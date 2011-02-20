@@ -1125,6 +1125,8 @@ static Object *PreferencesPage(ULONG page)
 			return(ar[BGP_LISTVIEW_PAGE1]);
 
 	}
+
+	return NULL;
 }
 
 static Object *ExamplesPage(ULONG page)
@@ -1530,6 +1532,8 @@ static Object *ExamplesPage(ULONG page)
 			return(ar[BGP_LISTVIEW_PAGE2]);
 
 	}
+
+	return NULL;
 }
 
 static void DisposePreferencesPage(ULONG page)
@@ -1663,7 +1667,7 @@ static void DisposeExamplesPage(ULONG page)
 ULONG
 Frame2Cycle( ULONG tmp_frame )
 {
-	ULONG	ret_frame;
+	ULONG	ret_frame = 0;
 	switch( tmp_frame ) {
 		case	FRTYPE_BUTTON:		ret_frame = 0; break;
 		case	FRTYPE_FUZZ_BUTTON:	ret_frame = 1; break;

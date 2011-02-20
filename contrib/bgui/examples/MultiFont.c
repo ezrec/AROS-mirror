@@ -64,16 +64,16 @@ VOID StartDemo( void )
 	/*
 	 *	We need this one to open the fonts.
 	 */
-	if ( DiskfontBase = OpenLibrary( "diskfont.library", 36 )) {
+	if (( DiskfontBase = OpenLibrary( "diskfont.library", 36 ))) {
 		/*
 		 *	We open the fonts ourselves since BGUI
 		 *	opens all fonts with OpenFont() which
 		 *	means that they have to be resident
 		 *	in memory.
 		 */
-		if ( Button = OpenDiskFont( &ButtonFont )) {
-			if ( Info1 = OpenDiskFont( &Info1Font )) {
-				if ( Info2 = OpenDiskFont( &Info2Font )) {
+		if (( Button = OpenDiskFont( &ButtonFont ))) {
+			if (( Info1 = OpenDiskFont( &Info1Font ))) {
+				if (( Info2 = OpenDiskFont( &Info2Font ))) {
 					/*
 					 *	Create the window object.
 					 */
@@ -142,7 +142,7 @@ VOID StartDemo( void )
 							/*
 							 *	try to open the window.
 							 */
-							if ( window = WindowOpen( WO_Window )) {
+							if (( window = WindowOpen( WO_Window ))) {
 								/*
 								 *	Obtain it's wait mask.
 								 */

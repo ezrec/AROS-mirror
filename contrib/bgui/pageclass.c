@@ -102,10 +102,7 @@ typedef struct {
 /*
  * Get the member 'num'.
  */
-//STATIC ASM PM *GetMember(REG(a0) PML *l, REG(d0) ULONG mnum)
-STATIC ASM REGFUNC2(PM *, GetMember,
-	REGPARAM(A0, PML *, l),
-	REGPARAM(D0, ULONG, mnum))
+STATIC ASM PM *GetMember(REG(a0) PML *l, REG(d0) ULONG mnum)
 {
    PM          *pm;
    ULONG        num = 0;
@@ -117,25 +114,21 @@ STATIC ASM REGFUNC2(PM *, GetMember,
    }
    return NULL;
 }
-REGFUNC_END
 
 /*
  * Add members.
  */
-//STATIC ASM VOID AddMembers( REG(a0) Class *cl, REG(a1) Object *obj, REG(a2) struct TagItem *attr)
-STATIC ASM REGFUNC3(VOID, AddMembers,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A1, Object *, obj),
-	REGPARAM(A2, struct TagItem *, attr))
+STATIC ASM VOID AddMembers( REG(a0) Class *cl, REG(a1) Object *obj, REG(a2) struct TagItem *attr)
 {
    PD                *pd = INST_DATA(cl, obj);
    PM                *pm;
-   struct TagItem    *tstate = attr, *tag;
+   const struct TagItem    *tstate = attr;
+   struct TagItem    *tag;
 
    /*
     * Scan attributes.
     */
-   while (tag = NextTagItem(&tstate))
+   while ((tag = NextTagItem(&tstate)))
    {
       switch (tag->ti_Tag)
       {
@@ -148,7 +141,7 @@ STATIC ASM REGFUNC3(VOID, AddMembers,
             /*
              * Allocate PMember structure.
              */
-            if (pm = (PM *)BGUI_AllocPoolMem(sizeof(PM)))
+            if ((pm = (PM *)BGUI_AllocPoolMem(sizeof(PM))))
             {
                /*
                 * Initialize structure and add it to the list.
@@ -172,14 +165,11 @@ STATIC ASM REGFUNC3(VOID, AddMembers,
       };
    };
 }
-REGFUNC_END
 
 /*
  * Set members active/deactive.
  */
-//STATIC ASM VOID DoMembers(REG(a0) PD *pd)
-STATIC ASM REGFUNC1(VOID, DoMembers,
-	REGPARAM(A0, PD *, pd))
+STATIC ASM VOID DoMembers(REG(a0) PD *pd)
 {
    PM       *pm, *active = pd->pd_Active;
    BOOL      inhibit = pd->pd_Flags & PDF_INHIBIT;
@@ -195,7 +185,6 @@ STATIC ASM REGFUNC1(VOID, DoMembers,
       AsmDoMethod(pm->pm_Object, BASE_INHIBIT, inhibit || (pm != active));
    };
 }
-REGFUNC_END
 
 /// OM_NEW
 /*
@@ -213,11 +202,11 @@ METHOD(PageClassNew, struct opSet *, ops)
     * First we let the superclass
     * get us an object.
     */
-   if (rc = NewSuperObject(cl, obj, tags))
+   if ((rc = NewSuperObject(cl, obj, tags)))
    {
       pd = INST_DATA(cl, rc);
 
-      if (tag = FindTagItem(PAGE_NoBufferRP, tags))
+      if ((tag = FindTagItem(PAGE_NoBufferRP, tags)))
       {
          DoSetMethodNG((Object *)rc, BT_Buffer, !(tag->ti_Data), TAG_DONE);
       };
@@ -274,7 +263,8 @@ METHOD_END
 METHOD(PageClassSetUpdate, struct opUpdate *, opu)
 {
    PD                *pd = INST_DATA( cl, obj );
-   struct TagItem    *attr = opu->opu_AttrList, *tstate = attr, *tag;
+   struct TagItem    *attr = opu->opu_AttrList, *tag;
+   const struct TagItem *tstate = attr;
    struct GadgetInfo *gi = opu->opu_GInfo;
    PM                *pm;
    ULONG              data;
@@ -295,7 +285,7 @@ METHOD(PageClassSetUpdate, struct opUpdate *, opu)
    if ((opu->MethodID == OM_UPDATE) && (opu->opu_Flags & OPUF_INTERIM))
       return 0;
 
-   while (tag = NextTagItem(&tstate))
+   while ((tag = NextTagItem(&tstate)))
    {
       data = tag->ti_Data;
       switch (tag->ti_Tag)
@@ -411,7 +401,7 @@ METHOD(PageClassDispose, Msg, msg)
    /*
     * Remove all objects from the list.
     */
-   while (pm = (PM *)RemHead((struct List *)&pd->pd_Members))
+   while ((pm = (PM *)RemHead((struct List *)&pd->pd_Members)))
    {
       /*
        * Tell the object to
@@ -475,7 +465,7 @@ METHOD(PageClassWhichObject, struct grmWhichObject *, grwo)
        */
       ob = (Object *)AsmDoMethodA(ob, (Msg)grwo);
 
-   return (ULONG)ob;
+   return (IPTR)ob;
 }
 METHOD_END
 ///
@@ -615,7 +605,7 @@ METHOD(PageClassRemMember, struct grmRemMember *, grmr)
    PM *pm;
 
    if(!grmr->grmr_Member)
-      return(NULL);
+      return (IPTR)NULL;
    Forbid();
    for (pm = pd->pd_Members.pl_First; pm->pm_Next; pm = pm->pm_Next)
    {
@@ -628,11 +618,11 @@ METHOD(PageClassRemMember, struct grmRemMember *, grmr)
          for(pd->pd_Num=0,pm=pd->pd_Members.pl_First;pm->pm_Next && pm!=pd->pd_Active;pd->pd_Num++,pm=pm->pm_Next);
          Permit();
          RelayoutGroup(obj);
-         return((ULONG)grmr->grmr_Member);
+         return((IPTR)grmr->grmr_Member);
       }
    }
    Permit();
-   return(NULL);
+   return (IPTR)NULL;
 }
 METHOD_END
 
@@ -738,7 +728,7 @@ METHOD(PageClassReplace, struct grmReplaceMember *, grrm)
          
             return FALSE;
          };
-         return((ULONG)grrm->grrm_MemberA);
+         return((IPTR)grrm->grrm_MemberA);
       }
    }
    Permit();
@@ -751,30 +741,30 @@ METHOD_END
  * Function table.
  */
 STATIC DPFUNC ClassFunc[] = {
-   BASE_RENDER,            (FUNCPTR)PageClassRender,
-   BASE_DIMENSIONS,        (FUNCPTR)PageClassDimensions,
-   OM_NEW,                 (FUNCPTR)PageClassNew,
-   OM_SET,                 (FUNCPTR)PageClassSetUpdate,
-   OM_UPDATE,              (FUNCPTR)PageClassSetUpdate,
-   OM_DISPOSE,             (FUNCPTR)PageClassDispose,
-   OM_GET,                 (FUNCPTR)PageClassGet,
-   GM_GOINACTIVE,          (FUNCPTR)PageClassForward,
-   GM_GOACTIVE,            (FUNCPTR)PageClassForward,
-   GM_HANDLEINPUT,         (FUNCPTR)PageClassForward,
-   GM_HITTEST,             (FUNCPTR)PageClassForward,
-   GRM_WHICHOBJECT,        (FUNCPTR)PageClassWhichObject,
-   BASE_INHIBIT,           (FUNCPTR)PageClassInhibit,
-   BASE_MOVEBOUNDS,        (FUNCPTR)PageClassForward,
-   BASE_LOCALIZE,          (FUNCPTR)PageClassAll,
-   BASE_KEYLABEL,          (FUNCPTR)PageClassAll,
-   BASE_FINDKEY,           (FUNCPTR)PageClassForward,
-   BASE_SHOWHELP,          (FUNCPTR)PageClassForward,
-   BASE_IS_MULTI,          (FUNCPTR)PageClassIsMulti,
-   GRM_ADDMEMBER,          (FUNCPTR)PageClassAddMember,
-   GRM_REMMEMBER,          (FUNCPTR)PageClassRemMember,
-   GRM_INSERTMEMBER,       (FUNCPTR)PageClassInsert,
-   GRM_REPLACEMEMBER,      (FUNCPTR)PageClassReplace,
-   DF_END,                 NULL
+   { BASE_RENDER,            PageClassRender },
+   { BASE_DIMENSIONS,        PageClassDimensions },
+   { OM_NEW,                 PageClassNew },
+   { OM_SET,                 PageClassSetUpdate },
+   { OM_UPDATE,              PageClassSetUpdate },
+   { OM_DISPOSE,             PageClassDispose },
+   { OM_GET,                 PageClassGet },
+   { GM_GOINACTIVE,          PageClassForward },
+   { GM_GOACTIVE,            PageClassForward },
+   { GM_HANDLEINPUT,         PageClassForward },
+   { GM_HITTEST,             PageClassForward },
+   { GRM_WHICHOBJECT,        PageClassWhichObject },
+   { BASE_INHIBIT,           PageClassInhibit },
+   { BASE_MOVEBOUNDS,        PageClassForward },
+   { BASE_LOCALIZE,          PageClassAll },
+   { BASE_KEYLABEL,          PageClassAll },
+   { BASE_FINDKEY,           PageClassForward },
+   { BASE_SHOWHELP,          PageClassForward },
+   { BASE_IS_MULTI,          PageClassIsMulti },
+   { GRM_ADDMEMBER,          PageClassAddMember },
+   { GRM_REMMEMBER,          PageClassRemMember },
+   { GRM_INSERTMEMBER,       PageClassInsert },
+   { GRM_REPLACEMEMBER,      PageClassReplace },
+   { DF_END },
 };
 
 /*

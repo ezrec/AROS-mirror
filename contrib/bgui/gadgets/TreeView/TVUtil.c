@@ -163,7 +163,7 @@ if (mem)
 
 if (tv->tv_MemPool)
 	{
-	if (mem = AllocPooled(tv->tv_MemPool,size + 4))
+	if ((mem = AllocPooled(tv->tv_MemPool,size + 4)))
 		*mem++ = size;
 	}
 else
@@ -236,7 +236,7 @@ HOOKPTR TV_AllocHook(HOOKFUNC handler,APTR data)
 {
 HOOKPTR	hook;
 
-if (hook = AllocMem(sizeof(struct Hook),MEMF_STD))
+if ((hook = AllocMem(sizeof(struct Hook),MEMF_STD)))
 	{
 	hook->h_Entry = handler;
 	hook->h_Data = data;
@@ -272,7 +272,7 @@ t = NULL;
 
 if (s)
 	{
-	if (t = TV_AllocVec(tv,strlen(s) + extra + 1))
+	if ((t = TV_AllocVec(tv,strlen(s) + extra + 1)))
 		strcpy(t,s);
 	}
 
@@ -299,9 +299,9 @@ ULONG				xentry;
 tvr.tvr_Command = TVRC_MAKE;
 tvr.tvr_Entry = entry;
 
-if (tn = TV_AllocVec(tv,sizeof(struct TreeNode)))
+if ((tn = TV_AllocVec(tv,sizeof(struct TreeNode))))
 	{
-	if (xentry = CallHookPkt(tv->tv_ResourceHook,tv->tv_TreeView,&tvr))
+	if ((xentry = CallHookPkt(tv->tv_ResourceHook,tv->tv_TreeView,&tvr)))
 		{
 		tn->tn_Entry = (APTR) xentry;
 		tn->tn_Flags = flags;
@@ -354,7 +354,7 @@ TNPTR	tn,tn2;
 
 tn2 = FirstChildIn(list);
 
-while(tn = tn2)		/* assign and test */
+while((tn = tn2))		/* assign and test */
 	{
 	tn2 = NextSiblingOf(tn);
 	TV_FreeTreeNodeList(tv,ChildListOf(tn));
@@ -376,7 +376,7 @@ ULONG	depth;
 
 depth = 0;
 
-while(tn = ParentOf(tn))
+while((tn = ParentOf(tn)))
 	depth++;
 
 return(depth);
@@ -472,7 +472,7 @@ do
 		/* end of nodes at current level? then get next of parent, if any */
 		while(!tn && pn)
 			{
-			if (tn = NextSiblingOf(pn))
+			if ((tn = NextSiblingOf(pn)))
 				{
 				pn = tn->tn_Parent;
 
@@ -520,7 +520,7 @@ do
 	{
 	/* get prev node at current level */
 
-	if (tn2 = PrevSiblingOf(tn))
+	if ((tn2 = PrevSiblingOf(tn)))
 		{
 		tn = tn2;
 
@@ -614,7 +614,7 @@ if ((tn = FirstChildOf(pn)) && IsExpanded(pn))
 	{
 	depth = TV_TreeNodeDepth(tn);
 
-	while(tn2 = TV_GetNextTreeNode(tn,TVF_VISIBLE,depth,~0))
+	while((tn2 = TV_GetNextTreeNode(tn,TVF_VISIBLE,depth,~0)))
 		tn = tn2;
 	}
 else
@@ -744,7 +744,7 @@ TNPTR TV_MatchNextEntry(TVData *tv,APTR refentry,ULONG which,ULONG flags,
 	struct tvAnchor *tva)
 {
 TNPTR	tn;
-ULONG	maxdepth,mindepth;
+ULONG	maxdepth = 0,mindepth = 0;
 BOOL	checkmatch,more,next;
 
 tn = NULL;

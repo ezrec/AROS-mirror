@@ -65,9 +65,7 @@
 
 #include "include/classdefs.h"
 
-//makeproto VOID ASM EraseBMO(REG(a0) BMO *bmo)
-makeproto ASM REGFUNC1(VOID, EraseBMO,
-	REGPARAM(A0, BMO *, bmo))
+makeproto VOID ASM EraseBMO(REG(a0) BMO *bmo)
 {
    struct Screen *s = bmo->bmo_Screen;
 
@@ -91,7 +89,6 @@ makeproto ASM REGFUNC1(VOID, EraseBMO,
 
    ReleaseSemaphore(&bmo->bmo_Lock);
 }
-REGFUNC_END
 
 //STATIC VOID ASM SAVEDS backfill_func(REG(a0) struct Hook *hook, REG(a2) struct RastPort *rp, REG(a1) BFINFO *bf)
 STATIC SAVEDS ASM REGFUNC3(VOID, backfill_func,
@@ -110,11 +107,9 @@ STATIC SAVEDS ASM REGFUNC3(VOID, backfill_func,
 }
 REGFUNC_END
 
-static struct Hook bf_hook = { NULL, NULL, (FUNCPTR)backfill_func, NULL, NULL };
+static struct Hook bf_hook = { {NULL, NULL}, (HOOKFUNC)backfill_func, NULL, NULL };
 
-//makeproto VOID ASM LayerBMO(REG(a0) BMO *bmo)
-makeproto ASM REGFUNC1(VOID, LayerBMO,
-	REGPARAM(A0, BMO *, bmo))
+makeproto VOID ASM LayerBMO(REG(a0) BMO *bmo)
 {
    if (!bmo->bmo_BMWindow)
    {
@@ -127,11 +122,8 @@ makeproto ASM REGFUNC1(VOID, LayerBMO,
       Signal((struct Task *)bmo->bmo_Process, SIGBREAKF_CTRL_F);
    };
 }
-REGFUNC_END
 
-//makeproto VOID ASM DrawBMO(REG(a0) BMO *bmo)
-makeproto ASM REGFUNC1(VOID, DrawBMO,
-	REGPARAM(A0, BMO *, bmo))
+makeproto VOID ASM DrawBMO(REG(a0) BMO *bmo)
 {
    struct Screen     *s  = bmo->bmo_Screen;
    struct BitMap     *bm = bmo->bmo_ObjectBuffer;
@@ -166,7 +158,6 @@ makeproto ASM REGFUNC1(VOID, DrawBMO,
 
    ReleaseSemaphore(&bmo->bmo_Lock);
 }  
-REGFUNC_END
 
 static void KillDragObject(BMO *bmo)
 {
@@ -178,7 +169,7 @@ static void KillDragObject(BMO *bmo)
    
       bmfo.MethodID = BASE_FREEDRAGOBJECT;
    
-      if (bmfo.bmfo_ObjBitMap = bmo->bmo_ObjectBuffer)
+      if ((bmfo.bmfo_ObjBitMap = bmo->bmo_ObjectBuffer))
          BGUI_DoGadgetMethodA(bmo->bmo_Object, bmo->bmo_Window, NULL, (Msg)&bmfo);
       
       /*
@@ -221,13 +212,13 @@ __saveds void Mover(void)
    ULONG              sigs;
    BOOL               go;
    struct IBox       *db;
-   Object            *obj, *wo, *g;
+   Object            *obj = NULL, *wo, *g;
    struct Window     *w;
-   struct Screen     *s;
+   struct Screen     *s = NULL;
    struct bmDragPoint bmd;
 
 #ifdef __AROS__
-   if (0 == sscanf(((struct Process *)FindTask(NULL))->pr_Arguments, "%lx", &bmo))
+   if (0 == sscanf(((struct Process *)FindTask(NULL))->pr_Arguments, "%p", &bmo))
 #else
    if (stch_l(((struct Process *)FindTask(NULL))->pr_Arguments, (long *)&bmo) == 0)
 #endif
@@ -292,7 +283,7 @@ __saveds void Mover(void)
          /*
           * Are we located on a BGUI window?
           */
-         if (wo = bmo->bmo_ActWin)
+         if ((wo = bmo->bmo_ActWin))
          {
             w = bmo->bmo_ActPtr;
 
@@ -373,10 +364,7 @@ __saveds void Mover(void)
  * around on the screen.
  */
 
-//makeproto ASM BMO *CreateBMO(REG(a0) Object *obj, REG(a1) struct GadgetInfo * gi)
-makeproto ASM REGFUNC2(BMO *, CreateBMO,
-	REGPARAM(A0, Object *, obj),
-	REGPARAM(A1, struct GadgetInfo *, gi))
+makeproto ASM BMO *CreateBMO(REG(a0) Object *obj, REG(a1) struct GadgetInfo * gi)
 {
    struct Screen     *scr = gi->gi_Screen;
    struct Window     *win = gi->gi_Window;
@@ -389,7 +377,7 @@ makeproto ASM REGFUNC2(BMO *, CreateBMO,
    if (last_bmo==NULL
    && (bmo=last_bmo= BGUI_AllocPoolMem(sizeof(BMO))))
    {
-      if (bmo->bmo_ObjectBuffer = (struct BitMap *)AsmDoMethod(obj, BASE_GETDRAGOBJECT, gi, &bounds))
+      if ((bmo->bmo_ObjectBuffer = (struct BitMap *)AsmDoMethod(obj, BASE_GETDRAGOBJECT, gi, &bounds)))
       {
          depth = FGetDepth(rp);
 
@@ -415,13 +403,17 @@ makeproto ASM REGFUNC2(BMO *, CreateBMO,
          bmo->bmo_Window = win;
          bmo->bmo_Object = obj;
 
-         if (bmo->bmo_ScreenBuffer = BGUI_AllocBitMap(w, h, depth, 0, scr->RastPort.BitMap))
+         if ((bmo->bmo_ScreenBuffer = BGUI_AllocBitMap(w, h, depth, 0, scr->RastPort.BitMap)))
          {
             InitSemaphore(&bmo->bmo_Lock);
+#ifdef __AROS__
+            sprintf(args, "%p\n", bmo);
+#else
             sprintf(args, "%08lx\n", bmo);
+#endif
 
-            if (bmo->bmo_Process = CreateNewProcTags(NP_Entry, Mover, NP_Priority, 5,
-               NP_Name, "BGUI Process", NP_Arguments, args, TAG_DONE))
+            if ((bmo->bmo_Process = CreateNewProcTags(NP_Entry, Mover, NP_Priority, 5,
+               NP_Name, "BGUI Process", NP_Arguments, args, TAG_DONE)))
             {
                return bmo;
             };
@@ -432,31 +424,23 @@ makeproto ASM REGFUNC2(BMO *, CreateBMO,
    }
    return NULL;
 }
-REGFUNC_END
 
 /*
  * Cleanup the mess we made.
  */
-//makeproto ASM VOID DeleteBMO(REG(a0) BMO *bmo)
-makeproto ASM REGFUNC1(VOID, DeleteBMO,
-	REGPARAM(A0, BMO *, bmo))
+makeproto ASM VOID DeleteBMO(REG(a0) BMO *bmo)
 {
    /*
     * Signal termination.
     */
    Signal((struct Task *)bmo->bmo_Process, SIGBREAKF_CTRL_C);
 }
-REGFUNC_END
 
 /*
  * Move the chunk to a new location.
  */
 
-//makeproto ASM VOID MoveBMO(REG(a0) BMO *bmo, REG(D0) WORD x, REG(D1) WORD y)
-makeproto ASM REGFUNC3(VOID, MoveBMO,
-	REGPARAM(A0, BMO *, bmo),
-	REGPARAM(D0, WORD, x),
-	REGPARAM(d1, WORD, y))
+makeproto ASM VOID MoveBMO(REG(a0) BMO *bmo, REG(D0) WORD x, REG(D1) WORD y)
 {
    /*
     * Make sure we stay inside the
@@ -470,4 +454,3 @@ makeproto ASM REGFUNC3(VOID, MoveBMO,
     */
    Signal((struct Task *)bmo->bmo_Process, SIGBREAKF_CTRL_D);
 }
-REGFUNC_END

@@ -76,41 +76,27 @@ typedef struct {
 
 #define EDF_NO_REBUILD     (1<<0)   /* No need to rebuild the object. */
 
-/*
- * Module prototypes.
- */
-#ifdef __AROS__
-/* looks like proto isn't needed, because ExtClassDispatch is defined
-   before it is used (or better: accessed) the first time */
-#else
-SAVEDS ASM STATIC ULONG ExtClassDispatch( REG(a0) Class *, REG(a2) Object *, REG(a1) Msg );
-#endif
-
-///
-
 
 /// SetupAttrList()
 /*
  * Build the create tags and tracked tags.
  */
-//STATIC ASM BOOL SetupAttrList(REG(a0) ED *ed, REG(a1) struct TagItem *attr)
-STATIC ASM REGFUNC2(BOOL, SetupAttrList,
-	REGPARAM(A0, ED *, ed),
-	REGPARAM(A1, struct TagItem *, attr))
+STATIC ASM BOOL SetupAttrList(REG(a0) ED *ed, REG(a1) struct TagItem *attr)
 {
-   struct TagItem *tstate, *tag;
+   const struct TagItem *tstate;
+   struct TagItem *tag;
 
    /*
     * Clone the original tag-list.
     */
-   if (ed->ed_AttrList = CloneTagItems(attr))
+   if ((ed->ed_AttrList = CloneTagItems(attr)))
    {
       tstate = ed->ed_AttrList;
 
       /*
        * Set up attributes for tracking.
        */
-      while (tag = NextTagItem(&tstate))
+      while ((tag = NextTagItem(&tstate)))
       {
          if (tag->ti_Tag == EXT_TrackAttr)
          {
@@ -124,7 +110,7 @@ STATIC ASM REGFUNC2(BOOL, SetupAttrList,
       /*
        * Allocate the tracked tag array.
        */
-      if (ed->ed_TrackList = CloneTagItems(ed->ed_AttrList))
+      if ((ed->ed_TrackList = CloneTagItems(ed->ed_AttrList)))
       {
          RefreshTagItemClones(ed->ed_AttrList, attr);
 
@@ -134,45 +120,40 @@ STATIC ASM REGFUNC2(BOOL, SetupAttrList,
 
    return FALSE;
 }
-REGFUNC_END
 ///
 ///GetTrackChanges()
 /*
  * Set the track changes.
  */
-//STATIC ASM VOID GetTrackChanges( REG(a0) ED *ed )
-STATIC ASM REGFUNC1(VOID, GetTrackChanges,
-	REGPARAM(A0, ED *, ed))
+STATIC ASM VOID GetTrackChanges( REG(a0) ED *ed )
 {
-   struct TagItem    *tstate = ed->ed_TrackList, *tag;
+   const struct TagItem    *tstate = ed->ed_TrackList;
+   struct TagItem *tag;
 
    /*
     * Get the attributes to track in the new object.
     */
-   while (tag = NextTagItem(&tstate))
+   while ((tag = NextTagItem(&tstate)))
       AsmDoMethod(ed->ed_Object, OM_GET, tag->ti_Tag, &tag->ti_Data);
 
 }
-REGFUNC_END
 ///
 ///SetupSize()
 /*
  * Setup object size.
  */
-//STATIC ASM VOID SetupSize(REG(a0) Class *cl, REG(a1) Object *obj)
-STATIC ASM REGFUNC2(VOID, SetupSize,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A1, Object *, obj))
+STATIC ASM VOID SetupSize(REG(a0) Class *cl, REG(a1) Object *obj)
 {
    ED                 *ed = INST_DATA(cl, obj);
    BC                 *bc = BASE_DATA(obj);
    struct IBox        *box = &bc->bc_InnerBox;
-   struct TagItem     *tstate = ed->ed_AttrList, *tag;
+   const struct TagItem *tstate = ed->ed_AttrList;
+   struct TagItem *tag;
 
    /*
     * Set values in the taglist.
     */
-   while (tag = NextTagItem(&tstate))
+   while ((tag = NextTagItem(&tstate)))
    {
       switch (tag->ti_Tag)
       {
@@ -185,17 +166,16 @@ STATIC ASM REGFUNC2(VOID, SetupSize,
    }
 
 }
-REGFUNC_END
 ///
 
 /// OM_NEW
-METHOD(ExtClassNew, struct opSet *, ops)
+STATIC ASM IPTR ExtClassNew(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1)  struct opSet * ops)
 {
     ED              *ed;
     ULONG           rc;
     struct TagItem  *attr;
 
-    if( rc = AsmDoSuperMethodA(cl,obj,(Msg)ops) )
+    if (( rc = AsmDoSuperMethodA(cl,obj,(Msg)ops) ))
     {
         /*
          * Get to the instance data.
@@ -212,8 +192,8 @@ METHOD(ExtClassNew, struct opSet *, ops)
          */
         ed->ed_MinWidth   = GetTagData(EXT_MinWidth,  0, attr);
         ed->ed_MinHeight  = GetTagData(EXT_MinHeight, 0, attr);
-        ed->ed_ClassID    = (UBYTE *)GetTagData(EXT_ClassID, NULL, attr);
-        ed->ed_Class      = (Class *)GetTagData(EXT_Class,   NULL, attr);
+        ed->ed_ClassID    = (UBYTE *)GetTagData(EXT_ClassID, (IPTR)NULL, attr);
+        ed->ed_Class      = (Class *)GetTagData(EXT_Class,   (IPTR)NULL, attr);
         ed->ed_Flags      = GetTagData(EXT_NoRebuild, FALSE, attr) ? EDF_NO_REBUILD : 0;
 
         /*
@@ -226,7 +206,7 @@ METHOD(ExtClassNew, struct opSet *, ops)
              */
             if (ed->ed_Flags & EDF_NO_REBUILD)
             {
-                if (ed->ed_Object = NewObjectA(ed->ed_Class, ed->ed_Class ? NULL : ed->ed_ClassID, attr))
+                if ((ed->ed_Object = NewObjectA(ed->ed_Class, ed->ed_Class ? NULL : ed->ed_ClassID, attr)))
                 {
                     DoSetMethodNG(ed->ed_Object, ICA_TARGET, ICTARGET_IDCMP, TAG_END);
                     return rc;
@@ -251,10 +231,9 @@ METHOD(ExtClassNew, struct opSet *, ops)
     }
     return rc;
 }
-METHOD_END
 ///
 /// OM_DISPOSE
-METHOD(ExtClassDispose, Msg, msg)
+STATIC ASM IPTR ExtClassDispose(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1)  Msg msg)
 {
     ED              *ed = INST_DATA(cl,obj);
     ULONG           rc;
@@ -285,10 +264,9 @@ METHOD(ExtClassDispose, Msg, msg)
 
     return rc;
 }
-METHOD_END
 ///
 /// OM_GET
-METHOD(ExtClassGet, struct opGet *, opg )
+STATIC ASM IPTR ExtClassGet(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1)  struct opGet * opg )
 {
     ED              *ed = INST_DATA(cl,obj);
     ULONG           rc;
@@ -314,10 +292,9 @@ METHOD(ExtClassGet, struct opGet *, opg )
 
     return rc;
 }
-METHOD_END
 ///
 ///BASE_DIMENSIONS
-METHOD(ExtClassDimensions, struct bmDimensions *, msg)
+STATIC ASM IPTR ExtClassDimensions(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1)  struct bmDimensions * msg)
 {
     ED              *ed = INST_DATA(cl,obj);
     ULONG           rc;
@@ -329,10 +306,9 @@ METHOD(ExtClassDimensions, struct bmDimensions *, msg)
 
     return rc;
 }
-METHOD_END
 ///
 ///GM_HITTEST
-METHOD(ExtClassHitTest, Msg, msg)
+STATIC ASM IPTR ExtClassHitTest(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1)  Msg msg)
 {
     ED              *ed = INST_DATA(cl,obj);
     ULONG           rc;
@@ -350,10 +326,9 @@ METHOD(ExtClassHitTest, Msg, msg)
 
     return rc;
 }
-METHOD_END
 ///
 ///GM_HANDLEINPUT,GM_GOACTIVE
-METHOD(ExtClassHandleInput, Msg, msg)
+STATIC ASM IPTR ExtClassHandleInput(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1)  Msg msg)
 {
     ED              *ed = INST_DATA(cl,obj);
     ULONG           rc = GMR_NOREUSE;
@@ -365,10 +340,9 @@ METHOD(ExtClassHandleInput, Msg, msg)
 
     return rc;
 }
-METHOD_END
 ///
 /// BASE_RENDER
-METHOD(ExtClassRender, struct bmRender *, bmr)
+STATIC ASM IPTR ExtClassRender(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1)  struct bmRender * bmr)
 {
     ED              *ed = INST_DATA(cl,obj);
     BC              *bc;
@@ -408,7 +382,7 @@ METHOD(ExtClassRender, struct bmRender *, bmr)
             /*
              * Create a new object.
              */
-            if (ed->ed_Object = NewObjectA(ed->ed_Class, ed->ed_Class ? NULL : ed->ed_ClassID, ed->ed_AttrList))
+            if ((ed->ed_Object = NewObjectA(ed->ed_Class, ed->ed_Class ? NULL : ed->ed_ClassID, ed->ed_AttrList)))
                 DoSetMethodNG(ed->ed_Object, ICA_TARGET, ICTARGET_IDCMP, set ? TAG_MORE : TAG_DONE, ed->ed_TrackList);
         };
     };
@@ -427,7 +401,6 @@ METHOD(ExtClassRender, struct bmRender *, bmr)
 
     return rc;
 }
-METHOD_END
 ///
 
 ///ExtClassDispatch()
@@ -435,21 +408,13 @@ METHOD_END
 /*
  * Class dispatcher.
  */
-//SAVEDS ASM STATIC ULONG ExtClassDispatch( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg msg )
-SAVEDS ASM STATIC REGFUNC3(ULONG, ExtClassDispatch,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, Msg, msg))
+SAVEDS ASM STATIC ULONG ExtClassDispatch( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg msg )
 {
    ED                *ed;
    ULONG              rc;
    APTR               stk;
 
-#ifdef __AROS__
-#warning Commented EnsureStack
-#else
    stk = EnsureStack();
-#endif
    /*
     * What have we got here...
     */
@@ -509,13 +474,9 @@ SAVEDS ASM STATIC REGFUNC3(ULONG, ExtClassDispatch,
       break;
    }
 
-#ifdef __AROS__
-#else
    RevertStack(stk);
-#endif
    return rc;
 }
-REGFUNC_END
 
 ///
 
@@ -528,7 +489,7 @@ makeproto Class *InitExtClass( void )
 {
    return BGUI_MakeClass(CLASS_SuperClassBGUI, BGUI_BASE_GADGET,
                          CLASS_ObjectSize,     sizeof(ED),
-                         CLASS_Dispatcher,     (ULONG)ExtClassDispatch,
+                         CLASS_Dispatcher,     ExtClassDispatch,
                          TAG_DONE);
 }
 ///

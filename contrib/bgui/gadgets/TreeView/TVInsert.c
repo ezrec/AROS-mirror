@@ -122,7 +122,7 @@ ASM REGFUNC3(ULONG, TV_Insert,
 	REGPARAM(A1, struct tvInsert *, tvi))
 {
 TVData	*tv;
-TNPTR	tn,prevtn,par,tr,sr;
+TNPTR	tn,prevtn = NULL,par,tr,sr = NULL;
 LISTPTR	list;
 ULONG	rc,tvflags,lvflags,pos;
 
@@ -145,7 +145,7 @@ if (tvi->tvi_Flags & TVF_EXPAND)
  * Allocate a new node for the entry and initialise it's child list.
  */
 
-if (tn = TV_AllocTreeNode(tv,tvi->tvi_Entry,tvflags))
+if ((tn = TV_AllocTreeNode(tv,tvi->tvi_Entry,tvflags)))
 	{
 	/*
 	 * Locate the treenode corresponding to the relation entry,

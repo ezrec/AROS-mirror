@@ -83,59 +83,60 @@ STATIC ULONG id2act[] = {
 /*
  * Module prototypes.
  */
-METHODPROTO(MXClassSetUpdate,   struct opUpdate *, );
+
 ///
 /// AddMXObjects()
 /*
  * Add MX objects.
  */
-//STATIC ASM BOOL AddMXObjects(REG(a0) Object *target, REG(a1) MD *md)
-STATIC ASM REGFUNC2(BOOL, AddMXObjects,
-	REGPARAM(A0, Object *, target),
-	REGPARAM(A1, MD *, md))
+STATIC ASM BOOL AddMXObjects(REG(a0) Object *target, REG(a1) MD *md)
 {
    UBYTE       **labels = md->md_LabelStrings;
    UWORD         i = 0;
    ULONG         id = md->md_LabelStringsID;
    BOOL          rc = FALSE, tab;
-   ULONG         tags[32], *t = tags;
+   struct TagItem tags[16], *t = &tags[0];
 
-   static ULONG  tags_fix[] = { LGO_FixMinWidth, TRUE, LGO_FixMinHeight, TRUE, TAG_DONE };
+   static const struct TagItem tags_fix[] = {
+       { LGO_FixMinWidth, TRUE },
+       { LGO_FixMinHeight, TRUE },
+       { TAG_DONE },
+   };
 
-   *t++ = GA_ToggleSelect;       *t++ = TRUE;
-   *t++ = GA_ID;                 *t++ = GADGET(target)->GadgetID;
-   *t++ = GA_Disabled;           *t++ = GADGET(target)->Flags & GFLG_DISABLED;
-   *t++ = LAB_SelectedDriPen;    *t++ = TEXTPEN;
+   t->ti_Tag = GA_ToggleSelect;       t->ti_Data = TRUE; t++;
+   t->ti_Tag = GA_ID;                 t->ti_Data = GADGET(target)->GadgetID; t++;
+   t->ti_Tag = GA_Disabled;           t->ti_Data = GADGET(target)->Flags & GFLG_DISABLED; t++;
+   t->ti_Tag = LAB_SelectedDriPen;    t->ti_Data = TEXTPEN; t++;
 
    switch (md->md_Type)
    {
    case MXTYPE_RADIOBUTTON:
-      *t++ = LAB_Place;          *t++ = md->md_Place;
+      t->ti_Tag = LAB_Place;          t->ti_Data = md->md_Place; t++;
 
       tab = FALSE;
       break;
 
    case MXTYPE_TAB_TOP:
-      *t++ = FRM_Type;           *t++ = FRTYPE_TAB_TOP;
+      t->ti_Tag = FRM_Type;           t->ti_Data = FRTYPE_TAB_TOP; t++;
       goto common_tab;
 
    case MXTYPE_TAB_BOTTOM:
-      *t++ = FRM_Type;           *t++ = FRTYPE_TAB_BOTTOM;
+      t->ti_Tag = FRM_Type;           t->ti_Data = FRTYPE_TAB_BOTTOM; t++;
       goto common_tab;
 
    case MXTYPE_TAB_LEFT:
-      *t++ = FRM_Type;           *t++ = FRTYPE_TAB_LEFT;
+      t->ti_Tag = FRM_Type;           t->ti_Data = FRTYPE_TAB_LEFT; t++;
       goto common_tab;
 
    case MXTYPE_TAB_RIGHT:
-      *t++ = FRM_Type;           *t++ = FRTYPE_TAB_RIGHT;
+      t->ti_Tag = FRM_Type;           t->ti_Data = FRTYPE_TAB_RIGHT; t++;
 
    common_tab:
-      *t++ = BUTTON_SelectOnly;  *t++ = TRUE;
-      *t++ = LAB_Place;          *t++ = PLACE_IN;
-      *t++ = LAB_SelectedStyle;  *t++ = FSF_BOLD;
-      *t++ = LAB_TextAttr;       *t++ = (ULONG)md->md_TabsFont;
-      *t++ = md->md_BackFill[0]; *t++ = md->md_BackFill[1];
+      t->ti_Tag = BUTTON_SelectOnly;  t->ti_Data = TRUE; t++;
+      t->ti_Tag = LAB_Place;          t->ti_Data = PLACE_IN; t++;
+      t->ti_Tag = LAB_SelectedStyle;  t->ti_Data = FSF_BOLD; t++;
+      t->ti_Tag = LAB_TextAttr;       t->ti_Data = (IPTR)md->md_TabsFont; t++;
+      t->ti_Tag = md->md_BackFill[0]; t->ti_Data = md->md_BackFill[1]; t++;
 
       tab = TRUE;
       break;
@@ -143,12 +144,13 @@ STATIC ASM REGFUNC2(BOOL, AddMXObjects,
    default:
       return FALSE;
    };
-   *t++ = TAG_DONE;
+   t->ti_Tag = TAG_DONE;
+   t++;
 
    /*
     * Allocate an array to hold the object pointers.
     */
-   if (md->md_Objects = (Object **)BGUI_AllocPoolMem((md->md_MaxLabel + 1) * sizeof(Object *)))
+   if ((md->md_Objects = (Object **)BGUI_AllocPoolMem((md->md_MaxLabel + 1) * sizeof(Object *))))
    {
       /*
        * Loop through all labels.
@@ -158,12 +160,12 @@ STATIC ASM REGFUNC2(BOOL, AddMXObjects,
          /*
           * Create a toggle object.
           */
-         if (md->md_Objects[i] = BGUI_NewObject(tab ? BGUI_BUTTON_GADGET : BGUI_RADIOBUTTON_GADGET,
+         if ((md->md_Objects[i] = BGUI_NewObject(tab ? BGUI_BUTTON_GADGET : BGUI_RADIOBUTTON_GADGET,
                   LAB_Label,       *labels,
                   LAB_LabelID,      id,
                   GA_UserData,      i,
                   GA_Selected,      (i == md->md_ActiveLabel),
-                  TAG_MORE,         tags))
+                  TAG_MORE,         tags)))
          {
             /*
              * Add it to the parent group.
@@ -197,24 +199,25 @@ STATIC ASM REGFUNC2(BOOL, AddMXObjects,
    
    return rc;
 }
-REGFUNC_END
+
 ///
 /// OM_NEW
 /*
  * Create a shiny new object.
  */
-METHOD(MXClassNew, struct opSet *, ops)
+STATIC METHOD(MXClassNew, struct opSet *, ops)
 {
    MD             *md;
-   struct TagItem *tstate, *tags = ops->ops_AttrList, *tag;
    ULONG           rc, data;
+   const struct TagItem *tstate;
+   struct TagItem *tags = ops->ops_AttrList, *tag;
    int             type = MXTYPE_RADIOBUTTON;
 
    /*
     * No labels? No gadget!
     */
    if (!FindTagItem(MX_Labels, tags))
-      return NULL;
+      return 0;
 
    tags = DefTagList(BGUI_MX_GADGET, tags);
 
@@ -230,7 +233,7 @@ METHOD(MXClassNew, struct opSet *, ops)
    /*
     * Let the superclass setup an object for us.
     */
-   if (rc = NewSuperObject(cl, obj, tags))
+   if ((rc = NewSuperObject(cl, obj, tags)))
    {
       /*
        * Initialize instance data.
@@ -241,7 +244,7 @@ METHOD(MXClassNew, struct opSet *, ops)
       md->md_Place       = PLACE_RIGHT;
 
       tstate = tags;
-      while (tag = NextTagItem(&tstate))
+      while ((tag = NextTagItem(&tstate)))
       {
          data = tag->ti_Data;
          switch (tag->ti_Tag)
@@ -343,11 +346,12 @@ METHOD_END
 /*
  * Change the object attributes.
  */
-METHOD(MXClassSetUpdate, struct opUpdate *, opu)
+STATIC METHOD(MXClassSetUpdate, struct opUpdate *, opu)
 {
    MD                *md = INST_DATA(cl, obj);
    struct GadgetInfo *gi = opu->opu_GInfo;
-   struct TagItem    *tstate = opu->opu_AttrList, *tag, ttag[2];
+   const struct TagItem    *tstate = opu->opu_AttrList;
+   struct TagItem    *tag, ttag[2];
    struct opSet       set;
    ULONG              data, i;
 
@@ -376,7 +380,7 @@ METHOD(MXClassSetUpdate, struct opUpdate *, opu)
          DoSetMethodNG(md->md_Objects[i], BT_TextAttr, md->md_TabsFont, TAG_END);
    }
 
-   while (tag = NextTagItem(&tstate))
+   while ((tag = NextTagItem(&tstate)))
    {
       data = tag->ti_Data;
       switch (tag->ti_Tag)
@@ -438,7 +442,7 @@ METHOD_END
 /*
  * Get an attribute.
  */
-METHOD(MXClassGet, struct opGet *, opg)
+STATIC METHOD(MXClassGet, struct opGet *, opg)
 {
    MD       *md = INST_DATA(cl, obj);
    ULONG     rc = 1;
@@ -461,7 +465,7 @@ METHOD_END
 /*
  * Dispose of the object.
  */
-METHOD(MXClassDispose, Msg, msg)
+STATIC METHOD(MXClassDispose, Msg, msg)
 {
    MD       *md = INST_DATA(cl, obj);
 
@@ -476,7 +480,7 @@ METHOD_END
 /*
  * Key activation.
  */
-METHOD(MXClassKeyActive, struct wmKeyInput *, wmki)
+STATIC METHOD(MXClassKeyActive, struct wmKeyInput *, wmki)
 {
    MD       *md   = INST_DATA(cl, obj);
    UWORD     qual = wmki->wmki_IEvent->ie_Qualifier;
@@ -522,13 +526,13 @@ METHOD_END
  * Class function table.
  */
 STATIC DPFUNC ClassFunc[] = {
-   OM_NEW,           (FUNCPTR)MXClassNew,
-   OM_SET,           (FUNCPTR)MXClassSetUpdate,
-   OM_UPDATE,        (FUNCPTR)MXClassSetUpdate,
-   OM_GET,           (FUNCPTR)MXClassGet,
-   OM_DISPOSE,       (FUNCPTR)MXClassDispose,
-   WM_KEYACTIVE,     (FUNCPTR)MXClassKeyActive,
-   DF_END,           NULL
+   { OM_NEW,           MXClassNew, },
+   { OM_SET,           MXClassSetUpdate, },
+   { OM_UPDATE,        MXClassSetUpdate, },
+   { OM_GET,           MXClassGet, },
+   { OM_DISPOSE,       MXClassDispose, },
+   { WM_KEYACTIVE,     MXClassKeyActive, },
+   { DF_END,           NULL },
 };
 
 /*

@@ -100,13 +100,16 @@ Object *GimmePrefsWindow( VOID )
 
         if(prefsw.Win) {
             AddMap(c,p,Cyc2Page);
+        } else {
+            printf("Darnicles. Can't create prefs window\n");
         }
     }
 
     if( prefsw.Win ) {
-        if( prefsw.win = WindowOpen( prefsw.Win ) ) {
+        if(( prefsw.win = WindowOpen( prefsw.Win ) )) {
             /* nothing here */
         } else {
+            printf("Darnicles. Can't open prefs window\n");
             DisposeObject( prefsw.Win );
             prefsw.Win = NULL;
         }
@@ -128,7 +131,7 @@ int main(void)
       return -1;
     }
 
-    if(BGUIBase=OpenLibrary(BGUINAME,0L)) {
+    if((BGUIBase=OpenLibrary(BGUINAME,0L))) {
         Win = GimmePrefsWindow();
         win = WindowOpen(Win);
         GetAttr(WINDOW_SigMask, Win, &sigmask);

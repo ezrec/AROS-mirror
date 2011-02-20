@@ -201,7 +201,7 @@ METHOD(PropClassNew, struct opSet *, ops)
    /*
     * First we let the superclass get us an object.
     */
-   if (rc = NewSuperObject(cl, obj, tags))
+   if ((rc = NewSuperObject(cl, obj, tags)))
    {
       /*
        * Obtain instance data.
@@ -248,11 +248,11 @@ METHOD(PropClassNew, struct opSet *, ops)
 	 if (!(pd->pd_Arrow1 && pd->pd_Arrow2)) goto failure;
       };
 
-      if (pd->pd_Prop = NewObject(NULL, PropGClass,
+      if ((pd->pd_Prop = NewObject(NULL, PropGClass,
 					GA_RelVerify,   TRUE,
 					PGA_Borderless, TRUE,
 					PGA_Freedom,    horiz ? FREEHORIZ : FREEVERT,
-					TAG_MORE,       tags))
+					TAG_MORE,       tags)))
       {
 	 /*
 	 pd->pd_Knob = BGUI_NewObject(BGUI_FRAME_IMAGE,
@@ -297,7 +297,7 @@ METHOD(PropClassNew, struct opSet *, ops)
       AsmCoerceMethod(cl, (Object *)rc, OM_DISPOSE);
    }
    FreeTagItems(tags);
-   return NULL;
+   return 0;
 }
 METHOD_END
 ///
@@ -309,9 +309,10 @@ METHOD(PropClassSetUpdate, struct opUpdate *, opu)
 {
    PD             *pd = INST_DATA(cl, obj);
    BC             *bc = BASE_DATA(obj);
-   struct TagItem *tstate = opu->opu_AttrList, *tag;
+   const struct TagItem *tstate = opu->opu_AttrList;
+   struct TagItem *tag;
    ULONG           data, type, redraw = 0, ho, vo;
-   LONG            tmp, val, omin, omax, olev, oldtop, oldtot, oldvis;
+   LONG            tmp, val, omin = 0, omax = 0, olev = 0, oldtop = 0, oldtot = 0, oldvis = 0;
    BOOL            fc = !(pd->pd_Flags & PDF_READY);
    WORD            dis = GADGET(obj)->Flags & GFLG_DISABLED;
 
@@ -342,7 +343,7 @@ METHOD(PropClassSetUpdate, struct opUpdate *, opu)
     * Let's see if we need to change
     * some known attributes ourselves.
     */
-   while (tag = NextTagItem(&tstate))
+   while ((tag = NextTagItem(&tstate)))
    {
       data = tag->ti_Data;
       switch (tag->ti_Tag)
@@ -711,12 +712,7 @@ METHOD(PropClassHitTest, struct gpHitTest *, gph)
 METHOD_END
 ///
 
-//STATIC ASM VOID NotifyChange(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct gpInput *gpi, REG(d0) ULONG flags)
-STATIC ASM REGFUNC4(VOID, NotifyChange,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct gpInput *, gpi),
-	REGPARAM(D0, ULONG, flags))
+STATIC ASM VOID NotifyChange(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct gpInput *gpi, REG(d0) ULONG flags)
 {
    PD          *pd = INST_DATA(cl, obj);
    ULONG        type;
@@ -751,17 +747,12 @@ STATIC ASM REGFUNC4(VOID, NotifyChange,
 
    DoNotifyMethod(obj, gpi->gpi_GInfo, flags, GA_ID, GADGET(obj)->GadgetID, type, val, TAG_DONE);
 }
-REGFUNC_END
 
 /*
  * Adjust knob position in
  * whatever direction necessary.
  */
-//STATIC ASM VOID AdjustKnob(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct gpInput *gpi)
-STATIC ASM REGFUNC3(VOID, AdjustKnob,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct gpInput *, gpi))
+STATIC ASM VOID AdjustKnob(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct gpInput *gpi)
 {
    PD        *pd = INST_DATA(cl, obj);
    LONG       top, total = max(pd->pd_Total - pd->pd_Visible, 0);
@@ -783,7 +774,6 @@ STATIC ASM REGFUNC3(VOID, AdjustKnob,
       NotifyChange(cl, obj, gpi, 0L);
    };
 }
-REGFUNC_END
 
 /// GM_GOACTIVE
 
@@ -1134,20 +1124,20 @@ METHOD_END
  * Class function table.
  */
 STATIC DPFUNC ClassFunc[] = {
-   BASE_RENDER,         (FUNCPTR)PropClassRender,
-   BASE_DIMENSIONS,     (FUNCPTR)PropClassDimensions,
+   { BASE_RENDER,         PropClassRender, },
+   { BASE_DIMENSIONS,     PropClassDimensions, },
 
-   OM_NEW,              (FUNCPTR)PropClassNew,
-   OM_SET,              (FUNCPTR)PropClassSetUpdate,
-   OM_UPDATE,           (FUNCPTR)PropClassSetUpdate,
-   OM_GET,              (FUNCPTR)PropClassGet,
-   OM_DISPOSE,          (FUNCPTR)PropClassDispose,
-   GM_HITTEST,          (FUNCPTR)PropClassHitTest,
-   GM_HANDLEINPUT,      (FUNCPTR)PropClassHandleInput,
-   GM_GOACTIVE,         (FUNCPTR)PropClassGoActive,
-   GM_GOINACTIVE,       (FUNCPTR)PropClassGoInActive,
-   WM_KEYACTIVE,        (FUNCPTR)PropClassKeyActive,
-   DF_END,              NULL
+   { OM_NEW,              PropClassNew, },
+   { OM_SET,              PropClassSetUpdate, },
+   { OM_UPDATE,           PropClassSetUpdate, },
+   { OM_GET,              PropClassGet, },
+   { OM_DISPOSE,          PropClassDispose, },
+   { GM_HITTEST,          PropClassHitTest, },
+   { GM_HANDLEINPUT,      PropClassHandleInput, },
+   { GM_GOACTIVE,         PropClassGoActive, },
+   { GM_GOINACTIVE,       PropClassGoInActive, },
+   { WM_KEYACTIVE,        PropClassKeyActive, },
+   { DF_END,              NULL },
 };
 
 /*

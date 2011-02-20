@@ -258,7 +258,7 @@ if ((BGUIBase = OpenLibrary("bgui.library",40)) && IntuitionBase)
 
                         if (ok)
                                 {
-                                if (win = WindowOpen(WI_Main))
+                                if ((win = WindowOpen(WI_Main)))
                                         {
                                         ULONG                   winsig,sigs,id;
                                         BOOL                    running;

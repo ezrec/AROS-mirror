@@ -40,26 +40,26 @@
  */
 METHOD(RBClassNew, struct opSet *, ops)
 {
-   ULONG           rc;
+   ULONG           rc = 0;
    Object         *rb;
    struct TagItem  ttags[2], *tags;
 
    /*
     * Get us a radiobutton image.
     */
-   if (rb = BGUI_NewObject(BGUI_VECTOR_IMAGE, VIT_BuiltIn, BUILTIN_RADIOBUTTON, VIT_DriPen, FILLPEN, TAG_DONE))
+   if ((rb = BGUI_NewObject(BGUI_VECTOR_IMAGE, VIT_BuiltIn, BUILTIN_RADIOBUTTON, VIT_DriPen, FILLPEN, TAG_DONE)))
    {
       ttags[0].ti_Tag  = BUTTON_SelectedVector;
-      ttags[0].ti_Data = (ULONG)rb;
+      ttags[0].ti_Data = (IPTR)rb;
       ttags[1].ti_Tag  = TAG_MORE;
-      ttags[1].ti_Data = (ULONG)ops->ops_AttrList;
+      ttags[1].ti_Data = (IPTR)ops->ops_AttrList;
 
       tags = DefTagList(BGUI_RADIOBUTTON_GADGET, ttags);
 
       /*
        * Let the superclass setup an object for us.
        */
-      if (rc = NewSuperObject(cl, obj, tags))
+      if ((rc = NewSuperObject(cl, obj, tags)))
       {
          /*
           * No recessed rendering.
@@ -81,8 +81,8 @@ METHOD_END
  * Class function table.
  */
 STATIC DPFUNC ClassFunc[] = {
-   OM_NEW,           (FUNCPTR)RBClassNew,
-   DF_END
+   { OM_NEW,           RBClassNew, },
+   { DF_END },
 };
 
 /*

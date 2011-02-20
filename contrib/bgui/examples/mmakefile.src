@@ -5,6 +5,8 @@
 include $(TOP)/config/make.cfg
 include $(SRCDIR)/$(CURDIR)/../make.cfg
 
+USER_CFLAGS := $(PARANOIA_CFLAGS)
+
 FILES = AddButtons \
 	Area \
 	BGUIDemo \

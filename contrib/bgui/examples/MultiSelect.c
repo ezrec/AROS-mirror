@@ -58,7 +58,10 @@ UBYTE   *ListEntries[] = {
 /*
 **      Map-list.
 **/
-struct TagItem CheckToList[] = { GA_Selected, LISTV_MultiSelectNoShift, TAG_END };
+struct TagItem CheckToList[] = {
+    { GA_Selected, LISTV_MultiSelectNoShift },
+    { TAG_END }
+};
 
 /*
 **      Object ID's.
@@ -150,7 +153,7 @@ VOID StartDemo( void )
                                 /*
                                 **      try to open the window.
                                 **/
-                                if ( window = WindowOpen( WO_Window )) {
+                                if (( window = WindowOpen( WO_Window ))) {
                                         /*
                                         **      Obtain it's wait mask.
                                         **/
@@ -190,7 +193,7 @@ VOID StartDemo( void )
                                                                         **      Simply dump all selected entries
                                                                         **      to the console.
                                                                         **/
-                                                                        if ( str = ( UBYTE * )FirstSelected( GO_List )) {
+                                                                        if (( str = ( UBYTE * )FirstSelected( GO_List ))) {
                                                                                 do {
                                                                                         STRPTR text=str;
 

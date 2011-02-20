@@ -129,11 +129,11 @@ VOID StartDemo( void )
         /*
          *      Lock the workbench screen.
          */
-        if ( wblock = LockPubScreen( "Workbench" )) {
+        if (( wblock = LockPubScreen( "Workbench" ))) {
                 /*
                  *      Obtain it's DrawInfo.
                  */
-                if ( dri = GetScreenDrawInfo( wblock )) {
+                if (( dri = GetScreenDrawInfo( wblock ))) {
                         /*
                          *      And mode ID.
                          */
@@ -141,13 +141,13 @@ VOID StartDemo( void )
                                 /*
                                  *      Open a screen ala your workbench.
                                  */
-                                if ( myscreen = OpenScreenTags( NULL, SA_Depth,         dri->dri_Depth,
+                                if (( myscreen = OpenScreenTags( NULL, SA_Depth,         dri->dri_Depth,
                                                                       SA_Width,         wblock->Width,
                                                                       SA_Height,        wblock->Height,
                                                                       SA_DisplayID,     mode,
                                                                       SA_Pens,          dri->dri_Pens,
                                                                       SA_Title,         "Backdrop Demo.",
-                                                                      TAG_END )) {
+                                                                      TAG_END ))) {
                                         /*
                                          *      Create a simple backdrop window on
                                          *      the screen whilst keeping the screen
@@ -191,7 +191,7 @@ VOID StartDemo( void )
                                                 /*
                                                  *      Open the window.
                                                  */
-                                                if ( window = WindowOpen( WO_Window )) {
+                                                if (( window = WindowOpen( WO_Window ))) {
                                                         /*
                                                          *      Show an explanation window.
                                                          */

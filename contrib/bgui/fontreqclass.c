@@ -65,7 +65,7 @@ METHOD(FontReqClassNew, struct opSet *, ops)
    /*
     * First we let the superclass create the object.
     */
-   if (rc = NewSuperObject(cl, obj, tags))
+   if ((rc = NewSuperObject(cl, obj, tags)))
    {
       FD  *fd = INST_DATA(cl, rc);
 
@@ -116,8 +116,9 @@ METHOD_END
 METHOD(FontReqClassSetUpdate, struct opSet *, ops)
 {
    FD             *fd = INST_DATA(cl, obj);
-   struct TagItem *tag, *tstate = ops->ops_AttrList;
    ULONG           data, rc;
+   const struct TagItem *tstate = ops->ops_AttrList;
+   struct TagItem *tag;
 
    /*
     * First we let the superclass
@@ -125,7 +126,7 @@ METHOD(FontReqClassSetUpdate, struct opSet *, ops)
     */
    rc = AsmDoSuperMethodA(cl, obj, (Msg)ops);
 
-   while (tag = NextTagItem(&tstate))
+   while ((tag = NextTagItem(&tstate)))
    {
       data = tag->ti_Data;
       switch (tag->ti_Tag)
@@ -246,7 +247,7 @@ METHOD(FontReqClassDoRequest, Msg, msg)
    /*
     * Allocate FontRequester structure.
     */
-   if (fo = (struct FontRequester *)AsmDoSuperMethod(cl, obj, ASLM_ALLOCREQUEST))
+   if ((fo = (struct FontRequester *)AsmDoSuperMethod(cl, obj, ASLM_ALLOCREQUEST)))
    {
       /*
        * Put up the requester.
@@ -284,13 +285,13 @@ METHOD_END
  * Function table.
  */
 STATIC DPFUNC ClassFunc[] = {
-   OM_NEW,                 (FUNCPTR)FontReqClassNew,
-   OM_SET,                 (FUNCPTR)FontReqClassSetUpdate,
-   OM_UPDATE,              (FUNCPTR)FontReqClassSetUpdate,
-   OM_GET,                 (FUNCPTR)FontReqClassGet,
-   OM_DISPOSE,             (FUNCPTR)FontReqClassDispose,
-   ASLM_DOREQUEST,         (FUNCPTR)FontReqClassDoRequest,
-   DF_END,                 NULL
+   { OM_NEW,                 FontReqClassNew, },
+   { OM_SET,                 FontReqClassSetUpdate, },
+   { OM_UPDATE,              FontReqClassSetUpdate, },
+   { OM_GET,                 FontReqClassGet, },
+   { OM_DISPOSE,             FontReqClassDispose, },
+   { ASLM_DOREQUEST,         FontReqClassDoRequest, },
+   { DF_END,                 NULL },
 };
 
 /*

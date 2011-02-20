@@ -87,23 +87,16 @@ typedef struct {
  * Obtain the LongVal and TextVal
  * values from the strgclass object.
  */
-//STATIC ASM VOID GetValues(REG(a0) SD *sd)
-STATIC ASM REGFUNC1(VOID, GetValues,
-	REGPARAM(A0, SD *, sd))
+STATIC ASM VOID GetValues(REG(a0) SD *sd)
 {
    Get_Attr(sd->sd_StrGad, STRINGA_TextVal, &sd->sd_TextContents);
    Get_Attr(sd->sd_StrGad, STRINGA_LongVal, &sd->sd_IntegerContents);
 }
-REGFUNC_END
 
 /*
  * Object cleanup.
  */
-//STATIC ASM ULONG StringClassDispose( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg msg )
-STATIC ASM REGFUNC3(ULONG, StringClassDispose,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, Msg, msg))
+STATIC METHOD(StringClassDispose, Msg, msg )
 {
    SD       *sd = INST_DATA(cl, obj);
 
@@ -124,16 +117,12 @@ STATIC ASM REGFUNC3(ULONG, StringClassDispose,
     */
    return AsmDoSuperMethodA(cl, obj, msg);
 }
-REGFUNC_END
+METHOD_END
 
 /*
  * Allocate buffers. (Only when maxchars > 128)
  */
-//STATIC ASM BOOL StringClassBuffers( REG(a0) SD *sd, REG(a1) struct TagItem *tags, REG(d0) ULONG max )
-STATIC ASM REGFUNC3(BOOL, StringClassBuffers,
-	REGPARAM(A0, SD *, sd),
-	REGPARAM(A1, struct TagItem *, tags),
-	REGPARAM(D0, ULONG, max))
+STATIC ASM BOOL StringClassBuffers( REG(a0) SD *sd, REG(a1) struct TagItem *tags, REG(d0) ULONG max )
 {
    /*
     * We only allocate buffer when:
@@ -157,16 +146,11 @@ STATIC ASM REGFUNC3(BOOL, StringClassBuffers,
    }
    return( TRUE );
 }
-REGFUNC_END
 
 /*
  * Create a shiny new object.
  */
-//STATIC ASM ULONG StringClassNew( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct opSet *ops )
-STATIC ASM REGFUNC3(ULONG, StringClassNew,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct opSet *, ops))
+STATIC METHOD(StringClassNew, struct opSet *, ops )
 {
    SD             *sd;
    struct TagItem *tag, *tags;
@@ -178,7 +162,7 @@ STATIC ASM REGFUNC3(ULONG, StringClassNew,
     * First we let the superclass
     * create an object.
     */
-   if (rc = NewSuperObject(cl, obj, tags))
+   if ((rc = NewSuperObject(cl, obj, tags)))
    {
       sd = INST_DATA(cl, rc);
 
@@ -197,18 +181,18 @@ STATIC ASM REGFUNC3(ULONG, StringClassNew,
        * We take care of the GA_Disabled attribute
        * so we don't let the strgclass see it.
        */
-      if (tag = FindTagItem(GA_Disabled, tags))
+      if ((tag = FindTagItem(GA_Disabled, tags)))
          tag->ti_Tag = TAG_IGNORE;
 
       /*
        * Handle NULL-STRINGA_TextVal.
        */
-      if (tag = FindTagItem(STRINGA_TextVal, tags))
+      if ((tag = FindTagItem(STRINGA_TextVal, tags)))
       {
          if (!tag->ti_Data)
-            tag->ti_Data = (ULONG)"";
+            tag->ti_Data = (IPTR)"";
       }
-      else if (tag = FindTagItem(STRINGA_LongVal, tags))
+      else if ((tag = FindTagItem(STRINGA_LongVal, tags)))
       {
          /*
           * Clamp the integer value between
@@ -220,7 +204,7 @@ STATIC ASM REGFUNC3(ULONG, StringClassNew,
       /*
        * Work-around for STRINGA_MaxChars.
        */
-      if (tag = FindTagItem(STRINGA_MaxChars, tags))
+      if ((tag = FindTagItem(STRINGA_MaxChars, tags)))
       {
          tag->ti_Data++;
          /*
@@ -237,17 +221,17 @@ STATIC ASM REGFUNC3(ULONG, StringClassNew,
       /*
        * Create a strgclass object.
        */
-      if (sd->sd_StrGad = NewObject( NULL, StrGClass,
+      if ((sd->sd_StrGad = NewObject( NULL, StrGClass,
                             sd->sd_Buffer     ? STRINGA_Buffer     : TAG_IGNORE, sd->sd_Buffer,
                             sd->sd_UndoBuffer ? STRINGA_UndoBuffer : TAG_IGNORE, sd->sd_UndoBuffer,
                             sd->sd_WorkBuffer ? STRINGA_WorkBuffer : TAG_IGNORE, sd->sd_WorkBuffer,
-                            TAG_MORE, tags))
+                            TAG_MORE, tags)))
       {
          /*
           * Copy of the pens.
           */
-         if (tag = FindTagItem(STRINGA_Pens,       tags)) sd->sd_Pens   = tag->ti_Data;
-         if (tag = FindTagItem(STRINGA_ActivePens, tags)) sd->sd_Active = tag->ti_Data;
+         if ((tag = FindTagItem(STRINGA_Pens,       tags))) sd->sd_Pens   = tag->ti_Data;
+         if ((tag = FindTagItem(STRINGA_ActivePens, tags))) sd->sd_Active = tag->ti_Data;
 
          /*
           * Obtain LongVal and TextVal values.
@@ -271,23 +255,18 @@ STATIC ASM REGFUNC3(ULONG, StringClassNew,
 
    return rc;
 }
-REGFUNC_END
-
+METHOD_END
 
 /*
  * Change the object attributes.
  */
-//STATIC ASM ULONG StringClassSetUpdate( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct opUpdate *opu )
-STATIC ASM REGFUNC3(ULONG, StringClassSetUpdate,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct opUpdate *, opu))
+STATIC METHOD(StringClassSetUpdate, struct opUpdate *, opu )
 {
    SD                *sd = INST_DATA(cl, obj);
    struct TagItem    *clones, *tag;
    WORD               dis = GADGET( obj )->Flags & GFLG_DISABLED, gv = 0;
    ULONG              inhibit, rc = 1;
-   BC                *bc = BASE_DATA(obj);
+   //BC                *bc = BASE_DATA(obj);
    struct GadgetInfo *gi = opu->opu_GInfo;
 
    /*
@@ -299,7 +278,7 @@ STATIC ASM REGFUNC3(ULONG, StringClassSetUpdate,
    /*
     * Clone tags.
     */
-   if (clones = CloneTagItems(opu->opu_AttrList))
+   if ((clones = CloneTagItems(opu->opu_AttrList)))
    {
       /*
        * Get min and max.
@@ -309,12 +288,12 @@ STATIC ASM REGFUNC3(ULONG, StringClassSetUpdate,
       /*
        * Handle NULL-STRINGA_TextVal.
        */
-      if (tag = FindTagItem(STRINGA_TextVal, clones))
+      if ((tag = FindTagItem(STRINGA_TextVal, clones)))
       {
-         if (!tag->ti_Data) tag->ti_Data = (ULONG)"";
+         if (!tag->ti_Data) tag->ti_Data = (IPTR)"";
          gv = TRUE;
       }
-      else if (tag = FindTagItem(STRINGA_LongVal, clones))
+      else if ((tag = FindTagItem(STRINGA_LongVal, clones)))
       {
          /*
           * Clamp value between min and max.
@@ -326,7 +305,7 @@ STATIC ASM REGFUNC3(ULONG, StringClassSetUpdate,
       /*
        * We handle GA_Disabled.
        */
-      if (tag = FindTagItem(GA_Disabled, clones))
+      if ((tag = FindTagItem(GA_Disabled, clones)))
          tag->ti_Tag = TAG_IGNORE;
 
       /*
@@ -356,7 +335,7 @@ STATIC ASM REGFUNC3(ULONG, StringClassSetUpdate,
        */
       if (opu->MethodID == OM_SET)
       {
-         if (tag = FindTagItem(BT_TextAttr, clones))
+         if ((tag = FindTagItem(BT_TextAttr, clones)))
          {
             Get_SuperAttr(cl, obj, BT_TextFont, &sd->sd_Font);
             DoSetMethodNG(sd->sd_StrGad, STRINGA_Font, sd->sd_Font, TAG_END);
@@ -364,8 +343,8 @@ STATIC ASM REGFUNC3(ULONG, StringClassSetUpdate,
          /*
           * Copy of the pens.
           */
-         if (tag = FindTagItem(STRINGA_Pens,       clones)) sd->sd_Pens   = tag->ti_Data;
-         if (tag = FindTagItem(STRINGA_ActivePens, clones)) sd->sd_Active = tag->ti_Data;
+         if ((tag = FindTagItem(STRINGA_Pens,       clones))) sd->sd_Pens   = tag->ti_Data;
+         if ((tag = FindTagItem(STRINGA_ActivePens, clones))) sd->sd_Active = tag->ti_Data;
       }
 
       /*
@@ -401,7 +380,7 @@ STATIC ASM REGFUNC3(ULONG, StringClassSetUpdate,
 
    return rc;
 }
-REGFUNC_END
+METHOD_END
 
 /// OM_GET
 /*
@@ -577,7 +556,7 @@ METHOD(StringClassGoActive, struct gpInput *, gpi)
          if (x < wx1) { x = wx1; w = wx2 - wx1; };
          if (y < wy1) { y = wy1; h = wy2 - wy1; };
 
-         if (rp = BGUI_ObtainGIRPort(gi))
+         if ((rp = BGUI_ObtainGIRPort(gi)))
          {
             if (!(sd->sd_T_Buffer = BGUI_CreateRPortBitMap(rp, w, h, FGetDepth(rp))))
             {
@@ -826,7 +805,7 @@ METHOD(StringClassFString, struct smFormatString *, smfs)
       /*
        * Allocate string buffer.
        */
-      if (sb = (UBYTE *)BGUI_AllocPoolMem(CompStrlenF(smfs->smfs_FStr, &smfs->smfs_Arg1)))
+      if ((sb = (UBYTE *)BGUI_AllocPoolMem(CompStrlenF(smfs->smfs_FStr, &smfs->smfs_Arg1))))
       {
          /*
           * Format and set it.
@@ -850,21 +829,21 @@ METHOD_END
  * Class function table.
  */
 STATIC DPFUNC ClassFunc[] = {
-   BASE_RENDER,         (FUNCPTR)StringClassRender,
-   BASE_DIMENSIONS,     (FUNCPTR)StringClassDimensions,
+   { BASE_RENDER,         StringClassRender, },
+   { BASE_DIMENSIONS,     StringClassDimensions, },
 
-   OM_NEW,              (FUNCPTR)StringClassNew,
-   OM_SET,              (FUNCPTR)StringClassSetUpdate,
-   OM_UPDATE,           (FUNCPTR)StringClassSetUpdate,
-   OM_GET,              (FUNCPTR)StringClassGet,
-   OM_DISPOSE,          (FUNCPTR)StringClassDispose,
-   GM_HITTEST,          (FUNCPTR)StringClassHitTest,
-   GM_GOACTIVE,         (FUNCPTR)StringClassGoActive,
-   GM_HANDLEINPUT,      (FUNCPTR)StringClassHandleInput,
-   GM_GOINACTIVE,       (FUNCPTR)StringClassGoInActive,
-   WM_KEYACTIVE,        (FUNCPTR)StringClassKeyActive,
-   SM_FORMAT_STRING,    (FUNCPTR)StringClassFString,
-   DF_END,              NULL
+   { OM_NEW,              StringClassNew, },
+   { OM_SET,              StringClassSetUpdate, },
+   { OM_UPDATE,           StringClassSetUpdate, },
+   { OM_GET,              StringClassGet, },
+   { OM_DISPOSE,          StringClassDispose, },
+   { GM_HITTEST,          StringClassHitTest, },
+   { GM_GOACTIVE,         StringClassGoActive, },
+   { GM_HANDLEINPUT,      StringClassHandleInput, },
+   { GM_GOINACTIVE,       StringClassGoInActive, },
+   { WM_KEYACTIVE,        StringClassKeyActive, },
+   { SM_FORMAT_STRING,    StringClassFString, },
+   { DF_END,              NULL },
 };
 
 /*

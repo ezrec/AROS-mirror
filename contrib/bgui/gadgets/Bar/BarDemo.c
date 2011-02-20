@@ -61,7 +61,7 @@ VOID Tell( UBYTE *fstr, ... )
    if ( StdOut ) VFPrintf( StdOut, fstr, ( ULONG * )&fstr + 1 );
 }
 
-static Object *OpenMainWindow(struct MsgPort *SharedPort,struct Window **main)
+static Object *OpenMainWindow(struct MsgPort *SharedPort,struct Window **win)
 {
    Object            *object=NULL, *p1, *p2, *s1, *s2, *p, *i1, *i2;
 
@@ -165,7 +165,7 @@ static Object *OpenMainWindow(struct MsgPort *SharedPort,struct Window **main)
       /*
       ** Open window.
       **/
-      if((*main=WindowOpen( object ))==NULL)
+      if((*win=WindowOpen( object ))==NULL)
       {
       	DisposeObject(object);
       	object=NULL;
@@ -180,17 +180,17 @@ static VOID StartDemo(void)
    Object         *WA_Main;
    struct MsgPort *SharedPort;
    ULONG       sigmask = 0L, sigrec,rc;
-   struct Window         *main=NULL, *sigwin;
+   struct Window         *win=NULL, *sigwin;
    BOOL        running = TRUE;
 
    /*
    ** Create the shared message port.
    **/
-   if ( SharedPort = CreateMsgPort()) {
+   if (( SharedPort = CreateMsgPort())) {
       /*
       ** Open the main window.
       **/
-      if ( WA_Main = OpenMainWindow(SharedPort,&main)) {
+      if (( WA_Main = OpenMainWindow(SharedPort,&win))) {
          /*
          ** OR signal masks.
          **/
@@ -208,12 +208,12 @@ static VOID StartDemo(void)
             ** Find out the which window signalled us.
             **/
             if ( sigrec & ( 1 << SharedPort->mp_SigBit )) {
-               while ( sigwin = GetSignalWindow( WA_Main )) {
+               while (( sigwin = GetSignalWindow( WA_Main ))) {
 
                   /*
                   ** Main window signal?
                   **/
-                  if ( sigwin == main ) {
+                  if ( sigwin == win ) {
                      /*
                      ** Call the main-window event handler.
                      **/
@@ -272,7 +272,7 @@ int main( int argc, char **argv )
    /*
     * Open BGUI.
     */
-   if ( BGUIBase = OpenLibrary( BGUINAME, BGUIVERSION )) {
+   if (( BGUIBase = OpenLibrary( BGUINAME, BGUIVERSION ))) {
       /*
        * Run the demo.
        */

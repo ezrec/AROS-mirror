@@ -89,7 +89,7 @@ typedef struct td_ {
    ULONG            td_Flags;              /* Flags.                           */
    UBYTE           *td_Text;               /* The text itself.                 */
    ULONG            td_TextID;             /* Text ID.                         */
-   ULONG           *td_Args;               /* Arguments for format string.     */
+   IPTR            *td_Args;               /* Arguments for format string.     */
 }  TD;
 
 #define TEXTF_COPY         (1<<0)          /* Copy text.                       */
@@ -105,7 +105,7 @@ STATIC UBYTE *Text_Get(TD *td)
 
    if (td->td_Text && td->td_Args)
    {
-      if (text = BGUI_AllocPoolMem(CompStrlenF(td->td_Text, td->td_Args)))
+      if ((text = BGUI_AllocPoolMem(CompStrlenF(td->td_Text, td->td_Args))))
       {
 	 DoSPrintF(text, td->td_Text, td->td_Args);
 	 return text;
@@ -135,7 +135,7 @@ static void Text_Set(TD *td, char *text)
 
    if (text && (td->td_Flags & TEXTF_COPY))
    {
-      if (td->td_Text = BGUI_AllocPoolMem(strlen(text)+1))
+      if ((td->td_Text = BGUI_AllocPoolMem(strlen(text)+1)))
       {
 	 strcpy(td->td_Text, text);
 	 td->td_Flags |= TEXTF_COPIED;
@@ -153,13 +153,13 @@ static void Text_Set(TD *td, char *text)
  */
 METHOD(TextClassNew, struct opSet *, ops)
 {
-   ULONG     rc;
+   IPTR      rc;
 
    /*
     * First we let the superclass
     * create an object.
     */
-   if (rc = AsmDoSuperMethodA(cl, obj, (Msg)ops))
+   if ((rc = AsmDoSuperMethodA(cl, obj, (Msg)ops)))
    {
       /*
        * Set attributes.
@@ -178,16 +178,16 @@ METHOD(TextClassGetAttrFlags, struct rmAttr *, ra)
 {
    static struct TagItem chart[] =
    {
-      TEXTA_Text,           CHART_ATTR(td_, td_Text               ) | RAF_CUSTOM | RAF_NOP | RAF_RESIZE,
-      TEXTA_TextID,         CHART_ATTR(td_, td_TextID             ),
-      TEXTA_Args,           CHART_ATTR(td_, td_Args               ) | RAF_RESIZE,
+      { TEXTA_Text,           CHART_ATTR(td_, td_Text               ) | RAF_CUSTOM | RAF_NOP | RAF_RESIZE, },
+      { TEXTA_TextID,         CHART_ATTR(td_, td_TextID             ), },
+      { TEXTA_Args,           CHART_ATTR(td_, td_Args               ) | RAF_RESIZE, },
 
-      TEXTA_CopyText,       CHART_FLAG(td_, td_Flags,  TEXTF_COPY ) | RAF_CUSTOM,
+      { TEXTA_CopyText,       CHART_FLAG(td_, td_Flags,  TEXTF_COPY ) | RAF_CUSTOM, },
 
-      TAG_DONE
+      { TAG_DONE },
    };
 
-   ULONG rc = GetTagData(ra->ra_Attr->ti_Tag, 0, chart);
+   IPTR rc = GetTagData(ra->ra_Attr->ti_Tag, 0, chart);
 
    return rc;
 }
@@ -199,7 +199,7 @@ METHOD_END
  */
 METHOD(TextClassSet, struct rmAttr *, ra)
 {
-   return BGUI_SetAttrChart(cl, obj, ra);
+   return (IPTR)BGUI_SetAttrChart(cl, obj, ra);
 }
 METHOD_END
 ///
@@ -226,7 +226,7 @@ METHOD(TextClassSetCustom, struct rmAttr *, ra)
       };
       break;
    };
-   return 1;
+   return (IPTR)TRUE;
 }
 METHOD_END
 ///
@@ -236,7 +236,7 @@ METHOD_END
  */
 METHOD(TextClassGet, struct rmAttr *, ra)
 {
-   return BGUI_GetAttrChart(cl, obj, ra);
+   return (IPTR)BGUI_GetAttrChart(cl, obj, ra);
 }
 METHOD_END
 ///
@@ -256,7 +256,7 @@ METHOD(TextClassGetCustom, struct rmAttr *, ra)
       STORE td->td_Text;
       break;
    };
-   return 1;
+   return (IPTR)TRUE;
 }
 METHOD_END
 ///
@@ -289,12 +289,12 @@ METHOD(TextClassRender, struct tmRender *, tmr)
    TD                *td = INST_DATA(cl, obj);
    UBYTE             *text;
 
-   if (text = Text_Get(td))
+   if ((text = Text_Get(td)))
    {
       RenderText(tmr->tmr_BInfo, text, tmr->tmr_Bounds);
       if (td->td_Args) BGUI_FreePoolMem(text);
    };
-   return 1;
+   return (IPTR)TRUE;
 }
 METHOD_END
 ///
@@ -307,14 +307,14 @@ METHOD(TextClassDimensions, struct tmDimensions *, tmd)
    TD                *td = INST_DATA(cl, obj);
    UBYTE             *text;
 
-   if (text = Text_Get(td))
+   if ((text = Text_Get(td)))
    {
       if (tmd->tmd_Extent.Width)  *(tmd->tmd_Extent.Width)  = TotalWidth (tmd->tmd_RPort, text);
       if (tmd->tmd_Extent.Height) *(tmd->tmd_Extent.Height) = TotalHeight(tmd->tmd_RPort, text);
 
       if (td->td_Args) BGUI_FreePoolMem(text);
    };
-   return 1;
+   return (IPTR)TRUE;
 }
 METHOD_END
 ///
@@ -323,14 +323,14 @@ METHOD_END
 METHOD(TextClassLocalize, struct bmLocalize *, bml)
 {
    TD        *td = INST_DATA(cl, obj);
-   ULONG      rc = 0;
+   ULONG      rc = FALSE;
    
    if (td->td_TextID)
    {
       Text_Set(td, BGUI_GetCatalogStr(bml->bml_Locale, td->td_TextID, td->td_Text));
-      rc = 1;
+      rc = TRUE;
    }
-   return rc;
+   return (IPTR)rc;
 }
 METHOD_END
 ///
@@ -341,18 +341,18 @@ METHOD_END
  * Class function table.
  */
 STATIC DPFUNC ClassFunc[] = {
-   TEXTM_RENDER,          (APTR)TextClassRender,
-   TEXTM_DIMENSIONS,      (FUNCPTR)TextClassDimensions,
+   { TEXTM_RENDER,          TextClassRender },
+   { TEXTM_DIMENSIONS,      TextClassDimensions },
 
-   RM_GETATTRFLAGS,       (FUNCPTR)TextClassGetAttrFlags,
-   RM_SET,                (FUNCPTR)TextClassSet,
-   RM_SETCUSTOM,          (FUNCPTR)TextClassSetCustom,
-   RM_GET,                (FUNCPTR)TextClassGet,
-   RM_GETCUSTOM,          (FUNCPTR)TextClassGetCustom,
-   OM_NEW,                (FUNCPTR)TextClassNew,
-   OM_DISPOSE,            (FUNCPTR)TextClassDispose,
-   BASE_LOCALIZE,         (FUNCPTR)TextClassLocalize,
-   DF_END,                NULL
+   { RM_GETATTRFLAGS,       TextClassGetAttrFlags },
+   { RM_SET,                TextClassSet },
+   { RM_SETCUSTOM,          TextClassSetCustom },
+   { RM_GET,                TextClassGet },
+   { RM_GETCUSTOM,          TextClassGetCustom },
+   { OM_NEW,                TextClassNew },
+   { OM_DISPOSE,            TextClassDispose },
+   { BASE_LOCALIZE,         TextClassLocalize },
+   { DF_END,                NULL }
 };
 
 /*
@@ -674,10 +674,7 @@ STATIC WORD XPos(struct BaseInfo *bi, UBYTE *text, UWORD *old_style, struct IBox
 /*
  * Determine the total height of the text.
  */
-//makeproto UWORD ASM TotalHeight( REG(a0) struct RastPort *rp, REG(a1) UBYTE *text )
-makeproto ASM REGFUNC2(UWORD, TotalHeight,
-	REGPARAM(A0, struct RastPort *, rp),
-	REGPARAM(A1, UBYTE *, text))
+makeproto UWORD ASM TotalHeight( REG(a0) struct RastPort *rp, REG(a1) UBYTE *text )
 {
    UWORD    nl = 1;
    UBYTE    c;
@@ -690,23 +687,19 @@ makeproto ASM REGFUNC2(UWORD, TotalHeight,
       D(bug("*** NULL text pointer in TotalHeight function (%s,%ld)\n",__FILE__,__LINE__));
       return(0);
    }
-   while (c = *text++)
+   while ((c = *text++))
    {
       if (c == '\n') nl++;
    }
    return (UWORD)(nl * rp->TxHeight);
 }
-REGFUNC_END
 ///
 /// TotalWidth
 /*
  * Determine the total width
  * of the information text.
  */
-//makeproto UWORD ASM TotalWidth(REG(a0) struct RastPort *rp, REG(a1) UBYTE *text)
-makeproto ASM REGFUNC2(UWORD, TotalWidth,
-	REGPARAM(A0, struct RastPort *, rp),
-	REGPARAM(A1, UBYTE *, text))
+makeproto UWORD ASM TotalWidth(REG(a0) struct RastPort *rp, REG(a1) UBYTE *text)
 {
    struct RastPort rport = *rp;
    ULONG           line_len = 0, len = 0;
@@ -790,7 +783,6 @@ makeproto ASM REGFUNC2(UWORD, TotalWidth,
    }
    return (UWORD)len;
 }
-REGFUNC_END
 ///
 /// RenderInfoText
 /*
@@ -801,9 +793,9 @@ makeproto void RenderInfoText(struct RastPort *rp, UBYTE *text, UWORD *pens, str
    struct BaseInfo *bi;
 
 #ifdef DEBUG_BGUI
-   if (bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_RastPort, rp, BI_Pens, pens, TAG_DONE))
+   if ((bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_RastPort, rp, BI_Pens, pens, TAG_DONE)))
 #else
-   if (bi = AllocBaseInfo(BI_RastPort, rp, BI_Pens, pens, TAG_DONE))
+   if ((bi = AllocBaseInfo(BI_RastPort, rp, BI_Pens, pens, TAG_DONE)))
 #endif
    {
       if (!pens) pens = DefDriPens;
@@ -842,7 +834,7 @@ makeproto void RenderText(struct BaseInfo *bi, UBYTE *text, struct IBox *domain)
    struct TextExtent    extent;
    WORD                 xpos, ypos = domain->Top + rp->TxBaseline;
    UWORD                style = FS_NORMAL, dubstyle = FS_NORMAL, flags = 0, i, nl, numc;
-   ULONG                old_a, old_m;
+   ULONG                old_a = 0, old_m;
 
    /*
     * Start as FS_NORMAL.
@@ -929,7 +921,7 @@ makeproto void RenderText(struct BaseInfo *bi, UBYTE *text, struct IBox *domain)
 	    /*
 	     * Render them.
 	     */
-	    if (numc = TextFit(rp, text, i, &extent, NULL, 1, max((LONG)(domain->Width - (xpos - domain->Left)), 0), rp->TxHeight))
+	    if ((numc = TextFit(rp, text, i, &extent, NULL, 1, max((LONG)(domain->Width - (xpos - domain->Left)), 0), rp->TxHeight)))
 	    {
 	       if (flags & TF_SHADOW)
 	       {

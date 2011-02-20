@@ -117,9 +117,13 @@ static ULONG LabelPackTable[] =
 {
    PACK_STARTTABLE(LAB_TAGSTART),
 
+#ifdef __AROS__
+   /* We really shouldn't be packing addresses anyway! */
+#else
    LD_ENTRY(LAB_Label,            ld_Text,              PKCTRL_ULONG),
    LD_ENTRY(LAB_LabelID,          ld_TextID,            PKCTRL_ULONG),
    LD_ENTRY(LAB_TextAttr,         ld_TextAttr,          PKCTRL_ULONG),
+#endif
    LD_ENTRY(LAB_Style,            ld_Style,             PKCTRL_UWORD),
    LD_ENTRY(LAB_SelectedStyle,    ld_SelStyle,          PKCTRL_UWORD),
    LD_ENTRY(LAB_Place,            ld_Place,             PKCTRL_UBYTE),
@@ -152,7 +156,7 @@ METHOD(LabelClassNew, struct opSet *, ops)
     * First we let the superclass
     * create an object.
     */
-   if (rc = AsmDoSuperMethodA(cl, obj, (Msg)ops))
+   if ((rc = AsmDoSuperMethodA(cl, obj, (Msg)ops)))
    {
       /*
        * Get to the instance data.
@@ -174,11 +178,7 @@ METHOD(LabelClassNew, struct opSet *, ops)
        */
       AsmCoerceMethod(cl, (Object *)rc, RM_SETM, ops->ops_AttrList, RAF_INITIAL);
 
-#if __AROS__
-#warning A comment within a comment makes gcc puke...
 #if 0
-
-      /*
       if (fail)
       {
 	 /*
@@ -187,8 +187,6 @@ METHOD(LabelClassNew, struct opSet *, ops)
 	 AsmCoerceMethod(cl, (Object *)rc, OM_DISPOSE);
 	 rc = 0;
       }
-      */
-#endif
 #endif
       // ld->ld_Flags |= LABF_FLIP_XY;
 
@@ -205,29 +203,29 @@ METHOD(LabelClassGetAttrFlags, struct rmAttr *, ra)
 {
    static struct TagItem chart[] =
    {
-      LAB_Label,            CHART_ATTR(ld_, ld_Text           ) | RAF_RESIZE,
-      LAB_LabelID,          CHART_ATTR(ld_, ld_TextID         ),
-      LAB_TextAttr,         CHART_ATTR(ld_, ld_TextAttr       ) | RAF_CUSTOM | RAF_RESIZE,
-      LAB_Style,            CHART_ATTR(ld_, ld_Style          ) | RAF_REDRAW,
-      LAB_SelectedStyle,    CHART_ATTR(ld_, ld_SelStyle       ) | RAF_REDRAW,
-      LAB_Place,            CHART_ATTR(ld_, ld_Place          ) | RAF_REDRAW,
-      LAB_Underscore,       CHART_ATTR(ld_, ld_UnderscoreChar ) | RAF_CUSTOM,
-      LAB_Template,         CHART_ATTR(ld_, ld_Flags          ) | RAF_CUSTOM | RAF_ADDRESS,
-      IMAGE_ErasePen,       CHART_ATTR(ld_, ld_ErasePen       ),
-      IMAGE_TextFont,       CHART_ATTR(ld_, ld_Font           ) | RAF_CUSTOM | RAF_NOP,
-      LAB_Pen,              CHART_ATTR(ld_, ld_Pen            ) | RAF_CUSTOM | RAF_NOP,
-      LAB_DriPen,           CHART_ATTR(ld_, ld_Pen            ) | RAF_CUSTOM | RAF_NOP,
-      LAB_SelectedPen,      CHART_ATTR(ld_, ld_SelPen         ) | RAF_CUSTOM | RAF_NOP,
-      LAB_SelectedDriPen,   CHART_ATTR(ld_, ld_SelPen         ) | RAF_CUSTOM | RAF_NOP,
+      { LAB_Label,            CHART_ATTR(ld_, ld_Text           ) | RAF_RESIZE, },
+      { LAB_LabelID,          CHART_ATTR(ld_, ld_TextID         ), },
+      { LAB_TextAttr,         CHART_ATTR(ld_, ld_TextAttr       ) | RAF_CUSTOM | RAF_RESIZE, },
+      { LAB_Style,            CHART_ATTR(ld_, ld_Style          ) | RAF_REDRAW, },
+      { LAB_SelectedStyle,    CHART_ATTR(ld_, ld_SelStyle       ) | RAF_REDRAW, },
+      { LAB_Place,            CHART_ATTR(ld_, ld_Place          ) | RAF_REDRAW, },
+      { LAB_Underscore,       CHART_ATTR(ld_, ld_UnderscoreChar ) | RAF_CUSTOM, },
+      { LAB_Template,         CHART_ATTR(ld_, ld_Flags          ) | RAF_CUSTOM | RAF_ADDRESS, },
+      { IMAGE_ErasePen,       CHART_ATTR(ld_, ld_ErasePen       ), },
+      { IMAGE_TextFont,       CHART_ATTR(ld_, ld_Font           ) | RAF_CUSTOM | RAF_NOP, },
+      { LAB_Pen,              CHART_ATTR(ld_, ld_Pen            ) | RAF_CUSTOM | RAF_NOP, },
+      { LAB_DriPen,           CHART_ATTR(ld_, ld_Pen            ) | RAF_CUSTOM | RAF_NOP, },
+      { LAB_SelectedPen,      CHART_ATTR(ld_, ld_SelPen         ) | RAF_CUSTOM | RAF_NOP, },
+      { LAB_SelectedDriPen,   CHART_ATTR(ld_, ld_SelPen         ) | RAF_CUSTOM | RAF_NOP, },
 
-      LAB_Highlight,        CHART_FLAG(ld_, ld_Flags, LABF_HIGHLIGHT  ) | RAF_REDRAW,
-      LAB_HighUScore,       CHART_FLAG(ld_, ld_Flags, LABF_HIGH_USCORE) | RAF_REDRAW,
-      LAB_FlipX,            CHART_FLAG(ld_, ld_Flags, LABF_FLIP_X     ) | RAF_REDRAW,
-      LAB_FlipY,            CHART_FLAG(ld_, ld_Flags, LABF_FLIP_Y     ) | RAF_REDRAW,
-      LAB_FlipXY,           CHART_FLAG(ld_, ld_Flags, LABF_FLIP_XY    ) | RAF_RESIZE,
-      LAB_NoPlaceIn,        CHART_FLAG(ld_, ld_Flags, LABF_NOPLACEIN  ) | RAF_CUSTOM,
+      { LAB_Highlight,        CHART_FLAG(ld_, ld_Flags, LABF_HIGHLIGHT  ) | RAF_REDRAW, },
+      { LAB_HighUScore,       CHART_FLAG(ld_, ld_Flags, LABF_HIGH_USCORE) | RAF_REDRAW, },
+      { LAB_FlipX,            CHART_FLAG(ld_, ld_Flags, LABF_FLIP_X     ) | RAF_REDRAW, },
+      { LAB_FlipY,            CHART_FLAG(ld_, ld_Flags, LABF_FLIP_Y     ) | RAF_REDRAW, },
+      { LAB_FlipXY,           CHART_FLAG(ld_, ld_Flags, LABF_FLIP_XY    ) | RAF_RESIZE, },
+      { LAB_NoPlaceIn,        CHART_FLAG(ld_, ld_Flags, LABF_NOPLACEIN  ) | RAF_CUSTOM, },
 
-      TAG_DONE
+      { TAG_DONE },
    };
 
    ULONG rc = GetTagData(ra->ra_Attr->ti_Tag, 0, chart);
@@ -262,7 +260,7 @@ METHOD(LabelClassSetCustom, struct rmAttr *, ra)
    case LAB_Template:
       if (data)
       {
-	 attr = NULL;
+	 attr = 0;
 	 Get_Attr((Object *)data, LAB_Template, &attr);
 	 if (attr)
 	 {
@@ -369,7 +367,7 @@ METHOD(LabelClassGet, struct opGet *, opg)
       case LAB_KeyChar:
 	 if (ld->ld_Text && ld->ld_UnderscoreChar)
 	 {
-	    if (u = strchr(ld->ld_Text, ld->ld_UnderscoreChar))
+	    if ((u = strchr(ld->ld_Text, ld->ld_UnderscoreChar)))
 	       STORE (u + 1);
 	 };
 	 break;
@@ -456,11 +454,11 @@ METHOD(LabelClassDrawErase, struct impDraw *, dr)
    /*
     * Only do the label when it actually exists.
     */
-   if (s = ld->ld_Text)
+   if ((s = ld->ld_Text))
    {
       text = BGUI_AllocPoolMem(strlen(s) + 30);
    };
-   if (d = text)
+   if ((d = text))
    {
       rc = 1;
 
@@ -571,7 +569,7 @@ METHOD(LabelClassDrawErase, struct impDraw *, dr)
       *d++ = '\33';                                /* 2 */
       *d++ = '\33';
 
-      while (c = *s++)
+      while ((c = *s++))
       {
 	 if (c == ld->ld_UnderscoreChar)           /* 5 */
 	 {
@@ -770,10 +768,10 @@ METHOD(LabelClassDrawErase, struct impDraw *, dr)
 	    {
 	       rw = ((tw + 15) >> 4) << 4;
 	       
-	       if (chunky1 = BGUI_AllocPoolMem(rw * th))
+	       if ((chunky1 = BGUI_AllocPoolMem(rw * th)))
 	       {
 		  trp = rrp;
-		  if (trp.BitMap = BGUI_AllocBitMap(rw, 1, FGetDepth(&rrp), BMF_STANDARD, dr->imp_RPort->BitMap))
+		  if ((trp.BitMap = BGUI_AllocBitMap(rw, 1, FGetDepth(&rrp), BMF_STANDARD, dr->imp_RPort->BitMap)))
 		  {
 		     ReadPixelArray8(&rrp, 0, 0, tw - 1, th - 1, chunky1, &trp);
 		     BGUI_FreeBitMap(rrp.BitMap);
@@ -818,7 +816,7 @@ METHOD(LabelClassDrawErase, struct impDraw *, dr)
 			chunky2 = chunky1;
 			rh = ((th + 15) >> 4) << 4;
 
-			if (chunky1 = BGUI_AllocPoolMem(tw * rh))
+			if ((chunky1 = BGUI_AllocPoolMem(tw * rh)))
 			{
 			   for (i1 = 0; i1 < th; i1++)
 			   {
@@ -933,19 +931,19 @@ METHOD_END
  * Class function table.
  */
 STATIC DPFUNC ClassFunc[] = {
-   RM_SET,                (FUNCPTR)LabelClassSet,
-   RM_SETCUSTOM,          (FUNCPTR)LabelClassSetCustom,
-   RM_GETATTRFLAGS,       (FUNCPTR)LabelClassGetAttrFlags,
-   IM_DRAW,               (FUNCPTR)LabelClassDrawErase,
+   { RM_SET,                LabelClassSet, },
+   { RM_SETCUSTOM,          LabelClassSetCustom, },
+   { RM_GETATTRFLAGS,       LabelClassGetAttrFlags, },
+   { IM_DRAW,               LabelClassDrawErase, },
 
-   OM_GET,                (FUNCPTR)LabelClassGet,
-   OM_NEW,                (FUNCPTR)LabelClassNew,
-   OM_DISPOSE,            (FUNCPTR)LabelClassDispose,
-   IM_EXTENT,             (FUNCPTR)LabelClassDrawErase,
-   IM_ERASE,              (FUNCPTR)LabelClassDrawErase,
-   BASE_LOCALIZE,         (FUNCPTR)LabelClassLocalize,
-   BASE_DIMENSIONS,       (FUNCPTR)LabelClassDimensions,
-   DF_END,                NULL
+   { OM_GET,                LabelClassGet, },
+   { OM_NEW,                LabelClassNew, },
+   { OM_DISPOSE,            LabelClassDispose, },
+   { IM_EXTENT,             LabelClassDrawErase, },
+   { IM_ERASE,              LabelClassDrawErase, },
+   { BASE_LOCALIZE,         LabelClassLocalize, },
+   { BASE_DIMENSIONS,       LabelClassDimensions, },
+   { DF_END },
 };
 
 /*

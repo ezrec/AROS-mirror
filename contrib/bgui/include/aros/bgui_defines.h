@@ -28,7 +28,7 @@
 	AROS_LC3(ULONG, BGUI_RequestA, 		\
 	AROS_LCA(struct Window *, win, A0), 	\
 	AROS_LCA(struct bguiRequest *, estruct, A1), \
-	AROS_LCA(ULONG * , args, A2), 		\
+	AROS_LCA(IPTR * , args, A2), 		\
 	struct Library *, BGUIBase, 7, BGUI)
 
 #define BGUI_Help(win,name,node,line) 		\
@@ -67,13 +67,13 @@
 	AROS_LCA(APTR, mem, A0), 		\
 	struct Library *, BGUIBase, 13, BGUI)
 
-#define BGUI_AllocBitMap(width,height,depth,flags,friend) \
+#define BGUI_AllocBitMap(width,height,depth,flags,Friend) \
 	AROS_LC5(struct BitMap *, BGUI_AllocBitMap, \
 	AROS_LCA(ULONG, width, D0), 		\
 	AROS_LCA(ULONG, height, D1), 		\
 	AROS_LCA(ULONG, depth, D2), 		\
 	AROS_LCA(ULONG, flags, D3), 		\
-	AROS_LCA(struct BitMap *, friend, A0), 	\
+	AROS_LCA(struct BitMap *, Friend, A0), 	\
 	struct Library *, BGUIBase, 14, BGUI)
 
 #define BGUI_FreeBitMap(bitmap) 		\

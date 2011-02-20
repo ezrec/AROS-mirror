@@ -84,7 +84,7 @@ METHOD(IClassNew, struct opSet *, ops)
    /*
     * Let the superclass create us an object.
     */
-   if (rc = NewSuperObject(cl, obj, tags))
+   if ((rc = NewSuperObject(cl, obj, tags)))
    {
       id = INST_DATA(cl, rc);
 
@@ -142,8 +142,9 @@ METHOD_END
 METHOD(IClassSetUpdate, struct opUpdate *, opu)
 {
    ID             *id = INST_DATA(cl, obj);
-   struct TagItem *tstate = opu->opu_AttrList, *tag;
    ULONG           data;
+   const struct TagItem *tstate = opu->opu_AttrList;
+   struct TagItem *tag;
    BOOL            update = FALSE;
    LONG            old_level = id->id_Level;
    UBYTE          *full_format;
@@ -156,9 +157,9 @@ METHOD(IClassSetUpdate, struct opUpdate *, opu)
    /*
     * Set attributes.
     */
-   BGUI_PackStructureTags((APTR)id, IndicatorPackTable, tstate);
+   BGUI_PackStructureTags((APTR)id, IndicatorPackTable, opu->opu_AttrList);
    
-   while (tag = NextTagItem(&tstate))
+   while ((tag = NextTagItem(&tstate)))
    {
       data = tag->ti_Data;       
    
@@ -173,9 +174,9 @@ METHOD(IClassSetUpdate, struct opUpdate *, opu)
          break;
 
       case INDIC_FormatString:
-         if (full_format = BGUI_AllocPoolMem(3 + strlen((UBYTE *)data)))
+         if ((full_format = BGUI_AllocPoolMem(3 + strlen((UBYTE *)data))))
          {
-            sprintf(full_format, "\033l%s", data);
+            sprintf(full_format, "\033l%s", (UBYTE *)data);
             DoSetMethodNG(id->id_Text, TEXTA_Text, full_format, TEXTA_CopyText, TRUE, TAG_DONE);
             BGUI_FreePoolMem(full_format);
          };
@@ -329,16 +330,16 @@ METHOD_END
  */
 STATIC DPFUNC ClassFunc[] =
 {
-   BASE_RENDER,      (FUNCPTR)IClassRender,
-   BASE_DIMENSIONS,  (FUNCPTR)IClassDimensions,
+   { BASE_RENDER,      IClassRender, },
+   { BASE_DIMENSIONS,  IClassDimensions, },
 
-   OM_NEW,           (FUNCPTR)IClassNew,
-   OM_SET,           (FUNCPTR)IClassSetUpdate,
-   OM_UPDATE,        (FUNCPTR)IClassSetUpdate,
-   OM_GET,           (FUNCPTR)IClassGet,
-   OM_DISPOSE,       (FUNCPTR)IClassDispose,
-   GM_HITTEST,       (FUNCPTR)IClassHitTest,
-   DF_END,           NULL
+   { OM_NEW,           IClassNew, },
+   { OM_SET,           IClassSetUpdate, },
+   { OM_UPDATE,        IClassSetUpdate, },
+   { OM_GET,           IClassGet, },
+   { OM_DISPOSE,       IClassDispose, },
+   { GM_HITTEST,       IClassHitTest, },
+   { DF_END,           NULL },
 };
 
 /*

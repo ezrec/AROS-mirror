@@ -153,7 +153,7 @@ void StartDemo(void)
 		/*
 		**      Open the window.
 		**/
-		if (w = WindowOpen(Win))
+		if ((w = WindowOpen(Win)))
 		{
 			/*
 			**      Get window signal.
@@ -182,7 +182,7 @@ void StartDemo(void)
 						**      When this routine returns we
 						**      evaluate the return code.
 						**/
-						if (rc = RenderMandel(w, area_box, Area, Win))
+						if ((rc = RenderMandel(w, area_box, Area, Win)))
 							goto handleMsg;
 
 						break;

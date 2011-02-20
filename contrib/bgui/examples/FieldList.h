@@ -78,17 +78,15 @@ typedef struct {
 /*
  *	Set attributes.
  */
-//STATIC ASM VOID SetFLAttr( REG(a0) FLD *fld, REG(a1) struct TagItem *attr )
-STATIC ASM REGFUNC2(VOID, SetFLAttr,
-	REGPARAM(A0, FLD *, fld),
-	REGPARAM(A1, struct TagItem *, attr))
+STATIC ASM VOID SetFLAttr( REG(a0) FLD *fld, REG(a1) struct TagItem *attr )
 {
-	struct TagItem		*tag, *tstate = attr;
+	struct TagItem		*tag;
+	const struct TagItem *tstate = attr;
 
 	/*
 	 *	Scan attribute list.
 	 */
-	while ( tag = NextTagItem( &tstate )) {
+	while (( tag = NextTagItem( &tstate ))) {
 		switch ( tag->ti_Tag ) {
 
 			case	FL_AcceptDrop:
@@ -101,7 +99,6 @@ STATIC ASM REGFUNC2(VOID, SetFLAttr,
 		}
 	}
 }
-REGFUNC_END
 
 /*
  *	Class dispatcher. Remember! NOSTACKCHECK or __interrupt for
@@ -132,7 +129,7 @@ REGFUNC3(,DispatchFL,
 			/*
 			 *	Let the superclass make the object.
 			 */
-			if ( rc = DoSuperMethodA( cl, obj, msg )) {
+			if (( rc = DoSuperMethodA( cl, obj, msg ))) {
 				/*
 				 *	Get instance data.
 				 */
@@ -230,7 +227,7 @@ REGFUNC3(,DispatchFL,
 			 *	Simply pick up all selected entries
 			 *	from the dragged object.
 			 */
-			while ( entry = ( APTR )FirstSelected( DROP( msg )->bmd_Source )) {
+			while (( entry = ( APTR )FirstSelected( DROP( msg )->bmd_Source ))) {
 				/*
 				 *	Set it on ourselves. We insert it when we are
 				 *	not sortable. We add them sorted when we are
@@ -280,11 +277,11 @@ Class *InitFLClass( void )
 	 *	Obtain the ListviewClass pointer which
 	 *	will be our superclass.
 	 */
-	if ( super = BGUI_GetClassPtr( BGUI_LISTVIEW_GADGET )) {
+	if (( super = BGUI_GetClassPtr( BGUI_LISTVIEW_GADGET ))) {
 		/*
 		 *	Create the class.
 		 */
-		if ( cl = MakeClass( NULL, NULL, super, sizeof( FLD ), 0L ))
+		if (( cl = MakeClass( NULL, NULL, super, sizeof( FLD ), 0L )))
 			/*
 			 *	Setup dispatcher.
 			 */

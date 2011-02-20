@@ -123,17 +123,18 @@ typedef struct {
 
 /// SetGroupNodeAttrs
 
-METHOD(SetGroupNodeAttrs, struct opSet *, ops)
+STATIC IPTR ASM SetGroupNodeAttrs(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct opSet *ops)
 {
    MD              *md = INST_DATA(cl, obj);
-   struct TagItem  *tstate = ops->ops_AttrList, *tag;
    ULONG            data;
+   const struct TagItem  *tstate = ops->ops_AttrList;
+   struct TagItem  *tag;
    BOOL             relayout = FALSE;
 
    /*
     * Scan LGO attributes.
     */
-   while (tag = NextTagItem(&tstate))
+   while ((tag = NextTagItem(&tstate)))
    {
       data = tag->ti_Data;
       switch (tag->ti_Tag)
@@ -235,7 +236,6 @@ METHOD(SetGroupNodeAttrs, struct opSet *, ops)
 
    return 1;
 }
-METHOD_END
 ///
 
 /// OM_NEW
@@ -251,7 +251,7 @@ METHOD(GroupNodeClassNew, struct opSet *, ops)
     * First we let the superclass
     * create the object.
     */
-   if (rc = AsmDoSuperMethodA(cl, obj, (Msg)ops))
+   if ((rc = AsmDoSuperMethodA(cl, obj, (Msg)ops)))
    {
       md                 = INST_DATA(cl, rc);
       md->md_Weight      = DEFAULT_WEIGHT;
@@ -275,7 +275,7 @@ METHOD(GroupNodeClassNew, struct opSet *, ops)
 
       AsmCoerceMethod(cl, (Object *)rc, OM_DISPOSE);
    }
-   return NULL;
+   return 0;
 }
 METHOD_END
 ///
@@ -353,11 +353,11 @@ METHOD_END
  * Function table.
  */
 STATIC DPFUNC ClassFuncNode[] = {
-   OM_NEW,              (FUNCPTR)GroupNodeClassNew,
-   OM_SET,              (FUNCPTR)GroupNodeClassSet,
-   OM_GET,              (FUNCPTR)GroupNodeClassGet,
-   RM_REMOVE,           (FUNCPTR)GroupNodeClassRemove,
-   DF_END,              NULL
+   { OM_NEW,              GroupNodeClassNew },
+   { OM_SET,              GroupNodeClassSet },
+   { OM_GET,              GroupNodeClassGet },
+   { RM_REMOVE,           GroupNodeClassRemove },
+   { DF_END },
 };
 
 static Class *GMClass = NULL;
@@ -418,11 +418,7 @@ typedef struct {
 
 /// NextGroupNode
 
-//static ASM MD *NextGroupNode(REG(a0) GD *gd, REG(a1) Object **node, REG(d0) ULONG flags)
-static ASM REGFUNC3(MD *, NextGroupNode,
-	REGPARAM(A0, GD *, gd),
-	REGPARAM(A1, Object **, node),
-	REGPARAM(D0, ULONG, flags))
+STATIC ASM MD *NextGroupNode(REG(a0) GD *gd, REG(a1) Object **node, REG(d0) ULONG flags)
 {
    Object    *next;
    MD        *md;
@@ -440,15 +436,10 @@ static ASM REGFUNC3(MD *, NextGroupNode,
 
    return md;
 }
-REGFUNC_END
 ///
 /// GroupNode
 
-//STATIC ASM Object *GroupNode(REG(a0) GD *gd, REG(d0) int i, REG(d1) int j)
-STATIC ASM REGFUNC3(Object *, GroupNode,
-	REGPARAM(A0, GD *, gd),
-	REGPARAM(D0, int, i),
-	REGPARAM(D1, int, j))
+STATIC ASM Object *GroupNode(REG(a0) GD *gd, REG(d0) int i, REG(d1) int j)
 {
    switch (gd->gd_Style)
    {
@@ -466,7 +457,7 @@ STATIC ASM REGFUNC3(Object *, GroupNode,
 
    return NULL;
 }
-REGFUNC_END
+
 ///
 /// VSpace, HSpace
 
@@ -499,10 +490,7 @@ static UWORD HSpace(UWORD space)
 ///
 /// FindObNode
 
-//STATIC ASM Object *FindObNode(REG(a0) GD *gd, REG(a1) Object *find)
-STATIC ASM REGFUNC2(Object *, FindObNode,
-	REGPARAM(A0, GD *, gd),
-	REGPARAM(A1, Object *, find))
+STATIC ASM Object *FindObNode(REG(a0) GD *gd, REG(a1) Object *find)
 {
    Object         *m = NULL;
    MD             *md;
@@ -512,7 +500,7 @@ STATIC ASM REGFUNC2(Object *, FindObNode,
       /*
        * Try to locate the object.
        */
-      while (md = NextGroupNode(gd, &m, 0))
+      while ((md = NextGroupNode(gd, &m, 0)))
       {
          /*
           * Is this the one?
@@ -522,7 +510,6 @@ STATIC ASM REGFUNC2(Object *, FindObNode,
    };
    return NULL;
 }
-REGFUNC_END
 ///
 
 /// GROUPM_NEWMEMBER
@@ -539,11 +526,11 @@ METHOD_END
  */
 STATIC Object *NewGroupMember(Object *obj, Object *member, struct TagItem *attrs)
 {
-   ULONG tags[6], *t = tags;
+   struct TagItem tags[3], *t = tags;
 
-   *t++ = LGO_Group;       *t++ = (ULONG)obj;
-   *t++ = LGO_Object;      *t++ = (ULONG)member;
-   *t++ = TAG_MORE;        *t++ = (ULONG)attrs;
+   t->ti_Tag = LGO_Group;  t->ti_Data = (IPTR)obj; t++;
+   t->ti_Tag = LGO_Object; t->ti_Data = (IPTR)member; t++;
+   t->ti_Tag = TAG_MORE;   t->ti_Data = (IPTR)attrs;
 
    return (Object *)AsmDoMethod(obj, GROUPM_NEWMEMBER, tags, NULL);
 }
@@ -554,11 +541,11 @@ STATIC Object *NewGroupMember(Object *obj, Object *member, struct TagItem *attrs
  */
 STATIC Object *NewSpaceObject(Object *obj, ULONG weight)
 {
-   ULONG tags[6], *t = tags;
+   struct TagItem tags[3], *t = tags;
 
-   *t++ = LGO_Group;       *t++ = (ULONG)obj;
-   *t++ = LGO_SpaceObject; *t++ = (ULONG)weight;
-   *t++ = TAG_DONE;
+   t->ti_Tag = LGO_Group;  t->ti_Data = (IPTR)obj; t++;
+   t->ti_Tag = LGO_Weight; t->ti_Data = (IPTR)weight; t++;
+   t->ti_Tag = TAG_DONE;
 
    return (Object *)AsmDoMethod(obj, GROUPM_NEWMEMBER, tags, NULL);
 }
@@ -567,11 +554,7 @@ STATIC Object *NewSpaceObject(Object *obj, ULONG weight)
 /*
  * Pass an attribute on to the members.
  */
-//STATIC ASM void PassAttr(REG(a0) GD *gd, REG(a1) struct TagItem *tag, REG(a2) struct GadgetInfo *gi)
-STATIC ASM REGFUNC3(void, PassAttr,
-	REGPARAM(A0, GD *, gd),
-	REGPARAM(A1, struct TagItem *, tag),
-	REGPARAM(A2, struct GadgetInfo *, gi))
+STATIC ASM void PassAttr(REG(a0) GD *gd, REG(a1) struct TagItem *tag, REG(a2) struct GadgetInfo *gi)
 {
    Object         *m;
    MD             *md;
@@ -587,15 +570,14 @@ STATIC ASM REGFUNC3(void, PassAttr,
    ops.ops_GInfo    = gi;
 
    m = NULL;
-   while (md = NextGroupNode(gd, &m, MDF_HIDDEN | MDF_SPACING))
+   while ((md = NextGroupNode(gd, &m, MDF_HIDDEN | MDF_SPACING)))
       AsmDoMethodA(md->md_Object, (Msg)&ops);
 }
-REGFUNC_END
 
 /*
  * Set one or more attributes.
  */
-METHOD(GroupSetAttrs, struct opSet *, ops)
+IPTR ASM GroupSetAttrs(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct opSet *ops)
 {
    GD                *gd = INST_DATA(cl, obj);
    BC                *bc = BASE_DATA(obj);
@@ -611,7 +593,7 @@ METHOD(GroupSetAttrs, struct opSet *, ops)
    /*
     * Pass on some tags.
     */
-   while (tag = BGUI_NextTagItem(&tstate))
+   while ((tag = BGUI_NextTagItem(&tstate)))
    {
       data = tag->ti_Data;
       switch (tag->ti_Tag)
@@ -710,7 +692,6 @@ METHOD(GroupSetAttrs, struct opSet *, ops)
    };
    return 1;
 }
-METHOD_END
 ///
 
 /// OM_NEW
@@ -731,7 +712,7 @@ METHOD(GroupClassNew, struct opSet *, ops)
    /*
     * Let the superclass make an object.
     */
-   if (rc = NewSuperObject(cl, obj, tags))
+   if ((rc = NewSuperObject(cl, obj, tags)))
    {
       /*
        * Obtain instance data.
@@ -750,7 +731,7 @@ METHOD(GroupClassNew, struct opSet *, ops)
       /*
        * Initialize the rest of the instance data.
        */
-      while (tag = BGUI_NextTagItem(&tstate))
+      while ((tag = BGUI_NextTagItem(&tstate)))
       {
          data = tag->ti_Data;
 
@@ -789,7 +770,7 @@ METHOD(GroupClassNew, struct opSet *, ops)
             break;
 
          case GROUP_SpaceObject:
-            if (m = NewSpaceObject((Object *)rc, data))
+            if ((m = NewSpaceObject((Object *)rc, data)))
             {
                AsmDoMethod(m, RM_ADDTAIL, &gd->gd_Members);
                break;
@@ -800,7 +781,7 @@ METHOD(GroupClassNew, struct opSet *, ops)
          case GROUP_Member:
             if (data)
             {
-               if (m = NewGroupMember((Object *)rc, (Object *)data, tag + 1))
+               if ((m = NewGroupMember((Object *)rc, (Object *)data, tag + 1)))
                {
                   AsmDoMethod(m, RM_ADDTAIL, &gd->gd_Members);
                   break;
@@ -1144,7 +1125,7 @@ METHOD(GroupClassLayout, struct bmLayout *, bml)
 
          for (r = 0, rd = gd->gd_RD; r < gd->gd_Rows; r++, rd++)
          {
-            if (m = GroupNode(gd, r, c))
+            if ((m = GroupNode(gd, r, c)))
             {
                md = MEMBER_DATA(m);
 
@@ -1267,7 +1248,7 @@ WW(kprintf("***GroupClassRender*** obj = %x\n", obj));
    };
 
    m = NULL;
-   while (md = NextGroupNode(gd, &m, MDF_HIDDEN | MDF_SPACING))
+   while ((md = NextGroupNode(gd, &m, MDF_HIDDEN | MDF_SPACING)))
    {
       /*
        * Setup object position/dimensions and render it.
@@ -1278,7 +1259,7 @@ WW(kprintf("***GroupClassRender*** obj = %x\n", obj));
 
       if (subrender)
       {
-         if (sr = BGUI_AllocPoolMem(sizeof(struct SubRender)))
+         if ((sr = BGUI_AllocPoolMem(sizeof(struct SubRender))))
          {
             proc = CreateNewProcTags(NP_Entry, subrender_task, NP_Name, "BGUI Render", TAG_DONE);
 
@@ -1311,7 +1292,7 @@ WW(kprintf("***GroupClassRender*** obj = %x\n", obj));
       while (render_count)
       {
          WaitPort(msgport);
-         while (sr = (struct SubRender *)GetMsg(msgport))
+         while ((sr = (struct SubRender *)GetMsg(msgport)))
          {
             BGUI_FreePoolMem(sr);
             render_count--;
@@ -1338,7 +1319,7 @@ METHOD(GroupClassHitTest, struct gpHitTest *, gph)
     * See if a member was "hit".
     */
    m = NULL;
-   while (md = NextGroupNode(gd, &m, MDF_HIDDEN | MDF_SPACING))
+   while ((md = NextGroupNode(gd, &m, MDF_HIDDEN | MDF_SPACING)))
    {
       /*
        * This member hit?
@@ -1432,7 +1413,7 @@ METHOD(GroupClassDispose, Msg, msg)
    /*
     * Remove and dispose of all members.
     */
-   while (m = ListHeadObject((struct List *)&gd->gd_Members))
+   while ((m = ListHeadObject((struct List *)&gd->gd_Members)))
    {
       md = MEMBER_DATA(m);
       o  = md->md_Object;
@@ -1470,7 +1451,7 @@ METHOD(GroupClassAddMember, struct grmAddMember *, grma)
    /*
     * Allocate and initialize node.
     */
-   if (m = NewGroupMember(obj, grma->grma_Member, (struct TagItem *)&grma->grma_Attr))
+   if ((m = NewGroupMember(obj, grma->grma_Member, (struct TagItem *)&grma->grma_Attr)))
    {
       /*
        * Add it to the list.
@@ -1523,7 +1504,7 @@ METHOD(GroupClassInsert, struct grmInsertMember *, grmi)
    /*
     * Allocate and initialize node.
     */
-   if (m = NewGroupMember(obj, grmi->grmi_Member, (struct TagItem *)&grmi->grmi_Attr))
+   if ((m = NewGroupMember(obj, grmi->grmi_Member, (struct TagItem *)&grmi->grmi_Attr)))
    {
       AsmDoMethod(m, RM_INSERT, &gd->gd_Members, FindObNode(gd, grmi->grmi_Pred));
 
@@ -1565,12 +1546,12 @@ METHOD(GroupClassReplace, struct grmReplaceMember *, grrm)
    /*
     * Allocate and initialize node.
     */
-   if (m = NewGroupMember(obj, grrm->grrm_MemberB, (struct TagItem *)&grrm->grrm_Attr))
+   if ((m = NewGroupMember(obj, grrm->grrm_MemberB, (struct TagItem *)&grrm->grrm_Attr)))
    {
       /*
        * Find member to replace.
        */
-      if (old = FindObNode(gd, grrm->grrm_MemberA))
+      if ((old = FindObNode(gd, grrm->grrm_MemberA)))
       {
          AsmDoMethod(m, RM_INSERT, &gd->gd_Members, old);
          AsmDoMethod(old, RM_REMOVE);
@@ -1615,7 +1596,7 @@ METHOD(GroupClassRemMember, struct grmRemMember *, grmr)
    GD             *gd = INST_DATA(cl, obj);
    Object         *m;
 
-   if (m = FindObNode(gd, grmr->grmr_Member))
+   if ((m = FindObNode(gd, grmr->grmr_Member)))
    {
       /*
        * Remove and dealocate it.
@@ -1629,7 +1610,7 @@ METHOD(GroupClassRemMember, struct grmRemMember *, grmr)
 
       return (ULONG)grmr->grmr_Member;
    }
-   return NULL;
+   return (IPTR)NULL;
 }
 METHOD_END
 ///
@@ -1669,7 +1650,7 @@ METHOD(GroupClassObtainMembers, struct gmObtainMembers *, gmom)
 
    n = 0;
    m = NULL;
-   while (md = NextGroupNode(gd, &m, (flags & GROMF_VISIBLE) ? MDF_HIDDEN : 0))
+   while ((md = NextGroupNode(gd, &m, (flags & GROMF_VISIBLE) ? MDF_HIDDEN : 0)))
       n++;
 
    o = BGUI_AllocPoolMem(sizeof(Object *) * (n + 2));
@@ -1683,7 +1664,7 @@ METHOD(GroupClassObtainMembers, struct gmObtainMembers *, gmom)
    *o++ = obj;  // Marker for safety.
 
    m = NULL;
-   while (md = NextGroupNode(gd, &m, (flags & GROMF_VISIBLE) ? MDF_HIDDEN : 0))
+   while ((md = NextGroupNode(gd, &m, (flags & GROMF_VISIBLE) ? MDF_HIDDEN : 0)))
    {
       if (flags & GROMF_OBJECTS)
          *o++ = md->md_Object;
@@ -1692,7 +1673,7 @@ METHOD(GroupClassObtainMembers, struct gmObtainMembers *, gmom)
    };
 
    if (gmom->gmom_Number) *(gmom->gmom_Number) = n;
-   return (ULONG)(o - n);
+   return (IPTR)(o - n);
 }
 METHOD_END
 ///
@@ -1724,9 +1705,7 @@ METHOD_END
 ///
 /// RelayoutGroup
 
-//makeproto ASM ULONG RelayoutGroup(REG(a0) Object *obj)
-makeproto ASM REGFUNC1(ULONG, RelayoutGroup,
-	REGPARAM(A0, Object *, obj))
+makeproto ASM ULONG RelayoutGroup(REG(a0) Object *obj)
 {
    BC                 *bc = BASE_DATA(obj);
    struct Window      *w = NULL;
@@ -1752,14 +1731,13 @@ WW(kprintf("** GroupClass_RelayoutGrop: has WINDOW_Window --> sending BASE_RELAY
    };
    return rc;
 }
-REGFUNC_END
 ///
 
 /// MemberDimensions
 /*
  * Calculate the minimum size of a group.
  */
-METHOD(MemberDimensions, struct bmDimensions *, bmd)
+STATIC ASM BOOL MemberDimensions(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct bmDimensions *bmd)
 {
    GD                *gd = INST_DATA(cl, obj);
    Object            *m;
@@ -1771,7 +1749,7 @@ METHOD(MemberDimensions, struct bmDimensions *, bmd)
    BOOL               got_members_list;
 
    if(ObtainMembers(obj,gd,&got_members_list)==NULL)
-      return(0);
+      return FALSE;
    if (gd->gd_NumMembers)
    {
       if (gd->gd_Style == GRSTYLE_HORIZONTAL)
@@ -1792,7 +1770,7 @@ METHOD(MemberDimensions, struct bmDimensions *, bmd)
       gd->gd_RD = BGUI_AllocPoolMem(sizeof(TD) * gd->gd_Rows);
       gd->gd_CD = BGUI_AllocPoolMem(sizeof(TD) * gd->gd_Columns);
 
-      if (!(gd->gd_RD && gd->gd_CD)) return 0;
+      if (!(gd->gd_RD && gd->gd_CD)) return FALSE;
 
       /*
        * Scan through the members.
@@ -1803,7 +1781,7 @@ METHOD(MemberDimensions, struct bmDimensions *, bmd)
 
          for (r = 0; r < gd->gd_Rows; r++)
          {
-            if (m = GroupNode(gd, r, c))
+            if ((m = GroupNode(gd, r, c)))
             {
                md = MEMBER_DATA(m);
 
@@ -1830,7 +1808,7 @@ METHOD(MemberDimensions, struct bmDimensions *, bmd)
 
          for (r = 0; r < gd->gd_Rows; r++)
          {
-            if (m = GroupNode(gd, r, c))
+            if ((m = GroupNode(gd, r, c)))
             {
                md = MEMBER_DATA(m);
 
@@ -1870,7 +1848,7 @@ METHOD(MemberDimensions, struct bmDimensions *, bmd)
 
          for (c = 0; c < gd->gd_Columns; c++)
          {
-            if (m = GroupNode(gd, r, c))
+            if ((m = GroupNode(gd, r, c)))
             {
                md = MEMBER_DATA(m);
 
@@ -1933,9 +1911,8 @@ METHOD(MemberDimensions, struct bmDimensions *, bmd)
    bmd->bmd_Extent->be_Max.Width   = maxw;
    bmd->bmd_Extent->be_Max.Height  = maxh;
 
-   return 1;
+   return TRUE;
 }
-METHOD_END
 ///
 /// BASE_DIMENSIONS
 /*
@@ -1966,7 +1943,7 @@ METHOD(GroupClassDimensions, struct bmDimensions *, bmd)
     * Browse through the members.
     */
    m = NULL;
-   while (md = NextGroupNode(gd, &m, MDF_HIDDEN))
+   while ((md = NextGroupNode(gd, &m, MDF_HIDDEN)))
    {
       if (md->md_Flags & MDF_SPACING)
       {
@@ -2008,7 +1985,7 @@ METHOD(GroupClassDimensions, struct bmDimensions *, bmd)
    };
 
    m = NULL;
-   while (md = NextGroupNode(gd, &m, MDF_HIDDEN))
+   while ((md = NextGroupNode(gd, &m, MDF_HIDDEN)))
    {
       /*
        * Set equal width/height.
@@ -2017,7 +1994,7 @@ METHOD(GroupClassDimensions, struct bmDimensions *, bmd)
       if (gd->gd_Flags & GDF_EQUAL_MINHEIGHT) md->md_MinHeight = mh;
    };
 
-   if (rc = AsmDoSuperMethodA(cl, obj, (Msg)bmd))
+   if ((rc = AsmDoSuperMethodA(cl, obj, (Msg)bmd)))
    {
       /*
        * Calculate constraints.
@@ -2077,7 +2054,7 @@ METHOD(GroupClassAddSpaceMember, struct grmAddSpaceMember *, grms)
    GD           *gd = INST_DATA(cl, obj);
    Object       *m;
 
-   if (m = NewSpaceObject(obj, grms->grms_Weight))
+   if ((m = NewSpaceObject(obj, grms->grms_Weight)))
    {
       AsmDoMethod(m, RM_ADDTAIL, &gd->gd_Members);
       return TRUE;
@@ -2151,14 +2128,14 @@ METHOD(GroupClassWhichObject, struct grmWhichObject *, grwo)
     * See if the coords are over a member.
     */
    m = NULL;
-   while (md = NextGroupNode(gd, &m, MDF_HIDDEN | MDF_SPACING))
+   while ((md = NextGroupNode(gd, &m, MDF_HIDDEN | MDF_SPACING)))
    {
       /*
        * If this is a group/page we pass on the method.
        */
       if (IsMulti(md->md_Object))
       {
-         if (rc = AsmDoMethodA(md->md_Object, (Msg)grwo))
+         if ((rc = AsmDoMethodA(md->md_Object, (Msg)grwo)))
             return rc;
       }
 
@@ -2175,10 +2152,10 @@ METHOD(GroupClassWhichObject, struct grmWhichObject *, grwo)
          /*
           * Yes.
           */
-         return (ULONG)md->md_Object;
+         return (IPTR)md->md_Object;
 
    }
-   return NULL;
+   return (IPTR)NULL;
 }
 METHOD_END
 ///
@@ -2193,16 +2170,16 @@ METHOD(GroupClassFindKey, struct bmFindKey *, bmfk)
    MD           *md;
    ULONG         rc;
    
-   if (rc = AsmDoSuperMethodA(cl, obj, (Msg)bmfk))
+   if ((rc = AsmDoSuperMethodA(cl, obj, (Msg)bmfk)))
       return rc;
     
    m = NULL;
-   while (md = NextGroupNode(gd, &m, MDF_HIDDEN | MDF_SPACING))
+   while ((md = NextGroupNode(gd, &m, MDF_HIDDEN | MDF_SPACING)))
    {
-      if (rc = AsmDoMethodA(md->md_Object, (Msg)bmfk))
+      if ((rc = AsmDoMethodA(md->md_Object, (Msg)bmfk)))
          return rc;
    };
-   return NULL;
+   return 0;
 }
 METHOD_END
 ///
@@ -2220,7 +2197,7 @@ METHOD(GroupClassAll, Msg, msg)
    rc = AsmDoSuperMethodA(cl, obj, msg);
    
    m = NULL;
-   while (md = NextGroupNode(gd, &m, MDF_HIDDEN))
+   while ((md = NextGroupNode(gd, &m, MDF_HIDDEN)))
    {
       rc += AsmDoMethodA(md->md_Object, msg);
    };
@@ -2240,39 +2217,39 @@ METHOD_END
  * Class function table.
  */
 STATIC DPFUNC ClassFunc[] = {
-   BASE_RENDER,            (FUNCPTR)GroupClassRender,
-   BASE_LAYOUT,            (FUNCPTR)GroupClassLayout,
-   BASE_DIMENSIONS,        (FUNCPTR)GroupClassDimensions,
-   GRM_DIMENSIONS,         (FUNCPTR)GroupClassDimensionsX,
+   { BASE_RENDER,            GroupClassRender },
+   { BASE_LAYOUT,            GroupClassLayout },
+   { BASE_DIMENSIONS,        GroupClassDimensions },
+   { GRM_DIMENSIONS,         GroupClassDimensionsX },
 
-   OM_NEW,                 (FUNCPTR)GroupClassNew,
-   OM_SET,                 (FUNCPTR)GroupClassSet,
-   OM_GET,                 (FUNCPTR)GroupClassGet,
-   OM_DISPOSE,             (FUNCPTR)GroupClassDispose,
-   GM_GOACTIVE,            (FUNCPTR)GroupClassActiveInput,
-   GM_HANDLEINPUT,         (FUNCPTR)GroupClassActiveInput,
-   GM_GOINACTIVE,          (FUNCPTR)GroupClassInActive,
-   GM_HITTEST,             (FUNCPTR)GroupClassHitTest,
+   { OM_NEW,                 GroupClassNew },
+   { OM_SET,                 GroupClassSet },
+   { OM_GET,                 GroupClassGet },
+   { OM_DISPOSE,             GroupClassDispose },
+   { GM_GOACTIVE,            GroupClassActiveInput },
+   { GM_HANDLEINPUT,         GroupClassActiveInput },
+   { GM_GOINACTIVE,          GroupClassInActive },
+   { GM_HITTEST,             GroupClassHitTest },
 
-   GROUPM_OBTAINMEMBERS,   (FUNCPTR)GroupClassObtainMembers,
-   GROUPM_RELEASEMEMBERS,  (FUNCPTR)GroupClassReleaseMembers,
-   GROUPM_NEWMEMBER,       (FUNCPTR)GroupClassNewMember,
-   GRM_ADDMEMBER,          (FUNCPTR)GroupClassAddMember,
-   GRM_REMMEMBER,          (FUNCPTR)GroupClassRemMember,
-   GRM_ADDSPACEMEMBER,     (FUNCPTR)GroupClassAddSpaceMember,
-   GRM_INSERTMEMBER,       (FUNCPTR)GroupClassInsert,
-   GRM_REPLACEMEMBER,      (FUNCPTR)GroupClassReplace,
-   GRM_WHICHOBJECT,        (FUNCPTR)GroupClassWhichObject,
-   BASE_MOVEBOUNDS,        (FUNCPTR)GroupClassAll,
-   BASE_FINDKEY,           (FUNCPTR)GroupClassFindKey,
-   BASE_KEYLABEL,          (FUNCPTR)GroupClassAll,
-   BASE_LOCALIZE,          (FUNCPTR)GroupClassAll,
-   BASE_SHOWHELP,          (FUNCPTR)GroupClassHelp,
-   BASE_LEFTEXT,           (FUNCPTR)GroupClassLeftExt,
-   BASE_INHIBIT,           (FUNCPTR)GroupClassAll,
-   BASE_IS_MULTI,          (FUNCPTR)GroupClassIsMulti,
+   { GROUPM_OBTAINMEMBERS,   GroupClassObtainMembers },
+   { GROUPM_RELEASEMEMBERS,  GroupClassReleaseMembers },
+   { GROUPM_NEWMEMBER,       GroupClassNewMember },
+   { GRM_ADDMEMBER,          GroupClassAddMember },
+   { GRM_REMMEMBER,          GroupClassRemMember },
+   { GRM_ADDSPACEMEMBER,     GroupClassAddSpaceMember },
+   { GRM_INSERTMEMBER,       GroupClassInsert },
+   { GRM_REPLACEMEMBER,      GroupClassReplace },
+   { GRM_WHICHOBJECT,        GroupClassWhichObject },
+   { BASE_MOVEBOUNDS,        GroupClassAll },
+   { BASE_FINDKEY,           GroupClassFindKey },
+   { BASE_KEYLABEL,          GroupClassAll },
+   { BASE_LOCALIZE,          GroupClassAll },
+   { BASE_SHOWHELP,          GroupClassHelp },
+   { BASE_LEFTEXT,           GroupClassLeftExt },
+   { BASE_INHIBIT,           GroupClassAll },
+   { BASE_IS_MULTI,          GroupClassIsMulti },
 
-   DF_END,                 NULL
+   { DF_END },
 };
 
 /*

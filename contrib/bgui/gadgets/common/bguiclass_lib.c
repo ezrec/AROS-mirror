@@ -78,10 +78,10 @@ static const IPTR Vectors[] = {
     * System interface.
     */
 #ifdef __AROS__
-   BGUIGadget_LibOpen,
-   BGUIGadget_LibClose,
-   BGUIGadget_LibExpunge,
-   BGUIGadget_LibVoid,
+   (IPTR)BGUIGadget_LibOpen,
+   (IPTR)BGUIGadget_LibClose,
+   (IPTR)BGUIGadget_LibExpunge,
+   (IPTR)BGUIGadget_LibVoid,
 #else
    (LONG)LibOpen,
    (LONG)LibClose,
@@ -110,9 +110,9 @@ STATIC VOID CloseLibs(void)
 IPTR _LibInit[4] =
 {
    (IPTR)sizeof(struct BGUIClassBase),
-   Vectors,
+   (IPTR)Vectors,
    (IPTR)NULL,
-   LibInit
+   (IPTR)LibInit
 };
 
 #define bcb ((struct BGUIClassBase *)lib)
@@ -147,7 +147,7 @@ SAVEDS ASM REGFUNC3(struct Library *, LibInit,
     */
    if (DOSBase && IntuitionBase && GfxBase && UtilityBase && LayersBase && BGUIBase)
    {
-      if (bcb->bcb_Class = BGUI_ClassInit())
+      if ((bcb->bcb_Class = BGUI_ClassInit()))
       {
          /*
           * Initialize library structure.
@@ -215,7 +215,7 @@ SAVEDS ASM BPTR LibClose(REG(a6) struct Library *lib)
     * when we still have accessors.
     */
    if (lib->lib_OpenCnt && --lib->lib_OpenCnt)
-      return NULL;
+      return BNULL;
 
    /*
     * Delayed expunge pending?
@@ -232,7 +232,7 @@ SAVEDS ASM BPTR LibClose(REG(a6) struct Library *lib)
    /*
     * Otherwise we remain in memory.
     */
-   return NULL;
+   return BNULL;
    
    AROS_LIBFUNC_EXIT
 }
@@ -259,7 +259,7 @@ SAVEDS ASM BPTR LibExpunge(REG(a6) struct Library *lib)
        * Set delayed expunge flag.
        */
       lib->lib_Flags |= LIBF_DELEXP;
-      return NULL;
+      return BNULL;
    }
 
    /*

@@ -73,7 +73,7 @@ Object *InitTest_6( void )
         return( win );
 }
 
-int main(argc,argv)
+int main(int argc,char **argv)
 {
         Object *window;
 
@@ -83,7 +83,7 @@ int main(argc,argv)
           return -1;
         }
 
-        if(BGUIBase=OpenLibrary(BGUINAME,BGUIVERSION))
+        if((BGUIBase=OpenLibrary(BGUINAME,BGUIVERSION)))
         {
                 if((window=InitTest_6())!=NULL
                 && WindowOpen(window)!=NULL)
@@ -113,4 +113,5 @@ int main(argc,argv)
         }
         CloseLibrary((struct Library *)IntuitionBase);
 
+        return 0;
 }

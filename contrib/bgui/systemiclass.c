@@ -56,10 +56,9 @@ typedef struct {
  */
 METHOD(SystemClassNew, struct opSet *, ops)
 {
-   SD                *sd = INST_DATA(cl, obj);
    ULONG              rc;
 
-   if (rc = AsmDoSuperMethodA(cl, obj, (Msg)ops))
+   if ((rc = AsmDoSuperMethodA(cl, obj, (Msg)ops)))
    {
       AsmCoerceMethod(cl, (Object *)rc, OM_SET, ops->ops_AttrList, NULL);
    };
@@ -74,7 +73,8 @@ METHOD_END
 METHOD(SystemClassSet, struct opSet *, ops)
 {
    SD                *sd = INST_DATA(cl, obj);
-   struct TagItem    *tag, *tstate = ops->ops_AttrList;
+   struct TagItem    *tag;
+   const struct TagItem *tstate = ops->ops_AttrList;
    ULONG              data;
    ULONG              rc;
 
@@ -88,7 +88,7 @@ METHOD(SystemClassSet, struct opSet *, ops)
    /*
     * Get the attributes.
     */
-   while (tag = NextTagItem(&tstate))
+   while ((tag = NextTagItem(&tstate)))
    {
       data = tag->ti_Data;
       switch (tag->ti_Tag)
@@ -194,13 +194,13 @@ METHOD_END
 /// Class initialization.
 
 STATIC DPFUNC ClassFunc[] = {
-   IM_DRAW,                (FUNCPTR)SystemClassDrawErase,
-   IM_ERASE,               (FUNCPTR)SystemClassDrawErase,
-   OM_NEW,                 (FUNCPTR)SystemClassNew,
-   OM_SET,                 (FUNCPTR)SystemClassSet,
-   OM_GET,                 (FUNCPTR)SystemClassGet,
-   OM_DISPOSE,             (FUNCPTR)SystemClassDispose,
-   DF_END,                 NULL
+   { IM_DRAW,                SystemClassDrawErase, },
+   { IM_ERASE,               SystemClassDrawErase, },
+   { OM_NEW,                 SystemClassNew, },
+   { OM_SET,                 SystemClassSet, },
+   { OM_GET,                 SystemClassGet, },
+   { OM_DISPOSE,             SystemClassDispose, },
+   { DF_END,                 NULL },
 };
 
 makeproto Class *InitSystemClass(void)

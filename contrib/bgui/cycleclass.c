@@ -116,7 +116,7 @@ METHOD(CycleClassNew, struct opSet *, ops)
     * First we let the superclass
     * create an object.
     */
-   if (rc = NewSuperObject(cl, obj, tags))
+   if ((rc = NewSuperObject(cl, obj, tags)))
    {
       /*
        * Get instance data.
@@ -165,8 +165,9 @@ METHOD_END
 METHOD(CycleClassSetUpdate, struct opUpdate *, opu)
 {
    CD                 *cd = INST_DATA(cl, obj);
-   struct TagItem     *tstate = opu->opu_AttrList, *tag;
    ULONG               oact = cd->cd_Active, data;
+   const struct TagItem *tstate = opu->opu_AttrList;
+   struct TagItem     *tag;
    WORD                dis = GADGET(obj)->Flags & GFLG_DISABLED;
    UBYTE             **new_labels = NULL;
    int                 num_labels;
@@ -184,7 +185,7 @@ METHOD(CycleClassSetUpdate, struct opUpdate *, opu)
    GADGET(obj)->Activation |= GACT_RELVERIFY;
    GADGET(obj)->Activation &= ~GACT_IMMEDIATE;
 
-   while (tag = NextTagItem(&tstate))
+   while ((tag = NextTagItem(&tstate)))
    {
       data = tag->ti_Data;
       switch (tag->ti_Tag)
@@ -214,7 +215,7 @@ METHOD(CycleClassSetUpdate, struct opUpdate *, opu)
 
 	 if (num_labels >= 0)
 	 {
-	    if (new_labels = BGUI_AllocPoolMem((num_labels + 2) * sizeof(UBYTE *)))
+	    if ((new_labels = BGUI_AllocPoolMem((num_labels + 2) * sizeof(UBYTE *))))
 	    {
 	       if (cd->cd_Labels) BGUI_FreePoolMem(cd->cd_Labels);
 	       cd->cd_Labels    = new_labels;
@@ -448,11 +449,11 @@ METHOD_END
 /*
  * Open the popup-window.
  */
-METHOD(OpenPopupWindow, struct gpInput *, gpi)
+STATIC ASM IPTR OpenPopupWindow(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct gpInput *gpi)
 {
    CD                   *cd = INST_DATA(cl, obj);
    BC                   *bc = BASE_DATA(obj);
-   UWORD                 max_items, num_items, wleft, wtop, wwi, wwh, bg, i;
+   UWORD                 max_items, num_items, wleft, wtop, wwi, wwh, i;
    struct IBox          *ibox;
    struct RastPort      *rp;
    struct GadgetInfo    *gi = gpi->gpi_GInfo;
@@ -519,9 +520,9 @@ METHOD(OpenPopupWindow, struct gpInput *, gpi)
 
       /* AROS BUGFIX --> AMIGAOS BUGFIX: TAG_DONE missed in both AllocBaseInfoDebug and AllocBaseInfo call below */
 #ifdef DEBUG_BGUI
-      if (bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_Screen, gi->gi_Screen, BI_RastPort, rp = cd->cd_PopWindow->RPort, TAG_DONE))
+      if ((bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_Screen, gi->gi_Screen, BI_RastPort, rp = cd->cd_PopWindow->RPort, TAG_DONE)))
 #else
-      if (bi = AllocBaseInfo(BI_Screen, gi->gi_Screen, BI_RastPort, rp = cd->cd_PopWindow->RPort, TAG_DONE))
+      if ((bi = AllocBaseInfo(BI_Screen, gi->gi_Screen, BI_RastPort, rp = cd->cd_PopWindow->RPort, TAG_DONE)))
 #endif
       {
 	 /*
@@ -575,7 +576,6 @@ METHOD(OpenPopupWindow, struct gpInput *, gpi)
    }
    return rc;
 }
-METHOD_END
 ///
 
 /// GM_GOACTIVE
@@ -630,10 +630,7 @@ METHOD_END
 /*
  * Which entry is selected?
  */
-//STATIC ASM UWORD Selected(REG(a0) CD *cd, REG(a1) struct RastPort *rp)
-STATIC ASM REGFUNC2(UWORD, Selected,
-	REGPARAM(A0, CD *, cd),
-	REGPARAM(A1, struct RastPort *, rp))
+STATIC ASM UWORD Selected(REG(a0) CD *cd, REG(a1) struct RastPort *rp)
 {
    WORD        mx = cd->cd_PopWindow->MouseX, my = cd->cd_PopWindow->MouseY;
    LONG        item = ~0;
@@ -651,7 +648,7 @@ STATIC ASM REGFUNC2(UWORD, Selected,
    }
    return(( UWORD )item );
 }
-REGFUNC_END
+
 /// GM_HANDLEINPUT
 /*
  * Handle the gadget input.
@@ -680,9 +677,9 @@ METHOD(CycleClassHandleInput, struct gpInput *, gpi)
 	 return GMR_NOREUSE;
 
 #ifdef DEBUG_BGUI
-      if (bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_GadgetInfo, gi, BI_RastPort, cd->cd_PopWindow->RPort, TAG_DONE))
+      if ((bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_GadgetInfo, gi, BI_RastPort, cd->cd_PopWindow->RPort, TAG_DONE)))
 #else
-      if (bi = AllocBaseInfo(BI_GadgetInfo, gi, BI_RastPort, cd->cd_PopWindow->RPort, TAG_DONE))
+      if ((bi = AllocBaseInfo(BI_GadgetInfo, gi, BI_RastPort, cd->cd_PopWindow->RPort, TAG_DONE)))
 #endif
       {
 	 /*
@@ -946,7 +943,7 @@ METHOD(CycleClassDimensions, struct bmDimensions *, bmd)
    /*
     * Find out the size of the largest label.
     */
-   while (label = *labels++)
+   while ((label = *labels++))
    {
       /*
        * Call TextExtent to find out the text width.
@@ -1005,20 +1002,20 @@ METHOD_END
  * Function table.
  */
 STATIC DPFUNC ClassFunc[] = {
-   BASE_RENDER,      (FUNCPTR)CycleClassRender,
-   GM_RENDER,        (FUNCPTR)CycleClassRenderX,
-   BASE_DIMENSIONS,  (FUNCPTR)CycleClassDimensions,
+   { BASE_RENDER,      CycleClassRender, },
+   { GM_RENDER,        CycleClassRenderX, },
+   { BASE_DIMENSIONS,  CycleClassDimensions, },
 
-   OM_NEW,           (FUNCPTR)CycleClassNew,
-   OM_SET,           (FUNCPTR)CycleClassSetUpdate,
-   OM_UPDATE,        (FUNCPTR)CycleClassSetUpdate,
-   OM_GET,           (FUNCPTR)CycleClassGet,
-   OM_DISPOSE,       (FUNCPTR)CycleClassDispose,
-   GM_GOACTIVE,      (FUNCPTR)CycleClassGoActive,
-   GM_HANDLEINPUT,   (FUNCPTR)CycleClassHandleInput,
-   GM_GOINACTIVE,    (FUNCPTR)CycleClassGoInactive,
-   WM_KEYACTIVE,     (FUNCPTR)CycleClassKeyActive,
-   DF_END,           NULL,
+   { OM_NEW,           CycleClassNew, },
+   { OM_SET,           CycleClassSetUpdate, },
+   { OM_UPDATE,        CycleClassSetUpdate, },
+   { OM_GET,           CycleClassGet, },
+   { OM_DISPOSE,       CycleClassDispose, },
+   { GM_GOACTIVE,      CycleClassGoActive, },
+   { GM_HANDLEINPUT,   CycleClassHandleInput, },
+   { GM_GOINACTIVE,    CycleClassGoInactive, },
+   { WM_KEYACTIVE,     CycleClassKeyActive, },
+   { DF_END,           NULL, },
 };
 
 /*

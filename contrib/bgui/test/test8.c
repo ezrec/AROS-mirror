@@ -86,7 +86,7 @@ void GimmeQuickDisplayWindow(void)
 
 }
 
-int main(void)
+int main(int argc, char **argv)
 {
     ULONG sigmask;
     BOOL quit = FALSE;
@@ -98,7 +98,7 @@ int main(void)
     }
 
 
-    if(BGUIBase=OpenLibrary(BGUINAME,0L)) {
+    if((BGUIBase=OpenLibrary(BGUINAME,0L))) {
         GimmeQuickDisplayWindow();
         if(Win)
         {

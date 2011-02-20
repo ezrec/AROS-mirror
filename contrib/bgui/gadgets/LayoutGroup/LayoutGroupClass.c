@@ -214,14 +214,14 @@ METHOD(GroupClassDimensions,struct bmDimensions *,bmd)
 			{
 				{
 					ULONG
-						horizontal_weight,
-						vertical_weight,
-						width_weight,
-						height_weight,
-						left_weight,
-						top_weight,
-						right_weight,
-						bottom_weight;
+						horizontal_weight = 0,
+						vertical_weight = 0,
+						width_weight = 0,
+						height_weight = 0,
+						left_weight = 0,
+						top_weight = 0,
+						right_weight = 0,
+						bottom_weight = 0;
 
 					gd->LayoutDefinition.Elements[gd->LayoutDefinition.ElementCount]= &element->Element;
 					element->Object=members[gd->LayoutDefinition.ElementCount];
@@ -344,7 +344,8 @@ METHOD_END
 static ULONG GroupSet(Class *cl,Object *obj,struct opSet *ops)
 {
 	GD *gd;
-	struct TagItem *tag,*tstate;
+	const struct TagItem *tstate;
+	struct TagItem *tag;
 	ULONG success;
 	BOOL refresh;
 
@@ -542,15 +543,15 @@ METHOD(GroupClassAll, Msg,msg)
 METHOD_END
 
 static DPFUNC ClassFunctions[] = {
-	OM_NEW,          (FUNCPTR)GroupClassNew,
-	OM_DISPOSE,      (FUNCPTR)GroupClassDispose,
-	OM_SET,          (FUNCPTR)GroupClassSet,
-	OM_GET,          (FUNCPTR)GroupClassGet,
-	BASE_LAYOUT,     (FUNCPTR)GroupClassLayout,
-	BASE_DIMENSIONS, (FUNCPTR)GroupClassDimensions,
-	GROUPM_NEWMEMBER,(FUNCPTR)GroupClassNewMember,
-	BASE_INHIBIT,    (FUNCPTR)GroupClassAll,
-	DF_END,          NULL
+	{ OM_NEW,          GroupClassNew, },
+	{ OM_DISPOSE,      GroupClassDispose, },
+	{ OM_SET,          GroupClassSet, },
+	{ OM_GET,          GroupClassGet, },
+	{ BASE_LAYOUT,     GroupClassLayout, },
+	{ BASE_DIMENSIONS, GroupClassDimensions, },
+	{ GROUPM_NEWMEMBER,GroupClassNewMember, },
+	{ BASE_INHIBIT,    GroupClassAll, },
+	{ DF_END,          NULL },
 };
 
 typedef struct
@@ -581,7 +582,8 @@ MD;
 static BOOL SetGroupNodeAttributes(MD *md,struct opSet *ops)
 {
 	BOOL success;
-	struct TagItem *tag,*tstate;
+	struct TagItem *tag;
+	const struct TagItem *tstate;
 
 	for(tstate=ops->ops_AttrList,success=TRUE;success==TRUE && (tag=NextTagItem(&tstate));)
 	{
@@ -695,7 +697,7 @@ METHOD(GroupNodeClassNew,struct opSet *,ops)
 }
 METHOD_END
 
-static GetAttribute(MD *md,ULONG attribute,ULONG *store)
+static BOOL GetAttribute(MD *md,ULONG attribute,IPTR *store)
 {
 	switch(attribute)
 	{
@@ -830,13 +832,14 @@ METHOD_END
 METHOD(GroupNodeClassMultipleGet,struct ogpMGet *,ogp)
 {
 	MD *md=INST_DATA(cl,obj);
-	ULONG got;
-	struct TagItem *tag,*tstate;
+	IPTR got;
+	struct TagItem *tag;
+	const struct TagItem *tstate;
 
 	for(got=0,tstate=ogp->ogpg_AttrList;(tag=NextTagItem(&tstate));got++)
 	{
-		if(!GetAttribute(md,tag->ti_Tag,(ULONG *)tag->ti_Data)
-		&& !GetAttr(tag->ti_Tag,obj,(ULONG *)tag->ti_Data))
+		if(!GetAttribute(md,tag->ti_Tag,(IPTR *)tag->ti_Data)
+		&& !GetAttr(tag->ti_Tag,obj,(IPTR *)tag->ti_Data))
 				return(0);
 	}
 	return(got);
@@ -844,10 +847,10 @@ METHOD(GroupNodeClassMultipleGet,struct ogpMGet *,ogp)
 METHOD_END
 
 static DPFUNC NodeClassFunctions[] = {
-	OM_NEW, (FUNCPTR)GroupNodeClassNew,
-	OM_GET, (FUNCPTR)GroupNodeClassGet,
-	LGM_MGET, (FUNCPTR)GroupNodeClassMultipleGet,
-	DF_END, NULL
+	{ OM_NEW,  GroupNodeClassNew, },
+	{ OM_GET,  GroupNodeClassGet, },
+	{ LGM_MGET,GroupNodeClassMultipleGet, },
+	{ DF_END, NULL },
 };
 
 
@@ -855,10 +858,10 @@ void __exit(int errcode)
 {
 }
 
-extern UBYTE _LibName[]   = "bgui_layoutgroup.gadget";
-extern UBYTE _LibID[]     = "\0$VER: bgui_layoutgroup.gadget 41.10 (3.5.00) ©1996 Manuel Lemos ©2000 BGUI Developers Team";
-extern UWORD _LibVersion  = 41;
-extern UWORD _LibRevision = 10;
+const UBYTE _LibName[]   = "bgui_layoutgroup.gadget";
+const UBYTE _LibID[]     = "\0$VER: bgui_layoutgroup.gadget 41.10 (3.5.00) ©1996 Manuel Lemos ©2000 BGUI Developers Team";
+const UWORD _LibVersion  = 41;
+const UWORD _LibRevision = 10;
 
 /*--------------------------------LIBARY CODE FOLLOWS-----------------------------------*/
 

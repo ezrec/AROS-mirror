@@ -118,7 +118,7 @@ switch (opg->opg_AttrID)
 			*(opg->opg_Storage) = (ULONG) TV_IndexToTreeNode(tv,top);
 			}
 		else
-			*(opg->opg_Storage) = NULL;
+			*(opg->opg_Storage) = (IPTR)NULL;
 		}
 		break;
 
@@ -176,7 +176,7 @@ rc = DoSuperMethodA(cl,obj,(Msg) ops);
  * Now we look at the taglist
  */
 
-if (tag = FindTagItem(TVA_Indentation,ops->ops_AttrList))
+if ((tag = FindTagItem(TVA_Indentation,ops->ops_AttrList)))
 	{
 	tv->tv_Indentation = max(tag->ti_Data,8);
 	refresh = TRUE;
@@ -186,13 +186,13 @@ if (tag = FindTagItem(TVA_Indentation,ops->ops_AttrList))
 if (refresh)
 	DoMethod(obj,TVM_REFRESH,ops->ops_GInfo);
 
-if (tag = FindTagItem(TVA_Top,ops->ops_AttrList))
+if ((tag = FindTagItem(TVA_Top,ops->ops_AttrList)))
 	{
 	struct TagItem	tags[2];
 	TNPTR			tn;
 	ULONG			pos;
 
-	if (tn = TV_FindTreeNode(RootList(tv),(APTR) tag->ti_Data))
+	if ((tn = TV_FindTreeNode(RootList(tv),(APTR) tag->ti_Data)))
 		{
 		if ((pos = TV_TreeNodeToIndex(tv,tn)) != ~0)
 			{

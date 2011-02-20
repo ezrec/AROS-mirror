@@ -100,13 +100,13 @@ typedef struct {
  * Prop map-lists.
  */
 static struct TagItem VProp2View[] = {
-   PGA_Top,       VIEW_Y,
-   TAG_DONE
+   { PGA_Top,       VIEW_Y, },
+   { TAG_DONE },
 };
 
 static struct TagItem HProp2View[] = {
-   PGA_Top,       VIEW_X,
-   TAG_DONE
+   { PGA_Top,       VIEW_X, },
+   { TAG_DONE },
 };
 
 ///
@@ -116,14 +116,15 @@ METHOD(ViewClassNew, struct opSet *, ops)
 {
    VD             *vd;
    ULONG           rc;
-   struct TagItem *tstate, *tag, *tags;
+   const struct TagItem *tstate;
+   struct TagItem *tag, *tags;
 
    tags = DefTagList(BGUI_VIEW_GADGET, ops->ops_AttrList);
 
    /*
     * Let the superclass create an object.
     */
-   if (rc = NewSuperObject(cl, obj, tags))
+   if ((rc = NewSuperObject(cl, obj, tags)))
    {
       vd = INST_DATA(cl, rc);
 
@@ -144,7 +145,7 @@ METHOD(ViewClassNew, struct opSet *, ops)
           * Filter out frame and label attributes.
           */
          tstate = tags;
-         while (tag = NextTagItem(&tstate))
+         while ((tag = NextTagItem(&tstate)))
          {
             switch (tag->ti_Tag)
             {
@@ -260,8 +261,9 @@ METHOD_END
 METHOD(ViewClassSet, struct opSet *, ops)
 {
    VD             *vd = INST_DATA(cl, obj);
-   struct TagItem *tstate = ops->ops_AttrList, *tag;
    ULONG           rc = 1, update = FALSE, data;
+   const struct TagItem *tstate = ops->ops_AttrList;
+   struct TagItem *tag;
 
    /*
     * First we let the superclass
@@ -269,7 +271,7 @@ METHOD(ViewClassSet, struct opSet *, ops)
     */
    AsmDoSuperMethodA(cl, obj, (Msg)ops);
 
-   while (tag = NextTagItem(&tstate))
+   while ((tag = NextTagItem(&tstate)))
    {
       data = tag->ti_Data;
       switch (tag->ti_Tag)
@@ -330,7 +332,7 @@ METHOD(ViewClassSet, struct opSet *, ops)
             DisposeObject(vd->vd_VScroller);
             vd->vd_OwnVScroller=FALSE;
          }
-         if (vd->vd_VScroller = (Object *)data)
+         if ((vd->vd_VScroller = (Object *)data))
          {
             AsmDoMethod(vd->vd_VScroller, BASE_ADDMAP, obj, VProp2View);
             vd->vd_ScrollerW = 0;
@@ -344,7 +346,7 @@ METHOD(ViewClassSet, struct opSet *, ops)
             DisposeObject(vd->vd_HScroller);
             vd->vd_OwnHScroller=FALSE;
          }
-         if (vd->vd_HScroller = (Object *)data)
+         if ((vd->vd_HScroller = (Object *)data))
          {
             AsmDoMethod(vd->vd_HScroller, BASE_ADDMAP, obj, HProp2View);
             vd->vd_ScrollerH = 0;
@@ -879,11 +881,11 @@ METHOD(ViewClassWhichObject, struct grmWhichObject *, grwo)
 
    if (x >= r)
    {
-      return (ULONG)vd->vd_VScroller;
+      return (IPTR)vd->vd_VScroller;
    };
    if (y >= b)
    {
-      return (ULONG)vd->vd_HScroller;
+      return (IPTR)vd->vd_HScroller;
    };
 
    wo.MethodID = GRM_WHICHOBJECT;
@@ -900,7 +902,7 @@ METHOD(ViewClassWhichObject, struct grmWhichObject *, grwo)
        */
       ob = (Object *)AsmDoMethodA(ob, (Msg)&wo);
    };
-   return (ULONG)ob;
+   return (IPTR)ob;
 }
 METHOD_END
 ///
@@ -987,27 +989,27 @@ METHOD_END
  * Class function table.
  */
 STATIC DPFUNC ClassFunc[] = {
-   VIEW_CLIP,           (FUNCPTR)ViewClassClip,
-   OM_NEW,              (FUNCPTR)ViewClassNew,
-   OM_GET,              (FUNCPTR)ViewClassGet,
-   OM_SET,              (FUNCPTR)ViewClassSet,
-   OM_UPDATE,           (FUNCPTR)ViewClassSet,
-   OM_DISPOSE,          (FUNCPTR)ViewClassDispose,
-   GM_RENDER,           (FUNCPTR)ViewClassRender,
-   BASE_DIMENSIONS,     (FUNCPTR)ViewClassDimensions,
-   GRM_WHICHOBJECT,     (FUNCPTR)ViewClassWhichObject,
-   GM_HITTEST,          (FUNCPTR)ViewClassHitTest,
-   GM_GOACTIVE,         (FUNCPTR)ViewClassHandleInput,
-   GM_HANDLEINPUT,      (FUNCPTR)ViewClassHandleInput,
-   GM_GOINACTIVE,       (FUNCPTR)ViewClassGoInactive,
-   BASE_MOVEBOUNDS,     (FUNCPTR)ViewClassForward,
-   BASE_LOCALIZE,       (FUNCPTR)ViewClassForward,
-   BASE_KEYLABEL,       (FUNCPTR)ViewClassForward,
-   BASE_FINDKEY,        (FUNCPTR)ViewClassForward,
-   BASE_SHOWHELP,       (FUNCPTR)ViewClassForward,
-   BASE_INHIBIT,        (FUNCPTR)ViewClassForward,
-   BASE_IS_MULTI,       (FUNCPTR)ViewClassIsMulti,
-   DF_END,              NULL
+   { VIEW_CLIP,           ViewClassClip, },
+   { OM_NEW,              ViewClassNew, },
+   { OM_GET,              ViewClassGet, },
+   { OM_SET,              ViewClassSet, },
+   { OM_UPDATE,           ViewClassSet, },
+   { OM_DISPOSE,          ViewClassDispose, },
+   { GM_RENDER,           ViewClassRender, },
+   { BASE_DIMENSIONS,     ViewClassDimensions, },
+   { GRM_WHICHOBJECT,     ViewClassWhichObject, },
+   { GM_HITTEST,          ViewClassHitTest, },
+   { GM_GOACTIVE,         ViewClassHandleInput, },
+   { GM_HANDLEINPUT,      ViewClassHandleInput, },
+   { GM_GOINACTIVE,       ViewClassGoInactive, },
+   { BASE_MOVEBOUNDS,     ViewClassForward, },
+   { BASE_LOCALIZE,       ViewClassForward, },
+   { BASE_KEYLABEL,       ViewClassForward, },
+   { BASE_FINDKEY,        ViewClassForward, },
+   { BASE_SHOWHELP,       ViewClassForward, },
+   { BASE_INHIBIT,        ViewClassForward, },
+   { BASE_IS_MULTI,       ViewClassIsMulti, },
+   { DF_END },
 };
 
 /*

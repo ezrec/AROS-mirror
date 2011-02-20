@@ -154,18 +154,14 @@ extern struct Library * BGUIBase;
 #include <graphics/rpattr.h>
 #include <graphics/gels.h>
 #include <libraries/gadtools.h>
-#ifndef __AROS__
 #include <libraries/amigaguide.h>
-#endif
 #include <libraries/commodities.h>
 #include <libraries/locale.h>
 #include <libraries/iffparse.h>
 #include <devices/timer.h>
 #include <workbench/workbench.h>
-#ifndef __AROS__
 #include <gadgets/colorwheel.h>
 #include <gadgets/gradientslider.h>
-#endif
 #include <utility/pack.h>
 
 #include <clib/macros.h>
@@ -177,14 +173,14 @@ extern struct Library * BGUIBase;
 #include <proto/asl.h>
 #include <proto/layers.h>
 #include <proto/gadtools.h>
-#ifndef __AROS__
 #include <proto/amigaguide.h>
-#endif
 #include <proto/commodities.h>
 #include <proto/locale.h>
 #include <proto/keymap.h>
 #include <proto/dos.h>
-#ifndef __AROS__
+#ifdef __AROS__
+#include <proto/workbench.h>
+#else
 #include <proto/wb.h>
 #endif
 #include <proto/datatypes.h>
@@ -238,7 +234,7 @@ extern struct Library * BGUIBase;
 struct CatCompArrayType
 {
     LONG   cca_ID;
-    STRPTR cca_Str;
+    CONST_STRPTR cca_Str;
 };
 #endif
 
@@ -645,38 +641,16 @@ extern const UBYTE LibID[];
 #define BGUI_CloseFont(font) CloseFont(font)
 #endif
 
-#ifndef __AROS__
-
 #ifdef DEBUG_BGUI
 #define SRectFill(rp,l,t,r,b) SRectFillDebug(rp,l,t,r,b,__FILE__,__LINE__)
 #define BRectFill(bi,l,t,r,b) BRectFillDebug(bi,l,t,r,b,__FILE__,__LINE__)
 #define RenderBackFillRaster(rp,ib,apen,bpen) RenderBackFillRasterDebug(rp,ib,apen,bpen,__FILE__,__LINE__)
 #else
-//ASM VOID SRectFill(REG(a0) struct RastPort *rp, REG(d0) LONG l, REG(d1) LONG t, REG(d2) LONG r, REG(d3) LONG b);
-ASM REGFUNCPROTO5(VOID, SRectFill,
-	REGPARAM(A0, struct RastPort *, rp),
-	REGPARAM(D0, LONG, l),
-	REGPARAM(D1, LONG, t),
-	REGPARAM(D2, LONG, r),
-	REGPARAM(D3, LONG, b));
+ASM VOID SRectFill(REG(a0) struct RastPort *rp, REG(d0) LONG l, REG(d1) LONG t, REG(d2) LONG r, REG(d3) LONG b);
 
+ASM VOID BRectFill(REG(a0) struct BaseInfo *bi, REG(d0) LONG l, REG(d1) LONG t, REG(d2) LONG r, REG(d3) LONG b);
 
-//ASM VOID BRectFill(REG(a0) struct BaseInfo *bi, REG(d0) LONG l, REG(d1) LONG t, REG(d2) LONG r, REG(d3) LONG b);
-ASM REGFUNCPROTO5(VOID, BRectFill,
-	REGPARAM(A0, struct BaseInfo *, bi),
-	REGPARAM(D0, LONG, l),
-	REGPARAM(D1, LONG, t),
-	REGPARAM(D2, LONG, r),
-	REGPARAM(D3, LONG, b));
-
-
-//ASM VOID RenderBackFillRaster(REG(a0) struct RastPort *rp, REG(a1) struct IBox *ib, REG(d0) UWORD apen, REG(d1) UWORD bpen);
-ASM REGFUNCPROTO4(VOID, RenderBackFillRaster,
-	REGPARAM(A0, struct RastPort *, rp),
-	REGPARAM(A1, struct IBox *, ib),
-	REGPARAM(D0, UWORD, apen),
-	REGPARAM(D1, UWORD, bpen));
+ASM VOID RenderBackFillRaster(REG(a0) struct RastPort *rp, REG(a1) struct IBox *ib, REG(d0) UWORD apen, REG(d1) UWORD bpen);
 #endif
 
-#endif /* __AROS__ */
 #endif

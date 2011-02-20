@@ -207,9 +207,9 @@
  */
 struct bguiRequest {
         ULONG            br_Flags;              /* See below.               */
-        STRPTR           br_Title;              /* Requester title.         */
-        STRPTR           br_GadgetFormat;       /* Gadget labels.           */
-        STRPTR           br_TextFormat;         /* Body text format.        */
+        CONST_STRPTR     br_Title;              /* Requester title.         */
+        CONST_STRPTR     br_GadgetFormat;       /* Gadget labels.           */
+        CONST_STRPTR     br_TextFormat;         /* Body text format.        */
         UWORD            br_ReqPos;             /* Requester position.      */
         struct TextAttr *br_TextAttr;           /* Requester font.          */
         UBYTE            br_Underscore;         /* Underscore indicator.    */
@@ -244,7 +244,7 @@ struct bguiLocaleStr {
 
 struct bguiCatalogStr {
         LONG             bcs_ID;                /* ID of locale string.         */
-        STRPTR           bcs_DefaultString;     /* Default string for this ID.  */
+        CONST_STRPTR     bcs_DefaultString;     /* Default string for this ID.  */
 };
 
 
@@ -390,7 +390,7 @@ struct tmDimensions {
  *      Class implementor information.
  */
 
-typedef ULONG  (*FUNCPTR)();
+typedef METHODPROTO((*FUNCPTR), Msg, m);
 
 typedef struct DispatcherFunction {
    STACKULONG       df_MethodID;
@@ -1225,8 +1225,8 @@ struct gmReleaseMembers {
 #define LISTV_LastColumn                (BGUI_TB+757)   /* --G-- */  /* V41 */
 #define LISTV_LayoutHook                (BGUI_TB+758)   /* IS--U */  /* V41 */
 
-#define LISTC_TAGSTART                  (BGUI_TB+781)
-#define LISTC_MinWidth                  (BGUI_TB+781)   /* -SG-- */  /* V41.9 */
+#define LISTC_TAGSTART                  (BGUI_TB+761)
+#define LISTC_MinWidth                  (BGUI_TB+761)   /* -SG-- */  /* V41.9 */
 #define LISTC_MaxWidth                  (BGUI_TB+762)   /* -SG-- */  /* V41.9 */
 #define LISTC_Weight                    (BGUI_TB+763)   /* -SG-- */  /* V41.9 */
 #define LISTC_Draggable                 (BGUI_TB+764)   /* -SG-- */  /* V41.9 */

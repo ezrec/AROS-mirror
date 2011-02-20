@@ -26,8 +26,8 @@
  *
  */
 
-extern	Object	**ar = BGUIPrefsObjs;
-extern	Object	*BGUIPrefsObjs[ BGP_NUMGADS ];
+Object	**ar = BGUIPrefsObjs;
+Object	*BGUIPrefsObjs[ BGP_NUMGADS ];
 
 // GROUP DEFAULTS
 extern	ULONG		 grp_frmtype,
@@ -81,12 +81,13 @@ void
 SaveTagList( struct IFFHandle *iff, ULONG type, struct TagItem *tags )
 {
 	struct	TagItem	*tag;
+	const struct TagItem *tstate = tags;
 	ULONG	zero = TAG_DONE;
 
 	PushChunk( iff, ID_BGUI, ID_DTAG, IFFSIZE_UNKNOWN );
 	WriteChunkBytes( iff, ( UBYTE * )&type, sizeof( ULONG ) );
 
-	while( tag = NextTagItem( &tags ) ) {
+	while(( tag = NextTagItem( &tstate ) )) {
 
 		WriteChunkBytes( iff, ( UBYTE * )tag, sizeof( struct TagItem ) );
 
@@ -114,9 +115,9 @@ SaveBGUIPrefs( char *dirname, char *name )
 
 		olddir = CurrentDir( dir );
 
-		if( iff = AllocIFF() ) {
+		if(( iff = AllocIFF() )) {
 
-			if( iff->iff_Stream = Open( name, MODE_NEWFILE ) ) {
+			if(( iff->iff_Stream = (IPTR)Open( name, MODE_NEWFILE ) )) {
 
 				InitIFFasDOS( iff );
 				if( OpenIFF( iff, IFFF_WRITE ) == 0 ) {
@@ -198,7 +199,7 @@ SaveBGUIPrefs( char *dirname, char *name )
 					PopChunk( iff );
 					CloseIFF( iff );
 				};
-				Close( iff->iff_Stream );
+				Close( (BPTR)iff->iff_Stream );
 			};
 			FreeIFF( iff );
 		};

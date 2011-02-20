@@ -117,7 +117,7 @@ BOOL openlibs(void)
 {
   IntuitionBase = (struct IntuitionBase *) OpenLibrary( "intuition.library", 0 );
   GfxBase       = (struct GfxBase *) OpenLibrary( "graphics.library", 0 );
-  UtilityBase   = OpenLibrary( "utility.library", 0 );
+  UtilityBase   = (APTR)OpenLibrary( "utility.library", 0 );
   
   if (!IntuitionBase || !GfxBase || ! UtilityBase)
     return FALSE;
@@ -129,7 +129,7 @@ void closelibs(void)
 { 
   if (IntuitionBase) CloseLibrary((struct Library*)IntuitionBase);
   if (GfxBase) CloseLibrary((struct Library*)GfxBase);
-  if (UtilityBase) CloseLibrary( UtilityBase );
+  if (UtilityBase) CloseLibrary((struct Library*)UtilityBase );
 }
 
 /*
@@ -164,7 +164,7 @@ int main( int argc, char **argv )
    /*
     * Open BGUI.
     */
-   if ( BGUIBase = OpenLibrary( BGUINAME, BGUIVERSION )) {
+   if (( BGUIBase = OpenLibrary( BGUINAME, BGUIVERSION ))) {
       /*
        * Run the demo.
        */

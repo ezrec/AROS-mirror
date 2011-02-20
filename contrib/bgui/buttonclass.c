@@ -79,18 +79,19 @@ typedef struct {
 /*
  * Change the object's attributes.
  */
-METHOD(ButtonSetAttrs, struct opSet *, ops)
+STATIC ASM IPTR ButtonSetAttrs(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct opSet *ops)
 {
    BD              *bd = INST_DATA(cl, obj);
    BC              *bc = BASE_DATA(obj);
-   struct TagItem  *tstate = ops->ops_AttrList, *tag;
    ULONG            data, attr;
+   const struct TagItem  *tstate = ops->ops_AttrList;
+   struct TagItem  *tag;
    BOOL             vis = FALSE;
 
    /*
     * Evaluate tags.
     */
-   while (tag = NextTagItem(&tstate))
+   while ((tag = NextTagItem(&tstate)))
    {
       data = tag->ti_Data;
       switch (attr = tag->ti_Tag)
@@ -190,7 +191,7 @@ METHOD(ButtonSetAttrs, struct opSet *, ops)
    }
    return vis;
 }
-METHOD_END
+
 ///
 /// OM_NEW
 /*
@@ -209,7 +210,7 @@ METHOD(ButtonClassNew, struct opSet *, ops)
     * First we let the superclass
     * create an object.
     */
-   if (rc = NewSuperObject(cl, obj, tags))
+   if ((rc = NewSuperObject(cl, obj, tags)))
    {
       /*
        * Get the instance data.
@@ -385,11 +386,7 @@ METHOD_END
 /*
  * We must go active.
  */
-//STATIC ASM ULONG ButtonClassGoActive( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct gpInput *gpi )
-STATIC ASM REGFUNC3(ULONG, ButtonClassGoActive,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct gpInput *, gpi))
+STATIC METHOD(ButtonClassGoActive, struct gpInput *, gpi)
 {
    BD                   *bd = INST_DATA(cl, obj);
    ULONG                 rc;
@@ -453,18 +450,14 @@ STATIC ASM REGFUNC3(ULONG, ButtonClassGoActive,
 
    return rc;
 }
-REGFUNC_END
+METHOD_END
 
 ///
 /// GM_HANDLEINPUT
 /*
  * Handle button gadget input.
  */
-//STATIC ASM ULONG ButtonClassHandleInput( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct gpInput *gpi )
-STATIC ASM REGFUNC3(ULONG, ButtonClassHandleInput,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct gpInput *,gpi))
+STATIC METHOD(ButtonClassHandleInput, struct gpInput *,gpi)
 {
    WORD                  sel = 0;
    struct gpHitTest      gph;
@@ -544,7 +537,7 @@ STATIC ASM REGFUNC3(ULONG, ButtonClassHandleInput,
 
    return rc;
 }
-REGFUNC_END
+METHOD_END
 ///
 /// OM_GET
 /*
@@ -615,8 +608,8 @@ METHOD(ButtonClassKeyActive, struct wmKeyInput *, wmki)
        * Toggle-select buttons do not
        * respond to repeated keys.
        */
-      if (!(wmki->wmki_IEvent->ie_Qualifier & IEQUALIFIER_REPEAT)
-      && (!(bd->bd_Flags & BDF_NO_DESELECT))
+      if ((!(wmki->wmki_IEvent->ie_Qualifier & IEQUALIFIER_REPEAT)
+      && (!(bd->bd_Flags & BDF_NO_DESELECT)))
       || !(GADGET(obj)->Flags & GFLG_SELECTED))
       {
          /*
@@ -879,23 +872,23 @@ METHOD_END
  * Class function table.
  */
 STATIC DPFUNC ClassFunc[] = {
-   BASE_RENDER,            (FUNCPTR)ButtonClassRender,
-   GM_GOACTIVE,            (FUNCPTR)ButtonClassGoActive,
-   GM_HANDLEINPUT,         (FUNCPTR)ButtonClassHandleInput,
+   { BASE_RENDER,            ButtonClassRender, },
+   { GM_GOACTIVE,            ButtonClassGoActive, },
+   { GM_HANDLEINPUT,         ButtonClassHandleInput, },
 
-   OM_SET,                 (FUNCPTR)ButtonClassSetUpdate,
-   OM_UPDATE,              (FUNCPTR)ButtonClassSetUpdate,
-   OM_GET,                 (FUNCPTR)ButtonClassGet,
-   OM_NEW,                 (FUNCPTR)ButtonClassNew,
-   OM_DISPOSE,             (FUNCPTR)ButtonClassDispose,
+   { OM_SET,                 ButtonClassSetUpdate, },
+   { OM_UPDATE,              ButtonClassSetUpdate, },
+   { OM_GET,                 ButtonClassGet, },
+   { OM_NEW,                 ButtonClassNew, },
+   { OM_DISPOSE,             ButtonClassDispose, },
    
-   WM_KEYACTIVE,           (FUNCPTR)ButtonClassKeyActive,
-   WM_KEYINPUT,            (FUNCPTR)ButtonClassKeyInput,
-   WM_KEYINACTIVE,         (FUNCPTR)ButtonClassKeyInActive,
+   { WM_KEYACTIVE,           ButtonClassKeyActive, },
+   { WM_KEYINPUT,            ButtonClassKeyInput, },
+   { WM_KEYINACTIVE,         ButtonClassKeyInActive, },
 
-   BASE_DIMENSIONS,        (FUNCPTR)ButtonClassDimensions,
-   BASE_FINDKEY,           (FUNCPTR)ButtonClassFindKey,
-   DF_END,                 NULL,
+   { BASE_DIMENSIONS,        ButtonClassDimensions, },
+   { BASE_FINDKEY,           ButtonClassFindKey, },
+   { DF_END,                 NULL, },
 };
 
 /*

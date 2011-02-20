@@ -118,7 +118,7 @@ SAVEDS ASM REGFUNC3(VOID, TabHookFunc,
 }
 REGFUNC_END
 
-struct Hook TabHook = { NULL, NULL, ( HOOKFUNC )TabHookFunc, NULL, NULL };
+struct Hook TabHook = { {NULL, NULL}, ( HOOKFUNC )TabHookFunc, NULL, NULL };
 
 
 int main(void)

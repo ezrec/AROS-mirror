@@ -161,24 +161,43 @@ LOCAL ASM SAVEDS REGFUNCPROTO3(ULONG, TV_TVExpandHandler,
  */
 
 LOCAL struct VectorItem BoxPlusVector[] = {
-	9,9,VIF_SCALE,	0,0,VIF_MOVE,	8,0,VIF_DRAW,	8,8,VIF_DRAW,
-	0,8,VIF_DRAW,	0,0,VIF_DRAW,	4,2,VIF_MOVE,	4,6,VIF_DRAW,
-	2,4,VIF_MOVE,	6,4,VIF_DRAW|VIF_LASTITEM
+	{ 9,9,VIF_SCALE, },
+	{ 0,0,VIF_MOVE, },
+	{ 8,0,VIF_DRAW, },
+	{ 8,8,VIF_DRAW, },
+	{ 0,8,VIF_DRAW, },
+	{ 0,0,VIF_DRAW, },
+	{ 4,2,VIF_MOVE, },
+	{ 4,6,VIF_DRAW, },
+	{ 2,4,VIF_MOVE, },
+	{ 6,4,VIF_DRAW|VIF_LASTITEM },
 };
 
 LOCAL struct VectorItem BoxMinusVector[] = {
-	9,9,VIF_SCALE,	0,0,VIF_MOVE,	8,0,VIF_DRAW,	8,8,VIF_DRAW,
-	0,8,VIF_DRAW,	0,0,VIF_DRAW,	2,4,VIF_MOVE,	6,4,VIF_DRAW|VIF_LASTITEM
+	{ 9,9,VIF_SCALE, },
+	{ 0,0,VIF_MOVE, },
+	{ 8,0,VIF_DRAW, },
+	{ 8,8,VIF_DRAW, },
+	{ 0,8,VIF_DRAW, },
+	{ 0,0,VIF_DRAW, },
+	{ 2,4,VIF_MOVE, },
+	{ 6,4,VIF_DRAW|VIF_LASTITEM },
 };
 
 LOCAL struct VectorItem ArrowRightVector[] = {
-	9,9,VIF_SCALE,	2,0,VIF_MOVE|VIF_AREASTART,		2,8,VIF_DRAW,
-	6,4,VIF_DRAW,	2,0,VIF_DRAW|VIF_AREAEND|VIF_LASTITEM
+	{ 9,9,VIF_SCALE, },
+	{ 2,0,VIF_MOVE|VIF_AREASTART, },
+	{ 2,8,VIF_DRAW, },
+	{ 6,4,VIF_DRAW, },
+	{ 2,0,VIF_DRAW|VIF_AREAEND|VIF_LASTITEM },
 };
 
 LOCAL struct VectorItem ArrowDownVector[] = {
-	9,9,VIF_SCALE,	0,2,VIF_MOVE|VIF_AREASTART,		8,2,VIF_DRAW,
-	4,6,VIF_DRAW,	0,2,VIF_DRAW|VIF_AREAEND|VIF_LASTITEM
+	{ 9,9,VIF_SCALE, },
+	{ 0,2,VIF_MOVE|VIF_AREASTART, },
+	{ 8,2,VIF_DRAW, },
+	{ 4,6,VIF_DRAW, },
+	{ 0,2,VIF_DRAW|VIF_AREAEND|VIF_LASTITEM },
 };
 
 static ULONG instances=0;
@@ -207,7 +226,7 @@ ULONG				rc;
 
 if(BGUIBase==NULL
 && (BGUIBase=OpenLibrary("bgui.library",41))==NULL)
-	return(NULL);
+	return (IPTR)NULL;
 
 lvrsrchk = lvdisphk = lvcomphk = lvnotihk = NULL;
 tvrsrchk = tvdisphk = tvcomphk = tvexpahk = NULL;
@@ -234,24 +253,24 @@ if (	(lvrsrchk = TV_AllocHook((HOOKFUNC) TV_LVRsrcHandler,NULL)) &&
 	 * acceptable listview tags through to the embedded object.
 	 */
 
-	if (rc = TV_DoSuperNew(cl,obj,
+	if ((rc = TV_DoSuperNew(cl,obj,
 			StartMember,
 				lvobj = ListviewObject,
 					LISTV_ResourceHook,		lvrsrchk,
 					LISTV_DisplayHook,		lvdisphk,
 					LISTV_CompareHook,		lvcomphk,
-					LISTV_ListFont,			GetTagData(LISTV_ListFont,NULL,tags),
+					LISTV_ListFont,			GetTagData(LISTV_ListFont,(IPTR)NULL,tags),
 					LISTV_MinEntriesShown,	GetTagData(LISTV_MinEntriesShown,3,tags),
 					LISTV_MultiSelect,		GetTagData(LISTV_MultiSelect,FALSE,tags),
 					LISTV_MultiSelectNoShift,GetTagData(LISTV_MultiSelectNoShift,FALSE,tags),
 					LISTV_ReadOnly,			GetTagData(LISTV_ReadOnly,FALSE,tags),
 					LISTV_ThinFrames,		GetTagData(LISTV_ThinFrames,FALSE,tags),
 					PGA_NewLook,			GetTagData(PGA_NewLook,FALSE,tags),
-					GA_ID,					GetTagData(GA_ID,NULL,tags),
+					GA_ID,					GetTagData(GA_ID,(IPTR)NULL,tags),
 				EndObject,
 			EndMember,
 			TAG_DONE)
-			)
+			))
 		{
 		TVData			*tv;
 
@@ -331,10 +350,10 @@ if (	(lvrsrchk = TV_AllocHook((HOOKFUNC) TV_LVRsrcHandler,NULL)) &&
 		 * set defaults if omitted.
 		 */
 
-		tv->tv_ResourceHook = (HOOKPTR) GetTagData(TVA_ResourceHook,(ULONG) tvrsrchk,tags);
-		tv->tv_DisplayHook = (HOOKPTR) GetTagData(TVA_DisplayHook,(ULONG) tvdisphk,tags);
-		tv->tv_CompareHook = (HOOKPTR) GetTagData(TVA_CompareHook,(ULONG) tvcomphk,tags);
-		tv->tv_ExpandHook = (HOOKPTR) GetTagData(TVA_ExpandHook,(ULONG) tvexpahk,tags);
+		tv->tv_ResourceHook = (HOOKPTR) GetTagData(TVA_ResourceHook,( IPTR) tvrsrchk,tags);
+		tv->tv_DisplayHook = (HOOKPTR) GetTagData(TVA_DisplayHook,( IPTR) tvdisphk,tags);
+		tv->tv_CompareHook = (HOOKPTR) GetTagData(TVA_CompareHook,( IPTR) tvcomphk,tags);
+		tv->tv_ExpandHook = (HOOKPTR) GetTagData(TVA_ExpandHook,( IPTR) tvexpahk,tags);
 
 		if (tv->tv_ResourceHook == tvrsrchk)
 			tvrsrchk = NULL;
@@ -365,8 +384,8 @@ if (	(lvrsrchk = TV_AllocHook((HOOKFUNC) TV_LVRsrcHandler,NULL)) &&
 		 * Collect user supplied expanded/contracted images.
 		 */
 
-		tv->tv_ExpandedImage = (Object *) GetTagData(TVA_ExpandedImage,NULL,tags);
-		tv->tv_ContractedImage = (Object *) GetTagData(TVA_ContractedImage,NULL,tags);
+		tv->tv_ExpandedImage = (Object *) GetTagData(TVA_ExpandedImage,(IPTR)NULL,tags);
+		tv->tv_ContractedImage = (Object *) GetTagData(TVA_ContractedImage,(IPTR)NULL,tags);
 
 		/*
 		 * For either image not supplied explicity by user, determine
@@ -403,7 +422,7 @@ if (	(lvrsrchk = TV_AllocHook((HOOKFUNC) TV_LVRsrcHandler,NULL)) &&
 			 */
 
 			CoerceMethod(cl,(Object *) rc,OM_DISPOSE);
-			rc = NULL;
+			rc = (IPTR)NULL;
 			}
 
 		} /* endif create object */

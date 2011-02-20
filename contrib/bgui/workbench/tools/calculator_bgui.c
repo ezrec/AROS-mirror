@@ -143,7 +143,7 @@ struct NewMenu menustrip[] =
 /*** Global variables ********************************************************/
 
 static struct RDArgs *MyArgs = NULL;
-static LONG Args[NUM_ARGS];
+static IPTR Args[NUM_ARGS];
 
 static char *deftapename = "RAW:%ld/%ld/%ld/%ld/Calculator Tape/INACTIVE/SCREEN%s";
 static FILE *tapefh      = NULL;
@@ -269,7 +269,7 @@ static void DoLocale(void)
 /// static void GetArguments( void )
 static void GetArguments( void )
 {
-    if( !(MyArgs = ReadArgs( ARG_TEMPLATE, (LONG *) Args, 0 )) )
+    if( !(MyArgs = ReadArgs( ARG_TEMPLATE, (IPTR *) Args, 0 )) )
     {
         DosError();
     }
@@ -461,7 +461,7 @@ static void RefreshLED( void )
 static double GetValue( void )
 {
     double val;
-    char c,*sp;
+    char c = 0,*sp;
 
     sp = strchr(ledstring,comma);
     if( sp )

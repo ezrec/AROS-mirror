@@ -69,7 +69,7 @@ METHOD(ScreenReqClassNew, struct opSet *, ops)
    /*
     * First we let the superclass create the object.
     */
-   if (rc = NewSuperObject(cl, obj, tags))
+   if ((rc = NewSuperObject(cl, obj, tags)))
    {
       /*
        * Setup user attributes.
@@ -110,8 +110,9 @@ METHOD_END
 METHOD(ScreenReqClassSetUpdate, struct opSet *, ops)
 {
    SD             *sd = INST_DATA(cl, obj);
-   struct TagItem *tstate = ops->ops_AttrList, *tag;
    ULONG           data, rc;
+   const struct TagItem *tstate = ops->ops_AttrList;
+   struct TagItem *tag;
 
    /*
     * First we let the superclass
@@ -119,7 +120,7 @@ METHOD(ScreenReqClassSetUpdate, struct opSet *, ops)
     */
    rc = AsmDoSuperMethodA(cl, obj, (Msg)ops);
 
-   while (tag = NextTagItem(&tstate))
+   while ((tag = NextTagItem(&tstate)))
    {
       data = tag->ti_Data;
       switch (tag->ti_Tag)
@@ -226,7 +227,7 @@ METHOD(ScreenReqClassDoRequest, Msg, msg)
    /*
     * Allocate ScreenRequester structure.
     */
-   if (sm = (struct ScreenModeRequester *)AsmDoSuperMethod(cl, obj, ASLM_ALLOCREQUEST))
+   if ((sm = (struct ScreenModeRequester *)AsmDoSuperMethod(cl, obj, ASLM_ALLOCREQUEST)))
    {
       /*
        * Put up the requester.
@@ -274,13 +275,13 @@ METHOD_END
  * Function table.
  */
 STATIC DPFUNC ClassFunc[] = {
-   OM_NEW,                 (FUNCPTR)ScreenReqClassNew,
-   OM_SET,                 (FUNCPTR)ScreenReqClassSetUpdate,
-   OM_UPDATE,              (FUNCPTR)ScreenReqClassSetUpdate,
-   OM_GET,                 (FUNCPTR)ScreenReqClassGet,
-   OM_DISPOSE,             (FUNCPTR)ScreenReqClassDispose,
-   ASLM_DOREQUEST,         (FUNCPTR)ScreenReqClassDoRequest,
-   DF_END,                 NULL
+   { OM_NEW,                 ScreenReqClassNew, },
+   { OM_SET,                 ScreenReqClassSetUpdate, },
+   { OM_UPDATE,              ScreenReqClassSetUpdate, },
+   { OM_GET,                 ScreenReqClassGet, },
+   { OM_DISPOSE,             ScreenReqClassDispose, },
+   { ASLM_DOREQUEST,         ScreenReqClassDoRequest, },
+   { DF_END,                 NULL },
 };
 
 /*

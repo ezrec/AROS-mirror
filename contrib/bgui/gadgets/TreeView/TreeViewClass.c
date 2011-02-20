@@ -215,43 +215,36 @@ extern ASM REGFUNCPROTO3(ULONG, TV_Rebuild,
  * Function table.
  */
 STATIC DPFUNC ClassFunc[] = {
-   OM_NEW,           TV_New,
-   OM_DISPOSE,       TV_Dispose,
-   OM_GET,           TV_Get,
-   OM_SET,           TV_Set,
-   OM_UPDATE,        TV_Set,
-   GM_GOACTIVE,      TV_GoActive,
-   GM_HANDLEINPUT,   TV_HandleInput,
-   GM_GOINACTIVE,    TV_GoInactive,
-   TVM_INSERT,       TV_Insert,
-   TVM_REMOVE,       TV_Remove,
-   TVM_REPLACE,      TV_Replace,
-   TVM_MOVE,         TV_Move,
-   TVM_GETENTRY,     TV_GetEntry,
-   TVM_SELECT,       TV_Select,
-   TVM_VISIBLE,      TV_Visible,
-   TVM_EXPAND,       TV_Expand,
-   TVM_CLEAR,        TV_Clear,
-   TVM_LOCK,         TV_Lock,
-   TVM_UNLOCK,       TV_Unlock,
-   TVM_SORT,         TV_Sort,
-   TVM_REDRAW,       TV_Redraw,
-   TVM_REFRESH,      TV_Refresh,
-   TVM_REBUILD,      TV_Rebuild,
-   DF_END,           NULL,
+   { OM_NEW,           TV_New, },
+   { OM_DISPOSE,       TV_Dispose, },
+   { OM_GET,           TV_Get, },
+   { OM_SET,           TV_Set, },
+   { OM_UPDATE,        TV_Set, },
+   { GM_GOACTIVE,      TV_GoActive, },
+   { GM_HANDLEINPUT,   TV_HandleInput, },
+   { GM_GOINACTIVE,    TV_GoInactive, },
+   { TVM_INSERT,       TV_Insert, },
+   { TVM_REMOVE,       TV_Remove, },
+   { TVM_REPLACE,      TV_Replace, },
+   { TVM_MOVE,         TV_Move, },
+   { TVM_GETENTRY,     TV_GetEntry, },
+   { TVM_SELECT,       TV_Select, },
+   { TVM_VISIBLE,      TV_Visible, },
+   { TVM_EXPAND,       TV_Expand, },
+   { TVM_CLEAR,        TV_Clear, },
+   { TVM_LOCK,         TV_Lock, },
+   { TVM_UNLOCK,       TV_Unlock, },
+   { TVM_SORT,         TV_Sort, },
+   { TVM_REDRAW,       TV_Redraw, },
+   { TVM_REFRESH,      TV_Refresh, },
+   { TVM_REBUILD,      TV_Rebuild, },
+   { DF_END,           NULL, },
 };
 
-#ifdef __AROS__
-UBYTE _LibName[]   = "bgui_treeview.gadget";
-UBYTE _LibID[]     = "\0$VER: bgui_treeview.gadget 41.10 (29.5.99) ©1996 Nick Christie ©1999 BGUI Developers Team";
-UWORD _LibVersion  = 41;
-UWORD _LibRevision = 10;
-#else
-extern UBYTE _LibName[]   = "bgui_treeview.gadget";
-extern UBYTE _LibID[]     = "\0$VER: bgui_treeview.gadget 41.10 (29.5.99) ©1996 Nick Christie ©1999 BGUI Developers Team";
-extern UWORD _LibVersion  = 41;
-extern UWORD _LibRevision = 10;
-#endif
+const UBYTE _LibName[]   = "bgui_treeview.gadget";
+const UBYTE _LibID[]     = "\0$VER: bgui_treeview.gadget 41.10 (29.5.99) ©1996 Nick Christie ©1999 BGUI Developers Team";
+const UWORD _LibVersion  = 41;
+const UWORD _LibRevision = 10;
 
 /*--------------------------------LIBARY CODE FOLLOWS-----------------------------------*/
 

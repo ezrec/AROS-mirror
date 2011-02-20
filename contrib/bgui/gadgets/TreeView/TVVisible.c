@@ -139,7 +139,7 @@ memset(&tva,0,sizeof(tva));
  * Find the treenode corresponding to this tvEntry.
  */
 
-if (tn = TV_MatchNextEntry(tv,tve->tve_Entry,tve->tve_Which,flags,&tva))
+if ((tn = TV_MatchNextEntry(tv,tve->tve_Entry,tve->tve_Which,flags,&tva)))
 	{
 	/*
 	 * Expand all unexpanded parents of this entry
@@ -147,7 +147,7 @@ if (tn = TV_MatchNextEntry(tv,tve->tve_Entry,tve->tve_Which,flags,&tva))
 
 	pn = tn;
 
-	while(pn = ParentOf(pn))
+	while((pn = ParentOf(pn)))
 		{
 		if (!IsExpanded(pn))
 			DoMethod(obj,TVM_EXPAND,NULL,pn,TVW_ENTRY,TVF_INTERNAL);

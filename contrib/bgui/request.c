@@ -63,11 +63,7 @@ typedef struct {
 /*
  * Parse a button label.
  */
-//STATIC ASM UBYTE *GetButtonName( REG(a0) UBYTE *source, REG(a1) UBYTE *uc, REG(d0) ULONG uchar )
-STATIC ASM REGFUNC3(UBYTE *, GetButtonName,
-	REGPARAM(A0, UBYTE *, source),
-	REGPARAM(A1, UBYTE *, uc),
-	REGPARAM(D0, ULONG, uchar))
+STATIC ASM UBYTE *GetButtonName( REG(a0) UBYTE *source, REG(a1) UBYTE *uc, REG(d0) ULONG uchar )
 {
    uc[0] = uc[1] = 0;
 
@@ -105,7 +101,6 @@ STATIC ASM REGFUNC3(UBYTE *, GetButtonName,
     */
    return NULL;
 }
-REGFUNC_END
 
 /*
  * Create the button group.
@@ -126,7 +121,7 @@ STATIC Object *CreateButtonGroup( UBYTE *gstring, ULONG xen, UBYTE uchar, ULONG 
    /*
     * Create a horizontal master group.
     */
-   if (master = BGUI_NewObject(BGUI_GROUP_GADGET, GROUP_Spacing, GRSPACE_WIDE, GROUP_EqualWidth, TRUE, TAG_END))
+   if ((master = BGUI_NewObject(BGUI_GROUP_GADGET, GROUP_Spacing, GRSPACE_WIDE, GROUP_EqualWidth, TRUE, TAG_END)))
    {
       /*
        * Add a spacing object for single
@@ -142,7 +137,7 @@ STATIC Object *CreateButtonGroup( UBYTE *gstring, ULONG xen, UBYTE uchar, ULONG 
        * Loop to get all the gadgets
        * names.
        */
-      while (ptr = gstring)
+      while ((ptr = gstring))
       {
 	 /*
 	  * Get a pointer to the next
@@ -163,8 +158,8 @@ STATIC Object *CreateButtonGroup( UBYTE *gstring, ULONG xen, UBYTE uchar, ULONG 
 	 /*
 	  * Create the button.
 	  */
-	 if (button = BGUI_NewObject(BGUI_BUTTON_GADGET, LAB_Label, ptr, LAB_Style, style, LAB_Underscore, uchar,
-	    GA_ID, id++, BT_Key, underscore, xen ? FRM_Type : TAG_IGNORE, FRTYPE_XEN_BUTTON, TAG_DONE))
+	 if ((button = BGUI_NewObject(BGUI_BUTTON_GADGET, LAB_Label, ptr, LAB_Style, style, LAB_Underscore, uchar,
+	    GA_ID, id++, BT_Key, underscore, xen ? FRM_Type : TAG_IGNORE, FRTYPE_XEN_BUTTON, TAG_DONE)))
 	 {
 	    /*
 	     * Pick this button if it's the first
@@ -229,7 +224,7 @@ STATIC Object *CreateButtonGroup( UBYTE *gstring, ULONG xen, UBYTE uchar, ULONG 
  * Requester IDCMP hook.
  */
 //STATIC SAVEDS ASM VOID ReqHookFunc(REG(a0) struct Hook *hook, REG(a2) Object *window, REG(a1) struct IntuiMessage *msg)
-STATIC SAVEDS ASM REGFUNC3(VOID, ReqHookFunc,
+STATIC SAVEDS ASM REGFUNC3(IPTR, ReqHookFunc,
 	REGPARAM(A0, struct Hook *, hook),
 	REGPARAM(A2, Object *, window),
 	REGPARAM(A1, struct IntuiMessage *, msg))
@@ -276,9 +271,11 @@ STATIC SAVEDS ASM REGFUNC3(VOID, ReqHookFunc,
       break;
    }
    if (id) AsmDoMethod(window, WM_REPORT_ID, id, 0);
+
+   return 0;
 }
 REGFUNC_END
-static struct Hook ReqHook = { NULL, NULL, (HOOKFUNC)ReqHookFunc, NULL, NULL };
+static struct Hook ReqHook = { { NULL, NULL }, (HOOKFUNC)ReqHookFunc, NULL, NULL };
 
 /*
  * Put up a BGUI requester.
@@ -300,8 +297,9 @@ makeproto SAVEDS ASM ULONG BGUI_RequestA(REG(a0) struct Window *win, REG(a1) str
    struct Screen  *screen;
    IHD             ihd;
    struct Window  *wptr;
-   UBYTE          *gstr, *wdt;
-   ULONG           id, maxid, signal, rc = ~0;
+   UBYTE          *gstr;
+   CONST_STRPTR    wdt;
+   ULONG           id, maxid = 0, signal, rc = ~0;
    APTR            rlock = NULL;
    BOOL            cw = FALSE, running = TRUE;
 
@@ -324,7 +322,7 @@ makeproto SAVEDS ASM ULONG BGUI_RequestA(REG(a0) struct Window *win, REG(a1) str
       /*
        * Allocate private copy of the gadget string.
        */
-      if (gstr = (UBYTE *)BGUI_AllocPoolMem(strlen(es->br_GadgetFormat) + 1))
+      if ((gstr = (UBYTE *)BGUI_AllocPoolMem(strlen(es->br_GadgetFormat) + 1)))
       {
 	 /*
 	  * Copy the gadget string.
@@ -401,7 +399,7 @@ makeproto SAVEDS ASM ULONG BGUI_RequestA(REG(a0) struct Window *win, REG(a1) str
 	     * Open the window and wait
 	     * for a gadget click.
 	     */
-	    if (wptr = (struct Window *)AsmDoMethod(window, WM_OPEN))
+	    if ((wptr = (struct Window *)AsmDoMethod(window, WM_OPEN)))
 	    {
 	       /*
 		* Lock parent window?
@@ -417,7 +415,7 @@ makeproto SAVEDS ASM ULONG BGUI_RequestA(REG(a0) struct Window *win, REG(a1) str
 	       do
 	       {
 		  Wait(signal);
-		  while((id = AsmDoMethod( window, WM_HANDLEIDCMP )) != WMHI_NOMORE)
+		  while((id = (ULONG)AsmDoMethod( window, WM_HANDLEIDCMP )) != WMHI_NOMORE)
 		  {
 		     /*
 		      * Gadget clicked?

@@ -107,7 +107,7 @@ LOCAL UWORD DefDriPens[ 12 ] = { 0, 1, 1, 2, 1, 3, 1, 0, 2, 1, 2, 1 };
  * Pattern used for ghosting disabled entries
  */
 
-LOCAL UWORD GhostPattern[] = { 0x2222, 0x8888 };
+//LOCAL UWORD GhostPattern[] = { 0x2222, 0x8888 };
 
 /************************************************************************
 *************************  TV_LVRSRCHANDLER()  **************************
@@ -372,7 +372,7 @@ if (imgwid <= box.Width)
 
 			pn = ParentOf(tn);
 
-			while(pn2 = ParentOf(pn))
+			while((pn2 = ParentOf(pn)))
 				{
 				x -= tv->tv_Indentation;
 
@@ -483,7 +483,7 @@ rc = 0;
  * that this notification is a final one, not an interim update.
  */
 
-if (tag = FindTagItem(LISTV_Entry,opu->opu_AttrList))
+if ((tag = FindTagItem(LISTV_Entry,opu->opu_AttrList)))
 	{
 	tn = (TNPTR) tag->ti_Data;
 

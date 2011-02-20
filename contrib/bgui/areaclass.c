@@ -51,19 +51,20 @@ typedef struct {
 METHOD(AreaClassNew, struct opSet *,ops)
 {
    AD             *ad;
-   struct TagItem *tags, *tstate, *tag;
    ULONG           rc;
+   struct TagItem *tags, *tag;
+   const struct TagItem *tstate;
 
    tags = DefTagList(BGUI_AREA_GADGET, ops->ops_AttrList);
    /*
     * Let the superclass create an object.
     */
-   if (rc = NewSuperObject(cl, obj, tags))
+   if ((rc = NewSuperObject(cl, obj, tags)))
    {
       ad = INST_DATA(cl, rc);
       
       tstate = tags;
-      while (tag = NextTagItem(&tstate))
+      while ((tag = NextTagItem(&tstate)))
       {
          switch (tag->ti_Tag)
          {
@@ -174,12 +175,12 @@ METHOD_END
  * Class function table.
  */
 STATIC DPFUNC ClassFunc[] = {
-   OM_NEW,           (FUNCPTR)AreaClassNew,
-   OM_GET,           (FUNCPTR)AreaClassGet,
-   BASE_RENDER,      (FUNCPTR)AreaClassRender,
-   BASE_DIMENSIONS,  (FUNCPTR)AreaClassDimensions,
-   GM_HITTEST,       (FUNCPTR)AreaClassHitTest,
-   DF_END
+   { OM_NEW,           (FUNCPTR)AreaClassNew, },
+   { OM_GET,           (FUNCPTR)AreaClassGet, },
+   { BASE_RENDER,      (FUNCPTR)AreaClassRender, },
+   { BASE_DIMENSIONS,  (FUNCPTR)AreaClassDimensions, },
+   { GM_HITTEST,       (FUNCPTR)AreaClassHitTest, },
+   { DF_END },
 };
 
 /*

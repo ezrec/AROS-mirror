@@ -77,11 +77,11 @@ METHOD_END
  * Class function table.
  */
 STATIC DPFUNC ClassFunc[] = {
-   GM_HITTEST,       (FUNCPTR)SpacingClassHitTest,
-   GRM_DIMENSIONS,   (FUNCPTR)SpacingClassDimensions,
-   BASE_LEFTEXT,     (FUNCPTR)SpacingClassLeftExt,
-   BASE_SHOWHELP,    (FUNCPTR)SpacingClassHelp,
-   DF_END,           NULL
+   { GM_HITTEST,       SpacingClassHitTest },
+   { GRM_DIMENSIONS,   SpacingClassDimensions },
+   { BASE_LEFTEXT,     SpacingClassLeftExt },
+   { BASE_SHOWHELP,    SpacingClassHelp },
+   { DF_END },
 };
 
 /*

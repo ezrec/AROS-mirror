@@ -192,10 +192,9 @@ typedef struct bd_ {
 
 makeproto ULONG CalcDimensions(Class *cl, Object *obj, struct bmDimensions *bmd, UWORD mx, UWORD my)
 {
-   BC       *bc = BASE_DATA(obj);
    ULONG     rc;
 
-   if (rc = AsmDoSuperMethodA(cl, obj, (Msg)bmd))
+   if ((rc = AsmDoSuperMethodA(cl, obj, (Msg)bmd)))
    {
       bmd->bmd_Extent->be_Min.Width  += mx;
       bmd->bmd_Extent->be_Min.Height += my;
@@ -255,7 +254,7 @@ METHOD(BaseClassNew, struct opSet *, ops)
     * We let the superclass setup an object
     * for us.
     */
-   if (rc = NewSuperObject(cl, obj, tags))
+   if ((rc = NewSuperObject(cl, obj, tags)))
    {
       /*
        * Get the instance data.
@@ -283,7 +282,6 @@ METHOD_END
  */
 METHOD(BaseClassGet, struct rmAttr *, ra)
 {
-   BD       *bd = (BD *)INST_DATA(cl, obj);
    ULONG     rc;
 
    rc = BGUI_GetAttrChart(cl, obj, ra);
@@ -321,49 +319,49 @@ METHOD(BaseClassGetAttrFlags, struct rmAttr *, ra)
 {
    static struct TagItem chart[] =
    {
-      BT_LabelClick,       CHART_FLAG(bd_, bd_Flags, BDF_LABEL_CLICK),
-      BT_NoRecessed,       CHART_FLAG(bd_, bd_Flags, BDF_NORECESSED),
-      BT_DragObject,       CHART_FLAG(bd_, bd_Flags, BDF_DRAGGABLE),
-      BT_DropObject,       CHART_FLAG(bd_, bd_Flags, BDF_DROPPABLE),
-      BT_Buffer,           CHART_FLAG(bd_, bd_Flags, BDF_BUFFER),
-      BT_IsActive,         CHART_FLAG(bd_, bd_Flags, BDF_ISACTIVE),
-      BT_ReportID,         CHART_FLAG(bd_, bd_Flags, BDF_REPORT_ID),
-      BT_Inhibit,          CHART_FLAG(bd_, bd_Flags, BDF_INHIBITED) | RAF_NOSET,
+      { BT_LabelClick,       CHART_FLAG(bd_, bd_Flags, BDF_LABEL_CLICK), },
+      { BT_NoRecessed,       CHART_FLAG(bd_, bd_Flags, BDF_NORECESSED), },
+      { BT_DragObject,       CHART_FLAG(bd_, bd_Flags, BDF_DRAGGABLE), },
+      { BT_DropObject,       CHART_FLAG(bd_, bd_Flags, BDF_DROPPABLE), },
+      { BT_Buffer,           CHART_FLAG(bd_, bd_Flags, BDF_BUFFER), },
+      { BT_IsActive,         CHART_FLAG(bd_, bd_Flags, BDF_ISACTIVE), },
+      { BT_ReportID,         CHART_FLAG(bd_, bd_Flags, BDF_REPORT_ID), },
+      { BT_Inhibit,          CHART_FLAG(bd_, bd_Flags, BDF_INHIBITED) | RAF_NOSET, },
 
-      BT_LabelObject,      CHART_ATTR(bd_, bd_Label)        | RAF_CUSTOM | RAF_NOSET,
-      BT_FrameObject,      CHART_ATTR(bd_, bd_Frame)        | RAF_CUSTOM | RAF_NOSET,
-      BT_TextAttr,         CHART_ATTR(bd_, bd_TextAttr)     | RAF_CUSTOM | RAF_NOSET,
-      BT_TextFont,         CHART_ATTR(bd_, bd_TextFont)     | RAF_NOSET,
-      BT_HelpHook,         CHART_ATTR(bd_, bd_HelpHook),
-      BT_HelpFile,         CHART_ATTR(bd_, bd_HelpFile),
-      BT_HelpNode,         CHART_ATTR(bd_, bd_HelpNode),
-      BT_HelpLine,         CHART_ATTR(bd_, bd_HelpLine),
-      BT_HelpText,         CHART_ATTR(bd_, bd_HelpText),
-      BT_HelpTextID,       CHART_ATTR(bd_, bd_HelpTextID),
-      BT_ToolTip,          CHART_ATTR(bd_, bd_ToolTip)      | RAF_CUSTOM,
-      BT_ToolTipID,        CHART_ATTR(bd_, bd_ToolTipID),
-      BT_DragThreshold,    CHART_ATTR(bd_, bd_Thresh),
-      BT_DragQualifier,    CHART_ATTR(bd_, bd_DragQual),
-      BT_MouseActivation,  CHART_ATTR(bd_, bd_MouseAct),
-      BT_Key,              CHART_ATTR(bd_, bd_Key)          | RAF_CUSTOM,
-      BT_RawKey,           CHART_ATTR(bd_, bd_RawKey)       | RAF_CUSTOM,
-      BT_Qualifier,        CHART_ATTR(bd_, bd_Qual),
-      BT_HitBox,           CHART_ATTR(bd_, bd_HitBox)       | RAF_ADDRESS,
-      BT_OuterBox,         CHART_ATTR(bd_, bd_OuterBox)     | RAF_ADDRESS,
-      BT_InnerBox,         CHART_ATTR(bd_, bd_InnerBox)     | RAF_ADDRESS,
-      BT_LeftOffset,       CHART_ATTR(bd_, bd_LeftOffset)   | RAF_SIGNED,
-      BT_RightOffset,      CHART_ATTR(bd_, bd_RightOffset)  | RAF_SIGNED,
-      BT_TopOffset,        CHART_ATTR(bd_, bd_TopOffset)    | RAF_SIGNED,
-      BT_BottomOffset,     CHART_ATTR(bd_, bd_BottomOffset) | RAF_SIGNED,
+      { BT_LabelObject,      CHART_ATTR(bd_, bd_Label)        | RAF_CUSTOM | RAF_NOSET, },
+      { BT_FrameObject,      CHART_ATTR(bd_, bd_Frame)        | RAF_CUSTOM | RAF_NOSET, },
+      { BT_TextAttr,         CHART_ATTR(bd_, bd_TextAttr)     | RAF_CUSTOM | RAF_NOSET, },
+      { BT_TextFont,         CHART_ATTR(bd_, bd_TextFont)     | RAF_NOSET, },
+      { BT_HelpHook,         CHART_ATTR(bd_, bd_HelpHook), },
+      { BT_HelpFile,         CHART_ATTR(bd_, bd_HelpFile), },
+      { BT_HelpNode,         CHART_ATTR(bd_, bd_HelpNode), },
+      { BT_HelpLine,         CHART_ATTR(bd_, bd_HelpLine), },
+      { BT_HelpText,         CHART_ATTR(bd_, bd_HelpText), },
+      { BT_HelpTextID,       CHART_ATTR(bd_, bd_HelpTextID), },
+      { BT_ToolTip,          CHART_ATTR(bd_, bd_ToolTip)      | RAF_CUSTOM, },
+      { BT_ToolTipID,        CHART_ATTR(bd_, bd_ToolTipID), },
+      { BT_DragThreshold,    CHART_ATTR(bd_, bd_Thresh), },
+      { BT_DragQualifier,    CHART_ATTR(bd_, bd_DragQual), },
+      { BT_MouseActivation,  CHART_ATTR(bd_, bd_MouseAct), },
+      { BT_Key,              CHART_ATTR(bd_, bd_Key)          | RAF_CUSTOM, },
+      { BT_RawKey,           CHART_ATTR(bd_, bd_RawKey)       | RAF_CUSTOM, },
+      { BT_Qualifier,        CHART_ATTR(bd_, bd_Qual), },
+      { BT_HitBox,           CHART_ATTR(bd_, bd_HitBox)       | RAF_ADDRESS, },
+      { BT_OuterBox,         CHART_ATTR(bd_, bd_OuterBox)     | RAF_ADDRESS, },
+      { BT_InnerBox,         CHART_ATTR(bd_, bd_InnerBox)     | RAF_ADDRESS, },
+      { BT_LeftOffset,       CHART_ATTR(bd_, bd_LeftOffset)   | RAF_SIGNED, },
+      { BT_RightOffset,      CHART_ATTR(bd_, bd_RightOffset)  | RAF_SIGNED, },
+      { BT_TopOffset,        CHART_ATTR(bd_, bd_TopOffset)    | RAF_SIGNED, },
+      { BT_BottomOffset,     CHART_ATTR(bd_, bd_BottomOffset) | RAF_SIGNED, },
 
-      BT_ParentWindow,     CHART_ATTR(bd_, bd_Window)       | RAF_CUSTOM,
-      BT_ParentView,       CHART_ATTR(bd_, bd_View),
-      BT_ParentGroup,      CHART_ATTR(bd_, bd_Group)        | RAF_CUSTOM,
-      BT_GroupMember,      CHART_ATTR(bd_, bd_Member),
+      { BT_ParentWindow,     CHART_ATTR(bd_, bd_Window)       | RAF_CUSTOM, },
+      { BT_ParentView,       CHART_ATTR(bd_, bd_View), },
+      { BT_ParentGroup,      CHART_ATTR(bd_, bd_Group)        | RAF_CUSTOM, },
+      { BT_GroupMember,      CHART_ATTR(bd_, bd_Member), },
 
-      GA_ID,               RAF_SUPER | RAF_NOUPDATE | RAF_NOP,
+      { GA_ID,               RAF_SUPER | RAF_NOUPDATE | RAF_NOP, },
 
-      TAG_DONE
+      { TAG_DONE },
    };
    
    ULONG rc = GetTagData(ra->ra_Attr->ti_Tag, 0, chart);
@@ -460,14 +458,14 @@ METHOD(BaseClassSetCustom, struct rmAttr *, ra)
    BD               *bd = (BD *)INST_DATA(cl, obj);
    struct TextAttr  *ta;
    struct TextFont  *tf;
-   ULONG             attr = ra->ra_Attr->ti_Tag;
-   ULONG             data = ra->ra_Attr->ti_Data;
+   Tag               attr = ra->ra_Attr->ti_Tag;
+   IPTR              data = ra->ra_Attr->ti_Data;
 
    switch (attr)
    {
    case BT_LabelObject:
       if (bd->bd_Label) DisposeObject(bd->bd_Label);
-      if (bd->bd_Label = (Object *)data)
+      if ((bd->bd_Label = (Object *)data))
       {
 	 bd->bd_Flags &= ~BDF_GOT_LABEL_EXT;
 	 DoSetMethodNG(bd->bd_Label, IMAGE_InBorder, GADGET(obj)->Activation & BORDERMASK, TAG_END);
@@ -476,7 +474,7 @@ METHOD(BaseClassSetCustom, struct rmAttr *, ra)
 
    case BT_FrameObject:
       if (bd->bd_Frame) DisposeObject(bd->bd_Frame);
-      if (bd->bd_Frame = (Object *)data)
+      if ((bd->bd_Frame = (Object *)data))
       {
 	 DoSetMethodNG(bd->bd_Frame, IMAGE_InBorder, GADGET(obj)->Activation & BORDERMASK, TAG_END);
       };
@@ -493,9 +491,9 @@ METHOD(BaseClassSetCustom, struct rmAttr *, ra)
       /*
        * We only change the font when it opens ok.
        */
-      if (ta = (struct TextAttr *)data)
+      if ((ta = (struct TextAttr *)data))
       {
-	 if (tf = BGUI_OpenFont(ta))
+	 if ((tf = BGUI_OpenFont(ta)))
 	 {
 	    bd->bd_TextAttr = ta;
 	    if(bd->bd_TextFont)
@@ -663,12 +661,12 @@ METHOD(BaseClassRenderX, struct gpRender *, gpr)
       Get_Attr(bd->bd_View, VIEW_ObjectBuffer, (ULONG *)&rp);
    };
 
-   if (bd->bd_RPort = rp)
+   if ((bd->bd_RPort = rp))
    {
 #ifdef DEBUG_BGUI
       if (bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_GadgetInfo, gpr->gpr_GInfo, BI_RastPort, rp, TAG_DONE))
 #else
-      if (bi = AllocBaseInfo(BI_GadgetInfo, gpr->gpr_GInfo, BI_RastPort, rp, TAG_DONE))
+      if ((bi = AllocBaseInfo(BI_GadgetInfo, gpr->gpr_GInfo, BI_RastPort, rp, TAG_DONE)))
 #endif
       {
 	 bi->bi_Window = bd->bd_Parent;
@@ -676,7 +674,7 @@ METHOD(BaseClassRenderX, struct gpRender *, gpr)
 	 /*
 	  * Layout the object.
 	  */
-	 if (rc = AsmDoMethod(obj, BASE_LAYOUT, bi, GADGETBOX(obj), 0))
+	 if ((rc = AsmDoMethod(obj, BASE_LAYOUT, bi, GADGETBOX(obj), 0)))
 	 {
 	    /*
 	     * Remove layer from buffer if not needed.
@@ -888,10 +886,10 @@ METHOD(BaseClassRender, struct bmRender *, bmr)
       {
 	 bd2 = bd;
 
-	 while (parent = bd2->bd_Group)
+	 while ((parent = bd2->bd_Group))
 	 {
 	    bd2 = INST_DATA(cl, parent);
-	    if (frame = bd2->bd_Frame)
+	    if ((frame = bd2->bd_Frame))
 	    {
 	       /*
 		* Use the frame for our backfill.
@@ -971,11 +969,7 @@ METHOD_END
 METHOD(BaseClassHelp, struct bmShowHelp *, bsh)
 {
    BD                   *bd = INST_DATA(cl, obj);
-#ifdef __AROS__
-#warning Commented the following line
-#else
-   struct NewAmigaGuide  nag = { NULL };
-#endif
+   struct NewAmigaGuide  nag = { };
    ULONG                 rc = BMHELP_NOT_ME;
    struct gpHitTest      gph;
 
@@ -985,10 +979,7 @@ METHOD(BaseClassHelp, struct bmShowHelp *, bsh)
     */
    if (bd->bd_HelpFile || bd->bd_HelpText || bd->bd_HelpHook)
    {
-#ifdef __AROS__
-#warning A comment within a comment makes gcc puke...
 #if 0
-      /*
       WORD                  l, t, w, h, dw, dh;
       /*
        * Setup the gadget bounds.
@@ -1024,8 +1015,6 @@ METHOD(BaseClassHelp, struct bmShowHelp *, bsh)
        */
       if (bsh->bsh_Mouse.X >= l && bsh->bsh_Mouse.X < (l + w) &&
 	  bsh->bsh_Mouse.Y >= t && bsh->bsh_Mouse.Y < (t + h))
-      */
-#endif
 #endif
 
       gph.MethodID   = GM_HELPTEST;
@@ -1053,9 +1042,6 @@ METHOD(BaseClassHelp, struct bmShowHelp *, bsh)
 	    /*
 	     * Initialize the NewAmigaGuide structure.
 	     */
-#ifdef __AROS__
-#warning Commented the following lines...
-#else
 	    nag.nag_Name   = (STRPTR)bd->bd_HelpFile;
 	    nag.nag_Node   = (STRPTR)bd->bd_HelpNode;
 	    nag.nag_Line   = bd->bd_HelpLine;
@@ -1066,7 +1052,6 @@ METHOD(BaseClassHelp, struct bmShowHelp *, bsh)
 	     */
 	    if (!DisplayAGuideInfo(&nag, TAG_END)) rc = BMHELP_FAILURE;
 	    else                                   rc = BMHELP_OK;
-#endif
 	 };
       };
    };
@@ -1110,12 +1095,12 @@ METHOD(BaseClassDimensionsX, struct grmDimensions *, dim)
    ULONG              rc = 0;
 
 #ifdef DEBUG_BGUI
-   if (bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_GadgetInfo, dim->grmd_GInfo, BI_RastPort, dim->grmd_RPort, TAG_DONE))
+   if ((bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_GadgetInfo, dim->grmd_GInfo, BI_RastPort, dim->grmd_RPort, TAG_DONE)))
 #else
-   if (bi = AllocBaseInfo(BI_GadgetInfo, dim->grmd_GInfo, BI_RastPort, dim->grmd_RPort, TAG_DONE))
+   if ((bi = AllocBaseInfo(BI_GadgetInfo, dim->grmd_GInfo, BI_RastPort, dim->grmd_RPort, TAG_DONE)))
 #endif
    {
-      if (rc = AsmDoMethod(obj, BASE_DIMENSIONS, bi, &be, 0))
+      if ((rc = AsmDoMethod(obj, BASE_DIMENSIONS, bi, &be, 0)))
       {
 	 /*
 	  * Compute minimum width/height according to the label and its position.
@@ -1292,7 +1277,7 @@ METHOD(BaseClassGoActive, struct gpInput *, gpi)
       /*
        * Let the object create a bitmap.
        */
-      if (bd->bd_BMO = CreateBMO(obj, gpi->gpi_GInfo))
+      if ((bd->bd_BMO = CreateBMO(obj, gpi->gpi_GInfo)))
       {
 	 return GMR_MEACTIVE;
       }
@@ -1541,9 +1526,9 @@ METHOD(BaseClassDragActive, struct bmDragMsg *, bmdm)
     * Let's show'm were active.
     */
 #ifdef DEBUG_BGUI
-   if (bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_GadgetInfo, bmdm->bmdm_GInfo, BI_RastPort, NULL, TAG_DONE))
+   if ((bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_GadgetInfo, bmdm->bmdm_GInfo, BI_RastPort, NULL, TAG_DONE)))
 #else
-   if (bi = AllocBaseInfo(BI_GadgetInfo, bmdm->bmdm_GInfo, BI_RastPort, NULL, TAG_DONE))
+   if ((bi = AllocBaseInfo(BI_GadgetInfo, bmdm->bmdm_GInfo, BI_RastPort, NULL, TAG_DONE)))
 #endif
    {
       /*
@@ -1573,9 +1558,9 @@ METHOD(BaseClassDragUpdate, struct bmDragPoint *, bmdp)
    if (bd->bd_Flags & BDF_MOVE_DROPBOX)
    {
 #ifdef DEBUG_BGUI
-      if (bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_GadgetInfo, bmdp->bmdp_GInfo, BI_RastPort, NULL, TAG_DONE))
+      if ((bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_GadgetInfo, bmdp->bmdp_GInfo, BI_RastPort, NULL, TAG_DONE)))
 #else
-      if (bi = AllocBaseInfo(BI_GadgetInfo, bmdp->bmdp_GInfo, BI_RastPort, NULL, TAG_DONE))
+      if ((bi = AllocBaseInfo(BI_GadgetInfo, bmdp->bmdp_GInfo, BI_RastPort, NULL, TAG_DONE)))
 #endif
       {
 	 DottedBox(bi, &bd->bd_HitBox);
@@ -1625,7 +1610,7 @@ METHOD(BaseClassDragInactive, struct bmDragMsg *, bmdm)
     * to eliminate any changes made when the
     * object was activated.
     */
-   if (rp = BGUI_ObtainGIRPort(bmdm->bmdm_GInfo))
+   if ((rp = BGUI_ObtainGIRPort(bmdm->bmdm_GInfo)))
    {
       /*
        * Refresh the object.
@@ -1660,7 +1645,7 @@ METHOD(BaseClassGetObject, struct bmGetDragObject *, bmgo)
     * Allocate a bitmap large enough to hold
     * the hitbox of the object.
     */
-   if (rc = (ULONG)BGUI_AllocBitMap(w, h, FGetDepth(&rp), BMF_CLEAR, rp.BitMap))
+   if ((rc = (IPTR)BGUI_AllocBitMap(w, h, FGetDepth(&rp), BMF_CLEAR, rp.BitMap)))
    {
       /*
        * Setup rastport for rendering into this new BitMap.
@@ -1743,7 +1728,7 @@ METHOD(BaseClassFindKey, struct bmFindKey *, bmfk)
    UWORD  qual = bd->bd_Qual & QUAL_MASK;
    
    if ((GADGET(obj)->Flags & GFLG_DISABLED) || (bd->bd_Flags & BDF_INHIBITED))
-      return NULL;
+      return (IPTR)NULL;
 
    if (qual == QUAL_MASK) Qual = qual;
    
@@ -1756,7 +1741,7 @@ METHOD(BaseClassFindKey, struct bmFindKey *, bmfk)
       {
 	 if ((key == (Key & 0x007F)) && (qual == Qual))
 	 {
-	    return (ULONG)obj;
+	    return (IPTR)obj;
 	 };
       };
    }
@@ -1766,11 +1751,11 @@ METHOD(BaseClassFindKey, struct bmFindKey *, bmfk)
       {  
 	 if ((ToLower(*bd->bd_Key) == ToLower(Key)) && (qual == Qual))
 	 {
-	    return (ULONG)obj;
+	    return (IPTR)obj;
 	 };
       };
    };
-   return NULL;
+   return (IPTR)NULL;
 }
 METHOD_END
 ///
@@ -1849,47 +1834,47 @@ METHOD_END
  */
 STATIC DPFUNC ClassFunc[] =
 {
-   RM_GET,                 (FUNCPTR)BaseClassGet,
-   RM_GETCUSTOM,           (FUNCPTR)BaseClassGetCustom,
-   RM_SET,                 (FUNCPTR)BaseClassSet,
-   RM_SETCUSTOM,           (FUNCPTR)BaseClassSetCustom,
-   RM_GETATTRFLAGS,        (FUNCPTR)BaseClassGetAttrFlags,
-   RM_REFRESH,             (FUNCPTR)BaseClassRefresh,
-   OM_NOTIFY,              (FUNCPTR)BaseClassNotify,
-   OM_DISPOSE,             (FUNCPTR)BaseClassDispose,
-   OM_NEW,                 (FUNCPTR)BaseClassNew,
+   { RM_GET,                 BaseClassGet, },
+   { RM_GETCUSTOM,           BaseClassGetCustom, },
+   { RM_SET,                 BaseClassSet, },
+   { RM_SETCUSTOM,           BaseClassSetCustom, },
+   { RM_GETATTRFLAGS,        BaseClassGetAttrFlags, },
+   { RM_REFRESH,             BaseClassRefresh, },
+   { OM_NOTIFY,              BaseClassNotify, },
+   { OM_DISPOSE,             BaseClassDispose, },
+   { OM_NEW,                 BaseClassNew, },
 
-   BASE_LAYOUT,            (FUNCPTR)BaseClassLayout,
-   BASE_RENDER,            (FUNCPTR)BaseClassRender,
-   BASE_DIMENSIONS,        (FUNCPTR)BaseClassDimensions,
+   { BASE_LAYOUT,            BaseClassLayout, },
+   { BASE_RENDER,            BaseClassRender, },
+   { BASE_DIMENSIONS,        BaseClassDimensions, },
    
-   GM_RENDER,              (FUNCPTR)BaseClassRenderX,
-   GRM_DIMENSIONS,         (FUNCPTR)BaseClassDimensionsX,
-   BASE_RELAYOUT,          (FUNCPTR)BaseClassRelayout,
+   { GM_RENDER,              BaseClassRenderX, },
+   { GRM_DIMENSIONS,         BaseClassDimensionsX, },
+   { BASE_RELAYOUT,          BaseClassRelayout, },
 
-   GM_HITTEST,             (FUNCPTR)BaseClassHitTest,
-   GM_HELPTEST,            (FUNCPTR)BaseClassHelpTest,
-   BASE_IS_MULTI,          (FUNCPTR)BaseClassIsMulti,
-   BASE_SHOWHELP,          (FUNCPTR)BaseClassHelp,
-   BASE_LEFTEXT,           (FUNCPTR)BaseClassLeftExt,
-   WM_KEYACTIVE,           (FUNCPTR)BaseClassKeyActive,
-   GM_GOACTIVE,            (FUNCPTR)BaseClassGoActive,
-   GM_GOINACTIVE,          (FUNCPTR)BaseClassGoInactive,
-   BASE_MOVEBOUNDS,        (FUNCPTR)BaseClassMoveBounds,
-   BASE_DRAGGING,          (FUNCPTR)BaseClassDragging,
-   BASE_DRAGQUERY,         (FUNCPTR)BaseClassDragQuery,
-   BASE_DRAGACTIVE,        (FUNCPTR)BaseClassDragActive,
-   BASE_DRAGUPDATE,        (FUNCPTR)BaseClassDragUpdate,
-   BASE_DROPPED,           (FUNCPTR)BaseClassDragDropped,
-   BASE_DRAGINACTIVE,      (FUNCPTR)BaseClassDragInactive,
-   BASE_GETDRAGOBJECT,     (FUNCPTR)BaseClassGetObject,
-   BASE_FREEDRAGOBJECT,    (FUNCPTR)BaseClassFreeObject,
-   BASE_FINDKEY,           (FUNCPTR)BaseClassFindKey,
-   BASE_KEYLABEL,          (FUNCPTR)BaseClassKeyLabel,
-   BASE_LOCALIZE,          (FUNCPTR)BaseClassLocalize,
-   BASE_INHIBIT,           (FUNCPTR)BaseClassInhibit,
+   { GM_HITTEST,             BaseClassHitTest, },
+   { GM_HELPTEST,            BaseClassHelpTest, },
+   { BASE_IS_MULTI,          BaseClassIsMulti, },
+   { BASE_SHOWHELP,          BaseClassHelp, },
+   { BASE_LEFTEXT,           BaseClassLeftExt, },
+   { WM_KEYACTIVE,           BaseClassKeyActive, },
+   { GM_GOACTIVE,            BaseClassGoActive, },
+   { GM_GOINACTIVE,          BaseClassGoInactive, },
+   { BASE_MOVEBOUNDS,        BaseClassMoveBounds, },
+   { BASE_DRAGGING,          BaseClassDragging, },
+   { BASE_DRAGQUERY,         BaseClassDragQuery, },
+   { BASE_DRAGACTIVE,        BaseClassDragActive, },
+   { BASE_DRAGUPDATE,        BaseClassDragUpdate, },
+   { BASE_DROPPED,           BaseClassDragDropped, },
+   { BASE_DRAGINACTIVE,      BaseClassDragInactive, },
+   { BASE_GETDRAGOBJECT,     BaseClassGetObject, },
+   { BASE_FREEDRAGOBJECT,    BaseClassFreeObject, },
+   { BASE_FINDKEY,           BaseClassFindKey, },
+   { BASE_KEYLABEL,          BaseClassKeyLabel, },
+   { BASE_LOCALIZE,          BaseClassLocalize, },
+   { BASE_INHIBIT,           BaseClassInhibit, },
    
-   DF_END
+   { DF_END },
 };
 
 makeproto Class *BaseClass = NULL;

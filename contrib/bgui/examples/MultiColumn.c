@@ -99,7 +99,7 @@ SAVEDS ASM REGFUNC3(APTR, ResourceHookFunc,
                         **      which, eventually, get's added to
                         **      the listview.
                         **/
-                        if ( fi = ( FILEINFO * )AllocVec( sizeof( FILEINFO ), MEMF_PUBLIC )) {
+                        if (( fi = ( FILEINFO * )AllocVec( sizeof( FILEINFO ), MEMF_PUBLIC ))) {
                                 /*
                                 **      Pick up the ExAllData.
                                 **/
@@ -115,7 +115,7 @@ SAVEDS ASM REGFUNC3(APTR, ResourceHookFunc,
                                 **/
                                 if ( ead->ed_Type < 0 ) {
                                         fi->fi_IsDir = FALSE;
-                                        sprintf( &fi->fi_Size[ 0 ], "%ld", ead->ed_Size );
+                                        sprintf( &fi->fi_Size[ 0 ], "%ld", (long int)ead->ed_Size );
                                 } else {
                                         fi->fi_IsDir = TRUE;
                                         strcpy( &fi->fi_Size[ 0 ], "(dir)" );
@@ -212,7 +212,7 @@ VOID ReComputeColumns( struct RastPort *rp, Object *obj, UWORD list_width )
                 **      Now we loop through the entries to find
                 **      out the largest width of the three columns.
                 **/
-                if ( fi = ( FILEINFO * )FirstEntry( obj )) {
+                if (( fi = ( FILEINFO * )FirstEntry( obj ))) {
                         /*
                         **      Loop until all are done.
                         **/
@@ -571,10 +571,10 @@ REGFUNC_END
 
 /* typedef ULONG (*HOOKFUNC)(); */
 
-struct Hook ResourceHook = { NULL, NULL, (HOOKFUNC)ResourceHookFunc, NULL, NULL };
-struct Hook DisplayHook  = { NULL, NULL, (HOOKFUNC)DisplayHookFunc,  NULL, NULL };
-struct Hook CompareHook  = { NULL, NULL, (HOOKFUNC)CompareHookFunc,  NULL, NULL };
-struct Hook ScrollHook   = { NULL, NULL, (HOOKFUNC)ScrollHookFunc,   NULL, NULL };
+struct Hook ResourceHook = { {NULL, NULL}, (HOOKFUNC)ResourceHookFunc, NULL, NULL };
+struct Hook DisplayHook  = { {NULL, NULL}, (HOOKFUNC)DisplayHookFunc,  NULL, NULL };
+struct Hook CompareHook  = { {NULL, NULL}, (HOOKFUNC)CompareHookFunc,  NULL, NULL };
+struct Hook ScrollHook   = { {NULL, NULL}, (HOOKFUNC)ScrollHookFunc,   NULL, NULL };
 
 /*
 **      Scan the directory "name".
@@ -595,11 +595,11 @@ VOID ScanDirectory( UBYTE *name, Object *obj )
         /*
         **      Get a lock to the directory.
         **/
-        if ( lock = Lock( name, ACCESS_READ )) {
+        if (( lock = Lock( name, ACCESS_READ ))) {
                 /*
                 **      Allocate a FileInfoBlock structure.
                 **/
-                if ( fib = ( struct FileInfoBlock * )AllocDosObject( DOS_FIB, NULL )) {
+                if (( fib = ( struct FileInfoBlock * )AllocDosObject( DOS_FIB, NULL ))) {
                         /*
                         **      Examine the lock.
                         **/
@@ -611,15 +611,15 @@ VOID ScanDirectory( UBYTE *name, Object *obj )
                                         /*
                                         **      Allocate ExAll() control structure.
                                         **/
-                                        if ( eac = ( struct ExAllControl * )AllocDosObject( DOS_EXALLCONTROL, NULL )) {
+                                        if (( eac = ( struct ExAllControl * )AllocDosObject( DOS_EXALLCONTROL, NULL ))) {
                                                 /*
                                                 **      Set key to NULL.
                                                 **/
-                                                eac->eac_LastKey = NULL;
+                                                eac->eac_LastKey = (IPTR)NULL;
                                                 /*
                                                 **      Allocate ExAll() buffer.
                                                 **/
-                                                if ( ead = ( struct ExAllData * )AllocVec( 10 * sizeof( struct ExAllData ), MEMF_PUBLIC )) {
+                                                if (( ead = ( struct ExAllData * )AllocVec( 10 * sizeof( struct ExAllData ), MEMF_PUBLIC ))) {
                                                         /*
                                                         **      Read directory.
                                                         **/
@@ -702,7 +702,7 @@ VOID StartDemo( void )
         /*
         **      Parse command line?
         **/
-        if ( ra = ReadArgs( "NAME", &dname, NULL )) {
+        if (( ra = ReadArgs( "NAME", &dname, NULL ))) {
                 /*
                 **      Copy the name into the buffer.
                 **/
@@ -765,7 +765,7 @@ VOID StartDemo( void )
                                 /*
                                 **      Open the window.
                                 **/
-                                if ( win = WindowOpen( WO_DirWin )) {
+                                if (( win = WindowOpen( WO_DirWin ))) {
                                         /*
                                         **      Obtain signal mask.
                                         **/
@@ -797,7 +797,7 @@ VOID StartDemo( void )
                                                                         /*
                                                                         **      Get selected entry.
                                                                         **/
-                                                                        if ( fi = ( FILEINFO * )FirstSelected( GO_DirList )) {
+                                                                        if (( fi = ( FILEINFO * )FirstSelected( GO_DirList ))) {
                                                                                 /*
                                                                                 **      Is the entry a directory?
                                                                                 **/

@@ -106,7 +106,7 @@ REGFUNC_END
 
 /* typedef ULONG (*HOOKFUNC)(); */
 
-struct Hook HexHook = { NULL, NULL, (HOOKFUNC)HexHookFunc, NULL, NULL };
+struct Hook HexHook = { { NULL, NULL }, (HOOKFUNC)HexHookFunc, NULL, NULL };
 
 VOID StartDemo( void )
 {
@@ -161,7 +161,7 @@ VOID StartDemo( void )
 		/*
 		**      try to open the window.
 		**/
-		if ( window = WindowOpen( WO_Window ))
+		if (( window = WindowOpen( WO_Window )))
 		{
 			/*
 			**      Obtain it's wait mask.

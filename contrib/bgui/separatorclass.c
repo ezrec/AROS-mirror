@@ -72,7 +72,7 @@ METHOD(SepClassNew, struct opSet *, ops)
    /*
     * Let the superclass create an object.
     */
-   if (rc = AsmDoSuperMethodA(cl, obj, (Msg)ops))
+   if ((rc = AsmDoSuperMethodA(cl, obj, (Msg)ops)))
    {
       AsmCoerceMethod(cl, (Object *)rc, OM_SET, ops->ops_AttrList, NULL);
    }
@@ -101,12 +101,13 @@ METHOD_END
 METHOD(SepClassSet, struct opSet *, ops)
 {
    SD              *sd = INST_DATA(cl, obj);
-   struct TagItem  *tag, *tstate = ops->ops_AttrList;
    ULONG            rc, data;
+   struct TagItem  *tag;
+   const struct TagItem *tstate = ops->ops_AttrList;
 
    rc = AsmDoSuperMethodA(cl, obj, (Msg)ops);
 
-   while (tag = NextTagItem(&tstate))
+   while ((tag = NextTagItem(&tstate)))
    {
       data = tag->ti_Data;
       switch (tag->ti_Tag)
@@ -384,14 +385,14 @@ METHOD_END
  * Class function table.
  */
 STATIC DPFUNC ClassFunc[] = {
-   BASE_RENDER,          (FUNCPTR)SepClassRender,
-   GM_HITTEST,           (FUNCPTR)SepClassHitTest,
-   BASE_DIMENSIONS,      (FUNCPTR)SepClassDimensions,
-   OM_NEW,               (FUNCPTR)SepClassNew,
-   OM_DISPOSE,           (FUNCPTR)SepClassDispose,
-   OM_SET,               (FUNCPTR)SepClassSet,
-   BASE_LOCALIZE,        (FUNCPTR)SepClassLocalize,
-   DF_END,               NULL
+   { BASE_RENDER,          SepClassRender, },
+   { GM_HITTEST,           SepClassHitTest, },
+   { BASE_DIMENSIONS,      SepClassDimensions, },
+   { OM_NEW,               SepClassNew, },
+   { OM_DISPOSE,           SepClassDispose, },
+   { OM_SET,               SepClassSet, },
+   { BASE_LOCALIZE,        SepClassLocalize, },
+   { DF_END,               NULL },
 };
 
 /*

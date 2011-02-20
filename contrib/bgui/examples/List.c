@@ -174,7 +174,7 @@ VOID StartDemo( void )
 		/*
 		 *      Open the window.
 		 */
-		if ( window = WindowOpen( WO_Window )) {
+		if (( window = WindowOpen( WO_Window ))) {
 			/*
 			 *      Get signal wait mask.
 			 */

@@ -117,30 +117,12 @@
 #include <dos.h>
 #endif
 
-#ifdef __AROS__
-#warning If something is wrong with the dispatcherfunction then look here!
-//#if 0
-typedef AROS_UFP4(ULONG,* ClassMethodDispatcher,
-		AROS_UFPA(Class *, cl, A0),
-		AROS_UFPA(Object *, obj, A2),
-		AROS_UFPA(Msg, msg, A1),
-		AROS_UFPA(APTR, global_data, A4));
-//#endif
-
-//typedef ClassMethodDispatcher (void *);
-
-#else
-typedef ASM ULONG (*ClassMethodDispatcher)(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg msg, REG(a4) APTR global_data);
-#endif
+typedef FUNCPTR ClassMethodDispatcher;
 
 typedef struct SortedMethod
 {
    ULONG MethodID;
-#ifdef __AROS__
-   ULONG (*DispatcherFunction)(Class *, Object *, Msg, APTR);
-#else
    ClassMethodDispatcher DispatcherFunction;
-#endif
    Class *Class;
    APTR GlobalData;
    struct SortedMethod *NextHashedMethod;
@@ -151,11 +133,7 @@ SortedMethod;
 typedef struct
 {
    DPFUNC *ClassMethodFunctions;
-#ifdef __AROS__
-   ULONG (*ClassDispatcher)(Class *, Object *, Msg, APTR);
-#else
    ClassMethodDispatcher ClassDispatcher;
-#endif
    APTR BGUIGlobalData;
    APTR ClassGlobalData;
    SortedMethod *MethodFunctions;
@@ -224,37 +202,23 @@ REGFUNC_END
 
 struct CallData
 {
-#ifdef __AROS__
-   ULONG (*dispatcher)(Class *, Object *, Msg, APTR);
-#else
    ClassMethodDispatcher dispatcher;
-#endif
    Class *cl;
    Object *obj;
    Msg msg;
    APTR global_data;
 };
 
-//static ULONG ASM CallMethod(REG(a3) struct CallData *call_data)
-static ASM REGFUNC1(ULONG, CallMethod,
-	REGPARAM(A3, struct CallData *, call_data))
+static IPTR ASM CallMethod(REG(a3) struct CallData *call_data)
 {
    register APTR stack;
-   register ULONG result;
+   register IPTR result;
 
-#ifdef __AROS__
-#warning Commented EnsureStack
-#else
    stack=EnsureStack();
-#endif
-   result=(*call_data->dispatcher)(call_data->cl,call_data->obj,call_data->msg,call_data->global_data);
-#ifdef __AROS__
-#else
+   result=METHOD_CALL(call_data->dispatcher,call_data->cl,call_data->obj,call_data->msg,call_data->global_data);
    RevertStack(stack);
-#endif
    return(result);
 }
-REGFUNC_END
 
 static int CompareMethods(const void *method_1, const void *method_2)
 {
@@ -290,7 +254,7 @@ static SortedMethod *LookupMethod(BGUIClassData *class_data,ULONG method)
 }
 
 //makeproto SAVEDS ASM ULONG __GCD( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg msg)
-makeproto SAVEDS ASM REGFUNC3(ULONG, __GCD,
+makeproto SAVEDS ASM REGFUNC3(IPTR, __GCD,
 	REGPARAM(A0, Class *, cl),
 	REGPARAM(A2, Object *, obj),
 	REGPARAM(A1, Msg, msg))
@@ -321,20 +285,12 @@ makeproto SAVEDS ASM REGFUNC3(ULONG, __GCD,
    if(method_found)
    {
       call_data.cl=method_found->Class;
-#ifdef __AROS__
-      call_data.dispatcher=method_found->DispatcherFunction;
-#else
       call_data.dispatcher=(ClassMethodDispatcher)method_found->DispatcherFunction;
-#endif
       call_data.global_data=method_found->GlobalData;
    }
    else
    {
-#ifdef __AROS__
-      call_data.dispatcher=(call_data.cl=cl->cl_Super)->cl_Dispatcher.h_Entry;
-#else
       call_data.dispatcher=(ClassMethodDispatcher)(call_data.cl=cl->cl_Super)->cl_Dispatcher.h_Entry;
-#endif
       call_data.global_data=class_data->BGUIGlobalData;
    }
    call_data.obj=obj;
@@ -357,57 +313,44 @@ makeproto ASM Class *BGUI_MakeClassA(REG(a0) struct TagItem *tags)
 {
    AROS_LIBFUNC_INIT
 
-#ifdef __AROS__
-#else
    ULONG  old_a4 = (ULONG)getreg(REG_A4);
-#endif
-   ULONG  SuperClass, SuperClass_ID, Class_ID, Flags, ClassSize, ObjectSize;
+   IPTR   SuperClass, SuperClass_ID, Class_ID;
+   ULONG  Flags, ClassSize, ObjectSize;
    BGUIClassData *ClassData;
    Class *cl=NULL;
 
-#ifdef __AROS__
-#else
    geta4();
-#endif
 
-   if ((SuperClass = GetTagData(CLASS_SuperClassBGUI, (ULONG)~0, tags)) == (ULONG)~0)
-      SuperClass = GetTagData(CLASS_SuperClass, NULL, tags);
+   if ((SuperClass = GetTagData(CLASS_SuperClassBGUI, (IPTR)~0, tags)) == (IPTR)~0)
+      SuperClass = GetTagData(CLASS_SuperClass, (IPTR)NULL, tags);
    else
-      SuperClass = (ULONG)BGUI_GetClassPtr(SuperClass);
+      SuperClass = (IPTR)BGUI_GetClassPtr(SuperClass);
 
    if (SuperClass)
-      SuperClass_ID = NULL;
+      SuperClass_ID = 0;
    else
-      SuperClass_ID = GetTagData(CLASS_SuperClassID, (ULONG)"rootclass", tags);
+      SuperClass_ID = GetTagData(CLASS_SuperClassID, (IPTR)"rootclass", tags);
 
-   Class_ID   = GetTagData(CLASS_ClassID, NULL, tags);
-   Flags      = GetTagData(CLASS_Flags,      0, tags);
-   ClassSize  = GetTagData(CLASS_ClassSize,  0, tags);
-   ObjectSize = GetTagData(CLASS_ObjectSize, 0, tags);
+   Class_ID   = GetTagData(CLASS_ClassID, (IPTR)NULL, tags);
+   Flags      = (ULONG)GetTagData(CLASS_Flags,      0, tags);
+   ClassSize  = (ULONG)GetTagData(CLASS_ClassSize,  0, tags);
+   ObjectSize = (ULONG)GetTagData(CLASS_ObjectSize, 0, tags);
 
-   if (ClassData = BGUI_AllocPoolMem(ClassSize + sizeof(BGUIClassData)))
+   if ((ClassData = BGUI_AllocPoolMem(ClassSize + sizeof(BGUIClassData))))
    {
-      if (cl = MakeClass((UBYTE *)Class_ID, (UBYTE *)SuperClass_ID, (Class *)SuperClass, ObjectSize, Flags))
+      if ((cl = MakeClass((UBYTE *)Class_ID, (UBYTE *)SuperClass_ID, (Class *)SuperClass, ObjectSize, Flags)))
       {
 	 DPFUNC *method_functions;
 
 	 cl->cl_UserData                 = (LONG)(ClassData+1);
 	 cl->cl_Dispatcher.h_Entry       = (HOOKFUNC)GetTagData(CLASS_Dispatcher, (ULONG)__GCD, tags);
 	 ClassData->ClassMethodFunctions = (DPFUNC *)GetTagData(CLASS_ClassDFTable, NULL, tags);
-#ifdef __AROS__
-	 ClassData->ClassDispatcher      = GetTagData(CLASS_ClassDispatcher, (ULONG)ClassCallDispatcher, tags);
-#else
 	 ClassData->ClassDispatcher      = (ClassMethodDispatcher)GetTagData(CLASS_ClassDispatcher, (ULONG)ClassCallDispatcher, tags);
-#endif
 
-#ifdef __AROS__
-#warning Missing code here!
-#else
 	 ClassData->BGUIGlobalData       = (APTR)getreg(REG_A4);
 	 ClassData->ClassGlobalData      = (APTR)old_a4;
-#endif
 
-	 if((method_functions=(DPFUNC *)GetTagData(CLASS_DFTable, NULL, tags)))
+	 if((method_functions=(DPFUNC *)GetTagData(CLASS_DFTable, 0, tags)))
 	 {
 	    {
 	       DPFUNC *methods;
@@ -421,16 +364,12 @@ makeproto ASM Class *BGUI_MakeClassA(REG(a0) struct TagItem *tags)
 	       for(method=0;method<ClassData->MethodCount;method++)
 	       {
 		  ClassData->MethodFunctions[method].MethodID=method_functions[method].df_MethodID;
-#ifdef __AROS__
-		  ClassData->MethodFunctions[method].DispatcherFunction=method_functions[method].df_Func;
-#else
 		  ClassData->MethodFunctions[method].DispatcherFunction=(ClassMethodDispatcher)method_functions[method].df_Func;
-#endif
 		  ClassData->MethodFunctions[method].Class=cl;
 		  ClassData->MethodFunctions[method].GlobalData=ClassData->ClassGlobalData;
 	       }
 	       qsort(ClassData->MethodFunctions,ClassData->MethodCount,sizeof(*ClassData->MethodFunctions),CompareMethods);
-	       if(cl->cl_Super->cl_Dispatcher.h_Entry==__GCD)
+	       if(cl->cl_Super->cl_Dispatcher.h_Entry==(APTR)__GCD)
 	       {
 		  BGUIClassData *super_class_data;
 		  ULONG new_methods;
@@ -444,7 +383,7 @@ makeproto ASM Class *BGUI_MakeClassA(REG(a0) struct TagItem *tags)
 
 			if((new_sorted_methods=BGUI_AllocPoolMem(sizeof(*new_sorted_methods)*(new_methods+1)))==NULL)
 			{
-			   cl->cl_UserData=NULL;
+			   cl->cl_UserData=0;
 			   FreeClass(cl);
 			   cl=NULL;
 			   break;
@@ -487,7 +426,7 @@ makeproto ASM Class *BGUI_MakeClassA(REG(a0) struct TagItem *tags)
 		  }
 		  else
 		  {
-		     cl->cl_UserData=NULL;
+		     cl->cl_UserData=0;
 		     FreeClass(cl);
 		     cl=NULL;
 		  }
@@ -495,7 +434,7 @@ makeproto ASM Class *BGUI_MakeClassA(REG(a0) struct TagItem *tags)
 	    }
 	    else
 	    {
-	       cl->cl_UserData=NULL;
+	       cl->cl_UserData=0;
 	       FreeClass(cl);
 	       cl=NULL;
 	    }
@@ -513,9 +452,9 @@ makeproto ASM Class *BGUI_MakeClassA(REG(a0) struct TagItem *tags)
 	    msg.MethodID=OM_NEW;
 	    msg.ops_AttrList=NULL;
 	    msg.ops_GInfo=NULL;
-	    if(!ClassData->ClassDispatcher(cl,NULL,(Msg)&msg,ClassData->ClassGlobalData))
+	    if(!METHOD_CALL(ClassData->ClassDispatcher,cl,NULL,(Msg)&msg,ClassData->ClassGlobalData))
 	    {
-	       cl->cl_UserData=NULL;
+	       cl->cl_UserData=0;
 	       FreeClass(cl);
 	       cl=NULL;
 	    }
@@ -528,10 +467,7 @@ makeproto ASM Class *BGUI_MakeClassA(REG(a0) struct TagItem *tags)
 	 BGUI_FreePoolMem(ClassData);
       }
    };
-#ifdef __AROS__
-#else
    putreg(REG_A4, (LONG)old_a4);
-#endif
    return cl;
 
    AROS_LIBFUNC_EXIT
@@ -559,7 +495,7 @@ makeproto SAVEDS ASM BOOL BGUI_FreeClass(REG(a0) Class *cl)
 	 {
 	    ULONG msg=OM_DISPOSE;
 
-	    if(!ClassData->ClassDispatcher(cl,NULL,(Msg)&msg,ClassData->ClassGlobalData))
+	    if(!METHOD_CALL(ClassData->ClassDispatcher,cl,NULL,(Msg)&msg,ClassData->ClassGlobalData))
 	       return FALSE;
 	 }
 	 if(ClassData->MethodFunctions)
@@ -569,7 +505,7 @@ makeproto SAVEDS ASM BOOL BGUI_FreeClass(REG(a0) Class *cl)
 	    BGUI_FreePoolMem(ClassData->MethodHashTable);
 	 }
 	 BGUI_FreePoolMem(ClassData);
-	 cl->cl_UserData=NULL;
+	 cl->cl_UserData=0;
       }
       if(FreeClass(cl))
       {
@@ -582,19 +518,15 @@ makeproto SAVEDS ASM BOOL BGUI_FreeClass(REG(a0) Class *cl)
    AROS_LIBFUNC_EXIT
 }
 
-//makeproto ULONG ASM BGUI_GetAttrChart(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct rmAttr *ra)
-makeproto ASM REGFUNC3(ULONG, BGUI_GetAttrChart,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct rmAttr *, ra))
+makeproto ULONG ASM BGUI_GetAttrChart(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct rmAttr *ra)
 {
    ULONG           flags = ra->ra_Flags;
    struct TagItem *attr  = ra->ra_Attr;
-   ULONG           data;
+   ULONG           data = 0;
    UBYTE          *dataspace;
    ULONG           rc;
 
-   if (rc = AsmCoerceMethod(cl, obj, RM_GETATTRFLAGS, attr, flags))
+   if ((rc = (ULONG)AsmCoerceMethod(cl, obj, RM_GETATTRFLAGS, attr, flags)))
    {
       if (!(rc & RAF_NOGET))
       {
@@ -643,7 +575,7 @@ makeproto ASM REGFUNC3(ULONG, BGUI_GetAttrChart,
       };
       if (rc & RAF_SUPER)
       {
-	 rc |= AsmDoSuperMethod(cl, obj, RM_GET, attr, flags);
+	 rc |= (ULONG)AsmDoSuperMethod(cl, obj, RM_GET, attr, flags);
       };
       rc = (rc & 0xFFFF) | RAF_UNDERSTOOD;
    }
@@ -652,17 +584,12 @@ makeproto ASM REGFUNC3(ULONG, BGUI_GetAttrChart,
       /*
        * Let the superclass have a go at it.
        */
-      rc = AsmDoSuperMethodA(cl, obj, (Msg)ra);
+      rc = (ULONG)AsmDoSuperMethodA(cl, obj, (Msg)ra);
    };
    return rc;
 }
-REGFUNC_END
 
-//makeproto ULONG ASM BGUI_SetAttrChart(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct rmAttr *ra)
-makeproto ASM REGFUNC3(ULONG, BGUI_SetAttrChart,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct rmAttr *, ra))
+makeproto ULONG ASM BGUI_SetAttrChart(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct rmAttr *ra)
 {
    ULONG           flags = ra->ra_Flags;
    struct TagItem *attr  = ra->ra_Attr;
@@ -670,7 +597,7 @@ makeproto ASM REGFUNC3(ULONG, BGUI_SetAttrChart,
    UBYTE          *dataspace, flag;
    ULONG           rc;
 
-   if (rc = AsmCoerceMethod(cl, obj, RM_GETATTRFLAGS, attr, flags))
+   if ((rc = (ULONG)AsmCoerceMethod(cl, obj, RM_GETATTRFLAGS, attr, flags)))
    {
       if ((rc & RAF_NOSET) || ((rc & RAF_NOUPDATE)  && (flags & RAF_UPDATE))
 			   || ((rc & RAF_NOINTERIM) && (flags & RAF_INTERIM))
@@ -720,7 +647,7 @@ makeproto ASM REGFUNC3(ULONG, BGUI_SetAttrChart,
       };
       if (rc & RAF_SUPER)
       {
-	 rc |= AsmDoSuperMethod(cl, obj, RM_SET, attr, flags);
+	 rc |= (ULONG)AsmDoSuperMethod(cl, obj, RM_SET, attr, flags);
       };
       rc = (rc & 0xFFFF) | RAF_UNDERSTOOD;
    }
@@ -729,23 +656,22 @@ makeproto ASM REGFUNC3(ULONG, BGUI_SetAttrChart,
       /*
        * Let the superclass have a go at it.
        */
-      rc = AsmDoSuperMethod(cl, obj, RM_SET, attr, flags);
+      rc = (ULONG)AsmDoSuperMethod(cl, obj, RM_SET, attr, flags);
    };
    return rc;
 }
-REGFUNC_END
 
-makeproto ULONG BGUI_PackStructureTag(UBYTE *dataspace, ULONG *pt, ULONG tag, ULONG data)
+makeproto ULONG BGUI_PackStructureTag(UBYTE *dataspace, ULONG *pt, Tag tag, IPTR data)
 {
    #ifdef ENHANCED
 
    struct TagItem tags[2];
 
    tags[0].ti_Tag  = tag;
-   tags[0].ti_Data = data;
+   tags[0].ti_Data = (ULONG)data; // FIXME
    tags[1].ti_Tag  = TAG_DONE;
 
-   return (ULONG)PackStructureTags((APTR)dataspace, pt, tags);
+   return PackStructureTags(dataspace, pt, tags);
 
    #else
 
@@ -792,17 +718,17 @@ makeproto ULONG BGUI_PackStructureTag(UBYTE *dataspace, ULONG *pt, ULONG tag, UL
    #endif
 }
 
-makeproto ULONG BGUI_UnpackStructureTag(UBYTE *dataspace, ULONG *pt, ULONG tag, ULONG *storage)
+makeproto ULONG BGUI_UnpackStructureTag(UBYTE *dataspace, ULONG *pt, Tag tag, IPTR *storage)
 {
    #ifdef ENHANCED
 
    struct TagItem tags[2];
 
    tags[0].ti_Tag  = tag;
-   tags[0].ti_Data = (ULONG)storage;
+   tags[0].ti_Data = (ULONG)(IPTR)storage;/* FIXME */
    tags[1].ti_Tag  = TAG_DONE;
 
-   return (ULONG)UnpackStructureTags((APTR)dataspace, pt, tags);
+   return UnpackStructureTags(dataspace, pt, tags);
 
    #else
 
@@ -912,7 +838,7 @@ makeproto SAVEDS ULONG ASM BGUI_UnpackStructureTags(REG(a0) APTR pack, REG(a1) U
    struct TagItem *tstate = tagList, *tag;
    ULONG rc = 0;
 
-   while (tag = NextTagItem(&tstate))
+   while ((tag = NextTagItem(&tstate)))
    {
       rc += BGUI_UnpackStructureTag((UBYTE *)pack, packTable, tag->ti_Tag, (ULONG *)tag->ti_Data);
    };
@@ -926,28 +852,17 @@ makeproto SAVEDS ULONG ASM BGUI_UnpackStructureTags(REG(a0) APTR pack, REG(a1) U
 /*
  * Quick GetAttr();
  */
-//makeproto ASM ULONG Get_Attr(REG(a0) Object *obj, REG(d0) ULONG attr, REG(a1) void *storage)
-makeproto ASM REGFUNC3(ULONG, Get_Attr,
-	REGPARAM(A0, Object *, obj),
-	REGPARAM(D0, ULONG, attr),
-	REGPARAM(A1, void *, storage))
+makeproto ASM ULONG Get_Attr(REG(a0) Object *obj, REG(d0) ULONG attr, REG(a1) void *storage)
 {
-   return AsmDoMethod(obj, OM_GET, attr, storage);
+   return (ULONG)AsmDoMethod(obj, OM_GET, attr, storage);
 }
-REGFUNC_END
 
-//makeproto ASM ULONG Get_SuperAttr(REG(a2) Class *cl, REG(a0) Object *obj, REG(d0) ULONG attr, REG(a1) void *storage)
-makeproto ASM REGFUNC4(ULONG, Get_SuperAttr,
-	REGPARAM(A2, Class *, cl),
-	REGPARAM(A0, Object *, obj),
-	REGPARAM(D0, ULONG, attr),
-	REGPARAM(A1, void *, storage))
+makeproto ASM ULONG Get_SuperAttr(REG(a2) Class *cl, REG(a0) Object *obj, REG(d0) ULONG attr, REG(a1) void *storage)
 {
-   return AsmDoSuperMethod(cl, obj, OM_GET, attr, storage);
+   return (ULONG)AsmDoSuperMethod(cl, obj, OM_GET, attr, storage);
 }
-REGFUNC_END
 
-makeproto ULONG NewSuperObject(Class *cl, Object *obj, struct TagItem *tags)
+makeproto IPTR NewSuperObject(Class *cl, Object *obj, struct TagItem *tags)
 {
    return AsmDoSuperMethod(cl, obj, OM_NEW, (ULONG)tags, NULL);
 }
@@ -957,7 +872,7 @@ makeproto ULONG NewSuperObject(Class *cl, Object *obj, struct TagItem *tags)
  */
 makeproto ULONG DoSetMethodNG(Object *obj, Tag tag1, ...)
 {
-   if (obj) return AsmDoMethod(obj, OM_SET, (struct TagItem *)&tag1, NULL);
+   if (obj) return (ULONG)AsmDoMethod(obj, OM_SET, (struct TagItem *)&tag1, NULL);
    else     return 0;
 }
 
@@ -966,7 +881,7 @@ makeproto ULONG DoSetMethodNG(Object *obj, Tag tag1, ...)
  */
 makeproto ULONG DoSuperSetMethodNG(Class *cl, Object *obj, Tag tag1, ...)
 {
-   if (obj) return AsmDoSuperMethod(cl, obj, OM_SET, (struct TagItem *)&tag1, NULL);
+   if (obj) return (ULONG)AsmDoSuperMethod(cl, obj, OM_SET, (struct TagItem *)&tag1, NULL);
    else     return 0;
 }
 
@@ -975,7 +890,7 @@ makeproto ULONG DoSuperSetMethodNG(Class *cl, Object *obj, Tag tag1, ...)
  */
 makeproto ULONG DoSetMethod(Object *obj, struct GadgetInfo *ginfo, Tag tag1, ...)
 {
-   if (obj) return AsmDoMethod(obj, OM_SET, (struct TagItem *)&tag1, ginfo);
+   if (obj) return (ULONG)AsmDoMethod(obj, OM_SET, (struct TagItem *)&tag1, ginfo);
    else     return 0;
 }
 
@@ -984,7 +899,7 @@ makeproto ULONG DoSetMethod(Object *obj, struct GadgetInfo *ginfo, Tag tag1, ...
  */
 makeproto ULONG DoSuperSetMethod(Class *cl, Object *obj, struct GadgetInfo *ginfo, Tag tag1, ...)
 {
-   if (obj) return AsmDoSuperMethod(cl, obj, OM_SET, (struct TagItem *)&tag1, ginfo);
+   if (obj) return (ULONG)AsmDoSuperMethod(cl, obj, OM_SET, (struct TagItem *)&tag1, ginfo);
    else     return 0;
 }
 
@@ -993,7 +908,7 @@ makeproto ULONG DoSuperSetMethod(Class *cl, Object *obj, struct GadgetInfo *ginf
  */
 makeproto ULONG DoUpdateMethod(Object *obj, struct GadgetInfo *ginfo, ULONG flags, Tag tag1, ...)
 {
-   if (obj) return AsmDoMethod(obj, OM_UPDATE, (struct TagItem *)&tag1, ginfo, flags);
+   if (obj) return (ULONG)AsmDoMethod(obj, OM_UPDATE, (struct TagItem *)&tag1, ginfo, flags);
    else     return 0;
 }
 
@@ -1002,7 +917,7 @@ makeproto ULONG DoUpdateMethod(Object *obj, struct GadgetInfo *ginfo, ULONG flag
  */
 makeproto ULONG DoNotifyMethod(Object *obj, struct GadgetInfo *ginfo, ULONG flags, Tag tag1, ...)
 {
-   if (obj) return AsmDoMethod(obj, OM_NOTIFY, (struct TagItem *)&tag1, ginfo, flags);
+   if (obj) return (ULONG)AsmDoMethod(obj, OM_NOTIFY, (struct TagItem *)&tag1, ginfo, flags);
    else     return 0;
 }
 
@@ -1010,14 +925,10 @@ makeproto ULONG DoNotifyMethod(Object *obj, struct GadgetInfo *ginfo, ULONG flag
  * Call the GM_RENDER method.
  */
 
-//makeproto ASM ULONG DoRenderMethod(REG(a0) Object *obj, REG(a1) struct GadgetInfo *ginfo, REG(d0) ULONG redraw)
-makeproto ASM REGFUNC3(ULONG, DoRenderMethod,
-	REGPARAM(A0, Object *, obj),
-	REGPARAM(A1, struct GadgetInfo *, ginfo),
-	REGPARAM(D0, ULONG, redraw))
+makeproto ASM IPTR  DoRenderMethod(REG(a0) Object *obj, REG(a1) struct GadgetInfo *ginfo, REG(d0) ULONG redraw)
 {
    struct RastPort   *rp;
-   ULONG              rc = 0;
+   IPTR               rc = 0;
 
    if (obj && (rp = BGUI_ObtainGIRPort(ginfo)))
    {
@@ -1026,24 +937,19 @@ makeproto ASM REGFUNC3(ULONG, DoRenderMethod,
    }
    return rc;
 }
-REGFUNC_END
 
 /*
  * Forward certain types of messages with modifications.
  */
-//makeproto ASM ULONG ForwardMsg(REG(a0) Object *s, REG(a1) Object *d, REG(a2) Msg msg)
-makeproto ASM REGFUNC3(ULONG, ForwardMsg,
-	REGPARAM(A0, Object *, s),
-	REGPARAM(A1, Object *, d),
-	REGPARAM(A2, Msg, msg))
+makeproto ASM IPTR ForwardMsg(REG(a0) Object *s, REG(a1) Object *d, REG(a2) Msg msg)
 {
 #ifdef __AROS__
-   #define MOUSEWORD STACKWORD
+   #define MOUSEWORD STACKED WORD
 #else
    #define MOUSEWORD WORD
 #endif
    MOUSEWORD      *mousex = NULL, *mousey = NULL, old_mousex, old_mousey;
-   ULONG          rc;
+   IPTR           rc;
    struct IBox   *b1 = GADGETBOX(s);
    struct IBox   *b2 = GADGETBOX(d);
    
@@ -1093,7 +999,6 @@ makeproto ASM REGFUNC3(ULONG, ForwardMsg,
 
    return rc;
 }
-REGFUNC_END
 
 #define BI_FREE_RP  1
 #define BI_FREE_DRI 2
@@ -1111,15 +1016,9 @@ makeproto struct BaseInfo *AllocBaseInfo(ULONG tag1, ...)
 #endif
 
 #ifdef DEBUG_BGUI
-//makeproto SAVEDS ASM struct BaseInfo *BGUI_AllocBaseInfoDebugA(REG(a0) struct TagItem *tags,REG(a1) STRPTR file, REG(d0) ULONG line)
-makeproto SAVEDS ASM REGFUNC3(struct BaseInfo *, BGUI_AllocBaseInfoDebugA,
-	REGPARAM(A0, struct TagItem *, tags),
-	REGPARAM(A1, STRPTR, file),
-	REGPARAM(D0, ULONG, line))
+makeproto SAVEDS ASM struct BaseInfo *BGUI_AllocBaseInfoDebugA(REG(a0) struct TagItem *tags,REG(a1) STRPTR file, REG(d0) ULONG line)
 #else
-//makeproto SAVEDS ASM struct BaseInfo *BGUI_AllocBaseInfoA(REG(a0) struct TagItem *tags)
-makeproto SAVEDS ASM REGFUNC1(struct BaseInfo *, BGUI_AllocBaseInfoA,
-	REGPARAM(A0, struct TagItem *, tags))
+makeproto SAVEDS ASM struct BaseInfo *BGUI_AllocBaseInfoA(REG(a0) struct TagItem *tags)
 #endif
 {
    struct BaseInfo   *bi, *bi2;
@@ -1127,33 +1026,33 @@ makeproto SAVEDS ASM REGFUNC1(struct BaseInfo *, BGUI_AllocBaseInfoA,
    ULONG             *flags;
 
 #ifdef DEBUG_BGUI
-   if (bi = BGUI_AllocPoolMemDebug(sizeof(struct BaseInfo) + sizeof(ULONG),file,line))
+   if ((bi = BGUI_AllocPoolMemDebug(sizeof(struct BaseInfo) + sizeof(ULONG),file,line)))
 #else
-   if (bi = BGUI_AllocPoolMem(sizeof(struct BaseInfo) + sizeof(ULONG)))
+   if ((bi = BGUI_AllocPoolMem(sizeof(struct BaseInfo) + sizeof(ULONG))))
 #endif
    {
       flags = (ULONG *)(bi + 1);
 
-      if (bi2 = (struct BaseInfo *)GetTagData(BI_BaseInfo, NULL, tags))
+      if ((bi2 = (struct BaseInfo *)GetTagData(BI_BaseInfo, 0, tags)))
       {
 	 *bi = *bi2;
       }
       else
 	memset(bi,'\0',sizeof(*bi));
 
-      if (gi = (struct GadgetInfo *)GetTagData(BI_GadgetInfo, (ULONG)gi, tags))
+      if ((gi = (struct GadgetInfo *)GetTagData(BI_GadgetInfo, (IPTR)gi, tags)))
       {
 	 *((struct GadgetInfo *)bi) = *gi;
       };
 
-      bi->bi_DrInfo  = (struct DrawInfo *)GetTagData(BI_DrawInfo, (ULONG)bi->bi_DrInfo, tags);
-      bi->bi_RPort   = (struct RastPort *)GetTagData(BI_RastPort, (ULONG)bi->bi_RPort,  tags);
-      bi->bi_IScreen = (struct Screen *)  GetTagData(BI_Screen,   (ULONG)bi->bi_IScreen, tags);
-      bi->bi_Pens    = (UWORD *)          GetTagData(BI_Pens,     (ULONG)bi->bi_Pens,   tags);
+      bi->bi_DrInfo  = (struct DrawInfo *)GetTagData(BI_DrawInfo, (IPTR)bi->bi_DrInfo, tags);
+      bi->bi_RPort   = (struct RastPort *)GetTagData(BI_RastPort, (IPTR)bi->bi_RPort,  tags);
+      bi->bi_IScreen = (struct Screen *)  GetTagData(BI_Screen,   (IPTR)bi->bi_IScreen, tags);
+      bi->bi_Pens    = (UWORD *)          GetTagData(BI_Pens,     (IPTR)bi->bi_Pens,   tags);
 
       if (gi && !bi->bi_RPort)
       {
-	 if (bi->bi_RPort = ObtainGIRPort(gi))
+	 if ((bi->bi_RPort = ObtainGIRPort(gi)))
 	 {
 	    *flags |= BI_FREE_RP;
 	 };
@@ -1161,7 +1060,7 @@ makeproto SAVEDS ASM REGFUNC1(struct BaseInfo *, BGUI_AllocBaseInfoA,
 
       if (bi->bi_IScreen && !bi->bi_DrInfo)
       {
-	 if (bi->bi_DrInfo = GetScreenDrawInfo(bi->bi_IScreen))
+	 if ((bi->bi_DrInfo = GetScreenDrawInfo(bi->bi_IScreen)))
 	 {
 	    *flags |= BI_FREE_DRI;
 	 };
@@ -1175,7 +1074,6 @@ makeproto SAVEDS ASM REGFUNC1(struct BaseInfo *, BGUI_AllocBaseInfoA,
    }
    return bi;
 }
-REGFUNC_END
 
 #ifdef DEBUG_BGUI
 makeproto void FreeBaseInfoDebug(struct BaseInfo *bi, STRPTR file, ULONG line)

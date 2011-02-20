@@ -48,7 +48,7 @@ METHOD(SliderClassNew, struct opSet *, ops)
    /*
     * First we let the superclass get us an object.
     */
-   if (rc = NewSuperObject(cl, obj, tags))
+   if ((rc = NewSuperObject(cl, obj, tags)))
    {
       AsmDoSuperMethod(cl, (Object *)rc, OM_SET, tags, NULL);
    };
@@ -64,8 +64,8 @@ METHOD_END
  */
 STATIC DPFUNC ClassFunc[] =
 {
-   OM_NEW,           (FUNCPTR)SliderClassNew,
-   DF_END,           NULL
+   { OM_NEW,           SliderClassNew, },
+   { DF_END,           NULL },
 };
 
 /*

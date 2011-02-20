@@ -330,10 +330,16 @@
 #define XDEF
 #define XREF extern
 
-/*** AROS compatability for AmigaOS *********************************/
+/*** AROS/AmigaOS compatability *********************************/
 
-#ifndef __AROS__
-#define IPTR ULONG
+#ifdef __AROS__
+#define REG_A4	4
+static inline IPTR getreg(int reg) { return 0xDEADCAFE; }
+static inline VOID putreg(int reg, IPTR val) { }
+static inline VOID geta4(void) { }
+#else
+typedef IPTR ULONG
+#define BNULL 0
 #endif
 
 /*** Disable these macros when not building on AROS *****************/
@@ -346,20 +352,34 @@
 /*** METHOD macro ***************************************************/
 
 #ifdef __AROS__
-  #define METHOD(f,mtype,m) STATIC ASM AROS_UFH3(ULONG, f, \
+
+  #define METHOD(f,mtype,m) ASM AROS_UFH4(IPTR, f, \
 			  AROS_UFHA(Class *, cl, A0), \
 			  AROS_UFHA(Object *, obj, A2), \
-			  AROS_UFHA(mtype, m, A1)) {AROS_USERFUNC_INIT
-  #define METHODPROTO(f,mtype,m) STATIC ASM AROS_UFP3(ULONG, f, \
+			  AROS_UFHA(Msg, _msg, A1), \
+			  AROS_UFHA(APTR, _global, A4)) \
+			       {AROS_USERFUNC_INIT \
+			        mtype __attribute__((unused)) m = (mtype)_msg;
+  #define METHODPROTO(f,mtype,m) ASM AROS_UFP4(IPTR, f, \
                           AROS_UFPA(Class *, cl, A0), \
 			  AROS_UFPA(Object *, obj, A2), \
-			  AROS_UFPA(mtype, m, A1))
+			  AROS_UFPA(Msg, msg, A1), \
+			  AROS_UFPA(APTR, _global, A4));
  
   #define METHOD_END AROS_USERFUNC_EXIT}
+  #define METHOD_CALL(f,cl,obj,m,g) \
+    	AROS_UFC4(IPTR, f, \
+    		AROS_UFCA(Class *, cl, A0), \
+    		AROS_UFCA(Object *, obj, A2), \
+    		AROS_UFCA(Msg, m, A1), \
+    		AROS_UFCA(APTR, g, A4))
+
 #else
-  #define METHOD(f,mtype,m) STATIC ASM ULONG f(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) mtype m)
-  #define METHODPROTO(f,mtype,m) STATIC ASM ULONG f(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) mtype m)
-  #define METHOD_END
+  #define METHOD(f,mtype,m) SAVEDS ASM IPTR f(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg _msg, REG(a4) APTR _global) \
+	{ mtype __attribute__((unused)) m = (mtype)_msg;
+  #define METHODPROTO(f,mtype,m) SAVEDS ASM IPTR f(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg m, REG(a4) APTR _global)
+  #define METHOD_END }
+  #define METHOD_CALL(f,cl,obj,m,g) f(cl, obj, (Msg)m, (APTR)g)
 #endif
 
 /*** REGFUNC and REGPARAM macros ************************************/

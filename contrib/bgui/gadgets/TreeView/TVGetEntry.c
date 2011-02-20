@@ -135,8 +135,8 @@ memset(&tva,0,sizeof(tva));
  * Find the treenode corresponding to this tvGet.
  */
 
-if (tn = TV_MatchNextEntry(tv,tvg->tvg_Entry,tvg->tvg_Which,tvg->tvg_Flags,&tva))
-	rc = (ULONG) tn->tn_Entry;
+if ((tn = TV_MatchNextEntry(tv,tvg->tvg_Entry,tvg->tvg_Which,tvg->tvg_Flags,&tva)))
+	rc = (IPTR) tn->tn_Entry;
 
 return(rc);
 }

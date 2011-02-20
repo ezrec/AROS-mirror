@@ -161,19 +161,9 @@ union TypesUnion
 
 #define TrashMemory(memory,size,character) memset(memory,character,size)
 
-//static ASM VOID FreeVecMemDebug(REG(a0) APTR pool, REG(a1) APTR memptr, REG(a2) STRPTR file, REG(d0) ULONG line);
-static ASM REGFUNCPROTO4(VOID, FreeVecMemDebug,
-	REGPARAM(A0, APTR, pool),
-	REGPARAM(A1, APTR, memptr),
-	REGPARAM(A2, STRPTR, file),
-	REGPARAM(D0, ULONG, line));
+static ASM VOID FreeVecMemDebug(REG(a0) APTR pool, REG(a1) APTR memptr, REG(a2) STRPTR file, REG(d0) ULONG line);
 
-//static ASM APTR AllocVecMemDebug(REG(a0) APTR mempool, REG(d0) ULONG size,REG(a1) STRPTR file, REG(d1) ULONG line);
-static ASM REGFUNCPROTO4(APTR, AllocVecMemDebug,
-	REGPARAM(A0, APTR, mempool),
-	REGPARAM(D0, ULONG, size),
-	REGPARAM(A1, STRPTR, file),
-	REGPARAM(D1, ULONG, line));
+static ASM APTR AllocVecMemDebug(REG(a0) APTR mempool, REG(d0) ULONG size,REG(a1) STRPTR file, REG(d1) ULONG line);
 
 #define AllocVecMem(mempool,size) AllocVecMemDebug(mempool,size,__FILE__,__LINE__)
 #define FreeVecMem(pool,memptr) FreeVecMemDebug(pool,memptr,__FILE__,__LINE__)
@@ -191,27 +181,14 @@ static BOOL VerifyMemoryWall(char *memory)
 }
 
 #else
-//static ASM APTR AllocVecMem(REG(a0) APTR mempool, REG(d0) ULONG size);
-static ASM REGFUNCPROTO2(APTR, AllocVecMem,
-	REGPARAM(A0, APTR, mempool),
-	REGPARAM(D0, ULONG, size));
+static ASM APTR AllocVecMem(REG(a0) APTR mempool, REG(d0) ULONG size);
 
-//static ASM VOID FreeVecMem(REG(a0) APTR pool, REG(a1) APTR memptr);
-static ASM REGFUNCPROTO2(VOID, FreeVecMem,
-	REGPARAM(A0, APTR, pool),
-	REGPARAM(A1, APTR, memptr));
+static ASM VOID FreeVecMem(REG(a0) APTR pool, REG(a1) APTR memptr);
 #endif
 
-//static SAVEDS ASM APTR BGUI_CreatePool(REG(d0) ULONG memFlags, REG(d1) ULONG puddleSize, REG(d2) ULONG threshSize);
-static SAVEDS ASM REGFUNCPROTO3(APTR, BGUI_CreatePool,
-	REGPARAM(D0, ULONG, memFlags),
-	REGPARAM(D1, ULONG, puddleSize),
-	REGPARAM(D2, ULONG, threshSize));
+static SAVEDS ASM APTR BGUI_CreatePool(REG(d0) ULONG memFlags, REG(d1) ULONG puddleSize, REG(d2) ULONG threshSize);
 
-
-//static SAVEDS ASM VOID BGUI_DeletePool(REG(a0) APTR poolHeader);
-static SAVEDS ASM REGFUNCPROTO1(VOID, BGUI_DeletePool,
-	REGPARAM(A0, APTR, poolHeader));
+static SAVEDS ASM VOID BGUI_DeletePool(REG(a0) APTR poolHeader);
 
 /*
  * Initialize task list.
@@ -391,7 +368,7 @@ makeproto UWORD AddTaskMember(void)
     * Does this task already have the
     * library open?
     */
-   if (tm = FindTaskMember())
+   if ((tm = FindTaskMember()))
    {
       /*
        * Yes. Increase open counter,
@@ -406,7 +383,7 @@ makeproto UWORD AddTaskMember(void)
    /*
     * Allocate a task member structure.
     */
-   if (tm = AllocVecMem(MemPool, sizeof(TM)))
+   if ((tm = AllocVecMem(MemPool, sizeof(TM))))
    {
       /*
        * Setup task address and counter.
@@ -499,7 +476,7 @@ makeproto BOOL FreeTaskMember( void )
    /*
     * Find the task member.
     */
-   if (tm = FindTaskMember())
+   if ((tm = FindTaskMember()))
    {
       /*
        * Last opener?
@@ -521,9 +498,9 @@ makeproto BOOL FreeTaskMember( void )
       /*
        * Remove and delete window/id stuff.
        */
-      while (pi  = (PI *)RemHead((struct List *)&tm->tm_Prefs))   FreeTL_PI(pi);
-      while (wi  = (WI *)RemHead((struct List *)&tm->tm_Windows)) FreeTL_WI(wi);
-      while (rid = (RID *)RemHead((struct List *)&tm->tm_RID))    FreeTL_RID(rid);
+      while ((pi  = (PI *)RemHead((struct List *)&tm->tm_Prefs)))   FreeTL_PI(pi);
+      while ((wi  = (WI *)RemHead((struct List *)&tm->tm_Windows))) FreeTL_WI(wi);
+      while ((rid = (RID *)RemHead((struct List *)&tm->tm_RID)))    FreeTL_RID(rid);
 
       FreeVecMem(MemPool, tm);
    };
@@ -577,12 +554,12 @@ makeproto BOOL GetWindowBounds(ULONG windowID, struct IBox *dest)
    /*
     * Look up the task member.
     */
-   if (tm = FindTaskMember())
+   if ((tm = FindTaskMember()))
    {
       /*
        * Window already in the list?
        */
-      if (wi = FindWindowInfo(windowID, &tm->tm_Windows))
+      if ((wi = FindWindowInfo(windowID, &tm->tm_Windows)))
       {
 	 /*
 	  * Copy the data to dest.
@@ -595,7 +572,7 @@ makeproto BOOL GetWindowBounds(ULONG windowID, struct IBox *dest)
 	 /*
 	  * Allocate and append a new one.
 	  */
-	 if (wi = (WI *)AllocVecMem(MemPool, sizeof(WI)))
+	 if ((wi = (WI *)AllocVecMem(MemPool, sizeof(WI))))
 	 {
 	    wi->wi_WinID = windowID;
 	    AddTail((struct List *)&tm->tm_Windows, (struct Node *)wi);
@@ -633,12 +610,12 @@ makeproto VOID SetWindowBounds(ULONG windowID, struct IBox *set)
    /*
     * Look up the task member.
     */
-   if (tm = FindTaskMember())
+   if ((tm = FindTaskMember()))
    {
       /*
        * Window in the list?
        */
-      if (wi = FindWindowInfo(windowID, &tm->tm_Windows))
+      if ((wi = FindWindowInfo(windowID, &tm->tm_Windows)))
       {
 	 /*
 	  * Copy the data.
@@ -656,42 +633,18 @@ makeproto VOID SetWindowBounds(ULONG windowID, struct IBox *set)
 /*
  * Asm stubs for the pool routines.
  */
-//extern ASM APTR AsmCreatePool  ( REG(d0) ULONG, REG(d1) ULONG, REG(d2) ULONG, REG(a6) struct ExecBase * );
-extern ASM REGFUNCPROTO4(APTR, AsmCreatePool,
-	REGPARAM(D0, ULONG, a),
-	REGPARAM(D1, ULONG, b),
-	REGPARAM(D2, ULONG, c),
-	REGPARAM(A6, struct ExecBase *, sysbase));
+extern ASM APTR AsmCreatePool  ( REG(d0) ULONG, REG(d1) ULONG, REG(d2) ULONG, REG(a6) struct ExecBase * );
 
+extern ASM APTR AsmAllocPooled ( REG(a0) APTR,  REG(d0) ULONG,                REG(a6) struct ExecBase * );
 
-//extern ASM APTR AsmAllocPooled ( REG(a0) APTR,  REG(d0) ULONG,                REG(a6) struct ExecBase * );
-extern ASM REGFUNCPROTO3(APTR, AsmAllocPooled,
-	REGPARAM(A0, APTR, pool),
-	REGPARAM(D0, ULONG, size),
-	REGPARAM(A6, struct ExecBase *, sysbase));
+extern ASM APTR AsmFreePooled  ( REG(a0) APTR,  REG(a1) APTR,  REG(d0) ULONG, REG(a6) struct ExecBase * );
 
-
-//extern ASM APTR AsmFreePooled  ( REG(a0) APTR,  REG(a1) APTR,  REG(d0) ULONG, REG(a6) struct ExecBase * );
-extern ASM REGFUNCPROTO4(APTR, AsmFreePooled,
-	REGPARAM(A0, APTR, pool),
-	REGPARAM(A1, APTR, mem),
-	REGPARAM(D0, ULONG, size),
-	REGPARAM(A6, struct ExecBase *, sysbase));
-
-
-//extern ASM APTR AsmDeletePool  ( REG(a0) APTR,                                REG(a6) struct ExecBase * );
-extern ASM REGFUNCPROTO2(APTR, AsmDeletePool,
-	REGPARAM(A0, APTR, pool),
-	REGPARAM(A6, struct ExecBase *, sysbase));
+extern ASM APTR AsmDeletePool  ( REG(a0) APTR,                                REG(a6) struct ExecBase * );
 
 /*
  * Create a memory pool.
  */
-//static SAVEDS ASM APTR BGUI_CreatePool(REG(d0) ULONG memFlags, REG(d1) ULONG puddleSize, REG(d2) ULONG threshSize)
-static SAVEDS ASM REGFUNC3(APTR, BGUI_CreatePool,
-	REGPARAM(D0, ULONG, memFlags),
-	REGPARAM(D1, ULONG, puddleSize),
-	REGPARAM(D2, ULONG, threshSize))
+static SAVEDS ASM APTR BGUI_CreatePool(REG(d0) ULONG memFlags, REG(d1) ULONG puddleSize, REG(d2) ULONG threshSize)
 {
    #ifdef ENHANCED
    /*
@@ -707,14 +660,11 @@ static SAVEDS ASM REGFUNC3(APTR, BGUI_CreatePool,
 
    #endif
 }
-REGFUNC_END
 
 /*
  * Delete a memory pool.
  */
-//static SAVEDS ASM VOID BGUI_DeletePool(REG(a0) APTR poolHeader)
-static SAVEDS ASM REGFUNC1(VOID, BGUI_DeletePool,
-	REGPARAM(A0, APTR, poolHeader))
+static SAVEDS ASM VOID BGUI_DeletePool(REG(a0) APTR poolHeader)
 {
 #ifdef DEBUG_BGUI
    struct BlockHeader **header;
@@ -744,24 +694,15 @@ static SAVEDS ASM REGFUNC1(VOID, BGUI_DeletePool,
 
    #endif
 }
-REGFUNC_END
 
 /*
  * Allocate pooled memory.
  */
 
 #ifdef DEBUG_BGUI
-//static SAVEDS ASM APTR BGUI_AllocPooledDebug(REG(a0) APTR poolHeader, REG(d0) ULONG memSize,REG(a1) STRPTR file,REG(d1) ULONG line)
-static SAVEDS ASM REGFUNC4(APTR, BGUI_AllocPooledDebug,
-	REGPARAM(A0, APTR, poolHeader),
-	REGPARAM(D0, ULONG, memSize),
-	REGPARAM(A1, STRPTR, file),
-	REGPARAM(D1, ULONG, line))
+static SAVEDS ASM APTR BGUI_AllocPooledDebug(REG(a0) APTR poolHeader, REG(d0) ULONG memSize,REG(a1) STRPTR file,REG(d1) ULONG line)
 #else
-//static SAVEDS ASM APTR BGUI_AllocPooled(REG(a0) APTR poolHeader, REG(d0) ULONG memSize)
-static SAVEDS ASM REGFUNC2(APTR, BGUI_AllocPooled,
-	REGPARAM(A0, APTR, poolHeader),
-	REGPARAM(D0, ULONG, memSize))
+static SAVEDS ASM APTR BGUI_AllocPooled(REG(a0) APTR poolHeader, REG(d0) ULONG memSize)
 #endif
 {
    APTR memory;
@@ -804,25 +745,14 @@ static SAVEDS ASM REGFUNC2(APTR, BGUI_AllocPooled,
 #endif
    return(memory);
 }
-REGFUNC_END
 
 /*
  * Free pooled memory.
  */
 #ifdef DEBUG_BGUI
-//static SAVEDS ASM VOID BGUI_FreePooledDebug(REG(a0) APTR poolHeader, REG(a1) APTR memory, REG(d1) ULONG memSize,REG(a2) STRPTR file,REG(d2) ULONG line)
-static SAVEDS ASM REGFUNC5(VOID, BGUI_FreePooledDebug,
-	REGPARAM(A0, APTR, poolHeader),
-	REGPARAM(A1, APTR, memory),
-	REGPARAM(D1, ULONG, memSize),
-	REGPARAM(A2, STRPTR, file),
-	REGPARAM(D2, ULONG, line))
+static SAVEDS ASM VOID BGUI_FreePooledDebug(REG(a0) APTR poolHeader, REG(a1) APTR memory, REG(d1) ULONG memSize,REG(a2) STRPTR file,REG(d2) ULONG line)
 #else
-//static SAVEDS ASM VOID BGUI_FreePooled(REG(a0) APTR poolHeader, REG(a1) APTR memory, REG(d1) ULONG memSize)
-static SAVEDS ASM REGFUNC3(VOID, BGUI_FreePooled,
-	REGPARAM(A0, APTR, poolHeader),
-	REGPARAM(A1, APTR, memory),
-	REGPARAM(D1, ULONG, memSize))
+static SAVEDS ASM VOID BGUI_FreePooled(REG(a0) APTR poolHeader, REG(a1) APTR memory, REG(d1) ULONG memSize)
 #endif
 {
 #ifdef DEBUG_BGUI
@@ -879,23 +809,14 @@ static SAVEDS ASM REGFUNC3(VOID, BGUI_FreePooled,
 
    #endif
 }
-REGFUNC_END
 
 /*
  * Allocate memory.
  */
 #ifdef DEBUG_BGUI
-//static ASM APTR AllocVecMemDebug(REG(a0) APTR mempool, REG(d0) ULONG size,REG(a1) STRPTR file, REG(d1) ULONG line)
-static ASM REGFUNC4(APTR, AllocVecMemDebug,
-	REGPARAM(A0, APTR, mempool),
-	REGPARAM(D0, ULONG, size),
-	REGPARAM(A1, STRPTR, file),
-	REGPARAM(D1, ULONG, line))
+static ASM APTR AllocVecMemDebug(REG(a0) APTR mempool, REG(d0) ULONG size,REG(a1) STRPTR file, REG(d1) ULONG line)
 #else
-//static ASM APTR AllocVecMem(REG(a0) APTR mempool, REG(d0) ULONG size)
-static ASM REGFUNC2(APTR, AllocVecMem,
-	REGPARAM(A0, APTR, mempool),
-	REGPARAM(D0, ULONG, size))
+static ASM APTR AllocVecMem(REG(a0) APTR mempool, REG(d0) ULONG size)
 #endif
 {
    ULONG    *mem;
@@ -910,9 +831,9 @@ static ASM REGFUNC2(APTR, AllocVecMem,
        * Allocate memory from the pool.
        */
 #ifdef DEBUG_BGUI
-      if (mem = (ULONG *)BGUI_AllocPooledDebug(mempool, size,file,line))
+      if ((mem = (ULONG *)BGUI_AllocPooledDebug(mempool, size,file,line)))
 #else
-      if (mem = (ULONG *)BGUI_AllocPooled(mempool, size))
+      if ((mem = (ULONG *)BGUI_AllocPooled(mempool, size)))
 #endif
       {
 	 /*
@@ -928,23 +849,14 @@ static ASM REGFUNC2(APTR, AllocVecMem,
 
    return (APTR)mem;
 }
-REGFUNC_END
 
 /*
  * Free memory.
  */
 #ifdef DEBUG_BGUI
-//static ASM VOID FreeVecMemDebug(REG(a0) APTR pool, REG(a1) APTR memptr, REG(a2) STRPTR file, REG(d0) ULONG line)
-static ASM REGFUNC4(VOID, FreeVecMemDebug,
-	REGPARAM(A0, APTR, pool),
-	REGPARAM(A1, APTR, memptr),
-	REGPARAM(A2, STRPTR, file),
-	REGPARAM(D0, ULONG, line))
+static ASM VOID FreeVecMemDebug(REG(a0) APTR pool, REG(a1) APTR memptr, REG(a2) STRPTR file, REG(d0) ULONG line)
 #else
-//static ASM VOID FreeVecMem(REG(a0) APTR pool, REG(a1) APTR memptr)
-static ASM REGFUNC2(VOID, FreeVecMem,
-	REGPARAM(A0, APTR, pool),
-	REGPARAM(A1, APTR, memptr))
+static ASM VOID FreeVecMem(REG(a0) APTR pool, REG(a1) APTR memptr)
 #endif
 {
    ULONG    *mem = (ULONG *)memptr;
@@ -969,7 +881,6 @@ static ASM REGFUNC2(VOID, FreeVecMem,
        */
       FreeVec(mem);
 }
-REGFUNC_END
 
 /*
  * Allocate memory from the pool.
@@ -1166,11 +1077,7 @@ REGFUNC_END
  *  - Uses InternalFindTaskMember to find destination task.
  */
 
-//makeproto ASM BOOL AddIDReport(REG(a0) struct Window *window, REG(d0) ULONG id, REG(a1) struct Task *task)
-makeproto ASM REGFUNC3(BOOL, AddIDReport,
-	REGPARAM(A0, struct Window *, window),
-	REGPARAM(D0, ULONG, id),
-	REGPARAM(A1, struct Task *, task))
+makeproto ASM BOOL AddIDReport(REG(a0) struct Window *window, REG(d0) ULONG id, REG(a1) struct Task *task)
 {
    RID         *rid;
    TM          *tm;
@@ -1184,12 +1091,12 @@ makeproto ASM REGFUNC3(BOOL, AddIDReport,
    /*
     *  Look up the task.
     */
-   if (tm = InternalFindTaskMember(task))
+   if ((tm = InternalFindTaskMember(task)))
    {
       /*
        *  Allocate an ID.
        */
-      if (rid = (RID *)AllocVecMem(MemPool, sizeof(RID)))
+      if ((rid = (RID *)AllocVecMem(MemPool, sizeof(RID))))
       {
 	 /*
 	  *  Setup and add.
@@ -1208,14 +1115,11 @@ makeproto ASM REGFUNC3(BOOL, AddIDReport,
 
    return rc;
 }
-REGFUNC_END
 
 /*
  * Get next ID for the window.
  */
-//makeproto ASM ULONG GetIDReport(REG(a0) struct Window *window)
-makeproto ASM REGFUNC1(ULONG, GetIDReport,
-	REGPARAM(A0, struct Window *, window))
+makeproto ASM ULONG GetIDReport(REG(a0) struct Window *window)
 {
    RID         *rid;
    TM          *tm;
@@ -1229,7 +1133,7 @@ makeproto ASM REGFUNC1(ULONG, GetIDReport,
    /*
     * Find the task.
     */
-   if (tm = FindTaskMember())
+   if ((tm = FindTaskMember()))
    {
       /*
        * See if an ID for the window
@@ -1260,7 +1164,6 @@ makeproto ASM REGFUNC1(ULONG, GetIDReport,
 
    return rc;
 }
-REGFUNC_END
 
 /*
  * Get the window of the first
@@ -1279,7 +1182,7 @@ makeproto struct Window *GetFirstIDReportWindow(void)
    /*
     * Get the task.
     */
-   if (tm = FindTaskMember())
+   if ((tm = FindTaskMember()))
    {
       /*
        * Are there any ID's?
@@ -1299,9 +1202,7 @@ makeproto struct Window *GetFirstIDReportWindow(void)
 /*
  * Remove all ID's of this window.
  */
-//makeproto ASM VOID RemoveIDReport(REG(a0) struct Window *window)
-makeproto ASM REGFUNC1(VOID, RemoveIDReport,
-	REGPARAM(A0, struct Window *, window))
+makeproto ASM VOID RemoveIDReport(REG(a0) struct Window *window)
 {
    RID      *rid, *succ;
    TM       *tm;
@@ -1314,10 +1215,10 @@ makeproto ASM REGFUNC1(VOID, RemoveIDReport,
    /*
     * Find the task.
     */
-   if (tm = FindTaskMember())
+   if ((tm = FindTaskMember()))
    {
       rid = tm->tm_RID.ril_First;
-      while (succ = rid->rid_Next)
+      while ((succ = rid->rid_Next))
       {
 	 if (rid->rid_Window == window)
 	 {
@@ -1333,15 +1234,11 @@ makeproto ASM REGFUNC1(VOID, RemoveIDReport,
     */
    ReleaseSemaphore(&TaskLock);
 }
-REGFUNC_END
 
 /*
  * Add an open window to the list.
  */
-//makeproto ASM VOID AddWindow(REG(a0) Object *wo, REG(a1) struct Window *win)
-makeproto ASM REGFUNC2(VOID, AddWindow,
-	REGPARAM(A0, Object *, wo),
-	REGPARAM(A1, struct Window *, win))
+makeproto ASM VOID AddWindow(REG(a0) Object *wo, REG(a1) struct Window *win)
 {
    WNODE       *wn;
 
@@ -1353,7 +1250,7 @@ makeproto ASM REGFUNC2(VOID, AddWindow,
    /*
     * Allocate node.
     */
-   if (wn = (WNODE *)AllocVecMem(MemPool, sizeof(WNODE)))
+   if ((wn = (WNODE *)AllocVecMem(MemPool, sizeof(WNODE))))
    {
       /*
        * Set it up.
@@ -1372,14 +1269,11 @@ makeproto ASM REGFUNC2(VOID, AddWindow,
     */
    ReleaseSemaphore(&TaskLock);
 }
-REGFUNC_END
 
 /*
  * Remove a window from the list.
  */
-//makeproto ASM VOID RemWindow(REG(a0) Object *wo)
-makeproto ASM REGFUNC1(VOID, RemWindow,
-	REGPARAM(A0, Object *, wo))
+makeproto ASM VOID RemWindow(REG(a0) Object *wo)
 {
    WNODE       *wn;
 
@@ -1416,13 +1310,11 @@ makeproto ASM REGFUNC1(VOID, RemWindow,
     */
    ReleaseSemaphore(&TaskLock);
 }
-REGFUNC_END
 
 /*
  * Find the window located under the mouse.
  */
-makeproto ASM REGFUNC1(Object *, WhichWindow,
-	REGPARAM(A0, struct Screen *, screen))
+makeproto ASM Object *WhichWindow(REG(a0) struct Screen *screen)
 {
    Object         *win = NULL;
    struct Layer   *layer;
@@ -1436,7 +1328,7 @@ makeproto ASM REGFUNC1(Object *, WhichWindow,
    /*
     * Find out the layer under the mouse pointer.
     */
-   if (layer = WhichLayer(&screen->LayerInfo, screen->MouseX, screen->MouseY))
+   if ((layer = WhichLayer(&screen->LayerInfo, screen->MouseX, screen->MouseY)))
    {
       for (wn = TaskList.tl_WindowList.wnl_First; wn->wn_Next; wn = wn->wn_Next)
       {
@@ -1461,7 +1353,6 @@ makeproto ASM REGFUNC1(Object *, WhichWindow,
 
    return win;
 }
-REGFUNC_END
 
 static PI *FindPrefInfo(TM *tm, ULONG id)
 {
@@ -1487,7 +1378,7 @@ static void NewPrefInfo(TM *tm, ULONG id, struct TagItem *tags)
 
    if (!pi)
    {
-      if (pi = AllocVecMem(MemPool, sizeof(PI)))
+      if ((pi = AllocVecMem(MemPool, sizeof(PI))))
       {
 	 pi->pi_PrefID   = id;
 	 pi->pi_Defaults = NULL;
@@ -1509,117 +1400,117 @@ static void DefPrefs(void)
 
    static struct TagItem deftags[] =
    {
-      TAG_PREFID,            BGUI_AREA_GADGET,
-      ICA_TARGET,            ICTARGET_IDCMP,
-      FRM_EdgesOnly,         TRUE,
+      { TAG_PREFID,            BGUI_AREA_GADGET },
+      { ICA_TARGET,            ICTARGET_IDCMP },
+      { FRM_EdgesOnly,         TRUE },
 
-      TAG_PREFID,            BGUI_BUTTON_GADGET,
-      FRM_Type,              FRTYPE_BUTTON,
+      { TAG_PREFID,            BGUI_BUTTON_GADGET },
+      { FRM_Type,              FRTYPE_BUTTON },
 
-      TAG_PREFID,            BGUI_CHECKBOX_GADGET,
-      LAB_NoPlaceIn,         TRUE,
-      BT_NoRecessed,         TRUE,
-      BUTTON_ScaleMinWidth,  14,
-      BUTTON_ScaleMinHeight, 8,
+      { TAG_PREFID,            BGUI_CHECKBOX_GADGET },
+      { LAB_NoPlaceIn,         TRUE },
+      { BT_NoRecessed,         TRUE },
+      { BUTTON_ScaleMinWidth,  14 },
+      { BUTTON_ScaleMinHeight, 8 },
 
-      TAG_PREFID,            BGUI_CYCLE_GADGET,
-      LAB_NoPlaceIn,         TRUE,
-      FRM_Type,              FRTYPE_BUTTON,
+      { TAG_PREFID,            BGUI_CYCLE_GADGET },
+      { LAB_NoPlaceIn,         TRUE },
+      { FRM_Type,              FRTYPE_BUTTON },
 
-      TAG_PREFID,            BGUI_GROUP_GADGET,
-      LAB_NoPlaceIn,         TRUE,
-      FRM_DefaultType,       FRTYPE_NEXT,
-      GROUP_DefHSpaceNarrow, 2,
-      GROUP_DefHSpaceNormal, 4,
-      GROUP_DefHSpaceWide,   8,
-      GROUP_DefVSpaceNarrow, 2,
-      GROUP_DefVSpaceNormal, 4,
-      GROUP_DefVSpaceWide,   8,
+      { TAG_PREFID,            BGUI_GROUP_GADGET },
+      { LAB_NoPlaceIn,         TRUE },
+      { FRM_DefaultType,       FRTYPE_NEXT },
+      { GROUP_DefHSpaceNarrow, 2 },
+      { GROUP_DefHSpaceNormal, 4 },
+      { GROUP_DefHSpaceWide,   8 },
+      { GROUP_DefVSpaceNarrow, 2 },
+      { GROUP_DefVSpaceNormal, 4 },
+      { GROUP_DefVSpaceWide,   8 },
 
-      TAG_PREFID,            BGUI_INDICATOR_GADGET,
-      BT_Buffer,             TRUE,
-      FRM_DefaultType,       FRTYPE_BUTTON,
-      FRM_Recessed,          TRUE,
+      { TAG_PREFID,            BGUI_INDICATOR_GADGET },
+      { BT_Buffer,             TRUE },
+      { FRM_DefaultType,       FRTYPE_BUTTON },
+      { FRM_Recessed,          TRUE },
 
-      TAG_PREFID,            BGUI_INFO_GADGET,
-      LAB_NoPlaceIn,         TRUE,
-      BT_Buffer,             TRUE,
-      FRM_DefaultType,       FRTYPE_BUTTON,
-      FRM_Recessed,          TRUE,
+      { TAG_PREFID,            BGUI_INFO_GADGET },
+      { LAB_NoPlaceIn,         TRUE },
+      { BT_Buffer,             TRUE },
+      { FRM_DefaultType,       FRTYPE_BUTTON },
+      { FRM_Recessed,          TRUE },
 
-      TAG_PREFID,            BGUI_LISTVIEW_GADGET,
-      LAB_NoPlaceIn,         TRUE,
-      FRM_Type,              FRTYPE_BUTTON,
+      { TAG_PREFID,            BGUI_LISTVIEW_GADGET },
+      { LAB_NoPlaceIn,         TRUE },
+      { FRM_Type,              FRTYPE_BUTTON },
 
-      TAG_PREFID,            BGUI_MX_GADGET,
-      LAB_NoPlaceIn,         TRUE,
-      LAB_Place,             PLACE_ABOVE,
-      MX_Spacing,            GRSPACE_NARROW,
-      MX_LabelPlace,         PLACE_RIGHT,
+      { TAG_PREFID,            BGUI_MX_GADGET },
+      { LAB_NoPlaceIn,         TRUE },
+      { LAB_Place,             PLACE_ABOVE },
+      { MX_Spacing,            GRSPACE_NARROW },
+      { MX_LabelPlace,         PLACE_RIGHT },
 
-      TAG_PREFID,            BGUI_PAGE_GADGET,
-      LAB_NoPlaceIn,         TRUE,
-      FRM_Type,              FRTYPE_NONE,
-      BT_Buffer,             TRUE,
+      { TAG_PREFID,            BGUI_PAGE_GADGET },
+      { LAB_NoPlaceIn,         TRUE },
+      { FRM_Type,              FRTYPE_NONE },
+      { BT_Buffer,             TRUE },
 
-      TAG_PREFID,            BGUI_PROGRESS_GADGET,
-      LAB_NoPlaceIn,         TRUE,
-      FRM_Type,              FRTYPE_BUTTON,
-      FRM_Recessed,          TRUE,
-      BT_LeftOffset,         1,
-      BT_RightOffset,        1,
-      BT_TopOffset,          1,
-      BT_BottomOffset,       1,
+      { TAG_PREFID,            BGUI_PROGRESS_GADGET },
+      { LAB_NoPlaceIn,         TRUE },
+      { FRM_Type,              FRTYPE_BUTTON },
+      { FRM_Recessed,          TRUE },
+      { BT_LeftOffset,         1 },
+      { BT_RightOffset,        1 },
+      { BT_TopOffset,          1 },
+      { BT_BottomOffset,       1 },
 
-      TAG_PREFID,            BGUI_PROP_GADGET,
-      LAB_NoPlaceIn,         TRUE,
-      FRM_Type,              FRTYPE_BUTTON,
+      { TAG_PREFID,            BGUI_PROP_GADGET },
+      { LAB_NoPlaceIn,         TRUE },
+      { FRM_Type,              FRTYPE_BUTTON },
 
-      TAG_PREFID,            BGUI_RADIOBUTTON_GADGET,
-      LAB_NoPlaceIn,         TRUE,
-      FRM_Type,              FRTYPE_RADIOBUTTON,
-      BUTTON_ScaleMinWidth,  8,
-      BUTTON_ScaleMinHeight, 8,
-      BUTTON_SelectOnly,     TRUE,
+      { TAG_PREFID,            BGUI_RADIOBUTTON_GADGET },
+      { LAB_NoPlaceIn,         TRUE },
+      { FRM_Type,              FRTYPE_RADIOBUTTON },
+      { BUTTON_ScaleMinWidth,  8 },
+      { BUTTON_ScaleMinHeight, 8 },
+      { BUTTON_SelectOnly,     TRUE },
 
-      TAG_PREFID,            BGUI_SLIDER_GADGET,
-      PGA_Slider,            TRUE,
+      { TAG_PREFID,            BGUI_SLIDER_GADGET },
+      { PGA_Slider,            TRUE },
 
-      TAG_PREFID,            BGUI_STRING_GADGET,
-      LAB_NoPlaceIn,         TRUE,
-      FRM_Type,              FRTYPE_RIDGE,
-      BT_LeftOffset,         1,
-      BT_RightOffset,        1,
-      BT_TopOffset,          1,
-      BT_BottomOffset,       1,
+      { TAG_PREFID,            BGUI_STRING_GADGET },
+      { LAB_NoPlaceIn,         TRUE },
+      { FRM_Type,              FRTYPE_RIDGE },
+      { BT_LeftOffset,         1 },
+      { BT_RightOffset,        1 },
+      { BT_TopOffset,          1 },
+      { BT_BottomOffset,       1 },
 
-      TAG_PREFID,            BGUI_VIEW_GADGET,
-      LAB_NoPlaceIn,         TRUE,
-      FRM_Type,              FRTYPE_BUTTON,
-      FRM_Recessed,          TRUE,
-      BT_LeftOffset,         1,
-      BT_RightOffset,        1,
-      BT_TopOffset,          1,
-      BT_BottomOffset,       1,
+      { TAG_PREFID,            BGUI_VIEW_GADGET },
+      { LAB_NoPlaceIn,         TRUE },
+      { FRM_Type,              FRTYPE_BUTTON },
+      { FRM_Recessed,          TRUE },
+      { BT_LeftOffset,         1 },
+      { BT_RightOffset,        1 },
+      { BT_TopOffset,          1 },
+      { BT_BottomOffset,       1 },
 
-      TAG_PREFID,            BGUI_WINDOW_OBJECT,
-      WINDOW_ToolTicks,      10,
-      WINDOW_PreBufferRP,    FALSE,
+      { TAG_PREFID,            BGUI_WINDOW_OBJECT },
+      { WINDOW_ToolTicks,      10 },
+      { WINDOW_PreBufferRP,    FALSE },
 
-      TAG_PREFID,            BGUI_FILEREQ_OBJECT,
-      ASLREQ_Type,           ASL_FileRequest,
+      { TAG_PREFID,            BGUI_FILEREQ_OBJECT },
+      { ASLREQ_Type,           ASL_FileRequest },
 
-      TAG_PREFID,            BGUI_FONTREQ_OBJECT,
-      ASLREQ_Type,           ASL_FontRequest,
+      { TAG_PREFID,            BGUI_FONTREQ_OBJECT },
+      { ASLREQ_Type,           ASL_FontRequest },
 
-      TAG_PREFID,            BGUI_SCREENREQ_OBJECT,
-      ASLREQ_Type,           ASL_ScreenModeRequest,
+      { TAG_PREFID,            BGUI_SCREENREQ_OBJECT },
+      { ASLREQ_Type,           ASL_ScreenModeRequest },
 
-      TAG_DONE
+      { TAG_DONE },
    };
 
    ObtainSemaphore(&TaskLock);
-   if (tm = FindTaskMember())
+   if ((tm = FindTaskMember()))
    {
       t1 = deftags;
       do
@@ -1647,11 +1538,11 @@ static void LoadPrefs(UBYTE *name)
    ULONG                   *data, type;
    TM                      *tm;
 
-   if (tm = FindTaskMember())
+   if ((tm = FindTaskMember()))
    {
-      if (iff = AllocIFF())
+      if ((iff = AllocIFF()))
       {
-	 if (iff->iff_Stream = Open((char *)name, MODE_OLDFILE))
+	 if ((iff->iff_Stream = (IPTR)Open((char *)name, MODE_OLDFILE)))
 	 {
 	    InitIFFasDOS(iff);
 	    if (OpenIFF(iff, IFFF_READ) == 0)
@@ -1679,23 +1570,24 @@ static void LoadPrefs(UBYTE *name)
 
 makeproto struct TagItem *DefTagList(ULONG id, struct TagItem *tags)
 {
-   struct TagItem *deftags, *newtags, *t, *tag, *tstate1, *tstate2;
+   struct TagItem *deftags, *newtags, *t, *tag;
+   const struct TagItem *tstate1, *tstate2;
    int             fr_deftype = 0;
 
    int n1, n2;
 
-   if (deftags = BGUI_GetDefaultTags(id))
+   if ((deftags = BGUI_GetDefaultTags(id)))
    {
       tstate1 = deftags, tstate2 = tags;
 
       n1 = BGUI_CountTagItems(deftags);
       n2 = BGUI_CountTagItems(tags);
 
-      if (newtags = AllocVec((n1 + n2 + 1) * sizeof(struct TagItem), 0))
+      if ((newtags = AllocVec((n1 + n2 + 1) * sizeof(struct TagItem), 0)))
       {
 	 t = newtags;
 
-	 while (tag = NextTagItem(&tstate1))
+	 while ((tag = NextTagItem(&tstate1)))
 	 {
 	    if (FindTagItem(tag->ti_Tag, tags))
 	       continue;
@@ -1708,7 +1600,7 @@ makeproto struct TagItem *DefTagList(ULONG id, struct TagItem *tags)
 	    *t++ = *tag;
 	 };
 
-	 while (tag = NextTagItem(&tstate2))
+	 while ((tag = NextTagItem(&tstate2)))
 	 {
 	    if (fr_deftype && (tag->ti_Tag == FRM_Type) && (tag->ti_Data == FRTYPE_DEFAULT))
 	    {
@@ -1729,35 +1621,30 @@ makeproto struct TagItem *DefTagList(ULONG id, struct TagItem *tags)
    return CloneTagItems(tags);
 }
 
-//makeproto SAVEDS ASM ULONG BGUI_CountTagItems(REG(a0) struct TagItem *tags)
-makeproto SAVEDS ASM REGFUNC1(ULONG, BGUI_CountTagItems,
-	REGPARAM(A0, struct TagItem *, tags))
+makeproto SAVEDS ASM ULONG BGUI_CountTagItems(REG(a0) struct TagItem *tags)
 {
-   struct TagItem *tstate = tags;
+   const struct TagItem *tstate = tags;
    ULONG n = 0;
 
    while (NextTagItem(&tstate)) n++;
 
    return n;
 }
-REGFUNC_END
 
-//makeproto SAVEDS ASM struct TagItem *BGUI_MergeTagItems(REG(a0) struct TagItem *tags1, REG(a1) struct TagItem *tags2)
-makeproto SAVEDS ASM REGFUNC2(struct TagItem *, BGUI_MergeTagItems,
-	REGPARAM(A0, struct TagItem *, tags1),
-	REGPARAM(A1, struct TagItem *, tags2))
+makeproto SAVEDS ASM struct TagItem *BGUI_MergeTagItems(REG(a0) struct TagItem *tags1, REG(a1) struct TagItem *tags2)
 {
-   struct TagItem *tags, *t, *tag, *tstate1 = tags1, *tstate2 = tags2;
+   struct TagItem *tags, *t, *tag;
+   const struct TagItem *tstate1 = tags1, *tstate2 = tags2;
 
    int n1 = BGUI_CountTagItems(tags1);
    int n2 = BGUI_CountTagItems(tags2);
 
-   if (tags = AllocVec((n1 + n2 + 1) * sizeof(struct TagItem), 0))
+   if ((tags = AllocVec((n1 + n2 + 1) * sizeof(struct TagItem), 0)))
    {
       t = tags;
 
-      while (tag = NextTagItem(&tstate1)) *t++ = *tag;
-      while (tag = NextTagItem(&tstate2)) *t++ = *tag;
+      while ((tag = NextTagItem(&tstate1))) *t++ = *tag;
+      while ((tag = NextTagItem(&tstate2))) *t++ = *tag;
       t->ti_Tag = TAG_DONE;
 
       t = CloneTagItems(tags);
@@ -1768,20 +1655,17 @@ makeproto SAVEDS ASM REGFUNC2(struct TagItem *, BGUI_MergeTagItems,
    };
    return NULL;
 }
-REGFUNC_END
 
-//makeproto SAVEDS ASM struct TagItem *BGUI_CleanTagItems(REG(a0) struct TagItem *tags, REG(d0) LONG dir)
-makeproto SAVEDS ASM REGFUNC2(struct TagItem *, BGUI_CleanTagItems,
-	REGPARAM(A0, struct TagItem *, tags),
-	REGPARAM(D0, LONG, dir))
+makeproto SAVEDS ASM struct TagItem *BGUI_CleanTagItems(REG(a0) struct TagItem *tags, REG(d0) LONG dir)
 {
-   struct TagItem *tstate = tags, *tag, *tag2;
+   struct TagItem *tag, *tag2;
+   const struct TagItem *tstate = tags;
 
    if (dir)
    {
-      while (tag = NextTagItem(&tstate))
+      while ((tag = NextTagItem(&tstate)))
       {
-	 while (tag2 = FindTagItem(tag->ti_Tag, tag + 1))
+	 while ((tag2 = FindTagItem(tag->ti_Tag, tag + 1)))
 	 {
 	    if (dir > 0)
 	    {
@@ -1799,7 +1683,6 @@ makeproto SAVEDS ASM REGFUNC2(struct TagItem *, BGUI_CleanTagItems,
    FreeTagItems(tags);
    return tag;
 }
-REGFUNC_END
 
 #ifdef __AROS__
 makearosproto
@@ -1821,9 +1704,9 @@ makeproto SAVEDS ASM struct TagItem *BGUI_GetDefaultTags(REG(d0) ULONG id)
     */
    ObtainSemaphore(&TaskLock);
 
-   if (tm = FindTaskMember())
+   if ((tm = FindTaskMember()))
    {
-      if (pi = FindPrefInfo(tm, id))
+      if ((pi = FindPrefInfo(tm, id)))
 	 tags = pi->pi_Defaults;
    };
 
@@ -1851,9 +1734,9 @@ makeproto SAVEDS ASM VOID BGUI_DefaultPrefs(VOID)
    TM        *tm;
 
    ObtainSemaphore(&TaskLock);
-   if (tm = FindTaskMember())
+   if ((tm = FindTaskMember()))
    {
-      while (pi = (PI *)RemHead((struct List *)&tm->tm_Prefs))
+      while ((pi = (PI *)RemHead((struct List *)&tm->tm_Prefs)))
 	 FreeTL_PI(pi);
    };
    ReleaseSemaphore(&TaskLock);

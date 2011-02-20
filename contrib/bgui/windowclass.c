@@ -264,32 +264,32 @@ typedef struct {
  * For PackBoolTags().
  */
 STATIC struct TagItem boolTags[] = {
-   WINDOW_LockWidth,    WDF_LOCK_WIDTH,
-   WINDOW_LockHeight,   WDF_LOCK_HEIGHT,
-   WINDOW_NoBufferRP,   WDF_NO_BUFFER,
-   WINDOW_PreBufferRP,  WDF_PREBUFFER,
-   WINDOW_AutoAspect,   WDF_AUTOASPECT,
-   WINDOW_CloseOnEsc,   WDF_CLOSEONESC,
-   WINDOW_ShowTitle,    WDF_SHOWTITLE,
-   WINDOW_AppWindow,    WDF_IS_APPWINDOW,
-   WINDOW_TitleZip,     WDF_TITLEZIP,
-   WINDOW_AutoKeyLabel, WDF_AUTOKEYLABEL,
-   TAG_END
+   { WINDOW_LockWidth,    WDF_LOCK_WIDTH },
+   { WINDOW_LockHeight,   WDF_LOCK_HEIGHT },
+   { WINDOW_NoBufferRP,   WDF_NO_BUFFER },
+   { WINDOW_PreBufferRP,  WDF_PREBUFFER },
+   { WINDOW_AutoAspect,   WDF_AUTOASPECT },
+   { WINDOW_CloseOnEsc,   WDF_CLOSEONESC },
+   { WINDOW_ShowTitle,    WDF_SHOWTITLE },
+   { WINDOW_AppWindow,    WDF_IS_APPWINDOW },
+   { WINDOW_TitleZip,     WDF_TITLEZIP },
+   { WINDOW_AutoKeyLabel, WDF_AUTOKEYLABEL },
+   { TAG_END }
 };
 
 STATIC struct TagItem boolTags1[] = {
-   WINDOW_DragBar,      WFLG_DRAGBAR,
-   WINDOW_SizeGadget,   WFLG_SIZEGADGET,
-   WINDOW_CloseGadget,  WFLG_CLOSEGADGET,
-   WINDOW_DepthGadget,  WFLG_DEPTHGADGET,
-   WINDOW_SizeBottom,   WFLG_SIZEBBOTTOM,
-   WINDOW_SizeRight,    WFLG_SIZEBRIGHT,
-   WINDOW_Activate,     WFLG_ACTIVATE,
-   WINDOW_RMBTrap,      WFLG_RMBTRAP,
-   WINDOW_ReportMouse,  WFLG_REPORTMOUSE,
-   WINDOW_Borderless,   WFLG_BORDERLESS,
-   WINDOW_Backdrop,     WFLG_BACKDROP,
-   TAG_END
+   { WINDOW_DragBar,      WFLG_DRAGBAR },
+   { WINDOW_SizeGadget,   WFLG_SIZEGADGET },
+   { WINDOW_CloseGadget,  WFLG_CLOSEGADGET },
+   { WINDOW_DepthGadget,  WFLG_DEPTHGADGET },
+   { WINDOW_SizeBottom,   WFLG_SIZEBBOTTOM },
+   { WINDOW_SizeRight,    WFLG_SIZEBRIGHT },
+   { WINDOW_Activate,     WFLG_ACTIVATE },
+   { WINDOW_RMBTrap,      WFLG_RMBTRAP },
+   { WINDOW_ReportMouse,  WFLG_REPORTMOUSE },
+   { WINDOW_Borderless,   WFLG_BORDERLESS },
+   { WINDOW_Backdrop,     WFLG_BACKDROP },
+   { TAG_END }
 };
 
 static Class *WindowClass = NULL;
@@ -326,7 +326,7 @@ STATIC BOOL CopyNewMenuArray( WD *wd, struct NewMenu *array )
    /*
     * Allocate a private copy.
     */
-   if ( wd->wd_MenuStrip = ( struct NewMenu * )BGUI_AllocPoolMem( num * sizeof( struct NewMenu ))) {
+   if (( wd->wd_MenuStrip = ( struct NewMenu * )BGUI_AllocPoolMem( num * sizeof( struct NewMenu )))) {
       /*
        * Copy the array.
        */
@@ -339,14 +339,12 @@ STATIC BOOL CopyNewMenuArray( WD *wd, struct NewMenu *array )
 /*
  * Find out the minumum dimensions.
  */
-STATIC ULONG GroupDimensions(Object *master, struct TextAttr *font, UWORD *minw, UWORD *minh)
+STATIC IPTR GroupDimensions(WD *wd, Object *master, struct TextAttr *font, UWORD *minw, UWORD *minh)
 {
    struct TextFont   *tf = NULL;
    struct RastPort    rp;
-   ULONG              rc;
+   IPTR               rc = 0;
    struct GadgetInfo  gi;
-   WD                *wd;
-   BC                *bc = BASE_DATA(master);
 
    /*
     * Initialize the RastPort.
@@ -358,16 +356,14 @@ STATIC ULONG GroupDimensions(Object *master, struct TextAttr *font, UWORD *minw,
     */
    if (font)
    {
-      if (tf = BGUI_OpenFont(font)) FSetFont(&rp, tf);
+      if ((tf = BGUI_OpenFont(font))) FSetFont(&rp, tf);
       else return 0;
 
       DoSetMethodNG(master, BT_TextAttr, font, TAG_END);
    }
 
-   if (bc->bc_Window)
+   if (wd)
    {
-      wd = INST_DATA(WindowClass, bc->bc_Window);
-
       /*
        * Setup fake GadgetInfo (used for the DrawInfo).
        */
@@ -425,9 +421,9 @@ STATIC SAVEDS ASM REGFUNC3(VOID, BackFill_func,
       rp->Layer  = NULL;
 
 #ifdef DEBUG_BGUI
-      if (bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_RastPort, rp, TAG_DONE))
+      if ((bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_RastPort, rp, TAG_DONE)))
 #else
-      if (bi = AllocBaseInfo(BI_RastPort, rp, TAG_DONE))
+      if ((bi = AllocBaseInfo(BI_RastPort, rp, TAG_DONE)))
 #endif
       {
 	 /*
@@ -445,25 +441,28 @@ STATIC SAVEDS ASM REGFUNC3(VOID, BackFill_func,
       };
       rp->Layer = save_layer;
    }
+
+   return;
 }
 REGFUNC_END
 
-STATIC struct Hook BackFill_hook = { NULL, NULL, (FUNCPTR)BackFill_func, NULL, NULL };
+STATIC struct Hook BackFill_hook = { {NULL, NULL}, (HOOKFUNC)BackFill_func, NULL, NULL };
 
 /*
  * Set attributes.
  */
-METHOD(WindowClassSetUpdate, struct opSet *, ops)
+STATIC METHOD(WindowClassSetUpdate, struct opSet *, ops)
 {
    WD              *wd = INST_DATA(cl, obj);
-   struct TagItem  *tstate = ops->ops_AttrList, *tag;
+   const struct TagItem  *tstate = ops->ops_AttrList;
+   struct TagItem  *tag;
    struct Window   *w = wd->wd_WindowPtr;
    ULONG            data;
 
    /*
     * Set attributes.
     */
-   while (tag = NextTagItem(&tstate))
+   while ((tag = NextTagItem(&tstate)))
    {
       data = tag->ti_Data;       
    
@@ -500,7 +499,7 @@ METHOD(WindowClassSetUpdate, struct opSet *, ops)
 	 {
 	    CloseLocale(wd->wd_Locale->bl_Locale);
 	    CloseCatalog(wd->wd_Locale->bl_Catalog);
-	    if (data == NULL)
+	    if (data == 0)
 	    {
 	       BGUI_FreePoolMem(wd->wd_Locale);
 	       wd->wd_Locale = NULL;
@@ -607,7 +606,7 @@ METHOD(WindowClassSetUpdate, struct opSet *, ops)
       case WINDOW_SharedPort:
 	 if (!w)
 	 {
-	    if (wd->wd_UserPort = (struct MsgPort *)data)
+	    if ((wd->wd_UserPort = (struct MsgPort *)data))
 	       wd->wd_Flags |= WDF_SHARED_MSGPORT;
 	    else
 	       wd->wd_Flags &= ~WDF_SHARED_MSGPORT;
@@ -685,7 +684,7 @@ METHOD(WindowClassSetUpdate, struct opSet *, ops)
 	 break;
       };
    };
-   return 1;
+   return (IPTR)TRUE;
 }
 METHOD_END
 
@@ -693,22 +692,24 @@ METHOD_END
 /*
  * Create a shiny new object.
  */
-METHOD(WindowClassNew, struct opSet *, ops)
+STATIC METHOD(WindowClassNew, struct opSet *, ops)
 {
    WD             *wd;
-   struct TagItem *tstate, *tag, *tags;
-   ULONG           rc=0, data, idcmp;
+   IPTR            rc=0;
+   ULONG           data, idcmp;
+   const struct TagItem *tstate;
+   struct TagItem *tag, *tags;
    BOOL            fail = FALSE;
 
    Object *master, *lborder, *tborder, *rborder, *bborder;
 
    tags = DefTagList(BGUI_WINDOW_OBJECT, ops->ops_AttrList);
 
-   master  = (Object *)GetTagData(WINDOW_MasterGroup,  NULL, tags);
-   lborder = (Object *)GetTagData(WINDOW_LBorderGroup, NULL, tags);
-   tborder = (Object *)GetTagData(WINDOW_TBorderGroup, NULL, tags);
-   rborder = (Object *)GetTagData(WINDOW_RBorderGroup, NULL, tags);
-   bborder = (Object *)GetTagData(WINDOW_BBorderGroup, NULL, tags);
+   master  = (Object *)GetTagData(WINDOW_MasterGroup,  0, tags);
+   lborder = (Object *)GetTagData(WINDOW_LBorderGroup, 0, tags);
+   tborder = (Object *)GetTagData(WINDOW_TBorderGroup, 0, tags);
+   rborder = (Object *)GetTagData(WINDOW_RBorderGroup, 0, tags);
+   bborder = (Object *)GetTagData(WINDOW_BBorderGroup, 0, tags);
 
    /*
     * For now we do not work without a master group.
@@ -766,7 +767,7 @@ METHOD(WindowClassNew, struct opSet *, ops)
        * Obtain all necessary window data.
        */
       tstate = tags;
-      while (tag = NextTagItem(&tstate))
+      while ((tag = NextTagItem(&tstate)))
       {
 	 data = tag->ti_Data;
 	 
@@ -858,7 +859,7 @@ METHOD_END
 /*
  * Get rid of an object.
  */
-METHOD(WindowClassDispose, Msg, msg)
+STATIC METHOD(WindowClassDispose, Msg, msg)
 {
    WD          *wd = INST_DATA(cl, obj);
    TABCYCLE    *tc;
@@ -892,13 +893,13 @@ METHOD(WindowClassDispose, Msg, msg)
    /*
     * Remove and delete the tab-cycle list.
     */
-   while (tc = (TABCYCLE *)RemHead((struct List *)&wd->wd_CycleList))
+   while ((tc = (TABCYCLE *)RemHead((struct List *)&wd->wd_CycleList)))
       BGUI_FreePoolMem(tc);
 
    /*
     * Remove and delete all update targets.
     */
-   while (up = (UPN *)RemHead((struct List *)&wd->wd_UpdateList))
+   while ((up = (UPN *)RemHead((struct List *)&wd->wd_UpdateList)))
       BGUI_FreePoolMem(up);
 
    /*
@@ -932,20 +933,17 @@ METHOD_END
 /*
  * Setup the menu strip.
  */
-//STATIC ASM BOOL DoMenuStrip( REG(a0) WD *wd, REG(a1) struct Screen *scr )
-STATIC ASM REGFUNC2(BOOL, DoMenuStrip,
-	REGPARAM(A0, WD *, wd),
-	REGPARAM(A1, struct Screen *, scr))
+STATIC ASM BOOL DoMenuStrip( REG(a0) WD *wd, REG(a1) struct Screen *scr )
 {
    /*
     * Get the visual info. (We use
     * gadtools for the menus.)
     */
-   if ( wd->wd_VisualInfo = GetVisualInfo( scr, TAG_END )) {
+   if ((wd->wd_VisualInfo = GetVisualInfo( scr, TAG_END ))) {
       /*
        * Create the menu-strip.
        */
-      if ( wd->wd_Menus = CreateMenus( wd->wd_MenuStrip, TAG_END )) {
+      if ((wd->wd_Menus = CreateMenus( wd->wd_MenuStrip, TAG_END ))) {
 	 /*
 	  * Layout the menu strip.
 	  */
@@ -962,14 +960,11 @@ STATIC ASM REGFUNC2(BOOL, DoMenuStrip,
    }
    return( FALSE );
 }
-REGFUNC_END
 
 /*
  * Kill the AppWindow stuff.
  */
-//STATIC ASM VOID KillAppWindow(REG(a0) WD *wd)
-STATIC ASM REGFUNC1(VOID, KillAppWindow,
-	REGPARAM(A0, WD *, wd))
+STATIC ASM VOID KillAppWindow(REG(a0) WD *wd)
 {
    struct Message       *msg;
 
@@ -978,11 +973,7 @@ STATIC ASM REGFUNC1(VOID, KillAppWindow,
     */
    if (wd->wd_AppWindow)
    {
-#ifdef __AROS__
-#warning Commented RemoveAppWindow
-#else
       RemoveAppWindow(wd->wd_AppWindow);
-#endif
       wd->wd_AppWindow = NULL;
    };
 
@@ -994,50 +985,40 @@ STATIC ASM REGFUNC1(VOID, KillAppWindow,
       /*
        * Kill all remaining messages and the port.
        */
-      while (msg = GetMsg(wd->wd_AppPort))
+      while ((msg = GetMsg(wd->wd_AppPort)))
 	 ReplyMsg(msg);
 
       DeleteMsgPort(wd->wd_AppPort);
       wd->wd_AppPort = NULL;
    };
 }
-REGFUNC_END
 
 /*
  * Make it an AppWindow.
  */
-//STATIC ASM BOOL MakeAppWindow(REG(a0) WD *wd)
-STATIC ASM REGFUNC1(BOOL, MakeAppWindow,
-	REGPARAM(A0, WD *, wd))
+STATIC ASM BOOL MakeAppWindow(REG(a0) WD *wd)
 {
    /*
     * Create a message port.
     */
-   if (wd->wd_AppPort = CreateMsgPort())
+   if ((wd->wd_AppPort = CreateMsgPort()))
    {
       /*
        * Create the app window.
        */
-#ifdef __AROS__
-#warning Commented AddAppWindowA
-#else
-      if (wd->wd_AppWindow = AddAppWindowA(0, 0, wd->wd_WindowPtr, wd->wd_AppPort, NULL))
+      if ((wd->wd_AppWindow = AddAppWindowA(0, 0, wd->wd_WindowPtr, wd->wd_AppPort, NULL)))
 	 return TRUE;
-#endif
 
       KillAppWindow(wd);
    };
    return FALSE;
 }
-REGFUNC_END
 
 /*
  * Compute width and height of the
  * system gadgets.
  */
-//STATIC ASM VOID SystemSize(REG(a1) WD *wd)
-STATIC ASM REGFUNC1(VOID, SystemSize,
-	REGPARAM(A1, WD *,wd))
+STATIC ASM VOID SystemSize(REG(a1) WD *wd)
 {
    struct TagItem   tags[4];
    Object          *image;
@@ -1048,7 +1029,7 @@ STATIC ASM REGFUNC1(VOID, SystemSize,
     */
    tags[0].ti_Tag  = SYSIA_Which;
    tags[1].ti_Tag  = SYSIA_DrawInfo;
-   tags[1].ti_Data = (ULONG)wd->wd_DrawInfo;
+   tags[1].ti_Data = (IPTR)wd->wd_DrawInfo;
    tags[2].ti_Tag  = SYSIA_Size;
    tags[2].ti_Data = hires ? SYSISIZE_MEDRES : SYSISIZE_LOWRES;
    tags[3].ti_Tag  = TAG_DONE;
@@ -1057,7 +1038,7 @@ STATIC ASM REGFUNC1(VOID, SystemSize,
     * Sizing image.
     */
    tags[0].ti_Data = SIZEIMAGE;
-   if (image = NewObjectA(NULL, SYSICLASS, tags))
+   if ((image = NewObjectA(NULL, SYSICLASS, tags)))
    {
       wd->wd_SizeW  = IM_BOX(image)->Width;
       wd->wd_SizeH  = IM_BOX(image)->Height;
@@ -1073,7 +1054,7 @@ STATIC ASM REGFUNC1(VOID, SystemSize,
     * Close image.
     */
    tags[0].ti_Data = CLOSEIMAGE;
-   if (image = NewObjectA(NULL, SYSICLASS, tags))
+   if ((image = NewObjectA(NULL, SYSICLASS, tags)))
    {
       wd->wd_CloseW = IM_BOX(image)->Width;
       DisposeObject(image);
@@ -1085,7 +1066,7 @@ STATIC ASM REGFUNC1(VOID, SystemSize,
     * Depth image.
     */
    tags[0].ti_Data = DEPTHIMAGE;
-   if (image = NewObjectA(NULL, SYSICLASS, tags))
+   if ((image = NewObjectA(NULL, SYSICLASS, tags)))
    {
       wd->wd_DepthW = IM_BOX(image)->Width;
       DisposeObject(image);
@@ -1097,7 +1078,7 @@ STATIC ASM REGFUNC1(VOID, SystemSize,
     * Zoom image.
     */
    tags[0].ti_Data = ZOOMIMAGE;
-   if (image = NewObjectA(NULL, SYSICLASS, tags))
+   if ((image = NewObjectA(NULL, SYSICLASS, tags)))
    {
       wd->wd_ZoomW  = IM_BOX(image)->Width;
       DisposeObject(image);
@@ -1105,16 +1086,11 @@ STATIC ASM REGFUNC1(VOID, SystemSize,
    else
       wd->wd_ZoomW  = hires ? 24 : 18;
 }
-REGFUNC_END
 
 /*
  * Query border sizes.
  */
-//STATIC ASM void WBorderSize(REG(a0) WD *wd, REG(a1) struct Screen *scr, REG(a2) struct TextAttr *at)
-STATIC ASM REGFUNC3(void, WBorderSize,
-	REGPARAM(A0, WD *, wd),
-	REGPARAM(A1, struct Screen *, scr),
-	REGPARAM(A2, struct TextAttr *, at))
+STATIC ASM void WBorderSize(REG(a0) WD *wd, REG(a1) struct Screen *scr, REG(a2) struct TextAttr *at)
 {
    UWORD    wl, wt, wr, wb;
 
@@ -1158,25 +1134,25 @@ STATIC ASM REGFUNC3(void, WBorderSize,
        */
       if (wd->wd_LBorder)
       {
-	 GroupDimensions(wd->wd_LBorder, at, &wd->wd_LWidth, &wd->wd_LHeight);
+	 GroupDimensions(wd, wd->wd_LBorder, at, &wd->wd_LWidth, &wd->wd_LHeight);
 	 if (wd->wd_LWidth > wl) wl = wd->wd_LWidth;
       }
 
       if (wd->wd_TBorder)
       {
-	 GroupDimensions(wd->wd_TBorder, at, &wd->wd_TWidth, &wd->wd_THeight);
+	 GroupDimensions(wd, wd->wd_TBorder, at, &wd->wd_TWidth, &wd->wd_THeight);
 	 if (wd->wd_THeight > wt) wt = wd->wd_THeight;
       }
 
       if (wd->wd_RBorder)
       {
-	 GroupDimensions(wd->wd_RBorder, at, &wd->wd_RWidth, &wd->wd_RHeight);
+	 GroupDimensions(wd, wd->wd_RBorder, at, &wd->wd_RWidth, &wd->wd_RHeight);
 	 if (wd->wd_RWidth > wr) wr = wd->wd_RWidth;
       }
 
       if (wd->wd_BBorder)
       {
-	 GroupDimensions(wd->wd_BBorder, at, &wd->wd_BWidth, &wd->wd_BHeight);
+	 GroupDimensions(wd, wd->wd_BBorder, at, &wd->wd_BWidth, &wd->wd_BHeight);
 	 if (wd->wd_BHeight > wb) wb = wd->wd_BHeight;
       }
 
@@ -1193,7 +1169,6 @@ STATIC ASM REGFUNC3(void, WBorderSize,
        */
       wd->wd_Left = wd->wd_Top = wd->wd_Right = wd->wd_Bottom = 0;
 }
-REGFUNC_END
 
 BOOL WinSize(WD *wd, UWORD *win_w, UWORD *win_h)
 {
@@ -1255,7 +1230,7 @@ BOOL WinSize(WD *wd, UWORD *win_w, UWORD *win_h)
     * Ask the master group to compute its
     * absolute minimum dimension.
     */
-   GroupDimensions(wd->wd_Gadgets, font, (UWORD *)&gmw, (UWORD *)&gmh);
+   GroupDimensions(wd, wd->wd_Gadgets, font, (UWORD *)&gmw, (UWORD *)&gmh);
 
    /*
     * Save these.
@@ -1437,7 +1412,7 @@ BOOL WinSize(WD *wd, UWORD *win_w, UWORD *win_h)
       goto reCalc;
    };
 
-   if (wd->wd_UsedFont = BGUI_OpenFont(font))
+   if ((wd->wd_UsedFont = BGUI_OpenFont(font)))
    {
       *win_w = gmw;
       *win_h = gmh;
@@ -1451,10 +1426,10 @@ BOOL WinSize(WD *wd, UWORD *win_w, UWORD *win_h)
 /*
  * Open up the window.
  */
-METHOD(WindowClassOpen, Msg, msg)
+STATIC METHOD(WindowClassOpen, Msg, msg)
 {
    WD                *wd = INST_DATA(cl, obj);
-   WORD               wleft = 0, wtop = 0, width = 0, height = 0, mw, mh;
+   WORD               wleft = 0, wtop = 0, width = 0, height = 0, mw = 0, mh = 0;
    WORD               vw, vh;
    struct Screen     *pubscreen;
    struct Rectangle   rect;
@@ -1471,8 +1446,8 @@ METHOD(WindowClassOpen, Msg, msg)
     * If the window is already opened we
     * return a pointer to it.
     */
-   if (w = wd->wd_WindowPtr)
-      return (ULONG)w;
+   if ((w = wd->wd_WindowPtr))
+      return (IPTR)w;
 
    /*
     * Link border gadgets.
@@ -1821,7 +1796,7 @@ METHOD(WindowClassOpen, Msg, msg)
        */
       ModifyIDCMP(w, IDCMP_REQCLEAR);
 
-      while (imsg = GetMsg(w->UserPort))
+      while ((imsg = GetMsg(w->UserPort)))
       {
 	 /*
 	  * Dump message onto the other port.
@@ -1867,7 +1842,7 @@ METHOD(WindowClassOpen, Msg, msg)
     */
    AddWindow(obj, w);
 
-   return (ULONG)w;
+   return (IPTR)w;
 
    failure:
 
@@ -1883,9 +1858,7 @@ METHOD_END
  * the port which belong to
  * the window.
  */
-//STATIC ASM VOID ClearMsgPort( REG(a0) WD *wd )
-STATIC ASM REGFUNC1(VOID, ClearMsgPort,
-	REGPARAM(A0, WD *, wd))
+STATIC ASM VOID ClearMsgPort( REG(a0) WD *wd )
 {
    struct IntuiMessage     *imsg;
    struct Node       *succ;
@@ -1897,7 +1870,7 @@ STATIC ASM REGFUNC1(VOID, ClearMsgPort,
 
    imsg = ( struct IntuiMessage * )wd->wd_UserPort->mp_MsgList.lh_Head;
 
-   while ( succ = imsg->ExecMessage.mn_Node.ln_Succ ) {
+   while ((succ = imsg->ExecMessage.mn_Node.ln_Succ)) {
       if ( imsg->IDCMPWindow == wd->wd_WindowPtr ) {
 	 Remove(( struct Node * )imsg );
 	 ReplyMsg(( struct Message * )imsg );
@@ -1906,18 +1879,17 @@ STATIC ASM REGFUNC1(VOID, ClearMsgPort,
    }
    Permit();
 }
-REGFUNC_END
 /// WM_CLOSE
 /*
  * Close the window.
  */
-METHOD(WindowClassClose, Msg, msg)
+STATIC METHOD(WindowClassClose, Msg, msg)
 {
    WD            *wd = INST_DATA(cl, obj);
    ULONG          rc = 0;
    struct Window *w;
 
-   if (w = wd->wd_WindowPtr)
+   if ((w = wd->wd_WindowPtr))
    {
       /*
        * When a shared MsgPort is used
@@ -2026,7 +1998,7 @@ METHOD(WindowClassClose, Msg, msg)
       wd->wd_Screen = NULL;
    };
 
-   return rc;
+   return (IPTR)rc;
 }
 METHOD_END
 ///
@@ -2034,7 +2006,7 @@ METHOD_END
 /*
  * Put the window to sleep.
  */
-METHOD(WindowClassSleep, Msg, msg)
+STATIC METHOD(WindowClassSleep, Msg, msg)
 {
    WD         *wd = INST_DATA(cl, obj);
    ULONG       rc = 0;
@@ -2055,7 +2027,7 @@ METHOD(WindowClassSleep, Msg, msg)
        */
       rc = 1;
    };
-   return rc;
+   return (IPTR)rc;
 }
 METHOD_END
 ///
@@ -2063,7 +2035,7 @@ METHOD_END
 /*
  * Wake the window back up.
  */
-METHOD(WindowClassWakeUp, Msg, msg)
+STATIC METHOD(WindowClassWakeUp, Msg, msg)
 {
    WD         *wd = INST_DATA(cl, obj);
    ULONG       rc = 0;
@@ -2085,7 +2057,7 @@ METHOD(WindowClassWakeUp, Msg, msg)
       };
       rc = 1;
    };
-   return rc;
+   return (IPTR)rc;
 }
 METHOD_END
 ///
@@ -2093,17 +2065,13 @@ METHOD_END
 /*
  * Keep track of window bound changes.
  */
-//STATIC ASM ULONG WindowClassChange( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg msg )
-STATIC ASM REGFUNC3(ULONG, WindowClassChange,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, Msg, msg))
+STATIC ASM ULONG WindowClassChange( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg msg )
 {
    WD            *wd = INST_DATA(cl, obj);
    ULONG          rc = 0;
    struct Window *w;
 
-   if (w = wd->wd_WindowPtr)
+   if ((w = wd->wd_WindowPtr))
    {
       wd->wd_FixedPos = *IBOX(&w->LeftEdge);
       wd->wd_Flags   |= WDF_CHANGE_VALID;
@@ -2115,16 +2083,11 @@ STATIC ASM REGFUNC3(ULONG, WindowClassChange,
    }
    return rc;
 }
-REGFUNC_END
 
 /*
  * Get an attribute.
  */
-//STATIC ASM ULONG WindowClassGet(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct opGet *opg)
-STATIC ASM REGFUNC3(ULONG, WindowClassGet,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct opGet *, opg))
+STATIC METHOD(WindowClassGet, struct opGet *, opg)
 {
    WD       *wd = (WD *)INST_DATA(cl, obj);
    ULONG     rc = 1, *store = opg->opg_Storage;
@@ -2226,32 +2189,28 @@ STATIC ASM REGFUNC3(ULONG, WindowClassGet,
 	 break;
 
       default:
-	 rc = AsmDoSuperMethodA(cl, obj, (Msg)opg);
+	 rc = (ULONG)AsmDoSuperMethodA(cl, obj, (Msg)opg);
 	 break;
    }
-   return rc;
+   return (IPTR)rc;
 }
-REGFUNC_END
+METHOD_END
 
 /*
  * Put out a help-request.
  */
-METHOD(WindowClassHelp, Msg, msg)
+STATIC METHOD(WindowClassHelp, Msg, msg)
 {
    WD                   *wd = INST_DATA( cl, obj );
    struct bmShowHelp     bsh;
-#ifdef __AROS__
-#warning Commented the following line
-#else
-   struct NewAmigaGuide  nag = { NULL };
-#endif
+   struct NewAmigaGuide  nag = { };
    ULONG                 rc = BMHELP_FAILURE;
    struct Window        *w;
 
    /*
     * Only when the window is open.
     */
-   if (w = wd->wd_WindowPtr)
+   if ((w = wd->wd_WindowPtr))
    {
       /*
        * Setup a help request for the
@@ -2291,17 +2250,13 @@ METHOD(WindowClassHelp, Msg, msg)
 	       }
 	       else
 	       {
-#ifdef __AROS__
-#warning Commented the following lines
-#else
 		  nag.nag_Name   = (STRPTR)wd->wd_HelpFile;
 		  nag.nag_Node   = (STRPTR)wd->wd_HelpNode;
 		  nag.nag_Line   = wd->wd_HelpLine;
 		  nag.nag_Screen = w->WScreen;
 
-		  if (DisplayAGuideInfo(&nag, NULL))
+		  if (DisplayAGuideInfo(&nag, TAG_END))
 		     rc = BMHELP_OK;
-#endif
 	       };
 	    };
 	 };
@@ -2311,7 +2266,7 @@ METHOD(WindowClassHelp, Msg, msg)
        */
       AsmDoMethod(obj, WM_WAKEUP);
    };
-   return rc;
+   return (IPTR)rc;
 }
 METHOD_END
 
@@ -2319,10 +2274,7 @@ METHOD_END
  * Fill up an InputEvent structure
  * with RAWKEY information.
  */
-//STATIC ASM VOID FillIE(REG(a0) struct InputEvent *ie, REG(a1) struct IntuiMessage *imsg)
-STATIC ASM REGFUNC2(VOID, FillIE,
-	REGPARAM(A0, struct InputEvent *, ie),
-	REGPARAM(A1, struct IntuiMessage *, imsg))
+STATIC ASM VOID FillIE(REG(a0) struct InputEvent *ie, REG(a1) struct IntuiMessage *imsg)
 {
    ie->ie_Class              = IECLASS_RAWKEY;
    ie->ie_Code               = imsg->Code;
@@ -2331,15 +2283,12 @@ STATIC ASM REGFUNC2(VOID, FillIE,
    ie->ie_TimeStamp.tv_secs  = imsg->Seconds;
    ie->ie_TimeStamp.tv_micro = imsg->Micros;
 }
-REGFUNC_END
 
 /*
  * Get the first message from the
  * window port which belongs to the window.
  */
-//STATIC ASM struct IntuiMessage *GetIMsg( REG(a0) WD *wd )
-STATIC ASM REGFUNC1(struct IntuiMessage *, GetIMsg,
-	REGPARAM(A0, WD *, wd))
+STATIC ASM struct IntuiMessage *GetIMsg( REG(a0) WD *wd )
 {
    struct IntuiMessage     *imsg;
    struct MsgPort       *mp = wd->wd_UserPort;
@@ -2360,7 +2309,6 @@ STATIC ASM REGFUNC1(struct IntuiMessage *, GetIMsg,
    Permit();
    return( NULL );
 }
-REGFUNC_END
 
 /*
  * Find out if an object must receive a key message.
@@ -2475,7 +2423,7 @@ STATIC ULONG KeyGadget(Class *cl, Object *obj, struct IntuiMessage *imsg)
       for(;;)
       {
 	 WaitPort(wd->wd_UserPort);
-	 while (im = GetIMsg(wd))
+	 while ((im = GetIMsg(wd)))
 	 {
 	    class = im->Class;
 	    code  = im->Code;
@@ -2577,10 +2525,7 @@ STATIC ULONG KeyGadget(Class *cl, Object *obj, struct IntuiMessage *imsg)
 /*
  * Find tab-cycle entry.
  */
-//STATIC ASM TABCYCLE *GetCycleNode( REG(a0) WD *wd, REG(a1) Object *obj )
-STATIC ASM REGFUNC2(TABCYCLE *, GetCycleNode,
-	REGPARAM(A0, WD *, wd),
-	REGPARAM(A1, Object *, obj))
+STATIC ASM TABCYCLE *GetCycleNode( REG(a0) WD *wd, REG(a1) Object *obj )
 {
    TABCYCLE    *tc;
 
@@ -2590,16 +2535,11 @@ STATIC ASM REGFUNC2(TABCYCLE *, GetCycleNode,
    }
    return( NULL );
 }
-REGFUNC_END
 
 /*
  * Perform update notification.
  */
-//STATIC ASM VOID UpdateNotification( REG(a0) WD *wd, REG(a1) struct TagItem *attr, REG(d0) ULONG id )
-STATIC ASM REGFUNC3(VOID, UpdateNotification,
-	REGPARAM(A0, WD *, wd),
-	REGPARAM(A1, struct TagItem *, attr),
-	REGPARAM(D0, ULONG, id))
+STATIC ASM VOID UpdateNotification( REG(a0) WD *wd, REG(a1) struct TagItem *attr, REG(d0) ULONG id )
 {
    struct TagItem       *clones;
    UPN            *up;
@@ -2607,7 +2547,7 @@ STATIC ASM REGFUNC3(VOID, UpdateNotification,
    /*
     * Clone attributes.
     */
-   if ( clones = CloneTagItems( attr )) {
+   if ((clones = CloneTagItems( attr ))) {
       /*
        * Find target.
        */
@@ -2640,15 +2580,12 @@ STATIC ASM REGFUNC3(VOID, UpdateNotification,
       FreeTagItems( clones );
    }
 }
-REGFUNC_END
-
-
 
 /*
  * Default tool tip hook.
  */
-//STATIC ASM ULONG ToolTip_func(REG(a0) struct Hook *h, REG(a2) Object *obj, REG(a1) struct ttCommand *ttc)
-STATIC ASM REGFUNC3(ULONG, ToolTip_func,
+//STATIC ASM IPTR ToolTip_func(REG(a0) struct Hook *h, REG(a2) Object *obj, REG(a1) struct ttCommand *ttc)
+STATIC ASM REGFUNC3(IPTR, ToolTip_func,
 	REGPARAM(A0, struct Hook *, h),
 	REGPARAM(A2, Object *, obj),
 	REGPARAM(A1, struct ttCommand *, ttc))
@@ -2660,7 +2597,7 @@ STATIC ASM REGFUNC3(ULONG, ToolTip_func,
    struct IBox        ibx;
    UWORD              x, y, ww, wh;
    UBYTE             *tip, *tc;
-   ULONG              args[2];
+   IPTR               args[2];
    struct BaseInfo   *bi;
 
    switch (ttc->ttc_Command)
@@ -2672,16 +2609,16 @@ STATIC ASM REGFUNC3(ULONG, ToolTip_func,
        * Does the tip-object have a tool-tip?
        */
       tc = NULL;
-      Get_Attr(ttc->ttc_Object, BT_ToolTip, (ULONG *)&tc);
+      Get_Attr(ttc->ttc_Object, BT_ToolTip, (IPTR *)&tc);
       if (tc)
       {
 	 /*
 	  * Copy and setup the tip.
 	  */
-	 if (tip = (UBYTE *)BGUI_AllocPoolMem(strlen(tc) + 10))
+	 if ((tip = (UBYTE *)BGUI_AllocPoolMem(strlen(tc) + 10)))
 	 {
-	    args[0] = BARDETAILPEN;
-	    args[1] = (ULONG)tc;
+	    args[0] = (IPTR)BARDETAILPEN;
+	    args[1] = (IPTR)tc;
 	    DoSPrintF(tip, "\033d%ld%s", args);
 	 }
 	 else
@@ -2717,21 +2654,21 @@ STATIC ASM REGFUNC3(ULONG, ToolTip_func,
 	  * Open tool-tip window with it's
 	  * bottom right corner under the mouse.
 	  */
-	 if (tw = OpenWindowTags(NULL, WA_Left,         wd->wd_WindowPtr->LeftEdge + x - ww,
+	 if ((tw = OpenWindowTags(NULL,WA_Left,         wd->wd_WindowPtr->LeftEdge + x - ww,
 				       WA_Top,          wd->wd_WindowPtr->TopEdge  + y - wh,
 				       WA_Width,        ww,
 				       WA_Height,       wh,
 				       WA_IDCMP,        0,
 				       WA_Flags,        WFLG_BORDERLESS|WFLG_RMBTRAP,
 				       WA_CustomScreen, wd->wd_Screen,
-				       TAG_DONE))
+				       TAG_DONE)))
 	 {
 	    rp = tw->RPort;
 
 #ifdef DEBUG_BGUI
-	    if (bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_Screen, wd->wd_Screen, BI_RastPort, rp, TAG_DONE))
+	    if ((bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_Screen, wd->wd_Screen, BI_RastPort, rp, TAG_DONE)))
 #else
-	    if (bi = AllocBaseInfo(BI_Screen, wd->wd_Screen, BI_RastPort, rp, TAG_DONE))
+	    if ((bi = AllocBaseInfo(BI_Screen, wd->wd_Screen, BI_RastPort, rp, TAG_DONE)))
 #endif
 	    {
 	       /*
@@ -2781,14 +2718,14 @@ STATIC ASM REGFUNC3(ULONG, ToolTip_func,
       break;
    };
 
-   return (ULONG)tw;
+   return (IPTR)tw;
 }
 REGFUNC_END
-static struct Hook ToolTipHook = { NULL, NULL, (HOOKFUNC)ToolTip_func, NULL, NULL };
+static struct Hook ToolTipHook = { {NULL, NULL}, (HOOKFUNC)ToolTip_func, NULL, NULL };
 
 /// WM_CLOSETOOLTIP
 
-METHOD(WindowClassCloseTT, Msg, msg)
+STATIC METHOD(WindowClassCloseTT, Msg, msg)
 {
    WD               *wd = INST_DATA(cl, obj);
    struct ttCommand  ttc;
@@ -2804,7 +2741,7 @@ METHOD(WindowClassCloseTT, Msg, msg)
       wd->wd_ToolX   = wd->wd_ToolY = -1;
       wd->wd_ToolTip = NULL;
    };
-   return 1;
+   return (IPTR)TRUE;
 }
 METHOD_END
 ///
@@ -2812,7 +2749,7 @@ METHOD_END
 /*
  * Handle a window's IDCMP messages.
  */
-METHOD(WindowClassIDCMP, Msg, msg)
+STATIC METHOD(WindowClassIDCMP, Msg, msg)
 {
    struct IntuiMessage   *imsg;
    struct TagItem        *attr, *tag;
@@ -2867,7 +2804,7 @@ METHOD(WindowClassIDCMP, Msg, msg)
    /*
     * Is there a message.
     */
-   while (imsg = GetIMsg(wd))
+   while ((imsg = GetIMsg(wd)))
    {
       /*
        * Any movement?
@@ -3005,12 +2942,12 @@ WW(kprintf("WindowClassIDCMP: received IDCMP_NEWSIZE\n"));
 	    grwo.grwo_Coords.X = imsg->MouseX;
 	    grwo.grwo_Coords.Y = imsg->MouseY;
 
-	    if (obja = (Object *)AsmDoMethodA(wd->wd_Gadgets, (Msg)&grwo))
+	    if ((obja = (Object *)AsmDoMethodA(wd->wd_Gadgets, (Msg)&grwo)))
 	    {
 	       Get_Attr(obja, BT_MouseActivation, &mouseact);
 
-	       if ((mouseact & MOUSEACT_RMB_ACTIVE) && (code == IECODE_RBUTTON)
-		|| (mouseact & MOUSEACT_MMB_ACTIVE) && (code == IECODE_MBUTTON))
+	       if (((mouseact & MOUSEACT_RMB_ACTIVE) && (code == IECODE_RBUTTON))
+		|| ((mouseact & MOUSEACT_MMB_ACTIVE) && (code == IECODE_MBUTTON)))
 	       {
 		  SetAttrs(obja, BT_ReportID,
 		  ((mouseact & MOUSEACT_RMB_REPORT) && (code == IECODE_RBUTTON)) ||
@@ -3043,7 +2980,7 @@ WW(kprintf("WindowClassIDCMP: received IDCMP_NEWSIZE\n"));
 	    grwo.grwo_Coords.X   = imsg->MouseX;
 	    grwo.grwo_Coords.Y   = imsg->MouseY;
 
-	    if (obja = (Object *)AsmDoMethodA(wd->wd_Gadgets, (Msg)&grwo))
+	    if ((obja = (Object *)AsmDoMethodA(wd->wd_Gadgets, (Msg)&grwo)))
 	    {
 	       Get_Attr(obja, BT_MouseActivation, &mouseact);
 	    };
@@ -3104,7 +3041,7 @@ WW(kprintf("WindowClassIDCMP: calling WindowClassChange\n"));
 	    /*
 	     * Setup the return code ID.
 	     */
-	    rc = (ULONG)GTMENUITEM_USERDATA(mi);
+	    rc = (IPTR)GTMENUITEM_USERDATA(mi);
 
 	    /*
 	     * Menu a CHECKIT item?
@@ -3141,7 +3078,7 @@ WW(kprintf("WindowClassIDCMP: calling WindowClassChange\n"));
 	 /*
 	  * Setup the return code ID.
 	  */
-	 if (mi) rc = WMHI_MENUHELP | (ULONG)GTMENUITEM_USERDATA(mi);
+	 if (mi) rc = WMHI_MENUHELP | (IPTR)GTMENUITEM_USERDATA(mi);
 	 break;
 
       case IDCMP_RAWKEY:
@@ -3161,7 +3098,7 @@ WW(kprintf("WindowClassIDCMP: calling WindowClassChange\n"));
 	    /*
 	     * HELP!!!!
 	     */
-	    WindowClassHelp(cl, obj, (Msg)NULL);
+	    METHOD_CALL(WindowClassHelp, cl, obj, NULL, getreg(REG_A4));
 	    break;
 	 };
 	 /*
@@ -3188,7 +3125,7 @@ WW(kprintf("WindowClassIDCMP: calling WindowClassChange\n"));
 	 /*
 	  * GA_ID makes sure it's comes from a gadget.
 	  */
-	 if (tag = FindTagItem(GA_ID, attr))
+	 if ((tag = FindTagItem(GA_ID, attr)))
 	 {
 	    /*
 	     * Pick up ID.
@@ -3198,7 +3135,7 @@ WW(kprintf("WindowClassIDCMP: calling WindowClassChange\n"));
 	    else
 	       id = WMHI_IGNORE;
 
-	    if (tabbed = (Object *)GetTagData(STRINGA_Tabbed, NULL, attr))
+	    if ((tabbed = (Object *)GetTagData(STRINGA_Tabbed, (IPTR)NULL, attr)))
 	    {
 	       forward = TRUE;
 	       /*
@@ -3206,7 +3143,7 @@ WW(kprintf("WindowClassIDCMP: calling WindowClassChange\n"));
 		*/
 	       rc = WMHI_IGNORE;
 	    }
-	    else if (tabbed = (Object *)GetTagData(STRINGA_ShiftTabbed, NULL, attr))
+	    else if ((tabbed = (Object *)GetTagData(STRINGA_ShiftTabbed, (IPTR)NULL, attr)))
 	    {
 	       forward = FALSE;
 	       /*
@@ -3214,7 +3151,7 @@ WW(kprintf("WindowClassIDCMP: calling WindowClassChange\n"));
 		*/
 	       rc = WMHI_IGNORE;
 	    }
-	    else if (tabbed = (Object *)GetTagData(WINDOW_ActNext, NULL, attr))
+	    else if ((tabbed = (Object *)GetTagData(WINDOW_ActNext, (IPTR)NULL, attr)))
 	    {
 	       forward = TRUE;
 	       /*
@@ -3222,7 +3159,7 @@ WW(kprintf("WindowClassIDCMP: calling WindowClassChange\n"));
 		*/
 	       rc = id;
 	    }
-	    else if (tabbed = (Object *)GetTagData(WINDOW_ActPrev, NULL, attr))
+	    else if ((tabbed = (Object *)GetTagData(WINDOW_ActPrev, (IPTR)NULL, attr)))
 	    {
 	       forward = FALSE;
 	       /*
@@ -3239,7 +3176,7 @@ WW(kprintf("WindowClassIDCMP: calling WindowClassChange\n"));
 	       /*
 		* Check if it's in our list.
 		*/
-	       if (tc = GetCycleNode(wd, tabbed))
+	       if ((tc = GetCycleNode(wd, tabbed)))
 	       {
 		  nextTabbed:
 		  if (forward)
@@ -3308,7 +3245,7 @@ WW(kprintf("WindowClassIDCMP: calling WindowClassChange\n"));
 	       /*
 		* Find object under the mouse.
 		*/
-	       if (wd->wd_ToolTipObject = (Object *)AsmDoMethodA(wd->wd_Gadgets, (Msg)&grwo))
+	       if ((wd->wd_ToolTipObject = (Object *)AsmDoMethodA(wd->wd_Gadgets, (Msg)&grwo)))
 	       {
 		  /*
 		   * Show the tool tip.
@@ -3347,7 +3284,7 @@ METHOD_END
 /*
  * Add a gadget key.
  */
-METHOD(WindowClassGadgetKey, struct wmGadgetKey *, wmg)
+STATIC METHOD(WindowClassGadgetKey, struct wmGadgetKey *, wmg)
 {
 // WD       *wd = INST_DATA(cl, obj);
    Object   *ob;
@@ -3355,7 +3292,7 @@ METHOD(WindowClassGadgetKey, struct wmGadgetKey *, wmg)
    /*
     * Only add when the object is valid.
     */
-   if (ob = wmg->wmgk_Object)
+   if ((ob = wmg->wmgk_Object))
    {
       DoSetMethodNG(ob, BT_Key, wmg->wmgk_Key, TAG_DONE);
    };
@@ -3366,14 +3303,11 @@ METHOD_END
 /*
  * Find a menu by it's ID.
  */
-//STATIC ASM struct Menu *FindMenu( REG(a0) struct Menu *ptr, REG(d0) ULONG id )
-STATIC ASM REGFUNC2(struct Menu *, FindMenu,
-	REGPARAM(A0, struct Menu *, ptr),
-	REGPARAM(D0, ULONG, id))
+STATIC ASM struct Menu *FindMenu( REG(a0) struct Menu *ptr, REG(d0) ULONG id )
 {
    struct Menu    *tmp;
 
-   if ( tmp = ptr ) {
+   if ((tmp = ptr)) {
       while ( tmp ) {
 	 if ( id == ( ULONG )GTMENU_USERDATA( tmp )) return( tmp );
 	 tmp = tmp->NextMenu;
@@ -3382,25 +3316,21 @@ STATIC ASM REGFUNC2(struct Menu *, FindMenu,
 
    return( NULL );
 }
-REGFUNC_END
 
 /*
  * Find a (sub)item by it's ID.
  */
-//STATIC ASM struct MenuItem *FindItem( REG(a0) struct Menu *ptr, REG(d0) ULONG id )
-STATIC ASM REGFUNC2(struct MenuItem *, FindItem,
-	REGPARAM(A0, struct Menu *, ptr),
-	REGPARAM(D0, ULONG, id))
+STATIC ASM struct MenuItem *FindItem( REG(a0) struct Menu *ptr, REG(d0) ULONG id )
 {
    struct Menu    *tmp;
    struct MenuItem         *item, *sub;
 
-   if ( tmp = ptr ) {
+   if ((tmp = ptr)) {
       while ( tmp ) {
-	 if ( item = tmp->FirstItem ) {
+	 if ((item = tmp->FirstItem)) {
 	    while ( item ) {
 	       if ( id == ( ULONG )GTMENUITEM_USERDATA( item )) return( item );
-	       if ( sub = item->SubItem ) {
+	       if ((sub = item->SubItem)) {
 		  while ( sub ) {
 		     if ( id == ( ULONG )GTMENUITEM_USERDATA( sub )) return( sub );
 		     sub = sub->NextItem;
@@ -3415,15 +3345,11 @@ STATIC ASM REGFUNC2(struct MenuItem *, FindItem,
 
    return( NULL );
 }
-REGFUNC_END
 
 /*
  * Find a NewMenu by it's ID.
  */
-//STATIC ASM struct NewMenu *FindNewMenu( REG(a0) struct NewMenu *nm, REG(d0) ULONG id )
-STATIC ASM REGFUNC2(struct NewMenu *, FindNewMenu,
-	REGPARAM(A0, struct NewMenu *, nm),
-	REGPARAM(D0, ULONG, id))
+STATIC ASM struct NewMenu *FindNewMenu( REG(a0) struct NewMenu *nm, REG(d0) ULONG id )
 {
    while ( nm->nm_Type != NM_END ) {
       if ( id == ( ULONG )nm->nm_UserData ) return( nm );
@@ -3432,16 +3358,11 @@ STATIC ASM REGFUNC2(struct NewMenu *, FindNewMenu,
 
    return( NULL );
 }
-REGFUNC_END
 
 /*
  * Disable a menu.
  */
-//STATIC ASM ULONG WindowClassDisableMenu( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct wmMenuAction *wmma )
-STATIC ASM REGFUNC3(ULONG, WindowClassDisableMenu,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct wmMenuAction *, wmma))
+STATIC METHOD(WindowClassDisableMenu, struct wmMenuAction *, wmma )
 {
    WD       *wd = ( WD * )INST_DATA( cl, obj );
    struct Menu    *menu;
@@ -3458,13 +3379,13 @@ STATIC ASM REGFUNC3(ULONG, WindowClassDisableMenu,
        * Remove the menus.
        */
       ClearMenuStrip( wd->wd_WindowPtr );
-      if ( menu = FindMenu( wd->wd_Menus, wmma->wmma_MenuID )) {
+      if ((menu = FindMenu( wd->wd_Menus, wmma->wmma_MenuID ))) {
 	 /*
 	  * Change the menu status.
 	  */
 	 if ( wmma->wmma_Set ) menu->Flags &= ~MENUENABLED;
 	 else           menu->Flags |= MENUENABLED;
-      } else if ( item = FindItem( wd->wd_Menus, wmma->wmma_MenuID )) {
+      } else if ((item = FindItem( wd->wd_Menus, wmma->wmma_MenuID ))) {
 	 /*
 	  * Otherwise the (sub)item status.
 	  */
@@ -3481,7 +3402,7 @@ STATIC ASM REGFUNC3(ULONG, WindowClassDisableMenu,
     * Also change the corresponding NewMenu accoordingly.
     */
    if ( wd->wd_MenuStrip ) {
-      if ( newmenu = FindNewMenu( wd->wd_MenuStrip, wmma->wmma_MenuID )) {
+      if (( newmenu = FindNewMenu( wd->wd_MenuStrip, wmma->wmma_MenuID ))) {
 	 rc = TRUE;
 	 if ( newmenu->nm_Type == NM_TITLE ) {
 	    if ( wmma->wmma_Set ) newmenu->nm_Flags |= NM_MENUDISABLED;
@@ -3495,16 +3416,12 @@ STATIC ASM REGFUNC3(ULONG, WindowClassDisableMenu,
 
    return( rc );
 }
-REGFUNC_END
+METHOD_END
 
 /*
  * (Un)check an item.
  */
-//STATIC ASM ULONG WindowClassCheckItem( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct wmMenuAction *wmma )
-STATIC ASM REGFUNC3(ULONG, WindowClassCheckItem,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct wmMenuAction *, wmma))
+STATIC METHOD(WindowClassCheckItem, struct wmMenuAction *,wmma )
 {
    WD       *wd = ( WD * )INST_DATA( cl, obj );
    struct MenuItem         *item;
@@ -3523,7 +3440,7 @@ STATIC ASM REGFUNC3(ULONG, WindowClassCheckItem,
        * Find the item and change it's
        * CHECKED status.
        */
-      if ( item = FindItem( wd->wd_Menus, wmma->wmma_MenuID )) {
+      if (( item = FindItem( wd->wd_Menus, wmma->wmma_MenuID ))) {
 	 if ( wmma->wmma_Set ) item->Flags |= CHECKED;
 	 else           item->Flags &= ~CHECKED;
       }
@@ -3537,7 +3454,7 @@ STATIC ASM REGFUNC3(ULONG, WindowClassCheckItem,
     * Change the corresponding NewMenu accoordingly.
     */
    if ( wd->wd_MenuStrip ) {
-      if ( newmenu = FindNewMenu( wd->wd_MenuStrip, wmma->wmma_MenuID )) {
+      if (( newmenu = FindNewMenu( wd->wd_MenuStrip, wmma->wmma_MenuID ))) {
 	 rc = TRUE;
 	 if ( wmma->wmma_Set ) newmenu->nm_Flags |= CHECKED;
 	 else           newmenu->nm_Flags &= ~CHECKED;
@@ -3546,22 +3463,18 @@ STATIC ASM REGFUNC3(ULONG, WindowClassCheckItem,
 
    return( rc );
 }
-REGFUNC_END
+METHOD_END
 
 /*
  * Ask for the disabled status of a menu or (sub)item.
  */
-//STATIC ASM ULONG WindowClassMenuDisabled( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct wmMenuQuery *wmmq )
-STATIC ASM REGFUNC3(ULONG, WindowClassMenuDisabled,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct wmMenuQuery *, wmmq))
+STATIC METHOD(WindowClassMenuDisabled, struct wmMenuQuery *, wmmq)
 {
    struct NewMenu       *newmenu;
    WD          *wd = ( WD * )INST_DATA( cl, obj );
 
    if ( wd->wd_MenuStrip ) {
-      if ( newmenu = FindNewMenu( wd->wd_MenuStrip, wmmq->wmmq_MenuID )) {
+      if (( newmenu = FindNewMenu( wd->wd_MenuStrip, wmmq->wmmq_MenuID ))) {
 	 if ( newmenu->nm_Type == NM_TITLE )
 	    return (ULONG)(newmenu->nm_Flags & NM_MENUDISABLED ? 1 : 0);
 	 else if ( newmenu->nm_Type != NM_END )
@@ -3571,33 +3484,29 @@ STATIC ASM REGFUNC3(ULONG, WindowClassMenuDisabled,
 
    return ~0;
 }
-REGFUNC_END
+METHOD_END
 
 /*
  * Ask for the CHECKED status of a (sub)item.
  */
-//STATIC ASM ULONG WindowClassItemChecked( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct wmMenuQuery *wmmq )
-STATIC ASM REGFUNC3(ULONG, WindowClassItemChecked,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct wmMenuQuery *, wmmq))
+STATIC METHOD(WindowClassItemChecked, struct wmMenuQuery *, wmmq)
 {
    struct NewMenu       *newmenu;
    WD          *wd = ( WD * )INST_DATA( cl, obj );
 
    if ( wd->wd_MenuStrip ) {
-      if ( newmenu = FindNewMenu( wd->wd_MenuStrip, wmmq->wmmq_MenuID ))
+      if (( newmenu = FindNewMenu( wd->wd_MenuStrip, wmmq->wmmq_MenuID )))
 	 return (ULONG)(newmenu->nm_Flags & CHECKED ? 1 : 0);
    }
 
    return ~0;
 }
-REGFUNC_END
+METHOD_END
 
 /*
  * Add an objects to the tab-cycle list.
  */
-METHOD(WindowClassCycleOrder, struct wmTabCycleOrder *, tco)
+STATIC METHOD(WindowClassCycleOrder, struct wmTabCycleOrder *, tco)
 {
    WD             *wd = INST_DATA( cl, obj );
    TABCYCLE       *tc;
@@ -3612,7 +3521,7 @@ METHOD(WindowClassCycleOrder, struct wmTabCycleOrder *, tco)
       /*
        * Allocate tab-cycle node.
        */
-      if (tc = (TABCYCLE *)BGUI_AllocPoolMem(sizeof(TABCYCLE)))
+      if ((tc = (TABCYCLE *)BGUI_AllocPoolMem(sizeof(TABCYCLE))))
       {
 	 /*
 	  * Initialize structure.
@@ -3637,7 +3546,7 @@ METHOD_END
 /*
  * Obtain an AppMessage.
  */
-METHOD(WindowClassGetAppMsg, Msg, msg)
+STATIC METHOD(WindowClassGetAppMsg, Msg, msg)
 {
    WD       *wd = INST_DATA(cl, obj);
    ULONG     rc = 0;
@@ -3656,7 +3565,7 @@ METHOD_END
 /*
  * Add a target to the update notification list.
  */
-METHOD(WindowClassAddUpdate, struct wmAddUpdate *, wmau)
+STATIC METHOD(WindowClassAddUpdate, struct wmAddUpdate *, wmau)
 {
    WD          *wd = INST_DATA(cl, obj);
    UPN         *up;
@@ -3670,7 +3579,7 @@ METHOD(WindowClassAddUpdate, struct wmAddUpdate *, wmau)
       /*
        * Allocate node.
        */
-      if (up = (UPN *)BGUI_AllocPoolMem(sizeof(UPN)))
+      if ((up = (UPN *)BGUI_AllocPoolMem(sizeof(UPN))))
       {
 	 /*
 	  * Initialize node.
@@ -3695,7 +3604,7 @@ METHOD_END
  *
  *  Changes made by T.Herold: Passes task to AddIDReport
  */
-METHOD(WindowClassReportID, struct wmReportID *, wmri)
+STATIC METHOD(WindowClassReportID, struct wmReportID *, wmri)
 {
    WD            *wd = INST_DATA(cl, obj);
    ULONG          rc = 0;
@@ -3712,7 +3621,7 @@ METHOD(WindowClassReportID, struct wmReportID *, wmri)
    /*
     *  Add ID node.
    */
-   if (w = wd->wd_WindowPtr)
+   if ((w = wd->wd_WindowPtr))
    {
       rc = AddIDReport(w, wmri->wmri_ID, task);
       /*
@@ -3734,7 +3643,7 @@ METHOD_END
 /*
  * Get a pointer to the window that signalled us.
  */
-METHOD(WindowClassGetSigWin, Msg, msg )
+STATIC METHOD(WindowClassGetSigWin, Msg, msg )
 {
    WD       *wd = ( WD * )INST_DATA( cl, obj );
    struct Window     *win;
@@ -3762,21 +3671,21 @@ METHOD(WindowClassGetSigWin, Msg, msg )
        */
       win = wd->wd_WindowPtr;
 
-   return(( ULONG )win );
+   return (IPTR)win;
 }
 METHOD_END
 
 /*
  * Remove an object from the tab-cycle list.
  */
-METHOD(WindowClassRemove, struct wmRemoveObject *, wmro )
+STATIC METHOD(WindowClassRemove, struct wmRemoveObject *, wmro )
 {
    WD          *wd = ( WD * )INST_DATA( cl, obj );
    TABCYCLE       *cyc;
 
    if ( wmro->wmro_Object ) {
       if ( wmro->wmro_Flags & WMROF_CYCLE_LIST ) {
-	 if ( cyc = GetCycleNode( wd, wmro->wmro_Object )) {
+	 if (( cyc = GetCycleNode( wd, wmro->wmro_Object ))) {
 	    Remove(( struct Node * )cyc );
 	    BGUI_FreePoolMem( cyc );
 	 }
@@ -3791,7 +3700,7 @@ METHOD_END
 /*
  * Secure the master gadget by removing it.
  */
-METHOD(WindowClassSecure, Msg, msg)
+STATIC METHOD(WindowClassSecure, Msg, msg)
 {
    WD            *wd = INST_DATA(cl, obj);
    ULONG          rc = 0;
@@ -3800,7 +3709,7 @@ METHOD(WindowClassSecure, Msg, msg)
    /*
     * Window Open?
     */
-   if (w = wd->wd_WindowPtr)
+   if ((w = wd->wd_WindowPtr))
    {
       /*
        * Yes. Master gadget attached?
@@ -3823,7 +3732,7 @@ METHOD_END
 /*
  * Release the master gadget by adding it.
  */
-METHOD(WindowClassRelease, Msg, msg)
+STATIC METHOD(WindowClassRelease, Msg, msg)
 {
    WD            *wd = INST_DATA(cl, obj);
    ULONG          rc = 0;
@@ -3834,7 +3743,7 @@ WW(kprintf("WindowClassRelease:\n"));
    /*
     * Window Open?
     */
-   if (w = wd->wd_WindowPtr)
+   if ((w = wd->wd_WindowPtr))
    {
 WW(kprintf("WindowClassRelease: window is open\n"));
       /*
@@ -3854,11 +3763,6 @@ WW(kprintf("WindowClassRelease: clearing WDF_REMOVED flag\n"));
       };
 WW(kprintf("WindowClassRelease: calling RefreshGList: gad = %x\n", (struct Gadget *)wd->wd_Gadgets));
 
-#warning temp AROS fix to fix refresh problem after an automatic window-resize done by BGUI
-#ifdef __AROS__
-RefreshGList((struct Gadget *)wd->wd_Gadgets, w, 0, 1);
-#endif
-
       rc = 1;
    };
    return rc;
@@ -3869,7 +3773,7 @@ METHOD_END
 /*
  * Relayout the GUI.
  */
-METHOD(WindowClassRelayout, Msg, msg)
+STATIC METHOD(WindowClassRelayout, Msg, msg)
 {
    WD             *wd = INST_DATA(cl, obj);
    WORD            newl, newt, neww, newh;
@@ -3883,7 +3787,7 @@ WW(kprintf("** WindowClassRelayout\n"));
    /*
     * Window open?
     */
-   if (w = wd->wd_WindowPtr)
+   if ((w = wd->wd_WindowPtr))
    {
 WW(kprintf("** WindowClassRelayout: window is open. calling WM_SECURE\n"));
       AsmDoMethod(obj, WM_SECURE);
@@ -3964,7 +3868,7 @@ METHOD_END
 /*
  * Find the object under the mouse.
  */
-METHOD(WindowClassWhichObject, Msg, msg)
+STATIC METHOD(WindowClassWhichObject, Msg, msg)
 {
    WD            *wd = INST_DATA(cl, obj);
    ULONG          rc = 0;
@@ -3974,7 +3878,7 @@ METHOD(WindowClassWhichObject, Msg, msg)
    /*
     * Window Open?
     */
-   if (w = wd->wd_WindowPtr)
+   if ((w = wd->wd_WindowPtr))
    {
       /*
        * Pickup mouse coords.
@@ -4002,7 +3906,7 @@ METHOD_END
 ///
 /// WM_LOCK, WM_UNLOCK
 
-METHOD(WindowClassLock, Msg, msg)
+STATIC METHOD(WindowClassLock, Msg, msg)
 {
    WD       *wd = INST_DATA(cl, obj);
 
@@ -4020,37 +3924,37 @@ METHOD_END
 /*
  * Which object has the proper key?
  */
-METHOD(WindowClassFindKey, struct bmFindKey *, bmfk)
+STATIC METHOD(WindowClassFindKey, struct bmFindKey *, bmfk)
 {
    WD          *wd = INST_DATA(cl, obj);
    Object      *ob, *gr;
 
-   if (gr = wd->wd_Gadgets)
+   if ((gr = wd->wd_Gadgets))
    {
-      if (ob = (Object *)AsmDoMethodA(gr, (Msg)bmfk))
-	 return (ULONG)ob;
+      if ((ob = (Object *)AsmDoMethodA(gr, (Msg)bmfk)))
+	 return (IPTR)ob;
    };
-   if (gr = wd->wd_LBorder)
+   if ((gr = wd->wd_LBorder))
    {
-      if (ob = (Object *)AsmDoMethodA(gr, (Msg)bmfk))
-	 return (ULONG)ob;
+      if ((ob = (Object *)AsmDoMethodA(gr, (Msg)bmfk)))
+	 return (IPTR)ob;
    };
-   if (gr = wd->wd_RBorder)
+   if ((gr = wd->wd_RBorder))
    {
-      if (ob = (Object *)AsmDoMethodA(gr, (Msg)bmfk))
-	 return (ULONG)ob;
+      if ((ob = (Object *)AsmDoMethodA(gr, (Msg)bmfk)))
+	 return (IPTR)ob;
    };
-   if (gr = wd->wd_TBorder)
+   if ((gr = wd->wd_TBorder))
    {
-      if (ob = (Object *)AsmDoMethodA(gr, (Msg)bmfk))
-	 return (ULONG)ob;
+      if ((ob = (Object *)AsmDoMethodA(gr, (Msg)bmfk)))
+	 return (IPTR)ob;
    };
-   if (gr = wd->wd_BBorder)
+   if ((gr = wd->wd_BBorder))
    {
-      if (ob = (Object *)AsmDoMethodA(gr, (Msg)bmfk))
-	 return (ULONG)ob;
+      if ((ob = (Object *)AsmDoMethodA(gr, (Msg)bmfk)))
+	 return (IPTR)ob;
    };
-   return NULL;
+   return (IPTR)NULL;
 }
 METHOD_END
 ///
@@ -4058,18 +3962,18 @@ METHOD_END
 /*
  * Attach label keys to object.
  */
-METHOD(WindowClassKeyLabel, struct bmKeyLabel *, bmkl)
+STATIC METHOD(WindowClassKeyLabel, struct bmKeyLabel *, bmkl)
 {
    WD          *wd = INST_DATA(cl, obj);
    Object      *gr;
 
-   if (gr = wd->wd_Gadgets) AsmDoMethodA(gr, (Msg)bmkl);
-   if (gr = wd->wd_LBorder) AsmDoMethodA(gr, (Msg)bmkl);
-   if (gr = wd->wd_RBorder) AsmDoMethodA(gr, (Msg)bmkl);
-   if (gr = wd->wd_TBorder) AsmDoMethodA(gr, (Msg)bmkl);
-   if (gr = wd->wd_BBorder) AsmDoMethodA(gr, (Msg)bmkl);
+   if ((gr = wd->wd_Gadgets)) AsmDoMethodA(gr, (Msg)bmkl);
+   if ((gr = wd->wd_LBorder)) AsmDoMethodA(gr, (Msg)bmkl);
+   if ((gr = wd->wd_RBorder)) AsmDoMethodA(gr, (Msg)bmkl);
+   if ((gr = wd->wd_TBorder)) AsmDoMethodA(gr, (Msg)bmkl);
+   if ((gr = wd->wd_BBorder)) AsmDoMethodA(gr, (Msg)bmkl);
 
-   return NULL;
+   return (IPTR)NULL;
 }
 METHOD_END
 ///
@@ -4077,16 +3981,16 @@ METHOD_END
 /*
  * Localize window.
  */
-METHOD(WindowClassLocalize, struct bmLocalize *, bml)
+STATIC METHOD(WindowClassLocalize, struct bmLocalize *, bml)
 {
    WD          *wd = INST_DATA(cl, obj);
    Object      *gr;
 
-   if (gr = wd->wd_Gadgets) AsmDoMethodA(gr, (Msg)bml);
-   if (gr = wd->wd_LBorder) AsmDoMethodA(gr, (Msg)bml);
-   if (gr = wd->wd_RBorder) AsmDoMethodA(gr, (Msg)bml);
-   if (gr = wd->wd_TBorder) AsmDoMethodA(gr, (Msg)bml);
-   if (gr = wd->wd_BBorder) AsmDoMethodA(gr, (Msg)bml);
+   if ((gr = wd->wd_Gadgets)) AsmDoMethodA(gr, (Msg)bml);
+   if ((gr = wd->wd_LBorder)) AsmDoMethodA(gr, (Msg)bml);
+   if ((gr = wd->wd_RBorder)) AsmDoMethodA(gr, (Msg)bml);
+   if ((gr = wd->wd_TBorder)) AsmDoMethodA(gr, (Msg)bml);
+   if ((gr = wd->wd_BBorder)) AsmDoMethodA(gr, (Msg)bml);
 
    if (wd->wd_WindowTitleID) wd->wd_WindowTitle =
       BGUI_GetCatalogStr(bml->bml_Locale, wd->wd_WindowTitleID, wd->wd_WindowTitle);
@@ -4097,7 +4001,7 @@ METHOD(WindowClassLocalize, struct bmLocalize *, bml)
    if (wd->wd_HelpTextID) wd->wd_HelpText =
       BGUI_GetCatalogStr(bml->bml_Locale, wd->wd_HelpTextID, wd->wd_HelpText);
    
-   return NULL;
+   return (IPTR)NULL;
 }
 METHOD_END
 ///
@@ -4105,7 +4009,7 @@ METHOD_END
 /*
  * Turn on or off buffer layering.
  */
-METHOD(WindowClassClip, struct wmClip *, wmc)
+STATIC METHOD(WindowClassClip, struct wmClip *, wmc)
 {
    WD                *wd = INST_DATA(cl, obj);
    struct RastPort   *br = wd->wd_BufferRP;
@@ -4155,12 +4059,13 @@ METHOD(WindowClassClip, struct wmClip *, wmc)
 }
 METHOD_END
 
-METHOD(WindowClassSetupGadget, struct wmSetupGadget *, wmsg)
+STATIC METHOD(WindowClassSetupGadget, struct wmSetupGadget *, wmsg)
 {
    WD *wd = INST_DATA(cl, obj);
-   struct TagItem  *tstate = wmsg->wmsg_Tags, *tag;
+   const struct TagItem  *tstate = wmsg->wmsg_Tags;
+   struct TagItem *tag;
 
-   while (tag = NextTagItem(&tstate))
+   while ((tag = NextTagItem(&tstate)))
    {
       switch(tag->ti_Tag)
       {
@@ -4201,43 +4106,43 @@ METHOD_END
  * Class function table.
  */
 STATIC DPFUNC ClassFunc[] = {
-   OM_NEW,                 (FUNCPTR)WindowClassNew,
-   OM_SET,                 (FUNCPTR)WindowClassSetUpdate,
-   OM_UPDATE,              (FUNCPTR)WindowClassSetUpdate,
-   OM_GET,                 (FUNCPTR)WindowClassGet,
-   OM_DISPOSE,             (FUNCPTR)WindowClassDispose,
-   WM_OPEN,                (FUNCPTR)WindowClassOpen,
-   WM_CLOSE,               (FUNCPTR)WindowClassClose,
-   WM_SLEEP,               (FUNCPTR)WindowClassSleep,
-   WM_WAKEUP,              (FUNCPTR)WindowClassWakeUp,
-   WM_HANDLEIDCMP,         (FUNCPTR)WindowClassIDCMP,
-   WM_GADGETKEY,           (FUNCPTR)WindowClassGadgetKey,
-   WM_DISABLEMENU,         (FUNCPTR)WindowClassDisableMenu,
-   WM_CHECKITEM,           (FUNCPTR)WindowClassCheckItem,
-   WM_MENUDISABLED,        (FUNCPTR)WindowClassMenuDisabled,
-   WM_ITEMCHECKED,         (FUNCPTR)WindowClassItemChecked,
-   WM_TABCYCLE_ORDER,      (FUNCPTR)WindowClassCycleOrder,
-   WM_GETAPPMSG,           (FUNCPTR)WindowClassGetAppMsg,
-   WM_ADDUPDATE,           (FUNCPTR)WindowClassAddUpdate,
-   WM_REPORT_ID,           (FUNCPTR)WindowClassReportID,
-   WM_GET_SIGNAL_WINDOW,   (FUNCPTR)WindowClassGetSigWin,
-   WM_REMOVE_OBJECT,       (FUNCPTR)WindowClassRemove,
+   { OM_NEW,                 WindowClassNew },
+   { OM_SET,                 WindowClassSetUpdate },
+   { OM_UPDATE,              WindowClassSetUpdate },
+   { OM_GET,                 WindowClassGet },
+   { OM_DISPOSE,             WindowClassDispose },
+   { WM_OPEN,                WindowClassOpen },
+   { WM_CLOSE,               WindowClassClose },
+   { WM_SLEEP,               WindowClassSleep },
+   { WM_WAKEUP,              WindowClassWakeUp },
+   { WM_HANDLEIDCMP,         WindowClassIDCMP },
+   { WM_GADGETKEY,           WindowClassGadgetKey },
+   { WM_DISABLEMENU,         WindowClassDisableMenu },
+   { WM_CHECKITEM,           WindowClassCheckItem },
+   { WM_MENUDISABLED,        WindowClassMenuDisabled },
+   { WM_ITEMCHECKED,         WindowClassItemChecked },
+   { WM_TABCYCLE_ORDER,      WindowClassCycleOrder },
+   { WM_GETAPPMSG,           WindowClassGetAppMsg },
+   { WM_ADDUPDATE,           WindowClassAddUpdate },
+   { WM_REPORT_ID,           WindowClassReportID },
+   { WM_GET_SIGNAL_WINDOW,   WindowClassGetSigWin },
+   { WM_REMOVE_OBJECT,       WindowClassRemove },
 
-   WM_SECURE,              (FUNCPTR)WindowClassSecure,
-   WM_RELEASE,             (FUNCPTR)WindowClassRelease,
-   WM_RELAYOUT,            (FUNCPTR)WindowClassRelayout,
-   WM_WHICHOBJECT,         (FUNCPTR)WindowClassWhichObject,
-   WM_LOCK,                (FUNCPTR)WindowClassLock,
-   WM_UNLOCK,              (FUNCPTR)WindowClassLock,
-   WM_CLOSETOOLTIP,        (FUNCPTR)WindowClassCloseTT,
-   WM_CLIP,                (FUNCPTR)WindowClassClip,
-   WM_SETUPGADGET,         (FUNCPTR)WindowClassSetupGadget,
+   { WM_SECURE,              WindowClassSecure },
+   { WM_RELEASE,             WindowClassRelease },
+   { WM_RELAYOUT,            WindowClassRelayout },
+   { WM_WHICHOBJECT,         WindowClassWhichObject },
+   { WM_LOCK,                WindowClassLock },
+   { WM_UNLOCK,              WindowClassLock },
+   { WM_CLOSETOOLTIP,        WindowClassCloseTT },
+   { WM_CLIP,                WindowClassClip },
+   { WM_SETUPGADGET,         WindowClassSetupGadget },
 
-   BASE_FINDKEY,           (FUNCPTR)WindowClassFindKey,
-   BASE_KEYLABEL,          (FUNCPTR)WindowClassKeyLabel,
-   BASE_LOCALIZE,          (FUNCPTR)WindowClassLocalize,
+   { BASE_FINDKEY,           WindowClassFindKey },
+   { BASE_KEYLABEL,          WindowClassKeyLabel },
+   { BASE_LOCALIZE,          WindowClassLocalize },
 
-   DF_END,                 NULL
+   { DF_END }
 };
 
 /*

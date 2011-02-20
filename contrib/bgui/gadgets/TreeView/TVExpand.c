@@ -165,7 +165,7 @@ refreshmethod = TVM_REDRAW;
  * Find each treenode corresponding to this tvEntry.
  */
 
-while(tn = TV_MatchNextEntry(tv,tve->tve_Entry,tve->tve_Which,tve->tve_Flags,&tva))
+while((tn = TV_MatchNextEntry(tv,tve->tve_Entry,tve->tve_Which,tve->tve_Flags,&tva)))
 	{
 	/*
 	 * Find it's position in the listview (~0 if not displayed)

@@ -81,7 +81,7 @@ METHOD(ProgressClassNew, struct opSet *, ops)
    /*
     * Let the superclass setup an object for us.
     */
-   if (rc = NewSuperObject(cl, obj, tags))
+   if ((rc = NewSuperObject(cl, obj, tags)))
    {
       pd = INST_DATA(cl, rc);
 
@@ -106,8 +106,9 @@ METHOD_END
 METHOD(ProgressClassSetUpdate, struct opUpdate *, opu)
 {
    PD              *pd = INST_DATA(cl, obj);
-   struct TagItem  *attr = opu->opu_AttrList, *tstate = attr, *tag;
    ULONG            tmp, data, odone = pd->pd_Done;
+   struct TagItem  *attr = opu->opu_AttrList, *tag;
+   const struct TagItem *tstate = attr;
    BOOL             vc = FALSE;
 
    /*
@@ -118,7 +119,7 @@ METHOD(ProgressClassSetUpdate, struct opUpdate *, opu)
    /*
     * Set attributes we know.
     */
-   while (tag = NextTagItem(&tstate))
+   while ((tag = NextTagItem(&tstate)))
    {
       data = tag->ti_Data;
       switch ( tag->ti_Tag )
@@ -389,7 +390,7 @@ METHOD(ProgressClassDimensions, struct bmDimensions *, bmd)
       /*
        * Obtain string.
        */
-      if (str = DoBuffer(pd->pd_Text, &pd->pd_Buffer, &pd->pd_BufSize, (ULONG *)&pd->pd_Min))
+      if ((str = DoBuffer(pd->pd_Text, &pd->pd_Buffer, &pd->pd_BufSize, (IPTR *)&pd->pd_Min)))
       {
          /*
           * Compute size of minimum level.
@@ -399,7 +400,7 @@ METHOD(ProgressClassDimensions, struct bmDimensions *, bmd)
          /*
           * Obtain string.
           */
-         if (str = DoBuffer(pd->pd_Text, &pd->pd_Buffer, &pd->pd_BufSize, (ULONG *)&pd->pd_Max))
+         if ((str = DoBuffer(pd->pd_Text, &pd->pd_Buffer, &pd->pd_BufSize, (IPTR *)&pd->pd_Max)))
          {
             /*
              * Compute size of maximum level.
@@ -431,16 +432,16 @@ METHOD_END
  * Function table.
  */
 STATIC DPFUNC ClassFunc[] = {
-   BASE_RENDER,       (FUNCPTR)ProgressClassRender,
-   BASE_DIMENSIONS,   (FUNCPTR)ProgressClassDimensions,
+   { BASE_RENDER,       ProgressClassRender, },
+   { BASE_DIMENSIONS,   ProgressClassDimensions, },
 
-   OM_NEW,            (FUNCPTR)ProgressClassNew,
-   OM_GET,            (FUNCPTR)ProgressClassGet,
-   OM_SET,            (FUNCPTR)ProgressClassSetUpdate,
-   OM_UPDATE,         (FUNCPTR)ProgressClassSetUpdate,
-   OM_DISPOSE,        (FUNCPTR)ProgressClassDispose,
-   GM_HITTEST,        (FUNCPTR)ProgressClassHitTest,
-   DF_END,            NULL
+   { OM_NEW,            ProgressClassNew, },
+   { OM_GET,            ProgressClassGet, },
+   { OM_SET,            ProgressClassSetUpdate, },
+   { OM_UPDATE,         ProgressClassSetUpdate, },
+   { OM_DISPOSE,        ProgressClassDispose, },
+   { GM_HITTEST,        ProgressClassHitTest, },
+   { DF_END,            NULL },
 };
 
 /*

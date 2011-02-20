@@ -1,19 +1,10 @@
 include $(TOP)/config/make.cfg
 include $(SRCDIR)/$(CURDIR)/make.cfg
 
-## Set the next line to "S" for standard build and "E" for enhanced ..
-BUILD_TYPE=E
-o=+$(BUILD_TYPE).o
-DEBUG_OPTIONS=
-STANDARD_OPTIONS=
-ENHANCED_OPTIONS=-DENHANCED
-
-LD = $(AROS_LD)
-LDINCR_FLAG = -r
+USER_CFLAGS := -DENHANCED $(PARANOIA_CFLAGS)
 
 OS_INCLUDES_DIR := $(AROS_INCLUDES)
 INCLUDES_DIR    := $(AROS_INCLUDES)
-OBJDIR          := $(GENDIR)/$(CURDIR)
 
 OS_INCLUDES     := -I$(AROS_INCLUDES)
 
@@ -64,16 +55,6 @@ gadgets/TreeView \
 gadgets/Bar \
 gadgets/LayoutGroup
 
-OBJECTS =  \
-	$(OBJDIR)/plmain$(o) \
-	$(OBJDIR)/plboopsi$(o) \
-	$(OBJDIR)/plgfx$(o) \
-	$(OBJDIR)/plgroupclasses$(o) \
-	$(OBJDIR)/plimageclasses$(o) \
-	$(OBJDIR)/plgadgetclasses$(o) \
-	$(OBJDIR)/plaslclasses$(o) \
-	$(OBJDIR)/endtag.o
-
 #MM bgui-setup
 bgui-setup : makedirs
 	@$(CP) $(SRCDIR)/$(CURDIR)/s/Package-Startup $(BGUISDIR)
@@ -84,12 +65,6 @@ bgui-setup : makedirs
 #MM
 bgui-includes-copy : $(INCLUDE_FILES)
 bgui-includes-copy : $(INCLUDE_FILES)
-
-#MM bgui-library : bgui-test bgui-examples
-bgui-library : $(BGUIDIR)/Libs/bgui.library
-
-bgui-clean:
-	$(RM) -rf $(INCLUDE_FILES) $(OBJDIR)/*.o $(OBJDIR)/*.err
 
 makedirs : 
 	@$(MKDIR) $(GENDIR)/$(CURDIR)/bin
@@ -187,96 +162,60 @@ $(INCLUDES_DIR)/libraries/bgui_layoutgroup.h : include/libraries_bgui_layoutgrou
 $(INCLUDES_DIR)/bgui/bgui_prefs.h : include/bgui_prefs.h
 	@$(CP) $^ $@
 
-$(OBJDIR)/bin/bgui.library.$(BUILD_TYPE) : $(OBJDIR)/libtag.o \
-		$(OBJDIR)/plmain$(o) \
-		$(OBJDIR)/plgfx$(o) \
-		$(OBJDIR)/plboopsi$(o) \
-		$(OBJDIR)/plimageclasses$(o) \
-		$(OBJDIR)/plgadgetclasses$(o) \
-		$(OBJDIR)/plgroupclasses$(o) \
-		$(OBJDIR)/plaslclasses$(o) \
-		$(OBJDIR)/endtag.o
-#	if ($(BUILD_TYPE) eq D)
-	@$(CC) $(CFLAGS) $(DEBUG_OPTIONS) $(DEFINES) -c $(SRCDIR)/$(CURDIR)/ver.c -o $(OBJDIR)/ver.o
-#	endif
-#	ifeq ($(BUILD_TYPE),S)
-#	@$(CC) $(STANDARD_OPTIONS) $(DEFINES) -c ver.c -o $(OBJDIR)/ver.o
-#	endif
-#	ifeq ($(BUILD_TYPE),E)
-#	@$(CC) $(ENHANCED_OPTIONS) $(DEFINES) -c ver.c -o $(OBJDIR)/ver.o
-#	endif
-	@$(ECHO) Linking $@...
-	@$(AROS_CC) $(NOSTARTUP_LDFLAGS) $(LDFLAGS) \
-	      $(OBJDIR)/libtag.o $(OBJDIR)/ver.o $(OBJDIR)/plmain$(o) $(OBJDIR)/plgfx$(o) $(OBJDIR)/plboopsi$(o) \
-	      $(OBJDIR)/plimageclasses$(o) $(OBJDIR)/plgadgetclasses$(o) $(OBJDIR)/plaslclasses$(o) \
-	      $(OBJDIR)/plgroupclasses$(o) $(OBJDIR)/endtag.o \
-	      -L$(AROS_LIB) -lrom -o $@
+FILES := libtag \
+	 ver \
+	 lib \
+	 libfunc \
+	 task \
+	 request \
+	 misc \
+	 bgui_locale \
+	 miscc \
+	 classes \
+	 rootclass \
+	 dgm \
+	 stkext \
+	 gfx \
+	 blitter \
+	 textclass \
+	 strformat \
+	 windowclass \
+	 groupclass \
+	 spacingclass \
+	 pageclass \
+	 viewclass \
+	 externalclass \
+	 frameclass \
+	 labelclass \
+	 separatorclass \
+	 vectorclass \
+	 systemiclass \
+	 baseclass \
+	 areaclass \
+	 buttonclass \
+	 checkboxclass \
+	 commodityclass \
+	 cycleclass \
+	 indicatorclass \
+	 infoclass \
+	 listclass \
+	 mxclass \
+	 progressclass \
+	 propclass \
+	 sliderclass \
+	 stringclass \
+	 radiobuttonclass \
+	 aslreqclass \
+	 filereqclass \
+	 fontreqclass \
+	 screenreqclass \
+	 endtag
+ 
+#MM- bgui-library : bgui-test bgui-examples
 
-$(BGUIDIR)/Libs/bgui.library :  $(OBJDIR)/bin/bgui.library.$(BUILD_TYPE)
-	@$(ECHO) Installing bgui.library...
-	@$(CP) $^ $@
+%build_module_simple mmake=bgui-library \
+	modname=bgui modtype=library \
+	moduledir=$(CONTRIBDIR)/BGUI/Libs \
+	files="$(FILES)" uselibs="amiga rom m"
 
-main_o=$(OBJDIR)/lib$(o) $(OBJDIR)/libfunc$(o) $(OBJDIR)/task$(o) $(OBJDIR)/request$(o) \
-	$(OBJDIR)/misc$(o) $(OBJDIR)/bgui_locale$(o) $(OBJDIR)/miscc$(o)
-##$(OBJDIR)/stkext$(o)
-
-boopsi_o=$(OBJDIR)/classes$(o) $(OBJDIR)/dgm$(o) $(OBJDIR)/rootclass$(o)
-#$(OBJDIR)/arexxclass$(o)
-
-gfx_o=$(OBJDIR)/gfx$(o) $(OBJDIR)/blitter$(o) $(OBJDIR)/textclass$(o) $(OBJDIR)/strformat$(o)
-
-group_o=$(OBJDIR)/windowclass$(o) $(OBJDIR)/groupclass$(o) $(OBJDIR)/spacingclass$(o) $(OBJDIR)/pageclass$(o) \
-   $(OBJDIR)/viewclass$(o) $(OBJDIR)/externalclass$(o)
-
-image_o=$(OBJDIR)/frameclass$(o) $(OBJDIR)/labelclass$(o) $(OBJDIR)/separatorclass$(o) $(OBJDIR)/vectorclass$(o) $(OBJDIR)/systemiclass$(o)
-
-gadget_o=$(OBJDIR)/baseclass$(o) $(OBJDIR)/areaclass$(o) $(OBJDIR)/buttonclass$(o) \
-   $(OBJDIR)/checkboxclass$(o) $(OBJDIR)/commodityclass$(o) $(OBJDIR)/cycleclass$(o) $(OBJDIR)/indicatorclass$(o) \
-   $(OBJDIR)/infoclass$(o) $(OBJDIR)/listclass$(o) $(OBJDIR)/mxclass$(o) $(OBJDIR)/progressclass$(o) $(OBJDIR)/propclass$(o) \
-   $(OBJDIR)/sliderclass$(o) $(OBJDIR)/stringclass$(o) $(OBJDIR)/radiobuttonclass$(o)
-
-asl_o=$(OBJDIR)/aslreqclass$(o) $(OBJDIR)/filereqclass$(o) $(OBJDIR)/fontreqclass$(o) $(OBJDIR)/screenreqclass$(o)
-
-$(OBJDIR)/plmain$(o): $(main_o)
-	@echo "Linking $@..."
-	@$(RM) -f $@
-	$(LD) $(LDINCR_FLAG) $(main_o) -o $@ 
-
-$(OBJDIR)/plboopsi$(o): $(boopsi_o)
-	@echo "Linking $@..."
-	@$(RM) -f $@
-	@$(LD) $(LDINCR_FLAG) $(boopsi_o) -o $@
-
-$(OBJDIR)/plgfx$(o): $(gfx_o)
-	@echo "Linking $@..."
-	@$(RM) -f $@
-	@$(LD) $(LDINCR_FLAG) $(gfx_o) -o $@
-
-$(OBJDIR)/plgroupclasses$(o): $(group_o)
-	@echo "Linking $@..."
-	@$(RM) -f $@
-	@$(LD) $(LDINCR_FLAG) $(group_o) -o $@
-
-$(OBJDIR)/plimageclasses$(o) : $(image_o)
-	@echo "Linking $@..."
-	@$(RM) -f $@
-	@$(LD) $(LDINCR_FLAG) $(image_o) -o $@
-
-$(OBJDIR)/plgadgetclasses$(o) : $(gadget_o)
-	@echo "Linking $@..."
-	@$(RM) -f $@
-	@$(LD) $(LDINCR_FLAG) $(gadget_o) -o $@
-
-$(OBJDIR)/plaslclasses$(o) : $(asl_o)
-	@echo "Linking $@..."
-	@$(RM) -f $@
-	@$(LD) $(LDINCR_FLAG) $(asl_o) -o $@
-
-$(OBJDIR)/libtag.o: libtag.c
-	@$(CC) $(CFLAGS) $(INCLUDES) -c $^ -o $@
-
-$(OBJDIR)/endtag.o: endtag.c
-	@$(CC) $(CFLAGS) $(INCLUDES) -c $^ -o $@
-
-$(OBJDIR)/%$(o): %.c
-	@$(CC) $(CFLAGS) $(DEFINES) -c $< -o $@ 2>&1|tee $@.err
+%common

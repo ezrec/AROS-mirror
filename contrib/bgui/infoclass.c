@@ -67,11 +67,11 @@ METHOD(InfoClassNew, struct opSet *, ops)
    /*
     * First we let the superclass setup an object for us.
     */
-   if (rc = NewSuperObject(cl, obj, tags))
+   if ((rc = NewSuperObject(cl, obj, tags)))
    {
       id = INST_DATA(cl, rc);
 
-      if (id->id_Text = BGUI_NewObject(BGUI_TEXT_GRAPHIC, TEXTA_CopyText, TRUE, TAG_DONE))
+      if ((id->id_Text = BGUI_NewObject(BGUI_TEXT_GRAPHIC, TEXTA_CopyText, TRUE, TAG_DONE)))
       {
          /*
           * Pick up frame offsets.
@@ -91,7 +91,7 @@ METHOD(InfoClassNew, struct opSet *, ops)
           * Failure!
           */
          AsmCoerceMethod(cl, (Object *)rc, OM_DISPOSE);
-         rc = NULL;
+         rc = 0;
       };
    }
    FreeTagItems(tags);
@@ -107,7 +107,8 @@ METHOD_END
 METHOD(InfoClassSetUpdate, struct opSet *, ops)
 {
    ID              *id = INST_DATA(cl, obj);
-   struct TagItem  *tstate = ops->ops_AttrList, *tag;
+   const struct TagItem  *tstate = ops->ops_AttrList;
+   struct TagItem  *tag;
    BOOL             vc = FALSE;
    ULONG            data;
 
@@ -119,7 +120,7 @@ METHOD(InfoClassSetUpdate, struct opSet *, ops)
    /*
     * Change attributes we know.
     */
-   while (tag = NextTagItem(&tstate))
+   while ((tag = NextTagItem(&tstate)))
    {
       data = tag->ti_Data;
       switch (tag->ti_Tag)
@@ -254,15 +255,15 @@ METHOD_END
  * Function table.
  */
 STATIC DPFUNC ClassFunc[] = {
-   BASE_RENDER,      (FUNCPTR)InfoClassRender,
-   BASE_DIMENSIONS,  (FUNCPTR)InfoClassDimensions,
+   { BASE_RENDER,      InfoClassRender, },
+   { BASE_DIMENSIONS,  InfoClassDimensions, },
 
-   OM_NEW,           (FUNCPTR)InfoClassNew,
-   OM_SET,           (FUNCPTR)InfoClassSetUpdate,
-   OM_UPDATE,        (FUNCPTR)InfoClassSetUpdate,
-   OM_DISPOSE,       (FUNCPTR)InfoClassDispose,
-   GM_HITTEST,       (FUNCPTR)InfoClassHitTest,
-   DF_END,            NULL,
+   { OM_NEW,           InfoClassNew, },
+   { OM_SET,           InfoClassSetUpdate, },
+   { OM_UPDATE,        InfoClassSetUpdate, },
+   { OM_DISPOSE,       InfoClassDispose, },
+   { GM_HITTEST,       InfoClassHitTest, },
+   { DF_END,            NULL, },
 };
 
 /*

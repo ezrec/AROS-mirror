@@ -264,10 +264,10 @@ STATIC CLASSDEF Classes[] =
    { NULL, InitScreenReqClass,   BGUI_SCREENREQ_OBJECT,   "bgui_screenreq.class",            NULL, FALSE, FALSE },
 
 #ifdef __AROS__
-#define InitArexxClass NULL
-#warning InitArexxClass defined as NULL
-#endif
+   /* AREXX is not yet supported on AROS */
+#else
    { NULL, InitArexxClass,       BGUI_AREXX_OBJECT,       "bgui_arexx.class",                NULL, FALSE, FALSE },
+#endif
    { NULL, InitSpacingClass,     BGUI_SPACING_OBJECT,     NULL,                              NULL, FALSE, FALSE },
 
    { NULL, NULL,                 (UWORD)~0,               NULL }
@@ -402,7 +402,7 @@ makeproto SAVEDS ASM Class *BGUI_GetClassPtr( REG(d0) ULONG classID )
 	 {
 	    if (cd->cd_ClassFile)
 	    {
-	       if (cd->cd_ClassBase = (struct BGUIClassBase *)OpenLibrary(cd->cd_ClassFile, 0))
+	       if ((cd->cd_ClassBase = (struct BGUIClassBase *)OpenLibrary(cd->cd_ClassFile, 0)))
 	       {
 		  /*
 		   * Get the class pointer.
@@ -454,7 +454,7 @@ makeproto SAVEDS ASM Object *BGUI_NewObjectA( REG(d0) ULONG classID, REG(a0) str
    Class       *cl;
    Object      *obj = NULL;
 
-   if (cl = BGUI_GetClassPtr(classID))
+   if ((cl = BGUI_GetClassPtr(classID)))
       obj = NewObjectA(cl, NULL, attr);
 
    return obj;
@@ -499,7 +499,7 @@ makeproto SAVEDS ASM struct BitMap *BGUI_AllocBitMap( REG(d0) ULONG width, REG(d
     * Not OS 3.0 or better?
     * Make the bitmap ourselves.
     */
-   if (b = (ULONG *)BGUI_AllocPoolMem(sizeof(struct BitMap) + sizeof(ULONG)))
+   if ((b = (ULONG *)BGUI_AllocPoolMem(sizeof(struct BitMap) + sizeof(ULONG))))
    {
       *b = ID_BGUI;
       bm = (struct BitMap *)(b + 1);
@@ -566,7 +566,7 @@ makeproto SAVEDS ASM VOID BGUI_FreeBitMap( REG(a0) struct BitMap *bm )
 	    /*
 	     * Free planes.
 	     */
-	    if (p = bm->Planes[i]) FreeVec(p);
+	    if ((p = bm->Planes[i])) FreeVec(p);
 	 }
 	 /*
 	  * Free the structure.
@@ -607,7 +607,7 @@ makeproto SAVEDS ASM struct RastPort *BGUI_CreateRPortBitMap( REG(a0) struct Ras
    /*
     * Allocate a rastport structure.
     */
-   if (rp = (struct RastPort *)BGUI_AllocPoolMem(sizeof(struct RastPort)))
+   if ((rp = (struct RastPort *)BGUI_AllocPoolMem(sizeof(struct RastPort))))
    {
       /*
        * If we have a source rastport we
@@ -622,16 +622,16 @@ makeproto SAVEDS ASM struct RastPort *BGUI_CreateRPortBitMap( REG(a0) struct Ras
       /*
        * Add a bitmap.
        */
-      if (rp->BitMap = BGUI_AllocBitMap(width, height, depth, BMF_CLEAR, source ? source->BitMap : NULL))
+      if ((rp->BitMap = BGUI_AllocBitMap(width, height, depth, BMF_CLEAR, source ? source->BitMap : NULL)))
       {
 	 /*
 	  * NO LAYER!.
 	  */
 	 // rp->Layer = NULL;
 
-	 if (li = NewLayerInfo())
+	 if ((li = NewLayerInfo()))
 	 {
-	    if (rp->Layer = CreateUpfrontLayer(li, rp->BitMap, 0, 0, width - 1, height - 1, 0, NULL))
+	    if ((rp->Layer = CreateUpfrontLayer(li, rp->BitMap, 0, 0, width - 1, height - 1, 0, NULL)))
 	    {
 	       /*
 		* Mark it as a buffered rastport.
@@ -681,7 +681,7 @@ makeproto SAVEDS ASM VOID BGUI_FreeRPortBitMap( REG(a0) struct RastPort *rp )
     * Free the layer.
     */
    InstallClipRegion(l, NULL);
-   DeleteLayer(NULL, l);
+   DeleteLayer(0, l);
    
    /*
     * Free the layerinfo.
@@ -704,7 +704,6 @@ makeproto SAVEDS ASM VOID BGUI_FreeRPortBitMap( REG(a0) struct RastPort *rp )
 /*
  * Show AmigaGuide file.
  */
-#
 #ifdef __AROS__
 makearosproto
 AROS_LH4(BOOL, BGUI_Help,
@@ -719,10 +718,7 @@ makeproto SAVEDS ASM BOOL BGUI_Help( REG(a0) struct Window *win, REG(a1) UBYTE *
 {
    AROS_LIBFUNC_INIT
 
-#ifdef __AROS__
-#warning Commented a bunch of lines!!!!!!
-#else
-   struct NewAmigaGuide       nag = { NULL };
+   struct NewAmigaGuide       nag = { };
 
    /*
     * Initialize structure.
@@ -736,7 +732,6 @@ makeproto SAVEDS ASM BOOL BGUI_Help( REG(a0) struct Window *win, REG(a1) UBYTE *
     * Show file.
     */
    return( DisplayAGuideInfo( &nag, TAG_END ));
-#endif
 
    AROS_LIBFUNC_EXIT
 }
@@ -745,8 +740,7 @@ makeproto SAVEDS ASM BOOL BGUI_Help( REG(a0) struct Window *win, REG(a1) UBYTE *
 /*
  * Set or clear the busy pointer.
  */
-//STATIC ASM VOID Busy(REG(a0) struct Window *win, REG(d0) BOOL set)
-STATIC ASM REGFUNC2(VOID, Busy, REGPARAM(a0, struct Window *, win), REGPARAM(d0, BOOL, set))
+STATIC ASM VOID Busy(REG(a0) struct Window *win, REG(d0) BOOL set)
 {
    #ifdef ENHANCED
 
@@ -780,7 +774,6 @@ STATIC ASM REGFUNC2(VOID, Busy, REGPARAM(a0, struct Window *, win), REGPARAM(d0,
 
    #endif
 }
-REGFUNC_END
 
 /*
  * Lock a window.
@@ -801,7 +794,7 @@ makeproto SAVEDS ASM APTR BGUI_LockWindow( REG(a0) struct Window *win )
    /*
     * Allocate lock structure.
     */
-   if ( wl = ( WINDOWLOCK * )BGUI_AllocPoolMem( sizeof( WINDOWLOCK ))) {
+   if (( wl = ( WINDOWLOCK * )BGUI_AllocPoolMem( sizeof( WINDOWLOCK )))) {
       /*
        * Initialize structure.
        */
@@ -880,7 +873,7 @@ makeproto SAVEDS ASM VOID BGUI_UnlockWindow( REG(a0) APTR lock )
 
 #ifdef __AROS__
 makearosproto
-AROS_LH2(STRPTR, BGUI_GetLocaleStr,
+AROS_LH2(CONST_STRPTR, BGUI_GetLocaleStr,
     AROS_LHA(struct bguiLocale *, bl, A0),
     AROS_LHA(ULONG, id, D0),
     struct Library *, BGUIBase, 20, BGUI)
@@ -890,7 +883,7 @@ makeproto SAVEDS ASM STRPTR BGUI_GetLocaleStr( REG(a0) struct bguiLocale *bl, RE
 {
    AROS_LIBFUNC_INIT
 
-   STRPTR str = NULL;
+   CONST_STRPTR str = NULL;
    
    struct bguiLocaleStr bls;
    
@@ -913,13 +906,13 @@ makeproto SAVEDS ASM STRPTR BGUI_GetLocaleStr( REG(a0) struct bguiLocale *bl, RE
 
 #ifdef __AROS__
 makearosproto
-AROS_LH3(STRPTR, BGUI_GetCatalogStr,
+AROS_LH3(CONST_STRPTR, BGUI_GetCatalogStr,
     AROS_LHA(struct bguiLocale *, bl, A0),
     AROS_LHA(ULONG, id, D0),
-    AROS_LHA(STRPTR, str, A1),
+    AROS_LHA(CONST_STRPTR, str, A1),
     struct Library *, BGUIBase, 21, BGUI)
 #else
-makeproto SAVEDS ASM STRPTR BGUI_GetCatalogStr( REG(a0) struct bguiLocale *bl, REG(d0) ULONG id, REG(a1) STRPTR str )
+makeproto SAVEDS ASM CONST_STRPTR BGUI_GetCatalogStr( REG(a0) struct bguiLocale *bl, REG(d0) ULONG id, REG(a1) CONST_STRPTR str )
 #endif
 {
    AROS_LIBFUNC_INIT
@@ -951,26 +944,19 @@ struct CallHookData
    APTR Message;
 };
 
-static ULONG CallHookWithStack(struct CallHookData *call_hook_data)
+static IPTR CallHookWithStack(struct CallHookData *call_hook_data)
 {
    register APTR stack;
-   register ULONG result;
+   register IPTR result;
 
-#ifdef __AROS__
-#warning Commented EnsureStack
-#else
    stack=EnsureStack();
-#endif
    result=CallHookPkt(call_hook_data->Hook,call_hook_data->Object,call_hook_data->Message);
-#ifdef __AROS__
-#else
    RevertStack(stack);
-#endif
+
    return(result);
 }
 
-//makeproto SAVEDS ASM ULONG BGUI_CallHookPkt(REG(a0) struct Hook *hook,REG(a2) APTR object,REG(a1) APTR message)
-makeproto SAVEDS ASM REGFUNC3(ULONG, BGUI_CallHookPkt, REGPARAM(a0, struct Hook *, hook), REGPARAM(a2, APTR, object), REGPARAM(a1, APTR, message))
+makeproto SAVEDS ASM IPTR BGUI_CallHookPkt(REG(a0) struct Hook *hook,REG(a2) APTR object,REG(a1) APTR message)
 {
    struct CallHookData call_hook_data;
 
@@ -979,4 +965,3 @@ makeproto SAVEDS ASM REGFUNC3(ULONG, BGUI_CallHookPkt, REGPARAM(a0, struct Hook 
    call_hook_data.Message=message;
    return(CallHookWithStack(&call_hook_data));
 }
-REGFUNC_END

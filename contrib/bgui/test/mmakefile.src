@@ -5,7 +5,10 @@
 include $(TOP)/config/make.cfg
 include $(SRCDIR)/$(CURDIR)/../make.cfg
 
-FILES = test1 \
+USER_CFLAGS := $(PARANOIA_CFLAGS)
+
+FILES = test0 \
+	test1 \
 	test2 \
 	test3 \
 	test4 \

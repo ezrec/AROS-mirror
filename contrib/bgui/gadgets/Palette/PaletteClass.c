@@ -109,10 +109,10 @@ extern struct Library * BGUIBase;
 #define OS30      (((struct Library * )SysBase)->lib_Version >= 39)
 #define OS20      (((struct Library * )SysBase)->lib_Version <  39)
 
-extern UBYTE _LibName[]   = "bgui_palette.gadget";
-extern UBYTE _LibID[]     = "\0$VER: bgui_palette.gadget 41.10 (29.5.99) ©1996 Ian J. Einman ©1999 BGUI Developers Team";
-extern UWORD _LibVersion  = 41;
-extern UWORD _LibRevision = 10;
+const  UBYTE _LibName[]   = "bgui_palette.gadget";
+const  UBYTE _LibID[]     = "\0$VER: bgui_palette.gadget 41.10 (29.5.99) ©1996 Ian J. Einman ©1999 BGUI Developers Team";
+const  UWORD _LibVersion  = 41;
+const  UWORD _LibRevision = 10;
 
 static ULONG instances=0;
 
@@ -140,10 +140,7 @@ typedef struct {
  * pen number in the colors which are displayed
  * in the palette object.
  */
-//STATIC ASM UWORD ValidateColor( REG(a0) PD *pd, REG(d0) ULONG pen )
-STATIC ASM REGFUNC2(UWORD, ValidateColor,
-	REGPARAM(A0, PD *, pd),
-	REGPARAM(D0, ULONG, pen))
+STATIC ASM UWORD ValidateColor( REG(a0) PD *pd, REG(d0) ULONG pen )
 {
    UWORD       *tab = pd->pd_PenTable, i;
 
@@ -182,7 +179,6 @@ STATIC ASM REGFUNC2(UWORD, ValidateColor,
 
    return( i );
 }
-REGFUNC_END
 
 /*
  * Create a new palette object.
@@ -190,18 +186,19 @@ REGFUNC_END
 METHOD(PaletteClassNew, struct opSet *,ops)
 {
    PD             *pd;
-   struct TagItem *tstate = ops->ops_AttrList, *tag;
+   const struct TagItem *tstate = ops->ops_AttrList;
+   struct TagItem *tag;
    Object         *label;
    ULONG           rc, place, data;
 
    if(BGUIBase==NULL
    && (BGUIBase=OpenLibrary("bgui.library",41))==NULL)
-      return(NULL);
+      return (IPTR)NULL;
 
    /*
     * Let the superclass make the object.
     */
-   if (rc = DoSuperMethodA(cl, obj, (Msg)ops))
+   if ((rc = DoSuperMethodA(cl, obj, (Msg)ops)))
    {
       instances++;
 
@@ -220,7 +217,7 @@ METHOD(PaletteClassNew, struct opSet *,ops)
       /*
        * Setup the instance data.
        */
-      while (tag = NextTagItem(&tstate))
+      while ((tag = NextTagItem(&tstate)))
       {
 	 data = tag->ti_Data;
 	 switch (tag->ti_Tag)
@@ -284,7 +281,7 @@ METHOD(PaletteClassNew, struct opSet *,ops)
        * Create a frame for the
        * currently selected pen.
        */
-      if (pd->pd_Frame = BGUI_NewObject(BGUI_FRAME_IMAGE, FRM_Type, FRTYPE_BUTTON, FRM_Flags, FRF_RECESSED, TAG_END))
+      if ((pd->pd_Frame = BGUI_NewObject(BGUI_FRAME_IMAGE, FRM_Type, FRTYPE_BUTTON, FRM_Flags, FRF_RECESSED, TAG_END)))
 	 return rc;
 
       /*
@@ -369,12 +366,7 @@ METHOD_END
  * inside the palette object it's
  * color box.
  */
-//STATIC ASM VOID RenderColorRects( REG(a0) PD *pd, REG(a1) struct RastPort *rp, REG(a2) struct IBox *area, REG(a3) struct DrawInfo *dri )
-STATIC ASM REGFUNC4(VOID, RenderColorRects,
-	REGPARAM(A0, PD *, pd),
-	REGPARAM(A1, struct RastPort *, rp),
-	REGPARAM(A2, struct IBox *, area),
-	REGPARAM(A3, struct DrawInfo *, dri))
+STATIC ASM VOID RenderColorRects( REG(a0) PD *pd, REG(a1) struct RastPort *rp, REG(a2) struct IBox *area, REG(a3) struct DrawInfo *dri )
 {
    UWORD    colorwidth, colorheight, columns = 1, rows = 1, depth = pd->pd_Depth;
    UWORD    hadjust, vadjust, left, top, colsize, rowsize, c, r, color;
@@ -427,8 +419,10 @@ STATIC ASM REGFUNC4(VOID, RenderColorRects,
     * Also we re-compute the color
     * box dimensions.
     */
-   hadjust = ( area->Width  - ( area->Width  = colsize * columns )) >> 1;
-   vadjust = ( area->Height - ( area->Height = rowsize * rows    )) >> 1;
+   hadjust = ( area->Width  - colsize * columns ) >> 1;
+   vadjust = ( area->Height - rowsize * rows    ) >> 1;
+   area->Width  = colsize * columns;
+   area->Height = rowsize * rows;
 
    /*
     * Adjust the colorbox position.
@@ -502,7 +496,6 @@ STATIC ASM REGFUNC4(VOID, RenderColorRects,
       top += rowsize;
    }
 }
-REGFUNC_END
 
 /*
  * Render the palette object.
@@ -523,7 +516,7 @@ METHOD(PaletteClassRender, struct gpRender *,gpr)
     * render. If it returns 0 we
     * do not render!
     */
-   if (rc = DoSuperMethodA(cl, obj, (Msg)gpr))
+   if ((rc = DoSuperMethodA(cl, obj, (Msg)gpr)))
    {
       /*
        * Get the hitbox bounds of the object
@@ -585,10 +578,7 @@ METHOD_END
  * Get the pen number of
  * ordinal color number "num".
  */
-//STATIC ASM ULONG GetPenNumber( REG(a0) PD *pd, REG(d0) ULONG num )
-STATIC ASM REGFUNC2(ULONG, GetPenNumber,
-	REGPARAM(A0, PD *, pd),
-	REGPARAM(D0, ULONG, num))
+STATIC ASM ULONG GetPenNumber( REG(a0) PD *pd, REG(d0) ULONG num )
 {
    /*
     * Return the pen number
@@ -601,16 +591,12 @@ STATIC ASM REGFUNC2(ULONG, GetPenNumber,
     */
    return( num + pd->pd_ColorOffset );
 }
-REGFUNC_END
 
 /*
  * Determine the ordinal number
  * of the pen in the object.
  */
-//STATIC ASM ULONG GetOrdinalNumber( REG(a0) PD *pd, REG(d0) ULONG pen )
-STATIC ASM REGFUNC2(ULONG, GetOrdinalNumber,
-	REGPARAM(A0, PD *, pd),
-	REGPARAM(D0, ULONG, pen))
+STATIC ASM ULONG GetOrdinalNumber( REG(a0) PD *pd, REG(d0) ULONG pen )
 {
    UWORD       *tab = pd->pd_PenTable, i;
 
@@ -635,17 +621,12 @@ STATIC ASM REGFUNC2(ULONG, GetOrdinalNumber,
     */
    return( pen - pd->pd_ColorOffset );
 }
-REGFUNC_END
 
 /*
  * Determine which color rectangle
  * the coordinates are in.
  */
-//STATIC ASM UWORD GetColor( REG(a0) PD *pd, REG(d0) ULONG x, REG(d1) ULONG y )
-STATIC ASM REGFUNC3(UWORD, GetColor,
-	REGPARAM(A0, PD *, pd),
-	REGPARAM(D0, ULONG, x),
-	REGPARAM(D1, ULONG, y))
+STATIC ASM UWORD GetColor( REG(a0) PD *pd, REG(d0) ULONG x, REG(d1) ULONG y )
 {
    UWORD    col, row;
 
@@ -663,18 +644,12 @@ STATIC ASM REGFUNC3(UWORD, GetColor,
     */
    return(( UWORD )GetPenNumber( pd, ( row * pd->pd_Columns ) + col ));
 }
-REGFUNC_END
 
 /*
  * Get the top-left position of
  * a color in the color box.
  */
-//STATIC ASM VOID GetTopLeft( REG(a0) PD *pd, REG(d0) UWORD color, REG(a1) UWORD *x, REG(a2) UWORD *y )
-STATIC ASM REGFUNC4(VOID, GetTopLeft,
-	REGPARAM(A0, PD *, pd),
-	REGPARAM(D0, UWORD, color),
-	REGPARAM(A1, UWORD *, x),
-	REGPARAM(A2, UWORD *, y))
+STATIC ASM VOID GetTopLeft( REG(a0) PD *pd, REG(d0) UWORD color, REG(a1) UWORD *x, REG(a2) UWORD *y )
 {
    UWORD       row, col;
 
@@ -693,7 +668,6 @@ STATIC ASM REGFUNC4(VOID, GetTopLeft,
    *x = pd->pd_ColorBox.Left + ( col * pd->pd_RectWidth  );
    *y = pd->pd_ColorBox.Top  + ( row * pd->pd_RectHeight );
 }
-REGFUNC_END
 
 /*
  * Notify about an attribute change.
@@ -706,11 +680,7 @@ STATIC ULONG NotifyAttrChange( Object *obj, struct GadgetInfo *gi, ULONG flags, 
 /*
  * Change the currently selected color.
  */
-//STATIC ASM VOID ChangeSelectedColor( REG(a0) PD *pd, REG(a1) struct GadgetInfo *gi, REG(d0) ULONG newcolor )
-STATIC ASM REGFUNC3(VOID, ChangeSelectedColor,
-	REGPARAM(A0, PD *, pd),
-	REGPARAM(A1, struct GadgetInfo *, gi),
-	REGPARAM(D0, ULONG, newcolor))
+STATIC ASM VOID ChangeSelectedColor( REG(a0) PD *pd, REG(a1) struct GadgetInfo *gi, REG(d0) ULONG newcolor )
 {
    struct RastPort         *rp;
    UWORD        l, t;
@@ -765,7 +735,6 @@ STATIC ASM REGFUNC3(VOID, ChangeSelectedColor,
     */
    pd->pd_CurrentColor = newcolor;
 }
-REGFUNC_END
 
 /*
  * Set attributes.
@@ -791,7 +760,7 @@ METHOD(PaletteClassSet, struct opUpdate *,opu)
     * simply intercept it to set the selected color
     * frame thickness.
     */
-   if ( tag = FindTagItem( FRM_ThinFrame, opu->opu_AttrList ))
+   if (( tag = FindTagItem( FRM_ThinFrame, opu->opu_AttrList )))
       /*
        * Set it to the frame.
        */
@@ -800,7 +769,7 @@ METHOD(PaletteClassSet, struct opUpdate *,opu)
    /*
     * Color change?
     */
-   if ( tag = FindTagItem( PALETTE_CurrentColor, opu->opu_AttrList )) {
+   if (( tag = FindTagItem( PALETTE_CurrentColor, opu->opu_AttrList ))) {
       /*
        * Make sure it's valid.
        */
@@ -1182,7 +1151,7 @@ METHOD(PaletteClassGetObject, struct bmGetDragObject *,bmgo)
    /*
     * Allocate the BitMap.
     */
-   if ( bm = BGUI_AllocBitMap( pd->pd_RectWidth, pd->pd_RectHeight, depth, BMF_CLEAR, gi->gi_Screen->RastPort.BitMap )) {
+   if (( bm = BGUI_AllocBitMap( pd->pd_RectWidth, pd->pd_RectHeight, depth, BMF_CLEAR, gi->gi_Screen->RastPort.BitMap ))) {
 
       struct RastPort rp;
 
@@ -1213,7 +1182,7 @@ METHOD(PaletteClassGetObject, struct bmGetDragObject *,bmgo)
       bmgo->bmgo_Bounds->Width  = pd->pd_RectWidth;
       bmgo->bmgo_Bounds->Height = pd->pd_RectHeight;
 
-      rc = ( ULONG )bm;
+      rc = ( IPTR )bm;
    }
    return( rc );
 }
@@ -1243,20 +1212,20 @@ static Class *ClassBase = NULL;
  * Class function table.
  */
 STATIC DPFUNC ClassFunc[] = {
-   OM_NEW,               (FUNCPTR)PaletteClassNew,
-   OM_DISPOSE,           (FUNCPTR)PaletteClassDispose,
-   OM_GET,               (FUNCPTR)PaletteClassGet,
-   OM_SET,               (FUNCPTR)PaletteClassSet,
-   OM_UPDATE,            (FUNCPTR)PaletteClassSet,
-   GM_RENDER,            (FUNCPTR)PaletteClassRender,
-   GM_GOACTIVE,          (FUNCPTR)PaletteClassGoActive,
-   GM_HANDLEINPUT,       (FUNCPTR)PaletteClassHandleInput,
-   GM_GOINACTIVE,        (FUNCPTR)PaletteClassGoInactive,
-   GRM_DIMENSIONS,       (FUNCPTR)PaletteClassDimensions,
-   WM_KEYACTIVE,         (FUNCPTR)PaletteClassKeyActive,
-   BASE_GETDRAGOBJECT,   (FUNCPTR)PaletteClassGetObject,
-   BASE_FREEDRAGOBJECT,  (FUNCPTR)PaletteClassFreeObject,
-   DF_END
+   { OM_NEW,               PaletteClassNew, },
+   { OM_DISPOSE,           PaletteClassDispose, },
+   { OM_GET,               PaletteClassGet, },
+   { OM_SET,               PaletteClassSet, },
+   { OM_UPDATE,            PaletteClassSet, },
+   { GM_RENDER,            PaletteClassRender, },
+   { GM_GOACTIVE,          PaletteClassGoActive, },
+   { GM_HANDLEINPUT,       PaletteClassHandleInput, },
+   { GM_GOINACTIVE,        PaletteClassGoInactive, },
+   { GRM_DIMENSIONS,       PaletteClassDimensions, },
+   { WM_KEYACTIVE,         PaletteClassKeyActive, },
+   { BASE_GETDRAGOBJECT,   PaletteClassGetObject, },
+   { BASE_FREEDRAGOBJECT,  PaletteClassFreeObject, },
+   { DF_END },
 };
 
 /*

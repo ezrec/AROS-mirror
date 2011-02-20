@@ -40,14 +40,14 @@
  */
 METHOD(CBClassNew, struct opSet *, ops)
 {
-   ULONG           rc;
+   ULONG           rc = 0;
    Object         *check;
    struct TagItem  ttags[2], *tags;
 
    /*
     * Get us a checkbox image.
     */
-   if (check = BGUI_NewObject(BGUI_VECTOR_IMAGE, VIT_BuiltIn, BUILTIN_CHECKMARK, VIT_DriPen, TEXTPEN, TAG_DONE))
+   if ((check = BGUI_NewObject(BGUI_VECTOR_IMAGE, VIT_BuiltIn, BUILTIN_CHECKMARK, VIT_DriPen, TEXTPEN, TAG_DONE)))
    {
       ttags[0].ti_Tag  = BUTTON_SelectedVector;
       ttags[0].ti_Data = (ULONG)check;
@@ -59,7 +59,7 @@ METHOD(CBClassNew, struct opSet *, ops)
       /*
        * Let the superclass setup an object for us.
        */
-      if (rc = NewSuperObject(cl, obj, tags))
+      if ((rc = NewSuperObject(cl, obj, tags)))
       {
          /*
           * No recessed rendering.
@@ -81,8 +81,8 @@ METHOD_END
  * Class function table.
  */
 STATIC DPFUNC ClassFunc[] = {
-   OM_NEW,           (FUNCPTR)CBClassNew,
-   DF_END
+   { OM_NEW,           CBClassNew, },
+   { DF_END },
 };
 
 /*

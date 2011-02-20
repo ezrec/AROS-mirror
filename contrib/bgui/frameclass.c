@@ -157,7 +157,7 @@ STATIC SAVEDS ASM REGFUNC3(IPTR, BuiltInBack,
 	REGPARAM(A1, struct FrameDrawMsg *, fdm))
 {
    FD                   *fd = INST_DATA(OCLASS(obj), obj);
-   UWORD                *pens = PENS(fdm->fdm_DrawInfo), apen, bpen;
+   UWORD                *pens = PENS(fdm->fdm_DrawInfo), apen, bpen = 0;
    struct RastPort      *rp = fdm->fdm_RPort;
    struct IBox           ib;
    struct bguiPattern   *pat;
@@ -429,8 +429,8 @@ STATIC VOID RenderTabFrame(struct bmRender *bmr, int l0, int t0, int r0, int b0,
 
    int l1 = l0 + 1, l2 = l0 + 2, l3 = l0 + 3, l4 = l0 + 4;
    int r1 = r0 - 1, r2 = r0 - 2, r3 = r0 - 3, r4 = r0 - 4;
-   int t1 = t0 + 1, t2 = t0 + 2, t3 = t0 + 3, t4 = t0 + 4;
-   int b1 = b0 - 1, b2 = b0 - 2, b3 = b0 - 3, b4 = b0 - 4;
+   int t1 = t0 + 1, t2 = t0 + 2, t3 = t0 + 3; //, t4 = t0 + 4;
+   int b1 = b0 - 1, b2 = b0 - 2, b3 = b0 - 3; //, b4 = b0 - 4;
 
    BOOL sel  = ((bmr->bmr_Flags == IDS_SELECTED) || (bmr->bmr_Flags == IDS_INACTIVESELECTED));
    BOOL thin = fd->fd_Flags & FRF_THIN_FRAME;
@@ -549,10 +549,7 @@ STATIC VOID RenderXenFrame(struct bmRender *bmr, WORD l, WORD t, WORD r, WORD b,
 /*
  * Pass on the frame thickness.
  */
-//STATIC ASM VOID FrameThickness(REG(a0) Class *cl, REG(a2) Object *obj)
-STATIC ASM REGFUNC2(VOID, FrameThickness,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj))
+STATIC ASM VOID FrameThickness(REG(a0) Class *cl, REG(a2) Object *obj)
 {
    FD                  *fd = INST_DATA(cl, obj);
    struct ThicknessMsg  tm;
@@ -623,25 +620,21 @@ STATIC ASM REGFUNC2(VOID, FrameThickness,
       fd->fd_Vertical   = v;
    };
 }
-REGFUNC_END
 
 /*
  * Setup frame attributes.
  */
-//STATIC ASM VOID SetFrameAttrs(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct TagItem *attr)
-STATIC ASM REGFUNC3(VOID, SetFrameAttrs,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct TagItem *, attr))
+STATIC ASM VOID SetFrameAttrs(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct TagItem *attr)
 {
    FD                *fd = INST_DATA(cl, obj);
    struct TextFont   *tf;
-   struct TagItem    *tstate = attr, *tag;
-   ULONG     temp = NULL;
+   IPTR      temp = (IPTR)NULL;
+   const struct TagItem *tstate = attr;
+   struct TagItem    *tag;
    Object   *ob   = NULL;
    ULONG     data;
 
-   if (tag = FindTagItem(FRM_Template, attr))
+   if ((tag = FindTagItem(FRM_Template, attr)))
    {
       ob = (Object *)tag->ti_Data;
       if (ob)
@@ -660,7 +653,7 @@ STATIC ASM REGFUNC3(VOID, SetFrameAttrs,
    /*
     * Set attributes.
     */
-   while (tag = NextTagItem(&tstate))
+   while ((tag = NextTagItem(&tstate)))
    {
       data = tag->ti_Data;       
    
@@ -685,7 +678,7 @@ STATIC ASM REGFUNC3(VOID, SetFrameAttrs,
       case FRM_TextAttr:
 	 if (data)
 	 {
-	    if (tf = BGUI_OpenFont((struct TextAttr *)tag->ti_Data))
+	    if ((tf = BGUI_OpenFont((struct TextAttr *)tag->ti_Data)))
 	    {
 	       if (fd->fd_Font && (fd->fd_Flags & FRF_SELFOPEN))
 		  BGUI_CloseFont(fd->fd_Font);
@@ -796,7 +789,6 @@ STATIC ASM REGFUNC3(VOID, SetFrameAttrs,
       break;
    }
 }
-REGFUNC_END
 
 /// OM_NEW
 /*
@@ -811,7 +803,7 @@ METHOD(FrameClassNew, struct opSet *, ops)
     * First we let the superclass
     * create a new object.
     */
-   if (rc = AsmDoSuperMethodA(cl, obj, (Msg)ops))
+   if ((rc = AsmDoSuperMethodA(cl, obj, (Msg)ops)))
    {
       /*
        * Get us the instance data.
@@ -846,7 +838,6 @@ METHOD_END
  */
 METHOD(FrameClassSet, struct opSet *, ops)
 {
-   FD              *fd = INST_DATA(cl, obj);
    ULONG            rc;
 
    /*
@@ -1029,7 +1020,7 @@ METHOD(FrameClassRender, struct bmRender *, bmr)
    struct FrameDrawMsg  fdraw;
    WORD                 l, t, r, b, place;
    ULONG                rc = 1;
-   int                  tv, th, dv, dh, shadow, shine, tmp, tmp2;
+   int                  tv, th, dv, dh, shadow, shine, tmp = 0, tmp2 = 0;
    int                  state = bmr->bmr_Flags;
    int                  i_fuzz, i_blank, i_swap, i_mix;
    Object              *fr;
@@ -1084,7 +1075,7 @@ METHOD(FrameClassRender, struct bmRender *, bmr)
    {
       if (fd->fd_Flags & FRF_FILL_OUTER)
       {
-	 if (fr = fd->fd_ParentGroup ? BASE_DATA(fd->fd_ParentGroup)->bc_Frame : NULL)
+	 if ((fr = fd->fd_ParentGroup ? BASE_DATA(fd->fd_ParentGroup)->bc_Frame : NULL))
 	 {
 	    AsmDoMethod(fr, FRAMEM_BACKFILL, bi, &rect, IDS_NORMAL);
 	 }
@@ -1387,16 +1378,16 @@ METHOD_END
  * Class function table.
  */
 STATIC DPFUNC ClassFunc[] = {
-   BASE_RENDER,         (FUNCPTR)FrameClassRender,
-   BASE_DIMENSIONS,     (FUNCPTR)FrameClassDimensions,
-   FRAMEM_BACKFILL,     (FUNCPTR)FrameClassBackfill,
-   FRAMEM_SETUPBOUNDS,  (FUNCPTR)FrameClassSetupBounds,
-   OM_SET,              (FUNCPTR)FrameClassSet,
-   OM_GET,              (FUNCPTR)FrameClassGet,
-   OM_NEW,              (FUNCPTR)FrameClassNew,
-   OM_DISPOSE,          (FUNCPTR)FrameClassDispose,
-   BASE_LOCALIZE,       (FUNCPTR)FrameClassLocalize,
-   DF_END,              NULL
+   { BASE_RENDER,         FrameClassRender, },
+   { BASE_DIMENSIONS,     FrameClassDimensions, },
+   { FRAMEM_BACKFILL,     FrameClassBackfill, },
+   { FRAMEM_SETUPBOUNDS,  FrameClassSetupBounds, },
+   { OM_SET,              FrameClassSet, },
+   { OM_GET,              FrameClassGet, },
+   { OM_NEW,              FrameClassNew, },
+   { OM_DISPOSE,          FrameClassDispose, },
+   { BASE_LOCALIZE,       FrameClassLocalize, },
+   { DF_END },
 };
 
 /*

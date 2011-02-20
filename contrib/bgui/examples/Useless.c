@@ -97,7 +97,7 @@ SAVEDS ASM REGFUNC3(ULONG, DispatchSB,
 						 *	dragging the object. We de-select
 						 *	the object.
 						 */
-						if ( rp = ObtainGIRPort( INPUT( msg )->gpi_GInfo )) {
+						if (( rp = ObtainGIRPort( INPUT( msg )->gpi_GInfo ))) {
 							SetAttrs( obj, GA_Selected, FALSE, TAG_END );
 							DoMethod( obj, GM_RENDER, INPUT( msg )->gpi_GInfo, rp, GREDRAW_REDRAW );
 							ReleaseGIRPort( rp );
@@ -152,8 +152,8 @@ Class *InitUselessClass( void )
 	 *	Get a pointer to the ButtonClass which
 	 *	is our superclass.
 	 */
-	if ( super = BGUI_GetClassPtr( BGUI_BUTTON_GADGET )) {
-		if ( cl = MakeClass( NULL, NULL, super, 0L, 0L ))
+	if (( super = BGUI_GetClassPtr( BGUI_BUTTON_GADGET ))) {
+		if (( cl = MakeClass( NULL, NULL, super, 0L, 0L )))
 			cl->cl_Dispatcher.h_Entry = ( HOOKFUNC )DispatchSB;
 	}
 	return( cl );
@@ -173,7 +173,7 @@ VOID StartDemo( void )
 	/*
 	 *	Setup the class.
 	 */
-	if ( class = InitUselessClass()) {
+	if (( class = InitUselessClass())) {
 		/*
 		 *	Create the window object tree.
 		 */
@@ -216,7 +216,7 @@ VOID StartDemo( void )
 			/*
 			 *	Open it.
 			 */
-			if ( window = WindowOpen( WO_Window )) {
+			if (( window = WindowOpen( WO_Window ))) {
 				/*
 				 *	Get signal mask.
 				 */

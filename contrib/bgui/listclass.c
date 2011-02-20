@@ -284,21 +284,15 @@ static ULONG ColumnPackTable[] =
  * Prop map-list.
  */
 STATIC struct TagItem PGA2LISTV[] = {
-   PGA_Top,       LISTV_Top,
-   TAG_END
+   { PGA_Top,       LISTV_Top, },
+   { TAG_END },
 };
 
 STATIC VOID RenderEntry(Object *obj, LD *ld, struct BaseInfo *bi, LVE *lve, ULONG top);
 #define REL_ZERO (0x80000000)
 
 
-//VOID ASM ColumnSeparators(REG(a0) LD *ld, REG(a1) struct BaseInfo *bi, REG(d0) ULONG x, REG(d1) ULONG y, REG(d2) ULONG h)
-ASM REGFUNC5(VOID, ColumnSeparators,
-	REGPARAM(A0, LD *, ld),
-	REGPARAM(A1, struct BaseInfo *, bi),
-	REGPARAM(D0, ULONG, x),
-	REGPARAM(D1, ULONG, y),
-	REGPARAM(D2, ULONG, h))
+STATIC VOID ASM ColumnSeparators(REG(a0) LD *ld, REG(a1) struct BaseInfo *bi, REG(d0) ULONG x, REG(d1) ULONG y, REG(d2) ULONG h)
 {
    int col, pena, penb, x2, y2;
 
@@ -337,14 +331,10 @@ ASM REGFUNC5(VOID, ColumnSeparators,
       };
    };
 }
-REGFUNC_END
 /*
  * Find a node by it's number (slow!).
  */
-//STATIC ASM LVE *FindNode( REG(a0) LD *ld, REG(d0) ULONG num )
-STATIC ASM REGFUNC2(LVE *, FindNode,
-	REGPARAM(A0, LD *, ld),
-	REGPARAM(D0, ULONG, num))
+STATIC ASM LVE *FindNode( REG(a0) LD *ld, REG(d0) ULONG num )
 {
    LVE         *lve;
    ULONG        lnum = 0L;
@@ -366,15 +356,11 @@ STATIC ASM REGFUNC2(LVE *, FindNode,
 
    return( lve );
 }
-REGFUNC_END
 
 /*
  * Find a node by it's number (quickly).
  */
-//STATIC ASM LVE *FindNodeQuick( REG(a0) LD *ld, REG(d0) ULONG num )
-STATIC ASM REGFUNC2(LVE *, FindNodeQuick,
-	REGPARAM(A0, LD *, ld),
-	REGPARAM(D0, ULONG, num))
+STATIC ASM LVE *FindNodeQuick( REG(a0) LD *ld, REG(d0) ULONG num )
 {
    LVE         *lve = ld->ld_TopEntry;
    ULONG        top = ld->ld_Top;
@@ -403,18 +389,12 @@ STATIC ASM REGFUNC2(LVE *, FindNodeQuick,
 
    return( lve );
 }
-REGFUNC_END
 
 /*
  * Add an entry in the list. Ugly code with
  * lotsa goto's :)
  */
-//STATIC ASM VOID AddEntryInList( REG(a0) LD *ld, REG(a1) Object *obj, REG(a2) LVE *lve, REG(d0) ULONG how )
-STATIC ASM REGFUNC4(VOID, AddEntryInList,
-	REGPARAM(A0, LD *, ld),
-	REGPARAM(A1, Object *, obj),
-	REGPARAM(A2, LVE *, lve),
-	REGPARAM(D0, ULONG, how))
+STATIC ASM VOID AddEntryInList( REG(a0) LD *ld, REG(a1) Object *obj, REG(a2) LVE *lve, REG(d0) ULONG how )
 {
    LVE                *tmp;
    struct lvCompare    lvc;
@@ -479,7 +459,6 @@ STATIC ASM REGFUNC4(VOID, AddEntryInList,
 	 };
       };
 
-      insertIt:
       ld->ld_Flags |= LDF_REFRESH_ALL;
       Insert((struct List *)&ld->ld_Entries, (struct Node *)lve, (struct Node *)tmp);
       break;
@@ -498,18 +477,11 @@ STATIC ASM REGFUNC4(VOID, AddEntryInList,
       break;
    }
 }
-REGFUNC_END
 
 /*
  * Add entries to the list.
  */
-//STATIC ASM BOOL AddEntries(REG(a0) LD *ld, REG(a1) APTR *entries, REG(a2) Object *obj, REG(d0) ULONG how, REG(a3) LVE *pred)
-STATIC ASM REGFUNC5(BOOL, AddEntries,
-	REGPARAM(A0, LD *, ld),
-	REGPARAM(A1, APTR *, entries),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(D0, ULONG, how),
-	REGPARAM(A3, LVE *, pred))
+STATIC ASM BOOL AddEntries(REG(a0) LD *ld, REG(a1) APTR *entries, REG(a2) Object *obj, REG(d0) ULONG how, REG(a3) LVE *pred)
 {
    LVE               *lve;
    struct lvResource  lvr;
@@ -530,12 +502,12 @@ STATIC ASM REGFUNC5(BOOL, AddEntries,
    /*
     * Loop through the entries.
     */
-   while (lvr.lvr_Entry = *entries++)
+   while ((lvr.lvr_Entry = *entries++))
    {
       /*
        * Create a node.
        */
-      if (lve = (LVE *)BGUI_AllocPoolMem(sizeof(LVE)))
+      if ((lve = (LVE *)BGUI_AllocPoolMem(sizeof(LVE))))
       {
 	 /*
 	  * Do we have a resource hook?
@@ -552,7 +524,7 @@ STATIC ASM REGFUNC5(BOOL, AddEntries,
 	    /*
 	     * Simple string copy.
 	     */
-	    if (lve->lve_Entry = (APTR)BGUI_AllocPoolMem(strlen((STRPTR)lvr.lvr_Entry) + 1))
+	    if ((lve->lve_Entry = (APTR)BGUI_AllocPoolMem(strlen((STRPTR)lvr.lvr_Entry) + 1)))
 	       strcpy((STRPTR)lve->lve_Entry, (STRPTR)lvr.lvr_Entry);
 	 }
 	 /*
@@ -585,15 +557,11 @@ STATIC ASM REGFUNC5(BOOL, AddEntries,
 
    return success;
 }
-REGFUNC_END
 
 /*
  * Make an entry visible.
  */
-//STATIC ASM ULONG MakeVisible(REG(a0) LD *ld, REG(d0) ULONG entry)
-STATIC ASM REGFUNC2(ULONG, MakeVisible,
-	REGPARAM(A0, LD *, ld),
-	REGPARAM(D0, ULONG, entry))
+STATIC ASM ULONG MakeVisible(REG(a0) LD *ld, REG(d0) ULONG entry)
 {
    ULONG       new_top;
 
@@ -614,14 +582,11 @@ STATIC ASM REGFUNC2(ULONG, MakeVisible,
 
    return new_top;
 }
-REGFUNC_END
 
 /*
  * De-select node list (slow!).
  */
-//STATIC ASM VOID DeSelect(REG(a0) LD *ld)
-STATIC ASM REGFUNC1(VOID, DeSelect,
-	REGPARAM(A0, LD *, ld))
+STATIC ASM VOID DeSelect(REG(a0) LD *ld)
 {
    LVE         *lve;
 
@@ -634,14 +599,11 @@ STATIC ASM REGFUNC1(VOID, DeSelect,
       };
    };
 }
-REGFUNC_END
 
 /*
  * Select node list (slow!).
  */
-//STATIC ASM VOID Select(REG(a0) LD *ld)
-STATIC ASM REGFUNC1(VOID, Select,
-	REGPARAM(A0, LD *, ld))
+STATIC ASM VOID Select(REG(a0) LD *ld)
 {
    LVE         *lve;
 
@@ -650,17 +612,11 @@ STATIC ASM REGFUNC1(VOID, Select,
 	 lve->lve_Flags |= LVEF_SELECTED | LVEF_REFRESH;
    }
 }
-REGFUNC_END
 
 /*
  * Setup a new top-value.
  */
-//STATIC ASM VOID NewTop(REG(a0) LD *ld, REG(a1) struct GadgetInfo *gi, REG(a2) Object *obj, REG(d0) ULONG new_top)
-STATIC ASM REGFUNC4(VOID, NewTop,
-	REGPARAM(A0, LD *, ld),
-	REGPARAM(A1, struct GadgetInfo *, gi),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(D0, ULONG, new_top))
+STATIC ASM VOID NewTop(REG(a0) LD *ld, REG(a1) struct GadgetInfo *gi, REG(a2) Object *obj, REG(d0) ULONG new_top)
 {
    struct BaseInfo   *bi;
    int                i;
@@ -681,9 +637,9 @@ STATIC ASM REGFUNC4(VOID, NewTop,
        * Create rastport.
        */
 #ifdef DEBUG_BGUI
-      if (bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_GadgetInfo, gi, BI_RastPort, NULL, TAG_DONE))
+      if ((bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_GadgetInfo, gi, BI_RastPort, NULL, TAG_DONE)))
 #else
-      if (bi = AllocBaseInfo(BI_GadgetInfo, gi, BI_RastPort, NULL, TAG_DONE))
+      if ((bi = AllocBaseInfo(BI_GadgetInfo, gi, BI_RastPort, NULL, TAG_DONE)))
 #endif
       {
 	 BOOL needs_refresh=FALSE;
@@ -774,7 +730,6 @@ STATIC ASM REGFUNC4(VOID, NewTop,
       ld->ld_Top = new_top;
    }
 }
-REGFUNC_END
 
 
 
@@ -883,10 +838,7 @@ STATIC BOOL GetColumnPositions(Object *obj, LD *ld)
 *
 *************************************************************************/
 
-//STATIC ASM VOID DrawDragLine(REG(a0) LD *ld, REG(a1) struct GadgetInfo *gi)
-STATIC ASM REGFUNC2(VOID, DrawDragLine,
-	REGPARAM(A0, LD *, ld),
-	REGPARAM(A1, struct GadgetInfo *, gi))
+STATIC ASM VOID DrawDragLine(REG(a0) LD *ld, REG(a1) struct GadgetInfo *gi)
 {
    WORD x1 = ld->ld_InnerBox.Left + ld->ld_DragXLine - 2;
    WORD x2 = x1 + 1;
@@ -896,9 +848,9 @@ STATIC ASM REGFUNC2(VOID, DrawDragLine,
    struct BaseInfo *bi;
 
 #ifdef DEBUG_BGUI
-   if (bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_GadgetInfo, gi, BI_RastPort, NULL, TAG_DONE))
+   if ((bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_GadgetInfo, gi, BI_RastPort, NULL, TAG_DONE)))
 #else
-   if (bi = AllocBaseInfo(BI_GadgetInfo, gi, BI_RastPort, NULL, TAG_DONE))
+   if ((bi = AllocBaseInfo(BI_GadgetInfo, gi, BI_RastPort, NULL, TAG_DONE)))
 #endif
    {
       BSetDrMd(bi, COMPLEMENT);
@@ -906,7 +858,6 @@ STATIC ASM REGFUNC2(VOID, DrawDragLine,
       FreeBaseInfo(bi);
    };
 }
-REGFUNC_END
 
 /// OM_NEW
 /*
@@ -915,8 +866,9 @@ REGFUNC_END
 METHOD(ListClassNew, struct opSet *, ops)
 {
    LD       *ld;
-   struct TagItem *tags, *tstate, *tag;
    ULONG        rc, sort = LVAP_TAIL, data;
+   struct TagItem *tags, *tag;
+   const struct TagItem *tstate;
    ULONG       *new_weights = NULL;
    APTR        *new_entries = NULL;
    int          i;
@@ -926,7 +878,7 @@ METHOD(ListClassNew, struct opSet *, ops)
    /*
     * Let the superclass make the object.
     */
-   if (rc = NewSuperObject(cl, obj, tags))
+   if ((rc = NewSuperObject(cl, obj, tags)))
    {
       /*
        * Get the instance data.
@@ -949,7 +901,7 @@ METHOD(ListClassNew, struct opSet *, ops)
 
       tstate = tags;
 
-      while (tag = NextTagItem(&tstate))
+      while ((tag = NextTagItem(&tstate)))
       {
 	 data = tag->ti_Data;
 	 switch (tag->ti_Tag)
@@ -991,7 +943,7 @@ METHOD(ListClassNew, struct opSet *, ops)
 	     */
 	    tstate = tags;
 
-	    while (tag = NextTagItem(&tstate))
+	    while ((tag = NextTagItem(&tstate)))
 	    {
 	       switch (tag->ti_Tag)
 	       {
@@ -1063,7 +1015,8 @@ METHOD_END
 METHOD(ListClassSetUpdate, struct opUpdate *, opu)
 {
    LD             *ld = INST_DATA( cl, obj );
-   struct TagItem *tstate = opu->opu_AttrList, *tag;
+   const struct TagItem *tstate = opu->opu_AttrList;
+   struct TagItem *tag;
    LVE            *lve;
    ULONG           data, otop = ld->ld_Top, ntop = otop, num, oldcol = ld->ld_Columns;
    WORD            dis = GADGET(obj)->Flags & GFLG_DISABLED;
@@ -1077,12 +1030,12 @@ METHOD(ListClassSetUpdate, struct opUpdate *, opu)
     */
    AsmDoSuperMethodA(cl, obj, (Msg)opu);
 
-   BGUI_PackStructureTags((APTR)ld, ListPackTable, tstate);
+   BGUI_PackStructureTags((APTR)ld, ListPackTable, opu->opu_AttrList);
 
    /*
     * Scan for known attributes.
     */
-   while (tag = NextTagItem(&tstate))
+   while ((tag = NextTagItem(&tstate)))
    {
       data = tag->ti_Data;
       switch (tag->ti_Tag)
@@ -1091,7 +1044,7 @@ METHOD(ListClassSetUpdate, struct opUpdate *, opu)
 	 if (ld->ld_Prop) DisposeObject(ld->ld_Prop);
 	 ld->ld_Flags &= ~LDF_PROPACTIVE;
 
-	 if (ld->ld_Prop = (Object *)data)
+	 if ((ld->ld_Prop = (Object *)data))
 	 {
 	    /*
 	     * Setup scroller notification.
@@ -1173,7 +1126,7 @@ METHOD(ListClassSetUpdate, struct opUpdate *, opu)
 	    /*
 	     * Find the node to deselect.
 	     */
-	    if ( lve = FindNodeQuick( ld, num )) {
+	    if (( lve = FindNodeQuick( ld, num ))) {
 	       /*
 		* Set it up.
 		*/
@@ -1282,7 +1235,7 @@ METHOD(ListClassSetUpdate, struct opUpdate *, opu)
 	       /*
 		* Find the node to select.
 		*/
-	       if (lve = ld->ld_LastActive = FindNodeQuick(ld, num))
+	       if ((lve = ld->ld_LastActive = FindNodeQuick(ld, num)))
 	       {
 		  /*
 		   * Setup the number as the last
@@ -1446,7 +1399,7 @@ METHOD(ListClassDispose, Msg, msg)
    /*
     * Free all entries.
     */
-   while (lve = (LVE *)RemHead((struct List *)&ld->ld_Entries))
+   while ((lve = (LVE *)RemHead((struct List *)&ld->ld_Entries)))
    {
       /*
        * Do we have a resource hook?
@@ -1499,10 +1452,7 @@ METHOD_END
 /*
  * Setup the list area bounds.
  */
-//STATIC ASM VOID ListAreaBounds(REG(a0) Object *obj, REG(a1) LD *ld)
-STATIC ASM REGFUNC2(VOID, ListAreaBounds,
-	REGPARAM(A0, Object *, obj),
-	REGPARAM(A1, LD *, ld))
+STATIC ASM VOID ListAreaBounds(REG(a0) Object *obj, REG(a1) LD *ld)
 {
    int          fh = ld->ld_EntryHeight;
    int          overhead;
@@ -1572,15 +1522,10 @@ STATIC ASM REGFUNC2(VOID, ListAreaBounds,
    ld->ld_TopEntry = FindNode(ld, ld->ld_Top);
 
 }
-REGFUNC_END
 ///
 /// RenderColumn
 
-//STATIC ASM SAVEDS VOID RenderColumn(REG(a0) char *text, REG(a2) Object *obj, REG(a1) struct lvRender *lvr)
-STATIC ASM SAVEDS REGFUNC3(VOID, RenderColumn,
-	REGPARAM(A0, char *, text),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct lvRender *, lvr))
+STATIC ASM SAVEDS VOID RenderColumn(REG(a0) char *text, REG(a2) Object *obj, REG(a1) struct lvRender *lvr)
 {
    int                col  = lvr->lvr_Column;   
    struct BaseInfo   *bi;
@@ -1611,9 +1556,9 @@ STATIC ASM SAVEDS REGFUNC3(VOID, RenderColumn,
    }
    
 #ifdef DEBUG_BGUI
-   if (bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_DrawInfo, lvr->lvr_DrawInfo, BI_RastPort, lvr->lvr_RPort, TAG_DONE))
+   if ((bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_DrawInfo, lvr->lvr_DrawInfo, BI_RastPort, lvr->lvr_RPort, TAG_DONE)))
 #else
-   if (bi = AllocBaseInfo(BI_DrawInfo, lvr->lvr_DrawInfo, BI_RastPort, lvr->lvr_RPort, TAG_DONE))
+   if ((bi = AllocBaseInfo(BI_DrawInfo, lvr->lvr_DrawInfo, BI_RastPort, lvr->lvr_RPort, TAG_DONE)))
 #endif
    {
       /*
@@ -1637,7 +1582,6 @@ STATIC ASM SAVEDS REGFUNC3(VOID, RenderColumn,
       FreeBaseInfo(bi);
    };
 }
-REGFUNC_END
 ///
 /// RenderEntry
 /*
@@ -1834,7 +1778,7 @@ METHOD(ListClassRender, struct bmRender *, bmr)
    {
       if (lf)
       {
-	 if (tf = BGUI_OpenFont(lf))
+	 if ((tf = BGUI_OpenFont(lf)))
 	 {
 	    ld->ld_Font = tf;
 	    BSetFont(bi, tf);
@@ -1877,7 +1821,7 @@ METHOD(ListClassRender, struct bmRender *, bmr)
       /*
        * Clear the overhead.
        */
-      if (h = overhead >> 1)
+      if ((h = overhead >> 1))
       {
 	 y = bc->bc_InnerBox.Top;
 	 if (ld->ld_Title || ld->ld_TitleHook) y += ld->ld_EntryHeight+2;
@@ -1888,7 +1832,7 @@ METHOD(ListClassRender, struct bmRender *, bmr)
 	 AsmDoMethod(bc->bc_Frame, FRAMEM_BACKFILL, bi, &rect, IDS_NORMAL);
       };
 
-      if (h = overhead - h)
+      if ((h = overhead - h))
       {
 	 y = bc->bc_InnerBox.Top + bc->bc_InnerBox.Height - h;
 
@@ -1944,7 +1888,7 @@ METHOD(ListClassRender, struct bmRender *, bmr)
       /*
        * Render the entry.
        */
-      if (lve = FindNodeQuick(ld, num))
+      if ((lve = FindNodeQuick(ld, num)))
       {
 	 /*
 	  * Only render when necessary.
@@ -2006,10 +1950,7 @@ METHOD_END
 /*
  * Find out over which entry the mouse is located.
  */
-//STATIC ASM LONG MouseOverEntry(REG(a0) LD *ld, REG(d0) LONG t)
-STATIC ASM REGFUNC2(LONG, MouseOverEntry,
-	REGPARAM(A0, LD *, ld),
-	REGPARAM(D0, LONG, t))
+STATIC ASM LONG MouseOverEntry(REG(a0) LD *ld, REG(d0) LONG t)
 {
    t -= ld->ld_ListArea.Top;
    if (t < 0) return -1;
@@ -2020,15 +1961,11 @@ STATIC ASM REGFUNC2(LONG, MouseOverEntry,
    
    return t;
 }
-REGFUNC_END
 
 /*
  * Perform multi-(de)selection.
  */
-//STATIC ASM BOOL MultiSelect( REG(a0) LD *ld, REG(d0) ULONG active )
-STATIC ASM REGFUNC2(BOOL, MultiSelect,
-	REGPARAM(A0, LD *, ld),
-	REGPARAM(D0, ULONG, active))
+STATIC ASM BOOL MultiSelect( REG(a0) LD *ld, REG(d0) ULONG active )
 {
    LVE         *node = FindNodeQuick( ld, ld->ld_MultiStart ), *anode = FindNodeQuick( ld, active );
    BOOL         rc = FALSE;
@@ -2100,7 +2037,6 @@ STATIC ASM REGFUNC2(BOOL, MultiSelect,
    }
    return rc;
 }
-REGFUNC_END
 /// GM_HITTEST
 /*
  * Test if the gadget was hit.
@@ -2157,7 +2093,7 @@ METHOD(ListClassGoActive, struct gpInput *, gpi)
     */
    int x = gpi->gpi_Mouse.X;
    int y = gpi->gpi_Mouse.Y;
-   int l = x + GADGET(obj)->LeftEdge;
+   //int l = x + GADGET(obj)->LeftEdge;
    int t = y + GADGET(obj)->TopEdge;
 
    /*
@@ -2249,7 +2185,7 @@ METHOD(ListClassGoActive, struct gpInput *, gpi)
     */
    if (ld->ld_ActiveEntry < ld->ld_Total)
    {
-      if (lve = ld->ld_LastActive = FindNodeQuick(ld, ld->ld_ActiveEntry))
+      if ((lve = ld->ld_LastActive = FindNodeQuick(ld, ld->ld_ActiveEntry)))
       {
 	 ld->ld_LastNum = ld->ld_ActiveEntry;
 	 /*
@@ -2373,7 +2309,7 @@ METHOD(ListClassHandleInput, struct gpInput *, gpi)
     */
    int x = gpi->gpi_Mouse.X;
    int y = gpi->gpi_Mouse.Y;
-   int l = x + GADGET(obj)->LeftEdge;
+   //int l = x + GADGET(obj)->LeftEdge;
    int t = y + GADGET(obj)->TopEdge;
 
    /*
@@ -2457,7 +2393,7 @@ METHOD(ListClassHandleInput, struct gpInput *, gpi)
 	    /*
 	     * No need to do anything if column position not changed.
 	     */
-	    if (dx = x - cd2->cd_Offset)
+	    if ((dx = x - cd2->cd_Offset))
 	    {
 	       /*
 		* Set new column position at x.
@@ -2586,7 +2522,7 @@ METHOD(ListClassHandleInput, struct gpInput *, gpi)
 		  /*
 		   * Get the node.
 		   */
-		  if (lve = ld->ld_LastActive = FindNodeQuick(ld, nc))
+		  if ((lve = ld->ld_LastActive = FindNodeQuick(ld, nc)))
 		  {
 		     ld->ld_LastNum = nc;
 		     /*
@@ -2684,7 +2620,7 @@ METHOD(ListClassHandleInput, struct gpInput *, gpi)
 		  /*
 		   * Find the entry.
 		   */
-		  if (lve = ld->ld_LastActive = FindNodeQuick(ld, nc))
+		  if ((lve = ld->ld_LastActive = FindNodeQuick(ld, nc)))
 		  {
 		     /*
 		      * Are we a multi-select object?
@@ -2842,11 +2778,7 @@ METHOD_END
 /*
  * Key activation.
  */
-//STATIC ASM ULONG ListClassKeyActive( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct wmKeyInput *wmki )
-STATIC ASM REGFUNC3(ULONG, ListClassKeyActive,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct wmKeyInput *, wmki))
+METHOD(ListClassKeyActive, struct wmKeyInput *, wmki )
 {
    LD       *ld = ( LD * )INST_DATA( cl, obj );
    UWORD        qual = wmki->wmki_IEvent->ie_Qualifier;
@@ -2922,17 +2854,12 @@ STATIC ASM REGFUNC3(ULONG, ListClassKeyActive,
 
    return( WMKF_VERIFY );
 }
-REGFUNC_END
+METHOD_END
 
 /*
  * Get entry predecessor, position and add method.
  */
-//STATIC ASM VOID EntryPosHow( REG(a0) LD *ld, REG(a1) LVE **lve, REG(d0) ULONG pos, REG(a2) ULONG *how )
-STATIC ASM REGFUNC4(VOID, EntryPosHow,
-	REGPARAM(A0, LD *, ld),
-	REGPARAM(A1, LVE **, lve),
-	REGPARAM(D0, ULONG, pos),
-	REGPARAM(A2, ULONG, *how))
+STATIC ASM VOID EntryPosHow( REG(a0) LD *ld, REG(a1) LVE **lve, REG(d0) ULONG pos, REG(a2) ULONG *how )
 {
    if ( ! pos ) {
       /*
@@ -2956,19 +2883,12 @@ STATIC ASM REGFUNC4(VOID, EntryPosHow,
       *lve = FindNodeQuick( ld, pos - 1 );
    }
 }
-REGFUNC_END
 ///
 
 /*
  * (Multi)Select entry and/or make it visible.
  */
-//SAVEDS ASM VOID DoEntry(REG(a0) struct GadgetInfo *gi, REG(a1) Object *obj, REG(a2) LD *ld, REG(d0) ULONG flags, REG(d1) ULONG number)
-SAVEDS ASM REGFUNC5(VOID, DoEntry,
-	REGPARAM(A0, struct GadgetInfo *, gi),
-	REGPARAM(A1, Object *, obj),
-	REGPARAM(A2, LD *, ld),
-	REGPARAM(D0, ULONG, flags),
-	REGPARAM(D1, ULONG, number))
+STATIC SAVEDS ASM VOID DoEntry(REG(a0) struct GadgetInfo *gi, REG(a1) Object *obj, REG(a2) LD *ld, REG(d0) ULONG flags, REG(d1) ULONG number)
 {
    ULONG       tag;
 
@@ -3009,7 +2929,6 @@ SAVEDS ASM REGFUNC5(VOID, DoEntry,
       DoRenderMethod(obj, gi, GREDRAW_UPDATE);
    }
 }
-REGFUNC_END
 /// LVM_INSERTENTRIES
 /*
  * Insert entries.
@@ -3069,7 +2988,7 @@ METHOD(ListClassInsertSingle, struct lvmInsertSingle *, lvis)
    /*
     * Insert them.
     */
-   rc = ListClassInsertEntries( cl, obj, &lvmi );
+   rc = METHOD_CALL(ListClassInsertEntries, cl, obj, &lvmi, getreg(REG_A4));
 
    /*
     * Select the entry or make it visible
@@ -3199,7 +3118,7 @@ METHOD(ListClassClear, struct lvmCommand *, lvc)
    /*
     * Free all entries.
     */
-   while (lve = (LVE *)RemHead((struct List *)&ld->ld_Entries))
+   while ((lve = (LVE *)RemHead((struct List *)&ld->ld_Entries)))
    {
       /*
        * Do we have a resource hook?
@@ -3260,11 +3179,7 @@ METHOD_END
 /*
  * Find a node by it's entry data (slow!).
  */
-//STATIC ASM LVE *FindEntryData(REG(a0) LD *ld, REG(a1) APTR data, REG(a2) ULONG *number)
-STATIC ASM REGFUNC3(LVE *, FindEntryData,
-	REGPARAM(A0, LD *, ld),
-	REGPARAM(A1, APTR, data),
-	REGPARAM(A2, ULONG *, number))
+STATIC ASM LVE *FindEntryData(REG(a0) LD *ld, REG(a1) APTR data, REG(a2) ULONG *number)
 {
    LVE         *lve;
    ULONG        num = 0;
@@ -3279,15 +3194,11 @@ STATIC ASM REGFUNC3(LVE *, FindEntryData,
    }
    return NULL;
 }
-REGFUNC_END
 
 /*
  * Find a node by it's entry data (can be fast!).
  */
-//STATIC ASM LVE *FindEntryDataF(REG(a0) LD *ld, REG(a1) APTR data)
-STATIC ASM REGFUNC2(LVE *, FindEntryDataF,
-	REGPARAM(A0, LD *, ld),
-	REGPARAM(A1, APTR, data))
+STATIC ASM LVE *FindEntryDataF(REG(a0) LD *ld, REG(a1) APTR data)
 {
    LVE         *lve;
 
@@ -3301,17 +3212,12 @@ STATIC ASM REGFUNC2(LVE *, FindEntryDataF,
    }
    return NULL;
 }
-REGFUNC_END
 
 /// LVM_GETENTRY
 /*
  * Get an entry.
  */
-//STATIC ASM ULONG ListClassGetEntry( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct lvmGetEntry *lvg )
-STATIC ASM REGFUNC3(ULONG, ListClassGetEntry,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct lvmGetEntry *, lvg))
+STATIC METHOD(ListClassGetEntry, struct lvmGetEntry *, lvg )
 {
    LD       *ld = ( LD * )INST_DATA( cl, obj );
    LVE         *lve;
@@ -3346,7 +3252,7 @@ STATIC ASM REGFUNC3(ULONG, ListClassGetEntry,
 		  if ( lve->lve_Flags & LVEF_SELECTED ) {
 		     ld->ld_ScanNode  = lve;
 		     ld->ld_ScanEntry = lve->lve_Entry;
-		     rc = ( ULONG )lve->lve_Entry;
+		     rc = ( IPTR )lve->lve_Entry;
 		     break;
 		  }
 	       }
@@ -3357,7 +3263,7 @@ STATIC ASM REGFUNC3(ULONG, ListClassGetEntry,
 	       if ( ld->ld_Entries.lvl_First->lve_Next ) {
 		  ld->ld_ScanNode  = ld->ld_Entries.lvl_First;
 		  ld->ld_ScanEntry = ld->ld_ScanNode->lve_Entry;
-		  rc = ( ULONG )ld->ld_ScanEntry;
+		  rc = ( IPTR )ld->ld_ScanEntry;
 	       }
 	    }
 	 }
@@ -3382,7 +3288,7 @@ STATIC ASM REGFUNC3(ULONG, ListClassGetEntry,
 		  if ( lve->lve_Flags & LVEF_SELECTED ) {
 		     ld->ld_ScanNode  = lve;
 		     ld->ld_ScanEntry = lve->lve_Entry;
-		     rc = ( ULONG )lve->lve_Entry;
+		     rc = ( IPTR )lve->lve_Entry;
 		     break;
 		  }
 		  /*
@@ -3398,7 +3304,7 @@ STATIC ASM REGFUNC3(ULONG, ListClassGetEntry,
 	       if ( ld->ld_Entries.lvl_First->lve_Next ) {
 		  ld->ld_ScanNode  = ld->ld_Entries.lvl_Last;
 		  ld->ld_ScanEntry = ld->ld_ScanNode->lve_Entry;
-		  rc = ( ULONG )ld->ld_ScanEntry;
+		  rc = ( IPTR )ld->ld_ScanEntry;
 	       }
 	    }
 	 }
@@ -3408,7 +3314,7 @@ STATIC ASM REGFUNC3(ULONG, ListClassGetEntry,
 	 /*
 	  * Valid entry?
 	  */
-	 if ( lve = FindEntryDataF( ld, lvg->lvmg_Previous )) {
+	 if (( lve = FindEntryDataF( ld, lvg->lvmg_Previous ))) {
 	    /*
 	     * Is there a next one?
 	     */
@@ -3427,7 +3333,7 @@ STATIC ASM REGFUNC3(ULONG, ListClassGetEntry,
 		     if ( lve->lve_Flags & LVEF_SELECTED ) {
 			ld->ld_ScanNode  = lve;
 			ld->ld_ScanEntry = lve->lve_Entry;
-			rc = ( ULONG )lve->lve_Entry;
+			rc = ( IPTR )lve->lve_Entry;
 			break;
 		     }
 		  }
@@ -3437,7 +3343,7 @@ STATIC ASM REGFUNC3(ULONG, ListClassGetEntry,
 		   */
 		  ld->ld_ScanNode  = lve->lve_Next;
 		  ld->ld_ScanEntry = lve->lve_Next->lve_Entry;
-		  rc = ( ULONG )ld->ld_ScanEntry;
+		  rc = ( IPTR )ld->ld_ScanEntry;
 	       }
 	    }
 	 }
@@ -3447,7 +3353,7 @@ STATIC ASM REGFUNC3(ULONG, ListClassGetEntry,
 	 /*
 	  * Valid entry?
 	  */
-	 if ( lve = FindEntryDataF( ld, lvg->lvmg_Previous )) {
+	 if (( lve = FindEntryDataF( ld, lvg->lvmg_Previous ))) {
 	    /*
 	     * Is there a previous one?
 	     */
@@ -3466,7 +3372,7 @@ STATIC ASM REGFUNC3(ULONG, ListClassGetEntry,
 		     if ( lve->lve_Flags & LVEF_SELECTED ) {
 			ld->ld_ScanNode  = lve;
 			ld->ld_ScanEntry = lve->lve_Entry;
-			rc = ( ULONG )lve->lve_Entry;
+			rc = ( IPTR )lve->lve_Entry;
 			break;
 		     }
 		     /*
@@ -3481,7 +3387,7 @@ STATIC ASM REGFUNC3(ULONG, ListClassGetEntry,
 		   */
 		  ld->ld_ScanNode  = lve->lve_Prev;
 		  ld->ld_ScanEntry = lve->lve_Prev->lve_Entry;
-		  rc = ( ULONG )ld->ld_ScanEntry;
+		  rc = ( IPTR )ld->ld_ScanEntry;
 	       }
 	    }
 	 }
@@ -3494,17 +3400,14 @@ STATIC ASM REGFUNC3(ULONG, ListClassGetEntry,
    ld->ld_Flags &= ~LDF_LIST_BUSY;
    return rc;
 }
-REGFUNC_END
+METHOD_END
+
 ///
 /// LVM_REMENTRY
 /*
  * Remove an entry from the list.
  */
-//STATIC ASM ULONG ListClassRemEntry( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct lvmRemEntry *lvmr )
-STATIC ASM REGFUNC3(ULONG, ListClassRemEntry,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct lvmRemEntry *, lvmr))
+STATIC METHOD(ListClassRemEntry, struct lvmRemEntry *, lvmr )
 {
    LD          *ld = INST_DATA(cl, obj);
    LVE         *lve;
@@ -3519,7 +3422,7 @@ STATIC ASM REGFUNC3(ULONG, ListClassRemEntry,
    /*
     * Find the entry node.
     */
-   if (lve = FindEntryData(ld, lvmr->lvmr_Entry, NULL))
+   if ((lve = FindEntryData(ld, lvmr->lvmr_Entry, NULL)))
    {
       /*
        * Remove the node.
@@ -3586,7 +3489,8 @@ STATIC ASM REGFUNC3(ULONG, ListClassRemEntry,
    ld->ld_Flags &= ~LDF_LIST_BUSY;
    return rc;
 }
-REGFUNC_END
+METHOD_END
+
 ///
 /// LVM_REMSELECTED
 /*
@@ -3716,7 +3620,7 @@ METHOD(ListClassRedrawSingle, struct lvmRedrawSingle *, lvrs)
 
    if (!(lvrs->lvrs_Flags & LVRF_ALL_ENTRIES))
    {
-      if (lve = FindEntryDataF(ld, lvrs->lvrs_Entry))
+      if ((lve = FindEntryDataF(ld, lvrs->lvrs_Entry)))
 	 lve->lve_Flags |= LVEF_REFRESH;
    }
    else
@@ -3735,11 +3639,7 @@ METHOD_END
 /*
  * Sort the list.
  */
-//STATIC ASM ULONG ListClassSort( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct lvmCommand *lvmc )
-STATIC ASM REGFUNC3(ULONG, ListClassSort,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct lvmCommand *, lvmc))
+STATIC METHOD(ListClassSort, struct lvmCommand *, lvmc )
 {
    LD       *ld = ( LD * )INST_DATA( cl, obj );
    LVE         *lve;
@@ -3762,13 +3662,13 @@ STATIC ASM REGFUNC3(ULONG, ListClassSort,
       /*
        * Attach all entries to the buffer.
        */
-      while ( lve = ( LVE * )RemHead(( struct List * )&ld->ld_Entries ))
+      while (( lve = ( LVE * )RemHead(( struct List * )&ld->ld_Entries )))
 	 AddTail(( struct List * )&buffer, ( struct Node * )lve );
 
       /*
        * And put them back again sorted.
        */
-      while ( lve = ( LVE * )RemHead(( struct List * )&buffer ))
+      while (( lve = ( LVE * )RemHead(( struct List * )&buffer )))
 	 AddEntryInList( ld, obj, lve, LVAP_SORTED );
 
       /*
@@ -3784,17 +3684,13 @@ STATIC ASM REGFUNC3(ULONG, ListClassSort,
    }
    return 1;
 }
-REGFUNC_END
+METHOD_END
 ///
 /// LVM_LOCK, LVM_UNLOCK
 /*
  * (Un)lock the list.
  */
-//STATIC ASM ULONG ListClassLock( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct lvmCommand *lvmc )
-STATIC ASM REGFUNC3(ULONG, ListClassLock,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct lvmCommand *, lvmc))
+STATIC METHOD(ListClassLock, struct lvmCommand *, lvmc )
 {
    LD       *ld = INST_DATA(cl, obj);
 
@@ -3811,17 +3707,14 @@ STATIC ASM REGFUNC3(ULONG, ListClassLock,
    }
    return 1;
 }
-REGFUNC_END
+METHOD_END
+
 ///
 /// LVM_MOVE
 /*
  * Move an entry.
  */
-//STATIC ASM ULONG ListClassMove( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct lvmMove *lvm )
-STATIC ASM REGFUNC3(ULONG, ListClassMove,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct lvmMove *, lvm))
+STATIC METHOD(ListClassMove, struct lvmMove *, lvm )
 {
    LD       *ld = ( LD * )INST_DATA( cl, obj );
    LVE         *lve, *tmp;
@@ -4032,17 +3925,14 @@ STATIC ASM REGFUNC3(ULONG, ListClassMove,
    ld->ld_Flags &= ~LDF_LIST_BUSY;
    return rc;
 }
-REGFUNC_END
+METHOD_END
+
 ///
 /// LVM_REPLACE
 /*
  * Replace an entry.
  */
-//STATIC ASM ULONG ListClassReplace( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct lvmReplace *lvmr )
-STATIC ASM REGFUNC3(ULONG, ListClassReplace,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct lvmReplace *, lvmr))
+STATIC METHOD(ListClassReplace, struct lvmReplace *, lvmr )
 {
    LD       *ld = ( LD * )INST_DATA( cl, obj );
    LVE         *lvo;
@@ -4064,7 +3954,7 @@ STATIC ASM REGFUNC3(ULONG, ListClassReplace,
    /*
     * Find the old entry.
     */
-   if (lvo = FindEntryData(ld, lvmr->lvmr_OldEntry, NULL))
+   if ((lvo = FindEntryData(ld, lvmr->lvmr_OldEntry, NULL)))
    {
       /*
        * Create the new entry.
@@ -4079,7 +3969,7 @@ STATIC ASM REGFUNC3(ULONG, ListClassReplace,
 	 /*
 	  * Call the hook.
 	  */
-	 if ( newdata = ( APTR )BGUI_CallHookPkt(( void * )ld->ld_Resource, ( void * )obj, ( void * )&lvr )) {
+	 if (( newdata = ( APTR )BGUI_CallHookPkt(( void * )ld->ld_Resource, ( void * )obj, ( void * )&lvr ))) {
 	    /*
 	     * Free the old entry and setup the new one.
 	     */
@@ -4088,13 +3978,13 @@ STATIC ASM REGFUNC3(ULONG, ListClassReplace,
 	    BGUI_CallHookPkt(( void * )ld->ld_Resource, ( void * )obj, ( void * )&lvr );
 	    lvo->lve_Entry = newdata;
 	    lvo->lve_Flags |= LVEF_REFRESH;
-	    rc = ( ULONG )newdata;
+	    rc = ( IPTR  )newdata;
 	 }
       } else {
 	 /*
 	  * Allocate a string copy of the new data.
 	  */
-	 if ( newdata = ( APTR )BGUI_AllocPoolMem( strlen(( UBYTE * )lvmr->lvmr_NewEntry ) + 1 )) {
+	 if (( newdata = ( APTR )BGUI_AllocPoolMem( strlen(( UBYTE * )lvmr->lvmr_NewEntry ) + 1 ))) {
 	    /*
 	     * Copy it.
 	     */
@@ -4106,7 +3996,7 @@ STATIC ASM REGFUNC3(ULONG, ListClassReplace,
 	    BGUI_FreePoolMem( lvmr->lvmr_OldEntry );
 	    lvo->lve_Entry = newdata;
 	    lvo->lve_Flags |= LVEF_REFRESH;
-	    rc = ( ULONG )newdata;
+	    rc = ( IPTR )newdata;
 	 }
       }
    }
@@ -4119,7 +4009,8 @@ STATIC ASM REGFUNC3(ULONG, ListClassReplace,
    if ( rc ) DoRenderMethod( obj, lvmr->lvmr_GInfo, GREDRAW_UPDATE );
    return( rc );
 }
-REGFUNC_END
+METHOD_END
+
 ///
 /// LVM_SETCOLUMNATTRS
 
@@ -4192,9 +4083,9 @@ METHOD(ListClassDragActive, struct bmDragMsg *, bmdm)
        * Anywhere or the list is empty. Simply place a dotted line around the view area.
        */
 #ifdef DEBUG_BGUI
-      if (bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_GadgetInfo, bmdm->bmdm_GInfo, BI_RastPort, NULL, TAG_DONE))
+      if ((bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_GadgetInfo, bmdm->bmdm_GInfo, BI_RastPort, NULL, TAG_DONE)))
 #else
-      if (bi = AllocBaseInfo(BI_GadgetInfo, bmdm->bmdm_GInfo, BI_RastPort, NULL, TAG_DONE))
+      if ((bi = AllocBaseInfo(BI_GadgetInfo, bmdm->bmdm_GInfo, BI_RastPort, NULL, TAG_DONE)))
 #endif
       {
 	 ld->ld_Flags |= LDF_MOVE_DROPBOX;
@@ -4213,11 +4104,7 @@ METHOD_END
 /*
  * Deactivate.
  */
-//STATIC ASM ULONG ListClassDragInactive( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct bmDragMsg *bmdm )
-STATIC ASM REGFUNC3(ULONG, ListClassDragInactive,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct bmDragMsg *, bmdm))
+STATIC METHOD(ListClassDragInactive, struct bmDragMsg *, bmdm )
 {
    LD                   *ld = INST_DATA(cl, obj);
 
@@ -4234,7 +4121,8 @@ STATIC ASM REGFUNC3(ULONG, ListClassDragInactive,
 
    return AsmDoSuperMethodA(cl, obj, (Msg)bmdm);
 }
-REGFUNC_END
+METHOD_END
+
 ///
 /// BASE_DRAGUPDATE
 /*
@@ -4256,9 +4144,9 @@ METHOD(ListClassDragUpdate, struct bmDragPoint *, bmdp)
    if (ld->ld_Flags & LDF_MOVE_DROPBOX)
    {
 #ifdef DEBUG_BGUI
-      if (bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_GadgetInfo, gi, BI_RastPort, NULL, TAG_DONE))
+      if ((bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_GadgetInfo, gi, BI_RastPort, NULL, TAG_DONE)))
 #else
-      if (bi = AllocBaseInfo(BI_GadgetInfo, gi, BI_RastPort, NULL, TAG_DONE))
+      if ((bi = AllocBaseInfo(BI_GadgetInfo, gi, BI_RastPort, NULL, TAG_DONE)))
 #endif
       {
 	 DottedBox(bi, &ld->ld_InnerBox);
@@ -4335,9 +4223,9 @@ METHOD(ListClassDragUpdate, struct bmDragPoint *, bmdp)
 	    if ((ld->ld_DrawSpot != (UWORD)~0) && ld->ld_LineBuffer)
 	    {
 #ifdef DEBUG_BGUI
-	       if (bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_GadgetInfo, gi, BI_RastPort, NULL, TAG_DONE))
+	       if ((bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_GadgetInfo, gi, BI_RastPort, NULL, TAG_DONE)))
 #else
-	       if (bi = AllocBaseInfo(BI_GadgetInfo, gi, BI_RastPort, NULL, TAG_DONE))
+	       if ((bi = AllocBaseInfo(BI_GadgetInfo, gi, BI_RastPort, NULL, TAG_DONE)))
 #endif
 	       {
 		  /*
@@ -4369,9 +4257,9 @@ METHOD(ListClassDragUpdate, struct bmDragPoint *, bmdp)
 	    ld->ld_DrawSpot = y;
 
 #ifdef DEBUG_BGUI
-	    if (bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_GadgetInfo, gi, BI_RastPort, NULL, TAG_DONE))
+	    if ((bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_GadgetInfo, gi, BI_RastPort, NULL, TAG_DONE)))
 #else
-	    if (bi = AllocBaseInfo(BI_GadgetInfo, gi, BI_RastPort, NULL, TAG_DONE))
+	    if ((bi = AllocBaseInfo(BI_GadgetInfo, gi, BI_RastPort, NULL, TAG_DONE)))
 #endif
 	    {
 	       if (!ld->ld_LineBuffer) ld->ld_LineBuffer = BGUI_CreateRPortBitMap(bi->bi_RPort, w, 1, 0);
@@ -4416,11 +4304,7 @@ METHOD_END
 /*
  * We have been dropped upon.
  */
-//STATIC ASM ULONG ListClassDropped( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct bmDropped *bmd )
-STATIC ASM REGFUNC3(ULONG, ListClassDropped,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct bmDropped *, bmd))
+STATIC METHOD(ListClassDropped, struct bmDropped *, bmd)
 {
    LD       *ld = ( LD * )INST_DATA( cl, obj );
    struct MinList     buffer;
@@ -4529,7 +4413,7 @@ STATIC ASM REGFUNC3(ULONG, ListClassDropped,
    /*
     * Move 'm back into their new position.
     */
-   while ( lve = ( LVE * )RemHead(( struct List * )&buffer )) {
+   while (( lve = ( LVE * )RemHead(( struct List * )&buffer ))) {
       if ( ! ld->ld_LastActive ) {
 	 ld->ld_LastActive = lve;
 	 ld->ld_LastNum   = pos;
@@ -4547,7 +4431,7 @@ STATIC ASM REGFUNC3(ULONG, ListClassDropped,
 
    return 1;
 }
-REGFUNC_END
+METHOD_END
 ///
 /// BASE_GETOBJECT
 /*
@@ -4565,17 +4449,17 @@ METHOD(ListClassGetObject, struct bmGetDragObject *, bmgo)
    struct BaseInfo   *bi;
 
    int lx = ld->ld_ListArea.Left;
-   int ly = ld->ld_ListArea.Top;
+   //int ly = ld->ld_ListArea.Top;
    int lw = ld->ld_ListArea.Width;
    int lh = ld->ld_ListArea.Height;
    int eh = ld->ld_EntryHeight;
-   int mx = gi->gi_Window->MouseX;
+   //int mx = gi->gi_Window->MouseX;
    int my = gi->gi_Window->MouseY;
 
    /*
     * Do we have any selected entries?
     */
-   if (entry = (APTR)FirstSelected(obj))
+   if ((entry = (APTR)FirstSelected(obj)))
    {
       /*
        * Count the number of selected entries.
@@ -4593,12 +4477,12 @@ METHOD(ListClassGetObject, struct bmGetDragObject *, bmgo)
 	 /*
 	  * Allocate the rastport.
 	  */
-	 if (drag_rp = BGUI_CreateRPortBitMap(rp, lw, num * lh, depth))
+	 if ((drag_rp = BGUI_CreateRPortBitMap(rp, lw, num * lh, depth)))
 	 {
 #ifdef DEBUG_BGUI
-	    if (bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_GadgetInfo, gi, BI_RastPort, drag_rp, TAG_DONE))
+	    if ((bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_GadgetInfo, gi, BI_RastPort, drag_rp, TAG_DONE)))
 #else
-	    if (bi = AllocBaseInfo(BI_GadgetInfo, gi, BI_RastPort, drag_rp, TAG_DONE))
+	    if ((bi = AllocBaseInfo(BI_GadgetInfo, gi, BI_RastPort, drag_rp, TAG_DONE)))
 #endif
 	    {
 	       BSetFont(bi, ld->ld_Font);
@@ -4611,7 +4495,7 @@ METHOD(ListClassGetObject, struct bmGetDragObject *, bmgo)
 	       do
 	       {
 		  RenderEntry(obj, ld, bi, ld->ld_ScanNode, REL_ZERO | i++);
-	       }  while (entry = (APTR)NextSelected(obj, entry));
+	       }  while ((entry = (APTR)NextSelected(obj, entry)));
 	       setIt:
 
 	       /*
@@ -4631,7 +4515,7 @@ METHOD(ListClassGetObject, struct bmGetDragObject *, bmgo)
 	       /*
 		* Return a pointer to the bitmap.
 		*/
-	       rc = (ULONG)drag_rp->BitMap;
+	       rc = (IPTR)drag_rp->BitMap;
 
 	       if(bi) FreeBaseInfo(bi);
 	    };
@@ -4642,12 +4526,12 @@ METHOD(ListClassGetObject, struct bmGetDragObject *, bmgo)
 	 /*
 	  * More than 10 entries is a special case.
 	  */
-	 if (drag_rp = BGUI_CreateRPortBitMap(rp, lw, 3 * eh, depth))
+	 if ((drag_rp = BGUI_CreateRPortBitMap(rp, lw, 3 * eh, depth)))
 	 {
 #ifdef DEBUG_BGUI
-	    if (bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_GadgetInfo, gi, BI_RastPort, drag_rp, TAG_DONE))
+	    if ((bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_GadgetInfo, gi, BI_RastPort, drag_rp, TAG_DONE)))
 #else
-	    if (bi = AllocBaseInfo(BI_GadgetInfo, gi, BI_RastPort, drag_rp, TAG_DONE))
+	    if ((bi = AllocBaseInfo(BI_GadgetInfo, gi, BI_RastPort, drag_rp, TAG_DONE)))
 #endif
 	    {
 	       BSetFont(bi, ld->ld_Font);
@@ -4694,11 +4578,7 @@ METHOD_END
 /*
  * Free the dragged object.
  */
-//STATIC ASM ULONG ListClassFreeObject( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct bmFreeDragObject *bmfo )
-STATIC ASM REGFUNC3(ULONG, ListClassFreeObject,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct bmFreeDragObject *, bmfo))
+STATIC METHOD(ListClassFreeObject, struct bmFreeDragObject *, bmfo )
 {
    LD       *ld = INST_DATA( cl, obj );
 
@@ -4710,7 +4590,7 @@ STATIC ASM REGFUNC3(ULONG, ListClassFreeObject,
 
    return 1;
 }
-REGFUNC_END
+METHOD_END
 ///
 
 /// Class initialization.
@@ -4718,49 +4598,49 @@ REGFUNC_END
  * Function table.
  */
 STATIC DPFUNC ClassFunc[] = {
-   BASE_RENDER,            (FUNCPTR)ListClassRender,
-   BASE_LAYOUT,            (FUNCPTR)ListClassLayout,
-   BASE_DIMENSIONS,        (FUNCPTR)ListClassDimensions,
+   { BASE_RENDER,            ListClassRender, },
+   { BASE_LAYOUT,            ListClassLayout, },
+   { BASE_DIMENSIONS,        ListClassDimensions, },
 
-   OM_NEW,                 (FUNCPTR)ListClassNew,
-   OM_SET,                 (FUNCPTR)ListClassSetUpdate,
-   OM_UPDATE,              (FUNCPTR)ListClassSetUpdate,
-   OM_GET,                 (FUNCPTR)ListClassGet,
-   OM_DISPOSE,             (FUNCPTR)ListClassDispose,
-   GM_HITTEST,             (FUNCPTR)ListClassHitTest,
-   GM_GOACTIVE,            (FUNCPTR)ListClassGoActive,
-   GM_HANDLEINPUT,         (FUNCPTR)ListClassHandleInput,
-   GM_GOINACTIVE,          (FUNCPTR)ListClassGoInActive,
-   WM_KEYACTIVE,           (FUNCPTR)ListClassKeyActive,
-   LVM_ADDENTRIES,         (FUNCPTR)ListClassAddEntries,
-   LVM_INSERTENTRIES,      (FUNCPTR)ListClassInsertEntries,
-   LVM_ADDSINGLE,          (FUNCPTR)ListClassAddSingle,
-   LVM_INSERTSINGLE,       (FUNCPTR)ListClassInsertSingle,
-   LVM_CLEAR,              (FUNCPTR)ListClassClear,
-   LVM_FIRSTENTRY,         (FUNCPTR)ListClassGetEntry,
-   LVM_LASTENTRY,          (FUNCPTR)ListClassGetEntry,
-   LVM_NEXTENTRY,          (FUNCPTR)ListClassGetEntry,
-   LVM_PREVENTRY,          (FUNCPTR)ListClassGetEntry,
-   LVM_REMENTRY,           (FUNCPTR)ListClassRemEntry,
-   LVM_REFRESH,            (FUNCPTR)ListClassRefresh,
-   LVM_REDRAW,             (FUNCPTR)ListClassRedraw,
-   LVM_REDRAWSINGLE,       (FUNCPTR)ListClassRedrawSingle,
-   LVM_SORT,               (FUNCPTR)ListClassSort,
-   LVM_LOCKLIST,           (FUNCPTR)ListClassLock,
-   LVM_UNLOCKLIST,         (FUNCPTR)ListClassLock,
-   LVM_REMSELECTED,        (FUNCPTR)ListClassRemSelected,
-   LVM_MOVE,               (FUNCPTR)ListClassMove,
-   LVM_REPLACE,            (FUNCPTR)ListClassReplace,
-   LVM_SETCOLUMNATTRS,     (FUNCPTR)ListClassSetColumnAttrs,
-   LVM_GETCOLUMNATTRS,     (FUNCPTR)ListClassGetColumnAttrs,
-   BASE_DRAGQUERY,         (FUNCPTR)ListClassDragQuery,
-   BASE_DRAGACTIVE,        (FUNCPTR)ListClassDragActive,
-   BASE_DRAGINACTIVE,      (FUNCPTR)ListClassDragInactive,
-   BASE_DRAGUPDATE,        (FUNCPTR)ListClassDragUpdate,
-   BASE_DROPPED,           (FUNCPTR)ListClassDropped,
-   BASE_GETDRAGOBJECT,     (FUNCPTR)ListClassGetObject,
-   BASE_FREEDRAGOBJECT,    (FUNCPTR)ListClassFreeObject,
-   DF_END,                 NULL
+   { OM_NEW,                 ListClassNew, },
+   { OM_SET,                 ListClassSetUpdate, },
+   { OM_UPDATE,              ListClassSetUpdate, },
+   { OM_GET,                 ListClassGet, },
+   { OM_DISPOSE,             ListClassDispose, },
+   { GM_HITTEST,             ListClassHitTest, },
+   { GM_GOACTIVE,            ListClassGoActive, },
+   { GM_HANDLEINPUT,         ListClassHandleInput, },
+   { GM_GOINACTIVE,          ListClassGoInActive, },
+   { WM_KEYACTIVE,           ListClassKeyActive, },
+   { LVM_ADDENTRIES,         ListClassAddEntries, },
+   { LVM_INSERTENTRIES,      ListClassInsertEntries, },
+   { LVM_ADDSINGLE,          ListClassAddSingle, },
+   { LVM_INSERTSINGLE,       ListClassInsertSingle, },
+   { LVM_CLEAR,              ListClassClear, },
+   { LVM_FIRSTENTRY,         ListClassGetEntry, },
+   { LVM_LASTENTRY,          ListClassGetEntry, },
+   { LVM_NEXTENTRY,          ListClassGetEntry, },
+   { LVM_PREVENTRY,          ListClassGetEntry, },
+   { LVM_REMENTRY,           ListClassRemEntry, },
+   { LVM_REFRESH,            ListClassRefresh, },
+   { LVM_REDRAW,             ListClassRedraw, },
+   { LVM_REDRAWSINGLE,       ListClassRedrawSingle, },
+   { LVM_SORT,               ListClassSort, },
+   { LVM_LOCKLIST,           ListClassLock, },
+   { LVM_UNLOCKLIST,         ListClassLock, },
+   { LVM_REMSELECTED,        ListClassRemSelected, },
+   { LVM_MOVE,               ListClassMove, },
+   { LVM_REPLACE,            ListClassReplace, },
+   { LVM_SETCOLUMNATTRS,     ListClassSetColumnAttrs, },
+   { LVM_GETCOLUMNATTRS,     ListClassGetColumnAttrs, },
+   { BASE_DRAGQUERY,         ListClassDragQuery, },
+   { BASE_DRAGACTIVE,        ListClassDragActive, },
+   { BASE_DRAGINACTIVE,      ListClassDragInactive, },
+   { BASE_DRAGUPDATE,        ListClassDragUpdate, },
+   { BASE_DROPPED,           ListClassDropped, },
+   { BASE_GETDRAGOBJECT,     ListClassGetObject, },
+   { BASE_FREEDRAGOBJECT,    ListClassFreeObject, },
+   { DF_END,                 NULL },
 };
 
 /*

@@ -64,7 +64,7 @@ METHOD(FileReqClassNew, struct opSet *, ops)
    /*
     * First we let the superclass create the object.
     */
-   if (rc = NewSuperObject(cl, obj, tags))
+   if ((rc = NewSuperObject(cl, obj, tags)))
    {
       /*
        * Setup user attributes.
@@ -105,8 +105,9 @@ METHOD_END
 METHOD(FileReqClassSetUpdate, struct opSet *, ops)
 {
    FD             *fd = INST_DATA(cl, obj);
-   struct TagItem *tag, *tstate = ops->ops_AttrList;
    ULONG           data, rc;
+   struct TagItem *tag;
+   const struct TagItem *tstate = ops->ops_AttrList;
    BOOL            path_update = FALSE;
 
    /*
@@ -114,7 +115,7 @@ METHOD(FileReqClassSetUpdate, struct opSet *, ops)
     */
    rc = AsmDoSuperMethodA(cl, obj, (Msg)ops);
 
-   while (tag = NextTagItem(&tstate))
+   while ((tag = NextTagItem(&tstate)))
    {
       data = tag->ti_Data;
       switch (tag->ti_Tag)
@@ -201,7 +202,7 @@ METHOD(FileReqClassDoRequest, Msg, msg)
    /*
     * Allocate filerequester structure.
     */
-   if (fr = (struct FileRequester *)AsmDoSuperMethod(cl, obj, ASLM_ALLOCREQUEST))
+   if ((fr = (struct FileRequester *)AsmDoSuperMethod(cl, obj, ASLM_ALLOCREQUEST)))
    {
       /*
        * Put up the requester.
@@ -252,13 +253,13 @@ METHOD_END
  * Function table.
  */
 STATIC DPFUNC ClassFunc[] = {
-   OM_NEW,                 (FUNCPTR)FileReqClassNew,
-   OM_SET,                 (FUNCPTR)FileReqClassSetUpdate,
-   OM_UPDATE,              (FUNCPTR)FileReqClassSetUpdate,
-   OM_GET,                 (FUNCPTR)FileReqClassGet,
-   OM_DISPOSE,             (FUNCPTR)FileReqClassDispose,
-   ASLM_DOREQUEST,         (FUNCPTR)FileReqClassDoRequest,
-   DF_END,                 NULL
+   { OM_NEW,                 FileReqClassNew, },
+   { OM_SET,                 FileReqClassSetUpdate, },
+   { OM_UPDATE,              FileReqClassSetUpdate, },
+   { OM_GET,                 FileReqClassGet, },
+   { OM_DISPOSE,             FileReqClassDispose, },
+   { ASLM_DOREQUEST,         FileReqClassDoRequest, },
+   { DF_END,                 NULL },
 };
 
 /*

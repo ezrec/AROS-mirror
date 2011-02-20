@@ -71,7 +71,7 @@ Object *InitTest_4( void )
         return( win );
 }
 
-int main(argc,argv)
+int main(int argc,char **argv)
 {
         Object *window;
         struct Library *GradientSliderBase;
@@ -82,10 +82,10 @@ int main(argc,argv)
           return -1;
         }
 
-        if(BGUIBase=OpenLibrary(BGUINAME,BGUIVERSION))
+        if((BGUIBase=OpenLibrary(BGUINAME,BGUIVERSION)))
         {
 printf("trying to open gradientslider.gadget\n");
-    if(GradientSliderBase=OpenLibrary("Gadgets/gradientslider.gadget",39L))
+    if((GradientSliderBase=OpenLibrary("Gadgets/gradientslider.gadget",39L)))
     {
 printf("opened gradientslider.gadget\n");
                         if((window=InitTest_4())!=NULL
@@ -119,4 +119,5 @@ printf("opened gradientslider.gadget\n");
 
         CloseLibrary((struct Library *)IntuitionBase);
 
+        return 0;
 }

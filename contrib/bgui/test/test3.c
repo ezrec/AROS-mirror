@@ -140,9 +140,10 @@ void event_loop(void) {
 	}
 }
 
-void main() {
+int main(int argc, char **argv) {
 	read_args();
 	open_all();
 	event_loop();
 	cleanexit(0,NULL);
+        return 0;
 }

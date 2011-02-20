@@ -73,20 +73,12 @@ STATIC UWORD DisPat[2] = { 0x2222, 0x8888 };
 /*
  * Calculate the text width.
  */
-//makeproto ASM ULONG TextWidth(REG(a1) struct RastPort *rp, REG(a0) UBYTE *text)
-makeproto ASM REGFUNC2(ULONG, TextWidth,
-	REGPARAM(A1, struct RastPort *, rp),
-	REGPARAM(A0, UBYTE *, text))
+makeproto ASM ULONG TextWidth(REG(a1) struct RastPort *rp, REG(a0) UBYTE *text)
 {
    return TextWidthNum(rp, text, strlen(text));
 }
-REGFUNC_END
 
-//makeproto ASM ULONG TextWidthNum(REG(a1) struct RastPort *rp, REG(a0) UBYTE *text, REG(d0) ULONG len)
-makeproto ASM REGFUNC3(ULONG, TextWidthNum,
-	REGPARAM(A1, struct RastPort *, rp),
-	REGPARAM(A0, UBYTE *, text),
-	REGPARAM(D0, ULONG, len))
+makeproto ASM ULONG TextWidthNum(REG(a1) struct RastPort *rp, REG(a0) UBYTE *text, REG(d0) ULONG len)
 {
    struct TextExtent te;
    ULONG             extent;
@@ -106,15 +98,11 @@ makeproto ASM REGFUNC3(ULONG, TextWidthNum,
     */
    return( extent /*( extent > te.te_Width ) ? extent : te.te_Width */);
 }
-REGFUNC_END
 
 /*
  * Disable the given area.
  */
-//makeproto ASM VOID BDisableBox(REG(a0) struct BaseInfo *bi, REG(a1) struct IBox *area)
-makeproto ASM REGFUNC2(VOID, BDisableBox,
-	REGPARAM(A0, struct BaseInfo *, bi),
-	REGPARAM(A1, struct IBox *, area))
+makeproto ASM VOID BDisableBox(REG(a0) struct BaseInfo *bi, REG(a1) struct IBox *area)
 {
    BSetAfPt(bi, DisPat, 1);
    BSetDrMd(bi, JAM1);
@@ -122,7 +110,36 @@ makeproto ASM REGFUNC2(VOID, BDisableBox,
    BBoxFillA(bi, area);
    BClearAfPt(bi);
 }
-REGFUNC_END
+
+#ifdef DEBUG_BGUI
+makeproto ASM VOID SRectFillDebug(REG(a0) struct RastPort *rp, REG(d0) LONG l, REG(d1) LONG t, REG(d2) LONG r, REG(d3) LONG b,REG(a1) STRPTR file,REG(d4) ULONG line)
+#else
+ASM VOID SRectFill(REG(a0) struct RastPort *rp, REG(d0) LONG l, REG(d1) LONG t, REG(d2) LONG r, REG(d3) LONG b)
+#endif
+{
+   if ((r >= l) && (b >= t))
+      RectFill(rp, l, t, r, b);
+#ifdef DEBUG_BGUI
+   else
+	   D(bug("***Invalid RectFill (%lx,%ld,%ld,%ld,%ld) (%s,%lu)\n",rp,l,t,r,b,file ? file : (STRPTR)"Unknown file",line));
+#endif
+}
+
+/*
+ * Do a safe rect-fill.
+ */
+#ifdef DEBUG_BGUI
+  makeproto ASM VOID BRectFillDebug(REG(a0) struct BaseInfo *bi, REG(d0) LONG l, REG(d1) LONG t, REG(d2) LONG r, REG(d3) LONG b,REG(a1) STRPTR file,REG(d4) ULONG line)
+  {
+     SRectFillDebug(bi->bi_RPort, l, t, r, b,file,line);
+  }
+#else
+  ASM VOID BRectFill(REG(a0) struct BaseInfo *bi, REG(d0) LONG l, REG(d1) LONG t, REG(d2) LONG r, REG(d3) LONG b)
+  {
+     SRectFill(bi->bi_RPort, l, t, r, b);
+  }
+#endif
+
 
 /*
  * Render a frame/separator title.
@@ -180,10 +197,7 @@ makeproto VOID RenderTitle(Object *title, struct BaseInfo *bi, WORD l, WORD t, W
    };
 }
 
-//makeproto VOID ASM SetDashedLine(REG(a0) struct BaseInfo *bi, REG(d0) UWORD offset)
-makeproto ASM REGFUNC2(VOID, SetDashedLine,
-	REGPARAM(A0, struct BaseInfo *, bi),
-	REGPARAM(D0, UWORD, offset))
+makeproto VOID ASM SetDashedLine(REG(a0) struct BaseInfo *bi, REG(d0) UWORD offset)
 {
    /*
     * Render a SHINE/SHADOW pen, dotted box or,
@@ -198,7 +212,6 @@ makeproto ASM REGFUNC2(VOID, SetDashedLine,
    if (bi->bi_RPort->FgPen == bi->bi_RPort->BgPen)
       BSetDPenA(bi, BACKGROUNDPEN);
 }
-REGFUNC_END
 
 /*
  * Quickly render a bevelled box.
@@ -234,106 +247,64 @@ makeproto VOID RenderBevelBox(struct BaseInfo *bi, WORD l, WORD t, WORD r, WORD 
    if (!thin) VLine(rp, r - 1, t + 1, b - 1);
 }
 
-#ifdef DEBUG_BGUI
-//makeproto ASM VOID SRectFillDebug(REG(a0) struct RastPort *rp, REG(d0) LONG l, REG(d1) LONG t, REG(d2) LONG r, REG(d3) LONG b,REG(a1) STRPTR file,REG(d4) ULONG line)
-makeproto ASM REGFUNC7(VOID, SRectFillDebug,
-	REGPARAM(A0, struct RastPort *, rp),
-	REGPARAM(D0, LONG, l),
-	REGPARAM(D1, LONG, t),
-	REGPARAM(D2, LONG, r),
-	REGPARAM(D3, LONG, b),
-	REGPARAM(A1, STRPTR, file),
-	REGPARAM(D4, ULONG, line))
-#else
-//ASM VOID SRectFill(REG(a0) struct RastPort *rp, REG(d0) LONG l, REG(d1) LONG t, REG(d2) LONG r, REG(d3) LONG b)
-ASM REGFUNC5(VOID, SRectFill,
-	REGPARAM(A0, struct RastPort *, rp),
-	REGPARAM(D0, LONG, l),
-	REGPARAM(D1, LONG, t),
-	REGPARAM(D2, LONG, r),
-	REGPARAM(D3, LONG, b))
-#endif
-{
-   if ((r >= l) && (b >= t))
-      RectFill(rp, l, t, r, b);
-#ifdef DEBUG_BGUI
-   else
-	   D(bug("***Invalid RectFill (%lx,%ld,%ld,%ld,%ld) (%s,%lu)\n",rp,l,t,r,b,file ? file : (STRPTR)"Unknown file",line));
-#endif
-}
-REGFUNC_END
-
-/*
- * Do a safe rect-fill.
- */
-#ifdef DEBUG_BGUI
-  //makeproto ASM VOID BRectFillDebug(REG(a0) struct BaseInfo *bi, REG(d0) LONG l, REG(d1) LONG t, REG(d2) LONG r, REG(d3) LONG b,REG(a1) STRPTR file,REG(d4) ULONG line)
-  makeproto ASM REGFUNC7(VOID, BRectFillDebug,
-	REGPARAM(A0, struct BaseInfo *, bi),
-	REGPARAM(D0, LONG, l),
-	REGPARAM(D1, LONG, t),
-	REGPARAM(D2, LONG, r),
-	REGPARAM(D3, LONG, b),
-	REGPARAM(A1, STRPTR, file),
-	REGPARAM(D4, ULONG, line))
-  {
-     SRectFillDebug(bi->bi_RPort, l, t, r, b,file,line);
-  }
-  REGFUNC_END
-#else
-  //ASM VOID BRectFill(REG(a0) struct BaseInfo *bi, REG(d0) LONG l, REG(d1) LONG t, REG(d2) LONG r, REG(d3) LONG b)
-  ASM REGFUNC5(VOID, BRectFill,
-	REGPARAM(A0, struct BaseInfo *, bi),
-	REGPARAM(D0, LONG, l),
-	REGPARAM(D1, LONG, t),
-	REGPARAM(D2, LONG, r),
-	REGPARAM(D3, LONG, b))
-  {
-     SRectFill(bi->bi_RPort, l, t, r, b);
-  }
-  REGFUNC_END
-#endif
-
-//makeproto ASM VOID BRectFillA(REG(a0) struct BaseInfo *bi, REG(a1) struct Rectangle *rect)
-makeproto ASM REGFUNC2(VOID, BRectFillA,
-	REGPARAM(A0, struct BaseInfo *, bi),
-	REGPARAM(A1, struct Rectangle *, rect))
+makeproto ASM VOID BRectFillA(REG(a0) struct BaseInfo *bi, REG(a1) struct Rectangle *rect)
 {
    BRectFill(bi, rect->MinX, rect->MinY, rect->MaxX, rect->MaxY);
 }
-REGFUNC_END
 
-//makeproto ASM VOID BBoxFill(REG(a0) struct BaseInfo *bi, REG(d0) LONG l, REG(d1) LONG t, REG(d2) LONG w, REG(d3) LONG h)
-makeproto ASM REGFUNC5(VOID, BBoxFill,
-	REGPARAM(A0, struct BaseInfo *, bi),
-	REGPARAM(D0, LONG, l),
-	REGPARAM(D1, LONG, t),
-	REGPARAM(D2, LONG, w),
-	REGPARAM(D3, LONG, h))
+makeproto ASM VOID BBoxFill(REG(a0) struct BaseInfo *bi, REG(d0) LONG l, REG(d1) LONG t, REG(d2) LONG w, REG(d3) LONG h)
 {
    SRectFill(bi->bi_RPort, l, t, l + w - 1, t + h - 1);
 }
-REGFUNC_END
 
-//makeproto ASM VOID BBoxFillA(REG(a0) struct BaseInfo *bi, REG(a1) struct IBox *box)
-makeproto ASM REGFUNC2(VOID, BBoxFillA,
-	REGPARAM(A0, struct BaseInfo *, bi),
-	REGPARAM(A1, struct IBox *, box))
+makeproto ASM VOID BBoxFillA(REG(a0) struct BaseInfo *bi, REG(a1) struct IBox *box)
 {
    BBoxFill(bi, box->Left, box->Top, box->Width, box->Height);
 }
-REGFUNC_END
 
 /*
  * Background filling.
  */
+#ifdef DEBUG_BGUI
+makeproto ASM VOID RenderBackFillRasterDebug(REG(a0) struct RastPort *rp, REG(a1) struct IBox *ib, REG(d0) UWORD apen, REG(d1) UWORD bpen,REG(a2) STRPTR file, REG(d2) ULONG line)
+#else
+ASM VOID RenderBackFillRaster(REG(a0) struct RastPort *rp, REG(a1) struct IBox *ib, REG(d0) UWORD apen, REG(d1) UWORD bpen)
+#endif
+{
+   static UWORD pat[] = { 0x5555, 0xAAAA };
+   /*
+    * Setup RastPort.
+    */
 
-//makeproto ASM VOID RenderBackFill(REG(a0) struct RastPort *rp, REG(a1) struct IBox *ib, REG(a2) UWORD *pens, REG(d0) ULONG type)
-makeproto ASM REGFUNC4(VOID, RenderBackFill,
-	REGPARAM(A0, struct RastPort *, rp),
-	REGPARAM(A1, struct IBox *, ib),
-	REGPARAM(A2, UWORD *, pens),
-	REGPARAM(D0, ULONG, type))
+   FSetABPenDrMd(rp, apen, bpen, JAM2);
+
+   if (apen == bpen)
+   {
+      FSetDrMd(rp, JAM1);
+      FClearAfPt(rp);
+   }
+   else
+   {
+      SetAfPt(rp, pat, 1);
+   };
+
+   /*
+    * Render...
+    */
+#ifdef DEBUG_BGUI
+   SRectFillDebug(rp, ib->Left, ib->Top, ib->Left + ib->Width - 1, ib->Top + ib->Height - 1,file,line);
+#else
+   SRectFill(rp, ib->Left, ib->Top, ib->Left + ib->Width - 1, ib->Top + ib->Height - 1);
+#endif
+
+   /*
+    * Clear area pattern.
+    */
+   FClearAfPt(rp);
+}
+
+
+makeproto ASM VOID RenderBackFill(REG(a0) struct RastPort *rp, REG(a1) struct IBox *ib, REG(a2) UWORD *pens, REG(d0) ULONG type)
 {
    int apen, bpen;
 
@@ -391,66 +362,11 @@ makeproto ASM REGFUNC4(VOID, RenderBackFill,
    };
    RenderBackFillRaster(rp, ib, pens[apen], pens[bpen]);
 }
-REGFUNC_END
-
-#ifdef DEBUG_BGUI
-//makeproto ASM VOID RenderBackFillRasterDebug(REG(a0) struct RastPort *rp, REG(a1) struct IBox *ib, REG(d0) UWORD apen, REG(d1) UWORD bpen,REG(a2) STRPTR file, REG(d2) ULONG line)
-makeproto ASM REGFUNC6(VOID, RenderBackFillRasterDebug,
-	REGPARAM(A0, struct RastPort *, rp),
-	REGPARAM(A1, struct IBox *, ib),
-	REGPARAM(D0, UWORD, apen),
-	REGPARAM(D1, UWORD, bpen),
-	REGPARAM(A2, STRPTR, file),
-	REGPARAM(D2, ULONG, line))
-#else
-//ASM VOID RenderBackFillRaster(REG(a0) struct RastPort *rp, REG(a1) struct IBox *ib, REG(d0) UWORD apen, REG(d1) UWORD bpen)
-ASM REGFUNC4(VOID, RenderBackFillRaster,
-	REGPARAM(A0, struct RastPort *, rp),
-	REGPARAM(A1, struct IBox *, ib),
-	REGPARAM(D0, UWORD, apen),
-	REGPARAM(D1, UWORD, bpen))
-#endif
-{
-   static UWORD pat[] = { 0x5555, 0xAAAA };
-   /*
-    * Setup RastPort.
-    */
-
-   FSetABPenDrMd(rp, apen, bpen, JAM2);
-
-   if (apen == bpen)
-   {
-      FSetDrMd(rp, JAM1);
-      FClearAfPt(rp);
-   }
-   else
-   {
-      SetAfPt(rp, pat, 1);
-   };
-
-   /*
-    * Render...
-    */
-#ifdef DEBUG_BGUI
-   SRectFillDebug(rp, ib->Left, ib->Top, ib->Left + ib->Width - 1, ib->Top + ib->Height - 1,file,line);
-#else
-   SRectFill(rp, ib->Left, ib->Top, ib->Left + ib->Width - 1, ib->Top + ib->Height - 1);
-#endif
-
-   /*
-    * Clear area pattern.
-    */
-   FClearAfPt(rp);
-}
-REGFUNC_END
 
 /*
  * Draw a dotted box.
  */
-//makeproto ASM VOID DottedBox(REG(a0) struct BaseInfo *bi, REG(a1) struct IBox *ibx)
-makeproto ASM REGFUNC2(VOID, DottedBox,
-	REGPARAM(A0, struct BaseInfo *, bi),
-	REGPARAM(A1, struct IBox *, ibx))
+makeproto ASM VOID DottedBox(REG(a0) struct BaseInfo *bi, REG(a1) struct IBox *ibx)
 {
    int x1 = ibx->Left;
    int x2 = ibx->Left + ibx->Width - 1;
@@ -485,16 +401,11 @@ makeproto ASM REGFUNC2(VOID, DottedBox,
    Draw(rp, x1, y2);
    Draw(rp, x1, y1 + 1);
 }
-REGFUNC_END
 
 /*
  * Find out rendering state.
  */
-//makeproto ASM ULONG GadgetState(REG(a0) struct BaseInfo *bi, REG(a1) Object *obj, REG(d0) BOOL norec)
-makeproto ASM REGFUNC3(ULONG, GadgetState,
-	REGPARAM(A0, struct BaseInfo *, bi),
-	REGPARAM(A1, Object *, obj),
-	REGPARAM(D0, BOOL, norec))
+makeproto ASM ULONG GadgetState(REG(a0) struct BaseInfo *bi, REG(a1) Object *obj, REG(d0) BOOL norec)
 {
    BOOL active = !(GADGET(obj)->Activation & BORDERMASK) || (bi->bi_IWindow->Flags & WFLG_WINDOWACTIVE);
    BOOL normal = !(GADGET(obj)->Flags & GFLG_SELECTED) || norec;
@@ -502,7 +413,6 @@ makeproto ASM REGFUNC3(ULONG, GadgetState,
    return active ? (ULONG)(normal ? IDS_NORMAL         : IDS_SELECTED)
 		 : (ULONG)(normal ? IDS_INACTIVENORMAL : IDS_INACTIVESELECTED);
 }
-REGFUNC_END
 
 #ifdef __AROS__
 makearosproto
@@ -593,33 +503,19 @@ makeproto SAVEDS ASM VOID BGUI_FillRectPattern(REG(a1) struct RastPort *r, REG(a
    AROS_LIBFUNC_EXIT
 }
 
-//makeproto VOID ASM HLine(REG(a1) struct RastPort *rp, REG(d0) UWORD l, REG(d1) UWORD t, REG(d2) UWORD r)
-makeproto ASM REGFUNC4(VOID, HLine,
-	REGPARAM(A1, struct RastPort *, rp),
-	REGPARAM(D0, UWORD, l),
-	REGPARAM(D1, UWORD, t),
-	REGPARAM(D2, UWORD, r))
+makeproto VOID ASM HLine(REG(a1) struct RastPort *rp, REG(d0) UWORD l, REG(d1) UWORD t, REG(d2) UWORD r)
 {
    Move(rp, l, t);
    Draw(rp, r, t);
 }
-REGFUNC_END
 
-//makeproto VOID ASM VLine(REG(a1) struct RastPort *rp, REG(d0) UWORD l, REG(d1) UWORD t, REG(d2) UWORD b)
-makeproto ASM REGFUNC4(VOID, VLine,
-	REGPARAM(A1, struct RastPort *, rp),
-	REGPARAM(D0, UWORD, l),
-	REGPARAM(D1, UWORD, t),
-	REGPARAM(D2, UWORD, b))
+makeproto VOID ASM VLine(REG(a1) struct RastPort *rp, REG(d0) UWORD l, REG(d1) UWORD t, REG(d2) UWORD b)
 {
    Move(rp, l, t);
    Draw(rp, l, b);
 }
-REGFUNC_END
 
-//makeproto ASM ULONG FGetAPen(REG(a1) struct RastPort *rp)
-makeproto ASM REGFUNC1(ULONG, FGetAPen,
-	REGPARAM(A1, struct RastPort *,rp))
+makeproto ASM ULONG FGetAPen(REG(a1) struct RastPort *rp)
 {
    #ifdef ENHANCED
    return GetAPen(rp);
@@ -628,11 +524,8 @@ makeproto ASM REGFUNC1(ULONG, FGetAPen,
    return rp->FgPen;
    #endif
 }
-REGFUNC_END
 
-//makeproto ASM ULONG FGetBPen(REG(a1) struct RastPort *rp)
-makeproto ASM REGFUNC1(ULONG, FGetBPen,
-	REGPARAM(A1, struct RastPort *,rp))
+makeproto ASM ULONG FGetBPen(REG(a1) struct RastPort *rp)
 {
    #ifdef ENHANCED
    return GetBPen(rp);
@@ -641,11 +534,8 @@ makeproto ASM REGFUNC1(ULONG, FGetBPen,
    return rp->BgPen;
    #endif
 }
-REGFUNC_END
 
-//makeproto ASM ULONG FGetDrMd(REG(a1) struct RastPort *rp)
-makeproto ASM REGFUNC1(ULONG, FGetDrMd,
-	REGPARAM(A1, struct RastPort *,rp))
+makeproto ASM ULONG FGetDrMd(REG(a1) struct RastPort *rp)
 {
    #ifdef ENHANCED
    return GetDrMd(rp);
@@ -654,25 +544,18 @@ makeproto ASM REGFUNC1(ULONG, FGetDrMd,
    return rp->DrawMode;
    #endif
 }
-REGFUNC_END
 
-//makeproto ASM ULONG FGetDepth(REG(a1) struct RastPort *rp)
-makeproto ASM REGFUNC1(ULONG, FGetDepth,
-	REGPARAM(A1, struct RastPort *, rp))
+makeproto ASM ULONG FGetDepth(REG(a1) struct RastPort *rp)
 {
    #ifdef ENHANCED
-   return GetBitMapAttr(rp->BitMap, BMA_DEPTH);
+   return (ULONG)GetBitMapAttr(rp->BitMap, BMA_DEPTH);
    #else
    if (OS30) return GetBitMapAttr(rp->BitMap, BMA_DEPTH);
    return rp->BitMap->Depth;
    #endif
 }
-REGFUNC_END
 
-//makeproto ASM VOID FSetAPen(REG(a1) struct RastPort *rp, REG(d0) ULONG pen)
-makeproto ASM REGFUNC2(VOID, FSetAPen,
-	REGPARAM(A1, struct RastPort *, rp),
-	REGPARAM(D0, ULONG, pen))
+makeproto ASM VOID FSetAPen(REG(a1) struct RastPort *rp, REG(d0) ULONG pen)
 {
    #ifdef ENHANCED
    SetRPAttrs(rp, RPTAG_APen, pen, TAG_END);
@@ -681,12 +564,8 @@ makeproto ASM REGFUNC2(VOID, FSetAPen,
    else if (rp->FgPen != pen) SetAPen(rp, pen);
    #endif
 }
-REGFUNC_END
 
-//makeproto ASM VOID FSetBPen(REG(a1) struct RastPort *rp, REG(d0) ULONG pen)
-makeproto ASM REGFUNC2(VOID, FSetBPen,
-	REGPARAM(A1, struct RastPort *, rp),
-	REGPARAM(D0, ULONG, pen))
+makeproto ASM VOID FSetBPen(REG(a1) struct RastPort *rp, REG(d0) ULONG pen)
 {
    #ifdef ENHANCED
    SetRPAttrs(rp, RPTAG_BPen, pen, TAG_END);
@@ -695,12 +574,8 @@ makeproto ASM REGFUNC2(VOID, FSetBPen,
    else if (rp->BgPen != pen) SetBPen(rp, pen);
    #endif
 }
-REGFUNC_END
 
-//makeproto ASM VOID FSetDrMd(REG(a1) struct RastPort *rp, REG(d0) ULONG drmd)
-makeproto ASM REGFUNC2(VOID, FSetDrMd,
-	REGPARAM(A1, struct RastPort *, rp),
-	REGPARAM(D0, ULONG, drmd))
+makeproto ASM VOID FSetDrMd(REG(a1) struct RastPort *rp, REG(d0) ULONG drmd)
 {
    #ifdef ENHANCED
    SetRPAttrs(rp, RPTAG_DrMd, drmd, TAG_END);
@@ -709,14 +584,8 @@ makeproto ASM REGFUNC2(VOID, FSetDrMd,
    else if (rp->DrawMode != drmd) SetDrMd(rp, drmd);
    #endif
 }
-REGFUNC_END
 
-//makeproto ASM VOID FSetABPenDrMd(REG(a1) struct RastPort *rp, REG(d0) ULONG apen, REG(d1) ULONG bpen, REG(d2) ULONG mode)
-makeproto ASM REGFUNC4(VOID, FSetABPenDrMd,
-	REGPARAM(A1, struct RastPort *, rp),
-	REGPARAM(D0, ULONG, apen),
-	REGPARAM(D1, ULONG, bpen),
-	REGPARAM(D2, ULONG, mode))
+makeproto ASM VOID FSetABPenDrMd(REG(a1) struct RastPort *rp, REG(d0) ULONG apen, REG(d1) ULONG bpen, REG(d2) ULONG mode)
 {
    #ifdef ENHANCED
    SetABPenDrMd(rp, apen, bpen, mode);
@@ -730,12 +599,8 @@ makeproto ASM REGFUNC4(VOID, FSetABPenDrMd,
    };
    #endif
 }
-REGFUNC_END
 
-//makeproto ASM VOID FSetFont(REG(a1) struct RastPort *rp, REG(a0) struct TextFont *tf)
-makeproto ASM REGFUNC2(VOID, FSetFont,
-	REGPARAM(A1, struct RastPort *, rp),
-	REGPARAM(A0, struct TextFont *, tf))
+makeproto ASM VOID FSetFont(REG(a1) struct RastPort *rp, REG(a0) struct TextFont *tf)
 {
    #ifdef ENHANCED
    SetRPAttrs(rp, RPTAG_Font, tf, TAG_END);
@@ -747,128 +612,70 @@ makeproto ASM REGFUNC2(VOID, FSetFont,
    }
    #endif
 }
-REGFUNC_END
 
-//makeproto ASM VOID FSetFontStyle(REG(a1) struct RastPort *rp, REG(d0) ULONG style)
-makeproto ASM REGFUNC2(VOID, FSetFontStyle,
-	REGPARAM(A1, struct RastPort *, rp),
-	REGPARAM(D0, ULONG, style))
+makeproto ASM VOID FSetFontStyle(REG(a1) struct RastPort *rp, REG(d0) ULONG style)
 {
    SetSoftStyle(rp, style, AskSoftStyle(rp));
 }
-REGFUNC_END
 
-//makeproto ASM VOID FClearAfPt(REG(a1) struct RastPort *rp)
-makeproto ASM REGFUNC1(VOID, FClearAfPt,
-	REGPARAM(A1, struct RastPort *, rp))
+makeproto ASM VOID FClearAfPt(REG(a1) struct RastPort *rp)
 {
    SetAfPt(rp, NULL, 0);
 }
-REGFUNC_END
 
-
-
-
-//makeproto ASM VOID BSetDPenA(REG(a0) struct BaseInfo *bi, REG(d0) LONG pen)
-makeproto ASM REGFUNC2(VOID, BSetDPenA,
-	REGPARAM(A0, struct BaseInfo *, bi),
-	REGPARAM(D0, LONG, pen))
+makeproto ASM VOID BSetDPenA(REG(a0) struct BaseInfo *bi, REG(d0) LONG pen)
 {
    FSetAPen(bi->bi_RPort, bi->bi_Pens[pen]);
 }
-REGFUNC_END
 
-//makeproto ASM VOID BSetPenA(REG(a0) struct BaseInfo *bi, REG(d0) ULONG pen)
-makeproto ASM REGFUNC2(VOID, BSetPenA,
-	REGPARAM(A0, struct BaseInfo *, bi),
-	REGPARAM(D0, ULONG, pen))
+makeproto ASM VOID BSetPenA(REG(a0) struct BaseInfo *bi, REG(d0) ULONG pen)
 {
    FSetAPen(bi->bi_RPort, pen);
 }
-REGFUNC_END
 
-//makeproto ASM VOID BSetDPenB(REG(a0) struct BaseInfo *bi, REG(d0) LONG pen)
-makeproto ASM REGFUNC2(VOID, BSetDPenB,
-	REGPARAM(A0, struct BaseInfo *, bi),
-	REGPARAM(D0, LONG, pen))
+makeproto ASM VOID BSetDPenB(REG(a0) struct BaseInfo *bi, REG(d0) LONG pen)
 {
    FSetBPen(bi->bi_RPort, bi->bi_Pens[pen]);
 }
-REGFUNC_END
 
-//makeproto ASM VOID BSetPenB(REG(a0) struct BaseInfo *bi, REG(d0) ULONG pen)
-makeproto ASM REGFUNC2(VOID, BSetPenB,
-	REGPARAM(A0, struct BaseInfo *, bi),
-	REGPARAM(D0, ULONG, pen))
+makeproto ASM VOID BSetPenB(REG(a0) struct BaseInfo *bi, REG(d0) ULONG pen)
 {
    FSetBPen(bi->bi_RPort, pen);
 }
-REGFUNC_END
 
-//makeproto ASM VOID BSetDrMd(REG(a0) struct BaseInfo *bi, REG(d0) ULONG drmd)
-makeproto ASM REGFUNC2(VOID, BSetDrMd,
-	REGPARAM(A0, struct BaseInfo *, bi),
-	REGPARAM(D0, ULONG, drmd))
+makeproto ASM VOID BSetDrMd(REG(a0) struct BaseInfo *bi, REG(d0) ULONG drmd)
 {
    FSetDrMd(bi->bi_RPort, drmd);
 }
-REGFUNC_END
 
-//makeproto ASM VOID BSetFont(REG(a0) struct BaseInfo *bi, REG(a1) struct TextFont *tf)
-makeproto ASM REGFUNC2(VOID, BSetFont,
-	REGPARAM(A0, struct BaseInfo *, bi),
-	REGPARAM(A1, struct TextFont *, tf))
+makeproto ASM VOID BSetFont(REG(a0) struct BaseInfo *bi, REG(a1) struct TextFont *tf)
 {
    FSetFont(bi->bi_RPort, tf);
 }
-REGFUNC_END
 
-//makeproto ASM VOID BSetFontStyle(REG(a0) struct BaseInfo *bi, REG(d0) ULONG style)
-makeproto ASM REGFUNC2(VOID, BSetFontStyle,
-	REGPARAM(A0, struct BaseInfo *, bi),
-	REGPARAM(D0, ULONG, style))
+makeproto ASM VOID BSetFontStyle(REG(a0) struct BaseInfo *bi, REG(d0) ULONG style)
 {
    SetSoftStyle(bi->bi_RPort, style, AskSoftStyle(bi->bi_RPort));
 }
-REGFUNC_END
 
-//makeproto ASM VOID BSetAfPt(REG(a0) struct BaseInfo *bi, REG(a1) UWORD *pat, REG(d0) ULONG size)
-makeproto ASM REGFUNC3(VOID, BSetAfPt,
-	REGPARAM(A0, struct BaseInfo *, bi),
-	REGPARAM(A1, UWORD *, pat),
-	REGPARAM(D0, ULONG, size))
+makeproto ASM VOID BSetAfPt(REG(a0) struct BaseInfo *bi, REG(a1) UWORD *pat, REG(d0) ULONG size)
 {
    SetAfPt(bi->bi_RPort, pat, size);
 }
-REGFUNC_END
 
-//makeproto ASM VOID BClearAfPt(REG(a0) struct BaseInfo *bi)
-makeproto ASM REGFUNC1(VOID, BClearAfPt,
-	REGPARAM(A0, struct BaseInfo *, bi))
+makeproto ASM VOID BClearAfPt(REG(a0) struct BaseInfo *bi)
 {
    SetAfPt(bi->bi_RPort, NULL, 0);
 }
-REGFUNC_END
 
-//makeproto ASM VOID BSetDrPt(REG(a0) struct BaseInfo *bi, REG(d0) ULONG pat)
-makeproto ASM REGFUNC2(VOID, BSetDrPt,
-	REGPARAM(A0, struct BaseInfo *, bi),
-	REGPARAM(D0, ULONG, pat))
+makeproto ASM VOID BSetDrPt(REG(a0) struct BaseInfo *bi, REG(d0) ULONG pat)
 {
    SetDrPt(bi->bi_RPort, pat & 0xFFFF);
 }
-REGFUNC_END
 
-//makeproto ASM VOID BDrawImageState(REG(a0) struct BaseInfo *bi, REG(a1) Object *image,
-//   REG(d0) ULONG x, REG(d1) ULONG y, REG(d2) ULONG state)
-makeproto ASM REGFUNC5(VOID, BDrawImageState,
-	REGPARAM(A0, struct BaseInfo *, bi),
-	REGPARAM(A1, Object *, image),
-	REGPARAM(D0, ULONG, x),
-	REGPARAM(D1, ULONG, y),
-	REGPARAM(D2, ULONG, state))
+makeproto ASM VOID BDrawImageState(REG(a0) struct BaseInfo *bi, REG(a1) Object *image,
+   REG(d0) ULONG x, REG(d1) ULONG y, REG(d2) ULONG state)
 {
    //tprintf("%08lx %08lx %ld %ld %04lx %08lx\n", /4*
    DrawImageState(bi->bi_RPort, IMAGE(image), x, y, state, bi->bi_DrInfo);
 }
-REGFUNC_END

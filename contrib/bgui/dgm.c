@@ -65,15 +65,16 @@ typedef struct {
 METHOD(DGMClassSet, struct opSet *, ops)
 {
    DD                  *dd = INST_DATA(cl, obj);
-   struct TagItem      *tag, *tstate = ops->ops_AttrList;
+   struct TagItem      *tag;
+   const struct TagItem *tstate = ops->ops_AttrList;
    struct IntuiMessage *imsg;
-   ULONG               *ptr = NULL, *res;
+   ULONG               *ptr = NULL, *res = NULL;
    BOOL                 domethod = FALSE;
 
    /*
     * Scan tags.
     */
-   while (tag = NextTagItem(&tstate))
+   while ((tag = NextTagItem(&tstate)))
    {
       switch (tag->ti_Tag)
       {
@@ -94,7 +95,7 @@ METHOD(DGMClassSet, struct opSet *, ops)
 	    break;
 	    
 	 case DGM_IntuiMsg:
-	    if (imsg = (struct IntuiMessage *)(tag->ti_Data))
+	    if ((imsg = (struct IntuiMessage *)(tag->ti_Data)))
 	    {
 	       dd->dd_Window           = imsg->IDCMPWindow;
 	       
@@ -155,9 +156,9 @@ METHOD(DGMClassSet, struct opSet *, ops)
 	  * Return result for compatibility reasons.
 	  */
       };
-      return *res;
+      return (IPTR)(*res);
    }
-   return 1;
+   return (IPTR)1;
 }
 METHOD_END
 ///
@@ -198,7 +199,7 @@ makeproto SAVEDS ASM ULONG BGUI_DoGadgetMethodA( REG(a0) Object *obj, REG(a1) st
       /*
        * Create DGMClass object.
        */
-      if (dgm = BGUI_NewObjectA(BGUI_DGM_OBJECT, NULL))
+      if ((dgm = BGUI_NewObjectA(BGUI_DGM_OBJECT, NULL)))
       {
 	 /*
 	  * Send of method to the target. We simple pass the DGMClass
@@ -223,7 +224,7 @@ makeproto SAVEDS ASM ULONG BGUI_DoGadgetMethodA( REG(a0) Object *obj, REG(a1) st
     * Fall back to the AsmDoMethod() call if
     * an important argument is missing.
     */
-   return AsmDoMethodA(obj, msg);
+   return (ULONG)AsmDoMethodA(obj, msg);
 
    AROS_LIBFUNC_EXIT
 }
@@ -255,7 +256,7 @@ METHOD(DGMClassGoActive, struct gpInput *, gpi2)
       SetGadgetAttrs((struct Gadget *)obj, dd->dd_Window, NULL,
 	 DGM_Result, &rc, DGM_Object, target, DGM_DoMethod, &gpi, TAG_END);
    };
-   return rc;
+   return (IPTR)rc;
 }
 METHOD_END
 ///
@@ -266,7 +267,7 @@ METHOD(DGMClassGoInactive, Msg, msg)
    ULONG        rc   = 0, id, mouseact = 0, report = FALSE;
    Object      *win  = NULL, *target;
 
-   if (target = dd->dd_Target)
+   if ((target = dd->dd_Target))
    {
       Get_Attr(target, BT_ReportID, &report);
       Get_Attr(target, BT_ParentWindow, (ULONG *)&win);
@@ -290,7 +291,7 @@ METHOD(DGMClassGoInactive, Msg, msg)
 	 };
       };
    };
-   return rc;
+   return (IPTR)rc;
 }
 METHOD_END
 ///
@@ -299,11 +300,11 @@ METHOD_END
  * Class function table.
  */
 STATIC DPFUNC ClassFunc[] = {
-   OM_SET,                 (FUNCPTR)DGMClassSet,
-   GM_GOACTIVE,            (FUNCPTR)DGMClassGoActive,
-   GM_HANDLEINPUT,         (FUNCPTR)DGMClassGoActive,
-   GM_GOINACTIVE,          (FUNCPTR)DGMClassGoInactive,
-   DF_END,                 NULL
+   { OM_SET,                 DGMClassSet },
+   { GM_GOACTIVE,            DGMClassGoActive },
+   { GM_HANDLEINPUT,         DGMClassGoActive },
+   { GM_GOINACTIVE,          DGMClassGoInactive },
+   { DF_END,                 NULL }
 };
 
 /*

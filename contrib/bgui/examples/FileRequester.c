@@ -42,7 +42,7 @@ ULONG GetAttrs( Object *obj, ULONG tag1, ... )
         struct TagItem          *tstate = ( struct TagItem * )&tag1, *tag;
         ULONG                    num = 0L;
 
-        while ( tag = NextTagItem( &tstate ))
+        while (( tag = NextTagItem( &tstate )))
                 num += GetAttr( tag->ti_Tag, obj, ( ULONG * )tag->ti_Data );
 
         return( num );
@@ -53,7 +53,7 @@ ULONG GetAttrs( Object *obj, ULONG tag1, ... )
 **/
 ULONG Req( UBYTE *gadgets, UBYTE *body, ... )
 {
-        struct bguiRequest      req = { NULL };
+        struct bguiRequest      req = { };
 
         req.br_GadgetFormat     = gadgets;
         req.br_TextFormat       = body;

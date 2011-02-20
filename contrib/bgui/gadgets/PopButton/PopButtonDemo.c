@@ -59,27 +59,27 @@
  *	Menu entries.
  */
 struct PopMenu Project[] = {
-	"New",          0, 0,
-	"Open...",      0, 0,
-	PMB_BARLABEL,	0, 0,
-	"Save",         0, 0,
-	"Save As...",   0, 0,
-	PMB_BARLABEL,	0, 0,
-	"Print",        0, 0,
-	"Print As...",  0, 0,
-	PMB_BARLABEL,	0, 0,
-	"About...",     0, 0,
-	PMB_BARLABEL,	0, 0,
-	"Quit",         0, 0,
-	NULL,		0, 0 };
+	{ "New",          0, 0 },
+	{ "Open...",      0, 0 },
+	{ PMB_BARLABEL,	0, 0 },
+	{ "Save",         0, 0 },
+	{ "Save As...",   0, 0 },
+	{ PMB_BARLABEL,	0, 0 },
+	{ "Print",        0, 0 },
+	{ "Print As...",  0, 0 },
+	{ PMB_BARLABEL,	0, 0 },
+	{ "About...",     0, 0 },
+	{ PMB_BARLABEL,	0, 0 },
+	{ "Quit",         0, 0 },
+	{ NULL,		0, 0 } };
 
 struct PopMenu	Edit[] = {
-	"Cut",          0, 0,
-	"Copy",         0, 0,
-	"Paste",        0, 0,
-	PMB_BARLABEL,	0, 0,
-	"Erase",        0, 0,
-	NULL,		0, 0 };
+	{ "Cut",          0, 0 },
+	{ "Copy",         0, 0 },
+	{ "Paste",        0, 0 },
+	{ PMB_BARLABEL,	0, 0 },
+	{ "Erase",        0, 0 },
+	{ NULL,		0, 0 } };
 
 /*
  *	This menu has checkable items and mutual exclusion.
@@ -89,13 +89,13 @@ struct PopMenu	Edit[] = {
  *	mutually-exclude the first item.
  */
 struct PopMenu	Exclude[] = {
-	"Uncheck below",        PMF_CHECKIT,                    (1<<2)|(1<<3)|(1<<4)|(1<<5),
-	PMB_BARLABEL,		0,				0,
-	"Item 1",               PMF_CHECKIT|PMF_CHECKED,        (1<<0),
-	"Item 2",               PMF_CHECKIT|PMF_CHECKED,        (1<<0),
-	"Item 3",               PMF_CHECKIT|PMF_CHECKED,        (1<<0),
-	"Item 4",               PMF_CHECKIT|PMF_CHECKED,        (1<<0),
-	NULL,			0,				0
+    { "Uncheck below",        PMF_CHECKIT,                    (1<<2)|(1<<3)|(1<<4)|(1<<5), },
+    { PMB_BARLABEL,		0,				0, },
+    { "Item 1",               PMF_CHECKIT|PMF_CHECKED,        (1<<0), },
+    { "Item 2",               PMF_CHECKIT|PMF_CHECKED,        (1<<0), },
+    { "Item 3",               PMF_CHECKIT|PMF_CHECKED,        (1<<0), },
+    { "Item 4",               PMF_CHECKIT|PMF_CHECKED,        (1<<0), },
+    { NULL,			0,				0 },
 };
 
 /*
@@ -103,9 +103,9 @@ struct PopMenu	Exclude[] = {
  *	when selected. (NMC)
  */
 struct PopMenu	Able[] = {
-	"Enable below",		0,		0,
-	"Enable above",		PMF_DISABLED,	0,
-	NULL,			0,		0
+   {	"Enable below",		0,		0, },
+   {	"Enable above",		PMF_DISABLED,	0, },
+   {	NULL,			0,		0, },
 };
 
 /*
@@ -145,7 +145,7 @@ int main( int argc, char **argv )
 	IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library",39);
 	if (IntuitionBase)
 #endif
-	if ( BGUIBase = OpenLibrary( BGUINAME, BGUIVERSION )) {
+	if (( BGUIBase = OpenLibrary( BGUINAME, BGUIVERSION ))) {
 			/*
 			 *	Create the popmenu buttons.
 			 */
@@ -246,7 +246,7 @@ int main( int argc, char **argv )
 				    GadgetKey( WO_Window, GO_PMB2,  "x" ) &&
 				    GadgetKey( WO_Window, GO_PMB3,  "n" )
 				    ) {
-					if ( window = WindowOpen( WO_Window )) {
+					if (( window = WindowOpen( WO_Window ))) {
 						GetAttr( WINDOW_SigMask, WO_Window, &signal );
 						do {
 							Wait( signal );
@@ -302,6 +302,8 @@ int main( int argc, char **argv )
 		}
 		CloseLibrary( BGUIBase );
 	}
+
+	return 0;
 }
 
 #ifdef _DCC

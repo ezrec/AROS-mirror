@@ -138,7 +138,7 @@ refreshmethod = 0;
 
 tn2 = TV_MatchNextEntry(tv,tve->tve_Entry,tve->tve_Which,tve->tve_Flags,&tva);
 
-while(tn = tn2)		/* assign and test */
+while((tn = tn2))		/* assign and test */
 	{
 	/*
 	 * Find next match now, before we remove this one
@@ -167,7 +167,7 @@ while(tn = tn2)		/* assign and test */
 	 * Now remove the entry from the tree
 	 */
 
-	if (pn = ParentOf(tn))
+	if ((pn = ParentOf(tn)))
 		pn->tn_NumChildren--;
 	tv->tv_NumEntries--;
 	Remove((NODEPTR) tn);

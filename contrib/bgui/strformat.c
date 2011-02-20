@@ -72,12 +72,9 @@
 extern struct LocaleBase *LocaleBase;
 
 
-//makeproto ASM ULONG CompStrlenF(REG(a0) UBYTE *fstring, REG(a1) ULONG *args)
-makeproto ASM REGFUNC2(ULONG, CompStrlenF,
-        REGPARAM(A0, UBYTE *, fstring),
-        REGPARAM(A1, ULONG *, args))
+makeproto ASM ULONG CompStrlenF(REG(a0) UBYTE *fstring, REG(a1) IPTR *args)
 {
-   struct Hook    hook = { NULL, NULL, (HOOKFUNC)LHook_Count, NULL, (APTR)0 };
+   struct Hook    hook = { { NULL, NULL}, (HOOKFUNC)LHook_Count, NULL, (APTR)0 };
    struct Locale *loc;
 
    /*
@@ -99,15 +96,10 @@ makeproto ASM REGFUNC2(ULONG, CompStrlenF,
    };
    return StrLenfA(fstring, args);
 }
-REGFUNC_END
 
-//makeproto ASM VOID DoSPrintF(REG(a0) UBYTE *buffer, REG(a1) UBYTE *fstring, REG(a2) ULONG *args)
-makeproto ASM REGFUNC3(VOID, DoSPrintF,
-        REGPARAM(A0, UBYTE *, buffer),
-        REGPARAM(A1, UBYTE *, fstring),
-        REGPARAM(A2, ULONG *, args))
+makeproto ASM VOID DoSPrintF(REG(a0) UBYTE *buffer, REG(a1) UBYTE *fstring, REG(a2) IPTR *args)
 {
-   struct Hook    hook = { NULL, NULL, (HOOKFUNC)LHook_Format, NULL, NULL };
+   struct Hook    hook = { {NULL, NULL}, (HOOKFUNC)LHook_Format, NULL, NULL };
    struct Locale *loc;
 
    /*
@@ -133,7 +125,6 @@ makeproto ASM REGFUNC3(VOID, DoSPrintF,
    else
       SPrintfA(buffer, fstring, args);
 }
-REGFUNC_END
 
 #ifdef __AROS__
 #else

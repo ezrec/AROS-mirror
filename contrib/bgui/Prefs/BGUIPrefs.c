@@ -109,7 +109,7 @@ struct	NewMenu	 Menus[] =	{
 };
 
 
-ULONG	 prf_drawer,	//	= NULL,
+IPTR 	 prf_drawer,	//	= NULL,
 		 prf_file;		//	= NULL;
 
 // Spacing control
@@ -158,10 +158,10 @@ ULONG
 GetFilename( int mode )
 {
 	Object				*filereq;
-	ULONG				 pf = NULL;
+	IPTR 				 pf = (IPTR)NULL;
 
 	if( !prf_drawer )
-		prf_drawer = ( ULONG )&PrefDir;
+		prf_drawer = ( IPTR )&PrefDir;
 
 	if( !mode ) {
 		filereq = FileReqObject,
@@ -227,7 +227,7 @@ void closelibs(void)
 int main( int count, char **args )
 {
 
-	struct	bguiRequest	 AboutRequest = { NULL };
+	struct	bguiRequest	 AboutRequest = { };
 	Object				*WO_Window;
 	ULONG				 rc,
 						 pf,
@@ -245,16 +245,16 @@ int main( int count, char **args )
 #endif
 
 	// Open the library, at least version 41 required.
-	if( BGUIBase = OpenLibrary( "bgui.library", 41 )) {
+	if(( BGUIBase = OpenLibrary( "bgui.library", 41 ))) {
 
 		// Get the default settings.
 		GetDefaults();
 
 		// Create the window object.
-		if( WO_Window = InitBGUIPrefs(INITIAL_PAGE) ) {
+		if(( WO_Window = InitBGUIPrefs(INITIAL_PAGE) )) {
 
 			// Open the window.
-			if( window = WindowOpen( WO_Window ) ) {
+			if(( window = WindowOpen( WO_Window ) )) {
 
 				// Get a signal for our window.
 				GetAttr( WINDOW_SigMask, WO_Window, &signal );

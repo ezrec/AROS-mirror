@@ -151,7 +151,7 @@ TV_UpdateSelected(tv);
  * Find each treenode corresponding to this tvEntry.
  */
 
-while(tn = TV_MatchNextEntry(tv,tve->tve_Entry,tve->tve_Which,flags,&tva))
+while((tn = TV_MatchNextEntry(tv,tve->tve_Entry,tve->tve_Which,flags,&tva)))
 	{
 	/*
 	 * User wants us to make the entry visible?

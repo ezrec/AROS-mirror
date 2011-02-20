@@ -138,43 +138,43 @@ AROS_LD1(BPTR, LibExpunge,
 AROS_LD0(LONG, LibVoid,
      struct Library *, lib, 4, BGUI);
 
-   extern BGUI_BGUI_GetClassPtr();
-   extern BGUI_BGUI_NewObjectA();
-   extern BGUI_BGUI_RequestA();
-   extern BGUI_BGUI_Help();
-   extern BGUI_BGUI_LockWindow();
-   extern BGUI_BGUI_UnlockWindow();
-   extern BGUI_BGUI_DoGadgetMethodA();
+   extern VOID BGUI_BGUI_GetClassPtr();
+   extern VOID BGUI_BGUI_NewObjectA();
+   extern VOID BGUI_BGUI_RequestA();
+   extern VOID BGUI_BGUI_Help();
+   extern VOID BGUI_BGUI_LockWindow();
+   extern VOID BGUI_BGUI_UnlockWindow();
+   extern VOID BGUI_BGUI_DoGadgetMethodA();
    /*
     * Private routines.
     */
-   extern BGUI_BGUI_AllocPoolMem();
-   extern BGUI_BGUI_FreePoolMem();
+   extern VOID BGUI_BGUI_AllocPoolMem();
+   extern VOID BGUI_BGUI_FreePoolMem();
    /*
     * Public routines.
     */ 
-   extern BGUI_BGUI_AllocBitMap();
-   extern BGUI_BGUI_FreeBitMap();
-   extern BGUI_BGUI_CreateRPortBitMap();
-   extern BGUI_BGUI_FreeRPortBitMap();
-   extern BGUI_BGUI_InfoTextSize();
-   extern BGUI_BGUI_InfoText();
-   extern BGUI_BGUI_GetLocaleStr();
-   extern BGUI_BGUI_GetCatalogStr();
-   extern BGUI_BGUI_FillRectPattern();
-   extern BGUI_BGUI_PostRender();
-   extern BGUI_BGUI_MakeClassA();
-   extern BGUI_BGUI_FreeClass();
-   extern BGUI_BGUI_PackStructureTags();
-   extern BGUI_BGUI_UnpackStructureTags();
+   extern VOID BGUI_BGUI_AllocBitMap();
+   extern VOID BGUI_BGUI_FreeBitMap();
+   extern VOID BGUI_BGUI_CreateRPortBitMap();
+   extern VOID BGUI_BGUI_FreeRPortBitMap();
+   extern VOID BGUI_BGUI_InfoTextSize();
+   extern VOID BGUI_BGUI_InfoText();
+   extern VOID BGUI_BGUI_GetLocaleStr();
+   extern VOID BGUI_BGUI_GetCatalogStr();
+   extern VOID BGUI_BGUI_FillRectPattern();
+   extern VOID BGUI_BGUI_PostRender();
+   extern VOID BGUI_BGUI_MakeClassA();
+   extern VOID BGUI_BGUI_FreeClass();
+   extern VOID BGUI_BGUI_PackStructureTags();
+   extern VOID BGUI_BGUI_UnpackStructureTags();
    /*
     * Private routines.
     */
-   extern BGUI_BGUI_GetDefaultTags();
-   extern BGUI_BGUI_DefaultPrefs();
-   extern BGUI_BGUI_LoadPrefs();
-   extern BGUI_BGUI_AllocPoolMemDebug();
-   extern BGUI_BGUI_FreePoolMemDebug();
+   extern VOID BGUI_BGUI_GetDefaultTags();
+   extern VOID BGUI_BGUI_DefaultPrefs();
+   extern VOID BGUI_BGUI_LoadPrefs();
+   extern VOID BGUI_BGUI_AllocPoolMemDebug();
+   extern VOID BGUI_BGUI_FreePoolMemDebug();
 #endif
 
 /*
@@ -282,7 +282,7 @@ STATIC const IPTR Vectors[] = {
    /*
     * Table end marker.
     */
-   ~0L
+   (IPTR)~0L
 };
 
 /*
@@ -325,7 +325,7 @@ makeproto VOID InitLocale(void)
       /*
        * Open up the catalog.
        */
-      if ( Catalog = OpenCatalog( NULL, "BGUI.catalog", OC_BuiltInLanguage, "english", OC_Version, 2, TAG_END )) {
+      if ( (Catalog = OpenCatalog( NULL, "BGUI.catalog", OC_BuiltInLanguage, "english", OC_Version, 2, TAG_END ))) {
          /*
           * Get strings.
           */
@@ -390,11 +390,7 @@ ASM REGFUNC3(struct Library *, LibInit,
    WorkbenchBase  = OpenLibrary("workbench.library",     37);
    DataTypesBase  = OpenLibrary("datatypes.library",     39);
 
-#ifdef __AROS__
-#warning Commented InitInputStack
-#else
    InitInputStack();
-#endif
 
 #ifdef OUTDATE_BUILD
       if(DOSBase)
@@ -422,7 +418,7 @@ ASM REGFUNC3(struct Library *, LibInit,
       /*
        * Create the library.
        */
-      if (BGUIBase = lib = MakeLibrary((APTR)Vectors, NULL, NULL, sizeof(struct Library), NULL))
+      if ((BGUIBase = lib = MakeLibrary((APTR)Vectors, NULL, NULL, sizeof(struct Library), NULL)))
       {
          /*
           * Initialize library structure.
@@ -517,13 +513,13 @@ makeproto SAVEDS ASM BPTR LibClose(REG(a6) struct Library *lib)
     * Remove the task from the member list.
     */
    if (!FreeTaskMember())
-      return NULL;
+      return BNULL;
 
    /*
     * Of course we do not expunge when we still have accessors.
     */
    if (lib->lib_OpenCnt && --lib->lib_OpenCnt)
-      return NULL;
+      return BNULL;
 
    /*
     * Delayed expunge pending?
@@ -539,7 +535,7 @@ makeproto SAVEDS ASM BPTR LibClose(REG(a6) struct Library *lib)
    /*
     * Otherwise we remain in memory.
     */
-   return NULL;
+   return BNULL;
     
    AROS_LIBFUNC_EXIT
 }
@@ -568,7 +564,7 @@ makeproto SAVEDS ASM BPTR LibExpunge(REG(a6) struct Library *lib)
        * Set delayed expunge flag.
        */
       lib->lib_Flags |= LIBF_DELEXP;
-      return NULL;
+      return BNULL;
    };
 
    /*
@@ -577,11 +573,7 @@ makeproto SAVEDS ASM BPTR LibExpunge(REG(a6) struct Library *lib)
    if (Catalog)
       CloseCatalog(Catalog);
 
-#ifdef __AROS__
-#warning Commented FreeInputStack
-#else
    FreeInputStack();
-#endif
 
    /*
     * Close system libraries.

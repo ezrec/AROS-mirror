@@ -86,7 +86,7 @@ AROS_LP4(VOID, BGUI_InfoTextSize,
 AROS_LP4(void, BGUI_InfoText,
 	AROS_LPA(struct RastPort *, rp, A0),
 	AROS_LPA(UBYTE *, text, A1),
-	AROS_LPA(struct IBOX *, bounds, A2),
+	AROS_LPA(struct IBox *, bounds, A2),
 	AROS_LPA(struct DrawInfo *, drawinfo, A3),
 	struct Library *, BGUIBase, 19, BGUI
 );
@@ -118,7 +118,7 @@ AROS_LP3(VOID, BGUI_PostRender,
 );	
 AROS_LP1(Class *, BGUI_MakeClassA,
 	AROS_LHA(struct TagItem *, tags, A0),
-	strcut Library *, BGUIBase, 24, BGUI
+	struct Library *, BGUIBase, 24, BGUI
 );
 AROS_LP1(BOOL, BGUI_FreeClass,
 	AROS_LPA(Class *, cl, A0),

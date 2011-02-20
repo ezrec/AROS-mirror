@@ -9,7 +9,7 @@ FILES := BGUIPrefs
 
 EXEDIR := $(BGUIPREFSDIR)
 
-USER_CFLAGS := -D_AROS -O2 -Wunused -Wall
+USER_CFLAGS := $(PARANOIA_CFLAGS)
 
 #MM bgui-prefs : includes linklibs
 

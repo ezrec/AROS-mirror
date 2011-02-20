@@ -63,7 +63,7 @@ METHOD(AslReqClassNew, struct opSet *, ops)
     * First we let the superclass
     * create the object.
     */
-   if (rc = AsmDoSuperMethodA(cl, obj, (Msg)ops))
+   if ((rc = AsmDoSuperMethodA(cl, obj, (Msg)ops)))
    {
       /*
        * Get us the instance data.
@@ -128,8 +128,9 @@ METHOD_END
 METHOD(AslReqClassSetUpdate, struct opSet *, ops)
 {
    AD             *ad = INST_DATA(cl, obj);
-   struct TagItem *tstate, *tags, *tag;
    ULONG           attr, data;
+   const struct TagItem *tstate;
+   struct TagItem *tags, *tag;
    BOOL            asl = FALSE;
 
    /*
@@ -139,7 +140,7 @@ METHOD(AslReqClassSetUpdate, struct opSet *, ops)
     */
    tstate = tags = CloneTagItems(ops->ops_AttrList);
 
-   while (tag = NextTagItem(&tstate))
+   while ((tag = NextTagItem(&tstate)))
    {
       attr = tag->ti_Tag;
       data = tag->ti_Data;
@@ -195,7 +196,7 @@ METHOD(AslReqClassGet, struct opGet *, opg)
    struct TagItem    *tag;
    ULONG              rc, attr = opg->opg_AttrID, *store = opg->opg_Storage;
    
-   if (tag = FindTagItem(attr, ad->ad_ASLTags))
+   if ((tag = FindTagItem(attr, ad->ad_ASLTags)))
    {
       *store = tag->ti_Data;
       rc = 1;
@@ -264,15 +265,15 @@ METHOD_END
  * Function table.
  */
 STATIC DPFUNC ClassFunc[] = {
-   OM_NEW,              (FUNCPTR)AslReqClassNew,
-   OM_SET,              (FUNCPTR)AslReqClassSetUpdate,
-   OM_UPDATE,           (FUNCPTR)AslReqClassSetUpdate,
-   OM_GET,              (FUNCPTR)AslReqClassGet,
-   OM_DISPOSE,          (FUNCPTR)AslReqClassDispose,
-   ASLM_ALLOCREQUEST,   (FUNCPTR)AslReqClassAllocRequest,
-   ASLM_REQUEST,        (FUNCPTR)AslReqClassRequest,
-   ASLM_FREEREQUEST,    (FUNCPTR)AslReqClassFreeRequest,
-   DF_END,              NULL
+   { OM_NEW,              AslReqClassNew, },
+   { OM_SET,              AslReqClassSetUpdate, },
+   { OM_UPDATE,           AslReqClassSetUpdate, },
+   { OM_GET,              AslReqClassGet, },
+   { OM_DISPOSE,          AslReqClassDispose, },
+   { ASLM_ALLOCREQUEST,   AslReqClassAllocRequest, },
+   { ASLM_REQUEST,        AslReqClassRequest, },
+   { ASLM_FREEREQUEST,    AslReqClassFreeRequest, },
+   { DF_END,              NULL },
 };
 
 /*

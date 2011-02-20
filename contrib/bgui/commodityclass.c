@@ -85,9 +85,9 @@ typedef struct {
  * For PackBoolTags().
  */
 STATIC struct TagItem BoolTags[] = {
-   COMM_Unique,       NBU_UNIQUE,
-   COMM_Notify,       NBU_NOTIFY,
-   TAG_DONE
+   { COMM_Unique,       NBU_UNIQUE, },
+   { COMM_Notify,       NBU_NOTIFY, },
+   { TAG_DONE },
 };
 
 /*
@@ -95,70 +95,20 @@ STATIC struct TagItem BoolTags[] = {
  */
 
 /*
-STATIC ASM ULONG CommClassNew(       REG(a0) Class *, REG(a2) Object *, REG(a1) struct opSet *      );
-STATIC ASM ULONG CommClassDispose(   REG(a0) Class *, REG(a2) Object *, REG(a1) Msg                     );
-STATIC ASM ULONG CommClassGet(       REG(a0) Class *, REG(a2) Object *, REG(a1) struct opGet *      );
-STATIC ASM ULONG CommClassAddHotkey(    REG(a0) Class *, REG(a2) Object *, REG(a1) struct cmAddHotkey *    );
-STATIC ASM ULONG CommClassRemHotkey(    REG(a0) Class *, REG(a2) Object *, REG(a1) struct cmDoKeyCommand * );
-STATIC ASM ULONG CommClassDisableHotkey( REG(a0) Class *, REG(a2) Object *, REG(a1) struct cmDoKeyCommand * );
-STATIC ASM ULONG CommClassEnableHotkey(  REG(a0) Class *, REG(a2) Object *, REG(a1) struct cmDoKeyCommand * );
-STATIC ASM ULONG CommClassEnableBroker(  REG(a0) Class *, REG(a2) Object *, REG(a1) Msg                     );
-STATIC ASM ULONG CommClassDisableBroker( REG(a0) Class *, REG(a2) Object *, REG(a1) Msg                     );
-STATIC ASM ULONG CommClassMsgInfo(   REG(a0) Class *, REG(a2) Object *, REG(a1) struct cmMsgInfo *     );
-*/
-
-STATIC ASM REGFUNCPROTO3(ULONG, CommClassNew, REGPARAM(A0, Class *, cl), REGPARAM(A2, Object *, obj), REGPARAM(A1, struct opSet *, ops));
-STATIC ASM REGFUNCPROTO3(ULONG, CommClassDispose, REGPARAM(A0, Class *, cl), REGPARAM(A2, Object *, obj), REGPARAM(A1, Msg, msg));
-STATIC ASM REGFUNCPROTO3(ULONG, CommClassGet, REGPARAM(A0, Class *, cl), REGPARAM(A2, Object *, obj), REGPARAM(A1, struct opGet *, opg));
-STATIC ASM REGFUNCPROTO3(ULONG, CommClassAddHotkey, REGPARAM(A0, Class *, cl), REGPARAM(A2, Object *, obj), REGPARAM(A1, struct cmAddHotkey *, cah));
-STATIC ASM REGFUNCPROTO3(ULONG, CommClassRemHotkey, REGPARAM(A0, Class *, cl), REGPARAM(A2, Object *, obj), REGPARAM(A1, struct cmDoKeyCommand *, com));
-STATIC ASM REGFUNCPROTO3(ULONG, CommClassDisableHotkey, REGPARAM(A0, Class *, cl), REGPARAM(A2, Object *, obj), REGPARAM(A1, struct cmDoKeyCommand *, com));
-STATIC ASM REGFUNCPROTO3(ULONG, CommClassEnableHotkey, REGPARAM(A0, Class *, cl), REGPARAM(A2, Object *, obj), REGPARAM(A1, struct cmDoKeyCommand *, com));
-STATIC ASM REGFUNCPROTO3(ULONG, CommClassEnableBroker, REGPARAM(A0, Class *, cl), REGPARAM(A2, Object *, obj), REGPARAM(A1, Msg, msg));
-STATIC ASM REGFUNCPROTO3(ULONG, CommClassDisableBroker, REGPARAM(A0, Class *, cl), REGPARAM(A2, Object *, obj), REGPARAM(A1, Msg, msg));
-STATIC ASM REGFUNCPROTO3(ULONG, CommClassMsgInfo, REGPARAM(A0, Class *, cl), REGPARAM(A2, Object *, obj), REGPARAM(A1, struct cmMsgInfo*, cmi));
-
-/*
- * Class function table.
- */
-STATIC DPFUNC ClassFunc[] = {
-   OM_NEW,                 (FUNCPTR)CommClassNew,
-   OM_GET,                 (FUNCPTR)CommClassGet,
-   OM_DISPOSE,    (FUNCPTR)CommClassDispose,
-   CM_ADDHOTKEY,     (FUNCPTR)CommClassAddHotkey,
-   CM_REMHOTKEY,     (FUNCPTR)CommClassRemHotkey,
-   CM_DISABLEHOTKEY, (FUNCPTR)CommClassDisableHotkey,
-   CM_ENABLEHOTKEY,  (FUNCPTR)CommClassEnableHotkey,
-   CM_DISABLEBROKER, (FUNCPTR)CommClassDisableBroker,
-   CM_ENABLEBROKER,  (FUNCPTR)CommClassEnableBroker,
-   CM_MSGINFO,    (FUNCPTR)CommClassMsgInfo,
-   DF_END,                 NULL
-};
-
-/*
- * Simple class initialization.
- */
-makeproto Class *InitCxClass(void)
-{
-   return BGUI_MakeClass(CLASS_ObjectSize, sizeof(CD),
-                         CLASS_DFTable,    ClassFunc,
-                         TAG_DONE);
-}
-
-/*
  * Create a shiny new object.
  */
 METHOD(CommClassNew, struct opSet *, ops)
 {
    CD                *cd;
-   struct TagItem    *tstate = ops->ops_AttrList, *tag;
    ULONG              rc, un = NBU_UNIQUE | NBU_NOTIFY, data;
+   const struct TagItem *tstate = ops->ops_AttrList;
+   struct TagItem    *tag;
 
    /*
     * First we let the superclass
     * setup an object.
     */
-   if (rc = AsmDoSuperMethodA(cl, obj, (Msg)ops))
+   if ((rc = AsmDoSuperMethodA(cl, obj, (Msg)ops)))
    {
       /*
        * Get the instance data.
@@ -173,14 +123,14 @@ METHOD(CommClassNew, struct opSet *, ops)
       /*
        * Get us a message port.
        */
-      if (cd->cd_Broker.nb_Port = CreateMsgPort())
+      if ((cd->cd_Broker.nb_Port = CreateMsgPort()))
       {
          /*
           * Initialize the broker.
           */
          cd->cd_Broker.nb_Version = NB_VERSION;
 
-         while (tag = NextTagItem(&tstate))
+         while ((tag = NextTagItem(&tstate)))
          {
             data = tag->ti_Data;
             switch (tag->ti_Tag)
@@ -216,7 +166,7 @@ METHOD(CommClassNew, struct opSet *, ops)
          /*
           * Setup broker.
           */
-         if (cd->cd_BrokerPtr = CxBroker(&cd->cd_Broker, NULL))
+         if ((cd->cd_BrokerPtr = CxBroker(&cd->cd_Broker, NULL)))
             return rc;
       }
       /*
@@ -224,7 +174,7 @@ METHOD(CommClassNew, struct opSet *, ops)
        */
       AsmCoerceMethod(cl, (Object *)rc, OM_DISPOSE);
    }
-   return NULL;
+   return 0;
 }
 METHOD_END
 
@@ -241,7 +191,7 @@ METHOD(CommClassDispose, Msg,  msg)
    /*
     * Scan through the list of keys.
     */
-   while ( key = ( KEY * )RemHead(( struct List * )&cd->cd_Hotkeys )) {
+   while (( key = ( KEY * )RemHead(( struct List * )&cd->cd_Hotkeys ))) {
       /*
        * Enabled?
        */
@@ -273,8 +223,8 @@ METHOD(CommClassDispose, Msg,  msg)
    /*
     * Strip the remaining messages.
     */
-   if ( mp = cd->cd_Broker.nb_Port ) {
-      while ( tmp = GetMsg( mp )) ReplyMsg( tmp );
+   if (( mp = cd->cd_Broker.nb_Port )) {
+      while (( tmp = GetMsg( mp ))) ReplyMsg( tmp );
       DeleteMsgPort( mp );
    }
 
@@ -289,11 +239,7 @@ METHOD_END
  * They want something.
  */
 
-//STATIC ASM ULONG CommClassGet( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct opGet *opg )
-STATIC ASM REGFUNC3(ULONG, CommClassGet,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct opGet *, opg))
+STATIC METHOD(CommClassGet, struct opGet *, opg)
 {
    CD       *cd = ( CD * )INST_DATA( cl, obj );
    ULONG        rc = 1L, *store = opg->opg_Storage;
@@ -314,15 +260,12 @@ STATIC ASM REGFUNC3(ULONG, CommClassGet,
    }
    return( rc );
 }
-REGFUNC_END
+METHOD_END
 
 /*
  * Search for a key by it's ID.
  */
-//STATIC ASM KEY *FindKey( REG(a0) KEYLIST *kl, REG(d0) ULONG keyID )
-STATIC ASM REGFUNC2(KEY *, FindKey,
-	REGPARAM(A0, KEYLIST *, kl),
-	REGPARAM(D0, ULONG, keyID))
+STATIC ASM KEY *FindKey( REG(a0) KEYLIST *kl, REG(d0) ULONG keyID )
 {
    KEY         *key;
 
@@ -332,17 +275,12 @@ STATIC ASM REGFUNC2(KEY *, FindKey,
    }
    return( NULL );
 }
-REGFUNC_END
 
 /*
  * Add a hotkey to the list.
  */
  
-//STATIC ASM ULONG CommClassAddHotkey( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct cmAddHotkey *cah )
-STATIC ASM REGFUNC3(ULONG, CommClassAddHotkey,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct cmAddHotkey *, cah))
+STATIC METHOD(CommClassAddHotkey, struct cmAddHotkey *, cah)
 {
    CD       *cd = ( CD * )INST_DATA( cl, obj );
    KEY         *key;
@@ -360,11 +298,11 @@ STATIC ASM REGFUNC3(ULONG, CommClassAddHotkey,
       /*
        * Allocate a KEY structure.
        */
-      if ( key = ( KEY * )BGUI_AllocPoolMem( sizeof( KEY ))) {
+      if (( key = ( KEY * )BGUI_AllocPoolMem( sizeof( KEY )))) {
          /*
           * Setup the key.
           */
-         if ( key->k_Object = HotKey( cah->cah_InputDescription, cd->cd_Broker.nb_Port, cah->cah_KeyID )) {
+         if (( key->k_Object = HotKey( cah->cah_InputDescription, cd->cd_Broker.nb_Port, cah->cah_KeyID ))) {
             /*
              * Initialize the KEY structure.
              */
@@ -428,16 +366,12 @@ STATIC ASM REGFUNC3(ULONG, CommClassAddHotkey,
 
    return 0;
 }
-REGFUNC_END
+METHOD_END
 
 /*
  * Remove a hotkey from the list.
  */
-//STATIC ASM ULONG CommClassRemHotkey( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct cmDoKeyCommand *com )
-STATIC ASM REGFUNC3(ULONG, CommClassRemHotkey,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct cmDoKeyCommand *, com))
+STATIC METHOD(CommClassRemHotkey, struct cmDoKeyCommand *, com)
 {
    CD       *cd = ( CD * )INST_DATA( cl, obj );
    KEY         *key;
@@ -452,7 +386,7 @@ STATIC ASM REGFUNC3(ULONG, CommClassRemHotkey,
    /*
     * Locate the key.
     */
-   if ( key = FindKey( &cd->cd_Hotkeys, com->cdkc_KeyID )) {
+   if (( key = FindKey( &cd->cd_Hotkeys, com->cdkc_KeyID ))) {
       /*
        * Remove it from the list.
        */
@@ -484,16 +418,12 @@ STATIC ASM REGFUNC3(ULONG, CommClassRemHotkey,
 
    return( rc );
 }
-REGFUNC_END
+METHOD_END
 
 /*
  * Disable a hotkey.
  */
-//STATIC ASM ULONG CommClassDisableHotkey( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct cmDoKeyCommand *com )
-STATIC ASM REGFUNC3(ULONG, CommClassDisableHotkey,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct cmDoKeyCommand *, com))
+STATIC METHOD(CommClassDisableHotkey, struct cmDoKeyCommand *, com)
 {
    CD       *cd = ( CD * )INST_DATA( cl, obj );
    KEY         *key;
@@ -508,7 +438,7 @@ STATIC ASM REGFUNC3(ULONG, CommClassDisableHotkey,
    /*
     * Locate the key.
     */
-   if ( key = FindKey( &cd->cd_Hotkeys, com->cdkc_KeyID )) {
+   if (( key = FindKey( &cd->cd_Hotkeys, com->cdkc_KeyID ))) {
       /*
        * Only disable when the key is enabled.
        */
@@ -534,17 +464,13 @@ STATIC ASM REGFUNC3(ULONG, CommClassDisableHotkey,
 
    return( rc );
 }
-REGFUNC_END
+METHOD_END
 
 /*
  * Enable a hotkey.
  */
 
-//STATIC ASM ULONG CommClassEnableHotkey( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct cmDoKeyCommand *com )
-STATIC ASM REGFUNC3(ULONG, CommClassEnableHotkey,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct cmDoKeyCommand *, com))
+STATIC METHOD(CommClassEnableHotkey, struct cmDoKeyCommand *, com)
 {
    CD       *cd = ( CD * )INST_DATA( cl, obj );
    KEY         *key;
@@ -559,7 +485,7 @@ STATIC ASM REGFUNC3(ULONG, CommClassEnableHotkey,
    /*
     * Locate the key.
     */
-   if ( key = FindKey( &cd->cd_Hotkeys, com->cdkc_KeyID )) {
+   if (( key = FindKey( &cd->cd_Hotkeys, com->cdkc_KeyID ))) {
       /*
        * Only enable when the key is disabled.
        */
@@ -585,16 +511,12 @@ STATIC ASM REGFUNC3(ULONG, CommClassEnableHotkey,
 
    return( rc );
 }
-REGFUNC_END
+METHOD_END
 
 /*
  * Enable the broker.
  */
-//STATIC ASM ULONG CommClassEnableBroker( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg msg )
-STATIC ASM REGFUNC3(ULONG, CommClassEnableBroker,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, Msg, msg))
+STATIC METHOD(CommClassEnableBroker, Msg, msg)
 {
    CD       *cd = ( CD * )INST_DATA( cl, obj );
    ULONG        rc = 0L;
@@ -616,16 +538,12 @@ STATIC ASM REGFUNC3(ULONG, CommClassEnableBroker,
    }
    return( rc );
 }
-REGFUNC_END
+METHOD_END
 
 /*
  * Disable the broker.
  */
-//STATIC ASM ULONG CommClassDisableBroker( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg msg )
-STATIC ASM REGFUNC3(ULONG, CommClassDisableBroker,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, Msg, msg))
+STATIC METHOD(CommClassDisableBroker, Msg, msg)
 {
    CD       *cd = ( CD * )INST_DATA( cl, obj );
    ULONG        rc = 0L;
@@ -647,16 +565,12 @@ STATIC ASM REGFUNC3(ULONG, CommClassDisableBroker,
    }
    return( rc );
 }
-REGFUNC_END
+METHOD_END
 
 /*
  * Poll broker port.
  */
-//STATIC ASM ULONG CommClassMsgInfo( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct cmMsgInfo *cmi )
-STATIC ASM REGFUNC3(ULONG, CommClassMsgInfo,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct cmMsgInfo*, cmi))
+STATIC METHOD(CommClassMsgInfo, struct cmMsgInfo*, cmi)
 {
    CD          *cd = ( CD * )INST_DATA( cl, obj );
    CxMsg          *msg;
@@ -665,7 +579,7 @@ STATIC ASM REGFUNC3(ULONG, CommClassMsgInfo,
    /*
     * Get a message from the port.
     */
-   if ( msg = ( CxMsg * )GetMsg( cd->cd_Broker.nb_Port )) {
+   if (( msg = ( CxMsg * )GetMsg( cd->cd_Broker.nb_Port ))) {
       /*
        * Get message data.
        */
@@ -733,4 +647,33 @@ STATIC ASM REGFUNC3(ULONG, CommClassMsgInfo,
 
    return( rc );
 }
-REGFUNC_END
+METHOD_END
+
+/*
+ * Class function table.
+ */
+STATIC DPFUNC ClassFunc[] = {
+   { OM_NEW,           CommClassNew, },
+   { OM_GET,           CommClassGet, },
+   { OM_DISPOSE,       CommClassDispose, },
+   { CM_ADDHOTKEY,     CommClassAddHotkey, },
+   { CM_REMHOTKEY,     CommClassRemHotkey, },
+   { CM_DISABLEHOTKEY, CommClassDisableHotkey, },
+   { CM_ENABLEHOTKEY,  CommClassEnableHotkey, },
+   { CM_DISABLEBROKER, CommClassDisableBroker, },
+   { CM_ENABLEBROKER,  CommClassEnableBroker, },
+   { CM_MSGINFO,       CommClassMsgInfo, },
+   { DF_END,                 NULL },
+};
+
+/*
+ * Simple class initialization.
+ */
+makeproto Class *InitCxClass(void)
+{
+   return BGUI_MakeClass(CLASS_ObjectSize, sizeof(CD),
+                         CLASS_DFTable,    ClassFunc,
+                         TAG_DONE);
+}
+
+

@@ -1,6 +1,8 @@
 include $(TOP)/config/make.cfg
 include $(SRCDIR)/$(CURDIR)/../make.cfg
 
+USER_CFLAGS := $(PARANOIA_CFLAGS)
+
 BINDIR = $(AROSDIR)
 LIBDIR = $(AROS_LIB)
 OBJDIR = $(GENDIR)/$(CURDIR)

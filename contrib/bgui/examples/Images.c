@@ -131,7 +131,7 @@ struct Image HelpI2 =
 **/
 ULONG Req( struct Window *win, UBYTE *gadgets, UBYTE *body, ... )
 {
-        struct bguiRequest      req = { NULL };
+        struct bguiRequest      req = { };
 
         req.br_GadgetFormat     = gadgets;
         req.br_TextFormat       = body;
@@ -200,7 +200,7 @@ VOID StartDemo( void )
                         /*
                         **      try to open the window.
                         **/
-                        if ( window = WindowOpen( WO_Window )) {
+                        if (( window = WindowOpen( WO_Window ))) {
                                 /*
                                 **      Obtain it's wait mask.
                                 **/

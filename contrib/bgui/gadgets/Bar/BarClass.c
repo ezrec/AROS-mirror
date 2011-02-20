@@ -413,7 +413,8 @@ BOOL recompute)
 static ULONG BarSet(Class *cl,Object *obj,struct opUpdate *opu,BOOL creation)
 {
 	GD *gd;
-	struct TagItem *tag,*tstate;
+	struct TagItem *tag;
+	const struct TagItem *tstate;
 	ULONG success;
 	BOOL redraw,redraw_knob,position_changed;
 	LONG horizontal_position,vertical_position;
@@ -672,7 +673,7 @@ METHOD(BarClassSet,struct opUpdate *,opu)
 }
 METHOD_END
 
-static GetAttribute(Class *cl,GD *gd,ULONG attribute,ULONG *store)
+static BOOL GetAttribute(Class *cl,GD *gd,ULONG attribute,IPTR *store)
 {
 	switch(attribute)
 	{
@@ -945,17 +946,17 @@ METHOD(BarClassDimensions, struct grmDimensions *,dim)
 METHOD_END
 
 static DPFUNC ClassFunctions[] = {
-	OM_NEW,          (FUNCPTR)BarClassNew,
-	OM_DISPOSE,      (FUNCPTR)BarClassDispose,
-	OM_SET,          (FUNCPTR)BarClassSet,
-	OM_GET,          (FUNCPTR)BarClassGet,
-	OM_UPDATE,       (FUNCPTR)BarClassSet,
-	GM_RENDER,       (FUNCPTR)BarClassRender,
-	GM_GOACTIVE,     (FUNCPTR)BarClassGoActive,
-	GM_HANDLEINPUT,  (FUNCPTR)BarClassHandleInput,
-	GM_GOINACTIVE,   (FUNCPTR)BarClassGoInactive,
-	GRM_DIMENSIONS,  (FUNCPTR)BarClassDimensions,
-	DF_END,          NULL
+	{ OM_NEW,          BarClassNew, },
+	{ OM_DISPOSE,      BarClassDispose, },
+	{ OM_SET,          BarClassSet, },
+	{ OM_GET,          BarClassGet, },
+	{ OM_UPDATE,       BarClassSet, },
+	{ GM_RENDER,       BarClassRender, },
+	{ GM_GOACTIVE,     BarClassGoActive, },
+	{ GM_HANDLEINPUT,  BarClassHandleInput, },
+	{ GM_GOINACTIVE,   BarClassGoInactive, },
+	{ GRM_DIMENSIONS,  BarClassDimensions, },
+	{ DF_END,          NULL },
 };
 
 void __exit(int errcode)

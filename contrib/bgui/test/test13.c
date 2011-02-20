@@ -50,7 +50,7 @@ int main(void)
     }
 
 
-    if(BGUIBase=OpenLibrary(BGUINAME,0L)) {
+    if((BGUIBase=OpenLibrary(BGUINAME,0L))) {
         GimmeQuickDisplayWindow();
         if(WO_Window)
         {

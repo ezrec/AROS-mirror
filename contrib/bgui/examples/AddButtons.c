@@ -113,7 +113,7 @@ VOID StartDemo( void )
       /*
        *      Open window.
        */
-      if ( window = WindowOpen( WO_Window ))
+      if (( window = WindowOpen( WO_Window )))
       {
          /*
           *      Get signal mask.

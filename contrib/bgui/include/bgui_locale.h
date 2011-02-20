@@ -59,7 +59,7 @@
 struct CatCompArrayType
 {
     LONG   cca_ID;
-    STRPTR cca_Str;
+    CONST_STRPTR cca_Str;
 };
 
  struct CatCompArrayType CatCompArray[] =

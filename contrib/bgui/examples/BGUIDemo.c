@@ -152,7 +152,7 @@ struct NewMenu MainMenus[] = {
 **/
 ULONG Req( struct Window *win, UBYTE *gadgets, UBYTE *body, ... )
 {
-   struct bguiRequest   req = { NULL };
+   struct bguiRequest   req = { };
 
    req.br_GadgetFormat  = gadgets;
    req.br_TextFormat = body;
@@ -326,7 +326,7 @@ struct Window *OpenMainWindow( ULONG *appmask )
       /*
       ** Open the window.
       **/
-      if ( window = WindowOpen( WA_Main )) {
+      if (( window = WindowOpen( WA_Main ))) {
 	 /*
 	 ** Obtain appwindow signal mask.
 	 **/
@@ -762,7 +762,7 @@ REGFUNC_END
 ** The hook structure.
 **/
 struct Hook BackFill = {
-   NULL, NULL, (HOOKFUNC)BackFillHook, NULL, NULL
+    { NULL, NULL}, (HOOKFUNC)BackFillHook, NULL, NULL
 };
 
 /*
@@ -918,7 +918,7 @@ TabHookFunc( REG(a0) struct Hook *hook, REG(a2) Object *obj, REG(a1) struct Intu
     AROS_USERFUNC_EXIT
 }
 
-struct Hook TabHook = { NULL, NULL, ( HOOKFUNC )TabHookFunc, NULL, NULL };
+struct Hook TabHook = { { NULL, NULL}, ( HOOKFUNC )TabHookFunc, NULL, NULL };
 
 /*
 ** Open pages window.
@@ -1053,7 +1053,7 @@ struct Window *OpenPagesWindow( void )
 **/
 VOID StartDemo( void )
 {
-   struct Window         *main = NULL, *groups = NULL, *notif = NULL, *info = NULL, *image = NULL, *bfill = NULL, *pages = NULL, *sigwin = ( struct Window * )~0;
+   struct Window         *win = NULL, *groups = NULL, *notif = NULL, *info = NULL, *image = NULL, *bfill = NULL, *pages = NULL, *sigwin = ( struct Window * )~0;
    struct AppMessage      *apm;
    struct WBArg          *ap;
    ULONG       sigmask = 0L, sigrec, rc, i, appsig = 0L, id;
@@ -1063,11 +1063,11 @@ VOID StartDemo( void )
    /*
    ** Create the shared message port.
    **/
-   if ( SharedPort = CreateMsgPort()) {
+   if (( SharedPort = CreateMsgPort())) {
       /*
       ** Open the main window.
       **/
-      if ( main = OpenMainWindow( &appsig )) {
+      if (( win = OpenMainWindow( &appsig ))) {
 	 /*
 	 ** OR signal masks.
 	 **/
@@ -1088,7 +1088,7 @@ VOID StartDemo( void )
 	       /*
 	       ** Obtain AppWindow messages.
 	       **/
-	       while ( apm = GetAppMsg( WA_Main )) {
+	       while (( apm = GetAppMsg( WA_Main ))) {
 		  /*
 		  ** Get all dropped icons.
 		  **/
@@ -1101,7 +1101,7 @@ VOID StartDemo( void )
 		     /*
 		     ** Add it to the listview.
 		     **/
-		     AddEntry( main, LV_IconList, (APTR)name, LVAP_SORTED );
+		     AddEntry( win, LV_IconList, (APTR)name, LVAP_SORTED );
 		  }
 		  /*
 		  ** Important! We must reply the message!
@@ -1111,19 +1111,19 @@ VOID StartDemo( void )
 	       /*
 	       ** Switch to the Icon page.
 	       **/
-	       SetGadgetAttrs(( struct Gadget * )PG_Pager, main, NULL, PAGE_Active, 1, TAG_END );
+	       SetGadgetAttrs(( struct Gadget * )PG_Pager, win, NULL, PAGE_Active, 1, TAG_END );
 	    }
 
 	    /*
 	    ** Find out the which window signalled us.
 	    **/
 	    if ( sigrec & ( 1 << SharedPort->mp_SigBit )) {
-	       while ( sigwin = GetSignalWindow( WA_Main )) {
+	       while (( sigwin = GetSignalWindow( WA_Main ))) {
 
 		  /*
 		  ** Main window signal?
 		  **/
-		  if ( sigwin == main ) {
+		  if ( sigwin == win ) {
 		     /*
 		     ** Call the main-window event handler.
 		     **/
@@ -1136,7 +1136,7 @@ VOID StartDemo( void )
 			      break;
 
 			   case  ID_ABOUT:
-			      Req( main, "OK", ISEQ_C ISEQ_B "\33d8BGUIDemo" ISEQ_N "\33d2\n(C) Copyright 1993-1995 Jaba Development" );
+			      Req( win, "OK", ISEQ_C ISEQ_B "\33d8BGUIDemo" ISEQ_N "\33d2\n(C) Copyright 1993-1995 Jaba Development" );
 			      break;
 
 			   case  ID_MAIN_GROUPS:
@@ -1191,11 +1191,11 @@ VOID StartDemo( void )
 			      /*
 			      ** Switch back to the main page.
 			      **/
-			      SetGadgetAttrs(( struct Gadget * )PG_Pager, main, NULL, PAGE_Active, 0, TAG_END );
+			      SetGadgetAttrs(( struct Gadget * )PG_Pager, win, NULL, PAGE_Active, 0, TAG_END );
 			      /*
 			      ** Clear all entries from the listview.
 			      **/
-			      ClearList( main, LV_IconList );
+			      ClearList( win, LV_IconList );
 			      break;
 			}
 		     }

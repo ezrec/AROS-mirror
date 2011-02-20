@@ -121,13 +121,13 @@ typedef struct {
 METHOD(RootClassNew, struct opSet *, ops)
 {
    RD             *rd;
-   ULONG           rc;
+   IPTR            rc;
 
    /*
     * We let the superclass setup an object
     * for us.
     */
-   if (rc = AsmDoSuperMethodA(cl, obj, (Msg)ops))
+   if ((rc = AsmDoSuperMethodA(cl, obj, (Msg)ops)))
    {
       /*
        * Get the instance data.
@@ -160,7 +160,7 @@ METHOD(RootClassNotify, struct opUpdate *, opu)
    Object           *target;
    struct TagItem   *tag;
    ULONG            *msg;
-   ULONG             rc;
+   IPTR              rc;
    BOOL              cond;
    int               type;
 
@@ -205,7 +205,7 @@ METHOD(RootClassNotify, struct opUpdate *, opu)
 	  * Conditional tag present in
 	  * the notification tags?
 	  */
-	 if (tag = FindTagItem(n->n_Condition.ti_Tag, opu->opu_AttrList))
+	 if ((tag = FindTagItem(n->n_Condition.ti_Tag, opu->opu_AttrList)))
 	 {
 	    cond = (n->n_Condition.ti_Data == tag->ti_Data);
 	    if (n->n_Flags & RAF_FALSE) cond = !cond;
@@ -233,7 +233,7 @@ METHOD(RootClassNotify, struct opUpdate *, opu)
 	    /*
 	     * Clone the original attribute list.
 	     */
-	    if (clones = CloneTagItems(opu->opu_AttrList))
+	    if ((clones = CloneTagItems(opu->opu_AttrList)))
 	    {
 	       MapTags(clones, ((MAP *)n)->m_MapList, MAP_KEEP_NOT_FOUND);
 
@@ -328,7 +328,7 @@ METHOD(RootClassDispose, Msg, msg)
    /*
     * Remove all targets and deallocate all resources.
     */
-   while (n = (NOTIF *)RemHead((struct List *)&rd->rd_NotifyList))
+   while ((n = (NOTIF *)RemHead((struct List *)&rd->rd_NotifyList)))
       FreeNotif(n);
 
    /*
@@ -352,13 +352,13 @@ METHOD_END
  */
 METHOD(RootClassUpdateX, struct opUpdate *, opu)
 {
-   ULONG rc = AsmCoerceMethod(cl,obj, RM_SETM, opu->opu_AttrList, (opu->opu_Flags & OPUF_INTERIM) ? RAF_INTERIM|RAF_UPDATE : RAF_UPDATE);
+   ULONG rc = (ULONG)AsmCoerceMethod(cl,obj, RM_SETM, opu->opu_AttrList, (opu->opu_Flags & OPUF_INTERIM) ? RAF_INTERIM|RAF_UPDATE : RAF_UPDATE);
 
    if (opu->opu_GInfo
    && !(opu->opu_Flags & OPUF_INTERIM))
       AsmDoMethod(obj, RM_REFRESH, opu->opu_GInfo, rc);
 
-   return rc;
+   return (IPTR)rc;
 }
 METHOD_END
 ///
@@ -368,11 +368,11 @@ METHOD_END
  */
 METHOD(RootClassSetX, struct opSet *, ops)
 {
-   ULONG rc = AsmDoMethod(obj, RM_SETM, ops->ops_AttrList, 0);
+   ULONG rc = (ULONG)AsmDoMethod(obj, RM_SETM, ops->ops_AttrList, 0);
 
    if (ops->ops_GInfo) AsmDoMethod(obj, RM_REFRESH, ops->ops_GInfo, rc);
 
-   return rc;
+   return (IPTR)rc;
 }
 METHOD_END
 ///
@@ -399,10 +399,10 @@ METHOD(RootClassSet, struct rmAttr *, ra)
    tags[0].ti_Data = ra->ra_Attr->ti_Data;
    tags[1].ti_Tag  = TAG_DONE;
 
-   rc = AsmDoSuperMethod(cl, obj, (ra->ra_Flags & RAF_UPDATE) ? OM_UPDATE : OM_SET, tags, NULL,
+   rc = (ULONG)AsmDoSuperMethod(cl, obj, (ra->ra_Flags & RAF_UPDATE) ? OM_UPDATE : OM_SET, tags, NULL,
 				  (ra->ra_Flags & RAF_INTERIM) ? OPUF_INTERIM : 0);
 
-   return (ULONG)0;//((rc > 0) ? (RAF_UNDERSTOOD|RAF_REDRAW) : 0);
+   return (IPTR)0;//((rc > 0) ? (RAF_UNDERSTOOD|RAF_REDRAW) : 0);
 }
 METHOD_END
 ///
@@ -429,10 +429,10 @@ METHOD(RootClassSetM, struct rmAttr *, ra1)
    ra.MethodID   = RM_SET;
    ra.ra_Flags   = ra1->ra_Flags;
 
-   while (ra.ra_Attr = BGUI_NextTagItem(&tstate))
-      rc |= AsmDoMethodA(obj, (Msg)&ra);
+   while ((ra.ra_Attr = BGUI_NextTagItem(&tstate)))
+      rc |= (ULONG)AsmDoMethodA(obj, (Msg)&ra);
 
-   return rc;
+   return (IPTR)rc;
 }
 METHOD_END
 ///
@@ -447,10 +447,10 @@ METHOD(RootClassGetM, struct rmAttr *, ra1)
    ra.MethodID   = RM_GET;
    ra.ra_Flags   = ra1->ra_Flags;
 
-   while (ra.ra_Attr = BGUI_NextTagItem(&tstate))
-      rc |= AsmDoMethodA(obj, (Msg)&ra);
+   while ((ra.ra_Attr = BGUI_NextTagItem(&tstate)))
+      rc |= (ULONG)AsmDoMethodA(obj, (Msg)&ra);
 
-   return rc;
+   return (IPTR)rc;
 }
 METHOD_END
 ///
@@ -491,7 +491,7 @@ METHOD(RootClassAddMap, struct rmAddMap *, ram)
       /*
        * Allocate and initialize a MAP structure.
        */
-      if (am = (MAP *)BGUI_AllocPoolMem(sizeof(MAP)))
+      if ((am = (MAP *)BGUI_AllocPoolMem(sizeof(MAP))))
       {
 	 /*
 	  * Check if we need to make a map list.
@@ -504,7 +504,7 @@ METHOD(RootClassAddMap, struct rmAddMap *, ram)
 	    if (!(am->m_MapList = CloneTagItems(ram->ram_MapList)))
 	    {
 	       BGUI_FreePoolMem(am);
-	       return NULL;
+	       return (IPTR)NULL;
 	    };
 	 };
 
@@ -514,7 +514,7 @@ METHOD(RootClassAddMap, struct rmAddMap *, ram)
 	 AddNotify(rd, (NOTIF *)am, (Msg)ram, NOTIFY_MAP);
       };
    }
-   return (ULONG)am;
+   return (IPTR)am;
 }
 METHOD_END
 ///
@@ -535,7 +535,7 @@ METHOD(RootClassAddAttr, struct rmAddAttr *, raa)
       /*
        * Allocate and initialize an ATTR structure.
        */
-      if (aa = (ATTR *)BGUI_AllocPoolMem(sizeof(ATTR)))
+      if ((aa = (ATTR *)BGUI_AllocPoolMem(sizeof(ATTR))))
       {
 	 /*
 	  * Copy the attribute.
@@ -548,7 +548,7 @@ METHOD(RootClassAddAttr, struct rmAddAttr *, raa)
 	 AddNotify(rd, (NOTIF *)aa, (Msg)raa, NOTIFY_ATTR);
       };
    }
-   return (ULONG)aa;
+   return (IPTR)aa;
 }
 METHOD_END
 ///
@@ -569,7 +569,7 @@ METHOD(RootClassAddMethod, struct rmAddMethod *, ram)
       /*
        * Allocate and initialize a METHOD structure.
        */
-      if (am = (METHOD *)BGUI_AllocPoolMem(sizeof(METHOD) + ram->ram_Size - sizeof(ULONG)))
+      if ((am = (METHOD *)BGUI_AllocPoolMem(sizeof(METHOD) + ram->ram_Size - sizeof(ULONG))))
       {
 	 /*
 	  * Copy the method.
@@ -582,7 +582,7 @@ METHOD(RootClassAddMethod, struct rmAddMethod *, ram)
 	 AddNotify(rd, (NOTIF *)am, (Msg)ram, NOTIFY_METHOD);
       };
    };
-   return (ULONG)am;
+   return (IPTR)am;
 }
 METHOD_END
 ///
@@ -603,7 +603,7 @@ METHOD(RootClassAddHook, struct rmAddHook *, rah)
       /*
        * Allocate and initialize a HOOK structure.
        */
-      if (ah = (HOOK *)BGUI_AllocPoolMem(sizeof(HOOK)))
+      if ((ah = (HOOK *)BGUI_AllocPoolMem(sizeof(HOOK))))
       {
 	 /*
 	  * Copy the hook.
@@ -618,7 +618,7 @@ METHOD(RootClassAddHook, struct rmAddHook *, rah)
 	 ah->h_Node.n_Object = NULL;
       };
    };
-   return (ULONG)ah;
+   return (IPTR)ah;
 }
 METHOD_END
 ///
@@ -628,14 +628,11 @@ METHOD_END
  */
 METHOD(NotifyClassRemove, struct bmRemove *, brt)
 {
+#if 0
    RD           *rd = INST_DATA(cl, obj);
    NOTIF        *n = (NOTIF *)rd->rd_NotifyList.mlh_Head;
    ULONG         type;
 
-#ifdef __AROS__
-#warning A comment within a comment makes gcc puke...
-#if 0
-   /*
    switch (brt->MethodID)
    {
    case BASE_REMMAP:
@@ -673,9 +670,8 @@ METHOD(NotifyClassRemove, struct bmRemove *, brt)
       };
       n = n->n_Next;
    };
-   */
 #endif
-#endif
+
    return 0;
 }
 METHOD_END
@@ -689,11 +685,11 @@ METHOD(RootClassSetLoop, Msg, msg)
    RD          *rd = INST_DATA(cl, obj);
 
    if (rd->rd_LoopCount)
-      return TRUE;
+      return (IPTR)TRUE;
 
    rd->rd_LoopCount++;
 
-   return FALSE;
+   return (IPTR)FALSE;
 }
 METHOD_END
 ///
@@ -723,9 +719,9 @@ METHOD(RootClassRemove, Msg, msg)
    {
       Remove((struct Node *)mln);
       mln->mln_Succ = mln->mln_Pred = NULL;
-      return 1;
+      return (IPTR)TRUE;
    };
-   return 0;
+   return (IPTR)FALSE;
 }
 METHOD_END
 ///
@@ -737,7 +733,7 @@ METHOD(RootClassAddHead, struct rmAdd *, ra)
 
    AddHead(ra->ra_List, (struct Node *)&rd->rd_Node);
 
-   return 1;
+   return (IPTR)TRUE;
 }
 METHOD_END
 ///
@@ -749,7 +745,7 @@ METHOD(RootClassAddTail, struct rmAdd *, ra)
 
    AddTail(ra->ra_List, (struct Node *)&rd->rd_Node);
 
-   return 1;
+   return (IPTR)TRUE;
 }
 METHOD_END
 ///
@@ -768,7 +764,7 @@ METHOD(RootClassInsert, struct rmInsert *, ri)
    {
       AddHead(ri->ri_List, (struct Node *)&rd->rd_Node);
    };
-   return 1;
+   return (IPTR)TRUE;
 }
 METHOD_END
 ///
@@ -780,9 +776,9 @@ METHOD(RootClassPrev, Msg, msg)
    struct MinNode *mn = rd->rd_Node.mln_Pred;
 
    if (mn && mn->mln_Pred)
-      return (ULONG)((UBYTE *)mn + rd->rd_NodeOffset);
+      return (IPTR)((UBYTE *)mn + rd->rd_NodeOffset);
 
-   return NULL;
+   return (IPTR)NULL;
 }
 METHOD_END
 ///
@@ -794,9 +790,9 @@ METHOD(RootClassNext, Msg, msg)
    struct MinNode *mn = rd->rd_Node.mln_Succ;
 
    if (mn && mn->mln_Succ)
-      return (ULONG)((UBYTE *)mn + rd->rd_NodeOffset);
+      return (IPTR)((UBYTE *)mn + rd->rd_NodeOffset);
 
-   return NULL;
+   return (IPTR)NULL;
 }
 METHOD_END
 ///
@@ -820,7 +816,7 @@ makeproto Object *ListTailObject(struct List *lh)
 
 METHOD(BaseClassAddMap, struct bmAddMap *, bam)
 {
-   return((ULONG)(AsmDoMethod(obj, RM_ADDMAP, 0, 0, 0, 0, bam->bam_Object, bam->bam_MapList)!=NULL));
+   return (IPTR)(AsmDoMethod(obj, RM_ADDMAP, 0, 0, 0, 0, bam->bam_Object, bam->bam_MapList)!=0);
 }
 METHOD_END
 ///
@@ -831,9 +827,9 @@ METHOD(BaseClassAddMethod, struct bmAddMethod *, bam)
    struct rmAddMethod *ram;
 
    int    size = bam->bam_Size * sizeof(ULONG);
-   ULONG  nh = 0;
+   IPTR   nh = 0;
 
-   if (ram = BGUI_AllocPoolMem(sizeof(struct bmAddMethod) + size))
+   if ((ram = BGUI_AllocPoolMem(sizeof(struct bmAddMethod) + size)))
    {
       ram->MethodID   = RM_ADDMETHOD;
       ram->ram_Object = bam->bam_Object;
@@ -854,18 +850,18 @@ METHOD_END
 
 METHOD(BaseClassAddConditional, struct bmAddConditional *, bac)
 {
-   ULONG nh;
+   IPTR  nh;
 
-   if (nh = AsmDoMethod(obj, RM_ADDATTR, 0, RAF_FALSE, bac->bac_Condition.ti_Tag, bac->bac_Condition.ti_Data,
-			     bac->bac_Object,          bac->bac_FALSE.ti_Tag,     bac->bac_FALSE.ti_Data))
+   if ((nh = AsmDoMethod(obj, RM_ADDATTR, 0, RAF_FALSE, bac->bac_Condition.ti_Tag, bac->bac_Condition.ti_Data,
+			     bac->bac_Object,          bac->bac_FALSE.ti_Tag,     bac->bac_FALSE.ti_Data)))
    {
       if (AsmDoMethod(obj, RM_ADDATTR, 0, RAF_TRUE,  bac->bac_Condition.ti_Tag, bac->bac_Condition.ti_Data,
 			   bac->bac_Object,          bac->bac_TRUE.ti_Tag,      bac->bac_TRUE.ti_Data))
-	 return TRUE;
+	 return (IPTR)TRUE;
 
       AsmDoMethod(obj, RM_REMNOTIFY, 0, nh);
    }
-   return FALSE;
+   return (IPTR)FALSE;
 }
 METHOD_END
 ///
@@ -873,7 +869,7 @@ METHOD_END
 
 METHOD(BaseClassAddHook, struct bmAddHook *, bah)
 {
-   return((ULONG)(AsmDoMethod(obj, RM_ADDHOOK, 0, 0, 0, 0, bah->bah_Hook)!=NULL));
+   return (IPTR)(AsmDoMethod(obj, RM_ADDHOOK, 0, 0, 0, 0, bah->bah_Hook)!=0);
 }
 METHOD_END
 ///
@@ -884,13 +880,13 @@ METHOD(ImageClassDraw, struct impDraw *, imp)
 {
    int              x = imp->imp_Offset.X;
    int              y = imp->imp_Offset.Y;
-   ULONG            rc;
+   IPTR             rc = (IPTR)0;
    struct BaseInfo *bi;
 
 #ifdef DEBUG_BGUI
-   if (bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_RastPort, imp->imp_RPort, BI_DrawInfo, imp->imp_DrInfo, TAG_DONE))
+   if ((bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_RastPort, imp->imp_RPort, BI_DrawInfo, imp->imp_DrInfo, TAG_DONE)))
 #else
-   if (bi = AllocBaseInfo(BI_RastPort, imp->imp_RPort, BI_DrawInfo, imp->imp_DrInfo, TAG_DONE))
+   if ((bi = AllocBaseInfo(BI_RastPort, imp->imp_RPort, BI_DrawInfo, imp->imp_DrInfo, TAG_DONE)))
 #endif
    {
       if (x) IMAGE(obj)->LeftEdge += x;
@@ -914,43 +910,43 @@ METHOD_END
  */
 STATIC DPFUNC ClassFunc[] =
 {
-   RM_SET,                 (FUNCPTR)RootClassSet,
-   RM_GET,                 (FUNCPTR)RootClassGet,
-   RM_SETM,                (FUNCPTR)RootClassSetM,
-   RM_GETM,                (FUNCPTR)RootClassGetM,
-   OM_SET,                 (FUNCPTR)RootClassSetX,
-   OM_GET,                 (FUNCPTR)RootClassGetX,
-   OM_UPDATE,              (FUNCPTR)RootClassUpdateX,
-   OM_NEW,                 (FUNCPTR)RootClassNew,
-   OM_DISPOSE,             (FUNCPTR)RootClassDispose,
-   OM_NOTIFY,              (FUNCPTR)RootClassNotify,
-   RM_SETLOOP,             (FUNCPTR)RootClassSetLoop,
-   RM_CLEARLOOP,           (FUNCPTR)RootClassClearLoop,
+   { RM_SET,                 RootClassSet },
+   { RM_GET,                 RootClassGet },
+   { RM_SETM,                RootClassSetM },
+   { RM_GETM,                RootClassGetM },
+   { OM_SET,                 RootClassSetX },
+   { OM_GET,                 RootClassGetX },
+   { OM_UPDATE,              RootClassUpdateX },
+   { OM_NEW,                 RootClassNew },
+   { OM_DISPOSE,             RootClassDispose },
+   { OM_NOTIFY,              RootClassNotify },
+   { RM_SETLOOP,             RootClassSetLoop },
+   { RM_CLEARLOOP,           RootClassClearLoop },
 
-   RM_REMOVE,              (FUNCPTR)RootClassRemove,
-   RM_ADDHEAD,             (FUNCPTR)RootClassAddHead,
-   RM_ADDTAIL,             (FUNCPTR)RootClassAddTail,
-   RM_INSERT,              (FUNCPTR)RootClassInsert,
-   RM_NEXT,                (FUNCPTR)RootClassNext,
-   RM_PREV,                (FUNCPTR)RootClassPrev,
+   { RM_REMOVE,              RootClassRemove },
+   { RM_ADDHEAD,             RootClassAddHead },
+   { RM_ADDTAIL,             RootClassAddTail },
+   { RM_INSERT,              RootClassInsert },
+   { RM_NEXT,                RootClassNext },
+   { RM_PREV,                RootClassPrev },
 
-   RM_ADDMAP,              (FUNCPTR)RootClassAddMap,
-   RM_ADDATTR,             (FUNCPTR)RootClassAddAttr,
-   RM_ADDMETHOD,           (FUNCPTR)RootClassAddMethod,
-   RM_ADDHOOK,             (FUNCPTR)RootClassAddHook,
+   { RM_ADDMAP,              RootClassAddMap },
+   { RM_ADDATTR,             RootClassAddAttr },
+   { RM_ADDMETHOD,           RootClassAddMethod },
+   { RM_ADDHOOK,             RootClassAddHook },
 
-   BASE_ADDMAP,            (FUNCPTR)BaseClassAddMap,
-   BASE_ADDCONDITIONAL,    (FUNCPTR)BaseClassAddConditional,
-   BASE_ADDMETHOD,         (FUNCPTR)BaseClassAddMethod,
-   BASE_ADDHOOK,           (FUNCPTR)BaseClassAddHook,
-   BASE_REMMAP,            (FUNCPTR)NotifyClassRemove,
-   BASE_REMCONDITIONAL,    (FUNCPTR)NotifyClassRemove,
-   BASE_REMMETHOD,         (FUNCPTR)NotifyClassRemove,
-   BASE_REMHOOK,           (FUNCPTR)NotifyClassRemove,
+   { BASE_ADDMAP,            BaseClassAddMap },
+   { BASE_ADDCONDITIONAL,    BaseClassAddConditional },
+   { BASE_ADDMETHOD,         BaseClassAddMethod },
+   { BASE_ADDHOOK,           BaseClassAddHook },
+   { BASE_REMMAP,            NotifyClassRemove },
+   { BASE_REMCONDITIONAL,    NotifyClassRemove },
+   { BASE_REMMETHOD,         NotifyClassRemove },
+   { BASE_REMHOOK,           NotifyClassRemove },
 
-   IM_DRAW,                (FUNCPTR)ImageClassDraw,
+   { IM_DRAW,                ImageClassDraw },
 
-   DF_END
+   { DF_END }
 };
 
 Class *InitRootSubClass(char *superclass)

@@ -56,6 +56,7 @@ printf("%s: Trying to create Window Object\n",__FILE__);
         win = WindowObject,
                 WINDOW_SmartRefresh, TRUE,
                 WINDOW_AutoAspect, TRUE,
+#if 0
                 WINDOW_MasterGroup, ar[WIN1_MASTER] = VGroupObject,
                         FRM_Type,FRTYPE_NEXT,
                         FRM_Title,NULL,
@@ -97,6 +98,18 @@ printf("%s: Trying to create Window Object\n",__FILE__);
                                 GA_ID, WIN1_STRING1,
                         EndObject, EndMember,
                 EndObject,
+#else
+                WINDOW_MasterGroup, ar[WIN1_MASTER] = VGroupObject,
+                        FRM_Type,FRTYPE_NEXT,
+                        FRM_Title,NULL,
+                        StartMember, ar[WIN1_BUTTON1] = ButtonObject,
+                                ButtonFrame,
+                                LAB_Label, "Button",
+                                LAB_Underscore, '_',
+                                GA_ID, WIN1_BUTTON1,
+                        EndObject, EndMember,
+                EndObject,
+#endif
         EndObject;
 
 printf("%s %s %d: win = %p\n",__FILE__, "InitTest_1()" ,__LINE__,win);
@@ -120,7 +133,7 @@ printf("%s: Successfully opened bgui.library!\n",__FILE__);
                 if((window=InitTest_1())!=NULL
                 && WindowOpen(window)!=NULL)
                 {
-                        ULONG signal;
+                        IPTR signal;
 printf("%s %s %d: survived Init_Test!\n",__FILE__, "main()" ,__LINE__);
                         if(GetAttr(WINDOW_SigMask,window,&signal)
                         && signal!=0)

@@ -174,10 +174,7 @@ STATIC struct VectorItem BuiltinRadioButton[] = {
    {  4,  3,  VIF_LASTITEM                              },
 };
 
-#ifdef __AROS__
-#warning A comment within a comment makes gcc puke...
 #if 0
-/*******************************************************************************
 /*
  * Built-in PopUp image.
  */
@@ -245,8 +242,6 @@ STATIC struct VectorItem BuiltInCycle2[] = {
    {  4,  4,  VIF_DRAW | VIF_XRELRIGHT | VIF_YRELBOTTOM },
    {  4,  4,  VIF_DRAW | VIF_XRELRIGHT | VIF_AREAEND    | VIF_LASTITEM },
 };
-*****************************************************************************************/
-#endif
 #endif
 
 /*
@@ -475,10 +470,7 @@ static struct VectorItem *BuiltIn[] =
 /*
  * Deallocate the AreaFill() stuff.
  */
-//STATIC ASM VOID CleanUpArea( REG(a0) struct RastPort *rp, REG(a1) VD *vd )
-STATIC ASM REGFUNC2(VOID, CleanUpArea,
-	REGPARAM(A0, struct RastPort *, rp),
-	REGPARAM(A1, VD *, vd))
+STATIC ASM VOID CleanUpArea( REG(a0) struct RastPort *rp, REG(a1) VD *vd )
 {
    if (vd->vd_Flags & VDATF_AREA)
    {
@@ -513,7 +505,6 @@ STATIC ASM REGFUNC2(VOID, CleanUpArea,
       vd->vd_Flags &= ~VDATF_AREA;
    };
 }
-REGFUNC_END
 
 /*
  * Allocate the necessary stuff
@@ -542,10 +533,10 @@ STATIC ULONG SetupArea( struct RastPort *rp, VD *vd, struct VectorItem *vi, UWOR
    /*
     * Allocate and setup the buffers etc.
     */
-   if (vd->vd_VertexBuffer = (UWORD *)BGUI_AllocPoolMem(numelem * 5))
+   if ((vd->vd_VertexBuffer = (UWORD *)BGUI_AllocPoolMem(numelem * 5)))
    {
       memset(vd->vd_VertexBuffer,'\0',numelem * 5);
-      if (vd->vd_AreaPlane = AllocRaster(w, h)) {
+      if ((vd->vd_AreaPlane = AllocRaster(w, h))) {
          /*
           * Initialize structures.
           */
@@ -592,7 +583,7 @@ METHOD(VectorClassNew, struct opSet *, ops)
     * First we let the superclass
     * create a new object.
     */
-   if (rc = AsmDoSuperMethodA(cl, obj, (Msg)ops))
+   if ((rc = AsmDoSuperMethodA(cl, obj, (Msg)ops)))
    {
       /*
        * Get us the instance data.
@@ -620,8 +611,9 @@ METHOD_END
 METHOD(VectorClassSet, struct opSet *, ops)
 {
    VD                *vd = INST_DATA(cl, obj);
-   struct TagItem    *tag, *tstate = ops->ops_AttrList;
    ULONG              data;
+   struct TagItem    *tag;
+   const struct TagItem *tstate = ops->ops_AttrList;
    BOOL               resize = FALSE;
    struct VectorItem *vi;
    ULONG              rc;
@@ -636,7 +628,7 @@ METHOD(VectorClassSet, struct opSet *, ops)
    /*
     * Get the attributes.
     */
-   while (tag = NextTagItem(&tstate))
+   while ((tag = NextTagItem(&tstate)))
    {
       data = tag->ti_Data;
       switch (tag->ti_Tag)
@@ -921,11 +913,11 @@ METHOD_END
  * Class function array.
  */
 STATIC DPFUNC ClassFunc[] = {
-   BASE_RENDER,            (FUNCPTR)VectorClassRender,
-   OM_NEW,                 (FUNCPTR)VectorClassNew,
-   OM_SET,                 (FUNCPTR)VectorClassSet,
-   OM_GET,                 (FUNCPTR)VectorClassGet,
-   DF_END,                 NULL
+   { BASE_RENDER,            VectorClassRender, },
+   { OM_NEW,                 VectorClassNew, },
+   { OM_SET,                 VectorClassSet, },
+   { OM_GET,                 VectorClassGet, },
+   { DF_END,                 NULL },
 };
 
 /*

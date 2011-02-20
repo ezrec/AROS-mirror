@@ -199,11 +199,11 @@ Class *MakeMyButtonClass( void )
         /*
          *      Get a pointer to our superclass.
          */
-        if ( super = BGUI_GetClassPtr( BGUI_BUTTON_GADGET )) {
+        if (( super = BGUI_GetClassPtr( BGUI_BUTTON_GADGET ))) {
                 /*
                  *      Make our class.
                  */
-                if ( cl = MakeClass( NULL, NULL, super, 0L, 0L ))
+                if (( cl = MakeClass( NULL, NULL, super, 0L, 0L )))
                         /*
                          *      Setup our dispatcher.
                          */
@@ -233,7 +233,7 @@ int main( int argc, char **argv )
                         /*
                          *      And our drop-button class.
                          */
-                        if ( myButtonClass = MakeMyButtonClass()) {
+                        if (( myButtonClass = MakeMyButtonClass())) {
                                 /*
                                  *      I assume a depth of three
                                  *      (8 colors) here for simplicity.
@@ -311,7 +311,7 @@ int main( int argc, char **argv )
                                         tmp += AddMap( GO_Pal[ 2 ], GO_B, p2l  );
                                         tmp += AddMap( GO_Pal[ 3 ], GO_B, p2ls );
                                         if ( tmp == 5 ) {
-                                                if ( window = WindowOpen( WO_Window )) {
+                                                if (( window = WindowOpen( WO_Window ))) {
                                                         GetAttr( WINDOW_SigMask, WO_Window, &signal );
                                                         do {
                                                                 Wait( signal );
@@ -334,6 +334,8 @@ int main( int argc, char **argv )
                 CloseLibrary( BGUIBase );
         }
         if (IntuitionBase) CloseLibrary((struct Library *)IntuitionBase);
+
+        return 0;
 }
 #ifdef _DCC
 int wbmain( struct WBStartup *wbs )
