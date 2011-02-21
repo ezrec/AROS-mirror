@@ -2758,13 +2758,13 @@ STATIC METHOD(WindowClassIDCMP, Msg, msg)
    struct MenuItem       *mi;
    TABCYCLE              *tc;
    WD                    *wd = INST_DATA(cl, obj);
-   ULONG                  rc = WMHI_IGNORE, inhibit, id;
+   ULONG                  rc = WMHI_IGNORE, id;
    UWORD                  code;
    Object                *obja;
    struct grmWhichObject  grwo;
    struct ttCommand       ttc;
    WORD                   x, y;
-   ULONG                  mouseact;
+   IPTR                   mouseact, inhibit;
    BOOL                   forward;
    Object                *tabbed;
    struct Window         *w = wd->wd_WindowPtr;

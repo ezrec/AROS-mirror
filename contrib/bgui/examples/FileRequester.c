@@ -74,7 +74,8 @@ ULONG ReqA( UBYTE *gadgets, UBYTE *body, IPTR *args)
 VOID StartDemo( void )
 {
         Object          *filereq;
-        ULONG            rc, dr, fl, pt, pa, l, t, w, h;
+        ULONG            rc;
+        IPTR             dr, fl, pt, pa, l, t, w, h;
 
         /*
         **      Present a simple requester.

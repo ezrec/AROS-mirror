@@ -752,7 +752,7 @@ METHOD(ButtonClassDimensions, struct bmDimensions *, bmd)
    Object               *temp;
    int                   rx, ry;
    UWORD                 mx = 1, my = 1;
-   ULONG                 tmp;
+   IPTR                  tmp;
 
    if (bd->bd_Image || bd->bd_SelImage)
    {

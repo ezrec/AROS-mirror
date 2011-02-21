@@ -275,7 +275,7 @@ __saveds void Mover(void)
                if (wo)
                {
                   AsmDoMethod(wo, WM_LOCK);
-                  Get_Attr(wo, WINDOW_Window, (ULONG *)&bmo->bmo_ActPtr);
+                  Get_Attr(wo, WINDOW_Window, (IPTR *)&bmo->bmo_ActPtr);
                };
             };
          };
@@ -317,7 +317,7 @@ __saveds void Mover(void)
                    * Get the hitbox bounds of the
                    * receiver.
                    */
-                  Get_Attr(g, BT_HitBox, &db);
+                  Get_Attr(g, BT_HitBox, (IPTR *)&db);
 
                   /*
                    * Get mouse coords relative to the

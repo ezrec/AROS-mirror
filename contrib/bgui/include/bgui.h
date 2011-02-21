@@ -467,6 +467,7 @@ struct rmRefresh {
 #define RAF_NOTIFY             (1<<1)  /* Send out a notification.       */
 #define RAF_REDRAW             (1<<2)  /* Gadget must be redrawn.        */
 #define RAF_RESIZE             (1<<3)  /* Gadget may have changed size.  */
+#define RAF_IPTR               (1<<4)  /* Return type is an address      */
 #define RAF_CUSTOM             (1<<10) /* Custom RM_SET processing.      */
 #define RAF_INITIAL            (1<<11) /* Prevent redundancy in OM_NEW.  */
 #define RAF_NOGET              (1<<12) /* Get is not allowed.            */
@@ -479,12 +480,12 @@ struct rmRefresh {
 #define RAF_BYTE               (0<<28) /* Size is one byte.              */
 #define RAF_WORD               (1<<28) /* Size is one word.              */
 #define RAF_LONG               (2<<28) /* Size is one long.              */
-#define RAF_ADDR               (3<<28) /* Return address of field.       */
+#define RAF_ADDR               (3<<28) /* Return address of structure    */
 #define RAF_BOOL               (1<<30) /* Data is boolean.               */
 #define RAF_SIGNED             (1<<31) /* Signed attribute.              */
 
 #define RAF_ADDRESS            (RAF_ADDR|RAF_NOSET)
-#define RAF_NOP                (RAF_ADDR|RAF_SIGNED)
+#define RAF_NOP                (RAF_ADDR|RAF_SIGNED|RAF_IPTR)
 
 #define P_BITNUM2(f) (f>>1?(f>>2?(f>>3?(f>>4?(f>>5?(f>>6?(f>>7?7:6):5):4):3):2):1):0)
 #define P_BITNUM1(f) (f>>8?P_BITNUM2(f>>8):P_BITNUM2(f))
@@ -492,8 +493,12 @@ struct rmRefresh {
 
 #define LENGTH_OF(type,field) sizeof(((struct type *)0)->field)
 
-#define TYPE_OF(type,field)       ((LENGTH_OF(type,field) == 2) ? RAF_WORD :\
-                                  ((LENGTH_OF(type,field) == 4) ? RAF_LONG : RAF_BYTE))
+#define TYPE_OF(type,field)       \
+                                  ((LENGTH_OF(type,field) == 1) ? RAF_BYTE :\
+                                  ((LENGTH_OF(type,field) == 2) ? RAF_WORD :\
+                                  ((LENGTH_OF(type,field) == 4) ? RAF_LONG :\
+                                  RAF_IPTR)))
+
 #define BITOFFSET_OF(type,field,f) (LENGTH_OF(type,field) - (f>>8?(f>>16?(f>>24?4:3):2):1))
 
 #ifdef __AROS__

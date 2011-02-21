@@ -108,7 +108,7 @@ static ULONG MultipleGet(Object *obj,Tag attribute,...)
 	struct ogpMGet mget;
 
 	mget.MethodID=LGM_MGET;
-	mget.ogpg_AttrList= (struct TagItem *)&attribute;
+	mget.ogpg_AttrList=AROS_SLOWSTACKTAGS_ARG(attribute);
 	retval = (ULONG)DoMethodA(obj, (Msg)&mget);
 	AROS_SLOWSTACKTAGS_POST
 }

@@ -425,7 +425,7 @@ makeproto SAVEDS ASM Class *BGUI_GetClassPtr( REG(d0) ULONG classID )
 makeproto Object *BGUI_NewObject(ULONG classID, Tag tag1, ...)
 {
    AROS_SLOWSTACKTAGS_PRE_AS(tag1, Object *)
-   retval = BGUI_NewObjectA(classID, (struct TagItem *)&tag1);
+   retval = BGUI_NewObjectA(classID, AROS_SLOWSTACKTAGS_ARG(tag1));
    AROS_SLOWSTACKTAGS_POST
 }
 

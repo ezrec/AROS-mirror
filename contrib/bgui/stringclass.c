@@ -89,8 +89,10 @@ typedef struct {
  */
 STATIC ASM VOID GetValues(REG(a0) SD *sd)
 {
-   Get_Attr(sd->sd_StrGad, STRINGA_TextVal, &sd->sd_TextContents);
-   Get_Attr(sd->sd_StrGad, STRINGA_LongVal, &sd->sd_IntegerContents);
+   IPTR tmp;
+   Get_Attr(sd->sd_StrGad, STRINGA_TextVal, (IPTR *)&sd->sd_TextContents);
+   Get_Attr(sd->sd_StrGad, STRINGA_LongVal, &tmp);
+   sd->sd_IntegerContents = (LONG)tmp;
 }
 
 /*
@@ -265,7 +267,8 @@ STATIC METHOD(StringClassSetUpdate, struct opUpdate *, opu )
    SD                *sd = INST_DATA(cl, obj);
    struct TagItem    *clones, *tag;
    WORD               dis = GADGET( obj )->Flags & GFLG_DISABLED, gv = 0;
-   ULONG              inhibit, rc = 1;
+   ULONG              rc = 1;
+   IPTR               inhibit;
    //BC                *bc = BASE_DATA(obj);
    struct GadgetInfo *gi = opu->opu_GInfo;
 
@@ -337,7 +340,7 @@ STATIC METHOD(StringClassSetUpdate, struct opUpdate *, opu )
       {
          if ((tag = FindTagItem(BT_TextAttr, clones)))
          {
-            Get_SuperAttr(cl, obj, BT_TextFont, &sd->sd_Font);
+            Get_SuperAttr(cl, obj, BT_TextFont, (IPTR *)&sd->sd_Font);
             DoSetMethodNG(sd->sd_StrGad, STRINGA_Font, sd->sd_Font, TAG_END);
          }
          /*
@@ -515,6 +518,7 @@ METHOD(StringClassGoActive, struct gpInput *, gpi)
    struct RastPort   *rp;
    struct Window     *win;
    int                x, y, w, h, wx1, wy1, wx2, wy2;
+   IPTR               tmp;
 
    /*
     * Only if not disabled.
@@ -526,8 +530,10 @@ METHOD(StringClassGoActive, struct gpInput *, gpi)
          /*
           * Get coordinates of object.
           */
-         Get_Attr(bc->bc_View, VIEW_AbsoluteX, (ULONG *)&x);
-         Get_Attr(bc->bc_View, VIEW_AbsoluteY, (ULONG *)&y);
+         Get_Attr(bc->bc_View, VIEW_AbsoluteX, &tmp);
+         x = (int)tmp;
+         Get_Attr(bc->bc_View, VIEW_AbsoluteY, &tmp);
+         y = (int)tmp;
 
          gi = gpi->gpi_GInfo;
          win = gi->gi_Window;
@@ -624,6 +630,7 @@ METHOD(StringClassHandleInput, struct gpInput *, gpi)
    ULONG              rc;
    LONG               val;
    struct GadgetInfo *gi = gpi->gpi_GInfo;
+   IPTR               tmp;
 
    /*
     * Pass on the message.
@@ -646,7 +653,8 @@ METHOD(StringClassHandleInput, struct gpInput *, gpi)
          /*
           * Get the value.
           */
-         Get_Attr(sd->sd_StrGad, STRINGA_LongVal, &val);
+         Get_Attr(sd->sd_StrGad, STRINGA_LongVal, &tmp);
+         val = (LONG)tmp;
          /*
           * Out of range?
           */

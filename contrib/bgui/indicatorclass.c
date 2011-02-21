@@ -248,7 +248,7 @@ METHOD(IClassRender, struct bmRender *, bmr)
     */
    if (id->id_Font) BSetFont(bi, id->id_Font);
 
-   Get_Attr(id->id_Text, TEXTA_Text, (ULONG *)&str);
+   Get_Attr(id->id_Text, TEXTA_Text, (IPTR *)&str);
 
    if (str)
    {

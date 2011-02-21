@@ -246,7 +246,7 @@ METHOD(DGMClassGoActive, struct gpInput *, gpi2)
       if (gpi.MethodID == GM_GOACTIVE)
 	 gpi.gpi_IEvent = &dd->ie;
 
-      Get_Attr(target, BT_HitBox, &bounds);
+      Get_Attr(target, BT_HitBox, (IPTR *)&bounds);
       if (bounds)
       {
 	 gpi.gpi_Mouse.X = gpi.gpi_GInfo->gi_Window->MouseX - bounds->Left;
@@ -267,13 +267,14 @@ METHOD_END
 METHOD(DGMClassGoInactive, Msg, msg)
 {
    DD          *dd   = INST_DATA(cl, obj);
-   ULONG        rc   = 0, id, mouseact = 0, report = FALSE;
+   ULONG        rc   = 0, id;
+   IPTR         mouseact = 0, report = FALSE;
    Object      *win  = NULL, *target;
 
    if ((target = dd->dd_Target))
    {
       Get_Attr(target, BT_ReportID, &report);
-      Get_Attr(target, BT_ParentWindow, (ULONG *)&win);
+      Get_Attr(target, BT_ParentWindow, (IPTR *)&win);
       Get_Attr(target, BT_MouseActivation, &mouseact);
       /*
        * Forward the message to the target.

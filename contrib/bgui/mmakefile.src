@@ -166,49 +166,49 @@ FILES := libtag \
 	 ver \
 	 lib \
 	 libfunc \
-	 task \
-	 request \
-	 misc \
 	 bgui_locale \
-	 miscc \
-	 classes \
-	 rootclass \
-	 dgm \
-	 stkext \
-	 gfx \
 	 blitter \
-	 textclass \
-	 strformat \
-	 windowclass \
-	 groupclass \
-	 spacingclass \
-	 pageclass \
-	 viewclass \
-	 externalclass \
-	 frameclass \
-	 labelclass \
-	 separatorclass \
-	 vectorclass \
-	 systemiclass \
-	 baseclass \
+	 classes \
+	 dgm \
+	 gfx \
+	 misc \
+	 miscc \
+	 request \
+	 stkext \
+	 task \
+	 rootclass \
 	 areaclass \
+	 aslreqclass \
+	 baseclass \
 	 buttonclass \
 	 checkboxclass \
 	 commodityclass \
 	 cycleclass \
-	 indicatorclass \
-	 infoclass \
-	 listclass \
-	 mxclass \
-	 progressclass \
-	 propclass \
-	 sliderclass \
-	 stringclass \
-	 radiobuttonclass \
-	 aslreqclass \
+	 externalclass \
 	 filereqclass \
 	 fontreqclass \
+	 frameclass \
+	 groupclass \
+	 indicatorclass \
+	 infoclass \
+	 labelclass \
+	 listclass \
+	 mxclass \
+	 pageclass \
+	 progressclass \
+	 propclass \
+	 radiobuttonclass \
 	 screenreqclass \
+	 separatorclass \
+	 sliderclass \
+	 spacingclass \
+	 strformat \
+	 stringclass \
+	 systemiclass \
+	 textclass \
+	 vectorclass \
+	 viewclass \
+	 windowclass \
 	 endtag
  
 #MM- bgui-library : bgui-test bgui-examples

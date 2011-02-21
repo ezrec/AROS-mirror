@@ -311,10 +311,11 @@ METHOD(PropClassSetUpdate, struct opUpdate *, opu)
    BC             *bc = BASE_DATA(obj);
    const struct TagItem *tstate = opu->opu_AttrList;
    struct TagItem *tag;
-   ULONG           data, type, redraw = 0, ho, vo;
+   ULONG           type, redraw = 0, ho, vo;
    LONG            tmp, val, omin = 0, omax = 0, olev = 0, oldtop = 0, oldtot = 0, oldvis = 0;
    BOOL            fc = !(pd->pd_Flags & PDF_READY);
    WORD            dis = GADGET(obj)->Flags & GFLG_DISABLED;
+   IPTR            data;
 
    /*
     * First we let the superclass do it's thing.
@@ -717,11 +718,13 @@ STATIC ASM VOID NotifyChange(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) str
    PD          *pd = INST_DATA(cl, obj);
    ULONG        type;
    LONG         val, oldval = (pd->pd_Flags & PDF_SLIDER) ? pd->pd_Level : pd->pd_Top;
+   IPTR         tmp;
 
    /*
     * Obtain top-value.
     */
-   Get_Attr(pd->pd_Prop, PGA_Top, &val);
+   Get_Attr(pd->pd_Prop, PGA_Top, &tmp);
+   val = (LONG)tmp;
 
    if (pd->pd_Flags & PDF_SLIDER)
    {
@@ -756,8 +759,10 @@ STATIC ASM VOID AdjustKnob(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struc
 {
    PD        *pd = INST_DATA(cl, obj);
    LONG       top, total = max(pd->pd_Total - pd->pd_Visible, 0);
+   IPTR       tmp;
 
-   Get_Attr(pd->pd_Prop, PGA_Top, &top);
+   Get_Attr(pd->pd_Prop, PGA_Top, &tmp);
+   top = (LONG)tmp;
 
    if (pd->pd_Flags & PDF_LEFT_UP)
    {

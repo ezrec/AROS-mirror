@@ -465,7 +465,7 @@ STATIC ASM IPTR OpenPopupWindow(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) 
    /*
     * Get the gadget hitbox bounds.
     */
-   Get_SuperAttr(cl, obj, BT_HitBox, &ibox);
+   Get_SuperAttr(cl, obj, BT_HitBox, (IPTR *)&ibox);
 
    /*
     * Open the font.

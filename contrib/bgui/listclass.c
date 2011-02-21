@@ -2743,7 +2743,7 @@ METHOD(ListClassDimensions, struct bmDimensions *, bmd)
       /*
        * Pickup superclass font.
        */
-      Get_SuperAttr(cl, obj, BT_TextAttr, &lf);
+      Get_SuperAttr(cl, obj, BT_TextAttr, (IPTR *)&lf);
    };
    /*
     * Setup entry height always even.
@@ -4177,7 +4177,7 @@ METHOD(ListClassDragUpdate, struct bmDragPoint *, bmdp)
       /*
        * Make the y position relative to the window.
        */
-      Get_SuperAttr(cl, obj, BT_HitBox, &ib);
+      Get_SuperAttr(cl, obj, BT_HitBox, (IPTR *)&ib);
       y += ib->Top + (ld->ld_EntryHeight >> 1);
 
       /*

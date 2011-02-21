@@ -119,7 +119,7 @@ ASM struct RastPort *BGUI_ObtainGIRPort(REG(a0) struct GadgetInfo * gi)
   return rp;
 }
 
-IPTR AsmDoMethod(Object * obj, ULONG MethodID, ...)
+IPTR AsmDoMethod(Object * obj, STACKULONG MethodID, ...)
 {
      AROS_SLOWSTACKMETHODS_PRE(MethodID)
      if (!obj)
@@ -137,7 +137,7 @@ IPTR AsmDoMethodA(REG(a2) Object * obj, REG(a1) Msg message)
   return DoMethodA(obj, message);
 }
 
-IPTR AsmDoSuperMethod( Class * cl, Object * obj, ULONG MethodID, ...)
+IPTR AsmDoSuperMethod( Class * cl, Object * obj, STACKULONG MethodID, ...)
 {
    AROS_SLOWSTACKMETHODS_PRE(MethodID)
    if ((!obj) || (!cl))
@@ -155,7 +155,7 @@ IPTR AsmDoSuperMethodA( REG(a0) Class * cl, REG(a2) Object * obj, REG(a1) Msg me
   return DoSuperMethodA(cl,obj,message);
 }
 
-IPTR AsmCoerceMethod( Class * cl, Object * obj, ULONG MethodID, ...)
+IPTR AsmCoerceMethod( Class * cl, Object * obj, STACKULONG MethodID, ...)
 {
     AROS_SLOWSTACKMETHODS_PRE(MethodID)
     if ((!obj) || (!cl))

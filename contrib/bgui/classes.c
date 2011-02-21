@@ -541,7 +541,7 @@ makeproto ULONG ASM BGUI_GetAttrChart(REG(a0) Class *cl, REG(a2) Object *obj, RE
 	 }
 	 else
 	 {
-	    switch (rc & (RAF_SIGNED|RAF_BYTE|RAF_WORD|RAF_LONG|RAF_ADDR))
+	    switch (rc & (RAF_SIGNED|RAF_BYTE|RAF_WORD|RAF_LONG|RAF_IPTR|RAF_ADDR))
 	    {
 	    case RAF_BYTE:
 	       data = (IPTR)(*(UBYTE *)dataspace);
@@ -561,7 +561,11 @@ makeproto ULONG ASM BGUI_GetAttrChart(REG(a0) Class *cl, REG(a2) Object *obj, RE
 	    case RAF_LONG|RAF_SIGNED:
 	       data = (IPTR)(*(LONG *)dataspace);
 	       break;
+	    case RAF_IPTR:
+	       data = *(IPTR *)dataspace;
+	       break;
 	    case RAF_ADDR:
+	    case RAF_ADDR|RAF_IPTR:
 	       data = (IPTR)dataspace;
 	       break;
 	    case RAF_NOP:
@@ -624,7 +628,7 @@ makeproto ULONG ASM BGUI_SetAttrChart(REG(a0) Class *cl, REG(a2) Object *obj, RE
 	 }
 	 else
 	 {
-	    switch (rc & (RAF_SIGNED|RAF_BYTE|RAF_WORD|RAF_LONG|RAF_ADDR))
+	    switch (rc & (RAF_SIGNED|RAF_BYTE|RAF_WORD|RAF_LONG|RAF_IPTR|RAF_ADDR))
 	    {
 	    case RAF_BYTE:
 	    case RAF_BYTE|RAF_SIGNED:
@@ -638,6 +642,8 @@ makeproto ULONG ASM BGUI_SetAttrChart(REG(a0) Class *cl, REG(a2) Object *obj, RE
 	    case RAF_LONG|RAF_SIGNED:
 	       *((ULONG *)dataspace) = (ULONG)data;
 	       break;
+	    case RAF_IPTR:
+	       *(IPTR *)dataspace = data;
 	    case RAF_NOP:
 	       break;
 	    };
@@ -854,12 +860,12 @@ makeproto SAVEDS ULONG ASM BGUI_UnpackStructureTags(REG(a0) APTR pack, REG(a1) U
 /*
  * Quick GetAttr();
  */
-makeproto ASM ULONG Get_Attr(REG(a0) Object *obj, REG(d0) ULONG attr, REG(a1) void *storage)
+makeproto ASM ULONG Get_Attr(REG(a0) Object *obj, REG(d0) ULONG attr, REG(a1) IPTR *storage)
 {
    return (ULONG)AsmDoMethod(obj, OM_GET, attr, storage);
 }
 
-makeproto ASM ULONG Get_SuperAttr(REG(a2) Class *cl, REG(a0) Object *obj, REG(d0) ULONG attr, REG(a1) void *storage)
+makeproto ASM ULONG Get_SuperAttr(REG(a2) Class *cl, REG(a0) Object *obj, REG(d0) ULONG attr, REG(a1) IPTR *storage)
 {
    return (ULONG)AsmDoSuperMethod(cl, obj, OM_GET, attr, storage);
 }
@@ -991,8 +997,8 @@ makeproto ASM IPTR ForwardMsg(REG(a0) Object *s, REG(a1) Object *d, REG(a2) Msg 
    old_mousex = *mousex;
    old_mousey = *mousey;
 
-   Get_Attr(s, BT_OuterBox, (ULONG *)&b1);
-   Get_Attr(d, BT_OuterBox, (ULONG *)&b2);
+   Get_Attr(s, BT_OuterBox, (IPTR *)&b1);
+   Get_Attr(d, BT_OuterBox, (IPTR *)&b2);
 
    /*
     * Adjust the coordinates to be relative to the destination object.

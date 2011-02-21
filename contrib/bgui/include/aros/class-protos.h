@@ -182,9 +182,9 @@ extern SAVEDS ULONG ASM BGUI_PackStructureTags(REG(a0) APTR, REG(a1) ULONG *, RE
 extern SAVEDS ULONG ASM BGUI_UnpackStructureTags(REG(a0) APTR, REG(a1) ULONG *, REG(a2) struct TagItem *);
 #endif
 
-extern ASM ULONG Get_Attr(REG(a0) Object *, REG(d0) ULONG, REG(a1) void *);
+extern ASM ULONG Get_Attr(REG(a0) Object *, REG(d0) ULONG, REG(a1) IPTR *);
 
-extern ASM ULONG Get_SuperAttr(REG(a2) Class *, REG(a0) Object *, REG(d0) ULONG, REG(a1) void *);
+extern ASM ULONG Get_SuperAttr(REG(a2) Class *, REG(a0) Object *, REG(d0) ULONG, REG(a1) IPTR *);
 
 extern IPTR  NewSuperObject(Class *, Object *, struct TagItem *);
 extern ULONG DoSetMethodNG(Object *, Tag, ...);
@@ -267,7 +267,7 @@ extern Class *InitWindowClass(void);
 
 /* dgm.c                                      */
 
-extern ULONG myDoGadgetMethod(Object *, struct Window *, struct Requester *, IPTR MethodID, ...);
+extern ULONG myDoGadgetMethod(Object *, struct Window *, struct Requester *, STACKULONG MethodID, ...);
 
 #ifndef __AROS__
 extern SAVEDS ASM ULONG BGUI_DoGadgetMethodA( REG(a0) Object *, REG(a1) struct Window *, REG(a2) struct Requester *, REG(a3) Msg);
@@ -512,10 +512,10 @@ extern REGFUNCPROTO3(VOID, LHook_Format,
 
 extern ASM struct RastPort *BGUI_ObtainGIRPort( REG(a0) struct GadgetInfo * );
 
-extern IPTR AsmDoMethod( Object *, ULONG MethodID, ... );
+extern IPTR AsmDoMethod( Object *, STACKULONG MethodID, ... );
 
-extern IPTR AsmDoSuperMethod( Class *, Object *, ULONG MethodID, ... );
-extern IPTR AsmCoerceMethod( Class *, Object *, ULONG MethodID, ... );
+extern IPTR AsmDoSuperMethod( Class *, Object *, STACKULONG MethodID, ... );
+extern IPTR AsmCoerceMethod( Class *, Object *, STACKULONG MethodID, ... );
 
 extern ASM IPTR AsmDoMethodA( REG(a2) Object *, REG(a1) Msg );
 

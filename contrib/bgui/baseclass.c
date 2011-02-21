@@ -629,7 +629,8 @@ METHOD(BaseClassRenderX, struct gpRender *, gpr)
    struct BaseInfo   *bi;
    int                x, y, from_x, from_y, to_x, to_y;
    struct IBox       *box, to;
-   ULONG              rc = 0, gok = TRUE;
+   ULONG              rc = 0;
+   IPTR               gok = TRUE;
 
    /*
     * Are we inhibited? If so we do not render ourselves.
@@ -647,7 +648,7 @@ METHOD(BaseClassRenderX, struct gpRender *, gpr)
        */
       if (bd->bd_Window)
       {
-	 Get_Attr(bd->bd_Window, WINDOW_BufferRP, (ULONG *)&rp);
+	 Get_Attr(bd->bd_Window, WINDOW_BufferRP, (IPTR *)&rp);
       }
    };
 
@@ -658,7 +659,7 @@ METHOD(BaseClassRenderX, struct gpRender *, gpr)
     */
    if (bd->bd_View)
    {
-      Get_Attr(bd->bd_View, VIEW_ObjectBuffer, (ULONG *)&rp);
+      Get_Attr(bd->bd_View, VIEW_ObjectBuffer, (IPTR *)&rp);
    };
 
    if ((bd->bd_RPort = rp))
@@ -693,8 +694,11 @@ METHOD(BaseClassRenderX, struct gpRender *, gpr)
       {
 	 if (rp != gpr->gpr_RPort)
 	 {
-	    Get_Attr(bd->bd_View, VIEW_AbsoluteX, &x);
-	    Get_Attr(bd->bd_View, VIEW_AbsoluteY, &y);
+	    IPTR tmp;
+	    Get_Attr(bd->bd_View, VIEW_AbsoluteX, &tmp);
+	    x = (int)tmp;
+	    Get_Attr(bd->bd_View, VIEW_AbsoluteY, &tmp);
+	    y = (int)tmp;
 
 	    from_x = bd->bd_OuterBox.Left;
 	    from_y = bd->bd_OuterBox.Top;
@@ -1334,7 +1338,7 @@ METHOD(BaseClassDragging, struct gpInput *, gpi)
 	     * Get the hitbox bounds of the
 	     * receiver.
 	     */
-	    Get_Attr(bd->bd_ActRec, BT_HitBox, &db);
+	    Get_Attr(bd->bd_ActRec, BT_HitBox, (IPTR *)&db);
 
 	    /*
 	     * Get mouse coords relative to the

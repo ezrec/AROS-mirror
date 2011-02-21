@@ -1721,7 +1721,7 @@ WW(kprintf("** GroupClass_RelayoutGrop\n"));
    if (bc->bc_Window)
    {
 WW(kprintf("** GroupClass_RelayoutGrop: has bc->bc_Window\n"));
-      Get_Attr(bc->bc_Window, WINDOW_Window, (ULONG *)&w);
+      Get_Attr(bc->bc_Window, WINDOW_Window, (IPTR *)&w);
 
       if (w)
       {
@@ -2075,7 +2075,7 @@ METHOD(GroupClassLeftExt, struct bmLeftExt *, le)
 {
    GD          *gd = INST_DATA(cl, obj);
    BC          *bc = BASE_DATA(obj);
-   ULONG        rc;
+   IPTR         rc;
 
    /*
     * Do we have a label or frame? If so we

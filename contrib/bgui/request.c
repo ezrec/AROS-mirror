@@ -299,7 +299,8 @@ makeproto SAVEDS ASM ULONG BGUI_RequestA(REG(a0) struct Window *win, REG(a1) str
    struct Window  *wptr;
    UBYTE          *gstr;
    CONST_STRPTR    wdt;
-   ULONG           id, maxid = 0, signal, rc = ~0;
+   ULONG           id, maxid = 0, rc = ~0;
+   IPTR            signal;
    APTR            rlock = NULL;
    BOOL            cw = FALSE, running = TRUE;
 

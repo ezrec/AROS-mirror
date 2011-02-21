@@ -156,7 +156,7 @@ METHOD(ProgressClassSetUpdate, struct opUpdate *, opu)
          break;
 
       case BT_TextAttr:
-         Get_SuperAttr(cl, obj, BT_TextFont, &pd->pd_Font);
+         Get_SuperAttr(cl, obj, BT_TextFont, (IPTR *)&pd->pd_Font);
          break;
       }
    }
