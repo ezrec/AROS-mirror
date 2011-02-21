@@ -632,7 +632,7 @@ STATIC ASM VOID SetFrameAttrs(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) st
    const struct TagItem *tstate = attr;
    struct TagItem    *tag;
    Object   *ob   = NULL;
-   ULONG     data;
+   IPTR      data;
 
    if ((tag = FindTagItem(FRM_Template, attr)))
    {
@@ -797,7 +797,7 @@ STATIC ASM VOID SetFrameAttrs(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) st
 METHOD(FrameClassNew, struct opSet *, ops)
 {
    FD             *fd;
-   ULONG           rc;
+   IPTR            rc;
 
    /*
     * First we let the superclass
@@ -863,7 +863,9 @@ METHOD_END
 METHOD(FrameClassGet, struct opGet *, opg)
 {
    FD       *fd = INST_DATA(cl, obj);
-   ULONG     rc = 1, tag = opg->opg_AttrID, *store = opg->opg_Storage;
+   ULONG     rc = 1;
+   Tag       tag = opg->opg_AttrID;
+   IPTR     *store = opg->opg_Storage;
 
    /*
     * First we see if the attribute

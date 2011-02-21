@@ -208,7 +208,7 @@ STATIC ASM BOOL AddMXObjects(REG(a0) Object *target, REG(a1) MD *md)
 STATIC METHOD(MXClassNew, struct opSet *, ops)
 {
    MD             *md;
-   ULONG           rc, data;
+   IPTR            rc, data;
    const struct TagItem *tstate;
    struct TagItem *tags = ops->ops_AttrList, *tag;
    int             type = MXTYPE_RADIOBUTTON;

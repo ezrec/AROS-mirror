@@ -161,7 +161,7 @@ STATIC ASM VOID SetupSize(REG(a0) Class *cl, REG(a1) Object *obj)
       case GA_Top:    tag->ti_Data = box->Top;    break;
       case GA_Width:  tag->ti_Data = box->Width;  break;
       case GA_Height: tag->ti_Data = box->Height; break;
-      case GA_Bounds: tag->ti_Data = (ULONG)box;  break;
+      case GA_Bounds: tag->ti_Data = (IPTR)box;   break;
       }
    }
 
@@ -172,7 +172,7 @@ STATIC ASM VOID SetupSize(REG(a0) Class *cl, REG(a1) Object *obj)
 STATIC ASM IPTR ExtClassNew(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1)  struct opSet * ops)
 {
     ED              *ed;
-    ULONG           rc;
+    IPTR            rc;
     struct TagItem  *attr;
 
     if (( rc = AsmDoSuperMethodA(cl,obj,(Msg)ops) ))
@@ -278,7 +278,7 @@ STATIC ASM IPTR ExtClassGet(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1)  str
     switch (opg->opg_AttrID)
     {
         case EXT_Object:
-            *(opg->opg_Storage) = (ULONG)ed->ed_Object;
+            *(opg->opg_Storage) = (IPTR)ed->ed_Object;
             break;
 
         default:

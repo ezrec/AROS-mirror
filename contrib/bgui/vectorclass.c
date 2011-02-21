@@ -577,7 +577,7 @@ STATIC ULONG SetupArea( struct RastPort *rp, VD *vd, struct VectorItem *vi, UWOR
 METHOD(VectorClassNew, struct opSet *, ops)
 {
    VD       *vd;
-   ULONG     rc;
+   IPTR      rc;
 
    /*
     * First we let the superclass
@@ -611,7 +611,7 @@ METHOD_END
 METHOD(VectorClassSet, struct opSet *, ops)
 {
    VD                *vd = INST_DATA(cl, obj);
-   ULONG              data;
+   IPTR               data;
    struct TagItem    *tag;
    const struct TagItem *tstate = ops->ops_AttrList;
    BOOL               resize = FALSE;
@@ -700,7 +700,8 @@ METHOD_END
 METHOD(VectorClassGet, struct opGet *, opg)
 {
    VD          *vd = INST_DATA( cl, obj );
-   ULONG        rc = 1, *store = opg->opg_Storage;
+   ULONG        rc = 1;
+   IPTR        *store = opg->opg_Storage;
 
    /*
     * Firts we see if the attribute

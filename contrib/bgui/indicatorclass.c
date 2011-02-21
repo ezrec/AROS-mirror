@@ -77,7 +77,7 @@ METHOD(IClassNew, struct opSet *, ops)
 {
    ID             *id;
    struct TagItem *tags;
-   ULONG           rc;
+   IPTR            rc;
 
    tags = DefTagList(BGUI_INDICATOR_GADGET, ops->ops_AttrList);
 
@@ -142,7 +142,7 @@ METHOD_END
 METHOD(IClassSetUpdate, struct opUpdate *, opu)
 {
    ID             *id = INST_DATA(cl, obj);
-   ULONG           data;
+   IPTR            data;
    const struct TagItem *tstate = opu->opu_AttrList;
    struct TagItem *tag;
    BOOL            update = FALSE;
@@ -203,7 +203,9 @@ METHOD_END
 METHOD(IClassGet, struct opGet *, opg)
 {
    ID          *id = INST_DATA(cl, obj);
-   ULONG        rc = 1, attr = opg->opg_AttrID, *store = opg->opg_Storage;
+   ULONG        rc = 1;
+   Tag          attr = opg->opg_AttrID;
+   IPTR        *store = opg->opg_Storage;
 
    switch (attr)
    {

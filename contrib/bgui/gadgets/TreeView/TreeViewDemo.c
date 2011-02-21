@@ -255,7 +255,8 @@ if ((BGUIBase = OpenLibrary("bgui.library",40)) && IntuitionBase)
                                 {
                                 if ((win = WindowOpen(WI_Main)))
                                         {
-                                        ULONG                   winsig,sigs,id;
+                                        IPTR                    winsig;
+                                        ULONG                   sigs,id;
                                         BOOL                    running;
 
                                         GetAttr(WINDOW_SigMask,WI_Main,&winsig);
@@ -338,7 +339,8 @@ ASM SAVEDS REGFUNC3(ULONG, WindowHandler,
         REGPARAM(A1, struct IntuiMessage *, imsg))
 {
 struct Window   *win;
-ULONG                   cursel,method,entry,which,flags;
+ULONG                   cursel,method,which,flags;
+IPTR                    entry;
 Object                  *view;
 
 view = (Object *) hook->h_Data;
@@ -347,7 +349,7 @@ win = imsg->IDCMPWindow;
 if (imsg->Class == IDCMP_RAWKEY)
         {
         method = TVM_SELECT;
-        entry = (ULONG) TV_SELECTED;
+        entry = (IPTR) TV_SELECTED;
         which = ~0;
         flags = TVF_MAKEVISIBLE;
         cursel = DoMethod(view,TVM_GETENTRY,TV_SELECTED,TVW_ENTRY,0);
@@ -363,14 +365,14 @@ if (imsg->Class == IDCMP_RAWKEY)
 
                         if (imsg->Qualifier & CTRLKEY)
                                 {
-                                entry = (ULONG) TV_ROOT;
+                                entry = (IPTR) TV_ROOT;
                                 which = TVW_CHILD_FIRST;
                                 }
                         }
                 else
                         {
                         which = TVW_CHILD_FIRST;
-                        entry = (ULONG) TV_ROOT;
+                        entry = (IPTR) TV_ROOT;
                         }
                 }
 
@@ -385,14 +387,14 @@ if (imsg->Class == IDCMP_RAWKEY)
 
                         if (imsg->Qualifier & CTRLKEY)
                                 {
-                                entry = (ULONG) TV_ROOT;
+                                entry = (IPTR) TV_ROOT;
                                 which = TVW_TREE_LAST;
                                 }
                         }
                 else
                         {
                         which = TVW_CHILD_FIRST;
-                        entry = (ULONG) TV_ROOT;
+                        entry = (IPTR) TV_ROOT;
                         }
                 }
 

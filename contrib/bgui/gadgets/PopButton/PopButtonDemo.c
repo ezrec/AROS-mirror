@@ -137,7 +137,8 @@ int main( int argc, char **argv )
 {
 	struct Window		*window;
 	Object			*WO_Window, *GO_Quit, *GO_PMB, *GO_PMB1, *GO_PMB2, *GO_PMB3; /* NMC */
-	ULONG			 signal, rc, tmp = 0;
+	ULONG			 rc;
+	IPTR                     signal, tmp = 0;
 	UBYTE			*txt;
 	BOOL			 running = TRUE;
 

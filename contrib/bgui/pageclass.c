@@ -194,7 +194,7 @@ METHOD(PageClassNew, struct opSet *, ops)
 {
    PD                *pd;
    struct TagItem    *tags, *tag;
-   ULONG              rc;
+   IPTR               rc;
 
    tags = DefTagList(BGUI_PAGE_GADGET, ops->ops_AttrList);
 
@@ -371,7 +371,8 @@ METHOD_END
 METHOD(PageClassGet, struct opGet *, opg )
 {
    PD       *pd = INST_DATA(cl, obj);
-   ULONG     rc = 1, *store = opg->opg_Storage;
+   ULONG     rc = 1;
+   IPTR     *store = opg->opg_Storage;
 
    switch (opg->opg_AttrID)
    {

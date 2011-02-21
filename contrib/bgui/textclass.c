@@ -210,8 +210,8 @@ METHOD_END
 METHOD(TextClassSetCustom, struct rmAttr *, ra)
 {
    TD               *td = INST_DATA(cl, obj);
-   ULONG             attr = ra->ra_Attr->ti_Tag;
-   ULONG             data = ra->ra_Attr->ti_Data;
+   Tag               attr = ra->ra_Attr->ti_Tag;
+   IPTR              data = ra->ra_Attr->ti_Data;
 
    switch (attr)
    {
@@ -247,8 +247,8 @@ METHOD_END
 METHOD(TextClassGetCustom, struct rmAttr *, ra)
 {
    TD               *td = INST_DATA(cl, obj);
-   ULONG             attr = ra->ra_Attr->ti_Tag;
-   ULONG            *store = (ULONG *)ra->ra_Attr->ti_Data;
+   Tag               attr = ra->ra_Attr->ti_Tag;
+   IPTR             *store = (IPTR  *)ra->ra_Attr->ti_Data;
 
    switch (attr)
    {

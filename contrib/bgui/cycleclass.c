@@ -108,7 +108,7 @@ METHOD(CycleClassNew, struct opSet *, ops)
 {
    CD             *cd;
    struct TagItem *tags;
-   ULONG           rc;
+   IPTR            rc;
 
    tags = DefTagList(BGUI_CYCLE_GADGET, ops->ops_AttrList);
 
@@ -165,7 +165,8 @@ METHOD_END
 METHOD(CycleClassSetUpdate, struct opUpdate *, opu)
 {
    CD                 *cd = INST_DATA(cl, obj);
-   ULONG               oact = cd->cd_Active, data;
+   ULONG               oact = cd->cd_Active;
+   IPTR                data;
    const struct TagItem *tstate = opu->opu_AttrList;
    struct TagItem     *tag;
    WORD                dis = GADGET(obj)->Flags & GFLG_DISABLED;
@@ -884,7 +885,8 @@ METHOD_END
 METHOD(CycleClassGet, struct opGet *, opg)
 {
    CD        *cd = INST_DATA(cl, obj);
-   ULONG      rc = 1, *store = opg->opg_Storage;
+   ULONG      rc = 1;
+   IPTR      *store = opg->opg_Storage;
 
    switch (opg->opg_AttrID)
    {

@@ -128,7 +128,7 @@ METHOD(GroupClassLayout,struct bmLayout *,bml)
 	return(0);
 	if(gd->GotConstraints==FALSE)
 		return(FALSE);
-	if(GetAttr(BT_InnerBox,obj,(ULONG *)&bounds)==FALSE)
+	if(GetAttr(BT_InnerBox,obj,(IPTR *)&bounds)==FALSE)
 		return(FALSE);
 #ifdef DEBUG_GROUP_CLASS
 	{
@@ -164,7 +164,7 @@ METHOD_END
 METHOD(GroupClassDimensions,struct bmDimensions *,bmd)
 {
 	GD *gd=INST_DATA(cl,obj);
-	ULONG member_count;
+	IPTR member_count;
 
 	bmd->bmd_Flags|=BDF_CUSTOM_GROUP;
 	if(DoSuperMethodA(cl,obj,(Msg)bmd)==0)
@@ -179,7 +179,7 @@ METHOD(GroupClassDimensions,struct bmDimensions *,bmd)
 	{
 		Object **members;
 
-		if(GetAttr(GROUP_Members,obj,(ULONG *)&members)==FALSE)
+		if(GetAttr(GROUP_Members,obj,(IPTR *)&members)==FALSE)
 			return(FALSE);
 		if(gd->LayoutDefinition.Elements)
 		{
@@ -274,7 +274,7 @@ METHOD(GroupClassDimensions,struct bmDimensions *,bmd)
 				element->Element.MaximumHeight=0xFFFF;
 #else
 				{
-					ULONG attribute;
+					IPTR attribute;
 
 					if(GetAttr(LGO_MinWidth,element->Object,&attribute)==FALSE)
 						return(FALSE);
@@ -300,14 +300,14 @@ METHOD(GroupClassDimensions,struct bmDimensions *,bmd)
 				{
 					Object *member;
 
-					if(GetAttr(LGO_Object,element->Object,(ULONG *)&member)==FALSE
+					if(GetAttr(LGO_Object,element->Object,(IPTR *)&member)==FALSE
 					|| DoMethod(member,BASE_INHIBIT,gd->FrontPage!=gd->LayoutDefinition.ElementCount)==FALSE)
 						return(FALSE);
 					D(bug("Member %lx, Count %lu, File %s, Line %lu\n",member,member_count,__FILE__,__LINE__));
 				}
 			}
 			{
-				ULONG attribute;
+				IPTR attribute;
 
 				if(GetAttr(BT_LeftOffset,obj,&attribute)==FALSE)
 					return(FALSE);
@@ -401,7 +401,7 @@ static ULONG GroupSet(Class *cl,Object *obj,struct opSet *ops)
 							{
 								if(gd->FrontPage<member_count)
 								{
-									if(GetAttr(LGO_Object,members[gd->FrontPage],(ULONG *)&member)==FALSE)
+									if(GetAttr(LGO_Object,members[gd->FrontPage],(IPTR *)&member)==FALSE)
 										paged=FALSE;
 									else
 									{
@@ -412,7 +412,7 @@ static ULONG GroupSet(Class *cl,Object *obj,struct opSet *ops)
 								}
 								if(paged)
 								{
-									if(GetAttr(LGO_Object,members[tag->ti_Data],(ULONG *)&member)==FALSE)
+									if(GetAttr(LGO_Object,members[tag->ti_Data],(IPTR *)&member)==FALSE)
 										paged=FALSE;
 									else
 									{
@@ -480,7 +480,7 @@ METHOD(GroupClassNew,struct opSet *,ops)
 			obj=NULL;
 		}
 	}
-	return((ULONG)obj);
+	return((IPTR)obj);
 }
 METHOD_END
 
@@ -534,7 +534,7 @@ METHOD_END
 
 METHOD(GroupClassNewMember,struct opSet *,ops)
 {
-	return((ULONG)NewObjectA(((struct oBGUIGroupClassData *)cl->cl_UserData)->NodeClass,NULL,ops->ops_AttrList));
+	return (IPTR)NewObjectA(((struct oBGUIGroupClassData *)cl->cl_UserData)->NodeClass,NULL,ops->ops_AttrList);
 }
 METHOD_END
 
@@ -699,7 +699,7 @@ METHOD(GroupNodeClassNew,struct opSet *,ops)
 			obj=NULL;
 		}
 	}
-	return((ULONG)obj);
+	return((IPTR)obj);
 }
 METHOD_END
 

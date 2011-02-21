@@ -126,7 +126,7 @@ typedef struct {
 STATIC IPTR ASM SetGroupNodeAttrs(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct opSet *ops)
 {
    MD              *md = INST_DATA(cl, obj);
-   ULONG            data;
+   IPTR             data;
    const struct TagItem  *tstate = ops->ops_AttrList;
    struct TagItem  *tag;
    BOOL             relayout = FALSE;
@@ -205,9 +205,11 @@ STATIC IPTR ASM SetGroupNodeAttrs(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1
          break;
 
       case LGO_FixAspect:
-         if (*(ULONG *)&md->md_AspectX != data)
+         if ((md->md_AspectX != ((data>>16) & 0xffff)) &&
+             (md->md_AspectY != ((data>> 0) & 0xffff)))
          {
-            *(ULONG *)&md->md_AspectX = data;
+            md->md_AspectX = (data>>16) & 0xffff;
+            md->md_AspectY = (data>> 0) & 0xffff;
             relayout = TRUE;
          };
          break;
@@ -245,7 +247,7 @@ STATIC IPTR ASM SetGroupNodeAttrs(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1
 METHOD(GroupNodeClassNew, struct opSet *, ops)
 {
    MD          *md;
-   ULONG        rc;
+   IPTR         rc;
 
    /*
     * First we let the superclass
@@ -299,7 +301,8 @@ METHOD_END
 METHOD(GroupNodeClassGet, struct opGet *, opg)
 {
    MD             *md = INST_DATA(cl, obj);
-   ULONG           rc = 1, *store = opg->opg_Storage;
+   ULONG           rc = 1;
+   IPTR           *store = opg->opg_Storage;
 
    switch (opg->opg_AttrID)
    {
@@ -516,7 +519,7 @@ STATIC ASM Object *FindObNode(REG(a0) GD *gd, REG(a1) Object *find)
 
 METHOD(GroupClassNewMember, struct opSet *, ops)
 {
-   return (ULONG)BGUI_NewObjectA(BGUI_GROUP_NODE, ops->ops_AttrList);
+   return (IPTR)BGUI_NewObjectA(BGUI_GROUP_NODE, ops->ops_AttrList);
 }
 METHOD_END
 ///
@@ -702,8 +705,8 @@ METHOD(GroupClassNew, struct opSet *, ops)
 {
    GD               *gd;
    struct TagItem   *tags = ops->ops_AttrList, *tstate, *tag;
-   ULONG             rc;
-   ULONG             data;
+   IPTR              rc;
+   IPTR              data;
    BOOL              invert = FALSE;
    Object           *m;
    struct Node      *n1, *n2;
@@ -854,7 +857,8 @@ METHOD_END
 METHOD(GroupClassGet, struct opGet *, opg)
 {
    GD       *gd = INST_DATA(cl, obj);
-   ULONG     rc = 1, *store = opg->opg_Storage;
+   ULONG     rc = 1;
+   IPTR     *store = opg->opg_Storage;
 
    switch (opg->opg_AttrID)
    {
@@ -1580,7 +1584,7 @@ METHOD(GroupClassReplace, struct grmReplaceMember *, grrm)
          /*
           * Set return code.
           */
-         return (ULONG)grrm->grrm_MemberA;
+         return (IPTR)grrm->grrm_MemberA;
       };
    };
    return 0;
@@ -1608,7 +1612,7 @@ METHOD(GroupClassRemMember, struct grmRemMember *, grmr)
        */
       RelayoutGroup(obj);
 
-      return (ULONG)grmr->grmr_Member;
+      return (IPTR)grmr->grmr_Member;
    }
    return (IPTR)NULL;
 }

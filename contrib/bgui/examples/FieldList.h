@@ -118,7 +118,7 @@ REGFUNC3(,DispatchFL,
 	FLD		       *fld;
 	APTR			entry;
 	struct IBox	       *ib;
-	ULONG			rc, spot;
+	IPTR 			rc, spot;
 
 	/*
 	 *	What do they want...
@@ -186,7 +186,7 @@ REGFUNC3(,DispatchFL,
 				/*
 				 *	Get the listview class list bounds.
 				 */
-				GetAttr( LISTV_ViewBounds, obj, ( ULONG * )&ib );
+				GetAttr( LISTV_ViewBounds, obj, ( IPTR * )&ib );
 
 				/*
 				 *	Mouse inside view bounds? Since the superclass

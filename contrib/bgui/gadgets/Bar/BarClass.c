@@ -575,7 +575,7 @@ METHOD(BarClassNew,struct opSet *,ops)
 		default_tags[1].ti_Tag=FRM_Recessed;
 		default_tags[1].ti_Data=FALSE;
 		default_tags[2].ti_Tag=TAG_MORE;
-		default_tags[2].ti_Data=(ULONG)ops->ops_AttrList;
+		default_tags[2].ti_Data=(IPTR)ops->ops_AttrList;
 		ops->ops_AttrList=default_tags;
 		obj=(Object *)DoSuperMethodA(cl,obj,(Msg)ops);
 		ops->ops_AttrList=(struct TagItem *)default_tags[2].ti_Data;
@@ -631,7 +631,7 @@ METHOD(BarClassNew,struct opSet *,ops)
 		CloseLibrary(BGUIBase);
 		BGUIBase=NULL;
 	}
-	return((ULONG)obj);
+	return((IPTR)obj);
 }
 METHOD_END
 
@@ -702,7 +702,7 @@ static BOOL GetAttribute(Class *cl,GD *gd,ULONG attribute,IPTR *store)
 			*store=gd->VerticalTotal;
 			break;
    case BT_PostRenderHighestClass:
-      *store=(ULONG)cl;
+      *store=(IPTR)cl;
       break;
 		default:
 			return(FALSE);

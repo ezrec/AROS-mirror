@@ -73,7 +73,7 @@ void GimmeQuickDisplayWindow(void)
 
 int main(int argc, char **argv)
 {
-    ULONG sigmask;
+    IPTR sigmask;
     BOOL quit = FALSE;
 
     if (NULL == (IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library",0)))

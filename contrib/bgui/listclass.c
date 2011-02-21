@@ -866,7 +866,8 @@ STATIC ASM VOID DrawDragLine(REG(a0) LD *ld, REG(a1) struct GadgetInfo *gi)
 METHOD(ListClassNew, struct opSet *, ops)
 {
    LD       *ld;
-   ULONG        rc, sort = LVAP_TAIL, data;
+   IPTR         rc, data;
+   ULONG        sort = LVAP_TAIL;
    struct TagItem *tags, *tag;
    const struct TagItem *tstate;
    ULONG       *new_weights = NULL;
@@ -1018,7 +1019,8 @@ METHOD(ListClassSetUpdate, struct opUpdate *, opu)
    const struct TagItem *tstate = opu->opu_AttrList;
    struct TagItem *tag;
    LVE            *lve;
-   ULONG           data, otop = ld->ld_Top, ntop = otop, num, oldcol = ld->ld_Columns;
+   IPTR            data;
+   ULONG           otop = ld->ld_Top, ntop = otop, num, oldcol = ld->ld_Columns;
    WORD            dis = GADGET(obj)->Flags & GFLG_DISABLED;
    BOOL            vc = FALSE;
    ULONG          *new_weights;
@@ -1342,7 +1344,8 @@ METHOD(ListClassGet, struct opGet *, opg)
 {
    LD          *ld = INST_DATA( cl, obj );
    ULONG        rc = TRUE, num = ~0;
-   ULONG        tag = opg->opg_AttrID, *store = opg->opg_Storage;
+   Tag          tag = opg->opg_AttrID;
+   IPTR        *store = opg->opg_Storage;
 
    switch (tag)
    {
@@ -2988,7 +2991,7 @@ METHOD(ListClassInsertSingle, struct lvmInsertSingle *, lvis)
    /*
     * Insert them.
     */
-   rc = METHOD_CALL(ListClassInsertEntries, cl, obj, &lvmi, getreg(REG_A4));
+   rc = METHOD_CALL(ListClassInsertEntries, cl, obj, (Msg)&lvmi, (APTR)getreg(REG_A4));
 
    /*
     * Select the entry or make it visible
@@ -3718,7 +3721,7 @@ STATIC METHOD(ListClassMove, struct lvmMove *, lvm )
 {
    LD       *ld = ( LD * )INST_DATA( cl, obj );
    LVE         *lve, *tmp;
-   ULONG        rc = 0L, num = 0L, cpos;
+   ULONG        rc = 0L, num = 0L, cpos = 0;
 
    /*
     * Look up the entry.

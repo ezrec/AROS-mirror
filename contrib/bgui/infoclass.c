@@ -59,7 +59,7 @@ METHOD(InfoClassNew, struct opSet *, ops)
 {
    ID                *id;
    struct TagItem    *tags;
-   ULONG              rc;
+   IPTR               rc;
    ULONG              ho, vo;
 
    tags = DefTagList(BGUI_INFO_GADGET, ops->ops_AttrList);

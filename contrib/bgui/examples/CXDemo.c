@@ -58,7 +58,8 @@ UBYTE *InfoTxt = ISEQ_C ISEQ_B ISEQ_HIGHLIGHT
 VOID StartDemo( void )
 {
 	Object  *CM_Broker, *WN_Window, *GA_Hide, *GA_Quit;
-	ULONG           signal = 0L, winsig = 0L, sigrec, type, id, rc;
+	ULONG           sigrec, type, id, rc;
+	IPTR            signal = 0L, winsig = 0L;
 	BOOL            running = TRUE;
 
 	/*

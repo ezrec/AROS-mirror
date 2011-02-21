@@ -83,7 +83,8 @@ VOID StartDemo( void )
 {
    struct Window           *window;
    Object                  *WO_Window, *GO_Add, *GO_Quit, *GO_Ins, *GO_Rem, *addobj[20], *base;
-   ULONG                    signal = 0, rc;
+   IPTR                     signal = 0;
+   ULONG                    rc;
    BOOL                     running = TRUE, ok = FALSE;
    int                      x = 0, xx;
 

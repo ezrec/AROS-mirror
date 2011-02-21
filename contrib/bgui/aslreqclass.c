@@ -57,7 +57,7 @@ static ULONG AslPackTable[] =
 METHOD(AslReqClassNew, struct opSet *, ops)
 {
    AD          *ad;
-   ULONG        rc;
+   IPTR         rc;
 
    /*
     * First we let the superclass
@@ -128,7 +128,8 @@ METHOD_END
 METHOD(AslReqClassSetUpdate, struct opSet *, ops)
 {
    AD             *ad = INST_DATA(cl, obj);
-   ULONG           attr, data;
+   Tag             attr;
+   IPTR            data;
    const struct TagItem *tstate;
    struct TagItem *tags, *tag;
    BOOL            asl = FALSE;
@@ -194,7 +195,9 @@ METHOD(AslReqClassGet, struct opGet *, opg)
 {
    AD                *ad = INST_DATA(cl, obj);
    struct TagItem    *tag;
-   ULONG              rc, attr = opg->opg_AttrID, *store = opg->opg_Storage;
+   ULONG              rc;
+   Tag                attr = opg->opg_AttrID;
+   IPTR              *store = opg->opg_Storage;
    
    if ((tag = FindTagItem(attr, ad->ad_ASLTags)))
    {
@@ -223,7 +226,7 @@ METHOD(AslReqClassAllocRequest, Msg, msg)
       ASL_Width,        ad->ad_Width,     ASL_Height,    ad->ad_Height,
       TAG_DONE);
       
-   return (ULONG)ad->ad_Requester;
+   return (IPTR)ad->ad_Requester;
 }
 METHOD_END
 ///

@@ -75,7 +75,8 @@ VOID StartDemo( void )
 {
         struct Window           *window;
         Object                  *WO_Window, *GO_Quit, *GO_Show, *GO_List, *GO_Shift, *GO_All, *GO_None;
-        ULONG                    signal, rc, tmp = 0;
+        IPTR                     signal;
+        ULONG                    rc, tmp = 0;
         BOOL                     running = TRUE;
 
         /*

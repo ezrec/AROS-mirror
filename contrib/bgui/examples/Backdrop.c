@@ -43,7 +43,8 @@ quit
 VOID Say( struct Screen *screen )
 {
         Object                  *WO_Window, *GO_Ok;
-        ULONG                    signal, rc;
+        IPTR                     signal;
+        ULONG                    rc;
         BOOL                     running = TRUE;
 
         /*
@@ -123,7 +124,8 @@ VOID StartDemo( void )
         struct Window           *window;
         Object                  *WO_Window;
         APTR                     wlock;
-        ULONG                    mode, rc, signal;
+        ULONG                    mode, rc;
+        IPTR                     signal;
         BOOL                     running = TRUE;
 
         /*

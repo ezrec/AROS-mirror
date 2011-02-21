@@ -150,7 +150,7 @@ static ULONG LabelPackTable[] =
 METHOD(LabelClassNew, struct opSet *, ops)
 {
    LD       *ld;
-   ULONG     rc;
+   IPTR      rc;
 
    /*
     * First we let the superclass
@@ -252,8 +252,8 @@ METHOD(LabelClassSetCustom, struct rmAttr *, ra)
 {
    LD               *ld = (LD *)INST_DATA(cl, obj);
    struct TextFont  *tf;
-   ULONG             attr = ra->ra_Attr->ti_Tag;
-   ULONG             data = ra->ra_Attr->ti_Data;
+   Tag               attr = ra->ra_Attr->ti_Tag;
+   IPTR              data = ra->ra_Attr->ti_Data;
 
    switch (attr)
    {
@@ -340,7 +340,9 @@ METHOD_END
 METHOD(LabelClassGet, struct opGet *, opg)
 {
    LD       *ld = INST_DATA(cl, obj);
-   ULONG     rc = 1, tag = opg->opg_AttrID, *store = opg->opg_Storage;
+   ULONG     rc = 1;
+   Tag       tag = opg->opg_AttrID;
+   IPTR     *store = opg->opg_Storage;
    UBYTE    *u;
    
    /*

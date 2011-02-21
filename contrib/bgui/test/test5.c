@@ -70,14 +70,14 @@ int main(int argc,char **argv)
                 if((window=InitTest_5())!=NULL
                 && WindowOpen(window)!=NULL)
                 {
-                        ULONG signal;
+                        IPTR signal;
 
                         if(GetAttr(WINDOW_SigMask,window,&signal)
                         && signal!=0)
                         {
                                 for(;;)
                                 {
-                                        ULONG rc,id;
+                                        IPTR rc,id;
 
                                         Wait(signal);
                                         switch((rc=HandleEvent(window)))

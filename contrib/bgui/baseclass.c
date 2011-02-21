@@ -247,7 +247,7 @@ METHOD_END
 METHOD(BaseClassNew, struct opSet *, ops)
 {
    BD                *bd;
-   ULONG              rc;
+   IPTR               rc;
    struct TagItem    *tags = ops->ops_AttrList;
 
    /*
@@ -1634,7 +1634,7 @@ METHOD(BaseClassGetObject, struct bmGetDragObject *, bmgo)
    BD                *bd = INST_DATA(cl, obj);
    struct GadgetInfo *gi = bmgo->bmgo_GInfo, tgi = *gi;
    struct RastPort    rp = gi->gi_Screen->RastPort;
-   ULONG              rc;
+   IPTR               rc;
    
    int x = bd->bd_HitBox.Left;
    int y = bd->bd_HitBox.Top;
@@ -1766,7 +1766,7 @@ METHOD_END
 METHOD(BaseClassKeyLabel, struct bmKeyLabel *, bmkl)
 {
    BD         *bd = INST_DATA(cl, obj);
-   ULONG       rc = 0;
+   IPTR        rc = 0;
    
    if (bd->bd_Label)
    {

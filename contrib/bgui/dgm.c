@@ -68,7 +68,8 @@ METHOD(DGMClassSet, struct opSet *, ops)
    struct TagItem      *tag;
    const struct TagItem *tstate = ops->ops_AttrList;
    struct IntuiMessage *imsg;
-   ULONG               *ptr = NULL, *res = NULL;
+   IPTR                *ptr = NULL;
+   ULONG               *res = NULL;
    BOOL                 domethod = FALSE;
 
    /*
@@ -114,7 +115,7 @@ METHOD(DGMClassSet, struct opSet *, ops)
 	    /*
 	     * Get a pointer to the message.
 	     */
-	    ptr = (ULONG *)tag->ti_Data;
+	    ptr = (IPTR *)tag->ti_Data;
 
 	    /*
 	     * What kind of method?
@@ -129,7 +130,7 @@ METHOD(DGMClassSet, struct opSet *, ops)
 		   * These get the GadgetInfo as the
 		   * third long-word.
 		   */
-		  ptr[2] = (ULONG)ops->ops_GInfo;
+		  ptr[2] = (IPTR)ops->ops_GInfo;
 		  break;
 
 	       default:
@@ -137,7 +138,7 @@ METHOD(DGMClassSet, struct opSet *, ops)
 		   * All the rest get it at the
 		   * second long-word.
 		   */
-		  ptr[1] = (ULONG)ops->ops_GInfo;
+		  ptr[1] = (IPTR)ops->ops_GInfo;
 		  break;
 	    };
 	    break;

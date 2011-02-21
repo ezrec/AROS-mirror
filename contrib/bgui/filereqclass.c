@@ -56,7 +56,7 @@ typedef struct {
  */
 METHOD(FileReqClassNew, struct opSet *, ops)
 {
-   ULONG           rc;
+   IPTR            rc;
    struct TagItem *tags;
 
    tags = DefTagList(BGUI_FILEREQ_OBJECT, ops->ops_AttrList);
@@ -105,7 +105,7 @@ METHOD_END
 METHOD(FileReqClassSetUpdate, struct opSet *, ops)
 {
    FD             *fd = INST_DATA(cl, obj);
-   ULONG           data, rc;
+   IPTR            data, rc;
    struct TagItem *tag;
    const struct TagItem *tstate = ops->ops_AttrList;
    BOOL            path_update = FALSE;
@@ -155,7 +155,9 @@ METHOD_END
 METHOD(FileReqClassGet, struct opGet *, opg)
 {
    FD          *fd = INST_DATA(cl, obj);
-   ULONG        rc = 1, *store = opg->opg_Storage, attr = opg->opg_AttrID;
+   ULONG        rc = 1;
+   IPTR        *store = opg->opg_Storage;
+   Tag          attr = opg->opg_AttrID;
 
    switch (attr)
    {

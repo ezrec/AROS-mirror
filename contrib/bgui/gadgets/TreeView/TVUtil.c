@@ -298,7 +298,7 @@ TNPTR TV_AllocTreeNode(TVData *tv,APTR entry,ULONG flags)
 {
 struct tvResource	tvr;
 TNPTR				tn;
-ULONG				xentry;
+IPTR				xentry;
 
 tvr.tvr_Command = TVRC_MAKE;
 tvr.tvr_Entry = entry;

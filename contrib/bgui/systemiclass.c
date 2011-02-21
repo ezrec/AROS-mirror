@@ -56,7 +56,7 @@ typedef struct {
  */
 METHOD(SystemClassNew, struct opSet *, ops)
 {
-   ULONG              rc;
+   IPTR               rc;
 
    if ((rc = AsmDoSuperMethodA(cl, obj, (Msg)ops)))
    {
@@ -129,7 +129,8 @@ METHOD_END
 METHOD(SystemClassGet, struct opGet *, opg)
 {
    SD          *sd = INST_DATA(cl, obj);
-   ULONG        rc = 1, *store = opg->opg_Storage;
+   ULONG        rc = 1;
+   IPTR        *store = opg->opg_Storage;
 
    /*
     * First we see if the attribute they want is known to us. If not

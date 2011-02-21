@@ -229,10 +229,9 @@ int main( int count, char **args )
 
 	struct	bguiRequest	 AboutRequest = { };
 	Object				*WO_Window;
-	ULONG				 rc,
-						 pf,
-						 signal = 0,
-						 frame = 0;
+	ULONG				 rc;
+	IPTR				 pf, signal = 0,
+					 frame = 0;
 	BOOL				 running = TRUE;
 
 #ifdef __AROS__

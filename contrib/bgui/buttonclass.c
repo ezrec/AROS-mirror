@@ -83,7 +83,8 @@ STATIC ASM IPTR ButtonSetAttrs(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) s
 {
    BD              *bd = INST_DATA(cl, obj);
    BC              *bc = BASE_DATA(obj);
-   ULONG            data, attr;
+   IPTR             data;
+   Tag              attr;
    const struct TagItem  *tstate = ops->ops_AttrList;
    struct TagItem  *tag;
    BOOL             vis = FALSE;
@@ -201,7 +202,7 @@ METHOD(ButtonClassNew, struct opSet *, ops)
 {
    BD               *bd;
    struct TagItem   *tags;
-   ULONG             rc;
+   IPTR              rc;
    struct opSet      opn = *ops;
    
    tags = DefTagList(BGUI_BUTTON_GADGET, ops->ops_AttrList);
@@ -545,7 +546,8 @@ METHOD_END
  */
 METHOD(ButtonClassGet, struct opGet *, opg)
 {
-   ULONG       rc = 1, *store = opg->opg_Storage;
+   ULONG       rc = 1;
+   IPTR       *store = opg->opg_Storage;
 
    switch (opg->opg_AttrID)
    {

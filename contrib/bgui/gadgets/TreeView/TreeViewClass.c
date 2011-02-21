@@ -73,137 +73,49 @@
  * Method functions in TVNewDispose, TVGetSet, etc:
  */
 
-//extern ASM ULONG TV_New(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct opSet *ops);
-extern ASM REGFUNCPROTO3(ULONG, TV_New,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct opSet *, ops));
+extern METHODPROTO(TV_New, struct opSet *, ops);
 
-//extern ASM ULONG TV_Dispose(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) Msg msg);
-extern ASM REGFUNCPROTO3(ULONG, TV_Dispose,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, Msg, msg));
+extern METHODPROTO(TV_Dispose, Msg, msg);
 
-//extern ASM ULONG TV_Get(REG(a0) Class *cl, REG(a2) Object *obj,REG(a1) struct opGet *opg);
-extern ASM REGFUNCPROTO3(ULONG, TV_Get,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct opGet *, opg));
+extern METHODPROTO(TV_Get, struct opGet *, opg);
 
-//extern ASM ULONG TV_Set(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct opSet *ops);
-extern ASM REGFUNCPROTO3(ULONG, TV_Set,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct opSet *, ops));
+extern METHODPROTO(TV_Set, struct opSet *, ops);
 
-//extern ASM ULONG TV_GoActive(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct gpInput *gpi);
-extern ASM REGFUNCPROTO3(ULONG, TV_GoActive,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct gpInput *, gpi));
+extern METHODPROTO(TV_GoActive, struct gpInput *, gpi);
 
-//extern ASM ULONG TV_HandleInput(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct gpInput *gpi);
-extern ASM REGFUNCPROTO3(ULONG, TV_HandleInput,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct gpInput *, gpi));
+extern METHODPROTO(TV_HandleInput, struct gpInput *, gpi);
 
-//extern ASM ULONG TV_GoInactive(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct gpGoInactive *gpgi);
-extern ASM REGFUNCPROTO3(ULONG, TV_GoInactive,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct gpGoInactive *, gpgi));
+extern METHODPROTO(TV_GoInactive, struct gpGoInactive *, gpgi);
 
-//extern ASM ULONG TV_Insert(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvInsert *tvi);
-extern ASM REGFUNCPROTO3(ULONG, TV_Insert,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct tvInsert *, tvi));
+extern METHODPROTO(TV_Insert, struct tvInsert *, tvi);
 
-//extern ASM ULONG TV_Remove(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvEntry *tve);
-extern ASM REGFUNCPROTO3(ULONG, TV_Remove,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct tvEntry *, tve));
+extern METHODPROTO(TV_Remove, struct tvEntry *, tve);
 
-//extern ASM ULONG TV_Replace(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvReplace *tvr);
-extern ASM REGFUNCPROTO3(ULONG, TV_Replace,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct tvReplace *, tvr));
+extern METHODPROTO(TV_Replace, struct tvReplace *, tvr);
 
-//extern ASM ULONG TV_Move(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvInsert *tvi);
-extern ASM REGFUNCPROTO3(ULONG, TV_Move,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct tvInsert *, tvi));
+extern METHODPROTO(TV_Move, struct tvInsert *, tvi);
 
-//extern ASM ULONG TV_GetEntry(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvGet *tvg);
-extern ASM REGFUNCPROTO3(ULONG, TV_GetEntry,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct tvGet *, tvg));
+extern METHODPROTO(TV_GetEntry, struct tvGet *, tvg);
 
-//extern ASM ULONG TV_Select(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvEntry *tve);
-extern ASM REGFUNCPROTO3(ULONG, TV_Select,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct tvEntry *, tve));
+extern METHODPROTO(TV_Select, struct tvEntry *, tve);
 
-//extern ASM ULONG TV_Visible(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvEntry *tve);
-extern ASM REGFUNCPROTO3(ULONG, TV_Visible,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct tvEntry *, tve));
+extern METHODPROTO(TV_Visible, struct tvEntry *, tve);
 
-//extern ASM ULONG TV_Expand(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvEntry *tve);
-extern ASM REGFUNCPROTO3(ULONG, TV_Expand,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct tvEntry *, tve));
+extern METHODPROTO(TV_Expand, struct tvEntry *, tve);
 
-//extern ASM ULONG TV_Clear(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvCommand *tvc);
-extern ASM REGFUNCPROTO3(ULONG, TV_Clear,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct tvCommand *, tvc));
+extern METHODPROTO(TV_Clear, struct tvCommand *, tvc);
 
-//extern ASM ULONG TV_Lock(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) Msg msg);
-extern ASM REGFUNCPROTO3(ULONG, TV_Lock,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, Msg, msg));
+extern METHODPROTO(TV_Lock, Msg, msg);
 
-//extern ASM ULONG TV_Unlock(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvCommand *tvc);
-extern ASM REGFUNCPROTO3(ULONG, TV_Unlock,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct tvCommand *, tvc));
+extern METHODPROTO(TV_Unlock, struct tvCommand *, tvc);
 
-//extern ASM ULONG TV_Sort(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvCommand *tvc);
-extern ASM REGFUNCPROTO3(ULONG, TV_Sort,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct tvCommand *, tvc));
+extern METHODPROTO(TV_Sort, struct tvCommand *, tvc);
 
-//extern ASM ULONG TV_Redraw(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvCommand *tvc);
-extern ASM REGFUNCPROTO3(ULONG, TV_Redraw,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct tvCommand *, tvc));
+extern METHODPROTO(TV_Redraw, struct tvCommand *, tvc);
 
-//extern ASM ULONG TV_Refresh(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvCommand *tvc);
-extern ASM REGFUNCPROTO3(ULONG, TV_Refresh,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct tvCommand *, tvc));
+extern METHODPROTO(TV_Refresh, struct tvCommand *, tvc);
 
-//extern ASM ULONG TV_Rebuild(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvCommand *tvc);
-extern ASM REGFUNCPROTO3(ULONG, TV_Rebuild,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct tvCommand *, tvc));
+extern METHODPROTO(TV_Rebuild, struct tvCommand *, tvc);
 
 /************************************************************************
 *****************************  LOCAL DATA  ******************************

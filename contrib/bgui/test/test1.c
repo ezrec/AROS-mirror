@@ -120,7 +120,7 @@ printf("%s: Successfully opened bgui.library!\n",__FILE__);
                 if((window=InitTest_1())!=NULL
                 && WindowOpen(window)!=NULL)
                 {
-                        ULONG signal;
+                        IPTR signal;
 printf("%s %s %d: survived Init_Test!\n",__FILE__, "main()" ,__LINE__);
                         if(GetAttr(WINDOW_SigMask,window,&signal)
                         && signal!=0)

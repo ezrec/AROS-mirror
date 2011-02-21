@@ -198,8 +198,8 @@ extern ASM IPTR  DoRenderMethod(REG(a0) Object *, REG(a1) struct GadgetInfo *, R
 
 extern ASM IPTR  ForwardMsg(REG(a0) Object *, REG(a1) Object *, REG(a2) Msg);
 
-extern struct BaseInfo *AllocBaseInfoDebug(STRPTR, ULONG,ULONG, ...);
-extern struct BaseInfo *AllocBaseInfo(ULONG, ...);
+extern struct BaseInfo *AllocBaseInfoDebug(STRPTR, ULONG,Tag, ...);
+extern struct BaseInfo *AllocBaseInfo(Tag, ...);
 
 extern SAVEDS ASM struct BaseInfo *BGUI_AllocBaseInfoDebugA(REG(a0) struct TagItem *,REG(a1) STRPTR, REG(d0) ULONG);
 
@@ -267,7 +267,7 @@ extern Class *InitWindowClass(void);
 
 /* dgm.c                                      */
 
-extern ULONG myDoGadgetMethod(Object *, struct Window *, struct Requester *, ULONG, ...);
+extern ULONG myDoGadgetMethod(Object *, struct Window *, struct Requester *, IPTR MethodID, ...);
 
 #ifndef __AROS__
 extern SAVEDS ASM ULONG BGUI_DoGadgetMethodA( REG(a0) Object *, REG(a1) struct Window *, REG(a2) struct Requester *, REG(a3) Msg);

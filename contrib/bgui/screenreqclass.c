@@ -61,7 +61,7 @@ typedef struct {
  */
 METHOD(ScreenReqClassNew, struct opSet *, ops)
 {
-   ULONG           rc;
+   IPTR            rc;
    struct TagItem *tags;
 
    tags = DefTagList(BGUI_SCREENREQ_OBJECT, ops->ops_AttrList);
@@ -162,7 +162,9 @@ METHOD_END
 METHOD(ScreenReqClassGet, struct opGet *, opg)
 {
    SD          *sd = INST_DATA(cl, obj);
-   ULONG        rc = 1, *store = opg->opg_Storage, attr = opg->opg_AttrID;
+   ULONG        rc = 1;
+   IPTR        *store = opg->opg_Storage;
+   Tag          attr = opg->opg_AttrID;
 
    switch (attr)
    {

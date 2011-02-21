@@ -108,14 +108,14 @@ switch (opg->opg_AttrID)
 
 	case TVA_Top:
 		{
-		ULONG	top;
+		IPTR	top;
 
 		GetAttr(LISTV_NumEntries,tv->tv_Listview,&top);
 
 		if (top)
 			{
 			GetAttr(LISTV_Top,tv->tv_Listview,&top);
-			*(opg->opg_Storage) = (ULONG) TV_IndexToTreeNode(tv,top);
+			*(opg->opg_Storage) = (IPTR) TV_IndexToTreeNode(tv,top);
 			}
 		else
 			*(opg->opg_Storage) = (IPTR)NULL;
@@ -127,7 +127,7 @@ switch (opg->opg_AttrID)
 		break;
 
 	case TVA_LastClicked:
-		*(opg->opg_Storage) = (ULONG) tv->tv_LastClicked;
+		*(opg->opg_Storage) = (IPTR) tv->tv_LastClicked;
 		break;
 
 	case TVA_ViewBounds:

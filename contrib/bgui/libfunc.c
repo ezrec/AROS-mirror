@@ -238,21 +238,12 @@ STATIC CLASSDEF Classes[] =
    { NULL, InitRadioButtonClass, BGUI_RADIOBUTTON_GADGET, "gadgets/bgui_radiobutton.gadget", NULL, FALSE, FALSE },
    { NULL, InitAreaClass,        BGUI_AREA_GADGET,        "gadgets/bgui_area.gadget",        NULL, FALSE, FALSE },
    { NULL, InitViewClass,        BGUI_VIEW_GADGET,        "gadgets/bgui_view.gadget",        NULL, FALSE, FALSE },
-
-
-#ifdef __AROS__
-   { NULL, NULL,                 BGUI_PALETTE_GADGET,     "Gadgets/bgui_palette.gadget",     NULL, FALSE, FALSE },
-   { NULL, NULL,                 BGUI_POPBUTTON_GADGET,   "Gadgets/bgui_popbutton.gadget",   NULL, FALSE, FALSE },
-   { NULL, NULL,                 BGUI_TREEVIEW_GADGET,    "Gadgets/bgui_treeview.gadget",    NULL, FALSE, FALSE },
-   { NULL, NULL,                 BGUI_BAR_GADGET,         "Gadgets/bgui_bar.gadget",         NULL, FALSE, FALSE },
-   { NULL, NULL,                 BGUI_LAYOUTGROUP_GADGET, "Gadgets/bgui_layoutgroup.gadget", NULL, FALSE, FALSE },
-#else
    { NULL, NULL,                 BGUI_PALETTE_GADGET,     "gadgets/bgui_palette.gadget",     NULL, FALSE, FALSE },
    { NULL, NULL,                 BGUI_POPBUTTON_GADGET,   "gadgets/bgui_popbutton.gadget",   NULL, FALSE, FALSE },
    { NULL, NULL,                 BGUI_TREEVIEW_GADGET,    "gadgets/bgui_treeview.gadget",    NULL, FALSE, FALSE },
    { NULL, NULL,                 BGUI_BAR_GADGET,         "gadgets/bgui_bar.gadget",         NULL, FALSE, FALSE },
    { NULL, NULL,                 BGUI_LAYOUTGROUP_GADGET, "gadgets/bgui_layoutgroup.gadget", NULL, FALSE, FALSE },
-#endif
+
    /*
     * Misc. classes.
     */

@@ -51,7 +51,7 @@ typedef struct {
 METHOD(AreaClassNew, struct opSet *,ops)
 {
    AD             *ad;
-   ULONG           rc;
+   IPTR            rc;
    struct TagItem *tags, *tag;
    const struct TagItem *tstate;
 
@@ -101,7 +101,7 @@ METHOD(AreaClassGet, struct opGet *,opg)
    AD       *ad = INST_DATA(cl, obj);
    BC       *bc = BASE_DATA(obj);
    ULONG     rc = 1;
-   ULONG    *store = opg->opg_Storage;
+   IPTR     *store = opg->opg_Storage;
 
    switch (opg->opg_AttrID)
    {

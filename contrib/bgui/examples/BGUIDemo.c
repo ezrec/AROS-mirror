@@ -180,7 +180,7 @@ STATIC ULONG ReqA( struct Window *win, UBYTE *gadgets, UBYTE *body, IPTR *args)
 /*
 ** Open main window.
 **/
-struct Window *OpenMainWindow( ULONG *appmask )
+struct Window *OpenMainWindow( IPTR *appmask )
 {
    struct Window     *window = NULL;
 
@@ -900,15 +900,15 @@ TabHookFunc( REG(a0) struct Hook *hook, REG(a2) Object *obj, REG(a1) struct Intu
 {
     AROS_USERFUNC_INIT
 
-   struct Window        *window;
+   struct Window     *window;
    Object            *mx_obj = ( Object * )hook->h_Data;
-   ULONG           pos;
+   IPTR               pos;
 
    /*
    ** Obtain window pointer and
    ** current tab position.
    **/
-   GetAttr( WINDOW_Window, obj,  ( ULONG * )&window );
+   GetAttr( WINDOW_Window, obj,  ( IPTR * )&window );
    GetAttr( MX_Active,  mx_obj, &pos );
 
    /*
@@ -1061,7 +1061,8 @@ VOID StartDemo( void )
    struct Window         *win = NULL, *groups = NULL, *notif = NULL, *info = NULL, *image = NULL, *bfill = NULL, *pages = NULL, *sigwin = ( struct Window * )~0;
    struct AppMessage      *apm;
    struct WBArg          *ap;
-   ULONG       sigmask = 0L, sigrec, rc, i, appsig = 0L, id;
+   ULONG       sigmask = 0L, sigrec, i, id;
+   IPTR        rc, appsig = 0L;
    BOOL        running = TRUE;
    UBYTE       name[ 256 ];
 

@@ -45,7 +45,7 @@ ULONG GetAttrs( Object *obj, Tag tag1, ... )
         ULONG                    num = 0L;
 
         while (( tag = NextTagItem( &tstate )))
-                num += GetAttr( tag->ti_Tag, obj, ( ULONG * )tag->ti_Data );
+                num += GetAttr( tag->ti_Tag, obj, ( IPTR * )tag->ti_Data );
 
         retval = num;
 

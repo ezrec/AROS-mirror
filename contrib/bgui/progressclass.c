@@ -74,7 +74,7 @@ METHOD(ProgressClassNew, struct opSet *, ops)
 {
    PD             *pd;
    struct TagItem *tags;
-   ULONG           rc;
+   IPTR            rc;
 
    tags = DefTagList(BGUI_PROGRESS_GADGET, ops->ops_AttrList);
 
@@ -106,7 +106,8 @@ METHOD_END
 METHOD(ProgressClassSetUpdate, struct opUpdate *, opu)
 {
    PD              *pd = INST_DATA(cl, obj);
-   ULONG            tmp, data, odone = pd->pd_Done;
+   ULONG            tmp, odone = pd->pd_Done;
+   IPTR             data;
    struct TagItem  *attr = opu->opu_AttrList, *tag;
    const struct TagItem *tstate = attr;
    BOOL             vc = FALSE;
@@ -230,6 +231,7 @@ METHOD(ProgressClassRender, struct bmRender *, bmr)
    LONG               done, min, max;
    LONG               filled, space;
    UBYTE             *str;
+   IPTR               tmp;
 
    /*
     * Render the baseclass.
@@ -305,7 +307,8 @@ METHOD(ProgressClassRender, struct bmRender *, bmr)
       /*
        * Do we have a text?
        */
-      if ((str = DoBuffer(pd->pd_Text, &pd->pd_Buffer, &pd->pd_BufSize, (ULONG *)&pd->pd_Done)) && strlen(str))
+      tmp = pd->pd_Done;
+      if ((str = DoBuffer(pd->pd_Text, &pd->pd_Buffer, &pd->pd_BufSize, &tmp)) && strlen(str))
       {
          ULONG apen;
          STRPTR formatted=NULL;
@@ -343,7 +346,8 @@ METHOD_END
 METHOD(ProgressClassGet, struct opGet *, opg)
 {
    PD          *pd = INST_DATA(cl, obj);
-   ULONG        rc = 1, *store = opg->opg_Storage;
+   ULONG        rc = 1;
+   IPTR        *store = opg->opg_Storage;
 
    switch (opg->opg_AttrID)
    {

@@ -121,7 +121,7 @@ Object *Win;
 
 int main(void)
 {
-    ULONG sigmask;
+    IPTR sigmask;
     BOOL quit = FALSE;
     struct Window *win;
 

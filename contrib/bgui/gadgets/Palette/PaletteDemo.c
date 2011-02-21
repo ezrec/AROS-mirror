@@ -121,7 +121,8 @@ ASM REGFUNC3(ULONG, myButtonDispatch,
 	     REGPARAM(A1, Msg, msg)
 )
 {
-        ULONG                   rc, pen, tag;
+        IPTR rc, pen;
+        Tag tag;
 
         switch ( msg->MethodID ) {
 
@@ -219,7 +220,8 @@ int main( int argc, char **argv )
 {
         struct Window           *window;
         Object                  *WO_Window, *GO_Quit, *GO_B, *GO_Pal[ 4 ]={0,0,0,0};
-        ULONG                    signal, rc, tmp = 0, a;
+        IPTR                     signal;
+        ULONG                    rc, tmp = 0, a;
         UWORD                    defpens[ 4 ] = { 0, 3, 1, 1 };
         BOOL                     running = TRUE;
 

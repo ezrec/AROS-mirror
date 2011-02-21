@@ -154,7 +154,7 @@ STATIC METHOD(StringClassNew, struct opSet *, ops )
 {
    SD             *sd;
    struct TagItem *tag, *tags;
-   ULONG           rc;
+   IPTR            rc;
 
    tags = DefTagList(BGUI_STRING_GADGET, ops->ops_AttrList);
 
@@ -389,7 +389,8 @@ METHOD_END
 METHOD(StringClassGet, struct opGet *, opg)
 {
    SD          *sd = INST_DATA(cl, obj);
-   ULONG        rc = 1, *store = opg->opg_Storage;
+   ULONG        rc = 1;
+   IPTR        *store = opg->opg_Storage;
 
    switch (opg->opg_AttrID)
    {

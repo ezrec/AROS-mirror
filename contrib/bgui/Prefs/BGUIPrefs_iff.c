@@ -30,7 +30,7 @@ Object	**ar = BGUIPrefsObjs;
 Object	*BGUIPrefsObjs[ BGP_NUMGADS ];
 
 // GROUP DEFAULTS
-extern	ULONG		 grp_frmtype,
+extern	IPTR		 grp_frmtype,
 					 grp_recessed,
 					 grp_vspnarrow,
 					 grp_hspnarrow,

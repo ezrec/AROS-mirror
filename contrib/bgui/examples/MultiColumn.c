@@ -514,7 +514,7 @@ SAVEDS ASM REGFUNC3(VOID, ScrollHookFunc,
         /*
         **      Obtain window pointer.
         **/
-        GetAttr( WINDOW_Window,        obj,    ( ULONG * )&window );
+        GetAttr( WINDOW_Window, obj, ( IPTR * )&window );
 
         /*
         **      What key is pressed?
@@ -694,8 +694,9 @@ VOID StartDemo( void )
         struct Window                   *win;
         Object                          *WO_DirWin, *GO_DirList, *GO_Quit, *GO_NewDir;
         FILEINFO                        *fi;
-        LONG                             dname = 0L;
-        ULONG                            signal, rc;
+        IPTR                             dname = 0L;
+        IPTR                             signal;
+        ULONG                            rc;
         UBYTE                            name[ 512 ], *ptr;
         BOOL                             running = TRUE;
 
@@ -827,7 +828,7 @@ VOID StartDemo( void )
                                                                         /*
                                                                         **      Copy the new name to the buffer.
                                                                         **/
-                                                                        GetAttr( STRINGA_TextVal, GO_NewDir, ( ULONG * )&ptr );
+                                                                        GetAttr( STRINGA_TextVal, GO_NewDir, ( IPTR * )&ptr );
                                                                         strcpy( name, ptr );
                                                                         goto refreshDir;
                                                         }

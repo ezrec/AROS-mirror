@@ -67,7 +67,7 @@ typedef struct {
  */
 METHOD(SepClassNew, struct opSet *, ops)
 {
-   ULONG           rc;
+   IPTR            rc;
 
    /*
     * Let the superclass create an object.

@@ -193,7 +193,7 @@ METHOD(PropClassNew, struct opSet *, ops)
    PD             *pd;
    BC             *bc;
    struct TagItem *tags;
-   ULONG           rc;
+   IPTR            rc;
    BOOL            horiz;
 
    tags = DefTagList(BGUI_PROP_GADGET, ops->ops_AttrList);
@@ -623,7 +623,7 @@ METHOD(PropClassGet, struct opGet *, opg)
 {
    PD           *pd = INST_DATA(cl, obj);
    ULONG         rc = 1;
-   ULONG        *store = opg->opg_Storage;
+   IPTR         *store = opg->opg_Storage;
 
    switch (opg->opg_AttrID)
    {

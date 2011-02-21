@@ -457,7 +457,7 @@ STATIC METHOD(WindowClassSetUpdate, struct opSet *, ops)
    const struct TagItem  *tstate = ops->ops_AttrList;
    struct TagItem  *tag;
    struct Window   *w = wd->wd_WindowPtr;
-   ULONG            data;
+   IPTR             data;
 
    /*
     * Set attributes.
@@ -696,7 +696,8 @@ STATIC METHOD(WindowClassNew, struct opSet *, ops)
 {
    WD             *wd;
    IPTR            rc=0;
-   ULONG           data, idcmp;
+   IPTR            data;
+   ULONG           idcmp;
    const struct TagItem *tstate;
    struct TagItem *tag, *tags;
    BOOL            fail = FALSE;
@@ -2090,7 +2091,8 @@ STATIC ASM ULONG WindowClassChange( REG(a0) Class *cl, REG(a2) Object *obj, REG(
 STATIC METHOD(WindowClassGet, struct opGet *, opg)
 {
    WD       *wd = (WD *)INST_DATA(cl, obj);
-   ULONG     rc = 1, *store = opg->opg_Storage;
+   ULONG     rc = 1;
+   IPTR     *store = opg->opg_Storage;
 
    struct Window *win;
 
@@ -3098,7 +3100,7 @@ WW(kprintf("WindowClassIDCMP: calling WindowClassChange\n"));
 	    /*
 	     * HELP!!!!
 	     */
-	    METHOD_CALL(WindowClassHelp, cl, obj, NULL, getreg(REG_A4));
+	    METHOD_CALL(WindowClassHelp, cl, obj, NULL, (APTR)getreg(REG_A4));
 	    break;
 	 };
 	 /*
@@ -3303,13 +3305,13 @@ METHOD_END
 /*
  * Find a menu by it's ID.
  */
-STATIC ASM struct Menu *FindMenu( REG(a0) struct Menu *ptr, REG(d0) ULONG id )
+STATIC ASM struct Menu *FindMenu( REG(a0) struct Menu *ptr, REG(d0) IPTR id )
 {
    struct Menu    *tmp;
 
    if ((tmp = ptr)) {
       while ( tmp ) {
-	 if ( id == ( ULONG )GTMENU_USERDATA( tmp )) return( tmp );
+	 if ( id == ( IPTR )GTMENU_USERDATA( tmp )) return( tmp );
 	 tmp = tmp->NextMenu;
       }
    }
@@ -3320,7 +3322,7 @@ STATIC ASM struct Menu *FindMenu( REG(a0) struct Menu *ptr, REG(d0) ULONG id )
 /*
  * Find a (sub)item by it's ID.
  */
-STATIC ASM struct MenuItem *FindItem( REG(a0) struct Menu *ptr, REG(d0) ULONG id )
+STATIC ASM struct MenuItem *FindItem( REG(a0) struct Menu *ptr, REG(d0) IPTR id )
 {
    struct Menu    *tmp;
    struct MenuItem         *item, *sub;
@@ -3329,10 +3331,10 @@ STATIC ASM struct MenuItem *FindItem( REG(a0) struct Menu *ptr, REG(d0) ULONG id
       while ( tmp ) {
 	 if ((item = tmp->FirstItem)) {
 	    while ( item ) {
-	       if ( id == ( ULONG )GTMENUITEM_USERDATA( item )) return( item );
+	       if ( id == ( IPTR )GTMENUITEM_USERDATA( item )) return( item );
 	       if ((sub = item->SubItem)) {
 		  while ( sub ) {
-		     if ( id == ( ULONG )GTMENUITEM_USERDATA( sub )) return( sub );
+		     if ( id == ( IPTR )GTMENUITEM_USERDATA( sub )) return( sub );
 		     sub = sub->NextItem;
 		  }
 	       }
@@ -3349,10 +3351,10 @@ STATIC ASM struct MenuItem *FindItem( REG(a0) struct Menu *ptr, REG(d0) ULONG id
 /*
  * Find a NewMenu by it's ID.
  */
-STATIC ASM struct NewMenu *FindNewMenu( REG(a0) struct NewMenu *nm, REG(d0) ULONG id )
+STATIC ASM struct NewMenu *FindNewMenu( REG(a0) struct NewMenu *nm, REG(d0) IPTR id )
 {
    while ( nm->nm_Type != NM_END ) {
-      if ( id == ( ULONG )nm->nm_UserData ) return( nm );
+      if ( id == ( IPTR )nm->nm_UserData ) return( nm );
       nm++;
    }
 
@@ -3549,13 +3551,13 @@ METHOD_END
 STATIC METHOD(WindowClassGetAppMsg, Msg, msg)
 {
    WD       *wd = INST_DATA(cl, obj);
-   ULONG     rc = 0;
+   IPTR      rc = 0;
 
    /*
     * Pop a message from the App port.
     */
    if (wd->wd_AppPort)
-      rc = (ULONG)GetMsg(wd->wd_AppPort);
+      rc = (IPTR)GetMsg(wd->wd_AppPort);
 
    return rc;
 }

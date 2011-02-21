@@ -40,7 +40,7 @@
  */
 METHOD(RBClassNew, struct opSet *, ops)
 {
-   ULONG           rc = 0;
+   IPTR            rc = 0;
    Object         *rb;
    struct TagItem  ttags[2], *tags;
 

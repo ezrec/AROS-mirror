@@ -105,7 +105,8 @@ void StartDemo(void)
 {
 	struct Window   *w;
 	Object          *Win, *Area, *But;
-	ULONG            signal, rc;
+	IPTR             signal;
+	ULONG            rc;
 	struct IBox     *area_box;
 	BOOL             running = TRUE;
 
@@ -176,7 +177,7 @@ void StartDemo(void)
 						**      Were signalled to redraw the
 						**      area. Obtain the area bounds.
 						**/
-						GetAttr(AREA_AreaBox, Area, (ULONG *)&area_box);
+						GetAttr(AREA_AreaBox, Area, (IPTR *)&area_box);
 						/*
 						**      Render inside the area.
 						**      When this routine returns we

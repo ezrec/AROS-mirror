@@ -92,7 +92,8 @@ VOID StartDemo( void )
 {
 	struct Window                   *window;
 	Object                  *WO_Window, *tabs, *page;
-	ULONG                            signal, rc;
+	IPTR                             signal;
+	ULONG                            rc;
 	BOOL                             running = TRUE;
 
 	/*

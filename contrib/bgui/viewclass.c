@@ -115,7 +115,7 @@ static struct TagItem HProp2View[] = {
 METHOD(ViewClassNew, struct opSet *, ops)
 {
    VD             *vd;
-   ULONG           rc;
+   IPTR            rc;
    const struct TagItem *tstate;
    struct TagItem *tag, *tags;
 
@@ -261,7 +261,8 @@ METHOD_END
 METHOD(ViewClassSet, struct opSet *, ops)
 {
    VD             *vd = INST_DATA(cl, obj);
-   ULONG           rc = 1, update = FALSE, data;
+   ULONG           rc = 1, update = FALSE;
+   IPTR            data;
    const struct TagItem *tstate = ops->ops_AttrList;
    struct TagItem *tag;
 
@@ -383,7 +384,7 @@ METHOD(ViewClassGet, struct opGet *, opg)
    VD       *vd = INST_DATA(cl, obj);
    BC       *bc = BASE_DATA(obj);
    ULONG     rc = 1;
-   ULONG    *store = opg->opg_Storage;
+   IPTR     *store = opg->opg_Storage;
    
    switch (opg->opg_AttrID)
    {

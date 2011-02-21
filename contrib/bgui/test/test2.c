@@ -88,7 +88,7 @@ int main(int argc,char **argv)
                 if((window=InitTest_2())!=NULL
                 && WindowOpen(window)!=NULL)
                 {
-                        ULONG signal;
+                        IPTR signal;
 
                         if(GetAttr(WINDOW_SigMask,window,&signal)
                         && signal!=0)

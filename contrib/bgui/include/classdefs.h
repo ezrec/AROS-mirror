@@ -265,7 +265,7 @@ struct CatCompArrayType
 #define LGO_TAG(v)   (v >= LGO_TAGSTART && v <= LGO_TAGDONE)
 
 #define test(exp) ((exp) ? 1 : 0)
-#define STORE *store = (ULONG)
+#define STORE *store = (IPTR)
 
 /*
  * Task information tracking.

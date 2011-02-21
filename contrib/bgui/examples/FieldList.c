@@ -89,7 +89,8 @@ VOID StartDemo( void )
 	struct TextAttr                  fixed;
 	UBYTE                            fname[ 32 ];
 	Object                          *WO_Window, *GO_ListSorted, *GO_ListPlace;
-	ULONG                            signal, rc;
+	IPTR                             signal;
+	ULONG                            rc;
 	Class                           *class;
 	BOOL                             running = TRUE;
 	

@@ -542,7 +542,8 @@ static char *DoOperation( void )
 /// static void HandleAll( void )
 static void HandleAll( void )
 {
-    ULONG signal = 0, rc;
+    IPTR  signal = 0;
+    ULONG rc;
     BOOL  running = TRUE , refresh_led = FALSE;
     WORD  checklen;
     char  * matherr = NULL;

@@ -57,7 +57,7 @@ typedef struct {
  */
 METHOD(FontReqClassNew, struct opSet *, ops)
 {
-   ULONG           rc;
+   IPTR            rc;
    struct TagItem *tags;
 
    tags = DefTagList(BGUI_FONTREQ_OBJECT, ops->ops_AttrList);
@@ -116,7 +116,7 @@ METHOD_END
 METHOD(FontReqClassSetUpdate, struct opSet *, ops)
 {
    FD             *fd = INST_DATA(cl, obj);
-   ULONG           data, rc;
+   IPTR            data, rc;
    const struct TagItem *tstate = ops->ops_AttrList;
    struct TagItem *tag;
 
@@ -183,7 +183,9 @@ METHOD_END
 METHOD(FontReqClassGet, struct opGet *, opg)
 {
    FD          *fd = INST_DATA(cl, obj);
-   ULONG        rc = 1, *store = opg->opg_Storage, attr = opg->opg_AttrID;
+   ULONG        rc = 1;
+   IPTR        *store = opg->opg_Storage;
+   IPTR         attr = opg->opg_AttrID;
 
    switch (attr)
    {

@@ -24,7 +24,7 @@
 #define ARG_MULTI 2
 #define ARG_COUNT 3
 
-LONG args[ARG_COUNT];
+IPTR args[ARG_COUNT];
 void *rda=NULL;
 struct Library *BGUIBase=NULL;
 Object *window=NULL;
@@ -125,7 +125,8 @@ BOOL open_all(void) {
 }
 
 void event_loop(void) {
-	ULONG code,sig;
+	ULONG code;
+	IPTR sig;
 	UBYTE going=TRUE;
 	GetAttr(WINDOW_SigMask,window,&sig);
 	while (going) {

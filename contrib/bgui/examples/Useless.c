@@ -167,7 +167,8 @@ VOID StartDemo( void )
 	struct Window		*window;
 	Class			*class;
 	Object			*WO_Window;
-	ULONG			 signal = 0, rc;
+	IPTR			 signal = 0;
+	ULONG			 rc;
 	BOOL			 running = TRUE;
 
 	/*

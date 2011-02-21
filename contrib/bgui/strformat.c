@@ -92,7 +92,7 @@ makeproto ASM ULONG CompStrlenF(REG(a0) UBYTE *fstring, REG(a1) IPTR *args)
        */
       CloseLocale(loc);
 
-      return (ULONG)hook.h_Data;
+      return (ULONG)(hook.h_Data - NULL);
    };
    return StrLenfA(fstring, args);
 }

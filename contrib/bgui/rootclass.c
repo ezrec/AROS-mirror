@@ -95,7 +95,7 @@ typedef struct {
 
 typedef struct {
    NOTIF              m_Node;
-   ULONG              m_Method[1];
+   IPTR               m_Method[1];
 }  METHOD;
 
 typedef struct {
@@ -159,7 +159,7 @@ METHOD(RootClassNotify, struct opUpdate *, opu)
    struct TagItem   *clones;
    Object           *target;
    struct TagItem   *tag;
-   ULONG            *msg;
+   IPTR             *msg;
    IPTR              rc;
    BOOL              cond;
    int               type;
@@ -276,14 +276,14 @@ METHOD(RootClassNotify, struct opUpdate *, opu)
 	       /*
 		* These methods get the GadgetInfo in the third long-word.
 		*/
-	       msg[2] = (ULONG)opu->opu_GInfo;
+	       msg[2] = (IPTR)opu->opu_GInfo;
 	       break;
 
 	    default:
 	       /*
 		* All others in the second long-word.
 		*/
-	       msg[1] = (ULONG)opu->opu_GInfo;
+	       msg[1] = (IPTR)opu->opu_GInfo;
 	       break;
 	    };
 	 };

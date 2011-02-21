@@ -127,7 +127,7 @@ ASM SAVEDS REGFUNC3(ULONG, TV_LVRsrcHandler,
 	REGPARAM(A1, struct lvResource *, lvr))
 {
 if (lvr->lvr_Command == LVRC_MAKE)
-	return((ULONG) lvr->lvr_Entry);
+	return((IPTR) lvr->lvr_Entry);
 else
 	return(0);
 }

@@ -39,7 +39,7 @@
  */
 
 // GROUP DEFAULTS
-extern	ULONG		 grp_frmtype,
+extern	IPTR		 grp_frmtype,
 					 grp_recessed,
 					 grp_vspnarrow,
 					 grp_hspnarrow,
@@ -49,11 +49,11 @@ extern	ULONG		 grp_frmtype,
 					 grp_hspwide;
 
 // INFO DEFAULTS
-extern	ULONG		 inf_frmtype,
+extern	IPTR		 inf_frmtype,
 					 inf_recessed;
 
 // INDICATOR DEFAULTS
-extern	ULONG		 ind_frmtype,
+extern	IPTR		 ind_frmtype,
 					 ind_recessed;
 
 extern	struct	NewMenu		Menus[];
@@ -233,7 +233,7 @@ struct	TagItem	*grp_defaults,			// BGUI_GROUP_GADGET
 				*ind_defaults;			// BGUI_INDICATOR_GADGET
 
 // GROUP DEFAULTS
-ULONG			 grp_frmtype	= 4,	// FRM_DefaultType
+IPTR			 grp_frmtype	= 4,	// FRM_DefaultType
 				 grp_recessed	= 0,	// FRM_Recessed
 				 grp_vspnarrow	= 2,	// GROUP_DefVSpaceNarrow
 				 grp_hspnarrow	= 2,	// GROUP_DefHSpaceNarrow
@@ -243,33 +243,33 @@ ULONG			 grp_frmtype	= 4,	// FRM_DefaultType
 				 grp_hspwide	= 8;	// GROUP_DefHSpaceWide
 
 // BUTTON DEFAULTS
-ULONG			 but_frmtype	= 1,	// FRM_Type
+IPTR			 but_frmtype	= 1,	// FRM_Type
 				 but_recessed	= 0;	// FRM_Recessed
 
 // STRING DEFAULTS
-ULONG			 str_frmtype	= 2,	// FRM_Type
+IPTR			 str_frmtype	= 2,	// FRM_Type
 				 str_recessed	= 0;	// FRM_Recessed
 
 // CHECKBOX DEFAULTS
-ULONG			 chk_frmtype	= 1,	// FRM_Type
+IPTR			 chk_frmtype	= 1,	// FRM_Type
 				 chk_recessed	= 0;	// FRM_Recessed
 
 // CYCLE DEFAULTS
-ULONG			 cyc_frmtype	= 1,	// FRM_Type
+IPTR			 cyc_frmtype	= 1,	// FRM_Type
 				 cyc_recessed	= 0,	// FRM_Recessed
 				 cyc_popup		= 0,	// CYC_Popup
 				 cyc_popactive	= 0;	// CYC_PopActive
 
 // INFO DEFAULTS
-ULONG			 inf_frmtype	= 1,	// FRM_Type
+IPTR			 inf_frmtype	= 1,	// FRM_Type
 				 inf_recessed	= 1;	// FRM_Recessed
 
 // PROGRESS DEFAULTS
-ULONG			 prg_frmtype	= 1,	// FRM_Type
+IPTR			 prg_frmtype	= 1,	// FRM_Type
 				 prg_recessed	= 1;	// FRM_Recessed
 
 // INDICATOR DEFAULTS
-ULONG			 ind_frmtype	= 1,	// FRM_Type
+IPTR			 ind_frmtype	= 1,	// FRM_Type
 				 ind_recessed	= 1;	// FRM_Recessed
 
 /*
@@ -2002,12 +2002,12 @@ BOOL SetNewPage(struct Window *window,ULONG page)
 			break;
 		default:
 		{
-			ULONG cur_page;
+			IPTR cur_page;
 			BOOL add_preferences,add_example;
 
 			if(!pages_map[page].Set)
 			{
-				ULONG previous_preferences_page, previous_example_page;
+				IPTR previous_preferences_page, previous_example_page;
 
 				GetAttr( PAGE_Active, ar[ BGP_SETTING_PAGES ], &previous_preferences_page);
 				GetAttr( PAGE_Active, ar[ BGP_EXAMPLE_PAGES ], &previous_example_page);

@@ -834,7 +834,8 @@ STATIC ASM VOID MutEx( REG(a0) PMD *pmd )
 STATIC ASM VOID SetDimensions( REG(a0) Object *obj, REG(a1) struct grmDimensions *dim, REG(d0) UWORD mx, REG(d1) UWORD my )
 {
    Object            *label = NULL, *frame = NULL;
-   ULONG           place, fh = 0, fv = 0;
+   ULONG              place;
+   IPTR               fh = 0, fv = 0;
 
    /*
    ** Including frame?
@@ -913,7 +914,7 @@ STATIC METHOD(PMBClassNew, struct opSet *, ops )
    const struct TagItem *tstate = ops->ops_AttrList;
    struct TagItem    *tag;
    struct PopMenu    *pm=NULL;
-   ULONG        rc = 0L;
+   IPTR               rc = 0L;
 
    if(BGUIBase==NULL
    && (BGUIBase=OpenLibrary("bgui.library",41))==NULL)
@@ -1485,7 +1486,7 @@ STATIC METHOD(PMBClassDimensions, struct grmDimensions *, dim)
 {
    PMD         *pmd = ( PMD * )INST_DATA( cl, obj );
    UWORD        mx, my;
-   ULONG        frame, fw, fh;
+   IPTR         frame, fw, fh;
    struct grmDimensions  dim1 = *dim;
    struct VectorItem *vit;
 

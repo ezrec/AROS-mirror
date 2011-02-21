@@ -40,7 +40,7 @@
  */
 METHOD(CBClassNew, struct opSet *, ops)
 {
-   ULONG           rc = 0;
+   IPTR            rc = 0;
    Object         *check;
    struct TagItem  ttags[2], *tags;
 
@@ -50,9 +50,9 @@ METHOD(CBClassNew, struct opSet *, ops)
    if ((check = BGUI_NewObject(BGUI_VECTOR_IMAGE, VIT_BuiltIn, BUILTIN_CHECKMARK, VIT_DriPen, TEXTPEN, TAG_DONE)))
    {
       ttags[0].ti_Tag  = BUTTON_SelectedVector;
-      ttags[0].ti_Data = (ULONG)check;
+      ttags[0].ti_Data = (IPTR)check;
       ttags[1].ti_Tag  = TAG_MORE;
-      ttags[1].ti_Data = (ULONG)ops->ops_AttrList;
+      ttags[1].ti_Data = (IPTR)ops->ops_AttrList;
 
       tags = DefTagList(BGUI_CHECKBOX_GADGET, ttags);
 

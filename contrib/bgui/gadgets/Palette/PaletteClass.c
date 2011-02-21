@@ -189,7 +189,8 @@ METHOD(PaletteClassNew, struct opSet *,ops)
    const struct TagItem *tstate = ops->ops_AttrList;
    struct TagItem *tag;
    Object         *label;
-   ULONG           rc, place, data;
+   IPTR            rc, data;
+   ULONG           place;
 
    if(BGUIBase==NULL
    && (BGUIBase=OpenLibrary("bgui.library",41))==NULL)
@@ -347,7 +348,7 @@ METHOD(PaletteClassGet, struct opGet *,opg)
       /*
        * Let BGUI know we support this.
        */
-      *(opg->opg_Storage) = (ULONG)cl;
+      *(opg->opg_Storage) = (IPTR)cl;
       break;
    default:
       /*

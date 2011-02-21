@@ -100,7 +100,8 @@ STATIC struct TagItem BoolTags[] = {
 METHOD(CommClassNew, struct opSet *, ops)
 {
    CD                *cd;
-   ULONG              rc, un = NBU_UNIQUE | NBU_NOTIFY, data;
+   IPTR               rc, data;
+   ULONG              un = NBU_UNIQUE | NBU_NOTIFY;
    const struct TagItem *tstate = ops->ops_AttrList;
    struct TagItem    *tag;
 
@@ -242,7 +243,8 @@ METHOD_END
 STATIC METHOD(CommClassGet, struct opGet *, opg)
 {
    CD       *cd = ( CD * )INST_DATA( cl, obj );
-   ULONG        rc = 1L, *store = opg->opg_Storage;
+   ULONG     rc = 1L;
+   IPTR     *store = opg->opg_Storage;
 
    switch ( opg->opg_AttrID ) {
 
@@ -573,8 +575,9 @@ METHOD_END
 STATIC METHOD(CommClassMsgInfo, struct cmMsgInfo*, cmi)
 {
    CD          *cd = ( CD * )INST_DATA( cl, obj );
-   CxMsg          *msg;
-   ULONG           rc = 0, type, id, data;
+   CxMsg       *msg;
+   ULONG        rc = 0, type, id;
+   IPTR         data;
 
    /*
     * Get a message from the port.
@@ -585,7 +588,7 @@ STATIC METHOD(CommClassMsgInfo, struct cmMsgInfo*, cmi)
        */
       type = CxMsgType(msg);
       id   = CxMsgID(msg);
-      data = (ULONG)CxMsgData(msg);
+      data = (IPTR)CxMsgData(msg);
 
       /*
        * Save data where ever possible.

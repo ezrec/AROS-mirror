@@ -222,7 +222,7 @@ struct VectorItem	*expvi,*convi;
 Object				*lvobj;
 HOOKPTR				lvrsrchk,lvdisphk,lvcomphk,lvnotihk;
 HOOKPTR				tvrsrchk,tvdisphk,tvcomphk,tvexpahk;
-ULONG				rc;
+IPTR				rc;
 
 if(BGUIBase==NULL
 && (BGUIBase=OpenLibrary("bgui.library",41))==NULL)
@@ -514,13 +514,13 @@ TV_FreeHook(tv->tv_LVRsrcHook);
  * Free default treeview hook structures, if any
  */
 
-if (tv->tv_ResourceHook->h_Entry == TV_TVRsrcHandler)
+if (tv->tv_ResourceHook->h_Entry == (APTR)TV_TVRsrcHandler)
 	TV_FreeHook(tv->tv_ResourceHook);
-if (tv->tv_DisplayHook->h_Entry == TV_TVDispHandler)
+if (tv->tv_DisplayHook->h_Entry == (APTR)TV_TVDispHandler)
 	TV_FreeHook(tv->tv_DisplayHook);
-if (tv->tv_CompareHook->h_Entry == TV_TVCompHandler)
+if (tv->tv_CompareHook->h_Entry == (APTR)TV_TVCompHandler)
 	TV_FreeHook(tv->tv_CompareHook);
-if (tv->tv_ExpandHook->h_Entry == TV_TVExpandHandler)
+if (tv->tv_ExpandHook->h_Entry == (APTR)TV_TVExpandHandler)
 	TV_FreeHook(tv->tv_ExpandHook);
 
 /*
@@ -556,7 +556,7 @@ LOCAL ASM SAVEDS REGFUNC3(ULONG, TV_TVRsrcHandler,
 	REGPARAM(A1, struct tvResource *, tvr))
 {
 TVData	*tv;
-ULONG	rc;
+IPTR	rc;
 
 rc = 0;
 tv = (TVData *) hook->h_Data;
@@ -564,14 +564,14 @@ tv = (TVData *) hook->h_Data;
 if (tv->tv_CopyEntries)
 	{
 	if (tvr->tvr_Command == TVRC_MAKE)
-		rc = (ULONG) TV_AllocStrCpy(tv,tvr->tvr_Entry,0);
+		rc = (IPTR) TV_AllocStrCpy(tv,tvr->tvr_Entry,0);
 	else
 		TV_FreeVec(tv,tvr->tvr_Entry);
 	}
 else
 	{
 	if (tvr->tvr_Command == TVRC_MAKE)
-		rc = (ULONG) tvr->tvr_Entry;
+		rc = (IPTR) tvr->tvr_Entry;
 	}
 
 return(rc);
@@ -586,7 +586,7 @@ LOCAL ASM SAVEDS REGFUNC3(ULONG, TV_TVDispHandler,
 	REGPARAM(A2, Object *, obj),
 	REGPARAM(A1, struct tvRender *, tvr))
 {
-return((ULONG) tvr->tvr_Entry);
+return (IPTR)tvr->tvr_Entry;
 }
 REGFUNC_END
 

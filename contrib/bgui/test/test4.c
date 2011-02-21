@@ -91,7 +91,7 @@ printf("opened gradientslider.gadget\n");
                         if((window=InitTest_4())!=NULL
                         && WindowOpen(window)!=NULL)
                         {
-                                ULONG signal;
+                                IPTR signal;
 
                                 if(GetAttr(WINDOW_SigMask,window,&signal)
                                 && signal!=0)

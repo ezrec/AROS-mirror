@@ -41,7 +41,7 @@
 METHOD(SliderClassNew, struct opSet *, ops)
 {
    struct TagItem   *tags;
-   ULONG             rc;
+   IPTR              rc;
 
    tags = DefTagList(BGUI_SLIDER_GADGET, ops->ops_AttrList);
 

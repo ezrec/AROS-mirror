@@ -315,7 +315,7 @@ makeproto ASM Class *BGUI_MakeClassA(REG(a0) struct TagItem *tags)
 {
    AROS_LIBFUNC_INIT
 
-   ULONG  old_a4 = (ULONG)getreg(REG_A4);
+   IPTR   old_a4 = (IPTR)getreg(REG_A4);
    IPTR   SuperClass, SuperClass_ID, Class_ID;
    ULONG  Flags, ClassSize, ObjectSize;
    BGUIClassData *ClassData;
@@ -344,10 +344,10 @@ makeproto ASM Class *BGUI_MakeClassA(REG(a0) struct TagItem *tags)
       {
 	 DPFUNC *method_functions;
 
-	 cl->cl_UserData                 = (LONG)(ClassData+1);
-	 cl->cl_Dispatcher.h_Entry       = (HOOKFUNC)GetTagData(CLASS_Dispatcher, (ULONG)__GCD, tags);
-	 ClassData->ClassMethodFunctions = (DPFUNC *)GetTagData(CLASS_ClassDFTable, NULL, tags);
-	 ClassData->ClassDispatcher      = (ClassMethodDispatcher)GetTagData(CLASS_ClassDispatcher, (ULONG)ClassCallDispatcher, tags);
+	 cl->cl_UserData                 = (IPTR)(&ClassData[1]);
+	 cl->cl_Dispatcher.h_Entry       = (HOOKFUNC)GetTagData(CLASS_Dispatcher, (IPTR)__GCD, tags);
+	 ClassData->ClassMethodFunctions = (DPFUNC *)GetTagData(CLASS_ClassDFTable, (IPTR)NULL, tags);
+	 ClassData->ClassDispatcher      = (ClassMethodDispatcher)GetTagData(CLASS_ClassDispatcher, (IPTR)ClassCallDispatcher, tags);
 
 	 ClassData->BGUIGlobalData       = (APTR)getreg(REG_A4);
 	 ClassData->ClassGlobalData      = (APTR)old_a4;
@@ -469,7 +469,7 @@ makeproto ASM Class *BGUI_MakeClassA(REG(a0) struct TagItem *tags)
 	 BGUI_FreePoolMem(ClassData);
       }
    };
-   putreg(REG_A4, (LONG)old_a4);
+   putreg(REG_A4, (IPTR)old_a4);
    return cl;
 
    AROS_LIBFUNC_EXIT
@@ -524,7 +524,7 @@ makeproto ULONG ASM BGUI_GetAttrChart(REG(a0) Class *cl, REG(a2) Object *obj, RE
 {
    ULONG           flags = ra->ra_Flags;
    struct TagItem *attr  = ra->ra_Attr;
-   ULONG           data = 0;
+   IPTR            data = 0;
    UBYTE          *dataspace;
    ULONG           rc;
 
@@ -544,31 +544,31 @@ makeproto ULONG ASM BGUI_GetAttrChart(REG(a0) Class *cl, REG(a2) Object *obj, RE
 	    switch (rc & (RAF_SIGNED|RAF_BYTE|RAF_WORD|RAF_LONG|RAF_ADDR))
 	    {
 	    case RAF_BYTE:
-	       data = (ULONG)(*(UBYTE *)dataspace);
+	       data = (IPTR)(*(UBYTE *)dataspace);
 	       break;
 	    case RAF_BYTE|RAF_SIGNED:
-	       data = (LONG)(*(BYTE *)dataspace);
+	       data = (IPTR)(*(BYTE *)dataspace);
 	       break;
 	    case RAF_WORD:
-	       data = (ULONG)(*(UWORD *)dataspace);
+	       data = (IPTR)(*(UWORD *)dataspace);
 	       break;
 	    case RAF_WORD|RAF_SIGNED:
-	       data = (LONG)(*(WORD *)dataspace);
+	       data = (IPTR)(*(WORD *)dataspace);
 	       break;
 	    case RAF_LONG:
-	       data = (ULONG)(*(ULONG *)dataspace);
+	       data = (IPTR)(*(ULONG *)dataspace);
 	       break;
 	    case RAF_LONG|RAF_SIGNED:
-	       data = (LONG)(*(LONG *)dataspace);
+	       data = (IPTR)(*(LONG *)dataspace);
 	       break;
 	    case RAF_ADDR:
-	       data = (ULONG)dataspace;
+	       data = (IPTR)dataspace;
 	       break;
 	    case RAF_NOP:
 	       goto no_get;
 	    };
 	 };
-	 *((ULONG *)(attr->ti_Data)) = data;
+	 *((IPTR *)(attr->ti_Data)) = data;
       }
       no_get:
       if (rc & RAF_CUSTOM)
@@ -866,7 +866,7 @@ makeproto ASM ULONG Get_SuperAttr(REG(a2) Class *cl, REG(a0) Object *obj, REG(d0
 
 makeproto IPTR NewSuperObject(Class *cl, Object *obj, struct TagItem *tags)
 {
-   return AsmDoSuperMethod(cl, obj, OM_NEW, (ULONG)tags, NULL);
+   return AsmDoSuperMethod(cl, obj, OM_NEW, (IPTR)tags, NULL);
 }
 
 /*

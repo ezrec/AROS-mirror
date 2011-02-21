@@ -82,7 +82,7 @@ REGFUNC3(,hookFunc,
                 **      Only flash the screen on which
                 **      the window is located.
                 **/
-                GetAttr( WINDOW_Window, obj, ( ULONG * )&wptr );
+                GetAttr( WINDOW_Window, obj, ( IPTR * )&wptr );
                 if ( wptr )
                         DisplayBeep( wptr->WScreen );
         }
@@ -102,7 +102,8 @@ VOID StartDemo( void )
 {
         struct Window           *window;
         Object                  *WO_Window, *GO_Quit;
-        ULONG                    signal = 0, rc;
+        IPTR                     signal = 0;
+        ULONG                    rc;
         BOOL                     running = TRUE;
 
         /*

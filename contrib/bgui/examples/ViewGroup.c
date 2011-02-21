@@ -98,13 +98,13 @@ SAVEDS ASM REGFUNC3(VOID, TabHookFunc,
 {
    struct Window        *window;
    Object            *mx_obj = ( Object * )hook->h_Data;
-   ULONG           pos;
+   IPTR            pos;
 
    /*
    ** Obtain window pointer and
    ** current tab position.
    **/
-   GetAttr( WINDOW_Window, obj,  ( ULONG * )&window );
+   GetAttr( WINDOW_Window, obj,  ( IPTR * )&window );
    GetAttr( MX_Active,  mx_obj, &pos );
 
    /*
@@ -351,7 +351,8 @@ int main(void)
 
     if(win) {
         BOOL quit = FALSE;
-        ULONG rc, sigmask, sig;
+        IPTR sigmask;
+        ULONG rc, sig;
 
         SetGadgetAttrs((struct Gadget *)v, win, NULL, VIEW_HScroller, GO_BottomProp, VIEW_VScroller, GO_RightProp,  TAG_DONE);
 
