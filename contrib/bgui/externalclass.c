@@ -236,7 +236,7 @@ STATIC ASM IPTR ExtClassNew(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1)  str
 STATIC ASM IPTR ExtClassDispose(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1)  Msg msg)
 {
     ED              *ed = INST_DATA(cl,obj);
-    ULONG           rc;
+    IPTR            rc;
 
     /*
      * Dispose the object.  We need to reset the ed_Object,
@@ -269,7 +269,7 @@ STATIC ASM IPTR ExtClassDispose(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) 
 STATIC ASM IPTR ExtClassGet(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1)  struct opGet * opg )
 {
     ED              *ed = INST_DATA(cl,obj);
-    ULONG           rc;
+    IPTR            rc;
 
     /*
      * What do they want?
@@ -297,7 +297,7 @@ STATIC ASM IPTR ExtClassGet(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1)  str
 STATIC ASM IPTR ExtClassDimensions(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1)  struct bmDimensions * msg)
 {
     ED              *ed = INST_DATA(cl,obj);
-    ULONG           rc;
+    IPTR            rc;
 
     /*
      * Setup minimum size.
@@ -311,7 +311,7 @@ STATIC ASM IPTR ExtClassDimensions(REG(a0) Class *cl, REG(a2) Object *obj, REG(a
 STATIC ASM IPTR ExtClassHitTest(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1)  Msg msg)
 {
     ED              *ed = INST_DATA(cl,obj);
-    ULONG           rc;
+    IPTR            rc;
 
     rc = AsmDoSuperMethodA(cl, obj, msg);
     /*
@@ -331,7 +331,7 @@ STATIC ASM IPTR ExtClassHitTest(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) 
 STATIC ASM IPTR ExtClassHandleInput(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1)  Msg msg)
 {
     ED              *ed = INST_DATA(cl,obj);
-    ULONG           rc = GMR_NOREUSE;
+    IPTR            rc = GMR_NOREUSE;
 
     /*
      * Forward message.  The message is thrown away if there's no object.
@@ -346,7 +346,7 @@ STATIC ASM IPTR ExtClassRender(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1)  
 {
     ED              *ed = INST_DATA(cl,obj);
     BC              *bc;
-    ULONG           rc;
+    IPTR            rc;
     BOOL            set;
     struct BaseInfo *bi;
 
@@ -408,10 +408,19 @@ STATIC ASM IPTR ExtClassRender(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1)  
 /*
  * Class dispatcher.
  */
+#ifdef __AROS__
+STATIC AROS_UFH3(IPTR, ExtClassDispatch,
+	AROS_UFHA(Class *, cl, A0),
+	AROS_UFHA(Object *, obj, A2),
+	AROS_UFHA(Msg, msg, A1))
+#else
 SAVEDS ASM STATIC ULONG ExtClassDispatch( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg msg )
+#endif
 {
+   AROS_USERFUNC_INIT
+
    ED                *ed;
-   ULONG              rc;
+   IPTR               rc;
    APTR               stk;
 
    stk = EnsureStack();
@@ -476,6 +485,8 @@ SAVEDS ASM STATIC ULONG ExtClassDispatch( REG(a0) Class *cl, REG(a2) Object *obj
 
    RevertStack(stk);
    return rc;
+
+   AROS_USERFUNC_EXIT
 }
 
 ///
