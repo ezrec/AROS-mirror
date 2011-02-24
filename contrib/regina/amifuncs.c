@@ -47,10 +47,13 @@
 
 #include "rxiface.h"
 
+/* We can't use AROS_LC1NR, since 'offset'
+ * is not constant.
+ */
 #define CallRsrcFunc(libbase, offset, rsrc) \
   ({ \
     int _offset=abs(offset)/6; \
-    AROS_LC1NR(VOID, CallLibFunc, \
+    AROS_LVO_CALL1NR(VOID, \
 	     AROS_LCA(struct RexxRsrc *, rsrc, A0), \
 	     struct Library *, libbase, _offset, rexxcall); \
   })

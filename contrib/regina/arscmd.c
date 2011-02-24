@@ -53,8 +53,10 @@ static struct IOFileSys *CreateIOFS(ULONG type, struct MsgPort *port, struct Fil
   iofs->IOFS.io_Message.mn_Length       = sizeof(struct IOFileSys);
   iofs->IOFS.io_Command                 = type;
   iofs->IOFS.io_Flags                   = 0;
+#if defined(__AROS__) && !defined(AROS_DOS_PACKETS)
   iofs->IOFS.io_Device                  = fh->fh_Device;
   iofs->IOFS.io_Unit                    = fh->fh_Unit;
+#endif
   
   return iofs;
 }
@@ -301,7 +303,7 @@ int __regina_write(int handle, const void *buf, unsigned size, void *async_info)
 
   fhi = &ai->files[handle];
 
-  if (buf==NULL && size==NULL)
+  if (buf==NULL && size==0)
   {
     if (fhi->pendingwrite!=NULL)
     {
