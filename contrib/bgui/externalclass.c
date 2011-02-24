@@ -408,17 +408,11 @@ STATIC ASM IPTR ExtClassRender(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1)  
 /*
  * Class dispatcher.
  */
-#ifdef __AROS__
-STATIC AROS_UFH3(IPTR, ExtClassDispatch,
-	AROS_UFHA(Class *, cl, A0),
-	AROS_UFHA(Object *, obj, A2),
-	AROS_UFHA(Msg, msg, A1))
-#else
-SAVEDS ASM STATIC ULONG ExtClassDispatch( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg msg )
-#endif
+STATIC SAVEDS ASM REGFUNC3(IPTR, ExtClassDispatch,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, Msg, msg))
 {
-   AROS_USERFUNC_INIT
-
    ED                *ed;
    IPTR               rc;
    APTR               stk;
@@ -486,8 +480,8 @@ SAVEDS ASM STATIC ULONG ExtClassDispatch( REG(a0) Class *cl, REG(a2) Object *obj
    RevertStack(stk);
    return rc;
 
-   AROS_USERFUNC_EXIT
 }
+REGFUNC_END
 
 ///
 

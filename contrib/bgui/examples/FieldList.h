@@ -104,13 +104,7 @@ STATIC ASM VOID SetFLAttr( REG(a0) FLD *fld, REG(a1) struct TagItem *attr )
  *	Class dispatcher. Remember! NOSTACKCHECK or __interrupt for
  *	SAS users!
  */
-#ifdef __STORM__
-STATIC ULONG SAVEDS ASM
-#else
-STATIC SAVEDS ASM ULONG
-#endif
-//DispatchFL( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg msg )
-REGFUNC3(,DispatchFL,
+REGFUNC3(IPTR SAVEDS ASM,DispatchFL,
 	REGPARAM(A0, Class *, cl),
 	REGPARAM(A2, Object *, obj),
 	REGPARAM(A1, Msg, msg))

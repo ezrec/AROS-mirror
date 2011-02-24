@@ -731,14 +731,7 @@ struct Window *OpenImageWindow( void )
 ** Renders a pattern from the WBPattern preferences
 ** editor as back-fill.
 **/
-#ifdef __STORM__
-ULONG SAVEDS ASM
-#else
-SAVEDS ASM ULONG
-#endif
-
-//BackFillHook( REG(a0) struct Hook *hook, REG(a2) Object *imo, REG(a1) struct FrameDrawMsg *fdm )
-REGFUNC3(, BackFillHook,
+SAVEDS ASM REGFUNC3(IPTR, BackFillHook,
 	 REGPARAM(A0, struct Hook *, hook),
 	 REGPARAM(A2, Object *, imo),
 	 REGPARAM(A1, struct FrameDrawMsg *, fdm)
@@ -884,21 +877,11 @@ ULONG Cyc2Page[] = { MX_Active, PAGE_Active, TAG_END };
 /*
 ** Tabs-key control of the tabs gadget.
 **/
-#ifdef __STORM__
-VOID SAVEDS ASM
-#else
-SAVEDS ASM VOID
-#endif
-#ifdef __AROS__
-AROS_UFH3(,TabHookFunc,
-	AROS_LHA(struct Hook *, hook, A0),
-	AROS_LHA(Object *, obj, A2),
-	AROS_LHA(struct IntuiMessage *, msg, A1))
-#else
-TabHookFunc( REG(a0) struct Hook *hook, REG(a2) Object *obj, REG(a1) struct IntuiMessage *msg )
-#endif
+SAVEDS ASM REGFUNC3(VOID,TabHookFunc,
+	REGPARAM(A0, struct Hook *, hook),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct IntuiMessage *, msg))
 {
-    AROS_USERFUNC_INIT
 
    struct Window     *window;
    Object            *mx_obj = ( Object * )hook->h_Data;
@@ -920,8 +903,8 @@ TabHookFunc( REG(a0) struct Hook *hook, REG(a2) Object *obj, REG(a1) struct Intu
       SetGadgetAttrs(( struct Gadget * )mx_obj, window, NULL, MX_Active, pos, TAG_END );
    }
 
-    AROS_USERFUNC_EXIT
 }
+REGFUNC_END
 
 struct Hook TabHook = { { NULL, NULL}, ( HOOKFUNC )TabHookFunc, NULL, NULL };
 

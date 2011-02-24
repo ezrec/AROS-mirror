@@ -57,15 +57,14 @@ quit
  *	We need a simple subclass of the BGUI button class to
  *	make it draggable.
  */
-//SAVEDS ASM ULONG DispatchSB( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg msg )
-SAVEDS ASM REGFUNC3(ULONG, DispatchSB,
+SAVEDS ASM REGFUNC3(IPTR, DispatchSB,
 	REGPARAM(A0, Class *, cl),
 	REGPARAM(A2, Object *, obj),
 	REGPARAM(A1, Msg, msg))
 {
 	struct RastPort         *rp;
 	struct gpInput		 copy;
-	ULONG			 rc = 0L, dr;
+	IPTR 			 rc = 0L, dr;
 
 	switch ( msg->MethodID ) {
 

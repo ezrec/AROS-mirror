@@ -364,9 +364,7 @@ METHOD(BaseClassGetAttrFlags, struct rmAttr *, ra)
       { TAG_DONE },
    };
    
-   ULONG rc = GetTagData(ra->ra_Attr->ti_Tag, 0, chart);
-
-   return rc;
+   return GetTagData(ra->ra_Attr->ti_Tag, 0, chart);
 }
 METHOD_END
 ///

@@ -2201,7 +2201,7 @@ METHOD_END
 /*
  * Put out a help-request.
  */
-STATIC METHOD(WindowClassHelp, Msg, msg)
+STATIC ASM ULONG WindowClassHelp(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg msg)
 {
    WD                   *wd = INST_DATA( cl, obj );
    struct bmShowHelp     bsh;
@@ -2268,9 +2268,8 @@ STATIC METHOD(WindowClassHelp, Msg, msg)
        */
       AsmDoMethod(obj, WM_WAKEUP);
    };
-   return (IPTR)rc;
+   return rc;
 }
-METHOD_END
 
 /*
  * Fill up an InputEvent structure
@@ -3100,7 +3099,7 @@ WW(kprintf("WindowClassIDCMP: calling WindowClassChange\n"));
 	    /*
 	     * HELP!!!!
 	     */
-	    METHOD_CALL(WindowClassHelp, cl, obj, NULL, (APTR)getreg(REG_A4));
+	    WindowClassHelp(cl, obj, NULL);
 	    break;
 	 };
 	 /*

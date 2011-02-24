@@ -166,12 +166,7 @@ makeproto Class *BGUI_MakeClass(Tag tag, ...)
    AROS_SLOWSTACKTAGS_POST
 }
 
-//static ASM ULONG ClassCallDispatcher(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg msg, REG(a4) APTR global_data)
-static ASM REGFUNC4(ULONG, ClassCallDispatcher,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, Msg, msg),
-	REGPARAM(A4, APTR, global_data))
+STATIC METHOD(ClassCallDispatcher, Msg, msg)
 {
    BGUIClassData *class_data;
    DPFUNC *class_methods;
@@ -182,15 +177,7 @@ static ASM REGFUNC4(ULONG, ClassCallDispatcher,
    {
       for(;class_methods->df_MethodID!=DF_END;class_methods++)
 	 if(class_methods->df_MethodID==msg->MethodID)
-#ifdef __AROS__
-	   return AROS_UFC4(ULONG, class_methods->df_Func,
-		     AROS_UFCA(Class *, cl, A0),
-		     AROS_UFCA(Object *, obj, A1),
-		     AROS_UFCA(Msg, msg, A2),
-		     AROS_UFCA(APTR, global_data, A4));
-#else
-	   return(((ClassMethodDispatcher)class_methods->df_Func)(cl,obj,msg,global_data));
-#endif
+	   return METHOD_CALL(class_methods->df_Func, cl, obj, msg, _global);
    }
    switch(msg->MethodID)
    {
@@ -200,7 +187,7 @@ static ASM REGFUNC4(ULONG, ClassCallDispatcher,
    }
    return(0);
 }
-REGFUNC_END
+METHOD_END
 
 struct CallData
 {

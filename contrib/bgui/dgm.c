@@ -69,7 +69,7 @@ METHOD(DGMClassSet, struct opSet *, ops)
    const struct TagItem *tstate = ops->ops_AttrList;
    struct IntuiMessage *imsg;
    IPTR                *ptr = NULL;
-   ULONG               *res = NULL;
+   IPTR                *res = NULL;
    BOOL                 domethod = FALSE;
 
    /*
@@ -85,7 +85,7 @@ METHOD(DGMClassSet, struct opSet *, ops)
 	     * in a pointer passed to us to avoid the system
 	     * glitch (or is it a real bug?).
 	     */
-	    res = ( ULONG * )tag->ti_Data;
+	    res = ( IPTR * )tag->ti_Data;
 	    break;
 
 	 case DGM_Object:
@@ -152,7 +152,7 @@ METHOD(DGMClassSet, struct opSet *, ops)
    {
       if (dd->dd_Target)
       {
-	 *res = (ULONG)AsmDoMethodA(dd->dd_Target, (Msg)ptr);
+	 *res = AsmDoMethodA(dd->dd_Target, (Msg)ptr);
 	 /*
 	  * Return result for compatibility reasons.
 	  */
@@ -192,7 +192,7 @@ makeproto SAVEDS ASM ULONG BGUI_DoGadgetMethodA( REG(a0) Object *obj, REG(a1) st
    AROS_LIBFUNC_INIT
 
    Object      *dgm;
-   ULONG        rc;
+   IPTR         rc;
 
    /*
     * Valid window?
@@ -238,7 +238,7 @@ METHOD(DGMClassGoActive, struct gpInput *, gpi2)
    DD             *dd = INST_DATA(cl, obj);
    struct gpInput  gpi = *gpi2;
    struct IBox    *bounds = NULL;
-   ULONG           rc = 0;
+   IPTR            rc = 0;
    Object         *target = dd->dd_Target;
 
    if (target)
@@ -259,7 +259,7 @@ METHOD(DGMClassGoActive, struct gpInput *, gpi2)
       SetGadgetAttrs((struct Gadget *)obj, dd->dd_Window, NULL,
 	 DGM_Result, &rc, DGM_Object, target, DGM_DoMethod, &gpi, TAG_END);
    };
-   return (IPTR)rc;
+   return rc;
 }
 METHOD_END
 ///
@@ -267,7 +267,8 @@ METHOD_END
 METHOD(DGMClassGoInactive, Msg, msg)
 {
    DD          *dd   = INST_DATA(cl, obj);
-   ULONG        rc   = 0, id;
+   IPTR         rc   = 0;
+   ULONG        id;
    IPTR         mouseact = 0, report = FALSE;
    Object      *win  = NULL, *target;
 
@@ -295,7 +296,7 @@ METHOD(DGMClassGoInactive, Msg, msg)
 	 };
       };
    };
-   return (IPTR)rc;
+   return rc;
 }
 METHOD_END
 ///
