@@ -64,11 +64,6 @@
 *****************************  PROTOTYPES  ******************************
 ************************************************************************/
 
-//ASM ULONG TV_Replace(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvReplace *tvr);
-ASM REGFUNCPROTO3(ULONG, TV_Replace,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct tvReplace *, tvr));
 
 /************************************************************************
 *****************************  LOCAL DATA  ******************************
@@ -79,12 +74,8 @@ ASM REGFUNCPROTO3(ULONG, TV_Replace,
 ****************************  TV_REPLACE()  *****************************
 ************************************************************************/
 
-//ASM ULONG TV_Replace(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvReplace *tvr)
-ASM REGFUNC3(ULONG, TV_Replace,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct tvReplace *, tvr))
+METHOD(TV_Replace, struct tvReplace *, tvr)
 {
 return(0);
 }
-REGFUNC_END
+METHOD_END

@@ -65,34 +65,6 @@
 *****************************  PROTOTYPES  ******************************
 ************************************************************************/
 
-//ASM SAVEDS ULONG TV_LVRsrcHandler(REG(a0) struct Hook *hook,
-//	REG(a2) Object *obj, REG(a1) struct lvResource *lvr);
-ASM SAVEDS REGFUNCPROTO3(ULONG, TV_LVRsrcHandler,
-	REGPARAM(A0, struct Hook *, hook),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct lvResource *, lvr));
-
-//ASM SAVEDS ULONG TV_LVDispHandler(REG(a0) struct Hook *hook,
-//	REG(a2) Object *obj, REG(a1) struct lvRender *lvr);
-ASM SAVEDS REGFUNCPROTO3(ULONG, TV_LVDispHandler,
-	REGPARAM(A0, struct Hook *, hook),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct lvRender *, lvr));
-
-//ASM SAVEDS ULONG TV_LVCompHandler(REG(a0) struct Hook *hook,
-//	REG(a2) Object *obj, REG(a1) struct lvCompare *lvc);
-ASM SAVEDS REGFUNCPROTO3(ULONG, TV_LVCompHandler,
-	REGPARAM(A0, struct Hook *, hook),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct lvCompare *, lvc));
-
-//ASM SAVEDS ULONG TV_LVNotifyHandler(REG(a0) struct Hook *hook,
-//	REG(a2) Object *obj, REG(a1) struct opUpdate *opu);
-ASM SAVEDS REGFUNCPROTO3(ULONG, TV_LVNotifyHandler,
-	REGPARAM(A0, struct Hook *, hook),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct opUpdate *, opu));
-
 /************************************************************************
 *****************************  LOCAL DATA  ******************************
 ************************************************************************/

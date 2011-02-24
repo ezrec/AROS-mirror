@@ -61,12 +61,6 @@
 *****************************  PROTOTYPES  ******************************
 ************************************************************************/
 
-//ASM ULONG TV_Move(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvInsert *tvi);
-ASM REGFUNCPROTO3(ULONG, TV_Move,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct tvInsert *, tvi));
-
 /************************************************************************
 *****************************  LOCAL DATA  ******************************
 ************************************************************************/
@@ -76,13 +70,9 @@ ASM REGFUNCPROTO3(ULONG, TV_Move,
 ******************************  TV_MOVE()  ******************************
 ************************************************************************/
 
-//ASM ULONG TV_Move(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvInsert *tvi)
-ASM REGFUNC3(ULONG, TV_Move,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct tvInsert *, tvi))
+METHOD(TV_Move, struct tvInsert *, tvi)
 {
 return(0);
 }
-REGFUNC_END
+METHOD_END
 

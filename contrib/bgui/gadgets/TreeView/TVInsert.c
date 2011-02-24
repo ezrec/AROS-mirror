@@ -61,11 +61,6 @@
 *****************************  PROTOTYPES  ******************************
 ************************************************************************/
 
-//ASM ULONG TV_Insert(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvInsert *tvi);
-ASM REGFUNCPROTO3(ULONG, TV_Insert,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct tvInsert *, tvi));
 
 /************************************************************************
 *****************************  LOCAL DATA  ******************************
@@ -115,11 +110,7 @@ ASM REGFUNCPROTO3(ULONG, TV_Insert,
 *
 *************************************************************************/
 
-//ASM ULONG TV_Insert(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvInsert *tvi)
-ASM REGFUNC3(ULONG, TV_Insert,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct tvInsert *, tvi))
+METHOD(TV_Insert, struct tvInsert *, tvi)
 {
 TVData	*tv;
 TNPTR	tn,prevtn = NULL,par,tr,sr = NULL;
@@ -316,5 +307,5 @@ if ((tn = TV_AllocTreeNode(tv,tvi->tvi_Entry,tvflags)))
 
 return(rc);
 }
-REGFUNC_END
+METHOD_END
 

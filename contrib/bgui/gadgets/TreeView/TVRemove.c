@@ -61,11 +61,6 @@
 *****************************  PROTOTYPES  ******************************
 ************************************************************************/
 
-//ASM ULONG TV_Remove(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvEntry *tve);
-ASM REGFUNCPROTO3(ULONG, TV_Remove,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct tvEntry *, tve));
 
 /************************************************************************
 *****************************  LOCAL DATA  ******************************
@@ -113,11 +108,7 @@ ASM REGFUNCPROTO3(ULONG, TV_Remove,
 *
 *************************************************************************/
 
-//ASM ULONG TV_Remove(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvEntry *tve)
-ASM REGFUNC3(ULONG, TV_Remove,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct tvEntry *, tve))
+METHOD(TV_Remove, struct tvEntry *, tve)
 {
 struct tvAnchor	tva;
 TVData			*tv;
@@ -197,5 +188,5 @@ if (refreshmethod)
 
 return(rc);
 }
-REGFUNC_END
+METHOD_END
 

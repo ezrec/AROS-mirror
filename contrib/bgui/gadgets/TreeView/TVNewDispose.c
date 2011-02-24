@@ -112,42 +112,22 @@ extern struct ExecBase *SysBase;
 *****************************  PROTOTYPES  ******************************
 ************************************************************************/
 
-//ASM ULONG TV_New(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct opSet *ops);
-ASM REGFUNCPROTO3(ULONG, TV_New,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct opSet *, ops));
-
-//ASM ULONG TV_Dispose(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) Msg msg);
-ASM REGFUNCPROTO3(ULONG, TV_Dispose,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, Msg, msg));
-
-//LOCAL ASM SAVEDS ULONG TV_TVRsrcHandler(REG(a0) struct Hook *hook,
-//	REG(a2) Object *obj, REG(a1) struct tvResource *tvr);
-LOCAL ASM SAVEDS REGFUNCPROTO3(ULONG, TV_TVRsrcHandler,
+LOCAL ASM SAVEDS REGFUNCPROTO3(IPTR, TV_TVRsrcHandler,
 	REGPARAM(A0, struct Hook *, hook),
 	REGPARAM(A2, Object *, obj),
 	REGPARAM(A1, struct tvResource *, tvr));
 
-//LOCAL ASM SAVEDS ULONG TV_TVDispHandler(REG(a0) struct Hook *hook,
-//	REG(a2) Object *obj, REG(a1) struct tvRender *tvr);
-LOCAL ASM SAVEDS REGFUNCPROTO3(ULONG, TV_TVDispHandler,
+LOCAL ASM SAVEDS REGFUNCPROTO3(IPTR, TV_TVDispHandler,
 	REGPARAM(A0, struct Hook *, hook),
 	REGPARAM(A2, Object *, obj),
 	REGPARAM(A1, struct tvRender *, tvr));
 
-//LOCAL ASM SAVEDS ULONG TV_TVCompHandler(REG(a0) struct Hook *hook,
-//	REG(a2) Object *obj, REG(a1) struct tvCompare *tvc);
-LOCAL ASM SAVEDS REGFUNCPROTO3(ULONG, TV_TVCompHandler,
+LOCAL ASM SAVEDS REGFUNCPROTO3(IPTR, TV_TVCompHandler,
 	REGPARAM(A0, struct Hook *, hook),
 	REGPARAM(A2, Object *, obj),
 	REGPARAM(A1, struct tvCompare *, tvc));
 
-//LOCAL ASM SAVEDS ULONG TV_TVExpandHandler(REG(a0) struct Hook *hook,
-//	REG(a2) Object *obj, REG(a1) struct tvExpand *tve);
-LOCAL ASM SAVEDS REGFUNCPROTO3(ULONG, TV_TVExpandHandler,
+LOCAL ASM SAVEDS REGFUNCPROTO3(IPTR, TV_TVExpandHandler,
 	REGPARAM(A0, struct Hook *, hook),
 	REGPARAM(A2, Object *, obj),
 	REGPARAM(A1, struct tvExpand *, tve));
@@ -211,11 +191,7 @@ static ULONG instances=0;
 *
 *************************************************************************/
 
-//ASM ULONG TV_New(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct opSet *ops)
-ASM REGFUNC3(ULONG, TV_New,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct opSet *, ops))
+METHOD(TV_New,struct opSet *, ops)
 {
 struct TagItem		*tags;
 struct VectorItem	*expvi,*convi;
@@ -459,7 +435,7 @@ if (!rc)
 
 return(rc);
 }
-REGFUNC_END
+METHOD_END
 
 /************************************************************************
 ****************************  TV_DISPOSE()  *****************************
@@ -469,11 +445,7 @@ REGFUNC_END
 *
 *************************************************************************/
 
-//ASM ULONG TV_Dispose(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) Msg msg)
-ASM REGFUNC3(ULONG, TV_Dispose,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, Msg, msg))
+METHOD(TV_Dispose, Msg, msg)
 {
 TVData	*tv;
 ULONG rc;
@@ -538,7 +510,7 @@ if(--instances==0)
 }
 return rc;
 }
-REGFUNC_END
+METHOD_END
 
 /************************************************************************
 **************************  TV_TV???HANDLER()  **************************
@@ -548,9 +520,7 @@ REGFUNC_END
 *
 *************************************************************************/
 
-//LOCAL ASM SAVEDS ULONG TV_TVRsrcHandler(REG(a0) struct Hook *hook,
-//	REG(a2) Object *obj, REG(a1) struct tvResource *tvr)
-LOCAL ASM SAVEDS REGFUNC3(ULONG, TV_TVRsrcHandler,
+LOCAL ASM SAVEDS REGFUNC3(IPTR, TV_TVRsrcHandler,
 	REGPARAM(A0, struct Hook *, hook),
 	REGPARAM(A2, Object *, obj),
 	REGPARAM(A1, struct tvResource *, tvr))
@@ -579,9 +549,7 @@ return(rc);
 REGFUNC_END
 
 
-//LOCAL ASM SAVEDS ULONG TV_TVDispHandler(REG(a0) struct Hook *hook,
-//	REG(a2) Object *obj, REG(a1) struct tvRender *tvr)
-LOCAL ASM SAVEDS REGFUNC3(ULONG, TV_TVDispHandler,
+LOCAL ASM SAVEDS REGFUNC3(IPTR, TV_TVDispHandler,
 	REGPARAM(A0, struct Hook *, hook),
 	REGPARAM(A2, Object *, obj),
 	REGPARAM(A1, struct tvRender *, tvr))
@@ -591,21 +559,17 @@ return (IPTR)tvr->tvr_Entry;
 REGFUNC_END
 
 
-//LOCAL ASM SAVEDS ULONG TV_TVCompHandler(REG(a0) struct Hook *hook,
-//	REG(a2) Object *obj, REG(a1) struct tvCompare *tvc)
-LOCAL ASM SAVEDS REGFUNC3(ULONG, TV_TVCompHandler,
+LOCAL ASM SAVEDS REGFUNC3(IPTR, TV_TVCompHandler,
 	REGPARAM(A0, struct Hook *, hook),
 	REGPARAM(A2, Object *, obj),
 	REGPARAM(A1, struct tvCompare *, tvc))
 {
-return((ULONG) Stricmp((STRPTR) tvc->tvc_EntryA,(STRPTR) tvc->tvc_EntryB));
+return((IPTR) Stricmp((STRPTR) tvc->tvc_EntryA,(STRPTR) tvc->tvc_EntryB));
 }
 REGFUNC_END
 
 
-//LOCAL ASM SAVEDS ULONG TV_TVExpandHandler(REG(a0) struct Hook *hook,
-//	REG(a2) Object *obj, REG(a1) struct tvExpand *tve)
-LOCAL ASM SAVEDS REGFUNC3(ULONG, TV_TVExpandHandler,
+LOCAL ASM SAVEDS REGFUNC3(IPTR, TV_TVExpandHandler,
 	REGPARAM(A0, struct Hook *, hook),
 	REGPARAM(A2, Object *, obj),
 	REGPARAM(A1, struct tvExpand *, tve))

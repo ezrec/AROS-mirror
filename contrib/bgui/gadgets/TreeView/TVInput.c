@@ -61,25 +61,6 @@
 *****************************  PROTOTYPES  ******************************
 ************************************************************************/
 
-//ASM ULONG TV_GoActive(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct gpInput *gpi);
-ASM REGFUNCPROTO3(ULONG, TV_GoActive,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct gpInput *, gpi));
-
-//ASM ULONG TV_HandleInput(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct gpInput *gpi);
-ASM REGFUNCPROTO3(ULONG, TV_HandleInput,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct gpInput *, gpi));
-
-
-//ASM ULONG TV_GoInactive(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct gpGoInactive *gpgi);
-ASM REGFUNCPROTO3(ULONG, TV_GoInactive,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct gpGoInactive *, gpgi));
-
 /************************************************************************
 *****************************  LOCAL DATA  ******************************
 ************************************************************************/
@@ -92,11 +73,7 @@ ASM REGFUNCPROTO3(ULONG, TV_GoInactive,
 *
 *************************************************************************/
 
-//ASM ULONG TV_GoActive(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct gpInput *gpi)
-ASM REGFUNC3(ULONG, TV_GoActive,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct gpInput *, gpi))
+METHOD(TV_GoActive, struct gpInput *, gpi)
 {
 TVData		*tv;
 ULONG		rc;
@@ -131,7 +108,7 @@ tv->tv_GoingActive = FALSE;
 
 return(rc);
 }
-REGFUNC_END
+METHOD_END
 
 /************************************************************************
 **************************  TV_HANDLEINPUT()  ***************************
@@ -140,11 +117,7 @@ REGFUNC_END
 *
 *************************************************************************/
 
-//ASM ULONG TV_HandleInput(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct gpInput *gpi)
-ASM REGFUNC3(ULONG, TV_HandleInput,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct gpInput *, gpi))
+METHOD(TV_HandleInput, struct gpInput *, gpi)
 {
 TVData	*tv;
 
@@ -152,17 +125,13 @@ tv = (TVData *) INST_DATA(cl,obj);
 
 return(DoMethodA(tv->tv_Listview,(Msg) gpi));
 }
-REGFUNC_END
+METHOD_END
 
 /************************************************************************
 ***************************  TV_GOINACTIVE()  ***************************
 ************************************************************************/
 
-//ASM ULONG TV_GoInactive(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct gpGoInactive *gpgi)
-ASM REGFUNC3(ULONG, TV_GoInactive,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct gpGoInactive *, gpgi))
+METHOD(TV_GoInactive, struct gpGoInactive *, gpgi)
 {
 TVData	*tv;
 
@@ -170,5 +139,5 @@ tv = (TVData *) INST_DATA(cl,obj);
 
 return(DoMethodA(tv->tv_Listview,(Msg) gpgi));
 }
-REGFUNC_END
+METHOD_END
 

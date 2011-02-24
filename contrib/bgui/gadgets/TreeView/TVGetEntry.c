@@ -61,11 +61,6 @@
 *****************************  PROTOTYPES  ******************************
 ************************************************************************/
 
-//ASM ULONG TV_GetEntry(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvGet *tvg);
-ASM REGFUNCPROTO3(ULONG, TV_GetEntry,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct tvGet *, tvg));
 
 /************************************************************************
 *****************************  LOCAL DATA  ******************************
@@ -113,11 +108,7 @@ ASM REGFUNCPROTO3(ULONG, TV_GetEntry,
 *
 *************************************************************************/
 
-//ASM ULONG TV_GetEntry(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvGet *tvg)
-ASM REGFUNC3(ULONG, TV_GetEntry,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct tvGet *, tvg))
+METHOD(TV_GetEntry, struct tvGet *, tvg)
 {
 struct tvAnchor	tva;
 TVData			*tv;
@@ -140,5 +131,5 @@ if ((tn = TV_MatchNextEntry(tv,tvg->tvg_Entry,tvg->tvg_Which,tvg->tvg_Flags,&tva
 
 return(rc);
 }
-REGFUNC_END
+METHOD_END
 

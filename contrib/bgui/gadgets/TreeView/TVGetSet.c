@@ -62,17 +62,6 @@
 *****************************  PROTOTYPES  ******************************
 ************************************************************************/
 
-//ASM ULONG TV_Get(REG(a0) Class *cl, REG(a2) Object *obj,REG(a1) struct opGet *opg);
-ASM REGFUNCPROTO3(ULONG, TV_Get,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct opGet *, opg));
-
-//ASM ULONG TV_Set(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct opSet *ops);
-ASM REGFUNCPROTO3(ULONG, TV_Set,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct opSet *, ops));
 
 /************************************************************************
 *****************************  LOCAL DATA  ******************************
@@ -88,11 +77,7 @@ ASM REGFUNCPROTO3(ULONG, TV_Set,
 *
 *************************************************************************/
 
-//ASM ULONG TV_Get(REG(a0) Class *cl, REG(a2) Object *obj,REG(a1) struct opGet *opg)
-ASM REGFUNC3(ULONG, TV_Get,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct opGet *, opg))
+METHOD(TV_Get, struct opGet *, opg)
 {
 TVData	*tv;
 ULONG	rc;
@@ -141,7 +126,7 @@ switch (opg->opg_AttrID)
 
 return(rc);
 }
-REGFUNC_END
+METHOD_END
 
 /************************************************************************
 *****************************  TV_SET()  ********************************
@@ -152,11 +137,7 @@ REGFUNC_END
 *
 *************************************************************************/
 
-//ASM ULONG TV_Set(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct opSet *ops)
-ASM REGFUNC3(ULONG, TV_Set,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct opSet *, ops))
+METHOD(TV_Set, struct opSet *, ops)
 {
 struct TagItem	*tag;
 TVData			*tv;
@@ -212,5 +193,5 @@ if ((tag = FindTagItem(TVA_Top,ops->ops_AttrList)))
 
 return(rc);
 }
-REGFUNC_END
+METHOD_END
 

@@ -69,53 +69,6 @@
 *************************  EXTERNAL REFERENCES  *************************
 ************************************************************************/
 
-/*
- * Method functions in TVNewDispose, TVGetSet, etc:
- */
-
-extern METHODPROTO(TV_New, struct opSet *, ops);
-
-extern METHODPROTO(TV_Dispose, Msg, msg);
-
-extern METHODPROTO(TV_Get, struct opGet *, opg);
-
-extern METHODPROTO(TV_Set, struct opSet *, ops);
-
-extern METHODPROTO(TV_GoActive, struct gpInput *, gpi);
-
-extern METHODPROTO(TV_HandleInput, struct gpInput *, gpi);
-
-extern METHODPROTO(TV_GoInactive, struct gpGoInactive *, gpgi);
-
-extern METHODPROTO(TV_Insert, struct tvInsert *, tvi);
-
-extern METHODPROTO(TV_Remove, struct tvEntry *, tve);
-
-extern METHODPROTO(TV_Replace, struct tvReplace *, tvr);
-
-extern METHODPROTO(TV_Move, struct tvInsert *, tvi);
-
-extern METHODPROTO(TV_GetEntry, struct tvGet *, tvg);
-
-extern METHODPROTO(TV_Select, struct tvEntry *, tve);
-
-extern METHODPROTO(TV_Visible, struct tvEntry *, tve);
-
-extern METHODPROTO(TV_Expand, struct tvEntry *, tve);
-
-extern METHODPROTO(TV_Clear, struct tvCommand *, tvc);
-
-extern METHODPROTO(TV_Lock, Msg, msg);
-
-extern METHODPROTO(TV_Unlock, struct tvCommand *, tvc);
-
-extern METHODPROTO(TV_Sort, struct tvCommand *, tvc);
-
-extern METHODPROTO(TV_Redraw, struct tvCommand *, tvc);
-
-extern METHODPROTO(TV_Refresh, struct tvCommand *, tvc);
-
-extern METHODPROTO(TV_Rebuild, struct tvCommand *, tvc);
 
 /************************************************************************
 *****************************  LOCAL DATA  ******************************
