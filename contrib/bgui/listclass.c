@@ -238,16 +238,9 @@ static ULONG ListPackTable[] =
 {
    PACK_STARTTABLE(LISTV_TAGSTART),
 
-   LD_ENTRY(LISTV_ResourceHook,       ld_Resource,   PKCTRL_ULONG),
-   LD_ENTRY(LISTV_DisplayHook,        ld_Display,    PKCTRL_ULONG),
-   LD_ENTRY(LISTV_CompareHook,        ld_Compare,    PKCTRL_ULONG),
-   LD_ENTRY(LISTV_TitleHook,          ld_TitleHook,  PKCTRL_ULONG),
    LD_ENTRY(LISTV_MinEntriesShown,    ld_MinShown,   PKCTRL_UWORD),
    LD_ENTRY(LISTV_Top,                ld_Top,        PKCTRL_ULONG),
    LD_ENTRY(LISTV_Columns,            ld_Columns,    PKCTRL_UWORD),
-   LD_ENTRY(LISTV_Title,              ld_Title,      PKCTRL_ULONG),
-   LD_ENTRY(LISTV_PropObject,         ld_Prop,       PKCTRL_ULONG),
-   LD_ENTRY(LISTV_ListFont,           ld_ListFont,   PKCTRL_ULONG),
 
    LD_FLAG(LISTV_ReadOnly,            LDF_READ_ONLY),
    LD_FLAG(LISTV_MultiSelect,         LDF_MULTI_SELECT),
@@ -918,6 +911,34 @@ METHOD(ListClassNew, struct opSet *, ops)
 	 case LISTV_ColumnWeights:
 	    new_weights = (ULONG *)data;
 	    break;
+
+	 case LISTV_PropObject:
+	    ld->ld_Prop = (Object *)data;
+	    break;
+
+	 case LISTV_ListFont:
+	    ld->ld_ListFont = (struct TextAttr *)data;
+	    break;
+
+	 case LISTV_Title:
+	    ld->ld_Title = (UBYTE *)data;
+	    break;
+
+	 case LISTV_TitleHook:
+	    ld->ld_TitleHook = (struct Hook *)data;
+	    break;
+
+	 case LISTV_CompareHook:
+	    ld->ld_Compare = (struct Hook *)data;
+	    break;
+
+	 case LISTV_DisplayHook:
+	    ld->ld_Display = (struct Hook *)data;
+	    break;
+
+	 case LISTV_ResourceHook:
+	    ld->ld_Resource = (struct Hook *)data;
+	    break;
 	 };
       };
 
@@ -1042,6 +1063,26 @@ METHOD(ListClassSetUpdate, struct opUpdate *, opu)
       data = tag->ti_Data;
       switch (tag->ti_Tag)
       {
+      case LISTV_Title:
+	 ld->ld_Title = (UBYTE *)data;
+	 break;
+
+      case LISTV_TitleHook:
+	 ld->ld_TitleHook = (struct Hook *)data;
+	 break;
+
+      case LISTV_CompareHook:
+	 ld->ld_Compare = (struct Hook *)data;
+	 break;
+
+      case LISTV_DisplayHook:
+	 ld->ld_Display = (struct Hook *)data;
+	 break;
+
+      case LISTV_ResourceHook:
+	 ld->ld_Resource = (struct Hook *)data;
+	 break;
+
       case LISTV_PropObject:
 	 if (ld->ld_Prop) DisposeObject(ld->ld_Prop);
 	 ld->ld_Flags &= ~LDF_PROPACTIVE;
@@ -1378,6 +1419,34 @@ METHOD(ListClassGet, struct opGet *, opg)
 
    case LISTV_LastColumn:
       STORE ld->ld_LastCol;
+      break;
+
+   case LISTV_PropObject:
+      STORE ld->ld_Prop;
+      break;
+
+   case LISTV_ListFont:
+      STORE ld->ld_ListFont;
+      break;
+
+   case LISTV_Title:
+      STORE ld->ld_Title;
+      break;
+
+   case LISTV_TitleHook:
+      STORE ld->ld_TitleHook;
+      break;
+
+   case LISTV_CompareHook:
+      STORE ld->ld_Compare;
+      break;
+
+   case LISTV_DisplayHook:
+      STORE ld->ld_Display;
+      break;
+
+   case LISTV_ResourceHook:
+      STORE ld->ld_Resource;
       break;
 
    default:

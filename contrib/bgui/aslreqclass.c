@@ -39,7 +39,6 @@ static ULONG AslPackTable[] =
 {
    PACK_STARTTABLE(ASLREQ_TAGSTART),
 
-   AD_ENTRY(ASLREQ_Requester,    ad_Requester,  PKCTRL_ULONG),
    AD_ENTRY(ASLREQ_Type,         ad_Type,       PKCTRL_ULONG),
    AD_ENTRY(ASLREQ_Left,         ad_Left,       PKCTRL_WORD),
    AD_ENTRY(ASLREQ_Top,          ad_Top,        PKCTRL_WORD),
@@ -157,6 +156,9 @@ METHOD(AslReqClassSetUpdate, struct opSet *, ops)
          case ASLREQ_Bounds:
             *((struct IBox *)&ad->ad_Left) = *((struct IBox *)data);
             break;
+         case ASLREQ_Requester:
+            ad->ad_Requester = (APTR)data;
+            break;
          default:
             /*
              * Try to process it.
@@ -202,6 +204,11 @@ METHOD(AslReqClassGet, struct opGet *, opg)
    if ((tag = FindTagItem(attr, ad->ad_ASLTags)))
    {
       *store = tag->ti_Data;
+      rc = 1;
+   }
+   else if (attr == ASLREQ_Requester)
+   {
+      *store = (IPTR)ad->ad_Requester;
       rc = 1;
    }
    else

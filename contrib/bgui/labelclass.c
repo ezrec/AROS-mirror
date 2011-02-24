@@ -117,13 +117,7 @@ static ULONG LabelPackTable[] =
 {
    PACK_STARTTABLE(LAB_TAGSTART),
 
-#ifdef __AROS__
-   /* We really shouldn't be packing addresses anyway! */
-#else
-   LD_ENTRY(LAB_Label,            ld_Text,              PKCTRL_ULONG),
    LD_ENTRY(LAB_LabelID,          ld_TextID,            PKCTRL_ULONG),
-   LD_ENTRY(LAB_TextAttr,         ld_TextAttr,          PKCTRL_ULONG),
-#endif
    LD_ENTRY(LAB_Style,            ld_Style,             PKCTRL_UWORD),
    LD_ENTRY(LAB_SelectedStyle,    ld_SelStyle,          PKCTRL_UWORD),
    LD_ENTRY(LAB_Place,            ld_Place,             PKCTRL_UBYTE),
@@ -354,6 +348,12 @@ METHOD(LabelClassGet, struct opGet *, opg)
       case LAB_Template:
 	 STORE ld;
 	 break;
+      case LAB_Label:
+      	 STORE ld->ld_Text;
+      	 break;
+      case LAB_TextAttr:
+      	 STORE ld->ld_TextAttr;
+      	 break;
       case LAB_Pen:
 	 STORE (!(ld->ld_Flags & LABF_DEFPEN) && !(ld->ld_Flags & LABF_DRIPEN)) ? ld->ld_Pen : (ULONG)~0;
 	 break;

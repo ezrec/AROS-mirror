@@ -114,13 +114,8 @@ static ULONG FramePackTable[] =
    PACK_STARTTABLE(FRM_TAGSTART),
 
    FD_ENTRY(FRM_Flags,                   fd_Flags,         PKCTRL_ULONG),
-   FD_ENTRY(FRM_CustomHook,              fd_FrameHook,     PKCTRL_ULONG),
-   FD_ENTRY(FRM_BackFillHook,            fd_BackFillHook,  PKCTRL_ULONG),
-   FD_ENTRY(FRM_TextAttr,                fd_TitleFont,     PKCTRL_ULONG),
    FD_ENTRY(FRM_Type,                    fd_Type,          PKCTRL_UWORD),
    FD_ENTRY(FRM_BackFill,                fd_BackFill,      PKCTRL_UWORD),
-   FD_ENTRY(FRM_FillPattern,             fd_Pattern,       PKCTRL_ULONG),
-   FD_ENTRY(FRM_SelectedFillPattern,     fd_SelPattern,    PKCTRL_ULONG),
 
    FD_ENTRY(FRM_FrameWidth,              fd_Horizontal,    PKCTRL_UBYTE),
    FD_ENTRY(FRM_FrameHeight,             fd_Vertical,      PKCTRL_UBYTE),
@@ -678,12 +673,12 @@ STATIC ASM VOID SetFrameAttrs(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) st
       case FRM_TextAttr:
 	 if (data)
 	 {
-	    if ((tf = BGUI_OpenFont((struct TextAttr *)tag->ti_Data)))
+	    if ((tf = BGUI_OpenFont((struct TextAttr *)data)))
 	    {
 	       if (fd->fd_Font && (fd->fd_Flags & FRF_SELFOPEN))
 		  BGUI_CloseFont(fd->fd_Font);
 	       fd->fd_Font  = tf;
-	       fd->fd_TitleFont = (struct TextAttr *)tag->ti_Data;
+	       fd->fd_TitleFont = (struct TextAttr *)data;
 	       fd->fd_Flags   |= FRF_SELFOPEN;
 	    }
 	 }
@@ -759,9 +754,23 @@ STATIC ASM VOID SetFrameAttrs(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) st
 	 else      fd->fd_Flags &= ~FRF_INBORDER;
 	 break;
 
+      case FRM_FillPattern:
+      	 fd->fd_Pattern = (struct bguiPattern *)data;
+      	 break;
+
+      case FRM_SelectedFillPattern:
+      	 fd->fd_SelPattern = (struct bguiPattern *)data;
+      	 break;
+
+      case FRM_BackFillHook:
+      	 fd->fd_BackFillHook = (struct Hook *)data;
+      	 break;
+
+      case FRM_CustomHook:
+      	 fd->fd_FrameHook = (struct Hook *)data;
+      	 /* Fallthough */
       case FRM_Type:
       case FRM_ThinFrame:
-      case FRM_CustomHook:
 	 FrameThickness(cl, obj);
 	 break;
       };
@@ -877,6 +886,26 @@ METHOD(FrameClassGet, struct opGet *, opg)
       case FRM_Template:
 	 STORE fd;
 	 break;
+
+      case FRM_TextAttr:
+      	 STORE fd->fd_TitleFont;
+      	 break;
+
+      case FRM_CustomHook:
+      	 STORE fd->fd_FrameHook;
+      	 break;
+
+      case FRM_BackFillHook:
+      	 STORE fd->fd_BackFillHook;
+      	 break;
+
+      case FRM_FillPattern:
+      	 STORE fd->fd_Pattern;
+      	 break;
+
+      case FRM_SelectedFillPattern:
+      	 STORE fd->fd_SelPattern;
+      	 break;
       
       case FRM_FrameWidth:
 	 STORE fd->fd_Horizontal;
