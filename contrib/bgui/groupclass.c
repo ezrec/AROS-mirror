@@ -547,7 +547,7 @@ STATIC Object *NewSpaceObject(Object *obj, ULONG weight)
    struct TagItem tags[3], *t = tags;
 
    t->ti_Tag = LGO_Group;  t->ti_Data = (IPTR)obj; t++;
-   t->ti_Tag = LGO_Weight; t->ti_Data = (IPTR)weight; t++;
+   t->ti_Tag = LGO_SpaceObject; t->ti_Data = (IPTR)weight; t++;
    t->ti_Tag = TAG_DONE;
 
    return (Object *)AsmDoMethod(obj, GROUPM_NEWMEMBER, tags, NULL);
