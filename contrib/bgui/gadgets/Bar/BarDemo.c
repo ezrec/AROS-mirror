@@ -49,12 +49,12 @@ struct IntuitionBase * IntuitionBase;
 /*
 ** Notification map-lists.
 **/
-ULONG pga2slh[] = { BAR_HorizontalPosition, BAR_HorizontalPosition, TAG_END };
-ULONG pga2slv[] = { BAR_VerticalPosition,   BAR_VerticalPosition,   TAG_END };
-ULONG sl2prg1[] = { BAR_HorizontalPosition, BAR_HorizontalSize,     TAG_END };
-ULONG prg12in[] = { BAR_HorizontalSize,     INDIC_Level,            TAG_END };
-ULONG sl2prg2[] = { BAR_VerticalPosition,   BAR_VerticalSize,       TAG_END };
-ULONG prg22in[] = { BAR_VerticalSize,       INDIC_Level,            TAG_END };
+struct TagItem pga2slh[] = { { BAR_HorizontalPosition, BAR_HorizontalPosition, }, { TAG_END }  };
+struct TagItem pga2slv[] = { { BAR_VerticalPosition,   BAR_VerticalPosition,   }, { TAG_END }  };
+struct TagItem sl2prg1[] = { { BAR_HorizontalPosition, BAR_HorizontalSize,     }, { TAG_END }  };
+struct TagItem prg12in[] = { { BAR_HorizontalSize,     INDIC_Level,            }, { TAG_END }  };
+struct TagItem sl2prg2[] = { { BAR_VerticalPosition,   BAR_VerticalSize,       }, { TAG_END }  };
+struct TagItem prg22in[] = { { BAR_VerticalSize,       INDIC_Level,            }, { TAG_END }  };
 
 #define Tell(fstr, args...) do { \
 	if ( StdOut ) FPrintf( StdOut, fstr ,##args); \

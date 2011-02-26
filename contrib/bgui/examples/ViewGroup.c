@@ -85,7 +85,7 @@ UBYTE *ListViewLab[]  = { "Entry 1",   "Entry 2",   "Entry 3",  "Entry 4",  "Ent
 /*
 ** Cycle to Page map-list.
 **/
-ULONG Cyc2Page[] = { MX_Active, PAGE_Active, TAG_END };
+struct TagItem Cyc2Page[] = { { MX_Active, PAGE_Active, }, { TAG_END }  };
 
 /*
 ** Tabs-key control of the tabs gadget.

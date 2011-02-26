@@ -498,9 +498,9 @@ UBYTE *NotifLabels[] = { "Enabled-->", "Disabled-->", "Still Disabled-->", NULL 
 /*
 ** Notification map-lists.
 **/
-ULONG pga2sl[] = { PGA_Top,       SLIDER_Level,  TAG_END };
-ULONG sl2prg[] = { SLIDER_Level,  PROGRESS_Done, TAG_END };
-ULONG prg2in[] = { PROGRESS_Done, INDIC_Level,   TAG_END };
+struct TagItem pga2sl[] = { { PGA_Top,       SLIDER_Level,  }, { TAG_END }  };
+struct TagItem sl2prg[] = { { SLIDER_Level,  PROGRESS_Done, }, { TAG_END }  };
+struct TagItem prg2in[] = { { PROGRESS_Done, INDIC_Level,   }, { TAG_END }  };
 
 /*
 ** Open the notification window.
@@ -589,7 +589,7 @@ struct Window *OpenNotifWindow( void )
 struct Window *OpenInfoWindow( void )
 {
    struct Window        *window = NULL;
-   ULONG           args[2];
+   IPTR            args[2];
 
    /*
    ** Setup arguments for the
@@ -858,7 +858,7 @@ UBYTE *MxLab[]  = { "MX #_1",   "MX #_2",   "MX #_3",      "MX #_4",         NUL
 /*
 ** Cycle to Page map-list.
 **/
-ULONG Cyc2Page[] = { MX_Active, PAGE_Active, TAG_END };
+struct TagItem Cyc2Page[] = { { MX_Active, PAGE_Active, }, { TAG_END }  };
 
 /*
 ** Create a MX object with a title on top.

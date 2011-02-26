@@ -50,7 +50,7 @@ struct PrefsWindow {
     Object          *Save, *Use, *Cancel;
 };
 
-Local ULONG Cyc2Page[] = { MX_Active, PAGE_Active, TAG_END };
+Local struct TagItem Cyc2Page[] = { { MX_Active, PAGE_Active }, { TAG_END } };
 Local UBYTE *Prefspages[] = { "S_ystem","_GUI", "M_isc", NULL };
 
 struct Library *BGUIBase = NULL;

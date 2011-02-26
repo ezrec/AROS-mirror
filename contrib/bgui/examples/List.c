@@ -83,7 +83,7 @@ static char *TabLabels[] =
 /*
 **      Cycle to Page map-list.
 **/
-static ULONG Cyc2Page[] = { MX_Active, PAGE_Active, TAG_END };
+static struct TagItem Cyc2Page[] = { { MX_Active, PAGE_Active, }, { TAG_END }  };
 
 /*
  *      Here we go...

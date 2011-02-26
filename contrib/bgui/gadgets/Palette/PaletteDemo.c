@@ -71,10 +71,10 @@
 /*
  *      Map-lists.
  */
-ULONG p2f[]  = { PALETTE_CurrentColor, FRM_BackPen,         TAG_END };
-ULONG p2fs[] = { PALETTE_CurrentColor, FRM_SelectedBackPen, TAG_END };
-ULONG p2l[]  = { PALETTE_CurrentColor, LAB_Pen,             TAG_END };
-ULONG p2ls[] = { PALETTE_CurrentColor, LAB_SelectedPen,     TAG_END };
+struct TagItem p2f[]  = { { PALETTE_CurrentColor, FRM_BackPen,         }, { TAG_END }  };
+struct TagItem p2fs[] = { { PALETTE_CurrentColor, FRM_SelectedBackPen, }, { TAG_END }  };
+struct TagItem p2l[]  = { { PALETTE_CurrentColor, LAB_Pen,             }, { TAG_END }  };
+struct TagItem p2ls[] = { { PALETTE_CurrentColor, LAB_SelectedPen,     }, { TAG_END }  };
 
 /*
  *      Library base and class base.
