@@ -62,7 +62,7 @@
 typedef struct {
    UBYTE            **md_LabelStrings;    /* MX button labels.             */
    ULONG              md_LabelStringsID;  /* Starting string ID label.     */
-   LONG               md_ActiveLabel;     /* Currently active selection.   */
+   ULONG              md_ActiveLabel;     /* Currently active selection.   */
    ULONG              md_MaxLabel;        /* Number of available labels.   */
    ULONG              md_Place;           /* Place of the labels.          */
    Object           **md_Objects;         /* MX buttons.                   */
@@ -74,10 +74,10 @@ typedef struct {
 /*
  * Notification map.
  */
-STATIC ULONG id2act[] = {
-   GA_UserData,      MX_Active,
-   GA_Selected,      TAG_IGNORE,
-   TAG_END
+STATIC struct TagItem id2act[] = {
+   { GA_UserData,      MX_Active, },
+   { GA_Selected,      TAG_IGNORE, },
+   { TAG_END,          0 },
 };
 
 /*
@@ -92,7 +92,7 @@ STATIC ULONG id2act[] = {
 STATIC ASM BOOL AddMXObjects(REG(a0) Object *target, REG(a1) MD *md)
 {
    UBYTE       **labels = md->md_LabelStrings;
-   UWORD         i = 0;
+   ULONG         i = 0;
    ULONG         id = md->md_LabelStringsID;
    BOOL          rc = FALSE, tab;
    struct TagItem tags[16], *t = &tags[0];
@@ -312,11 +312,6 @@ STATIC METHOD(MXClassNew, struct opSet *, ops)
       /*
        * Sanity check.
        */
-      if (md->md_ActiveLabel < 0)
-      {
-         if (type) md->md_ActiveLabel = md->md_MaxLabel;
-         else      md->md_ActiveLabel = 0;
-      };
       if (md->md_ActiveLabel > md->md_MaxLabel)
       {
          if (type) md->md_ActiveLabel = 0;
@@ -410,11 +405,6 @@ STATIC METHOD(MXClassSetUpdate, struct opUpdate *, opu)
          /*
           * Sanity check.
           */
-         if ((int)data < 0)
-         {
-            if (md->md_Type) data = md->md_MaxLabel;
-            else             data = 0;
-         };
          if (data > md->md_MaxLabel)
          {
             if (md->md_Type) data = 0;
@@ -484,8 +474,8 @@ STATIC METHOD(MXClassKeyActive, struct wmKeyInput *, wmki)
 {
    MD       *md   = INST_DATA(cl, obj);
    UWORD     qual = wmki->wmki_IEvent->ie_Qualifier;
-   int       num  = md->md_ActiveLabel;
-   int       max  = md->md_MaxLabel;
+   ULONG     num  = md->md_ActiveLabel;
+   ULONG     max  = md->md_MaxLabel;
    int       old, dir;
 
    /*
