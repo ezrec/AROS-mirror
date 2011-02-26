@@ -24,6 +24,7 @@
 ***************************************************************************/
 
 #include <clib/alib_protos.h>
+#include <proto/exec.h>
 #include <proto/graphics.h>
 #include <proto/utility.h>
 #include <proto/muimaster.h>
@@ -71,15 +72,16 @@ static IPTR mNL_Show(struct IClass *cl,Object *obj,Msg msg)
   data->ScrollBarsTime = 1;
 
   /* GetImages must be done before DoSuperMethodA */
-  GetImages(obj,data);
+  GetImages(data);
 
   data->do_updatesb = data->do_images = TRUE;
 
   retval = DoSuperMethodA(cl,obj,msg);
 
   if (data->ScrollBarsPos == -3)
-  { if (!(LIBVER(GfxBase) >= 39))
-      NL_CreateImages(obj,data);
+  {
+    if (!(LIBVER(GfxBase) >= 39))
+      NL_CreateImages(data);
     data->ScrollBarsPos = -2;
   }
 
@@ -90,7 +92,7 @@ static IPTR mNL_Show(struct IClass *cl,Object *obj,Msg msg)
       set(data->VertPropObject,MUIA_Prop_DoSmooth, FALSE);
   }
 
-  GetNImage_Sizes(obj,data);
+  GetNImage_Sizes(data);
   data->do_images = TRUE;
 
   RETURN(retval);
@@ -108,7 +110,7 @@ static IPTR mNL_Hide(struct IClass *cl,Object *obj,Msg msg)
   data->badrport = FALSE;
 
   // remove any custom pointer
-  HideCustomPointer(obj, data);
+  HideCustomPointer(data);
 
   retval = DoSuperMethodA(cl,obj,msg);
 
@@ -178,7 +180,7 @@ static IPTR mNL_Import(struct IClass *cl,Object *obj,struct MUIP_Import *msg)
           {
             D(DBF_STARTUP, "objID '%s', importing ACTV entry", getIDStr(muiNotifyData(obj)->mnd_ObjectID));
             if(isFlagSet(data->NList_Imports, MUIV_NList_Imports_Active))
-              NL_List_Active(obj, data, nlie[nliepos], NULL, MUIV_NList_Select_On, TRUE,0);
+              NL_List_Active(data, nlie[nliepos], NULL, MUIV_NList_Select_On, TRUE,0);
             nliepos++;
             data->do_draw = TRUE;
           }
@@ -188,7 +190,7 @@ static IPTR mNL_Import(struct IClass *cl,Object *obj,struct MUIP_Import *msg)
           {
             D(DBF_STARTUP, "objID '%s', importing FRST entry", getIDStr(muiNotifyData(obj)->mnd_ObjectID));
             if(isFlagSet(data->NList_Imports, MUIV_NList_Imports_First))
-              NL_List_First(obj, data, nlie[nliepos], NULL);
+              NL_List_First(data, nlie[nliepos], NULL);
             nliepos++;
             data->do_draw = TRUE;
           }
@@ -231,7 +233,7 @@ static IPTR mNL_Import(struct IClass *cl,Object *obj,struct MUIP_Import *msg)
               if(isFlagSet(data->NList_Imports, MUIV_NList_Imports_ColWidth))
               {
                 D(DBF_STARTUP, "objID '%s', importing WIDT %ld", getIDStr(muiNotifyData(obj)->mnd_ObjectID), nlie[nliepos]);
-                NL_ColWidth(obj, data, numcol, nlie[nliepos]);
+                NL_ColWidth(data, numcol, nlie[nliepos]);
               }
               nliepos++;
             }
@@ -247,7 +249,7 @@ static IPTR mNL_Import(struct IClass *cl,Object *obj,struct MUIP_Import *msg)
             for(numcol = 0; numcol < num_ordr; numcol++)
             {
               if(isFlagSet(data->NList_Imports, MUIV_NList_Imports_ColOrder))
-                NL_SetCol(obj, data, numcol, nlie[nliepos]);
+                NL_SetCol(data, numcol, nlie[nliepos]);
               nliepos++;
             }
             data->do_draw_all = TRUE;
@@ -354,7 +356,7 @@ static IPTR mNL_Export(struct IClass *cl,Object *obj,struct MUIP_Export *msg)
 
     if(isFlagSet(data->NList_Exports, MUIV_NList_Exports_Selected) && data->NList_TypeSelect == MUIV_NList_TypeSelect_Line)
     {
-      NL_List_Select(obj, data, MUIV_NList_Select_All, MUIV_NList_Select_All, MUIV_NList_Select_Ask, &numsel);
+      NL_List_Select(data, MUIV_NList_Select_All, MUIV_NList_Select_All, MUIV_NList_Select_Ask, &numsel);
 
       num_sels = 0;
       if(numsel > 0)
@@ -377,7 +379,7 @@ static IPTR mNL_Export(struct IClass *cl,Object *obj,struct MUIP_Export *msg)
 
     SHOWVALUE(DBF_STARTUP, nliesize);
 
-    if((buffer = (LONG *)NL_Malloc(data, nliesize, "NL_Export")) != NULL)
+    if((buffer = (LONG *)AllocVecPooled(data->Pool, nliesize)) != NULL)
     {
       ULONG nliepos = 0;
 
@@ -410,7 +412,7 @@ static IPTR mNL_Export(struct IClass *cl,Object *obj,struct MUIP_Export *msg)
         buffer[nliepos++] = MAKE_ID('W','I','D','T');
         buffer[nliepos++] = num_widt;
         for(numcol = 0; numcol < num_widt; numcol++)
-          buffer[nliepos++] = (LONG)NL_ColWidth(obj, data, numcol, MUIV_NList_ColWidth_Get);
+          buffer[nliepos++] = (LONG)NL_ColWidth(data, numcol, MUIV_NList_ColWidth_Get);
       }
       if(isFlagSet(data->NList_Exports, MUIV_NList_Exports_ColOrder))
       {
@@ -418,7 +420,7 @@ static IPTR mNL_Export(struct IClass *cl,Object *obj,struct MUIP_Export *msg)
         buffer[nliepos++] = MAKE_ID('O','R','D','R');
         buffer[nliepos++] = num_ordr;
         for(numcol = 0; numcol < num_ordr; numcol++)
-          buffer[nliepos++] = NL_ColumnToCol(obj, data, numcol);
+          buffer[nliepos++] = NL_ColumnToCol(data, numcol);
       }
       if(isFlagSet(data->NList_Exports, MUIV_NList_Exports_Selected) && data->NList_TypeSelect == MUIV_NList_TypeSelect_Line)
       {
@@ -448,7 +450,7 @@ static IPTR mNL_Export(struct IClass *cl,Object *obj,struct MUIP_Export *msg)
 
       DoMethod(msg->dataspace, MUIM_Dataspace_Add, buffer, nliesize, id);
 
-      NL_Free(data, buffer, "NL_Export");
+      FreeVecPooled(data->Pool, buffer);
     }
   }
 
@@ -520,18 +522,17 @@ static IPTR mNL_List_Destruct( struct IClass *cl, Object *obj, struct MUIP_NList
 // Function directly stolen from original NList_Compare().
 static IPTR mNL_List_Compare( struct IClass *cl, Object *obj, struct MUIP_NList_Compare *msg )
 {
-	struct NLData	*data	= INST_DATA( cl, obj );
-	APTR	s1	= msg->entry1;
-	APTR	s2	= msg->entry2;
-	if( data->NList_CompareHook )
+	struct NLData *data = INST_DATA(cl, obj);
+
+	if(data->NList_CompareHook != NULL)
 	{
-		if( data->NList_CompareHook2 )
-			return ((IPTR) MyCallHookPktA(obj,data->NList_CompareHook,s1,s2,msg->sort_type1,msg->sort_type2));
+		if(data->NList_CompareHook2)
+			return (IPTR)MyCallHookPktA(obj, data->NList_CompareHook, msg->entry1, msg->entry2, msg->sort_type1, msg->sort_type2);
 		else
-			return ((IPTR) MyCallHookPkt(obj,TRUE,data->NList_CompareHook,s2,s1));
+			return (IPTR)MyCallHookPkt(obj, TRUE, data->NList_CompareHook, msg->entry2, msg->entry1);
 	}
 	else
-		return ((IPTR) Stricmp(s1,s2));
+		return (IPTR)Stricmp(msg->entry1, msg->entry2);
 }
 
 //$$$Sensei

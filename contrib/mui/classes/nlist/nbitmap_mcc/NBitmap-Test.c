@@ -161,14 +161,12 @@ int main(void)
                       MUIA_Window_ID,       MAKE_ID('M','A','I','N'),
                       MUIA_Window_RootObject, VGroup,
                         Child, HGroup,
-/*
                           Child, NewObject(mcc->mcc_Class, NULL,
                             MUIA_NBitmap_Type,   MUIV_NBitmap_Type_File,
                             MUIA_NBitmap_Normal, "PROGDIR:icon.png",
                             MUIA_NBitmap_Label,  "Music",
                             MUIA_NBitmap_Button, TRUE,
                           End,
-*/
                           Child, NewObject(mcc->mcc_Class, NULL,
                             MUIA_NBitmap_Width,  ICON32_WIDTH,
                             MUIA_NBitmap_Height, ICON32_HEIGHT,

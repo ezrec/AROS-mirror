@@ -298,6 +298,10 @@ struct MUI_NListtree_ListNode {
 #define MUIM_NListtree_Clear								( MUIM_TB | 0x001b )	// *** Clear complete tree.
 #define MUIM_NListtree_DropType								( MUIM_TB | 0x001e )	// ***
 #define MUIM_NListtree_DropDraw								( MUIM_TB | 0x001f )	// ***
+#define MUIM_NListtree_Construct							( MUIM_TB | 0x0020 )	// *** Construct a treenode
+#define MUIM_NListtree_Destruct								( MUIM_TB | 0x0021 )	// *** Destruct a treenode
+#define MUIM_NListtree_Display								( MUIM_TB | 0x0022 )	// *** Display a treenode
+#define MUIM_NListtree_Compare								( MUIM_TB | 0x0023 )	// *** Compare two treenodes
 
 
 /*i* Private Methods ***/
@@ -517,6 +521,45 @@ struct  MUIP_NListtree_DropDraw {
 	STACKED LONG Pos;
 	STACKED LONG Type;
 	STACKED LONG MinX, MaxX, MinY, MaxY;
+};
+
+
+struct MUIP_NListtree_Construct
+{
+  STACKED ULONG MethodID;
+  STACKED STRPTR Name;
+  STACKED APTR UserData;
+  STACKED APTR MemPool;
+  STACKED ULONG Flags;
+};
+
+
+struct MUIP_NListtree_Destruct
+{
+  STACKED ULONG MethodID;
+  STACKED STRPTR Name;
+  STACKED APTR UserData;
+  STACKED APTR MemPool;
+  STACKED ULONG Flags;
+};
+
+
+struct MUIP_NListtree_Display
+{
+  STACKED ULONG   MethodID;
+  STACKED struct  MUI_NListtree_TreeNode *TreeNode;
+  STACKED LONG    EntryPos;
+  STACKED STRPTR  *Array;
+  STACKED STRPTR  *Preparse;
+};
+
+
+struct MUIP_NListtree_Compare
+{
+  STACKED ULONG MethodID;
+  STACKED struct MUI_NListtree_TreeNode *TreeNode1;
+  STACKED struct MUI_NListtree_TreeNode *TreeNode2;
+  STACKED LONG SortType;
 };
 
 

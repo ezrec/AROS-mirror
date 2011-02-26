@@ -97,10 +97,10 @@ static VOID ClassExpunge(UNUSED struct Library *base);
 /******************************************************************************/
 static BOOL ClassInit(UNUSED struct Library *base)
 {
-  if((LayersBase = OpenLibrary("layers.library", 37L)) &&
+  if((LayersBase = OpenLibrary("layers.library", 39L)) &&
      GETINTERFACE(ILayers, struct LayersIFace *, LayersBase))
   {
-    if((DiskfontBase = OpenLibrary("diskfont.library", 37L)) &&
+    if((DiskfontBase = OpenLibrary("diskfont.library", 39L)) &&
        GETINTERFACE(IDiskfont, struct DiskfontIFace *, DiskfontBase))
     {
       ioreq.io_Message.mn_Length = sizeof(ioreq);

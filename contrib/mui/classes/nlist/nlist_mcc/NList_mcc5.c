@@ -54,7 +54,7 @@ static struct NewMenu MenuData[] =
 };
 
 
-void NL_SetCols(Object *obj,struct NLData *data)
+void NL_SetCols(struct NLData *data)
 {
   if (data->do_setcols)
   {
@@ -80,7 +80,7 @@ void NL_SetCols(Object *obj,struct NLData *data)
         { if (!do_colwidthmax)
           { if (data->cols[column].c->colwidthbiggestptr == -2)
             {
-              NL_SetColsAdd(obj,data,-2,TRUE);
+              NL_SetColsAdd(data,-2,TRUE);
               do_colwidthmax = TRUE;
             }
             else
@@ -118,7 +118,7 @@ void NL_SetCols(Object *obj,struct NLData *data)
           if (minwidth == -1)
           { if (!do_colwidthmax && (data->cols[column].c->colwidthbiggestptr == -2))
             {
-              NL_SetColsAdd(obj,data,-2,TRUE);
+              NL_SetColsAdd(data,-2,TRUE);
               do_colwidthmax = TRUE;
             }
             minwidth = data->cols[column].c->colwidthmax;
@@ -161,13 +161,13 @@ void NL_SetCols(Object *obj,struct NLData *data)
         { data->do_wwrap = data->force_wwrap = data->do_draw_all = TRUE;
           data->cols[column].c->dx = (WORD) width;
           if (data->NList_TypeSelect)
-            UnSelectCharSel(obj,data,FALSE);
+            UnSelectCharSel(data,FALSE);
         }
         if (data->cols[column].c->minx != (WORD) colx)
         { data->do_wwrap = data->force_wwrap = data->do_draw_all = TRUE;
           data->cols[column].c->minx = (WORD) colx;
           if (data->NList_TypeSelect)
-            UnSelectCharSel(obj,data,FALSE);
+            UnSelectCharSel(data,FALSE);
         }
         colx += width;
         if (data->cols[column].c->maxx != (WORD) colx)
@@ -196,44 +196,44 @@ void NL_SetCols(Object *obj,struct NLData *data)
 
 
 
-LONG NL_DoNotifies(Object *obj,struct NLData *data,LONG which)
+LONG NL_DoNotifies(struct NLData *data,LONG which)
 {
   if (data->NList_Quiet || data->NList_Disabled)
     return (TRUE);
+
   /* notify ButtonClick */
-  if (NEED_NOTIFY(NTF_ButtonClick) & which)
-  { DONE_NOTIFY(NTF_ButtonClick);
-    notdoset(obj,MUIA_NList_ButtonClick,data->NList_ButtonClick);
+  if(NEED_NOTIFY(NTF_ButtonClick) & which)
+  {
+    DONE_NOTIFY(NTF_ButtonClick);
+    notdoset(data->this,MUIA_NList_ButtonClick,data->NList_ButtonClick);
   }
 
   /* notify TitleClick */
-  if (NEED_NOTIFY(NTF_TitleClick) & which)
-  { DONE_NOTIFY(NTF_TitleClick);
-    notdoset(obj,MUIA_NList_TitleClick,data->TitleClick);
+  if(NEED_NOTIFY(NTF_TitleClick) & which)
+  {
+    DONE_NOTIFY(NTF_TitleClick);
+    notdoset(data->this,MUIA_NList_TitleClick,data->TitleClick);
   }
 
   /* notify TitleClick2 */
-  if (NEED_NOTIFY(NTF_TitleClick2) & which)
-  { DONE_NOTIFY(NTF_TitleClick2);
-    notdoset(obj,MUIA_NList_TitleClick2,data->TitleClick2);
+  if(NEED_NOTIFY(NTF_TitleClick2) & which)
+  {
+    DONE_NOTIFY(NTF_TitleClick2);
+    notdoset(data->this,MUIA_NList_TitleClick2,data->TitleClick2);
   }
 
   /* notify EntryClick */
-  if (NEED_NOTIFY(NTF_EntryClick) & which)
-  { DONE_NOTIFY(NTF_EntryClick);
-    notdoset(obj,MUIA_NList_EntryClick,data->click_line);
-  }
-
-  /* notify EntryClick */
-  if (NEED_NOTIFY(NTF_EntryClick) & which)
-  { DONE_NOTIFY(NTF_EntryClick);
-    notdoset(obj,MUIA_NList_EntryClick,data->click_line);
+  if(NEED_NOTIFY(NTF_EntryClick) & which)
+  {
+    DONE_NOTIFY(NTF_EntryClick);
+    notdoset(data->this,MUIA_NList_EntryClick,data->click_line);
   }
 
   /* notify Doubleclick */
-  if (NEED_NOTIFY(NTF_Doubleclick) & which)
-  { DONE_NOTIFY(NTF_Doubleclick);
-    notdoset(obj,MUIA_NList_DoubleClick,data->click_line);
+  if(NEED_NOTIFY(NTF_Doubleclick) & which)
+  {
+    DONE_NOTIFY(NTF_Doubleclick);
+    notdoset(data->this,MUIA_NList_DoubleClick,data->click_line);
   }
 
   if(NEED_NOTIFY(NTF_LV_Doubleclick) & which)
@@ -242,105 +242,122 @@ LONG NL_DoNotifies(Object *obj,struct NLData *data,LONG which)
     if(data->listviewobj != NULL)
       DoMethod(data->listviewobj, MUIM_Set, MUIA_Listview_DoubleClick, (LONG)TRUE);
     else
-      set(obj,MUIA_Listview_DoubleClick,(LONG) TRUE);
+      set(data->this,MUIA_Listview_DoubleClick,(LONG) TRUE);
   }
 
   /* notify Multiclick */
-  if (NEED_NOTIFY(NTF_Multiclick) & which)
-  { DONE_NOTIFY(NTF_Multiclick);
-    notdoset(obj,MUIA_NList_MultiClick,data->multiclick + 1);
+  if(NEED_NOTIFY(NTF_Multiclick) & which)
+  {
+    DONE_NOTIFY(NTF_Multiclick);
+    notdoset(data->this,MUIA_NList_MultiClick,data->multiclick + 1);
   }
 
   /* notify Multiclick */
-  if (NEED_NOTIFY(NTF_MulticlickAlone) & which)
-  { DONE_NOTIFY(NTF_MulticlickAlone);
+  if(NEED_NOTIFY(NTF_MulticlickAlone) & which)
+  {
+    DONE_NOTIFY(NTF_MulticlickAlone);
     if (data->multiclickalone > 0)
       data->multiclickalone = -data->multiclickalone;
-    notdoset(obj,MUIA_NList_MultiClickAlone,-data->multiclickalone);
+    notdoset(data->this,MUIA_NList_MultiClickAlone,-data->multiclickalone);
   }
 
   /* notify_Active */
-  if (NEED_NOTIFY(NTF_Active) & which)
-  { DONE_NOTIFY(NTF_Active);
+  if(NEED_NOTIFY(NTF_Active) & which)
+  {
+    DONE_NOTIFY(NTF_Active);
     NOTIFY_START(NTF_Active);
-    notdoset(obj,MUIA_NList_Active,data->NList_Active);
+    notdoset(data->this,MUIA_NList_Active,data->NList_Active);
     NOTIFY_END(NTF_Active);
   }
-  if (NEED_NOTIFY(NTF_L_Active) & which)
-  { DONE_NOTIFY(NTF_L_Active);
+  if(NEED_NOTIFY(NTF_L_Active) & which)
+  {
+    DONE_NOTIFY(NTF_L_Active);
     NOTIFY_START(NTF_L_Active);
-    notdoset(obj,MUIA_List_Active,data->NList_Active);
+    notdoset(data->this,MUIA_List_Active,data->NList_Active);
     NOTIFY_END(NTF_L_Active);
   }
 
   /* notify_Select */
-  if (NEED_NOTIFY(NTF_Select) & which)
-  { DONE_NOTIFY(NTF_Select);
-    set(obj,MUIA_NList_SelectChange,(LONG) TRUE);
+  if(NEED_NOTIFY(NTF_Select) & which)
+  {
+    DONE_NOTIFY(NTF_Select);
+    set(data->this,MUIA_NList_SelectChange,(LONG) TRUE);
   }
 
-  if (NEED_NOTIFY(NTF_LV_Select) & which)
+  if(NEED_NOTIFY(NTF_LV_Select) & which)
   {
     DONE_NOTIFY(NTF_LV_Select);
     if(data->listviewobj != NULL)
       DoMethod(data->listviewobj, MUIM_Set, MUIA_Listview_SelectChange, (LONG)TRUE);
     else
-      set(obj,MUIA_Listview_SelectChange,(LONG) TRUE);
+      set(data->this,MUIA_Listview_SelectChange,(LONG) TRUE);
   }
 
   /* notify first */
-  if (NEED_NOTIFY(NTF_First) & which)
-  { DONE_NOTIFY(NTF_First);
-    notdoset(obj,MUIA_NList_First,data->NList_First);
+  if(NEED_NOTIFY(NTF_First) & which)
+  {
+    DONE_NOTIFY(NTF_First);
+    notdoset(data->this,MUIA_NList_First,data->NList_First);
   }
 
   /* notify entries */
-  if (NEED_NOTIFY(NTF_Entries) & which)
-  { DONE_NOTIFY(NTF_Entries);
-    notdoset(obj,MUIA_NList_Entries,data->NList_Entries);
-    notdoset(obj,MUIA_List_Entries,data->NList_Entries);
+  if(NEED_NOTIFY(NTF_Entries) & which)
+  {
+    DONE_NOTIFY(NTF_Entries);
+    notdoset(data->this,MUIA_NList_Entries,data->NList_Entries);
+    notdoset(data->this,MUIA_List_Entries,data->NList_Entries);
   }
 
   /* notify LineHeight */
-  if (NEED_NOTIFY(NTF_LineHeight) & which)
-  { DONE_NOTIFY(NTF_LineHeight);
-    notdoset(obj,MUIA_NList_LineHeight,data->vinc);
+  if(NEED_NOTIFY(NTF_LineHeight) & which)
+  {
+    DONE_NOTIFY(NTF_LineHeight);
+    notdoset(data->this,MUIA_NList_LineHeight,data->vinc);
   }
 
   /* notify NTF_DragSortInsert */
-  if (NEED_NOTIFY(NTF_DragSortInsert) & which)
-  { DONE_NOTIFY(NTF_Insert|NTF_DragSortInsert);
-    notdoset(obj,MUIA_NList_DragSortInsert,data->vinc);
+  if(NEED_NOTIFY(NTF_DragSortInsert) & which)
+  {
+    DONE_NOTIFY(NTF_Insert|NTF_DragSortInsert);
+    notdoset(data->this,MUIA_NList_DragSortInsert,data->vinc);
   }
 
   /* notify Insert */
-  if (NEED_NOTIFY(NTF_Insert) & which)
-  { DONE_NOTIFY(NTF_Insert);
-    notdoset(obj,MUIA_NList_InsertPosition,data->vinc);
+  if(NEED_NOTIFY(NTF_Insert) & which)
+  {
+    DONE_NOTIFY(NTF_Insert);
+    notdoset(data->this,MUIA_NList_InsertPosition,data->vinc);
   }
 
   /* notify minmax */
-  if (!data->do_wwrap && !data->force_wwrap &&
-      (ASKED_NOTIFY(NTF_MinMax) & which))
-  { DONE_NOTIFY(NTF_MinMax);
+  if(!data->do_wwrap && !data->force_wwrap &&
+     (ASKED_NOTIFY(NTF_MinMax) & which))
+  {
+    DONE_NOTIFY(NTF_MinMax);
     ForceMinMax;
   }
 
   /* notify columns */
-  if (NEED_NOTIFY(NTF_Columns) & which)
-  { DONE_NOTIFY(NTF_Columns);
-    notdoset(obj,MUIA_NList_Columns,(IPTR) NL_Columns(obj,data,NULL));
+  if(NEED_NOTIFY(NTF_Columns) & which)
+  {
+    DONE_NOTIFY(NTF_Columns);
+    notdoset(data->this,MUIA_NList_Columns,(IPTR) NL_Columns(data,NULL));
   }
+
   return (TRUE);
 }
 
 
-void NL_UpdateScrollersValues(Object *obj,struct NLData *data)
+void NL_UpdateScrollersValues(struct NLData *data)
 {
+  Object *obj = data->this;
+
   if (((data->NList_Quiet > 0) || data->NList_Disabled) && !data->do_draw_all)
     return;
   if (WANTED_NOTIFY(NTF_VSB))
-  { LONG entries = data->NList_Prop_First + data->NList_Prop_Visible;
+  {
+    LONG entries = data->NList_Prop_First + data->NList_Prop_Visible;
+
     if (entries < data->NList_Prop_Entries)
       entries = data->NList_Prop_Entries;
     if (entries != data->old_prop_entries)
@@ -353,7 +370,8 @@ void NL_UpdateScrollersValues(Object *obj,struct NLData *data)
       set(obj, MUIA_NList_VertDeltaFactor,data->vinc);
   }
   if (WANTED_NOTIFY(NTF_HSB))
-  { if (data->NList_Horiz_Entries != data->old_horiz_entries)
+  {
+    if (data->NList_Horiz_Entries != data->old_horiz_entries)
       set(obj, MUIA_NList_Horiz_Entries,data->NList_Horiz_Entries);
     if (data->NList_Horiz_Visible != data->old_horiz_visible)
       set(obj, MUIA_NList_Horiz_Visible,data->NList_Horiz_Visible);
@@ -365,22 +383,24 @@ void NL_UpdateScrollersValues(Object *obj,struct NLData *data)
 }
 
 
-ULONG NL_UpdateScrollers(Object *obj,struct NLData *data,BOOL force)
+ULONG NL_UpdateScrollers(struct NLData *data,BOOL force)
 {
   if (!data->SHOW || !data->DRAW)
     return (FALSE);
 
   if (data->UpdatingScrollbars)
-  { BOOL lastact = (data->NList_Active == (data->NList_First + data->NList_Visible - 1));
-    NL_SetObjInfos(obj,data,TRUE);
+  {
+    BOOL lastact = (data->NList_Active == (data->NList_First + data->NList_Visible - 1));
+
+    NL_SetObjInfos(data,TRUE);
     data->NList_Prop_Visible = data->lvisible * data->vinc;
     data->NList_Horiz_Visible = data->mright - data->mleft;
     data->NList_Prop_Entries = data->NList_Entries * data->vinc;
     if (lastact && (data->NList_Active == (data->NList_First + data->NList_Visible)))
       data->NList_First++;
-    NL_SetCols(obj,data);
-    NL_DoWrapAll(obj,data,FALSE,FALSE);
-    NL_UpdateScrollersValues(obj,data);
+    NL_SetCols(data);
+    NL_DoWrapAll(data,FALSE,FALSE);
+    NL_UpdateScrollersValues(data);
     return (FALSE);
   }
 
@@ -392,25 +412,30 @@ ULONG NL_UpdateScrollers(Object *obj,struct NLData *data,BOOL force)
   }
 
   if (!data->do_draw_all && !data->do_updatesb && !force && (data->NList_Quiet || data->NList_Disabled))
-  { data->ScrollBarsTime = SCROLLBARSTIME;
+  {
+    data->ScrollBarsTime = SCROLLBARSTIME;
     return (FALSE);
   }
 
-  NL_SetObjInfos(obj,data,TRUE);
+  NL_SetObjInfos(data,TRUE);
   if (data->do_images)
-  { GetImages(obj,data);
-    GetNImage_Sizes(obj,data);
+  {
+    GetImages(data);
+    GetNImage_Sizes(data);
   }
   if (data->do_parse)
-  { AllParseColumns(obj,data);
-    GetNImage_Sizes(obj,data);
+  {
+    AllParseColumns(data);
+    GetNImage_Sizes(data);
   }
 
-  NL_SetCols(obj,data);
-  NL_DoWrapAll(obj,data,FALSE,FALSE);
+  NL_SetCols(data);
+  NL_DoWrapAll(data,FALSE,FALSE);
 
   if (data->do_draw_all || force)
-  { LONG ent,ent2,hmax,linelen,hfirst;
+  {
+    LONG ent,ent2,hmax,linelen,hfirst;
+
     data->NList_Prop_Visible = data->lvisible * data->vinc;
     data->NList_Horiz_Visible = data->mright - data->mleft;
     data->NList_Prop_Entries = data->NList_Entries * data->vinc;
@@ -421,7 +446,8 @@ ULONG NL_UpdateScrollers(Object *obj,struct NLData *data,BOOL force)
     if (ent2 > data->NList_Entries)
       ent2 = data->NList_Entries;
     while (data->EntriesArray && (ent < ent2))
-    { linelen = data->EntriesArray[ent]->PixLen;
+    {
+      linelen = data->EntriesArray[ent]->PixLen;
       if (((linelen < 1) || data->do_draw_all) && (data->numcols > 0) && !DontDoColumn(data,ent,data->numcols-1))
       {
         data->display_ptr = NULL;
@@ -430,9 +456,9 @@ ULONG NL_UpdateScrollers(Object *obj,struct NLData *data,BOOL force)
           linelen = data->cols[data->numcols-1].c->userwidth + data->cols[data->numcols-1].c->minx - 1;
         else
         {
-          NL_GetDisplayArray(obj,data,ent);
-          ParseColumn(obj,data,data->numcols-1,0);
-          WidthColumn(obj,data,data->numcols-1,0);
+          NL_GetDisplayArray(data,ent);
+          ParseColumn(data,data->numcols-1,0);
+          WidthColumn(data,data->numcols-1,0);
           linelen = data->cols[data->numcols-1].c->colwidth + data->cols[data->numcols-1].c->minx + data->cols[data->numcols-1].c->xoffset;
           if (IS_ALIGN_CENTER(data->cols[data->numcols-1].c->style) && (data->cols[data->numcols-1].c->dx > data->cols[data->numcols-1].c->colwidth))
             linelen = data->cols[data->numcols-1].c->minx + data->cols[data->numcols-1].c->dx - 1;
@@ -446,17 +472,19 @@ ULONG NL_UpdateScrollers(Object *obj,struct NLData *data,BOOL force)
       ent++;
     }
     if (data->NList_Title)
-    { if ((data->Title_PixLen < 0) || data->do_draw_all)
-      { data->do_draw_title = TRUE;
+    {
+      if ((data->Title_PixLen < 0) || data->do_draw_all)
+      {
+        data->do_draw_title = TRUE;
         data->display_ptr = NULL;
         data->parse_column = -1;
         if (data->cols[data->numcols-1].c->userwidth > 0)
           data->Title_PixLen = data->cols[data->numcols-1].c->userwidth + data->cols[data->numcols-1].c->minx - 1;
         else
         {
-          NL_GetDisplayArray(obj,data,-1);
-          ParseColumn(obj,data,data->numcols-1,0);
-          WidthColumn(obj,data,data->numcols-1,0);
+          NL_GetDisplayArray(data,-1);
+          ParseColumn(data,data->numcols-1,0);
+          WidthColumn(data,data->numcols-1,0);
           data->Title_PixLen = data->cols[data->numcols-1].c->colwidth + data->cols[data->numcols-1].c->minx + data->cols[data->numcols-1].c->xoffset;
           if (IS_ALIGN_CENTER(data->cols[data->numcols-1].c->style) && (data->cols[data->numcols-1].c->dx > data->cols[data->numcols-1].c->colwidth))
             data->Title_PixLen = data->cols[data->numcols-1].minx + data->cols[data->numcols-1].dx - 1;
@@ -470,12 +498,13 @@ ULONG NL_UpdateScrollers(Object *obj,struct NLData *data,BOOL force)
     if (hfirst + data->hvisible > hmax)
       hmax = hfirst + data->hvisible;
     data->NList_Horiz_Entries = hmax;
-    NL_UpdateScrollersValues(obj,data);
+    NL_UpdateScrollersValues(data);
   }
 
   data->ScrollBarsTime = SCROLLBARSTIME;
   if (data->do_updatesb && (data->NList_Quiet <= 0) && !data->NList_Disabled && WANTED_NOTIFY(NTF_SB))
-  { data->do_updatesb = FALSE;
+  {
+    data->do_updatesb = FALSE;
     data->ScrollBars = (data->ScrollBarsOld & ~MUIV_NListview_HSB_On) | MUIV_NListview_HSB_Off;
 
     if (data->ScrollBarsPos != data->NList_First)
@@ -487,7 +516,9 @@ ULONG NL_UpdateScrollers(Object *obj,struct NLData *data,BOOL force)
     if (data->NList_Horiz_Entries > data->NList_Horiz_Visible)
       data->ScrollBars |= MUIV_NListview_HSB_On;
     else
-    { LONG ent = data->NList_First + data->NList_Visible;
+    {
+      LONG ent = data->NList_First + data->NList_Visible;
+
       if ((ent < data->NList_Entries) && data->EntriesArray &&
           ((data->ScrollBarsOld & MUIV_NListview_HSB_On) == MUIV_NListview_HSB_On))
       {
@@ -516,9 +547,9 @@ ULONG NL_UpdateScrollers(Object *obj,struct NLData *data,BOOL force)
               data->EntriesArray[ent]->PixLen = data->cols[data->numcols-1].c->userwidth + data->cols[data->numcols-1].c->minx - 1;
             else
             {
-              NL_GetDisplayArray(obj,data,ent);
-              ParseColumn(obj,data,data->numcols-1,0);
-              WidthColumn(obj,data,data->numcols-1,0);
+              NL_GetDisplayArray(data,ent);
+              ParseColumn(data,data->numcols-1,0);
+              WidthColumn(data,data->numcols-1,0);
               data->EntriesArray[ent]->PixLen = data->cols[data->numcols-1].c->colwidth + data->cols[data->numcols-1].c->minx + data->cols[data->numcols-1].c->xoffset;
               if (IS_ALIGN_CENTER(data->cols[data->numcols-1].c->style) && (data->cols[data->numcols-1].c->dx > data->cols[data->numcols-1].c->colwidth))
                 data->EntriesArray[ent]->PixLen = data->cols[data->numcols-1].c->minx + data->cols[data->numcols-1].c->dx - 1;
@@ -538,15 +569,16 @@ ULONG NL_UpdateScrollers(Object *obj,struct NLData *data,BOOL force)
     }
 
     if (force || (data->ScrollBars != data->ScrollBarsOld))
-    { data->ScrollBarsOld = data->ScrollBars;
+    {
+      data->ScrollBarsOld = data->ScrollBars;
       data->ScrollBarsPos = data->NList_First;
 
       data->UpdatingScrollbars = TRUE;
       data->UpdateScrollersRedrawn = FALSE;
-      set(obj,MUIA_NListview_Horiz_ScrollBar,data->ScrollBars);
+      set(data->this,MUIA_NListview_Horiz_ScrollBar,data->ScrollBars);
       data->UpdatingScrollbars = FALSE;
 
-      NL_UpdateScrollersValues(obj,data);
+      NL_UpdateScrollersValues(data);
 
       if ((data->ScrollBars & MUIV_NListview_VSB_On) != MUIV_NListview_VSB_On)
         data->ScrollBarsPos = -2;
@@ -559,11 +591,15 @@ ULONG NL_UpdateScrollers(Object *obj,struct NLData *data,BOOL force)
 }
 
 
-static LONG DoRefresh(Object *obj,struct NLData *data)
+static LONG DoRefresh(struct NLData *data)
 {
   if (data->SHOW && data->DRAW)
-  { if (data->DRAW > 1)
-    { data->pushtrigger = 1;
+  {
+    Object *obj = data->this;
+
+    if (data->DRAW > 1)
+    {
+      data->pushtrigger = 1;
       DoMethod(_app(obj),MUIM_Application_PushMethod,obj,1,MUIM_NList_Trigger);
       return (FALSE);
     }
@@ -592,10 +628,12 @@ static LONG DoRefresh(Object *obj,struct NLData *data)
     if ((data->pushtrigger == 2) ||
         (!(data->rp->Layer->Flags & LAYERREFRESH) &&
          !(muiRenderInfo(obj)->mri_Flags & MUIMRI_REFRESHMODE) && !data->refreshing))
-    { return (TRUE);
+    {
+      return (TRUE);
     }
     else if (!data->pushtrigger)
-    { data->pushtrigger = 1;
+    {
+      data->pushtrigger = 1;
       DoMethod(_app(obj),MUIM_Application_PushMethod,obj,1,MUIM_NList_Trigger);
     }
   }
@@ -613,7 +651,7 @@ static LONG DoRefresh(Object *obj,struct NLData *data)
  */
 
 
-LONG NL_DrawQuietBG(Object *obj,struct NLData *data,LONG dowhat,LONG bg)
+LONG NL_DrawQuietBG(struct NLData *data,LONG dowhat,LONG bg)
 {
   if (data->do_draw_all)
   { if ((dowhat == 0) || (dowhat == 4))
@@ -627,21 +665,24 @@ LONG NL_DrawQuietBG(Object *obj,struct NLData *data,LONG dowhat,LONG bg)
     case 0 :  /* REDRAW_IF */
 
       if (!data->NList_Quiet && !data->NList_Disabled && data->SHOW && data->DRAW)
-      { if (DoRefresh(obj,data))
-        { if (data->do_draw_all)
-          { ULONG mad_Flags = muiAreaData(obj)->mad_Flags;
-            struct IClass *realclass = OCLASS(obj);
+      {
+        if (DoRefresh(data))
+        {
+          if (data->do_draw_all)
+          {
+            ULONG mad_Flags = muiAreaData(data->this)->mad_Flags;
+
             data->nodraw++;
-            OCLASS(obj) = data->ncl;
-            nnset(obj,MUIA_Background,(IPTR)"0:128");
-            OCLASS(obj) = realclass;
+            OCLASS(data->this) = data->ncl;
+            nnset(data->this,MUIA_Background,(IPTR)"0:128");
+            OCLASS(data->this) = data->ocl;
             data->nodraw--;
-            muiAreaData(obj)->mad_Flags = mad_Flags;
+            muiAreaData(data->this)->mad_Flags = mad_Flags;
             data->actbackground = -1;
-            MUI_Redraw(obj,MADF_DRAWUPDATE);
+            MUI_Redraw(data->this,MADF_DRAWUPDATE);
           }
           else if (data->do_draw)
-            MUI_Redraw(obj,MADF_DRAWUPDATE);
+            MUI_Redraw(data->this,MADF_DRAWUPDATE);
         }
       }
       break;
@@ -650,17 +691,19 @@ LONG NL_DrawQuietBG(Object *obj,struct NLData *data,LONG dowhat,LONG bg)
 
       data->do_draw = data->do_draw_all = TRUE;
       if (data->SHOW && data->DRAW)
-      { if (DoRefresh(obj,data))
-        { ULONG mad_Flags = muiAreaData(obj)->mad_Flags;
-          struct IClass *realclass = OCLASS(obj);
+      {
+        if (DoRefresh(data))
+        {
+          ULONG mad_Flags = muiAreaData(data->this)->mad_Flags;
+
           data->nodraw++;
-          OCLASS(obj) = data->ncl;
-          nnset(obj,MUIA_Background,(IPTR)"0:128");
-          OCLASS(obj) = realclass;
+          OCLASS(data->this) = data->ncl;
+          nnset(data->this,MUIA_Background,(IPTR)"0:128");
+          OCLASS(data->this) = data->ocl;
           data->nodraw--;
-          muiAreaData(obj)->mad_Flags = mad_Flags;
+          muiAreaData(data->this)->mad_Flags = mad_Flags;
           data->actbackground = -1;
-          MUI_Redraw(obj,MADF_DRAWALL);
+          MUI_Redraw(data->this,MADF_DRAWALL);
         }
       }
       break;
@@ -669,17 +712,19 @@ LONG NL_DrawQuietBG(Object *obj,struct NLData *data,LONG dowhat,LONG bg)
 
       data->do_draw = data->do_draw_all = TRUE;
       if (!data->NList_Quiet && !data->NList_Disabled && data->SHOW && data->DRAW)
-      { if (DoRefresh(obj,data))
-        { ULONG mad_Flags = muiAreaData(obj)->mad_Flags;
-          struct IClass *realclass = OCLASS(obj);
+      {
+        if (DoRefresh(data))
+        {
+          ULONG mad_Flags = muiAreaData(data->this)->mad_Flags;
+
           data->nodraw++;
-          OCLASS(obj) = data->ncl;
-          nnset(obj,MUIA_Background,(IPTR)"0:128");
-          OCLASS(obj) = realclass;
+          OCLASS(data->this) = data->ncl;
+          nnset(data->this,MUIA_Background,(IPTR)"0:128");
+          OCLASS(data->this) = data->ocl;
           data->nodraw--;
-          muiAreaData(obj)->mad_Flags = mad_Flags;
+          muiAreaData(data->this)->mad_Flags = mad_Flags;
           data->actbackground = -1;
-          MUI_Redraw(obj,MADF_DRAWOBJECT);
+          MUI_Redraw(data->this,MADF_DRAWOBJECT);
         }
       }
       break;
@@ -688,21 +733,24 @@ LONG NL_DrawQuietBG(Object *obj,struct NLData *data,LONG dowhat,LONG bg)
 
       data->do_draw = TRUE;
       if (data->SHOW && data->DRAW)
-      { if (DoRefresh(obj,data))
-        { if (data->do_draw_all)
-          { ULONG mad_Flags = muiAreaData(obj)->mad_Flags;
-            struct IClass *realclass = OCLASS(obj);
+      {
+        if (DoRefresh(data))
+        {
+          if (data->do_draw_all)
+          {
+            ULONG mad_Flags = muiAreaData(data->this)->mad_Flags;
+
             data->nodraw++;
-            OCLASS(obj) = data->ncl;
-            nnset(obj,MUIA_Background,(IPTR)"0:128");
-            OCLASS(obj) = realclass;
+            OCLASS(data->this) = data->ncl;
+            nnset(data->this,MUIA_Background,(IPTR)"0:128");
+            OCLASS(data->this) = data->ocl;
             data->nodraw--;
-            muiAreaData(obj)->mad_Flags = mad_Flags;
+            muiAreaData(data->this)->mad_Flags = mad_Flags;
             data->actbackground = -1;
-            MUI_Redraw(obj,MADF_DRAWUPDATE);
+            MUI_Redraw(data->this,MADF_DRAWUPDATE);
           }
           else
-            MUI_Redraw(obj,MADF_DRAWUPDATE);
+            MUI_Redraw(data->this,MADF_DRAWUPDATE);
         }
       }
       break;
@@ -712,21 +760,23 @@ LONG NL_DrawQuietBG(Object *obj,struct NLData *data,LONG dowhat,LONG bg)
       data->do_draw = TRUE;
       if (!data->NList_Quiet && !data->NList_Disabled && data->SHOW && data->DRAW)
       {
-        if (DoRefresh(obj,data))
-        { if (data->do_draw_all)
-          { ULONG mad_Flags = muiAreaData(obj)->mad_Flags;
-            struct IClass *realclass = OCLASS(obj);
+        if (DoRefresh(data))
+        {
+          if (data->do_draw_all)
+          {
+            ULONG mad_Flags = muiAreaData(data->this)->mad_Flags;
+
             data->nodraw++;
-            OCLASS(obj) = data->ncl;
-            nnset(obj,MUIA_Background,(IPTR)"0:128");
-            OCLASS(obj) = realclass;
+            OCLASS(data->this) = data->ncl;
+            nnset(data->this,MUIA_Background,(IPTR)"0:128");
+            OCLASS(data->this) = data->ocl;
             data->nodraw--;
-            muiAreaData(obj)->mad_Flags = mad_Flags;
+            muiAreaData(data->this)->mad_Flags = mad_Flags;
             data->actbackground = -1;
-            MUI_Redraw(obj,MADF_DRAWUPDATE);
+            MUI_Redraw(data->this,MADF_DRAWUPDATE);
           }
           else
-            MUI_Redraw(obj,MADF_DRAWUPDATE);
+            MUI_Redraw(data->this,MADF_DRAWUPDATE);
         }
       }
       break;
@@ -735,22 +785,25 @@ LONG NL_DrawQuietBG(Object *obj,struct NLData *data,LONG dowhat,LONG bg)
 
       data->NList_Quiet = 0;
       if (data->SHOW)
-      { if (DoRefresh(obj,data))
-        { if (data->do_draw_all)
-          { ULONG mad_Flags = muiAreaData(obj)->mad_Flags;
-            struct IClass *realclass = OCLASS(obj);
+      {
+        if (DoRefresh(data))
+        {
+          if (data->do_draw_all)
+          {
+            ULONG mad_Flags = muiAreaData(data->this)->mad_Flags;
+
             data->nodraw++;
-            OCLASS(obj) = data->ncl;
-            nnset(obj,MUIA_Background,(IPTR)"0:128");
-            OCLASS(obj) = realclass;
+            OCLASS(data->this) = data->ncl;
+            nnset(data->this,MUIA_Background,(IPTR)"0:128");
+            OCLASS(data->this) = data->ocl;
             data->nodraw--;
-            muiAreaData(obj)->mad_Flags = mad_Flags;
+            muiAreaData(data->this)->mad_Flags = mad_Flags;
             data->actbackground = -1;
-            /*MUI_Redraw(obj,MADF_DRAWOBJECT);*/
-            MUI_Redraw(obj,MADF_DRAWOBJECT);
+            /*MUI_Redraw(data->this,MADF_DRAWOBJECT);*/
+            MUI_Redraw(data->this,MADF_DRAWOBJECT);
           }
           else if (data->do_draw)
-            MUI_Redraw(obj,MADF_DRAWUPDATE);
+            MUI_Redraw(data->this,MADF_DRAWUPDATE);
         }
 /*        do_notifies(NTF_All);*/
       }
@@ -761,22 +814,25 @@ LONG NL_DrawQuietBG(Object *obj,struct NLData *data,LONG dowhat,LONG bg)
       if (data->NList_Quiet > 0)
         data->NList_Quiet--;
       if (!data->NList_Quiet && !data->NList_Disabled && data->SHOW)
-      { if (DoRefresh(obj,data))
-        { if (data->do_draw_all)
-          { ULONG mad_Flags = muiAreaData(obj)->mad_Flags;
-            struct IClass *realclass = OCLASS(obj);
+      {
+        if (DoRefresh(data))
+        {
+          if (data->do_draw_all)
+          {
+            ULONG mad_Flags = muiAreaData(data->this)->mad_Flags;
+
             data->nodraw++;
-            OCLASS(obj) = data->ncl;
-            nnset(obj,MUIA_Background,(IPTR)"0:128");
-            OCLASS(obj) = realclass;
+            OCLASS(data->this) = data->ncl;
+            nnset(data->this,MUIA_Background,(IPTR)"0:128");
+            OCLASS(data->this) = data->ocl;
             data->nodraw--;
-            muiAreaData(obj)->mad_Flags = mad_Flags;
+            muiAreaData(data->this)->mad_Flags = mad_Flags;
             data->actbackground = -1;
-            /*MUI_Redraw(obj,MADF_DRAWOBJECT);*/
-            MUI_Redraw(obj,MADF_DRAWUPDATE);
+            /*MUI_Redraw(data->this,MADF_DRAWOBJECT);*/
+            MUI_Redraw(data->this,MADF_DRAWUPDATE);
           }
           else if (data->do_draw)
-            MUI_Redraw(obj,MADF_DRAWUPDATE);
+            MUI_Redraw(data->this,MADF_DRAWUPDATE);
         }
 /*        do_notifies(NTF_All);*/
       }
@@ -784,47 +840,53 @@ LONG NL_DrawQuietBG(Object *obj,struct NLData *data,LONG dowhat,LONG bg)
 
     case 7 :  /* SetBackGround */
 
-      { ULONG mad_Flags = muiAreaData(obj)->mad_Flags;
-        struct IClass *realclass = OCLASS(obj);
+      {
+        ULONG mad_Flags = muiAreaData(data->this)->mad_Flags;
+
         data->actbackground = bg;
         data->nodraw++;
-        OCLASS(obj) = data->ncl;
-        nnset(obj,MUIA_Background,bg);
-        OCLASS(obj) = realclass;
+        OCLASS(data->this) = data->ncl;
+        nnset(data->this,MUIA_Background,bg);
+        OCLASS(data->this) = data->ocl;
         data->nodraw--;
-        muiAreaData(obj)->mad_Flags = mad_Flags;
+        muiAreaData(data->this)->mad_Flags = mad_Flags;
       }
 
       break;
 
     case 8 :  /* SetBackGroundForce */
 
-      { ULONG mad_Flags = muiAreaData(obj)->mad_Flags;
-        struct IClass *realclass = OCLASS(obj);
-        OCLASS(obj) = data->ncl;
+      {
+        ULONG mad_Flags = muiAreaData(data->this)->mad_Flags;
+
+        OCLASS(data->this) = data->ncl;
         if (bg == data->actbackground)
-        { data->nodraw++;
-          nnset(obj,MUIA_Background,(IPTR)"0:128");
+        {
+          data->nodraw++;
+          nnset(data->this,MUIA_Background,(IPTR)"0:128");
           data->nodraw--;
         }
         data->actbackground = bg;
         data->nodraw++;
-        nnset(obj,MUIA_Background,bg);
-        OCLASS(obj) = realclass;
+        nnset(data->this,MUIA_Background,bg);
+        OCLASS(data->this) = data->ocl;
         data->nodraw--;
-        muiAreaData(obj)->mad_Flags = mad_Flags;
+        muiAreaData(data->this)->mad_Flags = mad_Flags;
       }
       break;
 
     case 9 :  /* Make_Active_Visible */
 
       if ((data->NList_AutoVisible) && (data->NList_Active >= 0) && (data->NList_Active < data->NList_Entries))
-      { if (data->NList_Active < data->NList_First)
-        { data->NList_First = data->NList_Active;
+      {
+        if (data->NList_Active < data->NList_First)
+        {
+          data->NList_First = data->NList_Active;
           DO_NOTIFY(NTF_First);
         }
         else if (data->NList_Active >= data->NList_First + data->NList_Visible)
-        { data->NList_First = data->NList_Active - data->NList_Visible + 1;
+        {
+          data->NList_First = data->NList_Active - data->NList_Visible + 1;
           if (data->NList_First < 0)
             data->NList_First = 0;
           DO_NOTIFY(NTF_First);
@@ -836,13 +898,15 @@ LONG NL_DrawQuietBG(Object *obj,struct NLData *data,LONG dowhat,LONG bg)
 
       DONE_NOTIFY(NTF_MinMax);
       if (!WANTED_NOTIFY(NTF_MinMax) && data->SHOW && data->DRAW && data->NL_Group && data->VirtGroup && data->NList_AdjustHeight)
-      { ULONG mad_Flags = muiAreaData(obj)->mad_Flags;
+      {
+        ULONG mad_Flags = muiAreaData(data->this)->mad_Flags;
+
         WANT_NOTIFY(NTF_MinMax|NTF_MinMaxNoDraw);
         if (DoMethod(data->VirtGroup,MUIM_Group_InitChange))
         {
           DoMethod(data->VirtGroup,MUIM_Group_ExitChange);
-          muiAreaData(obj)->mad_Flags = mad_Flags;
-          NL_UpdateScrollersValues(obj,data);
+          muiAreaData(data->this)->mad_Flags = mad_Flags;
+          NL_UpdateScrollersValues(data);
         }
       }
       NOWANT_NOTIFY(NTF_MinMax|NTF_MinMaxNoDraw);
@@ -856,10 +920,10 @@ LONG NL_DrawQuietBG(Object *obj,struct NLData *data,LONG dowhat,LONG bg)
 
 #define SELECTABLE(ent) \
   ((!data->NList_MultiTestHook) ||\
-   (MyCallHookPkt(obj,FALSE,data->NList_MultiTestHook,obj,data->EntriesArray[ent]->Entry)))
+   (MyCallHookPkt(data->this,FALSE,data->NList_MultiTestHook,data->this,data->EntriesArray[ent]->Entry)))
 
 
-void NL_Select(Object *obj,struct NLData *data,LONG dowhat,LONG ent,BYTE sel)
+void NL_Select(struct NLData *data,LONG dowhat,LONG ent,BYTE sel)
 {
 /*	D(bug("%lx dowhat=%ld ent=%ld sel=%ld\n",obj,dowhat,ent,sel));*/
   switch (dowhat)
@@ -870,7 +934,7 @@ void NL_Select(Object *obj,struct NLData *data,LONG dowhat,LONG ent,BYTE sel)
         { data->EntriesArray[ent]->Select = sel;
           DO_NOTIFY(NTF_Select | NTF_LV_Select);
 
-          DoMethod( obj, MUIM_NList_SelectChange, ent, MUIV_NList_Select_On, 0 );
+          DoMethod( data->this, MUIM_NList_SelectChange, ent, MUIV_NList_Select_On, 0 );
         }
       }
       break;
@@ -880,7 +944,7 @@ void NL_Select(Object *obj,struct NLData *data,LONG dowhat,LONG ent,BYTE sel)
       { data->EntriesArray[ent]->Select = sel;
         DO_NOTIFY(NTF_Select | NTF_LV_Select);
 
-        DoMethod( obj, MUIM_NList_SelectChange, ent, MUIV_NList_Select_Off, 0 );
+        DoMethod( data->this, MUIM_NList_SelectChange, ent, MUIV_NList_Select_Off, 0 );
       }
       break;
 
@@ -891,7 +955,7 @@ void NL_Select(Object *obj,struct NLData *data,LONG dowhat,LONG ent,BYTE sel)
           NL_Changed(data,ent);
           DO_NOTIFY(NTF_Select | NTF_LV_Select);
 
-          DoMethod( obj, MUIM_NList_SelectChange, ent, MUIV_NList_Select_On, MUIV_NList_SelectChange_Flag_Multi );
+          DoMethod( data->this, MUIM_NList_SelectChange, ent, MUIV_NList_Select_On, MUIV_NList_SelectChange_Flag_Multi );
         }
       }
       break;
@@ -902,7 +966,7 @@ void NL_Select(Object *obj,struct NLData *data,LONG dowhat,LONG ent,BYTE sel)
         NL_Changed(data,ent);
         DO_NOTIFY(NTF_Select | NTF_LV_Select);
 
-        DoMethod( obj, MUIM_NList_SelectChange, ent, MUIV_NList_Select_Off, MUIV_NList_SelectChange_Flag_Multi );
+        DoMethod( data->this, MUIM_NList_SelectChange, ent, MUIV_NList_Select_Off, MUIV_NList_SelectChange_Flag_Multi );
       }
       break;
 
@@ -912,7 +976,7 @@ void NL_Select(Object *obj,struct NLData *data,LONG dowhat,LONG ent,BYTE sel)
           data->NList_Active = (ent);
           DO_NOTIFY(NTF_Active | NTF_L_Active);
 
-          DoMethod( obj, MUIM_NList_SelectChange, ent, MUIV_NList_Select_Active, 0 );
+          DoMethod( data->this, MUIM_NList_SelectChange, ent, MUIV_NList_Select_Active, 0 );
         }
       }
       break;
@@ -957,10 +1021,11 @@ void NL_Select(Object *obj,struct NLData *data,LONG dowhat,LONG ent,BYTE sel)
 
 #define ABS(x)  (((x) >= 0) ? (x) : -(x))
 
-void ScrollVert(Object *obj,struct NLData *data,WORD dy,LONG LPVisible)
+void ScrollVert(struct NLData *data,WORD dy,LONG LPVisible)
 {
   WORD y1 = data->vpos;
   WORD y2 = data->vpos + LPVisible - 1;
+
   if (data->vwidth <= 0)
     return;
   if (y1 < data->vtop) y1 = data->vtop;
@@ -970,22 +1035,28 @@ void ScrollVert(Object *obj,struct NLData *data,WORD dy,LONG LPVisible)
 
 #ifndef DO_CLIPBLIT
   if (LIBVER(GfxBase) >= 39)
-  { struct Hook *oldbackfilhook;
+  {
+    struct Hook *oldbackfilhook;
+
     oldbackfilhook = InstallLayerHook(data->rp->Layer, LAYERS_NOBACKFILL);
     ScrollRasterBF(data->rp,0,dy,data->vleft,y1,data->vright,y2);
     InstallLayerHook(data->rp->Layer, oldbackfilhook);
   }
   else
 #endif
-  { struct Window *w = _window(obj);
+  {
+    struct Window *w = _window(data->this);
     struct Layer *l = w->WLayer;
+
     if (dy > 0)
       ClipBlit(data->rp,data->vleft,y1+dy,data->rp,data->vleft,y1,data->vwidth,y2-y1+1-dy,0xC0);
     else
       ClipBlit(data->rp,data->vleft,y1,data->rp,data->vleft,y1-dy,data->vwidth,y2-y1+1+dy,0xC0);
     if (((w->Flags & WFLG_REFRESHBITS) == WFLG_SIMPLE_REFRESH) &&
         (LayerCovered(l) || LayerDamaged(l)))
-    { UBYTE oldmask = data->rp->Mask;
+    {
+      UBYTE oldmask = data->rp->Mask;
+
       SetWrMsk(data->rp,0);
       ScrollRaster(data->rp,0,dy,data->vleft,y1,data->vright,y2);
       SetWrMsk(data->rp,oldmask);
@@ -994,10 +1065,11 @@ void ScrollVert(Object *obj,struct NLData *data,WORD dy,LONG LPVisible)
 }
 
 
-void ScrollHoriz(Object *obj,struct NLData *data,WORD dx,LONG LPVisible)
+void ScrollHoriz(struct NLData *data,WORD dx,LONG LPVisible)
 {
   WORD y1 = data->vpos;
   WORD y2 = data->vpos + LPVisible - 1;
+
   if (data->vwidth <= ABS(dx))
     return;
   if (data->NList_Title)
@@ -1009,22 +1081,28 @@ void ScrollHoriz(Object *obj,struct NLData *data,WORD dx,LONG LPVisible)
 
 #ifndef DO_CLIPBLIT
   if (LIBVER(GfxBase) >= 39)
-  { struct Hook *oldbackfilhook;
+  {
+    struct Hook *oldbackfilhook;
+
     oldbackfilhook = InstallLayerHook(data->rp->Layer, LAYERS_NOBACKFILL);
     ScrollRasterBF(data->rp,dx,0,data->vleft,y1,data->vright,y2);
     InstallLayerHook(data->rp->Layer, oldbackfilhook);
   }
   else
 #endif
-  { struct Window *w = _window(obj);
+  {
+    struct Window *w = _window(data->this);
     struct Layer *l = w->WLayer;
+
     if (dx > 0)
       ClipBlit(data->rp,data->vleft+dx,y1,data->rp,data->vleft,y1,data->vwidth-dx,y2-y1+1,0xC0);
     else
       ClipBlit(data->rp,data->vleft,y1,data->rp,data->vleft-dx,y1,data->vwidth+dx,y2-y1+1,0xC0);
     if (((w->Flags & WFLG_REFRESHBITS) == WFLG_SIMPLE_REFRESH) &&
         (LayerCovered(l) || LayerDamaged(l)))
-    { UBYTE oldmask = data->rp->Mask;
+    {
+      UBYTE oldmask = data->rp->Mask;
+
       SetWrMsk(data->rp,0);
       ScrollRaster(data->rp,dx,0,data->vleft,y1,data->vright,y2);
       SetWrMsk(data->rp,oldmask);
@@ -1033,11 +1111,15 @@ void ScrollHoriz(Object *obj,struct NLData *data,WORD dx,LONG LPVisible)
 }
 
 
-LONG  NL_ColToColumn(UNUSED Object *obj,struct NLData *data,LONG col)
-{ LONG column;
+LONG  NL_ColToColumn(struct NLData *data,LONG col)
+{
+  LONG column;
+
   if ((col >= 0) && (col < DISPLAY_ARRAY_MAX))
-  { for (column = 0; column < data->numcols; column++)
-    { if (data->cols[column].c->col == col)
+  {
+    for (column = 0; column < data->numcols; column++)
+    {
+      if (data->cols[column].c->col == col)
         return (column);
     }
   }
@@ -1045,7 +1127,7 @@ LONG  NL_ColToColumn(UNUSED Object *obj,struct NLData *data,LONG col)
 }
 
 
-LONG  NL_ColumnToCol(UNUSED Object *obj,struct NLData *data,LONG column)
+LONG  NL_ColumnToCol(struct NLData *data,LONG column)
 {
   if ((column >= 0) && (column < data->numcols))
     return ((LONG) data->cols[column].c->col);
@@ -1053,7 +1135,7 @@ LONG  NL_ColumnToCol(UNUSED Object *obj,struct NLData *data,LONG column)
 }
 
 
-LONG  NL_SetCol(Object *obj,struct NLData *data,LONG column,LONG col)
+LONG  NL_SetCol(struct NLData *data,LONG column,LONG col)
 { LONG column2d = -1;
   if ((column == MUIV_NList_SetColumnCol_Default) && (col == MUIV_NList_SetColumnCol_Default))
   { for (column = 0; column < data->numcols; column++)
@@ -1111,33 +1193,40 @@ LONG  NL_SetCol(Object *obj,struct NLData *data,LONG column,LONG col)
 }
 
 
-LONG NL_ColWidth(Object *obj,struct NLData *data,LONG col,LONG width)
+LONG NL_ColWidth(struct NLData *data,LONG col,LONG width)
 {
-  LONG column = NL_ColToColumn(obj,data,col);
+  LONG column = NL_ColToColumn(data,col);
   WORD userwidth = (WORD) width;
+
   if (userwidth < 4)  /* < 4 is considered as MUIV_NList_ColWidth_Default */
     userwidth = -1;
   if (userwidth > 2000)
     userwidth = 2000;
   if (width == MUIV_NList_ColWidth_Get)
-  { if ((column >= 0) && (column < data->numcols))
+  {
+    if ((column >= 0) && (column < data->numcols))
       return ((LONG) data->cols[column].c->userwidth);
   }
   else if (col == MUIV_NList_ColWidth_All)
-  { for (column = 0;column < data->numcols;column++)
-    { if (data->cols[column].c->userwidth != userwidth)
-      { if (userwidth < 0)
+  {
+    for (column = 0;column < data->numcols;column++)
+    {
+      if (data->cols[column].c->userwidth != userwidth)
+      {
+        if (userwidth < 0)
           data->cols[column].c->colwidthbiggestptr = -2;
         data->cols[column].c->userwidth = userwidth;
         data->do_setcols = TRUE;
       }
     }
     if (data->do_setcols)
-    { REDRAW_FORCE;
+    {
+      REDRAW_FORCE;
     }
   }
   else if ((column >= 0) && (column < data->numcols) && (data->cols[column].c->userwidth != userwidth))
-  { if (userwidth < 0)
+  {
+    if (userwidth < 0)
       data->cols[column].c->colwidthbiggestptr = -2;
     data->cols[column].c->userwidth = userwidth;
     data->do_setcols = TRUE;
@@ -1148,12 +1237,13 @@ LONG NL_ColWidth(Object *obj,struct NLData *data,LONG col,LONG width)
 }
 
 
-BYTE *NL_Columns(Object *obj,struct NLData *data,BYTE *columns)
+BYTE *NL_Columns(struct NLData *data,BYTE *columns)
 { LONG column;
   if (columns)
   { column = 0;
     while ((column < data->numcols) && (columns[column] != -1))
-    { NL_SetCol(obj,data,column,columns[column]);
+    {
+      NL_SetCol(data,column,columns[column]);
       column++;
     }
   }
@@ -1168,14 +1258,14 @@ BYTE *NL_Columns(Object *obj,struct NLData *data,BYTE *columns)
 IPTR mNL_ColToColumn(struct IClass *cl,Object *obj,struct MUIP_NList_ColToColumn *msg)
 {
   struct NLData *data = INST_DATA(cl,obj);
-  return ((IPTR) NL_ColToColumn(obj,data,msg->col));
+  return ((IPTR) NL_ColToColumn(data,msg->col));
 }
 
 
 IPTR mNL_ColumnToCol(struct IClass *cl,Object *obj,struct MUIP_NList_ColumnToCol *msg)
 {
   struct NLData *data = INST_DATA(cl,obj);
-  return ((IPTR) NL_ColumnToCol(obj,data,msg->column));
+  return ((IPTR) NL_ColumnToCol(data,msg->column));
 }
 
 
@@ -1183,7 +1273,7 @@ IPTR mNL_SetColumnCol(struct IClass *cl,Object *obj,struct MUIP_NList_SetColumnC
 {
   struct NLData *data = INST_DATA(cl,obj);
   LONG retval;
-  retval = NL_SetCol(obj,data,msg->column,msg->col);
+  retval = NL_SetCol(data,msg->column,msg->col);
   DONE_NOTIFY(NTF_Columns);
   return ((IPTR) retval);
 }
@@ -1192,7 +1282,7 @@ IPTR mNL_SetColumnCol(struct IClass *cl,Object *obj,struct MUIP_NList_SetColumnC
 IPTR mNL_List_ColWidth(struct IClass *cl,Object *obj,struct MUIP_NList_ColWidth *msg)
 {
   struct NLData *data = INST_DATA(cl,obj);
-  return ((IPTR) NL_ColWidth(obj,data,msg->col,msg->width));
+  return ((IPTR) NL_ColWidth(data,msg->col,msg->width));
 }
 
 
@@ -1239,10 +1329,11 @@ IPTR mNL_ContextMenuBuild(struct IClass *cl,Object *obj,struct MUIP_ContextMenuB
     { Object *mithis = NULL;
       struct MUI_NList_TestPos_Result res;
       LONG flags,ontop;
+
       data->click_x = msg->mx;
       data->click_y = msg->my;
       res.char_number = -2;
-      NL_List_TestPos(obj,data,MUI_MAXMAX,0,&res);
+      NL_List_TestPos(data,MUI_MAXMAX,0,&res);
       column = (LONG) res.column;
       flags = (LONG) res.flags;
       if (res.flags & MUI_NLPR_TITLE)
@@ -1316,23 +1407,27 @@ IPTR mNL_ContextMenuChoice(struct IClass *cl,Object *obj,struct MUIP_ContextMenu
   if (msg->item)
   {
     if (muiUserData(msg->item) == MUIV_NList_Menu_DefWidth_This)
-    { struct MUI_NList_TestPos_Result res;
+    {
+      struct MUI_NList_TestPos_Result res;
+
       res.char_number = -2;
-      NL_List_TestPos(obj,data,MUI_MAXMAX,0,&res);
+      NL_List_TestPos(data,MUI_MAXMAX,0,&res);
       if ((res.column >= 0) && (res.column < data->numcols) && !(res.flags & MUI_NLPR_BAR))
-        NL_ColWidth(obj,data,NL_ColumnToCol(obj,data,res.column),MUIV_NList_ColWidth_Default);
+        NL_ColWidth(data,NL_ColumnToCol(data,res.column),MUIV_NList_ColWidth_Default);
     }
     else if (muiUserData(msg->item) == MUIV_NList_Menu_DefWidth_All)
-      NL_ColWidth(obj,data,MUIV_NList_ColWidth_All,MUIV_NList_ColWidth_Default);
+      NL_ColWidth(data,MUIV_NList_ColWidth_All,MUIV_NList_ColWidth_Default);
     else if (muiUserData(msg->item) == MUIV_NList_Menu_DefOrder_This)
-    { struct MUI_NList_TestPos_Result res;
+    {
+      struct MUI_NList_TestPos_Result res;
+
       res.char_number = -2;
-      NL_List_TestPos(obj,data,MUI_MAXMAX,0,&res);
+      NL_List_TestPos(data,MUI_MAXMAX,0,&res);
       if ((res.column >= 0) && (res.column < data->numcols) && !(res.flags & MUI_NLPR_BAR))
-        NL_SetCol(obj,data,res.column,MUIV_NList_SetColumnCol_Default);
+        NL_SetCol(data,res.column,MUIV_NList_SetColumnCol_Default);
     }
     else if (muiUserData(msg->item) == MUIV_NList_Menu_DefOrder_All)
-      NL_SetCol(obj,data,MUIV_NList_SetColumnCol_Default,MUIV_NList_SetColumnCol_Default);
+      NL_SetCol(data,MUIV_NList_SetColumnCol_Default,MUIV_NList_SetColumnCol_Default);
     else
       return(DoSuperMethodA(cl,obj,(Msg) msg));
   }

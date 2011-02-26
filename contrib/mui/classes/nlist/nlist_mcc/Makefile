@@ -242,10 +242,10 @@ ifeq ($(OS), os3)
   LDFLAGS += -noixemul
   LDLIBS  += -ldebug -lmui
 
-  # only the OS3 build needs the custom memory pool implementations if run on OS2.x
-  COBJS += libpool.o
   # additional object files required
-  COBJS += vastubs.o
+  COBJS += vastubs.o \
+           extrasrc/AllocVecPooled.o \
+           extrasrc/FreeVecPooled.o
 
 else
 ifeq ($(OS), mos)
@@ -363,6 +363,7 @@ release:
 $(OBJDIR):
 	@echo "  MK $@"
 	@$(MKDIR) $(OBJDIR)
+	@$(MKDIR) $(OBJDIR)/extrasrc
 
 # make the binary directories
 $(BINDIR):

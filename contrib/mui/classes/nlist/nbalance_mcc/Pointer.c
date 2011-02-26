@@ -315,40 +315,7 @@ static void IdentifyPointerColors(Object *obj)
   ENTER();
 
   // get the current screen's pointer colors (17 to 19)
-  #if defined(__amigaos4__) || defined(__MORPHOS__)
   GetRGB32(_window(obj)->WScreen->ViewPort.ColorMap, 17, 3, colors);
-  #else
-  if(((struct Library *)GfxBase)->lib_Version >= 39)
-    GetRGB32(_window(obj)->WScreen->ViewPort.ColorMap, 17, 3, colors);
-  else
-  {
-    UWORD rgb;
-    ULONG r, g, b;
-
-    // OS2.x only has GetRGB4 which returns right aligned RGB nibbles
-    rgb = GetRGB4(_window(obj)->WScreen->ViewPort.ColorMap, 17);
-    r = ((rgb & 0x0f00) >> 4) | ((rgb & 0x0f00) >> 8);
-    g =  (rgb & 0x00f0)       | ((rgb & 0x00f0) >> 4);
-    b = ((rgb & 0x000f) << 4) |  (rgb & 0x000f);
-    colors[0*3+0] = r << 24;
-    colors[0*3+1] = g << 24;
-    colors[0*3+2] = b << 24;
-    rgb = GetRGB4(_window(obj)->WScreen->ViewPort.ColorMap, 18);
-    r = ((rgb & 0x0f00) >> 4) | ((rgb & 0x0f00) >> 8);
-    g =  (rgb & 0x00f0)       | ((rgb & 0x00f0) >> 4);
-    b = ((rgb & 0x000f) << 4) |  (rgb & 0x000f);
-    colors[1*3+0] = r << 24;
-    colors[1*3+1] = g << 24;
-    colors[1*3+2] = b << 24;
-    rgb = GetRGB4(_window(obj)->WScreen->ViewPort.ColorMap, 19);
-    r = ((rgb & 0x0f00) >> 4) | ((rgb & 0x0f00) >> 8);
-    g =  (rgb & 0x00f0)       | ((rgb & 0x00f0) >> 4);
-    b = ((rgb & 0x000f) << 4) |  (rgb & 0x000f);
-    colors[2*3+0] = r << 24;
-    colors[2*3+1] = g << 24;
-    colors[2*3+2] = b << 24;
-  }
-  #endif
 
   for(i=0; i < 3; i++)
   {
@@ -488,22 +455,14 @@ void SetupCustomPointers(struct InstData *data)
       POINTERA_YOffset,     (LONG)horizSizePointerYOffset,
       TAG_DONE);
     #else
-    if(((struct Library *)IntuitionBase)->lib_Version >= 39)
-    {
-      data->horizSizePointerObj = (Object *)NewObject(NULL, (STRPTR)"pointerclass",
-        POINTERA_BitMap,      (IPTR)&horizSizePointerBitmap,
-        POINTERA_WordWidth,   (ULONG)1,
-        POINTERA_XResolution, (ULONG)POINTERXRESN_SCREENRES,
-        POINTERA_YResolution, (ULONG)POINTERYRESN_SCREENRESASPECT,
-        POINTERA_XOffset,     (LONG)horizSizePointerXOffset,
-        POINTERA_YOffset,     (LONG)horizSizePointerYOffset,
-        TAG_DONE);
-    }
-    else
-    {
-      if((data->horizSizePointerObj = (Object *)AllocVec(sizeof(horizSizePointer), MEMF_CHIP|MEMF_PUBLIC)) != NULL)
-        memcpy(data->horizSizePointerObj, horizSizePointer, sizeof(horizSizePointer));
-    }
+    data->horizSizePointerObj = (Object *)NewObject(NULL, (STRPTR)"pointerclass",
+      POINTERA_BitMap,      (IPTR)&horizSizePointerBitmap,
+      POINTERA_WordWidth,   (ULONG)1,
+      POINTERA_XResolution, (ULONG)POINTERXRESN_SCREENRES,
+      POINTERA_YResolution, (ULONG)POINTERYRESN_SCREENRESASPECT,
+      POINTERA_XOffset,     (LONG)horizSizePointerXOffset,
+      POINTERA_YOffset,     (LONG)horizSizePointerYOffset,
+      TAG_DONE);
     #endif
   }
 
@@ -522,22 +481,14 @@ void SetupCustomPointers(struct InstData *data)
       POINTERA_YOffset,     (LONG)vertSizePointerYOffset,
       TAG_DONE);
     #else
-    if(((struct Library *)IntuitionBase)->lib_Version >= 39)
-    {
-      data->vertSizePointerObj = (Object *)NewObject(NULL, (STRPTR)"pointerclass",
-        POINTERA_BitMap,      (IPTR)&vertSizePointerBitmap,
-        POINTERA_WordWidth,   (ULONG)1,
-        POINTERA_XResolution, (ULONG)POINTERXRESN_SCREENRES,
-        POINTERA_YResolution, (ULONG)POINTERYRESN_SCREENRESASPECT,
-        POINTERA_XOffset,     (LONG)vertSizePointerXOffset,
-        POINTERA_YOffset,     (LONG)vertSizePointerYOffset,
-        TAG_DONE);
-    }
-    else
-    {
-      if((data->vertSizePointerObj = (Object *)AllocVec(sizeof(vertSizePointer), MEMF_CHIP|MEMF_PUBLIC)) != NULL)
-        memcpy(data->vertSizePointerObj, vertSizePointer, sizeof(vertSizePointer));
-    }
+    data->vertSizePointerObj = (Object *)NewObject(NULL, (STRPTR)"pointerclass",
+      POINTERA_BitMap,      (IPTR)&vertSizePointerBitmap,
+      POINTERA_WordWidth,   (ULONG)1,
+      POINTERA_XResolution, (ULONG)POINTERXRESN_SCREENRES,
+      POINTERA_YResolution, (ULONG)POINTERYRESN_SCREENRESASPECT,
+      POINTERA_XOffset,     (LONG)vertSizePointerXOffset,
+      POINTERA_YOffset,     (LONG)vertSizePointerYOffset,
+      TAG_DONE);
     #endif
   }
 
@@ -559,29 +510,13 @@ void CleanupCustomPointers(struct InstData *data)
   // dispose the different pointer objects
   if(data->horizSizePointerObj != NULL)
   {
-    #if defined(__amigaos4__)
     DisposeObject(data->horizSizePointerObj);
-    #else
-    if(((struct Library *)IntuitionBase)->lib_Version >= 39)
-      DisposeObject(data->horizSizePointerObj);
-    else
-      FreeVec(data->horizSizePointerObj);
-    #endif
-
     data->horizSizePointerObj = NULL;
   }
 
   if(data->vertSizePointerObj != NULL)
   {
-    #if defined(__amigaos4__)
     DisposeObject(data->vertSizePointerObj);
-    #else
-    if(((struct Library *)IntuitionBase)->lib_Version >= 39)
-      DisposeObject(data->vertSizePointerObj);
-    else
-      FreeVec(data->vertSizePointerObj);
-    #endif
-
     data->vertSizePointerObj = NULL;
   }
 
@@ -627,47 +562,10 @@ void ShowCustomPointer(Object *obj, struct InstData *data)
       // of the current screen colormap
       IdentifyPointerColors(obj);
 
-      #if defined(__amigaos4__)
+      #if !defined(__MORPHOS__)
       SetWindowPointer(_window(obj), WA_Pointer, ptrObject, TAG_DONE);
-      #elif defined(__MORPHOS__)
-      SetWindowPointer(_window(obj), ((struct Library *)IntuitionBase)->lib_Version >= 51 ? WA_PointerType : WA_Pointer, ptrObject, TAG_DONE);
       #else
-      if(((struct Library *)IntuitionBase)->lib_Version >= 39)
-        SetWindowPointer(_window(obj), WA_Pointer, ptrObject, TAG_DONE);
-      else
-      {
-        ULONG height = 0;
-        ULONG width = 0;
-        ULONG xoffset = 0;
-        ULONG yoffset = 0;
-
-        switch(type)
-        {
-          case PT_HORIZ:
-          {
-            height = horizSizePointerHeight;
-            width = horizSizePointerWidth;
-            xoffset = horizSizePointerXOffset;
-            yoffset = horizSizePointerYOffset;
-          }
-          break;
-
-          case PT_VERT:
-          {
-            height = vertSizePointerHeight;
-            width = vertSizePointerWidth;
-            xoffset = vertSizePointerXOffset;
-            yoffset = vertSizePointerYOffset;
-          }
-          break;
-
-          case PT_NONE:
-            // nothing
-          break;
-        }
-
-        SetPointer(_window(obj), (APTR)ptrObject, height, width, xoffset, yoffset);
-      }
+      SetWindowPointer(_window(obj), ((struct Library *)IntuitionBase)->lib_Version >= 51 ? WA_PointerType : WA_Pointer, ptrObject, TAG_DONE);
       #endif
 
       data->activeCustomPointer = type;
@@ -685,15 +583,7 @@ void HideCustomPointer(Object *obj, struct InstData *data)
 
   if(data->activeCustomPointer != PT_NONE)
   {
-    #if defined(__amigaos4__) || defined(__MORPHOS__)
     SetWindowPointer(_window(obj), TAG_DONE);
-    #else
-    if(((struct Library *)IntuitionBase)->lib_Version >= 39)
-      SetWindowPointer(_window(obj), TAG_DONE);
-    else
-      ClearPointer(_window(obj));
-    #endif
-
     data->activeCustomPointer = PT_NONE;
   }
 

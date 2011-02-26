@@ -23,8 +23,34 @@
 #include <proto/graphics.h>
 
 #include "Chunky2Bitmap.h"
+#include "SetPatch.h"
 
 #include "private.h"
+
+#if defined(__amigaos4__) || defined(__MORPHOS__) || defined(__AROS__)
+#define WPL8(rp, xstart, ystart, width, array, tmprp) WritePixelLine8(rp, xstart, ystart, width, array, tmprp)
+#else // __amigaos4 || __MORPHOS__ || __AROS__
+// WritePixelLine8() is broken on plain OS3.1 systems, don't use it!
+static void _WritePixelLine8(struct RastPort *rp, UWORD xstart, UWORD ystart, UWORD width, const UBYTE *array, UNUSED struct RastPort *tmprp)
+{
+  UWORD x;
+  const UBYTE *a = &array[xstart];
+
+  for(x = 0; x < width; x++)
+  {
+    SetAPen(rp, *a++);
+    WritePixel(rp, x+xstart, ystart);
+  }
+}
+
+#define WPL8(rp, xstart, ystart, width, array, tmprp) \
+{ \
+  if(setPatchVersion >= ((43UL << 16) | 0UL)) \
+    WritePixelLine8(rp, xstart, ystart, width, array, tmprp); \
+  else \
+    _WritePixelLine8(rp, xstart, ystart, width, array, tmprp); \
+}
+#endif // __amigaos4 || __MORPHOS__ || __AROS__
 
 struct BitMap *Chunky2Bitmap(APTR chunky, ULONG width, ULONG height, ULONG depth)
 {
@@ -53,7 +79,8 @@ struct BitMap *Chunky2Bitmap(APTR chunky, ULONG width, ULONG height, ULONG depth
 
         for(y = 0; y < height; y++)
         {
-          WritePixelLine8(&remapRP, 0, y, width, chunkyPtr, &tempRP);
+          WPL8(&remapRP, 0, y, width, chunkyPtr, &tempRP);
+
           chunkyPtr += width;
         }
 

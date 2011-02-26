@@ -30,6 +30,7 @@
 #include <intuition/pointerclass.h>
 #include <datatypes/pictureclass.h>
 
+#include <proto/exec.h>
 #include <proto/graphics.h>
 #include <proto/muimaster.h>
 #include <proto/intuition.h>
@@ -52,9 +53,10 @@ LONG ObtainBestPen( struct ColorMap *cm, ULONG r, ULONG g, ULONG b, ULONG tag1Ty
 /****************************************************************************************/
 /****************************************************************************************/
 
-BOOL NL_OnWindow(Object *obj,struct NLData *data,LONG x,LONG y)
+BOOL NL_OnWindow(struct NLData *data,LONG x,LONG y)
 {
   BOOL onWindow = FALSE;
+  Object *obj = data->this;
 
   #if defined(__MORPHOS__)
   /* No need for hit test in MorphOS 2.0 */
@@ -107,14 +109,14 @@ BOOL NL_OnWindow(Object *obj,struct NLData *data,LONG x,LONG y)
 
 
 
-struct NImgList *GetNImage(UNUSED Object *obj,struct NLData *data,char *ImgName)
+struct NImgList *GetNImage(struct NLData *data,char *ImgName)
 {
   struct NImgList *nimg = &data->NImage;
   int nameLen = strlen(ImgName)+2;
 
   while (nimg && nimg->ImgName && strcmp(nimg->ImgName,ImgName))
     nimg = nimg->next;
-  if (!nimg && (nimg = (struct NImgList *) NL_Malloc(data,sizeof(struct NImgList)+nameLen,"GetNImage")))
+  if (!nimg && (nimg = (struct NImgList *)AllocVecPooled(data->Pool, sizeof(struct NImgList)+nameLen)) != NULL)
   { nimg->ImgName = (char *) nimg;
     nimg->ImgName = &nimg->ImgName[sizeof(struct NImgList)];
     strlcpy(nimg->ImgName, ImgName, nameLen);
@@ -167,25 +169,25 @@ struct NImgList *GetNImage(UNUSED Object *obj,struct NLData *data,char *ImgName)
 }
 
 
-void DeleteNImages(UNUSED Object *obj, struct NLData *data)
+void DeleteNImages(struct NLData *data)
 {
   struct NImgList *nimg = data->NImage.next;
 
   while (nimg)
   {
     data->NImage.next = nimg->next;
-    NL_Free(data,nimg,"creImage2");
+    FreeVecPooled(data->Pool, nimg);
     nimg = data->NImage.next;
   }
 }
 
 
-struct NImgList *GetNImage2(UNUSED Object *obj,struct NLData *data,APTR imgobj)
+struct NImgList *GetNImage2(struct NLData *data,APTR imgobj)
 {
   struct NImgList *nimg2 = data->NImage2;
   while (nimg2 && (nimg2->NImgObj != imgobj) && (nimg2->ImgName != imgobj))
     nimg2 = nimg2->next;
-  if (!nimg2 && (nimg2 = (struct NImgList *) NL_Malloc(data,sizeof(struct NImgList),"GetNImage2")))
+  if (!nimg2 && (nimg2 = (struct NImgList *)AllocVecPooled(data->Pool, sizeof(struct NImgList))) != NULL)
   { nimg2->NImgObj = NULL;
     nimg2->width = -1000;
     nimg2->height = 2;
@@ -231,32 +233,39 @@ struct NImgList *GetNImage2(UNUSED Object *obj,struct NLData *data,APTR imgobj)
 }
 
 
-void DeleteNImages2(UNUSED Object *obj,struct NLData *data)
+void DeleteNImages2(struct NLData *data)
 {
   struct NImgList *nimg2 = data->NImage2;
+
   while (nimg2)
-  { data->NImage2 = nimg2->next;
+  {
+    data->NImage2 = nimg2->next;
     if (nimg2->ImgName && !nimg2->NImgObj)
       MUI_DisposeObject((APTR) nimg2->ImgName);
-    NL_Free(data,nimg2,"delImage2");
+    FreeVecPooled(data->Pool, nimg2);
     nimg2 = data->NImage2;
   }
 }
 
 
-void GetNImage_Sizes(UNUSED Object *obj, struct NLData *data)
+void GetNImage_Sizes(struct NLData *data)
 {
   if (data->SHOW)
-  { struct NImgList *nimg = &data->NImage;
+  {
+    struct NImgList *nimg = &data->NImage;
     struct NImgList *nimg2 = data->NImage2;
 
     while (nimg)
-    { if (nimg->NImgObj)
-      { nimg->width = _defwidth(nimg->NImgObj);
+    {
+      if (nimg->NImgObj)
+      {
+        nimg->width = _defwidth(nimg->NImgObj);
         nimg->height = _defheight(nimg->NImgObj);
         if (data->MinImageHeight < _minheight(nimg->NImgObj))
-        { if (_minheight(nimg->NImgObj) > 20)
-          { if (data->MinImageHeight < 20)
+        {
+          if (_minheight(nimg->NImgObj) > 20)
+          {
+            if (data->MinImageHeight < 20)
               data->MinImageHeight = 20;
           }
           else
@@ -269,12 +278,16 @@ void GetNImage_Sizes(UNUSED Object *obj, struct NLData *data)
     }
 
     while (nimg2)
-    { if (nimg2->NImgObj && (nimg2->width != -1000))
-      { nimg2->width = _defwidth(nimg2->NImgObj);
+    {
+      if (nimg2->NImgObj && (nimg2->width != -1000))
+      {
+        nimg2->width = _defwidth(nimg2->NImgObj);
         nimg2->height = _defheight(nimg2->NImgObj);
         if (data->MinImageHeight < _minheight(nimg2->NImgObj))
-        { if (_minheight(nimg2->NImgObj) > 30)
-          { if (data->MinImageHeight < 30)
+        {
+          if (_minheight(nimg2->NImgObj) > 30)
+          {
+            if (data->MinImageHeight < 30)
               data->MinImageHeight = 30;
           }
           else
@@ -287,47 +300,51 @@ void GetNImage_Sizes(UNUSED Object *obj, struct NLData *data)
     }
   }
   else
-      data->do_images = TRUE;
+    data->do_images = TRUE;
 }
 
 
-void GetNImage_End(Object *obj,struct NLData *data)
+void GetNImage_End(struct NLData *data)
 {
   if (data->adding_member == 2)
-  { data->adding_member = 0;
+  {
+    data->adding_member = 0;
 /*D(bug("%lx|GNIE Group_ExitChange\n",obj));*/
     data->nodraw++;
     DoMethod(data->NL_Group,MUIM_Group_ExitChange);
     data->nodraw--;
-    GetNImage_Sizes(obj,data);
+    GetNImage_Sizes(data);
   }
   data->adding_member = 0;
 }
 
 
-void GetImages(Object *obj,struct NLData *data)
+void GetImages(struct NLData *data)
 {
   if (data->SHOW && data->do_images)
-  { struct NImgList *nimg = &data->NImage;
+  {
+    struct NImgList *nimg = &data->NImage;
     struct NImgList *nimg2 = data->NImage2;
 
     if (data->adding_member != 2)
       data->adding_member = 1;
 
     while (nimg)
-    { if (!nimg->NImgObj)
-        GetNImage(obj,data,nimg->ImgName);
+    {
+      if (!nimg->NImgObj)
+        GetNImage(data,nimg->ImgName);
       nimg = nimg->next;
     }
 
     while (nimg2)
-    { if (nimg2->ImgName && !nimg2->NImgObj && (nimg2->width == -1000))
-        GetNImage2(obj,data,nimg2->ImgName);
+    {
+      if (nimg2->ImgName && !nimg2->NImgObj && (nimg2->width == -1000))
+        GetNImage2(data,nimg2->ImgName);
       nimg2 = nimg2->next;
     }
     data->do_images = FALSE;
   }
-  GetNImage_End(obj,data);
+  GetNImage_End(data);
 }
 
 
@@ -346,17 +363,20 @@ static void disposeBitMap(struct NLData *data,struct BitMap *bitmap, LONG width,
         FreeRaster(bitmap->Planes[ktr], width, height);
       }
     }
-    NL_Free(data,bitmap,"dispBM_bitmap");
+    FreeVecPooled(data->Pool, bitmap);
   }
 }
 
 
-static void disposeBitMapImage(struct NLData *data,Object *obj,struct BitMapImage *bmimg)
+static void disposeBitMapImage(struct NLData *data,struct BitMapImage *bmimg)
 {
   if (bmimg && data->SETUP)
-  { WORD ktr;
+  {
+    WORD ktr;
+
     for (ktr = 0; ktr < bmimg->imgbmp.Depth; ktr++)
-    { if (bmimg->imgbmp.Planes[ktr])
+    {
+      if (bmimg->imgbmp.Planes[ktr])
       {
 /*D(bug("FreeRaster(%lx) (dispBMI_planes)\n",bmimg->imgbmp.Planes[ktr]));*/
         FreeRaster(bmimg->imgbmp.Planes[ktr], bmimg->width, bmimg->height);
@@ -368,30 +388,32 @@ static void disposeBitMapImage(struct NLData *data,Object *obj,struct BitMapImag
       FreeRaster(bmimg->mask, bmimg->width, bmimg->height);
     }
     if (bmimg->obtainpens)
-    { if (LIBVER(GfxBase) >= 39)
-      { ktr = 0;
-        while (bmimg->obtainpens[ktr] != -3)
-        { if ((bmimg->obtainpens[ktr] >= 0) || (bmimg->obtainpens[ktr] < -3))
-            ReleasePen(_screen(obj)->ViewPort.ColorMap, (ULONG) bmimg->obtainpens[ktr]);
-          ktr++;
-        }
+    {
+      ktr = 0;
+      while (bmimg->obtainpens[ktr] != -3)
+      {
+        if ((bmimg->obtainpens[ktr] >= 0) || (bmimg->obtainpens[ktr] < -3))
+          ReleasePen(_screen(data->this)->ViewPort.ColorMap, (ULONG) bmimg->obtainpens[ktr]);
+        ktr++;
       }
-      NL_Free(data,bmimg->obtainpens,"dispBM_pens");
+      FreeVecPooled(data->Pool, bmimg->obtainpens);
     }
-    NL_Free(data,bmimg,"dispBMI_bmimg");
+    FreeVecPooled(data->Pool, bmimg);
   }
 }
 
 
-IPTR NL_CreateImage2(Object *obj,struct NLData *data,Object *imgobj,ULONG flags)
+IPTR NL_CreateImage2(struct NLData *data,Object *imgobj,ULONG flags)
 {
   struct BitMapImage *bmimg = NULL;
+
   if (imgobj)
   {
-    if((bmimg = NL_Malloc(data,sizeof(struct BitMapImage),"creImage2_bmimg")))
+    if((bmimg = AllocVecPooled(data->Pool ,sizeof(struct BitMapImage))) != NULL)
     {
-      if (GetNImage2(obj,data,imgobj))
-      { bmimg->control = MUIA_Image_Spec;
+      if (GetNImage2(data,imgobj))
+      {
+        bmimg->control = MUIA_Image_Spec;
         bmimg->width = 0;
         bmimg->height = 0;
         bmimg->obtainpens = (APTR) imgobj;
@@ -407,8 +429,9 @@ IPTR NL_CreateImage2(Object *obj,struct NLData *data,Object *imgobj,ULONG flags)
  */
       }
       else
-      { bmimg->control = 0L;
-        NL_Free(data,bmimg,"creImage2");
+      {
+        bmimg->control = 0L;
+        FreeVecPooled(data->Pool, bmimg);
         bmimg = NULL;
       }
     }
@@ -419,7 +442,7 @@ IPTR NL_CreateImage2(Object *obj,struct NLData *data,Object *imgobj,ULONG flags)
 }
 
 
-IPTR NL_CreateImage(Object *obj,struct NLData *data,Object *imgobj,ULONG flags)
+IPTR NL_CreateImage(struct NLData *data,Object *imgobj,ULONG flags)
 {
   SIPTR CI_BM_Width = 0;
 
@@ -428,10 +451,11 @@ IPTR NL_CreateImage(Object *obj,struct NLData *data,Object *imgobj,ULONG flags)
 
   // check if the Bitmap_Width attribute doesn't exists
   if((flags == (ULONG)~0L) || GetAttr(MUIA_Bitmap_Width, imgobj, (IPTR *)&CI_BM_Width) == FALSE)
-    return (NL_CreateImage2(obj,data,imgobj,flags));
+    return (NL_CreateImage2(data,imgobj,flags));
 
   if (imgobj && data->SETUP)
-  { LONG last_numpen,last_newnumpen;
+  {
+    LONG last_numpen,last_newnumpen;
     struct BitMap *CI_BM_Bitmap = NULL;
     struct BitMap *bm_src = NULL;
     struct BitMapImage *bmimg = NULL;
@@ -464,7 +488,7 @@ IPTR NL_CreateImage(Object *obj,struct NLData *data,Object *imgobj,ULONG flags)
 
       if (CI_BC_Body)
       {
-        if((bm_src = NL_Malloc(data,sizeof(struct BitMap),"CreateImage_bm_src")))
+        if((bm_src = AllocVecPooled(data->Pool, sizeof(struct BitMap))) != NULL)
         {
           WORD ktr;
           BOOL bit_map_failed = FALSE;
@@ -475,36 +499,47 @@ IPTR NL_CreateImage(Object *obj,struct NLData *data,Object *imgobj,ULONG flags)
               bit_map_failed = TRUE;
           }
           if (bit_map_failed)
-          { disposeBitMap(data,bm_src,CI_BM_Width,CI_BM_Height);
+          {
+            disposeBitMap(data,bm_src,CI_BM_Width,CI_BM_Height);
             bm_src = NULL;
           }
           else
-          { WORD cptb,cptr,cptd,offr;
+          {
+            WORD cptb,cptr,cptd,offr;
             WORD num = 0;
             UBYTE val = 0;
             UBYTE type = 0;
             UBYTE *body = CI_BC_Body;
+
             for (cptr = 0; cptr < bm_src->Rows; cptr++)
-            { offr = cptr * bm_src->BytesPerRow;
+            {
+              offr = cptr * bm_src->BytesPerRow;
               for (cptd = 0; cptd < bm_src->Depth; cptd++)
-              { for (cptb = 0; cptb < bm_src->BytesPerRow; cptb++)
-                { if (CI_BC_Compression == cmpByteRun1)
-                  { if (num > 0)
-                    { if (type == 0)
+              {
+                for (cptb = 0; cptb < bm_src->BytesPerRow; cptb++)
+                {
+                  if (CI_BC_Compression == cmpByteRun1)
+                  {
+                    if (num > 0)
+                    {
+                      if (type == 0)
                         bm_src->Planes[cptd][offr+cptb] = val;
                       else
                         bm_src->Planes[cptd][offr+cptb] = *body;
                       num--;
                     }
                     else
-                    { while (*body == 128)
+                    {
+                      while (*body == 128)
                         body++;
                       if (*body < 128)
-                      { num = (WORD) *body; type = 1; body++;
+                      {
+                        num = (WORD) *body; type = 1; body++;
                         bm_src->Planes[cptd][offr+cptb] = *body;
                       }
                       else
-                      { num = 256 - ((WORD) *body); type = 0; body++; val = *body;
+                      {
+                        num = 256 - ((WORD) *body); type = 0; body++; val = *body;
                         bm_src->Planes[cptd][offr+cptb] = val;
                       }
                     }
@@ -515,18 +550,29 @@ IPTR NL_CreateImage(Object *obj,struct NLData *data,Object *imgobj,ULONG flags)
                 }
               }
               if (CI_BC_Masking == mskHasMask)
-              { for (cptb = 0; cptb < bm_src->BytesPerRow; cptb++)
-                { if (CI_BC_Compression == cmpByteRun1)
-                  { if (num > 0)
+              {
+                for (cptb = 0; cptb < bm_src->BytesPerRow; cptb++)
+                {
+                  if (CI_BC_Compression == cmpByteRun1)
+                  {
+                    if (num > 0)
                       num--;
                     else
-                    { while (*body == 128)
+                    {
+                      while (*body == 128)
                         body++;
                       if (*body < 128)
-                      { num = (WORD) *body; type = 1; body++;
+                      {
+                        num = (WORD) *body;
+                        type = 1;
+                        body++;
                       }
                       else
-                      { num = 256 - ((WORD) *body); type = 0; body++; val = *body;
+                      {
+                        num = 256 - ((WORD) *body);
+                        type = 0;
+                        body++;
+                        val = *body;
                       }
                     }
                   }
@@ -553,34 +599,44 @@ IPTR NL_CreateImage(Object *obj,struct NLData *data,Object *imgobj,ULONG flags)
       newdepth = bm_src->Depth;
 
       if (CI_BM_MappingTable)
-      { LONG num;
+      {
+        LONG num;
+
         for (num = 0;num < last_numpen;num++)
-        { if (last_newnumpen < CI_BM_MappingTable[num])
+        {
+          if (last_newnumpen < CI_BM_MappingTable[num])
             last_newnumpen = CI_BM_MappingTable[num];
         }
         newdepth = 0;
         while (last_newnumpen)
-        { newdepth++;
+        {
+          newdepth++;
           last_newnumpen = last_newnumpen >> 1;
         }
       }
       else if (CI_BM_SourceColors)
-      { ULONG *mycolor;
-        obtainpens = NL_Malloc(data,(last_numpen+1)*sizeof(*obtainpens),"creImage_pens");
+      {
+        ULONG *mycolor;
+
+        obtainpens = AllocVecPooled(data->Pool, (last_numpen+1)*sizeof(*obtainpens));
         obtainpens[last_numpen] = -3;
         if (obtainpens)
-        { for (cptpen = 0; cptpen < last_numpen; cptpen++)
+        {
+          for (cptpen = 0; cptpen < last_numpen; cptpen++)
             obtainpens[cptpen] = -1;
           for (cptr = 0; cptr < bm_src->Rows; cptr++)
-          { offr = cptr * bm_src->BytesPerRow;
+          {
+            offr = cptr * bm_src->BytesPerRow;
             for (cptb = 0; cptb < bm_src->BytesPerRow; cptb++)
-            { bit1 = 0x80;
+            {
+              bit1 = 0x80;
               while (bit1)
               { /* get the source dot pen number */
                 mypen = 0;
                 bit2 = 0x01;
                 for (cptd = 0; cptd < bm_src->Depth; cptd++)
-                { if (bm_src->Planes[cptd][offr+cptb] & bit1)
+                {
+                  if (bm_src->Planes[cptd][offr+cptb] & bit1)
                     mypen |= bit2;
 
                   bit2 = bit2 << 1;
@@ -589,47 +645,20 @@ IPTR NL_CreateImage(Object *obj,struct NLData *data,Object *imgobj,ULONG flags)
                 if (mypen == CI_BM_Transparent)
                   obtainpens[mypen] = -2;
                 else if (obtainpens[mypen] == -1)
-                { mycolor = &CI_BM_SourceColors[mypen*3];
-                  if (LIBVER(GfxBase) >= 39)
-                  { obtainpens[mypen] = (WORD) ObtainBestPen(_screen(obj)->ViewPort.ColorMap,
+                {
+                  mycolor = &CI_BM_SourceColors[mypen*3];
+
+                  obtainpens[mypen] = (WORD) ObtainBestPen(_screen(data->this)->ViewPort.ColorMap,
+                                                           mycolor[0],mycolor[1],mycolor[2],
+                                                           OBP_Precision, CI_BM_Precision,
+                                                           TAG_END);
+                  if (obtainpens[mypen] == -1)
+                  {
+                    obtainpens[mypen] = (WORD) ObtainBestPen(_screen(data->this)->ViewPort.ColorMap,
                                                              mycolor[0],mycolor[1],mycolor[2],
-                                                             OBP_Precision, CI_BM_Precision,
+                                                             OBP_Precision, PRECISION_GUI,
                                                              TAG_END);
-                    if (obtainpens[mypen] == -1)
-                    { obtainpens[mypen] = (WORD) ObtainBestPen(_screen(obj)->ViewPort.ColorMap,
-                                                               mycolor[0],mycolor[1],mycolor[2],
-                                                               OBP_Precision, PRECISION_GUI,
-                                                               TAG_END);
-                    }
                   }
-                  else
-                  { ULONG coln,bestn;
-                    LONG col,colr,colg,colb,cr,cg,cb,coldiff,bestdiff;
-                    cr = (mycolor[0] >> 24) & 0x000000FF;
-                    cg = (mycolor[1] >> 24) & 0x000000FF;
-                    cb = (mycolor[2] >> 24) & 0x000000FF;
-                    coln = bestn = 0;
-                    coldiff = bestdiff = 1000000;
-                    col = 0;
-                    while (col >= 0)
-                    { col = GetRGB4(_screen(obj)->ViewPort.ColorMap,coln);
-                      colr = ((col >> 4) & 0x000000F0) + 8;
-                      colg = ((col)      & 0x000000F0) + 8;
-                      colb = ((col << 4) & 0x000000F0) + 8;
-                      colr -= cr;
-                      colg -= cg;
-                      colb -= cb;
-                      coldiff = colr*colr + colg*colg + colb*colb;
-                      if (coldiff < bestdiff)
-                      { bestdiff = coldiff;
-                        bestn = coln;
-                      }
-                      coln++;
-                    }
-                    obtainpens[mypen] = bestn;
-                  }
-                  if (last_newnumpen < obtainpens[mypen])
-                    last_newnumpen = obtainpens[mypen];
                 }
                 bit1 = bit1 >> 1;
               }
@@ -637,7 +666,8 @@ IPTR NL_CreateImage(Object *obj,struct NLData *data,Object *imgobj,ULONG flags)
           }
           newdepth = 0;
           while (last_newnumpen)
-          { newdepth++;
+          {
+            newdepth++;
             last_newnumpen = last_newnumpen >> 1;
           }
         }
@@ -646,8 +676,9 @@ IPTR NL_CreateImage(Object *obj,struct NLData *data,Object *imgobj,ULONG flags)
         newdepth = 8;
       last_newnumpen = 1 << newdepth;
 
-      if ((newdepth > 0) && (bmimg = NL_Malloc(data,sizeof(struct BitMapImage),"creImage_bmimg")))
-      { WORD ktr;
+      if ((newdepth > 0) && (bmimg = AllocVecPooled(data->Pool, sizeof(struct BitMapImage))) != NULL)
+      {
+        WORD ktr;
         BOOL bmimg_failed = FALSE;
 
         InitBitMap(&(bmimg->imgbmp),newdepth,CI_BM_Width,CI_BM_Height);
@@ -656,13 +687,15 @@ IPTR NL_CreateImage(Object *obj,struct NLData *data,Object *imgobj,ULONG flags)
         bmimg->height = CI_BM_Height;
         bmimg->obtainpens = obtainpens;
         for (ktr = 0; ktr < bmimg->imgbmp.Depth; ktr++)
-        { if (!(bmimg->imgbmp.Planes[ktr] = (PLANEPTR) AllocRaster(CI_BM_Width,CI_BM_Height)))
+        {
+          if (!(bmimg->imgbmp.Planes[ktr] = (PLANEPTR) AllocRaster(CI_BM_Width,CI_BM_Height)))
             bmimg_failed = TRUE;
         }
         if (!(bmimg->mask = (PLANEPTR) AllocRaster(CI_BM_Width,CI_BM_Height)))
           bmimg_failed = TRUE;
         if (bmimg_failed)
-        { disposeBitMapImage(data,obj,bmimg);
+        {
+          disposeBitMapImage(data,bmimg);
           bmimg = NULL;
         }
         else
@@ -679,20 +712,23 @@ IPTR NL_CreateImage(Object *obj,struct NLData *data,Object *imgobj,ULONG flags)
 			kprintf( "BytesPerRow %ld Rows %ld.\n", bmimg->imgbmp.BytesPerRow, bmimg->imgbmp.Rows );
 			*/
 			 for (cptr = 0; cptr < bmimg->imgbmp.Rows; cptr++)
-			 { offr = cptr * bmimg->imgbmp.BytesPerRow;
-				offr1 = cptr * bm_src->BytesPerRow;
-            for (cptb = 0; cptb < bmimg->imgbmp.BytesPerRow; cptb++)
-            { bit1 = 0x80;
-              while (bit1)
-              { /* get the source dot pen number */
-                mypen = 0;
-                bit2 = 0x01;
-                for (cptd = 0; cptd < bm_src->Depth; cptd++)
-					 { if (bm_src->Planes[cptd][offr1+cptb] & bit1)	// here was bug!!!
-                    mypen |= bit2;
-                  bit2 = bit2 << 1;
-                }
-                /* map the pen number */
+			 {
+         offr = cptr * bmimg->imgbmp.BytesPerRow;
+				 offr1 = cptr * bm_src->BytesPerRow;
+         for (cptb = 0; cptb < bmimg->imgbmp.BytesPerRow; cptb++)
+         {
+           bit1 = 0x80;
+           while (bit1)
+           { /* get the source dot pen number */
+             mypen = 0;
+             bit2 = 0x01;
+             for (cptd = 0; cptd < bm_src->Depth; cptd++)
+  					 {
+               if (bm_src->Planes[cptd][offr1+cptb] & bit1)	// here was bug!!!
+                  mypen |= bit2;
+               bit2 = bit2 << 1;
+             }
+               /* map the pen number */
                 if (mypen == CI_BM_Transparent)
                 { bmimg->mask[offr+cptb] &= ~bit1;
                   mypen = 0;
@@ -722,11 +758,11 @@ IPTR NL_CreateImage(Object *obj,struct NLData *data,Object *imgobj,ULONG flags)
     }
 
     if (!bmimg && obtainpens)
-    { NL_Free(data,obtainpens,"creBM_pens");
-    }
+      FreeVecPooled(data->Pool, obtainpens);
 
     if (!CI_BM_Bitmap)
-    { disposeBitMap(data,bm_src,CI_BM_Width,CI_BM_Height);
+    {
+      disposeBitMap(data,bm_src,CI_BM_Width,CI_BM_Height);
       bm_src = NULL;
     }
     if (bmimg && (data->MinImageHeight < bmimg->height) && !flags)
@@ -739,23 +775,29 @@ IPTR NL_CreateImage(Object *obj,struct NLData *data,Object *imgobj,ULONG flags)
 }
 
 
-ULONG NL_DeleteImage(Object *obj,struct NLData *data,APTR listimg)
-{ struct BitMapImage *bmimg = (struct BitMapImage *) listimg;
+ULONG NL_DeleteImage(struct NLData *data,APTR listimg)
+{
+  struct BitMapImage *bmimg = (struct BitMapImage *) listimg;
+
   if (bmimg && (bmimg->control == MUIM_NList_CreateImage))
-  { bmimg->control = 0L;
-    disposeBitMapImage(data,obj,bmimg);
+  {
+    bmimg->control = 0L;
+    disposeBitMapImage(data,bmimg);
   }
   else if (bmimg && (bmimg->control == MUIA_Image_Spec))
   {
     APTR imgobj = (APTR) bmimg->obtainpens;
     struct NImgList *nimg2 = data->NImage2,*nimgprec = NULL;
+
     while (nimg2 && (nimg2->NImgObj != imgobj) && (nimg2->ImgName != imgobj))
-    { nimgprec = nimg2;
+    {
+      nimgprec = nimg2;
       nimg2 = nimg2->next;
     }
     bmimg->control = 0L;
     if (nimg2)
-    { if (nimgprec)
+    {
+      if (nimgprec)
         nimgprec->next = nimg2->next;
       else
         data->NImage2 = nimg2->next;
@@ -774,22 +816,25 @@ ULONG NL_DeleteImage(Object *obj,struct NLData *data,APTR listimg)
             DoMethod(data->NL_Group,OM_REMMEMBER,imgobj);
         }
       }
-      NL_Free(data,nimg2,"DelImage2");
+      FreeVecPooled(data->Pool, nimg2);
     }
-    NL_Free(data,bmimg,"DelImage");
+    FreeVecPooled(data->Pool, bmimg);
   }
   return (TRUE);
 }
 
 
-ULONG NL_CreateImages(Object *obj,struct NLData *data)
+ULONG NL_CreateImages(struct NLData *data)
 {
   if (data->NList_UseImages && data->SETUP)
-  { LONG pos = 0;
+  {
+    LONG pos = 0;
+
     while (pos < data->LastImage)
-    { if (data->NList_UseImages[pos].imgobj)
+    {
+      if (data->NList_UseImages[pos].imgobj)
         data->NList_UseImages[pos].bmimg = (struct BitMapImage *)
-                                NL_CreateImage(obj,data,data->NList_UseImages[pos].imgobj,data->NList_UseImages[pos].flags);
+                                NL_CreateImage(data,data->NList_UseImages[pos].imgobj,data->NList_UseImages[pos].flags);
       else
         data->NList_UseImages[pos].bmimg = NULL;
       pos++;
@@ -800,13 +845,16 @@ ULONG NL_CreateImages(Object *obj,struct NLData *data)
 }
 
 
-ULONG NL_DeleteImages(Object *obj,struct NLData *data)
+ULONG NL_DeleteImages(struct NLData *data)
 {
   if (data->NList_UseImages)
-  { LONG pos = 0;
+  {
+    LONG pos = 0;
+
     while (pos < data->LastImage)
-    { if (data->NList_UseImages[pos].bmimg)
-        NL_DeleteImage(obj,data,(APTR) data->NList_UseImages[pos].bmimg);
+    {
+      if (data->NList_UseImages[pos].bmimg)
+        NL_DeleteImage(data,(APTR) data->NList_UseImages[pos].bmimg);
       data->NList_UseImages[pos].bmimg = NULL;
       pos++;
     }
@@ -816,17 +864,24 @@ ULONG NL_DeleteImages(Object *obj,struct NLData *data)
 }
 
 
-ULONG NL_UseImage(Object *obj,struct NLData *data,Object *imgobj,LONG imgnum,ULONG flags)
+ULONG NL_UseImage(struct NLData *data,Object *imgobj,LONG imgnum,ULONG flags)
 {
   BOOL redraw = FALSE;
   LONG retval = FALSE;
+
   if ((imgnum >= 0) && (imgnum < 8192))
-  { if (imgobj)
-    { if (!data->NList_UseImages || (imgnum >= data->LastImage))
-      { LONG last = imgnum + 8;
-        struct UseImage *useimages = (struct UseImage *) NL_Malloc(data,(last+1)*sizeof(struct UseImage),"UseImage");
+  {
+    if (imgobj)
+    {
+      if (!data->NList_UseImages || (imgnum >= data->LastImage))
+      {
+        LONG last = imgnum + 8;
+        struct UseImage *useimages = (struct UseImage *)AllocVecPooled(data->Pool, (last+1)*sizeof(struct UseImage));
+
         if (useimages)
-        { LONG pos = 0;
+        {
+          LONG pos = 0;
+
           while (pos < data->LastImage)
           { useimages[pos].bmimg = data->NList_UseImages[pos].bmimg;
             useimages[pos].imgobj = data->NList_UseImages[pos].imgobj;
@@ -842,7 +897,7 @@ ULONG NL_UseImage(Object *obj,struct NLData *data,Object *imgobj,LONG imgnum,ULO
             pos++;
           }
           if (data->NList_UseImages)
-            NL_Free(data,data->NList_UseImages,"UseImage");
+            FreeVecPooled(data->Pool, data->NList_UseImages);
           data->NList_UseImages = useimages;
           data->LastImage = last;
         }
@@ -853,7 +908,7 @@ ULONG NL_UseImage(Object *obj,struct NLData *data,Object *imgobj,LONG imgnum,ULO
       {
         if (data->NList_UseImages[imgnum].bmimg)
         {
-          NL_DeleteImage(obj,data,(APTR) data->NList_UseImages[imgnum].bmimg);
+          NL_DeleteImage(data,(APTR) data->NList_UseImages[imgnum].bmimg);
           redraw = TRUE;
         }
 
@@ -861,16 +916,19 @@ ULONG NL_UseImage(Object *obj,struct NLData *data,Object *imgobj,LONG imgnum,ULO
         data->NList_UseImages[imgnum].imgobj = imgobj;
         data->NList_UseImages[imgnum].flags = flags;
         if (data->SETUP)
-        { data->NList_UseImages[imgnum].bmimg = (struct BitMapImage *)
-                                NL_CreateImage(obj,data,data->NList_UseImages[imgnum].imgobj,data->NList_UseImages[imgnum].flags);
+        {
+          data->NList_UseImages[imgnum].bmimg = (struct BitMapImage *)
+                                NL_CreateImage(data,data->NList_UseImages[imgnum].imgobj,data->NList_UseImages[imgnum].flags);
           redraw = TRUE;
         }
         retval = TRUE;
       }
     }
     else if (imgnum < data->LastImage)
-    { if (data->NList_UseImages[imgnum].bmimg)
-      { NL_DeleteImage(obj,data,(APTR) data->NList_UseImages[imgnum].bmimg);
+    {
+      if (data->NList_UseImages[imgnum].bmimg)
+      {
+        NL_DeleteImage(data,(APTR) data->NList_UseImages[imgnum].bmimg);
         redraw = TRUE;
       }
       data->NList_UseImages[imgnum].bmimg = NULL;
@@ -880,10 +938,14 @@ ULONG NL_UseImage(Object *obj,struct NLData *data,Object *imgobj,LONG imgnum,ULO
     }
   }
   else if (!imgobj && (imgnum == MUIV_NList_UseImage_All) && data->NList_UseImages)
-  { LONG pos = 0;
+  {
+    LONG pos = 0;
+
     while (pos < data->LastImage)
-    { if (data->NList_UseImages[pos].bmimg)
-      { NL_DeleteImage(obj,data,(APTR) data->NList_UseImages[pos].bmimg);
+    {
+      if (data->NList_UseImages[pos].bmimg)
+      {
+        NL_DeleteImage(data,(APTR) data->NList_UseImages[pos].bmimg);
         redraw = TRUE;
       }
       data->NList_UseImages[pos].bmimg = NULL;
@@ -894,7 +956,8 @@ ULONG NL_UseImage(Object *obj,struct NLData *data,Object *imgobj,LONG imgnum,ULO
     retval = TRUE;
   }
   if (redraw)
-  { data->do_draw_all = data->do_draw_title = data->do_draw = TRUE;
+  {
+    data->do_draw_all = data->do_draw_title = data->do_draw = TRUE;
     data->do_parse = data->do_setcols = data->do_updatesb = data->do_wwrap = TRUE;
   }
   return ((ULONG)retval);
@@ -905,7 +968,7 @@ IPTR mNL_CreateImage(struct IClass *cl,Object *obj,struct MUIP_NList_CreateImage
 {
   struct NLData *data = INST_DATA(cl,obj);
   /*DoSuperMethodA(cl,obj,(Msg) msg);*/
-  return (NL_CreateImage(obj,data,msg->obj,msg->flags));
+  return (NL_CreateImage(data,msg->obj,msg->flags));
 }
 
 
@@ -913,7 +976,7 @@ IPTR mNL_DeleteImage(struct IClass *cl,Object *obj,struct MUIP_NList_DeleteImage
 {
   struct NLData *data = INST_DATA(cl,obj);
   /*DoSuperMethodA(cl,obj,(Msg) msg);*/
-  return (NL_DeleteImage(obj,data,msg->listimg));
+  return (NL_DeleteImage(data,msg->listimg));
 }
 
 
@@ -921,5 +984,5 @@ IPTR mNL_UseImage(struct IClass *cl,Object *obj,struct MUIP_NList_UseImage *msg)
 {
   struct NLData *data = INST_DATA(cl,obj);
   /*DoSuperMethodA(cl,obj,(Msg) msg);*/
-  return (NL_UseImage(obj,data,msg->obj,msg->imgnum,msg->flags));
+  return (NL_UseImage(data,msg->obj,msg->imgnum,msg->flags));
 }

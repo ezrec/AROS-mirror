@@ -30,8 +30,12 @@ NListtree.mcc/MUIA_NListtree_TreeColumn
 NListtree.mcc/MUIM_NListtree_Active
 NListtree.mcc/MUIM_NListtree_Clear
 NListtree.mcc/MUIM_NListtree_Close
+NListtree.mcc/MUIM_NListtree_Compare
+NListtree.mcc/MUIM_NListtree_Construct
 NListtree.mcc/MUIM_NListtree_Copy
 NListtree.mcc/MUIM_NListtree_CopyToClip
+NListtree.mcc/MUIM_NListtree_Destruct
+NListtree.mcc/MUIM_NListtree_Display
 NListtree.mcc/MUIM_NListtree_DoubleClick
 NListtree.mcc/MUIM_NListtree_DropDraw
 NListtree.mcc/MUIM_NListtree_DropType
@@ -141,7 +145,7 @@ NListtree.mcc/MUIM_NListtree_TestPos
 
 NListtree.mcc/MUIA_NListtree_Active       NListtree.mcc/MUIA_NListtree_Active
 
-   NAME    
+   NAME
 
     MUIA_NListtree_Active -- [.SG], struct MUI_NListtree_TreeNode *
 
@@ -161,7 +165,7 @@ NListtree.mcc/MUIM_NListtree_TestPos
     if it is visible. If the node is in an opened tree the listview is
     scrolling into the visible area. Setting MUIV_NListtree_Active_Off will
     vanish the cursor.
-    
+
     MUIV_NListtree_Active_First/FirstVisible/LastVisible are special values
     for activating the lists first or the top/bottom visible entry.
 
@@ -261,7 +265,7 @@ NListtree.mcc/MUIM_NListtree_TestPos
 
 NListtree.mcc/MUIA_NListtree_CloseHook NListtree.mcc/MUIA_NListtree_CloseHook
 
-   NAME    
+   NAME
 
     MUIA_NListtree_CloseHook -- [IS.], struct Hook *
 
@@ -273,10 +277,10 @@ NListtree.mcc/MUIM_NListtree_TestPos
 
     The close hook is called after a list node is closed, then you can
     change the list.
-    
+
     The close hook will be called with the hook in A0, the object in A2
     and a MUIP_NListtree_CloseMessage struct in A1 (see nlisttree_mcc.h).
-    
+
     To remove the hook set this to NULL.
 
 
@@ -320,7 +324,7 @@ NListtree.mcc/MUIM_NListtree_TestPos
 
         MUIV_NListtree_CompareHook_Tail
             Any entry is inserted at tail of the list.
-    
+
         MUIV_NListtree_CompareHook_LeavesTop
             Leaves are inserted at top of the list, nodes at bottom. They are
             alphabetically sorted.
@@ -331,11 +335,11 @@ NListtree.mcc/MUIM_NListtree_TestPos
         MUIV_NListtree_CompareHook_LeavesBottom
             Leaves are inserted at bottom of the list, nodes at top. They are
             alphabetically sorted. This is default.
-    
+
     The hook will be called with the hook in A0, the object in A2 and
     a MUIP_NListtree_CompareMessage struct in A1 (see nlisttree_mcc.h). You
     should return something like:
-    
+
         <0    (TreeNode1 <  TreeNode2)
          0    (TreeNode1 == TreeNode2)
         >0    (TreeNode1 >  TreeNode2)
@@ -497,7 +501,7 @@ NListtree.mcc/MUIM_NListtree_TestPos
 
     You have to supply a display hook to specify what should be shown in
     the listview, otherwise only the name of the nodes is displayed.
-    
+
     The display hook will be called with the hook in A0, the object in
     A2 and a MUIP_NListtree_DisplayMessage struct in A1 (see nlisttree_mcc.h)
 .
@@ -732,7 +736,7 @@ NListtree.mcc/MUIM_NListtree_TestPos
 
 NListtree.mcc/MUIA_NListtree_FindNameHooktree.mcc/MUIA_NListtree_FindNameHook
 
-   NAME    
+   NAME
 
     MUIA_NListtree_FindNameHook -- [IS.],
 
@@ -842,7 +846,7 @@ NListtree.mcc/MUIM_NListtree_TestPos
 
     Same as MUIA_NList_Format, but one column is reserved for the tree
     indicators and the names of the nodes.
-    
+
     For further detailed information see MUIA_NList_Format!
 
 
@@ -946,7 +950,7 @@ NListtree.mcc/MUIM_NListtree_TestPos
 
     The open hook is called whenever a list node will be opened, so you
     can change the list before the node is open.
-    
+
     The open hook will be called with the hook in A0, the object in A2
     and a MUIP_NListtree_OpenMessage struct in A1 (see nlisttree_mcc.h).
 
@@ -1145,7 +1149,7 @@ NListtree.mcc/MUIM_NListtree_TestPos
 
 NListtree.mcc/MUIM_NListtree_Close         NListtree.mcc/MUIM_NListtree_Close
 
-   NAME    
+   NAME
 
     MUIM_NListtree_Close -- Close the specified list node. (V1)
 
@@ -1215,6 +1219,70 @@ NListtree.mcc/MUIM_NListtree_TestPos
 
    SEE ALSO
     MUIM_NListtree_Open
+
+
+NListtree.mcc/MUIM_NListtree_Compare     NListtree.mcc/MUIM_NListtree_Compare
+
+   NAME
+
+    MUIM_NListtree_Compare -- Compare two nodes
+
+
+   SYNOPSIS
+
+    DoMethod(obj, MUIM_NListtree_Compare,
+        struct MUI_NListtree_TreeNode *TreeNode1,
+        struct MUI_NListtree_TreeNode *TreeNode2,
+        ULONG SortType);
+
+
+   FUNCTION
+
+    Compares the two given treenodes. You should return something like:
+
+        <0    (TreeNode1 <  TreeNode2)
+         0    (TreeNode1 == TreeNode2)
+        >0    (TreeNode1 >  TreeNode2)
+
+
+   NOTIFICATION
+
+
+   SEE ALSO
+
+    MUIA_NListtree_CompareHook
+
+
+NListtree.mcc/MUIA_NListtree_Construct NListtree.mcc/MUIA_NListtree_Construct
+
+   NAME
+
+    MUIN_NListtree_Construct -- Create a new treenode
+
+
+   SYNOPSIS
+
+    DoMethod(obj, MUIM_NListtree_Construct,
+        STRPTR Name,
+        APTR UserData,
+        APTR MemPool,
+        ULONG Flags);
+
+
+   FUNCTION
+
+    This method is called whenever a new treenode is to be added to the
+    listtree. See MUIA_NListtree_ConstructHook for more details.
+
+    If the method returns NULL, nothing will be added to the list.
+
+
+   NOTIFICATION
+
+
+   SEE ALSO
+
+    MUIA_NListtree_ConstructHook, MUIA_NListtree_DestructHook
 
 
 NListtree.mcc/MUIM_NListtree_Copy           NListtree.mcc/MUIM_NListtree_Copy
@@ -1363,6 +1431,65 @@ NListtree.mcc/MUIM_NListtree_TestPos
    SEE ALSO
 
     MUIA_NListtree_CopyToClipHook
+
+
+NListtree.mcc/MUIA_NListtree_Destruct   NListtree.mcc/MUIA_NListtree_Destruct
+
+   NAME
+
+    MUIN_NListtree_Destruct -- Free a new treenode
+
+
+   SYNOPSIS
+
+    DoMethod(obj, MUIM_NListtree_Destruct,
+        STRPTR Name,
+        APTR UserData,
+        APTR MemPool,
+        ULONG Flags);
+
+
+   FUNCTION
+
+    This method is called whenever a new treenode is to be removed from the
+    listtree. See MUIA_NListtree_DestructHook for more details.
+
+
+   NOTIFICATION
+
+
+   SEE ALSO
+
+    MUIA_NListtree_ConstructHook, MUIA_NListtree_DestructHook
+
+NListtree.mcc/MUIM_NListtree_Display     NListtree.mcc/MUIA_NListtree_Display
+
+   NAME
+
+    MUIN_NListtree_Display -- Display a treenode
+
+
+   SYNOPSIS
+
+    DoMethod(obj, MUIM_NListtree_Dispose,
+        struct MUI_NListtree_TreeNode *TreeNode,
+        LONG EntryPos,
+        STRPTR *Array,
+        STRPTR *Preparse);
+
+
+   FUNCTION
+
+    This method is called whenever a new treenode is to be displayed in the
+    listtree. See MUIA_NListtree_DisplayHook for more details.
+
+
+   NOTIFICATION
+
+
+   SEE ALSO
+
+    MUIA_NListtree_DisplayHook
 
 
 NListtree.mcc/MUIM_NListtree_DoubleClicksttree.mcc/MUIM_NListtree_DoubleClick
@@ -1580,7 +1707,7 @@ NListtree.mcc/MUIM_NListtree_TestPos
 
 NListtree.mcc/MUIM_NListtree_FindName   NListtree.mcc/MUIM_NListtree_FindName
 
-   NAME    
+   NAME
 
     MUIM_NListtree_FindName -- Find node using name match. (V1)
 
@@ -1635,7 +1762,7 @@ NListtree.mcc/MUIM_NListtree_TestPos
 
    RESULT
 
-    Returns the found node if available, NULL otherwise.    
+    Returns the found node if available, NULL otherwise.
 
 
    EXAMPLE
@@ -2319,7 +2446,7 @@ NListtree.mcc/MUIM_NListtree_TestPos
    INPUTS
 
     listnode -    Specify the node which list is used to open the node.
-    
+
         MUIV_NListtree_Open_ListNode_Root
             The root list is used.
 
@@ -2434,7 +2561,7 @@ NListtree.mcc/MUIM_NListtree_TestPos
 
 NListtree.mcc/MUIM_NListtree_Redraw       NListtree.mcc/MUIM_NListtree_Redraw
 
-   NAME    
+   NAME
 
     MUIM_NListtree_Redraw -- Redraw the specified tree node. (V1)
 
@@ -2826,7 +2953,7 @@ NListtree.mcc/MUIM_NListtree_TestPos
         if ( tpres.tpr_Entry != NULL )
         {
             // Do something very special here...
-        }    
+        }
 
 
    NOTES

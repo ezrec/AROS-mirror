@@ -46,7 +46,7 @@
 #define _isinobject(x,y) (_between(_mleft(obj),(x),_mright(obj)) && _between(_mtop(obj),(y),_mbottom(obj)))
 #define _isinobject2(x,y) (_between(_left(obj),(x),_right(obj)) && _between(_top(obj),(y),_bottom(obj)))
 
-static LONG NL_TestKey(UNUSED Object *obj,struct NLData *data,LONG KeyTag,UWORD Code,UWORD Qualifier, BOOL force)
+static LONG NL_TestKey(struct NLData *data,LONG KeyTag,UWORD Code,UWORD Qualifier, BOOL force)
 {
   UWORD qual;
   LONG i;
@@ -90,29 +90,29 @@ static LONG NL_TestKey(UNUSED Object *obj,struct NLData *data,LONG KeyTag,UWORD 
 }
 
 
-static void NL_RequestIDCMP(Object *obj,struct NLData *data,LONG IDCMP_val)
+static void NL_RequestIDCMP(struct NLData *data,LONG IDCMP_val)
 {
   if (IDCMP_val & IDCMP_MOUSEMOVE)
     data->MOUSE_MOVE = TRUE;
   if (!(data->ehnode.ehn_Events & IDCMP_val))
   {
-    DoMethod(_win(obj),MUIM_Window_RemEventHandler, &data->ehnode);
+    DoMethod(_win(data->this),MUIM_Window_RemEventHandler, &data->ehnode);
     data->ehnode.ehn_Events |= IDCMP_val;
-    DoMethod(_win(obj),MUIM_Window_AddEventHandler, &data->ehnode);
+    DoMethod(_win(data->this),MUIM_Window_AddEventHandler, &data->ehnode);
   }
 }
 
 
-static void NL_RejectIDCMP(Object *obj,struct NLData *data,LONG IDCMP_val,BOOL really)
+static void NL_RejectIDCMP(struct NLData *data,LONG IDCMP_val,BOOL really)
 {
   if (IDCMP_val & IDCMP_MOUSEMOVE)
     data->MOUSE_MOVE = FALSE;
   if ((really || !(IDCMP_val & IDCMP_MOUSEMOVE)) &&
       (data->ehnode.ehn_Events & IDCMP_val))
   {
-    DoMethod(_win(obj),MUIM_Window_RemEventHandler, &data->ehnode);
+    DoMethod(_win(data->this),MUIM_Window_RemEventHandler, &data->ehnode);
     data->ehnode.ehn_Events &= (~IDCMP_val);
-    DoMethod(_win(obj),MUIM_Window_AddEventHandler, &data->ehnode);
+    DoMethod(_win(data->this),MUIM_Window_AddEventHandler, &data->ehnode);
   }
 }
 
@@ -124,9 +124,9 @@ static BOOL GotoPage(struct IClass *cl, Object *obj, ULONG activePage)
   ENTER();
 
   if(data->NList_Input && !data->NList_TypeSelect && data->EntriesArray != NULL)
-    changed = NL_List_Active(obj, data, activePage, NULL, data->NList_List_Select, FALSE,0);
+    changed = NL_List_Active(data, activePage, NULL, data->NList_List_Select, FALSE,0);
   else
-    changed = NL_List_First(obj, data, activePage, NULL);
+    changed = NL_List_First(data, activePage, NULL);
 
   RETURN(changed);
   return changed;
@@ -139,7 +139,7 @@ static BOOL Scroll(struct IClass *cl, Object *obj, ULONG direction)
 
   ENTER();
 
-  scrolled = NL_List_Horiz_First(obj, data, direction, NULL);
+  scrolled = NL_List_Horiz_First(data, direction, NULL);
 
   RETURN(scrolled);
   return scrolled;
@@ -180,15 +180,15 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
 */
 
   if (!data->SHOW || !data->DRAW)
-    return (0);
+    return 0;
   if (data->NList_First_Incr || data->NList_AffFirst_Incr)
     return (MUI_EventHandlerRC_Eat);
   if (data->NList_Disabled)
-    return (0);
+    return 0;
 
   if ((data->left != _left(obj)) || (data->top != _top(obj)) ||
       (data->width != _width(obj)) || (data->height != _height(obj)))
-    NL_SetObjInfos(obj,data,FALSE);
+    NL_SetObjInfos(data,FALSE);
 
   if(msg->muikey != MUIKEY_NONE && !data->NList_Quiet && !data->NList_Disabled)
   {
@@ -286,8 +286,8 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
         if (data->multiselect && data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
         {
           MOREQUIET;
-          NL_List_Select(obj,data,MUIV_NList_Select_Active,MUIV_NList_Active_Off,MUIV_NList_Select_Toggle,NULL);
-          NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->NList_List_Select,FALSE,0);
+          NL_List_Select(data,MUIV_NList_Select_Active,MUIV_NList_Active_Off,MUIV_NList_Select_Toggle,NULL);
+          NL_List_Active(data,MUIV_NList_Active_Down,NULL,data->NList_List_Select,FALSE,0);
           LESSQUIET;
 
           retval = MUI_EventHandlerRC_Eat;
@@ -367,12 +367,12 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
     WORD hfirst = data->NList_Horiz_AffFirst & ~1;
     WORD hfirsthpos = hfirst - data->hpos;
     WORD do_draw = FALSE;
-    LONG WheelFastQual = NL_TestKey(obj,data,KEYTAG_QUALIFIER_WHEEL_FAST,msg->imsg->Code,msg->imsg->Qualifier,TRUE);
-    LONG WheelHorizQual = NL_TestKey(obj,data,KEYTAG_QUALIFIER_WHEEL_HORIZ,msg->imsg->Code,msg->imsg->Qualifier,TRUE);
-    LONG BalanceQual = NL_TestKey(obj,data,KEYTAG_QUALIFIER_BALANCE,msg->imsg->Code,msg->imsg->Qualifier,TRUE);
-    LONG DragQual = NL_TestKey(obj,data,KEYTAG_QUALIFIER_DRAG,msg->imsg->Code,msg->imsg->Qualifier,TRUE);
-    LONG MultQual = NL_TestKey(obj,data,KEYTAG_QUALIFIER_MULTISELECT,msg->imsg->Code,msg->imsg->Qualifier,TRUE);
-    LONG Title2Qual = NL_TestKey(obj,data,KEYTAG_QUALIFIER_TITLECLICK2,msg->imsg->Code,msg->imsg->Qualifier,TRUE);
+    LONG WheelFastQual = NL_TestKey(data,KEYTAG_QUALIFIER_WHEEL_FAST,msg->imsg->Code,msg->imsg->Qualifier,TRUE);
+    LONG WheelHorizQual = NL_TestKey(data,KEYTAG_QUALIFIER_WHEEL_HORIZ,msg->imsg->Code,msg->imsg->Qualifier,TRUE);
+    LONG BalanceQual = NL_TestKey(data,KEYTAG_QUALIFIER_BALANCE,msg->imsg->Code,msg->imsg->Qualifier,TRUE);
+    LONG DragQual = NL_TestKey(data,KEYTAG_QUALIFIER_DRAG,msg->imsg->Code,msg->imsg->Qualifier,TRUE);
+    LONG MultQual = NL_TestKey(data,KEYTAG_QUALIFIER_MULTISELECT,msg->imsg->Code,msg->imsg->Qualifier,TRUE);
+    LONG Title2Qual = NL_TestKey(data,KEYTAG_QUALIFIER_TITLECLICK2,msg->imsg->Code,msg->imsg->Qualifier,TRUE);
     if (data->multisel_qualifier && ((msg->imsg->Qualifier & data->multisel_qualifier) == data->multisel_qualifier))
       MultQual = TRUE;
     if (data->NList_WheelMMB && (msg->imsg->Qualifier & IEQUALIFIER_MIDBUTTON))
@@ -408,7 +408,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
  *D(bug("  Class=%lx Code=%lx Qualifier=%lx mx=%ld my=%ld\n",msg->imsg->Class,co,qu,mx,my));
  *}
 */
-          NL_RejectIDCMP(obj,data,IDCMP_MOUSEMOVE,TRUE);
+          NL_RejectIDCMP(data,IDCMP_MOUSEMOVE,TRUE);
           data->selectskiped = FALSE;
           data->moves = FALSE;
 
@@ -473,20 +473,20 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
             if(msg->imsg->Code == NM_WHEEL_UP)  /* MOUSE_WHEEL_UP */
             {
               if(WheelHorizQual && WheelFastQual)
-                NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_Left4,NULL);
+                NL_List_Horiz_First(data,MUIV_NList_Horiz_First_Left4,NULL);
               else if(WheelHorizQual)
-                NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_Left,NULL);
+                NL_List_Horiz_First(data,MUIV_NList_Horiz_First_Left,NULL);
               else if(WheelFastQual)
               {
                 int i;
                 for(i=0; i < data->NList_WheelFast; i++)
-                  NL_List_First(obj,data,MUIV_NList_First_Up,NULL);
+                  NL_List_First(data,MUIV_NList_First_Up,NULL);
               }
               else
               {
                 int i;
                 for(i=0; i < data->NList_WheelStep; i++)
-                  NL_List_First(obj,data,MUIV_NList_First_Up,NULL);
+                  NL_List_First(data,MUIV_NList_First_Up,NULL);
               }
 
               retval = MUI_EventHandlerRC_Eat;
@@ -494,33 +494,33 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
             else if(msg->imsg->Code == NM_WHEEL_DOWN)  /* MOUSE_WHEEL_DOWN */
             {
               if(WheelHorizQual && WheelFastQual)
-                NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_Right4,NULL);
+                NL_List_Horiz_First(data,MUIV_NList_Horiz_First_Right4,NULL);
               else if(WheelHorizQual)
-                NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_Right,NULL);
+                NL_List_Horiz_First(data,MUIV_NList_Horiz_First_Right,NULL);
               else if(WheelFastQual)
               {
                 int i;
                 for(i=0; i < data->NList_WheelFast; i++)
-                  NL_List_First(obj,data,MUIV_NList_First_Down,NULL);
+                  NL_List_First(data,MUIV_NList_First_Down,NULL);
               }
               else
               {
                 int i;
                 for(i=0; i < data->NList_WheelStep; i++)
-                  NL_List_First(obj,data,MUIV_NList_First_Down,NULL);
+                  NL_List_First(data,MUIV_NList_First_Down,NULL);
               }
 
               retval = MUI_EventHandlerRC_Eat;
             }
             else if(msg->imsg->Code == NM_WHEEL_LEFT)  /* MOUSE_WHEEL_LEFT */
             {
-              NL_List_Horiz_First(obj, data, WheelFastQual ? MUIV_NList_Horiz_First_Left4 : MUIV_NList_Horiz_First_Left, NULL);
+              NL_List_Horiz_First(data, WheelFastQual ? MUIV_NList_Horiz_First_Left4 : MUIV_NList_Horiz_First_Left, NULL);
 
               retval = MUI_EventHandlerRC_Eat;
             }
             else if(msg->imsg->Code == NM_WHEEL_RIGHT)  /* MOUSE_WHEEL_RIGHT */
             {
-              NL_List_Horiz_First(obj, data, WheelFastQual ? MUIV_NList_Horiz_First_Right4 : MUIV_NList_Horiz_First_Right, NULL);
+              NL_List_Horiz_First(data, WheelFastQual ? MUIV_NList_Horiz_First_Right4 : MUIV_NList_Horiz_First_Right, NULL);
 
               retval = MUI_EventHandlerRC_Eat;
             }
@@ -528,44 +528,44 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
           #endif
 
           if((tagval = xget(_win(obj), MUIA_Window_ActiveObject)) &&
-             ((tagval == (SIPTR)obj) ||
-               (tagval && (tagval2 = xget((Object *)tagval, MUIA_Listview_List)) && (tagval2 == (SIPTR)obj)) ||
-               (!tagval && (tagval2 = xget(_win(obj), MUIA_Window_DefaultObject)) && (tagval2 == (SIPTR)obj)))
+             ((tagval == (SIPTR)data->nlistviewobj) ||
+               (tagval && (tagval2 = xget((Object *)tagval, MUIA_Listview_List)) && (tagval2 == (SIPTR)data->nlistviewobj)) ||
+               (!tagval && (tagval2 = xget(_win(obj), MUIA_Window_DefaultObject)) && (tagval2 == (SIPTR)data->nlistviewobj)))
              )
           {
             if (data->NList_AutoCopyToClip)
             {
-              if (NL_TestKey(obj,data,KEYTAG_COPY_TO_CLIPBOARD,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
+              if (NL_TestKey(data,KEYTAG_COPY_TO_CLIPBOARD,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
               {
-                NL_CopyTo(obj,data,MUIV_NList_CopyToClip_Selected,NULL,0L,NULL,NULL);
+                NL_CopyTo(data,MUIV_NList_CopyToClip_Selected,NULL,0L,NULL,NULL);
                 if (data->NList_TypeSelect == MUIV_NList_TypeSelect_Char)
-                  SelectFirstPoint(obj,data,data->click_x,data->click_y);
+                  SelectFirstPoint(data,data->click_x,data->click_y);
                 retval = MUI_EventHandlerRC_Eat;
               }
             }
-            if (NL_TestKey(obj,data,KEYTAG_SELECT_TO_TOP,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
+            if (NL_TestKey(data,KEYTAG_SELECT_TO_TOP,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
             {
               if (data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
               {
               	LONG newactsel = MUIV_NList_Select_On;
               	if (data->NList_Active >= 0 && data->EntriesArray[data->NList_Active]->Select == TE_Select_None)
               		newactsel = MUIV_NList_Select_Off;
-                NL_List_Active(obj,data,MUIV_NList_Active_UntilTop,NULL,newactsel,FALSE,0);
+                NL_List_Active(data,MUIV_NList_Active_UntilTop,NULL,newactsel,FALSE,0);
               }
               retval = MUI_EventHandlerRC_Eat;
             }
-            else if (NL_TestKey(obj,data,KEYTAG_SELECT_TO_BOTTOM,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
+            else if (NL_TestKey(data,KEYTAG_SELECT_TO_BOTTOM,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
             {
               if (data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
               {
               	LONG newactsel = MUIV_NList_Select_On;
               	if (data->NList_Active >= 0 && data->EntriesArray[data->NList_Active]->Select == TE_Select_None)
               		newactsel = MUIV_NList_Select_Off;
-                NL_List_Active(obj,data,MUIV_NList_Active_UntilBottom,NULL,newactsel,FALSE,0);
+                NL_List_Active(data,MUIV_NList_Active_UntilBottom,NULL,newactsel,FALSE,0);
               }
               retval = MUI_EventHandlerRC_Eat;
             }
-            else if (NL_TestKey(obj,data,KEYTAG_SELECT_TO_PAGE_UP,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
+            else if (NL_TestKey(data,KEYTAG_SELECT_TO_PAGE_UP,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
             {
               /* Page up key pressed */
               if (data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
@@ -573,11 +573,11 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
               	LONG newactsel = MUIV_NList_Select_On;
               	if (data->NList_Active >= 0 && data->EntriesArray[data->NList_Active]->Select == TE_Select_None)
               		newactsel = MUIV_NList_Select_Off;
-                NL_List_Active(obj,data,MUIV_NList_Active_UntilPageUp,NULL,newactsel,FALSE,0);
+                NL_List_Active(data,MUIV_NList_Active_UntilPageUp,NULL,newactsel,FALSE,0);
               }
               retval = MUI_EventHandlerRC_Eat;
             }
-            else if (NL_TestKey(obj,data,KEYTAG_SELECT_TO_PAGE_DOWN,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
+            else if (NL_TestKey(data,KEYTAG_SELECT_TO_PAGE_DOWN,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
             {
             	/* Page down key pressed */
               if (data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
@@ -585,11 +585,11 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
               	LONG newactsel = MUIV_NList_Select_On;
               	if (data->NList_Active >= 0 && data->EntriesArray[data->NList_Active]->Select == TE_Select_None)
               		newactsel = MUIV_NList_Select_Off;
-                NL_List_Active(obj,data,MUIV_NList_Active_UntilPageDown,NULL,newactsel,FALSE,0);
+                NL_List_Active(data,MUIV_NList_Active_UntilPageDown,NULL,newactsel,FALSE,0);
               }
               retval = MUI_EventHandlerRC_Eat;
             }
-            else if (NL_TestKey(obj,data,KEYTAG_SELECT_UP,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
+            else if (NL_TestKey(data,KEYTAG_SELECT_UP,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
             {
             	/* Up key pressed */
               if (data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
@@ -598,11 +598,11 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
 
                 if (data->NList_Active >= 0 && data->EntriesArray[data->NList_Active]->Select == TE_Select_None)
               		newactsel = MUIV_NList_Select_Off;
-               	NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,newactsel,FALSE,0);
+               	NL_List_Active(data,MUIV_NList_Active_Up,NULL,newactsel,FALSE,0);
               }
               retval = MUI_EventHandlerRC_Eat;
             }
-            else if (NL_TestKey(obj,data,KEYTAG_SELECT_DOWN,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
+            else if (NL_TestKey(data,KEYTAG_SELECT_DOWN,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
             {
             	/* Down key pressed */
               if (data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
@@ -611,25 +611,25 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
 
                 if (data->NList_Active >= 0 && data->EntriesArray[data->NList_Active]->Select == TE_Select_None)
               		newactsel = MUIV_NList_Select_Off;
-               	NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,newactsel,FALSE,0);
+               	NL_List_Active(data,MUIV_NList_Active_Down,NULL,newactsel,FALSE,0);
               }
               retval = MUI_EventHandlerRC_Eat;
             }
-            else if (NL_TestKey(obj,data,KEYTAG_TOGGLE_ACTIVE,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
+            else if (NL_TestKey(data,KEYTAG_TOGGLE_ACTIVE,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
             {
               if (data->multiselect && data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
-                NL_List_Select(obj,data,MUIV_NList_Select_Active,MUIV_NList_Active_Off,MUIV_NList_Select_Toggle,NULL);
+                NL_List_Select(data,MUIV_NList_Select_Active,MUIV_NList_Active_Off,MUIV_NList_Select_Toggle,NULL);
               retval = MUI_EventHandlerRC_Eat;
             }
-            else if (NL_TestKey(obj,data,KEYTAG_DEFAULT_WIDTH_COLUMN,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
+            else if (NL_TestKey(data,KEYTAG_DEFAULT_WIDTH_COLUMN,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
             {
               struct MUI_NList_TestPos_Result res;
 
               res.char_number = -2;
-              NL_List_TestPos(obj,data,MUI_MAXMAX,0,&res);
+              NL_List_TestPos(data,MUI_MAXMAX,0,&res);
               if ((res.column >= 0) && (res.column < data->numcols) && !(res.flags & MUI_NLPR_BAR))
               {
-                NL_RejectIDCMP(obj,data,IDCMP_MOUSEMOVE,TRUE);
+                NL_RejectIDCMP(data,IDCMP_MOUSEMOVE,TRUE);
                 data->selectskiped = FALSE;
                 data->moves = FALSE;
                 if (data->adjustbar != -1)
@@ -637,20 +637,20 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
                   do_draw = TRUE;
                   data->click_line = -2;
                 }
-                NL_ColWidth(obj,data,NL_ColumnToCol(obj,data,res.column),MUIV_NList_ColWidth_Default);
+                NL_ColWidth(data,NL_ColumnToCol(data,res.column),MUIV_NList_ColWidth_Default);
               }
             }
-            else if (NL_TestKey(obj,data,KEYTAG_DEFAULT_WIDTH_ALL_COLUMNS,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
-              NL_ColWidth(obj,data,MUIV_NList_ColWidth_All,MUIV_NList_ColWidth_Default);
-            else if (NL_TestKey(obj,data,KEYTAG_DEFAULT_ORDER_COLUMN,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
+            else if (NL_TestKey(data,KEYTAG_DEFAULT_WIDTH_ALL_COLUMNS,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
+              NL_ColWidth(data,MUIV_NList_ColWidth_All,MUIV_NList_ColWidth_Default);
+            else if (NL_TestKey(data,KEYTAG_DEFAULT_ORDER_COLUMN,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
             {
               struct MUI_NList_TestPos_Result res;
 
               res.char_number = -2;
-              NL_List_TestPos(obj,data,MUI_MAXMAX,0,&res);
+              NL_List_TestPos(data,MUI_MAXMAX,0,&res);
               if ((res.column >= 0) && (res.column < data->numcols) && !(res.flags & MUI_NLPR_BAR))
               {
-                NL_RejectIDCMP(obj,data,IDCMP_MOUSEMOVE,TRUE);
+                NL_RejectIDCMP(data,IDCMP_MOUSEMOVE,TRUE);
                 data->selectskiped = FALSE;
                 data->moves = FALSE;
                 if (data->adjustbar != -1)
@@ -658,11 +658,11 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
                   do_draw = TRUE;
                   data->click_line = -2;
                 }
-                NL_SetCol(obj,data,res.column,MUIV_NList_SetColumnCol_Default);
+                NL_SetCol(data,res.column,MUIV_NList_SetColumnCol_Default);
               }
             }
-            else if (NL_TestKey(obj,data,KEYTAG_DEFAULT_ORDER_ALL_COLUMNS,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
-              NL_SetCol(obj,data,MUIV_NList_SetColumnCol_Default,MUIV_NList_SetColumnCol_Default);
+            else if (NL_TestKey(data,KEYTAG_DEFAULT_ORDER_ALL_COLUMNS,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
+              NL_SetCol(data,MUIV_NList_SetColumnCol_Default,MUIV_NList_SetColumnCol_Default);
 
 /*
  *             else
@@ -690,20 +690,20 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
           if(iwd->WheelY < 0) // WHEEL_UP
           {
             if(WheelHorizQual && WheelFastQual)
-              NL_List_Horiz_First(obj, data, MUIV_NList_Horiz_First_Left4, NULL);
+              NL_List_Horiz_First(data, MUIV_NList_Horiz_First_Left4, NULL);
             else if(WheelHorizQual)
-              NL_List_Horiz_First(obj, data, MUIV_NList_Horiz_First_Left, NULL);
+              NL_List_Horiz_First(data, MUIV_NList_Horiz_First_Left, NULL);
             else if(WheelFastQual)
             {
               int i;
               for(i=0; i < data->NList_WheelFast; i++)
-                NL_List_First(obj, data, MUIV_NList_First_Up, NULL);
+                NL_List_First(data, MUIV_NList_First_Up, NULL);
             }
             else
             {
               int i;
               for(i=0; i < data->NList_WheelStep; i++)
-                NL_List_First(obj, data, MUIV_NList_First_Up, NULL);
+                NL_List_First(data, MUIV_NList_First_Up, NULL);
             }
 
             retval = MUI_EventHandlerRC_Eat;
@@ -711,20 +711,20 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
           else if(iwd->WheelY > 0) // WHEEL_DOWN
           {
             if(WheelHorizQual && WheelFastQual)
-              NL_List_Horiz_First(obj, data, MUIV_NList_Horiz_First_Right4, NULL);
+              NL_List_Horiz_First(data, MUIV_NList_Horiz_First_Right4, NULL);
             else if(WheelHorizQual)
-              NL_List_Horiz_First(obj, data, MUIV_NList_Horiz_First_Right, NULL);
+              NL_List_Horiz_First(data, MUIV_NList_Horiz_First_Right, NULL);
             else if(WheelFastQual)
             {
               int i;
               for(i=0; i < data->NList_WheelFast; i++)
-                NL_List_First(obj, data, MUIV_NList_First_Down, NULL);
+                NL_List_First(data, MUIV_NList_First_Down, NULL);
             }
             else
             {
               int i;
               for(i=0; i < data->NList_WheelStep; i++)
-                NL_List_First(obj, data, MUIV_NList_First_Down, NULL);
+                NL_List_First(data, MUIV_NList_First_Down, NULL);
             }
 
             retval = MUI_EventHandlerRC_Eat;
@@ -732,13 +732,13 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
 
           if(iwd->WheelX < 0)  // WHEEL_LEFT
           {
-            NL_List_Horiz_First(obj, data, WheelFastQual ? MUIV_NList_Horiz_First_Left4 : MUIV_NList_Horiz_First_Left, NULL);
+            NL_List_Horiz_First(data, WheelFastQual ? MUIV_NList_Horiz_First_Left4 : MUIV_NList_Horiz_First_Left, NULL);
 
             retval = MUI_EventHandlerRC_Eat;
           }
           else if(iwd->WheelX > 0)  // WHEEL_RIGHT
           {
-            NL_List_Horiz_First(obj, data, WheelFastQual ? MUIV_NList_Horiz_First_Right4 : MUIV_NList_Horiz_First_Right, NULL);
+            NL_List_Horiz_First(data, WheelFastQual ? MUIV_NList_Horiz_First_Right4 : MUIV_NList_Horiz_First_Right, NULL);
 
             retval = MUI_EventHandlerRC_Eat;
           }
@@ -760,7 +760,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
           // as clicks inside the list. But clicking on the border above the list's title
           // being interpreted like a click the first entry is not very intuitive. Thus
           // we restrict ourself to clicks really inside the object here.
-          if (msg->imsg->Code==SELECTDOWN && _isinobject(msg->imsg->MouseX,msg->imsg->MouseY))
+          if(msg->imsg->Code == SELECTDOWN && _isinobject(msg->imsg->MouseX, msg->imsg->MouseY))
           {
             WORD ly = (msg->imsg->MouseY - data->vpos);
             WORD ly2 = (msg->imsg->MouseY - data->vdtitlepos);
@@ -772,49 +772,49 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
 
             if (lx < 0)
             {
-              NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_Left,NULL);
+              NL_List_Horiz_First(data,MUIV_NList_Horiz_First_Left,NULL);
               data->selectmode = MUIV_NList_Select_None;
               data->NumIntuiTick = MAX_INTUITICKS_WAIT;
               data->moves = TRUE;
-              NL_RequestIDCMP(obj,data,IDCMP_MOUSEMOVE);
+              NL_RequestIDCMP(data,IDCMP_MOUSEMOVE);
             }
             else if (lx >= data->NList_Horiz_Visible)
             {
-              NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_Right,NULL);
+              NL_List_Horiz_First(data,MUIV_NList_Horiz_First_Right,NULL);
               data->selectmode = MUIV_NList_Select_None;
               data->NumIntuiTick = MAX_INTUITICKS_WAIT;
               data->moves = TRUE;
-              NL_RequestIDCMP(obj,data,IDCMP_MOUSEMOVE);
+              NL_RequestIDCMP(data,IDCMP_MOUSEMOVE);
             }
             else if (ly2 < 0)
             {
               data->selectmode = data->NList_List_Select;
               if (data->NList_Input && !data->NList_TypeSelect)
               { if (data->NList_Active > data->NList_First)
-                  NL_List_Active(obj,data,MUIV_NList_Active_PageUp,NULL,data->selectmode,FALSE,0);
+                  NL_List_Active(data,MUIV_NList_Active_PageUp,NULL,data->selectmode,FALSE,0);
                 else
-                  NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE,0);
+                  NL_List_Active(data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE,0);
               }
               else
-                NL_List_First(obj,data,MUIV_NList_First_Up,NULL);
+                NL_List_First(data,MUIV_NList_First_Up,NULL);
               data->NumIntuiTick = MAX_INTUITICKS_WAIT;
               data->moves = TRUE;
-              NL_RequestIDCMP(obj,data,IDCMP_MOUSEMOVE);
+              NL_RequestIDCMP(data,IDCMP_MOUSEMOVE);
             }
             else if ((lyl >= data->NList_Visible) || (lyl2 >= data->NList_Entries))
             {
               data->selectmode = data->NList_List_Select;
               if (data->NList_Input && !data->NList_TypeSelect)
               { if (data->NList_Active < data->NList_First - 1 + data->NList_Visible)
-                  NL_List_Active(obj,data,MUIV_NList_Active_PageDown,NULL,data->selectmode,FALSE,0);
+                  NL_List_Active(data,MUIV_NList_Active_PageDown,NULL,data->selectmode,FALSE,0);
                 else
-                  NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE,0);
+                  NL_List_Active(data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE,0);
               }
               else
-                NL_List_First(obj,data,MUIV_NList_First_Down,NULL);
+                NL_List_First(data,MUIV_NList_First_Down,NULL);
               data->NumIntuiTick = MAX_INTUITICKS_WAIT;
               data->moves = TRUE;
-              NL_RequestIDCMP(obj,data,IDCMP_MOUSEMOVE);
+              NL_RequestIDCMP(data,IDCMP_MOUSEMOVE);
             }
             else
               do_else = TRUE;
@@ -833,6 +833,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
             else
             {
               BOOL modifyActiveObject = FALSE;
+              BOOL modifyDefaultObject = FALSE;
               Object *newActiveObject = (Object *)MUIV_Window_ActiveObject_None;
 
               data->secs = msg->imsg->Seconds;
@@ -852,8 +853,9 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
               if (data->NList_Title && (lx >= 0) && (lx < data->NList_Horiz_Visible) && (ly2 >= 0) && (ly < 0))
               {
                 struct MUI_NList_TestPos_Result res;
+
                 res.char_number = -2;
-                NL_List_TestPos(obj,data,MUI_MAXMAX,MUI_MAXMAX,&res);
+                NL_List_TestPos(data,MUI_MAXMAX,MUI_MAXMAX,&res);
                 if ((res.flags & MUI_NLPR_BAR) && (res.flags & MUI_NLPR_TITLE) && (res.flags & MUI_NLPR_ABOVE) &&
                     (res.column < data->numcols) && (res.column >= 0))
                 {
@@ -870,14 +872,14 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
                       { data->adjustbar = minx + hfirsthpos;
                         data->adjustbar_last = data->cols[data->adjustcolumn].c->userwidth;
                         do_draw = TRUE;
-                        NL_RequestIDCMP(obj,data,IDCMP_MOUSEMOVE);
+                        NL_RequestIDCMP(data,IDCMP_MOUSEMOVE);
                       }
                     }
                     else if (actx > minx)
                     { data->adjustbar = actx + hfirsthpos;
                       data->adjustbar_last = data->cols[data->adjustcolumn].c->userwidth;
                       do_draw = TRUE;
-                      NL_RequestIDCMP(obj,data,IDCMP_MOUSEMOVE);
+                      NL_RequestIDCMP(data,IDCMP_MOUSEMOVE);
                     }
                     if ((data->adjustbar >= 0) && BalanceQual &&
                         ((res.column < data->numcols-2) ||
@@ -899,7 +901,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
                   if ((WANTED_NOTIFY(NTF_TitleClick) || WANTED_NOTIFY(NTF_TitleClick2)) && data->cols[res.column].c->titlebutton)
                   { data->adjustbar = -2;
                     do_draw = TRUE;
-                    NL_RequestIDCMP(obj,data,IDCMP_MOUSEMOVE);
+                    NL_RequestIDCMP(data,IDCMP_MOUSEMOVE);
                   }
                   else
                   { if (WANTED_NOTIFY(NTF_TitleClick2) && (Title2Qual || !WANTED_NOTIFY(NTF_TitleClick)))
@@ -908,7 +910,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
                       data->TitleClick = (LONG) data->cols[res.column].c->col;
                     if ((data->adjustcolumn >= data->NList_MinColSortable) &&
                         ((data->numcols - data->NList_MinColSortable) > 1) &&
-                        (NL_OnWindow(obj,data,msg->imsg->MouseX,msg->imsg->MouseY)))
+                        (NL_OnWindow(data,msg->imsg->MouseX,msg->imsg->MouseY)))
                     {
 /*
  *{
@@ -931,7 +933,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
                       data->adjustbar = -10;
 
                       // set a custom mouse pointer
-                      ShowCustomPointer(obj, data, PT_MOVE);
+                      ShowCustomPointer(data, PT_MOVE);
                     }
                   }
                   data->moves = FALSE;
@@ -940,8 +942,9 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
               }
               else if (!data->NList_Title && (lx >= 0) && (lx < data->NList_Horiz_Visible) && (ly < data->vinc/2) && (ly >= 0))
               { struct MUI_NList_TestPos_Result res;
+
                 res.char_number = -2;
-                NL_List_TestPos(obj,data,MUI_MAXMAX,MUI_MAXMAX,&res);
+                NL_List_TestPos(data,MUI_MAXMAX,MUI_MAXMAX,&res);
                 if ((res.flags & MUI_NLPR_BAR) &&
                     (res.column < data->numcols) && (res.column >= 0))
                 {
@@ -958,14 +961,14 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
                       { data->adjustbar = minx + hfirsthpos;
                         data->adjustbar_last = data->cols[data->adjustcolumn].c->userwidth;
                         do_draw = TRUE;
-                        NL_RequestIDCMP(obj,data,IDCMP_MOUSEMOVE);
+                        NL_RequestIDCMP(data,IDCMP_MOUSEMOVE);
                       }
                     }
                     else if (actx > minx)
                     { data->adjustbar = actx + hfirsthpos;
                       data->adjustbar_last = data->cols[data->adjustcolumn].c->userwidth;
                       do_draw = TRUE;
-                      NL_RequestIDCMP(obj,data,IDCMP_MOUSEMOVE);
+                      NL_RequestIDCMP(data,IDCMP_MOUSEMOVE);
                     }
                     if ((data->adjustbar >= 0) && BalanceQual &&
                         ((res.column < data->numcols-2) ||
@@ -986,9 +989,9 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
               {
                 IPTR tst = xget(_win(obj), MUIA_Window_ActiveObject);
 
-                if((tst != MUIV_Window_ActiveObject_None) && (tst != data->NList_KeepActive) && (tst != (IPTR) obj))
+                if(tst != MUIV_Window_ActiveObject_None && tst != data->NList_KeepActive && tst != (IPTR)data->nlistviewobj)
                 {
-                  if (data->NList_MakeActive)
+                  if(data->NList_MakeActive != (IPTR)NULL)
                     newActiveObject = (Object *)data->NList_MakeActive;
                   else
                     newActiveObject = (Object *)MUIV_Window_ActiveObject_None;
@@ -996,10 +999,9 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
                   modifyActiveObject = TRUE;
                 }
 
-                // set our parent NListview object as new default object
-                set(_win(obj), MUIA_Window_DefaultObject, data->nlistviewobj);
+                modifyDefaultObject = TRUE;
               }
-              else if(data->NList_MakeActive)
+              else if(data->NList_MakeActive != (IPTR)NULL)
               {
                 newActiveObject = (Object *)data->NList_MakeActive;
                 modifyActiveObject = TRUE;
@@ -1016,16 +1018,23 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
 
               // change the window's active object if necessary
               if(modifyActiveObject == TRUE)
+              {
                 set(_win(obj), MUIA_Window_ActiveObject, newActiveObject);
+              }
+              else if(modifyDefaultObject == TRUE)
+              {
+                // set our parent NListview object as new default object
+                set(_win(obj), MUIA_Window_DefaultObject, data->nlistviewobj);
+              }
 
               if(data->NList_TypeSelect && (data->adjustbar == -1))
               {
                 if(MultQual)
-                  SelectSecondPoint(obj,data,data->click_x,data->click_y);
+                  SelectSecondPoint(data,data->click_x,data->click_y);
                 else
                 {
                   data->NList_TypeSelect = MUIV_NList_TypeSelect_Char;
-                  SelectFirstPoint(obj,data,data->click_x,data->click_y);
+                  SelectFirstPoint(data,data->click_x,data->click_y);
                 }
               }
             }
@@ -1033,13 +1042,14 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
             if (do_else && (data->adjustbar == -1) && (ly >= 0) && (lyl >= 0) && (lyl < data->NList_Visible))
             {
               struct MUI_NList_TestPos_Result res;
+
               data->affbutton = -1;
               data->affbuttonline = -1;
               data->affbuttoncol = -1;
               data->affbuttonstate = 0;
               data->storebutton = TRUE;
               res.char_number = 0;
-              NL_List_TestPos(obj,data,msg->imsg->MouseX,msg->imsg->MouseY,&res);
+              NL_List_TestPos(data,msg->imsg->MouseX,msg->imsg->MouseY,&res);
               data->storebutton = FALSE;
               if ((data->affbutton >= 0) && (data->affbuttonline >= 0))
               { data->affbuttonstate = -2;
@@ -1049,7 +1059,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
                 drag_ok = FALSE;
                 mclick = FALSE;
               }
-              NL_RequestIDCMP(obj,data,IDCMP_MOUSEMOVE);
+              NL_RequestIDCMP(data,IDCMP_MOUSEMOVE);
             }
 
             if(mclick)
@@ -1071,7 +1081,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
               if (data->NList_TypeSelect && (data->adjustbar == -1))
               {
                 if (MultQual)
-                { SelectSecondPoint(obj,data,data->click_x,data->click_y);
+                { SelectSecondPoint(data,data->click_x,data->click_y);
                   do_else = FALSE;
                 }
                 else
@@ -1082,7 +1092,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
                     data->NList_TypeSelect = MUIV_NList_TypeSelect_CWord;
                   else if ((data->multiclick % 3) == 2)
                     data->NList_TypeSelect = MUIV_NList_TypeSelect_CLine;
-                  SelectFirstPoint(obj,data,data->click_x,data->click_y);
+                  SelectFirstPoint(data,data->click_x,data->click_y);
                   do_else = FALSE;
                 }
               }
@@ -1098,14 +1108,14 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
                   if (data->multiselect == MUIV_NList_MultiSelect_None)
                   {
                     data->selectmode = MUIV_NList_Select_On;
-                    NL_List_Active(obj,data,lactive,NULL,data->selectmode,FALSE,0);
+                    NL_List_Active(data,lactive,NULL,data->selectmode,FALSE,0);
                   }
                   else if (!multi)
                   {
                     MOREQUIET;
-                    NL_UnSelectAll(obj,data,lactive);
+                    NL_UnSelectAll(data,lactive);
                     data->selectmode = MUIV_NList_Select_On;
-                    NL_List_Active(obj,data,lactive,NULL,data->selectmode,TRUE,0);
+                    NL_List_Active(data,lactive,NULL,data->selectmode,TRUE,0);
                     LESSQUIET;
                     data->selectskiped = TRUE;
                   }
@@ -1115,13 +1125,13 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
                       data->selectmode = MUIV_NList_Select_On;
                     else
                       data->selectmode = MUIV_NList_Select_Off;
-                    NL_List_Active(obj,data,lactive,NULL,data->selectmode,TRUE,0);
+                    NL_List_Active(data,lactive,NULL,data->selectmode,TRUE,0);
                     data->selectskiped = TRUE;
                   }
                 }
               }
               data->moves = TRUE;
-              NL_RequestIDCMP(obj,data,IDCMP_MOUSEMOVE);
+              NL_RequestIDCMP(data,IDCMP_MOUSEMOVE);
 
               if (data->drag_type != MUIV_NList_DragType_None)
               {
@@ -1153,7 +1163,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
                 !(((msg->imsg->Code==MENUDOWN) || (msg->imsg->Code==MENUUP)) && (data->drag_qualifier & IEQUALIFIER_RBUTTON)))
 */
             {
-              NL_RejectIDCMP(obj,data,IDCMP_MOUSEMOVE,FALSE);
+              NL_RejectIDCMP(data,IDCMP_MOUSEMOVE,FALSE);
               data->selectskiped = FALSE;
               data->moves = FALSE;
               drag_ok = FALSE;
@@ -1175,22 +1185,26 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
             if(data->NList_Input == FALSE && (data->NList_TypeSelect == MUIV_NList_TypeSelect_Char) &&
                data->NList_AutoClip == TRUE && (data->sel_pt[0].ent >= 0) && (data->sel_pt[1].ent >= 0) && !MultQual)
             {
-              NL_CopyTo(obj,data,MUIV_NList_CopyToClip_Selected,NULL,0L,NULL,NULL);
-              SelectFirstPoint(obj,data,data->click_x,data->click_y);
+              NL_CopyTo(data,MUIV_NList_CopyToClip_Selected,NULL,0L,NULL,NULL);
+              SelectFirstPoint(data,data->click_x,data->click_y);
             }
           }
           if ((msg->imsg->Code==SELECTUP) && ((data->adjustbar >= 0) || (data->adjustbar_old >= 0)))
           {
             if ((data->adjustcolumn < data->numcols) && (data->adjustcolumn >= 0))
-            { WORD userwidth = data->adjustbar
+            {
+              WORD userwidth = data->adjustbar
                                - ((data->cols[data->adjustcolumn].c->delta-1) / 2)
                                - data->cols[data->adjustcolumn].c->minx;
+
               if (userwidth < MinColWidth)
                 userwidth = MinColWidth;
               if (data->cols[data->adjustcolumn].c->userwidth != userwidth)
-              { data->cols[data->adjustcolumn].c->userwidth = userwidth;
+              {
+                data->cols[data->adjustcolumn].c->userwidth = userwidth;
                 if (data->adjustbar2 >= 0)
-                { userwidth = data->adjustbar2 - data->cols[data->adjustcolumn].c->minx
+                {
+                  userwidth = data->adjustbar2 - data->cols[data->adjustcolumn].c->minx
                               - userwidth - data->cols[data->adjustcolumn].c->delta;
                   if (userwidth < MinColWidth)
                     userwidth = MinColWidth;
@@ -1202,7 +1216,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
             }
             data->adjustbar = -1;
             do_draw = TRUE;
-            NL_RejectIDCMP(obj,data,IDCMP_MOUSEMOVE,TRUE);
+            NL_RejectIDCMP(data,IDCMP_MOUSEMOVE,TRUE);
             data->click_line = -2;
             data->moves = FALSE;
             drag_ok = FALSE;
@@ -1219,14 +1233,14 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
             }
             data->adjustbar = -1;
             data->adjustbar2 = -1;
-            NL_RejectIDCMP(obj,data,IDCMP_MOUSEMOVE,FALSE);
+            NL_RejectIDCMP(data,IDCMP_MOUSEMOVE,FALSE);
             do_draw = TRUE;
             data->click_line = -2;
             data->moves = FALSE;
             drag_ok = FALSE;
           }
           if ((msg->imsg->Code==SELECTUP) && (data->adjustbar >= -4) && (data->adjustbar <= -2))
-          { NL_RejectIDCMP(obj,data,IDCMP_MOUSEMOVE,TRUE);
+          { NL_RejectIDCMP(data,IDCMP_MOUSEMOVE,TRUE);
             data->moves = FALSE;
             drag_ok = FALSE;
             if ((data->adjustbar > -4) &&
@@ -1250,12 +1264,12 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
           }
           else if ((msg->imsg->Code==SELECTUP) && (data->adjustbar == -10))
           {
-            NL_RejectIDCMP(obj,data,IDCMP_MOUSEMOVE,TRUE);
+            NL_RejectIDCMP(data,IDCMP_MOUSEMOVE,TRUE);
             data->moves = FALSE;
             drag_ok = FALSE;
             data->adjustbar = -1;
             do_draw = TRUE;
-            HideCustomPointer(obj, data);
+            HideCustomPointer(data);
           }
           if (((msg->imsg->Code==SELECTUP) || (msg->imsg->Code==MENUDOWN)) &&
               (data->affbutton >= 0))
@@ -1265,7 +1279,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
               data->NList_ButtonClick = data->affbutton;
               DO_NOTIFY(NTF_ButtonClick);
             }
-            NL_RejectIDCMP(obj,data,IDCMP_MOUSEMOVE,TRUE);
+            NL_RejectIDCMP(data,IDCMP_MOUSEMOVE,TRUE);
             NL_Changed(data,data->affbuttonline);
             do_draw = TRUE;
             data->affbutton = -1;
@@ -1295,7 +1309,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
         data->affbuttonstate = 0;
         data->storebutton = TRUE;
         res.char_number = 0;
-        NL_List_TestPos(obj,data,msg->imsg->MouseX,msg->imsg->MouseY,&res);
+        NL_List_TestPos(data,msg->imsg->MouseX,msg->imsg->MouseY,&res);
         if (data->affbutton>=0) {
            if (data->affover!=data->affbutton) {
 /*
@@ -1336,7 +1350,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
       }
 
       if(!_isinobject(msg->imsg->MouseX,msg->imsg->MouseY) && data->moves == FALSE)
-        HideCustomPointer(obj, data);
+        HideCustomPointer(data);
 
       // walk through to next case...
 
@@ -1365,7 +1379,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
  *D(bug("  Class=%lx Code=%lx Qualifier=%lx mx=%ld my=%ld\n",msg->imsg->Class,co,qu,mx,my));
  *}
 */
-          NL_RejectIDCMP(obj,data,IDCMP_MOUSEMOVE,TRUE);
+          NL_RejectIDCMP(data,IDCMP_MOUSEMOVE,TRUE);
           data->selectskiped = FALSE;
           data->moves = FALSE;
 
@@ -1462,15 +1476,15 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
             }
           }
           if (msg->imsg->MouseX < data->mleft)
-          { NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_Left,NULL);
-/*            NL_RejectIDCMP(obj,data,IDCMP_MOUSEMOVE,FALSE);*/
+          { NL_List_Horiz_First(data,MUIV_NList_Horiz_First_Left,NULL);
+/*            NL_RejectIDCMP(data,IDCMP_MOUSEMOVE,FALSE);*/
           }
           else if (msg->imsg->MouseX >= data->mright)
-          { NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_Right,NULL);
-/*            NL_RejectIDCMP(obj,data,IDCMP_MOUSEMOVE,FALSE);*/
+          { NL_List_Horiz_First(data,MUIV_NList_Horiz_First_Right,NULL);
+/*            NL_RejectIDCMP(data,IDCMP_MOUSEMOVE,FALSE);*/
           }
           else
-            NL_RequestIDCMP(obj,data,IDCMP_MOUSEMOVE);
+            NL_RequestIDCMP(data,IDCMP_MOUSEMOVE);
         }
         else if ((data->adjustbar >= -4) && (data->adjustbar <= -2) && (msg->imsg->Class == IDCMP_MOUSEMOVE))
         { if ((data->adjustcolumn < data->numcols) &&
@@ -1486,7 +1500,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
             if ((data->adjustcolumn >= data->NList_MinColSortable) &&
                 ((data->numcols - data->NList_MinColSortable) > 1) &&
                 ((msg->imsg->MouseX < data->click_x - 6) || (msg->imsg->MouseX > data->click_x + 6)) &&
-                (NL_OnWindow(obj,data,msg->imsg->MouseX,msg->imsg->MouseY)))
+                (NL_OnWindow(data,msg->imsg->MouseX,msg->imsg->MouseY)))
             {
 /*
  *{
@@ -1507,7 +1521,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
               data->adjustbar = -10;
 
               // set a custom mouse pointer
-              ShowCustomPointer(obj, data, PT_MOVE);
+              ShowCustomPointer(data, PT_MOVE);
 
               data->moves = FALSE;
               drag_ok = FALSE;
@@ -1548,7 +1562,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
  *}
 */
             data->adjustbar = -1;
-            NL_RejectIDCMP(obj,data,IDCMP_MOUSEMOVE,FALSE);
+            NL_RejectIDCMP(data,IDCMP_MOUSEMOVE,FALSE);
             do_draw = TRUE;
             data->click_line = -2;
           }
@@ -1558,7 +1572,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
           struct MUI_NList_TestPos_Result res;
 
           res.char_number = -2;
-          NL_List_TestPos(obj,data,msg->imsg->MouseX,msg->imsg->MouseY,&res);
+          NL_List_TestPos(data,msg->imsg->MouseX,msg->imsg->MouseY,&res);
 
           if(data->adjustbar == -10)
           {
@@ -1587,7 +1601,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
                 (overObject == TRUE))
             {
               // set a custom mouse pointer
-              ShowCustomPointer(obj, data, PT_SIZE);
+              ShowCustomPointer(data, PT_SIZE);
             }
             else if(data->NList_SelectPointer == TRUE &&
                     data->NList_TypeSelect == MUIV_NList_TypeSelect_Char &&
@@ -1595,11 +1609,11 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
             {
               // in case the NList object is in charwise selection mode and the mouse
               // is above the object itself we show a specialized selection pointer
-              ShowCustomPointer(obj, data, PT_SELECT);
+              ShowCustomPointer(data, PT_SELECT);
             }
             else
             {
-              HideCustomPointer(obj, data);
+              HideCustomPointer(data);
             }
           }
         }
@@ -1613,6 +1627,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
           WORD lx = (msg->imsg->MouseX - data->hpos);
           WORD sel_x = msg->imsg->MouseX;
           WORD sel_y = msg->imsg->MouseY;
+
           data->NumIntuiTick = 0;
           if ((ly >= 0) && (lyl >= 0) && (lyl < data->NList_Visible) &&
               ((lx < 0) || (lx >= data->NList_Horiz_Visible)))
@@ -1629,16 +1644,16 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
               break;
             if (msg->imsg->MouseX < data->mleft-40)
             { MOREQUIET;
-              NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_Left4,NULL);
-              NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_Left4,NULL);
+              NL_List_Horiz_First(data,MUIV_NList_Horiz_First_Left4,NULL);
+              NL_List_Horiz_First(data,MUIV_NList_Horiz_First_Left4,NULL);
               LESSQUIET;
             }
             else if (msg->imsg->MouseX < data->mleft-24)
-              NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_Left4,NULL);
+              NL_List_Horiz_First(data,MUIV_NList_Horiz_First_Left4,NULL);
             else if (msg->imsg->MouseX < data->mleft-8)
-              NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_Left2,NULL);
+              NL_List_Horiz_First(data,MUIV_NList_Horiz_First_Left2,NULL);
             else
-              NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_Left,NULL);
+              NL_List_Horiz_First(data,MUIV_NList_Horiz_First_Left,NULL);
             data->selectskiped = FALSE;
             if (data->NList_TypeSelect && (data->sel_pt[0].ent >= 0))
             { sel_x = data->hpos;
@@ -1650,16 +1665,16 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
               break;
             if (msg->imsg->MouseX > data->mright+40)
             { MOREQUIET;
-              NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_Right4,NULL);
-              NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_Right4,NULL);
+              NL_List_Horiz_First(data,MUIV_NList_Horiz_First_Right4,NULL);
+              NL_List_Horiz_First(data,MUIV_NList_Horiz_First_Right4,NULL);
               LESSQUIET;
             }
             else if (msg->imsg->MouseX > data->mright+24)
-              NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_Right4,NULL);
+              NL_List_Horiz_First(data,MUIV_NList_Horiz_First_Right4,NULL);
             else if (msg->imsg->MouseX > data->mright+8)
-              NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_Right2,NULL);
+              NL_List_Horiz_First(data,MUIV_NList_Horiz_First_Right2,NULL);
             else
-              NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_Right,NULL);
+              NL_List_Horiz_First(data,MUIV_NList_Horiz_First_Right,NULL);
             data->selectskiped = FALSE;
             if (data->NList_TypeSelect && (data->sel_pt[0].ent >= 0))
             { sel_x = data->hpos + data->NList_Horiz_Visible - 1;
@@ -1678,25 +1693,25 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
             { if (data->NList_Input && !data->NList_TypeSelect)
               { MOREQUIET;
                 if (data->multiselect && data->selectskiped && (lactive >= 0) && (lactive != data->lastactived))
-                { NL_List_Select(obj,data,lactive,data->lastactived,data->selectmode,NULL);
-                  NL_List_Active(obj,data,lactive,NULL,data->selectmode,FALSE,0);
+                { NL_List_Select(data,lactive,data->lastactived,data->selectmode,NULL);
+                  NL_List_Active(data,lactive,NULL,data->selectmode,FALSE,0);
                 }
                 else
-                  NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE,0);
+                  NL_List_Active(data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE,0);
 
-                NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE,0);
-                NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE,0);
-                NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE,0);
-                NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE,0);
-                NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE,0);
-                NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE,0);
-                NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE,0);
+                NL_List_Active(data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE,0);
+                NL_List_Active(data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE,0);
+                NL_List_Active(data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE,0);
+                NL_List_Active(data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE,0);
+                NL_List_Active(data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE,0);
+                NL_List_Active(data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE,0);
+                NL_List_Active(data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE,0);
                 LESSQUIET;
               }
               else
               { MOREQUIET;
-                NL_List_First(obj,data,MUIV_NList_First_Up4,NULL);
-                NL_List_First(obj,data,MUIV_NList_First_Up4,NULL);
+                NL_List_First(data,MUIV_NList_First_Up4,NULL);
+                NL_List_First(data,MUIV_NList_First_Up4,NULL);
                 LESSQUIET;
               }
             }
@@ -1704,41 +1719,41 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
             { if (data->NList_Input && !data->NList_TypeSelect)
               { MOREQUIET;
                 if (data->multiselect && data->selectskiped && (lactive >= 0) && (lactive != data->lastactived))
-                { NL_List_Select(obj,data,lactive,data->lastactived,data->selectmode,NULL);
-                  NL_List_Active(obj,data,lactive,NULL,data->selectmode,FALSE,0);
+                { NL_List_Select(data,lactive,data->lastactived,data->selectmode,NULL);
+                  NL_List_Active(data,lactive,NULL,data->selectmode,FALSE,0);
                 }
                 else
-                  NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE,0);
+                  NL_List_Active(data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE,0);
 
-                NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE,0);
-                NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE,0);
-                NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE,0);
+                NL_List_Active(data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE,0);
+                NL_List_Active(data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE,0);
+                NL_List_Active(data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE,0);
                 LESSQUIET;
               }
               else
-                NL_List_First(obj,data,MUIV_NList_First_Up4,NULL);
+                NL_List_First(data,MUIV_NList_First_Up4,NULL);
             }
             else if (msg->imsg->MouseY < data->vdtpos-8)
             { if (data->NList_Input && !data->NList_TypeSelect)
               { MOREQUIET;
                 if (data->multiselect && data->selectskiped && (lactive >= 0) && (lactive != data->lastactived))
-                { NL_List_Select(obj,data,lactive,data->lastactived,data->selectmode,NULL);
-                  NL_List_Active(obj,data,lactive,NULL,data->selectmode,FALSE,0);
+                { NL_List_Select(data,lactive,data->lastactived,data->selectmode,NULL);
+                  NL_List_Active(data,lactive,NULL,data->selectmode,FALSE,0);
                 }
                 else
-                  NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE,0);
+                  NL_List_Active(data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE,0);
 
-                NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE,0);
+                NL_List_Active(data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE,0);
                 LESSQUIET;
               }
               else
-                NL_List_First(obj,data,MUIV_NList_First_Up2,NULL);
+                NL_List_First(data,MUIV_NList_First_Up2,NULL);
             }
             else
             { if (data->NList_Input && !data->NList_TypeSelect)
-                NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE,0);
+                NL_List_Active(data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE,0);
               else
-                NL_List_First(obj,data,MUIV_NList_First_Up,NULL);
+                NL_List_First(data,MUIV_NList_First_Up,NULL);
             }
             data->selectskiped = FALSE;
             if (data->NList_TypeSelect && (data->sel_pt[0].ent >= 0))
@@ -1759,24 +1774,24 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
             { if (data->NList_Input && !data->NList_TypeSelect)
               { MOREQUIET;
                 if (data->multiselect && data->selectskiped && (lactive >= 0) && (lactive != data->lastactived))
-                { NL_List_Select(obj,data,lactive,data->lastactived,data->selectmode,NULL);
-                  NL_List_Active(obj,data,lactive,NULL,data->selectmode,FALSE,0);
+                { NL_List_Select(data,lactive,data->lastactived,data->selectmode,NULL);
+                  NL_List_Active(data,lactive,NULL,data->selectmode,FALSE,0);
                 }
                 else
-                  NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE,0);
-                NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE,0);
-                NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE,0);
-                NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE,0);
-                NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE,0);
-                NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE,0);
-                NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE,0);
-                NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE,0);
+                  NL_List_Active(data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE,0);
+                NL_List_Active(data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE,0);
+                NL_List_Active(data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE,0);
+                NL_List_Active(data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE,0);
+                NL_List_Active(data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE,0);
+                NL_List_Active(data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE,0);
+                NL_List_Active(data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE,0);
+                NL_List_Active(data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE,0);
                 LESSQUIET;
               }
               else
               { MOREQUIET;
-                NL_List_First(obj,data,MUIV_NList_First_Down4,NULL);
-                NL_List_First(obj,data,MUIV_NList_First_Down4,NULL);
+                NL_List_First(data,MUIV_NList_First_Down4,NULL);
+                NL_List_First(data,MUIV_NList_First_Down4,NULL);
                 LESSQUIET;
               }
             }
@@ -1784,39 +1799,39 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
             { if (data->NList_Input && !data->NList_TypeSelect)
               { MOREQUIET;
                 if (data->multiselect && data->selectskiped && (lactive >= 0) && (lactive != data->lastactived))
-                { NL_List_Select(obj,data,lactive,data->lastactived,data->selectmode,NULL);
-                  NL_List_Active(obj,data,lactive,NULL,data->selectmode,FALSE,0);
+                { NL_List_Select(data,lactive,data->lastactived,data->selectmode,NULL);
+                  NL_List_Active(data,lactive,NULL,data->selectmode,FALSE,0);
                 }
                 else
-                  NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE,0);
-                NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE,0);
-                NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE,0);
-                NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE,0);
+                  NL_List_Active(data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE,0);
+                NL_List_Active(data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE,0);
+                NL_List_Active(data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE,0);
+                NL_List_Active(data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE,0);
                 LESSQUIET;
               }
               else
-                NL_List_First(obj,data,MUIV_NList_First_Down4,NULL);
+                NL_List_First(data,MUIV_NList_First_Down4,NULL);
             }
             else if (msg->imsg->MouseY > data->vdbpos+8)
             { if (data->NList_Input && !data->NList_TypeSelect)
               { MOREQUIET;
                 if (data->multiselect && data->selectskiped && (lactive >= 0) && (lactive != data->lastactived))
-                { NL_List_Select(obj,data,lactive,data->lastactived,data->selectmode,NULL);
-                  NL_List_Active(obj,data,lactive,NULL,data->selectmode,FALSE,0);
+                { NL_List_Select(data,lactive,data->lastactived,data->selectmode,NULL);
+                  NL_List_Active(data,lactive,NULL,data->selectmode,FALSE,0);
                 }
                 else
-                  NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE,0);
-                NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE,0);
+                  NL_List_Active(data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE,0);
+                NL_List_Active(data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE,0);
                 LESSQUIET;
               }
               else
-                NL_List_First(obj,data,MUIV_NList_First_Down2,NULL);
+                NL_List_First(data,MUIV_NList_First_Down2,NULL);
             }
             else
             { if (data->NList_Input && !data->NList_TypeSelect)
-                NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE,0);
+                NL_List_Active(data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE,0);
               else
-                NL_List_First(obj,data,MUIV_NList_First_Down,NULL);
+                NL_List_First(data,MUIV_NList_First_Down,NULL);
             }
             data->selectskiped = FALSE;
             if (data->NList_TypeSelect && (data->sel_pt[0].ent >= 0))
@@ -1835,34 +1850,46 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
               if ((lactive != data->NList_Active) && (lactive >= 0) && (lactive < data->NList_Entries))
               {
                 if (data->multiselect == MUIV_NList_MultiSelect_None)
-                { NL_List_Select(obj,data,data->lastactived,MUIV_NList_Active_Off,MUIV_NList_Select_Off,NULL);
+                {
+                  NL_List_Select(data,data->lastactived,MUIV_NList_Active_Off,MUIV_NList_Select_Off,NULL);
                   data->selectmode = MUIV_NList_Select_On;
                 }
                 if (data->multiselect && data->selectskiped)
                 {
-                  NL_List_Select(obj,data,lactive,data->lastactived,data->selectmode,NULL);
-                  NL_List_Active(obj,data,lactive,NULL,data->selectmode,FALSE,0);
+                  NL_List_Select(data,lactive,data->lastactived,data->selectmode,NULL);
+                  NL_List_Active(data,lactive,NULL,data->selectmode,FALSE,0);
                 }
                 else if (data->multiselect)
-                { data->selectskiped = TRUE;
-                  NL_List_Active(obj,data,lactive,NULL,data->selectmode,FALSE,0);
+                {
+                  data->selectskiped = TRUE;
+                  NL_List_Active(data,lactive,NULL,data->selectmode,FALSE,0);
                 }
                 else
                 {
-                  NL_List_Active(obj,data,lactive,NULL,data->selectmode,FALSE,0);
+                  // NL_List_Active(data,lactive,NULL,data->selectmode,FALSE,0);
+
+                  // Is this call really required???
+                  // It causes NList to misbehave if the user clicks in the list while the
+                  // window has MUIA_Window_Sleep set to TRUE. In this case the click seems
+                  // to be "cached" and is applied again as soon as the window is woken up
+                  // again, which is definitely wrong.
+                  // Well's have to see if commenting out this line causes any new misbehaviour.
                 }
               }
             }
             if (msg->imsg->Class == IDCMP_INTUITICKS)
             {
-              NL_RequestIDCMP(obj,data,IDCMP_MOUSEMOVE);
+              NL_RequestIDCMP(data,IDCMP_MOUSEMOVE);
             }
             if (data->drag_type != MUIV_NList_DragType_None)
-            { if (DragQual)
-              { drag_ok = TRUE;
+            {
+              if (DragQual)
+              {
+                drag_ok = TRUE;
               }
               else if ((data->drag_type == MUIV_NList_DragType_Immediate) && !data->multiselect && (msg->imsg->Class == IDCMP_MOUSEMOVE))
-              { drag_ok = TRUE;
+              {
+                drag_ok = TRUE;
               }
               else if ((data->drag_type == MUIV_NList_DragType_Immediate) || (data->drag_type == MUIV_NList_DragType_Borders))
                 data->drag_border = TRUE;
@@ -1870,7 +1897,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
           }
           if (data->NList_TypeSelect && (data->sel_pt[0].ent >= 0) &&
               ((sel_x != data->last_sel_click_x) || (sel_y != data->last_sel_click_y)))
-            SelectSecondPoint(obj,data,sel_x,sel_y);
+            SelectSecondPoint(data,sel_x,sel_y);
         }
         /*retval = MUI_EventHandlerRC_Eat;*/
         break;
@@ -1949,7 +1976,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
         dragx = msg->imsg->MouseX - data->mleft;
         dragy = msg->imsg->MouseY - (data->vpos+(data->vinc * (first - data->NList_First)));
 
-        if((data->DragRPort = CreateDragRPort(obj,data,numlines,first,last)))
+        if((data->DragRPort = CreateDragRPort(data,numlines,first,last)))
         {
           if (dragx < 0)
             dragx = 0;
@@ -1986,12 +2013,12 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
         }
 /*D(bug("%lx| 18 drag_ok=%ld   drag start now\n",obj,drag_ok));*/
         data->markdrawnum = MUIM_NList_Trigger;
-        NL_RejectIDCMP(obj,data,IDCMP_INTUITICKS,TRUE);
-        NL_RejectIDCMP(obj,data,IDCMP_MOUSEMOVE,TRUE);
+        NL_RejectIDCMP(data,IDCMP_INTUITICKS,TRUE);
+        NL_RejectIDCMP(data,IDCMP_MOUSEMOVE,TRUE);
         DoMethod(obj,MUIM_DoDrag,dragx,dragy,0L);
-        NL_RequestIDCMP(obj,data,IDCMP_INTUITICKS);
+        NL_RequestIDCMP(data,IDCMP_INTUITICKS);
         data->markdrawnum = 0;
-        NL_RejectIDCMP(obj,data,IDCMP_MOUSEMOVE,FALSE);
+        NL_RejectIDCMP(data,IDCMP_MOUSEMOVE,FALSE);
         data->selectskiped = FALSE;
         data->moves = FALSE;
         REDRAW_FORCE;
@@ -2039,22 +2066,25 @@ IPTR mNL_DeleteDragImage(struct IClass *cl,Object *obj,struct MUIP_DeleteDragIma
 {
   register struct NLData *data = INST_DATA(cl,obj);
   IPTR retval = DoSuperMethodA(cl,obj,(Msg) msg);
+
   if (data->DragRPort)
-    DisposeDragRPort(obj,data);
+    DisposeDragRPort(data);
   return (retval);
 }
 
 
-BOOL NL_Prop_First_Adjust(Object *obj,struct NLData *data)
+BOOL NL_Prop_First_Adjust(struct NLData *data)
 {
   LONG lfirst,lincr;
   lfirst = data->NList_Prop_First / data->vinc;
   if ((data->NList_Prop_Wait == 0) && data->drawall_bits)
-  { REDRAW;
+  {
+    REDRAW;
   }
   if ((data->NList_Prop_Wait == 0) && ((lfirst * data->vinc) != data->NList_Prop_First) && (data->NList_Prop_Add != 0))
   {
     LONG Notify_VSB = WANTED_NOTIFY(NTF_VSB);
+
     if (data->SHOW && (data->rp->Layer->Flags & LAYERREFRESH))
       return (FALSE);
     NOWANT_NOTIFY(NTF_VSB);
@@ -2114,7 +2144,7 @@ IPTR mNL_Trigger(struct IClass *cl, UNUSED Object *obj, UNUSED Msg msg)
   /* attention, can be called with msg = NULL */
   if (data->SHOW && data->DRAW && !data->do_draw_all)
   {
-    NL_Prop_First_Adjust(obj,data);
+    NL_Prop_First_Adjust(data);
     /*do_notifies(NTF_First|NTF_Entries|NTF_MinMax);*/
     if (data->ScrollBarsTime > 0)
       data->ScrollBarsTime--;
@@ -2122,7 +2152,7 @@ IPTR mNL_Trigger(struct IClass *cl, UNUSED Object *obj, UNUSED Msg msg)
     {
       data->ScrollBarsTime = 0;
       if (!data->NList_Quiet && !data->NList_Disabled)
-        NL_UpdateScrollers(obj,data,FALSE);
+        NL_UpdateScrollers(data,FALSE);
       data->ScrollBarsTime = SCROLLBARSTIME;
     }
   }

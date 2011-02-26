@@ -86,7 +86,7 @@ void NL_Changed(struct NLData *data,LONG ent)
 }
 
 
-void NL_UnSelectAll(Object *obj,struct NLData *data,LONG untouch_ent)
+void NL_UnSelectAll(struct NLData *data,LONG untouch_ent)
 {
   LONG ent;
 
@@ -105,11 +105,13 @@ void NL_UnSelectAll(Object *obj,struct NLData *data,LONG untouch_ent)
 }
 
 
-void UnSelectCharSel(Object *obj,struct NLData *data,BOOL redraw)
+void UnSelectCharSel(struct NLData *data,BOOL redraw)
 {
   if (data->NList_TypeSelect && !data->UpdatingScrollbars)
-  { if ((data->sel_pt[data->min_sel].ent >= 0) && (data->sel_pt[data->max_sel].ent >= 0))
+  {
+    if ((data->sel_pt[data->min_sel].ent >= 0) && (data->sel_pt[data->max_sel].ent >= 0))
       NL_SegChanged(data,data->sel_pt[data->min_sel].ent,data->sel_pt[data->max_sel].ent);
+
     data->sel_pt[1].ent = -1;
     data->min_sel = 1;
     data->max_sel = 1;
@@ -119,7 +121,7 @@ void UnSelectCharSel(Object *obj,struct NLData *data,BOOL redraw)
 }
 
 
-void SelectFirstPoint(Object *obj,struct NLData *data,WORD x,WORD y)
+void SelectFirstPoint(struct NLData *data,WORD x,WORD y)
 {
   struct MUI_NList_TestPos_Result res;
   LONG e1 = data->sel_pt[data->min_sel].ent;
@@ -129,7 +131,7 @@ void SelectFirstPoint(Object *obj,struct NLData *data,WORD x,WORD y)
   res.char_number = 0;
   data->last_sel_click_x = x;
   data->last_sel_click_y = y;
-  NL_List_TestPos(obj,data,x,y,&res);
+  NL_List_TestPos(data,x,y,&res);
   if ((res.column < 0) || (res.column >= data->numcols))
     return;
   if ((e1 >= 0) && (e2 >= 0))
@@ -267,7 +269,7 @@ void SelectFirstPoint(Object *obj,struct NLData *data,WORD x,WORD y)
 }
 
 
-void SelectSecondPoint(Object *obj,struct NLData *data,WORD x,WORD y)
+void SelectSecondPoint(struct NLData *data,WORD x,WORD y)
 {
   struct MUI_NList_TestPos_Result res;
   LONG e1 = data->sel_pt[1].ent;
@@ -276,7 +278,7 @@ void SelectSecondPoint(Object *obj,struct NLData *data,WORD x,WORD y)
   data->last_sel_click_x = x;
   data->last_sel_click_y = y;
   res.char_number = 0;
-  NL_List_TestPos(obj,data,x,y,&res);
+  NL_List_TestPos(data,x,y,&res);
   if ((res.column < 0) || (res.column >= data->numcols))
     return;
   if ((data->NList_TypeSelect == MUIV_NList_TypeSelect_CLine) && (res.entry >= 0))
@@ -504,7 +506,7 @@ void SelectSecondPoint(Object *obj,struct NLData *data,WORD x,WORD y)
 }
 
 
-BOOL NL_List_First(Object *obj,struct NLData *data,LONG lf,struct TagItem *tag)
+BOOL NL_List_First(struct NLData *data,LONG lf,struct TagItem *tag)
 {
   struct TagItem ltag;
   BOOL scrolled = FALSE;
@@ -627,7 +629,7 @@ BOOL NL_List_First(Object *obj,struct NLData *data,LONG lf,struct TagItem *tag)
 }
 
 
-BOOL NL_List_Active(Object *obj, struct NLData *data, LONG la, struct TagItem *tag, LONG newactsel, LONG acceptsame, ULONG flags)
+BOOL NL_List_Active(struct NLData *data, LONG la, struct TagItem *tag, LONG newactsel, LONG acceptsame, ULONG flags)
 {
   struct TagItem ltag;
   struct TagItem *tag2 = tag;
@@ -654,7 +656,7 @@ BOOL NL_List_Active(Object *obj, struct NLData *data, LONG la, struct TagItem *t
     {
       if(tag2 == NULL)
       {
-        changed = NL_List_First(obj,data,la,tag);
+        changed = NL_List_First(data,la,tag);
 
         RETURN(changed);
         return changed;
@@ -955,7 +957,7 @@ BOOL NL_List_Active(Object *obj, struct NLData *data, LONG la, struct TagItem *t
 }
 
 
-BOOL NL_List_Horiz_First(Object *obj,struct NLData *data,LONG hf,struct TagItem *tag)
+BOOL NL_List_Horiz_First(struct NLData *data,LONG hf,struct TagItem *tag)
 {
   BOOL scrolled = FALSE;
 
@@ -988,7 +990,7 @@ BOOL NL_List_Horiz_First(Object *obj,struct NLData *data,LONG hf,struct TagItem 
 
       case MUIV_NList_Horiz_First_Left :
       {
-        hf = data->NList_Horiz_First - _font(obj)->tf_XSize;
+        hf = data->NList_Horiz_First - _font(data->this)->tf_XSize;
         if (hf < 0)
           hf = 0;
       }
@@ -996,7 +998,7 @@ BOOL NL_List_Horiz_First(Object *obj,struct NLData *data,LONG hf,struct TagItem 
 
       case MUIV_NList_Horiz_First_Right :
       {
-        hf = data->NList_Horiz_First + _font(obj)->tf_XSize;
+        hf = data->NList_Horiz_First + _font(data->this)->tf_XSize;
         if(hf > data->NList_Horiz_Entries - data->NList_Horiz_Visible)
           hf = data->NList_Horiz_Entries - data->NList_Horiz_Visible;
       }
@@ -1020,7 +1022,7 @@ BOOL NL_List_Horiz_First(Object *obj,struct NLData *data,LONG hf,struct TagItem 
 
       case MUIV_NList_Horiz_First_Left2 :
       {
-        hf = data->NList_Horiz_First - _font(obj)->tf_XSize*2;
+        hf = data->NList_Horiz_First - _font(data->this)->tf_XSize*2;
         if (hf < 0)
           hf = 0;
       }
@@ -1028,7 +1030,7 @@ BOOL NL_List_Horiz_First(Object *obj,struct NLData *data,LONG hf,struct TagItem 
 
       case MUIV_NList_Horiz_First_Right2 :
       {
-        hf = data->NList_Horiz_First + _font(obj)->tf_XSize*2;
+        hf = data->NList_Horiz_First + _font(data->this)->tf_XSize*2;
         if (hf > data->NList_Horiz_Entries - data->NList_Horiz_Visible)
           hf = data->NList_Horiz_Entries - data->NList_Horiz_Visible;
       }
@@ -1036,7 +1038,7 @@ BOOL NL_List_Horiz_First(Object *obj,struct NLData *data,LONG hf,struct TagItem 
 
       case MUIV_NList_Horiz_First_Left4 :
       {
-        hf = data->NList_Horiz_First - _font(obj)->tf_XSize*4;
+        hf = data->NList_Horiz_First - _font(data->this)->tf_XSize*4;
         if (hf < 0)
           hf = 0;
       }
@@ -1044,7 +1046,7 @@ BOOL NL_List_Horiz_First(Object *obj,struct NLData *data,LONG hf,struct TagItem 
 
       case MUIV_NList_Horiz_First_Right4 :
       {
-        hf = data->NList_Horiz_First + _font(obj)->tf_XSize*4;
+        hf = data->NList_Horiz_First + _font(data->this)->tf_XSize*4;
         if (hf > data->NList_Horiz_Entries - data->NList_Horiz_Visible)
           hf = data->NList_Horiz_Entries - data->NList_Horiz_Visible;
       }
@@ -1063,7 +1065,7 @@ BOOL NL_List_Horiz_First(Object *obj,struct NLData *data,LONG hf,struct TagItem 
 
         tag->ti_Data = hf;
         if (tagnul /*&& data->Notify_HSB*/)
-          notdoset(obj,MUIA_NList_Horiz_First,hf);
+          notdoset(data->this,MUIA_NList_Horiz_First,hf);
 
         scrolled = TRUE;
       }
@@ -1079,36 +1081,7 @@ BOOL NL_List_Horiz_First(Object *obj,struct NLData *data,LONG hf,struct TagItem 
 }
 
 
-LONG NList_Compare(Object *obj,struct NLData *data,APTR s1,APTR s2)
-{
-
-#if 1
-	//$$$Sensei
-	/* We are forwarding comparision to method which then could be overriden by subclass. */
-	/* NList_Compare() is used by NL_SortCompar(). */
-	/* NL_SortCompar() is used by sort_compar(). */
-	/* sort_compar() is used by NL_List_SortPart(). */
-	/* NL_List_SortPart() is used by NL_List_SortMore(). */
-	/* NL_SortCompar() is used by NL_List_SortMore(). */
-	/* NL_List_SortMore() is used by NL_List_Insert(). */
-	/* NL_List_SortPart() is used by NL_List_Sort(). */
-	/* REAL MESS IMHO!!! */
-	return( DoMethod( obj, MUIM_NList_Compare, s1, s2, data->NList_SortType, data->NList_SortType2 ) );
-#else
-  if (data->NList_CompareHook)
-  { if (data->NList_CompareHook2)
-      return ((LONG) MyCallHookPktA(obj,data->NList_CompareHook,s1,s2,data->NList_SortType,data->NList_SortType2));
-    else
-      return ((LONG) MyCallHookPkt(obj,TRUE,data->NList_CompareHook,s2,s1));
-  }
-  else
-    return ((LONG) Stricmp(s1,s2));
-#endif
-
-}
-
-
-ULONG NL_List_SelectChar(Object *obj,struct NLData *data,LONG pos,LONG seltype,LONG *state)
+ULONG NL_List_SelectChar(struct NLData *data,LONG pos,LONG seltype,LONG *state)
 {
   LONG ent,ent2;
 
@@ -1126,10 +1099,10 @@ ULONG NL_List_SelectChar(Object *obj,struct NLData *data,LONG pos,LONG seltype,L
         *state = (LONG) (last - first + 1);
     }
     else if (seltype == MUIV_NList_Select_Off)
-      UnSelectCharSel(obj,data,TRUE);
+      UnSelectCharSel(data,TRUE);
     else if ((seltype == MUIV_NList_Select_On) && (data->NList_Entries > 0))
     {
-      UnSelectCharSel(obj,data,FALSE);
+      UnSelectCharSel(data,FALSE);
       if (pos == MUIV_NList_Select_All)
       { ent = 0;
         ent2 = data->NList_Entries;
@@ -1169,7 +1142,7 @@ ULONG NL_List_SelectChar(Object *obj,struct NLData *data,LONG pos,LONG seltype,L
 }
 
 
-ULONG NL_List_Select(Object *obj,struct NLData *data,LONG pos,LONG pos2,LONG seltype,LONG *state)
+ULONG NL_List_Select(struct NLData *data,LONG pos,LONG pos2,LONG seltype,LONG *state)
 {
   LONG ent,ent2,ent3;
 /*  DONE_NOTIFY(NTF_Select | NTF_LV_Select);*/
@@ -1300,18 +1273,21 @@ ULONG NL_List_Select(Object *obj,struct NLData *data,LONG pos,LONG pos2,LONG sel
 }
 
 
-ULONG NL_List_TestPos(Object *obj,struct NLData *data,LONG x,LONG y,struct MUI_NList_TestPos_Result *res)
+ULONG NL_List_TestPos(struct NLData *data,LONG x,LONG y,struct MUI_NList_TestPos_Result *res)
 {
   if ((x == MUI_MAXMAX) && (y == MUI_MAXMAX))
-  { x = data->click_x;
+  {
+    x = data->click_x;
     y = data->click_y;
   }
   else if ((x == MUI_MAXMAX) && (y == 0))
-  { x = data->mouse_x;
+  {
+    x = data->mouse_x;
     y = data->mouse_y;
   }
   if (res)
-  { WORD ly = (y - data->vpos);
+  {
+    WORD ly = (y - data->vpos);
     WORD lyl = ly / data->vinc;
     WORD lx = (x - data->hpos);
     res->entry = -1;
@@ -1362,7 +1338,7 @@ ULONG NL_List_TestPos(Object *obj,struct NLData *data,LONG x,LONG y,struct MUI_N
         res->xoffset = lx;
         res->yoffset = ly - ((lyl * data->vinc) + (data->vinc / 2));
         if (res->char_number != -2)
-          FindCharInColumn(obj,data,line,res->column,lx,&res->char_xoffset,&res->char_number);
+          FindCharInColumn(data,line,res->column,lx,&res->char_xoffset,&res->char_number);
         if (res->char_number < -PREPARSE_OFFSET_ENTRY)
         { res->char_number += PREPARSE_OFFSET_COL;
           res->preparse = 2;
@@ -1428,10 +1404,11 @@ ULONG NL_List_TestPos(Object *obj,struct NLData *data,LONG x,LONG y,struct MUI_N
 }
 
 
-ULONG NL_List_TestPosOld(UNUSED Object *obj,struct NLData *data,LONG x,LONG y,struct MUI_List_TestPos_Result *res)
+ULONG NL_List_TestPosOld(struct NLData *data,LONG x,LONG y,struct MUI_List_TestPos_Result *res)
 {
   if (res)
-  { WORD ly = (y - data->vpos);
+  {
+    WORD ly = (y - data->vpos);
     WORD lyl = ly / data->vinc;
     WORD lx = (x - data->hpos);
     res->entry = -1;
@@ -1679,7 +1656,7 @@ IPTR mNL_List_Jump(struct IClass *cl, Object *obj, struct MUIP_NList_Jump *msg)
     DO_NOTIFY(NTF_First);
     REDRAW;
   }
- 
+
 /*  do_notifies(NTF_AllChanges|NTF_MinMax);*/
 
   RETURN(TRUE);
@@ -1699,7 +1676,7 @@ IPTR mNL_List_SetActive(struct IClass *cl, Object *obj, struct MUIP_NList_SetAct
   if(isFlagSet(msg->flags, MUIV_NList_SetActive_Entry))
     NL_List_GetPos(data, (APTR)msg->pos, &pos);
 
-  result = NL_List_Active(obj, data, pos, NULL, data->NList_List_Select, FALSE, msg->flags);
+  result = NL_List_Active(data, pos, NULL, data->NList_List_Select, FALSE, msg->flags);
   if(result == TRUE)
   {
     DO_NOTIFY(NTF_Active | NTF_L_Active);
@@ -1714,9 +1691,9 @@ IPTR mNL_List_Select(struct IClass *cl,Object *obj,struct MUIP_NList_Select *msg
   struct NLData *data = INST_DATA(cl,obj);
   /*DoSuperMethodA(cl,obj,(Msg) msg);*/
   if (data->NList_TypeSelect)
-    return (NL_List_SelectChar(obj,data,msg->pos,msg->seltype,msg->state));
+    return (NL_List_SelectChar(data,msg->pos,msg->seltype,msg->state));
   else
-    return (NL_List_Select(obj,data,msg->pos,msg->pos,msg->seltype,msg->state));
+    return (NL_List_Select(data,msg->pos,msg->pos,msg->seltype,msg->state));
   return (0);
 }
 
@@ -1725,7 +1702,7 @@ IPTR mNL_List_TestPos(struct IClass *cl,Object *obj,struct MUIP_NList_TestPos *m
 {
   register struct NLData *data = INST_DATA(cl,obj);
   /*DoSuperMethodA(cl,obj,(Msg) msg);*/
-  return (NL_List_TestPos(obj,data,msg->x,msg->y,msg->res));
+  return (NL_List_TestPos(data,msg->x,msg->y,msg->res));
 }
 
 
@@ -1733,7 +1710,7 @@ IPTR mNL_List_TestPosOld(struct IClass *cl,Object *obj,struct MUIP_List_TestPos 
 {
   register struct NLData *data = INST_DATA(cl,obj);
   /*DoSuperMethodA(cl,obj,(Msg) msg);*/
-  return (NL_List_TestPosOld(obj,data,msg->x,msg->y,msg->res));
+  return (NL_List_TestPosOld(data,msg->x,msg->y,msg->res));
 }
 
 
@@ -1768,7 +1745,7 @@ IPTR mNL_List_Redraw(struct IClass *cl,Object *obj,struct MUIP_NList_Redraw *msg
       {
         if(data->DRAW)
         {
-          NL_SetColsAdd(obj,data,-2,TRUE);
+          NL_SetColsAdd(data,-2,TRUE);
           DoMethod(_app(obj), MUIM_Application_PushMethod, obj, 2, MUIM_NList_Redraw, MUIV_NList_Redraw_All);
         }
       }
@@ -1779,7 +1756,7 @@ IPTR mNL_List_Redraw(struct IClass *cl,Object *obj,struct MUIP_NList_Redraw *msg
         // redraw all entries
         if(data->DRAW)
         {
-          NL_SetColsAdd(obj,data,-2,TRUE);
+          NL_SetColsAdd(data,-2,TRUE);
           for(ent = 0; ent < data->NList_Entries; ent++)
             data->EntriesArray[ent]->PixLen = -1;
         }
@@ -1797,7 +1774,7 @@ IPTR mNL_List_Redraw(struct IClass *cl,Object *obj,struct MUIP_NList_Redraw *msg
       {
         // redraw visible columns only
         if(data->DRAW)
-          NL_SetColsAdd(obj, data, -3, TRUE);
+          NL_SetColsAdd(data, -3, TRUE);
       }
       break;
 
@@ -1815,7 +1792,7 @@ IPTR mNL_List_Redraw(struct IClass *cl,Object *obj,struct MUIP_NList_Redraw *msg
               // mark the selected entries as "to be redrawn"
               if(data->EntriesArray[ent]->Select != TE_Select_None)
               {
-                NL_SetColsAdd(obj, data, ent, TRUE);
+                NL_SetColsAdd(data, ent, TRUE);
                 data->EntriesArray[ent]->PixLen = -1;
                 NL_Changed(data, ent);
                 doDraw = TRUE;
@@ -1844,7 +1821,7 @@ IPTR mNL_List_Redraw(struct IClass *cl,Object *obj,struct MUIP_NList_Redraw *msg
         // redraw title only
         if(data->DRAW)
         {
-          NL_SetColsAdd(obj, data, -1, TRUE);
+          NL_SetColsAdd(data, -1, TRUE);
           data->Title_PixLen = -1;
         }
         data->do_draw_title = TRUE;
@@ -1867,7 +1844,7 @@ IPTR mNL_List_Redraw(struct IClass *cl,Object *obj,struct MUIP_NList_Redraw *msg
         {
           if(data->DRAW)
           {
-            NL_SetColsAdd(obj, data, ent, TRUE);
+            NL_SetColsAdd(data, ent, TRUE);
             data->EntriesArray[ent]->PixLen = -1;
           }
           NL_Changed(data, ent);
@@ -2159,7 +2136,7 @@ static BOOL NL_List_GetPos(struct NLData *data, APTR entry, LONG *pos)
   ENTER();
 
   if(entry == NULL)
-  { 
+  {
     *pos = MUIV_NList_GetPos_End;
     result = FALSE;
   }
@@ -2177,9 +2154,9 @@ static BOOL NL_List_GetPos(struct NLData *data, APTR entry, LONG *pos)
     LONG ent = *pos + 1;
 
     while(ent < data->NList_Entries)
-    { 
+    {
       if(data->EntriesArray[ent]->Entry == entry)
-      { 
+      {
         *pos = ent;
 
         result = TRUE;

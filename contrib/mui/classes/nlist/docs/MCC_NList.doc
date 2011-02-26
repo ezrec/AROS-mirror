@@ -3217,7 +3217,7 @@ NList.mcc/MUIM_NList_UseImage
 NList.mcc/MUIM_NList_SetActive
 
     NAME
-        MUIM_NList_SetActive -- make s specific entry the active one (v20.125)
+        MUIM_NList_SetActive -- make a specific entry the active one (v20.125)
 
     SYNOPSIS
         DoMethod(obj, MUIM_NList_SetActive, LONG pos, ULONG flags);
@@ -3244,9 +3244,9 @@ NList.mcc/MUIM_NList_UseImage
                   case you have specified the correct flag.
 
         flags   - Can be a combination of the following flags:
- 
+
                   MUIV_NList_SetActive_Entry:
-                 
+
                     the parameter 'pos' will be a pointer to the entry rather
                     than the position (int) of the entry to be made active. If
                     this flag is set NList will perform an internal GetPos()

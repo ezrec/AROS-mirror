@@ -31,14 +31,14 @@
 */
 
 #include <clib/alib_protos.h>
-#include <proto/utility.h>
+#include <proto/intuition.h>
 
 #include "NListtree.h"
 
 #define SWAP(a,b)     temp=(a);(a)=(b);(b)=temp
-#define COMPARE(a,b)  (LONG)CallHook(chook, data->Obj, MUIA_NListtree_CompareHook, (a), (b))
+#define COMPARE(a,b)  (LONG)DoMethod(data->Obj, MUIM_NListtree_Compare, (a), (b))
 
-void qsort2(struct MUI_NListtree_TreeNode **table, ULONG entries, struct Hook *chook, struct NListtree_Data *data)
+void qsort2(struct MUI_NListtree_TreeNode **table, ULONG entries, struct NListtree_Data *data)
 {
   struct MUI_NListtree_TreeNode *temp;
   ULONG a,b,c;
@@ -72,13 +72,13 @@ void qsort2(struct MUI_NListtree_TreeNode **table, ULONG entries, struct Hook *c
     // do recursion on smaller intervall and iteration on larger one
     if(b < entries-b)
     {
-      qsort2(table, b, chook, data);
+      qsort2(table, b, data);
       table = &table[b];
       entries = entries-b;
     }
     else
     {
-      qsort2(&table[b], entries-b, chook, data);
+      qsort2(&table[b], entries-b, data);
       entries = b;
     }
   }

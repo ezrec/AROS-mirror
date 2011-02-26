@@ -358,13 +358,9 @@ struct NLData
   LONG         NList_DisplayHook2;
   LONG         NList_CopyEntryToClipHook2;
   LONG         NList_CopyColumnToClipHook2;
-	//$$$Sensei
-//  void *NList_Pool;
-//  ULONG NList_PoolPuddleSize;
-//  ULONG NList_PoolThreshSize;
-//  LONG  NList_Pool_Given;
-	APTR	Pool;				/* Custom or internal pool pointer. */
-	APTR	PoolInternal;	/* Internal pool pointer. */
+  APTR	Pool;				/* Custom or internal pool pointer. */
+  APTR	PoolInternal;	/* Internal pool pointer. */
+  APTR  EntryPool;
   ULONG NList_Font;
   LONG  MOUSE_MOVE;
 

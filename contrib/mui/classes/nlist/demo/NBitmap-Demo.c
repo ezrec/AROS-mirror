@@ -183,18 +183,22 @@ int main(void)
         CloseLibrary(MUIMasterBase);
         MUIMasterBase = NULL;
       }
+      else
+        PutStr("Failed to open muimaster.library V19\n");
 
       DROPINTERFACE(IUtility);
       CloseLibrary((struct Library *)UtilityBase);
       UtilityBase = NULL;
     }
-  }
+    else
+      PutStr("Failed to open utility.library V36\n");
 
-  if(IntuitionBase)
-  {
     DROPINTERFACE(IIntuition);
     CloseLibrary((struct Library *)IntuitionBase);
+    IntuitionBase = NULL;
   }
+  else
+    PutStr("Failed to open intuition.library V36\n");
 
   return 0;
 }

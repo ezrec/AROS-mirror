@@ -3,7 +3,112 @@ MUI NList MCC classes - ChangeLog
 ---------------------------------
 
 $Id$
-$URL: https://nlist-classes.svn.sourceforge.net/svnroot/nlist-classes/releases/0.108/ChangeLog $
+$URL: https://nlist-classes.svn.sourceforge.net/svnroot/nlist-classes/releases/0.109/ChangeLog $
+
+#### v0.109 RELEASE ###########################################################
+
+2011-02-03 Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: final v0.109 release preparations
+
+2011-01-03 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/NList_mcc2.c: fixed a very strange isse which occured when a used
+    clicked inside a list while the window had MUIA_Window_Sleep set to TRUE. In
+    this case the click seemed to be cached and be applied again as soon as the
+    window was woken up again, which is definitely wrong.
+    It remains to be seen if this change causes any new funny things.
+    Thanks to Andreas Falkenhahn for the hint!
+
+2011-01-02 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/NList_mcc5.c: removed a double check for a pending entry click
+    notification.
+
+2010-12-20 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/NList_func.c: removed an unneeded function.
+  * nlist_mcc/NList_mcc5.c: use the class pointer obtained during OM_NEW instead
+    of getting it each time anew.
+  * nlist_mcc/NList_mcc6.c: got rid of some V37 graphics.library bug workarounds.
+  * nlist_mcc/NList_mcc4.c: got rid of some V37 intuition.library limitations.
+  * include/mccinit.c, #?/library.c: raised the minimum required system version
+    to OS3.0.
+
+2010-12-18 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlisttree_mcc/NListtree.c: use Exec functions to navigate within a list on
+    AmigaOS4 and AROS.
+  * nlist_mcc/misc: removed some OS2.x compatibility code.
+  * nbalance_mcc/misc: removed some OS2.x compatibility code.
+
+2010-12-16 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/all: LOTS of code clean up. For some very obscure reason Gilles
+    decided to pass a pointer to the object and its instance data to all called
+    functions, although the instance data already carry a pointer to the object
+    and many deeply nested function don't need the object pointer at all. This
+    caused lots of stack space to be wasted for no good reason and made NList
+    much slower than necessary due to the additional overhead of passing unused
+    parameters.
+
+2010-12-10 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlisttree_mcc/NListtree.c: implemented construct, destruct, compare and
+    display methods which can be overloaded by subclasses. These methods fall
+    back to the corresponding old hooks in case they are not overloaded. Also
+    removed some parameters being passed separately although they are globally
+    available through the instance data which is passed as well and there are
+    no alternatives to affected the parameters.
+  * nlist_mcc/misc: heavily cleaned up the memory management by removing all the
+    wrapper functions and using Alloc/FreeVecPooled directly. For the 68k build
+    appropriate reimplementations have been added which are still compatible
+    with OS2.x. This saves lots of additional jumps and passing of unused
+    parameters.
+  * nlist_mcc/misc: added a second size optimized pool for the single entries.
+    For the AmigaOS4 build this is an item pool, for all other builds a pool
+    with appropriate puddle and threshold sizes is used. This should speed up
+    entry handling a bit more.
+  * nlist/misc: dropped custom memory pool implementation. This means that OS2.x
+    is no longer supported and OS3.0 is the absolute minimum. But then, who does
+    really still use OS2.x with a monster like NList?
+
+2010-12-09 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlisttree_mcc/NListtree.c: replaced the NList display hook by a method. This
+    requires at least NList 20.127.
+  * nlisttree_mcc/NListtree.c: the version of NList.mcc is now queried directly
+    instead of the previous indirect method.
+
+2010-11-16 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nbitmap_mcc/NBitmap.c: redraw the background only if we are told to be a
+    button. Otherwise the truecolor .mcp images will not be drawn correctly.
+  * nbitmap_mcc/SetPatch.c: replaced the version check of graphics.library by a
+    more appropriate check of the installed SetPatch command.
+
+2010-11-15 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nbitmap_mcc/Chunky2Bitmap.c: don't use WritePixelLine8() on plain OS3.1
+    systems, as this function is broken there and may trash memory.
+  * demo/NBitmap-Demo.c: added some error messages in case something went wrong.
+
+2010-10-05 Thore Böckelmann <tboeckel@gmx.de>
+
+  * include/mccinit.c: make sure that removing the library during LibClose()
+    really operates on the correct base. Calling LibExpunge() on MorphOS is
+    wrong, since that takes no parameter but expects the base to be in A6. We
+    work around this by using an additional function which gets called from
+    LibClose() and LibExpunge() with the correct base pointer.
+
+2010-10-04 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/NList_func2.c: fixed another wrong handling of the special value
+    MUIV_NList_Move_Next.
+  * nlist_mcc/NList_func2.c, nlist_mcc/move.c: fixed the wrong behaviour of
+    MUIM_NList_Move. The destination position was always decremented and the
+    item was moved to the position ahead of the inteded one. Now NList behaves
+    exactly like List.mui again. Thanks to Andread Falkenhahn for the hint.
 
 #### v0.108 RELEASE ###########################################################
 

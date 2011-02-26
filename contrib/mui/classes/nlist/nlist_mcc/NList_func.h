@@ -71,39 +71,39 @@
 
 /* mad_Flags |= 0x00004000 to make it think it's visible even if in a virtgroup */
 
-#define REDRAW_IF                 NL_DrawQuietBG(obj,data,0,0)
-#define REDRAW_ALL_FORCE          NL_DrawQuietBG(obj,data,1,0)
-#define REDRAW_ALL                NL_DrawQuietBG(obj,data,2,0)
-#define REDRAW_FORCE              NL_DrawQuietBG(obj,data,3,0)
-#define REDRAW                    NL_DrawQuietBG(obj,data,4,0)
+#define REDRAW_IF                 NL_DrawQuietBG(data,0,0)
+#define REDRAW_ALL_FORCE          NL_DrawQuietBG(data,1,0)
+#define REDRAW_ALL                NL_DrawQuietBG(data,2,0)
+#define REDRAW_FORCE              NL_DrawQuietBG(data,3,0)
+#define REDRAW                    NL_DrawQuietBG(data,4,0)
 
 #define MOREQUIET                 data->NList_Quiet++
 #define FULLQUIET                 data->NList_Quiet |= 0x1000
 #define FULLQUIET_END             data->NList_Quiet &= 0x0FFF
 #define VISUALQUIET               data->NList_Quiet = (data->NList_Quiet & 0x0FFF) + 1
-#define ENDQUIET                  NL_DrawQuietBG(obj,data,5,0)
-#define LESSQUIET                 NL_DrawQuietBG(obj,data,6,0)
+#define ENDQUIET                  NL_DrawQuietBG(data,5,0)
+#define LESSQUIET                 NL_DrawQuietBG(data,6,0)
 
-#define SetBackGround(bg)         if((bg) != (ULONG)data->actbackground) NL_DrawQuietBG(obj, data, 7, (bg));
-#define SetBackGroundForce(bg)    NL_DrawQuietBG(obj,data,8,(bg))
+#define SetBackGround(bg)         if((bg) != (ULONG)data->actbackground) NL_DrawQuietBG(data, 7, (bg));
+#define SetBackGroundForce(bg)    NL_DrawQuietBG(data,8,(bg))
 
-#define Make_Active_Visible       NL_DrawQuietBG(obj,data,9,0)
+#define Make_Active_Visible       NL_DrawQuietBG(data,9,0)
 
-#define ForceMinMax               NL_DrawQuietBG(obj,data,10,0)
+#define ForceMinMax               NL_DrawQuietBG(data,10,0)
 
-#define do_notifies(which)        NL_DoNotifies(obj,data,(which))
-
-
-#define notify_Active             NL_DoNotifies(obj,data,NTF_Active)
-#define notify_Select             NL_DoNotifies(obj,data,(NTF_Select | NTF_LV_Select))
-#define do_notify_Select          NL_DoNotifies(obj,data,(NTF_Select | NTF_LV_Select))
+#define do_notifies(which)        NL_DoNotifies(data,(which))
 
 
-#define SELECT(ent,sel)           NL_Select(obj,data,0,(ent),(sel))
-#define SELECT2(ent,sel)          NL_Select(obj,data,1,(ent),(sel))
-#define SELECT_CHGE(ent,sel)      NL_Select(obj,data,2,(ent),(sel))
-#define SELECT2_CHGE(ent,sel)     NL_Select(obj,data,3,(ent),(sel))
-#define set_Active(new_act)       NL_Select(obj,data,4,(new_act),0)
+#define notify_Active             NL_DoNotifies(data,NTF_Active)
+#define notify_Select             NL_DoNotifies(data,(NTF_Select | NTF_LV_Select))
+#define do_notify_Select          NL_DoNotifies(data,(NTF_Select | NTF_LV_Select))
+
+
+#define SELECT(ent,sel)           NL_Select(data,0,(ent),(sel))
+#define SELECT2(ent,sel)          NL_Select(data,1,(ent),(sel))
+#define SELECT_CHGE(ent,sel)      NL_Select(data,2,(ent),(sel))
+#define SELECT2_CHGE(ent,sel)     NL_Select(data,3,(ent),(sel))
+#define set_Active(new_act)       NL_Select(data,4,(new_act),0)
 
 
 
@@ -177,12 +177,20 @@
 /*data->cols[column].style*/
 
 
-#define NL_Malloc2(pool,len,str)  NL2_Malloc2((pool),(len),NULL)
-#define NL_Free2(pool,ptr,str)    NL2_Free2((pool),(ptr),NULL)
-#define NL_Malloc(data,len,str)   NL2_Malloc((data),(len),NULL)
-#define NL_Free(data,ptr,str)     NL2_Free((data),(ptr),NULL)
+#if !defined(__amigaos4__) && !defined(__MORPHOS__) && !defined(__AROS__)
+// AllocVecPooled.c
+APTR AllocVecPooled(APTR, ULONG);
+// FreeVecPooled.c
+void FreeVecPooled(APTR, APTR);
+#endif
 
-
+#if defined(__amigaos4__)
+#define AllocTypeEntry()      ItemPoolAlloc(data->EntryPool)
+#define FreeTypeEntry(entry)  ItemPoolFree(data->EntryPool, entry)
+#else
+#define AllocTypeEntry()      AllocPooled(data->EntryPool, sizeof(struct TypeEntry))
+#define FreeTypeEntry(entry)  FreePooled(data->EntryPool, entry, sizeof(struct TypeEntry))
+#endif
 
 #define IS_BAR(c,ci) \
     (((c) < data->numcols-1) ||\

@@ -1,5 +1,3 @@
-#if !defined(_POINTER_H_)
-#define _POINTER_H_
 /***************************************************************************
 
  NList.mcc - New List MUI Custom Class
@@ -25,22 +23,21 @@
 
 ***************************************************************************/
 
-// forward declarations
-struct NLData;
+#include <exec/types.h>
+#include <proto/exec.h>
 
-// enums
-enum PointerType
+/// FreeVecPooled
+// return a vector to the pool
+void FreeVecPooled(APTR poolHeader, APTR memory)
 {
-  PT_NONE=0,  // no custom pointer active
-  PT_SIZE,    // sizePointer active
-  PT_MOVE,    // movePointer active
-  PT_SELECT,  // selectPointer active
-};
+  ULONG *mem = (ULONG *)memory;
+  ULONG memSize;
 
-// prototypes
-void SetupCustomPointers(struct NLData *data);
-void CleanupCustomPointers(struct NLData *data);
-void ShowCustomPointer(struct NLData *data, enum PointerType type);
-void HideCustomPointer(struct NLData *data);
+  // skip back over the stored size information
+  memSize = *(--mem);
 
-#endif // _POINTER_H_
+  // an return the memory block to the pool
+  FreePooled(poolHeader, mem, memSize);
+}
+
+///

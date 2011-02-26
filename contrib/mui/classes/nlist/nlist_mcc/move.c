@@ -37,64 +37,25 @@
  *
  */
 
-void  NL_Move( long *dest, long *src, long len, long newpos )
+void NL_Move(struct TypeEntry **dest, struct TypeEntry **src, LONG count, LONG newpos)
 {
-	if ( len > 0 )
-	{
-		len /= 4;
-		len--;
+  LONG i;
 
-		do
-		{
-			(*(struct TypeEntry **)src)->entpos = newpos++;
-			*(dest++) = *(src++);
-		}
-		while ( --len >= 0 );
-	}
-}
-
-
-void  NL_MoveD( long *dest, long *src, long len, long newpos )
-{
-	if ( len > 0 )
-	{
-		len /= 4;
-		len--;
-
-		do
-		{
-			*(--dest) = *(--src);
-			(*(struct TypeEntry **)dest)->entpos = --newpos;
-		}
-		while ( --len >= 0 );
-	}
-}
-
-
-
-/*
-void  NL_Move(long *dest,long *src,long len)
-{
-  if (len > 0)
+  for(i = 0; i < count; i++)
   {
-    len /= 4;
-    len--;
-    do {
-      *(dest++) = *(src++);
-    } while (--len >= 0);
+    (*src)->entpos = newpos++;
+    *dest++ = *src++;
   }
 }
 
 
-void  NL_MoveD(long *dest,long *src,long len)
+void NL_MoveD(struct TypeEntry **dest, struct TypeEntry **src, LONG count, LONG newpos)
 {
-  if (len > 0)
+  LONG i;
+
+  for(i = 0; i < count; i++)
   {
-    len /= 4;
-    len--;
-    do {
-      *(--dest) = *(--src);
-    } while (--len >= 0);
+    *--dest = *--src;
+    (*dest)->entpos = --newpos;
   }
 }
-*/

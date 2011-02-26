@@ -31,6 +31,7 @@
 
 #include <intuition/imageclass.h>
 #include <clib/alib_protos.h>
+#include <proto/exec.h>
 #include <proto/muimaster.h>
 #include <proto/graphics.h>
 #include <proto/intuition.h>
@@ -39,8 +40,9 @@
 
 #include "NList_func.h"
 
-WORD DrawTitle(Object *obj,struct NLData *data,LONG minx,LONG maxx,WORD hfirst)
+WORD DrawTitle(struct NLData *data,LONG minx,LONG maxx,WORD hfirst)
 {
+  Object *obj = data->this;
   WORD linelen = 3;
 #ifdef DO_CLIPPING
   APTR clippinghandle;
@@ -65,14 +67,15 @@ WORD DrawTitle(Object *obj,struct NLData *data,LONG minx,LONG maxx,WORD hfirst)
                                    (LONG) maxx-minx,(LONG) data->vdtitleheight,
                                    (LONG) minx + hfirst + data->vdx,(LONG) data->vdtitlepos + data->vdy,(LONG) 0);
   if (data->NList_TitleSeparator)
-  { SetAPen(data->rp,data->pens[MPEN_SHADOW]);
+  {
+    SetAPen(data->rp,data->pens[MPEN_SHADOW]);
     Move(data->rp, minx, data->vpos - 2);
     Draw(data->rp, maxx-1, data->vpos - 2);
     SetAPen(data->rp,data->pens[MPEN_SHINE]);
     Move(data->rp, minx, data->vpos - 1);
     Draw(data->rp, maxx-1, data->vpos - 1);
   }
-  linelen = DrawText(obj,data,-1,data->hpos - hfirst,data->vdtitlepos + data->voff,minx,maxx,MUIPEN(data->NList_TitlePen),data->hinc,FALSE);
+  linelen = DrawText(data,-1,data->hpos - hfirst,data->vdtitlepos + data->voff,minx,maxx,MUIPEN(data->NList_TitlePen),data->hinc,FALSE);
   data->do_draw_title = FALSE;
 #ifdef DO_CLIPPING
   MUI_RemoveClipping(muiRenderInfo(obj),clippinghandle);
@@ -81,8 +84,9 @@ WORD DrawTitle(Object *obj,struct NLData *data,LONG minx,LONG maxx,WORD hfirst)
 }
 
 
-void DrawOldLine(Object *obj,struct NLData *data,LONG ent,LONG minx,LONG maxx,WORD hfirst)
+void DrawOldLine(struct NLData *data,LONG ent,LONG minx,LONG maxx,WORD hfirst)
 {
+  Object *obj = data->this;
   ULONG mypen;
   BOOL forcepen = FALSE;
   BOOL drawtxt;
@@ -151,7 +155,7 @@ void DrawOldLine(Object *obj,struct NLData *data,LONG ent,LONG minx,LONG maxx,WO
 
     DoMethod(obj,MUIM_DrawBackground,(LONG) minx,vert1,(LONG) maxx-minx,vertd,(LONG) minx+hfirst+data->vdx,vert2+data->vdy,(LONG) 0);
     if (drawtxt)
-      DrawText(obj,data,ent,data->hpos-hfirst,vert1+data->voff,minx,maxx-1,MUIPEN(mypen),data->hinc,forcepen);
+      DrawText(data,ent,data->hpos-hfirst,vert1+data->voff,minx,maxx-1,MUIPEN(mypen),data->hinc,forcepen);
   }
 #ifdef DO_CLIPPING
   MUI_RemoveClipping(muiRenderInfo(obj),clippinghandle);
@@ -159,8 +163,9 @@ void DrawOldLine(Object *obj,struct NLData *data,LONG ent,LONG minx,LONG maxx,WO
 }
 
 
-WORD DrawLines(Object *obj,struct NLData *data,LONG e1,LONG e2,LONG minx,LONG maxx,WORD hfirst,WORD hmax,WORD small,BOOL do_extrems,WORD not_all)
+WORD DrawLines(struct NLData *data,LONG e1,LONG e2,LONG minx,LONG maxx,WORD hfirst,WORD hmax,WORD small,BOOL do_extrems,WORD not_all)
 {
+  Object *obj = data->this;
   LONG ent,ent2,ent3,ent4,dent,lim1,lim2,lim3;
   WORD cursel,linelen=0;
   ULONG mypen;
@@ -352,7 +357,7 @@ WORD DrawLines(Object *obj,struct NLData *data,LONG e1,LONG e2,LONG minx,LONG ma
         if (!data->NList_First_Incr || do_extrems || ((ent > data->NList_First) && (ent < data->NList_First + data->NList_Visible)))
 #endif
         {
-          linelen = DrawText(obj,data,ent,data->hpos-hfirst,vert1+data->voff,minx,maxx-1,MUIPEN(mypen),data->hinc,forcepen);
+          linelen = DrawText(data,ent,data->hpos-hfirst,vert1+data->voff,minx,maxx-1,MUIPEN(mypen),data->hinc,forcepen);
           if(linelen > hmax)
             hmax = linelen;
         }
@@ -449,17 +454,17 @@ WORD DrawLines(Object *obj,struct NLData *data,LONG e1,LONG e2,LONG minx,LONG ma
         if (x1 < x2)
         {
           mypen = data->NList_ListPen;
-          linelen = DrawText(obj,data,ent,data->hpos-hfirst,vert1+data->voff,x1,x2-1,MUIPEN(mypen),0,FALSE);
+          linelen = DrawText(data,ent,data->hpos-hfirst,vert1+data->voff,x1,x2-1,MUIPEN(mypen),0,FALSE);
         }
         if (x2 < x3)
         {
           mypen = data->NList_CursorPen;
-          linelen = DrawText(obj,data,ent,data->hpos-hfirst,vert1+data->voff,x2,x3-1,MUIPEN(mypen),0,data->ForcePen);
+          linelen = DrawText(data,ent,data->hpos-hfirst,vert1+data->voff,x2,x3-1,MUIPEN(mypen),0,data->ForcePen);
         }
         if (x3 < x4)
         {
           mypen = data->NList_ListPen;
-          linelen = DrawText(obj,data,ent,data->hpos-hfirst,vert1+data->voff,x3,x4-1,MUIPEN(mypen),0,FALSE);
+          linelen = DrawText(data,ent,data->hpos-hfirst,vert1+data->voff,x3,x4-1,MUIPEN(mypen),0,FALSE);
         }
         if (linelen > hmax)
           hmax = linelen;
@@ -535,30 +540,20 @@ WORD DrawLines(Object *obj,struct NLData *data,LONG e1,LONG e2,LONG minx,LONG ma
 
 
 
-static ULONG myTextFit( struct RastPort *rp, STRPTR string, unsigned long strLen,
-        struct TextExtent *textExtent, struct TextExtent *constrainingExtent,
-        long strDirection, unsigned long constrainingBitWidth,
-        unsigned long constrainingBitHeight )
-{
-  if ((LIBVER(GfxBase) == 37) && (rp->Font->tf_Flags & FPF_PROPORTIONAL))
-    constrainingBitWidth++;
-  return (TextFit(rp,string,strLen,textExtent,constrainingExtent,
-                 strDirection,constrainingBitWidth,constrainingBitHeight));
-}
-
-
 /*
 #define MPEN_HALFSHINE  1
 #define MPEN_BACKGROUND 2
 #define MPEN_HALFSHADOW 3
 */
 
-void NL_DrawTitleMark( Object *obj, struct NLData *data, LONG xf, WORD yf )
+void NL_DrawTitleMark(struct NLData *data, LONG xf, WORD yf)
 {
   APTR clippinghandle = NULL;
+  Object *obj = data->this;
 
   if (!data->NList_PartialChar)
-  { clippinghandle = MUI_AddClipping(muiRenderInfo(obj),(WORD) data->vleft,(WORD) data->vtop,
+  {
+    clippinghandle = MUI_AddClipping(muiRenderInfo(obj),(WORD) data->vleft,(WORD) data->vtop,
                                             (WORD) data->vwidth,(WORD) data->vheight);
   }
 
@@ -641,17 +636,20 @@ void NL_DrawTitleMark( Object *obj, struct NLData *data, LONG xf, WORD yf )
   }
 
   if (!data->NList_PartialChar)
-  { MUI_RemoveClipping(muiRenderInfo(obj),clippinghandle);
+  {
+    MUI_RemoveClipping(muiRenderInfo(obj),clippinghandle);
   }
 }
 
 
-void NL_DrawTitleMark2( Object *obj, struct NLData *data, LONG xf, WORD yf )
+void NL_DrawTitleMark2(struct NLData *data, LONG xf, WORD yf)
 {
+  Object *obj = data->this;
   APTR clippinghandle = NULL;
 
   if (!data->NList_PartialChar)
-  { clippinghandle = MUI_AddClipping(muiRenderInfo(obj),(WORD) data->vleft,(WORD) data->vtop,
+  {
+    clippinghandle = MUI_AddClipping(muiRenderInfo(obj),(WORD) data->vleft,(WORD) data->vtop,
                                             (WORD) data->vwidth,(WORD) data->vheight);
   }
 
@@ -724,15 +722,17 @@ void NL_DrawTitleMark2( Object *obj, struct NLData *data, LONG xf, WORD yf )
   }
 
   if (!data->NList_PartialChar)
-  { MUI_RemoveClipping(muiRenderInfo(obj),clippinghandle);
+  {
+    MUI_RemoveClipping(muiRenderInfo(obj),clippinghandle);
   }
 }
 
 
-LONG DrawText(Object *obj,struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,LONG maxx,ULONG mypen,LONG dxpermit,BOOL forcepen)
+LONG DrawText(struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,LONG maxx,ULONG mypen,LONG dxpermit,BOOL forcepen)
 {
-  /*register*/ struct colinfo *cinfo;
-  /*register*/ struct affinfo *afinfo;
+  Object *obj = data->this;
+  struct colinfo *cinfo;
+  struct affinfo *afinfo;
   LONG linelen, next_x=0, x2, x2s, x2e, minx2, maxx2, minx3, maxx3, cmaxx;
   WORD xbar,xbar2,ybar,ybar2;
   ULONG pen;
@@ -752,30 +752,27 @@ LONG DrawText(Object *obj,struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,L
     }
   }
 
-  if (LIBVER(GfxBase) >= 39)
-    SetABPenDrMd(data->rp,mypen,data->pens[MPEN_BACKGROUND],JAM1);
-  else
-  { SetAPen(data->rp,mypen);
-    SetBPen(data->rp,data->pens[MPEN_BACKGROUND]);
-    SetDrMd(data->rp,JAM1);
-  }
+  SetABPenDrMd(data->rp,mypen,data->pens[MPEN_BACKGROUND],JAM1);
 
-  NL_GetDisplayArray(obj,data,ent);
+  NL_GetDisplayArray(data,ent);
 
   xbar = x + data->cols[0].c->minx - 8;
 
   linelen = 0;
   for (column = 0;column < data->numcols;column++)
-  { cinfo = data->cols[column].c;
+  {
+    cinfo = data->cols[column].c;
 
     x2 = x + cinfo->minx;
     minx2 = x + cinfo->minx;
     if (cinfo->maxx >= 0)
-    { maxx2 = x + cinfo->maxx;
+    {
+      maxx2 = x + cinfo->maxx;
       cmaxx = maxx2;
     }
     else
-    { maxx2 = data->mright;
+    {
+      maxx2 = data->mright;
       cmaxx = 100000;
     }
 
@@ -795,13 +792,16 @@ LONG DrawText(Object *obj,struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,L
           ((column < data->numcols-1) ||
            ((data->NList_Horiz_Entries <= data->NList_Horiz_Visible + data->NList_Horiz_First) &&
             (xbar < data->mright - 1 - data->NList_Horiz_First))))
-      { if ((xbar >= data->mleft) && (xbar >= minx-1))
-        { SetAPen(data->rp,data->pens[MPEN_SHADOW]);
+      {
+        if ((xbar >= data->mleft) && (xbar >= minx-1))
+        {
+          SetAPen(data->rp,data->pens[MPEN_SHADOW]);
           Move(data->rp, xbar, ybar);
           Draw(data->rp, xbar, ybar2);
         }
         if (!(cinfo->bar & 4) && (xbar+1 <= data->mright) && (xbar+1 <= maxx+1))
-        { SetAPen(data->rp,data->pens[MPEN_SHINE]);
+        {
+          SetAPen(data->rp,data->pens[MPEN_SHINE]);
           Move(data->rp, xbar+1, ybar);
           Draw(data->rp, xbar+1, ybar2);
         }
@@ -811,12 +811,12 @@ LONG DrawText(Object *obj,struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,L
     if ((ent == -1) && IS_BAR(column,cinfo) &&
         ((data->NList_TitleMark & MUIV_NList_TitleMark_ColMask) == cinfo->col))
     {
-      NL_DrawTitleMark(obj,data,xbar-1,ybar);
+      NL_DrawTitleMark(data,xbar-1,ybar);
     }
     else if ((ent == -1) && IS_BAR(column,cinfo) &&
         ((data->NList_TitleMark2 & MUIV_NList_TitleMark2_ColMask) == cinfo->col))
     {
-      NL_DrawTitleMark2(obj,data,xbar-1,ybar);
+      NL_DrawTitleMark2(data,xbar-1,ybar);
     }
 */
     if (minx2 < data->mleft - data->NList_PartialChar)
@@ -825,7 +825,8 @@ LONG DrawText(Object *obj,struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,L
       maxx2 = data->mright + data->NList_PartialChar;
 
     if (column+1 < data->numcols)
-    { if (minx2 >= maxx2)
+    {
+      if (minx2 >= maxx2)
         continue;
       if (minx > maxx2)
         continue;
@@ -844,8 +845,8 @@ LONG DrawText(Object *obj,struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,L
     if (DontDoColumn(data,ent,column))
       continue;
 
-    ParseColumn(obj,data,column,mypen);
-    WidthColumn(obj,data,column,0);
+    ParseColumn(data,column,mypen);
+    WidthColumn(data,column,0);
 
     if (IS_HLINE(cinfo->style))
     {
@@ -858,7 +859,8 @@ LONG DrawText(Object *obj,struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,L
       if (IS_HLINE_C(cinfo->style))
         yb1 += (data->vinc-1)/2;
       else if (IS_HLINE_E(cinfo->style))
-      { yb1 += (data->vinc-1)/2;
+      {
+        yb1 += (data->vinc-1)/2;
         xbe1 = x2 + cinfo->xoffset - 3;
         xbe2 = xbe1 + cinfo->colwidth + 4;
       }
@@ -866,11 +868,13 @@ LONG DrawText(Object *obj,struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,L
         yb1 += data->vinc-2;
       yb2 = yb1 + 1;
       if (thick)
-      { yb1 -= 1;
+      {
+        yb1 -= 1;
         yb2 += 1;
       }
       else if (IS_HLINE_nothick(cinfo->style))
-      { nothick = 1;
+      {
+        nothick = 1;
         if (IS_HLINE_B(cinfo->style))
           yb1 = yb2;
       }
@@ -885,32 +889,39 @@ LONG DrawText(Object *obj,struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,L
       if (xb2 > data->mright)
         xb2 = data->mright;
       if (xb1 < xb2)
-      { if (IS_HLINE_E(cinfo->style))
-        { if (xbe1 > xb2)
+      {
+        if (IS_HLINE_E(cinfo->style))
+        {
+          if (xbe1 > xb2)
             xbe1 = xb2;
           if (xbe2 < xb1)
             xbe2 = xb1;
           if (xb1 <= xbe1)
-          { if (!nothick)
-            { SetAPen(data->rp,data->pens[MPEN_SHADOW]);
+          {
+            if (!nothick)
+            {
+              SetAPen(data->rp,data->pens[MPEN_SHADOW]);
               Move(data->rp, xb1, yb1);
               Draw(data->rp, xbe1, yb1);
               SetAPen(data->rp,data->pens[MPEN_SHINE]);
               Move(data->rp, xb1, yb2);
               Draw(data->rp, xbe1, yb2);
               if (thick)
-              { SetAPen(data->rp,data->HLINE_thick_pen);
+              {
+                SetAPen(data->rp,data->HLINE_thick_pen);
                 RectFill(data->rp, xb1, yb1+1, xbe1, yb1+2);
               }
             }
             else
-            { SetAPen(data->rp,data->HLINE_thick_pen);
+            {
+              SetAPen(data->rp,data->HLINE_thick_pen);
               Move(data->rp, xb1, yb1);
               Draw(data->rp, xbe1, yb1);
             }
           }
           if (xbe2 <= xb2)
-          { if (!nothick)
+          {
+            if (!nothick)
             { SetAPen(data->rp,data->pens[MPEN_SHADOW]);
               Move(data->rp, xbe2, yb1);
               Draw(data->rp, xb2, yb1);
@@ -918,32 +929,38 @@ LONG DrawText(Object *obj,struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,L
               Move(data->rp, xbe2, yb2);
               Draw(data->rp, xb2, yb2);
               if (thick)
-              { SetAPen(data->rp,data->HLINE_thick_pen);
+              {
+                SetAPen(data->rp,data->HLINE_thick_pen);
                 RectFill(data->rp, xbe2, yb1+1, xb2, yb1+2);
               }
             }
             else
-            { SetAPen(data->rp,data->HLINE_thick_pen);
+            {
+              SetAPen(data->rp,data->HLINE_thick_pen);
               Move(data->rp, xbe2, yb1);
               Draw(data->rp, xb2, yb1);
             }
           }
         }
         else
-        { if (!nothick)
-          { SetAPen(data->rp,data->pens[MPEN_SHADOW]);
+        {
+          if (!nothick)
+          {
+            SetAPen(data->rp,data->pens[MPEN_SHADOW]);
             Move(data->rp, xb1, yb1);
             Draw(data->rp, xb2, yb1);
             SetAPen(data->rp,data->pens[MPEN_SHINE]);
             Move(data->rp, xb1, yb2);
             Draw(data->rp, xb2, yb2);
             if (thick)
-            { SetAPen(data->rp,data->HLINE_thick_pen);
+            {
+              SetAPen(data->rp,data->HLINE_thick_pen);
               RectFill(data->rp, xb1, yb1+1, xb2, yb1+2);
             }
           }
           else
-          { SetAPen(data->rp,data->HLINE_thick_pen);
+          {
+            SetAPen(data->rp,data->HLINE_thick_pen);
             Move(data->rp, xb1, yb1);
             Draw(data->rp, xb2, yb1);
           }
@@ -951,7 +968,7 @@ LONG DrawText(Object *obj,struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,L
       }
     }
 
-/*    WidthColumn(obj,data,column,0);*/
+/*    WidthColumn(data,column,0);*/
 
     x2 += cinfo->xoffset;
 
@@ -960,7 +977,8 @@ LONG DrawText(Object *obj,struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,L
       if (cinfo->userwidth > 0)
         linelen = cinfo->userwidth + cinfo->minx - 1;
       else
-      { linelen = cinfo->colwidth + cinfo->minx + cinfo->xoffset;
+      {
+        linelen = cinfo->colwidth + cinfo->minx + cinfo->xoffset;
         if (IS_ALIGN_CENTER(cinfo->style) && (cinfo->dx > cinfo->colwidth))
           linelen = cinfo->minx + cinfo->dx - 1;
       }
@@ -1009,6 +1027,7 @@ LONG DrawText(Object *obj,struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,L
       {
         LONG dx,dx3,x3,dy,dy2;
         struct NImgList *nimg = (struct NImgList *) afinfo->strptr;
+
         x2 += 1;
         dx = afinfo->pen & 0x0000FFFF;
         dy = 0;
@@ -1019,7 +1038,8 @@ LONG DrawText(Object *obj,struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,L
         if ((x3 + dx3) > maxx2)
           dx3 = maxx2 - x3;
         if (x3 < minx2)
-        { dx3 -= (minx2 - x3);
+        {
+          dx3 -= (minx2 - x3);
           x3 = minx2;
         }
 
@@ -1054,8 +1074,10 @@ LONG DrawText(Object *obj,struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,L
           else
             _height(nimg->NImgObj) = data->vinc;
           if ((dy2 > data->vinc) || (dx3 < dx) || (_width(nimg->NImgObj) != nimg->width) || (_height(nimg->NImgObj) != nimg->height))
-          { if (dy2 > data->vinc)
-            { dy = 0;
+          {
+            if (dy2 > data->vinc)
+            {
+              dy = 0;
               _height(nimg->NImgObj) = data->vinc;
               ot = _top(nimg->NImgObj) = (WORD) (y-data->voff+dy);
             }
@@ -1067,14 +1089,18 @@ LONG DrawText(Object *obj,struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,L
           mad_Flags = muiAreaData(obj)->mad_Flags;
           OCLASS(obj) = data->ncl;
           if (!nimg->ImgName)
-          { LONG vinc = (LONG) data->vinc;
+          {
+            LONG vinc = (LONG) data->vinc;
+
             if (afinfo->tag)
-            { SetAttrs(nimg->NImgObj, MUIA_NLIMG_EntryCurrent, ent,
+            {
+              SetAttrs(nimg->NImgObj, MUIA_NLIMG_EntryCurrent, ent,
                                       MUIA_NLIMG_EntryHeight, vinc,
                                       afinfo->tag, afinfo->tagval, TAG_DONE);
             }
             else
-            { SetAttrs(nimg->NImgObj, MUIA_NLIMG_EntryCurrent, ent,
+            {
+              SetAttrs(nimg->NImgObj, MUIA_NLIMG_EntryCurrent, ent,
                                       MUIA_NLIMG_EntryHeight, vinc, TAG_DONE);
             }
           }
@@ -1089,7 +1115,8 @@ LONG DrawText(Object *obj,struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,L
           if ((data->affbutton >= 0) && (data->affbutton == (LONG)afinfo->button))
           {
             if ((data->affbuttonstate == 2) || (data->affbuttonstate == -2))
-            { muiAreaData(nimg->NImgObj)->mad_Flags &= ~MADF_VISIBLE;
+            {
+              muiAreaData(nimg->NImgObj)->mad_Flags &= ~MADF_VISIBLE;
               SetAttrs(nimg->NImgObj, MUIA_Image_State,IDS_SELECTED,
                                       MUIA_Selected, TRUE, TAG_DONE);
             }
@@ -1106,13 +1133,15 @@ LONG DrawText(Object *obj,struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,L
             MUI_Redraw(nimg->NImgObj,MADF_DRAWALL);
 
             if ((data->affbuttonstate == 2) || (data->affbuttonstate == -2))
-            { muiAreaData(nimg->NImgObj)->mad_Flags &= ~MADF_VISIBLE;
+            {
+              muiAreaData(nimg->NImgObj)->mad_Flags &= ~MADF_VISIBLE;
               SetAttrs(nimg->NImgObj, MUIA_Image_State,IDS_NORMAL,
                                       MUIA_Selected, FALSE, TAG_DONE);
             }
           }
           else
-          { muiAreaData(nimg->NImgObj)->mad_Flags |= MADF_VISIBLE;
+          {
+            muiAreaData(nimg->NImgObj)->mad_Flags |= MADF_VISIBLE;
 
             if(xget(nimg->NImgObj, MUIA_Disabled))
               set(nimg->NImgObj, MUIA_Disabled, FALSE);
@@ -1126,7 +1155,8 @@ LONG DrawText(Object *obj,struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,L
           OCLASS(obj) = realclass;
           data->drawsuper = 0;
           if (doclip)
-          { doclip = FALSE;
+          {
+            doclip = FALSE;
             MUI_RemoveClipping(muiRenderInfo(obj),clippinghandle);
             _width(nimg->NImgObj) = width;
             _height(nimg->NImgObj) = height;
@@ -1134,18 +1164,13 @@ LONG DrawText(Object *obj,struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,L
           _left(nimg->NImgObj) = left;
           _top(nimg->NImgObj) = top;
         }
-        if (LIBVER(GfxBase) >= 39)
-          SetABPenDrMd(data->rp,afinfo->pen,data->pens[MPEN_BACKGROUND],JAM1);
-        else
-        { SetAPen(data->rp,afinfo->pen);
-          SetBPen(data->rp,data->pens[MPEN_BACKGROUND]);
-          SetDrMd(data->rp,JAM1);
-        }
+        SetABPenDrMd(data->rp,afinfo->pen,data->pens[MPEN_BACKGROUND],JAM1);
         ReSetFont;
       }
       else if (afinfo->style == STYLE_IMAGE2)
       {
         LONG dx,dx2,dy,dy2;
+
         x2 += 1;
         dx = afinfo->pen & 0x0000FFFF;
         dx2 = 0;
@@ -1155,26 +1180,22 @@ LONG DrawText(Object *obj,struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,L
         if ((x2 + dx) > maxx2)
           dx = maxx2 - x2;
         if (x2 < minx2)
-        { dx2 = minx2 - x2;
+        {
+          dx2 = minx2 - x2;
           x2 += dx2;
           dx -= dx2;
         }
         if ((dx > 0) && (x2 <= maxx) && (next_x > minx) && afinfo->strptr)
         {
           struct BitMapImage *bmimg = (struct BitMapImage *) afinfo->strptr;
+
           if (data->vinc > dy2)
             dy = (data->vinc - dy2 + 1)/2;
           BltMaskBitMapRastPort(&(bmimg->imgbmp), (WORD) dx2, (WORD) 0,
                                 data->rp, (WORD) x2, (WORD) (y-data->voff+dy),
                                 (WORD) dx, (WORD) dy2, (UBYTE) (ABC|ABNC|ANBC),bmimg->mask);
         }
-        if (LIBVER(GfxBase) >= 39)
-          SetABPenDrMd(data->rp,afinfo->pen,data->pens[MPEN_BACKGROUND],JAM1);
-        else
-        { SetAPen(data->rp,afinfo->pen);
-          SetBPen(data->rp,data->pens[MPEN_BACKGROUND]);
-          SetDrMd(data->rp,JAM1);
-        }
+        SetABPenDrMd(data->rp,afinfo->pen,data->pens[MPEN_BACKGROUND],JAM1);
         SetDrPt(data->rp,(UWORD)~0);
       }
       else
@@ -1198,10 +1219,11 @@ LONG DrawText(Object *obj,struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,L
         x2e = x2 + te.te_Width;
 
         if ((x2 < maxx2) && (x2 + te.te_Extent.MaxX > minx2))
-        { /* skip most of unwanted chars on the right */
+        {
+          /* skip most of unwanted chars on the right */
           if ((curclen > 0) && (x2e > maxx3))
           { dcurclen = te.te_Extent.MaxX - te.te_Width - te.te_Extent.MinX  +2;
-            curclen = myTextFit(data->rp, ptr1, curclen, &te, NULL,1,maxx3 - x2 + dcurclen,32000);
+            curclen = TextFit(data->rp, ptr1, curclen, &te, NULL,1,maxx3 - x2 + dcurclen,32000);
             if (curclen > 0)
             { TextExtent(data->rp, ptr1, curclen, &te);
               x2e = x2 + te.te_Width;
@@ -1209,41 +1231,52 @@ LONG DrawText(Object *obj,struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,L
           }
           /* skip most of unwanted chars on the left */
           if ((curclen > 0) && (x2 < minx3))
-          { dcurclen = myTextFit(data->rp, ptr1, curclen, &te, NULL,1,minx3 - x2,32000);
+          {
+            dcurclen = TextFit(data->rp, ptr1, curclen, &te, NULL,1,minx3 - x2,32000);
             curclen -= dcurclen;
             if (curclen > 0)
-            { ptr1 += dcurclen;
+            {
+              ptr1 += dcurclen;
               x2 += te.te_Width;
               TextExtent(data->rp, ptr1, curclen, &te);
               x2e = x2 + te.te_Width;
             }
           }
           if (curclen > 0)
-          { TextExtent(data->rp, &ptr1[curclen-1], 1, &te);
+          {
+            TextExtent(data->rp, &ptr1[curclen-1], 1, &te);
             x2e -= te.te_Width;
             /* throw away chars on the right that souldn't be draw because out of list */
             while ((curclen > 0) && ((x2e + te.te_Extent.MaxX) > maxx2))
-            { curclen--;
+            {
+              curclen--;
               if (curclen > 0)
-              { TextExtent(data->rp, &ptr1[curclen-1], 1, &te);
+              {
+                TextExtent(data->rp, &ptr1[curclen-1], 1, &te);
                 x2e -= te.te_Width;
               }
             }
             /* throw away chars on the right that i don't want to draw because out of maxx */
             if (dxpermit)
-            { while ((curclen > 0) && ((x2e + te.te_Extent.MinX) > maxx))
-              { curclen--;
+            {
+              while ((curclen > 0) && ((x2e + te.te_Extent.MinX) > maxx))
+              {
+                curclen--;
                 if (curclen > 0)
-                { TextExtent(data->rp, &ptr1[curclen-1], 1, &te);
+                {
+                  TextExtent(data->rp, &ptr1[curclen-1], 1, &te);
                   x2e -= te.te_Width;
                 }
               }
             }
             else
-            { while ((curclen > 0) && (x2e > maxx))
-              { curclen--;
+            {
+              while ((curclen > 0) && (x2e > maxx))
+              {
+                curclen--;
                 if (curclen > 0)
-                { TextExtent(data->rp, &ptr1[curclen-1], 1, &te);
+                {
+                  TextExtent(data->rp, &ptr1[curclen-1], 1, &te);
                   x2e -= te.te_Width;
                 }
               }
@@ -1251,26 +1284,32 @@ LONG DrawText(Object *obj,struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,L
           }
 
           if (curclen > 0)
-          { TextExtent(data->rp, ptr1, 1, &te);
+          {
+            TextExtent(data->rp, ptr1, 1, &te);
             /* throw away chars on the left that souldn't be draw because out of list */
             while ((curclen > 0) && ((x2 + te.te_Extent.MinX) < minx2))
-            { x2 += te.te_Width;
+            {
+              x2 += te.te_Width;
               ptr1++;
               curclen--;
               TextExtent(data->rp, ptr1, 1, &te);
             }
             /* throw away chars on the left that i don't want to draw because out of minx */
             if (dxpermit)
-            { while ((curclen > 0) && ((x2 + te.te_Extent.MaxX) < minx))
-              { x2 += te.te_Width;
+            {
+              while ((curclen > 0) && ((x2 + te.te_Extent.MaxX) < minx))
+              {
+                x2 += te.te_Width;
                 ptr1++;
                 curclen--;
                 TextExtent(data->rp, ptr1, 1, &te);
               }
             }
             else
-            { while ((curclen > 0) && ((x2+te.te_Width) <= minx))
-              { x2 += te.te_Width;
+            {
+              while ((curclen > 0) && ((x2+te.te_Width) <= minx))
+              {
+                x2 += te.te_Width;
                 ptr1++;
                 curclen--;
                 TextExtent(data->rp, ptr1, 1, &te);
@@ -1311,7 +1350,9 @@ LONG DrawText(Object *obj,struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,L
       afinfo = &data->aff_infos[ni];
     }
     if (data->NList_PartialCol && (x2 > cmaxx) && (xbar-1 >= data->mleft) && (xbar-1 <= data->mright))
-    { WORD yb;
+    {
+      WORD yb;
+
       SetAPen(data->rp,data->pens[MPEN_SHINE]);
       for (yb = ybar+1; yb < ybar2; yb += 2)
         WritePixel(data->rp, xbar-1, yb);
@@ -1323,30 +1364,31 @@ LONG DrawText(Object *obj,struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,L
     if ((ent == -1) && IS_BAR(column,cinfo) &&
         ((data->NList_TitleMark & MUIV_NList_TitleMark_ColMask) == cinfo->col))
     {
-      NL_DrawTitleMark(obj,data,xbar-1,ybar);
+      NL_DrawTitleMark(data,xbar-1,ybar);
     }
     else if ((ent == -1) && IS_BAR(column,cinfo) &&
         ((data->NList_TitleMark2 & MUIV_NList_TitleMark2_ColMask) == cinfo->col))
     {
-      NL_DrawTitleMark2(obj,data,xbar-1,ybar);
+      NL_DrawTitleMark2(data,xbar-1,ybar);
     }
     if ((ent == -1) && !IS_BAR(column,cinfo) &&
         ((data->NList_TitleMark & MUIV_NList_TitleMark_ColMask) == cinfo->col))
     {
-      NL_DrawTitleMark(obj,data,next_x+6,ybar);
+      NL_DrawTitleMark(data,next_x+6,ybar);
     }
     else if ((ent == -1) && !IS_BAR(column,cinfo) &&
         ((data->NList_TitleMark2 & MUIV_NList_TitleMark2_ColMask) == cinfo->col))
     {
-      NL_DrawTitleMark2(obj,data,next_x+6,ybar);
+      NL_DrawTitleMark2(data,next_x+6,ybar);
     }
   }
   SetSoftStyle(data->rp, 0, STYLE_MASK);
+
   return (linelen);
 }
 
 
-static LONG DrawEntryTextOnly(Object *obj,struct NLData *data,struct RastPort *rp,LONG ent,LONG col,UNUSED LONG x,LONG y,LONG minx,LONG maxx,ULONG mypen,BOOL draw)
+static LONG DrawEntryTextOnly(struct NLData *data,struct RastPort *rp,LONG ent,LONG col,UNUSED LONG x,LONG y,LONG minx,LONG maxx,ULONG mypen,BOOL draw)
 {
   struct colinfo *cinfo;
   struct affinfo *afinfo;
@@ -1356,9 +1398,9 @@ static LONG DrawEntryTextOnly(Object *obj,struct NLData *data,struct RastPort *r
   struct TextExtent te;
   WORD curclen, dcurclen, ni;
 
-  NL_GetDisplayArray(obj,data,ent);
+  NL_GetDisplayArray(data,ent);
 
-  column = NL_ColToColumn(obj,data,col);
+  column = NL_ColToColumn(data,col);
   if (column < 0)
     return (0);
 
@@ -1366,8 +1408,8 @@ static LONG DrawEntryTextOnly(Object *obj,struct NLData *data,struct RastPort *r
 
   if (!DontDoColumn(data,ent,column))
   {
-    ParseColumn(obj,data,column,mypen);
-    WidthColumn(obj,data,column,0);
+    ParseColumn(data,column,mypen);
+    WidthColumn(data,column,0);
     x2 = 1;
     pen = mypen;
 
@@ -1400,7 +1442,7 @@ static LONG DrawEntryTextOnly(Object *obj,struct NLData *data,struct RastPort *r
         { /* skip most of unwanted chars on the right */
           if ((curclen > 0) && (x2e > maxx))
           { dcurclen = te.te_Extent.MaxX - te.te_Width - te.te_Extent.MinX  +2;
-            curclen = myTextFit(rp, ptr1, curclen, &te, NULL,1,maxx - x2 + dcurclen,32000);
+            curclen = TextFit(rp, ptr1, curclen, &te, NULL,1,maxx - x2 + dcurclen,32000);
             if (curclen > 0)
             { TextExtent(rp, ptr1, curclen, &te);
               x2e = x2 + te.te_Width;
@@ -1436,17 +1478,21 @@ static LONG DrawEntryTextOnly(Object *obj,struct NLData *data,struct RastPort *r
 }
 
 
-LONG DrawDragText(Object *obj,struct NLData *data,BOOL draw)
+LONG DrawDragText(struct NLData *data,BOOL draw)
 {
+  Object *obj = data->this;
   struct TextExtent te;
   struct RastPort *rp;
   LONG curclen,x,w;
+
   if (draw)
     rp = data->DragRPort;
   else
     rp = data->rp;
   if (rp && data->DragText)
-  { char *text = data->DragText;
+  {
+    char *text = data->DragText;
+
     x = 0;
     if (draw)
     {
@@ -1466,17 +1512,11 @@ LONG DrawDragText(Object *obj,struct NLData *data,BOOL draw)
       _top(obj) = data->top;
       _width(obj) = data->width;
       _height(obj) = data->height;
-      if (LIBVER(GfxBase) >= 39)
-        SetABPenDrMd(data->DragRPort,MUIPEN(data->NList_CursorPen),data->pens[MPEN_BACKGROUND],JAM1);
-      else
-      { SetAPen(data->DragRPort,MUIPEN(data->NList_CursorPen));
-        SetBPen(data->DragRPort,data->pens[MPEN_BACKGROUND]);
-        SetDrMd(data->DragRPort,JAM1);
-      }
+      SetABPenDrMd(data->DragRPort,MUIPEN(data->NList_CursorPen),data->pens[MPEN_BACKGROUND],JAM1);
     }
     SetSoftStyle(rp, 0, STYLE_MASK);
     curclen = strlen(text);
-    curclen = myTextFit(rp, text, curclen, &te, NULL,1,data->DragWidth,32000);
+    curclen = TextFit(rp, text, curclen, &te, NULL,1,data->DragWidth,32000);
     if (te.te_Extent.MinX < 0)
       x -= te.te_Extent.MinX;
     w = te.te_Extent.MaxX - te.te_Extent.MinX;
@@ -1493,7 +1533,9 @@ LONG DrawDragText(Object *obj,struct NLData *data,BOOL draw)
     return (w);
   }
   else if (rp && (data->DragEntry >= 0) && (data->NList_DragColOnly >= 0))
-  { LONG ent = data->DragEntry;
+  {
+    LONG ent = data->DragEntry;
+
     if (draw)
     {
       data->DragText = NULL;
@@ -1513,7 +1555,7 @@ LONG DrawDragText(Object *obj,struct NLData *data,BOOL draw)
       _width(obj) = data->width;
       _height(obj) = data->height;
     }
-    w = DrawEntryTextOnly(obj,data,rp,ent,data->NList_DragColOnly,0,data->voff,0,data->DragWidth,MUIPEN(data->NList_CursorPen),draw);
+    w = DrawEntryTextOnly(data,rp,ent,data->NList_DragColOnly,0,data->voff,0,data->DragWidth,MUIPEN(data->NList_CursorPen),draw);
     if (w > data->DragWidth)
       w = data->DragWidth;
     return (w);
@@ -1526,42 +1568,28 @@ LONG DrawDragText(Object *obj,struct NLData *data,BOOL draw)
 }
 
 
-void DisposeDragRPort(UNUSED Object *obj,struct NLData *data)
+void DisposeDragRPort(struct NLData *data)
 {
   if(data->DragRPort != NULL)
   {
     struct BitMap *bm = data->DragRPort->BitMap;
 
-    NL_Free(data, data->DragRPort, "DisposeDragRPort");
+    FreeVecPooled(data->Pool, data->DragRPort);
     data->DragRPort = NULL;
 
     if(bm != NULL)
     {
       WaitBlit();
-
-      if(LIBVER(GfxBase) >= 39)
-      {
-        FreeBitMap(bm);
-      }
-      else
-      {
-        struct BitMapImage *bmimg = (struct BitMapImage *)(((ULONG *)bm)[-1]);
-        ULONG ktr;
-
-        for(ktr = 0; ktr < bm->Depth; ktr++)
-        {
-          if(bm->Planes[ktr] != NULL)
-            FreeRaster(bm->Planes[ktr], bmimg->width, bmimg->height);
-        }
-        NL_Free(data, bmimg, "DisposeDragRPort");
-      }
+      FreeBitMap(bm);
     }
   }
 }
 
 
-struct RastPort *CreateDragRPort(Object *obj,struct NLData *data,LONG numlines,LONG first,LONG last)
+struct RastPort *CreateDragRPort(struct NLData *data,LONG numlines,LONG first,LONG last)
 {
+  Object *obj = data->this;
+
   if(last >= first)
   {
     data->DragWidth = data->mwidth;
@@ -1608,66 +1636,21 @@ struct RastPort *CreateDragRPort(Object *obj,struct NLData *data,LONG numlines,L
         data->DragEntry = first;
       }
 
-      data->DragWidth = DrawDragText(obj, data, FALSE);
+      data->DragWidth = DrawDragText(data, FALSE);
     }
   }
 
   if(data->DragRPort == NULL &&
-     ((data->DragRPort = (struct RastPort *)NL_Malloc(data, sizeof(struct RastPort), "CreateDragRPort"))) != NULL)
+     ((data->DragRPort = (struct RastPort *)AllocVecPooled(data->Pool, sizeof(struct RastPort)))) != NULL)
   {
     struct BitMap *fbm = _window(obj)->RPort->BitMap;
-    ULONG fbmDepth;
 
     InitRastPort(data->DragRPort);
 
-    if(LIBVER(GfxBase) >= 39)
-    {
-      fbmDepth = GetBitMapAttr(fbm, BMA_DEPTH);
-      data->DragRPort->BitMap = AllocBitMap((ULONG)data->DragWidth, (ULONG)data->DragHeight, fbmDepth, BMF_MINPLANES, fbm);
-    }
-    else
-    {
-      struct BitMapImage *bmimg = NULL;
-
-      fbmDepth = MIN(fbm->Depth, 8);
-
-      data->DragRPort->BitMap = NULL;
-      if((bmimg = NL_Malloc(data, sizeof(struct BitMapImage), "CreateDragRPort")) != NULL)
-      {
-        ULONG ktr;
-        BOOL bmimg_failed = FALSE;
-
-        InitBitMap(&bmimg->imgbmp, fbmDepth, data->DragWidth, data->DragHeight);
-
-        bmimg->control = MUIM_NList_CreateImage;
-        bmimg->width = data->DragWidth;
-        bmimg->height = data->DragHeight;
-        bmimg->mask = (PLANEPTR)bmimg;
-
-        for(ktr = 0; ktr < fbmDepth; ktr++)
-        {
-          if((bmimg->imgbmp.Planes[ktr] = (PLANEPTR)AllocRaster(bmimg->width, bmimg->height)) == NULL)
-            bmimg_failed = TRUE;
-        }
-
-        if(bmimg_failed == TRUE)
-        {
-          for(ktr = 0; ktr < fbmDepth; ktr++)
-          {
-            if(bmimg->imgbmp.Planes[ktr] != NULL)
-              FreeRaster(bmimg->imgbmp.Planes[ktr], bmimg->width, bmimg->height);
-          }
-          NL_Free(data,bmimg,"dispBMI_bmimg");
-          bmimg = NULL;
-        }
-
-        if(bmimg != NULL)
-          data->DragRPort->BitMap = &bmimg->imgbmp;
-      }
-    }
-    if(data->DragRPort->BitMap != NULL)
+    if((data->DragRPort->BitMap = AllocBitMap((ULONG)data->DragWidth, (ULONG)data->DragHeight, GetBitMapAttr(fbm, BMA_DEPTH), BMF_MINPLANES, fbm)) != NULL)
     {
       struct IClass *realclass = OCLASS(obj);
+
       SetFont(data->DragRPort,data->font);
       OCLASS(obj) = data->ncl;
       REDRAW_FORCE;
@@ -1677,7 +1660,7 @@ struct RastPort *CreateDragRPort(Object *obj,struct NLData *data,LONG numlines,L
     }
     else
     {
-      NL_Free(data,data->DragRPort,"CreateDragRPort");
+      FreeVecPooled(data->Pool, data->DragRPort);
       data->DragRPort = NULL;
     }
   }

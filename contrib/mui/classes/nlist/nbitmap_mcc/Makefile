@@ -229,6 +229,7 @@ ifeq ($(OS), os3)
 
   # additional object files required
   COBJS += Chunky2Bitmap.o \
+           SetPatch.o \
            WritePixelArray.o \
            WritePixelArrayAlpha.o \
            vastubs.o

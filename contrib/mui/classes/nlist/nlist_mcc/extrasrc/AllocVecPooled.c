@@ -1,5 +1,3 @@
-#if !defined(_POINTER_H_)
-#define _POINTER_H_
 /***************************************************************************
 
  NList.mcc - New List MUI Custom Class
@@ -25,22 +23,26 @@
 
 ***************************************************************************/
 
-// forward declarations
-struct NLData;
+#include <exec/types.h>
+#include <proto/exec.h>
 
-// enums
-enum PointerType
+/// AllocVecPooled
+// allocate a vector of <memSize> bytes from the pool specified by <poolHeader>
+APTR AllocVecPooled(APTR poolHeader, ULONG memSize)
 {
-  PT_NONE=0,  // no custom pointer active
-  PT_SIZE,    // sizePointer active
-  PT_MOVE,    // movePointer active
-  PT_SELECT,  // selectPointer active
-};
+  ULONG *memory;
 
-// prototypes
-void SetupCustomPointers(struct NLData *data);
-void CleanupCustomPointers(struct NLData *data);
-void ShowCustomPointer(struct NLData *data, enum PointerType type);
-void HideCustomPointer(struct NLData *data);
+  // add the number of bytes used to store the size information
+  memSize += sizeof(ULONG);
 
-#endif // _POINTER_H_
+  // allocate memory from the pool
+  if((memory = AllocPooled(poolHeader, memSize)) != NULL)
+  {
+    // and finally store the size of the memory block, including the size itself
+    *memory++ = memSize;
+  }
+
+  return memory;
+}
+
+///

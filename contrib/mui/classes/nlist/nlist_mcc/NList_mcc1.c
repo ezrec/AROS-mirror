@@ -145,7 +145,7 @@ IPTR mNL_AskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
 
       show = data->SHOW;
       data->SHOW = 1;
-      AllWidthColumns(obj,data);
+      AllWidthColumns(data);
       data->SHOW = show;
       data->NList_AdjustWidth = 0;
       delta = 0;
@@ -457,14 +457,14 @@ IPTR mNL_Set(struct IClass *cl,Object *obj,Msg msg)
         break;
       case MUIA_List_Active :
         if (!NOTIFYING(NTF_L_Active))
-          NL_List_Active(obj,data,(long) tag->ti_Data,tag,data->NList_List_Select,FALSE,0);
+          NL_List_Active(data,(long) tag->ti_Data,tag,data->NList_List_Select,FALSE,0);
         NOTIFY_END(NTF_L_Active);
         DONE_NOTIFY(NTF_L_Active);
         break;
       case MUIA_NList_Active :
 //      	D(DBF_ALWAYS, "MUIA_NList_Active %ld was %ld %ld %ld",tag->ti_Data,data->NList_Active,NOTIFYING(NTF_Active),WANTED_NOTIFY(NTF_Active));
         if (!NOTIFYING(NTF_Active))
-          NL_List_Active(obj,data,(long) tag->ti_Data,tag,data->NList_List_Select,FALSE,0);
+          NL_List_Active(data,(long) tag->ti_Data,tag,data->NList_List_Select,FALSE,0);
         NOTIFY_END(NTF_Active);
         DONE_NOTIFY(NTF_Active);
         break;
@@ -472,7 +472,7 @@ IPTR mNL_Set(struct IClass *cl,Object *obj,Msg msg)
       case MUIA_NList_First :
         if (do_things)
         {
-          NL_List_First(obj,data,(long) tag->ti_Data,tag);
+          NL_List_First(data,(long) tag->ti_Data,tag);
           data->ScrollBarsTime = SCROLLBARSTIME;
         }
         DONE_NOTIFY(NTF_First);
@@ -632,7 +632,7 @@ IPTR mNL_Set(struct IClass *cl,Object *obj,Msg msg)
         if (do_things)
         {
           data->old_horiz_first = tag->ti_Data;
-          NL_List_Horiz_First(obj,data,(long) tag->ti_Data,tag);
+          NL_List_Horiz_First(data,(long) tag->ti_Data,tag);
           data->ScrollBarsTime = SCROLLBARSTIME;
         }
         if (tag->ti_Tag == MUIA_NList_Horiz_First)
@@ -645,18 +645,18 @@ IPTR mNL_Set(struct IClass *cl,Object *obj,Msg msg)
         data->display_ptr = NULL;
         if (tag->ti_Data && !data->NList_Title)
         { data->NList_Title = (char *) tag->ti_Data;
-          NL_SetColsAdd(obj,data,-1,TRUE);
+          NL_SetColsAdd(data,-1,TRUE);
           REDRAW_ALL_FORCE;
         }
         else if (!tag->ti_Data && data->NList_Title)
-        { NL_SetColsRem(obj,data,-1);
+        { NL_SetColsRem(data,-1);
           data->NList_Title = NULL;
           REDRAW_ALL_FORCE;
         }
         else if (tag->ti_Data && data->NList_Title)
-        { NL_SetColsRem(obj,data,-1);
+        { NL_SetColsRem(data,-1);
           data->NList_Title = (char *) tag->ti_Data;
-          NL_SetColsAdd(obj,data,-1,TRUE);
+          NL_SetColsAdd(data,-1,TRUE);
           REDRAW_FORCE;
         }
         break;
@@ -677,10 +677,11 @@ IPTR mNL_Set(struct IClass *cl,Object *obj,Msg msg)
           }
         }
         else if (data->NList_Input)
-        { data->NList_Input = FALSE;
+        {
+          data->NList_Input = FALSE;
           set_Active(MUIV_NList_Active_Off);
-          NL_UnSelectAll(obj,data,-1);
-          nnset(obj,MUIA_Frame, MUIV_Frame_ReadList);
+          NL_UnSelectAll(data,-1);
+          nnset(data->this,MUIA_Frame, MUIV_Frame_ReadList);
           REDRAW_ALL_FORCE;
         }
         break;
@@ -693,7 +694,7 @@ IPTR mNL_Set(struct IClass *cl,Object *obj,Msg msg)
           { case MUIV_NList_MultiSelect_None :
               data->multiselect = data->NList_MultiSelect = MUIV_NList_MultiSelect_None;
               set_Active(MUIV_NList_Active_Off);
-              NL_UnSelectAll(obj,data,-1);
+              NL_UnSelectAll(data,-1);
               break;
             case MUIV_NList_MultiSelect_Default :
               data->NList_MultiSelect = MUIV_NList_MultiSelect_Default;
@@ -712,9 +713,9 @@ IPTR mNL_Set(struct IClass *cl,Object *obj,Msg msg)
           }
           if (reactive && (data->multiselect != MUIV_NList_MultiSelect_None) &&
               (data->NList_Active >= 0) && (data->NList_Active < data->NList_Entries))
-          { NL_UnSelectAll(obj,data,data->NList_Active);
+          { NL_UnSelectAll(data,data->NList_Active);
             data->selectmode = MUIV_NList_Select_On;
-            NL_List_Active(obj,data,data->NList_Active,NULL,data->selectmode,TRUE,0);
+            NL_List_Active(data,data->NList_Active,NULL,data->selectmode,TRUE,0);
           }
         }
         break;
@@ -988,9 +989,9 @@ IPTR mNL_Set(struct IClass *cl,Object *obj,Msg msg)
       case MUIA_NList_Format :
         data->NList_Format = (char *) tag->ti_Data;
         if (data->NList_Format)
-          NL_Read_Format(obj,data,data->NList_Format,(tag->ti_Tag == MUIA_List_Format));
+          NL_Read_Format(data,data->NList_Format,(tag->ti_Tag == MUIA_List_Format));
         else
-          NL_Read_Format(obj,data, (char *)"",(tag->ti_Tag == MUIA_List_Format));
+          NL_Read_Format(data, (char *)"",(tag->ti_Tag == MUIA_List_Format));
         Make_Active_Visible;
         REDRAW;
         break;
@@ -1002,11 +1003,11 @@ IPTR mNL_Set(struct IClass *cl,Object *obj,Msg msg)
         break;
       case MUIA_NList_TypeSelect :
         MOREQUIET;
-        NL_UnSelectAll(obj,data,FALSE);
-        UnSelectCharSel(obj,data,FALSE);
+        NL_UnSelectAll(data,FALSE);
+        UnSelectCharSel(data,FALSE);
         data->NList_TypeSelect = (LONG) tag->ti_Data;
-        NL_UnSelectAll(obj,data,FALSE);
-        UnSelectCharSel(obj,data,FALSE);
+        NL_UnSelectAll(data,FALSE);
+        UnSelectCharSel(data,FALSE);
         set_Active(MUIV_NList_Active_Off);
         REDRAW_ALL;
         LESSQUIET;
@@ -1080,7 +1081,7 @@ IPTR mNL_Set(struct IClass *cl,Object *obj,Msg msg)
                 data->cols[column].c->colwidthbiggestptr = -2;
             }
             data->do_setcols = TRUE;
-/*            NL_SetColsAdd(obj,data,-1,TRUE);*/
+/*            NL_SetColsAdd(data,-1,TRUE);*/
 /*            data->do_draw = data->do_draw_all = data->do_parse = data->do_setcols = data->do_updatesb = data->do_wwrap = TRUE;*/
           }
           data->NList_TitleMark = tag->ti_Data;
@@ -1102,7 +1103,7 @@ IPTR mNL_Set(struct IClass *cl,Object *obj,Msg msg)
                 data->cols[column].c->colwidthbiggestptr = -2;
             }
             data->do_setcols = TRUE;
-/*            NL_SetColsAdd(obj,data,-1,TRUE);*/
+/*            NL_SetColsAdd(data,-1,TRUE);*/
 /*            data->do_draw = data->do_draw_all = data->do_parse = data->do_setcols = data->do_updatesb = data->do_wwrap = TRUE;*/
           }
           data->NList_TitleMark2 = tag->ti_Data;
@@ -1115,7 +1116,7 @@ IPTR mNL_Set(struct IClass *cl,Object *obj,Msg msg)
       case MUIA_NList_Columns :
 /*D(bug("set(%lx,MUIA_NList_Columns,%lx)\n",obj,tag->ti_Data));*/
         if (do_things)
-        { NL_Columns(obj,data,(BYTE *) tag->ti_Data);
+        { NL_Columns(data,(BYTE *) tag->ti_Data);
           DONE_NOTIFY(NTF_Columns);
         }
         break;
@@ -1266,7 +1267,7 @@ IPTR mNL_Get(struct IClass *cl,Object *obj,struct opGet *msg)
     case MUIA_NList_ClickColumn:
       { struct MUI_NList_TestPos_Result res;
         res.char_number = -2;
-        NL_List_TestPos(obj,data,MUI_MAXMAX,MUI_MAXMAX,&res);
+        NL_List_TestPos(data,MUI_MAXMAX,MUI_MAXMAX,&res);
         *msg->opg_Storage = (LONG) res.column;
       }
       return( TRUE );
@@ -1283,7 +1284,7 @@ IPTR mNL_Get(struct IClass *cl,Object *obj,struct opGet *msg)
     case MUIA_NList_SortType2:				*msg->opg_Storage = (ULONG) data->NList_SortType2;			return( TRUE );
     case MUIA_NList_ButtonClick:				*msg->opg_Storage = (ULONG) data->NList_ButtonClick;		return( TRUE );
     case MUIA_NList_MinColSortable:			*msg->opg_Storage = (ULONG) data->NList_MinColSortable;	return( TRUE );
-    case MUIA_NList_Columns:					*msg->opg_Storage = (IPTR) NL_Columns(obj,data,NULL);	return( TRUE );
+    case MUIA_NList_Columns:					*msg->opg_Storage = (IPTR) NL_Columns(data,NULL);	return( TRUE );
     case MUIA_NList_Imports:					*msg->opg_Storage = (ULONG) data->NList_Imports;			return( TRUE );
     case MUIA_NList_Exports:					*msg->opg_Storage = (ULONG) data->NList_Exports;			return( TRUE );
     case MUIA_NList_TitleMark:				*msg->opg_Storage = (ULONG) data->NList_TitleMark;			return( TRUE );

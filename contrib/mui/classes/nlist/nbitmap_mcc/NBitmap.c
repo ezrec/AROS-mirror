@@ -905,7 +905,8 @@ void NBitmap_DrawImage(struct IClass *cl, Object *obj)
 
     // clear the background first, otherwise a multiply applied alpha channel
     // will become darker and darker every time
-    DoMethod(obj, MUIM_DrawBackground, _mleft(obj), _mtop(obj), _mwidth(obj), _mheight(obj), _left(obj), _top(obj), 0);
+    if(data->button != FALSE)
+      DoMethod(obj, MUIM_DrawBackground, _mleft(obj), _mtop(obj), _mwidth(obj), _mheight(obj), _left(obj), _top(obj), 0);
 
     /* label */
     if(data->label != NULL && data->button != FALSE)
@@ -1049,6 +1050,9 @@ void NBitmap_DrawImage(struct IClass *cl, Object *obj)
         SHOWVALUE(DBF_ALWAYS, data->scrdepth);
         SHOWVALUE(DBF_ALWAYS, data->ditheredImage[item]);
         SHOWVALUE(DBF_ALWAYS, data->ditheredMask[item]);
+        #if !defined(__amigaos4__)
+        SHOWVALUE(DBF_ALWAYS, data->ditheredBitmap[item]);
+        #endif
 
         if(data->data[item] != NULL)
         {

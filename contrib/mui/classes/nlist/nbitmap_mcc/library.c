@@ -26,6 +26,7 @@
 
 /* local includes */
 #include "Debug.h"
+#include "SetPatch.h"
 #include "private.h"
 #include "version.h"
 
@@ -85,6 +86,8 @@ static BOOL ClassInit(UNUSED struct Library *base)
     {
     }
     #endif
+
+    GetSetPatchVersion();
 
     res = TRUE;
   }

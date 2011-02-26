@@ -39,9 +39,11 @@
 #include "NList_func.h"
 #include "NListviews_mcp.h"
 
-void NL_SetObjInfos(Object *obj,struct NLData *data,BOOL setall)
+void NL_SetObjInfos(struct NLData *data,BOOL setall)
 {
+  Object *obj = data->this;
   WORD vdheight;
+
   if (data->do_draw_all || data->format_chge || data->do_setcols || (data->rp != _rp(obj)) ||
       (data->left != _left(obj)) || (data->top != _top(obj)) || (data->MinImageHeight > data->vinc) ||
       (data->width != _width(obj)) || (data->height != _height(obj)))
@@ -82,7 +84,9 @@ void NL_SetObjInfos(Object *obj,struct NLData *data,BOOL setall)
     data->voff = data->font->tf_Baseline + (data->vinc - data->font->tf_YSize + 1)/2;
 
     if (setall)
-    { struct TextExtent te;
+    {
+      struct TextExtent te;
+
       ReSetFont;
       data->hinc = 0;
       SetSoftStyle(data->rp, FSF_BOLD|FSF_ITALIC, STYLE_MASK);
@@ -119,9 +123,11 @@ void NL_SetObjInfos(Object *obj,struct NLData *data,BOOL setall)
     data->mbottom = _mbottom(obj);
 
     if (data->VirtGroup)
-    { LONG virtleft,virttop,virtwidth,virtheight,vl,vt,vw,vh;
+    {
+      LONG virtleft,virttop,virtwidth,virtheight,vl,vt,vw,vh;
       Object *o = data->VirtGroup;
       struct IClass *ocl;
+
       data->vleft = _mleft(o);
       data->vright = _mright(o);
       data->vtop = _mtop(o);
@@ -255,7 +261,8 @@ void NL_SetObjInfos(Object *obj,struct NLData *data,BOOL setall)
       {
       }
       else if (mheight != data->mheight)
-      { data->do_draw_all = data->do_draw = data->do_draw_title = data->do_updatesb = TRUE;
+      {
+        data->do_draw_all = data->do_draw = data->do_draw_title = data->do_updatesb = TRUE;
         data->Title_PixLen = -1;
         data->ScrollBarsPos = -2;
         NOWANT_NOTIFY(NTF_MinMaxNoDraw);
@@ -267,19 +274,25 @@ void NL_SetObjInfos(Object *obj,struct NLData *data,BOOL setall)
 }
 
 
-static void DrawAdjustBar(Object *obj,struct NLData *data,WORD draw)
+static void DrawAdjustBar(struct NLData *data,WORD draw)
 {
   WORD hfirst = data->NList_Horiz_AffFirst & ~1;
   WORD hfirsthpos = hfirst - data->hpos;
   WORD adjbar;
+  Object *obj = data->this;
+
   if (draw)
-  { if ((data->adjustbar == -2) || ((data->adjustbar == -3) && (draw == 2)))
-    { if (data->NList_Title && (data->adjustcolumn < data->numcols) && (data->adjustcolumn >= 0))
-      { WORD minx = (data->cols[data->adjustcolumn].c->minx - hfirsthpos);
+  {
+    if ((data->adjustbar == -2) || ((data->adjustbar == -3) && (draw == 2)))
+    {
+      if (data->NList_Title && (data->adjustcolumn < data->numcols) && (data->adjustcolumn >= 0))
+      {
+        WORD minx = (data->cols[data->adjustcolumn].c->minx - hfirsthpos);
         WORD maxx = (data->cols[data->adjustcolumn].c->maxx - hfirsthpos);
         WORD maxy = data->vdtitlepos + data->vdtitleheight;
         BOOL draw_left = TRUE;
         BOOL draw_right = TRUE;
+
         if (!data->NList_TitleSeparator)
           maxy--;
         if (data->adjustcolumn > 0)
@@ -288,16 +301,19 @@ static void DrawAdjustBar(Object *obj,struct NLData *data,WORD draw)
         if (data->adjustcolumn == data->numcols-1)
           maxx--;
         if (minx < data->mleft)
-        { minx = data->mleft;
+        {
+          minx = data->mleft;
           draw_left = FALSE;
         }
         if (maxx > data->mright)
-        { maxx = data->mright;
+        {
+          maxx = data->mright;
           if (IS_BAR(data->adjustcolumn,data->cols[data->adjustcolumn].c) || (maxx < (data->Title_PixLen - hfirsthpos)))
             draw_right = FALSE;
         }
         if ((maxx - minx) >= 1)
-        { SetAPen(data->rp,data->pens[MPEN_SHINE]);
+        {
+          SetAPen(data->rp,data->pens[MPEN_SHINE]);
           Move(data->rp, minx, maxy);
           Draw(data->rp, maxx, maxy);
           if (draw_right)
@@ -314,7 +330,8 @@ static void DrawAdjustBar(Object *obj,struct NLData *data,WORD draw)
       }
     }
     else if ((data->adjustbar >= 0) && ((data->adjustbar_old == -1) || (draw == 2)))
-    { adjbar = data->adjustbar - hfirsthpos;
+    {
+      adjbar = data->adjustbar - hfirsthpos;
       if ((adjbar < data->mleft) || (adjbar >= data->mright))
         data->adjustbar_old = -1;
       else
@@ -323,7 +340,8 @@ static void DrawAdjustBar(Object *obj,struct NLData *data,WORD draw)
         {
         }
         else if (data->NList_ColWidthDrag == MUIV_NList_ColWidthDrag_All)
-        { SetAPen(data->rp,data->pens[MPEN_SHADOW]);
+        {
+          SetAPen(data->rp,data->pens[MPEN_SHADOW]);
           Move(data->rp, adjbar+1, data->vdtitlepos);
           Draw(data->rp, adjbar+1, data->vdbpos - 1);
           SetAPen(data->rp,data->pens[MPEN_SHINE]);
@@ -331,7 +349,8 @@ static void DrawAdjustBar(Object *obj,struct NLData *data,WORD draw)
           Draw(data->rp, adjbar, data->vdbpos - 1);
         }
         else if (data->NList_Title)
-        { SetAPen(data->rp,data->pens[MPEN_SHADOW]);
+        {
+          SetAPen(data->rp,data->pens[MPEN_SHADOW]);
           Move(data->rp, adjbar+1, data->vdtitlepos);
           Draw(data->rp, adjbar+1, data->vdtitlepos + data->vdtitleheight - 1);
           SetAPen(data->rp,data->pens[MPEN_SHINE]);
@@ -339,7 +358,8 @@ static void DrawAdjustBar(Object *obj,struct NLData *data,WORD draw)
           Draw(data->rp, adjbar, data->vdtitlepos + data->vdtitleheight - 1);
         }
         else
-        { SetAPen(data->rp,data->pens[MPEN_SHADOW]);
+        {
+          SetAPen(data->rp,data->pens[MPEN_SHADOW]);
           Move(data->rp, adjbar+1, data->vpos);
           Draw(data->rp, adjbar+1, data->vpos + data->vinc - 1);
           SetAPen(data->rp,data->pens[MPEN_SHINE]);
@@ -351,11 +371,16 @@ static void DrawAdjustBar(Object *obj,struct NLData *data,WORD draw)
     }
   }
   else
-  { APTR clippinghandle = NULL;
+  {
+    APTR clippinghandle = NULL;
+
     if (data->NList_Title && (data->adjustbar_old <= -2) && ((data->adjustbar == -1) || (data->adjustbar <= -4)))
-    { if ((data->adjustcolumn < data->numcols) && (data->adjustcolumn >= 0))
-      { WORD minx = (data->cols[data->adjustcolumn].c->minx - hfirsthpos);
+    {
+      if ((data->adjustcolumn < data->numcols) && (data->adjustcolumn >= 0))
+      {
+        WORD minx = (data->cols[data->adjustcolumn].c->minx - hfirsthpos);
         WORD maxx = (data->cols[data->adjustcolumn].c->maxx - hfirsthpos);
+
         if (data->adjustcolumn > 0)
           minx -= (data->cols[data->adjustcolumn-1].c->delta - (((data->cols[data->adjustcolumn-1].c->delta-1) / 2) + 1));
         maxx += ((data->cols[data->adjustcolumn].c->delta-1) / 2);
@@ -364,45 +389,53 @@ static void DrawAdjustBar(Object *obj,struct NLData *data,WORD draw)
         if (maxx > data->mright)
           maxx = data->mright;
         if ((maxx - minx) > 0)
-        { WORD height = data->vdtitleheight;
+        {
+          WORD height = data->vdtitleheight;
+
           maxx++;
           if (data->NList_TitleSeparator)
             height++;
           clippinghandle = MUI_AddClipping(muiRenderInfo(obj),(WORD) minx,data->vdtitlepos,(WORD) (maxx-minx),height);
-          DrawTitle(obj,data,minx,maxx,hfirst);
+          DrawTitle(data,minx,maxx,hfirst);
           MUI_RemoveClipping(muiRenderInfo(obj),clippinghandle);
         }
       }
       data->adjustbar_old = -1;
     }
     else if (data->adjustbar_old >= 0)
-    { adjbar = data->adjustbar_old - hfirsthpos;
+    {
+      adjbar = data->adjustbar_old - hfirsthpos;
       if (adjbar < data->mleft)
-      { adjbar = data->mleft;
+      {
+        adjbar = data->mleft;
         data->adjustbar_old = adjbar + hfirsthpos;
       }
       else if (adjbar >= data->mright)
-      { adjbar = data->mright - 1;
+      {
+        adjbar = data->mright - 1;
         data->adjustbar_old = adjbar + hfirsthpos;
       }
       if (data->NList_ColWidthDrag == MUIV_NList_ColWidthDrag_Visual)
       {
       }
       else if (data->NList_ColWidthDrag == MUIV_NList_ColWidthDrag_All)
-      { clippinghandle = MUI_AddClipping(muiRenderInfo(obj),(WORD) adjbar,data->vdtitlepos,(WORD) 2,(WORD) (data->vdbpos - data->vdtitlepos));
-        DrawLines(obj,data,data->NList_AffFirst,data->NList_AffFirst+data->NList_Visible,adjbar,adjbar+2,hfirst,0,1,TRUE,0);
+      {
+        clippinghandle = MUI_AddClipping(muiRenderInfo(obj),(WORD) adjbar,data->vdtitlepos,(WORD) 2,(WORD) (data->vdbpos - data->vdtitlepos));
+        DrawLines(data,data->NList_AffFirst,data->NList_AffFirst+data->NList_Visible,adjbar,adjbar+2,hfirst,0,1,TRUE,0);
         if (data->NList_Title)
-          DrawTitle(obj,data,adjbar,adjbar+2,hfirst);
+          DrawTitle(data,adjbar,adjbar+2,hfirst);
         MUI_RemoveClipping(muiRenderInfo(obj),clippinghandle);
       }
       else if (data->NList_Title)
-      { clippinghandle = MUI_AddClipping(muiRenderInfo(obj),(WORD) adjbar,data->vdtitlepos,(WORD) 2,data->vdtitleheight);
-        DrawTitle(obj,data,adjbar,adjbar+2,hfirst);
+      {
+        clippinghandle = MUI_AddClipping(muiRenderInfo(obj),(WORD) adjbar,data->vdtitlepos,(WORD) 2,data->vdtitleheight);
+        DrawTitle(data,adjbar,adjbar+2,hfirst);
         MUI_RemoveClipping(muiRenderInfo(obj),clippinghandle);
       }
       else
-      { clippinghandle = MUI_AddClipping(muiRenderInfo(obj),(WORD) adjbar,data->vpos,(WORD) 2,data->vinc);
-        DrawLines(obj,data,data->NList_AffFirst,data->NList_AffFirst+1,adjbar,adjbar+2,hfirst,0,1,TRUE,0);
+      {
+        clippinghandle = MUI_AddClipping(muiRenderInfo(obj),(WORD) adjbar,data->vpos,(WORD) 2,data->vinc);
+        DrawLines(data,data->NList_AffFirst,data->NList_AffFirst+1,adjbar,adjbar+2,hfirst,0,1,TRUE,0);
         MUI_RemoveClipping(muiRenderInfo(obj),clippinghandle);
       }
       data->adjustbar_old = -1;
@@ -470,8 +503,9 @@ static void DrawAdjustBar(Object *obj,struct NLData *data,WORD draw)
                                               ((l)->ClipRect->bounds.MinY != (l)->bounds.MinY))
 
 
-static ULONG DrawRefresh(Object *obj,struct NLData *data)
+static ULONG DrawRefresh(struct NLData *data)
 {
+  Object *obj = data->this;
   APTR clippinghandle = NULL;
   struct RegionRectangle *rr;
   struct Region *reg;
@@ -486,7 +520,7 @@ static ULONG DrawRefresh(Object *obj,struct NLData *data)
  * LONG ml = (LONG) _mleft(obj);
  * LONG mt = (LONG) _top(obj);
  * D(bug("%lx|ml=%ld (%ld)  mt=%ld (%ld)\n",obj,ml,data->mleft,mt,data->top));
- *     NL_SetObjInfos(obj,data,FALSE);
+ *     NL_SetObjInfos(data,FALSE);
  *   }
  */
 
@@ -568,15 +602,15 @@ static ULONG DrawRefresh(Object *obj,struct NLData *data)
                                            mwidth,(LONG) data->vdb,
                                            mleft+data->vdx,(LONG) data->vdbpos+data->vdy,(LONG) 0);
         if (data->NList_Title && (ly1 < 0))
-          DrawTitle(obj,data,mleft,mright,hfirst);
+          DrawTitle(data,mleft,mright,hfirst);
 
 
         if (ly2 > 0)
-          DrawLines(obj,data,lyl1,lyl2,mleft,mright,hfirst,0,1,TRUE,0);
+          DrawLines(data,lyl1,lyl2,mleft,mright,hfirst,0,1,TRUE,0);
 
         if (clipped)
           MUI_RemoveClipping(muiRenderInfo(obj),clippinghandle);
-        DrawAdjustBar(obj,data,2);
+        DrawAdjustBar(data,2);
         SetBackGround(data->NList_ListBackGround);
       }
 /*
@@ -616,9 +650,11 @@ IPTR mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
   }
 
   if (WANTED_NOTIFY(NTF_MinMaxNoDraw) && !data->do_draw_all && !data->do_draw)
-  { NL_SetObjInfos(obj,data,FALSE);
+  {
+    NL_SetObjInfos(data,FALSE);
     if (WANTED_NOTIFY(NTF_MinMaxNoDraw))
-    { msg->flags = 0;
+    {
+      msg->flags = 0;
       return(0);
     }
   }
@@ -640,7 +676,8 @@ IPTR mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
     data->maxx_change_entry = -1;
     if ((muiAreaData(obj)->mad_Flags & MADF_DRAWOBJECT) ||
         (data->NList_Disabled < 2))
-    { NL_SetObjInfos(obj,data,FALSE);
+    {
+      NL_SetObjInfos(data,FALSE);
       data->NList_Disabled = 2;
       DoSuperMethodA(cl,obj,(Msg)msg);
     }
@@ -649,7 +686,8 @@ IPTR mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
   }
 
   if (data->DragRPort && (data->DragText || (data->DragEntry >= 0)))
-  { DrawDragText(obj,data,TRUE);
+  {
+    DrawDragText(data,TRUE);
     msg->flags = 0;
     return (0);
   }
@@ -673,7 +711,7 @@ IPTR mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 #endif
       DoSuperMethodA(cl,obj,(Msg) msg);
     }
-    DrawRefresh(obj,data);
+    DrawRefresh(data);
 /*
  *     data->do_draw = FALSE;
  *     data->do_draw_all = FALSE;
@@ -696,7 +734,7 @@ IPTR mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
   if (muiAreaData(obj)->mad_Flags & MADF_DRAWOBJECT)
     data->do_draw_all = TRUE;
 
-  if (NL_UpdateScrollers(obj,data,FALSE))
+  if (NL_UpdateScrollers(data,FALSE))
   { msg->flags = 0;
     if (data->DRAW > 1)
       data->DRAW--;
@@ -848,7 +886,7 @@ IPTR mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
     if (data->NList_First_Incr)
       one_more = 1;
 
-    NL_UpdateScrollersValues(obj,data);
+    NL_UpdateScrollersValues(data);
 
 /*
  *     if (data->first_change < data->last_change)
@@ -898,7 +936,7 @@ IPTR mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                                              (WORD) data->mwidth,
                                              (WORD) (data->NList_Visible*data->vinc));
           }
-          DrawOldLine(obj,data,ent,PMIN,PMAX,hfirst);
+          DrawOldLine(data,ent,PMIN,PMAX,hfirst);
 
           if (clipped)
             MUI_RemoveClipping(muiRenderInfo(obj),clippinghandle);
@@ -915,7 +953,7 @@ IPTR mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
       hfirst = data->NList_Horiz_AffFirst & ~1;
       data->NList_First = data->NList_AffFirst;
       data->NList_First_Incr = data->NList_AffFirst_Incr;
-      hmax = DrawLines(obj,data,data->NList_First,data->NList_First + data->NList_Visible,PMIN,PMAX,hfirst,0,0,FALSE,data->drawall_bits);
+      hmax = DrawLines(data,data->NList_First,data->NList_First + data->NList_Visible,PMIN,PMAX,hfirst,0,0,FALSE,data->drawall_bits);
       data->drawall_bits = 0;
       data->drawall_dobit = 0;
       hfirst = tmp_hfirst;
@@ -932,7 +970,7 @@ IPTR mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 
     if (data->do_draw_all && data->do_draw_title && data->NList_Title/* && (vfyl <= 0)*/)
     {
-      data->Title_PixLen = DrawTitle(obj,data,PMIN,PMAX,hfirst);
+      data->Title_PixLen = DrawTitle(data,PMIN,PMAX,hfirst);
 
       if(data->Title_PixLen > data->NList_Horiz_Entries)
         data->NList_Horiz_Entries = data->Title_PixLen;
@@ -951,6 +989,7 @@ IPTR mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
     {
       WORD not_all = 0;
       BOOL clipped = FALSE;
+
       data->drawall_bits = 0;
       if(data->do_draw_all)
       {
@@ -1001,7 +1040,7 @@ IPTR mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                                          (WORD) (data->NList_Visible*data->vinc));
       }
 
-      hmax = DrawLines(obj,data,data->first_change,data->last_change,PMIN,PMAX,hfirst,0,0,FALSE,not_all);
+      hmax = DrawLines(data,data->first_change,data->last_change,PMIN,PMAX,hfirst,0,0,FALSE,not_all);
 
       if (clipped)
         MUI_RemoveClipping(muiRenderInfo(obj),clippinghandle);
@@ -1036,6 +1075,7 @@ IPTR mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
     {
       /*WORD dyl,fyl,lyl,dy,yl1,yl2,vpos;*/
       LONG dyl,fyl,lyl,dy,y1,y2,vpos,vbot;
+
       dyl = data->NList_First - data->NList_AffFirst;
       dy = dyl*data->vinc + (data->NList_First_Incr - data->NList_AffFirst_Incr);
       vpos = data->vpos;
@@ -1082,13 +1122,16 @@ IPTR mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
  *       if ((_window(obj)->Flags & WFLG_REFRESHBITS) == WFLG_SIMPLE_REFRESH)
  *         WaitTOF();
  */
-        ScrollVert(obj,data,dy,LPVisible);
+        ScrollVert(data,dy,LPVisible);
         need_refresh = TRUE;
 
         if (data->NList_First_Incr || data->NList_AffFirst_Incr)
-        { WORD dy2;
+        {
+          WORD dy2;
+
           if (dy < 0)
-          { dy2 = -dy;
+          {
+            dy2 = -dy;
             clippinghandle = MUI_AddClipping(muiRenderInfo(obj),
                                              (WORD) data->mleft,
                                              (WORD) vpos,
@@ -1096,18 +1139,19 @@ IPTR mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                                              (WORD) dy2);
           }
           else
-          { dy2 = dy;
+          {
+            dy2 = dy;
             clippinghandle = MUI_AddClipping(muiRenderInfo(obj),
                                              (WORD) data->mleft,
                                              (WORD) vbot + 1 - dy2,
                                              (WORD) data->mwidth,
                                              (WORD) dy2);
           }
-          DrawLines(obj,data,fyl,lyl,PMIN,PMAX,hfirst,0,2,TRUE,0);
+          DrawLines(data,fyl,lyl,PMIN,PMAX,hfirst,0,2,TRUE,0);
           MUI_RemoveClipping(muiRenderInfo(obj),clippinghandle);
         }
         else
-          DrawLines(obj,data,fyl,lyl,PMIN,PMAX,hfirst,0,2,FALSE,0);
+          DrawLines(data,fyl,lyl,PMIN,PMAX,hfirst,0,2,FALSE,0);
 
         hmax = 0;
         ent2 = data->NList_First + data->NList_Visible;
@@ -1115,7 +1159,8 @@ IPTR mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
           ent2 = data->NList_Entries;
         ent = data->NList_First;
         while (ent < ent2)
-        { linelen = data->EntriesArray[ent]->PixLen;
+        {
+          linelen = data->EntriesArray[ent]->PixLen;
           if (linelen > hmax)
             hmax = linelen;
           ent++;
@@ -1137,8 +1182,8 @@ IPTR mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
       LONG fyl,lyl;
       WORD dx,fx,lx;
       BOOL clipped = FALSE;
-      dx = hfirst - data->NList_Horiz_AffFirst;
 
+      dx = hfirst - data->NList_Horiz_AffFirst;
       if (dx < 0)
       {
         fx = data->vleft;
@@ -1166,11 +1211,11 @@ IPTR mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
  *       if ((_window(obj)->Flags & WFLG_REFRESHBITS) == WFLG_SIMPLE_REFRESH)
  *         WaitTOF();
  */
-        ScrollHoriz(obj,data,dx,LPVisible);
+        ScrollHoriz(data,dx,LPVisible);
         need_refresh = TRUE;
 
         if (data->NList_Title)
-          data->Title_PixLen = DrawTitle(obj,data,fx,lx,hfirst);
+          data->Title_PixLen = DrawTitle(data,fx,lx,hfirst);
 
 /*        if (fyl < lyl)*/
         {
@@ -1184,7 +1229,7 @@ IPTR mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                                              (WORD) (data->NList_Visible*data->vinc));
           }
 
-          hmax = DrawLines(obj,data,fyl,lyl,fx,lx,hfirst,0,1,FALSE,0);
+          hmax = DrawLines(data,fyl,lyl,fx,lx,hfirst,0,1,FALSE,0);
 
           if (clipped)
             MUI_RemoveClipping(muiRenderInfo(obj),clippinghandle);
@@ -1203,7 +1248,9 @@ IPTR mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
     }
 
     if (!data->NList_TypeSelect && data->do_draw_active)
-    { BOOL clipped = FALSE;
+    {
+      BOOL clipped = FALSE;
+
       ent = data->NList_Active;
       if ((ent >= data->NList_First) && (ent < data->NList_First + data->NList_Visible + one_more)/* && (vfyl <= ent) && (ent <= vlyl)*/)
       {
@@ -1217,28 +1264,33 @@ IPTR mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                                            (WORD) (data->NList_Visible*data->vinc));
         }
 
-        DrawLines(obj,data,ent,ent+1,PMIN,PMAX,hfirst,0,0,FALSE,0);
+        DrawLines(data,ent,ent+1,PMIN,PMAX,hfirst,0,0,FALSE,0);
 
         if (clipped)
           MUI_RemoveClipping(muiRenderInfo(obj),clippinghandle);
       }
     }
     if (data->do_draw_title && data->NList_Title/* && (vfyl <= 0)*/)
-    { data->Title_PixLen = DrawTitle(obj,data,PMIN,PMAX,hfirst);
+    {
+      data->Title_PixLen = DrawTitle(data,PMIN,PMAX,hfirst);
       if (data->Title_PixLen > data->NList_Horiz_Entries)
         data->NList_Horiz_Entries = data->Title_PixLen;
     }
 
     if (fullclipped)
-    { MUI_RemoveClipping(muiRenderInfo(obj),fullclippinghandle);
+    {
+      MUI_RemoveClipping(muiRenderInfo(obj),fullclippinghandle);
       fullclipped = FALSE;
     }
 
     if (data->markdraw)
-    { LONG mdy;
+    {
+      LONG mdy;
+
       data->markerasenum = -1;
       if ((data->markdrawnum >= data->NList_First) && (data->markdrawnum < data->NList_First + data->NList_Visible))
-      { mdy = data->vpos + (data->vinc * (data->markdrawnum - data->NList_First));
+      {
+        mdy = data->vpos + (data->vinc * (data->markdrawnum - data->NList_First));
         DoMethod(obj,MUIM_NList_DropDraw, data->markdrawnum,data->marktype,
                                           data->mleft,data->mright,mdy,mdy+data->vinc-1);
         data->markerasenum = data->markdrawnum;
@@ -1267,8 +1319,8 @@ IPTR mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
         }
       }
     }
-    DrawAdjustBar(obj,data,0);
-    DrawAdjustBar(obj,data,1);
+    DrawAdjustBar(data,0);
+    DrawAdjustBar(data,1);
 
     SetBackGround(data->NList_ListBackGround);
 
@@ -1281,7 +1333,7 @@ IPTR mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
     data->minx_change_entry = -1;
     data->maxx_change_entry = -1;
 
-    NL_UpdateScrollersValues(obj,data);
+    NL_UpdateScrollersValues(data);
     /*do_notifies(NTF_First|NTF_Entries|NTF_MinMax);*/
 
     if (data->drawall_dobit != 1)
@@ -1301,15 +1353,9 @@ IPTR mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 
 IPTR mNL_DropDraw(struct IClass *cl,Object *obj,struct MUIP_NList_DropDraw *msg)
 {
-  register struct NLData *data = INST_DATA(cl,obj);
+  struct NLData *data = INST_DATA(cl,obj);
 
-  if (LIBVER(GfxBase) >= 39)
-    SetABPenDrMd(data->rp,data->pens[MPEN_SHINE],data->pens[MPEN_SHADOW],JAM2);
-  else
-  { SetAPen(data->rp,data->pens[MPEN_SHINE]);
-    SetBPen(data->rp,data->pens[MPEN_SHADOW]);
-    SetDrMd(data->rp,JAM2);
-  }
+  SetABPenDrMd(data->rp,data->pens[MPEN_SHINE],data->pens[MPEN_SHADOW],JAM2);
   SetDrPt(data->rp,0xF0F0);
   if ((msg->type & MUIV_NList_DropType_Mask) == MUIV_NList_DropType_Above)
   { Move(data->rp, msg->minx, msg->miny);
@@ -1330,13 +1376,8 @@ IPTR mNL_DropDraw(struct IClass *cl,Object *obj,struct MUIP_NList_DropDraw *msg)
     Draw(data->rp, msg->maxx, msg->maxy);
   }
   SetDrPt(data->rp,(UWORD)~0);
-  if (LIBVER(GfxBase) >= 39)
-    SetABPenDrMd(data->rp,data->pens[MPEN_TEXT],data->pens[MPEN_BACKGROUND],JAM1);
-  else
-  { SetAPen(data->rp,data->pens[MPEN_TEXT]);
-    SetBPen(data->rp,data->pens[MPEN_BACKGROUND]);
-    SetDrMd(data->rp,JAM1);
-  }
+  SetABPenDrMd(data->rp,data->pens[MPEN_TEXT],data->pens[MPEN_BACKGROUND],JAM1);
+
   return(0);
 }
 

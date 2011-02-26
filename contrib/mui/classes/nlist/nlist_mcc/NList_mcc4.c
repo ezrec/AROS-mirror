@@ -27,6 +27,7 @@
 #include <string.h>
 
 #include <clib/alib_protos.h>
+#include <proto/exec.h>
 #include <proto/intuition.h>
 #include <proto/graphics.h>
 
@@ -149,17 +150,18 @@ BOOL DontDoColumn(struct NLData *data,LONG ent,WORD column)
 }
 
 
-void FreeAffInfo(UNUSED Object *obj,struct NLData *data)
+void FreeAffInfo(struct NLData *data)
 {
-  if (data->aff_infos)
-  { NL_Free(data,data->aff_infos,"FreeAffInfo");
+  if(data->aff_infos)
+  {
+    FreeVecPooled(data->Pool, data->aff_infos);
+    data->aff_infos = NULL;
   }
-  data->aff_infos = NULL;
   data->numaff_infos = 0;
 }
 
 
-BOOL NeedAffInfo(Object *obj,struct NLData *data,WORD niask)
+BOOL NeedAffInfo(struct NLData *data,WORD niask)
 {
   struct affinfo *affinfotmp;
   WORD ni;
@@ -171,7 +173,7 @@ BOOL NeedAffInfo(Object *obj,struct NLData *data,WORD niask)
 
 	//D(bug( "Adding %ld aff infos.\n", num ));
 
-    if((affinfotmp = (struct affinfo *) NL_Malloc(data,sizeof(struct affinfo)*num,"NeedAffInfo")))
+    if((affinfotmp = (struct affinfo *)AllocVecPooled(data->Pool, sizeof(struct affinfo)*num)) != NULL)
     {
       ni = 0;
       while (ni < data->numaff_infos)
@@ -194,7 +196,7 @@ BOOL NeedAffInfo(Object *obj,struct NLData *data,WORD niask)
         affinfotmp[ni].style = 0;
         ni++;
       }
-      FreeAffInfo(obj,data);
+      FreeAffInfo(data);
       data->aff_infos = affinfotmp;
       data->numaff_infos = num;
       return (TRUE);
@@ -205,7 +207,7 @@ BOOL NeedAffInfo(Object *obj,struct NLData *data,WORD niask)
 }
 
 
-void NL_GetDisplayArray(Object *obj, struct NLData *data, LONG ent)
+void NL_GetDisplayArray(struct NLData *data, LONG ent)
 {
   char *useptr;
 
@@ -269,7 +271,7 @@ void NL_GetDisplayArray(Object *obj, struct NLData *data, LONG ent)
       // if this method is not catched by a subclass our own implementation will
       // correctly choose one of the two possible hook functions as default
       data->DisplayArray[0] = (char *)useptr;
-      DoMethod(obj, MUIM_NList_Display, data->DisplayArray[0], data->DisplayArray[1], &data->DisplayArray[2], &data->DisplayArray[2+DISPLAY_ARRAY_MAX]);
+      DoMethod(data->this, MUIM_NList_Display, data->DisplayArray[0], data->DisplayArray[1], &data->DisplayArray[2], &data->DisplayArray[2+DISPLAY_ARRAY_MAX]);
     }
     data->parse_column = -1;
   }
@@ -278,7 +280,7 @@ void NL_GetDisplayArray(Object *obj, struct NLData *data, LONG ent)
 }
 
 
-void ParseColumn(Object *obj,struct NLData *data,WORD column,ULONG mypen)
+void ParseColumn(struct NLData *data,WORD column,ULONG mypen)
 {
   register struct colinfo *cinfo = data->cols[column].c;
   register struct affinfo *afinfo;
@@ -294,7 +296,7 @@ void ParseColumn(Object *obj,struct NLData *data,WORD column,ULONG mypen)
 /*  if (data->parse_column == column)  return;*/
 
   data->parse_column = column;
-  col = NL_ColumnToCol(obj,data,column);
+  col = NL_ColumnToCol(data,column);
 
   there_is_char = 0;
   prep = 2;
@@ -332,7 +334,7 @@ void ParseColumn(Object *obj,struct NLData *data,WORD column,ULONG mypen)
   }
   ptrs = ptr1 = display_array[cinfo->col];
 
-  while ((prep>=0) && NeedAffInfo(obj,data,ni+1))
+  while ((prep>=0) && NeedAffInfo(data,ni+1))
   {
     if ((prep == 1) && !display_array[cinfo->col+DISPLAY_ARRAY_MAX])
       prep = 0;
@@ -378,7 +380,7 @@ void ParseColumn(Object *obj,struct NLData *data,WORD column,ULONG mypen)
 
 	//D(bug( "%ld - Setting aff info %ld: %15.15s - pos: %ld, len: %ld, style: %ld.\n", __LINE__, ni, afinfo->strptr, afinfo->pos, afinfo->len, afinfo->style ));
 
-    while (ptr1 && (ptr1<ptr2) && (ptr1[0] != '\0') && (ptr1[0] != '\n') && (ptr1[0] != '\r') && (good = NeedAffInfo(obj,data,ni+2)))
+    while (ptr1 && (ptr1<ptr2) && (ptr1[0] != '\0') && (ptr1[0] != '\n') && (ptr1[0] != '\r') && (good = NeedAffInfo(data,ni+2)))
     {
       if (data->NList_SkipChars)
       { char *sc = data->NList_SkipChars;
@@ -433,25 +435,21 @@ void ParseColumn(Object *obj,struct NLData *data,WORD column,ULONG mypen)
         else if (ptr1[0] == '-')
         { do_format = FALSE; ptr1++; }
         else if (ptr1[0] == '2')
-        { if (data->SHOW) { pen = _dri(obj)->dri_Pens[2]; SET_FIXPEN(style); } ptr1++; }
+        { if (data->SHOW) { pen = _dri(data->this)->dri_Pens[2]; SET_FIXPEN(style); } ptr1++; }
         else if (ptr1[0] == '3')
-        { if (data->SHOW) { pen = _dri(obj)->dri_Pens[3]; SET_FIXPEN(style); } ptr1++; }
+        { if (data->SHOW) { pen = _dri(data->this)->dri_Pens[3]; SET_FIXPEN(style); } ptr1++; }
         else if (ptr1[0] == '4')
-        { if (data->SHOW) { pen = _dri(obj)->dri_Pens[4]; SET_FIXPEN(style); } ptr1++; }
+        { if (data->SHOW) { pen = _dri(data->this)->dri_Pens[4]; SET_FIXPEN(style); } ptr1++; }
         else if (ptr1[0] == '5')
-        { if (data->SHOW) { pen = _dri(obj)->dri_Pens[5]; SET_FIXPEN(style); } ptr1++; }
+        { if (data->SHOW) { pen = _dri(data->this)->dri_Pens[5]; SET_FIXPEN(style); } ptr1++; }
         else if (ptr1[0] == '6')
-        { if (data->SHOW) { pen = _dri(obj)->dri_Pens[6]; SET_FIXPEN(style); } ptr1++; }
+        { if (data->SHOW) { pen = _dri(data->this)->dri_Pens[6]; SET_FIXPEN(style); } ptr1++; }
         else if (ptr1[0] == '7')
-        { if (data->SHOW) { pen = _dri(obj)->dri_Pens[7]; SET_FIXPEN(style); } ptr1++; }
+        { if (data->SHOW) { pen = _dri(data->this)->dri_Pens[7]; SET_FIXPEN(style); } ptr1++; }
         else if (ptr1[0] == '8')
-        { if (data->SHOW) { pen = _dri(obj)->dri_Pens[8]; SET_FIXPEN(style); } ptr1++; }
+        { if (data->SHOW) { pen = _dri(data->this)->dri_Pens[8]; SET_FIXPEN(style); } ptr1++; }
         else if (ptr1[0] == '9')
-        { if (LIBVER(IntuitionBase) >= 39)
-          { if (data->SHOW) { pen = _dri(obj)->dri_Pens[9]; SET_FIXPEN(style); } ptr1++; }
-          else
-          { if (data->SHOW) { pen = _dri(obj)->dri_Pens[2]; SET_FIXPEN(style); } ptr1++; }
-        }
+        { if (data->SHOW) { pen = _dri(data->this)->dri_Pens[9]; SET_FIXPEN(style); } ptr1++; }
         else if (ptr1[0] == 'T')
         { SET_HLINE_T(cinfo->style); SET_HLINE_T(style); ptr1++; }
         else if (ptr1[0] == 'C')
@@ -463,8 +461,8 @@ void ParseColumn(Object *obj,struct NLData *data,WORD column,ULONG mypen)
         else if (ptr1[0] == 't')
         { SET_HLINE_thick(cinfo->style);
           SET_HLINE_thick(style);
-          if (muiRenderInfo(obj) && _pens(obj))
-            data->HLINE_thick_pen = MUIPEN(_pens(obj)[MPEN_FILL]);
+          if (muiRenderInfo(data->this) && _pens(data->this))
+            data->HLINE_thick_pen = MUIPEN(_pens(data->this)[MPEN_FILL]);
           else
             data->HLINE_thick_pen = 3;
           ptr1++;
@@ -475,8 +473,8 @@ void ParseColumn(Object *obj,struct NLData *data,WORD column,ULONG mypen)
             if (ptr1[np] == 'N')
             { SET_HLINE_nothick(cinfo->style);
               SET_HLINE_nothick(style);
-              if (muiRenderInfo(obj) && _pens(obj))
-                data->HLINE_thick_pen = MUIPEN(_pens(obj)[MPEN_SHADOW]);
+              if (muiRenderInfo(data->this) && _pens(data->this))
+                data->HLINE_thick_pen = MUIPEN(_pens(data->this)[MPEN_SHADOW]);
               else
                 data->HLINE_thick_pen = 1;
               np = np2 = 2;
@@ -487,21 +485,25 @@ void ParseColumn(Object *obj,struct NLData *data,WORD column,ULONG mypen)
             while ((ptr1[np] != '\0') && (ptr1[np] != '\n') && (ptr1[np] != '\r') && (ptr1[np] != ']'))
               np++;
             if (ptr1[np] == ']')
-            { if (np == np2)
+            {
+              if (np == np2)
               {
               }
               else if (ptr1[np2] == 'M')
-              { pnum = atol(&ptr1[np2+1]);
-                if ((pnum >= 0) && (pnum <= 8) && muiRenderInfo(obj) && _pens(obj))
-                  data->HLINE_thick_pen = MUIPEN(_pens(obj)[pnum]);
+              {
+                pnum = atol(&ptr1[np2+1]);
+                if ((pnum >= 0) && (pnum <= 8) && muiRenderInfo(data->this) && _pens(data->this))
+                  data->HLINE_thick_pen = MUIPEN(_pens(data->this)[pnum]);
               }
               else if (ptr1[np2] == 'I')
-              { pnum = atol(&ptr1[np2+1]);
+              {
+                pnum = atol(&ptr1[np2+1]);
                 if ((pnum >= 0) && (pnum <= 11))
-                { if ((pnum >= 9) && LIBVER(IntuitionBase) >= 39)
+                {
+                  if (pnum >= 9)
                     pnum = 2;
-                  if ((pnum >= 0) && muiRenderInfo(obj) && _dri(obj) && _dri(obj)->dri_Pens)
-                  data->HLINE_thick_pen = _dri(obj)->dri_Pens[pnum];
+                  if ((pnum >= 0) && muiRenderInfo(data->this) && _dri(data->this) && _dri(data->this)->dri_Pens)
+                    data->HLINE_thick_pen = _dri(data->this)->dri_Pens[pnum];
                 }
               }
               else if (np < 8)
@@ -574,7 +576,7 @@ void ParseColumn(Object *obj,struct NLData *data,WORD column,ULONG mypen)
               if (data->imagebuf[0] == '\0')
                 afinfo->strptr = NULL;
               else
-                afinfo->strptr = (APTR) GetNImage(obj,data,data->imagebuf);
+                afinfo->strptr = (APTR) GetNImage(data,data->imagebuf);
               if (afinfo->strptr)
               { if (dx <= 0)
                   dx = ((struct NImgList *) afinfo->strptr)->width;
@@ -683,7 +685,7 @@ void ParseColumn(Object *obj,struct NLData *data,WORD column,ULONG mypen)
                 afinfo->addchar = 0;
                 afinfo->addinfo = 0;
                 afinfo->style = STYLE_IMAGE;
-                afinfo->strptr = (APTR) GetNImage2(obj,data,bitmapimage->obtainpens);
+                afinfo->strptr = (APTR) GetNImage2(data,bitmapimage->obtainpens);
                 afinfo->pos = (WORD) (ptro - ptrs);
                 if ((afinfo->strptr) && !(((struct NImgList *) afinfo->strptr)->NImgObj))
                   afinfo->strptr = NULL;
@@ -833,7 +835,7 @@ void ParseColumn(Object *obj,struct NLData *data,WORD column,ULONG mypen)
   if (!there_is_char && IS_HLINE_E(style))
   { SET_HLINE_C(cinfo->style); SET_HLINE_C(style); }
   cinfo->ninfo = ni;
-  if (NeedAffInfo(obj,data,ni+1))
+  if (NeedAffInfo(data,ni+1))
   { ni++;
     afinfo = &data->aff_infos[ni];
 
@@ -849,15 +851,15 @@ void ParseColumn(Object *obj,struct NLData *data,WORD column,ULONG mypen)
 }
 
 
-static void ParseColumns(Object *obj,struct NLData *data,LONG ent)
+static void ParseColumns(struct NLData *data,LONG ent)
 {
   WORD column;
 
-  NL_GetDisplayArray(obj,data,ent);
+  NL_GetDisplayArray(data,ent);
   for (column = 0;column < data->numcols;column++)
   { if (DontDoColumn(data,ent,column))
       continue;
-    ParseColumn(obj,data,column,0);
+    ParseColumn(data,column,0);
   }
 }
 
@@ -877,13 +879,13 @@ static void ParseColumns(Object *obj,struct NLData *data,LONG ent)
  *     data->parse_column = -1;
  *     ParseColumns(obj,data,ent);
  *     data->parse_column = -1;
- *     GetNImage_End(obj,data);
+ *     GetNImage_End(data);
  *     data->do_parse = FALSE;
  *   }
  * }
  */
 
-void AllParseColumns(Object *obj,struct NLData *data)
+void AllParseColumns(struct NLData *data)
 {
   LONG ent;
   if (!data->do_parse || data->NList_Quiet || data->NList_Disabled)
@@ -898,17 +900,17 @@ void AllParseColumns(Object *obj,struct NLData *data)
   data->display_ptr = NULL;
   data->parse_column = -1;
   if (data->NList_Title)
-    ParseColumns(obj,data,-1);
+    ParseColumns(data,-1);
   for (ent = 0;ent < data->NList_Entries;ent++)
-    ParseColumns(obj,data,ent);
+    ParseColumns(data,ent);
   data->display_ptr = NULL;
   data->parse_column = -1;
-  GetImages(obj,data);
+  GetImages(data);
   data->do_parse = FALSE;
 }
 
 
-static WORD AddSpaceInfos(Object *obj,struct NLData *data,WORD column,WORD ni1)
+static WORD AddSpaceInfos(struct NLData *data,WORD column,WORD ni1)
 {
   register struct colinfo *cinfo = data->cols[column].c;
   register struct affinfo *afinfo;
@@ -928,7 +930,7 @@ static WORD AddSpaceInfos(Object *obj,struct NLData *data,WORD column,WORD ni1)
       while ((curlen < afinfo->len) && (str[curlen] != ' '))
         curlen++;
       curlen++;
-      if ((curlen < afinfo->len) && NeedAffInfo(obj,data,cinfo->ninfo+1))
+      if ((curlen < afinfo->len) && NeedAffInfo(data,cinfo->ninfo+1))
       { ni2 = cinfo->ninfo++;
         while (ni2 >= ni)
         { data->aff_infos[ni2+1].strptr = data->aff_infos[ni2].strptr;
@@ -959,7 +961,7 @@ static WORD AddSpaceInfos(Object *obj,struct NLData *data,WORD column,WORD ni1)
 }
 
 
-void WidthColumn(Object *obj,struct NLData *data,WORD column,WORD updinfo)
+void WidthColumn(struct NLData *data,WORD column,WORD updinfo)
 {
   register struct colinfo *cinfo = data->cols[column].c;
   register struct affinfo *afinfo;
@@ -1047,7 +1049,7 @@ void WidthColumn(Object *obj,struct NLData *data,WORD column,WORD updinfo)
       UBYTE addinfo = 0;
       BOOL cont = TRUE;
       if ((numchar > 0) && (numinfo > 0))
-        numinfo += AddSpaceInfos(obj,data,column,ni1);
+        numinfo += AddSpaceInfos(data,column,ni1);
       numinfo--;
       while (cont)
       { cont = FALSE;
@@ -1151,7 +1153,7 @@ void WidthColumn(Object *obj,struct NLData *data,WORD column,WORD updinfo)
 }
 
 
-void FindCharInColumn(Object *obj,struct NLData *data,LONG ent,WORD column,WORD xoffset,WORD *charxoffset,WORD *charnum)
+void FindCharInColumn(struct NLData *data,LONG ent,WORD column,WORD xoffset,WORD *charxoffset,WORD *charnum)
 {
   register struct colinfo *cinfo = data->cols[column].c;
   register struct affinfo *afinfo;
@@ -1164,9 +1166,9 @@ void FindCharInColumn(Object *obj,struct NLData *data,LONG ent,WORD column,WORD 
     return;
   }
 
-  NL_GetDisplayArray(obj,data,ent);
-  ParseColumn(obj,data,column,0);
-  WidthColumn(obj,data,column,0);
+  NL_GetDisplayArray(data,ent);
+  ParseColumn(data,column,0);
+  WidthColumn(data,column,0);
 
   curx = cinfo->xoffset;
 
@@ -1282,7 +1284,7 @@ void FindCharInColumn(Object *obj,struct NLData *data,LONG ent,WORD column,WORD 
 }
 
 
-static LONG NL_DoWrapLine(Object *obj,struct NLData *data,LONG ent,BOOL force)
+static LONG NL_DoWrapLine(struct NLData *data,LONG ent,BOOL force)
 {
   register struct colinfo *cinfo;
   register struct affinfo *afinfo;
@@ -1301,19 +1303,20 @@ static LONG NL_DoWrapLine(Object *obj,struct NLData *data,LONG ent,BOOL force)
     return (ent+1);
 
   if ((data->EntriesArray[ent]->len >= 0) && !force && (data->EntriesArray[ent1]->dnum > 0))
-  { ent += data->EntriesArray[ent1]->dnum;
+  {
+    ent += data->EntriesArray[ent1]->dnum;
     return (ent);
   }
 
   colmask = data->EntriesArray[ent]->Wrap & TE_Wrap_TmpMask;
   while((colmask = colmask >> 1))
     col++;
-  column = NL_ColToColumn(obj,data,col);
+  column = NL_ColToColumn(data,col);
 
   if (data->EntriesArray[ent]->len < 0)
     selects = data->EntriesArray[ent]->pos;
   else
-    selects = NL_GetSelects(data,obj,ent);
+    selects = NL_GetSelects(data,ent);
 
   data->EntriesArray[ent]->PixLen = -1;
   data->EntriesArray[ent]->Wrap &= TE_Wrap_TmpMask;
@@ -1346,9 +1349,10 @@ static LONG NL_DoWrapLine(Object *obj,struct NLData *data,LONG ent,BOOL force)
 	//__asm("illegal");
 
   while (TRUE)
-  { data->EntriesArray[ent]->len = -1;
-    NL_GetDisplayArray(obj,data,ent);
-    ParseColumn(obj,data,column,pen);
+  {
+    data->EntriesArray[ent]->len = -1;
+    NL_GetDisplayArray(data,ent);
+    ParseColumn(data,column,pen);
     NL_Changed(data,ent);
     ni = 0;
     afinfo = &data->aff_infos[ni];
@@ -1357,35 +1361,42 @@ static LONG NL_DoWrapLine(Object *obj,struct NLData *data,LONG ent,BOOL force)
     endpos = -1;
 
     while ((ni <= cinfo->ninfo) && (afinfo->len > 0))
-    { if (curlen > colwidth)
+    {
+      if (curlen > colwidth)
         break;
       if (afinfo->style == STYLE_IMAGE)
         curlen += afinfo->len + 2;
       else if (afinfo->style == STYLE_IMAGE2)
         curlen += afinfo->len + 2;
       else if (afinfo->style == STYLE_TAB)
-      { pen = afinfo->pen;
+      {
+        pen = afinfo->pen;
         curlen = ((((curlen-1) / data->tabsize) + 1) * data->tabsize) + 1;
         if ((curlen > colwidth) && (ni > 0) && (ni < cinfo->ninfo))
-        { ni++;
+        {
+          ni++;
           afinfo = &data->aff_infos[ni];
           break;
         }
       }
       else if ((afinfo->style == STYLE_FIXSPACE) || (afinfo->style == STYLE_SPACE))
-      { pen = afinfo->pen;
+      {
+        pen = afinfo->pen;
         curlen += afinfo->len;
         if ((curlen > colwidth) && (ni > 0) && (ni < cinfo->ninfo))
-        { ni++;
+        {
+          ni++;
           afinfo = &data->aff_infos[ni];
           break;
         }
       }
       else
-      { WORD clen = afinfo->len;
+      {
+        WORD clen = afinfo->len;
         WORD blanklen = clen;
         WORD oldcurlen,difflen;
         char *strptr;
+
         strptr = (char *) afinfo->strptr;
         pen = afinfo->pen;
         style = afinfo->style;
@@ -1400,14 +1411,17 @@ static LONG NL_DoWrapLine(Object *obj,struct NLData *data,LONG ent,BOOL force)
         else
           difflen = 0;
         if ((clen > 0) && ((curlen + difflen) >= colwidth))
-        { if (afinfo->pos < 0)
-          { afinfo->pos = 0;
+        {
+          if (afinfo->pos < 0)
+          {
+            afinfo->pos = 0;
             afinfo->len = 0;
             break;
           }
           curlen += difflen;
           while ((clen > 0) && (curlen >= colwidth))
-          { clen--;
+          {
+            clen--;
             while ((clen > 0) && (strptr[clen] != ' '))
               clen--;
             if (clen > 0)
@@ -1421,14 +1435,16 @@ static LONG NL_DoWrapLine(Object *obj,struct NLData *data,LONG ent,BOOL force)
               curlen = oldcurlen + te.te_Width;
           }
           if ((clen <= 0) && (ni == 0) && (blanklen > 0))
-          { clen = blanklen;
+          {
+            clen = blanklen;
             TextExtent(data->rp, strptr, clen, &te);
             if (te.te_Extent.MaxX > te.te_Width)
               curlen = oldcurlen + te.te_Extent.MaxX;
             else
               curlen = oldcurlen + te.te_Width;
             while ((clen > 0) && (curlen >= colwidth))
-            { clen--;
+            {
+              clen--;
               if (clen <= 0)
                 break;
               TextExtent(data->rp, strptr, clen, &te);
@@ -1440,7 +1456,8 @@ static LONG NL_DoWrapLine(Object *obj,struct NLData *data,LONG ent,BOOL force)
             afinfo->pos += clen;
           }
           else
-          { endpos = afinfo->pos + clen;
+          {
+            endpos = afinfo->pos + clen;
             if (clen > 0)
               afinfo->pos += (clen + 1);
           }
@@ -1464,8 +1481,10 @@ static LONG NL_DoWrapLine(Object *obj,struct NLData *data,LONG ent,BOOL force)
     dnum++;
 
     if ((ni > cinfo->ninfo) || (afinfo->len <= 0) || (afinfo->pos < 0))
-    { if (IS_ALIGN_JUSTIFY(data->EntriesArray[ent]->style))
-      { SET_ALIGN_LEFT(data->EntriesArray[ent]->style);
+    {
+      if (IS_ALIGN_JUSTIFY(data->EntriesArray[ent]->style))
+      {
+        SET_ALIGN_LEFT(data->EntriesArray[ent]->style);
       }
       ent++;
       break;
@@ -1474,7 +1493,8 @@ static LONG NL_DoWrapLine(Object *obj,struct NLData *data,LONG ent,BOOL force)
       ent++;
 
     if ((ent >= data->NList_Entries) || !(data->EntriesArray[ent]->Wrap & TE_Wrap_TmpLine))
-    { if (!NL_InsertTmpLine(data,obj,ent))
+    {
+      if (!NL_InsertTmpLine(data,ent))
         break;
     }
 
@@ -1495,22 +1515,28 @@ static LONG NL_DoWrapLine(Object *obj,struct NLData *data,LONG ent,BOOL force)
   data->EntriesArray[ent1]->dnum = dnum;
   SetSoftStyle(data->rp, 0, STYLE_MASK);
   while ((ent < data->NList_Entries) && (data->EntriesArray[ent]->Wrap & TE_Wrap_TmpLine))
-    NL_DeleteTmpLine(data,obj,ent);
+    NL_DeleteTmpLine(data,ent);
+
   return (ent);
 }
 
 
-void NL_DoWrapAll(Object *obj,struct NLData *data,BOOL force,BOOL update)
+void NL_DoWrapAll(struct NLData *data,BOOL force,BOOL update)
 {
   LONG entorig = data->NList_Entries;
   LONG ent = 0;
+
   if (!data->do_wwrap || !data->EntriesArray || data->do_setcols)
     return;
   else if (!data->SHOW || !data->DRAW || data->NList_Quiet || data->NList_Disabled)
-  { LONG len = -1;
+  {
+    LONG len = -1;
+
     while (ent < data->NList_Entries)
-    { if (data->EntriesArray[ent]->Wrap & TE_Wrap_TmpLine)
-      { if (len < 0)
+    {
+      if (data->EntriesArray[ent]->Wrap & TE_Wrap_TmpLine)
+      {
+        if (len < 0)
           data->EntriesArray[ent]->len = -2;
       }
       else if (data->EntriesArray[ent]->Wrap)
@@ -1528,14 +1554,18 @@ void NL_DoWrapAll(Object *obj,struct NLData *data,BOOL force,BOOL update)
     force = TRUE;
 
   while (ent < data->NList_Entries)
-  { if (data->EntriesArray[ent]->Wrap & TE_Wrap_TmpLine)
-    { NL_DeleteTmpLine(data,obj,ent);
+  {
+    if (data->EntriesArray[ent]->Wrap & TE_Wrap_TmpLine)
+    {
+      NL_DeleteTmpLine(data,ent);
       NL_SegChanged(data,ent,data->NList_Entries);
       data->do_draw = TRUE;
     }
     else if (data->EntriesArray[ent]->Wrap)
-    { if ((data->EntriesArray[ent]->len < 0) || force || (data->EntriesArray[ent]->dnum < 1))
-      { ent = NL_DoWrapLine(obj,data,ent,force);
+    {
+      if ((data->EntriesArray[ent]->len < 0) || force || (data->EntriesArray[ent]->dnum < 1))
+      {
+        ent = NL_DoWrapLine(data,ent,force);
         if (data->NList_Entries != entorig)
           NL_SegChanged(data,ent,data->NList_Entries);
         data->do_draw = TRUE;
@@ -1547,25 +1577,28 @@ void NL_DoWrapAll(Object *obj,struct NLData *data,BOOL force,BOOL update)
       ent++;
   }
   if (data->NList_Entries != entorig)
-  { data->do_updatesb = TRUE;
+  {
+    data->do_updatesb = TRUE;
     DO_NOTIFY(NTF_Entries|NTF_MinMax);
   }
   if ((data->NList_First > 0) && (data->NList_First + data->NList_Visible >= data->NList_Entries))
-  { data->NList_First = data->NList_Entries - data->NList_Visible;
+  {
+    data->NList_First = data->NList_Entries - data->NList_Visible;
     if (data->NList_First < 0)
       data->NList_First = 0;
     DO_NOTIFY(NTF_First);
   }
   data->do_wwrap = data->force_wwrap = FALSE;
   if (update)
-  { data->do_updatesb = TRUE;
+  {
+    data->do_updatesb = TRUE;
     REDRAW;
 /*    do_notifies(NTF_AllChanges|NTF_MinMax);*/
   }
 }
 
 
-static void WidthColumns(Object *obj,struct NLData *data,LONG ent,WORD updinfo)
+static void WidthColumns(struct NLData *data,LONG ent,WORD updinfo)
 {
   WORD column;
 
@@ -1574,20 +1607,21 @@ static void WidthColumns(Object *obj,struct NLData *data,LONG ent,WORD updinfo)
   /* sba: was > 1 but in this case the images weren't parsed */
   if ( data->numcols > 0 )
   {
-    NL_GetDisplayArray(obj,data,ent);
+    NL_GetDisplayArray(data,ent);
 
     for (column = 0;column < data->numcols;column++) /* sba: was (data->numcols-1) */
     { if (DontDoColumn(data,ent,column))
         continue;
-      if (updinfo != 2) ParseColumn(obj,data,column,0);
+      if (updinfo != 2)
+        ParseColumn(data,column,0);
       if (data->SHOW)
-        WidthColumn(obj,data,column,updinfo);
+        WidthColumn(data,column,updinfo);
     }
   }
 }
 
 
-void AllWidthColumns(Object *obj,struct NLData *data)
+void AllWidthColumns(struct NLData *data)
 {
   LONG ent;
   WORD column;
@@ -1605,10 +1639,10 @@ void AllWidthColumns(Object *obj,struct NLData *data)
       data->cols[column].c->dx = 4;
     }
     if (data->NList_Title)
-      WidthColumns(obj,data,-1,0);
+      WidthColumns(data,-1,0);
     if (data->EntriesArray)
     { for (ent = 0;ent < data->NList_Entries;ent++)
-      WidthColumns(obj,data,ent,0);
+      WidthColumns(data,ent,0);
     }
     data->display_ptr = NULL;
     data->parse_column = -1;
@@ -1616,7 +1650,7 @@ void AllWidthColumns(Object *obj,struct NLData *data)
 }
 
 
-void NL_SetColsAdd(Object *obj,struct NLData *data,LONG ent,WORD addimages)
+void NL_SetColsAdd(struct NLData *data,LONG ent,WORD addimages)
 {
   WORD column;
 
@@ -1645,19 +1679,19 @@ void NL_SetColsAdd(Object *obj,struct NLData *data,LONG ent,WORD addimages)
       }
 
       if (data->NList_Title)
-        WidthColumns(obj,data,-1,1);
+        WidthColumns(data,-1,1);
 
       if (data->EntriesArray)
       {
         if (ent == -2 )
         {
           for (ent = 0;ent < data->NList_Entries;ent++)
-            WidthColumns(obj,data,ent,1);
+            WidthColumns(data,ent,1);
         }
         else /* -3 == Recalculate only visible (cs@aphaso.de) */
         {
           for (ent = data->NList_First; ent < ( data->NList_First + data->NList_Visible ); ent++ )
-            WidthColumns(obj,data,ent,1);
+            WidthColumns(data,ent,1);
         }
       }
       data->display_ptr = NULL;
@@ -1667,11 +1701,11 @@ void NL_SetColsAdd(Object *obj,struct NLData *data,LONG ent,WORD addimages)
     {
       //D(bug( "%ld - Calling WidthColumns() width entry %ld!\n", __LINE__, ent ));
       if (data->SETUP != 3)
-        WidthColumns(obj,data,ent,1);
+        WidthColumns(data,ent,1);
     }
 
     if (addimages)
-      GetNImage_End(obj,data);
+      GetNImage_End(data);
     else
       data->do_images = TRUE;
     if (!data->SHOW)
@@ -1680,7 +1714,7 @@ void NL_SetColsAdd(Object *obj,struct NLData *data,LONG ent,WORD addimages)
 }
 
 
-void NL_SetColsRem(Object *obj,struct NLData *data,LONG ent)
+void NL_SetColsRem(struct NLData *data,LONG ent)
 {
   WORD column;
 
@@ -1708,7 +1742,7 @@ void NL_SetColsRem(Object *obj,struct NLData *data,LONG ent)
       //D(bug( "%ld - Calling WidthColumns() width entry %ld!\n", __LINE__, ent ));
 
       if (data->SETUP != 3)
-        WidthColumns(obj,data,ent,2);
+        WidthColumns(data,ent,2);
 
       if (ent == -1)
         data->Title_PixLen = -1;

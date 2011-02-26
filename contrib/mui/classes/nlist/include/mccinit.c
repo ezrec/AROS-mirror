@@ -1,7 +1,7 @@
 /*******************************************************************************
 
         Name:           mccinit.c
-        Versionstring:  $VER: mccinit.c 1.23 (07.09.2010)
+        Versionstring:  $VER: mccinit.c 1.25 (20.12.2010)
         Author:         Jens Langner <Jens.Langner@light-speed.de>
         Distribution:   PD (public domain)
         Description:    library init file for easy generation of a MUI
@@ -61,6 +61,13 @@
   1.22  03.09.2010 : the library semaphore is now correctly cleared ahead of the
                      InitSemaphore() call.
   1.23  07.09.2010 : added missing #include <string.h> for memset().
+  1.24  05.10.2010 : make sure that removing the library during LibClose() really
+                     operates on the correct base. Calling LibExpunge() on MorphOS
+                     is wrong, since that takes no parameter but expects the base
+                     to be in A6. We work around this by using an additional
+                     function which gets called from LibClose() and LibExpunge()
+                     with the correct base pointer.
+  1.25  20.12.2010 : minimum required system version is now OS3.0 (V39).
 
  About:
 
@@ -709,19 +716,19 @@ STATIC ULONG mccLibInit(struct LibraryHeader *base)
   // now that this library/class is going to be initialized for the first time
   // we go and open all necessary libraries on our own
   #if defined(__amigaos4__)
-  if((DOSBase = OpenLibrary("dos.library", 36)) &&
+  if((DOSBase = OpenLibrary("dos.library", 39)) &&
      GETINTERFACE(IDOS, struct DOSIFace *, DOSBase))
-  if((GfxBase = OpenLibrary("graphics.library", 36)) &&
+  if((GfxBase = OpenLibrary("graphics.library", 39)) &&
      GETINTERFACE(IGraphics, struct GraphicsIFace *, GfxBase))
-  if((IntuitionBase = OpenLibrary("intuition.library", 36)) &&
+  if((IntuitionBase = OpenLibrary("intuition.library", 39)) &&
      GETINTERFACE(IIntuition, struct IntuitionIFace *, IntuitionBase))
-  if((UtilityBase = OpenLibrary("utility.library", 36)) &&
+  if((UtilityBase = OpenLibrary("utility.library", 39)) &&
      GETINTERFACE(IUtility, struct UtilityIFace *, UtilityBase))
   #else
-  if((DOSBase = (struct DosLibrary*)OpenLibrary("dos.library", 36)) &&
-     (GfxBase = (struct GfxBase*)OpenLibrary("graphics.library", 36)) &&
-     (IntuitionBase = (struct IntuitionBase*)OpenLibrary("intuition.library", 36)) &&
-     (UtilityBase = (APTR)OpenLibrary("utility.library", 36)))
+  if((DOSBase = (struct DosLibrary*)OpenLibrary("dos.library", 39)) &&
+     (GfxBase = (struct GfxBase*)OpenLibrary("graphics.library", 39)) &&
+     (IntuitionBase = (struct IntuitionBase*)OpenLibrary("intuition.library", 39)) &&
+     (UtilityBase = (APTR)OpenLibrary("utility.library", 39)))
   #endif
   {
     // we have to please the internal utilitybase
@@ -1024,10 +1031,44 @@ STATIC struct LibraryHeader * LIBFUNC LibInit(REG(d0, struct LibraryHeader *base
   FreeMem((STRPTR)(LIB)-(LIB)->lib_NegSize, (ULONG)((LIB)->lib_NegSize+(LIB)->lib_PosSize))
 #endif
 
+STATIC BPTR LibDelete(struct LibraryHeader *base)
+{
+#if defined(__amigaos4__)
+  struct ExecIFace *IExec = (struct ExecIFace *)(*(struct ExecBase **)4)->MainInterface;
+#endif
+  BPTR rc;
+
+  // remove the library base from exec's lib list in advance
+  Remove((struct Node *)base);
+
+  // protect mccLibExpunge()
+  ObtainSemaphore(&base->lh_Semaphore);
+
+  // make sure we have enough stack here
+  callMccFunction(mccLibExpunge, base);
+
+  // unprotect
+  ReleaseSemaphore(&base->lh_Semaphore);
+
+  #if defined(__amigaos4__) && defined(__NEWLIB__)
+  if(NewlibBase)
+  {
+    DROPINTERFACE(INewlib);
+    CloseLibrary(NewlibBase);
+    NewlibBase = NULL;
+  }
+  #endif
+
+  // make sure the system deletes the library as well.
+  rc = base->lh_Segment;
+  DeleteLibrary(&base->lh_Library);
+
+  return rc;
+}
+
 #if defined(__amigaos4__)
 STATIC BPTR LibExpunge(struct LibraryManagerInterface *Self)
 {
-  struct ExecIFace *IExec = (struct ExecIFace *)(*(struct ExecBase **)4)->MainInterface;
   struct LibraryHeader *base = (struct LibraryHeader *)Self->Data.LibBase;
 #elif defined(__MORPHOS__)
 STATIC BPTR LibExpunge(void)
@@ -1057,30 +1098,7 @@ STATIC BPTR LIBFUNC LibExpunge(REG(a6, struct LibraryHeader *base))
   }
   else
   {
-    // remove the library base from exec's lib list in advance
-    Remove((struct Node *)base);
-
-    // protect mccLibExpunge()
-    ObtainSemaphore(&base->lh_Semaphore);
-
-    // make sure we have enough stack here
-    callMccFunction(mccLibExpunge, base);
-
-    // unprotect
-    ReleaseSemaphore(&base->lh_Semaphore);
-
-    #if defined(__amigaos4__) && defined(__NEWLIB__)
-    if(NewlibBase)
-    {
-      DROPINTERFACE(INewlib);
-      CloseLibrary(NewlibBase);
-      NewlibBase = NULL;
-    }
-    #endif
-
-    // make sure the system deletes the library as well.
-    rc = base->lh_Segment;
-    DeleteLibrary(&base->lh_Library);
+    rc = LibDelete(base);
   }
 
   return(rc);
@@ -1220,20 +1238,7 @@ STATIC BPTR LIBFUNC LibClose(REG(a6, struct LibraryHeader *base))
     // expunge the library base right now
     if(base->lh_Library.lib_Flags & LIBF_DELEXP)
     {
-      #if defined(__amigaos4__)
-      rc = LibExpunge(Self);
-      #elif defined(__MORPHOS__)
-      rc = LibExpunge();
-      #elif defined(__AROS__)
-      rc = AROS_LC1(BPTR, LibExpunge,
-        AROS_LCA(struct LibraryHeader *, base, D0),
-        struct LibraryHeader *, base, 3, __MCC_
-      );
-      #else
-      rc = LibExpunge(base);
-      #endif
-
-      return rc;
+      rc = LibDelete(base);
     }
   }
 
