@@ -71,25 +71,22 @@ ASM VOID SPrintfA(REG(a3) UBYTE * buffer, REG(a0) UBYTE * format, REG(a1) IPTR *
 }
 
 
-//ASM VOID LHook_Count(REG(a0) struct Hook * hook, REG(a1) ULONG chr, REG(a2) struct Locale * loc)
 ASM REGFUNC3(VOID, LHook_Count,
         REGPARAM(A0, struct Hook *, hook),
-        REGPARAM(A1, ULONG, chr),
-        REGPARAM(A2, struct Locale *, loc))
+        REGPARAM(A2, struct Locale *, loc),
+        REGPARAM(A1, ULONG, chr))
 {
   hook->h_Data++;
 }
 REGFUNC_END
 
-
-//ASM VOID LHook_Format(REG(a0) struct Hook * hook, REG(a1) ULONG chr, REG(a2) struct Locale *loc)
 ASM REGFUNC3(VOID, LHook_Format,
         REGPARAM(A0, struct Hook *, hook),
-        REGPARAM(A1, ULONG, chr),
-        REGPARAM(A2, struct Locale *, loc))
+        REGPARAM(A2, struct Locale *, loc),
+        REGPARAM(A1, ULONG, chr))
 {
   char * cptr = (char *)hook->h_Data;
-  *cptr++ = (char)chr;
+  *(cptr++) = (char)chr;
   hook->h_Data = cptr;
 }
 REGFUNC_END

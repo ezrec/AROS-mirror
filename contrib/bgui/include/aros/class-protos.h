@@ -501,14 +501,14 @@ extern /*__stdargs*/ ASM VOID SPrintfA(REG(a3) UBYTE *, REG(a0) UBYTE *, REG(a1)
 //extern ASM VOID LHook_Count(REG(a0) struct Hook *hook, REG(a1) ULONG chr, REG(a2) struct Locale *loc);
 extern REGFUNCPROTO3(VOID, LHook_Count,
 	REGPARAM(A0, struct Hook *, hook),
-	REGPARAM(A1, ULONG, chr),
-	REGPARAM(A2, struct Locale *, loc));
+	REGPARAM(A2, struct Locale *, loc),
+	REGPARAM(A1, ULONG, chr));
 
 //extern ASM VOID LHook_Format(REG(a0) struct Hook *hook, REG(a1) ULONG chr, REG(a2) struct Locale *loc);
 extern REGFUNCPROTO3(VOID, LHook_Format,
 	REGPARAM(A0, struct Hook *, hook),
-	REGPARAM(A1, ULONG, chr),
-	REGPARAM(A2, struct Locale *, loc));
+	REGPARAM(A2, struct Locale *, loc),
+	REGPARAM(A1, ULONG, chr));
 
 extern ASM struct RastPort *BGUI_ObtainGIRPort( REG(a0) struct GadgetInfo * );
 

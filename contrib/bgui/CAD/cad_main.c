@@ -186,9 +186,9 @@ struct NewMenu     Menus[] = {
  */
 //STATIC SAVEDS ASM VOID Win_IDCMP_Func( REG(a0) struct Hook *hook, REG(a2) Object *obj, REG(a1) struct IntuiMessage *msg )
 STATIC SAVEDS ASM REGFUNC3(VOID, Win_IDCMP_Func,
-	REGPARAM(a0, struct Hook *, hook),
-	REGPARAM(a2, Object *, obj),
-	REGPARAM(a1, struct IntuiMessage *, msg))
+	REGPARAM(A0, struct Hook *, hook),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct IntuiMessage *, msg))
 {
    struct Window  *window;
    Object         *lv_obj = ( Object * )hook->h_Data;
