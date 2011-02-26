@@ -20,7 +20,7 @@ AROS_LP2(Object *, BGUI_NewObjectA,
 AROS_LP3(ULONG, BGUI_RequestA,
 	AROS_LPA(struct Window *, win, A0),
 	AROS_LPA(struct bguiRequest *, estruct, A1),
-	AROS_LPA(ULONG * , args, A2),
+	AROS_LPA(IPTR * , args, A2),
 	struct Library *, BGUIBase, 7, BGUI
 );
 AROS_LP4(BOOL, BGUI_Help,

@@ -285,10 +285,10 @@ makearosproto
 AROS_LH3(ULONG, BGUI_RequestA,
     AROS_LHA(struct Window *, win, A0),
     AROS_LHA(struct bguiRequest *, es, A1),
-    AROS_LHA(ULONG *, args, A2),
+    AROS_LHA(IPTR *, args, A2),
     struct Library *, BGUIBase, 7, BGUI)
 #else
-makeproto SAVEDS ASM ULONG BGUI_RequestA(REG(a0) struct Window *win, REG(a1) struct bguiRequest *es, REG(a2) ULONG *args)
+makeproto SAVEDS ASM ULONG BGUI_RequestA(REG(a0) struct Window *win, REG(a1) struct bguiRequest *es, REG(a2) IPTR *args)
 #endif
 {
    AROS_LIBFUNC_INIT
