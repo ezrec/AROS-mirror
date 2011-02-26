@@ -44,6 +44,7 @@
 typedef struct id_ {
    UWORD              id_Flags;           /* see below               */
    Object            *id_Text;            /* the text to display     */
+   IPTR               id_Args[1];         /* Args to the label       */
    LONG               id_Min;             /* minimum indication      */
    LONG               id_Max;             /* maximum indication      */
    LONG               id_Level;           /* Current level           */
@@ -68,6 +69,13 @@ static ULONG IndicatorPackTable[] =
 
    PACK_ENDTABLE
 };
+
+static void SetLevel(ID *id, LONG level)
+{
+    id->id_Level = level;
+    id->id_Args[0] = (IPTR)level;
+}
+
 ///
 /// OM_NEW
 /*
@@ -86,6 +94,8 @@ METHOD(IClassNew, struct opSet *, ops)
     */
    if ((rc = NewSuperObject(cl, obj, tags)))
    {
+      const struct TagItem *tstate;
+      struct TagItem *tag;
       id = INST_DATA(cl, rc);
 
       /*
@@ -94,9 +104,15 @@ METHOD(IClassNew, struct opSet *, ops)
        */
       id->id_Justification = IDJ_LEFT;
       id->id_Max           = 100;
-      id->id_Text          = BGUI_NewObject(BGUI_TEXT_GRAPHIC, TEXTA_Args, &id->id_Level, TAG_DONE);
+      id->id_Text          = BGUI_NewObject(BGUI_TEXT_GRAPHIC, TEXTA_Args, &id->id_Args[0], TAG_DONE);
       
       BGUI_PackStructureTags((APTR)id, IndicatorPackTable, tags);
+      tstate = tags;
+      while ((tag = NextTagItem(&tstate))) {
+      	  if (tag->ti_Tag == INDIC_Level) {
+      	      SetLevel(id, (LONG)tag->ti_Data);
+      	  }
+      }
 
       /*
        * are we setup OK?
@@ -181,6 +197,10 @@ METHOD(IClassSetUpdate, struct opUpdate *, opu)
             BGUI_FreePoolMem(full_format);
          };
       case INDIC_Justification:
+         update = TRUE;
+         break;
+      case INDIC_Level:
+         SetLevel(id, (LONG)data);
          update = TRUE;
          break;
       };
@@ -298,21 +318,21 @@ METHOD(IClassDimensions, struct bmDimensions *, bmd)
    /*
     * Compute size of minimum level.
     */
-   id->id_Level = id->id_Min;
+   SetLevel(id, id->id_Min);
 
    DoMethod(id->id_Text, TEXTM_DIMENSIONS, rp, &mw, &mh);
 
    /*
     * Compute size of maximum level.
     */
-   id->id_Level = id->id_Max;
+   SetLevel(id, id->id_Max);
 
    DoMethod(id->id_Text, TEXTM_DIMENSIONS, rp, &w, &h);
 
    if (mw < w) mw = w;
    if (mh < h) mh = h;
 
-   id->id_Level = old_level;
+   SetLevel(id, old_level);
 
    /*
     * Add the width of an average digit.
