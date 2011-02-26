@@ -102,6 +102,6 @@ extern struct Library * BGUIBase;
 
    return rc;
 #else
-    return BGUI_NewObjectA(num, &tag1);
+    return BGUI_NewObjectA(classID, &tag1);
 #endif
 } /* BGUI_NewObject */
