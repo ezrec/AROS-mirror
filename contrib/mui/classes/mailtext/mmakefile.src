@@ -44,6 +44,7 @@ MCPFILES := MailtextP \
 
 INCLUDE_FILES := mui/Mailtext_mcc.h
 USER_INCLUDES := -I$(TOP)/$(CURDIR)
+USER_CFLAGS += $(PARANOIA_CFLAGS)
 
 %build_module mmake=contrib-zune-classes-mailtext-mcc \
   modname=Mailtext modtype=mcc conffile=Mailtext_mcc.conf \
