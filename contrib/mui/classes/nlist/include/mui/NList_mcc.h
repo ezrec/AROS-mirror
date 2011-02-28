@@ -191,9 +191,9 @@ extern "C" {
 #define MUIV_NList_TypeSelect_Line        0
 #define MUIV_NList_TypeSelect_Char        1
 
-#define MUIV_NList_Font                 -20
-#define MUIV_NList_Font_Little          -21
-#define MUIV_NList_Font_Fixed           -22
+#define MUIV_NList_Font                 ((IPTR)-20)
+#define MUIV_NList_Font_Little          ((IPTR)-21)
+#define MUIV_NList_Font_Fixed           ((IPTR)-22)
 
 #define MUIV_NList_ConstructHook_String  -1
 #define MUIV_NList_DestructHook_String   -1
@@ -587,7 +587,7 @@ struct MUIP_NList_Compare            { STACKED ULONG MethodID; STACKED APTR entr
 struct MUIP_NList_Display            { STACKED ULONG MethodID; STACKED APTR entry; STACKED LONG entry_pos; STACKED STRPTR *strings; STACKED STRPTR *preparses; };
 struct MUIP_NList_GoActive           { STACKED ULONG MethodID; };
 struct MUIP_NList_GoInactive         { STACKED ULONG MethodID; };
-struct MUIP_NList_SetActive          { STACKED ULONG MethodID; STACKED LONG pos; STACKED ULONG flags; };
+struct MUIP_NList_SetActive          { STACKED ULONG MethodID; STACKED SIPTR pos; STACKED ULONG flags; };
 
 #define DISPLAY_ARRAY_MAX 64
 

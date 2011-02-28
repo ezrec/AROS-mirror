@@ -996,10 +996,10 @@ IPTR mNL_Set(struct IClass *cl,Object *obj,Msg msg)
         REDRAW;
         break;
       case MUIA_NList_MakeActive :
-        data->NList_MakeActive = (LONG) tag->ti_Data;
+        data->NList_MakeActive = tag->ti_Data;
         break;
       case MUIA_NList_KeepActive :
-        data->NList_KeepActive = (LONG) tag->ti_Data;
+        data->NList_KeepActive = tag->ti_Data;
         break;
       case MUIA_NList_TypeSelect :
         MOREQUIET;

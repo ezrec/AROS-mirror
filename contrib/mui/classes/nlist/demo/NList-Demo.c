@@ -535,7 +535,7 @@ static VOID init(VOID)
 
 int main(UNUSED int argc, UNUSED char *argv[])
 {
-  LONG win_opened;
+  LONG win_opened = 0;
   LONG result;
 
   init();
@@ -772,7 +772,7 @@ int main(UNUSED int argc, UNUSED char *argv[])
   /* *** If need to be sorted, sort then restore the active and first *** */
   /* ***            which were set in the Application_Load            *** */
   {
-    ULONG active,first,sorttype;
+    ULONG active = 0,first = 0,sorttype = 0;
     get(LI_Text,MUIA_NList_SortType,&sorttype);
     if (sorttype != MUIV_NList_SortType_None)
     { get(LI_Text,MUIA_NList_Active,&active);

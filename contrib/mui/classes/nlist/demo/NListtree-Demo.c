@@ -194,44 +194,44 @@ STATIC VOID DrawSampleTree( Object *ltobj )
 	char txt[128];
 	WORD i = 0, j;
 
-	tn1 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, (APTR)sa[i].flags, MUIV_NListtree_Insert_ListNode_Root, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
-	tn2 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, (APTR)sa[i].flags, tn1, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
-	tn1 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, (APTR)sa[i].flags, tn2, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
-	tn1 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, (APTR)sa[i].flags, tn1, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
-	tn1 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, (APTR)sa[i].flags, tn2, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
-	tntest = tn1 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, (APTR)sa[i].flags, tn1, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
+	tn1 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, (IPTR)sa[i].flags, MUIV_NListtree_Insert_ListNode_Root, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
+	tn2 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, (IPTR)sa[i].flags, tn1, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
+	tn1 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, (IPTR)sa[i].flags, tn2, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
+	tn1 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, (IPTR)sa[i].flags, tn1, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
+	tn1 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, (IPTR)sa[i].flags, tn2, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
+	tntest = tn1 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, (IPTR)sa[i].flags, tn1, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
 
-	tn1 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, (APTR)sa[i].flags, MUIV_NListtree_Insert_ListNode_Root, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
-	tn2 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, (APTR)sa[i].flags, tn1, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
-	tn2 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, (APTR)sa[i].flags, tn2, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
-	tn2 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, (APTR)sa[i].flags, tn2, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
-	tn3 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, (APTR)sa[i].flags, tn1, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
-	tn1 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, (APTR)sa[i].flags, tn3, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
-	tn2 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, (APTR)sa[i].flags, tn1, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
-	tn3 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, (APTR)sa[i].flags, tn2, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
-	tn3 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, (APTR)sa[i].flags, tn2, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
-	tn3 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, (APTR)sa[i].flags, tn1, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
+	tn1 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, (IPTR)sa[i].flags, MUIV_NListtree_Insert_ListNode_Root, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
+	tn2 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, (IPTR)sa[i].flags, tn1, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
+	tn2 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, (IPTR)sa[i].flags, tn2, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
+	tn2 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, (IPTR)sa[i].flags, tn2, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
+	tn3 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, (IPTR)sa[i].flags, tn1, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
+	tn1 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, (IPTR)sa[i].flags, tn3, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
+	tn2 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, (IPTR)sa[i].flags, tn1, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
+	tn3 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, (IPTR)sa[i].flags, tn2, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
+	tn3 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, (IPTR)sa[i].flags, tn2, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
+	tn3 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, (IPTR)sa[i].flags, tn1, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
 
-	tn1 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, (APTR)sa[i].flags, MUIV_NListtree_Insert_ListNode_Root, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
+	tn1 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, (IPTR)sa[i].flags, MUIV_NListtree_Insert_ListNode_Root, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
 
 	for( j = 0; j < 26; j++ )
 	{
-		DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, (APTR)sa[i].flags, tn1, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
+		DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, (IPTR)sa[i].flags, tn1, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
 	}
 
-	tn1 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, (APTR)sa[i].flags, MUIV_NListtree_Insert_ListNode_Root, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
+	tn1 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, (IPTR)sa[i].flags, MUIV_NListtree_Insert_ListNode_Root, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
 
 	for( j = 0; j < 11; j++ )
 	{
-		tn1 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, (APTR)sa[i].flags, tn1, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
+		tn1 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, (IPTR)sa[i].flags, tn1, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
 	}
 
-	tn1 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, (APTR)sa[i].flags, MUIV_NListtree_Insert_ListNode_Root, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
-	tn1 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, (APTR)sa[i].flags, tn1, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
-	tn1 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, (APTR)sa[i].flags, tn1, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
+	tn1 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, (IPTR)sa[i].flags, MUIV_NListtree_Insert_ListNode_Root, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
+	tn1 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, (IPTR)sa[i].flags, tn1, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
+	tn1 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, (IPTR)sa[i].flags, tn1, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
 
 
-	tn1 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, (APTR)sa[i].flags, MUIV_NListtree_Insert_ListNode_Root, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
+	tn1 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, (IPTR)sa[i].flags, MUIV_NListtree_Insert_ListNode_Root, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
 
 	for( i = 0; i < 2500; i++ )
 	{
@@ -308,7 +308,7 @@ HOOKPROTONHNO(confunc, SIPTR, struct MUIP_NListtree_ConstructMessage *msg)
 		strcpy( (STRPTR)&sa[1], msg->Name );
 		sa->name = (STRPTR)&sa[1];
 
-		sa->flags = (ULONG)msg->UserData;
+		sa->flags = (IPTR)msg->UserData;
 	}
 
 	return( (SIPTR)sa );
@@ -370,7 +370,7 @@ HOOKPROTONHNO(dspfunc, LONG, struct MUIP_NListtree_DisplayMessage *msg)
 		*/
 		struct SampleArray *a = (struct SampleArray *)msg->TreeNode->tn_User;
 
-		snprintf( buf, sizeof(buf), "%3d", (unsigned int)msg->Array[-1] );
+		snprintf( buf, sizeof(buf), "%3d", (unsigned int)(IPTR)msg->Array[-1] );
 
 		*msg->Array++	= msg->TreeNode->tn_Name;
 		*msg->Array++	= (STRPTR)(( a->flags & 0x8000 ) ? t3 : t4);
@@ -398,7 +398,7 @@ MakeStaticHook(dsphook, dspfunc);
 */
 HOOKPROTONHNP(insertfunc, LONG, Object *obj)
 {
-	STRPTR x;
+	STRPTR x = NULL;
 
 	/*
 	**	Get user string.
@@ -476,8 +476,8 @@ MakeStaticHook(exchangehook, exchangefunc);
 */
 HOOKPROTONHNP(renamefunc, LONG, Object *obj)
 {
-	struct MUI_NListtree_TreeNode *tn;
-	STRPTR x;
+	struct MUI_NListtree_TreeNode *tn = NULL;
+	STRPTR x = NULL;
 
 	/*
 	**	Get user string.
@@ -708,7 +708,7 @@ MakeStaticHook(fudh, fudf);
 HOOKPROTONHNP(findnamefunc, LONG, Object *obj)
 {
 	struct MUI_NListtree_TreeNode *tn;
-	STRPTR x;
+	STRPTR x = NULL;
 
 	/*
 	**	Let us see, which string the user wants to search for...
@@ -744,7 +744,7 @@ MakeStaticHook(findnamehook, findnamefunc);
 HOOKPROTONHNP(sortfunc, LONG, Object *obj)
 {
 	clock_t start, end;
-	LONG lastactive;
+	LONG lastactive = 0;
 
 	get( obj, MUIA_NListtree_Active, &lastactive );
 	set( obj, MUIA_NListtree_Active, MUIV_NListtree_Active_Off );
@@ -853,7 +853,7 @@ MakeStaticHook(numselhook, numselfunc);
 */
 HOOKPROTONHNP(testfunc, LONG, Object *obj)
 {
-	ULONG id;
+	IPTR id;
 	ULONG num;
 
 	id = MUIV_NListtree_NextSelected_Start;

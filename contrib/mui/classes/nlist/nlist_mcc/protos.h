@@ -62,12 +62,12 @@ extern IPTR mNL_DropDraw(struct IClass *cl,Object *obj,struct MUIP_NList_DropDra
 /* NList_mcc4.c */
 
 extern BOOL DontDoColumn(struct NLData *data,LONG ent,WORD column);
-extern void ParseColumn(struct NLData *data,WORD column,ULONG mypen);
+extern void ParseColumn(struct NLData *data,WORD column,IPTR mypen);
 extern void WidthColumn(struct NLData *data,WORD column,WORD updinfo);
 extern void AllParseColumns(struct NLData *data);
 extern void FreeAffInfo(struct NLData *data);
 extern BOOL NeedAffInfo(struct NLData *data,WORD niask);
-extern void NL_GetDisplayArray(struct NLData *data,LONG ent);
+extern void NL_GetDisplayArray(struct NLData *data,SIPTR ent);
 extern void FindCharInColumn(struct NLData *data,LONG ent,WORD column,WORD xoffset,WORD *charxoffset,WORD *charnum);
 extern void NL_DoWrapAll(struct NLData *data,BOOL force,BOOL update);
 extern void AllWidthColumns(struct NLData *data);

@@ -2883,7 +2883,7 @@ static void InsertTreeImages( struct NListtree_Data *data, struct MUI_NListtree_
       {
         if ( otn->tn_Space > 0 )
         {
-          snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%x;%x;%d,%d]", data->buf, (unsigned int)data->Image[IMAGE_Tree].ListImage, (unsigned int)MUIA_TI_Spec, (int)SPEC_Space, (int)otn->tn_Space );
+          snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%lx;%x;%d,%d]", data->buf, (unsigned long)data->Image[IMAGE_Tree].ListImage, (unsigned int)MUIA_TI_Spec, (int)SPEC_Space, (int)otn->tn_Space );
 
           otn->tn_ImagePos += otn->tn_Space;
           otn->tn_Space = 0;
@@ -2900,14 +2900,14 @@ static void InsertTreeImages( struct NListtree_Data *data, struct MUI_NListtree_
           {
             if ( ( data->Style == MUICFGV_NListtree_Style_Win98 ) || ( data->Style == MUICFGV_NListtree_Style_Win98Plus ) )
             {
-              snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%x;%x;%d,%d]", data->buf, (unsigned int)data->Image[IMAGE_Tree].ListImage, (unsigned int)MUIA_TI_Spec, (int)SPEC_Space, (int)x2 );
+              snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%lx;%x;%d,%d]", data->buf, (unsigned long)data->Image[IMAGE_Tree].ListImage, (unsigned int)MUIA_TI_Spec, (int)SPEC_Space, (int)x2 );
 
               otn->tn_ImagePos += x2;
             }
           }
           else
           {
-            snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%x;%x;%d,%d]", data->buf, (unsigned int)data->Image[IMAGE_Tree].ListImage, (unsigned int)MUIA_TI_Spec, (int)x1, (int)x2 );
+            snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%lx;%x;%d,%d]", data->buf, (unsigned long)data->Image[IMAGE_Tree].ListImage, (unsigned int)MUIA_TI_Spec, (int)x1, (int)x2 );
 
             otn->tn_ImagePos += x2;
           }
@@ -2935,7 +2935,7 @@ static void InsertImage( struct NListtree_Data *data, struct MUI_NListtree_TreeN
       x1 = IMAGE_Closed;
     }
 
-    snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%x]", data->buf, (unsigned int)data->Image[x1].ListImage );
+    snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%lx]", data->buf, (unsigned long)data->Image[x1].ListImage );
 
     if ( ( data->Style == MUICFGV_NListtree_Style_Win98 ) || ( data->Style == MUICFGV_NListtree_Style_Win98Plus ) )
       x1 = SPEC_Hor;
@@ -2944,12 +2944,12 @@ static void InsertImage( struct NListtree_Data *data, struct MUI_NListtree_TreeN
 
     if ( data->Space > 0 )
     {
-      snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%x;%x;%d,%d]", data->buf, (unsigned int)data->Image[IMAGE_Tree].ListImage, (unsigned int)MUIA_TI_Spec, (int)x1, (unsigned int)data->Space );
+      snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%lx;%x;%d,%d]", data->buf, (unsigned long)data->Image[IMAGE_Tree].ListImage, (unsigned int)MUIA_TI_Spec, (int)x1, (unsigned int)data->Space );
     }
 
     if ( data->Style == MUICFGV_NListtree_Style_Win98Plus )
     {
-      snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%x]\033O[%x;%x;%d,%d]", data->buf, (unsigned int)data->Image[IMAGE_Special].ListImage, (unsigned int)data->Image[IMAGE_Tree].ListImage, (unsigned int)MUIA_TI_Spec, (unsigned int)SPEC_Space, 3);
+      snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%lx]\033O[%lx;%x;%d,%d]", data->buf, (unsigned long)data->Image[IMAGE_Special].ListImage, (unsigned long)data->Image[IMAGE_Tree].ListImage, (unsigned int)MUIA_TI_Spec, (unsigned int)SPEC_Space, 3);
     }
   }
 
@@ -5423,7 +5423,7 @@ IPTR _New(struct IClass *cl, Object *obj, struct opSet *msg)
         struct NListtree_Data *data = INST_DATA(cl, obj);
         struct Task *mytask;
         const char *taskname;
-        ULONG ver=0, rev=0;
+        IPTR ver=0, rev=0;
 
         CopyMem( &ld, data, sizeof( struct NListtree_Data ) );
 
@@ -5927,7 +5927,7 @@ IPTR _HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg)
             DoMethod( obj, MUIM_NListtree_Close, MUIV_NListtree_Close_ListNode_Active, MUIV_NListtree_Close_TreeNode_Active, 0 );
             changed = TRUE;
           }
-          else if ( (ULONG)GetParent( data->ActiveNode ) != (ULONG)&data->RootList )
+          else if ( (IPTR)GetParent( data->ActiveNode ) != (IPTR)&data->RootList )
           {
             set( obj, MUIA_NListtree_Active, GetParent( data->ActiveNode ) );
             changed = TRUE;
@@ -7433,7 +7433,7 @@ IPTR _NListtree_Insert(struct IClass *cl, Object *obj, struct MUIP_NListtree_Ins
           case MUIV_NListtree_Insert_PrevNode_Active:
             if ( data->ActiveNode )
             {
-              if ( (LONG)li != (LONG)data->ActiveNode )
+              if ( (APTR)li != (APTR)data->ActiveNode )
               {
                 Insert( (struct List *)&li->ln_List, (struct Node *)&tn->tn_Node, (struct Node *)&data->ActiveNode->tn_Node );
                 in = data->ActiveNode;
@@ -9315,7 +9315,7 @@ IPTR _NListtree_GetEntry(struct IClass *cl, Object *obj, struct MUIP_NListtree_G
       break;
   }
 
-  switch( (ULONG)msg->Position )
+  switch( (IPTR)(SIPTR)msg->Position )
   {
     case MUIV_NListtree_GetEntry_Position_Head:
 
@@ -9920,7 +9920,7 @@ IPTR _NListtree_Select(struct IClass *cl, Object *obj, struct MUIP_NListtree_Sel
     case MUIV_NListtree_Select_Active:
       if ( msg->SelType == MUIV_NListtree_Select_Ask )
       {
-        state = (LONG)data->ActiveNode;
+        state = (LONG)(SIPTR)data->ActiveNode;
       }
       else
       {
@@ -10245,7 +10245,7 @@ IPTR _NListtree_CopyToClip(struct IClass *cl, Object *obj, struct MUIP_NListtree
 
   if ( data->CopyToClipHook )
   {
-    if ( (SIPTR)( string = (STRPTR)MyCallHook( data->CopyToClipHook, data, MUIA_NListtree_CopyToClipHook, msg->TreeNode, msg->Pos, msg->Unit ) ) == -1 )
+    if ( (SIPTR)( string = (STRPTR)MyCallHook( data->CopyToClipHook, data, MUIA_NListtree_CopyToClipHook, msg->TreeNode, msg->Pos, msg->Unit ) ) == MUIV_NListtree_CopyToClip_Active )
       string = msg->TreeNode->tn_Name;
   }
   else

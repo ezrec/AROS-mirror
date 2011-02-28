@@ -207,7 +207,7 @@ BOOL NeedAffInfo(struct NLData *data,WORD niask)
 }
 
 
-void NL_GetDisplayArray(struct NLData *data, LONG ent)
+void NL_GetDisplayArray(struct NLData *data, SIPTR ent)
 {
   char *useptr;
 
@@ -246,7 +246,7 @@ void NL_GetDisplayArray(struct NLData *data, LONG ent)
     ent = -1;
   }
 
-  if(data->display_ptr == NULL || useptr != data->display_ptr || ent != (LONG)data->DisplayArray[1])
+  if(data->display_ptr == NULL || useptr != data->display_ptr || ent != (SIPTR)data->DisplayArray[1])
   {
     char **display_array = &data->DisplayArray[2];
     WORD column;
@@ -280,13 +280,13 @@ void NL_GetDisplayArray(struct NLData *data, LONG ent)
 }
 
 
-void ParseColumn(struct NLData *data,WORD column,ULONG mypen)
+void ParseColumn(struct NLData *data,WORD column,IPTR mypen)
 {
   register struct colinfo *cinfo = data->cols[column].c;
   register struct affinfo *afinfo;
   char *ptr1,*ptr2,*ptro,*ptrs;
   char **display_array = &data->DisplayArray[2];
-  ULONG pen;
+  IPTR pen;
   LONG col,ent = data->parse_ent,maxlen = 300;
   WORD ni,style,do_format,prep,dx,there_is_char;
   WORD tmppos = 0;
@@ -319,7 +319,7 @@ void ParseColumn(struct NLData *data,WORD column,ULONG mypen)
       { tmppos = data->EntriesArray[ent]->pos;
         cinfo->style = style = data->EntriesArray[ent]->style;
         if (IS_FIXPEN(style))
-          pen = (ULONG)data->EntriesArray[ent]->Entry;
+          pen = (IPTR)data->EntriesArray[ent]->Entry;
         if (data->EntriesArray[ent]->len >= 0)
           maxlen = data->EntriesArray[ent]->len;
       }
@@ -1117,19 +1117,19 @@ void WidthColumn(struct NLData *data,WORD column,WORD updinfo)
       { cinfo->colwidthbiggest2 = cinfo->colwidthbiggest;
         cinfo->colwidthbiggestptr2 = cinfo->colwidthbiggestptr;
         cinfo->colwidthbiggest = colwidth;
-        cinfo->colwidthbiggestptr = (LONG) data->display_ptr;
+        cinfo->colwidthbiggestptr = (IPTR) data->display_ptr;
         if (((cinfo->width == -1) || (cinfo->minwidth == -1)) && (cinfo->userwidth == -1))
           data->do_setcols = TRUE;
       }
       else if ((colwidth > cinfo->colwidthbiggest2) && (cinfo->colwidthbiggest2 >= -1))
       { cinfo->colwidthbiggest2 = colwidth;
-        cinfo->colwidthbiggestptr2 = (LONG) data->display_ptr;
+        cinfo->colwidthbiggestptr2 = (IPTR) data->display_ptr;
       }
     }
     else
     {
       if (((colwidth > cinfo->colwidthbiggest) && (cinfo->colwidthbiggest >= -1)) ||
-          (cinfo->colwidthbiggestptr == (LONG) data->display_ptr))
+          (cinfo->colwidthbiggestptr == (IPTR) data->display_ptr))
       {
         cinfo->colwidthbiggestptr = cinfo->colwidthbiggestptr2;
         cinfo->colwidthbiggest = cinfo->colwidthbiggest2;
@@ -1143,7 +1143,7 @@ void WidthColumn(struct NLData *data,WORD column,WORD updinfo)
           data->do_setcols = TRUE;
         }
       }
-      else if (cinfo->colwidthbiggestptr2 == (LONG) data->display_ptr)
+      else if (cinfo->colwidthbiggestptr2 == (IPTR) data->display_ptr)
       {
         cinfo->colwidthbiggest2 = -2;
         cinfo->colwidthbiggestptr2 = -2;
@@ -1292,7 +1292,7 @@ static LONG NL_DoWrapLine(struct NLData *data,LONG ent,BOOL force)
   LONG ent1 = ent,selects,column,col = 0;
   WORD curlen,endpos,ni,colwidth,style;
   UWORD dnum = 0;
-  ULONG pen;
+  IPTR  pen;
   UBYTE colmask;
 
   if (!data->SHOW)

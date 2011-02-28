@@ -20,6 +20,7 @@
 ***************************************************************************/
 
 #include <libraries/iffparse.h>
+#include <libraries/mui.h>
 
 #include <proto/exec.h>
 #include <proto/dos.h>

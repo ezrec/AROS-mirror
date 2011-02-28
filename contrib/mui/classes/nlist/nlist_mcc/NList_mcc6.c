@@ -1085,7 +1085,7 @@ LONG DrawText(struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,LONG maxx,ULO
             clippinghandle = MUI_AddClipping(muiRenderInfo(obj),(WORD) x3,(WORD) (y-data->voff+dy),
                                                     (WORD) dx3,(WORD) data->vinc);
           }
-          data->drawsuper = (LONG) nimg->NImgObj;
+          data->drawsuper = nimg->NImgObj;
           mad_Flags = muiAreaData(obj)->mad_Flags;
           OCLASS(obj) = data->ncl;
           if (!nimg->ImgName)
@@ -1153,7 +1153,7 @@ LONG DrawText(struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,LONG maxx,ULO
 
           muiAreaData(obj)->mad_Flags = mad_Flags;
           OCLASS(obj) = realclass;
-          data->drawsuper = 0;
+          data->drawsuper = NULL;
           if (doclip)
           {
             doclip = FALSE;
@@ -1609,7 +1609,7 @@ struct RastPort *CreateDragRPort(struct NLData *data,LONG numlines,LONG first,LO
       if(numlines == 1)
         strlcpy(text, "Dragging one item...", sizeof(text));
       else
-        snprintf(text, sizeof(text), "Dragging %ld items...", numlines);
+        snprintf(text, sizeof(text), "Dragging %ld items...", (long)numlines);
 
       data->DragText = text;
       data->DragEntry = -1;
@@ -1618,7 +1618,7 @@ struct RastPort *CreateDragRPort(struct NLData *data,LONG numlines,LONG first,LO
     {
       if(numlines != 1)
       {
-        snprintf(text, sizeof(text), "%ld items.", numlines);
+        snprintf(text, sizeof(text), "%ld items.", (long)numlines);
 
         data->DragText = text;
         data->DragEntry = -1;

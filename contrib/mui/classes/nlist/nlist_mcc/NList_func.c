@@ -1667,7 +1667,7 @@ IPTR mNL_List_SetActive(struct IClass *cl, Object *obj, struct MUIP_NList_SetAct
 {
   BOOL result = FALSE;
   struct NLData *data = INST_DATA(cl,obj);
-  LONG pos = msg->pos;
+  LONG pos = (LONG)(SIPTR)msg->pos;
 
   ENTER();
 
@@ -2034,8 +2034,8 @@ IPTR mNL_List_DoMethod(struct IClass *cl,Object *obj,struct MUIP_NList_DoMethod 
     LONG *table1 = (LONG *)&msg->FollowParams;
     struct
     {
-	  ULONG MethodID;
-	  LONG params[64]; /* MAXIMUM 40 (see docs) <aphaso> */
+	  STACKED ULONG MethodID;
+	  SIPTR params[64]; /* MAXIMUM 40 (see docs) <aphaso> */
     } newMsg;
 
     if(msg->FollowParams > 63) /* MAXIMUM 40 (see docs) <aphaso> */
@@ -2083,17 +2083,17 @@ IPTR mNL_List_DoMethod(struct IClass *cl,Object *obj,struct MUIP_NList_DoMethod 
           switch(table1[num+1])
           {
             case MUIV_NList_EntryValue:
-              newMsg.params[num] = (LONG)data->EntriesArray[ent]->Entry;
+              newMsg.params[num] = (SIPTR)data->EntriesArray[ent]->Entry;
               break;
             case MUIV_NList_EntryPosValue:
               newMsg.params[num] = (LONG)ent;
               break;
             case MUIV_NList_SelfValue:
-              newMsg.params[num] = (LONG)obj;
+              newMsg.params[num] = (SIPTR)obj;
               break;
             case MUIV_NList_AppValue:
               if (data->SETUP)
-                newMsg.params[num] = (LONG)_app(obj);
+                newMsg.params[num] = (SIPTR)_app(obj);
               else
                 newMsg.params[num] = 0;
               break;
@@ -2140,7 +2140,7 @@ static BOOL NL_List_GetPos(struct NLData *data, APTR entry, LONG *pos)
     *pos = MUIV_NList_GetPos_End;
     result = FALSE;
   }
-  else if((ULONG)entry == (ULONG)-2)
+  else if((IPTR)entry == (IPTR)-2)
   {
     if(data->NList_LastInserted == -1)
       *pos = (data->NList_Entries - 1);

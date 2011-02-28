@@ -110,7 +110,7 @@ const uint32 defaultColorMap[256] =
 //
 ULONG GetConfigItem(Object *obj, ULONG configitem, ULONG defaultsetting)
 {
-  ULONG value;
+  IPTR value;
   ULONG result = defaultsetting;
 
   ENTER();

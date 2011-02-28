@@ -108,8 +108,8 @@ struct colinfo
   struct colinfo *c;
 
   char *preparse;
-  LONG  colwidthbiggestptr;
-  LONG  colwidthbiggestptr2;
+  IPTR  colwidthbiggestptr;
+  IPTR  colwidthbiggestptr2;
   WORD  colwidthbiggest;
   WORD  colwidthbiggest2;
   WORD  minx;
@@ -146,7 +146,7 @@ struct affinfo
 {
   char *strptr;
   ULONG tag,tagval,button,imgnum; // RHP: Changed for Special ShortHelp
-  ULONG pen;
+  IPTR  pen;
   WORD  pos;
   WORD  len;
   WORD  style;
@@ -299,8 +299,8 @@ struct NLData
   LONG  NList_AdjustHeight;
   LONG  NList_AdjustWidth;
   LONG  NList_SourceArray;
-  ULONG NList_KeepActive;
-  ULONG NList_MakeActive;
+  IPTR  NList_KeepActive;
+  IPTR  NList_MakeActive;
   LONG  NList_DefClickColumn;
   LONG  NList_AutoCopyToClip;
   LONG  NList_AutoVisible;
@@ -361,7 +361,7 @@ struct NLData
   APTR	Pool;				/* Custom or internal pool pointer. */
   APTR	PoolInternal;	/* Internal pool pointer. */
   APTR  EntryPool;
-  ULONG NList_Font;
+  IPTR  NList_Font;
   LONG  MOUSE_MOVE;
 
   struct IClass *ncl;
@@ -448,18 +448,18 @@ struct NLData
   LONG DragWidth;
   LONG DragHeight;
 
-  LONG Pen_Title_init;
-  LONG Pen_List_init;
-  LONG Pen_Select_init;
-  LONG Pen_Cursor_init;
-  LONG Pen_UnselCur_init;
-  LONG Pen_Inactive_init;
-  LONG BG_Title_init;
-  LONG BG_List_init;
-  LONG BG_Select_init;
-  LONG BG_Cursor_init;
-  LONG BG_UnselCur_init;
-  LONG BG_Inactive_init;
+  IPTR Pen_Title_init;
+  IPTR Pen_List_init;
+  IPTR Pen_Select_init;
+  IPTR Pen_Cursor_init;
+  IPTR Pen_UnselCur_init;
+  IPTR Pen_Inactive_init;
+  IPTR BG_Title_init;
+  IPTR BG_List_init;
+  IPTR BG_Select_init;
+  IPTR BG_Cursor_init;
+  IPTR BG_UnselCur_init;
+  IPTR BG_Inactive_init;
 
   LONG old_prop_first;
   LONG old_prop_visible;
@@ -469,7 +469,7 @@ struct NLData
   LONG old_horiz_visible;
   LONG old_horiz_entries;
   LONG old_horiz_delta;
-  LONG drawsuper;
+  APTR drawsuper;
 
   struct RastPort *rp;
   struct TextFont *font;

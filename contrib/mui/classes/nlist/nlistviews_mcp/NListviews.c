@@ -179,7 +179,7 @@ Object *MakeCheck(STRPTR label, STRPTR help, ULONG check)
 
 #define SAVE_DATAFONT(obj,cfg_attr) \
   { \
-    LONG ptrd=0; \
+    IPTR ptrd=0; \
     get(obj, MUIA_String_Contents, &ptrd); \
     if (ptrd) \
     { \

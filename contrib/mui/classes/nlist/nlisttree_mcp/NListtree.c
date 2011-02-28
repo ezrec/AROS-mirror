@@ -165,7 +165,7 @@ static VOID DrawSampleTree( Object *ltobj )
 
 VOID TransferValues(struct NListtreeP_Data *data)
 {
-  LONG v0=0, v1=0, v2=0, v3=0, v4=0, v5=0, v6=0, v7=0, v8=0, v9=0;
+  IPTR v0=0, v1=0, v2=0, v3=0, v4=0, v5=0, v6=0, v7=0, v8=0, v9=0;
 
   /*
   **  Style
@@ -237,7 +237,7 @@ HOOKPROTONHNO(dspfunc, LONG, struct MUIP_NListtree_DisplayMessage *msg)
     */
     struct SampleArray *a = (struct SampleArray *)msg->TreeNode->tn_User;
 
-    snprintf(buf, sizeof(buf), "%3d", (unsigned int)msg->Array[-1]);
+    snprintf(buf, sizeof(buf), "%3ld", (unsigned long)msg->Array[-1]);
 
     *msg->Array++  = (STRPTR)a->name;
     *msg->Array++  = (STRPTR)((a->flags & 0x8000) ? t3 : t4);
@@ -302,7 +302,7 @@ static VOID StyleChanged( struct NListtreeP_Data *data, ULONG style )
   return;
 }
 
-HOOKPROTONHNO(StyleChangedFunc, VOID, ULONG **para)
+HOOKPROTONHNO(StyleChangedFunc, VOID, IPTR *para)
 {
   StyleChanged( (struct NListtreeP_Data *)para[1], (ULONG)para[0] );
 }

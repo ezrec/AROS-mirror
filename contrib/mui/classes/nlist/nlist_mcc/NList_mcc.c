@@ -79,7 +79,7 @@ DEFAULT_KEYS_ARRAY
   { \
     if (!test) \
     { \
-      LONG ptrd; \
+      IPTR ptrd; \
       if (DoMethod(obj, MUIM_GetConfigItem, cfg_attr, &ptrd)) \
         obtain_pen(obj, &(var_dest), (struct MUI_PenSpec *)ptrd); \
       else \
@@ -93,11 +93,11 @@ DEFAULT_KEYS_ARRAY
   { \
     if (!test) \
     { \
-      LONG ptrd; \
+      IPTR ptrd; \
       if (DoMethod(obj, MUIM_GetConfigItem, cfg_attr, &ptrd)) \
         var_dest = ptrd; \
       else \
-        var_dest = (LONG)(defaultval); \
+        var_dest = (IPTR)(defaultval); \
     } \
   }
 
@@ -1082,19 +1082,19 @@ IPTR mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
   if (data->NList_Font && !data->InUseFont)
   {
     char *fontname = NULL;
-    ULONG fonttmp = data->NList_Font;
+    IPTR fonttmp = data->NList_Font;
 
-    if (data->NList_Font == (ULONG)MUIV_NList_Font)
+    if (data->NList_Font == MUIV_NList_Font)
     {
       fonttmp = MUIV_Font_List;
       DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_Font, &fontname);
     }
-    else if (data->NList_Font == (ULONG)MUIV_NList_Font_Little)
+    else if (data->NList_Font == MUIV_NList_Font_Little)
     {
       fonttmp = MUIV_Font_Tiny;
       DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_Font_Little, &fontname);
     }
-    else if (data->NList_Font == (ULONG)MUIV_NList_Font_Fixed)
+    else if (data->NList_Font == MUIV_NList_Font_Fixed)
     {
       fonttmp = MUIV_Font_Fixed;
       DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_Font_Fixed, &fontname);
@@ -1428,7 +1428,7 @@ IPTR mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
   data->multisel_qualifier = 0;
   { LONG *multisel;
     LONG mult = MUIV_NList_MultiSelect_Shifted;
-    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_MultiSelect, (LONG) (&multisel)))
+    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_MultiSelect, &multisel))
       mult = *multisel;
     if (data->NList_MultiSelect == MUIV_NList_MultiSelect_Default)
       data->multiselect = mult & 0x0007;
@@ -1476,7 +1476,7 @@ IPTR mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
 
   NL_CreateImages(data);
 
-  data->drawsuper = FALSE;
+  data->drawsuper = NULL;
   data->format_chge = 1;
   data->do_draw_all = data->do_draw_title = data->do_draw = TRUE;
   data->do_parse = data->do_setcols = data->do_updatesb = data->do_wwrap = TRUE;
