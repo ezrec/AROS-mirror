@@ -224,7 +224,7 @@ AROS_LD1(struct LibraryHeader *, LibOpen,
 AROS_LD0(BPTR, LibClose,
     struct LibraryHeader *, base, 2, MCC);
 
-AROS_LD0(LONG, LibNull,
+AROS_LD0(IPTR, LibNull,
     struct LibraryHeader *, base, 4, MCC);
     
 AROS_LD1(IPTR, MCC_Query,
@@ -258,12 +258,12 @@ static const APTR LibVectors[] =
 
 /****************************************************************************************/
 
-AROS_LH0(LONG, LibNull,
+AROS_LH0(IPTR, LibNull,
     struct LibraryHeader *, base, 4, MCC)
 {
     AROS_LIBFUNC_INIT
     
-    return NULL;
+    return (IPTR)NULL;
     
     AROS_LIBFUNC_EXIT
 }
@@ -278,7 +278,7 @@ static const struct Resident ROMTag __used =
 {
 	RTC_MATCHWORD,
 	&ROMTag,
-	&ROMTag + 1,
+	(APTR)(&ROMTag + 1),
 	0,
 	VERSION,
 	NT_LIBRARY,
@@ -352,7 +352,7 @@ AROS_LH0(BPTR, LibExpunge,
     {
         base->lh_Library.lib_Flags |= LIBF_DELEXP;
         D(bug("Setting LIBF_DELEXP\n") );
-        return(NULL);
+        return BNULL;
     }
 
     Remove((struct Node *)base);
@@ -412,7 +412,7 @@ AROS_LH0(BPTR, LibClose,
 {
     AROS_LIBFUNC_INIT
     
-    BPTR rc = NULL;
+    BPTR rc = BNULL;
 
     ObtainSemaphore(&base->lh_Semaphore);
 
@@ -485,7 +485,7 @@ BOOL UserLibOpen(struct Library *base)
         #endif
         {
             #ifdef SUPERCLASSP
-            if (ThisClassP = MUI_CreateCustomClass(base,SUPERCLASSP,NULL,sizeof(struct INSTDATAP),AROS_ASMSYMNAME(_DispatcherP)))
+            if ((ThisClassP = MUI_CreateCustomClass(base,SUPERCLASSP,NULL,sizeof(struct INSTDATAP),AROS_ASMSYMNAME(_DispatcherP))))
             #endif
             {
                 #ifdef SUPERCLASS
@@ -636,7 +636,7 @@ AROS_LH1(IPTR, MCC_Query,
 	}
 	#endif
     }
-    return(NULL);
+    return (IPTR)NULL;
 	
     AROS_LIBFUNC_EXIT
 }
