@@ -3,7 +3,7 @@ include $(TOP)/config/make.cfg
 
 #MM contrib-zune-classes-nlisttree-mcp : includes linklibs contrib-zune-classes-nlisttree-mcp-catalogs
 
-USER_INCLUDES = -I$(SRCDIR)/$(CURDIR)/../include
+USER_INCLUDES = -idirafter $(SRCDIR)/$(CURDIR)/../include
 USER_CFLAGS := -DNO_INLINE_STDARG
 FILES := library NListtree icon locale
 

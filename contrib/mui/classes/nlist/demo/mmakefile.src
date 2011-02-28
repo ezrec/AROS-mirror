@@ -8,7 +8,7 @@ FILES := NList-Demo \
 
 EXEDIR := $(CONTRIBDIR)/Zune/MCC_NList/Demos
 
-USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../include
+USER_INCLUDES := -idirafter $(SRCDIR)/$(CURDIR)/../include
 USER_CFLAGS := -DNO_INLINE_STDARG
 
 #MM contrib-zune-classes-nlist-demo : includes linklibs \

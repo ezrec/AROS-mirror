@@ -26,7 +26,7 @@ FILES := \
         Pointer      \
         Debug
 
-USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../include -I$(SRCDIR)/$(CURDIR)/../nlistviews_mcp \
+USER_INCLUDES := -idirafter $(SRCDIR)/$(CURDIR)/../include -I$(SRCDIR)/$(CURDIR)/../nlistviews_mcp \
     -I$(SRCDIR)/$(CURDIR)/../nlistview_mcc
 
 USER_CFLAGS := -DNO_INLINE_STDARG

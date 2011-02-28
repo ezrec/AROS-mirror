@@ -3,7 +3,7 @@ include $(TOP)/config/make.cfg
 
 #MM contrib-zune-classes-nlistview-class : includes linklibs
 
-USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../include -I$(SRCDIR)/$(CURDIR)/../nlistviews_mcp
+USER_INCLUDES := -idirafter $(SRCDIR)/$(CURDIR)/../include -I$(SRCDIR)/$(CURDIR)/../nlistviews_mcp
 USER_CFLAGS := -DNO_INLINE_STDARG
 
 FILES := library \
