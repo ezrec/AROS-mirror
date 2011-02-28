@@ -9,6 +9,8 @@ EXEDIR := $(AROS_CONTRIB)/Zune/MCC_Urltext/Demo
 
 FILES  := Urltext
 
+USER_CFLAGS := $(PARANOIA_CFLAGS)
+
 %build_prog mmake=contrib-zune-classes-urltext-demos \
     progname=$(EXE) targetdir=$(EXEDIR) \
     files=$(FILES) uselibs="amiga arosc mui"

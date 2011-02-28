@@ -10,6 +10,8 @@ FILES := libinit-aros \
 	 loc \
 	 utils
 	 
+USER_CFLAGS := $(PARANOIA_CFLAGS)
+	 
 %build_module mmake=contrib-zune-classes-urltext-mcp \
   modname=Urltext modtype=mcp moduledir=Extras/Zune/MCC_Urltext/Classes/Zune \
   files=$(FILES) \
