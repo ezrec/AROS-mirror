@@ -704,11 +704,7 @@ IPTR mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
     /* Avoid Superclass to draw anything *in* the object */
     if (muiRenderInfo(obj)->mri_Flags & MUIMRI_REFRESHMODE)
     {
-#ifndef __AROS__
       muiAreaData(obj)->mad_Flags &= ~0x00000001;
-#else
-#warning "AROS: FIXME: No frame drawn if doing: muiAreaData(obj)->mad_Flags &= ~0x00000001;"
-#endif
       DoSuperMethodA(cl,obj,(Msg) msg);
     }
     DrawRefresh(data);
@@ -744,12 +740,7 @@ IPTR mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 
 
   /* Avoid Superclass to draw anything *in* the object */
-#ifndef __AROS__
   muiAreaData(obj)->mad_Flags &= ~0x00000001;
-#else
-#warning "AROS: FIXME: No frame drawn if doing: muiAreaData(obj)->mad_Flags &= ~0x00000001;"
-#endif
-
   DoSuperMethodA(cl,obj,(Msg) msg);
 
 /*D(bug("%lx|Draw %lx %lx\n",obj,msg->flags,muiAreaData(obj)->mad_Flags));*/
