@@ -125,7 +125,7 @@ ULONG Toolbar_New(struct IClass *cl, Object *obj, struct opSet *msg)
   }
 
   KPrintF("New - finished\n");
-  return((ULONG)obj);
+  return (IPTR)obj;
 }
 
 ULONG Toolbar_Dispose(struct IClass *cl, Object *obj, Msg msg)

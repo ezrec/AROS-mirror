@@ -50,7 +50,7 @@ ULONG Toolbar_Show(struct IClass *cl, Object *obj, Msg msg)
   SetFont(&data->RP, data->ToolFont);
 
 #ifdef __AROS__
-#warning "Draw Code seems to assume JAM1 is set, which does not seem to be (always?) the case with Zune here!"
+  // FIXME: Draw Code seems to assume JAM1 is set, which does not seem to be (always?) the case with Zune here!
   SetDrMd(&data->RP, JAM1);
 #endif
 

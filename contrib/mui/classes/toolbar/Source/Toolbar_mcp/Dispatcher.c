@@ -58,12 +58,10 @@ static struct PrefsExchangeData PrefsInfo[] =
   { AutoActive,     MUIA_Selected,       MUICFG_Toolbar_AutoActive,     4,  (APTR) FALSE}
 };
 
-DISPATCHERPROTO(_DispatcherP)
+DISPATCHER(_DispatcherP)
 {
-  DISPATCHER_INIT
-  
   struct Toolbar_DataP *data = (struct Toolbar_DataP *)INST_DATA(cl, obj);
-  ULONG result = 0;
+  IPTR result = 0;
 
   switch(msg->MethodID)
   {
@@ -73,7 +71,7 @@ DISPATCHERPROTO(_DispatcherP)
       {
         static const struct TagItem tags[] =
         {
-          { OC_BuiltInLanguage, "english" },
+          { OC_BuiltInLanguage, (IPTR)"english" },
           { OC_Version,         0                },
           { TAG_DONE,           0                }
         };
@@ -94,7 +92,7 @@ DISPATCHERPROTO(_DispatcherP)
           for(i=0; i < NumberOfGadgets; i++)
             DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->Gadgets[PrefsInfo[i].ObjIndex], PrefsInfo[i].CfgItem, 0L, NULL);
 
-          result = (ULONG)obj;
+          result = (IPTR)obj;
         }
         else
           CoerceMethod(cl, obj, OM_DISPOSE);
@@ -113,7 +111,7 @@ DISPATCHERPROTO(_DispatcherP)
 
     case OM_GET:
     {
-      ULONG *store = ((struct opGet *)msg)->opg_Storage;
+      IPTR *store = ((struct opGet *)msg)->opg_Storage;
 
       switch(((struct opGet *)msg)->opg_AttrID)
       {
@@ -142,7 +140,7 @@ DISPATCHERPROTO(_DispatcherP)
 
     case MUIM_Cleanup:
     {
-      LONG active;
+      LONG active = 0;
       while(get(data->FontASL, MUIA_Popasl_Active, &active), active)
       {
         char *tmp = LOCALE(MSG_ASL_ERROR, "Cannot leave now, still\nan asl popup opened.\nPlease close it now.");
@@ -167,7 +165,7 @@ DISPATCHERPROTO(_DispatcherP)
 
         // Temp. hack..
         if(PrefsInfo[i].ObjIndex == GhostEffect)
-          cfg_val = (APTR)((LONG)cfg_val + 1);
+          cfg_val = (APTR)((IPTR)cfg_val + 1);
 
         len = PrefsInfo[i].Length;
         DoMethod(configdata, MUIM_Dataspace_Add, len==4 ? &cfg_val : cfg_val, len ? len : strlen((STRPTR)cfg_val)+1, PrefsInfo[i].CfgItem);
@@ -186,7 +184,7 @@ DISPATCHERPROTO(_DispatcherP)
 
         // Temp. hack
         if(PrefsInfo[i].ObjIndex == GhostEffect)
-          cfg_val = (APTR)((LONG)cfg_val - 1);
+          cfg_val = (APTR)((IPTR)cfg_val - 1);
 
         set(data->Gadgets[PrefsInfo[i].ObjIndex], PrefsInfo[i].Tag, cfg_val);
       }
@@ -197,6 +195,4 @@ DISPATCHERPROTO(_DispatcherP)
   }
 
   return result;
-  
-  DISPATCHER_EXIT
 }

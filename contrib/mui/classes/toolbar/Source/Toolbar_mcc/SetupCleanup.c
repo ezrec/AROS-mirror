@@ -73,10 +73,10 @@ VOID DumpKeyValues(struct Toolbar_Data *data)
 }
 #endif
 
-ULONG GetConfigItem(Object *obj, ULONG configitem, ULONG defaultsetting)
+IPTR  GetConfigItem(Object *obj, ULONG configitem, ULONG defaultsetting)
 {
-  ULONG value;
-  return( DoMethod(obj, MUIM_GetConfigItem, configitem, &value) ? *(ULONG *)value : defaultsetting);
+  IPTR  value;
+  return( DoMethod(obj, MUIM_GetConfigItem, configitem, &value) ? *(IPTR *)value : defaultsetting);
 }
 
 ULONG MakeDark(ULONG color)
@@ -190,11 +190,11 @@ BOOL ProcessImageFile(Object *obj, struct Toolbar_Data *data, APTR src_data, str
   if(o)
   {
 
-    struct BitMapHeader *bmhd;
+    struct BitMapHeader *bmhd = NULL;
     get(o, PDTA_BitMapHeader, &bmhd);
     if(bmhd)
     {
-      ULONG *cr;
+      ULONG *cr = NULL;
       struct FrameInfo fri;
 
       memset(&fri, 0, sizeof(struct FrameInfo));
@@ -576,10 +576,7 @@ ULONG Toolbar_Setup(struct IClass *cl, Object *obj, Msg msg)
       "If you continue, the toolbar will be visually corrupted,\n"
       "but it will not crash!\n"
       "\nRead the Toolbar.mcc documentation for more information."
-#ifdef __AROS__
-#warning "FIXME: this sucks!"
       , 0
-#endif      
       ))
       {
       CoerceMethod(cl, obj, MUIM_Cleanup);

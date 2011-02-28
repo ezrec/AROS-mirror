@@ -19,11 +19,11 @@
 
 struct TB_Element *FindTool(struct Toolbar_Data *data, ULONG number);
 
-UWORD Toolbar_Edge(struct IClass *cl, Object *obj, struct MUIP_Toolbar_Edge *msg);
-ULONG Toolbar_GetAttrib(struct IClass *cl, Object *obj, struct opGet *msg);
-ULONG Toolbar_SetAttrib(struct IClass *cl, Object *obj, struct opSet *msg);
-ULONG Toolbar_MultiSet(struct IClass *cl, Object *obj, struct MUIP_Toolbar_MultiSet *msg);
-ULONG Toolbar_Set(struct IClass *cl, Object *obj, struct MUIP_Toolbar_Set *msg);
+IPTR Toolbar_Edge(struct IClass *cl, Object *obj, struct MUIP_Toolbar_Edge *msg);
+IPTR Toolbar_GetAttrib(struct IClass *cl, Object *obj, struct opGet *msg);
+IPTR Toolbar_SetAttrib(struct IClass *cl, Object *obj, struct opSet *msg);
+IPTR Toolbar_MultiSet(struct IClass *cl, Object *obj, struct MUIP_Toolbar_MultiSet *msg);
+IPTR Toolbar_Set(struct IClass *cl, Object *obj, struct MUIP_Toolbar_Set *msg);
 
 
 #endif

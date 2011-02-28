@@ -65,7 +65,7 @@ AROS_UFH3(void, TestFunc,
 
 	ULONG qualifier = prms[0];
 
-	printf("Qualifier: %x\n", qualifier);
+	printf("Qualifier: %x\n", (unsigned int)qualifier);
 
 #if defined(__AROS__)
 	AROS_USERFUNC_EXIT
@@ -108,7 +108,7 @@ int main(int argc,char *argv[])
 		{ TDT_BUTTON, 0, TDF_TOGGLE | TDF_SELECTED, 0, "Bold text", 0},
 		{ TDT_BUTTON, 0, TDF_TOGGLE, 0, "Italic text", 0},
 		{ TDT_BUTTON, 0, TDF_TOGGLE, 0, "Underlined text", 0},
-		{ TDT_SPACE, NULL, NULL, NULL, NULL, NULL },
+		{ TDT_SPACE,  0,          0, 0, NULL, 0 },
 	/* Notice the mutual-exclude flag in the three following buttons. The bit pattern correspond
 		to the buttons/fields which should be deactivated. */
 		{ TDT_BUTTON, 0, TDF_RADIOTOGGLE | TDF_SELECTED, 0, "Left aligned", 0x0020 | 0x0040},
@@ -230,7 +230,7 @@ int main(int argc,char *argv[])
 
 			if (app)
 			{
-				ULONG open;
+				ULONG open = 0;
 
 				DoMethod(WI_Main,	MUIM_Notify,	MUIA_Window_CloseRequest,	TRUE ,
 							app,	2, MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit);

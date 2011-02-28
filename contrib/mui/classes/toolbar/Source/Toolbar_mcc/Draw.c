@@ -125,8 +125,8 @@ VOID DrawButton(struct TB_Element *tool, struct Toolbar_Data *data, Object *obj,
   ULONG delta = (data->ButtonWidth - data->IconWidth)/2;
   struct RastPort *rport = &data->RP;
   UBYTE number = tool->Number;
-  Object *par;
-  ULONG back;
+  Object *par = NULL;
+  ULONG back = 0;
 
   LONG trans = selected ? data->SelectTrans : data->NormalTrans;
   struct BitMap *bitmap = selected ? data->SelectBM : data->NormalBM;
@@ -274,8 +274,8 @@ VOID DrawButtons(struct Toolbar_Data *data, Object *obj, BOOL complete)
 {
   struct MUIP_Toolbar_Description *desc = data->Desc;
 
-  Object *par;
-  ULONG back;
+  Object *par = NULL;
+  ULONG back = 0;
 
   get(obj, MUIA_Parent, &par);
   if (par && get(par, MUIA_Background, &back)) {

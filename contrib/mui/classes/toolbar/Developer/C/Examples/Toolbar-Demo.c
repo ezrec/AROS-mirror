@@ -46,7 +46,7 @@ VOID TestFunc(REG(a0) struct Hook *hook, REG(a2) APTR unused, REG(a1) ULONG *prm
 {
 	ULONG qualifier = prms[0];
 
-	printf("Qualifier: %x\n", qualifier);
+	printf("Qualifier: %x\n", (unsigned int)qualifier);
 }
 
 #ifdef __AROS__
@@ -55,7 +55,7 @@ const struct Hook TestHook  = { { NULL,NULL }, HookEntry, (HOOKFUNC)TestFunc,NUL
 const struct Hook TestHook  = { { NULL,NULL }, (HOOKFUNC)TestFunc,NULL,NULL };
 #endif
 
-void main(void)
+int main(int argc, char **argv)
 {
 	Object 	*app;
 	Object 	*WI_Main;
@@ -89,7 +89,7 @@ void main(void)
 		{ TDT_BUTTON, 0, TDF_TOGGLE | TDF_SELECTED,			0,	"Bold text",			0},
 		{ TDT_BUTTON, 0, TDF_TOGGLE,								0,	"Italic text",			0},
 		{ TDT_BUTTON, 0, TDF_TOGGLE,								0,	"Underlined text",	0},
-		{ TDT_SPACE, NULL, NULL, NULL, NULL, NULL },
+		{ TDT_SPACE,  0,          0,  NULL, 0 },
 	/* Notice the mutual-exclude flag in the three following buttons. The bit pattern correspond
 		to the buttons/fields which should be deactivated. */
 		{ TDT_BUTTON, 0, TDF_RADIOTOGGLE | TDF_SELECTED, 	0,	"Left aligned",		0x0020 | 0x0040},
@@ -98,10 +98,11 @@ void main(void)
 		{ TDT_END, 0, 0, 0, 0, 0 }
 	};
 
+#ifndef __AROS__
 	/* Let us make sure we have enough stack-space - we'll ad 4Kb to the stack */
 	struct StackSwapStruct stackswap;
 	struct Task *mytask   = FindTask(NULL);
-	ULONG  stacksize      = (ULONG)mytask->tc_SPUpper-(ULONG)mytask->tc_SPLower+4096;
+	ULONG  stacksize      = (IPTR)mytask->tc_SPUpper-(IPTR)mytask->tc_SPLower+4096;
 	APTR   newstack       = AllocVec(stacksize, 0L);
 
 	stackswap.stk_Lower   = newstack;
@@ -110,10 +111,9 @@ void main(void)
 
 	if(newstack)
 	{
-	#ifndef __AROS__
 		StackSwap(&stackswap);
-	#endif
-		if (MUIMasterBase = OpenLibrary(MUIMASTER_NAME, 19))
+#endif
+		if ((MUIMasterBase = OpenLibrary(MUIMASTER_NAME, 19)))
 		{
 			app = ApplicationObject,
 				MUIA_Application_Title      , "Toolbar-Demo",
@@ -213,7 +213,7 @@ void main(void)
 
 			if (app)
 			{
-				ULONG open;
+				ULONG open = 0;
 
 				DoMethod(WI_Main,	MUIM_Notify,	MUIA_Window_CloseRequest,	TRUE ,
 							app,	2, MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit);
@@ -271,15 +271,17 @@ void main(void)
 			}
 			CloseLibrary(MUIMasterBase);
 		}
-    	#ifndef __AROS__		
+#ifndef __AROS__		
 		StackSwap(&stackswap);
-    	#endif		
 		FreeVec(newstack);
 	}
+#endif		
 	exit(res);
 }
 
 void wbmain(void)
 {
-	main();
+    char name[] = "Toolbar-Demo";
+    char *argv[1] = { name };
+    main(1,&argv[0]);
 }

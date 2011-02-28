@@ -71,7 +71,7 @@ UBYTE ConvertKey (struct IntuiMessage *imsg)
   event.ie_SubClass       = 0;
   event.ie_Code           = imsg->Code;
   event.ie_Qualifier      = 0; // imsg->Qualifier - I don't need this.
-  event.ie_EventAddress   = (APTR *) *((ULONG *)imsg->IAddress);
+  event.ie_EventAddress   = (APTR *) *((IPTR *)imsg->IAddress);
   MapRawKey(&event, &ascii, 1, NULL);
 
   return(ascii);

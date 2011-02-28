@@ -43,24 +43,22 @@
 #ifndef MUIM_CheckShortHelp
 #define MUIM_CheckShortHelp 0x80423c79 /* V20 */
 #include "amiga-align.h"
-struct  MUIP_CheckShortHelp { ULONG MethodID; STRPTR help; LONG mx; LONG my; };
+struct  MUIP_CheckShortHelp { STACKED ULONG MethodID; STRPTR help; STACKED LONG mx; STACKED LONG my; };
 #include "default-align.h"
 #endif
 
-LONG xget(Object *obj, ULONG attribute)
+IPTR xget(Object *obj, Tag attribute)
 {
-  LONG x;
+  IPTR x = 0;
   get(obj,attribute,&x);
   return(x);
 }
 
 #define KPrintF(arg)
 
-DISPATCHERPROTO(_Dispatcher)
+DISPATCHER(_Dispatcher)
 {
-  DISPATCHER_INIT
-  
-  ULONG result = 0;
+  IPTR result = 0;
   struct Toolbar_Data *data = (struct Toolbar_Data *)INST_DATA(cl, obj);
 
   switch (msg->MethodID)
@@ -236,6 +234,4 @@ DISPATCHERPROTO(_Dispatcher)
   }
 
   return(result);
-  
-  DISPATCHER_EXIT
 }

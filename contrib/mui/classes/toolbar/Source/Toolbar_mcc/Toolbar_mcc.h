@@ -56,15 +56,15 @@
 
 /*** Method structs ***/
 
-struct MUIP_Toolbar_CheckNotify      {ULONG MethodID; ULONG TrigButton; ULONG TrigAttr; ULONG TrigValue; };
-struct MUIP_Toolbar_Edge             {ULONG MethodID; ULONG Button; };
-struct MUIP_Toolbar_KillNotify       {ULONG MethodID; ULONG TrigButton; ULONG TrigAttr; };
+struct MUIP_Toolbar_CheckNotify      {ULONG MethodID; STACKED ULONG TrigButton; STACKED ULONG TrigAttr; STACKED ULONG TrigValue; };
+struct MUIP_Toolbar_Edge             {ULONG MethodID; STACKED ULONG Button; };
+struct MUIP_Toolbar_KillNotify       {ULONG MethodID; STACKED ULONG TrigButton; STACKED ULONG TrigAttr; };
 struct MUIP_Toolbar_KillNotifyObj    {ULONG MethodID; };
-struct MUIP_Toolbar_MultiSet         {ULONG MethodID; ULONG Flag; ULONG Value; LONG Button; /* ... */ };
-struct MUIP_Toolbar_Notify           {ULONG MethodID; ULONG TrigButton; ULONG TrigAttr; ULONG TrigValue; Object *DestObj; ULONG FollowParams; /* ... */};
-struct MUIP_Toolbar_Redraw           {ULONG MethodID; ULONG Changes; };
+struct MUIP_Toolbar_MultiSet         {ULONG MethodID; STACKED ULONG Flag; STACKED ULONG Value; LONG Button; /* ... */ };
+struct MUIP_Toolbar_Notify           {ULONG MethodID; STACKED ULONG TrigButton; STACKED ULONG TrigAttr; STACKED ULONG TrigValue; Object *DestObj; STACKED ULONG FollowParams; /* ... */};
+struct MUIP_Toolbar_Redraw           {ULONG MethodID; STACKED ULONG Changes; };
 struct MUIP_Toolbar_ReloadImages     {ULONG MethodID; STRPTR Normal; STRPTR Select; STRPTR Ghost; };
-struct MUIP_Toolbar_Set              {ULONG MethodID; ULONG Button; ULONG Flag; ULONG Value; };
+struct MUIP_Toolbar_Set              {ULONG MethodID; STACKED ULONG Button; STACKED ULONG Flag; STACKED ULONG Value; };
 
 /*** Special method values ***/
 
@@ -147,10 +147,10 @@ struct MUIP_Toolbar_Description
 
 /*** Toolbar Macros ***/
 
-#define Toolbar_Button(flags, text)          { TDT_BUTTON, NULL, flags, text, NULL, NULL}
-#define Toolbar_KeyButton(flags, text, key)  { TDT_BUTTON, key,  flags, text, NULL, NULL}
-#define Toolbar_Space                        { TDT_SPACE,  NULL, NULL,  NULL, NULL, NULL}
-#define Toolbar_End                          { TDT_END,    NULL, NULL,  NULL, NULL, NULL}
+#define Toolbar_Button(flags, text)          { TDT_BUTTON,    0, flags, text, NULL,    0}
+#define Toolbar_KeyButton(flags, text, key)  { TDT_BUTTON, key,  flags, text, NULL,    0}
+#define Toolbar_Space                        { TDT_SPACE,     0,    0,  NULL, NULL,    0}
+#define Toolbar_End                          { TDT_END,       0,    0,  NULL, NULL,    0}
 
 //#include "default-align.h"
 

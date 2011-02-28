@@ -53,7 +53,7 @@ struct TB_Element *FindTool(struct Toolbar_Data *data, ULONG number)
   return(result);
 }
 
-UWORD Toolbar_Edge(struct IClass *cl, Object *obj, struct MUIP_Toolbar_Edge *msg)
+IPTR Toolbar_Edge(struct IClass *cl, Object *obj, struct MUIP_Toolbar_Edge *msg)
 {
   struct Toolbar_Data *data = (struct Toolbar_Data *)INST_DATA(cl, obj);
   struct TB_Element *tool = FindTool(data, msg->Button);
@@ -75,34 +75,34 @@ UWORD Toolbar_Edge(struct IClass *cl, Object *obj, struct MUIP_Toolbar_Edge *msg
     break;
   }
 
-  return(result);
+  return result;
 }
 
-ULONG Toolbar_GetAttrib(struct IClass *cl, Object *obj, struct opGet *msg)
+IPTR Toolbar_GetAttrib(struct IClass *cl, Object *obj, struct opGet *msg)
 {
   struct Toolbar_Data *data = (struct Toolbar_Data *)INST_DATA(cl, obj);
-  ULONG result = TRUE;
-  ULONG *value = msg->opg_Storage;
+  IPTR result = TRUE;
+  IPTR *value = msg->opg_Storage;
 
   switch (msg->opg_AttrID)
   {
       case MUIA_Version:
-        *value = (ULONG)LIB_VERSION;
+        *value = (IPTR)LIB_VERSION;
       break;
       case MUIA_Revision:
-        *value = (ULONG)LIB_REVISION;
+        *value = (IPTR)LIB_REVISION;
       break;
       case MUIA_Toolbar_HelpString:
-        *value = (ULONG)data->HelpString;
+        *value = (IPTR)data->HelpString;
       break;
       case MUIA_Toolbar_Path:
-        *value = (ULONG)data->Path;
+        *value = (IPTR)data->Path;
       break;
       case MUIA_Toolbar_Permutation:
-        *value = (ULONG)data->Permutation;
+        *value = (IPTR)data->Permutation;
       break;
       case MUIA_Toolbar_Qualifier:
-        *value = (ULONG)data->KeyQualifier;
+        *value = (IPTR)data->KeyQualifier;
       break;
       default:
         result = DoSuperMethodA(cl, obj, (Msg)msg);
@@ -111,10 +111,11 @@ ULONG Toolbar_GetAttrib(struct IClass *cl, Object *obj, struct opGet *msg)
   return result;
 }
 
-ULONG Toolbar_SetAttrib(struct IClass *cl, Object *obj, struct opSet *msg)
+IPTR Toolbar_SetAttrib(struct IClass *cl, Object *obj, struct opSet *msg)
 {
   struct Toolbar_Data *data = (struct Toolbar_Data *)INST_DATA(cl, obj);
-  struct TagItem *tags, *tag;
+  const struct TagItem *tags;
+  struct TagItem *tag;
 
   for(tags=msg->ops_AttrList; (tag=NextTagItem(&tags)) != NULL; )
   {
@@ -154,7 +155,7 @@ ULONG Toolbar_SetAttrib(struct IClass *cl, Object *obj, struct opSet *msg)
 
 }
 
-ULONG Toolbar_MultiSet(UNUSED struct IClass *cl, Object *obj, struct MUIP_Toolbar_MultiSet *msg)
+IPTR Toolbar_MultiSet(UNUSED struct IClass *cl, Object *obj, struct MUIP_Toolbar_MultiSet *msg)
 {
   LONG *buttons = &msg->Button;
 
@@ -166,7 +167,7 @@ ULONG Toolbar_MultiSet(UNUSED struct IClass *cl, Object *obj, struct MUIP_Toolba
   return(TRUE);
 }
 
-ULONG Toolbar_Set(struct IClass *cl,Object *obj,struct MUIP_Toolbar_Set *msg)
+IPTR Toolbar_Set(struct IClass *cl,Object *obj,struct MUIP_Toolbar_Set *msg)
 {
   struct Toolbar_Data *data = (struct Toolbar_Data *)INST_DATA(cl, obj);
   struct MUIP_Toolbar_Description *desc = &data->Desc[msg->Button];

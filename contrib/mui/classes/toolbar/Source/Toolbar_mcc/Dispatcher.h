@@ -17,6 +17,6 @@
 
 ***************************************************************************/
 
-LONG xget(Object *obj,ULONG attribute);
+IPTR xget(Object *obj,Tag attribute);
 
 #endif

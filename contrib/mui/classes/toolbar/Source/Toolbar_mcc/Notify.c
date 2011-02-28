@@ -84,15 +84,15 @@ ULONG Toolbar_Notify(struct IClass *cl, Object *obj, struct MUIP_Toolbar_Notify 
   new_notify->Type            = (msg->TrigValue == MUIV_EveryTime) ? Type_EveryTime : 0;
 
   // lets copy the arguments of the message into our two arrays
-  if((new_notify->DestMessage = (Msg)AllocVec(sizeof(ULONG)*new_notify->Number_Of_Args, 0L)))
+  if((new_notify->DestMessage = (Msg)AllocVec(sizeof(IPTR)*new_notify->Number_Of_Args, 0L)))
   {
-    ULONG *para = (ULONG *)(((LONG)&msg->FollowParams)+4);
+    IPTR *para = (IPTR *)(((IPTR)&msg->FollowParams)+4);
 
-    memcpy(new_notify->DestMessage, para, new_notify->Number_Of_Args*sizeof(ULONG));
+    memcpy(new_notify->DestMessage, para, new_notify->Number_Of_Args*sizeof(IPTR));
 
-    if((new_notify->DestMessageCopy = (Msg)AllocVec(sizeof(ULONG)*new_notify->Number_Of_Args, 0L)))
+    if((new_notify->DestMessageCopy = (Msg)AllocVec(sizeof(IPTR)*new_notify->Number_Of_Args, 0L)))
     {
-      memcpy(new_notify->DestMessageCopy, para, new_notify->Number_Of_Args*sizeof(ULONG));
+      memcpy(new_notify->DestMessageCopy, para, new_notify->Number_Of_Args*sizeof(IPTR));
       new_notify->DestObject = msg->DestObj; // Only reaches this point if allocations are succesful.
     }
   }
@@ -159,7 +159,7 @@ VOID Toolbar_CheckNotify(struct IClass *cl, Object *obj, struct MUIP_Toolbar_Che
         }
       }
 
-      switch((ULONG)notify->DestObject)
+      switch((IPTR)notify->DestObject)
       {
         case MUIV_Notify_Self:
         {
