@@ -90,7 +90,7 @@ struct Data
 
     struct AEParams params ;
     struct TextFont *font ;     // Font, der in den Prefs eingestellt wurde.
-    LONG            setFont ;   // Font, der per [IS.] gesetzt wurde.
+    IPTR            setFont ;   // Font, der per [IS.] gesetzt wurde.
 
 
     struct Catalog  *catalog ;

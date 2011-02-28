@@ -43,6 +43,7 @@ MCPFILES := MailtextP \
 	 Mailtext_mcp_locale
 
 INCLUDE_FILES := mui/Mailtext_mcc.h
+USER_INCLUDES := -I$(TOP)/$(CURDIR)
 
 %build_module mmake=contrib-zune-classes-mailtext-mcc \
   modname=Mailtext modtype=mcc conffile=Mailtext_mcc.conf \

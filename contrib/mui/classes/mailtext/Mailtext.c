@@ -179,7 +179,7 @@ static void SetText(struct IClass *cl, Object *obj, struct Data *data, const Str
 
 static void InitPenData(struct AEAttrData *data, const LONG pen)
 {
-    sprintf(data->set, "\033P[%ld]", pen) ;
+    sprintf(data->set, "\033P[%ld]", (long)pen) ;
     strcpy(data->unset, "\033P[]") ;
 
     data->setSize   = strlen(data->set) ;
@@ -390,7 +390,7 @@ static ULONG New(struct IClass *cl, Object *obj, struct opSet *msg)
     DupString(&data->params.spattern, MUID_Mailtext_SigSepPattern) ;
     DupString(&data->wschars,         MUID_Mailtext_WhitespaceChars) ;
 
-    strncpy(data->params.qchars, (STRPTR)GetTagData(MUIA_Mailtext_QuoteChars, (ULONG)MUID_Mailtext_QuoteChars, msg->ops_AttrList), sizeof(data->params.qchars)-1) ;
+    strncpy(data->params.qchars, (STRPTR)GetTagData(MUIA_Mailtext_QuoteChars, (IPTR)MUID_Mailtext_QuoteChars, msg->ops_AttrList), sizeof(data->params.qchars)-1) ;
 
     SetupBitfield(&data->params.scharsBF,  MUID_Mailtext_NonIntroducingChars) ;
     SetupBitfield(&data->params.tcharsBF,  MUID_Mailtext_TerminatingChars) ;
@@ -406,7 +406,7 @@ static ULONG New(struct IClass *cl, Object *obj, struct opSet *msg)
 
     data->params.showAttrs = MUID_Mailtext_ShowAttributes ;
 
-    if (thetext = (STRPTR)GetTagData(MUIA_Mailtext_Text, (ULONG)"", msg->ops_AttrList))
+    if ((thetext = (STRPTR)GetTagData(MUIA_Mailtext_Text, (IPTR)"", msg->ops_AttrList)))
     {
         DupString(&data->text, thetext) ;
     }
@@ -417,7 +417,7 @@ static ULONG New(struct IClass *cl, Object *obj, struct opSet *msg)
 
     data->ptext = NULL ;
 
-    return((ULONG)obj);
+    return((IPTR)obj);
 }
 
 /*\\\*/
@@ -475,19 +475,20 @@ static ULONG Set(struct IClass *cl, Object *obj, struct opSet *msg)
 #endif
 {
     struct Data *data = INST_DATA(cl, obj);
-    struct TagItem *tags,*tag;
+    const struct TagItem *tags;
+    struct TagItem *tag;
     LONG first = MUIV_NList_First_Top ;
     BOOL changed = FALSE, textchanged = FALSE ;
 
     get(obj, MUIA_NList_First, &first) ;
 
-    for(tags=msg->ops_AttrList; tag=NextTagItem(&tags); )
+    for(tags=msg->ops_AttrList; (tag=NextTagItem(&tags)); )
     {
         switch(tag->ti_Tag)
         {
             case MUIA_Font :
 
-                if (tag->ti_Data != (ULONG)data->font)
+                if (tag->ti_Data != (IPTR)data->font)
                 {
                     data->setFont = tag->ti_Data ;
                 }
@@ -756,20 +757,20 @@ static ULONG Get(struct IClass *cl, Object *obj, struct opGet *msg)
 #endif
 {
     struct Data *data = INST_DATA(cl, obj);
-    ULONG *store = msg->opg_Storage;
+    IPTR *store = msg->opg_Storage;
 
     switch( msg->opg_AttrID )
     {
         case MUIA_Version :                 *store = VERSION ;                          return (TRUE) ; break ;
         case MUIA_Revision :                *store = REVISION ;                         return (TRUE) ; break ;
 
-        case MUIA_Mailtext_ActionEMail :    *store = (ULONG)STR(data->email) ;          return (TRUE) ; break ;
-        case MUIA_Mailtext_ActionURL :      *store = (ULONG)STR(data->url) ;            return (TRUE) ; break ;
-        case MUIA_Mailtext_IncPercent :     *store = (ULONG)data->percent ;             return (TRUE) ; break ;
-        case MUIA_Mailtext_QuoteChars :     *store = (ULONG)&data->params.qchars[0];    return (TRUE) ; break ;
-        case MUIA_Mailtext_Text :           *store = (ULONG)STR(data->text) ;           return (TRUE) ; break ;
-        case MUIA_Mailtext_DisplayRaw :     *store = (ULONG)data->displayRaw ;          return (TRUE) ; break ;
-        case MUIA_Mailtext_Wordwrap :       *store = (ULONG)data->wrap ;                return (TRUE) ; break ;
+        case MUIA_Mailtext_ActionEMail :    *store = (IPTR)STR(data->email) ;          return (TRUE) ; break ;
+        case MUIA_Mailtext_ActionURL :      *store = (IPTR)STR(data->url) ;            return (TRUE) ; break ;
+        case MUIA_Mailtext_IncPercent :     *store = (IPTR)data->percent ;             return (TRUE) ; break ;
+        case MUIA_Mailtext_QuoteChars :     *store = (IPTR)&data->params.qchars[0];    return (TRUE) ; break ;
+        case MUIA_Mailtext_Text :           *store = (IPTR)STR(data->text) ;           return (TRUE) ; break ;
+        case MUIA_Mailtext_DisplayRaw :     *store = (IPTR)data->displayRaw ;          return (TRUE) ; break ;
+        case MUIA_Mailtext_Wordwrap :       *store = (IPTR)data->wrap ;                return (TRUE) ; break ;
     }
 
     return(DoSuperMethodA(cl, obj, (Msg)msg));
@@ -821,7 +822,7 @@ static ULONG Setup(struct IClass *cl, Object *obj, struct MUIP_Setup *msg)
             ta.ta_YSize = atoi(++c) ;
 
 
-            if (data->font = OpenDiskFont(&ta))
+            if ((data->font = OpenDiskFont(&ta)))
             {
                 D(BUG("Font: %s (%ld)\n", ta.ta_Name, ta.ta_YSize)) ;
                 DoSuperSet(cl, obj, MUIA_Font, data->font, TAG_DONE) ;
@@ -901,7 +902,7 @@ static ULONG Setup(struct IClass *cl, Object *obj, struct MUIP_Setup *msg)
     {
         if (pendisplay)
         {
-            struct MUI_PenSpec *pen ;
+            struct MUI_PenSpec *pen = NULL ;
 
             DoMethod(pendisplay, MUIM_Pendisplay_SetMUIPen, MAILTEXT_TEXTPEN_DEFAULT) ;
             get(pendisplay, MUIA_Pendisplay_Spec, &pen) ;
@@ -928,7 +929,7 @@ static ULONG Setup(struct IClass *cl, Object *obj, struct MUIP_Setup *msg)
     {
         if (pendisplay)
         {
-            struct MUI_PenSpec *pen ;
+            struct MUI_PenSpec *pen = NULL ;
 
             DoMethod(pendisplay, MUIM_Pendisplay_SetMUIPen, MAILTEXT_TEXTPEN_DEFAULT) ;
             get(pendisplay, MUIA_Pendisplay_Spec, &pen) ;
@@ -955,7 +956,7 @@ static ULONG Setup(struct IClass *cl, Object *obj, struct MUIP_Setup *msg)
     {
         if (pendisplay)
         {
-            struct MUI_PenSpec *pen ;
+            struct MUI_PenSpec *pen = NULL ;
 
             DoMethod(pendisplay, MUIM_Pendisplay_SetMUIPen, MAILTEXT_QUOTEPEN_DEFAULT) ;
             get(pendisplay, MUIA_Pendisplay_Spec, &pen) ;
@@ -982,7 +983,7 @@ static ULONG Setup(struct IClass *cl, Object *obj, struct MUIP_Setup *msg)
     {
         if (pendisplay)
         {
-            struct MUI_PenSpec *pen ;
+            struct MUI_PenSpec *pen = NULL ;
 
             DoMethod(pendisplay, MUIM_Pendisplay_SetMUIPen, MAILTEXT_QUOTEPEN_DEFAULT) ;
             get(pendisplay, MUIA_Pendisplay_Spec, &pen) ;
@@ -1009,7 +1010,7 @@ static ULONG Setup(struct IClass *cl, Object *obj, struct MUIP_Setup *msg)
     {
         if (pendisplay)
         {
-            struct MUI_PenSpec *pen ;
+            struct MUI_PenSpec *pen = NULL ;
 
             DoMethod(pendisplay, MUIM_Pendisplay_SetMUIPen, MAILTEXT_QUOTEPEN_DEFAULT) ;
             get(pendisplay, MUIA_Pendisplay_Spec, &pen) ;
@@ -1036,7 +1037,7 @@ static ULONG Setup(struct IClass *cl, Object *obj, struct MUIP_Setup *msg)
     {
         if (pendisplay)
         {
-            struct MUI_PenSpec *pen ;
+            struct MUI_PenSpec *pen = NULL ;
 
             DoMethod(pendisplay, MUIM_Pendisplay_SetMUIPen, MAILTEXT_QUOTEPEN_DEFAULT) ;
             get(pendisplay, MUIA_Pendisplay_Spec, &pen) ;
@@ -1063,7 +1064,7 @@ static ULONG Setup(struct IClass *cl, Object *obj, struct MUIP_Setup *msg)
     {
         if (pendisplay)
         {
-            struct MUI_PenSpec *pen ;
+            struct MUI_PenSpec *pen = NULL ;
 
             DoMethod(pendisplay, MUIM_Pendisplay_SetMUIPen, MAILTEXT_QUOTEPEN_DEFAULT) ;
             get(pendisplay, MUIA_Pendisplay_Spec, &pen) ;
@@ -1205,7 +1206,7 @@ static ULONG CopyToClip(struct IClass *cl, Object *obj, Msg msg)
     DoSuperMethod(cl, obj, MUIM_NList_CopyToClip, MUIV_NList_CopyToClip_Selected, 0, NULL, NULL, TAG_DONE) ;
     DoSuperMethod(cl, obj, MUIM_NList_Select, 0, MUIV_NList_Select_Off, NULL, TAG_DONE) ;
 
-    return (ULONG)(NULL) ;
+    return 0;
 }
 
 /*\\\*/
@@ -1223,7 +1224,7 @@ static ULONG CallAction(struct IClass *cl, Object *obj, Msg msg)
 
     if (!(STR(data->urlaction) && STR(data->urlaction)[0]))
     {
-        return (ULONG)(NULL) ;
+        return 0;
     }
 
     DoMethod(obj, MUIM_NList_TestPos, MUI_MAXMAX, MUI_MAXMAX, &res) ;
@@ -1237,7 +1238,7 @@ static ULONG CallAction(struct IClass *cl, Object *obj, Msg msg)
 
         if (!(*entry))
         {
-            return (ULONG)(NULL) ;
+            return 0;
         }
 
         urlstart = FindURLStart(entry, res.char_number, data) ;
@@ -1343,7 +1344,7 @@ static ULONG CallAction(struct IClass *cl, Object *obj, Msg msg)
         }
     }
 
-    return (ULONG)(NULL) ;
+    return 0;
 }
 
 #ifndef __AROS__

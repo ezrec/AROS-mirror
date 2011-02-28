@@ -187,7 +187,7 @@ static LONG DistanceToNextLegal(char *line, const char attribute, const Bitfield
 
         if ((!(*pos)) || (BF_IsSet(tchars, *pos) && ((*pos) != attribute)))
         {
-            return (LONG)pos-(LONG)line-1 ;
+            return (pos-line)-1 ;
         }
         else
         {
@@ -289,7 +289,7 @@ BOOL AE_SetAttributes(const STRPTR src, STRPTR dst, long dstsize, struct AEParam
     res = FALSE ;
     parsingActive = TRUE ;
 
-    if (pool = (void *)CreatePool(MEMF_CLEAR || MEMF_PUBLIC, 32768, 32768))
+    if ((pool = (void *)CreatePool(MEMF_CLEAR || MEMF_PUBLIC, 32768, 32768)))
     {
         quoteCheck = ( (p->qdist) && (p->qchars[0]) ) ;
 

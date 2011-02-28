@@ -62,7 +62,14 @@ static BOOL SAVEDS ASM  UserLibOpen   (REG(a6, const struct Library *const base)
 static BOOL SAVEDS ASM  UserLibClose  (REG(a6, const struct Library *const base));
 static BOOL             ClassInitFunc (const struct Library *const base);
 static VOID             ClassExitFunc (const struct Library *const base);
+#ifdef __AROS__
+static AROS_UFP3(IPTR, Dispatcher,
+	AROS_UFPA(struct IClass *, cl, A0),
+	AROS_UFPA(Object *, obj, A2),
+	AROS_UFPA(Msg, msg, A1));
+#else
 static ULONG SAVEDS ASM Dispatcher    (REG(a0, struct IClass *const cl), REG(a2, Object *const obj), REG(a1, const Msg msg));
+#endif
 
 #if defined(__amigaos4__)
   struct MUI_CustomClass * SAVEDS ASM MCC_Query(UNUSED struct Interface *Self, const LONG which);

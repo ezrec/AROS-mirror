@@ -61,23 +61,23 @@ int main(int argc, char *argv[])
     struct RDArgs *rdArgs ;
     struct FileInfoBlock *fib ;
     BPTR fh ;
-    char *text ;
-    LONG args[2] = {0L, 0L};
-    STRPTR str ;
+    char *text = NULL ;
+    IPTR args[2] = {0L, 0L};
+    STRPTR str = NULL ;
 
     init() ;
 
-    if (rdArgs = ReadArgs("FILE", args, 0))
+    if ((rdArgs = ReadArgs("FILE", args, 0)))
     {
         if (args[0])
         {
-            if (fh = Open((STRPTR)args[0], MODE_OLDFILE))
+            if ((fh = Open((STRPTR)args[0], MODE_OLDFILE)))
             {
-                if (fib = AllocDosObjectTags(DOS_FIB, TAG_DONE))
+                if ((fib = AllocDosObjectTags(DOS_FIB, TAG_DONE)))
                 {
                     if (ExamineFH(fh, fib))
                     {
-                        if (text = AllocVec(fib->fib_Size+1, MEMF_PUBLIC | MEMF_CLEAR))
+                        if ((text = AllocVec(fib->fib_Size+1, MEMF_PUBLIC | MEMF_CLEAR)))
                         {
                             if (Read(fh, text, fib->fib_Size) == fib->fib_Size)
                             {
@@ -200,6 +200,6 @@ int main(int argc, char *argv[])
     }
 
     fail(NULL,NULL);
+
+    return 0;
 }
-
-

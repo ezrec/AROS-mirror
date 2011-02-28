@@ -129,7 +129,7 @@ static LONG GetControlChar(char *string)
 {
     char *ptr;
 
-    if (ptr=strchr(string,'_'))
+    if ((ptr=strchr(string,'_')))
     {
         if (strlen(ptr)>1)
         {
@@ -718,7 +718,7 @@ static ULONG New(struct IClass *cl, Object *obj, Msg msg)
         DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->uactStrObj,   MUICFG_Mailtext_URLAction,           1, NULL) ;
     }
 
-    return((ULONG)obj);
+    return((IPTR)obj);
 }
 
 /*\\\*/
@@ -746,7 +746,7 @@ IPTR MailtextP__OM_GET(struct IClass *cl, Object *obj, Msg msg)
 static ULONG Get(struct IClass *cl, Object *obj, Msg msg)
 #endif
 {
-    ULONG *store = ((struct opGet *)msg)->opg_Storage;
+    IPTR *store = ((struct opGet *)msg)->opg_Storage;
 
     switch( ((struct opGet *)msg)->opg_AttrID )
     {
@@ -768,11 +768,11 @@ static ULONG ConfigToGadgets(struct IClass *cl, Object *obj, struct MUIP_Setting
 #endif
 {
     struct Data *data = INST_DATA(cl, obj);
-    ULONG item ;
+    IPTR item ;
 
     /*/// "Boolean values" */
 
-    if (item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_ShowAttributes))
+    if ((item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_ShowAttributes)))
     {
         set(data->showObj, MUIA_Selected, *(ULONG *)item) ;
     }
@@ -781,7 +781,7 @@ static ULONG ConfigToGadgets(struct IClass *cl, Object *obj, struct MUIP_Setting
         set(data->showObj, MUIA_Selected, MUID_Mailtext_ShowAttributes) ;
     }
 
-    if (item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_Wordwrap))
+    if ((item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_Wordwrap)))
     {
         set(data->wrapObj, MUIA_Selected, *(ULONG *)item) ;
     }
@@ -790,7 +790,7 @@ static ULONG ConfigToGadgets(struct IClass *cl, Object *obj, struct MUIP_Setting
         set(data->wrapObj, MUIA_Selected, MUID_Mailtext_Wordwrap) ;
     }
 
-    if (item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_UseContextMenu))
+    if ((item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_UseContextMenu)))
     {
         set(data->contextObj, MUIA_Selected, *(ULONG *)item) ;
     }
@@ -799,7 +799,7 @@ static ULONG ConfigToGadgets(struct IClass *cl, Object *obj, struct MUIP_Setting
         set(data->contextObj, MUIA_Selected, MUID_Mailtext_UseContextMenu) ;
     }
 
-    if (item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_QuoteCharsUse))
+    if ((item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_QuoteCharsUse)))
     {
         set(data->uQCharsObj, MUIA_Selected, *(ULONG *)item) ;
         set(data->qCharsObj,  MUIA_Disabled, *(ULONG *)item == FALSE) ;
@@ -809,7 +809,7 @@ static ULONG ConfigToGadgets(struct IClass *cl, Object *obj, struct MUIP_Setting
         set(data->uQCharsObj, MUIA_Selected, MUID_Mailtext_QuoteCharsUse) ;
     }
 
-    if (item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_URLUnderline))
+    if ((item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_URLUnderline)))
     {
         set(data->uulObj, MUIA_Selected, *(ULONG *)item) ;
     }
@@ -818,7 +818,7 @@ static ULONG ConfigToGadgets(struct IClass *cl, Object *obj, struct MUIP_Setting
         set(data->uulObj, MUIA_Selected, MUID_Mailtext_URLUnderline) ;
     }
 
-    if (item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_URLActionBeep))
+    if ((item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_URLActionBeep)))
     {
         set(data->uabeepObj, MUIA_Selected, *(ULONG *)item) ;
     }
@@ -827,7 +827,7 @@ static ULONG ConfigToGadgets(struct IClass *cl, Object *obj, struct MUIP_Setting
         set(data->uabeepObj, MUIA_Selected, MUID_Mailtext_URLActionBeep) ;
     }
 
-    if (item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_SeparateSignature))
+    if ((item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_SeparateSignature)))
     {
         set(data->sigSepObj, MUIA_Selected, *(ULONG *)item) ;
     }
@@ -840,7 +840,7 @@ static ULONG ConfigToGadgets(struct IClass *cl, Object *obj, struct MUIP_Setting
 
     /*/// "Pens" */
 
-    if (item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_Color_QuoteLevel1))
+    if ((item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_Color_QuoteLevel1)))
     {
         set(data->colors[0], MUIA_Pendisplay_Spec, item) ;
     }
@@ -849,7 +849,7 @@ static ULONG ConfigToGadgets(struct IClass *cl, Object *obj, struct MUIP_Setting
         DoMethod(data->colors[0], MUIM_Pendisplay_SetMUIPen, MAILTEXT_QUOTEPEN_DEFAULT) ;
     }
 
-    if (item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_Color_QuoteLevel2))
+    if ((item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_Color_QuoteLevel2)))
     {
         set(data->colors[1], MUIA_Pendisplay_Spec, item) ;
     }
@@ -858,7 +858,7 @@ static ULONG ConfigToGadgets(struct IClass *cl, Object *obj, struct MUIP_Setting
         DoMethod(data->colors[1], MUIM_Pendisplay_SetMUIPen, MAILTEXT_QUOTEPEN_DEFAULT) ;
     }
 
-    if (item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_Color_QuoteLevel3))
+    if ((item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_Color_QuoteLevel3)))
     {
         set(data->colors[2], MUIA_Pendisplay_Spec, item) ;
     }
@@ -867,7 +867,7 @@ static ULONG ConfigToGadgets(struct IClass *cl, Object *obj, struct MUIP_Setting
         DoMethod(data->colors[2], MUIM_Pendisplay_SetMUIPen, MAILTEXT_QUOTEPEN_DEFAULT) ;
     }
 
-    if (item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_Color_QuoteLevel4))
+    if ((item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_Color_QuoteLevel4)))
     {
         set(data->colors[3], MUIA_Pendisplay_Spec, item) ;
     }
@@ -876,7 +876,7 @@ static ULONG ConfigToGadgets(struct IClass *cl, Object *obj, struct MUIP_Setting
         DoMethod(data->colors[3], MUIM_Pendisplay_SetMUIPen, MAILTEXT_QUOTEPEN_DEFAULT) ;
     }
 
-    if (item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_Color_QuoteLevel5))
+    if ((item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_Color_QuoteLevel5)))
     {
         set(data->colors[4], MUIA_Pendisplay_Spec, item) ;
     }
@@ -885,7 +885,7 @@ static ULONG ConfigToGadgets(struct IClass *cl, Object *obj, struct MUIP_Setting
         DoMethod(data->colors[4], MUIM_Pendisplay_SetMUIPen, MAILTEXT_QUOTEPEN_DEFAULT) ;
     }
 
-    if (item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_Color_URL))
+    if ((item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_Color_URL)))
     {
         set(data->urlcolor, MUIA_Pendisplay_Spec, item) ;
     }
@@ -894,7 +894,7 @@ static ULONG ConfigToGadgets(struct IClass *cl, Object *obj, struct MUIP_Setting
         DoMethod(data->urlcolor, MUIM_Pendisplay_SetMUIPen, MAILTEXT_TEXTPEN_DEFAULT) ;
     }
 
-    if (item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_Color_Text))
+    if ((item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_Color_Text)))
     {
         set(data->textcolor, MUIA_Pendisplay_Spec, item) ;
     }
@@ -907,7 +907,7 @@ static ULONG ConfigToGadgets(struct IClass *cl, Object *obj, struct MUIP_Setting
 
     /*/// "Numeric values" */
 
-    if (item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_Distance))
+    if ((item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_Distance)))
     {
         set(data->distObj, MUIA_Numeric_Value, *(ULONG *)item) ;
     }
@@ -916,7 +916,7 @@ static ULONG ConfigToGadgets(struct IClass *cl, Object *obj, struct MUIP_Setting
         set(data->distObj, MUIA_Numeric_Value, MUID_Mailtext_Distance) ;
     }
 
-    if (item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_QuoteDistance))
+    if ((item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_QuoteDistance)))
     {
         set(data->qdistObj, MUIA_Numeric_Value, *(ULONG *)item) ;
     }
@@ -925,7 +925,7 @@ static ULONG ConfigToGadgets(struct IClass *cl, Object *obj, struct MUIP_Setting
         set(data->qdistObj, MUIA_Numeric_Value, MUID_Mailtext_QuoteDistance) ;
     }
 
-    if (item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_URLActionStack))
+    if ((item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_URLActionStack)))
     {
         set(data->ustackObj, MUIA_Numeric_Value, *(ULONG *)item) ;
     }
@@ -938,12 +938,12 @@ static ULONG ConfigToGadgets(struct IClass *cl, Object *obj, struct MUIP_Setting
 
     /*/// "Strings" */
 
-    if (item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_Font))
+    if ((item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_Font)))
     {
         set(data->fontObj, MUIA_String_Contents, item) ;
     }
 
-    if (item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_DisablePattern))
+    if ((item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_DisablePattern)))
     {
         set(data->disPatObj, MUIA_String_Contents, item) ;
     }
@@ -952,7 +952,7 @@ static ULONG ConfigToGadgets(struct IClass *cl, Object *obj, struct MUIP_Setting
         set(data->disPatObj, MUIA_String_Contents, MUID_Mailtext_DisablePattern) ;
     }
 
-    if (item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_EnablePattern))
+    if ((item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_EnablePattern)))
     {
         set(data->enPatObj, MUIA_String_Contents, item);
     }
@@ -961,7 +961,7 @@ static ULONG ConfigToGadgets(struct IClass *cl, Object *obj, struct MUIP_Setting
         set(data->enPatObj, MUIA_String_Contents, MUID_Mailtext_EnablePattern) ;
     }
 
-    if (item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_SigSepPattern))
+    if ((item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_SigSepPattern)))
     {
         set(data->ssPatObj, MUIA_String_Contents, item);
     }
@@ -970,7 +970,7 @@ static ULONG ConfigToGadgets(struct IClass *cl, Object *obj, struct MUIP_Setting
         set(data->ssPatObj, MUIA_String_Contents, MUID_Mailtext_SigSepPattern) ;
     }
 
-    if (item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_NonIntroducingChars))
+    if ((item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_NonIntroducingChars)))
     {
         set(data->niCharsObj, MUIA_String_Contents, item) ;
     }
@@ -979,7 +979,7 @@ static ULONG ConfigToGadgets(struct IClass *cl, Object *obj, struct MUIP_Setting
         set(data->niCharsObj, MUIA_String_Contents, MUID_Mailtext_NonIntroducingChars) ;
     }
 
-    if (item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_TerminatingChars))
+    if ((item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_TerminatingChars)))
     {
         set(data->termCharsObj, MUIA_String_Contents, item) ;
     }
@@ -988,7 +988,7 @@ static ULONG ConfigToGadgets(struct IClass *cl, Object *obj, struct MUIP_Setting
         set(data->termCharsObj, MUIA_String_Contents, MUID_Mailtext_TerminatingChars) ;
     }
 
-    if (item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_WhitespaceChars))
+    if ((item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_WhitespaceChars)))
     {
         set(data->wsCharsObj, MUIA_String_Contents, item) ;
     }
@@ -997,7 +997,7 @@ static ULONG ConfigToGadgets(struct IClass *cl, Object *obj, struct MUIP_Setting
         set(data->wsCharsObj, MUIA_String_Contents, MUID_Mailtext_WhitespaceChars) ;
     }
 
-    if (item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_QuoteChars))
+    if ((item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_QuoteChars)))
     {
         set(data->qCharsObj, MUIA_String_Contents, item) ;
     }
@@ -1006,7 +1006,7 @@ static ULONG ConfigToGadgets(struct IClass *cl, Object *obj, struct MUIP_Setting
         set(data->qCharsObj, MUIA_String_Contents, MUID_Mailtext_QuoteChars) ;
     }
 
-    if (item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_URLAction))
+    if ((item = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_Mailtext_URLAction)))
     {
         set(data->uactStrObj, MUIA_String_Contents, item) ;
     }
@@ -1030,7 +1030,7 @@ static ULONG GadgetsToConfig(struct IClass *cl, Object *obj, struct MUIP_Setting
 #endif
 {
     struct Data *data = INST_DATA(cl, obj);
-    ULONG item ;
+    IPTR item ;
 
     /*/// "Boolean values" */
 
