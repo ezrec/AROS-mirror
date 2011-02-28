@@ -4,6 +4,7 @@ include $(TOP)/config/make.cfg
 #MM contrib-zune-classes-toolbar-mcp : includes linklibs
 
 USER_INCLUDES = -I$(SRCDIR)/$(CURDIR)/../../../commonaros
+USER_CFLAGS := $(PARANOIA_CFLAGS)
 
 FILES := library \
       	 Dispatcher \
