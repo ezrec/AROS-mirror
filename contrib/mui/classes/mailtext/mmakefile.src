@@ -3,7 +3,7 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- contrib : contrib-zune-classes-mailtext
+#MM- contrib-zune-classes : contrib-zune-classes-mailtext
 
 #MM  contrib-zune-classes-mailtext-demo : includes \
 #MM 					    linklibs \

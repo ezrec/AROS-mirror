@@ -2,7 +2,7 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- contrib : contrib-zune-classes-urltext
+#MM- contrib-zune-classes : contrib-zune-classes-urltext
 
 #MM- contrib-zune-classes-urltext : \
 #MM  contrib-zune-classes-urltext-mcc  contrib-zune-classes-urltext-mcp contrib-zune-classes-urltext-demos

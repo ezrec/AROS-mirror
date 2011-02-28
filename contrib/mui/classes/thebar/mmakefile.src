@@ -2,7 +2,7 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- contrib : contrib-zune-classes-thebar
+#MM- contrib-zune-classes : contrib-zune-classes-thebar
 
 #MM- contrib-zune-classes-thebar :  \
 #MM  contrib-zune-classes-thebar-mcc contrib-zune-classes-thebar-mccv \

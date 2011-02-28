@@ -5,6 +5,8 @@ include $(TOP)/config/make.cfg
 FILES         := popph popphs popph_misc popph_clipboard
 INCLUDE_FILES := Popplaceholder_mcc.h
 
+#MM- contrib-zine-classes: contrib-zune-classes-popph
+
 #MM- contrib-zune-classes-popph : contrib-zune-classes-popph-demo
 
 #MM contrib-zune-classes-popph-demo : includes linklibs contrib-zune-classes-popph-class

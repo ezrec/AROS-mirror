@@ -1,7 +1,7 @@
 #   $Id$
 include $(TOP)/config/make.cfg
 
-#MM- contrib : contrib-zune-classes-nlist
+#MM- contrib-zune-classes : contrib-zune-classes-nlist
 
 #MM- contrib-zune-classes-nlist-demos : 	\
 #MM	contrib-zune-classes-nlist-demo 	\
