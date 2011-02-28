@@ -59,7 +59,7 @@ static ULONG packTable[] =
     PACK_LONGBIT(MUIA_Window_Activate,MUIA_Window_Activate,pack,flags,PKCTRL_BIT|PKCTRL_PACKONLY,FLG_Activate),
 };
 
-static ULONG ASM
+static IPTR ASM
 mNew(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
 {
     struct pack             pack;
@@ -99,7 +99,7 @@ mNew(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
             MUIA_Window_SizeGadget,                          FALSE,
 
             MUIA_Window_RootObject, contents = ContentsObject,
-                WindowContents,        pack.root,
+                WindowContents,        (IPTR)pack.root,
                 MUIA_Window_ID,        pack.ID,
                 MUIA_BWin_Flags,       flags,
                 MUIA_BWin_Background,  pack.back,
@@ -127,12 +127,12 @@ mNew(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
     if (titleTag) titleTag->ti_Tag = MUIA_Window_Title;
     if (contTag) contTag->ti_Tag = WindowContents;
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
 /***********************************************************************/
 
-static ULONG ASM
+static IPTR ASM
 mGet(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opGet *msg)
 {
     struct data *data = INST_DATA(cl,obj);
@@ -142,7 +142,7 @@ mGet(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opGet *msg)
         case MUIA_Version:          *msg->opg_Storage = VERSION; return TRUE;
         case MUIA_Revision:         *msg->opg_Storage = REVISION; return TRUE;
 
-        case WindowContents:        *msg->opg_Storage = (ULONG)data->root; return TRUE;
+        case WindowContents:        *msg->opg_Storage = (IPTR)data->root; return TRUE;
 
         case MUIA_BWin_NoDragBar:   *msg->opg_Storage = (data->flags & FLG_NoDragBar) ? TRUE : FALSE; return TRUE;
         case MUIA_BWin_NoSize:      *msg->opg_Storage = (data->flags & FLG_NoSize) ? TRUE : FALSE; return TRUE;
@@ -169,16 +169,16 @@ mGet(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opGet *msg)
 
 /***********************************************************************/
 
-static ULONG ASM
+static IPTR ASM
 mSets(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
 {
     struct data    *data = INST_DATA(cl,obj);
     struct TagItem *tag;
-    struct TagItem          *tstate;
+    const struct TagItem *tstate;
 
     for (tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
     {
-        ULONG tidata = tag->ti_Data;
+        IPTR tidata = tag->ti_Data;
 
         switch (tag->ti_Tag)
         {
@@ -335,7 +335,7 @@ mSets(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
 
 /***********************************************************************/
 
-static ULONG ASM
+static IPTR ASM
 mDoContentsMethod(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 {
     struct data *data = INST_DATA(cl,obj);
@@ -354,7 +354,7 @@ enum
     EFLG_Close      = 1<<4,
 };
 
-static ULONG ASM
+static IPTR ASM
 mExport(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Export *msg)
 {
     struct data *data = INST_DATA(cl,obj);
@@ -387,7 +387,7 @@ mExport(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Export
 
 /***********************************************************************/
 
-static ULONG ASM
+static IPTR ASM
 mImport(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Import *msg)
 {
     struct data *data = INST_DATA(cl,obj);

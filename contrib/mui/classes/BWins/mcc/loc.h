@@ -81,7 +81,7 @@
 struct CatCompArrayType
 {
     LONG   cca_ID;
-    STRPTR cca_Str;
+    CONST_STRPTR cca_Str;
 };
 
 static const struct CatCompArrayType CatCompArray[] =

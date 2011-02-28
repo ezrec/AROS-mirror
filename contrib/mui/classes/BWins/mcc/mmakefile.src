@@ -10,11 +10,11 @@ FILES := libinit_aros \
 	 loc \
 	 sgad \
 	 boopsi \
+	 contents \
 	 class
 
-# 	 contents \
-
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../include
+USER_CFLAGS := -DNO_INLINE_STDARG
 
 %build_module mmake=contrib-zune-classes-bwin-mcc \
   modname=BWin modtype=mcc moduledir=Extras/Zune/MCC_BWin/Classes/Zune \

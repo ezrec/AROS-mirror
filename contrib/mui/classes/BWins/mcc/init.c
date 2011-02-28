@@ -3,10 +3,10 @@
 
 /****************************************************************************/
 
-ULONG ASM SAVEDS
+APTR ASM SAVEDS
 query(REG(d0) LONG which)
 {
-    return (ULONG)((which==MUIV_Query_MCC) ? lib_mcc : NULL);
+    return ((which==MUIV_Query_MCC) ? lib_mcc : NULL);
 }
 
 /****************************************************************************/
@@ -76,7 +76,7 @@ freeBase(void)
 
     if (UtilityBase)
     {
-        CloseLibrary(UtilityBase);
+        CloseLibrary((struct Library *)UtilityBase);
         UtilityBase = NULL;
     }
 
@@ -95,7 +95,7 @@ BOOL ASM
 initBase(void)
 {
     if ((DOSBase = (APTR)OpenLibrary("dos.library",37)) &&
-        (UtilityBase = OpenLibrary("utility.library",37)) &&
+        (UtilityBase = (APTR)OpenLibrary("utility.library",37)) &&
         (IntuitionBase = (APTR)OpenLibrary("intuition.library",37)) &&
         (GfxBase = (struct GfxBase *)OpenLibrary("graphics.library",37)) &&
         (MUIMasterBase = OpenLibrary("muimaster.library",19)) &&

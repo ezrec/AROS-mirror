@@ -13,7 +13,7 @@ int STDARGS snprintf ( char *buf , int size , char *fmt , ...);
 
 /* loc.c */
 void ASM initStrings ( void );
-STRPTR ASM getString ( REG (d0 )ULONG id );
+CONST_STRPTR ASM getString ( REG (d0 )LONG id );
 ULONG ASM getKeyChar ( REG (a0 )STRPTR string );
 
 /* shape.c */

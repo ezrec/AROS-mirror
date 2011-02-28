@@ -38,8 +38,8 @@ initStrings(void)
 
 /****************************************************************************/
 
-STRPTR ASM
-getString(REG(d0) ULONG id)
+CONST_STRPTR ASM
+getString(REG(d0) LONG id)
 {
     struct CatCompArrayType    *cca;
     int                        cnt;

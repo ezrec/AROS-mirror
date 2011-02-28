@@ -82,7 +82,7 @@ initBase(void)
         //register char buf[16];
 
         DOSBase       = (struct DosLibrary *)lib_class->mcc_DOSBase;
-        UtilityBase   = lib_class->mcc_UtilityBase;
+        UtilityBase   = (APTR)lib_class->mcc_UtilityBase;
         IntuitionBase = (struct IntuitionBase *)lib_class->mcc_IntuitionBase;
 
         initStrings();

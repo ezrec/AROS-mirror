@@ -18,16 +18,16 @@ initStrings(void)
              cnt>=0;
              cnt--, cca--)
         {
-            STRPTR s;
+            CONST_STRPTR s;
 
-            if (s = GetCatalogStr(cat,cca->cca_ID,cca->cca_Str)) cca->cca_Str = s;
+            if ((s = GetCatalogStr(cat,cca->cca_ID,cca->cca_Str))) cca->cca_Str = s;
         }
     }
 }
 
 /****************************************************************************/
 
-STRPTR ASM
+CONST_STRPTR ASM
 getString(REG(d0) ULONG id)
 {
     struct CatCompArrayType    *cca;
@@ -48,9 +48,9 @@ localizeMenus(REG(a0) struct NewMenu *menu)
     while (menu->nm_Type!=NM_END)
     {
         if (menu->nm_Label!=NM_BARLABEL)
-            menu->nm_Label = getString((ULONG)menu->nm_Label);
+            menu->nm_Label = getString((IPTR)menu->nm_Label);
 
-        if (menu->nm_CommKey) menu->nm_CommKey = getString((ULONG)menu->nm_CommKey);
+        if (menu->nm_CommKey) menu->nm_CommKey = getString((IPTR)menu->nm_CommKey);
 
         menu++;
     }

@@ -46,7 +46,7 @@ enum
 
 /***********************************************************************/
 
-static ULONG ASM
+static IPTR ASM
 mNew(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
 {
     if ((obj = (Object *)DoSuperNew(cl,obj,
@@ -70,17 +70,17 @@ mNew(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
             data->flags |= BFLG_Activate;
     }
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
 /***************************************************************************/
 
-static ULONG ASM
+static IPTR ASM
 mSets(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
 {
     struct data    *data = INST_DATA(cl,obj);
     struct TagItem *tag;
-    struct TagItem          *tstate;
+    const struct TagItem *tstate;
 
     for (tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
     {
@@ -118,7 +118,10 @@ mSets(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
                             Object *parent;
 
                             get(obj,MUIA_Parent,&parent);
-                            back = parent ? _backspec(parent) : (APTR)MUII_WindowBack;
+                            if (parent)
+                                GetAttr(MUIA_Background, parent, (IPTR *)&back);
+                            if (!back)
+                                back = (APTR)MUII_WindowBack;
                         }
 
                         data->flags |= BFLG_NTRedraw;
@@ -137,7 +140,7 @@ mSets(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
 
 /***********************************************************************/
 
-static ULONG ASM
+static IPTR ASM
 mSetup(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 {
     struct data *data = INST_DATA(cl,obj);
@@ -169,7 +172,11 @@ mSetup(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
                 Object *parent;
 
                 get(obj,MUIA_Parent,&parent);
-                ptr = parent ? _backspec(parent) : (APTR)MUII_WindowBack;
+                ptr = NULL;
+                if (parent)
+                    GetAttr(MUIA_Background, parent, (IPTR *)&ptr);
+                if (!ptr)
+                    ptr = (APTR)MUII_WindowBack;
             }
 
             SetSuperAttrs(cl,obj,MUIA_Background,ptr,TAG_DONE);
@@ -297,7 +304,7 @@ mSetup(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 
 /***********************************************************************/
 
-static ULONG ASM
+static IPTR ASM
 mCleanup(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 {
     struct data *data = INST_DATA(cl,obj);
@@ -316,7 +323,7 @@ mCleanup(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 
 /***********************************************************************/
 
-static ULONG ASM
+static IPTR ASM
 mAskMinMax(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_AskMinMax *msg)
 {
     struct data *data = INST_DATA(cl,obj);
@@ -428,7 +435,7 @@ mAskMinMax(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Ask
 
 /***********************************************************************/
 
-static ULONG ASM
+static IPTR ASM
 mDraw(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Draw *msg)
 {
     struct data     *data = INST_DATA(cl,obj);
@@ -625,8 +632,12 @@ mDraw(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Draw *ms
 
 /***********************************************************************/
 
-static ULONG ASM SAVEDS
+#ifdef __AROS__
+static BOOPSI_DISPATCHER(IPTR,dispatcher,cl,obj,msg)
+#else
+static IPTR ASM SAVEDS
 dispatcher(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
+#endif
 {
     switch(msg->MethodID)
     {
@@ -639,6 +650,9 @@ dispatcher(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
         default:             return DoSuperMethodA(cl,obj,msg);
     }
 }
+#ifdef __AROS__
+BOOPSI_DISPATCHER_END
+#endif
 
 /***************************************************************************/
 

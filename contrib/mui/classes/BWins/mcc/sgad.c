@@ -6,7 +6,7 @@
 static IPTR ASM
 mNew(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
 {
-    if (obj = (Object *)DoSuperMethodA(cl,obj,(Msg)msg))
+    if ((obj = (Object *)DoSuperMethodA(cl,obj,(Msg)msg)))
     {
         struct Gadget *gad = (struct Gadget *)obj;
 
@@ -46,7 +46,7 @@ dispatcher(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) Msg msg )
 BOOL ASM
 initSGad(void)
 {
-    if (lib_sgad = MakeClass(NULL,"gadgetclass",NULL,0,0))
+    if ((lib_sgad = MakeClass(NULL,"gadgetclass",NULL,0,0)))
     {
         lib_sgad->cl_Dispatcher.h_SubEntry = NULL;
         lib_sgad->cl_Dispatcher.h_Entry    = (HOOKFUNC)dispatcher;
