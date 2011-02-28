@@ -39,6 +39,7 @@
 #define MUIA_Urltext_SetMax         0xFEC900D7 /* [I...] (BOOL)   */
 #define MUIA_Urltext_DoOpenURL      0xFEC900D8 /* [I...] (BOOL)   */
 #define MUIA_Urltext_NoMenu         0xFEC900D9 /* [I...] (BOOL)   */
+#define MUIA_Urltext_NoOpenURLPrefs 0xFEC900DC /* [I...] (BOOL)   */
 
 /***********************************************************************/
 

@@ -29,7 +29,7 @@ ULONG DoMethod(APTR,unsigned long MethodID,...);
 /***********************************************************************/
 
 Object *
-urlTextObject(struct Library *MUIMasterBase,STRPTR url,STRPTR text,ULONG font)
+urlTextObject(struct Library *MUIMasterBase,STRPTR url,STRPTR text,IPTR font)
 {
     return UrltextObject,
         MUIA_Font,          font,

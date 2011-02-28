@@ -247,7 +247,7 @@ mSets(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
 {
     struct data    *data = INST_DATA(cl,obj);
     struct TagItem *tag;
-    struct TagItem          *tstate;
+    const struct TagItem *tstate;
     ULONG          flags, redraw, notifyUrl, over;
 
     flags = data->flags;
@@ -681,7 +681,7 @@ mCopy(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Urltext_
 
     if ((iff = AllocIFF()))
     {
-        if ((iff->iff_Stream = (LONG)OpenClipboard(unit)))
+        if ((iff->iff_Stream = (IPTR)OpenClipboard(unit)))
         {
             InitIFFasClip(iff);
 

@@ -17,6 +17,6 @@ int STDARGS snprintf ( char *buf , int size , char *fmt , ...);
 #endif
 
 /* loc.c */
-STRPTR ASM getString ( REG (d0 )ULONG id );
+CONST_STRPTR ASM getString ( REG (d0 )ULONG id );
 
 #endif /* _CLASS_PROTOS_H */

@@ -4,13 +4,13 @@
 /****************************************************************************/
 
 char ASM
-getKeyChar(REG(a0) STRPTR string)
+getKeyChar(REG(a0) CONST_STRPTR string)
 {
     register char res = 0;
 
     if (string)
     {
-        register char *c;
+        register CONST_STRPTR c;
 
         for (c = string; *c && *c!='_'; c++);
         if (*c++) res = ToLower(*c);
@@ -22,7 +22,7 @@ getKeyChar(REG(a0) STRPTR string)
 /***********************************************************************/
 
 Object * ASM
-keyCheckmark(REG(a0) STRPTR key,REG(d0) ULONG help)
+keyCheckmark(REG(a0) CONST_STRPTR key,REG(d0) ULONG help)
 {
     register Object *obj;
 
@@ -37,7 +37,7 @@ keyCheckmark(REG(a0) STRPTR key,REG(d0) ULONG help)
 /****************************************************************************/
 
 Object * ASM
-keyPopPen(REG(d0) ULONG title,REG(d1) STRPTR key,REG(d2) ULONG help)
+keyPopPen(REG(d0) ULONG title,REG(d1) CONST_STRPTR key,REG(d2) ULONG help)
 {
     return PoppenObject,
         MUIA_FixWidthTxt,  "nn",

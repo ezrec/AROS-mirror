@@ -15,16 +15,24 @@
 static IPTR ASM
 mNew(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 {
-    char           copyright[256], *l;
+    char           copyright[256];
+    CONST_STRPTR   l[7];
     struct data    *data;
     Object         *info, *popb;
-    STRPTR                 ver;
+    STRPTR                 ver = NULL;
 
     if (!(obj = (Object *)DoSuperMethodA(cl, obj, msg)))
         return 0;
 
     data = INST_DATA(cl,obj);
     memset(data,0,sizeof(struct data));
+    l[0] = getString(Msg_Out);
+    l[1] = getString(Msg_Over);
+    l[2] = getString(Msg_Visited);
+    l[3] = getString(Msg_Underline);
+    l[4] = getString(Msg_Fallback);
+    l[5] = getString(Msg_DoVisitedPen);
+    l[6] = getString(Msg_Font);
 
     data->prefs = VGroup,
 
@@ -37,12 +45,12 @@ mNew(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
                     GroupSpacing(0),
                     Child, VSpace(0),
                     Child, ColGroup(2),
-                        Child, Label2(l = getString(Msg_Out)),
-                        Child, data->mouseOutPen = keyPopPen(Msg_OutPenTitle,l,Msg_Out_Help),
-                        Child, Label2(l = getString(Msg_Over)),
-                        Child, data->mouseOverPen = keyPopPen(Msg_OverPenTitle,l,Msg_Over_Help),
-                        Child, Label2(l = getString(Msg_Visited)),
-                        Child, data->visitedPen = keyPopPen(Msg_VisitedPenTitle,l,Msg_Visited_Help),
+                        Child, Label2(l[0]),
+                        Child, data->mouseOutPen = keyPopPen(Msg_OutPenTitle,l[0],Msg_Out_Help),
+                        Child, Label2(l[1]),
+                        Child, data->mouseOverPen = keyPopPen(Msg_OverPenTitle,l[1],Msg_Over_Help),
+                        Child, Label2(l[2]),
+                        Child, data->visitedPen = keyPopPen(Msg_VisitedPenTitle,l[2],Msg_Visited_Help),
                     End,
                     Child, VSpace(0),
                 End,
@@ -55,25 +63,25 @@ mNew(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
                 Child, HGroup,
                     Child, HSpace(0),
                     Child,ColGroup(2),
-                        Child, Label1(l = getString(Msg_Underline)),
-                        Child, data->underline = keyCheckmark(l,Msg_Underline_Help),
-                        Child, Label1(l = getString(Msg_Fallback)),
-                        Child, data->fallBack = keyCheckmark(l,Msg_Fallback_Help),
-                        Child, Label1(l = getString(Msg_DoVisitedPen)),
-                        Child, data->doVisitedPen = keyCheckmark(l,Msg_DoVisitedPen_Help),
+                        Child, Label1(l[3]),
+                        Child, data->underline = keyCheckmark(l[3],Msg_Underline_Help),
+                        Child, Label1(l[4]),
+                        Child, data->fallBack = keyCheckmark(l[4],Msg_Fallback_Help),
+                        Child, Label1(l[5]),
+                        Child, data->doVisitedPen = keyCheckmark(l[5],Msg_DoVisitedPen_Help),
                     End,
                     Child, HSpace(0),
                 End,
                 Child, VSpace(0),
                 Child, HGroup,
-                    Child, Label2(l = getString(Msg_Font)),
+                    Child, Label2(l[6]),
                     Child, PopaslObject,
                         MUIA_ShortHelp, getString(Msg_Font_Help),
                         MUIA_Popasl_Type, ASL_FontRequest,
                         MUIA_Popstring_String, data->font = StringObject,
                             StringFrame,
                             MUIA_CycleChain, TRUE,
-                            MUIA_ControlChar, getKeyChar(l),
+                            MUIA_ControlChar, getKeyChar(l[6]),
                         End,
                         MUIA_Popstring_Button, popb = MUI_MakeObject(MUIO_PopButton,MUII_PopUp),
                     End,
@@ -200,7 +208,7 @@ mConfigToGadgets(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MU
     struct data    *data = INST_DATA(cl,obj);
     struct MUI_PenSpec      *pen;
     Object         *po;
-    ULONG                   p;
+    IPTR            p;
 
     po = MUI_NewObject(MUIC_Pendisplay,TAG_DONE);
 

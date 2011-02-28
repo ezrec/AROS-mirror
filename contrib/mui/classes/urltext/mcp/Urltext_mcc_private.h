@@ -75,6 +75,8 @@ enum
 
     MUIA_Urltext_Font,              /* PRIVATE!                                         */
     MUIA_Urltext_Version,           /* PRIVATE!                                         */
+
+    MUIA_Urltext_NoOpenURLPrefs,    /* [I...] (BOOL)                                    */
 };
 
 /***********************************************************************/

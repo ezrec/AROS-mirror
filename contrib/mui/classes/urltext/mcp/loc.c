@@ -63,16 +63,16 @@ struct message messages[] =
     {Msg_Font,               Msg_Font_STR},
     {Msg_Font_Help,          Msg_Font_Help_STR},
 
-    {NULL}
+    { 0 }
 };
 
 /****************************************************************************/
 
-STRPTR ASM
+CONST_STRPTR ASM
 getString(REG(d0) ULONG id)
 {
     struct message *array;
-    STRPTR         string;
+    CONST_STRPTR    string;
 
     for (array = messages;
          array->string && (array->id!=id);

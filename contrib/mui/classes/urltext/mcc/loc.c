@@ -23,20 +23,20 @@ struct message
 
 struct message messages[] =
 {
-    Msg_Send,               Msg_Send_STR,
-    Msg_Copy,               Msg_Copy_STR,
-    Msg_OpenURLPrefs,       Msg_OpenURLPrefs_STR,
+    { Msg_Send,               Msg_Send_STR, },
+    { Msg_Copy,               Msg_Copy_STR, },
+    { Msg_OpenURLPrefs,       Msg_OpenURLPrefs_STR, },
 
-    NULL
+    { NULL },
 };
 
 /****************************************************************************/
 
-STRPTR ASM
+CONST_STRPTR ASM
 getString(REG(d0) ULONG id)
 {
     struct message *array;
-    STRPTR         string;
+    CONST_STRPTR    string;
 
     for (array = messages;
          array->string && (array->id!=id);
