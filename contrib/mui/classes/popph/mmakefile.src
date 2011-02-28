@@ -4,6 +4,7 @@ include $(TOP)/config/make.cfg
 
 FILES         := popph popphs popph_misc popph_clipboard
 INCLUDE_FILES := Popplaceholder_mcc.h
+USER_CFLAGS += $(PARANOIA_CFLAGS)
 
 #MM- contrib-zine-classes: contrib-zune-classes-popph
 
