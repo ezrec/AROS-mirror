@@ -30,6 +30,7 @@ USER_INCLUDES := -idirafter $(SRCDIR)/$(CURDIR)/../include -I$(SRCDIR)/$(CURDIR)
     -I$(SRCDIR)/$(CURDIR)/../nlistview_mcc
 
 USER_CFLAGS := -DNO_INLINE_STDARG
+USER_CFLAGS += $(PARANOIA_CFLAGS)
 
 %build_module_simple mmake=contrib-zune-classes-nlist-class \
   modname=NList modtype=mcc moduledir=$(CONTRIBDIR)/Zune/MCC_NList/Classes/Zune \

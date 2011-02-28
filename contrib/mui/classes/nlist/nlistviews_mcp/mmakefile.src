@@ -6,6 +6,7 @@ include $(TOP)/config/make.cfg
 
 USER_INCLUDES := -idirafter $(SRCDIR)/$(CURDIR)/../include -I$(SRCDIR)/$(CURDIR)/../nlistview_mcc
 USER_CFLAGS := -DNO_INLINE_STDARG
+USER_CFLAGS += $(PARANOIA_CFLAGS)
 
 FILES := locale NListviews icon Debug
 

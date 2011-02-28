@@ -10,6 +10,7 @@ EXEDIR := $(CONTRIBDIR)/Zune/MCC_NList/Demos
 
 USER_INCLUDES := -idirafter $(SRCDIR)/$(CURDIR)/../include
 USER_CFLAGS := -DNO_INLINE_STDARG
+USER_CFLAGS += $(PARANOIA_CFLAGS)
 
 #MM contrib-zune-classes-nlist-demo : includes linklibs \
 #MM 	    	    	    	      contrib-zune-classes-nlist \
