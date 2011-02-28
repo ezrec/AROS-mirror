@@ -11,6 +11,7 @@ FILES := libinit_aros \
 	 class
 
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../include
+USER_CFLAGS += $(PARANOIA_CFLAGS)
 
 %build_module mmake=contrib-zune-classes-bwin-mcp \
   modname=BWin modtype=mcp moduledir=Extras/Zune/MCC_BWin/Classes/Zune \

@@ -6,6 +6,7 @@ include $(TOP)/config/make.cfg
 #MM contrib-zune-classes-bwin-mcc
 
 TARGETDIR := $(AROS_CONTRIB)/Zune/MCC_BWin/Demos
+USER_CFLAGS += $(PARANOIA_CFLAGS)
 
 FILES := demo1 \
 	 demo2 \
