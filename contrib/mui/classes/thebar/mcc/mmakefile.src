@@ -19,6 +19,7 @@ FILES := \
 
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../include
 USER_CFLAGS := -DNO_INLINE_STDARG
+USER_CFLAGS += $(PARANOIA_CFLAGS)
 
 %build_module_simple mmake=contrib-zune-classes-thebar-mcc \
   modname=TheBar modtype=mcc moduledir=$(AROS_CONTRIB)/Zune/MCC_TheBar/Classes/Zune \
@@ -27,6 +28,7 @@ USER_CFLAGS := -DNO_INLINE_STDARG
 
 
 USER_CFLAGS := -DVIRTUAL -DNO_INLINE_STDARG
+USER_CFLAGS += $(PARANOIA_CFLAGS)
 
 %build_module_simple mmake=contrib-zune-classes-thebar-mccv \
   modname=TheBarVirt modtype=mcc moduledir=$(AROS_CONTRIB)/Zune/MCC_TheBar/Classes/Zune \
