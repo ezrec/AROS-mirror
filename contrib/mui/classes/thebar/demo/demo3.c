@@ -225,7 +225,25 @@ main(UNUSED int argc,char **argv)
                 {
                     if (id==(LONG)TAG_USER)
                     {
-                        IPTR c, r, vm, bp, lp, br, su, ra, sc, k, bs, fi, fr, hl0, sl4, rbl, rsl, ril, rem;
+                        IPTR c = 0,
+                             r = 0,
+                             vm = 0,
+                             bp = 0,
+                             lp = 0,
+                             br = 0,
+                             su = 0,
+                             ra = 0,
+                             sc = 0,
+                             k = 0,
+                             bs = 0,
+                             fi = 0,
+                             fr = 0,
+                             hl0 = 0,
+                             sl4 = 0,
+                             rbl = 0,
+                             rsl = 0,
+                             ril = 0,
+                             rem = 0;
 
                         get(rows,MUIA_Radio_Active,&r);
                         if (r==4) r = 6;

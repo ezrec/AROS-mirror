@@ -174,7 +174,11 @@ enum
 /***********************************************************************/
 
 #ifndef _backspec
+#ifdef __AROS__
+#define _backspec(obj) ({IPTR tmp = 0; GetAttr(MUIA_Background, (Object *)(obj), &tmp); (APTR)tmp; })
+#else
 #define _backspec(obj) ((APTR)(*((ULONG *)(((char *)(obj))+80))))
+#endif
 #endif
 
 /***********************************************************************/

@@ -3045,7 +3045,7 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
         if (!done)
         {
             DoSuperMethod(cl,obj,OM_GET,MUIA_Parent,(IPTR)&ptr);
-            SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Background,ptr ? (IPTR)_backspec(ptr) : MUII_WindowBack,TAG_DONE);
+            SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Background,(IPTR)(ptr ? _backspec(ptr) : MUII_WindowBack),TAG_DONE);
         }
     }
 

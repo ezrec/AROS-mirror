@@ -56,8 +56,8 @@ struct Library *MUIMasterBase;
 #if defined(__AROS__)
 Object * DoSuperNew(struct IClass *cl, Object *obj, IPTR tag1, ...)
 {
-  AROS_SLOWSTACKTAGS_PRE(tag1)
-  retval = DoSuperMethod(cl, obj, OM_NEW, AROS_SLOWSTACKTAGS_ARG(tag1));
+  AROS_SLOWSTACKTAGS_PRE_AS(tag1, Object *)
+  retval = (Object *)DoSuperMethod(cl, obj, OM_NEW, AROS_SLOWSTACKTAGS_ARG(tag1));
   AROS_SLOWSTACKTAGS_POST
 }
 #elif defined(__MORPHOS__)
@@ -369,7 +369,7 @@ ULONG
 mShow(struct IClass *cl,Object *obj,Msg msg)
 {
     struct data *data = INST_DATA(cl,obj);
-    Object *parent;
+    Object *parent = NULL;
 
     if (!DoSuperMethodA(cl,obj,msg))
         return FALSE;

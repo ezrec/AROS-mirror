@@ -310,10 +310,8 @@ Object *MUI_NewObject(CONST_STRPTR classname,Tag tag1,...);
 ** MUI undoc stuff
 */
 
-#ifdef __AROS__
+#ifndef MUIA_Text_Copy
 #define MUIA_Text_Copy               0x80427727UL
-#warning MUIA_Text_Copy doesn't exist in Zune's mui.h.
-#warning Examine if this can cause trouble!
 #endif
 
 #ifndef MUIA_Window_MenuGadget

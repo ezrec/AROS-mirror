@@ -203,9 +203,24 @@ main(UNUSED int argc,char **argv)
                 {
                     if (id==(LONG)TAG_USER)
                     {
-                        IPTR rowsV, colsV, viewModeV, barPosV, labelPosV, borderlessV, sunnyV,
-                              raisedV, scaledV, enableKeysV, barSpacerV, freeHorizV, freeVertV,
-                              rbV, rsV, riV, raV, rem;
+                        IPTR rowsV = 0,
+                             colsV = 0,
+                             viewModeV = 0,
+                             barPosV = 0,
+                             labelPosV = 0,
+                             borderlessV = 0,
+                             sunnyV = 0,
+                             raisedV = 0,
+                             scaledV = 0,
+                             enableKeysV = 0,
+                             barSpacerV = 0,
+                             freeHorizV = 0,
+                             freeVertV = 0,
+                             rbV = 0,
+                             rsV = 0,
+                             riV = 0,
+                             raV = 0,
+                             rem = 0;
 
                         get(rows,MUIA_Radio_Active,&rowsV);
                         if (rowsV==4) rowsV = 6;
