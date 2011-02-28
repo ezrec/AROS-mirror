@@ -233,30 +233,29 @@ void obtain_pen(Object *obj, ULONG *pen, struct MUI_PenSpec *ps)
 }
 
 #if !defined(__MORPHOS__)
-#if defined(__AROS__)
-static IPTR VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
+#ifdef __AROS__
+static Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, Tag tag1, ...)
 {
-  IPTR rc;
+    AROS_SLOWSTACKTAGS_PRE_AS(tag1, Object *)
+    retval = (Object *)DoSuperMethod(cl, obj, OM_NEW, AROS_SLOWSTACKTAGS_ARG(tag1), NULL);
+    AROS_SLOWSTACKTAGS_POST
+}
 #else
 static Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 {
   Object *rc;
-#endif
   VA_LIST args;
 
   ENTER();
 
   VA_START(args, obj);
-  #if defined(__AROS__)
-  rc = (IPTR)DoSuperNewTagList(cl, obj, NULL, (struct TagItem *)VA_ARG(args, IPTR));
-  #else
   rc = (Object *)DoSuperMethod(cl, obj, OM_NEW, VA_ARG(args, ULONG), NULL);
-  #endif
   VA_END(args);
 
   RETURN(rc);
   return rc;
 }
+#endif
 #endif // !__MORPHOS__
 
 IPTR mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)

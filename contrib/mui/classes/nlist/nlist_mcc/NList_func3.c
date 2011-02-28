@@ -54,6 +54,9 @@ IPTR MyCallHookPkt(Object *obj,BOOL hdata,struct Hook *hook,APTR object,APTR mes
     return (CallHookPkt(hook,object,message));
 }
 
+#ifdef __AROS__
+/* AROS uses a macro to handle this */
+#else
 IPTR STDARGS VARARGS68K MyCallHookPktA(Object *obj, struct Hook *hook, ...)
 {
   IPTR ret;
@@ -65,6 +68,7 @@ IPTR STDARGS VARARGS68K MyCallHookPktA(Object *obj, struct Hook *hook, ...)
 
   return ret;
 }
+#endif
 
 LONG DeadKeyConvert(struct NLData *data,struct IntuiMessage *msg,STRPTR buf,LONG bufsize,struct KeyMap *kmap)
 {

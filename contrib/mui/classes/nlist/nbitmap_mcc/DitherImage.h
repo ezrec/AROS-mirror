@@ -34,7 +34,11 @@ APTR DitherImageA(CONST_APTR data, struct TagItem *tags);
 #if defined(__PPC__)
 #define DitherImage(data, ...) ({ ULONG _tags[] = { __VA_ARGS__ }; DitherImageA(data, (struct TagItem *)_tags); })
 #else
+#ifdef __AROS__
+APTR STDARGS VARARGS68K DitherImage(CONST_APTR data, Tag tag1, ...);
+#else
 APTR STDARGS VARARGS68K DitherImage(CONST_APTR data, ...);
+#endif
 #endif
 void FreeDitheredImage(APTR image, APTR mask);
 

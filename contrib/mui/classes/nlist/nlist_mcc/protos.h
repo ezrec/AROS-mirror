@@ -173,7 +173,13 @@ extern IPTR mNL_DropEntryDrawErase(struct IClass *cl,Object *obj,struct MUIP_NLi
 
 /* NList_func3.c */
 extern IPTR MyCallHookPkt(Object *obj,BOOL hdata,struct Hook *hook,APTR object,APTR message);
+#ifdef __AROS__
+#define MyCallHookPktA(obj, hook, ...) \
+ ({ IPTR __args[] = { AROS_PP_VARIADIC_CAST2IPTR(__VA_ARGS__) }; \
+    CallHookPkt(hook, obj, __args); })
+#else
 extern IPTR STDARGS VARARGS68K MyCallHookPktA(Object *obj, struct Hook *hook, ...);
+#endif
 extern LONG DeadKeyConvert(struct NLData *data,struct IntuiMessage *msg,STRPTR buf,LONG bufsize,struct KeyMap *kmap);
 extern char *ltoa(ULONG val, char *buffer, int len);
 

@@ -171,30 +171,29 @@ struct TreeImage_Data
 };
 
 #if !defined(__MORPHOS__)
-#if defined(__AROS__)
-static IPTR VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
+#ifdef __AROS__
+static Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, Tag tag1, ...)
 {
-  IPTR rc;
+    AROS_SLOWSTACKTAGS_PRE_AS(tag1, Object *)
+    retval = (Object *)DoSuperMethod(cl, obj, OM_NEW, AROS_SLOWSTACKTAGS_ARG(tag1), NULL);
+    AROS_SLOWSTACKTAGS_POST
+}
 #else
 static Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 {
   Object *rc;
-#endif
   VA_LIST args;
 
   ENTER();
 
   VA_START(args, obj);
-  #if defined(__AROS__)
-  rc = (IPTR)DoSuperNewTagList(cl, obj, NULL, (struct TagItem *)VA_ARG(args, IPTR));
-  #else
   rc = (Object *)DoSuperMethod(cl, obj, OM_NEW, VA_ARG(args, ULONG), NULL);
-  #endif
   VA_END(args);
 
   RETURN(rc);
   return rc;
 }
+#endif // __AROS__
 #endif // !__MORPHOS__
 
 /*****************************************************************************\
@@ -779,6 +778,11 @@ INLINE ULONG MyCallHookA(struct Hook *hook, struct NListtree_Data *data, struct 
 }
 #endif
 
+#ifdef __AROS__
+#define MyCallHook(hook, data, ...) \
+ ({ IPTR __args[] = { AROS_PP_VARIADIC_CAST2IPTR(__VA_ARGS__) }; \
+    CallHookPkt(hook, data->Obj, __args); })
+#else
 static IPTR STDARGS VARARGS68K MyCallHook(struct Hook *hook, struct NListtree_Data *data, ...)
 {
   IPTR ret;
@@ -790,6 +794,7 @@ static IPTR STDARGS VARARGS68K MyCallHook(struct Hook *hook, struct NListtree_Da
 
   return ret;
 }
+#endif
 
 /*
 **  Release a pen.
