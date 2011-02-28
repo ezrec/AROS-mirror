@@ -11,11 +11,13 @@
 
 #include <mui/BetterString_mcc.h>
 #include <libraries/asl.h>
+#include <proto/dos.h>
 #include <proto/utility.h>
+#include <proto/intuition.h>
+#include <proto/muimaster.h>
 
 #define list_format_single "P=\033l"
 #define list_format_multi  "P=\033r BAR,"
-
 
 // HOOK: WindowHook
 AROS_UFH3(void, WindowFunc,
@@ -163,7 +165,7 @@ IPTR Popph__MUIM_OpenAsl(struct IClass *cl, Object *obj, struct opSet *msg)
     Object *app = (Object *)XGET( obj, MUIA_ApplicationObject );
     struct Window *win;
     APTR   req = data->asl_req;
-    ULONG  res=0;
+    IPTR   res=0;
 
     char buf[ POPPH_MAX_STRING_LEN * 2 ];
     char *path;
@@ -191,7 +193,7 @@ IPTR Popph__MUIM_OpenAsl(struct IClass *cl, Object *obj, struct opSet *msg)
 		{
 		    struct FileRequester *freq = req;
 		    {
-			res = (ULONG)buf;
+			res = (IPTR)buf;
 			stccpy(buf , freq->fr_Drawer, sizeof( buf ));
 			AddPart(buf, freq->fr_File  , sizeof( buf ));
 
@@ -208,7 +210,7 @@ IPTR Popph__MUIM_OpenAsl(struct IClass *cl, Object *obj, struct opSet *msg)
 }
 
 // OM_NEW
-Object * Popph__OM_NEW(struct IClass *cl, Object *obj, Msg msg)
+IPTR Popph__OM_NEW(struct IClass *cl, Object *obj, Msg msg)
 {
     struct Popplaceholder_Data *data;
 
@@ -216,9 +218,9 @@ Object * Popph__OM_NEW(struct IClass *cl, Object *obj, Msg msg)
     Object *lv, *list;
     int    strmaxlen;
 
-    ULONG  tag_contents = MUIA_String_Contents;
-    ULONG  tag_bufpos   = MUIA_String_BufferPos;
-    ULONG  tag_maxlen   = MUIA_String_MaxLen;
+//    ULONG  tag_contents = MUIA_String_Contents;
+//    ULONG  tag_bufpos   = MUIA_String_BufferPos;
+//    ULONG  tag_maxlen   = MUIA_String_MaxLen;
     ULONG  tag_attached = MUIA_String_AttachedList;
 
     struct MUI_CustomClass *CL_String = NULL;
@@ -241,7 +243,7 @@ Object * Popph__OM_NEW(struct IClass *cl, Object *obj, Msg msg)
 
     if(((struct opSet *)msg)->ops_AttrList)
     {
-	string    = (Object *)GetTagData( MUIA_Popph_StringObject, NULL, ((struct opSet *)msg)->ops_AttrList );
+	string    = (Object *)GetTagData( MUIA_Popph_StringObject, (IPTR)NULL, ((struct opSet *)msg)->ops_AttrList );
 	avoid     = GetTagData( MUIA_Popph_Avoid , 0    , ((struct opSet *)msg)->ops_AttrList );
 	use_asl   = GetTagData( MUIA_Popph_PopAsl, FALSE, ((struct opSet *)msg)->ops_AttrList );
 
@@ -307,7 +309,7 @@ Object * Popph__OM_NEW(struct IClass *cl, Object *obj, Msg msg)
 	else
 	{
 	    D(bug(__NAME ": No string object class available!?\n"));
-	    return NULL;
+	    return (IPTR)NULL;
 	}
     }
 
@@ -317,7 +319,7 @@ Object * Popph__OM_NEW(struct IClass *cl, Object *obj, Msg msg)
 	if( !(CL_String = MUI_CreateCustomClass(NULL, string_class, NULL, sizeof(struct PPHS_Data), PPHS_Dispatcher)) )
 	{
 	    D(bug(__NAME ": Can't create '%s' custom class\n", string_class ));
-	    return NULL;
+	    return (IPTR)NULL;
 	}
 
 	D(bug(__NAME ": CustomClass created: %lx (%s)\n", CL_String, string_class));
@@ -367,7 +369,7 @@ Object * Popph__OM_NEW(struct IClass *cl, Object *obj, Msg msg)
 	D(bug(__NAME ": CustomStringObject created: %lx\n", string ));
     }
 
-    obj = (Object *)DoSuperNewTags(cl, obj,
+    obj = (Object *)DoSuperNewTags(cl, obj, NULL,
 	MUIA_Group_Horiz, TRUE,
 	Child, group = HGroup,
 	    MUIA_Group_Spacing, 0,
@@ -383,8 +385,8 @@ Object * Popph__OM_NEW(struct IClass *cl, Object *obj, Msg msg)
 			TAG_MORE, ((struct opSet *)msg)->ops_AttrList,
 		    End,
 		    TAG_MORE, ((struct opSet *)msg)->ops_AttrList,
-		End,
-	    End,
+		End, 
+	    End, 
 	End,
     TAG_DONE);
 
@@ -460,7 +462,7 @@ Object * Popph__OM_NEW(struct IClass *cl, Object *obj, Msg msg)
 	msg->MethodID = OM_NEW;
     }
 
-    return obj;
+    return (IPTR)obj;
 
 cleanup:
 
@@ -477,7 +479,7 @@ cleanup:
     if( popaslbutton )
 	MUI_DisposeObject( popaslbutton );
 
-    return NULL;
+    return (IPTR)NULL;
 }
 
 // OM_DISPOSE
@@ -499,7 +501,7 @@ IPTR Popph__OM_DISPOSE(struct IClass *cl, Object *obj, struct opSet *msg)
 
     cl_string = data->CL_String;
 
-    DoSuperMethodA(cl, obj, msg);
+    DoSuperMethodA(cl, obj, (Msg)msg);
 
     D(bug(__NAME ": cl_string: %lx\n", cl_string ));
     if( cl_string )
@@ -513,7 +515,8 @@ IPTR Popph__OM_DISPOSE(struct IClass *cl, Object *obj, struct opSet *msg)
 IPTR Popph__OM_SET(struct IClass *cl, Object *obj, Msg msg)
 {
     struct Popplaceholder_Data *data = INST_DATA(cl,obj);
-    struct TagItem *tags,*tag;
+    const struct TagItem *tags;
+    struct TagItem *tag;
 
     for( ( tags=((struct opSet *)msg)->ops_AttrList ) ; ( tag=NextTagItem(&tags) ) ; )
     {
@@ -751,7 +754,7 @@ IPTR Popph__OM_SET(struct IClass *cl, Object *obj, Msg msg)
 IPTR Popph__OM_GET(struct IClass *cl, Object *obj, Msg msg)
 {
     struct Popplaceholder_Data *data = INST_DATA(cl,obj);
-    ULONG  *store = ((struct opGet *)msg)->opg_Storage;
+    IPTR   *store = ((struct opGet *)msg)->opg_Storage;
 
     //    D(bug(__NAME ": GET\n"));
 
@@ -911,11 +914,11 @@ IPTR Popph__OM_GET(struct IClass *cl, Object *obj, Msg msg)
 	    return TRUE;
 
 	case MUIA_Popph_StringObject:
-	    *store = (ULONG)data->str;
+	    *store = (IPTR)data->str;
 	    return TRUE;
 
 	case MUIA_Popph_ListObject:
-	    *store = (ULONG)data->lv;
+	    *store = (IPTR)data->lv;
 	    return TRUE;
 
 	case MUIA_Popph_PopCycleChain:

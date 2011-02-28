@@ -4,6 +4,7 @@
 ** © 1999-2000 Marcin Orlowski <carlos@amiga.com.pl>
 */
 
+#include <stdlib.h>	/* abs() */
 #include <aros/debug.h>
 
 #include "Popplaceholder_mcc.h"
@@ -12,6 +13,8 @@
 #include <mui/BetterString_mcc.h>
 
 #include <proto/utility.h>
+#include <proto/intuition.h>
+#include <proto/muimaster.h>
 
 // _DoCopy
 int _DoCopy( Object *obj, struct PPHS_Data *data  )
@@ -115,7 +118,7 @@ IPTR PPHS__MUIM_DoCut( struct IClass *cl, Object *obj, struct opSet *msg )
 }
 
 // OM_NEW
-Object * PPHS__OM_NEW(struct IClass *cl, Object *obj, struct opSet *msg)
+IPTR PPHS__OM_NEW(struct IClass *cl, Object *obj, struct opSet *msg)
 {
     struct PPHS_Data *data;
 
@@ -147,7 +150,7 @@ Object * PPHS__OM_NEW(struct IClass *cl, Object *obj, struct opSet *msg)
 #endif
     }
 
-    obj = (Object *)DoSuperNewTags(cl,obj,
+    obj = (Object *)DoSuperNewTags(cl,obj,NULL,
 #ifdef HAVE_TEXTINPUT_MCC
 	    MUIA_Textinput_DefaultPopup, FALSE,
 #endif
@@ -180,7 +183,7 @@ Object * PPHS__OM_NEW(struct IClass *cl, Object *obj, struct opSet *msg)
 	DoMethodA(obj, (Msg)msg);
 	msg->MethodID = OM_NEW;
     }
-    return obj;
+    return (IPTR)obj;
 }
 
 // OM_DISPOSE
@@ -193,14 +196,15 @@ IPTR PPHS__OM_DISPOSE(struct IClass *cl, Object *obj, struct opSet *msg)
     if( data->contextmenu )
 	MUI_DisposeObject( data->contextmenu );
 
-    return DoSuperMethodA(cl, obj, msg);
+    return DoSuperMethodA(cl, obj, (Msg)msg);
 }
 
 // OM_SET
 IPTR PPHS__OM_SET(struct IClass *cl, Object *obj, Msg msg)
 {
     struct PPHS_Data *data = INST_DATA(cl,obj);
-    struct TagItem *tags, *tag;
+    const struct TagItem *tags;
+    struct TagItem *tag;
 
     for( (tags=((struct opSet *)msg)->ops_AttrList); (tag=NextTagItem(&tags)); )
     {
@@ -246,7 +250,7 @@ IPTR PPHS__OM_SET(struct IClass *cl, Object *obj, Msg msg)
 IPTR PPHS__OM_GET(struct IClass *cl, Object *obj, Msg msg)
 {
     struct PPHS_Data *data = INST_DATA(cl,obj);
-    ULONG  *store = ((struct opGet *)msg)->opg_Storage;
+    IPTR *store = ((struct opGet *)msg)->opg_Storage;
 
     //    D(bug( __NAME ": OM_GET\n"));
 

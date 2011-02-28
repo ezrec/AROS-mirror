@@ -17,7 +17,7 @@ int _WriteClip( char *data, int len, int clip_device )
     {
 	if( ( cliphandle = OpenClipboard( clip_device ) ) )
 	{
-	    iffh->iff_Stream = (ULONG)cliphandle;
+	    iffh->iff_Stream = (IPTR)cliphandle;
 	    InitIFFasClip( iffh );
 
 	    if( !OpenIFF( iffh, IFFF_WRITE ) )

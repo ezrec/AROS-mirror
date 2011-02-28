@@ -18,6 +18,7 @@
 #include <libraries/asl.h>
 #include <proto/exec.h>
 #include <proto/muimaster.h>
+#include <proto/intuition.h>
 
 #include <mui/Popplaceholder_mcc.h>
 
@@ -81,7 +82,7 @@ APTR app, window, pph;
 
    if( !(MUIMasterBase = OpenLibrary(MUIMASTER_NAME, 19)) )
 	   {
-	   printf("Can't open %s v%ld\n", MUIMASTER_NAME, 19);
+	   printf("Can't open %s v%ld\n", MUIMASTER_NAME, (long)19);
 	   CleanUp();
 	   return(EXIT_FAILURE);
 	   }
