@@ -4,9 +4,10 @@
 /* Includeheader
 
         Name:           SDI_compiler.h
-        Versionstring:  $VER: SDI_compiler.h 1.13 (23.05.2004)
-        Author:         SDI
+        Versionstring:  $VER: SDI_compiler.h 1.35 (03.03.2011)
+        Author:         Dirk Stoecker & Jens Langner
         Distribution:   PD
+        Project page:   http://www.sf.net/projects/sditools/
         Description:    defines to hide compiler stuff
 
  1.1   25.06.98 : created from data made by Gunter Nikl
@@ -14,19 +15,52 @@
  1.3   29.02.00 : fixed VBCC REG define
  1.4   30.03.00 : fixed SAVEDS for VBCC
  1.5   29.07.00 : added #undef statements (needed e.g. for AmiTCP together
-        with vbcc)
+                  with vbcc)
  1.6   19.05.01 : added STACKEXT and Dice stuff
- 1.7   16.06.02 : added MorphOS specials and VARARGS68K
+ 1.7   16.06.01 : added MorphOS specials and VARARGS68K
  1.8   21.09.02 : added MorphOS register stuff
  1.9   26.09.02 : added OFFSET macro. Thanks Frank Wille for suggestion
  1.10  18.10.02 : reverted to old MorphOS-method for GCC
  1.11  09.11.02 : added REGARGS define to MorphOS section
- 1.12  21.01.04 : added SDI_MORPHOSNOREG define to change behaviour
- 1.13  23.05.04 : added machine definitions
-*/
+ 1.12  18.01.04 : some adaptions for AmigaOS4 compatibility
+ 1.13  17.02.04 : changed ASM macros to be a simple define and added
+                  INTERRUPT, CHIP and FAR
+ 1.14  02.03.04 : added UNUSED which can be used to specify a function parameter
+                  or variable as "unused" which will not cause any compiler warning.
+ 1.15  02.03.04 : added special INLINE define for gcc > 3.0 version
+ 1.17  07.03.04 : changed INLINE definition of gcc <= 2.95.3 to be static aswell.
+ 1.18  21.06.04 : added USED and USED_VAR attribute to allow placing a
+                  __attribute__((used)) to a function and a variable, taking care of
+                  different compiler versions.
+ 1.19  04.07.04 : register specification for variables is not supported on MorphOS,
+                  so we modified the REG() macro accordingly.
+ 1.20  28.02.05 : correct INLINE for VBCC.
+ 1.21  28.02.05 : cleanup __GCC__ case.
+ 1.22  16.05.05 : changed the vbcc/REG() macro.
+                  added missing vbcc/VARARGS68K define.
+                  moved morphos SDI_EmulLib Stuff into compilers.h. I know it's not
+                  compiler specific,  (Guido Mersmann)
+ 1.23  30.04.06 : modified to get it compatible to AROS. (Guido Mersmann)
+ 1.24  06.05.06 : __linearvarargs is only valid for vbcc and PPC, so I moved VARARGS68K
+                  to prevent problems with 68K and i86 targets. (Guido Mersmann)
+ 1.25  21.06.07 : added NEAR to be usable for __near specification for SAS/C
+ 1.26  14.10.07 : added DEPRECATED macro which defaults to __attribute__((deprecated))
+                  for GCC compiles.
+ 1.27  20.03.09 : applied some changes and fixes to get the header more usable
+                  for an AROS compilation. (Pavel Fedin)
+ 1.28  25.03.09 : added missing IPTR definition to make SDI_compiler.h more compatible
+                  to AROS. (Pavel Fedin)
+ 1.29  25.03.09 : fixed the IPTR definition and also the use of the __M68000__ define.
+ 1.30  26.03.09 : fixed the IPTR definition by only defining it for non AROS targets.
+ 1.31  29.03.09 : added VARARGS68K definition for AROS.
+ 1.32  28.05.09 : added STACKED definition for non-AROS targets.
+ 1.33  03.06.10 : added missing SIPTR definition to make SDI_compiler.h more compatible
+                  to AROS.
+ 1.34  26.07.10 : adapted IPTR and SIPTR definitions as the latest MorphOS SDK already
+                  contains them. (tboeckel)
+ 1.35  03.03.11 : fixed AROS macros for m68k (Jason McMullan)
 
-/* Define SDI_MORPHOSNOREG in your makefile to switch register based functions
-   to normal C-Style functions as it is default for PPC. */
+*/
 
 /*
 ** This is PD (Public Domain). This means you can do with it whatever you want
@@ -37,36 +71,32 @@
 ** above history list and indicate that the change was not made by myself
 ** (e.g. add your name or nick name).
 **
-** Dirk Stöcker <soft@dstoecker.de>
+** Find the latest version of this file at:
+** http://cvs.sourceforge.net/viewcvs.py/sditools/sditools/headers/
+**
+** Jens Langner <Jens.Langner@light-speed.de> and
+** Dirk Stoecker <soft@dstoecker.de>
 */
 
-#ifdef ASM
+/* Some SDI internal header */
+
 #undef ASM
-#endif
-#ifdef REG
 #undef REG
-#endif
-#ifdef LREG
 #undef LREG
-#endif
-#ifdef CONST
 #undef CONST
-#endif
-#ifdef SAVEDS
 #undef SAVEDS
-#endif
-#ifdef INLINE
 #undef INLINE
-#endif
-#ifdef REGARGS
 #undef REGARGS
-#endif
-#ifdef STDARGS
 #undef STDARGS
-#endif
-#ifdef OFFSET
 #undef OFFSET
-#endif
+#undef INTERRUPT
+#undef CHIP
+#undef FAR
+#undef NEAR
+#undef UNUSED
+#undef USED
+#undef USED_VAR
+#undef DEPRECATED
 
 /* first "exceptions" */
 
@@ -76,64 +106,59 @@
   #define REGARGS
   #define SAVEDS
   #define INLINE inline
+/*************************************************************************/
 #elif defined(__VBCC__)
   #define STDARGS
   #define STACKEXT
   #define REGARGS
-  #define INLINE
+  #define INLINE static
   #define OFFSET(p,m) __offsetof(struct p,m)
-  #if defined(__MORPHOS__)
-    #define REG(reg,arg) __reg(MOS__##reg) arg
 
-    /* NOTE: This assumes "quick native mode" when compiling libraries. */
-    #define MOS__a0 "r24"
-    #define MOS__a1 "r25"
-    #define MOS__a2 "r26"
-    #define MOS__a3 "r27"
-    #define MOS__a4 "r28"
-    #define MOS__a5 "r29"
-    #define MOS__a6 "r30"
-    /* #define MOS__a7 "r31" */
-    #define MOS__d0 "r16"
-    #define MOS__d1 "r17"
-    #define MOS__d2 "r18"
-    #define MOS__d3 "r19"
-    #define MOS__d4 "r20"
-    #define MOS__d5 "r21"
-    #define MOS__d6 "r22"
-    #define MOS__d7 "r23"
-
+  #if defined(__PPC__)
+    #define VARARGS68K __linearvarargs
+    #define REG(reg,arg) arg
   #else
     #define REG(reg,arg) __reg(#reg) arg
   #endif
+/*************************************************************************/
 #elif defined(__STORM__)
   #define STDARGS
   #define STACKEXT
   #define REGARGS
   #define INLINE inline
+/*************************************************************************/
 #elif defined(__SASC)
-  #define ASM(arg) arg __asm
+  #define ASM __asm
+/*************************************************************************/
 #elif defined(__GNUC__)
-
-  #if defined(__amigaos4__)
-  #define REG(reg,arg) arg
-  #define ASM(arg) arg
+  #define UNUSED __attribute__((unused)) /* for functions, variables and types */
+  #define USED   __attribute__((used))   /* for functions only! */
+  #define DEPRECATED __attribute__((deprecated))
+  #if __GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ > 0)
+    #define USED_VAR USED /* for variables only! */
+    #define INLINE static __inline __attribute__((always_inline))
+  #endif
+  /* we have to distinguish between AmigaOS4 and MorphOS */
+  #if (defined(_M68000) || defined(__M68000) || defined(__mc68000)) && !defined(__AROS__)
+    #define REG(reg,arg) arg __asm(#reg)
+    #define LREG(reg,arg) register REG(reg,arg)
   #else
-  #define REG(reg,arg) arg __asm(#reg)
-  #define LREG(reg,arg) register REG(reg,arg)
-  #endif
-
-  /* Don`t use __stackext for the MorphOS version
-     because we anyway don`t have a libnix ppc with stackext
-     Also we define a VARARGS68K define here to specify
-     functions that should work with that special attribute
-     of the MOS gcc compiler for varargs68k handling. */
-  #if defined(__MORPHOS__)
+    #define REG(reg,arg) arg
+    #define SAVEDS
     #define STDARGS
-    #define STACKEXT
     #define REGARGS
-    #define VARARGS68K  __attribute__((varargs68k))
+    #define STACKEXT
+    #if defined(__MORPHOS__)
+      #define VARARGS68K __attribute__((varargs68k))
+    #endif
+    #if defined(__AROS__)
+      #define VARARGS68K __stackparm
+    #endif
+    #define INTERRUPT
+    #define CHIP
   #endif
+  #define FAR
+  #define NEAR
 #elif defined(_DCC)
   #define REG(reg,arg) __##reg arg
   #define STACKEXT __stkcheck
@@ -142,15 +167,9 @@
 #endif
 
 /* then "common" ones */
-#if defined(__MORPHOS__) && defined(SDI_MORPHOSNOREG)
-  #ifdef REG
-  #undef REG
-  #endif
-  #define REG(reg,arg) arg
-#endif
 
 #if !defined(ASM)
-  #define ASM(arg) arg
+  #define ASM
 #endif
 #if !defined(REG)
   #define REG(reg,arg) register __##reg arg
@@ -183,25 +202,40 @@
   #define OFFSET(structName, structEntry) \
     ((char *)(&(((struct structName *)0)->structEntry))-(char *)0)
 #endif
-
-#if defined(__GNUC__) || defined(__VBCC__)
-  #if !defined(__mc68060) && !defined(__M68060)
-    #if !defined(__mc68040) && !defined(__M68040)
-      #if !defined(__mc68030) && !defined(__mc68020) \
-      && !defined(__M68030) && !defined(__M68020)
-         #define _M68000
-      #else
-        #define _M68020
-      #endif
-    #else
-      #define _M68040
-    #endif
-  #else
-    #define _M68060
-  #endif
-  #if defined(__HAVE_68881__) || defined(__M68881) || defined(__M68882)
-    #define _M68881
-  #endif
+#if !defined(INTERRUPT)
+  #define INTERRUPT __interrupt
 #endif
+#if !defined(CHIP)
+  #define CHIP __chip
+#endif
+#if !defined(FAR)
+  #define FAR __far
+#endif
+#if !defined(NEAR)
+  #define NEAR __near
+#endif
+#if !defined(UNUSED)
+  #define UNUSED
+#endif
+#if !defined(USED)
+  #define USED
+#endif
+#if !defined(USED_VAR)
+  #define USED_VAR
+#endif
+#if !defined(DEPRECATED)
+  #define DEPRECATED
+#endif
+#if !defined(__AROS__) && !defined(__MORPHOS__) && !defined(IPTR)
+  #define IPTR ULONG
+#endif
+#if !defined(__AROS__) && !defined(__MORPHOS__) && !defined(SIPTR)
+  #define SIPTR LONG
+#endif
+#if !defined(__AROS__) && !defined(STACKED)
+  #define STACKED
+#endif
+
+/*************************************************************************/
 
 #endif /* SDI_COMPILER_H */
