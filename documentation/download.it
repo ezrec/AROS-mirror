@@ -28,21 +28,7 @@ guide e alcuni PDF sono stati inclusi. Questa versione viene rilasciata con
 anche una macchina virtuale basata su Qemu che può permettere agli utenti windows 
 di provare la distrubuzione in un ambiente più sicuro (anche se più lento).
 
-Icaros Desktop VE
------------------
-
-.. image:: /images/icarosve_logo.png
-   :align: left
-
-`Icaros Desktop VE (Virtual Environment)`__ è un ambiente desktop completo
-che può essere eseguito nelle macchine virtuali `VirtualBox`__ . Finalizzato per gli
-utenti finali e agli sviluppatori, Icaros Desktop VE permette il testing e 
-l'uso di Aros senza doverlo installare veramente sull'hard disk.
-Può essere un sustema affidabile per avere a disposizione questo sistema operativo
-per persone con un computer potente, ma attualmente non supportato da AROS
-
 __ http://live.icarosdesktop.org/
-__ http://ve.icarosdesktop.org/
 __ http://virtualbox.org/
 
 Snapshots

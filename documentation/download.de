@@ -31,22 +31,7 @@ kommt auch mit einer Qemu-basierten virtuellen Maschine, die es
 Windows-Anwendern ermöglicht, die Distribution in einer sichereren (aber
 langsameren) Umgebung zu testen.
 
-Icaros Desktop VE
------------------
-
-.. image:: /images/icarosve_logo.png
-   :align: left
-
-`Icaros Desktop VE (Virtual Environment)`__ ist eine vollständige AROS-
-Umgebung, die unter der virtuellen Maschine `VirtualBox`__ läuft. An Anwendern
-und Entwicklern gerichtet, ermöglicht Icaros Desktop VE das Testen und
-Benutzen des AROS-Betriebssystems, ohne es wirklich auf eine Festplatte
-zu installieren. Es ist ein sicherer Weg, um AROS auf Hardware zu testen,
-die zwar leistungsstark ist, aber noch nicht direkt von AROS unterstützt
-wird.
-
 __ http://live.icarosdesktop.org/
-__ http://ve.icarosdesktop.org/
 __ http://virtualbox.org/
 
 

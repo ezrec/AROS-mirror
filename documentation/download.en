@@ -20,30 +20,15 @@ Icaros Desktop LIVE!
 .. image:: /images/icaroslive_logo.png
    :align: left
 
-`Icaros Desktop LIVE!`__ is a complete distribution of the AROS desktop
-operating system. It comes on a bootable live DVD-ROM that runs directly
-on your PC (its hardware components must already be supported by AROS).
-It can be installed on the hard drive and can coexist with installed OS
-such as Microsoft Windows XP, in a dedicated partition. A quick reference 
-guide and some AROS PDF manuals are included. This version also comes 
-with a Qemu-based virtual machine that allows Windows users to test the 
-distribution in a safer (but slower) environment.
-
-Icaros Desktop VE
------------------
-
-.. image:: /images/icarosve_logo.png
-   :align: left
-
-`Icaros Desktop VE (Virtual Environment)`__ is a complete AROS desktop
-environment running on `VirtualBox`__ virtual machines. Targeted at final users
-and at developers, Icaros Desktop VE allows testing and using the AROS
-Research Operating System without really installing it on the hard
-drive. It can be a reliable way to access this interesting OS for people
-with powerful, but not yet natively-supported, hardware.
+`Icaros Desktop LIVE!`__ is a complete distribution of the AROS desktop 
+operating system. It comes on a bootable live DVD-ROM or CD-ROM that 
+runs directly on your PC (its hardware components must already be 
+supported by AROS) or in a virtual machine such as VMWare or `VirtualBox`__. 
+It can be installed on the hard drive and can coexist with installed 
+OSes such as Microsoft Windows, in a dedicated partition. A quick 
+reference guide and some AROS PDF manuals are included.
 
 __ http://live.icarosdesktop.org/
-__ http://ve.icarosdesktop.org/
 __ http://virtualbox.org/
 
 Snapshots
