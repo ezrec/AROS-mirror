@@ -77,7 +77,8 @@ void Close%bCatalog(struct Catalog *catalog)
 /// Open%bCatalog(struct Locale *loc, STRPTR language)
 struct Catalog * Open%bCatalog(struct Locale *loc, STRPTR language)
 {
-    LONG tag, tagarg;
+    Tag tag;
+    IPTR tagarg;
 
     if (LocaleBase != NULL)
     {
@@ -89,7 +90,7 @@ struct Catalog * Open%bCatalog(struct Locale *loc, STRPTR language)
         else
         {
             tag = OC_Language;
-            tagarg = (LONG) language;
+            tagarg = (IPTR) language;
         }
         return OpenCatalog(loc, (STRPTR) "%b.catalog",
                                 OC_BuiltInLanguage, %b_BuiltInLanguage,
