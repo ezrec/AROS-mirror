@@ -1,0 +1,11 @@
+--- lunapaint-0.5/src/app/export_import.c	2011-01-31 15:19:34.000000000 -0500
++++ lunapaint-0.5-aros/src/app/export_import.c	2011-03-06 16:15:00.000000000 -0500
+@@ -671,7 +671,7 @@
+ 
+ static void png_user_write( png_structp png_ptr, png_bytep data, png_size_t length )
+ {
+-    Write ( png_ptr->io_ptr, data, length );
++    Write ( png_get_io_ptr(png_ptr), data, length );
+ }
+ static void png_user_flush( png_structp png_ptr )
+ {

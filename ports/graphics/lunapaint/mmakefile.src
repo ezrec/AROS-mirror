@@ -54,6 +54,7 @@ FILES := \
 
 
 %fetch mmake=ports-graphics-lunapaint-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/lunapaint \
+    patches_specs=lunapaint-0.5.patch:lunapaint-0.5:-p1 \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.bz2"
 
 
