@@ -227,7 +227,7 @@ static void png_pov_err(png_structp png_ptr, png_const_charp msg)
   if (png_get_error_ptr(png_ptr))
     Error_Line("libpng: %s\n",msg);
 
-  longjmp(png_ptr->jmpbuf,1);
+  png_longjmp(png_ptr,1);
 }
 
 
@@ -262,6 +262,7 @@ static void png_pov_err(png_structp png_ptr, png_const_charp msg)
 
 static int Open_Png_File(FILE_HANDLE *handle, char *name, int *width, int *height, int buffer_size, int mode)
 {
+  int color_type;
   handle->mode = mode;
   handle->filename = name;
   
@@ -356,7 +357,7 @@ static int Open_Png_File(FILE_HANDLE *handle, char *name, int *width, int *heigh
         Error("Error allocating PNG data structures");
       }
 
-      if (setjmp(o_png_ptr->jmpbuf))
+      if (setjmp(*png_set_longjmp_fn(o_png_ptr, longjmp, sizeof (jmp_buf))))
       {
         /* If we get here, we had a problem reading the file */
         Status_Info("\n");
@@ -383,7 +384,7 @@ static int Open_Png_File(FILE_HANDLE *handle, char *name, int *width, int *heigh
       /* Read in header info from the file */
       png_read_info(o_png_ptr, info_ptr);
 
-      if (info_ptr->color_type & ~(PNG_COLOR_MASK_COLOR | PNG_COLOR_MASK_ALPHA))
+      if (png_get_color_type(o_png_ptr, info_ptr) & ~(PNG_COLOR_MASK_COLOR | PNG_COLOR_MASK_ALPHA))
       {
         return(0);
       }
@@ -397,7 +398,7 @@ static int Open_Png_File(FILE_HANDLE *handle, char *name, int *width, int *heigh
         Error("Error allocating PNG data structures");
       }
 
-      if (setjmp(png_ptr->jmpbuf))
+      if (setjmp(*png_set_longjmp_fn(png_ptr, longjmp, sizeof (jmp_buf))))
       {
         /* If we get here, we had a problem writing the file */
         Status_Info("\n");
@@ -428,53 +429,55 @@ static int Open_Png_File(FILE_HANDLE *handle, char *name, int *width, int *heigh
       png_init_io(png_ptr, handle->file);
 
       /* Fill in the relevant image information from the resumed file */
-      *width = handle->width = info_ptr->width;
-      *height = handle->height = info_ptr->height;
+      *width = handle->width = png_get_image_width(png_ptr, info_ptr);
+      *height = handle->height = png_get_image_height(png_ptr, info_ptr);
 
       /* Find out if file is a valid format, and if it had Alpha in it */
-      if (info_ptr->color_type & PNG_COLOR_MASK_ALPHA)
+      if (png_get_color_type(png_ptr, info_ptr) & PNG_COLOR_MASK_ALPHA)
       {
         opts.Options |= OUTPUT_ALPHA;
       }
 
-      if ((info_ptr->color_type & PNG_COLOR_MASK_COLOR) == PNG_COLOR_TYPE_GRAY)
+      if ((png_get_color_type(png_ptr, info_ptr) & PNG_COLOR_MASK_COLOR) == PNG_COLOR_TYPE_GRAY)
       {
         opts.Options |= HF_GRAY_16;
         opts.PaletteOption = GREY;       /* Force grayscale preview */
       }
 
 #if defined(PNG_READ_sBIT_SUPPORTED)
-      if (info_ptr->valid & PNG_INFO_sBIT)
+      if (png_get_valid(png_ptr, info_ptr, PNG_INFO_sBIT))
       {
-        if (info_ptr->color_type & PNG_COLOR_MASK_COLOR)
+        png_color_8 *color;
+        png_get_sBIT(png_ptr, info_ptr, &color);
+        if (png_get_color_type(png_ptr, info_ptr) & PNG_COLOR_MASK_COLOR)
         {
-          opts.OutputQuality = info_ptr->sig_bit.red;
+          opts.OutputQuality = color->red;
         }
         else
         {
-          opts.OutputQuality = info_ptr->sig_bit.gray;
+          opts.OutputQuality = color->gray;
         }
       }
 
 #else /* !PNG_READ_sBIT_SUPPORTED */
-      if (info_ptr->bit_depth == 8 && opts.OutputQuality > 8 ||
-          info_ptr->bit_depth == 16 && opts.OutputQuality <= 8)
+      if (png_get_bit_depth(png_ptr, info_ptr) == 8 && opts.OutputQuality > 8 ||
+          png_get_bit_depth(png_ptr, info_ptr) == 16 && opts.OutputQuality <= 8)
       {
         Error("\nSpecified color depth +fn%d not the same as depth %d in %s\n",
-              opts.OutputQuality, info_ptr->bit_depth, name);
+              opts.OutputQuality, png_get_bit_depth(png_ptr, info_ptr), name);
       }
 #endif /* !PNG_READ_sBIT_SUPPORTED */
 
 #if defined(PNG_READ_oFFs_SUPPORTED)
-      opts.First_Column = info_ptr->x_offset;
-      opts.First_Line   = info_ptr->y_offset;
+      opts.First_Column = png_get_x_offset_pixels(png_ptr, info_ptr);
+      opts.First_Line   = png_get_y_offset_pixels(png_ptr, info_ptr);
 #endif /* PNG_READ_oFFs_SUPPORTED */
 
       png_write_info(png_ptr, info_ptr);
 
-      png_stride = info_ptr->color_type & PNG_COLOR_MASK_COLOR ? 3 : 1;
+      png_stride = png_get_color_type(png_ptr, info_ptr) & PNG_COLOR_MASK_COLOR ? 3 : 1;
 
-      if (info_ptr->color_type & PNG_COLOR_MASK_ALPHA)
+      if (png_get_color_type(png_ptr, info_ptr) & PNG_COLOR_MASK_ALPHA)
         png_stride++;
 
       png_stride *= (opts.OutputQuality + 7) / 8;
@@ -509,7 +512,7 @@ static int Open_Png_File(FILE_HANDLE *handle, char *name, int *width, int *heigh
         Error("Error allocating PNG data structures");
       }
 
-      if (setjmp(png_ptr->jmpbuf))
+      if (setjmp(*png_set_longjmp_fn(png_ptr, longjmp, sizeof (jmp_buf))))
       {
         /* If we get here, we had a problem writing the file */
         if (handle->buffer != NULL)
@@ -530,69 +533,64 @@ static int Open_Png_File(FILE_HANDLE *handle, char *name, int *width, int *heigh
 
       png_init_io(png_ptr, handle->file);
 
+      handle->width = *width;
+      handle->height = *height;
+
+      color_type = 
+      	      ((opts.Options & HF_GRAY_16)
+      	      		? PNG_COLOR_TYPE_GRAY
+      	      		: PNG_COLOR_TYPE_RGB) |
+      	      ((opts.Options & OUTPUT_ALPHA)
+      	       		? PNG_COLOR_MASK_ALPHA
+      	       		: 0);
+
       /* Fill in the relevant image information */
+      png_set_IHDR(png_ptr, info_ptr, handle->width, handle->height,
+      	      8 * ((opts.OutputQuality + 7) / 8), 	/* Bit depth */
+      	      color_type,
+      	      PNG_INTERLACE_NONE,
+      	      PNG_COMPRESSION_TYPE_DEFAULT,
+      	      PNG_FILTER_TYPE_DEFAULT);
 
-      info_ptr->width = handle->width = *width;
-      info_ptr->height = handle->height = *height;
-
-      info_ptr->bit_depth = 8 * ((opts.OutputQuality + 7) / 8);
-
-      if (opts.Options & HF_GRAY_16)
-      {
-        info_ptr->color_type = PNG_COLOR_TYPE_GRAY;
-      }
-      else
-      {
-        info_ptr->color_type = PNG_COLOR_TYPE_RGB;
-      }
-
-      if (opts.Options & OUTPUT_ALPHA)
-      {
-        info_ptr->color_type |= PNG_COLOR_MASK_ALPHA;
-      }
 
 #if defined(PNG_WRITE_sBIT_SUPPORTED)
-      if (info_ptr->color_type & PNG_COLOR_MASK_COLOR)
+      if (png_get_color_type(png_ptr, info_ptr) & PNG_COLOR_MASK_COLOR)
       {
-        info_ptr->sig_bit.red =
-        info_ptr->sig_bit.green =
-        info_ptr->sig_bit.blue = opts.OutputQuality;
+        const png_color_8 color = {
+            .red = opts.OutputQuality,
+            .green = opts.OutputQuality,
+            .blue = opts.OutputQuality,
+            .alpha = (color_type & PNG_COLOR_MASK_ALPHA) ? opts.OutputQuality : 0,
+        };
+        png_set_sBIT(png_ptr, info_ptr, &color);
       }
       else
       {
-        info_ptr->sig_bit.gray = opts.OutputQuality;
+        const png_color_8 color = {
+            .gray = opts.OutputQuality,
+            .alpha = (color_type & PNG_COLOR_MASK_ALPHA) ? opts.OutputQuality : 0,
+        };
+        png_set_sBIT(png_ptr, info_ptr, &color);
       }
-
-      if (info_ptr->color_type & PNG_COLOR_MASK_ALPHA)
-      {
-        info_ptr->sig_bit.alpha = opts.OutputQuality;
-      }
-
-      info_ptr->valid |= PNG_INFO_sBIT;
 #endif /* PNG_WRITE_sBIT_SUPPORTED */
 
 #if defined(PNG_WRITE_gAMA_SUPPORTED)
       if (handle->file_type & (IMAGE_FTYPE | GRAY_FTYPE))
       {
-        info_ptr->gamma = 1.0/opts.DisplayGamma;
-        info_ptr->valid |= PNG_INFO_gAMA;
+        png_set_gAMA(png_ptr, info_ptr, 1.0/opts.DisplayGamma);
       }
       else if (handle->file_type & (HIST_FTYPE | HF_FTYPE))
       {
-        info_ptr->gamma = 1.0;
-        info_ptr->valid |= PNG_INFO_gAMA;
+        png_set_gAMA(png_ptr, info_ptr, 1.0);
       }
 #endif /* PNG_WRITE_gAMA_SUPPORTED */
 
 #if defined(PNG_WRITE_oFFs_SUPPORTED)
       if (opts.First_Column != 0 || opts.First_Line != 0)
       {
-        info_ptr->x_offset = opts.First_Column;
-        info_ptr->y_offset = opts.First_Line;
-
-        info_ptr->offset_unit_type = PNG_OFFSET_PIXEL;
-
-        info_ptr->valid |= PNG_INFO_oFFs;
+        png_set_oFFs(png_ptr, info_ptr,
+                     opts.First_Column, opts.First_Line,
+                     PNG_OFFSET_PIXEL);
       }
 #endif /* PNG_WRITE_oFFs_SUPPORTED */
 
@@ -607,9 +605,9 @@ static int Open_Png_File(FILE_HANDLE *handle, char *name, int *width, int *heigh
 
       png_write_info(png_ptr, info_ptr);
 
-      png_stride = info_ptr->color_type & PNG_COLOR_MASK_COLOR ? 3 : 1;
+      png_stride = color_type & PNG_COLOR_MASK_COLOR ? 3 : 1;
 
-      if (info_ptr->color_type & PNG_COLOR_MASK_ALPHA)
+      if (color_type & PNG_COLOR_MASK_ALPHA)
         png_stride++;
 
       png_stride *= (opts.OutputQuality + 7) / 8;
@@ -628,7 +626,7 @@ static int Open_Png_File(FILE_HANDLE *handle, char *name, int *width, int *heigh
     case APPEND_MODE:
 
 #if defined(PNG_WRITE_FLUSH_SUPPORTED)
-      if (setjmp(png_ptr->jmpbuf))
+      if (setjmp(*png_set_longjmp_fn(png_ptr, longjmp, sizeof (jmp_buf))))
       {
         /* If we get here, we had a problem writing the file */
 
@@ -745,7 +743,7 @@ static void Write_Png_Line(FILE_HANDLE *handle, COLOUR *line_data, int line_numb
 
       himask = 0xFF ^ ((1 << (8 - opts.OutputQuality)) - 1);
 
-      if ((info_ptr->color_type & PNG_COLOR_MASK_COLOR) == PNG_COLOR_TYPE_GRAY)
+      if ((png_get_color_type(png_ptr, info_ptr) & PNG_COLOR_MASK_COLOR) == PNG_COLOR_TYPE_GRAY)
       {
         for (col = j = 0; col < handle->width; col++, j += png_stride)
         {
@@ -760,7 +758,7 @@ static void Write_Png_Line(FILE_HANDLE *handle, COLOUR *line_data, int line_numb
           /* Handle Alpha here if needed - must use exact bit replication
            * instead of truncation or 100... termination
            */
-          if (info_ptr->color_type & PNG_COLOR_MASK_ALPHA)
+          if (png_get_color_type(png_ptr, info_ptr) & PNG_COLOR_MASK_ALPHA)
           {
             color = 255 - (int)floor(line_data[col][TRANSM] * 255.0);
 
@@ -789,7 +787,7 @@ static void Write_Png_Line(FILE_HANDLE *handle, COLOUR *line_data, int line_numb
           row_ptr[j + 2] |= color >> opts.OutputQuality;
 
           /* Handle Alpha here if needed */
-          if (info_ptr->color_type & PNG_COLOR_MASK_ALPHA)
+          if (png_get_color_type(png_ptr, info_ptr) & PNG_COLOR_MASK_ALPHA)
           {
             color = 255 - (int)floor(line_data[col][TRANSM] * 255.0);
 
@@ -801,7 +799,7 @@ static void Write_Png_Line(FILE_HANDLE *handle, COLOUR *line_data, int line_numb
       break;
 
     case 8:
-      if ((info_ptr->color_type & PNG_COLOR_MASK_COLOR) == PNG_COLOR_TYPE_GRAY)
+      if ((png_get_color_type(png_ptr, info_ptr) & PNG_COLOR_MASK_COLOR) == PNG_COLOR_TYPE_GRAY)
       {
         for (col = j = 0; col < handle->width; col++, j += png_stride)
         {
@@ -810,7 +808,7 @@ static void Write_Png_Line(FILE_HANDLE *handle, COLOUR *line_data, int line_numb
                                         line_data[col][BLUE]*0.11) * 255.0);
 
           /* Handle Alpha here if needed */
-          if (info_ptr->color_type & PNG_COLOR_MASK_ALPHA)
+          if (png_get_color_type(png_ptr, info_ptr) & PNG_COLOR_MASK_ALPHA)
           {
             row_ptr[j+1] = (png_byte)(255-floor(line_data[col][TRANSM]*255.0));
           }
@@ -825,7 +823,7 @@ static void Write_Png_Line(FILE_HANDLE *handle, COLOUR *line_data, int line_numb
           row_ptr[j + 2] = (png_byte)floor(line_data[col][BLUE]  * 255.0);
 
           /* Handle Alpha here if needed */
-          if (info_ptr->color_type & PNG_COLOR_MASK_ALPHA)
+          if (png_get_color_type(png_ptr, info_ptr) & PNG_COLOR_MASK_ALPHA)
           {
             row_ptr[j+3] = (png_byte)(255-floor(line_data[col][TRANSM]*255.0));
           }
@@ -834,7 +832,7 @@ static void Write_Png_Line(FILE_HANDLE *handle, COLOUR *line_data, int line_numb
       break;
 
     case 16:
-      if ((info_ptr->color_type & PNG_COLOR_MASK_COLOR) == PNG_COLOR_TYPE_GRAY)
+      if ((png_get_color_type(png_ptr, info_ptr) & PNG_COLOR_MASK_COLOR) == PNG_COLOR_TYPE_GRAY)
       {
         for (col = j = 0; col < handle->width; col++, j += png_stride)
         {
@@ -846,7 +844,7 @@ static void Write_Png_Line(FILE_HANDLE *handle, COLOUR *line_data, int line_numb
           row_ptr[j + 1] = color & 0xFF;
 
           /* Handle Alpha here if needed */
-          if (info_ptr->color_type & PNG_COLOR_MASK_ALPHA)
+          if (png_get_color_type(png_ptr, info_ptr) & PNG_COLOR_MASK_ALPHA)
           {
             color = 65535 - (int)floor(line_data[col][TRANSM]  * 65535.0);
 
@@ -875,7 +873,7 @@ static void Write_Png_Line(FILE_HANDLE *handle, COLOUR *line_data, int line_numb
           row_ptr[j + 5] = color & 0xFF;
 
           /* Handle Alpha here if needed */
-          if (info_ptr->color_type & PNG_COLOR_MASK_ALPHA)
+          if (png_get_color_type(png_ptr, info_ptr) & PNG_COLOR_MASK_ALPHA)
           {
             color = 65535 - (int)floor(line_data[col][TRANSM]  * 65535.0);
 
@@ -890,7 +888,7 @@ static void Write_Png_Line(FILE_HANDLE *handle, COLOUR *line_data, int line_numb
       /* Handle shifting for arbitrary output bit depth */
       himask = 0xFF ^ ((1 << (16 - opts.OutputQuality)) - 1);
 
-      if ((info_ptr->color_type & PNG_COLOR_MASK_COLOR) == PNG_COLOR_TYPE_GRAY)
+      if ((png_get_color_type(png_ptr, info_ptr) & PNG_COLOR_MASK_COLOR) == PNG_COLOR_TYPE_GRAY)
       {
         for (col = j = 0; col < handle->width; col++, j += png_stride)
         {
@@ -901,7 +899,7 @@ static void Write_Png_Line(FILE_HANDLE *handle, COLOUR *line_data, int line_numb
           row_ptr[j] = color >> 8;
           row_ptr[j + 1] = color & himask;
 
-          if (info_ptr->color_type & PNG_COLOR_MASK_ALPHA)
+          if (png_get_color_type(png_ptr, info_ptr) & PNG_COLOR_MASK_ALPHA)
           {
             color = 65535 - (int)floor(line_data[col][TRANSM] * 65535.0);
 
@@ -931,7 +929,7 @@ static void Write_Png_Line(FILE_HANDLE *handle, COLOUR *line_data, int line_numb
           row_ptr[j + 5] = color & himask;
 
           /* Handle Alpha here if needed */
-          if (info_ptr->color_type & PNG_COLOR_MASK_ALPHA)
+          if (png_get_color_type(png_ptr, info_ptr) & PNG_COLOR_MASK_ALPHA)
           {
             color = 65535 - (int)floor(line_data[col][TRANSM]  * 65535.0);
 
@@ -943,7 +941,7 @@ static void Write_Png_Line(FILE_HANDLE *handle, COLOUR *line_data, int line_numb
       }
   }
 
-  if (setjmp(png_ptr->jmpbuf))
+  if (setjmp(*png_set_longjmp_fn(png_ptr, longjmp, sizeof (jmp_buf))))
   {
     /* If we get here, we had a problem writing the file */
     fclose(handle->file);
@@ -996,7 +994,7 @@ static int Read_Png_Line(FILE_HANDLE *handle, COLOUR *line_data, int *line_numbe
 {
   register int col, j, step;
 
-  if (setjmp(o_png_ptr->jmpbuf))
+  if (setjmp(*png_set_longjmp_fn(o_png_ptr, longjmp, sizeof (jmp_buf))))
   {
     /* If we get here, we had a problem reading the file, which probably
      * means that we have read all the available data, rather than a real
@@ -1006,7 +1004,7 @@ static int Read_Png_Line(FILE_HANDLE *handle, COLOUR *line_data, int *line_numbe
     return(0);
   }
 
-  if (setjmp(png_ptr->jmpbuf))
+  if (setjmp(*png_set_longjmp_fn(png_ptr, longjmp, sizeof (jmp_buf))))
   {
     /* If we get here, we had a problem writing the new file */
     Status_Info("\n");
@@ -1042,9 +1040,9 @@ static int Read_Png_Line(FILE_HANDLE *handle, COLOUR *line_data, int *line_numbe
    */
 
   /* How many bytes in a sample */
-  step = (info_ptr->bit_depth <= 8) ? 1 : 2;
+  step = (png_get_bit_depth(png_ptr, info_ptr) <= 8) ? 1 : 2;
 
-  if ((info_ptr->color_type & PNG_COLOR_MASK_COLOR) == PNG_COLOR_TYPE_GRAY)
+  if ((png_get_color_type(png_ptr, info_ptr) & PNG_COLOR_MASK_COLOR) == PNG_COLOR_TYPE_GRAY)
   {
     for (col = j = 0; col < handle->width; col++, j += png_stride)
     {
@@ -1052,7 +1050,7 @@ static int Read_Png_Line(FILE_HANDLE *handle, COLOUR *line_data, int *line_numbe
       line_data[col][GREEN] = (DBL)row_ptr[j] / 255.0;
       line_data[col][BLUE] = (DBL)row_ptr[j] / 255.0;
 
-      if (info_ptr->color_type & PNG_COLOR_MASK_ALPHA)
+      if (png_get_color_type(png_ptr, info_ptr) & PNG_COLOR_MASK_ALPHA)
       {
         line_data[col][TRANSM] = (DBL)(255 - row_ptr[j + step]) / 255.0;
       }
@@ -1066,7 +1064,7 @@ static int Read_Png_Line(FILE_HANDLE *handle, COLOUR *line_data, int *line_numbe
       line_data[col][GREEN] = (DBL)row_ptr[j + step] / 255.0;
       line_data[col][BLUE] = (DBL)row_ptr[j + 2*step] / 255.0;
 
-      if (info_ptr->color_type & PNG_COLOR_MASK_ALPHA)
+      if (png_get_color_type(png_ptr, info_ptr) & PNG_COLOR_MASK_ALPHA)
       {
         line_data[col][TRANSM] = (DBL)(255 - row_ptr[j + 3*step]) / 255.0;
       }
@@ -1077,9 +1075,9 @@ static int Read_Png_Line(FILE_HANDLE *handle, COLOUR *line_data, int *line_numbe
    * the next row!
    */
 #if defined(PNG_READ_oFFS_SUPPORTED)
-  *line_number = info_ptr->y_offset + png_ptr->row_number - 1;
+  *line_number = png_get_y_offset_pixels(png_ptr, info_ptr) + png_get_current_row_number(png_ptr) - 1;
 #else
-  *line_number = png_ptr->row_number - 1;
+  *line_number = png_get_current_row_number(png_ptr) - 1;
 #endif
 
   return(1);
@@ -1139,7 +1137,7 @@ static void Close_Png_File(FILE_HANDLE *handle)
   {
     if (png_ptr != NULL)
     {
-      if (setjmp(png_ptr->jmpbuf))
+      if (setjmp(*png_set_longjmp_fn(png_ptr, longjmp, sizeof (jmp_buf))))
       {
         /* If we get here, we had a problem writing the file */
 
@@ -1166,12 +1164,14 @@ static void Close_Png_File(FILE_HANDLE *handle)
         Error("Error writing PNG file.");
       }
 
+#if 0
       if(png_ptr->row_number < png_ptr->num_rows)
       {
          /* finished prematurely - trick into thinking done*/
          png_ptr->num_rows = png_ptr->row_number;
          png_write_finish_row(png_ptr);
       }
+#endif
 
 #ifdef POV_COMMENTS /* temporarily skip comment writing code */
       if (info_ptr != NULL)
@@ -1391,7 +1391,7 @@ void Read_Png_Image(IMAGE *Image, char *name)
     return;	/* -hdf99- */
   }
 
-  if (setjmp(r_png_ptr->jmpbuf))
+  if (setjmp(*png_set_longjmp_fn(r_png_ptr, longjmp, sizeof (jmp_buf))))
   {
     /* If we get here, we had a problem reading the file */
 
@@ -1408,8 +1408,8 @@ void Read_Png_Image(IMAGE *Image, char *name)
 
   png_read_info(r_png_ptr, r_info_ptr);
 
-  width = r_info_ptr->width;
-  height = r_info_ptr->height;
+  width = png_get_image_width(r_png_ptr, r_info_ptr);
+  height = png_get_image_height(r_png_ptr, r_info_ptr);
 
   Image->iwidth = width;
   Image->iheight = height;
@@ -1419,19 +1419,20 @@ void Read_Png_Image(IMAGE *Image, char *name)
   /* Allocate buffers for the image */
   stride = 1;
 
-  if (r_info_ptr->color_type == PNG_COLOR_TYPE_PALETTE)
+  if (png_get_color_type(r_png_ptr, r_info_ptr) == PNG_COLOR_TYPE_PALETTE)
   {
     IMAGE_COLOUR *cmap;
     png_color *png_cmap;
-    int cmap_len = r_info_ptr->num_palette;
+    int cmap_len;
     int index;
+
+    png_get_PLTE(r_png_ptr, r_info_ptr, &png_cmap, &cmap_len);
 
     Image->Colour_Map_Size = cmap_len;
 
     cmap = (IMAGE_COLOUR *)POV_MALLOC(cmap_len*sizeof(IMAGE_COLOUR), "PNG image color map");
 
     Image->Colour_Map = cmap;
-    png_cmap = r_info_ptr->palette;
 
     for (index = 0; index < cmap_len; index++)
     {
@@ -1442,10 +1443,13 @@ void Read_Png_Image(IMAGE *Image, char *name)
       cmap[index].Transmit = 0;
     }
 
-    if (r_info_ptr->valid & PNG_INFO_tRNS)
+    if (png_get_valid(r_png_ptr, r_info_ptr, PNG_INFO_tRNS))
     {
-      for (index = 0; index < r_info_ptr->num_trans; index++)
-        cmap[index].Transmit = 255 - r_info_ptr->trans[index];
+      png_byte *trans;
+      int num_trans;
+      png_get_tRNS(r_png_ptr, r_info_ptr, &trans, &num_trans, NULL);
+      for (index = 0; index < num_trans; index++)
+        cmap[index].Transmit = 255 - trans[index];
     }
 
     Image->data.map_lines = (unsigned char **)
@@ -1454,14 +1458,14 @@ void Read_Png_Image(IMAGE *Image, char *name)
     /* tell pnglib to expand data to 1 pixel/byte */
     png_set_packing(r_png_ptr);
   }
-  else if (r_info_ptr->color_type == PNG_COLOR_TYPE_GRAY &&
-           r_info_ptr->bit_depth <= 8)
+  else if (png_get_color_type(r_png_ptr, r_info_ptr) == PNG_COLOR_TYPE_GRAY &&
+           png_get_bit_depth(r_png_ptr, r_info_ptr) <= 8)
   {
     IMAGE_COLOUR *cmap;
     int cmap_len;
     int index;
     
-    Image->Colour_Map_Size = cmap_len = 1 << r_info_ptr->bit_depth;
+    Image->Colour_Map_Size = cmap_len = 1 << png_get_bit_depth(r_png_ptr, r_info_ptr);
     
     cmap = (IMAGE_COLOUR *)POV_MALLOC(cmap_len*sizeof(IMAGE_COLOUR), "PNG image color map");
 
@@ -1476,10 +1480,13 @@ void Read_Png_Image(IMAGE *Image, char *name)
       cmap[index].Transmit = 0;
     }
 
-    if (r_info_ptr->valid & PNG_INFO_tRNS)
+    if (png_get_valid(r_png_ptr, r_info_ptr, PNG_INFO_tRNS))
     {
-      for (index = 0; index < r_info_ptr->num_trans; index++)
-        cmap[index].Transmit = 255 - r_info_ptr->trans[index];
+      png_byte *trans;
+      int num_trans;
+      png_get_tRNS(r_png_ptr, r_info_ptr, &trans, &num_trans, NULL);
+      for (index = 0; index < num_trans; index++)
+        cmap[index].Transmit = 255 - trans[index];
     }
 
     Image->data.map_lines = (unsigned char **)
@@ -1488,19 +1495,19 @@ void Read_Png_Image(IMAGE *Image, char *name)
     /* tell pnglib to expand data to 1 pixel/byte */
     png_set_packing(r_png_ptr);
   }
-  else if (r_info_ptr->color_type == PNG_COLOR_TYPE_GRAY ||
-           r_info_ptr->color_type == PNG_COLOR_TYPE_GRAY_ALPHA)
+  else if (png_get_color_type(r_png_ptr, r_info_ptr) == PNG_COLOR_TYPE_GRAY ||
+           png_get_color_type(r_png_ptr, r_info_ptr) == PNG_COLOR_TYPE_GRAY_ALPHA)
   {
     Image->Colour_Map = NULL;
     
     Image->data.rgb_lines = (IMAGE_LINE *)
       POV_MALLOC(height * sizeof(IMAGE_LINE), "PNG image");
 
-    if (r_info_ptr->color_type == PNG_COLOR_TYPE_GRAY)
+    if (png_get_color_type(r_png_ptr, r_info_ptr) == PNG_COLOR_TYPE_GRAY)
     {
       stride = 2;
     }
-    else if (r_info_ptr->bit_depth <= 8) /* PNG_COLOR_TYPE_GRAY_ALPHA */
+    else if (png_get_bit_depth(r_png_ptr, r_info_ptr) <= 8) /* PNG_COLOR_TYPE_GRAY_ALPHA */
     {
       /* tell pnglib to expand data to 1 pixel/byte */
       png_set_packing(r_png_ptr);
@@ -1511,13 +1518,13 @@ void Read_Png_Image(IMAGE *Image, char *name)
       stride = 4;
     }
   }
-  else if (r_info_ptr->color_type == PNG_COLOR_TYPE_RGB ||
-      r_info_ptr->color_type == PNG_COLOR_TYPE_RGB_ALPHA)
+  else if (png_get_color_type(r_png_ptr, r_info_ptr) == PNG_COLOR_TYPE_RGB ||
+      png_get_color_type(r_png_ptr, r_info_ptr) == PNG_COLOR_TYPE_RGB_ALPHA)
   {
     Image->Colour_Map = NULL;
     
     /* tell pnglib to strip 16 bit depth files down to 8 bits */
-    if (r_info_ptr->bit_depth > 8)
+    if (png_get_bit_depth(r_png_ptr, r_info_ptr) > 8)
     {
       if (opts.Options & VERBOSE)
         Warning(0.0,"\nConverting PNG image map to 8 bits/sample from higher bit depth.");
@@ -1527,14 +1534,14 @@ void Read_Png_Image(IMAGE *Image, char *name)
     Image->data.rgb_lines = (IMAGE_LINE *)
     POV_MALLOC(height * sizeof(IMAGE_LINE), "PNG image");
 
-    if (r_info_ptr->color_type == PNG_COLOR_TYPE_RGB)
+    if (png_get_color_type(r_png_ptr, r_info_ptr) == PNG_COLOR_TYPE_RGB)
       stride = 3;
     else                               /* PNG_COLOR_TYPE_RGB_ALPHA */
       stride = 4;
   }
   else                                 /* Unknown PNG type */
   {
-    Error("Unsupported color type %d in PNG image.\n", r_info_ptr->color_type);
+    Error("Unsupported color type %d in PNG image.\n", png_get_color_type(r_png_ptr, r_info_ptr));
   }
   
   /* Tell pnglib to handle the gamma conversion for you.  Note that
@@ -1546,10 +1553,11 @@ void Read_Png_Image(IMAGE *Image, char *name)
    * used as image maps, and the other types will load the raw pixel values.
    */
 #if defined(PNG_READ_GAMMA_SUPPORTED) && defined(PNG_READ_gAMA_SUPPORTED)
-  if (r_info_ptr->valid & PNG_INFO_gAMA && (Image->Image_Type & IMAGE_FTYPE))
+  if (png_get_valid(r_png_ptr, r_info_ptr, PNG_INFO_gAMA) && (Image->Image_Type & IMAGE_FTYPE))
   {
-    png_set_gamma(r_png_ptr, opts.GammaFactor*opts.DisplayGamma,
-                                                          r_info_ptr->gamma);
+    double gamma;
+    png_get_gAMA(r_png_ptr, r_info_ptr, &gamma);
+    png_set_gamma(r_png_ptr, opts.GammaFactor*opts.DisplayGamma,gamma);
   }
 #endif /* PNG_READ_GAMMA_SUPPORTED and PNG_READ_gAMA_SUPPORTED */
     
@@ -1561,7 +1569,7 @@ void Read_Png_Image(IMAGE *Image, char *name)
   
   for (row = 0; row < height; row++)
   {
-    row_ptrs[row] = (png_byte *)POV_MALLOC(r_info_ptr->rowbytes, "PNG image line");
+    row_ptrs[row] = (png_byte *)POV_MALLOC(png_get_rowbytes(r_png_ptr, r_info_ptr), "PNG image line");
   }
   
   /* Read in the entire image */
@@ -1580,7 +1588,7 @@ void Read_Png_Image(IMAGE *Image, char *name)
       line_data->green = (unsigned char *)POV_MALLOC(width, "PNG image line");
       line_data->blue = (unsigned char *)POV_MALLOC(width, "PNG image line");
 
-      if (r_info_ptr->color_type & PNG_COLOR_MASK_ALPHA)
+      if (png_get_color_type(r_png_ptr, r_info_ptr) & PNG_COLOR_MASK_ALPHA)
       {
         line_data->transm = (unsigned char *)POV_MALLOC(width,"PNG image line");
       }
@@ -1593,8 +1601,8 @@ void Read_Png_Image(IMAGE *Image, char *name)
        * images don't support different transparencies for each pixel, we
        * have to make this a full-color image.
        */
-      if (r_info_ptr->color_type == PNG_COLOR_TYPE_GRAY_ALPHA &&
-          r_info_ptr->bit_depth <= 8)
+      if (png_get_color_type(r_png_ptr, r_info_ptr) == PNG_COLOR_TYPE_GRAY_ALPHA &&
+          png_get_bit_depth(r_png_ptr, r_info_ptr) <= 8)
       {
         for (col = j = 0; col < width; col ++, j += stride)
         {
@@ -1610,7 +1618,7 @@ void Read_Png_Image(IMAGE *Image, char *name)
        * it in the MSB-read, LSB-green format that POV uses to store 16-bit
        * heightfields.
        */
-      else if ((r_info_ptr->color_type & PNG_COLOR_MASK_COLOR) ==
+      else if ((png_get_color_type(r_png_ptr, r_info_ptr) & PNG_COLOR_MASK_COLOR) ==
                                                           PNG_COLOR_TYPE_GRAY)
       {
         if (Image->Image_Type & HF_FTYPE)
@@ -1624,7 +1632,7 @@ void Read_Png_Image(IMAGE *Image, char *name)
             line_data->green[col] = green;
             line_data->blue[col] = 0;
 
-            if (r_png_ptr->color_type & PNG_COLOR_MASK_ALPHA)
+            if (png_get_color_type(r_png_ptr, r_info_ptr) & PNG_COLOR_MASK_ALPHA)
             {
               line_data->transm[col] = 255 - row_ptrs[row][j + 2];
             }
@@ -1640,14 +1648,14 @@ void Read_Png_Image(IMAGE *Image, char *name)
             line_data->green[col] = red;
             line_data->blue[col] = red;
 
-            if (r_png_ptr->color_type & PNG_COLOR_MASK_ALPHA)
+            if (png_get_color_type(r_png_ptr, r_info_ptr) & PNG_COLOR_MASK_ALPHA)
             {
               line_data->transm[col] = 255 - row_ptrs[row][j + 2];
             }
           }
         }
       }
-      else /* r_info_ptr->color_type & PNG_COLOR_MASK_COLOR */
+      else /* png_get_color_type(r_png_ptr, r_info_ptr) & PNG_COLOR_MASK_COLOR */
       {
         for (col = j = 0; col < width; col ++, j += stride)
         {
@@ -1655,7 +1663,7 @@ void Read_Png_Image(IMAGE *Image, char *name)
           line_data->green[col] = row_ptrs[row][j + 1];
           line_data->blue[col] = row_ptrs[row][j + 2];
 
-          if (r_png_ptr->color_type & PNG_COLOR_MASK_ALPHA)
+          if (png_get_color_type(r_png_ptr, r_info_ptr) & PNG_COLOR_MASK_ALPHA)
           {
             line_data->transm[col] = 255 - row_ptrs[row][j + 3];
           }
