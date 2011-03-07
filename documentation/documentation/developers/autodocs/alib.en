@@ -50,7 +50,7 @@ Synopsis
 ::
 
   VOID  __sprintf(
-          UBYTE *buffer, UBYTE *format, ...)
+          UBYTE *buffer, const UBYTE *format, ...)
 
 
 Function
@@ -4002,10 +4002,11 @@ Synopsis
 ~~~~~~~~
 ::
 
- ULONG TimeDelay(
-          LONG Unit,
-          ULONG Seconds,
-          ULONG MicroSeconds );
+  LONG TimeDelay(
+     LONG Unit,
+     ULONG Seconds,
+     ULONG MicroSeconds)
+
 
 Function
 ~~~~~~~~

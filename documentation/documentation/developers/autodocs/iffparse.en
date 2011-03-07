@@ -266,7 +266,7 @@ Synopsis
 
  LONG CollectionChunks(
           struct IFFHandle * iff,
-          LONG             * propArray,
+          const LONG       * propArray,
           LONG numPairs );
 
 Function
@@ -1295,7 +1295,7 @@ Synopsis
 
  LONG PropChunks(
           struct IFFHandle * iff,
-          LONG             * propArray,
+          const LONG       * propArray,
           LONG numPairs );
 
 Function
@@ -1570,7 +1570,7 @@ Synopsis
 
  LONG StopChunks(
           struct IFFHandle * iff,
-          LONG             * propArray,
+          const LONG       * propArray,
           LONG numPairs );
 
 Function
