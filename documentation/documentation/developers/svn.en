@@ -320,6 +320,31 @@ in the SVN manual is quite poorly written, so an example is in order:
         https://svn.aros.org/svn/aros/trunk/contrib/development/versioning/svn
 
 
+Vendor Branches
+===============
+
+The AROS Subversion repository has support for vendor branches as documented
+in the `Subversion book`__. You can list its current content by::
+
+        > svn ls https://svn.aros.org/svn/aros/vendor
+
+The purpose is to keep stable versions of external packages. Prominent
+examples are some MUI classes like NList, TextEditor, BetterString etc.
+
+__ http://svnbook.red-bean.com/nightly/en/svn.advanced.vendorbr.html
+
+
+Tags
+====
+
+Additionally the repository contains a directory for tags::
+
+        > svn ls https://svn.aros.org/svn/aros/tags
+
+So far no decission has been made how to use it. Please discuss this on the
+developer mailing list if you want to work with it.
+
+
 Copying
 =======
 
