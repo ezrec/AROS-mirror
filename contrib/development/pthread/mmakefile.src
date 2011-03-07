@@ -40,6 +40,12 @@ COMMON := \
     sem_init                  \
     sem_post                  \
     sem_wait                  \
+    pthread_exit	      \
+    pthread_getspecific	      \
+    pthread_setspecific	      \
+    pthread_key_create	      \
+    pthread_cond_broadcast    \
+    pthread_cond_wait	      \
 
 COMMON_OBJ := $(foreach f,$(COMMON),$(OBJDIR)/$(f).o)
 

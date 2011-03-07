@@ -79,7 +79,9 @@ enum
     PTHREAD_MUTEX_RECURSIVE,
 };
 
-/*
+/* FIXME: These typedefs really belong in sys/types.h */
+typedef APTR pthread_key_t;
+
 __BEGIN_DECLS
 
 extern int pthread_create(
@@ -140,5 +142,5 @@ extern int pthread_mutexattr_init(pthread_mutexattr_t* attr);
 extern int pthread_mutexattr_settype(pthread_mutexattr_t* attr, int type);
 
 __END_DECLS
-*/
+
 #endif /* _PTHREAD_H_ */
