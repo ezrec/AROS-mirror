@@ -341,7 +341,7 @@ Additionally the repository contains a directory for tags::
 
         > svn ls https://svn.aros.org/svn/aros/tags
 
-So far no decission has been made how to use it. Please discuss this on the
+So far no decision has been made how to use it. Please discuss this on the
 developer mailing list if you want to work with it.
 
 
