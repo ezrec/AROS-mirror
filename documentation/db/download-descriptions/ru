@@ -45,6 +45,9 @@ darwin-i386-system:
 darwin-ppc-system:
     Виртуализованная версия для Darwin и MacOS X на платформе PowerPC.
     Должна работать на всех версиях MacOS X.
+darwin-x86_64-system:
+    Виртуализованная версия для Darwin и MacOS X на платформе x86-64.
+    Должна работать на всех Intel-версиях MacOS X начиная с 10.6.
 freebsd-i386-system:
     Виртуализованная версия для FreeBSD/i386 5.x. Учтите, что она не сможет
     работать на FreeBSD 4.x.

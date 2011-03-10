@@ -48,6 +48,9 @@ darwin-i386-system:
 darwin-ppc-system:
     The hosted version for Darwin and MacOS X on PowerPC platform.
     Should work on all MacOS X versions.
+darwin-x86_64-system:
+    The hosted version for Darwin and MacOS X on x86-64 platform.
+    Should work on all Intel MacOS X versions starting from 10.6.
 freebsd5-i386-system:
     The hosted version for FreeBSD/i386 5.x. Note that it
     will not work on FreeBSD 4.x systems.
