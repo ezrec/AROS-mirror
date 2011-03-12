@@ -1,59 +1,59 @@
-diff -ur SDL_net-1.2.7/SDLnet.c SDL_net-1.2.7-aros/SDLnet.c
---- SDL_net-1.2.7/SDLnet.c	2007-07-20 14:41:49.000000000 +0200
-+++ SDL_net-1.2.7-aros/SDLnet.c	2008-08-20 19:45:50.000000000 +0200
-@@ -29,6 +29,12 @@
+diff -ruN SDL_net-1.2.7/SDLnet.c SDL_net-1.2.7.aros/SDLnet.c
+--- SDL_net-1.2.7/SDLnet.c	2007-07-02 04:04:03.000000000 +0200
++++ SDL_net-1.2.7.aros/SDLnet.c	2011-03-12 11:51:28.977323996 +0100
+@@ -29,6 +29,11 @@
  #include "SDLnetsys.h"
  #include "SDL_net.h"
  
 +#ifdef __AROS__
 +#include <proto/exec.h>
 +struct Library * SocketBase = NULL;
-+int h_errno = 0;
 +extern int errno;
 +#endif
  
  const SDL_version *SDLNet_Linked_Version(void)
  {
-@@ -292,6 +298,17 @@
+@@ -292,6 +297,17 @@
  			SDLNet_SetError("Couldn't initialize Winsock 1.1\n");
  			return(-1);
  		}
 +#elif defined __AROS__
-+        if(!(SocketBase = OpenLibrary("bsdsocket.library", 4 ))) {
++		if ( !(SocketBase = OpenLibrary("bsdsocket.library", 4 ))) {
 +			SDLNet_SetError("No TCP/IP Stack running!\n");
 +			return(-1);
-+        }
++		}
 +
-+        if( SocketBaseTags(SBTM_SETVAL(SBTC_ERRNOPTR(sizeof(errno))), (IPTR)&errno,
-+  		     SBTM_SETVAL(SBTC_HERRNOLONGPTR), (IPTR)&h_errno, TAG_DONE )) {
++		if ( SocketBaseTags(SBTM_SETVAL(SBTC_ERRNOPTR(sizeof(errno))), (IPTR)&errno,
++				    TAG_DONE )) {
 +			SDLNet_SetError("Error initializing bsdsocket\n");
 +			return(-1);
-+        }
++		}
  #else
  		/* SIGPIPE is generated when a remote socket is closed */
  		void (*handler)(int);
-@@ -318,6 +335,11 @@
+@@ -318,6 +334,11 @@
  				WSACleanup();
  			}
  		}
 +#elif defined __AROS__
-+	    if(SocketBase) {
-+		    CloseLibrary(SocketBase);
-+		    SocketBase = NULL;
-+	    }
++		if ( SocketBase ) {
++			CloseLibrary(SocketBase);
++			SocketBase = NULL;
++		}
  #else
  		/* Restore the SIGPIPE handler */
  		void (*handler)(int);
-diff -ur SDL_net-1.2.7/SDLnetsys.h SDL_net-1.2.7-aros/SDLnetsys.h
---- SDL_net-1.2.7/SDLnetsys.h	2007-07-20 14:41:49.000000000 +0200
-+++ SDL_net-1.2.7-aros/SDLnetsys.h	2008-08-12 22:20:41.000000000 +0200
-@@ -59,7 +59,8 @@
- #include <netinet/tcp.h>
+diff -ruN SDL_net-1.2.7/SDLnetsys.h SDL_net-1.2.7.aros/SDLnetsys.h
+--- SDL_net-1.2.7/SDLnetsys.h	2007-07-02 04:04:03.000000000 +0200
++++ SDL_net-1.2.7.aros/SDLnetsys.h	2011-03-12 13:38:02.083471002 +0100
+@@ -60,6 +60,10 @@
  #endif
  #include <netdb.h>
--#include <sys/socket.h>
+ #include <sys/socket.h>
++#ifdef __AROS__
 +#include <proto/socket.h>
 +#include <bsdsocket/socketbasetags.h>
++#endif /* AROS */
  #endif /* WIN32 */
  #endif /* Open Transport */
  

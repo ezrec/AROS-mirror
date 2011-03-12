@@ -72,7 +72,6 @@ extern int errno;
 #ifdef _AMIGASF
 #include <proto/exec.h>
 #include <proto/socket.h>
-int h_errno = 0;
 struct Library * SocketBase = NULL;
 #endif
 
@@ -724,7 +723,6 @@ main (int argc, char *const *argv)
 #endif
   
   if( SocketBaseTags(SBTM_SETVAL(SBTC_ERRNOPTR(sizeof(errno))), (IPTR)&errno,
-  		     SBTM_SETVAL(SBTC_HERRNOLONGPTR), (IPTR)&h_errno,
   		     SBTM_SETVAL(SBTC_LOGTAGPTR), (IPTR)"Wget", TAG_DONE )) {
   	
   	fprintf( stderr, "Error initializing bsdsocket\n\a");
