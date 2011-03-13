@@ -85,12 +85,6 @@ parameters are:
 ``prefix``
     FIXME
 
-``reffile``
-    FIXME
-
-``noref``
-    FIXME
-
 ``linklibname=%(modname)``
     The name to be used for the static link library that contains the
     library autoinit code and the stubs converting C stack calling
@@ -209,13 +203,6 @@ to the last non white-space character on that line.
 
 ``copyright``
     Example: ``copyright Copyright (C) 2006 Foobar team``
-
-``libcall``
-    The argument passing mechanism used for the functions in this module.
-    It can be either 'stack' or 'register'. By default 'stack' will be used.
-
-    FIXME: seams to be wrong. Default depends on if functions are written
-    with register spec.
 
 ``forcebase``
     This will force the use of a certain base variable in the static
