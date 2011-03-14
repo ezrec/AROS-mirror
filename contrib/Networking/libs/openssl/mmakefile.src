@@ -1,4 +1,4 @@
-# Copyright © 2008, The AROS Development Team. All rights reserved.
+# Copyright © 2008-2011, The AROS Development Team. All rights reserved.
 # $Id$
 
 -include $(TOP)/config/make.cfg
@@ -14,6 +14,13 @@ OPENSSL_BUILD_DIR := $(GENDIR)/$(CURDIR)
 %fetch mmake=contrib-networking-openssl-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/openssl \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
     patches_specs=$(ARCHBASE)-aros.diff:$(ARCHBASE):-p1
+
+# after patch creation remove diff about openssl-0.9.8j/test/ssltest.c
+# it is a sym linked file and would be patched twice it cannot easily
+# be excluded without breaking other things
+%create_patch mmake=contrib-networking-openssl-create-patch \
+    archbase=$(ARCHBASE) portdir=$(PORTSDIR)/openssl \
+    excludes="fips_aes_data Makefile.org.orig include"
 
 $(OPENSSL_BUILD_DIR)/.links-created :
 	%mkdir_q dir=$(OPENSSL_BUILD_DIR)
