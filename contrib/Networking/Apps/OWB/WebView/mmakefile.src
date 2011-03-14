@@ -13,7 +13,10 @@ OWB_BUILD_DIR := $(GENDIR)/$(CURDIR)
 
 %fetch mmake=aros-tcpip-apps-owb-webview-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/OWB \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz tar.bz2" \
-    patches_specs=$(ARCHBASE)-aros.diff:$(ARCHBASE):-p0
+    patches_specs=$(ARCHBASE)-aros.diff:$(ARCHBASE):-p1
+
+%create_patch mmake=aros-tcpip-apps-owb-webview-create-patch \
+    archbase=$(ARCHBASE) portdir=$(PORTSDIR)/OWB
 
 #MM
 aros-tcpip-apps-owb-webview-setup :
