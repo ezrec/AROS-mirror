@@ -1,6 +1,6 @@
 diff -ruN make-3.81/arscan.c make-3.81.aros/arscan.c
 --- make-3.81/arscan.c	2006-02-11 23:16:04.000000000 +0100
-+++ make-3.81.aros/arscan.c	2008-09-30 12:40:31.000000000 +0200
++++ make-3.81.aros/arscan.c	2006-04-01 08:40:00.000000000 +0200
 @@ -231,7 +231,7 @@
  #endif
  
@@ -10,9 +10,43 @@ diff -ruN make-3.81/arscan.c make-3.81.aros/arscan.c
  #  include <ar.h>
  # else
     /* BeOS 5 doesn't have <ar.h> but has archives in the same format
+diff -ruN make-3.81/glob/fnmatch.h make-3.81.aros/glob/fnmatch.h
+--- make-3.81/glob/fnmatch.h	2006-02-11 21:00:39.000000000 +0100
++++ make-3.81.aros/glob/fnmatch.h	2011-02-24 20:31:57.000000000 +0100
+@@ -36,6 +36,9 @@
+    non-ANSI C where `const' is problematical.  */
+ #endif /* C++ or ANSI C.  */
+ 
++#if defined __AROS__
++# undef __const
++#endif
+ #ifndef const
+ # if (defined __STDC__ && __STDC__) || defined __cplusplus || defined WINDOWS32
+ #  define __const	const
+diff -ruN make-3.81/glob/glob.h make-3.81.aros/glob/glob.h
+--- make-3.81/glob/glob.h	2006-02-11 21:00:39.000000000 +0100
++++ make-3.81.aros/glob/glob.h	2011-02-24 20:33:37.000000000 +0100
+@@ -29,7 +29,7 @@
+ #  undef __PMT
+ #  define __P(protos)	protos
+ #  define __PMT(protos)	protos
+-#  if !defined __GNUC__ || __GNUC__ < 2
++#  if !defined __GNUC__ || __GNUC__ < 2 || defined __AROS__
+ #   undef __const
+ #   define __const const
+ #  endif
+@@ -47,7 +47,7 @@
+ 
+ /* We need `size_t' for the following definitions.  */
+ #ifndef __size_t
+-# if defined __FreeBSD__
++# if defined __FreeBSD__ || defined __AROS__
+ #  define __size_t size_t
+ # else
+ #  if defined __GNUC__ && __GNUC__ >= 2
 diff -ruN make-3.81/main.c make-3.81.aros/main.c
 --- make-3.81/main.c	2006-03-20 03:36:37.000000000 +0100
-+++ make-3.81.aros/main.c	2008-09-30 12:40:31.000000000 +0200
++++ make-3.81.aros/main.c	2006-04-01 08:40:00.000000000 +0200
 @@ -886,7 +886,7 @@
  }
  
