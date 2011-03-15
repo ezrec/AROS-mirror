@@ -122,7 +122,7 @@ LINKLIB_FILES = \
 %build_module mmake=linklibs-aminet-dev-gui-gtlayout \
     modname=gtlayout modtype=library \
     files="$(FILES) $(OTHERS) $(UFC_SOURCE) $(API_SOURCE) $(LINKLIB_FILES)" \
-    linklibfiles=$(LINKLIB_FILES) uselibs=rom \
+    linklibobjs=$(GENDIR)/$(CURDIR)/$(LINKLIB_FILES).o uselibs=rom \
     conffile=lib.conf
 
 #MM linklibs-aminet-dev-gui-gtlayout-includes : gtlayout-includes-copy
