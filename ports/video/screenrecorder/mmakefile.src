@@ -45,7 +45,12 @@ FILES := \
 
 
 %fetch mmake=ports-video-screenrecorder-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/screenrecorder \
-    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.bz2"
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.bz2" \
+    patches_specs=$(ARCHBASE)-aros.diff:$(ARCHBASE):-p1
+
+
+%create_patch mmake=ports-video-screenrecorder-create-patch \
+    archbase=$(ARCHBASE) portdir=$(PORTSDIR)/screenrecorder
 
 
 ICONS := ScreenRecorder
