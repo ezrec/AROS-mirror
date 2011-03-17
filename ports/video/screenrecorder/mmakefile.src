@@ -50,7 +50,7 @@ FILES := \
 
 
 %create_patch mmake=ports-video-screenrecorder-create-patch \
-    archbase=$(ARCHBASE) portdir=$(PORTSDIR)/screenrecorder
+    archive=$(ARCHBASE) destination=$(PORTSDIR)/screenrecorder
 
 
 ICONS := ScreenRecorder
