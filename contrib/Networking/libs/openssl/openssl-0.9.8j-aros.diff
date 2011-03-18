@@ -195,10 +195,10 @@ diff -ruN -X ./exclude.patterns openssl-0.9.8j/Configure openssl-0.9.8j.aros/Con
  "tandem-c89","c89:-Ww -D__TANDEM -D_XOPEN_SOURCE -D_XOPEN_SOURCE_EXTENDED=1 -D_TANDEM_SOURCE -DB_ENDIAN::(unknown):::THIRTY_TWO_BIT:::",
  
 +##### AROS
-+"aros-i386-cross","$ENV{'AROS_CC'}:-DL_ENDIAN -g -Wall:::AROS::BN_LLONG ${x86_gcc_des} ${x86_gcc_opts}:${x86_elf_asm}::$ENV{'AROS_RANLIB'}",
-+"aros-x86_64-cross","$ENV{'AROS_CC'}:-DL_ENDIAN -DMD32_REG_T=int -g -Wall:::AROS::SIXTY_FOUR_BIT_LONG RC4_CHAR RC4_CHUNK DES_INT DES_UNROLL BF_PTR:${no_asm}::$ENV{'AROS_RANLIB'}",
-+"aros-ppc-cross","$ENV{'AROS_CC'}:-DB_ENDIAN -g -Wall:::AROS::BN_LLONG RC4_CHAR RC4_CHUNK DES_UNROLL BF_PTR:${no_asm}::$ENV{'AROS_RANLIB'}",
-+"aros-arm-cross","$ENV{'AROS_CC'}:-DL_ENDIAN -g -Wall:::AROS::BN_LLONG RC4_CHAR RC4_CHUNK DES_UNROLL BF_PTR:${no_asm}::$ENV{'AROS_RANLIB'}",
++"aros-i386-cross","$ENV{'AROS_CC'}:-DL_ENDIAN -g -Wall:::AROS::BN_LLONG ${x86_gcc_des} ${x86_gcc_opts}:${x86_elf_asm}::::::$ENV{'AROS_RANLIB'}",
++"aros-x86_64-cross","$ENV{'AROS_CC'}:-DL_ENDIAN -DMD32_REG_T=int -g -Wall:::AROS::SIXTY_FOUR_BIT_LONG RC4_CHAR RC4_CHUNK DES_INT DES_UNROLL BF_PTR:${no_asm}::::::$ENV{'AROS_RANLIB'}",
++"aros-ppc-cross","$ENV{'AROS_CC'}:-DB_ENDIAN -g -Wall:::AROS::BN_LLONG RC4_CHAR RC4_CHUNK DES_UNROLL BF_PTR:${no_asm}::::::$ENV{'AROS_RANLIB'}",
++"aros-arm-cross","$ENV{'AROS_CC'}:-DL_ENDIAN -g -Wall:::AROS::BN_LLONG RC4_CHAR RC4_CHUNK DES_UNROLL BF_PTR:${no_asm}::::::$ENV{'AROS_RANLIB'}",
 +
  );
  
