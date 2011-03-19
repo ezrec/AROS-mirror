@@ -9,18 +9,18 @@ arossupport
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`CalcChecksum()`_                       `debugmem()`_                           `FindNextNodes()`_                      `FindNode()`_                           
-`FreeStruct()`_                         `hexdump()`_                            `IsDosEntryA()`_                        `kprintf()`_                            
-`NastyFreeMem()`_                       `Purify_AddMemory()`_                   `Purify_CheckAccess()`_                 `Purify_Init()`_                        
-`Purify_SetState()`_                    `RawPutChars()`_                        `ReadByte()`_                           `ReadDouble()`_                         
-`ReadFloat()`_                          `ReadLong()`_                           `ReadString()`_                         `ReadStruct()`_                         
-`ReadWord()`_                           `RemoveSList()`_                        `rkprintf()`_                           `RT_FreeResource()`_                    
-`RT_IntAdd()`_                          `RT_IntCheck()`_                        `RT_IntEnter()`_                        `RT_IntExitB()`_                        
-`RT_IntExitE()`_                        `RT_IntFree()`_                         `RT_IntInitB()`_                        `RT_IntInitE()`_                        
-`RT_IntLeave()`_                        `RT_IntTrack()`_                        `RT_ShowRTStack()`_                     `RT_ShowStack()`_                       
-`strrncasecmp()`_                       `WriteByte()`_                          `WriteDouble()`_                        `WriteFloat()`_                         
-`WriteLong()`_                          `WriteString()`_                        `WriteStruct()`_                        `WriteWord()`_                          
-
+`CalcChecksum()`_                       `CreateSegList()`_                      `debugmem()`_                           `FindNextNodes()`_                      
+`FindNode()`_                           `FreeStruct()`_                         `hexdump()`_                            `IsDosEntryA()`_                        
+`kprintf()`_                            `NastyFreeMem()`_                       `Purify_AddMemory()`_                   `Purify_CheckAccess()`_                 
+`Purify_Init()`_                        `Purify_SetState()`_                    `RawPutChars()`_                        `ReadByte()`_                           
+`ReadDouble()`_                         `ReadFloat()`_                          `ReadLong()`_                           `ReadString()`_                         
+`ReadStruct()`_                         `ReadWord()`_                           `RemoveSList()`_                        `rkprintf()`_                           
+`RT_FreeResource()`_                    `RT_IntAdd()`_                          `RT_IntCheck()`_                        `RT_IntEnter()`_                        
+`RT_IntExitB()`_                        `RT_IntExitE()`_                        `RT_IntFree()`_                         `RT_IntInitB()`_                        
+`RT_IntInitE()`_                        `RT_IntLeave()`_                        `RT_IntTrack()`_                        `RT_ShowRTStack()`_                     
+`RT_ShowStack()`_                       `strrncasecmp()`_                       `WriteByte()`_                          `WriteDouble()`_                        
+`WriteFloat()`_                         `WriteLong()`_                          `WriteString()`_                        `WriteStruct()`_                        
+`WriteWord()`_                          
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -90,6 +90,48 @@ See also
 ~~~~~~~~
 
 `exec.library/SumKickData() <./exec#sumkickdata>`_ `exec.library/SumLibrary() <./exec#sumlibrary>`_ 
+
+----------
+
+CreateSegList()
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+  BPTR CreateSegList(
+     APTR function )
+
+
+Function
+~~~~~~~~
+::
+
+     Create a SegList, which contains a call to 'function'
+
+
+Inputs
+~~~~~~
+::
+
+     function - Function to call when the SegList is executed
+
+
+Result
+~~~~~~
+::
+
+     BPTR to the SegList that was allocated. This SegList can
+          be freed by DOS/UnloadSeg. If not enough memory,
+          BNULL will be returned.
+
+
+
+See also
+~~~~~~~~
+
+`UnloadSeg()`_ 
 
 ----------
 

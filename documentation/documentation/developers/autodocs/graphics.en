@@ -5867,6 +5867,14 @@ Inputs
      polyTable - array of x,y pairs
 
 
+Notes
+~~~~~
+::
+
+     Official prototype files declare count as LONG but
+     original ROM code only uses low 16-bits.
+
+
 
 ----------
 

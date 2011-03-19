@@ -3387,7 +3387,7 @@ Synopsis
  BPTR InternalLoadSeg(
           BPTR fh,
           BPTR table,
-          LONG_FUNC functionarray,
+          LONG_FUNC * funcarray,
           LONG * stack );
 
 Function
@@ -3407,14 +3407,16 @@ Inputs
 
      fh            : Filehandle to load from
      table         : ignored
-     functionarray : array of functions to be used for read, alloc and free
+     funcarray : array of functions to be used for read, seek, alloc and free
         FuncTable[0] -> bytes  = ReadFunc(readhandle, buffer, length), DOSBase
                         D0                D1          A0      D0       A6
         FuncTable[1] -> Memory = AllocFunc(size,flags), ExecBase
                         D0                 D0   D1      A6
         FuncTable[2] -> FreeFunc(memory, size), ExecBase
                                  A1       D0    A6
-     stack         : pointer to storage (ULONG) for stacksize.
+        FuncTable[3] -> pos    = SeekFunc(readhandle, pos, mode), DOSBase
+                        D0                D0          D1   D2
+     stack         : pointer to storage (LONG) for stacksize.
                      (currently ignored)
 
 
@@ -3423,6 +3425,14 @@ Result
 ::
 
      seglist  - pointer to loaded Seglist or NULL in case of failure.
+
+
+Notes
+~~~~~
+::
+
+     FuncTable[3] is not used for Amiga HUNK format files, but is required
+                  for ELF.
 
 
 Bugs
@@ -3483,7 +3493,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- LONG IoErr();
+ SIPTR IoErr();
 
 Function
 ~~~~~~~~
@@ -5919,8 +5929,8 @@ Synopsis
 ~~~~~~~~
 ::
 
- LONG SetIoErr(
-          LONG result );
+ SIPTR SetIoErr(
+          SIPTR result );
 
 Function
 ~~~~~~~~
