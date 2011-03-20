@@ -1,0 +1,48 @@
+#   $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- contrib-gfx-libs : contrib-gfx-libs-pixman contrib-gfx-libs-pixman-includes
+
+FILES :=			\
+	pixman-image		\
+	pixman-access		\
+	pixman-access-accessors	\
+	pixman-region16		\
+	pixman-region32		\
+	pixman-combine32	\
+	pixman-combine64	\
+	pixman-utils		\
+	pixman-edge		\
+	pixman-edge-accessors	\
+	pixman-trap		\
+	pixman-timer		\
+	pixman-matrix		\
+	pixman-gradient-walker	\
+	pixman-linear-gradient	\
+	pixman-radial-gradient	\
+	pixman-conical-gradient	\
+	pixman-bits-image	\
+	pixman			\
+	pixman-cpu		\
+	pixman-fast-path	\
+	pixman-implementation	\
+	pixman-solid-fill	\
+	pixman-general		\
+	../aros/emul_arosc
+
+USER_INCLUDES := -I$(SRCDIR)/$(CURDIR) -I$(SRCDIR)/$(CURDIR)/../aros
+USER_CFLAGS := -DHAVE_CONFIG_H -DPIXMAN_NO_TLS
+
+#MM contrib-gfx-libs-pixman-includes : includes-copy
+
+#MM contrib-gfx-libs-pixman : linklibs
+
+%build_module mmake=contrib-gfx-libs-pixman \
+    modname=pixman modtype=library \
+    files="$(FILES)" uselibs="amiga rom m"
+
+INCLUDE_FILES := pixman.h pixman-version.h
+%copy_includes mmake=includes-copy path=pixman-1
+
+%common
