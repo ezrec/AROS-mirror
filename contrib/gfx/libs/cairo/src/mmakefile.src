@@ -94,11 +94,11 @@ FILES := \
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../aros -I$(GENINCDIR)/pixman-1
 USER_CFLAGS := -DHAVE_CONFIG_H -DCAIRO_NO_MUTEX
 
-#MM workbench-libs-cairo-includes : workbench-libs-pixman-includes includes-copy
+#MM contrib-gfx-libs-cairo-includes : contrib-gfx-libs-pixman-includes includes-copy
 
-#MM workbench-libs-cairo : linklibs workbench-libs-pixman
+#MM contrib-gfx-libs-cairo : linklibs contrib-gfx-libs-pixman
 
-%build_module mmake=workbench-libs-cairo \
+%build_module mmake=contrib-gfx-libs-cairo \
     modname=cairo modtype=library \
     files="$(FILES)" \
     uselibs="freetype2 amiga rom m pixman png z "
