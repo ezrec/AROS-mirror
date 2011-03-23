@@ -7,6 +7,6 @@
 TARGET_CC := $(TOOLDIR)/$(AROS_TARGET_CPU)-aros-gcc
 
 #MM- contrib-gnu : contrib-gnu-binutils
-#MM- contrib-gnu-binutils : $(CROSSTOOLS_TARGET) development-binutils
+#MM- contrib-gnu-binutils : tools-crosstools development-binutils
 
 %fetch_and_build_gnu_development package=binutils version=2.20.1 patch=yes

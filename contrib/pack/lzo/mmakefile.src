@@ -8,7 +8,7 @@ TARGET_CC := $(TOOLDIR)/$(AROS_TARGET_CPU)-aros-gcc
 
 #MM- contrib-pack : contrib-pack-lzo
 #MM- contrib-pack-lzo : development-lzo
-#MM- development-lzo : $(CROSSTOOLS_TARGET)
+#MM- development-lzo : tools-crosstools
 
 %fetch_and_build_gnu_development package=lzo version=2.03 patch=yes \
 	package_repo="http://www.oberhumer.com/opensource/lzo/download"

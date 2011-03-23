@@ -7,7 +7,7 @@
 TARGET_CC := $(TOOLDIR)/$(AROS_TARGET_CPU)-aros-gcc
 
 #MM- contrib-gnu : contrib-gnu-findutils
-#MM- contrib-gnu-findutils : $(CROSSTOOLS_TARGET) development-findutils
+#MM- contrib-gnu-findutils : tools-crosstools development-findutils
 
 %fetch_and_build_gnu_development package=findutils version=4.2.31 patch=yes \
     suffixes="tar.gz"
