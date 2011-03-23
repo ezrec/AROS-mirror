@@ -1,4 +1,4 @@
-# Copyright © 2008, The AROS Development Team. All rights reserved.
+# Copyright © 2008, 2011, The AROS Development Team. All rights reserved.
 # $Id$
 
 -include $(TOP)/config/make.cfg
@@ -7,6 +7,6 @@
 TARGET_CC := $(TOOLDIR)/$(AROS_TARGET_CPU)-aros-gcc
 
 #MM- contrib-gnu : contrib-gnu-tar
-#MM- contrib-gnu-tar : tools-crosstools development-tar
+#MM- contrib-gnu-tar : $(CROSSTOOLS_TARGET) development-tar
 
 %fetch_and_build_gnu_development package=tar version=1.18 patch=yes

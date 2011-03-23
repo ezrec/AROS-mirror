@@ -1,4 +1,4 @@
-# Copyright © 2004, 2008 The AROS Development Team. All rights reserved.
+# Copyright © 2004, 2008, 2011 The AROS Development Team. All rights reserved.
 # $Id$
 
 -include $(TOP)/config/make.cfg
@@ -9,7 +9,7 @@ TARGET_CC := $(TOOLDIR)/$(AROS_TARGET_CPU)-aros-gcc
 GCC_VERSION := 4.2.2
 
 #MM- contrib-gnu : contrib-gnu-gcc
-#MM- contrib-gnu-gcc : tools-crosstools development-collect-aros development-gcc
+#MM- contrib-gnu-gcc : $(CROSSTOOLS_TARGET) development-collect-aros development-gcc
 
 %fetch_and_build_gnu_development package=gcc version=$(GCC_VERSION) patch=yes \
     extraoptions="--enable-languages=c,c++ --enable-longlong --enable-sjlj-exceptions --enable-version-specific-runtime-libs --disable-libssp --disable-libstdcxx-pch" \
