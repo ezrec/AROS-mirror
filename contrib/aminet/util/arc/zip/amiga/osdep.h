@@ -100,6 +100,10 @@ void ClearIOErr_exit(int e);
 #  endif
 #endif
 
+#ifdef __AROS__
+#  include <time.h>
+#endif
+
 #ifdef __GNUC__
 #  include <sys/types.h>
 #  include <exec/execbase.h>

@@ -31,6 +31,10 @@
 #else
    int mkdir(const char *_name);
 #endif
+#ifdef __AROS__ /* Some more prototypes */
+#include <time.h>
+#include <unistd.h>
+#endif
 
 /* we only have dinky old-sk00l 32 bit filesystems */
 #ifdef LARGE_FILE_SUPPORT
