@@ -2,7 +2,9 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- ports-office : ports-office-muibase
+#MM- ports-office : ports-office-$(AROS_TARGET_CPU)
+
+#MM- ports-office-i386 : ports-office-muibase
 
 #MM  ports-office-muibase : includes linklibs contrib-zune-classes-nlist ports-office-muibase-fetch \
 #MM  ports-office-muibase-create ports-office-muibase-install ports-office-muibase-catalogs
