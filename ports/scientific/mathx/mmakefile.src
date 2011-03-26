@@ -36,7 +36,7 @@ include $(TOP)/config/make.cfg
 REPOSITORIES := http://archives.aros-exec.org/share/utility/scientific
 ARCHBASE     := muimathx-src-svn40
 TARGETDIR    := $(AROS_CONTRIB)/Utilities/Scientific/MathX
-TARGET_CXX   := $(TOOLDIR)/$(AROS_TARGET_CPU)-aros-g++
+TARGET_CXX   := $(CROSSTOOLSDIR)/$(AROS_TARGET_CPU)-aros-g++
 USER_CFLAGS  := -D__MATHX_VERDATE=\"`date +%d.%m.%Y`\" \
                 -D__MATHX_VERDAYS="`expr \`date +%s\` / 86400 - 2922`" \
                 -D__MATHX_BUILDID=\"$(BUILDID)\" \
