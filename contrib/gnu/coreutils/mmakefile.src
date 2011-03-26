@@ -9,4 +9,5 @@ TARGET_CC := $(CROSSTOOLSDIR)/$(AROS_TARGET_CPU)-aros-gcc
 #MM- contrib-gnu : contrib-gnu-coreutils
 #MM- contrib-gnu-coreutils : tools-crosstools development-coreutils
 
-%fetch_and_build_gnu_development package=coreutils version=6.9 patch=yes
+%fetch_and_build_gnu_development package=coreutils version=6.9 patch=yes \
+    extracflags="-D__BSD_VISIBLE=1"

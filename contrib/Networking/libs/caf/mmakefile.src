@@ -8,6 +8,8 @@ FILES :=    debugging     \
  
 #MM contrib-networking-caf : libcaf-includes-copy
 
+USER_CFLAGS := -D__BSD_VISIBLE=1
+
 %build_linklib mmake=contrib-networking-caf libname=caf files=$(FILES)
 
 %common

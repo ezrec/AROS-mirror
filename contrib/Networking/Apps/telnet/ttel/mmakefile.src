@@ -6,7 +6,8 @@ include $(TOP)/config/make.cfg
 USER_CFLAGS := \
         -Wno-uninitialized -Wno-parentheses \
         -DAMITCP \
-        -DDIRECTED_BROADCAST
+        -DDIRECTED_BROADCAST \
+        -D__BSD_VISIBLE=1
 
 EXEDIR := $(CONTRIBDIR)/Networking/Apps/ttel
 

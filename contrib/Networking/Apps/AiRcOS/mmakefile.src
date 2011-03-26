@@ -8,7 +8,7 @@ FILES  := locale aircos_main aircos_gui aircos_server_gui aircos_funcs_irc airco
 
 EXEDIR := $(CONTRIBDIR)/Networking/Apps/AiRcOS
 
-USER_CFLAGS := -Wno-uninitialized -Wno-parentheses
+USER_CFLAGS := -Wno-uninitialized -Wno-parentheses -D__BSD_VISIBLE=1
 
 #MM aros-tcpip-apps-aircos : \
 #MM aros-tcpip-apps-aircos-catalogs \

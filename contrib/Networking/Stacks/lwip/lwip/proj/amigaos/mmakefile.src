@@ -32,7 +32,8 @@ FILES = $(COREOBJS) $(ARCHOBJS) $(NETIFOBJS) $(APIOBJS) $(LIBOBJS) test
 
 EXEDIR := $(CONTRIBDIR)/lwip
 
-USER_CFLAGS := -DLWIP_DEBUG -O2 -I$(SRCDIR)/include -I$(ARCHINCLUDE) -I$(IPVXINCLUDE) -I./ -I./include
+USER_CFLAGS := -DLWIP_DEBUG -O2 -I$(SRCDIR)/include -I$(ARCHINCLUDE) -I$(IPVXINCLUDE) -I./ -I./include \
+        -D__BSD_VISIBLE=1
 
 %build_prog mmake=lwip \
     progname=lwip targetdir=$(EXEDIR) \

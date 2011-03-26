@@ -9,5 +9,5 @@
 
 %fetch_and_build_gnu_development package=SDL_net version=1.2.7 patch=yes \
     package_repo=http://www.libsdl.org/projects/SDL_net/release/ \
-    suffixes="tar.gz"
+    suffixes="tar.gz" extracflags="-D__BSD_VISIBLE=1"
 
