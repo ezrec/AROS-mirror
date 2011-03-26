@@ -1,4 +1,4 @@
-# Copyright © 2009, The AROS Development Team. All rights reserved.
+# Copyright © 2009-2011, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(TOP)/config/make.cfg
@@ -44,7 +44,7 @@ LDFLAGS += -Wl,-whole-archive -lwebkit-owb -lwtf -ljsc -lwebcore -Wl,-no-whole-a
     -lSDL -lSDL_gfx -lpng -ljpeg -lcurl -liconv -lz -lamiga -larosc -lm -lmui -lssl \
     -lcrypto -lsqlite3 -lxslt
 
-OWB_CXX := $(TOOLDIR)/$(AROS_TARGET_CPU)-aros-g++ -specs=$(GENDIR)/config/specs
+OWB_CXX := $(CROSSTOOLSDIR)/$(AROS_TARGET_CPU)-aros-g++ -specs=$(GENDIR)/config/specs
 OWB_OBJ := $(addprefix $(OBJDIR)/,$(addsuffix .o,$(FILES)))
 OWB_CFLAGS := $(CFLAGS) -DZUNE_BUILTIN_SCROLLGROUP=0 -DMUIMASTER_YES_INLINE_STDARG \
     -DWTF_PLATFORM_AROS=1 -I$(SRCDIR)/$(CURDIR)/tabs -I$(AROS_INCLUDES)/SDL \

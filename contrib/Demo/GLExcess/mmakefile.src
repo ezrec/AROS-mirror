@@ -3,10 +3,11 @@ include $(TOP)/config/make.cfg
 
 #MM mesa-demos-glexcess : \
 #MM	includes \
+#MM     linklibs-startup \
 #MM	$(CROSSTOOLS_TARGET) \
-#MM	contrib-gfx-libs-mesa-includes \
-#MM	contrib-gfx-libs-mesa-glu-linklib \
-#MM	contrib-gfx-libs-mesa-glut-linklib \
+#MM	workbench-libs-mesa-includes \
+#MM	workbench-libs-glu-includes \
+#MM	contrib-gfx-libs-glut \
 #MM	mesa-demos-glexcess-cpp \
 #MM	mesa-demos-glexcess-copyfiles
 
@@ -37,10 +38,14 @@ CXX_FLAGS := $(CFLAGS) $(USER_CFLAGS) -fno-rtti -nostdinc++
 CXX_FLAGS := $(subst -Wno-pointer-sign,, $(subst -Werror-implicit-function-declaration,, $(CXX_FLAGS)))
 
 # Define the use of cross compiler
-TARGET_CXX = $(TOOLDIR)/$(AROS_TARGET_CPU)-aros-g++
+ifeq ($(TARGET_CXX),)
+  CXX_CC := $(CROSSTOOLSDIR)/$(AROS_TARGET_CPU)-aros-g++
+else
+  CXX_CC := $(TARGET_CXX)
+endif
 
 $(GLEXCESS_SOURCES) :
-%compile_q cmd=$(TARGET_CXX) opt=$(CXX_FLAGS) from=$(SRCDIR)/$(CURDIR)/$@.cpp to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+%compile_q cmd=$(CXX_CC) opt=$(CXX_FLAGS) from=$(SRCDIR)/$(CURDIR)/$@.cpp to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
 
 #MM
 mesa-demos-glexcess-cpp : mesa-demos-glexcess-cpp-directories-setup $(GLEXCESS_SOURCES)
@@ -48,6 +53,8 @@ mesa-demos-glexcess-cpp : mesa-demos-glexcess-cpp-directories-setup $(GLEXCESS_S
 #MM
 mesa-demos-glexcess-cpp-directories-setup :
 %mkdirs_q dirs="$(GENDIR)/$(CURDIR) $(CONTRIBDIR)/Demos/Mesa/GLExcess"
+
+USER_LDFLAGS := -L$(AROS_LIB)
 
 #MM
 mesa-demos-glexcess :

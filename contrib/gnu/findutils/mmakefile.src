@@ -4,7 +4,7 @@
 -include $(TOP)/config/make.cfg
 
 # Override faked target compiler with real cross compiler.
-TARGET_CC := $(TOOLDIR)/$(AROS_TARGET_CPU)-aros-gcc
+TARGET_CC := $(CROSSTOOLSDIR)/$(AROS_TARGET_CPU)-aros-gcc
 
 #MM- contrib-gnu : contrib-gnu-findutils
 #MM- contrib-gnu-findutils : tools-crosstools development-findutils
