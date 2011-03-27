@@ -33,7 +33,7 @@
 #include "SDL_cgximage_c.h"
 #include "SDL_cgxwm_c.h"
 #include "SDL_amigaevents_c.h"
-
+#include "SDL_amigamouse_c.h"
 
 /* The translation tables from an Amiga keysym to a SDL keysym */
 static SDLKey MISC_keymap[256];
