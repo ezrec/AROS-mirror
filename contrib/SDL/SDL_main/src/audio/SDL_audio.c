@@ -113,6 +113,9 @@ static AudioBootStrap *bootstrap[] = {
 #if SDL_AUDIO_DRIVER_EPOCAUDIO
 	&EPOCAudio_bootstrap,
 #endif
+#if SDL_AUDIO_DRIVER_AHI
+	&AHI_bootstrap,
+#endif
 	NULL
 };
 SDL_AudioDevice *current_audio = NULL;
@@ -120,6 +123,10 @@ SDL_AudioDevice *current_audio = NULL;
 /* Various local functions */
 int SDL_AudioInit(const char *driver_name);
 void SDL_AudioQuit(void);
+
+#if SDL_AUDIO_DRIVER_AHI
+Uint32 has_obtained_spec;
+#endif
 
 /* The general mixing thread function */
 int SDLCALL SDL_RunAudio(void *audiop)
@@ -495,6 +502,9 @@ int SDL_OpenAudio(SDL_AudioSpec *desired, SDL_AudioSpec *obtained)
 	audio->enabled = 1;
 	audio->paused  = 1;
 
+#ifdef ENABLE_AHI
+	has_obtained_spec = obtained ? 1 : 0;
+#endif
 	audio->opened = audio->OpenAudio(audio, &audio->spec)+1;
 
 	if ( ! audio->opened ) {
@@ -565,7 +575,7 @@ int SDL_OpenAudio(SDL_AudioSpec *desired, SDL_AudioSpec *obtained)
 			/* The audio is now playing */
 			break;
 	}
-
+	
 	return(0);
 }
 
