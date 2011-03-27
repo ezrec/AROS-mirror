@@ -1,4 +1,4 @@
-/* include/SDL_config.h.  Generated from SDL_config.h.in by configure.  */
+/* include/SDL_config.h.  Manually created for AROS  */
 /*
     SDL - Simple DirectMedia Layer
     Copyright (C) 1997-2009 Sam Lantinga
@@ -23,6 +23,8 @@
 
 #ifndef _SDL_config_h
 #define _SDL_config_h
+
+#include <aros/cpu.h>
 
 /* This is a set of defines to configure the SDL features */
 
@@ -53,7 +55,11 @@
 #define SDL_HAS_64BIT_TYPE 1
 
 /* Endianness */
+#if AROS_BIG_ENDIAN
+#define SDL_BYTEORDER 4321
+#else
 #define SDL_BYTEORDER 1234
+#endif
 
 /* Comment this if you want to build without any C library requirements */
 #define HAVE_LIBC 1
@@ -130,7 +136,7 @@
 #define HAVE_SSCANF 1
 #define HAVE_SNPRINTF 1
 #define HAVE_VSNPRINTF 1
-/* #undef HAVE_ICONV */
+#define HAVE_ICONV 1
 #define HAVE_SIGACTION 1
 #define HAVE_SETJMP 1
 /* #undef HAVE_NANOSLEEP */
