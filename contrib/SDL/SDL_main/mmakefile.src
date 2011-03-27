@@ -4,7 +4,7 @@
 include $(TOP)/config/make.cfg
 
 #MM- contrib-sdl : development-SDL development-SDL_gfx development-SDL_image development-SDL_mixer \
-#MM  development-SDL_net development-SDL_sound contrib-sdl-sdl-ttf
+#MM  development-SDL_net development-SDL_sound development-SDL_ttf
 
 #MM- development-SDL : workbench-devs-AHI workbench-libs-mesa \
 #MM  development-libiconv development-SDL-includes development-SDL-config

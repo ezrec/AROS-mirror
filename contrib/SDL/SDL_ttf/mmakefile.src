@@ -9,18 +9,14 @@ LIBFILES:=SDL_ttf
 FILES:=showfont
 HEADERS:=SDL_ttf.h
 
-#MM- contrib-sdl-sdl-ttf : development-sdl-ttf-test
+#MM- contrib-sdl-sdl-ttf : development-SDL_ttf-test
 
-#MM development-sdl-ttf-test : development-sdl-ttf workbench-libs-freetype-linklib
-%build_prog mmake=development-sdl-ttf-test progname=sdl_ttf_showfont files=$(FILES) \
-    targetdir=$(AROS_TESTS) uselibs="SDL SDL_ttf freetype2"
+#MM development-SDL_ttf-test : development-SDL_ttf workbench-libs-freetype-linklib
+%build_prog mmake=development-SDL_ttf-test progname=sdl_ttf_showfont files=$(FILES) \
+    targetdir=$(AROS_TESTS) uselibs="SDL GL iconv SDL_ttf freetype2"
 
-#MM development-sdl-ttf :
-%build_linklib mmake=development-sdl-ttf libname=SDL_ttf files=$(LIBFILES)
+%build_linklib mmake=development-SDL_ttf libname=SDL_ttf files=$(LIBFILES)
 
-
-#MM
-includes-copy :
-%copy_includes includes=$(HEADERS) path=SDL
+%copy_includes mmake=includes-copy includes=$(HEADERS) path=SDL
 
 %common
