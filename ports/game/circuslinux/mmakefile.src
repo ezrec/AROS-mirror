@@ -24,7 +24,7 @@ FILES := circuslinux
 %build_prog mmake=ports-game-circuslinux progname=CircusLinux \
     srcdir=$(PORTSDIR)/circuslinux/$(ARCHBASE)/ \
     files=$(FILES) targetdir=$(TARGETDIR) \
-    uselibs="arosc SDL_image png jpeg SDL_mixer vorbisfile vorbis ogg SDL z"
+    uselibs="arosc SDL_image png jpeg SDL_mixer vorbisfile vorbis ogg SDL GL z"
 
 
 %fetch mmake=ports-game-circuslinux-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/circuslinux \

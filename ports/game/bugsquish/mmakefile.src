@@ -24,7 +24,7 @@ FILES := bugsquish
 %build_prog mmake=ports-game-bugsquish progname=Bugsquish \
     srcdir=$(PORTSDIR)/bugsquish/$(ARCHBASE)/ \
     files=$(FILES) targetdir=$(TARGETDIR) \
-    uselibs="arosc SDL_image png jpeg SDL_mixer vorbisfile vorbis ogg SDL z"
+    uselibs="arosc SDL_image png jpeg SDL_mixer vorbisfile vorbis ogg SDL GL z"
 
 %fetch mmake=ports-game-bugsquish-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/bugsquish \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \

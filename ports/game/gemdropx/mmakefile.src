@@ -24,7 +24,7 @@ FILES := gemdropx
 %build_prog mmake=ports-game-gemdropx progname=GemDropX \
     srcdir=$(PORTSDIR)/gemdropx/$(ARCHBASE)/ \
     files=$(FILES) targetdir=$(TARGETDIR) \
-    uselibs="arosc SDL_mixer vorbisfile vorbis ogg SDL"
+    uselibs="arosc SDL_mixer vorbisfile vorbis ogg SDL GL"
 
 
 %fetch mmake=ports-game-gemdropx-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/gemdropx \

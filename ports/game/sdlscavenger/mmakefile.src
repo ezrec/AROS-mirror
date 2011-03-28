@@ -23,7 +23,7 @@ FILES := scav gfx sound edit anim
 %build_prog mmake=ports-game-sdlscavenger progname=SdlScavenger \
     srcdir=$(PORTSDIR)/sdlscavenger/$(ARCHBASE)/ \
     files=$(FILES) targetdir=$(TARGETDIR) nix=yes \
-    uselibs="arosc SDL"
+    uselibs="arosc SDL GL"
 
 
 %fetch mmake=ports-game-sdlscavenger-fetch archive=$(ARCHBASE)_2008_06_11 destination=$(PORTSDIR)/sdlscavenger \
