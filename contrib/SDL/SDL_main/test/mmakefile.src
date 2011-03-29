@@ -21,8 +21,6 @@ FILES  := \
     testiconv \
     testjoystick \
     testkeys \
-    testloadso \
-    testlock \
     testoverlay2 \
     testoverlay \
     testpalette \
@@ -38,6 +36,8 @@ FILES  := \
 # testsem
 # threadwin
 # torturethread
+# testloadso
+# testlock
 
 EXEDIR := $(AROS_TESTS)/sdl
 
@@ -50,7 +50,7 @@ USER_INCLUDES := -I$(AROS_INCLUDES)/SDL
     uselibs="SDL GL iconv arossupport amiga arosc m"
 
 
-DATAFILES := icon.bmp picture.xbm sail.bmp sample.bmp sample.wav utf8.txt
+DATAFILES := icon.bmp picture.xbm sail.bmp sample.bmp sample.wav utf8.txt moose.dat
 DATAS  := $(foreach f,$(DATAFILES),$(EXEDIR)/$(f))
 
 test-sdl : $(DATAS)
@@ -65,6 +65,9 @@ $(EXEDIR)/%.wav : %.wav
 	@$(CP) $< $@
 
 $(EXEDIR)/%.txt : %.txt
+	@$(CP) $< $@
+
+$(EXEDIR)/%.dat : %.dat
 	@$(CP) $< $@
 
 %common
