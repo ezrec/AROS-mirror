@@ -24,17 +24,17 @@
 #include "SDL_cgxvideo.h"
 #include "SDL_cgximage_c.h"
 
-extern int CGX_AllocHWSurface(_THIS, SDL_Surface *surface);
+extern int 	CGX_AllocHWSurface(_THIS, SDL_Surface *surface);
 extern void CGX_FreeHWSurface(_THIS, SDL_Surface *surface);
-extern int CGX_LockHWSurface(_THIS, SDL_Surface *surface);
+extern int 	CGX_LockHWSurface(_THIS, SDL_Surface *surface);
 extern void CGX_UnlockHWSurface(_THIS, SDL_Surface *surface);
-extern int CGX_FlipHWSurface(_THIS, SDL_Surface *surface);
-extern int CGX_FillHWRect(_THIS,SDL_Surface *dst,SDL_Rect *dstrect,Uint32 color);
+extern int 	CGX_FlipHWSurface(_THIS, SDL_Surface *surface);
+extern int 	CGX_FillHWRect(_THIS,SDL_Surface *dst,SDL_Rect *dstrect,Uint32 color);
 #ifndef NO_AMIGAHWSURF
-extern int CGX_CheckHWBlit(_THIS,SDL_Surface *src,SDL_Surface *dst);
-extern int CGX_SetHWColorKey(_THIS,SDL_Surface *surface, Uint32 key);
-extern int CGX_CreateAlphaPixMap(_THIS,SDL_Surface *surface);
-extern int CGX_ColorKeyToAlpha(_THIS,SDL_Surface *surface, Uint32 key);
+extern int 	CGX_CheckHWBlit(_THIS,SDL_Surface *src,SDL_Surface *dst);
+extern int 	CGX_SetHWColorKey(_THIS,SDL_Surface *surface, Uint32 key);
+extern int 	CGX_CreateAlphaPixMap(_THIS,SDL_Surface *surface);
+extern int 	CGX_ColorKeyToAlpha(_THIS,SDL_Surface *surface, Uint32 key);
 
 /* HW bliting functions */
 static int CGX_HWtoHWBlit(	SDL_Surface *src, SDL_Rect *srcrect,
@@ -49,7 +49,4 @@ static int CGX_SWtoHWBlitA(	SDL_Surface *src, SDL_Rect *srcrect,
 							SDL_Surface *dst, SDL_Rect *dstrect);
 static int CGX_SWtoHWBlitCC(SDL_Surface *src, SDL_Rect *srcrect,
 							SDL_Surface *dst, SDL_Rect *dstrect);
-/* This one is not used anymore */
-//static int CGX_HWAccelBlit(SDL_Surface *src, SDL_Rect *srcrect,
-//					SDL_Surface *dst, SDL_Rect *dstrect);
 #endif

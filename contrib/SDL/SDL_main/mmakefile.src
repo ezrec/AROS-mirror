@@ -66,8 +66,8 @@ FILES := \
     src/thread/aros/SDL_syssem \
     src/thread/aros/SDL_systhread \
     src/audio/ahi/SDL_ahiaudio \
-    src/video/cgx/SDL_amigaevents \
-    src/video/cgx/SDL_amigamouse \
+    src/video/cgx/SDL_cgxevents \
+    src/video/cgx/SDL_cgxmouse \
     src/video/cgx/SDL_cgxaccel \
     src/video/cgx/SDL_cgxgl \
     src/video/cgx/SDL_cgximage \

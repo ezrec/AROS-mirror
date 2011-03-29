@@ -24,5 +24,6 @@
 #include "SDL_cgxvideo.h"
 
 /* Functions to be exported */
-extern void amiga_InitOSKeymap(_THIS);
-extern void amiga_PumpEvents(_THIS);
+extern void CGX_InitOSKeymap(_THIS);
+extern void CGX_PumpEvents(_THIS);
+

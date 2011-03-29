@@ -51,12 +51,10 @@ struct SDL_PrivateVideoData {
     struct Window 	*SDL_Window;		/* The SDL Window */
 	struct RastPort *RP;
 	
-    unsigned char *BlankCursor;		/* The invisible cursor */
+    unsigned char *BlankCursor;			/* The invisible cursor */
 
     /* The variables used for displaying graphics */
-    Uint8 *Image;					/* The image for our window */
-
-    /* Support for internal mouse warping */
+    Uint8 *Image;						/* The image for our window */
 	
     /* The current list of available video modes */
     SDL_Rect **modelist;
@@ -64,14 +62,16 @@ struct SDL_PrivateVideoData {
     /* available visuals of interest to us, sorted deepest first */
     struct {
 		Uint32 visual;
-		int depth;		/* number of significant bits/pixel */
-		int bpp;		/* pixel quantum in bits */
-    } visuals[5];		/* at most entries for 8, 15, 16, 24, 32*/
+		int depth;						/* number of significant bits/pixel */
+		int bpp;						/* pixel quantum in bits */
+    } visuals[5];						/* at most entries for 8, 15, 16, 24, 32*/
     int nvisuals;
 
     Uint32 vis;						/* current visual in use */
     int depth;						/* current visual depth (not bpp) */
     int currently_fullscreen;		/* Fullscreen flag */
+	
+	/* Support for internal mouse warping */
 	int window_active;				/* Active Window flag */
 	int GrabMouse;					/* Flag indicating that mouse shall be grabbed */
 	
@@ -82,8 +82,7 @@ struct SDL_PrivateVideoData {
 	struct MsgPort 	*dispport;
 	ULONG safe_sigbit;
 	ULONG disp_sigbit;
-	/* Used to fake double buffering in Window mode, also used in FullScreen if AllocScreenBuffer fails */
-	struct BitMap *BlitBitMap;
+	struct BitMap *BlitBitMap;		/* Used to fake double buffering in Window mode, also used in FullScreen if AllocScreenBuffer fails */
 	
 	/* Temporary rastport used for HW bliting to non display surface */
 	struct RastPort *temprp;
@@ -135,7 +134,7 @@ struct private_hwdata
 	APTR					pixarrayalpha;		// Pixel array with alpha channel used for Alpha and ColorKey bliting
 	ULONG					pixfmt;				// pixfmt of the surface
 	BOOL 					allocated;			// Set to 1 if the bitmap has been allocated (remains 0 for the display surface)
-	BOOL					update;
+	BOOL					update;				// Flag used to force pending display update due to locks on destination surface after unlocking
 };
 
 #endif /* _SDL_cgxvideo_h */

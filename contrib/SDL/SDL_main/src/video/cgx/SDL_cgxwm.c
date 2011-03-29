@@ -22,42 +22,70 @@
 #include "SDL_config.h"
 
 #include "SDL_version.h"
-#include "SDL_timer.h"
 #include "SDL_video.h"
 #include "SDL_syswm.h"
+#include "SDL_mouse.h"
 #include "../../events/SDL_events_c.h"
-#include "../SDL_pixels_c.h"
 #include "SDL_cgxmodes_c.h"
 #include "SDL_cgxwm_c.h"
-
-/* This is necessary for working properly with Enlightenment, etc. */
-#define USE_ICON_WINDOW
+#include "SDL_cgxmouse_c.h"
 
 void CGX_SetIcon(_THIS, SDL_Surface *icon, Uint8 *mask)
 {
-/* Not yet implemented */
+	/* Not yet implemented */
+}
+
+int CGX_IconifyWindow(_THIS)
+{
+	/* Not yet implemented */
+	return 0;
 }
 
 void CGX_SetCaption(_THIS, const char *title, const char *icon)
 {
-	if(SDL_Window)
-		SetWindowTitles(SDL_Window,(char *)title,NULL);
-}
-
-/* Iconify the window */
-int CGX_IconifyWindow(_THIS)
-{
-/* Not yet implemented */
-	return 0;
+	if(SDL_Window) SetWindowTitles(SDL_Window,(char *)title,NULL);
 }
 
 int CGX_GetWMInfo(_THIS, SDL_SysWMinfo *info)
 {
-	if ( info->version.major <= SDL_MAJOR_VERSION ) {
+	if ( info->version.major <= SDL_MAJOR_VERSION )
+	{
 		return(1);
-	} else {
-		SDL_SetError("Application not compiled with SDL %d.%d\n",
-					SDL_MAJOR_VERSION, SDL_MINOR_VERSION);
+	}
+	else
+	{
+		SDL_SetError("Application not compiled with SDL %d.%d\n", SDL_MAJOR_VERSION, SDL_MINOR_VERSION);
 		return(-1);
 	}
 }
+
+
+SDL_GrabMode CGX_GrabWMInput(_THIS, SDL_GrabMode mode)
+{
+	D(bug("CGX_GrabWMInput()\n"));
+
+	SDL_Lock_EventThread();
+	
+	if ( this->screen == NULL )	return(SDL_GRAB_OFF);
+	if ( ! SDL_Window ) return(mode);	/* Will be set later on mode switch */
+
+	switch(mode)
+	{
+		case SDL_GRAB_OFF:
+			this->hidden->GrabMouse = 0;
+			break;
+		case SDL_GRAB_QUERY:
+			mode = this->hidden->GrabMouse?SDL_GRAB_ON:SDL_GRAB_OFF;
+			break;
+		case SDL_GRAB_ON:
+			if (!(this->screen->flags & SDL_FULLSCREEN))
+				this->hidden->GrabMouse = 1;
+			break;
+		default:
+			break;
+	}
+
+	SDL_Unlock_EventThread();
+	return(mode);
+}
+

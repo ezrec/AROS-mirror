@@ -26,6 +26,7 @@
 #include "../../events/SDL_events_c.h"
 #include "SDL_cgxvideo.h"
 #include "SDL_cgxwm_c.h"
+#include "SDL_cgxmouse_c.h"
 #include "SDL_cgxmodes_c.h"
 
 static void add_visual(_THIS, int depth, int class)

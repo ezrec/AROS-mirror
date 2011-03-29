@@ -37,8 +37,8 @@
 #include "SDL_cgxgl_c.h"
 #include "SDL_cgxvideo.h"
 #include "SDL_cgxwm_c.h"
-#include "SDL_amigamouse_c.h"
-#include "SDL_amigaevents_c.h"
+#include "SDL_cgxmouse_c.h"
+#include "SDL_cgxevents_c.h"
 #include "SDL_cgxmodes_c.h"
 #include "SDL_cgximage_c.h"
 #include "SDL_cgxaccel_c.h"
@@ -62,6 +62,7 @@ static int 			CGX_LeaveFullScreen(_THIS);
 int CGX_SetGamma(_THIS, float red, float green, float blue);
 int CGX_GetGamma(_THIS, float *red, float *green, float *blue);
 int CGX_SetGammaRamp(_THIS, Uint16 *ramp);
+int CGX_GetGammaRamp(_THIS, Uint16 *ramp);
 
 /* CGX driver bootstrap functions */
 static int 				CGX_Available(void);
@@ -103,6 +104,7 @@ static SDL_VideoDevice *CGX_CreateDevice(int devindex)
 	device->handles_any_size	= 1;
 
 	/* Set the function pointers */
+	/* SDL_cgxvideo.c */
 	device->VideoInit			= CGX_VideoInit;
 	device->ListModes			= CGX_ListModes;
 	device->SetVideoMode 		= CGX_SetVideoMode;
@@ -111,6 +113,12 @@ static SDL_VideoDevice *CGX_CreateDevice(int devindex)
 	device->SetColors 			= CGX_SetColors;
 	device->UpdateRects 		= NULL;
 	device->VideoQuit 			= CGX_VideoQuit;
+	device->free 				= CGX_DeleteDevice;
+	device->SetGamma 			= CGX_SetGamma;
+	device->GetGamma 			= CGX_GetGamma;
+	device->SetGammaRamp 		= CGX_SetGammaRamp;
+	device->GetGammaRamp 		= CGX_GetGammaRamp;
+	/* SDL_cgxaccel.c */
 	device->AllocHWSurface 		= CGX_AllocHWSurface;
 #ifndef NO_AMIGAHWSURF
 	device->CheckHWBlit 		= CGX_CheckHWBlit;
@@ -125,31 +133,28 @@ static SDL_VideoDevice *CGX_CreateDevice(int devindex)
 	device->UnlockHWSurface 	= CGX_UnlockHWSurface;
 	device->FlipHWSurface 		= CGX_FlipHWSurface;
 	device->FreeHWSurface 		= CGX_FreeHWSurface;
-	device->SetGamma 			= CGX_SetGamma;
-	device->GetGamma 			= CGX_GetGamma;
-	device->SetGammaRamp 		= CGX_SetGammaRamp;
-	device->GetGammaRamp 		= NULL;
+	/* SDL_cgxwm.c */
+	device->SetIcon 			= CGX_SetIcon;
+	device->SetCaption 			= CGX_SetCaption;
+	device->IconifyWindow 		= CGX_IconifyWindow;
+	device->GrabInput 			= CGX_GrabWMInput;
+	device->GetWMInfo 			= CGX_GetWMInfo;
+	device->FreeWMCursor 		= CGX_FreeWMCursor;
+	device->CreateWMCursor 		= CGX_CreateWMCursor;
+	device->ShowWMCursor 		= CGX_ShowWMCursor;
+	device->WarpWMCursor 		= CGX_WarpWMCursor;
+	device->CheckMouseMode 		= CGX_CheckMouseMode;
+	/* SDL_cgxevents.c */
+	device->InitOSKeymap 		= CGX_InitOSKeymap;
+	device->PumpEvents 			= CGX_PumpEvents;
 #if SDL_VIDEO_OPENGL
+	/* SDL_cgxgl.c */
 	device->GL_LoadLibrary 		= CGX_GL_LoadLibrary;
 	device->GL_GetProcAddress 	= CGX_GL_GetProcAddress;
 	device->GL_GetAttribute 	= CGX_GL_GetAttribute;
 	device->GL_MakeCurrent 		= CGX_GL_MakeCurrent;
 	device->GL_SwapBuffers 		= CGX_GL_SwapBuffers;
 #endif
-	device->SetIcon 			= CGX_SetIcon;
-	device->SetCaption 			= CGX_SetCaption;
-	device->IconifyWindow 		= NULL; /* CGX_IconifyWindow; */
-	device->GrabInput 			= amiga_GrabInput; /* CGX_GrabInput;*/
-	device->GetWMInfo 			= CGX_GetWMInfo;
-	device->FreeWMCursor 		= amiga_FreeWMCursor;
-	device->CreateWMCursor 		= amiga_CreateWMCursor;
-	device->ShowWMCursor 		= amiga_ShowWMCursor;
-	device->WarpWMCursor 		= amiga_WarpWMCursor;
-	device->CheckMouseMode 		= amiga_CheckMouseMode;
-	device->InitOSKeymap 		= amiga_InitOSKeymap;
-	device->PumpEvents 			= amiga_PumpEvents;
-
-	device->free 				= CGX_DeleteDevice;
 
 	return device;
 }
@@ -1335,6 +1340,12 @@ int CGX_GetGamma(_THIS, float *red, float *green, float *blue)
 }
 
 int CGX_SetGammaRamp(_THIS, Uint16 *ramp)
+{
+    SDL_SetError("Gamma correction not supported");
+    return(-1);
+}
+
+int CGX_GetGammaRamp(_THIS, Uint16 *ramp)
 {
     SDL_SetError("Gamma correction not supported");
     return(-1);

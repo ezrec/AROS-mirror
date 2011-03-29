@@ -25,59 +25,118 @@
 
 #include "SDL_mouse.h"
 #include "../../events/SDL_events_c.h"
+#include "../SDL_pixels_c.h"
 #include "../SDL_cursor_c.h"
-#include "SDL_amigamouse_c.h"
+#include "SDL_cgxmouse_c.h"
 
-
-/* The implementation dependent data for the window manager cursor */
-
-typedef void * WMCursor;
-
-void amiga_FreeWMCursor(_THIS, WMcursor *cursor)
+struct WMcursor
 {
+	UWORD*	image;
+	WORD	width, height;
+	WORD	offx, offy;
+};
+
+void CGX_FreeWMCursor(_THIS, WMcursor *cursor)
+{
+	D(bug("[SDL] CGX_FreeWMCursor()\n"));
+
+	if (cursor)
+	{
+		if (SDL_Window)
+			ClearPointer(SDL_Window);
+
+		if (cursor->image)
+			free(cursor->image);
+
+		free(cursor);
+	}
 }
 
-WMcursor *amiga_CreateWMCursor(_THIS,
-		Uint8 *data, Uint8 *mask, int w, int h, int hot_x, int hot_y)
+WMcursor *CGX_CreateWMCursor(_THIS, Uint8 *data, Uint8 *mask, int w, int h, int hot_x, int hot_y)
 {
-	return (WMcursor *)1; // Amiga has an Hardware cursor, so it's ok to return something unuseful but true
+	struct WMcursor *cursor = NULL;
+
+	if (w <= 16 && (cursor = malloc(sizeof(*cursor))))
+	{
+		cursor->width  = w;
+		cursor->height = h;
+		cursor->offx   = -hot_x;
+		cursor->offy   = -hot_y;
+
+		if ((cursor->image = malloc(w*h)))
+		{
+			ULONG y;
+			UWORD *p;
+
+			p = cursor->image + 2;
+
+			for (y = 0; y < h; y++)
+			{
+				if (w <= 8)
+				{
+					*p++ = (*mask++) << 8;
+					*p++ = (*data++) << 8;
+				}
+				else
+				{
+					*p++ = mask[0] << 8 | mask[1];
+					*p++ = data[0] << 8 | data[1];
+					data += 2;
+					mask += 2;
+				}
+			}
+		}
+		else
+		{
+			free(cursor);
+			cursor = NULL;
+		}
+	}
+
+	D(bug("[SDL] CGX_CreateWMCursor() (size %ld/%ld) -> 0x%08.8lx\n", w, h, (IPTR)cursor));
+
+	return cursor;
 }
 
-int amiga_ShowWMCursor(_THIS, WMcursor *cursor)
+int CGX_ShowWMCursor(_THIS, WMcursor *cursor)
 {
 	/* Don't do anything if the display is gone */
-	if ( SDL_Display == NULL) {
+	if ( SDL_Display == NULL)
+	{
 		return(0);
 	}
 
-	/* Set the Amiga prefs cursor cursor, or blank if cursor is NULL */
-
-	if ( SDL_Window ) {
+	/* Set the cursor, or blank if cursor is NULL */
+	if ( SDL_Window )
+	{
 		SDL_Lock_EventThread();
-		if ( cursor == NULL ) {
-			if ( SDL_BlankCursor != NULL ) {
+		if ( cursor == NULL )
+		{
+			if ( SDL_BlankCursor != NULL )
+			{
 				// Hide cursor HERE
 				SetPointer(SDL_Window,(UWORD *)SDL_BlankCursor,1,1,0,0);
 			}
-		} else {
+		}
+		else
+		{
 			// Show cursor
-			ClearPointer(SDL_Window);
+			SetPointer(SDL_Window, cursor->image, cursor->height, cursor->width, cursor->offx, cursor->offy);
 		}
 		SDL_Unlock_EventThread();
 	}
 	return(1);
 }
 
-void amiga_WarpWMCursor(_THIS, Uint16 x, Uint16 y)
+void CGX_WarpWMCursor(_THIS, Uint16 x, Uint16 y)
 {
-	D(bug("[SDL] amiga_WarpWMCursor(%ld, %ld)\n", x, y));
+	D(bug("[SDL] CGX_WarpWMCursor(%ld, %ld)\n", x, y));
 	
 	if (this->hidden->window_active)
 	{
 		/*
-		 * Note: code below may cause unwanted side effects
+			Note: code below may cause unwanted side effects
 		 */
-
 		struct IOStdReq *req;
 		struct MsgPort *port;
 
@@ -125,37 +184,9 @@ void amiga_WarpWMCursor(_THIS, Uint16 x, Uint16 y)
 	}
 }
 
-SDL_GrabMode amiga_GrabInput(_THIS, SDL_GrabMode mode)
+
+void CGX_CheckMouseMode(_THIS)
 {
-	D(bug("amiga_GrabInput()\n"));
-
-	SDL_Lock_EventThread();
-	
-	if ( this->screen == NULL )	return(SDL_GRAB_OFF);
-	if ( ! SDL_Window ) return(mode);	/* Will be set later on mode switch */
-
-	switch(mode)
-	{
-		case SDL_GRAB_OFF:
-			this->hidden->GrabMouse = 0;
-			break;
-		case SDL_GRAB_QUERY:
-			mode = this->hidden->GrabMouse?SDL_GRAB_ON:SDL_GRAB_OFF;
-			break;
-		case SDL_GRAB_ON:
-			if (!(this->screen->flags & SDL_FULLSCREEN))
-				this->hidden->GrabMouse = 1;
-			break;
-		default:
-			break;
-	}
-
-	SDL_Unlock_EventThread();
-
-	return(mode);
-}
-
-/* Check to see if we need to enter or leave mouse relative mode */
-void amiga_CheckMouseMode(_THIS)
-{
+	/* Check to see if we need to enter or leave mouse relative mode */
+	/* under AROS the mouse mode is always absolute => nothing to be done*/
 }

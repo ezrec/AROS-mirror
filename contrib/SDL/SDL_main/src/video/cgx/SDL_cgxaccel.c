@@ -19,6 +19,7 @@
     Sam Lantinga
     slouken@libsdl.org
 */
+
 #include "SDL_config.h"
 
 #include "SDL_endian.h"
@@ -164,7 +165,6 @@ int CGX_FlipHWSurface(_THIS, SDL_Surface *surface)
 		if(!SafeChange)
 		{
 			Wait(this->hidden->disp_sigbit);
-			// Non faccio nulla, vuoto solo la porta
 			while(GetMsg(this->hidden->dispport)!=NULL);
 			SafeChange=TRUE;
 		}
@@ -634,170 +634,4 @@ static int CGX_SWtoHWBlitCC(SDL_Surface *src, SDL_Rect *srcrect,
 	return 0;
 }
 
-/*
-static int CGX_HWtoHWBlitCC(SDL_Surface *src, SDL_Rect *srcrect,
-							SDL_Surface *dst, SDL_Rect *dstrect)
-{
-	struct SDL_VideoDevice 	*this = dst->hwdata->videodata;
-
-	D(bug("HW to HW blit with ColorKey\n"));
-	
-	if (src->hwdata->mask)
-	{
-		struct SDL_VideoDevice 	*this = dst->hwdata->videodata;
-		
-		if(!SDL_temprp) SDL_temprp = CreateRastPort();
-		SDL_temprp->BitMap=(struct BitMap *)dst->hwdata->bmap;
-
-		BltMaskBitMapRastPort(	src->hwdata->bmap,
-								srcrect->x,
-								srcrect->y,
-								SDL_temprp,
-								dstrect->x,
-								dstrect->y,
-								srcrect->w,
-								srcrect->h,
-								(ABC|ABNC|ANBC),
-								src->hwdata->mask);
-	}
-	return 0;
-}
-*/
-
-/*
-int CGX_SetHWColorKey(_THIS,SDL_Surface *surface, Uint32 key)
-{
-	if(	surface->hwdata 
-		&& ((surface->format->BytesPerPixel == 1)
-		 || (surface->format->BytesPerPixel == 2) 
-		 || (surface->format->BytesPerPixel == 4)))
-	{
-		if(surface->hwdata->mask)
-			SDL_free(surface->hwdata->mask);
-
-		if(surface->hwdata->mask=SDL_malloc(RASSIZE(surface->w,surface->h)))
-		{
-			Uint32 pitch,ok=0;
-			APTR lock;
-			
-			SDL_memset(surface->hwdata->mask,255,RASSIZE(surface->w,surface->h));
-
-			D(bug("Building colorkey mask: color: 0x%08X, size: %ld x %ld, %ld bytes...Bpp:%ld\n",key,surface->w,surface->h,RASSIZE(surface->w,surface->h),surface->format->BytesPerPixel));
-
-			lock=LockBitMapTags(	surface->hwdata->bmap,
-									LBMI_BASEADDRESS,(ULONG)&surface->pixels,
-									LBMI_BYTESPERROW,(ULONG)&pitch,
-									TAG_DONE);
-
-			if (lock)
-			{
-				switch(surface->format->BytesPerPixel)
-				{
-					case 1:
-					{
-						unsigned char k=key;
-						register int i,j,t;
-						register unsigned char *dest=surface->hwdata->mask,*map=surface->pixels;
-
-						pitch-=surface->w;
-
-						for(i=0;i<surface->h;i++)
-						{
-							for(t=128,j=0;j<surface->w;j++)
-							{
-								if(*map==k)
-									*dest&=~t;	
-
-								t>>=1;
-
-								if(t==0)
-								{
-									dest++;
-									t=128;
-								}
-								map++;
-							}
-							map+=pitch;
-						}
-					}
-					break;
-					case 2:
-					{
-						Uint16 k=key,*mapw;
-						register int i,j,t;
-						register unsigned char *dest=surface->hwdata->mask,*map=surface->pixels;
-
-						for(i=surface->h;i;--i)
-						{
-							mapw=(Uint16 *)map;
-
-							for(t=128,j=surface->w;j;--j)
-							{
-								if(*mapw==k)
-									*dest&=~t;
-
-								t>>=1;
-
-								if(t==0)
-								{
-									dest++;
-									t=128;
-								}
-								mapw++;
-							}
-							map+=pitch;
-						}
-					}
-					break;
-					case 4:
-					{
-						Uint32 *mapl;
-						register int i,j,t;
-						register unsigned char *dest=surface->hwdata->mask,*map=surface->pixels;
-						
-						for(i=surface->h;i;--i)
-						{
-							mapl=(Uint32 *)map;
-
-							for(t=128,j=surface->w;j;--j)
-							{
-								if((*mapl)==key)
-									*dest&=~t;
-
-								t>>=1;
-
-								if(t==0)
-								{
-									dest++;
-									t=128;
-								}
-								mapl++;
-							}
-							map+=pitch;
-						}
-
-					}
-					break;
-					default:
-						D(bug("Pixel mode non supported for color key..."));
-						SDL_free(surface->hwdata->mask);
-						surface->hwdata->mask=NULL;
-						ok=-1;
-				}
-				
-				if (lock)
-					UnLockBitMap(lock);
-
-				D(bug("...Colorkey built!\n"));
-				return ok;
-			}
-		}
-	}
-	D(bug("HW colorkey not supported for this depth\n"));
-
-	return -1;
-}
-*/
-
 #endif
-
