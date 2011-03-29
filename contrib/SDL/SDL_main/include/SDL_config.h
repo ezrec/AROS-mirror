@@ -143,6 +143,7 @@
 /* #undef HAVE_CLOCK_GETTIME */
 /* #undef HAVE_GETPAGESIZE */
 /* #undef HAVE_MPROTECT */
+#define HAVE_OPENGL 1
 
 #else
 /* We may need some replacement for stdarg.h here */
