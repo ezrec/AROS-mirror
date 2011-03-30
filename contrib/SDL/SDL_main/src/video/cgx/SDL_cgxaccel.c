@@ -355,42 +355,6 @@ int CGX_CheckHWBlit(_THIS,SDL_Surface *src,SDL_Surface *dst)
 	return result;
 }
 
-int CGX_SetHWColorKey(_THIS,SDL_Surface *surface, Uint32 key)
-{
-	/*
-		We are creating a pixmap in system memory with alpha channel (RGBA format)
-		The ColorKey is encoded in the Alpha channel
-		Doesn't work yet for 8 bits per pixel format!
-	*/
-	int result = -1;
-	ULONG ARGBKey = 0x00000000;
-	ULONG *currentpix;
-	int pixnum=0;
-	
-	D(bug("CGX_SetHWColorKey\n"));
-	
-	result = CGX_CreateAlphaPixMap(this,surface);
-	
-	if (result == 0)
-	{
-		/* Convert ColorKey to ARGB format (Do not take Alpha channel into account)*/
-		ARGBKey = (((key & surface->format->Rmask) >> surface->format->Rshift) << (surface->format->Rloss + 16))
-				| (((key & surface->format->Gmask) >> surface->format->Gshift) << (surface->format->Gloss + 8))
-				| (((key & surface->format->Bmask) >> surface->format->Bshift) << (surface->format->Bloss + 0));
-				
-		currentpix = (ULONG *)surface->hwdata->pixarrayalpha;
-		for (pixnum = 0; pixnum<surface->w*surface->h; pixnum++)
-		{
-			if ((currentpix[pixnum] & AROS_BE2LONG(0x00FFFFFF)) == AROS_BE2LONG(ARGBKey))
-			{
-				/* Keep color but put alpha channel to fully transparent (0 : TBC)*/
-				 currentpix[pixnum] = (currentpix[pixnum] & AROS_BE2LONG(0x00FFFFFF));
-			}
-		}
-	}
-	return result;
-}
-
 int CGX_CreateAlphaPixMap(_THIS,SDL_Surface *surface)
 {
 	/*
@@ -441,11 +405,47 @@ int CGX_CreateAlphaPixMap(_THIS,SDL_Surface *surface)
 	return result;
 }
 
+int CGX_SetHWColorKey(_THIS,SDL_Surface *surface, Uint32 key)
+{
+	/*
+		We are creating a pixmap in system memory with alpha channel (RGBA format)
+		The ColorKey is encoded in the Alpha channel
+		Doesn't work yet for 8 bits per pixel format!
+	*/
+	int result = -1;
+	ULONG ARGBKey = 0x00000000;
+	ULONG *currentpix;
+	int pixnum=0;
+	
+	D(bug("CGX_SetHWColorKey\n"));
+	
+	result = CGX_CreateAlphaPixMap(this,surface);
+	
+	if (result == 0)
+	{
+		/* Convert ColorKey to ARGB format (Do not take Alpha channel into account)*/
+		ARGBKey = (((key & surface->format->Rmask) >> surface->format->Rshift) << (surface->format->Rloss + 16))
+				| (((key & surface->format->Gmask) >> surface->format->Gshift) << (surface->format->Gloss + 8))
+				| (((key & surface->format->Bmask) >> surface->format->Bshift) << (surface->format->Bloss + 0));
+				
+		currentpix = (ULONG *)surface->hwdata->pixarrayalpha;
+		for (pixnum = 0; pixnum<surface->w*surface->h; pixnum++)
+		{
+			if ((currentpix[pixnum] & AROS_BE2LONG(0x00FFFFFF)) == AROS_BE2LONG(ARGBKey))
+			{
+				/* Keep color but put alpha channel to fully transparent (0 : TBC)*/
+				 currentpix[pixnum] = (currentpix[pixnum] & AROS_BE2LONG(0x00FFFFFF));
+			}
+		}
+	}
+	return result;
+}
+
 int CGX_ColorKeyToAlpha(_THIS,SDL_Surface *surface, Uint32 key)
 {
 	/* Includes the ColorKey in the Alpha Channel of a SW surface */
 	int result = -1;
-	ULONG RGBAKey = 0x00000000;
+	ULONG ARGBKey = 0x00000000;
 	ULONG *currentpix;
 	int pixnum=0;
 	
@@ -459,7 +459,7 @@ int CGX_ColorKeyToAlpha(_THIS,SDL_Surface *surface, Uint32 key)
 		&& (surface->format->Bmask == AROS_BE2LONG(0x000000FF)) )
 	{
 		/* Convert ColorKey to ARGB format (Do not take Alpha channel into account)*/
-		RGBAKey = (((key & surface->format->Rmask) >> surface->format->Rshift) << (surface->format->Rloss + 16))
+		ARGBKey = (((key & surface->format->Rmask) >> surface->format->Rshift) << (surface->format->Rloss + 16))
 				| (((key & surface->format->Gmask) >> surface->format->Gshift) << (surface->format->Gloss + 8))
 				| (((key & surface->format->Bmask) >> surface->format->Bshift) << (surface->format->Bloss + 0));
 				
@@ -467,7 +467,7 @@ int CGX_ColorKeyToAlpha(_THIS,SDL_Surface *surface, Uint32 key)
 		currentpix = (ULONG *)surface->pixels;
 		for (pixnum = 0; pixnum<surface->w*surface->h; pixnum++)
 		{
-			if ((currentpix[pixnum] & AROS_BE2LONG(0x00FFFFFF)) == AROS_BE2LONG(RGBAKey))
+			if ((currentpix[pixnum] & AROS_BE2LONG(0x00FFFFFF)) == AROS_BE2LONG(ARGBKey))
 			{
 				/* Keep color but put alpha channel to fully transparent (0 : TBC)*/
 				currentpix[pixnum] = (currentpix[pixnum] & AROS_BE2LONG(0x00FFFFFF));

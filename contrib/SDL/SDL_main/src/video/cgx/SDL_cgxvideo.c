@@ -45,8 +45,6 @@
 
 #include <aros/macros.h>
 
-struct Library *CyberGfxBase=NULL;
-
 /* Initialization/Query functions */
 static int 			CGX_VideoInit(_THIS, SDL_PixelFormat *vformat);
 static SDL_Surface *CGX_SetVideoMode(_THIS, SDL_Surface *current, int width, int height, int bpp, Uint32 flags);
@@ -206,17 +204,12 @@ static void DestroyScreen(_THIS)
 
 static int CGX_Available(void)
 {
-	struct Library *l;
-
-	l = OpenLibrary("cybergraphics.library",0L);
-
-	if ( l != NULL ) {
+	if ( CyberGfxBase != NULL ) {
 		D(bug("CGX video device AVAILABLE\n"));
-		CloseLibrary(l);
 	}
 	D(else bug("**CGX video device UNAVAILABLE\n"));
 
-	return(l != NULL);
+	return(CyberGfxBase != NULL);
 }
 
 static void CGX_DeleteDevice(SDL_VideoDevice *device)
@@ -393,25 +386,22 @@ static int CGX_VideoInit(_THIS, SDL_PixelFormat *vformat)
 
 	D(bug("VideoInit... Opening libraries\n"));
 
-	if(!IntuitionBase) {
-		if( !(IntuitionBase=(struct IntuitionBase *)OpenLibrary("intuition.library",39L))) {
-			SDL_SetError("Couldn't open intuition V39+");
-			return -1;
-		}
+	if(!IntuitionBase) 
+	{
+		SDL_SetError("Couldn't open intuition V39+");
+		return -1;
 	}
 
-	if(!GfxBase) {
-		if( !(GfxBase=(struct GfxBase *)OpenLibrary("graphics.library",39L))) {
-			SDL_SetError("Couldn't open graphics V39+");
-			return -1;
-		}
+	if(!GfxBase)
+	{
+		SDL_SetError("Couldn't open graphics V39+");
+		return -1;
 	}
 
-	if(!CyberGfxBase) {
-		if( !(CyberGfxBase=OpenLibrary("cybergraphics.library",40L))) {
-			SDL_SetError("Couldn't open cybergraphics.");
-			return(-1);
-		}
+	if(!CyberGfxBase)
+	{
+		SDL_SetError("Couldn't open cybergraphics.");
+		return(-1);
 	}
 
 	D(bug("Library intialized, locking screen...\n"));
@@ -1177,25 +1167,6 @@ static void CGX_VideoQuit(_THIS)
 			DestroyScreen(this);
 
 		SDL_Display = NULL;
-	}
-
-	D(bug("Closing libraries...\n"));
-
-	if( CyberGfxBase)
-	{
-		CloseLibrary(CyberGfxBase);
-		CyberGfxBase=NULL;
-	}
-
-	if (IntuitionBase)
-	{
-		CloseLibrary((struct Library *)IntuitionBase);
-		IntuitionBase=NULL;
-	}
-	if (GfxBase)
-	{
-		CloseLibrary((struct Library *)GfxBase);
-		GfxBase=NULL;
 	}
 
 	if (SDL_ConReq)

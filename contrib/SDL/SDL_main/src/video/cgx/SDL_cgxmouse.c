@@ -19,9 +19,10 @@
     Sam Lantinga
     slouken@libsdl.org
 */
-#include <devices/input.h>
-
 #include "SDL_config.h"
+
+#include <devices/input.h>
+#include <intuition/pointerclass.h>
 
 #include "SDL_mouse.h"
 #include "../../events/SDL_events_c.h"
@@ -31,9 +32,8 @@
 
 struct WMcursor
 {
-	UWORD*	image;
-	WORD	width, height;
-	WORD	offx, offy;
+	struct	BitMap *CursorBM;
+	Object	*PointerObj;
 };
 
 void CGX_FreeWMCursor(_THIS, WMcursor *cursor)
@@ -45,9 +45,12 @@ void CGX_FreeWMCursor(_THIS, WMcursor *cursor)
 		if (SDL_Window)
 			ClearPointer(SDL_Window);
 
-		if (cursor->image)
-			free(cursor->image);
+		if (cursor->CursorBM)
+			FreeBitMap(cursor->CursorBM);
 
+		if(cursor->PointerObj) 
+			DisposeObject(cursor->PointerObj);
+			
 		free(cursor);
 	}
 }
@@ -55,35 +58,76 @@ void CGX_FreeWMCursor(_THIS, WMcursor *cursor)
 WMcursor *CGX_CreateWMCursor(_THIS, Uint8 *data, Uint8 *mask, int w, int h, int hot_x, int hot_y)
 {
 	struct WMcursor *cursor = NULL;
-
-	if (w <= 16 && (cursor = malloc(sizeof(*cursor))))
+	struct RastPort *CursorRP = NULL;
+	ULONG  *pixarray = NULL;
+	ULONG  pixel_cnt;
+	char   currentbit = 7, currentdata, currentmask;
+	
+	cursor = malloc(sizeof(*cursor));
+	CursorRP = CreateRastPort();
+	pixarray = AllocVec(w*h*4,MEMF_ANY);
+	
+	if (cursor && CursorRP && pixarray)
 	{
-		cursor->width  = w;
-		cursor->height = h;
-		cursor->offx   = -hot_x;
-		cursor->offy   = -hot_y;
-
-		if ((cursor->image = malloc(w*h)))
+		// Allocate Cursor BitMap
+		cursor->CursorBM = AllocBitMap(w,h,32,BMF_MINPLANES | BMF_SPECIALFMT | (PIXFMT_RGBA32 << 24),SDL_Window->RPort->BitMap);
+		
+		if (cursor->CursorBM)
 		{
-			ULONG y;
-			UWORD *p;
-
-			p = cursor->image + 2;
-
-			for (y = 0; y < h; y++)
+			// Create pixarray from data and mask
+			for (pixel_cnt = 0; pixel_cnt < w*h; pixel_cnt++)
 			{
-				if (w <= 8)
+				currentdata = ((*data >> currentbit) & 0x01);
+				currentmask = ((*mask >> currentbit) & 0x01);
+				if (currentbit == 0)
 				{
-					*p++ = (*mask++) << 8;
-					*p++ = (*data++) << 8;
+					data++;
+					mask++;
+					currentbit = 7;
 				}
 				else
 				{
-					*p++ = mask[0] << 8 | mask[1];
-					*p++ = data[0] << 8 | data[1];
-					data += 2;
-					mask += 2;
+					currentbit--;
 				}
+				
+				switch(currentdata * 2 + currentmask)
+				{
+					case 0: //(0,0) => Transparent
+						pixarray[pixel_cnt] = AROS_BE2LONG(0x00000000);
+						break;
+					case 1: //(0,1) => White
+						pixarray[pixel_cnt] = AROS_BE2LONG(0xFFFFFFFF);
+						break;
+					case 2: //(1,0) => Inverted color if possible, black if not (Semi transparent here AROS)
+						pixarray[pixel_cnt] = AROS_BE2LONG(0x0000007F);
+						break;
+					case 3: //(1,1) => Black
+						pixarray[pixel_cnt] = AROS_BE2LONG(0x000000FF);
+						break;
+				}
+			}
+			
+			// Copy pixel array into bitmap
+			CursorRP->BitMap = cursor->CursorBM;
+			WritePixelArray( pixarray,
+							 0, 0, w * 4,
+							 CursorRP,
+							 0, 0, w, h,
+							 RECTFMT_RGBA32 );
+			
+			// Create Pointer Object
+			cursor->PointerObj = (Object *)NewObject(NULL,	
+													(STRPTR)"pointerclass",
+													POINTERA_BitMap,      (LONG)cursor->CursorBM,
+													POINTERA_XOffset,     (LONG)(-hot_x),
+													POINTERA_YOffset,     (LONG)(-hot_y),
+													TAG_DONE);
+													
+			if (!cursor->PointerObj)
+			{
+				FreeBitMap(cursor->CursorBM);
+				free(cursor);
+				cursor = NULL;
 			}
 		}
 		else
@@ -92,6 +136,9 @@ WMcursor *CGX_CreateWMCursor(_THIS, Uint8 *data, Uint8 *mask, int w, int h, int 
 			cursor = NULL;
 		}
 	}
+	
+	if (pixarray) FreeVec(pixarray);
+	if (CursorRP) FreeRastPort(CursorRP);
 
 	D(bug("[SDL] CGX_CreateWMCursor() (size %ld/%ld) -> 0x%08.8lx\n", w, h, (IPTR)cursor));
 
@@ -121,8 +168,10 @@ int CGX_ShowWMCursor(_THIS, WMcursor *cursor)
 		else
 		{
 			// Show cursor
-			SetPointer(SDL_Window, cursor->image, cursor->height, cursor->width, cursor->offx, cursor->offy);
-		}
+			SetWindowPointer( SDL_Window,
+							  WA_Pointer, (APTR)cursor->PointerObj,
+							  TAG_DONE );
+        }
 		SDL_Unlock_EventThread();
 	}
 	return(1);
