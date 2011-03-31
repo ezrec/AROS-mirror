@@ -11,13 +11,14 @@ GCC_VERSION := 4.2.2
 #MM- contrib-gnu : contrib-gnu-gcc
 #MM- contrib-gnu-gcc : tools-crosstools development-collect-aros development-gcc
 
-%fetch_and_build_gnu_development package=gcc version=$(GCC_VERSION) patch=yes \
-    extraoptions="--enable-languages=c,c++ --enable-longlong --enable-sjlj-exceptions --enable-version-specific-runtime-libs --disable-libssp --disable-libstdcxx-pch" \
-    postconfigure=contrib-gnu-gcc-fixincludes postinstall=contrib-gnu-gcc-deletefixed
+EXTRAOPTS := \
+    --enable-languages=c,c++ --enable-longlong --enable-sjlj-exceptions \
+    --enable-version-specific-runtime-libs --disable-libssp --disable-libstdcxx-pch \
+    --with-sysroot=/Development --with-build-sysroot=$(AROS_DEVELOPMENT)
 
-#MM
-contrib-gnu-gcc-fixincludes:
-	$(SED) -i -e "s@\(^NATIVE_SYSTEM_HEADER_DIR =\).*@\1 $(AROS_INCLUDES)@" $(PORTSDIR)/gcc/gcc-$(GCC_VERSION)/gcc/Makefile.in;
+%fetch_and_build_gnu_development package=gcc version=$(GCC_VERSION) patch=yes \
+    extraoptions=$(EXTRAOPTS) \
+    postinstall=contrib-gnu-gcc-deletefixed
 
 #MM
 contrib-gnu-gcc-deletefixed:

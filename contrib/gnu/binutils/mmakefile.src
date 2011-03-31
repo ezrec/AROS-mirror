@@ -9,4 +9,8 @@ TARGET_CC := $(CROSSTOOLSDIR)/$(AROS_TARGET_CPU)-aros-gcc
 #MM- contrib-gnu : contrib-gnu-binutils
 #MM- contrib-gnu-binutils : tools-crosstools development-binutils
 
-%fetch_and_build_gnu_development package=binutils version=2.20.1 patch=yes
+EXTRAOPTS := --with-sysroot=/Development --with-build-sysroot=$(AROS_DEVELOPMENT)
+
+%fetch_and_build_gnu_development package=binutils version=2.20.1 patch=yes \
+    extraoptions=$(EXTRAOPTS)
+
