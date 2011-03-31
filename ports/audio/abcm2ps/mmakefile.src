@@ -7,13 +7,13 @@ include $(TOP)/config/make.cfg
 #MM- ports-audio-abcm2ps : ports-audio-abcm2ps-drawericon
 
 PACKAGE      := abcm2ps
-VERSION      := 5.9.20
+VERSION      := 5.9.22
 TARGETDIR    := $(AROS_CONTRIB)/MultiMedia/Audio/Abcm2ps
 REPOSITORIES := http://moinejf.free.fr
 
 %fetch_and_build mmake=ports-audio-abcm2ps prefix=$(TARGETDIR) \
 	package=$(PACKAGE) version=$(VERSION) suffixes="tar.gz" \
-	patch=yes package_repo=$(REPOSITORIES) \
+	patch=no package_repo=$(REPOSITORIES) \
 	extraoptions="--with-def-fdir=PROGDIR:share/abcm2ps --enable-a4"
 
 
