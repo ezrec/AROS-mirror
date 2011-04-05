@@ -70,7 +70,9 @@ WMcursor *CGX_CreateWMCursor(_THIS, Uint8 *data, Uint8 *mask, int w, int h, int 
 	if (cursor && CursorRP && pixarray)
 	{
 		// Allocate Cursor BitMap
-		cursor->CursorBM = AllocBitMap(w,h,32,BMF_MINPLANES | BMF_SPECIALFMT | (PIXFMT_RGBA32 << 24),SDL_Window->RPort->BitMap);
+		// TODO: check if it's OK to use NULL for friend bitmap in case SDL_Window is NULL
+		cursor->CursorBM = AllocBitMap(w,h,32,BMF_MINPLANES | BMF_SPECIALFMT | (PIXFMT_RGBA32 << 24),
+					       SDL_Window ? SDL_Window->RPort->BitMap : NULL);
 		
 		if (cursor->CursorBM)
 		{
