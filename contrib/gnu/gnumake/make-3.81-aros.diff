@@ -35,15 +35,6 @@ diff -ruN make-3.81/glob/glob.h make-3.81.aros/glob/glob.h
  #   undef __const
  #   define __const const
  #  endif
-@@ -47,7 +47,7 @@
- 
- /* We need `size_t' for the following definitions.  */
- #ifndef __size_t
--# if defined __FreeBSD__
-+# if defined __FreeBSD__ || defined __AROS__
- #  define __size_t size_t
- # else
- #  if defined __GNUC__ && __GNUC__ >= 2
 diff -ruN make-3.81/main.c make-3.81.aros/main.c
 --- make-3.81/main.c	2006-03-20 03:36:37.000000000 +0100
 +++ make-3.81.aros/main.c	2006-04-01 08:40:00.000000000 +0200
