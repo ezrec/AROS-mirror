@@ -10,11 +10,17 @@
 /xpk*
 /Moria3D.org
 
+# /Demo/
+/Demo/mmakefile
+
 # /Demo/BlackHole/
 /Demo/BlackHole/mmakefile
 
 # /Demo/DawaFire/
 /Demo/DawaFire/mmakefile
+
+# /Demo/DawaFire/icons/
+/Demo/DawaFire/icons/mmakefile
 
 # /Demo/FTunnel/
 /Demo/FTunnel/mmakefile
@@ -22,27 +28,64 @@
 # /Demo/Firework/
 /Demo/Firework/mmakefile
 
+# /Demo/Firework/icons/
+/Demo/Firework/icons/mmakefile
+
 # /Demo/Flamme/
 /Demo/Flamme/mmakefile
 
+# /Demo/Flamme/icons/
+/Demo/Flamme/icons/mmakefile
+
+# /Demo/GLExcess/
+/Demo/GLExcess/mmakefile
+
 # /Demo/Galaxy/
 /Demo/Galaxy/mmakefile
+/Demo/Galaxy/memshd-i386.s
+/Demo/Galaxy/memshd-x86_64.s
+
+# /Demo/Galaxy/icons/
+/Demo/Galaxy/icons/mmakefile
 
 # /Demo/InfPlane/
 /Demo/InfPlane/mmakefile
+/Demo/InfPlane/refresh-i386.s
+/Demo/InfPlane/refresh-x86_64.s
+
+# /Demo/InfPlane/icons/
+/Demo/InfPlane/icons/mmakefile
 
 # /Demo/Kitty/
 /Demo/Kitty/mmakefile
 /Demo/Kitty/kittysprite_image.c
 
+# /Demo/Kitty/icons/
+/Demo/Kitty/icons/mmakefile
+
+# /Demo/Mesa/
+/Demo/Mesa/mmakefile
+
+# /Demo/Mesa/images/
+/Demo/Mesa/images/mmakefile
+
 # /Demo/Metaballs/
 /Demo/Metaballs/mmakefile
+
+# /Demo/Metaballs/icons/
+/Demo/Metaballs/icons/mmakefile
 
 # /Demo/NewVox/
 /Demo/NewVox/mmakefile
 
+# /Demo/NewVox/icons/
+/Demo/NewVox/icons/mmakefile
+
 # /Demo/Parallax/
 /Demo/Parallax/mmakefile
+
+# /Demo/Parallax/icons/
+/Demo/Parallax/icons/mmakefile
 
 # /Demo/PowerZoom/
 /Demo/PowerZoom/mmakefile
@@ -50,11 +93,20 @@
 # /Demo/RubberStrings/
 /Demo/RubberStrings/mmakefile
 
+# /Demo/RubberStrings/icons/
+/Demo/RubberStrings/icons/mmakefile
+
 # /Demo/Tunnel/
 /Demo/Tunnel/mmakefile
 
+# /Demo/Tunnel/icons/
+/Demo/Tunnel/icons/mmakefile
+
 # /Demo/Voxel/
 /Demo/Voxel/mmakefile
+
+# /Demo/Voxel/icons/
+/Demo/Voxel/icons/mmakefile
 
 # /Demo/kdp/
 /Demo/kdp/mmakefile
@@ -66,11 +118,17 @@
 # /DiskSpeed/catalogs/
 /DiskSpeed/catalogs/mmakefile
 
+# /DiskSpeed/icons/
+/DiskSpeed/icons/mmakefile
+
 # /Games/Bomber/
 /Games/Bomber/mmakefile
 
 # /Games/Doom/
 /Games/Doom/mmakefile
+
+# /Games/Doom/icons/
+/Games/Doom/icons/mmakefile
 
 # /Games/Kiel/Jump/
 /Games/Kiel/Jump/mmakefile
@@ -200,8 +258,32 @@
 # /MultiMedia/AMP2/plugin/xanim/
 /MultiMedia/AMP2/plugin/xanim/mmakefile
 
+# /MultiMedia/libs/OpenAL/OpenAL32/
+/MultiMedia/libs/OpenAL/OpenAL32/mmakefile
+
+# /MultiMedia/libs/OpenAL/examples/
+/MultiMedia/libs/OpenAL/examples/mmakefile
+
+# /MultiMedia/libs/OpenAL/include/AL/
+/MultiMedia/libs/OpenAL/include/AL/mmakefile
+
+# /MultiMedia/libs/freealut/include/AL/
+/MultiMedia/libs/freealut/include/AL/mmakefile
+
+# /MultiMedia/libs/freealut/src/
+/MultiMedia/libs/freealut/src/mmakefile
+
+# /MultiMedia/libs/freealut/test_suite/
+/MultiMedia/libs/freealut/test_suite/mmakefile
+
+# /MultiMedia/libs/ogg/
+/MultiMedia/libs/ogg/mmakefile
+
 # /MultiMedia/libs/ptplay/Sources/
 /MultiMedia/libs/ptplay/Sources/mmakefile
+
+# /MultiMedia/libs/vorbis/
+/MultiMedia/libs/vorbis/mmakefile
 
 # /MultiMedia/mad/
 /MultiMedia/mad/mmakefile
@@ -374,6 +456,9 @@
 # /SDL/SDL_main/
 /SDL/SDL_main/mmakefile
 
+# /SDL/SDL_main/test/
+/SDL/SDL_main/test/mmakefile
+
 # /SDL/SDL_mixer/
 /SDL/SDL_mixer/mmakefile
 
@@ -385,9 +470,6 @@
 
 # /SDL/SDL_ttf/
 /SDL/SDL_ttf/mmakefile
-
-# /SDL/tests/
-/SDL/tests/mmakefile
 
 # /ScalosV2/
 /ScalosV2/mmakefile
@@ -608,6 +690,9 @@
 
 # /aminet/util/arc/unzip/
 /aminet/util/arc/unzip/mmakefile
+
+# /aminet/util/arc/zip/
+/aminet/util/arc/zip/mmakefile
 
 # /aminet/util/arc/zoo/
 /aminet/util/arc/zoo/mmakefile
@@ -949,14 +1034,26 @@
 # /development/compilers/vbcc/vprof/
 /development/compilers/vbcc/vprof/mmakefile
 
+# /development/getconf/
+/development/getconf/mmakefile
+
 # /development/gui/pui/
 /development/gui/pui/mmakefile
 
 # /development/libs/fontconfig/
 /development/libs/fontconfig/mmakefile
 
+# /development/libs/icu/
+/development/libs/icu/mmakefile
+
+# /development/libs/libode/
+/development/libs/libode/mmakefile
+
 # /development/libs/libxslt/
 /development/libs/libxslt/mmakefile
+
+# /development/libs/sqlite3/
+/development/libs/sqlite3/mmakefile
 
 # /development/parsers/expat/lib/
 /development/parsers/expat/lib/mmakefile
@@ -1292,6 +1389,9 @@
 # /gfx/XaoS/
 /gfx/XaoS/mmakefile
 
+# /gfx/XaoS/icons/
+/gfx/XaoS/icons/mmakefile
+
 # /gfx/XaoS/src/
 /gfx/XaoS/src/mmakefile
 
@@ -1313,6 +1413,24 @@
 
 # /gfx/XaoS/src/util/
 /gfx/XaoS/src/util/mmakefile
+
+# /gfx/libs/cairo/boilerplate/
+/gfx/libs/cairo/boilerplate/mmakefile
+
+# /gfx/libs/cairo/src/
+/gfx/libs/cairo/src/mmakefile
+
+# /gfx/libs/eglut/
+/gfx/libs/eglut/mmakefile
+
+# /gfx/libs/eglut/include/
+/gfx/libs/eglut/include/mmakefile
+
+# /gfx/libs/glut/
+/gfx/libs/glut/mmakefile
+
+# /gfx/libs/glut/include/
+/gfx/libs/glut/include/mmakefile
 
 # /gfx/libs/guigfxlib/include/
 /gfx/libs/guigfxlib/include/mmakefile
@@ -1359,6 +1477,12 @@
 /gfx/libs/mysticlib/src/include
 /gfx/libs/mysticlib/src/wb
 /gfx/libs/mysticlib/src/*.map
+
+# /gfx/libs/pixman/pixman/
+/gfx/libs/pixman/pixman/mmakefile
+
+# /gfx/libs/pixman/test/
+/gfx/libs/pixman/test/mmakefile
 
 # /gfx/libs/renderlib/include/
 /gfx/libs/renderlib/include/mmakefile
@@ -1619,6 +1743,12 @@
 # /images/IconSets/Gorilla/Icons/Medium/AROS/Extras/Networking/Apps/OWB/
 /images/IconSets/Gorilla/Icons/Medium/AROS/Extras/Networking/Apps/OWB/mmakefile
 
+# /images/IconSets/Gorilla/Icons/Medium/AROS/Extras/System/
+/images/IconSets/Gorilla/Icons/Medium/AROS/Extras/System/mmakefile
+
+# /images/IconSets/Gorilla/Icons/Medium/AROS/Extras/Utilities/
+/images/IconSets/Gorilla/Icons/Medium/AROS/Extras/Utilities/mmakefile
+
 # /libiconv/
 /libiconv/mmakefile
 
@@ -1627,6 +1757,12 @@
 
 # /libxml2/
 /libxml2/mmakefile
+
+# /mui/
+/mui/mmakefile
+
+# /mui/classes/
+/mui/classes/mmakefile
 
 # /mui/classes/BWins/
 /mui/classes/BWins/mmakefile
@@ -1670,17 +1806,40 @@
 /mui/classes/nlist/*.orig
 /mui/classes/nlist/mmakefile
 
+# /mui/classes/nlist/aros/s/
+/mui/classes/nlist/aros/s/mmakefile
+
 # /mui/classes/nlist/demo/
 /mui/classes/nlist/demo/*.o
 /mui/classes/nlist/demo/*.oPPC
 /mui/classes/nlist/demo/NList-Demo
 /mui/classes/nlist/demo/mmakefile
 
+# /mui/classes/nlist/nbalance_mcc/
+/mui/classes/nlist/nbalance_mcc/mmakefile
+
+# /mui/classes/nlist/nbitmap_mcc/
+/mui/classes/nlist/nbitmap_mcc/mmakefile
+
+# /mui/classes/nlist/nfloattext_mcc/
+/mui/classes/nlist/nfloattext_mcc/mmakefile
+
+# /mui/classes/nlist/nlist_mcc/
+/mui/classes/nlist/nlist_mcc/mmakefile
+
 # /mui/classes/nlist/nlisttree_mcc/
 /mui/classes/nlist/nlisttree_mcc/mmakefile
 
 # /mui/classes/nlist/nlisttree_mcp/
 /mui/classes/nlist/nlisttree_mcp/mmakefile
+/mui/classes/nlist/nlisttree_mcp/locale.[ch]
+
+# /mui/classes/nlist/nlistview_mcc/
+/mui/classes/nlist/nlistview_mcc/mmakefile
+
+# /mui/classes/nlist/nlistviews_mcp/
+/mui/classes/nlist/nlistviews_mcp/mmakefile
+/mui/classes/nlist/nlistviews_mcp/locale.[ch]
 
 # /mui/classes/popph/
 /mui/classes/popph/mmakefile
@@ -1753,6 +1912,9 @@
 /mui/madmatrix/*.lnk
 /mui/madmatrix/mmakefile
 
+# /pack/bzip2/
+/pack/bzip2/mmakefile
+
 # /pack/libxad/portable/
 /pack/libxad/portable/mmakefile
 
@@ -1777,8 +1939,27 @@
 # /rexx/src/
 /rexx/src/mmakefile
 
+# /scout/
+/scout/mmakefile
+
+# /scout/disassembler/
+/scout/disassembler/mmakefile
+
+# /scout/disassembler/Include/
+/scout/disassembler/Include/mmakefile
+
+# /scout/disassembler/opcodes/
+/scout/disassembler/opcodes/mmakefile
+
+# /scout/source/
+/scout/source/mmakefile
+/scout/source/scout_cat.[ch]
+
 # /scout/source/locale/
 /scout/source/locale/mmakefile
+
+# /scout/source/tbLib/
+/scout/source/tbLib/mmakefile
 
 # /sqlite3/
 /sqlite3/mmakefile
