@@ -37,7 +37,7 @@ FILES := \
     src/stdlib/SDL_qsort \
     src/stdlib/SDL_stdlib \
     src/stdlib/SDL_string \
-    src/thread/SDL_thread \
+    src/thread/aros/SDL_thread \
     src/timer/SDL_timer \
     src/video/SDL_RLEaccel \
     src/video/SDL_blit \
