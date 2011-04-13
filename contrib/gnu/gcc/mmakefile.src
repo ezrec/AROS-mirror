@@ -6,7 +6,7 @@
 # Override faked target compiler with real cross compiler.
 TARGET_CC := $(CROSSTOOLSDIR)/$(AROS_TARGET_CPU)-aros-gcc
 
-GCC_VERSION := 4.2.2
+GCC_VERSION := 4.2.4
 
 #MM- contrib-gnu : contrib-gnu-gcc
 #MM- contrib-gnu-gcc : tools-crosstools development-collect-aros development-gcc
