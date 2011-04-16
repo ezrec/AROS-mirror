@@ -161,40 +161,48 @@ static int CGX_DispatchEvent(_THIS, struct IntuiMessage *msg)
 	    case IDCMP_MOUSEMOVE:
 			if ( SDL_VideoSurface )
 			{
-				int new_x,new_y;
+				int new_x, new_y, dx = 0, dy = 0;
+				
+				if (currently_fullscreen)
+				{
+					// center display on screen
+					dx = (SDL_Display->Width - this->screen->w)/2;
+					dy = (SDL_Display->Height - this->screen->h)/2;
+				}
 
-				new_x = msg->MouseX-SDL_Window->BorderLeft;
-				new_y = msg->MouseY-SDL_Window->BorderTop;
+				new_x = msg->MouseX - SDL_Window->BorderLeft;
+				new_y = msg->MouseY - SDL_Window->BorderTop;
+
 					
 				if (this->hidden->window_active && this->hidden->GrabMouse)
 				{
 					BOOL dowarp = FALSE;
 									
-					if (new_x < 0)
+					if (new_x - dx  < 0)
 					{
 						dowarp = TRUE;
-						new_x = 0;
+						new_x = dx;
 					}
-					else if (new_x > SDL_Window->Width-SDL_Window->BorderLeft-SDL_Window->BorderRight-1)
+					else if (new_x - dx > this->screen->w - 1)
 					{
 						dowarp = TRUE;
-						new_x = SDL_Window->Width-SDL_Window->BorderLeft-SDL_Window->BorderRight-1;
+						new_x = dx + this->screen->w - 1;
 					}
 					
-					if (new_y < 0)
+					if (new_y - dy < 0)
 					{
 						dowarp = TRUE;
 						new_y = 0;
 					}
-					else if (new_y > SDL_Window->Height-SDL_Window->BorderTop-SDL_Window->BorderBottom-1)
+					else if (new_y - dy > this->screen->h - 1)
 					{
 						dowarp = TRUE;
-						new_y = SDL_Window->Height-SDL_Window->BorderTop-SDL_Window->BorderBottom-1;
+						new_y = dy + this->screen->h - 1;
 					}
 					
-					if (dowarp) CGX_WarpWMCursor(this,new_x,new_y);
+					if (dowarp) CGX_WarpWMCursor(this, new_x, new_y);
 				}
-				posted = SDL_PrivateMouseMotion(0, 0, new_x, new_y);
+				posted = SDL_PrivateMouseMotion(0, 0, new_x - dx, new_y - dy);
 			}
 	    	break;
 
