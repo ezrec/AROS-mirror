@@ -17,14 +17,31 @@
 static int PartitionInit(LIBBASETYPEPTR LIBBASE)
 {
     LIBBASE->partbase.tables =  (struct PartitionTableInfo **)PartitionSupport;
-
     NewList(&LIBBASE->bootList);
+
+    /*
+     * This is intentionally allowed to fail.
+     * It fill fail if we are in kickstart, partition.library is initialized
+     * long before dos.library.
+     */
+    LIBBASE->dosBase = OpenLibrary("dos.library", 36);
 
     return TRUE;
 }
 
 static int PartitionCleanup(struct PartitionBase_intern *base)
 {
+    /*
+     * If we are resident in kickstart, we won't have a seglist.
+     * In this case we prevent expunging, otherwise we can't come up again.
+     */
+    if (!base->segList)
+    	return FALSE;
+
+    /* If there's something in our boot list, we can't quit without losing it */
+    if (!IsListEmpty(&base->bootList))
+    	return FALSE;
+
     if (base->dosBase)
     	CloseLibrary(base->dosBase);
 

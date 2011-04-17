@@ -1,5 +1,5 @@
 /*
-    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: OOP metaclass
@@ -8,6 +8,7 @@
 
 #include <proto/exec.h>
 #include <proto/utility.h>
+#include <exec/alerts.h>
 #include <exec/memory.h>
 
 #include <proto/oop.h>
@@ -21,36 +22,12 @@
 #undef DEBUG
 #define SDEBUG 0
 #define DEBUG 0
+/* #define DUMP_BUCKET */
+
 #include <aros/debug.h>
 
 #define MD(cl) ((struct metadata *)cl)
 #define IFI(cl) ((struct ifmeta_inst *)cl)
-
-#   define IntCallMethod(cl, o, msg) 					\
-    {				    					\
-    	register struct IFBucket *b;					\
-    	register OOP_MethodID mid = *msg;				\
-    	register ULONG ifid = mid & (~METHOD_MASK);			\
-    	register struct IFMethod *method;				\
-    									\
-    	mid &= METHOD_MASK;						\
-									\
-	b = IFI(cl)->data.iftab_directptr[ifid & IFI(cl)->data.hashmask];	\
-	while (b) 								\
-   	{								\
-       	    if (b->InterfaceID == ifid)					\
-	    {								\
-	    	method = &(b->MethodTable[mid]);			\
-	    	return (method->MethodFunc(method->mClass, o, msg));	\
-	    }    							\
-            b = b->Next;						\
-    	}								\
-    	return (0UL);							\
-     }
-
-
-
-#define UB(x) ((UBYTE *)x)
 
 /* Allocates and initializes the interface hashtable, and the methodtables */
 static BOOL ifmeta_allocdisptabs(OOP_Class *cl, OOP_Object *o, struct P_meta_allocdisptabs *msg);
@@ -65,11 +42,9 @@ VOID freebucket(struct Bucket *b, struct IntOOPBase *OOPBase);
 struct Bucket *copybucket(struct Bucket *old_b, APTR data, struct IntOOPBase *OOPBase);
 
 /* Internal */
-static struct IFBucket *createbucket(
-			 STRPTR			interface_id
-			,ULONG			num_methods
-			,struct IntOOPBase 	*OOPBase);
-			
+static struct IFBucket *createbucket(STRPTR interface_id, ULONG local_id ,ULONG num_methods);
+static BOOL expandbucket(struct IFBucket *b, ULONG num_methods);
+
 static ULONG calc_ht_entries(struct ifmeta_inst *cl
 		,OOP_Class *super
 		,struct OOP_InterfaceDescr *ifDescr
@@ -88,6 +63,24 @@ static ULONG calc_ht_entries(struct ifmeta_inst *cl
    
 #define OOPBase (GetOBase(cl->OOPBasePtr))
 
+#ifdef DUMP_BUCKET
+
+static void dump_bucket(struct IFBucket *b)
+{
+    ULONG i;
+
+    bug("[META] Bucket 0x%p with %u methods:\n", b, b->NumMethods);
+
+    for (i = 0; i < b->NumMethods; i++)
+    	bug("[META] Method ID 0x%08X function 0x%p\n", i, b->MethodTable[i].MethodFunc);
+}
+
+#else
+
+#define dump_bucket(b)
+
+#endif	
+
 /********************
 **  IFMeta::New()  **
 ********************/
@@ -97,11 +90,13 @@ static OOP_Object *ifmeta_new(OOP_Class *cl, OOP_Object *o, struct pRoot_New *ms
     IPTR (*coercemethod)(OOP_Class *, OOP_Object *, OOP_Msg) 	= NULL;
     IPTR (*dosupermethod)(OOP_Class *, OOP_Object *, OOP_Msg) 	= NULL;
 
-    EnterFunc(bug("IFMeta::New(cl=%s, msg = %p)\n",
-    	cl->ClassNode.ln_Name, msg));
+    EnterFunc(bug("IFMeta::New(cl=%s, (0x%p), msg = %p)\n",
+    	cl->ClassNode.ln_Name, cl, msg));
 
     /* Let the BaseMeta class initialize some stuff for us */
     o = (OOP_Object *)OOP_DoSuperMethod((OOP_Class *)cl, o, (OOP_Msg)msg);
+    D(bug("IFMeta: Superclass returned 0x%p\n", o));
+
     if (o)
     {
        
@@ -192,6 +187,7 @@ static BOOL ifmeta_allocdisptabs(OOP_Class *cl, OOP_Object *o, struct P_meta_all
     if (inst->data.iftable)
     {
     	struct OOP_InterfaceDescr *ifdescr;
+
     	D(bug("Got iftable\n"));
     	/* Save hashmask for use in method lookup */
 	inst->data.hashmask = HashMask(inst->data.iftable);
@@ -219,28 +215,30 @@ static BOOL ifmeta_allocdisptabs(OOP_Class *cl, OOP_Object *o, struct P_meta_all
 	    
 	    for (;;)
 	    {
-	    	struct IFBucket *ifb;
-    		struct IFMethod *ifm = NULL;
-    		ULONG mtab_size;
+	    	struct IFBucket *ifb = NULL;
+	    	ULONG local_id = 0;
 
 	    	superif = (struct IFMethod *)OOP_CoerceMethod(OOP_OCLASS(msg->superclass)
 							     ,(OOP_Object *)msg->superclass
 							     ,(OOP_Msg)&ii_msg);
 		if (!superif)
 		    break;
-		    
-		/* Allocate and insert the interface into the new class */
-		ifb = createbucket(interface_id, num_methods, OOPBase);
-		D(bug("Created bucket: %p\n", ifb));
+
+		/* Get correct ID for the interface (string ID => interface ID mapping) */
+		if (init_mi_methodbase(interface_id, &local_id, OOPBase))
+		{
+		    /* Allocate and insert the interface into the new class */
+		    ifb = createbucket(interface_id, local_id, num_methods);
+		}
+
 		if (!ifb)
 		    goto failure;
-		    
+
 		/* Copy the interface */
-		mtab_size = UB (&ifm[num_methods]) - UB( &ifm[0]);
-		D(bug("Copying from superclass methods for if %s, mtab_size=%d,basmetaroot %p, superif %p\n",
-			ifb->GlobalInterfaceID, mtab_size, OOPBase->ob_BaseMetaObject.inst.rootif, superif));
-			
-		CopyMem(superif, ifb->MethodTable, mtab_size);
+		D(bug("[META] Copying from superclass methods for if %s, basmetaroot %p, superif %p\n",
+			ifb->GlobalInterfaceID, OOPBase->ob_BaseMetaObject.inst.rootif, superif));
+	
+		CopyMemQuick(superif, ifb->MethodTable, sizeof(struct IFMethod) * num_methods);
 		InsertBucket(inst->data.iftable, (struct Bucket *)ifb, OOPBase);
 		    
 	    } /* for (;;) */
@@ -248,20 +246,41 @@ static BOOL ifmeta_allocdisptabs(OOP_Class *cl, OOP_Object *o, struct P_meta_all
 	} /* if (we inherit interfaces from some superclass) */
 	
 	/* Insert our own interfaces */
-	D(bug("Inserting own methods\n"));
+	D(bug("[META] Inserting own methods...\n"));
 	for ( ifdescr = msg->ifdescr; ifdescr->MethodTable; ifdescr ++)
 	{
 	    struct IFBucket *ifb;
 	    ULONG i;
-	    
 	    ULONG iid;
+	    ULONG num_methods = 0;
+
 	    /* Get variable interface ID */
-	    
-	    D(bug("Getting Local ifID for global ID %s\n", ifdescr->InterfaceID));
+	    D(bug("[META] Getting Local ifID for global ID %s\n", ifdescr->InterfaceID));
 	    if (!init_mi_methodbase(ifdescr->InterfaceID, &iid, OOPBase))
 	    	goto failure;
 	    
-	    D(bug("Got local ifID %ld\n", iid));
+	    D(bug("[META] Got local ifID 0x%08X\n", iid));
+
+	    /*
+	     * Count how many methods we are going to have in our interface.
+	     * Caller-supplied MethodTable in interface descriptor table may
+	     * have skipped entries (noone promised that it will cover the
+	     * whole range from 0 to maximum method offset). However our bucket's
+	     * MethodTable must cover the whole range, since method offset is an
+	     * index into this table (see Meta_CoerceMethod() below).
+	     * So we determine the largest offset and then add 1.
+	     *
+	     * v42.1 : ifdescr->NumMethods is completely ignored. This member is
+	     * actually redundant and not needed.
+	     */
+	    for (i = 0; ifdescr->MethodTable[i].MethodFunc; i++)
+	    {
+	        if (ifdescr->MethodTable[i].MethodIdx > num_methods)
+	            num_methods = ifdescr->MethodTable[i].MethodIdx;
+	    }
+
+	    num_methods++;
+	    D(bug("[META] Interface will have %u methods\n", num_methods));
 
 	    /* Lookup hashtable to see if interface has been copied from superclass */
 	    ifb = (struct IFBucket *)inst->data.iftable->Lookup(
@@ -269,39 +288,45 @@ static BOOL ifmeta_allocdisptabs(OOP_Class *cl, OOP_Object *o, struct P_meta_all
 			, (IPTR)iid
 			, OOPBase);
 
-	    D(bug("tried to find bucket in hashtable: %p\n", ifb));
+	    D(bug("[META] tried to find bucket in hashtable: 0x%p\n", ifb));
 	    if (!ifb)
 	    {
-	    	D(bug("Bucket doesn't exist, creating..\n"));
+	    	D(bug("[META] Bucket doesn't exist, creating...\n"));
+
 	    	/* Bucket doesn't exist, allocate it */
-		ifb = createbucket(ifdescr->InterfaceID, ifdescr->NumMethods, OOPBase);
+		ifb = createbucket(ifdescr->InterfaceID, iid, num_methods);
 	    	if (!ifb)
 	    	    goto failure;
 		else
 		{
-	    	    D(bug("Inserting bucket for IF %s\n", ifdescr->InterfaceID));
+	    	    D(bug("[META] Inserting bucket 0x%p for IF %s\n", ifb, ifdescr->InterfaceID));
 		    InsertBucket(inst->data.iftable, (struct Bucket *)ifb, OOPBase);
 		}
 	    }
-		
-	    
-	    D(bug("overriding methods\n"));
+	    else if (ifb->NumMethods < num_methods)
+	    {
+	    	D(bug("[META] Current bucket has %u methods, expanding...\n", ifb->NumMethods));
+
+	    	if (!expandbucket(ifb, num_methods))
+	    	    goto failure;
+	    }
+
+	    D(bug("[META] overriding methods...\n"));
 
 	    /* Ovveride the superclass methods with our new ones */
 	    for (i = 0; ifdescr->MethodTable[i].MethodFunc; i ++)
 	    {
-   	    	if (ifdescr->MethodTable[i].MethodFunc)
-	    	{
-	   	    ifb->MethodTable[ ifdescr->MethodTable[i].MethodIdx ].MethodFunc = ifdescr->MethodTable[i].MethodFunc;
-	    	    ifb->MethodTable[ ifdescr->MethodTable[i].MethodIdx ].mClass     = (OOP_Class *)o;
-	    	}
+	    	D(bug("[META] Method ID 0x%08X function 0x%p\n", ifdescr->MethodTable[i].MethodIdx, ifdescr->MethodTable[i].MethodFunc));
+
+		ifb->MethodTable[ ifdescr->MethodTable[i].MethodIdx ].MethodFunc = ifdescr->MethodTable[i].MethodFunc;
+	    	ifb->MethodTable[ ifdescr->MethodTable[i].MethodIdx ].mClass     = (OOP_Class *)o;
 	    } /* for (each method in the interface) */
-	    
+
 	} /* for (each interface to add to class) */
 	
 	/* For speedup in method lookup */
 	inst->data.iftab_directptr = (struct IFBucket **)inst->data.iftable->Table;
-    	
+    
 	ReturnBool ("IFMeta::allocdisptabs", TRUE);
 	
     } /* if (interface hash table allocated) */
@@ -510,7 +535,7 @@ BOOL init_ifmetaclass(struct IntOOPBase *OOPBase)
 
     ifmeta_cl = &(imo->inst.base.public);
     
-    D(bug("Got ifmeta classptr\n"));
+    D(bug("Got ifmeta classptr 0x%p\n", ifmeta_cl));
        
     imo->inst.base.public.superclass = BASEMETAPTR;
     imo->inst.base.public.OOPBasePtr = OOPBase;
@@ -639,51 +664,36 @@ static ULONG calc_ht_entries(struct ifmeta_inst *cl
     ReturnInt ("calc_ht_entries", ULONG, num_if);
 }
 
-
-
-
-
-
 /*********************
 **  createbucket()  **
 *********************/
 /* Creates a new interface bucket */
-static struct IFBucket *createbucket(
-			 STRPTR			interface_id
-			,ULONG			num_methods
-			,struct IntOOPBase 	*OOPBase)
+static struct IFBucket *createbucket(STRPTR interface_id, ULONG local_id, ULONG num_methods)
 {
-    struct IFMethod *ifm = NULL;
-    ULONG mtab_size = UB (&ifm[num_methods]) - UB( &ifm[0]);
-    
     /* Allocate bucket */
     struct IFBucket *ifb;
-    
-    ifb = (struct IFBucket *)AllocMem( sizeof (struct IFBucket), MEMF_ANY );
+
+    ifb = AllocMem(sizeof (struct IFBucket), MEMF_ANY);
     if (ifb)
     {
     	/* Allocate method table for this interface */
-    	ifb->MethodTable = (struct IFMethod *)AllocVec(mtab_size, MEMF_ANY);
+    	ifb->MethodTable = AllocVec(sizeof(struct IFMethod) * num_methods, MEMF_CLEAR);
 	if (ifb->MethodTable)
 	{
-	    /* Get correct ID for the interface (string ID => interface ID mapping) */
-	    ifb->InterfaceID = 0;
-	    if (init_mi_methodbase(interface_id, &(ifb->InterfaceID), OOPBase))
-	    {
-	    	/* Save number of methods in the interface */
-	    	ifb->NumMethods  = num_methods;
-		
-		/* Save the global string representations of the ID */
-		ifb->GlobalInterfaceID = interface_id;
-		return (ifb);
+	    /* Set correct ID for the interface (string ID => interface ID mapping) */
+	    ifb->InterfaceID       = local_id;
+	    ifb->GlobalInterfaceID = interface_id;
 
-	    }
+	    /* Save number of methods in the interface */
+	    ifb->NumMethods = num_methods;
+
+	    D(bug("[META] Created bucket 0x%p for %u methods\n", ifb, num_methods));
+	    return ifb;
 	}
-	FreeMem (ifb, sizeof (struct IFBucket));
+	FreeMem(ifb, sizeof (struct IFBucket));
     }
-    return (NULL);
-}    
-    
+    return NULL;
+}
 
 /***********************
 **  Hash table hooks  **
@@ -692,6 +702,7 @@ static struct IFBucket *createbucket(
 
 VOID freebucket(struct Bucket *b, struct IntOOPBase *OOPBase)
 {
+    D(bug("[META] freebucket(0x%p)\n", b));
 
     /* Free methodtable */
     FreeVec(IB(b)->MethodTable);
@@ -710,39 +721,31 @@ struct Bucket *copyBucket(struct Bucket *old_b, APTR data, struct IntOOPBase *OO
     
     EnterFunc(bug("CopyBucket(old_b=%p)\n", old_b));
     
-    /* Allocate memory for the new interface bucket */
-    new_b = (struct IFBucket *)AllocMem(sizeof (struct IFBucket), MEMF_ANY );
+    /* Allocate the new interface bucket */
+    new_b = createbucket(IB(old_b)->GlobalInterfaceID, IB(old_b)->InterfaceID, IB(old_b)->NumMethods);
+
     if (new_b)
-    {
-    	struct IFMethod *ifm = NULL;
-        ULONG mtab_size;
-	
-	/* Get number of methods in source methodtable */
-	ULONG numentries = IB(old_b)->NumMethods;
-	
-	mtab_size = UB(&ifm[numentries]) - UB(&ifm[0]);
-	
-	/* Allocate memory for methodtable of same size as source one */
-    	new_b->MethodTable = (struct IFMethod *)AllocVec(mtab_size, MEMF_ANY);
-	if (new_b->MethodTable)
-	{
-	    /* Copy methodtable to destination */
-	    CopyMem(IB(old_b)->MethodTable, new_b->MethodTable, mtab_size);
-	    
-    	    /* Initialize bucket */
-	    new_b->InterfaceID  	= IB(old_b)->InterfaceID;
-	    new_b->NumMethods 		= IB(old_b)->NumMethods;
-	    new_b->GlobalInterfaceID 	= IB(old_b)->GlobalInterfaceID;
-	    	    
-	    ReturnPtr ("CopyBucket", struct Bucket *, (struct Bucket *)new_b );
-	}
-	FreeMem (new_b, sizeof (struct IFBucket));
-    }
-    
-    ReturnPtr ("CopyBucket", struct Bucket *, NULL);
+	/* Copy methodtable to destination */
+	CopyMem(IB(old_b)->MethodTable, new_b->MethodTable,  sizeof(struct IFMethod) * IB(old_b)->NumMethods);
+
+    ReturnPtr ("CopyBucket", struct Bucket *, (struct Bucket *)new_b );
 }
 
+/* Expand method table in IFBucket up to num_methods entries */
+static BOOL expandbucket(struct IFBucket *b, ULONG num_methods)
+{
+    struct IFMethod *old = b->MethodTable;
+    struct IFMethod *ifm = AllocVec(sizeof(struct IFMethod) * num_methods, MEMF_CLEAR);
 
+    if (!ifm)
+    	return FALSE;
+
+    CopyMemQuick(b->MethodTable, ifm, sizeof(struct IFMethod) * b->NumMethods);
+    FreeVec(b->MethodTable);
+    b->MethodTable = ifm;
+
+    return TRUE;
+}
 
 /* Default function for calling DoMethod() on a local object */
 /*****************
@@ -752,22 +755,60 @@ struct Bucket *copyBucket(struct Bucket *old_b, APTR data, struct IntOOPBase *OO
 #define OOPBase ((struct IntOOPBase *)OOP_OOPBASE(object))
 
 static IPTR Meta_DoMethod(OOP_Object *object, OOP_Msg msg)
-{
-    struct metadata *cl = (struct metadata *)OOP_OCLASS(object);
-    
-    
-    /* Macro below defined in intern.h */
-    IntCallMethod(cl, object, msg);
+{   
+    D(bug("[META] DoMethod(0x%p), class 0x%p\n", object, OOP_OCLASS(object)));
 
+    return Meta_CoerceMethod(OOP_OCLASS(object), object, msg);
 }
-
 
 /*******************
 **  CoerceMethod  **
 *******************/
-static IPTR Meta_CoerceMethod(OOP_Class *cl, OOP_Object *object, OOP_Msg msg)
+static IPTR Meta_CoerceMethod(OOP_Class *cl, OOP_Object *o, OOP_Msg msg)
 {
-    IntCallMethod(cl, object, msg);
+    register struct IFBucket *b;
+    register OOP_MethodID mid = *msg;
+    register ULONG ifid = mid & (~METHOD_MASK);
+
+    mid &= METHOD_MASK;
+
+    b = IFI(cl)->data.iftab_directptr[ifid & IFI(cl)->data.hashmask];
+    while (b)
+    {
+	if (b->InterfaceID == ifid)
+	{
+	    dump_bucket(b);
+
+	    /* Ensure that method offset fits into the table */
+	    if (mid < b->NumMethods)
+	    {
+	    	register struct IFMethod *method = &b->MethodTable[mid];
+
+	        if (method->MethodFunc)
+	    	    return method->MethodFunc(method->mClass, o, msg);
+	    }
+
+	    /*
+	     * TODO: Looks like it would be nice to post alerts with some extra information
+	     * attached.
+	     * Current exec.library API does not allow this. Need to invent something.
+	     */
+	    bug("[OOP metaclass] Unimplemented method 0x%08X called on class 0x%p (%s)\n", mid, cl, cl->ClassNode.ln_Name);
+	    bug("[OOP metaclass] Interface ID %s\n", b->GlobalInterfaceID);
+	    bug("[OOP metaclass] Object 0x%p\n", o);
+
+	    /*
+	     * Throw an alert. It is recoverable, so won't harm.
+	     * But the developer will be able to examine a stack trace.
+	     */
+	    Alert(AN_OOP);
+
+	    return 0;
+        }
+        b = b->Next;
+    }
+
+    return 0;
 }
 
 /********************
@@ -775,8 +816,7 @@ static IPTR Meta_CoerceMethod(OOP_Class *cl, OOP_Object *object, OOP_Msg msg)
 ********************/
 static IPTR Meta_DoSuperMethod(OOP_Class *cl, OOP_Object *object, OOP_Msg msg)
 {
-    cl = IFI(cl)->base.public.superclass;
-    IntCallMethod(cl, object, msg);
+    return Meta_CoerceMethod(IFI(cl)->base.public.superclass, object, msg);
 }
 
 #undef OOPBase
