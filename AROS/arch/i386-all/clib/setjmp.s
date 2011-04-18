@@ -83,8 +83,11 @@ AROS_CDEFNAME(setjmp):
 	movl %ebp,24(%eax) /* %ebp */
 	movl %esp,28(%eax) /* %esp */
 
-	pushl %ebx
+        pushl %ebx /* Remember ebx */
 
+        movl (%ebx),%ebx /* RELBASE */
+        movl %ebx,32(%eax)
+        
 	movl retaddr+4(%esp), %ebx /* Save return address (%esp has changed) */
 	movl %ebx,0(%eax)
 

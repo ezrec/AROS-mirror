@@ -14,7 +14,7 @@
 #ifdef __mc68000__
 #   define _JMPLEN 12
 #elif __i386__
-#   define _JMPLEN 7
+#   define _JMPLEN 8
 #elif __x86_64__
 #   define _JMPLEN 15
 #elif __powerpc__

@@ -95,6 +95,8 @@ AROS_CDEFNAME(longjmp):
 
 	/* Restore all registers */
 	movl 4(%eax),%ebx /* %ebx */
+        movl 32(%eax),%edx /* RELBASE */
+        movl %edx,(%ebx)
 	movl 8(%eax),%ecx /* %ecx */
 	movl 12(%eax),%edx /* %edx */
 	movl 16(%eax),%esi /* %esi */
