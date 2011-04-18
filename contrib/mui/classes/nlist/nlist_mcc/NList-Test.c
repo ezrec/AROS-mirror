@@ -47,6 +47,7 @@
 #include <proto/muimaster.h>
 #include <proto/graphics.h>
 #include <proto/intuition.h>
+#include <proto/timer.h>
 #include <proto/utility.h>
 
 #if !defined(__amigaos4__)
@@ -82,6 +83,19 @@ struct UtilityIFace *IUtility = NULL;
 #endif
 
 static struct IOStdReq ioreq;
+
+#if defined(DEBUG)
+#include "timeval.h"
+static struct TimeRequest timereq;
+#if defined(__MORPHOS__)
+struct Library *TimerBase = NULL;
+#else
+struct Device *TimerBase = NULL;
+#endif
+#if defined(__amigaos4__)
+struct TimerIFace *ITimer = NULL;
+#endif
+#endif // DEBUG
 
 #include "private.h"
 
@@ -664,10 +678,10 @@ MakeStaticHook(CompareLI_TextHook, CompareLI_TextFunc);
 /* *********************************************** */
 
 #if defined(__amigaos4__)
-#define GETINTERFACE(iface, base)	(iface = (APTR)GetInterface((struct Library *)(base), "main", 1L, NULL))
-#define DROPINTERFACE(iface)			(DropInterface((struct Interface *)iface), iface = NULL)
+#define GETINTERFACE(iface, base)   (iface = (APTR)GetInterface((struct Library *)(base), "main", 1L, NULL))
+#define DROPINTERFACE(iface)        (DropInterface((struct Interface *)iface), iface = NULL)
 #else
-#define GETINTERFACE(iface, base)	TRUE
+#define GETINTERFACE(iface, base)   TRUE
 #define DROPINTERFACE(iface)
 #endif
 
@@ -685,11 +699,20 @@ static VOID fail(APTR APP_Main,const char *str)
 
   NGR_Delete();
 
+  #if defined(DEBUG)
+  if(TimerBase)
+  {
+    DROPINTERFACE(ITimer);
+    CloseDevice((struct IORequest *)&timereq);
+    TimerBase = NULL;
+  }
+  #endif // DEBUG
+
   if(ConsoleDevice)
   {
     DROPINTERFACE(IConsole);
-		CloseDevice((struct IORequest *)&ioreq);
-	  ConsoleDevice = NULL;
+    CloseDevice((struct IORequest *)&ioreq);
+    ConsoleDevice = NULL;
   }
 
   if(MUIMasterBase)
@@ -760,17 +783,29 @@ static VOID init(VOID)
 
       if(GETINTERFACE(IConsole, ConsoleDevice))
       {
-        if(NGR_Create())
+        #if defined(DEBUG)
+        timereq.Request.io_Message.mn_Length = sizeof(timereq);
+        if(OpenDevice("timer.device", 0, (struct IORequest *)&timereq, 0L) == 0)
         {
-          if(StartClipboardServer() == TRUE)
+          TimerBase = timereq.Request.io_Device;
+          if(GETINTERFACE(ITimer, TimerBase))
           {
-            #if defined(DEBUG)
-            SetupDebug();
-            #endif
+        #endif
+            if(NGR_Create())
+            {
+              if(StartClipboardServer() == TRUE)
+              {
+                #if defined(DEBUG)
+                SetupDebug();
+                #endif
 
-            return;
+                return;
+              }
+            }
+        #if defined(DEBUG)
           }
         }
+        #endif // DEBUG
       }
     }
   }

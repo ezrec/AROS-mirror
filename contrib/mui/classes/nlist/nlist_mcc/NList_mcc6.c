@@ -992,27 +992,27 @@ LONG DrawText(struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,LONG maxx,ULO
     x2s = x2;
     pen = mypen;
 
-	/*
-	{
-		int xy, yx;
+/*
+{
+int xy, yx;
 
-		D(bug( "BEFORE ==============================>\n" ));
+D(bug( "BEFORE ==============================>\n" ));
 
-		for( yx = 0; yx <= cinfo->ninfo; yx++ )
-		{
-			afinfo = &data->aff_infos[yx];
+for( yx = 0; yx <= cinfo->ninfo; yx++ )
+{
+  afinfo = &data->aff_infos[yx];
 
-			D(bug( "Drawing line len: %ld - '", afinfo->len ));
+  D(bug( "Drawing line len: %ld - '", afinfo->len ));
 
-			for( xy = 0; xy < afinfo->len; xy++ )
-				D(bug( "%1.1s", &afinfo->strptr[xy] ));
+  for( xy = 0; xy < afinfo->len; xy++ )
+  D(bug( "%1.1s", &afinfo->strptr[xy] ));
 
-			D(bug( "'\n" ));
-		}
+  D(bug( "'\n" ));
+}
 
-		D(bug( "<====================================\n" ));
-	}
-	*/
+D(bug( "<====================================\n" ));
+}
+*/
 
     ni = 0;
     afinfo = &data->aff_infos[ni];
@@ -1321,25 +1321,25 @@ LONG DrawText(struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,LONG maxx,ULO
             Move(data->rp, x2, y);
             Text(data->rp, ptr1, curclen);
 
-			/*
-			{
-				int xy;
+/*
+{
+int xy;
 
-				D(bug( "Drawing line len: %ld, x: %ld, y: %ld - '", curclen, x2, y ));
+D(bug( "Drawing line len: %ld, x: %ld, y: %ld - '", curclen, x2, y ));
 
-				for( xy = 0; xy < curclen; xy++ )
-				{	D(bug( "%1.1s", &ptr1[xy] )); }
+for( xy = 0; xy < curclen; xy++ )
+{
+  D(bug( "%1.1s", &ptr1[xy] )); }
+  D(bug( "'\n" ));
+}
 
-				D(bug( "'\n" ));
-			}
+{
+char txt[100];
 
-			{
-				char txt[100];
-
-				snprintf( txt, sizeof(txt), "Drawing line len: %ld, x: %ld, y: %ld - '%%%ld.%lds'", curclen, x2, y, curclen, curclen );
-				D(bug( txt, ptr1 ));
-			}
-			*/
+snprintf( txt, sizeof(txt), "Drawing line len: %ld, x: %ld, y: %ld - '%%%ld.%lds'", curclen, x2, y, curclen, curclen );
+D(bug( txt, ptr1 ));
+}
+*/
           }
         }
         if (afinfo->addchar > 0)

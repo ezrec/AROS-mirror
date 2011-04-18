@@ -30,14 +30,16 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-#include <proto/intuition.h>
-#include <proto/utility.h>
-#include <proto/dos.h>
 #include <proto/exec.h>
+#include <proto/dos.h>
+#include <proto/intuition.h>
+#include <proto/timer.h>
+#include <proto/utility.h>
 
 #include "SDI_compiler.h"
 #include "Debug.h"
 #include "version.h"
+#include "timeval.h"
 
 // special flagging macros
 #define isFlagSet(v,f)      (((v) & (f)) == (f))  // return TRUE if the flag is set
@@ -52,6 +54,9 @@ static int indent_level = 0;
 static BOOL ansi_output = FALSE;
 static ULONG debug_flags = DBF_ALWAYS | DBF_STARTUP; // default debug flags
 static ULONG debug_classes = DBC_ERROR | DBC_DEBUG | DBC_WARNING | DBC_ASSERT | DBC_REPORT; // default debug classes
+#define NUMCLOCKS 8
+static int timer_level = -1;
+static struct TimeVal startTimes[NUMCLOCKS];
 
 /****************************************************************************/
 
@@ -408,6 +413,44 @@ void _DPRINTF(unsigned long dclass, unsigned long dflags, const char *file, int 
     }
     else
       kprintf("%s:%ld:%s\n", file, line, buf);
+  }
+}
+
+/****************************************************************************/
+
+void _STARTCLOCK(unsigned long dclass, unsigned long dflags, const char *file, const unsigned long line)
+{
+  if(isFlagSet(debug_classes, dclass) &&
+     isFlagSet(debug_flags, dflags))
+  {
+    if(timer_level + 1 < NUMCLOCKS)
+    {
+      timer_level++;
+      GetSysTime(TIMEVAL(&startTimes[timer_level]));
+    }
+    else
+      kprintf("%s:%ld: already %ld clocks in use\n", file, line, NUMCLOCKS);
+  }
+}
+
+/****************************************************************************/
+
+void _STOPCLOCK(unsigned long dclass, unsigned long dflags, const char *file, const unsigned long line, const char *msg)
+{
+  if(isFlagSet(debug_classes, dclass) &&
+     isFlagSet(debug_flags, dflags))
+  {
+    if(timer_level >= 0)
+    {
+      struct TimeVal stopTime;
+
+      GetSysTime(TIMEVAL(&stopTime));
+      SubTime(TIMEVAL(&stopTime), TIMEVAL(&startTimes[timer_level]));
+      kprintf("%s:%ld: operation '%s' took %ld.%06ld seconds\n", file, line, msg, stopTime.Seconds, stopTime.Microseconds);
+      timer_level--;
+    }
+    else
+      kprintf("%s:%ld: no clocks in use\n", file, line);
   }
 }
 

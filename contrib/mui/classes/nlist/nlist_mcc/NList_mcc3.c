@@ -210,9 +210,11 @@ void NL_SetObjInfos(struct NLData *data,BOOL setall)
     data->lvisible = data->mheight / data->vinc;
     vdheight = (data->mheight - data->lvisible * data->vinc);
 
-	/* Set vertical delta top, if text should be centered vertically */
-	if (data->NList_VerticalCenteredText) data->vdt = vdheight / 2;
-	else data->vdt = 0;
+    /* Set vertical delta top, if text should be centered vertically */
+    if (data->NList_VerticalCenteredText)
+      data->vdt = vdheight / 2;
+    else
+      data->vdt = 0;
 
     data->vdb = vdheight - data->vdt;
     data->vdtpos = data->mtop;

@@ -522,7 +522,7 @@ ULONG NL_UpdateScrollers(struct NLData *data,BOOL force)
       if ((ent < data->NList_Entries) && data->EntriesArray &&
           ((data->ScrollBarsOld & MUIV_NListview_HSB_On) == MUIV_NListview_HSB_On))
       {
-    		LONG hsb,lastent,hsbheight,vsbwidth=0;
+        LONG hsb,lastent,hsbheight,vsbwidth=0;
 
         // check if we got a HSB_Height attribute
         if(data->scrollersobj && GetAttr(MUIA_NListview_HSB_Height, data->scrollersobj, (IPTR *)&hsbheight) != FALSE)
@@ -925,7 +925,7 @@ LONG NL_DrawQuietBG(struct NLData *data,LONG dowhat,LONG bg)
 
 void NL_Select(struct NLData *data,LONG dowhat,LONG ent,BYTE sel)
 {
-/*	D(bug("%lx dowhat=%ld ent=%ld sel=%ld\n",obj,dowhat,ent,sel));*/
+/* D(bug("%lx dowhat=%ld ent=%ld sel=%ld\n",obj,dowhat,ent,sel));*/
   switch (dowhat)
   {
     case 0 :  /* SELECT(ent,sel) */

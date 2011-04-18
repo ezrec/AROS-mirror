@@ -108,15 +108,16 @@ static struct QualifierDef QualTab[] =
 
 Object *MakeCheck(STRPTR label, STRPTR help, ULONG check)
 {
-	Object *obj = MUI_MakeObject(MUIO_Checkmark, label);
-	if (obj)
-	{
-		SetAttrs(obj, MUIA_CycleChain, 1,
-		              MUIA_Selected, check,
-		              MUIA_ShortHelp, help,
-					  TAG_DONE);
-	}
-	return (obj);
+  Object *obj = MUI_MakeObject(MUIO_Checkmark, label);
+  if (obj)
+  {
+    SetAttrs(obj, MUIA_CycleChain, 1,
+                  MUIA_Selected, check,
+                  MUIA_ShortHelp, help,
+                  TAG_DONE);
+  }
+
+  return (obj);
 }
 
 #define String2(contents,maxlen)\
@@ -1556,9 +1557,9 @@ static IPTR mNL_MCP_Dispose(struct IClass *cl, Object *obj, Msg msg)
 
   if(data->exampleText != NULL)
   {
-  	LONG i = 0;
+    LONG i = 0;
 
-  	while(data->exampleText[i] != NULL)
+    while(data->exampleText[i] != NULL)
     {
       FreeVec(data->exampleText[i]);
       i++;

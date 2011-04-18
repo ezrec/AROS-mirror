@@ -81,9 +81,9 @@ int main(void)
     GETINTERFACE(IIntuition, IntuitionBase))
   if((CxBase = OpenLibrary("commodities.library", 37L)) &&
     GETINTERFACE(ICommodities, CxBase))
-	if(!OpenDevice("console.device", -1L, (struct IORequest *)&ioreq, 0L))
-	{
-	  ConsoleDevice = (struct Device *)ioreq.io_Device;
+  if(!OpenDevice("console.device", -1L, (struct IORequest *)&ioreq, 0L))
+  {
+    ConsoleDevice = (struct Device *)ioreq.io_Device;
     if(ConsoleDevice != NULL &&
        GETINTERFACE(IConsole, ConsoleDevice))
     if((LocaleBase = (APTR)OpenLibrary("locale.library", 38)) &&
@@ -166,19 +166,19 @@ int main(void)
       CloseLibrary((struct Library *)LocaleBase);
     }
 
-  	if(ConsoleDevice)
-	  {
+    if(ConsoleDevice)
+    {
       DROPINTERFACE(IConsole);
       CloseDevice((struct IORequest *)&ioreq);
-    	ConsoleDevice = NULL;
+      ConsoleDevice = NULL;
     }
   }
 
-	if(CxBase)
+  if(CxBase)
   {
     DROPINTERFACE(ICommodities);
-		CloseLibrary(CxBase);
-  	CxBase = NULL;
+    CloseLibrary(CxBase);
+    CxBase = NULL;
   }
 
   if(IntuitionBase)

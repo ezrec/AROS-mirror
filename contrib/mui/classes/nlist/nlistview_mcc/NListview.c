@@ -44,14 +44,6 @@
                                     /* when your object is disabled or invisible */
 #endif
 
-#define imgbt(nr)\
-  ImageObject,\
-    ImageButtonFrame,\
-    MUIA_Background, MUII_ButtonBack,\
-    MUIA_InputMode , MUIV_InputMode_RelVerify,\
-    MUIA_Image_Spec, (long) nr,\
-  End
-
 static LONG IMsgToChar(struct IntuiMessage *imsg, ULONG dccode, ULONG dcquali)
 {
   struct InputEvent ie;

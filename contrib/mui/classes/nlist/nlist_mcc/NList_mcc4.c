@@ -171,7 +171,7 @@ BOOL NeedAffInfo(struct NLData *data,WORD niask)
     if (num < 12)
       num = 12;
 
-	//D(bug( "Adding %ld aff infos.\n", num ));
+    //D(bug( "Adding %ld aff infos.\n", num ));
 
     if((affinfotmp = (struct affinfo *)AllocVecPooled(data->Pool, sizeof(struct affinfo)*num)) != NULL)
     {
@@ -378,7 +378,7 @@ void ParseColumn(struct NLData *data,WORD column,IPTR mypen)
     afinfo->strptr = ptr1;
     afinfo->pos = (WORD) (ptr1 - ptrs);
 
-	//D(bug( "%ld - Setting aff info %ld: %15.15s - pos: %ld, len: %ld, style: %ld.\n", __LINE__, ni, afinfo->strptr, afinfo->pos, afinfo->len, afinfo->style ));
+    //D(bug( "%ld - Setting aff info %ld: %15.15s - pos: %ld, len: %ld, style: %ld.\n", __LINE__, ni, afinfo->strptr, afinfo->pos, afinfo->len, afinfo->style ));
 
     while (ptr1 && (ptr1<ptr2) && (ptr1[0] != '\0') && (ptr1[0] != '\n') && (ptr1[0] != '\r') && (good = NeedAffInfo(data,ni+2)))
     {
@@ -403,7 +403,7 @@ void ParseColumn(struct NLData *data,WORD column,IPTR mypen)
           afinfo->strptr = ptr1;
           afinfo->pos = (WORD) (ptr1 - ptrs);
 
-			//D(bug( "%ld - Setting aff info %ld: %15.15s - pos: %ld, len: %ld, style: %ld.\n", __LINE__, ni, afinfo->strptr, afinfo->pos, afinfo->len, afinfo->style ));
+          //D(bug( "%ld - Setting aff info %ld: %15.15s - pos: %ld, len: %ld, style: %ld.\n", __LINE__, ni, afinfo->strptr, afinfo->pos, afinfo->len, afinfo->style ));
 
           continue;
         }
@@ -595,7 +595,7 @@ void ParseColumn(struct NLData *data,WORD column,IPTR mypen)
               afinfo->len = minx;
               afinfo->pen = ((dy & 0x0000FFFF) << 16) + (dx & 0x0000FFFF);
 
-				//D(bug( "%ld - Setting aff info %ld: %15.15s - pos: %ld, len: %ld, style: %ld.\n", __LINE__, ni, afinfo->strptr, afinfo->pos, afinfo->len, afinfo->style ));
+              //D(bug( "%ld - Setting aff info %ld: %15.15s - pos: %ld, len: %ld, style: %ld.\n", __LINE__, ni, afinfo->strptr, afinfo->pos, afinfo->len, afinfo->style ));
 
               if (afinfo->strptr || (data->imagebuf[0] == '\0')) {
                 ptr1 = &ptr1[np+1];
@@ -657,25 +657,30 @@ void ParseColumn(struct NLData *data,WORD column,IPTR mypen)
               }
             }
             if (ptr1[np] == ',')
-            { np++;
+            {
+              np++;
               minx2 = minx = atol(&ptr1[np]);
               while ((ptr1[np] != '\0') && (ptr1[np] != '\n') && (ptr1[np] != '\r') && (ptr1[np] != ']'))
                 np++;
             }
             if (ptr1[np] == ']')
-            { struct BitMapImage *bitmapimage = NULL;
+            {
+              struct BitMapImage *bitmapimage = NULL;
               LONG dx2;
+
               if (imgtype == 'O')
                 bitmapimage = (struct BitMapImage *) strtoul(&ptr1[1],NULL,16);
               else
-              { numimg = atol(&ptr1[1]); // RHP: Changed for Special ShortHelp
+              {
+                numimg = atol(&ptr1[1]); // RHP: Changed for Special ShortHelp
                 if ((numimg >= 0) && (numimg < data->LastImage) && data->NList_UseImages)
                   bitmapimage = data->NList_UseImages[numimg].bmimg;
               }
-              if (bitmapimage && (bitmapimage->control == MUIA_Image_Spec))
+              if (bitmapimage != NULL && (bitmapimage->control == MUIA_Image_Spec))
               {
                 if (afinfo->len > 0)
-                { ni++;
+                {
+                  ni++;
                   afinfo = &data->aff_infos[ni];
                 }
                 afinfo->tag = tag;
@@ -691,7 +696,8 @@ void ParseColumn(struct NLData *data,WORD column,IPTR mypen)
                   afinfo->strptr = NULL;
                 dx2 = dx;
                 if (afinfo->strptr)
-                { if (dx <= 0)
+                {
+                  if (dx <= 0)
                     dx = ((struct NImgList *) afinfo->strptr)->width;
                   if (dy < 0)
                     dy = ((struct NImgList *) afinfo->strptr)->height;
@@ -710,7 +716,7 @@ void ParseColumn(struct NLData *data,WORD column,IPTR mypen)
                 afinfo->len = minx;
                 afinfo->pen = ((dy & 0x0000FFFF) << 16) + (dx & 0x0000FFFF);
 
-				//D(bug( "%ld - Setting aff info %ld: %15.15s - pos: %ld, len: %ld, style: %ld.\n", __LINE__, ni, afinfo->strptr, afinfo->pos, afinfo->len, afinfo->style ));
+                //D(bug( "%ld - Setting aff info %ld: %15.15s - pos: %ld, len: %ld, style: %ld.\n", __LINE__, ni, afinfo->strptr, afinfo->pos, afinfo->len, afinfo->style ));
 
                 ptr1 = &ptr1[np+1];
 
@@ -719,17 +725,19 @@ void ParseColumn(struct NLData *data,WORD column,IPTR mypen)
               }
               else
               {
-                if (!bitmapimage || (bitmapimage->control != MUIM_NList_CreateImage))
+                if (bitmapimage == NULL || (bitmapimage->control != MUIM_NList_CreateImage))
                   bitmapimage = NULL;
                 minx -= 2;
-                if (bitmapimage || (minx > 0))
+                if (bitmapimage != NULL || (minx > 0))
                 {
                   if (afinfo->len > 0)
-                  { ni++;
+                  {
+                    ni++;
                     afinfo = &data->aff_infos[ni];
                   }
                   if (bitmapimage)
-                  { dx = bitmapimage->width;
+                  {
+                    dx = bitmapimage->width;
                     if (dx <= 0)
                       dx = 1;
                     if ((dy > bitmapimage->height) || (dy < 0))
@@ -749,7 +757,7 @@ void ParseColumn(struct NLData *data,WORD column,IPTR mypen)
                   afinfo->strptr = (APTR) bitmapimage;
                   afinfo->pos = (WORD) (ptro - ptrs);
 
-					//D(bug( "%ld - Setting aff info %ld: %15.15s - pos: %ld, len: %ld, style: %ld.\n", __LINE__, ni, afinfo->strptr, afinfo->pos, afinfo->len, afinfo->style ));
+                  //D(bug( "%ld - Setting aff info %ld: %15.15s - pos: %ld, len: %ld, style: %ld.\n", __LINE__, ni, afinfo->strptr, afinfo->pos, afinfo->len, afinfo->style ));
                 }
                 ptr1 = &ptr1[np+1];
 
@@ -763,7 +771,8 @@ void ParseColumn(struct NLData *data,WORD column,IPTR mypen)
           ptr1++;
 
         if (afinfo->len > 0)
-        { ni++;
+        {
+          ni++;
           afinfo = &data->aff_infos[ni];
         }
         afinfo->pen = pen;
@@ -776,7 +785,7 @@ void ParseColumn(struct NLData *data,WORD column,IPTR mypen)
         afinfo->strptr = ptr1;
         afinfo->pos = (WORD) (ptr1 - ptrs);
 
-		//D(bug( "%ld - Setting aff info %ld: %15.15s - pos: %ld, len: %ld, style: %ld.\n", __LINE__, ni, afinfo->strptr, afinfo->pos, afinfo->len, afinfo->style ));
+        //D(bug( "%ld - Setting aff info %ld: %15.15s - pos: %ld, len: %ld, style: %ld.\n", __LINE__, ni, afinfo->strptr, afinfo->pos, afinfo->len, afinfo->style ));
       }
       else if ((ptr1[0] == '\t' && (data->NList_IgnoreSpecialChars == NULL || strchr(data->NList_IgnoreSpecialChars, '\t') == 0)) ||
                (((unsigned char)ptr1[0]) == 0xA0 && (data->NList_IgnoreSpecialChars == NULL || strchr(data->NList_IgnoreSpecialChars, 0xa0) == 0)))
@@ -806,7 +815,7 @@ void ParseColumn(struct NLData *data,WORD column,IPTR mypen)
           afinfo->len = data->spacesize;
         }
 
-		//D(bug( "%ld - Setting aff info %ld: %15.15s - pos: %ld, len: %ld, style: %ld.\n", __LINE__, ni, afinfo->strptr, afinfo->pos, afinfo->len, afinfo->style ));
+        //D(bug( "%ld - Setting aff info %ld: %15.15s - pos: %ld, len: %ld, style: %ld.\n", __LINE__, ni, afinfo->strptr, afinfo->pos, afinfo->len, afinfo->style ));
 
         ni++;
         afinfo = &data->aff_infos[ni];
@@ -822,7 +831,7 @@ void ParseColumn(struct NLData *data,WORD column,IPTR mypen)
         afinfo->strptr = ptr1;
         afinfo->pos = (WORD) (ptr1 - ptrs);
 
-		//D(bug( "%ld - Setting aff info %ld: %15.15s - pos: %ld, len: %ld, style: %ld.\n", __LINE__, ni, afinfo->strptr, afinfo->pos, afinfo->len, afinfo->style ));
+        //D(bug( "%ld - Setting aff info %ld: %15.15s - pos: %ld, len: %ld, style: %ld.\n", __LINE__, ni, afinfo->strptr, afinfo->pos, afinfo->len, afinfo->style ));
       }
       else
       { there_is_char = 1;
@@ -846,7 +855,7 @@ void ParseColumn(struct NLData *data,WORD column,IPTR mypen)
     afinfo->len = 0;
     afinfo->pos = (WORD) (ptr1 - ptrs);
 
-	//D(bug( "%ld - Setting aff info %ld: %15.15s - pos: %ld, len: %ld, style: %ld.\n", __LINE__, ni, afinfo->strptr, afinfo->pos, afinfo->len, afinfo->style ));
+    //D(bug( "%ld - Setting aff info %ld: %15.15s - pos: %ld, len: %ld, style: %ld.\n", __LINE__, ni, afinfo->strptr, afinfo->pos, afinfo->len, afinfo->style ));
   }
 }
 
@@ -1345,8 +1354,6 @@ static LONG NL_DoWrapLine(struct NLData *data,LONG ent,BOOL force)
 
   pen = 1;
   style = data->EntriesArray[ent]->style;
-
-	//__asm("illegal");
 
   while (TRUE)
   {

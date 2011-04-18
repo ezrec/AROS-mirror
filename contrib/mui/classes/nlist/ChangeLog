@@ -3,7 +3,51 @@ MUI NList MCC classes - ChangeLog
 ---------------------------------
 
 $Id$
-$URL: https://nlist-classes.svn.sourceforge.net/svnroot/nlist-classes/releases/0.109/ChangeLog $
+$URL: https://nlist-classes.svn.sourceforge.net/svnroot/nlist-classes/releases/0.110/ChangeLog $
+
+#### v0.110 RELEASE ###########################################################
+
+2011-04-17 Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: final v0.110 release preparations
+
+2011-02-22 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/NList_func.c: MUIM_NList_GetEntry tries to avoid a possible NULL
+    pointer access in case no valid pointer to store the entry is given. The
+    entry pointer itself is returned as the methods return value in any case.
+    This matches the behavior of List.mui.
+  * nfloattext_mcc/NFloattext.c, nlistview_mcc/NListview.c: removed an unused
+    macro.
+
+2011-02-17 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/NList_func2.c: try to move around entries only if there is really
+    anything to move.
+  * nlist_mcc/Debug.c: implemented the STARTCLOCK() and STOPCLOCK() functions to
+    be able to measure real execution times.
+  * nlist_mcc/NList_mcc.c: set the entry pool's threshold size to the same value
+    as the puddle size for the non-OS4 builds. This improves freeing items from
+    the pool a lot.
+  * nlist_mcc/NList_func2.c: removed a duplicate setActive() call without any
+    effect.
+
+2011-02-07 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/NList_func4.c: readded the pen number check which accidentally got
+    removed during the recent code cleanup and caused bodychunk object to be not
+    displayed anymore, because their color depth was calculated as zero. This
+    closes bug #317905.
+
+2011-02-05 Jens Langner <Jens.Langner@light-speed.de>
+
+  * nlisttree_mcp/locale, nlistviews_mcp/locale: added turkish catalog
+    translation kindly provided by Alper Sönmez.
+
+2011-02-04 Thore Böckelmann <tboeckel@gmx.de>
+
+  * all/Makefile: fixed the dependency generation to respect the system specific
+    object file path.
 
 #### v0.109 RELEASE ###########################################################
 

@@ -569,7 +569,7 @@ static IPTR _NewP( struct IClass *cl, Object *obj, Msg msg )
       End,
     End,
 
-	End;
+  End;
 
   if ( data->GR_Prefs == NULL )
   {

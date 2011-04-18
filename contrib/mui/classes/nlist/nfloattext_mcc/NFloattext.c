@@ -32,14 +32,6 @@
 #include "private.h"
 #include "version.h"
 
-#define imgbt(nr)\
-  ImageObject,\
-    ImageButtonFrame,\
-    MUIA_Background, MUII_ButtonBack,\
-    MUIA_InputMode , MUIV_InputMode_RelVerify,\
-    MUIA_Image_Spec, (long) nr,\
-  End
-
 static char *CopyText(char *textin)
 {
   char *textout = NULL;
@@ -173,7 +165,10 @@ static IPTR mNFT_New(struct IClass *cl,Object *obj,struct opSet *msg)
       data->NFloattext_Text = Text;
 
     if (data->NFloattext_Text)
+    {
+    	D(DBF_ALWAYS, "inserting text with length %ld '%s'",strlen(data->NFloattext_Text),data->NFloattext_Text);
       DoMethod(obj,MUIM_NList_InsertWrap,data->NFloattext_Text,-2,MUIV_NList_Insert_Bottom,1,data->NFloattext_Align);
+    }
   }
 
   return((IPTR) obj);

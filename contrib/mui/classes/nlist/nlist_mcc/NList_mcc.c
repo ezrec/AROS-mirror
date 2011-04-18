@@ -613,7 +613,7 @@ IPTR mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
                                                       TAG_DONE);
   #else
   // all other systems use a standard pool with puddle size and threshold set appropriately
-  data->EntryPool = CreatePool(MEMF_ANY, sizeof(struct TypeEntry) * 1024, sizeof(struct TypeEntry));
+  data->EntryPool = CreatePool(MEMF_ANY, sizeof(struct TypeEntry) * 1024, sizeof(struct TypeEntry) * 1024);
   #endif
 
   // are pools available?
@@ -1454,11 +1454,11 @@ IPTR mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
 
   /* Use centered text lines? */
   {
-  	LONG *vert;
+    LONG *vert;
 
-	  data->NList_VerticalCenteredText = DEFAULT_VCENTERED;
-	  if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_VCenteredLines, &vert))
-		  data->NList_VerticalCenteredText = *vert;
+    data->NList_VerticalCenteredText = DEFAULT_VCENTERED;
+    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_VCenteredLines, &vert))
+      data->NList_VerticalCenteredText = *vert;
   }
 
   if (data->ContextMenu != data->ContextMenuOn)
