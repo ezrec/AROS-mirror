@@ -42,6 +42,15 @@ amiga-m68k-system:
     Die native Version für m68k Amigas oder UAE. Diese Version ist binärkompatibel
     mit AmigaOS. Dieses Archiv enthält ROM-Speicherabbilder und alle AROS
     System-Binärdateien, welche aus dem Subversion-Verzeichnis erstellt wurden.
+darwin-i386-system:
+    Die gehostete Version für Darwin und MacOS x für die i386-Platform.
+    Sollte auf allen Intel-MacOS-X-Versionen ab 10.4 arbeiten.
+darwin-ppc-system:
+    Die gehostete Version für Darwin und MacOS x für die PowerPC-Platform.
+    Sollte auf allen MacOS-X-Versionen arbeiten.
+darwin-x86_64-system:
+    Die gehostete Version für Darwin und MacOS x für die x86-64-Platform.
+    Sollte auf allen Intel-MacOS-X-Versionen ab 10.6 arbeiten.
 freebsd5-i386-system:
     Die gehostete Version für FreeBSD/i386 5.x. Beachte, dass
     sie nicht auf FreeBSD 4.x-Systemen läuft.
@@ -110,6 +119,10 @@ linux-ppc-sdk:
     auf Deiner Maschine zu erstellen. GCC und die Binutils
     müssen so konfiguriert sein, dass sie Programme im
     ppc-elf-Format erzeugen.
+linux-arm-sdk:
+    Dateien und Werkzeuge um Deine eigenen AROS-Programme auf Deiner
+    bevorzugten Maschine zu erstellen. GCC und die Binutils müssen so
+    konfiguriert sein, dass sie Programme im arm-elf-Format erzeugen.
 sam440-ppc-sdk:
     Dateien und Werkzeuge um Deine eigenen AROS-Programme auf Deiner
     bevorzugten Maschine zu erstellen. GCC und die Binutils müssen so

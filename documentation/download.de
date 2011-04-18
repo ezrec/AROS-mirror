@@ -23,13 +23,11 @@ Icaros Desktop LIVE!
 
 `Icaros Desktop LIVE!`__ ist eine vollständige Distribution des
 AROS-Betriebssystems. Sie kommt auf einer boot-fähigen DVD-ROM und läuft
-direkt auf Deinem PC (die Hardware muss von AROS unterstützt werden). Sie
+direkt auf Deinem PC (die Hardware muss von AROS unterstützt werden) oder
+in einer virtuellen Maschine wie VMWare oder `VirtualBox`__. Sie
 kann auf eine Festplatte in eine eigene Partition installiert werden und
-kann mit anderen Betriebssystemen wie Windows XP koexistieren. Eine
-Kurzreferenz und ein paar PDF-Handbücher sind enthalten. Diese Version
-kommt auch mit einer Qemu-basierten virtuellen Maschine, die es
-Windows-Anwendern ermöglicht, die Distribution in einer sichereren (aber
-langsameren) Umgebung zu testen.
+kann mit anderen Betriebssystemen wie Microsoft Windows koexistieren. Eine
+Kurzreferenz und ein paar PDF-Handbücher sind enthalten.
 
 __ http://live.icarosdesktop.org/
 __ http://virtualbox.org/

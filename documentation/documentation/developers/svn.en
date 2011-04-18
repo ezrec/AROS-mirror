@@ -53,8 +53,7 @@ There's also a cross-platform GUI front-end for Subversion called
 `RapidSVN <http://rapidsvn.org/>`__, available for Unixes (GNU/Linux 
 distributions, FreeBSD, Sun Solaris and others), Mac OS X and Windows.
 
-.. Note:: The server runs Subversion 1.1, which can be accessed by a
-          client with the version 1.0, 1.1 or 1.2.
+.. Note:: The server runs Subversion 1.5.
 
 
 AmigaOS
