@@ -238,24 +238,24 @@ file contains the following line::
 
 Secondly, add these lines to the [auto-props] section of the file::
 
-    *.c = svn:eol-style=LF;svn:keywords=Id Date Revision Author
-    *.cpp = svn:eol-style=LF;svn:keywords=Id Date Revision Author
-    *.h = svn:eol-style=LF;svn:keywords=Id Date Revision Author
-    *.i = svn:eol-style=LF;svn:keywords=Id Date Revision Author
-    *.sh = svn:eol-style=LF;svn:executable;svn:keywords=Id Date Revision Author
-    *.txt = svn:eol-style=LF;svn:keywords=Id Date Revision Author
+    *.c = svn:eol-style=LF;svn:keywords=Author Date Id Revision
+    *.cpp = svn:eol-style=LF;svn:keywords=Author Date Id Revision
+    *.h = svn:eol-style=LF;svn:keywords=Author Date Id Revision
+    *.i = svn:eol-style=LF;svn:keywords=Author Date Id Revision
+    *.sh = svn:eol-style=LF;svn:executable;svn:keywords=Author Date Id Revision
+    *.txt = svn:eol-style=LF;svn:keywords=Author Date Id Revision
     *.png = svn:mime-type=image/png
     *.jpg = svn:mime-type=image/jpeg
-    Makefile = svn:eol-style=LF;svn:keywords=Id Date Revision Author
-    mmakefile.in = svn:eol-style=LF;svn:keywords=Id Date Revision Author
-    mmakefile = svn:eol-style=LF;svn:keywords=Id Date Revision Author
-    *.src = svn:eol-style=LF;svn:keywords=Id Date Revision Author
-    *.py = svn:eol-style=LF;svn:keywords=Id Date Revision Author
-    *.conf = svn:eol-style=LF;svn:keywords=Id Date Revision Author
-    *.css = svn:eol-style=LF;svn:keywords=Id Date Revision Author
-    *.cd = svn:eol-style=LF;svn:keywords=Id Date Revision Author
-    *.ct = svn:eol-style=LF;svn:keywords=Id Date Revision Author
-    *.en = svn:eol-style=LF;svn:keywords=Id Date Revision Author
+    Makefile = svn:eol-style=LF;svn:keywords=Author Date Id Revision
+    mmakefile.in = svn:eol-style=LF;svn:keywords=Author Date Id Revision
+    mmakefile = svn:eol-style=LF;svn:keywords=Author Date Id Revision
+    *.src = svn:eol-style=LF;svn:keywords=Author Date Id Revision
+    *.py = svn:eol-style=LF;svn:keywords=Author Date Id Revision
+    *.conf = svn:eol-style=LF;svn:keywords=Author Date Id Revision
+    *.css = svn:eol-style=LF;svn:keywords=Author Date Id Revision
+    *.cd = svn:eol-style=LF;svn:keywords=Author Date Id Revision
+    *.ct = svn:eol-style=LF;svn:keywords=Author Date Id Revision
+    *.en = svn:eol-style=LF;svn:keywords=Author Date Id Revision
 
 If you are editing documentation files, add a line similar to the last
 one for each language you intend to use, replacing 'en' with the
