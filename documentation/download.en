@@ -72,3 +72,17 @@ through the `AROS-Exec`__ forums.
 
 __ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
 __ http://aros-exec.org/
+
+Nightly builds (ABIv1)
+======================
+
+AROS is currently transitioning to a new `ABI`__. An extra set of nightly 
+builds is made based on this experimental source tree, but `these builds`__ 
+are only useful for developers who want to check the progress of the ABI 
+transition. **They are not compatible with existing AROS distributions 
+or with the AROS software available from The AROS Archives or Aminet.** 
+Users wishing to try new features or bug fixes that are not yet 
+available in distributions should only use the normal nightly builds.
+
+__ http://en.wikipedia.org/wiki/Application_binary_interface
+__ download2
