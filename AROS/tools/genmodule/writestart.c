@@ -12,6 +12,7 @@
 #include "boopsisupport.h"
 
 static void writedecl(FILE *, struct config *);
+static void writeglobal(FILE *, struct config *);
 static void writedeclsets(FILE *, struct config *);
 static void writeresident(FILE *, struct config *);
 static void writeinitlib(FILE *, struct config *);
@@ -42,6 +43,7 @@ void writestart(struct config *cfg)
     freeBanner(banner);
 
     writedecl(out, cfg);
+    writeglobal(out, cfg);
     if (!(cfg->options & OPTION_NORESIDENT))
     {
 	writeresident(out, cfg);
@@ -362,6 +364,24 @@ static void writedecl(FILE *out, struct config *cfg)
 	    exit(20);
 	}
     }
+}
+
+
+static void writeglobal(FILE *out, struct config *cfg)
+{
+    /* Write fake startup code as some library code may access it */
+    fprintf(out,
+            "#include <aros/startup.h>\n"
+            "char *__argstr __attribute__((__weak__));\n"
+            "ULONG __argsize __attribute__((__weak__));\n"
+            "char **__argv __attribute__((__weak__));\n"
+            "int __argc __attribute__((__weak__));\n"
+            "struct WBStartup *WBenchMsg __attribute__((__weak__));\n"
+            "LONG __startup_error __attribute__((__weak__));\n"
+            "void __startup_entries_next(void) __attribute__((__weak__));\n"
+            "void __startup_entries_next(void){}\n"
+            "\n"
+    );
 }
 
 
