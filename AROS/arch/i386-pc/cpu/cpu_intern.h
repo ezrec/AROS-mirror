@@ -95,7 +95,10 @@ char tab[127];
 
 #endif
 
-#define i386_cpuid(in,a,b,c,d)           asm("cpuid": "=a" (a), "=b" (b), "=c" (c), "=d" (d) : "a" (in));
+#define i386_cpuid(in,a,b,c,d) \
+    asm("xchgl %%ebx,%1; cpuid; xchgl %%ebx,%1": \
+	"=a" (a), "=m" (b), "=c" (c), "=d" (d) : "a" (in) \
+    );
 
 struct CPUBase *CPUBase;
 

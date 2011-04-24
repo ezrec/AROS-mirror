@@ -33,8 +33,13 @@ char *Brands[MAXBRANDS] = {
   "Intel Pentium 4 processor",
 };
 
+#ifndef __AROS__
 #define cpuid(in,a,b,c,d)\
   asm("cpuid": "=a" (a), "=b" (b), "=c" (c), "=d" (d) : "a" (in));
+#else
+#define cpuid(in,a,b,c,d)\
+  asm("pushl %%ebx; cpuid; movl %%ebx,%1; popl %%ebx": "=a" (a), "=m" (b), "=c" (c), "=d" (d) : "a" (in));
+#endif
 
 int main(){
   int i;

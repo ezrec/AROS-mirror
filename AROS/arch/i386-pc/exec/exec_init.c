@@ -137,7 +137,10 @@ asm(                ".section .aros.init,\"ax\"\n\t.globl kernel_startup  \n\t"
     do { asm volatile("mov %0,%%" #reg::"r"(val)); } while(0)
 
 #define cpuid(num, eax, ebx, ecx, edx) \
-    do { asm volatile("cpuid":"=a"(eax),"=b"(ebx),"=c"(ecx),"=d"(edx):"a"(num)); } while(0)
+    do { asm volatile("xchgl %%ebx,%1; cpuid; xchgl %%ebx,%1": \
+		      "=a"(eax),"=m"(ebx),"=c"(ecx),"=d"(edx):"a"(num) \
+	  ); \
+    } while(0)
 
 
 /*
@@ -567,7 +570,7 @@ void exec_cinit(unsigned long magic, unsigned long addr, struct TagItem *tags)
         "mov    %1,%%gs\n\t"    /* generate GP if someone uses them.   */
         "ljmp   %2,$1f\n1:\n\t" /* And finally, set the %CS!!!         */
         :
-        :"a"(KERNEL_DS),"b"(0),"i"(KERNEL_CS));
+        :"a"(KERNEL_DS),"c"(0),"i"(KERNEL_CS));
 
     asm("ltr    %%ax"::"ax"(0x30));
 

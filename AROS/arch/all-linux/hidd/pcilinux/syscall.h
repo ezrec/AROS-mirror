@@ -14,9 +14,9 @@ static inline int syscall1(IPTR num, IPTR arg1)
     int ret;
 
     asm volatile(
-		"int $0x80"
+		"xchgl %%ebx, %2; int $0x80; xchgl %%ebx, %2"
 		:"=a"(ret)
-		:"a"(num), "b"(arg1)
+		:"a"(num), "m"(arg1)
     );
     return ret;
 }
@@ -26,9 +26,9 @@ static inline int syscall2(IPTR num, IPTR arg1, IPTR arg2)
     int ret;
 
     asm volatile(
-		"int $0x80"
+		"xchgl %%ebx, %2; int $0x80; xchgl %%ebx, %2"
 		:"=a"(ret)
-		:"a"(num), "b"(arg1), "c"(arg2)
+		:"a"(num), "m"(arg1), "c"(arg2)
     );
     return ret;
 }

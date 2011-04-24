@@ -137,9 +137,9 @@ IPTR PCILx__Hidd_PCIDriver__MapPCI(OOP_Class *cl, OOP_Object *o,
     );
 #else
     asm volatile(
-	"push %%ebp; movl %%eax,%%ebp; movl %1,%%eax; int $0x80; pop %%ebp"
+	"push %%ebp; push %%ebx; movl $0, %%ebx; movl %%eax,%%ebp; movl %1,%%eax; int $0x80; pop %%ebx; pop %%ebp"
 	:"=a"(ret)
-	:"i"(192), "b"(0), "c"(size), "d"(0x03), "S"(0x01), "D"(PSD(cl)->fd), "0"(offs)
+	:"i"(192), "c"(size), "d"(0x03), "S"(0x01), "D"(PSD(cl)->fd), "0"(offs)
     );
 #endif
 

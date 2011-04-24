@@ -1,6 +1,9 @@
 *cpp:
 %(cpp_cpu) %{fPIC:-D__PIC__ -D__pic__} %{fpic:-D__PIC__ -D__pic__} %{posix:-D_POSIX_SOURCE} %{pthread:-D_REENTRANT} %{nix:-D__NIX__} %(aros_predefines) %(aros_include) -Uunix -U__unix__ -U__unix -U@aros_host_arch@ -U__@aros_host_arch@ -U__@aros_host_arch@__ 
 
+*cc1:
+%(cc1_cpu) %{profile:-p} @aros_gcc_specs_cc1@
+
 *ssp_default:
 
 

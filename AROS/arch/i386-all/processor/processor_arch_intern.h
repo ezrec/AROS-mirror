@@ -48,7 +48,10 @@ struct SystemProcessors
 };
 
 #define cpuid(num) \
-    do { asm volatile("cpuid":"=a"(eax),"=b"(ebx),"=c"(ecx),"=d"(edx):"a"(num)); } while(0)
+    do { asm volatile("xchgl %%ebx,%1; cpuid; xchgl %%ebx,%1": \
+		      "=a"(eax),"=m"(ebx),"=c"(ecx),"=d"(edx):"a"(num) \
+	 ); \
+    } while(0)
 
 VOID ReadProcessorInformation(struct X86ProcessorInformation * info);
 VOID ReadMaxFrequencyInformation(struct X86ProcessorInformation * info);

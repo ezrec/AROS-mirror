@@ -31,7 +31,7 @@ short getControllerInfo(void)
                 "movw $0x4f00, %%ax\n\t"
                 "int $0x10\n\t"
                 "movw %%ax, %0\n\t"
-                "DATA32 call go32\n\t.code32\n\t":"=b"(retval):"D"(&controllerinfo):"eax","ecx","cc");
+                "DATA32 call go32\n\t.code32\n\t":"=c"(retval):"D"(&controllerinfo):"eax","cc");
     return retval;
 }
 
@@ -59,7 +59,7 @@ short getModeInfo(long mode)
                 "movw $0x4f01, %%ax\n\t"
                 "int $0x10\n\t"
                 "movw %%ax, %0\n\t"
-                "DATA32 call go32\n\t.code32\n\t":"=b"(retval):"c"(mode),"D"(&modeinfo):"eax","cc");
+                "DATA32 call go32\n\t.code32\n\t":"=d"(retval):"c"(mode),"D"(&modeinfo):"eax","cc");
     if ((controllerinfo.version < 0x0102) && (mode > 0x0FF) && (mode < 0x108)) {
 	i = mode - 0x100;
 	modeinfo.x_resolution = vesa11Modes[i].x_resolution;
@@ -84,7 +84,7 @@ short setVbeMode(long mode, BOOL set_refresh)
                 "movw $0x4f02, %%ax\n\t"
                 "int $0x10\n\t"
                 "movw %%ax, %0\n\t"
-                "DATA32 call go32\n\t.code32\n\t":"=b"(retval):"0"(mode),"D"(&timings):"eax","ecx","cc");
+                "DATA32 call go32\n\t.code32\n\t":"=c"(retval):"0"(mode),"D"(&timings):"eax","cc");
     return retval;
 }
 
@@ -98,7 +98,7 @@ short paletteWidth(long req, unsigned char* width)
 		"int $0x10\n\t"
 		"movb %%bh, %1\n\t"
 		"movw %%ax, %0\n\t"
-		"DATA32 call go32\n\t.code32\n\t":"=b"(retval),"=c"(reswidth):"0"(req):"eax","cc");
+		"DATA32 call go32\n\t.code32\n\t":"=c"(retval),"=d"(reswidth):"0"(req):"eax","cc");
     *width = reswidth;
     return retval;
 }

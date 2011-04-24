@@ -1,6 +1,9 @@
 *cpp:
 %(cpp_cpu) %{fPIC:-D__PIC__ -D__pic__} %{fpic:-D__PIC__ -D__pic__} %{posix:-D_POSIX_SOURCE} %{pthread:-D_REENTRANT} %(predefines) -nostdinc %{!nostdinc:-isystem @aros_sdk_path@/@cc_cpu@-aros/include -isystem @cc_include@}
 
+*cc1:
+%(cc1_cpu) %{profile:-p} @aros_gcc_specs_cc1@
+
 *endfile:
 -lautoinit
 

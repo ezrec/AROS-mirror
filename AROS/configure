@@ -666,6 +666,7 @@ aros_target_cc_path
 aros_target_cc_includes
 orig_target_ld
 aros_target_as
+aros_gcc_specs_cc1
 aros_kernel_cc
 orig_target_cc
 aros_kernel_ar
@@ -7815,6 +7816,13 @@ case "$target_os" in
 	;;
 esac
 
+case "$aros_target_cpu" in
+    i?86)
+        aros_gcc_specs_cc1=-ffixed-ebx
+        aros_kernel_cflags="-ffixed-ebx $aros_kernel_cflags"
+        ;;
+esac
+
 #-----------------------------------------------------------------------------
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking where to install or search for cross tools binaries" >&5
 $as_echo_n "checking where to install or search for cross tools binaries... " >&6; }
@@ -10305,7 +10313,7 @@ if test "x$with_x" = xno; then
 else
   case $x_includes,$x_libraries in #(
     *\'*) as_fn_error $? "cannot use X directory names containing '" "$LINENO" 5;; #(
-    *,NONE | NONE,*) if ${ac_cv_have_x+:} false; then :
+    *,NONE | NONE,*) if test "${ac_cv_have_x+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
   # One or both of the vars are not set, and there is no cached value.

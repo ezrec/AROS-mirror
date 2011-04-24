@@ -20,7 +20,10 @@ static int cpu_Init(struct KernelBase *KernelBase)
     KernelBase->kb_ContextSize = sizeof(struct AROSCPUContext);
 
     /* Evaluate CPU capabilities */
-    asm volatile("cpuid":"=a"(v1),"=b"(v2),"=c"(v3),"=d"(v4):"a"(1));
+    asm volatile("xchgl %%ebx,%1; cpuid; xchgl %%ebx,%1":
+		 "=a"(v1),"=m"(v2),"=c"(v3),"=d"(v4):
+		 "a"(1)
+    );
 
     if (v4 & (1 << 24))
     {

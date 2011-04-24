@@ -1325,10 +1325,17 @@ static void m68k_run_1 (void)
 	instrcount[opcode]++;
 #endif
 #if defined X86_ASSEMBLY
+# ifndef __AROS__ 
 	__asm__ __volatile__("\tcall *%%ebx"
 			     : "=&a" (cycles) : "b" (cpufunctbl[opcode]), "0" (opcode)
 			     : "%edx", "%ecx",
 			     "%esi", "%edi", "%ebp", "memory", "cc");
+# else
+	__asm__ __volatile__("\tcall *%1"
+			     : "=&a" (cycles) : "mr" (cpufunctbl[opcode]), "0" (opcode)
+			     : "%edx", "%ecx",
+			     "%esi", "%edi", "%ebp", "memory", "cc");
+# endif
 #else
 	cycles = (*cpufunctbl[opcode])(opcode);
 #endif
@@ -1368,10 +1375,17 @@ static void m68k_run_2 (void)
 	instrcount[opcode]++;
 #endif
 #if defined X86_ASSEMBLY
+# ifndef __AROS__
 	__asm__ __volatile__("\tcall *%%ebx"
 			     : "=&a" (cycles) : "b" (cpufunctbl[opcode]), "0" (opcode)
 			     : "%edx", "%ecx",
 			     "%esi", "%edi", "%ebp", "memory", "cc");
+# else
+	__asm__ __volatile__("\tcall *%1"
+			     : "=&a" (cycles) : "mr" (cpufunctbl[opcode]), "0" (opcode)
+			     : "%edx", "%ecx",
+			     "%esi", "%edi", "%ebp", "memory", "cc");
+# endif
 #else
 	cycles = (*cpufunctbl[opcode])(opcode);
 #endif

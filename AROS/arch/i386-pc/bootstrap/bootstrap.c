@@ -245,7 +245,7 @@ static void __attribute__((used)) __bootstrap(unsigned int magic, unsigned int a
     	/* Go to the kernel */
     	kprintf("[BOOT] Jumping to %p\n", kernel_virt);
 
-    	asm volatile("jmp %3"::"a"(magic),"b"(addr),"d"(&tags[0]),"r"(kernel_virt));
+    	asm volatile("movl %1,%%ebx\n\tjmp *%3"::"a"(magic),"m"(addr),"d"(&tags[0]),"r"(kernel_virt));
     }
 
     die();

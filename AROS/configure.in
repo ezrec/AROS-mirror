@@ -1348,6 +1348,13 @@ case "$target_os" in
 	;;
 esac
 
+case "$aros_target_cpu" in
+    i?86)
+        aros_gcc_specs_cc1=-ffixed-ebx
+        aros_kernel_cflags="-ffixed-ebx $aros_kernel_cflags"
+        ;;
+esac
+
 #-----------------------------------------------------------------------------
 AC_MSG_CHECKING([where to install or search for cross tools binaries])
 AC_ARG_WITH(crosstools,AC_HELP_STRING([--with-crosstools=DIR],[Where to install or search for cross tools binaries]),with_crosstools=$withval,with_crosstools="default")
@@ -2198,6 +2205,7 @@ AC_SUBST(orig_target_cc)
 AC_SUBST(aros_target_cc)
 AC_SUBST(aros_target_cxx)
 AC_SUBST(aros_kernel_cc)
+AC_SUBST(aros_gcc_specs_cc1)
 AC_SUBST(aros_target_as)
 AC_SUBST(orig_target_ld)
 AC_SUBST(aros_target_ld)

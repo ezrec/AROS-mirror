@@ -50,6 +50,7 @@ while true; do
         i?86)
 	    echo "$OK"
 	    cc_cpu=i386
+            aros_gcc_specs_cc1=-ffixed-ebx
 	    break
 	    ;;
         x86_64)
@@ -177,7 +178,7 @@ if ! make -s -C tools/collect-aros \
 fi
 
 echo Building scripts...
-sed "s,@aros_sdk_path@,$aros_sdk_path,g; s,@ld_emu@,$ld_emu,g; s,@cc_include@,$cc_include,g; s,@cc_cpu@,$cc_cpu,g" scripts/specs.in > $aros_sdk_path/${cc_cpu}-aros/lib/gcc-lib/specs
+sed "s,@aros_sdk_path@,$aros_sdk_path,g; s,@ld_emu@,$ld_emu,g; s,@cc_include@,$cc_include,g; s,@cc_cpu@,$cc_cpu,g; s,@aros_gcc_specs_cc1@,$aros_gcc_specs_cc1,g;" scripts/specs.in > $aros_sdk_path/${cc_cpu}-aros/lib/gcc-lib/specs
 
 sed "s,@aros_sdk_path@,$aros_sdk_path,g; s,@ld@,$ld,g; s,@nm@,$nm,g; s,@cc@,$cc,g; s,@objdump@,$objdump,g; s,@cc_cpu@,$cc_cpu,g; s,@strip@,$strip,g" scripts/aros-gcc.in >  $aros_sdk_path/${cc_cpu}-aros/bin/gcc
 chmod a+x $aros_sdk_path/${cc_cpu}-aros/bin/gcc
