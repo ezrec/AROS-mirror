@@ -234,7 +234,7 @@ void obtain_pen(Object *obj, ULONG *pen, struct MUI_PenSpec *ps)
 
 #if !defined(__MORPHOS__)
 #ifdef __AROS__
-static Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, Tag tag1, ...)
+static __attribute__ ((noinline)) Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, Tag tag1, ...)
 {
     AROS_SLOWSTACKTAGS_PRE_AS(tag1, Object *)
     retval = (Object *)DoSuperMethod(cl, obj, OM_NEW, AROS_SLOWSTACKTAGS_ARG(tag1), NULL);
