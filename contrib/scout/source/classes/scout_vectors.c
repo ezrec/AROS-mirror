@@ -91,10 +91,13 @@ STATIC void IterateList( void (* callback)( struct VectorEntry *ve, void *userDa
         _snprintf(ve->ve_ResetVectors[5], sizeof(ve->ve_ResetVectors[5]), "$%08lx", SysBase->KickCheckSum);
 
         for (vec = 0; vec < 7; vec++) {
+#if !defined(__mc68000)
             if (amigaOS4 || arOS) {
                 // the 68k interrupt vectors don't exist anymore in AmigaOS4/AmigaOne
                 _snprintf(ve->ve_AutoVectors[vec], sizeof(ve->ve_AutoVectors[vec]), "$%08lx", 0);
-            } else {
+            } else
+#endif
+            {
                 // classic Amigas and MorphOS still got them
                 _snprintf(ve->ve_AutoVectors[vec], sizeof(ve->ve_AutoVectors[vec]), "$%08lx", *((ULONG *)(vbr + 0x0064 + vec * sizeof(ULONG))));
             }
