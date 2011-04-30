@@ -36,11 +36,19 @@ AROS_LH4(BOOL, PrepareContext,
 
     if (!(task->tc_Flags & TF_ETASK) )
 	return FALSE;
-  
+
     ctx = KrnCreateContext();
     GetIntETask (task)->iet_Context = ctx;
     if (!ctx)
 	return FALSE;
+
+    /* %ebx points to stack for pushing libbases
+       on i386 it grows in the opposite direction of the stack
+       and we assign the bottom of the stack to it
+    */
+    /* TODO: check why 8 has to be added to this value */
+    ctx->ebx = (ULONG)task->tc_SPLower + 8;
+    *((APTR *)ctx->ebx) = SysBase;
 
     while((t = LibNextTagItem(&tagList)))
     {

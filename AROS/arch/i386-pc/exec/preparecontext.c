@@ -1,5 +1,5 @@
 /*
-    Copyright © 1995-2001, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: i386unix version of PrepareContext().
@@ -92,7 +92,7 @@ static ULONG *PrepareContext_Common(struct Task *task, APTR entryPoint, APTR fal
     /* We have to prepare whole context right now so Dispatch()
      * would work propertly */
 
-    *regs++ = 0;		/* ebx */
+    *regs++ = task->tc_SPLower+8;	/* ebx */
     *regs++ = 0;		/* ecx */
     *regs++ = 0;		/* edx */
     *regs++ = 0;		/* esi */

@@ -3,7 +3,8 @@ include $(TOP)/config/make.cfg
 
 EXEDIR := $(BINDIR)/boot
 
-FILES         := main bootstrap elfloader32 filesystem hostinterface memory support shutdown ui
+FILES         := main bootstrap elfloader32 filesystem hostinterface memory \
+		 support shutdown ui cpu
 PROG	      := AROSBootstrap
 USER_INCLUDES := -I$(SRCDIR)/arch/all-$(ARCH)/kernel -I$(GENINCDIR)
 

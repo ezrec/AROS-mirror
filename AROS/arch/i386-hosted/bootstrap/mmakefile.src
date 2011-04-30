@@ -1,0 +1,5 @@
+include $(TOP)/config/make.cfg
+
+%build_archspecific \
+        mainmmake=kernel-bootstrap-hosted maindir=arch/all-hosted/bootstrap arch=i386 \
+        files=cpu compiler=kernel

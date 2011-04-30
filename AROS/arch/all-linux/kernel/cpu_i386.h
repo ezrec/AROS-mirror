@@ -64,10 +64,15 @@ typedef struct sigcontext regs_t;
     so the address of the signal context is &sig+1.
 */
 
+/* FIXME: libstack hack for libbase stack may need to be handled differently */
 #if USE_SA_SIGINFO
 #define GLOBAL_SIGNAL_INIT(sighandler) \
 	static void sighandler ## _gate (int sig, siginfo_t *blub, struct ucontext *u) 	\
 	{ 										\
+	    static void *libstack[16];                                                  \
+                                                                                        \
+            __asm__ __volatile__("movl %0, %%ebx" : : "rm" (libstack));                 \
+                                                                                        \
 	    sighandler(sig, (regs_t *)&u->uc_mcontext); 				\
 	}
 
@@ -76,6 +81,10 @@ typedef struct sigcontext regs_t;
 #define GLOBAL_SIGNAL_INIT(sighandler)			\
 	static void sighandler ## _gate (int sig)       \
 	{						\
+            static void *libstack[16];                  \
+                                                        \
+            __asm__ __volatile__("movl %0, %%ebx" : : "rm" (libstack)); \
+                                                        \
 	    sighandler (sig, (regs_t *)(&sig+1));       \
 	}
 #endif

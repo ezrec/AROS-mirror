@@ -24,6 +24,14 @@
 
 static void trampoline(IPTR (*func)(), IPTR *ret, IPTR *args)
 {
+#warning FIXME: RELLIBBASE handling should probably move to kernel.resource
+#ifdef __i386__
+    struct Task *task = SysBase->ThisTask;
+    void *ebx;
+    
+    __asm__ __volatile__("movl %%ebx, %0; movl %1, %%ebx" : "=rm" (ebx) : "m" (task->tc_SPLower));
+#endif
+
     /* this was called from NewStackSwap() which also called Disable */
     Enable();
 
@@ -42,6 +50,10 @@ static void trampoline(IPTR (*func)(), IPTR *ret, IPTR *args)
 
     /* this was called from NewStackSwap() which will enable again */        
     Disable();
+
+#ifdef __i386__
+    __asm__ __volatile__("movl %0, %%ebx" : : "rm" (ebx));
+#endif
 }
 
 AROS_LH3(IPTR, NewStackSwap,

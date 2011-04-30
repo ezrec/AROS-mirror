@@ -9,8 +9,32 @@
 #include <sys/types.h>
 
 static int memnest;
+#ifndef __i386__
 #define MEMLOCK if (SysBase != NULL) Forbid();
 #define MEMUNLOCK if (SysBase != NULL) Permit();
+#else
+/* Hack on i386 to bring %%ebx in a proper state
+   FIXME: Is there a better solution ?
+*/
+static char _lockebxmem[128];
+static char *lockebxmem = _lockebxmem;
+#define MEMLOCK \
+    if (SysBase != NULL) \
+    { \
+        void *ebx; \
+        asm volatile("movl %%ebx, %0; movl %1, %%ebx" : "=r"(ebx) : "m"(lockebxmem)); \
+        Forbid(); \
+        asm volatile("movl %0, %%ebx" : : "r"(ebx)); \
+    }
+#define MEMUNLOCK \
+    if (SysBase != NULL) \
+    { \
+        void *ebx; \
+        asm volatile("movl %%ebx, %0; movl %1, %%ebx" : "=r"(ebx) : "m"(lockebxmem)); \
+        Permit(); \
+        asm volatile("movl %0, %%ebx" : : "r"(ebx)); \
+    }
+#endif /* __i386__ */
 
 extern struct ExecBase *SysBase;
 extern void * __libc_malloc(size_t);

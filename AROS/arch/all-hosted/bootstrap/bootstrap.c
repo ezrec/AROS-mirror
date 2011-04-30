@@ -349,6 +349,9 @@ int bootstrap(int argc, char ** argv)
     fprintf(stderr, "\n");
 #endif
 
+    /* Setup cpu for call to code */
+    setup_cpu();
+
     fprintf(stderr, "[Bootstrap] entering kernel@%p...\n", kernel_entry);
     i = kernel_entry(km, AROS_BOOT_MAGIC);
 
