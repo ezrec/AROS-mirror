@@ -84,7 +84,7 @@ void internal_ChildFree(APTR tid, struct DosLibrary * DOSBase);
     STRPTR          	    	 s;
     ULONG                        old_sig = 0;
 
-    /* TODO: NP_CommandName, NP_ConsoleTask, NP_NotifyOnDeath */
+    /* TODO: NP_CommandName, NP_NotifyOnDeath */
 
 #define TAGDATA_NOT_SPECIFIED ~0ul
 
@@ -114,6 +114,7 @@ void internal_ChildFree(APTR tid, struct DosLibrary * DOSBase);
     /*21 */    { NP_HomeDir 	  , TAGDATA_NOT_SPECIFIED     	},
     /*22 */    { NP_Path          , TAGDATA_NOT_SPECIFIED       }, /* Default: copy path from parent */
     /*23 */    { NP_NotifyOnDeath , (IPTR)FALSE                 },
+    /*24 */    { NP_ConsoleTask   , TAGDATA_NOT_SPECIFIED       },
 	       { TAG_END    	  , 0           	    	}
     };
 
@@ -415,8 +416,16 @@ void internal_ChildFree(APTR tid, struct DosLibrary * DOSBase);
     process->pr_CES = (BPTR)defaults[6].ti_Data;
     process->pr_Task.tc_UserData = (APTR)defaults[14].ti_Data;
 
-/*  process->pr_ConsoleTask=; */
-/*  process->pr_FileSystemTask=; */
+    /* Inherit pr_ConsoleTask and pr_FileSystemTask from parent */
+    if (defaults[24].ti_Data != TAGDATA_NOT_SPECIFIED)
+    	process->pr_ConsoleTask = (struct MsgPort*)defaults[24].ti_Data;
+    else if (__is_process(me))
+    	process->pr_ConsoleTask = me->pr_ConsoleTask;
+    if (__is_process(me))
+    	process->pr_FileSystemTask = me->pr_FileSystemTask;
+    else
+    	process->pr_FileSystemTask = DOSBase->dl_Root->rn_BootProc;
+
     process->pr_CLI = MKBADDR(cli);
 
     /* Set the name of this program */
@@ -429,11 +438,12 @@ void internal_ChildFree(APTR tid, struct DosLibrary * DOSBase);
     process->pr_Flags = (defaults[3].ti_Data  ? PRF_CLOSEINPUT    : 0) |
 		        (defaults[5].ti_Data  ? PRF_CLOSEOUTPUT   : 0) |
 		        (defaults[7].ti_Data  ? PRF_CLOSEERROR    : 0) |
+			(defaults[8].ti_Data  ? PRF_FREECURRDIR   : 0) |
 		        (defaults[13].ti_Data ? PRF_FREECLI       : 0) |
 	                (defaults[19].ti_Data ? PRF_SYNCHRONOUS   : 0) |
 			(defaults[20].ti_Data ? PRF_FREESEGLIST   : 0) |
 			(defaults[23].ti_Data ? PRF_NOTIFYONDEATH : 0) |
-		        PRF_FREEARGS | PRF_FREECURRDIR;
+		        PRF_FREEARGS;
     process->pr_ExitCode = (APTR)defaults[15].ti_Data;
     process->pr_ExitData = defaults[16].ti_Data;
     process->pr_Arguments = argptr;

@@ -76,6 +76,7 @@ AROS_UFH3
     struct HandlerContext *hc            = &context;
     BOOL                   running       = TRUE;
     
+    SetConsoleTask(NULL);
     /*-- Initialization ----------------------------------------------------*/
     if (!Initialize()) return 20; // FIXME: report error to user somehow. displaybeep? alert?
     
@@ -317,6 +318,8 @@ static VOID __HandleLaunch_WB
         {NP_HomeDir,    (IPTR)home                      },
         {NP_StackSize,  stacksize                       },
         {NP_Priority,   priority                        },
+        {NP_Input,      BNULL                           },
+        {NP_Output,     BNULL                           },
         {TAG_DONE,      0                               }
     };
 
