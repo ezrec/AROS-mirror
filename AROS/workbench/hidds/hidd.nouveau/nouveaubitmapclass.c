@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2010, The AROS Development Team. All rights reserved.
+    Copyright (C) 2010-2011, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -23,8 +23,8 @@
 /* HELPER FUNCTIONS */
 static inline int do_alpha(int a, int v)
 {
-	int tmp = a*v;
-	return ((tmp << 8) + tmp + 32768) >> 16;
+    int tmp = a*v;
+    return ((tmp << 8) + tmp + 32768) >> 16;
 }
 
 /* NOTE: Assumes lock on bitmap is already made */
@@ -189,152 +189,439 @@ static VOID HIDDNouveauBitMapPutAlphaImage16(struct HIDDNouveauBitMapData * bmda
 
 /* NOTE: Assumes lock on bitmap is already made */
 /* NOTE: Assumes buffer is mapped */
-static VOID HIDDNouveauBitMapPutAlphaImage15(struct HIDDNouveauBitMapData * bmdata,
-    APTR srcbuff, ULONG srcpitch, ULONG destX, ULONG destY, ULONG width, ULONG height)
+static VOID HIDDNouveauBitMapPutAlphaTemplate32(struct HIDDNouveauBitMapData * bmdata,
+    OOP_Object * gc, OOP_Object * bm, BOOL invertalpha,
+    UBYTE * srcalpha, ULONG srcpitch, ULONG destX, ULONG destY, ULONG width, ULONG height)
 {
-    ULONG x,y;
+    WORD        x, y;
+    UBYTE       *pixarray = srcalpha;
+    HIDDT_Color color;
+    LONG        fg_red, fg_green, fg_blue;
+    LONG        bg_red = 0, bg_green = 0, bg_blue = 0;
+    WORD        type = 0;
+
+    if (width <= 0 || height <= 0)
+        return;
+
+    HIDD_BM_UnmapPixel(bm, GC_FG(gc), &color);
+
+    fg_red   = color.red >> 8;
+    fg_green = color.green >> 8;
+    fg_blue  = color.blue >> 8;
+
+    if (GC_COLEXP(gc) == vHidd_GC_ColExp_Transparent)
+    {
+        type = 0;
+    }
+    else if (GC_DRMD(gc) == vHidd_GC_DrawMode_Invert)
+    {
+        type = 2;
+    }
+    else
+    {
+        type = 4;
+
+        HIDD_BM_UnmapPixel(bm, GC_BG(gc), &color);
+        bg_red   = color.red >> 8;
+        bg_green = color.green >> 8;
+        bg_blue  = color.blue >> 8;
+    }
+
+    if (invertalpha) type++;
     
+
     for(y = 0; y < height; y++)
     {
-        /* Calculate line start addresses */
-        IPTR srcaddr = (srcpitch * y) + (IPTR)srcbuff;
-        IPTR destaddr = (destX * 2) + (bmdata->pitch * (destY + y)) + (IPTR)bmdata->bo->map;
-        
-        for (x = 0; x < width; x++)
+        IPTR destaddr = (destX * 4) + ((destY + y) * bmdata->pitch) + (IPTR)bmdata->bo->map;
+
+        switch(type)
         {
-            UWORD       destpix;
-            ULONG       srcpix;
-            LONG        src_red, src_green, src_blue, src_alpha;
-            LONG        dst_red, dst_green, dst_blue;
-
-            /* Read RGBA pixel from input array */
-            srcpix = *(ULONG *)srcaddr;
-#if AROS_BIG_ENDIAN
-            src_red   = (srcpix & 0x00FF0000) >> 16;
-            src_green = (srcpix & 0x0000FF00) >> 8;
-            src_blue  = (srcpix & 0x000000FF);
-            src_alpha = (srcpix & 0xFF000000) >> 24;
-#else
-            src_red   = (srcpix & 0x0000FF00) >> 8;
-            src_green = (srcpix & 0x00FF0000) >> 16;
-            src_blue  = (srcpix & 0xFF000000) >> 24;
-            src_alpha = (srcpix & 0x000000FF);
-#endif
-
-            /*
-            * If alpha=0, do not change the destination pixel at all.
-            * This saves us unnecessary reads and writes to VRAM.
-            */
-            if (src_alpha != 0)
+            case 0: /* JAM1 */
+            for(x = 0; x < width; x++)
             {
-                /*
-                * Full opacity. Do not read the destination pixel, as
-                * it's value does not matter anyway.
-                */
-                if (src_alpha == 0xff)
+                ULONG   destpix;
+                LONG    dst_red, dst_green, dst_blue, alpha;
+
+                alpha = *pixarray++;
+
+
+                if (alpha != 0) /* If alpha=0, do not change the destination pixel at all. */
                 {
-                    dst_red = src_red;
-                    dst_green = src_green;
-                    dst_blue = src_blue;
+                    if (alpha == 0xff) /* Full opacity. Do not read the destination pixel. */
+                    {
+                        dst_red = fg_red;
+                        dst_green = fg_green;
+                        dst_blue = fg_blue;
                     }
-                else
-                {
-                    /*
-                    * Alpha blending with source and destination pixels.
-                    * Get destination.
-                    */
+                    else
+                    {
+                        destpix = readl(destaddr);
 
-                    destpix = readw(destaddr);
+                        dst_red   = (destpix & 0x00FF0000) >> 16;
+                        dst_green = (destpix & 0x0000FF00) >> 8;
+                        dst_blue  = (destpix & 0x000000FF);
 
-                    dst_red   = (destpix & 0x00007c00) >> 7;
-                    dst_green = (destpix & 0x000003e0) >> 2;
-                    dst_blue  = (destpix & 0x0000001f) << 3;
+                        dst_red   += do_alpha(alpha, fg_red - dst_red);
+                        dst_green += do_alpha(alpha, fg_green - dst_green);
+                        dst_blue  += do_alpha(alpha, fg_blue - dst_blue);
+                    }
 
-                    dst_red   += do_alpha(src_alpha, src_red - dst_red);
-                    dst_green += do_alpha(src_alpha, src_green - dst_green);
-                    dst_blue  += do_alpha(src_alpha, src_blue - dst_blue);
+                    destpix = (dst_red << 16) + (dst_green << 8) + (dst_blue);
+                    writel(destpix, destaddr);
                 }
 
-                destpix = (ULONG)(((dst_red << 7) & 0x7c00) | ((dst_green << 2) & 0x03e0) | ((dst_blue >> 3) & 0x001f));
+                destaddr += 4;
 
-                writew(destpix, destaddr);
-            }
+            } /* for(x = 0; x < msg->width; x++) */
+            break;
 
-            /* Advance pointers */
-            srcaddr += 4;
-            destaddr += 2;
-        }
-    }
+            case 1: /* JAM1 | INVERSVID */
+            for(x = 0; x < width; x++)
+            {
+                ULONG   destpix;
+                LONG    dst_red, dst_green, dst_blue, alpha;
+
+                alpha = (*pixarray++) ^ 255;
+
+
+                if (alpha != 0) /* If alpha=0, do not change the destination pixel at all. */
+                {
+                    if (alpha == 0xff) /* Full opacity. Do not read the destination pixel. */
+                    {
+                        dst_red = fg_red;
+                        dst_green = fg_green;
+                        dst_blue = fg_blue;
+                    }
+                    else
+                    {
+                        destpix = readl(destaddr);
+
+                        dst_red   = (destpix & 0x00FF0000) >> 16;
+                        dst_green = (destpix & 0x0000FF00) >> 8;
+                        dst_blue  = (destpix & 0x000000FF);
+
+                        dst_red   += do_alpha(alpha, fg_red - dst_red);
+                        dst_green += do_alpha(alpha, fg_green - dst_green);
+                        dst_blue  += do_alpha(alpha, fg_blue - dst_blue);
+                    }
+
+                    destpix = (dst_red << 16) + (dst_green << 8) + (dst_blue);
+                    writel(destpix, destaddr);
+                }
+
+                destaddr += 4;
+
+            } /* for(x = 0; x < width; x++) */
+            break;
+
+            case 2: /* COMPLEMENT */
+            for(x = 0; x < width; x++)
+            {
+                ULONG   destpix;
+                UBYTE   alpha;
+
+                alpha = *pixarray++;
+
+
+                if (alpha >= 0x80) 
+                {
+                    destpix = readl(destaddr);
+                    destpix = ~destpix;
+                    writel(destpix, destaddr);
+                }
+
+                destaddr += 4;
+
+            } /* for(x = 0; x < width; x++) */
+            break;
+
+            case 3: /* COMPLEMENT | INVERSVID*/
+            for(x = 0; x < width; x++)
+            {
+                ULONG   destpix;
+                UBYTE   alpha;
+
+                alpha = *pixarray++;
+
+
+                if (alpha < 0x80)
+                {
+                    destpix = readl(destaddr);
+                    destpix = ~destpix;
+                    writel(destpix, destaddr);
+                }
+
+                destaddr += 4;
+
+            } /* for(x = 0; x < width; x++) */
+            break;
+
+            case 4: /* JAM2 */
+            for(x = 0; x < width; x++)
+            {
+                ULONG   destpix;
+                LONG    dst_red, dst_green, dst_blue, alpha;
+
+                alpha = *pixarray++;
+
+
+                dst_red   = bg_red   + ((fg_red   - bg_red)   * alpha) / 256;
+                dst_green = bg_green + ((fg_green - bg_green) * alpha) / 256;
+                dst_blue  = bg_blue  + ((fg_blue  - bg_blue)  * alpha) / 256;
+
+                destpix = (dst_red << 16) + (dst_green << 8) + (dst_blue);
+
+                writel(destpix, destaddr);
+                destaddr += 4;
+
+            } /* for(x = 0; x < width; x++) */
+            break;
+
+            case 5: /* JAM2 | INVERSVID */
+            for(x = 0; x < width; x++)
+            {
+                ULONG   destpix;
+                LONG    dst_red, dst_green, dst_blue, alpha;
+
+                alpha = (*pixarray++) ^ 255;
+
+
+                dst_red   = bg_red   + ((fg_red   - bg_red)   * alpha) / 256;
+                dst_green = bg_green + ((fg_green - bg_green) * alpha) / 256;
+                dst_blue  = bg_blue  + ((fg_blue  - bg_blue)  * alpha) / 256;
+
+                destpix = (dst_red << 16) + (dst_green << 8) + (dst_blue);
+                writel(destpix, destaddr);
+
+                destaddr += 4;
+
+            } /* for(x = 0; x < width; x++) */
+            break;
+
+        } /* switch(type) */
+
+        pixarray += srcpitch - width;
+
+    } /* for(y = 0; y < height; y++) */
 }
 
 /* NOTE: Assumes lock on bitmap is already made */
 /* NOTE: Assumes buffer is mapped */
-static VOID HIDDNouveauBitMapPutAlphaTemplate32(struct HIDDNouveauBitMapData * bmdata,
-    APTR srcalphabuff, ULONG srcalphapitch, ULONG destX, ULONG destY, ULONG width, ULONG height,
-    LONG fg_red, LONG fg_green, LONG fg_blue)
+static VOID HIDDNouveauBitMapPutAlphaTemplate16(struct HIDDNouveauBitMapData * bmdata,
+    OOP_Object * gc, OOP_Object * bm, BOOL invertalpha,
+    UBYTE * srcalpha, ULONG srcpitch, ULONG destX, ULONG destY, ULONG width, ULONG height)
 {
-    ULONG   x,y;
-    LONG    src_alpha;
-    LONG    dst_red, dst_green, dst_blue;
-    ULONG   destpix;
+    WORD        x, y;
+    UBYTE       *pixarray = srcalpha;
+    HIDDT_Color color;
+    LONG        fg_red, fg_green, fg_blue;
+    LONG        bg_red = 0, bg_green = 0, bg_blue = 0;
+    WORD        type = 0;
+
+    if (width <= 0 || height <= 0)
+        return;
+
+    HIDD_BM_UnmapPixel(bm, GC_FG(gc), &color);
+
+    fg_red   = color.red >> 8;
+    fg_green = color.green >> 8;
+    fg_blue  = color.blue >> 8;
+
+    if (GC_COLEXP(gc) == vHidd_GC_ColExp_Transparent)
+    {
+        type = 0;
+    }
+    else if (GC_DRMD(gc) == vHidd_GC_DrawMode_Invert)
+    {
+        type = 2;
+    }
+    else
+    {
+        type = 4;
+
+        HIDD_BM_UnmapPixel(bm, GC_BG(gc), &color);
+        bg_red   = color.red >> 8;
+        bg_green = color.green >> 8;
+        bg_blue  = color.blue >> 8;
+    }
+
+    if (invertalpha) type++;
     
-    /* SUPPORTED : JAM1 */
 
     for(y = 0; y < height; y++)
     {
-        /* Calculate line start addresses */
-        IPTR srcaddr = (srcalphapitch * y) + (IPTR)srcalphabuff;
-        IPTR destaddr = (destX * 4) + (bmdata->pitch * (destY + y)) + (IPTR)bmdata->bo->map;
-        
-        for (x = 0; x < width; x++)
+        IPTR destaddr = (destX * 2) + ((destY + y) * bmdata->pitch) + (IPTR)bmdata->bo->map;
+
+        switch(type)
         {
-            src_alpha = *(UBYTE *)srcaddr;
-            /*
-            * If alpha=0, do not change the destination pixel at all.
-            * This saves us unnecessary reads and writes to VRAM.
-            */
-            if (src_alpha != 0)
+            case 0: /* JAM1 */
+            for(x = 0; x < width; x++)
             {
-                /*
-                * Full opacity. Do not read the destination pixel, as
-                * it's value does not matter anyway.
-                */
-                if (src_alpha == 0xff)
+                UWORD   destpix;
+                LONG    dst_red, dst_green, dst_blue, alpha;
+
+                alpha = *pixarray++;
+
+
+                if (alpha != 0) /* If alpha=0, do not change the destination pixel at all. */
                 {
-                    dst_red = fg_red;
-                    dst_green = fg_green;
-                    dst_blue = fg_blue;
+                    if (alpha == 0xff) /* Full opacity. Do not read the destination pixel. */
+                    {
+                        dst_red = fg_red;
+                        dst_green = fg_green;
+                        dst_blue = fg_blue;
+                    }
+                    else
+                    {
+                        destpix = readw(destaddr);
+
+                        dst_red   = (destpix & 0x0000F800) >> 8;
+                        dst_green = (destpix & 0x000007e0) >> 3;
+                        dst_blue  = (destpix & 0x0000001f) << 3;
+
+                        dst_red   += do_alpha(alpha, fg_red - dst_red);
+                        dst_green += do_alpha(alpha, fg_green - dst_green);
+                        dst_blue  += do_alpha(alpha, fg_blue - dst_blue);
+                    }
+
+                    destpix = (((dst_red << 8) & 0xf800) | ((dst_green << 3) & 0x07e0) | ((dst_blue >> 3) & 0x001f));
+                    writew(destpix, destaddr);
                 }
-                else
+
+                destaddr += 2;
+
+            } /* for(x = 0; x < msg->width; x++) */
+            break;
+
+            case 1: /* JAM1 | INVERSVID */
+            for(x = 0; x < width; x++)
+            {
+                UWORD   destpix;
+                LONG    dst_red, dst_green, dst_blue, alpha;
+
+                alpha = (*pixarray++) ^ 255;
+
+
+                if (alpha != 0) /* If alpha=0, do not change the destination pixel at all. */
                 {
-                    /*
-                    * Alpha blending with fg color and destination pixels.
-                    * Get destination.
-                    */
-                    destpix = readl(destaddr);
+                    if (alpha == 0xff) /* Full opacity. Do not read the destination pixel. */
+                    {
+                        dst_red = fg_red;
+                        dst_green = fg_green;
+                        dst_blue = fg_blue;
+                    }
+                    else
+                    {
+                        destpix = readw(destaddr);
 
-                    dst_red   = (destpix & 0x00FF0000) >> 16;
-                    dst_green = (destpix & 0x0000FF00) >> 8;
-                    dst_blue  = (destpix & 0x000000FF);
+                        dst_red   = (destpix & 0x0000F800) >> 8;
+                        dst_green = (destpix & 0x000007e0) >> 3;
+                        dst_blue  = (destpix & 0x0000001f) << 3;
 
-                    dst_red   += do_alpha(src_alpha, fg_red - dst_red);
-                    dst_green += do_alpha(src_alpha, fg_green - dst_green);
-                    dst_blue  += do_alpha(src_alpha, fg_blue - dst_blue);
+                        dst_red   += do_alpha(alpha, fg_red - dst_red);
+                        dst_green += do_alpha(alpha, fg_green - dst_green);
+                        dst_blue  += do_alpha(alpha, fg_blue - dst_blue);
+                    }
+
+                    destpix = (((dst_red << 8) & 0xf800) | ((dst_green << 3) & 0x07e0) | ((dst_blue >> 3) & 0x001f));
+                    writew(destpix, destaddr);
                 }
 
-                destpix = (dst_red << 16) + (dst_green << 8) + (dst_blue);
+                destaddr += 2;
 
-                /* Store the new pixel */
-                writel(destpix, destaddr);
-            }
+            } /* for(x = 0; x < width; x++) */
+            break;
 
-            /* Advance pointers */
-            srcaddr += 1;
-            destaddr += 4;
-        }
-    }
+            case 2: /* COMPLEMENT */
+            for(x = 0; x < width; x++)
+            {
+                UWORD   destpix;
+                UBYTE   alpha;
+
+                alpha = *pixarray++;
+
+
+                if (alpha >= 0x80) 
+                {
+                    destpix = readw(destaddr);
+                    destpix = ~destpix;
+                    writew(destpix, destaddr);
+                }
+
+                destaddr += 2;
+
+            } /* for(x = 0; x < width; x++) */
+            break;
+
+            case 3: /* COMPLEMENT | INVERSVID*/
+            for(x = 0; x < width; x++)
+            {
+                UWORD   destpix;
+                UBYTE   alpha;
+
+                alpha = *pixarray++;
+
+
+                if (alpha < 0x80)
+                {
+                    destpix = readw(destaddr);
+                    destpix = ~destpix;
+                    writew(destpix, destaddr);
+                }
+
+                destaddr += 2;
+
+            } /* for(x = 0; x < width; x++) */
+            break;
+
+            case 4: /* JAM2 */
+            for(x = 0; x < width; x++)
+            {
+                UWORD   destpix;
+                LONG    dst_red, dst_green, dst_blue, alpha;
+
+                alpha = *pixarray++;
+
+
+                dst_red   = bg_red   + ((fg_red   - bg_red)   * alpha) / 256;
+                dst_green = bg_green + ((fg_green - bg_green) * alpha) / 256;
+                dst_blue  = bg_blue  + ((fg_blue  - bg_blue)  * alpha) / 256;
+
+                destpix = (((dst_red << 8) & 0xf800) | ((dst_green << 3) & 0x07e0) | ((dst_blue >> 3) & 0x001f));
+                writew(destpix, destaddr);
+
+                destaddr += 2;
+
+            } /* for(x = 0; x < width; x++) */
+            break;
+
+            case 5: /* JAM2 | INVERSVID */
+            for(x = 0; x < width; x++)
+            {
+                UWORD   destpix;
+                LONG    dst_red, dst_green, dst_blue, alpha;
+
+                alpha = (*pixarray++) ^ 255;
+
+
+                dst_red   = bg_red   + ((fg_red   - bg_red)   * alpha) / 256;
+                dst_green = bg_green + ((fg_green - bg_green) * alpha) / 256;
+                dst_blue  = bg_blue  + ((fg_blue  - bg_blue)  * alpha) / 256;
+
+                destpix = (((dst_red << 8) & 0xf800) | ((dst_green << 3) & 0x07e0) | ((dst_blue >> 3) & 0x001f));
+                writew(destpix, destaddr);
+
+                destaddr += 2;
+
+            } /* for(x = 0; x < width; x++) */
+            break;
+
+        } /* switch(type) */
+
+        pixarray += srcpitch - width;
+
+    } /* for(y = 0; y < height; y++) */
 }
-
 
 /* TEMP - FIXME HACK FOR PATCHRGBCONV */
 void HACK_PATCHRGBCONV(OOP_Object * bitmap);
@@ -343,50 +630,65 @@ void HACK_PATCHRGBCONV(OOP_Object * bitmap);
 /* PUBLIC METHODS */
 OOP_Object * METHOD(NouveauBitMap, Root, New)
 {
+    IPTR width, height, depth, displayable, bytesperpixel;
+    OOP_Object * pf;
+    struct HIDDNouveauBitMapData * bmdata = NULL;
+    HIDDT_StdPixFmt stdfmt = vHidd_StdPixFmt_Unknown;
+
     o = (OOP_Object *)OOP_DoSuperMethod(cl, o, (OOP_Msg)msg);
 
-    if (o)
-    {
-        IPTR width, height, depth, displayable;
-        OOP_Object * pf;
-        struct HIDDNouveauBitMapData * bmdata = OOP_INST_DATA(cl, o);
-        
-	    OOP_GetAttr(o, aHidd_BitMap_Width,  &width);
-	    OOP_GetAttr(o, aHidd_BitMap_Height, &height);
-        OOP_GetAttr(o, aHidd_BitMap_PixFmt, (APTR)&pf);
-        OOP_GetAttr(pf, aHidd_PixFmt_Depth, &depth);
-        OOP_GetAttr(o, aHidd_BitMap_Displayable, &displayable);
-        
-        /* Initialize properties */
-	    bmdata->width = width;
-	    bmdata->height = height;
-	    bmdata->depth = depth;
-        if (depth <= 8)
-            bmdata->bytesperpixel = 1;
-        else if (depth <= 16)
-            bmdata->bytesperpixel = 2;
-        else
-            bmdata->bytesperpixel = 4;
-        bmdata->pitch = (bmdata->width + 63) & ~63;
-        bmdata->pitch *= bmdata->bytesperpixel;
-        if (displayable) bmdata->displayable = TRUE; else bmdata->displayable = FALSE;
-        InitSemaphore(&bmdata->semaphore);
+    if (!o)
+        goto exit_fail;
 
-        /* Display information */
-        bmdata->fbid = 0; /* Default value */
-        bmdata->xoffset = 0;
-        bmdata->yoffset = 0;
+    bmdata = OOP_INST_DATA(cl, o);
 
-	    /* Creation of buffer object */
-	    /* FIXME: check result of call */
-        nouveau_bo_new(SD(cl)->carddata.dev, NOUVEAU_BO_VRAM | NOUVEAU_BO_MAP, 0, 
-	            bmdata->pitch * bmdata->height,
-	            &bmdata->bo);
-
-        bmdata->compositing = (OOP_Object *)GetTagData(aHidd_BitMap_Nouveau_CompositingHidd, 0, msg->attrList);
-        /* FIXME: check if compositing hidd was passed */
-    }
+    /* Initialize default values */
+    bmdata->fbid = 0;
+    bmdata->xoffset = 0;
+    bmdata->yoffset = 0;
+    bmdata->bo = NULL;
     
+    OOP_GetAttr(o, aHidd_BitMap_Width,  &width);
+    OOP_GetAttr(o, aHidd_BitMap_Height, &height);
+    OOP_GetAttr(o, aHidd_BitMap_PixFmt, (APTR)&pf);
+    OOP_GetAttr(o, aHidd_BitMap_Displayable, &displayable);
+    OOP_GetAttr(pf, aHidd_PixFmt_StdPixFmt, &stdfmt);
+    OOP_GetAttr(pf, aHidd_PixFmt_BytesPerPixel, &bytesperpixel);
+    OOP_GetAttr(pf, aHidd_PixFmt_Depth, &depth);
+
+    /* Check if requested format is one of the supported ones */
+    if ((stdfmt != vHidd_StdPixFmt_BGR032) && (stdfmt != vHidd_StdPixFmt_RGB16_LE))
+        goto exit_fail;
+
+    /* Check if requested depth is a supported one */
+    if (depth < 16)
+        goto exit_fail;
+    
+    /* Check if requested byted per pixel is a supported one */
+    if ((bytesperpixel != 2) && (bytesperpixel != 4))
+        goto exit_fail;
+
+    /* Initialize properties */
+    bmdata->width = width;
+    bmdata->height = height;
+    bmdata->depth = depth;
+    bmdata->bytesperpixel = bytesperpixel;
+    bmdata->pitch = (bmdata->width + 63) & ~63;
+    bmdata->pitch *= bmdata->bytesperpixel;
+    if (displayable) bmdata->displayable = TRUE; else bmdata->displayable = FALSE;
+    InitSemaphore(&bmdata->semaphore);
+
+    /* Creation of buffer object */
+    nouveau_bo_new(SD(cl)->carddata.dev, NOUVEAU_BO_VRAM | NOUVEAU_BO_MAP, 0, 
+            bmdata->pitch * bmdata->height,
+            &bmdata->bo);
+    if (bmdata->bo == NULL)
+        goto exit_fail;
+
+    bmdata->compositing = (OOP_Object *)GetTagData(aHidd_BitMap_Nouveau_CompositingHidd, 0, msg->attrList);
+    if (bmdata->compositing == NULL)
+        goto exit_fail;
+
     /* TEMP - FIXME HACK FOR PATCHRGBCONV */
     /* Yes, it can be called more than once */
     if (!SD(cl)->rgbpatched)
@@ -398,6 +700,18 @@ OOP_Object * METHOD(NouveauBitMap, Root, New)
     
     
     return o;
+
+exit_fail:
+
+    bug("[Nouveau]: Failed to create bitmap %dx%d %d %d\n", width, height, depth, stdfmt);
+
+    if (o)
+    {
+        OOP_MethodID disp_mid = OOP_GetMethodID(IID_Root, moRoot_Dispose);
+        OOP_CoerceMethod(cl, o, (OOP_Msg) &disp_mid);
+    }
+
+    return NULL;
 }
 
 VOID NouveauBitMap__Root__Dispose(OOP_Class *cl, OOP_Object *o, OOP_Msg msg)
@@ -523,7 +837,7 @@ VOID METHOD(NouveauBitMap, Hidd_BitMap, PutPixel)
     switch(bmdata->bytesperpixel)
     {
     case(1):
-        writeb(msg->pixel, (APTR)addr);
+        /* Not supported */
         break;
     case(2):
         writew(msg->pixel, (APTR)addr);
@@ -560,7 +874,7 @@ HIDDT_Pixel METHOD(NouveauBitMap, Hidd_BitMap, GetPixel)
     switch(bmdata->bytesperpixel)
     {
     case(1):
-        pixel = readb((APTR)addr);
+        /* Not supported */
         break;
     case(2):
         pixel = readw((APTR)addr);
@@ -719,7 +1033,7 @@ VOID METHOD(NouveauBitMap, Hidd_BitMap, GetImage)
     {
         BOOL result = FALSE;
         
-        /* RAM->CPU->GART GART->GPU->VRAM */
+        /* VRAM->CPU->GART GART->GPU->RAM */
         UNMAP_BUFFER
 
         ObtainSemaphore(&carddata->gartsemaphore);
@@ -740,7 +1054,7 @@ VOID METHOD(NouveauBitMap, Hidd_BitMap, GetImage)
 
     /* Fallback */
 
-    /* RAM->CPU->VRAM */
+    /* VRAM->CPU->RAM */
     {
     APTR srcBuff = NULL;
     
@@ -765,42 +1079,31 @@ VOID METHOD(NouveauBitMap, Hidd_BitMap, PutAlphaImage)
 
     /* TODO: implement accelerated putalphaimage */
 
-    /*
-    * Treat each depth case separately
-    */
-    if (bmdata->bytesperpixel == 4)
+    LOCK_BITMAP
+    MAP_BUFFER
+
+    switch(bmdata->bytesperpixel)
     {
-        LOCK_BITMAP
-        MAP_BUFFER
-        HIDDNouveauBitMapPutAlphaImage32(bmdata, msg->pixels, msg->modulo, msg->x, 
-            msg->y, msg->width, msg->height);
-        UNLOCK_BITMAP
-        return;
-    }
-    else if (bmdata->bytesperpixel == 2)
-    {
-        if (bmdata->depth == 16)
+    case 1:
+        /* Not supported */
+        break;
+
+    case 2:
         {
-            LOCK_BITMAP
-            MAP_BUFFER
             HIDDNouveauBitMapPutAlphaImage16(bmdata, msg->pixels, msg->modulo, msg->x, 
                 msg->y, msg->width, msg->height);
-            UNLOCK_BITMAP
-            return;
         }
-        else if (bmdata->depth == 15)
+        break;
+
+    case 4:
         {
-            LOCK_BITMAP
-            MAP_BUFFER
-            HIDDNouveauBitMapPutAlphaImage15(bmdata, msg->pixels, msg->modulo, msg->x, 
+            HIDDNouveauBitMapPutAlphaImage32(bmdata, msg->pixels, msg->modulo, msg->x, 
                 msg->y, msg->width, msg->height);
-            UNLOCK_BITMAP
-            return;
         }
-    }
- 
-    /* Fallback to default method */    
-    OOP_DoSuperMethod(cl, o, (OOP_Msg)msg);
+        break;
+    } /* switch(bmdata->bytesperpixel) */
+
+    UNLOCK_BITMAP
 }
 
 ULONG METHOD(NouveauBitMap, Hidd_BitMap, BytesPerLine)
@@ -832,310 +1135,35 @@ VOID METHOD(NouveauBitMap, Hidd_BitMap, ReleaseDirectAccess)
     UNLOCK_BITMAP
 }
 
-/* FIXME: TEMP */
-
-#define PIXBUFBYTES 	    (50000*4)
-
-#define PIXBUF_DECLARE_VARS 	\
-    LONG __buflines; 	    	\
-    LONG __bufy = 0;	    	\
-    LONG __worky = 0;	    	\
-    LONG __height;
-    
-#define PIXBUF_ALLOC(buf,bytesperline,height)      	    	\
-    __height = height;	    	    	    	    	    	\
-    __buflines = PIXBUFBYTES / (bytesperline);  	    	\
-    if (__buflines == 0)      	    	    	    	    	\
-    { 	    	    	    	    	    	    	    	\
-    	__buflines = 1; 	    	    	    	    	\
-    } 	    	    	    	    	    	    	    	\
-    else if (__buflines > __height)     	    	    	\
-    { 	    	    	    	    	    	    	    	\
-    	__buflines = __height;  	    	    	    	\
-    } 	    	    	    	    	    	    	    	\
-    buf = AllocVec((bytesperline) * __buflines, MEMF_PUBLIC); 	\
-    if (!buf && (__buflines > 1))     	    	    	    	\
-    { 	    	    	    	    	    	    	    	\
-    	__buflines = 1; 	    	    	    	    	\
-	buf = AllocVec((bytesperline), MEMF_PUBLIC);  	    	\
-    }
-    
-#define PIXBUF_TIME_TO_START_PROCESS  	(__bufy == __worky)
-
-#define PIXBUF_LINES_TO_PROCESS     	(((__height - __bufy) > __buflines) ? 	    \
-    	    	    	    	    	__buflines : __height - __bufy )
-
-#define PIXBUF_TIME_TO_END_PROCESS  	(((__worky - __bufy + 1) == __buflines) || \
-    	    	    	    	     	(__worky == __height - 1))
-
-#define PIXBUF_NEXT_LINE    	    	    	    	    	\
-    __worky++;      	    	    	    	    	    	\
-    if ((__worky - __bufy) == __buflines) __bufy = __worky;
-    
-        
-#define PIXBUF_FREE(buf) \
-    if (buf) FreeVec(buf);
-/* FIXME: TEMP */
-
-
 VOID METHOD(NouveauBitMap, Hidd_BitMap, PutAlphaTemplate)
 {
     struct HIDDNouveauBitMapData * bmdata = OOP_INST_DATA(cl, o);
 
-    if (msg->width <= 0 || msg->height <= 0)
-        return;
-
-    /* Optimizations only for 32bit modes for now */
-    if (bmdata->bytesperpixel < 4)
-    {
-        /* Fallback to default method */    
-        OOP_DoSuperMethod(cl, o, (OOP_Msg)msg);
-        return;
-    }
-
     LOCK_BITMAP
     MAP_BUFFER
 
-
-
-
-    WORD    x, y;
-    UBYTE   *pixarray = msg->alpha;
-    ULONG   *buf, *xbuf;
-    OOP_Object  *gc = msg->gc;
-    HIDDT_Color color;
-    LONG    a_red, a_green, a_blue;
-    LONG    b_red = 0;
-    LONG    b_green = 0;
-    LONG    b_blue = 0;
-    WORD    type = 0;
-    PIXBUF_DECLARE_VARS
-
-
-    EnterFunc(bug("BitMap::PutAlphaTemplate(x=%d, y=%d, width=%d, height=%d)\n"
-    , msg->x, msg->y, msg->width, msg->height));
-
-
-
-    HIDD_BM_UnmapPixel(o, GC_FG(gc), &color);
-
-    a_red   = color.red >> 8;
-    a_green = color.green >> 8;
-    a_blue  = color.blue >> 8;
-
-    if (GC_COLEXP(gc) == vHidd_GC_ColExp_Transparent)
+    switch(bmdata->bytesperpixel)
     {
-    type = 0;
-    }
-    else if (GC_DRMD(gc) == vHidd_GC_DrawMode_Invert)
-    {
-    type = 2;
-    }
-    else
-    {
-    type = 4;
+    case 1:
+        /* Not supported */
+        break;
 
-    HIDD_BM_UnmapPixel(o, GC_BG(gc), &color);
-    b_red   = color.red >> 8;
-    b_green = color.green >> 8;
-    b_blue  = color.blue >> 8;
-    }
-
-    if (msg->invertalpha) type++;
-    
-    /* TEMP: Let's try to improve the generic method - WIP */
-    /* FIXME this assume the bitmap in VRAM is in 32bit ARGB mode */
-    
-    if (type == 0 /* JAM1 */)
-    {
-        HIDDNouveauBitMapPutAlphaTemplate32(bmdata, msg->alpha, msg->modulo, 
-            msg->x, msg->y, msg->width, msg->height, a_red, a_green, a_blue);
-        
-        UNLOCK_BITMAP;
-        return;
-    }
-    
-    PIXBUF_ALLOC(buf, msg->width * sizeof(ULONG), msg->height);
-
-    if (buf)
-    {
-    HIDDT_DrawMode old_drmd = GC_DRMD(msg->gc);	
-    GC_DRMD(msg->gc) = vHidd_GC_DrawMode_Copy;
-
-    xbuf = buf;
-
-    for(y = msg->y; y < msg->y + msg->height; y++)
-    {
-        if ((type < 4) && PIXBUF_TIME_TO_START_PROCESS)
+    case 2:
         {
-            WORD height = PIXBUF_LINES_TO_PROCESS;
-
-           HIDD_BM_GetImage(o,
-            (UBYTE *)buf,
-            msg->width * sizeof(ULONG),
-            msg->x,
-            y,
-            msg->width,
-            height,
-            vHidd_StdPixFmt_ARGB32);
+            HIDDNouveauBitMapPutAlphaTemplate16(bmdata, msg->gc, o, msg->invertalpha,
+                msg->alpha, msg->modulo, msg->x, msg->y, msg->width, msg->height);
         }
+        break;
 
-        switch(type)
+    case 4:
         {
-
-        case 1:	/* JAM1 | INVERSVID */	    
-            for(x = 0; x < msg->width; x++)
-            {
-                ULONG	    destpix;
-                LONG	    dst_red, dst_green, dst_blue, alpha;
-
-                alpha = (*pixarray++) ^ 255;
-
-                destpix = xbuf[x];
-
-                #if AROS_BIG_ENDIAN		
-                dst_red   = (destpix & 0x00FF0000) >> 16;
-                dst_green = (destpix & 0x0000FF00) >> 8;
-                dst_blue  = (destpix & 0x000000FF);
-                #else
-                dst_red   = (destpix & 0x0000FF00) >> 8;
-                dst_green = (destpix & 0x00FF0000) >> 16;
-                dst_blue  = (destpix & 0xFF000000) >> 24;
-                #endif
-
-                dst_red   += do_alpha(alpha, a_red - dst_red);
-                dst_green += do_alpha(alpha, a_green - dst_green);
-                dst_blue  += do_alpha(alpha, a_blue - dst_blue);
-
-                #if AROS_BIG_ENDIAN
-                destpix = (dst_red << 16) + (dst_green << 8) + (dst_blue);
-                #else
-                destpix = (dst_blue << 24) + (dst_green << 16) + (dst_red << 8);
-                #endif
-
-                xbuf[x] = destpix;
-
-            } /* for(x = 0; x < msg->width; x++) */
-            break;
-
-        case 2: /* COMPLEMENT */
-            for(x = 0; x < msg->width; x++)
-            {
-                ULONG	    destpix;
-                UBYTE	    alpha;
-
-                alpha = *pixarray++;
-
-                destpix = xbuf[x];
-                if (alpha >= 0x80) destpix = ~destpix;
-                xbuf[x] = destpix;
-
-            } /* for(x = 0; x < msg->width; x++) */
-            break;
-
-        case 3: /* COMPLEMENT | INVERSVID*/
-            for(x = 0; x < msg->width; x++)
-            {
-                ULONG	    destpix;
-                UBYTE	    alpha;
-
-                alpha = *pixarray++;
-
-                destpix = xbuf[x];
-                if (alpha < 0x80) destpix = ~destpix;
-                xbuf[x] = destpix;
-
-            } /* for(x = 0; x < msg->width; x++) */
-            break;
-
-        case 4:	/* JAM2 */	    
-            for(x = 0; x < msg->width; x++)
-            {
-                ULONG	    destpix;
-                LONG	    dst_red, dst_green, dst_blue, alpha;
-
-                alpha = *pixarray++;
-
-                dst_red   = b_red   + ((a_red   - b_red)   * alpha) / 256;
-                dst_green = b_green + ((a_green - b_green) * alpha) / 256;
-                dst_blue  = b_blue  + ((a_blue  - b_blue)  * alpha) / 256;
-
-                #if AROS_BIG_ENDIAN
-                destpix = (dst_red << 16) + (dst_green << 8) + (dst_blue);
-                #else
-                destpix = (dst_blue << 24) + (dst_green << 16) + (dst_red << 8);
-                #endif
-
-                xbuf[x] = destpix;
-
-            } /* for(x = 0; x < msg->width; x++) */
-            break;
-
-        case 5:	/* JAM2 | INVERSVID */	    
-            for(x = 0; x < msg->width; x++)
-            {
-                ULONG	    destpix;
-                LONG	    dst_red, dst_green, dst_blue, alpha;
-
-                alpha = (*pixarray++) ^ 255;
-
-                dst_red   = b_red   + ((a_red   - b_red)   * alpha) / 256;
-                dst_green = b_green + ((a_green - b_green) * alpha) / 256;
-                dst_blue  = b_blue  + ((a_blue  - b_blue)  * alpha) / 256;
-
-                #if AROS_BIG_ENDIAN
-                destpix = (dst_red << 16) + (dst_green << 8) + (dst_blue);
-                #else
-                destpix = (dst_blue << 24) + (dst_green << 16) + (dst_red << 8);
-                #endif
-
-                xbuf[x] = destpix;
-
-            } /* for(x = 0; x < msg->width; x++) */
-            break;
-
-        } /* switch(type) */
-
-        if (PIXBUF_TIME_TO_END_PROCESS)
-        {
-            LONG height = PIXBUF_LINES_TO_PROCESS;
-
-            HIDD_BM_PutImage(o,
-            msg->gc,
-            (UBYTE *)buf,
-            msg->width * sizeof(ULONG),
-            msg->x,
-            y - height + 1,
-            msg->width,
-            height,
-            vHidd_StdPixFmt_ARGB32);
-
-            xbuf = buf;
+            HIDDNouveauBitMapPutAlphaTemplate32(bmdata, msg->gc, o, msg->invertalpha,
+                msg->alpha, msg->modulo, msg->x, msg->y, msg->width, msg->height);
         }
-        else
-        {
-          xbuf += msg->width;
-        }
+        break;
+    } /* switch(bmdata->bytesperpixel) */
 
-        pixarray += msg->modulo - msg->width;
-
-        PIXBUF_NEXT_LINE
-
-    } /* for(y = msg->y; y < msg->y + msg->height; y++) */
-
-    GC_DRMD(msg->gc) = old_drmd;
-
-    PIXBUF_FREE(buf);
-
-    } /* if (buf) */
-    else
-    {
-
-    }
-    
     UNLOCK_BITMAP
-
-    ReturnVoid("BitMap::PutAlphaTemplate");
 }
 
 VOID METHOD(NouveauBitMap, Hidd_BitMap, PutTemplate)
@@ -1148,15 +1176,7 @@ VOID METHOD(NouveauBitMap, Hidd_BitMap, PutTemplate)
     switch(bmdata->bytesperpixel)
     {
     case 1:
-        {
-            struct pHidd_BitMap_PutMemTemplate8 __m = 
-            {
-                SD(cl)->mid_PutMemTemplate8, msg->gc, msg->template, msg->modulo,
-                msg->srcx, bmdata->bo->map, bmdata->pitch, msg->x, msg->y,
-                msg->width, msg->height, msg->inverttemplate
-            }, *m = &__m;
-            OOP_DoMethod(o, (OOP_Msg)m);
-        }
+        /* Not supported */
         break;
 
     case 2:
@@ -1197,17 +1217,7 @@ VOID METHOD(NouveauBitMap, Hidd_BitMap, PutPattern)
     switch(bmdata->bytesperpixel)
     {
     case 1:
-        {
-            struct pHidd_BitMap_PutMemPattern8 __m = 
-            {
-                SD(cl)->mid_PutMemPattern8, msg->gc, msg->pattern, msg->patternsrcx,
-                msg->patternsrcy, msg->patternheight, msg->patterndepth, msg->patternlut,
-                msg->invertpattern, msg->mask, msg->maskmodulo, msg->masksrcx,
-                bmdata->bo->map, bmdata->pitch, msg->x, msg->y, msg->width,
-                msg->height
-            }, *m = &__m;
-            OOP_DoMethod(o, (OOP_Msg)m);
-        }
+        /* Not supported */
         break;
 
     case 2:
