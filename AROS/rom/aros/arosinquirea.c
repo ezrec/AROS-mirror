@@ -95,7 +95,8 @@ IPTR kickbase(void);
         Return the target architecture.
 
     AI_ArosABIMajor IPTR
-        Update this whenever a new ABI is introduced in AROS.
+        Update this whenever a new ABI is introduced in AROS. Special value of
+        -1 means that the ABI is under development and subject to change.
 
 
     RESULT
