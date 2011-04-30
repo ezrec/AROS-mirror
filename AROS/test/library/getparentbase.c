@@ -7,13 +7,9 @@
 
 #include LC_LIBDEFS_FILE
 
-AROS_LH0(struct Library *, GetParentBase,
-         struct Library *, PeridBase, 5, Perid
-)
+struct Library *GetParentBase(void)
 {
-    AROS_LIBFUNC_INIT
+    struct Library *lh = AROS_GET_LIBBASE;
     
-    return GM_GETPARENTBASEID2(PeridBase);
-    
-    AROS_LIBFUNC_EXIT
+    return GM_GETPARENTBASEID2(lh);
 }
