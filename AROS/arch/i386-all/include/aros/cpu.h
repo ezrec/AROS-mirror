@@ -100,10 +100,18 @@ struct JumpVec
     void __ ## fname ## _ ## libbasename ## _wrapper(void) \
     { \
 	asm volatile( \
-	    ".weak " #fname ";" \
-	    #fname " : " \
-	    "movl " #libbasename ",%%eax;" \
-	    "jmp *%c0(%%eax)" \
+	    ".weak " #fname "\n" \
+	    #fname " :\n" \
+            "\taddl $8, %%ebx\n" \
+            "\tmovl (%%esp), %%ecx\n" \
+            "\tmovl " #libbasename ", %%eax\n" \
+            "\tmovl %%ecx, -4(%%ebx)\n" \
+            "\tmovl %%eax, (%%ebx)\n" \
+            "\tmovl $" #fname "_ret, (%%esp)\n" \
+            "\tjmp *%c0(%%eax)\n" \
+            #fname "_ret :\n" \
+            "\tsubl $8, %%ebx\n" \
+            "\tjmp *4(%%ebx)" \
 	    : : "i" ((-lvo*LIB_VECTSIZE)) \
 	); \
     }
@@ -160,12 +168,6 @@ extern void aros_not_implemented ();
     it can be ignored by the function.
 */
 
-/* What to do with the library base in header, prototype and call */
-#define __AROS_LH_BASE(basetype,basename)   basetype basename
-#define __AROS_LP_BASE(basetype,basename)   void *
-#define __AROS_LC_BASE(basetype,basename)   basename
-#define __AROS_LD_BASE(basetype,basename)   basetype
-
 /* How to transform an argument in header, opt prototype, call and forced
    prototype. */
 #define __AROS_LHA(type,name,reg)     type name
@@ -190,5 +192,51 @@ extern void aros_not_implemented ();
 #define __AROS_UFP_PREFIX   /* eps */
 #define __AROS_UFC_PREFIX   /* eps */
 #define __AROS_UFD_PREFIX   /* eps */
+
+
+/*
+  Macro's for handling storing a pointer that can be used as a
+  base address for relative addressing. Most of the time it will
+  be used for storing the libbase
+*/
+static inline void *__AROS_GET_RELBASE(void)
+{
+    void *__ret;
+    __asm__ __volatile__("movl (%%ebx),%0" : "=r" (__ret) : );
+    return __ret;
+}
+#define AROS_GET_RELBASE __AROS_GET_RELBASE()
+
+static inline void *__AROS_SET_RELBASE(void *base)
+{
+    void *__ret;
+
+    __asm__ __volatile__("movl (%%ebx),%0\n\t"
+                         "movl %1,(%%ebx)" : "=&r" (__ret) : "r" (base)
+    );
+
+    return __ret;
+}
+#define AROS_SET_RELBASE(x) __AROS_SET_RELBASE(x)
+
+
+static inline void __AROS_I386_PUSH_EBXSTACK(void *base)
+{
+    __asm__ __volatile__("addl $4, %%ebx; movl %0,(%%ebx)" : : "r" (base));
+}
+#define AROS_I386_PUSH_EBXSTACK(x) __AROS_I386_PUSH_EBXSTACK(x)
+
+static inline void *__AROS_I386_POP_EBXSTACK(void)
+{
+    void *__ret;
+
+    __asm__ __volatile__("movl (%%ebx), %0\n\t"
+                         "subl $4, %%ebx"
+                         : "=r" (__ret) :
+    );
+
+    return __ret;
+}
+#define AROS_I386_POP_EBXSTACK __AROS_I386_POP_EBXSTACK()
 
 #endif /* AROS_I386_CPU_H */

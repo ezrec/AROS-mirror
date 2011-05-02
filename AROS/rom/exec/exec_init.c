@@ -175,6 +175,8 @@ AROS_UFH3S(LIBBASETYPEPTR, GM_UNIQUENAME(init),
      *
     SysBase = sysBase; */
 
+    void * oldbase = AROS_SET_LIBBASE(SysBase);
+
     DINIT("exec.library init");
 
     /* Create boot task */
@@ -302,6 +304,7 @@ AROS_UFH3S(LIBBASETYPEPTR, GM_UNIQUENAME(init),
      * This code returns, allowing more RTF_SINGLETASK modules to get initialized after us.
      * Kernel.resource's startup code has to InitCode(RTF_COLDSTART) itself.
      */
+    AROS_SET_LIBBASE(oldbase);
     return NULL;
 
     AROS_USERFUNC_EXIT
