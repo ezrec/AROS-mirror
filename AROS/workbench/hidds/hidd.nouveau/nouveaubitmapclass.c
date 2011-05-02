@@ -977,7 +977,7 @@ VOID METHOD(NouveauBitMap, Hidd_BitMap, PutImage)
     LOCK_BITMAP
 
     /* For larger transfers use GART */
-    if (((msg->width * msg->height) >= (64 * 64)) && (carddata->GART) && (carddata->architecture != NV_ARCH_C0))/* TODO:NVCO: IMPLEMENT */
+    if (((msg->width * msg->height) >= (32 * 32)) && (carddata->GART))
     {
         BOOL result = FALSE;
         
@@ -986,10 +986,18 @@ VOID METHOD(NouveauBitMap, Hidd_BitMap, PutImage)
 
         ObtainSemaphore(&carddata->gartsemaphore);
         
-        result = HiddNouveauNVAccelUploadM2MF(
-                    msg->pixels, msg->modulo, msg->pixFmt,
-                    msg->x, msg->y, msg->width, msg->height, 
-                    cl, o);
+        if (carddata->architecture >= NV_ARCH_C0)
+        {
+            /* TODO:NVCO: IMPLEMENT */
+            result = FALSE;
+        }
+        else
+        {
+            result = HiddNouveauNVAccelUploadM2MF(
+                        msg->pixels, msg->modulo, msg->pixFmt,
+                        msg->x, msg->y, msg->width, msg->height, 
+                        cl, o);
+        }
         
         ReleaseSemaphore(&carddata->gartsemaphore);
 
@@ -1029,7 +1037,7 @@ VOID METHOD(NouveauBitMap, Hidd_BitMap, GetImage)
     LOCK_BITMAP
 
     /* For larger transfers use GART */
-    if (((msg->width * msg->height) >= (64 * 64)) && (carddata->GART) && (carddata->architecture != NV_ARCH_C0))/* TODO:NVCO: IMPLEMENT */
+    if (((msg->width * msg->height) >= (32 * 32)) && (carddata->GART))
     {
         BOOL result = FALSE;
         
@@ -1038,11 +1046,19 @@ VOID METHOD(NouveauBitMap, Hidd_BitMap, GetImage)
 
         ObtainSemaphore(&carddata->gartsemaphore);
         
-        result = HiddNouveauNVAccelDownloadM2MF(
-                    msg->pixels, msg->modulo, msg->pixFmt,
-                    msg->x, msg->y, msg->width, msg->height, 
-                    cl, o);
-        
+        if (carddata->architecture >= NV_ARCH_C0)
+        {
+            /* TODO:NVCO: IMPLEMENT */
+            result = FALSE;
+        }
+        else
+        {
+            result = HiddNouveauNVAccelDownloadM2MF(
+                        msg->pixels, msg->modulo, msg->pixFmt,
+                        msg->x, msg->y, msg->width, msg->height, 
+                        cl, o);
+        }
+
         ReleaseSemaphore(&carddata->gartsemaphore);
 
         if (result)
@@ -1076,12 +1092,36 @@ VOID METHOD(NouveauBitMap, Hidd_BitMap, GetImage)
 VOID METHOD(NouveauBitMap, Hidd_BitMap, PutAlphaImage)
 {
     struct HIDDNouveauBitMapData * bmdata = OOP_INST_DATA(cl, o);
-
-    /* TODO: implement accelerated putalphaimage */
+    struct CardData * carddata = &(SD(cl)->carddata);
 
     LOCK_BITMAP
-    MAP_BUFFER
 
+    /* Try hardware method */
+    if ((carddata->architecture == NV_ARCH_40) && (bmdata->bytesperpixel > 1)
+        && ((msg->width * msg->height) >= (32 * 32)) && (carddata->GART))
+    {
+        BOOL result = FALSE;
+        
+        /* RAM->CPU->GART GART->GPU->VRAM */
+        UNMAP_BUFFER
+
+        ObtainSemaphore(&carddata->gartsemaphore);
+        
+        result = HiddNouveauNV40AccelARGBUpload3D(
+                    msg->pixels, msg->modulo,
+                    msg->x, msg->y, msg->width, msg->height, 
+                    cl, o);
+        
+        ReleaseSemaphore(&carddata->gartsemaphore);
+
+        if (result)
+        {
+            UNLOCK_BITMAP;
+            return;
+        }
+    }
+
+    /* Fallback to software method */
     switch(bmdata->bytesperpixel)
     {
     case 1:
@@ -1090,6 +1130,8 @@ VOID METHOD(NouveauBitMap, Hidd_BitMap, PutAlphaImage)
 
     case 2:
         {
+            MAP_BUFFER
+
             HIDDNouveauBitMapPutAlphaImage16(bmdata, msg->pixels, msg->modulo, msg->x, 
                 msg->y, msg->width, msg->height);
         }
@@ -1097,6 +1139,8 @@ VOID METHOD(NouveauBitMap, Hidd_BitMap, PutAlphaImage)
 
     case 4:
         {
+            MAP_BUFFER
+
             HIDDNouveauBitMapPutAlphaImage32(bmdata, msg->pixels, msg->modulo, msg->x, 
                 msg->y, msg->width, msg->height);
         }

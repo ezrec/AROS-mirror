@@ -121,6 +121,8 @@ struct CardData
     struct nouveau_grobj    *NvRectangle;
     struct nouveau_grobj    *NvMemFormat;
     struct nouveau_grobj    *Nv2D;
+    struct nouveau_grobj    *Nv3D;
+    struct nouveau_bo       *shader_mem;
     
     struct nouveau_bo       *GART;                  /* Buffer in GART for upload/download of images */
     struct SignalSemaphore  gartsemaphore;
@@ -249,6 +251,16 @@ BOOL HIDDNouveauNV04FillSolidRect(struct CardData * carddata,
     struct HIDDNouveauBitMapData * bmdata, ULONG minX, ULONG minY, ULONG maxX,
     ULONG maxY, ULONG drawmode, ULONG color);
 
+#define BLENDOP_SOLID           1
+#define BLENDOP_ALPHA_PREMULT   3
+#define BLENDOP_ALPHA           13
+
+BOOL HIDDNouveauNV403DCopyBox(struct CardData * carddata,
+    struct HIDDNouveauBitMapData * srcdata, struct HIDDNouveauBitMapData * destdata,
+    ULONG srcX, ULONG srcY, ULONG destX, ULONG destY, ULONG width, ULONG height,
+    ULONG blendop);
+
+
 VOID HIDDNouveauNV50SetPattern(struct CardData * carddata, LONG col0, 
     LONG col1, LONG pat0, LONG pat1);
 BOOL HIDDNouveauNV50CopySameFormat(struct CardData * carddata,
@@ -258,7 +270,8 @@ BOOL HIDDNouveauNV50CopySameFormat(struct CardData * carddata,
 BOOL HIDDNouveauNV50FillSolidRect(struct CardData * carddata,
     struct HIDDNouveauBitMapData * bmdata, ULONG minX, ULONG minY, ULONG maxX,
     ULONG maxY, ULONG drawmode, ULONG color);
-    
+
+/* nouveau_accel.c */
 BOOL HiddNouveauWriteFromRAM(
     APTR src, ULONG srcPitch, HIDDT_StdPixFmt srcPixFmt,
     APTR dst, ULONG dstPitch,
@@ -266,6 +279,10 @@ BOOL HiddNouveauWriteFromRAM(
     OOP_Class *cl, OOP_Object *o);
 BOOL HiddNouveauNVAccelUploadM2MF(
     UBYTE * srcpixels, ULONG srcpitch, HIDDT_StdPixFmt srcPixFmt,
+    ULONG x, ULONG y, ULONG width, ULONG height, 
+    OOP_Class *cl, OOP_Object *o);
+BOOL HiddNouveauNV40AccelARGBUpload3D(
+    UBYTE * srcpixels, ULONG srcpitch,
     ULONG x, ULONG y, ULONG width, ULONG height, 
     OOP_Class *cl, OOP_Object *o);
 
@@ -277,7 +294,7 @@ BOOL HiddNouveauReadIntoRAM(
 BOOL HiddNouveauNVAccelDownloadM2MF(
     UBYTE * dstpixels, ULONG dstpitch, HIDDT_StdPixFmt dstPixFmt,
     ULONG x, ULONG y, ULONG width, ULONG height, 
-    OOP_Class *cl, OOP_Object *o);   
+    OOP_Class *cl, OOP_Object *o);
 
 VOID HIDDNouveauShowCursor(OOP_Object * gfx, BOOL visible);
 BOOL HIDDNouveauSwitchToVideoMode(OOP_Object * bm);
