@@ -8,7 +8,6 @@
 
 static void writedefineregister(FILE *, struct functionhead *, struct config *);
 static void writedefinevararg(FILE *, struct functionhead *, struct config *);
-static void writedefinestack(FILE *, struct functionhead *, struct config *);
 static void writealiases(FILE *, struct functionhead *, struct config *);
 
 void writeincdefines(struct config *cfg)
@@ -59,7 +58,8 @@ void writeincdefines(struct config *cfg)
 	    }
 	    else /* libcall == STACK */
 	    {
-		writedefinestack(out, funclistit, cfg);
+                /* NOP: nothing to be written for stack argument passing.
+                   The stubs in the link library will be used */
 	    }
 	    
 	    writealiases(out, funclistit, cfg);
@@ -373,24 +373,6 @@ writedefinevararg(FILE *out, struct functionhead *funclistit, struct config *cfg
 
 	free(varargname);
     }
-}
-
-void
-writedefinestack(FILE *out, struct functionhead *funclistit, struct config *cfg)
-{
-    struct functionarg *arglistit;
-    
-    fprintf(out, "#define %s ((%s (*)(", funclistit->name, funclistit->type);
-    for (arglistit = funclistit->arguments;
-	 arglistit != NULL;
-	 arglistit = arglistit->next
-    )
-    {
-	fprintf(out, "%s", arglistit->arg);
-	if (arglistit->next != NULL)
-	    fprintf(out, ", ");
-    }
-    fprintf(out, "))__AROS_GETVECADDR(%s,%d))\n", cfg->libbase, funclistit->lvo);
 }
 
 void
