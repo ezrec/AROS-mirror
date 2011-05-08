@@ -145,123 +145,7 @@ BOOL HiddNouveauWriteFromRAM(
 /* NOTE: Assumes lock on bitmap is already made */
 /* NOTE: Assumes lock on GART object is already made */
 /* NOTE: Assumes buffer is not mapped */
-BOOL HiddNouveauNVAccelUploadM2MF(
-    UBYTE * srcpixels, ULONG srcpitch, HIDDT_StdPixFmt srcPixFmt,
-    ULONG x, ULONG y, ULONG width, ULONG height, 
-    OOP_Class *cl, OOP_Object *o)
-{
-    struct HIDDNouveauBitMapData * bmdata = OOP_INST_DATA(cl, o);
-    struct CardData * carddata = &(SD(cl)->carddata);
-    struct nouveau_channel *chan = carddata->chan;
-    struct nouveau_grobj *m2mf = carddata->NvMemFormat;
-    struct nouveau_bo *bo = bmdata->bo;
-    unsigned cpp = bmdata->bytesperpixel;
-    unsigned line_len = width * cpp;
-    unsigned dst_offset = 0, dst_pitch = 0, linear = 0;
-    /* Maximum DMA transfer */
-    unsigned line_count = carddata->GART->size / line_len;
-    char *src = (char *)srcpixels;
-
-//    if (!nv50_style_tiled_pixmap(pdpix)) {
-        linear     = 1;
-        dst_pitch  = bmdata->pitch;
-        dst_offset += (y * dst_pitch) + (x * cpp);
-//    }
-
-    /* HW limitations */
-    if (line_count > 2047)
-        line_count = 2047;
-
-    while (height) {
-        char *dst;
-
-        if (line_count > height)
-            line_count = height;
-
-        /* Upload to GART */
-        if (nouveau_bo_map(carddata->GART, NOUVEAU_BO_WR))
-            return FALSE;
-        dst = carddata->GART->map;
-
-        HiddNouveauWriteFromRAM(
-            src, srcpitch, srcPixFmt,
-            dst, line_len,
-            width, line_count,
-            cl, o);
-        src += srcpitch * line_count;
-        nouveau_bo_unmap(carddata->GART);
-
-        if (MARK_RING(chan, 32, 6))
-            return FALSE;
-
-        BEGIN_RING(chan, m2mf, NV04_MEMORY_TO_MEMORY_FORMAT_DMA_BUFFER_IN, 2);
-        if (OUT_RELOCo(chan, carddata->GART, NOUVEAU_BO_GART |
-                   NOUVEAU_BO_RD) ||
-            OUT_RELOCo(chan, bo, NOUVEAU_BO_VRAM | NOUVEAU_BO_GART |
-                   NOUVEAU_BO_WR)) {
-            MARK_UNDO(chan);
-            return FALSE;
-        }
-
-        if (carddata->architecture >= NV_ARCH_50) {
-            BEGIN_RING(chan, m2mf, NV50_MEMORY_TO_MEMORY_FORMAT_LINEAR_IN, 1);
-            OUT_RING  (chan, 1);
-
-            if (!linear) {
-                BEGIN_RING(chan, m2mf, NV50_MEMORY_TO_MEMORY_FORMAT_LINEAR_OUT, 7);
-                OUT_RING  (chan, 0);
-                OUT_RING  (chan, bo->tile_mode << 4);
-                OUT_RING  (chan, bmdata->width * cpp);
-                OUT_RING  (chan, bmdata->height);
-                OUT_RING  (chan, 1);
-                OUT_RING  (chan, 0);
-                OUT_RING  (chan, (y << 16) | (x * cpp));
-            } else {
-                BEGIN_RING(chan, m2mf, NV50_MEMORY_TO_MEMORY_FORMAT_LINEAR_OUT, 1);
-                OUT_RING  (chan, 1);
-            }
-
-            BEGIN_RING(chan, m2mf, NV50_MEMORY_TO_MEMORY_FORMAT_OFFSET_IN_HIGH, 2);
-            if (OUT_RELOCh(chan, carddata->GART, 0, NOUVEAU_BO_GART |
-                       NOUVEAU_BO_RD) ||
-                OUT_RELOCh(chan, bo, dst_offset, NOUVEAU_BO_VRAM |
-                       NOUVEAU_BO_GART | NOUVEAU_BO_WR)) {
-                MARK_UNDO(chan);
-                return FALSE;
-            }
-        }
-
-        /* DMA to VRAM */
-        BEGIN_RING(chan, m2mf,
-               NV04_MEMORY_TO_MEMORY_FORMAT_OFFSET_IN, 8);
-        if (OUT_RELOCl(chan, carddata->GART, 0, NOUVEAU_BO_GART |
-                   NOUVEAU_BO_RD) ||
-            OUT_RELOCl(chan, bo, dst_offset, NOUVEAU_BO_VRAM |
-                   NOUVEAU_BO_GART | NOUVEAU_BO_WR)) {
-            MARK_UNDO(chan);
-            return FALSE;
-        }
-        OUT_RING  (chan, line_len);
-        OUT_RING  (chan, dst_pitch);
-        OUT_RING  (chan, line_len);
-        OUT_RING  (chan, line_count);
-        OUT_RING  (chan, (1<<8)|1);
-        OUT_RING  (chan, 0);
-        FIRE_RING (chan);
-
-        if (linear)
-            dst_offset += line_count * dst_pitch;
-        height -= line_count;
-        y += line_count;
-    }
-
-    return TRUE;
-}
-
-/* NOTE: Assumes lock on bitmap is already made */
-/* NOTE: Assumes lock on GART object is already made */
-/* NOTE: Assumes buffer is not mapped */
-BOOL HiddNouveauNV40AccelARGBUpload3D(
+BOOL HiddNouveauAccelARGBUpload3D(
     UBYTE * srcpixels, ULONG srcpitch,
     ULONG x, ULONG y, ULONG width, ULONG height, 
     OOP_Class *cl, OOP_Object *o)
@@ -348,9 +232,25 @@ BOOL HiddNouveauNV40AccelARGBUpload3D(
         srcdata.pitch = line_len;
 
         /* Render using 3D engine */
-        HIDDNouveauNV403DCopyBox(carddata,
-            &srcdata, dstdata,
-            0, 0, x, y, width, height, BLENDOP_ALPHA);
+        switch(carddata->architecture)
+        {
+        case(NV_ARCH_40):
+            HIDDNouveauNV403DCopyBox(carddata,
+                &srcdata, dstdata,
+                0, 0, x, y, width, height, BLENDOP_ALPHA);
+            break;
+        case(NV_ARCH_30):
+            HIDDNouveauNV303DCopyBox(carddata,
+                &srcdata, dstdata,
+                0, 0, x, y, width, height, BLENDOP_ALPHA);
+            break;
+        case(NV_ARCH_20):
+        case(NV_ARCH_10):
+            HIDDNouveauNV103DCopyBox(carddata,
+                &srcdata, dstdata,
+                0, 0, x, y, width, height, BLENDOP_ALPHA);
+            break;
+        }
 
         height -= line_count;
         y += line_count;
@@ -473,118 +373,3 @@ BOOL HiddNouveauReadIntoRAM(
     return TRUE;
 }
 
-/* NOTE: Assumes lock on bitmap is already made */
-/* NOTE: Assumes lock on GART object is already made */
-/* NOTE: Assumes buffer is not mapped */
-BOOL HiddNouveauNVAccelDownloadM2MF(
-    UBYTE * dstpixels, ULONG dstpitch, HIDDT_StdPixFmt dstPixFmt,
-    ULONG x, ULONG y, ULONG width, ULONG height, 
-    OOP_Class *cl, OOP_Object *o)  
-{
-    struct HIDDNouveauBitMapData * bmdata = OOP_INST_DATA(cl, o);
-    struct CardData * carddata = &(SD(cl)->carddata);
-    struct nouveau_channel *chan = carddata->chan;
-    struct nouveau_grobj *m2mf = carddata->NvMemFormat;
-    struct nouveau_bo *bo = bmdata->bo;
-    unsigned cpp = bmdata->bytesperpixel;
-    unsigned line_len = width * cpp;
-    unsigned src_offset = 0, src_pitch = 0, linear = 0;
-    /* Maximum DMA transfer */
-    unsigned line_count = carddata->GART->size / line_len;
-    char * dst = (char *)dstpixels;
-
-//    if (!nv50_style_tiled_pixmap(pspix)) {
-        linear     = 1;
-        src_pitch  = bmdata->pitch;
-        src_offset += (y * src_pitch) + (x * cpp);
-//    }
-
-    /* HW limitations */
-    if (line_count > 2047)
-        line_count = 2047;
-
-    while (height) {
-        char *src;
-
-        if (line_count > height)
-            line_count = height;
-
-        if (MARK_RING(chan, 32, 6))
-            return FALSE;
-
-        BEGIN_RING(chan, m2mf, NV04_MEMORY_TO_MEMORY_FORMAT_DMA_BUFFER_IN, 2);
-        if (OUT_RELOCo(chan, bo, NOUVEAU_BO_GART | NOUVEAU_BO_VRAM |
-                   NOUVEAU_BO_RD) ||
-            OUT_RELOCo(chan, carddata->GART, NOUVEAU_BO_GART |
-                   NOUVEAU_BO_WR)) {
-            MARK_UNDO(chan);
-            return FALSE;
-        }
-
-        if (carddata->architecture >= NV_ARCH_50) {
-            if (!linear) {
-                BEGIN_RING(chan, m2mf, NV50_MEMORY_TO_MEMORY_FORMAT_LINEAR_IN, 7);
-                OUT_RING  (chan, 0);
-                OUT_RING  (chan, bo->tile_mode << 4);
-                OUT_RING  (chan, bmdata->width * cpp);
-                OUT_RING  (chan, bmdata->height);
-                OUT_RING  (chan, 1);
-                OUT_RING  (chan, 0);
-                OUT_RING  (chan, (y << 16) | (x * cpp));
-            } else {
-                BEGIN_RING(chan, m2mf, NV50_MEMORY_TO_MEMORY_FORMAT_LINEAR_IN, 1);
-                OUT_RING  (chan, 1);
-            }
-
-            BEGIN_RING(chan, m2mf, NV50_MEMORY_TO_MEMORY_FORMAT_LINEAR_OUT, 1);
-            OUT_RING  (chan, 1);
-
-            BEGIN_RING(chan, m2mf, NV50_MEMORY_TO_MEMORY_FORMAT_OFFSET_IN_HIGH, 2);
-            if (OUT_RELOCh(chan, bo, src_offset, NOUVEAU_BO_GART |
-                       NOUVEAU_BO_VRAM | NOUVEAU_BO_RD) ||
-                OUT_RELOCh(chan, carddata->GART, 0, NOUVEAU_BO_GART |
-                       NOUVEAU_BO_WR)) {
-                MARK_UNDO(chan);
-                return FALSE;
-            }
-        }
-
-        BEGIN_RING(chan, m2mf,
-               NV04_MEMORY_TO_MEMORY_FORMAT_OFFSET_IN, 8);
-        if (OUT_RELOCl(chan, bo, src_offset, NOUVEAU_BO_GART |
-                   NOUVEAU_BO_VRAM | NOUVEAU_BO_RD) ||
-            OUT_RELOCl(chan, carddata->GART, 0, NOUVEAU_BO_GART |
-                   NOUVEAU_BO_WR)) {
-            MARK_UNDO(chan);
-            return FALSE;
-        }
-        OUT_RING  (chan, src_pitch);
-        OUT_RING  (chan, line_len);
-        OUT_RING  (chan, line_len);
-        OUT_RING  (chan, line_count);
-        OUT_RING  (chan, (1<<8)|1);
-        OUT_RING  (chan, 0);
-
-        /* Download from GART */
-        if (nouveau_bo_map(carddata->GART, NOUVEAU_BO_RD)) {
-            MARK_UNDO(chan);
-            return FALSE;
-        }
-        src = carddata->GART->map;
-
-        HiddNouveauReadIntoRAM(
-            src, line_len,
-            dst, dstpitch, dstPixFmt,
-            width, line_count,
-            cl, o);
-        dst += dstpitch * line_count;
-        nouveau_bo_unmap(carddata->GART);
-
-        if (linear)
-            src_offset += line_count * src_pitch;
-        height -= line_count;
-        y += line_count;
-    }
-
-    return TRUE;
-}

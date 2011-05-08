@@ -112,7 +112,9 @@ struct CardData
     ULONG                   architecture;
     struct nouveau_device   *dev;                   /* Device object acquired from libdrm */
     struct nouveau_channel  *chan;
+
     struct nouveau_notifier *notify0;
+    struct nouveau_notifier *vblank_sem;
     
     struct nouveau_grobj    *NvImageBlit;
     struct nouveau_grobj    *NvContextSurfaces;
@@ -122,7 +124,9 @@ struct CardData
     struct nouveau_grobj    *NvMemFormat;
     struct nouveau_grobj    *Nv2D;
     struct nouveau_grobj    *Nv3D;
+    struct nouveau_grobj    *NvSW;
     struct nouveau_bo       *shader_mem;
+    struct nouveau_bo       *tesla_scratch;
     
     struct nouveau_bo       *GART;                  /* Buffer in GART for upload/download of images */
     struct SignalSemaphore  gartsemaphore;
@@ -259,7 +263,14 @@ BOOL HIDDNouveauNV403DCopyBox(struct CardData * carddata,
     struct HIDDNouveauBitMapData * srcdata, struct HIDDNouveauBitMapData * destdata,
     ULONG srcX, ULONG srcY, ULONG destX, ULONG destY, ULONG width, ULONG height,
     ULONG blendop);
-
+BOOL HIDDNouveauNV303DCopyBox(struct CardData * carddata,
+    struct HIDDNouveauBitMapData * srcdata, struct HIDDNouveauBitMapData * destdata,
+    ULONG srcX, ULONG srcY, ULONG destX, ULONG destY, ULONG width, ULONG height,
+    ULONG blendop);
+BOOL HIDDNouveauNV103DCopyBox(struct CardData * carddata,
+    struct HIDDNouveauBitMapData * srcdata, struct HIDDNouveauBitMapData * destdata,
+    ULONG srcX, ULONG srcY, ULONG destX, ULONG destY, ULONG width, ULONG height,
+    ULONG blendop);
 
 VOID HIDDNouveauNV50SetPattern(struct CardData * carddata, LONG col0, 
     LONG col1, LONG pat0, LONG pat1);
@@ -277,11 +288,7 @@ BOOL HiddNouveauWriteFromRAM(
     APTR dst, ULONG dstPitch,
     ULONG width, ULONG height,
     OOP_Class *cl, OOP_Object *o);
-BOOL HiddNouveauNVAccelUploadM2MF(
-    UBYTE * srcpixels, ULONG srcpitch, HIDDT_StdPixFmt srcPixFmt,
-    ULONG x, ULONG y, ULONG width, ULONG height, 
-    OOP_Class *cl, OOP_Object *o);
-BOOL HiddNouveauNV40AccelARGBUpload3D(
+BOOL HiddNouveauAccelARGBUpload3D(
     UBYTE * srcpixels, ULONG srcpitch,
     ULONG x, ULONG y, ULONG width, ULONG height, 
     OOP_Class *cl, OOP_Object *o);
@@ -290,6 +297,13 @@ BOOL HiddNouveauReadIntoRAM(
     APTR src, ULONG srcPitch, 
     APTR dst, ULONG dstPitch, HIDDT_StdPixFmt dstPixFmt,
     ULONG width, ULONG height,
+    OOP_Class *cl, OOP_Object *o);
+
+
+/* nouveau_exa.c */
+BOOL HiddNouveauNVAccelUploadM2MF(
+    UBYTE * srcpixels, ULONG srcpitch, HIDDT_StdPixFmt srcPixFmt,
+    ULONG x, ULONG y, ULONG width, ULONG height, 
     OOP_Class *cl, OOP_Object *o);
 BOOL HiddNouveauNVAccelDownloadM2MF(
     UBYTE * dstpixels, ULONG dstpitch, HIDDT_StdPixFmt dstPixFmt,

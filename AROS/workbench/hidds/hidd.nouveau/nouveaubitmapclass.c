@@ -1097,7 +1097,11 @@ VOID METHOD(NouveauBitMap, Hidd_BitMap, PutAlphaImage)
     LOCK_BITMAP
 
     /* Try hardware method */
-    if ((carddata->architecture == NV_ARCH_40) && (bmdata->bytesperpixel > 1)
+    if (
+        ((carddata->architecture == NV_ARCH_40) || (carddata->architecture == NV_ARCH_30)
+        || (carddata->architecture == NV_ARCH_20) || (carddata->architecture == NV_ARCH_10))
+        
+        && (bmdata->bytesperpixel > 1)
         && ((msg->width * msg->height) >= (32 * 32)) && (carddata->GART))
     {
         BOOL result = FALSE;
@@ -1107,7 +1111,7 @@ VOID METHOD(NouveauBitMap, Hidd_BitMap, PutAlphaImage)
 
         ObtainSemaphore(&carddata->gartsemaphore);
         
-        result = HiddNouveauNV40AccelARGBUpload3D(
+        result = HiddNouveauAccelARGBUpload3D(
                     msg->pixels, msg->modulo,
                     msg->x, msg->y, msg->width, msg->height, 
                     cl, o);
