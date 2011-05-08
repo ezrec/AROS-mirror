@@ -4,7 +4,9 @@ include $(TOP)/config/make.cfg
 #MM- test-library : test-library-dummytest test-library-peropenertest \
 #MM-     test-library-peropenertest_child
 #MM test-library-dummytest : test-library-dummylib
-#MM test-library-peropenertest : test-library-peropenerlib \
+#MM test-library-peropenertest : \
+#MM     test-library-peropenerlib \
+#MM     test-library-peropener2lib \
 #MM     test-library-peridlib
 #MM test-library-peropenertest_child : \
 #MM     test-library-peridlib
@@ -24,7 +26,8 @@ USER_LDFLAGS := -L$(TARGETDIR)/Development/lib
     progname=dummytest targetdir=$(TARGETDIR)
 
 %build_prog mmake=test-library-peropenertest \
-    progname=peropenertest targetdir=$(TARGETDIR) uselibs="peropener perid"
+    progname=peropenertest targetdir=$(TARGETDIR) \
+    uselibs="peropener peropener2 perid"
 
 %build_prog mmake=test-library-peropenertest_child \
     progname=peropenertest_child targetdir=$(TARGETDIR) \
@@ -35,6 +38,10 @@ USER_LDFLAGS := -L$(TARGETDIR)/Development/lib
 
 %build_module mmake=test-library-peropenerlib \
     modname=peropener modtype=library files=peropener prefix=$(TARGETDIR)
+
+%build_module mmake=test-library-peropener2lib \
+    modname=peropener2 modtype=library \
+    files=peropener2 uselibs=peropener_rel prefix=$(TARGETDIR)
 
 %build_module mmake=test-library-peridlib \
     modname=perid modtype=library files=getparentbase prefix=$(TARGETDIR)
