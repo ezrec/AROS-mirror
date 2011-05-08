@@ -104,8 +104,9 @@ writedefineregister(FILE *out, struct functionhead *funclistit, struct config *c
     {
 	    fprintf(out,
 		    ") \\\n"
-		    "        AROS_LC%d%s(%s, %s, \\\n",
-		    funclistit->argcount, (isvoid) ? "NR" : "",
+		    "        AROS_LC%d%s%s(%s, %s, \\\n",
+		    funclistit->argcount, funclistit->nolibbase ? "I" : "",
+		    (isvoid) ? "NR" : "",
 		    funclistit->type, funclistit->name
 	    );
 

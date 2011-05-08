@@ -1428,6 +1428,14 @@ static void readsectionfunctionlist(struct config *cfg)
 		
 		(*funclistptr)->novararg = 1;
 	    }
+            else if (strncmp(s, "nolibbase", 9)==0)
+	    {
+		if (*funclistptr == NULL)
+		    exitfileerror(20, ".novararg has to come after a function declaration\n");
+		
+		(*funclistptr)->nolibbase = 1;
+	    }
+                
 	    else
 		exitfileerror(20, "Syntax error");
 	}

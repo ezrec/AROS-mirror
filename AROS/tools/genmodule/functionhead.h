@@ -34,8 +34,9 @@ struct functionhead {
     unsigned int lvo; /* Only for library functions, not methods */
     struct stringlist *interface; /* Only for HIDD class */
     char *method; /* Only for HIID class */
-    int novararg : 1; /* Are varargs allowed for this function ? */
-    int priv     : 1; /* Is function private */
+    int novararg  : 1; /* Are varargs allowed for this function ? */
+    int priv      : 1; /* Is function private */
+    int nolibbase : 1; /* Do not pass libbase to function */
 };
 
 struct functionhead *newfunctionhead(const char *name, enum libcall libcall);

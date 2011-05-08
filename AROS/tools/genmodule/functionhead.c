@@ -27,6 +27,7 @@ struct functionhead *newfunctionhead(const char *name, enum libcall libcall)
 	funchead->method = NULL;
 	funchead->novararg = 0;
 	funchead->priv= 0;
+        funchead->nolibbase = 0;
     }
     else
     {
@@ -117,8 +118,9 @@ void writefuncdefs(FILE *out, struct config *cfg, struct functionhead *funclist)
 		fprintf(out, "%s", arglistit->arg);
 	    }
 	    fprintf(out,
-		    ");\nAROS_LH%d(%s, %s,\n",
-		    funclistit->argcount, funclistit->type, funclistit->internalname
+		    ");\nAROS_LH%d%s(%s, %s,\n",
+		    funclistit->argcount, funclistit->nolibbase ? "I" : "",
+                    funclistit->type, funclistit->internalname
 	    );
 	    for (arglistit = funclistit->arguments;
 		 arglistit!=NULL;
@@ -169,8 +171,9 @@ void writefuncdefs(FILE *out, struct config *cfg, struct functionhead *funclist)
 		|| strchr(funclistit->arguments->reg, '/') == NULL)
 	    {
 		fprintf(out,
-			"AROS_LD%d(%s, %s,\n",
-			funclistit->argcount, funclistit->type, funclistit->internalname
+			"AROS_LD%d%s(%s, %s,\n",
+			funclistit->argcount, funclistit->nolibbase ? "I" : "",
+                        funclistit->type, funclistit->internalname
 		);
 		for (arglistit = funclistit->arguments;
 		     arglistit!=NULL;
@@ -278,8 +281,9 @@ void writefuncprotos(FILE *out, struct config *cfg, struct functionhead *funclis
 	    )
 	    {
 		fprintf(out,
-			"AROS_LP%d(%s, %s,\n",
-			funclistit->argcount, funclistit->type, funclistit->name
+			"AROS_LP%d%s(%s, %s,\n",
+			funclistit->argcount, funclistit->nolibbase ? "I" : "",
+                        funclistit->type, funclistit->name
 		);
 		for (arglistit = funclistit->arguments;
 		     arglistit!=NULL;

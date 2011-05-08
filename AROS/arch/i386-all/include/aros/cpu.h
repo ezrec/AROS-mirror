@@ -118,6 +118,10 @@ struct JumpVec
 #define AROS_LIBFUNCSTUB(fname, libbasename, lvo) \
     __AROS_LIBFUNCSTUB(fname, libbasename, lvo)
 
+/* Macro: AROS_RELLIBFUNCSTUB(functionname, libbasename, lvo)
+   Same as AROS_LIBFUNCSTUB but finds libbase at an offset in
+   the current libbase
+*/
 #define __AROS_RELLIBFUNCSTUB(fname, libbasename, lvo) \
     void __ ## fname ## _ ## libbasename ## _relwrapper(void) \
     { \
@@ -140,6 +144,42 @@ struct JumpVec
 	); \
     }
 #define AROS_RELLIBFUNCSTUB(fname, libbasename, lvo) \
+    __AROS_RELLIBFUNCSTUB(fname, libbasename, lvo)
+
+/* Macro: AROS_LIBFUNCSTUBI(functionname, libbasename, lvo)
+   Same as AROS_LIBFUNCSTUB but libbase is not set
+*/
+#define __AROS_LIBFUNCSTUBI(fname, libbasename, lvo) \
+    void __ ## fname ## _ ## libbasename ## _wrapper(void) \
+    { \
+	asm volatile( \
+	    ".weak " #fname ";" \
+	    #fname " : " \
+	    "movl " #libbasename ",%%eax;" \
+	    "jmp *%c0(%%eax)" \
+	    : : "i" ((-lvo*LIB_VECTSIZE)) \
+	); \
+    }
+#define AROS_LIBFUNCSTUBI(fname, libbasename, lvo) \
+    __AROS_LIBFUNCSTUB(fname, libbasename, lvo)
+
+/* Macro: AROS_RELLIBFUNCSTUBI(functionname, libbasename, lvo)
+   Same as AROS_RELLIBFUNCSTUB but doesn't set new libbase
+*/
+#define __AROS_RELLIBFUNCSTUBI(fname, libbasename, lvo) \
+    void __ ## fname ## _ ## libbasename ## _relwrapper(void) \
+    { \
+	asm volatile( \
+            ".weak " #fname "\n" \
+            "\t" #fname " :\n" \
+            "\tmovl (%%ebx), %%eax\n" \
+            "\taddl " #libbasename "_offset, %%eax\n" \
+            "\tmovl (%%eax), %%eax\n" \
+            "\tjmp *%c0(%%eax)" \
+	    : : "i" ((-lvo*LIB_VECTSIZE)) \
+	); \
+    }
+#define AROS_RELLIBFUNCSTUBI(fname, libbasename, lvo) \
     __AROS_RELLIBFUNCSTUB(fname, libbasename, lvo)
 
 /* Macro: AROS_FUNCALIAS(functionname, alias)

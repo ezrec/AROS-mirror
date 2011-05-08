@@ -487,6 +487,14 @@ typedef unsigned int (*ULONG_FUNC)();
     x; \
     AROS_SET_LIBBASE(old); \
 })
+#define AROS_LC_CALLI(t,x,bn) \
+({ \
+    x; \
+})
+#define AROS_LC_CALLINR(x,bn) \
+({ \
+    x; \
+})
 
 #endif //AROS_LC_CALL
 
@@ -820,6 +828,311 @@ typedef unsigned int (*ULONG_FUNC)();
     __AROS_LCA(a15))),\
     bn)
 
+#define AROS_LC0I(t,n,bt,bn,o,s) \
+    AROS_LC_CALLI(t, \
+    (((__AROS_LC_PREFIX t(*)(void))__AROS_GETVECADDR(bn,o))()),\
+    bn)
+#define AROS_LC1I(t,n,a1,bt,bn,o,s) \
+    AROS_LC_CALLI(t, \
+    (((__AROS_LC_PREFIX t(*)(\
+    __AROS_LPA(a1)))__AROS_GETVECADDR(bn,o))(\
+    __AROS_LCA(a1))),\
+    bn)
+#define AROS_LC2I(t,n,a1,a2,bt,bn,o,s) \
+    AROS_LC_CALLI(t, \
+    (((__AROS_LC_PREFIX t(*)(\
+    __AROS_LPA(a1),\
+    __AROS_LPA(a2)))__AROS_GETVECADDR(bn,o))(\
+    __AROS_LCA(a1),\
+    __AROS_LCA(a2))),\
+    bn)
+#define AROS_LC3I(t,n,a1,a2,a3,bt,bn,o,s) \
+    AROS_LC_CALLI(t, \
+    (((__AROS_LC_PREFIX t(*)(\
+    __AROS_LPA(a1),\
+    __AROS_LPA(a2),\
+    __AROS_LPA(a3)))__AROS_GETVECADDR(bn,o))(\
+    __AROS_LCA(a1),\
+    __AROS_LCA(a2),\
+    __AROS_LCA(a3))),\
+    bn)
+#define AROS_LC4I(t,n,a1,a2,a3,a4,bt,bn,o,s) \
+    AROS_LC_CALLI(t, \
+    (((__AROS_LC_PREFIX t(*)(\
+    __AROS_LPA(a1),\
+    __AROS_LPA(a2),\
+    __AROS_LPA(a3),\
+    __AROS_LPA(a4)))__AROS_GETVECADDR(bn,o))(\
+    __AROS_LCA(a1),\
+    __AROS_LCA(a2),\
+    __AROS_LCA(a3),\
+    __AROS_LCA(a4))),\
+    bn)
+#define AROS_LC5I(t,n,a1,a2,a3,a4,a5,bt,bn,o,s) \
+    AROS_LC_CALLI(t, \
+    (((__AROS_LC_PREFIX t(*)(\
+    __AROS_LPA(a1),\
+    __AROS_LPA(a2),\
+    __AROS_LPA(a3),\
+    __AROS_LPA(a4),\
+    __AROS_LPA(a5)))__AROS_GETVECADDR(bn,o))(\
+    __AROS_LCA(a1),\
+    __AROS_LCA(a2),\
+    __AROS_LCA(a3),\
+    __AROS_LCA(a4),\
+    __AROS_LCA(a5))),\
+    bn)
+#define AROS_LC6I(t,n,a1,a2,a3,a4,a5,a6,bt,bn,o,s) \
+    AROS_LC_CALLI(t, \
+    (((__AROS_LC_PREFIX t(*)(\
+    __AROS_LPA(a1),\
+    __AROS_LPA(a2),\
+    __AROS_LPA(a3),\
+    __AROS_LPA(a4),\
+    __AROS_LPA(a5),\
+    __AROS_LPA(a6)))__AROS_GETVECADDR(bn,o))(\
+    __AROS_LCA(a1),\
+    __AROS_LCA(a2),\
+    __AROS_LCA(a3),\
+    __AROS_LCA(a4),\
+    __AROS_LCA(a5),\
+    __AROS_LCA(a6))),\
+    bn)
+#define AROS_LC7I(t,n,a1,a2,a3,a4,a5,a6,a7,bt,bn,o,s) \
+    AROS_LC_CALLI(t, \
+    (((__AROS_LC_PREFIX t(*)(\
+    __AROS_LPA(a1),\
+    __AROS_LPA(a2),\
+    __AROS_LPA(a3),\
+    __AROS_LPA(a4),\
+    __AROS_LPA(a5),\
+    __AROS_LPA(a6),\
+    __AROS_LPA(a7)))__AROS_GETVECADDR(bn,o))(\
+    __AROS_LCA(a1),\
+    __AROS_LCA(a2),\
+    __AROS_LCA(a3),\
+    __AROS_LCA(a4),\
+    __AROS_LCA(a5),\
+    __AROS_LCA(a6),\
+    __AROS_LCA(a7))),\
+    bn)
+#define AROS_LC8I(t,n,a1,a2,a3,a4,a5,a6,a7,a8,bt,bn,o,s) \
+    AROS_LC_CALLI(t, \
+    (((__AROS_LC_PREFIX t(*)(\
+    __AROS_LPA(a1),\
+    __AROS_LPA(a2),\
+    __AROS_LPA(a3),\
+    __AROS_LPA(a4),\
+    __AROS_LPA(a5),\
+    __AROS_LPA(a6),\
+    __AROS_LPA(a7),\
+    __AROS_LPA(a8)))__AROS_GETVECADDR(bn,o))(\
+    __AROS_LCA(a1),\
+    __AROS_LCA(a2),\
+    __AROS_LCA(a3),\
+    __AROS_LCA(a4),\
+    __AROS_LCA(a5),\
+    __AROS_LCA(a6),\
+    __AROS_LCA(a7),\
+    __AROS_LCA(a8))),\
+    bn)
+#define AROS_LC9I(t,n,a1,a2,a3,a4,a5,a6,a7,a8,a9,bt,bn,o,s) \
+    AROS_LC_CALLI(t, \
+    (((__AROS_LC_PREFIX t(*)(\
+    __AROS_LPA(a1),\
+    __AROS_LPA(a2),\
+    __AROS_LPA(a3),\
+    __AROS_LPA(a4),\
+    __AROS_LPA(a5),\
+    __AROS_LPA(a6),\
+    __AROS_LPA(a7),\
+    __AROS_LPA(a8),\
+    __AROS_LPA(a9)))__AROS_GETVECADDR(bn,o))(\
+    __AROS_LCA(a1),\
+    __AROS_LCA(a2),\
+    __AROS_LCA(a3),\
+    __AROS_LCA(a4),\
+    __AROS_LCA(a5),\
+    __AROS_LCA(a6),\
+    __AROS_LCA(a7),\
+    __AROS_LCA(a8),\
+    __AROS_LCA(a9))),\
+    bn)
+#define AROS_LC10I(t,n,a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,bt,bn,o,s) \
+    AROS_LC_CALLI(t, \
+    (((__AROS_LC_PREFIX t(*)(\
+    __AROS_LPA(a1),\
+    __AROS_LPA(a2),\
+    __AROS_LPA(a3),\
+    __AROS_LPA(a4),\
+    __AROS_LPA(a5),\
+    __AROS_LPA(a6),\
+    __AROS_LPA(a7),\
+    __AROS_LPA(a8),\
+    __AROS_LPA(a9),\
+    __AROS_LPA(a10)))__AROS_GETVECADDR(bn,o))(\
+    __AROS_LCA(a1),\
+    __AROS_LCA(a2),\
+    __AROS_LCA(a3),\
+    __AROS_LCA(a4),\
+    __AROS_LCA(a5),\
+    __AROS_LCA(a6),\
+    __AROS_LCA(a7),\
+    __AROS_LCA(a8),\
+    __AROS_LCA(a9),\
+    __AROS_LCA(a10))),\
+    bn)
+#define AROS_LC11I(t,n,a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,a11,bt,bn,o,s) \
+    AROS_LC_CALLI(t, \
+    (((__AROS_LC_PREFIX t(*)(\
+    __AROS_LPA(a1),\
+    __AROS_LPA(a2),\
+    __AROS_LPA(a3),\
+    __AROS_LPA(a4),\
+    __AROS_LPA(a5),\
+    __AROS_LPA(a6),\
+    __AROS_LPA(a7),\
+    __AROS_LPA(a8),\
+    __AROS_LPA(a9),\
+    __AROS_LPA(a10),\
+    __AROS_LPA(a11)))__AROS_GETVECADDR(bn,o))(\
+    __AROS_LCA(a1),\
+    __AROS_LCA(a2),\
+    __AROS_LCA(a3),\
+    __AROS_LCA(a4),\
+    __AROS_LCA(a5),\
+    __AROS_LCA(a6),\
+    __AROS_LCA(a7),\
+    __AROS_LCA(a8),\
+    __AROS_LCA(a9),\
+    __AROS_LCA(a10),\
+    __AROS_LCA(a11))),\
+    bn)
+#define AROS_LC12I(t,n,a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,a11,a12,bt,bn,o,s) \
+    AROS_LC_CALLI(t, \
+    (((__AROS_LC_PREFIX t(*)(\
+    __AROS_LPA(a1),\
+    __AROS_LPA(a2),\
+    __AROS_LPA(a3),\
+    __AROS_LPA(a4),\
+    __AROS_LPA(a5),\
+    __AROS_LPA(a6),\
+    __AROS_LPA(a7),\
+    __AROS_LPA(a8),\
+    __AROS_LPA(a9),\
+    __AROS_LPA(a10),\
+    __AROS_LPA(a11),\
+    __AROS_LPA(a12)))__AROS_GETVECADDR(bn,o))(\
+    __AROS_LCA(a1),\
+    __AROS_LCA(a2),\
+    __AROS_LCA(a3),\
+    __AROS_LCA(a4),\
+    __AROS_LCA(a5),\
+    __AROS_LCA(a6),\
+    __AROS_LCA(a7),\
+    __AROS_LCA(a8),\
+    __AROS_LCA(a9),\
+    __AROS_LCA(a10),\
+    __AROS_LCA(a11),\
+    __AROS_LCA(a12))),\
+    bn)
+#define AROS_LC13I(t,n,a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,a11,a12,a13,bt,bn,o,s) \
+    AROS_LC_CALLI(t, \
+    (((__AROS_LC_PREFIX t(*)(\
+    __AROS_LPA(a1),\
+    __AROS_LPA(a2),\
+    __AROS_LPA(a3),\
+    __AROS_LPA(a4),\
+    __AROS_LPA(a5),\
+    __AROS_LPA(a6),\
+    __AROS_LPA(a7),\
+    __AROS_LPA(a8),\
+    __AROS_LPA(a9),\
+    __AROS_LPA(a10),\
+    __AROS_LPA(a11),\
+    __AROS_LPA(a12),\
+    __AROS_LPA(a13)))__AROS_GETVECADDR(bn,o))(\
+    __AROS_LCA(a1),\
+    __AROS_LCA(a2),\
+    __AROS_LCA(a3),\
+    __AROS_LCA(a4),\
+    __AROS_LCA(a5),\
+    __AROS_LCA(a6),\
+    __AROS_LCA(a7),\
+    __AROS_LCA(a8),\
+    __AROS_LCA(a9),\
+    __AROS_LCA(a10),\
+    __AROS_LCA(a11),\
+    __AROS_LCA(a12),\
+    __AROS_LCA(a13))),\
+    bn)
+#define AROS_LC14I(t,n,a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,a11,a12,a13,a14,bt,bn,o,s) \
+    AROS_LC_CALLI(t, \
+    (((__AROS_LC_PREFIX t(*)(\
+    __AROS_LPA(a1),\
+    __AROS_LPA(a2),\
+    __AROS_LPA(a3),\
+    __AROS_LPA(a4),\
+    __AROS_LPA(a5),\
+    __AROS_LPA(a6),\
+    __AROS_LPA(a7),\
+    __AROS_LPA(a8),\
+    __AROS_LPA(a9),\
+    __AROS_LPA(a10),\
+    __AROS_LPA(a11),\
+    __AROS_LPA(a12),\
+    __AROS_LPA(a13),\
+    __AROS_LPA(a14)))__AROS_GETVECADDR(bn,o))(\
+    __AROS_LCA(a1),\
+    __AROS_LCA(a2),\
+    __AROS_LCA(a3),\
+    __AROS_LCA(a4),\
+    __AROS_LCA(a5),\
+    __AROS_LCA(a6),\
+    __AROS_LCA(a7),\
+    __AROS_LCA(a8),\
+    __AROS_LCA(a9),\
+    __AROS_LCA(a10),\
+    __AROS_LCA(a11),\
+    __AROS_LCA(a12),\
+    __AROS_LCA(a13),\
+    __AROS_LCA(a14))),\
+    bn)
+#define AROS_LC15I(t,n,a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,a11,a12,a13,a14,a15,bt,bn,o,s) \
+    AROS_LC_CALLI(t, \
+    (((__AROS_LC_PREFIX t(*)(\
+    __AROS_LPA(a1),\
+    __AROS_LPA(a2),\
+    __AROS_LPA(a3),\
+    __AROS_LPA(a4),\
+    __AROS_LPA(a5),\
+    __AROS_LPA(a6),\
+    __AROS_LPA(a7),\
+    __AROS_LPA(a8),\
+    __AROS_LPA(a9),\
+    __AROS_LPA(a10),\
+    __AROS_LPA(a11),\
+    __AROS_LPA(a12),\
+    __AROS_LPA(a13),\
+    __AROS_LPA(a14),\
+    __AROS_LPA(a15)))__AROS_GETVECADDR(bn,o))(\
+    __AROS_LCA(a1),\
+    __AROS_LCA(a2),\
+    __AROS_LCA(a3),\
+    __AROS_LCA(a4),\
+    __AROS_LCA(a5),\
+    __AROS_LCA(a6),\
+    __AROS_LCA(a7),\
+    __AROS_LCA(a8),\
+    __AROS_LCA(a9),\
+    __AROS_LCA(a10),\
+    __AROS_LCA(a11),\
+    __AROS_LCA(a12),\
+    __AROS_LCA(a13),\
+    __AROS_LCA(a14),\
+    __AROS_LCA(a15))),\
+    bn)
+
 #define AROS_LC0NR(t,n,bt,bn,o,s) \
     AROS_LC_CALLNR( \
     (((__AROS_LC_PREFIX t(*)(void))__AROS_GETVECADDR(bn,o))()),\
@@ -1092,6 +1405,311 @@ typedef unsigned int (*ULONG_FUNC)();
     bn)
 #define AROS_LC15NR(t,n,a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,a11,a12,a13,a14,a15,bt,bn,o,s) \
     AROS_LC_CALLNR( \
+    (((__AROS_LC_PREFIX t(*)(\
+    __AROS_LPA(a1),\
+    __AROS_LPA(a2),\
+    __AROS_LPA(a3),\
+    __AROS_LPA(a4),\
+    __AROS_LPA(a5),\
+    __AROS_LPA(a6),\
+    __AROS_LPA(a7),\
+    __AROS_LPA(a8),\
+    __AROS_LPA(a9),\
+    __AROS_LPA(a10),\
+    __AROS_LPA(a11),\
+    __AROS_LPA(a12),\
+    __AROS_LPA(a13),\
+    __AROS_LPA(a14),\
+    __AROS_LPA(a15)))__AROS_GETVECADDR(bn,o))(\
+    __AROS_LCA(a1),\
+    __AROS_LCA(a2),\
+    __AROS_LCA(a3),\
+    __AROS_LCA(a4),\
+    __AROS_LCA(a5),\
+    __AROS_LCA(a6),\
+    __AROS_LCA(a7),\
+    __AROS_LCA(a8),\
+    __AROS_LCA(a9),\
+    __AROS_LCA(a10),\
+    __AROS_LCA(a11),\
+    __AROS_LCA(a12),\
+    __AROS_LCA(a13),\
+    __AROS_LCA(a14),\
+    __AROS_LCA(a15))),\
+    bn)
+
+#define AROS_LC0INR(t,n,bt,bn,o,s) \
+    AROS_LC_CALLINR( \
+    (((__AROS_LC_PREFIX t(*)(void))__AROS_GETVECADDR(bn,o))()),\
+    bn)
+#define AROS_LC1INR(t,n,a1,bt,bn,o,s) \
+    AROS_LC_CALLINR( \
+    (((__AROS_LC_PREFIX t(*)(\
+    __AROS_LPA(a1)))__AROS_GETVECADDR(bn,o))(\
+    __AROS_LCA(a1))),\
+    bn)
+#define AROS_LC2INR(t,n,a1,a2,bt,bn,o,s) \
+    AROS_LC_CALLINR( \
+    (((__AROS_LC_PREFIX t(*)(\
+    __AROS_LPA(a1),\
+    __AROS_LPA(a2)))__AROS_GETVECADDR(bn,o))(\
+    __AROS_LCA(a1),\
+    __AROS_LCA(a2))),\
+    bn)
+#define AROS_LC3INR(t,n,a1,a2,a3,bt,bn,o,s) \
+    AROS_LC_CALLINR( \
+    (((__AROS_LC_PREFIX t(*)(\
+    __AROS_LPA(a1),\
+    __AROS_LPA(a2),\
+    __AROS_LPA(a3)))__AROS_GETVECADDR(bn,o))(\
+    __AROS_LCA(a1),\
+    __AROS_LCA(a2),\
+    __AROS_LCA(a3))),\
+    bn)
+#define AROS_LC4INR(t,n,a1,a2,a3,a4,bt,bn,o,s) \
+    AROS_LC_CALLINR( \
+    (((__AROS_LC_PREFIX t(*)(\
+    __AROS_LPA(a1),\
+    __AROS_LPA(a2),\
+    __AROS_LPA(a3),\
+    __AROS_LPA(a4)))__AROS_GETVECADDR(bn,o))(\
+    __AROS_LCA(a1),\
+    __AROS_LCA(a2),\
+    __AROS_LCA(a3),\
+    __AROS_LCA(a4))),\
+    bn)
+#define AROS_LC5INR(t,n,a1,a2,a3,a4,a5,bt,bn,o,s) \
+    AROS_LC_CALLINR( \
+    (((__AROS_LC_PREFIX t(*)(\
+    __AROS_LPA(a1),\
+    __AROS_LPA(a2),\
+    __AROS_LPA(a3),\
+    __AROS_LPA(a4),\
+    __AROS_LPA(a5)))__AROS_GETVECADDR(bn,o))(\
+    __AROS_LCA(a1),\
+    __AROS_LCA(a2),\
+    __AROS_LCA(a3),\
+    __AROS_LCA(a4),\
+    __AROS_LCA(a5))),\
+    bn)
+#define AROS_LC6INR(t,n,a1,a2,a3,a4,a5,a6,bt,bn,o,s) \
+    AROS_LC_CALLINR( \
+    (((__AROS_LC_PREFIX t(*)(\
+    __AROS_LPA(a1),\
+    __AROS_LPA(a2),\
+    __AROS_LPA(a3),\
+    __AROS_LPA(a4),\
+    __AROS_LPA(a5),\
+    __AROS_LPA(a6)))__AROS_GETVECADDR(bn,o))(\
+    __AROS_LCA(a1),\
+    __AROS_LCA(a2),\
+    __AROS_LCA(a3),\
+    __AROS_LCA(a4),\
+    __AROS_LCA(a5),\
+    __AROS_LCA(a6))),\
+    bn)
+#define AROS_LC7INR(t,n,a1,a2,a3,a4,a5,a6,a7,bt,bn,o,s) \
+    AROS_LC_CALLINR( \
+    (((__AROS_LC_PREFIX t(*)(\
+    __AROS_LPA(a1),\
+    __AROS_LPA(a2),\
+    __AROS_LPA(a3),\
+    __AROS_LPA(a4),\
+    __AROS_LPA(a5),\
+    __AROS_LPA(a6),\
+    __AROS_LPA(a7)))__AROS_GETVECADDR(bn,o))(\
+    __AROS_LCA(a1),\
+    __AROS_LCA(a2),\
+    __AROS_LCA(a3),\
+    __AROS_LCA(a4),\
+    __AROS_LCA(a5),\
+    __AROS_LCA(a6),\
+    __AROS_LCA(a7))),\
+    bn)
+#define AROS_LC8INR(t,n,a1,a2,a3,a4,a5,a6,a7,a8,bt,bn,o,s) \
+    AROS_LC_CALLINR( \
+    (((__AROS_LC_PREFIX t(*)(\
+    __AROS_LPA(a1),\
+    __AROS_LPA(a2),\
+    __AROS_LPA(a3),\
+    __AROS_LPA(a4),\
+    __AROS_LPA(a5),\
+    __AROS_LPA(a6),\
+    __AROS_LPA(a7),\
+    __AROS_LPA(a8)))__AROS_GETVECADDR(bn,o))(\
+    __AROS_LCA(a1),\
+    __AROS_LCA(a2),\
+    __AROS_LCA(a3),\
+    __AROS_LCA(a4),\
+    __AROS_LCA(a5),\
+    __AROS_LCA(a6),\
+    __AROS_LCA(a7),\
+    __AROS_LCA(a8))),\
+    bn)
+#define AROS_LC9INR(t,n,a1,a2,a3,a4,a5,a6,a7,a8,a9,bt,bn,o,s) \
+    AROS_LC_CALLINR( \
+    (((__AROS_LC_PREFIX t(*)(\
+    __AROS_LPA(a1),\
+    __AROS_LPA(a2),\
+    __AROS_LPA(a3),\
+    __AROS_LPA(a4),\
+    __AROS_LPA(a5),\
+    __AROS_LPA(a6),\
+    __AROS_LPA(a7),\
+    __AROS_LPA(a8),\
+    __AROS_LPA(a9)))__AROS_GETVECADDR(bn,o))(\
+    __AROS_LCA(a1),\
+    __AROS_LCA(a2),\
+    __AROS_LCA(a3),\
+    __AROS_LCA(a4),\
+    __AROS_LCA(a5),\
+    __AROS_LCA(a6),\
+    __AROS_LCA(a7),\
+    __AROS_LCA(a8),\
+    __AROS_LCA(a9))),\
+    bn)
+#define AROS_LC10INR(t,n,a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,bt,bn,o,s) \
+    AROS_LC_CALLINR( \
+    (((__AROS_LC_PREFIX t(*)(\
+    __AROS_LPA(a1),\
+    __AROS_LPA(a2),\
+    __AROS_LPA(a3),\
+    __AROS_LPA(a4),\
+    __AROS_LPA(a5),\
+    __AROS_LPA(a6),\
+    __AROS_LPA(a7),\
+    __AROS_LPA(a8),\
+    __AROS_LPA(a9),\
+    __AROS_LPA(a10)))__AROS_GETVECADDR(bn,o))(\
+    __AROS_LCA(a1),\
+    __AROS_LCA(a2),\
+    __AROS_LCA(a3),\
+    __AROS_LCA(a4),\
+    __AROS_LCA(a5),\
+    __AROS_LCA(a6),\
+    __AROS_LCA(a7),\
+    __AROS_LCA(a8),\
+    __AROS_LCA(a9),\
+    __AROS_LCA(a10))),\
+    bn)
+#define AROS_LC11INR(t,n,a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,a11,bt,bn,o,s) \
+    AROS_LC_CALLINR( \
+    (((__AROS_LC_PREFIX t(*)(\
+    __AROS_LPA(a1),\
+    __AROS_LPA(a2),\
+    __AROS_LPA(a3),\
+    __AROS_LPA(a4),\
+    __AROS_LPA(a5),\
+    __AROS_LPA(a6),\
+    __AROS_LPA(a7),\
+    __AROS_LPA(a8),\
+    __AROS_LPA(a9),\
+    __AROS_LPA(a10),\
+    __AROS_LPA(a11)))__AROS_GETVECADDR(bn,o))(\
+    __AROS_LCA(a1),\
+    __AROS_LCA(a2),\
+    __AROS_LCA(a3),\
+    __AROS_LCA(a4),\
+    __AROS_LCA(a5),\
+    __AROS_LCA(a6),\
+    __AROS_LCA(a7),\
+    __AROS_LCA(a8),\
+    __AROS_LCA(a9),\
+    __AROS_LCA(a10),\
+    __AROS_LCA(a11))),\
+    bn)
+#define AROS_LC12INR(t,n,a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,a11,a12,bt,bn,o,s) \
+    AROS_LC_CALLINR( \
+    (((__AROS_LC_PREFIX t(*)(\
+    __AROS_LPA(a1),\
+    __AROS_LPA(a2),\
+    __AROS_LPA(a3),\
+    __AROS_LPA(a4),\
+    __AROS_LPA(a5),\
+    __AROS_LPA(a6),\
+    __AROS_LPA(a7),\
+    __AROS_LPA(a8),\
+    __AROS_LPA(a9),\
+    __AROS_LPA(a10),\
+    __AROS_LPA(a11),\
+    __AROS_LPA(a12)))__AROS_GETVECADDR(bn,o))(\
+    __AROS_LCA(a1),\
+    __AROS_LCA(a2),\
+    __AROS_LCA(a3),\
+    __AROS_LCA(a4),\
+    __AROS_LCA(a5),\
+    __AROS_LCA(a6),\
+    __AROS_LCA(a7),\
+    __AROS_LCA(a8),\
+    __AROS_LCA(a9),\
+    __AROS_LCA(a10),\
+    __AROS_LCA(a11),\
+    __AROS_LCA(a12))),\
+    bn)
+#define AROS_LC13INR(t,n,a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,a11,a12,a13,bt,bn,o,s) \
+    AROS_LC_CALLINR( \
+    (((__AROS_LC_PREFIX t(*)(\
+    __AROS_LPA(a1),\
+    __AROS_LPA(a2),\
+    __AROS_LPA(a3),\
+    __AROS_LPA(a4),\
+    __AROS_LPA(a5),\
+    __AROS_LPA(a6),\
+    __AROS_LPA(a7),\
+    __AROS_LPA(a8),\
+    __AROS_LPA(a9),\
+    __AROS_LPA(a10),\
+    __AROS_LPA(a11),\
+    __AROS_LPA(a12),\
+    __AROS_LPA(a13)))__AROS_GETVECADDR(bn,o))(\
+    __AROS_LCA(a1),\
+    __AROS_LCA(a2),\
+    __AROS_LCA(a3),\
+    __AROS_LCA(a4),\
+    __AROS_LCA(a5),\
+    __AROS_LCA(a6),\
+    __AROS_LCA(a7),\
+    __AROS_LCA(a8),\
+    __AROS_LCA(a9),\
+    __AROS_LCA(a10),\
+    __AROS_LCA(a11),\
+    __AROS_LCA(a12),\
+    __AROS_LCA(a13))),\
+    bn)
+#define AROS_LC14INR(t,n,a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,a11,a12,a13,a14,bt,bn,o,s) \
+    AROS_LC_CALLINR( \
+    (((__AROS_LC_PREFIX t(*)(\
+    __AROS_LPA(a1),\
+    __AROS_LPA(a2),\
+    __AROS_LPA(a3),\
+    __AROS_LPA(a4),\
+    __AROS_LPA(a5),\
+    __AROS_LPA(a6),\
+    __AROS_LPA(a7),\
+    __AROS_LPA(a8),\
+    __AROS_LPA(a9),\
+    __AROS_LPA(a10),\
+    __AROS_LPA(a11),\
+    __AROS_LPA(a12),\
+    __AROS_LPA(a13),\
+    __AROS_LPA(a14)))__AROS_GETVECADDR(bn,o))(\
+    __AROS_LCA(a1),\
+    __AROS_LCA(a2),\
+    __AROS_LCA(a3),\
+    __AROS_LCA(a4),\
+    __AROS_LCA(a5),\
+    __AROS_LCA(a6),\
+    __AROS_LCA(a7),\
+    __AROS_LCA(a8),\
+    __AROS_LCA(a9),\
+    __AROS_LCA(a10),\
+    __AROS_LCA(a11),\
+    __AROS_LCA(a12),\
+    __AROS_LCA(a13),\
+    __AROS_LCA(a14))),\
+    bn)
+#define AROS_LC15INR(t,n,a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,a11,a12,a13,a14,a15,bt,bn,o,s) \
+    AROS_LC_CALLINR( \
     (((__AROS_LC_PREFIX t(*)(\
     __AROS_LPA(a1),\
     __AROS_LPA(a2),\

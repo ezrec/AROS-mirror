@@ -89,9 +89,11 @@ void writestubs(struct config *cfg)
                     fprintf(out,
                             ")\n"
                             "{\n"
-                            "    %sAROS_LC%d%s(%s, %s,\n",
+                            "    %sAROS_LC%d%s%s(%s, %s,\n",
                             (isvoid) ? "" : "return ",
-                            funclistit->argcount, (isvoid) ? "NR" : "",
+                            funclistit->argcount,
+                            funclistit->nolibbase ? "I" : "",
+                            (isvoid) ? "NR" : "",
                             funclistit->type, funclistit->name
                     );
 
@@ -173,7 +175,8 @@ void writestubs(struct config *cfg)
 	    }
 	    else /* libcall==STACK */
 	    {
-		fprintf(out, "AROS_LIBFUNCSTUB(%s, %s, %d)\n",
+		fprintf(out, "AROS_LIBFUNCSTUB%s(%s, %s, %d)\n",
+			funclistit->nolibbase ? "I" : "",
 			funclistit->name, cfg->libbase,	funclistit->lvo
 		);
 	    }

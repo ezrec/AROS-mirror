@@ -132,12 +132,19 @@ struct JumpVec
 		"#define EMITSTUB(fname, bname, vec) " \
 		".weak fname ; "                       \
 		"fname : "                             \
-		"movq bname , %%r11; "                  \
+		"movq bname , %%r11; "                 \
+		"jmp *vec(%%r11);\n"                   \
+		"#define EMITSTUBI(fname, bname, vec) "\
+		".weak fname ; "                       \
+		"fname : "                             \
+		"movq bname , %%r11; "                 \
 		"jmp *vec(%%r11);\n"                   \
 	        "#define EMITALIAS(fname, alias) "     \
 	        ".weak alias; .set alias, fname\n"
 #define STUBCODE                                       \
 		"EMITSTUB(%s, %s, %d)\n"
+#define STUBCODEI                                      \
+		"EMITSTUBI(%s, %s, %d)\n"
 #define ALIASCODE                                      \
                 "EMITALIAS(%s, %s)\n"
 
