@@ -61,8 +61,8 @@ struct HIDDNouveauBitMapData
     ULONG   height;         /* Height of bitmap in pixels */
     ULONG   width;          /* Width of bitmap in pixels */
     ULONG   pitch;          /* Width of single data row in bytes */
-    UBYTE   bytesperpixel;  /* In bytes */
-    UBYTE   depth;          /* In bits */
+    UBYTE   bytesperpixel;  /* In bytes, how many bytes to store a pixel */
+    UBYTE   depth;          /* In bits, how many bits used to represt the color */
     BOOL    displayable;    /* Can bitmap be displayed on screen */
     
     /* Information connected with display */
@@ -241,8 +241,10 @@ enum DMAObjects
 #define NV_ARCH_50  0x50
 #define NV_ARCH_C0  0xC0
 
-BOOL NVAccelCommonInit(struct CardData * carddata);
-VOID NVAccelFree(struct CardData * carddata);
+/* nv_accel_common.c */
+BOOL HIDDNouveauAccelCommonInit(struct CardData * carddata);
+VOID HIDDNouveauAccelFree(struct CardData * carddata);
+
 BOOL NVAccelGetCtxSurf2DFormatFromPixmap(struct HIDDNouveauBitMapData * bmdata, LONG *fmt_ret);
 
 VOID HIDDNouveauNV04SetPattern(struct CardData * carddata, ULONG clr0, ULONG clr1,
