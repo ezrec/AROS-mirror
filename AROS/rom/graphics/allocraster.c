@@ -1,5 +1,5 @@
 /*
-    Copyright © 1995-2007, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc:
@@ -47,12 +47,11 @@
 
     INTERNALS
 
-    HISTORY
-
 *****************************************************************************/
 {
     AROS_LIBFUNC_INIT
 
-    return AllocMem (RASSIZE(width,height),MEMF_CHIP);
+    return AllocMem(RASSIZE(width, height), MEMF_ANY);
+
     AROS_LIBFUNC_EXIT
 } /* AllocRaster */
