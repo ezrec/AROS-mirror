@@ -18,6 +18,9 @@ GENMODULE_SRCS := \
     writeend.c \
     writeautoinit.c \
     writestubs.c \
+    writeincrelproto.c \
+    writerelautoinit.c \
+    writerelstubs.c \
     writefunclist.c \
     writefd.c
 

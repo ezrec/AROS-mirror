@@ -2,7 +2,7 @@
 #define _AROS_SYMBOLSETS_H
 
 /*
-    Copyright © 1995-2005, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: Symbol sets support
@@ -14,11 +14,20 @@
 #include <exec/execbase.h>
 #include <aros/asmcall.h>
 
+#include <stddef.h>
+
 struct libraryset
 {
     CONST_STRPTR name;
     const LONG * const versionptr;
     void  **baseptr;
+};
+
+struct rellibraryset
+{
+    CONST_STRPTR name;
+    const LONG * const versionptr;
+    const IPTR * const baseoffsetptr;
 };
 
 #define SETNAME(set) __##set##_LIST__
@@ -103,6 +112,27 @@ const struct libraryset libraryset_##bname =                 \
 };                                                           \
 ADD2SET(libraryset_##bname, libs, 0) 
 
+#define ADD2RELLIBS(name, ver, btype, bname)                 \
+IPTR bname##_offset;                                         \
+AROS_IMPORT_ASM_SYM(int, dummy, __includelibrarieshandling); \
+                                                             \
+const LONG bname##_version __attribute__((weak)) = ver;      \
+                                                             \
+const struct rellibraryset rellibraryset_##bname =           \
+{                                                            \
+     name, &bname##_version, &bname##_offset,                \
+};                                                           \
+ADD2SET(rellibraryset_##bname, rellibs, 0) 
+
+#define SETRELLIBOFFSET(bname, libbasetype, fname) \
+extern IPTR bname##_offset;                        \
+static int __ ## bname ## _setoffset(void)         \
+{                                                  \
+    bname##_offset = offsetof(libbasetype, fname); \
+    return 1;                                      \
+}                                                  \
+ADD2INIT(__ ## bname ## _setoffset, 0)
+
 #define ASKFORLIBVERSION(bname, ver) \
 const LONG bname##_version = ver
 
@@ -148,8 +178,13 @@ extern int set_call_devfuncs
 );
 
 DECLARESET(LIBS)
+DECLARESET(RELLIBS)
 
 #define set_open_libraries() set_open_libraries_list(SETNAME(LIBS))
+#define set_open_rellibraries(base) set_open_rellibraries_list(base,SETNAME(RELLIBS))
 #define set_close_libraries() set_close_libraries_list(SETNAME(LIBS))
+#define set_close_rellibraries(base) set_close_rellibraries_list(base,SETNAME(RELLIBS))
 extern int set_open_libraries_list(const void * const list[]);
+extern int set_open_rellibraries_list(APTR base, const void * const list[]);
 extern void set_close_libraries_list(const void * const list[]);
+extern void set_close_rellibraries_list(APTR base, const void * const list[]);

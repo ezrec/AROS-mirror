@@ -26,6 +26,9 @@ void writeend(struct config *);
 void writeautoinit(struct config *);
 void writestubs(struct config *);
 void writefunclist(struct config *);
+void writeincrelproto(struct config *);
+void writerelautoinit(struct config *);
+void writerelstubs(struct config *);
 void writefd(struct config *);
 
 #endif

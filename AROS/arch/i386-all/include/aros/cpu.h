@@ -118,6 +118,30 @@ struct JumpVec
 #define AROS_LIBFUNCSTUB(fname, libbasename, lvo) \
     __AROS_LIBFUNCSTUB(fname, libbasename, lvo)
 
+#define __AROS_RELLIBFUNCSTUB(fname, libbasename, lvo) \
+    void __ ## fname ## _ ## libbasename ## _relwrapper(void) \
+    { \
+	asm volatile( \
+            ".weak " #fname "\n" \
+            "\t" #fname " :\n" \
+            "\tmovl (%%ebx), %%eax\n" \
+            "\tmovl (%%esp), %%ecx\n" \
+            "\taddl $8, %%ebx\n"  \
+            "\taddl " #libbasename "_offset, %%eax\n" \
+            "\tmovl (%%eax), %%eax\n" \
+            "\tmovl %%ecx, -4(%%ebx)\n" \
+            "\tmovl %%eax, (%%ebx)\n" \
+            "\tmovl $" #fname "_ret, (%%esp)\n" \
+            "\tjmp *%c0(%%eax)\n" \
+            #fname "_ret :\n" \
+            "\tsubl $8, %%ebx\n" \
+            "\tjmp *4(%%ebx)" \
+	    : : "i" ((-lvo*LIB_VECTSIZE)) \
+	); \
+    }
+#define AROS_RELLIBFUNCSTUB(fname, libbasename, lvo) \
+    __AROS_RELLIBFUNCSTUB(fname, libbasename, lvo)
+
 /* Macro: AROS_FUNCALIAS(functionname, alias)
    This macro will generate an alias 'alias' for function
    'functionname'

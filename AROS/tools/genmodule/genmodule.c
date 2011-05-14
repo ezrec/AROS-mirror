@@ -17,9 +17,15 @@ int main(int argc, char **argv)
 	writestart(cfg);
 	writeend(cfg);
 	if (cfg->options & OPTION_AUTOINIT)
+        {
 	    writeautoinit(cfg);
+	    writerelautoinit(cfg);
+        }
         if (cfg->options & OPTION_STUBS)
+        {
             writestubs(cfg);
+            writerelstubs(cfg);
+        }
 	break;
 	
     case INCLUDES:
@@ -29,6 +35,7 @@ int main(int argc, char **argv)
             exit(20);
         }
         writeincproto(cfg);
+        writeincrelproto(cfg);
         writeincclib(cfg);
         writeincdefines(cfg);
         writeincinline(cfg);
