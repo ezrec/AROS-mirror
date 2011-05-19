@@ -5,7 +5,9 @@ include $(TOP)/config/make.cfg
 
 #MM bootdisk-pc-i386 : AROS		\
 #MM			bootdisk-setup-pc-i386 \
+#MM			kernel-pc-i386 \
 #MM			kernel-package-pc-i386		\
+#MM			kernel-bootstrap-i386 \
 #MM			bootloader-$(AROS_TARGET_BOOTLOADER)-$(AROS_TARGET_ARCH)-$(AROS_TARGET_CPU)
 
 #MM systemdisk-pc-i386 : AROS		\
