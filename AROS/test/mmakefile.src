@@ -87,7 +87,6 @@ COMMONTESTFILES := \
     callhooktest \
     scanvarstest \
     runcommand \
-    aroscprivdata \
     convertpixels \
     patchrgbconv \
     joystick \

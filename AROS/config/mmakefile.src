@@ -27,7 +27,9 @@ machine :
 #MM      kernel-layers-linklib \
 #MM      kernel-intuition-linklib \
 #MM      kernel-dos-linklib \
-#MM      kernel-keymap-linklib
+#MM      kernel-workbench-linklib \
+#MM      kernel-keymap-linklib \
+#MM      linklibs-core
 
 #MM- core-includes: \
 #MM      kernel-expansion-includes \
