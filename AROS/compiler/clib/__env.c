@@ -1,5 +1,5 @@
 /*
-    Copyright © 1995-2003, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
     $Id$
 
     Internal functions for environment variables handling.
@@ -43,11 +43,11 @@ err1:
 
 static __env_item **internal_findvar(register const char *name)
 {
-
+    struct aroscbase *aroscbase = __get_aroscbase();
    __env_item **curr;
 
    for (
-       curr = &__env_list;
+       curr = &aroscbase->acb_env_list;
        *curr && strcmp((*curr)->name, name);
        curr = &((*curr)->next)
    );

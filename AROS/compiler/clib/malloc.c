@@ -54,10 +54,12 @@
 
 ******************************************************************************/
 {
+    struct aroscbase *aroscbase = __get_aroscbase();
+    
     UBYTE *mem = NULL;
 
     /* Allocate the memory */
-    mem = AllocPooled (__mempool, size + AROS_ALIGN(sizeof(size_t)));
+    mem = AllocPooled (aroscbase->acb_mempool, size + AROS_ALIGN(sizeof(size_t)));
     if (mem)
     {
 	*((size_t *)mem) = size;
@@ -77,11 +79,11 @@ int __init_memstuff(struct aroscbase *aroscbase)
           FindTask(NULL), aroscbase
     ));
 
-    __mempool = CreatePool(MEMF_ANY | MEMF_SEM_PROTECTED, 65536L, 4096L);
+    aroscbase->acb_mempool = CreatePool(MEMF_ANY | MEMF_SEM_PROTECTED, 65536L, 4096L);
 
-    D(bug("__init_memstuff: __mempool(%x)\n", __mempool));
+    D(bug("__init_memstuff: acb_mempool(%x)\n", aroscbase->acb_mempool));
 
-    if (!__mempool)
+    if (!aroscbase->acb_mempool)
     {
 	return 0;
     }
@@ -90,15 +92,15 @@ int __init_memstuff(struct aroscbase *aroscbase)
 }
 
 
-void __exit_memstuff(void)
+void __exit_memstuff(struct aroscbase *aroscbase)
 {
     D(bug("__exit_memstuff: task(%x), aroscbase(%x), acb_mempool(%x)\n",
-          FindTask(NULL), aroscbase, __mempool
+          FindTask(NULL), aroscbase, aroscbase->acb_mempool
     ));
 
-    if (__mempool)
+    if (aroscbase->acb_mempool)
     {
-	DeletePool(__mempool);
+	DeletePool(aroscbase->acb_mempool);
     }
 }
 

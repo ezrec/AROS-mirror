@@ -47,7 +47,4 @@ void __arosc_program_end(void);
 
 __END_DECLS
 
-#define __arosc_startup_jmp_buf  (__get_arosc_userdata()->acud_startup_jmp_buf)
-#define __arosc_startup_error    (__get_arosc_userdata()->acud_startup_error)
-
 #endif /* !_SYS_AROSC_H */

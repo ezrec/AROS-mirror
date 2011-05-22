@@ -1,5 +1,5 @@
 /*
-    Copyright © 1995-2009, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -61,11 +61,12 @@ static BPTR __lock(
 
 ******************************************************************************/
 {
+    struct aroscbase *aroscbase = __get_aroscbase();
     int res = 0;
     BPTR lock;
 
     /* check for empty path before potential conversion from "." to "" */
-    if (__doupath && path && *path == '\0')
+    if (aroscbase->acb_doupath && path && *path == '\0')
     {
         errno = ENOENT;
         return -1;

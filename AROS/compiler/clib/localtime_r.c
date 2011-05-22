@@ -1,5 +1,5 @@
 /*
-    Copyright © 1995-2007, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
     $Id$
 
     Convert a time into a string, reentrant.
@@ -73,9 +73,10 @@
 
 ******************************************************************************/
 {
+    struct aroscbase *aroscbase = __get_aroscbase();
     time_t ti = *tt;
 
-    ti -= __gmtoffset * 60;
+    ti -= aroscbase->acb_gmtoffset * 60;
 
     return gmtime_r (&ti, tm);
 } /* localtime_r */

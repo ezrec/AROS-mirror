@@ -1,5 +1,5 @@
 /*
-    Copyright © 1995-2009, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: Common startup code
@@ -73,7 +73,7 @@ static void __startup_detach(void)
         mysegment = cli->cli_Module;
         cli->cli_Module = BNULL;
 
-        detached_name = __detached_name ? __detached_name : (STRPTR) FindTask(NULL)->tc_Node.ln_Name;
+        detached_name = __detached_name ? __detached_name : (STRPTR)FindTask(NULL)->tc_Node.ln_Name;
     
         {
             struct TagItem tags[] =

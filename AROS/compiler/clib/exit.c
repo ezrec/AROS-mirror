@@ -58,9 +58,11 @@
 
 ******************************************************************************/
 {
-    __arosc_startup_error = code;
+    struct arosc_userdata *udata = __get_arosc_userdata();
 
-    longjmp (__arosc_startup_jmp_buf, 1);
+    udata->acud_startup_error = code;
+
+    longjmp (udata->acud_startup_jmp_buf, 1);
 
     /* never reached */
 } /* exit */

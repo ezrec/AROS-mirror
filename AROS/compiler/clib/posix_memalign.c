@@ -65,6 +65,7 @@
 
 ******************************************************************************/
 {
+    struct aroscbase *aroscbase = __get_aroscbase();
     UBYTE *mem = NULL, *orig;
 
     /* check the alignment is valid */
@@ -72,7 +73,7 @@
         return EINVAL;
 
     /* allocate enough space to satisfy the alignment and save some info */
-    mem = AllocPooled(__mempool, AROS_ALIGN(sizeof(size_t)) + sizeof(void *)
+    mem = AllocPooled(aroscbase->acb_mempool, AROS_ALIGN(sizeof(size_t)) + sizeof(void *)
         + AROS_ALIGN(sizeof(size_t)) + alignment + size);
     if (mem == NULL)
         return ENOMEM;

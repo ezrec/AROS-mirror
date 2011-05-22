@@ -32,26 +32,30 @@ static struct MinList __fdreglist;
 
 int __getfdslots(void)
 {
-    return __numslots;
+    struct aroscbase *aroscbase = __get_aroscbase();
+    return aroscbase->acb_numslots;
 }
 
 fdesc *__getfdesc(register int fd)
 {
-    return ((__numslots>fd) && (fd>=0))?__fd_array[fd]:NULL;
+    struct aroscbase *aroscbase = __get_aroscbase();
+    return ((aroscbase->acb_numslots>fd) && (fd>=0))?aroscbase->acb_fd_array[fd]:NULL;
 }
 
 void __setfdesc(register int fd, fdesc *desc)
 {
+    struct aroscbase *aroscbase = __get_aroscbase();
     /* FIXME: Check if fd is in valid range... */
-    __fd_array[fd] = desc;
+    aroscbase->acb_fd_array[fd] = desc;
 }
 
 int __getfirstfd(register int startfd)
 {
+    struct aroscbase *aroscbase = __get_aroscbase();
     /* FIXME: Check if fd is in valid range... */
     for (
 	;
-	startfd < __numslots && __fd_array[startfd];
+	startfd < aroscbase->acb_numslots && aroscbase->acb_fd_array[startfd];
 	startfd++
     );
 
@@ -60,32 +64,33 @@ int __getfirstfd(register int startfd)
 
 int __getfdslot(int wanted_fd)
 {
-    if (wanted_fd>=__numslots)
+    struct aroscbase *aroscbase = __get_aroscbase();
+    if (wanted_fd>=aroscbase->acb_numslots)
     {
         void *tmp;
         
-        tmp = AllocPooled(__fd_mempool, (wanted_fd+1)*sizeof(fdesc *));
+        tmp = AllocPooled(aroscbase->acb_fd_mempool, (wanted_fd+1)*sizeof(fdesc *));
         
         if (!tmp) return -1;
 
-        if (__fd_array)
+        if (aroscbase->acb_fd_array)
         {
-            size_t size = __numslots*sizeof(fdesc *);
-            CopyMem(__fd_array, tmp, size);
-            FreePooled(__fd_mempool, __fd_array, size);
+            size_t size = aroscbase->acb_numslots*sizeof(fdesc *);
+            CopyMem(aroscbase->acb_fd_array, tmp, size);
+            FreePooled(aroscbase->acb_fd_mempool, aroscbase->acb_fd_array, size);
         }
 
-        __fd_array = tmp;
+        aroscbase->acb_fd_array = tmp;
 
-        bzero(__fd_array + __numslots, (wanted_fd - __numslots + 1) * sizeof(fdesc *));
-        __numslots = wanted_fd+1;
+        bzero(aroscbase->acb_fd_array + aroscbase->acb_numslots, (wanted_fd - aroscbase->acb_numslots + 1) * sizeof(fdesc *));
+        aroscbase->acb_numslots = wanted_fd+1;
     }
     else if (wanted_fd < 0)
     {
         errno = EINVAL;
         return -1;
     }
-    else if (__fd_array[wanted_fd])
+    else if (aroscbase->acb_fd_array[wanted_fd])
     {
         close(wanted_fd);
     }
@@ -117,13 +122,14 @@ LONG __oflags2amode(int flags)
 
 int __open(int wanted_fd, const char *pathname, int flags, int mode)
 {
+    struct aroscbase *aroscbase = __get_aroscbase();
     BPTR fh = BNULL, lock = BNULL;
     fdesc *currdesc = NULL;
     fcb *cblock = NULL;
     struct FileInfoBlock *fib = NULL;
     LONG  openmode = __oflags2amode(flags);
 
-    if (__doupath && pathname[0] == '\0')
+    if (aroscbase->acb_doupath && pathname[0] == '\0')
     {
         /* On *nix "" is not really a valid file name.  */
         errno = ENOENT;
@@ -283,19 +289,21 @@ err:
 
 fdesc *__alloc_fdesc(void)
 {
+    struct aroscbase *aroscbase = __get_aroscbase();
     fdesc * desc;
     
-    desc = AllocPooled(__fd_mempool, sizeof(fdesc));
+    desc = AllocPooled(aroscbase->acb_fd_mempool, sizeof(fdesc));
     
-    D(bug("Allocated fdesc %x from %x pool\n", desc, __fd_mempool));
+    D(bug("Allocated fdesc %x from %x pool\n", desc, aroscbase->acb_fd_mempool));
     
     return desc;
 }
 
 void __free_fdesc(fdesc *desc)
 {
-    D(bug("Freeing fdesc %x from %x pool\n", desc, __fd_mempool));
-    FreePooled(__fd_mempool, desc, sizeof(fdesc));
+    struct aroscbase *aroscbase = __get_aroscbase();
+    D(bug("Freeing fdesc %x from %x pool\n", desc, aroscbase->acb_fd_mempool));
+    FreePooled(aroscbase->acb_fd_mempool, desc, sizeof(fdesc));
 }
 
 
@@ -398,15 +406,16 @@ int __init_stdfiles(struct aroscbase *aroscbase)
     indesc->fcb->opencount = outdesc->fcb->opencount = errdesc->fcb->opencount = 1;
     indesc->fcb->privflags = outdesc->fcb->privflags = errdesc->fcb->privflags = _FCB_DONTCLOSE_FH;
 
-    __fd_array[STDIN_FILENO]  = indesc;
-    __fd_array[STDOUT_FILENO] = outdesc;
-    __fd_array[STDERR_FILENO] = errdesc;
+    aroscbase->acb_fd_array[STDIN_FILENO]  = indesc;
+    aroscbase->acb_fd_array[STDOUT_FILENO] = outdesc;
+    aroscbase->acb_fd_array[STDERR_FILENO] = errdesc;
 
     return 1;
 }
 
 static int __copy_fdarray(fdesc **__src_fd_array, int numslots)
 {
+    struct aroscbase *aroscbase = __get_aroscbase();
     int i;
     
     for(i = numslots - 1; i >= 0; i--)
@@ -416,12 +425,12 @@ static int __copy_fdarray(fdesc **__src_fd_array, int numslots)
             if(__getfdslot(i) != i)
                 return 0;
             
-            if((__fd_array[i] = __alloc_fdesc()) == NULL)
+            if((aroscbase->acb_fd_array[i] = __alloc_fdesc()) == NULL)
                 return 0;
-
-            __fd_array[i]->fdflags = __src_fd_array[i]->fdflags;
-            __fd_array[i]->fcb = __src_fd_array[i]->fcb;
-            __fd_array[i]->fcb->opencount++;
+            
+            aroscbase->acb_fd_array[i]->fdflags = __src_fd_array[i]->fdflags;
+            aroscbase->acb_fd_array[i]->fcb = __src_fd_array[i]->fcb;
+            aroscbase->acb_fd_array[i]->fcb->opencount++;
         }
     }
     
@@ -433,7 +442,7 @@ int __init_fd(struct aroscbase *aroscbase)
     struct __reg_fdarray *regnodeit, *regnode = NULL;
     struct Task *self = FindTask(NULL);
 
-    __fd_mempool = CreatePool(MEMF_PUBLIC, 16*sizeof(fdesc), 16*sizeof(fdesc));
+    aroscbase->acb_fd_mempool = CreatePool(MEMF_PUBLIC, 16*sizeof(fdesc), 16*sizeof(fdesc));
     
     ObtainSemaphore(&__fdsem);
     ForeachNode(&__fdreglist, regnodeit)
@@ -478,6 +487,7 @@ void __exit_fd(struct aroscbase *aroscbase)
 
 void __updatestdio(void)
 {
+    struct aroscbase *aroscbase = __get_aroscbase();
     struct Process *me;
 
     me = (struct Process *)FindTask(NULL);
@@ -486,13 +496,13 @@ void __updatestdio(void)
     fflush(stdout);
     fflush(stderr);
 
-    __fd_array[STDIN_FILENO]->fcb->fh  = Input();
-    __fd_array[STDOUT_FILENO]->fcb->fh = Output();
-    __fd_array[STDERR_FILENO]->fcb->fh = me->pr_CES ? me->pr_CES : me->pr_COS;
+    aroscbase->acb_fd_array[STDIN_FILENO]->fcb->fh  = Input();
+    aroscbase->acb_fd_array[STDOUT_FILENO]->fcb->fh = Output();
+    aroscbase->acb_fd_array[STDERR_FILENO]->fcb->fh = me->pr_CES ? me->pr_CES : me->pr_COS;
 
-    __fd_array[STDIN_FILENO]->fcb->privflags =
-        __fd_array[STDOUT_FILENO]->fcb->privflags =
-        __fd_array[STDERR_FILENO]->fcb->privflags = _FCB_DONTCLOSE_FH;
+    aroscbase->acb_fd_array[STDIN_FILENO]->fcb->privflags =
+        aroscbase->acb_fd_array[STDOUT_FILENO]->fcb->privflags =
+        aroscbase->acb_fd_array[STDERR_FILENO]->fcb->privflags = _FCB_DONTCLOSE_FH;
 }
 
 ADD2INIT(__init_vars, 0);

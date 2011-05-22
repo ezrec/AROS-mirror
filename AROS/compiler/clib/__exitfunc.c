@@ -42,7 +42,7 @@ void __callexitfuncs(void)
             break;
 
         case AEN_PTR:
-            aen->func.fptr(__arosc_startup_error, aen->ptr);
+            aen->func.fptr(aroscbase->acb_acud.acud_startup_error, aen->ptr);
             break;
         }
     }

@@ -38,9 +38,10 @@
 
 ******************************************************************************/
 {
-    mode_t oumask = __umask;
+    struct aroscbase *aroscbase = __get_aroscbase();
+    mode_t oumask = aroscbase->acb_umask;
 
-    __umask = numask;
+    aroscbase->acb_umask = numask;
 
     return oumask;
 }
@@ -55,9 +56,9 @@ static int __umask_init(void)
     /* FIXME: Implement umask() properly */
 
     if (paroscbase && (paroscbase->acb_flags & (VFORK_PARENT | EXEC_PARENT)))
-        __umask = paroscbase->acb_umask;
+        aroscbase->acb_umask = paroscbase->acb_umask;
     else
-        __umask = S_IWGRP|S_IWOTH;
+        aroscbase->acb_umask = S_IWGRP|S_IWOTH;
 
     return 1;
 }

@@ -53,11 +53,12 @@ static int system_no_sh(const char *string);
 
 ******************************************************************************/
 {
+    struct aroscbase *aroscbase = __get_aroscbase();
     BPTR lock;
     APTR old_proc_window;
     struct Process *me;
 
-    if (!__doupath)
+    if (!aroscbase->acb_doupath)
         return system_no_sh(string);
     
     if (string == NULL || string[0] == '\0')
@@ -84,6 +85,7 @@ static int system_no_sh(const char *string);
 
 static int system_sh(const char *string)
 {
+    struct aroscbase *aroscbase = __get_aroscbase();
     pid_t pid = vfork();
     int status;
 
@@ -97,7 +99,7 @@ static int system_sh(const char *string)
     }
     else if(pid == 0)
     {
-	execl((__doupath ? "/bin/sh" : "bin:sh"), "sh", "-c", string, (char *) NULL);
+	execl((aroscbase->acb_doupath ? "/bin/sh" : "bin:sh"), "sh", "-c", string, (char *) NULL);
 	_exit(127);
     }
     else
@@ -108,6 +110,7 @@ static int system_sh(const char *string)
 	
 static int system_no_sh(const char *string)
 {
+    struct aroscbase *aroscbase = __get_aroscbase();
     const char *apath;
     char *args, *cmd, *fullcmd;
     fdesc *in, *out, *err;

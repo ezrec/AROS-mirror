@@ -1,5 +1,5 @@
 /*
-    Copyright © 2008, The AROS Development Team. All rights reserved.
+    Copyright © 2008-2011, The AROS Development Team. All rights reserved.
     $Id$
 
     4.4BSD function flock().
@@ -87,7 +87,7 @@ void RemoveFromList(struct SignalSemaphore *sem);
 	Since advisory locks semantics is equal to exec.library semaphores
 	semantics, semaphores are used to implement locks. For a given file
 	a semaphore named FLOCK(path) is created where path is a full path to
-	the file. Locks held by a given process are stored on __flocks_list
+	the file. Locks held by a given process are stored on acb_flocks_list
 	and released during process exit.
 
 ******************************************************************************/
@@ -223,21 +223,23 @@ void RemoveFromList(struct SignalSemaphore *sem);
 
 LONG AddToList(struct SignalSemaphore *sem)
 {
+    struct aroscbase *aroscbase = __get_aroscbase();
     struct FlockNode *node;
     node = AllocMem(sizeof(struct FlockNode), MEMF_ANY | MEMF_CLEAR);
     if(!node)
 	return -1;
     node->sem = sem;
-    AddHead((struct List *)&__flocks_list, (struct Node*) node);
+    AddHead((struct List *)&aroscbase->acb_file_locks, (struct Node*) node);
     return 0;
 }
 
 void RemoveFromList(struct SignalSemaphore *sem)
 {
+    struct aroscbase *aroscbase = __get_aroscbase();
     struct FlockNode *varNode;
     struct Node *tmpNode;
     
-    ForeachNodeSafe(&__flocks_list, varNode, tmpNode)
+    ForeachNodeSafe(&aroscbase->acb_file_locks, varNode, tmpNode)
     {
 	if(varNode->sem == sem)
 	{
@@ -250,20 +252,22 @@ void RemoveFromList(struct SignalSemaphore *sem)
 
 int __init_flocks(void)
 {
-    NEWLIST((struct List *)&__flocks_list);
+    struct aroscbase *aroscbase = __get_aroscbase();
+    NEWLIST((struct List *)&aroscbase->acb_file_locks);
 
     return 1;
 }
 
 void __unlock_flocks(void)
 {
+    struct aroscbase *aroscbase = __get_aroscbase();
     {
 	struct FlockNode *lock;
 	struct SignalSemaphore *sem;
 
 	Forbid();
 	while ((lock = (struct FlockNode *) REMHEAD(
-	    (struct List *) &__flocks_list)))
+	    (struct List *) &aroscbase->acb_file_locks)))
 	{
 	    sem = lock->sem;
     	    ReleaseSemaphore(sem);

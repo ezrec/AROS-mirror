@@ -57,6 +57,7 @@
 {
     BPTR oldlock;
     BPTR newlock;
+    struct aroscbase *aroscbase = __get_aroscbase();
     
     path = __path_u2a(path);
     
@@ -73,14 +74,14 @@
 
     oldlock = CurrentDir( newlock );
     
-    if( __cd_changed )
+    if( aroscbase->acb_cd_changed )
     {
     	UnLock( oldlock );
     }
     else
     {
-    	__cd_changed = TRUE;
-	__cd_lock    = oldlock;
+    	aroscbase->acb_cd_changed = TRUE;
+	aroscbase->acb_cd_lock    = oldlock;
     }    
     
     return 0;
@@ -91,18 +92,18 @@ error:
     return -1;
 }
 
-int __init_chdir(void)
+static int __init_chdir(struct aroscbase *aroscbase)
 {
-    __cd_changed = FALSE;
+    aroscbase->acb_cd_changed = FALSE;
 
     return 1;
 }
 
-void __exit_chdir(void)
+static void __exit_chdir(struct aroscbase *aroscbase)
 {
-    if( __cd_changed )
+    if( aroscbase->acb_cd_changed )
     {
-        BPTR lock = CurrentDir( __cd_lock );
+        BPTR lock = CurrentDir( aroscbase->acb_cd_lock );
 
         UnLock( lock );
     }

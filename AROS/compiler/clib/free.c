@@ -1,5 +1,5 @@
 /*
-    Copyright © 1995-2007, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
     $Id$
 
     ANSI C function free().
@@ -49,6 +49,8 @@
 {
     if (memory)
     {
+        struct aroscbase *aroscbase = __get_aroscbase();
+        
 	unsigned char *mem;
 	size_t         size;
 
@@ -59,7 +61,7 @@
             free(((void **) mem)[-1]);
         else {
             size += AROS_ALIGN(sizeof(size_t));
-	    FreePooled (__mempool, mem, size);
+	    FreePooled (aroscbase->acb_mempool, mem, size);
         }
     }
 
