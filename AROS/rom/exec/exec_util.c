@@ -1,5 +1,5 @@
 /*
-    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: Exec utility functions.
@@ -338,8 +338,6 @@ Exec_CleanupETask(struct Task *task, struct ETask *et, struct ExecBase *SysBase)
     ForeachNodeSafe(&et->et_TaskMsgPort.mp_MsgList, child, tmpNode)
     {
         /* This is effectively ChildFree() */
-        if(child->et_Result2)
-            FreeVec(child->et_Result2);
 #ifdef DEBUG_ETASK
 	FreeVec(child->iet_Me);
 #endif

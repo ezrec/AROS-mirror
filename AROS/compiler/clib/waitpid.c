@@ -1,5 +1,5 @@
 /*
-    Copyright © 2004-2009, The AROS Development Team. All rights reserved.
+    Copyright © 2004-2011, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -146,11 +146,8 @@
     et = (struct ETask *)ChildWait(tid);
     if (et != (struct ETask *)CHILD_NOTNEW)
     {
-        if(status && IntETask(et)->iet_startup)
-        {
-            struct arosc_startup *startup = IntETask(et)->iet_startup;
-            *status = startup->as_startup_error;
-        }
+        if (status)
+            *status = et->et_Result;
         ret = et->et_UniqueID;
         ChildFree(et->et_UniqueID);
     }

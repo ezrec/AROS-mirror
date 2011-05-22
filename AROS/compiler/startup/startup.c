@@ -1,6 +1,6 @@
 
 /*
-    Copyright © 1995-2009, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: Common startup code
@@ -89,6 +89,8 @@ AROS_UFH3(LONG, __startup_entry,
     AROS_USERFUNC_INIT
 #endif
 
+    struct ETask *etask;
+
     SysBase = sysbase;
 
     D(bug("Entering __startup_entry(\"%s\", %d, %x)\n", argstr, argsize, SysBase));
@@ -110,6 +112,10 @@ AROS_UFH3(LONG, __startup_entry,
     CloseLibrary((struct Library *)DOSBase);
 
     D(bug("Leaving __startup_entry\n"));
+
+    etask = GetETask(FindTask(NULL));
+    if (etask)
+        etask->et_Result = __startup_error;
 
     return __startup_error;
 

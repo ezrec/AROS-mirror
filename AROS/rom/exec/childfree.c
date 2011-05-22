@@ -1,5 +1,5 @@
 /*
-    Copyright © 1995-2007, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
     $Id$
 
     Free child task information on a dead child.
@@ -56,9 +56,6 @@
     if(et != NULL)
     {
 	Remove((struct Node *)et);
-
-	if(et->et_Result2)
-	    FreeVec(et->et_Result2);
 
 #ifdef DEBUG_ETASK
 	FreeVec(IntETask(et)->iet_Me);

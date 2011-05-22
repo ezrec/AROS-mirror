@@ -5,7 +5,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include "../rom/exec/etask.h"
+#include <exec/tasks.h>
 
 static LONG get_default_stack_size()
 {
@@ -15,12 +15,10 @@ static LONG get_default_stack_size()
 
 int main(int argc, char **argv)
 {
-	struct aros_startup * oldstartup;
+	struct ETask *et;
 	char *fname = "SYS:Utilities/Clock";
 	char *full = "";
 	int lastresult;
-	
-	oldstartup = (struct aros_startup *)GetIntETask(FindTask(NULL))->iet_startup;
 	
 	if(fname) {
 
@@ -34,6 +32,11 @@ int main(int argc, char **argv)
 		}
 	}
 	
-	printf("current iet_startup: %p, old iet_startup: %p\n", (struct aros_startup *)GetIntETask(FindTask(NULL))->iet_startup, oldstartup);
+	printf("lastresult: %d", lastresult);
+	et = GetETask(FindTask(NULL));
+	if (et)
+		printf(", et_Result: %d", et->et_Result);
+	printf("\n");
+
 	exit(0);
 }

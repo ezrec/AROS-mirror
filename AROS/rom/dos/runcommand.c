@@ -104,13 +104,6 @@ LONG AROS_SLIB_ENTRY(RunProcess,Dos)
     sss.stk_Upper=stack+stacksize;
     sss.stk_Pointer = sss.stk_Upper;
 
-    oldresult=me->pr_Result2;
-    /* we have to save iet_startup field because it's overwritten in 
-       startup code */
-    oldstartup = (struct aros_startup *)GetIntETask(me)->iet_startup;
-    
-    me->pr_Result2=oldresult;
-
     oldargs=me->pr_Arguments;
     me->pr_Arguments=(STRPTR)argptr;
 
@@ -130,12 +123,6 @@ LONG AROS_SLIB_ENTRY(RunProcess,Dos)
 		(LONG_FUNC)((BPTR *)BADDR(segList)+1),DOSBase);
 
     me->pr_Arguments=oldargs;
-
-    oldresult=me->pr_Result2;
-    /* restore saved iet_startup */
-    GetIntETask(me)->iet_startup = oldstartup;
-
-    me->pr_Result2=oldresult;
 
     /* remove buffered argument stream */
     /* must be original stream, command might have called SelectInput() */

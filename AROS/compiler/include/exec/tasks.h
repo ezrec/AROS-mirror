@@ -170,8 +170,8 @@ struct ETask
     struct MinList et_Children;     /* List of children */
     UWORD	   et_TrapAlloc;
     UWORD	   et_TrapAble;
-    ULONG	   et_Result1;	    /* First result */
-    APTR	   et_Result2;	    /* Result data pointer (AllocVec) */
+    ULONG	   et_Result;	    /* Result of command */
+    APTR           et_Unused1;
     struct MsgPort et_TaskMsgPort;
 
     /* Internal fields follow */

@@ -249,6 +249,13 @@ pid_t __vfork(jmp_buf env)
 	    D(bug("__vfork: not executed\n"));
 	    ((struct arosc_startup*) GetIntETask(udata->child)->iet_startup)->as_startup_error = __aros_startup_error;
 
+            /* et_Result is normally set in startup code but no exec was performed
+               so we have to mimic the startup code
+            */
+            etask = GetETask(udata->child);
+            if (etask)
+                etask->et_Result = __aros_startup_error;
+
 	    D(bug("__vfork: Signaling child\n"));
 	    Signal(udata->child, 1 << udata->child_signal);
 	}
