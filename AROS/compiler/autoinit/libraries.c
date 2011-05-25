@@ -94,7 +94,7 @@ int set_open_rellibraries_list(APTR base, const void * const list[])
 	    __showerror
 	    (
 	        "Could not open version %ld or higher of library \"%s\".",
-		(const IPTR []){version, set->name}
+		(const IPTR []){(IPTR)version, (IPTR)set->name}
 	    );
 
 	    return 0;
