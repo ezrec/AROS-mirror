@@ -19,7 +19,7 @@ extern struct aroscbase *aroscbase;
 /* Provide local aroscbase for the static version of arosc */
 #ifdef AROSC_STATIC
 static struct aroscbase __aroscbase;
-struct aroscbase *aroscbase = &__aroscbase;
+struct aroscbase *aroscbase;
 #endif
 
 struct arosc_userdata *__get_arosc_userdata(void)
@@ -28,12 +28,13 @@ struct arosc_userdata *__get_arosc_userdata(void)
     struct aroscbase *aroscbase = __get_aroscbase();
 #endif
 #ifdef AROSC_STATIC
-    static __init = 0;
+    static int __init = 0;
     
     if(!__init)
     {
         __init = 1;
         
+	aroscbase = &__aroscbase;
         __ctype_init();
     }
 #endif

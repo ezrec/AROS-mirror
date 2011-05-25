@@ -110,7 +110,6 @@ static int system_sh(const char *string)
 	
 static int system_no_sh(const char *string)
 {
-    struct aroscbase *aroscbase = __get_aroscbase();
     const char *apath;
     char *args, *cmd, *fullcmd;
     fdesc *in, *out, *err;

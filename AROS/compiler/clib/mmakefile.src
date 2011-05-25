@@ -516,7 +516,7 @@ USER_LDFLAGS := -L$(OBJDIR) $(NOSTDLIB_LDFLAGS)
     modname=arosc modtype=library objdir=$(OBJDIR)/shared \
     cflags="$(CFLAGS) -DAROSC_SHARED" \
     files="$(SHARED) $(SHARED_ARCH)" linklibobjs=$(AROSC_LINKLIB_OBJS) \
-    uselibs="gcc arosm autoinit arosccommon" 
+    uselibs="arosm autoinit arosccommon gcc" 
 
 
 # x86_64 needs a reduced 32bit librom.a lib.

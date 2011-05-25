@@ -119,7 +119,7 @@ struct aroscbase
 /* By default a new process will get new ACPD when it(or any other library
    it uses) opens arosc.library. This flag prohibits that and forces the
    child process to share ACPD with parent process */
-#warning support for SHARE_ACPD_WITH_CHILD has to be implemented
+/* FIXME: support for SHARE_ACPD_WITH_CHILD has to be implemented */
 #define SHARE_ACPD_WITH_CHILD 16
 
 /* !acb_flags */
