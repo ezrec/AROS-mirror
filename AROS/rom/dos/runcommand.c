@@ -82,8 +82,6 @@ LONG AROS_SLIB_ENTRY(RunProcess,Dos)
     AROS_LIBFUNC_INIT
 
     STRPTR oldargs;
-    LONG oldresult;
-    struct aros_startup * oldstartup;
 
     /* Get pointer to process structure */
     struct Process *me=(struct Process *)FindTask(NULL);
