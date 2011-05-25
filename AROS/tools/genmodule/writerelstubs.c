@@ -30,9 +30,11 @@ void writerelstubs(struct config *cfg)
         "%s"
         "#define NOLIBINLINE\n"
         "#define NOLIBDEFINES\n"
+        "#ifndef __%s_NOLIBBASE__\n"
         "/* Do not include the libbase */\n"
-        "#define __%s_NOLIBBASE__\n",
-        banner, cfg->modulenameupper
+        "#define __%s_NOLIBBASE__\n"
+        "#endif\n",
+        banner, cfg->modulenameupper, cfg->modulenameupper
     );
     freeBanner(banner);
 
@@ -129,19 +131,19 @@ void writerelstubs(struct config *cfg)
                         fprintf(out,
                                 "    %sAROS_LCQUAD%d%s(%s, %s, \\\n",
                                 (isvoid) ? "" : "return ",
-                                funclistit->argcount, (isvoid) ? "NR" : "",
+                                nquad, (isvoid) ? "NR" : "",
                                 funclistit->type, funclistit->name
                         );
                     }
                     else
                     {
-                        fprintf(out,
-                                "    %sAROS_LC%dQUAD%d%s(%s, %s, \\\n",
-                                (isvoid) ? "" : "return ",
-                                nargs, nquad, (isvoid) ? "NR" : "",
-                                funclistit->type, funclistit->name
-                        );
-                    }
+		        fprintf(out,
+			        "    %sAROS_LC%dQUAD%d%s(%s, %s, \\\n",
+				(isvoid) ? "" : "return ",
+				nargs, nquad, (isvoid) ? "NR" : "",
+				funclistit->type, funclistit->name
+		         );
+		    }
 
                     for (arglistit = funclistit->arguments;
                          arglistit != NULL;
@@ -170,7 +172,6 @@ void writerelstubs(struct config *cfg)
                                     type, name, arglistit->reg
                             );
                         }
-                        arglistit->reg[2] = '/';
                         free(type);
                         free(name);
                     }

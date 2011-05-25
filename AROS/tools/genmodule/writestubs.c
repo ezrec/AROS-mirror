@@ -127,15 +127,15 @@ void writestubs(struct config *cfg)
                     }
                     else
                     {
-                        fprintf(out,
-                                ") \\\n"
-                                "{\n"
+			    fprintf(out,
+					") \\\n"
+					"{\n"
                                 "    %sAROS_LC%dQUAD%d%s(%s, %s, \\\n",
                                 (isvoid) ? "" : "return ",
-                                nargs, nquad, (isvoid) ? "NR" : "",
-                                funclistit->type, funclistit->name
-                        );
-                    }
+					nargs, nquad, (isvoid) ? "NR" : "",
+					funclistit->type, funclistit->name
+			    );
+			}
 
                     for (arglistit = funclistit->arguments;
                          arglistit != NULL;
@@ -163,7 +163,6 @@ void writestubs(struct config *cfg)
                                     type, name, arglistit->reg
                             );
                         }
-                        arglistit->reg[2] = '/';
                         free(type);
                         free(name);
                     }
