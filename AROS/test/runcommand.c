@@ -18,7 +18,7 @@ int main(int argc, char **argv)
 	struct ETask *et;
 	char *fname = "SYS:Utilities/Clock";
 	char *full = "";
-	int lastresult;
+	int lastresult = 0;
 	
 	if(fname) {
 
@@ -35,7 +35,7 @@ int main(int argc, char **argv)
 	printf("lastresult: %d", lastresult);
 	et = GetETask(FindTask(NULL));
 	if (et)
-		printf(", et_Result: %d", et->et_Result);
+		printf(", et_Result: %d", (int)et->et_Result);
 	printf("\n");
 
 	exit(0);
