@@ -34,14 +34,17 @@ USER_LDFLAGS := -L$(TARGETDIR)/Development/lib
     uselibs="perid"
 
 %build_module mmake=test-library-dummylib \
-    modname=dummy modtype=library files=dummylib prefix=$(TARGETDIR)
+    modname=dummy modtype=library files=dummylib prefix=$(TARGETDIR) \
+    uselibs=rom
 
 %build_module mmake=test-library-peropenerlib \
-    modname=peropener modtype=library files=peropener prefix=$(TARGETDIR)
+    modname=peropener modtype=library files=peropener prefix=$(TARGETDIR) \
+    uselibs=rom
 
 %build_module mmake=test-library-peropener2lib \
     modname=peropener2 modtype=library \
-    files=peropener2 uselibs=peropener_rel prefix=$(TARGETDIR)
+    files=peropener2 uselibs="peropener_rel rom" prefix=$(TARGETDIR)
 
 %build_module mmake=test-library-peridlib \
-    modname=perid modtype=library files=getparentbase prefix=$(TARGETDIR)
+    modname=perid modtype=library files=getparentbase prefix=$(TARGETDIR) \
+    uselibs=rom
