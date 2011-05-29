@@ -229,6 +229,10 @@ ffs (int x)
 
 #endif
 
+#if defined(__AROS__)
+#define ffs __builtin_ffs
+#endif
+
 #if defined(_MSC_VER) && defined(_M_IX86)
 /* When compiling with /Gy and /OPT:ICF identical functions will be folded in together.
    The CAIRO_ENSURE_UNIQUE macro ensures that a function is always unique and
