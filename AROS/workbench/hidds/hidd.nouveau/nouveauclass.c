@@ -8,6 +8,7 @@
 
 #include <graphics/displayinfo.h>
 #include <proto/utility.h>
+#include <nouveau_drm.h>
 
 #define DEBUG 0
 #include <aros/debug.h>
@@ -31,6 +32,7 @@
 
 #define MAX_BITMAP_WIDTH    4096
 #define MAX_BITMAP_HEIGHT   4096
+#define GART_BUFFER_SIZE    (12 * 1024 * 1024)
 
 /* HELPER FUNCTIONS */
 VOID HIDDNouveauShowCursor(OOP_Object * gfx, BOOL visible)
@@ -226,7 +228,7 @@ BOOL HIDDNouveauSwitchToVideoMode(OOP_Object * bm)
     gfxdata = OOP_INST_DATA(OOP_OCLASS(gfx), gfx);
     selectedconnector = (drmModeConnectorPtr)gfxdata->selectedconnector;
 
-    D(bug("[Nouveau] HIDDNouveauSwitchToVideoMode\n"));
+    D(bug("[Nouveau] HIDDNouveauSwitchToVideoMode, bm: 0x%x\n", bm));
     
     /* We should be able to get modeID from the bitmap */
     OOP_GetAttr(bm, aHidd_BitMap_ModeID, &modeid);
@@ -422,6 +424,7 @@ OOP_Object * METHOD(Nouveau, Root, New)
             gfxdata->selectedconnector = selectedconnector;
             carddata->dev = dev;
             ULONG gartsize = 0;
+            UQUAD value;
             
             /* Check chipset architecture */
             switch (carddata->dev->chipset & 0xf0) 
@@ -455,6 +458,13 @@ OOP_Object * METHOD(Nouveau, Root, New)
                 /* TODO: report error, how to handle it? */
                 return NULL;
             }
+            
+            nouveau_device_get_param(carddata->dev, NOUVEAU_GETPARAM_BUS_TYPE, &value);
+            if (value == NV_PCIE)
+                carddata->IsPCIE = TRUE;
+            else
+                carddata->IsPCIE = FALSE;
+            
 
             if (carddata->architecture != NV_ARCH_C0)
             {
@@ -479,11 +489,11 @@ OOP_Object * METHOD(Nouveau, Root, New)
             /* TODO: Check return, hot to handle */
             
             /* Allocate GART scratch buffer */
-            if (carddata->dev->vm_gart_size > (16 * 1024 * 1024))
-                gartsize = 16 * 1024 * 1024;
+            if (carddata->dev->vm_gart_size > GART_BUFFER_SIZE)
+                gartsize = GART_BUFFER_SIZE;
             else
                 /* always leave 512kb for other things like the fifos */
-                gartsize = carddata->dev->vm_gart_size - 512*1024;
+                gartsize = carddata->dev->vm_gart_size - 512 * 1024;
 
             /* This can fail */
             nouveau_bo_new(carddata->dev, NOUVEAU_BO_GART | NOUVEAU_BO_MAP,

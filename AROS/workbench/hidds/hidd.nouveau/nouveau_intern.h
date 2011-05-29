@@ -110,6 +110,7 @@ struct CardData
 {
     /* Card controlling objects */
     ULONG                   architecture;
+    BOOL                    IsPCIE;
     struct nouveau_device   *dev;                   /* Device object acquired from libdrm */
     struct nouveau_channel  *chan;
 
@@ -290,17 +291,29 @@ BOOL HiddNouveauWriteFromRAM(
     APTR dst, ULONG dstPitch,
     ULONG width, ULONG height,
     OOP_Class *cl, OOP_Object *o);
-BOOL HiddNouveauAccelARGBUpload3D(
-    UBYTE * srcpixels, ULONG srcpitch,
-    ULONG x, ULONG y, ULONG width, ULONG height, 
-    OOP_Class *cl, OOP_Object *o);
-
 BOOL HiddNouveauReadIntoRAM(
     APTR src, ULONG srcPitch, 
     APTR dst, ULONG dstPitch, HIDDT_StdPixFmt dstPixFmt,
     ULONG width, ULONG height,
     OOP_Class *cl, OOP_Object *o);
-
+BOOL HiddNouveauAccelARGBUpload3D(
+    UBYTE * srcpixels, ULONG srcpitch,
+    ULONG x, ULONG y, ULONG width, ULONG height, 
+    OOP_Class *cl, OOP_Object *o);
+BOOL HiddNouveauAccelAPENUpload3D(
+    UBYTE * srcalpha, BOOL srcinvertalpha, ULONG srcpitch, ULONG srcpenrgb,
+    ULONG x, ULONG y, ULONG width, ULONG height, 
+    OOP_Class *cl, OOP_Object *o);
+VOID HIDDNouveauBitMapPutAlphaImage32(struct HIDDNouveauBitMapData * bmdata,
+    APTR srcbuff, ULONG srcpitch, ULONG destX, ULONG destY, ULONG width, ULONG height);
+VOID HIDDNouveauBitMapPutAlphaImage16(struct HIDDNouveauBitMapData * bmdata,
+    APTR srcbuff, ULONG srcpitch, ULONG destX, ULONG destY, ULONG width, ULONG height);
+VOID HIDDNouveauBitMapPutAlphaTemplate32(struct HIDDNouveauBitMapData * bmdata,
+    OOP_Object * gc, OOP_Object * bm, BOOL invertalpha,
+    UBYTE * srcalpha, ULONG srcpitch, ULONG destX, ULONG destY, ULONG width, ULONG height);
+VOID HIDDNouveauBitMapPutAlphaTemplate16(struct HIDDNouveauBitMapData * bmdata,
+    OOP_Object * gc, OOP_Object * bm, BOOL invertalpha,
+    UBYTE * srcalpha, ULONG srcpitch, ULONG destX, ULONG destY, ULONG width, ULONG height);
 
 /* nouveau_exa.c */
 BOOL HiddNouveauNVAccelUploadM2MF(
@@ -314,6 +327,7 @@ BOOL HiddNouveauNVAccelDownloadM2MF(
 
 VOID HIDDNouveauShowCursor(OOP_Object * gfx, BOOL visible);
 BOOL HIDDNouveauSwitchToVideoMode(OOP_Object * bm);
+VOID HIDDNouveauSetOffsets(OOP_Object * bm, LONG newxoffset, LONG newyoffset);
 
 /* Declaration of nouveau initialization function */
 extern int nouveau_init(void);
