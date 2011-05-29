@@ -171,7 +171,7 @@ do {					\
 static inline int cairo_const
 _cairo_popcount (uint32_t mask)
 {
-#if __GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 4)
+#if !defined(__AROS__) && (__GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 4))
     return __builtin_popcount (mask);
 #else
     register int y;
