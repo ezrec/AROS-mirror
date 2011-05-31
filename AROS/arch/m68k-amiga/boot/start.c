@@ -286,7 +286,7 @@ extern void SuperstackSwap(void);
 /* This calls the register-ABI library
  * routine Exec/InitCode, for use in NewStackSwap()
  */
-static LONG doInitCode(void)
+static void doInitCode(void)
 {
 	/* Attempt to allocate a new supervisor stack */
 	do {
@@ -309,7 +309,9 @@ static LONG doInitCode(void)
 
 	InitCode(RTF_COLDSTART, 0);
 
-	return 0;
+	/* If we get here, it's only because AmigaOS failed to start */
+	Early_Alert(CODE_EXEC_FAIL);
+	for (;;);
 }
 
 extern BYTE _rom_start;
@@ -594,8 +596,12 @@ void exec_boot(ULONG *membanks)
     	    SysBase->KickCheckSum = KickCheckSum;
     	}
 
-        SysBase->SysStkUpper    = (APTR)&_ss_end;
+        SysBase->SysStkUpper    = (APTR)&_ss_end - SP_OFFSET;
         SysBase->SysStkLower    = (APTR)&_ss;
+
+        /* We're in SuperVisor mode */
+        SysBase->ThisTask->tc_SPUpper    = SysBase->SysStkUpper;
+        SysBase->ThisTask->tc_SPLower    = SysBase->SysStkLower;
 
         /* Mark what the last alert was */
         for (i = 0; i < 4; i++)
@@ -770,33 +776,17 @@ void exec_boot(ULONG *membanks)
 	 */
 	trap[8] = Exec_Supervisor_Trap;
 
-	/* Attempt to allocate a real stack, and switch to it. */
-	do {
-	    const ULONG size = AROS_STACKSIZE;
-	    IPTR *usp;
-	
-	    usp = AllocMem(size * sizeof(IPTR), MEMF_PUBLIC);
-	    if (usp == NULL) {
-		DEBUGPUTS(("Can't allocate a new stack for Exec... Strange.\n"));
-	    	Early_Alert(CODE_ALLOC_FAIL);
-		break;
-	    }
-
-	    SysBase->ThisTask->tc_SPUpper = &usp[size];
-	    SysBase->ThisTask->tc_SPLower = usp;
-
-	    /* Leave supervisor mode */
-	    asm volatile (
-	    	"move.l %0,%%usp\n"
+	/* Attempt to use the boot task stack,
+	 * and leave supervisor mode to switch to it.
+	 */
+	asm volatile (
+		"move.l %0,%%usp\n"
 	    	"move.w #0,%%sr\n"
 	    	"jmp %1@\n"
 	    	:
-	    	: "a" (&usp[size-3]),
+	    	: "a" (SysBase->ThisTask->tc_SPUpper),
 	    	  "a" (doInitCode)
-	    	:);
-	} while (0);
+	    	: "d0", "d1", "a0", "a1");
 
-	/* We shouldn't get here */
-	Early_Alert(CODE_EXEC_FAIL);
-	for (;;);
+	/* We can't get here */
 }
