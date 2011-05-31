@@ -146,6 +146,36 @@ do                                                       \
 #define AROS_CHECK_ALLOCENTRY(memList) \
 	(!((IPTR)(memList) & 0x80ul<<(sizeof(APTR)-1)*8))
 
+/* Macro: AROS_RELLIBFUNCSTUB(functionname, libbasename, lvo)
+   Same as AROS_LIBFUNCSTUB but finds libbase at an offset in
+   the current libbase
+*/
+#define __AROS_RELLIBFUNCSTUB(fname, libbasename, lvo) \
+    void __ ## fname ## _ ## libbasename ## _relwrapper(void) \
+    { \
+	asm volatile( \
+            ".weak " #fname "\n" \
+            "\t" #fname " :\n" \
+            "\t trap #1\n" \
+            "\tjsr	aros_get_relbase\n" \
+            "\tadd.l	" #libbasename "_offset, %%d0\n" \
+            "\tmove.l	%%d0,%%a0\n" \
+            "\tmove.l	%%a0@,%%sp@-\n" \
+            "\tjsr	aros_push_relbase\n" \
+            "\taddq.l	#4,%%sp@\n" \
+	    "\tlea.l	%%a0@(%c0),%%a0\n" \
+	    "\tjsr	%%a0@\n" \
+	    "\tmovem.l	%%d0/%%d1,%%sp@-\n" \
+	    "\tjsr	aros_pop_relbase\n" \
+	    "\tmovem.l	%%sp@+,%%d0/%%d1\n" \
+	    : : "i" ((-lvo*LIB_VECTSIZE)) \
+	    : "a0", "a1" \
+	); \
+    }
+#define AROS_RELLIBFUNCSTUB(fname, libbasename, lvo) \
+    __AROS_RELLIBFUNCSTUB(fname, libbasename, lvo)
+
+
 /*
     Find the next valid alignment for a structure if the next x bytes must
     be skipped.
@@ -248,6 +278,11 @@ extern void aros_not_implemented ();
 
 /* Call a libary function which requires the libbase */
 #include <aros/m68k/libcall.h>
+
+#define AROS_LC_CALL(t,x,bn)	ERROR IN DEFINITIONS - AROS_LC_CALL
+#define AROS_LC_CALLNR(x,bn)	ERROR IN DEFINITIONS - AROS_LC_CALLNR
+#define AROS_LC_CALLI(t,x,bn)	ERROR IN DEFINITIONS - AROS_LC_CALLI
+#define AROS_LC_CALLINR(x,bn)	ERROR IN DEFINITIONS - AROS_LC_CALLNR
 
 #define AROS_LHQUAD1(t,n,a1,bt,bn,o,s) \
 	AROS_LH2(t,n, \
