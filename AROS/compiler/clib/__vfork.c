@@ -242,7 +242,7 @@ pid_t __vfork(jmp_buf env)
         aroscbase = __get_aroscbase();
         udata = aroscbase->acb_vfork_data;
 
-        D(bug("__vfork: ppriv = %x\n", ppriv));
+        D(bug("__vfork: acb_vfork_data = %x\n", udata));
 
 	if(!udata->child_executed)
 	{
