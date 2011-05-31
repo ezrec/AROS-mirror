@@ -1386,11 +1386,11 @@ BD_RELLINKLIBOBJS \
 # The module is linked from all the compiled .o files
 %rule_linkmodule module=$(BD_MODULE) objs="$(BD_STARTOBJS) $(BD_OBJS) $(USER_OBJS)" \
 		 endobj=$(BD_ENDOBJS) err=%(modname).err objdir=%(objdir) \
-		 uselibs="%(uselibs)" usehostlibs="%(usehostlibs)"
+		 uselibs="%(uselibs) rom" usehostlibs="%(usehostlibs)"
 
 %rule_linkmodule module=$(BD_PKGMOD) objs="$(BD_STARTOBJS) $(BD_OBJS) $(USER_OBJS)" \
 		 endobj=$(BD_ENDOBJS) err=%(modname).err objdir=%(objdir) \
-		 uselibs="%(uselibs)" usehostlibs="%(usehostlibs)"
+		 uselibs="%(uselibs) rom" usehostlibs="%(usehostlibs)"
 
 # Link static lib
 ifneq ($(BD_LINKLIB),)
