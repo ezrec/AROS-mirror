@@ -201,8 +201,8 @@ AROS_UFH3S(LIBBASETYPEPTR, GM_UNIQUENAME(init),
     t->tc_Node.ln_Pri = 0;
     t->tc_State = TS_RUN;
     t->tc_SigAlloc = 0xFFFF;
-    t->tc_SPLower = 0;		/* This is the system's boot stack. Not to be confused with supervisor stack! */
-    t->tc_SPUpper = (APTR)~0UL;
+    t->tc_SPLower = AllocMem(AROS_STACKSIZE, MEMF_ANY);
+    t->tc_SPUpper = t->tc_SPLower + AROS_STACKSIZE;
     t->tc_Flags |= TF_ETASK;
 
     t->tc_UnionETask.tc_ETask = AllocVec(sizeof(struct IntETask), MEMF_ANY|MEMF_CLEAR);
