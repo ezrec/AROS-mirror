@@ -16,9 +16,16 @@
 void __arosc_program_startup(void);
 void __arosc_program_end(void);
 
+/* aroscbase is defined by the C prototypes.
+ * We need to set it as the default LIBBASE
+ * here so that our routines case use it.
+ */
 static void __arosc_startup(void)
 {
+    APTR oldLibBase;
     D(bug("[__arosc_startup] Start\n"));
+
+    oldLibBase = AROS_SET_LIBBASE(aroscbase);
 
     __arosc_program_startup();
 
@@ -38,6 +45,7 @@ static void __arosc_startup(void)
     }
 
     __arosc_program_end();
+    AROS_SET_LIBBASE(oldLibBase);
 
     D(bug("[__arosc_startup] Leave\n"));
 }

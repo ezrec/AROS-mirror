@@ -84,7 +84,13 @@ typedef unsigned int (*ULONG_FUNC)();
 
 /* Declare relbase if asked */
 #if !defined(AROS_GET_RELBASE) || !defined(AROS_SET_RELBASE)
-#error AROS_GET_RELBASE or AROS_SET_RELBASE not defined by arch specific cpu.h
+extern void *aros_get_relbase(void);
+extern void *aros_set_relbase(void *lib);
+extern void  aros_push_relbase(void *lib);
+extern void *aros_pop_relbase(void);
+
+#define AROS_GET_RELBASE	aros_get_relbase()
+#define AROS_SET_RELBASE(x)	aros_set_relbase(x)
 #endif
 
 /* If AROS_GET_LIBBASE/AROS_SET_LIBBASE use relbase by defining them as resp.
