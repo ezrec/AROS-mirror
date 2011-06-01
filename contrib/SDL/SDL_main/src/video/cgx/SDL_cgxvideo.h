@@ -74,6 +74,9 @@ struct SDL_PrivateVideoData {
 	/* Support for internal mouse warping */
 	int window_active;				/* Active Window flag */
 	int GrabMouse;					/* Flag indicating that mouse shall be grabbed */
+	int CursorVisible;				/* Flag indicating that cursor is visible */
+	int LastMouseX;
+	int LastMouseY;
 	
 	/* Double buffering handling */
 	int dbuffer;					/* flag indicating that double buffering is in use */
