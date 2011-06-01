@@ -152,6 +152,7 @@ int CGX_ShowWMCursor(_THIS, WMcursor *cursor)
 	/* Don't do anything if the display is gone */
 	if ( SDL_Display == NULL)
 	{
+		this->hidden->CursorVisible = 0;
 		return(0);
 	}
 
@@ -166,6 +167,7 @@ int CGX_ShowWMCursor(_THIS, WMcursor *cursor)
 				// Hide cursor HERE
 				SetPointer(SDL_Window,(UWORD *)SDL_BlankCursor,1,1,0,0);
 			}
+			this->hidden->CursorVisible = 0;
 		}
 		else
 		{
@@ -173,6 +175,7 @@ int CGX_ShowWMCursor(_THIS, WMcursor *cursor)
 			SetWindowPointer( SDL_Window,
 							  WA_Pointer, (APTR)cursor->PointerObj,
 							  TAG_DONE );
+			this->hidden->CursorVisible = 1;
         }
 		SDL_Unlock_EventThread();
 	}
