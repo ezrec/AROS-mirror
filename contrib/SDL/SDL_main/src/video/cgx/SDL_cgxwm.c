@@ -69,22 +69,12 @@ SDL_GrabMode CGX_GrabWMInput(_THIS, SDL_GrabMode mode)
 	if ( this->screen == NULL )	return(SDL_GRAB_OFF);
 	if ( ! SDL_Window ) return(mode);	/* Will be set later on mode switch */
 
-	switch(mode)
-	{
-		case SDL_GRAB_OFF:
-			this->hidden->GrabMouse = 0;
-			break;
-		case SDL_GRAB_QUERY:
-			mode = this->hidden->GrabMouse?SDL_GRAB_ON:SDL_GRAB_OFF;
-			break;
-		case SDL_GRAB_ON:
-			if (!(this->screen->flags & SDL_FULLSCREEN))
-				this->hidden->GrabMouse = 1;
-			break;
-		default:
-			break;
-	}
 
+	if (mode == SDL_GRAB_OFF)
+		this->hidden->GrabMouse = 0;
+	else /* Match the X11 driver behaviour - this always grabs at full screen. Yes - condition makes no sense. */
+		this->hidden->GrabMouse = 1;
+		
 	SDL_Unlock_EventThread();
 	return(mode);
 }
