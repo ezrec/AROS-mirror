@@ -21,28 +21,20 @@
 */
 #include "SDL_config.h"
 
-/* AROSMesa implementation of SDL OpenGL support */
-
 #include "../SDL_sysvideo.h"
-
-#define _THIS   SDL_VideoDevice *_this
 
 #if SDL_VIDEO_OPENGL
 #include <proto/exec.h>
-/* 
-	FIX ME : this typedefs are put here to prevent compilation from 
-	aborting while including clib/mesa_protos.h
-	the includes should be fixed so that this isn't necessary anymore.
-*/
-typedef int64_t GLint64;
-typedef uint64_t GLuint64;
-typedef struct __GLsync *GLsync; 
-#include <proto/mesa.h>
+#include <GL/arosmesa.h>
+#endif
 
-#endif /* SDL_VIDEO_OPENGL */
+#define _THIS   SDL_VideoDevice *_this
 
 struct SDL_PrivateGLData {
 	int gl_active;
+#if SDL_VIDEO_OPENGL
+	AROSMesaContext glctx;
+#endif
 };
 
 /* OpenGL functions */

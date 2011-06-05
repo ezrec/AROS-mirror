@@ -27,8 +27,7 @@
 #include "SDL_cgxvideo.h"
 
 #if SDL_VIDEO_OPENGL
-struct Library *MesaBase = NULL;
-AROSMesaContext glcont=NULL;
+struct Library * MesaBase = NULL;
 #endif
 
 /* Init OpenGL */
@@ -85,9 +84,8 @@ int CGX_GL_Init(_THIS)
 		/* done */
 		attributes[i].ti_Tag = TAG_DONE;
 
-		glcont = AROSMesaCreateContext(attributes);
-		if ( glcont == NULL ) 
-		{
+		this->gl_data->glctx = AROSMesaCreateContext(attributes);
+		if ( this->gl_data->glctx == NULL ) {
 			SDL_SetError("Couldn't create OpenGL context");
 			return(-1);
 		}
@@ -111,9 +109,9 @@ int CGX_GL_Init(_THIS)
 void CGX_GL_Quit(_THIS)
 {
 #if SDL_VIDEO_OPENGL
-	if ( glcont != NULL ) {
-		AROSMesaDestroyContext(glcont);
-		glcont = NULL;
+	if ( this->gl_data->glctx != NULL ) {
+		AROSMesaDestroyContext(this->gl_data->glctx);
+		this->gl_data->glctx = NULL;
 		this->gl_data->gl_active = 0;
 		this->gl_config.driver_loaded = 0;
 	}
@@ -128,14 +126,14 @@ int CGX_GL_Update(_THIS)
 #if SDL_VIDEO_OPENGL
 	struct TagItem tags[2];
 	struct Window *win = (struct Window*)SDL_Window;
-	if(glcont == NULL) {
+	if( this->gl_data->glctx == NULL ) {
 		return -1; //should never happen
 	}
 	tags[0].ti_Tag = AMA_Window;
 	tags[0].ti_Data = (IPTR)win;
 	tags[1].ti_Tag = TAG_DONE;
 
-	AROSMesaSetRast(glcont, tags);
+	AROSMesaSetRast(this->gl_data->glctx, tags);
 
 	return 0;
 #else
@@ -149,16 +147,16 @@ int CGX_GL_Update(_THIS)
 /* Make the current context active */
 int CGX_GL_MakeCurrent(_THIS)
 {
-	if(glcont == NULL)
+	if(this->gl_data->glctx == NULL)
 		return -1;
 
-	AROSMesaMakeCurrent(glcont);
+	AROSMesaMakeCurrent(this->gl_data->glctx);
 	return 0;
 }
 
 void CGX_GL_SwapBuffers(_THIS)
 {
-	AROSMesaSwapBuffers(glcont);
+	AROSMesaSwapBuffers(this->gl_data->glctx);
 }
 
 int CGX_GL_GetAttribute(_THIS, SDL_GLattr attrib, int* value) {
@@ -209,7 +207,7 @@ int CGX_GL_GetAttribute(_THIS, SDL_GLattr attrib, int* value) {
 			return -1;
 	}
 
-	AROSMesaGetConfig(glcont, mesa_attrib, value);
+	AROSMesaGetConfig(this->gl_data->glctx, mesa_attrib, value);
 	return 0;
 }
 
@@ -220,9 +218,14 @@ void *CGX_GL_GetProcAddress(_THIS, const char *proc) {
 }
 
 int CGX_GL_LoadLibrary(_THIS, const char *path) {
-	/* Library is always open */
-	this->gl_config.driver_loaded = 1;
 
+	if (!MesaBase)
+	{
+		/* TODO: open library here */
+		this->gl_config.driver_loaded = 1;
+		this->gl_data->glctx = NULL;
+	}
+	
 	return 0;
 }
 
