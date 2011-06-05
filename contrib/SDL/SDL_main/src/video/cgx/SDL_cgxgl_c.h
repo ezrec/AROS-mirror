@@ -31,7 +31,6 @@
 #define _THIS   SDL_VideoDevice *_this
 
 struct SDL_PrivateGLData {
-	int gl_active;
 #if SDL_VIDEO_OPENGL
 	AROSMesaContext glctx;
 #endif

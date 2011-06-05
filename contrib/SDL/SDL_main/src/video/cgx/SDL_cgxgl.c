@@ -91,7 +91,6 @@ int CGX_GL_Init(_THIS)
 		SDL_SetError("Couldn't create OpenGL context");
 		return(-1);
 	}
-	this->gl_data->gl_active = 1;
 
 	return(0);
 
@@ -108,9 +107,8 @@ void CGX_GL_Quit(_THIS)
 	if ( this->gl_data->glctx != NULL ) {
 		AROSMesaDestroyContext(this->gl_data->glctx);
 		this->gl_data->glctx = NULL;
-		this->gl_data->gl_active = 0;
 	}
-	if (MesaBase) {
+	if ( MesaBase != NULL ) {
 		CloseLibrary(MesaBase);
 		this->gl_config.driver_loaded = 0;
 		MesaBase = NULL;
@@ -217,7 +215,7 @@ void *CGX_GL_GetProcAddress(_THIS, const char *proc) {
 
 int CGX_GL_LoadLibrary(_THIS, const char *path) {
 
-	if ( ! MesaBase ) {
+	if ( MesaBase == NULL ) {
 		if ((MesaBase = OpenLibrary("mesa.library", 17)) != NULL) {
 			this->gl_config.driver_loaded = 1;
 		}
