@@ -751,6 +751,11 @@ int CGX_CreateWindow(	_THIS, SDL_Surface *screen,
 				screen->flags |= SDL_OPENGL;
 		}
 	}
+	
+	/* Opening a window on new screen shows the cursor. If it was hidden, hide it
+	   again */
+	if (this->hidden->CursorVisible == 0)
+		CGX_ShowWMCursor(this, NULL);
 
 	return 0;
 }
