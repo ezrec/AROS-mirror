@@ -38,6 +38,7 @@ struct SDL_PrivateGLData {
 
 /* OpenGL functions */
 extern int CGX_GL_CreateContext(_THIS);
+extern void CGX_GL_DestroyContext(_THIS);
 extern void CGX_GL_Quit(_THIS);
 #if SDL_VIDEO_OPENGL
 extern int CGX_GL_MakeCurrent(_THIS);

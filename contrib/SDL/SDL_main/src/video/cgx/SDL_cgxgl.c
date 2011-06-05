@@ -30,7 +30,7 @@
 struct Library *MesaBase = NULL;
 #endif
 
-/* Init OpenGL */
+/* Create OpenGL context */
 int CGX_GL_CreateContext(_THIS)
 {
 #if SDL_VIDEO_OPENGL
@@ -100,14 +100,22 @@ int CGX_GL_CreateContext(_THIS)
 #endif
 }
 
-/* Quit OpenGL */
-void CGX_GL_Quit(_THIS)
+/* Destroy OpenGL context */
+void CGX_GL_DestroyContext(_THIS)
 {
 #if SDL_VIDEO_OPENGL
 	if ( this->gl_data->glctx != NULL ) {
 		AROSMesaDestroyContext(this->gl_data->glctx);
 		this->gl_data->glctx = NULL;
 	}
+#endif
+}
+
+/* Quit OpenGL */
+void CGX_GL_Quit(_THIS)
+{
+#if SDL_VIDEO_OPENGL
+	CGX_GL_DestroyContext(this);
 	if ( MesaBase != NULL ) {
 		CloseLibrary(MesaBase);
 		this->gl_config.driver_loaded = 0;
