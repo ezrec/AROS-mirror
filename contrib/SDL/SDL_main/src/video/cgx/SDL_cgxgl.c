@@ -105,6 +105,7 @@ void CGX_GL_DestroyContext(_THIS)
 {
 #if SDL_VIDEO_OPENGL
 	if ( this->gl_data->glctx != NULL ) {
+		AROSMesaMakeCurrent(NULL);
 		AROSMesaDestroyContext(this->gl_data->glctx);
 		this->gl_data->glctx = NULL;
 	}
