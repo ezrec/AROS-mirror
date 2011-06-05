@@ -31,7 +31,7 @@ struct Library *MesaBase = NULL;
 #endif
 
 /* Init OpenGL */
-int CGX_GL_Init(_THIS)
+int CGX_GL_CreateContext(_THIS)
 {
 #if SDL_VIDEO_OPENGL
 	LONG i = 0;
