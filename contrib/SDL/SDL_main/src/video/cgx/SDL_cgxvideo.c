@@ -458,7 +458,7 @@ static int CGX_VideoInit(_THIS, SDL_PixelFormat *vformat)
 
 	/* Determine the default screen depth: Use the default visual (or at least one with the same depth) */
 	for(i = 0; i < this->hidden->nvisuals; i++)
-	    if(this->hidden->visuals[i].depth == GetCyberMapAttr(SDL_Display->RastPort.BitMap,CYBRMATTR_DEPTH)) break;
+		if(this->hidden->visuals[i].depth == GetCyberMapAttr(SDL_Display->RastPort.BitMap,CYBRMATTR_DEPTH)) break;
 
 	/* default visual was useless, take the deepest one instead */
 	if(i == this->hidden->nvisuals) i = 0;
@@ -483,17 +483,17 @@ static int CGX_VideoInit(_THIS, SDL_PixelFormat *vformat)
 
 	/* Fill in some window manager capabilities */
 	this->info.wm_available = 1;
-	this->info.blit_fill    = 1;
+	this->info.blit_fill	= 1;
 #ifndef NO_AMIGAHWSURF
 	this->info.hw_available = 1;
-	this->info.blit_hw      = 1;
-	this->info.blit_hw_CC   = 1;
-	this->info.blit_hw_A    = 1;
-	this->info.blit_sw      = 1;
-	this->info.blit_sw_CC   = 0;
-	this->info.blit_sw_A    = 1;
+	this->info.blit_hw		= 1;
+	this->info.blit_hw_CC	= 1;
+	this->info.blit_hw_A	= 1;
+	this->info.blit_sw		= 1;
+	this->info.blit_sw_CC	= 0;
+	this->info.blit_sw_A	= 1;
 #endif
-	this->info.video_mem    = AvailMem(MEMF_FAST) / 4096000 * 1000; /* how to get Video Memory size? */
+	this->info.video_mem	= AvailMem(MEMF_FAST) / 4096000 * 1000; /* how to get Video Memory size? */
 	
 	SDL_RastPort = &SDL_Display->RastPort;
 	
@@ -611,29 +611,29 @@ int CGX_CreateWindow(	_THIS, SDL_Surface *screen,
 	/* Create the appropriate colormap */
 	if ( GetCyberMapAttr(SDL_Display->RastPort.BitMap,CYBRMATTR_PIXFMT)==PIXFMT_LUT8 || bpp==8 )
 	{
-	    int ncolors,i;
-	    D(bug("Pens palette allocation...\n"));
+		int ncolors,i;
+		D(bug("Pens palette allocation...\n"));
 
-	    /* Allocate the pixel flags */
-	    if(bpp>=8)
+		/* Allocate the pixel flags */
+		if(bpp>=8)
 			ncolors=256;
-	    else
+		else
 			ncolors = 1 << screen->format->BitsPerPixel;
 
-	    SDL_Pens = (Sint32 *)SDL_malloc(ncolors * sizeof(Sint32));
+		SDL_Pens = (Sint32 *)SDL_malloc(ncolors * sizeof(Sint32));
 
-	    if(SDL_Pens == NULL)
+		if(SDL_Pens == NULL)
 		{
 			SDL_OutOfMemory();
 			return -1;
-	    }
+		}
 
-	    for(i=0;i<ncolors;i++) SDL_Pens[i]=-1;
+		for(i=0;i<ncolors;i++) SDL_Pens[i]=-1;
 
-	    /* always allocate a private colormap on non-default visuals */
-	    if(bpp==8) flags |= SDL_HWPALETTE;
+		/* always allocate a private colormap on non-default visuals */
+		if(bpp==8) flags |= SDL_HWPALETTE;
 
-	    if ( flags & SDL_HWPALETTE ) screen->flags |= SDL_HWPALETTE;
+		if ( flags & SDL_HWPALETTE ) screen->flags |= SDL_HWPALETTE;
 	} 
 
 	if( flags & SDL_FULLSCREEN )
@@ -752,8 +752,8 @@ int CGX_CreateWindow(	_THIS, SDL_Surface *screen,
 				screen->flags |= SDL_OPENGL;
 		}
 	}
-    
-    return 0;
+
+	return 0;
 }
 
 int CGX_ResizeWindow(_THIS, SDL_Surface *screen, int width, int height, Uint32 flags)
@@ -970,7 +970,7 @@ static SDL_Surface *CGX_SetVideoMode(_THIS, SDL_Surface *current, int width, int
 
 			D(bug("Screen bitmap: %ld (%ld), bpp %ld\n",
 					GetCyberMapAttr(SDL_Display->RastPort.BitMap,CYBRMATTR_BPPIX),
-					GetCyberMapAttr(SDL_Display->RastPort.BitMap,CYBRMATTR_DEPTH),                        
+					GetCyberMapAttr(SDL_Display->RastPort.BitMap,CYBRMATTR_DEPTH),
 					bpp));
 		}
 
@@ -994,7 +994,7 @@ static SDL_Surface *CGX_SetVideoMode(_THIS, SDL_Surface *current, int width, int
 
 	if (SDL_Window 
 		&& ((saved_flags&SDL_OPENGL) == (flags&SDL_OPENGL))
-	    && !needcreate)
+		&& !needcreate)
 	{
 		if (CGX_ResizeWindow(this, current, width, height, flags) < 0)
 			current = NULL;
@@ -1077,7 +1077,7 @@ static void CGX_UpdateMouse(_THIS)
 
 static int CGX_SetColors(_THIS, int firstcolor, int ncolors, SDL_Color *colors)
 {
-	int      i;
+	int i;
 
 	if ( (this->screen->flags & SDL_HWPALETTE) && currently_fullscreen )
 	{
@@ -1192,15 +1192,12 @@ static void CGX_VideoQuit(_THIS)
 
 int CGX_ResizeFullScreen(_THIS)
 {
-    int x, y;
-    int real_w, real_h;
-
-    if ( currently_fullscreen )
+	if ( currently_fullscreen )
 	{
 		/* Not supported yet! */
 		D(bug("Resize Full Screen not supported yet\n"));
-    }
-    return(1);
+	}
+	return(1);
 }
 
 static void set_best_resolution(_THIS, int width, int height)
@@ -1237,19 +1234,19 @@ static void set_best_resolution(_THIS, int width, int height)
 
 int CGX_EnterFullScreen(_THIS)
 {
-    int okay;
+	int okay;
 	Uint32 saved_flags;
 
 	D(bug("CGX_EnterFullScreen\n"));
 	
-    okay = 1;
-    saved_flags = this->screen->flags;
+	okay = 1;
+	saved_flags = this->screen->flags;
 
-    if ( ! currently_fullscreen )
+	if ( ! currently_fullscreen )
 	{
-        int real_w, real_h;
+		int real_w, real_h;
 
-        /* Map the fullscreen window to blank the screen */
+		/* Map the fullscreen window to blank the screen */
 		real_w = SDL_Window->Width-SDL_Window->BorderLeft-SDL_Window->BorderRight;
 		real_h = SDL_Window->Height-SDL_Window->BorderBottom-SDL_Window->BorderTop;
 
@@ -1261,23 +1258,22 @@ int CGX_EnterFullScreen(_THIS)
 
 		CGX_CreateWindow(this,this->screen,real_w,real_h,GetCyberMapAttr(SDL_Display->RastPort.BitMap,CYBRMATTR_DEPTH),this->screen->flags);
 
-        /* Set the new resolution */
-        okay = CGX_ResizeFullScreen(this);
-        if ( ! okay ) 
+		/* Set the new resolution */
+		okay = CGX_ResizeFullScreen(this);
+ 		if ( ! okay ) 
 		{
-            CGX_LeaveFullScreen(this);
-        }
-    }
-    return(okay);
+			CGX_LeaveFullScreen(this);
+		}
+	}
+	return(okay);
 }
 
 int CGX_LeaveFullScreen(_THIS)
 {
 	D(bug("CGX_LeaveFullScreen\n"));
 
-    if ( currently_fullscreen )
+	if ( currently_fullscreen )
 	{
-		int width,height;
 		if ( SDL_Window )
 		{
 			CloseWindow(SDL_Window);
@@ -1291,33 +1287,33 @@ int CGX_LeaveFullScreen(_THIS)
 
 		CGX_CreateWindow(this,this->screen,this->screen->w,this->screen->h,GetCyberMapAttr(SDL_Display->RastPort.BitMap,CYBRMATTR_DEPTH),this->screen->flags);
 		CGX_ResizeImage(this,this->screen,0L);
-    }
+	}
 
-    return(0);
+	return(0);
 }
 
 
 /* Gamma correction functions (Not supported) */
 int CGX_SetGamma(_THIS, float red, float green, float blue)
 {
-    SDL_SetError("Gamma correction not supported");
-    return -1;
+	SDL_SetError("Gamma correction not supported");
+	return -1;
 }
 
 int CGX_GetGamma(_THIS, float *red, float *green, float *blue)
 {
-    SDL_SetError("Gamma correction not supported");
-    return -1;
+	SDL_SetError("Gamma correction not supported");
+	return -1;
 }
 
 int CGX_SetGammaRamp(_THIS, Uint16 *ramp)
 {
-    SDL_SetError("Gamma correction not supported");
-    return(-1);
+	SDL_SetError("Gamma correction not supported");
+	return(-1);
 }
 
 int CGX_GetGammaRamp(_THIS, Uint16 *ramp)
 {
-    SDL_SetError("Gamma correction not supported");
-    return(-1);
+	SDL_SetError("Gamma correction not supported");
+	return(-1);
 }

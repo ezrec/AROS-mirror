@@ -29,6 +29,20 @@
 
 #include <aros/macros.h>
 
+/* HW bliting functions */
+static int CGX_HWtoHWBlit(	SDL_Surface *src, SDL_Rect *srcrect,
+							SDL_Surface *dst, SDL_Rect *dstrect);
+static int CGX_HWtoHWBlitA(	SDL_Surface *src, SDL_Rect *srcrect,
+							SDL_Surface *dst, SDL_Rect *dstrect);
+static int CGX_HWtoHWBlitCC(SDL_Surface *src, SDL_Rect *srcrect,
+							SDL_Surface *dst, SDL_Rect *dstrect);
+static int CGX_SWtoHWBlit(	SDL_Surface *src, SDL_Rect *srcrect,
+							SDL_Surface *dst, SDL_Rect *dstrect);
+static int CGX_SWtoHWBlitA(	SDL_Surface *src, SDL_Rect *srcrect,
+							SDL_Surface *dst, SDL_Rect *dstrect);
+static int CGX_SWtoHWBlitCC(SDL_Surface *src, SDL_Rect *srcrect,
+							SDL_Surface *dst, SDL_Rect *dstrect);
+
 int CGX_AllocHWSurface(_THIS, SDL_Surface *surface)
 {
 #ifndef NO_AMIGAHWSURF
