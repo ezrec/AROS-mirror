@@ -668,7 +668,6 @@ int CGX_CreateWindow(	_THIS, SDL_Surface *screen,
 												IDCMP_MOUSEMOVE|IDCMP_ACTIVEWINDOW|IDCMP_INACTIVEWINDOW,
 									WA_BackFill, (ULONG)LAYERS_NOBACKFILL,
 									WA_PubScreen,(ULONG)SDL_Display,
-									WA_GimmeZeroZero, ( flags & SDL_OPENGL )?TRUE:FALSE,
 									TAG_DONE);
 		FillPixelArray(SDL_Window->RPort,SDL_Window->BorderLeft,SDL_Window->BorderTop,w,h,0x00000000);
 		D(bug("Opening WB window of size: %ldx%ld!\n",w,h));
