@@ -891,12 +891,6 @@ static int CGX_CreateWindow(_THIS, SDL_Surface *screen,	int w, int h, int bpp, U
 		}
 	}
 	
-// FIXME this probably should be in mode switch funtion
-	/* Opening a window on new screen shows the cursor. If it was hidden, hide it
-	   again */
-//	if (this->hidden->CursorVisible == 0)
-//		CGX_ShowWMCursor(this, NULL);
-
 	return 0;
 }
 
@@ -1097,6 +1091,12 @@ static int CGX_ToggleFullScreen(_THIS, int on)
 		/* Call video mode change */		
 		CGX_SetVideoMode(this, this->screen, this->screen->w, this->screen->h, this->hidden->depth, flags);
 	}
+
+	/* SDL does not take care of hinding cursor in this case. If it was hidden, hide it
+	   again. Call Intuition direclty */
+	if ((this->hidden->CursorVisible == 0) && (SDL_BlankCursor != NULL))
+		SetPointer(SDL_Window, (UWORD *)SDL_BlankCursor, 1, 1, 0, 0);
+
 
 	CGX_RefreshDisplay(this);
 	
