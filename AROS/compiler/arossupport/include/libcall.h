@@ -84,13 +84,64 @@ typedef unsigned int (*ULONG_FUNC)();
 
 /* Declare relbase if asked */
 #if !defined(AROS_GET_RELBASE) || !defined(AROS_SET_RELBASE)
-extern void *aros_get_relbase(void);
-extern void *aros_set_relbase(void *lib);
-extern void  aros_push_relbase(void *lib);
-extern void *aros_pop_relbase(void);
 
-#define AROS_GET_RELBASE	aros_get_relbase()
-#define AROS_SET_RELBASE(x)	aros_set_relbase(x)
+#define __RELBASE_MAGIC 0x524c4253 /* RLBS */
+
+static inline void *__aros_get_relbase(void)
+{
+    void ***baseptr = (void ***)SysBase->ThisTask->tc_SPLower;
+
+    if (baseptr[1] != (void **)__RELBASE_MAGIC)
+        Alert(AN_StackProbe);
+
+    return **baseptr;
+}
+
+static inline void *__aros_set_relbase(void *libbase)
+{
+    void ***baseptr = (void ***)SysBase->ThisTask->tc_SPLower;
+    void *old;
+
+    if (baseptr[1] != (APTR *)__RELBASE_MAGIC)
+    {
+        baseptr[1] = (APTR *)__RELBASE_MAGIC;
+        *baseptr = &((void **)baseptr)[2];
+        **baseptr = NULL;
+    }
+
+    old = **baseptr;
+    **baseptr = libbase;
+
+    return old;
+}
+
+static inline void __aros_push_relbase(void *libbase)
+{
+    void ***baseptr = (void ***)SysBase->ThisTask->tc_SPLower;
+
+    if (baseptr[1] != (void **)__RELBASE_MAGIC)
+        Alert(AN_StackProbe);
+
+    (*baseptr)++;
+    **baseptr = libbase;
+}
+
+static inline void *__aros_pop_relbase(void)
+{
+    void ***baseptr = (void ***)SysBase->ThisTask->tc_SPLower;
+    void *libbase;
+
+    if (baseptr[1] != (void **)__RELBASE_MAGIC)
+        Alert(AN_StackProbe);
+
+    libbase = **baseptr;
+    (*baseptr)--;
+
+    return libbase;
+}
+
+#define AROS_GET_RELBASE	__aros_get_relbase()
+#define AROS_SET_RELBASE(x)	__aros_set_relbase(x)
 #endif
 
 /* If AROS_GET_LIBBASE/AROS_SET_LIBBASE use relbase by defining them as resp.

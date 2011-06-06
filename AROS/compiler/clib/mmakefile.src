@@ -46,7 +46,6 @@ TESTDIR := $(BINDIR)/Tests
 #   - Common always exist in the link library.
 
 COMMON	:= \
-	aros_relbase \
 	__alloca \
 	__filesystem_support \
 	__isinf \
