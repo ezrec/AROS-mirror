@@ -154,7 +154,7 @@ APTR DisassembleObject(APTR ob, struct DisData *ds, struct DisasmBase *Disassemb
 	    if (len == -1) {
 	        RawDoFmt("\nFailed to disassemble\n"
 			 "Disassembler function returned -1\n",
-			 NULL, dsPutCh, ds);
+			 NULL, (VOID_FUNC)dsPutCh, ds);
 		break;
 	    }
 
@@ -163,33 +163,68 @@ APTR DisassembleObject(APTR ob, struct DisData *ds, struct DisasmBase *Disassemb
 
 		if (!bpl)
 		    bpl = len;
-	        NewRawDoFmt(ADDRESS_FORMAT, dsPutCh, ds, addr, (addr == ds->ds_PC) ? '*' : ' ');
+
+		IPTR rdata1[] =
+		{
+		    (IPTR)addr,
+		    (addr == ds->ds_PC) ? '*' : ' '
+		};
+	        //NewRawDoFmt(ADDRESS_FORMAT, dsPutCh, ds, addr, (addr == ds->ds_PC) ? '*' : ' ');
+		RawDoFmt(ADDRESS_FORMAT, rdata1, (VOID_FUNC)dsPutCh, ds);
 	        for (i = 0; i < bpl;) {
-	            NewRawDoFmt("%02x ", dsPutCh, ds, *addr++);
+		    IPTR rdata3[] =
+		    {
+			*addr
+		    };
+		    RawDoFmt("%02x ", rdata3, (VOID_FUNC)dsPutCh, ds);
+		    addr++;
+	            //NewRawDoFmt("%02x ", dsPutCh, ds, *addr++);
 		    i++;
 		    if (--len == 0)
 		        goto break_hexdump;
 	        }
-		RawDoFmt("\n", NULL, dsPutCh, ds);
+		RawDoFmt("\n", NULL, (VOID_FUNC)dsPutCh, ds);
 	    }
 break_hexdump:
 	    for (; i < obj->dinfo.bytes_per_line; i++)
-		RawDoFmt("   ", NULL, dsPutCh, ds);
-	    NewRawDoFmt("%s\n", dsPutCh, ds, obj->sbuf.buf);
+		RawDoFmt("   ", NULL, (VOID_FUNC)dsPutCh, ds);
+	    IPTR rdata4[] =
+	    {
+		(IPTR)obj->sbuf.buf
+	    };
+	    RawDoFmt("%s\n", rdata4, (VOID_FUNC)dsPutCh, ds);
+	    //NewRawDoFmt("%s\n", dsPutCh, ds, obj->sbuf.buf);
 	}
     } else {
         ReleaseSemaphore(&DisassemblerBase->sem);
-	RawDoFmt("\nInternal disassembler error!!!\n", NULL, dsPutCh, ds);
+	RawDoFmt("\nInternal disassembler error!!!\n", NULL, (VOID_FUNC)dsPutCh, ds);
 	switch (ex) {
 	case EXCEPTION_ABORT:
-	    NewRawDoFmt("abort() in file %s on line %u\n"
-			"Please contact developers.\n",
-			dsPutCh, ds, obj->libc_data.exception_arg1, obj->libc_data.exception_arg2);
-	    break;
+	    {
+		IPTR rdata2[] =
+		{
+		    (IPTR)obj->libc_data.exception_arg1,
+		    obj->libc_data.exception_arg2
+		};
+		RawDoFmt("abort() in file %s on line %u\nPlease contact developers.\n",
+			 rdata2, (VOID_FUNC)dsPutCh, ds);
+		//NewRawDoFmt("abort() in file %s on line %u\n"
+		//"Please contact developers.\n",
+		//dsPutCh, ds, obj->libc_data.exception_arg1, obj->libc_data.exception_arg2);
+		break;
+	    }
 	case EXCEPTION_NO_MEMORY:
-	    NewRawDoFmt("Failed to allocate %u bytes of memory.\n",
-			dsPutCh, ds, obj->libc_data.exception_arg2);
-	    break;
+	    {
+		IPTR rdata5[] =
+		{
+		    obj->libc_data.exception_arg2
+		};
+		RawDoFmt("Failed to allocate %u bytes of memory.\n",
+			 rdata5, (VOID_FUNC)dsPutCh, ds);
+		//NewRawDoFmt("Failed to allocate %u bytes of memory.\n",
+		//dsPutCh, ds, obj->libc_data.exception_arg2);
+		break;
+	    }
 	}
     }
 
