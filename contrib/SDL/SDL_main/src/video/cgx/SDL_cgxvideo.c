@@ -43,7 +43,7 @@
 #include "SDL_cgximage_c.h"
 #include "SDL_cgxaccel_c.h"
 
-#include <aros/macros.h>
+#include <aros/debug.h>
 
 /* Initialization/Query functions */
 static int 			CGX_VideoInit(_THIS, SDL_PixelFormat *vformat);
@@ -69,7 +69,7 @@ static SDL_VideoDevice *CGX_CreateDevice(int devindex);
 
 /* Bootstrap */
 VideoBootStrap CGX_bootstrap = {
-	"CGX", "AmigaOS CyberGraphics", CGX_Available, CGX_CreateDevice
+	"CGX", "AROS CyberGraphics", CGX_Available, CGX_CreateDevice
 };
 
 
@@ -158,8 +158,138 @@ static SDL_VideoDevice *CGX_CreateDevice(int devindex)
 }
 
 
+static Uint32 CGX_OpenCustomScreen(_THIS, SDL_Surface *screen, int width, int height, int bpp, Uint32 flags)
+{
+	Uint32 okid;
+
+	this->hidden->dbuffer = 0;
+	
+	/* This function expects that GFX_Display is not set */
+	if (GFX_Display) {
+		D(bug("CGX_OpenCustomScreen called with GFX_Display still set\n"));
+		SDL_SetError("CGX_OpenCustomScreen called with GFX_Display still set");
+		flags &= ~SDL_FULLSCREEN;
+		flags &= ~SDL_DOUBLEBUF;
+		return flags;
+	}
+
+	okid = BestCModeIDTags(CYBRBIDTG_NominalWidth, width,
+								CYBRBIDTG_NominalHeight, height,
+								CYBRBIDTG_Depth, bpp,
+								TAG_DONE);
+								
+	if ((okid == INVALID_ID) && (bpp == 32))
+	{
+		D(bug("Failed to open a 32bits screen trying 24bits instead\n"));
+		bpp = 24;
+		okid = BestCModeIDTags(CYBRBIDTG_NominalWidth, width,
+									CYBRBIDTG_NominalHeight, height,
+									CYBRBIDTG_Depth, bpp,
+									TAG_DONE);				
+	}
+
+	D(bug("Opening screen %dx%d/%d (id:%lx)...\n", width, height, bpp, okid));
+
+	if(okid != INVALID_ID)
+		GFX_Display = OpenScreenTags(NULL,
+									SA_Width,width,
+									SA_Height,height,
+									SA_Quiet,TRUE,
+									SA_ShowTitle,FALSE,
+									SA_Depth,bpp,
+									SA_DisplayID,okid,
+									TAG_DONE);
+
+	if (!GFX_Display)
+	{
+		D(bug("OpenScreenTags failed!\n"));
+		flags &= ~SDL_FULLSCREEN;
+		flags &= ~SDL_DOUBLEBUF;
+	}
+	else
+	{
+		SDL_Display = GFX_Display;
+
+		D(bug("Screen opened: %d x %d.\n", GFX_Display->Width, GFX_Display->Height));
+
+		if(flags & SDL_DOUBLEBUF)
+		{
+#ifndef NO_AMIGAHWSURF
+			APTR lock = NULL;
+			/* check if surface can be locked, if not => Surface is SW and there is no double buffering!*/
+			lock = LockBitMapTags(	SDL_Display->RastPort.BitMap,
+									TAG_DONE);
+									
+			if (lock)
+			{
+				UnLockBitMap(lock);
+
+				D(bug("Start of DBuffering allocations...\n"));
+				
+				this->hidden->safeport=CreateMsgPort();
+				this->hidden->dispport=CreateMsgPort();
+						
+				this->hidden->SB[0]=AllocScreenBuffer(SDL_Display,NULL,SB_SCREEN_BITMAP);
+				this->hidden->SB[1]=AllocScreenBuffer(SDL_Display,NULL,SB_COPY_BITMAP);
+				
+				if (	this->hidden->safeport
+					&&	this->hidden->dispport
+					&&	this->hidden->SB[0]
+					&&	this->hidden->SB[1])
+				{
+					D(bug("Screen buffers Allocated...\n"));
+					
+					this->hidden->safe_sigbit=1L<< this->hidden->safeport->mp_SigBit;
+					this->hidden->disp_sigbit=1L<< this->hidden->dispport->mp_SigBit;
+
+					this->hidden->SB[0]->sb_DBufInfo->dbi_SafeMessage.mn_ReplyPort=this->hidden->safeport;
+					this->hidden->SB[0]->sb_DBufInfo->dbi_DispMessage.mn_ReplyPort=this->hidden->dispport;
+					this->hidden->SB[1]->sb_DBufInfo->dbi_SafeMessage.mn_ReplyPort=this->hidden->safeport;
+					this->hidden->SB[1]->sb_DBufInfo->dbi_DispMessage.mn_ReplyPort=this->hidden->dispport;
+					
+					this->hidden->dbuffer = 1;
+					if (screen) screen->flags |= SDL_DOUBLEBUF;
+					D(bug("Dbuffering enabled!\n"));
+				}
+				else
+				{
+					if (this->hidden->SB[0]) FreeScreenBuffer(SDL_Display,this->hidden->SB[0]);
+					if (this->hidden->SB[1]) FreeScreenBuffer(SDL_Display,this->hidden->SB[1]);
+					if (this->hidden->safeport) DeleteMsgPort (this->hidden->safeport);
+					if (this->hidden->dispport) DeleteMsgPort (this->hidden->dispport);
+					this->hidden->SB[0] = NULL;
+					this->hidden->SB[1] = NULL;
+					this->hidden->safeport = NULL;
+					this->hidden->dispport = NULL;
+					
+					flags &= ~SDL_DOUBLEBUF;
+					this->hidden->dbuffer = 0;
+					D(bug("Dbuffering failed!\n"));
+				}
+			}
+			else
+			{
+				flags &= ~SDL_DOUBLEBUF;
+				this->hidden->dbuffer = 0;
+				D(bug("Dbuffering failed!\n"));
+			}
+#else
+			flags &= ~SDL_DOUBLEBUF;
+#endif
+		}
+	}
+
+	D(bug("Screen bitmap: %ld (%ld), bpp %ld\n",
+			GetCyberMapAttr(SDL_Display->RastPort.BitMap,CYBRMATTR_BPPIX),
+			GetCyberMapAttr(SDL_Display->RastPort.BitMap,CYBRMATTR_DEPTH),
+			bpp));
+
+	return flags;
+
+}
 static void DestroyScreen(_THIS)
 {
+/* TODO: clear FS/DB flags */
   	if(currently_fullscreen)
 	{
 		if(this->hidden->dbuffer)
@@ -582,11 +712,13 @@ int CGX_CreateWindow(	_THIS, SDL_Surface *screen,
 
 	/* This function assumes any existing window has already been closed */
 	if (SDL_Window != 0) {
+		D(bug("CGX_CreateWindow called when window still open\n"));
 		SDL_SetError("CGX_CreateWindow called when window still open");
 		return (-1);
 	}
 	/* This function assumes any existing GL context has already been freed up */
 	if (this->gl_data->glctx != NULL) {
+		D(bug("CGX_CreateWindow called when GL context still active\n"));
 		SDL_SetError("CGX_CreateWindow called when GL context still active");
 		return (-1);
 	}
@@ -830,29 +962,41 @@ int CGX_ResizeWindow(_THIS, SDL_Surface *screen, int width, int height, Uint32 f
 	Rules:
 
 	(+)if ( curr->WND && req->WND && sizediff && ! bppdiff ) resize_window
-	(-)if ( ! resize_window ) destroy_window
+	(+)if ( ! resize_window ) destroy_window
 	(-)if ( curr->FS && ( sizediff || bppdiff || req->WND ) ) destroy_screen
-	(-)if ( req->FS && ( sizediff || bppdiff || curr->WND ) ) create_screen
-	(-)if ( ! resize_window ) create_window
+	(+)if ( req->FS && ( sizediff || bppdiff || curr->WND ) ) create_screen
+	(+)if ( ! resize_window ) create_window
 
-	(-)if ( destroy_window && curr->SDL_OPENGL ) destroy_context
-	(-)if ( create_window && req->SDL_OPENGL ) create_context
+	(+)if ( destroy_window && curr->SDL_OPENGL ) destroy_context
+	(+)if ( create_window && req->SDL_OPENGL ) create_context
 
-	(-)if ( resize_window && curr->SDL_OPENGL && ! req->SDL_OPENGL ) destroy_context (not supported for now)
-	(-)if ( resize_window && ! curr->SDL_OPENGL && req->SDL_OPENGL ) create_context (not supported for now)
+	(-)if ( resize_window && curr->SDL_OPENGL && ! req->SDL_OPENGL ) destroy_context
+	(-)if ( resize_window && ! curr->SDL_OPENGL && req->SDL_OPENGL ) create_context
 */
+
 static SDL_Surface *CGX_SetVideoMode(_THIS, SDL_Surface *current, int width, int height, int bpp, Uint32 flags)
 {
+	int sizediff = 0, bppdiff = 0, i;
+	
+	sizediff = (current != NULL) ? ((current->w != width) || (current->h != height)) : 1;
+	bppdiff = (this->hidden != NULL) ? (this->hidden->depth != bpp) : 1;
+	
+
+	/* Lock the event thread, in multi-threading environments */
+	SDL_Lock_EventThread();
+
 	/* Decide early on if we are resizing or rebuilding window */
-	if ((current && (current->flags & SDL_FULLSCREEN)) &&
-		(flags & SDL_FULLSCREEN) && ((current->w != width) || (current->h != height)) &&
-		(this->hidden && this->hidden->depth == bpp)) {
+	if ((SDL_Window && current && !(current->flags & SDL_FULLSCREEN)) && !(flags & SDL_FULLSCREEN) 
+		&& (sizediff) && (!bppdiff)) {
 		/* Resize */
 		if (CGX_ResizeWindow(this, current, width, height, flags) < 0)
 			current = NULL;
 		else
 			current->flags |= (flags & SDL_RESIZABLE); /* Resizable only if the user asked it */
 
+		/* Release the event thread */
+		SDL_Unlock_EventThread();
+	
 		/* We're done! */
 		return(current);
 	}
@@ -862,18 +1006,46 @@ static SDL_Surface *CGX_SetVideoMode(_THIS, SDL_Surface *current, int width, int
 	CGX_DestroyWindow(this, current);
 	
 	/* TODO: check if destroy screen */
-	/* TODO: check if create screen */
+	/* TEMP */
+	GFX_Display = NULL;
 	
-	/* TEMP for now */
-	GFX_Display=SDL_Display=LockPubScreen(NULL);
-	flags &= ~SDL_DOUBLEBUF;
-	this->hidden->dbuffer = 0;
+	/* At this point GFX_Display, SDL_Display and SDL_Window are NULL */
+	
+	/* Create new screen if needed */
+	if ((flags & SDL_FULLSCREEN) &&
+		((current && !(current->flags & SDL_FULLSCREEN))
+		|| (sizediff) || (bppdiff))) {
+		flags = CGX_OpenCustomScreen(this, current, width, height, bpp, flags);
+	}
+	
+	if (!GFX_Display) {
+		/*  Attach SDL to Workbench screen if screen opening failed on running 
+			in windowed mode. */
+		GFX_Display = SDL_Display = LockPubScreen(NULL);
+	}
+
+	/* Select visual before creating a window */
+	bpp = this->hidden->depth = GetCyberMapAttr(SDL_Display->RastPort.BitMap,CYBRMATTR_DEPTH);
+	D(bug("Setting screen depth to: %ld\n", this->hidden->depth));
+
+	for (i = 0; i < this->hidden->nvisuals; i++)
+		if (this->hidden->visuals[i].depth == bpp)
+			break;
+
+	if (i == this->hidden->nvisuals) {
+		SDL_SetError("No matching visual for requested depth. Should never happen!");
+		return NULL;	/* should never happen */
+	}
+	SDL_Visual = this->hidden->visuals[i].visual;
 
 	/* Create a new window */
-	if (CGX_CreateWindow(this,current,width,height,bpp,flags) < 0)
+	if (CGX_CreateWindow(this, current, width, height, bpp, flags) < 0)
 		current = NULL;
 	else
 		current->flags |= (flags & SDL_RESIZABLE); /* Resizable only if the user asked it */
+
+	/* Release the event thread */
+	SDL_Unlock_EventThread();
 
 	/* We're done! */
 	return(current);
