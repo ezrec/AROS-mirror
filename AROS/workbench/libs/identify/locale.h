@@ -1,3 +1,6 @@
+#ifndef _LOCALE_H
+#define _LOCALE_H
+
 /*
  * Copyright (c) 2010-2011 Matthias Rustler
  *
@@ -22,38 +25,18 @@
  * $Id$
  */
 
-#include <aros/symbolsets.h>
+#include <exec/types.h>
 
-#include <proto/identify.h>
+#define CATCOMP_NUMBERS
+#include "strings.h"
 
-#include <strings.h>
+/*** Prototypes *************************************************************/
+/* Main *********************************************************************/
+STRPTR  _(ULONG ID);            /* Get a message, as a STRPTR */
+#define __(id) ((IPTR) _(id))   /* Get a message, as an IPTR */
 
-#include "identify_intern.h"
+/* Setup ********************************************************************/
+BOOL Locale_Initialize(void);
+void Locale_Deinitialize(void);
 
-// Global library base so that we can call library functions,
-// e.g. IdFormatString calls IdHardware.
-struct Library *IdentifyBase;
-
-static int InitFunc(struct IdentifyBaseIntern *lh)
-{
-    IdentifyBase = (struct Library *)lh;
-
-    lh->dirtyflag = TRUE;
-    NEWLIST(&lh->libList);
-    InitSemaphore(&lh->sem);
-    lh->poolMem = CreatePool(MEMF_ANY, 1024, 1024);
-    if (!lh->poolMem)
-        return FALSE;
-
-    return TRUE;
-}
-
-static int ExpungeFunc(struct IdentifyBaseIntern *lh)
-{
-    DeletePool(lh->poolMem);
-    lh->poolMem = NULL;
-    return TRUE;
-}
-
-ADD2INITLIB(InitFunc, 0);
-ADD2EXPUNGELIB(ExpungeFunc, 0);
+#endif /* _LOCALE_H */

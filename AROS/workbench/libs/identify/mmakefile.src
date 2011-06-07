@@ -9,19 +9,38 @@ FILES := library \
     idfunction  \
     idhardware  \
     idhardwarenum  \
-    idhardwareupdate
+    idhardwareupdate \
+    locale
 
-#MM workbench-libs-identify-includes : \
+#MM- workbench-libs-identify : \
+#MM     workbench-libs-identify-lib \
+#MM     workbench-libs-identify-test \
+#MM     workbench-libs-identify-tools
+
+#MM- workbench-libs-identify-quick : \
+#MM     workbench-libs-identify-lib-quick \
+#MM     workbench-libs-identify-test-quick \
+#MM     workbench-libs-identify-tools-quick
+
+#MM- workbench-libs-identify-clean : \
+#MM     workbench-libs-identify-lib-clean \
+#MM     workbench-libs-identify-test-clean \
+#MM     workbench-libs-identify-tools-clean
+
+#MM  workbench-libs-identify-lib : \
+#MM    workbench-libs-identify-includes linklibs \
+#MM    workbench-libs-identify-catalogs
+
+#MM- workbench-libs-identify-includes : \
 #MM     kernel-exec-includes \
 #MM     kernel-dos-includes \
 #MM     kernel-utility-includes \
 #MM     includes-copy
 
-#MM workbench-libs-identify : workbench-libs-identify-test linklibs workbench-libs-identify-generated
+#MM workbench-libs-identify-test : \
+#MM    workbench-libs-identify-lib includes linklibs
 
-#MM workbench-libs-identify-test : workbench-libs-identify includes linklibs
-
-%build_module mmake=workbench-libs-identify \
+%build_module mmake=workbench-libs-identify-lib \
     modname=identify modtype=library \
     files="$(FILES)" \
     uselibs="rom"
@@ -31,23 +50,6 @@ FILES := library \
     cflags=$(CFLAGS) \
     uselibs="amiga arosc identify"
 
-GENERATED   := $(TOP)/$(CURDIR)/modulefunctions.h
-
-.PHONY : $(TOP)/$(CURDIR)/modulefunctions.h
-
-#MM
-workbench-libs-identify-generated : $(GENERATED)
-
-$(TOP)/$(CURDIR)/modulefunctions.h :
-	@$(ECHO) Generating $@
-	@$(PYTHON) $(SRCDIR)/$(CURDIR)/getmodulefunctions.py $(SRCDIR) >$@
-
-
 %copy_includes mmake=includes-copy includes=identify.h path=libraries
-
-
-#MM
-identify-clean :
-	-$(RM) $(GENERATED)
 
 %common

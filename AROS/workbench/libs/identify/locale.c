@@ -23,37 +23,55 @@
  */
 
 #include <aros/symbolsets.h>
+#include <exec/types.h>
+#include <proto/locale.h>
 
-#include <proto/identify.h>
+#define CATCOMP_ARRAY
+#include "strings.h"
 
-#include <strings.h>
+#define CATALOG_NAME     "System/Tools/Identify.catalog"
+#define CATALOG_VERSION  0
 
-#include "identify_intern.h"
+/*** Variables **************************************************************/
+static struct Catalog *catalog;
 
-// Global library base so that we can call library functions,
-// e.g. IdFormatString calls IdHardware.
-struct Library *IdentifyBase;
 
-static int InitFunc(struct IdentifyBaseIntern *lh)
+/*** Functions **************************************************************/
+/* Main *********************************************************************/
+CONST_STRPTR _(ULONG id)
 {
-    IdentifyBase = (struct Library *)lh;
+    if (LocaleBase != NULL && catalog != NULL)
+    {
+        return GetCatalogStr(catalog, id, CatCompArray[id].cca_Str);
+    } 
+    else 
+    {
+        return CatCompArray[id].cca_Str;
+    }
+}
 
-    lh->dirtyflag = TRUE;
-    NEWLIST(&lh->libList);
-    InitSemaphore(&lh->sem);
-    lh->poolMem = CreatePool(MEMF_ANY, 1024, 1024);
-    if (!lh->poolMem)
-        return FALSE;
-
+/* Setup ********************************************************************/
+BOOL Locale_Initialize(VOID)
+{
+    if (LocaleBase != NULL)
+    {
+        catalog = OpenCatalog
+        ( 
+            NULL, CATALOG_NAME, OC_Version, CATALOG_VERSION, TAG_DONE 
+        );
+    }
+    else
+    {
+        catalog = NULL;
+    }
+    
     return TRUE;
 }
 
-static int ExpungeFunc(struct IdentifyBaseIntern *lh)
+VOID Locale_Deinitialize(VOID)
 {
-    DeletePool(lh->poolMem);
-    lh->poolMem = NULL;
-    return TRUE;
+    if(LocaleBase != NULL && catalog != NULL) CloseCatalog(catalog);
 }
 
-ADD2INITLIB(InitFunc, 0);
-ADD2EXPUNGELIB(ExpungeFunc, 0);
+ADD2INIT(Locale_Initialize,   90);
+ADD2EXIT(Locale_Deinitialize, 90);

@@ -145,8 +145,14 @@ static void idalert(void)
     puts("-------");
     TEXT buffer1[30];
     TEXT buffer2[30];
-    printf("result %d\n", IdAlertTags(42, IDTAG_DeadStr, buffer1, IDTAG_SpecStr, buffer2, IDTAG_StrLength, 30, TAG_DONE));
-    printf("DeadStr %s SpecStr %s\n", buffer1, buffer2);
+    TEXT buffer3[30];
+    TEXT buffer4[30];
+    printf("result %d\n", IdAlertTags(0x82010007, IDTAG_DeadStr, buffer1, IDTAG_SubsysStr, buffer2, IDTAG_GeneralStr, buffer3, IDTAG_SpecStr, buffer4, IDTAG_StrLength, 30, TAG_DONE));
+    printf("DeadStr %s SubsysStr %s GeneralStr %s SpecStr %s\n", buffer1, buffer2, buffer3, buffer4);
+    printf("result %d\n", IdAlertTags(0x8400000C, IDTAG_DeadStr, buffer1, IDTAG_SubsysStr, buffer2, IDTAG_GeneralStr, buffer3, IDTAG_SpecStr, buffer4, IDTAG_StrLength, 30, TAG_DONE));
+    printf("DeadStr %s SubsysStr %s GeneralStr %s SpecStr %s\n", buffer1, buffer2, buffer3, buffer4);
+    printf("result %d\n", IdAlertTags(0x04010003, IDTAG_DeadStr, buffer1, IDTAG_SubsysStr, buffer2, IDTAG_GeneralStr, buffer3, IDTAG_SpecStr, buffer4, IDTAG_StrLength, 30, TAG_DONE));
+    printf("DeadStr %s SubsysStr %s GeneralStr %s SpecStr %s\n", buffer1, buffer2, buffer3, buffer4);
 }
 
 static void idexpansion(void)
@@ -158,6 +164,17 @@ static void idexpansion(void)
     printf("ManufStr %s\n", buffer);
 }
 
+static void idfunction(void)
+{
+    puts("\nIdFunction");
+    puts("-----------");
+    TEXT buffer[30];
+    printf("result %d\n", IdFunctionTags("identify", 30, IDTAG_FuncNameStr, buffer, IDTAG_StrLength, 30, TAG_DONE));
+    printf("FuncNameStr %s\n", buffer);
+    printf("result %d\n", IdFunctionTags("identify", 36, IDTAG_FuncNameStr, buffer, IDTAG_StrLength, 30, TAG_DONE));
+    printf("FuncNameStr %s\n", buffer);
+}
+
 int main(void)
 {
     idhardwarenum();
@@ -166,6 +183,7 @@ int main(void)
     idestimateformatsize();
     idalert();
     idexpansion();
+    idfunction();
 
     return 0;
 }
