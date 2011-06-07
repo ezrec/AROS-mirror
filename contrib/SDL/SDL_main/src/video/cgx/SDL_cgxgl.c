@@ -63,8 +63,8 @@ int CGX_GL_Init(_THIS)
 		/* RGB(A) Mode ? */
 		attributes[i].ti_Tag = AMA_RGBMode;
 		if ( this->gl_config.red_size   != 0 &&
-		     this->gl_config.blue_size  != 0 &&
-		     this->gl_config.green_size != 0 )
+			 this->gl_config.blue_size  != 0 &&
+			 this->gl_config.green_size != 0 )
 		{
 			attributes[i++].ti_Data = GL_TRUE;
 		}
@@ -87,8 +87,8 @@ int CGX_GL_Init(_THIS)
 		}
 		/* no accum buffer ? */
 		if ( this->gl_config.accum_red_size   != 0 &&
-		     this->gl_config.accum_blue_size  != 0 &&
-		     this->gl_config.accum_green_size != 0 )
+			 this->gl_config.accum_blue_size  != 0 &&
+			 this->gl_config.accum_green_size != 0 )
 		{
 			attributes[i].ti_Tag = AMA_NoAccum;
 			attributes[i++].ti_Data = GL_TRUE;
@@ -214,7 +214,7 @@ int CGX_GL_GetAttribute(_THIS, SDL_GLattr attrib, int* value) {
 			return -1;
 	}
 
-    /* AROSMesa does not support this */
+	/* AROSMesa does not support this */
 	//AROSMesaGetConfig(glcont->visual, mesa_attrib, value);
 	return 0;
 }
