@@ -108,16 +108,6 @@ struct SDL_PrivateVideoData {
 #define SDL_Pens				(this->hidden->Pens)
 #define SDL_temprp				(this->hidden->temprp)
 
-/* Used to get the X cursor from a window-manager specific cursor */
-// extern Cursor SDL_GetWMXCursor(WMcursor *cursor);
-
-extern int CGX_CreateWindow(_THIS, SDL_Surface *screen,
-			    int w, int h, int bpp, Uint32 flags);
-extern int CGX_ResizeWindow(_THIS,
-			SDL_Surface *screen, int w, int h, Uint32 flags);
-
-extern void CGX_DestroyWindow(_THIS, SDL_Surface *screen, Uint32 flags);
-
 extern struct Library 			*CyberGfxBase;
 extern struct IntuitionBase 	*IntuitionBase;
 extern struct GfxBase 			*GfxBase;

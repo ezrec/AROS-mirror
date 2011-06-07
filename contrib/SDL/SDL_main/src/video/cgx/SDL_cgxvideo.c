@@ -58,10 +58,10 @@ static int 			CGX_SetColors(_THIS, int firstcolor, int ncolors, SDL_Color *color
 static void 		CGX_VideoQuit(_THIS);
 
 /* Gamma correction functions */
-int CGX_SetGamma(_THIS, float red, float green, float blue);
-int CGX_GetGamma(_THIS, float *red, float *green, float *blue);
-int CGX_SetGammaRamp(_THIS, Uint16 *ramp);
-int CGX_GetGammaRamp(_THIS, Uint16 *ramp);
+static int CGX_SetGamma(_THIS, float red, float green, float blue);
+static int CGX_GetGamma(_THIS, float *red, float *green, float *blue);
+static int CGX_SetGammaRamp(_THIS, Uint16 *ramp);
+static int CGX_GetGammaRamp(_THIS, Uint16 *ramp);
 
 /* CGX driver bootstrap functions */
 static int 				CGX_Available(void);
@@ -365,7 +365,7 @@ static void CGX_DeleteDevice(SDL_VideoDevice *device)
 	}
 }
 
-void MakeBitMask(_THIS, int format,int *bpp, Uint32 *Rmask, Uint32 *Gmask, Uint32 *Bmask, Uint32 *Amask)
+static void MakeBitMask(_THIS, int format,int *bpp, Uint32 *Rmask, Uint32 *Gmask, Uint32 *Bmask, Uint32 *Amask)
 {
 	if (this->hidden->depth==*bpp)
 	{
@@ -643,7 +643,7 @@ static int CGX_VideoInit(_THIS, SDL_PixelFormat *vformat)
 	return(0);
 }
 
-void CGX_DestroyWindow(_THIS, SDL_Surface *screen, Uint32 flags)
+static void CGX_DestroyWindow(_THIS, SDL_Surface *screen, Uint32 flags)
 {
 	D(bug("Destroy Window...\n"));
 
@@ -707,8 +707,7 @@ static void CGX_SetSizeHints(_THIS, int w, int h, Uint32 flags)
 						h+SDL_Window->BorderTop+SDL_Window->BorderBottom);
 }
 
-int CGX_CreateWindow(	_THIS, SDL_Surface *screen,
-						int w, int h, int bpp, Uint32 flags)
+static int CGX_CreateWindow(_THIS, SDL_Surface *screen,	int w, int h, int bpp, Uint32 flags)
 {
 	Uint32 form, rb, gb, bb, ab;
 
@@ -901,7 +900,7 @@ int CGX_CreateWindow(	_THIS, SDL_Surface *screen,
 	return 0;
 }
 
-int CGX_ResizeWindow(_THIS, SDL_Surface *screen, int width, int height, Uint32 flags)
+static int CGX_ResizeWindow(_THIS, SDL_Surface *screen, int width, int height, Uint32 flags)
 {
 	D(bug("CGX_ResizeWindow\n"));
 	
@@ -1250,25 +1249,25 @@ static void CGX_VideoQuit(_THIS)
 }
 
 /* Gamma correction functions (Not supported) */
-int CGX_SetGamma(_THIS, float red, float green, float blue)
+static  int CGX_SetGamma(_THIS, float red, float green, float blue)
 {
 	SDL_SetError("Gamma correction not supported");
 	return -1;
 }
 
-int CGX_GetGamma(_THIS, float *red, float *green, float *blue)
+static  int CGX_GetGamma(_THIS, float *red, float *green, float *blue)
 {
 	SDL_SetError("Gamma correction not supported");
 	return -1;
 }
 
-int CGX_SetGammaRamp(_THIS, Uint16 *ramp)
+static  int CGX_SetGammaRamp(_THIS, Uint16 *ramp)
 {
 	SDL_SetError("Gamma correction not supported");
 	return(-1);
 }
 
-int CGX_GetGammaRamp(_THIS, Uint16 *ramp)
+static int CGX_GetGammaRamp(_THIS, Uint16 *ramp)
 {
 	SDL_SetError("Gamma correction not supported");
 	return(-1);
