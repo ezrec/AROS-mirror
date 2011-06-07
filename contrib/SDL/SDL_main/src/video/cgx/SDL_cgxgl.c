@@ -27,7 +27,7 @@
 #include "SDL_cgxvideo.h"
 
 #if SDL_VIDEO_OPENGL
-struct Library * MesaBase = NULL;
+struct Library *MesaBase = NULL;
 #endif
 
 /* Init OpenGL */
@@ -39,66 +39,62 @@ int CGX_GL_Init(_THIS)
 	struct Window *win = (struct Window *)SDL_Window;
 
 	if ( this->gl_config.red_size   == 0 &&	this->gl_config.blue_size  == 0 &&
-			this->gl_config.green_size == 0 )
-	{
+			this->gl_config.green_size == 0 ) {
 		SDL_SetError("AROSMesa does not work with indexed color");
 		return(-1);
 	}
 
-	if( this->gl_config.stereo )
-	{
+	if( this->gl_config.stereo ) {
 		SDL_SetError("AROSMesa does not support stereo buffer");
 		return(-1);		
 	}
-
-	if ((MesaBase = OpenLibrary("mesa.library", 17)) != NULL)
-	{
-		/* Required window pointer  */
-		attributes[i].ti_Tag = AMA_Window;	attributes[i++].ti_Data = (IPTR)win;
-
-		/* this->gl_config.double_buffer - skipped, AROSMesa always double-buffer */
-		/* this->gl_config.multisamplebuffers - currently not supported by Mesa */
-		/* this->gl_config.multisamplesample - currently not supported by Mesa */
-
-		/* no depth buffer ? */
-		if ( this->gl_config.depth_size == 0 ) 
-		{
-			attributes[i].ti_Tag = AMA_NoDepth;
-			attributes[i++].ti_Data = GL_TRUE;
-		}
-		/* no stencil buffer ? */
-		if ( this->gl_config.stencil_size == 0 )
-		{
-			attributes[i].ti_Tag = AMA_NoStencil;
-			attributes[i++].ti_Data = GL_TRUE;
-		}
-		/* no accum buffer ? */
-		if ( this->gl_config.accum_red_size   == 0 && 
-				this->gl_config.accum_blue_size  == 0 &&
-			 	this->gl_config.accum_green_size == 0 )
-		{
-			attributes[i].ti_Tag = AMA_NoAccum;
-			attributes[i++].ti_Data = GL_TRUE;
-		}
-
-		/* done */
-		attributes[i].ti_Tag = TAG_DONE;
-
-		this->gl_data->glctx = AROSMesaCreateContext(attributes);
-		if ( this->gl_data->glctx == NULL ) {
-			SDL_SetError("Couldn't create OpenGL context");
+	
+	if ( ! this->gl_config.driver_loaded ) {
+		if ( CGX_GL_LoadLibrary(this, NULL) < 0 ) {
 			return(-1);
 		}
-		this->gl_data->gl_active = 1;
-		this->gl_config.driver_loaded = 1;
-
-		return(0);
 	}
-	else
+
+	/* Required window pointer  */
+	attributes[i].ti_Tag = AMA_Window;	attributes[i++].ti_Data = (IPTR)win;
+
+	/* this->gl_config.double_buffer - skipped, AROSMesa always double-buffer */
+	/* this->gl_config.multisamplebuffers - currently not supported by Mesa */
+	/* this->gl_config.multisamplesample - currently not supported by Mesa */
+
+	/* no depth buffer ? */
+	if ( this->gl_config.depth_size == 0 ) 
 	{
-		SDL_SetError("Could not open mesa.library");
+		attributes[i].ti_Tag = AMA_NoDepth;
+		attributes[i++].ti_Data = GL_TRUE;
+	}
+	/* no stencil buffer ? */
+	if ( this->gl_config.stencil_size == 0 )
+	{
+		attributes[i].ti_Tag = AMA_NoStencil;
+		attributes[i++].ti_Data = GL_TRUE;
+	}
+	/* no accum buffer ? */
+	if ( this->gl_config.accum_red_size   == 0 && 
+			this->gl_config.accum_blue_size  == 0 &&
+		 	this->gl_config.accum_green_size == 0 )
+	{
+		attributes[i].ti_Tag = AMA_NoAccum;
+		attributes[i++].ti_Data = GL_TRUE;
+	}
+
+	/* done */
+	attributes[i].ti_Tag = TAG_DONE;
+
+	this->gl_data->glctx = AROSMesaCreateContext(attributes);
+	if ( this->gl_data->glctx == NULL ) {
+		SDL_SetError("Couldn't create OpenGL context");
 		return(-1);
 	}
+	this->gl_data->gl_active = 1;
+
+	return(0);
+
 #else
 	SDL_SetError("OpenGL support not configured");
 	return(-1);
@@ -113,10 +109,12 @@ void CGX_GL_Quit(_THIS)
 		AROSMesaDestroyContext(this->gl_data->glctx);
 		this->gl_data->glctx = NULL;
 		this->gl_data->gl_active = 0;
-		this->gl_config.driver_loaded = 0;
 	}
-	if (MesaBase) CloseLibrary(MesaBase);
-	MesaBase = NULL;
+	if (MesaBase) {
+		CloseLibrary(MesaBase);
+		this->gl_config.driver_loaded = 0;
+		MesaBase = NULL;
+	}
 #endif
 }
 
@@ -219,10 +217,15 @@ void *CGX_GL_GetProcAddress(_THIS, const char *proc) {
 
 int CGX_GL_LoadLibrary(_THIS, const char *path) {
 
-	if (!MesaBase)
-	{
-		/* TODO: open library here */
-		this->gl_config.driver_loaded = 1;
+	if ( ! MesaBase ) {
+		if ((MesaBase = OpenLibrary("mesa.library", 17)) != NULL) {
+			this->gl_config.driver_loaded = 1;
+		}
+		else {
+			this->gl_config.driver_loaded = 0;
+			SDL_SetError("Could not open mesa.library");
+			return(-1);
+		}
 		this->gl_data->glctx = NULL;
 	}
 	
