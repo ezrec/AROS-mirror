@@ -581,10 +581,16 @@ int CGX_CreateWindow(	_THIS, SDL_Surface *screen,
 
 	D(bug("CGX_CreateWindow %dx%d/%d flags:%lx\n", w, h, bpp, flags));
 
-	/* If a window is already present, destroy it and start fresh */
-	if ( SDL_Window ) CGX_DestroyWindow(this, screen);
-
-	SDL_Window = 0;
+	/* This function assumes any existing window has already been closed */
+	if (SDL_Window != 0) {
+		SDL_SetError("CGX_CreateWindow called when window still open");
+		return (-1);
+	}
+	/* This function assumes any existing GL context has already been freed up */
+	if (this->gl_data->glctx != NULL) {
+		SDL_SetError("CGX_CreateWindow called when GL context still active");
+		return (-1);
+	}
 
 	/* Allocate the new pixel format for this video mode */
 	form = GetCyberIDAttr(CYBRIDATTR_PIXFMT,SDL_Visual);
@@ -734,28 +740,20 @@ int CGX_CreateWindow(	_THIS, SDL_Surface *screen,
 	CGX_ResizeImage(this, screen, flags);
 
 	/* Make OpenGL Context if needed*/
-	if(flags & SDL_OPENGL)
-	{
-		if(this->gl_data->glctx == NULL)
-		{
-			if(CGX_GL_Init(this) < 0)
-				return -1;
-			else
-				screen->flags |= SDL_OPENGL;
+	if(flags & SDL_OPENGL) {
+		if(CGX_GL_CreateContext(this) < 0) {
+			SDL_SetError("Failed to crate GL context");
+			return -1;
 		}
 		else
-		{
-			if(CGX_GL_Update(this) < 0)
-				return -1;
-			else
-				screen->flags |= SDL_OPENGL;
-		}
+			screen->flags |= SDL_OPENGL;
 	}
 	
+// FIXME this probably should be in mode switch funtion
 	/* Opening a window on new screen shows the cursor. If it was hidden, hide it
 	   again */
-	if (this->hidden->CursorVisible == 0)
-		CGX_ShowWMCursor(this, NULL);
+//	if (this->hidden->CursorVisible == 0)
+//		CGX_ShowWMCursor(this, NULL);
 
 	return 0;
 }
@@ -763,6 +761,8 @@ int CGX_CreateWindow(	_THIS, SDL_Surface *screen,
 int CGX_ResizeWindow(_THIS, SDL_Surface *screen, int width, int height, Uint32 flags)
 {
 	D(bug("CGX_ResizeWindow\n"));
+	
+	/* TODO: check if context should be removed */
 
 	/* Resize the window manager window */
 	CGX_SetSizeHints(this, width, height, flags);
@@ -790,233 +790,88 @@ int CGX_ResizeWindow(_THIS, SDL_Surface *screen, int width, int height, Uint32 f
 #endif
 	CGX_ResizeImage(this, screen, flags);
 
+	/* TODO: check if context should be created */
+
 	return 0;
 }
 
+/*  There are several combinations of existing and request parameters that this
+	function needs to support.
+	
+	Explanation of parameters:
+		FS - full screen
+		WND - windowned on Workbench window
+		sizeA, sizeB, sizeAny - some different sizes (width/height) of surfaces
+		bppA, bppB, bppAny - some different bits per pixel of surfaces
+		bppWB - bits per pixel of Workbench
+		OGL - surface uses OpenGL
+		NOGL - surface does not use OpenGL
+
+	Explanation of actions:
+	    wndR       - resize window
+		wndC, wndD - create, destroy window
+		scrC, scrD - create, destroy screen
+		oglC, oglD - create, destroy OpenGL context
+
+	Cases:
+	
+	| Current                | Requested                  | Actions                                                    |
+	| bppWB, sizeA, WND, OGL | bppB, sizeAny, WND, OGL    | Not possible to change bpp of window on Workbench          |
+	| bppWB, sizeA, WND, OGL | bppWB, sizeB, WND, OGL     | wndR(sizeB)                                                |
+	| bppWB, sizeA, WND, OGL | bppWB, sizeB, WND, NOGL    | wndR(sizeB), oglD                                          |
+	| bppWB, sizeA, WND, OGL | bppAny, sizeAny, FS, OGL   | oglD, wndD, scrC(sizeAny, bppAny), wndC(sizeAny), oglC     |
+	| bppWB, sizeA, WND, OGL | bppAny, sizeAny, FS, NOGL  | oglD, wndD, scrC(sizeAny, bppAny), wndC(sizeAny), oglC     |
+	| bppA, sizeA, FS, OGL   | bppB, sizeAny, FS, OGL     | oglD, wndD, scrD, scrC(sizeAny, bppB), wndC(sizeAny), oglC |
+	| bppA, sizeA, FS, OGL   | bppAny, sizeB, FS, OGL     | oglD, wndD, scrD, scrC(sizeB, bppAny), wndC(sizeB), oglC   |
+	| bppA, sizeA, FS, OGL   | bppB, sizeAny, FS, NOGL    | oglD, wndD, scrD, scrC(sizeAny, bppB), wndC(sizeAny)       |
+	| bppA, sizeA, FS, OGL   | bppAny, sizeB, FS, NOGL    | oglD, wndD, scrD, scrC(sizeB, bppAny), wndC(sizeB)         |
+	| bppA, sizeA, FS, OGL   | bppWB, sizeAny, WND, OGL   | oglD, wndD, scrD, wndC(sizeAny), oglC                      |
+	| bppA, sizeA, FS, OGL   | bppWB, sizeAny, WND, NOGL  | oglD, wndD, scrD, wndC(sizeAny)                            |
+
+	Rules:
+
+	(+)if ( curr->WND && req->WND && sizediff && ! bppdiff ) resize_window
+	(-)if ( ! resize_window ) destroy_window
+	(-)if ( curr->FS && ( sizediff || bppdiff || req->WND ) ) destroy_screen
+	(-)if ( req->FS && ( sizediff || bppdiff || curr->WND ) ) create_screen
+	(-)if ( ! resize_window ) create_window
+
+	(-)if ( destroy_window && curr->SDL_OPENGL ) destroy_context
+	(-)if ( create_window && req->SDL_OPENGL ) create_context
+
+	(-)if ( resize_window && curr->SDL_OPENGL && ! req->SDL_OPENGL ) destroy_context (not supported for now)
+	(-)if ( resize_window && ! curr->SDL_OPENGL && req->SDL_OPENGL ) create_context (not supported for now)
+*/
 static SDL_Surface *CGX_SetVideoMode(_THIS, SDL_Surface *current, int width, int height, int bpp, Uint32 flags)
 {
-	Uint32 saved_flags;
-	int needcreate=0;
-
-	D(bug("CGX_SetVideoMode current:%lx, bpp:%ld, flags:%lx\n",current, bpp, flags));
-
-	/* Lock the event thread, in multi-threading environments */
-	SDL_Lock_EventThread();
-
-	// Check if we need to close an already existing videomode...
-	if(   current 
-	   && current->flags&SDL_FULLSCREEN 
-	   && !(flags&SDL_FULLSCREEN))
-	{
-		unsigned long i;
-		D(bug("Discovered we need to re-create window, flags:%lx, current:%lx\n", flags, current->flags));
-
-		needcreate=1;
-
-		D(bug("Destroying image, window & screen!\n"));
-
-		CGX_DestroyImage(this,current);
-		CGX_DestroyWindow(this,current);
-		DestroyScreen(this);
-		GFX_Display=SDL_Display=LockPubScreen(NULL);
-
-		bpp=this->hidden->depth=GetCyberMapAttr(SDL_Display->RastPort.BitMap,CYBRMATTR_DEPTH);
-
-		for ( i = 0; i < this->hidden->nvisuals; i++ )
-		{
-			if ( this->hidden->visuals[i].depth == bpp ) /* era .depth */
-				break;
-		}
-		if ( i == this->hidden->nvisuals )
-		{
-			SDL_SetError("No matching visual for requested depth");
-			return NULL;	/* should never happen */
-		}
-		SDL_Visual = this->hidden->visuals[i].visual;
-
-		D(bug("Setting screen depth to: %ld\n",this->hidden->depth));
-	}
-	
-	/* Check the combination of flags we were passed */
-	if ( flags & SDL_FULLSCREEN )
-	{
-		int i;
-		int buildnewscreen = 1;
-		
-		needcreate=1;
-		
-		/* Clear fullscreen flag if not supported */
-		if (current && current->flags&SDL_FULLSCREEN ) 
-		{
-			if (current->w != width || current->h != height || (this->hidden && this->hidden->depth!=bpp))
-			{
-				D(bug("Deleting previous window...\n"));
-				CGX_DestroyImage(this,current);
-				CGX_DestroyWindow(this,current);
-				DestroyScreen(this);
-			}
-			else
-				buildnewscreen = 0;
-		}
-
-		if (buildnewscreen)
-		{
-			Uint32 okid;
-
-			this->hidden->dbuffer = 0;
-			GFX_Display=NULL;			
-			okid = BestCModeIDTags(CYBRBIDTG_NominalWidth, width,
-										CYBRBIDTG_NominalHeight, height,
-										CYBRBIDTG_Depth, bpp,
-										TAG_DONE);
-										
-			if ((okid == INVALID_ID) && (bpp == 32))
-			{
-				D(bug("Failed to open a 32bits screen trying 24bits instead\n"));
-				bpp = 24;
-				okid = BestCModeIDTags(CYBRBIDTG_NominalWidth, width,
-											CYBRBIDTG_NominalHeight, height,
-											CYBRBIDTG_Depth, bpp,
-											TAG_DONE);				
-			}
-
-			D(bug("Opening screen %dx%d/%d (id:%lx)...\n", width, height, bpp, okid));
-
-			if(okid!=INVALID_ID)
-				GFX_Display=OpenScreenTags(	NULL,
-											SA_Width,width,
-											SA_Height,height,
-											SA_Quiet,TRUE,
-											SA_ShowTitle,FALSE,
-											SA_Depth,bpp,
-											SA_DisplayID,okid,
-											TAG_DONE);
-
-			if (!GFX_Display)
-			{
-				D(bug("OpenScreenTags failed!\n"));
-				GFX_Display=SDL_Display;
-				flags &= ~SDL_FULLSCREEN;
-				flags &= ~SDL_DOUBLEBUF;
-			}
-			else
-			{
-				SDL_Display=GFX_Display;
-	
-				D(bug("Screen opened: %d x %d.\n", GFX_Display->Width, GFX_Display->Height));
-
-				if(flags&SDL_DOUBLEBUF)
-				{
-#ifndef NO_AMIGAHWSURF
-					APTR lock = NULL;
-					/* check if surface can be locked, if not => Surface is SW and there is no double buffering!*/
-					lock = LockBitMapTags(	SDL_Display->RastPort.BitMap,
-											TAG_DONE);
-											
-					if (lock)
-					{
-						UnLockBitMap(lock);
-
-						D(bug("Start of DBuffering allocations...\n"));
-						
-						this->hidden->safeport=CreateMsgPort();
-						this->hidden->dispport=CreateMsgPort();
-								
-						this->hidden->SB[0]=AllocScreenBuffer(SDL_Display,NULL,SB_SCREEN_BITMAP);
-						this->hidden->SB[1]=AllocScreenBuffer(SDL_Display,NULL,SB_COPY_BITMAP);
-						
-						if (	this->hidden->safeport
-							&&	this->hidden->dispport
-							&&	this->hidden->SB[0]
-							&&	this->hidden->SB[1])
-						{
-							D(bug("Screen buffers Allocated...\n"));
-							
-							this->hidden->safe_sigbit=1L<< this->hidden->safeport->mp_SigBit;
-							this->hidden->disp_sigbit=1L<< this->hidden->dispport->mp_SigBit;
-
-							this->hidden->SB[0]->sb_DBufInfo->dbi_SafeMessage.mn_ReplyPort=this->hidden->safeport;
-							this->hidden->SB[0]->sb_DBufInfo->dbi_DispMessage.mn_ReplyPort=this->hidden->dispport;
-							this->hidden->SB[1]->sb_DBufInfo->dbi_SafeMessage.mn_ReplyPort=this->hidden->safeport;
-							this->hidden->SB[1]->sb_DBufInfo->dbi_DispMessage.mn_ReplyPort=this->hidden->dispport;
-							
-							this->hidden->dbuffer = 1;
-							if (current) current->flags |= SDL_DOUBLEBUF;
-							D(bug("Dbuffering enabled!\n"));
-						}
-						else
-						{
-							if (this->hidden->SB[0]) FreeScreenBuffer(SDL_Display,this->hidden->SB[0]);
-							if (this->hidden->SB[1]) FreeScreenBuffer(SDL_Display,this->hidden->SB[1]);
-							if (this->hidden->safeport) DeleteMsgPort (this->hidden->safeport);
-							if (this->hidden->dispport) DeleteMsgPort (this->hidden->dispport);
-							this->hidden->SB[0] = NULL;
-							this->hidden->SB[1] = NULL;
-							this->hidden->safeport = NULL;
-							this->hidden->dispport = NULL;
-							
-							flags &= ~SDL_DOUBLEBUF;
-							this->hidden->dbuffer = 0;
-							D(bug("Dbuffering failed!\n"));
-						}
-					}
-					else
-					{
-						flags &= ~SDL_DOUBLEBUF;
-						this->hidden->dbuffer = 0;
-						D(bug("Dbuffering failed!\n"));
-					}
-#else
-					flags &= ~SDL_DOUBLEBUF;
-#endif
-				}
-			}
-
-			D(bug("Screen bitmap: %ld (%ld), bpp %ld\n",
-					GetCyberMapAttr(SDL_Display->RastPort.BitMap,CYBRMATTR_BPPIX),
-					GetCyberMapAttr(SDL_Display->RastPort.BitMap,CYBRMATTR_DEPTH),
-					bpp));
-		}
-
-		bpp=this->hidden->depth = GetCyberMapAttr(SDL_Display->RastPort.BitMap,CYBRMATTR_DEPTH);
-		D(bug("Setting screen depth to: %ld\n",this->hidden->depth));
-
-		for ( i = 0; i < this->hidden->nvisuals; i++ )
-			if ( this->hidden->visuals[i].depth == bpp ) /* era .depth */
-				break;
-
-		if ( i == this->hidden->nvisuals )
-		{
-			SDL_SetError("No matching visual for requested depth");
-			return NULL;	/* should never happen */
-		}
-		SDL_Visual = this->hidden->visuals[i].visual;
-	}
-
-	/* Set up the window */
-	saved_flags = current->flags;
-
-	if (SDL_Window 
-		&& ((saved_flags&SDL_OPENGL) == (flags&SDL_OPENGL))
-		&& !needcreate)
-	{
+	/* Decide early on if we are resizing or rebuilding window */
+	if ((current && (current->flags & SDL_FULLSCREEN)) &&
+		(flags & SDL_FULLSCREEN) && ((current->w != width) || (current->h != height)) &&
+		(this->hidden && this->hidden->depth == bpp)) {
+		/* Resize */
 		if (CGX_ResizeWindow(this, current, width, height, flags) < 0)
 			current = NULL;
 		else
-			current->flags |= (flags&SDL_RESIZABLE); // Resizable only if the user asked it
-	}
-	else
-	{
-		D(if (SDL_Window) bug("bpp: %d (current %d)\n",bpp, current->format->BitsPerPixel));
-		
-		if (CGX_CreateWindow(this,current,width,height,bpp,flags) < 0)
-			current = NULL;
-		else
-			current->flags |= (flags&SDL_RESIZABLE); // Resizable only if the user asked it
-	}
+			current->flags |= (flags & SDL_RESIZABLE); /* Resizable only if the user asked it */
 
-	/* Release the event thread */
-	SDL_Unlock_EventThread();
+		/* We're done! */
+		return(current);
+	}
+	
+	/* TODO: destroy window */
+	/* TODO: check if destroy screen */
+	/* TODO: check if create screen */
+	
+	/* TEMP for now */
+	GFX_Display=SDL_Display=LockPubScreen(NULL);
+	flags &= ~SDL_DOUBLEBUF;
+	this->hidden->dbuffer = 0;
+
+	/* Create a new window */
+	if (CGX_CreateWindow(this,current,width,height,bpp,flags) < 0)
+		current = NULL;
+	else
+		current->flags |= (flags & SDL_RESIZABLE); /* Resizable only if the user asked it */
 
 	/* We're done! */
 	return(current);
@@ -1233,7 +1088,7 @@ static void set_best_resolution(_THIS, int width, int height)
 	}
 }
 
-
+/* FIXME: these functions need to be switched to use of SetVideoMode */
 int CGX_EnterFullScreen(_THIS)
 {
 	int okay;
