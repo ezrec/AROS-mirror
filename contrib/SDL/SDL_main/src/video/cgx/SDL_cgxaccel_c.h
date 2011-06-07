@@ -35,18 +35,4 @@ extern int 	CGX_CheckHWBlit(_THIS,SDL_Surface *src,SDL_Surface *dst);
 extern int 	CGX_SetHWColorKey(_THIS,SDL_Surface *surface, Uint32 key);
 extern int 	CGX_CreateAlphaPixMap(_THIS,SDL_Surface *surface);
 extern int 	CGX_ColorKeyToAlpha(_THIS,SDL_Surface *surface, Uint32 key);
-
-/* HW bliting functions */
-static int CGX_HWtoHWBlit(	SDL_Surface *src, SDL_Rect *srcrect,
-							SDL_Surface *dst, SDL_Rect *dstrect);
-static int CGX_HWtoHWBlitA(	SDL_Surface *src, SDL_Rect *srcrect,
-							SDL_Surface *dst, SDL_Rect *dstrect);
-static int CGX_HWtoHWBlitCC(SDL_Surface *src, SDL_Rect *srcrect,
-							SDL_Surface *dst, SDL_Rect *dstrect);
-static int CGX_SWtoHWBlit(	SDL_Surface *src, SDL_Rect *srcrect,
-							SDL_Surface *dst, SDL_Rect *dstrect);
-static int CGX_SWtoHWBlitA(	SDL_Surface *src, SDL_Rect *srcrect,
-							SDL_Surface *dst, SDL_Rect *dstrect);
-static int CGX_SWtoHWBlitCC(SDL_Surface *src, SDL_Rect *srcrect,
-							SDL_Surface *dst, SDL_Rect *dstrect);
 #endif
