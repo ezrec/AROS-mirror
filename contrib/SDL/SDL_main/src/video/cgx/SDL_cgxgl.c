@@ -198,12 +198,20 @@ int CGX_GL_GetAttribute(_THIS, SDL_GLattr attrib, int* value) {
 		case SDL_GL_ACCUM_ALPHA_SIZE:
 			mesa_attrib = GL_ACCUM_ALPHA_BITS;
 			break;
+		case SDL_GL_STEREO:
+			mesa_attrib = GL_STEREO;
+			break;
+//		case SDL_GL_MULTISAMPLEBUFFERS:
+//			mesa_attrib =
+//			break;
+//		case SDL_GL_MULTISAMPLESAMPLES:
+//			mesa_attrib =
+//			break;
 		default :
 			return -1;
 	}
 
-	/* AROSMesa does not support this */
-	//AROSMesaGetConfig(glcont->visual, mesa_attrib, value);
+	AROSMesaGetConfig(glcont, mesa_attrib, value);
 	return 0;
 }
 
