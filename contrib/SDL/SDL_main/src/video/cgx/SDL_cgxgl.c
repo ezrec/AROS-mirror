@@ -125,7 +125,7 @@ void CGX_GL_Quit(_THIS)
 }
 
 /* Attach context to another window */
-int CGX_GL_Update(_THIS)
+int CGX_GL_UpdateContext(_THIS)
 {
 #if SDL_VIDEO_OPENGL
 	struct TagItem tags[2];

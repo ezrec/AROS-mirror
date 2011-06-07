@@ -45,6 +45,10 @@
 
 #include <aros/debug.h>
 
+/* This is a special flag that tells video mode change code to not to drop existing
+	GL context. This flag is used to toggle fullscreen on/off */
+#define SDL_KEEP_GL_CONTEXT	0x00000100
+
 /* Initialization/Query functions */
 static int 			CGX_VideoInit(_THIS, SDL_PixelFormat *vformat);
 static SDL_Surface *CGX_SetVideoMode(_THIS, SDL_Surface *current, int width, int height, int bpp, Uint32 flags);
@@ -52,9 +56,6 @@ static int 			CGX_ToggleFullScreen(_THIS, int on);
 static void 		CGX_UpdateMouse(_THIS);
 static int 			CGX_SetColors(_THIS, int firstcolor, int ncolors, SDL_Color *colors);
 static void 		CGX_VideoQuit(_THIS);
-static int 			CGX_ResizeFullScreen(_THIS);
-static int 			CGX_EnterFullScreen(_THIS);
-static int 			CGX_LeaveFullScreen(_THIS);
 
 /* Gamma correction functions */
 int CGX_SetGamma(_THIS, float red, float green, float blue);
@@ -642,22 +643,17 @@ static int CGX_VideoInit(_THIS, SDL_PixelFormat *vformat)
 	return(0);
 }
 
-void CGX_DestroyWindow(_THIS, SDL_Surface *screen)
+void CGX_DestroyWindow(_THIS, SDL_Surface *screen, Uint32 flags)
 {
 	D(bug("Destroy Window...\n"));
 
 	/* Hide the managed window */
-	int was_fullscreen = 0;
 	this->hidden->window_active = 0;
 
 	/* Clean up OpenGL */
-	if ( screen && ( screen->flags & SDL_OPENGL )) {
+	if ( screen && ( screen->flags & SDL_OPENGL ) && ! (flags & SDL_KEEP_GL_CONTEXT)) {
 		CGX_GL_DestroyContext(this);
 		screen->flags &= ~(SDL_OPENGL|SDL_OPENGLBLIT);
-	}
-
-	if ( screen && (screen->flags & SDL_FULLSCREEN) ) {
-		was_fullscreen = 1;
 	}
 
 	/* Free the colormap entries */
@@ -667,7 +663,7 @@ void CGX_DestroyWindow(_THIS, SDL_Surface *screen)
 			&&	GFX_Display
 			&&	this->screen->format
 			&&	this->hidden->depth == 8
-			&&	!was_fullscreen) {
+			&&	! ( screen && (screen->flags & SDL_FULLSCREEN) ) ) {
 			int numcolors = 1 << this->screen->format->BitsPerPixel;
 			unsigned long pen;
 
@@ -725,7 +721,7 @@ int CGX_CreateWindow(	_THIS, SDL_Surface *screen,
 		return (-1);
 	}
 	/* This function assumes any existing GL context has already been freed up */
-	if (this->gl_data->glctx != NULL) {
+	if (!(flags & SDL_KEEP_GL_CONTEXT) && (this->gl_data->glctx != NULL)) {
 		D(bug("CGX_CreateWindow called when GL context still active\n"));
 		SDL_SetError("CGX_CreateWindow called when GL context still active");
 		return (-1);
@@ -828,7 +824,7 @@ int CGX_CreateWindow(	_THIS, SDL_Surface *screen,
 		&&	(this->hidden->dbuffer) )
 	{
 		D(bug("Double Buffering in use\n",w,h));
-		if(SDL_RastPort = CreateRastPort())
+		if((SDL_RastPort = CreateRastPort()) != NULL)
 		{
 			SDL_RastPort->BitMap=this->hidden->SB[1]->sb_BitMap;
 			screen->flags |= SDL_DOUBLEBUF;
@@ -880,12 +876,20 @@ int CGX_CreateWindow(	_THIS, SDL_Surface *screen,
 
 	/* Make OpenGL Context if needed*/
 	if(flags & SDL_OPENGL) {
-		if(CGX_GL_CreateContext(this) < 0) {
-			SDL_SetError("Failed to crate GL context");
-			return -1;
+		if (flags & SDL_KEEP_GL_CONTEXT) {
+			/* Context was not destroyed, update it here */
+			if (CGX_GL_UpdateContext(this) < 0) {
+				SDL_SetError("Failed to update GL context");
+				return -1;
+			}
+		} else {
+			if(CGX_GL_CreateContext(this) < 0) {
+				SDL_SetError("Failed to crate GL context");
+				return -1;
+			}
+			else
+				screen->flags |= SDL_OPENGL;
 		}
-		else
-			screen->flags |= SDL_OPENGL;
 	}
 	
 // FIXME this probably should be in mode switch funtion
@@ -975,8 +979,9 @@ int CGX_ResizeWindow(_THIS, SDL_Surface *screen, int width, int height, Uint32 f
 	(+)if ( req->FS && ( sizediff || bppdiff || curr->WND ) ) create_screen
 	(+)if ( ! resize_window ) create_window
 
-	(+)if ( destroy_window && curr->SDL_OPENGL ) destroy_context
-	(+)if ( create_window && req->SDL_OPENGL ) create_context
+	(+)if ( destroy_window && curr->SDL_OPENGL && ! req->SDL_KEEP_GL_CONTEXT ) destroy_context
+	(+)if ( create_window && req->SDL_OPENGL && ! req->SDL_KEEP_GL_CONTEXT ) create_context
+	(+)if ( create_window && req->SDL_OPENGL && req->SDL_KEEP_GL_CONTEXT ) update_context
 
 	(-)if ( resize_window && curr->SDL_OPENGL && ! req->SDL_OPENGL ) destroy_context
 	(-)if ( resize_window && ! curr->SDL_OPENGL && req->SDL_OPENGL ) create_context
@@ -1011,7 +1016,7 @@ static SDL_Surface *CGX_SetVideoMode(_THIS, SDL_Surface *current, int width, int
 	
 	/* Destroy existing window */
 	CGX_DestroyImage(this, current);
-	CGX_DestroyWindow(this, current);
+	CGX_DestroyWindow(this, current, flags);
 	
 	/* Destroy existing screen if needed */
 	if ((current && (current->flags & SDL_FULLSCREEN)) &&
@@ -1077,13 +1082,21 @@ static int CGX_ToggleFullScreen(_THIS, int on)
 
 	if (on)
 	{
-		this->screen->flags |= SDL_FULLSCREEN;
-		CGX_EnterFullScreen(this);
+		Uint32 flags = this->screen->flags;
+		flags |= SDL_FULLSCREEN;
+		flags |= SDL_KEEP_GL_CONTEXT;
+
+		/* Call video mode change */		
+		CGX_SetVideoMode(this, this->screen, this->screen->w, this->screen->h, this->hidden->depth, flags);
 	} 
 	else
 	{
-		this->screen->flags &= ~SDL_FULLSCREEN;
-		CGX_LeaveFullScreen(this);
+		Uint32 flags = this->screen->flags;
+		flags &= ~SDL_FULLSCREEN;
+		flags |= SDL_KEEP_GL_CONTEXT;
+
+		/* Call video mode change */		
+		CGX_SetVideoMode(this, this->screen, this->screen->w, this->screen->h, this->hidden->depth, flags);
 	}
 
 	CGX_RefreshDisplay(this);
@@ -1195,7 +1208,7 @@ static void CGX_VideoQuit(_THIS)
 		D(bug("Destroying image...\n"));
 		CGX_DestroyImage(this, this->screen);
 		D(bug("Destroying window...\n"));
-		CGX_DestroyWindow(this, this->screen);
+		CGX_DestroyWindow(this, this->screen, 0);
 		/* Otherwise SDL_VideoQuit will try to free it! */
 		SDL_VideoSurface=NULL;
 		CGX_FreeVideoModes(this);
@@ -1235,109 +1248,6 @@ static void CGX_VideoQuit(_THIS)
 	D(bug("End of CGX_VideoQuit.\n"));
 
 }
-
-int CGX_ResizeFullScreen(_THIS)
-{
-	if ( currently_fullscreen )
-	{
-		/* Not supported yet! */
-		D(bug("Resize Full Screen not supported yet\n"));
-	}
-	return(1);
-}
-
-static void set_best_resolution(_THIS, int width, int height)
-{
-	Uint32 idok;
-	int depth=8;
-
-	if(SDL_Display)	depth=GetCyberMapAttr(SDL_Display->RastPort.BitMap,CYBRMATTR_DEPTH);
-
-	idok=BestCModeIDTags(	CYBRBIDTG_NominalWidth,width,
-							CYBRBIDTG_NominalHeight,height,
-							CYBRBIDTG_Depth,depth,
-							TAG_DONE);
-
-	if(idok!=INVALID_ID)
-	{
-		if(SDL_Display)
-		{
-			if(currently_fullscreen)
-				CloseScreen(SDL_Display);
-			else
-				UnlockPubScreen(NULL,SDL_Display);
-		}
-		SDL_Display=GFX_Display=OpenScreenTags(	NULL,
-												SA_Width,width,
-												SA_Height,height,
-												SA_Depth,depth,
-												SA_DisplayID,idok,
-												SA_ShowTitle,FALSE,
-												TAG_DONE);
-	}
-}
-
-/* FIXME: these functions need to be switched to use of SetVideoMode */
-int CGX_EnterFullScreen(_THIS)
-{
-	int okay;
-	Uint32 saved_flags;
-
-	D(bug("CGX_EnterFullScreen\n"));
-	
-	okay = 1;
-	saved_flags = this->screen->flags;
-
-	if ( ! currently_fullscreen )
-	{
-		int real_w, real_h;
-
-		/* Map the fullscreen window to blank the screen */
-		real_w = SDL_Window->Width-SDL_Window->BorderLeft-SDL_Window->BorderRight;
-		real_h = SDL_Window->Height-SDL_Window->BorderBottom-SDL_Window->BorderTop;
-
-		CGX_DestroyWindow(this,this->screen);
-		set_best_resolution(this, real_w,real_h);
-
-		currently_fullscreen = 1;
-		this->screen->flags = saved_flags;
-
-		CGX_CreateWindow(this,this->screen,real_w,real_h,GetCyberMapAttr(SDL_Display->RastPort.BitMap,CYBRMATTR_DEPTH),this->screen->flags);
-
-		/* Set the new resolution */
-		okay = CGX_ResizeFullScreen(this);
- 		if ( ! okay ) 
-		{
-			CGX_LeaveFullScreen(this);
-		}
-	}
-	return(okay);
-}
-
-int CGX_LeaveFullScreen(_THIS)
-{
-	D(bug("CGX_LeaveFullScreen\n"));
-
-	if ( currently_fullscreen )
-	{
-		if ( SDL_Window )
-		{
-			CloseWindow(SDL_Window);
-			SDL_Window=NULL;
-		}
-		CloseScreen(SDL_Display);
-
-		GFX_Display=SDL_Display=LockPubScreen(NULL);
-
-		currently_fullscreen = 0;
-
-		CGX_CreateWindow(this,this->screen,this->screen->w,this->screen->h,GetCyberMapAttr(SDL_Display->RastPort.BitMap,CYBRMATTR_DEPTH),this->screen->flags);
-		CGX_ResizeImage(this,this->screen,0L);
-	}
-
-	return(0);
-}
-
 
 /* Gamma correction functions (Not supported) */
 int CGX_SetGamma(_THIS, float red, float green, float blue)

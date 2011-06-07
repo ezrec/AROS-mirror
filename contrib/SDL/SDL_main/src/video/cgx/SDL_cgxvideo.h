@@ -116,7 +116,7 @@ extern int CGX_CreateWindow(_THIS, SDL_Surface *screen,
 extern int CGX_ResizeWindow(_THIS,
 			SDL_Surface *screen, int w, int h, Uint32 flags);
 
-extern void CGX_DestroyWindow(_THIS, SDL_Surface *screen);
+extern void CGX_DestroyWindow(_THIS, SDL_Surface *screen, Uint32 flags);
 
 extern struct Library 			*CyberGfxBase;
 extern struct IntuitionBase 	*IntuitionBase;
