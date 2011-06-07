@@ -70,7 +70,7 @@ int CGX_GetVideoModes(_THIS)
 		{
 			DisplayInfoHandle h;
 
-			if(h=FindDisplayInfo(nextid))
+			if((h = FindDisplayInfo(nextid)) != 0)
 			{
 				struct DimensionInfo info;
 

@@ -120,9 +120,9 @@ int CGX_LockHWSurface(_THIS, SDL_Surface *surface)
 		{	
 			Uint32 pitch;
 
-			if(surface->hwdata->lock=LockBitMapTags(surface->hwdata->bmap,
+			if((surface->hwdata->lock = LockBitMapTags(surface->hwdata->bmap,
 					LBMI_BASEADDRESS,(ULONG)&surface->pixels,
-					LBMI_BYTESPERROW,(ULONG)&pitch,TAG_DONE))
+					LBMI_BYTESPERROW,(ULONG)&pitch,TAG_DONE)) != NULL)
 			{
 				D(bug("Done...\n"));
 				surface->pitch=pitch;
@@ -385,7 +385,7 @@ int CGX_CreateAlphaPixMap(_THIS,SDL_Surface *surface)
 		&& (surface->format->BytesPerPixel > 1))
 	{
 		if (surface->hwdata->pixarrayalpha) SDL_free(surface->hwdata->pixarrayalpha);
-		if (surface->hwdata->pixarrayalpha = SDL_malloc(surface->w * surface->h * 4))
+		if ((surface->hwdata->pixarrayalpha = SDL_malloc(surface->w * surface->h * 4)) != NULL)
 		{
 			if(!SDL_temprp) SDL_temprp = CreateRastPort();
 			SDL_temprp->BitMap=(struct BitMap *)surface->hwdata->bmap;
