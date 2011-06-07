@@ -43,10 +43,6 @@ int CGX_GL_Init(_THIS)
 {
 		/* default config. Always used... */
 		attributes[i].ti_Tag = AMA_Window;	attributes[i++].ti_Data = (unsigned long)win;
-		attributes[i].ti_Tag = AMA_Left;	attributes[i++].ti_Data = 0;
-		attributes[i].ti_Tag = AMA_Bottom;	attributes[i++].ti_Data = 0;
-		attributes[i].ti_Tag = AMA_Width;	attributes[i++].ti_Data = win->Width-win->BorderLeft-win->BorderRight;
-		attributes[i].ti_Tag = AMA_Height;	attributes[i++].ti_Data = win->Height-win->BorderBottom-win->BorderTop;
 		/* attributes[i].ti_Tag = AMA_DirectRender; attributes[i++].ti_Data = GL_TRUE; */ /*NOT SUPPORTED */
 
 		/* double buffer ? */
