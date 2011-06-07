@@ -512,40 +512,39 @@ void CGX_DestroyWindow(_THIS, SDL_Surface *screen)
 	this->hidden->window_active = 0;
 
 	/* Clean up OpenGL */
-	if ( screen ) screen->flags &= ~(SDL_OPENGL|SDL_OPENGLBLIT);
+	if ( screen && ( screen->flags & SDL_OPENGL )) {
+		CGX_GL_DestroyContext(this);
+		screen->flags &= ~(SDL_OPENGL|SDL_OPENGLBLIT);
+	}
 
-	if ( screen && (screen->flags & SDL_FULLSCREEN) )
-	{
+	if ( screen && (screen->flags & SDL_FULLSCREEN) ) {
 		was_fullscreen = 1;
-		screen->flags &= ~SDL_FULLSCREEN;
+//FIXME this should be changed in DestroyScreen		screen->flags &= ~SDL_FULLSCREEN;
 	}
 
 	/* Free the colormap entries */
-	if ( SDL_Pens )
-	{
+	if ( SDL_Pens )	{
 		if (	this->screen
 			&& 	this->hidden
 			&&	GFX_Display
 			&&	this->screen->format
-			&&	this->hidden->depth==8
-			&&	!was_fullscreen)
-		{
+			&&	this->hidden->depth == 8
+			&&	!was_fullscreen) {
 			int numcolors = 1 << this->screen->format->BitsPerPixel;
 			unsigned long pen;
 
-			if(numcolors>256) numcolors=256;
+			if(numcolors > 256) numcolors = 256;
 
 			D(bug("Releasing %d pens...\n", numcolors));
-			for ( pen=0; pen<numcolors; pen++ )
-				if(SDL_Pens[pen]>=0) ReleasePen(GFX_Display->ViewPort.ColorMap,SDL_Pens[pen]);
+			for ( pen=0; pen < numcolors; pen++ )
+				if(SDL_Pens[pen] >= 0) ReleasePen(GFX_Display->ViewPort.ColorMap,SDL_Pens[pen]);
 		}
 		SDL_free(SDL_Pens);
 		SDL_Pens = NULL;
 	}
 
 	/* Destroy the output window */
-	if ( SDL_Window )
-	{
+	if ( SDL_Window ) {
 #ifndef NO_AMIGAHWSURF
 		if (this->hidden->temprp) FreeRastPort(this->hidden->temprp);
 		this->hidden->temprp = NULL;
@@ -553,7 +552,7 @@ void CGX_DestroyWindow(_THIS, SDL_Surface *screen)
 		this->hidden->BlitBitMap = NULL;
 #endif
 		CloseWindow(SDL_Window);
-		SDL_Window=NULL;
+		SDL_Window = NULL;
 	}
 }
 
@@ -808,7 +807,7 @@ int CGX_ResizeWindow(_THIS, SDL_Surface *screen, int width, int height, Uint32 f
 		NOGL - surface does not use OpenGL
 
 	Explanation of actions:
-	    wndR       - resize window
+		wndR	   - resize window
 		wndC, wndD - create, destroy window
 		scrC, scrD - create, destroy screen
 		oglC, oglD - create, destroy OpenGL context
@@ -858,7 +857,10 @@ static SDL_Surface *CGX_SetVideoMode(_THIS, SDL_Surface *current, int width, int
 		return(current);
 	}
 	
-	/* TODO: destroy window */
+	/* Destroy existing window */
+	CGX_DestroyImage(this, current);
+	CGX_DestroyWindow(this, current);
+	
 	/* TODO: check if destroy screen */
 	/* TODO: check if create screen */
 	
