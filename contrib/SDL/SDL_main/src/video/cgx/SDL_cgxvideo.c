@@ -287,48 +287,57 @@ static Uint32 CGX_OpenCustomScreen(_THIS, SDL_Surface *screen, int width, int he
 	return flags;
 
 }
-static void DestroyScreen(_THIS)
+
+static void CGX_CloseCustomScreen(_THIS, SDL_Surface *screen)
 {
-/* TODO: clear FS/DB flags */
-  	if(currently_fullscreen)
+	if(this->hidden->dbuffer)
 	{
-		if(this->hidden->dbuffer)
+		D(bug("Freeing double buffering stuff..."));
+
+		this->hidden->dbuffer = 0;
+		if (screen) screen->flags &= ~SDL_DOUBLEBUF;
+		if(this->hidden->SB[1]) FreeScreenBuffer(SDL_Display,this->hidden->SB[1]);
+		if(this->hidden->SB[0]) FreeScreenBuffer(SDL_Display,this->hidden->SB[0]);
+
+		D(bug("Screen buffers OK..."));			
+		
+		if(this->hidden->safeport)
 		{
-			D(bug("Freeing double buffering stuff..."));
-
-			this->hidden->dbuffer=0;
-			if(this->hidden->SB[1]) FreeScreenBuffer(SDL_Display,this->hidden->SB[1]);
-			if(this->hidden->SB[0]) FreeScreenBuffer(SDL_Display,this->hidden->SB[0]);
-
-			D(bug("Screen buffers OK..."));			
-			
-			if(this->hidden->safeport)
-			{
-				while(GetMsg(this->hidden->safeport)!=NULL);
+			while(GetMsg(this->hidden->safeport) != NULL);
 				DeleteMsgPort(this->hidden->safeport);
-			}
-			D(bug("safeport OK..."));			
-			if(this->hidden->dispport)
-			{
-				while(GetMsg(this->hidden->dispport)!=NULL);
-				DeleteMsgPort(this->hidden->dispport);
-			}
-			D(bug("dispport OK..."));			
-
-			this->hidden->SB[0]=this->hidden->SB[1]=NULL;
-
-			if(SDL_RastPort && SDL_RastPort != &SDL_Display->RastPort) FreeRastPort(SDL_RastPort);
-			SDL_RastPort=NULL;
-			D(bug("Rastport OK..."));			
 		}
-		D(bug("Closing screen..."));
-		CloseScreen(GFX_Display);
-		currently_fullscreen=0;
-	}
-	else if(GFX_Display)
-		UnlockPubScreen(NULL,GFX_Display);
+		D(bug("safeport OK..."));			
+		if(this->hidden->dispport)
+		{
+			while(GetMsg(this->hidden->dispport) != NULL);
+				DeleteMsgPort(this->hidden->dispport);
+		}
+		D(bug("dispport OK..."));			
 
-	GFX_Display = NULL;
+		this->hidden->SB[0]=this->hidden->SB[1] = NULL;
+
+		if(SDL_RastPort && SDL_RastPort != &SDL_Display->RastPort) FreeRastPort(SDL_RastPort);
+		SDL_RastPort=NULL;
+		D(bug("Rastport OK..."));			
+	}
+
+	D(bug("Closing screen..."));
+	CloseScreen(GFX_Display);
+	GFX_Display = NULL; SDL_Display = NULL;
+	currently_fullscreen = 0;
+	if (screen) screen->flags &= ~SDL_FULLSCREEN;
+}
+
+static void CGX_CloseUnlockScreen(_THIS, SDL_Surface *screen)
+{
+  	if(currently_fullscreen) {
+		CGX_CloseCustomScreen(this, screen);
+	}
+	else if(GFX_Display) {
+		UnlockPubScreen(NULL, GFX_Display);
+		GFX_Display = NULL; SDL_Display = NULL;
+	}
+
 	D(bug("Ok\n"));
 }
 
@@ -649,7 +658,6 @@ void CGX_DestroyWindow(_THIS, SDL_Surface *screen)
 
 	if ( screen && (screen->flags & SDL_FULLSCREEN) ) {
 		was_fullscreen = 1;
-//FIXME this should be changed in DestroyScreen		screen->flags &= ~SDL_FULLSCREEN;
 	}
 
 	/* Free the colormap entries */
@@ -963,7 +971,7 @@ int CGX_ResizeWindow(_THIS, SDL_Surface *screen, int width, int height, Uint32 f
 
 	(+)if ( curr->WND && req->WND && sizediff && ! bppdiff ) resize_window
 	(+)if ( ! resize_window ) destroy_window
-	(-)if ( curr->FS && ( sizediff || bppdiff || req->WND ) ) destroy_screen
+	(+)if ( curr->FS && ( sizediff || bppdiff || req->WND ) ) destroy_screen
 	(+)if ( req->FS && ( sizediff || bppdiff || curr->WND ) ) create_screen
 	(+)if ( ! resize_window ) create_window
 
@@ -1005,16 +1013,23 @@ static SDL_Surface *CGX_SetVideoMode(_THIS, SDL_Surface *current, int width, int
 	CGX_DestroyImage(this, current);
 	CGX_DestroyWindow(this, current);
 	
-	/* TODO: check if destroy screen */
-	/* TEMP */
-	GFX_Display = NULL;
-	
-	/* At this point GFX_Display, SDL_Display and SDL_Window are NULL */
+	/* Destroy existing screen if needed */
+	if ((current && (current->flags & SDL_FULLSCREEN)) &&
+		((!(flags & SDL_FULLSCREEN)) || (sizediff) || (bppdiff))) {
+		CGX_CloseCustomScreen(this, current);
+	}
 	
 	/* Create new screen if needed */
 	if ((flags & SDL_FULLSCREEN) &&
 		((current && !(current->flags & SDL_FULLSCREEN))
 		|| (sizediff) || (bppdiff))) {
+		
+		/* Release hold on Workbench screen first */
+		if (current && !(current->flags & SDL_FULLSCREEN)) {
+			UnlockPubScreen(NULL, GFX_Display);
+			GFX_Display = NULL; SDL_Display = NULL;
+		}
+
 		flags = CGX_OpenCustomScreen(this, current, width, height, bpp, flags);
 	}
 	
@@ -1195,7 +1210,7 @@ static void CGX_VideoQuit(_THIS)
 		D(bug("Destroying screen...\n"));
 
 		if ( GFX_Display != NULL )
-			DestroyScreen(this);
+			CGX_CloseUnlockScreen(this, NULL);
 
 		SDL_Display = NULL;
 	}
