@@ -58,8 +58,8 @@ int CGX_GL_Init(_THIS)
 		attributes[i].ti_Tag = AMA_Window;	attributes[i++].ti_Data = (IPTR)win;
 
 		/* this->gl_config.double_buffer - skipped, AROSMesa always double-buffer */
-		/* this->gl_config.multisamplebuffers - TODO: add support */
-		/* this->gl_config.multisamplesample - TODO: add support */
+		/* this->gl_config.multisamplebuffers - currently not supported by Mesa */
+		/* this->gl_config.multisamplesample - currently not supported by Mesa */
 
 		/* no depth buffer ? */
 		if ( this->gl_config.depth_size == 0 ) 
@@ -201,13 +201,11 @@ int CGX_GL_GetAttribute(_THIS, SDL_GLattr attrib, int* value) {
 		case SDL_GL_STEREO:
 			mesa_attrib = GL_STEREO;
 			break;
-//		case SDL_GL_MULTISAMPLEBUFFERS:
-//			mesa_attrib =
-//			break;
-//		case SDL_GL_MULTISAMPLESAMPLES:
-//			mesa_attrib =
-//			break;
-		default :
+		case SDL_GL_MULTISAMPLEBUFFERS:
+			return 0;
+		case SDL_GL_MULTISAMPLESAMPLES:
+			return 0;
+		default:
 			return -1;
 	}
 
