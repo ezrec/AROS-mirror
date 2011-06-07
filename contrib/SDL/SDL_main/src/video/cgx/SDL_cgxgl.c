@@ -39,7 +39,7 @@ int CGX_GL_Init(_THIS)
 	struct TagItem attributes [ 14 ]; /* 14 should be more than enough :) */
 	struct Window *win = (struct Window *)SDL_Window;
 	
-	if (MesaBase = OpenLibrary("mesa.library",0))
+	if (MesaBase = OpenLibrary("mesa.library", 17))
 {
 		/* default config. Always used... */
 		attributes[i].ti_Tag = AMA_Window;	attributes[i++].ti_Data = (unsigned long)win;
@@ -146,9 +146,8 @@ int CGX_GL_Update(_THIS)
 	tags[0].ti_Tag = AMA_Window;
 	tags[0].ti_Data = (unsigned long)win;
 	tags[1].ti_Tag = TAG_DONE;
-    
-    /* AROSMesa does not support this */
-    //AROSMesaSetRast(glcont, tags);
+
+	AROSMesaSetRast(glcont, tags);
 
 	return 0;
 #else
