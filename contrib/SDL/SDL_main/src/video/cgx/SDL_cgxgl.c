@@ -36,38 +36,30 @@ int CGX_GL_Init(_THIS)
 {
 #if SDL_VIDEO_OPENGL
 	LONG i = 0;
-	struct TagItem attributes [ 14 ]; /* 14 should be more than enough :) */
+	struct TagItem attributes [10];
 	struct Window *win = (struct Window *)SDL_Window;
-	
-	if (MesaBase = OpenLibrary("mesa.library", 17))
-{
-		/* default config. Always used... */
-		attributes[i].ti_Tag = AMA_Window;	attributes[i++].ti_Data = (unsigned long)win;
-		/* attributes[i].ti_Tag = AMA_DirectRender; attributes[i++].ti_Data = GL_TRUE; */ /*NOT SUPPORTED */
 
-		/* double buffer ? */
-		attributes[i].ti_Tag = AMA_DoubleBuf;
-		if ( this->gl_config.double_buffer ) 
-		{
-			attributes[i++].ti_Data = GL_TRUE;
-		}
-		else
-		{
-			attributes[i++].ti_Data = GL_FALSE;
-		}
+	if ( this->gl_config.red_size   == 0 &&	this->gl_config.blue_size  == 0 &&
+			this->gl_config.green_size == 0 )
+	{
+		SDL_SetError("AROSMesa does not work with indexed color");
+		return(-1);
+	}
 
-		/* RGB(A) Mode ? */
-		attributes[i].ti_Tag = AMA_RGBMode;
-		if ( this->gl_config.red_size   != 0 &&
-			 this->gl_config.blue_size  != 0 &&
-			 this->gl_config.green_size != 0 )
-		{
-			attributes[i++].ti_Data = GL_TRUE;
-		}
-		else
-		{
-			attributes[i++].ti_Data = GL_FALSE;
-		}
+	if( this->gl_config.stereo )
+	{
+		SDL_SetError("AROSMesa does not support stereo buffer");
+		return(-1);		
+	}
+
+	if ((MesaBase = OpenLibrary("mesa.library", 17)) != NULL)
+	{
+		/* Required window pointer  */
+		attributes[i].ti_Tag = AMA_Window;	attributes[i++].ti_Data = (IPTR)win;
+
+		/* this->gl_config.double_buffer - skipped, AROSMesa always double-buffer */
+		/* this->gl_config.multisamplebuffers - TODO: add support */
+		/* this->gl_config.multisamplesample - TODO: add support */
 
 		/* no depth buffer ? */
 		if ( this->gl_config.depth_size == 0 ) 
@@ -82,16 +74,16 @@ int CGX_GL_Init(_THIS)
 			attributes[i++].ti_Data = GL_TRUE;
 		}
 		/* no accum buffer ? */
-		if ( this->gl_config.accum_red_size   != 0 &&
-			 this->gl_config.accum_blue_size  != 0 &&
-			 this->gl_config.accum_green_size != 0 )
+		if ( this->gl_config.accum_red_size   == 0 && 
+				this->gl_config.accum_blue_size  == 0 &&
+			 	this->gl_config.accum_green_size == 0 )
 		{
 			attributes[i].ti_Tag = AMA_NoAccum;
 			attributes[i++].ti_Data = GL_TRUE;
 		}
 
 		/* done */
-		attributes[i].ti_Tag	= TAG_DONE;
+		attributes[i].ti_Tag = TAG_DONE;
 
 		glcont = AROSMesaCreateContext(attributes);
 		if ( glcont == NULL ) 
@@ -140,7 +132,7 @@ int CGX_GL_Update(_THIS)
 		return -1; //should never happen
 	}
 	tags[0].ti_Tag = AMA_Window;
-	tags[0].ti_Data = (unsigned long)win;
+	tags[0].ti_Data = (IPTR)win;
 	tags[1].ti_Tag = TAG_DONE;
 
 	AROSMesaSetRast(glcont, tags);
