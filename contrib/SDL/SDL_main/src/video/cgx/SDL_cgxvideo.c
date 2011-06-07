@@ -736,7 +736,7 @@ int CGX_CreateWindow(	_THIS, SDL_Surface *screen,
 	/* Make OpenGL Context if needed*/
 	if(flags & SDL_OPENGL)
 	{
-		if(this->gl_data->gl_active == 0)
+		if(this->gl_data->glctx == NULL)
 		{
 			if(CGX_GL_Init(this) < 0)
 				return -1;
@@ -1145,10 +1145,8 @@ static void CGX_VideoQuit(_THIS)
 	if ( SDL_Display != NULL )
 	{
 		/* Clean up OpenGL */
-		if(this->gl_data->gl_active == 1)
-		{
-			CGX_GL_Quit(this);
-		}
+		CGX_GL_Quit(this);
+
 		/* Start shutting down the windows */
 		D(bug("Destroying image...\n"));
 		CGX_DestroyImage(this, this->screen);
