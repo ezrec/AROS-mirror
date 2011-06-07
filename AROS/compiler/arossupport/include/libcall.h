@@ -142,6 +142,9 @@ static inline void *__aros_pop_relbase(void)
 
 #define AROS_GET_RELBASE	__aros_get_relbase()
 #define AROS_SET_RELBASE(x)	__aros_set_relbase(x)
+#define AROS_PUSH_RELBASE(x)    __aros_push_relbase(x)
+#define AROS_POP_RELBASE        __aros_pop_relbase()
+
 #endif
 
 /* If AROS_GET_LIBBASE/AROS_SET_LIBBASE use relbase by defining them as resp.
