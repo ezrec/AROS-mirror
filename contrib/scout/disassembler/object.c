@@ -169,16 +169,15 @@ APTR DisassembleObject(APTR ob, struct DisData *ds, struct DisasmBase *Disassemb
 		    (IPTR)addr,
 		    (addr == ds->ds_PC) ? '*' : ' '
 		};
-	        //NewRawDoFmt(ADDRESS_FORMAT, dsPutCh, ds, addr, (addr == ds->ds_PC) ? '*' : ' ');
 		RawDoFmt(ADDRESS_FORMAT, rdata1, (VOID_FUNC)dsPutCh, ds);
-	        for (i = 0; i < bpl;) {
-		    IPTR rdata3[] =
+	        for (i = 0; i < bpl;)
+	        {
+		    UWORD rdata3[] =
 		    {
 			*addr
 		    };
 		    RawDoFmt("%02x ", rdata3, (VOID_FUNC)dsPutCh, ds);
 		    addr++;
-	            //NewRawDoFmt("%02x ", dsPutCh, ds, *addr++);
 		    i++;
 		    if (--len == 0)
 		        goto break_hexdump;
@@ -206,7 +205,7 @@ break_hexdump:
 		    (IPTR)obj->libc_data.exception_arg1,
 		    obj->libc_data.exception_arg2
 		};
-		RawDoFmt("abort() in file %s on line %u\nPlease contact developers.\n",
+		RawDoFmt("abort() in file %s on line %lu\nPlease contact developers.\n",
 			 rdata2, (VOID_FUNC)dsPutCh, ds);
 		//NewRawDoFmt("abort() in file %s on line %u\n"
 		//"Please contact developers.\n",
@@ -219,7 +218,7 @@ break_hexdump:
 		{
 		    obj->libc_data.exception_arg2
 		};
-		RawDoFmt("Failed to allocate %u bytes of memory.\n",
+		RawDoFmt("Failed to allocate %lu bytes of memory.\n",
 			 rdata5, (VOID_FUNC)dsPutCh, ds);
 		//NewRawDoFmt("Failed to allocate %u bytes of memory.\n",
 		//dsPutCh, ds, obj->libc_data.exception_arg2);
