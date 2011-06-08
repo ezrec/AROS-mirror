@@ -9,7 +9,7 @@
 
 #define DEBUG_ASSERTS		1 /* Enables pointer validation assertions */
 
-#define DEBUG_OpenScreen    	0
+#define DEBUG_OpenScreen    	1
 #define DEBUG_OpenScreenTagList 0
 #define DEBUG_OpenWindow    	0
 #define DEBUG_OpenWindowTagList 0

@@ -1174,7 +1174,7 @@ AROS_UFPA(APTR  , args      , A1));
 #define DEBUG_OFFMENU(x)            	;
 #define DEBUG_ONGADGET(x)           	;
 #define DEBUG_ONMENU(x)             	;
-#define DEBUG_OPENSCREEN(x)         	;
+#define DEBUG_OPENSCREEN(x) x
 #define DEBUG_OPENSCREENTAGLIST(x)  	;
 #define DEBUG_OPENWINDOW(x)         	;
 #define DEBUG_OPENWINDOWTAGLIST(x)  	;
