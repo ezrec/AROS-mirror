@@ -2,8 +2,26 @@
 Scout Open Source - ChangeLog
 -----------------------------
 
-$Id: ChangeLog,v 1.167 2010/10/04 03:02:10 thboeckel Exp $
+$Id: ChangeLog,v 1.169 2011/06/09 20:42:26 marust Exp $
 $Source: /cvsroot/scoutos/scoutos/source/ChangeLog,v $
+
+2011-06-09  Matthias Rustler <mrustler@gmx.de>
+
+  * backport of various fixes from the AROS repository:
+    - scout_functions.c fixed crash caused by wrong
+      calculation of function address
+    - scout_functions.c fixed calling of IDFunctionTags().    
+    - fix crash in disassembler.library caused by wrong
+      usage of NewRawDoFmt(). That function is now replaced
+      by RawDoFmt().
+    - mmakefile.scr: Made identify.library a prerequisite of Scout.
+    - startup: A6 is not SysBase m68k fix.
+
+2010-12-31  Matthias Rustler <mrustler@gmx.de>
+
+  * scout_residents.c: fix for a segfault which happened on AROS
+    except 68k.
+  * misc: some minor fixes (spelling, wrong macro usage in mmakefile.src)
 
 2010-10-04  Thore Boeckelmann <tboeckel@gmx.de>
 
