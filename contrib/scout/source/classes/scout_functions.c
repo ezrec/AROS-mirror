@@ -213,12 +213,9 @@ STATIC ULONG mShowFunctions( struct IClass *cl,
 
             for (offset = LIB_VECTSIZE; offset <= max; offset += LIB_VECTSIZE) {
 #ifdef __AROS__
-		struct JumpVec *je;
-
-		je = (struct JumpVec *)((UBYTE *)lib - offset);
-
-		fe->fe_Address = *((APTR *)je->vec);
-		if (points2ram(fe->fe_Address)) {
+                fe->fe_Address = __AROS_GETVECADDR (lib, offset / LIB_VECTSIZE);
+                
+                if (points2ram(fe->fe_Address)) {
                     _snprintf(fe->fe_AddressStr, sizeof(fe->fe_AddressStr), MUIX_PH "$%08lx" MUIX_PT, fe->fe_Address);
                 } else {
                     _snprintf(fe->fe_AddressStr, sizeof(fe->fe_AddressStr), "$%08lx", fe->fe_Address);
@@ -265,20 +262,27 @@ STATIC ULONG mShowFunctions( struct IClass *cl,
                     stccpy(fe->fe_FuncName, (TEXT *)help, sizeof(fe->fe_FuncName));
                 } else if (useIdLib) {
                     ULONG error;
+                    ULONG id_offset;
 
                     if (sfm->name) {
+#ifdef __AROS__
+                        /* identify.library on AROS assumes LIB_VECTSIZE of 6 */
+                        id_offset = (offset / LIB_VECTSIZE) * 6;
+#else
+                        id_offset = offset;
+#endif
                         if (stricmp(sfm->name, CIAANAME) == 0 || stricmp(sfm->name, CIABNAME) == 0) {
-                            error = IdFunctionTags((STRPTR)"cia.resource", offset, IDTAG_FuncNameStr, fe->fe_FuncName,
-                                                                                   IDTAG_StrLength, sizeof(fe->fe_FuncName),
-                                                                                   TAG_DONE);
+                            error = IdFunctionTags((STRPTR)"cia.resource", id_offset, IDTAG_FuncNameStr, fe->fe_FuncName,
+                                                                                      IDTAG_StrLength, sizeof(fe->fe_FuncName),
+                                                                                      TAG_DONE);
                         } else if (stricmp(sfm->name, CARDRESNAME) == 0) {
-                            error = IdFunctionTags((STRPTR)"cardres.resource", offset, IDTAG_FuncNameStr, fe->fe_FuncName,
-                                                                                       IDTAG_StrLength, sizeof(fe->fe_FuncName),
-                                                                                       TAG_DONE);
+                            error = IdFunctionTags((STRPTR)"cardres.resource", id_offset, IDTAG_FuncNameStr, fe->fe_FuncName,
+                                                                                          IDTAG_StrLength, sizeof(fe->fe_FuncName),
+                                                                                          TAG_DONE);
                         } else {
-                            error = IdFunctionTags(sfm->name, offset, IDTAG_FuncNameStr, fe->fe_FuncName,
-                                                                      IDTAG_StrLength, sizeof(fe->fe_FuncName),
-                                                                      TAG_DONE);
+                            error = IdFunctionTags(sfm->name, id_offset, IDTAG_FuncNameStr, fe->fe_FuncName,
+                                                                         IDTAG_StrLength, sizeof(fe->fe_FuncName),
+                                                                         TAG_DONE);
                         }
                         switch (error) {
                             case IDERR_NOFD:

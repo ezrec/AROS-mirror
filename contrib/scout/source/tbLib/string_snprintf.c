@@ -12,9 +12,20 @@ struct FormatContext
     BOOL    fc_Overflow;
 };
 
+#if defined(__AROS__) && !defined(NO_LINEAR_VARARGS)
+#include <aros/asmcall.h>
+
+static AROS_UFH2(VOID, StuffChar,
+		AROS_UFHA(UBYTE, c, D0),
+		AROS_UFHA(struct FormatContext *, fc, A3)
+		)
+{
+    AROS_USERFUNC_INIT
+#else
 STATIC VOID ASM StuffChar( REG(d0, UBYTE c),
                            REG(a3, struct FormatContext *fc) )
 {
+#endif
     /* Is there still room? */
     if (fc->fc_Size > 0) {
         (*fc->fc_Index) = c;
@@ -33,6 +44,9 @@ STATIC VOID ASM StuffChar( REG(d0, UBYTE c),
     } else {
         fc->fc_Overflow = TRUE;
     }
+#if defined(__AROS__) && !defined(NO_LINEAR_VARARGS)
+    AROS_USERFUNC_EXIT
+#endif
 }
 /* \\\ */
 

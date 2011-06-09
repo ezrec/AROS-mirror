@@ -80,6 +80,11 @@ AROS_UFH3(__startup static ULONG, _start,
 	  AROS_UFHA(struct ExecBase *, sBase, A6))
 {
     AROS_USERFUNC_INIT
+
+#if defined(__mc68000)
+    /* A6 does not contain ExecBase but BCPL stuff */
+    sBase = (*(struct ExecBase **)4);
+#endif
     
     return startup(sBase);
     
