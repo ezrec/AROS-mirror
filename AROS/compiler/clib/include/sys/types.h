@@ -116,7 +116,7 @@ typedef struct fd_set {
 
 #endif /* _SYS_TYPES_H_ */
 
-#if __BSD_VISIBLE && !defined(__BSD_SYS_TYPES_H)
+#if !defined(__BSD_SYS_TYPES_H)
 #define __BSD_SYS_TYPES_H
 
 /* FIXME: remove temporary hack */
@@ -127,4 +127,4 @@ typedef unsigned short  u_short;
 typedef unsigned int    u_int;
 typedef unsigned long   u_long;
 
-#endif /* __BSD_VISIBLE && !__BSD_SYS_TYPES_H */
+#endif /* !__BSD_SYS_TYPES_H */
