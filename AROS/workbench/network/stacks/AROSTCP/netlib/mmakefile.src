@@ -3,8 +3,7 @@
 include $(TOP)/config/make.cfg
 
 USER_INCLUDES := -isystem ../netinclude/
-USER_CFLAGS := -Wno-uninitialized -Wno-parentheses -DAMITCP_NEW_NAMES -DSOCKETBASE_IN_CONTEXT -DUSERGROUPBASE_IN_CONTEXT \
-        -D__BSD_VISIBLE=1
+USER_CFLAGS := -Wno-uninitialized -Wno-parentheses -DAMITCP_NEW_NAMES -DSOCKETBASE_IN_CONTEXT -DUSERGROUPBASE_IN_CONTEXT
 
 #MM- linklibs: arostcp-linklibs
 #MM- workbench-network-stacks-arostcp : arostcp-linklibs

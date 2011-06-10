@@ -10,8 +10,7 @@ include $(TOP)/config/make.cfg
 #MM				network-dhcp-libomapip \
 #MM				network-dhcp-libminires
 
-USER_CFLAGS :=	-I$(SRCDIR)/$(CURDIR)/../includes -DCLIENT_PATH="C:" \
-        -D__BSD_VISIBLE=1
+USER_CFLAGS :=	-I$(SRCDIR)/$(CURDIR)/../includes -DCLIENT_PATH="C:"
 
 FILES :=	dhclient clparse
 
