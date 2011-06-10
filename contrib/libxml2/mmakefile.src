@@ -1,4 +1,4 @@
-# Copyright 2008-2010, The AROS Development Team. All rights reserved.
+# Copyright 2008-2011, The AROS Development Team. All rights reserved.
 # $Id$
 
 -include $(TOP)/config/make.cfg
@@ -6,7 +6,7 @@
 #MM- contrib-gnu : development-libxml2
 #MM- development-libxml2 : development-libiconv
 
-%fetch_and_build_gnu_development package=libxml2 version=2.6.31 patch=yes \
-    package_repo=ftp://xmlsoft.org/libxml2/old/ suffixes="tar.gz"\
-    extraoptions="--with-http=no --with-ftp=no --with-modules=no --with-mem-debug=no \
+%fetch_and_build_gnu_development package=libxml2 version=2.7.8 patch=yes \
+    package_repo=ftp://xmlsoft.org/libxml2/ suffixes="tar.gz"\
+    extraoptions="--disable-shared --with-http=no --with-ftp=no --with-modules=no --with-mem-debug=no \
         --with-iconv=no --with-debug=no --with-run-debug=no --enable-shared=no --with-threads=no --with-python=no"
