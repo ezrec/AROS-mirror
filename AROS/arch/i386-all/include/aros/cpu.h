@@ -116,8 +116,8 @@ struct JumpVec
 	asm volatile( \
 	    ".weak " #fname "\n" \
 	    #fname " :\n" \
-            "\tsubl $4, %%esp\n" \
-            "\tmovl " #libbasename ", (%%esp)\n" \
+            "\tmovl " #libbasename ", %%eax\n" \
+            "\tpushl %%eax\n" \
             "\tcall aros_push2_relbase\n" \
             "\tmovl (%%esp),%%eax\n" \
             "\taddl $8, %%esp\n" \
