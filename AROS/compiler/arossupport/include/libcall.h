@@ -85,14 +85,15 @@ typedef unsigned int (*ULONG_FUNC)();
 /* Declare relbase if asked */
 #if !defined(AROS_GET_RELBASE) || !defined(AROS_SET_RELBASE)
 
+#include <exec/execbase.h>
+
+extern struct ExecBase *SysBase;
+
 #define __RELBASE_MAGIC 0x524c4253 /* RLBS */
 
 static inline void *__aros_get_relbase(void)
 {
     void ***baseptr = (void ***)SysBase->ThisTask->tc_SPLower;
-
-    if (baseptr[1] != (void **)__RELBASE_MAGIC)
-        Alert(AN_StackProbe);
 
     return **baseptr;
 }
@@ -119,9 +120,6 @@ static inline void __aros_push_relbase(void *libbase)
 {
     void ***baseptr = (void ***)SysBase->ThisTask->tc_SPLower;
 
-    if (baseptr[1] != (void **)__RELBASE_MAGIC)
-        Alert(AN_StackProbe);
-
     (*baseptr)++;
     **baseptr = libbase;
 }
@@ -130,9 +128,6 @@ static inline void *__aros_pop_relbase(void)
 {
     void ***baseptr = (void ***)SysBase->ThisTask->tc_SPLower;
     void *libbase;
-
-    if (baseptr[1] != (void **)__RELBASE_MAGIC)
-        Alert(AN_StackProbe);
 
     libbase = **baseptr;
     (*baseptr)--;
