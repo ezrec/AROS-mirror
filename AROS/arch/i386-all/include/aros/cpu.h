@@ -116,20 +116,17 @@ struct JumpVec
 	asm volatile( \
 	    ".weak " #fname "\n" \
 	    #fname " :\n" \
-            "\tcall aros_push_relbase\n" \
             "\tsubl $4, %%esp\n" \
             "\tmovl " #libbasename ", (%%esp)\n" \
-            "\tcall aros_push_relbase\n" \
-            "\tpopl %%eax\n" \
-            "\tmovl $" #fname "_ret, (%%esp)\n" \
-            "\tjmp *%c0(%%eax)\n" \
-            #fname "_ret :\n" \
+            "\tcall aros_push2_relbase\n" \
+            "\tmovl (%%esp),%%eax\n" \
+            "\taddl $8, %%esp\n" \
+            "\tcall *%c0(%%eax)\n" \
             "\tpushl %%eax\n" \
-            "\tcall aros_pop_relbase\n" \
-            "\tcall aros_pop_relbase\n" \
-            "\tmovl %%eax, *4(%%esp)\n" \
+            "\tcall aros_pop2_relbase\n" \
+            "\tmovl %%eax, %%ecx\n" \
             "\tpopl %%eax\n" \
-            "\tjmp *(%%esp)" \
+            "\tjmp *(%%ecx)" \
 	    : : "i" ((-lvo*LIB_VECTSIZE)) \
 	); \
     }
