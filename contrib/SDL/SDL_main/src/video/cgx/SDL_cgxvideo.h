@@ -74,7 +74,7 @@ struct SDL_PrivateVideoData {
     int currently_fullscreen;		/* Fullscreen flag */
 	
 	/* Support for internal mouse warping */
-	int window_active;				/* Active Window flag */
+	int FocusActive;				/* Flag indicating that application has keyboard/mouse focus */
 	int WindowActive;				/* Flag indicating that AROS Window in in active state */
 	int GrabMouse;					/* Flag indicating that mouse shall be grabbed */
 	int CursorVisible;				/* Flag indicating that cursor is visible */

@@ -136,14 +136,14 @@ static int CGX_GetButton(int code)
 	}
 }
 
-static int CGX_AppActivate(_THIS, BOOL activate)
+static int CGX_FocusActivate(_THIS, BOOL activate)
 {
 	int posted = 0;
 	int val = activate ? 1 : 0;
 
 	posted = SDL_PrivateAppActive(val, SDL_APPMOUSEFOCUS);
 	posted |= SDL_PrivateAppActive(val, SDL_APPINPUTFOCUS);
-	this->hidden->window_active = val;
+	this->hidden->FocusActive = val;
 
 	return posted;
 }
@@ -174,7 +174,7 @@ static int CGX_DispatchEvent(_THIS, struct IntuiMessage *msg)
 
 	    /* Loosing app & mouse focus */
 	    case IDCMP_INACTIVEWINDOW:
-			posted = CGX_AppActivate(this, FALSE);
+			posted = CGX_FocusActivate(this, FALSE);
 			this->hidden->WindowActive = 0;
 			break;
 
@@ -194,17 +194,17 @@ static int CGX_DispatchEvent(_THIS, struct IntuiMessage *msg)
 				/* Check for activation/deactivation of App */
 				if (this->hidden->WindowActive)
 				{
-					if (this->hidden->window_active && !CGX_IsMouseInsideDrawArea(msg->MouseX, msg->MouseY, SDL_Window))
-						posted |= CGX_AppActivate(this, FALSE);
-					if (!this->hidden->window_active && CGX_IsMouseInsideDrawArea(msg->MouseX, msg->MouseY, SDL_Window))
-						posted |= CGX_AppActivate(this, TRUE);
+					if (this->hidden->FocusActive && !CGX_IsMouseInsideDrawArea(msg->MouseX, msg->MouseY, SDL_Window))
+						posted |= CGX_FocusActivate(this, FALSE);
+					if (!this->hidden->FocusActive && CGX_IsMouseInsideDrawArea(msg->MouseX, msg->MouseY, SDL_Window))
+						posted |= CGX_FocusActivate(this, TRUE);
 				}
 
 				/* These are coords "inside" AROS window (without borders) */
 				new_x = msg->MouseX - SDL_Window->BorderLeft;
 				new_y = msg->MouseY - SDL_Window->BorderTop;
 
-				if (this->hidden->window_active && this->hidden->GrabMouse)
+				if (this->hidden->FocusActive && this->hidden->GrabMouse)
 				{
 					if (!this->hidden->CursorVisible)
 					{

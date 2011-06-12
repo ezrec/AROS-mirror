@@ -647,8 +647,9 @@ static void CGX_DestroyWindow(_THIS, SDL_Surface *screen, Uint32 flags)
 {
 	D(bug("Destroy Window...\n"));
 
-	/* Hide the managed window */
-	this->hidden->window_active = 0;
+	/* Mark activation flags */
+	this->hidden->WindowActive = 0;
+	this->hidden->FocusActive = 0;
 
 	/* Clean up OpenGL */
 	if ( screen && ( screen->flags & SDL_OPENGL ) && ! (flags & SDL_KEEP_GL_CONTEXT)) {
@@ -816,8 +817,6 @@ static int CGX_CreateWindow(_THIS, SDL_Surface *screen,	int w, int h, int bpp, U
 
 	if(!SDL_Window) return -1;
 	
-	this->hidden->window_active = 1;
-
 #ifndef NO_AMIGAHWSURF
 	if (	(flags & SDL_DOUBLEBUF)
 		&&	(flags & SDL_FULLSCREEN)
