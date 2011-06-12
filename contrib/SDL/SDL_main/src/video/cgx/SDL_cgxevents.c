@@ -194,8 +194,12 @@ static int CGX_DispatchEvent(_THIS, struct IntuiMessage *msg)
 				/* Check for activation/deactivation of App */
 				if (this->hidden->WindowActive)
 				{
-					if (this->hidden->FocusActive && !CGX_IsMouseInsideDrawArea(msg->MouseX, msg->MouseY, SDL_Window))
+					/* Exit only if not grabbed */
+					if (this->hidden->FocusActive && !this->hidden->GrabMouse &&
+						!CGX_IsMouseInsideDrawArea(msg->MouseX, msg->MouseY, SDL_Window))
 						posted |= CGX_FocusActivate(this, FALSE);
+
+					/* Enter always */
 					if (!this->hidden->FocusActive && CGX_IsMouseInsideDrawArea(msg->MouseX, msg->MouseY, SDL_Window))
 						posted |= CGX_FocusActivate(this, TRUE);
 				}
