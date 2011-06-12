@@ -815,8 +815,6 @@ static int CGX_CreateWindow(_THIS, SDL_Surface *screen,	int w, int h, int bpp, U
 		D(bug("Opening WB window of size: %ldx%ld!\n",w,h));
 	}
 
-	if(!SDL_Window) return -1;
-	
 #ifndef NO_AMIGAHWSURF
 	if (	(flags & SDL_DOUBLEBUF)
 		&&	(flags & SDL_FULLSCREEN)
@@ -863,6 +861,9 @@ static int CGX_CreateWindow(_THIS, SDL_Surface *screen,	int w, int h, int bpp, U
 	if ( flags & SDL_FULLSCREEN )
 	{
 		screen->flags |= SDL_FULLSCREEN;
+		/* IDCMP_ACTIVEWINDOW does not seem to be sent to windows opened on
+		   new screen, so we set activity status here */
+		this->hidden->WindowActive = 1;
 		currently_fullscreen=1;
 	}
 	else
