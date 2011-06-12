@@ -94,16 +94,42 @@ struct JumpVec
 
    Internals: a dummy function is used that will generate some
    unused junk code but otherwise we can't pass input arguments
-   to the asm statement
+   to the asm statement.
+
+   Some asm trickery performed:
+   fname
+   - push the function return address on the relbase stack
+   - push the libbase on the relbase stack
+   - pop libase from stack into %eax
+   - set new function return address
+   - Call lvo vector
+   fname_ret
+   - push return value
+   - pop libbase from relbase stack
+   - pop old return address from stack
+   - pull return value
+   - jmp to old return address
 */
 #define __AROS_LIBFUNCSTUB(fname, libbasename, lvo) \
     void __ ## fname ## _ ## libbasename ## _wrapper(void) \
     { \
 	asm volatile( \
-	    ".weak " #fname ";" \
-	    #fname " : " \
-	    "movl " #libbasename ",%%eax;" \
-	    "jmp *%c0(%%eax)" \
+	    ".weak " #fname "\n" \
+	    #fname " :\n" \
+            "\tcall aros_push_relbase\n" \
+            "\tsubl $4, %%esp\n" \
+            "\tmovl " #libbasename ", (%%esp)\n" \
+            "\tcall aros_push_relbase\n" \
+            "\tpopl %%eax\n" \
+            "\tmovl $" #fname "_ret, (%%esp)\n" \
+            "\tjmp *%c0(%%eax)\n" \
+            #fname "_ret :\n" \
+            "\tpushl %%eax\n" \
+            "\tcall aros_pop_relbase\n" \
+            "\tcall aros_pop_relbase\n" \
+            "\tmovl %%eax, *4(%%esp)\n" \
+            "\tpopl %%eax\n" \
+            "\tjmp *(%%esp)" \
 	    : : "i" ((-lvo*LIB_VECTSIZE)) \
 	); \
     }
