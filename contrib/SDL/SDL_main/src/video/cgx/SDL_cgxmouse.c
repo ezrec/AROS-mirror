@@ -186,7 +186,7 @@ void CGX_WarpWMCursor(_THIS, Uint16 x, Uint16 y)
 {
 	D(bug("[SDL] CGX_WarpWMCursor(%ld, %ld)\n", x, y));
 	
-	if (this->hidden->window_active)
+	if (this->hidden->FocusActive)
 	{
 		/*
 			Note: code below may cause unwanted side effects
