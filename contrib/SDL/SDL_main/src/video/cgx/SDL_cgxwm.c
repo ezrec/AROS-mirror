@@ -43,7 +43,8 @@ int CGX_IconifyWindow(_THIS)
 
 void CGX_SetCaption(_THIS, const char *title, const char *icon)
 {
-	if(SDL_Window) SetWindowTitles(SDL_Window,(char *)title,NULL);
+	strncpy(this->hidden->WindowName, title, WINDOW_NAME_BUFFER_SIZE);
+	if(SDL_Window) SetWindowTitles(SDL_Window, this->hidden->WindowName, NULL);
 }
 
 int CGX_GetWMInfo(_THIS, SDL_SysWMinfo *info)
