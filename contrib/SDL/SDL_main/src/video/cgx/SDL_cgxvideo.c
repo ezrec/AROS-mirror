@@ -744,7 +744,7 @@ static int CGX_CreateWindow(_THIS, SDL_Surface *screen,	int w, int h, int bpp, U
  
 	MakeBitMask(this,form,&bpp, &rb, &gb, &bb, &ab);
 
-	if ( ! SDL_ReallocFormat(screen, 8 * GetCyberMapAttr(SDL_Display->RastPort.BitMap,CYBRMATTR_BPPIX), rb, gb, bb, 0) )
+	if ( ! SDL_ReallocFormat(screen, bpp, rb, gb, bb, 0) )
 		return -1;
 
 	D(bug("AFTER screen allocation: bpp:%ld (real:%ld)\n",bpp,this->hidden->depth));
@@ -987,6 +987,7 @@ static SDL_Surface *CGX_SetVideoMode(_THIS, SDL_Surface *current, int width, int
 	sizediff = (current != NULL) ? ((current->w != width) || (current->h != height)) : 1;
 	bppdiff = (this->hidden != NULL) ? (this->hidden->depth != bpp) : 1;
 	
+	D(bug("CGX_SetVideoMode to %dx%dx%d, sizediff %d bppdiff %d\n", width, height, bpp, sizediff, bppdiff));
 
 	/* Lock the event thread, in multi-threading environments */
 	SDL_Lock_EventThread();
