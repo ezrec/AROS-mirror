@@ -75,6 +75,7 @@ struct SDL_PrivateVideoData {
 	
 	/* Support for internal mouse warping */
 	int window_active;				/* Active Window flag */
+	int WindowActive;				/* Flag indicating that AROS Window in in active state */
 	int GrabMouse;					/* Flag indicating that mouse shall be grabbed */
 	int CursorVisible;				/* Flag indicating that cursor is visible */
 	int LastMouseX;
