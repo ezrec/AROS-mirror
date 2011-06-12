@@ -801,6 +801,7 @@ static int CGX_CreateWindow(_THIS, SDL_Surface *screen,	int w, int h, int bpp, U
 									WA_InnerHeight,h,
 									WA_Left, left,
 									WA_Top, top,
+									WA_Title, this->hidden->WindowName,
 									WA_Flags,	WFLG_REPORTMOUSE|WFLG_ACTIVATE|WFLG_RMBTRAP |
 												((flags&SDL_NOFRAME) ? 0 : (WFLG_DEPTHGADGET|WFLG_CLOSEGADGET|WFLG_DRAGBAR | 
 												((flags&SDL_RESIZABLE) ? WFLG_SIZEGADGET|WFLG_SIZEBBOTTOM : 0))),

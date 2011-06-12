@@ -43,6 +43,7 @@
 
 /* Hidden "this" pointer for the video functions */
 #define _THIS	SDL_VideoDevice *this
+#define WINDOW_NAME_BUFFER_SIZE	256
 
 /* Private display data */
 struct SDL_PrivateVideoData {
@@ -50,6 +51,7 @@ struct SDL_PrivateVideoData {
     struct Screen 	*GFX_Display;		/* Used for graphics and colormap stuff */
     struct Window 	*SDL_Window;		/* The SDL Window */
 	struct RastPort *RP;
+	TEXT			WindowName[WINDOW_NAME_BUFFER_SIZE];
 	
     unsigned char *BlankCursor;			/* The invisible cursor */
 
