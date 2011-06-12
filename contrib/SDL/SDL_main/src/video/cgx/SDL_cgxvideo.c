@@ -899,8 +899,6 @@ static int CGX_ResizeWindow(_THIS, SDL_Surface *screen, int width, int height, U
 {
 	D(bug("CGX_ResizeWindow\n"));
 	
-	/* TODO: check if context should be removed */
-
 	/* Resize the window manager window */
 	CGX_SetSizeHints(this, width, height, flags);
 	this->info.current_w = width;
@@ -927,8 +925,6 @@ static int CGX_ResizeWindow(_THIS, SDL_Surface *screen, int width, int height, U
 #endif
 	CGX_ResizeImage(this, screen, flags);
 
-	/* TODO: check if context should be created */
-
 	return 0;
 }
 
@@ -952,22 +948,24 @@ static int CGX_ResizeWindow(_THIS, SDL_Surface *screen, int width, int height, U
 
 	Cases:
 	
-	| Current                | Requested                  | Actions                                                    |
-	| bppWB, sizeA, WND, OGL | bppB, sizeAny, WND, OGL    | Not possible to change bpp of window on Workbench          |
-	| bppWB, sizeA, WND, OGL | bppWB, sizeB, WND, OGL     | wndR(sizeB)                                                |
-	| bppWB, sizeA, WND, OGL | bppWB, sizeB, WND, NOGL    | wndR(sizeB), oglD                                          |
-	| bppWB, sizeA, WND, OGL | bppAny, sizeAny, FS, OGL   | oglD, wndD, scrC(sizeAny, bppAny), wndC(sizeAny), oglC     |
-	| bppWB, sizeA, WND, OGL | bppAny, sizeAny, FS, NOGL  | oglD, wndD, scrC(sizeAny, bppAny), wndC(sizeAny), oglC     |
-	| bppA, sizeA, FS, OGL   | bppB, sizeAny, FS, OGL     | oglD, wndD, scrD, scrC(sizeAny, bppB), wndC(sizeAny), oglC |
-	| bppA, sizeA, FS, OGL   | bppAny, sizeB, FS, OGL     | oglD, wndD, scrD, scrC(sizeB, bppAny), wndC(sizeB), oglC   |
-	| bppA, sizeA, FS, OGL   | bppB, sizeAny, FS, NOGL    | oglD, wndD, scrD, scrC(sizeAny, bppB), wndC(sizeAny)       |
-	| bppA, sizeA, FS, OGL   | bppAny, sizeB, FS, NOGL    | oglD, wndD, scrD, scrC(sizeB, bppAny), wndC(sizeB)         |
-	| bppA, sizeA, FS, OGL   | bppWB, sizeAny, WND, OGL   | oglD, wndD, scrD, wndC(sizeAny), oglC                      |
-	| bppA, sizeA, FS, OGL   | bppWB, sizeAny, WND, NOGL  | oglD, wndD, scrD, wndC(sizeAny)                            |
+	| Current                 | Requested                  | Actions                                                    |
+	| bppWB, sizeA, WND, OGL  | bppB, sizeAny, WND, OGL    | Not possible to change bpp of window on Workbench          |
+	| bppWB, sizeA, WND, OGL  | bppWB, sizeB, WND, OGL     | wndR(sizeB)                                                |
+	| bppWB, sizeA, WND, NOGL | bppWB, sizeB, WND, NOGL    | wndR(sizeB)                                                |
+	| bppWB, sizeA, WND, OGL  | bppWB, sizeB, WND, NOGL    | oglD, wndD, wndC(sizeB)                                    |
+	| bppWB, sizeA, WND, NOGL | bppWB, sizeB, WND, OGL     | wndD, wndC(sizeB), oglC                                    |
+	| bppWB, sizeA, WND, OGL  | bppAny, sizeAny, FS, OGL   | oglD, wndD, scrC(sizeAny, bppAny), wndC(sizeAny), oglC     |
+	| bppWB, sizeA, WND, OGL  | bppAny, sizeAny, FS, NOGL  | oglD, wndD, scrC(sizeAny, bppAny), wndC(sizeAny), oglC     |
+	| bppA, sizeA, FS, OGL    | bppB, sizeAny, FS, OGL     | oglD, wndD, scrD, scrC(sizeAny, bppB), wndC(sizeAny), oglC |
+	| bppA, sizeA, FS, OGL    | bppAny, sizeB, FS, OGL     | oglD, wndD, scrD, scrC(sizeB, bppAny), wndC(sizeB), oglC   |
+	| bppA, sizeA, FS, OGL    | bppB, sizeAny, FS, NOGL    | oglD, wndD, scrD, scrC(sizeAny, bppB), wndC(sizeAny)       |
+	| bppA, sizeA, FS, OGL    | bppAny, sizeB, FS, NOGL    | oglD, wndD, scrD, scrC(sizeB, bppAny), wndC(sizeB)         |
+	| bppA, sizeA, FS, OGL    | bppWB, sizeAny, WND, OGL   | oglD, wndD, scrD, wndC(sizeAny), oglC                      |
+	| bppA, sizeA, FS, OGL    | bppWB, sizeAny, WND, NOGL  | oglD, wndD, scrD, wndC(sizeAny)                            |
 
 	Rules:
 
-	(+)if ( curr->WND && req->WND && sizediff && ! bppdiff ) resize_window
+	(+)if ( curr->WND && req->WND && sizediff && ! bppdiff && ! ogldiff ) resize_window
 	(+)if ( ! resize_window ) destroy_window
 	(+)if ( curr->FS && ( sizediff || bppdiff || req->WND ) ) destroy_screen
 	(+)if ( req->FS && ( sizediff || bppdiff || curr->WND ) ) create_screen
@@ -976,17 +974,15 @@ static int CGX_ResizeWindow(_THIS, SDL_Surface *screen, int width, int height, U
 	(+)if ( destroy_window && curr->SDL_OPENGL && ! req->SDL_KEEP_GL_CONTEXT ) destroy_context
 	(+)if ( create_window && req->SDL_OPENGL && ! req->SDL_KEEP_GL_CONTEXT ) create_context
 	(+)if ( create_window && req->SDL_OPENGL && req->SDL_KEEP_GL_CONTEXT ) update_context
-
-	(-)if ( resize_window && curr->SDL_OPENGL && ! req->SDL_OPENGL ) destroy_context
-	(-)if ( resize_window && ! curr->SDL_OPENGL && req->SDL_OPENGL ) create_context
 */
 
 static SDL_Surface *CGX_SetVideoMode(_THIS, SDL_Surface *current, int width, int height, int bpp, Uint32 flags)
 {
-	int sizediff = 0, bppdiff = 0, i;
+	int sizediff = 0, bppdiff = 0, ogldiff = 0, i;
 	
 	sizediff = (current != NULL) ? ((current->w != width) || (current->h != height)) : 1;
 	bppdiff = (this->hidden != NULL) ? (this->hidden->depth != bpp) : 1;
+	ogldiff = (current != NULL) ? ((current->flags & SDL_OPENGL) != (flags & SDL_OPENGL)) : 1;
 	
 	D(bug("CGX_SetVideoMode to %dx%dx%d, sizediff %d bppdiff %d\n", width, height, bpp, sizediff, bppdiff));
 
@@ -995,7 +991,7 @@ static SDL_Surface *CGX_SetVideoMode(_THIS, SDL_Surface *current, int width, int
 
 	/* Decide early on if we are resizing or rebuilding window */
 	if ((SDL_Window && current && !(current->flags & SDL_FULLSCREEN)) && !(flags & SDL_FULLSCREEN) 
-		&& (sizediff)) {
+		&& (sizediff) && (!ogldiff)) {
 		if (!bppdiff) {
 			/* Resize */
 			if (CGX_ResizeWindow(this, current, width, height, flags) < 0)
