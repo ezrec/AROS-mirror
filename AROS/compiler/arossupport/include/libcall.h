@@ -82,6 +82,25 @@ typedef int (*LONG_FUNC)();
 typedef unsigned int (*ULONG_FUNC)();
 #endif
 
+/* Declare relbase if asked */
+#if !defined(AROS_GET_RELBASE) || !defined(AROS_SET_RELBASE)
+extern void *aros_get_relbase(void);
+extern void *aros_set_relbase(void *lib);
+extern void  aros_push_relbase(void *lib);
+extern void *aros_pop_relbase(void);
+
+#define AROS_GET_RELBASE	aros_get_relbase()
+#define AROS_SET_RELBASE(x)	aros_set_relbase(x)
+#endif
+
+/* If AROS_GET_LIBBASE/AROS_SET_LIBBASE use relbase by defining them as resp.
+ * AROS_GET_RELBASE/AROS_SET_RELBASE
+ */
+#ifndef AROS_GET_LIBBASE
+#define AROS_GET_LIBBASE AROS_GET_RELBASE
+#define AROS_SET_LIBBASE(x) AROS_SET_RELBASE(x)
+#endif
+
 /* Declare all macros which the systems' libcall didn't */
 #ifndef __AROS_SLIB_ENTRY
 #   define __AROS_SLIB_ENTRY(n,s)   s ## _ ## n
