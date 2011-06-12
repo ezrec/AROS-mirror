@@ -1,34 +1,3 @@
-#error FIXME, FGC: I don't have fixed the const propagation in this code.
-Yep, you must run into this error. Please, fix all errors the compiler tells
-you. You may do the work in this order:
-0) Comment off this lines until the next true comment.
-
-1) Ignore errors for the first time. Look for each "static" function. Change
-   all "xxx *" into "const xxx *" and every typedef'ed type (e.g.
-   paramboxptr) into the c(onst) variant (e.g cparamboxptr). ONLY do this
-   in the arguments.
-   Recompile and check for error messages in the the static function.
-   Remove all "const" from the parameters where an "readonly l-value
-   assignment" is the error.
-   In the other cases try to fix the errors with changing local variables
-   in the static functions. In nearly all cases you have to change a running
-   variable from types like "xxx *" to "const xxx *".
-   Recompile.
-   Remove the bogus const declarations from all arguments in the static which
-   you don't have fixed.
-   You are ready.
-
-2) AFTER STEP 1:
-   You have to redo the above work for the global functions. Don't process
-   this step before step 1.
-   There is one exception to step 1: Don't try to change any parameters. Only
-   try to fix local variables.
-
-3) Send back all changes to Mark Hessling if you are not Mark Hessling :-)
-
-
-
-
 /*
  *  The Regina Rexx Interpreter
  *  Copyright (C) 1992  Anders Christensen <anders@pvv.unit.no>
@@ -47,11 +16,6 @@ you. You may do the work in this order:
  *  License along with this library; if not, write to the Free
  *  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
-
-/*
- * $Id$
- */
-
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
@@ -118,13 +82,20 @@ int init_vms( tsd_t *TSD )
    return(1);
 }
 
-static void vms_error (int error_code)
+#ifdef VMS_DO_COMMAND
+/*
+ *  At least with OpenVMS 7.3-1 on Alpha, the Posix way seems to work.
+ *  So there is no need to redirect on (now) bogus code.
+ *  But I keep the code here in case I didn't see something.
+ */
+
+static void vms_error (const int error_code)
 {
    LIB$SIGNAL(error_code);
    return;
 }
 
-static void complain (tsd_t *TSD, int rc)
+static void complain (const tsd_t *TSD, const int rc)
 {
    vms_tsd_t *vt;
 
@@ -155,10 +126,10 @@ static void complain (tsd_t *TSD, int rc)
    return ;
 }
 
-static void read_in_ast( int read )
+static void read_in_ast( const int read )
 {
    streng *ptr ;
-   int rc ;
+   int rc = 0;
    tsd_t *TSD;
    vms_tsd_t *vt;
 
@@ -260,7 +231,10 @@ static void write_out_ast()
    return;
 }
 
-int vms_do_command( tsd_t *TSD, const streng *cmd, int in, int out, int fout, const environment *env )
+#define in (io_flags == REDIR_INPUT)
+#define out (io_flags == REDIR_OUTPUT)
+#define fout (io_flags == REDIR_OUTFIFO)
+int vms_do_command( tsd_t *TSD, const streng *cmd, int io_flags, environment *env, Queue *redir )
 {
    struct dsc$descriptor_s name, input, output, prc_name ;
    int fdin[2], fdout[2], strval[2], strval2[2], lim=0, max=0 ;
@@ -273,7 +247,7 @@ int vms_do_command( tsd_t *TSD, const streng *cmd, int in, int out, int fout, co
    name.dsc$w_length = Str_len( cmd ) ;
    name.dsc$b_dtype = DSC$K_DTYPE_T ;
    name.dsc$b_class = DSC$K_CLASS_S ;
-   name.dsc$a_pointer = cmd->value ;
+   name.dsc$a_pointer = (char *)cmd->value ;
 
    vt->ichan = vt->ochan = 0 ;
    if (in) {
@@ -321,7 +295,7 @@ int vms_do_command( tsd_t *TSD, const streng *cmd, int in, int out, int fout, co
    prc_name.dsc$b_class = DSC$K_CLASS_S ;
    prc_name.dsc$a_pointer = nbuf ;
 
-   if (out || fout) {
+   if (io_flags == REDIR_OUTPUT || io_flags == REDIR_OUTFIFO) {
       rc = lib$get_ef( &vt->oflag ) ;
       if (rc != SS$_NORMAL) complain( TSD, rc ) ;
 
@@ -368,7 +342,7 @@ int vms_do_command( tsd_t *TSD, const streng *cmd, int in, int out, int fout, co
       if (rc != SS$_NORMAL) complain( TSD, rc ) ;
    }
 
-   if (out || fout) {
+   if (io_flags == REDIR_OUTPUT || io_flags == REDIR_OUTFIFO) {
       rc = sys$synch( vt->oflag, NULL ) ;
       if (vt->ochan)
          printf( "Warning ... output channel still exists ochan=%d\n",
@@ -398,8 +372,10 @@ int vms_do_command( tsd_t *TSD, const streng *cmd, int in, int out, int fout, co
 
    complain( TSD, 0 ) ;
 
+#ifdef TODO
    if (out || fout)
-      flush_stack( TSD, fout ) ;
+      flush_stack( TSD, io_flags ) ;
+#endif
 
 /*
  * I have no idea _why_, but bit 28 is sometimes set in the comp_stat.
@@ -411,6 +387,7 @@ int vms_do_command( tsd_t *TSD, const streng *cmd, int in, int out, int fout, co
    if ((vt->comp_stat & 0x0fffffff) == CLI$_NORMAL) vt->comp_stat = SS$_NORMAL ;
    return (((vt->comp_stat & 0x0fffffff)==SS$_NORMAL) ? 0 : vt->comp_stat) ;
 }
+#endif
 
 int vms_killproc( tsd_t *TSD )
 {

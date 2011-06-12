@@ -5,7 +5,7 @@
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version. 
+ *  (at your option) any later version.
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -18,7 +18,7 @@
  */
 
 /* testing the implementation of the stack */
-
+trace o
 written = 0
 options MAKEBUF_BIF DROPBUF_BIF DESBUF_BIF
 
@@ -45,7 +45,7 @@ call notify 'queue'
    push
    pull one
    pull two
-   
+
    if (one^=='') | (two^=="") then
       call complain 'Either QUEUE or PUSH do not stack empty lines'
 
@@ -100,6 +100,13 @@ call notify 'commands'
    if line^=='To BE or not to BE' then
       call complain 'Can not pipe the stack-contents through a command'
 
+   queue 'To be or not to be'
+   Address System 'tr abcdefghijkl ABCDEFGHIJKL' With Input LIFO '' Output LIFO ''
+
+   parse pull line
+   if line^=='To BE or not to BE' then
+      call complain 'Can not pipe the stack-contents through a command using ANSI extensions'
+
 /*----- does it clear the stack when command just read a few lines ----*/
    queue 'asdf asdf'
    queue 'zxcv zxcv'
@@ -113,6 +120,19 @@ call notify 'commands'
    parse pull lines words chars .
    if lines words chars^=='2 4 20' then
       call complain 'Something is incorrect in the stack'
+
+   queue 'asdf asdf'
+   queue 'zxcv zxcv'
+   queue 'tyui tyui'
+   queue 'ghjk ghjk'
+
+   Address System 'head -2 | wc' With Input LIFO '' Output LIFO ''
+   if queued()^=='1' then
+      call complain 'Commands does not clear stack using ANSI extensions'
+
+   parse pull lines words chars .
+   if lines words chars^=='2 4 20' then
+      call complain 'Something is incorrect in the stack using ANSI extensions'
 
 /*----- let's see if it really send it through system(3) ---------------*/
 /* sorry, too many machines don't set the USER environment variable. */
@@ -143,12 +163,12 @@ signal next_test
    if words != queued() then
       call complain 'Could not get all short lines to the stack'
 
-   'LIFO> cat >LIFO' 
-   if words != queued() then 
+   'LIFO> cat >LIFO'
+   if words != queued() then
       call complain 'Could not correctly run short lines on the stack'
 
-   'LIFO> sort -0.3 >LIFO' 
-   if words != queued() then 
+   'LIFO> sort -0.3 >LIFO'
+   if words != queued() then
       call complain 'Could not correctly "rotate" short lines on the stack'
 
    'LIFO> wc -l >LIFO'
@@ -166,9 +186,9 @@ signal next_test
    trace oldtrace
    if queued()!=10000 then
       call complain 'Could not put 10000 lines to the stack'
- 
+
    'LIFO> cat >LIFO'
-   if  queued() != 10000 then 
+   if  queued() != 10000 then
       call complain 'Could not run long lines through cat'
 
    'LIFO> sort >FIFO'
@@ -176,16 +196,17 @@ signal next_test
       call complain 'Could not rotate long lines on the stack'
 
    'LIFO> wc -l >LIFO'
-   if queued() != 1 then 
+   if queued() != 1 then
       call complain 'Could not flush long stack to program'
 
 next_test:
 /*----- The nullstring is a valid command ------------------------------*/
-/* 
- * This is kind of hard to check, but at least we can try to send a 
- * nullstring as a command, and try to catch any errors that might 
- * occur from it. 
+/*
+ * This is kind of hard to check, but at least we can try to send a
+ * nullstring as a command, and try to catch any errors that might
+ * occur from it.
  */
+call notify 'empty command'
 
    ""
 
@@ -193,10 +214,11 @@ next_test:
 
 
 
+call notify 'buffers'
 /*
- * try to check the performance of buffers. However, this is 
+ * try to check the performance of buffers. However, this is
  * specific to some implementations
- */   
+ */
    do queued() ; pull ; end   /* just in case ... */
 
    res = makebuf() makebuf() makebuf()
@@ -209,21 +231,21 @@ next_test:
       call complain 'DROPBUF does not return correct return value'
 
 
-   push 'second' 
+   push 'second'
    push 'third'
    call makebuf
    push 'fourth'
    call dropbuf
    parse pull line1
    parse pull line2
-   if line1\='third' | line2\='second' then 
+   if line1\='third' | line2\='second' then
       call complain 'DROPBUF kills line below the buffer'
 
    call makebuf
-   push 'first' 
+   push 'first'
    call makebuf
    push 'second'
-   parse pull line1 
+   parse pull line1
    parse pull line2
    brc = makebuf()
    if line1\='second' | line2\='first' | brc\='2' then
@@ -263,10 +285,10 @@ next_test:
 
 
 say ''
-exit
+exit 0
 
 
-ch: procedure expose sigl 
+ch: procedure expose sigl
    parse arg first, second
    if first ^== second then do
       say
@@ -277,7 +299,7 @@ ch: procedure expose sigl
 
 
 notify:
-   parse arg word .
+   parse arg word
    written = written + length(word) + 2
    if written>75 then do
       written = length(word)

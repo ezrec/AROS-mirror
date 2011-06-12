@@ -16,183 +16,142 @@
  *  License along with this library; if not, write to the Free
  *  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
-
-/*
- * $Id$
- */
-
-#define X_NULL          1
-#define X_PROGRAM       2
-#define X_STATS         3
-#define X_COMMAND       4
-#define X_ADDR_V        5
-#define X_ADDR_N        6
-#define X_ADDR_S        7
-#define X_CALL          8
-#define X_DO            9
-#define X_REP           10
-#define X_REP_FOREVER   11
-#define X_REP_COUNT     12
-#define X_DO_TO         13
-#define X_DO_BY         14
-#define X_DO_FOR        15
-#define X_WHILE         16
-#define X_UNTIL         17
-#define X_DROP          18
-#define X_EXIT          19
-#define X_IF            20
-#define X_IPRET         21
-#define X_ITERATE       22
-#define X_LABEL         23
-#define X_LEAVE         24
-#define X_NUM_D         25
-#define X_NUM_F         26
-#define X_NUM_FUZZ      27
-#define X_NUM_SCI       28
-#define X_NUM_ENG       29
-#define X_PARSE         30
-#define X_PARSE_U       31
-#define X_PARSE_ARG     32
-#define X_PARSE_EXT     33
-#define X_PARSE_NUM     34
-#define X_PARSE_PULL    35
-#define X_PARSE_SRC     36
-#define X_PARSE_VAR     37
-#define X_PARSE_VAL     38
-#define X_PARSE_VER     39
-#define X_PARSE_ARG_U   40
-#define X_PROC          41
-#define X_PULL          42
-#define X_PUSH          43
-#define X_QUEUE         44
-#define X_RETURN        45
-#define X_SAY           46
-#define X_SELECT        47
-#define X_WHENS         48
-#define X_WHEN          49
-#define X_OTHERWISE     50
-#define X_SIG_VAL       51
-#define X_SIG_LAB       52
-#define X_SIG_SET       53
-#define X_ON            54
-#define X_OFF           55
-#define X_S_ERROR       56
-#define X_S_HALT        57
-#define X_S_NOVALUE     58
-#define X_S_SYNTAX      59
-#define X_TRACE         60
-#define X_T_ALL         61
-#define X_T_COMM        62
-#define X_T_ERR         63
-#define X_T_INTER       64
-#define X_T_LABEL       65
-#define X_T_NORMAL      66
-#define X_T_OFF         67
-#define X_T_RESULT      68
-#define X_T_SCAN        69
-#define X_WHAT_BB       70
-#define X_WHAT_BW       71
-#define X_WHAT_B        72
-#define X_WHAT_WB       73
-#define X_WHAT_WW       74
-#define X_WHAT_W        75
-#define X_UPPER_VAR     76
-#define X_ASSIGN        77
-#define X_LOG_NOT       78
-#define X_PLUSS         79
-#define X_EQUAL         80
-#define X_MINUS         81
-#define X_MULT          82
-#define X_DEVIDE        83
-#define X_MODULUS       84
-#define X_LOG_OR        85
-#define X_LOG_AND       86
-#define X_LOG_XOR       87
-#define X_EXP           88
-#define X_CONCAT        89
-#define X_SPACE         90
-#define X_GTE           91
-#define X_LTE           92
-#define X_GT            93
-#define X_LT            94
-#define X_DIFF          95
-#define X_SIM_SYMBOL    96
-#define X_CON_SYMBOL    97
-#define X_HEX_STR       98
-#define X_STRING        99
-#define X_FUNC          100
-#define X_U_MINUS       101
-#define X_S_EQUAL       102
-#define X_S_DIFF        103
-#define X_SIMSYMB       104
-#define X_INTDIV        105
-#define X_EX_FUNC       106
-#define X_IN_FUNC       107
-#define X_TPL_SOLID     108
-#define X_TPL_MVE       109
-#define X_TPL_VAR       110
-#define X_TPL_TO        111
-#define X_TPL_SYMBOL    112
-#define X_TPL_SPACE     113
-#define X_TPL_POINT     114
-#define X_TMPLS         115
-#define X_TPL_OFF       116
-#define X_TPL_PATT      117
-#define X_POS_OFFS      118
-#define X_NEG_OFFS      119
-#define X_ABS_OFFS      120
-#define X_EXPRLIST      121
-#define X_SYMBOLS       122
-#define X_SYMBOL        123
-#define X_ARG           124
-#define X_S_NOTREADY    125
-#define X_S_FAILURE     126
-#define X_END           127
-#define X_CALL_SET      128
-#define X_IN_CALL       129
-#define X_NO_OTHERWISE  130
-#define X_IND_SYMBOL    131
-#define X_IS_INTERNAL   132
-#define X_IS_BUILTIN    133
-#define X_IS_EXTERNAL   134
-#define X_CTAIL_SYMBOL  135
-#define X_VTAIL_SYMBOL  136
-#define X_HEAD_SYMBOL   137
-#define X_STEM_SYMBOL   138
-#define X_SEQUAL        139
-#define X_SDIFF         140
-#define X_SGT           141
-#define X_SGTE          142
-#define X_SLT           143
-#define X_SLTE          144
-#define X_NEQUAL        145
-#define X_NDIFF         146
-#define X_NGT           147
-#define X_NGTE          148
-#define X_NLT           149
-#define X_NLTE          150
-#define X_NASSIGN       151
-#define X_CEXPRLIST     152
-#define X_U_PLUSS       153
-#define X_TPL_NEG       154
-#define X_TPL_POS       155
-#define X_TPL_ABS       156
-#define X_OPTIONS       157
-#define X_NUM_V         158
-#define X_NUM_DDEF      159
-#define X_NUM_FDEF      160
-#define X_NUM_FRMDEF    161
-#define X_SNGT          162
-#define X_SNLT          163
-#define X_S_NGT         164
-#define X_S_NLT         166
-#define X_S_GT          167
-#define X_S_GTE         168
-#define X_S_LT          169
-#define X_S_LTE         170
-#define X_ADDR_WITH     171
-#define X_S_LOSTDIGITS  172
-#define X_DO_EXPR       173
+#define X_NULL            1
+#define X_PROGRAM         2
+#define X_STATS           3
+#define X_COMMAND         4
+#define X_ADDR_V          5
+#define X_ADDR_N          6
+#define X_ADDR_S          7
+#define X_CALL            8
+#define X_DO              9
+#define X_REP            10
+#define X_REP_FOREVER    11
+#define X_DO_TO          12
+#define X_DO_BY          13
+#define X_DO_FOR         14
+#define X_WHILE          15
+#define X_UNTIL          16
+#define X_DROP           17
+#define X_EXIT           18
+#define X_IF             19
+#define X_IPRET          20
+#define X_ITERATE        21
+#define X_LABEL          22
+#define X_LEAVE          23
+#define X_NUM_D          24
+#define X_NUM_F          25
+#define X_NUM_FUZZ       26
+#define X_NUM_SCI        27
+#define X_NUM_ENG        28
+#define X_PARSE          29
+#define X_PARSE_ARG      30
+#define X_PARSE_EXT      31
+#define X_PARSE_PULL     32
+#define X_PARSE_SRC      33
+#define X_PARSE_VAR      34
+#define X_PARSE_VAL      35
+#define X_PARSE_VER      36
+#define X_PROC           37
+#define X_PULL           38
+#define X_PUSH           39
+#define X_QUEUE          40
+#define X_RETURN         41
+#define X_SAY            42
+#define X_SELECT         43
+#define X_WHENS          44
+#define X_WHEN           45
+#define X_OTHERWISE      46
+#define X_SIG_VAL        47
+#define X_SIG_LAB        48
+#define X_SIG_SET        49
+#define X_ON             50
+#define X_OFF            51
+#define X_S_ERROR        52
+#define X_S_HALT         53
+#define X_S_NOVALUE      54
+#define X_S_SYNTAX       55
+#define X_TRACE          56
+#define X_UPPER_VAR      57
+#define X_ASSIGN         58
+#define X_LOG_NOT        59
+#define X_PLUSS          60
+#define X_EQUAL          61
+#define X_MINUS          62
+#define X_MULT           63
+#define X_DEVIDE         64
+#define X_MODULUS        65
+#define X_LOG_OR         66
+#define X_LOG_AND        67
+#define X_LOG_XOR        68
+#define X_EXP            69
+#define X_CONCAT         70
+#define X_SPACE          71
+#define X_GTE            72
+#define X_LTE            73
+#define X_GT             74
+#define X_LT             75
+#define X_DIFF           76
+#define X_SIM_SYMBOL     77
+#define X_CON_SYMBOL     78
+#define X_STRING         79
+#define X_U_MINUS        80
+#define X_S_EQUAL        81
+#define X_S_DIFF         82
+#define X_INTDIV         83
+#define X_EX_FUNC        84
+#define X_IN_FUNC        85
+#define X_TPL_SOLID      86
+#define X_TPL_MVE        87
+#define X_TPL_VAR        88
+#define X_TPL_SYMBOL     89
+#define X_TPL_POINT      90
+#define X_POS_OFFS       91
+#define X_NEG_OFFS       92
+#define X_ABS_OFFS       93
+#define X_EXPRLIST       94
+#define X_S_NOTREADY     95
+#define X_S_FAILURE      96
+#define X_END            97
+#define X_CALL_SET       98
+#define X_NO_OTHERWISE   99
+#define X_IND_SYMBOL    100
+#define X_IS_INTERNAL   101
+#define X_IS_BUILTIN    102
+#define X_IS_EXTERNAL   103
+#define X_CTAIL_SYMBOL  104
+#define X_VTAIL_SYMBOL  105
+#define X_HEAD_SYMBOL   106
+#define X_STEM_SYMBOL   107
+#define X_SEQUAL        108
+#define X_SDIFF         109
+#define X_SGT           110
+#define X_SGTE          111
+#define X_SLT           112
+#define X_SLTE          113
+#define X_NEQUAL        114
+#define X_NDIFF         115
+#define X_NGT           116
+#define X_NGTE          117
+#define X_NLT           118
+#define X_NLTE          119
+#define X_NASSIGN       120
+#define X_CEXPRLIST     121
+#define X_U_PLUSS       122
+#define X_OPTIONS       123
+#define X_NUM_V         124
+#define X_NUM_DDEF      125
+#define X_NUM_FDEF      126
+#define X_NUM_FRMDEF    127
+#define X_S_NGT         128
+#define X_S_NLT         129
+#define X_S_GT          130
+#define X_S_GTE         131
+#define X_S_LT          132
+#define X_S_LTE         133
+#define X_ADDR_WITH     134
+#define X_S_LOSTDIGITS  135
+#define X_DO_EXPR       136
 
 
 /* The three first two numbers have not errortext attched to them */
@@ -241,6 +200,7 @@
 /* No errortexts have not been defined to the next to numbers */
 #define ERR_SYSTEM_FAILURE      48
 #define ERR_INTERPRETER_FAILURE 49
+#define ERR_RESERVED_SYMBOL     50
 #define ERR_UNQUOTED_FUNC_STOP  51
 #define ERR_INVALID_OPTION      53
 #define ERR_INVALID_STEM_OPTION 54
@@ -272,30 +232,30 @@
  * NOTE: There is a close correspondance between these and the char
  *       array alloc in memory.c
  */
-# define TRC_LEAKED     0
-# define TRC_HASHTAB    1
-# define TRC_PROCBOX    2
-# define TRC_SOURCE     3
-# define TRC_SOURCEL    4
-# define TRC_TREENODE   5
-# define TRC_VARVALUE   6
-# define TRC_VARNAME    7
-# define TRC_VARBOX     8
-# define TRC_STACKBOX   9
-# define TRC_STACKLINE 10
-# define TRC_SYSINFO   11
-# define TRC_FILEPTR   12
-# define TRC_PROCARG   13
-# define TRC_LABEL     14
-# define TRC_STATIC    15
-# define TRC_P_CACHE   16
-# define TRC_MATH      17
-# define TRC_ENVIRBOX  18
-# define TRC_ENVIRNAME 19
-# define TRC_SPCV_BOX  20
-# define TRC_SPCV_NAME 21
-# define TRC_SPCV_NUMB 22
-# define TRC_SPCV_NUMC 23
+# define TRC_LEAKED     0 /*  "leaked",   status unknown, probably leaked */
+# define TRC_HASHTAB    1 /*  "hashtab",  holds hashtable in variable subsystem */
+# define TRC_PROCBOX    2 /*  "procbox",  the info local to a single routine */
+# define TRC_SOURCE     3 /*  "source",   a line of source code */
+# define TRC_SOURCEL    4 /*  "srcbox",   box in list of source lines */
+# define TRC_TREENODE   5 /*  "treenode", node in the parse three */
+# define TRC_VARVALUE   6 /*  "var_val",  value of a variable */
+# define TRC_VARNAME    7 /*  "var_nam",  name of a variable */
+# define TRC_VARBOX     8 /*  "var_box",  other structure in the variable subsystem */
+# define TRC_STACKBOX   9 /*  "stc_box",  box in linked list of the stack lines */
+# define TRC_STACKLINE 10 /*  "stc_line", stack line */
+# define TRC_SYSINFO   11 /*  "sys_info", the common info for a whole program */
+# define TRC_FILEPTR   12 /*  "file_ptr", holds the filetable */
+# define TRC_PROCARG   13 /*  "proc_arg", holds arguments for internal or builtin functions */
+# define TRC_LABEL     14 /*  "label",    holds info about labels */
+# define TRC_STATIC    15 /*  "static",   names of special variables */
+# define TRC_P_CACHE   16 /*  "argcache", the proc argument cache */
+# define TRC_MATH      17 /*  "math",     dynamic workarrays in the math funcstion */
+# define TRC_ENVIRBOX  18 /*  "envirbx",  box holding environment definition */
+# define TRC_ENVIRNAME 19 /*  "envirnm",  name in a box holding environment definition */
+# define TRC_SPCV_BOX  20 /*  "spcvarbx", special variable box */
+# define TRC_SPCV_NAME 21 /*  "spcvarnm", special variable name */
+# define TRC_SPCV_NUMB 22 /*  "spcnumbx", special number box */
+# define TRC_SPCV_NUMC 23 /*  "spcnumnm", special number contents */
 
 
 
@@ -316,14 +276,15 @@
 #define NUM_FORM_ENG    1
 
 
-#define SIGNAL_FATAL   -1
-#define SIGNAL_ERROR    0
-#define SIGNAL_FAILURE  1
-#define SIGNAL_HALT     2
-#define SIGNAL_NOVALUE  3
-#define SIGNAL_NOTREADY 4
-#define SIGNAL_SYNTAX   5
-#define SIGNALS         6
+#define SIGNAL_FATAL     -1
+#define SIGNAL_ERROR      0
+#define SIGNAL_FAILURE    1
+#define SIGNAL_HALT       2
+#define SIGNAL_NOVALUE    3
+#define SIGNAL_NOTREADY   4
+#define SIGNAL_SYNTAX     5
+#define SIGNAL_LOSTDIGITS 6
+#define SIGNALS           7
 
 #define SIGTYPE_ON    0
 #define SIGTYPE_OFF   1
@@ -367,6 +328,8 @@
 #define HOOK_FUNC      7
 #define HOOK_GETENV    8
 #define HOOK_SETENV    9
+#define HOOK_GETCWD   10
+#define HOOK_SETCWD   11
 
 #define HOOK_MASK(a)   (1<<(a))
 
@@ -382,6 +345,7 @@
 #define SYMBOL_STEM     2
 #define SYMBOL_SIMPLE   3
 #define SYMBOL_COMPOUND 4
+#define SYMBOL_NUMBER   5
 
 
 #define VFLAG_NONE   0x0000
@@ -392,25 +356,51 @@
 
 #define UNKNOWN_QUEUE -1
 /*
- * For refering to the extensions, must correspond with the bitfields
- * in the definition of the u.options field of proclevel in types.h
+ * For refering to the extensions.
  */
-#define EXT_FLUSHSTACK              0
-#define EXT_LINEOUTTRUNC            1
-#define EXT_CLOSE_BIF               2
-#define EXT_OPEN_BIF                3
-#define EXT_BUFTYPE_BIF             4
-#define EXT_DESBUF_BIF              5
-#define EXT_DROPBUF_BIF             6
-#define EXT_MAKEBUF_BIF             7
-#define EXT_CACHEEXT                8
-#define EXT_FIND_BIF                9
-#define EXT_PRUNE_TRACE            10
-#define EXT_EXT_COMMANDS_AS_FUNCS  11
-#define EXT_STDOUT_FOR_STDERR      12
-#define EXT_TRACE_HTML             13
-#define EXT_FAST_LINES_BIF_DEFAULT 14
-#define EXT_STRICT_ANSI            15
-#define EXT_INTERNAL_QUEUES        16
-#define EXT_PGB_PATCH1             17  /* pgb */
-#define EXT_REGINA_BIFS            18
+#define EXT_FLUSHSTACK                       0
+#define EXT_LINEOUTTRUNC                     1
+#define EXT_BUFTYPE_BIF                      2
+#define EXT_DESBUF_BIF                       3
+#define EXT_DROPBUF_BIF                      4
+#define EXT_MAKEBUF_BIF                      5
+#define EXT_CACHEEXT                         6
+#define EXT_PRUNE_TRACE                      7
+#define EXT_EXT_COMMANDS_AS_FUNCS            8
+#define EXT_STDOUT_FOR_STDERR                9
+#define EXT_TRACE_HTML                      10
+#define EXT_FAST_LINES_BIF_DEFAULT          11
+#define EXT_STRICT_ANSI                     12
+#define EXT_INTERNAL_QUEUES                 13
+#define EXT_REGINA_BIFS                     14
+#define EXT_STRICT_WHITE_SPACE_COMPARISONS  15
+#define EXT_AREXX_SEMANTICS                 16
+#define EXT_AREXX_BIFS                      17
+#define EXT_BROKEN_ADDRESS_COMMAND          18
+#define EXT_CALLS_AS_FUNCS                  19
+#define EXT_QUEUES_301                      20
+#define EXT_HALT_ON_EXT_CALL_FAIL           21
+#define EXT_SINGLE_INTERPRETER              22
+
+/*
+ * Regina 3.1 introduced "pool 0" variables. There exist only some and they
+ * can be determined by known_reserved_variable. Here are the return
+ * values of this function.
+ */
+#define POOL0_NOT_RESERVED    0  /* must be 0, following must be consecutive */
+#define POOL0_RC              1  /* Never change the order, it is hard-wired */
+#define POOL0_RESULT          2  /* used in variable.c                       */
+#define POOL0_SIGL            3
+#define POOL0_RS              4
+#define POOL0_MN              5
+#define POOL0_LINE            6
+#define POOL0_ENDOFLINE       7
+#define POOL0_CNT             ( POOL0_ENDOFLINE + 1 )
+
+/*
+ * treenode.u.parseflags values which may be or'ed.
+ */
+#define PARSE_NORMAL    0
+#define PARSE_UPPER     1
+#define PARSE_LOWER     2
+#define PARSE_CASELESS  4

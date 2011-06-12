@@ -10,7 +10,6 @@ SRC = Translate(Value('REGINA_SRCDIR',,'OS2ENVIRONMENT'),'\','/')
 'mkdir dist'
 'cd dist'
 'copy ..\rexx.exe'
-'copy ..\trexx.exe'
 'copy ..\regina*.a'
 'copy' SRC || '\COPYING-LIB'
 'copy' SRC || '\rexxsaa.h'

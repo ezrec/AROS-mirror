@@ -1,10 +1,14 @@
 ;
 ; Language list
 ;
-; &TU,IC,RU,HU,DU,SW,DA,FI,NO,IT,FR,PO,SP,GE,AM
-&NO,PO,SP,GE,AM
-;#{"Regina Rexx","Regina Rexx","Regina Rexx","Regina Rexx","Regina Rexx","Regina Rexx","Regina Rexx","Regina Rexx","Regina Rexx","Regina Rexx","Regina Rexx","Regina Rexx","Regina Rexx","Regina Rexx","Regina Rexx"},(0x101f401f),3,0,0
-#{"Regina Rexx","Regina Rexx","Regina Rexx","Regina Rexx","Regina Rexx"},(0x101f401f),3,0,0
+; Each new language, add to line starting with & and add a new "Regina Rexx" string to
+; line starting #
+; Then uncomment language filename from last list
+;
+; &IC,RU,HU,DU,SW,DA,FI,NO,IT,FR,PO,SP,GE,AM
+&TU,NO,PO,SP,GE,AM
+;#{"Regina Rexx","Regina Rexx","Regina Rexx","Regina Rexx","Regina Rexx","Regina Rexx","Regina Rexx","Regina Rexx","Regina Rexx","Regina Rexx","Regina Rexx","Regina Rexx","Regina Rexx","Regina Rexx","Regina Rexx"},(0x101f401f),3,4,0
+#{"Regina Rexx","Regina Rexx","Regina Rexx","Regina Rexx","Regina Rexx","Regina Rexx"},(0x101f401f),3,4,0
 ; the Regina Rexx interpreter
 "\epoc32\release\marm\rel\rexx.exe"-"!:\system\apps\Regina\rexx.exe"
 ; sample programs
@@ -20,7 +24,7 @@
 ; FR-fr, GE-de, SP-es, IT-it, SW-sv, DA-da, NO-no, FI-fi
 ;
 {
-;"tr.mtb"
+"tr.mtb"
 ;"is.mtb"
 ;"ru.mtb"
 ;"hu.mtb"

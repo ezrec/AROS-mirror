@@ -1,7 +1,3 @@
-#ifndef lint
-static char *RCSid = "$Id$";
-#endif
-
 /*
  *  The Regina Rexx Interpreter
  *  Copyright (C) 1992-1994  Anders Christensen <anders@pvv.unit.no>
@@ -43,7 +39,8 @@ const char *signalnames[] = {
    "HALT",
    "NOVALUE",
    "NOTREADY",
-   "SYNTAX"
+   "SYNTAX",
+   "LOSTDIGITS"
 } ;
 
 #ifdef TRACEMEM
@@ -64,10 +61,10 @@ static trap *dupltraps( const tsd_t *TSD, const trap *traps )
    trap *ptr=NULL ;
    int i=0 ;
 
-   ptr = MallocTSD(sizeof(trap) * SIGNALS) ;
+   ptr = (trap *)MallocTSD( sizeof(trap) * SIGNALS ) ;
    /* Stupid SunOS acc gives incorrect warning for the next line */
-   memcpy( ptr, traps, sizeof(trap) * SIGNALS) ;
-   for ( i=0; i<SIGNALS; i++ )
+   memcpy( ptr, traps, sizeof(trap) * SIGNALS ) ;
+   for ( i = 0; i < SIGNALS; i++ )
       if (traps[i].name)
          ptr[i].name = Str_dupTSD( traps[i].name ) ;
 
@@ -135,7 +132,7 @@ int condition_hook( tsd_t *TSD, int type, int errorno, int suberrorno, int linen
          return 0 ;
       }
 
-      sigptr = MallocTSD( sizeof( sigtype )) ;
+      sigptr = (sigtype *)MallocTSD( sizeof( sigtype )) ;
 
       sigptr->type = type ;
       sigptr->info = NULL ;   /* BUG: I don't really think this is used */
@@ -157,18 +154,13 @@ int condition_hook( tsd_t *TSD, int type, int errorno, int suberrorno, int linen
       /* traps[type].on_off = 0 ;  */ /* turn trap off */
       /* traps[type].trapped = 0 ; */ /* unecessary, just to be sure */
          traps[type].delayed = 0 ;    /* ... ditto ... */
-         setvalue( TSD, &SIGL_name, int_to_streng( TSD, lineno )) ;
+         set_reserved_value( TSD, POOL0_SIGL, NULL, lineno, VFLAG_NUM );
          if (type == SIGNAL_SYNTAX) /* special condition */
-            setvalue( TSD, &RC_name, int_to_streng( TSD, errorno )) ;
+            set_reserved_value( TSD, POOL0_RC, NULL, errorno, VFLAG_NUM );
 
          TSD->nextsig = sigptr ;
 
-         if (TSD->in_protected)
-         {
-            TSD->delayed_error_type = PROTECTED_DelayedSetjmpBuf;
-            longjmp( TSD->protect_return, 1 ) ;
-         }
-         longjmp( *(TSD->currlevel->buf), 1 ) ;
+         jump_rexx_signal( TSD );
       }
       else
       {
@@ -189,12 +181,13 @@ int identify_trap( int type )
 {
    switch (type)
    {
-      case X_S_HALT:     return SIGNAL_HALT ;
-      case X_S_SYNTAX:   return SIGNAL_SYNTAX ;
-      case X_S_NOVALUE:  return SIGNAL_NOVALUE ;
-      case X_S_NOTREADY: return SIGNAL_NOTREADY ;
-      case X_S_ERROR:    return SIGNAL_ERROR ;
-      case X_S_FAILURE:  return SIGNAL_FAILURE ;
+      case X_S_HALT:       return SIGNAL_HALT ;
+      case X_S_SYNTAX:     return SIGNAL_SYNTAX ;
+      case X_S_NOVALUE:    return SIGNAL_NOVALUE ;
+      case X_S_NOTREADY:   return SIGNAL_NOTREADY ;
+      case X_S_ERROR:      return SIGNAL_ERROR ;
+      case X_S_FAILURE:    return SIGNAL_FAILURE ;
+      case X_S_LOSTDIGITS: return SIGNAL_LOSTDIGITS;
    }
    exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "" )  ;
    return SIGNAL_FATAL ;
@@ -205,7 +198,7 @@ int identify_trap( int type )
 static const char *signals_names[] = {
      "", "SIGHUP", "SIGINT", "", "", "", "", "", "", "",
      "", "", "", "", "", "SIGTERM", "", "", "", "", "",
-     "", "", "", "", "", "", "", "", "", "",
+     "SIGBREAK", "", "", "", "", "", "", "", "", "",
      "", ""
 } ;
 
@@ -243,44 +236,68 @@ signal_handler regina_signal(int signum,signal_handler action)
 }
 #endif
 
+/*
+ * halt_raised is invoked by the interpreter's main loop after detecting a
+ * halt condition.
+ * This routine raises the HALT condition and probably terminates the current
+ * thread.
+ */
+void halt_raised( tsd_t *TSD )
+{
+   int sig = TSD->HaltRaised;
+
+   TSD->HaltRaised = 0;
+
+   if ( condition_hook( TSD,
+                        SIGNAL_HALT,
+                        ERR_PROG_INTERRUPT,
+                        0,
+                        lineno_of( TSD->currentnode ),
+                        Str_creTSD( signals_names[sig] ),
+                        NULL ) )
+      return;
+#ifdef VMS
+   /*
+    * FIXME: Why do we use vms_killproc instead of using exiterror() ?
+    */
+   vms_killproc( TSD );
+#endif
+   exiterror( ERR_PROG_INTERRUPT, 0 );
+}
+
 /* Yuk! Some of these should *really* have been volatilized */
 static void halt_handler( int num )
 {
+#ifdef WIN32
+   /*
+    * Braindamaged Win32 systems raise ^C in a different thread. We need a
+    * synchroneous alert. We just set a global flag in the halt handler and
+    * reset it here doing the proper functionality for the signal. One
+    * thread has to pick the signal during execution in the main loop.
+    * fixes bug 553022
+    */
+   regina_signal( num, halt_handler );
+   __regina_Win32CtrlCRaised = SIGINT;
+#else
    tsd_t *TSD = __regina_get_tsd(); /* The TSD must be fetched directly. */
 
-#ifdef VMS
-   vms_killproc( TSD ) ;
-#endif
 
    if (regina_signal( num, halt_handler ) == SIG_ERR)
-      exiterror( ERR_SYSTEM_FAILURE, 0 )  ;
-
-   if (!condition_hook(TSD,
-                       SIGNAL_HALT,
-                       ERR_PROG_INTERRUPT,
-                       0,
-                       lineno_of(TSD->currentnode),
-                       Str_creTSD(signals_names[num]),
-                       NULL
-                       ))
-      exiterror( ERR_PROG_INTERRUPT, 0 )  ;
-
-   return ;
+      exiterror( ERR_SYSTEM_FAILURE, 0 );
+   TSD->HaltRaised = num;
+#endif
 }
 
 #if !defined(__WINS__) && !defined(__EPOC32__) && !defined(__AROS__)
 # if defined(SIGHUP)
 static void hup_handler( int dummy )
 {
-   tsd_t *TSD = __regina_get_tsd();
-
-   if (TSD->in_protected)
-   {
-      TSD->delayed_error_type = PROTECTED_DelayedExit;
-      TSD->expected_exit_error = 0;
-      longjmp( TSD->protect_return, 1 ) ;
-   }
-   TSD->MTExit( 0 ) ;
+   /*
+    * FGC: FIXME: Doing an exit is too heavy and too early. Maybe, we
+    * should ignore it completely. Every IO request will return EPIPE or
+    * similar, and we can do a graceful shutdown then.
+    */
+   exiterror( ERR_PROG_INTERRUPT, 0 );
 }
 # endif
 #endif
@@ -303,6 +320,10 @@ void signal_setup( const tsd_t *TSD )
    if (regina_signal( SIGINT, halt_handler) == SIG_ERR)
       exiterror( ERR_SYSTEM_FAILURE, 0 )  ;
 # endif
+# if defined(SIGBREAK)
+   if (regina_signal( SIGBREAK, halt_handler) == SIG_ERR)
+      exiterror( ERR_SYSTEM_FAILURE, 0 )  ;
+# endif
 # if defined(SIGHUP)
    if (regina_signal( SIGHUP, (TSD->isclient)?(hup_handler):(halt_handler)) == SIG_ERR)
       exiterror( ERR_SYSTEM_FAILURE, 0 )  ;
@@ -310,9 +331,7 @@ void signal_setup( const tsd_t *TSD )
 #endif
 }
 
-void set_rexx_halt( void )
+void set_rexx_halt( tsd_t *TSD )
 {
-   halt_handler( SIGINT );
+   TSD->HaltRaised = SIGINT;
 }
-
-

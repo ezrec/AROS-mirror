@@ -8,12 +8,18 @@
  * Opposite instances are eg. instance 1 and num_clients, 2 and 48, etc
  */
 Trace o
+parse source sys env prog
 num_clients = 50 /* 50 */
 num_lines = 10   /* 100 */
 If Arg() = 0 Then
    Do
+      cmd = "rexx"
+      if stream( "./rexx", "C", "FSTAT" ) \= "" then
+         cmd = "./rexx"
+      if stream( "../rexx", "C", "FSTAT" ) \= "" then
+         cmd = "../rexx"
       Do i = 1 To num_clients
-         Address System './rexx extqueue.rexx' i '&'
+         Address System cmd prog i '&'
       End
    End
 Else
@@ -25,10 +31,11 @@ Else
          opposite.i = 1+(num_clients-i)
       End
       Parse Arg instance
+      say instance
       If instance // 2 = 0 Then order = 'fifo'
       Else order = 'lifo'
-      Call Rxqueue 'Create', 'QUEUE'instance 
-      /* Say '***Creating queue' Rxqueue('Create', 'QUEUE'instance ) */
+      call RxQueue 'Set', Rxqueue('Create', 'QUEUE'instance'@')
+      /* Say '***Creating queue' Rxqueue('Create', 'QUEUE'instance'@'  ) */
       /*
        * push or queue num_lines lines onto our queue
        */
@@ -46,10 +53,10 @@ Else
        */
       Call Sleep(10)
 /*
-      Say '***Setting queue. Previous was:' rxqueue('Set', 'QUEUE'opposite.instance)
+      Say '***Setting queue. Previous was:' rxqueue('Set', 'QUEUE'opposite.instance'@' )
       Say '***Getting queue. Now:' rxqueue('Get')
 */
-      Call rxqueue 'Set', 'QUEUE'opposite.instance
+      Call rxqueue 'Set', 'QUEUE'opposite.instance'@'
       /*
        * The order of the lines is the opposite to
        * the order in which we put our lines on our queue
@@ -81,13 +88,15 @@ Else
       /*
        * Cleanup up our opposite's queue
        */
-      Call Rxqueue 'Delete', 'QUEUE'opposite.instance
+      Call Rxqueue 'Delete', 'QUEUE'opposite.instance'@'
       Say 'Instance' instance 'finished.'
    End
 Return 0
 
 Abort: Procedure Expose instance
 Parse Arg line, exp
+say '--------------------------------------------------------------------'
 Say 'Error validating instance' instance'. Got <'line'> Expecting <'exp'>'
-Call Rxqueue 'Delete', 'QUEUE'opposite.instance
+Call Rxqueue 'Delete', 'QUEUE'opposite.instance'@'
+say '--------------------------------------------------------------------'
 Exit 1

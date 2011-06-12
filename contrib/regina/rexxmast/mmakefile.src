@@ -13,7 +13,7 @@ DEMODIR := $(AROS_TESTS)/rexx
 #MM- contrib-regina-quick : \
 #MM      contrib-regina-rexxmast-arosc-quick contrib-regina-rexxmast-reginac-quick
 
-USER_CFLAGS = -I$(SRCDIR)/$(CURDIR)/..
+#USER_CFLAGS = -I$(SRCDIR)/$(CURDIR)/..
 
 %build_prog mmake=contrib-regina-rexxmast-arosc \
     progname=RexxMast targetdir=$(AROS_C) \

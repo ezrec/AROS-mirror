@@ -1,7 +1,3 @@
-#ifndef lint
-static char *RCSid = "$Id$";
-#endif
-
 /*
  *  The Regina Rexx Interpreter
  *  Copyright (C) 1993-1994  Anders Christensen <anders@pvv.unit.no>
@@ -22,20 +18,38 @@ static char *RCSid = "$Id$";
  */
 
 #include "rexx.h"
-#include "envir.h"
-
 #include <string.h>
-
-#ifdef HAVE_CTYPE_H
-# include <ctype.h>
-#endif
 
 #if defined(VMS)
 # define fork() vfork()
+/*
+ *  At least with OpenVMS 7.3-1 on Alpha, the Posix way seems to work.
+ *  So there is no need to redirect on (now) bogus code.
+ */
+
+#ifdef VMS_DO_COMMAND
 # ifdef posix_do_command
 #  undef posix_do_command
 # endif
 # define posix_do_command __regina_vms_do_command
+#endif
+#endif
+
+/*
+ * The following strings must match AddressWithType enums in regina_t.h
+ */
+static char *env_type[] = { "NORMAL", "STREAM", "STEM", "LIFO", "FIFO" };
+
+struct envir
+{
+   environment e ;
+   int type ;
+   struct envir *next, *prev ;
+};
+
+#if defined(_AMIGA) || defined(__AROS__)
+struct envir *amiga_find_envir( const tsd_t *TSD, const streng * );
+streng *AmigaSubCom( const tsd_t *TSD, const streng *command, struct envir *envir, int *rc );
 #endif
 
 /* clear_environpart sets initial values of an environpart.
@@ -49,29 +63,34 @@ static void clear_environpart(environpart *ep)
    ep->SameAsOutput = 0;
    ep->FileRedirected = 0;
    ep->tempname = NULL ;
+   ep->tmp_queue = NULL ;
+   ep->queue = NULL ;
    ep->type = 0 ;
-   ep->hdls[1] = ep->hdls[0] = -1;
+   ep->hdls[2] = ep->hdls[1] = ep->hdls[0] = -1;
 }
 
 void add_envir( tsd_t *TSD, const streng *name, int type, int subtype )
 /* an environment with the same name can be added more than once! */
 {
-   struct envir *ptr=NULL ;
+   struct envir *ptr;
 
-   ptr = MallocTSD( sizeof(struct envir)) ;
-   memset( &ptr->e, 0, sizeof(ptr->e) ) ;
-   clear_environpart(&ptr->e.input);
-   clear_environpart(&ptr->e.output);
-   clear_environpart(&ptr->e.error);
+   ptr = (struct envir *)MallocTSD( sizeof( struct envir ) );
+   memset( &ptr->e, 0, sizeof(ptr->e) );
+   clear_environpart( &ptr->e.input );
+   clear_environpart( &ptr->e.output );
+   clear_environpart( &ptr->e.error );
+   ptr->e.input.flags.isinput = 1;
+   ptr->e.error.flags.iserror = 1;
 
-   ptr->e.name = Str_dupTSD( name ) ;
-   ptr->e.subtype = subtype ;
-   ptr->type = type ;
-   ptr->prev = TSD->firstenvir ;
-   ptr->next = NULL ;
-   TSD->firstenvir = ptr ;
-   if (ptr->prev)
-      ptr->prev->next = ptr ;
+   ptr->e.name = Str_dupTSD( name );
+   ptr->e.subtype = subtype;
+   ptr->e.subcomed = 0;
+   ptr->type = type;
+   ptr->prev = (struct envir *)TSD->firstenvir;
+   ptr->next = NULL;
+   TSD->firstenvir = ptr;
+   if ( ptr->prev )
+      ptr->prev->next = ptr;
 }
 
 #ifdef TRACEMEM
@@ -79,7 +98,7 @@ static void markenvir( const tsd_t *TSD )
 {
    struct envir *eptr=NULL ;
 
-   eptr = TSD->firstenvir ;
+   eptr = (struct envir *) TSD->firstenvir ;
    for (; eptr; eptr=eptr->prev )
    {
       markmemory( eptr, TRC_ENVIRBOX ) ;
@@ -104,10 +123,11 @@ static struct envir *find_envir( const tsd_t *TSD, const streng *name )
       return ptr;
 #endif
 
-   for (ptr=TSD->firstenvir; ptr; ptr=ptr->prev)
-      if (!Str_cmp(ptr->e.name, name))
+   for ( ptr = (struct envir *)TSD->firstenvir; ptr; ptr = ptr->prev )
+   {
+      if ( !Str_cmp( ptr->e.name, name ) )
          return ptr ;
-
+   }
    return NULL ;
 }
 
@@ -121,6 +141,111 @@ int envir_exists( const tsd_t *TSD, const streng *name )
       return 0;
    else
       return 1;
+}
+
+/*
+ * This function returns textual information about the current environment.
+ * Suitable output for ADDRESS BIF
+ */
+streng *get_envir_details( const tsd_t *TSD, char opt, const streng *name )
+{
+   struct envir *ptr=NULL ;
+   streng *result, *env_resource, *raw_resource;
+   char *env_position;
+   int awt, ant, len;
+
+   ptr = find_envir( TSD, name );
+   switch( opt )
+   {
+      case 'I':
+         env_position = (char *)"INPUT";
+         awt = ptr->e.input.flags.awt;
+         ant = ptr->e.input.flags.ant;
+         raw_resource = ptr->e.input.name;
+         break;
+      case 'O':
+         env_position = (char *)( (ptr->e.output.flags.append) ? "APPEND" : "REPLACE" );
+         awt = ptr->e.output.flags.awt;
+         ant = ptr->e.output.flags.ant;
+         raw_resource = ptr->e.output.name;
+         break;
+      case 'E':
+         env_position = (char *)( (ptr->e.error.flags.append) ? "APPEND" : "REPLACE" );
+         awt = ptr->e.error.flags.awt;
+         ant = ptr->e.error.flags.ant;
+         raw_resource = ptr->e.error.name;
+         break;
+      default:
+         /*
+          * Should not get here!!
+          */
+         awt = ant = 0;
+         env_position = NULL;
+         raw_resource = NULL;
+         break;
+   }
+   /*
+    * Determine the resource string...
+    */
+   if ( raw_resource == NULL )
+   {
+      env_resource = nullstringptr();
+   }
+   else if ( awt == awtSTEM )
+   {
+      env_resource = raw_resource;
+   }
+   else if ( ant == antSTRING )
+   {
+      if ( raw_resource == NULL )
+      {
+         env_resource = nullstringptr();
+      }
+      else
+      {
+         env_resource = raw_resource;
+      }
+   }
+   else
+   {
+      /*
+       * Get the value of the symbol...
+       */
+      env_resource = (streng *)getdirvalue( (tsd_t *)TSD, raw_resource );
+   }
+   len = 3 + strlen( env_position) + strlen( env_type[awt] ) + env_resource->len;
+   result = Str_makeTSD( len );
+   result = Str_catstrTSD( result, env_position );
+   result = Str_catstrTSD( result, " " );
+   result = Str_catstrTSD( result, env_type[awt] );
+   if ( env_resource->len )
+   {
+      result = Str_catstrTSD( result, " " );
+      result = Str_catTSD( result, env_resource );
+   }
+   return result;
+}
+
+/*
+ * This function is used to set the subcomed flag in an environment exists.
+ */
+int set_subcomed_envir( const tsd_t *TSD, const streng *name, int subcomed )
+{
+   struct envir *ptr=NULL ;
+   if ( ( ptr = find_envir( TSD, name ) ) == NULL )
+      return 0;
+   ptr->e.subcomed = subcomed;
+   return 1;
+}
+/*
+ * This function is used to get the subcomed flag from an environment.
+ */
+int get_subcomed_envir( const tsd_t *TSD, const streng *name )
+{
+   struct envir *ptr=NULL ;
+   if ( ( ptr = find_envir( TSD, name ) ) == NULL )
+      return 0;
+   return ptr->e.subcomed;
 }
 
 static void del_envirpart( const tsd_t *TSD, environpart *e )
@@ -168,36 +293,20 @@ void del_envir( tsd_t *TSD, const streng *name )
    FreeTSD( ptr ) ;
 }
 
-static void set_currname( const tsd_t *TSD, environpart *e )
-/* Sets the initial currname of the environpart from its name. e->currname
- * must be free previously.
- */
-{
-   int len ;
-
-   /* we need space for "." and the maximal number */
-   len = Str_len( e->name ) ;
-   e->currname = Str_makeTSD( len + 3*sizeof(int) ) ;
-   memcpy( e->currname->value, e->name->value, len ) ;
-   e->currname->len = len ; /* pro forma, will be recomputed */
-}
-
-static void update_environpart( const tsd_t *TSD, environpart *e,
-                                                             const nodeptr new)
+static void update_environpart( const tsd_t *TSD, environpart *e, const nodeptr newptr)
 /* e is the environpart which has to be reset. new is the new part and has
  * to been valid. new->name may be NULL (for NORMAL behaviour).
  */
 {
    del_envirpart( TSD, e ) ;
 
-   if (new->name)
+   if (newptr->name)
    {
-      e->name = Str_dupTSD( new->name ) ;
+      e->name = Str_dupTSD( newptr->name ) ;
       e->base = Str_makeTSD( 3*sizeof(int) ) ;
-      set_currname( TSD, e ) ;
    }
 
-   e->flags = new->u.of ;
+   e->flags = newptr->u.of ;
    clear_environpart(e);
 }
 
@@ -217,17 +326,18 @@ int set_envir( const tsd_t *TSD, const streng *envirname, const nodeptr ios )
 {
    struct envir *e;
 
-   if ((envirname == NULL) || (ios == NULL))
-      return( 1 ) ;
+   if ( ( envirname == NULL ) || ( ios == NULL ) )
+      return 1;
 
-   if ((e = find_envir( TSD, envirname )) == NULL)
-      return( 0 ) ;
-   if (ios->p[0]) update_environpart( TSD, &e->e.input,  ios->p[0] ) ;
-   if (ios->p[1]) update_environpart( TSD, &e->e.output, ios->p[1] ) ;
-   if (ios->p[2]) update_environpart( TSD, &e->e.error,  ios->p[2] ) ;
-   e->e.input.flags.isinput = 1 ;
+   if ( ( e = find_envir( TSD, envirname ) ) == NULL )
+      return 0;
+   if (ios->p[0]) update_environpart( TSD, &e->e.input,  ios->p[0] );
+   if (ios->p[1]) update_environpart( TSD, &e->e.output, ios->p[1] );
+   if (ios->p[2]) update_environpart( TSD, &e->e.error,  ios->p[2] );
+   e->e.input.flags.isinput = 1;
+   e->e.error.flags.iserror = 1;
 
-   return( 1 ) ;
+   return 1;
 }
 
 static void dup_environpart( const tsd_t *TSD, environpart *dest,
@@ -243,35 +353,34 @@ static void dup_environpart( const tsd_t *TSD, environpart *dest,
       {
          dest->name = Str_dupTSD( src->name ) ;
          dest->base = Str_makeTSD( 3*sizeof(int) ) ;
-         set_currname( TSD, dest ) ;
       }
       dest->flags = src->flags ;
    }
    clear_environpart(dest);
 }
 
-static struct envir *dup_envir( tsd_t *TSD, const streng *name,
-                                                            const nodeptr ios )
+static struct envir *dup_envir( tsd_t *TSD, const streng *name, cnodeptr ios )
 /* This functions returns a new instance of the environment with the given
  * name or NULL if there is not such an environment name.
  * The current IO-redirection settings are overwritten with the
  * environment parts given in ios->p[0..2] for INPUT, OUTPUT and ERROR.
  */
 {
-   struct envir *prev, *new ;
+   struct envir *prev, *newptr;
 
-   if ((prev = find_envir( TSD, name )) == NULL)
-      return( NULL ) ;
+   if ( ( prev = find_envir( TSD, name ) ) == NULL )
+      return NULL;
 
-   add_envir( TSD, name, prev->type, prev->e.subtype ) ;
-   new = TSD->firstenvir ;
+   add_envir( TSD, name, prev->type, prev->e.subtype );
+   newptr = (struct envir *)TSD->firstenvir;
 
-   dup_environpart( TSD, &new->e.input,  ios->p[0], &prev->e.input  ) ;
-   dup_environpart( TSD, &new->e.output, ios->p[1], &prev->e.output ) ;
-   dup_environpart( TSD, &new->e.error,  ios->p[2], &prev->e.error  ) ;
-   new->e.input.flags.isinput = 1 ;
+   dup_environpart( TSD, &newptr->e.input,  ios->p[0], &prev->e.input  );
+   dup_environpart( TSD, &newptr->e.output, ios->p[1], &prev->e.output );
+   dup_environpart( TSD, &newptr->e.error,  ios->p[2], &prev->e.error  );
+   newptr->e.input.flags.isinput = 1;
+   newptr->e.error.flags.iserror = 1;
 
-   return( new ) ;
+   return newptr;
 }
 
 int init_envir( tsd_t *TSD )
@@ -280,11 +389,11 @@ int init_envir( tsd_t *TSD )
       const char *name ;
       int         subtype ;
    } locals[] = {
-      { "COMMAND",        SUBENVIR_COMMAND } ,
+      { "COMMAND",        SUBENVIR_PATH    } , /* was SUBENVIR_COMMAND */
       { "SYSTEM",         SUBENVIR_SYSTEM  } ,
       { "OS2ENVIRONMENT", SUBENVIR_SYSTEM  } ,
       { "ENVIRONMENT",    SUBENVIR_SYSTEM  } ,
-      { "CMD",            SUBENVIR_COMMAND } ,
+      { "CMD",            SUBENVIR_PATH    } , /* was SUBENVIR_COMMAND */
       { "PATH",           SUBENVIR_PATH    } ,
       { "REGINA",         SUBENVIR_REXX    } ,
       { "REXX",           SUBENVIR_REXX    }
@@ -358,7 +467,7 @@ static int get_io_flag( tsd_t *TSD, streng *command, streng **rxqueue )
                   /* "|" already checked */
                   for ( i = pos + 1, j = 0; i < length; i++ )
                   {
-                     if ( !isspace(command->value[i] ) )
+                     if ( !rx_isspace(command->value[i] ) )
                         break;
                   }
                   if ( i+7 <= length )
@@ -368,7 +477,7 @@ static int get_io_flag( tsd_t *TSD, streng *command, streng **rxqueue )
                         i += 7;
                         for ( ; i < length; i++ )
                         {
-                           if ( !isspace( command->value[i] ) )
+                           if ( !rx_isspace( command->value[i] ) )
                               break;
                            have_space = 1;
                         }
@@ -413,7 +522,7 @@ static int get_io_flag( tsd_t *TSD, streng *command, streng **rxqueue )
                                qname_start = i;
                                for ( ; i < length; i++ )
                                {
-                                  if ( isspace( command->value[i] ) )
+                                  if ( rx_isspace( command->value[i] ) )
                                   {
                                      have_space = 1;
                                      qname_end = i;
@@ -436,7 +545,7 @@ static int get_io_flag( tsd_t *TSD, streng *command, streng **rxqueue )
                                    */
                                   for ( ; i < length; i++ )
                                   {
-                                     if ( !isspace( command->value[i] ) )
+                                     if ( !rx_isspace( command->value[i] ) )
                                         break;
                                   }
                                   if ( i+6 <= length
@@ -486,25 +595,77 @@ static int get_io_flag( tsd_t *TSD, streng *command, streng **rxqueue )
    return flag ;
 }
 
+/*
+ * ANSI 8.2.4 and 8.3.5 and others forces us to set some variables showing
+ * the result and to raise some conditions in case of errors after
+ * processing an external command.
+ */
+void post_process_system_call( tsd_t *TSD, const streng *cmd,
+                               int rc_code, const streng *rc_value,
+                               cnodeptr thisptr )
+{
+   int rs;
+   trap *traps;
+   int type;
 
-streng *perform( tsd_t *TSD, const streng *command, const streng *envir, cnodeptr this )
-/* If and only if this->p[1] is set, a new instance of the environment is
+   /*
+    * ANSI 8.2.4 etc. forces us to do the following.
+    *
+    * 10-08-2004 MH interpreted 8.2.4 as only being applicable to
+    * clauses entered at the interactive prompt.
+    */
+#if 0
+   if ( !TSD->systeminfo->interactive )
+#endif
+   {
+      if ( rc_value != NULL )
+         set_reserved_value( TSD, POOL0_RC, Str_dupTSD( rc_value ), 0,
+                             VFLAG_STR );
+      else
+         set_reserved_value( TSD, POOL0_RC, NULL, rc_code, VFLAG_NUM );
+   }
+
+   /* set .RS: -1==Failure, 0=OK, 1=Error */
+   if ( rc_code == 0 )
+      rs = 0;
+   else if ( rc_code < 0 )
+      rs = -1;
+   else
+      rs = 1;
+   set_reserved_value( TSD, POOL0_RS, NULL, rs, VFLAG_NUM );
+
+   if ( rc_code )
+   {
+      traceerror( TSD, thisptr, rc_code );
+      traps = gettraps( TSD, TSD->currlevel );
+      type = ( rc_code > 0 ) ? SIGNAL_ERROR : SIGNAL_FAILURE;
+
+      if ( traps[type].on_off )
+         condition_hook( TSD, type, rc_code, 0, thisptr->lineno, Str_dupTSD( cmd ), NULL );
+   }
+}
+
+streng *perform( tsd_t *TSD, const streng *command, const streng *envir, cnodeptr thisptr, cnodeptr overwrite )
+/* If and only if overwrite is set, a new instance of the environment is
  * temporarily created and reset to the new IO-redirections.
  */
 {
    int rc=0, io_flag=0, clearq=0, tempenvir=0;
-   struct envir *eptr=NULL ;
+   struct envir *eptr;
    streng *retstr=NULL ;
    streng *rxqueue=NULL;
    streng *cmd=Str_dupTSD(command);
    streng *saved_queue=NULL;
    char *rxq=NULL;
-   streng *rs;
 
-   if (this->p[1])
+   if ( overwrite )
    {
-      if (( eptr = dup_envir( TSD, envir, this->p[1] ) ) != NULL)
-         tempenvir = 1 ;
+      /*
+       * fixes bug 653214, overwrite was this->p[1] in former versions, which
+       * was wrong is this wasn't an ADDRESS statement.
+       */
+      if (( eptr = dup_envir( TSD, envir, overwrite ) ) != NULL)
+         tempenvir = 1;
    }
    else
    {
@@ -554,7 +715,7 @@ streng *perform( tsd_t *TSD, const streng *command, const streng *envir, cnodept
                   io_flag -= REDIR_CLEAR;
                }
             }
-            rc = posix_do_command( TSD, cmd, io_flag, &eptr->e ) ;
+            rc = posix_do_command( TSD, cmd, io_flag, &eptr->e, NULL ) ;
             /*
              * Change the current queue name back
              * to the saved name
@@ -562,7 +723,7 @@ streng *perform( tsd_t *TSD, const streng *command, const streng *envir, cnodept
             if ( get_options_flag( TSD->currlevel, EXT_INTERNAL_QUEUES ) )
             {
                if ( clearq )
-                  drop_buffer( TSD, 0);
+                  drop_buffer( TSD, 0 ) ;
                set_queue( TSD, saved_queue );
                if ( rxqueue != NULL )
                   Free_stringTSD( rxqueue );
@@ -585,35 +746,10 @@ streng *perform( tsd_t *TSD, const streng *command, const streng *envir, cnodept
       retstr = SubCom( TSD, cmd, envir, &rc ) ;
    }
 
-   if (!TSD->systeminfo->interactive) /* J18PUB 8.2.4 */
-      setvalue(TSD,&RC_name,Str_dupTSD(retstr)) ;
-
    if (tempenvir)
       del_envir( TSD, envir ) ;
 
-   /* set .RS: -1==Failure, 0=OK, 1=Error */
-   if (rc == 0)
-      rs = int_to_streng(TSD, 0);
-   else if (rc < 0)
-      rs = int_to_streng(TSD, -1);
-   else
-      rs = int_to_streng(TSD, 1);
-   setvalue(TSD, dotRS_name, rs);
-
-   if (rc && this)
-   {
-      trap *traps ;
-      int type ;
-
-      traceerror( TSD, this, rc ) ;
-      traps = gettraps( TSD, TSD->currlevel ) ;
-      type = (rc>0) ? SIGNAL_ERROR : SIGNAL_FAILURE ;
-
-      if ((type==SIGNAL_FAILURE) && (traps[type].on_off))
-         condition_hook( TSD, type, rc, 0, this->lineno, Str_dupTSD(cmd), NULL ) ;
-      else if (traps[SIGNAL_ERROR].on_off)
-         condition_hook( TSD, SIGNAL_ERROR, rc, 0, this->lineno, Str_dupTSD(cmd), NULL ) ;
-   }
+   post_process_system_call( TSD, cmd, rc, retstr, thisptr );
 
    Free_stringTSD( cmd ) ;
    return retstr ;
@@ -633,29 +769,32 @@ streng *run_popen( tsd_t *TSD, const streng *command, const streng *envir )
    int rc;
    streng *retval;
    struct envir *ptr=NULL ;
+   Queue *q ;
 
-   for (ptr=TSD->firstenvir; ptr; ptr=ptr->prev)
+   for ( ptr = (struct envir *)TSD->firstenvir; ptr; ptr = ptr->prev )
    {
-      if ((ptr->type == ENVIR_SHELL) && (Str_cmp(ptr->e.name, envir) == 0))
+      if ( ( ptr->type == ENVIR_SHELL ) && ( Str_cmp( ptr->e.name, envir ) == 0 ) )
          break;
    }
-   if (ptr == NULL)
+   if ( ptr == NULL )
    {
-      retval = Str_creTSD("SYSTEM"); /* temporary misuse */
-      ptr = find_envir(TSD, retval);
-      Free_stringTSD(retval) ;
+      retval = Str_creTSD( "SYSTEM" ); /* temporary misuse */
+      ptr = find_envir( TSD, retval );
+      Free_stringTSD( retval ) ;
    }
 
    /* Create a new environment with no redirections. */
    add_envir(TSD, ptr->e.name, ENVIR_SHELL, ptr->e.subtype);
 
-   rc = posix_do_command(TSD, command, REDIR_OUTSTRING, TSD->firstenvir);
-   retval = stack_to_line(TSD);
+   q = find_free_slot( TSD ) ;
+   q->type = QisTemp;
+   rc = posix_do_command(TSD, command, REDIR_OUTSTRING, (environment *)TSD->firstenvir, q ) ;
+   retval = stack_to_line( TSD, q ) ;
 
    /* restore the previous environment and delete the temporary one */
    del_envir(TSD, ptr->e.name);
 
-   setvalue(TSD, &RC_name, int_to_streng(TSD, rc));
+   set_reserved_value( TSD, POOL0_RC, NULL, rc, VFLAG_NUM );
 
    if (rc >= 0)
       return(retval);

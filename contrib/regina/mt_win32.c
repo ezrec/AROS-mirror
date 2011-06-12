@@ -2,6 +2,9 @@
  * We initialize the global data structure and the global access variable.
  */
 
+#include "regina_c.h"
+#include "rexxsaa.h"
+#define DONT_TYPEDEF_PFN
 #include "rexx.h"
 #include <stdlib.h>
 #include <string.h>
@@ -9,7 +12,18 @@
 #include <assert.h>
 
 #define WIN32_LEAN_AND_MEAN
+#ifdef _MSC_VER
+# if _MSC_VER >= 1100
+/* Stupid MSC can't compile own headers without warning at least in VC 5.0 */
+#  pragma warning(disable: 4115 4201 4214 4514)
+# endif
+#endif
 #include <windows.h>
+#ifdef _MSC_VER
+# if _MSC_VER >= 1100
+#  pragma warning(default: 4115 4201 4214)
+# endif
+#endif
 
 typedef struct { /* mt_tsd: static variables of this module (thread-safe) */
    HANDLE Heap;
@@ -24,10 +38,7 @@ static DWORD ThreadIndex = 0xFFFFFFFF; /* index of the TSD, not yet got */
  */
 static CRITICAL_SECTION cs = {0,};
 
-#ifdef DYNAMIC
-#define AcquireCriticalSection(cs) EnterCriticalSection(cs)
-#define AcquireThreadIndex() ThreadIndex
-
+#if defined(DYNAMIC) || (defined(__MINGW32__) && (__GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 4)))
 static void DestroyHeap(tsd_t *TSD)
 {
    mt_tsd_t *mt = TSD->mt_tsd;
@@ -39,6 +50,25 @@ static void DestroyHeap(tsd_t *TSD)
    free(mt);
    free(TSD);
 }
+
+int IfcReginaCleanup( VOID )
+{
+   tsd_t *TSD = __regina_get_tsd();
+
+   if (TSD == NULL)
+      return 0;
+
+   deinit_rexxsaa(TSD);
+   DestroyHeap(TSD);
+   TlsSetValue(ThreadIndex,NULL);
+
+   return 1;
+}
+#endif
+
+#ifdef DYNAMIC
+#define AcquireCriticalSection(cs) EnterCriticalSection(cs)
+#define AcquireThreadIndex() ThreadIndex
 
 /* We provide a DLL entry function. Look at the standard documentation */
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD Reason, LPVOID reserved)
@@ -107,7 +137,7 @@ static unsigned sizeof_ptr(void)
 }
 
 /* Lowest level memory allocation function for normal circumstances. */
-static void *MTMalloc(const tsd_t *TSD,size_t size)
+static void *MTMalloc( const tsd_t *TSD, size_t size )
 {
    mt_tsd_t *mt = TSD->mt_tsd;
 
@@ -118,9 +148,15 @@ static void *MTMalloc(const tsd_t *TSD,size_t size)
 }
 
 /* Lowest level memory deallocation function for normal circumstances. */
-static void MTFree(const tsd_t *TSD,void *chunk)
+static void MTFree( const tsd_t *TSD, void *chunk )
 {
    mt_tsd_t *mt = TSD->mt_tsd;
+
+   /*
+    * Just in case...
+    */
+   if ( chunk == NULL)
+      return;
 
    if (mt == NULL)
       return; /* ??? */
@@ -190,6 +226,11 @@ tsd_t *ReginaInitializeThread(void)
    if (!OK)
       return(NULL);
 
+   {
+      extern OS_Dep_funcs __regina_OS_Win;
+      retval->OS = &__regina_OS_Win;
+   }
+   retval->OS->init();
    OK &= init_vars(retval);             /* Initialize the variable module    */
    OK &= init_stacks(retval);           /* Initialize the stack module       */
    OK &= init_filetable(retval);        /* Initialize the files module       */
@@ -208,7 +249,7 @@ tsd_t *ReginaInitializeThread(void)
    OK &= init_vms(retval);              /* Initialize the vmscmd module      */
    OK &= init_vmf(retval);              /* Initialize the vmsfuncs module    */
 #endif
-   OK |= init_arexxf(&__regina_tsd);    /* Initialize the arexxfuncs modules */
+   OK &= init_arexxf(retval);           /* Initialize the arxfuncs modules */
    retval->loopcnt = 1;                 /* stupid r2perl-module              */
    retval->traceparse = -1;
    retval->thread_id = (unsigned long)GetCurrentThreadId();

@@ -16,11 +16,6 @@
  *  License along with this library; if not, write to the Free
  *  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
-
-/*
- * $Id$
- */
-
 /*
  * For platforms that don't use autoconf, put these here...
  */
@@ -67,6 +62,8 @@
 # define HAVE_VSPRINTF        1
 # define HAVE_GETPID          1
 # define TIME_WITH_SYS_TIME   1
+# define HAVE_DIV             1
+# define HAVE_RAISE           1
 #endif
 
 #if defined(OS2) && defined(EMX)
@@ -78,6 +75,8 @@
 # define HAVE_SIGACTION       1
 # define HAVE_STDIO_H         1
 # define HAVE_SYS_TIME_H      1
+# define HAVE_SYS_STAT_H      1
+# define HAVE_SYS_TYPES_H     1
 # define HAVE_SYSCONF         1
 # define HAVE_TERMIOS_H       1
 # define HAVE_TIME_H          1
@@ -85,10 +84,12 @@
 # define HAVE_GRP_H           1
 # define HAVE_PWD_H           1
 # define HAVE_LIMITS_H        1
+# define HAVE_PROCESS_H       1
 # define HAVE_MALLOC_H        1
 # define HAVE_SETJMP_H        1
 # define HAVE_SIGNAL_H        1
 # define HAVE_STDLIB_H        1
+# define HAVE_STDINT_H        1
 # define HAVE_STRING_H        1
 # define HAVE_UNISTD_H        1
 # define HAVE_SYS_SOCKET_H    1
@@ -105,6 +106,8 @@
 # define HAVE_STRERROR        1
 # define HAVE_VSPRINTF        1
 # define HAVE_GETPID          1
+# define HAVE_DIV             1
+# define HAVE_RAISE           1
 # define TIME_WITH_SYS_TIME   1
 # if defined(DYNAMIC)
 #  define DYNAMIC_OS2
@@ -121,32 +124,86 @@
 # define HAVE_MEMMOVE
 # define HAVE_STRERROR
 # define HAVE_VSPRINTF
-# define HAVE_GETPID  
+# define HAVE_GETPID
+# define HAVE_DIV
+# define HAVE_RAISE
 # define TIME_WITH_SYS_TIME
 #endif
 
 #if defined(OS2) && defined(__WATCOMC__)
+# define HAVE_ARPA_INET_H  /* at least OpenWatcom */
+# define HAVE_DIRECT_H
+# define HAVE_DIV
+# define HAVE_FCNTL_H
+# define HAVE_FTIME
+# define HAVE_GETPID
 # define HAVE_MALLOC_H
-# define HAVE_SETJMP_H
-# define HAVE_UNISTD_H
-# define HAVE__FULLPATH
-# define HAVE_PUTENV
 # define HAVE_MEMCPY
 # define HAVE_MEMMOVE
+# define HAVE_NETDB_H      /* at least OpenWatcom */
+# define HAVE_NETINET_IN_H /* at least OpenWatcom */
+# define HAVE_PROCESS_H    /* at least OpenWatcom */
+# define HAVE_PUTENV
+# define HAVE_RAISE
+# define HAVE_SETENV
+# define HAVE_SETJMP_H
+# define HAVE_PROCESS_H
+# define HAVE_SIGNAL_H
 # define HAVE_STRERROR
+# define HAVE_STRING_H
+# define HAVE_SYS_SELECT_H /* at least OpenWatcom */
+# define HAVE_SYS_SOCKET_H /* at least OpenWatcom */
+# define HAVE_TYPES_H
+# define HAVE_UNISTD_H
 # define HAVE_VSPRINTF
-# define HAVE_GETPID  
+# define HAVE__FULLPATH
+# define HAVE__SPLITPATH2
 # if defined(DYNAMIC)
 #  define DYNAMIC_OS2
 # endif
 #endif
 
 #if defined(WIN32) && defined(__WATCOMC__)
+# define HAVE_ARPA_INET_H  /* at least OpenWatcom */
+# define HAVE_DIRECT_H
+# define HAVE_DIV
+# define HAVE_FCNTL_H
+# define HAVE_FTIME
+# define HAVE_GETPID
+# define HAVE_MALLOC_H
+# define HAVE_MEMCPY
+# define HAVE_MEMMOVE
+# define HAVE_NETDB_H      /* at least OpenWatcom */
+# define HAVE_NETINET_IN_H /* at least OpenWatcom */
+# define HAVE_PROCESS_H    /* at least OpenWatcom */
+# define HAVE_PUTENV
+# define HAVE_RAISE
+# define HAVE_SETENV
+# define HAVE_SETJMP_H
+# define HAVE_SIGNAL_H
+# define HAVE_STRERROR
+# define HAVE_STRING_H
+# define HAVE_SYS_SELECT_H /* at least OpenWatcom */
+# define HAVE_SYS_SOCKET_H /* at least OpenWatcom */
+# define HAVE_TYPES_H
+# define HAVE_UNISTD_H
+# define HAVE_VSPRINTF
+# define HAVE__FULLPATH
+# define HAVE__SPLITPATH2
+# if defined(DYNAMIC)
+#  define DYNAMIC_WIN32
+# endif
+#endif
+
+#if defined(DOS) && defined(__WATCOMC__)
 # define HAVE_MALLOC_H
 # define HAVE_SETJMP_H
-# define HAVE_SIGNAL_H 
+# define HAVE_SIGNAL_H
 # define HAVE_UNISTD_H
+# define HAVE_STRING_H
 # define HAVE_FTIME
+# define HAVE_FCNTL_H
+# define HAVE_PROCESS_H    /* at least OpenWatcom */
 # define HAVE__FULLPATH
 # define HAVE__SPLITPATH2
 /* # define HAVE_FTRUNCATE */
@@ -155,14 +212,13 @@
 # define HAVE_SETENV
 # define HAVE_STRERROR
 # define HAVE_VSPRINTF
-# define HAVE_GETPID  
-# if defined(DYNAMIC)
-#  define DYNAMIC_WIN32
-# endif
+# define HAVE_GETPID
+# define HAVE_DIV
+# define HAVE_RAISE
 #endif
 
 #if defined(WIN32) && defined(_MSC_VER)
-# define HAVE_FCNTL_H       
+# define HAVE_FCNTL_H
 # define HAVE_LIMITS_H
 # define HAVE_MALLOC_H
 # define HAVE_PROCESS_H
@@ -179,13 +235,16 @@
 # define HAVE_MEMMOVE
 # define HAVE_STRERROR
 # define HAVE_VSPRINTF
-# define HAVE_GETPID  
+# define HAVE_GETPID
+# define HAVE_DIV
+# define HAVE_RAISE
 # if defined(DYNAMIC)
 #  define DYNAMIC_WIN32
 # endif
 #endif
- 
+
 #if defined(WIN32) && defined(__BORLANDC__)
+# define HAVE_FCNTL_H
 # define HAVE_LIMITS_H
 # define HAVE_MALLOC_H
 # define HAVE_PROCESS_H
@@ -201,6 +260,8 @@
 # define HAVE_MEMMOVE
 # define HAVE_STRERROR
 # define HAVE_VSPRINTF
+# define HAVE_DIV
+# define HAVE_RAISE
 # if defined(DYNAMIC)
 #  define DYNAMIC_WIN32
 # endif
@@ -225,7 +286,9 @@
 # define HAVE_MEMMOVE         1
 # define HAVE_STRERROR        1
 # define HAVE_VSPRINTF        1
-# define HAVE_GETPID  
+# define HAVE_GETPID
+# define HAVE_DIV
+# define HAVE_RAISE
 # define TIME_WITH_SYS_TIME   1
 # if defined(DYNAMIC)
 #  define DYNAMIC_WIN32
@@ -241,7 +304,8 @@
 # define HAVE_STDLIB_H        1
 # define HAVE_STRING_H        1
 # define HAVE_UNISTD_H        1
-/* # define HAVE__FULLPATH        1 */
+# define HAVE_FCNTL_H         1
+# define HAVE__FULLPATH       1
 # define HAVE_PUTENV          1
 /* # define HAVE_GETTIMEOFDAY    1 */
 /* # define HAVE_FTRUNCATE       1 */
@@ -249,8 +313,39 @@
 # define HAVE_MEMMOVE         1
 # define HAVE_STRERROR        1
 # define HAVE_VSPRINTF        1
-# define HAVE_GETPID  
+# define HAVE_GETPID
+# define HAVE_DIV
+# define HAVE_RAISE
 # define TIME_WITH_SYS_TIME   1
+# if defined(DYNAMIC)
+#  define DYNAMIC_WIN32
+# endif
+#endif
+
+#if defined(WIN32) && defined(__LCC__)
+# define HAVE_FCNTL_H         1
+# define HAVE_DIRECT_H        1
+# define HAVE_LIMITS_H        1
+# define HAVE_MALLOC_H        1
+# define HAVE_PROCESS_H       1
+# define HAVE_SETJMP_H        1
+# define HAVE_SIGNAL_H        1
+# define HAVE_STDLIB_H        1
+# define HAVE_STRING_H        1
+# define HAVE_UNISTD_H        1
+# define HAVE__FULLPATH       1
+# define HAVE_PUTENV          1
+/* # define HAVE_GETTIMEOFDAY    1 */
+/* # define HAVE_FTRUNCATE       1 */
+# define HAVE_MEMCPY          1
+# define HAVE_MEMMOVE         1
+# define HAVE_STRERROR        1
+# define HAVE_VSPRINTF        1
+# define HAVE__SPLITPATH      1
+# define HAVE_GETPID          1
+# define HAVE_DIV
+# define HAVE_RAISE
+/* # define TIME_WITH_SYS_TIME   1 */
 # if defined(DYNAMIC)
 #  define DYNAMIC_WIN32
 # endif
@@ -261,6 +356,7 @@
 # define HAVE_GRP_H
 # define HAVE_PWD_H
 # define HAVE_LIMITS_H
+# define HAVE_STRING_H
 # define TIME_WITH_SYS_TIME
 # define HAVE_SETJMP_H
 # define HAVE_UNISTD_H
@@ -279,7 +375,9 @@
 # define HAVE_STRERROR
 # define HAVE__TRUENAME
 # define HAVE_VSPRINTF
-# define HAVE_GETPID  
+# define HAVE_GETPID
+# define HAVE_DIV
+# define HAVE_RAISE
 # ifndef _MAX_PATH
 #  define _MAX_PATH  PATH_MAX
 # endif
@@ -293,10 +391,12 @@
 # define HAVE_MEMMOVE
 # define HAVE_STRERROR
 # define HAVE_VSPRINTF
+# define HAVE_DIV
+# define HAVE_RAISE
 # define UNIX
 #endif
 
-#if defined(AMIGA) && defined(GCC)
+#if defined(AMIGA) && !defined(__AROS__) && ( defined(GCC) || defined(__GNUC__) )
 # define HAVE_GRP_H           1
 # define HAVE_PWD_H           1
 # define HAVE_LIMITS_H        1
@@ -307,6 +407,7 @@
 # define HAVE_STRING_H        1
 # define HAVE_UNISTD_H        1
 # define HAVE_SYS_SOCKET_H    1
+# define HAVE_SYS_FCNTL_H     1
 # define HAVE_NETINET_IN_H    1
 # define HAVE_NETDB_H         1
 # define HAVE_ARPA_INET_H     1
@@ -318,8 +419,16 @@
 # define HAVE_MEMMOVE         1
 # define HAVE_STRERROR        1
 # define HAVE_VSPRINTF        1
-# define HAVE_GETPID  
+# define HAVE_GETPID
+# define HAVE_DIV
+# define HAVE_RAISE
 # define TIME_WITH_SYS_TIME   1
+# if !defined( _AMIGA )
+#  define _AMIGA
+# endif
+# if !defined( __AMIGADATE__ )
+#  define __AMIGADATE__ "("__DATE__")"
+# endif
 #endif
 
 #if defined(__AROS__)
@@ -347,6 +456,8 @@
 #define HAVE_STRING_H         1
 #define HAVE_UNISTD_H         1
 #define HAVE_DRAND48
+#define HAVE_STDINT_H         1
+#define HAVE_RAISE            1
 #endif
 
 #if defined(MAC)
@@ -373,7 +484,9 @@
 # define HAVE_MEMMOVE         1
 # define HAVE_STRERROR        1
 # define HAVE_VSPRINTF        1
-# define HAVE_GETPID  
+# define HAVE_GETPID
+# define HAVE_DIV
+# define HAVE_RAISE
 /* # define TIME_WITH_SYS_TIME   1 */
 #endif
 
@@ -396,7 +509,9 @@
 # define HAVE_MEMMOVE
 # define HAVE_STRERROR
 # define HAVE_VSPRINTF
-# define HAVE_GETPID  
+# define HAVE_GETPID
+# define HAVE_DIV
+# define HAVE_RAISE
 # define HAVE_SYS_SOCKET_H
 # define HAVE_NETINET_IN_H
 # define HAVE_NETDB_H
@@ -428,6 +543,8 @@
 # define HAVE_STRERROR        1
 # define HAVE_VSPRINTF        1
 # define HAVE_GETPID          1
+# define HAVE_DIV
+# define HAVE_RAISE
 # define TIME_WITH_SYS_TIME   1
 # define HAVE_SYS_SOCKET_H    1
 # define HAVE_NETINET_IN_H    1
@@ -438,7 +555,41 @@
 # endif
 #endif
 
-#if defined(__vms)
+#if defined(SKYOS)
+# include <skyos/libskyos.h>
+# define HAVE_SYS_FCNTL_H     1
+# define HAVE_GRP_H           1
+# define HAVE_PWD_H           1
+# define HAVE_LIMITS_H        1
+# define HAVE_MALLOC_H        1
+# define HAVE_PROCESS_H       1
+# define HAVE_SETJMP_H        1
+# define HAVE_SIGNAL_H        1
+# define HAVE_STDLIB_H        1
+# define HAVE_STRING_H        1
+# define HAVE_UNISTD_H        1
+/* # define HAVE__FULLPATH        1 */
+# define HAVE_PUTENV          1
+# define HAVE_GETTIMEOFDAY    1
+/*# define HAVE_FTRUNCATE       1 */
+# define HAVE_MEMCPY          1
+# define HAVE_MEMMOVE         1
+# define HAVE_STRERROR        1
+# define HAVE_VSPRINTF        1
+# define HAVE_GETPID          1
+# define HAVE_DIV             1
+# define HAVE_RAISE           1
+/*# define TIME_WITH_SYS_TIME   1*/
+# define HAVE_SYS_SOCKET_H    1
+# define HAVE_NETINET_IN_H    1
+# define HAVE_NETDB_H         1
+# define HAVE_ARPA_INET_H     1
+# if defined(DYNAMIC)
+#  define DYNAMIC_SKYOS
+# endif
+#endif
+
+#if defined(VMS)
 # include "vms.h"
 #endif
 
@@ -451,15 +602,16 @@
  */
 #define MAXLEVELS        1024
 
-/* The macro HASHTABLENGTH is the number of sloths in the hash table
- *   containing the values of the rexx variables, must be a power of 2.
- */
-#define HASHTABLENGTH     256
-
 /* The macro MAX_INDEX_LENGTH defines the maximum length that the name
  *   of an compund variable might expand to.
  */
 #define MAX_INDEX_LENGTH  256
+
+/* The macro MAX_EXPONENT is the maximum exponent disregarding sign we
+ * are able to handle.
+ * This value MUST change for 64-bit-support.
+ */
+#define MAX_EXPONENT 999999999
 
 /*
  * The macro DEFAULT_FLUSH_STACK can be defined to either 1 or 0,
@@ -487,12 +639,6 @@
 # define DEFAULT_LINEOUTTRUNC 1
 #endif
 
-/*
- * Whether the OPEN() and CLOSE() bifs are available by default
- */
-#define DEFAULT_OPEN_BIF 1
-#define DEFAULT_CLOSE_BIF 1
-
 #define DEFAULT_MAKEBUF_BIF 1
 #define DEFAULT_DROPBUF_BIF 1
 #define DEFAULT_BUFTYPE_BIF 1
@@ -501,25 +647,76 @@
 #define DEFAULT_CACHEEXT 0
 #define DEFAULT_PRUNE_TRACE 1
 
-#define DEFAULT_FIND_BIF 1
-
-#define DEFAULT_EXT_COMMANDS_AS_FUNCS  1
-#define DEFAULT_STDOUT_FOR_STDERR      0
-#define DEFAULT_INTERNAL_QUEUES        0
-#define DEFAULT_TRACE_HTML             0
-#define DEFAULT_FAST_LINES_BIF_DEFAULT 1
-#define DEFAULT_STRICT_ANSI            0
-#define DEFAULT_PGB_PATCH1             0  /* pgb */
-#define DEFAULT_REGINA_BIFS            1 
-
 /*
- * Define the following if your machine has putenv(), unfortunately,
- *   Standard C does not include a way to set environmentvariables, just
- *   to read them. But most machines have the putenv() function.
- * If it is not defined, you will not be able to set the environment
- *   variables throught the VALUE() builtin function.
+ * Indicates that Regina treats external commands as functions by default
  */
-/* #define HAVE_PUTENV */ /* handled in makefile - TBD in autoconf */
+#define DEFAULT_EXT_COMMANDS_AS_FUNCS  1
+/*
+ * Indicates that Regina does not send output that normally goes to stderr, to stdout
+ */
+#define DEFAULT_STDOUT_FOR_STDERR      0
+/*
+ * Indicates that Regina allows external queues (and internal queues) by default
+ */
+#define DEFAULT_INTERNAL_QUEUES        0
+/*
+ * Indicates that Regina does not wrap trace output in HTML code by default
+ */
+#define DEFAULT_TRACE_HTML             0
+/*
+ * Indicates that Regina returns 1 or 0 for when calling LINES BIF without optional 2nd argument by default
+ */
+#define DEFAULT_FAST_LINES_BIF_DEFAULT 1
+/*
+ * Indicates that Regina does not observe strict ANSI functionality by default
+ */
+#define DEFAULT_STRICT_ANSI            0
+/*
+ * Indicates that Regina-specific BUFs are available by default
+ */
+#define DEFAULT_REGINA_BIFS            1
+/*
+ * Indicates that Regina does not do strict white space comparison by default
+ */
+#define DEFAULT_STRICT_WHITE_SPACE_COMPARISONS 0
+/*
+ * Indicates if the ARexx BIFs (OPEN, CLOSE, EOF) use AREXX semantics or not
+ * On Amiga and AROS, they are on by default.
+ */
+#if defined(_AMIGA) || defined(__AROS__)
+# define DEFAULT_AREXX_SEMANTICS        1
+#else
+# define DEFAULT_AREXX_SEMANTICS        0
+#endif
+/*
+ * Indicates that AREXX BIFs are available by default on Amiga and AROS, but
+ * OFF on other platforms
+ */
+#if defined(_AMIGA) || defined(__AROS__)
+# define DEFAULT_AREXX_BIFS             1
+#else
+# define DEFAULT_AREXX_BIFS             0
+#endif
+/*
+ * Indicates if the user want the "broken" semantics of ADDRESS COMMAND
+ */
+#define DEFAULT_BROKEN_ADDRESS_COMMAND 0
+/*
+ * Indicates if the user wants outer parentheses when using CALL subroutine.
+ */
+#define DEFAULT_CALLS_AS_FUNCS          0
+/*
+ * Indicates if the user wants the broken queue naming conventions.
+ */
+#define DEFAULT_QUEUES_301              0
+/*
+ * Indicates if a failure in a call to an external routine halts the caller with error 40.1
+ */
+#define DEFAULT_HALT_ON_EXT_CALL_FAIL   0
+/*
+ * Indicates if a new thread calls an API function the call occurs in the current (and only one) instance of an interpreter
+ */
+#define DEFAULT_SINGLE_INTERPRETER      0
 
 /*
  * The FILE_SEPARATOR is one character, and defines the char that separates
@@ -528,22 +725,26 @@
  * directories, from one another in a PATH environment variable.
  */
 
-#if defined(MSDOS) || ( defined(__WATCOMC__) && !defined(__QNX__) ) || defined(_MSC_VER) || defined(DOS) || defined(OS2) || defined(__WINS__) || defined(__EPOC32__)
+#if defined(MSDOS) || ( defined(__WATCOMC__) && !defined(__QNX__) ) || defined(_MSC_VER) || defined(DOS) || defined(OS2) || defined(__WINS__) || defined(__EPOC32__) || defined(__LCC__) || defined(__BORLANDC__) || defined(__MINGW32__)
+# define FILE_SEPARATORS     "\\/:"
 # define FILE_SEPARATOR      '\\'
 # define FILE_SEPARATOR_STR  "\\"
 # define PATH_SEPARATOR      ';'
 # define PATH_SEPARATOR_STR  ";"
 #elif defined(VMS)
+# define FILE_SEPARATORS    "]"
 # define FILE_SEPARATOR     ']'
 # define FILE_SEPARATOR_STR "]"
 # define PATH_SEPARATOR     '?'
 # define PATH_SEPARATOR_STR "?"
 #elif defined(MAC)
+# define FILE_SEPARATOR     "]"
 # define FILE_SEPARATOR     ']'
 # define FILE_SEPARATOR_STR "]"
 # define PATH_SEPARATOR     '?'
 # define PATH_SEPARATOR_STR "?"
 #else
+# define FILE_SEPARATORS    "/"
 # define FILE_SEPARATOR     '/'
 # define FILE_SEPARATOR_STR "/"
 # define PATH_SEPARATOR     ':'
@@ -553,9 +754,6 @@
 
 #define FIX_PROTOS
 #define FIX_ALL_PROTOS
-
-
-#define RXTOLOW(a) (u_to_l[(unsigned char)(a)])
 
 
 #if defined(HPUX) || defined(__hpux)
@@ -655,10 +853,6 @@
 # ifdef HAVE_GETTIMEOFODAY
 #  undef HAVE_GETTIMEOFDAY
 # endif
-#endif
-
-#ifndef AREXXIO
-#define OLD_REGINA_FEATURES
 #endif
 
 /*

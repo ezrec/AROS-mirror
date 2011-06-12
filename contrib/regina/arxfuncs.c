@@ -77,17 +77,17 @@ static proclevel setamilevel( tsd_t *TSD )
     
     TSD->currlevel = atsd->amilevel;
     
-    setvalue( TSD, &_fname, Str_cre_TSD( TSD, "STDIN" ) );
+    setvalue( TSD, &_fname, Str_cre_TSD( TSD, "STDIN" ), -1 );
     sprintf( txt, "%p", stdin );
-    setvalue( TSD, &_fstem, Str_cre_TSD( TSD, txt ) );
+    setvalue( TSD, &_fstem, Str_cre_TSD( TSD, txt ), -1 );
     
-    setvalue( TSD, &_fname, Str_cre_TSD( TSD, "STDOUT" ) );
+    setvalue( TSD, &_fname, Str_cre_TSD( TSD, "STDOUT" ), -1 );
     sprintf( txt, "%p", stdout );
-    setvalue( TSD, &_fstem, Str_cre_TSD( TSD, txt ) );
+    setvalue( TSD, &_fstem, Str_cre_TSD( TSD, txt ), -1 );
 
-    setvalue( TSD, &_fname, Str_cre_TSD( TSD, "STDERR" ) );
+    setvalue( TSD, &_fname, Str_cre_TSD( TSD, "STDERR" ), -1 );
     sprintf( txt, "%p", stderr );
-    setvalue( TSD, &_fstem, Str_cre_TSD( TSD, txt ) );
+    setvalue( TSD, &_fstem, Str_cre_TSD( TSD, txt ), -1 );
   }
   
   return oldlevel;
@@ -102,7 +102,7 @@ static FILE *getfile( tsd_t *TSD, const streng *name )
   char *txt;
   FILE *file=NULL;
 
-  setvalue( TSD, &_fname, Str_dup_TSD( TSD, name ) );
+  setvalue( TSD, &_fname, Str_dup_TSD( TSD, name ), -1 );
   if ( isvariable( TSD, &_fstem ) )
   {
     s = getvalue( TSD, &_fstem, 0 );
@@ -121,7 +121,7 @@ static FILE *getfile( tsd_t *TSD, const streng *name )
 static streng *getfilenames( tsd_t *TSD, const streng *sep )
 {
   proclevel oldlevel = setamilevel( TSD );
-  streng *retval, *tmpstr;
+  streng *retval = NULL, *tmpstr;
   int first = 1;
   variableptr var;
 
@@ -176,8 +176,8 @@ static void addfile( tsd_t *TSD, const streng *name, FILE *file )
 
   sprintf( txt, "%p", (void *)file );
   s = Str_cre_TSD( TSD, txt );
-  setvalue( TSD, &_fname, Str_dup_TSD( TSD, name ) );
-  setvalue( TSD, &_fstem, s );
+  setvalue( TSD, &_fname, Str_dup_TSD( TSD, name ), -1 );
+  setvalue( TSD, &_fstem, s, -1 );
 
   TSD->currlevel = oldlevel;
 }
@@ -984,7 +984,7 @@ streng *arexx_storage( tsd_t *TSD, cparamboxptr parm1 )
 streng *arexx_show( tsd_t *TSD, cparamboxptr parm1 )
 {
    cparamboxptr parm2 = NULL, parm3 = NULL;
-   streng *name = NULL, *sep, *retval;
+   streng *name = NULL, *sep, *retval = NULL;
    
    checkparam( parm1, 1, 3, "SHOW" );
    parm2 = parm1->next;

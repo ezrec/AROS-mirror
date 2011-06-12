@@ -142,9 +142,9 @@ proc cmde%:
 endp
 
 proc cmda%:
-  dinit "RexxStart v3.0"
+  dinit "RexxStart v3.4"
   dtext "by Mark Hessling",""
-  dtext "  http://www.lightlink.com/hessling",""
+  dtext "  http://www.rexx.org/",""
   dtext "based on PerlStart by Olaf Flebbe",""
   dtext "  http://www.science-computing.de/o.flebbe",""
   dbuttons "Continue", KDButtonEnter%

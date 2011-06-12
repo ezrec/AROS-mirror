@@ -72,6 +72,7 @@ typedef struct _amiga_tsd_t {
   BYTE maintasksignal, subtasksignal;
   struct Task *parent, *child;
   UBYTE *value; /* Here a temporary argstring will be stored for RXGETVAR */
+  void *ai;
 } amiga_tsd_t;
 
 
@@ -197,7 +198,7 @@ void ReginaHandleMessages(void)
 	    }
 	    else
 	    {
-	      setvalue( TSD, name, value );
+		setvalue( TSD, name, value, -1 );
 	      Free_stringTSD( name );
 	      msg->rm_Result1 = RC_OK;
 	      msg->rm_Result2 = (IPTR)NULL;
@@ -349,7 +350,7 @@ static streng *getlistnames( tsd_t *TSD, struct List *list, const streng *sep )
 streng *amiga_show( tsd_t *TSD, cparamboxptr parm1 )
 {
   cparamboxptr parm2 = NULL, parm3 = NULL;
-  streng *name = NULL, *sep, *retval;
+  streng *name = NULL, *sep, *retval = NULL;
   
   checkparam( parm1, 1, 3, "SHOW" );
   parm2 = parm1->next;
@@ -502,7 +503,7 @@ streng *AmigaSubCom( const tsd_t *TSD, const streng *command, struct envir *envi
   *rc = msg->rm_Result1;
   if (msg->rm_Result1 == 0)
   {
-    if (msg->rm_Result2 == NULL)
+    if (msg->rm_Result2 == 0)
       retval = Str_crestrTSD( "" );
     else
     {
@@ -664,11 +665,11 @@ streng *try_func_amiga( tsd_t *TSD, const streng *name, cparamboxptr parms, char
   struct RexxRsrc *rsrc;
   struct Library *lib;
   ULONG result1;
-  IPTR result2;
+  IPTR result2 = (IPTR)0;
   UBYTE *retstring;
   unsigned int parmcount;
   cparamboxptr parmit;
-  streng *retval;
+  streng *retval = NULL;
 
   msg = createreginamessage( TSD );
   if ( msg == NULL )
@@ -821,13 +822,16 @@ streng *amiga_getclip( tsd_t *TSD, cparamboxptr parm1 )
   if ( rsrc == NULL )
     return nullstringptr();
   else
-    return Str_ncre_TSD( TSD, (const char *)rsrc->rr_Arg1, LengthArgstring( (UBYTE *)rsrc->rr_Arg1 ) );
+  {
+    void *arg1 = (void *)rsrc->rr_Arg1;
+    return Str_ncre_TSD( TSD, arg1, LengthArgstring( arg1 ) );
+  }
 }
 
 streng *amiga_pragma( tsd_t *TSD, cparamboxptr parm1 )
 {
   cparamboxptr parm2;
-  streng *retval;
+  streng *retval = NULL;
   static char buf[1024];
   
   checkparam( parm1, 1, 2, "PRAGMA" );
@@ -897,7 +901,7 @@ streng *amiga_pragma( tsd_t *TSD, cparamboxptr parm1 )
   case 'I':
     {
       char s[10];
-      sprintf(s, "%8X", (int)FindTask( NULL ) );
+      sprintf(s, "%8x", (void *)FindTask( NULL ) );
       if ( parm2 != NULL && parm2->value != NULL )
 	exiterror( ERR_INCORRECT_CALL, 4, "PRAGMA", 1 );
       retval = Str_cre_TSD( TSD, s );
@@ -909,11 +913,30 @@ streng *amiga_pragma( tsd_t *TSD, cparamboxptr parm1 )
       struct Process *process = (struct Process *)FindTask( NULL );
       ULONG size = (ULONG)((char *)process->pr_Task.tc_SPUpper - (char *)process->pr_Task.tc_SPLower);
       retval = int_to_streng( TSD, size );
-#warning second argument ignored because stack size increase is not implemented
+/* FIXME: second argument ignored because stack size increase is not implemented
+ */
     }
     break;
   }
   
   return retval;
+}
+
+
+/* Support functions for os_amiga.c
+   They are defined here so data can be stored in amiga_tsd_t
+*/
+void __amiga_set_ai(tsd_t *TSD, void *ai)
+{
+  amiga_tsd_t *atsd = (amiga_tsd_t *)TSD->ami_tsd;
+
+  atsd->ai = ai;
+}
+
+void *__amiga_get_ai(const tsd_t *TSD)
+{
+  amiga_tsd_t *atsd = (amiga_tsd_t *)TSD->ami_tsd;
+
+  return atsd->ai;
 }
 

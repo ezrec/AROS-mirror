@@ -1,7 +1,3 @@
-#ifndef lint
-static char *RCSid = "$Id$";
-#endif
-
 /*
  *  The Regina Rexx Interpreter
  *  Copyright (C) 1992-1994  Anders Christensen <anders@pvv.unit.no>
@@ -21,6 +17,7 @@ static char *RCSid = "$Id$";
  *  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#define NO_CTYPE_REPLACEMENT
 #include "rexx.h"
 
 #ifdef HAVE_CONFIG_H
@@ -33,7 +30,7 @@ static char *RCSid = "$Id$";
 # if defined(_MSC_VER)
 #  if _MSC_VER >= 1100
 /* Stupid MSC can't compile own headers without warning at least in VC 5.0 */
-#   pragma warning(disable: 4115 4201 4214)
+#   pragma warning(disable: 4115 4201 4214 4514)
 #  endif
 #  include <windows.h>
 #  if _MSC_VER >= 1100
@@ -61,6 +58,10 @@ static char *RCSid = "$Id$";
 # endif
 #endif
 
+#ifdef __LCC__
+# include <winsock2.h>
+#endif
+
 #include <string.h>
 
 #ifdef HAVE_UNISTD_H
@@ -75,15 +76,21 @@ static char *RCSid = "$Id$";
 #include <signal.h>
 #endif
 
+#ifdef HAVE_CTYPE_H
+#include <ctype.h>
+#endif
+
 #include "extstack.h"
 
 #define SUCCESS(a) ((a)&&(a)->value[0] == '0')
 
-#ifndef NDEBUG
-# define DEBUGDUMP(x) {x;}
-#else
-# define DEBUGDUMP(x) {}
-#endif
+/*
+ * debugging is turned off. You can turn it on by the command line option "-D".
+ */
+static int debug = 0 ;
+#define DEBUGDUMP(x) { if ( debug ) \
+                          {x;}      \
+                     }
 
 char *buff=NULL;
 unsigned int bufflen=0;
@@ -112,6 +119,18 @@ const char *get_sys_errlist( int num )
 }
 #endif
 
+streng *Str_upper( streng *str )
+{
+   int i;
+
+   for ( i = 0; i < PSTRENGLEN( str ); i++ )
+   {
+      if ( islower( str->value[i] ) )
+         str->value[i] = (char)toupper( str->value[i] );
+   }
+   return str;
+}
+
 int send_all( int sock, char *action )
 {
    /*
@@ -126,10 +145,18 @@ int send_all( int sock, char *action )
    for ( ; ; )
    {
       len = 0;
-      while ( ( c = getchar() ) != EOF && c != '\n' )
+      while ( ( c = getchar() ) != EOF )
       {
+         if ( c == REGINA_EOL )
+         {
+#if defined(DOS) || defined(OS2) || defined(WIN32)
+            if (len && ( buff[len-1] == REGINA_CR ) )
+               len--;
+#endif
+            break;
+         }
          if ( len >= bufflen
-         && (( buff = realloc( buff, bufflen <<= 1 ) ) == NULL ) )
+         && (( buff = (char *)realloc( buff, bufflen <<= 1 ) ) == NULL ) )
          {
            showerror( ERR_STORAGE_EXHAUSTED, 0, ERR_STORAGE_EXHAUSTED_TMPL );
            exit( ERR_STORAGE_EXHAUSTED );
@@ -157,6 +184,22 @@ char *get_unspecified_queue( void )
    if ( rxq == NULL )
       rxq = "SESSION";
    return rxq;
+}
+
+char *force_remote( char *rxq )
+{
+   char *h ;
+
+   if ( strchr(rxq, '@' ) == NULL )
+   {
+      if ( ( h = (char *)malloc( strlen( rxq ) + 2 ) ) != NULL )
+      {
+         strcpy( h, rxq ) ;
+         strcat( h, "@" ) ;
+         return h ;
+      }
+   }
+   return rxq ;
 }
 
 char *get_action( char *parm )
@@ -192,7 +235,7 @@ void junk_return_from_rxstack( int sock, streng *header )
       result = read_result_from_rxstack( NULL, sock, length );
       if ( result )
          DROPSTRENG( result );
-   
+
    }
 }
 
@@ -208,12 +251,12 @@ int cleanup( void )
 
 int main( int argc, char *argv[])
 {
-   int sock,portno,rc=0,i,num;
+   int sock,rc=0,num;
    char *action;
    streng *queue=NULL,*server_name=NULL;
    char *in_queue=NULL;
-   int server_address;
    streng *result;
+   Queue q;
 #ifdef WIN32
    WORD wsver = (WORD)MAKEWORD(1,1);
    WSADATA wsaData;
@@ -227,11 +270,26 @@ int main( int argc, char *argv[])
    }
 #endif
 
+   argv++ ;
+   argc-- ;
+
+   if ( getenv( "RXDEBUG" ) != NULL )
+      debug = 1 ;
+
+   if ( ( argc >= 1 )
+     && ( ( strcmp( *argv, "-D" ) == 0 ) || ( strcmp( *argv, "/D" ) == 0 ) ) )
+   {
+      debug = 1 ;
+      putenv( "RXDEBUG=1" ) ;
+      argc-- ;
+      argv++ ;
+   }
+
    action = NULL;
    /*
     * Process the command line
     */
-   if ( argc == 1 )
+   if ( argc == 0 )
    {
       /*
        * "rxqueue"
@@ -239,42 +297,42 @@ int main( int argc, char *argv[])
       action = RXSTACK_QUEUE_FIFO_STR;
       in_queue = get_unspecified_queue();
    }
-   else if ( argc == 2 )
+   else if ( argc == 1 )
    {
       /*
        * "rxqueue queue"
        * or
        * "rxqueue /switch"
        */
-      if ( argv[1][0] == '/' )
+      if ( argv[0][0] == '/' )
       {
          /*
           * Only parameter is a switch
           */
          in_queue = get_unspecified_queue();
-         action = get_action( argv[1] );
+         action = get_action( argv[0] );
       }
       else
       {
          /*
           * Only parameter is a queue name
           */
-         in_queue = argv[1];
+         in_queue = argv[0];
          action = RXSTACK_QUEUE_FIFO_STR;
       }
    }
-   else if ( argc == 3 )
+   else if ( argc == 2 )
    {
       /*
        * "rxqueue queue /switch"
        */
-      in_queue = argv[1];
-      if ( argv[2][0] == '/' )
+      in_queue = argv[0];
+      if ( argv[1][0] == '/' )
       {
          /*
           * Parameter is a switch
           */
-         action = get_action( argv[2] );
+         action = get_action( argv[1] );
       }
    }
    else
@@ -285,34 +343,37 @@ int main( int argc, char *argv[])
       fprintf(stderr, "Invalid number of parameters\n");
       rc = 1;
    }
+   in_queue = force_remote( in_queue ) ;
    if ( action )
    {
       queue = MAKESTRENG( strlen( in_queue ) );
-      if ( queue  == NULL )
+      if ( queue == NULL )
       {
          showerror( ERR_STORAGE_EXHAUSTED, 0, ERR_STORAGE_EXHAUSTED_TMPL );
          exit(ERR_STORAGE_EXHAUSTED);
       }
       memcpy( PSTRENGVAL( queue ), in_queue, PSTRENGLEN( queue ) );
+      queue->len = strlen( in_queue ) ;
       /*
        * Parse the queue to determine server address
        * and queue name
        */
-      if ( parse_queue( NULL, queue, &server_name, &server_address, &portno ) == 0 )
+      if ( parse_queue( NULL, queue, &q ) == 1 )
       {
          if ( PSTRENGLEN( queue ) == 0 )
          {
             DROPSTRENG( queue );
-            queue = MAKESTRENG( strlen( in_queue ) );
-            if ( queue  == NULL )
+            queue = MAKESTRENG( 7 );
+            if ( queue == NULL )
             {
                showerror( ERR_STORAGE_EXHAUSTED, 0, ERR_STORAGE_EXHAUSTED_TMPL );
                exit(ERR_STORAGE_EXHAUSTED);
             }
-            memcpy( PSTRENGVAL( queue ), "SESSION", PSTRENGLEN( queue ) );
+            memcpy( PSTRENGVAL( queue ), "SESSION", 7 );
+            queue->len = 7 ;
          }
-         DEBUGDUMP(printf( "queue: <%s> server: %s<%d> Port:%d\n", PSTRENGVAL( queue ), PSTRENGVAL( server_name ), server_address,portno ););
-         sock = connect_to_rxstack( NULL, portno, server_name, server_address );
+         DEBUGDUMP(printf( "queue: <%.*s> server: %.*s<%d> Port:%d\n", PSTRENGLEN( queue ), PSTRENGVAL( queue ), PSTRENGLEN( q.u.e.name ), PSTRENGVAL( q.u.e.name ), q.u.e.address, q.u.e.portno ););
+         sock = connect_to_rxstack( NULL, &q );
          if ( sock < 0 )
          {
             cleanup();
@@ -413,9 +474,9 @@ int main( int argc, char *argv[])
                junk_return_from_rxstack( sock, result );
                DROPSTRENG( result );
                DEBUGDUMP(printf("--- Number in Queue ---\n"););
-               num = get_number_in_queue_from_rxstack( NULL, sock );
-               printf("%d\n", num );
-               rc = 0;
+               num = get_number_in_queue_from_rxstack( NULL, sock, &rc );
+               if ( rc == 0 )
+                  printf("%d\n", num );
                break;
             case RXSTACK_PULL:
                /*
@@ -449,27 +510,23 @@ int main( int argc, char *argv[])
                for ( ; ; )
                {
                   DEBUGDUMP(printf("--- Pull ---\n"););
-                  rc = get_line_from_rxstack( NULL, sock, &result );
+                  rc = get_line_from_rxstack( NULL, sock, &result, 0 );
                   if ( rc == 0 )
                   {
-                     for ( i = 0; i < PSTRENGLEN( result ); i++ )
-                     {
-                        putchar( result->value[i] );
-                     }
-                     putchar( '\n' );
+                     printf( "%.*s\n", PSTRENGLEN( result ), PSTRENGVAL( result ) ) ;
                   }
-                  else if ( rc == 2 )
-                  {
-                     showerror( ERR_EXTERNAL_QUEUE, ERR_RXSTACK_INTERNAL, ERR_RXSTACK_INTERNAL_TMPL, rc, "Getting line from queue" );
-                     rc = ERR_RXSTACK_INTERNAL;
-                     break;
-                  }
-                  else
+                  else if ( ( rc == 1 ) || ( rc == 4 ) )
                   {
                      /*
                       * Queue empty.
                       */
                      rc = 0;
+                     break;
+                  }
+                  else
+                  {
+                     showerror( ERR_EXTERNAL_QUEUE, ERR_RXSTACK_INTERNAL, ERR_RXSTACK_INTERNAL_TMPL, rc, "Getting line from queue" );
+                     rc = ERR_RXSTACK_INTERNAL;
                      break;
                   }
                   DROPSTRENG( result );
@@ -486,7 +543,8 @@ int main( int argc, char *argv[])
       }
       else
       {
-         DEBUGDUMP(printf( "queue: <%s> server: %s<%d> Port:%d\n", PSTRENGVAL( queue ), PSTRENGVAL( server_name ), server_address,portno ););
+         DEBUGDUMP(printf( "queue: <%.*s>\n", PSTRENGLEN( queue ), PSTRENGVAL( queue ) ););
+         rc = 1;
       }
    }
    DROPSTRENG( server_name );

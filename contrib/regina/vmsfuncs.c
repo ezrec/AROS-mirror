@@ -1,34 +1,3 @@
-#error FIXME, FGC: I don't have fixed the const propagation in this code.
-Yep, you must run into this error. Please, fix all errors the compiler tells
-you. You may do the work in this order:
-0) Comment off this lines until the next true comment.
-
-1) Ignore errors for the first time. Look for each "static" function. Change
-   all "xxx *" into "const xxx *" and every typedef'ed type (e.g.
-   paramboxptr) into the c(onst) variant (e.g cparamboxptr). ONLY do this
-   in the arguments.
-   Recompile and check for error messages in the the static function.
-   Remove all "const" from the parameters where an "readonly l-value
-   assignment" is the error.
-   In the other cases try to fix the errors with changing local variables
-   in the static functions. In nearly all cases you have to change a running
-   variable from types like "xxx *" to "const xxx *".
-   Recompile.
-   Remove the bogus const declarations from all arguments in the static which
-   you don't have fixed.
-   You are ready.
-
-2) AFTER STEP 1:
-   You have to redo the above work for the global functions. Don't process
-   this step before step 1.
-   There is one exception to step 1: Don't try to change any parameters. Only
-   try to fix local variables.
-
-3) Send back all changes to Mark Hessling if you are not Mark Hessling :-)
-
-
-
-
 /*
  *  The Regina Rexx Interpreter
  *  Copyright (C) 1992  Anders Christensen <anders@pvv.unit.no>
@@ -47,11 +16,6 @@ you. You may do the work in this order:
  *  License along with this library; if not, write to the Free
  *  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
-
-/*
- * $Id$
- */
-
 /* huups, have to add one to length in everyting given to Str_ncatstr */
 
 #include "rexx.h"
@@ -59,7 +23,6 @@ you. You may do the work in this order:
 
 #include <assert.h>
 #include <stdio.h>
-#include <ctype.h>
 
 #include <descrip.h>
 #include <rmsdef.h>
@@ -171,9 +134,9 @@ int init_vmf( tsd_t *TSD )
    return(1);
 }
 
-static char *select_code( int code, char *values[], int max )
+static char *select_code( const int code, const char *values[], const int max )
 {
-   return values[((code<1)||(code>max)) ? 0 : code] ;
+   return (char *)values[((code<1)||(code>max)) ? 0 : code] ;
 }
 
 static const char *all_privs[] = {
@@ -189,7 +152,7 @@ static const char *all_privs[] = {
 #define NUM_PRIVS ((sizeof(all_privs)/sizeof(char*)))
 
 
-static void vms_error( tsd_t *TSD, int err )
+static void vms_error( const tsd_t *TSD, const int err )
 {
    unsigned short length ;
    unsigned int rc ;
@@ -214,7 +177,7 @@ static void vms_error( tsd_t *TSD, int err )
 }
 
 
-static streng *internal_id( short *id )
+static streng *internal_id( const tsd_t *TSD, const short *id )
 {
    streng *result ;
 
@@ -224,13 +187,13 @@ static streng *internal_id( short *id )
    return( result ) ;
 }
 
-static int name_to_num( tsd_t *TSD, streng *name )
+static int name_to_num( const tsd_t *TSD, const streng *name )
 {
    int id, rc ;
    $DESCRIPTOR( descr, "" ) ;
 
    descr.dsc$w_length = name->len ;
-   descr.dsc$a_pointer = name->value ;
+   descr.dsc$a_pointer = (char *)name->value ;
    rc = sys$asctoid( &descr, &id, NULL ) ;
    if (rc == SS$_NOSUCHID || rc == SS$_IVIDENT)
       return 0 ;
@@ -241,7 +204,7 @@ static int name_to_num( tsd_t *TSD, streng *name )
 }
 
 
-static streng *num_to_name( tsd_t *TSD, int num )
+static streng *num_to_name( const tsd_t *TSD, const int num )
 {
    char user[256], group[256] ;
    $DESCRIPTOR( udescr, user ) ;
@@ -292,7 +255,7 @@ static streng *num_to_name( tsd_t *TSD, int num )
 }
 
 
-static streng *get_prot( int prot )
+static streng *get_prot( const tsd_t *TSD, int prot )
 {
    char *names[] = { "SYSTEM", "OWNER", "GROUP", "WORLD" } ;
    int i ;
@@ -319,7 +282,7 @@ static streng *get_prot( int prot )
    return result ;
 }
 
-static streng *get_uic( tsd_t *TSD, union uicdef *uic )
+static streng *get_uic( const tsd_t *TSD, const union uicdef *uic )
 {
    streng *name ;
    streng *result ;
@@ -399,7 +362,7 @@ struct item_list {
 #define TYP_QUF  6 + 1024
 #define TYP_QUS  7 + 1024
 
-static streng *format_result( tsd_t *TSD, int type, char *buffer, int length )
+static streng *format_result( const tsd_t *TSD, const int type, const char *buffer, int length )
 {
    streng *result ;
    int *iptr = (int *)&(buffer[0]) ;
@@ -527,7 +490,7 @@ static streng *format_result( tsd_t *TSD, int type, char *buffer, int length )
 
       case TYP_PROT:
       {
-         result = get_prot( *iptr ) ;
+         result = get_prot( TSD, *iptr ) ;
          break ;
       }
 
@@ -573,7 +536,7 @@ static streng *strip_nulls( streng *input )
 }
 
 
-#define HEXDIG(x) (((x)<'A')?((x)-'0'):(toupper(x)-'A'+10))
+#define HEXDIG(x) ((isdigit(x))?((x)-'0'):(toupper(x)-'A'+10))
 
 static unsigned int read_pid( const streng *hexpid )
 {
@@ -768,7 +731,7 @@ struct dvi_items_type dvi_items[] =
 
 
 static struct dvi_items_type *item_info(
-     const streng *name, struct dvi_items_type *xlist, int size )
+     const streng *name, const struct dvi_items_type *xlist, int size )
 {
    int top, bot, mid, tmp ;
    const char *poss, *cptr ;
@@ -795,7 +758,7 @@ static struct dvi_items_type *item_info(
       else if (tmp)
          bot = mid + 1 ;
       else
-         return &(xlist[mid]) ;
+         return (struct dvi_items_type *)&(xlist[mid]) ;
    }
    return NULL ;
 }
@@ -816,7 +779,7 @@ static struct dvi_items_type *item_info(
 
 streng *vms_f_getdvi( tsd_t *TSD, cparamboxptr parms )
 {
-   char *buffer, buffer1[64], buffer2[64] ;
+   char *buffer="", buffer1[64], buffer2[64] ;
    int spooled, slength=4, rc, itemcode, length ;
    short length1, length2 ;
    struct dvi_items_type *ptr ;
@@ -1476,7 +1439,7 @@ streng *vms_f_getqui( tsd_t *TSD, cparamboxptr parms )
    tmp = parms->next ;
    if (objid = (tmp && tmp->next) ? ((tmp=tmp->next)->value) : NULL )
    {
-      if (usenum=myisnumber(objid))
+      if (usenum=myisnumber(TSD, objid))
       {
          items[cnt++] = 4 + ( QUI$_SEARCH_NUMBER << 16 ) ;
          items[cnt++] = (int)&(search_number[0]) ;
@@ -1717,11 +1680,12 @@ streng *vms_f_pid( tsd_t *TSD, cparamboxptr parms )
 {
    short length ;
    int *pidp=NULL, rc, buffer ;
+   int pid;
    unsigned int items[6] ;
    const streng *Pid ;
    vmf_tsd_t *vt;
    char *str;
-   streng *val;
+   streng *val = NULL ;
 
    vt = TSD->vmf_tsd;
    checkparam( parms, 1, 1, "VMS_F_PID" ) ;
@@ -1733,7 +1697,7 @@ streng *vms_f_pid( tsd_t *TSD, cparamboxptr parms )
    items[4] = 0 ;
    items[5] = 0 ;
 
-   Pid = getvalue( TSD, parms->value, 0 ) ;
+   Pid = getvalue( TSD, parms->value, -1 ) ;
 
    if (Pid->len)
    {
@@ -1746,6 +1710,7 @@ streng *vms_f_pid( tsd_t *TSD, cparamboxptr parms )
 
    do {
       rc = sys$getjpiw( NULL, &pid, NULL, &items, NULL, NULL, NULL ) ;
+      }
    while (rc == SS$_NOPRIV) ;
 
    if ((rc != SS$_NORMAL) && (rc != SS$_NOMOREPROC))
@@ -1753,7 +1718,7 @@ streng *vms_f_pid( tsd_t *TSD, cparamboxptr parms )
 
    sprintf( (val=Str_makeTSD(10))->value, "%08x", pid ) ;
    val->len = 8 ;
-   setvalue( TSD, parms->value, val ) ;
+   setvalue( TSD, parms->value, val, -1 ) ;
 
    if (rc == SS$_NOMOREPROC)
       return nullstringptr() ;
@@ -1768,7 +1733,7 @@ streng *vms_f_pid( tsd_t *TSD, cparamboxptr parms )
 
 #define MAX_PRIVS (sizeof(all_privs)/sizeof(char*))
 
-static streng *map_privs( const int *vector )
+static streng *map_privs( const tsd_t *TSD, const int *vector )
 {
    int i ;
    char *ptr, buffer[512] ;
@@ -1904,7 +1869,7 @@ streng *vms_f_setprv( tsd_t *TSD, cparamboxptr parms )
    if (rc != SS$_NORMAL)
       vms_error( TSD, rc ) ;
 
-   return map_privs( old ) ;
+   return map_privs( TSD, old ) ;
 }
 
 
@@ -1938,7 +1903,7 @@ streng *vms_f_locate( tsd_t *TSD, cparamboxptr parms )
    int res ;
 
    checkparam( parms, 2, 2, "VMS_F_LOCATE" ) ;
-   res = bmstrstr( parms->next->value, 0, parms->value ) ;
+   res = bmstrstr( parms->next->value, 0, parms->value, 0 ) ;
    if (res==(-1))
       res = parms->next->value->len + 1 ;
 
@@ -2112,7 +2077,7 @@ streng *vms_f_trnlnm( tsd_t *TSD, cparamboxptr parms )
 streng *vms_f_logical( tsd_t *TSD, cparamboxptr parms )
 {
    checkparam( parms, 1, 1, "VMS_F_LOGICAL" ) ;
-   return vms_f_trnlnm( parms ) ;
+   return vms_f_trnlnm( TSD, parms ) ;
 }
 
 
@@ -2346,7 +2311,7 @@ streng *vms_f_type( tsd_t *TSD, cparamboxptr parms )
 }
 
 
-static streng *boolean( int param )
+static streng *boolean( const tsd_t *TSD, const int param )
 {
    return Str_creTSD( param ? "TRUE" : "FALSE" ) ;
 }
@@ -2447,10 +2412,10 @@ streng *vms_f_file_attributes( tsd_t *TSD, cparamboxptr parms )
    fab.fab$b_fns = parms->value->len ;
    fab.fab$l_nam = &nam ;
 
-   fab.fab$l_xab = (char)&xabdat ;
-   xabdat.xab$l_nxt = (char)&xabpro ;
-   xabpro.xab$l_nxt = (char)&xabsum ;
-   xabsum.xab$l_nxt = (char)&xabfhc ;
+   fab.fab$l_xab = &xabdat ;
+   xabdat.xab$l_nxt = &xabpro ;
+   xabpro.xab$l_nxt = &xabsum ;
+   xabsum.xab$l_nxt = &xabfhc ;
 /*   xaball.xab$l_next = &xabdat ; */
 
    if (item->addr==FIL_KNOWN)
@@ -2493,26 +2458,23 @@ streng *vms_f_file_attributes( tsd_t *TSD, cparamboxptr parms )
    switch (item->addr)
    {
       case FIL_ALQ:  res = int_to_streng( TSD, fab.fab$l_alq ); break ;
-      case FIL_BDT:  res = fr( TYP_TIME, xabdat.xab$q_bdt, 8 ); break ;
-/*      case FIL_BDT:  res = fr( TYP_TIME, &(xabdat.xab$q_bdt), 8 ); break ; */
+      case FIL_BDT:  res = fr( TYP_TIME, (const char *)xabdat.xab$q_bdt, 8 ); break ;
       case FIL_BKS:  res = int_to_streng( TSD, fab.fab$b_bks ); break ;
       case FIL_BLS:  res = int_to_streng( TSD, fab.fab$w_bls ); break ;
-      case FIL_CBT:  res = boolean( fab.fab$l_fop & FAB$M_CBT ); break ;
-      case FIL_CDT:  res = fr( TYP_TIME, xabdat.xab$q_cdt, 8 ); break ;
-/*      case FIL_CDT:  res = fr( TYP_TIME, &(xabdat.xab$q_cdt), 8 ); break ; */
-      case FIL_CTG:  res = boolean( fab.fab$l_fop & FAB$M_CTG ); break ;
+      case FIL_CBT:  res = boolean( TSD, fab.fab$l_fop & FAB$M_CBT ); break ;
+      case FIL_CDT:  res = fr( TYP_TIME, (const char *)xabdat.xab$q_cdt, 8 ); break ;
+      case FIL_CTG:  res = boolean( TSD, fab.fab$l_fop & FAB$M_CTG ); break ;
       case FIL_DEQ:  res = int_to_streng( TSD,    fab.fab$w_deq ); break ;
-      case FIL_DID:  res = internal_id( (short)nam.nam$w_did ); break ;
+      case FIL_DID:  res = internal_id( TSD, (const short *)nam.nam$w_did ); break ;
       case FIL_DVI:
         res = Str_makeTSD( nam.nam$t_dvi[0] ) ;
         memcpy( res->value, &(nam.nam$t_dvi[1]), res->len=nam.nam$t_dvi[0] ) ;
         break ;
-      case FIL_EDT:  res = fr( TYP_TIME, xabdat.xab$q_edt, 8 ); break ;
-/*      case FIL_EDT:  res = fr( TYP_TIME, &(xabdat.xab$q_edt), 8 ); break ; */
+      case FIL_EDT:  res = fr( TYP_TIME, (const char *)xabdat.xab$q_edt, 8 ); break ;
       case FIL_EOF:
          res = int_to_streng( TSD, xabfhc.xab$l_ebk - (xabfhc.xab$w_ffb==0));
          break ;
-      case FIL_FID:  res = internal_id( (short)nam.nam$w_fid ); break ;
+      case FIL_FID:  res = internal_id( TSD, (const short *)nam.nam$w_fid ); break ;
       case FIL_FSZ:  res = int_to_streng( TSD,    fab.fab$b_fsz ); break ;
       case FIL_KNOWN: res = nullstringptr() ; /* must be nonexistent */
          break ;
@@ -2531,7 +2493,7 @@ streng *vms_f_file_attributes( tsd_t *TSD, cparamboxptr parms )
             default: exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "" )  ;
          }
          break ;
-      case FIL_PRO:  res = get_prot( tmp=xabpro.xab$w_pro ); break ;
+      case FIL_PRO:  res = get_prot( TSD, tmp=xabpro.xab$w_pro ); break ;
       case FIL_PVN:  res = int_to_streng( TSD, xabsum.xab$w_pvn ); break ;
       case FIL_RAT:
          if (fab.fab$b_rat & FAB$M_BLK)
@@ -2545,8 +2507,8 @@ streng *vms_f_file_attributes( tsd_t *TSD, cparamboxptr parms )
          else
             res = nullstringptr() ;
          break ;
-      case FIL_RCK:  res = boolean( fab.fab$l_fop & FAB$M_RCK ); break ;
-      case FIL_RDT:  res = fr( TYP_TIME, xabdat.xab$q_rdt, 8 ); break ;
+      case FIL_RCK:  res = boolean( TSD, fab.fab$l_fop & FAB$M_RCK ); break ;
+      case FIL_RDT:  res = fr( TYP_TIME, (const char *)xabdat.xab$q_rdt, 8 ); break ;
 /*      case FIL_RDT:  res = fr( TYP_TIME, &(xabdat.xab$q_rdt), 8 ); break ; */
       case FIL_RFM:
          switch (xabfhc.xab$b_rfo & 15 ) /* magic number! */
@@ -2563,7 +2525,7 @@ streng *vms_f_file_attributes( tsd_t *TSD, cparamboxptr parms )
          break ;
       case FIL_RVN:  res = int_to_streng( TSD, xabdat.xab$w_rvn ); break ;
       case FIL_UIC:  res = get_uic( TSD, ( union uicdef *)&(xabpro.xab$l_uic) ); break ;
-      case FIL_WCK:  res = boolean( fab.fab$l_fop & FAB$M_WCK ); break ;
+      case FIL_WCK:  res = boolean( TSD, fab.fab$l_fop & FAB$M_WCK ); break ;
       default:
          exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "" )  ;
    }
@@ -2639,7 +2601,7 @@ streng *vms_f_element( tsd_t *TSD, cparamboxptr parms )
 }
 
 
-static streng *convert_bin( tsd_t *TSD, const paramboxptr parms, int issigned, char bif )
+static streng *convert_bin( tsd_t *TSD, cparamboxptr parms, const int issigned, const char *bif )
 {
    int start, length, obyte, obit, count, bit=0 ;
    streng *string, *result, *temp ;
@@ -2717,7 +2679,7 @@ static const char *vms_months[] = { "", "JAN", "FEB", "MAR", "APR", "MAY",
 
 enum outs { absolute, comparison, delta } ;
 enum funcs { year, month, day, hour, minute, second, hundredth,
-               weekday, time, date, datetime } ;
+               weekday, time_part, date_part, datetime } ;
 
 
 static char *read_abs_time( char *ptr, char *end, short *times )
@@ -3111,8 +3073,7 @@ streng *vms_f_cvtime( tsd_t *TSD, cparamboxptr parms )
    if (item)
    {
       for (cnt=0; cnt<item->len; cnt++)
-         if (islower(item->value[cnt]) )
-            item->value[cnt] = toupper(item->value[cnt]) ;
+         item->value[cnt] = toupper(item->value[cnt]) ;
 
       if (item->len==4 && !memcmp(item->value, "YEAR", 4))
          func = year ;
@@ -3123,9 +3084,9 @@ streng *vms_f_cvtime( tsd_t *TSD, cparamboxptr parms )
       else if (item->len==3 && !memcmp(item->value, "DAY", 3))
          func = day ;
       else if (item->len==4 && !memcmp(item->value, "DATE", 4))
-         func = date ;
+         func = date_part ;
       else if (item->len==4 && !memcmp(item->value, "TIME", 4))
-         func = time ;
+         func = time_part ;
       else if (item->len==4 && !memcmp(item->value, "HOUR", 4))
          func = hour ;
       else if (item->len==6 && !memcmp(item->value, "SECOND", 6))
@@ -3143,8 +3104,7 @@ streng *vms_f_cvtime( tsd_t *TSD, cparamboxptr parms )
    if (output)
    {
       for (cnt=0; cnt<output->len; cnt++)
-         if (islower(output->value[cnt]))
-            output->value[cnt] = toupper(output->value[cnt]) ;
+         output->value[cnt] = toupper(output->value[cnt]) ;
 
       if (output->len==5 && !memcmp(output->value, "DELTA", 5))
          out = delta ;
@@ -3170,8 +3130,7 @@ streng *vms_f_cvtime( tsd_t *TSD, cparamboxptr parms )
       cend = cptr + input->len ;
 
       for (ctmp=cptr;ctmp<cend;ctmp++)
-         if (islower(*ctmp))
-            *ctmp = toupper(*ctmp) ;
+         *ctmp = toupper(*ctmp) ;
 
       for (;isspace(*cptr);cptr++) ; /* strip leading spaces */
       if (out!=delta)
@@ -3201,8 +3160,8 @@ streng *vms_f_cvtime( tsd_t *TSD, cparamboxptr parms )
          {
             char oper = *cptr ;
             cptr2 = read_delta_time( ++cptr, cend, times ) ;
-            if ((increment=(times[7]==100)))
-               times[7] -= 1 ;
+            if ((increment=(times[6]==100)))
+               times[6] -= 1 ;
 
             rc2 = lib$cvt_vectim( times, dtime ) ;
             if (increment)
@@ -3288,14 +3247,14 @@ streng *vms_f_cvtime( tsd_t *TSD, cparamboxptr parms )
          }
          break ;
 
-      case time:
+      case time_part:
          result = Str_makeTSD( 12 ) ;
          sprintf(result->value, "%02d:%02d:%02d.%02d", timearray[hour],
               timearray[minute], timearray[second], timearray[hundredth]) ;
          result->len = 11 ;
          break ;
 
-      case date:
+      case date_part:
          result = Str_makeTSD( 12 ) ;
          if (out==delta)
             sprintf( result->value, "%d", timearray[day] ) ;

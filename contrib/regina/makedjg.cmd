@@ -10,7 +10,6 @@ SRC = Translate(Value('REGINA_SRCDIR',,'OS2ENVIRONMENT'),'\','/')
 'mkdir dist'
 'cd dist'
 'copy ..\rexx.exe'
-'copy ..\trexx.exe'
 'copy ..\rxstack.exe'
 'copy ..\rxqueue.exe'
 'copy ..\libregin.a'

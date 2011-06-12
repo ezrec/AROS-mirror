@@ -1,7 +1,3 @@
-#ifndef lint
-static char *RCSid = "$Id$";
-#endif
-
 /*
  *  The Regina Rexx Interpreter
  *  Copyright (C) 1992-1994  Anders Christensen <anders@pvv.unit.no>
@@ -24,7 +20,6 @@ static char *RCSid = "$Id$";
 #include "rexx.h"
 #include <stdio.h>
 #include <string.h>
-#include <ctype.h>
 #include <assert.h>
 
 #ifdef REGINA_DEBUG_MEMORY
@@ -47,7 +42,7 @@ streng *dbg_traceback( tsd_t *TSD, cparamboxptr dummy )
 
 streng *dbg_dumpvars( tsd_t *TSD, cparamboxptr dummy )
 {
-   dumpvars(TSD, (cvariableptr *) TSD->currlevel->vars) ;
+   dumpvars(TSD);
    dummy = dummy; /* keep compiler happy */
    return nullstringptr() ;
 }
@@ -56,7 +51,7 @@ streng *dbg_dumpvars( tsd_t *TSD, cparamboxptr dummy )
 #ifdef TRACEMEM
 streng *dbg_memorystats( tsd_t *TSD, cparamboxptr parms )
 {
-/*    memory_stats(TSD) ; */ /* FIXME, FGC: Shouldn't memory_stats() deleted? */
+   memory_stats(TSD) ;
    return nullstringptr() ;
 }
 
@@ -68,7 +63,7 @@ streng *dbg_allocated( tsd_t *TSD, cparamboxptr parms )
 
    checkparam(  parms,  0,  1 , "ALLOCATED" ) ;
    if (!parms->value)
-      ch = 'A' ;
+      ch = 'S' ;
    else
       ch = getonechar( TSD, parms->value, "ALLOCATED", 1 ) ;
 

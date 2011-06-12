@@ -1,7 +1,3 @@
-#ifndef lint
-static char *RCSid = "$Id$";
-#endif
-
 /*
  *  The Regina Rexx Interpreter
  *  Copyright (C) 1992-1994  Anders Christensen <anders@pvv.unit.no>
@@ -25,7 +21,6 @@ static char *RCSid = "$Id$";
 
 #include <assert.h>
 #include <string.h>
-#include <ctype.h>
 
 
 #define OPTION(opt) { #opt, EXT_##opt, NULL }
@@ -33,102 +28,115 @@ static char *RCSid = "$Id$";
 
 
 static const struct __regina_option all_options[] = {  /* Must be alphabetically sorted! */
+   METAOP( ANSI, "NOCALLS_AS_FUNCS NOEXT_COMMANDS_AS_FUNCS FAST_LINES_BIF_DEFAULT STRICT_ANSI STRICT_WHITE_SPACE_COMPARISONS" ),
+   OPTION( AREXX_BIFS ),
+   OPTION( AREXX_SEMANTICS ),
+   OPTION( BROKEN_ADDRESS_COMMAND ),
    METAOP( BUFFERS, "BUFTYPE_BIF DESBUF_BIF DROPBUF_BIF MAKEBUF_BIF" ),
    OPTION( BUFTYPE_BIF ),
    OPTION( CACHEEXT ),
-   OPTION( CLOSE_BIF ),
+   OPTION( CALLS_AS_FUNCS ),
    OPTION( DESBUF_BIF ),
    OPTION( DROPBUF_BIF ),
    OPTION( EXT_COMMANDS_AS_FUNCS ),
    OPTION( FAST_LINES_BIF_DEFAULT ),
-   METAOP( FILEIO, "OPEN_BIF CLOSE_BIF" ),
-   OPTION( FIND_BIF ),
    OPTION( FLUSHSTACK ),
+   OPTION( HALT_ON_EXT_CALL_FAIL ),
    OPTION( INTERNAL_QUEUES ),
    OPTION( LINEOUTTRUNC ),
    OPTION( MAKEBUF_BIF ),
-   OPTION( OPEN_BIF ),
    OPTION( PRUNE_TRACE ),
+   OPTION( QUEUES_301 ),
+   METAOP( REGINA, "NOCALLS_AS_FUNCS EXT_COMMANDS_AS_FUNCS FAST_LINES_BIF_DEFAULT, NOHALT_ON_EXT_CALL_FAIL " ),
    OPTION( REGINA_BIFS ),
+   METAOP( SAA, "NOCALLS_AS_FUNCS NOEXT_COMMANDS_AS_FUNCS" ),
+   OPTION( SINGLE_INTERPRETER ),
    OPTION( STDOUT_FOR_STDERR ),
    OPTION( STRICT_ANSI ),
+   OPTION( STRICT_WHITE_SPACE_COMPARISONS ),
    OPTION( TRACE_HTML ),
+   METAOP( TRL1, "NOCALLS_AS_FUNCS NOEXT_COMMANDS_AS_FUNCS" ),
+   METAOP( TRL2, "NOCALLS_AS_FUNCS NOEXT_COMMANDS_AS_FUNCS" ),
    { NULL, 0 }
 } ;
 
 
-void do_options( const tsd_t *TSD, streng *options, int toggle )
+void do_options( const tsd_t *TSD, proclevel pl, streng *options, int toggle )
 {
-   char *cptr=NULL, *eptr=NULL, *start=NULL ;
-   int length=0, inverse=0, tmp=0 ;
-   const struct __regina_option *lower=NULL, *upper=NULL, *middle=NULL ;
+   char *cptr,*eptr,*start;
+   int length,inverse=0,tmp;
+   const struct __regina_option *lower,*upper,*middle=NULL;
 
-   cptr = options->value ;
-   eptr = cptr + options->len ;
+   cptr = options->value;
+   eptr = cptr + options->len;
 
-   while (cptr<eptr)
+   while ( cptr < eptr )
    {
-      for (;cptr<eptr && isspace(*cptr); cptr++) ;
-      for (start=cptr; cptr<eptr && !isspace(*cptr); cptr++ )
-         *cptr = (char) toupper( *cptr ) ;
+      for ( ; cptr < eptr && rx_isspace( *cptr ); cptr++ )
+         ;
+      for ( start = cptr; cptr < eptr && !rx_isspace( *cptr ); cptr++ )
+         *cptr = (char) rx_toupper( *cptr );
 
-      if (((inverse=(*start=='N' && *(start+1)=='O'))!=0) && cptr>start+2)
-         start += 2 ;
-
-      length = cptr - start ;
-
-      lower = all_options ;
-      upper = lower + (sizeof(all_options)/sizeof(struct __regina_option)) - 2 ;
-
-      while( upper >= lower )
+      if ( cptr > start+2 )
       {
-         middle = lower + (upper-lower)/2 ;
-         tmp = strncmp(middle->name,start,length) ;
-         if (tmp==0 && middle->name[length]==0x00)
-            break ;
+         if ( ( inverse = ( *start == 'N' && *( start + 1) == 'O') ) != 0 )
+            start += 2;
+      }
+      length = cptr - start;
 
-         if (tmp>0)
-            upper = middle - 1 ;
+      lower = all_options;
+      upper = lower + sizeof( all_options ) / sizeof( all_options[0] ) - 2;
+
+      while ( upper >= lower )
+      {
+         middle = lower + ( upper - lower ) / 2;
+         tmp = strncmp( middle->name, start, length );
+         if ( tmp == 0 && middle->name[length] == '\0' )
+            break;
+
+         if ( tmp > 0 )
+            upper = middle - 1;
          else
-            lower = middle + 1 ;
+            lower = middle + 1;
       }
 
       /* If option is unknown, don't care ... */
       if ( upper >= lower )
       {
-         assert ( middle->name ) ;
-         if (middle->offset == -1)
+         assert ( middle->name );
+         if ( middle->offset == -1 )
          {
-            do_options( TSD, Str_creTSD(middle->contains), toggle^inverse ) ;
+            do_options( TSD, pl, Str_creTSD( middle->contains ),
+                        toggle ^ inverse );
          }
          else
          {
-
-            if (inverse^toggle)
-               set_options_flag( TSD->currlevel, middle->offset, 0 ) ;
+            if (inverse ^ toggle)
+               set_options_flag( pl, middle->offset, 0 );
             else
-               set_options_flag( TSD->currlevel, middle->offset, 1 ) ;
+               set_options_flag( pl, middle->offset, 1 );
          }
       }
    }
-   Free_stringTSD( options ) ;
+   Free_stringTSD( options );
+   /*
+    * Check if SINGLE_INTERPRTER option is set; save the current TSD globally
+    */
+   if ( get_options_flag( pl, EXT_SINGLE_INTERPRETER ) )
+   {
+      setGlobalTSD( TSD );
+   }
 }
 
 int get_options_flag( cproclevel pl, int offset )
 {
-   register int obyte = offset / ( sizeof( unsigned char ) * 8 ) ;
-   register int obit  = offset % ( sizeof( unsigned char ) * 8 ) ;
-
-   return ( pl->u.flags[obyte] & ( 1 << ( 7 - obit ) ) ) ;
+   return pl->options & ( 1ul << offset );
 }
 
 void set_options_flag( proclevel pl, int offset, int status )
 {
-   register int obyte = offset / ( sizeof( unsigned char ) * 8 ) ;
-   register int obit  = offset % ( sizeof( unsigned char ) * 8 ) ;
-
    if ( status )
-      pl->u.flags[obyte] |= (unsigned char)(1<<(7-obit)) ;
+      pl->options |= ( 1ul << offset );
    else
-      pl->u.flags[obyte] &= (unsigned char)(~(1<<(7-obit))) ;
+      pl->options &= ~( 1ul << offset );
 }

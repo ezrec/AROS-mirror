@@ -29,22 +29,20 @@ Do i = 1 To Words( errors )
    Interpret 'Call' sub
 End
 Say 'End of error testing'
-Return
+Address System 'rm -f err.rex'
+Return 0
 
 3_1: Procedure Expose langs
 Call doit 'this_should_not_exist.rexx'
 Return
 
 4_0: Procedure Expose langs
-src.0 = 1
-src.1 = 'say linein(fn, 6, 6)'
-Call runner
+Say 'Difficult to test!'
 Return
 
 5_0: Procedure Expose langs
 Say 'Difficult to test!'
 Return
-
 
 6_0: Procedure Expose langs
 Say 'Difficult to test!'
@@ -459,7 +457,7 @@ Return
 
 40_13: Procedure Expose langs
 src.0 = 1
-src.1 = 'say delstr("abc", -1)'
+src.1 = 'say d2x(-1)'
 Call runner
 Return
 
@@ -502,7 +500,7 @@ Return
 
 40_27: Procedure Expose langs
 src.0 = 1
-src.1 = 'say qualify(":::")'
+src.1 = 'say stream(":::", "C", "QUERY EXISTS")'
 Call runner
 Return
 
@@ -665,7 +663,7 @@ Return
 
 64_1: Procedure Expose langs
 src.0 = 1
-src.1 = 'say date(x'
+src.1 = 'call a,'
 Call runner
 Return
 
@@ -703,13 +701,13 @@ Call runner
 Return
 
 runner: Procedure Expose langs src.
-Call Stream  'err.rexx', 'C', 'OPEN WRITE REPLACE'
+Call Stream  'err.rex', 'C', 'OPEN WRITE REPLACE'
 Do i = 1 To src.0
-   Call Lineout 'err.rexx', src.i
+   Call Lineout 'err.rex', src.i
    Say '=='i'==>' src.i
 End
-Call Stream 'err.rexx', 'C', 'CLOSE'
-Call doit 'err.rexx'
+Call Stream 'err.rex', 'C', 'CLOSE'
+Call doit 'err.rex'
 Return
 
 doit: Procedure Expose langs

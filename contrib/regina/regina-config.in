@@ -3,32 +3,36 @@
 # The idea to this kind of setup info script was stolen from numerous
 # other packages, such as neon, libxml and gnome.
 #
-# $Id$
-#
 prefix=@prefix@
 exec_prefix=@exec_prefix@
 includedir=@includedir@
+libdir=@libdir@
+libdir64=@libdir64@
+libdir32=@libdir32@
 
 usage()
 {
-    cat <<EOF
-Usage: regina-config [OPTION]
-
-Available values for OPTION include:
-
-  --help         display this help and exit
-  --cflags       pre-processor and compiler flags
-                 [-I$includedir]
-  --multithread  yes; if multithread version; no otherwise
-                 [@REGINAMULTITHREAD@]
-  --libs         library linking information
-                 [-L$prefix/lib -l@SHLFILE@ @LDFLAGS@ @BOTHLIBS@ @SHLIBS@ @DLFCNLIBDIR@]
-  --prefix       Regina install prefix
-                 [$prefix]
-  --version      output version information
-                 [@VERSION@]
-EOF
-
+    echo "Usage: regina-config [OPTION]"
+    echo ""
+    echo "Available values for OPTION include:"
+    echo ""
+    echo "  --help         display this help and exit"
+    echo "  --cflags       pre-processor and compiler flags"
+    echo "                 [-I$includedir]"
+    echo "  --multithread  yes; if thread-safe library is available; no otherwise"
+    echo "                 [@REGINAMULTITHREAD@]"
+    echo "  --libs         library linking information"
+    echo "                 [-L$libdir -l@SHLFILE@ @BOTHLIBS@ @SHLIBS@ @DLFCNLIBDIR@ @THREADING_LINK@ @MH_FUNC_LIBS@]"
+    echo "  --libs_ts      library linking information for thread-safe library"
+    echo "                 [-L$libdir -l@SHLFILE@ @BOTHLIBS@ @SHLIBS@ @DLFCNLIBDIR@ @THREADING_LINK@]"
+    echo "  --libs32       library linking information for specific 32bit build"
+    echo "                 [-L$libdir32 -l@SHLFILE@ @BOTHLIBS@ @SHLIBS@ @DLFCNLIBDIR@ @THREADING_LINK@ @MH_FUNC_LIBS@]"
+    echo "  --libs64       library linking information for specific 64bit build"
+    echo "                 [-L$libdir64 -l@SHLFILE@ @BOTHLIBS@ @SHLIBS@ @DLFCNLIBDIR@ @THREADING_LINK@ @MH_FUNC_LIBS@]"
+    echo "  --prefix       Regina install prefix"
+    echo "                 [$prefix]"
+    echo "  --version      output version information"
+    echo "                 [@VERSION@]"
     exit $1
 }
 
@@ -41,40 +45,52 @@ while test $# -gt 0; do
     # this deals with options in the style
     # --option=value and extracts the value part
     # [not currently used]
-    -*=*) value=`echo "$1" | sed 's/[-_a-zA-Z0-9]*=//'` ;;
-    *) value= ;;
+       -*=*) value=`echo "$1" | sed 's/[-_a-zA-Z0-9]*=//'` ;;
+       *) value= ;;
     esac
 
     case "$1" in
-    --prefix)
-	echo $prefix
-	;;
+       --prefix)
+          echo $prefix
+          ;;
 
-    --multithread)
-	echo @REGINAMULTITHREAD@
-	;;
+       --multithread)
+          echo @REGINAMULTITHREAD@
+          ;;
 
-    --version)
-	echo @VERSION@
-	exit 0
-	;;
+       --version)
+          echo @VERSION@
+          exit 0
+          ;;
 
-    --help)
-	usage 0
-	;;
+       --help)
+          usage 0
+          ;;
 
-    --cflags)
-       	echo -I$includedir
-       	;;
+       --cflags)
+          echo -I$includedir
+          ;;
 
-    --libs)
-       	echo -L$prefix/lib -l@SHLFILE@ @LDFLAGS@ @BOTHLIBS@ @SHLIBS@ @DLFCNLIBDIR@
-       	;;
+       --libs)
+          echo -L$libdir -l@SHLFILE@ @BOTHLIBS@ @SHLIBS@ @DLFCNLIBDIR@ @THREADING_LINK@ @MH_FUNC_LIBS@
+          ;;
 
-    *)
-	usage
-	exit 1
-	;;
+       --libs_ts)
+          echo -L$libdir -l@TSLFILE@ @BOTHLIBS@ @SHLIBS@ @DLFCNLIBDIR@ @THREADING_LINK@
+          ;;
+
+       --libs32)
+          echo -L$libdir32 -l@SHLFILE@ @BOTHLIBS@ @SHLIBS@ @DLFCNLIBDIR@ @THREADING_LINK@ @MH_FUNC_LIBS@
+          ;;
+
+       --libs64)
+          echo -L$libdir64 -l@SHLFILE@ @BOTHLIBS@ @SHLIBS@ @DLFCNLIBDIR@ @THREADING_LINK@ @MH_FUNC_LIBS@
+          ;;
+
+       *)
+          usage
+          exit 1
+          ;;
     esac
     shift
 done

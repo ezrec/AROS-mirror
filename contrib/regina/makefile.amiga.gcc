@@ -8,12 +8,15 @@
 #SHELL = command.com
 SRCDIR=.
 CC = gcc
+LD = gcc
 
 ifeq ($(DEBUG),Y)
 OPTIMIZE = -g
+LDOPT = -g
 LDEXTRA=
 else
 OPTIMIZE = -O2 -DNDEBUG
+LDOPT = -O2
 LDEXTRA=
 endif
 
@@ -29,13 +32,13 @@ else
 USEFLISTS =
 endif
 
-CEXTRA = -DPOSIX_SOURCE -DAMIGA -DGCC
+CEXTRA = -DPOSIX_SOURCE -DAMIGA -DGCC -funsigned-char
 EEXTRA =
 EXTQUEUE_OBJS = extstack.$(OBJ) rexxbif.$(OBJ)
 EXTQUEUE_SHOBJS = #extstack.sho rexxbif.sho
 DYN_COMP =
 LIBS =
-TCPLIBS = 
+TCPLIBS =
 SHLIBS =
 SHL =
 LD_RXLIB1=
@@ -61,6 +64,7 @@ RXLIB = rxlib
 RM = -delete
 THREADING =
 MT_FILE = mt_notmt
+OS_FILE = os_other
 
 RANLIB_LIB=-ranlib $(LIBPRE)$(LIBFILE).a
 

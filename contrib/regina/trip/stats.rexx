@@ -5,7 +5,7 @@
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version. 
+ *  (at your option) any later version.
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -19,18 +19,18 @@
 
 /*
  * Following statements are tested otherwhere:
- * 
+ *
  *   PULL PUSH QUEUE
  *     --> tested in stack.rexx
  *
  */
 
-written = 0 
+written = 0
 
 /* ============================ GENERAL ============================= */
 call notify 'general'
-   
-/*----- clauses have precedens before commands ---------------------- */ 
+
+/*----- clauses have precedens before commands ---------------------- */
 bar = ''
 call doit true 1 'foo'
 signal aftertrue
@@ -38,9 +38,9 @@ signal aftertrue
 doit:
    rc = -1000
    bar = 'none'
-   one = 1 
+   one = 1
    arg(one) bar
-   if (rc^==-1000) then 
+   if (rc^==-1000) then
       call complain "commands have presedens before keywords"
    if (bar^==' FOO') then
       call complain 'ARG didnt work properly wrt the spaces'
@@ -92,7 +92,7 @@ call notify 'address'
 /*----- env names is stored over subroutines -------------------------*/
    address command
    address system
-   call checkaddr 
+   call checkaddr
    if (address() ^== 'SYSTEM') then
       call complain 'Env. not stored over function calls'
 
@@ -113,7 +113,7 @@ afterchk:
 
    env = 'SYSTEM'
    address command
-   address value env 
+   address value env
    if address()^=='SYSTEM' then
       call complain 'Env does not seem to work with VALUE'
 
@@ -130,11 +130,11 @@ afterchk:
    if address()^== 'COMMAND' then
       call complain 'Env can not be ommitted when it is default without space'
 
-   
+
 /*----- the environment name should not need space around it --------*/
 signal after_path
 
-path: return 1 
+path: return 1
 
 after_path:
    rc = -1000
@@ -142,7 +142,7 @@ after_path:
    if address()=='1' then
       call complain 'env lower priority than value'
    if rc ^== 0 then
-      call complain 'Something is very wrong with ADDRESS'  
+      call complain 'Something is very wrong with ADDRESS'
 
 /*----- can we fool it with no space after VALUE? --------------------*/
 
@@ -154,11 +154,11 @@ after_path:
 
    signal aftervalue
 
-value: 
+value:
    return 'foobar'
 
 aftervalue:
-   
+
 
 
 /* ============================== ARG =============================== */
@@ -224,7 +224,7 @@ if sigl=='foobar' then
 
 signal after_check_sigl
 
-check_sigl: procedure 
+check_sigl: procedure
    if sigl^=='SIGL' then
       call complain 'SIGL set within routine where it should be unset.'
    return
@@ -235,7 +235,7 @@ after_check_sigl:
 /*----- SIGNAL in subroutine does not effect DO-loops in caller ------*/
 /*      Same goes for ITERATE and LEAVE                               */
 foo = 'one'
-do i = 1 to 1 
+do i = 1 to 1
    call loop_routine
    foo = 'two'
    end
@@ -251,10 +251,10 @@ loop_routine:
 
    loop_routine_2:
    signal on syntax name loop_routine_3
-   iterate 
+   iterate
    call complain 'Something is wrong with plain ITERATE'
    loop_routine_3:
-   signal on syntax name loop_routine_4   
+   signal on syntax name loop_routine_4
    iterate i
    call complain 'Something is wrong with symbolic ITERATE'
 
@@ -350,7 +350,7 @@ after_address_2:
 
 /*----- Condition traps/information are stored across subroutines ----*/
 tag = 0
-signal on syntax name addr_1 
+signal on syntax name addr_1
 call change_it
 tag = 1
 interpret 'a = b = c = d'
@@ -371,7 +371,7 @@ addr_2:
       call complain "Condition setting not restored after CALL"
 
 after_address_3:
-   
+
 cond_info = condition('c') condition('i') condition('d') condition('s')
 call change_it_2
 cond_ifo2 = condition('c') condition('i') condition('d') condition('s')
@@ -395,7 +395,7 @@ after_address_4:
 
 call time 'r'
 foo = copies('foo ', 200)
-do 100 
+do 100
    call words(foo)
    end
 
@@ -426,7 +426,7 @@ trace normal
 
 call change_trace
 
-if trace()\=='N' then 
+if trace()\=='N' then
    call complain 'The trace setting was not saved across CALL'
 
 signal after_address_6
@@ -434,12 +434,12 @@ signal after_address_6
 change_trace:
    label = 'Label'
    trace label
-   return 
+   return
 
 after_address_6:
 
 
-/* 
+/*
  * Note: tests for limits (number of arguments and depth of nesting
  * is performed in limits.rexx
  */
@@ -459,7 +459,7 @@ forever = 6
 iterate = 1
 do for = forever to do + end by then while iterate
    signal = signal for
-   end 
+   end
 
 /*----- Check value of control variable ------------------------------*/
 if for ^= 10 then
@@ -470,9 +470,9 @@ if signal^==' 6 7 8 9' then
    call complain 'Did not perform the loop correct'
 
 
-j = 1 
+j = 1
 do i=-234 to 234 for 500
-  j = j + 1 
+  j = j + 1
   end
 
 if j\=470 | i\=235 then
@@ -484,7 +484,7 @@ do i=-23.4 to 23.5 for 50
    j = j + 1
    end
 
-if j\=48 | i\=23.6 then 
+if j\=48 | i\=23.6 then
    call complain "Fractal loop starting on negative number fails"
 
 
@@ -503,16 +503,16 @@ if array\==' 1 2 3 9 10' then
 result = ''
 do i = 1 to 10
    result = result i
-   j = i 
+   j = i
    drop i
    i = j + 2
    end
-if result ^== ' 1 4 7 10' then 
+if result ^== ' 1 4 7 10' then
    call complain 'Cannot drop and set control variable during looping'
 
 
 /*----- don't loop if end condition is fullfilled initially ----------*/
-do i=10 to 9 
+do i=10 to 9
    call complain 'Ran loop, even when end condition was fullfilled initially'
    leave
    end
@@ -527,7 +527,7 @@ do i=1 by func(1) for func(0) to func(2)
 
 if str ^==' 1 0 2' then
    call complain 'Incorrect evaluation order for phrases in do-loops'
- 
+
 
 str = ''
 do i=func(1) to func(4) by func(2) for func(5)
@@ -539,7 +539,7 @@ if str^==' 1 4 2 5' then
 
 
 signal afterfunc
-func: 
+func:
    str = str arg(1)
    return arg(1)
 afterfunc:
@@ -552,8 +552,8 @@ do i = fff(2) to fff(4)
    leave
    end
 
-if array \== ' 1 2' then 
-   call complain 'Ctrl var in DO loop assigned incorrectly' 
+if array \== ' 1 2' then
+   call complain 'Ctrl var in DO loop assigned incorrectly'
 signal after_do_9
 
 fff:
@@ -586,7 +586,7 @@ do i=1 to 10
    j = j + 1
    end
 
-if j^==7 then 
+if j^==7 then
    call complain 'Can not change value of control variable'
 
 
@@ -595,7 +595,7 @@ i = 0
 j = 0
 i. = 0
 do i.i=i.i to 10
-   i = (i+1)//10 
+   i = (i+1)//10
    j = j + 1
    end
 
@@ -630,7 +630,7 @@ if i^=='5' then
 
 signal on syntax name there_do_1
 times = '-2'
-do times 
+do times
    call complain 'Allowed negative number for exprr in DO'
    signal there_do_1
    end
@@ -649,7 +649,7 @@ count = 1
 do i=1 to 10 until 1
    count = count + 1
    end
- 
+
 if count\==2 then
    call complain 'Loop never executed in an UNTIL loop'
 
@@ -667,7 +667,7 @@ while = 'foo'
 interpret "do forever until while\='foo';",
           "   call complain 'Allowed WHILE within an UNTIL in DO';",
           "   leave; end;"
- 
+
 there_do_4:
 
 
@@ -693,7 +693,7 @@ string = 'do i=1 to 4 ; a=a+1 ; end i'
 interpret string
 
 check_end_1:
-if a\=5 then 
+if a\=5 then
    call complain 'Didn''t allow symbol after ''END'' '
 
 signal on syntax name check_end_2
@@ -736,7 +736,7 @@ else if a\=8 then
 /*----- some extra testing -------------------------------------------*/
 tag = 0
 signal on syntax name do_while
-do while=5 
+do while=5
    tag = tag + 1
    leave
    end
@@ -774,7 +774,7 @@ if symbol('foo.123')\=='LIT' then
 if symbol('bar.bar')\=='LIT' then
    call complain 'DROP didn''t work with compound variables'
 
-aaa = 1 
+aaa = 1
 bbb = 2
 ccc = 3
 ddd = 4
@@ -807,7 +807,7 @@ signal after_drop_1
 test_drop:
    procedure expose foo
    drop foo
-   return 
+   return
 
 if symbol('foo')\=='LIT' then
    call complain 'EXPOSED variable not dropped in caller'
@@ -835,20 +835,20 @@ else if foo.bar ^== 'FOO.BAR' then
 call notify 'if'
 
 /*----- the ';' can not replace a statement after 'then' ------------ */
-do i=0 to 1 
-   str = '' 
+do i=0 to 1
+   str = ''
    if i then ;
       str = 'hepp'
 
    if str=='hepp' && i  then
       call complain 'Null-clause in THEN-part of IF-statement'
 
-   str = '' 
-   if i then 
+   str = ''
+   if i then
       a=b
    else ;
       str = hepp
-   
+
    if str=='' && i then
       call complain 'Null-clause in ELSE-part of IF-statement'
 
@@ -860,7 +860,7 @@ do i=0 to 1
       call complain 'NOP is ignored in IF statement'
 
    str = ''
-   if i then 
+   if i then
       a=b
    else
       nop
@@ -872,30 +872,34 @@ end
 
 
 /*----- does 'else' bind correctly? --------------------------------- */
-if 0 then 
+if 0 then
    if 1 then
       nop
-   else 
+   else
       call complain "ELSE does not bind correctly in IF-statements"
 nop
 
 
 /*----- can then be used as variable in extr -------------------------*/
 then = '2'
-if '1 2' = 1 then 
+if '1 2' = 1 then
    call complain "then may be used in IF-expr as a variable"
 
 /*----- whitespace handling in non-exact comparisons -----------------*/
 a = '0a'x
 b = ' '
+if a \= b then
+   call complain "non-exact comparison doesn't treat whitespace correctly"
+OPTIONS STRICT_WHITE_SPACE_COMPARISONS
 if a = b then
    call complain "non-exact comparison doesn't treat whitespace correctly"
+OPTIONS NOSTRICT_WHITE_SPACE_COMPARISONS
 
 
 /* ===================== INTERPRET ============================ */
 
 interpret 'interpret "a=1";a=a+1'
-if a\=2 then 
+if a\=2 then
    call complain "couldn't nest INTERPRET"
 
 /* ================================================================== */
@@ -907,13 +911,13 @@ call notify 'iterate'
 k = 0
 do i=1 to 20
    if i>7 then
-      iterate 
+      iterate
    k = k + 1
    end
 
 if k^=='7' then
    call complain 'ITERATE does not work correctly'
- 
+
 
 /*----- does it iterate the right level --------------------------------*/
 k=0
@@ -944,7 +948,7 @@ do i.i=1 to 10
          i = 2
          iterate i.i
          end
-      k = k + 1 
+      k = k + 1
       end
    i.i = temp
    end
@@ -954,14 +958,14 @@ if k^==54 then
 
 
 /*----- can we terminate inactive loop ------------------------------*/
-/* 
- * k = 0 
+/*
+ * k = 0
  * do i=1 to 10
  *    if i=3 then
  *       interpret 'iterate'
  *    k = k + 1
  *    end
- * 
+ *
  * if i^==11 then
  *    call complain 'INTERPRET ITERATE can terminate inactive loop'
  */
@@ -1009,7 +1013,7 @@ call notify 'leave'
 /*----- does leave work at all ? -------------------------------------*/
 do i=0 to 20
    if i==7 then
-      leave 
+      leave
    end
 
 if i^=='7' then
@@ -1038,7 +1042,7 @@ i = 1
 j = 2
 do i.i=1 to 10
    do i.j=1 to 10
-      k = k + 1 
+      k = k + 1
       if (i.i=3) & (i.j=6) then do
          i = 2
          leave i.i
@@ -1056,7 +1060,7 @@ if k^==26 then
  *    if i=3 then
  *       interpret leave
  *    end
- * 
+ *
  * if i^==11 then
  *    call complain 'INTERPRET LEAVE can terminate inactive loop'
  */
@@ -1169,13 +1173,13 @@ parse var foo x1 =(a) x2 +(b) x3 -(c) x4
 if x1\=='fo' then
    call complain 'Variable positional pattern = does not work correctly'
 
-if x2\=='o ba' then 
+if x2\=='o ba' then
    call complain 'Variable positional patterns = or + do not work'
 
 if x3\=='r baz' then
    call complain 'Variable positional pattern - does not work'
 
-if x4\=='oo bar baz' then 
+if x4\=='oo bar baz' then
    call complain 'Variable positional pattern - does still not work'
 
 
@@ -1196,7 +1200,7 @@ foo.1 = 'yupp'
 test.2 = 'hepp'
 test.X.1 = 'foobar'
 foo.b = 'nope'
-b = 1 
+b = 1
 
 call checkit
 
@@ -1227,14 +1231,14 @@ aftercheckit:
 
    if (test.1 \=='foo') then
       call complain "Didn't properly handle explicit expose for compounds"
-   
-   if (test.2 \== 'bar') then 
+
+   if (test.2 \== 'bar') then
       call complain "Didn't properly handle implicit expose for compounds"
 
    if bbb.123 \== 'baz' then
       call complain "Didn't properly handle expose of stems"
 
-   if bbb.1 \== 'baz' then 
+   if bbb.1 \== 'baz' then
       call complain "Didn't handle var exposed as both stem and compound"
 
 /* ====================== RETURN ============================== */
@@ -1280,20 +1284,20 @@ select
 
 if str^=='hepp' then
    call complain 'Semi after then in select interpreted as statement'
-   
+
 
 
 /* ====================== SIGNAL ============================== */
 call notify 'signal'
-   signal next_sig 
-   call complain 'simple SIGNAL statement failed' 
+   signal next_sig
+   call complain 'simple SIGNAL statement failed'
 
-   next_sig: 
-   signal off novalue  
-   signal value nextsig2   
-   call complain 'SIGNAL statement with VALUE did not work'    
+   next_sig:
+   signal off novalue
+   signal value nextsig2
+   call complain 'SIGNAL statement with VALUE did not work'
 
-   nextsig2:  
+   nextsig2:
    with = 'NEXT_SIG_3'
    signal value with     /* hehe ... */
    call complain 'WITH has special meaning in SIGNAL VALUE'
@@ -1322,7 +1326,7 @@ echoargs:
       if i=1 then
          result = arg(1)
       else
-         result = result arg(i) 
+         result = result arg(i)
       end
    return result
 
@@ -1331,13 +1335,13 @@ incr:
    if arg()>0 then
       increment = arg(1)
    else
-      increment = increment + 1 
-   return increment 
-
-   
+      increment = increment + 1
+   return increment
 
 
-ch: procedure expose sigl 
+
+
+ch: procedure expose sigl
    parse arg first, second
    if first ^== second then do
       say
@@ -1369,4 +1373,4 @@ complain:
 return
 
 
- 
+

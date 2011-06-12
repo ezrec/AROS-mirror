@@ -228,6 +228,21 @@
  40,922,[Argumento de %s número %d, muy pocos sub-comandos; el mínimo esperado es %d; encontrado %d]|<bif>,<argnumber>,<value>,<value>
  40,923,[Argumento de %s número %d, demasiados sub-comandos; el máximo esperado es %d; encontrado %d]|<bif>,<argnumber>,<value>,<value>
  40,924,[Argumento de %s número %d, especificación posicional inválida; esperando uno de "%s"; encontrado "%s"]|<bif>,<argnumber>,<value>,<value>
+ 40,930,[RXQUEUE, function TIMEOUT, expecting a whole number between 0 and %d; found \"%s\"]|<value>,<value>
+ 40,980,Unexpected input, either unknown type or illegal data%s%s|: ,<location>
+ 40,981,Number out of the allowed range%s%s|: ,<location>
+ 40,982,String too big for the defined buffer%s%s|: ,<location>
+ 40,983,Illegal combination of type/size%s%s|: ,<location>
+ 40,984,Unsupported number like NAN, +INF, -INF%s%s|: ,<location>
+ 40,985,Structure too complex for static internal buffer%s%s|: ,<location>
+ 40,986,An element of the structure is missing%s%s|: ,<location>
+ 40,987,A value of the structure is missing%s%s|: ,<location>
+ 40,988,The name or part of the name is illegal for the interpreter%s%s|: ,<location>
+ 40,989,A problem occured at the interface between Regina and GCI%s%s|: ,<location>
+ 40,990,The type won't fit the requirements for basic types (arguments/return value)%s%s|: ,<location>
+ 40,991,The number of arguments is wrong or an argument is missing%s%s|: ,<location>
+ 40,992,GCI's internal stack for arguments got an overflow%s%s|: ,<location>
+ 40,993,GCI counted too many nested LIKE containers%s%s|: ,<location>
  41,  0,Mala conversión aritmética
  41,  1,Valor no numérico ("%s") a la izquierda de la operación aritmética "%s"|<value>,<operator>
  41,  2,Valor no numérico ("%s") a la derecha de la operación aritmética "%s"|<value>,<operator>
@@ -284,6 +299,7 @@
  93,  1,[El comando %s de STREAM debe estar seguido por uno de "%s"; encontrado "%s"]|<token>,<value>,<value>
  93,  3,[El comando de STREAM debe ser uno de "%s"; encontrado "%s"]|<value>,<value>
  94,  0,[Error de la interfaz de la cola externa]
+ 94,  1,[La coleta externa midió el tiempo hacia fuera]
  94, 99,[Error interno con la interfaz de la cola externa: %d "%s"]|<description>,<systemerror>
  94,100,[Error general del sistema con la interfaz de la cola externa. %s. %s]|<description>,<systemerror>
  94,101,[Error conectando con %s en la puerta %d: "%s"]|<machine>,<portnumber>,<systemerror>
@@ -294,6 +310,9 @@
  94,106,[Excedido el número máximo de colas externas: %d]|<maxqueues>
  94,107,[Error ocurrido leyendo el "socket": %s]|<systemerror>
  94,108,[El "Switch" pasado es inválido. Debe ser uno de "%s"]|<switch>
+ 94,109,[Queue \"%s\" not found]|<queuename>
+ 94,110,[%s invalid for external queues]|<bif>
+ 94,111,[RXQUEUE function %s invalid for internal queues]|<functionname>
  95,  0,[Propiedad restringida usada en modo "seguro" (safe)]
  95,  1,[%s inválido en modo "seguro" (safe)]|<token>
  95,  2,[Argumento de %s número %d inválido en modo "seguro" (safe)]|<bif>,<argnumber>

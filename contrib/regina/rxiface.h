@@ -17,10 +17,6 @@
  *  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-/*
- * $Id$
- */
-
 #include "wrappers.h"
 
 /* <<<<<<<<<<< Things you might want to configure >>>>>>>>>>>>>> */
@@ -133,6 +129,8 @@
 #define RX_EXIT_FUNC    7
 #define RX_EXIT_GETENV  8
 #define RX_EXIT_SETENV  9
+#define RX_EXIT_GETCWD 10
+#define RX_EXIT_SETCWD 11
 
 #define RX_LASTHOOK    32
 
@@ -146,7 +144,7 @@
 #define RXFLAG_NOTREG  30
 
 int IfcStartUp( tsd_t *TSD, char *name, int *Major, int *Minor ) ;
-int IfcExecScript( int NameLen, const char *Name,
+int IfcExecScript( tsd_t * volatile TSD, int NameLen, const char *Name,
                    int ArgCount, const int *ParLengths, const char **ParStrings,
                    int CallType, int ExitFlags, int EnvLen, const char *EnvName,
                    int SourceCode, int restricted,
@@ -154,22 +152,24 @@ int IfcExecScript( int NameLen, const char *Name,
                    const void *TinnedTree, unsigned long TinnedTreeLen,
                    int *RetLen, char **RetString, void **instore_buf,
                    unsigned long *instore_length ) ;
+int IfcExecCallBack( tsd_t * volatile TSD, int NameLen, const char *Name,
+                     int ArgCount, const int *ParLengths, const char **ParStrings,
+                     int *RetLen, char **RetString );
 
-int IfcVarPool( tsd_t *TSD, int Code, int *Lengths, char *Strings[] ) ;
-int IfcRegFunc( tsd_t *TSD, const char *Name ) ;
-int IfcDelFunc( tsd_t *TSD, const char *Name ) ;
-int IfcQueryFunc( tsd_t *TSD, const char *Name ) ;
+int IfcVarPool( tsd_t *TSD, int Code, int *Lengths, char *Strings[],
+                int *allocated );
 
-int IfcSubCmd( const tsd_t *TSD, int EnvLen, const char *EnvStr, int CmdLen,
+int IfcSubCmd( tsd_t *TSD, int EnvLen, const char *EnvStr, int CmdLen,
                const char *CmdStr, int *RetLen, char **RetStr ) ;
-int IfcDoExit( const tsd_t *TSD, int Code,
+int IfcDoExit( tsd_t *TSD, int Code,
                int OutputLength1, char *OutputString1,
                int OutputLength2, char *OutputString2,
                int *InputLength, char **InputString ) ;
-int IfcExecFunc( const tsd_t *TSD, PFN Func, char *Name, int Params,
+int IfcExecFunc( tsd_t *TSD, PFN Func, char *Name, int Params,
                  int *Lengths, char **Strings,
+                 int queue_name_len, char *queue_name,
                  int *RetLength, char **RetString,
-                 int *RC, char exitonly, char called ) ;
+                 int *RC, char called, void *gci_info ) ;
 int IfcRegDllFunc( const tsd_t *TSD, const char* rxname, const char* module, const char* objnam ) ;
 
 int IfcHaveFunctionExit(const tsd_t *TSD);
@@ -181,4 +181,4 @@ int IfcCreateQueue( tsd_t *TSD, const char *qname, const int qlen, char *data, u
 int IfcDeleteQueue( tsd_t *TSD, const char *qname, const int qlen );
 int IfcQueryQueue( tsd_t *TSD, const char *qname, const int qlen, unsigned long *count );
 int IfcAddQueue( tsd_t *TSD, const char *qname, const int qlen, const char *data, const int datalen, unsigned long addlifo );
-int IfcPullQueue( tsd_t *TSD, const char *qname, const int qlen, char **data, int *datalen, unsigned long waitforline );
+int IfcPullQueue( tsd_t *TSD, const char *qname, const int qlen, char **data, unsigned long *datalen, unsigned long waitforline );

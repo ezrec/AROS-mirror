@@ -12,4 +12,6 @@ small and nice program, and it should really not create any problems):
 
     cc -o rc rc.c
 
--anders
+The tests also use "true", and "std", so compile this the same way as rc.c
+
+-anders, Mark, Florian

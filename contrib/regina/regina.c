@@ -1,7 +1,3 @@
-#ifndef lint
-static char *RCSid = "$Id$";
-#endif
-
 /*
  *  The Regina Rexx Interpreter
  *  Copyright (C) 1992-1994  Anders Christensen <anders@pvv.unit.no>
@@ -20,6 +16,9 @@ static char *RCSid = "$Id$";
  *  License along with this library; if not, write to the Free
  *  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
+
+#include "regina_c.h"
+
 #if defined(WIN32) && defined(__IBMC__)
 # include <windows.h>
 # pragma warning(default: 4115 4201 4214)
@@ -33,7 +32,7 @@ static char *RCSid = "$Id$";
 #  undef APIENTRY
 #  if _MSC_VER >= 1100
 /* Stupid MSC can't compile own headers without warning at least in VC 5.0 */
-#    pragma warning(disable: 4115 4201 4214)
+#    pragma warning(disable: 4115 4201 4214 4514)
 #  endif
 #  include <windows.h>
 #  if _MSC_VER >= 1100

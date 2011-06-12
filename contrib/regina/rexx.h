@@ -16,10 +16,6 @@
  *  License along with this library; if not, write to the Free
  *  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
-
-/*
- * $Id$
- */
 #ifndef __REXX_H_INCLUDED
 #define __REXX_H_INCLUDED
 
@@ -92,6 +88,13 @@
 # define REG_FAR
 #endif
 
+/*
+ * define MAX_ARGS_TO_REXXSTART to specify the maximum number of arguments that
+ * can be passed to the RexxStart() and RexxCallBack() API functions.
+ */
+#define MAX_ARGS_TO_REXXSTART  32
+
+
 #include "defs.h"
 #if defined(HAVE_CONFIG_H)
 # include "config.h"
@@ -100,6 +103,10 @@
 
 #ifdef HAVE_LIMITS_H
 # include <limits.h>
+#endif
+
+#ifdef HAVE_STDINT_H
+# include <stdint.h>
 #endif
 
 #define MAXNUMERIC 64           /* Max setting for NUMERIC DIGITS       */
@@ -146,23 +153,9 @@
 # endif
 #endif
 
-/* The following have been included to support national languages.       */
-/*    English has a small set of letters. In the ASCII alphabet the      */
-/*    English uppercase letters occupy the range from d2c(65) to d2c(90) */
-/*    and the lowercase version of each letter have an offset of +32     */
-/*    from the corresponding uppercase letter.                           */
-/*                                                                       */
-/* You may define FIRST_CHAR and LAST_CHAR to the lowermost and the      */
-/*    uppermost letters of the uppercase alphabet. And you may define    */
-/*    CHAR_OFFSET as the difference between upper- and lowercase.        */
-/*    other Western European languages                                   */
+#include "regina_c.h"
 
-#define FIRST_CHAR      'A'
-#define LAST_CHAR       'Z'
-#define CHAR_OFFSET     32
-
-#define HEXNUM(c) (((c>='0')&&(c<='9'))||((c>='a')&&(c<='f')))
-#define HEXVAL(c) (((c)>'9')?(RXTOLOW(c)-'a'+10):((c)-'0'))
+#define HEXVAL( c ) ( rx_isdigit(c) ? ( ( c ) - '0' ) : ( rx_tolower(c) - 'a' + 10 ) )
 
 /*
  * Which character is used to delimit lines in text files? Actually,
@@ -217,15 +210,30 @@
 # include <string.h>
 #endif
 
+#if defined(HAVE_SIGNAL_H)
+# include <signal.h>
+#endif
+
+#if !defined(HAVE_RAISE)
+# define raise(_s) kill(getpid(), (_s))
+#endif
+
 #if defined(WIN32) && defined(__BORLANDC__)
 # include <mem.h>
 #endif
+
 #include "strings.h"            /* definitions of REXX strings */
-#include "types.h"              /* various types */
+
+#if defined(_MSC_VER) && !defined(__WINS__)
+# include "contrib/time64.h"
+#endif
+
+#include "regina_t.h"           /* various Regina types */
+
 #include "mt.h"                 /* multi-threading support */
 #include "extern.h"             /* function prototypes */
 
-#define FREE_IF_DEFINED(a) { if (a) Free(a); a=NULL ; }
+#define FREE_IF_DEFINED(a,b) { if (b) Free_TSD(a,b); b=NULL ; }
 
 #ifdef VMS  /* F*ck DEC */
 # ifdef EXIT_SUCCESS
@@ -247,19 +255,27 @@
 #define NOFUNC ((streng *) (void *) -1l)
 
 #if defined(MULTI_THREADED)
-# define REGINA_VERSION_THREAD "(MT)"
+# ifdef __MINGW32__
+#  define REGINA_VERSION_THREAD "(MT MINGW)"
+# else
+#  define REGINA_VERSION_THREAD "(MT)"
+# endif
 #else
 # define REGINA_VERSION_THREAD ""
 #endif
 
+/*
 #define REGINA_VERSION_MAJOR "3"
-#define REGINA_VERSION_MINOR "0"
+#define REGINA_VERSION_MINOR "4"
+#define REGINA_VERSION_SUPP  "beta1"
+*/
 
 #define PARSE_VERSION_STRING    "REXX-Regina_" REGINA_VERSION_MAJOR "." \
-                                REGINA_VERSION_MINOR REGINA_VERSION_THREAD \
-                                " 4.95 25 Apr 2002"
+                                REGINA_VERSION_MINOR REGINA_VERSION_SUPP \
+                                REGINA_VERSION_THREAD \
+                                " 5.00 " REGINA_VERSION_DATE
 
-#define INSTORE_VERSION 3 /* Must be incremented each time the parser/lexer
+#define INSTORE_VERSION 10 /* Must be incremented each time the parser/lexer
                            * or data structure changes something.
                            */
 

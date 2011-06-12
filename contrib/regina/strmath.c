@@ -1,7 +1,3 @@
-#ifndef lint
-static char *RCSid = "$Id$";
-#endif
-
 /*
  *  The Regina Rexx Interpreter
  *  Copyright (C) 1992-1994  Anders Christensen <anders@pvv.unit.no>
@@ -23,27 +19,25 @@ static char *RCSid = "$Id$";
 
 #include "rexx.h"
 #include <stdio.h>
-#include <ctype.h>
+#include <limits.h>
 #include <assert.h>
 #include <string.h>
+#include "regina64.h"
 
 
 #define log_xor(a,b)    (( (a)&&(!(b)) ) || ( (!(a)) && (b) ))
 #if !defined(MAX)
-# define MAX(a,b) ((a>b)?(a):(b))
+# define MAX(a,b) (((a)>(b))?(a):(b))
 #endif
 #if !defined(MIN)
-# define MIN(a,b) ((a<b)?(a):(b))
+# define MIN(a,b) (((a)<(b))?(a):(b))
 #endif
 #define IS_AT_LEAST(ptr,now,min) \
-   if (now<min) { if (ptr) FreeTSD(ptr); ptr=MallocTSD(now=min) ; } ;
+   if (now<min) { if (ptr) FreeTSD(ptr); ptr=(char *)MallocTSD(now=min) ; } ;
 
 
-/* hmmm perhaps it should be rebuilt, so that 0 gave: size=0 and num
-   and exp undefined, that would be most logical ... */
-
-
-#define MAX_EXPONENT (999999999)
+#define stringize(x) #x
+#define stringize_value(x) stringize(x)
 
 typedef struct { /* mat_tsd: static variables of this module (thread-safe) */
 #ifdef TRACEMEM
@@ -60,12 +54,6 @@ typedef struct { /* mat_tsd: static variables of this module (thread-safe) */
    num_descr sdescr;
 
 
-
-   int       ClassicFormat; /* For testing purpose it is declared here and is
-                             * equivalent to NotJ18                         .
-                             */
-   int       OldRegina; /* For testing purpose only */
-
    int       add_outsize;   /* This values MAY all become one. CHECK THIS! */
    char *    add_out;
    int       norm_outsize;
@@ -74,6 +62,7 @@ typedef struct { /* mat_tsd: static variables of this module (thread-safe) */
    char *    div_out;
    int       mul_outsize;
    char *    mul_out;
+   int       max_exponent_len;
 } mat_tsd_t; /* thread-specific but only needed by this module. see
               * init_math
               */
@@ -90,14 +79,12 @@ int init_math( tsd_t *TSD )
    if (TSD->mat_tsd != NULL)
       return(1);
 
-   if ((mt = TSD->mat_tsd = MallocTSD(sizeof(mat_tsd_t))) == NULL)
+   if ( ( TSD->mat_tsd = MallocTSD( sizeof(mat_tsd_t) ) ) == NULL )
       return(0);
-   memset(mt,0,sizeof(mat_tsd_t));
+   mt = (mat_tsd_t *)TSD->mat_tsd;
+   memset( mt, 0, sizeof(mat_tsd_t) );
 
-   if (getenv("OLD_REGINA") != NULL)
-      mt->OldRegina = 1;
-   if (getenv("CLASSIC_REGINA") != NULL)
-      mt->ClassicFormat = 1;
+   mt->max_exponent_len = strlen(stringize_value(MAX_EXPONENT));
    return(1);
 }
 
@@ -106,7 +93,7 @@ void mark_descrs( const tsd_t *TSD )
 {
    mat_tsd_t *mt;
 
-   mt = TSD->mat_tsd;
+   mt = (mat_tsd_t *)TSD->mat_tsd;
    if (mt->rdescr.num) markmemory( mt->rdescr.num, TRC_MATH ) ;
    if (mt->sdescr.num) markmemory( mt->sdescr.num, TRC_MATH ) ;
    if (mt->fdescr.num) markmemory( mt->fdescr.num, TRC_MATH ) ;
@@ -120,74 +107,238 @@ void mark_descrs( const tsd_t *TSD )
 }
 #endif /* TRACEMEM */
 
-
-int descr_to_int( const num_descr *input )
+static streng *name_of_node( const tsd_t *TSD, cnodeptr node,
+                             const num_descr *val )
 {
-   /* number must be integer, and must be small enough */
-   int result=0, i=0 ;
+   streng *retval;
+   cnodeptr run;
+   num_descr num;
+   int len;
 
-   if (input->size<input->exp)
-       exiterror( ERR_INVALID_INTEGER, 0 )  ;
-   else if (input->size>input->exp)
+   if (node)
    {
-      i = MAX( 0, input->exp ) ;
-      for (; i<input->size; i++)
+      switch ( node->type )
       {
-         if (input->num[i]!='0')
-            exiterror( ERR_INVALID_INTEGER, 0 )  ;
+         case X_STRING:
+         case X_CON_SYMBOL:
+         case X_SIM_SYMBOL:
+         case X_STEM_SYMBOL:
+            return Str_dupTSD( node->name );
+
+         case X_HEAD_SYMBOL:
+            /*
+             * Build the complete name of the variable.
+             */
+            len = Str_len( node->name );
+            for ( run = node->p[0]; run; run = run->p[0] )
+            {
+               len += Str_len( run->name ) + 1;
+            }
+            retval = Str_makeTSD( len );
+            Str_catTSD( retval, node->name );
+            for ( run = node->p[0]; run; run = run->p[0] )
+            {
+               Str_catTSD( retval, run->name );
+               if ( run->p[0] )
+                  retval->value[retval->len++] = '.';
+            }
+            return retval;
       }
    }
 
+   /*
+    * reformat the number with all possible digits to show the user the
+    * true value..
+    */
+   num = *val;
+   num.used_digits = ( num.size ) ? num.size : 1;
+   retval = str_norm( TSD, &num, NULL );
 
-   for (i=0; i<input->size; i++)
-   {
-      result = result*10 + (input->num[i] - '0') ;
-   }
-   if (input->negative)
-      result = -result ;
-
-   return result ;
+   return retval;
 }
 
+#define LOSTDIGITS_CHECK(val,maxdigits,node) {              \
+   const char *_ptr = (const char *) ((val)->num);          \
+   int _size = (val)->size;                                 \
+   int _digits = maxdigits;                                 \
+   while (_size && *_ptr == '0')                            \
+   {                                                        \
+      _ptr++;                                               \
+      _size--;                                              \
+   }                                                        \
+   if (_size > _digits)                                     \
+   {                                                        \
+      _size -= _digits;                                     \
+      _ptr += _digits;                                      \
+      while (_size)                                         \
+      {                                                     \
+         if (*_ptr != '0')                                  \
+         {                                                  \
+            condition_hook( TSD,                            \
+                            SIGNAL_LOSTDIGITS,              \
+                            0,                              \
+                            0,                              \
+                            -1,                             \
+                            name_of_node( TSD, node, val ), \
+                            NULL );                         \
+            break;                                          \
+         }                                                  \
+         _ptr++;                                            \
+         _size--;                                           \
+      }                                                     \
+   }                                                        \
+}
+
+/*
+ * ANSI chapter 7, beginning: "...matches that syntax and also has a value
+ * that is 'whole', that is has no non-zero fractional part." The syntax
+ * is that of a plain number.
+ * Thus, 1E1 or 1.00 are allowed.
+ * returns 0 on error, 1 on success. *value is set to the value on success.
+ */
+static int whole_number( const num_descr *input, int *value )
+{
+   /* number must be integer, and must be small enough */
+   int result,i,digit;
+
+   if ( input->size > input->exp )
+   {
+      /*
+       * Check for non-zeros in the fractional part of the number.
+       */
+      i = MAX( 0, input->exp );
+      for ( ; i < input->size; i++ )
+      {
+         if ( input->num[i] != '0' )
+            return 0;
+      }
+   }
+
+   /*
+    * The number is valid but may be too large. Keep care.
+    */
+   for ( i = 0, result = 0; i < input->exp; i++ )
+   {
+      if ( result > INT_MAX / 10 )
+         return 0;
+      result *= 10;
+      if ( i < input->size )
+      {
+         digit = input->num[i] - '0';
+         if ( result > INT_MAX - digit )
+            return 0;
+         result += digit;
+      }
+   }
+   if (input->negative)
+      result = -result;
+
+   *value = result;
+   return 1;
+}
+
+/*
+ * ANSI chapter 7, beginning: "...matches that syntax and also has a value
+ * that is 'whole', that is has no non-zero fractional part." The syntax
+ * is that of a plain number.
+ * Thus, 1E1 or 1.00 are allowed.
+ * returns 0 on error, 1 on success. *value is set to the value on success.
+ */
+static int whole_rx64_number( const num_descr *input, rx_64 *value )
+{
+   /* number must be integer, and must be small enough */
+   rx_64 result;
+   int i,digit;
+
+   if ( input->size > input->exp )
+   {
+      /*
+       * Check for non-zeros in the fractional part of the number.
+       */
+      i = MAX( 0, input->exp );
+      for ( ; i < input->size; i++ )
+      {
+         if ( input->num[i] != '0' )
+            return 0;
+      }
+   }
+
+   /*
+    * The number is valid but may be too large. Keep care.
+    */
+   for ( i = 0, result = 0; i < input->exp; i++ )
+   {
+      if ( result > RX_64MAX / 10 )
+         return 0;
+      result *= 10;
+      if ( i < input->size )
+      {
+         digit = input->num[i] - '0';
+         if ( result > RX_64MAX - digit )
+            return 0;
+         result += digit;
+      }
+   }
+   if (input->negative)
+      result = -result;
+
+   *value = result;
+   return 1;
+}
+
+int descr_to_int( const num_descr *input )
+{
+   int result = 0;
+
+   if ( !whole_number( input, &result ) )
+       exiterror( ERR_INVALID_INTEGER, 0 );
+
+   return result;
+}
+
+/*
+ * strip leading zeros and translate 0e? into a plain 0.
+ */
 void str_strip( num_descr *num )
 {
-   int i=0, j=0 ;
+   int i=0, j=0;
 
    if (num->size==1)
    {
       if (num->num[0] == '0')
       {
-         num->negative = 0 ;
-         num->exp = 1 ;
+         num->negative = 0;
+         num->exp = 1;
       }
-      return ;
+      return;
    }
 
-   for (i=0; i<num->size-1 && num->num[i]=='0'; i++ ) ;
-   if (i)
+   for ( i = 0; ( i < num->size - 1 ) && ( num->num[i] == '0'); i++ )
+      /* Keep at least one character */;
+   if ( i )
    {
-      for (j=0; j<(num->size-i); j++)
+      for ( j = 0; j < num->size - i; j++ )
       {
-         num->num[j] = num->num[j+i] ;
+         num->num[j] = num->num[j + i];
       }
 
-      num->exp -= i ;
-      num->size -= i ;
-      assert( num->size > 0 ) ;
+      num->exp -= i;
+      num->size -= i;
+      assert( num->size > 0 );
    }
 
-   if ((num->size==1) && (num->num[0]=='0'))
+   if ( ( num->size == 1 ) && ( num->num[0] == '0' ) )
    {
-      num->negative = 0 ;
-      num->exp = 1 ;
+      num->negative = 0;
+      num->exp = 1;
    }
 }
 
 
-#if 1
 int getdescr( const tsd_t *TSD, const streng *num, num_descr *descr )
 /* converts num into a descr and returns 0 if successfully.
- * returns 1 in case of an error. descr contains nonsense in this case.
+ * returns 9 or 11 in case of an error. descr contains nonsense in this case.
+ * 9 is returned if the exponent is too big, 11 if num is no number.
  * The newly generated descr is as short as possible: leading and
  * trailing zeros (after a period) will be cut, rounding occurs.
  * We don't use registers and hope the compiler does it better than outselves
@@ -204,21 +355,32 @@ int getdescr( const tsd_t *TSD, const streng *num, num_descr *descr )
    int   pointseen,     /* point in mantissa seen? */
          exp,           /* exp from mantissa */
          exp2,          /* exp from "1E1" */
-         expminus;      /* exp in "1E-1" is negative? */
+         expsign;       /* sign of the exp in "1E-1", 1 or -1 */
 
-   IS_AT_LEAST( descr->num, descr->max, TSD->currlevel->currnumsize+1 ) ;
+   /*
+    * The maximum size of the mantissa is the worst case of a plain number,
+    * e.g. 123456789
+    */
+   outmax = Str_len(num);
+
+   IS_AT_LEAST( descr->num, descr->max, outmax );
+
+   /*
+    * A new number shall always be printed with the current DIGITS value.
+    */
+   descr->used_digits = TSD->currlevel->currnumsize;
 
    in = num->value;
    inlen = Str_len(num);
    /* skip leading spaces */
-   while (inlen && isspace(*in))
+   while (inlen && rx_isspace(*in))
    {
       in++;
       inlen--;
    }
 
    if (!inlen)
-      return 1 ;
+      return 11 ;
 
    c = *in;
 
@@ -228,20 +390,20 @@ int getdescr( const tsd_t *TSD, const streng *num, num_descr *descr )
       descr->negative = (c == '-') ;
       in++; /* c eaten */
       inlen--;
-      while (inlen && isspace(*in)) /* skip leading spaces */
+      while (inlen && rx_isspace(*in)) /* skip leading spaces */
       {
          in++;
          inlen--;
       }
 
       if (!inlen)
-         return 1 ;
+         return 11 ;
    }
    else
       descr->negative = 0 ;
 
    /* cut ending blanks first, a non blank exists (in[0]) at this point */
-   while (isspace(in[inlen-1]))
+   while (rx_isspace(in[inlen-1]))
       inlen--;
 
    while (inlen && (*in == '0')) /* skip leading zeros */
@@ -261,27 +423,26 @@ int getdescr( const tsd_t *TSD, const streng *num, num_descr *descr )
          descr->negative = 0;
          return 0 ;
       }
-      return 1 ;
+      return 11 ;
    }
 
    /* Transfer digits and check for points */
    pointseen = 0; /* never seen */
    exp = 0;
    out = descr->num;
-   outmax = TSD->currlevel->currnumsize+1;
    outpos = 0;
    while (inlen)
    {
       if ((c = *in) == '.')
       {
          if (pointseen)
-            return 1 ;
+            return 11 ;
          pointseen = 1;
          in++;
          inlen--;
          continue;
       }
-      if (!isdigit(c))
+      if (!rx_isdigit(c))
          break;
       if (outpos < outmax)
       {
@@ -308,31 +469,36 @@ int getdescr( const tsd_t *TSD, const streng *num, num_descr *descr )
    if (inlen)
    {
       /* c is *in at this point, see above */
-      expminus = 0;
+      expsign = 1;
       if ((c != 'e') && (c != 'E'))
-         return 1 ;
+         return 11 ;
       if (--inlen == 0) /* at least one digit must follow */
-         return 1 ;
+         return 11 ;
       in++;
 
       c = *in;
       if ((c == '+') || (c == '-'))
       {
          if (c == '-')
-            expminus = 1;
+            expsign = -1;
          if (--inlen == 0) /* at least one digit must follow */
-            return 1 ;
+            return 11 ;
          in++;
       }
       exp2 = 0;
       while (inlen--)
       {
          c = *in++;
-         if (!isdigit(c))
-            return 1 ;
-         exp2 = exp2*10 + (c - '0'); /* Hmm, no overflow checking? */
+         if (!rx_isdigit(c))
+            return 11 ;
+         /* a rough test first, assume a mantissa with length < MAX_EXPONENT */
+         if ( exp2 > MAX_EXPONENT / 10 )
+            return 9;
+         exp2 = exp2*10 + (c - '0');
+         if ( expsign * (exp + expsign * exp2) - 1 > MAX_EXPONENT )
+            return 9;
       }
-      if (expminus)
+      if (expsign < 0)
          exp -= exp2;
         else
          exp += exp2;
@@ -340,213 +506,133 @@ int getdescr( const tsd_t *TSD, const streng *num, num_descr *descr )
    if (outpos == 0) /* no digit or 0.000 with or without exp */
    {
       if (!lastdigit)
-         return 1 ;
+         return 11 ;
       out[outpos++] = '0';
       exp = 1;
       descr->negative = 0;
    }
    descr->exp = exp;
    descr->size = outpos;
-   assert(descr->size <= TSD->currlevel->currnumsize+1);
+   assert(descr->size <= outmax);
    return(0);
 }
-#else
-int getdescr( const tsd_t *TSD, const streng *num, num_descr *descr )
+
+
+/*
+ * Rounds descr to size digits. If stop_on_cut is set, a LOSTDIGITS condition
+ * is fired if anything other than zeros are truncated.
+ */
+static void descr_round( num_descr *descr, int size, tsd_t *stop_on_cut )
 {
-   register unsigned char *i=NULL, *k=NULL, *top=NULL, *start=NULL ;
-   unsigned char *ktop=NULL, ch=' ' ;
-   register int kextra=0, skipped=0 ;
-   register int skipzeros=0, decipoint=0, found_digits=0 ;
+   int i;
 
-   IS_AT_LEAST( descr->num, descr->max, TSD->currlevel->currnumsize+1 ) ;
-
-   /* skip leading whitespace */
-   i = (unsigned char *)num->value ;
-   top = i + Str_len( num ) ;
-   for ( ; (i<top  && isspace(ch=*i)); i++ ) ; /* FGC: ordered */
-
-   /* set the sign, and skip more whitespace */
-   descr->negative = 0 ;
-   if (((ch == '-') || (ch == '+')) && i<top)
-   {
-      descr->negative = (*(i++) == '-') ;
-      for ( ; (i<top) && (isspace(*i)); i++ ) ;
-   }
-
-   /* This is slightly confusing ... but the conventions are:
-    *
-    *  decipoint - number of leading digits in descr->num that are in
-    *              front of the decimal point, if any.
-    *  skipzeros - number of leading zeros in the output, _after_ the
-    *              decimal point, which has been skipped.
-    *  examples:
-    *      00.0004   ->  decipoint=0   skipzeros=3
-    *      123.456   ->  decipoint=3   skipzeros=0
-    *      0004000   ->  decipoint=-1  skipzeros=-1
+   /*
+    * We don't touch descr->used_digits here. If the caller really needs it,
+    * it must be done at that level. Rounding itself isn't an operation
+    * creating a number in the terms of Rexx in opposite to TRUNC() or the
+    * normal mathematical operations.
     */
 
-   /* read all digits in number */
-   start = i ;
-   kextra = 0 ;
-   skipped = 0 ;
-   skipzeros = -1 ;
-   decipoint = -1 ;
-   found_digits = 0 ;
-   k = (unsigned char*)descr->num ;
-   ktop = k + TSD->currlevel->currnumsize + 1 ;
-   for (; i<top; i++ )
+   /*
+    * Can't do illegal operations.
+    */
+   assert( size > 0 );
+
+   /*
+    * Increment size by the number of leading zeros existing.
+    */
+   for ( i = 0; i < descr->size; i++ )
    {
-      if ( isdigit( ch=*i ) )
-      {
-         if (skipzeros<0)
-         {
-            found_digits = 1 ;
-            if (ch=='0')
-            {
-               if (decipoint>=0) skipped++ ;
-               continue ;
-            }
-            else
-            {
-               assert( decipoint <= 0 ) ;
-               skipzeros = skipped ;
-            }
-         }
-
-         if (k < ktop)
-            *(k++) = ch ;
-         else
-            kextra++ ;
-      }
-      else if (ch=='.')
-      {
-         if (decipoint!=(-1))
-            return 1 ;
-
-         decipoint = (int)( (char*)k - (char*)descr->num ) ;
-      }
+      if ( descr->num[i] == '0' )
+         size++;
       else
-         break ;
-    }
+         break;
+   }
+   size += i;
 
-   descr->exp = 0 ;
-   if ((i<top) && ((ch=='e') || (ch=='E')))
+   /*
+    * Do we have to round?
+    */
+   if ( descr->size <= size )
+      return;
+
+   if ( stop_on_cut )
    {
-      int sign=0 ;
-      unsigned char *tmp ;
-
-      if ((*(++i) == '-') || (*i == '+'))
-         sign = (*(i++) == '-') ;
-
-      for (tmp=i; (i<top) && (isdigit(*i)); i++ )
-         descr->exp = descr->exp * 10 + (*i - '0') ;
-
-      if (tmp==i) return 1 ;
-
-      if (sign)
-         descr->exp = - descr->exp ;
+      for ( i = size; i < descr->size; i++ )
+      {
+         if ( descr->num[i] != '0' )
+         {
+            condition_hook( stop_on_cut,
+                            SIGNAL_LOSTDIGITS,
+                            0,
+                            0,
+                            -1,
+                            name_of_node( stop_on_cut, NULL, descr ),
+                            NULL );
+            break;
+         }
+      }
+      if ( i >= descr->size )
+      {
+         descr->size = size;
+         return;
+      }
    }
 
-   /* If we didn't find any non-zero digits */
-   descr->size = (int)( (char*)k - (char*)descr->num ) ;
-   if (skipzeros<0)
+   descr->size = size;
+   /*
+    * Is it possibly just a truncation?
+    */
+   if ( descr->num[size] < '5' )
    {
-      if (!found_digits)
-         return 1 ;
-
-      descr->exp += 1 - skipped ;
-      *(k++) = '0' ;
-      descr->size++ ;
+      return;
    }
-   else if (decipoint<0)
-      descr->exp += descr->size + kextra ;
-   else
-      descr->exp += decipoint - skipzeros ;
 
-   /* check for non-white-space at the end */
-   for (; i<top; i++ )
-      if (!isspace(*i))
-         return 1 ;
+   /*
+    * increment next digit, and loop if that was a '9'
+    */
+   for ( i = size - 1; ; )
+   {
+      if ( descr->num[i] != '9' )
+      {
+         descr->num[i]++;
+         break;
+      }
 
-   assert( descr->size <= TSD->currlevel->currnumsize+1 ) ;
-   return 0 ;
-}
+      descr->num[i--] = '0';
+
+      if ( i == -1 )
+      {
+         /*
+          * "Carry", we have to increment the exponent. The complete mantissa
+          * consists of zeros. We have to set it to "1000...".
+          */
+#ifndef NDEBUG
+         /*
+          * Just check a few things ... I don't like surprises
+          */
+         for ( i = 0; i < size; i++ )
+            assert( descr->num[i] == '0' );
 #endif
+         descr->exp++;
+         descr->num[0] = '1';
+         break;
+      }
+   }
+   return;
+}
+
 
 void str_round( num_descr *descr, int size )
 {
-   int i=0 ;
-
-   /* we can't round to zero digits */
-   if (size==0)
-   {
-      if (descr->num[0]>='5')
-      {
-         descr->num[0] = '1' ;
-         descr->exp++ ;
-         descr->size = 1 ;
-      }
-      else
-      {
-         descr->num[0] = '0' ;
-         descr->size = 1 ;
-         descr->negative = descr->exp = 0 ;
-      }
-      return ;
-   }
-   else if (size<0)
-   {
-      descr->num[0] = '0' ;
-      descr->size = 1 ;
-      descr->exp = descr->negative = 0 ;
-      return ;
-   }
-
-   /* increment size by the number of leading zeros existing */
-   for (i=0; i<descr->size && descr->num[i]=='0'; i++) ;
-   size += i ;
-
-   /* do we have to round? */
-   if (descr->size<=size)
-      return ;
-
-   /* set the size to the wanted value */
-   descr->size = size ;
-
-   /* is it possible just to truncate? */
-   if (descr->num[size] < '5')
-      return ;
-
-   /* increment next digit, and loop if that is a '9' */
-   for (i=size-1;;)
-   {
-      /* can we get away with inc'ing this digit? */
-      if (descr->num[i] != '9')
-      {
-         descr->num[i]++ ;
-         return ;
-      }
-
-      /* no, set it to zero, and inc' next digit */
-      descr->num[i--] = '0' ;
-
-      /* if there are no more digits, move number one magnitude up */
-      if (i==(-1))
-      {
-#ifndef NDEBUG
-         /* Just check a few things ... I don't like surprises */
-         for (i=0; i<size; i++)
-            assert( descr->num[i] == '0' ) ;
-#endif
-
-         /* increase order of magnitude, and set first digit */
-         descr->exp++ ;
-         descr->num[0] = '1' ;
-         return ;
-      }
-   }
+   descr_round( descr, size, NULL );
 }
 
+
+void str_round_lostdigits( tsd_t *TSD, num_descr *descr, int size )
+{
+   descr_round( descr, size, TSD );
+}
 
 
 void descr_copy( const tsd_t *TSD, const num_descr *f, num_descr *s )
@@ -561,693 +647,281 @@ void descr_copy( const tsd_t *TSD, const num_descr *f, num_descr *s )
    s->negative = f->negative ;
    s->exp = f->exp ;
    s->size = f->size ;
+   s->used_digits = f->used_digits;
 
    IS_AT_LEAST( s->num, s->max, f->size ) ;
    memcpy( s->num, f->num, f->size ) ;
 }
 
-
-
 /*
+ * string_add2 computes
  *
+ * r=f+s
  *
- * So, why don't we just flush the changes into the result string
- * directly, without temporarily storing it in the out string? Well,
- * the answer is that if this function is called like:
+ * with the current digits() setting of ccns (e.g. TSD->currlevel->currnumsize)
+ * Keep in mind that f or s may be identical to r.
  *
- *    string_add( TSD, &descr1, &descr2, &descr1 )
- *
- * then it should be able to produce the correct answer, which is
- * impossible to do without a temporary storage. (Hmmm. No, that is
- * bogos, it just takes a bit of care to not overwrite anything that
- * we might need. Must be rewritten). Another problem, if the result
- * string is to small to hold the answer, we must reallocate space
- * so we might have to live with the out anyway.
+ * Function rewritten completely on 03.07.2005 by FGC. The former one was
+ * incompatible with the standard. This approach follows the ANSI standard's
+ * code example.
  */
-void string_add( const tsd_t *TSD, const num_descr *f, const num_descr *s, num_descr *r )
+static void string_add2( tsd_t *TSD, const num_descr *f, const num_descr *s,
+                         num_descr *r, int ccns )
 {
-   int count1=0, carry=0, tmp=0, sum=0, neg=0 ;
-   int lsd=0 ; /* least significant digit */
-   int msd=0, loan=0, ccns=0 ;
-   int flog=0, fexp=0, fsize=0, slog=0, ssize=0, sexp=0, sdiff=0, fdiff=0 ;
-   char *fnum=NULL, *snum=NULL ;
-   mat_tsd_t *mt;
-
-   mt = TSD->mat_tsd;
-
-   fexp = f->exp ;
-   fsize = f->size ;
-   sexp = s->exp ;
-   ssize = s->size ;
-   flog = f->negative & !s->negative;
-   slog = s->negative & !f->negative;
-   sdiff = sexp - ssize ;
-   fdiff = fexp - fsize ;
-   fnum = f->num ;
-   snum = s->num ;
+   mat_tsd_t *mt;       /* mt->add_out is used      */
+   int neg;             /* negate the result if set, and also: f WAS negative*/
+   int sneg_factor;     /* -1: s is negative, 1: s is positive */
+   int carry;           /* carry flag */
+   int loan;            /* loan flag */
+   const char *fnum;    /* mantissa start of f */
+   const char *snum;    /* mantissa start of s */
+   char *fpoint;        /* least significant mantissa position of f */
+   const char *spoint;  /* least significant mantissa position of s */
+                        /* There is no more digits available if point < num */
+   int h, h2, h3;       /* helper */
+   const num_descr *swp;/* helper */
+   int c;               /* helper */
+   static const char none[2] ="";  /* just to keep pointers valid */
 
    /*
-    * Make sure that we have enough space for the internal use.
+    * In opposite to ANSI we don't have to consider NUMERIC FUZZ. The
+    * comparisons are done using string_test.
     */
-   ccns = TSD->currlevel->currnumsize ;
-   IS_AT_LEAST( mt->add_out, mt->add_outsize, ccns+2 ) ;
+
+   /*
+    * ANSI results f if s==0 (strict comparison!) and s if f==0 with respect
+    * to the operator which is "+" in string_add2.
+    */
+   if ((s->size == 1) && (s->num[0] == '0'))
+   {
+      descr_copy( TSD, f, r );
+      return;
+   }
+   if ((f->size == 1) && (f->num[0] == '0'))
+   {
+      descr_copy( TSD, s, r );
+      return;
+   }
+
+   /*
+    * The other shortcut isn't mentioned in ANSI where the exponents differ
+    * so significantly that one operand isn't used at all. So just continue
+    * to try computing 1+1e1000.
+    */
+
+   mt = (mat_tsd_t *)TSD->mat_tsd;
+   /*
+    * We use a temporary buffer for the result. We don't know the magnitude of
+    * the result in advance (99.99 may be rounded to 100), so we need 2 more
+    * digits: one for the digits after ccns which is calculated to determine
+    * a first rounding and one for the overflow.
+    * Thus, the most significant number which is a template of the result
+    * has a virtual mantissa position of 1 because position 0 is reserved for
+    * the overflow.
+    */
+   IS_AT_LEAST( mt->add_out, mt->add_outsize, ccns+2 );
 #ifdef TRACEMEM
-   mt->outptr5 = mt->add_out ;
+   mt->outptr5 = mt->add_out;
 #endif
 
-   /*
-    * If *s is zero compared to *f under NUMERIC DIGITS, set it to zero
-    * This also applies if *s is zero. TRL says that in that case, the
-    * other number is to be returned.
-    */
-   if ((ssize==1)&&(snum[0]=='0'))
+   if (f->exp < s->exp)
    {
-      descr_copy( TSD, f, r ) ;
-      return ;
+      /*
+       * The number with the most significant exponent needs to be the
+       * first one to make things simpler.
+       */
+      swp = f;
+      f = s;
+      s = swp;
    }
 
    /*
-    * And do  the same thing for *f
+    * It is much easier to reduce the various situations by making the first
+    * number positive:
+    * -x op y     is equivalent to       -(x op -y)
     */
-   if (( fsize==1)&&(fnum[0]=='0'))
+   if (f->negative)
    {
-      descr_copy( TSD, s, r ) ;
-      return ;
+      /* always use a positive number as the left operator */
+      neg = 1;
+      sneg_factor = s->negative ? 1 : -1;
+   }
+   else
+   {
+      neg = 0;
+      sneg_factor = s->negative ? -1 : 1;
    }
 
-   if (sexp > fexp)
+   fnum = f->num;
+   snum = s->num;
+   /*
+    * The most significant number is the base of the result. The other number
+    * is aligned to the most significant. Example where the second is the
+    * most significant number:
+    *
+    *       fffff.ff
+    *          ss.ssssss
+    */
+
+   h = f->exp - s->exp;
+   r->exp = f->exp;     /* save now even if s==r */
+   /*
+    * s may need an adjustement.
+    */
+   h2 = MIN( ccns + 1, f->size );     /* h2 = used mantissa length of f */
+   h3 = MIN( ccns + 1 - h, s->size ); /* h3 = used mantissa length of s */
+   if ( h3 < 0 )
    {
-      if (sexp > fexp + ccns)
+      /*
+       * spoint = snum + h3 - 1 is NOT allowed. h3 may be so small that
+       * spoint becomes really invalid and may cause a segment violation.
+       */
+      spoint = none;
+      snum = spoint + 1;
+   }
+   else
+   {
+      spoint = snum + h3 - 1;
+   }
+   r->size = MAX( h2, h + h3 );
+
+   /*
+    * We conpute "r = f; r += s;" This is much easier to handle than everything
+    * else.
+    */
+
+   mt->add_out[0] = '0';
+   memcpy( mt->add_out + 1, fnum, h2 );
+   memset( mt->add_out + h2 + 1, '0', r->size - h2 );
+
+   /*
+    * r += s;
+    *
+    * Get the fpoint to that position that needs to be added by spoint.
+    * This is a valid position because we filled up with 0 already.
+    */
+   fnum = mt->add_out;              /* NOT +1, keep it on the starting 0 */
+   fpoint = (char *) fnum + h + h3; /* NOT -1, because fnum is decremented */
+   carry = loan = 0;
+
+   while ( spoint >= snum )
+   {
+      c = *fpoint + sneg_factor * (*spoint - '0') + carry - loan;
+      if ((loan = (c < '0')) != 0)
       {
-         descr_copy( TSD, s, r ) ;
-         return ;
+         c += 10;
+      }
+      if ((carry = (c > '9')) != 0)
+      {
+         c -= 10;
+      }
+      spoint--;
+      *fpoint-- = (char)c;
+   }
+   while ( fpoint > fnum )
+   {
+      c = *fpoint + carry - loan;
+      if ((loan = (c < '0')) != 0)
+      {
+         c += 10;
+      }
+      if ((carry = (c > '9')) != 0)
+      {
+         c -= 10;
+      }
+      *fpoint-- = (char)c;
+   }
+   if ( !loan )
+   {
+      if ( carry )
+      {
+         *fpoint = '1';
+         r->exp++;
+         r->size++;
+      }
+      else
+      {
+         fpoint++;
       }
    }
    else
    {
-      if (fexp > sexp + ccns)
+      fpoint++;
+      /*
+       * Having a loan means we have a negative result. Reverse the result with
+       * r = -r;
+       */
+      neg = !neg;
+      for ( h = r->size - 1, carry = 10; h >= 0; h-- )
       {
-         descr_copy( TSD, f, r ) ;
-         return ;
-      }
-   }
-
-   /*
-    * Find the exponent number for the most significant digit and the
-    * least significant digit. 'size' is the size of the result, minus
-    * any extra carry. 'count1' is the loop variable that iterates
-    * through each digit.
-    *
-    * These initializations may look a bit complex, so there is a
-    * description of what they really means, consider the following
-    * addition:
-    *
-    *        xxxxx.xx
-    *           yy.yyyy
-    *
-    * The 'lsd' is the fourth digit after the decimal point, and is
-    * therefore set to -3. The 'msd' is the fifth digit before the
-    * decimal point, and is therefore set to 5. The size is set to
-    * the difference between them, that is 8.
-    * The 'carry' and 'loan' are initially
-    * cleared.
-    *
-    * Special consideration is taken, so that 'lsd' will never be more
-    * so small that the difference between them are bigger than the
-    * current precision.
-    */
-   msd = MAX( fexp, sexp ) ;
-   lsd = MAX( msd-(TSD->currlevel->currnumsize+1), MIN( fdiff, sdiff));
-   carry = loan = 0 ;
-
-   /*
-    * Loop through the numbers, from the 'lsd' to the 'msd', letting
-    * 'count1' have the value of the current digit.
-    */
-
-#ifdef CHECK_MEMORY
-   /* The faster (and correct) algorithm uses fnum- and snum-pointers which
-      are initially set to perhaps illegal values. They become valid by
-      an offset. This isn't correctly understood by the bounds checker.
-      We use valid base pointers and a complex index here. See below for
-      the faster code. WARNING: Changes should be done both here and in the
-      '#else' - statement. FGC
-    */
-   for (count1=lsd; count1<msd; count1++ )
-   {
-      /*
-       * The variable 'sum' collects the sum for the addition of the
-       * current digit. This is done, in five steps. First, register
-       * any old value stored in 'carry' or 'loan'.
-       */
-      sum = carry - loan ;
-
-      /*
-       * Then, for each of the two numbers, add its digit to 'sum'.
-       * There are two considerations to be taken. First, are we
-       * within the range of that number. Then what are the sign of
-       * the number. The expression of the if statement checks for
-       * the validity of the range, and the contents of the if
-       * statement adds the digit to 'sum' taking note of the sign.
-       */
-      if (count1>=fdiff && fexp>count1)
+         if ( ( fpoint[h] = (char) (carry - (fpoint[h] - '0') + '0') ) > '9' )
          {
-             tmp = fnum[fexp - 1 - count1] - '0';
-             if (flog)
-                sum -= tmp ;
-             else
-                sum += tmp ;
-         }
-/*          else
-            fdiff = msd ;
- */
-      /*
-       * Repeat previous step for the second number
-       */
-      if (count1>=sdiff && sexp>count1)
-         {
-            tmp = snum[sexp - 1 - count1] - '0';
-            if (slog)
-               sum -= tmp ;
-            else
-               sum += tmp ;
-         }
-/*         else
-            sdiff = msd ; */
-
-      /*
-       * If the sum is more than 9, we have a carry, then set 'carry'
-       * and subtract 10. And similar, if the sum is less than 0,
-       * set 'loan' and add 10.
-       */
-      if ((carry = ( sum > 9 )))
-         sum -= 10 ;
-
-      if ((loan = ( sum < 0 )))
-         sum += 10 ;
-
-      /*
-       * Flush the resulting digit to the output string.
-       */
-      mt->add_out[ msd - count1 ] = (char) (sum + '0');
-   }
-#else
-   fnum += fexp - 1 ;
-   snum += sexp - 1 ;
-   for (count1=lsd; count1<msd; count1++ )
-   {
-      /*
-       * The variable 'sum' collects the sum for the addition of the
-       * current digit. This is done, in five steps. First, register
-       * any old value stored in 'carry' or 'loan'.
-       */
-      sum = carry - loan ;
-
-      /*
-       * Then, for each of the two numbers, add its digit to 'sum'.
-       * There are two considerations to be taken. First, are we
-       * within the range of that number. Then what are the sign of
-       * the number. The expression of the if statement checks for
-       * the validity of the range, and the contents of the if
-       * statement adds the digit to 'sum' taking note of the sign.
-       */
-      if (count1>=fdiff && fexp>count1)
-         {
-             tmp = fnum[-count1] - '0';
-             if (flog)
-                sum -= tmp ;
-             else
-                sum += tmp ;
-         }
-/*          else
-            fdiff = msd ;
- */
-      /*
-       * Repeat previous step for the second number
-       */
-      if (count1>=sdiff && sexp>count1)
-         {
-            tmp = snum[-count1] - '0';
-            if (slog)
-               sum -= tmp ;
-            else
-               sum += tmp ;
-         }
-/*         else
-            sdiff = msd ; */
-
-      /*
-       * If the sum is more than 9, we have a carry, then set 'carry'
-       * and subtract 10. And similar, if the sum is less than 0,
-       * set 'loan' and add 10.
-       */
-      if ((carry = ( sum > 9 )) != 0)
-         sum -= 10 ;
-
-      if ((loan = ( sum < 0 )) != 0)
-         sum += 10 ;
-
-      /*
-       * Flush the resulting digit to the output string.
-       */
-      mt->add_out[ msd - count1 ] = (char) (sum + '0');
-   }
-#endif
-
-   neg = ( f->negative && s->negative ) ;
-   IS_AT_LEAST( r->num, r->max, /*ccns+2*/ msd-lsd+3 ) ;
-
-   fnum = r->num ;
-   if ( carry )
-   {
-      *(fnum++) = '1' ;
-   }
-   else if ( loan )
-   {
-      int i ;
-      assert( neg==0 ) ;
-      neg = 1 ;
-      mt->add_out[0] = '0' ;
-      sum = 10 ;
-      for ( i=msd-lsd; i>0; i-- )
-      {
-         if ((mt->add_out[i] = (char) (sum - (mt->add_out[i]-'0') + '0')) > '9')
-         {
-           mt->add_out[i] = '0' ;
-           sum = 10 ;
+            fpoint[h] = '0';
+            carry = 10;
          }
          else
-           sum = 9 ;
+           carry = 9;
       }
-      snum = mt->add_out ;
-      msd-- ;
    }
-   else
+
+   /*
+    * Added so far. Now accomplish the rounding following ANSI rules.
+    *
+    * We can increase the result's accurracy by jumping over one leading
+    * zero if available first, but this breaks ANSI.
+    */
+
+   if ( r->size > ccns )
    {
-      msd-- ;
+      r->size = ccns;
+      if ( fpoint[ccns] > '4' )
+      {
+         /*
+          * Increment mantissa regardless of the true sign.
+          */
+         fnum = fpoint;
+         fpoint += ccns - 1;
+         carry = 1;
+         while ( fpoint >= fnum )
+         {
+            if ( ++(*fpoint) <= '9' )
+            {
+               carry = 0;
+               fpoint = (char *) fnum - 1;
+               break;
+            }
+            *fpoint = '0';
+            fpoint--;
+         }
+
+         if ( carry )
+         {
+            r->exp++;
+            *fpoint = '1';
+         }
+         else
+         {
+            fpoint++;
+         }
+      }
    }
-
-   r->negative = neg ;
-   r->exp = msd + 1 ;
-   r->size = r->exp - lsd ;
-
-#if 1
-   memcpy( fnum, mt->add_out+1, r->size - ( (carry) ? 1 : 0 ) ) ;
-#else
-   memcpy( fnum, mt->add_out+1, r->size ) ;
-#endif
+   IS_AT_LEAST( r->num, r->max, r->size ) ;
+   memcpy( r->num, fpoint, r->size );
+   r->negative = neg;
    str_strip( r ) ;
-/*   for (; count1<fsize; count1++)
-      fnum[count1] = mt->add_out[count1]  ;
- */
 }
 
-
-streng *str_format_orig( const tsd_t *TSD, const streng *input, int before, int after, int expp, int expt )
+void string_add( tsd_t *TSD, const num_descr *f, const num_descr *s,
+                 num_descr *r, cnodeptr left, cnodeptr right )
 {
-   static char *out=NULL ;
-   static int outsize=0 ;
-   int sdigs=0, trigger=0, j=0, size=0, k=0 ;
-   int decim, use_exp=0, use_eng=0 ;
-   char *tmp_ptr=NULL ;
-   streng *result=NULL ;
+   int ccns = TSD->currlevel->currnumsize ;
 
-   char *in_ptr ; /* ptr to current char in input string */
-   char *in_end ; /* ptr to end+1 in input string */
-   int exponent ; /* the value of the exponent */
-   char *out_ptr ; /* ptr to current char in output string */
-   mat_tsd_t *mt;
+   LOSTDIGITS_CHECK( f, ccns, left );
+   LOSTDIGITS_CHECK( s, ccns, right );
 
-   mt = TSD->mat_tsd;
+   string_add2( TSD, f, s, r, ccns );
 
-   if (getdescr(TSD,input,&mt->fdescr))
-       exiterror( ERR_BAD_ARITHMETIC, 0 )  ;
-
-   str_round( &mt->fdescr, TSD->currlevel->currnumsize ) ;
-
-   /*
-    * Make sure that we have enough space available. If we have memory
-    * tracing enabled, remember to save the info about the new memory
-    * allocated.
-    */
-   IS_AT_LEAST( out, outsize, 3*TSD->currlevel->currnumsize+5 ) ;
-#ifdef TRACEMEM
-   mt->outptr1 = out ;
-#endif
-
-   new_round:
-   /*
-    * Str_ip leading zeros from the descriptor. We could have done this
-    * by calling strip(), but it is faster to do it here. Besides doing
-    * it this way shortcuts the need to shift (i.e copy) the digits
-    */
-   str_strip( &mt->fdescr ) ;
-   exponent = mt->fdescr.exp ;
-   in_end = &mt->fdescr.num[mt->fdescr.size] ;
-   in_ptr = mt->fdescr.num ;
-
-   /*
-    * Now, let us see if we've got a zero. That one is a special case,
-    * and then just return a zero, no more, no less
-    */
-/*
-   if (in_ptr==in_end)
-      return Str_creTSD( "0" ) ;
-*/
-   /*
-    * There are certain limits that the .exp must be within, the 32
-    * bit integer can hold slightly larger numbers, so if we are outside
-    * the legal range, report an error.
-    */
-   if ((MAX_EXPONENT<exponent-1) || ((-MAX_EXPONENT)>exponent+1))
-       exiterror( ERR_ARITH_OVERFLOW, 0 )  ;
-
-   /*
-    * Set 'sdigs' to the number of significant digits we want in the
-    * answer. Whatever the user wants, we first round off 'in' to
-    * the precision before doing anyting.
-    */
-   sdigs = MIN( in_end-in_ptr, TSD->currlevel->currnumsize ) ;  /* significant digits in answer */
-
-   /* Are we in for exponential form? If the integer part is bigger
-    * than a trigger value, or the decimal part bigger than twice that
-    * trigger value, use exponential form. The default for trigger is
-    * the precision, but it will be expt if that is defined.
-    *
-    * Problem: will the setting of before and after effect the
-    * precision on such a way that it will change the representation
-    * between exponential/simple form. (I don't think so?) The code
-    * that considers 'after' has therefore been commented out. Consider
-    * the problem format('0.00011111',,4,,3). Now, this number needs
-    * eight digits after the decimal point in order to be represented.
-    * On the other hand, it only need four digits, in the output.
-    * Which is the correct???  I don't know, but I think the code should
-    * be commented out.
-    */
-   trigger = (expt!=(-1)) ? expt : TSD->currlevel->currnumsize ;
-   decim = MAX( sdigs - exponent, 0 ) ;
-
-   use_exp = ((decim>2*trigger) || (trigger<exponent)) ;
-   if (after>(-1))
-      decim = after ;
-
-   /* If expp is zero, then we will never use exponential form
-    */
-   if (expp==0)
-      use_exp = 0 ;
-
-   /* Here comes the big question, are we going to use exponential form
-    * or simple form, 'use_exp' holds the answer
-    */
-   if (use_exp)
-   {
-      /* We are going to use exponential form, now we have to check
-       * whether to use scientific or engineering form. In exponential
-       * form, there are *always* an integer part, which size is 1 in
-       * sci. form and 1-3 in eng. form. Now, there are a total of three
-       * ways to do this: sci, eng and custom (i.e. before is set too).
-       */
-      use_eng = (TSD->currlevel->numform == NUM_FORM_ENG) ;
-
-      /* If number is 99.995, we might have to reconsider the integer
-       * part (even the length of the integer part) after rounding the
-       * fractional part. So we better round it right away, and do
-       * something sensible if order of magnitude changed.
-       */
-      k = mt->fdescr.exp ;
-      if (after>(-1))
-      {
-         if (use_eng)
-            str_round( &mt->fdescr, after + 1 + exponent%2 ) ;
-         else
-            str_round( &mt->fdescr, after + 1 ) ;
-
-         if (k!=mt->fdescr.exp)
-            goto new_round ;
-      }
-
-      /* If 'before' was specified, we need to initialize the first
-       * chars in out to spaces, and set 'k' so we skip over them.
-       */
-      if (before!=(-1))
-      {
-         out_ptr = out + before - (mt->fdescr.negative!=0) - 1 ;
-         if (use_eng)
-            out_ptr -= (exponent)%3 ;
-
-         /* Now, check that there is enough space, and set the initial
-          * characters that we are not going to use to spaces.
-          */
-         if (out_ptr<out)
-             exiterror( ERR_ARITH_OVERFLOW, 0 )  ;
-
-         /* Then set the initial characters to space. When this is done,
-          * we are sure (almost, at least) that there we have set k to
-          * point to the 'right' char, so that after the sign and the
-          * integer part of the matissa has been written out, k will be
-          * at the k'th position of the output string.
-          */
-         for (tmp_ptr=out; tmp_ptr<out_ptr; *(tmp_ptr++)=' ') ;
-      }
-      else
-         out_ptr = out ;
-
-      /*
-       * Let's start with the sign, that is not effected by any of the
-       * various formats at which this routine can output 'in'
-       */
-      if (mt->fdescr.negative)
-         *(out_ptr++) = '-' ;
-
-      /* Then continue with the first digit, that shall *always* be
-       * written out, both in sci and eng form.
-       */
-      assert( in_ptr < in_end ) ;
-      *(out_ptr++) = *(in_ptr++) ;
-      exponent-- ;
-
-      /* If we use eng. form, we might have to stuff into it as much
-       * as two additional digits. And we have to watch out so we neigher
-       * increase the precision nor use more digits than we are allowed
-       * to do.
-       */
-      if (use_eng)
-      {
-         for (;;)
-         {
-            /* Break out of this when the exponent is a multiple of three.
-             */
-            if ((exponent%3)==0)
-               break ;
-
-            /* First, check to see if there are more digits in the number
-             * that we want to write out. If that is ok, then just write
-             * the whole thing out.
-             */
-            if (in_ptr >= in_end)
-                exiterror( ERR_ARITH_OVERFLOW, 0 )  ;
-            *(out_ptr++) = *(in_ptr++) ;
-
-            exponent-- ;
-         }
-      }
-
-      /* OK, now we have written out the integer part of the matissa. Now
-       * we must follow with the decimal part. First of all, let us start
-       * with the decimal point, which should only be present if the
-       * actually are a decimal part.
-       */
-      if (after==(-1))
-         after = in_end - in_ptr ;
-
-      if (after>0)
-         *(out_ptr++) = '.' ;
-
-      /* At last we have to to fill in the digits in the decimal part of
-       * the matissa. Just loop through it.
-       */
-      for (; (after) && (in_ptr < in_end); after--)
-         *(out_ptr++) = *(in_ptr++) ;
-
-      /* And then we have to add the required number of tailing zeros in
-       * the matissa
-       */
-      for (; after; after--)
-         *(out_ptr++) = '0' ;
-
-      /* Then comes the exponent. It should not be written if the
-       * exponent is one. On the other hand, if a particular size is
-       * requested for the exponent in expp, then the appropriate number
-       * of space should be filled in.
-       */
-      if (exponent)
-      {
-         *(out_ptr++) = 'E' ;
-         *(out_ptr++) = (char) ((exponent>0) ? '+' : '-') ;
-
-         if (exponent<0)
-            exponent = -exponent ;
-
-         /* Now, suppose that expp is unspecified, then we would have to
-          * find the number of characters needed for the exponent. The
-          * following is a kludge to set expp to the 'right' number if
-          * it was previously unset.
-          */
-         if (expp==(-1))
-         {
-            for (k=exponent,expp=0; k; k/=10, expp++)
-               ;
-         }
-
-         /* We have to fill in numbers from the end of it, and pad with
-          * zeros to the left. First find the end, and then loop backwards
-          * for each significant digit in exponent
-          */
-         for (tmp_ptr=out_ptr+expp-1;;)
-         {
-            /* First check for overflow, i.e the space reserved in the
-             * exponent is not enough to hold it.
-             */
-            if (tmp_ptr<out_ptr)
-                exiterror( ERR_ARITH_OVERFLOW, 0 )  ;
-
-            /* Then extract the decimal digit and put it into the output
-             * string, while deviding the exponent by ten.
-             */
-            *(tmp_ptr--) = (char) (exponent%10 + '0') ;
-            exponent /= 10 ;
-
-            /* The only possible way out of this is when the exponent is
-             * zero, i.e. it has been written out. (unless an error is
-             * trapped in the lines above.)
-             */
-            if (!exponent)
-               break ;
-         }
-
-         /* Now there might be some chars left in the exponent that has
-          * to be set to leading zeros, check it and do it.
-          */
-         for (; tmp_ptr>=out_ptr;)
-            *(tmp_ptr--) = '0' ;
-
-         /* At last, set k, so that we know the real size of the out
-          * string.
-          */
-         out_ptr += expp ;
-      }
-      else if (expp!=(-1))
-      {
-         for (j=(-2); j<expp; j++)
-           *(out_ptr++) = ' ' ;
-      }
-   }
-   else
-   {
-      /* If number is 99.995, we might have to reconsider the integer
-       * part (even the length of the integer part) after rounding the
-       * fractional part. So we better round it right away, and do
-       * something sensible if order of magnitude changed.
-       */
-      after = decim ;
-      k = mt->fdescr.exp ;
-      if (after>(-1))
-      {
-         str_round( &mt->fdescr, after + mt->fdescr.exp ) ;
-         if (k!=mt->fdescr.exp)
-            goto new_round ;
-      }
-
-      out_ptr = out ;
-      /* We are not going to use an exponent. Our number will consist of
-       * two parts, the integer part, and the fractional part. Let us
-       * concentrate on the integer part, which will have a particular
-       * length if before is set.
-       */
-      if (before>(-1))
-      {
-         /* Since the integer part is going to have a particular length,
-          * we better find that lenght, and skip the initial part (or
-          * give an error if the length given is too small for this
-          * number. Remember that we need at least on digit before the
-          * decimal point (the leading zero).
-          */
-         size = (mt->fdescr.negative) + MAX(exponent, 1) ;
-
-         /* Does the integer part of the output string hold enough chars?
-          * If not, report an error. If is does, initialize the first
-          * part of it (the unused part) to spaces.
-          */
-         if (size>before)
-             exiterror( ERR_ARITH_OVERFLOW, 0 )  ;
-         else
-         {
-            for (k=0; k<(before-size); k++)
-               *(out_ptr++) = ' ' ;
-         }
-      }
-
-      /* Write out the sign if it is needed, and then loop trough the
-       * digits of the integer part of the number. If the integer part
-       * in empty, write out a "0" instead.
-       */
-      if (mt->fdescr.negative)
-         *(out_ptr++) = '-' ;
-
-      if (exponent>0)
-         for (; (exponent) && (in_ptr<in_end); exponent--)
-            *(out_ptr++) = *(in_ptr++) ;
-      else
-         *(out_ptr++) = '0' ;
-
-      /*
-       * If the number doesn't have enough digits to fill the integer
-       * part, help it, and fill it with zeros.
-       */
-      if (exponent>0)
-      {
-         for (; exponent; exponent--)
-            *(out_ptr++) = '0' ;
-      }
-
-      /* Now has the time come for the decimal points, which is only
-       * to be written out if there actually are decimals, and if
-       * the size of the decimal part is non-zero. First find the
-       * number of decimals, and stuff it into the 'size' variable
-       */
-      if (after>(-1))
-         after = after ;
-      else
-         after = in_end - in_ptr ;
-
-      /* If there are decimals, write the decimal point
-       */
-      if (after>0)
-         *(out_ptr++) = '.' ;
-
-      /* Then write the leading zeros after the decimal point, but
-       * before the first digit in the number, if there are any
-       */
-      for (j=0; (j<after) && (exponent<0); exponent++, j++)
-         *(out_ptr++) = '0' ;
-
-      /* And then loop through the decimals, and write them out.
-       * Remember that size might be larger than the actual number
-       * of decimals available.
-       */
-      for (; (in_ptr<in_end) && (j<after); j++)
-         *(out_ptr++) = *(in_ptr++) ;
-
-      /* Then append the right number of zeros, to pad the number
-       * to the wanted length. Here k is the length of the number
-       */
-      for (; j<after; j++)
-         *(out_ptr++) = '0' ;
-   }
-
-   result = Str_makeTSD( out_ptr - out ) ;
-   memcpy( result->value, out, result->len=out_ptr-out ) ;
-   return result ;
+   r->used_digits = ccns;
 }
 
 streng *str_format(tsd_t *TSD, const streng *input, int Before,
@@ -1263,295 +937,403 @@ streng *str_format(tsd_t *TSD, const streng *input, int Before,
  */
 {
 #define Enlarge(Num,atleast) if (Num.size + (atleast) > Num.max) {            \
-                                char *new = MallocTSD(Num.size + (atleast) + 5); \
+                                char *newnum = (char *)MallocTSD(Num.size + (atleast) + 5); \
                                 Num.max = Num.size + (atleast) + 5;           \
-                                memcpy(new,Num.num,Num.size);                 \
+                                memcpy( newnum, Num.num, Num.size );                 \
                                 FreeTSD(Num.num);                             \
-                                Num.num = new;                                \
+                                Num.num = newnum;                                \
                              }
    char *buf;
    size_t bufsize;
    size_t bufpos;
    int ShowExp,Exponent,ExponentLen = 0,Afters,Sign,Point,OrigExpp,h;
    streng *retval;
-   char ExponentBuffer[80]; /* enough even on a 256-bit-machine for an int */
+   char Expart[80]; /* enough even on a 256-bit-machine for an int */
    mat_tsd_t *mt;
+   int StrictAnsi;
 
-   mt = TSD->mat_tsd;
+   mt = (mat_tsd_t *)TSD->mat_tsd;
 
-   if (mt->OldRegina)
-      return(str_format_orig(TSD, input, Before, After, Expp, Expt));
+   /*
+    * Convert the input to a number and check if it is a number at all.
+    */
+   if ( ( h = getdescr( TSD, input, &mt->fdescr ) ) != 0 )
+   {
+      if ( h == 9 )
+         exiterror( ERR_INCORRECT_CALL, h, "FORMAT", 1, mt->max_exponent_len, tmpstr_of( TSD, input ) );
+      else
+         exiterror( ERR_INCORRECT_CALL, h, "FORMAT", 1, tmpstr_of( TSD, input ) );
+   }
 
-   /* Convert the input to a number and check if it is a number at all. */
-   if (getdescr(TSD,input,&mt->fdescr))
-      exiterror(ERR_INCORRECT_CALL, 11, "FORMAT", 1, tmpstr_of(TSD, input));
+   StrictAnsi = get_options_flag( TSD->currlevel, EXT_STRICT_ANSI );
+   /*
+    * Round the number according to NUMERIC DIGITS. This is rule 9.2.1.
+    * It is mentioned at several places in 9.4.1 (FORMAT).
+    * FGC: This is bullshit if you want to have format() formatting numbers
+    *      with a higher precision than DIGITS. I've put it into STRICT mode.
+    *      Regina's normal mode allows any numbers to be formatted. The
+    *      default formatting rounds to DIGITS, though.
+    */
+   if (StrictAnsi)
+   {
+      str_round_lostdigits( TSD, &mt->fdescr, TSD->currlevel->currnumsize );
+   }
 
-   /* Round the number according to NUMERIC DIGITS */
-   str_round( &mt->fdescr, TSD->currlevel->currnumsize ) ;
+   /*
+    * We have done the "call CheckArgs" of the ANSI function.
+    */
 
-   /* We have done the "call CheckArgs" of the ANSI function. */
-
-   /* In the simplest case the first is the only argument. */
-   if ((Before == -1) && (After == -1) && (Expp == -1) && (Expt == -1))
-      return str_norm(TSD, &mt->fdescr, NULL);
+   /*
+    * In the simplest case the first is the only argument.
+    */
+   if ( ( Before == -1 ) && ( After == -1 ) && ( Expp == -1 ) && ( Expt == -1 ) )
+      return str_norm( TSD, &mt->fdescr, NULL );
 
    if (Expt == -1)
       Expt = TSD->currlevel->currnumsize;
 
-   /* The number is already set up but check twice that we don't have leading
-      zeros:
+   /*
+    * The number is already set up but check twice that we don't have leading
+    * zeros:
     */
-   /*str_strip(&mt->fdescr); FGC: FIX: commented off for testing purpose */
+   str_strip( &mt->fdescr );
 
-   /* Trailing zeros are confusing, too: */
-   while ((mt->fdescr.size > 1) && (mt->fdescr.num[mt->fdescr.size - 1] == '0'))
+   /*
+    * Trailing zeros are confusing, too:
+    */
+   while ( ( mt->fdescr.size > 1 )
+      && ( mt->fdescr.num[mt->fdescr.size - 1] == '0' ) )
       mt->fdescr.size--;
+
+   Sign = ( mt->fdescr.negative ) ? 1 : 0;
+
+   /*
+    * Now compute the Exponent str_norm would use to format the number.
+    * Don't keep care for ENGINEERING. Note that this equals to the result
+    * We can determine the value of ShowExp en passent. This shortens our
+    * approach to ANSI's algorithm significantly.
+    */
+   ShowExp = 0;
+   Exponent = 0;
+   if ( ( ( Expp != 0 ) &&
+          ( ( mt->fdescr.exp < -5 ) || ( mt->fdescr.exp > Expt ) ) ) ||
+        ( ( Expt == 0 ) && !StrictAnsi /* fixes bug 562668 */ ) )
+   {
+      ShowExp = 1;
+      Exponent = mt->fdescr.exp - 1;
+   }
+
    /* The number is normalized, now.
     * Usage of the variables:
     * mt->fdescr.num: Mantissa in the ANSI-standard and defined as usual, zeros
     *                 may be padded at the end but never at the start because:
-    * mt->fdescr.exp: true exponent for the mantissa.
+    * mt->fdescr.exp: true exponent for the mantissa. The point is just before
+    *                 the mantissa.
     * Exponent:       Used Exponent for the mantissa, e.g.:
     *                 mt->fdescr.num=1,mt->fdescr.exp=2 = 0.1E2 = 10E0
     *                 In this case Exponent may be 0 to reflect the exponent we
     *                 should display.
     * Point:          Defined in the standard but not used. It is obviously
-    *                 equal to (mt->fdescr.exp-Exponent)
+    *                 equal to (mt->fdescr.exp-Exponent) where Point must
+    *                 be inserted before.
     * examples with both mt->fdescr.num=Mantissa="101" and mt->fdescr.exp=-2:
     *    Exponent=0:  output may be "0.00101"
     *    Exponent=-3: output may be "1.01E-3"
     */
 
-   Exponent = mt->fdescr.exp;
-   Sign = (mt->fdescr.negative) ? 1 : 0;
-   /* Sign, Mantissa(mt->fdescr.num) and Exponent now reflect the Number.
-      Keep in mind that the Mantissa of a num_descr is always normalized to
-      a value smaller than 1. Thus, mt->fdescr(num=1,exp=1) means 0.1E1=1)
+   /*
+    * The fourth and fifth arguments allow for exponential notation.
+    *
+    * Decide whether exponential form to be used, setting ShowExp.
+    * (Done above).
+    *
+    * These tests have to be on the number before any rounding since
+    * decision on whether to have exponent affects what digits surround
+    * the decimal point.
+    *
+    * Sign, Mantissa(mt->fdescr.num) and Exponent now reflect the Number.
+    * Keep in mind that the Mantissa of a num_descr is always normalized to
+    * a value smaller than 1. Thus, mt->fdescr(num=1,exp=1) means 0.1E1=1)
+    *
+    * ShowExp now indicates whether to show an exponent.
     */
-
-   /* Decide whether exponential form to be used, setting ShowExp.
-      These tests have to be on the number before any rounding since
-      decision on whether to have exponent affects what digits surround
-      the decimal point.
-      Only after this decision can Before and After arguments be checked.
-    */
-   ShowExp = 0;
-   /* There is a test about maximum number of digits in the part before
-      the decimal point, if non-exponential is to be used.
-      eg 123.4E+3 becomes 1234E+2 by point removal, 123400 non-floating
-    */
-   if (Exponent > Expt)
-      ShowExp = 1;
-   /* Also a test on digits after the point.
-      If the Exponent is negative at this point in the calculation there
-      is a possibility that the non-exponential form would have too many
-      zeros after the decimal point.
-      For classic this test is:
-    */
-   if (mt->ClassicFormat)
+   if ( ShowExp )
    {
-      if ((-(Exponent - mt->fdescr.size) > 2*Expt) && (-Exponent >= 0))
-         ShowExp = 1;
-   }
-   else /* For modern it is: */
-   {
-      /* The non-exponential value needs to be at least a millionth. */
-      if (-Exponent >= 6)
-         ShowExp = 1;
-   }
-   /* An over-riding rule for exponential form: */
-   if (Expp == 0)
-      ShowExp = 0;
-
-   /* ShowExp now indicates whether to show an exponent. */
-   if (ShowExp)
-   {
-      /* Construct the exponential part of the result.
-         Exponent at this point in the calculation reflects an integer
-         mantissa.  It has to be changed to reflect a decimal point at
-         Point from the left. */
-      /* set the Point to 1 as required for 'SCIENTIFIC': */
-      Exponent--;
       h = Exponent % 3;
-      if ((TSD->currlevel->numform == NUM_FORM_ENG) && h)
+      if ( ( TSD->currlevel->numform == NUM_FORM_ENG ) && h )
       {
-         if (h < 0) /* integer division may return values < 0 */
+         /*
+          * Integer division may return values < 0
+          */
+         if ( h < 0 )
             h += 3;
-         Enlarge(mt->fdescr,h);
-         memset(mt->fdescr.num + mt->fdescr.size,'0',h);
-         mt->fdescr.size += h;
          Exponent -= h;
+         if ( StrictAnsi )
+         {
+            /*
+             * As a side effect, ANSI adds zeros automatically. This must be
+             * honoured if after isn't given.
+             */
+            Enlarge( mt->fdescr, h );
+            memset( mt->fdescr.num + mt->fdescr.size, '0', h );
+            mt->fdescr.size += h;
+         }
       }
-   }
-   else /* Force the exponent to zero for non-exponential format. */
-   {
-      if (Exponent > mt->fdescr.size)
-      {
-         Enlarge(mt->fdescr,Exponent - mt->fdescr.size);
-         memset(mt->fdescr.num + mt->fdescr.size,'0',Exponent - mt->fdescr.size);
-         mt->fdescr.size = Exponent; /* mt->fdescr.size += Exponent - mt->fdescr.size; */
-      }
-      /* else add zeros at the start of the Mantissa in the standard */
-      Exponent = 0;
-      /* Now Exponent is Zero and Mantissa with Point reflects Number */
    }
 
-   /* Deal with right of decimal point first since that can affect the
-      left. Ensure the requested number of digits there.
+   /*
+    * Deal with right of decimal point first since that can affect the
+    * left. Ensure the requested number of digits there.
+    * Afters = length(Mantissa) - Point, thus;
     */
-   Afters = mt->fdescr.size - (mt->fdescr.exp - Exponent);
-   assert(Afters >= 0);
-   if (After == -1)
+   Afters = mt->fdescr.size - ( mt->fdescr.exp - Exponent );
+   if ( After == -1 )
       After = Afters;  /* Note default. */
+
+   /*
+    * The following happens due to our excessive trimming of zeros.
+    */
+   if ( After < 0 )
+      After = 0;
+
    /* Make Afters match the requested After */
-   if (Afters < After)
+   if ( Afters < After )
    {
-      h = After - Afters;
-      Enlarge(mt->fdescr,h);
-      memset(mt->fdescr.num + mt->fdescr.size,'0',h);
-      mt->fdescr.size += h;
+      /*
+       * We have to add (After - Afters) zeros. This can be done more
+       * efficiently later.
+       */
    }
-   else if (Afters > After)
+   else if ( Afters > After )
    {
-      /* Round by adding 5 at the right place. */
-      h = mt->fdescr.exp - Exponent + After;
-      /* h == position of overflowed digit or < 0 if it doesn't exist */
-      if (h < 0) /* default it to zero, it's a special case of truncating */
+      /*
+       * Don't forget the most needed thing. We need it later to determine
+       * the number of zeros being added as 0.
+       */
+      Afters = After;
+
+      /*
+       * Round by adding 5 at the right place.
+       * Regina uses a different algorithm.
+       */
+
+      h = mt->fdescr.exp - Exponent + After; /* aka Point + After */
+
+      mt->fdescr.size = h;
+
+      if ( ( h < 0 ) || ( ( h == 0 ) && ( mt->fdescr.num[0] < '5' ) ) )
       {
-         mt->fdescr.size = 1;
-         mt->fdescr.num[0] = '0'; /* always enough space for one character */
-         Sign = 0;
-         mt->fdescr.exp = -After + 1; /* let the mantissa been filled up later */
-      }
-      else if (mt->fdescr.num[h] >= '5')
-      {
-         mt->fdescr.size = h;
-         /* Just in this case the value may change significantly! We leave
-          * the normal transcription of the standard here to do it faster
-          * and maybe better. Keep in mind some problems with rounding and
-          * the awful ENGINEERING format.
+         /*
+          * Round to zero. We may not have any usable characters in the
+          * mantissa, so create one.
           */
-         for (--h;h >= 0;h--)
+         mt->fdescr.num[0] = '0';
+         mt->fdescr.size = 1;
+         Sign = 0;
+      }
+      else if ( mt->fdescr.num[h] >= '5' )
+      {
+         for ( h--; h >= 0; h-- )
          {
-            if (++mt->fdescr.num[h] <= '9')
+            if ( ++mt->fdescr.num[h] <= '9' )
                break;
             mt->fdescr.num[h] = '0';
          }
-         if (h < 0) /* overflow! we have to add one in the front! */
+
+         /*
+          * We have a carry one in front if h < 0.
+          * In this case we have to re-adjust the Exponent which is pretty
+          * difficult in ENGINEERING notation.
+          */
+         if ( h < 0 )
          {
-            Enlarge(mt->fdescr,1);
-            memmove(mt->fdescr.num + 1,mt->fdescr.num,mt->fdescr.size);
+            Enlarge( mt->fdescr, 1 );
+            memmove( mt->fdescr.num + 1, mt->fdescr.num, mt->fdescr.size );
             mt->fdescr.size++;
             mt->fdescr.num[0] = '1';
             mt->fdescr.exp++;
-            if ( (mt->fdescr.exp - Exponent > Expt)
-            &&    Expp != 0 ) /* bug 20000727-84858 */
-               ShowExp = 1;
+
+            /* The hard part follows */
+            if ( mt->fdescr.exp - Exponent > Expt )
+            {
+               if ( StrictAnsi )
+               {
+                  ShowExp = 1;
+               }
+               else
+               {
+                  if ( Expp != 0 )
+                     ShowExp = 1;
+               }
+            }
             if (ShowExp)
             {
                Exponent = mt->fdescr.exp - 1;
                h = Exponent % 3;
-               if ((TSD->currlevel->numform == NUM_FORM_ENG) && h)
+               if ( ( TSD->currlevel->numform == NUM_FORM_ENG ) && h )
                {
-                  if (h < 0) /* integer division may return values < 0 */
+                  /*
+                   * Integer division may return values < 0
+                   */
+                  if ( h < 0 )
                      h += 3;
                   Exponent -= h;
                }
             }
          }
-         for (h = mt->fdescr.size - 1;h >= 0;h--)
-         {
-            if (mt->fdescr.num[h] != '0')
-               break;
-            else if (h == 0) /* completely zero */
-               Sign = 0;
-         }
-         /* The value itself is correct now but check the format: */
       }
-      else /* rounding by truncating */
+      else
       {
-         mt->fdescr.size = h;
-         for (--h;h >= 0;h--)
+         /*
+          * This can leave the result zero. The remaining zero-characters
+          * shall persist, but the sign may change.
+          */
+         for ( h--; h >= 0; h-- )
          {
-            if (mt->fdescr.num[h] != '0')
-               break;
-            else if (h == 0) /* completely zero */
-               Sign = 0;
+            if ( mt->fdescr.num[h] != '0' )
+               break ;
+         }
+         if ( h < 0 )
+         {
+            Sign = 0;
          }
       }
-   } /* Rounded */
-   /* That's all for now with the right part */
+   }
+   /*
+    * Rounded
+    * That's all for now with the right part
+    */
 
-   /* Now deal with the part of the result before the decimal point. */
-   Point = mt->fdescr.exp - Exponent; /* Point doesn't change never more */
+   /*
+    * Now deal with the part of the result before the decimal point.
+    * Point doesn't change never more.
+    */
+   Point = mt->fdescr.exp - Exponent;
    h = Point;
-   if (h <= 0) /* missing front of the number? */
-      h = 1; /* assume 1 char for "0" of "0.xxx" */
-   if (Before == -1)
-      Before = h + Sign; /* Note default. */
-   /* Make Point match Before */
-   if (h > Before - Sign)
-      exiterror(ERR_INCORRECT_CALL, 38, "FORMAT", 2, tmpstr_of(TSD, input));
 
-   /* We check the length of the exponent field, first. This allows to
+   /*
+    * missing front of the number?
+    * assume 1 char for "0" of "0.xxx"
+    */
+   if ( h <= 0 )
+      h = 1;
+   if ( Before == -1 )
+      Before = h + Sign;
+   /*
+    * Make Point match Before
+    */
+   if ( h > Before - Sign )
+   {
+      exiterror( ERR_INCORRECT_CALL, 38, "FORMAT", 2, tmpstr_of( TSD, input ) );
+   }
+   /*
+    * We don't fill up leading zeros as documented in the standard. Useless!
+    */
+
+   /*
+    * We check the length of the exponent field, first. This allows to
     * allocate a sufficient string for the complete number.
     */
    OrigExpp = Expp;
-   if (ShowExp)
+   if ( ShowExp )
    {
-      if ((h = Exponent) < 0)
-         h = -h;
-      sprintf(ExponentBuffer,"%d",h);
-      ExponentLen = strlen(ExponentBuffer);
-      if (Expp == -1)
+      /*
+       * Format the exponent.
+       */
+      sprintf( Expart, "%+d", Exponent );
+      ExponentLen = strlen( Expart ) - 1;
+      if ( Expp == -1 )
          Expp = ExponentLen;
-      if (ExponentLen > Expp)
-         exiterror(ERR_INCORRECT_CALL, 38, "FORMAT", 4, tmpstr_of(TSD, input));
+
+      if ( ExponentLen > Expp )
+      {
+         exiterror( ERR_INCORRECT_CALL, 38, "FORMAT", 4, tmpstr_of( TSD, input ) );
+      }
    }
    else
-      Expp = 0; /* don't format an exponent */
+   {
+      /*
+       * no exponent
+       */
+      Expp = 0;
+   }
 
    bufsize = Before + After + Expp + 4; /* Point, "E+", term. zero */
-   buf = MallocTSD(bufsize);
+   buf = (char *)MallocTSD(bufsize);
 
-   /* Now do the formatting, it's a little bit complicated, since the parts
+   /*
+    * Now do the formatting, it's a little bit complicated, since the parts
     * of the number may not exist (partially).
+    *
+    * Format the part before the point
     */
-   /* Format the part before the point */
-   if (Point <= 0) /* denormalized number */
+   if ( Point <= 0 )
    {
-      memset(buf,' ',Before - 1);
+      /*
+       * denormalized number
+       */
+      assert( Before >= 1 + Sign );
+      memset( buf, ' ', Before - 1 );
       buf[Before - 1] = '0';
-      if (Sign)
+      if ( Sign )
          buf[Before - 2] = '-';
    }
    else
    {
-      assert(Point <= mt->fdescr.size); /* before part should always fit */
-      memset(buf,' ',Before - Point);
-      memcpy(buf + Before - Point,mt->fdescr.num,Point);
-      if (Sign)
+      memset( buf, ' ', Before - Point );
+      if ( ( h = Point ) > mt->fdescr.size )
+         h = mt->fdescr.size;
+      memcpy( buf + Before - Point, mt->fdescr.num, h );
+      memset( buf + Before - Point + h, '0', Point - h );
+      if ( Sign )
          buf[Before - Point - 1] = '-';
    }
    bufpos = Before;
 
-   /* Process the part after the decimal point */
-   if (After > 0)
+   /*
+    * Process the part after the decimal point
+    */
+   if ( After > 0 )
    {
       buf[bufpos++] = '.';
       if (Point < 0)
-      { /* Denormalized mantissa, we must fill up with zeros */
+      {
+         /*
+          * Denormalized mantissa, we must fill up with zeros
+          */
          h = -Point;
-         if (h > After)
+         if ( h > After )
             h = After; /* beware of an overrun */
-         memset(buf + bufpos,'0',h);
-         assert(After - h <= mt->fdescr.size);
-         memcpy(buf + bufpos + h,mt->fdescr.num,After - h);
+         memset( buf + bufpos, '0', h );
+         if ( After - h <= mt->fdescr.size )
+         {
+            memcpy( buf + bufpos + h, mt->fdescr.num, After - h );
+         }
+         else
+         {
+            memcpy( buf + bufpos + h, mt->fdescr.num, mt->fdescr.size );
+            memset( buf + bufpos + h + mt->fdescr.size,
+                    '0',
+                    After - h - mt->fdescr.size );
+         }
       }
       else
       {
-         assert(Point + After <= mt->fdescr.size);
-         memcpy(buf + bufpos,mt->fdescr.num + Point,After);
+         if ( After + Point <= mt->fdescr.size )
+         {
+            memcpy( buf + bufpos, mt->fdescr.num + Point, After );
+         }
+         else
+         {
+            /*
+             * number of After characters in the mantissa?
+             */
+            if ( ( h = mt->fdescr.size - Point ) < 0 )
+               h = 0;
+
+            memcpy( buf + bufpos, mt->fdescr.num + Point, h );
+            memset( buf + bufpos + h, '0', After - h );
+         }
       }
       bufpos += After;
    }
@@ -1559,347 +1341,294 @@ streng *str_format(tsd_t *TSD, const streng *input, int Before,
    /* Finally process the exponent. ExponentBuffer contents the exponent
     * without the sign.
     */
-   if (ShowExp)
+   if ( ShowExp )
    {
-      if (Exponent == 0)
+      if ( Exponent == 0 )
       {
-         if (OrigExpp != -1)
+         if ( OrigExpp != -1 )
          {
-            memset(buf + bufpos,' ',Expp + 2);
+            memset( buf + bufpos, ' ', Expp + 2 );
             bufpos += Expp + 2;
          }
       }
       else
       {
          buf[bufpos++] = 'E';
-         buf[bufpos++] = (char) ((Exponent < 0) ? '-' : '+');
-         memset(buf + bufpos,'0',Expp - ExponentLen);
-         memcpy(buf + bufpos + Expp - ExponentLen,ExponentBuffer,ExponentLen);
+         buf[bufpos++] = Expart[0];
+         memset( buf + bufpos, '0', Expp - ExponentLen );
+         memcpy( buf + bufpos + Expp - ExponentLen, Expart + 1, ExponentLen );
          bufpos += Expp;
       }
    }
 
-   assert(bufpos < bufsize);
+   assert( bufpos < bufsize );
    buf[bufpos] = '\0';
 
-   retval = Str_creTSD(buf);
-   FreeTSD(buf);
+   retval = Str_creTSD( buf );
+   FreeTSD( buf );
    return retval;
 #undef Enlarge
 }
 
-
-#define OPTIMIZE
-#ifdef OPTIMIZE
-
-
-streng *str_norm( const tsd_t *TSD, num_descr *in, streng *try )
+/*
+ * str_norm does the "PostOp" operation of the ANSI standard. It throws
+ * away leading zeros and does some rounding with DIGITS of the time the
+ * number was generated. try (if non-NULL) is used to print the number and is
+ * returned. Never use try again after the call with the exception of
+ * "x = str_norm(?,?,x)".
+ *
+ * The return value is the printable number.
+ *
+ * The value "in" may be rounded and reformatted.
+ */
+streng *str_norm( const tsd_t *TSD, num_descr *in, streng *trystr )
 {
-   streng *result=NULL ;
-   char frst=0 ;
-   int i=0, j=0, k=0, p=0 ;
-   int sdigs=0, top=0 ;
-   int size=0, exp=0 ;
+   streng *result;
+   int i;
+   int size,exp,ccns,Point;
    mat_tsd_t *mt;
 
-   mt = TSD->mat_tsd;
+   mt = (mat_tsd_t *)TSD->mat_tsd;
 
-   IS_AT_LEAST( mt->norm_out, mt->norm_outsize, 3*TSD->currlevel->currnumsize+5 ) ;
+   ccns = in->used_digits;
+   /*
+    * We use ccns for the allocation of the string's content. Chop this value
+    * is case of number which doesn't need billions of digits.
+    */
+   if ( ( exp = in->exp ) < 0 )
+      exp = -exp;
+   if ( ccns > in->size + exp + 10 )
+      ccns = in->size + exp + 10 ;
+   /*
+    * The longest number produced from a num_descr is (with DIGITS=i)
+    * -1.2...iE-MAX_EXPONENT
+    * and its length is DIGITS + length(MAX_EXPONENT) + strlen(-.E-\0)
+    */
+   IS_AT_LEAST( mt->norm_out, mt->norm_outsize, ccns + mt->max_exponent_len + 6 );
 #ifdef TRACEMEM
-   mt->outptr2 = mt->norm_out ;
+   mt->outptr2 = mt->norm_out;
 #endif
 
-   if (in->negative)
-      mt->norm_out[k++] = '-' ;
-
-   /* remove effect of leading zeros in the descriptor */
-   for ( i=0; i<in->size ; i++)
+   /*
+    * remove effect of leading zeros in the descriptor
+    */
+   for ( i = 0; i < in->size; i++ )
    {
-      if ( in->num[i]!='0' )
-         break ;
+      if ( in->num[i] != '0' )
+         break;
+   }
+   if ( i )
+   {
+      memmove( in->num, in->num + i, in->size - i );
+      in->exp -= i;
+      in->size -= i;
    }
 
-   exp = in->exp ;
-   if (i==in->size) /* mantissa contains zeros only */
+   /*
+    * We may have a number without mantissa. Even a rounding with DIGITS==1
+    * will always produce a non-zero number. We can therefore do the test
+    * before every other and return "0" in case of a mantissa with zeros.
+    */
+   if ( in->size == 0 )
    {
-      in->size = in->exp = 1 ;
-      in->negative = 0 ;
-      in->num[0] = '0' ;
-      if (try)
+      in->size = 1;
+      in->exp = 1;
+      in->negative = 0;
+      in->num[0] = '0';
+      if ( trystr )
+      {
+         if ( trystr->max )
+         {
+            trystr->value[0] = '0';
+            trystr->len = 1;
+         }
+         else
+         {
+            Free_stringTSD( trystr );
+            trystr = Str_creTSD( "0" );
+         }
+      }
+      else
+         trystr = Str_creTSD( "0" );
+
+      return trystr;
+   }
+
+   /*
+    * Do the rounding needed for DIGITS. It may be to late here for doing this.
+    * The user may have changed DIGITS between the operation and this function.
+    */
+
+   i = ccns;
+   if ( in->size > i )
+   {
+      in->size = i;
+      if ( in->num[i] >= '5' )
+      {
+         for ( i--; i >= 0; i-- )
+         {
+            if ( ++in->num[i] <= '9' )
+            {
+               break;
+            }
+            in->num[i] = '0';
+         }
+         if ( i < 0 )
+         {
+            /*
+             * "Carry"
+             */
+            memmove( in->num + 1, in->num, in->size - 1 );
+            in->num[0] = '1';
+            in->exp++;
+         }
+      }
+      /*
+       * This may have produced leading zeros.
+       */
+   }
+
+   /*
+    * Truncation of trailing zeros must be done by the operations themself.
+    * We are not allowed to cut them away, even after a decimal point.
+    */
+
+   exp = in->exp - 1;
+
+   /*
+    * Compute the exponent used to display. exp==0 -> don't show an exponent.
+    * Respect the ENGINEERING format.
+    */
+   if ( ( exp < -6 ) || ( exp >= ccns ) )
+   {
+      i = exp % 3;
+      if ( ( TSD->currlevel->numform == NUM_FORM_ENG ) && i )
       {
          /*
-          * Replace assert() with real code - MDW 30012002
-         assert( try->max > 0 ) ;
-         try->value[0] = '0' ;
-         try->len = 1 ;
-         */
-         if (try->max)
-         {
-            try->value[0] = '0' ;
-            try->len = 1 ;
-         }
-         else
-         {
-            Free_stringTSD( try ) ;
-            try = Str_creTSD( "0" ) ;
-         }
+          * Integer division may return values < 0.
+          */
+         if ( i < 0 )
+            i += 3;
+         exp -= i;
       }
-      else
-         try = Str_creTSD( "0" ) ;
-      return try ;
+      if ( ( MAX_EXPONENT < exp ) || ( -MAX_EXPONENT > exp ) )
+      {
+         exiterror( ERR_ARITH_OVERFLOW, 0 )  ;
+         return NULL ;
+      }
    }
    else
-     size = in->size ;
-
-   if ((MAX_EXPONENT+1<exp) || ((-MAX_EXPONENT-1)>exp)) /* too late here! FGC */
    {
-      exiterror( ERR_ARITH_OVERFLOW, 0 )  ;
-      return NULL ;
+      exp = 0;
    }
 
-   exp -= top = i ;               /* adjust the exponent */
-
-   /* Again, it is too late for an adjustment to digits() here. The user may
-    * have changed digits() in between. The rounding should have taken place
-    * after the math operation (which happens) and that's all.
-    * Benefit: We don't have to round and therefore can't change the
-    * exponent by rounding. FGC
+   /*
+    * Point points to the first char in the mantissa which is right of the
+    * decimal point.
     */
-   sdigs = MIN( size-i, TSD->currlevel->currnumsize ) ;  /* significant digits in answer */
+   Point = in->exp - exp;
 
-   if ((exp <= -6) || ( exp > TSD->currlevel->currnumsize )) /* ANSI */
+   size = 0;
+   if ( in->negative )
+      mt->norm_out[size++] = '-';
+
+   /*
+    * Process the part BEFORE the point.
+    */
+   if ( Point <= 0 )
    {
-      /* Too late for rounding, must be fixed! FGC */
-      if ((size-i > TSD->currlevel->currnumsize) && (in->num[TSD->currlevel->currnumsize+i] > '4'))
-      {
-         for (j=TSD->currlevel->currnumsize+i-1; j>=i; j--)
-         {
-            if (((in->num[j])++)=='9')
-               in->num[j] = '0' ;
-            else
-               break ;
-         }
-         if (j<i)
-         {
-            in->num[i] = '1' ;
-            exp++ ;
-         }
-      }
-
-      frst = mt->norm_out[k++] = (char) (( i<size ) ? in->num[i++] : '0') ;
-      if (i<size && (1<=TSD->currlevel->currnumsize-(frst!='0')))
-         mt->norm_out[k++] = '.' ;
-
-      for (j=1; (i<size) && (j<=TSD->currlevel->currnumsize-(frst!='0')); j++ )
-         mt->norm_out[k++] = in->num[i++] ;
-
-      /* avrunding */
-      j = exp - 1 ;
-      mt->norm_out[k++] = 'E' ;
-      sprintf( &mt->norm_out[k], "%+d", j ) ;
-
-      return Str_creTSD( mt->norm_out ) ;
+      /*
+       * Something like "0.1". We have to provide an integer part.
+       */
+      mt->norm_out[size++] = '0';
    }
-
-   if (exp <= 0)
+   else if ( Point <= in->size )
    {
-      mt->norm_out[k++] = '0' ;
-      if (exp<0)
-      {
-         mt->norm_out[k++] = '.' ;
-         for ( j=0; j>exp; j-- )
-            mt->norm_out[k++] = '0' ;
-      }
-   }
-
-   top = MIN( sdigs, TSD->currlevel->currnumsize ) + i ;
-   if ((size-i > TSD->currlevel->currnumsize) && (in->num[TSD->currlevel->currnumsize+i] > '4'))
-   {
-      /* Too late for rounding, must be fixed! FGC */
-      for (j=TSD->currlevel->currnumsize+i-1; j>=i; j--)
-      {
-         if (((in->num[j])++)=='9')
-            in->num[j] = '0' ;
-         else
-            break ;
-      }
-      if (j<i)
-      {
-         top-- ;
-         p += mt->norm_out[k++] = '1' ;
-      }
-   }
-
-   j = exp ;
-   for (; i<top; i++ )
-   {
-      if (j--==0)
-         mt->norm_out[k++] = '.' ;
-
-      p += (mt->norm_out[k++] = in->num[i]) - '0' ;
-   }
-   while (j-- > 0)             /* Fill possibly lost zeros */
-      mt->norm_out[k++] = '0';
-
-   if (p==0)
-      mt->norm_out[(k=1)-1] = '0' ;
-
-   if (try)
-   {
-      if (try->max>=k)
-          result = try ;
-      else
-      {
-          result = Str_makeTSD( k ) ;
-          Free_stringTSD( try ) ;
-      }
+      /*
+       * Integer part exists and lays in the matissa completely.
+       */
+      memcpy( mt->norm_out + size, in->num, Point );
+      size += Point;
    }
    else
-      result = Str_makeTSD( k ) ;
+   {
+      /*
+       * Integer part exists but is partially represented only, something
+       * like "1e3" without trailing zeros.
+       */
+      memcpy( mt->norm_out + size, in->num, in->size );
+      size += in->size;
+      memset( mt->norm_out + size, '0', Point - in->size );
+      size += Point - in->size;
+   }
 
-   memcpy( result->value, mt->norm_out, result->len=k ) ;
+   /*
+    * Process the part AFTER the point.
+    */
+   if ( Point < in->size )
+   {
+      /*
+       * We have to show something as a fractional part.
+       */
+      mt->norm_out[size++] = '.';
+
+      if ( Point < 0 )
+      {
+         /*
+          * Something like 1E-3, leading zeros are missing.
+          */
+         memset( mt->norm_out + size, '0', -Point );
+         size += -Point;
+         memcpy( mt->norm_out + size, in->num, in->size );
+         size += in->size;
+      }
+      else
+      {
+         /*
+          * Something of the fractional part is there as induced by the
+          * outer "if".
+          */
+         memcpy( mt->norm_out + size, in->num + Point, in->size - Point );
+         size += in->size - Point;
+      }
+   }
+
+   /*
+    * We can add the exponent and that's it.
+    */
+   if ( exp != 0 )
+   {
+      size += sprintf( mt->norm_out + size, "E%+d", exp );
+      /*
+       * implicitely adds a \0 at the end.
+       */
+   }
+   assert( size + 1 <= mt->norm_outsize );
+
+   if ( trystr )
+   {
+      if ( trystr->max < size )
+      {
+          Free_stringTSD( trystr );
+          trystr = NULL;
+      }
+   }
+   if ( trystr )
+      result = trystr;
+   else
+      result = Str_makeTSD( size );
+   result->len = size;
+   memcpy( result->value, mt->norm_out, size );
+
    return result ;
 }
 
-#else
-
-
-streng *str_norm( const tsd_t *TSD, num_descr *in, streng *try )
-{
-   streng *result=NULL ;
-   char frst=0 ;
-   int i=0, j=0, k=0, p=0 ;
-   int sdigs=0, top=0 ;
-   int exp=0, size=0, neg=0 ;
-   mat_tsd_t *mt;
-
-   mt = TSD->mat_tsd;
-
-   IS_AT_LEAST( mt->norm_out, mt->norm_outsize, 3*TSD->currlevel->currnumsize+5 ) ;
-#ifdef TRACEMEM
-   mt->outptr2 = mt->norm_out ;
-#endif
-
-   if (in->negative)
-      mt->norm_out[k++] = '-' ;
-
-   /* remove effect of leading zeros in the descriptor */
-   for ( i=0; i<in->size ; i++)
-   {
-      if ( in->num[i]!='0' )
-         break ;
-   }
-   exp = in->exp ;
-   size = in->size ;
-   neg = in->negative ;
-   if (i==size)
-     size = exp = neg = 0 ;
-
-   if ((MAX_EXPONENT+1<exp) || ((-MAX_EXPONENT)-1>exp))
-       exiterror( ERR_ARITH_OVERFLOW, 0 )  ;
-
-   exp -= top = i ;               /* adjust the exponent */
-   sdigs = MIN(size-i,TSD->currlevel->currnumsize); /* significant digits in answer */
-
-   if (( sdigs - exp > 2*TSD->currlevel->currnumsize ) || ( sdigs < exp ))
-   {
-
-      if ((size-i > TSD->currlevel->currnumsize) && (in->num[TSD->currlevel->currnumsize+i] > '4'))
-      {
-         for (j=TSD->currlevel->currnumsize+i-1; j>=i; j--)
-         {
-            if (((in->num[j])++)=='9')
-               in->num[j] = '0' ;
-            else
-               break ;
-         }
-         if (j<i)
-         {
-            in->num[i] = '1' ;
-            exp++ ;
-         }
-      }
-
-
-      frst = mt->norm_out[k++] = ( i<size ) ? in->num[i++] : '0' ;
-      if (i<size)
-         mt->norm_out[k++] = '.' ;
-
-      for (j=1; (i<size) && (j<=TSD->currlevel->currnumsize-(frst!='0')); j++ )
-         mt->norm_out[k++] = in->num[i++] ;
-
-      /* avrunding */
-      j = exp - 1 ;
-      mt->norm_out[k++] = 'E' ;
-      sprintf( &mt->norm_out[k], "%+d", j ) ;
-
-      return Str_creTSD( mt->norm_out ) ;
-   }
-
-   if (exp <= 0)
-   {
-      mt->norm_out[k++] = '0' ;
-      if (exp<0)
-      {
-         mt->norm_out[k++] = '.' ;
-         for ( j=0; j>exp; j-- )
-            mt->norm_out[k++] = '0' ;
-      }
-   }
-
-   top = MIN( sdigs, TSD->currlevel->currnumsize ) + i ;
-   if ((size-i > TSD->currlevel->currnumsize) && (in->num[TSD->currlevel->currnumsize+i] > '4'))
-   {
-      for (j=TSD->currlevel->currnumsize+i-1; j>=i; j--)
-      {
-         if (((in->num[j])++)=='9')
-            in->num[j] = '0' ;
-         else
-            break ;
-      }
-      if (j<i)
-      {
-         top-- ;
-         p += mt->norm_out[k++] = '1' ;
-      }
-   }
-
-   j = exp ;
-   for (; i<top; i++ )
-   {
-      if (j--==0)
-         mt->norm_out[k++] = '.' ;
-
-      p += (mt->norm_out[k++] = in->num[i]) - '0' ;
-   }
-   if (p==0)
-      mt->norm_out[(k=1)-1] = '0' ;
-
-   if (try)
-   {
-      if (try->max>=k)
-          result = try ;
-      else
-      {
-          result = Str_makeTSD( k ) ;
-          Free_stringTSD( try ) ;
-      }
-   }
-   else
-      result = Str_makeTSD( k ) ;
-
-   memcpy( result->value, mt->norm_out, result->len=k ) ;
-   return result ;
-}
-
-
-#endif
-
-
-int string_test( const tsd_t *TSD, const num_descr *first, const num_descr *second )
+int string_test( const tsd_t *TSD, const num_descr *first,
+                 const num_descr *second )
 {
    int i=0, top=0, fnul=0, snul=0 ;
    char fchar=' ', schar=' ' ;
+   int ccns = TSD->currlevel->currnumsize;
 
    if ( first->negative != second->negative )  /* have different signs */
       return ( first->negative ? -1 : 1 ) ;
@@ -1916,8 +1645,8 @@ int string_test( const tsd_t *TSD, const num_descr *first, const num_descr *seco
    if ( first->exp != second->exp ) /* have different order */
       return (log_xor( first->negative, first->exp>second->exp ) ? 1 : -1 ) ;
 
-   /* same order and sign, have to compare TSD->currlevel->currnumsize-TSD->currlevel->numfuzz first */
-   top = MIN( TSD->currlevel->currnumsize-TSD->currlevel->numfuzz, MAX( first->size, second->size )) ;
+   /* same order and sign, have to compare ccns - TSD->currlevel->numfuzz first */
+   top = MIN( ccns - TSD->currlevel->numfuzz, MAX( first->size, second->size )) ;
    for ( i=0; i<top; i++ )
    {
       fchar = (char) ((first->size > i) ? first->num[i] : '0') ;
@@ -1938,24 +1667,31 @@ int string_test( const tsd_t *TSD, const num_descr *first, const num_descr *seco
 
 
 
-num_descr *string_incr( const tsd_t *TSD, num_descr *input )
+num_descr *string_incr( tsd_t *TSD, num_descr *input, cnodeptr node )
 {
-   int last=0 ;
+   int last,ccns=TSD->currlevel->currnumsize;
    char *cptr=NULL ;
 
    assert( input->size > 0 ) ;
 
-   if (input->size != input->exp || input->exp >= TSD->currlevel->currnumsize)
+   if (input->size != input->exp || input->exp >= ccns)
    {
-      static const num_descr one = { "1", 0, 1, 1, 1 } ;
+      static const num_descr one = { "1", 0, 1, 1, 1, -1 } ;
 
-      string_add( TSD, input, &one, input ) ;
-      str_round(input,TSD->currlevel->currnumsize) ;
+      string_add( TSD, input, (num_descr *) &one, input, node, NULL ) ;
+      str_round(input,ccns) ;
       return input ;
    }
 
    cptr = input->num ;
-   last = input->size-1 ;
+   last = input->size;
+
+
+   LOSTDIGITS_CHECK( input, ccns, node );
+   /*
+    * No LOSTDIGITS check for "1". If this fails, everything fails...
+    */
+   last--;
 
    for (;;)
    {
@@ -1964,6 +1700,7 @@ num_descr *string_incr( const tsd_t *TSD, num_descr *input )
          if (cptr[last] > '1')
          {
             cptr[last]-- ;
+            input->used_digits = ccns;
             return input ;
          }
          else if (cptr[last]=='1')
@@ -1971,6 +1708,7 @@ num_descr *string_incr( const tsd_t *TSD, num_descr *input )
             cptr[last]-- ;
             if (last==0)
                str_strip( input ) ;
+            input->used_digits = ccns;
             return input ;
          }
          else
@@ -1985,6 +1723,7 @@ num_descr *string_incr( const tsd_t *TSD, num_descr *input )
          if (cptr[last] < '9')
          {
             cptr[last]++ ;
+            input->used_digits = ccns;
             return input ;
          }
          else
@@ -1998,17 +1737,17 @@ num_descr *string_incr( const tsd_t *TSD, num_descr *input )
       {
          if (input->size >= input->max)
          {
-            char *new ;
+            char *newnum ;
 
             assert( input->size == input->max ) ;
-            new = MallocTSD( input->max * 2 + 2 ) ;
-            memcpy( new+1, input->num, input->size ) ;
-            new[0] = '0' ;
+            newnum = (char *)MallocTSD( input->max * 2 + 2 ) ;
+            memcpy( newnum+1, input->num, input->size ) ;
+            newnum[0] = '0' ;
             input->size++ ;
             input->exp++ ;
             input->max = input->max*2 + 2 ;
             FreeTSD( input->num ) ;
-            cptr = input->num = new ;
+            cptr = input->num = newnum ;
          }
          else
          {
@@ -2023,172 +1762,410 @@ num_descr *string_incr( const tsd_t *TSD, num_descr *input )
 }
 
 
-
-void string_div( const tsd_t *TSD, const num_descr *f, const num_descr *s, num_descr *r, num_descr *r2, int type )
+/*
+ * tests for an ANSI compatible whole number. Look at myiswnumber()
+ * for a description.
+ */
+static int test_whole( const tsd_t *TSD, const num_descr *input,
+                       int noDigitsLimit )
 {
-   int ssize=0, tstart=0, tcnt=0, finished=0, tend=0 ;
-   int i=0, cont=0, outp=0, test=0, loan=0 ;
-   int origneg=0, origexp=0 ;
-   mat_tsd_t *mt;
+   int i;
 
-   mt = TSD->mat_tsd;
-
-   IS_AT_LEAST( mt->div_out, mt->div_outsize, (TSD->currlevel->currnumsize+1)*2+1 ) ;
-   IS_AT_LEAST( r->num, r->max, TSD->currlevel->currnumsize+1 ) ;
-#ifdef TRACEMEM
-   mt->outptr3 = mt->div_out ;
-#endif
-
-   ssize = MIN( s->size, TSD->currlevel->currnumsize+1 ) ;
-   r->exp = 1 + f->exp - s->exp ;
-   r->negative = log_xor( f->negative, s->negative ) ;
-
-   /* initialize the pointers */
-   tstart = 0 ;
-   tend = tstart + MIN( f->size, TSD->currlevel->currnumsize+1 ) ;
-
-   /* first, fill out tmp to the size of ssize */
-   for (tcnt=tstart; tcnt< ssize; tcnt++ )
-      mt->div_out[tcnt] = (char) ((tcnt<tend) ? f->num[tcnt] : '0') ;
-
-   /* if the ssize first digits in f->num form a number which is smaller */
-   /* than s->num, we must add an additional digit to f->num */
-
-   for (i=0; i<ssize; i++)
+   if ( input->size > input->exp )
    {
-      if ( mt->div_out[i] > s->num[i] )
-         break ;
-      else if ( mt->div_out[i] < s->num[i] )
+      /*
+       * Check for non-zeros in the fractional part of the number.
+       */
+      i = MAX( 0, input->exp );
+      for ( ; i < input->size; i++ )
       {
-         mt->div_out[tcnt] = (char) ((tcnt<tend) ? f->num[tcnt] : '0') ;
-         tcnt++ ;
-         r->exp-- ;
-         break ;
+         if ( input->num[i] != '0' )
+            return 0;
       }
    }
 
-   /* situation: s->num[1..ssize] contains the devisor, and the array   */
-   /* div_out[tstart==0..tcnt-1] hold the (first part of the) devidend. The */
-   /* array f->num[tcnt..tend-1] (which may be empty) holds the last    */
-   /* part of the devidend                                              */
-
-   /* then foreach resulting digit we want */
-   for (outp=0; outp<TSD->currlevel->currnumsize+1 && !finished; outp++)
+   if ( !noDigitsLimit )
    {
-      r->num[outp] = '0' ;
-      if ((tcnt-tstart > ssize) && (mt->div_out[tstart]=='0'))
-         tstart++ ;
+      for (i = 0; i < input->size; i++)
+      {
+         if (input->num[i] != '0')
+            break;
+      }
+      if (i < input->size)
+      {
+         /* not a 0 */
+         if (input->exp - i > TSD->currlevel->currnumsize)
+            return 0;
+      }
+   }
+   return 1;
+}
 
-      /* if this is integer division, and we have hit the decimal point... */
-      if ((type!=DIVTYPE_NORMAL) && (outp>=r->exp))
+
+/*
+ * Division in the typical manner we learn in school hopefully.
+ *
+ * type is DIVTYPE_NORMAL for floating point division, DIVTYPE_INTEGER for
+ * division without remainer, DIVTYPE_REMAINER if the remainer is interested in
+ * and DIVTYPE_BOTH if both the integer part and the remainer shall be
+ * returned.
+ *
+ * We compute f/s with a NUMERIC DIGITS value of ccns.
+ *
+ * The return value is put into *r, *r2 holds the remainer if DIVTYPE_BOTH
+ * is set.
+ *
+ * We throw an error on non-floating point division if the COMPLETE integer
+ * part of the division can't be represented without rounding.
+ */
+static void string_div2( tsd_t *TSD, const num_descr *f, const num_descr *s,
+                         num_descr *r, num_descr *r2, int type, int ccns )
+{
+   int ssize,tstart,tcnt,finished=0,tend;
+   int i,cont,outp,test,loan;
+   int origneg,origexp;
+   mat_tsd_t *mt;
+
+   mt = (mat_tsd_t *)TSD->mat_tsd;
+
+   IS_AT_LEAST( mt->div_out, mt->div_outsize, (ccns+1) * 2 + 1 );
+   IS_AT_LEAST( r->num, r->max, ccns+1 );
+#ifdef TRACEMEM
+   mt->outptr3 = mt->div_out;
+#endif
+
+   /*
+    * We don't want to strip leading zeros here!
+    */
+   assert( ( ( f->size > 1 ) && ( f->num[0] != '0' ) ) || ( f->size == 1 ) );
+   assert( ( s->size != 0 ) && ( s->num[0] != '0' ) );
+
+   /*
+    * ssize is the count of the used digits from s's mantissa.
+    */
+   ssize = MIN( s->size, ccns+1 );
+
+   /*
+    * Compute the trivial parts of the result.
+    * Imagine xxxxx : yy = zzzz, probably with zeros.
+    */
+   r->exp = 1 + f->exp - s->exp;
+   r->negative = log_xor( f->negative, s->negative );
+
+   /*
+    * Initialize the pointers.
+    * tstart, tend, tcnt
+    */
+   tstart = 0;
+   tend = tstart + MIN( f->size, ccns+1 );
+
+   /*
+    * First, fill div_out with f as the residual. Fill up with zeros.
+    */
+   for ( tcnt = tstart; tcnt < ssize; tcnt++ )
+      mt->div_out[tcnt] = (char) ( ( tcnt < tend ) ? f->num[tcnt] : '0' );
+
+   /*
+    * Imagine xxxxx : yy again. If the first length(yy) digits of xxxxx
+    * are smaller than yy, we have to set the first digit of z to 0. For
+    * entering the main algorithm, we do the step here decrementing the
+    * result's exponent, which if mathematically the same.
+    * e.g. 12345 : 23 = 0zzz
+    */
+
+   for ( i = 0; i < ssize; i++ )
+   {
+      if ( mt->div_out[i] > s->num[i] )
+         break;
+      else if ( mt->div_out[i] < s->num[i] )
+      {
+         /*
+          * Fetch next digit of f for the next iteration, remember the school.
+          */
+         mt->div_out[tcnt] = (char) ( ( tcnt < tend) ? f->num[tcnt] : '0' );
+         tcnt++;
+         r->exp--;
+         break;
+      }
+   }
+
+   /*
+    * Situation: s->num[0..ssize-1] contains the divisor, and the array
+    * div_out[tstart==0..tcnt-1] hold the (first part of the) dividend. The
+    * array f->num[tcnt..tend-1] (which may be empty) holds the last
+    * part of the dividend.
+    *
+    * We compute (the first part of) div_out : s
+    *
+    * Iterate through each digit of div_out, fetching the next digit from
+    * f if available.
+    */
+   for ( outp = 0; outp < ccns+1 && !finished; outp++ )
+   {
+      /*
+       * Assume 0 as the result for the next digit. We may increment it below
+       * some times.
+       */
+      r->num[outp] = '0';
+      if ( ( tcnt - tstart > ssize ) && ( mt->div_out[tstart] == '0' ) )
+         tstart++;
+
+      /*
+       * Stop the iteration if this is integer division, and we have hit the
+       * decimal point.
+       */
+      if ( ( type != DIVTYPE_NORMAL ) && ( outp >= r->exp ) )
       {
          finished = 1 ;
          continue ;
       }
 
-      /* try to subtract as many times as possible */
-      for (cont=1; cont; )
+      /*
+       * Try to subtract as many times as possible, that is, compute the
+       * next digit of the result. Our example in the second step:
+       * 12 345  : 23 = 0 zzz (before iteration)
+       * 123 45  : 23 = 05 zz (first iteration)
+       * 00 84 5 : 23 = 053 z (84 contains 3 times 23)
+       */
+      for ( cont = 1; cont; )
       {
-         /* can we subtract one more time? */
-         if (tcnt-tstart == ssize)
-            for (i=0; i<ssize; i++ )
-            {
-               test = mt->div_out[tstart+i] - s->num[i] ;
-               if (test<0)
-                  cont = 0 ;
-               if (test!=0)
-                  break ;
-            }
-
-         /* if we can continue, subtract it */
-         loan = 0 ;
-         if (cont)
+         /*
+          * If the current operation works on equal sized numbers (e.g.
+          * second iteration), we have to compare if we can do the next
+          * subtraction. This isn't necessary if (tcnt-tstart) > ssize, which
+          * means the partial dividend (123 in first iteration) is longer
+          * than the divisor (23, only two chars). xx always is smaller than
+          * yyy if they don't start with 0.
+          */
+         if ( tcnt - tstart == ssize )
          {
-            r->num[outp]++ ;
-            for (i=0; i<ssize; i++)
+            for ( i = 0; i < ssize; i++ )
             {
-               /* When do M$ ever build usable compilers, sigh: */
-               char h = (char) ( s->num[ssize-1-i] - '0' + loan ) ;
-               mt->div_out[tcnt-1-i] = (char) (mt->div_out[tcnt-1-i] - h);
-               if ((loan = (mt->div_out[tcnt-1-i] < '0'))!=0)
-                  mt->div_out[tcnt-1-i] += 10 ;
+               test = mt->div_out[tstart + i] - s->num[i];
+               if ( test < 0 )
+                  cont = 0;
+               if ( test != 0 )
+                  break;
             }
-            if (loan)
+         }
+
+         /*
+          * If we can continue, subtract it.
+          */
+         loan = 0;
+         if ( cont )
+         {
+            r->num[outp]++;
+            for ( i = 0; i < ssize; i++ )
             {
-               /* decrement it and check for '0' */
-               mt->div_out[tstart] -= 1 ;
-               if ((tcnt-tstart > ssize) && (mt->div_out[tstart]=='0'))
-                  tstart++ ;
+               char h = (char) ( s->num[ssize-1-i] - '0' + loan );
+               mt->div_out[tcnt-1-i] = (char) ( mt->div_out[tcnt-1-i] - h );
+               if ( ( loan = (mt->div_out[tcnt-1-i] < '0' ) ) != 0 )
+                  mt->div_out[tcnt-1-i] += 10;
+            }
+            if ( loan )
+            {
+               /*
+                * decrement it and check for '0'
+                */
+               mt->div_out[tstart] -= 1;
+               if ( ( tcnt - tstart > ssize ) &&
+                                               ( mt->div_out[tstart] == '0' ) )
+                  tstart++;
             }
 
          }
       } /* for each possible subtraction */
 
-      if ((tcnt-tstart > ssize) && (mt->div_out[tstart]=='0'))
-         tstart++ ;
+      if ( ( tcnt - tstart > ssize ) && ( mt->div_out[tstart] == '0' ) )
+         tstart++;
 
-      /* do we have anything left of the devidend, only meaningful if   */
-      /* all digits in original divident have been processed, it is     */
-      /* also safe to assume that divident and devisor have equal size  */
+      /*
+       * Do we have anything left of the dividend? This is only meaningful if
+       * all digits in the original divident have been processed, it is
+       * also safe to assume that divident and divisor have equal sizes.
+       */
 
-      assert( tcnt-tstart == ssize ) ;
-      mt->div_out[tcnt] = (char) ((tcnt<tend) ? f->num[tcnt] : '0') ;
-      if (++tcnt > tend)
+      assert( tcnt-tstart == ssize );
+      mt->div_out[tcnt] = (char) ( ( tcnt < tend ) ? f->num[tcnt] : '0' );
+      if ( ++tcnt > tend )
       {
-         finished = 1 ;
-         for (i=tstart; i<tcnt; i++)
+         finished = 1;
+         for ( i = tstart; i < tcnt; i++ )
          {
-            if (mt->div_out[i]!='0')
+            if ( mt->div_out[i] != '0' )
             {
-               finished = 0 ;
-               break ;
+               finished = 0;
+               break;
             }
          }
       }
 
    } /* for each digit wanted in the result */
 
-   origexp = f->exp ;
-   origneg = f->negative ;
-
-   if (type==DIVTYPE_BOTH) /* return both answers */
+   if ( type != DIVTYPE_NORMAL )
    {
-      IS_AT_LEAST( r2->num, r2->max, outp ) ;
-
-      memcpy(r2->num, r->num, outp) ;
-      r2->negative = r->negative ;
-      r2->size = r->size ;
-      r2->exp = r->exp ;
-
-      for (r2->size = outp; (r2->size > r2->exp) && (r2->size > 1); r2->size--)
+      /*
+       * fixes bug 687399
+       *
+       * Perform a validity check. We may got a remainder bigger than
+       * the residual. It indicates a rounded integer part value.
+       * The residual in div_out[tstart..tcnt-1] counted from div_out[0] is
+       * f->exp based.
+       * Find the first non-zero in the residiual and continue then.
+       */
+      finished = 1;
+      test = MIN( MAX( tend, tcnt ) - tstart, ccns + 1 );
+      for ( i = 0; i < test; i++ )
       {
-         if (r2->num[r2->size-1]!='0')
-            break ;
+         char h;
+         h = (char) ( ( i < tcnt - tstart ) ? mt->div_out[tstart+i] :
+                                              f->num[tstart+i] );
+         if ( h != '0' )
+            break;
+      }
+
+      /*
+       * s begins withs a non-zero as the digit at tstart+i. Only compare the
+       * numbers if the residual may be greater than s.
+       */
+      if ( ( f->exp - tstart - i >= s->exp ) && ( i < test ) )
+      {
+         if ( f->exp - tstart - i > s->exp )
+         {
+            /*
+             * The residual has a higher exponent. We have definitely an error.
+             */
+            finished = 0;
+         }
+         else
+         {
+            /*
+             * This fits many situations. The exponent is the same, we have
+             * to compare the digits of the number.
+             */
+            int j;
+
+            test = MIN( test - i, ssize );
+            for ( j = 0; j < test; j++, i++ )
+            {
+               int h;
+               h = ( i < tcnt - tstart ) ? mt->div_out[tstart+i] :
+                                           f->num[tstart+i];
+               h -= s->num[j];
+               if ( h > 0 )
+                  finished = 0;
+               if ( h != 0 )
+                  break;
+            }
+            /*
+             * We still can have an error. Imagine a residual of 22 and a
+             * divisor of 2e1.
+             */
+            if ( ( j >= test ) && ( ssize > test ) && ( test > 0 ) )
+               finished = 0;
+         }
+      }
+
+      /*
+       * We perform the operation with DIGITS+1 precision for a later
+       * rounding and to prevent math errors. We have to check if rounding
+       * would occur later.
+       */
+      if ( finished )
+      {
+         if ( ( outp > ccns ) && ( r->num[ccns] != '0' ) )
+            finished = 0;
+         /*
+          * FGC: I'm not sure whether the following test supersedes the
+          * the testing of the mantissa above. It should, but who can
+          * prove?
+          */
+         r->size = outp;
+         if ( !test_whole( TSD, r, 0 ) )
+            finished = 0;
+      }
+      if ( !finished )
+      {
+         volatile char *fs, *ss;
+         streng *h;
+
+         h = name_of_node( TSD, NULL, f );
+         fs = tmpstr_of( TSD, h );
+         Free_stringTSD( h );
+         h = name_of_node( TSD, NULL, s );
+         ss = tmpstr_of( TSD, h );
+         Free_stringTSD( h );
+         exiterror( ERR_INVALID_INTEGER,
+                    ( type == DIVTYPE_REMAINDER ) ? 12 : 11,
+                    fs, ss, ccns);
       }
    }
 
-   if ((type == DIVTYPE_REMINDER) || (type == DIVTYPE_BOTH))
-   {
-      /* we are really interested in the reminder, so swap things */
-      for (i=0; i<MIN(MAX(tend,tcnt)-tstart,TSD->currlevel->currnumsize+1); i++ )
-         r->num[i] = (char) (i<tcnt-tstart ? mt->div_out[tstart+i] : f->num[tstart+i]) ;
+   origexp = f->exp;
+   origneg = f->negative;
 
-      r->size = outp = i ;
-      r->exp = origexp - tstart ;
-      r->negative = origneg ;
+   if ( type == DIVTYPE_BOTH )
+   {
+      /*
+       * Return both answers
+       */
+      IS_AT_LEAST( r2->num, r2->max, outp );
+
+      memcpy( r2->num, r->num, outp );
+      r2->negative = r->negative;
+      r2->size = r->size;
+      r2->exp = r->exp;
+
+      for ( r2->size = outp; ( r2->size > r2->exp ) && ( r2->size > 1 );
+                                                                   r2->size-- )
+      {
+         if ( r2->num[r2->size-1] != '0' )
+            break;
+      }
    }
 
-   /* then, at the end, we have to strip of trailing zeros that come */
-   /* after the decimal point, first do we have any decimals?        */
-   for (r->size = outp; (r->size > r->exp) && (r->size > 1); r->size--)
+   if ( ( type == DIVTYPE_REMAINDER ) || ( type == DIVTYPE_BOTH ) )
    {
-      if (r->num[r->size-1]!='0')
-         break ;
+      /*
+       * We are really interested in the remainder, so swap things
+       */
+      for ( i = 0; i < MIN( MAX( tend, tcnt ) - tstart, ccns + 1 ); i++ )
+         r->num[i] = (char) ( ( i < tcnt - tstart ) ? mt->div_out[tstart+i] :
+                                                      f->num[tstart+i] );
+
+      r->size = outp = i;
+      r->exp = origexp - tstart;
+      r->negative = origneg;
+   }
+
+   /*
+    * Then, at the end, we have to strip of trailing zeros that come
+    * after the decimal point, first do we have any decimals?
+    */
+   for ( r->size = outp; ( r->size > r->exp ) && ( r->size > 1 ); r->size-- )
+   {
+      if ( r->num[r->size - 1] != '0' )
+         break;
    }
 }
 
+void string_div( tsd_t *TSD, const num_descr *f, const num_descr *s,
+                 num_descr *r, num_descr *r2, int type, cnodeptr left,
+                 cnodeptr right )
+{
+   int ccns = TSD->currlevel->currnumsize;
 
+   LOSTDIGITS_CHECK( f, ccns, left );
+   LOSTDIGITS_CHECK( s, ccns, right );
 
+   string_div2( TSD, f, s, r, r2, type, ccns );
+
+   if ( r != NULL )
+      r->used_digits = ccns;
+   if ( r2 != NULL )
+      r2->used_digits = ccns;
+}
 
 /* The multiplication table for two single-digits numbers */
 static const char mult[10][10][3] = {
@@ -2205,31 +2182,35 @@ static const char mult[10][10][3] = {
 } ;
 
 
-void string_mul( const tsd_t *TSD, const num_descr *f, const num_descr *s, num_descr *r )
+static void string_mul2( tsd_t *TSD, const num_descr *f, const num_descr *s,
+                         num_descr *r, int ccns )
 {
-   char *outp=NULL;
-   const char *answer=NULL ;
-   int i=0, sskip=0, fskip=0, sstart=0, fstart=0, base=0, offset=0, carry=0, j=0 ;
+   char *outp;
+   const char *answer;
+   int i,sskip,fskip,sstart,fstart,base,offset,carry,j;
    mat_tsd_t *mt;
 
-   mt = TSD->mat_tsd;
+   mt = (mat_tsd_t *)TSD->mat_tsd;
 
-   IS_AT_LEAST( mt->mul_out, mt->mul_outsize, 2*(TSD->currlevel->currnumsize+1) ) ;
+   IS_AT_LEAST( mt->mul_out, mt->mul_outsize, 2*(ccns+1) ) ;
 #ifdef TRACEMEM
    mt->outptr4 = mt->mul_out ;
 #endif
 
-   for (i=0; i<2*(TSD->currlevel->currnumsize+1); mt->mul_out[i++]='0') ;
-   outp = &mt->mul_out[2*(TSD->currlevel->currnumsize+1)-1] ;
+   for (i=0; i<2*(ccns+1); mt->mul_out[i++]='0') ;
+   outp = &mt->mul_out[2*(ccns+1)-1] ;
 
    for (sskip=0; (sskip<s->size) && (s->num[sskip]=='0'); sskip++ ) ;
-   sstart = MIN( sskip+TSD->currlevel->currnumsize+1, s->size-1 ) ;
+   sstart = MIN( sskip+ccns, s->size-1 ) ;
 
    for (fskip=0; (fskip<f->size) && (f->num[fskip]=='0'); fskip++ ) ;
-   fstart = MIN( fskip+TSD->currlevel->currnumsize+1, f->size-1 ) ;
+   fstart = MIN( fskip+ccns, f->size-1 ) ;
 
-   base = 2*(TSD->currlevel->currnumsize+1)-1 ;
+   base = 2*(ccns+1)-1 ;
    offset = carry = 0 ;
+   /*
+    * Use a maximum of DIGITS+1 significant digits on input for each operand.
+    */
    for ( i=sstart; i>=sskip; i-- )
    {
       offset = carry = 0 ;
@@ -2242,7 +2223,7 @@ void string_mul( const tsd_t *TSD, const num_descr *f, const num_descr *s, num_d
          mt->mul_out[base-offset] = (char) (mt->mul_out[base-offset] +
                                             answer[1] - '0' + carry) ;
          carry = answer[0] - '0' ;
-         for (; mt->mul_out[base-offset]>'9'; )
+         while ( mt->mul_out[base-offset] > '9' )
          {
             mt->mul_out[base-offset] -= 10 ;
             carry++ ;
@@ -2257,10 +2238,10 @@ void string_mul( const tsd_t *TSD, const num_descr *f, const num_descr *s, num_d
       base-- ;
    }
 
-   IS_AT_LEAST( r->num, r->max, /*2*(TSD->currlevel->currnumsize+1)*/
-                              outp-mt->mul_out-base+offset  ) ;
+   IS_AT_LEAST( r->num, r->max, /*2*(ccns+1)*/
+                              outp - mt->mul_out-base+offset  ) ;
    j = 0 ;
-   for (i=base-offset+2; (i<=outp-mt->mul_out); i++ )
+   for (i=base-offset+2; (i<=outp - mt->mul_out); i++ )
       r->num[j++] = mt->mul_out[i] ;
 
    if (j==0)
@@ -2273,9 +2254,21 @@ void string_mul( const tsd_t *TSD, const num_descr *f, const num_descr *s, num_d
 
    r->negative = log_xor( f->negative, s->negative ) ;
    r->size = j ;
-   str_round( r, TSD->currlevel->currnumsize ) ;
+   str_round( r, ccns ) ;
 }
 
+void string_mul( tsd_t *TSD, const num_descr *f, const num_descr *s,
+                 num_descr *r, cnodeptr left, cnodeptr right )
+{
+   int ccns = TSD->currlevel->currnumsize;
+
+   LOSTDIGITS_CHECK( f, ccns, left );
+   LOSTDIGITS_CHECK( s, ccns, right );
+
+   string_mul2( TSD, f, s, r, ccns );
+
+   r->used_digits = ccns;
+}
 
 static void descr_strip( const tsd_t *TSD, const num_descr *from, num_descr *to )
 {
@@ -2293,18 +2286,25 @@ static void descr_strip( const tsd_t *TSD, const num_descr *from, num_descr *to 
       exiterror( ERR_ARITH_OVERFLOW, 0 )  ;
 
    to->size = j ;
+   to->used_digits = from->used_digits;
 }
 
 
 
-void string_pow( const tsd_t *TSD, const num_descr *num, int power, num_descr *acc, num_descr *res )
+void string_pow( tsd_t *TSD, const num_descr *num, num_descr *acc,
+                 num_descr *res, cnodeptr lname, cnodeptr rname )
 {
-   static const num_descr one = { "1", 0, 1, 1, 2 } ;
-   int ineg=0, pow=0, cnt=0 ;
+   static const num_descr one = { "1", 0, 1, 1, 2, -1 } ;
+   int ineg=0, pow, cnt,power ;
+   int ccns = TSD->currlevel->currnumsize;
 
-   IS_AT_LEAST( res->num, res->max, TSD->currlevel->currnumsize+1 ) ;
-   IS_AT_LEAST( acc->num, acc->max, TSD->currlevel->currnumsize+1 ) ;
+   IS_AT_LEAST( res->num, res->max, ccns+1 ) ;
 
+   LOSTDIGITS_CHECK( num, ccns, lname );
+   LOSTDIGITS_CHECK( acc, ccns, rname );
+   power = descr_to_int( acc ) ;
+
+   IS_AT_LEAST( acc->num, acc->max, ccns+1 ) ;
    acc->exp = 1 ;
    acc->size = 1 ;
    acc->negative = 0 ;
@@ -2325,7 +2325,7 @@ void string_pow( const tsd_t *TSD, const num_descr *num, int power, num_descr *a
       if (power & (1<<(cnt-1)))
       {
          /* multiply acc with *f, and put answer into acc */
-         string_mul( TSD, acc, num, res ) ;
+         string_mul2( TSD, acc, num, res, ccns ) ;
          assert( acc->size <= acc->max && res->size <= res->max ) ;
          descr_strip( TSD, res, acc ) ;
          assert( acc->size <= acc->max && res->size <= res->max ) ;
@@ -2335,7 +2335,7 @@ void string_pow( const tsd_t *TSD, const num_descr *num, int power, num_descr *a
          break ;   /* horrible example of dataflow */
 
       /* then, square the contents of acc */
-      string_mul( TSD, acc, acc, res ) ;
+      string_mul2( TSD, acc, acc, res, ccns ) ;
       assert( acc->size <= acc->max && res->size <= res->max ) ;
       descr_strip( TSD, res, acc ) ;
       assert( acc->size <= acc->max && res->size <= res->max ) ;
@@ -2343,26 +2343,15 @@ void string_pow( const tsd_t *TSD, const num_descr *num, int power, num_descr *a
 
    if (ineg)
       /* may hang if acc==zero ? */
-      string_div( TSD, &one, acc, res, NULL, DIVTYPE_NORMAL ) ;
+      string_div2( TSD, &one, acc, res, NULL, DIVTYPE_NORMAL, ccns ) ;
    else
       descr_strip( TSD, acc, res ) ;
    assert( acc->size <= acc->max && res->size <= res->max ) ;
+   acc->used_digits = ccns;
 }
 
 
 /* ========= interface routines to the arithmetic routines ========== */
-
-streng *str_add( const tsd_t *TSD, const void *descr, const streng *second )
-{
-   mat_tsd_t *mt;
-
-   mt = TSD->mat_tsd;
-   if (getdescr( TSD, second, &mt->sdescr ))
-      exiterror( ERR_BAD_ARITHMETIC, 0 )  ;
-
-   string_add( TSD, descr, &mt->sdescr, &mt->rdescr ) ;
-   return str_norm( TSD, &mt->rdescr, NULL ) ;
-}
 
 int descr_sign( const void *descr )
 {
@@ -2381,26 +2370,36 @@ void free_a_descr( const tsd_t *TSD, num_descr *in )
 }
 
 
-num_descr *get_a_descr( const tsd_t *TSD, const streng *num )
+num_descr *get_a_descr( tsd_t *TSD, const char *bif, int argno,
+                        const streng *num )
 {
+   mat_tsd_t *mt;
    num_descr *descr=NULL ;
-
-   descr=MallocTSD( sizeof(num_descr)) ;
+   int i;
+   descr = (num_descr *)MallocTSD( sizeof(num_descr) ) ;
    descr->max = 0 ;
    descr->num = NULL ;
 
-   if (getdescr( TSD, num, descr ))
-       exiterror( ERR_BAD_ARITHMETIC, 0 )  ;
+   if ( ( i = getdescr( TSD, num, descr ) ) != 0 )
+   {
+      mt = (mat_tsd_t *)TSD->mat_tsd;
 
-   return (void*)descr ;
+      FreeTSD( descr );
+      if ( bif == NULL )
+         exiterror( ERR_BAD_ARITHMETIC, 0 );
+
+      if ( i == 9 )
+         exiterror( ERR_INCORRECT_CALL, i, bif, argno, mt->max_exponent_len, tmpstr_of( TSD, num ) );
+      else
+         exiterror( ERR_INCORRECT_CALL, i, bif, argno, tmpstr_of( TSD, num ) );
+   }
+
+   return descr ;
 }
 
 
 int str_true( const tsd_t *TSD, const streng *input )
 {
-   mat_tsd_t *mt;
-
-   mt = TSD->mat_tsd;
    if (input->len != 1)
        exiterror( ERR_UNLOGICAL_VALUE, 0 )  ;
 
@@ -2419,34 +2418,96 @@ int str_true( const tsd_t *TSD, const streng *input )
 }
 
 
-streng *str_abs( const tsd_t *TSD, const streng *input)
+streng *str_abs( tsd_t *TSD, const streng *input )
 {
    mat_tsd_t *mt;
+   streng *retval;
+   int i;
 
-   mt = TSD->mat_tsd;
-   if (getdescr(TSD,input,&mt->fdescr))
-       exiterror( ERR_BAD_ARITHMETIC, 0 )  ;
+   mt = (mat_tsd_t *)TSD->mat_tsd;
+   if ( ( i = getdescr( TSD, input, &mt->fdescr ) ) != 0 )
+   {
+      if ( i == 9 )
+         exiterror( ERR_INCORRECT_CALL, i, "ABS", 1, mt->max_exponent_len, tmpstr_of( TSD, input ) );
+      else
+         exiterror( ERR_INCORRECT_CALL, i, "ABS", 1, tmpstr_of( TSD, input ) );
+   }
 
-   mt->fdescr.negative = 0 ;
-   return str_norm( TSD, &mt->fdescr, NULL ) ;
+   if ( get_options_flag( TSD->currlevel, EXT_STRICT_ANSI ) )
+   {
+      str_round_lostdigits( TSD, &mt->fdescr, TSD->currlevel->currnumsize );
+      mt->fdescr.negative = 0;
+      return str_norm( TSD, &mt->fdescr, NULL );
+   }
+
+   mt->fdescr.negative = 0;
+   mt->fdescr.used_digits = mt->fdescr.size;
+   retval = str_norm( TSD, &mt->fdescr, NULL );
+   return retval;
 }
 
 
-streng *str_trunc( const tsd_t *TSD, const streng *number, int deci )
+streng *str_sign( tsd_t *TSD, const streng *input )
+{
+   mat_tsd_t *mt;
+   char *mant;
+   int i;
+
+   mt = (mat_tsd_t *)TSD->mat_tsd;
+   if ( ( i = getdescr( TSD, input, &mt->fdescr ) ) != 0 )
+   {
+      if ( i == 9 )
+         exiterror( ERR_INCORRECT_CALL, i, "SIGN", 1, mt->max_exponent_len, tmpstr_of( TSD, input ) );
+      else
+         exiterror( ERR_INCORRECT_CALL, i, "SIGN", 1, tmpstr_of( TSD, input ) );
+   }
+
+   if ( get_options_flag( TSD->currlevel, EXT_STRICT_ANSI ) )
+   {
+      str_round_lostdigits( TSD, &mt->fdescr, TSD->currlevel->currnumsize );
+   }
+
+   mant = mt->fdescr.num;
+   for ( i = 0; i < mt->fdescr.size; i++ )
+   {
+      if ( mant[i] != '0' )
+      {
+         if ( mt->fdescr.negative )
+         {
+            return Str_creTSD( "-1" );
+         }
+         else
+         {
+            return Str_creTSD( "1" );
+         }
+      }
+   }
+   return Str_creTSD( "0" );
+}
+
+
+streng *str_trunc( tsd_t *TSD, const streng *number, int deci )
 {
    int i=0, j=0, k=0, size=0, top=0 ;
    streng *result=NULL ;
    mat_tsd_t *mt;
 
-   mt = TSD->mat_tsd;
+   mt = (mat_tsd_t *)TSD->mat_tsd;
 
    /* first, convert number to internal representation */
-   if (getdescr( TSD, number, &mt->fdescr ))
-       exiterror( ERR_BAD_ARITHMETIC, 0 )  ;
+   if ( ( i = getdescr( TSD, number, &mt->fdescr ) ) != 0 )
+   {
+      if ( i == 9 )
+         exiterror( ERR_INCORRECT_CALL, i, "TRUNC", 1, mt->max_exponent_len, tmpstr_of( TSD, number ) );
+      else
+         exiterror( ERR_INCORRECT_CALL, i, "TRUNC", 1, tmpstr_of( TSD, number ) );
+   }
 
    /* get rid of possible excessive precision */
-   if (mt->fdescr.size>TSD->currlevel->currnumsize)
-      str_round( &mt->fdescr, TSD->currlevel->currnumsize ) ;
+   if ( get_options_flag( TSD->currlevel, EXT_STRICT_ANSI ) )
+   {
+      str_round_lostdigits( TSD, &mt->fdescr, TSD->currlevel->currnumsize );
+   }
 
    /* who big must the result string be? */
    if ((i=mt->fdescr.exp) > 0 )
@@ -2500,6 +2561,7 @@ streng *str_trunc( const tsd_t *TSD, const streng *number, int deci )
 
    result->len = j ;
    assert( (result->len <= result->max) && (result->len<=size+2) ) ;
+
    return( result ) ;
 }
 
@@ -2530,24 +2592,31 @@ streng *str_trunc( const tsd_t *TSD, const streng *number, int deci )
  * The 'input' variable is assumed to have at least one digit, so don't
  * call this function with a null string. Maybe the compiler could
  * optimize this function better if [esf]descr were locals?
+ *
+ * In case of errors we throw SYNTAX(40,35).
  */
 
-streng *str_digitize( const tsd_t *TSD, const streng *input, int start, int sign )
+streng *str_digitize( tsd_t *TSD, streng *input, int start, int sign,
+                      const char *bif, int removeStringOnError )
 {
    int cur_byte=0 ;     /* current byte in 'input' */
    int cur_bit=0 ;      /* current bit in 'input' */
    int too_large=0 ;    /* error flag (see above) */
+   int i, ccns;
+   int user_ccns = TSD->currlevel->currnumsize;
    mat_tsd_t *mt;
 
-   mt = TSD->mat_tsd;
+   mt = (mat_tsd_t *)TSD->mat_tsd;
 
    /* do we have anything to work on? */
-   assert( start < Str_len(input) ) ;
+   assert( start < Str_len(input) );
+
+   ccns = 3 * Str_len(input);
 
    /* ensure that temporary number descriptors has enough space */
-   IS_AT_LEAST( mt->fdescr.num, mt->fdescr.max, TSD->currlevel->currnumsize+2 ) ;
-   IS_AT_LEAST( mt->edescr.num, mt->edescr.max, TSD->currlevel->currnumsize+2 ) ;
-   IS_AT_LEAST( mt->sdescr.num, mt->sdescr.max, TSD->currlevel->currnumsize+2 ) ;
+   IS_AT_LEAST( mt->fdescr.num, mt->fdescr.max, ccns+2 ) ;
+   IS_AT_LEAST( mt->edescr.num, mt->edescr.max, ccns+2 ) ;
+   IS_AT_LEAST( mt->sdescr.num, mt->sdescr.max, ccns+2 ) ;
 
    /*
     * Initialize the temporary number descriptors: 'fdescr', 'sdescr'
@@ -2605,8 +2674,12 @@ streng *str_digitize( const tsd_t *TSD, const streng *input, int start, int sign
    {
       for (cur_bit=0; cur_bit<8; cur_bit++)
       {
-         /* does the precision hold? if not, set flag */
-         if (mt->fdescr.size > TSD->currlevel->currnumsize)
+         /*
+          * does the precision hold? if not, set flag
+          * The error can be considered to be a severe error. We should
+          * always have "enough" precision. See ccns above.
+          */
+         if (mt->fdescr.size > ccns)
             too_large = 1 ;
 
          /*
@@ -2621,7 +2694,7 @@ streng *str_digitize( const tsd_t *TSD, const streng *input, int start, int sign
             if (too_large)
                 exiterror( ERR_INVALID_INTEGER, 0 )  ;
 
-            string_add( TSD, &mt->edescr, &mt->fdescr, &mt->edescr ) ;
+            string_add2( TSD, &mt->edescr, &mt->fdescr, &mt->edescr, ccns );
          }
 
          /*
@@ -2640,21 +2713,69 @@ streng *str_digitize( const tsd_t *TSD, const streng *input, int start, int sign
           */
          if (!too_large)
          {
-            string_mul( TSD, &mt->fdescr, &mt->sdescr, &mt->fdescr ) ;
+            string_mul2( TSD, &mt->fdescr, &mt->sdescr, &mt->fdescr, ccns );
             str_strip( &mt->fdescr ) ;
          }
       }
    }
 
-   /* normalize answer and return to caller */
-   return str_norm( TSD, &mt->edescr, NULL ) ;
+   /*
+    * normalize answer and return to caller. Always show all digits if we
+    * don't have to support STRICT_ANSI. In ANSI we have to throw a SYNTAX
+    * in case of number overflow.
+    */
+   if ( get_options_flag( TSD->currlevel, EXT_STRICT_ANSI ) )
+   {
+      for (i = 0; i < mt->edescr.size; i++)
+      {
+         if (mt->edescr.num[i] != '0')
+            break;
+      }
+      if (i < mt->edescr.size)
+      {
+         /* not a 0 */
+         if (mt->edescr.exp - i > user_ccns)
+         {
+            volatile char *msg;
+
+            if ( removeStringOnError )
+               Free_stringTSD( input );
+            mt->edescr.used_digits = mt->edescr.size;
+            input = str_norm( TSD, &mt->edescr, NULL );
+            msg = tmpstr_of( TSD, input );
+            Free_stringTSD( input );
+            /* fixes bug 1112956 */
+            exiterror( ERR_INCORRECT_CALL, 35, bif, msg );
+         }
+      }
+      mt->edescr.used_digits = user_ccns;
+   }
+   else
+   {
+      int s,e;
+
+      for ( s = 0; s < mt->edescr.size; s++ )
+      {
+         if ( mt->edescr.num[s] != '0' )
+            break;
+      }
+      for ( e = mt->edescr.size - 1; e > s; e-- )
+      {
+         if ( mt->edescr.num[e] != '0' )
+            break;
+      }
+      e -= s - 1;
+      if ( e < 1 )
+         e = 1;
+      mt->edescr.used_digits = ( e < user_ccns ) ? user_ccns : e;
+   }
+   return str_norm( TSD, &mt->edescr, NULL );
 }
 
-streng *str_binerize( const tsd_t *TSD, const streng *number, int length )
+streng *str_binerize( tsd_t *TSD, num_descr *num, int length )
 {
-   int i=0 ;
-   streng *result=NULL ;
-   char *res_ptr=NULL ;
+   int i,ccns;
+   streng *result;
 
    /*
     * We are going to need two number in this algoritm, so we can
@@ -2665,67 +2786,30 @@ streng *str_binerize( const tsd_t *TSD, const streng *number, int length )
     * (Would have to set NUMERIC DIGIT to at least 4 before calling
     * getdescr with these.)
     */
-   static const num_descr minus_one = {   "1", 1, 1, 1, 2 } ;
-   static const num_descr byte      = { "256", 0, 3, 3, 4 } ;
+   static const num_descr minus_one = {   "1", 1, 1, 1, 2, -1 } ;
+   static const num_descr byte      = { "256", 0, 3, 3, 4, -1 } ;
 
    mat_tsd_t *mt;
 
-   mt = TSD->mat_tsd;
+   mt = (mat_tsd_t *)TSD->mat_tsd;
+
+   ccns = ( num->exp < 3 ) ? 3 : num->exp;
+
+   assert( num == &mt->edescr );
 
    /*
-    * First, let us convert the number into a descriptor. If that is
-    * not possible, then we don't have a number, which is an error.
+    * If the length is zero, a special case applies, the return value
+    * is a nullstring.
     */
-   if (getdescr( TSD, number, &mt->edescr ))
-      exiterror( ERR_BAD_ARITHMETIC, 0 )  ;
-
-   /*
-    * If the number is negative, then we *must* know how long it is,
-    * since we are going to pad with 'ff'x bytes at the left up the
-    * the wanted length. If we don't know the length, report an error.
-    */
-   if ((length==(-1)) && (mt->edescr.negative))
-      exiterror( ERR_INCORRECT_CALL, 0 )  ;
-
-   /*
-    * Then we have to determine if this actually is a whole number.
-    * There are two things that might be wrong: a non-zero fractional
-    * part (checked in the 'else' part below; or a insufficient
-    * precition (handled in the if part below).
-    */
-   if (mt->edescr.size < mt->edescr.exp)
-   {
-      exiterror( ERR_INVALID_INTEGER, 0 )  ;
-   }
-   else if (mt->edescr.size > mt->edescr.exp)
-   {
-      /*
-       * Make sure that all digits in the fractional part is zero
-       */
-      for (i=MIN(mt->edescr.exp,0); i<mt->edescr.exp; i++)
-      {
-         if (mt->edescr.num[i]!='0')
-         {
-            exiterror( ERR_INVALID_INTEGER, 0 )  ;
-         }
-      }
-   }
-
-   /*
-    * If the number is zero, a special case applies, the return value
-    * is a nullstring. Same if length is zero. I am not sure if this
-    * is needed, or if the rest of the algoritm is general enough to
-    * handle these cases too.
-    */
-   if ((length==0) /* || ((mt->edescr.num[0]=='0') && (mt->edescr.size=1)) */)
-      result=nullstringptr() ;
+   if ( length == 0 )
+      result = nullstringptr();
 
    /*
     * Here comes the real work. To ease the implementation it is
-    * devided into two parts based on whether or not length is
+    * divided into two parts based on whether or not length is
     * specified.
     */
-   else if (length==(-1))
+   else if ( length == -1 )
    {
       /*
        * First, let's estimate the size of the output string that
@@ -2735,36 +2819,33 @@ streng *str_binerize( const tsd_t *TSD, const streng *number, int length )
        * a decimal part, and since it must have a integer part (else
        * it would be zero, and then trapped above.)
        */
-      assert(mt->edescr.exp > 0) ;
-      result = Str_makeTSD( (length=(MAX(mt->edescr.exp,0))/2) + 1 ) ;
-      res_ptr = result->value ;
-
+      assert( num->exp > 0 );
+      result = Str_makeTSD( ( length = ( MAX( num->exp, 0 ) ) / 2 ) + 1 );
 
       /*
        * Let's loop from the least significant part of edescr. For each
-       * iteration we devide mt->edescr by 256, stopping when edescr is
+       * iteration we divide num by 256, stopping when edescr is
        * zero.
        */
-      for (i=length; ; i--)
+      for ( i = length; ; i-- )
       {
          /*
           * Perform the integer divition, edescr gets the quotient,
-          * while fdescr get the reminder. Afterwards, perform some
+          * while fdescr get the remainder. Afterwards, perform some
           * makeup on the numbers (that might not be needed?)
           */
-         /* may hang if acc==zero ? */
-         string_div( TSD, &mt->edescr, &byte, &mt->fdescr, &mt->edescr, DIVTYPE_BOTH ) ;
-         str_strip( &mt->edescr ) ;
-         str_strip( &mt->fdescr ) ;
+         string_div2( TSD, num, &byte, &mt->fdescr, num, DIVTYPE_BOTH, ccns );
+         str_strip( num );
+         str_strip( &mt->fdescr );
 
          /*
-          * Now, fdescr has the reminder, stuff it into the result string
+          * Now, fdescr has the remainder, stuff it into the result string
           * before it escapes :-) (don't we have to cast lvalue here?)
           * Afterwards, check to see if there are more digits to extract.
           */
-         result->value[i] = (char) descr_to_int( &mt->fdescr ) ;
-         if ((mt->edescr.num[0]=='0') && (mt->edescr.size==1))
-            break ;
+         result->value[i] = (char) descr_to_int( &mt->fdescr );
+         if ( ( num->num[0] == '0' ) && ( num->size == 1 ) )
+            break;
       }
 
       /*
@@ -2772,8 +2853,8 @@ streng *str_binerize( const tsd_t *TSD, const streng *number, int length )
        * correct length. Have to use memmove() since strings may
        * overlap.
        */
-      memmove( result->value, &result->value[i], length+1-i ) ;
-      result->len = length + 1 - i ;
+      memmove( result->value, &result->value[i], length + 1 - i );
+      result->len = length + 1 - i;
    }
    else
    {
@@ -2781,59 +2862,59 @@ streng *str_binerize( const tsd_t *TSD, const streng *number, int length )
        * We do have a specified length for the number. At least that
        * makes it easy to deside how large the result string should be.
        */
-      result = Str_makeTSD( length ) ;
-      res_ptr = result->value ;
+      result = Str_makeTSD( length );
 
       /*
        * In the loop, iterate once for each divition of 256, but stop
        * only when we have reached the start of the result string.
-       * Below, edescr gets the quotient and fdescr gets the reminder.
+       * Below, edescr gets the quotient and fdescr gets the remainder.
        */
-      for (i=length-1; i>=0; i--)
+      for ( i = length - 1; i >= 0; i-- )
       {
          /* may hang if acc==zero ? */
-         string_div( TSD, &mt->edescr, &byte, &mt->fdescr, &mt->edescr, DIVTYPE_BOTH ) ;
-         str_strip( &mt->edescr ) ;
-         str_strip( &mt->fdescr ) ;
+         string_div2( TSD, num, &byte, &mt->fdescr, num, DIVTYPE_BOTH, ccns );
+         str_strip( num );
+         str_strip( &mt->fdescr );
 
          /*
-          * If the reminder is negative (i.e. quotient is negative too)
-          * then add 256 to the reminder, to bring it into the range of
+          * If the remainder is negative (i.e. quotient is negative too)
+          * then add 256 to the remainder, to bring it into the range of
           * an unsigned char. To compensate for that, subtract one from
-          * the quotient. Store the reminder.
+          * the quotient. Store the remainder.
           */
-         if (mt->fdescr.negative)
+         if ( mt->fdescr.negative )
          {
             /* the following two lines are not needed, but it does not
                work without them. */
-            if ((mt->edescr.size==1) && (mt->edescr.num[0]=='0'))
-               mt->edescr.exp = 1 ;
+            if ( ( num->size == 1 ) && ( num->num[0] == '0' ) )
+               num->exp = 1;
 
-            string_add( TSD, &mt->edescr, &minus_one, &mt->edescr ) ;
-            str_strip( &mt->edescr ) ;
-            string_add( TSD, &mt->fdescr, &byte, &mt->fdescr ) ;
+            string_add2( TSD, num, &minus_one, num, ccns );
+            str_strip( num );
+            string_add2( TSD, &mt->fdescr, &byte, &mt->fdescr, ccns );
          }
-         result->value[i] = (char) descr_to_int( &mt->fdescr ) ;
+         result->value[i] = (char) descr_to_int( &mt->fdescr );
       }
       /*
        * That's it, store the length
        */
-      result->len = length ;
+      result->len = length;
    }
 
    /*
     * We're finished ... hope it works ...
     */
-   return result ;
+   return result;
 }
 
 
 streng *str_normalize( const tsd_t *TSD, const streng *number )
 {
    mat_tsd_t *mt;
+   int err;
 
-   mt = TSD->mat_tsd;
-   if (getdescr( TSD, number, &mt->fdescr ))
+   mt = (mat_tsd_t *)TSD->mat_tsd;
+   if ( ( err = getdescr( TSD, number, &mt->fdescr ) ) != 0 )
       exiterror( ERR_BAD_ARITHMETIC, 0 )  ;
 
    return str_norm( TSD, &mt->fdescr, NULL ) ;
@@ -2843,87 +2924,111 @@ streng *str_normalize( const tsd_t *TSD, const streng *number )
 
 num_descr *is_a_descr( const tsd_t *TSD, const streng *number )
 {
-   num_descr *new=NULL ;
+   num_descr *newnum=NULL ;
    mat_tsd_t *mt;
 
-   mt = TSD->mat_tsd;
+   mt = (mat_tsd_t *)TSD->mat_tsd;
 
-   if (getdescr( TSD, number, &mt->fdescr ))
+   if ( getdescr( TSD, number, &mt->fdescr ) != 0 )
       return NULL ;
 
-   new = MallocTSD( sizeof( num_descr )) ;
-   new->max = 0 ;
-   new->num = NULL ;
+   newnum = (num_descr *)MallocTSD( sizeof( num_descr )) ;
+   newnum->max = 0 ;
+   newnum->num = NULL ;
 
-   descr_copy( TSD, &mt->fdescr, new ) ;
-   return new ;
+   descr_copy( TSD, &mt->fdescr, newnum ) ;
+   return newnum ;
 }
 
-
-int myiswnumber( const tsd_t *TSD, const streng *number )
-{
 /*
- * Checks if number is a whole number according to NUMERIC DIGITS.
- * We DON'T check for NUMERIC FORM if the resulting string would have
- * a decimal point.
+ * ANSI chapter 7, beginning: "...matches that syntax and also has a value
+ * that is 'whole', that is has no non-zero fractional part." The syntax
+ * is that of a plain number.
+ * Thus, 1E1 or 1.00 are allowed.
+ * This function returns 1 if number is a valid whole number, 0 else.
+ *
+ * The value is loaded into mat_tsd_t.edescr. A pointer to this is
+ * returned in *num.
+ *
+ * Added 08.03.2005 (tt.mm.yyyy), FGC: Due to some misinterpretation by my own
+ * this routine must not round, instead it must check for ANSI WHOLENUM.
+ * This means that the number must be representable without loss in the
+ * interval [-(10**digits()-1), 10**digits()-1].
+ * noDigitsLimit raises digits() virtually to endless. Don't use it in
+ * ANSI compatible environments.
  */
-   int i=0;
+int myiswnumber( tsd_t *TSD, const streng *number, num_descr **num,
+                 int noDigitsLimit )
+{
+   num_descr *input;
    mat_tsd_t *mt;
 
-   mt = TSD->mat_tsd;
+   mt = (mat_tsd_t *)TSD->mat_tsd;
 
-   if (getdescr(TSD, number, &mt->fdescr))
+   if ( getdescr( TSD, number, &mt->edescr ) )
       return 0;
-   str_round(&mt->fdescr, TSD->currlevel->currnumsize);
-   i = mt->fdescr.exp;
-   if (i <= 0)     /* 0.?? */
-      return 0;
-   for (; i < mt->fdescr.size; i++)
-   {
-      if (mt->fdescr.num[i] != '0')     /* decimal part not zero */
-         return 0;
-   }
-   return 1;
+   input = &mt->edescr;
+   if ( num != NULL )
+      *num = input;
+
+   return test_whole( TSD, input, noDigitsLimit );
 }
 
 
-/* Converts number to an integer. Sets *error to 1 on error (0 otherwise) */
+/*
+ * Converts number to an integer. Sets *error to 1 on error (0 otherwise)
+ *
+ * ANSI chapter 7, beginning: "...matches that syntax and also has a value
+ * that is 'whole', that is has no non-zero fractional part." The syntax
+ * is that of a plain number.
+ * Thus, 1E1 or 1.00 are allowed.
+ */
 int streng_to_int( const tsd_t *TSD, const streng *number, int *error )
 {
-   int result=0 ;
-   int i=0 ;
+   int result = 0;
    mat_tsd_t *mt;
 
-   mt = TSD->mat_tsd;
+   mt = (mat_tsd_t *)TSD->mat_tsd;
 
-   if (getdescr( TSD, number, &mt->fdescr ))
-      goto errorout ;
+   if ( ( *error = getdescr( TSD, number, &mt->fdescr ) ) != 0 )
+      return 0;
 
-   str_round( &mt->fdescr, TSD->currlevel->currnumsize ) ;
-   if (mt->fdescr.exp > mt->fdescr.size)  /* precision of less than one */
-      goto errorout ;
+   if ( ( *error = !whole_number( &mt->fdescr, &result ) ) != 0 )
+      return 0;
 
-   i = mt->fdescr.exp ;
-   if (i<0)
-      i = 0 ;
-   for (; i<mt->fdescr.size; i++)
-   {
-      if (mt->fdescr.num[i] != '0')  /* decimal part not zero */
-         goto errorout ;
-   }
-   if (mt->fdescr.exp>9)
-      goto errorout ; /* thus, a 32 bit integer should be sufficient */
-
-   result = 0 ;
-   for (i=0; i<mt->fdescr.exp; i++)
-      result = result * 10 + (mt->fdescr.num[i]-'0') ;
-
-   if (mt->fdescr.negative)
-      result = -result ;
-
-   *error = 0;
-   return result ;
-errorout:
-   *error = 1;
-   return(0);
+   return result;
 }
+
+/*
+ * Converts number to a 64bit integer. Sets *error to 1 on error (0 otherwise)
+ *
+ * ANSI chapter 7, beginning: "...matches that syntax and also has a value
+ * that is 'whole', that is has no non-zero fractional part." The syntax
+ * is that of a plain number.
+ * Thus, 1E1 or 1.00 are allowed.
+ */
+rx_64 streng_to_rx64( const tsd_t *TSD, const streng *number, int *error )
+{
+   rx_64 result = 0;
+   mat_tsd_t *mt;
+
+   mt = (mat_tsd_t *)TSD->mat_tsd;
+
+   if ( ( *error = getdescr( TSD, number, &mt->fdescr ) ) != 0 )
+      return 0;
+
+   if ( ( *error = !whole_rx64_number( &mt->fdescr, &result ) ) != 0 )
+      return 0;
+
+   return result;
+}
+
+int myisnumber( const tsd_t *TSD, const streng *string )
+{
+   mat_tsd_t *mt;
+
+   mt = (mat_tsd_t *)TSD->mat_tsd;
+
+   return getdescr( TSD, string, &mt->edescr ) == 0;
+}
+

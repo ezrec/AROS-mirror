@@ -3,8 +3,8 @@ options FIND_BIF
 parse value uname() with sysname . version .
 if sysname=='SunOS' & version<5 then do   /* works until SunOS 10.x */
    'csh -c "limit descriptors" >LIFO'
-   descr = 0 
-   if queued()>=1 then 
+   descr = 0
+   if queued()>=1 then
       parse pull . descr .
    if descr > 128 then do
       say 'The limit of open file descriptors per process is set to a value'
@@ -30,6 +30,7 @@ select
      rcname = 'rc.exe'
      true = 'true.exe'
      files = 'dir'( '/b *.rexx' )
+     one = '1.exe'
      end
   when os = 'AMIGA' | os = 'AROS' then do
      rcname = 'rc'
@@ -40,6 +41,7 @@ select
      rcname = 'rc'
      true = 'true'
      files = 'ls'( '*.rexx' )
+     one = 'true'
      end
 end
 
@@ -53,14 +55,22 @@ if  stream(true,'c','query exists') = '' then do
     exit 1
     end
 
+if  stream(one,'c','query exists') = '' then do
+    say 'You must compile 1.c first'
+    exit 1
+    end
+
+if ls = 'ls' then files = 'ls'( '*.rexx' )
+else files = 'dir'( '/b *.rexx' )
+
 do while files \= ''
    parse var files file files
    say center(' 'file' ',72,'=')
-   interpret "junk = '"file"'()" 
+   interpret "junk = '"file"'()"
    end
 
 exit
 
 
 SunOS_warning:
-   
+

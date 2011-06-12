@@ -1,7 +1,3 @@
-#ifndef lint
-static char *RCSid = "$Id$";
-#endif
-
 /*
  *  The Regina Rexx Interpreter
  *  Copyright (C) 1992-1994  Anders Christensen <anders@pvv.unit.no>
@@ -24,10 +20,13 @@ static char *RCSid = "$Id$";
 #include "rexx.h"
 #include "rxiface.h"
 #include <string.h>
-#include <ctype.h>
 #include <stdio.h>
 #include <assert.h>
 #include <time.h>
+
+static streng *conflict_close( tsd_t *TSD, cparamboxptr parms );
+static streng *conflict_eof( tsd_t *TSD, cparamboxptr parms );
+static streng *conflict_open( tsd_t *TSD, cparamboxptr parms );
 
 struct function_type
 {
@@ -36,10 +35,10 @@ struct function_type
    const char *funcname ;
 } ;
 
-#if defined(OLD_REGINA_FEATURES) && defined(AREXXIO)
-#error OLD_REGINA_FEATURES and AREXXIO options are incompatible
-#endif
-
+/*
+ * A 0 in the first column of this table indicates that this BIF is ANSI.
+ * Any other value
+ */
 static const struct function_type functions[] = {
   { 0,              std_abbrev,            "ABBREV" },
   { 0,              std_abs,               "ABS" },
@@ -51,19 +50,19 @@ static const struct function_type functions[] = {
   { EXT_REGINA_BIFS,dbg_allocated,         "ALLOCATED" },
 #endif
   { 0,              std_arg,               "ARG" },
-  { EXT_REGINA_BIFS,arexx_b2c,             "B2C" },
+  { EXT_AREXX_BIFS, arexx_b2c,             "B2C" },
   { 0,              std_b2x,               "B2X" },
   { EXT_REGINA_BIFS,os2_beep,              "BEEP" },
   { 0,              std_bitand,            "BITAND" },
-  { 0,              arexx_bitchg,          "BITCHG" },
-  { EXT_REGINA_BIFS,arexx_bitclr,          "BITCLR" },
-  { EXT_REGINA_BIFS,arexx_bitcomp,         "BITCOMP" },
+  { EXT_AREXX_BIFS, arexx_bitchg,          "BITCHG" },
+  { EXT_AREXX_BIFS, arexx_bitclr,          "BITCLR" },
+  { EXT_AREXX_BIFS, arexx_bitcomp,         "BITCOMP" },
   { 0,              std_bitor,             "BITOR" },
-  { EXT_REGINA_BIFS,arexx_bitset,          "BITSET" },
-  { EXT_REGINA_BIFS,arexx_bittst,          "BITTST" },
+  { EXT_AREXX_BIFS, arexx_bitset,          "BITSET" },
+  { EXT_AREXX_BIFS, arexx_bittst,          "BITTST" },
   { 0,              std_bitxor,            "BITXOR" },
   { EXT_BUFTYPE_BIF,cms_buftype,           "BUFTYPE" },
-  { EXT_REGINA_BIFS,arexx_c2b,             "C2B" },
+  { EXT_AREXX_BIFS, arexx_c2b,             "C2B" },
   { 0,              std_c2d,               "C2D" },
   { 0,              std_c2x,               "C2X" },
   { EXT_REGINA_BIFS,unx_chdir,             "CD" },
@@ -74,14 +73,12 @@ static const struct function_type functions[] = {
   { 0,              std_charout,           "CHAROUT" },
   { 0,              std_chars,             "CHARS" },
   { EXT_REGINA_BIFS,unx_chdir,             "CHDIR" },
-#ifdef OLD_REGINA_FEATURES
-  { EXT_REGINA_BIFS,unx_close,             "CLOSE" },
-#endif
+  { EXT_REGINA_BIFS,conflict_close,        "CLOSE" },
 #ifdef AREXXIO
   { EXT_REGINA_BIFS,arexx_close,           "CLOSE" },
 #endif
   { 0,              std_compare,           "COMPARE" },
-  { EXT_REGINA_BIFS,arexx_compress,        "COMPRESS" },
+  { EXT_AREXX_BIFS, arexx_compress,        "COMPRESS" },
   { 0,              std_condition,         "CONDITION" },
   { 0,              std_copies,            "COPIES" },
   { 0,              std_countstr,          "COUNTSTR" },   /* ANSI Std 1996 - MH 10-06-96 */
@@ -101,15 +98,10 @@ static const struct function_type functions[] = {
   { EXT_REGINA_BIFS,dbg_dumptree,          "DUMPTREE" },
   { EXT_REGINA_BIFS,dbg_dumpvars,          "DUMPVARS" },
 #endif
-#ifdef OLD_REGINA_FEATURES
-  { EXT_REGINA_BIFS,unx_eof,               "EOF" },
-#endif
-#ifdef AREXXIO
-  { EXT_REGINA_BIFS,arexx_eof,             "EOF" },
-#endif
+  { EXT_REGINA_BIFS,conflict_eof,          "EOF" },
   { 0,              std_errortext,         "ERRORTEXT" },
-  { EXT_REGINA_BIFS,arexx_exists,          "EXISTS" },
-  { EXT_REGINA_BIFS,arexx_export,          "EXPORT" },
+  { EXT_AREXX_BIFS, arexx_exists,          "EXISTS" },
+  { EXT_AREXX_BIFS, arexx_export,          "EXPORT" },
 #ifdef VMS
   { EXT_REGINA_BIFS,vms_f_cvsi,            "F$CVSI" },
   { EXT_REGINA_BIFS,vms_f_cvtime,          "F$CVTIME" },
@@ -144,7 +136,7 @@ static const struct function_type functions[] = {
 /*{ EXT_REGINA_BIFS,vms_f_verify,          "F$VERIFY" }, */
 #endif
   { EXT_REGINA_BIFS,os2_filespec,          "FILESPEC" },
-  { EXT_FIND_BIF,   cms_find,              "FIND" },
+  { EXT_REGINA_BIFS,cms_find,              "FIND" },
 #ifdef OLD_REGINA_FEATURES
   { EXT_REGINA_BIFS,unx_close,             "FINIS" },
 #endif /* OLD_REGINA_FEATURES */
@@ -154,18 +146,21 @@ static const struct function_type functions[] = {
 #if defined(REGINA_DEBUG_MEMORY)
   { EXT_REGINA_BIFS,dbg_freelists,         "FREELISTS" },
 #endif
-  { EXT_REGINA_BIFS,arexx_freespace,       "FREESPACE" },
+  { EXT_AREXX_BIFS, arexx_freespace,       "FREESPACE" },
   { 0,              std_fuzz,              "FUZZ" },
 #if defined(_AMIGA) || defined(__AROS__)
   { EXT_REGINA_BIFS,amiga_getclip,         "GETCLIP" },
 #endif
+#ifdef HAVE_GCI
+  { EXT_REGINA_BIFS,rex_gciprefixchar,     "GCIPREFIXCHAR" },
+#endif
   { EXT_REGINA_BIFS,unx_getenv,            "GETENV" },
   { EXT_REGINA_BIFS,unx_getpath,           "GETPATH" },
   { EXT_REGINA_BIFS,unx_getpid,            "GETPID" },
-  { EXT_REGINA_BIFS,arexx_getspace,        "GETSPACE" },
+  { EXT_AREXX_BIFS, arexx_getspace,        "GETSPACE" },
   { EXT_REGINA_BIFS,unx_gettid,            "GETTID" },
-  { EXT_REGINA_BIFS,arexx_hash,            "HASH" },
-  { EXT_REGINA_BIFS,arexx_import,          "IMPORT" },
+  { EXT_AREXX_BIFS, arexx_hash,            "HASH" },
+  { EXT_AREXX_BIFS, arexx_import,          "IMPORT" },
   { EXT_REGINA_BIFS,cms_index,             "INDEX" },
   { 0,              std_insert,            "INSERT" },
   { EXT_REGINA_BIFS,cms_justify,           "JUSTIFY" },
@@ -178,47 +173,44 @@ static const struct function_type functions[] = {
 #ifdef TRACEMEM
   { EXT_REGINA_BIFS,dbg_listleaked,        "LISTLEAKED" },
 #endif
+  { EXT_REGINA_BIFS,rex_lower,             "LOWER" },
   { EXT_MAKEBUF_BIF,cms_makebuf,           "MAKEBUF" },
   { 0,              std_max,               "MAX" },
 #ifdef TRACEMEM
   { EXT_REGINA_BIFS,dbg_memorystats,       "MEMORYSTATS" },
 #endif
   { 0,              std_min,               "MIN" },
-#ifdef OLD_REGINA_FEATURES
-  { EXT_OPEN_BIF,   unx_open,              "OPEN" },
-#endif /* OLD_REGINA_FEATURES */
+  { EXT_REGINA_BIFS,conflict_open,         "OPEN" },
 #ifdef AREXXIO
   { EXT_REGINA_BIFS,arexx_open,            "OPEN" },
 #endif
   { 0,              std_overlay,           "OVERLAY" },
+  { EXT_REGINA_BIFS,rex_poolid,            "POOLID" },
   { EXT_REGINA_BIFS,unx_popen,             "POPEN" },
   { 0,              std_pos,               "POS" },
 #if defined(_AMIGA) || defined(__AROS__)
   { EXT_REGINA_BIFS,amiga_pragma,          "PRAGMA" },
 #endif
+  { EXT_REGINA_BIFS,unx_putenv,            "PUTENV" },
   { 0,              std_qualify,           "QUALIFY" },
   { 0,              std_queued,            "QUEUED" },
   { 0,              std_random,            "RANDOM" },
-  { EXT_REGINA_BIFS,arexx_randu,           "RANDU" },
-#ifdef AREXXIO
-  { EXT_REGINA_BIFS,arexx_readch,          "READCH" },
-  { EXT_REGINA_BIFS,arexx_readln,          "READLN" },
-#endif
-#if defined(_AMIGA) || defined(__AROS__)
-  { EXT_REGINA_BIFS,amiga_remlib,          "REMLIB" },
-#endif
+  { EXT_AREXX_BIFS, arexx_randu,           "RANDU" },
+  { EXT_AREXX_BIFS, arexx_readch,          "READCH" },
+  { EXT_AREXX_BIFS, arexx_readln,          "READLN" },
   { 0,              std_reverse,           "REVERSE" },
   { 0,              std_right,             "RIGHT" },
 
   { 0,              rex_rxfuncadd,         "RXFUNCADD" },
+#ifdef HAVE_GCI
+  { EXT_REGINA_BIFS,rex_rxfuncdefine,      "RXFUNCDEFINE" },
+#endif
   { 0,              rex_rxfuncdrop,        "RXFUNCDROP" },
-  { 0,              rex_rxfuncerrmsg,      "RXFUNCERRMSG" },
+  { EXT_REGINA_BIFS,rex_rxfuncerrmsg,      "RXFUNCERRMSG" },
   { 0,              rex_rxfuncquery,       "RXFUNCQUERY" },
   { 0,              rex_rxqueue,           "RXQUEUE" },
 
-#ifdef AREXXIO
-  { EXT_REGINA_BIFS,arexx_seek,            "SEEK" },
-#endif
+  { EXT_AREXX_BIFS, arexx_seek,            "SEEK" },
 #if defined(_AMIGA) || defined(__AROS__)
   { EXT_REGINA_BIFS,amiga_setclip,         "SETCLIP" },
 #endif
@@ -232,6 +224,7 @@ static const struct function_type functions[] = {
   { 0,              std_sourceline,        "SOURCELINE" },
   { 0,              std_space,             "SPACE" },
   { EXT_REGINA_BIFS,cms_state,             "STATE" },
+  { EXT_AREXX_BIFS, arexx_storage,         "STORAGE" },
   { 0,              std_stream,            "STREAM" },
   { 0,              std_strip,             "STRIP" },
   { EXT_REGINA_BIFS,arexx_storage,         "STORAGE" },
@@ -245,6 +238,7 @@ static const struct function_type functions[] = {
   { EXT_REGINA_BIFS,dbg_traceback,         "TRACEBACK" },
 
   { 0,              std_translate,         "TRANSLATE" },
+  { EXT_AREXX_BIFS, arexx_trim,            "TRIM" },
   { 0,              std_trunc,             "TRUNC" },
   { EXT_REGINA_BIFS,unx_uname,             "UNAME" },
   { EXT_REGINA_BIFS,unx_unixerror,         "UNIXERROR" },
@@ -257,10 +251,8 @@ static const struct function_type functions[] = {
   { 0,              std_wordlength,        "WORDLENGTH" },
   { 0,              std_wordpos,           "WORDPOS" },
   { 0,              std_words,             "WORDS" },
-#ifdef AREXXIO
-  { EXT_REGINA_BIFS,arexx_writech,         "WRITECH" },
-  { EXT_REGINA_BIFS,arexx_writeln,         "WRITELN" },
-#endif
+  { EXT_AREXX_BIFS, arexx_writech,         "WRITECH" },
+  { EXT_AREXX_BIFS, arexx_writeln,         "WRITELN" },
   { 0,              std_x2b,               "X2B" },
   { 0,              std_x2c,               "X2C" },
   { 0,              std_x2d,               "X2D" },
@@ -290,45 +282,31 @@ void mark_listleaked_params( const tsd_t *TSD )
 }
 #endif
 
-streng *buildtinfunc( tsd_t *TSD, nodeptr this )
+streng *buildtinfunc( tsd_t *TSD, nodeptr thisptr )
 {
    int low=0, topp=0, mid=0, end=1, up=num_funcs-1, i=0 ;
-   streng *ptr=NULL ;
-   int ext=0 ;
-   void *vptr=NULL ;
+   streng *ptr;
+   struct entry_point *vptr;
    streng *(*func)(tsd_t *,cparamboxptr)=NULL ;
-   streng *upper_name;
+   const char *BIFname = NULL; /* set to non-NULL only in case of a BIF */
+   void *BIFfunc = NULL; /* set to non-NULL only in case of a BIF */
 
-   upper_name=Str_upper(Str_dupTSD(this->name));
    /*
     * Look for a function registered in a DLL
     */
-   vptr = loaded_lib_func( TSD, upper_name ) ;
-   if (vptr)
+   vptr = loaded_lib_func( TSD, thisptr->name ) ;
+   if ( vptr )
       func = std_center ; /* e.g. */
-
-   Free_stringTSD( upper_name );
-
-   /*
-    * If no function registered in a DLL, look for one in the
-    * current EXE
-    */
-   if (!func)
-   {
-      ext = external_func( TSD, this->name ) ;
-      if (ext)
-         func = std_center ; /* e.g. */
-   }
 
    /*
     * If no function registered in a DLL or EXE, look for a builtin
     */
    if (!func)
    {
-      topp = Str_len( this->name ) ;
+      topp = Str_len( thisptr->name ) ;
 
-      if (this->u.func)
-         func = this->u.func ;
+      if (thisptr->u.func)
+         func = thisptr->u.func ;
       else
       {
          mid = 0 ;  /* to keep the compiler happy */
@@ -336,13 +314,13 @@ streng *buildtinfunc( tsd_t *TSD, nodeptr this )
          {
             mid = (up+low)/2 ;
             for (i=0; i<topp; i++ )
-               if (this->name->value[i] != functions[mid].funcname[i])
+               if (thisptr->name->value[i] != functions[mid].funcname[i])
                   break ;
 
             if (i==topp)
                end = (functions[mid].funcname[i]!=0x00) ;
             else
-               end = ( functions[mid].funcname[i] - this->name->value[i] ) ;
+               end = ( functions[mid].funcname[i] - thisptr->name->value[i] ) ;
 
             if (end>0)
                up = mid-1 ;
@@ -357,6 +335,7 @@ streng *buildtinfunc( tsd_t *TSD, nodeptr this )
              * If the OPTION; STRICT_ANSI is in effect however, this overrides
              * the extension.
              */
+            BIFname = functions[mid].funcname;
             if (functions[mid].compat)
             {
                if ( get_options_flag( TSD->currlevel, EXT_STRICT_ANSI ) )
@@ -367,13 +346,14 @@ streng *buildtinfunc( tsd_t *TSD, nodeptr this )
                {
                   func = functions[mid].function ;
                   if ( get_options_flag( TSD->currlevel, EXT_CACHEEXT ) )
-                     this->u.func = func ;
+                     thisptr->u.func = func ;
                }
             }
             else
-               this->u.func = func = functions[mid].function ;
+               thisptr->u.func = func = functions[mid].function ;
          }
       }
+      BIFfunc = (void *) func;
    }
 
    if (func)
@@ -386,13 +366,15 @@ streng *buildtinfunc( tsd_t *TSD, nodeptr this )
                      * deallocplink. FGC
                      */
 
-      TSD->bif_first = initplist( TSD, this ) ;
-      if (ext)
-         ptr = do_an_external_exe( TSD, this->name, TSD->bif_first, 0, (char) this->called) ;
-      else if (vptr)
-         ptr = do_an_external_dll( TSD, vptr, TSD->bif_first, (char) this->called ) ;
+      TSD->bif_first = initplist( TSD, thisptr ) ;
+      TSD->BIFname = BIFname;
+      TSD->BIFfunc = (void *) BIFfunc;
+      if (vptr)
+         ptr = call_known_external( TSD, vptr, TSD->bif_first, (char) thisptr->o.called ) ;
       else
          ptr = (*func)(TSD, TSD->bif_first /* ->next */ ) ;
+      TSD->BIFname = NULL;
+      TSD->BIFfunc = NULL;
 
       deallocplink( TSD, TSD->bif_first ) ;
       TSD->bif_first = NULL ;
@@ -412,8 +394,8 @@ streng *buildtinfunc( tsd_t *TSD, nodeptr this )
 			      * deallocplink. FGC
 			      */
 
-      TSD->bif_first = initplist( TSD, this );
-      ptr = try_func_amiga( TSD, this->name, TSD->bif_first, (char) this->called );
+      TSD->bif_first = initplist( TSD, thisptr );
+      ptr = try_func_amiga( TSD, thisptr->name, TSD->bif_first, (char) thisptr->o.called );
       deallocplink( TSD, TSD->bif_first );
       TSD->bif_first = NULL;
      
@@ -432,154 +414,146 @@ streng *buildtinfunc( tsd_t *TSD, nodeptr this )
                                                  */
 
 
-         TSD->bif_first = initplist( TSD, this ) ;
-         ptr = do_an_external_exe( TSD, this->name, TSD->bif_first, 1, (char) this->called ) ;
+         TSD->bif_first = initplist( TSD, thisptr ) ;
+         ptr = call_unknown_external( TSD, thisptr->name, TSD->bif_first, (char) thisptr->o.called ) ;
          deallocplink( TSD, TSD->bif_first ) ;
          TSD->bif_first = NULL ;
       }
       else
-         return NOFUNC ;
+         ptr = NOFUNC;
    }
-   /* can return valid ptr! */
    return ptr;
 }
 
-paramboxptr initplist( tsd_t *TSD, cnodeptr this )
+paramboxptr initplist( tsd_t *TSD, cnodeptr thisptr )
 {
-   paramboxptr first=NULL, new=NULL, currnt=NULL ;
-   streng *pptr=NULL ;
-   streng *junk=NULL ;
+   paramboxptr first,newptr,currnt;
 
    first = currnt = NULL ;
-   for (this=this->p[0]; this; this=this->p[1])
+   for (thisptr=thisptr->p[0]; thisptr; thisptr=thisptr->p[1])
    {
       if (TSD->par_stack)
       {
-         new = TSD->par_stack ;
-         TSD->par_stack = new->next ;
+         newptr = TSD->par_stack ;
+         TSD->par_stack = newptr->next ;
       }
       else
-         new = MallocTSD( sizeof( parambox )) ;
+         newptr = (paramboxptr)MallocTSD( sizeof( parambox )) ;
 
       if (!first)
-         first = currnt = new ;
+         first = currnt = newptr ;
       else
       {
-         currnt->next = new ;
-         currnt = new ;
+         currnt->next = newptr ;
+         currnt = newptr ;
       }
 
-      if (this->type==X_CEXPRLIST && TSD->trace_stat!='I')
+      if (thisptr->type==X_CEXPRLIST && TSD->trace_stat!='I')
       {
-         if (this->u.strng)
-            pptr = this->u.strng ;
+         if (thisptr->u.strng)
+            currnt->value = thisptr->u.strng ;
          else
-            pptr = NULL ;
+            currnt->value  = NULL ;
 
          currnt->dealloc = 0 ;
       }
+      else if ( !thisptr->p[0] )
+      {
+         currnt->dealloc = 1;
+         currnt->value = NULL;
+      }
       else
       {
-         currnt->dealloc = 1 ;
-         if (this->p[0])
-            pptr = evaluate( TSD, this->p[0], &junk ) ;
-         else
-            pptr = NULL ;
-
-         if ( get_options_flag( TSD->currlevel, EXT_PGB_PATCH1 ) ) /* pgb */
-         {
-            /*
-            * This code "removed" 16/04/99 byMH, based on suggestion from
-            * Patrick McPhee.  The case that FGC states as a potential
-            * error, does not cause a problem by removing this code.
-            */
-           /*
-            * Reinstated by FGC 25/11/99 to fix bug 35
-            */
-           /*
-            * FGC: HELP! I really don't know if this will work. The problem
-            * is:
-            * a) is pptr a "new" tree with "new" values ? In this case the
-            *    Str_dupTSD() is wrong. What happens in this case if we don't
-            *    delete it later (dealloc=0) ?
-            * b) junk SEEMS to me as the same as pptr if newly allocated
-            * (see expr.c/evaluate). Why, in this case does it crash ?
-            */
-            if (!junk)
-            {
-               if ( pptr != NULL )
-                  pptr = Str_dupTSD( pptr );
-            }
-            /*
-             * Currently only used in dealloc_plink() some lines below.
-             * I think:
-             *  !junk -->no newly allocated
-             *  values --> not allowed to delete them
-             * BUT, WHAT HAPPENS IN CASE OF junk==NULL? SHALL WE Str_dupTSD pptr ?
-             * THERE ARE GOOD REASONS TO DO IT.  TRY THIS FIRST IN CASE OF
-             * STRANGE RESULTS/CRASHES WITH ARGUMENTS.
-             */
-            else
-            {
-            /*
-             * MH - 3-May-2000
-             * added:
-                  if ( pptr )
-                     currnt->dealloc = 1 ;
-                  else
-             * to remove memory leak as reported by PJM - bug 20000502-55023
-             * seems to be stable
-             */
-               if ( pptr )
-                  currnt->dealloc = 1 ;
-               else
-                  currnt->dealloc = 0 ;
-            }
-         }
-         else
-         {
-            /*
-             * FGC: Following code will cause a crash if a variable x is
-             * passed to a function which uses both arg(1) and x: arg(1)
-             * is a reference to x. Modifying x causes a deletion of arg(1)
-             */
-            if (!junk)
-   /*            pptr = Str_dupTSD( pptr ) ; */
-               currnt->dealloc = 0 ;
-         }
-
+         /*
+          * This fixes bug 590589 and others.
+          * Always force a fresh new return value of evaluate.
+          * Imagine this code, it will produce a crash otherwise:
+          * call func x
+          * return
+          * func:
+          *    x = "new" || "value"
+          *    say arg(1)
+          */
+         currnt->dealloc = 1;
+         currnt->value = evaluate( TSD, thisptr->p[0], NULL );
       }
-
-      currnt->value = pptr ;
    }
 #ifdef TRACEMEM
    TSD->listleaked_params = first ;
 #endif
-   currnt->next = NULL ;
+   if ( currnt )
+      currnt->next = NULL ;
    return first ;
+}
+
+
+paramboxptr initargs( tsd_t *TSD, int argc, const int *lengths,
+                      const char **strings )
+{
+   paramboxptr first,newptr,currnt;
+   int i;
+
+   first = currnt = NULL;
+   for ( i = 0; i < argc; i++ )
+   {
+      if ( TSD->par_stack )
+      {
+         newptr = TSD->par_stack;
+         TSD->par_stack = newptr->next;
+      }
+      else
+         newptr = (paramboxptr)MallocTSD( sizeof( parambox ) );
+
+      if ( !first )
+         first = currnt = newptr;
+      else
+      {
+         currnt->next = newptr;
+         currnt = newptr;
+      }
+
+      if ( lengths[i] == RX_NO_STRING )
+      {
+         currnt->dealloc = 1;
+         currnt->value = NULL;
+      }
+      else
+      {
+         currnt->value = Str_ncreTSD( strings[i], lengths[i] );
+         currnt->dealloc = 1;
+      }
+   }
+
+#ifdef TRACEMEM
+   TSD->listleaked_params = first;
+#endif
+
+   if ( currnt )
+      currnt->next = NULL;
+   return first;
 }
 
 
 void deallocplink( tsd_t *TSD, paramboxptr first )
 {
-   paramboxptr this=NULL ;
+   paramboxptr thisptr;
 
    for (;first;)
    {
-      this = first ;
+      thisptr = first ;
       first = first->next ;
-      if (this->dealloc && this->value)
+      if (thisptr->dealloc && thisptr->value)
       {
-         Free_stringTSD( this->value ) ;
-         this->value = NULL;
+         Free_stringTSD( thisptr->value ) ;
+         thisptr->value = NULL;
       }
 
 #if defined(CHECK_MEMORY)
-      FreeTSD(this);
+      FreeTSD(thisptr);
 #else
       /* Back to the freed-parbox stack: */
-      this->next = TSD->par_stack ;
-      TSD->par_stack = this ;
+      thisptr->next = TSD->par_stack ;
+      TSD->par_stack = thisptr ;
 #endif
    }
 }
@@ -625,7 +599,8 @@ int atozpos( tsd_t *TSD, const streng *text, const char *bif, int argnum )
 {
    int result=0 ;
 
-   if ( ( result = myintatol( TSD, text, 13, bif, argnum ) ) < 0 )
+   /* fixes bug 1108868 */
+   if ( ( result = myintatol( TSD, text, 12, bif, argnum ) ) < 0 )
       exiterror( ERR_INCORRECT_CALL, 13, bif, argnum, tmpstr_of( TSD, text ) )  ;
 
    return result ;
@@ -641,7 +616,7 @@ char getoptionchar( tsd_t *TSD, const streng *text, const char* bif, int argnum,
    if (text->len == 0)
       exiterror( ERR_INCORRECT_CALL, 21, bif, argnum )  ;
 
-   ch = (char) toupper( text->value[0] ) ;
+   ch = (char) rx_toupper( text->value[0] ) ;
    /*
     * If the option supplied is ANSI, then return when we find it.
     */
@@ -691,7 +666,8 @@ int atopos( tsd_t *TSD, const streng *text, const char *bif, int argnum )
 {
    int result=0 ;
 
-   if ( ( result = myintatol( TSD, text, 14, bif, argnum ) ) <= 0 )
+   /* fixes bug 1108868 */
+   if ( ( result = myintatol( TSD, text, 12, bif, argnum ) ) <= 0 )
       exiterror( ERR_INCORRECT_CALL, 14, bif, argnum, tmpstr_of( TSD, text ) ) ;
 
    return result ;
@@ -702,7 +678,7 @@ int atoposorzero( tsd_t *TSD, const streng *text, const char *bif, int argnum )
    int result=0 ;
 
    if ( ( result = myintatol( TSD, text, 11, bif, argnum ) ) < 0 )
-      exiterror( ERR_INCORRECT_CALL, 11, bif, argnum, tmpstr_of( TSD, text ) ) ;
+      exiterror( ERR_INCORRECT_CALL, 17, bif, argnum, tmpstr_of( TSD, text ) ) ;
 
    return result ;
 }
@@ -758,16 +734,6 @@ void checkparam( cparamboxptr params, int min, int max, const char *name )
 }
 
 
-const streng *param( cparamboxptr ptr, int num )
-{
-   int i=0 ;
-   for (i=1;i<num;i++,ptr=ptr->next)
-      if (!ptr)
-         exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "" )  ;
-
-   return ((ptr)&&(ptr->value)) ? ptr->value : NULL ;
-}
-
 /*
  * These functions are rather ugly, but they works :-)
  */
@@ -776,19 +742,20 @@ const streng *param( cparamboxptr ptr, int num )
  * into a struct tm (individual values for year, month, day, year_days and
  * base days).
  */
-int convert_date(const streng *suppdate, char suppformat, struct tm *indate)
+int convert_date(tsd_t *TSD, const streng *suppdate, char suppformat, struct tm *indate)
 {
-   int rc=0,i=0,off=0;
+   int rc,i=0,off=0,save_year=indate->tm_year;
    long num1=0,num2=0,num3=0;
    char buf[20];
-   const char *ptr=suppdate->value;
+   char *ptr=(char*)suppdate->value;
    struct tm *tmpTime;
+   time_t num64;
 
    indate->tm_sec = indate->tm_min = indate->tm_hour = 0;
    switch(suppformat)
    {
-      case 'B':
-      case 'D':
+      case 'B': /* 99999... */
+      case 'D': /* 99999... */
          if (suppdate->len > 19)
             return(1);
          memcpy(buf,ptr,suppdate->len);
@@ -806,37 +773,43 @@ int convert_date(const streng *suppdate, char suppformat, struct tm *indate)
          else
             base2date(num1+basedays(indate->tm_year)-1,indate);
          break;
-      case 'I':
+#if 0
+      case 'I': /* WHAT IS THIS? */
          if (suppdate->len > 19)
             return(1);
          memcpy(buf,ptr,suppdate->len);
          buf[suppdate->len] = '\0';
          if ((num1 = atol(buf)) == 0)
+         {
             for (i=0;i<suppdate->len;i++)
-	       if (buf[i] != '0')
-	          return(1);
+            {
+               if (buf[i] != '0')
+                  return(1);
+            }
+         }
          base2date(num1+basedays(1978)-1,indate);
          break;
-      case 'E':
-      case 'O':
-      case 'U':
+#endif
+      case 'E': /* dd/mm/yy */
+      case 'O': /* yy/mm/dd */
+      case 'U': /* mm/dd/yy */
          if (suppdate->len != 8)
             return(1);
          if (*(ptr+2) != '/' && *(ptr+5) != '/')
               return( 1 );
          memcpy(buf,ptr,2);
          buf[2] = '\0';
-         if ( !isdigit( buf[0] ) || !isdigit( buf[1] ) )
+         if ( !rx_isdigit( buf[0] ) || !rx_isdigit( buf[1] ) )
             return( 1 );
          num1 = atol( buf );
          memcpy(buf,(ptr+3),2);
          buf[2] = '\0';
-         if ( !isdigit( buf[0] ) || !isdigit( buf[1] ) )
+         if ( !rx_isdigit( buf[0] ) || !rx_isdigit( buf[1] ) )
             return( 1 );
          num2 = atol( buf );
          memcpy(buf,(ptr+6),2);
          buf[2] = '\0';
-         if ( !isdigit( buf[0] ) || !isdigit( buf[1] ) )
+         if ( !rx_isdigit( buf[0] ) || !rx_isdigit( buf[1] ) )
             return( 1 );
          num3 = atol( buf );
          switch(suppformat)
@@ -863,10 +836,13 @@ int convert_date(const streng *suppdate, char suppformat, struct tm *indate)
                indate->tm_year = num3;
                break;
          }
+         /*
+          * Work out the century based on a sliding year
+          */
          if (indate->tm_year < 100)   /* do something with century ... */
-            indate->tm_year += (indate->tm_year < 50) ? 2000 : 1900;
+            indate->tm_year += ( indate->tm_year <= (save_year - 2000 ) + 50 ) ? 2000 : 1900;
          break;
-      case 'N':
+      case 'N': /* dd mmm yyyy */
          if (suppdate->len != 11 && suppdate->len != 10)
             return(1);
          if (suppdate->len == 10)
@@ -899,36 +875,65 @@ int convert_date(const streng *suppdate, char suppformat, struct tm *indate)
          indate->tm_mon = num2;
          indate->tm_year = num3;
          break;
-      case 'S':
-         if (suppdate->len != 8)
+      case 'S': /* yyyymmdd */
+         if ( suppdate->len != 8 )
             return(1);
-         memcpy(buf,ptr,4);
+         memcpy( buf, ptr, 4 );
          buf[4] = '\0';
-         if ((num1 = atol(buf)) == 0)
+         if ( ( num1 = atol( buf ) ) == 0 )
             return(1);
-         memcpy(buf,(ptr+4),2);
+         memcpy( buf, (ptr+4), 2 );
          buf[2] = '\0';
-         if ((num2 = atol(buf)) == 0)
+         if ( ( num2 = atol( buf ) ) == 0 )
             return(1);
-         memcpy(buf,(ptr+6),2);
+         memcpy( buf, (ptr+6), 2 );
          buf[2] = '\0';
-         if ((num3 = atol(buf)) == 0)
+         if ( ( num3 = atol( buf ) ) == 0 )
             return(1);
          indate->tm_mday = num3;
          indate->tm_mon = num2-1;
          indate->tm_year = num1;
          break;
-      case 'T':
-         num1 = atol( ptr );
-         tmpTime = localtime( &num1 );
-         memcpy( indate, tmpTime, sizeof(struct tm) );
+      case 'I': /* yyyy-mm-dd */
+         if ( suppdate->len != 10 )
+            return(1);
+         if ( ptr[4] != '-' )
+            return(1);
+         if ( ptr[7] != '-' )
+            return(1);
+         memcpy( buf, ptr, 4 );
+         buf[4] = '\0';
+         if ( ( num1 = atol( buf ) ) == 0 )
+            return(1);
+         memcpy( buf, (ptr+5), 2 );
+         buf[2] = '\0';
+         if ( ( num2 = atol( buf ) ) == 0 )
+            return(1);
+         memcpy( buf, (ptr+8), 2 );
+         buf[2] = '\0';
+         if ( ( num3 = atol( buf ) ) == 0 )
+            return(1);
+         indate->tm_mday = num3;
+         indate->tm_mon = num2-1;
+         indate->tm_year = num1;
+         break;
+      case 'T': /* +|-999999... */
+         num64 = streng_to_rx64( TSD, suppdate, &rc );
+         if ( rc )
+            return 1;
+         tmpTime = gmtime( (time_t *)&num64 );
+         *indate = *tmpTime;
          indate->tm_year += 1900;
+         /*
+          * Reset time to 00:00:00
+          */
+         indate->tm_sec = indate->tm_hour = indate->tm_min = 0;
          break;
       default:
          /* should not get here */
          break;
    }
-   if (indate->tm_mday > MonthDays[indate->tm_mon] + leapyear(indate->tm_year)
+   if (indate->tm_mday > ( MonthDays[indate->tm_mon] + ( (indate->tm_mon == 1) ? leapyear(indate->tm_year) : 0 ) )
    ||  indate->tm_mday < 1
    ||  indate->tm_mon > 11
    ||  indate->tm_mon < 0
@@ -939,7 +944,7 @@ int convert_date(const streng *suppdate, char suppformat, struct tm *indate)
                      ((leapyear(indate->tm_year)&&indate->tm_mon>1)?1:0)+
                      indate->tm_mday - 1;
    indate->tm_wday = (((indate->tm_yday+basedays(indate->tm_year))+8) % 7);
-   return(rc);
+   return(0);
 }
 
 /*
@@ -1005,33 +1010,42 @@ static void base2date(long basedate,void *conv_tmdata)
  */
 int convert_time( const tsd_t *TSD, const streng *supptime, char suppformat, struct tm *intime, time_t *unow)
 {
-   int rc=0;
+   int rc,offset;
    long num1=0,num2=0,num3=0,num4=0;
    char buf[20];
-   const char *ptr=supptime->value;
+   char *ptr=(char*)supptime->value;
    struct tm *tmpTime;
+   time_t num64;
 
    switch(suppformat)
    {
-      case 'C':
-         if (*(ptr+2) != ':')
+      case 'C': /* hh:mmXX */
+         /*
+          * Format of time can be "3:45pm", or "11:45pm"; ie hour can be 1 or
+          * two digits. Use of "offset" below fixes bug 742725
+          */
+         if (*(ptr+2) == ':')
+            offset = 1;
+         else if (*(ptr+1) == ':')
+            offset = 0;
+         else
             return(1);
-         if (memcmp("am",ptr+5,2) != 0 && memcmp("pm",ptr+5,2) != 0)
+         if (memcmp("am",ptr+4+offset,2) != 0 && memcmp("pm",ptr+4+offset,2) != 0)
             return(1);
-         memcpy(buf,ptr,2);
-         buf[2] = '\0';
+         memcpy(buf,ptr,1+offset);
+         buf[1+offset] = '\0';
          if ((num1 = atol(buf)) == 0 && strcmp("00",buf) != 0)
             return(1);
          if (num1 > 12)
             return(1);
-         memcpy(buf,ptr+3,2);
+         memcpy(buf,ptr+2+offset,2);
          buf[2] = '\0';
          if ((num2 = atol(buf)) == 0 && strcmp("00",buf) != 0)
             return(1);
          if (num2 > 59)
             return(1);
          intime->tm_sec = 0;
-         if (memcmp("am",ptr+5,2)==0)
+         if (memcmp("am",ptr+4+offset,2)==0)
          {
             if (num1 == 12)
                intime->tm_hour = 0;
@@ -1048,16 +1062,16 @@ int convert_time( const tsd_t *TSD, const streng *supptime, char suppformat, str
          intime->tm_min = num2;
          *unow = 0;
          break;
-      case 'H':
-      case 'M':
-      case 'S':
+      case 'H': /* 99999... */
+      case 'M': /* 99999... */
+      case 'S': /* 99999... */
          /*
           * Convert supptime to whole number using streng_to_int()
           * rather than atoi(). Bug #20000922-78622
           */
          num1 = streng_to_int( TSD, supptime, &rc );
-         if ( rc ) return 1;
-         if ( num1 < 0 )
+         if ( rc
+         || num1 < 0 )
             return(1);
          switch(suppformat)
          {
@@ -1080,8 +1094,8 @@ int convert_time( const tsd_t *TSD, const streng *supptime, char suppformat, str
             return(1);
          *unow = 0;
          break;
-      case 'L':
-      case 'N':
+      case 'L': /* hh:mm:ss.mmmmmm */
+      case 'N': /* hh:mm:ss */
          if (suppformat == 'N' && supptime->len != 8)
             return(1);
          if (suppformat == 'L' && supptime->len != 15)
@@ -1126,10 +1140,12 @@ int convert_time( const tsd_t *TSD, const streng *supptime, char suppformat, str
             return(1);
          *unow = num4;
          break;
-      case 'T':
-         num1 = atol( ptr );
-         tmpTime = localtime( &num1 );
-         memcpy( intime, tmpTime, sizeof(struct tm) );
+      case 'T': /* +|-999999... */
+         num64 = streng_to_int( TSD, supptime, &rc );
+         if ( rc )
+            return 1;
+         tmpTime = gmtime( (time_t *)&num64 );
+         *intime = *tmpTime;
          *unow = 0;
          break;
       default:
@@ -1137,5 +1153,68 @@ int convert_time( const tsd_t *TSD, const streng *supptime, char suppformat, str
          break;
    }
 
-   return(rc);
+   return(0);
+}
+/*
+ * The following functions are wrappers for BIFs that are syntactically different
+ * depending on the OPTONS used.
+ */
+
+static streng *conflict_close( tsd_t *TSD, cparamboxptr parms )
+{
+   if ( get_options_flag( TSD->currlevel, EXT_AREXX_SEMANTICS ) )
+      return( arexx_close( TSD, parms ) );
+   else
+      return( unx_close( TSD, parms ) );
+}
+
+static streng *conflict_eof( tsd_t *TSD, cparamboxptr parms )
+{
+   if ( get_options_flag( TSD->currlevel, EXT_AREXX_SEMANTICS ) )
+      return( arexx_eof( TSD, parms ) );
+   else
+      return( unx_eof( TSD, parms ) );
+}
+
+static streng *conflict_open( tsd_t *TSD, cparamboxptr parms )
+{
+   if ( get_options_flag( TSD->currlevel, EXT_AREXX_SEMANTICS ) )
+      return( arexx_open( TSD, parms ) );
+   else
+      return( unx_open( TSD, parms ) );
+}
+
+/*
+ * BIFname tries to guess the name of the BIF we currently evaluate.
+ * We try to identify cached functions pointers.
+ */
+const char *BIFname( tsd_t *TSD )
+{
+   int i;
+   void *func;
+
+   assert( TSD->currentnode );
+
+   if ( TSD->BIFname != NULL )
+   {
+      return TSD->BIFname;
+   }
+
+   if ( TSD->BIFfunc != NULL )
+   {
+      func = TSD->BIFfunc;
+   }
+   else
+   {
+      func = (void *) TSD->currentnode->u.func;
+
+   }
+   for ( i = 0; i < num_funcs; i++ )
+   {
+      if ( (void *) functions[i].function == func )
+      {
+         return functions[i].funcname;
+      }
+   }
+   return "(internal)";
 }

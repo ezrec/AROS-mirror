@@ -35,7 +35,7 @@
   9,  2,OTHERWISE hat kein zugehöriges SELECT
  10,  0,Unerwartetes oder unpassendes END
  10,  1,END hat kein zugehöriges DO oder SELECT
- 10,  2,Dem END passend zum DO in Zeile %d muß ein Symbol passend für einer Laufvariablen folgen (oder ganz ohne sein); "%s" gefunden|<linenumber>,<token>
+ 10,  2,Dem END passend zum DO in Zeile %d muss ein Symbol passend für eine Laufvariable folgen (oder ganz ohne sein); "%s" gefunden|<linenumber>,<token>
  10,  3,Dem END passend zum DO in Zeile %d darf kein Symbol folgen, da keine Laufvariablen existieren; "%s" gefunden|<linenumber>,<token>
  10,  4,Dem END passend zum SELECT in Zeile %d darf kein Symbol folgen; "%s" gefunden|<linenumber>,<token>
  10,  5,END darf nicht direkt einem THEN folgen
@@ -47,8 +47,8 @@
  14,  0,Unvollständiges DO/SELECT/IF
  14,  1,DO-Anweisung erwartet ein passendes END
  14,  2,SELECT-Anweisung erwartet ein passendes END
- 14,  3,THEN erwartet ein nachfolgende Anweisung
- 14,  4,ELSE erwartet ein nachfolgende Anweisung
+ 14,  3,THEN erwartet eine nachfolgende Anweisung
+ 14,  4,ELSE erwartet eine nachfolgende Anweisung
  15,  0,Ungültige Hexadezimal- oder Binär-Zeichenkette
  15,  1,Ungültige Position eines Leerzeichens an Position %d in der Hexadezimal-Zeichenkette|<position>
  15,  2,Ungültige Position eines Leerzeichens an Position %d in der Binär-Zeichenkette|<position>
@@ -79,8 +79,8 @@
  22,  1,Ungültige Zeichen in der Zeichenkette '%s'X|<hex-encoding>
  23,  0,Ungültige Daten-Zeichenkette
  23,  1,Ungültige Daten-Zeichenkette '%s'X|<hex-encoding>
- 24,  0,Ungültige TRACE-Anfrage
- 24,  1,Ein TRACE-Anfragezeichen muß eines aus "%s" sein; "%c" gefunden|ACEFILNOR,<value>
+ 24,  0,Ungültige TRACE-Anforderung
+ 24,  1,Ein TRACE-Anforderungszeichen muss eines aus "%s" sein; "%c" gefunden|ACEFILNOR,<value>
  25,  0,Ungültiges Folge-Schlüsselwort gefunden
  25,  1,CALL ON fordert als Nachfolger eines der Schlüsselwörter %s; "%s" gefunden|<keywords>,<token>
  25,  2,CALL OFF fordert als Nachfolger eines der Schlüsselwörter %s; "%s" gefunden|<keywords>,<token>
@@ -99,14 +99,14 @@
  25, 16,FOREVER fordert als Nachfolger eines der Schlüsselwörter %s; "%s" gefunden|<keywords>,<token>
  25, 17,PROCEDURE fordert als Nachfolger eines der Schlüsselwörter EXPOSE; "%s" gefunden|<token>
  26,  0,Ungültige ganze Zahl
- 26,  1,Ganze zahlen müssen innerhalb der DIGITS-Begrenzung(%d) bleiben; "%s" gefunden|<value>,<value>
- 26,  2,Der Wert des Ausdrucks für den Wiederholungszähler der DO-Anweisung muß Null oder eine positive ganze Zahl sein; "%s" gefunden|<value>
- 26,  3,Der Wert des FOR-Ausdrucks der DO-Anweisung muß Null oder eine positive ganze Zahl sein; "%s" gefunden|<value>
- 26,  4,Positionsparameter der Suchschablone muß eine ganze Zahl sein; "%s" gefunden|<value>
- 26,  5,NUMERIC DIGITS-Wert muß Null oder eine positive ganze Zahl sein; "%s" gefunden|<value>
- 26,  6,NUMERIC FUZZ-Wert muß Null oder eine positive ganze Zahl sein; "%s" gefunden|<value>
- 26,  7,Zahl bei der TRACE-Setzung muß eine ganze Zahl sein; "%s" gefunden|<value>
- 26,  8,Operand auf der rechten Seite des Potenzierungsoperators ("**") muß eine ganze Zahl sein; "%s" gefunden|<value>
+ 26,  1,Ganze Zahlen müssen innerhalb der DIGITS-Begrenzung(%d) bleiben; "%s" gefunden|<value>,<value>
+ 26,  2,Der Wert des Ausdrucks für den Wiederholungszähler der DO-Anweisung muss Null oder eine positive ganze Zahl sein; "%s" gefunden|<value>
+ 26,  3,Der Wert des FOR-Ausdrucks der DO-Anweisung muss Null oder eine positive ganze Zahl sein; "%s" gefunden|<value>
+ 26,  4,Positionsparameter der Suchschablone muss eine ganze Zahl sein; "%s" gefunden|<value>
+ 26,  5,NUMERIC DIGITS-Wert muss eine positive ganze Zahl sein; "%s" gefunden|<value>
+ 26,  6,NUMERIC FUZZ-Wert muss Null oder eine positive ganze Zahl sein; "%s" gefunden|<value>
+ 26,  7,Zahl bei der TRACE-Setzung muss eine ganze Zahl sein; "%s" gefunden|<value>
+ 26,  8,Operand auf der rechten Seite des Potenzierungsoperators ("**") muss eine ganze Zahl sein; "%s" gefunden|<value>
  26, 11,Ergebnis der Operation %s %% %s benötigt eine Exponentialnotation beim aktuellen NUMERIC DIGITS-Wert %d|<value>,<value>,<value>
  26, 12,Ergebnis der %%-Operation, benötigt für die Operation %s // %s, benötigt eine Exponentialnotation beim aktuellen NUMERIC DIGITS-Wert %d|<value>,<value>,<value>
  27,  0,Ungültige DO-Syntax
@@ -114,8 +114,8 @@
  28,  0,Ungültiges LEAVE oder ITERATE
  28,  1,LEAVE ist nur in einer wiederholenden DO-Schleife erlaubt
  28,  2,ITERATE ist nur in einer wiederholenen DO-Schleife erlaubt
- 28,  3,Das Symbol hinter LEAVE ("%s") muß entweder eine Laufvariable einer aktuellen DO-Schleife sein oder komplett fehlen|<token>
- 28,  4,Das Symbol hinter ITERATE ("%s") muß entweder eine Laufvariable einer aktuellen DO-Schleife sein oder komplett fehlen|<token>
+ 28,  3,Das Symbol hinter LEAVE ("%s") muss entweder eine Laufvariable einer aktuellen DO-Schleife sein oder komplett fehlen|<token>
+ 28,  4,Das Symbol hinter ITERATE ("%s") muss entweder eine Laufvariable einer aktuellen DO-Schleife sein oder komplett fehlen|<token>
  29,  0,Umbegungsname zu lang
  29,  1,Umgebungsname ist länger als %d Zeichen; "%s" gefunden|#Limit_EnvironmentName,<name>
  30,  0,Name oder Zeichenkette zu lang
@@ -127,16 +127,16 @@
  31,  3,Variablensymbol darf nicht mit einem "." beginnen; "%s" gefunden|<token>
  32,  0,[Ungültige Benutzung eines Stamms]
  33,  0,Ungültiges Ergebnis eines Ausdrucks
- 33,  1,Wert von NUMERIC DIGITS "%d" darf den von NUMERIC FUZZ "(%d)" nicht überschreiten|<value>,<value>
+ 33,  1,Wert von NUMERIC DIGITS "%d" muss größer sein als der von NUMERIC FUZZ "(%d)"|<value>,<value>
  33,  2,Wert von NUMERIC DIGITS "%d" darf %d nicht überschreiten|<value>,#Limit_Digits
- 33,  3,Ergebnis des Ausdrucks hinter NUMERIC FORM muß mit "E" oder "S" anfangen; "%s" gefunden|<value>
+ 33,  3,Ergebnis des Ausdrucks hinter NUMERIC FORM muss mit "E" oder "S" anfangen; "%s" gefunden|<value>
  34,  0,Logischer Wert nicht "0" oder "1"
- 34,  1,Wert des Ausdrucks hinter dem IF-Schlüsselwort muß entweder "0" oder "1" sein; "%s" gefunden|<value>
- 34,  2,Wert des Ausdrucks hinter dem WHEN-Schlüsselwort muß entweder "0" oder "1" sein; "%s" gefunden|<value>
- 34,  3,Wert des Ausdrucks hinter dem WHILE-Schlüsselwort muß entweder "0" oder "1" sein; "%s" gefunden|<value>
- 34,  4,Wert des Ausdrucks hinter dem UNTIL-Schlüsselwort muß entweder "0" oder "1" sein; "%s" gefunden|<value>
- 34,  5,Wert des Ausdrucks zur Linken des logischen Operators "%s" muß entweder "0" oder "1"; "%s" gefunden|<operator>,<value>
- 34,  6,Wert des Ausdrucks zur Rechten des logischen Operators "%s" muß entweder "0" oder "1"; "%s" gefunden|<operator>,<value>
+ 34,  1,Wert des Ausdrucks hinter dem IF-Schlüsselwort muss entweder "0" oder "1" sein; "%s" gefunden|<value>
+ 34,  2,Wert des Ausdrucks hinter dem WHEN-Schlüsselwort muss entweder "0" oder "1" sein; "%s" gefunden|<value>
+ 34,  3,Wert des Ausdrucks hinter dem WHILE-Schlüsselwort muss entweder "0" oder "1" sein; "%s" gefunden|<value>
+ 34,  4,Wert des Ausdrucks hinter dem UNTIL-Schlüsselwort muss entweder "0" oder "1" sein; "%s" gefunden|<value>
+ 34,  5,Wert des Ausdrucks zur Linken des logischen Operators "%s" muss entweder "0" oder "1"; "%s" gefunden|<operator>,<value>
+ 34,  6,Wert des Ausdrucks zur Rechten des logischen Operators "%s" muss entweder "0" oder "1"; "%s" gefunden|<operator>,<value>
  35,  0,Ungültiger Ausdruck
  35,  1,Ungültiger Ausdruck entdeckt bei "%s"|<token>
  36,  0,Fehlende schließende Klammer ")" im Ausdruck
@@ -154,45 +154,60 @@
  40,  4,Zu viele Argumente beim Aufruf von "%s"; das Maximum ist %d|<bif>,<argnumber>
  40,  5,Fehlendes Argument beim Aufruf von "%s"; Argument %d wird benötigt|<bif>,<argnumber>
  40,  9,Routine %s, Argument %d: Exponent überschreitet %d Ziffern; "%s" gefunden|<bif>,<argnumber>,#Limit_ExponentDigits,<value>
- 40, 11,Routine %s, Argument %d muß eine Zahl sein; "%s" gefunden|<bif>,<argnumber>,<value>
- 40, 12,Routine %s, Argument %d muß eine ganze Zahl sein; "%s" gefunden|<bif>,<argnumber>,<value>
- 40, 13,Routine %s, Argument %d muß Null oder positiv sein; "%s" gefunden|<bif>,<argnumber>,<value>
- 40, 14,Routine %s, Argument %d muß positiv sein; "%s" gefunden|<bif>,<argnumber>,<value>
- 40, 17,Routine %s, Argument 1 muß einen Ganzzahlteil im Bereich 0-90 Ziffern und einen Nachkommateil nicht größer als .9 haben; "%s" gefunden|<bif>,<value>
+ 40, 11,Routine %s, Argument %d muss eine Zahl sein; "%s" gefunden|<bif>,<argnumber>,<value>
+ 40, 12,Routine %s, Argument %d muss eine ganze Zahl sein; "%s" gefunden|<bif>,<argnumber>,<value>
+ 40, 13,Routine %s, Argument %d muss Null oder positiv sein; "%s" gefunden|<bif>,<argnumber>,<value>
+ 40, 14,Routine %s, Argument %d muss positiv sein; "%s" gefunden|<bif>,<argnumber>,<value>
+ 40, 17,Routine %s, Argument 1 muss einen Ganzzahlteil im Bereich 0-90 Ziffern und einen Nachkommateil nicht größer als .9 haben; "%s" gefunden|<bif>,<value>
  40, 18,Routine %s, Umwandlung verlangt ein Jahr im Bereich 0001 bis 9999|<bif>
  40, 19,Routine %s, Argument 2, "%s", genügt nicht dem Format beschrieben in Argument 3, "%s"|<bif>,<value>,<value>
  40, 21,Routine %s, Argument %d darf nicht leer sein|<bif>,<argnumber>
- 40, 23,Routine %s, Argument %d muß ein einzelnes Zeichen sein; "%s" gefunden|<bif>,<argnumber>,<value>
- 40, 24,Routine %s, Argument 1 muß eine Binätzeichenkette sein; "%s" gefunden|<bif>,<value>
- 40, 25,Routine %s, Argument 1 muß eine Hexadezimalzeichenkette sein; "%s" gefunden|<bif>,<value>
- 40, 26,Routine %s, Argument 1 muß ein gültiges Symbol sein; "%s" gefunden|<bif>,<value>
- 40, 27,Routine %s, Argument 1 muß ein gültiger Dateiname sein; "%s" gefunden|<bif>,<value>
- 40, 28,Routine %s, Argument %d: Option muß mit einem Zeichen aus "%s" anfangen; "%s" gefunden|<bif>,<argnumber>,<optionslist>,<value>
+ 40, 23,Routine %s, Argument %d muss ein einzelnes Zeichen sein; "%s" gefunden|<bif>,<argnumber>,<value>
+ 40, 24,Routine %s, Argument 1 muss eine Binärzeichenkette sein; "%s" gefunden|<bif>,<value>
+ 40, 25,Routine %s, Argument 1 muss eine Hexadezimalzeichenkette sein; "%s" gefunden|<bif>,<value>
+ 40, 26,Routine %s, Argument 1 muss ein gültiges Symbol sein; "%s" gefunden|<bif>,<value>
+ 40, 27,Routine %s, Argument 1 muss ein gültiger Dateiname sein; "%s" gefunden|<bif>,<value>
+ 40, 28,Routine %s, Argument %d: Option muss mit einem Zeichen aus "%s" anfangen; "%s" gefunden|<bif>,<argnumber>,<optionslist>,<value>
  40, 29,Routine %s, Umwandlung zum Format "%s" ist nicht erlaubt|<bif>,<value>
  40, 31,Routine %s, Argument 1 ("%d") darf 100000 nicht überschreiten|<bif>,<value>
  40, 32,Routine %s, die Differenz zwischen Argument 1 ("%d") und Argument 2 ("%d") darf 100000 nicht überschreiten|<bif>,<value>,<value>
- 40, 33,Routine %s, Argument 1 ("%d") muß kleiner oder gleich Argument 2 ("%d") sein|<bif>,<value>,<value>
- 40, 34,Routine %s, Argument 1 ("%d") muß kleiner oder gleich der Anzahl der Zeilen im Programm (%d) sein|<bif>,<value>,<sourceline()>
+ 40, 33,Routine %s, Argument 1 ("%d") muss kleiner oder gleich Argument 2 ("%d") sein|<bif>,<value>,<value>
+ 40, 34,Routine %s, Argument 1 ("%d") muss kleiner oder gleich der Anzahl der Zeilen im Programm (%d) sein|<bif>,<value>,<sourceline()>
  40, 35,Routine %s, Argument 1 kann nicht als ganze Zahl dargestellt werden; "%s" gefunden|<bif>,<value>
- 40, 36,Routine %s, Argument 1 muß der Name einer Variablen im Namensraum sein; "%s" gefunden|<bif>,<value>
- 40, 37,Routine %s, Argument 3 muß der Name eines Namensraums sein; "%s" gefunden|<bif>,<value>
+ 40, 36,Routine %s, Argument 1 muss der Name einer Variablen im Namensraum sein; "%s" gefunden|<bif>,<value>
+ 40, 37,Routine %s, Argument 3 muss der Name eines Namensraums sein; "%s" gefunden|<bif>,<value>
  40, 38,Routine %s, Argument %d ist nicht groß genug, um "%s" darzustellen|<bif>,<argnumber>,<value>
  40, 39,Routine %s, Argument 3 ist weder Null noch Eins; "%s" gefunden|<bif>,<value>
- 40, 41,Routine %s, Argument %d muß innerhalb der Dateigrenzen sein; "%s" gefunden|<bif>,<argnumber>,<value>
+ 40, 41,Routine %s, Argument %d muss innerhalb der Dateigrenzen sein; "%s" gefunden|<bif>,<argnumber>,<value>
  40, 42,Routine %s, Argument 1: auf dieser Datei kann nicht positioniert werden; "%s" gefunden|<bif>,<value>
- 40,914,[Routine %s, Argument %d: muß ein Wert aus "%s" sein; found "%s"]|<bif>,<argnumber>,<optionslist>,<value>
+ 40,914,[Routine %s, Argument %d: muss ein Wert aus "%s" sein; gefunden: "%s"]|<bif>,<argnumber>,<optionslist>,<value>
  40,920,[Routine %s: Systemfehler bei der Ein-/Ausgabe auf der Datei; %s]|<bif>,<description>
  40,921,[Routine %s, Argument %d: Dateipositionierung im Modus "%s"; nicht kompatibel mit dem Öffnungsmodus]|<bif>,<argnumber>,<value>
  40,922,[Routine %s, Argument %d: Zuwenig Folgebefehle; das Minimum ist %d; gefunden %d]|<bif>,<argnumber>,<value>,<value>
  40,923,[Routine %s, Argument %d, Zuviele Folgebefehle; das Maximum ist %d; gefunden %d]|<bif>,<argnumber>,<value>,<value>
  40,924,[Routine %s, Argument %d, ungültige Positionierungsbasis; erwartet wird ein Wort aus "%s"; gefunden "%s"]|<bif>,<argnumber>,<value>,<value>
+ 40,930,[Routine RXQUEUE, Funktion TIMEOUT: Ein Ganzzahlwert zwischen 0 und %d erwartet; gefunden: \"%s\"]|<value>,<value>
+ 40,980,Unerwartete Eingabe, entweder unbekannter Typ oder nicht erlaubte Daten%s%s|: ,<location>
+ 40,981,Zahl außerhalb des erlaubten Bereichs%s%s|: ,<location>
+ 40,982,Zeichenkette zu lang für den definierten Puffer%s%s|: ,<location>
+ 40,983,Illegale Kombination von Typ/Größe%s%s|: ,<location>
+ 40,984,Nicht unterstützte Zahl wie NAN, +INF, -INF%s%s|: ,<location>
+ 40,985,Struktur zu komplex für den statischen internen Puffer%s%s|: ,<location>
+ 40,986,Ein Element in der Struktur fehlt%s%s|: ,<location>
+ 40,987,Ein Wert in der Struktur fehlt%s%s|: ,<location>
+ 40,988,Der Name oder ein Namensteil ist ungültig für den Interpreter%s%s|: ,<location>
+ 40,989,Ein Problem tauchte auf bei der Schnittstelle zwischen Regina und GCI%s%s|: ,<location>
+ 40,990,Der Typ passt nicht zu den Anforderungen an Basistypen (Argumente/Rückgabewert)%s%s|: ,<location>
+ 40,991,Die Anzahl der Argument ist falsch oder ein Argument fehlt%s%s|: ,<location>
+ 40,992,GCI's interner Argumentstack lief über%s%s|: ,<location>
+ 40,993,GCI zählte zu viele geschachtelte LIKE-Container%s%s|: ,<location>
  41,  0,Fehlerhafte Zahlumwandlung
  41,  1,Nichtnumerischer Wert ("%s") zur Linken des arithmetischen Operators "%s"|<value>,<operator>
  41,  2,Nichtnumerischer Wert ("%s") zur Rechten des arithmetischen Operators "%s"|<value>,<operator>
  41,  3,Nichtnumerischer Wert ("%s") mit dem Präfix-Operator "%s"|<value>,<operator>
- 41,  4,Wert des TO-Ausdrucks in der DO-Anweisung muß numerisch sein; "%s" gefunden|<value>
- 41,  5,Wert des BY-Ausdrucks in der DO-Anweisung muß numerisch sein; "%s" gefunden|<value>
- 41,  6,Wert des Laufvariablen-Ausdrucks der DO-Anweisung muß numerisch sein; "%s" gefunden|<value>
+ 41,  4,Wert des TO-Ausdrucks in der DO-Anweisung muss numerisch sein; "%s" gefunden|<value>
+ 41,  5,Wert des BY-Ausdrucks in der DO-Anweisung muss numerisch sein; "%s" gefunden|<value>
+ 41,  6,Wert des Laufvariablen-Ausdrucks der DO-Anweisung muss numerisch sein; "%s" gefunden|<value>
  41,  7,Exponent überschreitet %d Ziffern; "%s" gefunden|#Limit_ExponentDigits,<value>
  42,  0,Arithmetischer Über-/Unterlauf
  42,  1,Arithmetischer Überlauf erkannt bei "%s %s %s"; Exponent des Ergebnisses benötigt mehr als %d Stellen|<value>,<operator>,<value>,#Limit_ExponentDigits
@@ -221,11 +236,11 @@
  53,  0,Ungültige Option
  53,  1,Zeichenkette oder Symbol erwartet nach dem STREAM-Schlüsselwort; "%s" gefunden|<token>
  53,  2,Variablenname erwartet nach dem STEM-Schlüsselwort; "%s" gefunden|<token>
- 53,  3,Argument zu STEM muß einen Punkt als letztes Zeichen haben;"%s" gefunden|<name>
+ 53,  3,Argument zu STEM muss einen Punkt als letztes Zeichen haben;"%s" gefunden|<name>
  53,100,Zeichenkette oder Symbol erwartet nach dem LIFO-Schlüsselwort; "%s" gefunden|<token>
  53,101,Zeichenkette oder Symbol erwartet nach dem FIFO-Schlüsselwort; "%s" gefunden|<token>
  54,  0,Ungültiger STEM-Name
- 54,  1,Für diesen STEM APPEND-Befehl muß "%s" als Wert eine Zeilenanzahl enthalten; "%s" gefunden|<name>,<value>
+ 54,  1,Für diesen STEM APPEND-Befehl muss "%s" als Wert eine Zeilenanzahl enthalten; "%s" gefunden|<name>,<value>
 #
 # Alle Fehlermeldungen nach dieser Zeile sind nicht durch ANSI definiert.
 #
@@ -237,11 +252,12 @@
  90,  0,[Nicht-ANSI-Besonderheit mit "OPTIONS STRICT_ANSI" benutzt]
  90,  1,[%s ist eine Erweiterungs-BIF von Regina (BIF = built in function, Standardfunktion)]|<bif>
  90,  2,[%s ist eine Erweiterungsinstruktion von Regina]|<token>
- 90,  3,[Routine %s, Argument %d: Option muß ein Wert aus "%s" sein, wenn "OPTIONS STRICT_ANSI" vorliegt; Regina-Erweiterung "%s" gefunden]|<bif>,<argnumber>,<optionslist>,<value>
+ 90,  3,[Routine %s, Argument %d: Option muss ein Wert aus "%s" sein, wenn "OPTIONS STRICT_ANSI" vorliegt; Regina-Erweiterung "%s" gefunden]|<bif>,<argnumber>,<optionslist>,<value>
  93,  0,[Ungültiger Aufruf einer Routine]
- 93,  1,[Das STREAM-Kommando %s forder als Nachfolger eines der Worte "%s"; "%s" gefunden]|<token>,<value>,<value>
- 93,  3,[Das STREAM-Kommando muß eines sein aus "%s"; "%s" gefunden]|<value>,<value>
+ 93,  1,[Das STREAM-Kommando %s fordert als Nachfolger eines der Worte "%s"; "%s" gefunden]|<token>,<value>,<value>
+ 93,  3,[Das STREAM-Kommando muss eines sein aus "%s"; "%s" gefunden]|<value>,<value>
  94,  0,[Schnittstellenfehler mit einer externen Warteschlange]
+ 94,  1,[Externe Warteschlange heraus gefestsetzt]
  94, 99,[Interner Fehler mit der Schnittstelle der externen Warteschlange: %d "%s"]|<description>,<systemerror>
  94,100,[Allgemeiner Systemfehler mit der Schnittstelle der externen Warteschlange. %s. %s]|<description>,<systemerror>
  94,101,[Fehler beim Verbinden mit %s auf Portnummer %d: "%s"]|<machine>,<portnumber>,<systemerror>
@@ -251,7 +267,10 @@
  94,105,[Kann die Schnittstelle zu den Windows-Sockets nicht hochfahren: %s]|<systemerror>
  94,106,[Höchstanzahl für externe Warteschlangen überschritten: %d]|<maxqueues>
  94,107,[Fehler während des Lesens eines Sockets: %s]|<systemerror>
- 94,108,[Ungültiger Schalter weitergegeben. Es muß einer aus "%s" sein.]|<switch>
+ 94,108,[Ungültiger Schalter weitergegeben. Es muss einer aus "%s" sein.]|<switch>
+ 94,109,[Queue \"%s\" nicht gefunden]|<queuename>
+ 94,110,[Routine %s ungültig bei externen Queues]|<bif>
+ 94,111,[Routine RXQUEUE, Funktion %s ungültig bei internen Queues]|<functionname>
  95,  0,[Gesperrte Routine im "geschützten" Modus benutzt]
  95,  1,[Routine %s ungültig im "geschützten" Modus]|<token>
  95,  2,[Routine %s, Argument %d ungültig im "geschützten" Modus]|<bif>,<argnumber>

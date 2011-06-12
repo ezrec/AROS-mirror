@@ -8,7 +8,7 @@
 
 extern "C"
 {
-int epoc32_uname(struct utsname *name)
+int epoc32_uname(struct regina_utsname *name)
 {
    TMachineInfoV1Buf machine;
    UserHal::MachineInfo (machine);

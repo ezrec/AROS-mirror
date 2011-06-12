@@ -60,6 +60,12 @@ static void cleanup(int dummy, void *ptr)
   node->TSD = NULL; /* Node is cleared */
 }
 
+int IfcReginaCleanup( VOID )
+{
+    /* Do nothing, currently cleanup is done through on_exit function */
+    return 1;
+}
+
 tsd_t *ReginaInitializeThread(void)
 {
    int OK;
@@ -83,26 +89,31 @@ tsd_t *ReginaInitializeThread(void)
    if (!OK)
       return(NULL);
 
-   OK |= init_vars(__regina_tsd);      /* Initialize the variable module    */
-   OK |= init_stacks(__regina_tsd);    /* Initialize the stack module       */
-   OK |= init_filetable(__regina_tsd); /* Initialize the files module       */
-   OK |= init_math(__regina_tsd);      /* Initialize the math module        */
-   OK |= init_spec_vars(__regina_tsd); /* Initialize the interprt module    */
-   OK |= init_tracing(__regina_tsd);   /* Initialize the tracing module     */
-   OK |= init_builtin(__regina_tsd);   /* Initialize the builtin module     */
-   OK |= init_client(__regina_tsd);    /* Initialize the client module      */
-   OK |= init_library(__regina_tsd);   /* Initialize the library module     */
-   OK |= init_rexxsaa(__regina_tsd);   /* Initialize the rexxsaa module     */
-   OK |= init_shell(__regina_tsd);     /* Initialize the shell module       */
-   OK |= init_envir(__regina_tsd);     /* Initialize the envir module       */
-   OK |= init_expr(__regina_tsd);      /* Initialize the expr module        */
-   OK |= init_error(__regina_tsd);     /* Initialize the error module       */
+   {
+      extern OS_Dep_funcs __regina_OS_Amiga;
+      __regina_tsd->OS = &__regina_OS_Amiga;
+   }
+
+   OK &= init_vars(__regina_tsd);      /* Initialize the variable module    */
+   OK &= init_stacks(__regina_tsd);    /* Initialize the stack module       */
+   OK &= init_filetable(__regina_tsd); /* Initialize the files module       */
+   OK &= init_math(__regina_tsd);      /* Initialize the math module        */
+   OK &= init_spec_vars(__regina_tsd); /* Initialize the interprt module    */
+   OK &= init_tracing(__regina_tsd);   /* Initialize the tracing module     */
+   OK &= init_builtin(__regina_tsd);   /* Initialize the builtin module     */
+   OK &= init_client(__regina_tsd);    /* Initialize the client module      */
+   OK &= init_library(__regina_tsd);   /* Initialize the library module     */
+   OK &= init_rexxsaa(__regina_tsd);   /* Initialize the rexxsaa module     */
+   OK &= init_shell(__regina_tsd);     /* Initialize the shell module       */
+   OK &= init_envir(__regina_tsd);     /* Initialize the envir module       */
+   OK &= init_expr(__regina_tsd);      /* Initialize the expr module        */
+   OK &= init_error(__regina_tsd);     /* Initialize the error module       */
 #ifdef VMS
-   OK |= init_vms(__regina_tsd);       /* Initialize the vmscmd module      */
-   OK |= init_vmf(__regina_tsd);       /* Initialize the vmsfuncs module    */
+   OK &= init_vms(__regina_tsd);       /* Initialize the vmscmd module      */
+   OK &= init_vmf(__regina_tsd);       /* Initialize the vmsfuncs module    */
 #endif
-   OK |= init_arexxf(__regina_tsd);    /* Initialize the arexxfuncs module  */
-   OK |= init_amigaf(__regina_tsd);    /* Initialize the amigafuncs module  */
+   OK &= init_arexxf(__regina_tsd);    /* Initialize the arexxfuncs module  */
+   OK &= init_amigaf(__regina_tsd);    /* Initialize the amigafuncs module  */
    __regina_tsd->loopcnt = 1;            /* stupid r2perl-module              */
    __regina_tsd->traceparse = -1;
    __regina_tsd->thread_id = 1;
