@@ -136,6 +136,30 @@ static int CGX_GetButton(int code)
 	}
 }
 
+static int CGX_AppActivate(_THIS, BOOL activate)
+{
+	int posted = 0;
+	int val = activate ? 1 : 0;
+
+	posted = SDL_PrivateAppActive(val, SDL_APPMOUSEFOCUS);
+	posted |= SDL_PrivateAppActive(val, SDL_APPINPUTFOCUS);
+	this->hidden->window_active = val;
+
+	return posted;
+}
+
+static int CGX_IsMouseInsideDrawArea(int mouseX, int mouseY, struct Window * wnd)
+{
+	if ((mouseX < (wnd->BorderLeft)) ||
+		(mouseX > (wnd->Width - wnd->BorderRight)))
+		return 0;
+	if ((mouseY < (wnd->BorderTop)) ||
+		(mouseY > (wnd->Height - wnd->BorderBottom)))
+		return 0;
+		
+	return 1;
+}
+
 static int CGX_DispatchEvent(_THIS, struct IntuiMessage *msg)
 {
 	int class=msg->Class,code=msg->Code;
@@ -145,16 +169,13 @@ static int CGX_DispatchEvent(_THIS, struct IntuiMessage *msg)
 	switch (class) {
 	    /* Gaining app & mouse focus */
 	    case IDCMP_ACTIVEWINDOW:
-			posted = SDL_PrivateAppActive(1, SDL_APPMOUSEFOCUS);
-			posted |= SDL_PrivateAppActive(1, SDL_APPINPUTFOCUS);
-			this->hidden->window_active = 1;
+			this->hidden->WindowActive = 1;
 			break;
 
 	    /* Loosing app & mouse focus */
 	    case IDCMP_INACTIVEWINDOW:
-			posted = SDL_PrivateAppActive(0, SDL_APPMOUSEFOCUS);
-			posted |= SDL_PrivateAppActive(0, SDL_APPINPUTFOCUS);
-			this->hidden->window_active = 0;
+			posted = CGX_AppActivate(this, FALSE);
+			this->hidden->WindowActive = 0;
 			break;
 
 	    /* Mouse motion */
@@ -165,12 +186,21 @@ static int CGX_DispatchEvent(_THIS, struct IntuiMessage *msg)
 				
 				if (currently_fullscreen)
 				{
-					/* center display on screen */
+					/* Center display on screen */
 					dx = (SDL_Display->Width - this->screen->w)/2;
 					dy = (SDL_Display->Height - this->screen->h)/2;
 				}
+				
+				/* Check for activation/deactivation of App */
+				if (this->hidden->WindowActive)
+				{
+					if (this->hidden->window_active && !CGX_IsMouseInsideDrawArea(msg->MouseX, msg->MouseY, SDL_Window))
+						posted |= CGX_AppActivate(this, FALSE);
+					if (!this->hidden->window_active && CGX_IsMouseInsideDrawArea(msg->MouseX, msg->MouseY, SDL_Window))
+						posted |= CGX_AppActivate(this, TRUE);
+				}
 
-				/* These are coords "inside" AROS window (without bortders) */
+				/* These are coords "inside" AROS window (without borders) */
 				new_x = msg->MouseX - SDL_Window->BorderLeft;
 				new_y = msg->MouseY - SDL_Window->BorderTop;
 
@@ -194,7 +224,7 @@ static int CGX_DispatchEvent(_THIS, struct IntuiMessage *msg)
 							int rel_y = msg->MouseY - this->hidden->LastMouseY;
 
 							CGX_WarpWMCursor(this, center_x, center_y);
-							posted = SDL_PrivateMouseMotion(0, 1, rel_x, rel_y);
+							posted |= SDL_PrivateMouseMotion(0, 1, rel_x, rel_y);
 						}
 					}
 					else
@@ -224,11 +254,11 @@ static int CGX_DispatchEvent(_THIS, struct IntuiMessage *msg)
 						}
 
 						if (dowarp) CGX_WarpWMCursor(this, new_x, new_y);
-						posted = SDL_PrivateMouseMotion(0, 0, new_x - dx, new_y - dy);
+						posted |= SDL_PrivateMouseMotion(0, 0, new_x - dx, new_y - dy);
 					}
 				}
 				else
-					posted = SDL_PrivateMouseMotion(0, 0, new_x - dx, new_y - dy);
+					posted |= SDL_PrivateMouseMotion(0, 0, new_x - dx, new_y - dy);
 
 				this->hidden->LastMouseX = msg->MouseX;
 				this->hidden->LastMouseY = msg->MouseY;
