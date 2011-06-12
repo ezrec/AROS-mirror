@@ -994,12 +994,17 @@ static SDL_Surface *CGX_SetVideoMode(_THIS, SDL_Surface *current, int width, int
 
 	/* Decide early on if we are resizing or rebuilding window */
 	if ((SDL_Window && current && !(current->flags & SDL_FULLSCREEN)) && !(flags & SDL_FULLSCREEN) 
-		&& (sizediff) && (!bppdiff)) {
-		/* Resize */
-		if (CGX_ResizeWindow(this, current, width, height, flags) < 0)
+		&& (sizediff)) {
+		if (!bppdiff) {
+			/* Resize */
+			if (CGX_ResizeWindow(this, current, width, height, flags) < 0)
+				current = NULL;
+			else
+				current->flags |= (flags & SDL_RESIZABLE); /* Resizable only if the user asked it */
+		} else {
 			current = NULL;
-		else
-			current->flags |= (flags & SDL_RESIZABLE); /* Resizable only if the user asked it */
+			SDL_SetError("Changing BPP and staying in window mode is not supported!");
+		}
 
 		/* Release the event thread */
 		SDL_Unlock_EventThread();
