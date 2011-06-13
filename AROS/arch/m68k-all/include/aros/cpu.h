@@ -112,15 +112,13 @@ do                                                       \
 	asm volatile( \
 	    ".weak " #fname "\n" \
 	    "\t" #fname ":\n" \
-            "\tjsr	aros_push_relbase\n" /* save retaddr */\
 	    "\tmove.l	" #libbasename ",%%a0\n" \
-	    "\tmove.l	%%a0,%%sp@\n" \
-            "\tjsr	aros_push_relbase\n" \
-            "\taddq.l	#4, %%sp\n" /* original arguments */ \
+	    "\tmove.l	%%a0,%%sp@-\n" \
+            "\tjsr	aros_push2_relbase\n" \
+            "\taddq.l	#8, %%sp\n" /* original arguments */ \
 	    "\tjsr	%%a0@(%c0)\n" \
 	    "\tmovem.l	%%d0/%%d1,%%sp@-\n" \
-            "\tjsr	aros_pop_relbase\n" \
-            "\tjsr	aros_pop_relbase\n" \
+            "\tjsr	aros_pop2_relbase\n" \
             "\tmove.l	%%d0,%%a0\n" \
 	    "\tmovem.l	%%sp@+,%%d0/%%d1\n" \
 	    "\tjmp      %%a0@\n" \
@@ -130,41 +128,6 @@ do                                                       \
     }
 #define AROS_LIBFUNCSTUB(fname, libbasename, lvo) \
     __AROS_LIBFUNCSTUB(fname, libbasename, lvo)
-
-/* Macro: AROS_RELLIBFUNCSTUB(functionname, libbasename, lvo)
-   Same as AROS_LIBFUNCSTUB but finds libbase at an offset in
-   the current libbase
-*/
-#define __AROS_RELLIBFUNCSTUB(fname, libbasename, lvo) \
-    void __ ## fname ## _ ## libbasename ## _relwrapper(IPTR args) \
-    { \
-	asm volatile( \
-            ".weak " #fname "\n" \
-            "\t" #fname " :\n" \
-            "\tjsr	aros_get_relbase\n" \
-            "\tadd.l	" #libbasename "_offset, %%d0\n" \
-            "\tmove.l	%%d0,%%a0\n" \
-            "\tmove.l	%%a0@,%%d0\n" \
-            "\tmove.l	%%sp@+,%%a1\n" /* A1 is retaddr */\
-            "\tmove.l	%%d0,%%sp@+\n" \
-            "\tmove.l	%%a1,%%sp@+\n" \
-            "\tjsr	aros_push_relbase\n" /* save retaddr */\
-            "\taddq.l	#4, %%sp\n" \
-            "\tjsr	aros_push_relbase\n" /* save base */ \
-	    "\tmove.l	%%sp@+,%%a0\n" /* base */\
-	    "\tjsr	%%a0@(%c0)\n" \
-	    "\tmovem.l	%%d0/%%d1,%%sp@-\n" \
-	    "\tjsr	aros_pop_relbase\n" \
-	    "\tjsr	aros_pop_relbase\n" \
-	    "\tmove.l	%%d0,%%a0\n" \
-	    "\tmovem.l	%%sp@+,%%d0/%%d1\n" \
-	    "\tjmp	%%a0@\n" \
-	    : : "i" ((-lvo*LIB_VECTSIZE)) \
-	    : \
-	); \
-    }
-#define AROS_RELLIBFUNCSTUB(fname, libbasename, lvo) \
-    __AROS_RELLIBFUNCSTUB(fname, libbasename, lvo)
 
 
 /* Macro: AROS_FUNCALIAS(functionname, alias)
