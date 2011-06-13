@@ -15,6 +15,7 @@
 #include <proto/exec.h>
 #include <proto/dos.h>
 #include <aros/asmcall.h>
+#include <aros/libcall.h>
 #include <aros/debug.h>
 #include <aros/symbolsets.h>
 #include <aros/startup.h>
@@ -103,6 +104,11 @@ AROS_UFH3(LONG, __startup_entry,
     __argstr  = argstr;
     __argsize = argsize;
     __startup_error = RETURN_FAIL;
+
+    /* FIXME: Can RELBASE init be moved to own file and linked in
+       through linker symbols ?
+    */
+    AROS_RELBASE_INIT;
 
     __startup_entries_init();
     __startup_entries_next();

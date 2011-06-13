@@ -55,6 +55,7 @@
     HISTORY
 
 ******************************************************************************/
+#error need to be update to store *(SysBase->ThisTask->tc_SPLower)
 
 	#include "aros/x86_64/asm.h"
 

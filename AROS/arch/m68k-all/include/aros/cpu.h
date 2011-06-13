@@ -110,16 +110,25 @@ do                                                       \
     void __ ## fname ## _ ## libbasename ## _wrapper(void) \
     { \
 	asm volatile( \
-	    ".globl " #fname "\n" \
+	    ".weak " #fname "\n" \
 	    "\t" #fname ":\n" \
-	    "\tmovl " #libbasename ",%%a0\n" \
-	    "\tlea.l %c0(%%a0),%%a0\n" \
-	    "\tjmp (%%a0)\n" \
+	    "\tmove.l	" #libbasename ",%%a0\n" \
+	    "\tmove.l	%%a0,%%sp@-\n" \
+            "\tjsr	aros_push2_relbase\n" \
+            "\taddq.l	#8, %%sp\n" /* original arguments */ \
+	    "\tjsr	%%a0@(%c0)\n" \
+	    "\tmovem.l	%%d0/%%d1,%%sp@-\n" \
+            "\tjsr	aros_pop2_relbase\n" \
+            "\tmove.l	%%d0,%%a0\n" \
+	    "\tmovem.l	%%sp@+,%%d0/%%d1\n" \
+	    "\tjmp      %%a0@\n" \
 	    : : "i" ((-lvo*LIB_VECTSIZE)) \
+	    : \
         ); \
     }
 #define AROS_LIBFUNCSTUB(fname, libbasename, lvo) \
     __AROS_LIBFUNCSTUB(fname, libbasename, lvo)
+
 
 /* Macro: AROS_FUNCALIAS(functionname, alias)
    This macro will generate an alias 'alias' for function
@@ -248,6 +257,11 @@ extern void aros_not_implemented ();
 
 /* Call a libary function which requires the libbase */
 #include <aros/m68k/libcall.h>
+
+#define AROS_LC_CALL(t,x,bn)	ERROR IN DEFINITIONS - AROS_LC_CALL
+#define AROS_LC_CALLNR(x,bn)	ERROR IN DEFINITIONS - AROS_LC_CALLNR
+#define AROS_LC_CALLI(t,x,bn)	ERROR IN DEFINITIONS - AROS_LC_CALLI
+#define AROS_LC_CALLINR(x,bn)	ERROR IN DEFINITIONS - AROS_LC_CALLNR
 
 #define AROS_LHQUAD1(t,n,a1,bt,bn,o,s) \
 	AROS_LH2(t,n, \

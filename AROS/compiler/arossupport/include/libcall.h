@@ -82,6 +82,107 @@ typedef int (*LONG_FUNC)();
 typedef unsigned int (*ULONG_FUNC)();
 #endif
 
+/* Declare relbase if asked */
+#if !defined(AROS_GET_RELBASE) || !defined(AROS_SET_RELBASE)
+
+#include <exec/execbase.h>
+
+extern struct ExecBase *SysBase;
+
+struct __AROS_RelBase {
+    UBYTE magic[3];
+    UBYTE depth;
+    void *lib[];
+};
+
+#define __RELBASE_IS_MAGIC(x)	\
+    ((x)->magic[0] == 'R' && \
+     (x)->magic[1] == 'L' && \
+     (x)->magic[2] == 'B' \
+    )
+
+#define __RELBASE_INIT(x)		do { \
+    (x)->magic[0] = 'R'; \
+    (x)->magic[1] = 'L'; \
+    (x)->magic[2] = 'B'; \
+    (x)->depth = 0; \
+    (x)->lib[0] = NULL; \
+   } while (0)
+
+static inline void *__aros_get_relbase(void)
+{
+    struct __AROS_RelBase *base;
+
+    base = (struct __AROS_RelBase *)SysBase->ThisTask->tc_SPLower;
+
+    return base->lib[base->depth];
+}
+
+static inline void *__aros_set_relbase(void *libbase)
+{
+    struct __AROS_RelBase *base;
+    void *old;
+
+    base = (struct __AROS_RelBase *)SysBase->ThisTask->tc_SPLower;
+
+    old = base->lib[base->depth];
+    base->lib[base->depth] = libbase;
+
+    return old;
+}
+
+static inline void __aros_push_relbase(void *libbase)
+{
+    struct __AROS_RelBase *base;
+
+    base = (struct __AROS_RelBase *)SysBase->ThisTask->tc_SPLower;
+
+    base->depth++;
+    base->lib[base->depth] = libbase;
+}
+
+static inline void *__aros_pop_relbase(void)
+{
+    struct __AROS_RelBase *base;
+    void *libbase;
+
+    base = (struct __AROS_RelBase *)SysBase->ThisTask->tc_SPLower;
+
+    libbase = base->lib[base->depth];
+    base->depth--;
+
+    return libbase;
+}
+
+#define AROS_RELBASE_INIT       __RELBASE_INIT((struct __AROS_RelBase *)SysBase->ThisTask->tc_SPLower)
+#define AROS_GET_RELBASE        __aros_get_relbase()
+#define AROS_SET_RELBASE(x)     __aros_set_relbase(x)
+#define AROS_PUSH_RELBASE(x)    __aros_push_relbase(x)
+#define AROS_POP_RELBASE        __aros_pop_relbase()
+
+/* You can enable debug checking for the above defines by using the
+   following defines and turning on DEBUG in arossupport/aros_relbase.c
+void *aros_get_relbase(void);
+void *aros_set_relbase(void *libbase);
+void aros_push_relbase(void *libbase);
+void *aros_pop_relbase(void);
+
+#define AROS_GET_RELBASE	aros_get_relbase()
+#define AROS_SET_RELBASE(x)	aros_set_relbase(x)
+#define AROS_PUSH_RELBASE(x)    aros_push_relbase(x)
+#define AROS_POP_RELBASE        aros_pop_relbase()
+*/
+
+#endif
+
+/* If AROS_GET_LIBBASE/AROS_SET_LIBBASE use relbase by defining them as resp.
+ * AROS_GET_RELBASE/AROS_SET_RELBASE
+ */
+#ifndef AROS_GET_LIBBASE
+#define AROS_GET_LIBBASE AROS_GET_RELBASE
+#define AROS_SET_LIBBASE(x) AROS_SET_RELBASE(x)
+#endif
+
 /* Declare all macros which the systems' libcall didn't */
 #ifndef __AROS_SLIB_ENTRY
 #   define __AROS_SLIB_ENTRY(n,s)   s ## _ ## n
