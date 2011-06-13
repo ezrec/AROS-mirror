@@ -99,6 +99,7 @@ struct JumpVec
    Some asm trickery performed:
    fname
    - push the function return address on the relbase stack
+     (it is already on the stack)
    - push the libbase on the relbase stack
    - pop libase from stack into %eax
    - set new function return address
@@ -119,14 +120,15 @@ struct JumpVec
             "\tmovl " #libbasename ", %%eax\n" \
             "\tpushl %%eax\n" \
             "\tcall aros_push2_relbase\n" \
-            "\tmovl (%%esp),%%eax\n" \
-            "\taddl $8, %%esp\n" \
+            "\tmovl (%%esp), %%eax\n" \
+            "\taddl $8,%%esp\n" \
             "\tcall *%c0(%%eax)\n" \
             "\tpushl %%eax\n" \
             "\tcall aros_pop2_relbase\n" \
             "\tmovl %%eax, %%ecx\n" \
             "\tpopl %%eax\n" \
-            "\tjmp *(%%ecx)" \
+            "\tmovl %%ecx, (%%esp)\n" \
+            "\tjmp %%ecx" \
 	    : : "i" ((-lvo*LIB_VECTSIZE)) \
 	); \
     }

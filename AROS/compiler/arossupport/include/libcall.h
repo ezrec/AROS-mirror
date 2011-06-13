@@ -103,9 +103,9 @@ static inline void *__aros_set_relbase(void *libbase)
     void ***baseptr = (void ***)SysBase->ThisTask->tc_SPLower;
     void *old;
 
-    if (baseptr[1] != (APTR *)__RELBASE_MAGIC)
+    if (baseptr[1] != (void **)__RELBASE_MAGIC)
     {
-        baseptr[1] = (APTR *)__RELBASE_MAGIC;
+        baseptr[1] = (void **)__RELBASE_MAGIC;
         *baseptr = &((void **)baseptr)[2];
         **baseptr = NULL;
     }
@@ -119,6 +119,13 @@ static inline void *__aros_set_relbase(void *libbase)
 static inline void __aros_push_relbase(void *libbase)
 {
     void ***baseptr = (void ***)SysBase->ThisTask->tc_SPLower;
+
+    if (baseptr[1] != (void **)__RELBASE_MAGIC)
+    {
+        baseptr[1] = (void **)__RELBASE_MAGIC;
+        *baseptr = &((void **)baseptr)[2];
+        **baseptr = NULL;
+    }
 
     (*baseptr)++;
     **baseptr = libbase;

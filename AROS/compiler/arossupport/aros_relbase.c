@@ -6,6 +6,7 @@
  */
 
 #include <aros/libcall.h>
+#include <aros/debug.h>
 
 void *aros_get_relbase(void)
 {
@@ -22,7 +23,7 @@ void aros_push_relbase(void *libbase)
     AROS_PUSH_RELBASE(libbase);
 }
 
-void aros_push2_relbase(void *ptr, void *libbase)
+void aros_push2_relbase(void *libbase, void *ptr)
 {
     AROS_PUSH_RELBASE(ptr);
     AROS_PUSH_RELBASE(libbase);
