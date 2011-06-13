@@ -89,55 +89,73 @@ typedef unsigned int (*ULONG_FUNC)();
 
 extern struct ExecBase *SysBase;
 
-#define __RELBASE_MAGIC 0x524c4253 /* RLBS */
+struct __AROS_RelBase {
+    UBYTE magic[3];
+    UBYTE depth;
+    void *lib[];
+};
+
+#define __RELBASE_IS_MAGIC(x)	\
+    ((x)->magic[0] == 'R' && \
+     (x)->magic[1] == 'L' && \
+     (x)->magic[2] == 'B' \
+    )
+
+#define __RELBASE_INIT(x)		do { \
+    (x)->magic[0] = 'R'; \
+    (x)->magic[1] = 'L'; \
+    (x)->magic[2] = 'B'; \
+    (x)->depth = 0; \
+    (x)->lib[0] = NULL; \
+   } while (0)
 
 static inline void *__aros_get_relbase(void)
 {
-    void ***baseptr = (void ***)SysBase->ThisTask->tc_SPLower;
+    struct __AROS_RelBase *base;
 
-    return **baseptr;
+    base = (struct __AROS_RelBase *)SysBase->ThisTask->tc_SPLower;
+
+    return base->lib[base->depth];
 }
 
 static inline void *__aros_set_relbase(void *libbase)
 {
-    void ***baseptr = (void ***)SysBase->ThisTask->tc_SPLower;
+    struct __AROS_RelBase *base;
     void *old;
 
-    if (baseptr[1] != (void **)__RELBASE_MAGIC)
-    {
-        baseptr[1] = (void **)__RELBASE_MAGIC;
-        *baseptr = &((void **)baseptr)[2];
-        **baseptr = NULL;
-    }
+    base = (struct __AROS_RelBase *)SysBase->ThisTask->tc_SPLower;
 
-    old = **baseptr;
-    **baseptr = libbase;
+    if (!__RELBASE_IS_MAGIC(base))
+        __RELBASE_INIT(base);
+
+    old = base->lib[base->depth];
+    base->lib[base->depth] = libbase;
 
     return old;
 }
 
 static inline void __aros_push_relbase(void *libbase)
 {
-    void ***baseptr = (void ***)SysBase->ThisTask->tc_SPLower;
+    struct __AROS_RelBase *base;
 
-    if (baseptr[1] != (void **)__RELBASE_MAGIC)
-    {
-        baseptr[1] = (void **)__RELBASE_MAGIC;
-        *baseptr = &((void **)baseptr)[2];
-        **baseptr = NULL;
-    }
+    base = (struct __AROS_RelBase *)SysBase->ThisTask->tc_SPLower;
 
-    (*baseptr)++;
-    **baseptr = libbase;
+    if (!__RELBASE_IS_MAGIC(base))
+        __RELBASE_INIT(base);
+
+    base->depth++;
+    base->lib[base->depth] = libbase;
 }
 
 static inline void *__aros_pop_relbase(void)
 {
-    void ***baseptr = (void ***)SysBase->ThisTask->tc_SPLower;
+    struct __AROS_RelBase *base;
     void *libbase;
 
-    libbase = **baseptr;
-    (*baseptr)--;
+    base = (struct __AROS_RelBase *)SysBase->ThisTask->tc_SPLower;
+
+    libbase = base->lib[base->depth];
+    base->depth--;
 
     return libbase;
 }
@@ -146,6 +164,19 @@ static inline void *__aros_pop_relbase(void)
 #define AROS_SET_RELBASE(x)	__aros_set_relbase(x)
 #define AROS_PUSH_RELBASE(x)    __aros_push_relbase(x)
 #define AROS_POP_RELBASE        __aros_pop_relbase()
+
+/* You can enable debug checking for the above defines by using the
+   following defines and turning on DEBUG in arossupport/aros_relbase.c
+void *aros_get_relbase(void);
+void *aros_set_relbase(void *libbase);
+void aros_push_relbase(void *libbase);
+void *aros_pop_relbase(void);
+
+#define AROS_GET_RELBASE	aros_get_relbase()
+#define AROS_SET_RELBASE(x)	aros_set_relbase(x)
+#define AROS_PUSH_RELBASE(x)    aros_push_relbase(x)
+#define AROS_POP_RELBASE        aros_pop_relbase()
+*/
 
 #endif
 
