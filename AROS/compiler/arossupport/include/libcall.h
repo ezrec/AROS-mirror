@@ -125,9 +125,6 @@ static inline void *__aros_set_relbase(void *libbase)
 
     base = (struct __AROS_RelBase *)SysBase->ThisTask->tc_SPLower;
 
-    if (!__RELBASE_IS_MAGIC(base))
-        __RELBASE_INIT(base);
-
     old = base->lib[base->depth];
     base->lib[base->depth] = libbase;
 
@@ -139,9 +136,6 @@ static inline void __aros_push_relbase(void *libbase)
     struct __AROS_RelBase *base;
 
     base = (struct __AROS_RelBase *)SysBase->ThisTask->tc_SPLower;
-
-    if (!__RELBASE_IS_MAGIC(base))
-        __RELBASE_INIT(base);
 
     base->depth++;
     base->lib[base->depth] = libbase;
@@ -160,8 +154,9 @@ static inline void *__aros_pop_relbase(void)
     return libbase;
 }
 
-#define AROS_GET_RELBASE	__aros_get_relbase()
-#define AROS_SET_RELBASE(x)	__aros_set_relbase(x)
+#define AROS_RELBASE_INIT       __RELBASE_INIT((struct __AROS_RelBase *)SysBase->ThisTask->tc_SPLower)
+#define AROS_GET_RELBASE        __aros_get_relbase()
+#define AROS_SET_RELBASE(x)     __aros_set_relbase(x)
 #define AROS_PUSH_RELBASE(x)    __aros_push_relbase(x)
 #define AROS_POP_RELBASE        __aros_pop_relbase()
 

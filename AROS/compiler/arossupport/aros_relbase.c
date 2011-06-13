@@ -32,10 +32,18 @@ void *aros_get_relbase(void)
 
 void *aros_set_relbase(void *libbase)
 {
-    D(
-        if (FindTask(NULL) == NULL)
+    D({
+        struct Task *task = FindTask(NULL);
+        struct __AROS_RelBase *base;
+
+        if (task == NULL)
             Alert(AN_MemCorrupt);
-    )
+
+        base = (struct __AROS_RelBase *)task->tc_SPLower;
+
+        if (!__RELBASE_IS_MAGIC(base))
+            Alert(AN_StackProbe);
+    })
 
     return __aros_set_relbase(libbase);
 }
@@ -51,13 +59,13 @@ void aros_push_relbase(void *libbase)
 
         base = (struct __AROS_RelBase *)task->tc_SPLower;
 
-        if (__RELBASE_IS_MAGIC(base))
-        {
-            if (base->depth == 255 ||
-                base->depth >= ((task->tc_SPReg - task->tc_SPLower)/sizeof(APTR))
-            )
-		Alert(AN_StackProbe);
-        }
+        if (!__RELBASE_IS_MAGIC(base))
+            Alert(AN_StackProbe);
+
+        if (base->depth == 255 ||
+            base->depth >= ((task->tc_SPReg - task->tc_SPLower)/sizeof(APTR))
+        )
+            Alert(AN_StackProbe);
     })
 
     __aros_push_relbase(libbase);
