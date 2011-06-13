@@ -1,6 +1,7 @@
 /*
     SDL - Simple DirectMedia Layer
     Copyright (C) 1997-2006 Sam Lantinga
+    Copyright (C) 2011 AROS Development Team
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -744,7 +745,7 @@ static int CGX_CreateWindow(_THIS, SDL_Surface *screen,	int w, int h, int bpp, U
  
 	MakeBitMask(this,form,&bpp, &rb, &gb, &bb, &ab);
 
-	if ( ! SDL_ReallocFormat(screen, bpp, rb, gb, bb, 0) )
+	if ( ! SDL_ReallocFormat(screen, 8 * GetCyberMapAttr(SDL_Display->RastPort.BitMap, CYBRMATTR_BPPIX), rb, gb, bb, 0) )
 		return -1;
 
 	D(bug("AFTER screen allocation: bpp:%ld (real:%ld)\n",bpp,this->hidden->depth));
@@ -965,7 +966,7 @@ static int CGX_ResizeWindow(_THIS, SDL_Surface *screen, int width, int height, U
 
 	Rules:
 
-	(+)if ( curr->WND && req->WND && sizediff && ! bppdiff && ! ogldiff ) resize_window
+	(+)if ( curr->WND && req->WND && sizediff && ! ogldiff ) resize_window
 	(+)if ( ! resize_window ) destroy_window
 	(+)if ( curr->FS && ( sizediff || bppdiff || req->WND ) ) destroy_screen
 	(+)if ( req->FS && ( sizediff || bppdiff || curr->WND ) ) create_screen
@@ -992,16 +993,16 @@ static SDL_Surface *CGX_SetVideoMode(_THIS, SDL_Surface *current, int width, int
 	/* Decide early on if we are resizing or rebuilding window */
 	if ((SDL_Window && current && !(current->flags & SDL_FULLSCREEN)) && !(flags & SDL_FULLSCREEN) 
 		&& (sizediff) && (!ogldiff)) {
-		if (!bppdiff) {
-			/* Resize */
-			if (CGX_ResizeWindow(this, current, width, height, flags) < 0)
-				current = NULL;
-			else
-				current->flags |= (flags & SDL_RESIZABLE); /* Resizable only if the user asked it */
-		} else {
-			current = NULL;
-			SDL_SetError("Changing BPP and staying in window mode is not supported!");
+		if (bppdiff) {
+			/* Not possible in windowned mode. Use previous depth. */
+			D(bug("Bringing bpp back from %d to %d\n", bpp, this->hidden->depth));
+			bpp = this->hidden->depth;
 		}
+		/* Resize */
+		if (CGX_ResizeWindow(this, current, width, height, flags) < 0)
+			current = NULL;
+		else
+			current->flags |= (flags & SDL_RESIZABLE); /* Resizable only if the user asked it */
 
 		/* Release the event thread */
 		SDL_Unlock_EventThread();
