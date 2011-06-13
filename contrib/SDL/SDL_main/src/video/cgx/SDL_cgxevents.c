@@ -35,7 +35,6 @@
 #include "SDL_cgxmouse_c.h"
 #include "SDL_cgxevents_c.h"
 
-
 /* The translation tables from an Amiga keysym to a SDL keysym */
 static SDLKey 		MISC_keymap[256];
 
@@ -49,6 +48,15 @@ SDL_keysym *CGX_TranslateKey(int code, UWORD qualifier, SDL_keysym *keysym)
 	char buffer[5];
 
 	static struct Device *ConsoleDevice=NULL;
+
+	/* Range check. Necessary because the X11 hidd returns -1 if a
+	   key symbol couldn't be found. That leads to crashes in 
+	   SDL applications. */
+	if ((code < 0) || (code > SDL_arraysize(MISC_keymap)))
+	{
+		keysym->sym = SDLK_UNKNOWN;
+		return keysym;
+	}
 
 	/* Get the raw keyboard scancode */
 	keysym->scancode = code;
