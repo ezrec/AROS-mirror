@@ -112,16 +112,9 @@ do                                                       \
 	asm volatile( \
 	    ".weak " #fname "\n" \
 	    "\t" #fname ":\n" \
-	    "\tmove.l	" #libbasename ",%%a0\n" \
-	    "\tmove.l	%%a0,%%sp@-\n" \
-            "\tjsr	aros_push2_relbase\n" \
-            "\taddq.l	#8, %%sp\n" /* original arguments */ \
-	    "\tjsr	%%a0@(%c0)\n" \
-	    "\tmovem.l	%%d0/%%d1,%%sp@-\n" \
-            "\tjsr	aros_pop2_relbase\n" \
-            "\tmove.l	%%d0,%%a0\n" \
-	    "\tmovem.l	%%sp@+,%%d0/%%d1\n" \
-	    "\tjmp      %%a0@\n" \
+	    "\tmove.l	" #libbasename ",%%d0\n" \
+	    "\tmove.l	#%c0,%%d1\n" \
+	    "\tjmp      aros_thunk_libfunc\n" \
 	    : : "i" ((-lvo*LIB_VECTSIZE)) \
 	    : \
         ); \
