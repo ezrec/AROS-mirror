@@ -36,7 +36,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 extern struct Screen *mainscreen;
 
 #ifndef rtPaletteRequest
-LONG rtPaletteRequest(char *title,struct rtReqInfo *reqinfo,Tag tag, ...){
+LONG rtPaletteRequest(const char *title,struct rtReqInfo *reqinfo,Tag tag, ...){
 	return rtPaletteRequestA(title,reqinfo,(struct TagItem *)&tag);
 }
 #endif
