@@ -39,9 +39,13 @@ docs-html:
     Documentation in HTML format. Contains everything available
     on the website, but adapted for offline reading.
 amiga-m68k-system:
-    The native version for m68k Amigas or UAE. This version is binary
-    compatible with AmigaOS. This archive contains rom image(s) and all AROS
+    The native version for m68k Amigas or WinUAE. This version is binary
+    compatible with AmigaOS. This archive contains rom images and all AROS
     system binaries compiled from the Subversion tree.
+amiga-m68k-boot:
+    The native version for m68k Amigas or WinUAE. This version is binary
+    compatible with AmigaOS. This archive contains ROM images and a boot
+    floppy image.
 darwin-i386-system:
     The hosted version for Darwin and MacOS X on i386 platform.
     Should work on all Intel MacOS X versions starting from 10.4.
