@@ -88,20 +88,26 @@ FILES := \
 	$(CAIRO_FT_FILES) \
 	$(CAIRO_FONT_FILES) \
 	$(CAIRO_AROS_FILES) \
-	cairo-deflate-stream \
-	../aros/emul_arosc
+	cairo-deflate-stream
+
+# ../aros/emul_arosc
 
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../aros -I$(GENINCDIR)/pixman-1
 USER_CFLAGS := -DHAVE_CONFIG_H -DCAIRO_NO_MUTEX
+
+#MM- contrib : contrib-gfx-libs-cairo
 
 #MM contrib-gfx-libs-cairo-includes : contrib-gfx-libs-pixman-includes includes-copy
 
 #MM contrib-gfx-libs-cairo : linklibs contrib-gfx-libs-pixman
 
-%build_module mmake=contrib-gfx-libs-cairo \
-    modname=cairo modtype=library \
-    files="$(FILES)" \
-    uselibs="freetype2 amiga rom m pixman png z "
+#%build_module mmake=contrib-gfx-libs-cairo \
+#    modname=cairo modtype=library \
+#    files="$(FILES)" \
+#    uselibs="freetype2 amiga rom m pixman png z "
+
+%build_linklib mmake=contrib-gfx-libs-cairo \
+    libname=cairo files="$(FILES)"
 
 INCLUDE_FILES := cairo-deprecated.h cairo-ft.h cairo.h cairo-pdf.h cairo-ps.h cairo-svg.h cairo-version.h
 %copy_includes mmake=includes-copy path=cairo
