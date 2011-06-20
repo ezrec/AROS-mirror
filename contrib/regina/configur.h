@@ -458,6 +458,7 @@
 #define HAVE_DRAND48
 #define HAVE_STDINT_H         1
 #define HAVE_RAISE            1
+#define HAVE_DIV
 #endif
 
 #if defined(MAC)
