@@ -22,7 +22,7 @@
 # elif defined(HAVE_STDINT_H)
 #  define rx_64         int64_t
 #  define rx_64u        uint64_t
-#  define rx_mk64u      (rx_64u) num##u
+#  define rx_mk64u(num) (rx_64u) num##u
 #  define RX_64MAX      INT64_MAX
 #  define RX_64UMAX     UINT64_MAX
 # elif defined(__WORDSIZE) && (__WORDSIZE >= 64)
