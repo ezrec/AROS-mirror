@@ -168,7 +168,6 @@ static int CGX_IsMouseInsideDrawArea(int mouseX, int mouseY, struct Window * wnd
 	return 1;
 }
 
-#include <aros/debug.h>
 /* 
  * FocusActive handling:
  *   How to loose focus:
