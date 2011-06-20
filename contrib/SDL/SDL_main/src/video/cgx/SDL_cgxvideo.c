@@ -865,6 +865,9 @@ static int CGX_CreateWindow(_THIS, SDL_Surface *screen,	int w, int h, int bpp, U
 		/* IDCMP_ACTIVEWINDOW does not seem to be sent to windows opened on
 		   new screen, so we set activity status here */
 		this->hidden->WindowActive = 1;
+		/* Reset explicit focus activation - alway capture in full screen mode */
+		this->hidden->ExplicitFocusActivation = 0;
+
 		currently_fullscreen=1;
 	}
 	else

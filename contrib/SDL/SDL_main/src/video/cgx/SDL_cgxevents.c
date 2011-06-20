@@ -160,6 +160,17 @@ static int CGX_IsMouseInsideDrawArea(int mouseX, int mouseY, struct Window * wnd
 	return 1;
 }
 
+#include <aros/debug.h>
+/* 
+ * FocusActive handling:
+ *   How to loose focus:
+ *     - If !GrabMouse and WindowActive and Exit window drawing area
+ *     - ALT + TAB = IDCMP_IACTIVEWINDOW
+ *   How to gain focus:
+ *     - If WindowActive and Enter window drawing area and !ExplicitFocusActivation
+ *     - Open SDL_FULLSCREEN mode (indirect via clearing ExplicitFocusFlag)
+ *     - If ExplicitFocusActivation and Click in window drawing area
+ */
 static int CGX_DispatchEvent(_THIS, struct IntuiMessage *msg)
 {
 	int class=msg->Class,code=msg->Code;
@@ -174,6 +185,9 @@ static int CGX_DispatchEvent(_THIS, struct IntuiMessage *msg)
 
 	    /* Loosing app & mouse focus */
 	    case IDCMP_INACTIVEWINDOW:
+	    	/* If mouse is grabbed, request explicit activation */
+	    	if (this->hidden->GrabMouse)
+	    		this->hidden->ExplicitFocusActivation = 1;
 			posted = CGX_FocusActivate(this, FALSE);
 			this->hidden->WindowActive = 0;
 			break;
@@ -199,8 +213,9 @@ static int CGX_DispatchEvent(_THIS, struct IntuiMessage *msg)
 						!CGX_IsMouseInsideDrawArea(msg->MouseX, msg->MouseY, SDL_Window))
 						posted |= CGX_FocusActivate(this, FALSE);
 
-					/* Enter always */
-					if (!this->hidden->FocusActive && CGX_IsMouseInsideDrawArea(msg->MouseX, msg->MouseY, SDL_Window))
+					/* Enter only if not explicit focus activation needed */
+					if (!this->hidden->FocusActive && !this->hidden->ExplicitFocusActivation &&
+						CGX_IsMouseInsideDrawArea(msg->MouseX, msg->MouseY, SDL_Window))
 						posted |= CGX_FocusActivate(this, TRUE);
 				}
 
@@ -274,8 +289,18 @@ static int CGX_DispatchEvent(_THIS, struct IntuiMessage *msg)
 			/* Mouse button press? */
 			if(!(code&IECODE_UP_PREFIX))
 			{
-				posted = SDL_PrivateMouseButton(SDL_PRESSED,
-						CGX_GetButton(code), 0, 0);
+				/* Explicit focus activation case */
+				if (this->hidden->ExplicitFocusActivation && 
+					CGX_IsMouseInsideDrawArea(msg->MouseX, msg->MouseY, SDL_Window))
+				{
+					this->hidden->ExplicitFocusActivation = 0;
+					posted |= CGX_FocusActivate(this, TRUE);
+				}
+				else
+				{
+					posted |= SDL_PrivateMouseButton(SDL_PRESSED, 
+							CGX_GetButton(code), 0, 0);
+				}
 			}
 			/* Mouse button release? */
 			else
