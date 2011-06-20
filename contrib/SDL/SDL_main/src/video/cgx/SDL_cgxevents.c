@@ -250,7 +250,14 @@ static int CGX_DispatchEvent(_THIS, struct IntuiMessage *msg)
 							int rel_x = msg->MouseX - this->hidden->LastMouseX;
 							int rel_y = msg->MouseY - this->hidden->LastMouseY;
 
-							CGX_WarpWMCursor(this, center_x, center_y);
+							/* 	Workaround:
+							 * 	Send "recall" event only when cursor leaves 1/2 of inner area
+							 	of window. Sending the event each mouse event casues an increasing
+							 	stall with DoIO call. The root cause of this stall is unknown.
+							 	The workaround seems to avoid the stall. */
+							if ((new_x < center_x / 2) || (new_x > (center_x * 3 / 2)) ||
+								(new_y < center_y / 2) || (new_y > (center_y * 3 / 2)))
+								CGX_WarpWMCursor(this, center_x, center_y);
 							posted |= SDL_PrivateMouseMotion(0, 1, rel_x, rel_y);
 						}
 					}
