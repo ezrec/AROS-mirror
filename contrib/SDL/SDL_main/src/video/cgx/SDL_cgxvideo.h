@@ -78,7 +78,7 @@ struct SDL_PrivateVideoData {
 	int WindowActive;				/* Flag indicating that AROS Window in in active state */
 	int GrabMouse;					/* Flag indicating that mouse shall be grabbed */
 	int CursorVisible;				/* Flag indicating that cursor is visible */
-	int ExplicitFocusActivation;	/* Flag indication that focus should not be activated automatically when moving to inner area */
+	int ExplicitFocusActivation;	/* Flag indicating that focus should not be activated automatically when moving to inner area */
 	int LastMouseX;
 	int LastMouseY;
 	
