@@ -42,6 +42,7 @@
 #include <proto/cybergraphics.h>
 #include <proto/graphics.h>
 #include <aros/macros.h>
+//#include <aros/debug.h>
 
 #if AROS_BIG_ENDIAN
 #define AROS_PIXFMT_ARGB32  PIXFMT_ARGB32
@@ -295,7 +296,6 @@ _cairo_aros_surface_release_dest_image (void                  *abstract_surface,
                                         cairo_rectangle_int_t *image_rect,
                                         void                  *image_extra)
 {
-
     cairo_aros_surface_t *surface = abstract_surface;
     cairo_status_t status;
 
@@ -317,7 +317,7 @@ _cairo_aros_surface_get_extents (void                  *abstract_surface,
     rectangle->width =  surface->width;
     rectangle->height = surface->height;
 
-    return CAIRO_STATUS_SUCCESS;
+    return TRUE;
 }
 
 static const cairo_surface_backend_t cairo_aros_surface_backend = {

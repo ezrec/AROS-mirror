@@ -1394,7 +1394,7 @@ typedef enum _cairo_font_type {
     CAIRO_FONT_TYPE_WIN32,
     CAIRO_FONT_TYPE_QUARTZ,
     CAIRO_FONT_TYPE_USER,
-    CAIRO_FONT_TYPE_AROS // FIXME: do we really need this or can we use FONT_TYPE_USER?
+    CAIRO_FONT_TYPE_AROS=50 // FIXME: do we really need this or can we use FONT_TYPE_USER?
 } cairo_font_type_t;
 
 cairo_public cairo_font_type_t
@@ -2123,7 +2123,7 @@ typedef enum _cairo_surface_type {
     CAIRO_SURFACE_TYPE_XML,
     CAIRO_SURFACE_TYPE_SKIA,
     CAIRO_SURFACE_TYPE_SUBSURFACE,
-    CAIRO_SURFACE_TYPE_AROS
+    CAIRO_SURFACE_TYPE_AROS=50
 } cairo_surface_type_t;
 
 cairo_public cairo_surface_type_t

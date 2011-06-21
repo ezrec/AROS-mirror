@@ -109,7 +109,7 @@ USER_CFLAGS := -DHAVE_CONFIG_H -DCAIRO_NO_MUTEX
 %build_linklib mmake=contrib-gfx-libs-cairo \
     libname=cairo files="$(FILES)"
 
-INCLUDE_FILES := cairo-deprecated.h cairo-ft.h cairo.h cairo-pdf.h cairo-ps.h cairo-svg.h cairo-version.h
+INCLUDE_FILES := cairo-deprecated.h cairo-ft.h cairo.h cairo-pdf.h cairo-ps.h cairo-svg.h cairo-version.h cairo-aros.h
 %copy_includes mmake=includes-copy path=cairo
 
 %common
