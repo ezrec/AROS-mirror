@@ -59,15 +59,6 @@ typedef struct strengtype {
 #endif
 #define STRENG_TYPEDEFED 1
 
-#ifndef CHECK_MEMORY
-typedef struct streng8type {
-   int len, max ;
-   char value[8] ;
-} streng8 ;
-#else
-#define streng8 streng
-#endif
-
 #define Str_len(a) ((a)->len)
 #define Str_max(a) ((a)->max)
 #define Str_val(a) ((a)->value)

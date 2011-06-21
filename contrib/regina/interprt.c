@@ -36,7 +36,6 @@
 volatile int __regina_Win32CtrlCRaised = 0;
 #endif
 
-
 static const char default_action[SIGNALS] = { 1, 1, 0, 1, 1, 0 } ;
 static const char default_ignore[SIGNALS] = { 1, 1, 0, 0, 1, 0 } ;
 
@@ -1064,6 +1063,7 @@ endloop: if (s.increment)
              * ie. executing a command
              */
             /* bja - added Free_stringTSD() around perform() */
+            /* the IO-redirection is temporarily in this case. */
             tmp = evaluate( TSD, thisptr->p[0], &kill );
             Free_stringTSD(perform(TSD, tmp, envir, thisptr, thisptr->p[1]));
             if ( kill )

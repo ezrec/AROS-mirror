@@ -17,11 +17,10 @@
  *  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "rexx.h"
-
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
+#include "rexx.h"
 
 #ifndef NDEBUG
 
