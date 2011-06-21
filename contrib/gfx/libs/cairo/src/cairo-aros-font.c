@@ -33,6 +33,8 @@
  * Contributor(s):
  */
 
+// FIXME: Cairo's font API has changed. More tests required.
+
 #include "cairoint.h"
 #include "cairo-error-private.h"
 #include "cairo-aros.h"
@@ -53,6 +55,9 @@
 
 #include <stdio.h>
 #include <string.h>
+
+//#define DEBUG 1
+#include <aros/debug.h>
 
 typedef struct _cairo_aros_scaled_font {
     cairo_scaled_font_t     base;
@@ -85,6 +90,8 @@ typedef struct _cairo_aros_font_face {
 static struct GlyphEngine *
 _get_engine_for_otag (struct TagItem *otag)
 {
+    D(bug("[cairo:_get_engine_for_otag] %p\n", otag));
+
     char *ot_engine;
     char filename[1024];
     struct Library *BulletBase;
@@ -112,11 +119,12 @@ _get_engine_for_otag (struct TagItem *otag)
         return NULL;
     }
 
-    return engine;
+    ReturnPtr("_get_engine_for_otag", struct GlyphEngine *, engine);
 }
 
 static void
 _release_engine (struct GlyphEngine *engine) {
+    D(bug("[cairo:_release_engine] %p\n", engine));
     struct Library *BulletBase;
 
     BulletBase = engine->gle_Library;
@@ -128,6 +136,7 @@ static void
 _set_font_size (cairo_aros_scaled_font_t *font,
                 FIXED height)
 {
+    D(bug("[cairo:_set_font_size] font %p height %d\n", font, height));
     struct Library *BulletBase = font->engine->gle_Library;
 
     SetInfo (font->engine, OT_PointHeight, height, TAG_DONE);
@@ -137,6 +146,7 @@ static void
 _setup_face_options (cairo_aros_scaled_font_t *font,
                      cairo_aros_font_face_t *face)
 {
+    D(bug("[cairo:_setup_face_options] font %p face %p\n", font, face));
     struct Library *BulletBase;
 
     BulletBase = font->engine->gle_Library;
@@ -160,6 +170,7 @@ static struct GlyphMap *
 _get_glyph_map (cairo_aros_scaled_font_t *font,
                 uint16_t                  code)
 {
+    D(bug("[cairo:_get_glyph_map] font %p code %u\n", font, code));
     struct Library *BulletBase = font->engine->gle_Library;
     struct GlyphMap *gm;
 
@@ -170,13 +181,14 @@ _get_glyph_map (cairo_aros_scaled_font_t *font,
     else
         ObtainInfo (font->engine, OT_GlyphMap, &gm, TAG_DONE);
 
-    return gm;
+    ReturnPtr("_get_glyph_map", struct GlyphMap *, gm);
 }
 
 static void
 _release_glyph_map (cairo_aros_scaled_font_t *font,
                     struct GlyphMap          *gm)
 {
+    D(bug("[cairo:_release_glyph_map] font %p gm %p\n", font, gm));
     struct Library *BulletBase = font->engine->gle_Library;
 
     if (gm != NULL)
@@ -186,6 +198,7 @@ _release_glyph_map (cairo_aros_scaled_font_t *font,
 static void
 _cairo_aros_font_face_destroy (void *abstract_face)
 {
+    D(bug("[cairo:_cairo_aros_font_face_destroy] abstract_face %p\n", abstract_face));
     cairo_aros_font_face_t *face = abstract_face;
 
     if (face == NULL)
@@ -205,6 +218,8 @@ _cairo_aros_font_face_scaled_font_create (void                        *abstract_
                                           const cairo_font_options_t  *font_options,
                                           cairo_scaled_font_t        **font_out)
 {
+    D(bug("[cairo:_cairo_aros_font_face_scaled_font_create] abstract_face %p font_matrix %p ctm %p font_options %p font_out %p\n",
+          abstract_face, font_matrix, ctm, font_options, font_out));
     cairo_aros_font_face_t *face = abstract_face;
     cairo_status_t status;
     struct GlyphEngine *engine;
@@ -286,8 +301,18 @@ _cairo_aros_font_face_scaled_font_create (void                        *abstract_
     return CAIRO_STATUS_SUCCESS;
 }
 
+static cairo_status_t
+_cairo_aros_font_face_create_for_toy (cairo_toy_font_face_t   *toy_face,
+                                      cairo_font_face_t      **font_face)
+{
+    D(bug("[cairo:_cairo_aros_font_face_create_for_toy toy_face] %p font_face %p\n", toy_face, font_face));
+    // FIXME: implement me
+    ReturnPtr("_cairo_aros_font_face_create_for_toy", cairo_status_t, 0);
+}
+
 static const cairo_font_face_backend_t _cairo_aros_font_face_backend = {
     CAIRO_FONT_TYPE_AROS,
+    _cairo_aros_font_face_create_for_toy,
     _cairo_aros_font_face_destroy,
     _cairo_aros_font_face_scaled_font_create
 };
@@ -295,6 +320,7 @@ static const cairo_font_face_backend_t _cairo_aros_font_face_backend = {
 cairo_font_face_t *
 cairo_aros_font_face_create_for_outline_tags (struct TagItem *tags)
 {
+    D(bug("cairo:cairo_aros_font_face_create_for_outline_tags] tags %p\n", tags));
     cairo_aros_font_face_t *face;
 
     face = malloc (sizeof (cairo_aros_font_face_t));
@@ -309,12 +335,13 @@ cairo_aros_font_face_create_for_outline_tags (struct TagItem *tags)
 
     _cairo_font_face_init (&face->base, &_cairo_aros_font_face_backend);
 
-    return &face->base;
+    ReturnPtr("cairo_aros_font_face_create_for_outline_tags", cairo_font_face_t *, &face->base);
 }
 
 static BOOL
 _validate_otag (struct TagItem *otag, int size)
 {
+    D(bug("[cairo:_validate_otag] otag %p size %d\n", otag, size));
     struct TagItem *tag;
 
     if (AROS_LONG2BE (otag[0].ti_Tag) != OT_FileIdent ||
@@ -329,7 +356,7 @@ _validate_otag (struct TagItem *otag, int size)
             tag->ti_Data += (IPTR) otag;
     }
 
-    return TRUE;
+    ReturnBool("_validate_otag", TRUE);
 }
 
 cairo_font_face_t *
@@ -337,6 +364,7 @@ cairo_aros_font_face_create (const char          *wanted_family,
                              cairo_font_slant_t   wanted_slant,
                              cairo_font_weight_t  wanted_weight)
 {
+    D(bug("[cairo:cairo_aros_font_face_create] family %s slant %d weight %d\n", wanted_family, wanted_slant, wanted_weight));
     BPTR fontdir;
     struct FileInfoBlock *fib;
     cairo_aros_font_face_t *face = NULL, best, new;
@@ -507,12 +535,11 @@ _face_create_finish:
 
     face->needs_italic = best.needs_italic;
     face->needs_bold = best.needs_bold;
-
     _cairo_font_face_init (&face->base, &_cairo_aros_font_face_backend);
-
-    return &face->base;
+    ReturnPtr("cairo_aros_font_face_create", cairo_font_face_t *, &face->base);
 }
 
+#if 0
 static cairo_status_t
 _cairo_aros_scaled_font_create_toy (cairo_toy_font_face_t       *toy_face,
                                     const cairo_matrix_t        *font_matrix,
@@ -539,10 +566,12 @@ _cairo_aros_scaled_font_create_toy (cairo_toy_font_face_t       *toy_face,
     *font_out = font;
     return CAIRO_STATUS_SUCCESS;
 }
+#endif
 
 static void
 _cairo_aros_scaled_font_fini (void *abstract_font)
 {
+    D(bug("[cairo:_cairo_aros_scaled_font_fini abstract_font %p\n", abstract_font));
     cairo_aros_scaled_font_t *font = abstract_font;
 
     if (font == NULL)
@@ -560,6 +589,7 @@ _cairo_aros_scaled_font_glyph_init_metrics (cairo_aros_scaled_font_t *font,
                                             cairo_scaled_glyph_t     *glyph,
                                             struct GlyphMap          *gm)
 {
+    D(bug("[cairo:_cairo_aros_scaled_font_glyph_init_metrics] font %p glyph %p gm %p\n", font, glyph, gm));
     cairo_text_extents_t extents;
 
     if (gm == NULL) {
@@ -590,6 +620,7 @@ _cairo_aros_scaled_font_glyph_init_surface (cairo_aros_scaled_font_t *font,
                                             cairo_scaled_glyph_t     *glyph,
                                             struct GlyphMap          *gm)
 {
+    D(bug("[cairo:_cairo_aros_scaled_font_glyph_init_surface] font %p glyph %p gm %p\n", font, glyph, gm));
     cairo_image_surface_t *surface;
     UBYTE *src;
     unsigned char *dest;
@@ -641,6 +672,7 @@ _cairo_aros_scaled_font_glyph_init_surface_a8 (cairo_aros_scaled_font_t *font,
                                                cairo_scaled_glyph_t     *glyph,
                                                struct GlyphMap          *gm)
 {
+    D(bug("[cairo:_cairo_aros_scaled_font_glyph_init_surface_a8] font %p glyph %p gm %p\n", font, glyph, gm));
     cairo_image_surface_t *surface;
     UBYTE *src;
     unsigned char *dest;
@@ -692,6 +724,7 @@ _cairo_aros_scaled_font_glyph_init (void                      *abstract_font,
                                     cairo_scaled_glyph_t      *glyph,
                                     cairo_scaled_glyph_info_t  info)
 {
+    D(bug("[cairo:_cairo_aros_scaled_font_glyph_init] abstract_font %p glyph %p info %d\n", abstract_font, glyph, info));
     cairo_aros_scaled_font_t *font = abstract_font;
     struct GlyphMap *gm;
     cairo_status_t status;
@@ -730,6 +763,7 @@ _get_kern (cairo_aros_scaled_font_t *font,
            uint16_t                  code,
            uint16_t                  code2)
 {
+    D(bug("[cairo:_get_kern] font %p code %d code2 %d\n", font, code, code2));
     struct Library *BulletBase = font->engine->gle_Library;
     uint32_t kern;
 
@@ -741,14 +775,21 @@ _get_kern (cairo_aros_scaled_font_t *font,
     return kern;
 }
 
+
 static cairo_int_status_t
-_cairo_aros_scaled_font_text_to_glyphs (void           *abstract_font,
-                                        double          x,
-                                        double          y,
-                                        const char     *utf8,
-                                        cairo_glyph_t **glyphs,
-                                        int            *num_glyphs)
+_cairo_aros_scaled_font_text_to_glyphs (void                       *abstract_font,
+                                        double                      x,
+                                        double                      y,
+                                        const char                 *utf8,
+                                        int                         utf8_len,
+                                        cairo_glyph_t             **glyphs,
+                                        int                        *num_glyphs,
+                                        cairo_text_cluster_t      **clusters,
+                                        int                        *num_clusters,
+                                        cairo_text_cluster_flags_t *cluster_flags)
 {
+    D(bug("[cairo:_cairo_aros_scaled_font_text_to_glyphs] abstract_font %p x %d y %d utf8 %s glyphs %p num_glyphs %p\n",
+        abstract_font, x, y, utf8, glyphs, num_glyphs));
     cairo_aros_scaled_font_t *font = abstract_font;
     uint16_t *utf16;
     int n16, s, d;
@@ -795,7 +836,6 @@ _cairo_aros_scaled_font_text_to_glyphs (void           *abstract_font,
 
 const cairo_scaled_font_backend_t cairo_aros_scaled_font_backend = {
     CAIRO_FONT_TYPE_AROS,
-    _cairo_aros_scaled_font_create_toy,
     _cairo_aros_scaled_font_fini,
     _cairo_aros_scaled_font_glyph_init,
     _cairo_aros_scaled_font_text_to_glyphs,
