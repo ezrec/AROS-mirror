@@ -1,0 +1,105 @@
+diff -ur SDL_mixer-1.2.11/configure SDL_mixer-1.2.11-aros/configure
+--- SDL_mixer-1.2.11/configure	2009-11-12 07:44:13.000000000 +0100
++++ SDL_mixer-1.2.11-aros/configure	2011-06-23 17:08:34.000000000 +0200
+@@ -12053,7 +12053,7 @@
+ 
+   if test "x$sdl_prefix$sdl_exec_prefix" = x ; then
+ 
+-pkg_failed=no
++pkg_failed=yes
+ { $as_echo "$as_me:$LINENO: checking for SDL" >&5
+ $as_echo_n "checking for SDL... " >&6; }
+ 
+@@ -13275,7 +13275,7 @@
+   $as_echo_n "(cached) " >&6
+ else
+   ac_check_lib_save_LIBS=$LIBS
+-LIBS="-lvorbisfile  $LIBS"
++LIBS="-lvorbisfile -lvorbis -logg $LIBS"
+ cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+ _ACEOF
+@@ -15227,7 +15227,8 @@
+ if test -n "$CONFIG_FILES"; then
+ 
+ 
+-ac_cr=''
++ac_cr='
++'
+ ac_cs_awk_cr=`$AWK 'BEGIN { print "a\rb" }' </dev/null 2>/dev/null`
+ if test "$ac_cs_awk_cr" = "a${ac_cr}b"; then
+   ac_cs_awk_cr='\\r'
+diff -ur SDL_mixer-1.2.11/Makefile.in SDL_mixer-1.2.11-aros/Makefile.in
+--- SDL_mixer-1.2.11/Makefile.in	2009-10-13 01:06:53.000000000 +0200
++++ SDL_mixer-1.2.11-aros/Makefile.in	2011-06-23 17:08:34.000000000 +0200
+@@ -32,7 +32,7 @@
+ SDL_CFLAGS = @SDL_CFLAGS@
+ SDL_LIBS = @SDL_LIBS@
+ 
+-TARGET  = libSDL_mixer.la
++SDL_TARGET  = libSDL_mixer.la
+ OBJECTS = @OBJECTS@
+ VERSION_OBJECTS = @VERSION_OBJECTS@
+ PLAYWAVE_OBJECTS = @PLAYWAVE_OBJECTS@
+@@ -46,7 +46,7 @@
+ LT_REVISION = @LT_REVISION@
+ LT_LDFLAGS  = -no-undefined -rpath $(libdir) -release $(LT_RELEASE) -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
+ 
+-all: $(srcdir)/configure Makefile $(objects) $(objects)/$(TARGET) $(objects)/playwave$(EXE) $(objects)/playmus$(EXE)
++all: $(srcdir)/configure Makefile $(objects) $(objects)/$(SDL_TARGET) $(objects)/playwave$(EXE) $(objects)/playmus$(EXE)
+ 
+ $(srcdir)/configure: $(srcdir)/configure.in
+ 	@echo "Warning, configure.in is out of date"
+@@ -71,14 +71,14 @@
+ -include $(PLAYMUS_OBJECTS:.lo=.d)
+ @PLAYMUS_DEPENDS@
+ 
+-$(objects)/$(TARGET): $(OBJECTS) $(VERSION_OBJECTS)
++$(objects)/$(SDL_TARGET): $(OBJECTS) $(VERSION_OBJECTS)
+ 	$(LIBTOOL) --mode=link $(CC) -o $@ $(OBJECTS) $(VERSION_OBJECTS) $(LDFLAGS) $(EXTRA_LDFLAGS) $(LT_LDFLAGS)
+ 
+-$(objects)/playwave$(EXE): $(objects)/playwave.lo $(objects)/$(TARGET)
+-	$(LIBTOOL) --mode=link $(CC) -o $@ $(objects)/playwave.lo $(SDL_CFLAGS) $(SDL_LIBS) $(objects)/$(TARGET)
++$(objects)/playwave$(EXE): $(objects)/playwave.lo $(objects)/$(SDL_TARGET)
++	$(LIBTOOL) --mode=link $(CC) -o $@ $(objects)/playwave.lo $(SDL_CFLAGS) $(SDL_LIBS) $(objects)/$(SDL_TARGET)
+ 
+-$(objects)/playmus$(EXE): $(objects)/playmus.lo $(objects)/$(TARGET)
+-	$(LIBTOOL) --mode=link $(CC) -o $@ $(objects)/playmus.lo $(SDL_CFLAGS) $(SDL_LIBS) $(objects)/$(TARGET)
++$(objects)/playmus$(EXE): $(objects)/playmus.lo $(objects)/$(SDL_TARGET)
++	$(LIBTOOL) --mode=link $(CC) -o $@ $(objects)/playmus.lo $(SDL_CFLAGS) $(SDL_LIBS) $(objects)/$(SDL_TARGET)
+ 
+ install: all install-hdrs install-lib #install-bin
+ install-hdrs:
+@@ -89,9 +89,9 @@
+ 	done
+ 	$(SHELL) $(auxdir)/mkinstalldirs $(libdir)/pkgconfig
+ 	$(INSTALL) -m 644 SDL_mixer.pc $(libdir)/pkgconfig/
+-install-lib: $(objects) $(objects)/$(TARGET)
++install-lib: $(objects) $(objects)/$(SDL_TARGET)
+ 	$(SHELL) $(auxdir)/mkinstalldirs $(libdir)
+-	$(LIBTOOL) --mode=install $(INSTALL) $(objects)/$(TARGET) $(libdir)/$(TARGET)
++	$(LIBTOOL) --mode=install $(INSTALL) $(objects)/$(SDL_TARGET) $(libdir)/$(SDL_TARGET)
+ install-bin:
+ 	$(SHELL) $(auxdir)/mkinstalldirs $(bindir)
+ 	$(LIBTOOL) --mode=install $(INSTALL) -m 755 $(objects)/playwave$(EXE) $(bindir)/playwave$(EXE)
+@@ -107,7 +107,7 @@
+ 	rm -f $(libdir)/pkgconfig/SDL_mixer.pc
+ 	-rmdir $(libdir)/pkgconfig
+ uninstall-lib:
+-	$(LIBTOOL) --mode=uninstall rm -f $(libdir)/$(TARGET)
++	$(LIBTOOL) --mode=uninstall rm -f $(libdir)/$(SDL_TARGET)
+ uninstall-bin:
+ 	rm -f $(bindir)/playwave$(EXE)
+ 	rm -f $(bindir)/playmus$(EXE)
+diff -ur SDL_mixer-1.2.11/timidity/config.h SDL_mixer-1.2.11-aros/timidity/config.h
+--- SDL_mixer-1.2.11/timidity/config.h	2009-10-13 01:06:52.000000000 +0200
++++ SDL_mixer-1.2.11-aros/timidity/config.h	2011-06-23 17:08:34.000000000 +0200
+@@ -176,6 +176,8 @@
+ 
+ #if defined(__WIN32__) || defined(__OS2__)
+ #define DEFAULT_PATH	"C:\\TIMIDITY"
++#elif defined(__AROS__)
++#define DEFAULT_PATH    "PROGDIR:"
+ #else
+ #define DEFAULT_PATH	"/etc/timidity"
+ #define DEFAULT_PATH1	"/usr/share/timidity"
