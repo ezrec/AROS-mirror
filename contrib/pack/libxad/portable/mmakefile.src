@@ -4,57 +4,57 @@
 include $(TOP)/config/make.cfg
 
 HFILES   = \
-	include/ConvertE
+    include/ConvertE
 
 CFILES = \
     clients/HA \
     clients/TR-DOS \
-	clients/Ace \
-	clients/AMPK \
-	clients/bzip2 \
-	clients/CAB \
-	clients/Cpio \
-	clients/CrunchDisk \
-	clients/DMS \
-	clients/DCS \
-	clients/IFF-CDAF \
-	clients/FS_Amiga \
+    clients/Ace \
+    clients/AMPK \
+    clients/bzip2 \
+    clients/CAB \
+    clients/Cpio \
+    clients/CrunchDisk \
+    clients/DMS \
+    clients/DCS \
+    clients/IFF-CDAF \
+    clients/FS_Amiga \
     clients/FS_FAT \
     clients/FS_SOS \
     clients/LhA \
-	clients/LhF \
-	clients/LZX \
-	clients/MDC \
-	clients/MXM-SimpleArc \
-	clients/PackDev \
-	clients/PackDisk \
-	clients/RPM \
-	clients/StuffIt \
-	clients/SuperDuper3 \
-	clients/Tar \
-	clients/xDisk \
-	clients/xMash \
-	clients/Zip \
-	clients/Zoom \
-	clients/xadIO_Compress \
-	clients/xadIO_XPK \
-	clients/xadIO
+    clients/LhF \
+    clients/LZX \
+    clients/MDC \
+    clients/MXM-SimpleArc \
+    clients/PackDev \
+    clients/PackDisk \
+    clients/RPM \
+    clients/StuffIt \
+    clients/SuperDuper3 \
+    clients/Tar \
+    clients/xDisk \
+    clients/xMash \
+    clients/Zip \
+    clients/Zoom \
+    clients/xadIO_Compress \
+    clients/xadIO_XPK \
+    clients/xadIO
 
 CHARSET = \
-	cs_atarist_to_unicode \
-	cs_c64_to_unicode \
-	cs_ibmcp437_to_unicode \
-	cs_macroman_to_unicode \
-	cs_unicode_to_iso8859-1 \
-	cs_windowscp1252_to_unicod
+    cs_atarist_to_unicode \
+    cs_c64_to_unicode \
+    cs_ibmcp437_to_unicode \
+    cs_macroman_to_unicode \
+    cs_unicode_to_iso8859-1 \
+    cs_windowscp1252_to_unicod
 
-FILES = all \
-	clientfunc \
-	copymem \
-	crc \
-	dates \
-	diskfile \
-	diskunarc \
+FILES = \
+    clientfunc \
+    copymem \
+    crc \
+    dates \
+    diskfile \
+    diskunarc \
     error \
     filename \
     fileunarc \
@@ -68,12 +68,13 @@ FILES = all \
     info \
     objects \
     protection \
-	$(HFILES) $(CHARSET)
+    $(HFILES) \
+    $(CHARSET)
 
-USER_CFLAGS := -Wno-uninitialized -Wno-parentheses -I ./include -I ./ -I ../amiga/include/C
+USER_CFLAGS := -Wno-uninitialized -Wno-parentheses -I$(AROS_INCLUDES)/SDI -I$(SRCDIR)/$(CURDIR)/../amiga/include/C -I$(SRCDIR)/$(CURDIR)/include -I$(SRCDIR)/$(CURDIR)/ -I$(SRCDIR)/$(CURDIR)/amiga
 
-#MM- contrib-pack-xadmaster-libray : includes
+#MM- contrib-pack-xadmaster-library : includes
 
-%build_module mmake=contrib-pack-xadmaster-libray \
+%build_module mmake=contrib-pack-xadmaster-library \
   modname=xadmaster modtype=library uselibs=rom \
   files="$(FILES)"

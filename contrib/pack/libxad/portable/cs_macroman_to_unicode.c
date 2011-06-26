@@ -23,6 +23,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+#include <libraries/xadmaster.h>
+
 static const xadUINT16 macroman[] = {
 0x00C4, /* LATIN CAPITAL LETTER A WITH DIAERESIS */
 0x00C5, /* LATIN CAPITAL LETTER A WITH RING ABOVE */
