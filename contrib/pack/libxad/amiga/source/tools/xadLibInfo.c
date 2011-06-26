@@ -39,15 +39,25 @@
 			 SysBase = (*((struct ExecBase **) 4));
 #else
   struct DosLibrary *	 DOSBase = 0;
+#if !defined(__AROS__)
   struct ExecBase *	 SysBase  = 0;
+#endif
   struct xadMasterBase * xadMasterBase = 0;
 
   #define ASSIGN_DOS	 DOSBase = dosbase;
   #define ASSIGN_XAD	 xadMasterBase = xadmasterbase;
+#if !defined(__AROS__)
   #define ASSIGN_SYS	 SysBase = (*((struct ExecBase **) 4));
+#else
+  #define ASSIGN_SYS
+#endif
 #endif
 
+#if !defined(__AROS__)
 ULONG start(void)
+#else
+int main(void)
+#endif
 {
   ULONG ret = RETURN_FAIL;
   struct DosLibrary *dosbase;

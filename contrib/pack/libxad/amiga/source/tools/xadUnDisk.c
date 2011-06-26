@@ -40,7 +40,9 @@
 
 struct xadMasterBase *   xadMasterBase = 0;
 struct DosLibrary *      DOSBase = 0;
+#if !defined(__AROS__)
 struct ExecBase *        SysBase  = 0;
+#endif
 
 #define PARAM   "FROM/A,TO,LOWCYL/N,HIGHCYL/N,ENTRY/N,PASSWORD,SAVETEXTS/K," \
                 "NE=NOEXTERN/S,INFO=LIST/S,SHOWTEXTS/S,OW=OVERWRITE/S," \
@@ -76,12 +78,18 @@ static void FreeMyTags(struct TagItem *ti);
 static struct TagItem *GetMyTags(STRPTR name, LONG *reserr);
 static LONG AskInsertDisk(STRPTR);
 
+#if !defined(__AROS__)
 ULONG start(void)
+#else
+int main(void)
+#endif
 {
   ULONG ret = RETURN_FAIL;
   struct DosLibrary *dosbase;
 
+#if !defined(__AROS__)
   SysBase = (*((struct ExecBase **) 4));
+#endif
   { /* test for WB and reply startup-message */
     struct Process *task;
     if(!(task = (struct Process *) FindTask(0))->pr_CLI)

@@ -32,7 +32,9 @@
 #include "SDI_ASM_STD_protos.h"
 
 struct DosLibrary *	 DOSBase = 0;
+#if !defined(__AROS__)
 struct ExecBase *	 SysBase  = 0;
+#endif
 
 #define PARAM	"FROM/A,TO,TYPE/K"
 
@@ -64,12 +66,18 @@ struct ScanData {
 
 struct ScanData ScanFuncs[]; /* declaration, real field see file end */
 
+#if !defined(__AROS__)
 ULONG start(void)
+#else
+int main(void)
+#endif
 {
   ULONG ret = RETURN_FAIL;
   struct DosLibrary *dosbase;
 
+#if !defined(__AROS__)
   SysBase = (*((struct ExecBase **) 4));
+#endif
   { /* test for WB and reply startup-message */
     struct Process *task;
     if(!(task = (struct Process *) FindTask(0))->pr_CLI)

@@ -37,7 +37,9 @@
 
 struct xadMasterBase *  xadMasterBase = 0;
 struct DosLibrary *     DOSBase = 0;
+#if !defined(__AROS__)
 struct ExecBase *       SysBase = 0;
+#endif
 
 #define MINPRINTSIZE    51200   /* 50KB */
 #define NAMEBUFSIZE     512
@@ -171,12 +173,18 @@ static void ShowProt(ULONG i);
 static LONG CheckNameSize(STRPTR name, ULONG size);
 static LONG CheckName(STRPTR *pat, STRPTR name);
 
+#if !defined(__AROS__)
 ULONG SAVEDS start(void)
+#else
+int main(void)
+#endif
 {
   ULONG ret = RETURN_FAIL;
   struct DosLibrary *dosbase;
 
+#if !defined(__AROS__)
   SysBase = (*((struct ExecBase **) 4));
+#endif
   { /* test for WB and reply startup-message */
     struct Process *task = (struct Process *) FindTask(0);
     if(!task->pr_CLI)

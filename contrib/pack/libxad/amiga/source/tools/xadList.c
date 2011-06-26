@@ -37,7 +37,11 @@ struct Args {
   ULONG	  onlyknown;
 };
 
+#if !defined(__AROS__)
 ULONG _start(void)
+#else
+int main(void)
+#endif
 {
   ULONG ret = RETURN_FAIL;
 
