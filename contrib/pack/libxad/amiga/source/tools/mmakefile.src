@@ -1,5 +1,5 @@
-# Copyright © 2003-2010, The AROS Development Team. All rights reserved.
-# $Id: mmakefile.src 39345 2011-06-17 05:55:29Z jmcmullan $
+# Copyright © 2011, The AROS Development Team. All rights reserved.
+# $Id$
 
 include $(TOP)/config/make.cfg
 
@@ -7,11 +7,12 @@ FILES := \
     exe2arc \
     xad2lha \
     xadLibInfo \
+    xadList \
     xadUnDisk \
     xadUnFile \
     xadUnTar
 
-SKIPPED := xadList
+SKIPPED := 
 
 USER_CFLAGS     := -I$(AROS_INCLUDES)/SDI -I$(SRCDIR)/$(CURDIR)/../../include/C -I$(SRCDIR)/$(CURDIR)/../../../portable/include
 

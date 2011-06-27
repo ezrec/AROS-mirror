@@ -1,8 +1,8 @@
 /*
-    Copyright © 2002-2006, The AROS Development Team. 
+    Copyright © 2011, The AROS Development Team. 
     All rights reserved.
     
-    $Id: xadmaster_init.c 30792 2009-03-07 22:40:04Z NicJA $
+    $Id$
 */
 
 #define NOXADPROTOS
@@ -104,16 +104,16 @@ static int Init(LIBBASETYPEPTR LIBBASE)
 
     XADB(LIBBASE)->xmb_DefaultName = "unnamed.dat";
 
-    XADB(LIBBASE)->xmb_InHookFH.h_Entry = InHookFH;
-    XADB(LIBBASE)->xmb_OutHookFH.h_Entry = OutHookFH;
-    XADB(LIBBASE)->xmb_InHookMem.h_Entry = InHookMem;
-    XADB(LIBBASE)->xmb_OutHookMem.h_Entry = OutHookMem;
-    XADB(LIBBASE)->xmb_InHookStream.h_Entry = InHookStream;
-    XADB(LIBBASE)->xmb_OutHookStream.h_Entry = OutHookStream;
-    XADB(LIBBASE)->xmb_InHookDisk.h_Entry = InHookDisk;
-    XADB(LIBBASE)->xmb_OutHookDisk.h_Entry = OutHookDisk;
-    XADB(LIBBASE)->xmb_InHookSplitted.h_Entry = InHookSplitted;
-    XADB(LIBBASE)->xmb_InHookDiskArc.h_Entry = InHookDiskArc;
+    XADB(LIBBASE)->xmb_InHookFH.h_Entry = ( HOOKFUNC )InHookFH;
+    XADB(LIBBASE)->xmb_OutHookFH.h_Entry = ( HOOKFUNC )OutHookFH;
+    XADB(LIBBASE)->xmb_InHookMem.h_Entry = ( HOOKFUNC )InHookMem;
+    XADB(LIBBASE)->xmb_OutHookMem.h_Entry = ( HOOKFUNC )OutHookMem;
+    XADB(LIBBASE)->xmb_InHookStream.h_Entry = ( HOOKFUNC )InHookStream;
+    XADB(LIBBASE)->xmb_OutHookStream.h_Entry = ( HOOKFUNC )OutHookStream;
+    XADB(LIBBASE)->xmb_InHookDisk.h_Entry = ( HOOKFUNC )InHookDisk;
+    XADB(LIBBASE)->xmb_OutHookDisk.h_Entry = ( HOOKFUNC )OutHookDisk;
+    XADB(LIBBASE)->xmb_InHookSplitted.h_Entry = ( HOOKFUNC )InHookSplitted;
+    XADB(LIBBASE)->xmb_InHookDiskArc.h_Entry = ( HOOKFUNC )InHookDiskArc;
 
     XADB(LIBBASE)->xmb_FirstClient = NULL;
     XADB(LIBBASE)->xmb_System.xsi_Version = XADMASTERVERSION;

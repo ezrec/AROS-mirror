@@ -24,13 +24,13 @@
 
 #define BETA
 #define XADMASTERVERSION   13
-#define XADMASTERREVISION  0
-#define DATETXT            "31.03.2003"
+#define XADMASTERREVISION  1
+#define DATETXT            "27.06.2011"
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #else
-#define VERSION            "13.0"
+#define VERSION            "13.1"
 #endif
 
 #define LIBNAME   "xadmaster.library"
