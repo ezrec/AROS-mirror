@@ -6,6 +6,7 @@
 */
 
 #define NOXADPROTOS
+#define DEBUG 1
 
 #include <exec/types.h>
 #include <exec/libraries.h>
@@ -13,8 +14,6 @@
 #include <aros/symbolsets.h>
 
 #include <proto/dos.h>
-
-//#include <libraries/xadmaster.h>
 
 #include LC_LIBDEFS_FILE
 
@@ -37,7 +36,7 @@ static void InitClients(LIBBASETYPEPTR LIBBASE)
   {
     BPTR lock;
 
-    D(bug("[xadmaster.library]: %s()\n", __PRETTY_FCUNTION__));
+    D(bug("[xadmaster.library]: %s()\n", __PRETTY_FUNCTION__));
 
     if((lock = Lock("LIBS:xad", SHARED_LOCK)))
     {
@@ -104,8 +103,6 @@ static int Init(LIBBASETYPEPTR LIBBASE)
     D(bug("[xadmaster.library]: %s()\n", __PRETTY_FUNCTION__));
 
     XADB(LIBBASE)->xmb_DefaultName = "unnamed.dat";
-//  XADB(LIBBASE)->xmb_SegList = seglist;
-//  XADB(LIBBASE)->xmb_SysBase = sysBase;
 
     XADB(LIBBASE)->xmb_InHookFH.h_Entry = InHookFH;
     XADB(LIBBASE)->xmb_OutHookFH.h_Entry = OutHookFH;
@@ -132,7 +129,7 @@ static int Init(LIBBASETYPEPTR LIBBASE)
 	    /* add internal clients */
 	    xadAddClients(LIBBASE, RealFirstClient, 0);
 	    /* load and add external clients */
-//	    InitClients(LIBBASE);
+	    InitClients(LIBBASE);
 
 	    for(cl = XADB(LIBBASE)->xmb_FirstClient; cl; cl = cl->xc_Next)
 	    {
@@ -153,7 +150,7 @@ static int Init(LIBBASETYPEPTR LIBBASE)
 
 static int Expunge(LIBBASETYPEPTR LIBBASE)
 {
-    D(bug("[xadmaster.library]: %s()\n", __PRETTY_FCUNTION__));
+    D(bug("[xadmaster.library]: %s()\n", __PRETTY_FUNCTION__));
 
     return TRUE;
 }
