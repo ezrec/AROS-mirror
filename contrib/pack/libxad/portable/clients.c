@@ -51,32 +51,35 @@ void DebugClient(const struct xadArchiveInfo *ai, const xadSTRING *, ...);      
 #endif
 
 #include "clients/Ace.c"
-#include "clients/AMPK.c"
 #include "clients/bzip2.c"
 #include "clients/CAB.c"
 #include "clients/Cpio.c"
-#include "clients/CrunchDisk.c"
-#include "clients/DCS.c"
 #include "clients/DMS.c"
 #include "clients/FS_Amiga.c"
 #include "clients/FS_FAT.c"
 #include "clients/FS_SOS.c"
-#include "clients/IFF-CDAF.c"
 #include "clients/LhA.c"
 #include "clients/LhF.c"
 #include "clients/LZX.c"
-#include "clients/MDC.c"
 #include "clients/MXM-SimpleArc.c"
-#include "clients/PackDev.c"
-#include "clients/PackDisk.c"
 #include "clients/RPM.c"
 #include "clients/StuffIt.c"
-#include "clients/SuperDuper3.c"
 #include "clients/Tar.c"
-#include "clients/xDisk.c"
-#include "clients/xMash.c"
 #include "clients/Zip.c"
 #include "clients/Zoom.c"
+
+#if !defined(__AROS__)
+#include "clients/AMPK.c"
+#include "clients/CrunchDisk.c"
+#include "clients/DCS.c"
+#include "clients/IFF-CDAF.c"
+#include "clients/MDC.c"
+#include "clients/PackDev.c"
+#include "clients/PackDisk.c"
+#include "clients/SuperDuper3.c"
+#include "clients/xDisk.c"
+#include "clients/xMash.c"
+#endif
 
 const struct xadClient * const RealFirstClient = XADNEXTCLIENT;
 

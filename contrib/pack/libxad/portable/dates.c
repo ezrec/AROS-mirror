@@ -226,7 +226,7 @@ FUNCxadConvertDates /* xadTAGPTR tags */
   xadTAGPTR ti, ti2;
   const struct MyDateStamp *datsp = 0;
 
-#ifdef AMIGA
+#if !defined(__AROS__) && defined(AMIGA)
   struct ExecBase *SysBase = xadMasterBase->xmb_SysBase;
 #endif
 

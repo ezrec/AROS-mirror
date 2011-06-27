@@ -33,7 +33,9 @@
 #define FreeMem(a,b) free(a)
 #else
 #include <proto/exec.h>
+#if !defined(__AROS__)
 #define SysBase xadMasterBase->xmb_SysBase
+#endif
 #endif
 
 FUNCxadAllocVec /* xadSize size, xadUINT32 flags */
