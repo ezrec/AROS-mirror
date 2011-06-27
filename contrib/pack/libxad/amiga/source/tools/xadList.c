@@ -14,6 +14,8 @@
  1.0   18.11.98 : first version
 */
 
+#define XAD_OBSOLETE
+
 #include <proto/xadmaster.h>
 #include <proto/exec.h>
 #include <proto/dos.h>
