@@ -47,7 +47,9 @@ int main(void)
 {
   ULONG ret = RETURN_FAIL;
 
+#if !defined(__AROS__)
   SDI_SETSYSBASE
+#endif
   { /* test for WB and reply startup-message */
     struct Process *task;
     if(!(task = (struct Process *) FindTask(0))->pr_CLI)
