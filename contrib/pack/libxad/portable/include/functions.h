@@ -47,22 +47,33 @@
 #endif
 #endif
 
-#define PROTOHOOK(name) \
+#if !defined(__AROS__)
+#   define PROTOHOOK(name) \
   ASM(xadINT32) name( \
   REG(a0, struct Hook * hook), \
   REG(a2, struct xadArchiveInfoP *ai), \
   REG(a1, struct xadHookParam * param))
-
-#define FUNCHOOK(name) PROTOHOOK(name) {
-
-#if !defined(__AROS__)
+#   define FUNCHOOK(name) PROTOHOOK(name) {
 #   define ENDFUNC }
 #   define ENDHOOK ENDFUNC
 #else
 #   include <aros/asmcall.h>
+#   define PROTOHOOK(name) \
+  AROS_UFP3(xadINT32, name, \
+  AROS_UFPA(struct Hook *, hook, A0), \
+  AROS_UFPA(struct xadArchiveInfoP *, ai, A2), \
+  AROS_UFPA(struct xadHookParam *, param,  A1))
+#   define FUNCHOOK(name) \
+  AROS_UFH3(xadINT32, name, \
+  AROS_UFHA(struct Hook *, hook, A0), \
+  AROS_UFHA(struct xadArchiveInfoP *, ai, A2), \
+  AROS_UFHA(struct xadHookParam *, param,  A1)) \
+  { \
+      AROS_USERFUNC_INIT
 #   define ENDFUNC AROS_LIBFUNC_EXIT \
 }
-# define ENDHOOK }
+#   define ENDHOOK AROS_USERFUNC_EXIT \
+}
 #endif
 
 #if !defined(__AROS__)

@@ -145,9 +145,15 @@ struct Args {
   ULONG    notree;
 };
 
-ASM(ULONG) progrhook(REG(a0, struct Hook *),
+#if !defined(__AROS__)
+ASM(ULONG) SAVEDS progrhook(REG(a0, struct Hook *),
   REG(a1, struct xadProgressInfo *));
-
+#else
+  AROS_UFP3(ULONG, progrhook,
+  AROS_UFPA(struct Hook *, hook, A0),
+  AROS_UFPA(void *, ai, A2),
+  AROS_UFPA(struct xadProgressInfo *, pi,  A1));
+#endif
 void ShowProt(ULONG i);
 LONG CheckNameSize(STRPTR name, ULONG size);
 void CalcPercent(ULONG cr, ULONG ucr, ULONG *p1, ULONG *p2);
@@ -761,9 +767,18 @@ int main(void)
 }
 
 /* Because of SAS-err, this cannot be SAVEDS */
-ASM(ULONG) progrhook(REG(a0, struct Hook *hook),
+#if !defined(__AROS__)
+ASM(ULONG) SAVEDS progrhook(REG(a0, struct Hook *hook),
 REG(a1, struct xadProgressInfo *pi))
 {
+#else
+  AROS_UFH3(ULONG, progrhook,
+  AROS_UFHA(struct Hook *, hook, A0),
+  AROS_UFHA(void *, ai, A2),
+  AROS_UFHA(struct xadProgressInfo *, pi,  A1))
+{
+    AROS_USERFUNC_INIT
+#endif
   ULONG ret = 0;
   STRPTR name = ((struct xHookArgs *) (hook->h_Data))->name;
 
@@ -885,6 +900,9 @@ REG(a1, struct xadProgressInfo *pi))
     ret |= XADPIF_OK;
 
   return ret;
+#if defined(__AROS__)
+  AROS_USERFUNC_EXIT
+#endif
 }
 
 void ShowProt(ULONG i)

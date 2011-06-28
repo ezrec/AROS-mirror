@@ -38,7 +38,7 @@ static void InitClients(LIBBASETYPEPTR LIBBASE)
 
     D(bug("[xadmaster.library]: %s()\n", __PRETTY_FUNCTION__));
 
-    if((lock = Lock("LIBS:xad", SHARED_LOCK)))
+    if((lock = Lock("LIBS:XAD", SHARED_LOCK)))
     {
       if(Examine(lock, fib))
       {

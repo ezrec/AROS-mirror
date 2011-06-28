@@ -81,10 +81,17 @@ The string CPUTEXT is used in version string after date.
           INLINE xadBOOL _name##_RecogData( xadSize size, \
           xadUINT8 *data, struct xadMasterBase *xadMasterBase)
 #else
+#if defined(__AROS__)
+#define XADRECOGDATA(name) static xadBOOL name##_RecogData( \
+          xadSize size, \
+          const xadUINT8 *data, \
+          struct xadMasterBase *xadMasterBase)
+#else
 #define XADRECOGDATA(name) static ASM(xadBOOL) name##_RecogData( \
           REG(d0, xadSize size), \
           REG(a0, const xadUINT8 *data), \
           REG(a6, struct xadMasterBase *xadMasterBase))
+#endif
 #endif
 
 #if !defined(XADMASTERFILE) && defined(CPUCHECKGI)
@@ -97,11 +104,26 @@ The string CPUTEXT is used in version string after date.
           INLINE xadERROR _name##_GetInfo( \
           struct xadArchiveInfo *ai, struct xadMasterBase *xadMasterBase)
 #else
+#if defined(__AROS__)
+#define XADGETINFO(name)   static xadERROR name##_GetInfo( \
+          struct xadArchiveInfo *ai, \
+          struct xadMasterBase *xadMasterBase)
+#else
 #define XADGETINFO(name)   static ASM(xadERROR) name##_GetInfo( \
           REG(a0, struct xadArchiveInfo *ai), \
           REG(a6, struct xadMasterBase *xadMasterBase))
 #endif
+#endif
 
+#if defined(__AROS__)
+#define XADUNARCHIVE(name) static xadERROR name##_UnArchive( \
+          struct xadArchiveInfo *ai, \
+          struct xadMasterBase *xadMasterBase)
+
+#define XADFREE(name)      static void name##_Free( \
+          struct xadArchiveInfo *ai, \
+          struct xadMasterBase *xadMasterBase)
+#else
 #define XADUNARCHIVE(name) static ASM(xadERROR) name##_UnArchive( \
           REG(a0, struct xadArchiveInfo *ai), \
           REG(a6, struct xadMasterBase *xadMasterBase))
@@ -109,6 +131,7 @@ The string CPUTEXT is used in version string after date.
 #define XADFREE(name)      static ASM(void) name##_Free( \
           REG(a0, struct xadArchiveInfo *ai), \
           REG(a6, struct xadMasterBase *xadMasterBase))
+#endif
 
 #define XADRECOGDATAP(name) (xadBOOL (*)()) name##_RecogData
 
