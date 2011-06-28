@@ -6,8 +6,10 @@ include $(TOP)/config/make.cfg
 INCLUDES	:= $(wildcard libraries/*.h)
 DEST_INCLUDES	:= $(foreach f,$(INCLUDES),$(AROS_INCLUDES)/$(f))
 
+#MM- xadmaster-includes : xadmaster-copy-headers
+
 #MM
-xadmaster-includes : $(DEST_INCLUDES)
+xadmaster-copy-headers : $(DEST_INCLUDES)
 	@$(NOP)
 
 $(AROS_INCLUDES)/%.h : %.h

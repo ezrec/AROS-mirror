@@ -64,7 +64,7 @@ FUNCHOOK(InHookMem)
 
   return 0;
 }
-ENDFUNC
+ENDHOOK
 
 /*************************** write-to-mem hook **************************/
 
@@ -101,7 +101,7 @@ FUNCHOOK(OutHookMem)
 
   return 0;
 }
-ENDFUNC
+ENDHOOK
 
 #endif /* XADMASTER_HOOK_MEM_C */
 

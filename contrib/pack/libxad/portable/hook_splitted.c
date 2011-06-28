@@ -276,6 +276,6 @@ FUNCHOOK(InHookSplitted)
 
   return 0;
 }
-ENDFUNC
+ENDHOOK
 
 #endif /* XADMASTER_HOOK_SPLITTED_C */
