@@ -110,11 +110,15 @@ void ClearIOErr_exit(int e)     /* EXIT is defined as this */
 
 /* Make sure the version number here matches the number in revision.h */
 /* as closely as possible in strict decimal "#.#" form:               */
-const char version_id[] = "\0$VER: Zip 2.3 ("
+const char version_id[] = "\0$VER: Zip 3.0 ("
+#ifdef __AROS__
+"5.7.2008"
+#else
 #ifdef __GNUC__
 __DATE__
 #else
 #  include "env:VersionDate"
+#endif
 #endif
 ")\r\n";
 
