@@ -73,18 +73,10 @@ int __saveds DoMatchPattern(register unsigned char *pat __asm("a0"), register un
 //    if (DOSBase->dl_lib.lib_Version>35) {
         int suc,old;
 
-#ifndef __AROS__
         old=DOSBase->dl_Root->rn_Flags&RNF_WILDSTAR;
         DOSBase->dl_Root->rn_Flags|=RNF_WILDSTAR;
         suc = (cas ? MatchPatternNoCase(pat,str) : MatchPattern(pat,str));
         if (!old) DOSBase->dl_Root->rn_Flags&=~RNF_WILDSTAR;
-#else
-        old=DOSBase->dl_Flags&RNF_WILDSTAR;
-        DOSBase->dl_Flags|=RNF_WILDSTAR;
-        suc = (cas ? MatchPatternNoCase(pat,str) : MatchPattern(pat,str));
-        if (!old) DOSBase->dl_Flags&=~RNF_WILDSTAR;
-        return(suc);
-#endif
         return(suc);
 /*
     }
@@ -105,24 +97,15 @@ void __saveds DoParsePattern(register unsigned char *pat __asm("a0"), register u
 //    if (DOSBase->dl_lib.lib_Version>35) {
         int len,old;
 
-#ifndef __AROS__
         old=DOSBase->dl_Root->rn_Flags&RNF_WILDSTAR;
         DOSBase->dl_Root->rn_Flags|=RNF_WILDSTAR;
-#else
-        old=DOSBase->dl_Flags&RNF_WILDSTAR;
-        DOSBase->dl_Flags|=RNF_WILDSTAR;
-#endif
         len=(strlen(pat)*2)+2;
 
     (cas?ParsePatternNoCase(pat,patbuf,len):ParsePattern(pat,patbuf,len));
 
         if (cas) ParsePatternNoCase(pat,patbuf,len);
         else ParsePattern(pat,patbuf,len);
-#ifndef __AROS__
         if (!old) DOSBase->dl_Root->rn_Flags&=~RNF_WILDSTAR;
-#else
-        if (!old) DOSBase->dl_Flags&=~RNF_WILDSTAR;
-#endif
 /*
     }
     else {
