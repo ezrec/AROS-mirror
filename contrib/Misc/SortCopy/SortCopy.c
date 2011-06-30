@@ -16,12 +16,6 @@
 
 /* Converted to AROS by SDuvan 18.11.2000 (some bugs fixed too) */
 
-#if !defined(__AROS__) || defined(AROS_DOS_PACKETS)
-#define USE_DOS_PACKETS
-#else
-#define USE_AROS_PACKETS
-#endif
-
 /// Includes
 #include <exec/types.h>
 #include <exec/nodes.h>
@@ -37,6 +31,12 @@
 #include <proto/exec.h>
 #include <proto/dos.h>
 #include <proto/utility.h>
+
+#if !defined(__AROS__) || defined(AROS_DOS_PACKETS)
+#define USE_DOS_PACKETS
+#else
+#define USE_AROS_PACKETS
+#endif
 
 #ifdef  __AROS__
     #define   DEBUG 1
