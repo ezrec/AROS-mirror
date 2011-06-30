@@ -431,6 +431,7 @@ static int Amiga_fork_exec(tsd_t *TSD, environment *env, const char *cmdline, in
       int inhndl  = env->input.hdls[1],
 	  outhndl = env->output.hdls[0],
 	  errhndl = env->error.hdls[0];
+      struct Process *me = (struct Process *)FindTask(NULL);
 
       ai->psigbit = AllocSignal(-1);
       if (ai->psigbit < 0)
@@ -450,7 +451,7 @@ static int Amiga_fork_exec(tsd_t *TSD, environment *env, const char *cmdline, in
 			NP_CloseInput, inhndl != -1,
 			NP_Output, (outhndl == -1) ? Output() : ai->files[outhndl].fhout,
 			NP_CloseOutput, outhndl != -1,
-			NP_Error, (errhndl == -1) ? Error() : ai->files[errhndl].fhout,
+			NP_Error, (errhndl == -1) ? me->pr_CES : ai->files[errhndl].fhout,
 			NP_CloseError, errhndl != -1,
 			NP_Cli, TRUE,
 			TAG_DONE, NULL);
