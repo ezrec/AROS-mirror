@@ -230,7 +230,7 @@ static void StartFileSlave(struct RexxMsg *msg)
 
 	input = SelectInput(input);
 	output = SelectOutput(output);
-        error = SelectError(error);
+        error = SelectErrorOutput(error);
 	updatestdio();
     }
 
@@ -368,7 +368,7 @@ static void StartFileSlave(struct RexxMsg *msg)
         if (output != NULL)
 	    SelectOutput(output);
         if (error != NULL)
-	    SelectError(error);
+	    SelectErrorOutput(error);
         updatestdio();
         if (oldlock != NULL)
 	    UnLock(CurrentDir(oldlock));
