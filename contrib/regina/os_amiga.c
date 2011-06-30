@@ -142,7 +142,19 @@ static int Amiga_open_subprocess_connection(const tsd_t *TSD, environpart *ep)
 
   snprintf(buff, sizeof(buff), "PIPE:rexx-%016llx", (unsigned long long)(IPTR)FindTask(NULL));
 
-  if (Pipe(buff, &(ai->files[slot].fhin), &(ai->files[slot].fhout)) != DOSTRUE)
+  ai->files[slot].fhout = Open(buff, MODE_NEWFILE);
+  if (ai->files[slot].fhout)
+  {
+      ai->files[slot].fhin = Open(buff, MODE_OLDFILE);
+      if (!ai->files[slot].fhin)
+      {
+        DeleteFile(buff);
+        Close(ai->files[slot].fhout);
+        ai->files[slot].fhout = BNULL;
+      }
+  }
+
+  if (!ai->files[slot].fhout)
   {
     errno = EACCES;
     return -1;
