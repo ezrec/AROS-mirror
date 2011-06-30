@@ -270,7 +270,7 @@ static int Amiga_read(int handle, void *buf, unsigned size, void *async_info)
 
     dp = fhi->pendingread;
     dp->dp_Type = ACTION_READ;
-    dp->dp_Arg1 = fhi->fhin;
+    dp->dp_Arg1 = (IPTR)fhi->fhin;
     dp->dp_Arg2 = (IPTR)AllocVec(size, MEMF_PUBLIC);
     dp->dp_Arg3 = size;
     
@@ -333,7 +333,7 @@ static int Amiga_write(int handle, const void *buf, unsigned size, void *async_i
       return -ENOMEM;
    
     dp->dp_Type = ACTION_WRITE;
-    dp->dp_Arg1 = fhi->fhout;
+    dp->dp_Arg1 = (IPTR)fhi->fhout;
     dp->dp_Arg2 = (IPTR)AllocVec(size, MEMF_PUBLIC);
     CopyMem(buf, (APTR)dp->dp_Arg2, size);
     dp->dp_Arg3 = size;
