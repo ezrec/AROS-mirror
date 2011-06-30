@@ -26,10 +26,10 @@
 */  
 typedef struct {
   BPTR fhin, fhout;
-  struct MsgPort *port;
-  struct IOFileSys *pendingread;
+  struct MsgPort *replyPort;
+  struct DosPacket *pendingread;
   ULONG bytesread;
-  struct IOFileSys *pendingwrite;
+  struct DosPacket *pendingwrite;
   ULONG flags;
 } FileHandleInfo;
 
@@ -47,35 +47,17 @@ typedef struct {
   FileHandleInfo files[3];
 } AsyncInfo;
 
-/* Support function for AROS IOFS DOS asynchronous file IO
-   TODO: switch or add DOS packets asynchronous handling
+/* SupreplyPort function for AmigaDOS asynchronous file IO
  */
-static struct IOFileSys *CreateIOFS(ULONG type, struct MsgPort *port, struct FileHandle *fh)
+static struct DosPacket *CreateDosPacket(void)
 {
-  struct IOFileSys *iofs = (struct IOFileSys *)AllocMem(sizeof(struct IOFileSys), MEMF_PUBLIC|MEMF_CLEAR);
-
-  if (iofs == NULL)
-    return NULL;
-  
-  iofs->IOFS.io_Message.mn_Node.ln_Type = NT_REPLYMSG;
-  iofs->IOFS.io_Message.mn_ReplyPort    = port;
-  iofs->IOFS.io_Message.mn_Length       = sizeof(struct IOFileSys);
-  iofs->IOFS.io_Command                 = type;
-  iofs->IOFS.io_Flags                   = 0;
-#if defined(__AROS__) && !defined(AROS_DOS_PACKETS)
-  iofs->IOFS.io_Device                  = fh->fh_Device;
-  iofs->IOFS.io_Unit                    = fh->fh_Unit;
-#endif
-  
-  return iofs;
+    return AllocDosObject(DOS_STDPKT, NULL);
 }
 
-static void DeleteIOFS(struct IOFileSys *iofs)
+static void DeleteDosPacket(struct DosPacket *dp)
 {
-  FreeMem(iofs, sizeof(struct IOFileSys));
+    return FreeDosObject(DOS_STDPKT, dp);
 }
-
-
 
 /* Allocate and setup AsyncInfo */
 static void *Amiga_create_async_info(const tsd_t *TSD)
@@ -88,9 +70,9 @@ static void *Amiga_create_async_info(const tsd_t *TSD)
   
   for(i=0; i<3; i++)
   {
-    ai->files[i].fhin = NULL;
-    ai->files[i].fhout = NULL;
-    ai->files[i].port = CreatePort(NULL, 0);
+    ai->files[i].fhin = BNULL;
+    ai->files[i].fhout = BNULL;
+    ai->files[i].replyPort = CreatePort(NULL, 0);
   }
 
   return (void *)ai;
@@ -109,7 +91,7 @@ static void Amiga_delete_async_info(void *async_info)
   {
     assert(ai->files[i].fhin == BNULL);
     assert(ai->files[i].fhout == BNULL);
-    DeletePort(ai->files[i].port);
+    DeletePort(ai->files[i].replyPort);
   }
 
   __amiga_set_ai((tsd_t *)ai->TSD, NULL);
@@ -144,8 +126,9 @@ static int Amiga_open_subprocess_connection(const tsd_t *TSD, environpart *ep)
 {
   AsyncInfo *ai = __amiga_get_ai(TSD);
   int slot;
+  char buff[5 + 5 + 16 + 1];
 
-  for (slot=0; slot<3 && ai->files[slot].fhin!=NULL; slot++)
+  for (slot=0; slot<3 && ai->files[slot].fhin!=BNULL; slot++)
     ;
     
   if (slot==3)
@@ -157,7 +140,9 @@ static int Amiga_open_subprocess_connection(const tsd_t *TSD, environpart *ep)
   /* Reset flags */
   ai->files[slot].flags = 0;
 
-  if (Pipe("PIPEFS:", &(ai->files[slot].fhin), &(ai->files[slot].fhout)) != DOSTRUE)
+  snprintf(buff, sizeof(buff), "PIPE:rexx-%016llx", (unsigned long long)(IPTR)FindTask(NULL));
+
+  if (Pipe(buff, &(ai->files[slot].fhin), &(ai->files[slot].fhout)) != DOSTRUE)
   {
     errno = EACCES;
     return -1;
@@ -180,24 +165,30 @@ static int Amiga_open_subprocess_connection(const tsd_t *TSD, environpart *ep)
   return 0;
 }
 
+static struct DosPacket *wait_pkt(struct MsgPort *port)
+{
+  WaitPort(port);
+  return (struct DosPacket *)(GetMsg(port)->mn_Node.ln_Name);
+}
+
 
 /* Get possible returned messages for a certain file handle */
 static void handle_msgs(FileHandleInfo *fhi)
 {
-  struct IOFileSys *iofs;
-    
-  while ((iofs = (struct IOFileSys *)GetMsg(fhi->port)) != NULL)
-  {
-    if (iofs == fhi->pendingread)
+  struct DosPacket *dp;
+
+  while ((dp = wait_pkt(fhi->replyPort)) != NULL) {
+    if (dp == fhi->pendingread)
       fhi->flags |= FHI_READRETURNED;
-    else if (iofs == fhi->pendingwrite)
+    else if (dp == fhi->pendingwrite)
     {
-      FreeVec(iofs->io_Union.io_WRITE.io_Buffer);
-      DeleteIOFS(iofs);
+      FreeVec((APTR)dp->dp_Arg2);
+      DeleteDosPacket(dp);
       fhi->pendingwrite = NULL;
     }
-    else
-      ReplyMsg((struct Message *)iofs);
+    else {
+      /* TODO: This is impossible - we should die here */
+    }
   }
 }
 
@@ -211,27 +202,25 @@ static int Amiga_close(int handle, void *async_info)
 
   fhi = &ai->files[handle];
 
-  handle_msgs(fhi);
-  if (fhi->pendingread != NULL && !(fhi->flags & FHI_READRETURNED))
+  while (fhi->pendingread != NULL && !(fhi->flags & FHI_READRETURNED))
   {
-    AbortIO((struct IORequest *)fhi->pendingread);
-    WaitIO((struct IORequest *)fhi->pendingread);
-    FreeVec(fhi->pendingread->io_Union.io_READ.io_Buffer);
-    DeleteIOFS(fhi->pendingread);
+    handle_msgs(fhi);
   }
-  if (fhi->pendingwrite != NULL)
+  if (fhi->pendingread != NULL) {
+    FreeVec((APTR)fhi->pendingread->dp_Arg2);
+    DeleteDosPacket(fhi->pendingread);
+    fhi->pendingread = NULL;
+  }
+  while (fhi->pendingwrite != NULL)
   {
-    AbortIO((struct IORequest *)fhi->pendingwrite);
-    WaitIO((struct IORequest *)fhi->pendingwrite);
-    FreeVec(fhi->pendingwrite->io_Union.io_WRITE.io_Buffer);
-    DeleteIOFS(fhi->pendingwrite);
+    handle_msgs(fhi);
   }
   if (fhi->flags & FHI_ISINPUT)
     Close(fhi->fhout);
   else
     Close(fhi->fhin);
   fhi->fhout = fhi->fhin = BNULL;
-  DeletePort(fhi->port);
+  DeletePort(fhi->replyPort);
 
   return 0;
 }
@@ -254,47 +243,54 @@ static void Amiga_unblock_handle(int *handle, void *async_info)
   /* All handles are non-blocking on AROS => do nothing */
 }
 
+static struct MsgPort *file_port(BPTR file)
+{
+  struct FileHandle *fh = BADDR(file);
+  return fh->fh_Type;
+}
 
 static int Amiga_read(int handle, void *buf, unsigned size, void *async_info)
 {
   AsyncInfo *ai = async_info;
   FileHandleInfo *fhi;
+  struct DosPacket *dp;
 
   assert(handle<3);
   
   fhi = &ai->files[handle];
     
-  if (fhi->fhin == NULL)
+  if (fhi->fhin == BNULL)
     return -EBADF;
   
   if (fhi->pendingread == NULL)
   {
-    struct IOFileSys *iofs;
-    
-    fhi->pendingread = iofs = CreateIOFS(FSA_READ, fhi->port, fhi->fhin);
-    if (iofs == NULL)
+    fhi->pendingread = CreateDosPacket();
+    if (fhi->pendingread == NULL)
       return -ENOMEM;
+
+    dp = fhi->pendingread;
+    dp->dp_Type = ACTION_READ;
+    dp->dp_Arg1 = fhi->fhin;
+    dp->dp_Arg2 = (IPTR)AllocVec(size, MEMF_PUBLIC);
+    dp->dp_Arg3 = size;
     
-    iofs->io_Union.io_READ.io_Buffer = AllocVec(size, MEMF_PUBLIC);
-    iofs->io_Union.io_READ.io_Length = size;
- 
-    SendIO(&iofs->IOFS);
+    SendPkt(dp, file_port(fhi->fhin), fhi->replyPort);
   }
     
   handle_msgs(fhi);
     
   if (fhi->flags & FHI_READRETURNED)
   {
-    if (fhi->bytesread + size > fhi->pendingread->io_Union.io_READ.io_Length)
-      size = fhi->pendingread->io_Union.io_READ.io_Length - fhi->bytesread;
+    if (fhi->bytesread + size > fhi->pendingread->dp_Res1)
+      size = fhi->pendingread->dp_Res1 - fhi->bytesread;
 
-    memcpy(buf, fhi->pendingread->io_Union.io_READ.io_Buffer, size);
+    memcpy(buf, (APTR)fhi->pendingread->dp_Arg2, size);
     fhi->bytesread += size;
     
-    if (fhi->bytesread == fhi->pendingread->io_Union.io_READ.io_Length)
+    if (fhi->bytesread == fhi->pendingread->dp_Res1)
     {
-      FreeVec(fhi->pendingread->io_Union.io_READ.io_Buffer);
-      DeleteIOFS(fhi->pendingread);
+      FreeVec((APTR)fhi->pendingread->dp_Arg2);
+      DeleteDosPacket(fhi->pendingread);
       fhi->pendingread = NULL;
       fhi->bytesread = 0;
       fhi->flags &= ~FHI_READRETURNED;
@@ -311,6 +307,7 @@ static int Amiga_write(int handle, const void *buf, unsigned size, void *async_i
 {
   AsyncInfo *ai = (AsyncInfo *)async_info;
   FileHandleInfo *fhi;
+  struct DosPacket *dp;
   
   assert(handle<3);
 
@@ -318,35 +315,30 @@ static int Amiga_write(int handle, const void *buf, unsigned size, void *async_i
 
   if (buf==NULL && size==0)
   { /* Flush write */
-    if (fhi->pendingwrite!=NULL)
-    {
-      WaitIO((struct IORequest *)fhi->pendingwrite);
-      FreeVec(fhi->pendingwrite->io_Union.io_WRITE.io_Buffer);
-      DeleteIOFS(fhi->pendingwrite);
-      fhi->pendingwrite = NULL;
+    while (fhi->pendingwrite!=NULL) {
+      handle_msgs(fhi);
     }
     return 0;
   }
 
-  if (fhi->fhin == NULL)
+  if (fhi->fhin == BNULL)
     return -EBADF;
   
   handle_msgs(fhi);
   
   if (fhi->pendingwrite == NULL)
   {
-    struct IOFileSys *iofs;
-    
-    fhi->pendingwrite = iofs = CreateIOFS(FSA_WRITE, fhi->port, fhi->fhout);
-    if (iofs == NULL)
+    fhi->pendingwrite = dp = CreateDosPacket();
+    if (fhi->pendingwrite == NULL)
       return -ENOMEM;
+   
+    dp->dp_Type = ACTION_WRITE;
+    dp->dp_Arg1 = fhi->fhout;
+    dp->dp_Arg2 = (IPTR)AllocVec(size, MEMF_PUBLIC);
+    CopyMem(buf, (APTR)dp->dp_Arg2, size);
+    dp->dp_Arg3 = size;
     
-    iofs->io_Union.io_WRITE.io_Buffer = AllocVec(size, MEMF_PUBLIC);
-    memcpy(iofs->io_Union.io_WRITE.io_Buffer, buf, size);
-    iofs->io_Union.io_WRITE.io_Length = size;
-    
-    SendIO(&iofs->IOFS);
-      
+    SendPkt(dp, file_port(fhi->fhout), fhi->replyPort);
     return (int)size;
   }
   else
@@ -362,10 +354,10 @@ static void Amiga_wait_async_info(void *async_info)
 
   for (i = 0; i < 3; i++)
   {
-    if (ai->files[i].fhin != NULL && ai->files[i].flags & FHI_WAIT &&
+    if (ai->files[i].fhin != BNULL && ai->files[i].flags & FHI_WAIT &&
 	(ai->files[i].pendingwrite != NULL || (ai->files[i].pendingread != NULL && !(ai->files[i].flags & FHI_READRETURNED)))
        )
-      mask |= 1<<ai->files[i].port->mp_SigBit;
+      mask |= 1<<ai->files[i].replyPort->mp_SigBit;
   }
 
   if (mask != SIGBREAKF_CTRL_C)
