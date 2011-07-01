@@ -1,7 +1,15 @@
 # $Id$
 include $(TOP)/config/make.cfg
 
+FILES = ahci \
+	ahci_init \
+	bus_pci \
+	timer \
+	lowlevel
+
 %build_module mmake=kernel-ahci \
   modname=ahci modtype=device \
-  files="ahci_init ahci_hbahw ahci_misc" \
+  files="$(FILES)" \
   uselibs="rom oop hiddstubs"
+
+%common

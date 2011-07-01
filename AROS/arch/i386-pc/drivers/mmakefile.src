@@ -16,6 +16,7 @@ include $(TOP)/config/make.cfg
 #MM    kernel-pc-i386-vga-kobj \
 #MM    kernel-pci-kobj \
 #MM    kernel-pci-pcipc-kobj \
+#MM    kernel-ahci-kobj \
 #MM    kernel-ata-kobj
 
 # Disabled kernel-pc-i386-driver

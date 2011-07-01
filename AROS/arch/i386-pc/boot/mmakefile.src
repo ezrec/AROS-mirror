@@ -49,7 +49,7 @@ DEPLIBS := $(addprefix $(LIBDIR)/lib,$(addsuffix .a,$(USELIBS)))
 KRSRCS  := battclock bootloader dosboot processor lddemon FileSystem
 KLIBS   := boot aros debug dos graphics utility intuition keymap \
       	   expansion oop layers partition
-KDEVS   := timer input keyboard console gameport ata trackdisk
+KDEVS   := timer input keyboard console gameport ata ahci trackdisk
 KHNDLRS := con amberram cdrom afs sfs
 KHIDDS  := hiddclass serial keyboard mouse graphics kbd ps2mouse vesagfx vgah pci pcipc
 KUSB    := poseidon_library.o hub_class.o hid_class.o massstorage_class.o pciusb_device.o usbromstartup_resource.o

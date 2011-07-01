@@ -345,8 +345,8 @@ AROS_UFH3(void, ata_PCIEnumerator_h,
      * SATA controllers may need a special treatment before becoming usable.
      * The machine's firmware (EFI on Mac) may operate them in native AHCI mode
      * and do not set up legacy mode by itself.
-     * In this case we have to do it ourselves.
-     * This code is based on incomplete ahci.device source code by DissyOfCRN.
+     *
+     * In this case we ignore them, and let ahci.device handle them.
      * CHECKME: In order to work on PPC it uses explicit little-endian I/O,
      * assuning AHCI register file is always little-endian. Is it correct ?
      */
@@ -402,78 +402,9 @@ AROS_UFH3(void, ata_PCIEnumerator_h,
 
 	if (ghc & GHC_AE)
 	{
-	    DSATA(bug("[PCI-ATA] AHCI enabled\n"));
-
-	    if (cap & CAP_SAM)
-	    {
-	    	DSATA(bug("[PCI-ATA] Legacy mode is not supported, device will be ignored\n"));
-
-	    	OOP_DoMethod(Driver, (OOP_Msg)&unmap);
-	    	return;
-	    }
-	    else
-	    {
-	    	/*
-	    	 * This is ATA driver, not SATA driver, so i'd like to keep SATA-specific code
-	    	 * at a minimum.
-	    	 * On Mac everything runs fine without this (GRUB tells EFI to handoff the whole
-	    	 * machine for us). However, if on some machine we have problems, we can try
-	    	 * to #define this.
-	    	 */
-#ifdef DO_SATA_HANDOFF
-		ULONG version = mmio_inl_le(&hwhba->vs);
-		ULONG cap2    = mmio_inl_le(&hwhba->cap2);
-
-		DSATA(bug("[PCI-ATA] Version: 0x%08X, Cap2: 0x%08X\n", version, cap2));
-
-	    	if ((version >= AHCI_VERSION_1_20) && (cap2 && CAP2_BOH))
-		{
-	    	    ULONG bohc;
-
-            	    DSATA(bug("[PCI-ATA] HBA supports BIOS/OS handoff\n"));
-
-		    bohc = mmio_inl_le(&hwhba->bohc);
-		    if (bohc && BOHC_BOS)
-		    {
-	    		struct IORequest *timereq;
-
-			DSATA(bug("[PCI-ATA] Device owned by BIOS, performing handoff\n"));
-
-			/*
-		 	 * We need timer.device in order to perform delays.
-		 	 * TODO: in ata_InitBus() it will be opened and closed again.
-		 	 * This is not optimal, it could be opened and closed just once.
-		 	 */
-	    		timereq = ata_OpenTimer();
-	    		if (!timereq)
-	    		{
-	    		    DSATA(bug("[PCI-ATA] Failed to open timer, can't perform handoff. Device will be ignored\n"));
-
-			    OOP_DoMethod(Driver, (OOP_Msg)&unmap);
-	    		    return;
-	    		}
-
-                	mmio_outl_le(bohc | BOHC_OOS, &hwhba->bohc);
-                	/* Spin on BOHC_BOS bit FIXME: Possible dead lock. No maximum time given on AHCI1.3 specs... */
-			while (mmio_inl_le(&hwhba->bohc) & BOHC_BOS);
-
-			ata_WaitTO(timereq, 0, 25000, 0);
-                	/* If after 25ms BOHC_BB bit is still set give bios a minimum of 2 seconds more time to run */
-                
-                	if (mmio_inl_le(&hwhba->bohc) & BOHC_BB)
-                	{
-                	    DSATA(bug("[PCI-ATA] Delayed handoff, waiting...\n"));
-                	    ata_WaitTO(timereq, 2, 0, 0);
-                	}
-
-                	DSATA(bug("[ATA ] Handoff done\n"));
-                	ata_CloseTimer(timereq);
-            	    }
-        	}
-#endif
-	    	/* This resets GHC_AE bit, disabling AHCI */
-	    	mmio_outl_le(0, &hwhba->ghc);
-	    }
+	    DSATA(bug("[PCI-ATA] AHCI enabled, device handled by ahci.device\n"));
+	    OOP_DoMethod(Driver, (OOP_Msg)&unmap);
+	    return;
 	}
 
 	unmap.mID        = a->HiddPCIDriverMethodBase + moHidd_PCIDriver_UnmapPCI;
