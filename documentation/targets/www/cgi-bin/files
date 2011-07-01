@@ -28,6 +28,8 @@ else:
 
 if dltype == "nightly":
     colorTH      = Color( 0xFF, 0xE0, 0xA0 )  # Table headers
+elif dltype == "nightly2":
+    colorTH      = Color( 0xA0, 0x00, 0xFF )  # Table headers
 elif dltype == "snapshots":
     colorTH      = Color( 0xA0, 0xE0, 0xFF )  # Table headers
 
@@ -98,6 +100,9 @@ for date in dates:
                 elif package[-4:] == '.zip':
 	            # Remove the 'AROS-YYYYMMDD-' prefix and '.zip' suffix.
                     package = package[14:][:-4]
+                elif package[-4:] == '.lha':
+	            # Remove the 'AROS-YYYYMMDD-' prefix and '.lha' suffix.
+                    package = package[14:][:-4]
                 else:
                     continue
 
@@ -139,6 +144,13 @@ for date in dates:
                     <td class="layout" align="center" bgcolor="%(color)s">
                         <b>%(year)s-%(month)s-%(day)s</b><br>
                         [<a href="http://aros.sourceforge.net/downloads/nightly/%(date)s/logs">%(logsLabel)s</a>]
+                    </td>
+        ''' % vars()
+    if dltype == "nightly2":
+        print '''
+                    <td class="layout" align="center" bgcolor="%(color)s">
+                        <b>%(year)s-%(month)s-%(day)s</b><br>
+                        [<a href="http://aros.sourceforge.net/downloads/nightly2/%(date)s/logs">%(logsLabel)s</a>]
                     </td>
         ''' % vars()
     elif dltype == "snapshots":
@@ -195,6 +207,9 @@ for group in groups.keys():
 		elif os.access(path + '.zip', os.F_OK):
 		    path = path + '.zip'
 		    file = file + '.zip'
+		elif os.access(path + '.lha', os.F_OK):
+		    path = path + '.lha'
+		    file = file + '.lha'
 		else:
 		    path = path + '.php'
 		    file = file + '.php'
