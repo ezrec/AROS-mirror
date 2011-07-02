@@ -28,7 +28,11 @@ structure to be the really first stuff in the file. */
 extern const xadSTRING version[];
 extern const struct xadClient FirstClient;
 
-const struct xadForeman ForeMan =
+#if !defined(__AROS__)
+struct xadForeman xadForeman USED =
+#else
+struct xadForeman xadForeman __attribute__((used, section(".aros.init"))) =
+#endif
 { XADFOREMAN_SECURITY, XADFOREMAN_ID, XADFOREMAN_VERSION, 0, version,
 &FirstClient };
 

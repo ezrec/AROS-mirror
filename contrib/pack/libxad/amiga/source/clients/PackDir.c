@@ -110,9 +110,17 @@ const UBYTE version[] = "$VER: PackDir 1.0 (27.11.2002)";
 #define PACKDIR_VERSION		1
 #define PACKDIR_REVISION	0
 
+#if !defined(__AROS__)
 #define XADBASE  REG(a6, struct xadMasterBase *xadMasterBase)
+#else
+#define XADBASE struct xadMasterBase *xadMasterBase
+#endif
 
+#if !defined(__AROS__)
 ASM(BOOL) PackDir_RecogData(REG(d0, ULONG size), REG(a0, STRPTR d), XADBASE) {
+#else
+BOOL PackDir_RecogData(ULONG size, STRPTR d, XADBASE) {
+#endif
   return (d[0]=='P' && d[1]=='A' && d[2]=='C' && d[3]=='K' &&
           d[4]==0   && d[5] < 5  && d[6]==0   && d[7]==0   && d[8]==0);
 }
@@ -158,7 +166,11 @@ LONG PackDir_readname(ULONG *offset, UBYTE *name, struct xadArchiveInfo *ai,
   return err;
 }
 
+#if !defined(__AROS__)
 ASM(LONG) PackDir_GetInfo(REG(a0, struct xadArchiveInfo *ai), XADBASE) {
+#else
+LONG PackDir_GetInfo(struct xadArchiveInfo *ai, XADBASE) {
+#endif
   ULONG offset, depth, load, exec, attr, i;
   struct PackDir_state *state;
   struct xadFileInfo *fi;
@@ -371,7 +383,11 @@ exit_handler:
   }                                                              \
 } while (0)
 
+#if !defined(__AROS__)
 ASM(LONG) PackDir_UnArchive(REG(a0, struct xadArchiveInfo *ai), XADBASE) {
+#else
+LONG PackDir_UnArchive(struct xadArchiveInfo *ai, XADBASE) {
+#endif
   ULONG code, oldcode, clearcode, firstchar, incode, *prefix, maxcodes;
   UBYTE ibuf[LZW_INSZ], obuf[LZW_OUTSZ], *iptr, *optr, *iend, *oend;
   UBYTE bitsleft, *suffix, *stack, codesize, *stackp;

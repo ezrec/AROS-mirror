@@ -85,7 +85,11 @@ const UBYTE version[] = "$VER: ar 1.1 (05.08.2000)";
 #define AR_VERSION		1
 #define AR_REVISION		1
 
+#if !defined(__AROS__)
 #define XADBASE  REG(a6, struct xadMasterBase *xadMasterBase)
+#else
+#define XADBASE struct xadMasterBase *xadMasterBase
+#endif
 
 #define ARMAG  "!<arch>\012"	/* For COFF and a.out archives */
 #define ARMAGB "!<bout>\012"	/* For b.out archives */
@@ -125,11 +129,19 @@ ULONG ar_readnum(char *str, int strl, int base) {
 }
 
 
+#if !defined(__AROS__)
 ASM(BOOL) ar_RecogData(REG(d0, ULONG size), REG(a0, STRPTR d), XADBASE) {
+#else
+BOOL ar_RecogData(ULONG size, STRPTR d, XADBASE) {
+#endif
   return (BOOL) (strncmp(d, ARMAG, 8) == 0 || strncmp(d, ARMAGB, 8) == 0);
 }
 
+#if !defined(__AROS__)
 ASM(LONG) ar_GetInfo(REG(a0, struct xadArchiveInfo *ai), XADBASE) {
+#else
+LONG ar_GetInfo(struct xadArchiveInfo *ai, XADBASE) {
+#endif
   UBYTE *ext_names = NULL, *bsd_name = NULL, *namep, *pend;
   ULONG filenum = 1, skiplen = 8, namelen, extnameslen;
   struct xadFileInfo *link = NULL,  *fi;
@@ -299,7 +311,11 @@ ASM(LONG) ar_GetInfo(REG(a0, struct xadArchiveInfo *ai), XADBASE) {
   return XADERR_OK;
 }
 
+#if !defined(__AROS__)
 ASM(LONG) ar_UnArchive(REG(a0, struct xadArchiveInfo *ai), XADBASE) {
+#else
+LONG ar_UnArchive(struct xadArchiveInfo *ai, XADBASE) {
+#endif
   return xadHookAccess(XADAC_COPY, ai->xai_CurFile->xfi_Size, NULL, ai);
 }
 

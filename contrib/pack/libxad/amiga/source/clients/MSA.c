@@ -40,7 +40,11 @@ const UBYTE version[] = "$VER: MSA 1.1 (06.08.2000)";
 #define MSA_VERSION     1
 #define MSA_REVISION    1
 
-#define XADBASE REG(a6, struct xadMasterBase *xadMasterBase)
+#if !defined(__AROS__)
+#define XADBASE  REG(a6, struct xadMasterBase *xadMasterBase)
+#else
+#define XADBASE struct xadMasterBase *xadMasterBase
+#endif
 
 /* work-doing macros */
 #define SKIP(offset) if ((err = xadHookAccess(XADAC_INPUTSEEK, \
@@ -56,12 +60,19 @@ const UBYTE version[] = "$VER: MSA 1.1 (06.08.2000)";
 #define ERROR(error) do { err = XADERR_##error; goto exit_handler; } while(0)
 
 
-
-ASM(BOOL) MSA_RecogData(REG(d0, ULONG size), REG(a0, UBYTE *d), XADBASE) {
+#if !defined(__AROS__)
+ASM(BOOL) MSA_RecogData(REG(d0, ULONG size), REG(a0, STRPTR d), XADBASE) {
+#else
+BOOL MSA_RecogData(ULONG size, STRPTR d, XADBASE) {
+#endif
   return (BOOL) (d[0]==0x0E &&d[1]==0x0F && d[4]==0 && d[5]<2);
 }
 
+#if !defined(__AROS__)
 ASM(LONG) MSA_GetInfo(REG(a0, struct xadArchiveInfo *ai), XADBASE) {
+#else
+LONG MSA_GetInfo(struct xadArchiveInfo *ai, XADBASE) {
+#endif
   struct xadDiskInfo *xdi;
   UBYTE buffer[10];
   LONG err;
@@ -85,7 +96,11 @@ ASM(LONG) MSA_GetInfo(REG(a0, struct xadArchiveInfo *ai), XADBASE) {
   return XADERR_OK;
 }
 
+#if !defined(__AROS__)
 ASM(LONG) MSA_UnArchive(REG(a0, struct xadArchiveInfo *ai), XADBASE) {
+#else
+LONG MSA_UnArchive(struct xadArchiveInfo *ai, XADBASE) {
+#endif
   UBYTE buffer[2], *in = NULL, *out, *i, *o, *end, code;
   struct xadDiskInfo *di = ai->xai_CurDisk;
   UWORD inlen = 0, outlen = di->xdi_TrackSectors << 9;

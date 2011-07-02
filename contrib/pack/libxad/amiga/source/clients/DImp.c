@@ -39,7 +39,13 @@ const UBYTE version[] = "$VER: DImp 1.3 (20.08.2001)";
 #define DIMP_VERSION     1
 #define DIMP_REVISION    3
 
-#define XADBASE REG(a6, struct xadMasterBase *xadMasterBase)
+#if !defined(__AROS__)
+#define XADBASE  REG(a6, struct xadMasterBase *xadMasterBase)
+#else
+#undef INLINE
+#define INLINE __inline__
+#define XADBASE struct xadMasterBase *xadMasterBase
+#endif
 
 /* work-doing macros */
 #define SKIP(offset) if ((err = xadHookAccess(XADAC_INPUTSEEK, \
@@ -186,15 +192,22 @@ static int DImp_explode(UBYTE *buf, UBYTE *table, ULONG inlen, ULONG outlen) {
 
 
 
-
-ASM(BOOL) DImp_RecogData(REG(d0, ULONG size), REG(a0, UBYTE *d), XADBASE) {
+#if !defined(__AROS__)
+ASM(BOOL) DImp_RecogData(REG(d0, ULONG size), REG(a0, STRPTR d), XADBASE) {
+#else
+BOOL DImp_RecogData(ULONG size, STRPTR d, XADBASE) {
+#endif
   ULONG infolen;
   if (d[0]!='D' || d[1]!='I' || d[2]!='M' || d[3]!='P') return 0;
   infolen = EndGetM32(d+4);
   return (BOOL) (infolen > 4 && infolen <= dinf_SIZEOF);
 }
 
-ASM(LONG) SAVEDS DImp_GetInfo(REG(a0, struct xadArchiveInfo *ai), XADBASE) {
+#if !defined(__AROS__)
+ASM(LONG) DImp_GetInfo(REG(a0, struct xadArchiveInfo *ai), XADBASE) {
+#else
+LONG DImp_GetInfo(struct xadArchiveInfo *ai, XADBASE) {
+#endif
   UBYTE buffer[8], *info, *text;
   ULONG infolen, textplen, textulen;
   struct xadDiskInfo *di = NULL;
@@ -265,8 +278,11 @@ exit_handler:
   return XADERR_OK;
 }
 
-
+#if !defined(__AROS__)
 ASM(LONG) SAVEDS DImp_UnArchive(REG(a0, struct xadArchiveInfo *ai), XADBASE) {
+#else
+LONG DImp_UnArchive(struct xadArchiveInfo *ai, XADBASE) {
+#endif
   UBYTE *buf = NULL, *info = (UBYTE *) ai->xai_PrivateClient, *p;
   struct xadDiskInfo *di = ai->xai_CurDisk;
   ULONG cyl, x;
@@ -311,7 +327,11 @@ exit_handler:
   return err;
 }
 
+#if !defined(__AROS__)
 ASM(void) DImp_Free(REG(a0, struct xadArchiveInfo *ai), XADBASE) {
+#else
+void DImp_Free(struct xadArchiveInfo *ai, XADBASE) {
+#endif
   if (ai->xai_PrivateClient) {
     FREE(ai->xai_PrivateClient);
     ai->xai_PrivateClient = NULL;
@@ -324,7 +344,11 @@ ASM(void) DImp_Free(REG(a0, struct xadArchiveInfo *ai), XADBASE) {
 #define HUNK_HEADER	1011
 #define HUNK_CODE	1001
 
-ASM(BOOL) DImpSFX_RecogData(REG(d0, ULONG size), REG(a0, UBYTE *d), XADBASE) {
+#if !defined(__AROS__)
+ASM(LONG) DImpSFX_RecogData(REG(d0, ULONG size), REG(a0, UBYTE *d), XADBASE) {
+#else
+LONG DImpSFX_RecogData(ULONG size, UBYTE *d, XADBASE) {
+#endif
   ULONG i;
   if (size < 32
   ||  EndGetM32(d)    != HUNK_HEADER
@@ -342,7 +366,11 @@ ASM(BOOL) DImpSFX_RecogData(REG(d0, ULONG size), REG(a0, UBYTE *d), XADBASE) {
   return 0;
 }
 
+#if !defined(__AROS__)
 ASM(LONG) DImpSFX_GetInfo(REG(a0, struct xadArchiveInfo *ai), XADBASE) {
+#else
+LONG DImpSFX_GetInfo(struct xadArchiveInfo *ai, XADBASE) {
+#endif
   ULONG readlen, offset = 0, i;
   UBYTE *buf;
   LONG err;
