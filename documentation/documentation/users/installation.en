@@ -3,7 +3,7 @@ AROS Installation Guide
 =======================
 
 :Authors:   Stefan Rieken, Matt Parsons, Adam Chodorowski, Neil Cafferkey, Sergey Mineychev
-:Copyright: Copyright (C) 1995-2009, The AROS Development Team
+:Copyright: Copyright (C) 1995-2011, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Needs to be updated for some AROS ports. In works, being updating to the current status.
@@ -200,14 +200,15 @@ CDROM
 Writing
 '''''''
 
-Simply download the ISO image from the `download page`_ (we recommend using
-any download manager able to resume broken downloads, like wget) and burn it to 
-the CD using your favorite CD burning program. There's a number of freeware 
-cd burning programs for any system, and we can point Windows users to the 
-`InfraRecorder <http://infrarecorder.sourceforge.net>`__ - it's free, 
-small and fast, and it's just simple. Another examples
-are CDBurnerXP, DeepBurn, AstroBurn, and in linux world there's  k3B, Brasero 
-and others. On Amiga (and hopefully, AROS soon) you can use FryingPan.
+Simply download the ISO image from the `download page`_ (we recommend 
+using any download manager able to resume broken downloads, like wget) 
+and burn it to the CD using your favorite CD burning program. There are 
+a number of freeware CD burning programs for any system, and we can 
+point Windows users to the `InfraRecorder 
+<http://infrarecorder.sourceforge.net>`__ - it's free, small and fast, 
+and it's just simple. Other examples are CDBurnerXP, DeepBurn, 
+AstroBurn, and in the Linux world there's k3B, Brasero and others. On 
+Amiga (and AROS) you can use FryingPan.
 
 
 Booting
