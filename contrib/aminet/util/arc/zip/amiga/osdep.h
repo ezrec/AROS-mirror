@@ -32,7 +32,6 @@
 #endif
 
 #define USE_CASE_MAP
-#define USE_EF_UT_TIME
 #define HANDLE_AMIGA_SFX
 #define PROCNAME(n) (action == ADD || action == UPDATE ? wild(n) : \
                      procname(n, 1))
