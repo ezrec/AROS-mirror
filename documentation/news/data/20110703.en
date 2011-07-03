@@ -1,0 +1,102 @@
+================
+A Year in Review
+================
+
+:Author:   Neil Cafferkey
+:Date:     2011-07-03
+
+Once again, the news has been long delayed, mainly because we've been 
+too busy adding features and fixes to AROS. In fact, so much has 
+happened in the last year that what follows is only a selection of 
+highlights.
+
+AROS 68k and other new platforms
+--------------------------------
+
+An important new chapter has been opened in AROS's history with the 
+development of a stand-alone AROS port for the original Amiga computers. 
+This should also be of great interest to people using WinUAE to run old 
+Amiga applications. Such is the level of compatibility, the AROS ROM 
+image can even boot original Workbench disks as old as V1.3. This 
+development will hopefully also lead to improved integration of original 
+Amiga software into AROS on x86 platforms and elsewhere.
+
+AROS's platform support has continued to diversify in other directions 
+too. A Linux-hosted ARM port has emerged, and new hosted ports for Mac 
+OS X support three different CPU architectures. And AROS may soon become 
+even more portable with the recent development of new iOS and Android 
+ports.
+
+Graphics
+--------
+
+On the PC-compatible/x86 front, a lot has been happening too, 
+particularly in the area of graphics. The Intel GMA graphics driver has 
+been extended to support a wider variety of chipsets, and also now works 
+with laptop LCD displays as well as external monitors. The Nouveau and 
+Gallium based driver for nVidia graphics cards has been improved too: as 
+well as increasing its speed and hardware support, it has also become 
+the first driver with hardware-accelerated alpha-blending operations.
+
+A notable graphics feature from our Amiga heritage has also been 
+introduced to AROS: most native graphics drivers now support screen 
+dragging and scrolling. These include our drivers for nVidia and Intel 
+GMA chipsets, as well as the generic VESA driver.
+
+Apart from the graphics drivers, AROS also received some additional 
+graphics libraries: egl.library and openvg.library. The first provides 
+portable GL initialisation and window management interfaces, while the 
+second is a vector graphics library accelerated using Gallium. Our port 
+of the SDL library has become more polished too, with improvements to 
+features such as SDL-to-GL integration, leading to a more enjoyable 
+gaming experience.
+
+Wireless networking
+-------------------
+
+Two significant milestones in network support for laptops have been 
+reached. Firstly, a modern and secure wireless networking stack has been 
+added to AROS. The first driver to use this infrastructure supports many 
+popular cards with Atheros chipsets. Secondly, support has been added 
+for a wide variety of mobile broadband USB devices.
+
+Other improvements
+------------------
+
+Debugging support and error reporting have been improved. Misuse and 
+mismanagement of memory and other resources by applications is now more 
+easily detected, and error reports now include stack traces showing 
+where the error occurred.
+
+A lot of fine tuning and ease-of-use improvements have been made to 
+various components. The FAT filesystem handler has received a number of 
+important bug fixes. Native graphics drivers are now typically activated 
+automatically for detected graphics cards, and the AC97 and HDAudio 
+sound drivers usually need no manual configuration before use. And at 
+last, AROS is no longer stuck with one unchangeable mouse pointer: the 
+standard pointer to use can be chosen in a new pointer preferences 
+program, and applications can change the pointer to suit different 
+situations. The AROS shell has become more sophisticated, and now has a 
+scrollable output history, as well as support for more modes and some 
+bug fixes. AROS's handling of GUI themes has also become significantly 
+faster. Finally, another piece of the backwards-compatibility jigsaw has 
+been filled following the transformation of Regina into a much more 
+complete ARexx clone.
+
+Wider developments
+------------------
+
+AROS now has a third distribution available in addition to the regularly 
+updated `Icaros Desktop <http://www.icarosdesktop.org/>`__ and `AROS 
+Broadway <http://www.aros-broadway.de/>`__. The new `AspireOS 
+<http://www.arosaspire.org/>`__ distribution is aimed mainly at the Acer 
+Aspire One 110 and 150 netbooks, but may also be interesting to users of 
+other PCs looking for a lightweight distribution.
+
+Many applications and games have been added to AROS's software selection 
+in recent months. Some application highlights include AmiFig, Portrekkr 
+and Open Universe. 3D games such as Cube, AssaultCube and Super Tux Kart 
+(with a popular kitty car!) put AROS's 3D graphics enhancements to good 
+use, while many 2D games such as Giana's Return and Mega Mario have also 
+arrived. We have added a number of emulators too to allow even more 
+retro gaming fun to be had.
