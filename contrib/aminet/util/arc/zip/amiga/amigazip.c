@@ -9,6 +9,18 @@
 #include "zip.h"
 #include "amiga/amiga.h"
 
+#define AMI_IFMT       06000       /* Amiga file type mask */
+#define AMI_IFDIR      04000       /* Amiga directory */
+#define AMI_IFREG      02000       /* Amiga regular file */
+#define AMI_IHIDDEN    00200       /* to be supported in AmigaDOS 3.x */
+#define AMI_ISCRIPT    00100       /* executable script (text command file) */
+#define AMI_IPURE      00040       /* allow loading into resident memory */
+#define AMI_IARCHIVE   00020       /* not modified since bit was last set */
+#define AMI_IREAD      00010       /* can be opened for reading */
+#define AMI_IWRITE     00004       /* can be opened for writing */
+#define AMI_IEXECUTE   00002       /* executable image, a loadable runfile */
+#define AMI_IDELETE    00001       /* can be deleted */
+
 #ifndef UTIL    /* the companion #endif is a bit of ways down ... */
 
 #define utime FileDate
@@ -21,7 +33,6 @@
 extern char *label;             /* still declared in fileio.c */
 local ulg label_time = 0;
 local ulg label_mode = 0;
-local time_t label_utim = 0;
 
 /* Local functions */
 local char *readd OF((DIR *));
@@ -313,62 +324,84 @@ iztimes *t;             /* return value: access, modific. and creation times */
    time is returned in a long with the date most significant to allow
    unsigned integer comparison of absolute times.  Also, if a is not
    a NULL pointer, store the file attributes there, with the high two
-   bytes being the Unix attributes, and the low byte being a mapping
-   of that to DOS attributes.  If n is not NULL, store the file size
-   there.  If t is not NULL, the file's access, modification and creation
-   times are stored there as UNIX time_t values.
-   If f is "-", use standard input as the file. If f is a device, return
-   a file size of -1 */
+   bytes being the AmigaOS attributes, and the low byte being a mapping
+   of that to MS-DOS attributes.  If n is not NULL, store the file size
+   there.  t is ignored because AmigaOS does not support access and creation
+   times.
+   If f is "-", use standard input as the file. */
 {
-  struct stat s;        /* results of stat() */
-  /* convert FNMAX to malloc - 11/8/04 EG */
-  char *name;
-  int len = strlen(f);
+    struct FileInfoBlock *inf;
+    BPTR lock;
+    time_t ftime;
+    struct tm local_tm;
 
   if (f == label) {
     if (a != NULL)
       *a = label_mode;
     if (n != NULL)
       *n = -2L; /* convention for a label name */
-    if (t != NULL)
-      t->atime = t->mtime = t->ctime = label_utim;
     return label_time;
   }
-  if ((name = malloc(len + 1)) == NULL) {
-    ZIPERR(ZE_MEM, "filetime");
-  }
-  strcpy(name, f);
-  if (name[len - 1] == '/')
-    name[len - 1] = '\0';
-  /* not all systems allow stat'ing a file with / appended */
 
   if (strcmp(f, "-") == 0) {
-    if (fstat(fileno(stdin), &s) != 0)
-      error("fstat(stdin)");
-  } else if (SSTAT(name, &s) != 0) {
-             /* Accept about any file kind including directories
-              * (stored with trailing / with -r option)
-              */
-    free(name);
-    return 0;
-  }
-  free(name);
+    /* fake some reasonable values for stdin */
+    if (a != NULL)
+      *a = (AMI_IFREG | AMI_IREAD | AMI_IWRITE | AMI_IDELETE) << 16;
+    if (n != NULL)
+      *n = -1L;
+    ftime = time(&ftime);
+  } else {
+    /* lock and examine file */
+    if ((lock = Lock(f, SHARED_LOCK)) == 0)
+      /* file not found */
+      return 0;
 
-  if (a != NULL) {
-    *a = ((ulg)s.st_mode << 16) | !(s.st_mode & S_IWRITE);
-    if ((s.st_mode & S_IFDIR) != 0) {
-      *a |= MSDOS_DIR_ATTR;
+    if (!(inf = (struct FileInfoBlock *)AllocMem(
+      sizeof(struct FileInfoBlock), MEMF_PUBLIC | MEMF_CLEAR))) {
+      UnLock(lock);
+      return 0;
     }
-  }
-  if (n != NULL)
-    *n = (s.st_mode & S_IFMT) == S_IFREG ? s.st_size : -1L;
-  if (t != NULL) {
-    t->atime = s.st_atime;
-    t->mtime = s.st_mtime;
-    t->ctime = s.st_ctime;
+
+    if (!Examine(lock, inf)) {
+      FreeMem(inf, sizeof(*inf));
+      UnLock(lock);
+      return 0;
+    }
+
+    /* throw in the protection bits */
+    if (a != NULL) {
+      *a = (ulg) ((inf->fib_Protection ^ 0xF) & 0xFF) << 16;
+      if (inf->fib_DirEntryType >= 0)
+        *a |= AMI_IFDIR << 16 | MSDOS_DIR_ATTR;
+      else
+        *a |= AMI_IFREG << 16;
+    }
+
+    if (n != NULL)
+      *n = inf->fib_DirEntryType < 0 ? inf->fib_Size : -1L;
+
+    /* now the date.  AmigaDOS has weird datestamps---
+     *      ds_Days is the number of days since 1-1-1978;
+     *      however, as Unix wants date since 1-1-1970...
+     */
+    ftime =
+      (inf->fib_Date.ds_Days * 86400 )                +
+      (inf->fib_Date.ds_Minute * 60 )                 +
+      (inf->fib_Date.ds_Tick / TICKS_PER_SECOND )     +
+      (86400 * 8 * 365 )                              +
+      (86400 * 2 );  /* two leap years */
+
+    /* tzset(); */  /* this should be handled by mktime(), instead */
+    /* ftime += timezone; */
+    local_tm = *gmtime(&ftime);
+    local_tm.tm_isdst = -1;
+    ftime = mktime(&local_tm);
+
+    FreeMem(inf, sizeof(*inf));
+    UnLock(lock);
   }
 
-   return unix2dostime(&s.st_mtime);
+  return unix2dostime(&ftime);
 }
 
 int set_extra_field(z, z_utim)
