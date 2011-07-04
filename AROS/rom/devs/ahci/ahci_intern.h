@@ -107,6 +107,13 @@ struct ahci_Unit
    UBYTE               au_DevMask;             /* device mask used to simplify device number coding */
    UBYTE               au_SenseKey;            /* Sense key from ATAPI devices */
    UBYTE               au_DevType;
+   ULONG               au_XferModes;
+
+   /* Last outstanding command */
+   APTR                au_cmd_data;
+   ULONG               au_cmd_length;
+   ULONG               au_cmd_total;
+   ULONG               au_cmd_error;
 };
 
 
@@ -157,7 +164,7 @@ struct ahci_Host {
 };
 
 BOOL ahci_InitHost(struct ahci_Host *ah);
-BOOL ahci_init_unit(struct ahci_Port *ap, ULONG unitnum);
+BOOL ahci_init_unit(struct ahci_Port *ap);
 BOOL ahci_setup_unit(struct ahci_Port *ap);
 BOOL ahci_RegisterVolume(ULONG StartCyl, ULONG EndCyl, struct ahci_Unit *unit);
 void ahci_RegisterHost(struct ahci_Host *ah);
