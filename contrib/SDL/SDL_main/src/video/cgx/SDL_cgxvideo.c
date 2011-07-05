@@ -47,7 +47,7 @@
 #include <aros/debug.h>
 
 /* This is a special flag that tells video mode change code to not to drop existing
-	GL context. This flag is used to toggle fullscreen on/off */
+	GL context. */
 #define SDL_KEEP_GL_CONTEXT	0x00000100
 
 /* Initialization/Query functions */
@@ -945,10 +945,11 @@ static int CGX_ResizeWindow(_THIS, SDL_Surface *screen, int width, int height, U
 		NOGL - surface does not use OpenGL
 
 	Explanation of actions:
-		wndR	   - resize window
-		wndC, wndD - create, destroy window
-		scrC, scrD - create, destroy screen
-		oglC, oglD - create, destroy OpenGL context
+		wndR		- resize window
+		wndC, wndD	- create, destroy window
+		scrC, scrD	- create, destroy screen
+		oglC, oglD	- create, destroy OpenGL context
+		oglU		- update OpenGL context with new window
 
 	Cases:
 	
@@ -958,13 +959,13 @@ static int CGX_ResizeWindow(_THIS, SDL_Surface *screen, int width, int height, U
 	| bppWB, sizeA, WND, NOGL | bppWB, sizeB, WND, NOGL    | wndR(sizeB)                                                |
 	| bppWB, sizeA, WND, OGL  | bppWB, sizeB, WND, NOGL    | oglD, wndD, wndC(sizeB)                                    |
 	| bppWB, sizeA, WND, NOGL | bppWB, sizeB, WND, OGL     | wndD, wndC(sizeB), oglC                                    |
-	| bppWB, sizeA, WND, OGL  | bppAny, sizeAny, FS, OGL   | oglD, wndD, scrC(sizeAny, bppAny), wndC(sizeAny), oglC     |
+	| bppWB, sizeA, WND, OGL  | bppAny, sizeAny, FS, OGL   | wndD, scrC(sizeAny, bppAny), wndC(sizeAny), oglU           |
 	| bppWB, sizeA, WND, OGL  | bppAny, sizeAny, FS, NOGL  | oglD, wndD, scrC(sizeAny, bppAny), wndC(sizeAny), oglC     |
-	| bppA, sizeA, FS, OGL    | bppB, sizeAny, FS, OGL     | oglD, wndD, scrD, scrC(sizeAny, bppB), wndC(sizeAny), oglC |
-	| bppA, sizeA, FS, OGL    | bppAny, sizeB, FS, OGL     | oglD, wndD, scrD, scrC(sizeB, bppAny), wndC(sizeB), oglC   |
+	| bppA, sizeA, FS, OGL    | bppB, sizeAny, FS, OGL     | wndD, scrD, scrC(sizeAny, bppB), wndC(sizeAny), oglU       |
+	| bppA, sizeA, FS, OGL    | bppAny, sizeB, FS, OGL     | wndD, scrD, scrC(sizeB, bppAny), wndC(sizeB), oglU         |
 	| bppA, sizeA, FS, OGL    | bppB, sizeAny, FS, NOGL    | oglD, wndD, scrD, scrC(sizeAny, bppB), wndC(sizeAny)       |
 	| bppA, sizeA, FS, OGL    | bppAny, sizeB, FS, NOGL    | oglD, wndD, scrD, scrC(sizeB, bppAny), wndC(sizeB)         |
-	| bppA, sizeA, FS, OGL    | bppWB, sizeAny, WND, OGL   | oglD, wndD, scrD, wndC(sizeAny), oglC                      |
+	| bppA, sizeA, FS, OGL    | bppWB, sizeAny, WND, OGL   | wndD, scrD, wndC(sizeAny), oglU                            |
 	| bppA, sizeA, FS, OGL    | bppWB, sizeAny, WND, NOGL  | oglD, wndD, scrD, wndC(sizeAny)                            |
 
 	Rules:
@@ -975,6 +976,7 @@ static int CGX_ResizeWindow(_THIS, SDL_Surface *screen, int width, int height, U
 	(+)if ( req->FS && ( sizediff || bppdiff || curr->WND ) ) create_screen
 	(+)if ( ! resize_window ) create_window
 
+	(+)if ( ! ogldiff) req->SDL_KEEP_GL_CONTEXT
 	(+)if ( destroy_window && curr->SDL_OPENGL && ! req->SDL_KEEP_GL_CONTEXT ) destroy_context
 	(+)if ( create_window && req->SDL_OPENGL && ! req->SDL_KEEP_GL_CONTEXT ) create_context
 	(+)if ( create_window && req->SDL_OPENGL && req->SDL_KEEP_GL_CONTEXT ) update_context
@@ -987,6 +989,7 @@ static SDL_Surface *CGX_SetVideoMode(_THIS, SDL_Surface *current, int width, int
 	sizediff = (current != NULL) ? ((current->w != width) || (current->h != height)) : 1;
 	bppdiff = (this->hidden != NULL) ? (this->hidden->depth != bpp) : 1;
 	ogldiff = (current != NULL) ? ((current->flags & SDL_OPENGL) != (flags & SDL_OPENGL)) : 1;
+	if (!ogldiff) flags |= SDL_KEEP_GL_CONTEXT;
 	
 	D(bug("CGX_SetVideoMode to %dx%dx%d, sizediff %d bppdiff %d\n", width, height, bpp, sizediff, bppdiff));
 
@@ -1084,7 +1087,6 @@ static int CGX_ToggleFullScreen(_THIS, int on)
 	{
 		Uint32 flags = this->screen->flags;
 		flags |= SDL_FULLSCREEN;
-		flags |= SDL_KEEP_GL_CONTEXT;
 
 		/* Call video mode change */		
 		CGX_SetVideoMode(this, this->screen, this->screen->w, this->screen->h, this->hidden->depth, flags);
@@ -1093,7 +1095,6 @@ static int CGX_ToggleFullScreen(_THIS, int on)
 	{
 		Uint32 flags = this->screen->flags;
 		flags &= ~SDL_FULLSCREEN;
-		flags |= SDL_KEEP_GL_CONTEXT;
 
 		/* Call video mode change */		
 		CGX_SetVideoMode(this, this->screen, this->screen->w, this->screen->h, this->hidden->depth, flags);
