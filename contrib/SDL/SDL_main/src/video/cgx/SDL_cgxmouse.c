@@ -184,58 +184,53 @@ int CGX_ShowWMCursor(_THIS, WMcursor *cursor)
 
 void CGX_WarpWMCursor(_THIS, Uint16 x, Uint16 y)
 {
+	struct IOStdReq *req;
+	struct MsgPort *port;
+
 	D(bug("[SDL] CGX_WarpWMCursor(%ld, %ld)\n", x, y));
-	
-	if (this->hidden->FocusActive)
+
+	SDL_Lock_EventThread();
+
+	port = CreateMsgPort();
+	req  = (struct IOStdReq *)CreateIORequest(port, sizeof(*req));
+
+	if (req)
 	{
-		/*
-			Note: code below may cause unwanted side effects
-		 */
-		struct IOStdReq *req;
-		struct MsgPort *port;
-
-		SDL_Lock_EventThread();
-
-		port = CreateMsgPort();
-		req  = (struct IOStdReq *)CreateIORequest(port, sizeof(*req));
-
-		if (req)
+		if (OpenDevice("input.device", 0, (struct IORequest *)req, 0) == 0)
 		{
-			if (OpenDevice("input.device", 0, (struct IORequest *)req, 0) == 0)
+			struct InputEvent *ie;
+			struct IEPointerPixel *newpos;
+
+			if ((ie = malloc(sizeof(*ie) + sizeof(*newpos))))
 			{
-				struct InputEvent *ie;
-				struct IEPointerPixel *newpos;
+				newpos = (struct IEPointerPixel *)(ie + 1);
 
-				if ((ie = malloc(sizeof(*ie) + sizeof(*newpos))))
-				{
-					newpos = (struct IEPointerPixel *)(ie + 1);
+				newpos->iepp_Screen = SDL_Display;
+				newpos->iepp_Position.X = x + SDL_Window->BorderLeft + SDL_Window->LeftEdge;
+				newpos->iepp_Position.Y = y + SDL_Window->BorderTop + SDL_Window->TopEdge;
 
-					newpos->iepp_Screen = SDL_Display;
-					newpos->iepp_Position.X = x + SDL_Window->BorderLeft + SDL_Window->LeftEdge;
-					newpos->iepp_Position.Y = y + SDL_Window->BorderTop + SDL_Window->TopEdge;
+				ie->ie_EventAddress = newpos;
+				ie->ie_NextEvent    = NULL;
+				ie->ie_Class        = IECLASS_NEWPOINTERPOS;
+				ie->ie_SubClass     = IESUBCLASS_PIXEL;
+				ie->ie_Code         = IECODE_NOBUTTON;
+				ie->ie_Qualifier    = 0;
 
-					ie->ie_EventAddress = newpos;
-					ie->ie_NextEvent    = NULL;
-					ie->ie_Class        = IECLASS_NEWPOINTERPOS;
-					ie->ie_SubClass     = IESUBCLASS_PIXEL;
-					ie->ie_Code         = IECODE_NOBUTTON;
-					ie->ie_Qualifier    = 0;
+				req->io_Data    = ie;
+				req->io_Length  = sizeof(*ie);
+				req->io_Command = IND_WRITEEVENT;
 
-					req->io_Data    = ie;
-					req->io_Length  = sizeof(*ie);
-					req->io_Command = IND_WRITEEVENT;
-
-					DoIO((struct IORequest *)req);
-					free(ie);
-				}
-				CloseDevice((struct IORequest *)req);
+				DoIO((struct IORequest *)req);
+				free(ie);
 			}
+			CloseDevice((struct IORequest *)req);
 		}
-		DeleteIORequest((struct IORequest *)req);
-		DeleteMsgPort(port);
-		
-		SDL_Unlock_EventThread();
 	}
+	DeleteIORequest((struct IORequest *)req);
+	DeleteMsgPort(port);
+	
+	SDL_Unlock_EventThread();
+
 }
 
 
