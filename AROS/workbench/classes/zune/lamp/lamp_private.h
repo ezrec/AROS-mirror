@@ -12,6 +12,9 @@
 struct Lamp_DATA
 {
     /*- Private ------------------------------------------------------------*/
+    LONG                lmp_PenNr;
+    ULONG               lmp_PenChanged;
+    ULONG               lmp_PenChangedOld;
 
     /*- Protected ----------------------------------------------------------*/
 

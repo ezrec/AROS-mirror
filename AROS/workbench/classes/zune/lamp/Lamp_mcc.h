@@ -27,7 +27,7 @@ struct MUIP_Lamp_SetRGB                 {STACKED ULONG methodid; STACKED ULONG r
 #define MUIA_Lamp_PenSpec               0x85b90007ul /* [ISG]  struct MUI_PenSpec * */
 
 /*** Macros *****************************************************************/
-#define LampWindowObject                MUIOBJMACRO_START(MUIC_Lamp)
+#define LampObject                      MUIOBJMACRO_START(MUIC_Lamp)
 
 #define MUIV_Lamp_Type_Tiny             0
 #define MUIV_Lamp_Type_Small            1

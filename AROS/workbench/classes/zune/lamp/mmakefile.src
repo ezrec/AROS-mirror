@@ -6,7 +6,7 @@ include $(TOP)/config/make.cfg
 USER_CFLAGS := $(PARANOIA_CFLAGS)
 
 FILES         := lamp
-INCLUDE_FILES := lamp.h
+INCLUDE_FILES := Lamp_mcc.h
 
 #MM workbench-classes-zune-lamp : includes
 
@@ -16,6 +16,6 @@ INCLUDE_FILES := lamp.h
     conffile=lamp.conf \
     uselibs="amiga rom"
 
-%copy_includes path=zune
+%copy_includes path=mui
 
 %common
