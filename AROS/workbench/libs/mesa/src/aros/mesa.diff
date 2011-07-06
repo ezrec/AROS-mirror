@@ -1,9 +1,9 @@
 diff -ur /data/deadwood/source/Mesa-7.10-staging/include/EGL/eglplatform.h ./mesa/include/EGL/eglplatform.h
 --- /data/deadwood/source/Mesa-7.10-staging/include/EGL/eglplatform.h	2010-10-05 18:56:51.000000000 +0200
-+++ ./mesa/include/EGL/eglplatform.h	2011-01-22 14:06:09.000000000 +0100
-@@ -98,6 +98,14 @@
- 
- #endif /* MESA_EGL_NO_X11_HEADERS */
++++ ./mesa/include/EGL/eglplatform.h	2011-05-29 20:11:36.000000000 +0200
+@@ -78,6 +78,14 @@
+ typedef void *EGLNativeWindowType;
+ typedef void *EGLNativePixmapType;
  
 +#elif defined(__AROS__)
 +
@@ -13,12 +13,12 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/include/EGL/eglplatform.h ./mes
 +typedef struct Bitmap   *EGLNativePixmapType;
 +typedef struct Window   *EGLNativeWindowType;
 +
- #else
- #error "Platform not recognized"
- #endif
+ #elif defined(__unix__) || defined(__unix)
+ 
+ #ifdef MESA_EGL_NO_X11_HEADERS
 diff -ur /data/deadwood/source/Mesa-7.10-staging/src/egl/main/eglcompiler.h ./mesa/src/egl/main/eglcompiler.h
 --- /data/deadwood/source/Mesa-7.10-staging/src/egl/main/eglcompiler.h	2010-10-05 18:56:51.000000000 +0200
-+++ ./mesa/src/egl/main/eglcompiler.h	2011-01-22 14:06:09.000000000 +0100
++++ ./mesa/src/egl/main/eglcompiler.h	2011-05-29 20:11:36.000000000 +0200
 @@ -7,6 +7,7 @@
   */
  #if (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L)
@@ -29,7 +29,7 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/egl/main/eglcompiler.h ./me
     typedef unsigned __int8    uint8_t;
 diff -ur /data/deadwood/source/Mesa-7.10-staging/src/egl/main/eglcurrent.c ./mesa/src/egl/main/eglcurrent.c
 --- /data/deadwood/source/Mesa-7.10-staging/src/egl/main/eglcurrent.c	2011-01-02 23:58:35.000000000 +0100
-+++ ./mesa/src/egl/main/eglcurrent.c	2011-01-22 14:06:09.000000000 +0100
++++ ./mesa/src/egl/main/eglcurrent.c	2011-05-29 20:11:36.000000000 +0200
 @@ -80,6 +80,35 @@
     return EGL_TRUE;
  }
@@ -68,7 +68,7 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/egl/main/eglcurrent.c ./mes
  static void (*_egl_FreeTSD)(_EGLThreadInfo *);
 diff -ur /data/deadwood/source/Mesa-7.10-staging/src/egl/main/egldisplay.c ./mesa/src/egl/main/egldisplay.c
 --- /data/deadwood/source/Mesa-7.10-staging/src/egl/main/egldisplay.c	2010-12-14 22:43:14.000000000 +0100
-+++ ./mesa/src/egl/main/egldisplay.c	2011-01-22 14:06:09.000000000 +0100
++++ ./mesa/src/egl/main/egldisplay.c	2011-05-29 20:11:36.000000000 +0200
 @@ -28,7 +28,8 @@
        { _EGL_PLATFORM_WINDOWS, "gdi" },
        { _EGL_PLATFORM_X11, "x11" },
@@ -97,7 +97,7 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/egl/main/egldisplay.c ./mes
  
 diff -ur /data/deadwood/source/Mesa-7.10-staging/src/egl/main/egldisplay.h ./mesa/src/egl/main/egldisplay.h
 --- /data/deadwood/source/Mesa-7.10-staging/src/egl/main/egldisplay.h	2010-12-14 22:43:14.000000000 +0100
-+++ ./mesa/src/egl/main/egldisplay.h	2011-01-22 14:06:09.000000000 +0100
++++ ./mesa/src/egl/main/egldisplay.h	2011-05-29 20:11:36.000000000 +0200
 @@ -13,6 +13,7 @@
     _EGL_PLATFORM_X11,
     _EGL_PLATFORM_DRM,
@@ -108,7 +108,7 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/egl/main/egldisplay.h ./mes
     _EGL_INVALID_PLATFORM = -1
 diff -ur /data/deadwood/source/Mesa-7.10-staging/src/egl/main/egldriver.c ./mesa/src/egl/main/egldriver.c
 --- /data/deadwood/source/Mesa-7.10-staging/src/egl/main/egldriver.c	2011-01-02 23:58:35.000000000 +0100
-+++ ./mesa/src/egl/main/egldriver.c	2011-01-22 14:06:09.000000000 +0100
++++ ./mesa/src/egl/main/egldriver.c	2011-05-29 20:11:36.000000000 +0200
 @@ -33,6 +33,7 @@
  static _EGLArray *_eglModules;
  
@@ -189,7 +189,7 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/egl/main/egldriver.c ./mesa
 +#endif
 diff -ur /data/deadwood/source/Mesa-7.10-staging/src/egl/main/eglglobals.c ./mesa/src/egl/main/eglglobals.c
 --- /data/deadwood/source/Mesa-7.10-staging/src/egl/main/eglglobals.c	2010-10-19 19:58:28.000000000 +0200
-+++ ./mesa/src/egl/main/eglglobals.c	2011-01-22 14:06:09.000000000 +0100
++++ ./mesa/src/egl/main/eglglobals.c	2011-05-29 20:11:36.000000000 +0200
 @@ -38,7 +38,7 @@
        _eglLockMutex(_eglGlobal.Mutex);
  
@@ -201,7 +201,7 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/egl/main/eglglobals.c ./mes
  
 diff -ur /data/deadwood/source/Mesa-7.10-staging/src/egl/main/egllog.c ./mesa/src/egl/main/egllog.c
 --- /data/deadwood/source/Mesa-7.10-staging/src/egl/main/egllog.c	2010-12-14 22:43:14.000000000 +0100
-+++ ./mesa/src/egl/main/egllog.c	2011-01-22 14:06:09.000000000 +0100
++++ ./mesa/src/egl/main/egllog.c	2011-05-29 20:11:36.000000000 +0200
 @@ -26,11 +26,18 @@
     _EGLLogProc logger;
     EGLint num_messages;
@@ -254,7 +254,7 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/egl/main/egllog.c ./mesa/sr
     if (log_env && level < 0) {
 diff -ur /data/deadwood/source/Mesa-7.10-staging/src/egl/main/eglmutex.h ./mesa/src/egl/main/eglmutex.h
 --- /data/deadwood/source/Mesa-7.10-staging/src/egl/main/eglmutex.h	2010-02-05 01:10:39.000000000 +0100
-+++ ./mesa/src/egl/main/eglmutex.h	2011-01-22 14:06:09.000000000 +0100
++++ ./mesa/src/egl/main/eglmutex.h	2011-05-29 20:11:36.000000000 +0200
 @@ -35,6 +35,48 @@
  #define _EGL_DECLARE_MUTEX(m) \
     _EGLMutex m = _EGL_MUTEX_INITIALIZER
@@ -306,7 +306,7 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/egl/main/eglmutex.h ./mesa/
  typedef int _EGLMutex;
 diff -ur /data/deadwood/source/Mesa-7.10-staging/src/egl/main/egltypedefs.h ./mesa/src/egl/main/egltypedefs.h
 --- /data/deadwood/source/Mesa-7.10-staging/src/egl/main/egltypedefs.h	2010-12-14 22:43:14.000000000 +0100
-+++ ./mesa/src/egl/main/egltypedefs.h	2011-01-22 14:06:09.000000000 +0100
++++ ./mesa/src/egl/main/egltypedefs.h	2011-05-29 20:11:36.000000000 +0200
 @@ -8,6 +8,12 @@
  
  #include "eglcompiler.h"
@@ -322,7 +322,7 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/egl/main/egltypedefs.h ./me
  typedef struct _egl_array _EGLArray;
 diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/os/os_thread.h ./mesa/src/gallium/auxiliary/os/os_thread.h
 --- /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/os/os_thread.h	2010-10-05 18:56:51.000000000 +0200
-+++ ./mesa/src/gallium/auxiliary/os/os_thread.h	2011-01-22 14:06:09.000000000 +0100
++++ ./mesa/src/gallium/auxiliary/os/os_thread.h	2011-05-29 20:11:36.000000000 +0200
 @@ -229,6 +229,52 @@
  
  #endif /* pre-Vista win32 */
@@ -378,7 +378,7 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/os/os_thr
  #include "os/os_time.h"
 diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/os/os_time.c ./mesa/src/gallium/auxiliary/os/os_time.c
 --- /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/os/os_time.c	2010-10-05 18:56:51.000000000 +0200
-+++ ./mesa/src/gallium/auxiliary/os/os_time.c	2011-01-22 14:06:09.000000000 +0100
++++ ./mesa/src/gallium/auxiliary/os/os_time.c	2011-05-29 20:11:36.000000000 +0200
 @@ -37,7 +37,7 @@
  
  #if !defined(PIPE_OS_EMBEDDED)
@@ -399,7 +399,7 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/os/os_tim
     gettimeofday(&tv, NULL);
 diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/os/os_time.h ./mesa/src/gallium/auxiliary/os/os_time.h
 --- /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/os/os_time.h	2010-04-27 23:41:59.000000000 +0200
-+++ ./mesa/src/gallium/auxiliary/os/os_time.h	2011-01-22 14:06:09.000000000 +0100
++++ ./mesa/src/gallium/auxiliary/os/os_time.h	2011-05-29 20:11:36.000000000 +0200
 @@ -38,7 +38,7 @@
  
  #include "pipe/p_config.h"
@@ -420,7 +420,7 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/os/os_tim
  void
 diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/util/u_atomic.h ./mesa/src/gallium/auxiliary/util/u_atomic.h
 --- /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/util/u_atomic.h	2010-10-19 19:58:28.000000000 +0200
-+++ ./mesa/src/gallium/auxiliary/util/u_atomic.h	2011-01-22 14:06:09.000000000 +0100
++++ ./mesa/src/gallium/auxiliary/util/u_atomic.h	2011-05-29 20:11:36.000000000 +0200
 @@ -29,8 +29,12 @@
  #define PIPE_ATOMIC_ASM_MSVC_X86                
  #elif (defined(PIPE_CC_GCC) && defined(PIPE_ARCH_X86))
@@ -569,26 +569,9 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/util/u_at
  #ifndef PIPE_ATOMIC
  #error "No pipe_atomic implementation selected"
  #endif
-diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/util/u_cpu_detect.c ./mesa/src/gallium/auxiliary/util/u_cpu_detect.c
---- /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/util/u_cpu_detect.c	2010-10-19 19:58:28.000000000 +0200
-+++ ./mesa/src/gallium/auxiliary/util/u_cpu_detect.c	2011-01-22 14:06:09.000000000 +0100
-@@ -195,9 +195,12 @@
-    );
- #elif defined(PIPE_CC_GCC) && defined(PIPE_ARCH_X86_64)
-    __asm __volatile (
-+     "pushq %%rbx\n\t"
-      "cpuid\n\t"
-+     "movl %%ebx, %%esi\n\t"
-+     "popq %%rbx"
-      : "=a" (p[0]),
--       "=b" (p[1]),
-+       "=S" (p[1]),
-        "=c" (p[2]),
-        "=d" (p[3])
-      : "0" (ax)
 diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/util/u_math.c ./mesa/src/gallium/auxiliary/util/u_math.c
 --- /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/util/u_math.c	2010-02-05 01:10:39.000000000 +0100
-+++ ./mesa/src/gallium/auxiliary/util/u_math.c	2011-01-22 14:06:09.000000000 +0100
++++ ./mesa/src/gallium/auxiliary/util/u_math.c	2011-05-29 20:11:36.000000000 +0200
 @@ -42,6 +42,13 @@
        pow2_table[i] = (float) pow(2.0, (i - POW2_TABLE_OFFSET) / POW2_TABLE_SCALE);
  }
@@ -605,7 +588,7 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/util/u_ma
  float log2_table[LOG2_TABLE_SIZE];
 diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/util/u_math.h ./mesa/src/gallium/auxiliary/util/u_math.h
 --- /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/util/u_math.h	2010-12-14 22:43:14.000000000 +0100
-+++ ./mesa/src/gallium/auxiliary/util/u_math.h	2011-01-22 14:06:09.000000000 +0100
++++ ./mesa/src/gallium/auxiliary/util/u_math.h	2011-05-29 20:11:36.000000000 +0200
 @@ -399,6 +399,8 @@
  }
  #elif defined(__MINGW32__)
@@ -630,24 +613,9 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/util/u_ma
     return __builtin_popcount(n);
  #else
     /* K&R classic bitcount.
-diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/drivers/nouveau/nouveau_screen.c ./mesa/src/gallium/drivers/nouveau/nouveau_screen.c
---- /data/deadwood/source/Mesa-7.10-staging/src/gallium/drivers/nouveau/nouveau_screen.c	2010-12-14 22:43:14.000000000 +0100
-+++ ./mesa/src/gallium/drivers/nouveau/nouveau_screen.c	2011-01-22 14:06:10.000000000 +0100
-@@ -236,7 +236,11 @@
- 	int ret;
- 
- 	ret = nouveau_channel_alloc(dev, 0xbeef0201, 0xbeef0202,
-+#if !defined(PIPE_OS_AROS)
- 				    512*1024, &screen->channel);
-+#else
-+				    &screen->channel);
-+#endif
- 	if (ret)
- 		return ret;
- 	screen->device = dev;
 diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/drivers/nv50/nv50_context.h ./mesa/src/gallium/drivers/nv50/nv50_context.h
 --- /data/deadwood/source/Mesa-7.10-staging/src/gallium/drivers/nv50/nv50_context.h	2010-12-16 00:02:44.000000000 +0100
-+++ ./mesa/src/gallium/drivers/nv50/nv50_context.h	2011-01-22 14:06:10.000000000 +0100
++++ ./mesa/src/gallium/drivers/nv50/nv50_context.h	2011-05-29 20:11:36.000000000 +0200
 @@ -26,8 +26,13 @@
  #define NOUVEAU_MSG(fmt, args...) \
  	fprintf(stderr, "nouveau: "fmt, ##args);
@@ -664,7 +632,7 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/drivers/nv50/nv50_c
  #define NV50_CB_PMISC		0
 diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/include/pipe/p_config.h ./mesa/src/gallium/include/pipe/p_config.h
 --- /data/deadwood/source/Mesa-7.10-staging/src/gallium/include/pipe/p_config.h	2010-10-05 18:56:51.000000000 +0200
-+++ ./mesa/src/gallium/include/pipe/p_config.h	2011-01-22 14:06:09.000000000 +0100
++++ ./mesa/src/gallium/include/pipe/p_config.h	2011-05-29 20:11:36.000000000 +0200
 @@ -82,6 +82,10 @@
  #define PIPE_ARCH_X86
  #endif
@@ -721,7 +689,7 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/include/pipe/p_conf
   * 
 diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/egl/common/egl_g3d.c ./mesa/src/gallium/state_trackers/egl/common/egl_g3d.c
 --- /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/egl/common/egl_g3d.c	2011-01-02 23:58:35.000000000 +0100
-+++ ./mesa/src/gallium/state_trackers/egl/common/egl_g3d.c	2011-01-22 14:06:09.000000000 +0100
++++ ./mesa/src/gallium/state_trackers/egl/common/egl_g3d.c	2011-05-29 20:11:36.000000000 +0200
 @@ -75,6 +75,12 @@
           nplat = native_get_fbdev_platform();
  #endif
@@ -757,7 +725,7 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/egl/
  egl_g3d_free_config(void *conf)
 diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/egl/common/egl_g3d_loader.h ./mesa/src/gallium/state_trackers/egl/common/egl_g3d_loader.h
 --- /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/egl/common/egl_g3d_loader.h	2010-10-19 19:58:29.000000000 +0200
-+++ ./mesa/src/gallium/state_trackers/egl/common/egl_g3d_loader.h	2011-01-22 14:06:09.000000000 +0100
++++ ./mesa/src/gallium/state_trackers/egl/common/egl_g3d_loader.h	2011-05-29 20:11:36.000000000 +0200
 @@ -41,8 +41,10 @@
     struct st_api *(*get_st_api)(enum st_api_type api);
     struct st_api *(*guess_gl_api)(enum st_profile_type profile);
@@ -771,7 +739,7 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/egl/
  _EGLDriver *
 diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/egl/common/native.h ./mesa/src/gallium/state_trackers/egl/common/native.h
 --- /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/egl/common/native.h	2011-01-02 23:58:35.000000000 +0100
-+++ ./mesa/src/gallium/state_trackers/egl/common/native.h	2011-01-22 14:06:09.000000000 +0100
++++ ./mesa/src/gallium/state_trackers/egl/common/native.h	2011-05-29 20:11:36.000000000 +0200
 @@ -208,10 +208,12 @@
                             struct native_surface *nsurf,
                             unsigned int seq_num);
@@ -795,7 +763,7 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/egl/
  #endif /* _NATIVE_H_ */
 diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/api.h ./mesa/src/gallium/state_trackers/vega/api.h
 --- /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/api.h	2010-12-16 00:02:44.000000000 +0100
-+++ ./mesa/src/gallium/state_trackers/vega/api.h	2011-01-22 14:06:09.000000000 +0100
++++ ./mesa/src/gallium/state_trackers/vega/api.h	2011-05-29 20:11:36.000000000 +0200
 @@ -33,6 +33,11 @@
  #include "VG/vgext.h"
  #include "vg_manager.h"
@@ -808,222 +776,41 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega
  #include "api_tmp.h"
  
  struct mapi_table;
-diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/renderer.c ./mesa/src/gallium/state_trackers/vega/renderer.c
---- /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/renderer.c	2011-01-02 23:58:35.000000000 +0100
-+++ ./mesa/src/gallium/state_trackers/vega/renderer.c	2011-01-22 14:06:11.000000000 +0100
-@@ -42,7 +42,6 @@
- #include "util/u_sampler.h"
- #include "util/u_surface.h"
- #include "util/u_math.h"
--#include "util/u_format.h"
- 
- #include "cso_cache/cso_context.h"
- #include "tgsi/tgsi_ureg.h"
-@@ -1267,67 +1266,6 @@
-    }
- }
- 
--static void renderer_validate_blend(struct renderer *renderer,
--                                     const struct vg_state *state,
--                                     enum pipe_format fb_format)
--{
--   struct pipe_blend_state blend;
--
--   memset(&blend, 0, sizeof(blend));
--   blend.rt[0].colormask = PIPE_MASK_RGBA;
--   blend.rt[0].rgb_src_factor   = PIPE_BLENDFACTOR_ONE;
--   blend.rt[0].alpha_src_factor = PIPE_BLENDFACTOR_ONE;
--   blend.rt[0].rgb_dst_factor   = PIPE_BLENDFACTOR_ZERO;
--   blend.rt[0].alpha_dst_factor = PIPE_BLENDFACTOR_ZERO;
--
--   /* TODO alpha masking happens after blending? */
--
--   switch (state->blend_mode) {
--   case VG_BLEND_SRC:
--      blend.rt[0].rgb_src_factor   = PIPE_BLENDFACTOR_ONE;
--      blend.rt[0].alpha_src_factor = PIPE_BLENDFACTOR_ONE;
--      blend.rt[0].rgb_dst_factor   = PIPE_BLENDFACTOR_ZERO;
--      blend.rt[0].alpha_dst_factor = PIPE_BLENDFACTOR_ZERO;
--      break;
--   case VG_BLEND_SRC_OVER:
--      if (!util_format_has_alpha(fb_format)) {
--         blend.rt[0].rgb_src_factor   = PIPE_BLENDFACTOR_SRC_ALPHA;
--         blend.rt[0].alpha_src_factor = PIPE_BLENDFACTOR_ONE;
--         blend.rt[0].rgb_dst_factor   = PIPE_BLENDFACTOR_INV_SRC_ALPHA;
--         blend.rt[0].alpha_dst_factor = PIPE_BLENDFACTOR_INV_SRC_ALPHA;
--         blend.rt[0].blend_enable = 1;
--      }
--      break;
--   case VG_BLEND_SRC_IN:
--      blend.rt[0].rgb_src_factor   = PIPE_BLENDFACTOR_ONE;
--      blend.rt[0].alpha_src_factor = PIPE_BLENDFACTOR_DST_ALPHA;
--      blend.rt[0].rgb_dst_factor   = PIPE_BLENDFACTOR_ZERO;
--      blend.rt[0].alpha_dst_factor = PIPE_BLENDFACTOR_ZERO;
--      blend.rt[0].blend_enable = 1;
--      break;
--   case VG_BLEND_DST_IN:
--      blend.rt[0].rgb_src_factor   = PIPE_BLENDFACTOR_ZERO;
--      blend.rt[0].alpha_src_factor = PIPE_BLENDFACTOR_ZERO;
--      blend.rt[0].rgb_dst_factor   = PIPE_BLENDFACTOR_ONE;
--      blend.rt[0].alpha_dst_factor = PIPE_BLENDFACTOR_SRC_ALPHA;
--      blend.rt[0].blend_enable = 1;
--      break;
--   case VG_BLEND_DST_OVER:
--   case VG_BLEND_MULTIPLY:
--   case VG_BLEND_SCREEN:
--   case VG_BLEND_DARKEN:
--   case VG_BLEND_LIGHTEN:
--   case VG_BLEND_ADDITIVE:
--      /* need a shader */
--      break;
--   default:
--      assert(!"not implemented blend mode");
--      break;
--   }
--
--   cso_set_blend(renderer->cso, &blend);
--}
--
- /**
-  * Propogate OpenVG state changes to the renderer.  Only framebuffer, blending
-  * and scissoring states are relevant here.
-@@ -1342,6 +1280,66 @@
-    dirty |= renderer->dirty;
-    renderer->dirty = 0;
- 
-+   if (dirty & BLEND_DIRTY) {
-+      struct pipe_blend_state blend;
-+      memset(&blend, 0, sizeof(blend));
-+      blend.rt[0].blend_enable = 1;
-+      blend.rt[0].colormask = PIPE_MASK_RGBA;
-+
-+      switch (state->blend_mode) {
-+      case VG_BLEND_SRC:
-+         blend.rt[0].rgb_src_factor   = PIPE_BLENDFACTOR_ONE;
-+         blend.rt[0].alpha_src_factor = PIPE_BLENDFACTOR_ONE;
-+         blend.rt[0].rgb_dst_factor   = PIPE_BLENDFACTOR_ZERO;
-+         blend.rt[0].alpha_dst_factor = PIPE_BLENDFACTOR_ZERO;
-+         blend.rt[0].blend_enable = 0;
-+         break;
-+      case VG_BLEND_SRC_OVER:
-+         blend.rt[0].rgb_src_factor   = PIPE_BLENDFACTOR_SRC_ALPHA;
-+         blend.rt[0].alpha_src_factor = PIPE_BLENDFACTOR_ONE;
-+         blend.rt[0].rgb_dst_factor   = PIPE_BLENDFACTOR_INV_SRC_ALPHA;
-+         blend.rt[0].alpha_dst_factor = PIPE_BLENDFACTOR_INV_SRC_ALPHA;
-+         break;
-+      case VG_BLEND_DST_OVER:
-+         blend.rt[0].rgb_src_factor   = PIPE_BLENDFACTOR_INV_DST_ALPHA;
-+         blend.rt[0].alpha_src_factor = PIPE_BLENDFACTOR_INV_DST_ALPHA;
-+         blend.rt[0].rgb_dst_factor   = PIPE_BLENDFACTOR_DST_ALPHA;
-+         blend.rt[0].alpha_dst_factor = PIPE_BLENDFACTOR_DST_ALPHA;
-+         break;
-+      case VG_BLEND_SRC_IN:
-+         blend.rt[0].rgb_src_factor   = PIPE_BLENDFACTOR_DST_ALPHA;
-+         blend.rt[0].alpha_src_factor = PIPE_BLENDFACTOR_DST_ALPHA;
-+         blend.rt[0].rgb_dst_factor   = PIPE_BLENDFACTOR_ZERO;
-+         blend.rt[0].alpha_dst_factor = PIPE_BLENDFACTOR_ZERO;
-+         break;
-+      case VG_BLEND_DST_IN:
-+         blend.rt[0].rgb_src_factor   = PIPE_BLENDFACTOR_ZERO;
-+         blend.rt[0].alpha_src_factor = PIPE_BLENDFACTOR_ZERO;
-+         blend.rt[0].rgb_dst_factor   = PIPE_BLENDFACTOR_SRC_ALPHA;
-+         blend.rt[0].alpha_dst_factor = PIPE_BLENDFACTOR_SRC_ALPHA;
-+         break;
-+      case VG_BLEND_MULTIPLY:
-+      case VG_BLEND_SCREEN:
-+      case VG_BLEND_DARKEN:
-+      case VG_BLEND_LIGHTEN:
-+         blend.rt[0].rgb_src_factor   = PIPE_BLENDFACTOR_ONE;
-+         blend.rt[0].alpha_src_factor = PIPE_BLENDFACTOR_ONE;
-+         blend.rt[0].rgb_dst_factor   = PIPE_BLENDFACTOR_ZERO;
-+         blend.rt[0].alpha_dst_factor = PIPE_BLENDFACTOR_ZERO;
-+         blend.rt[0].blend_enable = 0;
-+         break;
-+      case VG_BLEND_ADDITIVE:
-+         blend.rt[0].rgb_src_factor   = PIPE_BLENDFACTOR_ONE;
-+         blend.rt[0].alpha_src_factor = PIPE_BLENDFACTOR_ONE;
-+         blend.rt[0].rgb_dst_factor   = PIPE_BLENDFACTOR_ONE;
-+         blend.rt[0].alpha_dst_factor = PIPE_BLENDFACTOR_ONE;
-+         break;
-+      default:
-+         assert(!"not implemented blend mode");
-+      }
-+      cso_set_blend(renderer->cso, &blend);
-+   }
-+
-    if (dirty & FRAMEBUFFER_DIRTY) {
-       struct pipe_framebuffer_state *fb = &renderer->g3d.fb;
-       struct matrix *proj = &renderer->projection;
-@@ -1372,9 +1370,6 @@
-       update_clip_state(renderer, state);
-       cso_set_depth_stencil_alpha(renderer->cso, &renderer->g3d.dsa);
-    }
--
--   if (dirty & BLEND_DIRTY)
--      renderer_validate_blend(renderer, state, stfb->strb->format);
- }
- 
- /**
-diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/shader.c ./mesa/src/gallium/state_trackers/vega/shader.c
---- /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/shader.c	2011-01-02 23:58:35.000000000 +0100
-+++ ./mesa/src/gallium/state_trackers/vega/shader.c	2011-01-22 14:06:11.000000000 +0100
-@@ -39,7 +39,6 @@
- #include "util/u_inlines.h"
- #include "util/u_memory.h"
- #include "util/u_math.h"
--#include "util/u_format.h"
- 
- #define MAX_CONSTANTS 28
- 
-@@ -134,16 +133,10 @@
-    VGboolean advanced_blending;
- 
-    switch (ctx->state.vg.blend_mode) {
--   case VG_BLEND_SRC_OVER:
--      advanced_blending =
--         util_format_has_alpha(ctx->draw_buffer->strb->format);
--      break;
--   case VG_BLEND_DST_OVER:
-    case VG_BLEND_MULTIPLY:
-    case VG_BLEND_SCREEN:
-    case VG_BLEND_DARKEN:
-    case VG_BLEND_LIGHTEN:
--   case VG_BLEND_ADDITIVE:
-       advanced_blending = VG_TRUE;
-       break;
-    default:
-diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/vg_context.c ./mesa/src/gallium/state_trackers/vega/vg_context.c
---- /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/vg_context.c	2011-01-02 23:58:35.000000000 +0100
-+++ ./mesa/src/gallium/state_trackers/vega/vg_context.c	2011-01-22 14:06:11.000000000 +0100
-@@ -400,10 +400,6 @@
-    if (vg_context_update_depth_stencil_rb(ctx, stfb->width, stfb->height))
-       ctx->state.dirty |= DEPTH_STENCIL_DIRTY;
- 
--   /* blend state depends on fb format */
--   if (ctx->state.dirty & FRAMEBUFFER_DIRTY)
--      ctx->state.dirty |= BLEND_DIRTY;
--
-    renderer_validate(ctx->renderer, ctx->state.dirty,
-          ctx->draw_buffer, &ctx->state.vg);
- 
 diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/vgu.c ./mesa/src/gallium/state_trackers/vega/vgu.c
 --- /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/vgu.c	2010-02-05 01:10:40.000000000 +0100
-+++ ./mesa/src/gallium/state_trackers/vega/vgu.c	2011-01-22 14:06:09.000000000 +0100
-@@ -36,6 +36,11 @@
++++ ./mesa/src/gallium/state_trackers/vega/vgu.c	2011-05-29 20:11:36.000000000 +0200
+@@ -29,6 +29,7 @@
+ 
+ #include "matrix.h"
+ #include "path.h"
++#include "handle.h"
+ 
+ #include "util/u_debug.h"
+ #include "util/u_pointer.h"
+@@ -36,16 +37,10 @@
  #include <math.h>
  #include <assert.h>
  
+-static VGboolean is_aligned_to(const void *ptr, VGbyte alignment)
+-{
+-   void *aligned = align_pointer(ptr, alignment);
+-   return (ptr == aligned) ? VG_TRUE : VG_FALSE;
+-}
+-
+-static VGboolean is_aligned(const void *ptr)
+-{
+-   return is_aligned_to(ptr, 4);
+-}
 +#if defined(PIPE_OS_AROS)
 +#include "vega/vgapim.h"
 +#include "vega/vg_mangle.h"
 +#endif
-+
- static VGboolean is_aligned_to(const void *ptr, VGbyte alignment)
- {
-    void *aligned = align_pointer(ptr, alignment);
+ 
+ static void vgu_append_float_coords(VGPath path,
+                                     const VGubyte *cmds,
 diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/targets/egl/egl.c ./mesa/src/gallium/targets/egl/egl.c
 --- /data/deadwood/source/Mesa-7.10-staging/src/gallium/targets/egl/egl.c	2011-01-02 23:58:35.000000000 +0100
-+++ ./mesa/src/gallium/targets/egl/egl.c	2011-01-22 14:06:09.000000000 +0100
++++ ./mesa/src/gallium/targets/egl/egl.c	2011-05-29 20:11:36.000000000 +0200
 @@ -68,6 +68,7 @@
     return t;
  }
@@ -1125,7 +912,7 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/targets/egl/egl.c .
  }
 diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/targets/egl/st_GL.c ./mesa/src/gallium/targets/egl/st_GL.c
 --- /data/deadwood/source/Mesa-7.10-staging/src/gallium/targets/egl/st_GL.c	2010-10-19 19:58:29.000000000 +0200
-+++ ./mesa/src/gallium/targets/egl/st_GL.c	2011-01-22 14:06:10.000000000 +0100
++++ ./mesa/src/gallium/targets/egl/st_GL.c	2011-05-29 20:11:36.000000000 +0200
 @@ -1,8 +1,30 @@
 -#include "state_tracker/st_gl_api.h"
 +#include <proto/exec.h>
@@ -1163,7 +950,7 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/targets/egl/st_GL.c
 +ADD2EXPUNGELIB(CloseMesa, 5)
 diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/targets/egl/st_OpenVG.c ./mesa/src/gallium/targets/egl/st_OpenVG.c
 --- /data/deadwood/source/Mesa-7.10-staging/src/gallium/targets/egl/st_OpenVG.c	2010-10-19 19:58:29.000000000 +0200
-+++ ./mesa/src/gallium/targets/egl/st_OpenVG.c	2011-01-22 14:06:09.000000000 +0100
++++ ./mesa/src/gallium/targets/egl/st_OpenVG.c	2011-05-29 20:11:36.000000000 +0200
 @@ -1,8 +1,26 @@
 -#include "vg_api.h"
 +#include <proto/exec.h>
@@ -1197,7 +984,7 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/targets/egl/st_Open
 +ADD2EXPUNGELIB(CloseVega, 5)
 diff -ur /data/deadwood/source/Mesa-7.10-staging/src/glsl/ir.h ./mesa/src/glsl/ir.h
 --- /data/deadwood/source/Mesa-7.10-staging/src/glsl/ir.h	2011-01-02 23:58:35.000000000 +0100
-+++ ./mesa/src/glsl/ir.h	2011-01-22 14:06:09.000000000 +0100
++++ ./mesa/src/glsl/ir.h	2011-05-29 20:11:36.000000000 +0200
 @@ -44,6 +44,14 @@
   * @{
   */
@@ -1215,7 +1002,7 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/glsl/ir.h ./mesa/src/glsl/i
   *
 diff -ur /data/deadwood/source/Mesa-7.10-staging/src/glsl/s_expression.cpp ./mesa/src/glsl/s_expression.cpp
 --- /data/deadwood/source/Mesa-7.10-staging/src/glsl/s_expression.cpp	2011-01-04 01:45:51.000000000 +0100
-+++ ./mesa/src/glsl/s_expression.cpp	2011-01-22 14:06:09.000000000 +0100
++++ ./mesa/src/glsl/s_expression.cpp	2011-05-29 20:11:36.000000000 +0200
 @@ -28,6 +28,11 @@
  #include <assert.h>
  #include "s_expression.h"
@@ -1230,7 +1017,7 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/glsl/s_expression.cpp ./mes
     this->str = talloc_strndup (this, tmp, n);
 diff -ur /data/deadwood/source/Mesa-7.10-staging/src/glu/sgi/include/gluos.h ./mesa/src/glu/sgi/include/gluos.h
 --- /data/deadwood/source/Mesa-7.10-staging/src/glu/sgi/include/gluos.h	2008-07-21 17:10:11.000000000 +0200
-+++ ./mesa/src/glu/sgi/include/gluos.h	2011-01-22 14:06:09.000000000 +0100
++++ ./mesa/src/glu/sgi/include/gluos.h	2011-05-29 20:11:36.000000000 +0200
 @@ -2,6 +2,13 @@
  ** gluos.h - operating system dependencies for GLU
  **
@@ -1245,9 +1032,68 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/glu/sgi/include/gluos.h ./m
  #ifdef __VMS
  #ifdef __cplusplus
  #pragma message disable nocordel
+diff -ur /data/deadwood/source/Mesa-7.10-staging/src/mapi/glapi/gen/gl_API.xml ./mesa/src/mapi/glapi/gen/gl_API.xml
+--- /data/deadwood/source/Mesa-7.10-staging/src/mapi/glapi/gen/gl_API.xml	2010-12-14 22:43:14.000000000 +0100
++++ ./mesa/src/mapi/glapi/gen/gl_API.xml	2011-07-02 17:16:03.000000000 +0200
+@@ -12309,7 +12309,7 @@
+     <function name="TextureRangeAPPLE" offset="assign" static_dispatch="false">
+         <param name="target" type="GLenum"/>
+         <param name="length" type="GLsizei"/>
+-        <param name="pointer" type="GLvoid *"/>
++        <param name="pointer" type="const GLvoid *"/>
+     </function>
+     <function name="GetTexParameterPointervAPPLE" offset="assign" static_dispatch="false">
+         <param name="target" type="GLenum"/>
+diff -ur /data/deadwood/source/Mesa-7.10-staging/src/mapi/glapi/gen/gl_XML.py ./mesa/src/mapi/glapi/gen/gl_XML.py
+--- /data/deadwood/source/Mesa-7.10-staging/src/mapi/glapi/gen/gl_XML.py	2010-10-05 18:56:51.000000000 +0200
++++ ./mesa/src/mapi/glapi/gen/gl_XML.py	2011-07-02 17:16:03.000000000 +0200
+@@ -629,8 +629,9 @@
+ 		name = element.nsProp( "name", None )
+ 		alias = element.nsProp( "alias", None )
+ 
+-		if is_attr_true(element, "static_dispatch"):
+-			self.static_entry_points.append(name)
++		# if is_attr_true(element, "static_dispatch"):
++		# AROS version requires all entry points to be available in library base
++		self.static_entry_points.append( name )
+ 
+ 		self.entry_points.append( name )
+ 		if alias:
+diff -ur /data/deadwood/source/Mesa-7.10-staging/src/mapi/glapi/gen/Makefile ./mesa/src/mapi/glapi/gen/Makefile
+--- /data/deadwood/source/Mesa-7.10-staging/src/mapi/glapi/gen/Makefile	2010-12-14 22:43:14.000000000 +0100
++++ ./mesa/src/mapi/glapi/gen/Makefile	2011-07-02 17:16:04.000000000 +0200
+@@ -5,7 +5,9 @@
+ 
+ 
+ TOP = ../../../..
+-include $(TOP)/configs/current
++#include $(TOP)/configs/current
++PYTHON2 = python
++PYTHON_FLAGS = -t -O -O
+ 
+ MESA_DIR = $(TOP)/src/mesa
+ MESA_GLAPI_DIR = $(TOP)/src/mapi/glapi
+@@ -27,11 +29,12 @@
+ 	$(MESA_DIR)/main/enums.c \
+ 	$(MESA_DIR)/main/glapidispatch.h \
+ 	$(MESA_DIR)/main/remap_helper.h \
+-	$(MESA_GLX_DIR)/indirect.c \
+-	$(MESA_GLX_DIR)/indirect.h \
+-	$(MESA_GLX_DIR)/indirect_init.c \
+-	$(MESA_GLX_DIR)/indirect_size.h \
+-	$(MESA_GLX_DIR)/indirect_size.c
++
++#	$(MESA_GLX_DIR)/indirect.c \
++#	$(MESA_GLX_DIR)/indirect.h \
++#	$(MESA_GLX_DIR)/indirect_init.c \
++#	$(MESA_GLX_DIR)/indirect_size.h \
++#	$(MESA_GLX_DIR)/indirect_size.c
+ 
+ ######################################################################
+ 
 diff -ur /data/deadwood/source/Mesa-7.10-staging/src/mapi/glapi/glapi.h ./mesa/src/mapi/glapi/glapi.h
 --- /data/deadwood/source/Mesa-7.10-staging/src/mapi/glapi/glapi.h	2010-12-14 22:43:14.000000000 +0100
-+++ ./mesa/src/mapi/glapi/glapi.h	2011-01-22 14:06:09.000000000 +0100
++++ ./mesa/src/mapi/glapi/glapi.h	2011-05-29 20:11:36.000000000 +0200
 @@ -97,6 +97,17 @@
  # define GET_DISPATCH() _glapi_tls_Dispatch
  # define GET_CURRENT_CONTEXT(C)  struct gl_context *C = (struct gl_context *) _glapi_tls_Context
@@ -1266,9 +1112,21 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/mapi/glapi/glapi.h ./mesa/s
  #else
  
  _GLAPI_EXPORT extern struct _glapi_table *_glapi_Dispatch;
+diff -ur /data/deadwood/source/Mesa-7.10-staging/src/mapi/glapi/glapitable.h ./mesa/src/mapi/glapi/glapitable.h
+--- /data/deadwood/source/Mesa-7.10-staging/src/mapi/glapi/glapitable.h	2010-12-14 22:43:14.000000000 +0100
++++ ./mesa/src/mapi/glapi/glapitable.h	2011-07-02 17:16:04.000000000 +0200
+@@ -907,7 +907,7 @@
+    void (GLAPIENTRYP TransformFeedbackVaryingsEXT)(GLuint program, GLsizei count, const char ** varyings, GLenum bufferMode); /* 864 */
+    void (GLAPIENTRYP ProvokingVertexEXT)(GLenum mode); /* 865 */
+    void (GLAPIENTRYP GetTexParameterPointervAPPLE)(GLenum target, GLenum pname, GLvoid ** params); /* 866 */
+-   void (GLAPIENTRYP TextureRangeAPPLE)(GLenum target, GLsizei length, GLvoid * pointer); /* 867 */
++   void (GLAPIENTRYP TextureRangeAPPLE)(GLenum target, GLsizei length, const GLvoid * pointer); /* 867 */
+    void (GLAPIENTRYP GetObjectParameterivAPPLE)(GLenum objectType, GLuint name, GLenum pname, GLint * value); /* 868 */
+    GLenum (GLAPIENTRYP ObjectPurgeableAPPLE)(GLenum objectType, GLuint name, GLenum option); /* 869 */
+    GLenum (GLAPIENTRYP ObjectUnpurgeableAPPLE)(GLenum objectType, GLuint name, GLenum option); /* 870 */
 diff -ur /data/deadwood/source/Mesa-7.10-staging/src/mapi/mapi/u_current.c ./mesa/src/mapi/mapi/u_current.c
 --- /data/deadwood/source/Mesa-7.10-staging/src/mapi/mapi/u_current.c	2011-01-02 23:58:35.000000000 +0100
-+++ ./mesa/src/mapi/mapi/u_current.c	2011-01-22 14:06:09.000000000 +0100
++++ ./mesa/src/mapi/mapi/u_current.c	2011-05-29 20:11:36.000000000 +0200
 @@ -111,9 +111,17 @@
  
  #else
@@ -1325,7 +1183,7 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/mapi/mapi/u_current.c ./mes
  #endif
 diff -ur /data/deadwood/source/Mesa-7.10-staging/src/mapi/mapi/u_current.h ./mesa/src/mapi/mapi/u_current.h
 --- /data/deadwood/source/Mesa-7.10-staging/src/mapi/mapi/u_current.h	2011-01-02 23:58:35.000000000 +0100
-+++ ./mesa/src/mapi/mapi/u_current.h	2011-01-22 14:06:09.000000000 +0100
++++ ./mesa/src/mapi/mapi/u_current.h	2011-05-29 20:11:36.000000000 +0200
 @@ -39,6 +39,8 @@
  extern const struct mapi_table *u_current_table;
  extern const void *u_current_user;
@@ -1355,7 +1213,7 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/mapi/mapi/u_current.h ./mes
  #endif
 diff -ur /data/deadwood/source/Mesa-7.10-staging/src/mapi/mapi/u_thread.c ./mesa/src/mapi/mapi/u_thread.c
 --- /data/deadwood/source/Mesa-7.10-staging/src/mapi/mapi/u_thread.c	2011-01-02 23:58:35.000000000 +0100
-+++ ./mesa/src/mapi/mapi/u_thread.c	2011-01-22 14:06:09.000000000 +0100
++++ ./mesa/src/mapi/mapi/u_thread.c	2011-05-29 20:11:36.000000000 +0200
 @@ -222,7 +222,7 @@
   */
  
@@ -1367,7 +1225,7 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/mapi/mapi/u_thread.c ./mesa
  }
 diff -ur /data/deadwood/source/Mesa-7.10-staging/src/mesa/main/compiler.h ./mesa/src/mesa/main/compiler.h
 --- /data/deadwood/source/Mesa-7.10-staging/src/mesa/main/compiler.h	2010-12-16 00:02:44.000000000 +0100
-+++ ./mesa/src/mesa/main/compiler.h	2011-01-22 14:06:09.000000000 +0100
++++ ./mesa/src/mesa/main/compiler.h	2011-05-29 20:11:36.000000000 +0200
 @@ -251,6 +251,8 @@
  #elif defined(__APPLE__)
  #include <CoreFoundation/CFByteOrder.h>
@@ -1389,7 +1247,7 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/mesa/main/compiler.h ./mesa
  #  define ASSERT(X)   _CHECK(X) 
 diff -ur /data/deadwood/source/Mesa-7.10-staging/src/mesa/main/context.c ./mesa/src/mesa/main/context.c
 --- /data/deadwood/source/Mesa-7.10-staging/src/mesa/main/context.c	2010-12-16 00:02:44.000000000 +0100
-+++ ./mesa/src/mesa/main/context.c	2011-01-22 14:06:09.000000000 +0100
++++ ./mesa/src/mesa/main/context.c	2011-05-29 20:11:36.000000000 +0200
 @@ -438,7 +438,7 @@
     /* Hopefully atexit() is widely available.  If not, we may need some
      * #ifdef tests here.
@@ -1399,9 +1257,21 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/mesa/main/context.c ./mesa/
  
     dummy_enum_func();
  }
+diff -ur /data/deadwood/source/Mesa-7.10-staging/src/mesa/main/glapidispatch.h ./mesa/src/mesa/main/glapidispatch.h
+--- /data/deadwood/source/Mesa-7.10-staging/src/mesa/main/glapidispatch.h	2010-12-14 22:43:15.000000000 +0100
++++ ./mesa/src/mesa/main/glapidispatch.h	2011-07-02 17:16:04.000000000 +0200
+@@ -4502,7 +4502,7 @@
+ #define CALL_GetTexParameterPointervAPPLE(disp, parameters) CALL_by_offset(disp, (void (GLAPIENTRYP)(GLenum, GLenum, GLvoid **)), _gloffset_GetTexParameterPointervAPPLE, parameters)
+ #define GET_GetTexParameterPointervAPPLE(disp) GET_by_offset(disp, _gloffset_GetTexParameterPointervAPPLE)
+ #define SET_GetTexParameterPointervAPPLE(disp, fn) SET_by_offset(disp, _gloffset_GetTexParameterPointervAPPLE, fn)
+-#define CALL_TextureRangeAPPLE(disp, parameters) CALL_by_offset(disp, (void (GLAPIENTRYP)(GLenum, GLsizei, GLvoid *)), _gloffset_TextureRangeAPPLE, parameters)
++#define CALL_TextureRangeAPPLE(disp, parameters) CALL_by_offset(disp, (void (GLAPIENTRYP)(GLenum, GLsizei, const GLvoid *)), _gloffset_TextureRangeAPPLE, parameters)
+ #define GET_TextureRangeAPPLE(disp) GET_by_offset(disp, _gloffset_TextureRangeAPPLE)
+ #define SET_TextureRangeAPPLE(disp, fn) SET_by_offset(disp, _gloffset_TextureRangeAPPLE, fn)
+ #define CALL_GetObjectParameterivAPPLE(disp, parameters) CALL_by_offset(disp, (void (GLAPIENTRYP)(GLenum, GLuint, GLenum, GLint *)), _gloffset_GetObjectParameterivAPPLE, parameters)
 diff -ur /data/deadwood/source/Mesa-7.10-staging/src/mesa/main/imports.c ./mesa/src/mesa/main/imports.c
 --- /data/deadwood/source/Mesa-7.10-staging/src/mesa/main/imports.c	2010-12-16 00:02:44.000000000 +0100
-+++ ./mesa/src/mesa/main/imports.c	2011-01-22 14:06:09.000000000 +0100
++++ ./mesa/src/mesa/main/imports.c	2011-05-29 20:11:36.000000000 +0200
 @@ -458,7 +458,7 @@
  int
  _mesa_ffs(int32_t i)
@@ -1423,7 +1293,7 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/mesa/main/imports.c ./mesa/
  #else
 diff -ur /data/deadwood/source/Mesa-7.10-staging/src/mesa/main/querymatrix.c ./mesa/src/mesa/main/querymatrix.c
 --- /data/deadwood/source/Mesa-7.10-staging/src/mesa/main/querymatrix.c	2010-12-14 22:43:15.000000000 +0100
-+++ ./mesa/src/mesa/main/querymatrix.c	2011-01-22 14:06:09.000000000 +0100
++++ ./mesa/src/mesa/main/querymatrix.c	2011-05-29 20:11:36.000000000 +0200
 @@ -76,6 +76,10 @@
       (defined(__sun) && defined(__GNUC__))
  
