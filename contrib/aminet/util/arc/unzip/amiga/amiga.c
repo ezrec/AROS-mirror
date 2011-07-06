@@ -831,7 +831,7 @@ void _abort(void)               /* called when ^C is pressed */
 #include <exec/memory.h>
 #include <clib/exec_protos.h>
 
-#ifdef __AROS__
+#if defined(__AROS__) && !defined(AROS_DOS_PACKETS)
 #  include <dos/filesystem.h>
 
 void InitIOFS(struct IOFileSys *iofs, ULONG type, struct DosLibrary *DOSBase);

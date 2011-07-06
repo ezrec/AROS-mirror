@@ -8,7 +8,6 @@
 #include <dos/dos.h>
 #include <dos/dostags.h>
 #include <dos/dosextens.h>
-#include <dos/filesystem.h>
 #include <exec/memory.h>
 #include <exec/io.h>
 #include <exec/lists.h>

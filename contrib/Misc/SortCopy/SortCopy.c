@@ -42,7 +42,9 @@
     #define   DEBUG 1
     #include  <aros/debug.h>
 
-    #include  <dos/filesystem.h>
+#ifndef AROS_DOS_PACKETS
+    #include <dos/filesystem.h>
+#endif
     #include  <stdio.h>
     #define   Printf  printf      /* Must be after #include <proto/dos.h> */
 #else
