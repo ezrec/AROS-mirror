@@ -200,7 +200,7 @@ static void makewin(void)
 			       WA_Activate, TRUE,
 			       WA_IDCMP, IDCMP_VANILLAKEY,
 			       WA_Gadgets, (IPTR)draggad,
-			       WA_Shape, (IPTR)shape,
+			       WA_ShapeRegion, (IPTR)shape,
 			       TAG_DONE);
 
     if (!win) cleanup("Can't open window!");
