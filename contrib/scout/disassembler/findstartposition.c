@@ -6,7 +6,7 @@ AROS_LH3(APTR, FindStartPosition,
 	 AROS_LHA(APTR, startpc, A0),
 	 AROS_LHA(UWORD, min, D0),
 	 AROS_LHA(UWORD, max, D1),
-	 struct DisassemblerBase *, DisassemblerBase, 6, Disassembler)
+	 struct DisassemblerBase *, DisassemblerBase, 12, Disassembler)
 {
     AROS_LIBFUNC_INIT
 

@@ -225,7 +225,7 @@ AROS_LD0(BPTR, LibClose,
     struct LibraryHeader *, base, 2, MCC);
 
 AROS_LD0(IPTR, LibNull,
-    struct LibraryHeader *, base, 4, MCC);
+    struct LibraryHeader *, base, 0, MCC);
     
 AROS_LD1(IPTR, MCC_Query,
     AROS_LDA(LONG, which, D0),
@@ -243,11 +243,11 @@ BOOL UserLibClose  (struct Library *base);
 
 static const APTR LibVectors[] =
 {
-    AROS_SLIB_ENTRY(LibOpen, MCC),
-    AROS_SLIB_ENTRY(LibClose, MCC),
-    AROS_SLIB_ENTRY(LibExpunge, MCC),
-    AROS_SLIB_ENTRY(LibNull, MCC),
-    AROS_SLIB_ENTRY(MCC_Query, MCC),
+    AROS_SLIB_ENTRY(LibOpen, MCC, 1),
+    AROS_SLIB_ENTRY(LibClose, MCC, 2),
+    AROS_SLIB_ENTRY(LibExpunge, MCC, 3),
+    AROS_SLIB_ENTRY(LibNull, MCC, 0),
+    AROS_SLIB_ENTRY(MCC_Query, MCC, 5),
     (APTR)-1
 };
 
@@ -259,7 +259,7 @@ static const APTR LibVectors[] =
 /****************************************************************************************/
 
 AROS_LH0(IPTR, LibNull,
-    struct LibraryHeader *, base, 4, MCC)
+    struct LibraryHeader *, base, 0, MCC)
 {
     AROS_LIBFUNC_INIT
     

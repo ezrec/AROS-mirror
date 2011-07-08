@@ -180,93 +180,81 @@ int LIB_reserved(void)
 static struct Library *socketlib;
 
 #ifndef __AROS__
-#define AROS_SLIB_ENTRY(a,b) a
+#define AROS_SLIB_ENTRY(a,b,c) a
 #endif
 
-extern void AROS_SLIB_ENTRY(LIB_socket, Socket)(void);
-extern void AROS_SLIB_ENTRY(LIB_bind, Socket)(void);
-extern void AROS_SLIB_ENTRY(LIB_listen, Socket)(void);
-extern void AROS_SLIB_ENTRY(LIB_accept, Socket)(void);
-extern void AROS_SLIB_ENTRY(LIB_connect, Socket)(void);
-extern void AROS_SLIB_ENTRY(LIB_sendto, Socket)(void);
-extern void AROS_SLIB_ENTRY(LIB_send, Socket)(void);
-extern void AROS_SLIB_ENTRY(LIB_recvfrom, Socket)(void);
-extern void AROS_SLIB_ENTRY(LIB_recv, Socket)(void);
-extern void AROS_SLIB_ENTRY(LIB_shutdown, Socket)(void);
-extern void AROS_SLIB_ENTRY(LIB_setsockopt, Socket)(void);
-extern void AROS_SLIB_ENTRY(LIB_getsockopt, Socket)(void);
-extern void AROS_SLIB_ENTRY(LIB_getsockname, Socket)(void);
-extern void AROS_SLIB_ENTRY(LIB_getpeername, Socket)(void);
-extern void AROS_SLIB_ENTRY(LIB_IoctlSocket, Socket)(void);
-extern void AROS_SLIB_ENTRY(LIB_CloseSocket, Socket)(void);
-extern void AROS_SLIB_ENTRY(LIB_WaitSelect, Socket)(void);
-extern void AROS_SLIB_ENTRY(LIB_SetSocketSignals, Socket)(void);
-extern void AROS_SLIB_ENTRY(LIB_getdtablesize, Socket)(void);
-extern void AROS_SLIB_ENTRY(LIB_ObtainSocket, Socket)(void);
-extern void AROS_SLIB_ENTRY(LIB_ReleaseSocket, Socket)(void);
-extern void AROS_SLIB_ENTRY(LIB_ReleaseCopyOfSocket, Socket)(void);
-extern void AROS_SLIB_ENTRY(LIB_Errno, Socket)(void);
-extern void AROS_SLIB_ENTRY(LIB_SetErrnoPtr, Socket)(void);
-extern void AROS_SLIB_ENTRY(LIB_Inet_NtoA, Socket)(void);
-extern void AROS_SLIB_ENTRY(LIB_inet_addr, Socket)(void);
-extern void AROS_SLIB_ENTRY(LIB_Inet_LnaOf, Socket)(void);
-extern void AROS_SLIB_ENTRY(LIB_Inet_NetOf, Socket)(void);
-extern void AROS_SLIB_ENTRY(LIB_Inet_MakeAddr, Socket)(void);
-extern void AROS_SLIB_ENTRY(LIB_inet_network, Socket)(void);
-extern void AROS_SLIB_ENTRY(LIB_gethostbyname, Socket)(void);
-
-extern void AROS_SLIB_ENTRY(LIB_gethostbyaddr, Socket)(void);
-extern void AROS_SLIB_ENTRY(LIB_getnetbyname, Socket)(void);
-extern void AROS_SLIB_ENTRY(LIB_getnetbyaddr, Socket)(void);
-extern void AROS_SLIB_ENTRY(LIB_getservbyname, Socket)(void);
-extern void AROS_SLIB_ENTRY(LIB_getservbyport, Socket)(void);
-extern void AROS_SLIB_ENTRY(LIB_getprotobyname, Socket)(void);
-extern void AROS_SLIB_ENTRY(LIB_getprotobynumber, Socket)(void);
-extern void AROS_SLIB_ENTRY(LIB_SyslogA, Socket)(void);
-extern void AROS_SLIB_ENTRY(LIB_Dup2Socket, Socket)(void);
-extern void AROS_SLIB_ENTRY(LIB_SendMsg, Socket)(void);
-extern void AROS_SLIB_ENTRY(LIB_RecvMsg, Socket)(void);
-extern void AROS_SLIB_ENTRY(LIB_GetHostName, Socket)(void);
-extern void AROS_SLIB_ENTRY(LIB_GetHostId, Socket)(void);
-extern void AROS_SLIB_ENTRY(LIB_SocketBaseTagList, Socket)(void); /* -294 */
+extern void AROS_SLIB_ENTRY(LIB_open, Socket, 1)(void);
+extern void AROS_SLIB_ENTRY(LIB_close, Socket, 2)(void);
+extern void AROS_SLIB_ENTRY(LIB_expunge, Socket, 3)(void);
+extern void AROS_SLIB_ENTRY(LIB_socket, Socket, 5)(void);
+extern void AROS_SLIB_ENTRY(LIB_bind, Socket, 6)(void);
+extern void AROS_SLIB_ENTRY(LIB_listen, Socket, 7)(void);
+extern void AROS_SLIB_ENTRY(LIB_accept, Socket, 8)(void);
+extern void AROS_SLIB_ENTRY(LIB_connect, Socket, 9)(void);
+extern void AROS_SLIB_ENTRY(LIB_sendto, Socket, 10)(void);
+extern void AROS_SLIB_ENTRY(LIB_send, Socket, 11)(void);
+extern void AROS_SLIB_ENTRY(LIB_recvfrom, Socket, 12)(void);
+extern void AROS_SLIB_ENTRY(LIB_recv, Socket, 13)(void);
+extern void AROS_SLIB_ENTRY(LIB_shutdown, Socket, 14)(void);
+extern void AROS_SLIB_ENTRY(LIB_setsockopt, Socket, 15)(void);
+extern void AROS_SLIB_ENTRY(LIB_getsockopt, Socket, 16)(void);
+extern void AROS_SLIB_ENTRY(LIB_getsockname, Socket, 17)(void);
+extern void AROS_SLIB_ENTRY(LIB_getpeername, Socket, 18)(void);
+extern void AROS_SLIB_ENTRY(LIB_IoctlSocket, Socket, 19)(void);
+extern void AROS_SLIB_ENTRY(LIB_CloseSocket, Socket, 20)(void);
+extern void AROS_SLIB_ENTRY(LIB_WaitSelect, Socket, 21)(void);
+extern void AROS_SLIB_ENTRY(LIB_SetSocketSignals, Socket, 22)(void);
+extern void AROS_SLIB_ENTRY(LIB_getdtablesize, Socket, 23)(void);
+extern void AROS_SLIB_ENTRY(LIB_ObtainSocket, Socket, 24)(void);
+extern void AROS_SLIB_ENTRY(LIB_ReleaseSocket, Socket, 25)(void);
+extern void AROS_SLIB_ENTRY(LIB_ReleaseCopyOfSocket, Socket, 26)(void);
+extern void AROS_SLIB_ENTRY(LIB_Errno, Socket, 27)(void);
+extern void AROS_SLIB_ENTRY(LIB_SetErrnoPtr, Socket, 28)(void);
+extern void AROS_SLIB_ENTRY(LIB_Inet_NtoA, Socket, 29)(void);
+extern void AROS_SLIB_ENTRY(LIB_inet_addr, Socket, 30)(void);
+extern void AROS_SLIB_ENTRY(LIB_Inet_LnaOf, Socket, 31)(void);
+extern void AROS_SLIB_ENTRY(LIB_Inet_NetOf, Socket, 32)(void);
+extern void AROS_SLIB_ENTRY(LIB_Inet_MakeAddr, Socket, 33)(void);
+extern void AROS_SLIB_ENTRY(LIB_inet_network, Socket, 34)(void);
+extern void AROS_SLIB_ENTRY(LIB_gethostbyname, Socket, 35)(void);
 
 static void *function_array[] =
 {
-  AROS_SLIB_ENTRY(LIB_open, Socket),
-  AROS_SLIB_ENTRY(LIB_close, Socket),
-  AROS_SLIB_ENTRY(LIB_expunge, Socket),
+  AROS_SLIB_ENTRY(LIB_open, Socket, 1),
+  AROS_SLIB_ENTRY(LIB_close, Socket, 2),
+  AROS_SLIB_ENTRY(LIB_expunge, Socket, 3),
   LIB_reserved,
-  AROS_SLIB_ENTRY(LIB_socket, Socket),
-  AROS_SLIB_ENTRY(LIB_bind, Socket),
-  AROS_SLIB_ENTRY(LIB_listen, Socket),
-  AROS_SLIB_ENTRY(LIB_accept, Socket),
-  AROS_SLIB_ENTRY(LIB_connect, Socket),
-  AROS_SLIB_ENTRY(LIB_sendto, Socket),
-  AROS_SLIB_ENTRY(LIB_send, Socket),
-  AROS_SLIB_ENTRY(LIB_recvfrom, Socket),
-  AROS_SLIB_ENTRY(LIB_recv, Socket),
-  AROS_SLIB_ENTRY(LIB_shutdown, Socket),
-  AROS_SLIB_ENTRY(LIB_setsockopt, Socket),
-  AROS_SLIB_ENTRY(LIB_getsockopt, Socket),
-  AROS_SLIB_ENTRY(LIB_getsockname, Socket),         /* -102 */
-  AROS_SLIB_ENTRY(LIB_getpeername, Socket),         /* -108 */
-  AROS_SLIB_ENTRY(LIB_IoctlSocket, Socket),         /* -114 */
-  AROS_SLIB_ENTRY(LIB_CloseSocket, Socket),         /* -120 */
-  AROS_SLIB_ENTRY(LIB_WaitSelect, Socket),          /* -126 */
-  AROS_SLIB_ENTRY(LIB_SetSocketSignals, Socket),    /* -132 */
-  AROS_SLIB_ENTRY(LIB_getdtablesize, Socket),       /* -138 */
-  AROS_SLIB_ENTRY(LIB_ObtainSocket, Socket),        /* -144 */
-  AROS_SLIB_ENTRY(LIB_ReleaseSocket, Socket),       /* -150 */
-  AROS_SLIB_ENTRY(LIB_ReleaseCopyOfSocket, Socket), /* -156 */
-  AROS_SLIB_ENTRY(LIB_Errno, Socket),               /* -162 */
-  AROS_SLIB_ENTRY(LIB_SetErrnoPtr, Socket),         /* -168 */
-  AROS_SLIB_ENTRY(LIB_Inet_NtoA, Socket),           /* -174 */
-  AROS_SLIB_ENTRY(LIB_inet_addr, Socket),           /* -180 */
-  AROS_SLIB_ENTRY(LIB_Inet_LnaOf, Socket),          /* -186 */
-  AROS_SLIB_ENTRY(LIB_Inet_NetOf, Socket),          /* -192 */
-  AROS_SLIB_ENTRY(LIB_Inet_MakeAddr, Socket),       /* -198 */
-  AROS_SLIB_ENTRY(LIB_inet_network, Socket),        /* -204 */
-  AROS_SLIB_ENTRY(LIB_gethostbyname, Socket),       /* -210 */
+  AROS_SLIB_ENTRY(LIB_socket, Socket, 5),
+  AROS_SLIB_ENTRY(LIB_bind, Socket, 6),
+  AROS_SLIB_ENTRY(LIB_listen, Socket, 7),
+  AROS_SLIB_ENTRY(LIB_accept, Socket, 8),
+  AROS_SLIB_ENTRY(LIB_connect, Socket, 9),
+  AROS_SLIB_ENTRY(LIB_sendto, Socket, 10),
+  AROS_SLIB_ENTRY(LIB_send, Socket, 11),
+  AROS_SLIB_ENTRY(LIB_recvfrom, Socket, 12),
+  AROS_SLIB_ENTRY(LIB_recv, Socket, 13),
+  AROS_SLIB_ENTRY(LIB_shutdown, Socket, 14),
+  AROS_SLIB_ENTRY(LIB_setsockopt, Socket, 15),
+  AROS_SLIB_ENTRY(LIB_getsockopt, Socket, 16),
+  AROS_SLIB_ENTRY(LIB_getsockname, Socket, 17),         /* -102 */
+  AROS_SLIB_ENTRY(LIB_getpeername, Socket, 18),         /* -108 */
+  AROS_SLIB_ENTRY(LIB_IoctlSocket, Socket, 19),         /* -114 */
+  AROS_SLIB_ENTRY(LIB_CloseSocket, Socket, 20),         /* -120 */
+  AROS_SLIB_ENTRY(LIB_WaitSelect, Socket, 21),          /* -126 */
+  AROS_SLIB_ENTRY(LIB_SetSocketSignals, Socket, 22),    /* -132 */
+  AROS_SLIB_ENTRY(LIB_getdtablesize, Socket, 23),       /* -138 */
+  AROS_SLIB_ENTRY(LIB_ObtainSocket, Socket, 24),        /* -144 */
+  AROS_SLIB_ENTRY(LIB_ReleaseSocket, Socket, 25),       /* -150 */
+  AROS_SLIB_ENTRY(LIB_ReleaseCopyOfSocket, Socket, 26), /* -156 */
+  AROS_SLIB_ENTRY(LIB_Errno, Socket, 27),               /* -162 */
+  AROS_SLIB_ENTRY(LIB_SetErrnoPtr, Socket, 28),         /* -168 */
+  AROS_SLIB_ENTRY(LIB_Inet_NtoA, Socket, 29),           /* -174 */
+  AROS_SLIB_ENTRY(LIB_inet_addr, Socket, 30),           /* -180 */
+  AROS_SLIB_ENTRY(LIB_Inet_LnaOf, Socket, 31),          /* -186 */
+  AROS_SLIB_ENTRY(LIB_Inet_NetOf, Socket, 32),          /* -192 */
+  AROS_SLIB_ENTRY(LIB_Inet_MakeAddr, Socket, 33),       /* -198 */
+  AROS_SLIB_ENTRY(LIB_inet_network, Socket, 34),        /* -204 */
+  AROS_SLIB_ENTRY(LIB_gethostbyname, Socket, 35),       /* -210 */
   (void*)~0,
 };
 

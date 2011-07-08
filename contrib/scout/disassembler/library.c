@@ -26,12 +26,12 @@ AROS_LD0I(LONG, LIB_Reserved,
          struct DisasmBase *, DisassemblerBase, 4, Disassembler);
 AROS_LD1(APTR, Disassemble,
 	 AROS_LPA(struct DisData *, ds, A0),
-	 struct DisasmBase *, DisassemblerBase, 5, Disassembler);
+	 struct DisasmBase *, DisassemblerBase, 11, Disassembler);
 AROS_LD3(APTR, FindStartPosition,
 	 AROS_LPA(APTR, startpc, A0),
 	 AROS_LPA(UWORD, min, D0),
 	 AROS_LPA(UWORD, max, D1),
-	 struct DisasmBase *, DisassemblerBase, 6, Disassembler);
+	 struct DisasmBase *, DisassemblerBase, 12, Disassembler);
 
 static struct DisasmBase* _LIB_Init(struct DisasmBase *DisassemblerBase, BPTR SegList, struct ExecBase *SBase);
 
@@ -49,19 +49,19 @@ static IPTR LibFuncTable[] = {
 #ifdef __MORPHOS__
     FUNCARRAY_32BIT_NATIVE,
 #endif
-    (IPTR)AROS_SLIB_ENTRY(LIB_Open, Disassembler),
-    (IPTR)AROS_SLIB_ENTRY(LIB_Close, Disassembler),
-    (IPTR)AROS_SLIB_ENTRY(LIB_Expunge, Disassembler),
-    (IPTR)AROS_SLIB_ENTRY(LIB_Reserved, Disassembler),
+    (IPTR)AROS_SLIB_ENTRY(LIB_Open, Disassembler, 1),
+    (IPTR)AROS_SLIB_ENTRY(LIB_Close, Disassembler, 2),
+    (IPTR)AROS_SLIB_ENTRY(LIB_Expunge, Disassembler, 3),
+    (IPTR)AROS_SLIB_ENTRY(LIB_Reserved, Disassembler, 0),
     /* 6 reserved slots */
-    (IPTR)AROS_SLIB_ENTRY(LIB_Reserved, Disassembler),
-    (IPTR)AROS_SLIB_ENTRY(LIB_Reserved, Disassembler),
-    (IPTR)AROS_SLIB_ENTRY(LIB_Reserved, Disassembler),
-    (IPTR)AROS_SLIB_ENTRY(LIB_Reserved, Disassembler),
-    (IPTR)AROS_SLIB_ENTRY(LIB_Reserved, Disassembler),
-    (IPTR)AROS_SLIB_ENTRY(LIB_Reserved, Disassembler),
-    (IPTR)AROS_SLIB_ENTRY(Disassemble, Disassembler),
-    (IPTR)AROS_SLIB_ENTRY(FindStartPosition, Disassembler),
+    (IPTR)AROS_SLIB_ENTRY(LIB_Reserved, Disassembler, 0),
+    (IPTR)AROS_SLIB_ENTRY(LIB_Reserved, Disassembler, 0),
+    (IPTR)AROS_SLIB_ENTRY(LIB_Reserved, Disassembler, 0),
+    (IPTR)AROS_SLIB_ENTRY(LIB_Reserved, Disassembler, 0),
+    (IPTR)AROS_SLIB_ENTRY(LIB_Reserved, Disassembler, 0),
+    (IPTR)AROS_SLIB_ENTRY(LIB_Reserved, Disassembler, 0),
+    (IPTR)AROS_SLIB_ENTRY(Disassemble, Disassembler, 11),
+    (IPTR)AROS_SLIB_ENTRY(FindStartPosition, Disassembler, 12),
     (IPTR)-1
 };
 

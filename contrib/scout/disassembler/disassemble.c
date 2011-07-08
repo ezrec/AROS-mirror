@@ -10,7 +10,7 @@
 
 AROS_LH1(APTR, Disassemble,
 	 AROS_LHA(struct DisData *, ds, A0),
-	 struct DisasmBase *, DisassemblerBase, 5, Disassembler)
+	 struct DisasmBase *, DisassemblerBase, 11, Disassembler)
 {
     AROS_LIBFUNC_INIT
 
