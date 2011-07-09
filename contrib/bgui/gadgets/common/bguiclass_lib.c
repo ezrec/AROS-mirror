@@ -78,10 +78,10 @@ static const IPTR Vectors[] = {
     * System interface.
     */
 #ifdef __AROS__
-   (IPTR)BGUIGadget_LibOpen,
-   (IPTR)BGUIGadget_LibClose,
-   (IPTR)BGUIGadget_LibExpunge,
-   (IPTR)BGUIGadget_LibVoid,
+   (IPTR)BGUIGadget_1_LibOpen,
+   (IPTR)BGUIGadget_2_LibClose,
+   (IPTR)BGUIGadget_3_LibExpunge,
+   (IPTR)BGUIGadget_4_LibVoid,
 #else
    (LONG)LibOpen,
    (LONG)LibClose,
@@ -222,7 +222,7 @@ SAVEDS ASM BPTR LibClose(REG(a6) struct Library *lib)
     */
    if (lib->lib_Flags & LIBF_DELEXP)
 #ifdef __AROS__
-      return REGCALL2(BPTR, BGUIGadget_LibExpunge,
+      return REGCALL2(BPTR, BGUIGadget_3_LibExpunge,
                 REGPARAM(D0, struct Library *, lib),
                 REGPARAM(A6, struct ExecBase *, SysBase));
 #else

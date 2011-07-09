@@ -138,43 +138,43 @@ AROS_LD1(BPTR, LibExpunge,
 AROS_LD0(LONG, LibVoid,
      struct Library *, lib, 4, BGUI);
 
-   extern VOID BGUI_BGUI_GetClassPtr();
-   extern VOID BGUI_BGUI_NewObjectA();
-   extern VOID BGUI_BGUI_RequestA();
-   extern VOID BGUI_BGUI_Help();
-   extern VOID BGUI_BGUI_LockWindow();
-   extern VOID BGUI_BGUI_UnlockWindow();
-   extern VOID BGUI_BGUI_DoGadgetMethodA();
+   extern VOID BGUI_5_BGUI_GetClassPtr();
+   extern VOID BGUI_6_BGUI_NewObjectA();
+   extern VOID BGUI_7_BGUI_RequestA();
+   extern VOID BGUI_8_BGUI_Help();
+   extern VOID BGUI_9_BGUI_LockWindow();
+   extern VOID BGUI_10_BGUI_UnlockWindow();
+   extern VOID BGUI_11_BGUI_DoGadgetMethodA();
    /*
     * Private routines.
     */
-   extern VOID BGUI_BGUI_AllocPoolMem();
-   extern VOID BGUI_BGUI_FreePoolMem();
+   extern VOID BGUI_12_BGUI_AllocPoolMem();
+   extern VOID BGUI_13_BGUI_FreePoolMem();
    /*
     * Public routines.
     */ 
-   extern VOID BGUI_BGUI_AllocBitMap();
-   extern VOID BGUI_BGUI_FreeBitMap();
-   extern VOID BGUI_BGUI_CreateRPortBitMap();
-   extern VOID BGUI_BGUI_FreeRPortBitMap();
-   extern VOID BGUI_BGUI_InfoTextSize();
-   extern VOID BGUI_BGUI_InfoText();
-   extern VOID BGUI_BGUI_GetLocaleStr();
-   extern VOID BGUI_BGUI_GetCatalogStr();
-   extern VOID BGUI_BGUI_FillRectPattern();
-   extern VOID BGUI_BGUI_PostRender();
-   extern VOID BGUI_BGUI_MakeClassA();
-   extern VOID BGUI_BGUI_FreeClass();
-   extern VOID BGUI_BGUI_PackStructureTags();
-   extern VOID BGUI_BGUI_UnpackStructureTags();
+   extern VOID BGUI_14_BGUI_AllocBitMap();
+   extern VOID BGUI_15_BGUI_FreeBitMap();
+   extern VOID BGUI_16_BGUI_CreateRPortBitMap();
+   extern VOID BGUI_17_BGUI_FreeRPortBitMap();
+   extern VOID BGUI_18_BGUI_InfoTextSize();
+   extern VOID BGUI_19_BGUI_InfoText();
+   extern VOID BGUI_20_BGUI_GetLocaleStr();
+   extern VOID BGUI_21_BGUI_GetCatalogStr();
+   extern VOID BGUI_22_BGUI_FillRectPattern();
+   extern VOID BGUI_23_BGUI_PostRender();
+   extern VOID BGUI_24_BGUI_MakeClassA();
+   extern VOID BGUI_25_BGUI_FreeClass();
+   extern VOID BGUI_26_BGUI_PackStructureTags();
+   extern VOID BGUI_27_BGUI_UnpackStructureTags();
    /*
     * Private routines.
     */
-   extern VOID BGUI_BGUI_GetDefaultTags();
-   extern VOID BGUI_BGUI_DefaultPrefs();
-   extern VOID BGUI_BGUI_LoadPrefs();
-   extern VOID BGUI_BGUI_AllocPoolMemDebug();
-   extern VOID BGUI_BGUI_FreePoolMemDebug();
+   extern VOID BGUI_28_BGUI_GetDefaultTags();
+   extern VOID BGUI_29_BGUI_DefaultPrefs();
+   extern VOID BGUI_30_BGUI_LoadPrefs();
+   extern VOID BGUI_31_BGUI_AllocPoolMemDebug();
+   extern VOID BGUI_32_BGUI_FreePoolMemDebug();
 #endif
 
 /*
@@ -185,50 +185,50 @@ STATIC const IPTR Vectors[] = {
    /*
     * System interface.
     */
-   (IPTR)BGUI_LibOpen,
-   (IPTR)BGUI_LibClose,
-   (IPTR)BGUI_LibExpunge,
-   (IPTR)BGUI_LibVoid,
+   (IPTR)BGUI_1_LibOpen,
+   (IPTR)BGUI_2_LibClose,
+   (IPTR)BGUI_3_LibExpunge,
+   (IPTR)BGUI_4_LibVoid,
    /*
     * Public routines.
     */
-   (IPTR)BGUI_BGUI_GetClassPtr,
-   (IPTR)BGUI_BGUI_NewObjectA,
-   (IPTR)BGUI_BGUI_RequestA,
-   (IPTR)BGUI_BGUI_Help,
-   (IPTR)BGUI_BGUI_LockWindow,
-   (IPTR)BGUI_BGUI_UnlockWindow,
-   (IPTR)BGUI_BGUI_DoGadgetMethodA,
+   (IPTR)BGUI_5_BGUI_GetClassPtr,
+   (IPTR)BGUI_6_BGUI_NewObjectA,
+   (IPTR)BGUI_7_BGUI_RequestA,
+   (IPTR)BGUI_8_BGUI_Help,
+   (IPTR)BGUI_9_BGUI_LockWindow,
+   (IPTR)BGUI_10_BGUI_UnlockWindow,
+   (IPTR)BGUI_11_BGUI_DoGadgetMethodA,
    /*
     * Private routines.
     */
-   (IPTR)BGUI_BGUI_AllocPoolMem,
-   (IPTR)BGUI_BGUI_FreePoolMem,
+   (IPTR)BGUI_12_BGUI_AllocPoolMem,
+   (IPTR)BGUI_13_BGUI_FreePoolMem,
    /*
     * Public routines.
     */
-   (IPTR)BGUI_BGUI_AllocBitMap,
-   (IPTR)BGUI_BGUI_FreeBitMap,
-   (IPTR)BGUI_BGUI_CreateRPortBitMap,
-   (IPTR)BGUI_BGUI_FreeRPortBitMap,
-   (IPTR)BGUI_BGUI_InfoTextSize,
-   (IPTR)BGUI_BGUI_InfoText,
-   (IPTR)BGUI_BGUI_GetLocaleStr,
-   (IPTR)BGUI_BGUI_GetCatalogStr,
-   (IPTR)BGUI_BGUI_FillRectPattern,
-   (IPTR)BGUI_BGUI_PostRender,
-   (IPTR)BGUI_BGUI_MakeClassA,
-   (IPTR)BGUI_BGUI_FreeClass,
-   (IPTR)BGUI_BGUI_PackStructureTags,
-   (IPTR)BGUI_BGUI_UnpackStructureTags,
+   (IPTR)BGUI_14_BGUI_AllocBitMap,
+   (IPTR)BGUI_15_BGUI_FreeBitMap,
+   (IPTR)BGUI_16_BGUI_CreateRPortBitMap,
+   (IPTR)BGUI_17_BGUI_FreeRPortBitMap,
+   (IPTR)BGUI_18_BGUI_InfoTextSize,
+   (IPTR)BGUI_19_BGUI_InfoText,
+   (IPTR)BGUI_20_BGUI_GetLocaleStr,
+   (IPTR)BGUI_21_BGUI_GetCatalogStr,
+   (IPTR)BGUI_22_BGUI_FillRectPattern,
+   (IPTR)BGUI_23_BGUI_PostRender,
+   (IPTR)BGUI_24_BGUI_MakeClassA,
+   (IPTR)BGUI_25_BGUI_FreeClass,
+   (IPTR)BGUI_26_BGUI_PackStructureTags,
+   (IPTR)BGUI_27_BGUI_UnpackStructureTags,
    /*
     * Private routines.
     */
-   (IPTR)BGUI_BGUI_GetDefaultTags,
-   (IPTR)BGUI_BGUI_DefaultPrefs,
-   (IPTR)BGUI_BGUI_LoadPrefs,
-   (IPTR)BGUI_BGUI_AllocPoolMemDebug,
-   (IPTR)BGUI_BGUI_FreePoolMemDebug,
+   (IPTR)BGUI_28_BGUI_GetDefaultTags,
+   (IPTR)BGUI_29_BGUI_DefaultPrefs,
+   (IPTR)BGUI_30_BGUI_LoadPrefs,
+   (IPTR)BGUI_31_BGUI_AllocPoolMemDebug,
+   (IPTR)BGUI_32_BGUI_FreePoolMemDebug,
 #else
    /*
     * System interface.
@@ -526,7 +526,7 @@ makeproto SAVEDS ASM BPTR LibClose(REG(a6) struct Library *lib)
     */
    if (lib->lib_Flags & LIBF_DELEXP)
 #ifdef __AROS__
-      REGCALL2(BPTR, BGUI_LibExpunge,
+      REGCALL2(BPTR, BGUI_3_LibExpunge,
                 REGPARAM(D0, struct Library *, lib),
                 REGPARAM(A6, struct ExecBase *, SysBase));
 #else
