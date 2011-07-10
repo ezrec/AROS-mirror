@@ -1,0 +1,34 @@
+#   $Id$
+#
+#   Generate libintl.a
+#
+include $(TOP)/config/make.cfg
+
+#MM- contrib-development : contrib-development-libs-libintl
+
+#MM contrib-development-libs-libintl : includes contrib-development-libs-libintl-includes contrib-libiconv
+
+INTL_FILES = \
+    gettext \
+    dcgettext \
+    dcigettext \
+    hash-string \
+    finddomain \
+    loadmsgcat \
+    l10nflist \
+    explodename \
+    plural-exp \
+    plural \
+    ngettext \
+    dcngettext \
+    bindtextdom \
+    textdomain \
+    dgettext \
+    dngettext \
+
+USER_CFLAGS := -DHAVE_ICONV=1 -D'LOCALEDIR="PROGDIR:i18n"' -DIN_LIBINTL -DHAVE_UNISTD_H=1 -DHAVE_STPCPY=1 -DHAVE_GETCWD=1
+
+%build_linklib mmake=contrib-development-libs-libintl libname=intl \
+    files="$(INTL_FILES)"
+
+%common
