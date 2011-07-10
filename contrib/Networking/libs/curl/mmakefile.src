@@ -7,7 +7,7 @@
 
 %fetch_and_build_gnu_development package=curl version=7.19.2 \
     patch=yes package_repo="http://curl.haxx.se/download" \
-    extraoptions="--without-random" \
+    extraoptions="--without-random CPPFLAGS='-D__BSD_VISIBLE=1'" \
     postconfigure="development-curl-fixconfig"
 
 #MM
