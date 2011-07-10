@@ -34,7 +34,7 @@ gcc-installflag      := $(CROSSTOOLSDIR)/.installflag-gcc-$(GCC_VERSION)
 # arm still needs linklibs be build before, can be removed after patch is updated to work with --with-sysroot
 #MM- tools-crosstools-arm    : linklibs-core tools-crosstools-gcc crosstools-gcc
 
-#MM tools-crosstools-gcc : tools-crosstools-binutils tools-crosstools-collect-aros compiler-includes compiler-clib-includes
+#MM tools-crosstools-gcc : tools-crosstools-binutils tools-crosstools-collect-aros compiler-includes compiler-clib-includes arostcp-includes
 
 # We intentionally bypass the usual fetch_and_build macro below and call mmakefile and gcc makefile
 # targets directly. This is in order to not build the linklibs-core target during binutils and gcc
