@@ -1,0 +1,13 @@
+# Copyright 2011, The AROS Development Team. All rights reserved.
+# $Id$
+
+-include $(TOP)/config/make.cfg
+
+#MM- contrib-multimedia : development-libtheora
+
+#MM- development-libtheora : development-libogg development-libvorbis
+
+%fetch_and_build_gnu_development package=libtheora version=1.1.1 patch=yes \
+    package_repo=http://downloads.xiph.org/releases/theora/ suffixes="tar.gz" \
+    extraoptions="--disable-examples"
+

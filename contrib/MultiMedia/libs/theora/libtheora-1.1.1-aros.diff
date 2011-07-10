@@ -1,0 +1,12 @@
+diff -ur libtheora-1.1.1/config.sub libtheora-1.1.1-aros/config.sub
+--- libtheora-1.1.1/config.sub	2009-02-24 04:50:50.000000000 +0100
++++ libtheora-1.1.1-aros/config.sub	2011-07-10 12:48:20.000000000 +0200
+@@ -1216,6 +1216,8 @@
+ 		;;
+ 	-none)
+ 		;;
++	-aros)
++		;;
+ 	*)
+ 		# Get rid of the `-' at the beginning of $os.
+ 		os=`echo $os | sed 's/[^-]*-//'`
