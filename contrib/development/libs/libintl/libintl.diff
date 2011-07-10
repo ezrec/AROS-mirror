@@ -1,0 +1,1037 @@
+diff -ur libintl/bindtextdom.c libintl-aros/bindtextdom.c
+--- libintl/bindtextdom.c	2011-05-31 06:12:33.000000000 +0200
++++ libintl-aros/bindtextdom.c	2011-07-10 20:26:55.000000000 +0200
+@@ -17,31 +17,13 @@
+    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+    02111-1307 USA.  */
+ 
+-#ifdef HAVE_CONFIG_H
+-# include <config.h>
+-#endif
+-
+ #include <stddef.h>
+ #include <stdlib.h>
+ #include <string.h>
+ 
+-#ifdef _LIBC
+-# include <libintl.h>
+-#else
+-# include "libgnuintl.h"
+-#endif
++#include <libintl.h>
+ #include "gettextP.h"
+ 
+-#ifdef _LIBC
+-/* We have to handle multi-threaded applications.  */
+-# include <bits/libc-lock.h>
+-#else
+-/* Provide dummy implementation if this is outside glibc.  */
+-# define __libc_rwlock_define(CLASS, NAME)
+-# define __libc_rwlock_wrlock(NAME)
+-# define __libc_rwlock_unlock(NAME)
+-#endif
+-
+ /* The internal variables in the standalone libintl.a must have different
+    names than the internal variables in GNU libc, otherwise programs
+    using libintl.a cannot be linked statically.  */
+@@ -59,9 +41,6 @@
+ 
+ /* Contains the default location of the message catalogs.  */
+ extern const char _nl_default_dirname[];
+-#ifdef _LIBC
+-libc_hidden_proto (_nl_default_dirname)
+-#endif
+ 
+ /* List with bindings of specific domains.  */
+ extern struct binding *_nl_domain_bindings;
+@@ -70,20 +49,8 @@
+ __libc_rwlock_define (extern, _nl_state_lock attribute_hidden)
+ 
+ 
+-/* Names for the libintl functions are a problem.  They must not clash
+-   with existing names and they should follow ANSI C.  But this source
+-   code is also used in GNU C Library where the names have a __
+-   prefix.  So we have to make a difference here.  */
+-#ifdef _LIBC
+-# define BINDTEXTDOMAIN __bindtextdomain
+-# define BIND_TEXTDOMAIN_CODESET __bind_textdomain_codeset
+-# ifndef strdup
+-#  define strdup(str) __strdup (str)
+-# endif
+-#else
+-# define BINDTEXTDOMAIN libintl_bindtextdomain
+-# define BIND_TEXTDOMAIN_CODESET libintl_bind_textdomain_codeset
+-#endif
++#define BINDTEXTDOMAIN bindtextdomain
++#define BIND_TEXTDOMAIN_CODESET bind_textdomain_codeset
+ 
+ /* Prototypes for local functions.  */
+ static void set_binding_values PARAMS ((const char *domainname,
+@@ -361,8 +328,3 @@
+   return (char *) codeset;
+ }
+ 
+-#ifdef _LIBC
+-/* Aliases for function names in GNU C Library.  */
+-weak_alias (__bindtextdomain, bindtextdomain);
+-weak_alias (__bind_textdomain_codeset, bind_textdomain_codeset);
+-#endif
+diff -ur libintl/dcgettext.c libintl-aros/dcgettext.c
+--- libintl/dcgettext.c	2011-05-31 06:12:33.000000000 +0200
++++ libintl-aros/dcgettext.c	2011-07-10 18:38:10.000000000 +0200
+@@ -17,30 +17,13 @@
+    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+    02111-1307 USA.  */
+ 
+-#ifdef HAVE_CONFIG_H
+-# include <config.h>
+-#endif
+-
+ #include "gettextP.h"
+-#ifdef _LIBC
+-# include <libintl.h>
+-#else
+-# include "libgnuintl.h"
+-#endif
++#include <libintl.h>
+ 
+ /* @@ end of prolog @@ */
+ 
+-/* Names for the libintl functions are a problem.  They must not clash
+-   with existing names and they should follow ANSI C.  But this source
+-   code is also used in GNU C Library where the names have a __
+-   prefix.  So we have to make a difference here.  */
+-#ifdef _LIBC
+-# define DCGETTEXT __dcgettext
+-# define DCIGETTEXT __dcigettext
+-#else
+-# define DCGETTEXT libintl_dcgettext
+-# define DCIGETTEXT libintl_dcigettext
+-#endif
++# define DCGETTEXT dcgettext
++# define DCIGETTEXT dcigettext
+ 
+ /* Look up MSGID in the DOMAINNAME message catalog for the current CATEGORY
+    locale.  */
+@@ -53,9 +36,3 @@
+   return DCIGETTEXT (domainname, msgid, NULL, 0, 0, category);
+ }
+ 
+-#ifdef _LIBC
+-/* Alias for function name in GNU C Library.  */
+-INTDEF(__dcgettext)
+-weak_alias (__dcgettext, dcgettext);
+-libc_hidden_def (__dcgettext)
+-#endif
+diff -ur libintl/dcigettext.c libintl-aros/dcigettext.c
+--- libintl/dcigettext.c	2011-05-31 06:12:33.000000000 +0200
++++ libintl-aros/dcigettext.c	2011-07-10 21:59:12.000000000 +0200
+@@ -25,10 +25,6 @@
+ # define _GNU_SOURCE	1
+ #endif
+ 
+-#ifdef HAVE_CONFIG_H
+-# include <config.h>
+-#endif
+-
+ #include <sys/types.h>
+ 
+ #ifdef __GNUC__
+@@ -70,28 +66,13 @@
+ # include <sys/param.h>
+ #endif
+ 
++#define ICONV_CONST
++
+ #include "gettextP.h"
+ #include "plural-exp.h"
+-#ifdef _LIBC
+-# include <libintl.h>
+-#else
+-# include "libgnuintl.h"
+-#endif
++#include <libintl.h>
+ #include "hash-string.h"
+ 
+-/* Thread safetyness.  */
+-#ifdef _LIBC
+-# include <bits/libc-lock.h>
+-#else
+-/* Provide dummy implementation if this is outside glibc.  */
+-# define __libc_lock_define_initialized(CLASS, NAME)
+-# define __libc_lock_lock(NAME)
+-# define __libc_lock_unlock(NAME)
+-# define __libc_rwlock_define_initialized(CLASS, NAME)
+-# define __libc_rwlock_rdlock(NAME)
+-# define __libc_rwlock_unlock(NAME)
+-#endif
+-
+ /* Alignment of types.  */
+ #if defined __GNUC__ && __GNUC__ >= 2
+ # define alignof(TYPE) __alignof__ (TYPE)
+@@ -339,32 +320,14 @@
+ #endif	/* have alloca */
+ 
+ 
+-#ifdef _LIBC
+-/* List of blocks allocated for translations.  */
+-typedef struct transmem_list
+-{
+-  struct transmem_list *next;
+-  char data[ZERO];
+-} transmem_block_t;
+-static struct transmem_list *transmem_list;
+-#else
+ typedef unsigned char transmem_block_t;
+-#endif
+-#if defined _LIBC || HAVE_ICONV
++#if HAVE_ICONV
+ static const char *get_output_charset PARAMS ((struct binding *domainbinding))
+      internal_function;
+ #endif
+ 
+ 
+-/* Names for the libintl functions are a problem.  They must not clash
+-   with existing names and they should follow ANSI C.  But this source
+-   code is also used in GNU C Library where the names have a __
+-   prefix.  So we have to make a difference here.  */
+-#ifdef _LIBC
+-# define DCIGETTEXT __dcigettext
+-#else
+-# define DCIGETTEXT libintl_dcigettext
+-#endif
++#define DCIGETTEXT dcigettext
+ 
+ /* Lock variable to protect the global data in the gettext implementation.  */
+ #ifdef _LIBC
+@@ -463,46 +426,6 @@
+   if (domainname == NULL)
+     domainname = _nl_current_default_domain;
+ 
+-#if defined HAVE_TSEARCH || defined _LIBC
+-  /* Try to find the translation among those which we found at
+-     some time.  */
+-  search.domain = NULL;
+-  search.msgid.ptr = msgid1;
+-  search.domainname = domainname;
+-  search.category = category;
+-# ifdef HAVE_PER_THREAD_LOCALE
+-#  ifdef _LIBC
+-  localename = strdupa (__current_locale_name (category));
+-#  endif
+-  search.localename = localename;
+-# endif
+-
+-  /* Since tfind/tsearch manage a balanced tree, concurrent tfind and
+-     tsearch calls can be fatal.  */
+-  __libc_rwlock_define_initialized (static, tree_lock);
+-  __libc_rwlock_rdlock (tree_lock);
+-
+-  foundp = (struct known_translation_t **) tfind (&search, &root, transcmp);
+-
+-  __libc_rwlock_unlock (tree_lock);
+-
+-  if (foundp != NULL && (*foundp)->counter == _nl_msg_cat_cntr)
+-    {
+-      /* Now deal with plural.  */
+-      if (plural)
+-	retval = plural_lookup ((*foundp)->domain, n, (*foundp)->translation,
+-				(*foundp)->translation_length);
+-      else
+-	retval = (char *) (*foundp)->translation;
+-
+-# ifdef _LIBC
+-      __libc_rwlock_unlock (__libc_setlocale_lock);
+-# endif
+-      __libc_rwlock_unlock (_nl_state_lock);
+-      return retval;
+-    }
+-#endif
+-
+   /* Preserve the `errno' value.  */
+   saved_errno = errno;
+ 
+@@ -526,7 +449,7 @@
+ 
+   if (binding == NULL)
+     dirname = (char *) _nl_default_dirname;
+-  else if (binding->dirname[0] == '/')
++  else if ((binding->dirname[0] == '/') || strchr(binding->dirname, ':'))
+     dirname = binding->dirname;
+   else
+     {
+@@ -575,7 +498,6 @@
+   single_locale = (char *) alloca (strlen (categoryvalue) + 1);
+   ADD_BLOCK (block_list, single_locale);
+ 
+-
+   /* Search for the given string.  This is a loop because we perhaps
+      got an ordered list of languages to consider for the translation.  */
+   while (1)
+@@ -622,7 +544,6 @@
+ 		  : n == 1 ? (char *) msgid1 : (char *) msgid2);
+ 	}
+ 
+-
+       /* Find structure describing the message catalog matching the
+ 	 DOMAINNAME and CATEGORY.  */
+       domain = _nl_find_domain (dirname, single_locale, xdomainname, binding);
+@@ -659,68 +580,7 @@
+ 	      /* Found the translation of MSGID1 in domain DOMAIN:
+ 		 starting at RETVAL, RETLEN bytes.  */
+ 	      FREE_BLOCKS (block_list);
+-#if defined HAVE_TSEARCH || defined _LIBC
+-	      if (foundp == NULL)
+-		{
+-		  /* Create a new entry and add it to the search tree.  */
+-		  size_t msgid_len;
+-		  size_t size;
+-		  struct known_translation_t *newp;
+-
+-		  msgid_len = strlen (msgid1) + 1;
+-		  size = offsetof (struct known_translation_t, msgid)
+-			 + msgid_len + domainname_len + 1;
+-# ifdef HAVE_PER_THREAD_LOCALE
+-		  size += strlen (localename) + 1;
+-# endif
+-		  newp = (struct known_translation_t *) malloc (size);
+-		  if (newp != NULL)
+-		    {
+-		      char *new_domainname;
+-# ifdef HAVE_PER_THREAD_LOCALE
+-		      char *new_localename;
+-# endif
+ 
+-		      new_domainname =
+-			mempcpy (newp->msgid.appended, msgid1, msgid_len);
+-		      memcpy (new_domainname, domainname, domainname_len + 1);
+-# ifdef HAVE_PER_THREAD_LOCALE
+-		      new_localename = new_domainname + domainname_len + 1;
+-		      strcpy (new_localename, localename);
+-# endif
+-		      newp->domainname = new_domainname;
+-		      newp->category = category;
+-# ifdef HAVE_PER_THREAD_LOCALE
+-		      newp->localename = new_localename;
+-# endif
+-		      newp->counter = _nl_msg_cat_cntr;
+-		      newp->domain = domain;
+-		      newp->translation = retval;
+-		      newp->translation_length = retlen;
+-
+-		      __libc_rwlock_wrlock (tree_lock);
+-
+-		      /* Insert the entry in the search tree.  */
+-		      foundp = (struct known_translation_t **)
+-			tsearch (newp, &root, transcmp);
+-
+-		      __libc_rwlock_unlock (tree_lock);
+-
+-		      if (foundp == NULL
+-			  || __builtin_expect (*foundp != newp, 0))
+-			/* The insert failed.  */
+-			free (newp);
+-		    }
+-		}
+-	      else
+-		{
+-		  /* We can update the existing entry.  */
+-		  (*foundp)->counter = _nl_msg_cat_cntr;
+-		  (*foundp)->domain = domain;
+-		  (*foundp)->translation = retval;
+-		  (*foundp)->translation_length = retlen;
+-		}
+-#endif
+ 	      __set_errno (saved_errno);
+ 
+ 	      /* Now deal with plural.  */
+@@ -1344,14 +1204,7 @@
+   if (language != NULL && language[0] == '\0')
+     language = NULL;
+ 
+-  /* We have to proceed with the POSIX methods of looking to `LC_ALL',
+-     `LC_xxx', and `LANG'.  On some systems this can be done by the
+-     `setlocale' function itself.  */
+-#ifdef _LIBC
+-  retval = __current_locale_name (category);
+-#else
+-  retval = _nl_locale_name (category, categoryname);
+-#endif
++  retval = "en:en_US"; /* Hardcode english, provide better integration in future */
+ 
+   return language != NULL && strcmp (retval, "C") != 0 ? language : retval;
+ }
+@@ -1402,7 +1255,7 @@
+ 	  return _NL_CURRENT (LC_CTYPE, CODESET);
+ # else
+ #  if HAVE_ICONV
+-	  extern const char *locale_charset PARAMS ((void);
++	  extern const char *locale_charset PARAMS ((void));
+ 	  return locale_charset ();
+ #  endif
+ # endif
+@@ -1417,7 +1270,7 @@
+    avoid the non-standard function stpcpy.  In GNU C Library this
+    function is available, though.  Also allow the symbol HAVE_STPCPY
+    to be defined.  */
+-#if !_LIBC && !HAVE_STPCPY
++#if !HAVE_STPCPY
+ static char *
+ stpcpy (dest, src)
+      char *dest;
+@@ -1429,7 +1282,7 @@
+ }
+ #endif
+ 
+-#if !_LIBC && !HAVE_MEMPCPY
++#if !HAVE_MEMPCPY
+ static void *
+ mempcpy (dest, src, n)
+      void *dest;
+@@ -1440,38 +1293,3 @@
+ }
+ #endif
+ 
+-
+-#ifdef _LIBC
+-/* If we want to free all resources we have to do some work at
+-   program's end.  */
+-libc_freeres_fn (free_mem)
+-{
+-  void *old;
+-
+-  while (_nl_domain_bindings != NULL)
+-    {
+-      struct binding *oldp = _nl_domain_bindings;
+-      _nl_domain_bindings = _nl_domain_bindings->next;
+-      if (oldp->dirname != _nl_default_dirname)
+-	/* Yes, this is a pointer comparison.  */
+-	free (oldp->dirname);
+-      free (oldp->codeset);
+-      free (oldp);
+-    }
+-
+-  if (_nl_current_default_domain != _nl_default_default_domain)
+-    /* Yes, again a pointer comparison.  */
+-    free ((char *) _nl_current_default_domain);
+-
+-  /* Remove the search tree with the known translations.  */
+-  __tdestroy (root, free);
+-  root = NULL;
+-
+-  while (transmem_list != NULL)
+-    {
+-      old = transmem_list;
+-      transmem_list = transmem_list->next;
+-      free (old);
+-    }
+-}
+-#endif
+diff -ur libintl/dcngettext.c libintl-aros/dcngettext.c
+--- libintl/dcngettext.c	2011-05-31 06:12:33.000000000 +0200
++++ libintl-aros/dcngettext.c	2011-07-10 20:15:58.000000000 +0200
+@@ -17,30 +17,13 @@
+    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+    02111-1307 USA.  */
+ 
+-#ifdef HAVE_CONFIG_H
+-# include <config.h>
+-#endif
+-
+ #include "gettextP.h"
+-#ifdef _LIBC
+-# include <libintl.h>
+-#else
+-# include "libgnuintl.h"
+-#endif
++#include <libintl.h>
+ 
+ /* @@ end of prolog @@ */
+ 
+-/* Names for the libintl functions are a problem.  They must not clash
+-   with existing names and they should follow ANSI C.  But this source
+-   code is also used in GNU C Library where the names have a __
+-   prefix.  So we have to make a difference here.  */
+-#ifdef _LIBC
+-# define DCNGETTEXT __dcngettext
+-# define DCIGETTEXT __dcigettext
+-#else
+-# define DCNGETTEXT libintl_dcngettext
+-# define DCIGETTEXT libintl_dcigettext
+-#endif
++#define DCNGETTEXT dcngettext
++#define DCIGETTEXT dcigettext
+ 
+ /* Look up MSGID in the DOMAINNAME message catalog for the current CATEGORY
+    locale.  */
+@@ -55,7 +38,3 @@
+   return DCIGETTEXT (domainname, msgid1, msgid2, 1, n, category);
+ }
+ 
+-#ifdef _LIBC
+-/* Alias for function name in GNU C Library.  */
+-weak_alias (__dcngettext, dcngettext);
+-#endif
+diff -ur libintl/dgettext.c libintl-aros/dgettext.c
+--- libintl/dgettext.c	2011-05-31 06:12:33.000000000 +0200
++++ libintl-aros/dgettext.c	2011-07-10 22:13:33.000000000 +0200
+@@ -17,32 +17,15 @@
+    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+    02111-1307 USA.  */
+ 
+-#ifdef HAVE_CONFIG_H
+-# include <config.h>
+-#endif
+-
+ #include <locale.h>
+ 
+ #include "gettextP.h"
+-#ifdef _LIBC
+-# include <libintl.h>
+-#else
+-# include "libgnuintl.h"
+-#endif
++#include <libintl.h>
+ 
+ /* @@ end of prolog @@ */
+ 
+-/* Names for the libintl functions are a problem.  They must not clash
+-   with existing names and they should follow ANSI C.  But this source
+-   code is also used in GNU C Library where the names have a __
+-   prefix.  So we have to make a difference here.  */
+-#ifdef _LIBC
+-# define DGETTEXT __dgettext
+-# define DCGETTEXT INTUSE(__dcgettext)
+-#else
+-# define DGETTEXT libintl_dgettext
+-# define DCGETTEXT libintl_dcgettext
+-#endif
++#define DGETTEXT dgettext
++#define DCGETTEXT dcgettext
+ 
+ /* Look up MSGID in the DOMAINNAME message catalog of the current
+    LC_MESSAGES locale.  */
+@@ -54,7 +37,3 @@
+   return DCGETTEXT (domainname, msgid, LC_MESSAGES);
+ }
+ 
+-#ifdef _LIBC
+-/* Alias for function name in GNU C Library.  */
+-weak_alias (__dgettext, dgettext);
+-#endif
+diff -ur libintl/dngettext.c libintl-aros/dngettext.c
+--- libintl/dngettext.c	2011-05-31 06:12:33.000000000 +0200
++++ libintl-aros/dngettext.c	2011-07-10 22:14:47.000000000 +0200
+@@ -17,32 +17,15 @@
+    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+    02111-1307 USA.  */
+ 
+-#ifdef HAVE_CONFIG_H
+-# include <config.h>
+-#endif
+-
+ #include <locale.h>
+ 
+ #include "gettextP.h"
+-#ifdef _LIBC
+-# include <libintl.h>
+-#else
+-# include "libgnuintl.h"
+-#endif
++#include <libintl.h>
+ 
+ /* @@ end of prolog @@ */
+ 
+-/* Names for the libintl functions are a problem.  They must not clash
+-   with existing names and they should follow ANSI C.  But this source
+-   code is also used in GNU C Library where the names have a __
+-   prefix.  So we have to make a difference here.  */
+-#ifdef _LIBC
+-# define DNGETTEXT __dngettext
+-# define DCNGETTEXT __dcngettext
+-#else
+-# define DNGETTEXT libintl_dngettext
+-# define DCNGETTEXT libintl_dcngettext
+-#endif
++#define DNGETTEXT dngettext
++#define DCNGETTEXT dcngettext
+ 
+ /* Look up MSGID in the DOMAINNAME message catalog of the current
+    LC_MESSAGES locale and skip message according to the plural form.  */
+@@ -56,7 +39,3 @@
+   return DCNGETTEXT (domainname, msgid1, msgid2, n, LC_MESSAGES);
+ }
+ 
+-#ifdef _LIBC
+-/* Alias for function name in GNU C Library.  */
+-weak_alias (__dngettext, dngettext);
+-#endif
+diff -ur libintl/explodename.c libintl-aros/explodename.c
+--- libintl/explodename.c	2011-05-31 06:12:33.000000000 +0200
++++ libintl-aros/explodename.c	2011-07-10 20:01:46.000000000 +0200
+@@ -78,7 +78,7 @@
+   if (*language == cp)
+     /* This does not make sense: language has to be specified.  Use
+        this entry as it is without exploding.  Perhaps it is an alias.  */
+-    cp = __rawmemchr (*language, '\0');
++    /* cp = __rawmemchr (*language, '\0') */;
+   else if (cp[0] != '@')
+     {
+       if (cp[0] == '_')
+diff -ur libintl/finddomain.c libintl-aros/finddomain.c
+--- libintl/finddomain.c	2011-05-31 06:12:33.000000000 +0200
++++ libintl-aros/finddomain.c	2011-07-10 20:29:11.000000000 +0200
+@@ -19,10 +19,6 @@
+    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+    02111-1307 USA.  */
+ 
+-#ifdef HAVE_CONFIG_H
+-# include <config.h>
+-#endif
+-
+ #include <stdio.h>
+ #include <sys/types.h>
+ #include <stdlib.h>
+@@ -33,12 +29,7 @@
+ #endif
+ 
+ #include "gettextP.h"
+-#ifdef _LIBC
+ # include <libintl.h>
+-# include <bits/libc-lock.h>
+-#else
+-# include "libgnuintl.h"
+-#endif
+ 
+ /* @@ end of prolog @@ */
+ /* List of already loaded domains.  */
+@@ -117,9 +108,9 @@
+   /* See whether the locale value is an alias.  If yes its value
+      *overwrites* the alias name.  No test for the original value is
+      done.  */
+-  alias_value = _nl_expand_alias (locale);
++  alias_value = NULL;
+   if (alias_value != NULL)
+-    locale = strdupa (alias_value);
++    locale = strdupa ((char *)alias_value);
+ 
+   /* Now we determine the single parts of the locale name.  First
+      look for the language.  Termination symbols are `_' and `@' if
+@@ -167,23 +158,3 @@
+   return retval;
+ }
+ 
+-
+-#ifdef _LIBC
+-/* This is called from iconv/gconv_db.c's free_mem, as locales must
+-   be freed before freeing gconv steps arrays.  */
+-void __libc_freeres_fn_section
+-_nl_finddomain_subfreeres ()
+-{
+-  struct loaded_l10nfile *runp = _nl_loaded_domains;
+-
+-  while (runp != NULL)
+-    {
+-      struct loaded_l10nfile *here = runp;
+-      if (runp->data != NULL)
+-	_nl_unload_domain ((struct loaded_domain *) runp->data);
+-      runp = runp->next;
+-      free ((char *) here->filename);
+-      free (here);
+-    }
+-}
+-#endif
+diff -ur libintl/gettext.c libintl-aros/gettext.c
+--- libintl/gettext.c	2011-05-31 06:12:33.000000000 +0200
++++ libintl-aros/gettext.c	2011-07-10 20:48:59.000000000 +0200
+@@ -17,37 +17,13 @@
+    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+    02111-1307 USA.  */
+ 
+-#ifdef HAVE_CONFIG_H
+-# include <config.h>
+-#endif
+-
+-#ifdef _LIBC
+-# define __need_NULL
+-# include <stddef.h>
+-#else
+-# include <stdlib.h>		/* Just for NULL.  */
+-#endif
++#include <stdlib.h>		/* Just for NULL.  */
++#include <locale.h>
+ 
+ #include "gettextP.h"
+-#ifdef _LIBC
+-# include <libintl.h>
+-#else
+-# include "libgnuintl.h"
+-#endif
+-
+-/* @@ end of prolog @@ */
+-
+-/* Names for the libintl functions are a problem.  They must not clash
+-   with existing names and they should follow ANSI C.  But this source
+-   code is also used in GNU C Library where the names have a __
+-   prefix.  So we have to make a difference here.  */
+-#ifdef _LIBC
+-# define GETTEXT __gettext
+-# define DCGETTEXT INTUSE(__dcgettext)
+-#else
+-# define GETTEXT libintl_gettext
+-# define DCGETTEXT libintl_dcgettext
+-#endif
++#include <libintl.h>
++#define GETTEXT gettext
++#define DCGETTEXT dcgettext
+ 
+ /* Look up MSGID in the current default message catalog for the current
+    LC_MESSAGES locale.  If not found, returns MSGID itself (the default
+@@ -59,7 +35,3 @@
+   return DCGETTEXT (NULL, msgid, LC_MESSAGES);
+ }
+ 
+-#ifdef _LIBC
+-/* Alias for function name in GNU C Library.  */
+-weak_alias (__gettext, gettext);
+-#endif
+diff -ur libintl/gettextP.h libintl-aros/gettextP.h
+--- libintl/gettextP.h	2011-05-31 06:12:33.000000000 +0200
++++ libintl-aros/gettextP.h	2011-07-10 20:27:21.000000000 +0200
+@@ -24,12 +24,8 @@
+ 
+ #include <stddef.h>		/* Get size_t.  */
+ 
+-#ifdef _LIBC
+-# include "../iconv/gconv_int.h"
+-#else
+-# if HAVE_ICONV
+-#  include <iconv.h>
+-# endif
++#if HAVE_ICONV
++# include <iconv.h>
+ #endif
+ 
+ #include "loadinfo.h"
+@@ -54,6 +50,40 @@
+ # define attribute_hidden
+ #endif
+ 
++/* Provide dummy implementation if this is outside glibc.  */
++#define __libc_lock_define_initialized(CLASS, NAME)
++#define __libc_lock_define_initialized_recursive(CLASS, NAME)
++#define __libc_lock_lock(NAME)
++#define __libc_lock_lock_recursive(NAME)
++#define __libc_lock_unlock(NAME)
++#define __libc_lock_unlock_recursive(NAME)
++#define __libc_rwlock_init(NAME)
++#define __libc_rwlock_define(CLASS, NAME)
++#define __libc_rwlock_define_initialized(CLASS, NAME)
++#define __libc_rwlock_rdlock(NAME)
++#define __libc_rwlock_wrlock(NAME)
++#define __libc_rwlock_unlock(NAME)
++
++/* Duplicate S, returning an identical alloca'd string.  */
++# define strdupa(s)							      \
++  (__extension__							      \
++    ({									      \
++      __const char *__old = (s);					      \
++      size_t __len = strlen (__old) + 1;				      \
++      char *__new = (char *) __builtin_alloca (__len);			      \
++      (char *) memcpy (__new, __old, __len);				      \
++    }))
++
++/* Evaluate EXPRESSION, and repeat as long as it returns -1 with `errno'
++   set to EINTR.  */
++
++# define TEMP_FAILURE_RETRY(expression) \
++  (__extension__							      \
++    ({ long int __result;						      \
++       do __result = (long int) (expression);				      \
++       while (__result == -1L && errno == EINTR);			      \
++       __result; }))
++
+ /* Tell the compiler when a conditional or integer expression is
+    almost always true or almost always false.  */
+ #ifndef HAVE_BUILTIN_EXPECT
+@@ -65,10 +95,6 @@
+ #endif
+ 
+ 
+-#ifdef _LIBC
+-# include <byteswap.h>
+-# define SWAP(i) bswap_32 (i)
+-#else
+ static nls_uint32 SWAP PARAMS ((nls_uint32 i));
+ 
+ static inline nls_uint32
+@@ -77,7 +103,6 @@
+ {
+   return (i << 24) | ((i & 0xff00) << 8) | ((i >> 8) & 0xff00) | (i >> 24);
+ }
+-#endif
+ 
+ 
+ /* In-memory representation of system dependent string.  */
+@@ -98,13 +123,9 @@
+   const char *encoding;
+   /* The descriptor for conversion from the message catalog's encoding to
+      this target encoding.  */
+-#ifdef _LIBC
+-  __gconv_t conv;
+-#else
+ # if HAVE_ICONV
+   iconv_t conv;
+ # endif
+-#endif
+   /* The table of translated strings after charset conversion.  */
+   char **conv_tab;
+ };
+@@ -147,7 +168,6 @@
+   /* Cache of charset conversions of the translated strings.  */
+   struct converted_domain *conversions;
+   size_t nconversions;
+-  __libc_rwlock_define (, conversions_lock);
+ 
+   const struct expression *plural;
+   unsigned long int nplurals;
+@@ -176,9 +196,7 @@
+    This variable is part of the external ABI of the GNU libintl.  */
+ extern int _nl_msg_cat_cntr;
+ 
+-#ifndef _LIBC
+ const char *_nl_locale_name PARAMS ((int category, const char *categoryname));
+-#endif
+ 
+ struct loaded_l10nfile *_nl_find_domain PARAMS ((const char *__dirname,
+ 						 char *__locale,
+@@ -194,62 +212,31 @@
+ 			    int convert, size_t *lengthp))
+      internal_function;
+ 
+-#ifdef _LIBC
+-extern char *__gettext PARAMS ((const char *__msgid));
+-extern char *__dgettext PARAMS ((const char *__domainname,
++extern char *gettext PARAMS ((const char *__msgid));
++extern char *dgettext PARAMS ((const char *__domainname,
+ 				 const char *__msgid));
+-extern char *__dcgettext PARAMS ((const char *__domainname,
++extern char *dcgettext PARAMS ((const char *__domainname,
+ 				  const char *__msgid, int __category));
+-extern char *__ngettext PARAMS ((const char *__msgid1, const char *__msgid2,
++extern char *ngettext PARAMS ((const char *__msgid1, const char *__msgid2,
+ 				 unsigned long int __n));
+-extern char *__dngettext PARAMS ((const char *__domainname,
++/*extern char *__dngettext PARAMS ((const char *__domainname,
+ 				  const char *__msgid1, const char *__msgid2,
+-				  unsigned long int n));
+-extern char *__dcngettext PARAMS ((const char *__domainname,
++				  unsigned long int n));*/
++extern char *dcngettext PARAMS ((const char *__domainname,
+ 				   const char *__msgid1, const char *__msgid2,
+ 				   unsigned long int __n, int __category));
+-extern char *__dcigettext PARAMS ((const char *__domainname,
++extern char *dcigettext PARAMS ((const char *__domainname,
+ 				   const char *__msgid1, const char *__msgid2,
+ 				   int __plural, unsigned long int __n,
+ 				   int __category));
+-extern char *__textdomain PARAMS ((const char *__domainname));
+-extern char *__bindtextdomain PARAMS ((const char *__domainname,
++extern char *textdomain PARAMS ((const char *__domainname));
++extern char *bindtextdomain PARAMS ((const char *__domainname,
+ 				       const char *__dirname));
+-extern char *__bind_textdomain_codeset PARAMS ((const char *__domainname,
++extern char *bind_textdomain_codeset PARAMS ((const char *__domainname,
+ 						const char *__codeset));
+-extern void _nl_finddomain_subfreeres PARAMS ((void)) attribute_hidden;
++/*extern void _nl_finddomain_subfreeres PARAMS ((void)) attribute_hidden;
+ extern void _nl_unload_domain PARAMS ((struct loaded_domain *__domain))
+-     internal_function attribute_hidden;
+-#else
+-extern char *libintl_gettext PARAMS ((const char *__msgid));
+-extern char *libintl_dgettext PARAMS ((const char *__domainname,
+-				       const char *__msgid));
+-extern char *libintl_dcgettext PARAMS ((const char *__domainname,
+-					const char *__msgid, int __category));
+-extern char *libintl_ngettext PARAMS ((const char *__msgid1,
+-				       const char *__msgid2,
+-				       unsigned long int __n));
+-extern char *libintl_dngettext PARAMS ((const char *__domainname,
+-					const char *__msgid1,
+-					const char *__msgid2,
+-					unsigned long int __n));
+-extern char *libintl_dcngettext PARAMS ((const char *__domainname,
+-					 const char *__msgid1,
+-					 const char *__msgid2,
+-					 unsigned long int __n,
+-					 int __category));
+-extern char *libintl_dcigettext PARAMS ((const char *__domainname,
+-					 const char *__msgid1,
+-					 const char *__msgid2,
+-					 int __plural, unsigned long int __n,
+-					 int __category));
+-extern char *libintl_textdomain PARAMS ((const char *__domainname));
+-extern char *libintl_bindtextdomain PARAMS ((const char *__domainname,
+-					     const char *__dirname));
+-extern char *libintl_bind_textdomain_codeset PARAMS ((const char *__domainname,
+-						      const char *__codeset));
+-#endif
+-
++     internal_function attribute_hidden;*/
+ /* @@ begin of epilog @@ */
+ 
+ #endif /* gettextP.h  */
+diff -ur libintl/hash-string.h libintl-aros/hash-string.h
+--- libintl/hash-string.h	2011-05-31 06:12:33.000000000 +0200
++++ libintl-aros/hash-string.h	2011-07-10 19:18:00.000000000 +0200
+@@ -34,5 +34,4 @@
+ /* Defines the so called `hashpjw' function by P.J. Weinberger
+    [see Aho/Sethi/Ullman, COMPILERS: Principles, Techniques and Tools,
+    1986, 1987 Bell Telephone Laboratories, Inc.]  */
+-extern unsigned long int __hash_string PARAMS ((const char *__str_param))
+-     attribute_hidden;
++extern unsigned long int __hash_string PARAMS ((const char *__str_param));
+diff -ur libintl/l10nflist.c libintl-aros/l10nflist.c
+--- libintl/l10nflist.c	2011-05-31 06:12:33.000000000 +0200
++++ libintl-aros/l10nflist.c	2011-07-10 21:52:47.000000000 +0200
+@@ -212,7 +212,8 @@
+   memcpy (abs_filename, dirlist, dirlist_len);
+   __argz_stringify (abs_filename, dirlist_len, ':');
+   cp = abs_filename + (dirlist_len - 1);
+-  *cp++ = '/';
++  if (*(cp - 1) != '/')
++    *cp++ = '/';
+   cp = stpcpy (cp, language);
+ 
+   if ((mask & XPG_TERRITORY) != 0)
+diff -ur libintl/loadmsgcat.c libintl-aros/loadmsgcat.c
+--- libintl/loadmsgcat.c	2011-05-31 06:12:33.000000000 +0200
++++ libintl-aros/loadmsgcat.c	2011-07-10 21:59:30.000000000 +0200
+@@ -840,7 +840,9 @@
+ 
+   /* If the data is not yet available (i.e. mmap'ed) we try to load
+      it manually.  */
++#if !defined(__AROS__)
+   if (data == MAP_FAILED)
++#endif
+     {
+       size_t to_read;
+       char *read_ptr;
+diff -ur libintl/ngettext.c libintl-aros/ngettext.c
+--- libintl/ngettext.c	2011-07-10 20:13:30.000000000 +0200
++++ libintl-aros/ngettext.c	2011-07-10 20:14:02.000000000 +0200
+@@ -17,39 +17,17 @@
+    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+    02111-1307 USA.  */
+ 
+-#ifdef HAVE_CONFIG_H
+-# include <config.h>
+-#endif
+-
+-#ifdef _LIBC
+-# define __need_NULL
+-# include <stddef.h>
+-#else
+-# include <stdlib.h>		/* Just for NULL.  */
+-#endif
++#include <stdlib.h>		/* Just for NULL.  */
+ 
+ #include "gettextP.h"
+-#ifdef _LIBC
+-# include <libintl.h>
+-#else
+-# include "libgnuintl.h"
+-#endif
++#include <libintl.h>
+ 
+ #include <locale.h>
+ 
+ /* @@ end of prolog @@ */
+ 
+-/* Names for the libintl functions are a problem.  They must not clash
+-   with existing names and they should follow ANSI C.  But this source
+-   code is also used in GNU C Library where the names have a __
+-   prefix.  So we have to make a difference here.  */
+-#ifdef _LIBC
+-# define NGETTEXT __ngettext
+-# define DCNGETTEXT __dcngettext
+-#else
+-# define NGETTEXT libintl_ngettext
+-# define DCNGETTEXT libintl_dcngettext
+-#endif
++#define NGETTEXT ngettext
++#define DCNGETTEXT dcngettext
+ 
+ /* Look up MSGID in the current default message catalog for the current
+    LC_MESSAGES locale.  If not found, returns MSGID itself (the default
+@@ -63,7 +41,3 @@
+   return DCNGETTEXT (NULL, msgid1, msgid2, n, LC_MESSAGES);
+ }
+ 
+-#ifdef _LIBC
+-/* Alias for function name in GNU C Library.  */
+-weak_alias (__ngettext, ngettext);
+-#endif
+diff -ur libintl/textdomain.c libintl-aros/textdomain.c
+--- libintl/textdomain.c	2011-05-31 06:12:33.000000000 +0200
++++ libintl-aros/textdomain.c	2011-07-10 20:26:43.000000000 +0200
+@@ -17,30 +17,12 @@
+    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+    02111-1307 USA.  */
+ 
+-#ifdef HAVE_CONFIG_H
+-# include <config.h>
+-#endif
+-
+ #include <stdlib.h>
+ #include <string.h>
+ 
+-#ifdef _LIBC
+-# include <libintl.h>
+-#else
+-# include "libgnuintl.h"
+-#endif
++#include <libintl.h>
+ #include "gettextP.h"
+ 
+-#ifdef _LIBC
+-/* We have to handle multi-threaded applications.  */
+-# include <bits/libc-lock.h>
+-#else
+-/* Provide dummy implementation if this is outside glibc.  */
+-# define __libc_rwlock_define(CLASS, NAME)
+-# define __libc_rwlock_wrlock(NAME)
+-# define __libc_rwlock_unlock(NAME)
+-#endif
+-
+ /* The internal variables in the standalone libintl.a must have different
+    names than the internal variables in GNU libc, otherwise programs
+    using libintl.a cannot be linked statically.  */
+@@ -58,18 +40,7 @@
+ extern const char *_nl_current_default_domain attribute_hidden;
+ 
+ 
+-/* Names for the libintl functions are a problem.  They must not clash
+-   with existing names and they should follow ANSI C.  But this source
+-   code is also used in GNU C Library where the names have a __
+-   prefix.  So we have to make a difference here.  */
+-#ifdef _LIBC
+-# define TEXTDOMAIN __textdomain
+-# ifndef strdup
+-#  define strdup(str) __strdup (str)
+-# endif
+-#else
+-# define TEXTDOMAIN libintl_textdomain
+-#endif
++#define TEXTDOMAIN textdomain
+ 
+ /* Lock variable to protect the global data in the gettext implementation.  */
+ __libc_rwlock_define (extern, _nl_state_lock attribute_hidden)
+@@ -137,7 +108,3 @@
+   return new_domain;
+ }
+ 
+-#ifdef _LIBC
+-/* Alias for function name in GNU C Library.  */
+-weak_alias (__textdomain, textdomain);
+-#endif
