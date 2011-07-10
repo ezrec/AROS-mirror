@@ -6,6 +6,8 @@ include $(TOP)/config/make.cfg
 USER_CFLAGS     := -I$(AROS_INCLUDES)/SDI -I$(SRCDIR)/$(CURDIR)/../../../portable/include
 LDFLAGS += -nostartfiles
 
+#MM- contrib-pack-xadmaster : xadmaster-clients
+
 #MM- xadmaster-clients : \
 #MM xadmaster-client-ar \
 #MM xadmaster-client-bzip \
@@ -21,6 +23,13 @@ LDFLAGS += -nostartfiles
 #MM xadmaster-client-msa-quick \
 #MM xadmaster-client-packdir-quick \
 #MM xadmaster-client-zap-quick
+
+#MM xadmaster-client-ar : xadmaster-includes
+#MM xadmaster-client-bzip : xadmaster-includes
+#MM xadmaster-client-dimp : xadmaster-includes
+#MM xadmaster-client-msa : xadmaster-includes
+#MM xadmaster-client-packdir : xadmaster-includes
+#MM xadmaster-client-zap : xadmaster-includes
 
 %build_prog mmake=xadmaster-client-ar \
     files="extheader ar" progname=ar targetdir=$(AROS_LIBS)/XAD \

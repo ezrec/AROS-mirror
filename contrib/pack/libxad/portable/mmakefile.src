@@ -41,6 +41,7 @@ USER_CFLAGS := -D__DOS_NOLIBBASE__ -D__UTILITY_NOLIBBASE__ -Wno-uninitialized -W
 
 #MM- contrib-pack-xadmaster : xadmaster-library
 #MM- xadmaster-library : includes xadmaster-includes
+#MM- xadmaster-includes : xadmaster-library-includes
 
 %build_module mmake=xadmaster-library \
   modname=xadmaster modtype=library \
