@@ -1,6 +1,6 @@
-diff -urN --exclude=CVS grep-2.5.1/config.sub grep/config.sub
+diff -urN grep-2.5.1/config.sub grep-2.5.1-aros/config.sub
 --- grep-2.5.1/config.sub	2002-02-28 10:12:58.000000000 +0100
-+++ grep/config.sub	2003-08-07 00:06:24.000000000 +0200
++++ grep-2.5.1-aros/config.sub	2011-07-10 23:41:03.000000000 +0200
 @@ -1168,6 +1168,9 @@
          -*mint | -mint[0-9]* | -*MiNT | -MiNT[0-9]*)
  	        os=-mint
@@ -11,23 +11,21 @@ diff -urN --exclude=CVS grep-2.5.1/config.sub grep/config.sub
  	-none)
  		;;
  	*)
-diff -urN --exclude=CVS grep-2.5.1/src/getpagesize.h grep/src/getpagesize.h
---- grep-2.5.1/src/getpagesize.h	2001-02-08 16:56:55.000000000 +0100
-+++ grep/src/getpagesize.h	2003-08-07 00:06:24.000000000 +0200
-@@ -25,6 +25,10 @@
- # endif
- #endif
+diff -urN grep-2.5.1/configure grep-2.5.1-aros/configure
+--- grep-2.5.1/configure	2002-03-26 17:09:38.000000000 +0100
++++ grep-2.5.1-aros/configure	2011-07-10 23:41:03.000000000 +0200
+@@ -4229,7 +4229,7 @@
  
-+#if !defined getpagesize && defined __AROS__
-+# define getpagesize() 4096
-+#endif
-+
- #ifndef getpagesize
- # include <sys/param.h>
- # ifdef EXEC_PAGESIZE
-diff -urN --exclude=CVS grep-2.5.1/src/dfa.c grep/src/dfa.c
---- grep-2.5.1/src/dfa.c	2002-03-26 17:09:38.000000000 +0100
-+++ grep/src/dfa.c	2008-04-23 03:01:10.000000000 +0200
+ 
+ 
+-for ac_header in string.h stdlib.h sys/param.h memory.h unistd.h libintl.h
++for ac_header in string.h stdlib.h sys/param.h memory.h unistd.h
+ do
+ as_ac_Header=`echo "ac_cv_header_$ac_header" | $as_tr_sh`
+ if eval "test \"\${$as_ac_Header+set}\" = set"; then
+diff -urN grep-2.5.1/src/dfa.c grep-2.5.1-aros/src/dfa.c
+--- grep-2.5.1/src/dfa.c	2001-09-26 18:57:55.000000000 +0200
++++ grep-2.5.1-aros/src/dfa.c	2011-07-10 23:41:03.000000000 +0200
 @@ -44,11 +44,6 @@
  # include <locale.h>
  #endif
@@ -40,4 +38,17 @@ diff -urN --exclude=CVS grep-2.5.1/src/dfa.c grep/src/dfa.c
  #ifdef MBS_SUPPORT
  # include <wchar.h>
  # include <wctype.h>
-
+diff -urN grep-2.5.1/src/getpagesize.h grep-2.5.1-aros/src/getpagesize.h
+--- grep-2.5.1/src/getpagesize.h	2001-02-08 16:56:55.000000000 +0100
++++ grep-2.5.1-aros/src/getpagesize.h	2011-07-10 23:41:03.000000000 +0200
+@@ -25,6 +25,10 @@
+ # endif
+ #endif
+ 
++#if !defined getpagesize && defined __AROS__
++# define getpagesize() 4096
++#endif
++
+ #ifndef getpagesize
+ # include <sys/param.h>
+ # ifdef EXEC_PAGESIZE
