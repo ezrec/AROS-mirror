@@ -6,5 +6,5 @@
 #MM- contrib-gnu : contrib-libiconv
 #MM- contrib-libiconv : development-libiconv
 
-%fetch_and_build_gnu_development package=libiconv version=1.12 patch=no \
+%fetch_and_build_gnu_development package=libiconv version=1.13.1 patch=no \
     suffixes="tar.gz"
