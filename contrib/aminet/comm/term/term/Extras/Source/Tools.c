@@ -3907,7 +3907,7 @@ LocalCreateTask(STRPTR Name,LONG Priority,TASKENTRY Entry,ULONG StackSize,LONG N
 		/* Try the allocation. */
 
 #ifdef __AROS__
-    	if(NewAllocEntry(LocalMemList, &MemList, NULL))
+    	if(MemList = NewAllocEntry(LocalMemList, NULL))
 #else
 	if(MemList = AllocEntry(LocalMemList))
 #endif
