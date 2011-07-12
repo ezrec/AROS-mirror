@@ -27,7 +27,7 @@ FILES := \
         Debug
 
 USER_INCLUDES := -idirafter $(SRCDIR)/$(CURDIR)/../include -I$(SRCDIR)/$(CURDIR)/../nlistviews_mcp \
-    -I$(SRCDIR)/$(CURDIR)/../nlistview_mcc
+    -idirafter $(SRCDIR)/$(CURDIR)/../include/mui
 
 USER_CFLAGS := -DNO_INLINE_STDARG
 USER_CFLAGS += $(PARANOIA_CFLAGS)
