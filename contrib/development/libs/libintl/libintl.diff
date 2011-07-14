@@ -125,7 +125,7 @@ diff -ur libintl/dcgettext.c libintl-aros/dcgettext.c
 -#endif
 diff -ur libintl/dcigettext.c libintl-aros/dcigettext.c
 --- libintl/dcigettext.c	2011-05-31 06:12:33.000000000 +0200
-+++ libintl-aros/dcigettext.c	2011-07-10 21:59:12.000000000 +0200
++++ libintl-aros/dcigettext.c	2011-07-14 20:12:31.000000000 +0200
 @@ -25,10 +25,6 @@
  # define _GNU_SOURCE	1
  #endif
@@ -345,10 +345,62 @@ diff -ur libintl/dcigettext.c libintl-aros/dcigettext.c
  	      __set_errno (saved_errno);
  
  	      /* Now deal with plural.  */
-@@ -1344,14 +1204,7 @@
-   if (language != NULL && language[0] == '\0')
-     language = NULL;
+@@ -1328,32 +1188,71 @@
+ #endif
  
+ /* Guess value of current locale from value of the environment variables.  */
++#include <proto/locale.h>
++
++struct languagemapping
++{
++  const char * aroslang;
++  const char * libintllang;
++} langmappinglist [] = 
++{
++  { "Català.language"     , "ca:ca_ES:en" },
++  { "Czech.language"      , "cs:en" },
++  { "Dansk.language"      , "da:da_DK:en" },
++  { "Deutsch.language"    , "de:de_DE:en" },
++  { "Español.language"    , "es:es_ES:en" },
++  { "Esperanto.language"  , "en" },
++  { "Français.language"   , "fr:fr_FR:en" },
++  { "Greek.language"      , "el:el_GR:en" },
++  { "Hrvatski.language"   , "hr:hr_HR:en" },
++  { "íslenska.language"   , "is:is_IS:en" },
++  { "Italiano.language"   , "it:it_IT:en" },
++  { "Magyar.language"     , "hu:hu_HU:en" },
++  { "Malti.language"      , "mt:mt_MT:en" },
++  { "Nederlands.language" , "nl:nl_NL:en" },
++  { "Norsk.language"      , "no:no_NO:en" },
++  { "Piglatin.language"   , "en" },
++  { "Polski.language"     , "pl:en" },
++  { "Português.language"  , "pt:pt_PT:en" },
++  { "Russian.language"    , "ru:ru_RU:en" },
++  { "Shqipja.language"    , "en" },
++  { "Suomi.language"      , "fi:fi_FI:en" },
++  { "Svenska.language"    , "sv:sv_SE:en" },
++  { "Thai.language"       , "th:th_TH:en" },
++  { "Türkçe.language"     , "tr:tr_TR:en" },
++  { NULL, NULL }
++};
++
+ static const char *
+ internal_function
+ guess_category_value (category, categoryname)
+      int category;
+      const char *categoryname;
+ {
+-  const char *language;
+-  const char *retval;
++  static char * foundlanguage = NULL;
+ 
+-  /* The highest priority value is the `LANGUAGE' environment
+-     variable.  But we don't use the value if the currently selected
+-     locale is the C locale.  This is a GNU extension.  */
+-  language = getenv ("LANGUAGE");
+-  if (language != NULL && language[0] == '\0')
+-    language = NULL;
+-
 -  /* We have to proceed with the POSIX methods of looking to `LC_ALL',
 -     `LC_xxx', and `LANG'.  On some systems this can be done by the
 -     `setlocale' function itself.  */
@@ -357,11 +409,33 @@ diff -ur libintl/dcigettext.c libintl-aros/dcigettext.c
 -#else
 -  retval = _nl_locale_name (category, categoryname);
 -#endif
-+  retval = "en:en_US"; /* Hardcode english, provide better integration in future */
++  if (foundlanguage == NULL)
++  {
++    foundlanguage = "en:en_US"; /* Default value */
++    struct Locale * locale = OpenLocale(NULL);
++
++    if (locale != NULL)
++    {
++      int index = 0;
++      while (NULL != langmappinglist[index].aroslang)
++      {
++        if (0 == strcmp(locale->loc_LanguageName,(char *)langmappinglist[index].aroslang))
++        {
++          foundlanguage = (char *)langmappinglist[index].libintllang;
++          break;
++        }
++        index++;
++      }
++      CloseLocale(locale);
++    }
++  }
  
-   return language != NULL && strcmp (retval, "C") != 0 ? language : retval;
+-  return language != NULL && strcmp (retval, "C") != 0 ? language : retval;
++  return foundlanguage;
  }
-@@ -1402,7 +1255,7 @@
+ 
+ #if defined _LIBC || HAVE_ICONV
+@@ -1402,7 +1301,7 @@
  	  return _NL_CURRENT (LC_CTYPE, CODESET);
  # else
  #  if HAVE_ICONV
@@ -370,7 +444,7 @@ diff -ur libintl/dcigettext.c libintl-aros/dcigettext.c
  	  return locale_charset ();
  #  endif
  # endif
-@@ -1417,7 +1270,7 @@
+@@ -1417,7 +1316,7 @@
     avoid the non-standard function stpcpy.  In GNU C Library this
     function is available, though.  Also allow the symbol HAVE_STPCPY
     to be defined.  */
@@ -379,7 +453,7 @@ diff -ur libintl/dcigettext.c libintl-aros/dcigettext.c
  static char *
  stpcpy (dest, src)
       char *dest;
-@@ -1429,7 +1282,7 @@
+@@ -1429,7 +1328,7 @@
  }
  #endif
  
@@ -388,7 +462,7 @@ diff -ur libintl/dcigettext.c libintl-aros/dcigettext.c
  static void *
  mempcpy (dest, src, n)
       void *dest;
-@@ -1440,38 +1293,3 @@
+@@ -1440,38 +1339,3 @@
  }
  #endif
  
