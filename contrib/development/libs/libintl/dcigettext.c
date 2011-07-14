@@ -1188,25 +1188,71 @@ category_to_name (category)
 #endif
 
 /* Guess value of current locale from value of the environment variables.  */
+#include <proto/locale.h>
+
+struct languagemapping
+{
+  const char * aroslang;
+  const char * libintllang;
+} langmappinglist [] = 
+{
+  { "Català.language"     , "ca:ca_ES:en" },
+  { "Czech.language"      , "cs:en" },
+  { "Dansk.language"      , "da:da_DK:en" },
+  { "Deutsch.language"    , "de:de_DE:en" },
+  { "Español.language"    , "es:es_ES:en" },
+  { "Esperanto.language"  , "en" },
+  { "Français.language"   , "fr:fr_FR:en" },
+  { "Greek.language"      , "el:el_GR:en" },
+  { "Hrvatski.language"   , "hr:hr_HR:en" },
+  { "íslenska.language"   , "is:is_IS:en" },
+  { "Italiano.language"   , "it:it_IT:en" },
+  { "Magyar.language"     , "hu:hu_HU:en" },
+  { "Malti.language"      , "mt:mt_MT:en" },
+  { "Nederlands.language" , "nl:nl_NL:en" },
+  { "Norsk.language"      , "no:no_NO:en" },
+  { "Piglatin.language"   , "en" },
+  { "Polski.language"     , "pl:en" },
+  { "Português.language"  , "pt:pt_PT:en" },
+  { "Russian.language"    , "ru:ru_RU:en" },
+  { "Shqipja.language"    , "en" },
+  { "Suomi.language"      , "fi:fi_FI:en" },
+  { "Svenska.language"    , "sv:sv_SE:en" },
+  { "Thai.language"       , "th:th_TH:en" },
+  { "Türkçe.language"     , "tr:tr_TR:en" },
+  { NULL, NULL }
+};
+
 static const char *
 internal_function
 guess_category_value (category, categoryname)
      int category;
      const char *categoryname;
 {
-  const char *language;
-  const char *retval;
+  static char * foundlanguage = NULL;
 
-  /* The highest priority value is the `LANGUAGE' environment
-     variable.  But we don't use the value if the currently selected
-     locale is the C locale.  This is a GNU extension.  */
-  language = getenv ("LANGUAGE");
-  if (language != NULL && language[0] == '\0')
-    language = NULL;
+  if (foundlanguage == NULL)
+  {
+    foundlanguage = "en:en_US"; /* Default value */
+    struct Locale * locale = OpenLocale(NULL);
 
-  retval = "en:en_US"; /* Hardcode english, provide better integration in future */
+    if (locale != NULL)
+    {
+      int index = 0;
+      while (NULL != langmappinglist[index].aroslang)
+      {
+        if (0 == strcmp(locale->loc_LanguageName,(char *)langmappinglist[index].aroslang))
+        {
+          foundlanguage = (char *)langmappinglist[index].libintllang;
+          break;
+        }
+        index++;
+      }
+      CloseLocale(locale);
+    }
+  }
 
-  return language != NULL && strcmp (retval, "C") != 0 ? language : retval;
+  return foundlanguage;
 }
 
 #if defined _LIBC || HAVE_ICONV
