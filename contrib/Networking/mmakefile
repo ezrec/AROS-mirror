@@ -2,5 +2,4 @@
 
 #MM- contrib-networking : \
 #MM     contrib-networking-stacks \
-#MM     contrib-networking-utils \
-#MM     contrib-networking-libs
+#MM     contrib-networking-utils
