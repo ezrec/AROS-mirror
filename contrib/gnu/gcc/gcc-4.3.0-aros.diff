@@ -14091,15 +14091,6 @@ diff -ruN gcc-4.3.0-orig/gcc/gcc.c gcc-4.3.0/gcc/gcc.c
 diff -ruN gcc-4.3.0-orig/gcc/ginclude/stddef.h gcc-4.3.0/gcc/ginclude/stddef.h
 --- gcc-4.3.0-orig/gcc/ginclude/stddef.h	2005-06-25 01:11:52 +0000
 +++ gcc-4.3.0/gcc/ginclude/stddef.h	2010-08-10 08:52:43 +0000
-@@ -58,7 +58,7 @@
- #include <machine/ansi.h>
- #endif
- /* On FreeBSD 5, machine/ansi.h does not exist anymore... */
--#if defined (__FreeBSD__) && (__FreeBSD__ >= 5)
-+#if (defined (__FreeBSD__) && (__FreeBSD__ >= 5)) || defined(__AROS__)
- #include <sys/_types.h>
- #endif
- 
 @@ -66,31 +66,36 @@
     defined if the corresponding type is *not* defined.
     FreeBSD-2.1 defines _MACHINE_ANSI_H_ instead of _ANSI_H_ */
