@@ -24,6 +24,14 @@
  * @author Pavel Fedin <pavel.fedin@mail.ru>
  */
 
+
+#ifdef __AROS__
+
+#include <oop/oop.h>
+#include <proto/oop.h>
+
+#endif
+
 #include "system_headers.h"
 
 /* This class operates on AROS-specific data.
@@ -32,9 +40,6 @@
    remote AROS machine */
 
 #ifdef __AROS__
-
-#include <oop/oop.h>
-#include <proto/oop.h>
 
 struct Library *OOPBase;
 OOP_AttrBase MetaAttrBase;
