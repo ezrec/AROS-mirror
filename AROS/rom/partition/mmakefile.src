@@ -3,11 +3,13 @@ include $(TOP)/config/make.cfg
 
 FILES := \
 	partition_types \
+	partition_monitor \
 	partition_support \
 	partitionebr \
 	partitionmbr \
 	partitionrdb \
 	partitiongpt \
+	partitioniso \
 	crc32 \
 	fsloader
 
@@ -30,7 +32,11 @@ FUNCS := \
 	findfilesystema		 \
 	loadfilesystem		 \
 	getfilesystemattrsa	 \
-	addbootfilesystem
+	addbootfilesystem \
+	updatedospartitions \
+	ejectdospartitions \
+	managedospartitions \
+	monitordospartitions
 
 #MM kernel-partition-includes : \
 #MM    kernel-exec-includes \
@@ -39,7 +45,7 @@ FUNCS := \
 #MM kernel-partition-kobj : core-linklibs core-linklibs
 #MM- core-linklibs: linklibs-partition
 
-USER_CFLAGS := -DDEBUG=0 \
+USER_CFLAGS := -DDEBUG=1 \
 	       -D__UTILITY_NOLIBBASE__
 USER_INCLUDES := -I$(SRCDIR)/rom/dos/include
 USER_LDFLAGS  := -L$(GENDIR)/lib

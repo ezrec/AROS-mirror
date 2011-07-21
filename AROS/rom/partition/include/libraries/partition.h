@@ -63,6 +63,7 @@ struct PartitionType
 #define PHPTT_MBR     (2)
 #define PHPTT_EBR     (3)
 #define PHPTT_GPT     (4)
+#define PHPTT_ISO     (5)       /* ISO9660, RockRidge, and Joliet */
 
 /* partition types */
 //nothing defined here ...

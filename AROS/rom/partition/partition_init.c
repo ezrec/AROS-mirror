@@ -19,9 +19,15 @@ static int PartitionInit(LIBBASETYPEPTR LIBBASE)
     /* REMOVE ONCE ABIv1 HAS STABILIZED */
     if (!(LIBBASE->pb_UtilityBase = TaggedOpenLibrary(TAGGEDOPEN_UTILITY)))
     	return FALSE;
+    if (!(LIBBASE->pb_ExpansionBase = (APTR)TaggedOpenLibrary(TAGGEDOPEN_EXPANSION))) {
+        CloseLibrary((APTR)LIBBASE->pb_UtilityBase);
+        return FALSE;
+    }
 
     LIBBASE->partbase.tables =  (struct PartitionTableInfo **)PartitionSupport;
     NewList(&LIBBASE->bootList);
+    InitSemaphore(&LIBBASE->pb_DeviceMapSemaphore);
+    NewList(&LIBBASE->pb_DeviceMaps);
 
     /*
      * This is intentionally allowed to fail.
@@ -35,6 +41,10 @@ static int PartitionInit(LIBBASETYPEPTR LIBBASE)
 
 static int PartitionCleanup(struct PartitionBase_intern *base)
 {
+    /* If we're managing devices, then we can't quit yet */
+    if (!IsListEmpty(&base->pb_DeviceMaps))
+        return FALSE;
+
     /* If there's something in our boot list, we can't quit without losing it */
     if (!IsListEmpty(&base->bootList))
     	return FALSE;

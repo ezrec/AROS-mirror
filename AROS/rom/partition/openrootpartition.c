@@ -4,6 +4,7 @@
 
 */
 
+#include <aros/debug.h>
 #include <proto/exec.h>
 #include <exec/memory.h>
 
@@ -68,24 +69,23 @@
                 {
                     if (OpenDevice(Device, Unit, (struct IORequest *)ph->bd->ioreq, 0)==0)
                     {
+                        D(bug("%s: %s.%d opened\n", __func__, Device, (int)Unit));
                         if (getGeometry(PartitionBase, ph->bd->ioreq, &ph->dg)==0)
                         {
-                            if (ph->dg.dg_DeviceType != DG_CDROM)
-                            {
-                                ph->de.de_SizeBlock      = ph->dg.dg_SectorSize>>2;
-                                ph->de.de_Surfaces       = ph->dg.dg_Heads;
-                                ph->de.de_BlocksPerTrack = ph->dg.dg_TrackSectors;
-                                ph->de.de_HighCyl        = ph->dg.dg_Cylinders-1;
-                                ph->de.de_BufMemType     = ph->dg.dg_BufMemType;
+                            D(bug("%s: %s.%d found geometry\n", __func__, Device, (int)Unit));
+                            ph->de.de_SizeBlock      = ph->dg.dg_SectorSize>>2;
+                            ph->de.de_Surfaces       = ph->dg.dg_Heads;
+                            ph->de.de_BlocksPerTrack = ph->dg.dg_TrackSectors;
+                            ph->de.de_HighCyl        = ph->dg.dg_Cylinders-1;
+                            ph->de.de_BufMemType     = ph->dg.dg_BufMemType;
 
-                                /* The followin are common defaults */
-                                ph->de.de_TableSize      = DE_BUFMEMTYPE;
-                                ph->de.de_SectorPerBlock = 1;
-                                ph->de.de_NumBuffers     = 20;
+                            /* The followin are common defaults */
+                            ph->de.de_TableSize      = DE_BUFMEMTYPE;
+                            ph->de.de_SectorPerBlock = 1;
+                            ph->de.de_NumBuffers     = 20;
 
-                                PartitionNsdCheck(PartitionBase, ph);
-                                return ph;
-                            }
+                            PartitionNsdCheck(PartitionBase, ph);
+                            return ph;
                         }
                     }
                     DeleteIORequest((struct IORequest *)ph->bd->ioreq);

@@ -10,6 +10,7 @@
 #include "partition_intern.h"
 #include "partition_support.h"
 #include "platform.h"
+#include "debug.h"
 
 /*****************************************************************************
 
@@ -58,6 +59,7 @@
     pst = PartitionSupport;
     while (pst[0])
     {
+        D(bug("%s: Check for type %s\n", __func__, pst[0]->name));
         if (pst[0]->checkPartitionTable(PartitionBase, root))
         {
             root->table = AllocMem(sizeof(struct PartitionTableHandler), MEMF_PUBLIC | MEMF_CLEAR);
@@ -72,6 +74,7 @@
                 root->table->handler = (void *)pst[0];
 
                 retval = pst[0]->openPartitionTable(PartitionBase, root);
+                D(bug("%s: open %s = %d\n", __func__, pst[0]->name, (int)retval));
                 if (retval)
                 {
                     FreeMem(root->table, sizeof(struct PartitionTableHandler));

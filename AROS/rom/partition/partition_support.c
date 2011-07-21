@@ -18,6 +18,7 @@ const struct PTFunctionTable * const PartitionSupport[] =
     &PartitionGPT, /* The order of these two is important, GPT must be checked before MBR */
     &PartitionMBR,
     &PartitionEBR,
+    &PartitionISO,
     NULL
 };
 

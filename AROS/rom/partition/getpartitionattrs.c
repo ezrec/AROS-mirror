@@ -123,10 +123,13 @@
 
 	    case PT_LEADIN:
 	    case PT_ACTIVE:
-	    case PT_BOOTABLE:
 	    case PT_AUTOMOUNT:
 	    	*((ULONG *)tag->ti_Data) = 0;
 	    	break;
+
+	    case PT_BOOTABLE:
+	        *((ULONG *)tag->ti_Data) = (ph->de.de_BootPri > -128);
+	        break;
 
 	    case PT_POSITION:
   		D(bug("[GetPartitionAttrs] PT_POSITION(0x%p)\n", ph));
