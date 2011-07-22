@@ -61,6 +61,7 @@
 #include <proto/timer.h>
 #include <proto/bootloader.h>
 #include <proto/expansion.h>
+#include <proto/partition.h>
 
 #include <string.h>
 
@@ -69,75 +70,38 @@
 
 #include LC_LIBDEFS_FILE
 
-/* Add a bootnode using expansion.library */
+/* Add a bootnode using partition.library */
 BOOL ata_RegisterVolume(ULONG StartCyl, ULONG EndCyl, struct ata_Unit *unit)
 {
-    struct ExpansionBase *ExpansionBase;
-    struct DeviceNode *devnode;
+    APTR PartitionBase;
     TEXT dosdevname[4] = "HD0";
-    const ULONG IdDOS = AROS_MAKE_ID('D','O','S','\001');
-    const ULONG IdCDVD = AROS_MAKE_ID('C','D','V','D');
+    LONG ret;
 
-    ExpansionBase = (struct ExpansionBase *)OpenLibrary("expansion.library",
-                                                        40L);
+    PartitionBase = OpenLibrary("partition.library", 0);
+    if (PartitionBase == NULL)
+        return FALSE;
 
-    if (ExpansionBase)
-    {
-        IPTR pp[24];
-
-        /* This should be dealt with using some sort of volume manager or such. */
-        switch (unit->au_DevType)
-        {
-            case DG_DIRECT_ACCESS:
-                break;
-            case DG_CDROM:
-                dosdevname[0] = 'C';
-                break;
-            default:
-                D(bug("[ATA>>]:-ata_RegisterVolume called on unknown devicetype\n"));
-        }
-
-        if (unit->au_UnitNum < 10)
-            dosdevname[2] += unit->au_UnitNum % 10;
-        else
-            dosdevname[2] = 'A' - 10 + unit->au_UnitNum;
-    
-        pp[0] 		    = (IPTR)dosdevname;
-        pp[1]		    = (IPTR)MOD_NAME_STRING;
-        pp[2]		    = unit->au_UnitNum;
-        pp[DE_TABLESIZE    + 4] = DE_BOOTBLOCKS;
-        pp[DE_SIZEBLOCK    + 4] = 1 << (unit->au_SectorShift - 2);
-        pp[DE_NUMHEADS     + 4] = unit->au_Heads;
-        pp[DE_SECSPERBLOCK + 4] = 1;
-        pp[DE_BLKSPERTRACK + 4] = unit->au_Sectors;
-        pp[DE_RESERVEDBLKS + 4] = 2;
-        pp[DE_LOWCYL       + 4] = StartCyl;
-        pp[DE_HIGHCYL      + 4] = EndCyl;
-        pp[DE_NUMBUFFERS   + 4] = 10;
-        pp[DE_BUFMEMTYPE   + 4] = MEMF_PUBLIC | MEMF_31BIT;
-        pp[DE_MAXTRANSFER  + 4] = 0x00200000;
-        pp[DE_MASK         + 4] = 0x7FFFFFFE;
-        pp[DE_BOOTPRI      + 4] = ((unit->au_DevType == DG_DIRECT_ACCESS) ? 0 : 10);
-        pp[DE_DOSTYPE      + 4] = ((unit->au_DevType == DG_DIRECT_ACCESS) ? IdDOS : IdCDVD);
-        pp[DE_BOOTBLOCKS   + 4] = 2;
-    
-        devnode = MakeDosNode(pp);
-
-        if (devnode)
-        {
-            D(bug("[ATA>>]:-ata_RegisterVolume: '%b', type=0x%08lx with StartCyl=%d, EndCyl=%d .. ",
-                  devnode->dn_Name, pp[DE_DOSTYPE + 4], StartCyl, EndCyl));
-
-            AddBootNode(pp[DE_BOOTPRI + 4], ADNF_STARTPROC, devnode, NULL);
-            D(bug("done\n"));
-            
-            return TRUE;
-        }
-
-        CloseLibrary((struct Library *)ExpansionBase);
+    /* This should be dealt with using some sort of volume manager or such. */
+    switch (unit->au_DevType) {
+    case DG_DIRECT_ACCESS:
+        break;
+    case DG_CDROM:
+        dosdevname[0] = 'C';
+        break;
+    default:
+        D(bug("[ATA>>]:-ata_RegisterVolume called on unknown devicetype\n"));
+        dosdevname[0] = 'U';
     }
 
-    return FALSE;
+    if (unit->au_UnitNum < 10)
+        dosdevname[2] += unit->au_UnitNum % 10;
+    else
+        dosdevname[2] = 'A' - 10 + unit->au_UnitNum;
+
+    ret = ManageDosPartitions(&unit->au_Bus->ab_Base->ata_Device,
+                              unit->au_UnitNum, dosdevname);
+
+    return (ret == RETURN_OK);
 }
 
 /*
