@@ -6,7 +6,9 @@
 #MM- contrib-gnu : development-libxml2
 #MM- development-libxml2 : development-libiconv
 
+REPOSITORIES := ftp://xmlsoft.org/libxml2/ ftp://gd.tuwien.ac.at/pub/libxml/
+
 %fetch_and_build_gnu_development package=libxml2 version=2.7.8 patch=yes \
-    package_repo=ftp://xmlsoft.org/libxml2/ suffixes="tar.gz"\
+    package_repo=$(REPOSITORIES) suffixes="tar.gz"\
     extraoptions="--disable-shared --with-http=no --with-ftp=no --with-modules=no --with-mem-debug=no \
         --with-iconv=no --with-debug=no --with-run-debug=no --enable-shared=no --with-threads=no --with-python=no"
