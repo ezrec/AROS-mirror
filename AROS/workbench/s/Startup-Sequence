@@ -2,8 +2,6 @@ SetClock LOAD
 
 FailAt 21
 
-C:LoadMonDrvs
-
 Makedir RAM:Clipboards
 If NOT EXISTS RAM:T
     Makedir RAM:T
