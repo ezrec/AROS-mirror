@@ -347,7 +347,7 @@ static struct DeviceNode *internal_MakeDeviceNode(
     pp[1] = (IPTR)device->dd_Library.lib_Node.ln_Name;
     pp[2] = (IPTR)unit;
 
-    D(bug("%s: Partition %d of %s.%d: %s type=0x%08x\n", __func__, position, device->dd_Library.lib_Node.ln_Name, (int)unit, name), pp[4 + DE_DOSTYPE]);
+    D(bug("%s: Partition %d of %s.%d: %s type=0x%08x\n", __func__, position, device->dd_Library.lib_Node.ln_Name, (int)unit, name, pp[4 + DE_DOSTYPE]));
 
     /* We abuse the flags a bit here, but since
      * partition.library won't fill them in, 
