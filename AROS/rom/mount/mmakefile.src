@@ -1,0 +1,24 @@
+# $Id$
+include $(TOP)/config/make.cfg
+
+FILES := \
+        # None
+
+FUNCS := \
+        # None
+
+#MM kernel-mount-includes : \
+#MM    kernel-expansion-includes \
+#MM    kernel-partition-includes \
+#MM    kernel-exec-includes \
+#MM    includes-copy
+
+USER_INCLUDES := -I$(SRCDIR)/rom/dos/include
+USER_LDFLAGS  := -L$(GENDIR)/lib
+USER_CFLAGS += -DDEBUG=1
+
+%build_module mmake=kernel-mount \
+    modname=mount modtype=library \
+    files="mount_init $(FUNCS) $(FILES)" uselibs="partition rom"
+
+%common
