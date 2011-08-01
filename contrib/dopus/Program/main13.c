@@ -370,78 +370,6 @@ int getroot(name,ds)
 char *name;
 struct DateStamp *ds;
 {
-#if defined(__AROS__) && !defined(AROS_DOS_PACKETS)
-        struct DosList *dl;
-        BPTR           lock;
-        BOOL           success;
-        char           buf[MAXFILENAMELENGTH];
-
-        //kprintf("!!!! getroot(%s)\n", name);
-
-        lock = Lock(name, ACCESS_READ);
-        if (NULL == lock)
-        {
-            //kprintf("Could not get lock in getroot()\n");
-            return 0;
-        }
-
-        /* Get the volume name */
-
-        /* Get lock on root device */
-
-        SetIoErr(0);
-        lock = getrootlock(lock);
-
-        /* Get the name from lock */
-        success = NameFromLock(lock, buf, MAXFILENAMELENGTH);
-
-        UnLock(lock);
-
-        if (!success)
-        {
-            //kprintf("Could not get lock for name\n");
-            return 0;
-        }
-
-        //kprintf("Name from lock %s\n", buf);
-
-
-        dl = LockDosList(LDF_DEVICES | LDF_VOLUMES | LDF_READ);
-        dl = FindDosEntry(dl, buf, LDF_DEVICES |  LDF_VOLUMES);
-
-        if (NULL == dl) {
-
-            UnLockDosList(LDF_DEVICES | LDF_VOLUMES | LDF_READ);
-            kprintf("Could not get device list\n");
-            return 0;
-        }
-
-        /* Get the device name */
-
-        if (dl->dol_Ext.dol_AROS.dol_DevName)
-        {
-            if (!IsFileSystem(dl->dol_Ext.dol_AROS.dol_DevName))
-            {
-                kprintf("!!!! NO FILESYSTEM IN getroot()\n");
-                Alert(AT_DeadEnd);
-            }
-            strcpy(name, dl->dol_Ext.dol_AROS.dol_DevName);
-        }
-
-        /* Get the volume date */
-        if (ds)
-        {
-            CopyMem(&dl->dol_misc.dol_volume.dol_VolumeDate, ds, sizeof (*ds));
-        }
-
-        UnLockDosList(LDF_DEVICES | LDF_VOLUMES | LDF_READ);
-
-#warning ID_VALIDATED is not always the case
-
-        //kprintf("getroot(): Name returned: %s\n", name);
-        return ID_VALIDATED;
-
-#else
     struct InfoData __aligned info;
     BPTR lock1;
     struct FileLock *lock2;
@@ -459,7 +387,6 @@ struct DateStamp *ds;
     Info(lock1,&info);
     UnLock(lock1);
     return(info.id_DiskState);
-#endif
 }
 
 BPTR getrootlock(lock1)

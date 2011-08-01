@@ -114,7 +114,6 @@ int rexx;
 void dodevicelist(win)
 int win;
 {
-#if !defined(__AROS__) || defined(AROS_DOS_PACKETS)
     struct DeviceList *devlist;
     struct RootNode *rootnode;
     struct DosInfo *dosinfo;
@@ -155,53 +154,6 @@ int win;
     refreshwindow(win,3);
     unbusy();
     okay();
-#else
-    struct DosList *devlist;
-    char devname[32];
-    int type;
-    static char type_order[4]={DLT_DEVICE,DLT_VOLUME,DLT_DIRECTORY,-1};
-    struct Directory *addafter=NULL;
-
-    if (status_iconified) return;
-    makespecialdir(win,globstring[STR_DEVICE_LIST_TITLE]);
-
-    dostatustext(globstring[STR_SCANNING_DEVICE_LIST]);
-    busy();
-
-    for (type=0;type<4;type++) {
-        devlist = LockDosList(LDF_READ | LDF_ALL);
-        while ((devlist= NextDosEntry(devlist, LDF_ALL)) != NULL) {
-            if (status_haveaborted) {
-                myabort();
-                break;
-            }
-            if (devlist->dol_Type==type_order[type] ||
-                (devlist->dol_Type>DLT_VOLUME && type_order[type]==-1)) {
-                if (devlist->dol_Type!=DLT_DEVICE
-                    || IsFileSystem(devlist->dol_Ext.dol_AROS.dol_DevName)
-                     ) {
-
-                    /* AROS: We don't have dl_Name field anymore
-                    BtoCStr((BPTR)devlist->dl_Name,devname,32);
-                    */
-
-                    strncpy(devname, devlist->dol_Ext.dol_AROS.dol_DevName, 31);
-
-                    strcat(devname,":");
-                    if (!(addfile(dopus_curwin[win],
-                        win,devname,devlist->dol_Type,0,
-                        NULL,NULL,0,0,FALSE,NULL,addafter,0,0))) break;
-                }
-            }
-        }
-        UnLockDosList(LDF_ALL);
-        if ((addafter=dopus_curwin[win]->firstentry))
-            while (addafter->next) addafter=addafter->next;
-    }
-    refreshwindow(win,3);
-    unbusy();
-    okay();
-#endif
 }
 
 int huntfile(name,completename,aa)

@@ -415,7 +415,6 @@ BPTR lock;
 char *buffer;
 struct MsgPort *port;
 {
-#if !defined(__AROS__) || defined(AROS_DOS_PACKETS)
     struct DeviceList *devlist,*dl;
     struct RootNode *rootnode;
     struct DosInfo *dosinfo;
@@ -434,31 +433,6 @@ struct MsgPort *port;
     if (devlist) BtoCStr((BPTR)devlist->dl_Name,buffer,31);
     else strcpy(buffer,((struct Task *)port->mp_SigTask)->tc_Node.ln_Name);
     strcat(buffer,":");
-#else
-    struct DosList *doslist, *volnode;
-    struct InfoData *infodata;
-    APTR volunit;
-    UWORD len;
-
-    infodata = AllocVec(sizeof(struct InfoData), MEMF_PUBLIC);
-    if (infodata != NULL) {
-        if (Info(lock, infodata)) {
-            volnode = BADDR(infodata->id_VolumeNode);
-            volunit = volnode->dol_Ext.dol_AROS.dol_Unit;
-
-            doslist = LockDosList(LDF_READ | LDF_VOLUMES);
-            while ((doslist = NextDosEntry(doslist, LDF_DEVICES)) != NULL) {
-                if (doslist->dol_Ext.dol_AROS.dol_Unit == volunit) {
-                    len = AROS_BSTR_strlen(doslist->dol_Name);
-                    CopyMem(AROS_BSTR_ADDR(doslist->dol_Name), buffer, len);
-                    buffer[len++] = ':';
-                    buffer[len] = '\0';
-                }
-            }
-            UnLockDosList(LDF_READ | LDF_VOLUMES);
-        }
-    }
-#endif
 }
 
 #ifdef __SASC__

@@ -1025,7 +1025,6 @@ int __saveds DoDefaultConfig(register struct ConfigStuff *cstuff __asm("a0"))
 
 int __saveds DoGetDevices(register struct ConfigStuff *cstuff __asm("a0"))
 {
-#if !defined(__AROS__) || defined(AROS_DOS_PACKETS)
     struct DeviceList *devlist;
     struct RootNode *rootnode;
     struct DosInfo *dosinfo;
@@ -1094,84 +1093,6 @@ int __saveds DoGetDevices(register struct ConfigStuff *cstuff __asm("a0"))
 //for (a = 0; a < DRIVECOUNT; a++) D(bug("%ld: %s\n",a,cstuff->config->drive[a].name);
 
   return 1;
-#else
-    struct DosList *devlist;
-
-    struct Config *config;
-    char devname[16],pathname[256];
-    int gap,i,j,k,a,p,l,d;
-
-    if (!(config=cstuff->config)) return(0);
-
-    a=0;
-
-    devlist = LockDosList(LDF_READ | LDF_ALL);
-
-    while ((devlist = NextDosEntry(devlist, LDF_ALL)) != NULL) {
-        if (devlist->dol_Type==DLT_DEVICE
-                && IsFileSystem(devlist->dol_Ext.dol_AROS.dol_DevName)
-                ) {
-
-            strncpy(pathname, devlist->dol_Ext.dol_AROS.dol_DevName, 255);
-
-            LStrCat(pathname,":");
-
-            strncpy(devname,pathname,15); devname[15]=0;
-            DoAssignDrive(cstuff,a,devname,pathname);
-            ++a;
-            if (a==DRIVECOUNT) break;
-        }
-    }
-    UnLockDosList(LDF_READ | LDF_ALL);
-
-    for (gap=a/2;gap>0;gap/=2) {
-        for (i=gap;i<a;i++) {
-            for (j=i-gap;j>=0;j-=gap) {
-                k=j+gap;
-                if (LStrCmpI(config->drive[j].name,config->drive[k].name)<=0) break;
-                SwapMem((char *)&config->drive[j],(char *)&config->drive[k],sizeof(struct dopusfunction));
-            }
-        }
-    }
-    d=a;
-    if (a<DRIVECOUNT) {
-        devlist = LockDosList(LDF_READ | LDF_ALL);
-
-        while ((devlist= NextDosEntry(devlist, LDF_ALL)) != NULL) {
-            if (devlist->dol_Type==DLT_DIRECTORY) {
-                /* AROS: we don't have a dol_Name field
-                BtoCStr((BPTR)devlist->dl_Name,pathname,256);
-                */
-
-                strncpy(pathname, devlist->dol_Ext.dol_AROS.dol_DevName, 255);
-
-                LStrCat(pathname,":");
-                strncpy(devname,pathname,15); devname[15]=0;
-                DoAssignDrive(cstuff,a,devname,pathname);
-                ++a;
-                if (a==DRIVECOUNT) break;
-            }
-        }
-        UnLockDosList(LDF_READ | LDF_ALL);
-    }
-    p=a-d;
-    for (gap=p/2;gap>0;gap/=2) {
-        for (i=gap;i<p;i++) {
-            for (j=i-gap;j>=0;j-=gap) {
-                k=j+gap+d; l=j+d;
-                if (LStrCmpI(config->drive[l].name,config->drive[k].name)<=0) break;
-                SwapMem((char *)&config->drive[l],(char *)&config->drive[k],sizeof(struct dopusfunction));
-            }
-        }
-    }
-    if (a<DRIVECOUNT) {
-        for (i=a;i<DRIVECOUNT;i++) DoAssignDrive(cstuff,i,NULL,NULL);
-    }
-
-    /* AROS: a return here was missing */
-    return 1;
-
-#endif
 }
 
 void __saveds DoAssignGadget(register struct ConfigStuff *cstuff __asm("a0"), register int bk __asm("d0"), register int gad __asm("d1"), register char *name __asm("a1"), register char *func __asm("a2"))

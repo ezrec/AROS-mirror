@@ -831,12 +831,6 @@ void _abort(void)               /* called when ^C is pressed */
 #include <exec/memory.h>
 #include <clib/exec_protos.h>
 
-#if defined(__AROS__) && !defined(AROS_DOS_PACKETS)
-#  include <dos/filesystem.h>
-
-void InitIOFS(struct IOFileSys *iofs, ULONG type, struct DosLibrary *DOSBase);
-#endif
-
 extern long sendpkt(struct MsgPort *pid, long action, long *args, long nargs);
 
 int screensize(int *ttrows, int *ttcols)
@@ -851,24 +845,7 @@ int screensize(int *ttrows, int *ttcols)
 
         if (ind && conp && sendpkt(conp, ACTION_DISK_INFO, &argp, 1))
             conunit = (void *) ((struct IOStdReq *) ind->id_InUse)->io_Unit;
-#if defined(__AROS__) && !defined(AROS_DOS_PACKETS)
-	if (ind && (!conp))
-	{
-	    struct IOFileSys iofs;
-	    struct FileHandle *handle = (struct FileHandle *)BADDR(fh);
-    
-	    InitIOFS(&iofs, FSA_DISK_INFO, DOSBase);
 
-	    iofs.IOFS.io_Device = handle->fh_Device;
-	    iofs.IOFS.io_Unit   = handle->fh_Unit;
-	    iofs.io_Union.io_INFO.io_Info = ind;
-
-	    DoIO(&iofs.IOFS);
-
-	    if (!iofs.io_DosError)
-	    	conunit = (void *) ((struct IOStdReq *) ind->id_InUse)->io_Unit;
-	}
-#endif
         if (ind)
             FreeMem(ind, sizeof(*ind));
         if (conunit) {

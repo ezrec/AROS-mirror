@@ -32,19 +32,10 @@
 #include <proto/dos.h>
 #include <proto/utility.h>
 
-#if !defined(__AROS__) || defined(AROS_DOS_PACKETS)
-#define USE_DOS_PACKETS
-#else
-#define USE_AROS_PACKETS
-#endif
-
 #ifdef  __AROS__
     #define   DEBUG 1
     #include  <aros/debug.h>
 
-#ifndef AROS_DOS_PACKETS
-    #include <dos/filesystem.h>
-#endif
     #include  <stdio.h>
     #define   Printf  printf      /* Must be after #include <proto/dos.h> */
 #else
@@ -110,13 +101,8 @@ struct DirEntry
 
 struct CopyNode
 {
-#ifdef USE_DOS_PACKETS
     struct Message     cn_DosMessage; /* a message for the DOS process */
     struct DosPacket   cn_DosPacket;  /* the message to be posted */
-#else
-    struct IOFileSys   cn_iofs;
-#endif
-
     APTR               cn_Buffer;     /* Pointer to the buffer */
     ULONG              cn_BufSize;    /* size of the buffer to allocate */
     ULONG              cn_WriteSize;  /* number of bytes to be written out */
@@ -265,12 +251,10 @@ int main(void)
     
     tclower = (LONG)(this->pr_Task.tc_SPLower);
 
-#ifdef USE_DOS_PACKETS
     DOSBase = (struct DosLibrary *)(OpenLibrary("dos.library", 37L));
 
     if(DOSBase != NULL)
     {
-#endif
 
 	oldlock = CurrentDir(NULL);
 	CurrentDir(oldlock);
@@ -336,13 +320,11 @@ int main(void)
 	CurrentDir(oldlock);
 	CloseLibrary((struct Library *)DOSBase);
 	
-#ifdef USE_DOS_PACKETS
     }
     else
     {
 	res = 32;
     }
-#endif
     
     return res;
 }
@@ -921,7 +903,7 @@ BOOL FindSoftOrginal(struct DirEntry *de)
     CurrentDir(dirlock);
 
 #warning  Using lock internals here
-#ifdef USE_DOS_PACKETS
+
     flock = (struct FileLock *)(BADDR(dirlock));
     
     if(flock->fl_Task == NULL)
@@ -933,7 +915,6 @@ BOOL FindSoftOrginal(struct DirEntry *de)
     if(!ReadLink(flock->fl_Task, dirlock, de->de_name, buffer, BUFFERSIZE))
 	return FALSE;
 
-#endif
 
     /* Locate the object the link is going to */
     if(!(dirlock = Lock(buffer, SHARED_LOCK)))
@@ -2907,7 +2888,6 @@ BOOL PurgeDir(BPTR sourcelock, BPTR destlock, struct MinList *dirlist,
     return result;
 }
 
-#ifdef USE_DOS_PACKETS
 
 ///
 /// AllocCopyNode
@@ -2965,7 +2945,6 @@ struct CopyNode *AllocCopyNode(BPTR from, ULONG size, ULONG *limit)
     return cn;
 }
 
-#endif /* #ifdef USE_DOS_PACKETS */
 
 ///
 /// FreeCopyNode
@@ -2980,7 +2959,6 @@ void FreeCopyNode(struct CopyNode *cn, ULONG *limit)
 	lastchancebusy = FALSE;
 }
 
-#ifdef USE_DOS_PACKETS
 
 ///
 /// AsyncCopy
@@ -3254,386 +3232,3 @@ BOOL AsyncCopy(BPTR from, BPTR to, ULONG readsize, char *name)
     
     return TRUE;
 }
-
-
-#endif /* #ifdef USE_DOS_PACKETS*/
-
-
-#ifdef USE_AROS_PACKETS
-///
-/// AsyncCopy_AROS
-BOOL AsyncCopy_AROS(BPTR from, BPTR to, ULONG readsize, char *name)
-{
-    struct CopyNode *cn;
-    
-    ULONG  buffer;
-    ULONG  packetcount;
-    ULONG  limit;
-    BOOL   busy, stop, report;
-    LONG   readerror, writeerror;
-    LONG   signals;
-    
-    ioport.mp_Node.ln_Type  = NT_MSGPORT;
-    ioport.mp_Node.ln_Pri   = 0;
-    ioport.mp_Node.ln_Name  = NULL;
-    ioport.mp_Flags         = PA_SIGNAL;
-    ioport.mp_SigBit        = SIGB_DOS;
-    ioport.mp_SigTask       = FindTask(NULL);
-    NewList(&(ioport.mp_MsgList));
-
-    /* Buffer limit == half the size of the largest free memoryblock */
-    limit                   = AvailMem(MEMF_PUBLIC | MEMF_LARGEST);
-    limit                 >>= 1;
-    
-    if(limit > 8192)
-    {
-	limit -= 8192;
-    }
-    else
-    {
-	limit = 0;
-    }
-    
-#if 0
-    /* if source or destination is NIL:, return no error
-       but copy zero bytes anyhow */
-    if((readport == NULL) || (writeport == NULL))
-	return 0;
-#endif
-
-    /* if there's nothing to do, abort now */
-    if(readsize == 0)
-	return 0;
-    
-    readerror      = 0;
-    writeerror     = 0;
-    packetcount    = 0;
-    stop           = FALSE;
-    SetIoErr(0);
-    lastchancebusy = FALSE;
-    report         = TRUE;
-    
-    while(TRUE)
-    {
-	/* Check whether we should still read bytes from the input */
-	busy = FALSE;
-	
-	/* If user hit ^C, then abort reading */
-	if(CheckAbort())
-	    stop = TRUE;
-	
-	if(stop) 
-	{
-	    readsize = 0;   /* Do not demand reading if halt required */
-	}
-	
-	if(readsize != 0)
-	{
-	    /* Go for a reasonable buffer size */
-	    buffer = 4096;
-	    
-	    if(bufsize > buffer)
-		buffer = bufsize;
-	    
-	    if(buffer > readsize)
-		buffer = readsize;
-	    
-	    if(buffer > limit)
-	    {
-		if(limit > BUFFERSIZE)
-		{
-		    buffer = limit;
-		}
-	    }
-	    
-	    cn = AllocCopyNode_AROS(from, buffer, &limit);
-	    
-	    if(cn != NULL)
-	    {
-		/* Might fill in another value if no memory */
-		readsize -= cn->cn_BufSize;
-
-		D(bug("Sending read 1\n"));
-
-		SendIO((struct IORequest *)&cn->cn_iofs);
-		
-		// SendPkt(&(cn->cn_DosPacket), readport, &ioport);
-
-		busy = TRUE;
-		packetcount++;
-	    }
-	    else
-	    {
-		/* Allocation of the packet failed. If at least one packet 
-		   is busy, wait for its return as we may re-use it.
-		   else generate an error */
-		if(packetcount == 0)
-		{
-		    readerror = ERROR_NO_FREE_STORE;
-		    SetIoErr(readerror);
-		    PostFailure(Fatal(), "Can't read from \"%s\"", name);
-		    stop = TRUE;
-
-		    /* Fatal sets also abortFlag */
-		}
-	    }
-	}
-	
-	cn = (struct CopyNode *)GetMsg(&ioport);
-
-	if(cn != NULL)
-	{
-	    busy = TRUE;
-	    
-	    /* A Queue packet failure ? */
-	    if(cn->cn_BackTick != cn)
-	    {
-		Alert(AN_QPktFail);
-	    }
-	    else
-	    {
-		if(cn->cn_Command == FSA_READ)
-		{
-		    D(bug("Got doserror (from FSA_READ) %i\n",
-			  cn->cn_iofs.io_DosError));
-
-		    if(cn->cn_iofs.io_DosError == 0)
-		    {
-			/* If this is an emergency stop, do not send a 
-			   write request */
-			if(CheckAbort())
-			{
-			    packetcount--;
-			    FreeCopyNode(cn, &limit);
-			}
-			else
-			{
-			    struct FileHandle *fh = (struct FileHandle *)to;
-			    ULONG  bytesRead;
-			    struct IOFileSys *iofs = &cn->cn_iofs;
-
-			    /* Everything went fine, initialize this packet
-			       for writing and let it go */
-
-			    iofs->IOFS.io_Command = FSA_WRITE;
-			    cn->cn_Command        = FSA_WRITE;
-
-			    iofs->IOFS.io_Device = fh->fh_Device;
-			    iofs->IOFS.io_Unit   = fh->fh_Unit;
-			    
-			    readsize += cn->cn_BufSize;
-			    
-			    bytesRead = iofs->io_Union.io_READ.io_Length;
-
-			    /* bytesRead stays in io_Length for the write! */
-
-			    cn->cn_WriteSize = bytesRead;
-			    
-			    /* Subtract the actual number of bytes read */
-			    readsize -= bytesRead;
-
-			    D(bug("Sending write 1"));
-
-			    SendIO((struct IORequest *)iofs);
-
-			    // SendPkt(&(cn->cn_DosPacket), writeport, &ioport);
-			}
-		    }
-		    else
-		    {
-			/* Uhoh, something went wrong. An error? */
-			if(cn->cn_iofs.io_DosError != 0)
-			{   /* An error! */
-			    
-			    /* If this is the first fault, print it */
-			    
-			    if(readerror == 0)
-			    {
-				if(report)
-				{
-				    if(ErrorReport(cn->cn_iofs.io_DosError,
-						   REPORT_STREAM, (LONG)from,
-						   NULL))
-				    {
-					/* Cancled */
-					report = FALSE;
-				    }
-				} /* continue with the next read-packet, 
-				     release this */
-				
-				/* Abort and print error in case the user
-				   cancled */
-				if(report == FALSE)
-				{
-				    readerror = cn->cn_iofs.io_DosError;
-				    SetIoErr(readerror);
-				    PostFailure(readerror,
-						"Can't read from \"%s\"", name);
-				    stop = TRUE;
-				}
-			    }
-			    
-			    /* A read error is non-fatal */
-			}
-			else
-			    stop = TRUE;   /* EOF, Reading done */
-			
-			packetcount--;
-			FreeCopyNode(cn, &limit);
-		    }
-		}
-		else if(cn->cn_Command == FSA_WRITE)
-		{
-		    if(cn->cn_iofs.io_Union.io_READ.io_Length != cn->cn_BufSize)
-		    {
-			if(cn->cn_iofs.io_DosError != 0)
-			{
-			    /* A real error? If so, report to the user 
-			       if not aborted anyhow */
-			    if(report)
-			    {
-				if(ErrorReport(cn->cn_iofs.io_DosError,
-					       REPORT_STREAM, (LONG)to, NULL))
-				{
-				    /* User canceled */
-				    report = FALSE;
-				}
-				else
-				{
-				    struct IOFileSys  *iofs = &cn->cn_iofs;
-				    struct FileHandle *fh = (struct FileHandle *)to;
-
-				    /* Re-initialize the packet, and retry
-				       the write request */
-				    iofs->IOFS.io_Command = FSA_WRITE;
-				    
-				    /* These are probably not necessary */
-				    iofs->IOFS.io_Device = fh->fh_Device;
-				    iofs->IOFS.io_Unit   = fh->fh_Unit;
-
-				    // cn->cn_DosPacket.dp_Arg1 = arg1;
-				    // cn->cn_DosPacket.dp_Arg2 = cn->cn_Buffer;
-				    // cn->cn_DosPacket.dp_Arg3 = cn->cn_WriteSize;
-				    // SendPkt(&(cn->cn_DosPacket), writeport,
-				    //     &ioport);
-				    
-				    D(bug("Sending write 2"));
-
-				    SendIO((struct IORequest *)&cn->cn_iofs);
-
-				    CheckAbort();
-				    continue;
-				}
-			    }
-			}
-			
-			/* If this is the first write error, print it */
-			if(report == FALSE && writeerror == 0)
-			{
-			    if(cn->cn_iofs.io_DosError != 0)
-			    {
-				writeerror = cn->cn_iofs.io_DosError;
-			    }
-			    else
-			    {
-				writeerror = ERROR_OBJECT_WRONG_TYPE;
-			    }
-			    
-			    SetIoErr(writeerror);
-			    PostFailure(Fatal(), "Can't write to \"%s\"", name);
-			    
-			    /* Fatal() sets abortFlag and therefore stops 
-			       reading */
-			}
-		    }
-		    
-		    packetcount--;
-		    FreeCopyNode(cn, &limit);
-		}
-		else 
-		    Alert(AN_QPktFail);  /* Huh, an unknown command returned? */
-	    }
-	}
-	
-	if(packetcount == 0 && readsize == 0)
-	    break;
-	
-	if(!busy)
-	{
-	    signals = Wait((ULONG)(SIGF_DOS | SIGBREAKF_CTRL_C));
-
-	    if(signals & SIGBREAKF_CTRL_C)
-		Abort();
-	}
-	else
-	    CheckAbort();
-    }
-    
-    if(readerror || writeerror)
-	return FALSE;
-    
-    return TRUE;
-}
-
-struct CopyNode *AllocCopyNode_AROS(BPTR from, ULONG size, ULONG *limit)
-{
-    struct CopyNode *cn = NULL;
-    
-    if(size > *limit)
-    {
-	size = *limit;
-    }
-    
-    if(size)
-    {
-	cn = AllocVec(sizeof(struct CopyNode) + size, 
-		      MEMF_PUBLIC | MEMF_NO_EXPUNGE);
-    }
-    
-    if(cn == NULL)
-    {
-	/* If we couldn't allocate a buffer, we use the static buffer
-	   and make sure we don't free it afterwards */	   
-	if(lastchancebusy == FALSE)
-	{
-	    lastchancebusy  = TRUE;
-	    cn              = &lastchancenode;
-	    cn->cn_Buffer   = buffer;  /* NOTE: This is the static global
-					        variable 'buffer' */
-	    cn->cn_release  = FALSE;
-	    size            = BUFFERSIZE;
-	}
-    }
-    else
-    {
-	*limit         -= size;
-	cn->cn_Buffer   = (APTR)(cn + 1);  /* NOTE: Buffer is after CopyNode */
-	cn->cn_release  = TRUE;
-    }
-    
-    if(cn != NULL)
-    {
-	struct IOFileSys  *iofs = &cn->cn_iofs;
-	struct FileHandle *fh = (struct FileHandle *)from;
-
-	iofs->IOFS.io_Message.mn_Node.ln_Type = NT_REPLYMSG;
-	iofs->IOFS.io_Message.mn_ReplyPort    = &ioport;
-	iofs->IOFS.io_Message.mn_Length       = sizeof(struct IOFileSys);
-	iofs->IOFS.io_Command                 = FSA_READ;
-	iofs->IOFS.io_Flags                   = 0;
-
-	iofs->IOFS.io_Device = fh->fh_Device;
-	iofs->IOFS.io_Unit   = fh->fh_Unit;
-
-	iofs->io_Union.io_READ.io_Buffer = cn->cn_Buffer;
-	iofs->io_Union.io_READ.io_Length = size;
-
-	cn->cn_Command                   = FSA_READ;
-	cn->cn_BufSize                   = size;
-	cn->cn_BackTick                  = cn;
-    }
-
-    return cn;
-}
-
-#endif /* #ifdef AROS */
