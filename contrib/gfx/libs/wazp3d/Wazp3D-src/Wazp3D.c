@@ -9257,9 +9257,4 @@ void		 PrintAllFunctionsAdresses(void)
 #endif
 }
 /*==========================================================================*/
-#ifdef __AROS__
-void W3D_Settings(void)
-{
-	WAZP3D_Settings();
-}
-#endif
+
