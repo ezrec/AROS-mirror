@@ -1,22 +1,6 @@
 
 Source code for Popplaceholder class
 
-Legal
------
-
-I've released the complete source code for Popph so you may add what
-you need.  However you are not allowed to use the source code for
-commercial purposes, nor release modified versions of the classes
-under under any name without my written permission.
-
-Releasing sources does not mean I don't care this project any longer.
-It simply means I find this project finished (oh, it lacks .mcp prefs
-module, I know ;-)
-
-You can reach me at the following address if you have any questions
-or suggestions: carlos@amiga.com.pl
-
-
 Building the Popph from the code
 --------------------------------
 
