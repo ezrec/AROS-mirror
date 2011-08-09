@@ -3,13 +3,6 @@
 /* patch for real Warp3D if the hardware-driver cant draw lines/points			*/
 /* patch for real Warp3D if the hardware-driver cant read/write in zbuffer		*/
 
-#include <exec/types.h>
-#include <proto/Warp3D.h>
-
-#include <strings.h>
-#include <stdio.h>
-#include <math.h>
-
 BOOL w3dpatch=FALSE;
 /*==========================================================================*/
 #define ZDOUBLE	1
