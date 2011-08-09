@@ -34,7 +34,6 @@ ULONG DrawLine(W3D_Context *context,W3D_Vertex *v1,W3D_Vertex *v2,W3D_Texture *t
 W3D_Vertex quad[4];
 W3D_Triangles triangles;
 register ULONG result;
-register ULONG n;
 float dim,x,y;
 ULONG currentstate;
 
@@ -118,11 +117,11 @@ ULONG PatchW3D_DrawLineStrip(W3D_Context *context, W3D_Lines *lines)
 {
 register W3D_Vertex *v	=lines->v;
 register LONG nlines	=lines->vertexcount-1;
-register ULONG result;
+register ULONG result	=W3D_SUCCESS;
 register LONG n;
 
 	if(!w3dpatch)	return( W3D_DrawLineStrip(context,lines) );
-
+	
 NLOOP(nlines)
 	{
 	result=DrawLine(context,&v[0],&v[1],lines->tex,lines->linewidth);
@@ -295,7 +294,6 @@ register UWORD  *uwz;
 register ULONG  *ulz;
 UBYTE *z8;
 ULONG zsize;
-ULONG result;
 
 	if(!w3dpatch)	{W3D_WriteZSpan(context,x,y,n,z,mask); return;}
 
@@ -485,7 +483,7 @@ ULONG i;
 		PatchW3D_ReadZPixel(context,0,0,&dz);		/* try to re-read the zbuffer with this format */
 		if((TESTZ-0.001) < dz )					/* is it aproximately the same value  ? */
 		if(dz < (TESTZ+0.001) )
-			{printf("found z format %d\n",zformat); return;}
+			{printf("found z format %ld\n",zformat); return;}
 		}
 	zformat=-1;
 	printf("cant find z format\n");

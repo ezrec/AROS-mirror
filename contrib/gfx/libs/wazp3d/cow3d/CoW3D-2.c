@@ -1,5 +1,5 @@
 /* Author: Alain Thellier - Paris - 2010 . See ReadMe for more infos			*/
-/* Cow3D-2.c: Cow V2 10 nov 2010 : now can draw cow as lines/points + zbuffer to grey	*/ 
+/* Cow3D-2.c: Cow V2 10 nov 2010 : now can draw cow as lines/points + zbuffer to grey	*/
 /* v2.1 August 2011 : Draw FPS correctly on Aros too					*/
 
 
@@ -227,7 +227,7 @@ void SetQuad(struct object3D *Quad,float x,float y,float z,float large,float hig
 	SetP(&Quad->P2[1],x+large,y+high,z,1.0/z,1.0,1.0,r,g,b,a);
 	SetP(&Quad->P2[2],x+large,y,z,1.0/z,1.0,0.0,r,g,b,a);
 	SetP(&Quad->P2[3],x,y,z,1.0/z,0.0,0.0,r,g,b,a);
-	
+
 }
 /*==================================================================*/
 void SetV(W3D_Vertex *V,float x, float y, float z,float w,float u, float v,UBYTE r,UBYTE g,UBYTE b,UBYTE a)
@@ -247,9 +247,10 @@ void SetV(W3D_Vertex *V,float x, float y, float z,float w,float u, float v,UBYTE
 void MyDumpMem(UBYTE *pt,LONG nb)
 {
 LONG n;
+
 NLOOP(nb/4)
 	{
-	printf("[%ld\t][%ld\t] %ld\t%ld\t%ld\t%ld\n",pt,4*n,pt[0],pt[1],pt[2],pt[3]);
+	printf("[%ld\t][%ld\t] %d\t%d\t%d\t%d\n",(ULONG)pt,4*n,pt[0],pt[1],pt[2],pt[3]);
 	pt=&(pt[4]);
 	}
 }
@@ -269,14 +270,14 @@ W3D_Point point;
 	point.tex=tex;
 
 
-	x=400; y=20; z=0.1;
+	x=400; y=20; z=0.1; w=1.0/z;
 	point.pointsize=1;
 	SetV(&point.v1,x,y,z,w,u,v,r,g,b,a);
 	result=PatchW3D_DrawPoint(context,&point);
 	if(result!=W3D_SUCCESS)
 		printf("Cant W3D_DrawPoint size=1\n");
 
-	x=400; y=40; z=0.1;
+	x=400; y=40; z=0.1; w=1.0/z;
 	point.pointsize=5;
 	SetV(&point.v1,x,y,z,w,u,v,r,g,b,a);
 	result=PatchW3D_DrawPoint(context,&point);
@@ -289,7 +290,7 @@ W3D_Point point;
 	line.st_pattern=0;
 	line.st_factor=0;
 
-	x=420; y=20; z=0.1;
+	x=420; y=20; z=0.1; w=1.0/z;
 	line.linewidth=1;
 	SetV(&line.v1,x,y,z,w,u,v,r,g,b,a);
 	SetV(&line.v2,x+100,y+20,z,w,u2,v2,r,g,b,a);
@@ -297,7 +298,7 @@ W3D_Point point;
 	if(result!=W3D_SUCCESS)
 		printf("Cant W3D_DrawLine width=1\n");
 
-	x=420; y=40; z=0.1;
+	x=420; y=40; z=0.1; w=1.0/z;
 	line.linewidth=5;
 	SetV(&line.v1,x,y,z,w,u,v,r,g,b,a);
 	SetV(&line.v2,x+100,y+20,z,w,u2,v2,r,g,b,a);
@@ -326,7 +327,7 @@ float zvalues[7]={0.10,0.20,0.30,0.40,0.90,0.94,0.98};
 double zspan[LARGE];
 UBYTE   mask[LARGE];
 
-/* 1: test writezspan */ 
+/* 1: test writezspan */
 	if(!w3dpatch)
 	if( W3D_SUCCESS != W3D_LockHardware(context) ) return;
 
@@ -345,14 +346,14 @@ UBYTE   mask[LARGE];
 	NLOOP(LARGE)
 		{mask[n]=1; zspan[n]=0.50;}		/* never mask */
 	NLOOP(100)
-		zspan[n]=n*0.01;				
+		zspan[n]=n*0.01;
 
 	PatchW3D_WriteZSpan(context,0,42,LARGE,zspan,mask); 	/* draw a zspan in the midle of the test-rectangles */
 
 	if(!w3dpatch)
 	W3D_UnLockHardware(context);
 
-/* 2: test zbuffer */ 
+/* 2: test zbuffer */
 	if( W3D_SUCCESS != W3D_LockHardware(context) ) return;
 
 	large=50.0;
@@ -445,7 +446,7 @@ ULONG n;
 float x,y,z,w,u,v;
 UBYTE r,g,b,a;
 
-	
+
 	NLOOP(O->PInb)
 		O->PI[n]=i[n];
 	P=O->P;
@@ -573,7 +574,7 @@ ULONG mode;
 	O->tex=W3D_AllocTexObjTags(context,&result,W3D_ATO_IMAGE,(ULONG)O->picture,W3D_ATO_FORMAT,mode,W3D_ATO_WIDTH,size,W3D_ATO_HEIGHT,size,TAG_DONE);
 
 	if(result!=W3D_SUCCESS)
-		printf("Cant create tex! \n",result);
+		{printf("Cant create tex! \n");return;}
 
 	W3D_SetTexEnv(context,O->tex,W3D_REPLACE,NULL);
 }
@@ -620,7 +621,7 @@ UBYTE drawname[10];
 	if(zmode==W3D_Z_NOTEQUAL) strcpy(zname,"ZNOTEQUAL");
 	if(zmode==W3D_Z_EQUAL) strcpy(zname,"ZEQUAL");
 	if(zmode==W3D_Z_ALWAYS) strcpy(zname,"ZALWAYS");
-	sprintf(FpsText,"%s: %d Fps(Object: %dtris %dpoints)(zbuffer%d/zupdate%d(%s) optirot%d buffered%d) as %s(big%d)",progname,FPS,CowObj->PInb/3,CowObj->Pnb,zbuffer,zupdate,zname,optimroty,buffered,drawname,bigpoint);
+	sprintf(FpsText,"%s: %ld Fps(Object: %ldtris %ldpoints)(zbuffer%d/zupdate%d(%s) optirot%d buffered%d) as %s(big%d)",progname,FPS,CowObj->PInb/3,CowObj->Pnb,zbuffer,zupdate,zname,optimroty,buffered,drawname,bigpoint);
 
 	if (++FramesCounted >= (FRAMESCOUNT*2)) 			/* ie after the object turned two times  */
 	{
@@ -639,7 +640,7 @@ UBYTE drawname[10];
 	MyDrawText(3,9,FpsText);
 }
 /*=================================================================*/
-SwitchDisplayWarp3D(void)
+void SwitchDisplayWarp3D(void)
 {
 W3D_Double Zclear=0.90;
 
@@ -833,8 +834,8 @@ UBYTE texname[50];
 /*==================================================================*/
 ULONG SetBlendMode()
 {
-	if(srcfunc==0) 
-	if(dstfunc==0) 
+	if(srcfunc==0)
+	if(dstfunc==0)
 		return(W3D_ILLEGALINPUT);
 
 	if((srcfunc==W3D_ZERO) && (dstfunc==W3D_ZERO))	/* skip this special value that is used in Wazp3D */
@@ -846,7 +847,7 @@ ULONG SetBlendMode()
 BOOL DoContextCheckWarp3D(void)
 {
 W3D_Driver **drivers;
-W3D_Driver *driver;
+W3D_Driver *driver=NULL;
 ULONG texfmt,destfmt,state,query,w,h,wp,hp,m,n;
 
 	printf("CheckWarp3D:\n");
@@ -859,28 +860,28 @@ ULONG texfmt,destfmt,state,query,w,h,wp,hp,m,n;
 
 	drivers = W3D_GetDrivers();
 
-#ifdef STATWAZP3D 
+#ifdef STATWAZP3D
 #define W3D_Q_SETTINGS 9999
 	W3D_QueryDriver(drivers[0],W3D_Q_SETTINGS,0);
 #endif
-	
+
 
 	if (*drivers == NULL)
 	{
 	printf("Panic: No W3D_Driver(s) found !!!\n");
-	return;
+	goto panic;
 	}
 	printf("==============================\n");
 	while (drivers[0])
 	{
 	driver=drivers[0];
-	printf("========= W3D_Driver <%s> soft:%ld ChipID:%ld formats:%ld =======\n",driver->name,driver->swdriver,driver->ChipID,driver->formats);
+	printf("========= W3D_Driver <%s> soft:%d ChipID:%ld formats:%ld =======\n",driver->name,driver->swdriver,driver->ChipID,driver->formats);
 
 	MLOOP(15)
 	{
 	destfmt=1<<m;
 	printf("------------------------------\n");
-	printf("destformat:%d\n",destfmt);
+	printf("destformat:%ld\n",destfmt);
 	MyQueryDriver(driver,W3D_Q_DRAW_POINT,destfmt);
 	MyQueryDriver(driver,W3D_Q_DRAW_LINE,destfmt);
 	MyQueryDriver(driver,W3D_Q_DRAW_TRIANGLE,destfmt);
@@ -911,7 +912,7 @@ ULONG texfmt,destfmt,state,query,w,h,wp,hp,m,n;
 	if(destfmt==PIXFMT_BGRA32)	destfmt=W3D_FMT_B8G8R8A8;
 	if(destfmt==PIXFMT_RGBA32)	destfmt=W3D_FMT_R8G8B8A8;
 	printf("==============================\n");
-	printf("Current bitmap's destformat is %d\n",destfmt);
+	printf("Current bitmap's destformat is %ld\n",destfmt);
 
 	printf("==============================\n");
 	printf("Query for the current bitmap's destformat:\n");
@@ -964,16 +965,16 @@ ULONG texfmt,destfmt,state,query,w,h,wp,hp,m,n;
 	MLOOP(15)
 	{
 	srcfunc=m+1; 	/* src/dstfunc go 1 to 15 */
-	if(srcfunc<10) printf("BlendMode Src%d :",srcfunc); else printf("BlendMode Src%d:",srcfunc); 
+	if(srcfunc<10) printf("BlendMode Src%ld :",srcfunc); else printf("BlendMode Src%ld:",srcfunc);
 	NLOOP(15)
 	{
 	dstfunc=n+1;
-	
+
 	result=SetBlendMode();
 	if(result==W3D_SUCCESS)
-		{if(dstfunc<10) printf(" Dst%d ",dstfunc); else printf(" Dst%d",dstfunc);}
+		{if(dstfunc<10) printf(" Dst%ld ",dstfunc); else printf(" Dst%ld",dstfunc);}
 	else
-		{if(dstfunc<10) printf(" ---- ",dstfunc); else printf(" -----",dstfunc);}
+		{if(dstfunc<10) printf(" ---- "); else printf(" -----");}
 	}
 	printf("\n");
 	}
@@ -987,7 +988,7 @@ panic:
 /*=================================================================*/
 BOOL StartWarp3D(void)
 {						/* open a window & a ratsport ("back buffer") & open warp3d & create a warp3d context  */
-UWORD screenlarge,screenhigh,ok;
+UWORD screenlarge,screenhigh;
 ULONG Flags =WFLG_ACTIVATE | WFLG_REPORTMOUSE | WFLG_RMBTRAP | WFLG_SIMPLE_REFRESH | WFLG_GIMMEZEROZERO ;
 ULONG IDCMPs=IDCMP_CLOSEWINDOW | IDCMP_VANILLAKEY | IDCMP_RAWKEY | IDCMP_MOUSEMOVE | IDCMP_MOUSEBUTTONS ;
 
@@ -995,7 +996,7 @@ ULONG IDCMPs=IDCMP_CLOSEWINDOW | IDCMP_VANILLAKEY | IDCMP_RAWKEY | IDCMP_MOUSEMO
 	if (CyberGfxBase==NULL)
 		{printf("Cant open LIBS:cybergraphics.library\n");	return FALSE;};
 
-#ifdef STATWAZP3D 
+#ifdef STATWAZP3D
 	WAZP3D_Init(SysBase);
 #else
 	Warp3DBase = OpenLibrary("Warp3D.library", 4L);
@@ -1011,7 +1012,7 @@ ULONG IDCMPs=IDCMP_CLOSEWINDOW | IDCMP_VANILLAKEY | IDCMP_RAWKEY | IDCMP_MOUSEMO
 	window = OpenWindowTags(NULL,
 	WA_Activate,	TRUE,
 	WA_InnerWidth,	LARGE,
-	WA_InnerHeight,	HIGH, 
+	WA_InnerHeight,	HIGH,
 	WA_Left,		(screenlarge - LARGE)/2,
 	WA_Top,		(screenhigh  -  HIGH)/2,
 	WA_Title,		(ULONG)progname,
@@ -1037,7 +1038,7 @@ ULONG IDCMPs=IDCMP_CLOSEWINDOW | IDCMP_VANILLAKEY | IDCMP_RAWKEY | IDCMP_MOUSEMO
 	bm=bufferrastport.BitMap;				/* draw in this back-buffer */
 
 	if(DoContextCheckWarp3D()==FALSE)
-		{printf("Cant Check Warp3D\n",result);return(FALSE);}
+		{printf("Cant Check Warp3D\n");return(FALSE);}
 
 	result=W3D_AllocZBuffer(context);
 	if(result!=W3D_SUCCESS)
@@ -1049,13 +1050,19 @@ void CloseWarp3D(void)
 {
 	if (BufferedP)			free(BufferedP);
 
-	if (CowObj->tex)			W3D_FreeTexObj(context,CowObj->tex);
-	if (CowObj->picture)		free(CowObj->picture);
-	if (CowObj)				free(CowObj);
+	if (CowObj)
+	{
+		if (CowObj->tex)			W3D_FreeTexObj(context,CowObj->tex);
+		if (CowObj->picture)		free(CowObj->picture);
+		free(CowObj);
+	}
 
-	if (CosmosObj->tex)		W3D_FreeTexObj(context,CosmosObj->tex);
-	if (CosmosObj->picture)		free(CosmosObj->picture);
-	if (CosmosObj)			free(CosmosObj);
+	if (CosmosObj)
+	{
+		if (CosmosObj->tex)		W3D_FreeTexObj(context,CosmosObj->tex);
+		if (CosmosObj->picture)		free(CosmosObj->picture);
+		free(CosmosObj);
+	}
 
 	if (QuadObj)			free(QuadObj);
 
@@ -1063,7 +1070,7 @@ void CloseWarp3D(void)
 	if (bufferrastport.BitMap)	FreeBitMap(bufferrastport.BitMap);
 	if (window)				CloseWindow(window);
 
-#ifdef STATWAZP3D 
+#ifdef STATWAZP3D
 	WAZP3D_Close();
 #else
 	if (Warp3DBase)			CloseLibrary(Warp3DBase);
@@ -1076,8 +1083,8 @@ void SetStatesWarp3D(void)
 W3D_Color envcolor1;
 W3D_Color envcolor2;
 
-	envcolor1.r=0.0; envcolor1.g=1.0; envcolor1.b=0.0; envcolor1.a=1.0; 
-	envcolor2.r=0.0; envcolor2.g=0.0; envcolor2.b=1.0; envcolor2.a=1.0; 
+	envcolor1.r=0.0; envcolor1.g=1.0; envcolor1.b=0.0; envcolor1.a=1.0;
+	envcolor2.r=0.0; envcolor2.g=0.0; envcolor2.b=1.0; envcolor2.a=1.0;
 
 	W3D_SetState(context, W3D_BLENDING,		W3D_DISABLE);	/* non transparent */
 	W3D_SetState(context, W3D_GOURAUD,		W3D_DISABLE);	/* non shaded */
@@ -1112,7 +1119,7 @@ void ShowSrcDst(void)
 {
 #define  WINFO(var,val,doc) if(var == val) printf(" " #var "=" #val ", " #doc "\n");
 
-	printf("Blending src%d/dst%d\n",srcfunc,dstfunc);
+	printf("Blending src%ld/dst%ld\n",srcfunc,dstfunc);
 
 	WINFO(srcfunc,W3D_ZERO,"source + dest ")
 	WINFO(srcfunc,W3D_ONE,"source + dest ")
@@ -1149,14 +1156,14 @@ void ShowSrcDst(void)
 /* check if this blend mode works ? */
 	result=SetBlendMode();
 	if(result!=W3D_SUCCESS)
-		printf("Cant SetBlendMode!(src %d dst %d)\n",srcfunc,dstfunc);
+		printf("Cant SetBlendMode!(src %ld dst %ld)\n",srcfunc,dstfunc);
 }
 /*================================================================================*/
 void WindowEvents(void)
 {							/* manage the window  */
 struct IntuiMessage *imsg;
 
-	while( imsg = (struct IntuiMessage *)GetMsg(window->UserPort))
+	while( (imsg = (struct IntuiMessage *)GetMsg(window->UserPort)))
 	{
 	if (imsg == NULL) break;
 	switch (imsg->Class)
@@ -1198,21 +1205,21 @@ struct IntuiMessage *imsg;
 				srcdstfunc--;
 				if(srcdstfunc>255) srcdstfunc=0;
 				srcfunc=srcdstfunc/16;
-				dstfunc=srcdstfunc-srcfunc*16; 
-				ShowSrcDst(); 
+				dstfunc=srcdstfunc-srcfunc*16;
+				ShowSrcDst();
 				break;
 			case 'D':
 				srcdstfunc++;
 				if(srcdstfunc>255) srcdstfunc=0;
 				srcfunc=srcdstfunc/16;
-				dstfunc=srcdstfunc-srcfunc*16; 
-				ShowSrcDst(); 
+				dstfunc=srcdstfunc-srcfunc*16;
+				ShowSrcDst();
 				break;
 
 			case 's':
 				srcfunc++;
 				if(srcfunc>15) 	srcfunc=0;
-				srcdstfunc=srcfunc*16+dstfunc; 
+				srcdstfunc=srcfunc*16+dstfunc;
 				ShowSrcDst();
 				break;
 			case 'd':
@@ -1225,16 +1232,16 @@ struct IntuiMessage *imsg;
 			case 'm':
 			case 'M':
 				texenvmode++;	if(texenvmode>W3D_BLEND)	texenvmode=W3D_REPLACE;
-				printf("Texenvmode %d\n",texenvmode); 
+				printf("Texenvmode %ld\n",texenvmode);
 				WINFO(texenvmode,W3D_REPLACE,"unlit texturing ")
 				WINFO(texenvmode,W3D_DECAL,"same as W3D_REPLACE use alpha to blend texture with primitive =lit-texturing")
 				WINFO(texenvmode,W3D_MODULATE,"lit-texturing by modulation ")
 				WINFO(texenvmode,W3D_BLEND,"blend with environment color ")
 				break;
 
-			case 'w':	
-			w3dpatch=!w3dpatch;	
-				if(w3dpatch)	printf("Warp3D is  patched\n"); 
+			case 'w':
+			w3dpatch=!w3dpatch;
+				if(w3dpatch)	printf("Warp3D is  patched\n");
 				else			printf("Warp3D not patched\n");
 				break;
 
@@ -1277,7 +1284,7 @@ BOOL framebuffered;
 		if(buffered)
 		if(BufferedP==NULL)
 			{
-			printf("Will allocate buffer %d bytes\n",FRAMESCOUNT*CowObj->Pnb*sizeof(struct point3D));
+			printf("Will allocate buffer %ld bytes\n",FRAMESCOUNT*CowObj->Pnb*sizeof(struct point3D));
 			BufferedP = malloc(FRAMESCOUNT*CowObj->Pnb*sizeof(struct point3D));
 			if(!BufferedP) printf("no memory for buffer!\n");
 			NLOOP(FRAMESCOUNT) Pdone[n]=FALSE;
@@ -1290,7 +1297,7 @@ BOOL framebuffered;
 		frame=RotY/SPEED;
 
 		if(buffered)
-		if(BufferedP!=NULL)			
+		if(BufferedP!=NULL)
 		if(Pdone[frame])		/* use a saved frame ? */
 			{
 			CowObj->P2		=&BufferedP[CowObj->Pnb*frame];	/* P2=buffered points */
@@ -1328,7 +1335,7 @@ BOOL framebuffered;
 		if(dstfunc!=0)
 			{
 			W3D_SetState(context, W3D_BLENDING,W3D_ENABLE);
-			DrawObject(CosmosObj);	
+			DrawObject(CosmosObj);
 			}
 
 		if(lintest)
