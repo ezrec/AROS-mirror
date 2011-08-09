@@ -5,14 +5,16 @@ include $(TOP)/config/make.cfg
 FILES         := popph popphs popph_misc popph_clipboard
 INCLUDE_FILES := Popplaceholder_mcc.h
 USER_CFLAGS += $(PARANOIA_CFLAGS)
+TARGETDIR     := $(AROS_CONTRIB)/Zune/MCC_Popph
 
-#MM- contrib-zine-classes: contrib-zune-classes-popph
+#MM- contrib-zune-classes: contrib-zune-classes-popph
 
-#MM- contrib-zune-classes-popph : contrib-zune-classes-popph-demo
+#MM- contrib-zune-classes-popph : contrib-zune-classes-popph-demo contrib-zune-classes-popph-doc
 
 #MM contrib-zune-classes-popph-demo : includes linklibs contrib-zune-classes-popph-class
 
 #MM contrib-zune-classes-popph-class : includes linklibs
+
 
 %build_module \
     mmake=contrib-zune-classes-popph-class \
@@ -21,13 +23,18 @@ USER_CFLAGS += $(PARANOIA_CFLAGS)
     moduledir=Extras/Zune/MCC_Popph/Classes/Zune \
     uselibs="amiga rom mui"
 
+
 #MM includes-copy
 %copy_includes path=mui
 
 
 %build_prog mmake=contrib-zune-classes-popph-demo progname=Popph-Demo \
-    files="popph_demo" targetdir=$(AROS_CONTRIB)/Zune/MCC_Popph/Demos \
+    files="popph_demo" targetdir=$(TARGETDIR)/Demos \
     uselibs="amiga mui"
+
+
+%copy_files_q mmake=contrib-zune-classes-popph-doc files=mcc_popplaceholder.doc dst=$(TARGETDIR)/Doc
+
 
 #MM contrib-zune-classes-popph-clean : contrib-zune-classes-popph-class-clean
 

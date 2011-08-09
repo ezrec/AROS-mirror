@@ -1,0 +1,504 @@
+TABLE OF CONTENTS
+
+Popplaceholder.mcc/Popplaceholder.mcc
+Popplaceholder.mcc/MUIA_Popph_Array
+Popplaceholder.mcc/MUIA_Popph_Avoid
+Popplaceholder.mcc/MUIA_Popph_Contents
+Popplaceholder.mcc/MUIA_Popph_CopyEntries
+Popplaceholder.mcc/MUIA_Popph_InsertMode
+Popplaceholder.mcc/MUIA_Popph_PopAsl
+Popplaceholder.mcc/MUIA_Popph_PopbuttonKey
+Popplaceholder.mcc/MUIA_Popph_PopCycleChain
+Popplaceholder.mcc/MUIA_Popph_ReplaceMode
+Popplaceholder.mcc/MUIA_Popph_Separator
+Popplaceholder.mcc/MUIA_Popph_SingleColumn
+Popplaceholder.mcc/MUIA_Popph_StringKey
+Popplaceholder.mcc/MUIA_Popph_StringMaxLen
+Popplaceholder.mcc/MUIA_Popph_StringType
+Popplaceholder.mcc/MUIA_Popph_Title
+
+Popplaceholder.mcc/Popplaceholder.mcc
+
+  Popplaceholder class is a simple but useful class ;) Most applications
+  are fully configurable nowadays, offering wide range of various
+  parameters for further user modifications.  Not only functions options
+  or forms of behaviour are configurable but often most of program
+  strings can now be changed by the user.  The latter applies to
+  internet (communication) related programs mostly, (e.g.  AmIRC,
+  AmTelnet, YAM and so on...) which needs to send various string to
+  other different people.  So they allow you to define e.g.  own welcome
+  phrase or kick reason sentence.  Because e.g.  your welcome phrase for
+  e.g.  John and phrase for Mary will differ only with the name, most of
+  these strings uses so called placeholders, to describe varable,
+  dynamically modified string part (e.g.  mentioned receipient name).
+  For example "On %d, %u wrote:".  The "%d" and "%u" ares just the
+  placeholders, program will replace on use by for instance mail date
+  and the sender's name (of course placeholder can look like "@name" or
+  "%{date}", but the idea behind remains).
+
+  Unfortunately, most programs forces user to know what placeholder can
+  be user where and which means what.  That's kinda user unfriendly
+  (especially for beginners, or just-users).  Instead of forcing them to
+  type placeholders by hand (in proper syntax!) it would be nicer to let
+  them pick up what they want from the list of available items.  That
+  both eliminates placeholder syntax problems (unless user 'fix' it
+  later by hand of course) as well as disallows to use unsupported
+  placeholder (the above exception applies of course).  And here comes
+  Popplaceholder class.  It features the ordinary string gadget user can
+  type own text in, but it also gives the popup listview, which holds
+  all available placeholders.  User can easily select one from the list
+  either by double click or by neat drag&drop.  See the example demo
+  program for better picture.
+
+
+  Popplaceholder is freeware software, but it's copyrighted
+  © 1999-2000 by Marcin Orlowski <carlos@amiga.com.pl>
+
+  $Id: mcc_popplaceholder.doc,v 1.4 2000/04/04 17:58:19 carlos Exp $
+
+Popplaceholder.mcc/MUIA_Popph_Array
+
+    NAME
+        MUIA_Popph_Array -- [IS.], char **
+
+    FUNCTION
+        A NULL terminated list of strings defining the contents
+        of the poplist object. The string format is as follow:
+
+        "item|description"
+         ^   ^^
+         |   |+- the human understandable description of the tag
+         |   |
+         |   +-- separator
+         |
+         +------ the tag itself (anything you want)
+
+
+    NOTES
+        Please note the items are INSERTED into the list. They
+        do not replace existsing entries. If you want to reuse
+        the object w/o destroying it, you may clear the list
+        using MUIM_List_Clear method (note, most List object
+        related methods are directly forwarded to the Popph's
+        internal list object, so you can sort, insert single
+        entries, remove etc as you used to do with ordinary
+        List objects)
+
+    LIMITATIONS
+        Recently the internal processing buffers are fixed
+        size and holds up to 50 (POPPH_MAX_KEY_LEN) chars for
+        placeholder and 128 (POPPH_MAX_STRING_LEN) chars for its
+        description. If you need bigger buffers, let me know.
+
+    EXAMPLE
+
+    static const char *PP_Table[] =
+    {
+    "%s|normal",
+    "%g|highlight",
+    "\\n|LF",
+    "\\t|Tabulator",
+    "Tag|Description",
+    "WWW|World Wide Web",
+    NULL
+    };
+
+    set(obj, MUIA_Popph_Array, PP_Table );
+
+    SEE ALSO
+        MUIA_Popph_Separator, MUIA_Popph_CopyEntries
+        mcc_popplaceholder.h/POPPH_MAX_#?_LEN
+        MUI_List.doc
+
+Popplaceholder.mcc/MUIA_Popph_Avoid
+
+    NAME
+        MUIA_Popph_Avoid  {I..} LONG
+
+    FUNCTION
+        Popplaceholder transparently handles and utilises external
+        classes like string object replacements and list class
+        replacements. The fallback scheme looks:
+
+          for string object: Textinput->Betterstring->String
+          for list object  : NList->List
+
+        Using this attribute you can tell Popph you don't wish
+        the particular object to be used. The following are
+        recently supported:
+
+        MUIV_Popph_Avoid_Betterstring 
+        MUIV_Popph_Avoid_Textinput
+        MUIV_Popph_Avoid_Nlist
+
+        If you wish to avoid more than one class at the object
+        creation time, just OR (do not add them!) the
+        MUIV_Popph_Avoid tags, or use MUIA_Popph_Avoid as many
+        times as you need (internally, Popph just ORs the arguments
+        with internal mask)
+
+        NOTE: I stronly recommend to avoid using this attribute,
+              unless you *really* have to (if you think so, sit
+              down an rethink it once again). The forthcomming
+              preference module (#?.mcp) will let user decide
+              which classes hi/she likes or dislikes.
+
+    EXAMPLE
+
+    PopphObject, MUIA_Popph_Avoid, MUIV_Popph_Avoid_Betterstring,
+                 MUIA_Popph_Avoid, MUIV_Popph_Avoid_Nlist,
+                 End,
+
+        or (means exactly the same):
+
+    PopphObject, MUIA_Popph_Avoid, ( MUIV_Popph_Avoid_Betterstring |
+                                    MUIV_Popph_Avoid_Nlist ),
+                 End,
+
+    SEE ALSO
+
+Popplaceholder.mcc/MUIA_Popph_Contents
+
+    NAME
+        MUIA_Popph_Contents -- [ISG], char *
+
+    FUNCTION
+        This attribute gives you direct access to the internal string
+        object. By setting it, you change the string gadget contents,
+        by getting it, you can get what user crested. It simply acts
+        as String/MUIA_String_Contents.
+
+    NOTES
+        Popplaceholder transparently handles most popular string object
+        replacements as Textinput.mcc and Betterstring.mcc.  However class
+        understands some tags of these classes, you should NOT use anything
+        else than MUIA_Popph_Contents to access Popph's string. This
+        will prevent you from further problems.
+        
+
+    EXAMPLE
+
+    char *buf;
+
+    get( obj, MUIA_Popph_Contents, &buf );
+
+Popplaceholder.mcc/MUIA_Popph_CopyEntries
+
+    NAME
+        MUIA_Popph_CopyEntries  {ISG} BOOL
+
+    FUNCTION
+        However you can talk to Popph object as to ordinary List object
+        to access its internal object list (most List's methods are
+        forwarded), not all things can be done that way. By default,
+        Popph does NOT buffer list entries (no hooks are used), so the
+        all inserted strings should remains available while the objects
+        uses them. But it might be somethimes useful to order Popph to 
+        take care of the strings by itself. By setting this attribute
+        to TRUE, all *further* added/inserted entries are copied and buffered
+        internally and you may stop worry about them (Popph will set built-in
+        string hooks for list then).  Existsing entries, WON'T get buffered
+        unless you remove and reinsert them! Memory will automaticaly
+        get fried when you destroy the object (or clear the list with
+        MUIM_List_Clear)
+
+    DEFAULT VALUE
+        FALSE (no buffering)        
+
+    BUGS
+        Rather side-effect than bug, but:
+
+        when you set MUIA_Popph_CopyEntries to TRUE, insert some entries
+        and then set it back to FALSE, no memory will be fried on list
+        clear or object disposition. 
+
+        It's advised to not play with this attribute heavily. Just set
+        it TRUE on object creation if you need buffering and forget ;)
+
+
+    SEE ALSO
+        MUIA_Popph_Array,
+        MUIM_List_Clear, MUIA_List_ContructHook, MUIA_List_DestructHook,
+        MUI_List.Doc
+
+Popplaceholder.mcc/MUIA_Popph_InsertMode
+
+    NAME
+        MUIA_Popph_InsertMode  {ISG} ULONG
+
+    FUNCTION
+        By default, Popph inserts the placeholder at the current
+        cursor position. Hovever, for some reasons, you may wish
+        to change that behaviour (separately for D&D and DC (double
+        click) actions). Available options are:
+
+        MUIV_Popph_InsertMode_Default - depends on user settings
+                                        or at the cursor position
+                                        if no user prefs is set
+                                        (both D&D and DC) 
+
+        MUIV_Popph_InsertMode_CursorPos - forces putting placeholders
+                                        at current cursor position
+
+        MUIV_Popph_InsertMode_Apend   - always apends placeholder
+                                        at the end of the current
+                                        string (both D&D, DC)
+        MUIV_Popph_InsertMode_Prepend - always inserts placeholder
+                                        at the beginning of the
+                                        string (both D&D and DC)
+
+        MUIV_Popph_InsertMode_DD_Default
+        MUIV_Popph_InsertMode_DD_Apend
+        MUIV_Popph_InsertMode_DD_Prepend
+        MUIV_Popph_InsertMode_DC_Default
+        MUIV_Popph_InsertMode_DC_Apend
+        MUIV_Popph_InsertMode_DC_Prepend
+                                      - same as above but applies
+                                        to D&D or DC separately.
+                                        See the include file to
+                                        find out how the global (for
+                                        both actions) special value
+                                        is defined.
+
+        If you want set different actions for DD and DC either OR
+        the MUIV_... values, or use MUIA_Popph_InsertMode as many
+        times as you wish (internally Popph ORs the argument with
+        internal mask)
+                                        
+        
+
+    DEFAULT VALUE
+        MUIV_Popph_InsertMode_Default
+
+    BUGS
+
+    SEE ALSO
+        MUIA_Popph_Array,
+        MUIM_List_Clear, MUIA_List_ContructHook, MUIA_List_DestructHook,
+        MUI_List.Doc
+
+Popplaceholder.mcc/MUIA_Popph_PopbuttonKey
+
+    NAME
+        MUIA_Popph_PopbuttonKey {IS.} char 
+
+    FUNCTION
+        Same as MUIA_ControlChar - sets the hotkey for internal popup
+        button object.
+
+    DEFAULT VALUE
+        no hotkey
+
+    SEE ALSO
+        MUIA_ControlChar
+
+Popplaceholder.mcc/MUIA_Popph_PopAsl
+
+    NAME
+        MUIA_Popph_PopAsl    {I..} BOOL
+
+    FUNCTION
+        Since version 14.5, Popph features PopAsl alike mode, allowing
+        you to combine adventages of Popplaceholder class and Asl
+        requester.
+        
+    DEFAULT VALUE
+        FALSE
+
+    BUGS
+        Not real bug though, but don't use MUIA_Popasl_StartHook and
+        MUIA_Popasl_StopHook.
+
+    SEE ALSO
+        MUIA_Popph_AslActive, MUIA_Popph_AslType
+        MUIA_Popasl_Active, MUIA_Popasl_Type
+
+Popplaceholder.mcc/MUIA_Popph_PopCycleChain
+
+    NAME
+        MUIA_Popph_PopCycleChain    {ISG} BOOL
+
+    FUNCTION
+        Since version 14.8, Popph lets you remove the popup button from the
+        cycle chain, as some developers seems to don't like all objects
+        to be cyclechained by default.
+
+    DEFAULT VALUE
+        TRUE
+
+    BUGS
+        When in ASL mode, this attribute affects popasl button as well.
+        This is not a bug, but while there should be rather separate
+        attribute, this info remain in this section unless someone's
+        add it or will nag too much ;-)
+
+    SEE ALSO
+        MUIA_CycleChain
+
+Popplaceholder.mcc/MUIA_Popph_ReplaceMode
+
+    NAME
+        MUIA_Popph_ReplaceMode    {ISG} BOOL
+
+    FUNCTION
+        By default, whenever you double click or Drag&Drop any placeholder
+        from the popup list, it will be inserted/appended to the current
+        contents of string gadget. If you set this attribute to TRUE,
+        old contents of the string gadget will be replaced by the new
+        placeholder
+
+    DEFAULT VALUE
+        FALSE
+
+    SEE ALSO
+
+Popplaceholder.mcc/MUIA_Popph_Separator
+
+    NAME
+        MUIA_Popph_Separator    {ISG} char 
+
+    FUNCTION
+        If you need to alter the separator (because you use default
+        one for other purposes) specify it here.
+
+    BUGS:
+        Not a bug honestly, but keep in mind that you should NOT
+        change the separator character if there are still some entries
+        that use the old one. Change will break the parsing and handling
+        of the  'old' entries. To be safe, either set up your own separator
+        once on startup, or clear/reset placeholder array on evey change.              
+
+    DEFAULT VALUE
+        |  (dec. code 124)
+
+    SEE ALSO
+        MUIA_Popph_Array
+
+Popplaceholder.mcc/MUIA_Popph_StringKey
+
+    NAME
+        MUIA_Popph_StringKey {IS.} char 
+
+    FUNCTION
+        Same as MUIA_ControlChar - sets the hotkey for internal string
+        object.
+
+    DEFAULT VALUE
+        no hotkey
+
+    SEE ALSO
+        MUIA_ControlChar
+
+Popplaceholder.mcc/MUIA_Popph_StringMaxLen
+
+    NAME
+        MUIA_Popph_StringMaxLen  {I.G} LONG
+
+    FUNCTION
+        Setup the maximum length for the string gadget.
+        This attribute is only valid at object creation time.
+
+        NOTE:  The maximum length includes the 0-byte at the end
+               of the string. To let the user enter e.g. 10 characters,
+               you would have to specify a maxlen of 11.
+
+        NOTE2: Default max lenght gets doubled when you use
+               MUIA_Popph_PopAsl attribute, to avoid path cut-offs.
+               
+
+    DEFAULT VALUE
+        POPPH_MAX_STRING_LEN   (128 bytes) for ordinary object
+        POPPH_MAX_STRING_LEN*2 (256 bytes) for PopAsl alike
+
+    SEE ALSO
+        MUIA_Popph_PopAsl, MUIA_String_MaxLen
+
+Popplaceholder.mcc/MUIA_Popph_StringType
+
+    NAME
+        MUIA_Popph_StringType  {..G} LONG
+
+    FUNCTION
+        In case you wonder what type of string gadget Popph is recently
+        using, get this attribute, which should be equal to one of
+        the following:
+
+        MUIV_Popph_StringType_String
+        MUIV_Popph_StringType_Betterstring 
+        MUIV_Popph_StringType_Textinput
+
+        NOTE: However Popph forwards all Textinput/BetterString/String
+              class' related attributes to the internal string object
+              please avoid using them. Popph knows about differences
+              between these classes and properly uses them no matter
+              what string object is used without any crashes and other
+              neat sideeffects! You have been warned.
+
+    SEE ALSO
+        MUIA_Popph_Avoid
+
+Popplaceholder.mcc/MUIA_Popph_SingleColumn
+
+    NAME
+        MUIA_Popph_SingleColumn {ISG} BOOL
+
+    FUNCTION
+        Since v15 you can use Popplaceholder in single column mode. This is
+        very useful if you don't have any description for your placeholders
+        or want to use the class for other purposes than placeholders
+        (like plain popup list)
+
+    BUGS
+		Single mode or not, string length limits remains unchanged. This
+		means, 50 characters (POPPH_MAX_KEY_LEN) is the limit for the 1st
+        column.
+
+    DEFAULT VALUE
+        FALSE (two columns)
+
+    SEE ALSO
+        mcc_popplaceholder.h/POPPH_MAX_KEY_LEN
+
+Popplaceholder.mcc/MUIA_Popph_Title
+
+    NAME
+        MUIA_Popph_SingleColumn {IS.}  STRPTR  v15
+
+    FUNCTION
+        Since v15 you can have custom title for popup list's columns.
+        Pass pointer to your title string or NULL if you want to
+        remove title (if was previously set). The title string will be
+        copied to internal buffer. You can use all MUI formating codes
+        like MUIX_B, MUIX_C or colors as well. To separate titles for
+        default two column mode use separator character.
+        
+        NOTE: If you defined custom separator character, your title
+              string have to use it otherwise it won't be properly
+              parsed (important for two column mode). The rule of thumb:
+              always use the separator that is the "current" at the
+              given moment.
+
+    DEFAULT VALUE
+        NULL (no titles)
+
+	EXAMPLE
+		MUIA_Popph_Title, "Key|Info"
+
+        if you want to override separator:
+
+        ...
+        MUIA_Popph_Separator, '$',
+	    MUIA_Popph_Title    , "Title$Node",
+        ...
+
+        but:
+
+        ...
+	    MUIA_Popph_Title    , "Title|Node",
+        MUIA_Popph_Separator, '$',
+        ...
+
+    SEE ALSO
+		mui.h/MUIX_#?
+
+

@@ -195,7 +195,10 @@ IPTR Popph__MUIM_OpenAsl(struct IClass *cl, Object *obj, struct opSet *msg)
 		    {
 			res = (IPTR)buf;
 			stccpy(buf , freq->fr_Drawer, sizeof( buf ));
-			AddPart(buf, freq->fr_File  , sizeof( buf ));
+			if (freq->fr_File)
+			{
+			    AddPart(buf, freq->fr_File  , sizeof( buf ));
+			}
 
 			set( obj, MUIA_Popph_Contents, buf );
 		    }
