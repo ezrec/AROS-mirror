@@ -14,6 +14,7 @@
 #include <exec/memory.h>
 #include <dos/dos.h>
 #include <dos/dosextens.h>
+#include <proto/alib.h>
 #include <proto/exec.h>
 #include <proto/dos.h>
 #include <proto/thread.h>
@@ -103,7 +104,7 @@ static void entry_trampoline(void);
         NP_UserData,    (IPTR) td,
         NP_Input,       (IPTR) OpenFromLock(DupLockFromFH(Input())),
         NP_Output,      (IPTR) OpenFromLock(DupLockFromFH(Output())),
-        NP_Error,       (IPTR) OpenFromLock(DupLockFromFH(Error())),
+        NP_Error,       (IPTR) OpenFromLock(DupLockFromFH(ErrorOutput())),
         TAG_DONE);
 
     /* failure, shut it down */
