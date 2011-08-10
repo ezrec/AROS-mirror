@@ -41,7 +41,7 @@ FILES :=               \
 
 LDFLAGS += -Wl,-whole-archive -lwebkit-owb -lwtf -ljsc -lwebcore -Wl,-no-whole-archive \
     -licui18n -licuuc -licudata -lcodesets -lthread -lxml2 -lfontconfig -lfreetype2 \
-    -lSDL -lSDL_gfx -lpng -ljpeg -lcurl -liconv -lz -lamiga -larosc -lm -lmui -lssl \
+    -lSDL -lSDL_gfx -lGL -lpng -ljpeg -lcurl -liconv -lz -lamiga -larosc -lm -lmui -lssl \
     -lcrypto -lsqlite3 -lxslt
 
 OWB_CXX := $(CROSSTOOLSDIR)/$(AROS_TARGET_CPU)-aros-g++ -specs=$(GENDIR)/config/specs
