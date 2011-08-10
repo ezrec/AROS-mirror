@@ -46,6 +46,9 @@ amiga-m68k-boot:
     Die native Version für m68k Amigas oder UAE. Diese Version ist binärkompatibel
     mit AmigaOS. Dieses Archiv enthält ROM-Speicherabbilder und ein
     Boot-Floppy-Speicherabbild.
+amiga-m68k-bootiso:
+    Die native Version für m68k Amigas oder UAE. Diese Version ist binärkompatibel
+    mit AmigaOS. Dies ist das CDROM-ISO-Image.
 darwin-i386-system:
     Die gehostete Version für Darwin und MacOS x für die i386-Platform.
     Sollte auf allen Intel-MacOS-X-Versionen ab 10.4 arbeiten.

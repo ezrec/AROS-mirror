@@ -46,6 +46,10 @@ amiga-m68k-boot:
     The native version for m68k Amigas or WinUAE. This version is binary
     compatible with AmigaOS. This archive contains ROM images and a boot
     floppy image.
+amiga-m68k-bootiso:
+    The native version for m68k Amigas or WinUAE. This version is binary
+    compatible with AmigaOS. This is the CD-ROM ISO image, which
+    contains all AROS system files.
 darwin-i386-system:
     The hosted version for Darwin and MacOS X on i386 platform.
     Should work on all Intel MacOS X versions starting from 10.4.
