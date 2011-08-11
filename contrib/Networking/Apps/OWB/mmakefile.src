@@ -36,7 +36,7 @@ FILES :=               \
 #MM                        aros-tcpip-apps-owb-fonts     \
 #MM                        aros-tcpip-apps-owb-licenses  \
 #MM                        aros-tcpip-apps-startowb      \
-#MM                        aros-tcpip-apps-quick
+#MM                        aros-tcpip-apps-owb-quick
 
 #MM aros-tcpip-apps-owb-resources : aros-tcpip-apps-owb-icons iconset-$(AROS_TARGET_ICONSET)-contrib-icons-owb aros-tcpip-apps-owb-readme
 
