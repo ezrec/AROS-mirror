@@ -35,7 +35,8 @@ FILES :=               \
 #MM                        aros-tcpip-apps-owb-resources \
 #MM                        aros-tcpip-apps-owb-fonts     \
 #MM                        aros-tcpip-apps-owb-licenses  \
-#MM                        aros-tcpip-apps-startowb
+#MM                        aros-tcpip-apps-startowb      \
+#MM                        aros-tcpip-apps-quick
 
 #MM aros-tcpip-apps-owb-resources : aros-tcpip-apps-owb-icons iconset-$(AROS_TARGET_ICONSET)-contrib-icons-owb aros-tcpip-apps-owb-readme
 
@@ -51,7 +52,7 @@ OWB_CFLAGS := $(CFLAGS) -DZUNE_BUILTIN_SCROLLGROUP=0 -DMUIMASTER_YES_INLINE_STDA
     -I$(AROS_INCLUDES)/webkit-owb
 
 #MM
-aros-tcpip-apps-owb : $(FILES)
+aros-tcpip-apps-owb-quick : $(FILES)
 %link_q cmd=$(OWB_CXX) from=$(OWB_OBJ) to=$(EXEDIR)/owb
 
 $(FILES) :
