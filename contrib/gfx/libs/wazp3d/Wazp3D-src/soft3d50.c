@@ -641,13 +641,13 @@ VAR(high)
 	if(SC->UseHard==0)
 	{
 	if(SC->Zbuffer!=NULL)
-		{ SREM(changing Zbuffer...); }
+		{ SREM(will change an existing Zbuffer...); }
 
 	FREEPTR(SC->Zbuffer);
 
 	if(high!=0)
 	if(large!=0)
-	SC->Zbuffer=Zbuffer=MYmalloc(large*high*sizeof(ZBUFF),"Zbuffer");
+		SC->Zbuffer=Zbuffer=MYmalloc(large*high*sizeof(ZBUFF),"Zbuffer");
 
 	if(Zbuffer!=NULL)
 	YLOOP(high)
@@ -815,11 +815,13 @@ VAR(PrefsWazp3D)
 	SC->UseHard=FALSE;
 #ifdef USEOPENGL
 struct HARD3D_context *HC=&SC->HC;
-	SC->UseHard=Wazp3D->Renderer.ON; 		/* 0 mean "use soft only"*/
+	SC->UseHard=(Wazp3D->Renderer.ON!=0); 		/* as 0 mean "use soft only"*/
 	if(SC->UseHard)
 	{
-	HC->UseAntiAlias		= (Wazp3D->UseAntiImage.ON);
-	HC->UseOverlay		= (Wazp3D->Renderer.ON==2 );
+	Libprintf("Wazp3D/Soft3D will use hardware rendering :-)\n");
+	HC->UseAntiAlias		= (Wazp3D->UseAntiImage.ON  );
+	HC->UseOverlay		= (Wazp3D->Renderer.ON==2  );
+	HC->DebugHard 		= (Wazp3D->DebugSC.ON==TRUE);
 	HC->awin			=  Wazp3D->window;
 	HARD3D_Start(&SC->HC);
 	}
@@ -968,9 +970,10 @@ register float zresize=ZRESIZE;
 
 	if(!Wazp3D->PrefsIsOpened)		/* if the user dont changing debug states */
 	LibDebug=Wazp3D->DebugWazp3D.ON;	/* synchronize soft3d's LibDebug with global debug value "DebugWazp3D" setted with Wazp3-Prefs */
+
 SFUNCTION(SOFT3D_ClearZBuffer)
-	if(!SC->UseHard)
-	if(SC->Zbuffer!=NULL)
+
+	if(SC->Zbuffer!=NULL)	/* only happen in software mode */
 	{
 	Zbuffer=SC->Zbuffer;
 	VARF(fz)
@@ -985,6 +988,7 @@ SFUNCTION(SOFT3D_ClearZBuffer)
 		Zbuffer+=8;
 		}
 	}
+
 #ifdef USEOPENGL
 	if(SC->UseHard) HARD3D_ClearZBuffer(&SC->HC,fz);
 #endif
@@ -1088,10 +1092,10 @@ SFUNCTION(SOFT3D_End)
 /* see OpenGL doc Ct=texture Cf=color Cc=env*/
 /*
 GL_TEXTURE_ENV_MODE:
-	GL_REPLACE	 C = Ct			 A = At
-	GL_MODULATE	C = Ct * Cf		 A = At * Af
-	GL_BLEND	C = Cf*(1-Ct) + Cc*Ct	 A = Af * At
-	GL_DECAL	C = Cf*(1-At) + Ct*At	 A = Af
+	GL_REPLACE	C = Ct			A = At
+	GL_MODULATE	C = Ct * Cf			A = At * Af
+	GL_BLEND	C = Cf*(1-Ct) + Cc*Ct	A = Af * At
+	GL_DECAL	C = Cf*(1-At) + Ct*At	A = Af
 f = fragment, t = texture, c = GL_TEXTURE_ENV_COLOR
 glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE,param);
 glTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR,param);
@@ -1230,7 +1234,6 @@ SREM(PixelsColorToBuffer)
 	Frag+=2;
 	}
 }
-
 /*=============================================================*/
 void PixelsReplace24(struct SOFT3D_context *SC)
 {
@@ -5556,8 +5559,6 @@ BOOL DebugState;
 DrawDone:
 	LibDebug	=DebugState;
 #ifdef USEOPENGL
-struct HARD3D_context *HC=&SC->HC;
-	HC->debugmode = (Wazp3D->DebugSC.ON==TRUE);
 	if(SC->UseHard) 	HARD3D_DrawPrimitive(&SC->HC,p,Pnb,primitive,(SC->PerspMode!=0));
 #endif
 }

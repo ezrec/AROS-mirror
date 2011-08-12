@@ -109,7 +109,12 @@
 #define WARP3DV5
 #endif
 
+#ifdef __amigaos4__
+#include "cybergraphics.h"
+#else
 #include <cybergraphx/cybergraphics.h>
+#endif
+
 #include <proto/cybergraphics.h>
 
 /*======================================================================================*/
@@ -482,24 +487,28 @@ int sprintf(char *buffer,char *string,...);
 
 #elif defined(__AROS__)
 /*==================================================================================*/
+#include <exec/rawfmt.h>
 void Libprintf(UBYTE *string, ...)
 {
+char buffer[256];
 va_list args;
 
-    if(!LibDebug ) return;
-    va_start(args, string);
-    vkprintf(string, args);
-    va_end(args);
+	//if(!LibDebug ) return;
+	if(SysBase==0) return;
+	va_start(args, string);
+	VNewRawDoFmt(string, RAWFMTFUNC_STRING, buffer, args);
+	va_end(args);
+	Write(Output(), buffer, Libstrlen(buffer));
 }
 /*==================================================================================*/
 void Libsprintf(UBYTE *buffer,UBYTE *string, ...)
 {
 va_list args;
 
-    if(!LibDebug ) return;
-    va_start(args, string);
-    vsprintf(buffer, string, args);
-    va_end(args);
+	if(SysBase==0) return;
+	va_start(args, string);
+	VNewRawDoFmt(string, RAWFMTFUNC_STRING, buffer, args);
+	va_end(args);
 }
 #else
 /*==================================================================================*/

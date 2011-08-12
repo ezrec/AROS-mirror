@@ -117,19 +117,20 @@ struct point3D{
 #define XLOOP(nbre) for(x=0;x<nbre;x++)
 #define YLOOP(nbre) for(y=0;y<nbre;y++)
 #define NLOOP(nbre) for(n=0;n<nbre;n++)
-#define REMP        if(DebugOpenGL) Libprintf
+#define REMP        if(HC->DebugHard) Libprintf
 #define HFUNC(name) REMP(#name"\n");
 #define REM(name)   REMP(#name"\n");
 #define VAR(var)    REMP(#var "=%d\n",var);
 #define SWAPW(a) (unsigned short int )(((unsigned short int )a>>8)+((((unsigned short int )a&0xff)<<8)))
 #define SWAPL(a) (unsigned long  int )(((unsigned long int )a>>24)+(((unsigned long int )a&0xff0000)>>8)+(((unsigned long int )a&0xff00)<<8)+(((unsigned long int )a&0xff)<<24))
 void LibAlert(unsigned char *text);
+void Libprintf(const unsigned char *string, ...);
+void Libsprintf(unsigned char *buffer,const unsigned char *string, ...);
 void PrintP(struct point3D *P);
 void ReorderBitmap(unsigned char  *rgba,unsigned short large,unsigned short high);
 /*==================================================================*/
-int   DebugOpenGL	=0;
-void *currenthc	=NULL;		/* to detect if need to change context */
-float fzspan[MAXSCREEN];		/* for read/write zspan */
+void *currenthc=NULL;			/* to detect if need to change context */
+float    fzspan[MAXSCREEN];		/* for read/write zspan */
 float texcoords[4*MAXPRIM];		/* for perspectived texture-coordinates */
 /*==================================================================*/
 #if defined(_WIN32)
@@ -171,7 +172,7 @@ struct HARD3D_context *HC=hc;
 struct Amigawindow *awin;
 int x,y,large,high;
 
-	if(!HC->UseOverlay) 
+	if(!HC->UseOverlay)
 		return;
 
 /* HC->awin is an Amiga pointer that contain Amiga WORDs */
@@ -485,7 +486,7 @@ struct Window *overwin;
 struct RastPort *hackrastport;
 int x,y,large,high;
 
-	if(!HC->UseOverlay) 
+	if(!HC->UseOverlay)
 	{
 	hackrastport=HC->hackrastport;
 	Move(hackrastport,0,0);
@@ -504,7 +505,7 @@ int x,y,large,high;
 	high	=awin->Height - awin->BorderTop  - awin->BorderBottom;
 
 	REMP("AROS: overwin <%s> at %d %d size %dX%d\n",overwin->Title,x,y,large,high);
-	ChangeWindowBox(overwin,x,y,large,high);	
+	ChangeWindowBox(overwin,x,y,large,high);
 	}
 }
 /*==================================================================*/
@@ -529,11 +530,11 @@ ULONG IDCMPs=IDCMP_CLOSEWINDOW | IDCMP_VANILLAKEY | IDCMP_RAWKEY | IDCMP_MOUSEMO
 	awin=(struct Window *)HC->awin;
 
 /* duplicate current Amiga window as a new "overlay" window  */
-	
+
 	HC->overwin= OpenWindowTags(NULL,
 	WA_Activate,	FALSE,
 	WA_InnerWidth,	large,
-	WA_InnerHeight,	high, 
+	WA_InnerHeight,	high,
 	WA_Left,		awin->LeftEdge,
 	WA_Top,		awin->TopEdge,
 	WA_Title,		(ULONG)overwinname,
@@ -663,7 +664,7 @@ struct HARD3D_context *HC=hc;
 	HFUNC(OS_CloseGL)
 
 	if(HC->overwin!=NULL)
-	      CloseWindow(HC->overwin); 
+	      CloseWindow(HC->overwin);
 
 	if(HC->hglrc!=NULL)
 		AROSMesaDestroyContext(HC->hglrc);
@@ -686,7 +687,7 @@ struct RastPort *hackrastport;
 struct RastPort *oldrastport;
 struct Window   *mesawin;
 
-	if(HC->UseOverlay)				/* in this case we draw in overwin */
+	if(HC->UseOverlay)					/* in this case we draw in overwin */
 		{
 		AROSMesaSwapBuffers(HC->hglrc);
 		}
@@ -698,7 +699,7 @@ struct Window   *mesawin;
 		hackrastport=HC->hackrastport;
 		Move(hackrastport,0,0);
 		Move(hackrastport->Layer->rp,0,0);
-		AROSMesaSwapBuffers(HC->hglrc);	/* On Aros this will copy the back buffer to the current window */
+		AROSMesaSwapBuffers(HC->hglrc);		/* On Aros this will copy the back buffer to the current window */
 		mesawin->RPort=oldrastport;
 		}
 }
@@ -707,6 +708,7 @@ struct Window   *mesawin;
 /*==================================================================*/
 void HARD3D_Start(void *hc)
 {
+struct HARD3D_context *HC=hc;
 	HFUNC(HARD3D_Start);
 	return;
 }
@@ -757,6 +759,7 @@ struct HARD3D_context *HC=hc;
 /*==================================================================*/
 void HARD3D_ClearImageBuffer(void *hc,unsigned short x,unsigned short y,unsigned short large,unsigned short high)
 {
+struct HARD3D_context *HC=hc;
 
 	HFUNC(HARD3D_ClearImageBuffer);
 	OS_CurrentContext(hc);
@@ -765,6 +768,7 @@ void HARD3D_ClearImageBuffer(void *hc,unsigned short x,unsigned short y,unsigned
 /*==================================================================*/
 void HARD3D_ClearZBuffer(void *hc,float fz)
 {
+struct HARD3D_context *HC=hc;
 GLclampd depth=fz;
 
 	HFUNC(HARD3D_ClearZBuffer);
@@ -775,6 +779,7 @@ GLclampd depth=fz;
 /*==================================================================*/
 void HARD3D_CreateTexture(void *hc,void *ht,unsigned char *pt,unsigned short large,unsigned short high,unsigned short bits,unsigned char UseMip,unsigned char UseFiltering)
 {
+struct HARD3D_context *HC=hc;
 struct HARD3D_texture *HT=ht;
 unsigned long size,level,format;
 unsigned char *pt2;
@@ -868,6 +873,7 @@ struct HARD3D_context *HC=hc;
 /*==================================================================*/
 void HARD3D_DrawPrimitive(void *hc,struct point3D *P,unsigned long Pnb,unsigned long primitive,unsigned char UsePersp)
 {
+struct HARD3D_context *HC=hc;
 void *VertexPointer;
 void *TexCoordPointer;
 void *ColorPointer;
@@ -966,16 +972,19 @@ struct HARD3D_context *HC=hc;
 /*==================================================================*/
 void HARD3D_Flush(void *hc)
 {
+struct HARD3D_context *HC=hc;
+
 	HFUNC(HARD3D_Flush);
 	OS_CurrentContext(hc);
-/*	
+/*
 	glFlush();
 	glFinish();
-*/	
+*/
 }
 /*==================================================================*/
 void HARD3D_Fog(void *hc,unsigned char FogMode,float FogZmin,float FogZmax,float FogDensity,unsigned char *FogRGBA)
 {
+struct HARD3D_context *HC=hc;
 float FogColor[4];
 unsigned long FogModes[] = {0,GL_LINEAR,GL_EXP,GL_EXP2};
 
@@ -1006,6 +1015,7 @@ unsigned long FogModes[] = {0,GL_LINEAR,GL_EXP,GL_EXP2};
 /*==================================================================*/
 void HARD3D_FreeTexture(void *hc,void *ht)
 {
+struct HARD3D_context *HC=hc;
 struct HARD3D_texture *HT=ht;
 GLuint tex;
 
@@ -1017,6 +1027,7 @@ GLuint tex;
 /*==================================================================*/
 void HARD3D_ReadZSpan(void *hc, unsigned short x, unsigned short y,unsigned long n, double *dz)
 {
+struct HARD3D_context *HC=hc;
 float *fz=fzspan;
 
 	HFUNC(HARD3D_ReadZSpan);
@@ -1028,6 +1039,7 @@ float *fz=fzspan;
 /*==================================================================*/
 void HARD3D_WriteZSpan(void *hc, unsigned short x, unsigned short y,unsigned long n, double *dz, unsigned char *mask)
 {
+struct HARD3D_context *HC=hc;
 float *fz=fzspan;
 
 	HFUNC(HARD3D_WriteZSpan);
@@ -1042,12 +1054,14 @@ float *fz=fzspan;
 /*==================================================================*/
 void HARD3D_AllocImageBuffer(void *hc,unsigned short large,unsigned short high)
 {
+struct HARD3D_context *HC=hc;
 	HFUNC(HARD3D_AllocImageBuffer);
 	return;		/* Writing to an ImageBuffer32 is not possible in hardware mode */
 }
 /*==================================================================*/
 void HARD3D_SetBackColor(void *hc,unsigned char  *RGBA)
 {
+struct HARD3D_context *HC=hc;
 	HFUNC(HARD3D_SetBackColor);
 	OS_CurrentContext(hc);
 	glClearColor( (float)RGBA[0]/255.0,(float)RGBA[1]/255.0,(float)RGBA[2]/255.0,(float)RGBA[3]/255.0);
@@ -1062,7 +1076,6 @@ float xscale,yscale,zscale;
 float xtrans,ytrans,ztrans;
 struct RastPort *hackrastport;
 
-	DebugOpenGL=(HC->debugmode);
 	HFUNC(HARD3D_SetBitmap);
 	if(!HC->glstarted)
 		startgl(hc,bm,x,y,large,high);
@@ -1146,6 +1159,7 @@ struct HARD3D_context *HC=hc;
 /*==================================================================*/
 void HARD3D_SetCurrentColor(void *hc,unsigned char  *RGBA)
 {
+struct HARD3D_context *HC=hc;
 	HFUNC(HARD3D_SetCurrentColor);
 	OS_CurrentContext(hc);
 	glColor4f( (float)RGBA[0]/255.0,(float)RGBA[1]/255.0,(float)RGBA[2]/255.0,(float)RGBA[3]/255.0);
@@ -1153,6 +1167,7 @@ void HARD3D_SetCurrentColor(void *hc,unsigned char  *RGBA)
 /*==================================================================*/
 void HARD3D_SetDrawFunctions(void *hc,void *ht,unsigned char ZMode,unsigned char BlendMode,unsigned char TexEnvMode,unsigned char UseGouraud,unsigned char UseFog,unsigned char PerspMode,unsigned char *EnvRGBA)
 {
+struct HARD3D_context *HC=hc;
 struct HARD3D_texture *HT=ht;
 unsigned long zupdate,zfunc,SrcFunc,DstFunc,TexEnvMode32;
 float envcolor[4];
@@ -1323,12 +1338,14 @@ REM(----------------------)
 /*==================================================================*/
 void HARD3D_SetDrawStates(void *hc,void *ht,unsigned char ZMode,unsigned char BlendMode,unsigned char TexEnvMode,unsigned char UseGouraud,unsigned char UseFog,unsigned char PerspMode)
 {
+struct HARD3D_context *HC=hc;
 	HFUNC(HARD3D_SetDrawStates);
 	return;		/* SOFT3D_SetDrawStates only set states flags and dont call an hardware function */
 }
 /*==================================================================*/
 void HARD3D_SetEnvColor(void *hc,unsigned char  *RGBA)
 {
+struct HARD3D_context *HC=hc;
 GLfloat color[4] ;
 
 	HFUNC(HARD3D_SetEnvColor);
@@ -1342,6 +1359,7 @@ GLfloat color[4] ;
 /*==================================================================*/
 void HARD3D_SetPointSize(void *hc,unsigned short PointSize)
 {
+struct HARD3D_context *HC=hc;
 	HFUNC(HARD3D_SetPointSize);
 	OS_CurrentContext(hc);
 	glPointSize((float)PointSize);
@@ -1349,6 +1367,7 @@ void HARD3D_SetPointSize(void *hc,unsigned short PointSize)
 /*==================================================================*/
 void HARD3D_AllocZbuffer(void *hc,unsigned short large,unsigned short high)
 {
+struct HARD3D_context *HC=hc;
 	HFUNC(HARD3D_AllocZbuffer);
 	OS_CurrentContext(hc);
 	if(large!=0)
@@ -1364,6 +1383,7 @@ void HARD3D_AllocZbuffer(void *hc,unsigned short large,unsigned short high)
 /*==================================================================*/
 void HARD3D_UpdateTexture(void *hc,void *ht,unsigned char *pt,unsigned short large,unsigned short high,unsigned char bits)
 {
+struct HARD3D_context *HC=hc;
 struct HARD3D_texture *HT=ht;
 unsigned long format,x,y,level;
 GLuint tex;

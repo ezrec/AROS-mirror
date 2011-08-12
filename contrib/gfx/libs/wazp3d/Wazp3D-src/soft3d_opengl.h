@@ -37,19 +37,19 @@ struct HARD3D_context{
 	void *hglrc;			/* handle to GL Rendering Context */
 	void *instance;			/* handle to window-instance */
 	void *glwnd;			/* handle to window for GL */
-	unsigned long glstarted;	/* OpenGL ready ? */
-	unsigned long registered;	/* window-instance registered ?*/
-	int UseAntiAlias;			/* enable POLYGON/POINT/LINE_SMOOTH  */
-	int UseDoubleBuffer;		/* use OS_SwapBuffers else not    */
-	int UseOverlay;			/* create a sub-window("overlay") else use WinUAE's window for GL context */
-	int large,high;			/* to convert origin to lower-left corner */
 	void *winbm;			/* off-screen Windows' bitmap */
 	void *RGBA32;			/* off-screen Windows' bitmap data */
 	void *Image8;
 	void *awin;				/* Amiga's current window at startup */
 	void *overwin;			/* Amiga's window created for Aros-Mesa overlay */
 	void *hackrastport;		/* Copy of current window->rport */
-	int debugmode;			/* for debugging */
+	unsigned char glstarted;			/* OpenGL ready ? */
+	unsigned char registered;			/* window-instance registered ?*/
+	unsigned char UseAntiAlias;			/* enable POLYGON/POINT/LINE_SMOOTH  */
+	unsigned char UseDoubleBuffer;		/* use OS_SwapBuffers else not    */
+	unsigned char UseOverlay;			/* create a sub-window("overlay") else use WinUAE's window for GL context */
+	unsigned char large,high;			/* to convert origin to lower-left corner */
+	unsigned char DebugHard;			/* for debugging */
 	};
 /*=============================================================*/
 struct HARD3D_texture{
