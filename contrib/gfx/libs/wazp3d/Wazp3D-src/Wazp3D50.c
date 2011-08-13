@@ -1089,7 +1089,7 @@ WORD Bnb,n,x,large;
 	Libstrcpy(Wazp3D->StepDrawPoly.name,"[Step] DrawPoly");
 	Libstrcpy(Wazp3D->StepSOFT3D.name, "[Step]  SOFT3D");
 	Libstrcpy(Wazp3D->StepFunction50.name, "[Step] 50 Functions");
-	Libstrcpy(Wazp3D->DebugSC.name,"Debug SC");
+	Libstrcpy(Wazp3D->DebugSC.name,"Debug SC & Debug Hard");
 	Libstrcpy(Wazp3D->DebugST.name,"Debug ST");
 	Libstrcpy(Wazp3D->DebugSepiaImage.name,"Debug Sepia Image");
 	Libstrcpy(Wazp3D->DebugClipper.name,"Debug Clipper");

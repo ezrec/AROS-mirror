@@ -139,6 +139,7 @@ extern unsigned long int  z3offset;		/* winuae's memory offset 	*/
 /*==================================================================*/
 void OS_CurrentContext(void *hc)
 {
+/* WIN32: set current OpenGL context */
 struct HARD3D_context *HC=hc;
 
 	if(hc!=currenthc)
@@ -150,7 +151,7 @@ struct HARD3D_context *HC=hc;
 /*==================================================================*/
 LRESULT CALLBACK windowFuncWin32(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-/* this function come from QuarkTex */
+/* WIN32: this function come from QuarkTex */
 		switch (message) {
 		case WM_NCCREATE:
 			return 1;
@@ -167,14 +168,17 @@ LRESULT CALLBACK windowFuncWin32(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 /*==================================================================*/
 void OS_AdjustWindow(void *hc)
 {
-/* Move the "overlay" like the original amiga window */
+/* WIN32: Move the "overlay" like the original amiga window */
 struct HARD3D_context *HC=hc;
 struct Amigawindow *awin;
 int x,y,large,high;
 
 	if(!HC->UseOverlay)
+	{
 		return;
-
+	}
+	else
+	{
 /* HC->awin is an Amiga pointer that contain Amiga WORDs */
 	awin=(struct Amigawindow *)(SWAPL(HC->awin)+z3offset);
 	if(awin==NULL)	return;
@@ -185,17 +189,87 @@ int x,y,large,high;
 	high  =SWAPW(awin->Height) - awin->BorderTop  - awin->BorderBottom;
 
 	MoveWindow(HC->glwnd,x,y,large,high,FALSE);
+	}
 }
 /*==================================================================*/
-int OS_StartGLwinuae(void *hc,int x, int y,int large, int high)
+int OS_StartGLoverlay(void *hc,void *bm,int x, int y,int large, int high)
 {
-/* "hard" = BackBuffer from WinUAE's window */
+/* WIN32: Open OpenGL with an "overlay" = a new window upside the existing WinUAE's window */
+/* this function come from QuarkTex */
+struct HARD3D_context *HC=hc;
+WNDCLASS wc;
+RECT rect;
+PIXELFORMATDESCRIPTOR p;
+int format;
+unsigned char name[50];
+
+	if (!HC->instance) HC->instance = GetModuleHandle(0);
+	if (HC->registered) UnregisterClass("Wazp3D", HC->instance);
+
+	GetClientRect(winuaewnd, &rect);
+	x =x + rect.left +2 ;
+	y =y + rect.top  +17;
+
+	memset(&wc, 0, sizeof(WNDCLASS));
+	wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
+	wc.lpfnWndProc = windowFuncWin32;
+	wc.hInstance = HC->instance;
+	wc.hIcon = LoadIcon(0, IDI_APPLICATION);
+	wc.hCursor = LoadCursor(0, IDC_ARROW);
+	wc.lpszClassName = "Wazp3D";
+
+	if (!RegisterClass(&wc)) { REMP("Warning: Could not register Window Class"); return 0; }
+	HC->registered = 1;
+
+	if (!(HC->glwnd = CreateWindowEx(0, "Wazp3D", "", WS_CHILD | WS_VISIBLE, x, y, large, high, winuaewnd, 0, 0, 0))) REMP("Warning: Could not create Window");
+	if (!(HC->hdc = GetDC(HC->glwnd))) { REMP("Warning: Could not get Device Context"); return 0; }
+
+	memset(&p, 0, sizeof(PIXELFORMATDESCRIPTOR));
+	p.nSize = sizeof(PIXELFORMATDESCRIPTOR);
+	p.nVersion = 1;
+
+	if(HC->UseDoubleBuffer)
+		p.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
+	else
+		p.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL ;
+
+	p.dwLayerMask = PFD_MAIN_PLANE;
+	p.iPixelType = PFD_TYPE_RGBA;
+	p.cColorBits = 32;
+	p.cDepthBits = 16;
+	p.cStencilBits = 8;
+
+	if ((format = ChoosePixelFormat(HC->hdc, &p)) == 0) { REMP("Warning: Could not choose pixel format"); return 0; }
+
+	DescribePixelFormat(HC->hdc,format,sizeof(PIXELFORMATDESCRIPTOR), &p);
+	if(p.iPixelType = PFD_TYPE_COLORINDEX)
+		sprintf(name,"LUT8");
+	if(p.iPixelType = PFD_TYPE_RGBA )
+		sprintf(name,"R%d<<%d+G%d<<%d+B%d<<%d+A%d<<%d",p.cRedBits,p.cRedShift,p.cGreenBits,p.cGreenShift,p.cBlueBits,p.cBlueShift,p.cAlphaBits,p.cAlphaShift);
+	REMP("Pixel format: %s\n",name);
+
+	if (!SetPixelFormat(HC->hdc, format, &p)) { REMP("Warning: Could not set pixel format\n"); return 0; }
+
+	if (!(HC->hglrc = wglCreateContext(HC->hdc))) { REMP("Warning: Could not create rendering context\n"); return 0; }
+	if (!(wglMakeCurrent(HC->hdc, HC->hglrc))) { REMP("Warning: Could not activate the rendering context\n"); return 0; }
+
+	REMP("hc %d winuaewnd %d HC->hdc %d HC->hglrc %d format%d\n",hc,winuaewnd,HC->hdc,HC->hglrc,format);
+	return 1;
+}
+
+/*==================================================================*/
+int OS_StartGL(void *hc,void *bm,int x,int y,int large, int high)
+{
+/* WIN32: Open OpenGL with  Option "hard" = Draw in BackBuffer of the WinUAE's window */
 /* this function come from WinUAE */
 struct HARD3D_context *HC=hc;
 PIXELFORMATDESCRIPTOR p;
 int format;
 int depth;
 unsigned char name[50];
+
+	if(HC->UseOverlay)
+		return( OS_StartGLoverlay(hc,bm,x,y,large,high) );
 
 	x =x + 2 ;
 	y =y + 17;
@@ -252,101 +326,10 @@ unsigned char name[50];
 	return 1;
 }
 /*==================================================================*/
-int OS_StartGL(void *hc,void *bm,int x, int y,int large, int high)
+void OS_CloseGLoverlay(void *hc)
 {
-/* "overlay" = a new window upside */
-/* this function come from QuarkTex */
+/* WIN32: Close OpenGL. this function come from QuarkTex */
 struct HARD3D_context *HC=hc;
-WNDCLASS wc;
-RECT rect;
-PIXELFORMATDESCRIPTOR p;
-int format;
-unsigned char name[50];
-
-	if(!HC->UseOverlay)
-		return( OS_StartGLwinuae(hc,x,y,large,high) );
-
-	if (!HC->instance) HC->instance = GetModuleHandle(0);
-	if (HC->registered) UnregisterClass("Wazp3D", HC->instance);
-
-	GetClientRect(winuaewnd, &rect);
-	x =x + rect.left +2 ;
-	y =y + rect.top  +17;
-
-	memset(&wc, 0, sizeof(WNDCLASS));
-	wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
-	wc.lpfnWndProc = windowFuncWin32;
-	wc.hInstance = HC->instance;
-	wc.hIcon = LoadIcon(0, IDI_APPLICATION);
-	wc.hCursor = LoadCursor(0, IDC_ARROW);
-	wc.lpszClassName = "Wazp3D";
-
-	if (!RegisterClass(&wc)) { REMP("Warning: Could not register Window Class"); return 0; }
-	HC->registered = 1;
-
-	if (!(HC->glwnd = CreateWindowEx(0, "Wazp3D", "", WS_CHILD | WS_VISIBLE, x, y, large, high, winuaewnd, 0, 0, 0))) REMP("Warning: Could not create Window");
-	if (!(HC->hdc = GetDC(HC->glwnd))) { REMP("Warning: Could not get Device Context"); return 0; }
-
-	memset(&p, 0, sizeof(PIXELFORMATDESCRIPTOR));
-	p.nSize = sizeof(PIXELFORMATDESCRIPTOR);
-	p.nVersion = 1;
-
-	if(HC->UseDoubleBuffer)
-		p.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
-	else
-		p.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL ;
-
-	p.dwLayerMask = PFD_MAIN_PLANE;
-	p.iPixelType = PFD_TYPE_RGBA;
-	p.cColorBits = 32;
-	p.cDepthBits = 16;
-	p.cStencilBits = 8;
-
-	if ((format = ChoosePixelFormat(HC->hdc, &p)) == 0) { REMP("Warning: Could not choose pixel format"); return 0; }
-
-	DescribePixelFormat(HC->hdc,format,sizeof(PIXELFORMATDESCRIPTOR), &p);
-	if(p.iPixelType = PFD_TYPE_COLORINDEX)
-		sprintf(name,"LUT8");
-	if(p.iPixelType = PFD_TYPE_RGBA )
-		sprintf(name,"R%d<<%d+G%d<<%d+B%d<<%d+A%d<<%d",p.cRedBits,p.cRedShift,p.cGreenBits,p.cGreenShift,p.cBlueBits,p.cBlueShift,p.cAlphaBits,p.cAlphaShift);
-	REMP("Pixel format: %s\n",name);
-
-	if (!SetPixelFormat(HC->hdc, format, &p)) { REMP("Warning: Could not set pixel format\n"); return 0; }
-
-	if (!(HC->hglrc = wglCreateContext(HC->hdc))) { REMP("Warning: Could not create rendering context\n"); return 0; }
-	if (!(wglMakeCurrent(HC->hdc, HC->hglrc))) { REMP("Warning: Could not activate the rendering context\n"); return 0; }
-
-	REMP("hc %d winuaewnd %d HC->hdc %d HC->hglrc %d format%d\n",hc,winuaewnd,HC->hdc,HC->hglrc,format);
-	return 1;
-}
-/*==================================================================*/
-void OS_CloseGLwinuae(void *hc)
-{
-/* this function come from QuarkTex */
-struct HARD3D_context *HC=hc;
-
-	if (HC->hglrc)
-		{
-		wglMakeCurrent(0, 0);
-		wglDeleteContext(HC->hglrc);
-		HC->hglrc = 0;
-		}
-	if (HC->hdc)
-		{
-		ReleaseDC(winuaewnd,HC->hdc);
-		HC->hdc = 0;
-		}
-	HC->registered=0;
-	HC->glstarted=0;
-}
-/*==================================================================*/
-void OS_CloseGL(void *hc)
-{
-/* this function come from QuarkTex */
-struct HARD3D_context *HC=hc;
-
-	if(!HC->UseOverlay)
-		{OS_CloseGLwinuae(hc); return;}
 
 	if (HC->hglrc)
 		{
@@ -369,9 +352,33 @@ struct HARD3D_context *HC=hc;
 	HC->glstarted=0;
 }
 /*==================================================================*/
+void OS_CloseGL(void *hc)
+{
+/* WIN32: Close OpenGL. this function come from QuarkTex */
+struct HARD3D_context *HC=hc;
+
+	if(HC->UseOverlay)
+		{OS_CloseGLoverlay(hc); return;}
+
+	if (HC->hglrc)
+		{
+		wglMakeCurrent(0, 0);
+		wglDeleteContext(HC->hglrc);
+		HC->hglrc = 0;
+		}
+	if (HC->hdc)
+		{
+		ReleaseDC(winuaewnd,HC->hdc);
+		HC->hdc = 0;
+		}
+	HC->registered=0;
+	HC->glstarted=0;
+}
+/*==================================================================*/
+#ifdef USETHISCODE
 int OS_StartGLbm(void *hc,int x, int y,int large, int high)
 {
-/* this function come from Internet */
+/* WIN32: Open OpenGL + supposed to use a separate bitmap :unused now .this function come from Internet.*/
 struct HARD3D_context *HC=hc;
 PIXELFORMATDESCRIPTOR p;
 BITMAPINFO bi;
@@ -435,7 +442,7 @@ unsigned char name[50];
 /*==================================================================*/
 void OS_CloseGLbm(void *hc)
 {
-/* this function come from Internet */
+/* WIN32: Close OpenGL if using a separate bitmap: unused now. This function come from Internet */
 struct HARD3D_context *HC=hc;
 
 	wglMakeCurrent(NULL, NULL);
@@ -443,22 +450,27 @@ struct HARD3D_context *HC=hc;
 	DeleteObject(HC->winbm);
 	DeleteDC(HC->hdc);
 }
+#endif
 /*==================================================================*/
-void OS_SwapBuffers(void *hc)
+void HARD3D_DoUpdate(void *hc)
 {
-/* this function come from QuarkTex */
+/* WIN32: Update the window. The SwapBuffers() part come from QuarkTex */
 struct HARD3D_context *HC=hc;
 
-	if(!HC->UseOverlay)		/* in this case we draw y-flipped in the back buffer */
+	HFUNC(HARD3D_DoUpdate)
+	OS_CurrentContext(hc);
+
+	if(HC->UseOverlay)		
 	{
-	glReadBuffer(GL_BACK);
-	glReadPixels(0,0,HC->large,HC->high,GL_RGBA, GL_UNSIGNED_BYTE,HC->Image8); /* read the back buffer in the bitmap */
-	ReorderBitmap(HC->Image8,HC->large,HC->high);	/* WinUAE use BGRA mode */
+		SwapBuffers(HC->hdc);
 	}
-	else
+	else					/* in this case we draw y-flipped in the back buffer */
 	{
-	SwapBuffers(HC->hdc);
+		glReadBuffer(GL_BACK);
+		glReadPixels(0,0,HC->large,HC->high,GL_RGBA,GL_UNSIGNED_BYTE,HC->Image8);	/* read the back buffer in the bitmap */
+		ReorderBitmap(HC->Image8,HC->large,HC->high);						/* WinUAE use BGRA mode */
 	}
+
 }
 /*==================================================================*/
 #endif	/* end for win32 */
@@ -467,6 +479,7 @@ struct HARD3D_context *HC=hc;
 /*==================================================================*/
 void OS_CurrentContext(void *hc)
 {
+/* AROS: set current OpenGL context */
 struct HARD3D_context *HC=hc;
 
 	HFUNC(OS_CurrentContext)
@@ -479,7 +492,7 @@ struct HARD3D_context *HC=hc;
 /*==================================================================*/
 void OS_AdjustWindow(void *hc)
 {
-/* Move the "overlay" window like the original amiga window */
+/* AROS: Move the "overlay" window like the original amiga window */
 struct HARD3D_context *HC=hc;
 struct Window *awin;
 struct Window *overwin;
@@ -511,6 +524,7 @@ int x,y,large,high;
 /*==================================================================*/
 int OS_StartGLoverlay(void *hc,int x, int y,int large, int high)
 {
+/* AROS: Open ArosMesa & Create an "overlay" window like the original amiga window */
 struct HARD3D_context *HC=hc;
 struct TagItem   attributes[20];
 struct Window   *mesawin;
@@ -581,6 +595,7 @@ ULONG IDCMPs=IDCMP_CLOSEWINDOW | IDCMP_VANILLAKEY | IDCMP_RAWKEY | IDCMP_MOUSEMO
 /*==================================================================*/
 int OS_StartGL(void *hc,void *bm,int x, int y,int large, int high)
 {
+/* AROS: Open ArosMesa & use original amiga window */
 struct HARD3D_context *HC=hc;
 struct TagItem   attributes[20];
 struct Window   *mesawin;
@@ -659,6 +674,7 @@ int i=0;
 /*==================================================================*/
 void OS_CloseGL(void *hc)
 {
+/* AROS: Close ArosMesa & window */
 struct HARD3D_context *HC=hc;
 
 	HFUNC(OS_CloseGL)
@@ -680,19 +696,23 @@ struct HARD3D_context *HC=hc;
 	HC->awin=NULL;
 }
 /*==================================================================*/
-void OS_SwapBuffers(void *hc)
+void HARD3D_DoUpdate(void *hc)
 {
+/* AROS: Update the window. */
 struct HARD3D_context *HC=hc;
 struct RastPort *hackrastport;
 struct RastPort *oldrastport;
 struct Window   *mesawin;
+
+	HFUNC(HARD3D_DoUpdate)
+	OS_CurrentContext(hc);
 
 	if(HC->UseOverlay)					/* in this case we draw in overwin */
 		{
 		AROSMesaSwapBuffers(HC->hglrc);
 		}
 	else
-		{
+		{							/* else we draw in back buffer */
 		mesawin=HC->awin;
 		oldrastport=mesawin->RPort;			/* save original window structure */
 		mesawin->RPort=hackrastport;			/* use our rastport */
@@ -774,6 +794,7 @@ GLclampd depth=fz;
 	HFUNC(HARD3D_ClearZBuffer);
 	OS_CurrentContext(hc);
 	glClearDepth(depth);
+	glDepthMask (TRUE);
 	glClear(GL_DEPTH_BUFFER_BIT);
 }
 /*==================================================================*/
@@ -859,16 +880,6 @@ register unsigned long n;
 			SWAP(RGBA[0+28 ],RGBA[2+28 ]);
 			RGBA+=4*8;
 			}
-}
-/*==================================================================*/
-void HARD3D_DoUpdate(void *hc)
-{
-struct HARD3D_context *HC=hc;
-
-	HFUNC(HARD3D_DoUpdate);
-	OS_CurrentContext(hc);
-
-	OS_SwapBuffers(hc);
 }
 /*==================================================================*/
 void HARD3D_DrawPrimitive(void *hc,struct point3D *P,unsigned long Pnb,unsigned long primitive,unsigned char UsePersp)
@@ -976,7 +987,7 @@ struct HARD3D_context *HC=hc;
 
 	HFUNC(HARD3D_Flush);
 	OS_CurrentContext(hc);
-/*
+/*	TODO: emulate Warp3D's direct/indirect mode with glflush/glfinish
 	glFlush();
 	glFinish();
 */
@@ -1077,9 +1088,12 @@ float xtrans,ytrans,ztrans;
 struct RastPort *hackrastport;
 
 	HFUNC(HARD3D_SetBitmap);
+VAR(large)
+VAR(high)
 	if(!HC->glstarted)
 		startgl(hc,bm,x,y,large,high);
 	OS_CurrentContext(hc);
+
 
 	HC->Image8	=Image8;
 	HC->large	=large;

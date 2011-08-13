@@ -43,12 +43,12 @@ struct HARD3D_context{
 	void *awin;				/* Amiga's current window at startup */
 	void *overwin;			/* Amiga's window created for Aros-Mesa overlay */
 	void *hackrastport;		/* Copy of current window->rport */
+	unsigned short large,high;			/* to convert origin to lower-left corner */
 	unsigned char glstarted;			/* OpenGL ready ? */
 	unsigned char registered;			/* window-instance registered ?*/
 	unsigned char UseAntiAlias;			/* enable POLYGON/POINT/LINE_SMOOTH  */
 	unsigned char UseDoubleBuffer;		/* use OS_SwapBuffers else not    */
 	unsigned char UseOverlay;			/* create a sub-window("overlay") else use WinUAE's window for GL context */
-	unsigned char large,high;			/* to convert origin to lower-left corner */
 	unsigned char DebugHard;			/* for debugging */
 	};
 /*=============================================================*/

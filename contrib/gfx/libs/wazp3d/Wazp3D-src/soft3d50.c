@@ -818,7 +818,6 @@ struct HARD3D_context *HC=&SC->HC;
 	SC->UseHard=(Wazp3D->Renderer.ON!=0); 		/* as 0 mean "use soft only"*/
 	if(SC->UseHard)
 	{
-	Libprintf("Wazp3D/Soft3D will use hardware rendering :-)\n");
 	HC->UseAntiAlias		= (Wazp3D->UseAntiImage.ON  );
 	HC->UseOverlay		= (Wazp3D->Renderer.ON==2  );
 	HC->DebugHard 		= (Wazp3D->DebugSC.ON==TRUE);
@@ -6252,6 +6251,20 @@ VAR(Image8)
 
 	SC->format=format;
 VAR(format)
+
+#if !defined(PIXFMT_ABGR32)
+#define PIXFMT_ABGR32	100
+#define PIXFMT_0RGB32   101
+#define PIXFMT_BGR032   102
+#define PIXFMT_RGB032   103
+#define PIXFMT_0BGR32   104
+#endif
+
+	if(format==PIXFMT_0RGB32) format=PIXFMT_ARGB32;
+	if(format==PIXFMT_BGR032) format=PIXFMT_BGRA32;
+	if(format==PIXFMT_RGB032) format=PIXFMT_RGBA32;
+	if(format==PIXFMT_0BGR32) format=PIXFMT_ABGR32;
+
 	switch (format)
 	{
 	case PIXFMT_BGRA32:
@@ -6357,6 +6370,7 @@ VAR(format)
 		break;
 
 	default:
+		Libprintf("WAZP3D/SOFT3D ERROR: Unknown bitmap format %ld (%d X %d)\n",format,large,high);
 		return;
 	}
 
