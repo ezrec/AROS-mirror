@@ -1,5 +1,5 @@
 /*
-    Copyright © 2009, The AROS Development Team. All rights reserved.
+    Copyright © 2009-2011, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -29,7 +29,7 @@ int main(int argc, char** argv)
     struct RDArgs *args = NULL;
     const char *url = NULL;
     Object *wnd, *app, *status;
-    
+
     if (argc == 0)
     {
         struct WBStartup *startup = (struct WBStartup *) argv;
@@ -38,60 +38,60 @@ int main(int argc, char** argv)
         {
             UBYTE buffer[1024] = "file:///";
 
-	    if(NameFromLock(startup->sm_ArgList[1].wa_Lock, &buffer[8], sizeof(buffer) - 8))
-	    {
-		AddPart(&buffer[8], startup->sm_ArgList[1].wa_Name, sizeof(buffer) - 8);
-		url = StrDup(buffer);
-	    }
+            if(NameFromLock(startup->sm_ArgList[1].wa_Lock, &buffer[8], sizeof(buffer) - 8))
+            {
+                AddPart(&buffer[8], startup->sm_ArgList[1].wa_Name, sizeof(buffer) - 8);
+                url = StrDup(buffer);
+            }
         }
     }
 
     if((args = ReadArgs("URL", argArray, NULL)) != NULL)
     {
-	if(argArray[0])
-	{
-	    url = StrDup((const char*) argArray[0]);
-	    if(!url)
-	    {
-		FreeArgs(args);
-		return 1;
-	    }
-	}
-	FreeArgs(args);
+        if(argArray[0])
+        {
+            url = StrDup((const char*) argArray[0]);
+            if(!url)
+            {
+                FreeArgs(args);
+                return 1;
+            }
+        }
+        FreeArgs(args);
     }
 
     Locale_Initialize();
-    
+
     SetVar("FONTCONFIG_PATH", "PROGDIR:fonts/config", -1, LV_VAR | GVF_LOCAL_ONLY);
-    
+
     // GUI creation
     app = ApplicationObject,
         SubWindow, wnd = WindowObject,
-	    MUIA_Window_Width, MUIV_Window_AltWidth_Screen(25),
-	    MUIA_Window_Height, MUIV_Window_AltHeight_Screen(25),
-	    MUIA_Window_Borderless, TRUE,
-	    WindowContents, VGroup,
-		MUIA_InnerTop, 10,
-		MUIA_InnerBottom, 10,
-		MUIA_InnerLeft, 10,
-		MUIA_InnerRight, 10,
-	        Child, ImageObject,
-		    MUIA_Image_Spec, "3:PROGDIR:resources/logo.png",
-		    End,
-		Child, TextObject,
-		    MUIA_Text_Contents, "\33b\33cOrigyn Web Browser for AROS\33n\n\33cVersion: " OWB_VERSION " (" OWB_RELEASE_DATE ")\n",
-		    End,
-		Child, status = TextObject,
-		    MUIA_Text_PreParse, "\33c",
-		    MUIA_Text_Contents, "Origyn Web Browser for AROS is starting...\n",
-		    End,
-	        End,
+            MUIA_Window_Width, MUIV_Window_AltWidth_Screen(25),
+            MUIA_Window_Height, MUIV_Window_AltHeight_Screen(25),
+            MUIA_Window_Borderless, TRUE,
+            WindowContents, VGroup,
+                MUIA_InnerTop, 10,
+                MUIA_InnerBottom, 10,
+                MUIA_InnerLeft, 10,
+                MUIA_InnerRight, 10,
+                Child, ImageObject,
+                    MUIA_Image_Spec, "3:PROGDIR:resources/logo.png",
+                    End,
+                Child, TextObject,
+                    MUIA_Text_Contents, "\33b\33cOrigyn Web Browser for AROS\33n\n\33cVersion: " OWB_VERSION " (" OWB_RELEASE_DATE ")\n",
+                    End,
+                Child, status = TextObject,
+                    MUIA_Text_PreParse, "\33c",
+                    MUIA_Text_Contents, "Origyn Web Browser for AROS is starting...\n",
+                    End,
+                End,
             End,
-	End;
+        End;
 
     /* Click Close gadget or hit Escape to quit */
     DoMethod(wnd, MUIM_Notify, MUIA_Window_CloseRequest, TRUE,
-	    app, 2, MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit);
+             app, 2, MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit);
 
     if (app != NULL)
     {
@@ -99,7 +99,7 @@ int main(int argc, char** argv)
 
         /* Open the window */
         set(wnd, MUIA_Window_Open, TRUE);
-       
+
         set(status, MUIA_Text_Contents, "Checking if TCP/IP stack is running...");
         struct Library *socketBase = OpenLibrary("bsdsocket.library", 4);
         if(socketBase)
@@ -112,7 +112,7 @@ int main(int argc, char** argv)
             Delay(100);
             goto error;
         }
-        
+
         set(status, MUIA_Text_Contents, "Generating font cache...");
         if(FcInit())
         {
@@ -124,43 +124,43 @@ int main(int argc, char** argv)
             Delay(100);
             goto error;
         }
-            
+
         set(status, MUIA_Text_Contents, "Loading...");
         BPTR owbSeg = LoadSeg("PROGDIR:owb");
         if(owbSeg)
         {
             set(status, MUIA_Text_Contents, "Executing...");
             set(wnd, MUIA_Window_Open, FALSE);
-            
+
             SetIoErr(0);
             struct CommandLineInterface *cli = Cli();
             ULONG stackSize = (cli ? cli->cli_DefaultStack * CLI_DEFAULTSTACK_UNIT : OWB_STACK_SIZE);
 
             struct TagItem tags[] =
             {
-        	{ NP_Seglist, owbSeg },
-        	{ NP_StackSize, stackSize > OWB_STACK_SIZE ? stackSize : OWB_STACK_SIZE },
-        	{ NP_Name, "Origyn Web Browser" },
-        	{ url ? NP_Arguments : TAG_IGNORE, url },
-        	{ NP_Cli, TRUE },
-        	{ NP_FreeSeglist, TRUE },
-        	{ NP_CommandName, "owb" }
+                { NP_Seglist, owbSeg },
+                { NP_StackSize, stackSize > OWB_STACK_SIZE ? stackSize : OWB_STACK_SIZE },
+                { NP_Name, "Origyn Web Browser" },
+                { url ? NP_Arguments : TAG_IGNORE, url },
+                { NP_Cli, TRUE },
+                { NP_FreeSeglist, TRUE },
+                { NP_CommandName, "owb" }
             };
 
-	    struct Process *owbProc = CreateNewProc(tags);
-	    
-	    if(!owbProc)
-	    {
-		UnLoadSeg(owbSeg);
-		set(wnd, MUIA_Window_Open, TRUE);
-		set(status, MUIA_Text_Contents, "Error: \33bCouldn't execute Origyn Web Browser\33n");
-		Delay(100);
-		goto error;		
-	    }
+            struct Process *owbProc = CreateNewProc(tags);
 
-	    MUI_DisposeObject(app);
-	    
-	    return 0;
+            if(!owbProc)
+            {
+                UnLoadSeg(owbSeg);
+                set(wnd, MUIA_Window_Open, TRUE);
+                set(status, MUIA_Text_Contents, "Error: \33bCouldn't execute Origyn Web Browser\33n");
+                Delay(100);
+                goto error;
+            }
+
+            MUI_DisposeObject(app);
+
+            return 0;
         }
         else
         {
@@ -176,8 +176,9 @@ error:
     }
 
     Locale_Deinitialize();
-    
+
     if(url)
-	FreeVec(url);
+        FreeVec(url);
+
     return 0;
 }
