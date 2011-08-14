@@ -27,7 +27,7 @@ int main(int argc, char** argv)
 {
     IPTR argArray[] = { 0 };
     struct RDArgs *args = NULL;
-    const char *url = NULL;
+    char *url = NULL;
     Object *wnd, *app, *status;
 
     if (argc == 0)
@@ -95,8 +95,6 @@ int main(int argc, char** argv)
 
     if (app != NULL)
     {
-        ULONG sigs = 0;
-
         /* Open the window */
         set(wnd, MUIA_Window_Open, TRUE);
 
@@ -138,13 +136,13 @@ int main(int argc, char** argv)
 
             struct TagItem tags[] =
             {
-                { NP_Seglist, owbSeg },
+                { NP_Seglist, (IPTR) owbSeg },
                 { NP_StackSize, stackSize > OWB_STACK_SIZE ? stackSize : OWB_STACK_SIZE },
-                { NP_Name, "Origyn Web Browser" },
-                { url ? NP_Arguments : TAG_IGNORE, url },
+                { NP_Name, (IPTR) "Origyn Web Browser" },
+                { url ? NP_Arguments : TAG_IGNORE, (IPTR) url },
                 { NP_Cli, TRUE },
                 { NP_FreeSeglist, TRUE },
-                { NP_CommandName, "owb" }
+                { NP_CommandName, (IPTR) "owb" }
             };
 
             struct Process *owbProc = CreateNewProc(tags);
