@@ -1,0 +1,7 @@
+KNOWN ISSUES:
+
+I.  The library is not accepting AROS-style paths, like PROGDIR:file.xml. In order
+    to work, just pass it file.xml. Fixing this should not be a big problem
+    though.
+II. Library is not included in the nightly build, because the .a file is 45MB in
+    size.
