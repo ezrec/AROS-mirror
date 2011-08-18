@@ -1,0 +1,98 @@
+diff -ruN xerces-c-3.1.1/configure xerces-c-3.1.1-aros/configure
+--- xerces-c-3.1.1/configure	2010-04-21 17:55:00.000000000 +0200
++++ xerces-c-3.1.1-aros/configure	2011-07-31 15:45:36.000000000 +0200
+@@ -17118,30 +17118,6 @@
+ SHREXT=$shrext_cmds
+ 
+ 
+-#
+-# Orchestrate the replacement of missing functions
+-#
+-for ac_func in stricmp strnicmp towlower towupper
+-do :
+-  as_ac_var=`$as_echo "ac_cv_func_$ac_func" | $as_tr_sh`
+-ac_fn_cxx_check_func "$LINENO" "$ac_func" "$as_ac_var"
+-eval as_val=\$$as_ac_var
+-   if test "x$as_val" = x""yes; then :
+-  cat >>confdefs.h <<_ACEOF
+-#define `$as_echo "HAVE_$ac_func" | $as_tr_cpp` 1
+-_ACEOF
+-
+-else
+-  case " $LIBOBJS " in
+-  *" $ac_func.$ac_objext "* ) ;;
+-  *) LIBOBJS="$LIBOBJS $ac_func.$ac_objext"
+- ;;
+-esac
+-
+-fi
+-done
+-
+-
+ 
+ abs_top_srcdir=`cd $srcdir; pwd`
+ 
+@@ -18218,20 +18194,7 @@
+ fi
+ 
+ 
+-	for ac_func in iconv_open iconv_close iconv
+-do :
+-  as_ac_var=`$as_echo "ac_cv_func_$ac_func" | $as_tr_sh`
+-ac_fn_cxx_check_func "$LINENO" "$ac_func" "$as_ac_var"
+-eval as_val=\$$as_ac_var
+-   if test "x$as_val" = x""yes; then :
+-  cat >>confdefs.h <<_ACEOF
+-#define `$as_echo "HAVE_$ac_func" | $as_tr_cpp` 1
+-_ACEOF
+ 
+-else
+-  no_GNUiconv=true
+-fi
+-done
+ 
+ 	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether we can support the GNU iconv Transcoder" >&5
+ $as_echo_n "checking whether we can support the GNU iconv Transcoder... " >&6; }
+diff -ruN xerces-c-3.1.1/configure.ac xerces-c-3.1.1-aros/configure.ac
+--- xerces-c-3.1.1/configure.ac	2010-04-18 17:02:36.000000000 +0200
++++ xerces-c-3.1.1-aros/configure.ac	2011-07-31 15:45:36.000000000 +0200
+@@ -203,11 +203,6 @@
+ 
+ AC_SUBST([SHREXT], [$shrext_cmds])
+ 
+-#
+-# Orchestrate the replacement of missing functions
+-#
+-AC_REPLACE_FUNCS([stricmp strnicmp towlower towupper])
+-
+ abs_top_srcdir=`cd $srcdir; pwd`
+ AC_SUBST(abs_top_srcdir)
+ abs_top_builddir=`pwd`
+diff -ruN xerces-c-3.1.1/Makefile.in xerces-c-3.1.1-aros/Makefile.in
+--- xerces-c-3.1.1/Makefile.in	2010-04-21 17:55:00.000000000 +0200
++++ xerces-c-3.1.1-aros/Makefile.in	2011-07-31 15:45:36.000000000 +0200
+@@ -289,7 +289,7 @@
+ top_build_prefix = @top_build_prefix@
+ top_builddir = @top_builddir@
+ top_srcdir = @top_srcdir@
+-SUBDIRS = src tests samples
++SUBDIRS = src
+ EXTRA_DIST = version.incl \
+              config/pretty-make \
+              scripts/createBindingsFormatFromHPP.pl \
+diff -ruN xerces-c-3.1.1/src/xercesc/util/Transcoders/IconvGNU/IconvGNUTransService.cpp xerces-c-3.1.1-aros/src/xercesc/util/Transcoders/IconvGNU/IconvGNUTransService.cpp
+--- xerces-c-3.1.1/src/xercesc/util/Transcoders/IconvGNU/IconvGNUTransService.cpp	2010-01-20 09:45:02.000000000 +0100
++++ xerces-c-3.1.1-aros/src/xercesc/util/Transcoders/IconvGNU/IconvGNUTransService.cpp	2011-07-31 15:45:36.000000000 +0200
+@@ -31,6 +31,12 @@
+ #include <locale.h>
+ #include <errno.h>
+ 
++#if defined(__AROS__)
++#define LITTLE_ENDIAN	1
++#define BIG_ENDIAN		2
++#define BYTE_ORDER		LITTLE_ENDIAN
++#endif
++
+ #if HAVE_ENDIAN_H
+   #include <endian.h>
+ #elif HAVE_MACHINE_ENDIAN_H
