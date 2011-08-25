@@ -96,7 +96,12 @@ INDEX
 
      binutils: --disable-werror
      gcc     : --with-libiconv-prefix=/opt/local --with-gmp=/opt/local --with-mpfr=/opt/local
-	      
+
+- IMPORTANT4: (ARM-specific) Multilib in gcc v4.5.1 includes hardfloat versions
+              by default. AROS does not support this yet, so the build will fail
+              (libstdc++ will fail to configure because AROS does not have
+              hardfloat version of libc). Supply --disable-fpu to configure.
+
 4. What is and how to build a native compiler for AROS?
 
   As opposed to a crosscompiler, a native compiler runs on the same
