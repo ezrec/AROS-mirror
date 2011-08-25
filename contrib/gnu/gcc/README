@@ -63,11 +63,14 @@ INDEX
     
   5) Now issue the following command (all on one line):
   
-     ../gcc-aros/configure --target=<cpu>-aros --enable-sjlj-exceptions
-     --enable-long-long  --with-headers=<path/to/AROS/headers> 
+     ../gcc-aros/configure --target=<cpu>-aros --with-headers=<path/to/AROS/headers> 
      --with-libs=<path/to/AROS/libs>
 
      replace the various <...> with the proper values.
+
+     If includes and libs are already placed in standard directories
+     (<prefix>/<cpu>-aros/sys-include and <prefix>/<cpu>-aros/lib), then
+     --with-headers and --with-libs parameters are not needed.
 
   6) Type "make" and then "make install",
 
@@ -83,8 +86,8 @@ INDEX
 	      have hardcoded paths to binutils, so it won't work with
 	      standalone toolchain. Instructions for building a correct
 	      version of collect-aros for standalone toolchain can be
-	      found in tools/env.h.cross file. Compiled collect-aros
-	      can be placed into <your_install_prefix)/<cpu>-aros/bin
+	      found in its README file. Compiled collect-aros can be
+	      placed into <your_install_prefix)/<cpu>-aros/bin
 	      directory (there you'll also see some binutils stuff).
 
 - IMPORTANT3: to be able to build a cross-toolchain under MacOS X you
@@ -116,7 +119,7 @@ INDEX
     2) Now issue the following command (all on one line):
   
        CC='i386-aros-gcc -nix' ../gcc-aros/configure --target=<cpu>-aros
-       --host=<cpu>-aros --build=local --enable-sjlj-exceptions
+       --host=<cpu>-aros --build=local
        --prefix=<prefix for the gcc installation, from the AROS point of view>
        --enable-long-long 
  
@@ -169,14 +172,3 @@ INDEX
 If you need to blame someone for how crappy this gcc port is, then by
 any means blame Fabio Alemagna <falemagn@studenti.unina.it>. Feel free
 to also ask normal questions, though :-)
-
-6. Various notes
-
-Starting from 13.01.2011 AROS startup code supports using DWARF2 unwinding
-in C++ exceptions. This means that --enable-sjlj-exceptions option can now
-be omitted on all architectures. This requires collect-aros and libautoinit.a
-not older than from the specified date.
-
-The fix was succesfully tested on i386 architecture. PPC and x86-64 are expected
-to work too. On ARM linking fails because of undefined weak symbol, this is
-still being worked on.
