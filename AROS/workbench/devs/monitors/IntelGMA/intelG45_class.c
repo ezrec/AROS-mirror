@@ -475,6 +475,23 @@ OOP_Object *METHOD(INTELG45, Root, New)
 //	tags->ti_Data = (IPTR)pftags_15bpp;
 //	tags++;
 
+    MAKE_SYNC(640x480_60,   25174,
+    640,  656,  752,  800,
+    480,  490,  492,  525,
+    "GMA_640x480@60");
+    tags->ti_Tag =  aHidd_Gfx_SyncTags;
+    tags->ti_Data = (IPTR)sync_640x480_60;
+    tags++;
+
+    //Modeline "720x568@50" 26.40 720 752 848 880 568 580 585 597
+    MAKE_SYNC(720x568_50,   26400,
+    720,752,848,880,
+    568,580,585,597,
+    "GMA_720x568@50");
+    tags->ti_Tag =  aHidd_Gfx_SyncTags;
+    tags->ti_Data = (IPTR)sync_720x568_50;
+    tags++;
+
 	if( sd->pipe == PIPE_B )
 	{
 		char *description = AllocVecPooled(sd->MemPool, MAX_MODE_NAME_LEN + 1);
@@ -498,15 +515,6 @@ OOP_Object *METHOD(INTELG45, Root, New)
 		{ aHidd_Sync_HMax,     4096},
 		{ aHidd_Sync_Description, (IPTR)description },
 		{ TAG_DONE, 0UL }};
-
-		MAKE_SYNC(640x480_60,   25174,
-         640,  656,  752,  800,
-         480,  490,  492,  525,
-         "GMA_LVDS:640x480");
-		
-		tags->ti_Tag =  aHidd_Gfx_SyncTags;
-		tags->ti_Data = (IPTR)sync_640x480_60;
-		tags++;
 		
 		tags->ti_Tag =  aHidd_Gfx_SyncTags;
 		tags->ti_Data = (IPTR)sync_native;
