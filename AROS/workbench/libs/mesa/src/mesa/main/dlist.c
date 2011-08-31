@@ -7079,6 +7079,7 @@ execute_list(struct gl_context *ctx, GLuint list)
             CALL_Clear(ctx->Exec, (n[1].bf));
             break;
          case OPCODE_CLEAR_BUFFER_IV:
+#if 0 /* unused */
             {
                GLint value[4];
                value[0] = n[3].i;
@@ -7087,8 +7088,10 @@ execute_list(struct gl_context *ctx, GLuint list)
                value[3] = n[6].i;
                /*CALL_ClearBufferiv(ctx->Exec, (n[1].e, n[2].i, value));*/
             }
+#endif
             break;
          case OPCODE_CLEAR_BUFFER_UIV:
+#if 0 /* unused */
             {
                GLuint value[4];
                value[0] = n[3].ui;
@@ -7097,8 +7100,10 @@ execute_list(struct gl_context *ctx, GLuint list)
                value[3] = n[6].ui;
                /*CALL_ClearBufferiv(ctx->Exec, (n[1].e, n[2].i, value));*/
             }
+#endif
             break;
          case OPCODE_CLEAR_BUFFER_FV:
+#if 0 /* unused */
             {
                GLfloat value[4];
                value[0] = n[3].f;
@@ -7107,6 +7112,7 @@ execute_list(struct gl_context *ctx, GLuint list)
                value[3] = n[6].f;
                /*CALL_ClearBufferfv(ctx->Exec, (n[1].e, n[2].i, value));*/
             }
+#endif
             break;
          case OPCODE_CLEAR_BUFFER_FI:
             /*CALL_ClearBufferfi(ctx->Exec, (n[1].e, n[2].i, n[3].f, n[4].i));*/
