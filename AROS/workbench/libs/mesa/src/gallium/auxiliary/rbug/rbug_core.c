@@ -226,9 +226,11 @@ int rbug_send_error_reply(struct rbug_connection *__con,
 
 struct rbug_proto_noop * rbug_demarshal_noop(struct rbug_proto_header *header)
 {
+#if 0 /* unused */
 	uint32_t len = 0;
 	uint32_t pos = 0;
 	uint8_t *data =  NULL;
+#endif
 	struct rbug_proto_noop *ret;
 
 	if (!header)
@@ -236,9 +238,11 @@ struct rbug_proto_noop * rbug_demarshal_noop(struct rbug_proto_header *header)
 	if (header->opcode != (int32_t)RBUG_OP_NOOP)
 		return NULL;
 
+#if 0 /* unused */
 	pos = 0;
 	len = header->length * 4;
 	data = (uint8_t*)&header[1];
+#endif
 	ret = MALLOC(sizeof(*ret));
 	if (!ret)
 		return NULL;
@@ -252,9 +256,11 @@ struct rbug_proto_noop * rbug_demarshal_noop(struct rbug_proto_header *header)
 
 struct rbug_proto_ping * rbug_demarshal_ping(struct rbug_proto_header *header)
 {
+#if 0 /* unused */
 	uint32_t len = 0;
 	uint32_t pos = 0;
 	uint8_t *data =  NULL;
+#endif
 	struct rbug_proto_ping *ret;
 
 	if (!header)
@@ -262,9 +268,11 @@ struct rbug_proto_ping * rbug_demarshal_ping(struct rbug_proto_header *header)
 	if (header->opcode != (int32_t)RBUG_OP_PING)
 		return NULL;
 
+#if 0 /* unused */
 	pos = 0;
 	len = header->length * 4;
 	data = (uint8_t*)&header[1];
+#endif
 	ret = MALLOC(sizeof(*ret));
 	if (!ret)
 		return NULL;

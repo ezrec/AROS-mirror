@@ -858,7 +858,9 @@ tgsi_build_full_instruction(
    for( i = 0;  i <   full_inst->Instruction.NumDstRegs; i++ ) {
       const struct tgsi_full_dst_register *reg = &full_inst->Dst[i];
       struct tgsi_dst_register *dst_register;
+#if 0 /* unused */
       struct tgsi_token *prev_token;
+#endif
 
       if( maxsize <= size )
          return 0;
@@ -873,7 +875,9 @@ tgsi_build_full_instruction(
          reg->Register.Index,
          instruction,
          header );
+#if 0 /* unused */
       prev_token = (struct tgsi_token  *) dst_register;
+#endif
 
       if( reg->Register.Indirect ) {
          struct tgsi_src_register *ind;
@@ -942,7 +946,9 @@ tgsi_build_full_instruction(
    for( i = 0;  i < full_inst->Instruction.NumSrcRegs; i++ ) {
       const struct tgsi_full_src_register *reg = &full_inst->Src[i];
       struct tgsi_src_register *src_register;
+#if 0 /* unused */
       struct tgsi_token *prev_token;
+#endif
 
       if( maxsize <= size )
          return 0;
@@ -962,7 +968,9 @@ tgsi_build_full_instruction(
          reg->Register.Index,
          instruction,
          header );
+#if 0 /* unused */
       prev_token = (struct tgsi_token  *) src_register;
+#endif
 
       if( reg->Register.Indirect ) {
          struct  tgsi_src_register *ind;
