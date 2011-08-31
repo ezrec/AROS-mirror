@@ -24,8 +24,10 @@ struct _egl_global
 extern struct _egl_global _eglGlobal;
 
 
+#if !defined(_EGL_OS_AROS)
 extern void
 _eglAddAtExitCall(void (*func)(void));
+#endif
 
 
 #endif /* EGLGLOBALS_INCLUDED */
