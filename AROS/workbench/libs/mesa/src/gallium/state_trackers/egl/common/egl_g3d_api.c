@@ -98,7 +98,7 @@ egl_g3d_choose_st(_EGLDriver *drv, _EGLContext *ctx,
    return stapi;
 }
 
-static int
+static EGLint
 egl_g3d_compare_config(const _EGLConfig *conf1, const _EGLConfig *conf2,
                        void *priv_data)
 {
@@ -259,6 +259,7 @@ egl_g3d_create_surface(_EGLDriver *drv, _EGLDisplay *dpy, _EGLConfig *conf,
    struct egl_g3d_surface *gsurf;
    struct native_surface *nsurf;
    const char *err;
+   int w,h;
 
    switch (arg->type) {
    case EGL_WINDOW_BIT:
@@ -316,8 +317,9 @@ egl_g3d_create_surface(_EGLDriver *drv, _EGLDisplay *dpy, _EGLConfig *conf,
       return NULL;
    }
    /* initialize the geometry */
-   if (!nsurf->validate(nsurf, 0x0, &gsurf->sequence_number, NULL,
-            &gsurf->base.Width, &gsurf->base.Height)) {
+   if (!nsurf->validate(nsurf, 0x0, &gsurf->sequence_number, NULL, &w, &h)) {
+      gsurf->base.Width = w;
+      gsurf->base.Height = h;
       nsurf->destroy(nsurf);
       FREE(gsurf);
       return NULL;
@@ -888,7 +890,7 @@ _EGLConfig *
 egl_g3d_find_pixmap_config(_EGLDisplay *dpy, EGLNativePixmapType pix)
 {
    struct egl_g3d_display *gdpy = egl_g3d_display(dpy);
-   struct egl_g3d_config *gconf;
+   struct egl_g3d_config *gconf = NULL;
    EGLint i;
 
    for (i = 0; i < dpy->Configs->Size; i++) {
