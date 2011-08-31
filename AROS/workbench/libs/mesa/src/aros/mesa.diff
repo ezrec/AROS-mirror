@@ -1,6 +1,6 @@
-diff -ur /data/deadwood/source/Mesa-7.10-staging/include/EGL/eglplatform.h ./mesa/include/EGL/eglplatform.h
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/include/EGL/eglplatform.h ./mesa/include/EGL/eglplatform.h
 --- /data/deadwood/source/Mesa-7.10-staging/include/EGL/eglplatform.h	2010-10-05 18:56:51.000000000 +0200
-+++ ./mesa/include/EGL/eglplatform.h	2011-05-29 20:11:36.000000000 +0200
++++ ./mesa/include/EGL/eglplatform.h	2011-08-31 11:28:13.000000000 +0200
 @@ -78,6 +78,14 @@
  typedef void *EGLNativeWindowType;
  typedef void *EGLNativePixmapType;
@@ -16,9 +16,21 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/include/EGL/eglplatform.h ./mes
  #elif defined(__unix__) || defined(__unix)
  
  #ifdef MESA_EGL_NO_X11_HEADERS
-diff -ur /data/deadwood/source/Mesa-7.10-staging/src/egl/main/eglcompiler.h ./mesa/src/egl/main/eglcompiler.h
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/include/GL/glext.h ./mesa/include/GL/glext.h
+--- /data/deadwood/source/Mesa-7.10-staging/include/GL/glext.h	2010-12-14 22:43:14.000000000 +0100
++++ ./mesa/include/GL/glext.h	2011-08-31 11:28:16.000000000 +0200
+@@ -29,7 +29,7 @@
+ */
+ 
+ /* Header file version number, required by OpenGL ABI for Linux */
+-/* glext.h last updated $Date: 2010-11-03 18:59:30 -0700 (Wed, 03 Nov 2010) $ */
++/* glext.h last updated $Date$ */
+ /* Current version at http://www.opengl.org/registry/ */
+ #define GL_GLEXT_VERSION 66
+ /* Function declaration macros - to move into glplatform.h */
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/egl/main/eglcompiler.h ./mesa/src/egl/main/eglcompiler.h
 --- /data/deadwood/source/Mesa-7.10-staging/src/egl/main/eglcompiler.h	2010-10-05 18:56:51.000000000 +0200
-+++ ./mesa/src/egl/main/eglcompiler.h	2011-05-29 20:11:36.000000000 +0200
++++ ./mesa/src/egl/main/eglcompiler.h	2011-05-29 21:41:01.000000000 +0200
 @@ -7,6 +7,7 @@
   */
  #if (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L)
@@ -27,9 +39,30 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/egl/main/eglcompiler.h ./me
  #elif defined(_MSC_VER)
     typedef __int8             int8_t;
     typedef unsigned __int8    uint8_t;
-diff -ur /data/deadwood/source/Mesa-7.10-staging/src/egl/main/eglcurrent.c ./mesa/src/egl/main/eglcurrent.c
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/egl/main/eglconfig.c ./mesa/src/egl/main/eglconfig.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/egl/main/eglconfig.c	2010-12-16 00:02:44.000000000 +0100
++++ ./mesa/src/egl/main/eglconfig.c	2011-08-31 08:27:59.000000000 +0200
+@@ -233,7 +233,7 @@
+ 
+    /* check attributes by their types */
+    for (i = 0; i < ARRAY_SIZE(_eglValidationTable); i++) {
+-      EGLint mask;
++      EGLint mask = 0;
+ 
+       attr = _eglValidationTable[i].attr;
+       val = _eglGetConfigKey(conf, attr);
+@@ -672,7 +672,7 @@
+ }
+ 
+ 
+-static int
++static EGLint
+ _eglFallbackCompare(const _EGLConfig *conf1, const _EGLConfig *conf2,
+                    void *priv_data)
+ {
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/egl/main/eglcurrent.c ./mesa/src/egl/main/eglcurrent.c
 --- /data/deadwood/source/Mesa-7.10-staging/src/egl/main/eglcurrent.c	2011-01-02 23:58:35.000000000 +0100
-+++ ./mesa/src/egl/main/eglcurrent.c	2011-05-29 20:11:36.000000000 +0200
++++ ./mesa/src/egl/main/eglcurrent.c	2011-05-29 21:41:01.000000000 +0200
 @@ -80,6 +80,35 @@
     return EGL_TRUE;
  }
@@ -66,9 +99,9 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/egl/main/eglcurrent.c ./mes
  #else /* PTHREADS */
  static const _EGLThreadInfo *_egl_TSD;
  static void (*_egl_FreeTSD)(_EGLThreadInfo *);
-diff -ur /data/deadwood/source/Mesa-7.10-staging/src/egl/main/egldisplay.c ./mesa/src/egl/main/egldisplay.c
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/egl/main/egldisplay.c ./mesa/src/egl/main/egldisplay.c
 --- /data/deadwood/source/Mesa-7.10-staging/src/egl/main/egldisplay.c	2010-12-14 22:43:14.000000000 +0100
-+++ ./mesa/src/egl/main/egldisplay.c	2011-05-29 20:11:36.000000000 +0200
++++ ./mesa/src/egl/main/egldisplay.c	2011-05-29 21:41:01.000000000 +0200
 @@ -28,7 +28,8 @@
        { _EGL_PLATFORM_WINDOWS, "gdi" },
        { _EGL_PLATFORM_X11, "x11" },
@@ -95,9 +128,9 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/egl/main/egldisplay.c ./mes
        dpy = dpy->Next;
     }
  
-diff -ur /data/deadwood/source/Mesa-7.10-staging/src/egl/main/egldisplay.h ./mesa/src/egl/main/egldisplay.h
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/egl/main/egldisplay.h ./mesa/src/egl/main/egldisplay.h
 --- /data/deadwood/source/Mesa-7.10-staging/src/egl/main/egldisplay.h	2010-12-14 22:43:14.000000000 +0100
-+++ ./mesa/src/egl/main/egldisplay.h	2011-05-29 20:11:36.000000000 +0200
++++ ./mesa/src/egl/main/egldisplay.h	2011-05-29 21:41:01.000000000 +0200
 @@ -13,6 +13,7 @@
     _EGL_PLATFORM_X11,
     _EGL_PLATFORM_DRM,
@@ -106,9 +139,9 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/egl/main/egldisplay.h ./mes
  
     _EGL_NUM_PLATFORMS,
     _EGL_INVALID_PLATFORM = -1
-diff -ur /data/deadwood/source/Mesa-7.10-staging/src/egl/main/egldriver.c ./mesa/src/egl/main/egldriver.c
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/egl/main/egldriver.c ./mesa/src/egl/main/egldriver.c
 --- /data/deadwood/source/Mesa-7.10-staging/src/egl/main/egldriver.c	2011-01-02 23:58:35.000000000 +0100
-+++ ./mesa/src/egl/main/egldriver.c	2011-05-29 20:11:36.000000000 +0200
++++ ./mesa/src/egl/main/egldriver.c	2011-05-29 21:41:01.000000000 +0200
 @@ -33,6 +33,7 @@
  static _EGLArray *_eglModules;
  
@@ -187,21 +220,39 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/egl/main/egldriver.c ./mesa
     _eglPreloadForEach(search_path, callback, callback_data);
  }
 +#endif
-diff -ur /data/deadwood/source/Mesa-7.10-staging/src/egl/main/eglglobals.c ./mesa/src/egl/main/eglglobals.c
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/egl/main/eglglobals.c ./mesa/src/egl/main/eglglobals.c
 --- /data/deadwood/source/Mesa-7.10-staging/src/egl/main/eglglobals.c	2010-10-19 19:58:28.000000000 +0200
-+++ ./mesa/src/egl/main/eglglobals.c	2011-05-29 20:11:36.000000000 +0200
-@@ -38,7 +38,7 @@
-       _eglLockMutex(_eglGlobal.Mutex);
++++ ./mesa/src/egl/main/eglglobals.c	2011-08-31 10:15:00.000000000 +0200
+@@ -20,6 +20,7 @@
+ };
  
-       if (!registered) {
--         atexit(_eglAtExit);
-+//TODO FIXME         atexit(_eglAtExit);
-          registered = EGL_TRUE;
-       }
  
-diff -ur /data/deadwood/source/Mesa-7.10-staging/src/egl/main/egllog.c ./mesa/src/egl/main/egllog.c
++#if !defined(_EGL_OS_AROS)
+ static void
+ _eglAtExit(void)
+ {
+@@ -48,3 +49,4 @@
+       _eglUnlockMutex(_eglGlobal.Mutex);
+    }
+ }
++#endif
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/egl/main/eglglobals.h ./mesa/src/egl/main/eglglobals.h
+--- /data/deadwood/source/Mesa-7.10-staging/src/egl/main/eglglobals.h	2010-10-19 19:58:28.000000000 +0200
++++ ./mesa/src/egl/main/eglglobals.h	2011-08-31 10:11:48.000000000 +0200
+@@ -24,8 +24,10 @@
+ extern struct _egl_global _eglGlobal;
+ 
+ 
++#if !defined(_EGL_OS_AROS)
+ extern void
+ _eglAddAtExitCall(void (*func)(void));
++#endif
+ 
+ 
+ #endif /* EGLGLOBALS_INCLUDED */
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/egl/main/egllog.c ./mesa/src/egl/main/egllog.c
 --- /data/deadwood/source/Mesa-7.10-staging/src/egl/main/egllog.c	2010-12-14 22:43:14.000000000 +0100
-+++ ./mesa/src/egl/main/egllog.c	2011-05-29 20:11:36.000000000 +0200
++++ ./mesa/src/egl/main/egllog.c	2011-05-29 21:41:01.000000000 +0200
 @@ -26,11 +26,18 @@
     _EGLLogProc logger;
     EGLint num_messages;
@@ -252,9 +303,9 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/egl/main/egllog.c ./mesa/sr
  
     /* it is fine to call _eglLog now */
     if (log_env && level < 0) {
-diff -ur /data/deadwood/source/Mesa-7.10-staging/src/egl/main/eglmutex.h ./mesa/src/egl/main/eglmutex.h
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/egl/main/eglmutex.h ./mesa/src/egl/main/eglmutex.h
 --- /data/deadwood/source/Mesa-7.10-staging/src/egl/main/eglmutex.h	2010-02-05 01:10:39.000000000 +0100
-+++ ./mesa/src/egl/main/eglmutex.h	2011-05-29 20:11:36.000000000 +0200
++++ ./mesa/src/egl/main/eglmutex.h	2011-05-29 21:41:01.000000000 +0200
 @@ -35,6 +35,48 @@
  #define _EGL_DECLARE_MUTEX(m) \
     _EGLMutex m = _EGL_MUTEX_INITIALIZER
@@ -304,9 +355,9 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/egl/main/eglmutex.h ./mesa/
  #else
  
  typedef int _EGLMutex;
-diff -ur /data/deadwood/source/Mesa-7.10-staging/src/egl/main/egltypedefs.h ./mesa/src/egl/main/egltypedefs.h
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/egl/main/egltypedefs.h ./mesa/src/egl/main/egltypedefs.h
 --- /data/deadwood/source/Mesa-7.10-staging/src/egl/main/egltypedefs.h	2010-12-14 22:43:14.000000000 +0100
-+++ ./mesa/src/egl/main/egltypedefs.h	2011-05-29 20:11:36.000000000 +0200
++++ ./mesa/src/egl/main/egltypedefs.h	2011-05-29 21:41:01.000000000 +0200
 @@ -8,6 +8,12 @@
  
  #include "eglcompiler.h"
@@ -320,9 +371,29 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/egl/main/egltypedefs.h ./me
  typedef struct _egl_api _EGLAPI;
  
  typedef struct _egl_array _EGLArray;
-diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/os/os_thread.h ./mesa/src/gallium/auxiliary/os/os_thread.h
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/draw/draw_vertex.c ./mesa/src/gallium/auxiliary/draw/draw_vertex.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/draw/draw_vertex.c	2010-10-05 18:56:51.000000000 +0200
++++ ./mesa/src/gallium/auxiliary/draw/draw_vertex.c	2011-08-31 09:43:15.000000000 +0200
+@@ -60,10 +60,15 @@
+ void
+ draw_dump_emitted_vertex(const struct vertex_info *vinfo, const uint8_t *data)
+ {
+-   unsigned i, j;
++   unsigned i;
++#if 0 /* unused */
++   unsigned j;
++#endif
+ 
+    for (i = 0; i < vinfo->num_attribs; i++) {
++#if 0 /* unused */
+       j = vinfo->attrib[i].src_index;
++#endif
+       switch (vinfo->attrib[i].emit) {
+       case EMIT_OMIT:
+          debug_printf("EMIT_OMIT:");
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/os/os_thread.h ./mesa/src/gallium/auxiliary/os/os_thread.h
 --- /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/os/os_thread.h	2010-10-05 18:56:51.000000000 +0200
-+++ ./mesa/src/gallium/auxiliary/os/os_thread.h	2011-05-29 20:11:36.000000000 +0200
++++ ./mesa/src/gallium/auxiliary/os/os_thread.h	2011-05-29 21:41:01.000000000 +0200
 @@ -229,6 +229,52 @@
  
  #endif /* pre-Vista win32 */
@@ -376,9 +447,9 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/os/os_thr
  #else
  
  #include "os/os_time.h"
-diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/os/os_time.c ./mesa/src/gallium/auxiliary/os/os_time.c
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/os/os_time.c ./mesa/src/gallium/auxiliary/os/os_time.c
 --- /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/os/os_time.c	2010-10-05 18:56:51.000000000 +0200
-+++ ./mesa/src/gallium/auxiliary/os/os_time.c	2011-05-29 20:11:36.000000000 +0200
++++ ./mesa/src/gallium/auxiliary/os/os_time.c	2011-05-29 21:41:01.000000000 +0200
 @@ -37,7 +37,7 @@
  
  #if !defined(PIPE_OS_EMBEDDED)
@@ -397,9 +468,9 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/os/os_tim
  
     struct timeval tv;
     gettimeofday(&tv, NULL);
-diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/os/os_time.h ./mesa/src/gallium/auxiliary/os/os_time.h
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/os/os_time.h ./mesa/src/gallium/auxiliary/os/os_time.h
 --- /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/os/os_time.h	2010-04-27 23:41:59.000000000 +0200
-+++ ./mesa/src/gallium/auxiliary/os/os_time.h	2011-05-29 20:11:36.000000000 +0200
++++ ./mesa/src/gallium/auxiliary/os/os_time.h	2011-05-29 21:41:01.000000000 +0200
 @@ -38,7 +38,7 @@
  
  #include "pipe/p_config.h"
@@ -418,9 +489,157 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/os/os_tim
  #define os_time_sleep(_usecs) usleep(_usecs)
  #else
  void
-diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/util/u_atomic.h ./mesa/src/gallium/auxiliary/util/u_atomic.h
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/rbug/rbug_context.c ./mesa/src/gallium/auxiliary/rbug/rbug_context.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/rbug/rbug_context.c	2010-12-14 22:43:14.000000000 +0100
++++ ./mesa/src/gallium/auxiliary/rbug/rbug_context.c	2011-08-31 09:45:01.000000000 +0200
+@@ -473,9 +473,11 @@
+ 
+ struct rbug_proto_context_list * rbug_demarshal_context_list(struct rbug_proto_header *header)
+ {
++#if 0 /* unused */
+ 	uint32_t len = 0;
+ 	uint32_t pos = 0;
+ 	uint8_t *data =  NULL;
++#endif
+ 	struct rbug_proto_context_list *ret;
+ 
+ 	if (!header)
+@@ -483,9 +485,11 @@
+ 	if (header->opcode != (int32_t)RBUG_OP_CONTEXT_LIST)
+ 		return NULL;
+ 
++#if 0 /* unused */
+ 	pos = 0;
+ 	len = header->length * 4;
+ 	data = (uint8_t*)&header[1];
++#endif
+ 	ret = MALLOC(sizeof(*ret));
+ 	if (!ret)
+ 		return NULL;
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/rbug/rbug_core.c ./mesa/src/gallium/auxiliary/rbug/rbug_core.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/rbug/rbug_core.c	2010-12-14 22:43:14.000000000 +0100
++++ ./mesa/src/gallium/auxiliary/rbug/rbug_core.c	2011-08-31 09:46:28.000000000 +0200
+@@ -226,9 +226,11 @@
+ 
+ struct rbug_proto_noop * rbug_demarshal_noop(struct rbug_proto_header *header)
+ {
++#if 0 /* unused */
+ 	uint32_t len = 0;
+ 	uint32_t pos = 0;
+ 	uint8_t *data =  NULL;
++#endif
+ 	struct rbug_proto_noop *ret;
+ 
+ 	if (!header)
+@@ -236,9 +238,11 @@
+ 	if (header->opcode != (int32_t)RBUG_OP_NOOP)
+ 		return NULL;
+ 
++#if 0 /* unused */
+ 	pos = 0;
+ 	len = header->length * 4;
+ 	data = (uint8_t*)&header[1];
++#endif
+ 	ret = MALLOC(sizeof(*ret));
+ 	if (!ret)
+ 		return NULL;
+@@ -252,9 +256,11 @@
+ 
+ struct rbug_proto_ping * rbug_demarshal_ping(struct rbug_proto_header *header)
+ {
++#if 0 /* unused */
+ 	uint32_t len = 0;
+ 	uint32_t pos = 0;
+ 	uint8_t *data =  NULL;
++#endif
+ 	struct rbug_proto_ping *ret;
+ 
+ 	if (!header)
+@@ -262,9 +268,11 @@
+ 	if (header->opcode != (int32_t)RBUG_OP_PING)
+ 		return NULL;
+ 
++#if 0 /* unused */
+ 	pos = 0;
+ 	len = header->length * 4;
+ 	data = (uint8_t*)&header[1];
++#endif
+ 	ret = MALLOC(sizeof(*ret));
+ 	if (!ret)
+ 		return NULL;
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/rbug/rbug_texture.c ./mesa/src/gallium/auxiliary/rbug/rbug_texture.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/rbug/rbug_texture.c	2010-12-14 22:43:14.000000000 +0100
++++ ./mesa/src/gallium/auxiliary/rbug/rbug_texture.c	2011-08-31 09:47:51.000000000 +0200
+@@ -410,9 +410,11 @@
+ 
+ struct rbug_proto_texture_list * rbug_demarshal_texture_list(struct rbug_proto_header *header)
+ {
++#if 0 /* unused */
+ 	uint32_t len = 0;
+ 	uint32_t pos = 0;
+ 	uint8_t *data =  NULL;
++#endif
+ 	struct rbug_proto_texture_list *ret;
+ 
+ 	if (!header)
+@@ -420,9 +422,11 @@
+ 	if (header->opcode != (int32_t)RBUG_OP_TEXTURE_LIST)
+ 		return NULL;
+ 
++#if 0 /* unused */
+ 	pos = 0;
+ 	len = header->length * 4;
+ 	data = (uint8_t*)&header[1];
++#endif
+ 	ret = MALLOC(sizeof(*ret));
+ 	if (!ret)
+ 		return NULL;
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/tgsi/tgsi_build.c ./mesa/src/gallium/auxiliary/tgsi/tgsi_build.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/tgsi/tgsi_build.c	2010-12-14 22:43:14.000000000 +0100
++++ ./mesa/src/gallium/auxiliary/tgsi/tgsi_build.c	2011-08-31 09:49:25.000000000 +0200
+@@ -858,7 +858,9 @@
+    for( i = 0;  i <   full_inst->Instruction.NumDstRegs; i++ ) {
+       const struct tgsi_full_dst_register *reg = &full_inst->Dst[i];
+       struct tgsi_dst_register *dst_register;
++#if 0 /* unused */
+       struct tgsi_token *prev_token;
++#endif
+ 
+       if( maxsize <= size )
+          return 0;
+@@ -873,7 +875,9 @@
+          reg->Register.Index,
+          instruction,
+          header );
++#if 0 /* unused */
+       prev_token = (struct tgsi_token  *) dst_register;
++#endif
+ 
+       if( reg->Register.Indirect ) {
+          struct tgsi_src_register *ind;
+@@ -942,7 +946,9 @@
+    for( i = 0;  i < full_inst->Instruction.NumSrcRegs; i++ ) {
+       const struct tgsi_full_src_register *reg = &full_inst->Src[i];
+       struct tgsi_src_register *src_register;
++#if 0 /* unused */
+       struct tgsi_token *prev_token;
++#endif
+ 
+       if( maxsize <= size )
+          return 0;
+@@ -962,7 +968,9 @@
+          reg->Register.Index,
+          instruction,
+          header );
++#if 0 /* unused */
+       prev_token = (struct tgsi_token  *) src_register;
++#endif
+ 
+       if( reg->Register.Indirect ) {
+          struct  tgsi_src_register *ind;
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/util/u_atomic.h ./mesa/src/gallium/auxiliary/util/u_atomic.h
 --- /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/util/u_atomic.h	2010-10-19 19:58:28.000000000 +0200
-+++ ./mesa/src/gallium/auxiliary/util/u_atomic.h	2011-05-29 20:11:36.000000000 +0200
++++ ./mesa/src/gallium/auxiliary/util/u_atomic.h	2011-05-29 21:41:01.000000000 +0200
 @@ -29,8 +29,12 @@
  #define PIPE_ATOMIC_ASM_MSVC_X86                
  #elif (defined(PIPE_CC_GCC) && defined(PIPE_ARCH_X86))
@@ -569,9 +788,9 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/util/u_at
  #ifndef PIPE_ATOMIC
  #error "No pipe_atomic implementation selected"
  #endif
-diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/util/u_math.c ./mesa/src/gallium/auxiliary/util/u_math.c
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/util/u_math.c ./mesa/src/gallium/auxiliary/util/u_math.c
 --- /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/util/u_math.c	2010-02-05 01:10:39.000000000 +0100
-+++ ./mesa/src/gallium/auxiliary/util/u_math.c	2011-05-29 20:11:36.000000000 +0200
++++ ./mesa/src/gallium/auxiliary/util/u_math.c	2011-05-29 21:41:01.000000000 +0200
 @@ -42,6 +42,13 @@
        pow2_table[i] = (float) pow(2.0, (i - POW2_TABLE_OFFSET) / POW2_TABLE_SCALE);
  }
@@ -586,9 +805,9 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/util/u_ma
  
  /** log2(x), for x in [1.0, 2.0) */
  float log2_table[LOG2_TABLE_SIZE];
-diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/util/u_math.h ./mesa/src/gallium/auxiliary/util/u_math.h
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/util/u_math.h ./mesa/src/gallium/auxiliary/util/u_math.h
 --- /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/util/u_math.h	2010-12-14 22:43:14.000000000 +0100
-+++ ./mesa/src/gallium/auxiliary/util/u_math.h	2011-05-29 20:11:36.000000000 +0200
++++ ./mesa/src/gallium/auxiliary/util/u_math.h	2011-05-29 21:41:01.000000000 +0200
 @@ -399,6 +399,8 @@
  }
  #elif defined(__MINGW32__)
@@ -613,9 +832,9 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/auxiliary/util/u_ma
     return __builtin_popcount(n);
  #else
     /* K&R classic bitcount.
-diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/drivers/nv50/nv50_context.h ./mesa/src/gallium/drivers/nv50/nv50_context.h
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/drivers/nv50/nv50_context.h ./mesa/src/gallium/drivers/nv50/nv50_context.h
 --- /data/deadwood/source/Mesa-7.10-staging/src/gallium/drivers/nv50/nv50_context.h	2010-12-16 00:02:44.000000000 +0100
-+++ ./mesa/src/gallium/drivers/nv50/nv50_context.h	2011-05-29 20:11:36.000000000 +0200
++++ ./mesa/src/gallium/drivers/nv50/nv50_context.h	2011-05-29 21:41:01.000000000 +0200
 @@ -26,8 +26,13 @@
  #define NOUVEAU_MSG(fmt, args...) \
  	fprintf(stderr, "nouveau: "fmt, ##args);
@@ -630,9 +849,1317 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/drivers/nv50/nv50_c
  
  /* Constant buffer assignment */
  #define NV50_CB_PMISC		0
-diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/include/pipe/p_config.h ./mesa/src/gallium/include/pipe/p_config.h
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/drivers/nv50/nv50_state.c ./mesa/src/gallium/drivers/nv50/nv50_state.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/gallium/drivers/nv50/nv50_state.c	2010-12-14 22:43:14.000000000 +0100
++++ ./mesa/src/gallium/drivers/nv50/nv50_state.c	2011-05-29 21:41:01.000000000 +0200
+@@ -721,17 +721,16 @@
+ 	struct nv50_context *nv50 = nv50_context(pipe);
+ 
+ 	if (shader == PIPE_SHADER_VERTEX) {
+-		nv50->constbuf[PIPE_SHADER_VERTEX] = buf;
+ 		nv50->dirty |= NV50_NEW_VERTPROG_CB;
+ 	} else
+ 	if (shader == PIPE_SHADER_FRAGMENT) {
+-		nv50->constbuf[PIPE_SHADER_FRAGMENT] = buf;
+ 		nv50->dirty |= NV50_NEW_FRAGPROG_CB;
+-	} else
+-	if (shader == PIPE_SHADER_GEOMETRY) {
+-		nv50->constbuf[PIPE_SHADER_GEOMETRY] = buf;
++	} else {
++		assert(shader == PIPE_SHADER_GEOMETRY);
+ 		nv50->dirty |= NV50_NEW_GEOMPROG_CB;
+ 	}
++
++	pipe_resource_reference(&nv50->constbuf[shader], buf);
+ }
+ 
+ static void
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/drivers/nv50/nv50_tgsi_to_nc.c ./mesa/src/gallium/drivers/nv50/nv50_tgsi_to_nc.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/gallium/drivers/nv50/nv50_tgsi_to_nc.c	2010-12-14 22:43:14.000000000 +0100
++++ ./mesa/src/gallium/drivers/nv50/nv50_tgsi_to_nc.c	2011-08-31 08:50:57.000000000 +0200
+@@ -1466,7 +1466,7 @@
+ {
+    struct nv_value *t[4], *s[3];
+    uint opcode = translate_opcode(insn->Instruction.Opcode);
+-   int arg, dim, c;
++   int arg = 0, dim = 0, c;
+    const int tic = insn->Src[1].Register.Index;
+    const int tsc = 0;
+    const int cube = (insn->Texture.Texture  == TGSI_TEXTURE_CUBE) ? 1 : 0;
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/drivers/nvfx/nv30_fragtex.c ./mesa/src/gallium/drivers/nvfx/nv30_fragtex.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/gallium/drivers/nvfx/nv30_fragtex.c	2011-01-02 23:58:35.000000000 +0100
++++ ./mesa/src/gallium/drivers/nvfx/nv30_fragtex.c	2011-08-31 09:54:45.000000000 +0200
+@@ -9,7 +9,9 @@
+ 			  struct nvfx_sampler_state *ps,
+ 			  const struct pipe_sampler_state *cso)
+ {
++#if 0 /* unused */
+ 	float limit;
++#endif
+ 
+ 	if (cso->max_anisotropy >= 2)
+ 	{
+@@ -21,7 +23,9 @@
+ 			ps->en |= NV30_3D_TEX_ENABLE_ANISO_2X;
+ 	}
+ 
++#if 0 /* unused */
+ 	limit = CLAMP(cso->lod_bias, -16.0, 15.0 + (255.0 / 256.0));
++#endif
+ 	ps->filt |= (int)(cso->lod_bias * 256.0) & 0x1fff;
+ 
+ 	ps->max_lod = (int)CLAMP(cso->max_lod, 0.0, 15.0);
+@@ -71,6 +75,7 @@
+ 	struct nvfx_sampler_view* sv = (struct nvfx_sampler_view*)nvfx->fragment_sampler_views[unit];
+ 	struct nouveau_bo *bo = ((struct nvfx_miptree *)sv->base.texture)->base.bo;
+ 	struct nouveau_channel* chan = nvfx->screen->base.channel;
++	struct nouveau_grobj *eng3d = nvfx->screen->eng3d;
+ 	unsigned txf;
+ 	unsigned tex_flags = NOUVEAU_BO_VRAM | NOUVEAU_BO_GART | NOUVEAU_BO_RD;
+ 	unsigned use_rect;
+@@ -102,7 +107,7 @@
+ 	txf = sv->u.nv30.fmt[ps->compare + (use_rect ? 2 : 0)];
+ 
+ 	MARK_RING(chan, 9, 2);
+-	OUT_RING(chan, RING_3D(NV30_3D_TEX_OFFSET(unit), 8));
++	BEGIN_RING(chan, eng3d, NV30_3D_TEX_OFFSET(unit), 8);
+ 	OUT_RELOC(chan, bo, sv->offset, tex_flags | NOUVEAU_BO_LOW, 0, 0);
+ 	OUT_RELOC(chan, bo, txf,
+ 		tex_flags | NOUVEAU_BO_OR,
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/drivers/nvfx/nv40_fragtex.c ./mesa/src/gallium/drivers/nvfx/nv40_fragtex.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/gallium/drivers/nvfx/nv40_fragtex.c	2011-01-02 23:58:35.000000000 +0100
++++ ./mesa/src/gallium/drivers/nvfx/nv40_fragtex.c	2011-08-31 09:55:53.000000000 +0200
+@@ -8,7 +8,9 @@
+ 			  struct nvfx_sampler_state *ps,
+ 			  const struct pipe_sampler_state *cso)
+ {
++#if 0 /* unused */
+ 	float limit;
++#endif
+ 	if (cso->max_anisotropy >= 2) {
+ 		/* no idea, binary driver sets it, works without it.. meh.. */
+ 		ps->wrap |= (1 << 5);
+@@ -29,7 +31,9 @@
+ 			ps->en |= NV40_3D_TEX_ENABLE_ANISO_2X;
+ 	}
+ 
++#if 0 /* unused */
+ 	limit = CLAMP(cso->lod_bias, -16.0, 15.0 + (255.0 / 256.0));
++#endif
+ 	ps->filt |= (int)(cso->lod_bias * 256.0) & 0x1fff;
+ 
+ 	ps->max_lod = (int)(CLAMP(cso->max_lod, 0.0, 15.0 + (255.0 / 256.0)) * 256.0);
+@@ -76,6 +80,7 @@
+ nv40_fragtex_set(struct nvfx_context *nvfx, int unit)
+ {
+ 	struct nouveau_channel* chan = nvfx->screen->base.channel;
++	struct nouveau_grobj *eng3d = nvfx->screen->eng3d;
+ 	struct nvfx_sampler_state *ps = nvfx->tex_sampler[unit];
+ 	struct nvfx_sampler_view* sv = (struct nvfx_sampler_view*)nvfx->fragment_sampler_views[unit];
+ 	struct nouveau_bo *bo = ((struct nvfx_miptree *)sv->base.texture)->base.bo;
+@@ -87,7 +92,7 @@
+ 	txf = sv->u.nv40.fmt[ps->compare] | ps->fmt;
+ 
+ 	MARK_RING(chan, 11, 2);
+-	OUT_RING(chan, RING_3D(NV30_3D_TEX_OFFSET(unit), 8));
++	BEGIN_RING(chan, eng3d, NV30_3D_TEX_OFFSET(unit), 8);
+ 	OUT_RELOC(chan, bo, sv->offset, tex_flags | NOUVEAU_BO_LOW, 0, 0);
+ 	OUT_RELOC(chan, bo, txf, tex_flags | NOUVEAU_BO_OR,
+ 			NV30_3D_TEX_FORMAT_DMA0, NV30_3D_TEX_FORMAT_DMA1);
+@@ -97,7 +102,7 @@
+ 	OUT_RING(chan, ps->filt | sv->filt);
+ 	OUT_RING(chan, sv->npot_size);
+ 	OUT_RING(chan, ps->bcol);
+-	OUT_RING(chan, RING_3D(NV40_3D_TEX_SIZE1(unit), 1));
++	BEGIN_RING(chan, eng3d, NV40_3D_TEX_SIZE1(unit), 1);
+ 	OUT_RING(chan, sv->u.nv40.npot_size2);
+ 
+ 	nvfx->hw_txf[unit] = txf;
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/drivers/nvfx/nvfx_context.c ./mesa/src/gallium/drivers/nvfx/nvfx_context.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/gallium/drivers/nvfx/nvfx_context.c	2011-01-02 23:58:35.000000000 +0100
++++ ./mesa/src/gallium/drivers/nvfx/nvfx_context.c	2011-05-29 21:41:01.000000000 +0200
+@@ -13,13 +13,13 @@
+ 	struct nvfx_context *nvfx = nvfx_context(pipe);
+ 	struct nvfx_screen *screen = nvfx->screen;
+ 	struct nouveau_channel *chan = screen->base.channel;
++	struct nouveau_grobj *eng3d = screen->eng3d;
+ 
+ 	/* XXX: we need to actually be intelligent here */
+ 	if (flags & PIPE_FLUSH_TEXTURE_CACHE) {
+-		WAIT_RING(chan, 4);
+-		OUT_RING(chan, RING_3D(0x1fd8, 1));
++		BEGIN_RING(chan, eng3d, 0x1fd8, 1);
+ 		OUT_RING(chan, 2);
+-		OUT_RING(chan, RING_3D(0x1fd8, 1));
++		BEGIN_RING(chan, eng3d, 0x1fd8, 1);
+ 		OUT_RING(chan, 1);
+ 	}
+ 
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/drivers/nvfx/nvfx_context.h ./mesa/src/gallium/drivers/nvfx/nvfx_context.h
+--- /data/deadwood/source/Mesa-7.10-staging/src/gallium/drivers/nvfx/nvfx_context.h	2011-01-02 23:58:35.000000000 +0100
++++ ./mesa/src/gallium/drivers/nvfx/nvfx_context.h	2011-05-29 21:41:01.000000000 +0200
+@@ -339,30 +339,31 @@
+ /* nvfx_push.c */
+ extern void nvfx_push_vbo(struct pipe_context *pipe, const struct pipe_draw_info *info);
+ 
+-/* must WAIT_RING(chan, ncomp + 1) or equivalent beforehand! */
+-static inline void nvfx_emit_vtx_attr(struct nouveau_channel* chan, unsigned attrib, const float* v, unsigned ncomp)
++static inline void nvfx_emit_vtx_attr(struct nouveau_channel* chan,
++		struct nouveau_grobj *eng3d, unsigned attrib, const float* v,
++		unsigned ncomp)
+ {
+ 	switch (ncomp) {
+ 	case 4:
+-		OUT_RING(chan, RING_3D(NV30_3D_VTX_ATTR_4F_X(attrib), 4));
++		BEGIN_RING(chan, eng3d, NV30_3D_VTX_ATTR_4F_X(attrib), 4);
+ 		OUT_RING(chan, fui(v[0]));
+ 		OUT_RING(chan, fui(v[1]));
+ 		OUT_RING(chan,  fui(v[2]));
+ 		OUT_RING(chan,  fui(v[3]));
+ 		break;
+ 	case 3:
+-		OUT_RING(chan, RING_3D(NV30_3D_VTX_ATTR_3F_X(attrib), 3));
++		BEGIN_RING(chan, eng3d, NV30_3D_VTX_ATTR_3F_X(attrib), 3);
+ 		OUT_RING(chan,  fui(v[0]));
+ 		OUT_RING(chan,  fui(v[1]));
+ 		OUT_RING(chan,  fui(v[2]));
+ 		break;
+ 	case 2:
+-		OUT_RING(chan, RING_3D(NV30_3D_VTX_ATTR_2F_X(attrib), 2));
++		BEGIN_RING(chan, eng3d, NV30_3D_VTX_ATTR_2F_X(attrib), 2);
+ 		OUT_RING(chan,  fui(v[0]));
+ 		OUT_RING(chan,  fui(v[1]));
+ 		break;
+ 	case 1:
+-		OUT_RING(chan, RING_3D(NV30_3D_VTX_ATTR_1F(attrib), 1));
++		BEGIN_RING(chan, eng3d, NV30_3D_VTX_ATTR_1F(attrib), 1);
+ 		OUT_RING(chan,  fui(v[0]));
+ 		break;
+ 	}
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/drivers/nvfx/nvfx_draw.c ./mesa/src/gallium/drivers/nvfx/nvfx_draw.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/gallium/drivers/nvfx/nvfx_draw.c	2011-01-02 23:58:35.000000000 +0100
++++ ./mesa/src/gallium/drivers/nvfx/nvfx_draw.c	2011-05-29 21:41:01.000000000 +0200
+@@ -28,10 +28,10 @@
+ 	struct nvfx_render_stage *rs = nvfx_render_stage(stage);
+ 	struct nvfx_context *nvfx = rs->nvfx;
+ 	struct nouveau_channel *chan = nvfx->screen->base.channel;
++	struct nouveau_grobj *eng3d = nvfx->screen->eng3d;
+ 
+ 	if (rs->prim != NV30_3D_VERTEX_BEGIN_END_STOP) {
+-		assert(AVAIL_RING(chan) >= 2);
+-		OUT_RING(chan, RING_3D(NV30_3D_VERTEX_BEGIN_END, 1));
++		BEGIN_RING(chan, eng3d, NV30_3D_VERTEX_BEGIN_END, 1);
+ 		OUT_RING(chan, NV30_3D_VERTEX_BEGIN_END_STOP);
+ 		rs->prim = NV30_3D_VERTEX_BEGIN_END_STOP;
+ 	}
+@@ -46,6 +46,7 @@
+ 
+ 	struct nvfx_screen *screen = nvfx->screen;
+ 	struct nouveau_channel *chan = screen->base.channel;
++	struct nouveau_grobj *eng3d = screen->eng3d;
+ 	boolean no_elements = nvfx->vertprog->draw_no_elements;
+ 	unsigned num_attribs = nvfx->vertprog->draw_elements;
+ 
+@@ -63,7 +64,7 @@
+ 	/* Switch primitive modes if necessary */
+ 	if (rs->prim != mode) {
+ 		if (rs->prim != NV30_3D_VERTEX_BEGIN_END_STOP) {
+-			OUT_RING(chan, RING_3D(NV30_3D_VERTEX_BEGIN_END, 1));
++			BEGIN_RING(chan, eng3d, NV30_3D_VERTEX_BEGIN_END, 1);
+ 			OUT_RING(chan, NV30_3D_VERTEX_BEGIN_END_STOP);
+ 		}
+ 
+@@ -74,23 +75,24 @@
+ 			int i;
+ 			for(i = 0; i < 32; ++i)
+ 			{
+-				OUT_RING(chan, RING_3D(0x1dac, 1));
++				BEGIN_RING(chan, eng3d, 0x1dac, 1);
+ 				OUT_RING(chan, 0);
+ 			}
+ 		}
+ 
+-		OUT_RING(chan, RING_3D(NV30_3D_VERTEX_BEGIN_END, 1));
++		BEGIN_RING(chan, eng3d, NV30_3D_VERTEX_BEGIN_END, 1);
+ 		OUT_RING  (chan, mode);
+ 		rs->prim = mode;
+ 	}
+ 
+-	OUT_RING(chan, RING_3D_NI(NV30_3D_VERTEX_DATA, num_attribs * 4 * count));
+ 	if(no_elements) {
++		BEGIN_RING_NI(chan, eng3d, NV30_3D_VERTEX_DATA, 4);
+ 		OUT_RING(chan, 0);
+ 		OUT_RING(chan, 0);
+ 		OUT_RING(chan, 0);
+ 		OUT_RING(chan, 0);
+ 	} else {
++		BEGIN_RING_NI(chan, eng3d, NV30_3D_VERTEX_DATA, num_attribs * 4 * count);
+ 		for (unsigned i = 0; i < count; ++i)
+ 		{
+ 			struct vertex_header* v = prim->v[i];
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/drivers/nvfx/nvfx_fragprog.c ./mesa/src/gallium/drivers/nvfx/nvfx_fragprog.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/gallium/drivers/nvfx/nvfx_fragprog.c	2011-01-02 23:58:35.000000000 +0100
++++ ./mesa/src/gallium/drivers/nvfx/nvfx_fragprog.c	2011-05-29 21:41:01.000000000 +0200
+@@ -1189,12 +1189,12 @@
+ static inline void
+ nvfx_fp_memcpy(void* dst, const void* src, size_t len)
+ {
+-#ifndef WORDS_BIGENDIAN
++#ifndef PIPE_ARCH_BIG_ENDIAN
+ 	memcpy(dst, src, len);
+ #else
+ 	size_t i;
+ 	for(i = 0; i < len; i += 4) {
+-		uint32_t v = (uint32_t*)((char*)src + i);
++		uint32_t v = *(uint32_t*)((char*)src + i);
+ 		*(uint32_t*)((char*)dst + i) = (v >> 16) | (v << 16);
+ 	}
+ #endif
+@@ -1233,6 +1233,7 @@
+ nvfx_fragprog_validate(struct nvfx_context *nvfx)
+ {
+ 	struct nouveau_channel* chan = nvfx->screen->base.channel;
++	struct nouveau_grobj *eng3d = nvfx->screen->eng3d;
+ 	struct nvfx_pipe_fragment_program *pfp = nvfx->fragprog;
+ 	struct nvfx_vertex_program* vp;
+ 
+@@ -1499,17 +1500,17 @@
+ 		nvfx->hw_fragprog = fp;
+ 
+ 		MARK_RING(chan, 8, 1);
+-		OUT_RING(chan, RING_3D(NV30_3D_FP_ACTIVE_PROGRAM, 1));
++		BEGIN_RING(chan, eng3d, NV30_3D_FP_ACTIVE_PROGRAM, 1);
+ 		OUT_RELOC(chan, fp->fpbo->bo, offset, NOUVEAU_BO_VRAM |
+ 			      NOUVEAU_BO_GART | NOUVEAU_BO_RD | NOUVEAU_BO_LOW |
+ 			      NOUVEAU_BO_OR, NV30_3D_FP_ACTIVE_PROGRAM_DMA0,
+ 			      NV30_3D_FP_ACTIVE_PROGRAM_DMA1);
+-		OUT_RING(chan, RING_3D(NV30_3D_FP_CONTROL, 1));
++		BEGIN_RING(chan, eng3d, NV30_3D_FP_CONTROL, 1);
+ 		OUT_RING(chan, fp->fp_control);
+ 		if(!nvfx->is_nv4x) {
+-			OUT_RING(chan, RING_3D(NV30_3D_FP_REG_CONTROL, 1));
++			BEGIN_RING(chan, eng3d, NV30_3D_FP_REG_CONTROL, 1);
+ 			OUT_RING(chan, (1<<16)|0x4);
+-			OUT_RING(chan, RING_3D(NV30_3D_TEX_UNITS_ENABLE, 1));
++			BEGIN_RING(chan, eng3d, NV30_3D_TEX_UNITS_ENABLE, 1);
+ 			OUT_RING(chan, fp->samplers);
+ 		}
+ 	}
+@@ -1518,8 +1519,7 @@
+ 		unsigned pointsprite_control = fp->point_sprite_control | nvfx->rasterizer->pipe.point_quad_rasterization;
+ 		if(pointsprite_control != nvfx->hw_pointsprite_control)
+ 		{
+-			WAIT_RING(chan, 2);
+-			OUT_RING(chan, RING_3D(NV30_3D_POINT_SPRITE, 1));
++			BEGIN_RING(chan, eng3d, NV30_3D_POINT_SPRITE, 1);
+ 			OUT_RING(chan, pointsprite_control);
+ 			nvfx->hw_pointsprite_control = pointsprite_control;
+ 		}
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/drivers/nvfx/nvfx_fragtex.c ./mesa/src/gallium/drivers/nvfx/nvfx_fragtex.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/gallium/drivers/nvfx/nvfx_fragtex.c	2011-01-02 23:58:35.000000000 +0100
++++ ./mesa/src/gallium/drivers/nvfx/nvfx_fragtex.c	2011-05-29 21:41:01.000000000 +0200
+@@ -177,6 +177,7 @@
+ nvfx_fragtex_validate(struct nvfx_context *nvfx)
+ {
+ 	struct nouveau_channel* chan = nvfx->screen->base.channel;
++	struct nouveau_grobj *eng3d = nvfx->screen->eng3d;
+ 	unsigned samplers, unit;
+ 
+ 	samplers = nvfx->dirty_samplers;
+@@ -197,9 +198,8 @@
+ 			else
+ 				nv40_fragtex_set(nvfx, unit);
+ 		} else {
+-			WAIT_RING(chan, 2);
+ 			/* this is OK for nv40 too */
+-			OUT_RING(chan, RING_3D(NV30_3D_TEX_ENABLE(unit), 1));
++			BEGIN_RING(chan, eng3d, NV30_3D_TEX_ENABLE(unit), 1);
+ 			OUT_RING(chan, 0);
+ 			nvfx->hw_samplers &= ~(1 << unit);
+ 		}
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/drivers/nvfx/nvfx_push.c ./mesa/src/gallium/drivers/nvfx/nvfx_push.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/gallium/drivers/nvfx/nvfx_push.c	2011-01-02 23:58:35.000000000 +0100
++++ ./mesa/src/gallium/drivers/nvfx/nvfx_push.c	2011-05-29 21:41:01.000000000 +0200
+@@ -10,6 +10,7 @@
+ 
+ struct push_context {
+ 	struct nouveau_channel* chan;
++	struct nouveau_grobj *eng3d;
+ 
+ 	void *idxbuf;
+ 	int32_t idxbias;
+@@ -27,9 +28,10 @@
+ emit_edgeflag(void *priv, boolean enabled)
+ {
+ 	struct push_context* ctx = priv;
++	struct nouveau_grobj *eng3d = ctx->eng3d;
+ 	struct nouveau_channel *chan = ctx->chan;
+ 
+-	OUT_RING(chan, RING_3D(NV30_3D_EDGEFLAG, 1));
++	BEGIN_RING(chan, eng3d, NV30_3D_EDGEFLAG, 1);
+ 	OUT_RING(chan, enabled ? 1 : 0);
+ }
+ 
+@@ -37,6 +39,7 @@
+ emit_vertices_lookup8(void *priv, unsigned start, unsigned count)
+ {
+         struct push_context *ctx = priv;
++        struct nouveau_grobj *eng3d = ctx->eng3d;
+         uint8_t* elts = (uint8_t*)ctx->idxbuf + start;
+ 
+         while(count)
+@@ -44,7 +47,7 @@
+                 unsigned push = MIN2(count, ctx->max_vertices_per_packet);
+                 unsigned length = push * ctx->vertex_length;
+ 
+-                OUT_RING(ctx->chan, RING_3D_NI(NV30_3D_VERTEX_DATA, length));
++                BEGIN_RING_NI(ctx->chan, eng3d, NV30_3D_VERTEX_DATA, length);
+                 ctx->translate->run_elts8(ctx->translate, elts, push, 0, ctx->chan->cur);
+                 ctx->chan->cur += length;
+ 
+@@ -57,6 +60,7 @@
+ emit_vertices_lookup16(void *priv, unsigned start, unsigned count)
+ {
+ 	struct push_context *ctx = priv;
++	struct nouveau_grobj *eng3d = ctx->eng3d;
+         uint16_t* elts = (uint16_t*)ctx->idxbuf + start;
+ 
+         while(count)
+@@ -64,7 +68,7 @@
+                 unsigned push = MIN2(count, ctx->max_vertices_per_packet);
+                 unsigned length = push * ctx->vertex_length;
+ 
+-                OUT_RING(ctx->chan, RING_3D_NI(NV30_3D_VERTEX_DATA, length));
++                BEGIN_RING_NI(ctx->chan, eng3d, NV30_3D_VERTEX_DATA, length);
+                 ctx->translate->run_elts16(ctx->translate, elts, push, 0, ctx->chan->cur);
+                 ctx->chan->cur += length;
+ 
+@@ -77,6 +81,7 @@
+ emit_vertices_lookup32(void *priv, unsigned start, unsigned count)
+ {
+         struct push_context *ctx = priv;
++        struct nouveau_grobj *eng3d = ctx->eng3d;
+         uint32_t* elts = (uint32_t*)ctx->idxbuf + start;
+ 
+         while(count)
+@@ -84,7 +89,7 @@
+                 unsigned push = MIN2(count, ctx->max_vertices_per_packet);
+                 unsigned length = push * ctx->vertex_length;
+ 
+-                OUT_RING(ctx->chan, RING_3D_NI(NV30_3D_VERTEX_DATA, length));
++                BEGIN_RING_NI(ctx->chan, eng3d, NV30_3D_VERTEX_DATA, length);
+                 ctx->translate->run_elts(ctx->translate, elts, push, 0, ctx->chan->cur);
+                 ctx->chan->cur += length;
+ 
+@@ -97,13 +102,14 @@
+ emit_vertices(void *priv, unsigned start, unsigned count)
+ {
+         struct push_context *ctx = priv;
++        struct nouveau_grobj *eng3d = ctx->eng3d;
+ 
+         while(count)
+         {
+ 		unsigned push = MIN2(count, ctx->max_vertices_per_packet);
+ 		unsigned length = push * ctx->vertex_length;
+ 
+-		OUT_RING(ctx->chan, RING_3D_NI(NV30_3D_VERTEX_DATA, length));
++		BEGIN_RING_NI(ctx->chan, eng3d, NV30_3D_VERTEX_DATA, length);
+ 		ctx->translate->run(ctx->translate, start, push, 0, ctx->chan->cur);
+ 		ctx->chan->cur += length;
+ 
+@@ -116,10 +122,11 @@
+ emit_ranges(void* priv, unsigned start, unsigned vc, unsigned reg)
+ {
+ 	struct push_context* ctx = priv;
++	struct nouveau_grobj *eng3d = ctx->eng3d;
+ 	struct nouveau_channel *chan = ctx->chan;
+ 	unsigned nr = (vc & 0xff);
+ 	if (nr) {
+-		OUT_RING(chan, RING_3D(reg, 1));
++		BEGIN_RING(chan, eng3d, reg, 1);
+ 		OUT_RING  (chan, ((nr - 1) << 24) | start);
+ 		start += nr;
+ 	}
+@@ -130,7 +137,7 @@
+ 
+ 		nr -= push;
+ 
+-		OUT_RING(chan, RING_3D_NI(reg, push));
++		BEGIN_RING_NI(chan, eng3d, reg, push);
+ 		while (push--) {
+ 			OUT_RING(chan, ((0x100 - 1) << 24) | start);
+ 			start += 0x100;
+@@ -154,12 +161,13 @@
+ emit_elt8(void* priv, unsigned start, unsigned vc)
+ {
+ 	struct push_context* ctx = priv;
++	struct nouveau_grobj *eng3d = ctx->eng3d;
+ 	struct nouveau_channel *chan = ctx->chan;
+ 	uint8_t *elts = (uint8_t *)ctx->idxbuf + start;
+ 	int idxbias = ctx->idxbias;
+ 
+ 	if (vc & 1) {
+-		OUT_RING(chan, RING_3D(NV30_3D_VB_ELEMENT_U32, 1));
++		BEGIN_RING(chan, eng3d, NV30_3D_VB_ELEMENT_U32, 1);
+ 		OUT_RING  (chan, elts[0]);
+ 		elts++; vc--;
+ 	}
+@@ -168,7 +176,7 @@
+ 		unsigned i;
+ 		unsigned push = MIN2(vc, 2047 * 2);
+ 
+-		OUT_RING(chan, RING_3D_NI(NV30_3D_VB_ELEMENT_U16, push >> 1));
++		BEGIN_RING_NI(chan, eng3d, NV30_3D_VB_ELEMENT_U16, push >> 1);
+ 		for (i = 0; i < push; i+=2)
+ 			OUT_RING(chan, ((elts[i+1] + idxbias) << 16) | (elts[i] + idxbias));
+ 
+@@ -181,12 +189,13 @@
+ emit_elt16(void* priv, unsigned start, unsigned vc)
+ {
+ 	struct push_context* ctx = priv;
++	struct nouveau_grobj *eng3d = ctx->eng3d;
+ 	struct nouveau_channel *chan = ctx->chan;
+ 	uint16_t *elts = (uint16_t *)ctx->idxbuf + start;
+ 	int idxbias = ctx->idxbias;
+ 
+ 	if (vc & 1) {
+-		OUT_RING(chan, RING_3D(NV30_3D_VB_ELEMENT_U32, 1));
++		BEGIN_RING(chan, eng3d, NV30_3D_VB_ELEMENT_U32, 1);
+ 		OUT_RING  (chan, elts[0]);
+ 		elts++; vc--;
+ 	}
+@@ -195,7 +204,7 @@
+ 		unsigned i;
+ 		unsigned push = MIN2(vc, 2047 * 2);
+ 
+-		OUT_RING(chan, RING_3D_NI(NV30_3D_VB_ELEMENT_U16, push >> 1));
++		BEGIN_RING_NI(chan, eng3d, NV30_3D_VB_ELEMENT_U16, push >> 1);
+ 		for (i = 0; i < push; i+=2)
+ 			OUT_RING(chan, ((elts[i+1] + idxbias) << 16) | (elts[i] + idxbias));
+ 
+@@ -208,6 +217,7 @@
+ emit_elt32(void* priv, unsigned start, unsigned vc)
+ {
+ 	struct push_context* ctx = priv;
++	struct nouveau_grobj *eng3d = ctx->eng3d;
+ 	struct nouveau_channel *chan = ctx->chan;
+ 	uint32_t *elts = (uint32_t *)ctx->idxbuf + start;
+ 	int idxbias = ctx->idxbias;
+@@ -215,8 +225,7 @@
+ 	while (vc) {
+ 		unsigned push = MIN2(vc, 2047);
+ 
+-		OUT_RING(chan, RING_3D_NI(NV30_3D_VB_ELEMENT_U32, push));
+-		assert(AVAIL_RING(chan) >= push);
++		BEGIN_RING_NI(chan, eng3d, NV30_3D_VB_ELEMENT_U32, push);
+ 		if(idxbias)
+ 		{
+ 			for(unsigned i = 0; i < push; ++i)
+@@ -235,6 +244,7 @@
+ {
+ 	struct nvfx_context *nvfx = nvfx_context(pipe);
+ 	struct nouveau_channel *chan = nvfx->screen->base.channel;
++	struct nouveau_grobj *eng3d = nvfx->screen->eng3d;
+ 	struct push_context ctx;
+ 	struct util_split_prim s;
+ 	unsigned instances_left = info->instance_count;
+@@ -251,6 +261,7 @@
+ 			+ 4; /* potential edgeflag enable/disable */
+ 
+ 	ctx.chan = nvfx->screen->base.channel;
++	ctx.eng3d = nvfx->screen->eng3d;
+ 	ctx.translate = nvfx->vtxelt->translate;
+ 	ctx.idxbuf = NULL;
+ 	ctx.vertex_length = nvfx->vtxelt->vertex_length;
+@@ -333,8 +344,9 @@
+ 
+ 		nvfx->vtxelt->per_instance[i].base.fetch_rgba_float(v, per_instance[i].map, 0, 0);
+ 
+-		WAIT_RING(chan, 5);
+-		nvfx_emit_vtx_attr(chan, nvfx->vtxelt->per_instance[i].base.idx, v, nvfx->vtxelt->per_instance[i].base.ncomp);
++		nvfx_emit_vtx_attr(chan, eng3d,
++				   nvfx->vtxelt->per_instance[i].base.idx, v,
++				   nvfx->vtxelt->per_instance[i].base.ncomp);
+ 	}
+ 
+ 	/* per-instance loop */
+@@ -374,15 +386,18 @@
+ 					int i;
+ 					for(i = 0; i < 32; ++i)
+ 					{
+-						OUT_RING(chan, RING_3D(0x1dac, 1));
++						BEGIN_RING(chan, eng3d,
++							   0x1dac, 1);
+ 						OUT_RING(chan, 0);
+ 					}
+ 				}
+ 
+-				OUT_RING(chan, RING_3D(NV30_3D_VERTEX_BEGIN_END, 1));
++				BEGIN_RING(chan, eng3d,
++					   NV30_3D_VERTEX_BEGIN_END, 1);
+ 				OUT_RING(chan, hw_mode);
+ 				done = util_split_prim_next(&s, max_verts);
+-				OUT_RING(chan, RING_3D(NV30_3D_VERTEX_BEGIN_END, 1));
++				BEGIN_RING(chan, eng3d,
++					   NV30_3D_VERTEX_BEGIN_END, 1);
+ 				OUT_RING(chan, 0);
+ 
+ 				if(done)
+@@ -406,8 +421,10 @@
+ 				per_instance[i].step = 0;
+ 
+ 				nvfx->vtxelt->per_instance[i].base.fetch_rgba_float(v, per_instance[i].map, 0, 0);
+-				WAIT_RING(chan, 5);
+-				nvfx_emit_vtx_attr(chan, nvfx->vtxelt->per_instance[i].base.idx, v, nvfx->vtxelt->per_instance[i].base.ncomp);
++				nvfx_emit_vtx_attr(chan, eng3d,
++						   nvfx->vtxelt->per_instance[i].base.idx,
++						   v,
++						   nvfx->vtxelt->per_instance[i].base.ncomp);
+ 			}
+ 		}
+ 	}
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/drivers/nvfx/nvfx_query.c ./mesa/src/gallium/drivers/nvfx/nvfx_query.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/gallium/drivers/nvfx/nvfx_query.c	2011-01-02 23:58:35.000000000 +0100
++++ ./mesa/src/gallium/drivers/nvfx/nvfx_query.c	2011-05-29 21:41:01.000000000 +0200
+@@ -49,6 +49,7 @@
+ 	struct nvfx_query *q = nvfx_query(pq);
+ 	struct nvfx_screen *screen = nvfx->screen;
+ 	struct nouveau_channel *chan = screen->base.channel;
++	struct nouveau_grobj *eng3d = screen->eng3d;
+ 	uint64_t tmp;
+ 
+ 	assert(!nvfx->query);
+@@ -72,10 +73,9 @@
+ 
+ 	nouveau_notifier_reset(nvfx->screen->query, q->object->start);
+ 
+-	WAIT_RING(chan, 4);
+-	OUT_RING(chan, RING_3D(NV30_3D_QUERY_RESET, 1));
++	BEGIN_RING(chan, eng3d, NV30_3D_QUERY_RESET, 1);
+ 	OUT_RING(chan, 1);
+-	OUT_RING(chan, RING_3D(NV30_3D_QUERY_ENABLE, 1));
++	BEGIN_RING(chan, eng3d, NV30_3D_QUERY_ENABLE, 1);
+ 	OUT_RING(chan, 1);
+ 
+ 	q->ready = FALSE;
+@@ -88,15 +88,15 @@
+ {
+ 	struct nvfx_context *nvfx = nvfx_context(pipe);
+ 	struct nouveau_channel *chan = nvfx->screen->base.channel;
++	struct nouveau_grobj *eng3d = nvfx->screen->eng3d;
+ 	struct nvfx_query *q = nvfx_query(pq);
+ 
+ 	assert(nvfx->query == pq);
+ 
+-	WAIT_RING(chan, 4);
+-	OUT_RING(chan, RING_3D(NV30_3D_QUERY_GET, 1));
++	BEGIN_RING(chan, eng3d, NV30_3D_QUERY_GET, 1);
+ 	OUT_RING  (chan, (0x01 << NV30_3D_QUERY_GET_UNK24__SHIFT) |
+ 		   ((q->object->start * 32) << NV30_3D_QUERY_GET_OFFSET__SHIFT));
+-	OUT_RING(chan, RING_3D(NV30_3D_QUERY_ENABLE, 1));
++	BEGIN_RING(chan, eng3d, NV30_3D_QUERY_ENABLE, 1);
+ 	OUT_RING(chan, 0);
+ 	FIRE_RING(chan);
+ 
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/drivers/nvfx/nvfx_screen.c ./mesa/src/gallium/drivers/nvfx/nvfx_screen.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/gallium/drivers/nvfx/nvfx_screen.c	2011-01-02 23:58:35.000000000 +0100
++++ ./mesa/src/gallium/drivers/nvfx/nvfx_screen.c	2011-05-29 21:41:01.000000000 +0200
+@@ -301,98 +301,100 @@
+ static void nv30_screen_init(struct nvfx_screen *screen)
+ {
+ 	struct nouveau_channel *chan = screen->base.channel;
++	struct nouveau_grobj *eng3d = screen->eng3d;
+ 	int i;
+ 
+ 	/* TODO: perhaps we should do some of this on nv40 too? */
+ 	for (i=1; i<8; i++) {
+-		OUT_RING(chan, RING_3D(NV30_3D_VIEWPORT_CLIP_HORIZ(i), 1));
++		BEGIN_RING(chan, eng3d, NV30_3D_VIEWPORT_CLIP_HORIZ(i), 1);
+ 		OUT_RING(chan, 0);
+-		OUT_RING(chan, RING_3D(NV30_3D_VIEWPORT_CLIP_VERT(i), 1));
++		BEGIN_RING(chan, eng3d, NV30_3D_VIEWPORT_CLIP_VERT(i), 1);
+ 		OUT_RING(chan, 0);
+ 	}
+ 
+-	OUT_RING(chan, RING_3D(0x220, 1));
++	BEGIN_RING(chan, eng3d, 0x220, 1);
+ 	OUT_RING(chan, 1);
+ 
+-	OUT_RING(chan, RING_3D(0x03b0, 1));
++	BEGIN_RING(chan, eng3d, 0x03b0, 1);
+ 	OUT_RING(chan, 0x00100000);
+-	OUT_RING(chan, RING_3D(0x1454, 1));
++	BEGIN_RING(chan, eng3d, 0x1454, 1);
+ 	OUT_RING(chan, 0);
+-	OUT_RING(chan, RING_3D(0x1d80, 1));
++	BEGIN_RING(chan, eng3d, 0x1d80, 1);
+ 	OUT_RING(chan, 3);
+-	OUT_RING(chan, RING_3D(0x1450, 1));
++	BEGIN_RING(chan, eng3d, 0x1450, 1);
+ 	OUT_RING(chan, 0x00030004);
+ 
+ 	/* NEW */
+-	OUT_RING(chan, RING_3D(0x1e98, 1));
++	BEGIN_RING(chan, eng3d, 0x1e98, 1);
+ 	OUT_RING(chan, 0);
+-	OUT_RING(chan, RING_3D(0x17e0, 3));
++	BEGIN_RING(chan, eng3d, 0x17e0, 3);
+ 	OUT_RING(chan, fui(0.0));
+ 	OUT_RING(chan, fui(0.0));
+ 	OUT_RING(chan, fui(1.0));
+-	OUT_RING(chan, RING_3D(0x1f80, 16));
++	BEGIN_RING(chan, eng3d, 0x1f80, 16);
+ 	for (i=0; i<16; i++) {
+ 		OUT_RING(chan, (i==8) ? 0x0000ffff : 0);
+ 	}
+ 
+-	OUT_RING(chan, RING_3D(0x120, 3));
++	BEGIN_RING(chan, eng3d, 0x120, 3);
+ 	OUT_RING(chan, 0);
+ 	OUT_RING(chan, 1);
+ 	OUT_RING(chan, 2);
+ 
+-	OUT_RING(chan, RING_3D(0x1d88, 1));
++	BEGIN_RING(chan, eng3d, 0x1d88, 1);
+ 	OUT_RING(chan, 0x00001200);
+ 
+-	OUT_RING(chan, RING_3D(NV30_3D_RC_ENABLE, 1));
++	BEGIN_RING(chan, eng3d, NV30_3D_RC_ENABLE, 1);
+ 	OUT_RING(chan, 0);
+ 
+-	OUT_RING(chan, RING_3D(NV30_3D_DEPTH_RANGE_NEAR, 2));
++	BEGIN_RING(chan, eng3d, NV30_3D_DEPTH_RANGE_NEAR, 2);
+ 	OUT_RING(chan, fui(0.0));
+ 	OUT_RING(chan, fui(1.0));
+ 
+-	OUT_RING(chan, RING_3D(NV30_3D_MULTISAMPLE_CONTROL, 1));
++	BEGIN_RING(chan, eng3d, NV30_3D_MULTISAMPLE_CONTROL, 1);
+ 	OUT_RING(chan, 0xffff0000);
+ 
+ 	/* enables use of vp rather than fixed-function somehow */
+-	OUT_RING(chan, RING_3D(0x1e94, 1));
++	BEGIN_RING(chan, eng3d, 0x1e94, 1);
+ 	OUT_RING(chan, 0x13);
+ }
+ 
+ static void nv40_screen_init(struct nvfx_screen *screen)
+ {
+ 	struct nouveau_channel *chan = screen->base.channel;
++	struct nouveau_grobj *eng3d = screen->eng3d;
+ 
+-	OUT_RING(chan, RING_3D(NV40_3D_DMA_COLOR2, 2));
++	BEGIN_RING(chan, eng3d, NV40_3D_DMA_COLOR2, 2);
+ 	OUT_RING(chan, screen->base.channel->vram->handle);
+ 	OUT_RING(chan, screen->base.channel->vram->handle);
+ 
+-	OUT_RING(chan, RING_3D(0x1450, 1));
++	BEGIN_RING(chan, eng3d, 0x1450, 1);
+ 	OUT_RING(chan, 0x00000004);
+ 
+-	OUT_RING(chan, RING_3D(0x1ea4, 3));
++	BEGIN_RING(chan, eng3d, 0x1ea4, 3);
+ 	OUT_RING(chan, 0x00000010);
+ 	OUT_RING(chan, 0x01000100);
+ 	OUT_RING(chan, 0xff800006);
+ 
+ 	/* vtxprog output routing */
+-	OUT_RING(chan, RING_3D(0x1fc4, 1));
++	BEGIN_RING(chan, eng3d, 0x1fc4, 1);
+ 	OUT_RING(chan, 0x06144321);
+-	OUT_RING(chan, RING_3D(0x1fc8, 2));
++	BEGIN_RING(chan, eng3d, 0x1fc8, 2);
+ 	OUT_RING(chan, 0xedcba987);
+ 	OUT_RING(chan, 0x0000006f);
+-	OUT_RING(chan, RING_3D(0x1fd0, 1));
++	BEGIN_RING(chan, eng3d, 0x1fd0, 1);
+ 	OUT_RING(chan, 0x00171615);
+-	OUT_RING(chan, RING_3D(0x1fd4, 1));
++	BEGIN_RING(chan, eng3d, 0x1fd4, 1);
+ 	OUT_RING(chan, 0x001b1a19);
+ 
+-	OUT_RING(chan, RING_3D(0x1ef8, 1));
++	BEGIN_RING(chan, eng3d, 0x1ef8, 1);
+ 	OUT_RING(chan, 0x0020ffff);
+-	OUT_RING(chan, RING_3D(0x1d64, 1));
++	BEGIN_RING(chan, eng3d, 0x1d64, 1);
+ 	OUT_RING(chan, 0x01d300d4);
+-	OUT_RING(chan, RING_3D(0x1e94, 1));
++	BEGIN_RING(chan, eng3d, 0x1e94, 1);
+ 	OUT_RING(chan, 0x00000001);
+ 
+-	OUT_RING(chan, RING_3D(NV40_3D_MIPMAP_ROUNDING, 1));
++	BEGIN_RING(chan, eng3d, NV40_3D_MIPMAP_ROUNDING, 1);
+ 	OUT_RING(chan, NV40_3D_MIPMAP_ROUNDING_MODE_DOWN);
+ }
+ 
+@@ -571,25 +573,25 @@
+ 
+ 	/* Static eng3d initialisation */
+ 	/* note that we just started using the channel, so we must have space in the pushbuffer */
+-	OUT_RING(chan, RING_3D(NV30_3D_DMA_NOTIFY, 1));
++	BEGIN_RING(chan, screen->eng3d, NV30_3D_DMA_NOTIFY, 1);
+ 	OUT_RING(chan, screen->sync->handle);
+-	OUT_RING(chan, RING_3D(NV30_3D_DMA_TEXTURE0, 2));
++	BEGIN_RING(chan, screen->eng3d, NV30_3D_DMA_TEXTURE0, 2);
+ 	OUT_RING(chan, chan->vram->handle);
+ 	OUT_RING(chan, chan->gart->handle);
+-	OUT_RING(chan, RING_3D(NV30_3D_DMA_COLOR1, 1));
++	BEGIN_RING(chan, screen->eng3d, NV30_3D_DMA_COLOR1, 1);
+ 	OUT_RING(chan, chan->vram->handle);
+-	OUT_RING(chan, RING_3D(NV30_3D_DMA_COLOR0, 2));
++	BEGIN_RING(chan, screen->eng3d, NV30_3D_DMA_COLOR0, 2);
+ 	OUT_RING(chan, chan->vram->handle);
+ 	OUT_RING(chan, chan->vram->handle);
+-	OUT_RING(chan, RING_3D(NV30_3D_DMA_VTXBUF0, 2));
++	BEGIN_RING(chan, screen->eng3d, NV30_3D_DMA_VTXBUF0, 2);
+ 	OUT_RING(chan, chan->vram->handle);
+ 	OUT_RING(chan, chan->gart->handle);
+ 
+-	OUT_RING(chan, RING_3D(NV30_3D_DMA_FENCE, 2));
++	BEGIN_RING(chan, screen->eng3d, NV30_3D_DMA_FENCE, 2);
+ 	OUT_RING(chan, 0);
+ 	OUT_RING(chan, screen->query->handle);
+ 
+-	OUT_RING(chan, RING_3D(NV30_3D_DMA_UNK1AC, 2));
++	BEGIN_RING(chan, screen->eng3d, NV30_3D_DMA_UNK1AC, 2);
+ 	OUT_RING(chan, chan->vram->handle);
+ 	OUT_RING(chan, chan->vram->handle);
+ 
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/drivers/nvfx/nvfx_state.c ./mesa/src/gallium/drivers/nvfx/nvfx_state.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/gallium/drivers/nvfx/nvfx_state.c	2010-12-14 22:43:14.000000000 +0100
++++ ./mesa/src/gallium/drivers/nvfx/nvfx_state.c	2011-05-29 21:41:01.000000000 +0200
+@@ -304,7 +304,7 @@
+ {
+ 	struct nvfx_context *nvfx = nvfx_context(pipe);
+ 
+-	nvfx->constbuf[shader] = buf;
++	pipe_resource_reference(&nvfx->constbuf[shader], buf);
+ 	nvfx->constbuf_nr[shader] = buf ? (buf->width0 / (4 * sizeof(float))) : 0;
+ 
+ 	if (shader == PIPE_SHADER_VERTEX) {
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/drivers/nvfx/nvfx_state_emit.c ./mesa/src/gallium/drivers/nvfx/nvfx_state_emit.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/gallium/drivers/nvfx/nvfx_state_emit.c	2011-01-02 23:58:35.000000000 +0100
++++ ./mesa/src/gallium/drivers/nvfx/nvfx_state_emit.c	2011-05-29 21:41:01.000000000 +0200
+@@ -7,11 +7,11 @@
+ nvfx_state_viewport_validate(struct nvfx_context *nvfx)
+ {
+ 	struct nouveau_channel *chan = nvfx->screen->base.channel;
++	struct nouveau_grobj *eng3d = nvfx->screen->eng3d;
+ 	struct pipe_viewport_state *vpt = &nvfx->viewport;
+ 
+-	WAIT_RING(chan, 11);
+ 	if(nvfx->render_mode == HW) {
+-		OUT_RING(chan, RING_3D(NV30_3D_VIEWPORT_TRANSLATE_X, 8));
++		BEGIN_RING(chan, eng3d, NV30_3D_VIEWPORT_TRANSLATE_X, 8);
+ 		OUT_RINGf(chan, vpt->translate[0]);
+ 		OUT_RINGf(chan, vpt->translate[1]);
+ 		OUT_RINGf(chan, vpt->translate[2]);
+@@ -20,10 +20,10 @@
+ 		OUT_RINGf(chan, vpt->scale[1]);
+ 		OUT_RINGf(chan, vpt->scale[2]);
+ 		OUT_RINGf(chan, vpt->scale[3]);
+-		OUT_RING(chan, RING_3D(0x1d78, 1));
++		BEGIN_RING(chan, eng3d, 0x1d78, 1);
+ 		OUT_RING(chan, 1);
+ 	} else {
+-		OUT_RING(chan, RING_3D(NV30_3D_VIEWPORT_TRANSLATE_X, 8));
++		BEGIN_RING(chan, eng3d, NV30_3D_VIEWPORT_TRANSLATE_X, 8);
+ 		OUT_RINGf(chan, 0.0f);
+ 		OUT_RINGf(chan, 0.0f);
+ 		OUT_RINGf(chan, 0.0f);
+@@ -32,7 +32,7 @@
+ 		OUT_RINGf(chan, 1.0f);
+ 		OUT_RINGf(chan, 1.0f);
+ 		OUT_RINGf(chan, 1.0f);
+-		OUT_RING(chan, RING_3D(0x1d78, 1));
++		BEGIN_RING(chan, eng3d, 0x1d78, 1);
+ 		OUT_RING(chan, nvfx->is_nv4x ? 0x110 : 1);
+ 	}
+ }
+@@ -41,6 +41,7 @@
+ nvfx_state_scissor_validate(struct nvfx_context *nvfx)
+ {
+ 	struct nouveau_channel *chan = nvfx->screen->base.channel;
++	struct nouveau_grobj *eng3d = nvfx->screen->eng3d;
+ 	struct pipe_rasterizer_state *rast = &nvfx->rasterizer->pipe;
+ 	struct pipe_scissor_state *s = &nvfx->scissor;
+ 
+@@ -48,8 +49,7 @@
+ 		return;
+ 	nvfx->state.scissor_enabled = rast->scissor;
+ 
+-	WAIT_RING(chan, 3);
+-	OUT_RING(chan, RING_3D(NV30_3D_SCISSOR_HORIZ, 2));
++	BEGIN_RING(chan, eng3d, NV30_3D_SCISSOR_HORIZ, 2);
+ 	if (nvfx->state.scissor_enabled) {
+ 		OUT_RING(chan, ((s->maxx - s->minx) << 16) | s->minx);
+ 		OUT_RING(chan, ((s->maxy - s->miny) << 16) | s->miny);
+@@ -63,12 +63,12 @@
+ nvfx_state_sr_validate(struct nvfx_context *nvfx)
+ {
+ 	struct nouveau_channel* chan = nvfx->screen->base.channel;
++	struct nouveau_grobj *eng3d = nvfx->screen->eng3d;
+ 	struct pipe_stencil_ref *sr = &nvfx->stencil_ref;
+ 
+-	WAIT_RING(chan, 4);
+-	OUT_RING(chan, RING_3D(NV30_3D_STENCIL_FUNC_REF(0), 1));
++	BEGIN_RING(chan, eng3d, NV30_3D_STENCIL_FUNC_REF(0), 1);
+ 	OUT_RING(chan, sr->ref_value[0]);
+-	OUT_RING(chan, RING_3D(NV30_3D_STENCIL_FUNC_REF(1), 1));
++	BEGIN_RING(chan, eng3d, NV30_3D_STENCIL_FUNC_REF(1), 1);
+ 	OUT_RING(chan, sr->ref_value[1]);
+ }
+ 
+@@ -76,10 +76,10 @@
+ nvfx_state_blend_colour_validate(struct nvfx_context *nvfx)
+ {
+ 	struct nouveau_channel* chan = nvfx->screen->base.channel;
++	struct nouveau_grobj *eng3d = nvfx->screen->eng3d;
+ 	struct pipe_blend_color *bcol = &nvfx->blend_colour;
+ 
+-	WAIT_RING(chan, 2);
+-	OUT_RING(chan, RING_3D(NV30_3D_BLEND_COLOR, 1));
++	BEGIN_RING(chan, eng3d, NV30_3D_BLEND_COLOR, 1);
+ 	OUT_RING(chan, ((float_to_ubyte(bcol->color[3]) << 24) |
+ 		       (float_to_ubyte(bcol->color[0]) << 16) |
+ 		       (float_to_ubyte(bcol->color[1]) <<  8) |
+@@ -90,9 +90,9 @@
+ nvfx_state_stipple_validate(struct nvfx_context *nvfx)
+ {
+ 	struct nouveau_channel *chan = nvfx->screen->base.channel;
++	struct nouveau_grobj *eng3d = nvfx->screen->eng3d;
+ 
+-	WAIT_RING(chan, 33);
+-	OUT_RING(chan, RING_3D(NV30_3D_POLYGON_STIPPLE_PATTERN(0), 32));
++	BEGIN_RING(chan, eng3d, NV30_3D_POLYGON_STIPPLE_PATTERN(0), 32);
+ 	OUT_RINGp(chan, nvfx->stipple, 32);
+ }
+ 
+@@ -100,12 +100,12 @@
+ nvfx_coord_conventions_validate(struct nvfx_context* nvfx)
+ {
+ 	struct nouveau_channel* chan = nvfx->screen->base.channel;
++	struct nouveau_grobj *eng3d = nvfx->screen->eng3d;
+ 	unsigned value = nvfx->hw_fragprog->coord_conventions;
+ 	if(value & NV30_3D_COORD_CONVENTIONS_ORIGIN_INVERTED)
+ 		value |= nvfx->framebuffer.height << NV30_3D_COORD_CONVENTIONS_HEIGHT__SHIFT;
+ 
+-	WAIT_RING(chan, 2);
+-	OUT_RING(chan, RING_3D(NV30_3D_COORD_CONVENTIONS, 1));
++	BEGIN_RING(chan, eng3d, NV30_3D_COORD_CONVENTIONS, 1);
+ 	OUT_RING(chan, value);
+ }
+ 
+@@ -113,6 +113,7 @@
+ nvfx_ucp_validate(struct nvfx_context* nvfx)
+ {
+ 	struct nouveau_channel* chan = nvfx->screen->base.channel;
++	struct nouveau_grobj *eng3d = nvfx->screen->eng3d;
+ 	unsigned enables[7] =
+ 	{
+ 			0,
+@@ -126,17 +127,15 @@
+ 
+ 	if(!nvfx->use_vp_clipping)
+ 	{
+-		WAIT_RING(chan, 2);
+-		OUT_RING(chan, RING_3D(NV30_3D_VP_CLIP_PLANES_ENABLE, 1));
++		BEGIN_RING(chan, eng3d, NV30_3D_VP_CLIP_PLANES_ENABLE, 1);
+ 		OUT_RING(chan, 0);
+ 
+-		WAIT_RING(chan, 6 * 4 + 1);
+-		OUT_RING(chan, RING_3D(NV30_3D_VP_CLIP_PLANE(0, 0), nvfx->clip.nr * 4));
++		BEGIN_RING(chan, eng3d, NV30_3D_VP_CLIP_PLANE(0, 0),
++			   nvfx->clip.nr * 4);
+ 		OUT_RINGp(chan, &nvfx->clip.ucp[0][0], nvfx->clip.nr * 4);
+ 	}
+ 
+-	WAIT_RING(chan, 2);
+-	OUT_RING(chan, RING_3D(NV30_3D_VP_CLIP_PLANES_ENABLE, 1));
++	BEGIN_RING(chan, eng3d, NV30_3D_VP_CLIP_PLANES_ENABLE, 1);
+ 	OUT_RING(chan, enables[nvfx->clip.nr]);
+ }
+ 
+@@ -144,38 +143,37 @@
+ nvfx_vertprog_ucp_validate(struct nvfx_context* nvfx)
+ {
+ 	struct nouveau_channel* chan = nvfx->screen->base.channel;
++	struct nouveau_grobj *eng3d = nvfx->screen->eng3d;
+ 	unsigned i;
+ 	struct nvfx_vertex_program* vp = nvfx->hw_vertprog;
+ 	if(nvfx->clip.nr != vp->clip_nr)
+ 	{
+ 		unsigned idx;
+-		WAIT_RING(chan, 14);
+ 
+ 		/* remove last instruction bit */
+ 		if(vp->clip_nr >= 0)
+ 		{
+ 			idx = vp->nr_insns - 7 + vp->clip_nr;
+-			OUT_RING(chan, RING_3D(NV30_3D_VP_UPLOAD_FROM_ID, 1));
++			BEGIN_RING(chan, eng3d, NV30_3D_VP_UPLOAD_FROM_ID, 1);
+ 			OUT_RING(chan,  vp->exec->start + idx);
+-			OUT_RING(chan, RING_3D(NV30_3D_VP_UPLOAD_INST(0), 4));
++			BEGIN_RING(chan, eng3d, NV30_3D_VP_UPLOAD_INST(0), 4);
+ 			OUT_RINGp (chan, vp->insns[idx].data, 4);
+ 		}
+ 
+ 		 /* set last instruction bit */
+ 		idx = vp->nr_insns - 7 + nvfx->clip.nr;
+-		OUT_RING(chan, RING_3D(NV30_3D_VP_UPLOAD_FROM_ID, 1));
++		BEGIN_RING(chan, eng3d, NV30_3D_VP_UPLOAD_FROM_ID, 1);
+ 		OUT_RING(chan,  vp->exec->start + idx);
+-		OUT_RING(chan, RING_3D(NV30_3D_VP_UPLOAD_INST(0), 4));
++		BEGIN_RING(chan, eng3d, NV30_3D_VP_UPLOAD_INST(0), 4);
+ 		OUT_RINGp(chan, vp->insns[idx].data, 3);
+ 		OUT_RING(chan, vp->insns[idx].data[3] | 1);
+ 		vp->clip_nr = nvfx->clip.nr;
+ 	}
+ 
+ 	// TODO: only do this for the ones changed
+-	WAIT_RING(chan, 6 * 6);
+ 	for(i = 0; i < nvfx->clip.nr; ++i)
+ 	{
+-		OUT_RING(chan, RING_3D(NV30_3D_VP_UPLOAD_CONST_ID, 5));
++		BEGIN_RING(chan, eng3d, NV30_3D_VP_UPLOAD_CONST_ID, 5);
+ 		OUT_RING(chan, vp->data->start + i);
+ 		OUT_RINGp (chan, nvfx->clip.ucp[i], 4);
+ 	}
+@@ -185,6 +183,7 @@
+ nvfx_state_validate_common(struct nvfx_context *nvfx)
+ {
+ 	struct nouveau_channel* chan = nvfx->screen->base.channel;
++	struct nouveau_grobj *eng3d = nvfx->screen->eng3d;
+ 	unsigned dirty;
+ 	unsigned still_dirty = 0;
+ 	int new_fb_mode = -1; /* 1 = all swizzled, 0 = make all linear */
+@@ -287,8 +286,7 @@
+ 
+ 		if(vp_output != nvfx->hw_vp_output)
+ 		{
+-			WAIT_RING(chan, 2);
+-			OUT_RING(chan, RING_3D(NV40_3D_VP_RESULT_EN, 1));
++			BEGIN_RING(chan, eng3d, NV40_3D_VP_RESULT_EN, 1);
+ 			OUT_RING(chan, vp_output);
+ 			nvfx->hw_vp_output = vp_output;
+ 		}
+@@ -320,8 +318,7 @@
+ 
+ 	if(dirty & NVFX_NEW_ZSA || (new_fb_mode >= 0))
+ 	{
+-		WAIT_RING(chan, 3);
+-		OUT_RING(chan, RING_3D(NV30_3D_DEPTH_WRITE_ENABLE, 2));
++		BEGIN_RING(chan, eng3d, NV30_3D_DEPTH_WRITE_ENABLE, 2);
+ 		OUT_RING(chan, nvfx->framebuffer.zsbuf && nvfx->zsa->pipe.depth.writemask);
+ 	        OUT_RING(chan, nvfx->framebuffer.zsbuf && nvfx->zsa->pipe.depth.enabled);
+ 	}
+@@ -334,10 +331,9 @@
+ 		// TODO: what about nv30?
+ 		if(nvfx->is_nv4x)
+ 		{
+-			WAIT_RING(chan, 4);
+-			OUT_RING(chan, RING_3D(NV40_3D_TEX_CACHE_CTL, 1));
++			BEGIN_RING(chan, eng3d, NV40_3D_TEX_CACHE_CTL, 1);
+ 			OUT_RING(chan, 2);
+-			OUT_RING(chan, RING_3D(NV40_3D_TEX_CACHE_CTL, 1));
++			BEGIN_RING(chan, eng3d, NV40_3D_TEX_CACHE_CTL, 1);
+ 			OUT_RING(chan, 1);
+ 		}
+ 	}
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/drivers/nvfx/nvfx_state_fb.c ./mesa/src/gallium/drivers/nvfx/nvfx_state_fb.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/gallium/drivers/nvfx/nvfx_state_fb.c	2011-01-02 23:58:35.000000000 +0100
++++ ./mesa/src/gallium/drivers/nvfx/nvfx_state_fb.c	2011-05-29 21:41:01.000000000 +0200
+@@ -96,6 +96,7 @@
+ {
+ 	struct pipe_framebuffer_state *fb = &nvfx->framebuffer;
+ 	struct nouveau_channel *chan = nvfx->screen->base.channel;
++	struct nouveau_grobj *eng3d = nvfx->screen->eng3d;
+ 	uint32_t rt_enable, rt_format;
+ 	int i;
+ 	unsigned rt_flags = NOUVEAU_BO_RDWR | NOUVEAU_BO_VRAM;
+@@ -204,11 +205,11 @@
+ 
+ 		//printf("rendering to bo %p [%i] at offset %i with pitch %i\n", rt0->bo, rt0->bo->handle, rt0->offset, pitch);
+ 
+-		OUT_RING(chan, RING_3D(NV30_3D_DMA_COLOR0, 1));
++		BEGIN_RING(chan, eng3d, NV30_3D_DMA_COLOR0, 1);
+ 		OUT_RELOC(chan, rt0->bo, 0,
+ 			      rt_flags | NOUVEAU_BO_OR,
+ 			      chan->vram->handle, chan->gart->handle);
+-		OUT_RING(chan, RING_3D(NV30_3D_COLOR0_PITCH, 2));
++		BEGIN_RING(chan, eng3d, NV30_3D_COLOR0_PITCH, 2);
+ 		OUT_RING(chan, pitch);
+ 		OUT_RELOC(chan, rt0->bo,
+ 			      rt0->offset, rt_flags | NOUVEAU_BO_LOW,
+@@ -216,11 +217,11 @@
+ 	}
+ 
+ 	if (rt_enable & NV30_3D_RT_ENABLE_COLOR1) {
+-		OUT_RING(chan, RING_3D(NV30_3D_DMA_COLOR1, 1));
++		BEGIN_RING(chan, eng3d, NV30_3D_DMA_COLOR1, 1);
+ 		OUT_RELOC(chan, nvfx->hw_rt[1].bo, 0,
+ 			      rt_flags | NOUVEAU_BO_OR,
+ 			      chan->vram->handle, chan->gart->handle);
+-		OUT_RING(chan, RING_3D(NV30_3D_COLOR1_OFFSET, 2));
++		BEGIN_RING(chan, eng3d, NV30_3D_COLOR1_OFFSET, 2);
+ 		OUT_RELOC(chan, nvfx->hw_rt[1].bo,
+ 				nvfx->hw_rt[1].offset, rt_flags | NOUVEAU_BO_LOW,
+ 			      0, 0);
+@@ -230,68 +231,68 @@
+ 	if(nvfx->is_nv4x)
+ 	{
+ 		if (rt_enable & NV40_3D_RT_ENABLE_COLOR2) {
+-			OUT_RING(chan, RING_3D(NV40_3D_DMA_COLOR2, 1));
++			BEGIN_RING(chan, eng3d, NV40_3D_DMA_COLOR2, 1);
+ 			OUT_RELOC(chan, nvfx->hw_rt[2].bo, 0,
+ 				      rt_flags | NOUVEAU_BO_OR,
+ 				      chan->vram->handle, chan->gart->handle);
+-			OUT_RING(chan, RING_3D(NV40_3D_COLOR2_OFFSET, 1));
++			BEGIN_RING(chan, eng3d, NV40_3D_COLOR2_OFFSET, 1);
+ 			OUT_RELOC(chan, nvfx->hw_rt[2].bo,
+ 				      nvfx->hw_rt[2].offset, rt_flags | NOUVEAU_BO_LOW,
+ 				      0, 0);
+-			OUT_RING(chan, RING_3D(NV40_3D_COLOR2_PITCH, 1));
++			BEGIN_RING(chan, eng3d, NV40_3D_COLOR2_PITCH, 1);
+ 			OUT_RING(chan, nvfx->hw_rt[2].pitch);
+ 		}
+ 
+ 		if (rt_enable & NV40_3D_RT_ENABLE_COLOR3) {
+-			OUT_RING(chan, RING_3D(NV40_3D_DMA_COLOR3, 1));
++			BEGIN_RING(chan, eng3d, NV40_3D_DMA_COLOR3, 1);
+ 			OUT_RELOC(chan, nvfx->hw_rt[3].bo, 0,
+ 				      rt_flags | NOUVEAU_BO_OR,
+ 				      chan->vram->handle, chan->gart->handle);
+-			OUT_RING(chan, RING_3D(NV40_3D_COLOR3_OFFSET, 1));
++			BEGIN_RING(chan, eng3d, NV40_3D_COLOR3_OFFSET, 1);
+ 			OUT_RELOC(chan, nvfx->hw_rt[3].bo,
+ 					nvfx->hw_rt[3].offset, rt_flags | NOUVEAU_BO_LOW,
+ 				      0, 0);
+-			OUT_RING(chan, RING_3D(NV40_3D_COLOR3_PITCH, 1));
++			BEGIN_RING(chan, eng3d, NV40_3D_COLOR3_PITCH, 1);
+ 			OUT_RING(chan, nvfx->hw_rt[3].pitch);
+ 		}
+ 	}
+ 
+ 	if (fb->zsbuf) {
+-		OUT_RING(chan, RING_3D(NV30_3D_DMA_ZETA, 1));
++		BEGIN_RING(chan, eng3d, NV30_3D_DMA_ZETA, 1);
+ 		OUT_RELOC(chan, nvfx->hw_zeta.bo, 0,
+ 			      rt_flags | NOUVEAU_BO_OR,
+ 			      chan->vram->handle, chan->gart->handle);
+-		OUT_RING(chan, RING_3D(NV30_3D_ZETA_OFFSET, 1));
++		BEGIN_RING(chan, eng3d, NV30_3D_ZETA_OFFSET, 1);
+ 		/* TODO: reverse engineer LMA */
+ 		OUT_RELOC(chan, nvfx->hw_zeta.bo,
+ 			     nvfx->hw_zeta.offset, rt_flags | NOUVEAU_BO_LOW, 0, 0);
+ 	        if(nvfx->is_nv4x) {
+-			OUT_RING(chan, RING_3D(NV40_3D_ZETA_PITCH, 1));
++			BEGIN_RING(chan, eng3d, NV40_3D_ZETA_PITCH, 1);
+ 			OUT_RING(chan, nvfx->hw_zeta.pitch);
+ 		}
+ 	}
+ 	else if(nvfx->is_nv4x) {
+-		OUT_RING(chan, RING_3D(NV40_3D_ZETA_PITCH, 1));
++		BEGIN_RING(chan, eng3d, NV40_3D_ZETA_PITCH, 1);
+ 		OUT_RING(chan, 64);
+ 	}
+ 
+-	OUT_RING(chan, RING_3D(NV30_3D_RT_ENABLE, 1));
++	BEGIN_RING(chan, eng3d, NV30_3D_RT_ENABLE, 1);
+ 	OUT_RING(chan, rt_enable);
+-	OUT_RING(chan, RING_3D(NV30_3D_RT_HORIZ, 3));
++	BEGIN_RING(chan, eng3d, NV30_3D_RT_HORIZ, 3);
+ 	OUT_RING(chan, (w << 16) | 0);
+ 	OUT_RING(chan, (h << 16) | 0);
+ 	OUT_RING(chan, rt_format);
+-	OUT_RING(chan, RING_3D(NV30_3D_VIEWPORT_HORIZ, 2));
++	BEGIN_RING(chan, eng3d, NV30_3D_VIEWPORT_HORIZ, 2);
+ 	OUT_RING(chan, (w << 16) | 0);
+ 	OUT_RING(chan, (h << 16) | 0);
+-	OUT_RING(chan, RING_3D(NV30_3D_VIEWPORT_CLIP_HORIZ(0), 2));
++	BEGIN_RING(chan, eng3d, NV30_3D_VIEWPORT_CLIP_HORIZ(0), 2);
+ 	OUT_RING(chan, ((w - 1) << 16) | 0);
+ 	OUT_RING(chan, ((h - 1) << 16) | 0);
+ 
+ 	if(!nvfx->is_nv4x) {
+ 		/* Wonder why this is needed, context should all be set to zero on init */
+ 		/* TODO: we can most likely remove this, after putting it in context init */
+-		OUT_RING(chan, RING_3D(NV30_3D_VIEWPORT_TX_ORIGIN, 1));
++		BEGIN_RING(chan, eng3d, NV30_3D_VIEWPORT_TX_ORIGIN, 1);
+ 		OUT_RING(chan, 0);
+ 	}
+ 	nvfx->relocs_needed &=~ NVFX_RELOCATE_FRAMEBUFFER;
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/drivers/nvfx/nvfx_surface.c ./mesa/src/gallium/drivers/nvfx/nvfx_surface.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/gallium/drivers/nvfx/nvfx_surface.c	2011-01-02 23:58:35.000000000 +0100
++++ ./mesa/src/gallium/drivers/nvfx/nvfx_surface.c	2011-05-29 21:41:01.000000000 +0200
+@@ -168,8 +168,8 @@
+ 	if(nvfx->query && !nvfx->blitters_in_use)
+ 	{
+ 		struct nouveau_channel* chan = nvfx->screen->base.channel;
+-		WAIT_RING(chan, 2);
+-		OUT_RING(chan, RING_3D(NV30_3D_QUERY_ENABLE, 1));
++		struct nouveau_grobj *eng3d = nvfx->screen->eng3d;
++		BEGIN_RING(chan, eng3d, NV30_3D_QUERY_ENABLE, 1);
+ 		OUT_RING(chan, 0);
+ 	}
+ 
+@@ -209,8 +209,8 @@
+ 	if(nvfx->query && !nvfx->blitters_in_use)
+ 	{
+ 		struct nouveau_channel* chan = nvfx->screen->base.channel;
+-		WAIT_RING(chan, 2);
+-		OUT_RING(chan, RING_3D(NV30_3D_QUERY_ENABLE, 1));
++		struct nouveau_grobj *eng3d = nvfx->screen->eng3d;
++		BEGIN_RING(chan, eng3d, NV30_3D_QUERY_ENABLE, 1);
+ 		OUT_RING(chan, 1);
+ 	}
+ }
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/drivers/nvfx/nvfx_vbo.c ./mesa/src/gallium/drivers/nvfx/nvfx_vbo.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/gallium/drivers/nvfx/nvfx_vbo.c	2011-01-02 23:58:35.000000000 +0100
++++ ./mesa/src/gallium/drivers/nvfx/nvfx_vbo.c	2011-05-29 21:41:01.000000000 +0200
+@@ -247,6 +247,7 @@
+ nvfx_vbo_validate(struct nvfx_context *nvfx)
+ {
+ 	struct nouveau_channel* chan = nvfx->screen->base.channel;
++	struct nouveau_grobj *eng3d = nvfx->screen->eng3d;
+ 	int i;
+ 	int elements = MAX2(nvfx->vtxelt->num_elements, nvfx->hw_vtxelt_nr);
+ 	unsigned vb_flags = nvfx->screen->vertex_buffer_reloc_flags | NOUVEAU_BO_RD;
+@@ -262,11 +263,11 @@
+ 		struct nvfx_buffer* buffer = nvfx_buffer(vb->buffer);
+ 		float v[4];
+ 		ve->fetch_rgba_float(v, buffer->data + vb->buffer_offset + ve->src_offset, 0, 0);
+-		nvfx_emit_vtx_attr(chan, ve->idx, v, ve->ncomp);
++		nvfx_emit_vtx_attr(chan, eng3d, ve->idx, v, ve->ncomp);
+ 	}
+ 
+ 
+-	OUT_RING(chan, RING_3D(NV30_3D_VTXFMT(0), elements));
++	BEGIN_RING(chan, eng3d, NV30_3D_VTXFMT(0), elements);
+ 	if(nvfx->use_vertex_buffers)
+ 	{
+ 		unsigned idx = 0;
+@@ -297,12 +298,12 @@
+ 		unsigned i;
+ 		/* seems to be some kind of cache flushing */
+ 		for(i = 0; i < 3; ++i) {
+-			OUT_RING(chan, RING_3D(0x1718, 1));
++			BEGIN_RING(chan, eng3d, 0x1718, 1);
+ 			OUT_RING(chan, 0);
+ 		}
+ 	}
+ 
+-	OUT_RING(chan, RING_3D(NV30_3D_VTXBUF(0), elements));
++	BEGIN_RING(chan, eng3d, NV30_3D_VTXBUF(0), elements);
+ 	if(nvfx->use_vertex_buffers)
+ 	{
+ 		unsigned idx = 0;
+@@ -330,7 +331,7 @@
+ 			OUT_RING(chan, 0);
+ 	}
+ 
+-	OUT_RING(chan, RING_3D(0x1710, 1));
++	BEGIN_RING(chan, eng3d, 0x1710, 1);
+ 	OUT_RING(chan, 0);
+ 
+ 	nvfx->hw_vtxelt_nr = nvfx->vtxelt->num_elements;
+@@ -342,15 +343,14 @@
+ nvfx_vbo_swtnl_validate(struct nvfx_context *nvfx)
+ {
+ 	struct nouveau_channel* chan = nvfx->screen->base.channel;
++	struct nouveau_grobj *eng3d = nvfx->screen->eng3d;
+ 	unsigned num_outputs = nvfx->vertprog->draw_elements;
+ 	int elements = MAX2(num_outputs, nvfx->hw_vtxelt_nr);
+ 
+ 	if (!elements)
+ 		return;
+ 
+-	WAIT_RING(chan, (1 + 6 + 1 + 2) + elements * 2);
+-
+-	OUT_RING(chan, RING_3D(NV30_3D_VTXFMT(0), elements));
++	BEGIN_RING(chan, eng3d, NV30_3D_VTXFMT(0), elements);
+ 	for(unsigned i = 0; i < num_outputs; ++i)
+ 		OUT_RING(chan, (4 << NV30_3D_VTXFMT_SIZE__SHIFT) | NV30_3D_VTXFMT_TYPE_V32_FLOAT);
+ 	for(unsigned i = num_outputs; i < elements; ++i)
+@@ -360,16 +360,16 @@
+ 		unsigned i;
+ 		/* seems to be some kind of cache flushing */
+ 		for(i = 0; i < 3; ++i) {
+-			OUT_RING(chan, RING_3D(0x1718, 1));
++			BEGIN_RING(chan, eng3d, 0x1718, 1);
+ 			OUT_RING(chan, 0);
+ 		}
+ 	}
+ 
+-	OUT_RING(chan, RING_3D(NV30_3D_VTXBUF(0), elements));
++	BEGIN_RING(chan, eng3d, NV30_3D_VTXBUF(0), elements);
+ 	for (unsigned i = 0; i < elements; i++)
+ 		OUT_RING(chan, 0);
+ 
+-	OUT_RING(chan, RING_3D(0x1710, 1));
++	BEGIN_RING(chan, eng3d, 0x1710, 1);
+ 	OUT_RING(chan, 0);
+ 
+ 	nvfx->hw_vtxelt_nr = num_outputs;
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/drivers/nvfx/nvfx_vertprog.c ./mesa/src/gallium/drivers/nvfx/nvfx_vertprog.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/gallium/drivers/nvfx/nvfx_vertprog.c	2011-01-02 23:58:35.000000000 +0100
++++ ./mesa/src/gallium/drivers/nvfx/nvfx_vertprog.c	2011-05-29 21:41:01.000000000 +0200
+@@ -1182,6 +1182,7 @@
+ {
+ 	struct nvfx_screen *screen = nvfx->screen;
+ 	struct nouveau_channel *chan = screen->base.channel;
++	struct nouveau_grobj *eng3d = screen->eng3d;
+ 	struct nvfx_pipe_vertex_program *pvp = nvfx->vertprog;
+ 	struct nvfx_vertex_program* vp;
+ 	struct pipe_resource *constbuf;
+@@ -1341,7 +1342,6 @@
+ 		}
+ 		*/
+ 
+-		WAIT_RING(chan, 6 * vp->nr_consts);
+ 		for (i = nvfx->use_vp_clipping ? 6 : 0; i < vp->nr_consts; i++) {
+ 			struct nvfx_vertex_program_data *vpd = &vp->consts[i];
+ 
+@@ -1356,7 +1356,7 @@
+ 
+ 			//printf("upload into %i + %i: %f %f %f %f\n", vp->data->start, i, vpd->value[0], vpd->value[1], vpd->value[2], vpd->value[3]);
+ 
+-			OUT_RING(chan, RING_3D(NV30_3D_VP_UPLOAD_CONST_ID, 5));
++			BEGIN_RING(chan, eng3d, NV30_3D_VP_UPLOAD_CONST_ID, 5);
+ 			OUT_RING(chan, i + vp->data->start);
+ 			OUT_RINGp(chan, (uint32_t *)vpd->value, 4);
+ 		}
+@@ -1364,11 +1364,10 @@
+ 
+ 	/* Upload vtxprog */
+ 	if (upload_code) {
+-		WAIT_RING(chan, 2 + 5 * vp->nr_insns);
+-		OUT_RING(chan, RING_3D(NV30_3D_VP_UPLOAD_FROM_ID, 1));
++		BEGIN_RING(chan, eng3d, NV30_3D_VP_UPLOAD_FROM_ID, 1);
+ 		OUT_RING(chan, vp->exec->start);
+ 		for (i = 0; i < vp->nr_insns; i++) {
+-			OUT_RING(chan, RING_3D(NV30_3D_VP_UPLOAD_INST(0), 4));
++			BEGIN_RING(chan, eng3d, NV30_3D_VP_UPLOAD_INST(0), 4);
+ 			//printf("%08x %08x %08x %08x\n", vp->insns[i].data[0], vp->insns[i].data[1], vp->insns[i].data[2], vp->insns[i].data[3]);
+ 			OUT_RINGp(chan, vp->insns[i].data, 4);
+ 		}
+@@ -1377,11 +1376,10 @@
+ 
+ 	if(nvfx->dirty & (NVFX_NEW_VERTPROG))
+ 	{
+-		WAIT_RING(chan, 6);
+-		OUT_RING(chan, RING_3D(NV30_3D_VP_START_FROM_ID, 1));
++		BEGIN_RING(chan, eng3d, NV30_3D_VP_START_FROM_ID, 1);
+ 		OUT_RING(chan, vp->exec->start);
+ 		if(nvfx->is_nv4x) {
+-			OUT_RING(chan, RING_3D(NV40_3D_VP_ATTRIB_EN, 1));
++			BEGIN_RING(chan, eng3d, NV40_3D_VP_ATTRIB_EN, 1);
+ 			OUT_RING(chan, vp->ir);
+ 		}
+ 	}
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/include/pipe/p_config.h ./mesa/src/gallium/include/pipe/p_config.h
 --- /data/deadwood/source/Mesa-7.10-staging/src/gallium/include/pipe/p_config.h	2010-10-05 18:56:51.000000000 +0200
-+++ ./mesa/src/gallium/include/pipe/p_config.h	2011-05-29 20:11:36.000000000 +0200
++++ ./mesa/src/gallium/include/pipe/p_config.h	2011-05-29 21:41:01.000000000 +0200
 @@ -82,6 +82,10 @@
  #define PIPE_ARCH_X86
  #endif
@@ -687,9 +2214,50 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/include/pipe/p_conf
  /*
   * Try to auto-detect the subsystem.
   * 
-diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/egl/common/egl_g3d.c ./mesa/src/gallium/state_trackers/egl/common/egl_g3d.c
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/egl/common/egl_g3d_api.c ./mesa/src/gallium/state_trackers/egl/common/egl_g3d_api.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/egl/common/egl_g3d_api.c	2011-01-02 23:58:55.000000000 +0100
++++ ./mesa/src/gallium/state_trackers/egl/common/egl_g3d_api.c	2011-08-31 08:38:09.000000000 +0200
+@@ -98,7 +98,7 @@
+    return stapi;
+ }
+ 
+-static int
++static EGLint
+ egl_g3d_compare_config(const _EGLConfig *conf1, const _EGLConfig *conf2,
+                        void *priv_data)
+ {
+@@ -259,6 +259,7 @@
+    struct egl_g3d_surface *gsurf;
+    struct native_surface *nsurf;
+    const char *err;
++   int w,h;
+ 
+    switch (arg->type) {
+    case EGL_WINDOW_BIT:
+@@ -316,8 +317,9 @@
+       return NULL;
+    }
+    /* initialize the geometry */
+-   if (!nsurf->validate(nsurf, 0x0, &gsurf->sequence_number, NULL,
+-            &gsurf->base.Width, &gsurf->base.Height)) {
++   if (!nsurf->validate(nsurf, 0x0, &gsurf->sequence_number, NULL, &w, &h)) {
++      gsurf->base.Width = w;
++      gsurf->base.Height = h;
+       nsurf->destroy(nsurf);
+       FREE(gsurf);
+       return NULL;
+@@ -888,7 +890,7 @@
+ egl_g3d_find_pixmap_config(_EGLDisplay *dpy, EGLNativePixmapType pix)
+ {
+    struct egl_g3d_display *gdpy = egl_g3d_display(dpy);
+-   struct egl_g3d_config *gconf;
++   struct egl_g3d_config *gconf = NULL;
+    EGLint i;
+ 
+    for (i = 0; i < dpy->Configs->Size; i++) {
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/egl/common/egl_g3d.c ./mesa/src/gallium/state_trackers/egl/common/egl_g3d.c
 --- /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/egl/common/egl_g3d.c	2011-01-02 23:58:35.000000000 +0100
-+++ ./mesa/src/gallium/state_trackers/egl/common/egl_g3d.c	2011-05-29 20:11:36.000000000 +0200
++++ ./mesa/src/gallium/state_trackers/egl/common/egl_g3d.c	2011-08-31 08:31:38.000000000 +0200
 @@ -75,6 +75,12 @@
           nplat = native_get_fbdev_platform();
  #endif
@@ -703,6 +2271,24 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/egl/
        default:
           break;
        }
+@@ -95,7 +101,7 @@
+ {
+    struct egl_g3d_display *gdpy = egl_g3d_display(dpy);
+    const struct native_connector **native_connectors;
+-   EGLint num_connectors, i;
++   int num_connectors, i;
+ 
+    native_connectors =
+       gdpy->native->modeset->get_connectors(gdpy->native, &num_connectors, NULL);
+@@ -109,7 +115,7 @@
+       const struct native_connector *nconn = native_connectors[i];
+       struct egl_g3d_screen *gscr;
+       const struct native_mode **native_modes;
+-      EGLint num_modes, j;
++      int num_modes, j;
+ 
+       /* TODO support for hotplug */
+       native_modes =
 @@ -416,6 +422,7 @@
        gctx->stctxi->notify_invalid_framebuffer(gctx->stctxi, gsurf->stfbi);
  }
@@ -723,9 +2309,9 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/egl/
  
  static void
  egl_g3d_free_config(void *conf)
-diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/egl/common/egl_g3d_loader.h ./mesa/src/gallium/state_trackers/egl/common/egl_g3d_loader.h
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/egl/common/egl_g3d_loader.h ./mesa/src/gallium/state_trackers/egl/common/egl_g3d_loader.h
 --- /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/egl/common/egl_g3d_loader.h	2010-10-19 19:58:29.000000000 +0200
-+++ ./mesa/src/gallium/state_trackers/egl/common/egl_g3d_loader.h	2011-05-29 20:11:36.000000000 +0200
++++ ./mesa/src/gallium/state_trackers/egl/common/egl_g3d_loader.h	2011-05-29 21:41:01.000000000 +0200
 @@ -41,8 +41,10 @@
     struct st_api *(*get_st_api)(enum st_api_type api);
     struct st_api *(*guess_gl_api)(enum st_profile_type profile);
@@ -737,9 +2323,36 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/egl/
  };
  
  _EGLDriver *
-diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/egl/common/native.h ./mesa/src/gallium/state_trackers/egl/common/native.h
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/egl/common/egl_g3d_st.c ./mesa/src/gallium/state_trackers/egl/common/egl_g3d_st.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/egl/common/egl_g3d_st.c	2010-12-16 00:02:44.000000000 +0100
++++ ./mesa/src/gallium/state_trackers/egl/common/egl_g3d_st.c	2011-08-31 08:39:32.000000000 +0200
+@@ -207,6 +207,7 @@
+    struct pipe_resource *textures[NUM_NATIVE_ATTACHMENTS];
+    uint attachment_mask = 0;
+    unsigned i;
++   int w, h;
+ 
+    for (i = 0; i < count; i++) {
+       int natt;
+@@ -234,10 +235,12 @@
+    }
+ 
+    if (!gsurf->native->validate(gsurf->native, attachment_mask,
+-         &gsurf->sequence_number, textures, &gsurf->base.Width,
+-         &gsurf->base.Height))
++         &gsurf->sequence_number, textures, &w, &h)) {
++      gsurf->base.Width = w;
++      gsurf->base.Height = h;
+       return FALSE;
+-
++   }
++   
+    for (i = 0; i < count; i++) {
+       struct pipe_resource *tex;
+       int natt;
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/egl/common/native.h ./mesa/src/gallium/state_trackers/egl/common/native.h
 --- /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/egl/common/native.h	2011-01-02 23:58:35.000000000 +0100
-+++ ./mesa/src/gallium/state_trackers/egl/common/native.h	2011-05-29 20:11:36.000000000 +0200
++++ ./mesa/src/gallium/state_trackers/egl/common/native.h	2011-05-29 21:41:01.000000000 +0200
 @@ -208,10 +208,12 @@
                             struct native_surface *nsurf,
                             unsigned int seq_num);
@@ -761,9 +2374,104 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/egl/
 +native_get_aros_platform(void);
 +
  #endif /* _NATIVE_H_ */
-diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/api.h ./mesa/src/gallium/state_trackers/vega/api.h
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/api_filters.c ./mesa/src/gallium/state_trackers/vega/api_filters.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/api_filters.c	2010-12-16 00:02:44.000000000 +0100
++++ ./mesa/src/gallium/state_trackers/vega/api_filters.c	2011-05-29 21:41:01.000000000 +0200
+@@ -29,6 +29,7 @@
+ #include "vg_context.h"
+ #include "image.h"
+ #include "api.h"
++#include "handle.h"
+ #include "renderer.h"
+ #include "shaders_cache.h"
+ 
+@@ -251,8 +252,8 @@
+       return;
+    }
+ 
+-   d = (struct vg_image*)dst;
+-   s = (struct vg_image*)src;
++   d = handle_to_image(dst);
++   s = handle_to_image(src);
+ 
+    if (vg_image_overlaps(d, s)) {
+       vg_set_error(ctx, VG_ILLEGAL_ARGUMENT_ERROR);
+@@ -293,7 +294,7 @@
+    struct vg_image *d, *s;
+    VGint kernel_size = kernelWidth * kernelHeight;
+    struct filter_info info;
+-   const VGint max_kernel_size = vgGeti(VG_MAX_KERNEL_SIZE);
++   const VGint max_kernel_size = vegaGeti(VG_MAX_KERNEL_SIZE);
+ 
+    if (dst == VG_INVALID_HANDLE || src == VG_INVALID_HANDLE) {
+       vg_set_error(ctx, VG_BAD_HANDLE_ERROR);
+@@ -317,8 +318,8 @@
+       return;
+    }
+ 
+-   d = (struct vg_image*)dst;
+-   s = (struct vg_image*)src;
++   d = handle_to_image(dst);
++   s = handle_to_image(src);
+ 
+    if (vg_image_overlaps(d, s)) {
+       vg_set_error(ctx, VG_ILLEGAL_ARGUMENT_ERROR);
+@@ -395,7 +396,7 @@
+    struct vg_context *ctx = vg_current_context();
+    VGshort *kernel;
+    VGint i, j, idx = 0;
+-   const VGint max_kernel_size = vgGeti(VG_MAX_SEPARABLE_KERNEL_SIZE);
++   const VGint max_kernel_size = vegaGeti(VG_MAX_SEPARABLE_KERNEL_SIZE);
+ 
+    if (dst == VG_INVALID_HANDLE || src == VG_INVALID_HANDLE) {
+       vg_set_error(ctx, VG_BAD_HANDLE_ERROR);
+@@ -425,8 +426,8 @@
+          ++idx;
+       }
+    }
+-   vgConvolve(dst, src, kernelWidth, kernelHeight, shiftX, shiftY,
+-              kernel, scale, bias, tilingMode);
++   vegaConvolve(dst, src, kernelWidth, kernelHeight, shiftX, shiftY,
++                kernel, scale, bias, tilingMode);
+    free(kernel);
+ }
+ 
+@@ -502,8 +503,8 @@
+       return;
+    }
+ 
+-   d = (struct vg_image*)dst;
+-   s = (struct vg_image*)src;
++   d = handle_to_image(dst);
++   s = handle_to_image(src);
+ 
+    if (vg_image_overlaps(d, s)) {
+       vg_set_error(ctx, VG_ILLEGAL_ARGUMENT_ERROR);
+@@ -599,8 +600,8 @@
+       return;
+    }
+ 
+-   d = (struct vg_image*)dst;
+-   s = (struct vg_image*)src;
++   d = handle_to_image(dst);
++   s = handle_to_image(src);
+ 
+    if (vg_image_overlaps(d, s)) {
+       vg_set_error(ctx, VG_ILLEGAL_ARGUMENT_ERROR);
+@@ -662,8 +663,8 @@
+       return;
+    }
+ 
+-   d = (struct vg_image*)dst;
+-   s = (struct vg_image*)src;
++   d = handle_to_image(dst);
++   s = handle_to_image(src);
+ 
+    if (vg_image_overlaps(d, s)) {
+       vg_set_error(ctx, VG_ILLEGAL_ARGUMENT_ERROR);
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/api.h ./mesa/src/gallium/state_trackers/vega/api.h
 --- /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/api.h	2010-12-16 00:02:44.000000000 +0100
-+++ ./mesa/src/gallium/state_trackers/vega/api.h	2011-05-29 20:11:36.000000000 +0200
++++ ./mesa/src/gallium/state_trackers/vega/api.h	2011-05-29 21:41:01.000000000 +0200
 @@ -33,6 +33,11 @@
  #include "VG/vgext.h"
  #include "vg_manager.h"
@@ -776,9 +2484,1713 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega
  #include "api_tmp.h"
  
  struct mapi_table;
-diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/vgu.c ./mesa/src/gallium/state_trackers/vega/vgu.c
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/api_images.c ./mesa/src/gallium/state_trackers/vega/api_images.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/api_images.c	2010-12-16 00:02:44.000000000 +0100
++++ ./mesa/src/gallium/state_trackers/vega/api_images.c	2011-05-29 21:41:01.000000000 +0200
+@@ -32,6 +32,7 @@
+ #include "vg_translate.h"
+ #include "api_consts.h"
+ #include "api.h"
++#include "handle.h"
+ 
+ #include "pipe/p_context.h"
+ #include "pipe/p_screen.h"
+@@ -105,12 +106,12 @@
+       vg_set_error(ctx, VG_ILLEGAL_ARGUMENT_ERROR);
+       return VG_INVALID_HANDLE;
+    }
+-   if (width > vgGeti(VG_MAX_IMAGE_WIDTH) ||
+-       height > vgGeti(VG_MAX_IMAGE_HEIGHT)) {
++   if (width > vegaGeti(VG_MAX_IMAGE_WIDTH) ||
++       height > vegaGeti(VG_MAX_IMAGE_HEIGHT)) {
+       vg_set_error(ctx, VG_ILLEGAL_ARGUMENT_ERROR);
+       return VG_INVALID_HANDLE;
+    }
+-   if (width * height > vgGeti(VG_MAX_IMAGE_PIXELS)) {
++   if (width * height > vegaGeti(VG_MAX_IMAGE_PIXELS)) {
+       vg_set_error(ctx, VG_ILLEGAL_ARGUMENT_ERROR);
+       return VG_INVALID_HANDLE;
+    }
+@@ -122,19 +123,19 @@
+       return VG_INVALID_HANDLE;
+    }
+ 
+-   return (VGImage)image_create(format, width, height);
++   return image_to_handle(image_create(format, width, height));
+ }
+ 
+ void vegaDestroyImage(VGImage image)
+ {
+    struct vg_context *ctx = vg_current_context();
+-   struct vg_image *img = (struct vg_image *)image;
++   struct vg_image *img = handle_to_image(image);
+ 
+    if (image == VG_INVALID_HANDLE) {
+       vg_set_error(ctx, VG_BAD_HANDLE_ERROR);
+       return;
+    }
+-   if (!vg_object_is_valid((void*)image, VG_OBJECT_IMAGE)) {
++   if (!vg_object_is_valid(image, VG_OBJECT_IMAGE)) {
+       vg_set_error(ctx, VG_BAD_HANDLE_ERROR);
+       return;
+    }
+@@ -157,7 +158,7 @@
+       return;
+    }
+ 
+-   img = (struct vg_image*)image;
++   img = handle_to_image(image);
+ 
+    if (x + width < 0 || y + height < 0)
+       return;
+@@ -189,7 +190,7 @@
+       return;
+    }
+ 
+-   img = (struct vg_image*)(image);
++   img = handle_to_image(image);
+    image_sub_data(img, data, dataStride, dataFormat,
+                   x, y, width, height);
+ }
+@@ -216,7 +217,7 @@
+       vg_set_error(ctx, VG_ILLEGAL_ARGUMENT_ERROR);
+       return;
+    }
+-   img = (struct vg_image*)image;
++   img = handle_to_image(image);
+    image_get_sub_data(img, data, dataStride, dataFormat,
+                       x, y, width, height);
+ }
+@@ -229,8 +230,8 @@
+    struct vg_image *p;
+ 
+    if (parent == VG_INVALID_HANDLE ||
+-       !vg_context_is_object_valid(ctx, VG_OBJECT_IMAGE, (void*)parent) ||
+-       !vg_object_is_valid((void*)parent, VG_OBJECT_IMAGE)) {
++       !vg_context_is_object_valid(ctx, VG_OBJECT_IMAGE, parent) ||
++       !vg_object_is_valid(parent, VG_OBJECT_IMAGE)) {
+       vg_set_error(ctx, VG_BAD_HANDLE_ERROR);
+       return VG_INVALID_HANDLE;
+    }
+@@ -238,7 +239,7 @@
+       vg_set_error(ctx, VG_ILLEGAL_ARGUMENT_ERROR);
+       return VG_INVALID_HANDLE;
+    }
+-   p = (struct vg_image *)parent;
++   p = handle_to_image(parent);
+    if (x > p->width  || y > p->height) {
+       vg_set_error(ctx, VG_ILLEGAL_ARGUMENT_ERROR);
+       return VG_INVALID_HANDLE;
+@@ -248,7 +249,7 @@
+       return VG_INVALID_HANDLE;
+    }
+ 
+-   return (VGImage)image_child_image(p, x, y, width, height);
++   return image_to_handle(image_child_image(p, x, y, width, height));
+ }
+ 
+ VGImage vegaGetParent(VGImage image)
+@@ -261,9 +262,9 @@
+       return VG_INVALID_HANDLE;
+    }
+ 
+-   img = (struct vg_image*)image;
++   img = handle_to_image(image);
+    if (img->parent)
+-      return (VGImage)img->parent;
++      return image_to_handle(img->parent);
+    else
+       return image;
+ }
+@@ -285,8 +286,8 @@
+       return;
+    }
+    vg_validate_state(ctx);
+-   image_copy((struct vg_image*)dst, dx, dy,
+-              (struct vg_image*)src, sx, sy,
++   image_copy(handle_to_image(dst), dx, dy,
++              handle_to_image(src), sx, sy,
+               width, height, dither);
+ }
+ 
+@@ -303,7 +304,7 @@
+    }
+ 
+    vg_validate_state(ctx);
+-   image_draw((struct vg_image*)image,
++   image_draw(handle_to_image(image),
+          &ctx->state.vg.image_user_to_surface_matrix);
+ }
+ 
+@@ -323,7 +324,7 @@
+       vg_set_error(ctx, VG_ILLEGAL_ARGUMENT_ERROR);
+       return;
+    }
+-   image_set_pixels(dx, dy, (struct vg_image*)src, sx, sy, width,
++   image_set_pixels(dx, dy, handle_to_image(src), sx, sy, width,
+                     height);
+ }
+ 
+@@ -343,7 +344,7 @@
+       return;
+    }
+ 
+-   img = (struct vg_image*)dst;
++   img = handle_to_image(dst);
+ 
+    image_get_pixels(img, dx, dy,
+                     sx, sy, width, height);
+@@ -487,7 +488,7 @@
+ 
+    vg_validate_state(ctx);
+    /* make sure rendering has completed */
+-   vgFinish();
++   vegaFinish();
+ 
+    vg_copy_surface(ctx, strb->surface, dx, dy,
+                    strb->surface, sx, sy, width, height);
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/api_masks.c ./mesa/src/gallium/state_trackers/vega/api_masks.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/api_masks.c	2011-01-02 23:58:35.000000000 +0100
++++ ./mesa/src/gallium/state_trackers/vega/api_masks.c	2011-05-29 21:41:01.000000000 +0200
+@@ -28,14 +28,11 @@
+ 
+ #include "mask.h"
+ #include "api.h"
++#include "handle.h"
+ #include "renderer.h"
+ 
+ #include "vg_context.h"
+ #include "pipe/p_context.h"
+-#include "util/u_inlines.h"
+-
+-#include "util/u_pack_color.h"
+-#include "util/u_draw_quad.h"
+ 
+ void vegaMask(VGHandle mask, VGMaskOperation operation,
+               VGint x, VGint y,
+@@ -60,11 +57,11 @@
+       mask_fill(x, y, width, height, 0.f);
+    } else if (operation == VG_FILL_MASK) {
+       mask_fill(x, y, width, height, 1.f);
+-   } else if (vg_object_is_valid((void*)mask, VG_OBJECT_IMAGE)) {
+-      struct vg_image *image = (struct vg_image *)mask;
++   } else if (vg_object_is_valid(mask, VG_OBJECT_IMAGE)) {
++      struct vg_image *image = handle_to_image(mask);
+       mask_using_image(image, operation, x, y, width, height);
+-   } else if (vg_object_is_valid((void*)mask, VG_OBJECT_MASK)) {
+-      struct vg_mask_layer *layer = (struct vg_mask_layer *)mask;
++   } else if (vg_object_is_valid(mask, VG_OBJECT_MASK)) {
++      struct vg_mask_layer *layer = handle_to_masklayer(mask);
+       mask_using_layer(layer, operation, x, y, width, height);
+    } else {
+       vg_set_error(ctx, VG_BAD_HANDLE_ERROR);
+@@ -127,14 +124,14 @@
+       vg_set_error(ctx, VG_ILLEGAL_ARGUMENT_ERROR);
+       return;
+    }
+-   if (!vg_object_is_valid((void*)path, VG_OBJECT_PATH)) {
++   if (!vg_object_is_valid(path, VG_OBJECT_PATH)) {
+       vg_set_error(ctx, VG_BAD_HANDLE_ERROR);
+       return;
+    }
+ 
+    vg_validate_state(ctx);
+ 
+-   mask_render_to((struct path *)path, paintModes, operation);
++   mask_render_to(handle_to_path(path), paintModes, operation);
+ }
+ 
+ VGMaskLayer vegaCreateMaskLayer(VGint width, VGint height)
+@@ -142,13 +139,13 @@
+    struct vg_context *ctx = vg_current_context();
+ 
+    if (width <= 0 || height <= 0 ||
+-       width > vgGeti(VG_MAX_IMAGE_WIDTH) ||
+-       height > vgGeti(VG_MAX_IMAGE_HEIGHT)) {
++       width > vegaGeti(VG_MAX_IMAGE_WIDTH) ||
++       height > vegaGeti(VG_MAX_IMAGE_HEIGHT)) {
+       vg_set_error(ctx, VG_ILLEGAL_ARGUMENT_ERROR);
+       return VG_INVALID_HANDLE;
+    }
+ 
+-   return (VGMaskLayer)mask_layer_create(width, height);
++   return masklayer_to_handle(mask_layer_create(width, height));
+ }
+ 
+ void vegaDestroyMaskLayer(VGMaskLayer maskLayer)
+@@ -160,12 +157,12 @@
+       vg_set_error(ctx, VG_BAD_HANDLE_ERROR);
+       return;
+    }
+-   if (!vg_object_is_valid((void*)maskLayer, VG_OBJECT_MASK)) {
++   if (!vg_object_is_valid(maskLayer, VG_OBJECT_MASK)) {
+       vg_set_error(ctx, VG_BAD_HANDLE_ERROR);
+       return;
+    }
+ 
+-   mask = (struct vg_mask_layer *)maskLayer;
++   mask = handle_to_masklayer(maskLayer);
+    mask_layer_destroy(mask);
+ }
+ 
+@@ -196,12 +193,12 @@
+       return;
+    }
+ 
+-   if (!vg_object_is_valid((void*)maskLayer, VG_OBJECT_MASK)) {
++   if (!vg_object_is_valid(maskLayer, VG_OBJECT_MASK)) {
+       vg_set_error(ctx, VG_BAD_HANDLE_ERROR);
+       return;
+    }
+ 
+-   mask = (struct vg_mask_layer*)maskLayer;
++   mask = handle_to_masklayer(maskLayer);
+ 
+    if (x + width > mask_layer_width(mask) ||
+        y + height > mask_layer_height(mask)) {
+@@ -230,14 +227,14 @@
+       vg_set_error(ctx, VG_ILLEGAL_ARGUMENT_ERROR);
+       return;
+    }
+-   if (!vg_object_is_valid((void*)maskLayer, VG_OBJECT_MASK)) {
++   if (!vg_object_is_valid(maskLayer, VG_OBJECT_MASK)) {
+       vg_set_error(ctx, VG_BAD_HANDLE_ERROR);
+       return;
+    }
+ 
+    vg_validate_state(ctx);
+ 
+-   mask = (struct vg_mask_layer*)maskLayer;
++   mask = handle_to_masklayer(maskLayer);
+    mask_copy(mask, sx, sy, dx, dy, width, height);
+ }
+ 
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/api_paint.c ./mesa/src/gallium/state_trackers/vega/api_paint.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/api_paint.c	2010-12-14 22:43:14.000000000 +0100
++++ ./mesa/src/gallium/state_trackers/vega/api_paint.c	2011-05-29 21:41:01.000000000 +0200
+@@ -29,24 +29,24 @@
+ #include "vg_context.h"
+ #include "paint.h"
+ #include "api.h"
++#include "handle.h"
++
+ 
+ VGPaint vegaCreatePaint(void)
+ {
+-   return (VGPaint) paint_create(vg_current_context());
++   return paint_to_handle(paint_create(vg_current_context()));
+ }
+ 
+ void vegaDestroyPaint(VGPaint p)
+ {
+    struct vg_context *ctx = vg_current_context();
+-   struct vg_paint *paint;
+ 
+    if (p == VG_INVALID_HANDLE) {
+       vg_set_error(ctx, VG_BAD_HANDLE_ERROR);
+       return;
+    }
+ 
+-   paint = (struct vg_paint *)p;
+-   paint_destroy(paint);
++   paint_destroy(handle_to_paint(p));
+ }
+ 
+ void vegaSetPaint(VGPaint paint, VGbitfield paintModes)
+@@ -55,8 +55,8 @@
+ 
+    if (paint == VG_INVALID_HANDLE) {
+       /* restore the default */
+-      paint = (VGPaint)ctx->default_paint;
+-   } else if (!vg_object_is_valid((void*)paint, VG_OBJECT_PAINT)) {
++      paint = paint_to_handle(ctx->default_paint);
++   } else if (!vg_object_is_valid(paint, VG_OBJECT_PAINT)) {
+       vg_set_error(ctx, VG_BAD_HANDLE_ERROR);
+       return;
+    }
+@@ -67,11 +67,13 @@
+    }
+ 
+    if (paintModes & VG_FILL_PATH) {
+-      ctx->state.vg.fill_paint = (struct vg_paint *)paint;
++      ctx->state.vg.fill_paint = handle_to_paint(paint);
+    }
+    if (paintModes & VG_STROKE_PATH) {
+-      ctx->state.vg.stroke_paint = (struct vg_paint *)paint;
++      ctx->state.vg.stroke_paint = handle_to_paint(paint);
+    }
++
++   ctx->state.dirty |= PAINT_DIRTY;
+ }
+ 
+ VGPaint vegaGetPaint(VGPaintMode paintMode)
+@@ -85,11 +87,11 @@
+    }
+ 
+    if (paintMode == VG_FILL_PATH)
+-      paint = (VGPaint)ctx->state.vg.fill_paint;
++      paint = paint_to_handle(ctx->state.vg.fill_paint);
+    else if (paintMode == VG_STROKE_PATH)
+-      paint = (VGPaint)ctx->state.vg.stroke_paint;
++      paint = paint_to_handle(ctx->state.vg.stroke_paint);
+ 
+-   if (paint == (VGPaint)ctx->default_paint)
++   if (paint == paint_to_handle(ctx->default_paint))
+       paint = VG_INVALID_HANDLE;
+ 
+    return paint;
+@@ -98,20 +100,24 @@
+ void vegaSetColor(VGPaint paint, VGuint rgba)
+ {
+    struct vg_context *ctx = vg_current_context();
++   struct vg_paint *p;
+ 
+    if (paint == VG_INVALID_HANDLE) {
+       vg_set_error(ctx, VG_BAD_HANDLE_ERROR);
+       return;
+    }
+ 
+-   if (!vg_object_is_valid((void*)paint, VG_OBJECT_PAINT)) {
++   if (!vg_object_is_valid(paint, VG_OBJECT_PAINT)) {
+       vg_set_error(ctx, VG_BAD_HANDLE_ERROR);
+       return;
+    }
+-   {
+-      struct vg_paint *p = (struct vg_paint *)paint;
+-      paint_set_colori(p, rgba);
+-   }
++
++   p = handle_to_paint(paint);
++   paint_set_colori(p, rgba);
++
++   if (ctx->state.vg.fill_paint == p ||
++       ctx->state.vg.stroke_paint == p)
++      ctx->state.dirty |= PAINT_DIRTY;
+ }
+ 
+ VGuint vegaGetColor(VGPaint paint)
+@@ -125,11 +131,11 @@
+       return rgba;
+    }
+ 
+-   if (!vg_object_is_valid((void*)paint, VG_OBJECT_PAINT)) {
++   if (!vg_object_is_valid(paint, VG_OBJECT_PAINT)) {
+       vg_set_error(ctx, VG_BAD_HANDLE_ERROR);
+       return rgba;
+    }
+-   p = (struct vg_paint *)paint;
++   p = handle_to_paint(paint);
+ 
+    return paint_colori(p);
+ }
+@@ -139,28 +145,28 @@
+    struct vg_context *ctx = vg_current_context();
+ 
+    if (paint == VG_INVALID_HANDLE ||
+-       !vg_context_is_object_valid(ctx, VG_OBJECT_PAINT, (void *)paint)) {
++       !vg_context_is_object_valid(ctx, VG_OBJECT_PAINT, paint)) {
+       vg_set_error(ctx, VG_BAD_HANDLE_ERROR);
+       return;
+    }
+ 
+    if (pattern == VG_INVALID_HANDLE) {
+-      paint_set_type((struct vg_paint*)paint, VG_PAINT_TYPE_COLOR);
++      paint_set_type(handle_to_paint(paint), VG_PAINT_TYPE_COLOR);
+       return;
+    }
+ 
+-   if (!vg_context_is_object_valid(ctx, VG_OBJECT_IMAGE, (void *)pattern)) {
++   if (!vg_context_is_object_valid(ctx, VG_OBJECT_IMAGE, pattern)) {
+       vg_set_error(ctx, VG_BAD_HANDLE_ERROR);
+       return;
+    }
+ 
+ 
+-   if (!vg_object_is_valid((void*)paint, VG_OBJECT_PAINT) ||
+-       !vg_object_is_valid((void*)pattern, VG_OBJECT_IMAGE)) {
++   if (!vg_object_is_valid(paint, VG_OBJECT_PAINT) ||
++       !vg_object_is_valid(pattern, VG_OBJECT_IMAGE)) {
+       vg_set_error(ctx, VG_BAD_HANDLE_ERROR);
+       return;
+    }
+-   paint_set_pattern((struct vg_paint*)paint,
+-                     (struct vg_image*)pattern);
++   paint_set_pattern(handle_to_paint(paint),
++                     handle_to_image(pattern));
+ }
+ 
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/api_params.c ./mesa/src/gallium/state_trackers/vega/api_params.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/api_params.c	2010-12-16 00:02:44.000000000 +0100
++++ ./mesa/src/gallium/state_trackers/vega/api_params.c	2011-05-29 21:41:01.000000000 +0200
+@@ -29,6 +29,7 @@
+ #include "vg_context.h"
+ #include "paint.h"
+ #include "path.h"
++#include "handle.h"
+ #include "image.h"
+ #include "text.h"
+ #include "matrix.h"
+@@ -60,7 +61,7 @@
+    else if (type == VG_STROKE_DASH_PATTERN) {
+       return count <= VEGA_MAX_DASH_COUNT;
+    } else {
+-      VGint real_count = vgGetVectorSize(type);
++      VGint real_count = vegaGetVectorSize(type);
+       return count == real_count;
+    }
+ }
+@@ -103,7 +104,7 @@
+    case VG_MAX_IMAGE_BYTES:
+    case VG_MAX_GAUSSIAN_STD_DEVIATION:
+    case VG_MAX_FLOAT:
+-      vgSeti(type, floor(value));
++      vegaSeti(type, floor(value));
+       return;
+       break;
+    case VG_STROKE_LINE_WIDTH:
+@@ -289,7 +290,7 @@
+    case VG_FILTER_FORMAT_LINEAR:
+    case VG_FILTER_FORMAT_PREMULTIPLIED:
+    case VG_FILTER_CHANNEL_MASK:
+-      vgSeti(type, floor(values[0]));
++      vegaSeti(type, floor(values[0]));
+       return;
+       break;
+    case VG_SCISSOR_RECTS: {
+@@ -416,7 +417,7 @@
+    case VG_FILTER_FORMAT_LINEAR:
+    case VG_FILTER_FORMAT_PREMULTIPLIED:
+    case VG_FILTER_CHANNEL_MASK:
+-      vgSeti(type, values[0]);
++      vegaSeti(type, values[0]);
+       return;
+       break;
+    case VG_SCISSOR_RECTS: {
+@@ -536,7 +537,7 @@
+    case VG_FILTER_FORMAT_LINEAR:
+    case VG_FILTER_FORMAT_PREMULTIPLIED:
+    case VG_FILTER_CHANNEL_MASK:
+-      return vgGeti(type);
++      return vegaGeti(type);
+       break;
+    case VG_STROKE_LINE_WIDTH:
+       value = state->stroke.line_width.f;
+@@ -558,7 +559,7 @@
+    case VG_MAX_IMAGE_PIXELS:
+    case VG_MAX_IMAGE_BYTES:
+    case VG_MAX_GAUSSIAN_STD_DEVIATION:
+-      return vgGeti(type);
++      return vegaGeti(type);
+       break;
+    case VG_MAX_FLOAT:
+       value = 1e+10;/*must be at least 1e+10*/
+@@ -674,7 +675,7 @@
+       break;
+ 
+    case VG_MAX_FLOAT: {
+-      VGfloat val = vgGetf(type);
++      VGfloat val = vegaGetf(type);
+       value = float_to_int_floor(*((VGuint*)&val));
+    }
+       break;
+@@ -765,7 +766,7 @@
+ {
+    const struct vg_state *state = current_state();
+    struct vg_context *ctx = vg_current_context();
+-   VGint real_count = vgGetVectorSize(type);
++   VGint real_count = vegaGetVectorSize(type);
+ 
+    if (!values || count <= 0 || count > real_count || !is_aligned(values)) {
+       vg_set_error(ctx, VG_ILLEGAL_ARGUMENT_ERROR);
+@@ -802,10 +803,10 @@
+    case VG_MAX_IMAGE_PIXELS:
+    case VG_MAX_IMAGE_BYTES:
+    case VG_MAX_GAUSSIAN_STD_DEVIATION:
+-      values[0] = vgGeti(type);
++      values[0] = vegaGeti(type);
+       break;
+    case VG_MAX_FLOAT:
+-      values[0] = vgGetf(type);
++      values[0] = vegaGetf(type);
+       break;
+    case VG_SCISSOR_RECTS: {
+       VGint i;
+@@ -866,7 +867,7 @@
+ {
+    const struct vg_state *state = current_state();
+    struct vg_context *ctx = vg_current_context();
+-   VGint real_count = vgGetVectorSize(type);
++   VGint real_count = vegaGetVectorSize(type);
+ 
+    if (!values || count <= 0 || count > real_count || !is_aligned(values)) {
+       vg_set_error(ctx, VG_ILLEGAL_ARGUMENT_ERROR);
+@@ -903,10 +904,10 @@
+    case VG_MAX_IMAGE_PIXELS:
+    case VG_MAX_IMAGE_BYTES:
+    case VG_MAX_GAUSSIAN_STD_DEVIATION:
+-      values[0] = vgGeti(type);
++      values[0] = vegaGeti(type);
+       break;
+    case VG_MAX_FLOAT: {
+-      VGfloat val = vgGetf(type);
++      VGfloat val = vegaGetf(type);
+       values[0] = float_to_int_floor(*((VGuint*)&val));
+    }
+       break;
+@@ -972,9 +973,9 @@
+                        VGfloat value)
+ {
+    struct vg_context *ctx = vg_current_context();
+-   void *ptr = (void*)object;
++   void *ptr = handle_to_pointer(object);
+ 
+-   if (!object || object == VG_INVALID_HANDLE || !is_aligned(ptr)) {
++   if (object == VG_INVALID_HANDLE || !is_aligned(ptr)) {
+       vg_set_error(ctx, VG_BAD_HANDLE_ERROR);
+       return;
+    }
+@@ -983,7 +984,7 @@
+    case VG_PAINT_TYPE:
+    case VG_PAINT_COLOR_RAMP_SPREAD_MODE:
+    case VG_PAINT_PATTERN_TILING_MODE:
+-      vgSetParameteri(object, paramType, floor(value));
++      vegaSetParameteri(object, paramType, floor(value));
+       return;
+       break;
+    case VG_PAINT_COLOR:
+@@ -994,7 +995,7 @@
+       vg_set_error(ctx, VG_ILLEGAL_ARGUMENT_ERROR);
+       break;
+    case VG_PAINT_COLOR_RAMP_PREMULTIPLIED: {
+-      struct vg_paint *p = (struct vg_paint *)object;
++      struct vg_paint *p = handle_to_paint(object);
+       paint_set_color_ramp_premultiplied(p, value);
+    }
+       break;
+@@ -1026,9 +1027,9 @@
+                        VGint value)
+ {
+    struct vg_context *ctx = vg_current_context();
+-   void *ptr = (void*)object;
++   void *ptr = handle_to_pointer(object);
+ 
+-   if (!object || object == VG_INVALID_HANDLE || !is_aligned(ptr)) {
++   if (object == VG_INVALID_HANDLE || !is_aligned(ptr)) {
+       vg_set_error(ctx, VG_BAD_HANDLE_ERROR);
+       return;
+    }
+@@ -1039,7 +1040,7 @@
+           value > VG_PAINT_TYPE_PATTERN)
+          vg_set_error(ctx, VG_ILLEGAL_ARGUMENT_ERROR);
+       else {
+-         struct vg_paint *paint = (struct vg_paint *)ptr;
++         struct vg_paint *paint = handle_to_paint(object);
+          paint_set_type(paint, value);
+       }
+       break;
+@@ -1055,12 +1056,12 @@
+           value > VG_COLOR_RAMP_SPREAD_REFLECT)
+          vg_set_error(ctx, VG_ILLEGAL_ARGUMENT_ERROR);
+       else {
+-         struct vg_paint *paint = (struct vg_paint *)ptr;
++         struct vg_paint *paint = handle_to_paint(object);
+          paint_set_spread_mode(paint, value);
+       }
+       break;
+    case VG_PAINT_COLOR_RAMP_PREMULTIPLIED: {
+-      struct vg_paint *p = (struct vg_paint *)object;
++      struct vg_paint *p = handle_to_paint(object);
+       paint_set_color_ramp_premultiplied(p, value);
+    }
+       break;
+@@ -1069,7 +1070,7 @@
+           value > VG_TILE_REFLECT)
+          vg_set_error(ctx, VG_ILLEGAL_ARGUMENT_ERROR);
+       else {
+-         struct vg_paint *paint = (struct vg_paint *)ptr;
++         struct vg_paint *paint = handle_to_paint(object);
+          paint_set_pattern_tiling(paint, value);
+       }
+       break;
+@@ -1102,10 +1103,10 @@
+                         const VGfloat * values)
+ {
+    struct vg_context *ctx = vg_current_context();
+-   void *ptr = (void*)object;
+-   VGint real_count = vgGetParameterVectorSize(object, paramType);
++   void *ptr = handle_to_pointer(object);
++   VGint real_count = vegaGetParameterVectorSize(object, paramType);
+ 
+-   if (!object || object == VG_INVALID_HANDLE || !is_aligned(ptr)) {
++   if (object == VG_INVALID_HANDLE || !is_aligned(ptr)) {
+       vg_set_error(ctx, VG_BAD_HANDLE_ERROR);
+       return;
+    }
+@@ -1125,15 +1126,18 @@
+       if (count != 1)
+          vg_set_error(ctx, VG_ILLEGAL_ARGUMENT_ERROR);
+       else
+-         vgSetParameterf(object, paramType, values[0]);
++         vegaSetParameterf(object, paramType, values[0]);
+       return;
+       break;
+    case VG_PAINT_COLOR: {
+       if (count != 4)
+          vg_set_error(ctx, VG_ILLEGAL_ARGUMENT_ERROR);
+       else {
+-         struct vg_paint *paint = (struct vg_paint *)object;
++         struct vg_paint *paint = handle_to_paint(object);
+          paint_set_color(paint, values);
++         if (ctx->state.vg.fill_paint == paint ||
++             ctx->state.vg.stroke_paint == paint)
++            ctx->state.dirty |= PAINT_DIRTY;
+       }
+    }
+       break;
+@@ -1141,7 +1145,7 @@
+       if (count && count < 4)
+          vg_set_error(ctx, VG_ILLEGAL_ARGUMENT_ERROR);
+       else {
+-         struct vg_paint *paint = (struct vg_paint *)object;
++         struct vg_paint *paint = handle_to_paint(object);
+          count = MIN2(count, VEGA_MAX_COLOR_RAMP_STOPS);
+          paint_set_ramp_stops(paint, values, count);
+          {
+@@ -1159,7 +1163,7 @@
+       if (count != 4)
+          vg_set_error(ctx, VG_ILLEGAL_ARGUMENT_ERROR);
+       else {
+-         struct vg_paint *paint = (struct vg_paint *)object;
++         struct vg_paint *paint = handle_to_paint(object);
+          paint_set_linear_gradient(paint, values);
+          {
+             VGint vals[4];
+@@ -1176,7 +1180,7 @@
+       if (count != 5)
+          vg_set_error(ctx, VG_ILLEGAL_ARGUMENT_ERROR);
+       else {
+-         struct vg_paint *paint = (struct vg_paint *)object;
++         struct vg_paint *paint = handle_to_paint(object);
+          paint_set_radial_gradient(paint, values);
+          {
+             VGint vals[5];
+@@ -1215,10 +1219,10 @@
+                         const VGint * values)
+ {
+    struct vg_context *ctx = vg_current_context();
+-   void *ptr = (void*)object;
+-   VGint real_count = vgGetParameterVectorSize(object, paramType);
++   void *ptr = handle_to_pointer(object);
++   VGint real_count = vegaGetParameterVectorSize(object, paramType);
+ 
+-   if (!object || object == VG_INVALID_HANDLE || !is_aligned(ptr)) {
++   if (object == VG_INVALID_HANDLE || !is_aligned(ptr)) {
+       vg_set_error(ctx, VG_BAD_HANDLE_ERROR);
+       return;
+    }
+@@ -1238,15 +1242,18 @@
+       if (count != 1)
+          vg_set_error(ctx, VG_ILLEGAL_ARGUMENT_ERROR);
+       else
+-         vgSetParameteri(object, paramType, values[0]);
++         vegaSetParameteri(object, paramType, values[0]);
+       return;
+       break;
+    case VG_PAINT_COLOR: {
+       if (count != 4)
+          vg_set_error(ctx, VG_ILLEGAL_ARGUMENT_ERROR);
+       else {
+-         struct vg_paint *paint = (struct vg_paint *)object;
++         struct vg_paint *paint = handle_to_paint(object);
+          paint_set_coloriv(paint, values);
++         if (ctx->state.vg.fill_paint == paint ||
++             ctx->state.vg.stroke_paint == paint)
++            ctx->state.dirty |= PAINT_DIRTY;
+       }
+    }
+       break;
+@@ -1256,7 +1263,7 @@
+       else {
+          VGfloat *vals = 0;
+          int i;
+-         struct vg_paint *paint = (struct vg_paint *)object;
++         struct vg_paint *paint = handle_to_paint(object);
+          if (count) {
+             vals = malloc(sizeof(VGfloat)*count);
+             for (i = 0; i < count; ++i)
+@@ -1274,7 +1281,7 @@
+          vg_set_error(ctx, VG_ILLEGAL_ARGUMENT_ERROR);
+       else {
+          VGfloat vals[4];
+-         struct vg_paint *paint = (struct vg_paint *)object;
++         struct vg_paint *paint = handle_to_paint(object);
+          vals[0] = values[0];
+          vals[1] = values[1];
+          vals[2] = values[2];
+@@ -1289,7 +1296,7 @@
+          vg_set_error(ctx, VG_ILLEGAL_ARGUMENT_ERROR);
+       else {
+          VGfloat vals[5];
+-         struct vg_paint *paint = (struct vg_paint *)object;
++         struct vg_paint *paint = handle_to_paint(object);
+          vals[0] = values[0];
+          vals[1] = values[1];
+          vals[2] = values[2];
+@@ -1318,9 +1325,8 @@
+                                  VGint paramType)
+ {
+    struct vg_context *ctx = vg_current_context();
+-   void *ptr = (void*)object;
+ 
+-   if (!ptr || object == VG_INVALID_HANDLE) {
++   if (object == VG_INVALID_HANDLE) {
+       vg_set_error(ctx, VG_BAD_HANDLE_ERROR);
+       return 0;
+    }
+@@ -1334,7 +1340,7 @@
+    case VG_PAINT_COLOR:
+       return 4;
+    case VG_PAINT_COLOR_RAMP_STOPS: {
+-      struct vg_paint *p = (struct vg_paint *)object;
++      struct vg_paint *p = handle_to_paint(object);
+       return paint_num_ramp_stops(p);
+    }
+       break;
+@@ -1374,9 +1380,8 @@
+                           VGint paramType)
+ {
+    struct vg_context *ctx = vg_current_context();
+-   void *ptr = (void*)object;
+ 
+-   if (!ptr || object == VG_INVALID_HANDLE) {
++   if (object == VG_INVALID_HANDLE) {
+       vg_set_error(ctx, VG_BAD_HANDLE_ERROR);
+       return 0;
+    }
+@@ -1386,7 +1391,7 @@
+    case VG_PAINT_COLOR_RAMP_SPREAD_MODE:
+    case VG_PAINT_COLOR_RAMP_PREMULTIPLIED:
+    case VG_PAINT_PATTERN_TILING_MODE:
+-      return vgGetParameteri(object, paramType);
++      return vegaGetParameteri(object, paramType);
+       break;
+    case VG_PAINT_COLOR:
+    case VG_PAINT_COLOR_RAMP_STOPS:
+@@ -1398,17 +1403,17 @@
+    case VG_PATH_FORMAT:
+       return VG_PATH_FORMAT_STANDARD;
+    case VG_PATH_SCALE: {
+-      struct path *p = (struct path*)object;
++      struct path *p = handle_to_path(object);
+       return path_scale(p);
+    }
+    case VG_PATH_BIAS: {
+-      struct path *p = (struct path*)object;
++      struct path *p = handle_to_path(object);
+       return path_bias(p);
+    }
+    case VG_PATH_DATATYPE:
+    case VG_PATH_NUM_SEGMENTS:
+    case VG_PATH_NUM_COORDS:
+-      return vgGetParameteri(object, paramType);
++      return vegaGetParameteri(object, paramType);
+       break;
+ 
+    case VG_IMAGE_FORMAT:
+@@ -1416,7 +1421,7 @@
+    case VG_IMAGE_HEIGHT:
+ #ifdef OPENVG_VERSION_1_1
+    case VG_FONT_NUM_GLYPHS: 
+-      return vgGetParameteri(object, paramType);
++      return vegaGetParameteri(object, paramType);
+       break;
+ #endif
+ 
+@@ -1431,30 +1436,29 @@
+                         VGint paramType)
+ {
+    struct vg_context *ctx = vg_current_context();
+-   void *ptr = (void*)object;
+ 
+-   if (!ptr || object == VG_INVALID_HANDLE) {
++   if (object == VG_INVALID_HANDLE) {
+       vg_set_error(ctx, VG_BAD_HANDLE_ERROR);
+       return 0;
+    }
+ 
+    switch(paramType) {
+    case VG_PAINT_TYPE: {
+-         struct vg_paint *paint = (struct vg_paint *)ptr;
++         struct vg_paint *paint = handle_to_paint(object);
+          return paint_type(paint);
+    }
+       break;
+    case VG_PAINT_COLOR_RAMP_SPREAD_MODE: {
+-      struct vg_paint *p = (struct vg_paint *)object;
++      struct vg_paint *p = handle_to_paint(object);
+       return paint_spread_mode(p);
+    }
+    case VG_PAINT_COLOR_RAMP_PREMULTIPLIED: {
+-      struct vg_paint *p = (struct vg_paint *)object;
++      struct vg_paint *p = handle_to_paint(object);
+       return paint_color_ramp_premultiplied(p);
+    }
+       break;
+    case VG_PAINT_PATTERN_TILING_MODE: {
+-      struct vg_paint *p = (struct vg_paint *)object;
++      struct vg_paint *p = handle_to_paint(object);
+       return paint_pattern_tiling(p);
+    }
+       break;
+@@ -1469,40 +1473,40 @@
+       return VG_PATH_FORMAT_STANDARD;
+    case VG_PATH_SCALE:
+    case VG_PATH_BIAS:
+-      return vgGetParameterf(object, paramType);
++      return vegaGetParameterf(object, paramType);
+    case VG_PATH_DATATYPE: {
+-      struct path *p = (struct path*)object;
++      struct path *p = handle_to_path(object);
+       return path_datatype(p);
+    }
+    case VG_PATH_NUM_SEGMENTS: {
+-      struct path *p = (struct path*)object;
++      struct path *p = handle_to_path(object);
+       return path_num_segments(p);
+    }
+    case VG_PATH_NUM_COORDS: {
+-      struct path *p = (struct path*)object;
++      struct path *p = handle_to_path(object);
+       return path_num_coords(p);
+    }
+       break;
+ 
+    case VG_IMAGE_FORMAT: {
+-      struct vg_image *img = (struct vg_image*)object;
++      struct vg_image *img = handle_to_image(object);
+       return img->format;
+    }
+       break;
+    case VG_IMAGE_WIDTH: {
+-      struct vg_image *img = (struct vg_image*)object;
++      struct vg_image *img = handle_to_image(object);
+       return img->width;
+    }
+       break;
+    case VG_IMAGE_HEIGHT: {
+-      struct vg_image *img = (struct vg_image*)object;
++      struct vg_image *img = handle_to_image(object);
+       return img->height;
+    }
+       break;
+ 
+ #ifdef OPENVG_VERSION_1_1
+    case VG_FONT_NUM_GLYPHS: {
+-      struct vg_font *font = (struct vg_font*)object;
++      struct vg_font *font = handle_to_font(object);
+       return font_num_glyphs(font);
+    }
+       break;
+@@ -1521,10 +1525,9 @@
+                         VGfloat * values)
+ {
+    struct vg_context *ctx = vg_current_context();
+-   void *ptr = (void*)object;
+-   VGint real_count = vgGetParameterVectorSize(object, paramType);
++   VGint real_count = vegaGetParameterVectorSize(object, paramType);
+ 
+-   if (!ptr || object == VG_INVALID_HANDLE) {
++   if (object == VG_INVALID_HANDLE) {
+       vg_set_error(ctx, VG_BAD_HANDLE_ERROR);
+       return;
+    }
+@@ -1537,41 +1540,41 @@
+ 
+    switch(paramType) {
+    case VG_PAINT_TYPE: {
+-      struct vg_paint *p = (struct vg_paint *)object;
++      struct vg_paint *p = handle_to_paint(object);
+       values[0] = paint_type(p);
+    }
+       break;
+    case VG_PAINT_COLOR_RAMP_SPREAD_MODE: {
+-      struct vg_paint *p = (struct vg_paint *)object;
++      struct vg_paint *p = handle_to_paint(object);
+       values[0] = paint_spread_mode(p);
+    }
+       break;
+    case VG_PAINT_COLOR_RAMP_PREMULTIPLIED: {
+-      struct vg_paint *p = (struct vg_paint *)object;
++      struct vg_paint *p = handle_to_paint(object);
+       values[0] = paint_color_ramp_premultiplied(p);
+    }
+       break;
+    case VG_PAINT_PATTERN_TILING_MODE: {
+-      values[0] = vgGetParameterf(object, paramType);
++      values[0] = vegaGetParameterf(object, paramType);
+    }
+       break;
+    case VG_PAINT_COLOR: {
+-      struct vg_paint *paint = (struct vg_paint *)object;
++      struct vg_paint *paint = handle_to_paint(object);
+       paint_get_color(paint, values);
+    }
+       break;
+    case VG_PAINT_COLOR_RAMP_STOPS: {
+-      struct vg_paint *paint = (struct vg_paint *)object;
++      struct vg_paint *paint = handle_to_paint(object);
+       paint_ramp_stops(paint, values, count);
+    }
+       break;
+    case VG_PAINT_LINEAR_GRADIENT: {
+-      struct vg_paint *paint = (struct vg_paint *)object;
++      struct vg_paint *paint = handle_to_paint(object);
+       paint_linear_gradient(paint, values);
+    }
+       break;
+    case VG_PAINT_RADIAL_GRADIENT: {
+-      struct vg_paint *paint = (struct vg_paint *)object;
++      struct vg_paint *paint = handle_to_paint(object);
+       paint_radial_gradient(paint, values);
+    }
+       break;
+@@ -1580,11 +1583,11 @@
+    case VG_PATH_DATATYPE:
+    case VG_PATH_NUM_SEGMENTS:
+    case VG_PATH_NUM_COORDS:
+-      values[0] = vgGetParameteri(object, paramType);
++      values[0] = vegaGetParameteri(object, paramType);
+       break;
+    case VG_PATH_SCALE:
+    case VG_PATH_BIAS:
+-      values[0] = vgGetParameterf(object, paramType);
++      values[0] = vegaGetParameterf(object, paramType);
+       break;
+ 
+    case VG_IMAGE_FORMAT:
+@@ -1592,7 +1595,7 @@
+    case VG_IMAGE_HEIGHT:
+ #ifdef OPENVG_VERSION_1_1
+    case VG_FONT_NUM_GLYPHS:
+-      values[0] = vgGetParameteri(object, paramType);
++      values[0] = vegaGetParameteri(object, paramType);
+       break;
+ #endif
+ 
+@@ -1608,10 +1611,9 @@
+                         VGint * values)
+ {
+    struct vg_context *ctx = vg_current_context();
+-   void *ptr = (void*)object;
+-   VGint real_count = vgGetParameterVectorSize(object, paramType);
++   VGint real_count = vegaGetParameterVectorSize(object, paramType);
+ 
+-   if (!ptr || object == VG_INVALID_HANDLE) {
++   if (object || object == VG_INVALID_HANDLE) {
+       vg_set_error(ctx, VG_BAD_HANDLE_ERROR);
+       return;
+    }
+@@ -1629,45 +1631,45 @@
+    case VG_PAINT_PATTERN_TILING_MODE:
+ #ifdef OPENVG_VERSION_1_1
+    case VG_FONT_NUM_GLYPHS:
+-      values[0] = vgGetParameteri(object, paramType);
++      values[0] = vegaGetParameteri(object, paramType);
+       break;
+ #endif
+    case VG_PAINT_COLOR: {
+-      struct vg_paint *paint = (struct vg_paint *)object;
++      struct vg_paint *paint = handle_to_paint(object);
+       paint_get_coloriv(paint, values);
+    }
+       break;
+    case VG_PAINT_COLOR_RAMP_STOPS: {
+-      struct vg_paint *paint = (struct vg_paint *)object;
++      struct vg_paint *paint = handle_to_paint(object);
+       paint_ramp_stopsi(paint, values, count);
+    }
+       break;
+    case VG_PAINT_LINEAR_GRADIENT: {
+-      struct vg_paint *paint = (struct vg_paint *)object;
++      struct vg_paint *paint = handle_to_paint(object);
+       paint_linear_gradienti(paint, values);
+    }
+       break;
+    case VG_PAINT_RADIAL_GRADIENT: {
+-      struct vg_paint *paint = (struct vg_paint *)object;
++      struct vg_paint *paint = handle_to_paint(object);
+       paint_radial_gradienti(paint, values);
+    }
+       break;
+ 
+    case VG_PATH_SCALE:
+    case VG_PATH_BIAS:
+-      values[0] = vgGetParameterf(object, paramType);
++      values[0] = vegaGetParameterf(object, paramType);
+       break;
+    case VG_PATH_FORMAT:
+    case VG_PATH_DATATYPE:
+    case VG_PATH_NUM_SEGMENTS:
+    case VG_PATH_NUM_COORDS:
+-      values[0] = vgGetParameteri(object, paramType);
++      values[0] = vegaGetParameteri(object, paramType);
+       break;
+ 
+    case VG_IMAGE_FORMAT:
+    case VG_IMAGE_WIDTH:
+    case VG_IMAGE_HEIGHT:
+-      values[0] = vgGetParameteri(object, paramType);
++      values[0] = vegaGetParameteri(object, paramType);
+       break;
+ 
+    default:
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/api_path.c ./mesa/src/gallium/state_trackers/vega/api_path.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/api_path.c	2010-12-16 00:02:44.000000000 +0100
++++ ./mesa/src/gallium/state_trackers/vega/api_path.c	2011-05-29 21:41:01.000000000 +0200
+@@ -27,6 +27,7 @@
+ #include "VG/openvg.h"
+ 
+ #include "vg_context.h"
++#include "handle.h"
+ #include "path.h"
+ #include "api.h"
+ 
+@@ -55,9 +56,9 @@
+       return VG_INVALID_HANDLE;
+    }
+ 
+-   return (VGPath)path_create(datatype, scale, bias,
+-                              segmentCapacityHint, coordCapacityHint,
+-                              capabilities);
++   return path_to_handle(path_create(datatype, scale, bias,
++                                     segmentCapacityHint, coordCapacityHint,
++                                     capabilities));
+ }
+ 
+ void vegaClearPath(VGPath path, VGbitfield capabilities)
+@@ -70,7 +71,7 @@
+       return;
+    }
+ 
+-   p = (struct path *)path;
++   p = handle_to_path(path);
+    path_clear(p, capabilities);
+ }
+ 
+@@ -84,7 +85,7 @@
+       return;
+    }
+ 
+-   path = (struct path *)p;
++   path = handle_to_path(p);
+    path_destroy(path);
+ }
+ 
+@@ -100,7 +101,7 @@
+       return;
+    }
+ 
+-   p = (struct path*)path;
++   p = handle_to_path(path);
+    current = path_capabilities(p);
+    path_set_capabilities(p, (current &
+                              (~(capabilities & VG_PATH_CAPABILITY_ALL))));
+@@ -115,7 +116,7 @@
+       vg_set_error(ctx, VG_BAD_HANDLE_ERROR);
+       return 0;
+    }
+-   p = (struct path*)path;
++   p = handle_to_path(path);
+    return path_capabilities(p);
+ }
+ 
+@@ -128,8 +129,8 @@
+       vg_set_error(ctx, VG_BAD_HANDLE_ERROR);
+       return;
+    }
+-   src = (struct path *)srcPath;
+-   dst = (struct path *)dstPath;
++   src = handle_to_path(srcPath);
++   dst = handle_to_path(dstPath);
+ 
+    if (!(path_capabilities(src) & VG_PATH_CAPABILITY_APPEND_FROM) ||
+        !(path_capabilities(dst) & VG_PATH_CAPABILITY_APPEND_TO)) {
+@@ -167,9 +168,9 @@
+       }
+    }
+ 
+-   p = (struct path*)dstPath;
++   p = handle_to_path(dstPath);
+ 
+-   if (!pathData || !is_aligned_to(pathData, path_datatype_size(p))) {
++   if (!p || !is_aligned_to(p, path_datatype_size(p))) {
+       vg_set_error(ctx, VG_ILLEGAL_ARGUMENT_ERROR);
+       return;
+    }
+@@ -199,7 +200,7 @@
+       return;
+    }
+ 
+-   p = (struct path *)dstPath;
++   p = handle_to_path(dstPath);
+ 
+    if (!pathData || !is_aligned_to(pathData, path_datatype_size(p))) {
+       vg_set_error(ctx, VG_ILLEGAL_ARGUMENT_ERROR);
+@@ -226,8 +227,8 @@
+       vg_set_error(ctx, VG_BAD_HANDLE_ERROR);
+       return;
+    }
+-   src = (struct path *)srcPath;
+-   dst = (struct path *)dstPath;
++   src = handle_to_path(srcPath);
++   dst = handle_to_path(dstPath);
+ 
+    if (!(path_capabilities(src) & VG_PATH_CAPABILITY_TRANSFORM_FROM) ||
+        !(path_capabilities(dst) & VG_PATH_CAPABILITY_TRANSFORM_TO)) {
+@@ -251,9 +252,9 @@
+       vg_set_error(ctx, VG_BAD_HANDLE_ERROR);
+       return VG_FALSE;
+    }
+-   dst = (struct path *)dstPath;
+-   start = (struct path *)startPath;
+-   end = (struct path *)endPath;
++   dst = handle_to_path(dstPath);
++   start = handle_to_path(startPath);
++   end = handle_to_path(endPath);
+ 
+    if (!(path_capabilities(dst) & VG_PATH_CAPABILITY_INTERPOLATE_TO) ||
+        !(path_capabilities(start) & VG_PATH_CAPABILITY_INTERPOLATE_FROM) ||
+@@ -285,7 +286,7 @@
+       vg_set_error(ctx, VG_ILLEGAL_ARGUMENT_ERROR);
+       return -1;
+    }
+-   p = (struct path*)path;
++   p = handle_to_path(path);
+ 
+    if (!(path_capabilities(p) & VG_PATH_CAPABILITY_PATH_LENGTH)) {
+       vg_set_error(ctx, VG_PATH_CAPABILITY_ERROR);
+@@ -330,7 +331,7 @@
+       return;
+    }
+ 
+-   p = (struct path*)path;
++   p = handle_to_path(path);
+ 
+    caps = path_capabilities(p);
+    if (!(caps & VG_PATH_CAPABILITY_POINT_ALONG_PATH) ||
+@@ -385,7 +386,7 @@
+       return;
+    }
+ 
+-   p = (struct path*)path;
++   p = handle_to_path(path);
+ 
+    caps = path_capabilities(p);
+    if (!(caps & VG_PATH_CAPABILITY_PATH_BOUNDS)) {
+@@ -422,7 +423,7 @@
+       return;
+    }
+ 
+-   p = (struct path*)path;
++   p = handle_to_path(path);
+ 
+    caps = path_capabilities(p);
+    if (!(caps & VG_PATH_CAPABILITY_PATH_TRANSFORMED_BOUNDS)) {
+@@ -466,6 +467,7 @@
+ void vegaDrawPath(VGPath path, VGbitfield paintModes)
+ {
+    struct vg_context *ctx = vg_current_context();
++   struct path *p = handle_to_path(path);
+ 
+    if (path == VG_INVALID_HANDLE) {
+       vg_set_error(ctx, VG_BAD_HANDLE_ERROR);
+@@ -477,9 +479,9 @@
+       return;
+    }
+ 
+-   if (path_is_empty((struct path*)path))
++   if (path_is_empty(p))
+       return;
+-   path_render((struct path*)path, paintModes,
++   path_render(p, paintModes,
+          &ctx->state.vg.path_user_to_surface_matrix);
+ }
+ 
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/api_text.c ./mesa/src/gallium/state_trackers/vega/api_text.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/api_text.c	2010-12-16 00:02:44.000000000 +0100
++++ ./mesa/src/gallium/state_trackers/vega/api_text.c	2011-05-29 21:41:01.000000000 +0200
+@@ -29,6 +29,7 @@
+ #include "vg_context.h"
+ #include "text.h"
+ #include "api.h"
++#include "handle.h"
+ 
+ #include "util/u_memory.h"
+ 
+@@ -43,19 +44,19 @@
+       return VG_INVALID_HANDLE;
+    }
+ 
+-   return (VGFont) font_create(glyphCapacityHint);
++   return font_to_handle(font_create(glyphCapacityHint));
+ }
+ 
+ void vegaDestroyFont(VGFont f)
+ {
+-   struct vg_font *font = (struct vg_font *)f;
++   struct vg_font *font = handle_to_font(f);
+    struct vg_context *ctx = vg_current_context();
+ 
+    if (f == VG_INVALID_HANDLE) {
+       vg_set_error(ctx, VG_BAD_HANDLE_ERROR);
+       return;
+    }
+-   if (!vg_object_is_valid((void *) font, VG_OBJECT_FONT)) {
++   if (!vg_object_is_valid(f, VG_OBJECT_FONT)) {
+       vg_set_error(ctx, VG_BAD_HANDLE_ERROR);
+       return;
+    }
+@@ -75,7 +76,7 @@
+    struct vg_font *f;
+ 
+    if (font == VG_INVALID_HANDLE ||
+-       !vg_context_is_object_valid(ctx, VG_OBJECT_FONT, (void *)font)) {
++       !vg_context_is_object_valid(ctx, VG_OBJECT_FONT, font)) {
+       vg_set_error(ctx, VG_BAD_HANDLE_ERROR);
+       return;
+    }
+@@ -85,13 +86,13 @@
+       return;
+    }
+    if (path != VG_INVALID_HANDLE &&
+-       !vg_context_is_object_valid(ctx, VG_OBJECT_PATH, (void *)path)) {
++       !vg_context_is_object_valid(ctx, VG_OBJECT_PATH, path)) {
+       vg_set_error(ctx, VG_BAD_HANDLE_ERROR);
+       return;
+    }
+ 
+-   pathObj = (struct path*) path;
+-   f = (struct vg_font*) font;
++   pathObj = handle_to_path(path);
++   f = handle_to_font(font);
+ 
+    font_set_glyph_to_path(f, glyphIndex, pathObj,
+          isHinted, glyphOrigin, escapement);
+@@ -108,7 +109,7 @@
+    struct vg_font *f;
+ 
+    if (font == VG_INVALID_HANDLE ||
+-       !vg_context_is_object_valid(ctx, VG_OBJECT_FONT, (void *)font)) {
++       !vg_context_is_object_valid(ctx, VG_OBJECT_FONT, font)) {
+       vg_set_error(ctx, VG_BAD_HANDLE_ERROR);
+       return;
+    }
+@@ -118,13 +119,13 @@
+       return;
+    }
+    if (image != VG_INVALID_HANDLE &&
+-       !vg_context_is_object_valid(ctx, VG_OBJECT_IMAGE, (void *)image)) {
++       !vg_context_is_object_valid(ctx, VG_OBJECT_IMAGE, image)) {
+       vg_set_error(ctx, VG_BAD_HANDLE_ERROR);
+       return;
+    }
+ 
+-   img_obj = (struct vg_image*)image;
+-   f = (struct vg_font*)font;
++   img_obj = handle_to_image(image);
++   f = handle_to_font(font);
+ 
+    font_set_glyph_to_image(f, glyphIndex, img_obj, glyphOrigin, escapement);
+ }
+@@ -140,7 +141,7 @@
+       return;
+    }
+ 
+-   f = (struct vg_font*) font;
++   f = handle_to_font(font);
+ 
+    font_clear_glyph(f, glyphIndex);
+ }
+@@ -161,7 +162,7 @@
+       vg_set_error(ctx, VG_ILLEGAL_ARGUMENT_ERROR);
+       return;
+    }
+-   f = (struct vg_font*)font;
++   f = handle_to_font(font);
+ 
+    font_draw_glyph(f, glyphIndex, paintModes, allowAutoHinting);
+ }
+@@ -199,7 +200,7 @@
+       return;
+    }
+ 
+-   f = (struct vg_font*)font;
++   f = handle_to_font(font);
+ 
+    font_draw_glyphs(f, glyphCount, glyphIndices,
+          adjustments_x, adjustments_y, paintModes, allowAutoHinting);
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/image.c ./mesa/src/gallium/state_trackers/vega/image.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/image.c	2010-12-16 00:02:44.000000000 +0100
++++ ./mesa/src/gallium/state_trackers/vega/image.c	2011-05-29 21:41:01.000000000 +0200
+@@ -349,6 +349,8 @@
+       array_destroy(img->children_array);
+    }
+ 
++   vg_free_object(&img->base);
++
+    pipe_sampler_view_reference(&img->sampler_view, NULL);
+    FREE(img);
+ }
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/Makefile ./mesa/src/gallium/state_trackers/vega/Makefile
+--- /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/Makefile	2010-12-16 00:02:44.000000000 +0100
++++ ./mesa/src/gallium/state_trackers/vega/Makefile	2011-05-29 21:41:01.000000000 +0200
+@@ -24,23 +24,25 @@
+            api_path.c      \
+            api_text.c      \
+            api_transform.c \
+-           vgu.c        \
+-           vg_context.c \
+-           vg_manager.c \
+-           vg_state.c   \
+-           vg_translate.c \
+-           polygon.c    \
+-           bezier.c     \
+-           path.c       \
+-           paint.c      \
+            arc.c \
++           bezier.c \
++           handle.c \
+            image.c \
++           mask.c \
++           paint.c \
++           path.c \
++           polygon.c \
+            renderer.c \
++           shader.c \
++           shaders_cache.c \
+            stroker.c \
+-           mask.c \
+            text.c \
+-           shader.c \
+-           shaders_cache.c
++           vg_context.c \
++           vg_manager.c \
++           vg_state.c \
++           vg_translate.c \
++           vgu.c
++
+ 
+ GENERATED_SOURCES := api_tmp.h
+ 
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/mask.c ./mesa/src/gallium/state_trackers/vega/mask.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/mask.c	2010-12-16 00:02:44.000000000 +0100
++++ ./mesa/src/gallium/state_trackers/vega/mask.c	2011-08-31 09:26:27.000000000 +0200
+@@ -386,9 +386,11 @@
+                      VGint width, VGint height,
+                      VGfloat value)
+ {
++#if 0 /* unused */
+    VGfloat alpha_color[4] = {0, 0, 0, 0};
+ 
+    alpha_color[3] = value;
++#endif
+ 
+    mask_resource_fill(layer->sampler_view->texture,
+                       x, y, width, height, value);
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/paint.c ./mesa/src/gallium/state_trackers/vega/paint.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/paint.c	2010-12-16 00:02:44.000000000 +0100
++++ ./mesa/src/gallium/state_trackers/vega/paint.c	2011-05-29 21:41:01.000000000 +0200
+@@ -748,3 +748,10 @@
+       abort();
+    }
+ }
++
++VGboolean paint_is_opaque(struct vg_paint *paint)
++{
++   /* TODO add other paint types and make sure PAINT_DIRTY gets set */
++   return (paint->type == VG_PAINT_TYPE_COLOR &&
++           floatsEqual(paint->solid.color[3], 1.0f));
++}
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/paint.h ./mesa/src/gallium/state_trackers/vega/paint.h
+--- /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/paint.h	2010-12-16 00:02:44.000000000 +0100
++++ ./mesa/src/gallium/state_trackers/vega/paint.h	2011-05-29 21:41:01.000000000 +0200
+@@ -118,5 +118,6 @@
+                                 const struct matrix *mat,
+                                 void *buffer);
+ 
++VGboolean paint_is_opaque(struct vg_paint *paint);
+ 
+ #endif
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/path.c ./mesa/src/gallium/state_trackers/vega/path.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/path.c	2010-12-16 00:02:44.000000000 +0100
++++ ./mesa/src/gallium/state_trackers/vega/path.c	2011-08-31 09:28:19.000000000 +0200
+@@ -1093,8 +1093,8 @@
+       y2 = data[1];
+       x3 = data[2];
+       y3 = data[3];
+-      map_if_relative(pd->ox, pd->oy, relative, &x2, &y2);
+-      map_if_relative(pd->ox, pd->oy, relative, &x3, &y3);
++      map_if_relative(x0, y0, relative, &x2, &y2);
++      map_if_relative(x0, y0, relative, &x3, &y3);
+       pd->ox = x3;
+       pd->oy = y3;
+       pd->px = x2;
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/renderer.c ./mesa/src/gallium/state_trackers/vega/renderer.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/renderer.c	2011-01-02 23:58:35.000000000 +0100
++++ ./mesa/src/gallium/state_trackers/vega/renderer.c	2011-05-29 21:41:01.000000000 +0200
+@@ -28,7 +28,7 @@
+ #include "renderer.h"
+ 
+ #include "vg_context.h"
+-#include "image.h"
++#include "paint.h" /* for paint_is_opaque */
+ 
+ #include "pipe/p_context.h"
+ #include "pipe/p_state.h"
+@@ -1290,7 +1290,11 @@
+       blend.rt[0].alpha_dst_factor = PIPE_BLENDFACTOR_ZERO;
+       break;
+    case VG_BLEND_SRC_OVER:
+-      if (!util_format_has_alpha(fb_format)) {
++      if (paint_is_opaque(state->fill_paint) &&
++          paint_is_opaque(state->stroke_paint)) {
++         /* no blending */
++      }
++      else if (!util_format_has_alpha(fb_format)) {
+          blend.rt[0].rgb_src_factor   = PIPE_BLENDFACTOR_SRC_ALPHA;
+          blend.rt[0].alpha_src_factor = PIPE_BLENDFACTOR_ONE;
+          blend.rt[0].rgb_dst_factor   = PIPE_BLENDFACTOR_INV_SRC_ALPHA;
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/SConscript ./mesa/src/gallium/state_trackers/vega/SConscript
+--- /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/SConscript	2010-12-16 00:02:44.000000000 +0100
++++ ./mesa/src/gallium/state_trackers/vega/SConscript	2011-05-29 21:41:01.000000000 +0200
+@@ -26,23 +26,24 @@
+     'api_path.c',
+     'api_text.c',
+     'api_transform.c',
+-    'vgu.c',
+-    'vg_context.c',
+-    'vg_manager.c',
+-    'vg_state.c',
+-    'vg_translate.c',
+-    'polygon.c',
+-    'bezier.c',
+-    'path.c',
+-    'paint.c',
+     'arc.c',
++    'bezier.c',
++    'handle.c',
+     'image.c',
+-    'renderer.c',
+-    'stroker.c',
+     'mask.c',
++    'paint.c',
++    'path.c',
++    'polygon.c',
++    'renderer.c',
+     'shader.c',
+     'shaders_cache.c',
++    'stroker.c',
+     'text.c',
++    'vg_context.c',
++    'vg_manager.c',
++    'vg_state.c',
++    'vg_translate.c',
++    'vgu.c'
+ ]
+ 
+ api_tmp = env.CodeGenerate(
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/shader.c ./mesa/src/gallium/state_trackers/vega/shader.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/shader.c	2011-01-02 23:58:35.000000000 +0100
++++ ./mesa/src/gallium/state_trackers/vega/shader.c	2011-05-29 21:41:01.000000000 +0200
+@@ -34,9 +34,7 @@
+ #include "renderer.h"
+ 
+ #include "pipe/p_context.h"
+-#include "pipe/p_screen.h"
+ #include "pipe/p_state.h"
+-#include "util/u_inlines.h"
+ #include "util/u_memory.h"
+ #include "util/u_math.h"
+ #include "util/u_format.h"
+@@ -136,6 +134,8 @@
+    switch (ctx->state.vg.blend_mode) {
+    case VG_BLEND_SRC_OVER:
+       advanced_blending =
++         (!paint_is_opaque(ctx->state.vg.fill_paint) ||
++          !paint_is_opaque(ctx->state.vg.stroke_paint)) &&
+          util_format_has_alpha(ctx->draw_buffer->strb->format);
+       break;
+    case VG_BLEND_DST_OVER:
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/text.c ./mesa/src/gallium/state_trackers/vega/text.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/text.c	2011-01-02 23:58:35.000000000 +0100
++++ ./mesa/src/gallium/state_trackers/vega/text.c	2011-05-29 21:41:01.000000000 +0200
+@@ -30,7 +30,6 @@
+ #include "text.h"
+ #include "image.h"
+ #include "path.h"
+-#include "api.h"
+ 
+ #ifdef OPENVG_VERSION_1_1
+ 
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/vg_context.c ./mesa/src/gallium/state_trackers/vega/vg_context.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/vg_context.c	2011-01-02 23:58:35.000000000 +0100
++++ ./mesa/src/gallium/state_trackers/vega/vg_context.c	2011-05-29 21:41:01.000000000 +0200
+@@ -30,17 +30,16 @@
+ #include "renderer.h"
+ #include "shaders_cache.h"
+ #include "shader.h"
+-#include "asm_util.h"
+ #include "vg_manager.h"
+ #include "api.h"
+ #include "mask.h"
++#include "handle.h"
+ 
+ #include "pipe/p_context.h"
+ #include "util/u_inlines.h"
+ 
+ #include "cso_cache/cso_context.h"
+ 
+-#include "util/u_simple_shaders.h"
+ #include "util/u_memory.h"
+ #include "util/u_blit.h"
+ #include "util/u_sampler.h"
+@@ -184,17 +183,26 @@
+ {
+    obj->type = type;
+    obj->ctx = ctx;
++   obj->handle = create_handle(obj);
++}
++
++/** free object resources, but not the object itself */
++void vg_free_object(struct vg_object *obj)
++{
++   obj->type = 0;
++   obj->ctx = NULL;
++   destroy_handle(obj->handle);
+ }
+ 
+ VGboolean vg_context_is_object_valid(struct vg_context *ctx,
+                                 enum vg_object_type type,
+-                                void *ptr)
++                                VGHandle object)
+ {
+     if (ctx) {
+        struct cso_hash *hash = ctx->owned_objects[type];
+        if (!hash)
+           return VG_FALSE;
+-       return cso_hash_contains(hash, (unsigned)(long)ptr);
++       return cso_hash_contains(hash, (unsigned)(long)object);
+     }
+     return VG_FALSE;
+ }
+@@ -400,8 +408,9 @@
+    if (vg_context_update_depth_stencil_rb(ctx, stfb->width, stfb->height))
+       ctx->state.dirty |= DEPTH_STENCIL_DIRTY;
+ 
+-   /* blend state depends on fb format */
+-   if (ctx->state.dirty & FRAMEBUFFER_DIRTY)
++   /* blend state depends on fb format and paint color */
++   if ((ctx->state.dirty & FRAMEBUFFER_DIRTY) ||
++       (ctx->state.dirty & PAINT_DIRTY))
+       ctx->state.dirty |= BLEND_DIRTY;
+ 
+    renderer_validate(ctx->renderer, ctx->state.dirty,
+@@ -414,10 +423,10 @@
+    shader_set_color_transform(ctx->shader, ctx->state.vg.color_transform);
+ }
+ 
+-VGboolean vg_object_is_valid(void *ptr, enum vg_object_type type)
++VGboolean vg_object_is_valid(VGHandle object, enum vg_object_type type)
+ {
+-   struct vg_object *obj = ptr;
+-   if (ptr && is_aligned(obj) && obj->type == type)
++   struct vg_object *obj = handle_to_object(object);
++   if (obj && is_aligned(obj) && obj->type == type)
+       return VG_TRUE;
+    else
+       return VG_FALSE;
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/vg_context.h ./mesa/src/gallium/state_trackers/vega/vg_context.h
+--- /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/vg_context.h	2010-12-16 00:02:44.000000000 +0100
++++ ./mesa/src/gallium/state_trackers/vega/vg_context.h	2011-05-29 21:41:01.000000000 +0200
+@@ -81,10 +81,12 @@
+    BLEND_DIRTY         = 1 << 0,
+    FRAMEBUFFER_DIRTY   = 1 << 1,
+    DEPTH_STENCIL_DIRTY = 1 << 2,
++   PAINT_DIRTY         = 1 << 3,
+ 
+    ALL_DIRTY           = BLEND_DIRTY |
+                          FRAMEBUFFER_DIRTY |
+-                         DEPTH_STENCIL_DIRTY
++                         DEPTH_STENCIL_DIRTY |
++                         PAINT_DIRTY
+ };
+ 
+ struct vg_context
+@@ -129,12 +131,21 @@
+    struct blit_state *blit;
+ };
+ 
++
++/**
++ *  Base class for VG objects like paths, images, fonts.
++ */
+ struct vg_object {
+    enum vg_object_type type;
++   VGHandle handle;
+    struct vg_context *ctx;
+ };
++
++
+ void vg_init_object(struct vg_object *obj, struct vg_context *ctx, enum vg_object_type type);
+-VGboolean vg_object_is_valid(void *ptr, enum vg_object_type type);
++void vg_free_object(struct vg_object *obj);
++
++VGboolean vg_object_is_valid(VGHandle object, enum vg_object_type type);
+ 
+ struct vg_context *vg_create_context(struct pipe_context *pipe,
+                                      const void *visual,
+@@ -145,7 +156,7 @@
+ 
+ VGboolean vg_context_is_object_valid(struct vg_context *ctx,
+                                      enum vg_object_type type,
+-                                     void *ptr);
++                                     VGHandle object);
+ void vg_context_add_object(struct vg_context *ctx,
+                            enum vg_object_type type,
+                            void *ptr);
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/vg_manager.c ./mesa/src/gallium/state_trackers/vega/vg_manager.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/vg_manager.c	2011-01-02 23:58:35.000000000 +0100
++++ ./mesa/src/gallium/state_trackers/vega/vg_manager.c	2011-05-29 21:41:01.000000000 +0200
+@@ -33,15 +33,14 @@
+ #include "pipe/p_screen.h"
+ #include "util/u_memory.h"
+ #include "util/u_inlines.h"
+-#include "util/u_sampler.h"
+ #include "util/u_box.h"
+ #include "util/u_surface.h"
+ 
+ #include "vg_api.h"
+ #include "vg_manager.h"
+ #include "vg_context.h"
+-#include "image.h"
+ #include "api.h"
++#include "handle.h"
+ 
+ static boolean
+ vg_context_update_color_rb(struct vg_context *ctx, struct pipe_resource *pt)
+@@ -174,6 +173,9 @@
+    if (attribs->major > 1 || (attribs->major == 1 && attribs->minor > 0))
+       return NULL;
+ 
++   /* for VGHandle / pointer lookups */
++   init_handles();
++
+    pipe = smapi->screen->context_create(smapi->screen, NULL);
+    if (!pipe)
+       return NULL;
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/vgu.c ./mesa/src/gallium/state_trackers/vega/vgu.c
 --- /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega/vgu.c	2010-02-05 01:10:40.000000000 +0100
-+++ ./mesa/src/gallium/state_trackers/vega/vgu.c	2011-05-29 20:11:36.000000000 +0200
++++ ./mesa/src/gallium/state_trackers/vega/vgu.c	2011-05-29 21:41:01.000000000 +0200
 @@ -29,6 +29,7 @@
  
  #include "matrix.h"
@@ -808,9 +4220,18 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/state_trackers/vega
  
  static void vgu_append_float_coords(VGPath path,
                                      const VGubyte *cmds,
-diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/targets/egl/egl.c ./mesa/src/gallium/targets/egl/egl.c
+@@ -54,7 +49,7 @@
+                                     VGint num_coords)
+ {
+    VGubyte common_data[40 * sizeof(VGfloat)];
+-   struct path *p = (struct path *)path;
++   struct path *p = handle_to_path(path);
+ 
+    vg_float_to_datatype(path_datatype(p), common_data, coords, num_coords);
+    vgAppendPathData(path, num_cmds, cmds, common_data);
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/targets/egl/egl.c ./mesa/src/gallium/targets/egl/egl.c
 --- /data/deadwood/source/Mesa-7.10-staging/src/gallium/targets/egl/egl.c	2011-01-02 23:58:35.000000000 +0100
-+++ ./mesa/src/gallium/targets/egl/egl.c	2011-05-29 20:11:36.000000000 +0200
++++ ./mesa/src/gallium/targets/egl/egl.c	2011-05-29 21:41:01.000000000 +0200
 @@ -68,6 +68,7 @@
     return t;
  }
@@ -910,9 +4331,9 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/targets/egl/egl.c .
  
     return &egl_g3d_loader;
  }
-diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/targets/egl/st_GL.c ./mesa/src/gallium/targets/egl/st_GL.c
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/targets/egl/st_GL.c ./mesa/src/gallium/targets/egl/st_GL.c
 --- /data/deadwood/source/Mesa-7.10-staging/src/gallium/targets/egl/st_GL.c	2010-10-19 19:58:29.000000000 +0200
-+++ ./mesa/src/gallium/targets/egl/st_GL.c	2011-05-29 20:11:36.000000000 +0200
++++ ./mesa/src/gallium/targets/egl/st_GL.c	2011-05-29 21:41:01.000000000 +0200
 @@ -1,8 +1,30 @@
 -#include "state_tracker/st_gl_api.h"
 +#include <proto/exec.h>
@@ -948,9 +4369,9 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/targets/egl/st_GL.c
 +}
 +
 +ADD2EXPUNGELIB(CloseMesa, 5)
-diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/targets/egl/st_OpenVG.c ./mesa/src/gallium/targets/egl/st_OpenVG.c
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/gallium/targets/egl/st_OpenVG.c ./mesa/src/gallium/targets/egl/st_OpenVG.c
 --- /data/deadwood/source/Mesa-7.10-staging/src/gallium/targets/egl/st_OpenVG.c	2010-10-19 19:58:29.000000000 +0200
-+++ ./mesa/src/gallium/targets/egl/st_OpenVG.c	2011-05-29 20:11:36.000000000 +0200
++++ ./mesa/src/gallium/targets/egl/st_OpenVG.c	2011-05-29 21:41:01.000000000 +0200
 @@ -1,8 +1,26 @@
 -#include "vg_api.h"
 +#include <proto/exec.h>
@@ -982,9 +4403,33 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/gallium/targets/egl/st_Open
 +}
 +
 +ADD2EXPUNGELIB(CloseVega, 5)
-diff -ur /data/deadwood/source/Mesa-7.10-staging/src/glsl/ir.h ./mesa/src/glsl/ir.h
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/glsl/ast_function.cpp ./mesa/src/glsl/ast_function.cpp
+--- /data/deadwood/source/Mesa-7.10-staging/src/glsl/ast_function.cpp	2010-12-16 00:02:44.000000000 +0100
++++ ./mesa/src/glsl/ast_function.cpp	2011-08-31 08:40:42.000000000 +0200
+@@ -199,7 +199,7 @@
+ 
+       const char *prefix = "candidates are: ";
+ 
+-      for (int i = -1; i < state->num_builtins_to_link; i++) {
++      for (int i = -1; i < (int)state->num_builtins_to_link; i++) {
+ 	 glsl_symbol_table *syms = i >= 0 ? state->builtins_to_link[i]->symbols
+ 					  : state->symbols;
+ 	 f = syms->get_function(name);
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/glsl/ir_function.cpp ./mesa/src/glsl/ir_function.cpp
+--- /data/deadwood/source/Mesa-7.10-staging/src/glsl/ir_function.cpp	2010-12-14 22:43:14.000000000 +0100
++++ ./mesa/src/glsl/ir_function.cpp	2011-08-31 08:51:50.000000000 +0200
+@@ -111,7 +111,7 @@
+        * but the actual parameter can be coerced to the type of the declared
+        * parameter, the match score is one.
+        */
+-      int score;
++      int score = -1;
+       switch ((enum ir_variable_mode)(param->mode)) {
+       case ir_var_auto:
+       case ir_var_uniform:
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/glsl/ir.h ./mesa/src/glsl/ir.h
 --- /data/deadwood/source/Mesa-7.10-staging/src/glsl/ir.h	2011-01-02 23:58:35.000000000 +0100
-+++ ./mesa/src/glsl/ir.h	2011-05-29 20:11:36.000000000 +0200
++++ ./mesa/src/glsl/ir.h	2011-05-29 21:41:01.000000000 +0200
 @@ -44,6 +44,14 @@
   * @{
   */
@@ -1000,9 +4445,9 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/glsl/ir.h ./mesa/src/glsl/i
  /**
   * Class tags
   *
-diff -ur /data/deadwood/source/Mesa-7.10-staging/src/glsl/s_expression.cpp ./mesa/src/glsl/s_expression.cpp
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/glsl/s_expression.cpp ./mesa/src/glsl/s_expression.cpp
 --- /data/deadwood/source/Mesa-7.10-staging/src/glsl/s_expression.cpp	2011-01-04 01:45:51.000000000 +0100
-+++ ./mesa/src/glsl/s_expression.cpp	2011-05-29 20:11:36.000000000 +0200
++++ ./mesa/src/glsl/s_expression.cpp	2011-05-29 21:41:01.000000000 +0200
 @@ -28,6 +28,11 @@
  #include <assert.h>
  #include "s_expression.h"
@@ -1015,9 +4460,9 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/glsl/s_expression.cpp ./mes
  s_symbol::s_symbol(const char *tmp, size_t n)
  {
     this->str = talloc_strndup (this, tmp, n);
-diff -ur /data/deadwood/source/Mesa-7.10-staging/src/glu/sgi/include/gluos.h ./mesa/src/glu/sgi/include/gluos.h
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/glu/sgi/include/gluos.h ./mesa/src/glu/sgi/include/gluos.h
 --- /data/deadwood/source/Mesa-7.10-staging/src/glu/sgi/include/gluos.h	2008-07-21 17:10:11.000000000 +0200
-+++ ./mesa/src/glu/sgi/include/gluos.h	2011-05-29 20:11:36.000000000 +0200
++++ ./mesa/src/glu/sgi/include/gluos.h	2011-05-29 21:41:01.000000000 +0200
 @@ -2,6 +2,13 @@
  ** gluos.h - operating system dependencies for GLU
  **
@@ -1032,9 +4477,57 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/glu/sgi/include/gluos.h ./m
  #ifdef __VMS
  #ifdef __cplusplus
  #pragma message disable nocordel
-diff -ur /data/deadwood/source/Mesa-7.10-staging/src/mapi/glapi/gen/gl_API.xml ./mesa/src/mapi/glapi/gen/gl_API.xml
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/glu/sgi/libutil/mipmap.c ./mesa/src/glu/sgi/libutil/mipmap.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/glu/sgi/libutil/mipmap.c	2010-10-05 18:56:51.000000000 +0200
++++ ./mesa/src/glu/sgi/libutil/mipmap.c	2011-08-31 08:53:54.000000000 +0200
+@@ -4886,7 +4886,7 @@
+     GLint group_size;
+     GLint elements_per_line;
+     const GLubyte *start;
+-    const GLubyte *iter;
++    const GLubyte *iter = NULL;
+     GLushort *iter2;
+     GLint i, j, k;
+     GLint myswap_bytes;
+@@ -5149,7 +5149,7 @@
+     GLint group_size;
+     GLint elements_per_line;
+     GLubyte *start;
+-    GLubyte *iter;
++    GLubyte *iter = NULL;
+     const GLushort *iter2;
+     GLint i, j, k;
+     GLint myswap_bytes;
+@@ -6034,7 +6034,7 @@
+     int i,j,k,xindex;
+ 
+     const char *temp, *temp0;
+-    int outindex;
++    int outindex = 0;
+ 
+     int lowx_int, highx_int, lowy_int, highy_int;
+     float x_percent, y_percent;
+@@ -6695,7 +6695,7 @@
+    int elementsPerLine;
+    int rowsPerImage;
+    int imageSize;
+-   const GLubyte *start, *rowStart, *iter;
++   const GLubyte *start, *rowStart, *iter = NULL;
+    GLushort *iter2;
+    int ww, hh, dd, k;
+ 
+@@ -7057,7 +7057,7 @@
+    int groupSize;
+    int rowSize;
+    int padding;
+-   GLubyte *start, *rowStart, *iter;
++   GLubyte *start, *rowStart, *iter = NULL;
+    int elementsPerLine;
+    const GLushort *iter2;
+    int ii, jj, dd, k;
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/mapi/glapi/gen/gl_API.xml ./mesa/src/mapi/glapi/gen/gl_API.xml
 --- /data/deadwood/source/Mesa-7.10-staging/src/mapi/glapi/gen/gl_API.xml	2010-12-14 22:43:14.000000000 +0100
-+++ ./mesa/src/mapi/glapi/gen/gl_API.xml	2011-07-02 17:16:03.000000000 +0200
++++ ./mesa/src/mapi/glapi/gen/gl_API.xml	2011-07-16 15:33:56.000000000 +0200
 @@ -12309,7 +12309,7 @@
      <function name="TextureRangeAPPLE" offset="assign" static_dispatch="false">
          <param name="target" type="GLenum"/>
@@ -1044,9 +4537,9 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/mapi/glapi/gen/gl_API.xml .
      </function>
      <function name="GetTexParameterPointervAPPLE" offset="assign" static_dispatch="false">
          <param name="target" type="GLenum"/>
-diff -ur /data/deadwood/source/Mesa-7.10-staging/src/mapi/glapi/gen/gl_XML.py ./mesa/src/mapi/glapi/gen/gl_XML.py
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/mapi/glapi/gen/gl_XML.py ./mesa/src/mapi/glapi/gen/gl_XML.py
 --- /data/deadwood/source/Mesa-7.10-staging/src/mapi/glapi/gen/gl_XML.py	2010-10-05 18:56:51.000000000 +0200
-+++ ./mesa/src/mapi/glapi/gen/gl_XML.py	2011-07-02 17:16:03.000000000 +0200
++++ ./mesa/src/mapi/glapi/gen/gl_XML.py	2011-07-16 15:33:56.000000000 +0200
 @@ -629,8 +629,9 @@
  		name = element.nsProp( "name", None )
  		alias = element.nsProp( "alias", None )
@@ -1059,9 +4552,9 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/mapi/glapi/gen/gl_XML.py ./
  
  		self.entry_points.append( name )
  		if alias:
-diff -ur /data/deadwood/source/Mesa-7.10-staging/src/mapi/glapi/gen/Makefile ./mesa/src/mapi/glapi/gen/Makefile
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/mapi/glapi/gen/Makefile ./mesa/src/mapi/glapi/gen/Makefile
 --- /data/deadwood/source/Mesa-7.10-staging/src/mapi/glapi/gen/Makefile	2010-12-14 22:43:14.000000000 +0100
-+++ ./mesa/src/mapi/glapi/gen/Makefile	2011-07-02 17:16:04.000000000 +0200
++++ ./mesa/src/mapi/glapi/gen/Makefile	2011-07-16 15:33:56.000000000 +0200
 @@ -5,7 +5,9 @@
  
  
@@ -1091,9 +4584,25 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/mapi/glapi/gen/Makefile ./m
  
  ######################################################################
  
-diff -ur /data/deadwood/source/Mesa-7.10-staging/src/mapi/glapi/glapi.h ./mesa/src/mapi/glapi/glapi.h
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/mapi/glapi/glapi_entrypoint.c ./mesa/src/mapi/glapi/glapi_entrypoint.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/mapi/glapi/glapi_entrypoint.c	2010-10-19 19:58:29.000000000 +0200
++++ ./mesa/src/mapi/glapi/glapi_entrypoint.c	2011-08-31 08:41:40.000000000 +0200
+@@ -309,10 +309,12 @@
+ 
+ #else /* USE_*_ASM */
+ 
++#if defined(PTHREADS) || defined(GLX_USE_TLS)
+ static void
+ init_glapi_relocs( void )
+ {
+ }
++#endif
+ 
+ 
+ _glapi_proc
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/mapi/glapi/glapi.h ./mesa/src/mapi/glapi/glapi.h
 --- /data/deadwood/source/Mesa-7.10-staging/src/mapi/glapi/glapi.h	2010-12-14 22:43:14.000000000 +0100
-+++ ./mesa/src/mapi/glapi/glapi.h	2011-05-29 20:11:36.000000000 +0200
++++ ./mesa/src/mapi/glapi/glapi.h	2011-05-29 21:41:01.000000000 +0200
 @@ -97,6 +97,17 @@
  # define GET_DISPATCH() _glapi_tls_Dispatch
  # define GET_CURRENT_CONTEXT(C)  struct gl_context *C = (struct gl_context *) _glapi_tls_Context
@@ -1112,21 +4621,9 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/mapi/glapi/glapi.h ./mesa/s
  #else
  
  _GLAPI_EXPORT extern struct _glapi_table *_glapi_Dispatch;
-diff -ur /data/deadwood/source/Mesa-7.10-staging/src/mapi/glapi/glapitable.h ./mesa/src/mapi/glapi/glapitable.h
---- /data/deadwood/source/Mesa-7.10-staging/src/mapi/glapi/glapitable.h	2010-12-14 22:43:14.000000000 +0100
-+++ ./mesa/src/mapi/glapi/glapitable.h	2011-07-02 17:16:04.000000000 +0200
-@@ -907,7 +907,7 @@
-    void (GLAPIENTRYP TransformFeedbackVaryingsEXT)(GLuint program, GLsizei count, const char ** varyings, GLenum bufferMode); /* 864 */
-    void (GLAPIENTRYP ProvokingVertexEXT)(GLenum mode); /* 865 */
-    void (GLAPIENTRYP GetTexParameterPointervAPPLE)(GLenum target, GLenum pname, GLvoid ** params); /* 866 */
--   void (GLAPIENTRYP TextureRangeAPPLE)(GLenum target, GLsizei length, GLvoid * pointer); /* 867 */
-+   void (GLAPIENTRYP TextureRangeAPPLE)(GLenum target, GLsizei length, const GLvoid * pointer); /* 867 */
-    void (GLAPIENTRYP GetObjectParameterivAPPLE)(GLenum objectType, GLuint name, GLenum pname, GLint * value); /* 868 */
-    GLenum (GLAPIENTRYP ObjectPurgeableAPPLE)(GLenum objectType, GLuint name, GLenum option); /* 869 */
-    GLenum (GLAPIENTRYP ObjectUnpurgeableAPPLE)(GLenum objectType, GLuint name, GLenum option); /* 870 */
-diff -ur /data/deadwood/source/Mesa-7.10-staging/src/mapi/mapi/u_current.c ./mesa/src/mapi/mapi/u_current.c
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/mapi/mapi/u_current.c ./mesa/src/mapi/mapi/u_current.c
 --- /data/deadwood/source/Mesa-7.10-staging/src/mapi/mapi/u_current.c	2011-01-02 23:58:35.000000000 +0100
-+++ ./mesa/src/mapi/mapi/u_current.c	2011-05-29 20:11:36.000000000 +0200
++++ ./mesa/src/mapi/mapi/u_current.c	2011-05-29 21:41:01.000000000 +0200
 @@ -111,9 +111,17 @@
  
  #else
@@ -1181,9 +4678,9 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/mapi/mapi/u_current.c ./mes
  #else
     return u_current_table;
  #endif
-diff -ur /data/deadwood/source/Mesa-7.10-staging/src/mapi/mapi/u_current.h ./mesa/src/mapi/mapi/u_current.h
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/mapi/mapi/u_current.h ./mesa/src/mapi/mapi/u_current.h
 --- /data/deadwood/source/Mesa-7.10-staging/src/mapi/mapi/u_current.h	2011-01-02 23:58:35.000000000 +0100
-+++ ./mesa/src/mapi/mapi/u_current.h	2011-05-29 20:11:36.000000000 +0200
++++ ./mesa/src/mapi/mapi/u_current.h	2011-05-29 21:41:01.000000000 +0200
 @@ -39,6 +39,8 @@
  extern const struct mapi_table *u_current_table;
  extern const void *u_current_user;
@@ -1211,9 +4708,9 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/mapi/mapi/u_current.h ./mes
  #else
     return likely(u_current_user) ? u_current_user : u_current_get_user_internal();
  #endif
-diff -ur /data/deadwood/source/Mesa-7.10-staging/src/mapi/mapi/u_thread.c ./mesa/src/mapi/mapi/u_thread.c
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/mapi/mapi/u_thread.c ./mesa/src/mapi/mapi/u_thread.c
 --- /data/deadwood/source/Mesa-7.10-staging/src/mapi/mapi/u_thread.c	2011-01-02 23:58:35.000000000 +0100
-+++ ./mesa/src/mapi/mapi/u_thread.c	2011-05-29 20:11:36.000000000 +0200
++++ ./mesa/src/mapi/mapi/u_thread.c	2011-05-29 21:41:01.000000000 +0200
 @@ -222,7 +222,7 @@
   */
  
@@ -1223,9 +4720,9 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/mapi/mapi/u_thread.c ./mesa
  {
     return 0;
  }
-diff -ur /data/deadwood/source/Mesa-7.10-staging/src/mesa/main/compiler.h ./mesa/src/mesa/main/compiler.h
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/mesa/main/compiler.h ./mesa/src/mesa/main/compiler.h
 --- /data/deadwood/source/Mesa-7.10-staging/src/mesa/main/compiler.h	2010-12-16 00:02:44.000000000 +0100
-+++ ./mesa/src/mesa/main/compiler.h	2011-05-29 20:11:36.000000000 +0200
++++ ./mesa/src/mesa/main/compiler.h	2011-05-29 21:41:01.000000000 +0200
 @@ -251,6 +251,8 @@
  #elif defined(__APPLE__)
  #include <CoreFoundation/CFByteOrder.h>
@@ -1245,9 +4742,9 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/mesa/main/compiler.h ./mesa
  #if !defined(_WIN32_WCE)
  #if defined(BUILD_FOR_SNAP) && defined(CHECKED)
  #  define ASSERT(X)   _CHECK(X) 
-diff -ur /data/deadwood/source/Mesa-7.10-staging/src/mesa/main/context.c ./mesa/src/mesa/main/context.c
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/mesa/main/context.c ./mesa/src/mesa/main/context.c
 --- /data/deadwood/source/Mesa-7.10-staging/src/mesa/main/context.c	2010-12-16 00:02:44.000000000 +0100
-+++ ./mesa/src/mesa/main/context.c	2011-05-29 20:11:36.000000000 +0200
++++ ./mesa/src/mesa/main/context.c	2011-05-29 21:41:01.000000000 +0200
 @@ -438,7 +438,7 @@
     /* Hopefully atexit() is widely available.  If not, we may need some
      * #ifdef tests here.
@@ -1257,21 +4754,62 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/mesa/main/context.c ./mesa/
  
     dummy_enum_func();
  }
-diff -ur /data/deadwood/source/Mesa-7.10-staging/src/mesa/main/glapidispatch.h ./mesa/src/mesa/main/glapidispatch.h
---- /data/deadwood/source/Mesa-7.10-staging/src/mesa/main/glapidispatch.h	2010-12-14 22:43:15.000000000 +0100
-+++ ./mesa/src/mesa/main/glapidispatch.h	2011-07-02 17:16:04.000000000 +0200
-@@ -4502,7 +4502,7 @@
- #define CALL_GetTexParameterPointervAPPLE(disp, parameters) CALL_by_offset(disp, (void (GLAPIENTRYP)(GLenum, GLenum, GLvoid **)), _gloffset_GetTexParameterPointervAPPLE, parameters)
- #define GET_GetTexParameterPointervAPPLE(disp) GET_by_offset(disp, _gloffset_GetTexParameterPointervAPPLE)
- #define SET_GetTexParameterPointervAPPLE(disp, fn) SET_by_offset(disp, _gloffset_GetTexParameterPointervAPPLE, fn)
--#define CALL_TextureRangeAPPLE(disp, parameters) CALL_by_offset(disp, (void (GLAPIENTRYP)(GLenum, GLsizei, GLvoid *)), _gloffset_TextureRangeAPPLE, parameters)
-+#define CALL_TextureRangeAPPLE(disp, parameters) CALL_by_offset(disp, (void (GLAPIENTRYP)(GLenum, GLsizei, const GLvoid *)), _gloffset_TextureRangeAPPLE, parameters)
- #define GET_TextureRangeAPPLE(disp) GET_by_offset(disp, _gloffset_TextureRangeAPPLE)
- #define SET_TextureRangeAPPLE(disp, fn) SET_by_offset(disp, _gloffset_TextureRangeAPPLE, fn)
- #define CALL_GetObjectParameterivAPPLE(disp, parameters) CALL_by_offset(disp, (void (GLAPIENTRYP)(GLenum, GLuint, GLenum, GLint *)), _gloffset_GetObjectParameterivAPPLE, parameters)
-diff -ur /data/deadwood/source/Mesa-7.10-staging/src/mesa/main/imports.c ./mesa/src/mesa/main/imports.c
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/mesa/main/dlist.c ./mesa/src/mesa/main/dlist.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/mesa/main/dlist.c	2010-12-14 22:43:15.000000000 +0100
++++ ./mesa/src/mesa/main/dlist.c	2011-08-31 09:11:26.000000000 +0200
+@@ -7079,6 +7079,7 @@
+             CALL_Clear(ctx->Exec, (n[1].bf));
+             break;
+          case OPCODE_CLEAR_BUFFER_IV:
++#if 0 /* unused */
+             {
+                GLint value[4];
+                value[0] = n[3].i;
+@@ -7087,8 +7088,10 @@
+                value[3] = n[6].i;
+                /*CALL_ClearBufferiv(ctx->Exec, (n[1].e, n[2].i, value));*/
+             }
++#endif
+             break;
+          case OPCODE_CLEAR_BUFFER_UIV:
++#if 0 /* unused */
+             {
+                GLuint value[4];
+                value[0] = n[3].ui;
+@@ -7097,8 +7100,10 @@
+                value[3] = n[6].ui;
+                /*CALL_ClearBufferiv(ctx->Exec, (n[1].e, n[2].i, value));*/
+             }
++#endif
+             break;
+          case OPCODE_CLEAR_BUFFER_FV:
++#if 0 /* unused */
+             {
+                GLfloat value[4];
+                value[0] = n[3].f;
+@@ -7107,6 +7112,7 @@
+                value[3] = n[6].f;
+                /*CALL_ClearBufferfv(ctx->Exec, (n[1].e, n[2].i, value));*/
+             }
++#endif
+             break;
+          case OPCODE_CLEAR_BUFFER_FI:
+             /*CALL_ClearBufferfi(ctx->Exec, (n[1].e, n[2].i, n[3].f, n[4].i));*/
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/mesa/main/fbobject.c ./mesa/src/mesa/main/fbobject.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/mesa/main/fbobject.c	2010-12-16 00:02:44.000000000 +0100
++++ ./mesa/src/mesa/main/fbobject.c	2011-08-31 08:54:30.000000000 +0200
+@@ -1649,7 +1649,7 @@
+ {
+    struct gl_renderbuffer_attachment *att;
+    struct gl_texture_object *texObj = NULL;
+-   struct gl_framebuffer *fb;
++   struct gl_framebuffer *fb = NULL;
+    GLboolean error = GL_FALSE;
+ 
+    ASSERT_OUTSIDE_BEGIN_END(ctx);
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/mesa/main/imports.c ./mesa/src/mesa/main/imports.c
 --- /data/deadwood/source/Mesa-7.10-staging/src/mesa/main/imports.c	2010-12-16 00:02:44.000000000 +0100
-+++ ./mesa/src/mesa/main/imports.c	2011-05-29 20:11:36.000000000 +0200
++++ ./mesa/src/mesa/main/imports.c	2011-05-29 21:41:01.000000000 +0200
 @@ -458,7 +458,7 @@
  int
  _mesa_ffs(int32_t i)
@@ -1291,9 +4829,32 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/mesa/main/imports.c ./mesa/
  	((_GNUC__ == 3 && __GNUC_MINOR__ >= 4) || __GNUC__ >= 4)
     return __builtin_popcount(n);
  #else
-diff -ur /data/deadwood/source/Mesa-7.10-staging/src/mesa/main/querymatrix.c ./mesa/src/mesa/main/querymatrix.c
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/mesa/main/pack.c ./mesa/src/mesa/main/pack.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/mesa/main/pack.c	2010-12-16 00:02:44.000000000 +0100
++++ ./mesa/src/mesa/main/pack.c	2011-08-31 09:12:06.000000000 +0200
+@@ -2866,7 +2866,9 @@
+    GLint rSrc, gSrc, bSrc, aSrc;
+    GLint stride;
+    GLint rDst, bDst, gDst, aDst;
++#if 0 /* unused */
+    GLboolean intFormat;
++#endif
+ 
+    ASSERT(srcFormat == GL_RED ||
+           srcFormat == GL_GREEN ||
+@@ -2921,7 +2923,9 @@
+ 
+    stride = _mesa_components_in_format(srcFormat);
+ 
++#if 0 /* unused */
+    intFormat = _mesa_is_integer_format(srcFormat);
++#endif
+ 
+ #define PROCESS(SRC_INDEX, DST_INDEX, DEFAULT, TYPE, CONVERSION)	\
+    if ((SRC_INDEX) < 0) {						\
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/mesa/main/querymatrix.c ./mesa/src/mesa/main/querymatrix.c
 --- /data/deadwood/source/Mesa-7.10-staging/src/mesa/main/querymatrix.c	2010-12-14 22:43:15.000000000 +0100
-+++ ./mesa/src/mesa/main/querymatrix.c	2011-05-29 20:11:36.000000000 +0200
++++ ./mesa/src/mesa/main/querymatrix.c	2011-05-29 21:41:01.000000000 +0200
 @@ -76,6 +76,10 @@
       (defined(__sun) && defined(__GNUC__))
  
@@ -1305,3 +4866,239 @@ diff -ur /data/deadwood/source/Mesa-7.10-staging/src/mesa/main/querymatrix.c ./m
  
  #elif !defined(_XOPEN_SOURCE) || _XOPEN_SOURCE < 600
  
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/mesa/main/shaderapi.c ./mesa/src/mesa/main/shaderapi.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/mesa/main/shaderapi.c	2010-12-14 22:43:15.000000000 +0100
++++ ./mesa/src/mesa/main/shaderapi.c	2011-08-31 09:13:29.000000000 +0200
+@@ -359,7 +359,10 @@
+ {
+    struct gl_shader_program *shProg;
+    const GLint size = -1; /* unknown size */
+-   GLint i, oldIndex;
++   GLint i;
++#if 0 /* unused */
++   GLint oldIndex;
++#endif
+    GLenum datatype = GL_FLOAT_VEC4;
+ 
+    shProg = _mesa_lookup_shader_program_err(ctx, program,
+@@ -382,6 +385,7 @@
+       return;
+    }
+ 
++#if 0 /* unused */
+    if (shProg->LinkStatus) {
+       /* get current index/location for the attribute */
+       oldIndex = get_attrib_location(ctx, program, name);
+@@ -389,6 +393,7 @@
+    else {
+       oldIndex = -1;
+    }
++#endif
+ 
+    /* this will replace the current value if it's already in the list */
+    i = _mesa_add_attribute(shProg->Attributes, name, size, datatype, index);
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/mesa/main/texcompress_s3tc.c ./mesa/src/mesa/main/texcompress_s3tc.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/mesa/main/texcompress_s3tc.c	2010-12-14 22:43:15.000000000 +0100
++++ ./mesa/src/mesa/main/texcompress_s3tc.c	2011-08-31 09:16:03.000000000 +0200
+@@ -161,7 +161,9 @@
+ _mesa_texstore_rgb_dxt1(TEXSTORE_PARAMS)
+ {
+    const GLchan *pixels;
++#if 0 /* unused */
+    GLint srcRowStride;
++#endif
+    GLubyte *dst;
+    const GLint texWidth = dstRowStride * 4 / 8; /* a bit of a hack */
+    const GLchan *tempImage = NULL;
+@@ -188,13 +190,17 @@
+       if (!tempImage)
+          return GL_FALSE; /* out of memory */
+       pixels = tempImage;
++#if 0 /* unused */
+       srcRowStride = 3 * srcWidth;
++#endif
+       srcFormat = GL_RGB;
+    }
+    else {
+       pixels = (const GLchan *) srcAddr;
++#if 0 /* unused */
+       srcRowStride = _mesa_image_row_stride(srcPacking, srcWidth, srcFormat,
+                                             srcType) / sizeof(GLchan);
++#endif
+    }
+ 
+    dst = _mesa_compressed_image_address(dstXoffset, dstYoffset, 0,
+@@ -224,7 +230,9 @@
+ _mesa_texstore_rgba_dxt1(TEXSTORE_PARAMS)
+ {
+    const GLchan *pixels;
++#if 0 /* unused */
+    GLint srcRowStride;
++#endif
+    GLubyte *dst;
+    const GLint texWidth = dstRowStride * 4 / 8; /* a bit of a hack */
+    const GLchan *tempImage = NULL;
+@@ -251,13 +259,17 @@
+       if (!tempImage)
+          return GL_FALSE; /* out of memory */
+       pixels = tempImage;
++#if 0 /* unused */
+       srcRowStride = 4 * srcWidth;
++#endif
+       srcFormat = GL_RGBA;
+    }
+    else {
+       pixels = (const GLchan *) srcAddr;
++#if 0 /* unused */
+       srcRowStride = _mesa_image_row_stride(srcPacking, srcWidth, srcFormat,
+                                             srcType) / sizeof(GLchan);
++#endif
+    }
+ 
+    dst = _mesa_compressed_image_address(dstXoffset, dstYoffset, 0,
+@@ -286,7 +298,9 @@
+ _mesa_texstore_rgba_dxt3(TEXSTORE_PARAMS)
+ {
+    const GLchan *pixels;
++#if 0 /* unused */
+    GLint srcRowStride;
++#endif
+    GLubyte *dst;
+    const GLint texWidth = dstRowStride * 4 / 16; /* a bit of a hack */
+    const GLchan *tempImage = NULL;
+@@ -313,12 +327,16 @@
+       if (!tempImage)
+          return GL_FALSE; /* out of memory */
+       pixels = tempImage;
++#if 0 /* unused */
+       srcRowStride = 4 * srcWidth;
++#endif
+    }
+    else {
+       pixels = (const GLchan *) srcAddr;
++#if 0 /* unused */
+       srcRowStride = _mesa_image_row_stride(srcPacking, srcWidth, srcFormat,
+                                             srcType) / sizeof(GLchan);
++#endif
+    }
+ 
+    dst = _mesa_compressed_image_address(dstXoffset, dstYoffset, 0,
+@@ -347,7 +365,9 @@
+ _mesa_texstore_rgba_dxt5(TEXSTORE_PARAMS)
+ {
+    const GLchan *pixels;
++#if 0 /* unused */
+    GLint srcRowStride;
++#endif
+    GLubyte *dst;
+    const GLint texWidth = dstRowStride * 4 / 16; /* a bit of a hack */
+    const GLchan *tempImage = NULL;
+@@ -374,12 +394,16 @@
+       if (!tempImage)
+          return GL_FALSE; /* out of memory */
+       pixels = tempImage;
++#if 0 /* unused */
+       srcRowStride = 4 * srcWidth;
++#endif
+    }
+    else {
+       pixels = (const GLchan *) srcAddr;
++#if 0 /* unused */
+       srcRowStride = _mesa_image_row_stride(srcPacking, srcWidth, srcFormat,
+                                             srcType) / sizeof(GLchan);
++#endif
+    }
+ 
+    dst = _mesa_compressed_image_address(dstXoffset, dstYoffset, 0,
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/mesa/state_tracker/st_atom_pixeltransfer.c ./mesa/src/mesa/state_tracker/st_atom_pixeltransfer.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/mesa/state_tracker/st_atom_pixeltransfer.c	2010-12-16 00:02:44.000000000 +0100
++++ ./mesa/src/mesa/state_tracker/st_atom_pixeltransfer.c	2011-08-31 09:18:26.000000000 +0200
+@@ -195,9 +195,12 @@
+          { STATE_INTERNAL, STATE_PT_SCALE, 0, 0, 0 };
+       static const gl_state_index bias_state[STATE_LENGTH] =
+          { STATE_INTERNAL, STATE_PT_BIAS, 0, 0, 0 };
++#if 0 /* unused */
+       GLfloat scale[4], bias[4];
++#endif
+       GLint scale_p, bias_p;
+ 
++#if 0 /* unused */
+       scale[0] = ctx->Pixel.RedScale;
+       scale[1] = ctx->Pixel.GreenScale;
+       scale[2] = ctx->Pixel.BlueScale;
+@@ -206,6 +209,7 @@
+       bias[1] = ctx->Pixel.GreenBias;
+       bias[2] = ctx->Pixel.BlueBias;
+       bias[3] = ctx->Pixel.AlphaBias;
++#endif
+ 
+       scale_p = _mesa_add_state_reference(params, scale_state);
+       bias_p = _mesa_add_state_reference(params, bias_state);
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/mesa/state_tracker/st_cb_drawpixels.c ./mesa/src/mesa/state_tracker/st_cb_drawpixels.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/mesa/state_tracker/st_cb_drawpixels.c	2011-01-02 23:58:35.000000000 +0100
++++ ./mesa/src/mesa/state_tracker/st_cb_drawpixels.c	2011-08-31 09:18:52.000000000 +0200
+@@ -392,7 +392,9 @@
+    gl_format mformat;
+    struct pipe_resource *pt;
+    enum pipe_format pipeFormat;
++#if 0 /* unused */
+    GLuint cpp;
++#endif
+    GLenum baseFormat, intFormat;
+ 
+    baseFormat = base_format(format);
+@@ -404,7 +406,9 @@
+ 
+    pipeFormat = st_mesa_format_to_pipe_format(mformat);
+    assert(pipeFormat);
++#if 0 /* unused */
+    cpp = util_format_get_blocksize(pipeFormat);
++#endif
+ 
+    pixels = _mesa_map_pbo_source(ctx, unpack, pixels);
+    if (!pixels)
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.10-staging/src/mesa/state_tracker/st_program.c ./mesa/src/mesa/state_tracker/st_program.c
+--- /data/deadwood/source/Mesa-7.10-staging/src/mesa/state_tracker/st_program.c	2011-01-02 23:58:35.000000000 +0100
++++ ./mesa/src/mesa/state_tracker/st_program.c	2011-08-31 09:20:40.000000000 +0200
+@@ -291,7 +291,9 @@
+    GLuint inputMapping[FRAG_ATTRIB_MAX];
+    GLuint interpMode[PIPE_MAX_SHADER_INPUTS];  /* XXX size? */
+    GLuint attr;
++#if 0 /* unused */
+    enum pipe_error error;
++#endif
+    const GLbitfield inputsRead = stfp->Base.Base.InputsRead;
+    struct ureg_program *ureg;
+ 
+@@ -442,7 +444,9 @@
+       debug_printf("\n");
+    }
+ 
++#if 0 /* unused */
+    error = 
++#endif
+       st_translate_mesa_program(st->ctx,
+                                 TGSI_PROCESSOR_FRAGMENT,
+                                 ureg,
+@@ -476,7 +480,9 @@
+    GLuint inputMapping[GEOM_ATTRIB_MAX];
+    GLuint outputMapping[GEOM_RESULT_MAX];
+    struct pipe_context *pipe = st->pipe;
++#if 0 /* unused */
+    enum pipe_error error;
++#endif
+    GLuint attr;
+    const GLbitfield inputsRead = stgp->Base.Base.InputsRead;
+    GLuint vslot = 0;
+@@ -680,7 +686,10 @@
+    ureg_property_gs_output_prim(ureg, stgp->Base.OutputType);
+    ureg_property_gs_max_vertices(ureg, stgp->Base.VerticesOut);
+ 
+-   error  = st_translate_mesa_program(st->ctx,
++#if 0 /* unused */
++   error  = 
++#endif
++            st_translate_mesa_program(st->ctx,
+                                       TGSI_PROCESSOR_GEOMETRY,
+                                       ureg,
+                                       &stgp->Base.Base,
