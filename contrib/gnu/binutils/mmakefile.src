@@ -11,6 +11,6 @@ TARGET_CC := $(CROSSTOOLSDIR)/$(AROS_TARGET_CPU)-aros-gcc
 
 EXTRAOPTS := --with-sysroot=/Development --with-build-sysroot=$(AROS_DEVELOPMENT)
 
-%fetch_and_build_gnu_development package=binutils version=2.21.1a patch=yes \
-    srcdir=binutils-2.21.1 extraoptions=$(EXTRAOPTS)
+%fetch_and_build_gnu_development package=binutils version=2.21.1 patch=yes \
+    extraoptions=$(EXTRAOPTS)
 
