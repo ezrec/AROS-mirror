@@ -6,7 +6,7 @@ include $(TOP)/config/make.cfg
 
 EXE := CoW3D
 TARGETDIR := $(AROS_CONTRIB)/MultiMedia/Gfx/Wazp3D
-FILES := CoW3D-3
+FILES := CoW3D
 
 %build_prog mmake=contrib-wazp3d-cow3d progname=$(EXE) files=$(FILES) \
     targetdir=$(TARGETDIR) \

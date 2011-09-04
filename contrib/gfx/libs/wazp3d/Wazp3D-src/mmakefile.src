@@ -9,13 +9,13 @@ include $(TOP)/config/make.cfg
 USER_CFLAGS := -Wno-implicit-function-declaration
 
 
-FILES := Wazp3D50 soft3d_opengl
+FILES := Wazp3D soft3d_opengl
 
 %build_module mmake=contrib-wazp3d-lib modname=Warp3D modtype=library \
   files=$(FILES) uselibs="arossupport amiga rom m GL"
 
 
-FILES := Wazp3D-Prefs50
+FILES := Wazp3D-Prefs
 TARGETDIR := $(AROS_CONTRIB)/MultiMedia/Gfx/Wazp3D
 
 %build_prog mmake=contrib-wazp3d-prefs progname=Wazp3D-Prefs files=$(FILES) \

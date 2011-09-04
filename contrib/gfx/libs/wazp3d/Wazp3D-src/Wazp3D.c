@@ -26,7 +26,7 @@ struct Library *Soft3DBase=NULL;
 #else
 
 /* else soft3d functions are inside Wazp3D */
-#include "soft3d50.c"
+#include "soft3d.c"
 
 #endif
 /*==================================================================================*/
