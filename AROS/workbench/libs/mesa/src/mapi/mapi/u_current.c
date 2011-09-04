@@ -209,7 +209,7 @@ u_current_set_user(const void *ptr)
    u_tsd_set(&u_current_user_tsd, (void *) ptr);
    u_current_user = (ThreadSafe) ? NULL : (void *) ptr;
 #elif defined(__AROS__)
-   InsertIntoTLS(u_current_user, ptr);
+   InsertIntoTLS(u_current_user, (APTR)ptr);
 #else
    u_current_user = (void *) ptr;
 #endif
