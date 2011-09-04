@@ -50,7 +50,6 @@ struct _egl_global _eglGlobal =
 };
 
 
-#if !defined(_EGL_OS_AROS)
 static void
 _eglAtExit(void)
 {
@@ -79,4 +78,3 @@ _eglAddAtExitCall(void (*func)(void))
       _eglUnlockMutex(_eglGlobal.Mutex);
    }
 }
-#endif

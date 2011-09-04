@@ -113,6 +113,12 @@ static INLINE EGLBoolean _eglInitTSD(void (*dtor)(_EGLThreadInfo *))
 #include "aros/tls.h"
 
 static struct TaskLocalStorage * tls = NULL;
+static void (*_egl_FreeTSD)(_EGLThreadInfo *);
+
+static INLINE void _eglFiniTSD(void)
+{
+    DestroyTLS(tls);
+}
 
 static INLINE void _eglSetTSD(const _EGLThreadInfo *t)
 {
@@ -126,16 +132,30 @@ static INLINE _EGLThreadInfo *_eglGetTSD(void)
 
 static INLINE EGLBoolean _eglInitTSD(void (*dtor)(_EGLThreadInfo *))
 {
-    /* FIXME: What to do with dtor? */
-    /* FIXME: atexit -> clear from TLS */
     if (!tls)
+    {
         tls = CreateTLS();
+        _egl_FreeTSD = dtor;
+        _eglAddAtExitCall(_eglFiniTSD);
+    }
 
     if (tls)
         return EGL_TRUE;
     else
         return EGL_FALSE;
 }
+
+#include <aros/symbolsets.h>
+
+static VOID _egl_FreeTSD_fn()
+{
+    _EGLThreadInfo *t = _eglGetTSD();
+
+    if (t && _egl_FreeTSD)
+        _egl_FreeTSD((void *) t);
+    ClearFromTLS(tls);
+}
+ADD2CLOSELIB(_egl_FreeTSD_fn, 10)
 
 #else /* PTHREADS */
 static const _EGLThreadInfo *_egl_TSD;
