@@ -6,3 +6,4 @@ glapitemp.h
 glprocs.h
 glapidispatch.h
 remap_helper.h
+glapi_mapi_tmp.h
