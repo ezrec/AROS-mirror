@@ -560,7 +560,7 @@ _mesa_inv_sqrtf(float x);
 extern void
 _mesa_init_sqrt_table(void);
 
-#ifdef __GNUC__
+#if defined(__GNUC__) && !defined(__AROS__)
 
 #ifdef __MINGW32__
 #define ffs __builtin_ffs

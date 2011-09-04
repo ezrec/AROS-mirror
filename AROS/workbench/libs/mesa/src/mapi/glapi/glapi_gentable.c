@@ -27,6 +27,7 @@
  * SOFTWARE.
  */
 
+#if !defined(__AROS__)
 
 #if defined(DEBUG) && !defined(_WIN32_WCE)
 #include <execinfo.h>
@@ -9142,4 +9143,5 @@ _glapi_create_table_from_handle(void *handle, const char *symbol_prefix) {
 
     return disp;
 }
+#endif
 

@@ -279,6 +279,12 @@ int fprintf (FILE * fh, const char * format, ...)
     return 0;
 }
 
+int vfprintf(FILE * restrict stream, const char * restrict format,
+	va_list arg)
+{
+    IMPLEMENT();
+    return 0;
+}
 
 double strtod (const char * str,char ** endptr)
 {

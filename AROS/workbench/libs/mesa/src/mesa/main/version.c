@@ -25,7 +25,9 @@
 #include "imports.h"
 #include "mtypes.h"
 #include "version.h"
+#ifdef MESA_GIT_SHA1
 #include "git_sha1.h"
+#endif
 
 
 

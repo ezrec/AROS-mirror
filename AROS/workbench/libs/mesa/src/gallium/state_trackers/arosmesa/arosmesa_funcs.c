@@ -167,7 +167,7 @@ static BOOL AROSMesaSelectColorFormat(enum pipe_format * colorFormat,
     {
         /* Try PIPE_FORMAT_B5G6R5_UNORM */
         if (screen->is_format_supported(screen, PIPE_FORMAT_B5G6R5_UNORM,
-            PIPE_TEXTURE_2D, 0, PIPE_BIND_RENDER_TARGET, 0))
+            PIPE_TEXTURE_2D, 0, PIPE_BIND_RENDER_TARGET))
         {
             *colorFormat = PIPE_FORMAT_B5G6R5_UNORM;
             return TRUE;
@@ -178,7 +178,7 @@ static BOOL AROSMesaSelectColorFormat(enum pipe_format * colorFormat,
     {
         /* Try PIPE_FORMAT_B8G8R8A8_UNORM */
         if (screen->is_format_supported(screen, PIPE_FORMAT_B8G8R8A8_UNORM,
-            PIPE_TEXTURE_2D, 0, PIPE_BIND_RENDER_TARGET, 0))
+            PIPE_TEXTURE_2D, 0, PIPE_BIND_RENDER_TARGET))
         {
             *colorFormat = PIPE_FORMAT_B8G8R8A8_UNORM;
             return TRUE;
@@ -199,7 +199,7 @@ static BOOL AROSMesaSelectDepthStencilFormat(enum pipe_format * depthStencilForm
     
     /* Try PIPE_FORMAT_S8_USCALED_Z24_UNORM */
     if(!noStencil && (screen->is_format_supported(screen, PIPE_FORMAT_S8_USCALED_Z24_UNORM,
-            PIPE_TEXTURE_2D, 0, PIPE_BIND_DEPTH_STENCIL, 0)))
+            PIPE_TEXTURE_2D, 0, PIPE_BIND_DEPTH_STENCIL)))
     {
         *depthStencilFormat  = PIPE_FORMAT_S8_USCALED_Z24_UNORM;
         return TRUE;
@@ -207,7 +207,7 @@ static BOOL AROSMesaSelectDepthStencilFormat(enum pipe_format * depthStencilForm
     
     /* Try PIPE_FORMAT_X8Z24_UNORM */
     if(noStencil && (screen->is_format_supported(screen, PIPE_FORMAT_X8Z24_UNORM,
-            PIPE_TEXTURE_2D, 0, PIPE_BIND_DEPTH_STENCIL, 0)))
+            PIPE_TEXTURE_2D, 0, PIPE_BIND_DEPTH_STENCIL)))
     {
         *depthStencilFormat  = PIPE_FORMAT_X8Z24_UNORM;
         return TRUE;
@@ -215,7 +215,7 @@ static BOOL AROSMesaSelectDepthStencilFormat(enum pipe_format * depthStencilForm
 
     /* Try PIPE_FORMAT_Z24X8_UNORM */
     if(noStencil && (screen->is_format_supported(screen, PIPE_FORMAT_Z24X8_UNORM,
-            PIPE_TEXTURE_2D, 0, PIPE_BIND_DEPTH_STENCIL, 0)))
+            PIPE_TEXTURE_2D, 0, PIPE_BIND_DEPTH_STENCIL)))
     {
         *depthStencilFormat  = PIPE_FORMAT_Z24X8_UNORM;
         return TRUE;
@@ -223,7 +223,7 @@ static BOOL AROSMesaSelectDepthStencilFormat(enum pipe_format * depthStencilForm
     
     /* Try PIPE_FORMAT_Z16_UNORM */
     if(screen->is_format_supported(screen, PIPE_FORMAT_Z16_UNORM,
-            PIPE_TEXTURE_2D, 0, PIPE_BIND_DEPTH_STENCIL, 0))
+            PIPE_TEXTURE_2D, 0, PIPE_BIND_DEPTH_STENCIL))
     {
         *depthStencilFormat = PIPE_FORMAT_Z16_UNORM;
         return TRUE;

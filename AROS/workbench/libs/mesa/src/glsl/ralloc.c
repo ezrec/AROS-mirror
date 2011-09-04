@@ -28,6 +28,10 @@
 #include <string.h>
 #include <stdint.h>
 
+#if defined(__AROS__)
+#define SIZE_MAX INT32_MAX
+#endif
+
 #include "ralloc.h"
 
 #ifdef __GNUC__
@@ -283,7 +287,7 @@ ralloc_autofree_context(void)
 {
    if (unlikely(autofree_context == NULL)) {
       autofree_context = ralloc_context(NULL);
-      atexit(autofree);
+//TODO: FIXME      atexit(autofree);
    }
    return autofree_context;
 }
