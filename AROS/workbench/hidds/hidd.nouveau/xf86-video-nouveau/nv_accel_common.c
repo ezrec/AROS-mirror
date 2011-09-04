@@ -21,16 +21,9 @@
  */
 
 #include "nv_include.h"
-#if !defined(__AROS__)
 #include "nv04_pushbuf.h"
-#else
-
+#if defined(__AROS__)
 #include <aros/debug.h>
-
-/* Some overriding defines for AROS */
-#define NOUVEAU_CREATE_PIXMAP_ZETA      0x10000000
-#define NOUVEAU_CREATE_PIXMAP_TILED     0x20000000
-#define NOUVEAU_CREATE_PIXMAP_SCANOUT   0x40000000
 #endif
 
 #if !defined(__AROS__)

@@ -21,8 +21,8 @@
  */
 
 #include "nv_include.h"
-#if !defined(__AROS__)
 #include "nv04_pushbuf.h"
+#if !defined(__AROS__)
 #include "exa.h"
 
 static inline Bool

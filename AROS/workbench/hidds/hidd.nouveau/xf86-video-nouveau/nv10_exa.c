@@ -28,9 +28,7 @@
 #endif
 
 #include "nv_include.h"
-#if !defined(__AROS__)
 #include "nv04_pushbuf.h"
-#endif
 
 /* Texture/Render target formats. */
 static struct pict_format {

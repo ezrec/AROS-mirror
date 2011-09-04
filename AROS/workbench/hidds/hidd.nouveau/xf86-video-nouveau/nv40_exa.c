@@ -22,11 +22,9 @@
 
 #include "nv_include.h"
 #include "nv30_shaders.h"
-#if !defined(__AROS__)
 #include "nv04_pushbuf.h"
-#else
+#if defined(__AROS__)
 #include <aros/debug.h>
-
 #define NV40EXA_STATE
 #endif
 
