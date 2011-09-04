@@ -70,7 +70,6 @@ BOOL CallFlushFrame;			/* then DoUpdate inside bitmap*/
 BOOL CallSetDrawRegion;
 BOOL CallClearZBuffer;
 BOOL CallSetBlending;
-BOOL NeedNewZbuffer;
 struct point3D P[MAXPRIM];
 ULONG primitive;
 ULONG Pnb;
@@ -87,7 +86,7 @@ WORD windowX,windowY;
 struct RastPort rastport;				/*  include current bitmap  */
 struct TextFont *font;
 ULONG ModeID;
-UBYTE *Image8;							/*  bitmap memory  */
+UBYTE *bmdata;							/*  bitmap memory  */
 ULONG  bmformat;							/*  bitmap format  */
 ULONG  yoffset;							/*  bitmap offset  */
 
@@ -577,7 +576,7 @@ void SetBitmap(struct WAZP3D_context *WC)
 {
 /* calling SOFT3D in an hook avoid GCC's inlining that cause error "fixed or forbidden register was spilled" */
 
-	SOFT3D_SetBitmap(WC->SC,WC->rastport.BitMap,WC->Image8,WC->bmformat,0,WC->yoffset,WC->large,WC->high);
+	SOFT3D_SetBitmap(WC->SC,WC->rastport.BitMap,WC->bmdata,WC->bmformat,0,WC->yoffset,WC->large,WC->high);
 	SOFT3D_SetClipping(WC->SC,WC->Xmin,WC->Xmax,WC->Ymin,WC->Ymax);
 }
 /*=============================================================*/
@@ -627,7 +626,7 @@ SREM(TEXTURE_NOT_NULL)
 	}
 
 	WC->ZMode	= W3D_Z_ALWAYS-1;		/* default no z buffer = no test ==> always draw & dont update a zbuffer */
-	if(context->zbuffer!=NULL)
+	if(context->zbufferalloc)
 	if(StateON(W3D_ZBUFFER))
 		WC->ZMode   =8*(StateON(W3D_ZBUFFERUPDATE)) + (WC->ZCompareMode - 1); /* ZCompareMode is from 1 to 8 */
 
@@ -901,6 +900,24 @@ WORD n;
 #define PrintTexture(x) ;
 #endif
 /*==================================================================================*/
+ULONG SupportedFormats(void)
+{
+ULONG formats;
+
+	if(Wazp3D->Renderer.ON==0)		/* use Soft to Image */
+		formats=HIGHCOLORFORMATS;
+	if(Wazp3D->Renderer.ON==1)		/* use Soft to bitmap */
+		formats=ALLCOLORFORMATS; 	/* v46: now support 8/15/16/24/32 bits */
+	if(Wazp3D->Renderer.ON==2)		/* use Hard */
+		formats=W3D_FMT_B8G8R8A8;
+	if(Wazp3D->Renderer.ON==3)		/* use Hard(Overlay)*/
+		formats=ALLCOLORFORMATS;
+
+	if(Wazp3D->OnlyTrueColor.ON)
+		formats=TRUECOLORFORMATS;
+	return(formats);
+}
+/*==================================================================================*/
 BOOL WAZP3D_Init(void *exec)
 {
 struct button3D *B=(struct button3D *)&Wazp3D->HardwareLie;
@@ -1024,24 +1041,21 @@ WORD Bnb,n,x,large;
 	Libstrcpy(Wazp3D->HackTexs.name,"+Hack RGB/RGBA/ARGB texs");
 	Libstrcpy(Wazp3D->UseRatioAlpha.name,"+Use RatioAlpha(20%)");
 	Libstrcpy(Wazp3D->UseAlphaMinMax.name,"+Use AlphaMin&Max");
-	Libstrcpy(Wazp3D->DirectBitmap.name,"+Directly draw in Bitmap");
 	Libstrcpy(Wazp3D->OnlyTrueColor.name,"+Only TrueColor 24&32");
 	Libstrcpy(Wazp3D->SmoothTextures.name,"+Smooth Textures");
 	Libstrcpy(Wazp3D->DoMipMaps.name,"+Do MipMaps");
 #ifdef SOFT3DLIB
-
-	Libstrcpy(Wazp3D->Renderer.name,"+Renderer|soft|hard|hard(overlay)");
-
+	Libstrcpy(Wazp3D->Renderer.name,"+Renderer|Soft to Image|Soft to bitmap|Hard|Hard(overlay)");
 #else
 
 #ifdef __amigaos4__
-	Libstrcpy(Wazp3D->Renderer.name,"+Renderer|soft ppc only");
+	Libstrcpy(Wazp3D->Renderer.name,"+Renderer|SoftPPC to Image|SoftPPC to bitmap");
 #else
-	Libstrcpy(Wazp3D->Renderer.name,"+Renderer|soft 68k only");
+	Libstrcpy(Wazp3D->Renderer.name,"+Renderer|Soft68k to Image|Soft68k to bitmap");
 #endif
 
 #ifdef __AROS__
-	Libstrcpy(Wazp3D->Renderer.name,"+Renderer|soft|hard|hard(overlay)");
+	Libstrcpy(Wazp3D->Renderer.name,"+Renderer|Soft to Image|Soft to bitmap|Hard|Hard(overlay)");
 #endif
 
 #endif
@@ -1124,12 +1138,12 @@ WORD Bnb,n,x,large;
 	Wazp3D->UseMinUpdate.ON=TRUE;
 	Wazp3D->UseRatioAlpha.ON=TRUE;
 	Wazp3D->UseAlphaMinMax.ON=TRUE;
-	Wazp3D->DirectBitmap.ON=TRUE;
 	Wazp3D->UseStateTracker.ON=TRUE;
 	Wazp3D->UseDLL=FALSE;
 	Wazp3D->IndirectMode.ON=TRUE;		/* default = force to (faster) indirect mode */	
 
 /* default values for cycle-gadgets */
+	Wazp3D->Renderer.ON=1;		/* use Soft to bitmap */
 	Wazp3D->PolyMode.ON=1;
 	Wazp3D->PerspMode.ON=1;
 	Wazp3D->TexMode.ON=0;
@@ -1153,15 +1167,8 @@ WORD Bnb,n,x,large;
 	Libstrcpy(Wazp3D->DriverName,DRIVERNAME);
 	Wazp3D->driver.name	=Wazp3D->DriverName;
 	Wazp3D->driver.ChipID	=W3D_CHIP_UNKNOWN;
-	Wazp3D->driver.formats	=HIGHCOLORFORMATS;
+	Wazp3D->driver.formats	=SupportedFormats();
 	Wazp3D->driver.swdriver	=W3D_TRUE;
-
-	if(Wazp3D->DirectBitmap.ON)
-		Wazp3D->driver.formats=HIGHCOLORFORMATS | W3D_FMT_CLUT; /* v46: now support 8/15/16/24/32 bits */
-	else
-		Wazp3D->driver.formats=HIGHCOLORFORMATS;
-	if(Wazp3D->OnlyTrueColor.ON)
-		Wazp3D->driver.formats=TRUECOLORFORMATS;
 
 	if(Wazp3D->HardwareLie.ON)
 		{
@@ -1797,11 +1804,12 @@ SREM(DrawText)
 void DoUpdate(W3D_Context *context)
 {
 struct WAZP3D_context *WC=context->driver;
-UBYTE name[40];
+UBYTE name[256];
 ULONG *rgba32;
 ULONG MilliTime;
 
-	if(Wazp3D->Renderer.ON==0)	/* = use soft */
+REM(DoUpdate)
+	if(Wazp3D->Renderer.ON<2)	/* = use soft */
 	if(Wazp3D->UseColorHack.ON)
 		{
 		rgba32=(ULONG *)WC->BackRGBA;
@@ -1865,7 +1873,7 @@ W3D_Context	*context;
 struct WAZP3D_context *WC;
 ULONG tag,data;
 UWORD n;
-ULONG EnableMask,DisableMask,supportedfmt;
+ULONG EnableMask,DisableMask;
 ULONG AllStates=~0;
 ULONG UnsupportedStates=  W3D_ANTI_POINT | W3D_ANTI_LINE | W3D_ANTI_POLYGON | W3D_DITHERING | W3D_LOGICOP | W3D_STENCILBUFFER | W3D_ALPHATEST | W3D_SPECULAR | W3D_TEXMAPPING3D | W3D_CHROMATEST;
 ULONG	envsupmask=W3D_REPLACE | W3D_DECAL | W3D_MODULATE  | W3D_BLEND;	/* v40: full implementation */
@@ -1885,38 +1893,9 @@ struct Window *win;
 	UnsupportedStates= UnsupportedStates | W3D_MULTITEXTURE | W3D_FOG_COORD | W3D_LINE_STIPPLE | W3D_POLYGON_STIPPLE;
 #endif
 
-
-/*
-REM (verify if Libprintf works correctly)
-void *p1;
-void *p2;
-void *p3;
-p1=(void*)11111;
-p2=(void*)222222;
-p3=(void*)3333333;
-Libprintf("char _%c_%c_%c_\n",'a','b','c');
-Libprintf("int  %d %d %d\n",11,22,33);
-Libprintf("long %ld %ld %ld\n",11,22,33);
-Libprintf("int %d %d %d\n",1100,2200,3300);
-Libprintf("long %ld %ld %ld\n",1100,2200,3300);
-Libprintf("int %d %d %d\n",1100999,2200999,3300999);
-Libprintf("long %ld %ld %ld\n",1100999,2200999,3300999);
-Libprintf("string _%s_%s__%s_\n","aaa","bbbb","ccccc");
-Libprintf("floats %f %f %f\n",1.11,2.222,3.3333);
-Libprintf("pt int %d %d %d\n",p1,p2,p3);
-Libprintf("pt long %ld %ld %ld\n",p1,p2,p3);
-*/
-
 	WAZP3DFUNCTION(1);
 	VAR(error)
 	VAR(taglist)
-
-	if(Wazp3D->DirectBitmap.ON)
-		Wazp3D->driver.formats=HIGHCOLORFORMATS | W3D_FMT_CLUT; /* v46: now support 8/15/16/24/32 bits */
-	else
-		Wazp3D->driver.formats=HIGHCOLORFORMATS;
-	if(Wazp3D->OnlyTrueColor.ON)
-		Wazp3D->driver.formats=TRUECOLORFORMATS;
 
 	if(Wazp3D->HardwareLie.ON)
 		{
@@ -1943,8 +1922,6 @@ Libprintf("pt long %ld %ld %ld\n",p1,p2,p3);
 	else
 		EnableMask=AllStates & (~UnsupportedStates) ;
 
-	supportedfmt=Wazp3D->driver.formats;
-
 	WC->ModeID=INVALID_ID;
 
 	context->driver=WC;				 /* insert driver specific data here */
@@ -1956,7 +1933,6 @@ Libprintf("pt long %ld %ld %ld\n",p1,p2,p3);
 	context->stencilbuffer=NULL;		/* Pointer to the stencil buffer */
 	context->state=0;				 /* hardware state (see below) */
 	context->drawregion=NULL;		/* destination bitmap */
-	context->supportedfmt=supportedfmt;	/* bitmask with all supported dest fmt */
 	context->format=0;			 /* bitmap format (see below) */
 	context->yoffset=0;			 /* Y-Offset (for ScrollVPort-Multibuf.) */
 	context->bprow=0;				 /* bytes per row */
@@ -2154,6 +2130,9 @@ Libprintf("pt long %ld %ld %ld\n",p1,p2,p3);
 	SetDrawRegion(context,context->drawregion,context->yoffset,NULL);
 	if(WC->SC==NULL) 
 		{FREEPTR(WC); return(NULL);}
+
+/* If Aros cant do LockBitmapTags then we did a fallback to "soft to Image" so we need to set again context->supportedfmt now */
+	context->supportedfmt=SupportedFormats();
 
 VAR(context->width)
 VAR(context->height)
@@ -2421,12 +2400,7 @@ UBYTE sup='N';
 	VAR(destfmt)
 	VAR(query)
 
-	if(Wazp3D->DirectBitmap.ON)
-		Wazp3D->driver.formats=HIGHCOLORFORMATS | W3D_FMT_CLUT; /* v46: now support 8/15/16/24/32 bits */
-	else
-		Wazp3D->driver.formats=HIGHCOLORFORMATS;
-	if(Wazp3D->OnlyTrueColor.ON)
-		Wazp3D->driver.formats=TRUECOLORFORMATS;
+	Wazp3D->driver.formats=SupportedFormats();
 
 	if(Wazp3D->HardwareLie.ON)
 		{
@@ -2822,18 +2796,35 @@ W3D_Driver *driver;
 	bits			=GetCyberIDAttr(CYBRIDATTR_DEPTH ,ModeID);
 	bytesperpixel	=GetCyberIDAttr(CYBRIDATTR_BPPIX ,ModeID);
 
-	if(Wazp3D->DirectBitmap.ON)	/* v46: now support 8/15/16/24/32 bits */
+	if(Wazp3D->Renderer.ON==0)		/* use Soft to Image */
+	{
+	if(bits<15)
+		driver=NULL;
+	if(bytesperpixel<2)
+		driver=NULL;
+	}
+
+	if(Wazp3D->Renderer.ON==1)		/* use Soft to bitmap */
 	{
 	if(bits<8)
 		driver=NULL;
 	if(bytesperpixel<1)
 		driver=NULL;
 	}
-	else
+
+	if(Wazp3D->Renderer.ON==2)		/* use Hard */
 	{
-	if(bits<15)
+	if(bits!=32)
 		driver=NULL;
-	if(bytesperpixel<2)
+	if(bytesperpixel<4)
+		driver=NULL;
+	}
+
+	if(Wazp3D->Renderer.ON==3)		/* use Hard(Overlay)*/
+	{
+	if(bits<8)
+		driver=NULL;
+	if(bytesperpixel<1)
 		driver=NULL;
 	}
 
@@ -4061,7 +4052,7 @@ void ZbufferCheck(W3D_Context *context)
 struct WAZP3D_context *WC=context->driver;
 
 	SREM(ZbufferCheck)
-	if(WC->NeedNewZbuffer)
+	if(context->zbufferlost) /* = need a new zbuffer */
 	{
 		SREM(ZbufferCheck: Reallocating a new Zbuffer)
 		W3D_FreeZBuffer(context);
@@ -4130,9 +4121,23 @@ SREM(setting the bitmap)
 	context->drawmem=NULL;
 	}
 
-	bmHandle=LockBitMapTags((APTR)bm,LBMI_BASEADDRESS,(ULONG)&WC->Image8, TAG_DONE);
+	if(Wazp3D->UseDLL)
+	if(Wazp3D->Renderer.ON==0)	/* soft to Image */
+		{
+		Libprintf("WAZP3D: SOFT3D.DLL cant use Soft to bitmap!!!\n");
+		Wazp3D->Renderer.ON=1;	/* soft to bitmap : as SOFT3D.DLL cant do a WritePixelArray(Image)*/
+		}
+
+	bmHandle=LockBitMapTags((APTR)bm,LBMI_BASEADDRESS,(ULONG)&WC->bmdata, TAG_DONE);
 	WC->bmformat = GetCyberMapAttr(bm,CYBRMATTR_PIXFMT);
 	UnLockBitMap(bmHandle);
+	if(Wazp3D->Renderer.ON==1)	/* soft to bitmap */
+	if(WC->bmdata==NULL)
+		{
+		Libprintf("WAZP3D: This Aros driver cant use Soft to bitmap!!!\n");
+		Wazp3D->Renderer.ON=0;	/* soft to Image */
+		}
+
 	WC->bits=context->bprow/context->width*8;
 	context->drawregion=bm;
 	WC->rastport.BitMap=bm;
@@ -4145,7 +4150,13 @@ SREM(setting the bitmap)
 	WC->yoffset=context->yoffset=yoffset;
 
 /* store new (?) size */
+
+	VAR(context->width)
+	VAR(context->height)
+	VAR(WC->large)
+	VAR(WC->high)
 	SameSize=((WC->large==context->width) et (WC->high==context->height));
+VAR(SameSize)
 	WC->large=context->width;
 	WC->high =context->height;
 	WC->windowX=WC->window->LeftEdge;
@@ -4186,21 +4197,21 @@ SREM(with scissor )
 	if(WC->SC==NULL)
 		WC->SC=SOFT3D_Start(Wazp3D);
 
+/* if bitmap's size has changed then change ImageBuffer (if any) & query for a  new Zbuffer */
+	if(!SameSize)
+	{
+	SREM(Bitmap size changed !!!!)
+	if(Wazp3D->Renderer.ON==0)		/* use Soft to Image */
+		SOFT3D_AllocImageBuffer(WC->SC,WC->large,WC->high);		/* If use an ImageBuffer32 (Wazp3D's RGBA buffer) then will realloc it */
+	if(context->zbufferalloc)						/* if use a Zbuffer */
+		{
+		SREM(Will need a new Zbuffer)
+		context->zbufferlost=TRUE;
+		}
+	}
+
 /* SOFT3D: change bitmap  & scissor */
 	WC->SetBitmapFunction(WC);
-
-/* if same size = nothing more to do */
-	if(SameSize)
-		return;
-
-/* if not same size = change Image & query for a  new Zbuffer */
-	SREM(Bitmap size changed !!!!)
-	SOFT3D_AllocImageBuffer(WC->SC,WC->large,WC->high);		/* If use an ImageBuffer32 (Wazp3D's RGBA buffer) then will realloc it */
-	if(context->zbuffer!=NULL)						/* if use a Zbuffer */
-	{
-		SREM(Will need a new Zbuffer)
-		WC->NeedNewZbuffer=TRUE;
-	}
 }
 /*==========================================================================*/
 ULONG W3D_SetDrawRegion(W3D_Context *context, struct BitMap *bm,int yoffset, W3D_Scissor *scissor)
@@ -4408,15 +4419,16 @@ struct WAZP3D_context *WC=context->driver;
 		WRETURN(W3D_SUCCESS);	/* already allocated ? */
 
 	context->zbuffer=SOFT3D_AllocZbuffer(WC->SC,WC->large,WC->high);
-
-	if(context->zbuffer==NULL)
-		 WRETURN(W3D_NOGFXMEM);
-
 	context->zbufferalloc=TRUE;
 	context->zbufferlost =FALSE;		 /* Is it TRUE if just allocated ?!? */
 
-	WC->NeedNewZbuffer=FALSE;
-	SOFT3D_AllocZbuffer(WC->SC,WC->large,WC->high);
+	if(Wazp3D->Renderer.ON<2)	/* use soft */
+	if(context->zbuffer==NULL)
+		context->zbufferalloc=FALSE;
+
+	if(!context->zbufferalloc)
+		 WRETURN(W3D_NOGFXMEM);
+
 	SOFT3D_ClearZBuffer(WC->SC,1.0);
 
 	WRETURN(W3D_SUCCESS);
@@ -4427,7 +4439,7 @@ ULONG W3D_FreeZBuffer(W3D_Context *context)
 struct WAZP3D_context *WC=context->driver;
 
 	WAZP3DFUNCTION(57);
-	if(context->zbuffer==NULL) WRETURN(W3D_NOZBUFFER);
+	if(!context->zbufferalloc) WRETURN(W3D_NOZBUFFER);
 	context->zbufferalloc=FALSE;
 	context->zbufferlost =TRUE;	 /* Is it TRUE if just freed ?!? */
 	FREEPTR(context->zbuffer);
@@ -4446,9 +4458,11 @@ float z=1.0;
 	if(clearvalue!=NULL)
 		z=*clearvalue;
 	VARF(z);
-	if(context->zbuffer==NULL) WRETURN(W3D_NOZBUFFER);
+	if(!context->zbufferalloc) WRETURN(W3D_NOZBUFFER);
 	SOFT3D_ClearZBuffer(WC->SC,z);
-	DoUpdate(context);			/*draw the image if any */
+	if(!WC->CallFlushFrame)
+	if(!WC->CallSetDrawRegion)
+		DoUpdate(context);			/*draw the image if any */
 	WRETURN(W3D_SUCCESS);
 }
 /*==========================================================================*/
@@ -4457,7 +4471,7 @@ ULONG W3D_ReadZPixel(W3D_Context *context, ULONG x, ULONG y,W3D_Double *z)
 struct WAZP3D_context *WC=context->driver;
 
 	WAZP3DFUNCTION(59);
-	if(context->zbuffer==NULL) WRETURN(W3D_NOZBUFFER);
+	if(!context->zbufferalloc) WRETURN(W3D_NOZBUFFER);
 	VAR(x);
 	VAR(y);
 	VARF((float)*z);
@@ -4471,13 +4485,11 @@ ULONG W3D_ReadZSpan(W3D_Context *context, ULONG x, ULONG y,ULONG n, W3D_Double *
 struct WAZP3D_context *WC=context->driver;
 
 	WAZP3DFUNCTION(60);
-	if(context->zbuffer==NULL) WRETURN(W3D_NOZBUFFER);
+	if(!context->zbufferalloc) WRETURN(W3D_NOZBUFFER);
 	VAR(x);
 	VAR(y);
 	VAR(n);
 	VAR(z);
-	if(context->zbuffer==NULL)
-		WRETURN(W3D_NOZBUFFER);
 
 	SOFT3D_ReadZSpan(WC->SC,x,y,n,z);
 	WRETURN(W3D_SUCCESS);
@@ -4516,8 +4528,7 @@ struct WAZP3D_context *WC=context->driver;
 UBYTE mask=1;
 
 	WAZP3DFUNCTION(62);
-/*	if(context->zbuffer==NULL) WRETURN(W3D_NOZBUFFER); */
-	if(context->zbuffer==NULL) return;
+	if(!context->zbufferalloc) return;
 	VAR(x);
 	VAR(y);
 	VARF((float)*z);
@@ -4532,8 +4543,7 @@ struct WAZP3D_context *WC=context->driver;
 
 	WAZP3DFUNCTION(63);
 	ZbufferCheck(context);
-/*	if(context->zbuffer==NULL) WRETURN(W3D_NOZBUFFER); */
-	if(context->zbuffer==NULL) return;
+	if(!context->zbufferalloc) return;
 
 	VAR(x);
 	VAR(y);
@@ -4541,7 +4551,6 @@ struct WAZP3D_context *WC=context->driver;
 	VAR(mask)
 
 	SOFT3D_WriteZSpan(WC->SC,x,y,n,z,mask);
-/*	WRETURN(W3D_SUCCESS);*/
 }
 /*==========================================================================*/
 ULONG W3D_AllocStencilBuffer(W3D_Context *context)

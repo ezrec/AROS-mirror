@@ -79,8 +79,8 @@ UBYTE  overwinname[]={"Wazp3D overlay"};
 #define BLENDFASTALPHA  187			/* 187 is an unused BlendMode			*/
 #define BLENDNOALPHA    59			/* 59  is an unused BlendMode			*/
 /*=============================================================*/
-/* For OpenGL overlay: we define how is maded an Amiga's window 	*/
-/* So we know the Warp3D's window so the position & size 		*/
+/* For PC's OpenGL overlay: we define how is maded an Amiga's window 	*/
+/* So we know the Warp3D's window so the position & size 			*/
 struct Amigawindow
 {
 	void *NextWindow;					/* for the linked list in a screen */
@@ -375,83 +375,6 @@ struct HARD3D_context *HC=hc;
 	HC->glstarted=0;
 }
 /*==================================================================*/
-#ifdef USETHISCODE
-int OS_StartGLbm(void *hc,int x, int y,int large, int high)
-{
-/* WIN32: Open OpenGL + supposed to use a separate bitmap :unused now .this function come from Internet.*/
-struct HARD3D_context *HC=hc;
-PIXELFORMATDESCRIPTOR p;
-BITMAPINFO bi;
-int format;
-unsigned char name[50];
-
-	HC->glwnd=winuaewnd;
-	HC->hdc = GetDC (HC->glwnd);
-
-/* Create the bitmap for this OpenGL context */
-	memset(&bi, 0, sizeof(BITMAPINFO));
-	bi.bmiHeader.biSize 	= sizeof(BITMAPINFOHEADER);
-	bi.bmiHeader.biWidth	= large;
-	bi.bmiHeader.biHeight	= high;
-	bi.bmiHeader.biPlanes	= 1;
-	bi.bmiHeader.biBitCount	= 32;
-	bi.bmiHeader.biCompression= BI_RGB;
-	bi.bmiHeader.biSizeImage	= large * high * 32/8;
-	HC->winbm = CreateDIBSection(HC->hdc, &bi, DIB_RGB_COLORS, &HC->RGBA32, NULL, (DWORD)0);
-
-/* Create the memory DC for the OpenGL context */
-	HC->hdc = CreateCompatibleDC(NULL);
-	SelectObject(HC->hdc, HC->winbm);
-
-/* choose and set pixelformat */
-	memset (&p, 0, sizeof (p));
-	p.nSize = sizeof (PIXELFORMATDESCRIPTOR);
-	p.nVersion 		=1;
-	p.dwFlags		=PFD_DRAW_TO_BITMAP | PFD_GENERIC_FORMAT | PFD_SUPPORT_OPENGL | PFD_SUPPORT_GDI;
-	p.iLayerType	=PFD_TYPE_RGBA;
-	p.cColorBits	=32;
-	p.cDepthBits 	=16;
-	p.cStencilBits	=8;
-
-	HC->hdc = GetDC (HC->glwnd);
-	format = ChoosePixelFormat (HC->hdc, &p);
-	if (format == 0)
-		{
-		REMP("OPENGL: can't find suitable pixelformat\n");
-		return 0;
-		}
-
-	DescribePixelFormat(HC->hdc,format,sizeof(PIXELFORMATDESCRIPTOR), &p);
-	if(p.iPixelType = PFD_TYPE_COLORINDEX)
-		sprintf(name,"LUT8");
-	if(p.iPixelType = PFD_TYPE_RGBA )
-		sprintf(name,"R%d<<%d+G%d<<%d+B%d<<%d+A%d<<%d",p.cRedBits,p.cRedShift,p.cGreenBits,p.cGreenShift,p.cBlueBits,p.cBlueShift,p.cAlphaBits,p.cAlphaShift);
-	REMP("Pixel format: %s\n",name);
-
-	if (!SetPixelFormat (HC->hdc, format, &p))
-		{
-		REMP("OPENGL: can't set pixelformat %d\n", format);
-		return 0;
-		}
-
-/* create and set GL context */
-	HC->hglrc = wglCreateContext(HC->hdc);
-	wglMakeCurrent(HC->hdc, HC->hglrc);
-	return 1;
-}
-/*==================================================================*/
-void OS_CloseGLbm(void *hc)
-{
-/* WIN32: Close OpenGL if using a separate bitmap: unused now. This function come from Internet */
-struct HARD3D_context *HC=hc;
-
-	wglMakeCurrent(NULL, NULL);
-	wglDeleteContext(HC->hglrc);
-	DeleteObject(HC->winbm);
-	DeleteDC(HC->hdc);
-}
-#endif
-/*==================================================================*/
 void HARD3D_DoUpdate(void *hc)
 {
 /* WIN32: Update the window. The SwapBuffers() part come from QuarkTex */
@@ -462,6 +385,7 @@ struct HARD3D_context *HC=hc;
 
 	if(HC->UseOverlay)		
 	{
+		glReadBuffer(GL_BACK);
 		SwapBuffers(HC->hdc);
 	}
 	else					/* in this case we draw y-flipped in the back buffer */
@@ -646,7 +570,7 @@ int i=0;
 /*	amesa->visible_rp_height= amesa->visible_rp->Layer->bounds.MaxY - amesa->visible_rp->Layer->bounds.MinY + 1; */
 
 /* Create a new rastport with our Warp3D's bitmap*/
-	hackrastport=Libmalloc(sizeof(struct RastPort));
+	hackrastport=(struct RastPort *)Libmalloc(sizeof(struct RastPort));
 	if(hackrastport==NULL)
 		return(0);
 	HC->hackrastport=hackrastport; 		/* save for later freeing the rastport*/
@@ -700,7 +624,6 @@ void HARD3D_DoUpdate(void *hc)
 {
 /* AROS: Update the window. */
 struct HARD3D_context *HC=hc;
-struct RastPort *hackrastport;
 struct RastPort *oldrastport;
 struct Window   *mesawin;
 
@@ -709,17 +632,18 @@ struct Window   *mesawin;
 
 	if(HC->UseOverlay)					/* in this case we draw in overwin */
 		{
+		glReadBuffer(GL_BACK);
 		AROSMesaSwapBuffers(HC->hglrc);
 		}
 	else
 		{							/* else we draw in back buffer */
 		mesawin=HC->awin;
 		oldrastport=mesawin->RPort;			/* save original window structure */
-		mesawin->RPort=hackrastport;			/* use our rastport */
-		hackrastport=HC->hackrastport;
-		Move(hackrastport,0,0);
-		Move(hackrastport->Layer->rp,0,0);
+
+		mesawin->RPort=(struct RastPort *)HC->hackrastport;	/* use our rastport and bitmap */
+
 		AROSMesaSwapBuffers(HC->hglrc);		/* On Aros this will copy the back buffer to the current window */
+
 		mesawin->RPort=oldrastport;
 		}
 }
@@ -744,10 +668,9 @@ struct HARD3D_context *HC=hc;
 		return;
 
 	OS_CurrentContext(hc);
-	REMP("OpenGL Vendor <%s>\n"	,glGetString(GL_VENDOR));
+	REMP("OpenGL Vendor   <%s>\n"	,glGetString(GL_VENDOR));
 	REMP("OpenGL Renderer <%s>\n"	,glGetString(GL_RENDERER));
-	REMP("OpenGL Version <%s>\n"	,glGetString(GL_VERSION));
-	REMP("OpenGL Extensions <%s>\n",glGetString(GL_EXTENSIONS));
+	REMP("OpenGL Version  <%s>\n"	,glGetString(GL_VERSION));
 
 /* use a flat mode */
 	glMatrixMode(GL_MODELVIEW);

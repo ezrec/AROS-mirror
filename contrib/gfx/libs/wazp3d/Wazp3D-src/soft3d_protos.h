@@ -21,7 +21,7 @@ APTR  SOFT3D_CreateTexture(APTR sc,APTR pt,UWORD large,UWORD high,UWORD bits,UBY
 void  SOFT3D_Fog(APTR sc,UBYTE FogMode,float FogZmin,float FogZmax,float FogDensity,APTR FogRGBA);
 void  SOFT3D_WriteZSpan(APTR sc,UWORD x,UWORD y,ULONG n,APTR dz,APTR mask);
 void  SOFT3D_SetClipping(APTR sc,UWORD xmin,UWORD xmax,UWORD ymin,UWORD ymax);
-void  SOFT3D_SetBitmap(APTR sc,APTR bm,APTR Image8,ULONG format,UWORD x,UWORD y,UWORD large,UWORD high);
+void  SOFT3D_SetBitmap(APTR sc,APTR bm,APTR bmdata,ULONG bmformat,UWORD x,UWORD y,UWORD large,UWORD high);
 void  SOFT3D_SetDrawStates(APTR sc,APTR st,UBYTE ZMode,UBYTE BlendMode,UBYTE TexEnvMode,UBYTE UseGouraud,UBYTE UseFog,UBYTE PerspMode);
 void  SOFT3D_UpdateTexture(APTR sc,APTR st,APTR pt);	
 #endif

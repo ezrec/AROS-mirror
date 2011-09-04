@@ -37,8 +37,9 @@
 #endif
 
 #ifdef  __AROS__
-/* define this one if you build a Wazp3D/soft3d that use an hardware mesa.library */
 #define WAZP3DDEBUG 1
+#define MOTOROLAORDER 1 /* for Aros 68k/ppc case */
+/* define this one if you build a Wazp3D/soft3d that use an hardware mesa.library */
 #define USEOPENGL 1 
 #endif
 
@@ -231,6 +232,7 @@ struct memory3D{
 
 #define TRUECOLORFORMATS (W3D_FMT_R8G8B8|W3D_FMT_B8G8R8|W3D_FMT_A8R8G8B8|W3D_FMT_A8B8G8R8|W3D_FMT_R8G8B8A8|W3D_FMT_B8G8R8A8)
 #define HIGHCOLORFORMATS (W3D_FMT_R5G5B5|W3D_FMT_B5G5R5|W3D_FMT_R5G5B5PC|W3D_FMT_B5G5R5PC|W3D_FMT_R5G6B5|W3D_FMT_B5G6R5|W3D_FMT_R5G6B5PC|W3D_FMT_B5G6R5PC|W3D_FMT_R8G8B8|W3D_FMT_B8G8R8|W3D_FMT_A8R8G8B8|W3D_FMT_A8B8G8R8|W3D_FMT_R8G8B8A8|W3D_FMT_B8G8R8A8)
+#define ALLCOLORFORMATS  (W3D_FMT_R5G5B5|W3D_FMT_B5G5R5|W3D_FMT_R5G5B5PC|W3D_FMT_B5G5R5PC|W3D_FMT_R5G6B5|W3D_FMT_B5G6R5|W3D_FMT_R5G6B5PC|W3D_FMT_B5G6R5PC|W3D_FMT_R8G8B8|W3D_FMT_B8G8R8|W3D_FMT_A8R8G8B8|W3D_FMT_A8B8G8R8|W3D_FMT_R8G8B8A8|W3D_FMT_B8G8R8A8|W3D_FMT_CLUT)
 #define ALLSTENCILMODES 0xFFFF
 typedef void (*HOOKEDFUNCTION)(void *c);
 /*==================================================================================*/
@@ -280,7 +282,6 @@ struct button3D TexFmtLie;
 struct button3D HackTexs;
 struct button3D UseRatioAlpha;	/* v40: force BlendMode to BLENDFAST if alpha-pixels < 20% */
 struct button3D UseAlphaMinMax;	/* v40: ignore smallest (=transparent) and biggest (=solid) alpha values*/
-struct button3D DirectBitmap;		/* v39: directly hit in the screen bitmap so no RGBA buffer & no update */
 struct button3D OnlyTrueColor;	/* only use fast RGB/RGBA screens */
 struct button3D SmoothTextures;
 struct button3D ReloadTextures;
@@ -395,7 +396,8 @@ ULONG ASLminX,ASLmaxX,ASLminY,ASLmaxY;
 #define   VAR(var) if(Wazp3D->DebugVal.ON)  {if(Wazp3D->DebugVar.ON) Libprintf(" " #var "="); Libprintf("%ld\n",((ULONG)var));}
 #define  VARF(var) if(Wazp3D->DebugVal.ON)  {if(Wazp3D->DebugVar.ON) Libprintf(" " #var "="); pf(var); Libprintf("\n"); }
 #define   VAL(var) {if(Wazp3D->DebugVal.ON) Libprintf(" [%ld]",((ULONG)var));}
-#define ZZ LibAlert("ZZ stepping ...");
+#define ZZ  LibAlert("ZZ stepping...");
+#define XX Libprintf("XX stepping...\n");
 #define  ERROR(val,doc) if(error == val) if(Wazp3D->DebugVal.ON) {if(Wazp3D->DebugVar.ON) Libprintf(" Error="); Libprintf(#val); if(Wazp3D->DebugDoc.ON) Libprintf(", " #doc); Libprintf("\n");}
 #define   WRETURN(error) return(PrintError(error));
 #define QUERY(q,doc,s) if(query==q) if(Wazp3D->DebugVal.ON) {sup=s;  Libprintf(" " #q); if(Wazp3D->DebugDoc.ON) Libprintf(", " #doc); Libprintf("\n");}
@@ -690,11 +692,9 @@ void CloseAmigaLibraries()
 #endif
 /*==================================================================================*/
 #ifdef AMIGA
-#define Libmemset memset
 #define Libexp exp
 #define Libfloor floor
 #else /* if is a PC */
-void	 Libmemset(void *s, int c, unsigned long int n);
 float  Libexp(float x);
 float  Libfloor(float x);
 void Libprintf(void *string,...);

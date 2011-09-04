@@ -1,6 +1,6 @@
-/* Author: Alain Thellier - Paris - 2010 . See ReadMe for more infos			*/
-/* Cow3D-2.c: Cow V2 10 nov 2010 : now can draw cow as lines/points + zbuffer to grey	*/
-/* v2.1 August 2011 : Draw FPS correctly on Aros too					*/
+/* Author: Alain Thellier - Paris - 2010 . See ReadMe for more infos					*/
+/* Cow3D-3.c: Cow V2 10 nov 2010 : now can draw cow as lines/points + zbuffer to grey		*/
+/* v3.0 Sept 2011 : Draw FPS correctly on Aros too. Now works with Wazp3D using "hard overlay"	*/
 
 
 #include <stdio.h>
@@ -12,13 +12,20 @@
 #include <proto/dos.h>
 #include <proto/graphics.h>
 #include <proto/intuition.h>
+
+#ifdef STATWAZP3D
+#include "Warp3D_protos.h"
+#include "cybergraphics.h"
+#else
 #include <proto/Warp3D.h>
 #include <cybergraphx/cybergraphics.h>
+#endif
+
 #include <proto/cybergraphics.h>
 
 /*==================================================================*/
 #include "Cow3D.h"				/* 3d object*/
-UBYTE  progname[]={"CoW3D V2"};
+UBYTE  progname[]={"CoW3D V3"};
 #define LARGE 640					/* window size */
 #define HIGH  480
 #define NLOOP(nbre) for(n=0;n<nbre;n++)
@@ -844,7 +851,7 @@ ULONG SetBlendMode()
 	return(W3D_SetBlendMode(context,srcfunc,dstfunc));
 }
 /*==================================================================*/
-BOOL DoContextCheckWarp3D(void)
+void CheckWarp3D(void)
 {
 W3D_Driver **drivers;
 W3D_Driver *driver=NULL;
@@ -856,21 +863,12 @@ ULONG texfmt,destfmt,state,query,w,h,wp,hp,m,n;
 	flags = W3D_CheckDriver();
 	if (flags & W3D_DRIVER_3DHW)		{printf("Hardware W3D_Driver available\n");}
 	if (flags & W3D_DRIVER_CPU)		{printf("Software W3D_Driver available\n");}
-	if (flags & W3D_DRIVER_UNAVAILABLE) {printf("No W3D_Driver !!!\n");goto panic;}
+	if (flags & W3D_DRIVER_UNAVAILABLE) {printf("No W3D_Driver !!!\n");return;}
 
 	drivers = W3D_GetDrivers();
-
-#ifdef STATWAZP3D
-#define W3D_Q_SETTINGS 9999
-	W3D_QueryDriver(drivers[0],W3D_Q_SETTINGS,0);
-#endif
-
-
 	if (*drivers == NULL)
-	{
-	printf("Panic: No W3D_Driver(s) found !!!\n");
-	goto panic;
-	}
+		return;
+
 	printf("==============================\n");
 	while (drivers[0])
 	{
@@ -926,19 +924,6 @@ ULONG texfmt,destfmt,state,query,w,h,wp,hp,m,n;
 		MyQueryDriver(driver,query,destfmt);
 	}
 
-
-	context = W3D_CreateContextTags(&result,
-		W3D_CC_MODEID,      ModeID,             // Mandatory for non-pubscreen
-		W3D_CC_BITMAP,      (ULONG)bm,          // The bitmap we'll use
-		W3D_CC_YOFFSET,     0,                  // We don't do dbuffering
-		W3D_CC_DRIVERTYPE,  W3D_DRIVER_BEST,    // Let Warp3D decide
-		W3D_CC_DOUBLEHEIGHT,FALSE,               // Double height screen
-		W3D_CC_FAST,        TRUE,               // Fast drawing
-	TAG_DONE);
-
-	if (!context || result != W3D_SUCCESS)
-		{printf("Cant create context! (error %ld)\n",result);return(FALSE);}
-
 	printf("==============================\n");
 	printf("State default values:\n");
 	NLOOP(27)
@@ -981,9 +966,6 @@ ULONG texfmt,destfmt,state,query,w,h,wp,hp,m,n;
 	srcfunc=dstfunc=0;
 	printf("==============================\n");
 
-	return(TRUE);
-panic:
-	return(FALSE);
 }
 /*=================================================================*/
 BOOL StartWarp3D(void)
@@ -991,6 +973,7 @@ BOOL StartWarp3D(void)
 UWORD screenlarge,screenhigh;
 ULONG Flags =WFLG_ACTIVATE | WFLG_REPORTMOUSE | WFLG_RMBTRAP | WFLG_SIMPLE_REFRESH | WFLG_GIMMEZEROZERO ;
 ULONG IDCMPs=IDCMP_CLOSEWINDOW | IDCMP_VANILLAKEY | IDCMP_RAWKEY | IDCMP_MOUSEMOVE | IDCMP_MOUSEBUTTONS ;
+W3D_Driver **drivers;
 
 	CyberGfxBase = OpenLibrary("cybergraphics.library", 0L);
 	if (CyberGfxBase==NULL)
@@ -1037,8 +1020,24 @@ ULONG IDCMPs=IDCMP_CLOSEWINDOW | IDCMP_VANILLAKEY | IDCMP_RAWKEY | IDCMP_MOUSEMO
 
 	bm=bufferrastport.BitMap;				/* draw in this back-buffer */
 
-	if(DoContextCheckWarp3D()==FALSE)
-		{printf("Cant Check Warp3D\n");return(FALSE);}
+#ifdef STATWAZP3D
+#define W3D_Q_SETTINGS 9999
+	drivers = W3D_GetDrivers();
+	if (*drivers == NULL)
+		{printf("No Warp3D driver found !!!\n");return(FALSE);}
+	W3D_QueryDriver(drivers[0],W3D_Q_SETTINGS,0);
+#endif
+	context = W3D_CreateContextTags(&result,
+		W3D_CC_MODEID,      ModeID,             // Mandatory for non-pubscreen
+		W3D_CC_BITMAP,      (ULONG)bm,          // The bitmap we'll use
+		W3D_CC_YOFFSET,     0,                  // We don't do dbuffering
+		W3D_CC_DRIVERTYPE,  W3D_DRIVER_BEST,    // Let Warp3D decide
+		W3D_CC_DOUBLEHEIGHT,FALSE,               // Double height screen
+		W3D_CC_FAST,        TRUE,               // Fast drawing
+	TAG_DONE);
+
+	if (!context || result != W3D_SUCCESS)
+		{printf("Cant create Warp3D context! (error %ld)\n",result);return(FALSE);}
 
 	result=W3D_AllocZBuffer(context);
 	if(result!=W3D_SUCCESS)
@@ -1266,6 +1265,8 @@ BOOL framebuffered;
 	if(!StartWarp3D())
 		goto panic;
 
+	CheckWarp3D();
+
 	QuadObj=AddObject(4,2*3);		/* simple quad as 2 tris */
 
 	CosmosObj=AddObject(4,2*3);		/* simple quad as 2 tris */
@@ -1344,6 +1345,7 @@ BOOL framebuffered;
 			DrawZtests();
 
 		W3D_Flush(context);
+
 		if(greyreadz)
 			DrawZvaluesWarp3D();
 

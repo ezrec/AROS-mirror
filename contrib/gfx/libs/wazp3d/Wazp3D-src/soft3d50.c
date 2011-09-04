@@ -176,7 +176,7 @@ struct SOFT3D_context{
 	UBYTE GtoB1[256];
 	UBYTE BtoB1[256];
 	WORD large,high,bits;
-	ULONG format;
+	ULONG bmformat;
 	struct vertex3D ClipMin;			/* 3D clipper */
 	struct vertex3D ClipMax;
 	UBYTE *Image8;
@@ -521,29 +521,31 @@ void Edge_Tex(struct SOFT3D_context *SC);
 /*==========================================================================*/
 void WriteImageBuffer(struct SOFT3D_context *SC)
 {
-#ifdef SOFT3DDLL
-	;
-#else
+#ifdef AMIGA
 	WritePixelArray(SC->ImageBuffer32,SC->xUpdate,SC->yUpdate,SC->large*(32/8),&SC->rastport,SC->xUpdate,SC->yUpdate+SC->yoffset,SC->largeUpdate,SC->highUpdate,RECTFMT_RGBA);
 #endif
 }
 /*==========================================================================*/
-void  SetImage(APTR sc,UWORD large,UWORD high,UWORD bits,UBYTE *Image8)
+void  SetImage(APTR sc,UWORD x,UWORD y,UWORD large,UWORD high,UWORD bits,UBYTE *Image8)
 {
 struct SOFT3D_context *SC=sc;
-WORD x,y,bpp;
-
+UWORD bpp;
+ULONG offset;
 
 SFUNCTION(SetImage)
 VAR(Image8)
+VAR(x)
+VAR(y)
 VAR(large)
 VAR(high)
 VAR(bits)
-
 	if(SC==NULL) return;
 	if(Image8==NULL) return;
 
-	SC->Image8	=Image8;
+
+	offset	=y*large*bits/8 + x*bits/8;  /* Dont use x y offset in SOFT3D : use real pointer to Image */
+VAR(offset)
+	SC->Image8	=Image8+offset;
 	SC->large	=large;
 	SC->high	=high;
 	SC->bits	=bits;
@@ -571,15 +573,14 @@ VAR(bits)
 /*=============================================================*/
 void SOFT3D_AllocImageBuffer(APTR sc,UWORD large,UWORD high)
 {
-#ifdef AMIGA
 struct SOFT3D_context *SC=sc;
+ULONG size;
 
 	if(!Wazp3D->PrefsIsOpened)		/* if the user dont changing debug states */
 	LibDebug=Wazp3D->DebugWazp3D.ON;	/* synchronize soft3d's LibDebug with global debug value "DebugWazp3D" setted with Wazp3-Prefs */
-	if(Wazp3D->DirectBitmap.ON)	/* else the "Image" is pointing to an RGBA buffer called "ImageBuffer32" */
-		return;
 
 SFUNCTION(SOFT3D_AllocImageBuffer)
+#ifdef AMIGA
 VAR(large)
 VAR(high)
 	if(SC->ImageBuffer32!=NULL)
@@ -587,29 +588,23 @@ VAR(high)
 
 	FREEPTR(SC->ImageBuffer32);
 
-	if(high!=0)
-	if(large!=0)
-	SC->ImageBuffer32=MYmalloc(SC->large*SC->high*32/8,"SOFT3D_ImageBuffer32");
-	if(SC->ImageBuffer32!=NULL)
-		{
-		SC->FunctionBitmapIn =NULL;		/* no need to read a bitmap in this case */
-		SC->FunctionBitmapOut=NULL;
-		}
-	SetImage(SC,large,high,32,(UBYTE *)SC->ImageBuffer32);
+	size=large*high*32/8;
+	if(size!=0)
+		SC->ImageBuffer32=MYmalloc(size,"SOFT3D_ImageBuffer32");
+	SetImage(SC,0,0,large,high,32,(UBYTE *)SC->ImageBuffer32);
 #else
-	return;
+	Libprintf("WAZP3D/SOFT3D: cant use Soft to bitmap!!!\n");
 #endif
 }
 /*=============================================================*/
 BOOL SOFT3D_Init(void *exec)
 {
+	SREM(SOFT3D_Init)
 #ifdef AMIGA
 #ifdef SOFT3DLIB
-	if(OpenAmigaLibraries(exec)==FALSE) return(FALSE);
-	SREM(SOFT3D_Init)
-	OpenSoft3DDLL();
 	firstME=NULL;	/* Tracked memory-allocation	*/
-	return(TRUE);
+	if(OpenAmigaLibraries(exec)==FALSE) return(FALSE);
+	OpenSoft3DDLL();
 #endif
 #endif
 	return(TRUE);
@@ -617,9 +612,9 @@ BOOL SOFT3D_Init(void *exec)
 /*=============================================================*/
 void SOFT3D_Close()
 {
+	SREM(SOFT3D_Close)
 #ifdef AMIGA
 #ifdef SOFT3DLIB
-	SREM(SOFT3D_Close)
 	CloseSoft3DDLL();
 	CloseAmigaLibraries();
 #endif
@@ -638,9 +633,9 @@ ULONG y;
 SFUNCTION(SOFT3D_AllocZbuffer)
 VAR(large)
 VAR(high)
-	if(SC->UseHard==0)
+	if(!SC->UseHard)
 	{
-	if(SC->Zbuffer!=NULL)
+	if(SC->Zbuffer!=NULL)	/* only happen in software mode */
 		{ SREM(will change an existing Zbuffer...); }
 
 	FREEPTR(SC->Zbuffer);
@@ -657,7 +652,7 @@ VAR(high)
 	if(SC->UseHard)
 	{
 	HARD3D_AllocZbuffer(&SC->HC,large,high);
-	return(SC->Image8);		/* return a fake non-null pointer. TODO: obtain the hardware-zbuffer adress */
+	SC->Zbuffer=NULL;			/* hard cant give the zbuffer adress */
 	}
 #endif
 	return(SC->Zbuffer);
@@ -679,9 +674,9 @@ union oper3D Oper;
 	if(!Wazp3D->PrefsIsOpened)		/* if the user dont changing debug states */
 	LibDebug=Wazp3D->DebugWazp3D.ON;	/* synchronize soft3d's LibDebug with global debug value "DebugWazp3D" setted with Wazp3-Prefs */
 #ifdef AMIGA
-	Wazp3D->UseDLL=FALSE;		/* will inform Wazp3D that soft3d is Amiga native */
+	Wazp3D->UseDLL=FALSE;			/* will inform Wazp3D that soft3d is Amiga native */
 #else
-	Wazp3D->UseDLL=TRUE;		/* then we are runnig soft3d compiled as a PC DLL */
+	Wazp3D->UseDLL=TRUE;			/* then we are runnig soft3d compiled as a PC DLL */
 
 #endif
 #endif
@@ -815,12 +810,12 @@ VAR(PrefsWazp3D)
 	SC->UseHard=FALSE;
 #ifdef USEOPENGL
 struct HARD3D_context *HC=&SC->HC;
-	SC->UseHard=(Wazp3D->Renderer.ON!=0); 		/* as 0 mean "use soft only"*/
+	SC->UseHard=(Wazp3D->Renderer.ON>=2); 		/* as 2 mean "use hard" */
 	if(SC->UseHard)
 	{
 	HC->UseAntiAlias		= (Wazp3D->UseAntiImage.ON  );
-	HC->UseOverlay		= (Wazp3D->Renderer.ON==2  );
-	HC->DebugHard 		= (Wazp3D->DebugSC.ON==TRUE);
+	HC->UseOverlay		= (Wazp3D->Renderer.ON==3   );
+	HC->DebugHard 		= (Wazp3D->DebugSC.ON==TRUE );
 	HC->awin			=  Wazp3D->window;
 	HARD3D_Start(&SC->HC);
 	}
@@ -934,28 +929,36 @@ register LONG  n;
 	if(!Wazp3D->PrefsIsOpened)		/* if the user dont changing debug states */
 	LibDebug=Wazp3D->DebugWazp3D.ON;	/* synchronize soft3d's LibDebug with global debug value "DebugWazp3D" setted with Wazp3-Prefs */
 SFUNCTION(SOFT3D_ClearImageBuffer)
+	if(SC->ImageBuffer32==NULL) return;
+VAR(SC->Image8)
+VAR(x)
+VAR(y)
+VAR(large)
+VAR(high)
+VAR(SC->large)
 
 #ifdef USEOPENGL
 	;	/* do nothing as the hardware cant use an existing ImageBuffer32 */
 #endif
-	if(SC->ImageBuffer32==NULL) return;
 	SREM(ImageBuffer32 present)
 	I32=&SC->ImageBuffer32[y*SC->large];
-
-	if(RGBA32==0)
-		{
-		size=SC->large*high*32/8;
-		Libmemset(I32,0,size);
-		return;
-		}
-
+VAR(I32)
 	size=SC->large*high/8;
+	if(RGBA32==0)
+	NLOOP(size)
+	{
+		I32[0]=0;I32[1]=0;I32[2]=0;I32[3]=0;
+		I32[4]=0;I32[5]=0;I32[6]=0;I32[7]=0;
+		I32+=8;
+	}
+	else
 	NLOOP(size)
 	{
 		I32[0]=RGBA32;I32[1]=RGBA32;I32[2]=RGBA32;I32[3]=RGBA32;
 		I32[4]=RGBA32;I32[5]=RGBA32;I32[6]=RGBA32;I32[7]=RGBA32;
 		I32+=8;
 	}
+
 }
 /*=============================================================*/
 void SOFT3D_ClearZBuffer(APTR sc,float fz)
@@ -1005,7 +1008,7 @@ register ULONG i;
 	if(!Wazp3D->PrefsIsOpened)		/* if the user dont changing debug states */
 	LibDebug=Wazp3D->DebugWazp3D.ON;	/* synchronize soft3d's LibDebug with global debug value "DebugWazp3D" setted with Wazp3-Prefs */
 SFUNCTION(SOFT3D_ReadZSpan)
-	if(SC->Zbuffer!=NULL)
+	if(SC->Zbuffer!=NULL)	/* only happen in software mode */
 	{
 	Zbuffer=SC->edge1[y].L.ZbufferY + x;
 	ILOOP(n)
@@ -1033,7 +1036,7 @@ register ULONG i;
 	if(!Wazp3D->PrefsIsOpened)		/* if the user dont changing debug states */
 	LibDebug=Wazp3D->DebugWazp3D.ON;	/* synchronize soft3d's LibDebug with global debug value "DebugWazp3D" setted with Wazp3-Prefs */
 SFUNCTION(SOFT3D_WriteZSpan)
-	if(SC->Zbuffer!=NULL)
+	if(SC->Zbuffer!=NULL)	/* only happen in software mode */
 	{
 	Zbuffer=SC->edge1[y].L.ZbufferY + x;
 	ILOOP(n)
@@ -1058,9 +1061,11 @@ struct SOFT3D_context *SC=sc;
 	LibDebug=Wazp3D->DebugWazp3D.ON;	/* synchronize soft3d's LibDebug with global debug value "DebugWazp3D" setted with Wazp3-Prefs */
 SFUNCTION(SOFT3D_End)
 	if(SC==NULL) return;
-	SREM(Free ImageBuffer32)
 	if(SC->ImageBuffer32!=NULL)
+		{
+		SREM(Free ImageBuffer32)
 		FREEPTR(SC->ImageBuffer32);
+		}
 #ifdef USEOPENGL
 	if(SC->UseHard) HARD3D_End(&SC->HC);
 #endif
@@ -2592,6 +2597,50 @@ register ULONG size=SC->FragSize2;
 	Frag[1].Image8[1]=Frag[1].BufferRGBA[0];
 	Frag[1].Image8[2]=Frag[1].BufferRGBA[1];
 	Frag[1].Image8[3]=Frag[1].BufferRGBA[2];
+	Frag[1].Image8[0]=Frag[1].BufferRGBA[3];
+	Frag+=2;
+	}
+
+}
+/*=============================================================*/
+void PixelsInABGR(struct SOFT3D_context *SC)
+{
+/* Convert ABGR -> buffer */
+register struct fragbuffer3D *Frag=SC->FragBuffer;
+register ULONG size=SC->FragSize2;
+
+	while(0<size--)
+	{
+	Frag[0].BufferRGBA[0]=Frag[0].Image8[3];
+	Frag[0].BufferRGBA[1]=Frag[0].Image8[2];
+	Frag[0].BufferRGBA[2]=Frag[0].Image8[1];
+	Frag[0].BufferRGBA[3]=Frag[0].Image8[0];
+
+	Frag[1].BufferRGBA[0]=Frag[1].Image8[3];
+	Frag[1].BufferRGBA[1]=Frag[1].Image8[2];
+	Frag[1].BufferRGBA[2]=Frag[1].Image8[1];
+	Frag[1].BufferRGBA[3]=Frag[1].Image8[0];
+	Frag+=2;
+	}
+
+}
+/*=============================================================*/
+void PixelsOutABGR(struct SOFT3D_context *SC)
+{
+/* Convert buffer -> ABGR */
+register struct fragbuffer3D *Frag=SC->FragBuffer;
+register ULONG size=SC->FragSize2;
+
+	while(0<size--)
+	{
+	Frag[0].Image8[3]=Frag[0].BufferRGBA[0];
+	Frag[0].Image8[2]=Frag[0].BufferRGBA[1];
+	Frag[0].Image8[1]=Frag[0].BufferRGBA[2];
+	Frag[0].Image8[0]=Frag[0].BufferRGBA[3];
+
+	Frag[1].Image8[3]=Frag[1].BufferRGBA[0];
+	Frag[1].Image8[2]=Frag[1].BufferRGBA[1];
+	Frag[1].Image8[1]=Frag[1].BufferRGBA[2];
 	Frag[1].Image8[0]=Frag[1].BufferRGBA[3];
 	Frag+=2;
 	}
@@ -4193,12 +4242,12 @@ struct SOFT3D_context *SC=sc;
 
 	if(!Wazp3D->PrefsIsOpened)		/* if the user dont changing debug states */
 	LibDebug=Wazp3D->DebugWazp3D.ON;	/* synchronize soft3d's LibDebug with global debug value "DebugWazp3D" setted with Wazp3-Prefs */
-/* draw what is in the Fragments Buffer */
-SREM(SOFT3D_Flush: draw fragments pipeline)
-	if(SC->Image8==NULL) return;
+SREM(SOFT3D_Flush)
+/* Will draw what is in the Fragments Buffer */
 	SC->FragSize2=(SC->FragBufferDone - SC->FragBuffer + 1)/2;
-	if(SC->FragSize2==0) {SREM( ==> nothing to Draw);goto DrawFragBufferEnd;}
+	if(SC->FragSize2==0) {SREM( ==> No fragments to draw);goto DrawFragBufferEnd;}
 	VAR(SC->FragSize2)
+	if(SC->Image8==NULL) return;
 
 /* add one (noop) fragment to FragBuffer so can do size=(size + 1)/2 and so can process 2 Frags inside a loop   */
 	SC->FragBufferDone->Tex8	=SC->NoopRGBA;	/* read the noop pixel as texture */
@@ -4212,13 +4261,15 @@ SREM(Pass1: FunctionIn)
 	SINFO((void *)SC->FunctionIn,(void *)PixelsInBGRA)
 	SINFO((void *)SC->FunctionIn,(void *)PixelsInRGBA)
 	SINFO((void *)SC->FunctionIn,(void *)PixelsInARGB)
+	SINFO((void *)SC->FunctionIn,(void *)PixelsInABGR)
 	SINFO((void *)SC->FunctionIn,(void *)PixelsInRGB)
 	SINFO((void *)SC->FunctionIn,(void *)PixelsInBGR)
 	SINFO((void *)SC->FunctionIn,(void *)PixelsIn16)
 	SINFO((void *)SC->FunctionIn,(void *)PixelsIn8)
 	if(!LockBM(SC))
-		goto DrawFragBufferEnd;	/* if cant lock ==> panic ==> exit */
-	SC->FunctionIn(SC);		/* convert readed pixels to RGBA format. */
+		goto DrawFragBufferEnd;		/* if cant read pixels then cancel this drawing */
+
+	SC->FunctionIn(SC);			/* convert readed pixels to RGBA format. */
 	UnLockBM(SC);
 	}
 
@@ -4260,17 +4311,18 @@ SREM(Pass 7:FunctionOut)
 	SINFO((void *)SC->FunctionOut,(void *)PixelsOutBGRA)
 	SINFO((void *)SC->FunctionOut,(void *)PixelsOutRGBA)
 	SINFO((void *)SC->FunctionOut,(void *)PixelsOutARGB)
+	SINFO((void *)SC->FunctionOut,(void *)PixelsOutABGR)
 	SINFO((void *)SC->FunctionOut,(void *)PixelsOutRGB)
 	SINFO((void *)SC->FunctionOut,(void *)PixelsOutBGR)
 	SINFO((void *)SC->FunctionOut,(void *)PixelsOut16)
 	SINFO((void *)SC->FunctionOut,(void *)PixelsOut8)
 	SINFO((void *)SC->FunctionOut,(void *)PixelsTex24ToBGRA)
 	SINFO((void *)SC->FunctionOut,(void *)PixelsTex24ToARGB)
-	if(LockBM(SC))
-	{
-	SC->FunctionOut(SC);
-	UnLockBM(SC);
-	}
+		if(LockBM(SC))
+		{
+		SC->FunctionOut(SC);
+		UnLockBM(SC);
+		}
 	}
 
 SREM(Flush done...)
@@ -5241,7 +5293,7 @@ if(Wazp3D->DebugSOFT3D.ON) Libprintf("DrawPolyP Pnb %ld  \n",(ULONG)SC->PolyPnb)
 
 	SetDrawFunctions(SC);		/* draw functions still can change now if ColorChange ColorTransp UseFog just changed */
 
-	if(SC->UseHard!=0)  /* so dont use "soft" for drawing the primitive*/
+	if(SC->UseHard)  			/* so dont use "soft" for drawing the primitive*/
 		return;
 
 	switch(Pnb)
@@ -5388,6 +5440,7 @@ BOOL DebugState;
 	if(Wazp3D->DebugContext.ON)			/* backdoor: for debugging =  display all the scene as lines */
 		primitive=W3D_PRIMITIVE_LINELOOP;
 
+	if(!SC->UseHard)
 	if(SC->Image8==NULL)
 		{ REM(Image is lost or freed: cant draw !!); return;}		/* happen if SOFT3D_AllocImageBuffer() fail */
 
@@ -6113,37 +6166,40 @@ struct SOFT3D_context *SC=sc;
 
 	if(!Wazp3D->PrefsIsOpened)		/* if the user dont changing debug states */
 	LibDebug=Wazp3D->DebugWazp3D.ON;	/* synchronize soft3d's LibDebug with global debug value "DebugWazp3D" setted with Wazp3-Prefs */
-	if(SC->Image8==NULL) return(FALSE);
-	if(SC->Pxmax==0) return(FALSE);		/* nothing to update ? */
+
+/* check is something new has been drawn ==> update */
+	if(SC->Pxmax==0) return(FALSE);	
 	if(SC->Pymax==0) return(FALSE);
 
 SREM(SOFT3D_DoUpdate)
+	if(!SC->UseHard)
+	{
+	if(SC->Image8==NULL) return(FALSE);
 	SOFT3D_Flush(SC);
+	}
+
 	if(Wazp3D->StepUpdate.ON)
 		LibAlert("Update will occurs now !!");
 
-	if(SC->ImageBuffer32==NULL)
-		goto UpdateDone;
-
-#ifdef AMIGA
-
+	if(SC->ImageBuffer32!=NULL)
+	{
 	SREM(Got an ImageBuffer32)
 SREM(MinUpdate)
 	if(Wazp3D->UseMinUpdate.ON)
-	{
-	SC->xUpdate		=SC->Pxmin;		/* should also be used to clear the previous drawing */
-	SC->yUpdate		=SC->Pymin;
-	SC->largeUpdate	=SC->Pxmax-SC->Pxmin+1;
-	SC->highUpdate	=SC->Pymax-SC->Pymin+1;
-	}
-	else
-	{
+		{
+		SC->xUpdate		=SC->Pxmin;		/* should also be used to clear the previous drawing */
+		SC->yUpdate		=SC->Pymin;
+		SC->largeUpdate	=SC->Pxmax-SC->Pxmin+1;
+		SC->highUpdate	=SC->Pymax-SC->Pymin+1;
+		}
+		else
+		{
 
-	SC->xUpdate		=0;
-	SC->yUpdate		=0;
-	SC->largeUpdate	=SC->large;
-	SC->highUpdate	=SC->high;
-	}
+		SC->xUpdate		=0;
+		SC->yUpdate		=0;
+		SC->largeUpdate	=SC->large;
+		SC->highUpdate	=SC->high;
+		}
 
 #ifdef WAZP3DDEBUG
 	if(Wazp3D->DebugSOFT3D.ON)
@@ -6161,18 +6217,17 @@ SREM(WriteImageBuffer)
 	if(SC->largeUpdate<=SC->large)
 	if(0< SC->highUpdate)
 	if(SC->highUpdate <=SC->high)
-	{
-	VAR(SC->xUpdate)
-	VAR(SC->yUpdate)
-	VAR(SC->largeUpdate)
-	VAR(SC->highUpdate)
-	SC->FunctionWriteImageBuffer(SC); 	/* Do in fact WritePixelArray(ImageBuffer32) to rastport */
-	if(Wazp3D->UseClearImage.ON)
-		SOFT3D_ClearImageBuffer(SC,0,0,SC->large,SC->high);
+		{
+		VAR(SC->xUpdate)
+		VAR(SC->yUpdate)
+		VAR(SC->largeUpdate)
+		VAR(SC->highUpdate)
+		SC->FunctionWriteImageBuffer(SC); 	/* Do in fact WritePixelArray(ImageBuffer32) to rastport */
+		if(Wazp3D->UseClearImage.ON)
+			SOFT3D_ClearImageBuffer(SC,0,0,SC->large,SC->high);
+		}
 	}
 
-#endif
-UpdateDone:
 	SC->Pxmin=SC->large-1;
 	SC->Pymin=SC->high -1;
 	SC->Pzmin= 1000.0;
@@ -6186,6 +6241,7 @@ UpdateDone:
 	if(Wazp3D->UseClearImage.ON)
 		if(SC->UseHard) HARD3D_ClearImageBuffer(&SC->HC,0,0,SC->large,SC->high);
 #endif
+
 	return(TRUE);
 }
 /*==========================================================================*/
@@ -6203,10 +6259,17 @@ UBYTE BackRGBA[]={0,0,0,0};		/* default black background */
 	SOFT3D_SetCulling(SC,W3D_NOW);								/* default disable culling as I dont know what is Warp3D's default-culling */
 }
 /*==========================================================================*/
-void  SOFT3D_SetBitmap(APTR sc,void  *bm,APTR i8,ULONG format,UWORD x,UWORD y,UWORD large,UWORD high)
+void  SOFT3D_SetBitmap(APTR sc,void  *bm,APTR bmdata,ULONG bmformat,UWORD x,UWORD y,UWORD large,UWORD high)
 {
+#if !defined(PIXFMT_ABGR32)
+#define PIXFMT_ABGR32	100
+#define PIXFMT_0RGB32   101
+#define PIXFMT_BGR032   102
+#define PIXFMT_RGB032   103
+#define PIXFMT_0BGR32   104
+#endif
+
 struct SOFT3D_context *SC=sc;
-UBYTE *Image8=i8;
 UBYTE *RGBA;
 ULONG Rbits,Gbits,Bbits;
 ULONG Rpos,Gpos,Bpos;
@@ -6224,7 +6287,8 @@ BOOL started;
 	if(SC==NULL) return;
 SREM(SOFT3D_SetBitmap)
 VAR(bm)
-VAR(Image8)
+VAR(bmdata)
+VAR(bmformat)
 
 	started=(SC->Image8!=NULL);
 #ifdef AMIGA
@@ -6236,38 +6300,29 @@ VAR(Image8)
 	if(SC->ImageBuffer32!=NULL)
 	{
 	SREM(SetImage to ImageBuffer32)
-	Image8=(UBYTE *)SC->ImageBuffer32;
-	x=y=0;
-	bits=32;
-	goto setimageonly;
+	SC->bmformat=PIXFMT_RGBA32;
+	SC->FunctionBitmapIn =NULL;		/* no need to read/write a bitmap in this case */
+	SC->FunctionBitmapOut=NULL;
+	SetImage(SC,0,0,large,high,32,(UBYTE *)SC->ImageBuffer32);
+	return;
 	}
 
-	if(format==SC->format) {bits=SC->bits; goto setimageonly;}
+	if(SC->bmformat==bmformat) 
+		{bits=SC->bits; goto setimageonly;}
+	SC->bmformat=bmformat;
 
+	if(SC->UseHard)
+		goto setimageonly;
+
+/* Define the Pixels In/Out functions for this bitmap format */
 	SREM(Bitmap format changed)
-
 	Rbits=Gbits=Bbits=Rpos=Gpos=Bpos=bits=0;
 	PcOrder=FALSE;
 
-	SC->format=format;
-VAR(format)
-
-#if !defined(PIXFMT_ABGR32)
-#define PIXFMT_ABGR32	100
-#define PIXFMT_0RGB32   101
-#define PIXFMT_BGR032   102
-#define PIXFMT_RGB032   103
-#define PIXFMT_0BGR32   104
-#endif
-
-	if(format==PIXFMT_0RGB32) format=PIXFMT_ARGB32;
-	if(format==PIXFMT_BGR032) format=PIXFMT_BGRA32;
-	if(format==PIXFMT_RGB032) format=PIXFMT_RGBA32;
-	if(format==PIXFMT_0BGR32) format=PIXFMT_ABGR32;
-
-	switch (format)
+	switch (bmformat)
 	{
 	case PIXFMT_BGRA32:
+	case PIXFMT_BGR032:
 		SC->FunctionBitmapIn =(HOOKEDFUNCTION)PixelsInBGRA;
 		SC->FunctionBitmapOut=(HOOKEDFUNCTION)PixelsOutBGRA;
 		Rbits=8;	Gbits=8;	Bbits=8;
@@ -6276,6 +6331,7 @@ VAR(format)
 		PcOrder=FALSE;
 		break;
 	case PIXFMT_RGBA32:
+	case PIXFMT_RGB032:
 		SC->FunctionBitmapIn =(HOOKEDFUNCTION)PixelsInRGBA;
 		SC->FunctionBitmapOut=(HOOKEDFUNCTION)PixelsOutRGBA;
 		Rbits=8;	Gbits=8;	Bbits=8;
@@ -6284,10 +6340,20 @@ VAR(format)
 		PcOrder=FALSE;
 		break;
 	case PIXFMT_ARGB32:
+	case PIXFMT_0RGB32:
 		SC->FunctionBitmapIn =(HOOKEDFUNCTION)PixelsInARGB;
 		SC->FunctionBitmapOut=(HOOKEDFUNCTION)PixelsOutARGB;
 		Rbits=8;	Gbits=8;	Bbits=8;
 		Rpos=16;	Gpos= 8;	Bpos= 0;
+		bits=32;
+		PcOrder=FALSE;
+		break;
+	case PIXFMT_ABGR32:		
+	case PIXFMT_0BGR32:
+		SC->FunctionBitmapIn =(HOOKEDFUNCTION)PixelsInABGR;
+		SC->FunctionBitmapOut=(HOOKEDFUNCTION)PixelsOutABGR;
+		Rbits=8;	Gbits=8;	Bbits=8;
+		Rpos=0;	Gpos= 8;	Bpos=16;
 		bits=32;
 		PcOrder=FALSE;
 		break;
@@ -6300,7 +6366,6 @@ VAR(format)
 		bits=24;
 		PcOrder=FALSE;
 		break;
-
 	case PIXFMT_BGR24:
 		SC->FunctionBitmapIn =(HOOKEDFUNCTION)PixelsInBGR;
 		SC->FunctionBitmapOut=(HOOKEDFUNCTION)PixelsOutBGR;
@@ -6370,11 +6435,11 @@ VAR(format)
 		break;
 
 	default:
-		Libprintf("WAZP3D/SOFT3D ERROR: Unknown bitmap format %ld (%d X %d)\n",format,large,high);
+		Libprintf("WAZP3D/SOFT3D: Unknown bitmap format %ld (%d X %d)\n",bmformat,large,high);
 		return;
 	}
 
-	VAR(format)
+	VAR(bmformat)
 	VAR(bits)
 
 
@@ -6439,14 +6504,11 @@ VAR(format)
 	}
 
 setimageonly:
-	Image8=Image8 + y*large*bits/8 + x*bits/8;  /* Dont use yoffset in SOFT3D : use real pointer to Image */
-	SetImage(SC,large,high,bits,Image8);
+	SREM(SetImage to bitmap data)
+	SetImage(SC,x,y,large,high,bits,bmdata);
+
 #ifdef USEOPENGL
-	if(SC->UseHard)
-	{
-	x=y=0;		/* no yoffset for a GL overlay */
-	HARD3D_SetBitmap(&SC->HC,bm,i8,format,x,y,large,high);
- 	}
+	if(SC->UseHard) HARD3D_SetBitmap(&SC->HC,bm,bmdata,bmformat,0,0,large,high);		/* no yoffset for a GL overlay */
 #endif
 	if(!started)
 		SetDefaults(SC);
@@ -6537,7 +6599,10 @@ register UBYTE *RGB;
 BOOL LockBM(struct SOFT3D_context *SC)
 {
 #ifdef AMIGA
-UBYTE *Image8;						/* = bitmap memory  */
+UBYTE *Image8;					/* = bitmap memory  */
+
+	if(SC->ImageBuffer32!=NULL)		/* So we dont write to a bitmap but to an RGBA buffer called "ImageBuffer32" */
+		return(TRUE);
 
 	SC->bmHandle=LockBitMapTags((APTR)SC->bm,LBMI_BASEADDRESS,(ULONG)&Image8, TAG_DONE);
 	return(SC->bmHandle!=NULL);
@@ -6549,6 +6614,9 @@ UBYTE *Image8;						/* = bitmap memory  */
 void UnLockBM(struct SOFT3D_context *SC)
 {
 #ifdef AMIGA
+	if(SC->ImageBuffer32!=NULL)		/* So we dont write to a bitmap but to an RGBA buffer called "ImageBuffer32" */
+		return;
+
 	if(SC->bmHandle!=NULL)
 		UnLockBitMap(SC->bmHandle);
 #endif
