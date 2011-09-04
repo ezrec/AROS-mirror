@@ -348,6 +348,7 @@ static VOID AROSMesaFrameBufferCreateResource(struct arosmesa_framebuffer * amfb
     templ.height0 = amfb->height;
     templ.depth0 = 1;
     templ.last_level = 0;
+    templ.array_size = 1;
     switch(statt)
     {
     case ST_ATTACHMENT_FRONT_LEFT:
@@ -364,7 +365,7 @@ static VOID AROSMesaFrameBufferCreateResource(struct arosmesa_framebuffer * amfb
     default:
         return; /* Failure */
     }
-    
+
     /* Create resource */
     amfb->textures[statt] = amfb->screen->resource_create(amfb->screen, &templ);
 }
