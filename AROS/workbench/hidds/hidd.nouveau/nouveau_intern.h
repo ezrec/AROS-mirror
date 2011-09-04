@@ -14,7 +14,6 @@
 #include "nouveau/nouveau_channel.h"
 #include "nouveau/nouveau_notifier.h"
 #include "nouveau/nouveau_grobj.h"
-#include "nouveau/nouveau_pushbuf.h"
 
 #include LC_LIBDEFS_FILE
 
