@@ -61,14 +61,8 @@ void
 draw_dump_emitted_vertex(const struct vertex_info *vinfo, const uint8_t *data)
 {
    unsigned i;
-#if 0 /* unused */
-   unsigned j;
-#endif
 
    for (i = 0; i < vinfo->num_attribs; i++) {
-#if 0 /* unused */
-      j = vinfo->attrib[i].src_index;
-#endif
       switch (vinfo->attrib[i].emit) {
       case EMIT_OMIT:
          debug_printf("EMIT_OMIT:");
