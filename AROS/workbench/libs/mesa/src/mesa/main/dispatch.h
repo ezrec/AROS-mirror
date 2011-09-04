@@ -12099,14 +12099,14 @@ static INLINE void SET_GetTexParameterPointervAPPLE(struct _glapi_table *disp, v
    SET_by_offset(disp, _gloffset_GetTexParameterPointervAPPLE, fn);
 }
 
-typedef void (GLAPIENTRYP _glptr_TextureRangeAPPLE)(GLenum, GLsizei, GLvoid *);
+typedef void (GLAPIENTRYP _glptr_TextureRangeAPPLE)(GLenum, GLsizei, const GLvoid *);
 #define CALL_TextureRangeAPPLE(disp, parameters) \
     (* GET_TextureRangeAPPLE(disp)) parameters
 static INLINE _glptr_TextureRangeAPPLE GET_TextureRangeAPPLE(struct _glapi_table *disp) {
    return (_glptr_TextureRangeAPPLE) (GET_by_offset(disp, _gloffset_TextureRangeAPPLE));
 }
 
-static INLINE void SET_TextureRangeAPPLE(struct _glapi_table *disp, void (GLAPIENTRYP fn)(GLenum, GLsizei, GLvoid *)) {
+static INLINE void SET_TextureRangeAPPLE(struct _glapi_table *disp, void (GLAPIENTRYP fn)(GLenum, GLsizei, const GLvoid *)) {
    SET_by_offset(disp, _gloffset_TextureRangeAPPLE, fn);
 }
 
