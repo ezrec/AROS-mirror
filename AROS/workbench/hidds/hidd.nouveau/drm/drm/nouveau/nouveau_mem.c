@@ -36,7 +36,7 @@
 
 #include "nouveau_drv.h"
 #include "nouveau_pm.h"
-#include "nouveau_mm.h"
+#include "nouveau_mm_renamed.h"
 #include "nouveau_vm.h"
 
 #if defined(__AROS__)

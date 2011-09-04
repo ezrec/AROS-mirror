@@ -28,7 +28,7 @@
 #include "drmP.h"
 
 #include "nouveau_drv.h"
-#include "nouveau_mm.h"
+#include "nouveau_mm_renamed.h"
 
 struct nouveau_vm_pgt {
 	struct nouveau_gpuobj *obj[2];

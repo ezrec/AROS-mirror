@@ -48,13 +48,13 @@ AROS_DRM_NVIDIA_SOURCES = \
             drm/nouveau/nouveau_display \
             drm/nouveau/nouveau_dma \
             drm/nouveau/nouveau_dp \
-            drm/nouveau/nouveau_fence \
+            drm/nouveau/nouveau_fence_renamed \
             drm/nouveau/nouveau_i2c \
             drm/nouveau/nouveau_irq \
             drm/nouveau/nouveau_gem \
             drm/nouveau/nouveau_hw \
             drm/nouveau/nouveau_mem \
-            drm/nouveau/nouveau_mm \
+            drm/nouveau/nouveau_mm_renamed \
             drm/nouveau/nouveau_notifier_renamed \
             drm/nouveau/nouveau_object \
             drm/nouveau/nouveau_sgdma \

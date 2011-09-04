@@ -24,7 +24,7 @@
 
 #include "drmP.h"
 #include "nouveau_drv.h"
-#include "nouveau_mm.h"
+#include "nouveau_mm_renamed.h"
 #include "nvc0_graph.h"
 
 static void

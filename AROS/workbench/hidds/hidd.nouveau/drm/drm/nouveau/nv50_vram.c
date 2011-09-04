@@ -24,7 +24,7 @@
 
 #include "drmP.h"
 #include "nouveau_drv.h"
-#include "nouveau_mm.h"
+#include "nouveau_mm_renamed.h"
 
 static int types[0x80] = {
 	1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,

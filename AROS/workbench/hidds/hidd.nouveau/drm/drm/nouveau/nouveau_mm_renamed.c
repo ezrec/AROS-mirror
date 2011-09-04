@@ -24,7 +24,7 @@
 
 #include "drmP.h"
 #include "nouveau_drv.h"
-#include "nouveau_mm.h"
+#include "nouveau_mm_renamed.h"
 
 static inline void
 region_put(struct nouveau_mm *rmm, struct nouveau_mm_node *a)
