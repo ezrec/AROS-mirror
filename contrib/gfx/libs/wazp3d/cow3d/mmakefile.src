@@ -1,0 +1,21 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM contrib-wazp3d-cow3d : includes linklibs contrib-wazp3d-lib contrib-wazp3d-cow3d-cpy
+
+EXE := CoW3D
+TARGETDIR := $(AROS_CONTRIB)/MultiMedia/Gfx/Wazp3D
+FILES := CoW3D
+
+%build_prog mmake=contrib-wazp3d-cow3d progname=$(EXE) files=$(FILES) \
+    targetdir=$(TARGETDIR) \
+    uselibs="amiga arosc Warp3D"
+
+
+FILES := Cosmos_256X256X32.RAW Cow_256X256X32.RAW
+
+%copy_files_q mmake=contrib-wazp3d-cow3d-cpy files=$(FILES) dst=$(TARGETDIR)
+
+
+%common

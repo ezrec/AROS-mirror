@@ -4,13 +4,25 @@ include $(TOP)/config/make.cfg
 
 #MM contrib-wazp3d-lib : includes linklibs
 
-LIB := Warp3D
-FILES := Wazp3D LIBRARY_settings LIBRARY_aros writepixarr
-USER_CFLAGS := -DPROVIDE_VARARG_FUNCTIONS
+#MM contrib-wazp3d-prefs : includes linklibs contrib-wazp3d-lib
 
-%build_module mmake=contrib-wazp3d-lib modname=$(LIB) modtype=library \
-  files=$(FILES) uselibs="arossupport amiga rom m"
+USER_CFLAGS := -Wno-implicit-function-declaration
 
-%copy_includes mmake=includes-copy includes=../Warp3D/Warp3D.h path=Warp3D
+
+FILES := Wazp3D soft3d_opengl
+
+%build_module mmake=contrib-wazp3d-lib modname=Warp3D modtype=library \
+  files=$(FILES) uselibs="arossupport amiga rom m GL"
+
+
+FILES := Wazp3D-Prefs
+TARGETDIR := $(AROS_CONTRIB)/MultiMedia/Gfx/Wazp3D
+
+%build_prog mmake=contrib-wazp3d-prefs progname=Wazp3D-Prefs files=$(FILES) \
+    targetdir=$(TARGETDIR) uselibs="arossupport amiga arosc m Warp3D"
+
+
+%copy_includes mmake=includes-copy includes=Warp3D.h path=Warp3D
+
 
 %common

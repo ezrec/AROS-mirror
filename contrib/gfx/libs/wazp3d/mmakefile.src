@@ -4,11 +4,8 @@ include $(TOP)/config/make.cfg
 
 #MM- contrib : contrib-wazp3d
 
-#MM- contrib-wazp3d : contrib-wazp3d-settings contrib-wazp3d-test contrib-wazp3d-lib
+#MM- contrib-wazp3d : contrib-wazp3d-prefs contrib-wazp3d-cow3d \
+#MM  contrib-wazp3d-test contrib-wazp3d-lib
 
-#MM contrib-wazp3d-clean : contrib-wazp3d-lib-clean
-
-#MM
-contrib-wazp3d-clean :
-	$(RM) $(GENDIR)/contrib/gfx/libs/wazp3d
-	$(RM) $(AROS_CONTRIB)/MultiMedia/Gfx/Wazp3D
+#MM- contrib-wazp3d-clean : contrib-wazp3d-lib-clean contrib-wazp3d-prefs-clean \
+#MM  contrib-wazp3d-cow3d-clean contrib-wazp3d-lib-test
