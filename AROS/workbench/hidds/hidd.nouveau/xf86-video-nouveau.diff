@@ -1,14 +1,14 @@
-diff -ur ./xf86-video-nouveau-src/nouveau_exa.c ./xf86-video-nouveau/nouveau_exa.c
---- ./xf86-video-nouveau-src/nouveau_exa.c	2011-03-23 09:14:36.000000000 +0100
-+++ ./xf86-video-nouveau/nouveau_exa.c	2011-05-08 09:44:19.000000000 +0200
-@@ -21,6 +21,7 @@
-  */
+diff -ur xf86-video-nouveau-src/nouveau_exa.c xf86-video-nouveau/nouveau_exa.c
+--- xf86-video-nouveau-src/nouveau_exa.c	2011-03-23 09:14:36.000000000 +0100
++++ xf86-video-nouveau/nouveau_exa.c	2011-09-01 17:27:55.000000000 +0200
+@@ -22,6 +22,7 @@
  
  #include "nv_include.h"
-+#if !defined(__AROS__)
  #include "nv04_pushbuf.h"
++#if !defined(__AROS__)
  #include "exa.h"
  
+ static inline Bool
 @@ -40,23 +41,40 @@
  
  	return TRUE;
@@ -239,9 +239,9 @@ diff -ur ./xf86-video-nouveau-src/nouveau_exa.c ./xf86-video-nouveau/nouveau_exa
 +		    dstpixels, dstpitch, carddata, dstPixFmt, cl, o);
 +}
 +
-diff -ur ./xf86-video-nouveau-src/nouveau_local.h ./xf86-video-nouveau/nouveau_local.h
---- ./xf86-video-nouveau-src/nouveau_local.h	2011-03-23 09:14:36.000000000 +0100
-+++ ./xf86-video-nouveau/nouveau_local.h	2011-05-08 09:44:19.000000000 +0200
+diff -ur xf86-video-nouveau-src/nouveau_local.h xf86-video-nouveau/nouveau_local.h
+--- xf86-video-nouveau-src/nouveau_local.h	2011-03-23 09:14:36.000000000 +0100
++++ xf86-video-nouveau/nouveau_local.h	2011-05-29 21:41:00.000000000 +0200
 @@ -23,8 +23,10 @@
  #ifndef __NOUVEAU_LOCAL_H__
  #define __NOUVEAU_LOCAL_H__
@@ -253,20 +253,10 @@ diff -ur ./xf86-video-nouveau-src/nouveau_local.h ./xf86-video-nouveau/nouveau_l
  
  /* Debug output */
  #define NOUVEAU_MSG(fmt,args...) ErrorF(fmt, ##args)
-diff -ur ./xf86-video-nouveau-src/nv10_exa.c ./xf86-video-nouveau/nv10_exa.c
---- ./xf86-video-nouveau-src/nv10_exa.c	2011-03-23 09:14:36.000000000 +0100
-+++ ./xf86-video-nouveau/nv10_exa.c	2011-05-03 14:51:06.000000000 +0200
-@@ -28,7 +28,9 @@
- #endif
- 
- #include "nv_include.h"
-+#if !defined(__AROS__)
- #include "nv04_pushbuf.h"
-+#endif
- 
- /* Texture/Render target formats. */
- static struct pict_format {
-@@ -62,10 +64,16 @@
+diff -ur xf86-video-nouveau-src/nv10_exa.c xf86-video-nouveau/nv10_exa.c
+--- xf86-video-nouveau-src/nv10_exa.c	2011-03-23 09:14:36.000000000 +0100
++++ xf86-video-nouveau/nv10_exa.c	2011-09-01 17:27:27.000000000 +0200
+@@ -62,10 +62,16 @@
  	{},
  };
  
@@ -283,7 +273,7 @@ diff -ur ./xf86-video-nouveau-src/nv10_exa.c ./xf86-video-nouveau/nv10_exa.c
  	NVPtr pNv = NVPTR(pScrn);
  
  	/* If repeat is set we're always handling a 1x1 texture with
-@@ -120,6 +128,7 @@
+@@ -120,6 +126,7 @@
  	{ SF(ONE_MINUS_DST_ALPHA), DF(SRC_ALPHA) },	      /* AtopReverse */
  	{ SF(ONE_MINUS_DST_ALPHA), DF(ONE_MINUS_SRC_ALPHA) }, /* Xor */
  	{ SF(ONE),		   DF(ONE) },		      /* Add */
@@ -291,7 +281,7 @@ diff -ur ./xf86-video-nouveau-src/nv10_exa.c ./xf86-video-nouveau/nv10_exa.c
  };
  
  static inline Bool
-@@ -141,6 +150,7 @@
+@@ -141,6 +148,7 @@
  	return mask && mask->componentAlpha && PICT_FORMAT_RGB(mask->format);
  }
  
@@ -299,7 +289,7 @@ diff -ur ./xf86-video-nouveau-src/nv10_exa.c ./xf86-video-nouveau/nv10_exa.c
  static Bool
  check_texture(PicturePtr pict)
  {
-@@ -368,6 +378,7 @@
+@@ -368,6 +376,7 @@
  	print_fallback_info("Accelerating", op, src, mask, dst);
  	return TRUE;
  }
@@ -307,7 +297,7 @@ diff -ur ./xf86-video-nouveau-src/nv10_exa.c ./xf86-video-nouveau/nv10_exa.c
  
  static Bool
  setup_texture(NVPtr pNv, int unit, PicturePtr pict, PixmapPtr pixmap)
-@@ -376,14 +387,23 @@
+@@ -376,14 +385,23 @@
  	struct nouveau_grobj *celsius = pNv->Nv3D;
  	struct nouveau_bo *bo = nouveau_pixmap_bo(pixmap);
  	unsigned tex_reloc = NOUVEAU_BO_VRAM | NOUVEAU_BO_GART | NOUVEAU_BO_RD;
@@ -331,7 +321,7 @@ diff -ur ./xf86-video-nouveau-src/nv10_exa.c ./xf86-video-nouveau/nv10_exa.c
  		0x50 /* UNK */;
  
  	BEGIN_RING(chan, celsius, NV10TCL_TX_OFFSET(unit), 1);
-@@ -481,8 +501,13 @@
+@@ -481,8 +499,13 @@
  	(NV10TCL_RC_IN_RGB_##input##_INPUT_CONSTANT_COLOR##unit |	\
  	 NV10TCL_RC_IN_RGB_##input##_COMPONENT_USAGE_##chan)
  
@@ -345,7 +335,7 @@ diff -ur ./xf86-video-nouveau-src/nv10_exa.c ./xf86-video-nouveau/nv10_exa.c
  {
  	struct nouveau_channel *chan = pNv->chan;
  	struct nouveau_grobj *celsius = pNv->Nv3D;
-@@ -499,7 +524,11 @@
+@@ -499,7 +522,11 @@
  		rc_in_alpha |= RC_IN_ONE(B);
  
  	if (effective_component_alpha(mask)) {
@@ -357,7 +347,7 @@ diff -ur ./xf86-video-nouveau-src/nv10_exa.c ./xf86-video-nouveau/nv10_exa.c
  			/* The alpha channels won't be used for blending. Drop
  			 * them, as our pixels only have 4 components...
  			 * output_i = src_i * mask_i
-@@ -535,24 +564,41 @@
+@@ -535,24 +562,41 @@
  	OUT_RING  (chan, rc_in_rgb);
  }
  
@@ -399,7 +389,7 @@ diff -ur ./xf86-video-nouveau-src/nv10_exa.c ./xf86-video-nouveau/nv10_exa.c
  		if (dst_factor == DF(SRC_ALPHA))
  			dst_factor = DF(SRC_COLOR);
  		else if (dst_factor == DF(ONE_MINUS_SRC_ALPHA))
-@@ -566,6 +612,7 @@
+@@ -566,6 +610,7 @@
  	OUT_RING  (chan, 1);
  }
  
@@ -407,7 +397,7 @@ diff -ur ./xf86-video-nouveau-src/nv10_exa.c ./xf86-video-nouveau/nv10_exa.c
  static void
  NV10StateCompositeReemit(struct nouveau_channel *chan)
  {
-@@ -575,7 +622,9 @@
+@@ -575,7 +620,9 @@
  	NV10EXAPrepareComposite(pNv->alu, pNv->pspict, pNv->pmpict, pNv->pdpict,
  				pNv->pspix, pNv->pmpix, pNv->pdpix);
  }
@@ -417,7 +407,7 @@ diff -ur ./xf86-video-nouveau-src/nv10_exa.c ./xf86-video-nouveau/nv10_exa.c
  Bool
  NV10EXAPrepareComposite(int op,
  			PicturePtr pict_src,
-@@ -586,12 +635,24 @@
+@@ -586,12 +633,24 @@
  			PixmapPtr dst)
  {
  	ScrnInfoPtr pScrn = xf86Screens[dst->drawable.pScreen->myNum];
@@ -442,7 +432,7 @@ diff -ur ./xf86-video-nouveau-src/nv10_exa.c ./xf86-video-nouveau/nv10_exa.c
  	pNv->alu = op;
  	pNv->pspict = pict_src;
  	pNv->pmpict = pict_mask;
-@@ -599,6 +660,7 @@
+@@ -599,6 +658,7 @@
  	pNv->pspix = src;
  	pNv->pmpix = mask;
  	pNv->pdpix = dst;
@@ -450,7 +440,7 @@ diff -ur ./xf86-video-nouveau-src/nv10_exa.c ./xf86-video-nouveau/nv10_exa.c
  
  	/* Set dst format */
  	if (!setup_render_target(pNv, pict_dst, dst))
-@@ -613,6 +675,7 @@
+@@ -613,6 +673,7 @@
  	    !setup_texture(pNv, 1, pict_mask, mask))
  		goto fail;
  
@@ -458,7 +448,7 @@ diff -ur ./xf86-video-nouveau-src/nv10_exa.c ./xf86-video-nouveau/nv10_exa.c
  	/* Set the register combiners up. */
  	setup_combiners(pNv, pict_src, pict_mask);
  
-@@ -620,6 +683,15 @@
+@@ -620,6 +681,15 @@
  	setup_blend_function(pNv);
  
  	chan->flush_notify = NV10StateCompositeReemit;
@@ -474,7 +464,7 @@ diff -ur ./xf86-video-nouveau-src/nv10_exa.c ./xf86-video-nouveau/nv10_exa.c
  
  	return TRUE;
  
-@@ -629,6 +701,20 @@
+@@ -629,6 +699,20 @@
  	return FALSE;
  }
  
@@ -495,7 +485,7 @@ diff -ur ./xf86-video-nouveau-src/nv10_exa.c ./xf86-video-nouveau/nv10_exa.c
  #define QUAD(x, y, w, h)					\
  	{{{ IntToxFixed(x),     IntToxFixed(y),     xFixed1 }},	\
  	 {{ IntToxFixed(x + w), IntToxFixed(y),     xFixed1 }},	\
-@@ -670,6 +756,7 @@
+@@ -670,6 +754,7 @@
  	OUT_RINGf (chan, 0);
  }
  
@@ -503,7 +493,7 @@ diff -ur ./xf86-video-nouveau-src/nv10_exa.c ./xf86-video-nouveau/nv10_exa.c
  static inline void
  transform_vertex(PictTransformPtr t, int i, PictVector vs[])
  {
-@@ -685,18 +772,33 @@
+@@ -685,18 +770,33 @@
  		 int width, int height)
  {
  	ScrnInfoPtr pScrn = xf86Screens[pix_dst->drawable.pScreen->myNum];
@@ -537,7 +527,7 @@ diff -ur ./xf86-video-nouveau-src/nv10_exa.c ./xf86-video-nouveau/nv10_exa.c
  
  	WAIT_RING (chan, 64);
  	BEGIN_RING(chan, celsius, NV10TCL_VERTEX_BEGIN_END, 1);
-@@ -708,6 +810,7 @@
+@@ -708,6 +808,7 @@
  	OUT_RING  (chan, NV10TCL_VERTEX_BEGIN_END_STOP);
  }
  
@@ -545,7 +535,7 @@ diff -ur ./xf86-video-nouveau-src/nv10_exa.c ./xf86-video-nouveau/nv10_exa.c
  void
  NV10EXADoneComposite(PixmapPtr dst)
  {
-@@ -717,6 +820,7 @@
+@@ -717,6 +818,7 @@
  
  	chan->flush_notify = NULL;
  }
@@ -553,7 +543,7 @@ diff -ur ./xf86-video-nouveau-src/nv10_exa.c ./xf86-video-nouveau/nv10_exa.c
  
  Bool
  NVAccelInitNV10TCL(ScrnInfoPtr pScrn)
-@@ -969,3 +1073,32 @@
+@@ -969,3 +1071,32 @@
  
  	return TRUE;
  }
@@ -586,24 +576,21 @@ diff -ur ./xf86-video-nouveau-src/nv10_exa.c ./xf86-video-nouveau/nv10_exa.c
 +    
 +    return FALSE;
 +}
-diff -ur ./xf86-video-nouveau-src/nv30_exa.c ./xf86-video-nouveau/nv30_exa.c
---- ./xf86-video-nouveau-src/nv30_exa.c	2011-03-23 09:14:36.000000000 +0100
-+++ ./xf86-video-nouveau/nv30_exa.c	2011-05-03 10:27:48.000000000 +0200
-@@ -25,7 +25,13 @@
- 
+diff -ur xf86-video-nouveau-src/nv30_exa.c xf86-video-nouveau/nv30_exa.c
+--- xf86-video-nouveau-src/nv30_exa.c	2011-03-23 09:14:36.000000000 +0100
++++ xf86-video-nouveau/nv30_exa.c	2011-09-01 17:27:19.000000000 +0200
+@@ -26,6 +26,10 @@
  #include "nv_include.h"
  #include "nv30_shaders.h"
-+#if !defined(__AROS__)
  #include "nv04_pushbuf.h"
-+#else
++#if defined(__AROS__)
 +#include <aros/debug.h>
-+
 +#define NV30EXA_STATE
 +#endif
  
  typedef struct nv_pict_surface_format {
  	int	 pict_fmt;
-@@ -54,8 +60,10 @@
+@@ -54,8 +58,10 @@
  		float height;
  	} unit[2];
  } nv30_exa_state_t;
@@ -614,7 +601,7 @@ diff -ur ./xf86-video-nouveau-src/nv30_exa.c ./xf86-video-nouveau/nv30_exa.c
  
  static nv_pict_surface_format_t
  NV30SurfaceFormat[] = {
-@@ -223,7 +231,8 @@
+@@ -223,7 +229,8 @@
  /* Atop        */ { 1, 1, BF(          DST_ALPHA), BF(ONE_MINUS_SRC_ALPHA) },
  /* AtopReverse */ { 1, 1, BF(ONE_MINUS_DST_ALPHA), BF(          SRC_ALPHA) },
  /* Xor         */ { 1, 1, BF(ONE_MINUS_DST_ALPHA), BF(ONE_MINUS_SRC_ALPHA) },
@@ -624,7 +611,7 @@ diff -ur ./xf86-video-nouveau-src/nv30_exa.c ./xf86-video-nouveau/nv30_exa.c
  };
  
  static nv_pict_op_t *
-@@ -299,8 +308,13 @@
+@@ -299,8 +306,13 @@
  	}
  }
  
@@ -638,7 +625,7 @@ diff -ur ./xf86-video-nouveau-src/nv30_exa.c ./xf86-video-nouveau/nv30_exa.c
  {
  	NVPtr pNv = NVPTR(pScrn);
  	struct nouveau_channel *chan = pNv->chan;
-@@ -326,9 +340,17 @@
+@@ -326,9 +338,17 @@
  	if (OUT_RELOCl(chan, bo, 0, tex_reloc) ||
  	    OUT_RELOCd(chan, bo, NV34TCL_TX_FORMAT_DIMS_2D | (1 << 16) | 8 |
  		       (fmt->card_fmt << NV34TCL_TX_FORMAT_FORMAT_SHIFT) |
@@ -656,7 +643,7 @@ diff -ur ./xf86-video-nouveau-src/nv30_exa.c ./xf86-video-nouveau/nv30_exa.c
  			NV34TCL_TX_FORMAT_BASE_SIZE_V_SHIFT),
  		       tex_reloc | NOUVEAU_BO_OR,
  		       NV34TCL_TX_FORMAT_DMA0, NV34TCL_TX_FORMAT_DMA1))
-@@ -343,12 +365,21 @@
+@@ -343,12 +363,21 @@
  	OUT_RING  (chan, (card_filter << NV34TCL_TX_FILTER_MINIFY_SHIFT) /* min */ |
  			(card_filter << NV34TCL_TX_FILTER_MAGNIFY_SHIFT) /* mag */ |
  			0x2000 /* engine lock */);
@@ -678,7 +665,7 @@ diff -ur ./xf86-video-nouveau-src/nv30_exa.c ./xf86-video-nouveau/nv30_exa.c
  
  	return TRUE;
  }
-@@ -379,6 +410,7 @@
+@@ -379,6 +408,7 @@
  	return TRUE;
  }
  
@@ -686,7 +673,7 @@ diff -ur ./xf86-video-nouveau-src/nv30_exa.c ./xf86-video-nouveau/nv30_exa.c
  static Bool
  NV30EXACheckCompositeTexture(PicturePtr pPict, PicturePtr pdPict, int op)
  {
-@@ -460,7 +492,9 @@
+@@ -460,7 +490,9 @@
  	NV30EXAPrepareComposite(pNv->alu, pNv->pspict, pNv->pmpict, pNv->pdpict,
  				pNv->pspix, pNv->pmpix, pNv->pdpix);
  }
@@ -696,7 +683,7 @@ diff -ur ./xf86-video-nouveau-src/nv30_exa.c ./xf86-video-nouveau/nv30_exa.c
  Bool
  NV30EXAPrepareComposite(int op, PicturePtr psPict,
  		PicturePtr pmPict,
-@@ -470,6 +504,17 @@
+@@ -470,6 +502,17 @@
  		PixmapPtr  pdPix)
  {
  	ScrnInfoPtr pScrn = xf86Screens[psPix->drawable.pScreen->myNum];
@@ -714,7 +701,7 @@ diff -ur ./xf86-video-nouveau-src/nv30_exa.c ./xf86-video-nouveau/nv30_exa.c
  	NVPtr pNv = NVPTR(pScrn);
  	struct nouveau_channel *chan = pNv->chan;
  	struct nouveau_grobj *rankine = pNv->Nv3D;
-@@ -487,7 +532,11 @@
+@@ -487,7 +530,11 @@
  			 PICT_FORMAT_RGB(pmPict->format)));
  
  	if (!NV30_SetupSurface(pScrn, pdPix, pdPict) ||
@@ -726,7 +713,7 @@ diff -ur ./xf86-video-nouveau-src/nv30_exa.c ./xf86-video-nouveau/nv30_exa.c
  		MARK_UNDO(chan);
  		return FALSE;
  	}
-@@ -507,7 +556,11 @@
+@@ -507,7 +554,11 @@
  #endif
  
  	if (pmPict) {
@@ -738,7 +725,7 @@ diff -ur ./xf86-video-nouveau-src/nv30_exa.c ./xf86-video-nouveau/nv30_exa.c
  			MARK_UNDO(chan);
  			return FALSE;
  		}
-@@ -537,6 +590,7 @@
+@@ -537,6 +588,7 @@
  	BEGIN_RING(chan, rankine, 0x23c, 1);
  	OUT_RING  (chan, pmPict?3:1);
  
@@ -746,7 +733,7 @@ diff -ur ./xf86-video-nouveau-src/nv30_exa.c ./xf86-video-nouveau/nv30_exa.c
  	pNv->alu = op;
  	pNv->pspict = psPict;
  	pNv->pmpict = pmPict;
-@@ -545,6 +599,7 @@
+@@ -545,6 +597,7 @@
  	pNv->pmpix = pmPix;
  	pNv->pdpix = pdPix;
  	chan->flush_notify = NV30EXAStateCompositeReemit;
@@ -754,7 +741,7 @@ diff -ur ./xf86-video-nouveau-src/nv30_exa.c ./xf86-video-nouveau/nv30_exa.c
  	return TRUE;
  }
  
-@@ -555,15 +610,21 @@
+@@ -555,15 +608,21 @@
  NV30EXATransformCoord(PictTransformPtr t, int x, int y, float sx, float sy,
  					  float *x_ret, float *y_ret)
  {
@@ -776,7 +763,7 @@ diff -ur ./xf86-video-nouveau-src/nv30_exa.c ./xf86-video-nouveau/nv30_exa.c
  	} else {
  		*x_ret = (float)x;
  		*y_ret = (float)y;
-@@ -584,6 +645,7 @@
+@@ -584,6 +643,7 @@
  	OUT_RING  (chan, ((dy)<<16)|(dx));                                     \
  } while(0)
  
@@ -784,7 +771,7 @@ diff -ur ./xf86-video-nouveau-src/nv30_exa.c ./xf86-video-nouveau/nv30_exa.c
  void
  NV30EXAComposite(PixmapPtr pdPix, int srcX , int srcY,
  				  int maskX, int maskY,
-@@ -591,6 +653,14 @@
+@@ -591,6 +651,14 @@
  				  int width, int height)
  {
  	ScrnInfoPtr pScrn = xf86Screens[pdPix->drawable.pScreen->myNum];
@@ -799,7 +786,7 @@ diff -ur ./xf86-video-nouveau-src/nv30_exa.c ./xf86-video-nouveau/nv30_exa.c
  	NVPtr pNv = NVPTR(pScrn);
  	struct nouveau_channel *chan = pNv->chan;
  	struct nouveau_grobj *rankine = pNv->Nv3D;
-@@ -652,6 +722,7 @@
+@@ -652,6 +720,7 @@
  	OUT_RING  (chan, 0);
  }
  
@@ -807,7 +794,7 @@ diff -ur ./xf86-video-nouveau-src/nv30_exa.c ./xf86-video-nouveau/nv30_exa.c
  void
  NV30EXADoneComposite(PixmapPtr pdPix)
  {
-@@ -661,6 +732,7 @@
+@@ -661,6 +730,7 @@
  
  	chan->flush_notify = NULL;
  }
@@ -815,7 +802,7 @@ diff -ur ./xf86-video-nouveau-src/nv30_exa.c ./xf86-video-nouveau/nv30_exa.c
  
  Bool
  NVAccelInitNV30TCL(ScrnInfoPtr pScrn)
-@@ -914,3 +986,33 @@
+@@ -914,3 +984,33 @@
  
  	return TRUE;
  }
@@ -849,39 +836,32 @@ diff -ur ./xf86-video-nouveau-src/nv30_exa.c ./xf86-video-nouveau/nv30_exa.c
 +    
 +    return FALSE;
 +}
-diff -ur ./xf86-video-nouveau-src/nv30_shaders.c ./xf86-video-nouveau/nv30_shaders.c
---- ./xf86-video-nouveau-src/nv30_shaders.c	2011-03-23 09:14:36.000000000 +0100
-+++ ./xf86-video-nouveau/nv30_shaders.c	2011-05-02 23:41:21.000000000 +0200
-@@ -20,9 +20,10 @@
+diff -ur xf86-video-nouveau-src/nv30_shaders.c xf86-video-nouveau/nv30_shaders.c
+--- xf86-video-nouveau-src/nv30_shaders.c	2011-03-23 09:14:36.000000000 +0100
++++ xf86-video-nouveau/nv30_shaders.c	2011-09-01 17:27:07.000000000 +0200
+@@ -20,7 +20,6 @@
   * SOFTWARE.
   */
  
 -
  #include "nv30_shaders.h"
-+#if !defined(__AROS__)
  #include "nv04_pushbuf.h"
-+#endif
  
- void NV30_UploadFragProg(NVPtr pNv, nv_shader_t *shader, int *hw_offset)
- {
-diff -ur ./xf86-video-nouveau-src/nv40_exa.c ./xf86-video-nouveau/nv40_exa.c
---- ./xf86-video-nouveau-src/nv40_exa.c	2011-03-23 09:14:36.000000000 +0100
-+++ ./xf86-video-nouveau/nv40_exa.c	2011-05-03 10:27:48.000000000 +0200
-@@ -22,7 +22,13 @@
- 
+diff -ur xf86-video-nouveau-src/nv40_exa.c xf86-video-nouveau/nv40_exa.c
+--- xf86-video-nouveau-src/nv40_exa.c	2011-03-23 09:14:36.000000000 +0100
++++ xf86-video-nouveau/nv40_exa.c	2011-09-01 17:26:45.000000000 +0200
+@@ -23,6 +23,10 @@
  #include "nv_include.h"
  #include "nv30_shaders.h"
-+#if !defined(__AROS__)
  #include "nv04_pushbuf.h"
-+#else
++#if defined(__AROS__)
 +#include <aros/debug.h>
-+
 +#define NV40EXA_STATE
 +#endif
  
  typedef struct nv_pict_surface_format {
  	int	 pict_fmt;
-@@ -51,8 +57,10 @@
+@@ -51,8 +55,10 @@
  		float height;
  	} unit[2];
  } nv40_exa_state_t;
@@ -892,7 +872,7 @@ diff -ur ./xf86-video-nouveau-src/nv40_exa.c ./xf86-video-nouveau/nv40_exa.c
  
  static nv_pict_surface_format_t
  NV40SurfaceFormat[] = {
-@@ -172,7 +180,8 @@
+@@ -172,7 +178,8 @@
  /* Atop        */ { 1, 1, SF(          DST_ALPHA), DF(ONE_MINUS_SRC_ALPHA) },
  /* AtopReverse */ { 1, 1, SF(ONE_MINUS_DST_ALPHA), DF(          SRC_ALPHA) },
  /* Xor         */ { 1, 1, SF(ONE_MINUS_DST_ALPHA), DF(ONE_MINUS_SRC_ALPHA) },
@@ -902,7 +882,7 @@ diff -ur ./xf86-video-nouveau-src/nv40_exa.c ./xf86-video-nouveau/nv40_exa.c
  };
  
  static nv_pict_op_t *
-@@ -233,8 +242,13 @@
+@@ -233,8 +240,13 @@
  	}
  }
  
@@ -916,7 +896,7 @@ diff -ur ./xf86-video-nouveau-src/nv40_exa.c ./xf86-video-nouveau/nv40_exa.c
  {
  	NVPtr pNv = NVPTR(pScrn);
  	struct nouveau_channel *chan = pNv->chan;
-@@ -291,6 +305,7 @@
+@@ -291,6 +303,7 @@
  		OUT_RING  (chan, NV40TCL_TEX_FILTER_MIN_NEAREST |
  				 NV40TCL_TEX_FILTER_MAG_NEAREST | 0x3fd6);
  	}
@@ -924,7 +904,7 @@ diff -ur ./xf86-video-nouveau-src/nv40_exa.c ./xf86-video-nouveau/nv40_exa.c
  	OUT_RING  (chan, (pPix->drawable.width << 16) | pPix->drawable.height);
  	OUT_RING  (chan, 0); /* border ARGB */
  	BEGIN_RING(chan, curie, NV40TCL_TEX_SIZE1(unit), 1);
-@@ -300,6 +315,17 @@
+@@ -300,6 +313,17 @@
  	state->unit[unit].width		= (float)pPix->drawable.width;
  	state->unit[unit].height	= (float)pPix->drawable.height;
  	state->unit[unit].transform	= pPict->transform;
@@ -942,7 +922,7 @@ diff -ur ./xf86-video-nouveau-src/nv40_exa.c ./xf86-video-nouveau/nv40_exa.c
  	return TRUE;
  }
  
-@@ -329,6 +355,7 @@
+@@ -329,6 +353,7 @@
  	return TRUE;
  }
  
@@ -950,7 +930,7 @@ diff -ur ./xf86-video-nouveau-src/nv40_exa.c ./xf86-video-nouveau/nv40_exa.c
  static Bool
  NV40EXACheckCompositeTexture(PicturePtr pPict, PicturePtr pdPict, int op)
  {
-@@ -406,7 +433,9 @@
+@@ -406,7 +431,9 @@
  	NV40EXAPrepareComposite(pNv->alu, pNv->pspict, pNv->pmpict, pNv->pdpict,
  				pNv->pspix, pNv->pmpix, pNv->pdpix);
  }
@@ -960,7 +940,7 @@ diff -ur ./xf86-video-nouveau-src/nv40_exa.c ./xf86-video-nouveau/nv40_exa.c
  Bool
  NV40EXAPrepareComposite(int op, PicturePtr psPict,
  				PicturePtr pmPict,
-@@ -416,6 +445,17 @@
+@@ -416,6 +443,17 @@
  				PixmapPtr  pdPix)
  {
  	ScrnInfoPtr pScrn = xf86Screens[psPix->drawable.pScreen->myNum];
@@ -978,7 +958,7 @@ diff -ur ./xf86-video-nouveau-src/nv40_exa.c ./xf86-video-nouveau/nv40_exa.c
  	NVPtr pNv = NVPTR(pScrn);
  	struct nouveau_channel *chan = pNv->chan;
  	struct nouveau_grobj *curie = pNv->Nv3D;
-@@ -433,14 +473,22 @@
+@@ -433,14 +471,22 @@
  			 PICT_FORMAT_RGB(pmPict->format)));
  
  	if (!NV40_SetupSurface(pScrn, pdPix, pdPict->format) ||
@@ -1001,7 +981,7 @@ diff -ur ./xf86-video-nouveau-src/nv40_exa.c ./xf86-video-nouveau/nv40_exa.c
  			MARK_UNDO(chan);
  			return FALSE;
  		}
-@@ -476,6 +524,7 @@
+@@ -476,6 +522,7 @@
  	BEGIN_RING(chan, curie, NV40TCL_TEX_CACHE_CTL, 1);
  	OUT_RING  (chan, 1);
  
@@ -1009,7 +989,7 @@ diff -ur ./xf86-video-nouveau-src/nv40_exa.c ./xf86-video-nouveau/nv40_exa.c
  	pNv->alu = op;
  	pNv->pspict = psPict;
  	pNv->pmpict = pmPict;
-@@ -484,6 +533,7 @@
+@@ -484,6 +531,7 @@
  	pNv->pmpix = pmPix;
  	pNv->pdpix = pdPix;
  	chan->flush_notify = NV40EXAStateCompositeReemit;
@@ -1017,7 +997,7 @@ diff -ur ./xf86-video-nouveau-src/nv40_exa.c ./xf86-video-nouveau/nv40_exa.c
  	return TRUE;
  }
  
-@@ -495,6 +545,9 @@
+@@ -495,6 +543,9 @@
  					  float *x_ret, float *y_ret)
  {
  	if (t) {
@@ -1027,7 +1007,7 @@ diff -ur ./xf86-video-nouveau-src/nv40_exa.c ./xf86-video-nouveau/nv40_exa.c
  		PictVector v;
  		v.vector[0] = IntToxFixed(x);
  		v.vector[1] = IntToxFixed(y);
-@@ -502,6 +555,7 @@
+@@ -502,6 +553,7 @@
  		PictureTransformPoint(t, &v);
  		*x_ret = xFixedToFloat(v.vector[0]) / sx;
  		*y_ret = xFixedToFloat(v.vector[1]) / sy;
@@ -1035,7 +1015,7 @@ diff -ur ./xf86-video-nouveau-src/nv40_exa.c ./xf86-video-nouveau/nv40_exa.c
  	} else {
  		*x_ret = (float)x / sx;
  		*y_ret = (float)y / sy;
-@@ -522,6 +576,7 @@
+@@ -522,6 +574,7 @@
  	OUT_RING  (chan, ((dy)<<16)|(dx));                                     \
  } while(0)
  
@@ -1043,7 +1023,7 @@ diff -ur ./xf86-video-nouveau-src/nv40_exa.c ./xf86-video-nouveau/nv40_exa.c
  void
  NV40EXAComposite(PixmapPtr pdPix, int srcX , int srcY,
  				  int maskX, int maskY,
-@@ -529,11 +584,19 @@
+@@ -529,11 +582,19 @@
  				  int width, int height)
  {
  	ScrnInfoPtr pScrn = xf86Screens[pdPix->drawable.pScreen->myNum];
@@ -1065,7 +1045,7 @@ diff -ur ./xf86-video-nouveau-src/nv40_exa.c ./xf86-video-nouveau/nv40_exa.c
  	NV40EXA_STATE;
  
  	WAIT_RING(chan, 64);
-@@ -587,6 +650,7 @@
+@@ -587,6 +648,7 @@
  	OUT_RING  (chan, NV40TCL_BEGIN_END_STOP);
  }
  
@@ -1073,7 +1053,7 @@ diff -ur ./xf86-video-nouveau-src/nv40_exa.c ./xf86-video-nouveau/nv40_exa.c
  void
  NV40EXADoneComposite(PixmapPtr pdPix)
  {
-@@ -596,6 +660,7 @@
+@@ -596,6 +658,7 @@
  
  	chan->flush_notify = NULL;
  }
@@ -1081,7 +1061,7 @@ diff -ur ./xf86-video-nouveau-src/nv40_exa.c ./xf86-video-nouveau/nv40_exa.c
  
  #define NV40TCL_CHIPSET_4X_MASK 0x00000baf
  #define NV44TCL_CHIPSET_4X_MASK 0x00005450
-@@ -760,3 +825,33 @@
+@@ -760,3 +823,33 @@
  
  	return TRUE;
  }
@@ -1115,9 +1095,9 @@ diff -ur ./xf86-video-nouveau-src/nv40_exa.c ./xf86-video-nouveau/nv40_exa.c
 +    
 +    return FALSE;
 +}
-diff -ur ./xf86-video-nouveau-src/nv50_accel.c ./xf86-video-nouveau/nv50_accel.c
---- ./xf86-video-nouveau-src/nv50_accel.c	2011-03-23 09:14:36.000000000 +0100
-+++ ./xf86-video-nouveau/nv50_accel.c	2011-05-08 09:44:19.000000000 +0200
+diff -ur xf86-video-nouveau-src/nv50_accel.c xf86-video-nouveau/nv50_accel.c
+--- xf86-video-nouveau-src/nv50_accel.c	2011-03-23 09:14:36.000000000 +0100
++++ xf86-video-nouveau/nv50_accel.c	2011-05-29 21:41:00.000000000 +0200
 @@ -23,6 +23,7 @@
  #include "nv_include.h"
  #include "nv50_accel.h"
@@ -1134,22 +1114,9 @@ diff -ur ./xf86-video-nouveau-src/nv50_accel.c ./xf86-video-nouveau/nv50_accel.c
  
  Bool
  NVAccelInitNV50TCL(ScrnInfoPtr pScrn)
-diff -ur ./xf86-video-nouveau-src/nv50_accel.h ./xf86-video-nouveau/nv50_accel.h
---- ./xf86-video-nouveau-src/nv50_accel.h	2011-03-23 09:14:36.000000000 +0100
-+++ ./xf86-video-nouveau/nv50_accel.h	2011-05-08 09:44:19.000000000 +0200
-@@ -1,7 +1,9 @@
- #ifndef __NV50_ACCEL_H__
- #define __NV50_ACCEL_H__
- 
-+#if !defined(__AROS__)
- #include "nv04_pushbuf.h"
-+#endif
- 
- /* "Tesla scratch buffer" offsets */
- #define PVP_OFFSET  0x00000000 /* Vertex program */
-diff -ur ./xf86-video-nouveau-src/nv50_exa.c ./xf86-video-nouveau/nv50_exa.c
---- ./xf86-video-nouveau-src/nv50_exa.c	2011-03-23 09:14:36.000000000 +0100
-+++ ./xf86-video-nouveau/nv50_exa.c	2011-05-08 09:44:19.000000000 +0200
+diff -ur xf86-video-nouveau-src/nv50_exa.c xf86-video-nouveau/nv50_exa.c
+--- xf86-video-nouveau-src/nv50_exa.c	2011-03-23 09:14:36.000000000 +0100
++++ xf86-video-nouveau/nv50_exa.c	2011-05-29 21:41:00.000000000 +0200
 @@ -22,9 +22,11 @@
   */
  
@@ -1505,30 +1472,22 @@ diff -ur ./xf86-video-nouveau-src/nv50_exa.c ./xf86-video-nouveau/nv50_exa.c
 +    
 +    return FALSE;
 +}
-diff -ur ./xf86-video-nouveau-src/nv_accel_common.c ./xf86-video-nouveau/nv_accel_common.c
---- ./xf86-video-nouveau-src/nv_accel_common.c	2011-03-23 09:14:36.000000000 +0100
-+++ ./xf86-video-nouveau/nv_accel_common.c	2011-05-09 20:19:59.000000000 +0200
-@@ -21,8 +21,19 @@
-  */
+diff -ur xf86-video-nouveau-src/nv_accel_common.c xf86-video-nouveau/nv_accel_common.c
+--- xf86-video-nouveau-src/nv_accel_common.c	2011-03-23 09:14:36.000000000 +0100
++++ xf86-video-nouveau/nv_accel_common.c	2011-09-01 17:26:01.000000000 +0200
+@@ -22,7 +22,11 @@
  
  #include "nv_include.h"
-+#if !defined(__AROS__)
  #include "nv04_pushbuf.h"
-+#else
-+
++#if defined(__AROS__)
 +#include <aros/debug.h>
- 
-+/* Some overriding defines for AROS */
-+#define NOUVEAU_CREATE_PIXMAP_ZETA      0x10000000
-+#define NOUVEAU_CREATE_PIXMAP_TILED     0x20000000
-+#define NOUVEAU_CREATE_PIXMAP_SCANOUT   0x40000000
 +#endif
-+
+ 
 +#if !defined(__AROS__)
  Bool
  nouveau_allocate_surface(ScrnInfoPtr scrn, int width, int height, int bpp,
  			 int usage_hint, int *pitch, struct nouveau_bo **bo)
-@@ -149,6 +160,7 @@
+@@ -149,6 +153,7 @@
  	BEGIN_RING(chan, blit, 0x00000130, 1);
  	OUT_RING  (chan, 0);
  }
@@ -1536,7 +1495,7 @@ diff -ur ./xf86-video-nouveau-src/nv_accel_common.c ./xf86-video-nouveau/nv_acce
  
  static Bool
  NVAccelInitDmaNotifier0(ScrnInfoPtr pScrn)
-@@ -193,6 +205,7 @@
+@@ -193,6 +198,7 @@
  	return TRUE;
  }
  
@@ -1544,7 +1503,7 @@ diff -ur ./xf86-video-nouveau-src/nv_accel_common.c ./xf86-video-nouveau/nv_acce
  /* FLAGS_ROP_AND, DmaFB, DmaFB, 0 */
  static Bool
  NVAccelInitContextBeta1(ScrnInfoPtr pScrn)
-@@ -233,11 +246,16 @@
+@@ -233,11 +239,16 @@
  	OUT_RING  (chan, 0xffff0000);
  	return TRUE;
  }
@@ -1561,7 +1520,7 @@ diff -ur ./xf86-video-nouveau-src/nv_accel_common.c ./xf86-video-nouveau/nv_acce
  	case 32:
  		*fmt_ret = NV04_CONTEXT_SURFACES_2D_FORMAT_A8R8G8B8;
  		break;
-@@ -245,7 +263,11 @@
+@@ -245,7 +256,11 @@
  		*fmt_ret = NV04_CONTEXT_SURFACES_2D_FORMAT_X8R8G8B8_Z8R8G8B8;
  		break;
  	case 16:
@@ -1573,7 +1532,7 @@ diff -ur ./xf86-video-nouveau-src/nv_accel_common.c ./xf86-video-nouveau/nv_acce
  			*fmt_ret = NV04_CONTEXT_SURFACES_2D_FORMAT_R5G6B5;
  		else
  			*fmt_ret = NV04_CONTEXT_SURFACES_2D_FORMAT_X1R5G5B5_Z1R5G5B5;
-@@ -260,6 +282,7 @@
+@@ -260,6 +275,7 @@
  	return TRUE;
  }
  
@@ -1581,7 +1540,7 @@ diff -ur ./xf86-video-nouveau-src/nv_accel_common.c ./xf86-video-nouveau/nv_acce
  Bool
  NVAccelGetCtxSurf2DFormatFromPicture(PicturePtr pPict, int *fmt_ret)
  {
-@@ -292,6 +315,7 @@
+@@ -292,6 +308,7 @@
  	else
  		return (PixmapPtr) pDraw;
  }
@@ -1589,7 +1548,7 @@ diff -ur ./xf86-video-nouveau-src/nv_accel_common.c ./xf86-video-nouveau/nv_acce
  
  static Bool
  NVAccelInitImagePattern(ScrnInfoPtr pScrn)
-@@ -339,7 +363,7 @@
+@@ -339,7 +356,7 @@
  	BEGIN_RING(chan, rop, NV03_CONTEXT_ROP_DMA_NOTIFY, 1);
  	OUT_RING  (chan, chan->nullobj->handle);
  
@@ -1598,7 +1557,7 @@ diff -ur ./xf86-video-nouveau-src/nv_accel_common.c ./xf86-video-nouveau/nv_acce
  	return TRUE;
  }
  
-@@ -421,6 +445,7 @@
+@@ -421,6 +438,7 @@
  	return TRUE;
  }
  
@@ -1606,7 +1565,7 @@ diff -ur ./xf86-video-nouveau-src/nv_accel_common.c ./xf86-video-nouveau/nv_acce
  static Bool
  NVAccelInitScaledImage(ScrnInfoPtr pScrn)
  {
-@@ -491,6 +516,7 @@
+@@ -491,6 +509,7 @@
  
  	return TRUE;
  }
@@ -1614,7 +1573,7 @@ diff -ur ./xf86-video-nouveau-src/nv_accel_common.c ./xf86-video-nouveau/nv_acce
  
  /* FLAGS_NONE, NvDmaFB, NvDmaAGP, NvDmaNotifier0 */
  static Bool
-@@ -522,6 +548,7 @@
+@@ -522,6 +541,7 @@
  	return TRUE;
  }
  
@@ -1622,7 +1581,7 @@ diff -ur ./xf86-video-nouveau-src/nv_accel_common.c ./xf86-video-nouveau/nv_acce
  static Bool
  NVAccelInitImageFromCpu(ScrnInfoPtr pScrn)
  {
-@@ -571,6 +598,7 @@
+@@ -571,6 +591,7 @@
  
  	return TRUE;
  }
@@ -1630,7 +1589,7 @@ diff -ur ./xf86-video-nouveau-src/nv_accel_common.c ./xf86-video-nouveau/nv_acce
  
  static Bool
  NVAccelInit2D_NV50(ScrnInfoPtr pScrn)
-@@ -602,10 +630,11 @@
+@@ -602,10 +623,11 @@
  	BEGIN_RING(chan, eng2d, 0x58c, 1);
  	OUT_RING  (chan, 0x111);
  
@@ -1643,7 +1602,7 @@ diff -ur ./xf86-video-nouveau-src/nv_accel_common.c ./xf86-video-nouveau/nv_acce
  #define INIT_CONTEXT_OBJECT(name) do {                                        \
  	ret = NVAccelInit##name(pScrn);                                       \
  	if (!ret) {                                                           \
-@@ -615,6 +644,16 @@
+@@ -615,6 +637,16 @@
  		return FALSE;                                                 \
  	}                                                                     \
  } while(0)
@@ -1660,7 +1619,7 @@ diff -ur ./xf86-video-nouveau-src/nv_accel_common.c ./xf86-video-nouveau/nv_acce
  
  Bool
  NVAccelCommonInit(ScrnInfoPtr pScrn)
-@@ -622,8 +661,10 @@
+@@ -622,8 +654,10 @@
  	NVPtr pNv = NVPTR(pScrn);
  	Bool ret;
  
@@ -1671,7 +1630,7 @@ diff -ur ./xf86-video-nouveau-src/nv_accel_common.c ./xf86-video-nouveau/nv_acce
  
  	/* General engine objects */
  	if (pNv->Architecture < NV_ARCH_C0)
-@@ -632,32 +673,42 @@
+@@ -632,32 +666,42 @@
  	/* 2D engine */
  	if (pNv->Architecture < NV_ARCH_50) {
  		INIT_CONTEXT_OBJECT(ContextSurfaces);
@@ -1714,7 +1673,7 @@ diff -ur ./xf86-video-nouveau-src/nv_accel_common.c ./xf86-video-nouveau/nv_acce
  	case NV_ARCH_50:
  		INIT_CONTEXT_OBJECT(NV50TCL);
  		break;
-@@ -682,22 +733,28 @@
+@@ -682,22 +726,28 @@
  {
  	NVPtr pNv = NVPTR(pScrn);
  
@@ -1743,7 +1702,7 @@ diff -ur ./xf86-video-nouveau-src/nv_accel_common.c ./xf86-video-nouveau/nv_acce
  	nouveau_grobj_free(&pNv->Nv2D);
  	nouveau_grobj_free(&pNv->NvMemFormat);
  	nouveau_grobj_free(&pNv->NvSW);
-@@ -706,3 +763,16 @@
+@@ -706,3 +756,16 @@
  	nouveau_bo_ref(NULL, &pNv->tesla_scratch);
  	nouveau_bo_ref(NULL, &pNv->shader_mem);
  }
@@ -1760,9 +1719,9 @@ diff -ur ./xf86-video-nouveau-src/nv_accel_common.c ./xf86-video-nouveau/nv_acce
 +{
 +    NVAccelFree(carddata);
 +}
-diff -ur ./xf86-video-nouveau-src/nv_include.h ./xf86-video-nouveau/nv_include.h
---- ./xf86-video-nouveau-src/nv_include.h	2011-03-23 09:14:36.000000000 +0100
-+++ ./xf86-video-nouveau/nv_include.h	2011-05-09 20:20:03.000000000 +0200
+diff -ur xf86-video-nouveau-src/nv_include.h xf86-video-nouveau/nv_include.h
+--- xf86-video-nouveau-src/nv_include.h	2011-03-23 09:14:36.000000000 +0100
++++ xf86-video-nouveau/nv_include.h	2011-05-29 21:41:00.000000000 +0200
 @@ -1,84 +1,158 @@
  #ifndef __NV_INCLUDE_H__
  #define __NV_INCLUDE_H__
