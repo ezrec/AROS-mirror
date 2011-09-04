@@ -23,8 +23,7 @@ include $(SRCDIR)/$(CURDIR)/../../mapi/mapi/sources.mak
 #MM- test-mesa : workbench-libs-mesa-module
 
 #MM workbench-libs-mesa-module : includes linklibs-galliumauxiliary \
-#MM workbench-libs-gallium workbench-libs-mesa-module-generated \
-#MM workbench-libs-mesa-module-cpp
+#MM workbench-libs-gallium workbench-libs-mesa-module-cpp
 
 SHARED_LIB_SOURCES = \
             aros/emul_arosc \
@@ -193,13 +192,16 @@ LIBRARY_SOURCES = \
 
 # NOTE: Both files have been generate and added to AROS repository. Once all 
 # build machines support python 2.5 with libxml2, these targets can be enabled
-##MM
-#workbench-libs-mesa-module-generated : $(SRCDIR)/$(CURDIR)/main/api_exec_es1.c $(SRCDIR)/$(CURDIR)/main/api_exec_es2.c
-#
-#$(SRCDIR)/$(CURDIR)/main/api_exec_es1.c :
-#	@$(PYTHON) $(SRCDIR)/$(CURDIR)/main/es_generator.py -S $(SRCDIR)/$(CURDIR)/main/APIspec.xml -V GLES1.1 > $@
-#
-#$(SRCDIR)/$(CURDIR)/main/api_exec_es2.c :
-#	@$(PYTHON) $(SRCDIR)/$(CURDIR)/main/es_generator.py -S $(SRCDIR)/$(CURDIR)/main/APIspec.xml -V GLES2.0 > $@
+
+MESA_MAIN := $(SRCDIR)/$(CURDIR)/../../mesa/main
+
+#MM
+workbench-libs-mesa-module-generated : $(MESA_MAIN)/api_exec_es1.c $(MESA_MAIN)/api_exec_es2.c
+
+$(MESA_MAIN)/api_exec_es1.c :
+	@$(PYTHON) $(MESA_MAIN)/es_generator.py -S $(MESA_MAIN)/APIspec.xml -V GLES1.1 > $@
+
+$(SRCDIR)/$(CURDIR)/../../mesa/main/api_exec_es2.c :
+	@$(PYTHON) $(MESA_MAIN)/es_generator.py -S $(MESA_MAIN)/APIspec.xml -V GLES2.0 > $@
 
 %common
