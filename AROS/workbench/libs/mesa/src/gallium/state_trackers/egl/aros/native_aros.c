@@ -40,7 +40,7 @@
 struct aros_display 
 {
     struct native_display base;
-    struct native_event_handler *event_handler;
+    const struct native_event_handler *event_handler;
     struct native_config *configs;
     int configs_count;
 };
@@ -264,7 +264,7 @@ aros_display_is_format_supported(struct native_display *ndpy,
     return ndpy->screen->is_format_supported(ndpy->screen,
         fmt, PIPE_TEXTURE_2D, 0,
         (is_color) ? PIPE_BIND_RENDER_TARGET :
-        PIPE_BIND_DEPTH_STENCIL, 0);
+        PIPE_BIND_DEPTH_STENCIL);
 }
 
 static const struct native_config **
@@ -355,9 +355,10 @@ aros_display_destroy(struct native_display *ndpy)
     FREE(arosdpy);
 }
 
+static const struct native_event_handler *aros_event_handler;
+
 static struct native_display *
-native_create_display(void * dpy, struct native_event_handler * event_handler,
-                      void * user_data)
+native_create_display(void * dpy, boolean use_sw)
 {
     struct aros_display * adpy;
 
@@ -365,8 +366,7 @@ native_create_display(void * dpy, struct native_event_handler * event_handler,
     if (!adpy)
         return NULL;
 
-    adpy->event_handler = event_handler;
-    adpy->base.user_data = user_data;
+    adpy->event_handler = aros_event_handler;
 
     if (!(adpy->base.screen = CreatePipeScreenV(NULL))) 
     {
@@ -390,8 +390,9 @@ static const struct native_platform aros_platform =
 };
 
 const struct native_platform *
-native_get_aros_platform(void)
+native_get_aros_platform(const struct native_event_handler *event_handler)
 {
+   aros_event_handler = event_handler;
    return &aros_platform;
 }
 

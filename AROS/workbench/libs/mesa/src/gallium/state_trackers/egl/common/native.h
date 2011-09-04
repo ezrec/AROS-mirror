@@ -290,11 +290,14 @@ native_get_drm_platform(const struct native_event_handler *event_handler);
 const struct native_platform *
 native_get_fbdev_platform(const struct native_event_handler *event_handler);
 
+#if defined(PIPE_OS_AROS)
+const struct native_platform *
+native_get_aros_platform(const struct native_event_handler *event_handler);
+#endif
+
 #ifdef __cplusplus
 }
 #endif
 
-const struct native_platform *
-native_get_aros_platform(void);
 
 #endif /* _NATIVE_H_ */

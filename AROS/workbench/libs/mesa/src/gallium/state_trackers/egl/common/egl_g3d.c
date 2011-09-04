@@ -56,6 +56,7 @@ egl_g3d_invalid_surface(struct native_display *ndpy,
       gctx->stctxi->notify_invalid_framebuffer(gctx->stctxi, gsurf->stfbi);
 }
 
+#if !defined(PIPE_OS_AROS)
 static struct pipe_screen *
 egl_g3d_new_drm_screen(struct native_display *ndpy, const char *name, int fd)
 {
@@ -71,6 +72,7 @@ egl_g3d_new_sw_screen(struct native_display *ndpy, struct sw_winsys *ws)
    struct egl_g3d_display *gdpy = egl_g3d_display(dpy);
    return gdpy->loader->create_sw_screen(ws);
 }
+#endif
 
 static struct pipe_resource *
 egl_g3d_lookup_egl_image(struct native_display *ndpy, void *egl_image)
@@ -87,13 +89,19 @@ egl_g3d_lookup_egl_image(struct native_display *ndpy, void *egl_image)
    return resource;
 }
 
+#if !defined(PIPE_OS_AROS)
 static const struct native_event_handler egl_g3d_native_event_handler = {
    egl_g3d_invalid_surface,
    egl_g3d_new_drm_screen,
    egl_g3d_new_sw_screen,
    egl_g3d_lookup_egl_image
 };
-
+#else
+static const struct native_event_handler egl_g3d_native_event_handler = {
+   egl_g3d_invalid_surface,
+   egl_g3d_lookup_egl_image
+};
+#endif
 /**
  * Get the native platform.
  */
@@ -140,7 +148,7 @@ egl_g3d_get_platform(_EGLDriver *drv, _EGLPlatformType plat)
       case _EGL_PLATFORM_AROS:
          plat_name = "AROS";
 #ifdef HAVE_AROS_BACKEND
-         nplat = native_get_aros_platform();
+         nplat = native_get_aros_platform(&egl_g3d_native_event_handler);
 #endif
          break;
       default:

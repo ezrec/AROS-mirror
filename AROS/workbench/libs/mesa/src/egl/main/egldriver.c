@@ -28,11 +28,9 @@
  **************************************************************************/
 
 
-#if !defined(_EGL_OS_AROS)
 /**
  * Functions for choosing and opening/loading device drivers.
  */
-
 
 #include <assert.h>
 #include <string.h>
@@ -80,6 +78,7 @@ const struct {
    { NULL, NULL }
 };
 
+#if !defined(_EGL_OS_AROS)
 /**
  * Wrappers for dlopen/dlclose()
  */
@@ -231,7 +230,7 @@ _eglLoadModule(_EGLModule *mod)
 
    return EGL_TRUE;
 }
-
+#endif /* !defined(_EGL_OS_AROS) */
 
 /**
  * Unload a module.
@@ -259,7 +258,6 @@ _eglUnloadModule(_EGLModule *mod)
    mod->Driver = NULL;
    mod->Handle = NULL;
 }
-#endif /* !defined(_EGL_OS_AROS) */
 
 
 /**
@@ -302,7 +300,6 @@ _eglAddModule(const char *path)
 }
 
 
-#if !defined(_EGL_OS_AROS)
 /**
  * Free a module.
  */
@@ -317,6 +314,7 @@ _eglFreeModule(void *module)
 }
 
 
+#if !defined(_EGL_OS_AROS)
 /**
  * A loader function for use with _eglPreloadForEach.  The loader data is the
  * filename of the driver.   This function stops on the first valid driver.
@@ -534,7 +532,7 @@ _eglAddGalliumDriver(void)
    _eglPreloadForEach(_eglGetSearchPath(), _eglLoaderFile, external);
 #endif
 }
-
+#endif /* !defined(_EGL_OS_AROS) */
 
 /**
  * Add built-in drivers to the module array.
@@ -551,7 +549,6 @@ _eglAddBuiltInDrivers(void)
          mod->BuiltIn = _eglBuiltInDrivers[i].main;
    }
 }
-#endif /* !defined(_EGL_OS_AROS) */
 
 
 /**
@@ -564,6 +561,7 @@ _eglAddDrivers(void)
    if (_eglModules)
       return EGL_TRUE;
 
+#if !defined(_EGL_OS_AROS)
    if (!_eglAddUserDriver()) {
       /*
        * Add other drivers only when EGL_DRIVER is not set.  The order here
@@ -572,6 +570,9 @@ _eglAddDrivers(void)
       _eglAddGalliumDriver();
       _eglAddBuiltInDrivers();
    }
+#else
+   _eglAddBuiltInDrivers();
+#endif
 
    return (_eglModules != NULL);
 }
@@ -585,7 +586,9 @@ static _EGLDriver *
 _eglMatchAndInitialize(_EGLDisplay *dpy)
 {
    _EGLDriver *drv = NULL;
+#if !defined(_EGL_OS_AROS)
    EGLint i = 0;
+#endif
 
    if (!_eglAddDrivers()) {
       _eglLog(_EGL_WARNING, "failed to find any driver");
@@ -600,6 +603,7 @@ _eglMatchAndInitialize(_EGLDisplay *dpy)
       return drv;
    }
 
+#if !defined(_EGL_OS_AROS)
    while (i < _eglModules->Size) {
       _EGLModule *mod = (_EGLModule *) _eglModules->Elements[i];
 
@@ -617,6 +621,7 @@ _eglMatchAndInitialize(_EGLDisplay *dpy)
          i++;
       }
    }
+#endif
 
    return drv;
 }
@@ -701,7 +706,6 @@ _eglUnloadDrivers(void)
       _eglModules = NULL;
    }
 }
-
 
 #if !defined(_EGL_OS_AROS)
 /**
