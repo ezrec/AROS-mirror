@@ -162,9 +162,10 @@ int gettimeofday (struct timeval * tv,struct timezone * tz)
     return 0;
 }
 
-void abort (void)
+__noreturn void abort (void)
 {
     IMPLEMENT();
+    for(;;);
 }
 
 /* File operations */
@@ -192,9 +193,22 @@ int fprintf (FILE * fh, const char * format, ...)
     return 0;
 }
 
+int vfprintf(FILE * restrict stream, const char * restrict format,
+	va_list arg)
+{
+    IMPLEMENT();
+    return 0;
+}
+
 double atof (const char * str)
 {
     return strtod (str, (char **)NULL);
+}
+
+int puts (const char * str)
+{
+    bug("%s\n", str);
+    return 1;
 }
 
 /* private function to get the upper or lower bound (depending on the architecture) of the stack */
