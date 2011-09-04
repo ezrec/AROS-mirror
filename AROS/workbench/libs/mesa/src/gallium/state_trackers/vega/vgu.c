@@ -37,6 +37,10 @@
 #include <math.h>
 #include <assert.h>
 
+#if defined(PIPE_OS_AROS)
+#include "vega/vgapim.h"
+#include "vega/vg_mangle.h"
+#endif
 
 static void vgu_append_float_coords(VGPath path,
                                     const VGubyte *cmds,
