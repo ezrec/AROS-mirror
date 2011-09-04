@@ -532,7 +532,15 @@ static INLINE unsigned
 util_bitcount(unsigned n)
 {
 #if defined(PIPE_CC_GCC) && (PIPE_CC_GCC_VERSION >= 304)
+#if defined(PIPE_OS_AROS)
+   unsigned int bits;
+   for (bits = 0; n > 0; n = n >> 1) {
+      bits += (n & 1);
+   }
+   return bits;
+#else
    return __builtin_popcount(n);
+#endif
 #else
    /* K&R classic bitcount.
     *
