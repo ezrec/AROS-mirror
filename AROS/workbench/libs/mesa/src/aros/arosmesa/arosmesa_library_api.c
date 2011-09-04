@@ -16022,3 +16022,717 @@ AROS_LH3(void, glGetTexParameterPointervAPPLE,
     AROS_LIBFUNC_EXIT
 }
 
+AROS_LH2(void, glClampColorARB,
+    AROS_LHA(GLenum, target, D0),
+    AROS_LHA(GLenum, clamp, D1),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglClampColorARB(target, clamp);
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH5(void, glFramebufferTextureLayerARB,
+    AROS_LHA(GLenum, target, D0),
+    AROS_LHA(GLenum, attachment, D1),
+    AROS_LHA(GLuint, texture, D2),
+    AROS_LHA(GLint, level, D3),
+    AROS_LHA(GLint, layer, D4),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglFramebufferTextureLayerARB(target, attachment, texture, level, layer);
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH2(void, glVertexAttribDivisorARB,
+    AROS_LHA(GLuint, index, D0),
+    AROS_LHA(GLuint, divisor, D1),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglVertexAttribDivisorARB(index, divisor);
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH3(void, glTexBufferARB,
+    AROS_LHA(GLenum, target, D0),
+    AROS_LHA(GLenum, internalformat, D1),
+    AROS_LHA(GLuint, buffer, D2),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglTexBufferARB(target, internalformat, buffer);
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH6(void, glDrawElementsInstancedBaseVertex,
+    AROS_LHA(GLenum, mode, D0),
+    AROS_LHA(GLsizei, count, D1),
+    AROS_LHA(GLenum, type, D2),
+    AROS_LHA(const GLvoid *, indices, A0),
+    AROS_LHA(GLsizei, primcount, D3),
+    AROS_LHA(GLint, basevertex, D4),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglDrawElementsInstancedBaseVertex(mode, count, type, indices, primcount, basevertex);
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH2(void, glBlendEquationiARB,
+    AROS_LHA(GLuint, buf, D0),
+    AROS_LHA(GLenum, mode, D1),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglBlendEquationiARB(buf, mode);
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH3(void, glBlendEquationSeparateiARB,
+    AROS_LHA(GLuint, buf, D0),
+    AROS_LHA(GLenum, modeRGB, D1),
+    AROS_LHA(GLenum, modeAlpha, D2),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglBlendEquationSeparateiARB(buf, modeRGB, modeAlpha);
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH3(void, glBlendFunciARB,
+    AROS_LHA(GLuint, buf, D0),
+    AROS_LHA(GLenum, src, D1),
+    AROS_LHA(GLenum, dst, D2),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglBlendFunciARB(buf, src, dst);
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH5(void, glBlendFuncSeparateiARB,
+    AROS_LHA(GLuint, buf, D0),
+    AROS_LHA(GLenum, srcRGB, D1),
+    AROS_LHA(GLenum, dstRGB, D2),
+    AROS_LHA(GLenum, srcAlpha, D3),
+    AROS_LHA(GLenum, dstAlpha, D4),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglBlendFuncSeparateiARB(buf, srcRGB, dstRGB, srcAlpha, dstAlpha);
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH2(void, glGenSamplers,
+    AROS_LHA(GLsizei, count, D0),
+    AROS_LHA(GLuint *, samplers, A0),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglGenSamplers(count, samplers);
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH2(void, glDeleteSamplers,
+    AROS_LHA(GLsizei, count, D0),
+    AROS_LHA(const GLuint *, samplers, A0),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglDeleteSamplers(count, samplers);
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH1(GLboolean, glIsSampler,
+    AROS_LHA(GLuint, sampler, D0),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    GLboolean _return = mglIsSampler(sampler);
+
+    return _return;
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH2(void, glBindSampler,
+    AROS_LHA(GLuint, unit, D0),
+    AROS_LHA(GLuint, sampler, D1),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglBindSampler(unit, sampler);
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH3(void, glSamplerParameteri,
+    AROS_LHA(GLuint, sampler, D0),
+    AROS_LHA(GLenum, pname, D1),
+    AROS_LHA(GLint, param, D2),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglSamplerParameteri(sampler, pname, param);
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH3(void, glSamplerParameteriv,
+    AROS_LHA(GLuint, sampler, D0),
+    AROS_LHA(GLenum, pname, D1),
+    AROS_LHA(const GLint *, param, A0),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglSamplerParameteriv(sampler, pname, param);
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH3(void, glSamplerParameterf,
+    AROS_LHA(GLuint, sampler, D0),
+    AROS_LHA(GLenum, pname, D1),
+    AROS_LHA(GLfloat, param, D2),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglSamplerParameterf(sampler, pname, param);
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH3(void, glSamplerParameterfv,
+    AROS_LHA(GLuint, sampler, D0),
+    AROS_LHA(GLenum, pname, D1),
+    AROS_LHA(const GLfloat *, param, A0),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglSamplerParameterfv(sampler, pname, param);
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH3(void, glSamplerParameterIiv,
+    AROS_LHA(GLuint, sampler, D0),
+    AROS_LHA(GLenum, pname, D1),
+    AROS_LHA(const GLint *, param, A0),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglSamplerParameterIiv(sampler, pname, param);
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH3(void, glSamplerParameterIuiv,
+    AROS_LHA(GLuint, sampler, D0),
+    AROS_LHA(GLenum, pname, D1),
+    AROS_LHA(const GLuint *, param, A0),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglSamplerParameterIuiv(sampler, pname, param);
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH3(void, glGetSamplerParameteriv,
+    AROS_LHA(GLuint, sampler, D0),
+    AROS_LHA(GLenum, pname, D1),
+    AROS_LHA(GLint *, params, A0),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglGetSamplerParameteriv(sampler, pname, params);
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH3(void, glGetSamplerParameterIiv,
+    AROS_LHA(GLuint, sampler, D0),
+    AROS_LHA(GLenum, pname, D1),
+    AROS_LHA(GLint *, params, A0),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglGetSamplerParameterIiv(sampler, pname, params);
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH3(void, glGetSamplerParameterfv,
+    AROS_LHA(GLuint, sampler, D0),
+    AROS_LHA(GLenum, pname, D1),
+    AROS_LHA(GLfloat *, params, A0),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglGetSamplerParameterfv(sampler, pname, params);
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH3(void, glGetSamplerParameterIuiv,
+    AROS_LHA(GLuint, sampler, D0),
+    AROS_LHA(GLenum, pname, D1),
+    AROS_LHA(GLuint *, params, A0),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglGetSamplerParameterIuiv(sampler, pname, params);
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH0(void, glReleaseShaderCompiler,
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglReleaseShaderCompiler();
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH5(void, glShaderBinary,
+    AROS_LHA(GLsizei, count, D0),
+    AROS_LHA(const GLuint *, shaders, A0),
+    AROS_LHA(GLenum, binaryformat, D1),
+    AROS_LHA(const GLvoid *, binary, A1),
+    AROS_LHA(GLsizei, length, D2),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglShaderBinary(count, shaders, binaryformat, binary, length);
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH4(void, glGetShaderPrecisionFormat,
+    AROS_LHA(GLenum, shadertype, D0),
+    AROS_LHA(GLenum, precisiontype, D1),
+    AROS_LHA(GLint *, range, A0),
+    AROS_LHA(GLint *, precision, A1),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglGetShaderPrecisionFormat(shadertype, precisiontype, range, precision);
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH2(void, glDepthRangef,
+    AROS_LHA(GLclampf, n, D0),
+    AROS_LHA(GLclampf, f, D1),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglDepthRangef(n, f);
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH1(void, glClearDepthf,
+    AROS_LHA(GLclampf, d, D0),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglClearDepthf(d);
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH0(GLenum, glGetGraphicsResetStatusARB,
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    GLenum _return = mglGetGraphicsResetStatusARB();
+
+    return _return;
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH4(void, glGetnMapdvARB,
+    AROS_LHA(GLenum, target, D0),
+    AROS_LHA(GLenum, query, D1),
+    AROS_LHA(GLsizei, bufSize, D2),
+    AROS_LHA(GLdouble *, v, A0),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglGetnMapdvARB(target, query, bufSize, v);
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH4(void, glGetnMapfvARB,
+    AROS_LHA(GLenum, target, D0),
+    AROS_LHA(GLenum, query, D1),
+    AROS_LHA(GLsizei, bufSize, D2),
+    AROS_LHA(GLfloat *, v, A0),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglGetnMapfvARB(target, query, bufSize, v);
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH4(void, glGetnMapivARB,
+    AROS_LHA(GLenum, target, D0),
+    AROS_LHA(GLenum, query, D1),
+    AROS_LHA(GLsizei, bufSize, D2),
+    AROS_LHA(GLint *, v, A0),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglGetnMapivARB(target, query, bufSize, v);
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH3(void, glGetnPixelMapfvARB,
+    AROS_LHA(GLenum, map, D0),
+    AROS_LHA(GLsizei, bufSize, D1),
+    AROS_LHA(GLfloat *, values, A0),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglGetnPixelMapfvARB(map, bufSize, values);
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH3(void, glGetnPixelMapuivARB,
+    AROS_LHA(GLenum, map, D0),
+    AROS_LHA(GLsizei, bufSize, D1),
+    AROS_LHA(GLuint *, values, A0),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglGetnPixelMapuivARB(map, bufSize, values);
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH3(void, glGetnPixelMapusvARB,
+    AROS_LHA(GLenum, map, D0),
+    AROS_LHA(GLsizei, bufSize, D1),
+    AROS_LHA(GLushort *, values, A0),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglGetnPixelMapusvARB(map, bufSize, values);
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH2(void, glGetnPolygonStippleARB,
+    AROS_LHA(GLsizei, bufSize, D0),
+    AROS_LHA(GLubyte *, pattern, A0),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglGetnPolygonStippleARB(bufSize, pattern);
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH5(void, glGetnColorTableARB,
+    AROS_LHA(GLenum, target, D0),
+    AROS_LHA(GLenum, format, D1),
+    AROS_LHA(GLenum, type, D2),
+    AROS_LHA(GLsizei, bufSize, D3),
+    AROS_LHA(GLvoid *, table, A0),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglGetnColorTableARB(target, format, type, bufSize, table);
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH5(void, glGetnConvolutionFilterARB,
+    AROS_LHA(GLenum, target, D0),
+    AROS_LHA(GLenum, format, D1),
+    AROS_LHA(GLenum, type, D2),
+    AROS_LHA(GLsizei, bufSize, D3),
+    AROS_LHA(GLvoid *, image, A0),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglGetnConvolutionFilterARB(target, format, type, bufSize, image);
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH8(void, glGetnSeparableFilterARB,
+    AROS_LHA(GLenum, target, D0),
+    AROS_LHA(GLenum, format, D1),
+    AROS_LHA(GLenum, type, D2),
+    AROS_LHA(GLsizei, rowBufSize, D3),
+    AROS_LHA(GLvoid *, row, A0),
+    AROS_LHA(GLsizei, columnBufSize, D4),
+    AROS_LHA(GLvoid *, column, A1),
+    AROS_LHA(GLvoid *, span, A2),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglGetnSeparableFilterARB(target, format, type, rowBufSize, row, columnBufSize, column, span);
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH6(void, glGetnHistogramARB,
+    AROS_LHA(GLenum, target, D0),
+    AROS_LHA(GLboolean, reset, D1),
+    AROS_LHA(GLenum, format, D2),
+    AROS_LHA(GLenum, type, D3),
+    AROS_LHA(GLsizei, bufSize, D4),
+    AROS_LHA(GLvoid *, values, A0),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglGetnHistogramARB(target, reset, format, type, bufSize, values);
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH6(void, glGetnMinmaxARB,
+    AROS_LHA(GLenum, target, D0),
+    AROS_LHA(GLboolean, reset, D1),
+    AROS_LHA(GLenum, format, D2),
+    AROS_LHA(GLenum, type, D3),
+    AROS_LHA(GLsizei, bufSize, D4),
+    AROS_LHA(GLvoid *, values, A0),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglGetnMinmaxARB(target, reset, format, type, bufSize, values);
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH6(void, glGetnTexImageARB,
+    AROS_LHA(GLenum, target, D0),
+    AROS_LHA(GLint, level, D1),
+    AROS_LHA(GLenum, format, D2),
+    AROS_LHA(GLenum, type, D3),
+    AROS_LHA(GLsizei, bufSize, D4),
+    AROS_LHA(GLvoid *, img, A0),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglGetnTexImageARB(target, level, format, type, bufSize, img);
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH8(void, glReadnPixelsARB,
+    AROS_LHA(GLint, x, D0),
+    AROS_LHA(GLint, y, D1),
+    AROS_LHA(GLsizei, width, D2),
+    AROS_LHA(GLsizei, height, D3),
+    AROS_LHA(GLenum, format, D4),
+    AROS_LHA(GLenum, type, D5),
+    AROS_LHA(GLsizei, bufSize, D6),
+    AROS_LHA(GLvoid *, data, A0),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglReadnPixelsARB(x, y, width, height, format, type, bufSize, data);
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH4(void, glGetnCompressedTexImageARB,
+    AROS_LHA(GLenum, target, D0),
+    AROS_LHA(GLint, lod, D1),
+    AROS_LHA(GLsizei, bufSize, D2),
+    AROS_LHA(GLvoid *, img, A0),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglGetnCompressedTexImageARB(target, lod, bufSize, img);
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH4(void, glGetnUniformfvARB,
+    AROS_LHA(GLuint, program, D0),
+    AROS_LHA(GLint, location, D1),
+    AROS_LHA(GLsizei, bufSize, D2),
+    AROS_LHA(GLfloat *, params, A0),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglGetnUniformfvARB(program, location, bufSize, params);
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH4(void, glGetnUniformivARB,
+    AROS_LHA(GLuint, program, D0),
+    AROS_LHA(GLint, location, D1),
+    AROS_LHA(GLsizei, bufSize, D2),
+    AROS_LHA(GLint *, params, A0),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglGetnUniformivARB(program, location, bufSize, params);
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH4(void, glGetnUniformuivARB,
+    AROS_LHA(GLuint, program, D0),
+    AROS_LHA(GLint, location, D1),
+    AROS_LHA(GLsizei, bufSize, D2),
+    AROS_LHA(GLuint *, params, A0),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglGetnUniformuivARB(program, location, bufSize, params);
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH4(void, glGetnUniformdvARB,
+    AROS_LHA(GLuint, program, D0),
+    AROS_LHA(GLint, location, D1),
+    AROS_LHA(GLsizei, bufSize, D2),
+    AROS_LHA(GLdouble *, params, A0),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglGetnUniformdvARB(program, location, bufSize, params);
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH3(void, glBlendFuncIndexedAMD,
+    AROS_LHA(GLuint, buf, D0),
+    AROS_LHA(GLenum, src, D1),
+    AROS_LHA(GLenum, dst, D2),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglBlendFuncIndexedAMD(buf, src, dst);
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH5(void, glBlendFuncSeparateIndexedAMD,
+    AROS_LHA(GLuint, buf, D0),
+    AROS_LHA(GLenum, srcRGB, D1),
+    AROS_LHA(GLenum, dstRGB, D2),
+    AROS_LHA(GLenum, srcAlpha, D3),
+    AROS_LHA(GLenum, dstAlpha, D4),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglBlendFuncSeparateIndexedAMD(buf, srcRGB, dstRGB, srcAlpha, dstAlpha);
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH2(void, glBlendEquationIndexedAMD,
+    AROS_LHA(GLuint, buf, D0),
+    AROS_LHA(GLenum, mode, D1),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglBlendEquationIndexedAMD(buf, mode);
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH3(void, glBlendEquationSeparateIndexedAMD,
+    AROS_LHA(GLuint, buf, D0),
+    AROS_LHA(GLenum, modeRGB, D1),
+    AROS_LHA(GLenum, modeAlpha, D2),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglBlendEquationSeparateIndexedAMD(buf, modeRGB, modeAlpha);
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH0(void, glTextureBarrierNV,
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    mglTextureBarrierNV();
+
+    AROS_LIBFUNC_EXIT
+}
+
