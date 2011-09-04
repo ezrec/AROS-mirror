@@ -355,6 +355,17 @@ aros_display_destroy(struct native_display *ndpy)
     FREE(arosdpy);
 }
 
+static boolean
+aros_display_init_screen(struct native_display *ndpy)
+{
+    struct aros_display *arosdpy = aros_display(ndpy);
+
+    if (!(arosdpy->base.screen = CreatePipeScreenV(NULL))) 
+        return FALSE;
+
+   return TRUE;
+}
+
 static const struct native_event_handler *aros_event_handler;
 
 static struct native_display *
@@ -368,15 +379,11 @@ native_create_display(void * dpy, boolean use_sw)
 
     adpy->event_handler = aros_event_handler;
 
-    if (!(adpy->base.screen = CreatePipeScreenV(NULL))) 
-    {
-        aros_display_destroy(&adpy->base);
-        return NULL;
-    }
-
+    adpy->base.init_screen = aros_display_init_screen;
     adpy->base.destroy = aros_display_destroy;
     adpy->base.get_param = aros_display_get_param;
     adpy->base.get_configs = aros_display_get_configs;
+
     adpy->base.create_window_surface = aros_display_create_window_surface;
     adpy->base.create_pixmap_surface = NULL;
 

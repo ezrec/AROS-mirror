@@ -78,7 +78,7 @@ const struct {
    { NULL, NULL }
 };
 
-#if !defined(_EGL_OS_AROS)
+
 /**
  * Wrappers for dlopen/dlclose()
  */
@@ -106,6 +106,16 @@ library_suffix(void)
    return ".dll";
 }
 
+
+#elif defined(_EGL_OS_AROS)
+
+typedef void * lib_handle;
+
+static void
+close_library(void *lib)
+{
+    /* No-Op */
+}
 
 #elif defined(_EGL_OS_UNIX)
 
@@ -141,6 +151,7 @@ library_suffix(void)
 static _EGLMain_t
 _eglOpenLibrary(const char *driverPath, lib_handle *handle)
 {
+#if !defined(_EGL_OS_AROS)
    lib_handle lib;
    _EGLMain_t mainFunc = NULL;
    const char *error = "unknown error";
@@ -187,6 +198,9 @@ _eglOpenLibrary(const char *driverPath, lib_handle *handle)
 
    *handle = lib;
    return mainFunc;
+#else
+   return NULL;
+#endif
 }
 
 
@@ -230,7 +244,7 @@ _eglLoadModule(_EGLModule *mod)
 
    return EGL_TRUE;
 }
-#endif /* !defined(_EGL_OS_AROS) */
+
 
 /**
  * Unload a module.
@@ -586,9 +600,7 @@ static _EGLDriver *
 _eglMatchAndInitialize(_EGLDisplay *dpy)
 {
    _EGLDriver *drv = NULL;
-#if !defined(_EGL_OS_AROS)
    EGLint i = 0;
-#endif
 
    if (!_eglAddDrivers()) {
       _eglLog(_EGL_WARNING, "failed to find any driver");
@@ -603,7 +615,6 @@ _eglMatchAndInitialize(_EGLDisplay *dpy)
       return drv;
    }
 
-#if !defined(_EGL_OS_AROS)
    while (i < _eglModules->Size) {
       _EGLModule *mod = (_EGLModule *) _eglModules->Elements[i];
 
@@ -621,7 +632,6 @@ _eglMatchAndInitialize(_EGLDisplay *dpy)
          i++;
       }
    }
-#endif
 
    return drv;
 }
