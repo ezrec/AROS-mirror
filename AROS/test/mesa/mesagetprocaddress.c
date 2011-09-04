@@ -18,6 +18,7 @@ AROSMesaContext glcont=NULL;
 #define RAND_COL 1.0
 
 PFNGLUNIFORM4IPROC AROSglUniform4i = NULL;
+AROSMesaProc AROSglNotExisting4fv = NULL;
 
 void testextensions()
 {
@@ -26,15 +27,28 @@ void testextensions()
 
     if (AROSglUniform4i != NULL)
     {
-        printf("Pointer to glUniform4i acquired\n");
-        printf("Calling glUniform4i via pointer\n");
+        printf("OK.. Pointer to glUniform4i acquired\n");
+        printf("OK.. Calling glUniform4i via pointer\n");
         AROSglUniform4i(0, 0, 0, 0, 0);
-        printf("glUniform4i called\n");
+        printf("OK.. glUniform4i called\n");
     }
     else
     {
-        printf("Failed to get pointer to glUniform4i");
+        printf("FAILED.. Failed to get pointer to glUniform4i\n");
     }
+    
+    printf("Getting pointer to glNotExisting4fv...\n");
+    AROSglNotExisting4fv = AROSMesaGetProcAddress("glNotExisting4fv");
+
+    if (AROSglNotExisting4fv == NULL)
+    {
+        printf("OK.. Pointer to glNotExisting4fv not acquired\n");
+    }
+    else
+    {
+        printf("OK.. Pointer to glNotExisting4fv acquired\n");
+    }
+
 }
 
 struct Window * win = NULL;
