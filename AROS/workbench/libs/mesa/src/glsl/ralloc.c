@@ -287,7 +287,7 @@ ralloc_autofree_context(void)
 {
    if (unlikely(autofree_context == NULL)) {
       autofree_context = ralloc_context(NULL);
-//TODO: FIXME      atexit(autofree);
+      atexit(autofree);
    }
    return autofree_context;
 }
