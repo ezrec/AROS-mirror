@@ -10,9 +10,11 @@ include $(TOP)/config/make.cfg
 #MM workbench-libs-hostgl-module : includes
 
 MESA_API_DIRECTORY := $(SRCDIR)/workbench/libs/mesa/src/aros/arosmesa
+MESA_ST_DIRECTORY := $(SRCDIR)/workbench/libs/mesa/src/gallium/state_trackers/arosmesa
 
 LIBRARY_SOURCES = \
                 $(MESA_API_DIRECTORY)/arosmesa_library_api \
+                $(MESA_ST_DIRECTORY)/arosmesa_funcs \
                 hostgl_gl_api \
                 hostgl_arosmesacreatecontext \
                 hostgl_arosmesadestroycontext \
@@ -24,8 +26,8 @@ LIBRARY_SOURCES = \
                 hostgl_arosmesaswapbuffers \
                 x11_hostlib \
 
-USER_INCLUDES := -I$(MESA_API_DIRECTORY) -isystem $(GENINCDIR) $(HOST_X11_CFLAGS) $(KERNEL_INCLUDES)
-USER_CFLAGS := -DHOST_OS_$(ARCH)
+USER_INCLUDES := -I$(MESA_API_DIRECTORY) -I$(MESA_ST_DIRECTORY) -isystem $(GENINCDIR) $(HOST_X11_CFLAGS) $(KERNEL_INCLUDES)
+USER_CFLAGS := -DHOST_OS_$(ARCH) -DAROSMESA_TYPES='"hostgl_types.h"'
 
 %build_module mmake=workbench-libs-hostgl-module \
     modname=mesa modtype=library linklibname=GL conffile=arosmesa.conf \

@@ -3,7 +3,7 @@
     $Id$
 */
 
-#include "hostgl_types.h"
+#include "arosmesa_funcs.h"
 #include <proto/exec.h>
 #include <aros/debug.h>
 
@@ -131,22 +131,53 @@
 *****************************************************************************/
 {
     LONG screen;
-    
-    AROSMesaContext amesa = AllocVec(sizeof(AROSMesaContext), MEMF_ANY);
+    AROSMesaContext amesa = NULL;
 
-    /* open connection with the server */
-    amesa->display = XCALL(XOpenDisplay, NULL);
-    screen = DefaultScreen(amesa->display);
+    /* Allocate arosmesa_context struct initialized to zeros */
+    if (!(amesa = (AROSMesaContext)AllocVec(sizeof(struct arosmesa_context), MEMF_PUBLIC | MEMF_CLEAR)))
+    {
+        D(bug("[AROSMESA] AROSMesaCreateContext: ERROR - failed to allocate AROSMesaContext\n"));
+        return NULL;
+    }
     
+    AROSMesaSelectRastPort(amesa, tagList);
+    if (!amesa->visible_rp)
+    {
+        D(bug("[AROSMESA] AROSMesaCreateContext: ERROR - failed to select visible rastport\n"));
+        goto error_out;
+    }
+    
+    AROSMesaStandardInit(amesa, tagList);
+
+    amesa->framebuffer = (struct arosmesa_framebuffer *)AllocVec(sizeof(struct arosmesa_framebuffer), MEMF_PUBLIC | MEMF_CLEAR);
+    if (!amesa->framebuffer)
+    {
+        D(bug("[AROSMESA] AROSMesaCreateContext: ERROR -  failed to create frame buffer\n"));
+        goto error_out;
+    }
+
+    AROSMesaRecalculateBufferWidthHeight(amesa);
+
+
+
+    
+    /* open connection with the server */
+    amesa->XDisplay = XCALL(XOpenDisplay, NULL);
+    screen = DefaultScreen(amesa->XDisplay);
 
     /* create window */
-    amesa->window = XCALL(XCreateSimpleWindow, amesa->display, RootWindow(amesa->display, screen), 10, 10, 100, 100, 1,
-        BlackPixel(amesa->display, screen), WhitePixel(amesa->display, screen));
+    amesa->XWindow = XCALL(XCreateSimpleWindow, amesa->XDisplay, RootWindow(amesa->XDisplay, screen), 
+        amesa->left, amesa->top, amesa->framebuffer->width, amesa->framebuffer->height, 0,
+        BlackPixel(amesa->XDisplay, screen), WhitePixel(amesa->XDisplay, screen));
 
     /* map (show) the window */
-    XCALL(XMapWindow, amesa->display, amesa->window);
+    XCALL(XMapWindow, amesa->XDisplay, amesa->XWindow);
     
-    XCALL(XFlush, amesa->display);
+    XCALL(XFlush, amesa->XDisplay);
     
     return amesa;
+
+error_out:
+    if (amesa) AROSMesaDestroyContext(amesa);
+    return NULL;
 }

@@ -39,9 +39,10 @@
 {
     AROS_LIBFUNC_INIT
 
-    XCALL(XDestroyWindow, amesa->display, amesa->window);
-    XCALL(XCloseDisplay, amesa->display);
+    XCALL(XDestroyWindow, amesa->XDisplay, amesa->XWindow);
+    XCALL(XCloseDisplay, amesa->XDisplay);
     
+    FreeVec(amesa->framebuffer);
     FreeVec(amesa);
 
     AROS_LIBFUNC_EXIT
