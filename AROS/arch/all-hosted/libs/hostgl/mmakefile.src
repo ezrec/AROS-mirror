@@ -1,0 +1,31 @@
+#   $Id$
+#
+#   Generate libGL.a
+#
+
+include $(TOP)/config/make.cfg
+
+#MM- workbench-libs-hostgl : workbench-libs-hostgl-module
+
+#MM workbench-libs-hostgl-module : includes
+
+LIBRARY_SOURCES = \
+                arosmesa_library_api \
+                hostgl_gl_api \
+                hostgl_arosmesacreatecontext \
+                hostgl_arosmesadestroycontext \
+                hostgl_arosmesagetconfig \
+                hostgl_arosmesagetcurrentcontext \
+                hostgl_arosmesagetopenglstatetrackerapi \
+                hostgl_arosmesamakecurrent \
+                hostgl_arosmesasetrast \
+                hostgl_arosmesaswapbuffers \
+
+%build_module mmake=workbench-libs-hostgl-module \
+    modname=mesa modtype=library linklibname=GL conffile=arosmesa.conf \
+    files="$(LIBRARY_SOURCES)" moduledir=Storage
+
+#    uselibs="galliumauxiliary rom gallium arosm amiga"
+#linklibfiles="arosmesa_getprocaddress" \
+
+%common
