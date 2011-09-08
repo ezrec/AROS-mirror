@@ -130,6 +130,23 @@
 
 *****************************************************************************/
 {
-    /* TODO: IMPLEMENT */
-    return AllocVec(sizeof(AROSMesaContext), MEMF_ANY);
+    LONG screen;
+    
+    AROSMesaContext amesa = AllocVec(sizeof(AROSMesaContext), MEMF_ANY);
+
+    /* open connection with the server */
+    amesa->display = XCALL(XOpenDisplay, NULL);
+    screen = DefaultScreen(amesa->display);
+    
+
+    /* create window */
+    amesa->window = XCALL(XCreateSimpleWindow, amesa->display, RootWindow(amesa->display, screen), 10, 10, 100, 100, 1,
+        BlackPixel(amesa->display, screen), WhitePixel(amesa->display, screen));
+
+    /* map (show) the window */
+    XCALL(XMapWindow, amesa->display, amesa->window);
+    
+    XCALL(XFlush, amesa->display);
+    
+    return amesa;
 }

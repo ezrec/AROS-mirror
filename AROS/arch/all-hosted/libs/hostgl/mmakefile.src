@@ -22,8 +22,10 @@ LIBRARY_SOURCES = \
                 hostgl_arosmesamakecurrent \
                 hostgl_arosmesasetrast \
                 hostgl_arosmesaswapbuffers \
+                x11_hostlib \
 
-USER_INCLUDES := -I$(MESA_API_DIRECTORY)
+USER_INCLUDES := -I$(MESA_API_DIRECTORY) -isystem $(GENINCDIR) $(HOST_X11_CFLAGS) $(KERNEL_INCLUDES)
+USER_CFLAGS := -DHOST_OS_$(ARCH)
 
 %build_module mmake=workbench-libs-hostgl-module \
     modname=mesa modtype=library linklibname=GL conffile=arosmesa.conf \
