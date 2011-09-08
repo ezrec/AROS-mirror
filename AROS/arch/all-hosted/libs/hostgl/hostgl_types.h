@@ -9,6 +9,7 @@
 #include <GL/arosmesa.h>
 
 #include "x11_hostlib.h"
+#include "glx_hostlib.h"
 
 struct arosmesa_framebuffer
 {
@@ -20,8 +21,9 @@ struct arosmesa_framebuffer
 /* AROSMesa context */
 struct arosmesa_context
 {
-    Display *XDisplay;
-    Window XWindow;
+    Display     *XDisplay;
+    Window      XWindow;
+    GLXContext  glXctx;
 
     struct arosmesa_framebuffer *framebuffer;
 

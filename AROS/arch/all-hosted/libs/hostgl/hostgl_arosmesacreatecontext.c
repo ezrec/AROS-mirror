@@ -130,8 +130,14 @@
 
 *****************************************************************************/
 {
-    LONG screen;
-    AROSMesaContext amesa = NULL;
+    LONG                screen;
+    AROSMesaContext     amesa = NULL;
+    XVisualInfo         template;
+    XVisualInfo         *visinfo;
+    LONG                template_mask;
+    LONG                numvisuals;
+
+    /* Standard AROSMesa initialization */
 
     /* Allocate arosmesa_context struct initialized to zeros */
     if (!(amesa = (AROSMesaContext)AllocVec(sizeof(struct arosmesa_context), MEMF_PUBLIC | MEMF_CLEAR)))
@@ -160,24 +166,43 @@
 
 
 
+    /* X/GLX initialization */
     
-    /* open connection with the server */
+    /* Open connection with the server */
     amesa->XDisplay = XCALL(XOpenDisplay, NULL);
     screen = DefaultScreen(amesa->XDisplay);
 
-    /* create window */
+    /* Create window */
     amesa->XWindow = XCALL(XCreateSimpleWindow, amesa->XDisplay, RootWindow(amesa->XDisplay, screen), 
         amesa->left, amesa->top, amesa->framebuffer->width, amesa->framebuffer->height, 0,
         BlackPixel(amesa->XDisplay, screen), WhitePixel(amesa->XDisplay, screen));
 
-    /* map (show) the window */
+    /* Map (show) the window */
     XCALL(XMapWindow, amesa->XDisplay, amesa->XWindow);
     
     XCALL(XFlush, amesa->XDisplay);
+
+    /* Get some info on the display */
+    template.visualid = XCALL(XVisualIDFromVisual, DefaultVisual(amesa->XDisplay, screen));
+    template_mask = VisualIDMask;
+
+    visinfo = XCALL(XGetVisualInfo, amesa->XDisplay, template_mask, &template, &numvisuals);
     
+    /* Create GL context */
+    amesa->glXctx = GLXCALL(glXCreateContext, amesa->XDisplay, visinfo, NULL, True);
+    
+    XCALL(XFree, visinfo);
+    
+    if (!amesa->glXctx)
+    {
+        D(bug("[AROSMESA] AROSMesaCreateContext: ERROR -  failed to create GLX context\n"));
+        goto error_out;
+    }
+
     return amesa;
 
 error_out:
+    if (amesa->framebuffer) FreeVec(amesa->framebuffer);
     if (amesa) AROSMesaDestroyContext(amesa);
     return NULL;
 }

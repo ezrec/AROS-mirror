@@ -25,6 +25,7 @@ LIBRARY_SOURCES = \
                 hostgl_arosmesasetrast \
                 hostgl_arosmesaswapbuffers \
                 x11_hostlib \
+                glx_hostlib
 
 USER_INCLUDES := -I$(MESA_API_DIRECTORY) -I$(MESA_ST_DIRECTORY) -isystem $(GENINCDIR) $(HOST_X11_CFLAGS) $(KERNEL_INCLUDES)
 USER_CFLAGS := -DHOST_OS_$(ARCH) -DAROSMESA_TYPES='"hostgl_types.h"'
