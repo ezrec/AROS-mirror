@@ -11,6 +11,7 @@ include $(TOP)/config/make.cfg
 
 MESA_API_DIRECTORY := $(SRCDIR)/workbench/libs/mesa/src/aros/arosmesa
 MESA_ST_DIRECTORY := $(SRCDIR)/workbench/libs/mesa/src/gallium/state_trackers/arosmesa
+MESA_MAPI_DIRECTORY := $(SRCDIR)/workbench/libs/mesa/src/mapi
 
 LIBRARY_SOURCES = \
                 $(MESA_API_DIRECTORY)/arosmesa_library_api \
@@ -28,13 +29,17 @@ LIBRARY_SOURCES = \
                 x11_hostlib \
                 glx_hostlib
 
-USER_INCLUDES := -I$(MESA_API_DIRECTORY) -I$(MESA_ST_DIRECTORY) -isystem $(GENINCDIR) $(HOST_X11_CFLAGS) $(KERNEL_INCLUDES)
+LINKLIB_SOURCES = \
+                $(MESA_API_DIRECTORY)/arosmesa_getprocaddress \
+
+
+USER_INCLUDES := -I$(MESA_API_DIRECTORY) -I$(MESA_ST_DIRECTORY) -I$(MESA_MAPI_DIRECTORY) -isystem $(GENINCDIR) $(HOST_X11_CFLAGS) $(KERNEL_INCLUDES)
 USER_CFLAGS := -DHOST_OS_$(ARCH) -DAROSMESA_TYPES='"hostgl_types.h"' \
                 -DAPIMINLINE='inline'
 
 %build_module mmake=workbench-libs-hostgl-module \
     modname=mesa modtype=library linklibname=GL conffile=arosmesa.conf \
-    files="$(LIBRARY_SOURCES)" moduledir=Storage
+    files="$(LIBRARY_SOURCES)" moduledir=Storage linklibfiles="$(LINKLIB_SOURCES)"
 
 #    uselibs="galliumauxiliary rom gallium arosm amiga"
 #linklibfiles="arosmesa_getprocaddress" \
