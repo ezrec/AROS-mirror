@@ -42,7 +42,10 @@
     if (amesa)
     {
         GLXCALL(glXDestroyContext, amesa->XDisplay, amesa->glXctx);
+#if defined(RENDERER_SEPARATE_X_WINDOW)
+        GLXCALL(glXDestroyWindow, amesa->XDisplay, amesa->glXWindow);
         XCALL(XDestroyWindow, amesa->XDisplay, amesa->XWindow);
+#endif
         XCALL(XCloseDisplay, amesa->XDisplay);
         
         FreeVec(amesa->framebuffer);

@@ -11,6 +11,8 @@
 #include "x11_hostlib.h"
 #include "glx_hostlib.h"
 
+#define RENDERER_SEPARATE_X_WINDOW
+
 struct arosmesa_framebuffer
 {
     ULONG                       width;
@@ -22,7 +24,10 @@ struct arosmesa_framebuffer
 struct arosmesa_context
 {
     Display     *XDisplay;
+#if defined(RENDERER_SEPARATE_X_WINDOW)
     Window      XWindow;
+    GLXWindow   glXWindow;
+#endif
     GLXContext  glXctx;
 
     struct arosmesa_framebuffer *framebuffer;

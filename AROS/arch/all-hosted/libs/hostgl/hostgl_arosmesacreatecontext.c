@@ -130,12 +130,26 @@
 
 *****************************************************************************/
 {
-    LONG                screen;
-    AROSMesaContext     amesa = NULL;
-    XVisualInfo         template;
-    XVisualInfo         *visinfo;
-    LONG                template_mask;
-    LONG                numvisuals;
+    LONG                    screen;
+    AROSMesaContext         amesa = NULL;
+    XVisualInfo             *visinfo;
+#if defined(RENDERER_SEPARATE_X_WINDOW)
+    GLXFBConfig             *windowfbconfigs;
+    LONG                    numreturned;
+    XSetWindowAttributes    swa;
+    LONG                    swamask;
+    LONG windowattributes[] = 
+    {
+        GLX_DRAWABLE_TYPE, GLX_WINDOW_BIT,
+        GLX_RENDER_TYPE,   GLX_RGBA_BIT,
+        GLX_DOUBLEBUFFER,  True,
+        GLX_RED_SIZE,      1,
+        GLX_GREEN_SIZE,    1, 
+        GLX_BLUE_SIZE,     1,
+        None
+    };
+
+#endif
 
     /* Standard AROSMesa initialization */
 
@@ -165,33 +179,43 @@
     AROSMesaRecalculateBufferWidthHeight(amesa);
 
 
-
     /* X/GLX initialization */
-    
+
     /* Open connection with the server */
     amesa->XDisplay = XCALL(XOpenDisplay, NULL);
     screen = DefaultScreen(amesa->XDisplay);
+    
+#if defined(RENDERER_SEPARATE_X_WINDOW)
+    /* Choose window config */
+    windowfbconfigs = GLXCALL(glXChooseFBConfig, amesa->XDisplay, screen, windowattributes, &numreturned);
+    
+    if (windowfbconfigs == NULL)
+    {
+        D(bug("[AROSMESA] AROSMesaCreateContext: ERROR -  failed to retrieve windowfbconfigs\n"));
+        goto error_out;
+    }
+    
+    visinfo = GLXCALL(glXGetVisualFromFBConfig, amesa->XDisplay, windowfbconfigs[0]);
 
-    /* Create window */
-    amesa->XWindow = XCALL(XCreateSimpleWindow, amesa->XDisplay, RootWindow(amesa->XDisplay, screen), 
+    swa.colormap = XCALL(XCreateColormap, amesa->XDisplay, RootWindow(amesa->XDisplay, screen), visinfo->visual, AllocNone);
+    swamask = CWColormap;
+
+    /* Create X window */
+    amesa->XWindow = XCALL(XCreateWindow, amesa->XDisplay, RootWindow(amesa->XDisplay, screen),
         amesa->left, amesa->top, amesa->framebuffer->width, amesa->framebuffer->height, 0,
-        BlackPixel(amesa->XDisplay, screen), WhitePixel(amesa->XDisplay, screen));
+        visinfo->depth, InputOutput, visinfo->visual, swamask, &swa);
+    
+    /* Create GLX window */
+    amesa->glXWindow = GLXCALL(glXCreateWindow, amesa->XDisplay, windowfbconfigs[0], amesa->XWindow, NULL);
 
     /* Map (show) the window */
     XCALL(XMapWindow, amesa->XDisplay, amesa->XWindow);
     
     XCALL(XFlush, amesa->XDisplay);
 
-    /* Get some info on the display */
-    template.visualid = XCALL(XVisualIDFromVisual, DefaultVisual(amesa->XDisplay, screen));
-    template_mask = VisualIDMask;
-
-    visinfo = XCALL(XGetVisualInfo, amesa->XDisplay, template_mask, &template, &numvisuals);
-    
     /* Create GL context */
-    amesa->glXctx = GLXCALL(glXCreateContext, amesa->XDisplay, visinfo, NULL, True);
-    
-    XCALL(XFree, visinfo);
+    amesa->glXctx = GLXCALL(glXCreateNewContext, amesa->XDisplay, windowfbconfigs[0], GLX_RGBA_TYPE, NULL, True);
+#endif
     
     if (!amesa->glXctx)
     {
@@ -202,7 +226,13 @@
     return amesa;
 
 error_out:
+#if defined(RENDERER_SEPARATE_X_WINDOW)
+    if (amesa->glXWindow) GLXCALL(glXDestroyWindow, amesa->XDisplay, amesa->glXWindow);
+    if (amesa->XWindow) XCALL(XDestroyWindow, amesa->XDisplay, amesa->XWindow);
+#endif
+    if (amesa->XDisplay) XCALL(XCloseDisplay, amesa->XDisplay);
     if (amesa->framebuffer) FreeVec(amesa->framebuffer);
     if (amesa) AROSMesaDestroyContext(amesa);
     return NULL;
 }
+

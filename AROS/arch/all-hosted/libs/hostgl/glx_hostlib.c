@@ -16,40 +16,45 @@ void *glx_handle = NULL;
 struct glx_func glx_func;
 
 static const char *glx_func_names[] = {
-    "glXCreateContext",
+    "glXChooseFBConfig",
+    "glXGetVisualFromFBConfig",
+    "glXCreateNewContext",
     "glXDestroyContext",
+    "glXCreateWindow",
+    "glXDestroyWindow",
     "glXGetProcAddress",
-    "glXMakeCurrent",
-    "glXSwapBuffers"
+    "glXMakeContextCurrent",
+    "glXSwapBuffers",
+    NULL
 };
-
-#define GLX_NUM_FUNCS (5)
 
 struct gl_func gl_func;
 static const char *gl_func_names[];
 
 APTR HostLibBase;
 
-static void *hostlib_load_so(const char *sofile, const char **names, int nfuncs, void **funcptr) {
+static void *hostlib_load_so(const char *sofile, const char **names, void **funcptr) {
     void *handle;
     char *err;
-    int i;
+    char *name;
+    int i = 0;
 
     D(bug("[glx] loading %d functions from %s\n", nfuncs, sofile));
 
     if ((handle = HostLib_Open(sofile, &err)) == NULL) {
-        kprintf("[glx] couldn't open '%s': %s\n", sofile, err);
+        bug("[glx] couldn't open '%s': %s\n", sofile, err);
         return NULL;
     }
 
-    for (i = 0; i < nfuncs; i++) {
-        funcptr[i] = HostLib_GetPointer(handle, names[i], &err);
-        D(bug("%s(%x)\n", names[i], funcptr[i]));
+    while((name = names[i]) != NULL) {
+        funcptr[i] = HostLib_GetPointer(handle, name, &err);
+        D(bug("%s(%x)\n", name, funcptr[i]));
         if (err != NULL) {
-            kprintf("[glx] couldn't get symbol '%s' from '%s': %s\n", names[i], sofile, err);
+            bug("[glx] couldn't get symbol '%s' from '%s': %s\n", name, sofile, err);
             HostLib_Close(handle, NULL);
             return NULL;
         }
+        i++;
     }
 
     D(bug("[glx] done\n"));
@@ -72,11 +77,11 @@ static int glx_hostlib_init(LIBBASETYPEPTR LIBBASE) {
     D(bug("[glx] hostlib init\n"));
 
     if ((HostLibBase = OpenResource("hostlib.resource")) == NULL) {
-        kprintf("[glx] couldn't open hostlib.resource\n");
+        bug("[glx] couldn't open hostlib.resource\n");
         return FALSE;
     }
 
-    if ((glx_handle = hostlib_load_so(GLX_SOFILE, glx_func_names, GLX_NUM_FUNCS, (void **) &glx_func)) == NULL)
+    if ((glx_handle = hostlib_load_so(GLX_SOFILE, glx_func_names, (void **) &glx_func)) == NULL)
         return FALSE;
 
     load_gl_functions(gl_func_names, (void **) &gl_func);

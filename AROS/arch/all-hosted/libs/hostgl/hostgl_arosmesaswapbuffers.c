@@ -40,7 +40,9 @@
 
     if (amesa) 
     {
-        GLXCALL(glXSwapBuffers, amesa->XDisplay, amesa->XWindow);
+#if defined(RENDERER_SEPARATE_X_WINDOW)
+        GLXCALL(glXSwapBuffers, amesa->XDisplay, amesa->glXWindow);
+#endif
     }
 
     /* TODO: check and update glx drawable size */

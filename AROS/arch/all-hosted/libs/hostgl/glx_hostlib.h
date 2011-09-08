@@ -6,10 +6,14 @@
 #include <GL/glx.h>
 
 struct glx_func {
-    GLXContext (*glXCreateContext) (Display *dpy, XVisualInfo *vis, GLXContext shareList, Bool direct);
+    GLXFBConfig * (*glXChooseFBConfig) (Display *dpy, int screen, const int *attribList, int *nitems);
+    XVisualInfo * (*glXGetVisualFromFBConfig) (Display *dpy, GLXFBConfig config);
+    GLXContext (*glXCreateNewContext) (Display *dpy, GLXFBConfig config, int renderType, GLXContext shareList, Bool direct);
     void (*glXDestroyContext) (Display *dpy, GLXContext ctx);
+    GLXWindow (*glXCreateWindow) (Display *dpy, GLXFBConfig config, Window win, const int *attribList);
+    void (*glXDestroyWindow) (Display *dpy, GLXWindow window);
     void * (*glXGetProcAddress) (const GLubyte *procname);     /* glXGetProcAddress is only to be used internally */
-    Bool (*glXMakeCurrent) (Display *dpy, GLXDrawable drawable, GLXContext ctx);
+    Bool (*glXMakeContextCurrent) (Display *dpy, GLXDrawable draw, GLXDrawable read, GLXContext ctx);
     void (*glXSwapBuffers) (Display *dpy, GLXDrawable drawable);
 };
 
