@@ -36,6 +36,7 @@
     AROS_LIBFUNC_INIT
 
     /* TODO: IMPLEMENT */
+    return NULL;
 
     AROS_LIBFUNC_EXIT
 }
