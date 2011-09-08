@@ -132,10 +132,10 @@
 {
     LONG                    screen;
     AROSMesaContext         amesa = NULL;
+    LONG                    numreturned;
 #if defined(RENDERER_SEPARATE_X_WINDOW)
     XVisualInfo             *visinfo;
     GLXFBConfig             *windowfbconfigs;
-    LONG                    numreturned;
     XSetWindowAttributes    swa;
     LONG                    swamask;
     LONG windowfbattributes[] = 
@@ -153,7 +153,6 @@
 
 #if defined(RENDERER_PBUFFER_WPA)
     GLXFBConfig             *pbufferfbconfigs;
-    LONG                    numreturned;
     LONG pbufferfbattributes[] = 
     {
         GLX_DRAWABLE_TYPE, GLX_PBUFFER_BIT,

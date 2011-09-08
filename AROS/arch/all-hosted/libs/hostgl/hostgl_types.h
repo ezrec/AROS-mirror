@@ -16,9 +16,9 @@
 
 struct arosmesa_framebuffer
 {
-    ULONG                       width;
-    ULONG                       height;
-    BOOL                        resized;
+    ULONG   width;
+    ULONG   height;
+    BOOL    resized;
 };
 
 /* AROSMesa context */
