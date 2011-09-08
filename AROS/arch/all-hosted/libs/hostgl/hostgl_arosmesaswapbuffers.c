@@ -38,7 +38,13 @@
 {
     AROS_LIBFUNC_INIT
 
-    /* TODO: IMPLEMENT */
+    if (amesa) 
+    {
+        GLXCALL(glXSwapBuffers, amesa->XDisplay, amesa->XWindow);
+    }
+
+    /* TODO: check and update glx drawable size */
+    /* AROSMesaCheckAndUpdateBufferSize(amesa); */
 
     AROS_LIBFUNC_EXIT
 }

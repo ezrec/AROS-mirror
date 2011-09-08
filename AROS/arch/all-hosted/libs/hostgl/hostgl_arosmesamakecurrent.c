@@ -3,7 +3,7 @@
     $Id$
 */
 
-#include "hostgl_types.h"
+#include "arosmesa_funcs.h"
 #include <proto/exec.h>
 
 /*****************************************************************************
@@ -37,7 +37,25 @@
 {
     AROS_LIBFUNC_INIT
 
-    /* TODO: IMPLEMENT */
+    if (amesa)
+    {
+        /* TODO: check if not the same */
+        /* struct st_context_iface * cur_ctx = glstapi->get_current(glstapi);*/
+        
+        /* if (amesa->st != cur_ctx) */
+        {
+            /* Recalculate buffer dimensions */
+            AROSMesaRecalculateBufferWidthHeight(amesa);
+
+            /* Attach */
+            GLXCALL(glXMakeCurrent, amesa->XDisplay, amesa->XWindow, amesa->glXctx);
+        }            
+    }
+    else
+    {
+        /* Detach */
+        /* TODO: how to implement? XDisplay/GLXDrawable needed which are part of amesa */
+    }
 
     AROS_LIBFUNC_EXIT
 }

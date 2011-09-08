@@ -18,10 +18,12 @@ struct glx_func glx_func;
 static const char *glx_func_names[] = {
     "glXCreateContext",
     "glXDestroyContext",
-    "glXGetProcAddress"
+    "glXGetProcAddress",
+    "glXMakeCurrent",
+    "glXSwapBuffers"
 };
 
-#define GLX_NUM_FUNCS (3)
+#define GLX_NUM_FUNCS (5)
 
 APTR HostLibBase;
 
