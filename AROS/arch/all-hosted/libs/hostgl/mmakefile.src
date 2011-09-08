@@ -21,6 +21,7 @@ LIBRARY_SOURCES = \
                 hostgl_arosmesagetconfig \
                 hostgl_arosmesagetcurrentcontext \
                 hostgl_arosmesagetopenglstatetrackerapi \
+                hostgl_arosmesagetprocaddressinternal \
                 hostgl_arosmesamakecurrent \
                 hostgl_arosmesasetrast \
                 hostgl_arosmesaswapbuffers \

@@ -6206,3 +6206,268 @@ inline void mglGetTexParameterPointervAPPLE (GLenum target, GLenum pname, GLvoid
     GLCALL(glGetTexParameterPointervAPPLE, target, pname, params);
 }
 
+inline void mglClampColorARB (GLenum target, GLenum clamp)
+{
+    GLCALL(glClampColorARB, target, clamp);
+}
+
+inline void mglFramebufferTextureLayerARB (GLenum target, GLenum attachment, GLuint texture, GLint level, GLint layer)
+{
+    GLCALL(glFramebufferTextureLayerARB, target, attachment, texture, level, layer);
+}
+
+inline void mglVertexAttribDivisorARB (GLuint index, GLuint divisor)
+{
+    GLCALL(glVertexAttribDivisorARB, index, divisor);
+}
+
+inline void mglTexBufferARB (GLenum target, GLenum internalformat, GLuint buffer)
+{
+    GLCALL(glTexBufferARB, target, internalformat, buffer);
+}
+
+inline void mglDrawElementsInstancedBaseVertex (GLenum mode, GLsizei count, GLenum type, const GLvoid * indices, GLsizei primcount, GLint basevertex)
+{
+    GLCALL(glDrawElementsInstancedBaseVertex, mode, count, type, indices, primcount, basevertex);
+}
+
+inline void mglBlendEquationiARB (GLuint buf, GLenum mode)
+{
+    GLCALL(glBlendEquationiARB, buf, mode);
+}
+
+inline void mglBlendEquationSeparateiARB (GLuint buf, GLenum modeRGB, GLenum modeAlpha)
+{
+    GLCALL(glBlendEquationSeparateiARB, buf, modeRGB, modeAlpha);
+}
+
+inline void mglBlendFunciARB (GLuint buf, GLenum src, GLenum dst)
+{
+    GLCALL(glBlendFunciARB, buf, src, dst);
+}
+
+inline void mglBlendFuncSeparateiARB (GLuint buf, GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha, GLenum dstAlpha)
+{
+    GLCALL(glBlendFuncSeparateiARB, buf, srcRGB, dstRGB, srcAlpha, dstAlpha);
+}
+
+inline void mglGenSamplers (GLsizei count, GLuint * samplers)
+{
+    GLCALL(glGenSamplers, count, samplers);
+}
+
+inline void mglDeleteSamplers (GLsizei count, const GLuint * samplers)
+{
+    GLCALL(glDeleteSamplers, count, samplers);
+}
+
+inline GLboolean mglIsSampler (GLuint sampler)
+{
+    return GLCALL(glIsSampler, sampler);
+}
+
+inline void mglBindSampler (GLuint unit, GLuint sampler)
+{
+    GLCALL(glBindSampler, unit, sampler);
+}
+
+inline void mglSamplerParameteri (GLuint sampler, GLenum pname, GLint param)
+{
+    GLCALL(glSamplerParameteri, sampler, pname, param);
+}
+
+inline void mglSamplerParameteriv (GLuint sampler, GLenum pname, const GLint * param)
+{
+    GLCALL(glSamplerParameteriv, sampler, pname, param);
+}
+
+inline void mglSamplerParameterf (GLuint sampler, GLenum pname, GLfloat param)
+{
+    GLCALL(glSamplerParameterf, sampler, pname, param);
+}
+
+inline void mglSamplerParameterfv (GLuint sampler, GLenum pname, const GLfloat * param)
+{
+    GLCALL(glSamplerParameterfv, sampler, pname, param);
+}
+
+inline void mglSamplerParameterIiv (GLuint sampler, GLenum pname, const GLint * param)
+{
+    GLCALL(glSamplerParameterIiv, sampler, pname, param);
+}
+
+inline void mglSamplerParameterIuiv (GLuint sampler, GLenum pname, const GLuint * param)
+{
+    GLCALL(glSamplerParameterIuiv, sampler, pname, param);
+}
+
+inline void mglGetSamplerParameteriv (GLuint sampler, GLenum pname, GLint * params)
+{
+    GLCALL(glGetSamplerParameteriv, sampler, pname, params);
+}
+
+inline void mglGetSamplerParameterIiv (GLuint sampler, GLenum pname, GLint * params)
+{
+    GLCALL(glGetSamplerParameterIiv, sampler, pname, params);
+}
+
+inline void mglGetSamplerParameterfv (GLuint sampler, GLenum pname, GLfloat * params)
+{
+    GLCALL(glGetSamplerParameterfv, sampler, pname, params);
+}
+
+inline void mglGetSamplerParameterIuiv (GLuint sampler, GLenum pname, GLuint * params)
+{
+    GLCALL(glGetSamplerParameterIuiv, sampler, pname, params);
+}
+
+inline void mglReleaseShaderCompiler ()
+{
+    GLCALL(glReleaseShaderCompiler);
+}
+
+inline void mglShaderBinary (GLsizei count, const GLuint * shaders, GLenum binaryformat, const GLvoid * binary, GLsizei length)
+{
+    GLCALL(glShaderBinary, count, shaders, binaryformat, binary, length);
+}
+
+inline void mglGetShaderPrecisionFormat (GLenum shadertype, GLenum precisiontype, GLint * range, GLint * precision)
+{
+    GLCALL(glGetShaderPrecisionFormat, shadertype, precisiontype, range, precision);
+}
+
+inline void mglDepthRangef (GLclampf n, GLclampf f)
+{
+    GLCALL(glDepthRangef, n, f);
+}
+
+inline void mglClearDepthf (GLclampf d)
+{
+    GLCALL(glClearDepthf, d);
+}
+
+inline GLenum mglGetGraphicsResetStatusARB ()
+{
+    return GLCALL(glGetGraphicsResetStatusARB);
+}
+
+inline void mglGetnMapdvARB (GLenum target, GLenum query, GLsizei bufSize, GLdouble * v)
+{
+    GLCALL(glGetnMapdvARB, target, query, bufSize, v);
+}
+
+inline void mglGetnMapfvARB (GLenum target, GLenum query, GLsizei bufSize, GLfloat * v)
+{
+    GLCALL(glGetnMapfvARB, target, query, bufSize, v);
+}
+
+inline void mglGetnMapivARB (GLenum target, GLenum query, GLsizei bufSize, GLint * v)
+{
+    GLCALL(glGetnMapivARB, target, query, bufSize, v);
+}
+
+inline void mglGetnPixelMapfvARB (GLenum map, GLsizei bufSize, GLfloat * values)
+{
+    GLCALL(glGetnPixelMapfvARB, map, bufSize, values);
+}
+
+inline void mglGetnPixelMapuivARB (GLenum map, GLsizei bufSize, GLuint * values)
+{
+    GLCALL(glGetnPixelMapuivARB, map, bufSize, values);
+}
+
+inline void mglGetnPixelMapusvARB (GLenum map, GLsizei bufSize, GLushort * values)
+{
+    GLCALL(glGetnPixelMapusvARB, map, bufSize, values);
+}
+
+inline void mglGetnPolygonStippleARB (GLsizei bufSize, GLubyte * pattern)
+{
+    GLCALL(glGetnPolygonStippleARB, bufSize, pattern);
+}
+
+inline void mglGetnColorTableARB (GLenum target, GLenum format, GLenum type, GLsizei bufSize, GLvoid * table)
+{
+    GLCALL(glGetnColorTableARB, target, format, type, bufSize, table);
+}
+
+inline void mglGetnConvolutionFilterARB (GLenum target, GLenum format, GLenum type, GLsizei bufSize, GLvoid * image)
+{
+    GLCALL(glGetnConvolutionFilterARB, target, format, type, bufSize, image);
+}
+
+inline void mglGetnSeparableFilterARB (GLenum target, GLenum format, GLenum type, GLsizei rowBufSize, GLvoid * row, GLsizei columnBufSize, GLvoid * column, GLvoid * span)
+{
+    GLCALL(glGetnSeparableFilterARB, target, format, type, rowBufSize, row, columnBufSize, column, span);
+}
+
+inline void mglGetnHistogramARB (GLenum target, GLboolean reset, GLenum format, GLenum type, GLsizei bufSize, GLvoid * values)
+{
+    GLCALL(glGetnHistogramARB, target, reset, format, type, bufSize, values);
+}
+
+inline void mglGetnMinmaxARB (GLenum target, GLboolean reset, GLenum format, GLenum type, GLsizei bufSize, GLvoid * values)
+{
+    GLCALL(glGetnMinmaxARB, target, reset, format, type, bufSize, values);
+}
+
+inline void mglGetnTexImageARB (GLenum target, GLint level, GLenum format, GLenum type, GLsizei bufSize, GLvoid * img)
+{
+    GLCALL(glGetnTexImageARB, target, level, format, type, bufSize, img);
+}
+
+inline void mglReadnPixelsARB (GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, GLsizei bufSize, GLvoid * data)
+{
+    GLCALL(glReadnPixelsARB, x, y, width, height, format, type, bufSize, data);
+}
+
+inline void mglGetnCompressedTexImageARB (GLenum target, GLint lod, GLsizei bufSize, GLvoid * img)
+{
+    GLCALL(glGetnCompressedTexImageARB, target, lod, bufSize, img);
+}
+
+inline void mglGetnUniformfvARB (GLuint program, GLint location, GLsizei bufSize, GLfloat * params)
+{
+    GLCALL(glGetnUniformfvARB, program, location, bufSize, params);
+}
+
+inline void mglGetnUniformivARB (GLuint program, GLint location, GLsizei bufSize, GLint * params)
+{
+    GLCALL(glGetnUniformivARB, program, location, bufSize, params);
+}
+
+inline void mglGetnUniformuivARB (GLuint program, GLint location, GLsizei bufSize, GLuint * params)
+{
+    GLCALL(glGetnUniformuivARB, program, location, bufSize, params);
+}
+
+inline void mglGetnUniformdvARB (GLuint program, GLint location, GLsizei bufSize, GLdouble * params)
+{
+    GLCALL(glGetnUniformdvARB, program, location, bufSize, params);
+}
+
+inline void mglBlendFuncIndexedAMD (GLuint buf, GLenum src, GLenum dst)
+{
+    GLCALL(glBlendFuncIndexedAMD, buf, src, dst);
+}
+
+inline void mglBlendFuncSeparateIndexedAMD (GLuint buf, GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha, GLenum dstAlpha)
+{
+    GLCALL(glBlendFuncSeparateIndexedAMD, buf, srcRGB, dstRGB, srcAlpha, dstAlpha);
+}
+
+inline void mglBlendEquationIndexedAMD (GLuint buf, GLenum mode)
+{
+    GLCALL(glBlendEquationIndexedAMD, buf, mode);
+}
+
+inline void mglBlendEquationSeparateIndexedAMD (GLuint buf, GLenum modeRGB, GLenum modeAlpha)
+{
+    GLCALL(glBlendEquationSeparateIndexedAMD, buf, modeRGB, modeAlpha);
+}
+
+inline void mglTextureBarrierNV ()
+{
+    GLCALL(glTextureBarrierNV);
+}
+
