@@ -46,6 +46,11 @@
         GLXCALL(glXDestroyWindow, amesa->XDisplay, amesa->glXWindow);
         XCALL(XDestroyWindow, amesa->XDisplay, amesa->XWindow);
 #endif
+#if defined(RENDERER_PBUFFER_WPA)
+        GLXCALL(glXDestroyPbuffer, amesa->XDisplay, amesa->glXPbuffer);
+        FreeVec(amesa->swapbufferline);
+        FreeVec(amesa->swapbuffer);
+#endif
         XCALL(XCloseDisplay, amesa->XDisplay);
         
         FreeVec(amesa->framebuffer);

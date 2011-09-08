@@ -47,9 +47,12 @@
             /* Recalculate buffer dimensions */
             AROSMesaRecalculateBufferWidthHeight(amesa);
 
-#if defined(RENDERER_SEPARATE_X_WINDOW)
             /* Attach */
+#if defined(RENDERER_SEPARATE_X_WINDOW)
             GLXCALL(glXMakeContextCurrent, amesa->XDisplay, amesa->glXWindow, amesa->glXWindow, amesa->glXctx);
+#endif
+#if defined(RENDERER_PBUFFER_WPA)
+            GLXCALL(glXMakeContextCurrent, amesa->XDisplay, amesa->glXPbuffer, amesa->glXPbuffer, amesa->glXctx);
 #endif
         }            
     }

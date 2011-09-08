@@ -12,6 +12,8 @@ struct glx_func {
     void (*glXDestroyContext) (Display *dpy, GLXContext ctx);
     GLXWindow (*glXCreateWindow) (Display *dpy, GLXFBConfig config, Window win, const int *attribList);
     void (*glXDestroyWindow) (Display *dpy, GLXWindow window);
+    GLXPbuffer (*glXCreatePbuffer) (Display *dpy, GLXFBConfig config, const int *attribList);
+    void (*glXDestroyPbuffer) (Display *dpy, GLXPbuffer pbuf);
     void * (*glXGetProcAddress) (const GLubyte *procname);     /* glXGetProcAddress is only to be used internally */
     Bool (*glXMakeContextCurrent) (Display *dpy, GLXDrawable draw, GLXDrawable read, GLXContext ctx);
     void (*glXSwapBuffers) (Display *dpy, GLXDrawable drawable);

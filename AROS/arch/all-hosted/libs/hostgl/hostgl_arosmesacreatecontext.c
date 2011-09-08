@@ -132,13 +132,13 @@
 {
     LONG                    screen;
     AROSMesaContext         amesa = NULL;
-    XVisualInfo             *visinfo;
 #if defined(RENDERER_SEPARATE_X_WINDOW)
+    XVisualInfo             *visinfo;
     GLXFBConfig             *windowfbconfigs;
     LONG                    numreturned;
     XSetWindowAttributes    swa;
     LONG                    swamask;
-    LONG windowattributes[] = 
+    LONG windowfbattributes[] = 
     {
         GLX_DRAWABLE_TYPE, GLX_WINDOW_BIT,
         GLX_RENDER_TYPE,   GLX_RGBA_BIT,
@@ -149,6 +149,28 @@
         None
     };
 
+#endif
+
+#if defined(RENDERER_PBUFFER_WPA)
+    GLXFBConfig             *pbufferfbconfigs;
+    LONG                    numreturned;
+    LONG pbufferfbattributes[] = 
+    {
+        GLX_DRAWABLE_TYPE, GLX_PBUFFER_BIT,
+        GLX_RENDER_TYPE,   GLX_RGBA_BIT,
+        GLX_DOUBLEBUFFER,  False,
+        GLX_RED_SIZE,      1,
+        GLX_GREEN_SIZE,    1, 
+        GLX_BLUE_SIZE,     1,
+        None
+    };
+    LONG pbufferattributes[] =
+    {
+        GLX_PBUFFER_WIDTH,   0,
+        GLX_PBUFFER_HEIGHT,  0,
+        GLX_LARGEST_PBUFFER, False,
+        None
+    };
 #endif
 
     /* Standard AROSMesa initialization */
@@ -187,7 +209,7 @@
     
 #if defined(RENDERER_SEPARATE_X_WINDOW)
     /* Choose window config */
-    windowfbconfigs = GLXCALL(glXChooseFBConfig, amesa->XDisplay, screen, windowattributes, &numreturned);
+    windowfbconfigs = GLXCALL(glXChooseFBConfig, amesa->XDisplay, screen, windowfbattributes, &numreturned);
     
     if (windowfbconfigs == NULL)
     {
@@ -216,6 +238,28 @@
     /* Create GL context */
     amesa->glXctx = GLXCALL(glXCreateNewContext, amesa->XDisplay, windowfbconfigs[0], GLX_RGBA_TYPE, NULL, True);
 #endif
+
+#if defined(RENDERER_PBUFFER_WPA)
+    /* Choose window config */
+    pbufferfbconfigs = GLXCALL(glXChooseFBConfig, amesa->XDisplay, screen, pbufferfbattributes, &numreturned);
+    
+    if (pbufferfbconfigs == NULL)
+    {
+        D(bug("[AROSMESA] AROSMesaCreateContext: ERROR -  failed to retrieve windowfbconfigs\n"));
+        goto error_out;
+    }
+
+    /* Create GLX Pbuffer */
+    pbufferattributes[1] = amesa->framebuffer->width;
+    pbufferattributes[3] = amesa->framebuffer->height;
+    amesa->glXPbuffer = GLXCALL(glXCreatePbuffer, amesa->XDisplay, pbufferfbconfigs[0], pbufferattributes);
+    
+    amesa->swapbuffer       = AllocVec(amesa->framebuffer->width * amesa->framebuffer->height * 4, MEMF_ANY);
+    amesa->swapbufferline   = AllocVec(amesa->framebuffer->width * 4, MEMF_ANY);
+
+    /* Create GL context */
+    amesa->glXctx = GLXCALL(glXCreateNewContext, amesa->XDisplay, pbufferfbconfigs[0], GLX_RGBA_TYPE, NULL, True);
+#endif
     
     if (!amesa->glXctx)
     {
@@ -229,6 +273,11 @@ error_out:
 #if defined(RENDERER_SEPARATE_X_WINDOW)
     if (amesa->glXWindow) GLXCALL(glXDestroyWindow, amesa->XDisplay, amesa->glXWindow);
     if (amesa->XWindow) XCALL(XDestroyWindow, amesa->XDisplay, amesa->XWindow);
+#endif
+#if defined(RENDERER_PBUFFER_WPA)
+    if (amesa->swapbufferline) FreeVec(amesa->swapbufferline);
+    if (amesa->swapbuffer) FreeVec(amesa->swapbuffer);
+    if (amesa->glXPbuffer) GLXCALL(glXDestroyPbuffer, amesa->XDisplay, amesa->glXPbuffer);
 #endif
     if (amesa->XDisplay) XCALL(XCloseDisplay, amesa->XDisplay);
     if (amesa->framebuffer) FreeVec(amesa->framebuffer);

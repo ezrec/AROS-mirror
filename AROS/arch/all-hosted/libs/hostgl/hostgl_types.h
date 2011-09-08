@@ -11,7 +11,8 @@
 #include "x11_hostlib.h"
 #include "glx_hostlib.h"
 
-#define RENDERER_SEPARATE_X_WINDOW
+#undef RENDERER_SEPARATE_X_WINDOW
+#define RENDERER_PBUFFER_WPA
 
 struct arosmesa_framebuffer
 {
@@ -27,6 +28,11 @@ struct arosmesa_context
 #if defined(RENDERER_SEPARATE_X_WINDOW)
     Window      XWindow;
     GLXWindow   glXWindow;
+#endif
+#if defined(RENDERER_PBUFFER_WPA)
+    GLXPbuffer  glXPbuffer;
+    ULONG       *swapbuffer;
+    ULONG       *swapbufferline;
 #endif
     GLXContext  glXctx;
 

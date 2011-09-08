@@ -22,6 +22,8 @@ static const char *glx_func_names[] = {
     "glXDestroyContext",
     "glXCreateWindow",
     "glXDestroyWindow",
+    "glXCreatePbuffer",
+    "glXDestroyPbuffer",
     "glXGetProcAddress",
     "glXMakeContextCurrent",
     "glXSwapBuffers",
@@ -36,7 +38,7 @@ APTR HostLibBase;
 static void *hostlib_load_so(const char *sofile, const char **names, void **funcptr) {
     void *handle;
     char *err;
-    char *name;
+    const char *name;
     int i = 0;
 
     D(bug("[glx] loading %d functions from %s\n", nfuncs, sofile));
