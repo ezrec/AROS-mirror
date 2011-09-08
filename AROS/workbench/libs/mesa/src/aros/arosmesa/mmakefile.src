@@ -36,6 +36,7 @@ AROSMESA_SOURCES = \
             gallium/state_trackers/arosmesa/arosmesaswapbuffers \
             gallium/state_trackers/arosmesa/arosmesagetcurrentcontext \
             gallium/state_trackers/arosmesa/arosmesa_funcs \
+            gallium/state_trackers/arosmesa/arosmesa_funcs_gallium \
             gallium/state_trackers/arosmesa/arosmesa_init \
             gallium/state_trackers/arosmesa/arosmesagetopenglstatetrackerapi \
             gallium/state_trackers/arosmesa/arosmesasetrast \
@@ -132,7 +133,7 @@ USER_INCLUDES := \
             -I$(SRCDIR)/$(CURDIR)/../../aros \
             -I$(SRCDIR)/$(CURDIR)/../.. \
 
-USER_CFLAGS := -ffast-math -DMAPI_MODE_UTIL -DMAPI_ABI_HEADER=\"glapi/glapi_mapi_tmp.h\" -DFEATURE_GL=1
+USER_CFLAGS := -ffast-math -DMAPI_MODE_UTIL -DMAPI_ABI_HEADER=\"glapi/glapi_mapi_tmp.h\" -DFEATURE_GL=1 -DAROSMESA_TYPES='"arosmesa_types.h"'
 
 LIB_MESA_SOURCES = \
             $(addprefix mesa/, $(MESA_GALLIUM_SOURCES:.c=)) \
