@@ -87,6 +87,7 @@
 #include LC_LIBDEFS_FILE
 
 #include "etask.h"
+#include "exec_debug.h"
 #include "exec_intern.h"
 #include "exec_util.h"
 #include "memory.h"
@@ -433,6 +434,7 @@ void exec_cinit(unsigned long magic, unsigned long addr, struct TagItem *tags)
     long long *idt = (long long *)0x100;    /* Ditto */
 
     int i;                                  /* Whatever? Counter? Erm... */
+    char *opts;
 
 //    exec_SetColors(0x10,0x10,0x10);         /* Set screen to almost black */
 
@@ -772,6 +774,10 @@ void exec_cinit(unsigned long magic, unsigned long addr, struct TagItem *tags)
     /* Enable mungwall before the first allocation call */
     if (strstr(arosmb->cmdline, "mungwall"))
 	PrivExecBase(SysBase)->IntFlags = EXECF_MungWall;
+
+    opts = strstr(arosmb->cmdline, "sysdebug=");
+    if (opts)
+        SysBase->ex_DebugFlags = ParseFlags(&opts[9], ExecFlagNames);
 
     /* Add FAST memory at 0x01000000 to free memory lists */
     if (extmem)
