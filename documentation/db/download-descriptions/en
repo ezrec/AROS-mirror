@@ -52,13 +52,16 @@ amiga-m68k-bootiso:
     contains all AROS system files.
 darwin-i386-system:
     The hosted version for Darwin and MacOS X on i386 platform.
-    Should work on all Intel MacOS X versions starting from 10.4.
+    Should work on all Intel MacOS X versions starting from 10.4. It requires
+    X11 server for the display.
 darwin-ppc-system:
     The hosted version for Darwin and MacOS X on PowerPC platform.
-    Should work on all MacOS X versions.
+    Should work on all MacOS X versions. It requires
+    X11 server for the display.
 darwin-x86_64-system:
     The hosted version for Darwin and MacOS X on x86-64 platform.
-    Should work on all Intel MacOS X versions starting from 10.6.
+    Should work on all Intel MacOS X versions starting from 10.6.  It requires
+    X11 server for the display.
 freebsd5-i386-system:
     The hosted version for FreeBSD/i386 5.x. Note that it
     will not work on FreeBSD 4.x systems.
@@ -84,6 +87,12 @@ linux-arm-system:
     The hosted version for Linux/ARM. This archive
     contains AROS core system binaries compiled from the Subversion
     tree. Please note this version requires at least ARMv6 CPU with VFP unit.
+android-arm-system:
+    The hosted version for Android/ARM. This archive
+    contains AROS core system binaries compiled from the Subversion
+    tree. This version also requires ARMv6 with VFP (all Android devices seem
+    to meet this requirement). No Android modifications (like rooting etc) are
+    required to run this version.
 pc-i386-boot-floppy:
     The native version for i386-based PC AT computers and
     compatibles. This archive contains the boot
