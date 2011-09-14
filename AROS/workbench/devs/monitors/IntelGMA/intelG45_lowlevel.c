@@ -32,6 +32,41 @@ typedef struct {
 	 uint32_t	PixelClock;
 } GMA_PLL_t;
 
+static BOOL Is915_Family(struct g45staticdata *sd)
+{
+    /* Not 100% sure about this list...*/
+    return sd->ProductID == 0x258a
+        || sd->ProductID == 0x3577
+        || sd->ProductID == 0x2562
+        || sd->ProductID == 0x3582
+        || sd->ProductID == 0x358e
+        || sd->ProductID == 0x2572
+        || sd->ProductID == 0x2582
+        || sd->ProductID == 0x2782
+        || sd->ProductID == 0x2592
+        || sd->ProductID == 0x2792
+        || sd->ProductID == 0x2772
+        || sd->ProductID == 0x2776
+        || sd->ProductID == 0x27A2
+        || sd->ProductID == 0x27A6
+        || sd->ProductID == 0x27AE
+        || sd->ProductID == 0x2972
+        || sd->ProductID == 0x2973
+        || sd->ProductID == 0x2992
+        || sd->ProductID == 0x2993
+        || sd->ProductID == 0x29D2
+        || sd->ProductID == 0x29D3
+        || sd->ProductID == 0x29B2
+        || sd->ProductID == 0x29B3
+        || sd->ProductID == 0x29C2
+        || sd->ProductID == 0x29C3
+        || sd->ProductID == 0xA001
+        || sd->ProductID == 0xA002
+        || sd->ProductID == 0xA011
+        || sd->ProductID == 0xA012;
+}
+
+
 VOID delay_ms(struct g45staticdata *sd, uint32_t msec)
 {
 	/* Take MsgPort over by current task */
@@ -114,14 +149,14 @@ static BOOL calc_pll_and_validate(GMA_PLL_t *pll)
 	return TRUE;
 }
 
-void EnablePipe(struct g45staticdata *sd,LONG pipe){		
+void EnablePipe(struct g45staticdata *sd,LONG pipe){
     char *pipeconf_reg = sd->Card.MMIO + ((pipe == PIPE_A) ? G45_PIPEACONF : G45_PIPEBCONF);
     writel( readl( pipeconf_reg ) | G45_PIPECONF_ENABLE ,pipeconf_reg );
 }
-	
+
 void DisablePipe(struct g45staticdata *sd,LONG pipe){
     char *pipeconf_reg = sd->Card.MMIO + ((pipe == PIPE_A) ? G45_PIPEACONF : G45_PIPEBCONF);
-	
+
     writel(readl( pipeconf_reg ) & ~G45_PIPECONF_ENABLE, pipeconf_reg );
 	readl( pipeconf_reg );
 	delay_ms(sd, 20);
@@ -155,12 +190,12 @@ void SetCursorPosition(struct g45staticdata *sd,LONG x,LONG y)
 {
 	LONG width = (sd->VisibleBitmap->state->htotal & 0x0000ffff);
     LONG height = (sd->VisibleBitmap->state->vtotal & 0x0000ffff);
-	
+
 	if(x<0)x=0;
 	if(y<0)y=0;
 	if(x>width)x = width;  // Grue eats you,if pointer is outside of the screen.
 	if(y>height)y = height;
-	
+
 	writel(((ULONG)x << G45_CURPOS_XSHIFT) | ((ULONG)y << G45_CURPOS_YSHIFT),
 			sd->Card.MMIO + (sd->pipe == PIPE_A ?G45_CURAPOS:G45_CURBPOS));
     UpdateCursor(sd);
@@ -172,10 +207,10 @@ void G45_InitMode(struct g45staticdata *sd, GMAState_t *state,
         uint16_t vstart, uint16_t vend, uint16_t vtotal, uint32_t flags)
 {
 	bug("[GMA] InitMode %dx%dx%d @ %dHz\n", hdisp, vdisp, depth, ((pixelclock / (uint32_t)htotal) * 1000) / ((uint32_t)vtotal));
-	GMA_PLL_t clock, t;
+	GMA_PLL_t clock={0,0,0,0,0,0},t;
 	uint32_t err = pixelclock;
 
-	clock.PixelClock = 0;
+    clock.PixelClock = 0;
 
 	/*
 	 * Brute force determination of PLL settings. Iterate through all available configurations and select the most
@@ -279,12 +314,157 @@ void G45_InitMode(struct g45staticdata *sd, GMAState_t *state,
 	}
 }
 
+#define SCALE_AUTO 0
+#define SCALE_LETTER 1
+#define SCALE_PILLAR 2
+
+static void SetPanelFitter(struct g45staticdata *sd, GMAState_t *state)
+{
+	// unprotect some registers
+	writel( (readl(sd->Card.MMIO + 0x61204)&0xffff )| 0xabcd0000, sd->Card.MMIO + 0x61204);
+
+	// initialize default sync values
+	GMAState_t adjusted;
+	adjusted.htotal = (sd->lvds_fixed.hdisp - 1) | ((sd->lvds_fixed.htotal - 1) << 16);
+	adjusted.hblank = (sd->lvds_fixed.hdisp - 1) | ((sd->lvds_fixed.htotal - 1) << 16);
+	adjusted.hsync = (sd->lvds_fixed.hstart - 1) | ((sd->lvds_fixed.hend - 1) << 16);
+	adjusted.vtotal = (sd->lvds_fixed.vdisp - 1) | ((sd->lvds_fixed.vtotal - 1) << 16);
+	adjusted.vblank = (sd->lvds_fixed.vdisp - 1) | ((sd->lvds_fixed.vtotal - 1) << 16);
+	adjusted.vsync = (sd->lvds_fixed.vstart - 1) | ((sd->lvds_fixed.vend - 1) << 16);
+
+	// screen size
+	ULONG hdisp = (state->htotal & 0x0000ffff) + 1;
+	ULONG vdisp = (state->vtotal & 0x0000ffff) + 1;
+
+	int mode = SCALE_AUTO;
+	ULONG pgm_ratios = readl( sd->Card.MMIO + G45_PFIT_PGM_RATIOS);
+	ULONG pfitc = readl( sd->Card.MMIO + G45_PFIT_CONTROL );
+
+	bug("[GMA] old G45_PFIT_CONTROL=0x%x\n",pfitc);
+	bug("[GMA] old G45_PFIT_PGM_RATIOS=0x%x\n",pgm_ratios);
+
+    pgm_ratios = 0;
+
+	float source_ar = (float)hdisp / (float)vdisp;
+	float dest_ar = (float)sd->lvds_fixed.hdisp / (float)sd->lvds_fixed.vdisp;
+
+    if( source_ar < dest_ar ){
+        bug("[GMA] G45_PFIT_MODE_PILLAR\n");
+        mode = SCALE_PILLAR;
+    }
+    else if( source_ar > dest_ar){
+        bug("[GMA] G45_PFIT_MODE_LETTER\n");
+        mode = SCALE_LETTER;
+    }
+
+    if( hdisp != sd->lvds_fixed.hdisp || vdisp != sd->lvds_fixed.vdisp)
+    {
+        pfitc |= PFIT_ENABLE;
+    }else
+    {
+        pfitc &= ~PFIT_ENABLE;
+    }
+
+    bug("[GMA] panelfitter %s\n",(pfitc & PFIT_ENABLE) ? "ON":"OFF");
+
+    // disable border
+    writel( readl(sd->Card.MMIO + G45_LVDS) &~ LVDS_BORDER_ENABLE , sd->Card.MMIO + G45_LVDS );
+
+    // set panelfitter mode (auto,letterbox or pillarbox)
+    if( Is915_Family(sd) ) // older chips
+    {
+        bug("[GMA] panelfitter old_chip\n");
+        pfitc |= PANEL_8TO6_DITHER_ENABLE;
+
+        if( mode == SCALE_PILLAR ){
+
+            //float horiz_scale = (float)sd->lvds_fixed.hdisp) / (float)hdisp;
+            float vert_scale = (float)sd->lvds_fixed.vdisp / (float)vdisp;
+
+            ULONG scaled_width = (float)hdisp * vert_scale;
+
+            pfitc &= ~ (VERT_INTERP_MASK | HORIZ_INTERP_MASK | VERT_AUTO_SCALE | HORIZ_AUTO_SCALE);
+            pfitc |= VERT_AUTO_SCALE | VERT_INTERP_BILINEAR | HORIZ_INTERP_BILINEAR;
+
+            uint16_t left_border =  ( sd->lvds_fixed.hdisp - scaled_width) / 2;
+            uint16_t right_border = sd->lvds_fixed.hdisp - scaled_width - left_border;
+
+           bug("[GMA] leftborder=%d rightborder=%d scaled_width=%d\n",left_border,right_border,scaled_width);
+
+			//  black borders,adjust some sync values
+            adjusted.htotal = (scaled_width  - 1 ) | ((sd->lvds_fixed.htotal - 1) << 16);
+            adjusted.hblank =(scaled_width + right_border - 1) | ((sd->lvds_fixed.htotal - left_border - 1) << 16);
+            adjusted.hsync = (scaled_width + right_border + left_border- 1) | ((sd->lvds_fixed.htotal - left_border- 1) << 16);
+
+           // enable border
+            writel( readl(sd->Card.MMIO + G45_LVDS) | LVDS_BORDER_ENABLE , sd->Card.MMIO + G45_LVDS );
+
+	         // calculate panel fitter ratios
+            float ratio = ((float)vdisp) / (float)sd->lvds_fixed.vdisp;
+            uint16_t horiz_bits = 0.5 + (1 << 12) * ratio;
+            uint16_t vert_bits = 0.5 + (1 << 12) * ratio;
+            pgm_ratios = (((vert_bits << PFIT_VERT_SCALE_SHIFT) & PFIT_VERT_SCALE_MASK) |
+                         ((horiz_bits << PFIT_HORIZ_SCALE_SHIFT) & PFIT_HORIZ_SCALE_MASK));
+
+        }
+        else if( mode == SCALE_LETTER ){
+
+            // letter mode unimplemented,do auto scale
+            pfitc &= ~ (VERT_INTERP_MASK | HORIZ_INTERP_MASK | VERT_AUTO_SCALE | HORIZ_AUTO_SCALE);
+            pfitc |= VERT_AUTO_SCALE | HORIZ_AUTO_SCALE |
+            VERT_INTERP_BILINEAR | HORIZ_INTERP_BILINEAR;
+            pgm_ratios = 0;
+
+        }else{ // AUTO mode,full screen stretch
+            pfitc &= ~ (VERT_INTERP_MASK | HORIZ_INTERP_MASK | VERT_AUTO_SCALE | HORIZ_AUTO_SCALE);
+            pfitc |= VERT_AUTO_SCALE | HORIZ_AUTO_SCALE |
+            VERT_INTERP_BILINEAR | HORIZ_INTERP_BILINEAR;
+            pgm_ratios = 0;
+        }
+
+    }else{
+
+        // G965 and newer,it is easy (or not...)
+        pfitc |= PIPE_B << PFIT_PIPE_SHIFT ;
+
+        pfitc &= ~PFIT_SCALING_MODE_MASK;// 0 == auto mode
+        if( mode == SCALE_PILLAR ){
+            pfitc |= PFIT_SCALING_PILLAR;
+        }
+        else if( mode == SCALE_LETTER ){
+            pfitc |= PFIT_SCALING_LETTER;
+        }
+
+    }
+
+	// update sync registers
+	writel(adjusted.htotal, sd->Card.MMIO + G45_HTOTAL_B);
+	writel(adjusted.hblank, sd->Card.MMIO + G45_HBLANK_B);
+	writel(adjusted.hsync,  sd->Card.MMIO + G45_HSYNC_B);
+	writel(adjusted.vtotal, sd->Card.MMIO + G45_VTOTAL_B);
+	writel(adjusted.vblank, sd->Card.MMIO + G45_VBLANK_B);
+	writel(adjusted.vsync,  sd->Card.MMIO + G45_VSYNC_B);
+
+	// panelfit control and ratios
+	//bug("[GMA] write G45_PFIT_CONTROL=0x%x\n",pfitc);
+	//bug("[GMA] write G45_PFIT_PGM_RATIOS=0x%x\n",pgm_ratios);
+	writel( pgm_ratios , sd->Card.MMIO + G45_PFIT_PGM_RATIOS );
+	writel( pfitc , sd->Card.MMIO + G45_PFIT_CONTROL );
+    //bug("[GMA] new G45_PFIT_CONTROL=0x%x\n", readl( sd->Card.MMIO + G45_PFIT_CONTROL ));
+	//bug("[GMA] new G45_PFIT_PGM_RATIOS=0x%x\n",readl( sd->Card.MMIO + G45_PFIT_PGM_RATIOS));
+
+	// write protect registers
+	writel( (readl(sd->Card.MMIO + 0x61204)&0xffff ), sd->Card.MMIO + 0x61204);
+
+
+}
+
+
 void G45_LoadState(struct g45staticdata *sd, GMAState_t *state)
 {
 	int i;
 	uint32_t tmp;
-	BOOL panelfitter;
-	
+
 	bug("[GMA] LoadState %dx%dx%d\n",
 		(state->htotal & 0x0000ffff) + 1,
 		(state->vtotal & 0x0000ffff) + 1,
@@ -296,44 +476,34 @@ void G45_LoadState(struct g45staticdata *sd, GMAState_t *state)
 
 	LOCK_HW
 	DO_FLUSH();
-	
+
 	if( sd->pipe == PIPE_B )
 	{
-		/*		G45: Volume 3: Display Register
-		• DPLL must be enabled and warmed up before pipe or ports are enabled.
-		• DPLL must be kept enabled until ports are disabled and pipe is completely off.
-		• DPLL frequency must not be changed until ports are disabled and pipe is completely off, except
-		  when in native VGA where SR01 25/28 MHz select can be changed.
-		• Planes must be disabled before pipe is disabled or pipe timings changed.
-		• Panelfitter must be enabled or disabled only when pipe is completely off.
-		• On Gen3 set port multiply when enabling a SDVO port.
-		• On Gen3.5 and GenX set port multiply when programming the DPLL.
-		• The internal TV and CRT ports can be left on during a mode switch if DPLL is not touched.
-		• Ports can be freely enabled or disabled on a running pipe, except when port multiply needs to
-		  be changed.
-		*/
-		
+        /*		G45: Volume 3: Display Register
+        DPLL must be enabled and warmed up before pipe or ports are enabled.
+        DPLL must be kept enabled until ports are disabled and pipe is completely off.
+        DPLL frequency must not be changed until ports are disabled and pipe is completely off, except
+        when in native VGA where SR01 25/28 MHz select can be changed.
+        Planes must be disabled before pipe is disabled or pipe timings changed.
+        Panelfitter must be enabled or disabled only when pipe is completely off.
+        On Gen3 set port multiply when enabling a SDVO port.
+        On Gen3.5 and GenX set port multiply when programming the DPLL.
+        The internal TV and CRT ports can be left on during a mode switch if DPLL is not touched.
+        Ports can be freely enabled or disabled on a running pipe, except when port multiply needs to
+        be changed.
+        */
+
 		// DPLL or FP is not touched here ,register value is same in BIOS vesa modes 640x420 and 1024x600
-		
+
 		// disable vga
 		writel(readl(sd->Card.MMIO + G45_VGACNTRL) | G45_VGACNTRL_VGA_DISABLE, sd->Card.MMIO + G45_VGACNTRL);
-		
+
 		ULONG hdisp = (state->htotal & 0x0000ffff) + 1;
 		ULONG vdisp = (state->vtotal & 0x0000ffff) + 1;
 
-		if( hdisp == sd->lvds_fixed.hdisp && vdisp == sd->lvds_fixed.vdisp)
-			panelfitter = FALSE;
-		else
-			panelfitter = TRUE;
-
-		bug("[GMA] panelfitter %s\n",panelfitter ? "ON":"OFF");
-   	 
 		DisablePlane(sd,PIPE_B);
 		DisablePipe(sd,PIPE_B);
-		
-		bug("G45_PFIT_CONTROL=%x\n",readl(sd->Card.MMIO + G45_PFIT_CONTROL));
-		bug("G45_PFIT_PGM_RATIOS=%x\n",readl(sd->Card.MMIO + G45_PFIT_PGM_RATIOS));
-		
+
 		writel(((hdisp - 1) << 16) | (vdisp - 1), sd->Card.MMIO + G45_PIPEBSRC);
 		writel(((vdisp - 1) << 16) | (hdisp - 1), sd->Card.MMIO + G45_DSPBSIZE);
 
@@ -359,22 +529,14 @@ void G45_LoadState(struct g45staticdata *sd, GMAState_t *state)
 			writel( (i << 16) |(i << 8) | i , sd->Card.MMIO + 0x0a800 + 4 * i);//PALETTE_B
 		}
 
-		// enable/disable panelfitter
-		if( panelfitter ){
-			writel( 0 , sd->Card.MMIO + G45_PFIT_PGM_RATIOS );
-			writel( readl(sd->Card.MMIO + G45_PFIT_CONTROL) | G45_PFIT_ENABLE , sd->Card.MMIO + G45_PFIT_CONTROL );
-		}
-		else
-		{
-			writel( 0 , sd->Card.MMIO + G45_PFIT_PGM_RATIOS );
-			writel( readl(sd->Card.MMIO + G45_PFIT_CONTROL) & ~G45_PFIT_ENABLE , sd->Card.MMIO + G45_PFIT_CONTROL );
-		}
+        SetPanelFitter(sd,state);
+
 		writel(state->dspsurf, sd->Card.MMIO + G45_DSPBSURF);
 		delay_ms(sd, 1);
-		
+
 		EnablePipe(sd,PIPE_B);
 		EnablePlane(sd,PIPE_B);
-		
+
 	}
 	else
 	{
@@ -390,7 +552,7 @@ void G45_LoadState(struct g45staticdata *sd, GMAState_t *state)
 	//	/* Stop cursor */
 	//	writel(0, sd->Card.MMIO + 0x70080);
 	//	delay_ms(sd, 20);
-		
+
 		/* Disable pipe */
 		writel(readl(sd->Card.MMIO + G45_PIPEACONF) & ~G45_PIPECONF_ENABLE, sd->Card.MMIO + G45_PIPEACONF);
 
@@ -529,7 +691,7 @@ void G45_LoadState(struct g45staticdata *sd, GMAState_t *state)
 
 		writel(state->dspcntr, sd->Card.MMIO + G45_DSPACNTR);
 	}
-	
+
 	UNLOCK_HW
 }
 
@@ -605,7 +767,7 @@ void GetSync(struct g45staticdata *sd,struct Sync *sync,ULONG pipe)
 
     sync->pixelclock = 48; // dummy value
 	sync->flags =0;
-	
+
     sync->hdisp = (htot & 0xffff) + 1;
     sync->htotal = ((htot & 0xffff0000) >> 16) + 1;
     sync->hstart = (hsync & 0xffff) + 1;
@@ -617,9 +779,9 @@ void GetSync(struct g45staticdata *sd,struct Sync *sync,ULONG pipe)
 
 	sync->width = sync->hdisp;
 	sync->height = sync->vdisp;
-	
+
     ULONG dsp_cntr = readl(sd->Card.MMIO + (sd->pipe == 0 ? G45_DSPACNTR : G45_DSPBCNTR));
-	
+
     switch (dsp_cntr & G45_DSPCNTR_PIXEL_MASK) {
         case G45_DSPCNTR_8BPP:
             sync->depth = 8;

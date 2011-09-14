@@ -167,6 +167,10 @@ void calcTimings(int x, int y, int vfreq, sync_t *sync)
         { aHidd_Sync_VSyncEnd,    vend }, \
         { aHidd_Sync_VTotal,      vtotal }, \
         { aHidd_Sync_Description, (IPTR)descr }, \
+        { aHidd_Sync_VMin,        vdisp }, \
+	    { aHidd_Sync_VMax,        4096 }, \
+	    { aHidd_Sync_HMin,        hdisp }, \
+        { aHidd_Sync_HMax,        4096 }, \
         { TAG_DONE, 0UL }}
 
 #define PUSH_TAG(ptr, tag, data) do { (*(ptr))->ti_Tag = (tag); (*(ptr))->ti_Data= (IPTR)(data); (*ptr)++; } while(0)
@@ -491,6 +495,16 @@ OOP_Object *METHOD(INTELG45, Root, New)
     tags->ti_Tag =  aHidd_Gfx_SyncTags;
     tags->ti_Data = (IPTR)sync_720x576_50;
     tags++;
+
+    // Modeline "800x600@60" 38.21 800 832 976 1008 600 612 618 631
+    MAKE_SYNC(800x600_60, 38210,
+    800,832,976,1008,
+    600,612,618,631,
+    "GMA_800x600@60");
+    tags->ti_Tag =  aHidd_Gfx_SyncTags;
+    tags->ti_Data = (IPTR)sync_800x600_60;
+    tags++;
+
 
 	if( sd->pipe == PIPE_B )
 	{

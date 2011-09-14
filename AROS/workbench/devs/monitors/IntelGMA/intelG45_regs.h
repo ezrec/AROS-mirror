@@ -171,10 +171,44 @@
 #define G45_LVDS					0x61180
 #define G45_LVDS_PORT_EN			(1 << 31)
 #define G45_LVDS_PIPEB_SELECT		(1 << 30) /* Selects pipe B for LVDS data.  Must be set on pre-965. */
+#define LVDS_BORDER_ENABLE          (1 << 15)
 
 #define G45_PFIT_CONTROL			0x61230
-#define G45_PFIT_ENABLE				(1 << 31)
 #define G45_PFIT_PGM_RATIOS			0x61234
+
+#define PFIT_ENABLE				(1 << 31)
+/* Pre-965 */
+#define VERT_INTERP_BILINEAR    (1 << 10)
+#define VERT_INTERP_MASK        (3 << 10)
+#define VERT_AUTO_SCALE         (1 << 9)
+#define HORIZ_INTERP_BILINEAR   (1 << 6)
+#define HORIZ_INTERP_MASK       (3 << 6)
+#define HORIZ_AUTO_SCALE        (1 << 5)
+#define PANEL_8TO6_DITHER_ENABLE (1 << 3)
+/* 965+ */
+# define PFIT_PIPE_MASK             (3 << 29)
+# define PFIT_PIPE_SHIFT            29
+# define PFIT_SCALING_MODE_MASK     (7 << 26)
+//#define PFIT_SCALING_AUTO         (0 << 26)
+#define PFIT_SCALING_PROGRAMMED (1 << 26)
+#define PFIT_SCALING_PILLAR     (2 << 26)
+#define PFIT_SCALING_LETTER     (3 << 26)
+#define PFIT_FILTER_SELECT_MASK (3 << 24)
+//#define PFIT_FILTER_FUZZY         (0 << 24)
+#define PFIT_FILTER_CRISP           (1 << 24)
+#define PFIT_FILTER_MEDIAN      (2 << 24)
+
+/* Pre-965 */
+#define PFIT_VERT_SCALE_SHIFT       20
+#define PFIT_VERT_SCALE_MASK        0xfff00000
+#define PFIT_HORIZ_SCALE_SHIFT      4
+#define PFIT_HORIZ_SCALE_MASK       0x0000fff0
+/* 965+ */
+#define PFIT_VERT_SCALE_SHIFT_965   16
+#define PFIT_VERT_SCALE_MASK_965    0x1fff0000
+//# define PFIT_HORIZ_SCALE_SHIFT_965   0
+#define PFIT_HORIZ_SCALE_MASK_965   0x00001fff
+
 
 #define G45_CURACNTR				0x70080
 #define G45_CURBCNTR				0x700C0
