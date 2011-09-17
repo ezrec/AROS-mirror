@@ -39,6 +39,7 @@
 //#define HOSTED_BUILD_CHIPSET    175     /* MCP89 chip GeForce 320M */
 //#define HOSTED_BUILD_CHIPSET    192     /* GT100 chip GeForce 470 GTX */
 
+#define HOSTED_BUILD_VRAM_SIZE  (128 * 1024 * 1024)
 #endif
 
 /* Config */
