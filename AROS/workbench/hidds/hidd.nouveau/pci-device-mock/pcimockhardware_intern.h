@@ -15,7 +15,8 @@
 #define PCI_BAR4            4
 #define PCI_BAR5            5
 #define PCI_CONFIG_SPACE    6
-#define PCI_REGIONS_COUNT   7
+#define PCI_ROM             7
+#define PCI_REGIONS_COUNT   8
 
 struct AddressSpaceRegion
 {

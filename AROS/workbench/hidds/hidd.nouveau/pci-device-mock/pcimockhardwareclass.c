@@ -19,14 +19,10 @@ OOP_Object * METHOD(PCIMockHardware, Root, New)
 {
     o = (OOP_Object *)OOP_DoSuperMethod(cl, o, (OOP_Msg)msg);
     struct HIDDPCIMockHardwareData * hwdata = OOP_INST_DATA(cl, o);
+    ULONG i;
     
-    ALLOC_ASR_NULL(hwdata, PCI_BAR0);
-    ALLOC_ASR_NULL(hwdata, PCI_BAR1);
-    ALLOC_ASR_NULL(hwdata, PCI_BAR2);
-    ALLOC_ASR_NULL(hwdata, PCI_BAR3);
-    ALLOC_ASR_NULL(hwdata, PCI_BAR4);
-    ALLOC_ASR_NULL(hwdata, PCI_BAR5);
-    ALLOC_ASR_NULL(hwdata, PCI_CONFIG_SPACE);
+    for (i = 0; i < PCI_REGIONS_COUNT; i++)
+        ALLOC_ASR_NULL(hwdata, i);
 
     return o;
 }
@@ -98,6 +94,9 @@ VOID METHOD(PCIMockHardware, Hidd_PCIMockHardware, MemoryChangedAtAddress)
                 break;
             case(PCICS_BAR5) :
                 SUPPORT_BAR_SIZE_QUERY(hwdata, PCICS_BAR5, PCI_BAR5);
+                break;
+            case(PCICS_EXPROM_BASE) :
+                SUPPORT_BAR_SIZE_QUERY(hwdata, PCICS_EXPROM_BASE, PCI_ROM);
                 break;
             default :
                 bug("[PCIMockHardware->MemoryChangedAtAddress Unhandled - %d:0x%x\n", rao.Region, rao.Offset);

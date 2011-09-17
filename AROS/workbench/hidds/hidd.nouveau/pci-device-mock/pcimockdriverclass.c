@@ -64,6 +64,8 @@ ULONG METHOD(PCIMock, Hidd_PCIDriver, ReadConfigLong)
     {
         /* PCICS_PRODUCT */
         case(PCICS_VENDOR)      :
+        /* PCICS_STATUS */
+        case(PCICS_COMMAND)     :
         /* PCICS_PROGIF */
         /* PCICS_SUBCLASS */
         /* PCICS_CLASS */
@@ -79,6 +81,7 @@ ULONG METHOD(PCIMock, Hidd_PCIDriver, ReadConfigLong)
         case(PCICS_BAR3)        :
         case(PCICS_BAR4)        :
         case(PCICS_BAR5)        :
+        case(PCICS_EXPROM_BASE) :
             return ptr[msg->reg];
 
 
