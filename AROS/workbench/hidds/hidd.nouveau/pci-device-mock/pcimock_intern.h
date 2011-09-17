@@ -12,6 +12,9 @@ struct staticdata
     OOP_Class       *driverClass;
     OOP_Class       *pciMockHardwareClass;
     OOP_Class       *NV44AMockHardwareClass;
+    OOP_Class       *NVG86MockHardwareClass;
+    OOP_Class       *NVGTS250MockHardwareClass;
+    OOP_Class       *NVGF100MockHardwareClass;
     OOP_AttrBase    hiddPCIDriverAB;
     OOP_AttrBase    hiddAB;
     OOP_AttrBase    hiddPCIMockHardwareAB;

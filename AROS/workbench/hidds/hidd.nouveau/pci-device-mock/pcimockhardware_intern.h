@@ -75,6 +75,23 @@ struct HIDDNV44AMockHardwareData
 {
 };
 
+#define CLID_Hidd_PCIMockHardware_NVG86   "hidd.pcimockhardware.nvg86"
+
+struct HIDDNVG86MockHardwareData
+{
+};
+
+#define CLID_Hidd_PCIMockHardware_NVGTS250   "hidd.pcimockhardware.nvgts250"
+
+struct HIDDNVGTS250MockHardwareData
+{
+};
+
+#define CLID_Hidd_PCIMockHardware_NVGF100   "hidd.pcimockhardware.nvgf100"
+
+struct HIDDNVGF100MockHardwareData
+{
+};
 
 #endif /* PCIMOCKHARDWARE_INTERN_H */
 

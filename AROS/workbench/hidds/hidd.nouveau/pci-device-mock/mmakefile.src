@@ -5,6 +5,9 @@ FILES	:= \
     pcimockdriverclass \
     pcimockhardwareclass \
     NV44A \
+    NVG86 \
+    NVGTS250 \
+    NVGF100 \
 
 USER_INCLUDES := -I$(SRCDIR)/rom/hidds/hidd.pci/
 

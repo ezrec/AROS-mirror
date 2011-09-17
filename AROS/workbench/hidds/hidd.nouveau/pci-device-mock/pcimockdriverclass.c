@@ -137,7 +137,10 @@ static int PCIMock_InitClass(LIBBASETYPEPTR LIBBASE)
     LIBBASE->sd.hiddAB = OOP_ObtainAttrBase(IID_Hidd);
     LIBBASE->sd.hiddPCIMockHardwareAB = OOP_ObtainAttrBase(IID_Hidd_PCIMockHardware);
     
-    LIBBASE->sd.mockHardware = OOP_NewObject(NULL, CLID_Hidd_PCIMockHardware_NV44A, NULL);
+//    LIBBASE->sd.mockHardware = OOP_NewObject(NULL, CLID_Hidd_PCIMockHardware_NV44A, NULL);
+//    LIBBASE->sd.mockHardware = OOP_NewObject(NULL, CLID_Hidd_PCIMockHardware_NVG86, NULL);
+//    LIBBASE->sd.mockHardware = OOP_NewObject(NULL, CLID_Hidd_PCIMockHardware_NVGTS250, NULL);
+    LIBBASE->sd.mockHardware = OOP_NewObject(NULL, CLID_Hidd_PCIMockHardware_NVGF100, NULL);
 
     if (LIBBASE->sd.hiddPCIDriverAB)
     {
