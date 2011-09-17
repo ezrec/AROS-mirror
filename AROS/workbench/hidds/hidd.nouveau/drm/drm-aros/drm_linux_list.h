@@ -72,6 +72,15 @@ list_del(struct list_head *entry) {
 	(entry)->prev->next = (entry)->next;
 }
 
+static __inline__ void
+list_replace(struct list_head *old, struct list_head *head) {
+	(head)->next = (old)->next;
+	(head)->next->prev = head;
+	(head)->prev = (old)->prev;
+	(head)->prev->next = head;
+}
+
+
 #define list_for_each(entry, head)				\
     for (entry = (head)->next; entry != head; entry = (entry)->next)
 
@@ -109,6 +118,12 @@ static inline void list_move_tail(struct list_head *list,
 {
 	list_del(list);
 	list_add_tail(list, head);
+}
+
+static inline void list_move(struct list_head *list, struct list_head *head)
+{
+	list_del(list);
+	list_add(list, head);
 }
 
 static inline void list_sort(void * priv, struct list_head *head,

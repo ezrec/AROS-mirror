@@ -19,6 +19,7 @@
 /* Which type of bus */
 #define HOSTED_BUILD_BUS_PCI            1
 #define HOSTED_BUILD_BUS_AGP            2
+#define HOSTED_BUILD_BUS_PCIE           3
 
 #define HOSTED_BUILD_BUS                HOSTED_BUILD_BUS_PCI
 

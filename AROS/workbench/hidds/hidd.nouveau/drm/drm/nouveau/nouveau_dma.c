@@ -83,7 +83,7 @@ nouveau_dma_init(struct nouveau_channel *chan)
 		return ret;
 
 	/* NV_MEMORY_TO_MEMORY_FORMAT requires a notifier object */
-	ret = nouveau_notifier_alloc(chan, NvNotify0, 32, 0xfd0, 0x1000,
+	ret = nouveau_notifier_alloc(chan, NvNotify0, 32, 0xfe0, 0x1000,
 				     &chan->m2mf_ntfy);
 	if (ret)
 		return ret;
@@ -167,8 +167,13 @@ nv50_dma_push(struct nouveau_channel *chan, struct nouveau_bo *bo,
 	      int delta, int length)
 {
 	struct nouveau_bo *pb = chan->pushbuf_bo;
-	uint64_t offset = bo->bo.offset + delta;
+	struct nouveau_vma *vma;
 	int ip = (chan->dma.ib_put * 2) + chan->dma.ib_base;
+	u64 offset;
+
+	vma = nouveau_bo_vma_find(bo, chan->vm);
+	BUG_ON(!vma);
+	offset = vma->offset + delta;
 
 	BUG_ON(chan->dma.ib_free < 1);
 	nouveau_bo_wr32(pb, ip++, lower_32_bits(offset));

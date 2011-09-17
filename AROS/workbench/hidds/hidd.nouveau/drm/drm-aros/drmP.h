@@ -245,6 +245,8 @@ struct drm_driver
     int         (*gem_init_object) (struct drm_gem_object *obj);
     void        (*gem_free_object) (struct drm_gem_object *obj);
     void        (*gem_free_object_unlocked) (struct drm_gem_object *obj);
+    int         (*gem_open_object) (struct drm_gem_object *, struct drm_file *);
+    void        (*gem_close_object) (struct drm_gem_object *, struct drm_file *);
 
     int                     version_patchlevel;
     unsigned int            driver_features;
@@ -441,6 +443,7 @@ struct drm_gem_object *drm_gem_object_lookup(struct drm_device *dev,
                          struct drm_file *filp,
                          u32 handle);
 
+int drm_gem_handle_delete(struct drm_file *filp, u32 handle);
                          
 static inline void
 drm_gem_object_reference(struct drm_gem_object *obj)
@@ -544,6 +547,11 @@ static inline int mtrr_add(unsigned long base, unsigned long size,
                     unsigned int type, char increment)
 {
     return -ENODEV;
+}
+
+static inline int drm_pci_device_is_agp(struct drm_device *dev)
+{
+    return (int)dev->driver->IsAGP;
 }
 
 #endif

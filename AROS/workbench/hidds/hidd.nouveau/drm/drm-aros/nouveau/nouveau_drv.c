@@ -42,6 +42,9 @@ int nouveau_msi = 0;
 int nouveau_force_post = 0;
 /* DRM Debug, Bits: 0x01 | 0x02 | 0x04 */
 unsigned int drm_debug = 0;
+/* Use external firmware */
+int nouveau_ctxfw = 0;
+
 
 extern struct drm_ioctl_desc nouveau_ioctls[];
 

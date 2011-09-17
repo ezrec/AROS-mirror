@@ -59,9 +59,8 @@
 #define get_user(x, p)                  ({u32 ret = 0; x = *(p); ret;})
 #define put_user(x, p)                  ({u32 ret = 0; *(p) = x; ret;})
 #define rounddown(x, y)                 (((x)/(y))*(y))
-#define request_firmware(fw, name, x)   _request_firmware(fw, name)
+#define DIV_ROUND_UP(x, y)              (((x) + (y) - 1) / (y))
 
-#define MODULE_FIRMWARE(x)
 
 
 void iowrite32(u32 val, void * addr);
@@ -145,6 +144,7 @@ int pci_read_config_word(void *dev, int where, u16 *val);
 int pci_read_config_dword(void *dev, int where, u32 *val);
 int pci_write_config_dword(void *dev, int where, u32 val);
 const char * pci_name(void * dev);
+int pci_is_pcie(void *dev);
 
 
 
@@ -377,10 +377,6 @@ unsigned long get_jiffies();
     IMPLEMENT("\n");                            \
     __ret;                                      \
 })
-
-/* Firmware */
-int _request_firmware(const struct firmware ** pfw, char * name);
-void release_firmware(const struct firmware * fw);
 
 /* other */
 #define do_div(n,base) ({ \

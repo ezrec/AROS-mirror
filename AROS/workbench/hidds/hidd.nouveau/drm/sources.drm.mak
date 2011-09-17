@@ -86,11 +86,13 @@ AROS_DRM_NVIDIA_SOURCES = \
             drm/nouveau/nv17_tv_modes \
             drm/nouveau/nv20_graph \
             drm/nouveau/nv30_fb \
+            drm/nouveau/nv31_mpeg \
             drm/nouveau/nv40_fb \
             drm/nouveau/nv40_fifo \
             drm/nouveau/nv40_graph \
             drm/nouveau/nv40_grctx \
             drm/nouveau/nv40_mc \
+            drm/nouveau/nv40_pm \
             drm/nouveau/nv50_instmem \
             drm/nouveau/nv50_display \
             drm/nouveau/nv50_calc \
@@ -100,6 +102,7 @@ AROS_DRM_NVIDIA_SOURCES = \
             drm/nouveau/nv50_evo \
             drm/nouveau/nv50_fb \
             drm/nouveau/nv50_fifo \
+            drm/nouveau/nv50_mpeg \
             drm/nouveau/nv50_mc \
             drm/nouveau/nv50_gpio \
             drm/nouveau/nv50_graph \
@@ -108,12 +111,20 @@ AROS_DRM_NVIDIA_SOURCES = \
             drm/nouveau/nv50_sor \
             drm/nouveau/nv50_vm \
             drm/nouveau/nv50_vram \
+            drm/nouveau/nv84_bsp \
             drm/nouveau/nv84_crypt \
+            drm/nouveau/nv84_vp \
+            drm/nouveau/nv98_crypt \
+            drm/nouveau/nv98_ppp \
+            drm/nouveau/nva3_copy \
             drm/nouveau/nva3_pm \
+            drm/nouveau/nvc0_copy \
             drm/nouveau/nvc0_fb \
             drm/nouveau/nvc0_fifo \
             drm/nouveau/nvc0_graph \
             drm/nouveau/nvc0_grctx \
             drm/nouveau/nvc0_instmem \
+            drm/nouveau/nvc0_pm \
             drm/nouveau/nvc0_vm \
             drm/nouveau/nvc0_vram \
+            drm/nouveau/nvd0_display \

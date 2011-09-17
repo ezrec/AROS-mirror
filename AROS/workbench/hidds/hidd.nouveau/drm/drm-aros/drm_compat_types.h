@@ -24,6 +24,7 @@
 #define u16                         UWORD
 #define s16                         WORD
 #define u32                         ULONG
+#define s32                         LONG
 #define u64                         UQUAD
 #define s64                         QUAD
 #define u8                          UBYTE

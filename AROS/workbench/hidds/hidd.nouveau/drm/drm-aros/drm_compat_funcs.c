@@ -522,6 +522,20 @@ const char *pci_name(void * dev)
     return name;
 }
 
+int pci_is_pcie(void *dev)
+{
+#if !defined(HOSTED_BUILD)
+    IPTR PCIECap;
+    OOP_GetAttr(dev, aHidd_PCIDevice_CapabilityPCIE, (APTR)&PCIECap);
+    return PCIECap;
+#else
+#if HOSTED_BUILD_BUS == HOSTED_BUILD_BUS_PCIE
+    return 1;
+#else
+    return 0;
+#endif
+#endif
+}
 
 #include <hidd/agp.h>
 
@@ -875,29 +889,6 @@ int i2c_del_adapter(struct i2c_adapter * adap)
 {
     IMPLEMENT("\n");
     return 0;
-}
-
-/* Firmware */
-int _request_firmware(const struct firmware ** pfw, char * name)
-{
-    struct firmware * fw = AllocVec(sizeof(struct firmware), MEMF_ANY | MEMF_CLEAR);
-    fw->size = 100;
-    fw->data = AllocMem(fw->size, MEMF_ANY | MEMF_CLEAR);
-    *pfw = fw;
-
-    return 8; /* TODO: fixme, signal error for now */
-}
-
-void release_firmware(const struct firmware * fw)
-{
-    if (fw)
-    {
-        if (fw->data)
-        {
-            FreeMem(fw->data, fw->size);
-        }
-        FreeVec((APTR)fw);
-    }
 }
 
 /* Other */
