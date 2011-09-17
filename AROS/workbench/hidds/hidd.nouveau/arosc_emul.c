@@ -136,6 +136,8 @@ char *getenv (const char *name)
     return NULL;
 }
 
+struct timezone;
+
 int gettimeofday (struct timeval * tv,struct timezone * tz)
 {
     struct MsgPort * timerport = CreateMsgPort();

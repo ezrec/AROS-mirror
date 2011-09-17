@@ -329,7 +329,8 @@ OOP_Object * METHOD(Nouveau, Root, New)
     LONG ret;
     ULONG selectedcrtcid;
 
-    nouveau_init();
+    if (nouveau_init() < 0)
+        return NULL;
 
     nouveau_device_open(&dev, "");
     nvdev = nouveau_device(dev);
@@ -471,12 +472,18 @@ OOP_Object * METHOD(Nouveau, Root, New)
                 /* Allocate dma channel */
                 ret = nouveau_channel_alloc(carddata->dev, NvDmaFB, NvDmaTT, 
                     24 * 1024, &carddata->chan);
-                /* TODO: Check ret, how to handle ? */
+                if (ret < 0)
+                {
+                    /* TODO: Check ret, how to handle ? */
+                }
 
                 /* Initialize acceleration objects */
             
                 ret = HIDDNouveauAccelCommonInit(carddata);
-                /* TODO: Check ret, how to handle ? */
+                if (ret < 0)
+                {
+                    /* TODO: Check ret, how to handle ? */
+                }
             }
             else
             {

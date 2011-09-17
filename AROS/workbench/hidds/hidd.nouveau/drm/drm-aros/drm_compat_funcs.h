@@ -55,7 +55,7 @@
 #define mdelay(x)                       udelay(1000 * x)
 #define msleep(x)                       udelay(1000 * x)
 #define KHZ2PICOS(x)                    (1000000000UL/(x))
-#define uninitialized_var(x)            x
+#define uninitialized_var(x)            x = 0
 #define get_user(x, p)                  ({u32 ret = 0; x = *(p); ret;})
 #define put_user(x, p)                  ({u32 ret = 0; *(p) = x; ret;})
 #define rounddown(x, y)                 (((x)/(y))*(y))
@@ -109,8 +109,8 @@ static inline VOID memcpy_fromio(APTR dst, CONST_APTR src, ULONG size)
 #define BUG_ON(condition)           do { if (unlikely(condition)) bug("BUG: %s:%d\n", __FILE__, __LINE__); } while(0)
 #define WARN_ON(condition)          do { if (unlikely(condition)) bug("WARN: %s:%d\n", __FILE__, __LINE__); } while(0)
 #define EXPORT_SYMBOL(x)
-#define PTR_ERR(addr)               (SIPTR)addr
-#define ERR_PTR(error)              (APTR)error
+#define PTR_ERR(addr)               ((SIPTR)addr)
+#define ERR_PTR(error)              ((APTR)(SIPTR)error)
 static inline IPTR IS_ERR(APTR ptr)
 {
     return (IPTR)(ptr) >= (IPTR)-MAX_ERRNO;
@@ -121,6 +121,7 @@ static inline IPTR IS_ERR(APTR ptr)
 #define KERN_DEBUG
 #define KERN_WARNING
 #define KERN_INFO
+#define KERN_NOTICE
 #define printk(fmt, ...)                bug(fmt, ##__VA_ARGS__)
 #define IMPLEMENT(fmt, ...)             bug("------IMPLEMENT(%s): " fmt, __func__ , ##__VA_ARGS__)
 #define TRACE(fmt, ...)                 D(bug("[TRACE](%s): " fmt, __func__ , ##__VA_ARGS__))
@@ -143,6 +144,7 @@ void * pci_get_bus_and_slot(unsigned int bus, unsigned int dev, unsigned int fun
 int pci_read_config_word(void *dev, int where, u16 *val);
 int pci_read_config_dword(void *dev, int where, u32 *val);
 int pci_write_config_dword(void *dev, int where, u32 val);
+const char * pci_name(void * dev);
 
 
 

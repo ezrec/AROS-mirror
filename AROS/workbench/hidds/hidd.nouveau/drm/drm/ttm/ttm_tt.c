@@ -98,6 +98,8 @@ static void ttm_tt_free_user_pages(struct ttm_tt *ttm)
 #if !defined(__AROS__)
 		if (write && dirty && !PageReserved(page))
 			set_page_dirty_lock(page);
+#else
+		(void)write; (void)dirty;
 #endif
 
 		ttm->pages[i] = NULL;

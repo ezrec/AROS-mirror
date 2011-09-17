@@ -40,7 +40,8 @@ int nouveau_agpmode = -1;
 int nouveau_msi = 0;
 /* Force POST */
 int nouveau_force_post = 0;
-
+/* DRM Debug, Bits: 0x01 | 0x02 | 0x04 */
+unsigned int drm_debug = 0;
 
 extern struct drm_ioctl_desc nouveau_ioctls[];
 

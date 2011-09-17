@@ -57,6 +57,11 @@
 #define DRM_INFO(fmt, ...)  bug("[" DRM_NAME "(INFO)] " fmt, ##__VA_ARGS__)
 #define DRM_DEBUG_DRIVER    DRM_DEBUG
 
+#define DRM_UT_CORE     0x01
+#define DRM_UT_DRIVER   0x02
+#define DRM_UT_KMS      0x04
+
+extern unsigned int drm_debug;
 
 /*
  * DRM_READMEMORYBARRIER() prevents reordering of reads.
@@ -68,6 +73,10 @@
 #define DRM_READMEMORYBARRIER()     __asm __volatile("lock; addl $0,0(%%esp)" : : : "memory");
 #define DRM_WRITEMEMORYBARRIER()    __asm __volatile("" : : : "memory");
 #define DRM_MEMORYBARRIER()         __asm __volatile("lock; addl $0,0(%%esp)" : : : "memory");
+#elif defined(__x86_64__)
+#define DRM_READMEMORYBARRIER()     __asm __volatile("lfence":::"memory");
+#define DRM_WRITEMEMORYBARRIER()    __asm __volatile("sfence":::"memory");
+#define DRM_MEMORYBARRIER()         __asm __volatile("mfence":::"memory");
 #else
 #error IMPLEMENT momory bariers for non-x86
 #endif
