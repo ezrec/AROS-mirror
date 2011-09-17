@@ -1146,6 +1146,10 @@ int nouveau_load(struct drm_device *dev, unsigned long flags)
 		break;
 	case 0xd0:
 		dev_priv->card_type = NV_D0;
+#if defined(__AROS__)
+        /* TODO:NVD0: Implement acceleration */
+        nouveau_noaccel = 1; /* FORCE UNTIL FIRMWARE CAN BE LOADED */
+#endif
 		break;
 	default:
 		NV_INFO(dev, "Unsupported chipset 0x%08x\n", reg0);
@@ -1363,7 +1367,7 @@ bool
 nouveau_wait_eq(struct drm_device *dev, uint64_t timeout,
 		uint32_t reg, uint32_t mask, uint32_t val)
 {
-#if !defined(HOSTED_BUILD)
+#if !defined(MOCK_HARDWARE) /* Needed by NV50 and up */
 	struct drm_nouveau_private *dev_priv = dev->dev_private;
 	struct nouveau_timer_engine *ptimer = &dev_priv->engine.timer;
 	uint64_t start = ptimer->read(dev);
@@ -1375,7 +1379,7 @@ nouveau_wait_eq(struct drm_device *dev, uint64_t timeout,
 
 	return false;
 #else
-    return true;
+	return true;
 #endif
 }
 
@@ -1384,7 +1388,7 @@ bool
 nouveau_wait_ne(struct drm_device *dev, uint64_t timeout,
 		uint32_t reg, uint32_t mask, uint32_t val)
 {
-#if !defined(HOSTED_BUILD)
+#if !defined(MOCK_HARDWARE) /* Needed by NV50 and up */
 	struct drm_nouveau_private *dev_priv = dev->dev_private;
 	struct nouveau_timer_engine *ptimer = &dev_priv->engine.timer;
 	uint64_t start = ptimer->read(dev);
@@ -1396,7 +1400,7 @@ nouveau_wait_ne(struct drm_device *dev, uint64_t timeout,
 
 	return false;
 #else
-    return true;
+	return true;
 #endif
 }
 
@@ -1405,7 +1409,6 @@ bool
 nouveau_wait_cb(struct drm_device *dev, u64 timeout,
 		bool (*cond)(void *), void *data)
 {
-#if !defined(HOSTED_BUILD)
 	struct drm_nouveau_private *dev_priv = dev->dev_private;
 	struct nouveau_timer_engine *ptimer = &dev_priv->engine.timer;
 	u64 start = ptimer->read(dev);
@@ -1416,9 +1419,6 @@ nouveau_wait_cb(struct drm_device *dev, u64 timeout,
 	} while (ptimer->read(dev) - start < timeout);
 
 	return false;
-#else
-    return true;
-#endif
 }
 
 /* Waits for PGRAPH to go completely idle */

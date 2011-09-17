@@ -76,9 +76,7 @@ nouveau_fence_del(struct kref *ref)
 void
 nouveau_fence_update(struct nouveau_channel *chan)
 {
-#if !defined(HOSTED_BUILD)
 	struct drm_device *dev = chan->dev;
-#endif
 	struct nouveau_fence *tmp, *fence;
 	uint32_t sequence;
 
@@ -86,9 +84,10 @@ nouveau_fence_update(struct nouveau_channel *chan)
 
 	/* Fetch the last sequence if the channel is still up and running */
 	if (likely(!list_empty(&chan->fence.pending))) {
-#if defined(HOSTED_BUILD)
-        /* For purpose of simulation, assume all fences are signalled */
-        sequence = chan->fence.sequence;
+#if defined(MOCK_HARDWARE)
+		/* For purpose of simulation, assume all fences are signalled */
+		(void)dev;
+		sequence = chan->fence.sequence;
 #else
 		if (USE_REFCNT(dev))
 			sequence = nvchan_rd32(chan, 0x48);

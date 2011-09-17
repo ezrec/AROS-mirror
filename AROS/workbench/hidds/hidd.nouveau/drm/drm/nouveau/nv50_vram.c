@@ -194,9 +194,6 @@ nv50_vram_init(struct drm_device *dev)
 	dev_priv->vram_size  = nv_rd32(dev, 0x10020c);
 	dev_priv->vram_size |= (dev_priv->vram_size & 0xff) << 32;
 	dev_priv->vram_size &= 0xffffffff00ULL;
-#if defined(HOSTED_BUILD)
-    dev_priv->vram_size = HOSTED_BUILD_VRAM_SIZE;
-#endif
 
 	/* IGPs, no funky reordering happens here, they don't have VRAM */
 	if (dev_priv->chipset == 0xaa ||
@@ -207,9 +204,6 @@ nv50_vram_init(struct drm_device *dev)
 	} else {
 		rblock = nv50_vram_rblock(dev) >> 12;
 	}
-#if defined(HOSTED_BUILD)
-    rblock = 4096 >> 12;
-#endif
 
 	length = (dev_priv->vram_size >> 12) - rsvd_head - rsvd_tail;
 

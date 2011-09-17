@@ -129,10 +129,6 @@ nvc0_vram_init(struct drm_device *dev)
 		dev_priv->vram_size += (u64)psize << 20;
 	}
 
-#if defined(HOSTED_BUILD)
-    dev_priv->vram_size = HOSTED_BUILD_VRAM_SIZE;
-#endif
-
 	/* if all controllers have the same amount attached, there's no holes */
 	if (uniform) {
 		offset = rsvd_head;

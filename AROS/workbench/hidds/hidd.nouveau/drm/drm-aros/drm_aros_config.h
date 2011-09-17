@@ -8,7 +8,7 @@
 
 /*  Define this flag to enable code changes for running nouveau driver under
     linux-hosted AROS with pcimock.hidd. THIS IS PURELLY FOR DEBUG PURPOSES */
-#define MOCK_HARDWARE
+/* #define MOCK_HARDWARE */
 
 /* Config */
 #define CONFIG_AGP
