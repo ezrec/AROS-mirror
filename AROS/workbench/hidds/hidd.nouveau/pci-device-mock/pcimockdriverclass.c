@@ -48,18 +48,6 @@ OOP_Object * METHOD(PCIMock, Root, New)
     return o;
 }
 
-#define READ_BAR(n) \
-    if ((ULONG)SD(cl)->tmp.BarAddr[n] != 0xffffffff)    \
-        return (ULONG)SD(cl)->tmp.BarAddr[n];           \
-    else                                                \
-    {                                                   \
-        ULONG ret = SD(cl)->tmp.BarSize[n];             \
-        ret -= 1;                                       \
-        ret = ~ret;                                     \
-        return ret;                                     \
-    }
-
-
 ULONG METHOD(PCIMock, Hidd_PCIDriver, ReadConfigLong)
 {
     IPTR pciconfigspace;
@@ -85,13 +73,13 @@ ULONG METHOD(PCIMock, Hidd_PCIDriver, ReadConfigLong)
         case(PCICS_SUBVENDOR)   :
         /* CICS_INT_PIN */
         case(PCICS_INT_LINE)    :
+        case(PCICS_BAR0)        :
+        case(PCICS_BAR1)        :
+        case(PCICS_BAR2)        :
+        case(PCICS_BAR3)        :
+        case(PCICS_BAR4)        :
+        case(PCICS_BAR5)        :
             return ptr[msg->reg];
-        case(PCICS_BAR0)        : READ_BAR(0)
-        case(PCICS_BAR1)        : READ_BAR(1)
-        case(PCICS_BAR2)        : READ_BAR(2)
-        case(PCICS_BAR3)        : READ_BAR(3)
-        case(PCICS_BAR4)        : READ_BAR(4)
-        case(PCICS_BAR5)        : READ_BAR(5)
 
 
         default: bug("READ: 0x%x\n", msg->reg);
@@ -102,18 +90,26 @@ ULONG METHOD(PCIMock, Hidd_PCIDriver, ReadConfigLong)
 
 VOID METHOD(PCIMock, Hidd_PCIDriver, WriteConfigLong)
 {
+    IPTR pciconfigspace;
+    ULONG * ptr;
+
     if (!((msg->bus == 0) && (msg->dev == 2) && (msg->sub == 0)))
         return;
 
-    switch (msg->reg)
+    OOP_GetAttr(SD(cl)->mockHardware, aHidd_PCIMockHardware_ConfigSpaceAddr, &pciconfigspace);
+    
+    ptr = (ULONG *)pciconfigspace;
+    ptr[msg->reg] = msg->val;
+    
+    /* Inform mock device that value in its address space region has changed */
     {
-        case(PCICS_BAR0)    : SD(cl)->tmp.BarAddr[0] = (APTR)msg->val; break;
-        case(PCICS_BAR1)    : SD(cl)->tmp.BarAddr[1] = (APTR)msg->val; break;
-        case(PCICS_BAR2)    : SD(cl)->tmp.BarAddr[2] = (APTR)msg->val; break;
-        case(PCICS_BAR3)    : SD(cl)->tmp.BarAddr[3] = (APTR)msg->val; break;
-        case(PCICS_BAR4)    : SD(cl)->tmp.BarAddr[4] = (APTR)msg->val; break;
-        case(PCICS_BAR5)    : SD(cl)->tmp.BarAddr[5] = (APTR)msg->val; break;
-        default: bug("WRITE: 0x%x -> 0x%x\n", msg->reg, msg->val);
+        struct pHidd_PCIMockHardware_MemoryChangedAtAddress mcaa =
+        {
+            mID : OOP_GetMethodID(IID_Hidd_PCIMockHardware, moHidd_PCIMockHardware_MemoryChangedAtAddress),
+            memoryaddress : pciconfigspace + msg->reg
+        };
+        
+        OOP_DoMethod(SD(cl)->mockHardware, (OOP_Msg)&mcaa);
     }
 }
 
@@ -130,14 +126,6 @@ static int PCIMock_ExpungeClass(LIBBASETYPEPTR LIBBASE)
     return TRUE;
 }
 
-#define ALLOC_BAR(n, size)  \
-    LIBBASE->sd.tmp.BarSize[n] = size; \
-    LIBBASE->sd.tmp.BarAddr[n] = AllocMem(LIBBASE->sd.tmp.BarSize[n], MEMF_PUBLIC | MEMF_CLEAR); \
-
-#define ALLOC_BAR_NULL(n) \
-    LIBBASE->sd.tmp.BarSize[n] = 0; \
-    LIBBASE->sd.tmp.BarAddr[n] = (APTR)0; \
-
 static int PCIMock_InitClass(LIBBASETYPEPTR LIBBASE)
 {
     OOP_Object *pci = NULL;
@@ -149,14 +137,6 @@ static int PCIMock_InitClass(LIBBASETYPEPTR LIBBASE)
     LIBBASE->sd.hiddPCIMockHardwareAB = OOP_ObtainAttrBase(IID_Hidd_PCIMockHardware);
     
     LIBBASE->sd.mockHardware = OOP_NewObject(NULL, CLID_Hidd_PCIMockHardware_NV44A, NULL);
-
-    /* Temporary: Allocate bar space */
-    ALLOC_BAR(0, 0x1000000)
-    ALLOC_BAR(1, 0x10000000)
-    ALLOC_BAR(2, 0x1000000)
-    ALLOC_BAR_NULL(3)
-    ALLOC_BAR_NULL(4)
-    ALLOC_BAR_NULL(5)
 
     if (LIBBASE->sd.hiddPCIDriverAB)
     {

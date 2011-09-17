@@ -7,13 +7,6 @@
 
 #include LC_LIBDEFS_FILE
 
-struct BarSpace
-{
-    APTR    BarAddr[6];
-    ULONG   BarSize[6];
-};
-
-
 struct staticdata
 {
     OOP_Class       *driverClass;
@@ -22,7 +15,6 @@ struct staticdata
     OOP_AttrBase    hiddPCIDriverAB;
     OOP_AttrBase    hiddAB;
     OOP_AttrBase    hiddPCIMockHardwareAB;
-    struct BarSpace tmp;
     
     OOP_Object      *mockHardware;
 };
