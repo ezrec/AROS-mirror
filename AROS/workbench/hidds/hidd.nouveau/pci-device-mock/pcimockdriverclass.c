@@ -37,8 +37,8 @@ OOP_Object * METHOD(PCIMock, Root, New)
 
     if (msg->attrList)
     {
-        mytags[3].ti_Tag = TAG_MORE;
-        mytags[3].ti_Data = (IPTR)msg->attrList;
+        mytags[2].ti_Tag = TAG_MORE;
+        mytags[2].ti_Data = (IPTR)msg->attrList;
     }
 
     msg = &mymsg;
