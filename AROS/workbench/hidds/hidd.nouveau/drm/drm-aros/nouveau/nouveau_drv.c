@@ -60,7 +60,7 @@ static struct drm_driver driver =
     .driver_features = DRIVER_MODESET | DRIVER_GEM | DRIVER_USE_AGP,
     .load = nouveau_load,
     .firstopen = nouveau_firstopen,
-    .open = NULL,
+    .open = nouveau_open,
     .preclose = nouveau_preclose,
     .postclose = NULL,
     .lastclose = nouveau_lastclose,
@@ -73,6 +73,8 @@ static struct drm_driver driver =
     .ioctls = nouveau_ioctls,
     .gem_init_object = nouveau_gem_object_new,
     .gem_free_object = nouveau_gem_object_del,
+    .gem_open_object = NULL,
+    .gem_close_object = NULL,
 };
 
 void nouveau_exit(void)
