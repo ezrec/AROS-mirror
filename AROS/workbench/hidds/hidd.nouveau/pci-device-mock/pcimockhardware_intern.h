@@ -33,14 +33,17 @@ struct HIDDPCIMockHardwareData
 #define GET_PCIMOCKHWDATA \
     struct HIDDPCIMockHardwareData * hwdata = OOP_INST_DATA((SD(cl))->pciMockHardwareClass, o);
 
-#define ALLOC_ASR(hwdata, n, size)                                              \
-    hwdata->Regions[n].Size = size;                                             \
-    hwdata->Regions[n].Address = (IPTR)AllocVec(size, MEMF_ANY | MEMF_CLEAR)    \
+#define ALLOC_ASR(hwdata, n, size)                                                  \
+    {                                                                               \
+        hwdata->Regions[n].Size = size;                                             \
+        hwdata->Regions[n].Address = (IPTR)AllocVec(size, MEMF_ANY | MEMF_CLEAR);   \
+    }                                                                               \
 
 #define ALLOC_ASR_NULL(hwdata, n)                                               \
-    hwdata->Regions[n].Size = 0;                                                \
-    hwdata->Regions[n].Address = (IPTR)NULL                                     \
-
+    {                                                                           \
+        hwdata->Regions[n].Size = 0;                                            \
+        hwdata->Regions[n].Address = (IPTR)NULL;                                \
+    }                                                                           \
 
 #define SET_ASR_DWORD(hwdata, n, address, value) \
     *((ULONG *)(hwdata->Regions[n].Address + address)) = value;
@@ -51,12 +54,12 @@ struct HIDDPCIMockHardwareData
 #define DEF_NEXTCAPADDR         \
     ULONG nextcapaddr = 0x80;   \
 
-#define ADD_PCI_CAP(hwdata, pcicap)                             \
-    {                                                           \
-    ULONG val = ((nextcapaddr + 4) << 8) | pcicap;              \
-    SET_ASR_DWORD(hwdata, PCI_CONFIG_SPACE, nextcapaddr, val);  \
-    nextcapaddr += 4;                                           \
-    }                                                           \
+#define ADD_PCI_CAP(hwdata, pcicap)                                 \
+    {                                                               \
+        ULONG val = ((nextcapaddr + 4) << 8) | pcicap;              \
+        SET_ASR_DWORD(hwdata, PCI_CONFIG_SPACE, nextcapaddr, val);  \
+        nextcapaddr += 4;                                           \
+    }                                                               \
     
 
 struct RegionAndOffset
