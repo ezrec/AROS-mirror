@@ -207,6 +207,9 @@ nv50_vram_init(struct drm_device *dev)
 	} else {
 		rblock = nv50_vram_rblock(dev) >> 12;
 	}
+#if defined(HOSTED_BUILD)
+    rblock = 4096 >> 12;
+#endif
 
 	length = (dev_priv->vram_size >> 12) - rsvd_head - rsvd_tail;
 
