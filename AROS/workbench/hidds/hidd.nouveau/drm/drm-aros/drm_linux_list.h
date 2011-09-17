@@ -56,8 +56,16 @@ list_is_singular(struct list_head *head) {
     return !list_empty(head) && ((head)->next == (head->prev));
 }
 
-#define list_add(entry, head) list_add_tail(entry, head)
+/* Insert just after head (at start of list) */
+static __inline__ void
+list_add(struct list_head *entry, struct list_head *head) {
+    (head)->next->prev = entry;
+    (entry)->next = (head)->next;
+    (head)->next = entry;
+    (entry)->prev = head;
+}
 
+/* Insert just before head (at end of list) */
 static __inline__ void
 list_add_tail(struct list_head *entry, struct list_head *head) {
 	(entry)->prev = (head)->prev;
