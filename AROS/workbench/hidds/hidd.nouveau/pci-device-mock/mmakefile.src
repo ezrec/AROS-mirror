@@ -1,0 +1,7 @@
+#   $Id$
+include $(TOP)/config/make.cfg
+
+FILES	:= pcimockdriverclass
+
+%build_module mmake=hidd-pci-mock modname=pcimock modtype=hidd \
+    files=$(FILES) uselibs="oop rom amiga"
