@@ -1397,6 +1397,9 @@ nouveau_wait_ne(struct drm_device *dev, uint64_t timeout,
 	} while (ptimer->read(dev) - start < timeout);
 
 	return false;
+#else
+    return true;
+#endif
 }
 
 /* Wait until cond(data) == true, up until timeout has hit */
@@ -1404,6 +1407,7 @@ bool
 nouveau_wait_cb(struct drm_device *dev, u64 timeout,
 		bool (*cond)(void *), void *data)
 {
+#if !defined(HOSTED_BUILD)
 	struct drm_nouveau_private *dev_priv = dev->dev_private;
 	struct nouveau_timer_engine *ptimer = &dev_priv->engine.timer;
 	u64 start = ptimer->read(dev);
