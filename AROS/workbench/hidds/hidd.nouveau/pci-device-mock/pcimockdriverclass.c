@@ -13,10 +13,13 @@
 #include "pci_registers.h" /* From hidd.pci */
 
 #undef HiddPCIDriverAttrBase
-
 #define HiddPCIDriverAttrBase   (SD(cl)->hiddPCIDriverAB)
+
+#undef HiddAttrBase
 #define HiddAttrBase            (SD(cl)->hiddAB)
 
+#undef HiddPCIMockHardwareAttrBase
+#define HiddPCIMockHardwareAttrBase (SD(cl)->hiddPCIMockHardwareAB)
 
 OOP_Object * METHOD(PCIMock, Root, New)
 {
@@ -59,28 +62,38 @@ OOP_Object * METHOD(PCIMock, Root, New)
 
 ULONG METHOD(PCIMock, Hidd_PCIDriver, ReadConfigLong)
 {
+    IPTR pciconfigspace;
+    ULONG * ptr;
+    
     if (!((msg->bus == 0) && (msg->dev == 2) && (msg->sub == 0)))
         return 0;
+
+    OOP_GetAttr(SD(cl)->mockHardware, aHidd_PCIMockHardware_ConfigSpaceAddr, &pciconfigspace);
+    
+    ptr = (ULONG *)pciconfigspace;
 
     switch (msg->reg)
     {
         /* PCICS_PRODUCT */
-        case(PCICS_VENDOR)      : return 0x022110de;
+        case(PCICS_VENDOR)      :
         /* PCICS_PROGIF */
         /* PCICS_SUBCLASS */
         /* PCICS_CLASS */
-        case(PCICS_REVISION)    : return 0x030000a1;
-        case(PCICS_CACHELS)     : return 0x00000000;
+        case(PCICS_REVISION)    :
+        case(PCICS_CACHELS)     :
         /* PCICS_SUBSYSTEM */
-        case(PCICS_SUBVENDOR)   : return 0x81c71043;
+        case(PCICS_SUBVENDOR)   :
         /* CICS_INT_PIN */
-        case(PCICS_INT_LINE)    : return 0x010b;
+        case(PCICS_INT_LINE)    :
+            return ptr[msg->reg];
         case(PCICS_BAR0)        : READ_BAR(0)
         case(PCICS_BAR1)        : READ_BAR(1)
         case(PCICS_BAR2)        : READ_BAR(2)
         case(PCICS_BAR3)        : READ_BAR(3)
         case(PCICS_BAR4)        : READ_BAR(4)
         case(PCICS_BAR5)        : READ_BAR(5)
+
+
         default: bug("READ: 0x%x\n", msg->reg);
     }
 
@@ -110,6 +123,9 @@ static int PCIMock_ExpungeClass(LIBBASETYPEPTR LIBBASE)
 
     OOP_ReleaseAttrBase(IID_Hidd_PCIDriver);
     OOP_ReleaseAttrBase(IID_Hidd);
+    OOP_ReleaseAttrBase(IID_Hidd_PCIMockHardware);
+    
+    /* TODO: delete all allocated mock hardware devices */
 
     return TRUE;
 }
@@ -130,6 +146,9 @@ static int PCIMock_InitClass(LIBBASETYPEPTR LIBBASE)
 
     LIBBASE->sd.hiddPCIDriverAB = OOP_ObtainAttrBase(IID_Hidd_PCIDriver);
     LIBBASE->sd.hiddAB = OOP_ObtainAttrBase(IID_Hidd);
+    LIBBASE->sd.hiddPCIMockHardwareAB = OOP_ObtainAttrBase(IID_Hidd_PCIMockHardware);
+    
+    LIBBASE->sd.mockHardware = OOP_NewObject(NULL, CLID_Hidd_PCIMockHardware_NV44A, NULL);
 
     /* Temporary: Allocate bar space */
     ALLOC_BAR(0, 0x1000000)
