@@ -43,10 +43,21 @@ struct HIDDPCIMockHardwareData
 
 
 #define SET_ASR_DWORD(hwdata, n, address, value) \
-    ((ULONG *)hwdata->Regions[n].Address)[address] = value;
+    *((ULONG *)(hwdata->Regions[n].Address + address)) = value;
 
 #define GET_ASR_DWORD(hwdata, n, address) \
-    (((ULONG *)hwdata->Regions[n].Address)[address])
+    *((ULONG *)(hwdata->Regions[n].Address + address))
+
+#define DEF_NEXTCAPADDR         \
+    ULONG nextcapaddr = 0x80;   \
+
+#define ADD_PCI_CAP(hwdata, pcicap)                             \
+    {                                                           \
+    ULONG val = ((nextcapaddr + 4) << 8) | pcicap;              \
+    SET_ASR_DWORD(hwdata, PCI_CONFIG_SPACE, nextcapaddr, val);  \
+    nextcapaddr += 4;                                           \
+    }                                                           \
+    
 
 struct RegionAndOffset
 {

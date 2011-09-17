@@ -51,15 +51,12 @@ OOP_Object * METHOD(PCIMock, Root, New)
 ULONG METHOD(PCIMock, Hidd_PCIDriver, ReadConfigLong)
 {
     IPTR pciconfigspace;
-    ULONG * ptr;
     
     if (!((msg->bus == 0) && (msg->dev == 2) && (msg->sub == 0)))
         return 0;
 
     OOP_GetAttr(SD(cl)->mockHardware, aHidd_PCIMockHardware_ConfigSpaceAddr, &pciconfigspace);
     
-    ptr = (ULONG *)pciconfigspace;
-
     switch (msg->reg)
     {
         /* PCICS_PRODUCT */
@@ -82,7 +79,10 @@ ULONG METHOD(PCIMock, Hidd_PCIDriver, ReadConfigLong)
         case(PCICS_BAR4)        :
         case(PCICS_BAR5)        :
         case(PCICS_EXPROM_BASE) :
-            return ptr[msg->reg];
+        case(PCICS_CAP_PTR)     :
+        case(0x80)              :
+        case(0x84)              :
+            return *((ULONG *)(pciconfigspace + msg->reg));
 
 
         default: bug("READ: 0x%x\n", msg->reg);
@@ -94,15 +94,13 @@ ULONG METHOD(PCIMock, Hidd_PCIDriver, ReadConfigLong)
 VOID METHOD(PCIMock, Hidd_PCIDriver, WriteConfigLong)
 {
     IPTR pciconfigspace;
-    ULONG * ptr;
 
     if (!((msg->bus == 0) && (msg->dev == 2) && (msg->sub == 0)))
         return;
 
     OOP_GetAttr(SD(cl)->mockHardware, aHidd_PCIMockHardware_ConfigSpaceAddr, &pciconfigspace);
     
-    ptr = (ULONG *)pciconfigspace;
-    ptr[msg->reg] = msg->val;
+    *((ULONG *)(pciconfigspace + msg->reg)) = msg->val;
     
     /* Inform mock device that value in its address space region has changed */
     {
