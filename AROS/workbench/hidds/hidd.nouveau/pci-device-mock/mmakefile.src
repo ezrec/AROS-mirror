@@ -1,7 +1,10 @@
 #   $Id$
 include $(TOP)/config/make.cfg
 
-FILES	:= pcimockdriverclass
+FILES	:= \
+    pcimockdriverclass \
+    pcimockhardwareclass \
+    NV44A \
 
 USER_INCLUDES := -I$(SRCDIR)/rom/hidds/hidd.pci/
 

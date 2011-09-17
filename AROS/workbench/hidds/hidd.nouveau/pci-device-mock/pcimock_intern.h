@@ -17,6 +17,8 @@ struct BarSpace
 struct staticdata
 {
     OOP_Class       *driverClass;
+    OOP_Class       *pciMockHardwareClass;
+    OOP_Class       *NV44AMockHardwareClass;
     OOP_AttrBase    hiddPCIDriverAB;
     OOP_AttrBase    hiddAB;
     struct BarSpace tmp;
