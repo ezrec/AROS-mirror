@@ -10,16 +10,6 @@
 #include <proto/exec.h>
 #include <aros/symbolsets.h>
 
-#if defined(HOSTED_BUILD)
-static VOID Nouveau_HOSTED_BUILD_Init(LIBBASETYPEPTR LIBBASE)
-{
-    OOP_NewObject(NULL, CLID_Hidd_Gfx_Nouveau, NULL);
-    
-    /* TODO: NewBitmap creation of screen bitmap 1024x768 */
-    /* TODO: ShowViewPorts - display of bitmap */
-}
-#endif
-
 static ULONG Nouveau_Init(LIBBASETYPEPTR LIBBASE)
 {
     struct OOP_ABDescr attrbases[] = 
@@ -61,11 +51,6 @@ static ULONG Nouveau_Init(LIBBASETYPEPTR LIBBASE)
   
     
     InitSemaphore(&LIBBASE->sd.multibitmapsemaphore);
-
-#if defined(HOSTED_BUILD)
-    /* This is used only for HOSTED_BUILD initialization */
-    Nouveau_HOSTED_BUILD_Init(LIBBASE);
-#endif
 
     /* TEMP - FIXME HACK FOR PATCHRGBCONV */
     LIBBASE->sd.rgbpatched = FALSE;
