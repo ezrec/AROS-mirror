@@ -29,7 +29,7 @@ extern OOP_AttrBase HiddPCIMockHardwareAttrBase;
 
 enum
 {
-    moHidd_PCIMockHardware_MemoryChangedAtAdrress = 0,    
+    moHidd_PCIMockHardware_MemoryChangedAtAddress = 0,    
 
     NUM_PCIMOCKHARDWARE_METHODS
 };
