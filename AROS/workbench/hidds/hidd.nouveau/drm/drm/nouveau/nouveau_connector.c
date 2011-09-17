@@ -300,11 +300,11 @@ detect_analog:
 	if (!nv_encoder && !nouveau_tv_disable)
 		nv_encoder = find_encoder(connector, OUTPUT_TV);
 	if (nv_encoder && force) {
+#if !defined(MOCK_HARDWARE)
 		struct drm_encoder *encoder = to_drm_encoder(nv_encoder);
 		struct drm_encoder_helper_funcs *helper =
 						encoder->helper_private;
 
-#if !defined(HOSTED_BUILD)
 		if (helper->detect(encoder, connector) ==
 						connector_status_connected) {
 			nouveau_connector_set_encoder(connector, nv_encoder);

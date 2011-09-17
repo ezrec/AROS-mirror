@@ -1120,10 +1120,6 @@ int nouveau_load(struct drm_device *dev, unsigned long flags)
 	} else
 		dev_priv->chipset = 0xff;
 
-#if defined(HOSTED_BUILD)
-    dev_priv->chipset = HOSTED_BUILD_CHIPSET;
-#endif
- 
 	switch (dev_priv->chipset & 0xf0) {
 	case 0x00:
 	case 0x10:
@@ -1265,9 +1261,9 @@ int nouveau_unload(struct drm_device *dev)
 {
 	struct drm_nouveau_private *dev_priv = dev->dev_private;
 
+#if !defined(__AROS__)
 	nouveau_card_takedown(dev);
 
-#if !defined(__AROS__)
 	iounmap(dev_priv->mmio);
 	iounmap(dev_priv->ramin);
 
@@ -1276,6 +1272,8 @@ int nouveau_unload(struct drm_device *dev)
 #else
 	if (dev_priv)
 	{
+		nouveau_card_takedown(dev);
+
 		iounmap(dev_priv->mmio);
 		iounmap(dev_priv->ramin);
 

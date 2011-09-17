@@ -393,7 +393,6 @@ int drm_irq_install(struct drm_device *dev)
 }
 EXPORT_SYMBOL(drm_irq_install);
 #else
-#if !defined(HOSTED_BUILD)
 static void interrupt_handler(HIDDT_IRQ_Handler * irq, HIDDT_IRQ_HwInfo *hw)
 {
     struct drm_device *dev = (struct drm_device*)irq->h_Data;
@@ -402,13 +401,9 @@ static void interrupt_handler(HIDDT_IRQ_Handler * irq, HIDDT_IRQ_HwInfo *hw)
     if (dev->driver->irq_handler)
         dev->driver->irq_handler(dev);
 }
-#endif
 
 int drm_irq_install(struct drm_device *dev)
 {
-#if defined(HOSTED_BUILD)
-    return 0;
-#else    
     struct OOP_Object *o = NULL;
     IPTR INTLine = 0;
     int retval = -EINVAL;
@@ -436,7 +431,8 @@ int drm_irq_install(struct drm_device *dev)
         DRM_DEBUG("INTLine: %d\n", INTLine);
         
         o = OOP_NewObject(NULL, CLID_Hidd_IRQ, NULL);
-        
+
+#if !defined(MOCK_HARDWARE)
         if (o)
         {
             struct pHidd_IRQ_AddHandler __msg__ = {
@@ -450,6 +446,9 @@ int drm_irq_install(struct drm_device *dev)
 
             OOP_DisposeObject((OOP_Object *)o);
         }
+#else
+        retval = 0;
+#endif
     }
 
     if (retval != 0)
@@ -472,7 +471,6 @@ int drm_irq_install(struct drm_device *dev)
     }
     
     return retval;
-#endif    
 }
 #endif
 
@@ -530,9 +528,6 @@ EXPORT_SYMBOL(drm_irq_uninstall);
 #else
 int drm_irq_uninstall(struct drm_device *dev)
 {
-#if defined(HOSTED_BUILD)
-    return 0;
-#else      
     int irq_enabled;
     struct OOP_Object *o = NULL;
     int retval = -EINVAL;
@@ -549,7 +544,8 @@ int drm_irq_uninstall(struct drm_device *dev)
         dev->driver->irq_uninstall(dev);
 
     o = OOP_NewObject(NULL, CLID_Hidd_IRQ, NULL);
-    
+
+#if !defined(MOCK_HARDWARE)
     if (o)
     {
         struct pHidd_IRQ_RemHandler __msg__ = {
@@ -566,9 +562,13 @@ int drm_irq_uninstall(struct drm_device *dev)
 
         OOP_DisposeObject((OOP_Object *)o);
     }
+#else
+    FreeVec(dev->IntHandler);
+    dev->IntHandler = NULL;
+    retval = 0;
+#endif
 
     return retval;
-#endif
 }
 #endif
 

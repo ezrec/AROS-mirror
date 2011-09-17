@@ -262,7 +262,6 @@ void idr_init(struct idr *idp)
 
 void *ioremap(resource_size_t offset, unsigned long size)
 {
-#if !defined(HOSTED_BUILD)
     if (pciDriver)
     {
         struct pHidd_PCIDriver_MapPCI mappci,*msg = &mappci;
@@ -276,19 +275,10 @@ void *ioremap(resource_size_t offset, unsigned long size)
         bug("BUG: ioremap used without acquiring pciDriver\n");
         return NULL;
     }
-#else
-    /* For better simulation:
-    a) make a list of already "mapped" buffers keyed by APTR buf
-    b) check if a request (buf + size) is inside of already mapped region -> return pointer in mapped region
-    Why: sometimes the same range is mapped more than once
-    */
-    return AllocVec(size, MEMF_PUBLIC | MEMF_CLEAR); /* This will leak */
-#endif
 }
 
 void iounmap(void * addr)
 {
-#if !defined(HOSTED_BUILD)
     if (pciDriver)
     {
         struct pHidd_PCIDriver_UnmapPCI unmappci,*msg=&unmappci;
@@ -299,16 +289,10 @@ void iounmap(void * addr)
 
         OOP_DoMethod(pciDriver, (OOP_Msg)msg);
     }
-#else
-    /* If "better simulation" is implemented (see ioremap) memory
-    can only be freed if there is no other mappings to this buffer */
-    FreeVec(addr);
-#endif
 }
 
 resource_size_t pci_resource_start(void * pdev, unsigned int resource)
 {
-#if !defined(HOSTED_BUILD)    
     APTR start = (APTR)NULL;
     switch(resource)
     {
@@ -322,25 +306,10 @@ resource_size_t pci_resource_start(void * pdev, unsigned int resource)
     }
     
     return (resource_size_t)start;
-#else
-#if HOSTED_BUILD_HARDWARE == HOSTED_BUILD_HARDWARE_NVIDIA
-#if HOSTED_BUILD_CHIPSET >= 0x40
-if (resource == 0) return (resource_size_t)0xcf000000;
-if (resource == 1) return (resource_size_t)0xb0000000;
-if (resource == 3) return (resource_size_t)0xce000000;
-#else
-if (resource == 0) return (resource_size_t)0xe7000000;
-if (resource == 1) return (resource_size_t)0xf0000000;
-if (resource == 2) return (resource_size_t)0xef800000;
-#endif
-#endif
-return (resource_size_t)0;
-#endif
 }
 
 unsigned long pci_resource_len(void * pdev, unsigned int resource)
 {
-#if !defined(HOSTED_BUILD)    
     IPTR len = (IPTR)0;
     
     if (pci_resource_start(pdev, resource) != 0)
@@ -365,20 +334,6 @@ unsigned long pci_resource_len(void * pdev, unsigned int resource)
     }
     
     return len;
-#else
-#if HOSTED_BUILD_HARDWARE == HOSTED_BUILD_HARDWARE_NVIDIA
-#if HOSTED_BUILD_CHIPSET >= 0x40
-if (resource == 0) return (IPTR)0x1000000;
-if (resource == 1) return (IPTR)0x10000000;
-if (resource == 3) return (IPTR)0x1000000;
-#else
-if (resource == 0) return (IPTR)0x1000000;
-if (resource == 1) return (IPTR)0x8000000;
-if (resource == 2) return (IPTR)0x80000;
-#endif
-#endif
-return (IPTR)0;
-#endif
 }
 
 struct GetBusSlotEnumeratorData
@@ -421,7 +376,6 @@ AROS_UFH3(void, GetBusSlotEnumerator,
 }   
 void * pci_get_bus_and_slot(unsigned int bus, unsigned int dev, unsigned int fun)
 {
-#if !defined(HOSTED_BUILD)
     OOP_Object * pciDevice = NULL;
 
     if (pciBus)
@@ -452,46 +406,36 @@ void * pci_get_bus_and_slot(unsigned int bus, unsigned int dev, unsigned int fun
     }
     
     return pciDevice;
-#else
-    return AllocVec(1, MEMF_ANY);
-#endif
 }
 
 int pci_read_config_word(void *dev, int where, u16 *val)
 {
-#if !defined(HOSTED_BUILD)
     struct pHidd_PCIDevice_ReadConfigWord rcwmsg = {
     mID: OOP_GetMethodID(IID_Hidd_PCIDevice, moHidd_PCIDevice_ReadConfigWord),
     reg: (UBYTE)where,
     }, *msg = &rcwmsg;
     
     *val = (UWORD)OOP_DoMethod((OOP_Object*)dev, (OOP_Msg)msg);
-#else
-#endif
-    bug("pci_read_config_word: %d -> %d\n", where, *val);
+    D(bug("pci_read_config_word: %d -> %d\n", where, *val));
     
     return 0;
 }
 
 int pci_read_config_dword(void *dev, int where, u32 *val)
 {
-#if !defined(HOSTED_BUILD)
     struct pHidd_PCIDevice_ReadConfigLong rclmsg = {
     mID: OOP_GetMethodID(IID_Hidd_PCIDevice, moHidd_PCIDevice_ReadConfigLong),
     reg: (UBYTE)where,
     }, *msg = &rclmsg;
     
     *val = (ULONG)OOP_DoMethod((OOP_Object*)dev, (OOP_Msg)msg);
-#else
-#endif
-    bug("pci_read_config_dword: %d -> %d\n", where, *val);
+    D(bug("pci_read_config_dword: %d -> %d\n", where, *val));
     
     return 0;
 }
 
 int pci_write_config_dword(void *dev, int where, u32 val)
 {
-#if !defined(HOSTED_BUILD)
     struct pHidd_PCIDevice_WriteConfigLong wclmsg = {
     mID: OOP_GetMethodID(IID_Hidd_PCIDevice, moHidd_PCIDevice_ReadConfigLong),
     reg: (UBYTE)where,
@@ -499,9 +443,7 @@ int pci_write_config_dword(void *dev, int where, u32 val)
     }, *msg = &wclmsg;
     
     OOP_DoMethod((OOP_Object*)dev, (OOP_Msg)msg);
-#else
-#endif
-    bug("pci_write_config_dword: %d -> %d\n", where, val);
+    D(bug("pci_write_config_dword: %d -> %d\n", where, val));
     
     return 0;
 }
@@ -510,35 +452,23 @@ int pci_write_config_dword(void *dev, int where, u32 val)
 
 const char *pci_name(void * dev)
 {
-#if !defined(HOSTED_BUILD)
     static char name[16];
     OOP_Object * oopdev = (OOP_Object *)dev;
     IPTR Bus = 0, Dev = 0, Sub = 0;
     OOP_GetAttr(oopdev, aHidd_PCIDevice_Bus, &Bus);
     OOP_GetAttr(oopdev, aHidd_PCIDevice_Dev, &Dev);
     OOP_GetAttr(oopdev, aHidd_PCIDevice_Sub, &Sub);
-    snprintf(name, sizeof(name), "%x:%2x.%x",
+    snprintf(name, sizeof(name), "%x:%x.%x",
     	    (unsigned)Bus, (unsigned)Dev, (unsigned)Sub);
     name[sizeof(name)-1] = 0;
     return name;
-#else
-    return "HOSTED_BUILD";
-#endif
 }
 
 int pci_is_pcie(void *dev)
 {
-#if !defined(HOSTED_BUILD)
     IPTR PCIECap;
     OOP_GetAttr(dev, aHidd_PCIDevice_CapabilityPCIE, (APTR)&PCIECap);
     return PCIECap;
-#else
-#if HOSTED_BUILD_BUS == HOSTED_BUILD_BUS_PCIE
-    return 1;
-#else
-    return 0;
-#endif
-#endif
 }
 
 #include <hidd/agp.h>
@@ -605,14 +535,14 @@ int agp_copy_info(struct agp_bridge_data * bridge, struct agp_kern_info * info)
 
 struct agp_bridge_data * agp_find_bridge(void * dev)
 {
-#if !defined(HOSTED_BUILD)
+#if !defined(MOCK_HARDWARE)
     OOP_Object * agpbus = NULL;
 #endif
 
     if (global_agp_bridge)
         return global_agp_bridge;
 
-#if !defined(HOSTED_BUILD)
+#if !defined(MOCK_HARDWARE)
     if (!HiddAgpBase)
     {
         HiddAgpBase = OpenLibrary("agp.hidd", 1);
@@ -657,11 +587,9 @@ struct agp_bridge_data * agp_find_bridge(void * dev)
     global_agp_bridge = AllocVec(sizeof(struct agp_bridge_data), 
                                         MEMF_PUBLIC | MEMF_CLEAR);
     global_agp_bridge->agpbridgedevice = (IPTR)NULL;
-#if HOSTED_BUILD_HARDWARE == HOSTED_BUILD_HARDWARE_NVIDIA
     global_agp_bridge->mode = 0x1f004e1b;
-    global_agp_bridge->aperturebase = 0xd8000000;
+    global_agp_bridge->aperturebase = (IPTR)AllocVec(64 * 1024 * 1024, MEMF_ANY | MEMF_CLEAR);
     global_agp_bridge->aperturesize = 64;
-#endif
 #endif
 
     return global_agp_bridge;
@@ -672,7 +600,7 @@ void agp_enable(struct agp_bridge_data * bridge, u32 mode)
     if (!bridge || !bridge->agpbridgedevice)
         return;
 
-#if !defined(HOSTED_BUILD)
+#if !defined(MOCK_HARDWARE)
     struct pHidd_AGPBridgeDevice_Enable emsg = {
     mID:            OOP_GetMethodID(IID_Hidd_AGPBridgeDevice, moHidd_AGPBridgeDevice_Enable),
     requestedmode:  mode
@@ -693,7 +621,7 @@ int agp_bind_memory(struct agp_memory * mem, off_t offset)
         return -EINVAL;
     }
 
-#if !defined(HOSTED_BUILD)
+#if !defined(MOCK_HARDWARE)
     if (!mem->is_flushed)
     {
         /* TODO: Flush memory */
@@ -722,7 +650,7 @@ int agp_unbind_memory(struct agp_memory * mem)
 {
     if (!mem || !mem->is_bound)
         return -EINVAL;
-#if !defined(HOSTED_BUILD)
+#if !defined(MOCK_HARDWARE)
     struct pHidd_AGPBridgeDevice_UnBindMemory ubmmsg = {
     mID:        OOP_GetMethodID(IID_Hidd_AGPBridgeDevice, moHidd_AGPBridgeDevice_UnBindMemory),
     offset:     mem->pg_start,
@@ -743,7 +671,7 @@ void agp_flush_chipset(struct agp_bridge_data * bridge)
     if (!bridge || !bridge->agpbridgedevice)
         return;
 
-#if !defined(HOSTED_BUILD)
+#if !defined(MOCK_HARDWARE)
     struct pHidd_AGPBridgeDevice_FlushChipset fcmsg = {
     mID:        OOP_GetMethodID(IID_Hidd_AGPBridgeDevice, moHidd_AGPBridgeDevice_FlushChipset),
     };

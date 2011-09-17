@@ -93,7 +93,7 @@ drm_clflush_pages(struct page *pages[], unsigned long num_pages)
 	}
 #elif defined(__AROS__)
     /* TODO: Detect if cpu has clflush. Use it if present */
-#if !defined(HOSTED_BUILD)
+#if !defined(MOCK_HARDWARE)
     VOID Wbinvd(); /* Implemented in assembler */
     Supervisor((ULONG_FUNC)Wbinvd);
 #endif
