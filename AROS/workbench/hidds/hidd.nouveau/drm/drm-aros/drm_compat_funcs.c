@@ -510,16 +510,20 @@ int pci_write_config_dword(void *dev, int where, u32 val)
 
 const char *pci_name(void * dev)
 {
+#if !defined(HOSTED_BUILD)
     static char name[16];
     OOP_Object * oopdev = (OOP_Object *)dev;
     IPTR Bus = 0, Dev = 0, Sub = 0;
     OOP_GetAttr(oopdev, aHidd_PCIDevice_Bus, &Bus);
     OOP_GetAttr(oopdev, aHidd_PCIDevice_Dev, &Dev);
     OOP_GetAttr(oopdev, aHidd_PCIDevice_Sub, &Sub);
-    snprintf(name, sizeof(name), "%x:%2x.%x\n",
+    snprintf(name, sizeof(name), "%x:%2x.%x",
     	    (unsigned)Bus, (unsigned)Dev, (unsigned)Sub);
     name[sizeof(name)-1] = 0;
     return name;
+#else
+    return "HOSTED_BUILD";
+#endif
 }
 
 int pci_is_pcie(void *dev)
