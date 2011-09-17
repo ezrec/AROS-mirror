@@ -4439,7 +4439,6 @@ int nouveau_bios_parse_lvds_table(struct drm_device *dev, int pxclk, bool *dl, b
 		break;
 	}
 
-
 	/* Dell Latitude D620 reports a too-high value for the dual-link
 	 * transition freq, causing us to program the panel incorrectly.
 	 *
@@ -6561,9 +6560,8 @@ parse_dcb_table(struct drm_device *dev, struct nvbios *bios)
 		return 0;
 	}
 
-	if (!i2ctabptr) {
+	if (!i2ctabptr)
 		NV_WARN(dev, "No pointer to DCB I2C port table\n");
-	}
 	else {
 		dcb->i2c_table = &bios->data[i2ctabptr];
 		if (dcb->version >= 0x30)

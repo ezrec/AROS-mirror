@@ -1596,7 +1596,6 @@ extern void nv_wo32(struct nouveau_gpuobj *, u32 offset, u32 val);
 		NV_PRINTK(KERN_DEBUG, d, fmt, ##arg);                          \
 } while (0)
 #endif
-
 #define NV_ERROR(d, fmt, arg...) NV_PRINTK(KERN_ERR, d, fmt, ##arg)
 #define NV_INFO(d, fmt, arg...) NV_PRINTK(KERN_INFO, d, fmt, ##arg)
 #define NV_TRACEWARN(d, fmt, arg...) NV_PRINTK(KERN_NOTICE, d, fmt, ##arg)

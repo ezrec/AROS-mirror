@@ -248,6 +248,7 @@ int
 nouveau_mem_detect(struct drm_device *dev)
 {
 	struct drm_nouveau_private *dev_priv = dev->dev_private;
+
 	if (dev_priv->card_type == NV_04) {
 		dev_priv->vram_size = nouveau_mem_detect_nv04(dev);
 	} else
