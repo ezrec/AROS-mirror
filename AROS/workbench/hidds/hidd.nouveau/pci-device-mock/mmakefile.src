@@ -9,6 +9,7 @@ FILES	:= \
     NVG86 \
     NVGTS250 \
     NVGF100 \
+    SIS661FX \
 
 USER_INCLUDES := -I$(SRCDIR)/rom/hidds/hidd.pci/
 

@@ -18,6 +18,7 @@ struct staticdata
     OOP_Class       *NVG86MockHardwareClass;
     OOP_Class       *NVGTS250MockHardwareClass;
     OOP_Class       *NVGF100MockHardwareClass;
+    OOP_Class       *SIS661FXMockHardwareClass;
     OOP_AttrBase    hiddPCIDriverAB;
     OOP_AttrBase    hiddAB;
     OOP_AttrBase    hiddPCIMockHardwareAB;

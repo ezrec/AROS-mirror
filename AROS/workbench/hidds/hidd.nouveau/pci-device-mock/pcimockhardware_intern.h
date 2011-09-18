@@ -96,5 +96,11 @@ struct HIDDNVGF100MockHardwareData
 {
 };
 
+#define CLID_Hidd_PCIMockHardware_SIS661FX  "hidd.pcimockhardware.sis661fx"
+
+struct HIDDSIS661FXMockHardwareData
+{
+};
+
 #endif /* PCIMOCKHARDWARE_INTERN_H */
 
