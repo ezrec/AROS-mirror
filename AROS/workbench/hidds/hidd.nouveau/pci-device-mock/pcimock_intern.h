@@ -10,6 +10,7 @@
 struct staticdata
 {
     OOP_Class       *driverClass;
+    OOP_Class       *irqMockClass;
     OOP_Class       *pciMockHardwareClass;
     OOP_Class       *NV44AMockHardwareClass;
     OOP_Class       *NVG86MockHardwareClass;
@@ -34,6 +35,10 @@ LIBBASETYPE
 #define BASE(lib)                   ((LIBBASETYPEPTR)(lib))
 
 #define SD(cl)                      (&BASE(cl->UserData)->sd)
+
+struct HIDDIRQMockData
+{
+};
 
 #endif /* PCIMOCK_INTERN_H */
 

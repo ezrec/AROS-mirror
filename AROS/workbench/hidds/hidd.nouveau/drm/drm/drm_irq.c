@@ -429,10 +429,9 @@ int drm_irq_install(struct drm_device *dev)
 
         OOP_GetAttr(dev->pdev, aHidd_PCIDevice_INTLine, &INTLine);
         DRM_DEBUG("INTLine: %d\n", INTLine);
-        
+
         o = OOP_NewObject(NULL, CLID_Hidd_IRQ, NULL);
 
-#if !defined(MOCK_HARDWARE)
         if (o)
         {
             struct pHidd_IRQ_AddHandler __msg__ = {
@@ -446,9 +445,6 @@ int drm_irq_install(struct drm_device *dev)
 
             OOP_DisposeObject((OOP_Object *)o);
         }
-#else
-        retval = 0;
-#endif
     }
 
     if (retval != 0)
@@ -545,7 +541,6 @@ int drm_irq_uninstall(struct drm_device *dev)
 
     o = OOP_NewObject(NULL, CLID_Hidd_IRQ, NULL);
 
-#if !defined(MOCK_HARDWARE)
     if (o)
     {
         struct pHidd_IRQ_RemHandler __msg__ = {
@@ -562,11 +557,6 @@ int drm_irq_uninstall(struct drm_device *dev)
 
         OOP_DisposeObject((OOP_Object *)o);
     }
-#else
-    FreeVec(dev->IntHandler);
-    dev->IntHandler = NULL;
-    retval = 0;
-#endif
 
     return retval;
 }

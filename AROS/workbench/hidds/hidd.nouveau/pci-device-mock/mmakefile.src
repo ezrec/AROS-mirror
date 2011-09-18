@@ -2,6 +2,7 @@
 include $(TOP)/config/make.cfg
 
 FILES	:= \
+    irqmockclass \
     pcimockdriverclass \
     pcimockhardwareclass \
     NV44A \
