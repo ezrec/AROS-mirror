@@ -57,7 +57,7 @@ VOID METHOD(NV44AMockHardware, Hidd_PCIMockHardware, MemoryReadAtAddress)
     struct RegionAndOffset rao = HIDDPCIMockHardwareDetectRegionAndOffset(hwdata, msg->memoryaddress);
 
     if (rao.Region == -1)
-        return;    
+        return;
 
     if (rao.Region == PCI_CONFIG_SPACE)
     {
@@ -81,8 +81,31 @@ VOID METHOD(NV44AMockHardware, Hidd_PCIMockHardware, MemoryReadAtAddress)
             case(0x00000084):
             return;
         }
-    }        
-        
+    }
+
+    OOP_DoSuperMethod(cl, o, (OOP_Msg)msg);
+}
+
+VOID METHOD(NV44AMockHardware, Hidd_PCIMockHardware, MemoryChangedAtAddress)
+{
+    GET_PCIMOCKHWDATA
+
+    /* Detect in which address space the address is located and get relative offset */
+    struct RegionAndOffset rao = HIDDPCIMockHardwareDetectRegionAndOffset(hwdata, msg->memoryaddress);
+
+    if (rao.Region == -1)
+        return;
+
+    if (rao.Region == PCI_CONFIG_SPACE)
+    {
+        switch(rao.Offset)
+        {
+            case(0x00000004):
+            case(0x00000088): /* AGP_COMMAND_REG */
+            return;
+        }
+    }
+
     OOP_DoSuperMethod(cl, o, (OOP_Msg)msg);
 }
 
