@@ -51,12 +51,20 @@ OOP_Object * METHOD(PCIMock, Root, New)
 ULONG METHOD(PCIMock, Hidd_PCIDriver, ReadConfigLong)
 {
     IPTR pciconfigspace;
+    OOP_Object * mockHardware = NULL;
     
-    if (!((msg->bus == 0) && (msg->dev == 2) && (msg->sub == 0)))
+    if (!((msg->bus == 0) && (msg->sub == 0)))
         return 0;
 
-    OOP_GetAttr(SD(cl)->mockHardware, aHidd_PCIMockHardware_ConfigSpaceAddr, &pciconfigspace);
-    
+    if ((mockHardware = SD(cl)->mockHardwareBus0[msg->dev]) == NULL)
+        return 0;
+
+    OOP_GetAttr(mockHardware, aHidd_PCIMockHardware_ConfigSpaceAddr, &pciconfigspace);
+
+    /* Note: the switch is here ONLY to mark which config fields we support and which
+       not. "support" - the mock hardware classes were written to be able to answer
+       those requests correclty */
+
     switch (msg->reg)
     {
         /* PCICS_PRODUCT */
@@ -85,7 +93,7 @@ ULONG METHOD(PCIMock, Hidd_PCIDriver, ReadConfigLong)
             return *((ULONG *)(pciconfigspace + msg->reg));
 
 
-        default: bug("READ: 0x%x\n", msg->reg);
+        default: bug("[PCIMock] Unhandled ReadConfigLong for reg 0x%x\n", msg->reg);
     }
 
     return 0;
@@ -94,11 +102,15 @@ ULONG METHOD(PCIMock, Hidd_PCIDriver, ReadConfigLong)
 VOID METHOD(PCIMock, Hidd_PCIDriver, WriteConfigLong)
 {
     IPTR pciconfigspace;
-
-    if (!((msg->bus == 0) && (msg->dev == 2) && (msg->sub == 0)))
+    OOP_Object * mockHardware = NULL;
+    
+    if (!((msg->bus == 0) && (msg->sub == 0)))
         return;
 
-    OOP_GetAttr(SD(cl)->mockHardware, aHidd_PCIMockHardware_ConfigSpaceAddr, &pciconfigspace);
+    if ((mockHardware = SD(cl)->mockHardwareBus0[msg->dev]) == NULL)
+        return;
+
+    OOP_GetAttr(mockHardware, aHidd_PCIMockHardware_ConfigSpaceAddr, &pciconfigspace);
     
     *((ULONG *)(pciconfigspace + msg->reg)) = msg->val;
     
@@ -110,19 +122,28 @@ VOID METHOD(PCIMock, Hidd_PCIDriver, WriteConfigLong)
             memoryaddress : pciconfigspace + msg->reg
         };
         
-        OOP_DoMethod(SD(cl)->mockHardware, (OOP_Msg)&mcaa);
+        OOP_DoMethod(mockHardware, (OOP_Msg)&mcaa);
     }
 }
 
 static int PCIMock_ExpungeClass(LIBBASETYPEPTR LIBBASE)
 {
+    ULONG i;
+
     D(bug("[PCIMock] deleting classes\n"));
+
+    for (i = 0; i < MAX_BUS0_DEVICES; i++)
+        if (LIBBASE->sd.mockHardwareBus0[i] != NULL)
+        {
+            OOP_DisposeObject(LIBBASE->sd.mockHardwareBus0[i]);
+            LIBBASE->sd.mockHardwareBus0[i] = NULL;
+        }
 
     OOP_ReleaseAttrBase(IID_Hidd_PCIDriver);
     OOP_ReleaseAttrBase(IID_Hidd);
     OOP_ReleaseAttrBase(IID_Hidd_PCIMockHardware);
     
-    /* TODO: delete all allocated mock hardware devices */
+
 
     return TRUE;
 }
@@ -130,17 +151,20 @@ static int PCIMock_ExpungeClass(LIBBASETYPEPTR LIBBASE)
 static int PCIMock_InitClass(LIBBASETYPEPTR LIBBASE)
 {
     OOP_Object *pci = NULL;
+    ULONG i;
 
     D(bug("[PCIMock] Driver initialization\n"));
 
     LIBBASE->sd.hiddPCIDriverAB = OOP_ObtainAttrBase(IID_Hidd_PCIDriver);
     LIBBASE->sd.hiddAB = OOP_ObtainAttrBase(IID_Hidd);
     LIBBASE->sd.hiddPCIMockHardwareAB = OOP_ObtainAttrBase(IID_Hidd_PCIMockHardware);
+    for (i = 0; i < MAX_BUS0_DEVICES; i++)
+        LIBBASE->sd.mockHardwareBus0[i] = NULL;
     
-//    LIBBASE->sd.mockHardware = OOP_NewObject(NULL, CLID_Hidd_PCIMockHardware_NV44A, NULL);
-//    LIBBASE->sd.mockHardware = OOP_NewObject(NULL, CLID_Hidd_PCIMockHardware_NVG86, NULL);
-//    LIBBASE->sd.mockHardware = OOP_NewObject(NULL, CLID_Hidd_PCIMockHardware_NVGTS250, NULL);
-    LIBBASE->sd.mockHardware = OOP_NewObject(NULL, CLID_Hidd_PCIMockHardware_NVGF100, NULL);
+    ADD_DEVICE((&LIBBASE->sd), 2, CLID_Hidd_PCIMockHardware_NV44A);
+//    ADD_DEVICE((&LIBBASE->sd), 3, CLID_Hidd_PCIMockHardware_NVG86);
+//    ADD_DEVICE((&LIBBASE->sd), 4, CLID_Hidd_PCIMockHardware_NVGTS250);
+//    ADD_DEVICE((&LIBBASE->sd), 5, CLID_Hidd_PCIMockHardware_NVGF100);
 
     if (LIBBASE->sd.hiddPCIDriverAB)
     {

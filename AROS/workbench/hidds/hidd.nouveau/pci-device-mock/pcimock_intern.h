@@ -7,6 +7,8 @@
 
 #include LC_LIBDEFS_FILE
 
+#define MAX_BUS0_DEVICES    255
+
 struct staticdata
 {
     OOP_Class       *driverClass;
@@ -20,7 +22,7 @@ struct staticdata
     OOP_AttrBase    hiddAB;
     OOP_AttrBase    hiddPCIMockHardwareAB;
     
-    OOP_Object      *mockHardware;
+    OOP_Object      *mockHardwareBus0[MAX_BUS0_DEVICES];
 };
 
 LIBBASETYPE
@@ -40,5 +42,8 @@ struct HIDDIRQMockData
 {
 };
 
+#define ADD_DEVICE(sd, dev, class)                                              \
+        sd->mockHardwareBus0[dev] = OOP_NewObject(NULL, class, NULL);   \
+    
 #endif /* PCIMOCK_INTERN_H */
 
