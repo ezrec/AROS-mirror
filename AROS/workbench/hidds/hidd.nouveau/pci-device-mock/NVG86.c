@@ -52,3 +52,61 @@ OOP_Object * METHOD(NVG86MockHardware, Root, New)
     return o;
 }
 
+VOID METHOD(NVG86MockHardware, Hidd_PCIMockHardware, MemoryReadAtAddress)
+{
+    GET_PCIMOCKHWDATA
+
+    /* Detect in which address space the address is located and get relative offset */
+    struct RegionAndOffset rao = HIDDPCIMockHardwareDetectRegionAndOffset(hwdata, msg->memoryaddress);
+
+    if (rao.Region == -1)
+        return;
+
+    if (rao.Region == PCI_CONFIG_SPACE)
+    {
+        switch(rao.Offset)
+        {
+            case(0x00000000):
+            case(0x00000004):
+            case(0x00000008):
+            case(0x0000000c):
+            case(0x00000010):
+            case(0x00000014):
+            case(0x00000018):
+            case(0x0000001c):
+            case(0x00000020):
+            case(0x00000024):
+            case(0x0000002c):
+            case(0x00000030):
+            case(0x00000034):
+            case(0x0000003c):
+            case(0x00000080):
+            case(0x00000084):
+            return;
+        }
+    }
+
+    OOP_DoSuperMethod(cl, o, (OOP_Msg)msg);
+}
+
+VOID METHOD(NVG86MockHardware, Hidd_PCIMockHardware, MemoryChangedAtAddress)
+{
+    GET_PCIMOCKHWDATA
+
+    /* Detect in which address space the address is located and get relative offset */
+    struct RegionAndOffset rao = HIDDPCIMockHardwareDetectRegionAndOffset(hwdata, msg->memoryaddress);
+
+    if (rao.Region == -1)
+        return;
+
+    if (rao.Region == PCI_CONFIG_SPACE)
+    {
+        switch(rao.Offset)
+        {
+            case(0x00000004):
+            return;
+        }
+    }
+
+    OOP_DoSuperMethod(cl, o, (OOP_Msg)msg);
+}
