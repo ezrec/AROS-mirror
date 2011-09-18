@@ -99,7 +99,10 @@ VOID METHOD(PCIMockHardware, Hidd_PCIMockHardware, MemoryChangedAtAddress)
                 SUPPORT_BAR_SIZE_QUERY(hwdata, PCICS_EXPROM_BASE, PCI_ROM);
                 break;
             default :
-                bug("[PCIMockHardware->MemoryChangedAtAddress Unhandled - %d:0x%x\n", rao.Region, rao.Offset);
+                bug("[PCIMockHardware(0x%x:0x%x)->MemoryChangedAtAddress - %d:0x%x Unhandled\n", 
+                    (GET_ASR_DWORD(hwdata, PCI_CONFIG_SPACE, 0x00) & 0xffff),
+                    ((GET_ASR_DWORD(hwdata, PCI_CONFIG_SPACE, 0x00) >> 16) & 0xffff),
+                    rao.Region, rao.Offset);
                 break;
         }
     }
@@ -115,7 +118,10 @@ VOID METHOD(PCIMockHardware, Hidd_PCIMockHardware, MemoryReadAtAddress)
     if (rao.Region == -1)
         return;    
     
-    bug("[PCIMockHardware->MemoryReadAtAddress Unhandled - %d:0x%x\n", rao.Region, rao.Offset);
+    bug("[PCIMockHardware(0x%x:0x%x)->MemoryReadAtAddress - %d:0x%x Unhandled\n", 
+        (GET_ASR_DWORD(hwdata, PCI_CONFIG_SPACE, 0x00) & 0xffff),
+        ((GET_ASR_DWORD(hwdata, PCI_CONFIG_SPACE, 0x00) >> 16) & 0xffff),
+        rao.Region, rao.Offset);
 }
 
 struct RegionAndOffset HIDDPCIMockHardwareDetectRegionAndOffset(struct HIDDPCIMockHardwareData * hwdata, IPTR address)
