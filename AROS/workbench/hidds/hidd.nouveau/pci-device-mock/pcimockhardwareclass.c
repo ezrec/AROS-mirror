@@ -105,6 +105,19 @@ VOID METHOD(PCIMockHardware, Hidd_PCIMockHardware, MemoryChangedAtAddress)
     }
 }
 
+VOID METHOD(PCIMockHardware, Hidd_PCIMockHardware, MemoryReadAtAddress)
+{
+    struct HIDDPCIMockHardwareData * hwdata = OOP_INST_DATA(cl, o);
+
+    /* Detect in which address space the address is located and get relative offset */
+    struct RegionAndOffset rao = HIDDPCIMockHardwareDetectRegionAndOffset(hwdata, msg->memoryaddress);
+
+    if (rao.Region == -1)
+        return;    
+    
+    bug("[PCIMockHardware->MemoryReadAtAddress Unhandled - %d:0x%x\n", rao.Region, rao.Offset);
+}
+
 struct RegionAndOffset HIDDPCIMockHardwareDetectRegionAndOffset(struct HIDDPCIMockHardwareData * hwdata, IPTR address)
 {
     ULONG i = 0;

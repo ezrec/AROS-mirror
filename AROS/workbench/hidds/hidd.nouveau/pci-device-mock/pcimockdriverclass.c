@@ -52,6 +52,7 @@ ULONG METHOD(PCIMock, Hidd_PCIDriver, ReadConfigLong)
 {
     IPTR pciconfigspace;
     OOP_Object * mockHardware = NULL;
+    ULONG val;
     
     if (!((msg->bus == 0) && (msg->sub == 0)))
         return 0;
@@ -61,42 +62,21 @@ ULONG METHOD(PCIMock, Hidd_PCIDriver, ReadConfigLong)
 
     OOP_GetAttr(mockHardware, aHidd_PCIMockHardware_ConfigSpaceAddr, &pciconfigspace);
 
-    /* Note: the switch is here ONLY to mark which config fields we support and which
-       not. "support" - the mock hardware classes were written to be able to answer
-       those requests correclty */
 
-    switch (msg->reg)
+    val = *((ULONG *)(pciconfigspace + msg->reg));
+
+    /* Inform mock device that value in its address space region has been read */
     {
-        /* PCICS_PRODUCT */
-        case(PCICS_VENDOR)      :
-        /* PCICS_STATUS */
-        case(PCICS_COMMAND)     :
-        /* PCICS_PROGIF */
-        /* PCICS_SUBCLASS */
-        /* PCICS_CLASS */
-        case(PCICS_REVISION)    :
-        case(PCICS_CACHELS)     :
-        /* PCICS_SUBSYSTEM */
-        case(PCICS_SUBVENDOR)   :
-        /* CICS_INT_PIN */
-        case(PCICS_INT_LINE)    :
-        case(PCICS_BAR0)        :
-        case(PCICS_BAR1)        :
-        case(PCICS_BAR2)        :
-        case(PCICS_BAR3)        :
-        case(PCICS_BAR4)        :
-        case(PCICS_BAR5)        :
-        case(PCICS_EXPROM_BASE) :
-        case(PCICS_CAP_PTR)     :
-        case(0x80)              :
-        case(0x84)              :
-            return *((ULONG *)(pciconfigspace + msg->reg));
-
-
-        default: bug("[PCIMock] Unhandled ReadConfigLong for reg 0x%x\n", msg->reg);
+        struct pHidd_PCIMockHardware_MemoryReadAtAddress mraa =
+        {
+            mID : OOP_GetMethodID(IID_Hidd_PCIMockHardware, moHidd_PCIMockHardware_MemoryReadAtAddress),
+            memoryaddress : pciconfigspace + msg->reg
+        };
+        
+        OOP_DoMethod(mockHardware, (OOP_Msg)&mraa);
     }
 
-    return 0;
+    return val;
 }
 
 VOID METHOD(PCIMock, Hidd_PCIDriver, WriteConfigLong)
@@ -160,7 +140,7 @@ static int PCIMock_InitClass(LIBBASETYPEPTR LIBBASE)
     LIBBASE->sd.hiddPCIMockHardwareAB = OOP_ObtainAttrBase(IID_Hidd_PCIMockHardware);
     for (i = 0; i < MAX_BUS0_DEVICES; i++)
         LIBBASE->sd.mockHardwareBus0[i] = NULL;
-    
+
     ADD_DEVICE((&LIBBASE->sd), 2, CLID_Hidd_PCIMockHardware_NV44A);
 //    ADD_DEVICE((&LIBBASE->sd), 3, CLID_Hidd_PCIMockHardware_NVG86);
 //    ADD_DEVICE((&LIBBASE->sd), 4, CLID_Hidd_PCIMockHardware_NVGTS250);

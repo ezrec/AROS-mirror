@@ -29,7 +29,8 @@ extern OOP_AttrBase HiddPCIMockHardwareAttrBase;
 
 enum
 {
-    moHidd_PCIMockHardware_MemoryChangedAtAddress = 0,    
+    moHidd_PCIMockHardware_MemoryChangedAtAddress = 0,
+    moHidd_PCIMockHardware_MemoryReadAtAddress,
 
     NUM_PCIMOCKHARDWARE_METHODS
 };
@@ -47,6 +48,12 @@ enum
     (((idx) = (attr) - HiddPCIMockHardwareAttrBase) < num_Hidd_PCIMockHardware_Attrs)
 
 struct pHidd_PCIMockHardware_MemoryChangedAtAddress
+{
+    OOP_MethodID    mID;
+    IPTR            memoryaddress;
+};
+
+struct pHidd_PCIMockHardware_MemoryReadAtAddress
 {
     OOP_MethodID    mID;
     IPTR            memoryaddress;
