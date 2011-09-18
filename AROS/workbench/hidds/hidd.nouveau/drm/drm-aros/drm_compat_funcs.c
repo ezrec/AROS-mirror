@@ -535,14 +535,11 @@ int agp_copy_info(struct agp_bridge_data * bridge, struct agp_kern_info * info)
 
 struct agp_bridge_data * agp_find_bridge(void * dev)
 {
-#if !defined(MOCK_HARDWARE)
     OOP_Object * agpbus = NULL;
-#endif
 
     if (global_agp_bridge)
         return global_agp_bridge;
 
-#if !defined(MOCK_HARDWARE)
     if (!HiddAgpBase)
     {
         HiddAgpBase = OpenLibrary("agp.hidd", 1);
@@ -558,7 +555,7 @@ struct agp_bridge_data * agp_find_bridge(void * dev)
         mID : OOP_GetMethodID(IID_Hidd_AGP, moHidd_AGP_GetBridgeDevice)
         };
         OOP_Object * bridgedevice = NULL;
-        
+
         bridgedevice = (OOP_Object*)OOP_DoMethod(agpbus, (OOP_Msg)&gbdmsg);
         
         OOP_DisposeObject(agpbus);
@@ -583,15 +580,6 @@ struct agp_bridge_data * agp_find_bridge(void * dev)
         }
     }
 
-#else
-    global_agp_bridge = AllocVec(sizeof(struct agp_bridge_data), 
-                                        MEMF_PUBLIC | MEMF_CLEAR);
-    global_agp_bridge->agpbridgedevice = (IPTR)NULL;
-    global_agp_bridge->mode = 0x1f004e1b;
-    global_agp_bridge->aperturebase = (IPTR)AllocVec(64 * 1024 * 1024, MEMF_ANY | MEMF_CLEAR);
-    global_agp_bridge->aperturesize = 64;
-#endif
-
     return global_agp_bridge;
 }
 
@@ -600,14 +588,12 @@ void agp_enable(struct agp_bridge_data * bridge, u32 mode)
     if (!bridge || !bridge->agpbridgedevice)
         return;
 
-#if !defined(MOCK_HARDWARE)
     struct pHidd_AGPBridgeDevice_Enable emsg = {
     mID:            OOP_GetMethodID(IID_Hidd_AGPBridgeDevice, moHidd_AGPBridgeDevice_Enable),
     requestedmode:  mode
     };
     
     OOP_DoMethod((OOP_Object *)bridge->agpbridgedevice, (OOP_Msg)&emsg);
-#endif
 }
 
 int agp_bind_memory(struct agp_memory * mem, off_t offset)
@@ -621,7 +607,6 @@ int agp_bind_memory(struct agp_memory * mem, off_t offset)
         return -EINVAL;
     }
 
-#if !defined(MOCK_HARDWARE)
     if (!mem->is_flushed)
     {
         /* TODO: Flush memory */
@@ -640,7 +625,7 @@ int agp_bind_memory(struct agp_memory * mem, off_t offset)
     };
     
     OOP_DoMethod((OOP_Object *)global_agp_bridge->agpbridgedevice, (OOP_Msg)&bmmsg);
-#endif
+
     mem->is_bound = TRUE;
     mem->pg_start = offset;
     return 0;
@@ -650,7 +635,7 @@ int agp_unbind_memory(struct agp_memory * mem)
 {
     if (!mem || !mem->is_bound)
         return -EINVAL;
-#if !defined(MOCK_HARDWARE)
+
     struct pHidd_AGPBridgeDevice_UnBindMemory ubmmsg = {
     mID:        OOP_GetMethodID(IID_Hidd_AGPBridgeDevice, moHidd_AGPBridgeDevice_UnBindMemory),
     offset:     mem->pg_start,
@@ -660,7 +645,7 @@ int agp_unbind_memory(struct agp_memory * mem)
     OOP_DoMethod((OOP_Object *)global_agp_bridge->agpbridgedevice, (OOP_Msg)&ubmmsg);
 
     /* TODO: agp_unmap_memory */
-#endif
+
     mem->is_bound = FALSE;
     mem->pg_start = 0;
     return 0;
@@ -671,13 +656,11 @@ void agp_flush_chipset(struct agp_bridge_data * bridge)
     if (!bridge || !bridge->agpbridgedevice)
         return;
 
-#if !defined(MOCK_HARDWARE)
     struct pHidd_AGPBridgeDevice_FlushChipset fcmsg = {
     mID:        OOP_GetMethodID(IID_Hidd_AGPBridgeDevice, moHidd_AGPBridgeDevice_FlushChipset),
     };
     
     OOP_DoMethod((OOP_Object *)bridge->agpbridgedevice, (OOP_Msg)&fcmsg);
-#endif
 }
 
 /* jiffies handling */

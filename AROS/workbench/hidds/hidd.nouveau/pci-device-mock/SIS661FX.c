@@ -71,6 +71,7 @@ VOID METHOD(SIS661FXMockHardware, Hidd_PCIMockHardware, MemoryReadAtAddress)
             case(0x00000080):
             case(0x00000084):
             case(0x00000094):
+            case(0x00000098):
             return;
         }
     }        
@@ -92,7 +93,10 @@ VOID METHOD(SIS661FXMockHardware, Hidd_PCIMockHardware, MemoryChangedAtAddress)
     {
         switch(rao.Offset)
         {
+            case(0x00000088):
+            case(0x00000090):
             case(0x00000094):
+            case(0x00000098):
             return;
         }
     }        
