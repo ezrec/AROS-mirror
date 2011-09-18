@@ -10,8 +10,6 @@
 
 #include "pcimock_intern.h"
 
-#include "pci_registers.h" /* From hidd.pci */
-
 #undef HiddPCIDriverAttrBase
 #define HiddPCIDriverAttrBase   (SD(cl)->hiddPCIDriverAB)
 
