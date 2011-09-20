@@ -154,7 +154,13 @@ static int ttm_bo_man_free_space(struct ttm_mem_type_manager *man)
 {
 	struct ttm_range_manager *rman = (struct ttm_range_manager *) man->priv;
 	struct drm_mm *mm = &rman->mm;
-	return drm_mm_get_free_space_size(mm);
+	int size;
+
+	spin_lock(&rman->lock);
+	size = drm_mm_get_free_space_size(mm);
+	spin_unlock(&rman->lock);
+
+	return size;
 }
 #endif
 
