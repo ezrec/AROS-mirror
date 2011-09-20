@@ -16,9 +16,11 @@
 #include <exec/tasks.h>
 #include <exec/execbase.h>
 
+#include <aros/debug.h>
+
 #include "locale.h"
 
-#define VERSION "$VER: SysMon 1.0 (07.01.2011) ©2011 The AROS Development Team"
+#define VERSION "$VER: SysMon 1.1 (09.18.2011) ©2011 The AROS Development Team"
 
 /* MUI information */
 static Object * application;
@@ -30,7 +32,15 @@ static Object ** cpuusagegauges;
 static Object * cpufreqgroup;
 static Object ** cpufreqlabels;
 static Object ** cpufreqvalues;
-static CONST_STRPTR tabs [] = {NULL, NULL, NULL};
+static CONST_STRPTR tabs [] = {NULL, NULL, NULL, NULL};
+
+#define MEMORY_RAM  0
+#define MEMORY_CHIP 1
+#define MEMORY_FAST 2
+#define MEMORY_VRAM 3
+#define MEMORY_GART 4
+static Object * memorysize[5];
+static Object * memoryfree[5];
 
 static Object * tasklist;
 static Object * tasklistrefreshbutton;
@@ -38,6 +48,31 @@ static Object * tasklistautorefreshcheckmark;
 static struct Hook tasklistdisplayhook;
 static struct Hook tasklistrefreshbuttonhook;
 static IPTR tasklistautorefresh;
+
+/* Memory information */
+#define NOUVEAU_VRAM_GART
+#if defined(NOUVEAU_VRAM_GART)
+#include <proto/graphics.h>
+#include <proto/oop.h>
+#include <hidd/graphics.h>
+struct BitMap * bm = NULL;
+#define HIDD_BM_OBJ(bitmap)     (*(OOP_Object **)&((bitmap)->Planes[0]))
+#undef HiddGfxNouveauAttrBase
+#undef HiddBitMapAttrBase
+OOP_AttrBase HiddGfxNouveauAttrBase;
+OOP_AttrBase HiddBitMapAttrBase;
+#define IID_Hidd_Gfx_Nouveau            "hidd.gfx.nouveau"
+enum
+{
+    aoHidd_Gfx_Nouveau_VRAMFree,        /* [G..] The amount of free VRAM in bytes */
+    aoHidd_Gfx_Nouveau_GARTFree,        /* [G..] The amount of free GART in bytes */
+    
+    num_Hidd_Gfx_Nouveau_Attrs
+};
+#define aHidd_Gfx_Nouveau_VRAMFree      (HiddGfxNouveauAttrBase + aoHidd_Gfx_Nouveau_VRAMFree)
+#define aHidd_Gfx_Nouveau_GARTFree      (HiddGfxNouveauAttrBase + aoHidd_Gfx_Nouveau_GARTFree)
+struct Library * OOPBase = NULL;
+#endif
 
 /* Processor information */
 static ULONG processorcount;
@@ -85,7 +120,7 @@ VOID UpdateCPUInformation()
     }
 }
 
-/* Updated information which will not change through life od application */
+/* Updated information which will not change through life of application */
 VOID UpdateCPUStaticInformation()
 {
     ULONG i;
@@ -133,14 +168,14 @@ static LONG AddTaskInfo(struct Task * task, struct TaskInfo * ti)
     
     if (src)
     {
-        while(*src != NULL)
+        while(*src != 0)
         {
             ti->Name[namesize++] = *src;
             src++;
         }
     }
     
-    *(ti->Name + namesize) = NULL; /* Terminate */
+    *(ti->Name + namesize) = 0; /* Terminate */
 
     /* Calculate next item  */
     ti->Next = (struct TaskInfo *)(((UBYTE *)ti) + sizeof(struct TaskInfo) + namesize);
@@ -259,6 +294,7 @@ BOOL CreateApplication()
 
     tabs[0] = _(MSG_TAB_TASKS);
     tabs[1] = _(MSG_TAB_CPU);
+    tabs[2] = _(MSG_TAB_SYSTEM);
 
     tasklistdisplayhook.h_Entry = (APTR)tasklistdisplayfunction;
     tasklistrefreshbuttonhook.h_Entry = (APTR)tasklistrefreshbuttonfunction;
@@ -305,6 +341,59 @@ BOOL CreateApplication()
                                 Child, cpufreqgroup = ColGroup(3), 
                                 End,
                             End,
+                        End,
+                        Child, VGroup,
+                            Child, ColGroup(2),
+                                Child, VGroup, GroupFrameT("Memory Size"),
+                                        Child, ColGroup(2), 
+                                        Child, Label("RAM"),
+                                        Child, memorysize[MEMORY_RAM] = TextObject, TextFrame, MUIA_Background, MUII_TextBack,
+                                                MUIA_Text_PreParse, (IPTR)"\33r", MUIA_Text_Contents, (IPTR)"2097152 Kb", 
+                                        End,
+                                        Child, Label("CHIP RAM"),
+                                        Child, memorysize[MEMORY_CHIP] = TextObject, TextFrame, MUIA_Background, MUII_TextBack,
+                                                MUIA_Text_PreParse, (IPTR)"\33r", MUIA_Text_Contents, (IPTR)"", 
+                                        End,
+                                        Child, Label("FAST RAM"),
+                                        Child, memorysize[MEMORY_FAST] = TextObject, TextFrame, MUIA_Background, MUII_TextBack,
+                                                MUIA_Text_PreParse, (IPTR)"\33r", MUIA_Text_Contents, (IPTR)"", 
+                                        End,
+                                        Child, Label("VIDEO RAM"),
+                                        Child, memorysize[MEMORY_VRAM] = TextObject, TextFrame, MUIA_Background, MUII_TextBack,
+                                                MUIA_Text_PreParse, (IPTR)"\33r", MUIA_Text_Contents, (IPTR)"", 
+                                        End,
+                                        Child, Label("GART Aperture"),
+                                        Child, memorysize[MEMORY_GART] = TextObject, TextFrame, MUIA_Background, MUII_TextBack,
+                                                MUIA_Text_PreParse, (IPTR)"\33r", MUIA_Text_Contents, (IPTR)"", 
+                                        End,
+                                    End,
+                                End,
+                                Child, VGroup, GroupFrameT("Memory Free"),
+                                    Child, ColGroup(2), 
+                                        Child, Label("RAM"),
+                                        Child, memoryfree[MEMORY_RAM] = TextObject, TextFrame, MUIA_Background, MUII_TextBack,
+                                                MUIA_Text_PreParse, (IPTR)"\33r", MUIA_Text_Contents, (IPTR)"2097152 Kb", 
+                                        End,
+                                        Child, Label("CHIP RAM"),
+                                        Child, memoryfree[MEMORY_CHIP] = TextObject, TextFrame, MUIA_Background, MUII_TextBack,
+                                                MUIA_Text_PreParse, (IPTR)"\33r", MUIA_Text_Contents, (IPTR)"", 
+                                        End,
+                                        Child, Label("FAST RAM"),
+                                        Child, memoryfree[MEMORY_FAST] = TextObject, TextFrame, MUIA_Background, MUII_TextBack,
+                                                MUIA_Text_PreParse, (IPTR)"\33r", MUIA_Text_Contents, (IPTR)"", 
+                                        End,
+                                        Child, Label("VIDEO RAM"),
+                                        Child, memoryfree[MEMORY_VRAM] = TextObject, TextFrame, MUIA_Background, MUII_TextBack,
+                                                MUIA_Text_PreParse, (IPTR)"\33r", MUIA_Text_Contents, (IPTR)"", 
+                                        End,
+                                        Child, Label("GART Aperture"),
+                                        Child, memoryfree[MEMORY_GART] = TextObject, TextFrame, MUIA_Background, MUII_TextBack,
+                                                MUIA_Text_PreParse, (IPTR)"\33r", MUIA_Text_Contents, (IPTR)"", 
+                                        End,
+                                    End,
+                                End,
+                            End,
+                            Child, HVSpace,
                         End,
                     End,
             End,
@@ -446,6 +535,92 @@ VOID DeInitProcessor()
 {
 }
 
+/* Memory functions */
+BOOL InitMemory()
+{
+#if defined(NOUVEAU_VRAM_GART)
+    struct OOP_ABDescr attrbases[] = 
+    {
+    { IID_Hidd_BitMap,          &HiddBitMapAttrBase },
+    { IID_Hidd_Gfx_Nouveau,     &HiddGfxNouveauAttrBase },
+    { NULL, NULL }
+    };
+    struct Screen * wbscreen;
+    
+    OOPBase = OpenLibrary("oop.library", 0L);
+    
+    if (!OOPBase)
+        return FALSE;
+
+    if (!OOP_ObtainAttrBases(attrbases))
+        return FALSE;
+
+    wbscreen = LockPubScreen(NULL);
+    bm = AllocBitMap(32, 32, 0, BMF_DISPLAYABLE, wbscreen->RastPort.BitMap);
+    UnlockPubScreen(NULL, wbscreen);
+#endif
+    return TRUE;
+}
+
+VOID DeInitMemory()
+{
+#if defined(NOUVEAU_VRAM_GART)
+    FreeBitMap(bm);
+    
+    OOP_ReleaseAttrBase(IID_Hidd_BitMap);
+    OOP_ReleaseAttrBase(IID_Hidd_Gfx_Nouveau);
+    
+    CloseLibrary(OOPBase);
+#endif
+}
+
+VOID UpdateMemoryInformation()
+{
+    TEXT buffer[64] = {0};
+    ULONG size = 0;
+
+    /* Size */
+    size = AvailMem(MEMF_ANY | MEMF_TOTAL) / 1024;
+    __sprintf(buffer, "%ld kB", size);
+    set(memorysize[MEMORY_RAM], MUIA_Text_Contents, buffer);
+
+    size = AvailMem(MEMF_CHIP | MEMF_TOTAL) / 1024;
+    __sprintf(buffer, "%ld kB", size);
+    set(memorysize[MEMORY_CHIP], MUIA_Text_Contents, buffer);
+
+    size = AvailMem(MEMF_FAST | MEMF_TOTAL) / 1024;
+    __sprintf(buffer, "%ld kB", size);
+    set(memorysize[MEMORY_FAST], MUIA_Text_Contents, buffer);
+
+    /* Free */
+    size = AvailMem(MEMF_ANY) / 1024;
+    __sprintf(buffer, "%ld kB", size);
+    set(memoryfree[MEMORY_RAM], MUIA_Text_Contents, buffer);
+
+    size = AvailMem(MEMF_CHIP) / 1024;
+    __sprintf(buffer, "%ld kB", size);
+    set(memoryfree[MEMORY_CHIP], MUIA_Text_Contents, buffer);
+
+    size = AvailMem(MEMF_FAST) / 1024;
+    __sprintf(buffer, "%ld kB", size);
+    set(memoryfree[MEMORY_FAST], MUIA_Text_Contents, buffer);
+
+#if defined(NOUVEAU_VRAM_GART)
+    {
+    OOP_Object * gfxhidd;
+    OOP_Object * oopbm = HIDD_BM_OBJ(bm);
+    OOP_GetAttr(oopbm, aHidd_BitMap_GfxHidd, (APTR)&gfxhidd);
+    IPTR vram_free, gart_free;
+    OOP_GetAttr(gfxhidd, aHidd_Gfx_Nouveau_VRAMFree, &vram_free);
+    OOP_GetAttr(gfxhidd, aHidd_Gfx_Nouveau_GARTFree, &gart_free);
+    __sprintf(buffer, "%ld kB", (ULONG)(vram_free / 1024));
+    set(memoryfree[MEMORY_VRAM], MUIA_Text_Contents, buffer);
+    __sprintf(buffer, "%ld kB", (ULONG)(gart_free / 1024));
+    set(memoryfree[MEMORY_GART], MUIA_Text_Contents, buffer);
+    }
+#endif
+}
+
 int main()
 {
     ULONG signals = 0;
@@ -453,10 +628,12 @@ int main()
 
     Locale_Initialize();
 
+    if (!InitMemory())
+        return 1;
 #if SIMULATE_USAGE_FREQ
     processorcount = 4;
 #else
-    if(!InitProcessor())
+    if (!InitProcessor())
         return 1;
 #endif
 
@@ -482,6 +659,8 @@ int main()
             if (signals & SIG_TIMER)
             {
                 UpdateCPUInformation();
+                if ((tasklistcounter % 4) == 0)
+                    UpdateMemoryInformation();
                 if (tasklistautorefresh && ((tasklistcounter++ % 4) == 0)) 
                     UpdateTaskInformation();
                 SignalMeAfter(250);
@@ -496,6 +675,8 @@ int main()
     DeInitTimer();
     
     DeInitProcessor();
+    
+    DeInitMemory();
 
     Locale_Deinitialize();
 
