@@ -18,9 +18,26 @@
 
 struct SysMonData
 {
+    Object * application;
+    Object * mainwindow;
+
+    CONST_STRPTR tabs [4];
+
+    struct Hook tasklistdisplayhook;
+    struct Hook tasklistrefreshbuttonhook;
+
+    Object * tasklist;
+
+    Object ** cpuusagegauges;
+    Object ** cpufreqlabels;
+    Object ** cpufreqvalues;
+
     Object * memorysize[5];
     Object * memoryfree[5];
+    
+    IPTR tasklistautorefresh;
 };
+
 
 BOOL InitMemory();
 VOID DeInitMemory();
@@ -32,4 +49,26 @@ VOID DeInitVideo();
 VOID UpdateVideoInformation(struct SysMonData * smdata);
 VOID UpdateVideoStaticInformation(struct SysMonData * smdata);
 
+BOOL InitProcessor();
+VOID DeInitProcessor();
+ULONG GetProcessorCount();
+VOID UpdateProcessorInformation(struct SysMonData * smdata);
+VOID UpdateProcessorStaticInformation(struct SysMonData * smdata);
+
+struct TaskInfo;
+
+BOOL InitTasks();
+VOID DeInitTasks();
+VOID UpdateTasksInformation(struct SysMonData * smdata);
+VOID UpdateTasksStaticInformation(struct SysMonData * smdata);
+
+AROS_UFP3(VOID, TasksListDisplayFunction,
+    AROS_UFHA(struct Hook *, h,  A0),
+    AROS_UFHA(STRPTR *, strings, A2),
+    AROS_UFHA(struct TaskInfo *, obj, A1));
+
+ULONG GetSIG_TIMER();
+BOOL InitTimer();
+VOID DeInitTimer();
+VOID SignalMeAfter(ULONG msecs);
 #endif
