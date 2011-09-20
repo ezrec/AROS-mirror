@@ -682,6 +682,20 @@ VOID METHOD(Nouveau, Root, Get)
     {
         switch(idx)
         {
+            case(aoHidd_Gfx_Nouveau_VRAMSize):
+            {
+                UQUAD value;
+                nouveau_device_get_param(SD(cl)->carddata.dev, NOUVEAU_GETPARAM_VRAM_SIZE, &value);
+                *msg->storage = (IPTR)value;
+                return;
+            }
+            case(aoHidd_Gfx_Nouveau_GARTSize):
+            {
+                UQUAD value;
+                nouveau_device_get_param(SD(cl)->carddata.dev, NOUVEAU_GETPARAM_GART_SIZE, &value);
+                *msg->storage = (IPTR)value;
+                return;
+            }
             case(aoHidd_Gfx_Nouveau_VRAMFree):
             {
                 UQUAD value;

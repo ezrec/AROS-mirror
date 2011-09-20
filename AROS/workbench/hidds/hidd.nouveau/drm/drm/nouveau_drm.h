@@ -80,8 +80,10 @@ struct drm_nouveau_gpuobj_free {
 #define NOUVEAU_GETPARAM_HAS_BO_USAGE    15
 #define NOUVEAU_GETPARAM_HAS_PAGEFLIP    16
 #if defined(__AROS__)
-#define NOUVEAU_GETPARAM_VRAM_FREE       128
-#define NOUVEAU_GETPARAM_GART_FREE       129
+#define NOUVEAU_GETPARAM_VRAM_SIZE       128
+#define NOUVEAU_GETPARAM_GART_SIZE       129
+#define NOUVEAU_GETPARAM_VRAM_FREE       130
+#define NOUVEAU_GETPARAM_GART_FREE       131
 #endif
 struct drm_nouveau_getparam {
 	uint64_t param;

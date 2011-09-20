@@ -28,12 +28,16 @@ extern OOP_AttrBase HiddGfxNouveauAttrBase;
 
 enum
 {
+    aoHidd_Gfx_Nouveau_VRAMSize,        /* [G..] The amount of total VRAM in bytes */
+    aoHidd_Gfx_Nouveau_GARTSize,        /* [G..] The amount of total GART in bytes */
     aoHidd_Gfx_Nouveau_VRAMFree,        /* [G..] The amount of free VRAM in bytes */
     aoHidd_Gfx_Nouveau_GARTFree,        /* [G..] The amount of free GART in bytes */
     
     num_Hidd_Gfx_Nouveau_Attrs
 };
 
+#define aHidd_Gfx_Nouveau_VRAMSize      (HiddGfxNouveauAttrBase + aoHidd_Gfx_Nouveau_VRAMSize)
+#define aHidd_Gfx_Nouveau_GARTSize      (HiddGfxNouveauAttrBase + aoHidd_Gfx_Nouveau_GARTSize)
 #define aHidd_Gfx_Nouveau_VRAMFree      (HiddGfxNouveauAttrBase + aoHidd_Gfx_Nouveau_VRAMFree)
 #define aHidd_Gfx_Nouveau_GARTFree      (HiddGfxNouveauAttrBase + aoHidd_Gfx_Nouveau_GARTFree)
 

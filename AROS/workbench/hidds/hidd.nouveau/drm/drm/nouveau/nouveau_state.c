@@ -1326,22 +1326,36 @@ int nouveau_ioctl_getparam(struct drm_device *dev, void *data,
 		getparam->value = dev_priv->card_type < NV_D0;
 		break;
 #if defined(__AROS__)
+    case NOUVEAU_GETPARAM_VRAM_SIZE:
+        {
+            struct ttm_mem_type_manager * man = &dev_priv->ttm.bdev.man[TTM_PL_VRAM];
+            getparam->value = 0;
+            if (man && man->func)
+                getparam->value = man->size * 4096;
+        }
+        break;
+    case NOUVEAU_GETPARAM_GART_SIZE:
+        {
+            struct ttm_mem_type_manager * man = &dev_priv->ttm.bdev.man[TTM_PL_TT];
+            getparam->value = 0;
+            if (man)
+                getparam->value = man->size * 4096;
+        }
+        break;
     case NOUVEAU_GETPARAM_VRAM_FREE:
         {
             struct ttm_mem_type_manager * man = &dev_priv->ttm.bdev.man[TTM_PL_VRAM];
+            getparam->value = 0;
             if (man && man->func)
                 getparam->value = man->func->get_free_space_size(man) * 4096;
-            else
-                getparam->value = 0;
         }
         break;
     case NOUVEAU_GETPARAM_GART_FREE:
         {
             struct ttm_mem_type_manager * man = &dev_priv->ttm.bdev.man[TTM_PL_TT];
+            getparam->value = 0;
             if (man && man->func)
                 getparam->value = man->func->get_free_space_size(man) * 4096;
-            else
-                getparam->value = 0;
         }
         break;
 #endif
