@@ -40,6 +40,7 @@ void drm_exit(struct drm_driver * driver)
     
     drm_aros_pci_shutdown(driver);
     
+    FreeVec(driver->dev->pdev);
     FreeVec(driver->dev);
     driver->dev = NULL;
     current_drm_driver = NULL;
@@ -58,7 +59,8 @@ static int drm_init_device(struct drm_driver * driver)
     dev->driver = driver;
     dev->pci_vendor = driver->VendorID;
     dev->pci_device = driver->ProductID;
-    dev->pdev = driver->pciDevice;
+    dev->pdev = AllocVec(sizeof(struct pci_dev), MEMF_ANY | MEMF_CLEAR);
+    dev->pdev->oopdev = driver->pciDevice;
     int ret;
 
     if (drm_core_has_AGP(dev)) {

@@ -75,7 +75,12 @@ struct page
 #define ALIGN(val, align)       (val + align - 1) & (~(align - 1))
 #define BITS_TO_LONGS(x)        ((x / (sizeof(long) * 8)) + 1)
 
-
+/* PCI support */
+struct pci_dev
+{
+    ULONG class;
+    APTR oopdev;
+};
 
 /* io_mapping support */
 struct io_mapping

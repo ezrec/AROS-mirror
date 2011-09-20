@@ -270,6 +270,8 @@ struct drm_device
     struct address_space *dev_mapping;
     struct drm_mode_config mode_config;
     
+    struct pci_dev * pdev;
+    
     /* GEM information */
     spinlock_t object_name_lock;
     struct idr object_name_idr;
@@ -277,7 +279,6 @@ struct drm_device
     uint32_t flush_domains;         /* domains pending flush */
 
     /* AROS specific fields */
-    OOP_Object              *pdev;
     HIDDT_IRQ_Handler       *IntHandler;
 };
 

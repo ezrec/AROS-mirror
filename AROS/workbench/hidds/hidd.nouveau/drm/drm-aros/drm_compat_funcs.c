@@ -254,6 +254,7 @@ void idr_init(struct idr *idp)
     idp->last_starting_id = 0;
 }
 
+/* PCI handling */
 #include "drm_aros.h"
 #include <aros/libcall.h>
 #include <proto/oop.h>
@@ -291,24 +292,24 @@ void iounmap(void * addr)
     }
 }
 
-resource_size_t pci_resource_start(void * pdev, unsigned int resource)
+resource_size_t pci_resource_start(struct pci_dev * pdev, unsigned int resource)
 {
     APTR start = (APTR)NULL;
     switch(resource)
     {
-        case(0): OOP_GetAttr(pdev, aHidd_PCIDevice_Base0, (APTR)&start); break;
-        case(1): OOP_GetAttr(pdev, aHidd_PCIDevice_Base1, (APTR)&start); break;
-        case(2): OOP_GetAttr(pdev, aHidd_PCIDevice_Base2, (APTR)&start); break;
-        case(3): OOP_GetAttr(pdev, aHidd_PCIDevice_Base3, (APTR)&start); break;
-        case(4): OOP_GetAttr(pdev, aHidd_PCIDevice_Base4, (APTR)&start); break;
-        case(5): OOP_GetAttr(pdev, aHidd_PCIDevice_Base5, (APTR)&start); break;
+        case(0): OOP_GetAttr((OOP_Object *)pdev->oopdev, aHidd_PCIDevice_Base0, (APTR)&start); break;
+        case(1): OOP_GetAttr((OOP_Object *)pdev->oopdev, aHidd_PCIDevice_Base1, (APTR)&start); break;
+        case(2): OOP_GetAttr((OOP_Object *)pdev->oopdev, aHidd_PCIDevice_Base2, (APTR)&start); break;
+        case(3): OOP_GetAttr((OOP_Object *)pdev->oopdev, aHidd_PCIDevice_Base3, (APTR)&start); break;
+        case(4): OOP_GetAttr((OOP_Object *)pdev->oopdev, aHidd_PCIDevice_Base4, (APTR)&start); break;
+        case(5): OOP_GetAttr((OOP_Object *)pdev->oopdev, aHidd_PCIDevice_Base5, (APTR)&start); break;
         default: bug("ResourceID %d not supported\n", resource);
     }
     
     return (resource_size_t)start;
 }
 
-unsigned long pci_resource_len(void * pdev, unsigned int resource)
+unsigned long pci_resource_len(struct pci_dev * pdev, unsigned int resource)
 {
     IPTR len = (IPTR)0;
     
@@ -323,12 +324,12 @@ unsigned long pci_resource_len(void * pdev, unsigned int resource)
         
         switch(resource)
         {
-            case(0): OOP_GetAttr(pdev, aHidd_PCIDevice_Size0, (APTR)&len); break;
-            case(1): OOP_GetAttr(pdev, aHidd_PCIDevice_Size1, (APTR)&len); break;
-            case(2): OOP_GetAttr(pdev, aHidd_PCIDevice_Size2, (APTR)&len); break;
-            case(3): OOP_GetAttr(pdev, aHidd_PCIDevice_Size3, (APTR)&len); break;
-            case(4): OOP_GetAttr(pdev, aHidd_PCIDevice_Size4, (APTR)&len); break;
-            case(5): OOP_GetAttr(pdev, aHidd_PCIDevice_Size5, (APTR)&len); break;
+            case(0): OOP_GetAttr((OOP_Object *)pdev->oopdev, aHidd_PCIDevice_Size0, (APTR)&len); break;
+            case(1): OOP_GetAttr((OOP_Object *)pdev->oopdev, aHidd_PCIDevice_Size1, (APTR)&len); break;
+            case(2): OOP_GetAttr((OOP_Object *)pdev->oopdev, aHidd_PCIDevice_Size2, (APTR)&len); break;
+            case(3): OOP_GetAttr((OOP_Object *)pdev->oopdev, aHidd_PCIDevice_Size3, (APTR)&len); break;
+            case(4): OOP_GetAttr((OOP_Object *)pdev->oopdev, aHidd_PCIDevice_Size4, (APTR)&len); break;
+            case(5): OOP_GetAttr((OOP_Object *)pdev->oopdev, aHidd_PCIDevice_Size5, (APTR)&len); break;
             default: bug("ResourceID %d not supported\n", resource);
         }
     }
@@ -408,33 +409,33 @@ void * pci_get_bus_and_slot(unsigned int bus, unsigned int dev, unsigned int fun
     return pciDevice;
 }
 
-int pci_read_config_word(void *dev, int where, u16 *val)
+int pci_read_config_word(struct pci_dev * pdev, int where, u16 *val)
 {
     struct pHidd_PCIDevice_ReadConfigWord rcwmsg = {
     mID: OOP_GetMethodID(IID_Hidd_PCIDevice, moHidd_PCIDevice_ReadConfigWord),
     reg: (UBYTE)where,
     }, *msg = &rcwmsg;
     
-    *val = (UWORD)OOP_DoMethod((OOP_Object*)dev, (OOP_Msg)msg);
+    *val = (UWORD)OOP_DoMethod((OOP_Object*)pdev->oopdev, (OOP_Msg)msg);
     D(bug("pci_read_config_word: %d -> %d\n", where, *val));
     
     return 0;
 }
 
-int pci_read_config_dword(void *dev, int where, u32 *val)
+int pci_read_config_dword(struct pci_dev * pdev, int where, u32 *val)
 {
     struct pHidd_PCIDevice_ReadConfigLong rclmsg = {
     mID: OOP_GetMethodID(IID_Hidd_PCIDevice, moHidd_PCIDevice_ReadConfigLong),
     reg: (UBYTE)where,
     }, *msg = &rclmsg;
     
-    *val = (ULONG)OOP_DoMethod((OOP_Object*)dev, (OOP_Msg)msg);
+    *val = (ULONG)OOP_DoMethod((OOP_Object*)pdev->oopdev, (OOP_Msg)msg);
     D(bug("pci_read_config_dword: %d -> %d\n", where, *val));
     
     return 0;
 }
 
-int pci_write_config_dword(void *dev, int where, u32 val)
+int pci_write_config_dword(struct pci_dev * pdev, int where, u32 val)
 {
     struct pHidd_PCIDevice_WriteConfigLong wclmsg = {
     mID: OOP_GetMethodID(IID_Hidd_PCIDevice, moHidd_PCIDevice_ReadConfigLong),
@@ -442,7 +443,7 @@ int pci_write_config_dword(void *dev, int where, u32 val)
     val: val,
     }, *msg = &wclmsg;
     
-    OOP_DoMethod((OOP_Object*)dev, (OOP_Msg)msg);
+    OOP_DoMethod((OOP_Object*)pdev->oopdev, (OOP_Msg)msg);
     D(bug("pci_write_config_dword: %d -> %d\n", where, val));
     
     return 0;
@@ -450,10 +451,10 @@ int pci_write_config_dword(void *dev, int where, u32 val)
 
 #include <stdio.h>
 
-const char *pci_name(void * dev)
+const char *pci_name(struct pci_dev * pdev)
 {
     static char name[16];
-    OOP_Object * oopdev = (OOP_Object *)dev;
+    OOP_Object * oopdev = (OOP_Object *)pdev->oopdev;
     IPTR Bus = 0, Dev = 0, Sub = 0;
     OOP_GetAttr(oopdev, aHidd_PCIDevice_Bus, &Bus);
     OOP_GetAttr(oopdev, aHidd_PCIDevice_Dev, &Dev);
@@ -464,10 +465,10 @@ const char *pci_name(void * dev)
     return name;
 }
 
-int pci_is_pcie(void *dev)
+int pci_is_pcie(struct pci_dev * pdev)
 {
     IPTR PCIECap;
-    OOP_GetAttr(dev, aHidd_PCIDevice_CapabilityPCIE, (APTR)&PCIECap);
+    OOP_GetAttr((OOP_Object *)pdev->oopdev, aHidd_PCIDevice_CapabilityPCIE, (APTR)&PCIECap);
     return PCIECap;
 }
 
