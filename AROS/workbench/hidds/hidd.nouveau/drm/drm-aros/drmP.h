@@ -378,11 +378,6 @@ static __inline__ void drm_free_large(void *ptr)
 
 /* drm_bufs.c */
 int drm_order(unsigned long size);
-resource_size_t drm_get_resource_len(struct drm_device *dev,
-                        unsigned int resource);
-resource_size_t drm_get_resource_start(struct drm_device *dev,
-                        unsigned int resource);
- 
 
 /* drm_drv.c */
 void drm_exit(struct drm_driver *driver);
@@ -400,11 +395,6 @@ int drm_vblank_get(struct drm_device *dev, int crtc);
 void drm_vblank_put(struct drm_device *dev, int crtc);
 void drm_handle_vblank(struct drm_device *dev, int crtc);
 u32 drm_vblank_count(struct drm_device *dev, int crtc);
-
-/* drm_pci.c */
-drm_dma_handle_t *drm_pci_alloc(struct drm_device *dev, size_t size,
-				       size_t align, dma_addr_t maxaddr);
-void drm_pci_free(struct drm_device * dev, drm_dma_handle_t * dmah);
 
 /* drm_memory.c */
 void drm_core_ioremap(struct drm_local_map *map, struct drm_device *dev);

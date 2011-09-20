@@ -18,7 +18,6 @@ AROS_LIBDRM_NVIDIA_SOURCES = \
 AROS_DRM_CORE_SOURCES = \
             drm-aros/drm_aros \
             drm-aros/drm_bufs \
-            drm-aros/drm_pci \
             drm-aros/drm_drv \
             drm-aros/drm_compat_funcs \
             drm/drm_mm \

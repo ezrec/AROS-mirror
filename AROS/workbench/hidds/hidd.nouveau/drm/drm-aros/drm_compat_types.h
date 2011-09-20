@@ -80,6 +80,7 @@ struct pci_dev
 {
     ULONG class;
     APTR oopdev;
+    TEXT name[16];
 };
 
 /* io_mapping support */

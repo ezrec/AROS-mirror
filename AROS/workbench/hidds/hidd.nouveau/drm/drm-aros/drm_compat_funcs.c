@@ -449,22 +449,6 @@ int pci_write_config_dword(struct pci_dev * pdev, int where, u32 val)
     return 0;
 }
 
-#include <stdio.h>
-
-const char *pci_name(struct pci_dev * pdev)
-{
-    static char name[16];
-    OOP_Object * oopdev = (OOP_Object *)pdev->oopdev;
-    IPTR Bus = 0, Dev = 0, Sub = 0;
-    OOP_GetAttr(oopdev, aHidd_PCIDevice_Bus, &Bus);
-    OOP_GetAttr(oopdev, aHidd_PCIDevice_Dev, &Dev);
-    OOP_GetAttr(oopdev, aHidd_PCIDevice_Sub, &Sub);
-    snprintf(name, sizeof(name), "%x:%x.%x",
-    	    (unsigned)Bus, (unsigned)Dev, (unsigned)Sub);
-    name[sizeof(name)-1] = 0;
-    return name;
-}
-
 int pci_is_pcie(struct pci_dev * pdev)
 {
     IPTR PCIECap;

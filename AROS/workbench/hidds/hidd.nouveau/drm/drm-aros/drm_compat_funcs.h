@@ -143,7 +143,7 @@ void * pci_get_bus_and_slot(unsigned int bus, unsigned int dev, unsigned int fun
 int pci_read_config_word(struct pci_dev * pdev, int where, u16 *val);
 int pci_read_config_dword(struct pci_dev * pdev, int where, u32 *val);
 int pci_write_config_dword(struct pci_dev * pdev, int where, u32 val);
-const char * pci_name(struct pci_dev * pdev);
+#define pci_name(pdev)                  ((const char *)pdev->name)
 int pci_is_pcie(struct pci_dev * pdev);
 
 
