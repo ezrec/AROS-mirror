@@ -79,6 +79,10 @@ struct drm_nouveau_gpuobj_free {
 #define NOUVEAU_GETPARAM_PTIMER_TIME     14
 #define NOUVEAU_GETPARAM_HAS_BO_USAGE    15
 #define NOUVEAU_GETPARAM_HAS_PAGEFLIP    16
+#if defined(__AROS__)
+#define NOUVEAU_GETPARAM_VRAM_FREE       128
+#define NOUVEAU_GETPARAM_GART_FREE       129
+#endif
 struct drm_nouveau_getparam {
 	uint64_t param;
 	uint64_t value;

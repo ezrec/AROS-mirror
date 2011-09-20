@@ -1325,6 +1325,26 @@ int nouveau_ioctl_getparam(struct drm_device *dev, void *data,
 	case NOUVEAU_GETPARAM_HAS_PAGEFLIP:
 		getparam->value = dev_priv->card_type < NV_D0;
 		break;
+#if defined(__AROS__)
+    case NOUVEAU_GETPARAM_VRAM_FREE:
+        {
+            struct ttm_mem_type_manager * man = &dev_priv->ttm.bdev.man[TTM_PL_VRAM];
+            if (man && man->func)
+                getparam->value = man->func->get_free_space_size(man) * 4096;
+            else
+                getparam->value = 0;
+        }
+        break;
+    case NOUVEAU_GETPARAM_GART_FREE:
+        {
+            struct ttm_mem_type_manager * man = &dev_priv->ttm.bdev.man[TTM_PL_TT];
+            if (man && man->func)
+                getparam->value = man->func->get_free_space_size(man) * 4096;
+            else
+                getparam->value = 0;
+        }
+        break;
+#endif
 	case NOUVEAU_GETPARAM_GRAPH_UNITS:
 		/* NV40 and NV50 versions are quite different, but register
 		 * address is the same. User is supposed to know the card
