@@ -18,6 +18,7 @@ static ULONG Nouveau_Init(LIBBASETYPEPTR LIBBASE)
     { IID_Hidd_PixFmt,	        &LIBBASE->sd.pixFmtAttrBase },
     { IID_Hidd_Sync,            &LIBBASE->sd.syncAttrBase },
     { IID_Hidd_Gfx,             &LIBBASE->sd.gfxAttrBase },
+    { IID_Hidd_Gfx_Nouveau,     &LIBBASE->sd.gfxNouveauAttrBase },
     { IID_Hidd_PlanarBM,        &LIBBASE->sd.planarAttrBase },
     { IID_Hidd_I2C_Nouveau,     &LIBBASE->sd.i2cNouveauAttrBase },
     { IID_Hidd_Gallium,         &LIBBASE->sd.galliumAttrBase },

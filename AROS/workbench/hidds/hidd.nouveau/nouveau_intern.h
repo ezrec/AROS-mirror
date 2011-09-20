@@ -18,6 +18,27 @@
 #include LC_LIBDEFS_FILE
 
 #define CLID_Hidd_Gfx_Nouveau           "hidd.gfx.nouveau"
+#define IID_Hidd_Gfx_Nouveau            "hidd.gfx.nouveau"
+
+#define HiddGfxNouveauAttrBase          __IHidd_Gfx_Nouveau
+
+#ifndef __OOP_NOATTRBASES__
+extern OOP_AttrBase HiddGfxNouveauAttrBase;
+#endif
+
+enum
+{
+    aoHidd_Gfx_Nouveau_VRAMFree,        /* [G..] The amount of free VRAM in bytes */
+    aoHidd_Gfx_Nouveau_GARTFree,        /* [G..] The amount of free GART in bytes */
+    
+    num_Hidd_Gfx_Nouveau_Attrs
+};
+
+#define aHidd_Gfx_Nouveau_VRAMFree      (HiddGfxNouveauAttrBase + aoHidd_Gfx_Nouveau_VRAMFree)
+#define aHidd_Gfx_Nouveau_GARTFree      (HiddGfxNouveauAttrBase + aoHidd_Gfx_Nouveau_GARTFree)
+
+#define IS_GFXNOUVEAU_ATTR(attr, idx) \
+    (((idx) = (attr) - HiddGfxNouveauAttrBase) < num_Hidd_Gfx_Nouveau_Attrs)
 
 struct HIDDNouveauData
 {
@@ -142,6 +163,7 @@ struct staticdata
     
     OOP_AttrBase    pixFmtAttrBase;
     OOP_AttrBase    gfxAttrBase;
+    OOP_AttrBase    gfxNouveauAttrBase;
     OOP_AttrBase    syncAttrBase;
     OOP_AttrBase    bitMapAttrBase;
     OOP_AttrBase    planarAttrBase;

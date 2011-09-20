@@ -18,6 +18,7 @@
 
 #undef HiddPixFmtAttrBase
 #undef HiddGfxAttrBase
+#undef HiddGfxNouveauAttrBase
 #undef HiddSyncAttrBase
 #undef HiddBitMapAttrBase
 #undef HiddCompositingAttrBase
@@ -25,6 +26,7 @@
 
 #define HiddPixFmtAttrBase          (SD(cl)->pixFmtAttrBase)
 #define HiddGfxAttrBase             (SD(cl)->gfxAttrBase)
+#define HiddGfxNouveauAttrBase      (SD(cl)->gfxNouveauAttrBase)
 #define HiddSyncAttrBase            (SD(cl)->syncAttrBase)
 #define HiddBitMapAttrBase          (SD(cl)->bitMapAttrBase)
 #define HiddCompositingAttrBase     (SD(cl)->compositingAttrBase)
@@ -414,7 +416,7 @@ OOP_Object * METHOD(Nouveau, Root, New)
 
         o = (OOP_Object *)OOP_DoSuperMethod(cl, o, (OOP_Msg)msg);
 
-        D(bug("Nouveau::New\n"));
+        D(bug("[Nouveau] GFX New\n"));
 
         if (o)
         {
@@ -609,6 +611,8 @@ VOID METHOD(Nouveau, Hidd_Gfx, CopyBox)
         struct CardData * carddata = &(SD(cl)->carddata);
         BOOL ret = FALSE;
         
+        D(bug("[Nouveau] CopyBox 0x%x -> 0x%x\n", msg->src, msg->dest));
+ 
         LOCK_MULTI_BITMAP
         LOCK_BITMAP_BM(srcdata)
         LOCK_BITMAP_BM(destdata)
@@ -673,6 +677,27 @@ VOID METHOD(Nouveau, Root, Get)
     		return;
         }
     }
+    
+    if (IS_GFXNOUVEAU_ATTR(msg->attrID, idx))
+    {
+        switch(idx)
+        {
+            case(aoHidd_Gfx_Nouveau_VRAMFree):
+            {
+                UQUAD value;
+                nouveau_device_get_param(SD(cl)->carddata.dev, NOUVEAU_GETPARAM_VRAM_FREE, &value);
+                *msg->storage = (IPTR)value;
+                return;
+            }
+            case(aoHidd_Gfx_Nouveau_GARTFree):
+            {
+                UQUAD value;
+                nouveau_device_get_param(SD(cl)->carddata.dev, NOUVEAU_GETPARAM_GART_FREE, &value);
+                *msg->storage = (IPTR)value;
+                return;
+            }
+        }
+    }
 
     OOP_DoSuperMethod(cl, o, (OOP_Msg)msg);
 }
@@ -686,7 +711,7 @@ ULONG METHOD(Nouveau, Hidd_Gfx, ShowViewPorts)
         data : msg->Data
     };
     
-    D(bug("[Nouveau] ShowViewPorts enter TopLevelBM %x\n", msg->Data->Bitmap));
+    D(bug("[Nouveau] ShowViewPorts enter TopLevelBM %x\n", (msg->Data ? (msg->Data->Bitmap) : NULL)));
 
     OOP_DoMethod(gfxdata->compositing, (OOP_Msg)&bscmsg);
 

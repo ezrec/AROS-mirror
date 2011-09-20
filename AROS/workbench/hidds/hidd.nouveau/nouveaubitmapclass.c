@@ -62,6 +62,8 @@ OOP_Object * METHOD(NouveauBitMap, Root, New)
     OOP_GetAttr(pf, aHidd_PixFmt_StdPixFmt, &stdfmt);
     OOP_GetAttr(pf, aHidd_PixFmt_BytesPerPixel, &bytesperpixel);
     OOP_GetAttr(pf, aHidd_PixFmt_Depth, &depth);
+    
+    D(bug("[Nouveau] BitMap New: %d x %d x %d\n", width, height, depth));
 
     /* Check if requested format is one of the supported ones */
     if ((stdfmt != vHidd_StdPixFmt_BGR032) && (stdfmt != vHidd_StdPixFmt_RGB16_LE))
