@@ -817,12 +817,32 @@ nouveau_vram_manager_debug(struct ttm_mem_type_manager *man, const char *prefix)
 	       prefix, mm->block_size << 12);
 }
 
+#if defined(__AROS__)
+static int 
+nouveau_vram_manager_free_space(struct ttm_mem_type_manager *man)
+{
+	struct drm_nouveau_private *dev_priv = nouveau_bdev(man->bdev);
+	struct nouveau_mm *mm = &dev_priv->engine.vram.mm;
+	int size;
+
+	mutex_lock(&mm->mutex);
+	size = nouveau_mm_get_free_space_size(mm);
+	mutex_unlock(&mm->mutex);
+
+	return size;
+}
+#endif
+
 const struct ttm_mem_type_manager_func nouveau_vram_manager = {
 	nouveau_vram_manager_init,
 	nouveau_vram_manager_fini,
 	nouveau_vram_manager_new,
 	nouveau_vram_manager_del,
 	nouveau_vram_manager_debug
+#if defined(__AROS__)
+	,
+	nouveau_vram_manager_free_space
+#endif
 };
 
 static int
@@ -874,10 +894,22 @@ nouveau_gart_manager_debug(struct ttm_mem_type_manager *man, const char *prefix)
 {
 }
 
+#if defined(__AROS__)
+static int 
+nouveau_gart_manager_free_space(struct ttm_mem_type_manager *man)
+{
+    return 0;
+}
+#endif
+
 const struct ttm_mem_type_manager_func nouveau_gart_manager = {
 	nouveau_gart_manager_init,
 	nouveau_gart_manager_fini,
 	nouveau_gart_manager_new,
 	nouveau_gart_manager_del,
 	nouveau_gart_manager_debug
+#if defined(__AROS__)
+	,
+	nouveau_gart_manager_free_space
+#endif
 };

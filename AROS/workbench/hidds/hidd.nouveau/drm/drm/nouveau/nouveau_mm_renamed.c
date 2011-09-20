@@ -173,3 +173,18 @@ nouveau_mm_fini(struct nouveau_mm *mm)
 	kfree(heap);
 	return 0;
 }
+
+#if defined(__AROS__)
+int
+nouveau_mm_get_free_space_size(struct nouveau_mm *mm)
+{
+	struct nouveau_mm_node *this;
+	int size = 0;
+
+	list_for_each_entry(this, &mm->free, fl_entry) {
+		size += this->length;
+	}
+
+	return size;
+}
+#endif

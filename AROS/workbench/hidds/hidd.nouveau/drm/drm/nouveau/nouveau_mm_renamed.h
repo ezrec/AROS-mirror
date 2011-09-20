@@ -51,6 +51,9 @@ int  nouveau_mm_pre(struct nouveau_mm *);
 int  nouveau_mm_get(struct nouveau_mm *, int type, u32 size, u32 size_nc,
 		    u32 align, struct nouveau_mm_node **);
 void nouveau_mm_put(struct nouveau_mm *, struct nouveau_mm_node *);
+#if defined(__AROS__)
+int  nouveau_mm_get_free_space_size(struct nouveau_mm *);
+#endif
 
 int  nv50_vram_init(struct drm_device *);
 void nv50_vram_fini(struct drm_device *);
