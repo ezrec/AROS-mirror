@@ -718,3 +718,19 @@ int drm_mm_dump_table(struct seq_file *m, struct drm_mm *mm)
 }
 EXPORT_SYMBOL(drm_mm_dump_table);
 #endif
+
+#if defined(__AROS__)
+int drm_mm_get_free_space_size(const struct drm_mm *mm)
+{
+	struct drm_mm_node *entry;
+	int total_free = 0;
+
+	list_for_each_entry(entry, &mm->hole_stack, hole_stack) {
+		BUG_ON(!entry->hole_follows);
+		total_free += drm_mm_hole_node_end(entry) - drm_mm_hole_node_start(entry);
+	}
+
+	return total_free;
+}
+EXPORT_SYMBOL(drm_mm_get_free_space);
+#endif

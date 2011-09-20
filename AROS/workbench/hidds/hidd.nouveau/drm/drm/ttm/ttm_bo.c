@@ -1670,8 +1670,8 @@ bool ttm_mem_reg_is_pci(struct ttm_bo_device *bdev, struct ttm_mem_reg *mem)
 
 void ttm_bo_unmap_virtual_locked(struct ttm_buffer_object *bo)
 {
-	struct ttm_bo_device *bdev = bo->bdev;
 #if !defined(__AROS__)
+	struct ttm_bo_device *bdev = bo->bdev;
 	loff_t offset = (loff_t) bo->addr_space_offset;
 	loff_t holelen = ((loff_t) bo->mem.num_pages) << PAGE_SHIFT;
 

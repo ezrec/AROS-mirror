@@ -190,4 +190,8 @@ extern void drm_mm_debug_table(struct drm_mm *mm, const char *prefix);
 int drm_mm_dump_table(struct seq_file *m, struct drm_mm *mm);
 #endif
 
+#if defined(__AROS__)
+int drm_mm_get_free_space_size(const struct drm_mm *mm);
+#endif
+
 #endif

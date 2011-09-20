@@ -278,6 +278,10 @@ struct ttm_mem_type_manager_func {
 	 * It may not be called from within atomic context.
 	 */
 	void (*debug)(struct ttm_mem_type_manager *man, const char *prefix);
+
+#if defined(__AROS__)
+	int (*get_free_space_size)(struct ttm_mem_type_manager *man);
+#endif
 };
 
 /**
