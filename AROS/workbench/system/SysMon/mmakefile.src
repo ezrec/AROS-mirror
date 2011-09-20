@@ -3,7 +3,7 @@
 
 include $(TOP)/config/make.cfg
 
-FILES	:= main locale
+FILES	:= main locale memory video
 EXEDIR	:= $(AROSDIR)/System
 
 #MM- workbench-system : workbench-system-sysmon

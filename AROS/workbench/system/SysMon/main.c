@@ -3,10 +3,7 @@
     $Id$
 */
 
-#include <libraries/mui.h>
 #include <proto/muimaster.h>
-#include <proto/intuition.h>
-#include <proto/exec.h>
 #include <dos/dos.h>
 #include <devices/timer.h>
 #include <clib/alib_protos.h>
@@ -42,31 +39,6 @@ static Object * tasklistautorefreshcheckmark;
 static struct Hook tasklistdisplayhook;
 static struct Hook tasklistrefreshbuttonhook;
 static IPTR tasklistautorefresh;
-
-/* Memory information */
-#define NOUVEAU_VRAM_GART
-#if defined(NOUVEAU_VRAM_GART)
-#include <proto/graphics.h>
-#include <proto/oop.h>
-#include <hidd/graphics.h>
-struct BitMap * bm = NULL;
-#define HIDD_BM_OBJ(bitmap)     (*(OOP_Object **)&((bitmap)->Planes[0]))
-#undef HiddGfxNouveauAttrBase
-#undef HiddBitMapAttrBase
-OOP_AttrBase HiddGfxNouveauAttrBase;
-OOP_AttrBase HiddBitMapAttrBase;
-#define IID_Hidd_Gfx_Nouveau            "hidd.gfx.nouveau"
-enum
-{
-    aoHidd_Gfx_Nouveau_VRAMFree,        /* [G..] The amount of free VRAM in bytes */
-    aoHidd_Gfx_Nouveau_GARTFree,        /* [G..] The amount of free GART in bytes */
-    
-    num_Hidd_Gfx_Nouveau_Attrs
-};
-#define aHidd_Gfx_Nouveau_VRAMFree      (HiddGfxNouveauAttrBase + aoHidd_Gfx_Nouveau_VRAMFree)
-#define aHidd_Gfx_Nouveau_GARTFree      (HiddGfxNouveauAttrBase + aoHidd_Gfx_Nouveau_GARTFree)
-struct Library * OOPBase = NULL;
-#endif
 
 /* Processor information */
 static ULONG processorcount;
@@ -529,91 +501,6 @@ VOID DeInitProcessor()
 {
 }
 
-/* Memory functions */
-BOOL InitMemory()
-{
-#if defined(NOUVEAU_VRAM_GART)
-    struct OOP_ABDescr attrbases[] = 
-    {
-    { IID_Hidd_BitMap,          &HiddBitMapAttrBase },
-    { IID_Hidd_Gfx_Nouveau,     &HiddGfxNouveauAttrBase },
-    { NULL, NULL }
-    };
-    struct Screen * wbscreen;
-    
-    OOPBase = OpenLibrary("oop.library", 0L);
-    
-    if (!OOPBase)
-        return FALSE;
-
-    if (!OOP_ObtainAttrBases(attrbases))
-        return FALSE;
-
-    wbscreen = LockPubScreen(NULL);
-    bm = AllocBitMap(32, 32, 0, BMF_DISPLAYABLE, wbscreen->RastPort.BitMap);
-    UnlockPubScreen(NULL, wbscreen);
-#endif
-    return TRUE;
-}
-
-VOID DeInitMemory()
-{
-#if defined(NOUVEAU_VRAM_GART)
-    FreeBitMap(bm);
-    
-    OOP_ReleaseAttrBase(IID_Hidd_BitMap);
-    OOP_ReleaseAttrBase(IID_Hidd_Gfx_Nouveau);
-    
-    CloseLibrary(OOPBase);
-#endif
-}
-
-VOID UpdateMemoryInformation(struct SysMonData * smdata)
-{
-    TEXT buffer[64] = {0};
-    ULONG size = 0;
-
-    /* Size */
-    size = AvailMem(MEMF_ANY | MEMF_TOTAL) / 1024;
-    __sprintf(buffer, "%ld kB", size);
-    set(smdata->memorysize[MEMORY_RAM], MUIA_Text_Contents, buffer);
-
-    size = AvailMem(MEMF_CHIP | MEMF_TOTAL) / 1024;
-    __sprintf(buffer, "%ld kB", size);
-    set(smdata->memorysize[MEMORY_CHIP], MUIA_Text_Contents, buffer);
-
-    size = AvailMem(MEMF_FAST | MEMF_TOTAL) / 1024;
-    __sprintf(buffer, "%ld kB", size);
-    set(smdata->memorysize[MEMORY_FAST], MUIA_Text_Contents, buffer);
-
-    /* Free */
-    size = AvailMem(MEMF_ANY) / 1024;
-    __sprintf(buffer, "%ld kB", size);
-    set(smdata->memoryfree[MEMORY_RAM], MUIA_Text_Contents, buffer);
-
-    size = AvailMem(MEMF_CHIP) / 1024;
-    __sprintf(buffer, "%ld kB", size);
-    set(smdata->memoryfree[MEMORY_CHIP], MUIA_Text_Contents, buffer);
-
-    size = AvailMem(MEMF_FAST) / 1024;
-    __sprintf(buffer, "%ld kB", size);
-    set(smdata->memoryfree[MEMORY_FAST], MUIA_Text_Contents, buffer);
-
-#if defined(NOUVEAU_VRAM_GART)
-    {
-    OOP_Object * gfxhidd;
-    OOP_Object * oopbm = HIDD_BM_OBJ(bm);
-    OOP_GetAttr(oopbm, aHidd_BitMap_GfxHidd, (APTR)&gfxhidd);
-    IPTR vram_free, gart_free;
-    OOP_GetAttr(gfxhidd, aHidd_Gfx_Nouveau_VRAMFree, &vram_free);
-    OOP_GetAttr(gfxhidd, aHidd_Gfx_Nouveau_GARTFree, &gart_free);
-    __sprintf(buffer, "%ld kB", (ULONG)(vram_free / 1024));
-    set(smdata->memoryfree[MEMORY_VRAM], MUIA_Text_Contents, buffer);
-    __sprintf(buffer, "%ld kB", (ULONG)(gart_free / 1024));
-    set(smdata->memoryfree[MEMORY_GART], MUIA_Text_Contents, buffer);
-    }
-#endif
-}
 
 int main()
 {
@@ -625,6 +512,10 @@ int main()
 
     if (!InitMemory())
         return 1;
+
+    if (!InitVideo())
+        return 1;
+
 #if SIMULATE_USAGE_FREQ
     processorcount = 4;
 #else
@@ -641,6 +532,10 @@ int main()
     UpdateCPUStaticInformation();
     UpdateCPUInformation();
     UpdateTaskInformation();
+    UpdateMemoryStaticInformation(&smdata);
+    UpdateMemoryInformation(&smdata);
+    UpdateVideoStaticInformation(&smdata);
+    UpdateVideoInformation(&smdata);
     SignalMeAfter(250);
 
     set(mainwindow, MUIA_Window_Open, TRUE);
@@ -655,7 +550,11 @@ int main()
             {
                 UpdateCPUInformation();
                 if ((tasklistcounter % 4) == 0)
+                {
                     UpdateMemoryInformation(&smdata);
+                    UpdateVideoInformation(&smdata);
+                }
+
                 if (tasklistautorefresh && ((tasklistcounter++ % 4) == 0)) 
                     UpdateTaskInformation();
                 SignalMeAfter(250);
@@ -670,7 +569,9 @@ int main()
     DeInitTimer();
     
     DeInitProcessor();
-    
+
+    DeInitVideo();
+
     DeInitMemory();
 
     Locale_Deinitialize();
