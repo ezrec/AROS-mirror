@@ -467,8 +467,12 @@ nv50_crtc_wait_complete(struct drm_crtc *crtc)
 
 	start = ptimer->read(dev);
 	do {
+#if !defined(MOCK_HARDWARE)
 		if (nv_ro32(disp->ntfy, 0x000))
 			return 0;
+#else
+		return 0;
+#endif
 	} while (ptimer->read(dev) - start < 2000000000ULL);
 
 	return -EBUSY;
