@@ -2,9 +2,6 @@
 
 #include <clib/alib_protos.h>
 
-#define VRAM_HACK
-
-
 /* Video information */
 #if defined(VRAM_HACK)
 
@@ -25,11 +22,16 @@ OOP_AttrBase HiddBitMapAttrBase;
 #define IID_Hidd_Gfx_Nouveau            "hidd.gfx.nouveau"
 enum
 {
+    aoHidd_Gfx_Nouveau_VRAMSize,        /* [G..] The amount of total VRAM in bytes */
+    aoHidd_Gfx_Nouveau_GARTSize,        /* [G..] The amount of total GART in bytes */
     aoHidd_Gfx_Nouveau_VRAMFree,        /* [G..] The amount of free VRAM in bytes */
     aoHidd_Gfx_Nouveau_GARTFree,        /* [G..] The amount of free GART in bytes */
     
     num_Hidd_Gfx_Nouveau_Attrs
 };
+
+#define aHidd_Gfx_Nouveau_VRAMSize      (HiddGfxNouveauAttrBase + aoHidd_Gfx_Nouveau_VRAMSize)
+#define aHidd_Gfx_Nouveau_GARTSize      (HiddGfxNouveauAttrBase + aoHidd_Gfx_Nouveau_GARTSize)
 #define aHidd_Gfx_Nouveau_VRAMFree      (HiddGfxNouveauAttrBase + aoHidd_Gfx_Nouveau_VRAMFree)
 #define aHidd_Gfx_Nouveau_GARTFree      (HiddGfxNouveauAttrBase + aoHidd_Gfx_Nouveau_GARTFree)
 struct Library * OOPBase = NULL;
@@ -77,6 +79,20 @@ static VOID DeInitVideo()
 
 VOID UpdateVideoStaticInformation(struct SysMonData * smdata)
 {
+#if defined(VRAM_HACK)
+    TEXT buffer[64] = {0};
+    IPTR vram_size, gart_size;
+    OOP_Object * gfxhidd;
+    OOP_Object * oopbm = HIDD_BM_OBJ(bm);
+
+    OOP_GetAttr(oopbm, aHidd_BitMap_GfxHidd, (APTR)&gfxhidd);
+    OOP_GetAttr(gfxhidd, aHidd_Gfx_Nouveau_VRAMSize, &vram_size);
+    OOP_GetAttr(gfxhidd, aHidd_Gfx_Nouveau_GARTSize, &gart_size);
+    __sprintf(buffer, "%ld kB", (ULONG)(vram_size / 1024));
+    set(smdata->memorysize[MEMORY_VRAM], MUIA_Text_Contents, buffer);
+    __sprintf(buffer, "%ld kB", (ULONG)(gart_size / 1024));
+    set(smdata->memorysize[MEMORY_GART], MUIA_Text_Contents, buffer);
+#endif
 }
 
 VOID UpdateVideoInformation(struct SysMonData * smdata)
