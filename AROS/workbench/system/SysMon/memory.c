@@ -3,12 +3,12 @@
 #include <clib/alib_protos.h>
 
 /* Memory functions */
-BOOL InitMemory()
+static BOOL InitMemory()
 {
     return TRUE;
 }
 
-VOID DeInitMemory()
+static VOID DeInitMemory()
 {
 }
 
@@ -49,3 +49,10 @@ VOID UpdateMemoryInformation(struct SysMonData * smdata)
     __sprintf(buffer, "%ld kB", size);
     set(smdata->memoryfree[MEMORY_FAST], MUIA_Text_Contents, buffer);
 }
+
+struct SysMonModule memorymodule =
+{
+    .Init = InitMemory,
+    .DeInit = DeInitMemory,
+};
+

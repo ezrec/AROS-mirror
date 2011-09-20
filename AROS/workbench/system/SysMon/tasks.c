@@ -133,3 +133,19 @@ AROS_UFH3(VOID, TasksListDisplayFunction,
 
     AROS_USERFUNC_EXIT
 }
+
+static BOOL InitTasks()
+{
+    return TRUE;
+}
+
+static VOID DeInitTasks()
+{
+}
+
+struct SysMonModule tasksmodule =
+{
+    .Init = InitTasks,
+    .DeInit = DeInitTasks,
+};
+

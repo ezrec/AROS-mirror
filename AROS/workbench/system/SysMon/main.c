@@ -207,24 +207,44 @@ VOID DisposeApplication(struct SysMonData * smdata)
     FreeVec(smdata->cpufreqvalues);
 }
 
+VOID DeInitModules(struct SysMonModule ** modules, LONG lastinitedmodule)
+{
+    LONG i;
+    
+    for (i = lastinitedmodule; i >= 0; i--)
+        modules[i]->DeInit();
+}
+
+LONG InitModules(struct SysMonModule ** modules)
+{
+    LONG lastinitedmodule = -1;
+
+    while(modules[lastinitedmodule + 1] != NULL)
+    {
+        if (modules[lastinitedmodule + 1]->Init())
+            lastinitedmodule++;
+        else
+        {
+            DeInitModules(modules, lastinitedmodule);
+            return -1;
+        }
+        
+    }    
+    
+    return lastinitedmodule;
+}
+
 int main()
 {
     ULONG signals = 0;
     ULONG itercounter = 0;
     struct SysMonData smdata;
+    struct SysMonModule * modules [] = {&memorymodule, &videomodule, &processormodule, &tasksmodule, &timermodule, NULL};
+    LONG lastinitedmodule = -1;
 
     Locale_Initialize();
 
-    if (!InitMemory())
-        return 1;
-
-    if (!InitVideo())
-        return 1;
-
-    if (!InitProcessor())
-        return 1;
-
-    if (!InitTimer())
+    if ((lastinitedmodule = InitModules(modules)) == -1)
         return 1;
 
     if (!CreateApplication(&smdata))
@@ -266,18 +286,12 @@ int main()
             }
         }
     }
-    
+
     set(smdata.mainwindow, MUIA_Window_Open, FALSE);
-    
+
     DisposeApplication(&smdata);
 
-    DeInitTimer();
-    
-    DeInitProcessor();
-
-    DeInitVideo();
-
-    DeInitMemory();
+    DeInitModules(modules, lastinitedmodule);
 
     Locale_Deinitialize();
 

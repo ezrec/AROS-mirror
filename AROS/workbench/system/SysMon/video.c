@@ -36,8 +36,8 @@ struct Library * OOPBase = NULL;
 
 #endif
 
-/* Memory functions */
-BOOL InitVideo()
+/* Videofunctions */
+static BOOL InitVideo()
 {
 #if defined(VRAM_HACK)
     struct OOP_ABDescr attrbases[] = 
@@ -63,7 +63,7 @@ BOOL InitVideo()
     return TRUE;
 }
 
-VOID DeInitVideo()
+static VOID DeInitVideo()
 {
 #if defined(VRAM_HACK)
     FreeBitMap(bm);
@@ -96,3 +96,10 @@ VOID UpdateVideoInformation(struct SysMonData * smdata)
     set(smdata->memoryfree[MEMORY_GART], MUIA_Text_Contents, buffer);
 #endif
 }
+
+struct SysMonModule videomodule =
+{
+    .Init = InitVideo,
+    .DeInit = DeInitVideo,
+};
+

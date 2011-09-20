@@ -38,37 +38,37 @@ struct SysMonData
     IPTR tasklistautorefresh;
 };
 
+struct SysMonModule
+{
+    BOOL (*Init)();
+    VOID (*DeInit)();
+};
 
-BOOL InitMemory();
-VOID DeInitMemory();
+extern struct SysMonModule memorymodule;
+extern struct SysMonModule videomodule;
+extern struct SysMonModule processormodule;
+extern struct SysMonModule timermodule;
+extern struct SysMonModule tasksmodule;
+
 VOID UpdateMemoryInformation(struct SysMonData * smdata);
 VOID UpdateMemoryStaticInformation(struct SysMonData * smdata);
 
-BOOL InitVideo();
-VOID DeInitVideo();
 VOID UpdateVideoInformation(struct SysMonData * smdata);
 VOID UpdateVideoStaticInformation(struct SysMonData * smdata);
 
-BOOL InitProcessor();
-VOID DeInitProcessor();
 ULONG GetProcessorCount();
 VOID UpdateProcessorInformation(struct SysMonData * smdata);
 VOID UpdateProcessorStaticInformation(struct SysMonData * smdata);
 
-struct TaskInfo;
-
-BOOL InitTasks();
-VOID DeInitTasks();
 VOID UpdateTasksInformation(struct SysMonData * smdata);
 VOID UpdateTasksStaticInformation(struct SysMonData * smdata);
 
+struct TaskInfo;
 AROS_UFP3(VOID, TasksListDisplayFunction,
     AROS_UFHA(struct Hook *, h,  A0),
     AROS_UFHA(STRPTR *, strings, A2),
     AROS_UFHA(struct TaskInfo *, obj, A1));
 
 ULONG GetSIG_TIMER();
-BOOL InitTimer();
-VOID DeInitTimer();
 VOID SignalMeAfter(ULONG msecs);
 #endif

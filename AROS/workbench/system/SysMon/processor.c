@@ -14,7 +14,7 @@ APTR ProcessorBase;
 #define SIMULATE_USAGE_FREQ 0
 
 /* Processor functions */
-BOOL InitProcessor()
+static BOOL InitProcessor()
 {
 #if SIMULATE_USAGE_FREQ
     processorcount = 4;
@@ -40,7 +40,7 @@ BOOL InitProcessor()
 #endif
 }
 
-VOID DeInitProcessor()
+static VOID DeInitProcessor()
 {
 }
 
@@ -108,3 +108,9 @@ VOID UpdateProcessorStaticInformation(struct SysMonData * smdata)
         set(smdata->cpufreqlabels[i], MUIA_Text_Contents, buffer);
     }
 }
+
+struct SysMonModule processormodule =
+{
+    .Init = InitProcessor,
+    .DeInit = DeInitProcessor,
+};
