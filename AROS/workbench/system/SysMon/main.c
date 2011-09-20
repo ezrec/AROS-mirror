@@ -20,6 +20,8 @@
 
 #include "locale.h"
 
+#include "sysmon_intern.h"
+
 #define VERSION "$VER: SysMon 1.1 (09.18.2011) ©2011 The AROS Development Team"
 
 /* MUI information */
@@ -33,14 +35,6 @@ static Object * cpufreqgroup;
 static Object ** cpufreqlabels;
 static Object ** cpufreqvalues;
 static CONST_STRPTR tabs [] = {NULL, NULL, NULL, NULL};
-
-#define MEMORY_RAM  0
-#define MEMORY_CHIP 1
-#define MEMORY_FAST 2
-#define MEMORY_VRAM 3
-#define MEMORY_GART 4
-static Object * memorysize[5];
-static Object * memoryfree[5];
 
 static Object * tasklist;
 static Object * tasklistrefreshbutton;
@@ -287,7 +281,7 @@ AROS_UFH3(VOID, tasklistrefreshbuttonfunction,
     AROS_USERFUNC_EXIT
 }
 
-BOOL CreateApplication()
+BOOL CreateApplication(struct SysMonData * smdata)
 {
     Object * cpucolgroup;
     ULONG i;
@@ -347,23 +341,23 @@ BOOL CreateApplication()
                                 Child, VGroup, GroupFrameT("Memory Size"),
                                         Child, ColGroup(2), 
                                         Child, Label("RAM"),
-                                        Child, memorysize[MEMORY_RAM] = TextObject, TextFrame, MUIA_Background, MUII_TextBack,
+                                        Child, smdata->memorysize[MEMORY_RAM] = TextObject, TextFrame, MUIA_Background, MUII_TextBack,
                                                 MUIA_Text_PreParse, (IPTR)"\33r", MUIA_Text_Contents, (IPTR)"2097152 Kb", 
                                         End,
                                         Child, Label("CHIP RAM"),
-                                        Child, memorysize[MEMORY_CHIP] = TextObject, TextFrame, MUIA_Background, MUII_TextBack,
+                                        Child, smdata->memorysize[MEMORY_CHIP] = TextObject, TextFrame, MUIA_Background, MUII_TextBack,
                                                 MUIA_Text_PreParse, (IPTR)"\33r", MUIA_Text_Contents, (IPTR)"", 
                                         End,
                                         Child, Label("FAST RAM"),
-                                        Child, memorysize[MEMORY_FAST] = TextObject, TextFrame, MUIA_Background, MUII_TextBack,
+                                        Child, smdata->memorysize[MEMORY_FAST] = TextObject, TextFrame, MUIA_Background, MUII_TextBack,
                                                 MUIA_Text_PreParse, (IPTR)"\33r", MUIA_Text_Contents, (IPTR)"", 
                                         End,
                                         Child, Label("VIDEO RAM"),
-                                        Child, memorysize[MEMORY_VRAM] = TextObject, TextFrame, MUIA_Background, MUII_TextBack,
+                                        Child, smdata->memorysize[MEMORY_VRAM] = TextObject, TextFrame, MUIA_Background, MUII_TextBack,
                                                 MUIA_Text_PreParse, (IPTR)"\33r", MUIA_Text_Contents, (IPTR)"", 
                                         End,
                                         Child, Label("GART Aperture"),
-                                        Child, memorysize[MEMORY_GART] = TextObject, TextFrame, MUIA_Background, MUII_TextBack,
+                                        Child, smdata->memorysize[MEMORY_GART] = TextObject, TextFrame, MUIA_Background, MUII_TextBack,
                                                 MUIA_Text_PreParse, (IPTR)"\33r", MUIA_Text_Contents, (IPTR)"", 
                                         End,
                                     End,
@@ -371,23 +365,23 @@ BOOL CreateApplication()
                                 Child, VGroup, GroupFrameT("Memory Free"),
                                     Child, ColGroup(2), 
                                         Child, Label("RAM"),
-                                        Child, memoryfree[MEMORY_RAM] = TextObject, TextFrame, MUIA_Background, MUII_TextBack,
+                                        Child, smdata->memoryfree[MEMORY_RAM] = TextObject, TextFrame, MUIA_Background, MUII_TextBack,
                                                 MUIA_Text_PreParse, (IPTR)"\33r", MUIA_Text_Contents, (IPTR)"2097152 Kb", 
                                         End,
                                         Child, Label("CHIP RAM"),
-                                        Child, memoryfree[MEMORY_CHIP] = TextObject, TextFrame, MUIA_Background, MUII_TextBack,
+                                        Child, smdata->memoryfree[MEMORY_CHIP] = TextObject, TextFrame, MUIA_Background, MUII_TextBack,
                                                 MUIA_Text_PreParse, (IPTR)"\33r", MUIA_Text_Contents, (IPTR)"", 
                                         End,
                                         Child, Label("FAST RAM"),
-                                        Child, memoryfree[MEMORY_FAST] = TextObject, TextFrame, MUIA_Background, MUII_TextBack,
+                                        Child, smdata->memoryfree[MEMORY_FAST] = TextObject, TextFrame, MUIA_Background, MUII_TextBack,
                                                 MUIA_Text_PreParse, (IPTR)"\33r", MUIA_Text_Contents, (IPTR)"", 
                                         End,
                                         Child, Label("VIDEO RAM"),
-                                        Child, memoryfree[MEMORY_VRAM] = TextObject, TextFrame, MUIA_Background, MUII_TextBack,
+                                        Child, smdata->memoryfree[MEMORY_VRAM] = TextObject, TextFrame, MUIA_Background, MUII_TextBack,
                                                 MUIA_Text_PreParse, (IPTR)"\33r", MUIA_Text_Contents, (IPTR)"", 
                                         End,
                                         Child, Label("GART Aperture"),
-                                        Child, memoryfree[MEMORY_GART] = TextObject, TextFrame, MUIA_Background, MUII_TextBack,
+                                        Child, smdata->memoryfree[MEMORY_GART] = TextObject, TextFrame, MUIA_Background, MUII_TextBack,
                                                 MUIA_Text_PreParse, (IPTR)"\33r", MUIA_Text_Contents, (IPTR)"", 
                                         End,
                                     End,
@@ -574,7 +568,7 @@ VOID DeInitMemory()
 #endif
 }
 
-VOID UpdateMemoryInformation()
+VOID UpdateMemoryInformation(struct SysMonData * smdata)
 {
     TEXT buffer[64] = {0};
     ULONG size = 0;
@@ -582,28 +576,28 @@ VOID UpdateMemoryInformation()
     /* Size */
     size = AvailMem(MEMF_ANY | MEMF_TOTAL) / 1024;
     __sprintf(buffer, "%ld kB", size);
-    set(memorysize[MEMORY_RAM], MUIA_Text_Contents, buffer);
+    set(smdata->memorysize[MEMORY_RAM], MUIA_Text_Contents, buffer);
 
     size = AvailMem(MEMF_CHIP | MEMF_TOTAL) / 1024;
     __sprintf(buffer, "%ld kB", size);
-    set(memorysize[MEMORY_CHIP], MUIA_Text_Contents, buffer);
+    set(smdata->memorysize[MEMORY_CHIP], MUIA_Text_Contents, buffer);
 
     size = AvailMem(MEMF_FAST | MEMF_TOTAL) / 1024;
     __sprintf(buffer, "%ld kB", size);
-    set(memorysize[MEMORY_FAST], MUIA_Text_Contents, buffer);
+    set(smdata->memorysize[MEMORY_FAST], MUIA_Text_Contents, buffer);
 
     /* Free */
     size = AvailMem(MEMF_ANY) / 1024;
     __sprintf(buffer, "%ld kB", size);
-    set(memoryfree[MEMORY_RAM], MUIA_Text_Contents, buffer);
+    set(smdata->memoryfree[MEMORY_RAM], MUIA_Text_Contents, buffer);
 
     size = AvailMem(MEMF_CHIP) / 1024;
     __sprintf(buffer, "%ld kB", size);
-    set(memoryfree[MEMORY_CHIP], MUIA_Text_Contents, buffer);
+    set(smdata->memoryfree[MEMORY_CHIP], MUIA_Text_Contents, buffer);
 
     size = AvailMem(MEMF_FAST) / 1024;
     __sprintf(buffer, "%ld kB", size);
-    set(memoryfree[MEMORY_FAST], MUIA_Text_Contents, buffer);
+    set(smdata->memoryfree[MEMORY_FAST], MUIA_Text_Contents, buffer);
 
 #if defined(NOUVEAU_VRAM_GART)
     {
@@ -614,9 +608,9 @@ VOID UpdateMemoryInformation()
     OOP_GetAttr(gfxhidd, aHidd_Gfx_Nouveau_VRAMFree, &vram_free);
     OOP_GetAttr(gfxhidd, aHidd_Gfx_Nouveau_GARTFree, &gart_free);
     __sprintf(buffer, "%ld kB", (ULONG)(vram_free / 1024));
-    set(memoryfree[MEMORY_VRAM], MUIA_Text_Contents, buffer);
+    set(smdata->memoryfree[MEMORY_VRAM], MUIA_Text_Contents, buffer);
     __sprintf(buffer, "%ld kB", (ULONG)(gart_free / 1024));
-    set(memoryfree[MEMORY_GART], MUIA_Text_Contents, buffer);
+    set(smdata->memoryfree[MEMORY_GART], MUIA_Text_Contents, buffer);
     }
 #endif
 }
@@ -625,6 +619,7 @@ int main()
 {
     ULONG signals = 0;
     ULONG tasklistcounter = 0;
+    struct SysMonData smdata;
 
     Locale_Initialize();
 
@@ -640,7 +635,7 @@ int main()
     if (!InitTimer())
         return 1;
 
-    if (!CreateApplication())
+    if (!CreateApplication(&smdata))
         return 1;
 
     UpdateCPUStaticInformation();
@@ -660,7 +655,7 @@ int main()
             {
                 UpdateCPUInformation();
                 if ((tasklistcounter % 4) == 0)
-                    UpdateMemoryInformation();
+                    UpdateMemoryInformation(&smdata);
                 if (tasklistautorefresh && ((tasklistcounter++ % 4) == 0)) 
                     UpdateTaskInformation();
                 SignalMeAfter(250);
