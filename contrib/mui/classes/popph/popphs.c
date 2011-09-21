@@ -12,6 +12,7 @@
 
 #include <mui/BetterString_mcc.h>
 
+#include <proto/alib.h>
 #include <proto/utility.h>
 #include <proto/intuition.h>
 #include <proto/muimaster.h>

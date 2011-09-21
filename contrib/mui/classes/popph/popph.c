@@ -11,6 +11,7 @@
 
 #include <mui/BetterString_mcc.h>
 #include <libraries/asl.h>
+#include <proto/alib.h>
 #include <proto/dos.h>
 #include <proto/utility.h>
 #include <proto/intuition.h>

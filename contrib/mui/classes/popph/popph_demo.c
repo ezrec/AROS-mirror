@@ -16,6 +16,7 @@
 #include <exec/types.h>
 #include <libraries/mui.h>
 #include <libraries/asl.h>
+#include <proto/alib.h>
 #include <proto/exec.h>
 #include <proto/muimaster.h>
 #include <proto/intuition.h>

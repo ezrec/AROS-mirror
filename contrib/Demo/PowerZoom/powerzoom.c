@@ -3,6 +3,7 @@
 #include <cybergraphx/cybergraphics.h>
 #include <datatypes/pictureclass.h>
 #include <datatypes/datatypesclass.h>
+#include <proto/alib.h>
 #include <proto/exec.h>
 #include <proto/dos.h>
 #include <proto/graphics.h>
