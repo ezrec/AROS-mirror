@@ -28,6 +28,11 @@
 
 #include <dos/dosextens.h>
 #include <clib/alib_protos.h>
+
+#ifndef NO_INLINE_STDARG
+#define NO_INLINE_STDARG
+#endif
+
 #include <proto/muimaster.h>
 #include <proto/diskfont.h>
 #include <proto/graphics.h>
