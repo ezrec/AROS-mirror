@@ -18,23 +18,8 @@
 
 #include <stdlib.h>
 
-/* On amiga we store for each connection the input and output
-   filehandle.
-   We use as filehandle the number of the slot, so we have filehandles
-   from 0 to 2
-*/  
-typedef struct {
-   BPTR fhin, fhout;
-   struct MsgPort *replyPort;
-   struct DosPacket *pendingread;
-   ULONG bytesread;
-   struct DosPacket *pendingwrite;
-   ULONG flags;
-} FileHandleInfo;
-
-#define FHI_WAIT          (1<<0)
-#define FHI_ISINPUT       (1<<1)
-#define FHI_READRETURNED  (1<<2)
+#define DEBUG 1
+#include <aros/debug.h>
 
 typedef struct {
    const tsd_t *TSD;
@@ -43,196 +28,108 @@ typedef struct {
    environment *parentenv;
    const char *childcmd;
    int retval;
-   FileHandleInfo files[3];
-} AsyncInfo;
+} ChildInfo;
 
-/* SupreplyPort function for AmigaDOS asynchronous file IO
- */
-static struct DosPacket *CreateDosPacket(void)
-{
-   return AllocDosObject(DOS_STDPKT, NULL);
-}
+typedef enum {
+   PIPE_READ, PIPE_WRITE
+} AmigaPipeType;
 
-static void DeleteDosPacket(struct DosPacket *dp)
-{
-   return FreeDosObject(DOS_STDPKT, dp);
-}
+typedef struct {
+   AmigaPipeType type;
+   BPTR file;
+} AmigaPipeInfo;
 
-/* Allocate and setup AsyncInfo */
+/* On amiga(-like) systems the pipe used for communicating
+   is asynchronous from itself and does not to be handled
+   by custom code.
+*/
 static void *Amiga_create_async_info(const tsd_t *TSD)
 {
-   AsyncInfo *ai = MallocTSD(sizeof(AsyncInfo));
-   int i;
-  
-   ai->TSD = TSD;
-   __amiga_set_ai((tsd_t *)TSD, ai);
-  
-   for(i=0; i<3; i++)
-   {
-      ai->files[i].fhin = BNULL;
-      ai->files[i].fhout = BNULL;
-      ai->files[i].replyPort = CreatePort(NULL, 0);
-   }
+   D(bug("[Amiga_create_async_info] TSD=%p\n", TSD));
 
-   return (void *)ai;
+   /* Amiga pipes are async */
+   return NULL;
 }
 
-/* Deallocate AsyncInfo */
 static void Amiga_delete_async_info(void *async_info)
 {
-   AsyncInfo *ai = (AsyncInfo *)async_info;
-   int i;
- 
-   if (ai == NULL)
-      return;
-
-   for(i=0; i < 3; i++)
-   {
-      assert(ai->files[i].fhin == BNULL);
-      assert(ai->files[i].fhout == BNULL);
-      DeletePort(ai->files[i].replyPort);
-   }
-
-   __amiga_set_ai((tsd_t *)ai->TSD, NULL);
-   
-   Free_TSD(ai->TSD, ai);
+   D(bug("[Amiga_delete_async_info] async_info=%p\n", async_info));
+   /* Amiga pipes are async */
 }
 
 /* Reset FHI_WAIT flag */
 static void Amiga_reset_async_info(void *async_info)
 {
-   AsyncInfo *ai = (AsyncInfo *)async_info;
-   int i;
-
-   for(i = 0; i < 3; i++)
-      ai->files[i].flags &= ~FHI_WAIT;
+   D(bug("[Amiga_reset_async_info] async_info=%p\n", async_info));
+   /* Amiga pipes are async */
 }
 
 /* Mark handle to wait for it */
 static void Amiga_add_async_waiter(void *async_info, int handle, int add_as_read_handle)
 {
-   AsyncInfo *ai = (AsyncInfo *)async_info;
-
-   ai->files[handle].flags |= FHI_WAIT;
+   /* Amiga pipes are async */
 }
 
 /* For a subprocess connection on amiga a pipe will be opened
    and both read and write ends will be stored.
    Only a read or write handle will be returned depending on wether
    this connection is input or output.
+   We can't just cast a BPTR to int in this function as on some archs
+   sizeof(int) < sizeof(void *).
 */
 static int Amiga_open_subprocess_connection(const tsd_t *TSD, environpart *ep)
 {
-   AsyncInfo *ai = __amiga_get_ai(TSD);
-   int slot;
-   char buff[5 + 5 + 16 + 1];
+   AmigaPipeInfo *pipein, *pipeout;
+   int hndlin, hndlout;
 
-   for (slot=0; slot<3 && ai->files[slot].fhin!=BNULL; slot++)
-      ;
-    
-   if (slot==3)
+   D(bug("[Amiga_open_subprocess_connection] Entering\n"));
+
+   pipein = malloc(sizeof(AmigaPipeInfo));
+   if(pipein == NULL)
    {
-      errno = EMFILE;
+      errno = ENOMEM;
+      return -1;
+   }
+   pipein->type = PIPE_READ;
+   pipein->file = BNULL;
+
+   pipeout = malloc(sizeof(AmigaPipeInfo));
+   if(pipeout == NULL)
+   {
+      errno = ENOMEM;
+      return -1;
+   }
+   pipeout->type = PIPE_WRITE;
+   pipeout->file = BNULL;
+
+   hndlin = __amiga_ptr2int(TSD, pipein);
+   hndlout = __amiga_ptr2int(TSD, pipeout);
+   if (hndlin == -1 || hndlout == -1)
+   {
+      free(pipein);
+      free(pipeout);
+      errno = ENOMEM;
       return -1;
    }
 
-   /* Reset flags */
-   ai->files[slot].flags = 0;
+   ep->hdls[0] = hndlin;
+   ep->hdls[1] = hndlout;
 
-   snprintf(buff, sizeof(buff), "PIPE:rexx-%016llx", (unsigned long long)(IPTR)FindTask(NULL));
-
-   ai->files[slot].fhout = Open(buff, MODE_NEWFILE);
-   if (ai->files[slot].fhout)
-   {
-      ai->files[slot].fhin = Open(buff, MODE_OLDFILE);
-      if (!ai->files[slot].fhin)
-      {
-         DeleteFile(buff);
-         Close(ai->files[slot].fhout);
-         ai->files[slot].fhout = BNULL;
-      }
-   }
-
-   if (!ai->files[slot].fhout)
-   {
-      errno = EACCES;
-      return -1;
-   }
-  
-   ai->files[slot].bytesread = 0;
-  
-   if (ep->flags.isinput)
-   {
-      ai->files[slot].flags |= FHI_ISINPUT;
-      ep->hdls[0] = -1;
-      ep->hdls[1] = slot;
-   }
-   else
-   {
-      ep->hdls[0] = slot;
-      ep->hdls[1] = -1;
-   }
-    
    return 0;
-}
-
-static struct DosPacket *wait_pkt(struct MsgPort *port)
-{
-   WaitPort(port);
-   return (struct DosPacket *)(GetMsg(port)->mn_Node.ln_Name);
-}
-
-
-/* Get possible returned messages for a certain file handle */
-static void handle_msgs(FileHandleInfo *fhi)
-{
-   struct DosPacket *dp;
-
-   while ((dp = wait_pkt(fhi->replyPort)) != NULL) {
-      if (dp == fhi->pendingread)
-         fhi->flags |= FHI_READRETURNED;
-      else if (dp == fhi->pendingwrite)
-      {
-         FreeVec((APTR)dp->dp_Arg2);
-         DeleteDosPacket(dp);
-         fhi->pendingwrite = NULL;
-      }
-      else {
-         /* TODO: This is impossible - we should die here */
-      }
-   }
 }
 
 /* First abort pending IOs, then close filehandle */
 static int Amiga_close(int handle, void *async_info)
 {
-   AsyncInfo *ai = async_info;
-   FileHandleInfo *fhi;
+   const tsd_t *TSD = GLOBAL_ENTRY_POINT();
+   AmigaPipeInfo *pipe = __amiga_getptr( TSD, handle );
 
-   assert(handle<3 && handle>=0);
+   D(bug("[Amiga_close] handle=%d\n", handle));
 
-   fhi = &ai->files[handle];
-
-   while (fhi->pendingread != NULL && !(fhi->flags & FHI_READRETURNED))
-   {
-      handle_msgs(fhi);
-   }
-   if (fhi->pendingread != NULL)
-   {
-      FreeVec((APTR)fhi->pendingread->dp_Arg2);
-      DeleteDosPacket(fhi->pendingread);
-      fhi->pendingread = NULL;
-   }
-   while (fhi->pendingwrite != NULL)
-   {
-      handle_msgs(fhi);
-   }
-   if (fhi->flags & FHI_ISINPUT)
-      Close(fhi->fhout);
-   else
-      Close(fhi->fhin);
-   fhi->fhout = fhi->fhin = BNULL;
-   DeletePort(fhi->replyPort);
+   if(pipe->file != BNULL)
+      Close(pipe->file);
+   __amiga_clearptr(TSD, handle);
+   free(pipe);
 
    return 0;
 }
@@ -247,7 +144,7 @@ static void Amiga_close_special( int handle )
 /* Amiga uses pipes so cannot restart file */
 static void Amiga_restart_file(int handle)
 {
-   assert(handle == -1);
+   assert( handle == -1 );
 }
 
 static void Amiga_unblock_handle(int *handle, void *async_info)
@@ -255,227 +152,271 @@ static void Amiga_unblock_handle(int *handle, void *async_info)
   /* All handles are non-blocking on AROS => do nothing */
 }
 
-static struct MsgPort *file_port(BPTR file)
-{
-   struct FileHandle *fh = BADDR(file);
-   return fh->fh_Type;
-}
-
 static int Amiga_read(int handle, void *buf, unsigned size, void *async_info)
 {
-   AsyncInfo *ai = async_info;
-   FileHandleInfo *fhi;
-   struct DosPacket *dp;
+   const tsd_t *TSD = GLOBAL_ENTRY_POINT();
+   AmigaPipeInfo *pipe = __amiga_getptr( TSD, handle );
+   int retval;
 
-   assert(handle<3);
-  
-   fhi = &ai->files[handle];
-    
-   if (fhi->fhin == BNULL)
-      return -EBADF;
-  
-   if (fhi->pendingread == NULL)
-   {
-      fhi->pendingread = CreateDosPacket();
-      if (fhi->pendingread == NULL)
-         return -ENOMEM;
+   D(bug("[Amiga_read] hndl=%d\n"));
 
-      dp = fhi->pendingread;
-      dp->dp_Type = ACTION_READ;
-      dp->dp_Arg1 = (IPTR)fhi->fhin;
-      dp->dp_Arg2 = (IPTR)AllocVec(size, MEMF_PUBLIC);
-      dp->dp_Arg3 = size;
-    
-      SendPkt(dp, file_port(fhi->fhin), fhi->replyPort);
-   }
-    
-   handle_msgs(fhi);
-    
-   if (fhi->flags & FHI_READRETURNED)
-   {
-      if (fhi->bytesread + size > fhi->pendingread->dp_Res1)
-         size = fhi->pendingread->dp_Res1 - fhi->bytesread;
+   assert(pipe->type == PIPE_READ);
+   assert(pipe->file != BNULL);
 
-      memcpy(buf, (APTR)fhi->pendingread->dp_Arg2, size);
-      fhi->bytesread += size;
-    
-      if (fhi->bytesread == fhi->pendingread->dp_Res1)
-      {
-         FreeVec((APTR)fhi->pendingread->dp_Arg2);
-         DeleteDosPacket(fhi->pendingread);
-         fhi->pendingread = NULL;
-         fhi->bytesread = 0;
-         fhi->flags &= ~FHI_READRETURNED;
-      }
-      
-      return size;
-   }
-   else
-      return -EAGAIN;
+   retval = Read( pipe->file, buf, size );
+   if( retval < 0 )
+      retval = -EACCES;
+
+   D(bug("[Amiga_read] retval=%d\n", retval));
+
+   return retval;
 }
-
 
 static int Amiga_write(int handle, const void *buf, unsigned size, void *async_info)
 {
-   AsyncInfo *ai = (AsyncInfo *)async_info;
-   FileHandleInfo *fhi;
-   struct DosPacket *dp;
-  
-   assert(handle<3);
+   const tsd_t *TSD = GLOBAL_ENTRY_POINT();
+   AmigaPipeInfo *pipe = __amiga_getptr( TSD, handle );
+   int retval;
 
-   fhi = &ai->files[handle];
+   D(bug("[Amiga_write] hndl=%d\n"));
 
-   if (buf==NULL && size==0)
-   { /* Flush write */
-      while (fhi->pendingwrite!=NULL)
-      {
-         handle_msgs(fhi);
-      }
-      return 0;
-   }
+   assert(pipe->type == PIPE_WRITE);
+   assert(pipe->file != BNULL);
 
-   if (fhi->fhin == BNULL)
-      return -EBADF;
-  
-   handle_msgs(fhi);
-  
-   if (fhi->pendingwrite == NULL)
-   {
-      fhi->pendingwrite = dp = CreateDosPacket();
-      if (fhi->pendingwrite == NULL)
-         return -ENOMEM;
-   
-      dp->dp_Type = ACTION_WRITE;
-      dp->dp_Arg1 = (IPTR)fhi->fhout;
-      dp->dp_Arg2 = (IPTR)AllocVec(size, MEMF_PUBLIC);
-      CopyMem(buf, (APTR)dp->dp_Arg2, size);
-      dp->dp_Arg3 = size;
-    
-      SendPkt(dp, file_port(fhi->fhout), fhi->replyPort);
-      return (int)size;
-   }
-   else
-      return -EAGAIN;
+   retval = Write( pipe->file, buf, size );
+   if( retval < 0 )
+      retval = -EACCES;
+
+   D(bug("[Amiga_write] retval=%d\n", retval));
+
+   return retval;
 }
   
 
 static void Amiga_wait_async_info(void *async_info)
 {
-   AsyncInfo *ai = (AsyncInfo *)async_info;
-   int i;
-   ULONG mask = SIGBREAKF_CTRL_C;
-
-   for (i = 0; i < 3; i++)
-   {
-      if (ai->files[i].fhin != BNULL && ai->files[i].flags & FHI_WAIT &&
-          (ai->files[i].pendingwrite != NULL || (ai->files[i].pendingread != NULL && !(ai->files[i].flags & FHI_READRETURNED)))
-      )
-         mask |= 1<<ai->files[i].replyPort->mp_SigBit;
-   }
-
-   if (mask != SIGBREAKF_CTRL_C)
-      Wait(mask);
+   /* Amiga pipes are async */
 }
 
 GLOBAL_PROTECTION_VAR(startcommand)
-static AsyncInfo *childai;
+static ChildInfo *childinfo;
 
 static void StartCommand(void)
 {
-   AsyncInfo *ai = childai;
+   ChildInfo *info = childinfo;
    char *cmd;
    struct Library *UtilityBase;
-   struct TagItem *tags;
    struct DosLibrary *DOSBase;
 
+   D(bug("[Startcommand]: Entering\n"));
+   
    DOSBase = (struct DosLibrary *)OpenLibrary("dos.library", 0);
   
-   ai->child = FindTask(NULL);
-   ai->csigbit = AllocSignal(-1);
-   cmd = AllocVec(strlen(ai->childcmd)+1, MEMF_PUBLIC|MEMF_CLEAR);
-   strcpy(cmd, ai->childcmd);
-  
-   Signal(ai->parent, 1<<ai->psigbit);
-   Wait(1<<ai->csigbit);
-   FreeSignal(ai->csigbit);
+   info->child = FindTask(NULL);
+   info->csigbit = AllocSignal(-1);
+   cmd = AllocVec(strlen(info->childcmd)+1, MEMF_PUBLIC|MEMF_CLEAR);
+   strcpy(cmd, info->childcmd);
+   D(bug("[Startcommand]: cmd='%s'\n", cmd));
+   
+   D(bug("[Startcommand]: Signaling parent\n"));
+   Signal(info->parent, 1<<info->psigbit);
+   D(bug("[Startcommand]: Waiting for parent\n"));
+   Wait(1<<info->csigbit);
+   FreeSignal(info->csigbit);
     
    UtilityBase = OpenLibrary("utility.library", 0);
    if (UtilityBase == NULL)
    {
       FreeVec(cmd);
-      ai->retval = 20;
-      Signal(ai->parent, 1<<ai->psigbit);
+      info->retval = 20;
+      Signal(info->parent, 1<<info->psigbit);
       CloseLibrary((struct Library *)DOSBase);
       return;
    }
   
-   tags = AllocateTagItems(5);
-   if (tags == NULL)
-   {
-      FreeVec(cmd);
-      CloseLibrary(UtilityBase);
-      ai->retval = 20;
-      Signal(ai->parent, 1<<ai->psigbit);
-      CloseLibrary((struct Library *)DOSBase);
-      return;
-   }
-
-   ai->retval = SystemTagList(cmd, NULL);
+   info->retval = SystemTags(cmd, NP_Synchronous, TRUE, TAG_DONE, NULL);
+   D(bug("[Startcommand]: retval=%d\n", info->retval));
    FreeVec(cmd);
 
-   FreeTagItems(tags);
    CloseLibrary(UtilityBase);
   
-   Signal(ai->parent, 1<<ai->psigbit);
+   D(bug("[Startcommand]: Signaling parent\n"));
+   Signal(info->parent, 1<<info->psigbit);
   
    CloseLibrary((struct Library *)DOSBase);
 }
 
 static int Amiga_fork_exec(tsd_t *TSD, environment *env, const char *cmdline, int *rcode)
 {
-   AsyncInfo *ai = (void *)__amiga_get_ai(TSD);
-
    switch (env->subtype)
    {
    case SUBENVIR_PATH:
    case SUBENVIR_COMMAND:
    case SUBENVIR_SYSTEM:
       {
-         int inhndl  = env->input.hdls[1],
+         ChildInfo *info = malloc( sizeof(ChildInfo) );
+         char buff[32];
+         int inhndl = env->input.hdls[1],
             outhndl = env->output.hdls[0],
             errhndl = env->error.hdls[0];
+         BPTR sub_input = BNULL, sub_output = BNULL, sub_error = BNULL;
+         BOOL close_input, close_output, close_error;
+         AmigaPipeInfo *pipe = NULL;
+         int proc;
          struct Process *me = (struct Process *)FindTask(NULL);
 
-         ai->psigbit = AllocSignal(-1);
-         if (ai->psigbit < 0)
+         D(bug("[Amiga_fork_exec]: Entering cmdline='%s'\n", cmdline));
+
+         if( info == NULL )
+         {
+            errno = ENOMEM;
+            return -1;
+         }
+
+         proc = __amiga_ptr2int( TSD, info );
+         D(bug("[Amiga_fork_exec]: Got proc=%d\n", proc));
+         if ( proc < 0 )
+         {
+            errno = ENOMEM;
+            free( info );
+            return -1;
+         }
+
+         info->psigbit = AllocSignal(-1);
+         if (info->psigbit < 0)
          {
             errno = ECHILD;
             return -1;
          }
-         ai->parent = FindTask(NULL);
-         ai->parentenv = env;
-         ai->childcmd = cmdline;
+         info->parent = FindTask(NULL);
+         info->parentenv = env;
+         info->childcmd = cmdline;
+
+         if(inhndl != -1)
+         {
+            pipe = (AmigaPipeInfo *)__amiga_getptr(TSD, inhndl);
+            /* Regina will write into input of subcommand */
+            assert(pipe->type == PIPE_WRITE);
+            
+            snprintf(buff, sizeof(buff), "PIPE:rexx-%p-in", me);
+            pipe->file = Open(buff, MODE_NEWFILE);
+            if (pipe->file != BNULL)
+            {
+               /* Input() of subcommand with read from pipe */
+               sub_input = Open(buff, MODE_OLDFILE);
+               if(sub_input == BNULL)
+               {
+                  errno = ENOMEM;
+                  Close(pipe->file);
+                  pipe->file = BNULL;
+                  return -1;
+               }
+            }
+            else
+            {
+               errno = EACCES;
+               return -1;
+            }
+
+            close_input = TRUE;
+         }
+         else
+         {
+            sub_input = Input();
+            close_input = FALSE;
+         }
+
+         if(outhndl != -1)
+         {
+            pipe = (AmigaPipeInfo *)__amiga_getptr(TSD, outhndl);
+            /* Regina will read output of subcommand */
+            assert(pipe->type == PIPE_READ);
+            
+            snprintf(buff, sizeof(buff), "PIPE:rexx-%p-out", me);
+            /* Output() of subcommand will write in pipe */
+            sub_output = Open(buff, MODE_NEWFILE);
+            if (sub_output != BNULL)
+            {
+               pipe->file = Open(buff, MODE_OLDFILE);
+               if(pipe->file == BNULL)
+               {
+                  errno = ENOMEM;
+                  Close(pipe->file);
+                  pipe->file = BNULL;
+                  return -1;
+               }
+            }
+            else
+            {
+               errno = EACCES;
+               return -1;
+            }
+
+            close_output = TRUE;
+         }
+         else
+         {
+            sub_output = Output();
+            close_output = FALSE;
+         }
+
+         if(errhndl != -1)
+         {
+            pipe = (AmigaPipeInfo *)__amiga_getptr(TSD, errhndl);
+            /* Regina will read error output of subcommand */
+            assert(pipe->type == PIPE_READ);
+            
+            snprintf(buff, sizeof(buff), "PIPE:rexx-%p-err", me);
+            /* Error() of subcommand will write in pipe */
+            sub_error = Open(buff, MODE_NEWFILE);
+            if (sub_error != BNULL)
+            {
+               pipe->file = Open(buff, MODE_OLDFILE);
+               if(pipe->file == BNULL)
+               {
+                  errno = ENOMEM;
+                  Close(pipe->file);
+                  pipe->file = BNULL;
+                  return -1;
+               }
+            }
+            else
+            {
+               errno = EACCES;
+               return -1;
+            }
+
+            close_error = TRUE;
+         }
+         else
+         {
+            sub_error = me->pr_CES;
+            close_error = FALSE;
+         }
 
          THREAD_PROTECT(startcommand)
-         childai = ai;
+         childinfo = info;
+
+         D(bug("[Amiga_fork_exec]: Starting command\n"));
 
          CreateNewProcTags
          (
             NP_Entry, StartCommand,
-            NP_Input, (inhndl == -1) ? Input() : ai->files[inhndl].fhin,
-            NP_CloseInput, inhndl != -1,
-            NP_Output, (outhndl == -1) ? Output() : ai->files[outhndl].fhout,
-            NP_CloseOutput, outhndl != -1,
-            NP_Error, (errhndl == -1) ? me->pr_CES : ai->files[errhndl].fhout,
-            NP_CloseError, errhndl != -1,
+            NP_Input, sub_input, NP_CloseInput, close_input,
+            NP_Output, sub_output, NP_CloseOutput, close_output,
+            NP_Error, sub_error, NP_CloseError, close_error,
             NP_Cli, TRUE,
             TAG_DONE, NULL
          );
-         Wait(1<<ai->psigbit);
+         D(bug("[Amiga_fork_exec]: Waiting child cache of info\n"));
+         Wait(1<<info->psigbit);
          THREAD_UNPROTECT(startcommand)
-         Signal(ai->child, 1<<ai->csigbit);
+         D(bug("[Amiga_fork_exec]: Signaling child\n"));
+         Signal(info->child, 1<<info->csigbit);
+
+         D(bug("[Amiga_fork_exec]: Returning proc=%d\n", proc));
+         return proc;
       }
-      return (int)ai;
       break;
       
    case SUBENVIR_REXX:
@@ -489,13 +430,22 @@ static int Amiga_fork_exec(tsd_t *TSD, environment *env, const char *cmdline, in
 
 static int Amiga_wait(int process)
 {
-   AsyncInfo *ai = (AsyncInfo *)process;
+   const tsd_t *TSD = GLOBAL_ENTRY_POINT();
+   ChildInfo *info = __amiga_getptr( TSD, process );
+   int retval;
 
-   Wait(1<<ai->psigbit);
-   FreeSignal(ai->psigbit);
-   ai->psigbit = -1;
-    
-   return ai->retval;
+   D(bug("[Amiga_wait] Waiting for child\n"));
+
+   Wait( 1<<info->psigbit );
+   retval = info->retval;
+   FreeSignal( info->psigbit );
+   info->psigbit = -1;
+   __amiga_clearptr( TSD, process );
+   free( info );
+
+   D(bug("[Amiga_wait] retval=%d\n", retval));
+
+   return retval;
 }
 
 static void Amiga_init(void)

@@ -64,6 +64,7 @@ struct amiga_envir {
   struct MsgPort *port;
 };
 
+#define PTRS_SIZE 16
 typedef struct _amiga_tsd_t {
    struct amiga_envir portenvir;
    struct RxsLib *rexxsysbase;
@@ -74,6 +75,7 @@ typedef struct _amiga_tsd_t {
    struct Task *parent, *child;
    UBYTE *value; /* Here a temporary argstring will be stored for RXGETVAR */
    void *ai;
+   void *ptrs[PTRS_SIZE];
 } amiga_tsd_t;
 
 
@@ -267,6 +269,7 @@ int init_amigaf ( tsd_t *TSD )
 {
    amiga_tsd_t *atsd = (amiga_tsd_t *)malloc( sizeof(amiga_tsd_t) );
    BPTR old;
+   int i;
 
    if (atsd==NULL) return 0;
 
@@ -299,7 +302,10 @@ int init_amigaf ( tsd_t *TSD )
     
    if ( atsd->child == NULL )
       return 0;
-  
+
+   for(i = 0; i < PTRS_SIZE; i++)
+      atsd->ptrs[i] = NULL;
+
    return 1;
 }
 
@@ -922,18 +928,36 @@ streng *amiga_pragma( tsd_t *TSD, cparamboxptr parm1 )
 
 
 /* Support functions for os_amiga.c
-   They are defined here so data can be stored in amiga_tsd_t
+   They are defined here so data can be stored in amiga_tsd_t, that is only
+   defined in this file.
 */
-void __amiga_set_ai(tsd_t *TSD, void *ai)
+int __amiga_ptr2int(const tsd_t *TSD, void *ptr)
 {
    amiga_tsd_t *atsd = (amiga_tsd_t *)TSD->ami_tsd;
+   int i;
 
-   atsd->ai = ai;
+   for ( i = 0; i < PTRS_SIZE && atsd->ptrs[i] != NULL; i++ )
+      /* NOP */;
+
+   if ( i == PTRS_SIZE )
+      return -1;
+   else
+   {
+      atsd->ptrs[i] = ptr;
+      return i + 1;
+   }
 }
 
-void *__amiga_get_ai(const tsd_t *TSD)
+void *__amiga_getptr(const tsd_t *TSD, int index)
 {
    amiga_tsd_t *atsd = (amiga_tsd_t *)TSD->ami_tsd;
 
-   return atsd->ai;
+   return atsd->ptrs[index - 1];
+}
+
+void __amiga_clearptr(const tsd_t *TSD, int index)
+{
+   amiga_tsd_t *atsd = (amiga_tsd_t *)TSD->ami_tsd;
+
+   atsd->ptrs[index - 1] = NULL;
 }

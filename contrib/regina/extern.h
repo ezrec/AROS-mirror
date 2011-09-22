@@ -907,8 +907,9 @@ extern "C" {
    streng *amiga_pragma( tsd_t *TSD, cparamboxptr parm1 );
 
 /* Some support in amifuncs.c for os_amiga.c */
-   void __amiga_set_ai(tsd_t *TSD, void *ai);
-   void *__amiga_get_ai(const tsd_t *TSD);
+   int __amiga_ptr2int( const tsd_t *TSD, void *ptr );
+   void *__amiga_getptr( const tsd_t *TSD, int index );
+   void __amiga_clearptr( const tsd_t *TSD, int index );
 #endif
 
 /*
