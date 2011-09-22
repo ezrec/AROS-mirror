@@ -43,7 +43,7 @@ static const struct function_type functions[] = {
   { 0,              std_abbrev,            "ABBREV" },
   { 0,              std_abs,               "ABS" },
 #if defined(_AMIGA) || defined(__AROS__)
-  { EXT_REGINA_BIFS,amiga_addlib,          "ADDLIB" },
+  { EXT_AREXX_BIFS, amiga_addlib,          "ADDLIB" },
 #endif
   { 0,              std_address,           "ADDRESS" },
 #ifdef TRACEMEM
@@ -74,9 +74,6 @@ static const struct function_type functions[] = {
   { 0,              std_chars,             "CHARS" },
   { EXT_REGINA_BIFS,unx_chdir,             "CHDIR" },
   { EXT_REGINA_BIFS,conflict_close,        "CLOSE" },
-#ifdef AREXXIO
-  { EXT_REGINA_BIFS,arexx_close,           "CLOSE" },
-#endif
   { 0,              std_compare,           "COMPARE" },
   { EXT_AREXX_BIFS, arexx_compress,        "COMPRESS" },
   { 0,              std_condition,         "CONDITION" },
@@ -149,7 +146,7 @@ static const struct function_type functions[] = {
   { EXT_AREXX_BIFS, arexx_freespace,       "FREESPACE" },
   { 0,              std_fuzz,              "FUZZ" },
 #if defined(_AMIGA) || defined(__AROS__)
-  { EXT_REGINA_BIFS,amiga_getclip,         "GETCLIP" },
+  { EXT_AREXX_BIFS, amiga_getclip,         "GETCLIP" },
 #endif
 #ifdef HAVE_GCI
   { EXT_REGINA_BIFS,rex_gciprefixchar,     "GCIPREFIXCHAR" },
@@ -181,15 +178,12 @@ static const struct function_type functions[] = {
 #endif
   { 0,              std_min,               "MIN" },
   { EXT_REGINA_BIFS,conflict_open,         "OPEN" },
-#ifdef AREXXIO
-  { EXT_REGINA_BIFS,arexx_open,            "OPEN" },
-#endif
   { 0,              std_overlay,           "OVERLAY" },
   { EXT_REGINA_BIFS,rex_poolid,            "POOLID" },
   { EXT_REGINA_BIFS,unx_popen,             "POPEN" },
   { 0,              std_pos,               "POS" },
 #if defined(_AMIGA) || defined(__AROS__)
-  { EXT_REGINA_BIFS,amiga_pragma,          "PRAGMA" },
+  { EXT_AREXX_BIFS, amiga_pragma,          "PRAGMA" },
 #endif
   { EXT_REGINA_BIFS,unx_putenv,            "PUTENV" },
   { 0,              std_qualify,           "QUALIFY" },
@@ -212,12 +206,12 @@ static const struct function_type functions[] = {
 
   { EXT_AREXX_BIFS, arexx_seek,            "SEEK" },
 #if defined(_AMIGA) || defined(__AROS__)
-  { EXT_REGINA_BIFS,amiga_setclip,         "SETCLIP" },
+  { EXT_AREXX_BIFS, amiga_setclip,         "SETCLIP" },
 #endif
 #if defined(_AMIGA) || defined(__AROS__)
-  { EXT_REGINA_BIFS,amiga_show,            "SHOW" },
+  { EXT_AREXX_BIFS, amiga_show,            "SHOW" },
 #else
-  { EXT_REGINA_BIFS,arexx_show,            "SHOW" },
+  { EXT_AREXX_BIFS, arexx_show,            "SHOW" },
 #endif
   { 0,              std_sign,              "SIGN" },
   { EXT_REGINA_BIFS,cms_sleep,             "SLEEP" },
@@ -227,7 +221,6 @@ static const struct function_type functions[] = {
   { EXT_AREXX_BIFS, arexx_storage,         "STORAGE" },
   { 0,              std_stream,            "STREAM" },
   { 0,              std_strip,             "STRIP" },
-  { EXT_REGINA_BIFS,arexx_storage,         "STORAGE" },
   { 0,              std_substr,            "SUBSTR" },
   { 0,              std_subword,           "SUBWORD" },
   { 0,              std_symbol,            "SYMBOL" },
