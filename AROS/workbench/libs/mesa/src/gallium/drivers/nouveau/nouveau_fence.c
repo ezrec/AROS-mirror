@@ -31,6 +31,10 @@
 #include <sched.h>
 #endif
 
+#ifdef PIPE_OS_AROS
+#include "drm_aros_config.h" /* for MOCK_HARDWARE define */
+#endif
+
 boolean
 nouveau_fence_new(struct nouveau_screen *screen, struct nouveau_fence **fence,
                   boolean emit)
@@ -138,7 +142,13 @@ nouveau_fence_update(struct nouveau_screen *screen, boolean flushed)
 {
    struct nouveau_fence *fence;
    struct nouveau_fence *next = NULL;
+
+#if defined(PIPE_OS_AROS) && defined(MOCK_HARDWARE)
+   /* For purpose of simulation, assume all fences are signalled */
+   u32 sequence = screen->fence.tail->sequence;
+#else
    u32 sequence = screen->fence.update(&screen->base);
+#endif
 
    if (screen->fence.sequence_ack == sequence)
       return;
