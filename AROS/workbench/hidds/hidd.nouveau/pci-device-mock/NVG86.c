@@ -47,7 +47,7 @@ OOP_Object * METHOD(NVG86MockHardware, Root, New)
     SET_ASR_DWORD(hwdata, PCI_BAR0, 0x00100200, 0x00000000); /* r0 */
     SET_ASR_DWORD(hwdata, PCI_BAR0, 0x00100204, 0x01086000); /* r4 */
     SET_ASR_DWORD(hwdata, PCI_BAR0, 0x00100250, 0x00000000); /* rt */
-    SET_ASR_DWORD(hwdata, PCI_BAR0, 0x00001540, 0x00010000); /* ru */
+    SET_ASR_DWORD(hwdata, PCI_BAR0, 0x00001540, 0x01010001); /* ru, NV40_PMC_GRAPH_UNITS */
 
     return o;
 }
