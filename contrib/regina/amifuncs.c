@@ -495,7 +495,8 @@ streng *AmigaSubCom( const tsd_t *TSD, const streng *command, struct envir *envi
    streng *retval = NULL;
 
    msg = createreginamessage( TSD );
-   msg->rm_Action = RXCOMM;
+   /* Always ask for result, wether to set RESULT or not will be decided later */
+   msg->rm_Action = RXCOMM | RXFF_RESULT;
    msg->rm_Args[0] = (IPTR)CreateArgstring( (STRPTR)command->value, command->len );
    fflush(stdout);
    msg->rm_Stdin = Input();
