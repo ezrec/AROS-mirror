@@ -22,7 +22,7 @@
 
 #include <aros/debug.h>
 
-static void StartFile(struct RexxMsg *);
+static LONG StartFile(struct RexxMsg *);
 static void StartFileSlave(struct RexxMsg *);
 static void AddLib(struct RexxMsg *);
 static void RemLib(struct RexxMsg *);
@@ -87,8 +87,13 @@ int main(int argc, char **argv)
                {
                case RXFUNC:
                case RXCOMM:
-                  StartFile(msg);
-                  reply = FALSE;
+                  if (StartFile(msg) < 0)
+                  {
+                     msg->rm_Result1 = RC_ERROR;
+                     msg->rm_Result2 = (IPTR)ERR10_100;
+                  }
+                  else
+                     reply = FALSE;
                   break;
 
                case RXADDCON:
@@ -152,14 +157,14 @@ int main(int argc, char **argv)
    return 0;
 }
 
-static void StartFile(struct RexxMsg *msg)
+static LONG StartFile(struct RexxMsg *msg)
 {
    char text[40];
    
    sprintf(text, "PROGDIR:RexxMast SUBTASK %p", (void*)msg);
   
-#warning FIXME: thread should be used to handle more then one message at a time, not SystemTags
-   SystemTags(text, SYS_Asynch, TRUE, SYS_Input, NULL,
+   /* FIXME: thread should be used to handle more then one message at a time, not SystemTags */
+   return SystemTags(text, SYS_Asynch, TRUE, SYS_Input, NULL,
               SYS_Output, NULL, TAG_DONE
    );
 }
