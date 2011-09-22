@@ -63,3 +63,4 @@ static ULONG Nouveau_Init(LIBBASETYPEPTR LIBBASE)
 ADD2INITLIB(Nouveau_Init, 0);
 
 ADD2LIBS((STRPTR)"gallium.hidd", 7, static struct Library *, GalliumHiddBase);
+ADD2LIBS((STRPTR)"pci.hidd", 0, static struct Library *, PciHiddBase);
