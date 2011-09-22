@@ -676,6 +676,34 @@ diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Da
  #else
     /* K&R classic bitcount.
      *
+diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.11-staging/src/gallium/drivers/nouveau/nouveau_fence.c ./mesa/src/gallium/drivers/nouveau/nouveau_fence.c
+--- /data/deadwood/source/Mesa-7.11-staging/src/gallium/drivers/nouveau/nouveau_fence.c	2011-07-09 03:37:09.000000000 +0200
++++ ./mesa/src/gallium/drivers/nouveau/nouveau_fence.c	2011-09-22 20:01:43.000000000 +0200
+@@ -31,6 +31,10 @@
+ #include <sched.h>
+ #endif
+ 
++#ifdef PIPE_OS_AROS
++#include "drm_aros_config.h" /* for MOCK_HARDWARE define */
++#endif
++
+ boolean
+ nouveau_fence_new(struct nouveau_screen *screen, struct nouveau_fence **fence,
+                   boolean emit)
+@@ -138,7 +142,13 @@
+ {
+    struct nouveau_fence *fence;
+    struct nouveau_fence *next = NULL;
++
++#if defined(PIPE_OS_AROS) && defined(MOCK_HARDWARE)
++   /* For purpose of simulation, assume all fences are signalled */
++   u32 sequence = screen->fence.tail->sequence;
++#else
+    u32 sequence = screen->fence.update(&screen->base);
++#endif
+ 
+    if (screen->fence.sequence_ack == sequence)
+       return;
 diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.11-staging/src/gallium/drivers/nv50/nv50_tgsi_to_nc.c ./mesa/src/gallium/drivers/nv50/nv50_tgsi_to_nc.c
 --- /data/deadwood/source/Mesa-7.11-staging/src/gallium/drivers/nv50/nv50_tgsi_to_nc.c	2011-07-09 03:37:09.000000000 +0200
 +++ ./mesa/src/gallium/drivers/nv50/nv50_tgsi_to_nc.c	2011-09-05 20:03:01.000000000 +0200
