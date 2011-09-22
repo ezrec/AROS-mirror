@@ -366,16 +366,6 @@ static __inline__ int drm_device_is_pcie(struct drm_device *dev)
     return dev->driver->IsPCIE;
 }
 
-static __inline__ void *drm_calloc_large(size_t nmemb, size_t size)
-{
-    return AllocVec(nmemb * size, MEMF_ANY | MEMF_CLEAR);
-}
-
-static __inline__ void drm_free_large(void *ptr)
-{
-    FreeVec(ptr);
-}
-
 /* drm_bufs.c */
 int drm_order(unsigned long size);
 
