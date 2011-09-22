@@ -195,6 +195,7 @@ nv50_dma_push_wait(struct nouveau_channel *chan, int count)
 	uint32_t cnt = 0, prev_get = 0;
 
 	while (chan->dma.ib_free < count) {
+#if !defined(MOCK_HARDWARE)
 		uint32_t get = nvchan_rd32(chan, 0x88);
 		if (get != prev_get) {
 			prev_get = get;
@@ -210,6 +211,11 @@ nv50_dma_push_wait(struct nouveau_channel *chan, int count)
 		chan->dma.ib_free = get - chan->dma.ib_put;
 		if (chan->dma.ib_free <= 0)
 			chan->dma.ib_free += chan->dma.ib_max;
+#else
+		(void)cnt;(void)prev_get;
+		chan->dma.ib_put = 0;
+		chan->dma.ib_free = chan->dma.ib_max - chan->dma.ib_put;
+#endif
 	}
 
 	return 0;
@@ -226,6 +232,7 @@ nv50_dma_wait(struct nouveau_channel *chan, int slots, int count)
 		return ret;
 
 	while (chan->dma.free < count) {
+#if !defined(MOCK_HARDWARE)
 		int get = READ_GET(chan, &prev_get, &cnt);
 		if (unlikely(get < 0)) {
 			if (get == -EINVAL)
@@ -253,6 +260,12 @@ nv50_dma_wait(struct nouveau_channel *chan, int slots, int count)
 		}
 
 		chan->dma.free = get - chan->dma.cur - 1;
+#else
+		(void)cnt;(void)prev_get;
+		chan->dma.cur = 0;
+		chan->dma.put = 0;
+		chan->dma.free = chan->dma.max - chan->dma.cur - 1;
+#endif
 	}
 
 	return 0;
@@ -268,6 +281,7 @@ nouveau_dma_wait(struct nouveau_channel *chan, int slots, int size)
 		return nv50_dma_wait(chan, slots, size);
 
 	while (chan->dma.free < size) {
+#if !defined(MOCK_HARDWARE)
 		get = READ_GET(chan, &prev_get, &cnt);
 		if (unlikely(get == -EBUSY))
 			return -EBUSY;
@@ -336,6 +350,13 @@ nouveau_dma_wait(struct nouveau_channel *chan, int slots, int size)
 		 * here, so this is safe.
 		 */
 		chan->dma.free = get - chan->dma.cur - 1;
+#else
+		(void)get;(void)cnt;(void)prev_get;
+		chan->dma.cur  =
+		chan->dma.put  = NOUVEAU_DMA_SKIPS;
+
+		chan->dma.free = chan->dma.max - chan->dma.cur - 1;
+#endif
 	}
 
 	return 0;
