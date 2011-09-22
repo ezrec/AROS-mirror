@@ -7,25 +7,15 @@
 #include <exec/ports.h>
 #include <rexx/storage.h>
 
-struct RxsLib *RexxSysBase;
-
 int main(void)
 {
    struct RexxMsg *msg;
    struct MsgPort *port;
 
-   RexxSysBase = (struct RxsLib *)OpenLibrary("rexxsyslib.library", 44);
-   if (RexxSysBase == NULL)
-   {
-      puts("Error opening rexxsyslib.library");
-      return 20;
-   }
-    
    port = CreatePort("TEST", 0);
    if (port == NULL)
    {
       puts("Error creating TEST port");
-      CloseLibrary((struct Library *)RexxSysBase);
       return 20;
    }
     
@@ -47,7 +37,6 @@ int main(void)
    }
    ReplyMsg((struct Message *)msg);
    DeletePort(port);
-   CloseLibrary((struct Library *)RexxSysBase);
 
    return 0;
 }

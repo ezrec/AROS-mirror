@@ -17,10 +17,10 @@ DEMODIR := $(AROS_TESTS)/rexx
 
 %build_prog mmake=contrib-regina-rexxmast-arosc \
     progname=RexxMast targetdir=$(AROS_C) \
-    files=RexxMast uselibs="regina_shared amiga arosc"
+    files=RexxMast uselibs="regina_shared rexxsyslib"
 
 %build_progs mmake=contrib-regina-rexxmast-reginac \
     files="sendrexxmsg listen4msg" targetdir=$(DEMODIR) \
-    uselibs="amiga arosc"
+    uselibs="rexxsyslib"
     
 %common

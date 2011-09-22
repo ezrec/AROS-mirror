@@ -7,26 +7,16 @@
 #include <exec/ports.h>
 #include <rexx/storage.h>
 
-struct RxsLib *RexxSysBase;
-
 int main(void)
 {
    struct RexxMsg *msg, *reply;
    struct MsgPort *port, *replyport;
    const char *command = "'say hello everybody'";
     
-   RexxSysBase = (struct RxsLib *)OpenLibrary("rexxsyslib.library", 44);
-   if (RexxSysBase == NULL)
-   {
-      puts("Error opening rexxsyslib.library");
-      return 20;
-   }
-    
    port = FindPort("REXX");
    if (port == NULL)
    {
       puts("REXX port not found");
-      CloseLibrary((struct Library *)RexxSysBase);
       return 20;
    }
 
@@ -34,7 +24,6 @@ int main(void)
    if (replyport == NULL)
    {
       puts("Could not create replyport");
-      CloseLibrary((struct Library *)RexxSysBase);
       return 20;
    }
     
@@ -43,7 +32,6 @@ int main(void)
    {
       puts("Error creating RexxMsg");
       DeletePort(replyport);
-      CloseLibrary((struct Library *)RexxSysBase);
       return 20;
    }
    msg->rm_Action = RXCOMM | RXFF_RESULT;
@@ -59,7 +47,6 @@ int main(void)
    DeleteArgstring((STRPTR)msg->rm_Args[0]);
    DeleteRexxMsg(msg);
    DeletePort(replyport);
-   CloseLibrary((struct Library *)RexxSysBase);
 
    if (reply != msg)
    {

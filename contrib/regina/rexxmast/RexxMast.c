@@ -22,10 +22,6 @@
 
 #include <aros/debug.h>
 
-struct Library *ReginaBase;
-struct RxsLib *RexxSysBase;
-struct IntuitionBase *IntuitionBase;
-
 static void StartFile(struct RexxMsg *);
 static void StartFileSlave(struct RexxMsg *);
 static void AddLib(struct RexxMsg *);
@@ -48,23 +44,6 @@ int main(int argc, char **argv)
       "OK"
    };
 
-   IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library", 0);
-   RexxSysBase = (struct RxsLib *)OpenLibrary("rexxsyslib.library", 44);
-   if (RexxSysBase == NULL)
-   {
-      es.es_TextFormat = "Error opening rexxsyslib.library V44";
-      EasyRequest(NULL, &es, NULL);
-      CloseLibrary((struct Library *)RexxSysBase);
-      return 20;
-   }
-   ReginaBase = OpenLibrary("regina.library", 2);
-   if (ReginaBase == NULL)
-   {
-      es.es_TextFormat = "Error opening regina.library V2";
-      EasyRequest(NULL, &es, NULL);
-      return 20;
-   }
-
    if (argc==3 && strcmp("SUBTASK", argv[1])==0)
    {
       struct RexxMsg *msg;
@@ -73,9 +52,6 @@ int main(int argc, char **argv)
       StartFileSlave(msg);
       ReplyMsg((struct Message *)msg);
 
-      CloseLibrary(ReginaBase);
-      CloseLibrary((struct Library *)RexxSysBase);
-      CloseLibrary((struct Library *)IntuitionBase);
       return 0;
    }
 
@@ -172,9 +148,6 @@ int main(int argc, char **argv)
    } while(!done);
    
    DeletePort(port);
-   CloseLibrary(ReginaBase);
-   CloseLibrary((struct Library *)RexxSysBase);
-   CloseLibrary((struct Library *)IntuitionBase);
    
    return 0;
 }

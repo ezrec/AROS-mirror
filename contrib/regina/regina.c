@@ -41,44 +41,16 @@
 #endif
 #endif
 
-#if !(defined(__AROS__) || defined(_AMIGA)) 
 #include "rexxsaa.h"
 #define DONT_TYPEDEF_PFN
 #ifndef RXLIB  /* need __regina_faked_main which is known with RXLIB only */
 # define RXLIB
 #endif
 #include "rexx.h"
-#else
-#include <exec/exec.h>
-#include <exec/libraries.h>
-#include <proto/exec.h>
-#include <proto/regina.h>
-
-#include <stdio.h>
-#include <stdlib.h>
-#endif
-
-struct Library *ReginaBase;
-
-#if defined(__AROS__) || defined(_AMIGA)
-void closelib(void)
-{
-  CloseLibrary(ReginaBase);
-}
-#endif
 
 int main(int argc, char *argv[])
 {
    int rc;
-
-#if defined(__AROS__) || defined(_AMIGA)
-   if (!(ReginaBase=OpenLibrary("regina.library", 0))) {
-      puts("Error opening regina.library");
-   }
-  atexit(closelib);
-#endif
-
    rc = __regina_faked_main(argc,argv);
-
    return(rc);
 }
