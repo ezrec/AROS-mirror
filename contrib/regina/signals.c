@@ -223,7 +223,7 @@ signal_handler regina_signal(int signum,__sighandler_t action)
 #elif defined(__AROS__)
 signal_handler regina_signal(int signum,signal_handler action)
 {
-  return SIG_ERR;
+   return SIG_ERR;
 }
 #else
 signal_handler regina_signal(int signum,signal_handler action)

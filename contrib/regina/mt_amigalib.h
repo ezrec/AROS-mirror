@@ -71,9 +71,9 @@ void AmigaUnlockSemaphore(struct SignalSemaphore *);
 #include <exec/nodes.h>
 
 typedef struct _tsd_node_t {
-  struct MinNode node;
-  struct Task *task;
-  tsd_t *TSD;
+   struct MinNode node;
+   struct Task *task;
+   tsd_t *TSD;
 } tsd_node_t;
 
 extern struct MinList *__regina_tsdlist;

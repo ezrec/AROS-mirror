@@ -16,7 +16,7 @@
 APTR __regina_semaphorepool;
 
 typedef struct _mt_tsd_t {
-  APTR mempool;
+   APTR mempool;
 } mt_tsd_t;
 
 
@@ -31,8 +31,8 @@ static void *MTMalloc(const tsd_t *TSD,size_t size)
    if ( mem == NULL )
       return NULL;
 
-  *((size_t*)mem)=size;
-  return (void *)(((char *)mem)+sizeof(size_t));
+   *((size_t*)mem)=size;
+   return (void *)(((char *)mem)+sizeof(size_t));
 }
 
 /* Lowest level memory deallocation function for normal circumstances. */
@@ -52,18 +52,18 @@ static void MTExit(int code)
 
 static void cleanup(int dummy, void *ptr)
 {
-  tsd_node_t *node = (tsd_node_t *)ptr;
-  mt_tsd_t *mt = (mt_tsd_t *)node->TSD->mt_tsd;
+   tsd_node_t *node = (tsd_node_t *)ptr;
+   mt_tsd_t *mt = (mt_tsd_t *)node->TSD->mt_tsd;
+   
+   DeletePool( mt->mempool );
 
-  DeletePool( mt->mempool );
-
-  node->TSD = NULL; /* Node is cleared */
+   node->TSD = NULL; /* Node is cleared */
 }
 
 int IfcReginaCleanup( VOID )
 {
-    /* Do nothing, currently cleanup is done through on_exit function */
-    return 1;
+   /* Do nothing, currently cleanup is done through on_exit function */
+   return 1;
 }
 
 tsd_t *ReginaInitializeThread(void)
@@ -127,52 +127,52 @@ tsd_t *ReginaInitializeThread(void)
 
 void AmigaLockSemaphore(struct SignalSemaphore **semaphoreptr)
 {
-  if (*semaphoreptr == NULL)
-  {
-    Forbid();
+   if (*semaphoreptr == NULL)
+   {
+      Forbid();
 
-    if (*semaphoreptr == NULL)
-    {
-      *semaphoreptr = AllocPooled (__regina_semaphorepool, sizeof(struct SignalSemaphore));
-      InitSemaphore(*semaphoreptr);
-    }
+      if (*semaphoreptr == NULL)
+      {
+         *semaphoreptr = AllocPooled (__regina_semaphorepool, sizeof(struct SignalSemaphore));
+         InitSemaphore(*semaphoreptr);
+      }
 
-    Permit();
-  }
+      Permit();
+   }
 
-  ObtainSemaphore(*semaphoreptr);
+   ObtainSemaphore(*semaphoreptr);
 }
 
 void AmigaUnlockSemaphore(struct SignalSemaphore *semaphore)
 {
-  assert(semaphore!=NULL);
-  ReleaseSemaphore(semaphore);
+   assert(semaphore!=NULL);
+   ReleaseSemaphore(semaphore);
 }
 
 
 tsd_t *__regina_get_tsd(void)
 {
-  struct Task *thistask = FindTask(NULL);
-  tsd_node_t *node;
+   struct Task *thistask = FindTask(NULL);
+   tsd_node_t *node;
 
-  node = (tsd_node_t *)GetHead(__regina_tsdlist);
-  while (node!=NULL && node->task!=thistask)
-    node = (tsd_node_t *)GetSucc(node);
+   node = (tsd_node_t *)GetHead(__regina_tsdlist);
+   while (node!=NULL && node->task!=thistask)
+      node = (tsd_node_t *)GetSucc(node);
   
-  if (node==NULL)
-  {
-    /* taskdata not found */
-    node = (tsd_node_t *)AllocPooled(__regina_semaphorepool, sizeof(tsd_node_t));
-    node->task = thistask;
-    node->TSD = ReginaInitializeThread();
-    AddTail((struct List *)__regina_tsdlist, (struct Node *)node);
-    on_exit(cleanup, node);
-  }
-  else if (node->TSD==NULL) /* Was MTExit called on this task ? */
-  {
-    node->TSD = ReginaInitializeThread();
-    on_exit(cleanup, node);
-  }
+   if (node==NULL)
+   {
+      /* taskdata not found */
+      node = (tsd_node_t *)AllocPooled(__regina_semaphorepool, sizeof(tsd_node_t));
+      node->task = thistask;
+      node->TSD = ReginaInitializeThread();
+      AddTail((struct List *)__regina_tsdlist, (struct Node *)node);
+      on_exit(cleanup, node);
+   }
+   else if (node->TSD==NULL) /* Was MTExit called on this task ? */
+   {
+      node->TSD = ReginaInitializeThread();
+      on_exit(cleanup, node);
+   }
 
-  return node->TSD;
+   return node->TSD;
 }
