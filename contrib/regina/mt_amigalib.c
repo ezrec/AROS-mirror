@@ -11,6 +11,9 @@
 #include <proto/alib.h>
 #include <exec/memory.h>
 
+#define DEBUG 0
+#include <aros/debug.h>
+
 #include <assert.h>
 
 APTR __regina_semaphorepool;
@@ -47,6 +50,8 @@ static void MTFree(const tsd_t *TSD,void *chunk)
 /* Lowest level exit handler. Use this indirection to prevent errors. */
 static void MTExit(int code)
 {
+   D(bug("[mt_amigalib::MTExit] exiting with code=%d\n", code));
+
    exit(code);
 }
 
@@ -54,7 +59,9 @@ static void cleanup(int dummy, void *ptr)
 {
    tsd_node_t *node = (tsd_node_t *)ptr;
    mt_tsd_t *mt = (mt_tsd_t *)node->TSD->mt_tsd;
-   
+
+   D(bug("[mt_amigalib::cleanup] node=%p\n"));
+
    DeletePool( mt->mempool );
 
    node->TSD = NULL; /* Node is cleared */
@@ -72,7 +79,9 @@ tsd_t *ReginaInitializeThread(void)
 
    tsd_t *__regina_tsd = malloc(sizeof(tsd_t));
    mt_tsd_t *mt;
-  
+
+   D(bug("[mt_amigalib::ReginaInitializeThread] TSD=%p\n", __regina_tsd));
+
    /* Default all values to zero        */
    memset(__regina_tsd,0,sizeof(tsd_t));
    __regina_tsd->MTMalloc = MTMalloc;
@@ -84,6 +93,8 @@ tsd_t *ReginaInitializeThread(void)
    OK &= ( mt->mempool = CreatePool(MEMF_PUBLIC, 8192, 1024) ) != NULL;
 
    OK &= init_memory(__regina_tsd);     /* Initialize the memory module FIRST*/
+
+   D(bug("[mt_amigalib::ReginaInitializeThread] TSD->mem_tsd=%p\n", __regina_tsd->mem_tsd));
 
    /* Without the initial memory we don't have ANY chance! */
    if (!OK)
@@ -155,10 +166,14 @@ tsd_t *__regina_get_tsd(void)
    struct Task *thistask = FindTask(NULL);
    tsd_node_t *node;
 
+   D(bug("[mt_amigalib::__regina_get_tsd] thistask=%p\n", thistask));
+
    node = (tsd_node_t *)GetHead(__regina_tsdlist);
    while (node!=NULL && node->task!=thistask)
       node = (tsd_node_t *)GetSucc(node);
   
+   D(bug("[mt_amigalib::__regina_get_tsd] node=%p\n", node));
+
    if (node==NULL)
    {
       /* taskdata not found */
@@ -167,11 +182,13 @@ tsd_t *__regina_get_tsd(void)
       node->TSD = ReginaInitializeThread();
       AddTail((struct List *)__regina_tsdlist, (struct Node *)node);
       on_exit(cleanup, node);
+      D(bug("[mt_amigalib::__regina_get_tsd] new node=%p, TSD=%p\n", node, node->TSD));
    }
    else if (node->TSD==NULL) /* Was MTExit called on this task ? */
    {
       node->TSD = ReginaInitializeThread();
       on_exit(cleanup, node);
+      D(bug("[mt_amigalib::__regina_get_tsd] new TSD=%p\n", node->TSD));
    }
 
    return node->TSD;

@@ -1,10 +1,11 @@
 /*
-  Copyright © 1995-2006, The AROS Development Team. All rights reserved.
+  Copyright © 1995-2011, The AROS Development Team. All rights reserved.
   $Id$
 
   Desc: Regina code for initialization during opening and closing of the library
 */
 
+#define DEBUG 0
 #include <exec/types.h>
 #include <exec/memory.h>
 #include <aros/libcall.h>
