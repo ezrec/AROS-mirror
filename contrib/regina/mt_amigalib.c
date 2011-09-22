@@ -81,9 +81,9 @@ tsd_t *ReginaInitializeThread(void)
 
    OK = ( __regina_tsd->mt_tsd = malloc(sizeof(mt_tsd_t))) != NULL;
    mt = (mt_tsd_t *)__regina_tsd->mt_tsd;
-   OK |= ( mt->mempool = CreatePool(MEMF_PUBLIC, 8192, 1024) ) != NULL;
+   OK &= ( mt->mempool = CreatePool(MEMF_PUBLIC, 8192, 1024) ) != NULL;
 
-   OK |= init_memory(__regina_tsd);     /* Initialize the memory module FIRST*/
+   OK &= init_memory(__regina_tsd);     /* Initialize the memory module FIRST*/
 
    /* Without the initial memory we don't have ANY chance! */
    if (!OK)
