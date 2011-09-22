@@ -2146,6 +2146,7 @@ proclevel newlevel( tsd_t *TSD, proclevel oldlevel )
          set_options_flag( level, EXT_QUEUES_301, DEFAULT_QUEUES_301 );
          set_options_flag( level, EXT_HALT_ON_EXT_CALL_FAIL, DEFAULT_HALT_ON_EXT_CALL_FAIL );
          set_options_flag( level, EXT_SINGLE_INTERPRETER, DEFAULT_SINGLE_INTERPRETER );
+         set_options_flag( level, EXT_RESULTS, DEFAULT_RESULTS );
 
          if ( ( str = mygetenv( TSD, "REGINA_OPTIONS", NULL, 0 ) ) != NULL )
          {

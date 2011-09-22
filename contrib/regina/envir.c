@@ -634,6 +634,15 @@ void post_process_system_call( tsd_t *TSD, const streng *cmd,
       rs = 1;
    set_reserved_value( TSD, POOL0_RS, NULL, rs, VFLAG_NUM );
 
+   /* ARexx OPTIONS RESULTS */
+   if ( get_options_flag( TSD->currlevel, EXT_RESULTS ) )
+   {
+      if ( rc_code == 0 )
+         set_reserved_value( TSD, POOL0_RESULT, Str_dupTSD( rc_value ), 0, VFLAG_STR );
+      else
+         set_reserved_value( TSD, POOL0_RESULT, NULL, 0, VFLAG_NONE );
+   }
+
    if ( rc_code )
    {
       traceerror( TSD, thisptr, rc_code );

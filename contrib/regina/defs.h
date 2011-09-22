@@ -381,6 +381,7 @@
 #define EXT_QUEUES_301                      20
 #define EXT_HALT_ON_EXT_CALL_FAIL           21
 #define EXT_SINGLE_INTERPRETER              22
+#define EXT_RESULTS                         23
 
 /*
  * Regina 3.1 introduced "pool 0" variables. There exist only some and they

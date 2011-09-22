@@ -718,6 +718,10 @@
  * Indicates if a new thread calls an API function the call occurs in the current (and only one) instance of an interpreter
  */
 #define DEFAULT_SINGLE_INTERPRETER      0
+/*
+ * ARexx OPTIONS RESULTS default to off
+ */
+#define DEFAULT_RESULTS                 0
 
 /*
  * The FILE_SEPARATOR is one character, and defines the char that separates
