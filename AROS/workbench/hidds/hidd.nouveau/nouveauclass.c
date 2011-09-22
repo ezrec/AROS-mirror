@@ -596,14 +596,12 @@ OOP_Object * METHOD(Nouveau, Hidd_Gfx, NewBitMap)
     return (OOP_Object *)OOP_DoSuperMethod(cl, o, (OOP_Msg)msg);
 }
 
-#define IS_NOUVEAU_CLASS(x) (x == SD(cl)->bmclass)
-
 VOID METHOD(Nouveau, Hidd_Gfx, CopyBox)
 {
     OOP_Class * srcclass = OOP_OCLASS(msg->src);
     OOP_Class * destclass = OOP_OCLASS(msg->dest);
     
-    if (IS_NOUVEAU_CLASS(srcclass) && IS_NOUVEAU_CLASS(destclass))
+    if (IS_NOUVEAU_BM_CLASS(srcclass) && IS_NOUVEAU_BM_CLASS(destclass))
     {
         /* FIXME: add checks for pixel format, etc */
         struct HIDDNouveauBitMapData * srcdata = OOP_INST_DATA(srcclass, msg->src);

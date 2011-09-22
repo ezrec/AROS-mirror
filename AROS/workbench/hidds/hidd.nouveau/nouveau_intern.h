@@ -229,6 +229,8 @@ LIBBASETYPE
 #define MAP_BUFFER                  { if (!bmdata->bo->map) nouveau_bo_map(bmdata->bo, NOUVEAU_BO_RDWR); }
 #define MAP_BUFFER_BM(bmdata)       { if (!(bmdata)->bo->map) nouveau_bo_map((bmdata)->bo, NOUVEAU_BO_RDWR); }
 
+#define IS_NOUVEAU_BM_CLASS(x)      ((x) == SD(cl)->bmclass)
+
 #define writel(val, addr)           (*(volatile ULONG*)(addr) = (val))
 #define readl(addr)                 (*(volatile ULONG*)(addr))
 #define writew(val, addr)           (*(volatile UWORD*)(addr) = (val))

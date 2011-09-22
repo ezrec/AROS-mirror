@@ -206,7 +206,12 @@ VOID METHOD(NouveauGallium, Hidd_Gallium, DisplayResource)
     struct CardData * carddata = &(SD(cl)->carddata);
     struct HIDDNouveauBitMapData srcdata;
     OOP_Object * bm = HIDD_BM_OBJ(msg->bitmap);
-    struct HIDDNouveauBitMapData * dstdata = OOP_INST_DATA(OOP_OCLASS(bm), bm);
+    struct HIDDNouveauBitMapData * dstdata;
+
+    if (!IS_NOUVEAU_BM_CLASS(OOP_OCLASS(bm))) /* Check if bitmap is really nouveau bitmap */
+        return;
+
+    dstdata = OOP_INST_DATA(OOP_OCLASS(bm), bm);
 
     if (!HIDDNouveauWrapResource(carddata, msg->resource, &srcdata))
         return;
