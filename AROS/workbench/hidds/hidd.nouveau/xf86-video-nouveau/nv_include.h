@@ -74,6 +74,9 @@ Bool NVAccelInitNV50TCL(ScrnInfoPtr pScrn);
 Bool NVAccelInitNV40TCL(ScrnInfoPtr pScrn);
 Bool NVAccelInitNV30TCL(ScrnInfoPtr pScrn);
 Bool NVAccelInitNV10TCL(ScrnInfoPtr pScrn);
+Bool NVAccelInitM2MF_NVC0(ScrnInfoPtr pScrn);
+Bool NVAccelInit2D_NVC0(ScrnInfoPtr pScrn);
+Bool NVAccelInit3D_NVC0(ScrnInfoPtr pScrn);
 Bool nv50_style_tiled_pixmap(PixmapPtr ppix, ScrnInfoPtr pScrn);
 
 

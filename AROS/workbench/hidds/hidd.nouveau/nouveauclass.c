@@ -467,29 +467,21 @@ OOP_Object * METHOD(Nouveau, Root, New)
                 carddata->IsPCIE = TRUE;
             else
                 carddata->IsPCIE = FALSE;
-            
 
-            if (carddata->architecture != NV_ARCH_C0)
+            /* Allocate dma channel */
+            ret = nouveau_channel_alloc(carddata->dev, NvDmaFB, NvDmaTT, 
+                24 * 1024, &carddata->chan);
+            if (ret < 0)
             {
-                /* Allocate dma channel */
-                ret = nouveau_channel_alloc(carddata->dev, NvDmaFB, NvDmaTT, 
-                    24 * 1024, &carddata->chan);
-                if (ret < 0)
-                {
-                    /* TODO: Check ret, how to handle ? */
-                }
-
-                /* Initialize acceleration objects */
-            
-                ret = HIDDNouveauAccelCommonInit(carddata);
-                if (ret < 0)
-                {
-                    /* TODO: Check ret, how to handle ? */
-                }
+                /* TODO: Check ret, how to handle ? */
             }
-            else
+
+            /* Initialize acceleration objects */
+        
+            ret = HIDDNouveauAccelCommonInit(carddata);
+            if (ret < 0)
             {
-               /* TODO:NVC0: Implement acceleration */
+                /* TODO: Check ret, how to handle ? */
             }
 
             /* Allocate buffer object for cursor */

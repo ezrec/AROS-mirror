@@ -85,6 +85,7 @@ XF86_NOUVEAU_SOURCES = \
             nv10_exa \
             nv50_exa \
             nouveau_exa \
+            nvc0_accel \
 
 GALLIUM_PATH = $(SRCDIR)/workbench/libs/mesa/src/gallium/
 

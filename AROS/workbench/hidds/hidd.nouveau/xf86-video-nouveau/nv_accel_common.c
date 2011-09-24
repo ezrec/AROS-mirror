@@ -683,25 +683,19 @@ NVAccelCommonInit(ScrnInfoPtr pScrn)
 	if (pNv->Architecture < NV_ARCH_C0) {
 		INIT_CONTEXT_OBJECT(2D_NV50);
 	} else {
-#if !defined(__AROS__)
 		INIT_CONTEXT_OBJECT(2D_NVC0);
-#endif
 	}
 
 	if (pNv->Architecture < NV_ARCH_C0)
 		INIT_CONTEXT_OBJECT(MemFormat);
-#if !defined(__AROS__)
 	else
 		INIT_CONTEXT_OBJECT(M2MF_NVC0);
-#endif
 
 	/* 3D init */
 	switch (pNv->Architecture) {
-#if !defined(__AROS__)
 	case NV_ARCH_C0:
 		INIT_CONTEXT_OBJECT(3D_NVC0);
 		break;
-#endif
 	case NV_ARCH_50:
 		INIT_CONTEXT_OBJECT(NV50TCL);
 		break;
