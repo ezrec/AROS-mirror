@@ -418,7 +418,7 @@ int drm_irq_install(struct drm_device *dev)
     if (dev->driver->irq_preinstall)
         dev->driver->irq_preinstall(dev);
 
-    dev->IntHandler = (HIDDT_IRQ_Handler *)AllocVec(sizeof(HIDDT_IRQ_Handler), MEMF_PUBLIC | MEMF_CLEAR);
+    dev->IntHandler = (HIDDT_IRQ_Handler *)HIDDNouveauAlloc(sizeof(HIDDT_IRQ_Handler));
     
     if (dev->IntHandler)
     {
@@ -550,7 +550,7 @@ int drm_irq_uninstall(struct drm_device *dev)
 
         if (OOP_DoMethod((OOP_Object *)o, (OOP_Msg)msg))
         {
-            FreeVec(dev->IntHandler);
+            HIDDNouveauFree(dev->IntHandler);
             dev->IntHandler = NULL;
             retval = 0;
         }

@@ -19,13 +19,13 @@
 #define readw(addr)                     (*(volatile UWORD*)(addr))
 #define writeb(val, addr)               (*(volatile UBYTE*)(addr) = (val))
 #define readb(addr)                     (*(volatile UBYTE*)(addr))
-#define kzalloc(size, flags)            AllocVec(size, MEMF_ANY | MEMF_CLEAR)
-#define kcalloc(count, size, flags)     AllocVec((count) * (size), MEMF_ANY | MEMF_CLEAR);
-#define kmalloc(size, flags)            AllocVec(size, MEMF_ANY)
-#define vmalloc_user(size)              AllocVec(size, MEMF_ANY | MEMF_CLEAR)
-#define vmalloc(size)                   AllocVec(size, MEMF_ANY)
-#define kfree(objp)                     FreeVec(objp)
-#define vfree(objp)                     FreeVec(objp)
+#define kzalloc(size, flags)            HIDDNouveauAlloc(size)
+#define kcalloc(count, size, flags)     HIDDNouveauAlloc((count) * (size))
+#define kmalloc(size, flags)            HIDDNouveauAlloc(size)
+#define vmalloc_user(size)              HIDDNouveauAlloc(size)
+#define vmalloc(size)                   HIDDNouveauAlloc(size)
+#define kfree(objp)                     HIDDNouveauFree(objp)
+#define vfree(objp)                     HIDDNouveauFree(objp)
 #define capable(p)                      TRUE
 #define roundup(x, y)                   ((((x) + ((y) - 1)) / (y)) * (y))
 #define round_up(x, y)                  roundup(x, y)
@@ -62,6 +62,8 @@
 #define DIV_ROUND_UP(x, y)              (((x) + (y) - 1) / (y))
 
 
+APTR HIDDNouveauAlloc(ULONG size);
+VOID HIDDNouveauFree(APTR memory);
 
 void iowrite32(u32 val, void * addr);
 unsigned int ioread32(void * addr);
@@ -346,14 +348,14 @@ void agp_flush_chipset(struct agp_bridge_data * bridge);
 #define io_mapping_unmap_atomic(address)
 static inline struct io_mapping * io_mapping_create_wc(resource_size_t base, unsigned long size)
 {
-    struct io_mapping * mapping = AllocVec(sizeof(struct io_mapping), MEMF_PUBLIC | MEMF_CLEAR);
+    struct io_mapping * mapping = HIDDNouveauAlloc(sizeof(struct io_mapping));
     mapping->address = (IPTR)ioremap(base, size);
     return mapping;
 }
 static inline void io_mapping_free(struct io_mapping *mapping)
 {
     iounmap((APTR)mapping->address);
-    FreeVec(mapping);
+    HIDDNouveauFree(mapping);
 }
 
 /* I2C handling */

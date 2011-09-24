@@ -129,11 +129,11 @@ static struct TagItem * HIDDNouveauCreateSyncTagsFromConnector(OOP_Class * cl, d
         return NULL;
         
     /* Allocate enough structures */
-    syncs = AllocVec(sizeof(struct TagItem) * modescount, MEMF_ANY);
+    syncs = HIDDNouveauAlloc(sizeof(struct TagItem) * modescount);
     
     for (i = 0; i < modescount; i++)
     {
-        struct TagItem * sync = AllocVec(sizeof(struct TagItem) * 15, MEMF_ANY);
+        struct TagItem * sync = HIDDNouveauAlloc(sizeof(struct TagItem) * 15);
         LONG j = 0;
         
         drmModeModeInfoPtr mode = &connector->modes[i];
@@ -155,7 +155,7 @@ static struct TagItem * HIDDNouveauCreateSyncTagsFromConnector(OOP_Class * cl, d
         sync[j].ti_Tag = aHidd_Sync_VMax;           sync[j++].ti_Data = MAX_BITMAP_HEIGHT;
         
         /* Name */
-        STRPTR syncname = AllocVec(32, MEMF_ANY | MEMF_CLEAR);
+        STRPTR syncname = HIDDNouveauAlloc(32);
         sprintf(syncname, "NV:%dx%d@%d", mode->hdisplay, mode->vdisplay, mode->vrefresh);
         
         sync[j].ti_Tag = aHidd_Sync_Description;   sync[j++].ti_Data = (IPTR)syncname;

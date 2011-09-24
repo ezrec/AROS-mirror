@@ -166,17 +166,17 @@ ADD2EXIT(deinit_timer, 5);
 void __free_page(struct page * p)
 {
     if (p->allocated_buffer)
-        FreeVec(p->allocated_buffer);
+        HIDDNouveauFree(p->allocated_buffer);
     p->allocated_buffer = NULL;
     p->address = NULL;
-    FreeVec(p);
+    HIDDNouveauFree(p);
 }
 
 struct page * create_page_helper()
 {
     struct page * p;
-    p = AllocVec(sizeof(*p), MEMF_PUBLIC | MEMF_CLEAR);
-    p->allocated_buffer = AllocVec(PAGE_SIZE + PAGE_SIZE - 1, MEMF_PUBLIC | MEMF_CLEAR);
+    p = HIDDNouveauAlloc(sizeof(*p));
+    p->allocated_buffer = HIDDNouveauAlloc(PAGE_SIZE + PAGE_SIZE - 1);
     p->address = PAGE_ALIGN(p->allocated_buffer);
     return p;
 }
@@ -188,7 +188,7 @@ int idr_pre_get_internal(struct idr *idp)
     {
         /* Create new table */
         ULONG newsize = idp->size ? idp->size * 2 : 128;
-        IPTR * newtab = AllocVec(newsize * sizeof(IPTR), MEMF_PUBLIC | MEMF_CLEAR);
+        IPTR * newtab = HIDDNouveauAlloc(newsize * sizeof(IPTR));
         
         if (newtab == NULL)
             return 0;
@@ -200,7 +200,7 @@ int idr_pre_get_internal(struct idr *idp)
             CopyMem(idp->pointers, newtab, idp->size * sizeof(IPTR));
             
             /* Release old table */
-            FreeVec(idp->pointers);
+            HIDDNouveauFree(idp->pointers);
         }
         
         idp->pointers = newtab;
@@ -479,8 +479,8 @@ void agp_backend_release(struct agp_bridge_data * bridge)
 
 void agp_free_memory(struct agp_memory * mem)
 {
-    FreeVec(mem->pages);
-    FreeVec(mem);
+    HIDDNouveauFree(mem->pages);
+    HIDDNouveauFree(mem);
 }
 
 struct agp_memory *agp_allocate_memory(struct agp_bridge_data * bridge, 
@@ -492,8 +492,8 @@ struct agp_memory *agp_allocate_memory(struct agp_bridge_data * bridge,
         return NULL;
     }
     
-    struct agp_memory * mem = AllocVec(sizeof(struct agp_memory), MEMF_PUBLIC | MEMF_CLEAR);
-    mem->pages = AllocVec(sizeof(struct page *) * num_pages, MEMF_PUBLIC | MEMF_CLEAR);
+    struct agp_memory * mem = HIDDNouveauAlloc(sizeof(struct agp_memory));
+    mem->pages = HIDDNouveauAlloc(sizeof(struct page *) * num_pages);
     mem->page_count = 0; /* Not a typo, will be filled later */
     mem->type = type;
     mem->is_flushed = FALSE;
@@ -550,8 +550,7 @@ struct agp_bridge_data * agp_find_bridge(void * dev)
         {
             IPTR mode = 0, aperbase = 0, apersize = 0;
 
-            global_agp_bridge = AllocVec(sizeof(struct agp_bridge_data), 
-                                                MEMF_PUBLIC | MEMF_CLEAR);
+            global_agp_bridge = HIDDNouveauAlloc(sizeof(struct agp_bridge_data));
             global_agp_bridge->agpbridgedevice = (IPTR)bridgedevice;
 
             OOP_GetAttr(bridgedevice, aHidd_AGPBridgeDevice_Mode, (APTR)&mode);

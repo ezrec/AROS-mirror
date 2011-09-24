@@ -56,23 +56,23 @@ static int ttm_tt_swapin(struct ttm_tt *ttm);
 static void ttm_tt_alloc_page_directory(struct ttm_tt *ttm)
 {
 	ttm->pages = drm_calloc_large(ttm->num_pages, sizeof(*ttm->pages));
-#if defined(__AROS__)
-    ttm->allocated_buffer = AllocVec((ttm->num_pages * PAGE_SIZE) + PAGE_SIZE - 1, MEMF_PUBLIC | MEMF_CLEAR);
-#endif
 	ttm->dma_address = drm_calloc_large(ttm->num_pages,
 					    sizeof(*ttm->dma_address));
+#if defined(__AROS__)
+	ttm->allocated_buffer = HIDDNouveauAlloc((ttm->num_pages * PAGE_SIZE) + PAGE_SIZE - 1);
+#endif
 }
 
 static void ttm_tt_free_page_directory(struct ttm_tt *ttm)
 {
 	drm_free_large(ttm->pages);
 	ttm->pages = NULL;
-#if defined(__AROS__)
-    FreeVec(ttm->allocated_buffer);
-    ttm->allocated_buffer = NULL;
-#endif
 	drm_free_large(ttm->dma_address);
 	ttm->dma_address = NULL;
+#if defined(__AROS__)
+	HIDDNouveauFree(ttm->allocated_buffer);
+	ttm->allocated_buffer = NULL;
+#endif
 }
 
 static void ttm_tt_free_user_pages(struct ttm_tt *ttm)
@@ -155,7 +155,7 @@ out_err:
 	struct page *p;
 
 	while (NULL == (p = ttm->pages[index])) {
-        p = AllocVec(sizeof(*p), MEMF_PUBLIC | MEMF_CLEAR);
+        p = HIDDNouveauAlloc(sizeof(*p));
         p->allocated_buffer = NULL;
         p->address = (APTR)((IPTR)PAGE_ALIGN(ttm->allocated_buffer) + (IPTR)(PAGE_SIZE * index));
 

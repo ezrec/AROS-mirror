@@ -29,11 +29,11 @@
 
 /* malloc/calloc/realloc/free */
 
-/* This is a copy of implementation from arosc.library so that mesa.library uses its 
+/* This is a copy of implementation from arosc.library so that module uses its 
    own space for malloc/calloc/realloc calls */
 
 #define MEMALIGN_MAGIC ((size_t) 0x57E2CB09)
-APTR __mempool = NULL;
+extern APTR NouveauMemPool;
 
 void * malloc (size_t size)
 {
@@ -41,7 +41,7 @@ void * malloc (size_t size)
 
     D(bug("arosc_emul_malloc\n"));
     /* Allocate the memory */
-    mem = AllocPooled (__mempool, size + AROS_ALIGN(sizeof(size_t)));
+    mem = AllocPooled (NouveauMemPool, size + AROS_ALIGN(sizeof(size_t)));
     if (mem)
     {
         *((size_t *)mem) = size;
@@ -69,7 +69,7 @@ void free (void * memory)
         else 
         {
             size += AROS_ALIGN(sizeof(size_t));
-            FreePooled (__mempool, mem, size);
+            FreePooled (NouveauMemPool, mem, size);
         }
     }
 }
@@ -224,29 +224,4 @@ void *__alloca_get_stack_limit(void)
     return FindTask(NULL)->tc_SPUpper;
     #endif
 }
-	
-int __init_emul(void)
-{
-    /* malloc/calloc/realloc/free */
-    __mempool = CreatePool(MEMF_ANY | MEMF_SEM_PROTECTED, 65536L, 4096L);
 
-    if (!__mempool)
-    {
-        return 0;
-    }
-
-    return 1;
-}
-
-
-void __exit_emul(void)
-{
-    /* malloc/calloc/realloc/free */
-    if (__mempool)
-    {
-        DeletePool(__mempool);
-    }
-}
-
-ADD2INIT(__init_emul, 0);
-ADD2EXIT(__exit_emul, 0);

@@ -10,6 +10,8 @@
 #include <proto/exec.h>
 #include <aros/symbolsets.h>
 
+APTR NouveauMemPool;
+
 static ULONG Nouveau_Init(LIBBASETYPEPTR LIBBASE)
 {
     struct OOP_ABDescr attrbases[] = 
@@ -57,10 +59,32 @@ static ULONG Nouveau_Init(LIBBASETYPEPTR LIBBASE)
     LIBBASE->sd.rgbpatched = FALSE;
     /* TEMP - FIXME HACK FOR PATCHRGBCONV */
 
+    NouveauMemPool = CreatePool(MEMF_PUBLIC | MEMF_CLEAR | MEMF_SEM_PROTECTED, 32 * 1024, 16 * 1024);
+
     return TRUE;
 }
 
+static VOID Nouveau_Exit(LIBBASETYPEPTR LIBBASE)
+{
+    if (NouveauMemPool)
+    {
+        DeletePool(NouveauMemPool);
+        NouveauMemPool = NULL;
+    }
+}
+
+APTR HIDDNouveauAlloc(ULONG size)
+{
+    return AllocVecPooled(NouveauMemPool, size);
+}
+
+VOID HIDDNouveauFree(APTR memory)
+{
+    FreeVecPooled(NouveauMemPool, memory);
+}
+
 ADD2INITLIB(Nouveau_Init, 0);
+ADD2EXPUNGELIB(Nouveau_Exit, 0);
 
 ADD2LIBS((STRPTR)"gallium.hidd", 7, static struct Library *, GalliumHiddBase);
 ADD2LIBS((STRPTR)"pci.hidd", 0, static struct Library *, PciHiddBase);

@@ -359,4 +359,8 @@ VOID HIDDNouveauSetOffsets(OOP_Object * bm, LONG newxoffset, LONG newyoffset);
 /* Declaration of nouveau initialization function */
 extern int nouveau_init(void);
 
+/* Commom memory allocation */
+APTR HIDDNouveauAlloc(ULONG size);
+VOID HIDDNouveauFree(APTR memory);
+
 #endif /* _NOUVEAU_INTERN_H */

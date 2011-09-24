@@ -40,8 +40,8 @@ void drm_exit(struct drm_driver * driver)
     
     drm_aros_pci_shutdown(driver);
     
-    FreeVec(driver->dev->pdev);
-    FreeVec(driver->dev);
+    HIDDNouveauFree(driver->dev->pdev);
+    HIDDNouveauFree(driver->dev);
     driver->dev = NULL;
     current_drm_driver = NULL;
 }
@@ -49,7 +49,7 @@ void drm_exit(struct drm_driver * driver)
 static int drm_init_device(struct drm_driver * driver)
 {
     /* If this function is called, the card was already found */
-    driver->dev = AllocVec(sizeof(struct drm_device), MEMF_ANY | MEMF_CLEAR);
+    driver->dev = HIDDNouveauAlloc(sizeof(struct drm_device));
     struct drm_device * dev = driver->dev;
     
     /* Init fields */
@@ -59,7 +59,7 @@ static int drm_init_device(struct drm_driver * driver)
     dev->driver = driver;
     dev->pci_vendor = driver->VendorID;
     dev->pci_device = driver->ProductID;
-    dev->pdev = AllocVec(sizeof(struct pci_dev), MEMF_ANY | MEMF_CLEAR);
+    dev->pdev = HIDDNouveauAlloc(sizeof(struct pci_dev));
     dev->pdev->oopdev = driver->pciDevice;
     int ret;
 
