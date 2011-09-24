@@ -10,6 +10,8 @@
 #include "pcimockhardware_intern.h"
 #include "pcimock_intern.h"
 
+/* chip GF100, model GTX 470 */
+
 OOP_Object * METHOD(NVGF100MockHardware, Root, New)
 {
     o = (OOP_Object *)OOP_DoSuperMethod(cl, o, (OOP_Msg)msg);
@@ -48,6 +50,11 @@ OOP_Object * METHOD(NVGF100MockHardware, Root, New)
     SET_ASR_DWORD(hwdata, PCI_BAR0, 0x00121c74, 0x00000001); /* parts */
     SET_ASR_DWORD(hwdata, PCI_BAR0, 0x0011020c, 0x00000100); /* psize */
     SET_ASR_DWORD(hwdata, PCI_BAR0, 0x00001540, 0x01010001); /* NV40_PMC_GRAPH_UNITS */
+    SET_ASR_DWORD(hwdata, PCI_BAR0, 0x00409604, 0x00050004); /* rop_nr, gpc_nr */
+    SET_ASR_DWORD(hwdata, PCI_BAR0, 0x00502608, 0x00000003); /* GPC 0 */
+    SET_ASR_DWORD(hwdata, PCI_BAR0, 0x0050a608, 0x00000003); /* GPC 1 */
+    SET_ASR_DWORD(hwdata, PCI_BAR0, 0x00512608, 0x00000004); /* GPC 2 */
+    SET_ASR_DWORD(hwdata, PCI_BAR0, 0x0051a608, 0x00000004); /* GPC 3 */
 
     return o;
 }
