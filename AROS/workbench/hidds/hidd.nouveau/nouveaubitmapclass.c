@@ -232,7 +232,7 @@ VOID METHOD(NouveauBitMap, Hidd_BitMap, PutPixel)
 {
     struct HIDDNouveauBitMapData * bmdata = OOP_INST_DATA(cl, o);
     IPTR addr = (msg->x * bmdata->bytesperpixel) + (bmdata->pitch * msg->y);
-    
+
     /* FIXME "Optimistics" synchronization (yes, I know it's wrong) */
     IPTR map = (IPTR)bmdata->bo->map;
     
@@ -269,7 +269,7 @@ HIDDT_Pixel METHOD(NouveauBitMap, Hidd_BitMap, GetPixel)
     struct HIDDNouveauBitMapData * bmdata = OOP_INST_DATA(cl, o);
     IPTR addr = (msg->x * bmdata->bytesperpixel) + (bmdata->pitch * msg->y);
     HIDDT_Pixel pixel = 0;
-    
+
     /* FIXME "Optimistics" synchronization (yes, I know it's wrong) */
     IPTR map = (IPTR)bmdata->bo->map;
 
@@ -823,6 +823,28 @@ VOID METHOD(NouveauBitMap, Hidd_BitMap, PutPattern)
         break;
     } /* switch(bmdata->bytesperpixel) */
 
+    UNLOCK_BITMAP
+}
+
+VOID METHOD(NouveauBitMap, Hidd_BitMap, DrawLine)
+{
+    struct HIDDNouveauBitMapData * bmdata = OOP_INST_DATA(cl, o);
+
+    LOCK_BITMAP
+
+    if ((GC_DRMD(msg->gc) == vHidd_GC_DrawMode_Copy) && (GC_COLMASK(msg->gc) == ~0))
+    {
+        MAP_BUFFER
+
+        HIDDNouveauBitMapDrawSolidLine(bmdata, msg->gc, msg->x1, msg->y1, msg->x2, msg->y2);
+
+        UNLOCK_BITMAP
+
+        return;
+    }
+
+    OOP_DoSuperMethod(cl, o, (OOP_Msg)msg);
+    
     UNLOCK_BITMAP
 }
 
