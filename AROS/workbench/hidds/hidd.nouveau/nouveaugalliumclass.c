@@ -13,6 +13,7 @@
 #include "nouveau/nouveau_winsys.h"
 #include "nv50/nv50_resource.h"
 #include "nvfx/nvfx_resource.h"
+#include "nvc0/nvc0_resource.h"
 
 #undef HiddGalliumAttrBase
 #define HiddGalliumAttrBase   (SD(cl)->galliumAttrBase)
@@ -67,6 +68,10 @@ HIDDNouveauWrapResource(struct CardData * carddata, struct pipe_resource * resou
         case NV_ARCH_50:
             bo = nv50_miptree(resource)->base.bo;
             pitch = nv50_miptree(resource)->level[0].pitch;
+            break;
+        case NV_ARCH_C0:
+            bo = nvc0_miptree(resource)->base.bo;
+            pitch = nvc0_miptree(resource)->level[0].pitch;
             break;
     }
     
@@ -173,6 +178,9 @@ APTR METHOD(NouveauGallium, Hidd_Gallium, CreatePipeScreen)
     case 0xa0:
         init = nv50_screen_create;
         break;
+    case 0xc0:
+        init = nvc0_screen_create;
+        break;
     default:
         D(bug("%s: unknown chipset nv%02x\n", __func__,
                  dev->chipset));
@@ -228,18 +236,26 @@ VOID METHOD(NouveauGallium, Hidd_Gallium, DisplayResource)
     /* XXX HACK XXX */
     UNMAP_BUFFER_BM(dstdata)
 
-    if (carddata->architecture < NV_ARCH_50)
+    switch(carddata->architecture)
     {
+    case NV_ARCH_30:
+    case NV_ARCH_40:
         HIDDNouveauNV04CopySameFormat(carddata, &srcdata, dstdata, 
             msg->srcx, msg->srcy, msg->dstx, msg->dsty, msg->width, msg->height, 
             0x03 /* vHidd_GC_DrawMode_Copy */);
-    }
-    else
-    {
+        break;
+    case NV_ARCH_50:
         HIDDNouveauNV50CopySameFormat(carddata, &srcdata, dstdata, 
             msg->srcx, msg->srcy, msg->dstx, msg->dsty, msg->width, msg->height, 
             0x03 /* vHidd_GC_DrawMode_Copy */);
+        break;    
+    case NV_ARCH_C0:
+        /* TODO: NVC0 IMPLEMENT */
+    default:
+        /* TODO: Report error */
+        break;
     }
+
 
     UNLOCK_BITMAP_BM(dstdata)
 }
