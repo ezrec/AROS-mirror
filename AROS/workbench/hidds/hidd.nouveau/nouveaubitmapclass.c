@@ -41,6 +41,7 @@ OOP_Object * METHOD(NouveauBitMap, Root, New)
     OOP_Object * pf;
     struct HIDDNouveauBitMapData * bmdata = NULL;
     HIDDT_StdPixFmt stdfmt = vHidd_StdPixFmt_Unknown;
+    struct CardData * carddata = &(SD(cl)->carddata);
 
     o = (OOP_Object *)OOP_DoSuperMethod(cl, o, (OOP_Msg)msg);
 
@@ -82,8 +83,12 @@ OOP_Object * METHOD(NouveauBitMap, Root, New)
     bmdata->height = height;
     bmdata->depth = depth;
     bmdata->bytesperpixel = bytesperpixel;
-    bmdata->pitch = (bmdata->width + 63) & ~63;
-    bmdata->pitch *= bmdata->bytesperpixel;
+    bmdata->pitch = bmdata->width * bmdata->bytesperpixel;
+    if (carddata->architecture >= NV_ARCH_50)
+        bmdata->pitch = (bmdata->pitch + 255) & ~255; 
+    else
+        bmdata->pitch = (bmdata->pitch + 63) & ~63;
+
     if (displayable) bmdata->displayable = TRUE; else bmdata->displayable = FALSE;
     InitSemaphore(&bmdata->semaphore);
 
