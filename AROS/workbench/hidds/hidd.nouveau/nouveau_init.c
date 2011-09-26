@@ -10,7 +10,15 @@
 #include <proto/exec.h>
 #include <aros/symbolsets.h>
 
+/* GLOBALS */
 APTR NouveauMemPool;
+
+/* This pointer is necessary to limit the number of changes function signatures
+   of xf86-video-nouveau codes. Without, carddata needs to be passed to each
+   function, since in original codes the data it represents is taken from global
+   array */
+struct CardData * globalcarddataptr;
+/* GLOBALS END */
 
 static ULONG Nouveau_Init(LIBBASETYPEPTR LIBBASE)
 {
@@ -60,6 +68,8 @@ static ULONG Nouveau_Init(LIBBASETYPEPTR LIBBASE)
     /* TEMP - FIXME HACK FOR PATCHRGBCONV */
 
     NouveauMemPool = CreatePool(MEMF_PUBLIC | MEMF_CLEAR | MEMF_SEM_PROTECTED, 32 * 1024, 16 * 1024);
+    
+    globalcarddataptr = &LIBBASE->sd.carddata;
 
     return TRUE;
 }

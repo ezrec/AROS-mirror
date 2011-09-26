@@ -228,17 +228,12 @@ static struct nvc0_exa_state exa_state;
 	struct nouveau_grobj *fermi = pNv->Nv3D; (void)fermi;          \
 	struct nvc0_exa_state *state = &exa_state; (void)state
 #else
-/* This is a pointer to LIBBASE->sd->carddata. It is set at each AROS function
-   always to the same value, the passed one-and-only carddata. Setting and
-   reading is not semaphore protected, however this is a pointer and it will
-   always be set or read as atomic action.
-   This construction is implemented so that original EXA funtion calls don't 
+/* This construction is implemented so that original EXA funtion calls don't 
    have to be extended with ScrnInfoPtr parameter which makes code harder to
    maintain */
-static struct CardData * localcarddata = NULL;
-#define SET_SCRNINFOPTR localcarddata = carddata;
+extern struct CardData * globalcarddataptr;
 #define NVC0EXA_LOCALS(p)                                          \
-	ScrnInfoPtr pScrn = localcarddata;                             \
+	ScrnInfoPtr pScrn = globalcarddataptr;                         \
 	NVPtr pNv = NVPTR(pScrn);                                      \
 	struct nouveau_channel *chan = pNv->chan; (void)chan;          \
 	struct nouveau_grobj *m2mf = pNv->NvMemFormat; (void)m2mf;     \
@@ -1296,8 +1291,6 @@ NVC0EXADoneComposite(PixmapPtr pdpix)
 VOID HIDDNouveauNVC0SetPattern(struct CardData * carddata, ULONG clr0, ULONG clr1,
 		  ULONG pat0, ULONG pat1)
 {
-    SET_SCRNINFOPTR
-
     NVC0EXASetPattern(NULL, clr0, clr1, pat0, pat1);
 }
 
@@ -1307,8 +1300,6 @@ BOOL HIDDNouveauNVC0FillSolidRect(struct CardData * carddata,
     struct HIDDNouveauBitMapData * bmdata, ULONG minX, ULONG minY, ULONG maxX,
     ULONG maxY, ULONG drawmode, ULONG color)
 {
-    SET_SCRNINFOPTR
-
     if (NVC0EXAPrepareSolid(bmdata, drawmode, ~0, color))
     {
         NVC0EXASolid(bmdata, minX, minY, maxX, maxY);
@@ -1325,8 +1316,6 @@ BOOL HIDDNouveauNVC0CopySameFormat(struct CardData * carddata,
     ULONG srcX, ULONG srcY, ULONG destX, ULONG destY, ULONG width, ULONG height,
     ULONG drawmode)
 {
-    SET_SCRNINFOPTR
-
     if (NVC0EXAPrepareCopy(srcdata, destdata, 0, 0, drawmode, ~0))
     {
         NVC0EXACopy(destdata, srcX, srcY, destX , destY, width, height);
