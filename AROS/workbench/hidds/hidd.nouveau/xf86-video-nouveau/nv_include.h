@@ -22,6 +22,7 @@
 #define PictFormatShort             LONG
 #define PictTransformPtr            APTR
 #define Pixel                       HIDDT_Pixel
+#define CARD32                      ULONG
 
 struct Picture
 {
