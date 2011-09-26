@@ -21,6 +21,7 @@
 #define ErrorF(msg, ...)            bug(msg, ##__VA_ARGS__)
 #define PictFormatShort             LONG
 #define PictTransformPtr            APTR
+#define Pixel                       HIDDT_Pixel
 
 struct Picture
 {

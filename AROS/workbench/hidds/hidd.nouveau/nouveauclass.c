@@ -516,7 +516,7 @@ OOP_Object * METHOD(Nouveau, Root, New)
                 HIDDNouveauNV50SetPattern(carddata, ~0, ~0, ~0, ~0);
                 break;
             case(NV_ARCH_C0):
-                /* TODO:NVCO IMPLEMENT */
+                HIDDNouveauNVC0SetPattern(carddata, ~0, ~0, ~0, ~0);
                 break;
             }
 

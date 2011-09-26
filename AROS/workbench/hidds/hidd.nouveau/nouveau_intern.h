@@ -312,6 +312,13 @@ BOOL HIDDNouveauNV50FillSolidRect(struct CardData * carddata,
     struct HIDDNouveauBitMapData * bmdata, ULONG minX, ULONG minY, ULONG maxX,
     ULONG maxY, ULONG drawmode, ULONG color);
 
+/* nvc0_exa.c */
+VOID HIDDNouveauNVC0SetPattern(struct CardData * carddata, ULONG clr0, ULONG clr1,
+		  ULONG pat0, ULONG pat1);
+BOOL HIDDNouveauNVC0FillSolidRect(struct CardData * carddata,
+    struct HIDDNouveauBitMapData * bmdata, ULONG minX, ULONG minY, ULONG maxX,
+    ULONG maxY, ULONG drawmode, ULONG color);
+
 /* nouveau_accel.c */
 BOOL HiddNouveauWriteFromRAM(
     APTR src, ULONG srcPitch, HIDDT_StdPixFmt srcPixFmt,

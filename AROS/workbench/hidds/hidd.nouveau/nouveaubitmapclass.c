@@ -328,7 +328,8 @@ VOID METHOD(NouveauBitMap, Hidd_BitMap, Clear)
                     0, 0, bmdata->width - 1, bmdata->height - 1, GC_DRMD(msg->gc), GC_BG(msg->gc));
         break;
     case(NV_ARCH_C0):
-        ret = FALSE; /* TODO:NVC0: IMPLEMENT */
+        ret = HIDDNouveauNVC0FillSolidRect(carddata, bmdata, 
+                    0, 0, bmdata->width - 1, bmdata->height - 1, GC_DRMD(msg->gc), GC_BG(msg->gc));
         break;
     }    
 
@@ -369,7 +370,8 @@ VOID METHOD(NouveauBitMap, Hidd_BitMap, FillRect)
                     msg->minX, msg->minY, msg->maxX, msg->maxY, GC_DRMD(msg->gc), GC_FG(msg->gc));
         break;
     case(NV_ARCH_C0):
-        ret = FALSE; /* TODO:NVCO: IMPLEMENT */
+        ret = HIDDNouveauNVC0FillSolidRect(carddata, bmdata, 
+                    msg->minX, msg->minY, msg->maxX, msg->maxY, GC_DRMD(msg->gc), GC_FG(msg->gc));
         break;
     }
 
