@@ -510,8 +510,9 @@ NV30EXAPrepareComposite(int op, PicturePtr psPict,
 		PixmapPtr  psPix,
 		PixmapPtr  pmPix,
 		PixmapPtr  pdPix,
-		ScrnInfoPtr pScrn, nv30_exa_state_t * state)
+		nv30_exa_state_t * state)
 {
+	ScrnInfoPtr pScrn = globalcarddataptr;
 #endif
 	NVPtr pNv = NVPTR(pScrn);
 	struct nouveau_channel *chan = pNv->chan;
@@ -597,6 +598,8 @@ NV30EXAPrepareComposite(int op, PicturePtr psPict,
 	pNv->pmpix = pmPix;
 	pNv->pdpix = pdPix;
 	chan->flush_notify = NV30EXAStateCompositeReemit;
+#else
+	chan->flush_notify = NULL;
 #endif
 	return TRUE;
 }
@@ -656,8 +659,9 @@ static void
 NV30EXAComposite(PixmapPtr pdPix, int srcX , int srcY,
 				  int maskX, int maskY,
 				  int dstX , int dstY,
-				  int width, int height, ScrnInfoPtr pScrn, nv30_exa_state_t * state)
+				  int width, int height, nv30_exa_state_t * state)
 {
+	ScrnInfoPtr pScrn = globalcarddataptr;
 #endif
 	NVPtr pNv = NVPTR(pScrn);
 	struct nouveau_channel *chan = pNv->chan;
@@ -1003,12 +1007,12 @@ BOOL HIDDNouveauNV303DCopyBox(struct CardData * carddata,
     HIDDNouveauFillPictureFromBitMapData(&dPict, destdata);
 
     if (NV30EXAPrepareComposite(blendop,
-        &sPict, NULL, &dPict, srcdata, NULL, destdata, carddata, &state))
+        &sPict, NULL, &dPict, srcdata, NULL, destdata, &state))
     {
         NV30EXAComposite(destdata, srcX, srcY,
 				      maskX, maskY,
 				      destX , destY,
-				      width, height, carddata, &state);
+				      width, height, &state);
         return TRUE;
     }
     

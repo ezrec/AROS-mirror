@@ -50,7 +50,8 @@ static struct nv50_exa_state exa_state;
 	struct nouveau_grobj *tesla = pNv->Nv3D; (void)tesla;          \
 	struct nv50_exa_state *state = &exa_state; (void)state
 #else
-#define NV50EXA_LOCALS(p)                                              \
+#define NV50EXA_LOCALS(p)                                          \
+	ScrnInfoPtr pScrn = globalcarddataptr;                         \
 	NVPtr pNv = NVPTR(pScrn);                                      \
 	struct nouveau_channel *chan = pNv->chan; (void)chan;          \
 	struct nouveau_grobj *eng2d = pNv->Nv2D; (void)eng2d;          \
@@ -478,13 +479,8 @@ NV50EXACheckRenderTarget(PicturePtr ppict)
 }
 #endif
 
-#if !defined(__AROS__)
 static Bool
 NV50EXARenderTarget(PixmapPtr ppix, PicturePtr ppict)
-#else
-static Bool
-NV50EXARenderTarget(PixmapPtr ppix, PicturePtr ppict, ScrnInfoPtr pScrn)
-#endif
 {
 	NV50EXA_LOCALS(ppix);
 	struct nouveau_bo *bo = nouveau_pixmap_bo(ppix);
@@ -608,7 +604,7 @@ static Bool
 NV50EXATexture(PixmapPtr ppix, PicturePtr ppict, unsigned unit)
 #else
 static Bool
-NV50EXATexture(PixmapPtr ppix, PicturePtr ppict, unsigned unit, ScrnInfoPtr pScrn, struct nv50_exa_state * state)
+NV50EXATexture(PixmapPtr ppix, PicturePtr ppict, unsigned unit, struct nv50_exa_state * state)
 #endif
 {
 	NV50EXA_LOCALS(ppix);
@@ -794,13 +790,8 @@ NV50EXACheckBlend(int op)
 }
 #endif
 
-#if !defined(__AROS__)
 static void
 NV50EXABlend(PixmapPtr ppix, PicturePtr ppict, int op, int component_alpha)
-#else
-static void
-NV50EXABlend(PixmapPtr ppix, PicturePtr ppict, int op, int component_alpha, ScrnInfoPtr pScrn)
-#endif
 {
 	NV50EXA_LOCALS(ppix);
 	struct nv50_blend_op *b = &NV50EXABlendOp[op];
@@ -891,7 +882,7 @@ static Bool
 NV50EXAPrepareComposite(int op,
 			PicturePtr pspict, PicturePtr pmpict, PicturePtr pdpict,
 			PixmapPtr pspix, PixmapPtr pmpix, PixmapPtr pdpix,
-			ScrnInfoPtr pScrn, struct nv50_exa_state * state)
+			struct nv50_exa_state * state)
 #endif
 {
 	NV50EXA_LOCALS(pspix);
@@ -903,22 +894,13 @@ NV50EXAPrepareComposite(int op,
 	BEGIN_RING(chan, eng2d, 0x0110, 1);
 	OUT_RING  (chan, 0);
 
-#if !defined(__AROS__)
 	if (!NV50EXARenderTarget(pdpix, pdpict)) {
-#else
-	if (!NV50EXARenderTarget(pdpix, pdpict, pScrn)) {
-#endif
 		MARK_UNDO(chan);
 		NOUVEAU_FALLBACK("render target invalid\n");
 	}
 
-#if !defined(__AROS__)
 	NV50EXABlend(pdpix, pdpict, op, pmpict && pmpict->componentAlpha &&
 		     PICT_FORMAT_RGB(pmpict->format));
-#else
-	NV50EXABlend(pdpix, pdpict, op, pmpict && pmpict->componentAlpha &&
-		     PICT_FORMAT_RGB(pmpict->format), pScrn);
-#endif
 
 	BEGIN_RING(chan, tesla, NV50TCL_VP_ADDRESS_HIGH, 2);
 	if (OUT_RELOCh(chan, pNv->tesla_scratch, PVP_OFFSET, shd_flags) ||
@@ -937,7 +919,7 @@ NV50EXAPrepareComposite(int op,
 #if !defined(__AROS__)
 	if (!NV50EXATexture(pspix, pspict, 0)) {
 #else
-	if (!NV50EXATexture(pspix, pspict, 0, pScrn, state)) {
+	if (!NV50EXATexture(pspix, pspict, 0, state)) {
 #endif
 		MARK_UNDO(chan);
 		NOUVEAU_FALLBACK("src picture invalid\n");
@@ -947,7 +929,7 @@ NV50EXAPrepareComposite(int op,
 #if !defined(__AROS__)
 		if (!NV50EXATexture(pmpix, pmpict, 1)) {
 #else
-		if (!NV50EXATexture(pmpix, pmpict, 1, pScrn, state)) {
+		if (!NV50EXATexture(pmpix, pmpict, 1, state)) {
 #endif
 			MARK_UNDO(chan);
 			NOUVEAU_FALLBACK("mask picture invalid\n");
@@ -995,6 +977,8 @@ NV50EXAPrepareComposite(int op,
 	pNv->pmpix = pmpix;
 	pNv->pdpix = pdpix;
 	chan->flush_notify = NV50EXAStateCompositeResubmit;
+#else
+	chan->flush_notify = NULL;
 #endif
 	return TRUE;
 }
@@ -1031,7 +1015,7 @@ NV50EXAComposite(PixmapPtr pdpix, int sx, int sy, int mx, int my,
 #else
 static void
 NV50EXAComposite(PixmapPtr pdpix, int sx, int sy, int mx, int my,
-		 int dx, int dy, int w, int h, ScrnInfoPtr pScrn, struct nv50_exa_state * state)
+		 int dx, int dy, int w, int h, struct nv50_exa_state * state)
 #endif
 {
 	NV50EXA_LOCALS(pdpix);
@@ -1108,12 +1092,12 @@ BOOL HIDDNouveauNV503DCopyBox(struct CardData * carddata,
     HIDDNouveauFillPictureFromBitMapData(&dPict, destdata);
 
     if (NV50EXAPrepareComposite(blendop,
-        &sPict, NULL, &dPict, srcdata, NULL, destdata, carddata, &state))
+        &sPict, NULL, &dPict, srcdata, NULL, destdata, &state))
     {
         NV50EXAComposite(destdata, srcX, srcY,
 				      maskX, maskY,
 				      destX , destY,
-				      width, height, carddata, &state);
+				      width, height, &state);
         return TRUE;
     }
     
