@@ -511,7 +511,9 @@ NVC0EXASolid(PixmapPtr pdpix, int x1, int y1, int x2, int y2)
 	OUT_RING  (chan, x2);
 	OUT_RING  (chan, y2);
 
+#if !defined(__AROS__)
 	if ((x2 - x1) * (y2 - y1) >= 512)
+#endif
 		FIRE_RING (chan);
 }
 
@@ -594,7 +596,9 @@ NVC0EXACopy(PixmapPtr pdpix, int srcX , int srcY,
 	OUT_RING  (chan, 0);
 	OUT_RING  (chan, srcY);
 
+#if !defined(__AROS__)
 	if (width * height >= 512)
+#endif
 		FIRE_RING (chan);
 }
 
@@ -1294,7 +1298,7 @@ BOOL HIDDNouveauNVC0FillSolidRect(struct CardData * carddata,
 {
     if (NVC0EXAPrepareSolid(bmdata, drawmode, ~0, color))
     {
-        NVC0EXASolid(bmdata, minX, minY, maxX, maxY);
+        NVC0EXASolid(bmdata, minX, minY, maxX + 1, maxY + 1);
         return TRUE;
     }
 
