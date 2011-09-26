@@ -494,8 +494,8 @@ NV04EXAUploadIFC(ScrnInfoPtr pScrn, const char *src, int src_pitch,
 
 /* AROS CODE */
 
-VOID HIDDNouveauNV04SetPattern(struct CardData * carddata, ULONG clr0, ULONG clr1,
-		  ULONG pat0, ULONG pat1)
+VOID HIDDNouveauNV04SetPattern(struct CardData * carddata, LONG clr0, LONG clr1,
+		  LONG pat0, LONG pat1)
 {
     NV04EXASetPattern(carddata, clr0, clr1, pat0, pat1);
 }
@@ -503,8 +503,8 @@ VOID HIDDNouveauNV04SetPattern(struct CardData * carddata, ULONG clr0, ULONG clr
 /* NOTE: Assumes lock on bitmap is already made */
 /* NOTE: Assumes buffer is not mapped */
 BOOL HIDDNouveauNV04FillSolidRect(struct CardData * carddata,
-    struct HIDDNouveauBitMapData * bmdata, ULONG minX, ULONG minY, ULONG maxX,
-    ULONG maxY, ULONG drawmode, ULONG color)
+    struct HIDDNouveauBitMapData * bmdata, LONG minX, LONG minY, LONG maxX,
+    LONG maxY, ULONG drawmode, ULONG color)
 {
     if (NV04EXAPrepareSolid(bmdata, drawmode, ~0, color))
     {
@@ -519,7 +519,7 @@ BOOL HIDDNouveauNV04FillSolidRect(struct CardData * carddata,
 /* NOTE: Assumes buffer is not mapped */
 BOOL HIDDNouveauNV04CopySameFormat(struct CardData * carddata,
     struct HIDDNouveauBitMapData * srcdata, struct HIDDNouveauBitMapData * destdata,
-    ULONG srcX, ULONG srcY, ULONG destX, ULONG destY, ULONG width, ULONG height,
+    LONG srcX, LONG srcY, LONG destX, LONG destY, LONG width, LONG height,
     ULONG drawmode)
 {
     if (NV04EXAPrepareCopy(srcdata, destdata, 0, 0, drawmode, ~0))

@@ -1148,8 +1148,8 @@ VOID HIDDNouveauNV50SetPattern(struct CardData * carddata, LONG col0,
 /* NOTE: Assumes lock on bitmap is already made */
 /* NOTE: Assumes buffer is not mapped */
 BOOL HIDDNouveauNV50FillSolidRect(struct CardData * carddata,
-    struct HIDDNouveauBitMapData * bmdata, ULONG minX, ULONG minY, ULONG maxX,
-    ULONG maxY, ULONG drawmode, ULONG color)
+    struct HIDDNouveauBitMapData * bmdata, LONG minX, LONG minY, LONG maxX,
+    LONG maxY, ULONG drawmode, ULONG color)
 {
     if (NV50EXAPrepareSolid(bmdata, drawmode, ~0, color))
     {
@@ -1164,7 +1164,7 @@ BOOL HIDDNouveauNV50FillSolidRect(struct CardData * carddata,
 /* NOTE: Assumes buffer is not mapped */
 BOOL HIDDNouveauNV50CopySameFormat(struct CardData * carddata,
     struct HIDDNouveauBitMapData * srcdata, struct HIDDNouveauBitMapData * destdata,
-    ULONG srcX, ULONG srcY, ULONG destX, ULONG destY, ULONG width, ULONG height,
+    LONG srcX, LONG srcY, LONG destX, LONG destY, LONG width, LONG height,
     ULONG drawmode)
 {
     if (NV50EXAPrepareCopy(srcdata, destdata, 0, 0, drawmode, ~0))
@@ -1181,7 +1181,7 @@ BOOL HIDDNouveauNV50CopySameFormat(struct CardData * carddata,
 /* NOTE: Allows different formats of source and destination */
 BOOL HIDDNouveauNV503DCopyBox(struct CardData * carddata,
     struct HIDDNouveauBitMapData * srcdata, struct HIDDNouveauBitMapData * destdata,
-    ULONG srcX, ULONG srcY, ULONG destX, ULONG destY, ULONG width, ULONG height,
+    LONG srcX, LONG srcY, LONG destX, LONG destY, LONG width, LONG height,
     ULONG blendop)
 {
     struct Picture sPict, dPict;

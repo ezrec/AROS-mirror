@@ -37,9 +37,9 @@ static inline int do_alpha(int a, int v)
 /* NOTE: Assumes lock on bitmap is already made */
 /* NOTE: Assumes buffer is mapped */
 VOID HIDDNouveauBitMapPutAlphaImage32(struct HIDDNouveauBitMapData * bmdata,
-    APTR srcbuff, ULONG srcpitch, ULONG destX, ULONG destY, ULONG width, ULONG height)
+    APTR srcbuff, ULONG srcpitch, LONG destX, LONG destY, LONG width, LONG height)
 {
-    ULONG x,y;
+    LONG x,y;
     
     for(y = 0; y < height; y++)
     {
@@ -117,9 +117,9 @@ VOID HIDDNouveauBitMapPutAlphaImage32(struct HIDDNouveauBitMapData * bmdata,
 /* NOTE: Assumes lock on bitmap is already made */
 /* NOTE: Assumes buffer is mapped */
 VOID HIDDNouveauBitMapPutAlphaImage16(struct HIDDNouveauBitMapData * bmdata,
-    APTR srcbuff, ULONG srcpitch, ULONG destX, ULONG destY, ULONG width, ULONG height)
+    APTR srcbuff, ULONG srcpitch, LONG destX, LONG destY, LONG width, LONG height)
 {
-    ULONG x,y;
+    LONG x,y;
     
     for(y = 0; y < height; y++)
     {
@@ -198,7 +198,7 @@ VOID HIDDNouveauBitMapPutAlphaImage16(struct HIDDNouveauBitMapData * bmdata,
 /* NOTE: Assumes buffer is mapped */
 VOID HIDDNouveauBitMapPutAlphaTemplate32(struct HIDDNouveauBitMapData * bmdata,
     OOP_Object * gc, OOP_Object * bm, BOOL invertalpha,
-    UBYTE * srcalpha, ULONG srcpitch, ULONG destX, ULONG destY, ULONG width, ULONG height)
+    UBYTE * srcalpha, ULONG srcpitch, LONG destX, LONG destY, LONG width, LONG height)
 {
     WORD        x, y;
     UBYTE       *pixarray = srcalpha;
@@ -416,7 +416,7 @@ VOID HIDDNouveauBitMapPutAlphaTemplate32(struct HIDDNouveauBitMapData * bmdata,
 /* NOTE: Assumes buffer is mapped */
 VOID HIDDNouveauBitMapPutAlphaTemplate16(struct HIDDNouveauBitMapData * bmdata,
     OOP_Object * gc, OOP_Object * bm, BOOL invertalpha,
-    UBYTE * srcalpha, ULONG srcpitch, ULONG destX, ULONG destY, ULONG width, ULONG height)
+    UBYTE * srcalpha, ULONG srcpitch, LONG destX, LONG destY, LONG width, LONG height)
 {
     WORD        x, y;
     UBYTE       *pixarray = srcalpha;
@@ -860,7 +860,7 @@ BOOL HiddNouveauReadIntoRAM(
 
 static inline VOID HiddNouveau3DCopyBoxFromGART(struct CardData * carddata, 
     struct HIDDNouveauBitMapData * dstdata, ULONG gartpitch,
-    ULONG x, ULONG y, ULONG width, ULONG height)
+    LONG x, LONG y, LONG width, LONG height)
 {
     struct HIDDNouveauBitMapData srcdata;
 
@@ -899,7 +899,7 @@ static inline VOID HiddNouveau3DCopyBoxFromGART(struct CardData * carddata,
 /* NOTE: Assumes buffer is not mapped */
 BOOL HiddNouveauAccelARGBUpload3D(
     UBYTE * srcpixels, ULONG srcpitch,
-    ULONG x, ULONG y, ULONG width, ULONG height, 
+    LONG x, LONG y, LONG width, LONG height, 
     OOP_Class *cl, OOP_Object *o)
 {
     struct HIDDNouveauBitMapData * dstdata = OOP_INST_DATA(cl, o);
@@ -988,7 +988,7 @@ BOOL HiddNouveauAccelARGBUpload3D(
 /* NOTE: Assumes buffer is not mapped */
 BOOL HiddNouveauAccelAPENUpload3D(
     UBYTE * srcalpha, BOOL srcinvertalpha, ULONG srcpitch, ULONG srcpenrgb,
-    ULONG x, ULONG y, ULONG width, ULONG height, 
+    LONG x, LONG y, LONG width, LONG height, 
     OOP_Class *cl, OOP_Object *o)
 {
     struct HIDDNouveauBitMapData * dstdata = OOP_INST_DATA(cl, o);

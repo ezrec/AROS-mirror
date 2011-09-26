@@ -996,12 +996,12 @@ NVAccelInitNV30TCL(ScrnInfoPtr pScrn)
 /* NOTE: Allows different formats of source and destination */
 BOOL HIDDNouveauNV303DCopyBox(struct CardData * carddata,
     struct HIDDNouveauBitMapData * srcdata, struct HIDDNouveauBitMapData * destdata,
-    ULONG srcX, ULONG srcY, ULONG destX, ULONG destY, ULONG width, ULONG height,
+    LONG srcX, LONG srcY, LONG destX, LONG destY, LONG width, LONG height,
     ULONG blendop)
 {
     struct Picture sPict, dPict;
     nv30_exa_state_t state;
-    ULONG maskX = 0; ULONG maskY = 0;
+    LONG maskX = 0; LONG maskY = 0;
 
     HIDDNouveauFillPictureFromBitMapData(&sPict, srcdata);   
     HIDDNouveauFillPictureFromBitMapData(&dPict, destdata);

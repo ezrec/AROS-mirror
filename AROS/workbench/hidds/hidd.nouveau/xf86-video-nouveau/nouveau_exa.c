@@ -666,7 +666,7 @@ nouveau_exa_init(ScreenPtr pScreen)
 /* NOTE: Assumes buffer is not mapped */
 BOOL HiddNouveauNVAccelUploadM2MF(
     UBYTE * srcpixels, ULONG srcpitch, HIDDT_StdPixFmt srcPixFmt,
-    ULONG x, ULONG y, ULONG width, ULONG height, 
+    LONG x, LONG y, LONG width, LONG height, 
     OOP_Class *cl, OOP_Object *o)
 {
     struct HIDDNouveauBitMapData * bmdata = OOP_INST_DATA(cl, o);
@@ -681,7 +681,7 @@ BOOL HiddNouveauNVAccelUploadM2MF(
 /* NOTE: Assumes buffer is not mapped */
 BOOL HiddNouveauNVAccelDownloadM2MF(
     UBYTE * dstpixels, ULONG dstpitch, HIDDT_StdPixFmt dstPixFmt,
-    ULONG x, ULONG y, ULONG width, ULONG height, 
+    LONG x, LONG y, LONG width, LONG height, 
     OOP_Class *cl, OOP_Object *o)  
 {
     struct HIDDNouveauBitMapData * bmdata = OOP_INST_DATA(cl, o);
