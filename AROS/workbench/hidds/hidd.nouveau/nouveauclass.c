@@ -628,7 +628,9 @@ VOID METHOD(Nouveau, Hidd_Gfx, CopyBox)
                         msg->width, msg->height, GC_DRMD(msg->gc));
             break;
         case(NV_ARCH_C0):
-            ret = FALSE; /* TODO:NVCO IMPLEMENT */
+            ret = HIDDNouveauNVC0CopySameFormat(carddata, srcdata, destdata, 
+                        msg->srcX, msg->srcY, msg->destX, msg->destY, 
+                        msg->width, msg->height, GC_DRMD(msg->gc));
             break;
         }
 

@@ -318,6 +318,10 @@ VOID HIDDNouveauNVC0SetPattern(struct CardData * carddata, ULONG clr0, ULONG clr
 BOOL HIDDNouveauNVC0FillSolidRect(struct CardData * carddata,
     struct HIDDNouveauBitMapData * bmdata, ULONG minX, ULONG minY, ULONG maxX,
     ULONG maxY, ULONG drawmode, ULONG color);
+BOOL HIDDNouveauNVC0CopySameFormat(struct CardData * carddata,
+    struct HIDDNouveauBitMapData * srcdata, struct HIDDNouveauBitMapData * destdata,
+    ULONG srcX, ULONG srcY, ULONG destX, ULONG destY, ULONG width, ULONG height,
+    ULONG drawmode);
 
 /* nouveau_accel.c */
 BOOL HiddNouveauWriteFromRAM(

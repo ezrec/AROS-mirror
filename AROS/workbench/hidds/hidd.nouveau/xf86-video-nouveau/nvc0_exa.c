@@ -564,40 +564,65 @@ NVC0EXAStateCopyResubmit(struct nouveau_channel *chan)
 	NVC0EXAPrepareCopy(pNv->pspix, pNv->pdpix, 0, 0, pNv->alu,
 			   pNv->planemask);
 }
+#endif
 
 Bool
 NVC0EXAPrepareCopy(PixmapPtr pspix, PixmapPtr pdpix, int dx, int dy,
+#if !defined(__AROS__)
 		   int alu, Pixel planemask)
+#else
+		   int alu, Pixel planemask, ScrnInfoPtr pScrn)
+#endif
 {
 	NVC0EXA_LOCALS(pdpix);
 
 	if (MARK_RING(chan, 64, 4))
 		NOUVEAU_FALLBACK("ring space\n");
 
+#if !defined(__AROS__)
 	if (!NVC0EXAAcquireSurface2D(pspix, 1)) {
+#else
+	if (!NVC0EXAAcquireSurface2D(pspix, 1, pScrn)) {
+#endif
 		MARK_UNDO(chan);
 		NOUVEAU_FALLBACK("src pixmap\n");
 	}
 
+#if !defined(__AROS__)
 	if (!NVC0EXAAcquireSurface2D(pdpix, 0)) {
+#else
+	if (!NVC0EXAAcquireSurface2D(pdpix, 0, pScrn)) {
+#endif
 		MARK_UNDO(chan);
 		NOUVEAU_FALLBACK("dest pixmap\n");
 	}
 
+#if !defined(__AROS__)
 	NVC0EXASetROP(pdpix, alu, planemask);
+#else
+	NVC0EXASetROP(pdpix, alu, planemask, pScrn);
+#endif
 
+#if !defined(__AROS__)
 	pNv->pspix = pspix;
 	pNv->pdpix = pdpix;
 	pNv->alu = alu;
 	pNv->planemask = planemask;
 	chan->flush_notify = NVC0EXAStateCopyResubmit;
+#else
+	chan->flush_notify = NULL;
+#endif
 	return TRUE;
 }
 
 void
 NVC0EXACopy(PixmapPtr pdpix, int srcX , int srcY,
 			     int dstX , int dstY,
+#if !defined(__AROS__)
 			     int width, int height)
+#else
+			     int width, int height, ScrnInfoPtr pScrn)
+#endif
 {
 	NVC0EXA_LOCALS(pdpix);
 
@@ -624,6 +649,7 @@ NVC0EXACopy(PixmapPtr pdpix, int srcX , int srcY,
 		FIRE_RING (chan);
 }
 
+#if !defined(__AROS__)
 void
 NVC0EXADoneCopy(PixmapPtr pdpix)
 {
@@ -1321,6 +1347,22 @@ BOOL HIDDNouveauNVC0FillSolidRect(struct CardData * carddata,
     if (NVC0EXAPrepareSolid(bmdata, drawmode, ~0, color, carddata))
     {
         NVC0EXASolid(bmdata, minX, minY, maxX, maxY, carddata);
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
+/* NOTE: Assumes lock on both bitmaps is already made */
+/* NOTE: Assumes both buffers are not mapped */
+BOOL HIDDNouveauNVC0CopySameFormat(struct CardData * carddata,
+    struct HIDDNouveauBitMapData * srcdata, struct HIDDNouveauBitMapData * destdata,
+    ULONG srcX, ULONG srcY, ULONG destX, ULONG destY, ULONG width, ULONG height,
+    ULONG drawmode)
+{
+    if (NVC0EXAPrepareCopy(srcdata, destdata, 0, 0, drawmode, ~0, carddata))
+    {
+        NVC0EXACopy(destdata, srcX, srcY, destX , destY, width, height, carddata);
         return TRUE;
     }
 
