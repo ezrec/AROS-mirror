@@ -228,7 +228,17 @@ static struct nvc0_exa_state exa_state;
 	struct nouveau_grobj *fermi = pNv->Nv3D; (void)fermi;          \
 	struct nvc0_exa_state *state = &exa_state; (void)state
 #else
-#define NVC0EXA_LOCALS(p)                                              \
+/* This is a pointer to LIBBASE->sd->carddata. It is set at each AROS function
+   always to the same value, the passed one-and-only carddata. Setting and
+   reading is not semaphore protected, however this is a pointer and it will
+   always be set or read as atomic action.
+   This construction is implemented so that original EXA funtion calls don't 
+   have to be extended with ScrnInfoPtr parameter which makes code harder to
+   maintain */
+static struct CardData * localcarddata = NULL;
+#define SET_SCRNINFOPTR localcarddata = carddata;
+#define NVC0EXA_LOCALS(p)                                          \
+	ScrnInfoPtr pScrn = localcarddata;                             \
 	NVPtr pNv = NVPTR(pScrn);                                      \
 	struct nouveau_channel *chan = pNv->chan; (void)chan;          \
 	struct nouveau_grobj *m2mf = pNv->NvMemFormat; (void)m2mf;     \
@@ -267,9 +277,9 @@ NVC0EXABlendOp[] = {
 static Bool
 NVC0EXA2DSurfaceFormat(PixmapPtr ppix, uint32_t *fmt)
 {
-#if !defined(__AROS__)
 	NVC0EXA_LOCALS(ppix);
 
+#if !defined(__AROS__)
 	switch (ppix->drawable.bitsPerPixel) {
 #else
 	switch (ppix->depth) {
@@ -289,11 +299,7 @@ NVC0EXA2DSurfaceFormat(PixmapPtr ppix, uint32_t *fmt)
 	return TRUE;
 }
 
-#if !defined(__AROS__)
 static void NVC0EXASetClip(PixmapPtr ppix, int x, int y, int w, int h)
-#else
-static void NVC0EXASetClip(PixmapPtr ppix, int x, int y, int w, int h, ScrnInfoPtr pScrn)
-#endif
 {
 	NVC0EXA_LOCALS(ppix);
 
@@ -305,11 +311,7 @@ static void NVC0EXASetClip(PixmapPtr ppix, int x, int y, int w, int h, ScrnInfoP
 }
 
 static Bool
-#if !defined(__AROS__)
 NVC0EXAAcquireSurface2D(PixmapPtr ppix, int is_src)
-#else
-NVC0EXAAcquireSurface2D(PixmapPtr ppix, int is_src, ScrnInfoPtr pScrn)
-#endif
 {
 	NVC0EXA_LOCALS(ppix);
 	struct nouveau_bo *bo = nouveau_pixmap_bo(ppix);
@@ -357,18 +359,14 @@ NVC0EXAAcquireSurface2D(PixmapPtr ppix, int is_src, ScrnInfoPtr pScrn)
 #if !defined(__AROS__)
 		NVC0EXASetClip(ppix, 0, 0, ppix->drawable.width, ppix->drawable.height);
 #else
-		NVC0EXASetClip(ppix, 0, 0, ppix->width, ppix->height, pScrn);
+		NVC0EXASetClip(ppix, 0, 0, ppix->width, ppix->height);
 #endif
 
 	return TRUE;
 }
 
 static void
-#if !defined(__AROS__)
 NVC0EXASetPattern(PixmapPtr pdpix, int col0, int col1, int pat0, int pat1)
-#else
-NVC0EXASetPattern(PixmapPtr pdpix, int col0, int col1, int pat0, int pat1, ScrnInfoPtr pScrn)
-#endif
 {
 	NVC0EXA_LOCALS(pdpix);
 
@@ -433,7 +431,7 @@ NVC0EXASetROP(PixmapPtr pdpix, int alu, Pixel planemask)
 }
 #else
 static void
-NVC0EXASetROP(PixmapPtr pdpix, int alu, Pixel planemask, ScrnInfoPtr pScrn)
+NVC0EXASetROP(PixmapPtr pdpix, int alu, Pixel planemask)
 {
 	NVC0EXA_LOCALS(pdpix);
 	LONG rop;
@@ -479,11 +477,7 @@ NVC0EXAStateSolidResubmit(struct nouveau_channel *chan)
 #endif
 
 Bool
-#if !defined(__AROS__)
 NVC0EXAPrepareSolid(PixmapPtr pdpix, int alu, Pixel planemask, Pixel fg)
-#else
-NVC0EXAPrepareSolid(PixmapPtr pdpix, int alu, Pixel planemask, Pixel fg, ScrnInfoPtr pScrn)
-#endif
 {
 	NVC0EXA_LOCALS(pdpix);
 	uint32_t fmt;
@@ -494,20 +488,12 @@ NVC0EXAPrepareSolid(PixmapPtr pdpix, int alu, Pixel planemask, Pixel fg, ScrnInf
 	if (MARK_RING(chan, 64, 4))
 		NOUVEAU_FALLBACK("ring space\n");
 
-#if !defined(__AROS__)
 	if (!NVC0EXAAcquireSurface2D(pdpix, 0)) {
-#else
-	if (!NVC0EXAAcquireSurface2D(pdpix, 0, pScrn)) {
-#endif
 		MARK_UNDO(chan);
 		NOUVEAU_FALLBACK("dest pixmap\n");
 	}
 
-#if !defined(__AROS__)
 	NVC0EXASetROP(pdpix, alu, planemask);
-#else
-	NVC0EXASetROP(pdpix, alu, planemask, pScrn);
-#endif
 
 	BEGIN_RING(chan, eng2d, NV50_2D_DRAW_SHAPE, 3);
 	OUT_RING  (chan, NV50_2D_DRAW_SHAPE_RECTANGLES);
@@ -527,11 +513,7 @@ NVC0EXAPrepareSolid(PixmapPtr pdpix, int alu, Pixel planemask, Pixel fg, ScrnInf
 }
 
 void
-#if !defined(__AROS__)
 NVC0EXASolid(PixmapPtr pdpix, int x1, int y1, int x2, int y2)
-#else
-NVC0EXASolid(PixmapPtr pdpix, int x1, int y1, int x2, int y2, ScrnInfoPtr pScrn)
-#endif
 {
 	NVC0EXA_LOCALS(pdpix);
 
@@ -568,40 +550,24 @@ NVC0EXAStateCopyResubmit(struct nouveau_channel *chan)
 
 Bool
 NVC0EXAPrepareCopy(PixmapPtr pspix, PixmapPtr pdpix, int dx, int dy,
-#if !defined(__AROS__)
 		   int alu, Pixel planemask)
-#else
-		   int alu, Pixel planemask, ScrnInfoPtr pScrn)
-#endif
 {
 	NVC0EXA_LOCALS(pdpix);
 
 	if (MARK_RING(chan, 64, 4))
 		NOUVEAU_FALLBACK("ring space\n");
 
-#if !defined(__AROS__)
 	if (!NVC0EXAAcquireSurface2D(pspix, 1)) {
-#else
-	if (!NVC0EXAAcquireSurface2D(pspix, 1, pScrn)) {
-#endif
 		MARK_UNDO(chan);
 		NOUVEAU_FALLBACK("src pixmap\n");
 	}
 
-#if !defined(__AROS__)
 	if (!NVC0EXAAcquireSurface2D(pdpix, 0)) {
-#else
-	if (!NVC0EXAAcquireSurface2D(pdpix, 0, pScrn)) {
-#endif
 		MARK_UNDO(chan);
 		NOUVEAU_FALLBACK("dest pixmap\n");
 	}
 
-#if !defined(__AROS__)
 	NVC0EXASetROP(pdpix, alu, planemask);
-#else
-	NVC0EXASetROP(pdpix, alu, planemask, pScrn);
-#endif
 
 #if !defined(__AROS__)
 	pNv->pspix = pspix;
@@ -618,11 +584,7 @@ NVC0EXAPrepareCopy(PixmapPtr pspix, PixmapPtr pdpix, int dx, int dy,
 void
 NVC0EXACopy(PixmapPtr pdpix, int srcX , int srcY,
 			     int dstX , int dstY,
-#if !defined(__AROS__)
 			     int width, int height)
-#else
-			     int width, int height, ScrnInfoPtr pScrn)
-#endif
 {
 	NVC0EXA_LOCALS(pdpix);
 
@@ -1334,7 +1296,9 @@ NVC0EXADoneComposite(PixmapPtr pdpix)
 VOID HIDDNouveauNVC0SetPattern(struct CardData * carddata, ULONG clr0, ULONG clr1,
 		  ULONG pat0, ULONG pat1)
 {
-    NVC0EXASetPattern(NULL, clr0, clr1, pat0, pat1, carddata);
+    SET_SCRNINFOPTR
+
+    NVC0EXASetPattern(NULL, clr0, clr1, pat0, pat1);
 }
 
 /* NOTE: Assumes lock on bitmap is already made */
@@ -1343,10 +1307,11 @@ BOOL HIDDNouveauNVC0FillSolidRect(struct CardData * carddata,
     struct HIDDNouveauBitMapData * bmdata, ULONG minX, ULONG minY, ULONG maxX,
     ULONG maxY, ULONG drawmode, ULONG color)
 {
+    SET_SCRNINFOPTR
 
-    if (NVC0EXAPrepareSolid(bmdata, drawmode, ~0, color, carddata))
+    if (NVC0EXAPrepareSolid(bmdata, drawmode, ~0, color))
     {
-        NVC0EXASolid(bmdata, minX, minY, maxX, maxY, carddata);
+        NVC0EXASolid(bmdata, minX, minY, maxX, maxY);
         return TRUE;
     }
 
@@ -1360,9 +1325,11 @@ BOOL HIDDNouveauNVC0CopySameFormat(struct CardData * carddata,
     ULONG srcX, ULONG srcY, ULONG destX, ULONG destY, ULONG width, ULONG height,
     ULONG drawmode)
 {
-    if (NVC0EXAPrepareCopy(srcdata, destdata, 0, 0, drawmode, ~0, carddata))
+    SET_SCRNINFOPTR
+
+    if (NVC0EXAPrepareCopy(srcdata, destdata, 0, 0, drawmode, ~0))
     {
-        NVC0EXACopy(destdata, srcX, srcY, destX , destY, width, height, carddata);
+        NVC0EXACopy(destdata, srcX, srcY, destX , destY, width, height);
         return TRUE;
     }
 
