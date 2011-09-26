@@ -269,25 +269,26 @@ enum DMAObjects
 #define NV_ARCH_50  0x50
 #define NV_ARCH_C0  0xC0
 
+#define BLENDOP_SOLID           1
+#define BLENDOP_ALPHA_PREMULT   3
+#define BLENDOP_ALPHA           13
+
 /* nv_accel_common.c */
 BOOL HIDDNouveauAccelCommonInit(struct CardData * carddata);
 VOID HIDDNouveauAccelFree(struct CardData * carddata);
 
 BOOL NVAccelGetCtxSurf2DFormatFromPixmap(struct HIDDNouveauBitMapData * bmdata, LONG *fmt_ret);
 
+/* nv04_exa.c */
 VOID HIDDNouveauNV04SetPattern(struct CardData * carddata, ULONG clr0, ULONG clr1,
 		  ULONG pat0, ULONG pat1);
+BOOL HIDDNouveauNV04FillSolidRect(struct CardData * carddata,
+    struct HIDDNouveauBitMapData * bmdata, ULONG minX, ULONG minY, ULONG maxX,
+    ULONG maxY, ULONG drawmode, ULONG color);
 BOOL HIDDNouveauNV04CopySameFormat(struct CardData * carddata,
     struct HIDDNouveauBitMapData * srcdata, struct HIDDNouveauBitMapData * destdata,
     ULONG srcX, ULONG srcY, ULONG destX, ULONG destY, ULONG width, ULONG height,
     ULONG drawmode);
-BOOL HIDDNouveauNV04FillSolidRect(struct CardData * carddata,
-    struct HIDDNouveauBitMapData * bmdata, ULONG minX, ULONG minY, ULONG maxX,
-    ULONG maxY, ULONG drawmode, ULONG color);
-
-#define BLENDOP_SOLID           1
-#define BLENDOP_ALPHA_PREMULT   3
-#define BLENDOP_ALPHA           13
 
 /* nv10_exa.c */
 BOOL HIDDNouveauNV103DCopyBox(struct CardData * carddata,
@@ -307,16 +308,16 @@ BOOL HIDDNouveauNV303DCopyBox(struct CardData * carddata,
     ULONG srcX, ULONG srcY, ULONG destX, ULONG destY, ULONG width, ULONG height,
     ULONG blendop);
 
-
+/* nv50_exa.c */
 VOID HIDDNouveauNV50SetPattern(struct CardData * carddata, LONG col0, 
     LONG col1, LONG pat0, LONG pat1);
+BOOL HIDDNouveauNV50FillSolidRect(struct CardData * carddata,
+    struct HIDDNouveauBitMapData * bmdata, ULONG minX, ULONG minY, ULONG maxX,
+    ULONG maxY, ULONG drawmode, ULONG color);
 BOOL HIDDNouveauNV50CopySameFormat(struct CardData * carddata,
     struct HIDDNouveauBitMapData * srcdata, struct HIDDNouveauBitMapData * destdata,
     ULONG srcX, ULONG srcY, ULONG destX, ULONG destY, ULONG width, ULONG height,
     ULONG drawmode);
-BOOL HIDDNouveauNV50FillSolidRect(struct CardData * carddata,
-    struct HIDDNouveauBitMapData * bmdata, ULONG minX, ULONG minY, ULONG maxX,
-    ULONG maxY, ULONG drawmode, ULONG color);
 
 /* nvc0_exa.c */
 VOID HIDDNouveauNVC0SetPattern(struct CardData * carddata, ULONG clr0, ULONG clr1,

@@ -22,11 +22,9 @@
  */
 
 #include "nv_include.h"
-#if !defined(__AROS__)
 #include "nv_rop.h"
 
 #include "nv04_pushbuf.h"
-#endif
 #include "nv50_accel.h"
 #include "nv50_texture.h"
 
@@ -86,13 +84,16 @@ NV50EXABlendOp[] = {
 /* OverAlpha   */ { 1, 0, BF(          SRC_ALPHA), BF(ONE_MINUS_SRC_ALPHA) },
 };
 
-#if !defined(__AROS__)
 static Bool
 NV50EXA2DSurfaceFormat(PixmapPtr ppix, uint32_t *fmt)
 {
 	NV50EXA_LOCALS(ppix);
 
+#if !defined(__AROS__)
 	switch (ppix->drawable.bitsPerPixel) {
+#else
+	switch (ppix->depth) {
+#endif
 	case 8 : *fmt = NV50_2D_SRC_FORMAT_R8_UNORM; break;
 	case 15: *fmt = NV50_2D_SRC_FORMAT_X1R5G5B5_UNORM; break;
 	case 16: *fmt = NV50_2D_SRC_FORMAT_R5G6B5_UNORM; break;
@@ -149,14 +150,23 @@ NV50EXAAcquireSurface2D(PixmapPtr ppix, int is_src)
 	}
 
 	BEGIN_RING(chan, eng2d, mthd + 0x18, 4);
+#if !defined(__AROS__)
 	OUT_RING  (chan, ppix->drawable.width);
 	OUT_RING  (chan, ppix->drawable.height);
+#else
+	OUT_RING  (chan, ppix->width);
+	OUT_RING  (chan, ppix->height);
+#endif
 	if (OUT_RELOCh(chan, bo, 0, bo_flags) ||
 	    OUT_RELOCl(chan, bo, 0, bo_flags))
 		return FALSE;
 
 	if (is_src == 0)
+#if !defined(__AROS__)
 		NV50EXASetClip(ppix, 0, 0, ppix->drawable.width, ppix->drawable.height);
+#else
+		NV50EXASetClip(ppix, 0, 0, ppix->width, ppix->height);
+#endif
 
 	return TRUE;
 }
@@ -173,6 +183,7 @@ NV50EXASetPattern(PixmapPtr pdpix, int col0, int col1, int pat0, int pat1)
 	OUT_RING  (chan, pat1);
 }
 
+#if !defined(__AROS__)
 static void
 NV50EXASetROP(PixmapPtr pdpix, int alu, Pixel planemask)
 {
@@ -224,7 +235,43 @@ NV50EXASetROP(PixmapPtr pdpix, int alu, Pixel planemask)
 		pNv->currentRop = alu;
 	}
 }
+#else
+static void
+NV50EXASetROP(PixmapPtr pdpix, int alu, Pixel planemask)
+{
+	NV50EXA_LOCALS(pdpix);
+	int rop;
 
+	rop = NVROP[alu].copy;
+
+	BEGIN_RING(chan, eng2d, NV50_2D_OPERATION, 1);
+	if (alu == 0x03 /* DrawMode_Copy */) {
+		OUT_RING  (chan, NV50_2D_OPERATION_SRCCOPY);
+		return;
+	} else {
+		OUT_RING  (chan, NV50_2D_OPERATION_SRCCOPY_PREMULT);
+	}
+
+	BEGIN_RING(chan, eng2d, NV50_2D_PATTERN_FORMAT, 2);
+	switch (pdpix->depth) {
+		case  8: OUT_RING  (chan, 3); break;
+		case 15: OUT_RING  (chan, 1); break;
+		case 16: OUT_RING  (chan, 0); break;
+		case 24:
+		case 32:
+		default:
+			 OUT_RING  (chan, 2);
+			 break;
+	}
+	OUT_RING  (chan, 1);
+
+
+	BEGIN_RING(chan, eng2d, NV50_2D_ROP, 1);
+	OUT_RING  (chan, rop);
+}
+#endif
+
+#if !defined(__AROS__)
 static void
 NV50EXAStateSolidResubmit(struct nouveau_channel *chan)
 {
@@ -234,6 +281,7 @@ NV50EXAStateSolidResubmit(struct nouveau_channel *chan)
 	NV50EXAPrepareSolid(pNv->pdpix, pNv->alu, pNv->planemask,
 			    pNv->fg_colour);
 }
+#endif
 
 Bool
 NV50EXAPrepareSolid(PixmapPtr pdpix, int alu, Pixel planemask, Pixel fg)
@@ -259,11 +307,15 @@ NV50EXAPrepareSolid(PixmapPtr pdpix, int alu, Pixel planemask, Pixel fg)
 	OUT_RING  (chan, fmt);
 	OUT_RING  (chan, fg);
 
+#if !defined(__AROS__)
 	pNv->pdpix = pdpix;
 	pNv->alu = alu;
 	pNv->planemask = planemask;
 	pNv->fg_colour = fg;
 	chan->flush_notify = NV50EXAStateSolidResubmit;
+#else
+	chan->flush_notify = NULL;
+#endif
 	return TRUE;
 }
 
@@ -279,10 +331,13 @@ NV50EXASolid(PixmapPtr pdpix, int x1, int y1, int x2, int y2)
 	OUT_RING  (chan, x2);
 	OUT_RING  (chan, y2);
 
+#if !defined(__AROS__)
 	if((x2 - x1) * (y2 - y1) >= 512)
+#endif
 		FIRE_RING (chan);
 }
 
+#if !defined(__AROS__)
 void
 NV50EXADoneSolid(PixmapPtr pdpix)
 {
@@ -300,6 +355,7 @@ NV50EXAStateCopyResubmit(struct nouveau_channel *chan)
 	NV50EXAPrepareCopy(pNv->pspix, pNv->pdpix, 0, 0, pNv->alu,
 			   pNv->planemask);
 }
+#endif
 
 Bool
 NV50EXAPrepareCopy(PixmapPtr pspix, PixmapPtr pdpix, int dx, int dy,
@@ -322,11 +378,15 @@ NV50EXAPrepareCopy(PixmapPtr pspix, PixmapPtr pdpix, int dx, int dy,
 
 	NV50EXASetROP(pdpix, alu, planemask);
 
+#if !defined(__AROS__)
 	pNv->pspix = pspix;
 	pNv->pdpix = pdpix;
 	pNv->alu = alu;
 	pNv->planemask = planemask;
 	chan->flush_notify = NV50EXAStateCopyResubmit;
+#else
+	chan->flush_notify = NULL;
+#endif
 	return TRUE;
 }
 
@@ -356,10 +416,13 @@ NV50EXACopy(PixmapPtr pdpix, int srcX , int srcY,
 	OUT_RING  (chan, 0);
 	OUT_RING  (chan, srcY);
 
+#if !defined(__AROS__)
 	if(width * height >= 512)
+#endif
 		FIRE_RING (chan);
 }
 
+#if !defined(__AROS__)
 void
 NV50EXADoneCopy(PixmapPtr pdpix)
 {
@@ -1075,6 +1138,43 @@ NV50EXADoneComposite(PixmapPtr pdpix)
 #endif
 
 /* AROS CODE */
+
+VOID HIDDNouveauNV50SetPattern(struct CardData * carddata, LONG col0, 
+    LONG col1, LONG pat0, LONG pat1)
+{
+    NV50EXASetPattern(NULL, col0, col1, pat0, pat1);
+}
+
+/* NOTE: Assumes lock on bitmap is already made */
+/* NOTE: Assumes buffer is not mapped */
+BOOL HIDDNouveauNV50FillSolidRect(struct CardData * carddata,
+    struct HIDDNouveauBitMapData * bmdata, ULONG minX, ULONG minY, ULONG maxX,
+    ULONG maxY, ULONG drawmode, ULONG color)
+{
+    if (NV50EXAPrepareSolid(bmdata, drawmode, ~0, color))
+    {
+        NV50EXASolid(bmdata, minX, minY, maxX + 1, maxY + 1);
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
+/* NOTE: Assumes lock on bitmap is already made */
+/* NOTE: Assumes buffer is not mapped */
+BOOL HIDDNouveauNV50CopySameFormat(struct CardData * carddata,
+    struct HIDDNouveauBitMapData * srcdata, struct HIDDNouveauBitMapData * destdata,
+    ULONG srcX, ULONG srcY, ULONG destX, ULONG destY, ULONG width, ULONG height,
+    ULONG drawmode)
+{
+    if (NV50EXAPrepareCopy(srcdata, destdata, 0, 0, drawmode, ~0))
+    {
+        NV50EXACopy(destdata, srcX, srcY, destX , destY, width, height);
+        return TRUE;
+    }
+
+    return FALSE;
+}
 
 /* NOTE: Assumes lock on bitmap is already made */
 /* NOTE: Assumes buffer is not mapped */

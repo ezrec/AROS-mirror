@@ -101,7 +101,6 @@ NOUVEAU_HIDD_SOURCES := \
             nouveau_init \
             nouveaubitmapclass \
             nouveaugalliumclass \
-            nouveau_nv50_accel \
             nouveau_accel \
             nouveaui2c \
             arosc_emul \
