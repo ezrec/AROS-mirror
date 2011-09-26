@@ -491,11 +491,7 @@ NV50EXARenderTarget(PixmapPtr ppix, PicturePtr ppict, ScrnInfoPtr pScrn)
 	unsigned format;
 
 	/*XXX: Scanout buffer not tiled, someone needs to figure it out */
-#if !defined(__AROS__)
 	if (!nv50_style_tiled_pixmap(ppix))
-#else
-	if (!nv50_style_tiled_pixmap(ppix, pScrn))
-#endif
 		NOUVEAU_FALLBACK("pixmap is scanout buffer\n");
 
 	switch (ppict->format) {
@@ -621,11 +617,7 @@ NV50EXATexture(PixmapPtr ppix, PicturePtr ppict, unsigned unit, ScrnInfoPtr pScr
 	uint32_t mode;
 
 	/*XXX: Scanout buffer not tiled, someone needs to figure it out */
-#if !defined(__AROS__)
 	if (!nv50_style_tiled_pixmap(ppix))
-#else
-	if (!nv50_style_tiled_pixmap(ppix, pScrn))
-#endif
 		NOUVEAU_FALLBACK("pixmap is scanout buffer\n");
 
 	BEGIN_RING(chan, tesla, NV50TCL_TIC_ADDRESS_HIGH, 3);

@@ -70,11 +70,7 @@ NVAccelDownloadM2MF(PixmapPtr pspix, int x, int y, int w, int h,
 	/* Maximum DMA transfer */
 	unsigned line_count = pNv->GART->size / line_len;
 
-#if !defined(__AROS__)
 	if (!nv50_style_tiled_pixmap(pspix)) {
-#else
-	if (!nv50_style_tiled_pixmap(pspix, pScrn)) {
-#endif
 		linear     = 1;
 		src_pitch  = exaGetPixmapPitch(pspix);
 		src_offset += (y * src_pitch) + (x * cpp);
@@ -215,11 +211,7 @@ NVAccelUploadM2MF(PixmapPtr pdpix, int x, int y, int w, int h,
 	/* Maximum DMA transfer */
 	unsigned line_count = pNv->GART->size / line_len;
 
-#if !defined(__AROS__)
 	if (!nv50_style_tiled_pixmap(pdpix)) {
-#else
-	if (!nv50_style_tiled_pixmap(pdpix, pScrn)) {
-#endif
 		linear     = 1;
 		dst_pitch  = exaGetPixmapPitch(pdpix);
 		dst_offset += (y * dst_pitch) + (x * cpp);
@@ -417,15 +409,13 @@ nouveau_exa_destroy_pixmap(ScreenPtr pScreen, void *priv)
 }
 #endif
 
-#if !defined(__AROS__)
-bool
+Bool
 nv50_style_tiled_pixmap(PixmapPtr ppix)
 {
+#if !defined(__AROS__)
 	ScrnInfoPtr pScrn = xf86Screens[ppix->drawable.pScreen->myNum];
 #else
-Bool
-nv50_style_tiled_pixmap(PixmapPtr ppix, ScrnInfoPtr pScrn)
-{
+	ScrnInfoPtr pScrn = globalcarddataptr;
 #endif
 	NVPtr pNv = NVPTR(pScrn);
 

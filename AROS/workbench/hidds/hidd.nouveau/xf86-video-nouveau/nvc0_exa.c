@@ -228,10 +228,6 @@ static struct nvc0_exa_state exa_state;
 	struct nouveau_grobj *fermi = pNv->Nv3D; (void)fermi;          \
 	struct nvc0_exa_state *state = &exa_state; (void)state
 #else
-/* This construction is implemented so that original EXA funtion calls don't 
-   have to be extended with ScrnInfoPtr parameter which makes code harder to
-   maintain */
-extern struct CardData * globalcarddataptr;
 #define NVC0EXA_LOCALS(p)                                          \
 	ScrnInfoPtr pScrn = globalcarddataptr;                         \
 	NVPtr pNv = NVPTR(pScrn);                                      \
@@ -319,11 +315,7 @@ NVC0EXAAcquireSurface2D(PixmapPtr ppix, int is_src)
 	bo_flags  = NOUVEAU_BO_VRAM;
 	bo_flags |= is_src ? NOUVEAU_BO_RD : NOUVEAU_BO_WR;
 
-#if !defined(__AROS__)
 	if (!nv50_style_tiled_pixmap(ppix)) {
-#else
-	if (!nv50_style_tiled_pixmap(ppix, pScrn)) {
-#endif
 		BEGIN_RING(chan, eng2d, mthd, 2);
 		OUT_RING  (chan, fmt);
 		OUT_RING  (chan, 1);
