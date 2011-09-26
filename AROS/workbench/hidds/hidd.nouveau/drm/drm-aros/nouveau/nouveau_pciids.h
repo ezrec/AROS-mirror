@@ -536,7 +536,8 @@ struct drm_pciid nouveau_pciids [] =
     { 0x10de, 0x1201 }, /* GF114 [GeForce GTX 560] */
     { 0x10de, 0x1244 }, /* GF116 [GeForce GTX 550 Ti] */
 
-    
+    /* Entries missing in official list */
+    { 0x10de, 0x0e23 }, /* GF104 [GeForce GTX 460 SE] */ 
     { 0x0000, 0x0000 }
 };
 
