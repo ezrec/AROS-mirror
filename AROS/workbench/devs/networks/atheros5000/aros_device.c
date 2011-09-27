@@ -129,12 +129,12 @@ AROS_LH1(VOID, DevAbortIO,
 
 static const APTR vectors[] =
 {
-   (APTR)AROS_SLIB_ENTRY(DevOpen, S2, 1),
-   (APTR)AROS_SLIB_ENTRY(DevClose, S2, 2),
-   (APTR)AROS_SLIB_ENTRY(DevExpunge, S2, 3),
-   (APTR)AROS_SLIB_ENTRY(DevReserved, S2, 4),
-   (APTR)AROS_SLIB_ENTRY(DevBeginIO, S2, 5),
-   (APTR)AROS_SLIB_ENTRY(DevAbortIO, S2, 6),
+   (APTR)AROS_SLIB_ENTRY(DevOpen, S2),
+   (APTR)AROS_SLIB_ENTRY(DevClose, S2),
+   (APTR)AROS_SLIB_ENTRY(DevExpunge, S2),
+   (APTR)AROS_SLIB_ENTRY(DevReserved, S2),
+   (APTR)AROS_SLIB_ENTRY(DevBeginIO, S2),
+   (APTR)AROS_SLIB_ENTRY(DevAbortIO, S2),
    (APTR)-1
 };
 
@@ -144,7 +144,7 @@ static const APTR init_table[] =
    (APTR)sizeof(struct DevBase),
    (APTR)vectors,
    (APTR)&init_data,
-   (APTR)AROS_SLIB_ENTRY(DevInit, S2, 0),
+   (APTR)AROS_SLIB_ENTRY(DevInit, S2),
 };
 
 
