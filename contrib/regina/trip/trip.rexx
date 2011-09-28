@@ -5,7 +5,7 @@
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version. 
+ *  (at your option) any later version.
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -18,11 +18,11 @@
  */
 
 /*--------------------------------------------------------------------*/
-/* The purpose of this program is to try some strange constructions   */ 
+/* The purpose of this program is to try some strange constructions   */
 /*   in REXX, and to fool the interpreter to make a mistake           */
 /*                                                                    */
 /* Created ... ... : April 1989                                       */
-/* Last modified . : 6th September 1980                               */
+/* Last modified . : 14th March 2003                                  */
 /*                                                                    */
 /* Current version : 2.00                                             */
 /*                                                                    */
@@ -42,16 +42,16 @@ call notify 'comments'
 /*----- Comments can take any character ------------------------------*/
 /*   !"#$%&'  *(*+,-./  01234567  89:;<=>?
  *  @ABCDEFG  HIJKLMNO  PQRSTUVW  XYZ[\]^_
- *  `abcdefg  hijklomo  pqrstuvw  xyz{|}~  
- * 
- *  bel     bs      cr 
-     esc    
- *  tab 	     ff                          
- */ 
+ *  `abcdefg  hijklomo  pqrstuvw  xyz{|}~
+ *
+ *  bel     bs      cr
+     esc 
+ *  tab 	     ff  
+ */
 
 
 /*----- Let's see if we can nest comments ----------------------------*/
-test = /* /* */ ' */ ' ' /* ' /* */ */   
+test = /* /* */ ' */ ' ' /* ' /* */ */
 if test == ' */   /* ' then
    call complain "Comments can't be nested."
 else if test \== ' ' then
@@ -79,14 +79,6 @@ test = 'foo', /*comment*/
    'bar'
 if (test\=='foo bar') then
    call complain 'Comment after continutation mark confuses interpreter'
-
-/*----- Comments can come in the middle of operators -----------------*/
-if ( 'abc'=/* */=' abc ' ) then
-   call complain 'Comments could not be place inside operators'
-
-if ( 'abc'=/* *//* */=' abc ' ) then
-   call complain 'Comments could not be place inside operators'
-
 
 /*----- Comments can come in front of left paran in functions --------*/
 if words/* */('foo bar') words/* *//* */('foo bar') \== '2 2' then
@@ -116,18 +108,18 @@ if " "" ' """" '' ""'""' " \== ' " '' "" '''' "''"'' ' then
 /*
 string = xrange()
 interpret 'strin2 = "' || translate(xrange(,'"'),'  ','0a00'x)||xrange('"',      'fe'x) || '"'
-/* 
- * Unfortunately, there are several things we need to eliminate here. 
- * The most evident thing is newlines which are not allowed in literal 
- * strings. Regina is based on lex, which don't like 'ff'x or '00'x in 
- * the input string. Thus, in 'real life', we would set the limits to 
+/*
+ * Unfortunately, there are several things we need to eliminate here.
+ * The most evident thing is newlines which are not allowed in literal
+ * strings. Regina is based on lex, which don't like 'ff'x or '00'x in
+ * the input string. Thus, in 'real life', we would set the limits to
  * zero and ff, and not translate away newline.
- */ 
+ */
 do i=1 to 254
-   if substr(string,i+1,1) \== d2c(i) then 
+   if substr(string,i+1,1) \== d2c(i) then
       call complain 'Character' i 'is invalid in result strings',
              'char='c2x(d2c(i)) 'string='c2x(substr(string,i+1,1))
-   if substr(strin2,i+1,1) \== d2c(i) & i\=10 then 
+   if substr(strin2,i+1,1) \== d2c(i) & i\=10 then
       call complain 'Character' i 'is invalid in source code',
              'char='c2x(d2c(i)) 'string='c2x(substr(strin2,i+1,1) )
    end
@@ -193,7 +185,7 @@ syntax_hexstring_003:
 
 
 /*----- The "X" must not be part of another token --------------------*/
-drop X 
+drop X
 drop XYZZY
 if 'deedbeef'X||'YZZY' == 'deadbeef'XYZZY then
    call complain 'Read as hexstring when it should not'
@@ -212,12 +204,12 @@ if '0101 0010 0110 0101 0111 1000 0111 1000'b \== 'Rexx' then
 
 
 /*----- Both upper and lower case 'x' can be used --------------------*/
-if '1010010111110000'B \== '1010010111110000'b then 
+if '1010010111110000'B \== '1010010111110000'b then
    call complain 'Upper and lower case "b" not equivalent'
 
 
 /*----- Spaces at nibble boundaries, else error ----------------------*/
-if '0101  10101111  0000'B \== '01011010  11110000'B then 
+if '0101  10101111  0000'B \== '01011010  11110000'B then
    call complain 'Does not handle spaces at nibble boundaries'
 
 
@@ -271,7 +263,7 @@ if '111'B||'AR' == '111'BAR then
 /*--------------------------------------------------------------------*/
 call notify 'dataformats'
 
-   
+
 
 
 
@@ -296,7 +288,7 @@ if test \== 'abc NOP' then
 
 /*----- Let's see if it takes some heavy line continuation -----------*/
 if,
-   6, 
+   6,
      ==,
         7,
           then,
@@ -310,13 +302,13 @@ if,
 call notify 'expr'
 
 /*----- First, test all compariastion operators ----------------------*/
-str = \('abc'='abc')    \('abc'=='abc')    ('abc'\='abc')    ('abc'\=='abc'), 
+str = \('abc'='abc')    \('abc'=='abc')    ('abc'\='abc')    ('abc'\=='abc'),
        ('abc'='xyz')     ('abc'=='xyz')   \('abc'\='xyz')   \('abc'\=='xyz'),
       \('abc'=' abc ')   ('abc'==' abc ')  ('abc'\=' abc ') \('abc'\==' abc '),
        ('abc'\='abc')    ('abc'\=='abc')  \('abc'\='xyz')   \('abc'\=='xyz'),
        ('abc'\=' abc ') \('abc'\==' abc ')
 
-if (str\='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0') then 
+if (str\='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0') then
    call complain 'Comparison operators do not work properly'
 
 
@@ -335,12 +327,12 @@ if str\=='0 1 1 0' then
 
 
 /*----- Test logical NOT ---------------------------------------------*/
-parse upper version ver 
+parse upper version ver
 if pos('REGINA',ver)>0 then do
    ipret = 'junk = (((1 \= 0) \= 0) ~= 0)'
    signal on syntax name logical_nots
    interpret ipret
-   if junk\=1 then 
+   if junk\=1 then
       call complain "Didn't handle logical nots correctly"
    end
 
@@ -427,20 +419,20 @@ if (7-7%2) \== 4 then
 
 
 /*----- Is expressions evalueated completely -------------------------*/
-count = 1 
-junk = ( 1 | subproc() ) 
+count = 1
+junk = ( 1 | subproc() )
 if count \== 2 then
    call complain 'OR expressions not completely evaluated'
 
-count = 2 
-junk = ( 0 & subproc() ) 
+count = 2
+junk = ( 0 & subproc() )
 if count \== 3 then
    call complain 'AND expressions not completely evaluated'
 
 signal afterexpr
 
 subproc:
-   count = count + 1 
+   count = count + 1
    return 1
 
 afterexpr:
@@ -464,7 +456,7 @@ second = 'FOObar'
 if (first = second) then
    call complain 'the = operator is case insensitive'
 
-if (first == second) then 
+if (first == second) then
    call complain 'the == operator is case insensitive'
 
 
@@ -484,33 +476,37 @@ signal on syntax name strings_2
 drop name
 rc = -1000
 interpret '123 == "hallo"'
-rcsave = rc   
+rcsave = rc
 call complain 'Did not trap assignment with =='
 if (rcsave \== '-1000') then
    call complain 'suspect that command was performed instead of =='
 
 strings_2:
-
 parse source os .
-if os = "AMIGA" | os = "AROS" then do
-  'delete quiet 1'
-  'makelink from 1 to true'
-end
-else do
-  'rm -f ./1'
-  'ln -s /bin/true ./1'
-end
+If os = 'UNIX' | os = 'BEOS' | os = 'QNX' | os = 'SKYOS' Then
+   Do
+      'rm -f ./1'
+      'ln -s /bin/true ./1'
+   End
+If os = "AMIGA" | os = "AROS" Then
+   Do
+      'delete quiet 1'
+      'makelink from 1 to true'
+   End
 
 rc = -1000
 123 <= "hallo"
 if (rc \== '0') then
-   call complain 'Command was not executed, somehow'
+   call complain 'Command was not executed, is "." in PATH ?'
 
-if os = "AMIGA" | os = "AROS" then
-  'delete quiet 1'
-else
-  'rm -f ./1'
-
+If os = 'UNIX' | os = 'BEOS' | os = 'QNX' | os = 'SKYOS' Then
+   Do
+      'rm -f ./1'
+   End
+If os = "AMIGA" | os = "AROS" Then
+   Do
+      'delete quiet 1'
+   End
 
 /*--------------------------------------------------------------------*/
 /* Then we test the random generator                                  */
@@ -531,7 +527,7 @@ do 10
 if (random(10,10)\==random(10,10)) then
     call complain "Random does not respect upper and lower limits"
 
-if \(temp1==temp2) then 
+if \(temp1==temp2) then
    call complain 'Can not set seed in random generator'
 
 /*--------------------------------------------------------------------*/
@@ -577,7 +573,7 @@ signal on syntax name lexsynt
 interpret 'do (while=3); nop; end'
    call complain "Incorrect handle of WHILE in exprf in DO"
 lexsynt:
-   
+
 
 
 
@@ -594,7 +590,7 @@ signal thelabel
 test = 'after'
 
 thelabel:
-if test\=='before' then 
+if test\=='before' then
    call complain 'Something is really wrong with labels'
 
 signal jumpover
@@ -604,7 +600,7 @@ jumpover:
 
 
 /*----- One statement can have more than one label ------------------*/
-foobar = 1 
+foobar = 1
 signal first
 
 first: second: third: foobar = foobar + 1
@@ -617,9 +613,9 @@ if (foobar\=4) then
 
 /*----- Reserved words can be used as labels -------------------------*/
 address: value: arg: call: on: off: name: do: end: to: by: for: forever:
-while: until: drop: exit: if: then: else: interpret: iterate: leave: nop: 
-numeric: digits: form: scientific: engineering: fuzz: options: parse: 
-upper: linein: pull: source: with: var: version: procedure: expose: push: 
+while: until: drop: exit: if: then: else: interpret: iterate: leave: nop:
+numeric: digits: form: scientific: engineering: fuzz: options: parse:
+upper: linein: pull: source: with: var: version: procedure: expose: push:
 queue: return: say: select: when: otherwise: signal: trace: nop
 
 
@@ -640,7 +636,7 @@ ass_numbers_1:
       call complain 'The representation of number changed'
 
    if .34 + 0 \== '0.34' then
-      call complain 'The value of number changed' 
+      call complain 'The value of number changed'
 
 
 /*----- integer and fraction part zero simultaneously ? --------------*/
@@ -653,13 +649,13 @@ start_do_loop:
    parse var badnumbers badnumber badnumbers
    signal on syntax name numbers_2
    istring = 'sum = 1. +' badnumber '+ .1'
-   interpret istring 
+   interpret istring
    call complain 'The parsing did not choke on the number "'badnumber'".'
 
    numbers_2:
    signal on syntax name numbers_3
    istring = 'sum = 1. + "'badnumber'" + .1'
-   interpret istring 
+   interpret istring
    call complain 'The pluss operator performed pluss on number "'badnumber'".'
 
    numbers_3:
@@ -686,7 +682,7 @@ call notify 'functions'
 
 /*--------------------------------------------------------------------*/
 call testing
-if result \== '17' then 
+if result \== '17' then
    call complain 'RESULT not correctly set after call'
 signal aftertesting
 
@@ -718,7 +714,7 @@ call notify 'recursing'
 /*----- First a simple test ------------------------------------------*/
 signal afterrecurse
 
-recurse: procedure 
+recurse: procedure
    parse arg parameter
    if parameter>0 then do
 /*      say parameter */
@@ -752,18 +748,18 @@ return
 
 
 tell:
-   str = arg(1) 
+   str = arg(1)
    if length+length(str)>70 then do
       say ''
       length = charout(,'   ' || str || ', ') ; end
    else
-      length = length + charout(,str || ', ') 
+      length = length + charout(,str || ', ')
 return
 
 
 notify:
    parse arg word .
-   written = written + length(word) + 2 
+   written = written + length(word) + 2
    if written>75 then do
       written = length(word)
       say ' '

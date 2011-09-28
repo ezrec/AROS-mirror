@@ -16,17 +16,12 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
-
-/*
- * $Id$
- */
-
 #ifndef _UTSNAME_ALREADY_DEFINED_
 #define _UTSNAME_ALREADY_DEFINED_
 
-#define _UTSNAME_LENGTH 20
+#define _UTSNAME_LENGTH 32
 
-struct utsname
+struct regina_utsname
 {
   char sysname[_UTSNAME_LENGTH];
   char nodename[_UTSNAME_LENGTH];
@@ -34,14 +29,5 @@ struct utsname
   char version[_UTSNAME_LENGTH];
   char machine[_UTSNAME_LENGTH];
 };
-
-#if defined(__cplusplus)
-extern "C"
-{
-#endif
-int uname (struct utsname *name);
-#if defined(__cplusplus)
-}
-#endif
 
 #endif /* _UTSNAME_ALREADY_INCLUDED_ */

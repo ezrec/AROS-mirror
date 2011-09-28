@@ -125,10 +125,7 @@ Routine:	getopt
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
-int getopt(argc, argv, optstring)
-int   argc;
-char *argv[];
-char *optstring;
+int getopt(int argc, char * const argv[], const char *optstring)
 {
   static char *ap = (char *) 0;
   char  *vp;

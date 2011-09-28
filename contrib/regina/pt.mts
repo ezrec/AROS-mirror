@@ -12,6 +12,7 @@
 #
 # portuguese - translation by Susana Carpenter,
 #              with assist by uni-lingual C>nerd husband (brian)
+#            - additional messages by Josie Medieros
 #
   0,  1,Erro %s ao executar %s, linha %d:|<value>,<source>,<linenumber>
   0,  2,Erro %s na investigacao interativa:|<value>
@@ -43,8 +44,8 @@
  10,  2,END correspondente a DO na linha %d deve ter um simbolo em seguida que seja correspondente a variavel de controle (ou nenhum simbolo); encontrado "%s"|<linenumber>,<token>
  10,  3,END correspondente a DO na linha %d nao deve ter um simbolo em seguida porque nao ha variavel de controle; encontrado "%s"|<linenumber>,<token>
  10,  4,END corresponding to SELECT on line %d must not have a symbol following; found "%s"|<linenumber>,<token>
- 10,  5,END must not immediately follow THEN
- 10,  6,END must not immediately follow ELSE
+ 10,  5,END nao deve ser imediatamente seguido de THEN
+ 10,  6,END nao deve ser imediatamente seguido de ELSE
  11,  0,[pilha de controle cheia]
  12,  0,[Clausula > 1024 caracteres]
  13,  0,Caractere invalido no programa
@@ -106,7 +107,7 @@
  26,  0,Numero inteiro invalido
  26,  1,Numeros inteiros devem encaixar-se na configuracao DIGITS em uso (%d); encontrado "%s"|<value>,<value>
  26,  2,O valor da expressao de contagem de repeticoes na instrucao DO deve ser zero ou um numero inteiro positivo; encontrado "%s"|<value>
- 26,  3,O valor da expressao FOU na instrucao DO deve ser zero ou um numero inteiro positivo; encontrado "%s"|<value>
+ 26,  3,O valor da expressao FOR na instrucao DO deve ser zero ou um numero inteiro positivo; encontrado "%s"|<value>
  26,  4,O parametro posicional do modelo de analise deve ser um numero inteiro; encontrado "%s"|<value>
  26,  5,O valor dos NUMERIC DIGITS deve ser zero ou um numero inteiro positivo; encontrado "%s"|<value>
  26,  6,O valor NUMERIC FUZZ deve ser zero ou um numero inteiro positivo; encontrado "%s"|<value>
@@ -130,7 +131,7 @@
  31,  1,Um valor nao pode ser atribuido a um numero; encontrado "%s"|<token>
  31,  2,Simbolo de variavel nao deve iniciar com um numero; encontrado "%s"|<token>
  31,  3,Simbolo de variavel nao deve iniciar com "."; encontrado "%s"|<token>
- 32,  0,[Uso invalido de tronco]
+ 32,  0,[Uso invalido de stem]
  33,  0,Resultado de expressao invalido
  33,  1,O valor de NUMERIC DIGITS "%d" deve ultrapassar o valor de NUMERIC FUZZ "(%d)"|<value>,<value>
  33,  2,O valor de NUMERIC DIGITS "%d" nao deve ultrapassar %d|<value>,#Limit_Digits
@@ -168,7 +169,7 @@
  40, 19,%s argumento 2, "%s", nao estah no formato descrito em argumento 3, "%s"|<bif>,<value>,<value>
  40, 21,%s argumento %d nao deve ser nulo|<bif>,<argnumber>
  40, 23,%s argumento %d deve ser um caractere unico; encontrado "%s"|<bif>,<argnumber>,<value>
- 40, 24,%s argumento  deve ser uma linha de caracteres binaria; encontrado "%s"|<bif>,<value>
+ 40, 24,%s argumento 1 deve ser uma linha de caracteres binaria; encontrado "%s"|<bif>,<value>
  40, 25,%s argumento 1 deve ser uma linha de caracteres hexadecimal; encontrado "%s"|<bif>,<value>
  40, 26,%s argumento 1 deve ser um simbolo valido; encontrado "%s"|<bif>,<value>
  40, 27,%s argumento 1, deve ser um nome de stream valido; encontrado "%s"|<bif>,<value>
@@ -182,7 +183,7 @@
  40, 36,%s argumento 1 deve ser o nome de uma variavel no agrupamento; encontrado "%s"|<bif>,<value>
  40, 37,%s argumento 3 deve ser o nome de um agrupamento; encontrado "%s"|<bif>,<value>
  40, 38,%s argumento %d nao eh grande o bastante para formatar "%s"|<bif>,<argnumber>,<value>
- 40, 39,%s argument 3 is not zero or one; found "%s"|<bif>,<value>
+ 40, 39,%s argumento 3 nao eh zero ou um; encontrado "%s"|<bif>,<value>
  40, 41,%s argumento %d deve estar dentro dos limites do stream; encontrado "%s"|<bif>,<argnumber>,<value>
  40, 42,%s argumento 1; nao eh possivel posicionar neste stream; encontrado "%s"|<bif>,<value>
  40,914,[%s argumento  %d, deve ser um dos "%s"; encontrado "%s"]|<bif>,<argnumber>,<optionslist>,<value>
@@ -191,6 +192,21 @@
  40,922,[%s argumento %d, sub-comando insuficientes; minimo necessario eh %d; encontrado %d]|<bif>,<argnumber>,<value>,<value>
  40,923,[%s argumento %d, sub-comandos demais; maximo necessario eh %d; encontrado %d]|<bif>,<argnumber>,<value>,<value>
  40,924,[%s argumento %d, especificacao posicional invalida; eh necessario um dos "%s"; encontrado "%s"]|<bif>,<argnumber>,<value>,<value>
+ 40,930,[RXQUEUE, funcao TIMEOUT, espera-se um numero total entre 0 e %d; encontrado \"%s\"]|<value>,<value>
+ 40,980,Unexpected input, either unknown type or illegal data%s%s|: ,<location>
+ 40,981,Number out of the allowed range%s%s|: ,<location>
+ 40,982,String too big for the defined buffer%s%s|: ,<location>
+ 40,983,Illegal combination of type/size%s%s|: ,<location>
+ 40,984,Unsupported number like NAN, +INF, -INF%s%s|: ,<location>
+ 40,985,Structure too complex for static internal buffer%s%s|: ,<location>
+ 40,986,An element of the structure is missing%s%s|: ,<location>
+ 40,987,A value of the structure is missing%s%s|: ,<location>
+ 40,988,The name or part of the name is illegal for the interpreter%s%s|: ,<location>
+ 40,989,A problem occured at the interface between Regina and GCI%s%s|: ,<location>
+ 40,990,The type won't fit the requirements for basic types (arguments/return value)%s%s|: ,<location>
+ 40,991,The number of arguments is wrong or an argument is missing%s%s|: ,<location>
+ 40,992,GCI's internal stack for arguments got an overflow%s%s|: ,<location>
+ 40,993,GCI counted too many nested LIKE containers%s%s|: ,<location>
  41,  0,mah conversao aritmetica
  41,  1,valor nao-numerico ("%s") a esquerda da operacao aritmetica "%s"|<value>,<operator>
  41,  2,valor nao-numerico ("%s") a direita da operacao aritmetica "%s"|<value>,<operator>
@@ -245,8 +261,9 @@
  90,  3,[%s argumento %d, a opcao deve iniciar com um dos "%s" com "OPTIONS STRICT_ANSI"; encontrado "%s"; uma extensao Regina]|<bif>,<argnumber>,<optionslist>,<value>
  93,  0,[chamada incorreta para rotina]
  93,  1,[o comando STREAM %s deve ser seguido por um dos "%s"; encontrado "%s"]|<token>,<value>,<value>
- 93,  3,[commando STREAM deve ser um dos "%s"; encontrado "%s"]|<value>,<value>
+ 93,  3,[o comando STREAM deve ser um dos "%s"; encontrado "%s"]|<value>,<value>
  94,  0,[erro de interface de fila externa]
+ 94,  1,[a fila externa cronometrou para fora]
  94, 99,[erro interno com interface de fila externa: %d "%s"]|<description>,<systemerror>
  94,100,[erro geral do sistema com interface de fila externa. %s. %s]|<description>,<systemerror>
  94,101,[Erro ao conectar a %s na porta %d: "%s"]|<machine>,<portnumber>,<systemerror>
@@ -257,7 +274,10 @@
  94,106,[foi ultrapasso o numero maximo de filas externas: %d]|<maxqueues>
  94,107,[ocorreu um erro ao ler o soquete: %s]|<systemerror>
  94,108,[foi passado comutador invalido. Deve ser um dos "%s"]|<switch>
- 95,  0,[dispositivo restrito usado em modo "safe"]
+ 94,109,[Fila \"%s\" nao encontrada]|<queuename>
+ 94,110,[%s invalido para linhas externasl|<bif>
+ 94,111,[RXQUEUE funcao %s invalida para linhas internas]|<functionname>
+ 95,  0,[dispositivo restrito usado em modo "seguro"]
  95,  1,[%s invalido no modo "seguro"]|<token>
  95,  2,[%s argumento %d invalido no modo "seguro"]|<bif>,<argnumber>
  95,  3,[%s argumento %d: "%s", invalido no modo "seguro"]|<bif>,<argnumber>,<token>

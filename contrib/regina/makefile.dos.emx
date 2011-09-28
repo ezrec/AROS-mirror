@@ -27,13 +27,20 @@ SRCDIR=$(REGINA_SRCDIR)
 #SRCDIR=path_to_this_file
 
 CC = gcc
+LD = gcc
+
+include $(SRCDIR)\regina.ver
+VERDOT = $(VER_DOT)
+VERDATE = $(VER_DATE)
 
 ifeq ($(DEBUG),Y)
-OPTIMIZE = -g  -fbounds-checking -Wall
+OPTIMIZE = -g  -fbounds-checking -Wall -Wno-char-subscripts
+LDOPT = -g
 LIBS = -lcheck
 SHLIBS = -lcheck
 else
-OPTIMIZE = -O3 -fomit-frame-pointer -Wall -DNDEBUG
+OPTIMIZE = -O3 -fomit-frame-pointer -Wall -DNDEBUG -Wno-char-subscripts
+LDOPT = -O3
 LIBS =
 SHLIBS =
 endif
@@ -50,13 +57,14 @@ else
 USEFLISTS =
 endif
 
-CEXTRA = -DDOS -DEMX -DNO_EXTERNAL_QUEUES
+CEXTRA = -DDOS -DEMX -DNO_EXTERNAL_QUEUES -funsigned-char -DREGINA_VERSION_DATE=\"$(VER_DATE)\" -DREGINA_VERSION_MAJOR=\"$(VER_MAJOR)\" -DREGINA_VERSION_MINOR=\"$(VER_MINOR)\" -DREGINA_VERSION_SUPP=\"$(VER_SUPP)\"
 EXTQUEUE_OBJS = #extstack.$(OBJ) rexxbif.$(OBJ)
 EXTQUEUE_SHOBJS = #extstack.sho rexxbif.sho
 EEXTRA =
 DYN_COMP =
 THREADING =
 MT_FILE = mt_notmt
+OS_FILE = os_other
 SHL = dll
 OBJ=o
 LD_RXLIB1=ld

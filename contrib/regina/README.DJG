@@ -1,4 +1,4 @@
-                        Regina 3.0
+                        Regina 3.4
                        for DOS/DPMI
 
 This file contains 32 bit executables of the Regina Rexx interpreter for
@@ -31,21 +31,21 @@ files into a directory specified in your PATH environment variable.
 
 If you want to have Regina error messages displayed in you native
 language, set the environment variable; REGINA_LANG to the two-character
-language abbreviation (the first two chracters of a file in the NLS 
+language abbreviation (the first two chracters of a file in the NLS
 directory), and set REGINA_LANG_DIR to the directory containing the
 *.mtb files.
 
 This port was built with the WATTCP-32 package, which provides access to
 a DOS TCP/IP stack. To use the external queue interface of Regina, you
 need to install an appropriate packet driver for your network card.
-As a result, this port of Regina cannot access external data queues when 
-run from inside the DOS box under OS/2 or NT, because packet drivers do 
+As a result, this port of Regina cannot access external data queues when
+run from inside the DOS box under OS/2 or NT, because packet drivers do
 not run in these environments.
 
 Cheers, Mark.
 ------------------------------------------------------------------------
-* Mark Hessling,  M.Hessling@qut.edu.au  http://www.lightlink.com/hessling/
-* Author of THE, a Free XEDIT/KEDIT editor and, Rexx/SQL
-* Maintainer of PDCurses: Public Domain Curses and, Regina Rexx interpreter
-* Use Rexx ? join the Rexx Language Association: http://www.rexxla.org
+* Mark Hessling,  mark@rexx.org  http://www.rexx.org/
+* Author of THE, a Free XEDIT/KEDIT editor and, Rexx/SQL, Rexx/CURL, etc.
+* Maintainer of Regina Rexx interpreter and Rexx/Tk
+* Use Rexx? join the Rexx Language Association: http://www.rexxla.org/
 ------------------------------------------------------------------------

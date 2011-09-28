@@ -3,7 +3,7 @@
 
 #include <setjmp.h>
 
-struct extlib_funcbox; /* private type in extlib.c */
+struct _OS_Dep_funcs;
 
 /* tsd_t holds all global vars which may change between threads as expected.*/
 typedef struct _tsd_t {
@@ -22,13 +22,11 @@ typedef struct _tsd_t {
    void *                  shl_tsd ;           /* local variables of shell.c */
    void *                  mat_tsd ;           /* local variables of strmath.c */
    void *                  cli_tsd ;           /* local variables of client.c */
-   void *                  arx_tsd ;           /* local variables of arexxfuncs.c */
    void *                  ami_tsd ;           /* local variables of amigafuncs.c */
+   void *                  arx_tsd ;           /* local variables of arexxfuncs.c */
    void *                  mt_tsd ;            /* local variables of mt_???.c */
 
    void *                  CH;                 /* only rexxsaa.c */
-   int                     stemidx;            /* only get_next_variable() */
-   int                     tailidx ;           /* only get_next_variable() */
    int                     indentsize;         /* only in r2perl.c */
    int                     loopcnt;            /* only in r2perl.c */
    paramboxptr             listleaked_params ; /* only in funcs.c */
@@ -41,7 +39,6 @@ typedef struct _tsd_t {
    void *                  stkaddr;            /* only in alloca.c */
    volatile char *         tmp_strs[8];        /* only tmpstr_of() */
    int                     next_tmp_str;       /* only tmpstr_of() */
-   struct extlib_funcbox * extfuncs[133];      /* only in extlib.c */
    paramboxptr             bif_first ;         /* only builtinfunc() */
    void *                  firstmacro ;        /* only in macros.c */
 
@@ -61,24 +58,34 @@ typedef struct _tsd_t {
    /* Stuff for a delayed exit()/setjmp(): */
    int                     in_protected;
    jmp_buf                 protect_return;
-   volatile enum           { PROTECTED_DelayedExit,
-                             PROTECTED_DelayedSetjmpPanic,
-                             PROTECTED_DelayedSetjmpBuf} delayed_error_type;
+   jmp_buf                 gci_jump;
+   volatile delayed_error_type_t delayed_error_type;
    volatile int            expected_exit_error;
                             /* call exit() with this value if
-                             * delayed_error_type is PROTECTED_DelayedExit
+                             * delayed_error_type is PROTECTED_DelayedScriptExit
                              */
+   volatile int            HaltRaised;
    void *                  (*MTMalloc)(const struct _tsd_t *TSD,size_t size);
    void                    (*MTFree)(const struct _tsd_t *TSD,void *chunk);
    void                    (*MTExit)(int code);
+   char                    gci_prefix[2];
+   const char             *BIFname;
+   void                   *BIFfunc;
+   struct _OS_Dep_funcs   *OS;
 } tsd_t;
 
-
-#if defined(POSIX) && (defined(_REENTRANT) || defined(REENTRANT))
+#if (defined(POSIX) || defined(_POSIX_SOURCE) || defined(_PTHREAD_SEMANTICS)) && (defined(_REENTRANT) || defined(REENTRANT))
 #  include "mt_posix.h"
+#elif defined(_WIN64) && defined(REGINA_SINGLE_THREADED)
+#  include "mt_notmt.h"
+#  define SINGLE_THREADED
+#elif defined(_WIN64) && defined(_MT)
+#  include "mt_win32.h"
 #elif defined(_WIN32) && defined(_MT)
 #  include "mt_win32.h"
 #elif defined(OS2) && defined(__EMX__) && defined(__MT__) && defined(REGINA_MULTI)
+#  include "mt_os2.h"
+#elif defined(OS2) && defined(__WATCOMC__) && defined(REGINA_MULTI)
 #  include "mt_os2.h"
 #elif (defined(__AROS__) || defined(_AMIGA)) && defined(RXLIB)
 #  include "mt_amigalib.h"

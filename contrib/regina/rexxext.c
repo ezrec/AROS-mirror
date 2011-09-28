@@ -1,7 +1,3 @@
-#ifndef lint
-static char *RCSid = "$Id$";
-#endif
-
 /*
  *  The Regina Rexx Interpreter
  *  Copyright (C) 1992-1994  Anders Christensen <anders@pvv.unit.no>
@@ -21,6 +17,17 @@ static char *RCSid = "$Id$";
  *  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#if defined( __EMX__ ) && !defined(DOS)
+# include <os2.h>
+# define DONT_TYPEDEF_PFN
+#endif
+
+#if defined(__WATCOMC__) && defined(OS2)
+# define INCL_DOS
+# include <os2.h>
+# define DONT_TYPEDEF_PFN
+#endif
+
 #include "rexx.h"
 #include <stdio.h>
 #if !defined(VMS)                                       /* MH 10-06-96 */
@@ -36,7 +43,7 @@ static char *RCSid = "$Id$";
 # ifdef _MSC_VER
 #  if _MSC_VER >= 1100
 /* Stupid MSC can't compile own headers without warning at least in VC 5.0 */
-#   pragma warning(disable: 4115 4201 4214)
+#   pragma warning(disable: 4115 4201 4214 4514)
 #  endif
 # endif
 # include <windows.h>
@@ -55,7 +62,7 @@ streng *rex_userid( tsd_t *TSD, cparamboxptr parms )
    DWORD bufsize=sizeof( buf );
 #endif
    checkparam(  parms,  0,  0 , "USERID" ) ;
-#if defined(VMS) || defined(MAC) || defined(__WATCOMC__) || defined(_MSC_VER) || defined(_AMIGA) || defined(__AROS__) || defined(__MINGW32__) || defined(__BORLANDC__) || defined(__EPOC32__)
+#if defined(VMS) || defined(MAC) || ( defined(__WATCOMC__) && !defined(__QNX__) ) || defined(_MSC_VER) || defined(_AMIGA) || defined(__MINGW32__) || defined(__BORLANDC__) || defined(__EPOC32__) || defined(__LCC__) || defined(_AMIGA) || defined(__AROS__)
 # if defined(WIN32) && !defined(WDOSX)
    if ( GetUserName( buf, &bufsize ) )
    {
@@ -73,10 +80,11 @@ streng *rex_userid( tsd_t *TSD, cparamboxptr parms )
 
 streng *rex_rxqueue( tsd_t *TSD, cparamboxptr parms )
 {
-   char opt='?' ;
-   streng *result=NULL ;
+   char opt='?';
+   streng *result=NULL;
+   int rc;
 
-   checkparam(  parms,  1,  2 , "RXQUEUE" ) ;
+   checkparam(  parms,  1,  3 , "RXQUEUE" ) ;
 
    opt = getoptionchar( TSD, parms->value, "RXQUEUE", 1, "CDGS", "T" ) ;
    switch ( opt )
@@ -84,11 +92,20 @@ streng *rex_rxqueue( tsd_t *TSD, cparamboxptr parms )
       case 'C': /* Create */
          if ( ( parms->next )
          && ( parms->next->value ) )
-            create_queue( TSD, parms->next->value, &result );
+            rc = create_queue( TSD, parms->next->value, &result );
             /* result created by create_queue() */
          else
-            create_queue( TSD, NULL, &result );
-            /* result created by create_queue() */
+            rc = create_queue( TSD, NULL, &result );
+
+         if ( result == NULL )
+         {
+            if ( rc == 5 )
+               exiterror( ERR_EXTERNAL_QUEUE, 104, tmpstr_of( TSD, parms->next->value ) );
+            else
+               exiterror( ERR_EXTERNAL_QUEUE, 99, rc, "Creating from stack" );
+         }
+
+         /* result created by create_queue() or an internal error occurred */
          break;
       case 'D': /* Delete */
          if ( ( parms->next )
@@ -119,7 +136,7 @@ streng *rex_rxqueue( tsd_t *TSD, cparamboxptr parms )
             result = int_to_streng( TSD, timeout_queue(TSD, parms->next->value, NULL ) );
             /* result created here */
          else
-            exiterror( ERR_INCORRECT_CALL, 5, "RXQUEUE", 2 );
+            exiterror( ERR_INCORRECT_CALL, 5, "RXQUEUE", 3 );
          break;
    }
    return result ;
@@ -180,7 +197,7 @@ char *mygetenv( const tsd_t *TSD, const char *name, char *buf, int bufsize )
       return NULL;
    if (!buf)
    {
-      ptr1 = MallocTSD(strlen(ptr)+1);
+      ptr1 = (char *)MallocTSD((int)strlen(ptr)+1);
       if (!ptr1)
          return NULL;
       strcpy(ptr1, ptr);
@@ -196,15 +213,14 @@ char *mygetenv( const tsd_t *TSD, const char *name, char *buf, int bufsize )
 #endif
 }
 
-#if defined(WIN32) && !defined(__WINS__) && !defined(__EPOC32__)
-
+#if !defined(__WINS__) && !defined(__EPOC32__)
 static int actually_pause = 1;
 
 /*
  * These functions are used to allow Regina to display "Press ENTER key to exit..."
  * in the console if it is NOT started from a console.
  */
-void do_pause_at_exit( void )
+static void do_pause_at_exit( void )
 {
    int ch;
    if ( actually_pause )
@@ -215,42 +231,62 @@ void do_pause_at_exit( void )
    }
 }
 
-void flush_stdout( void )
-{
-   fflush( stdout );
-   return;
-}
-
-void dont_pause_at_exit( void )
-{
-   actually_pause = 0;
-}
-
 void set_pause_at_exit( void )
 {
-   CONSOLE_SCREEN_BUFFER_INFO csbi;
-   HANDLE hStdOutput;
-
-   hStdOutput = GetStdHandle(STD_OUTPUT_HANDLE);
-   if ( GetConsoleScreenBufferInfo( hStdOutput, &csbi ) )
-   {
-      /* 
-       * if cursor position is (0,0) then use pause
-       */
-      if ( csbi.dwCursorPosition.X == 0 
-      &&   csbi.dwCursorPosition.Y == 0 )
-      {
-         atexit( do_pause_at_exit );
-      }
-      else
-      {
-         atexit( flush_stdout );
-      }
-   }
-   else
-   {
-      atexit( flush_stdout );
-   }
-   return;
+   atexit( do_pause_at_exit );
 }
 #endif
+
+/* You are not allowed to use TSD or __regina_get_tsd() here! */
+void *IfcAllocateMemory( unsigned long size )
+{
+   void *ret;
+#if defined( WIN32 )
+   /* We now use the Virtual-functions instead of Global... */
+   ret = VirtualAlloc( NULL, size, MEM_COMMIT, PAGE_READWRITE ) ;
+   return ret;
+#elif defined( __EMX__ ) && !defined(DOS)
+   if (_osmode == OS2_MODE)
+   {
+      if ( (BOOL)DosAllocMem( &ret, size, fPERM|PAG_COMMIT ) )
+         return NULL;
+      else
+         return ret;
+   }
+   else /* DOS or something else */
+   {
+      ret = (void *)malloc( size );
+      return ret;
+   }
+#elif defined( OS2 )
+   if ( (BOOL)DosAllocMem( &ret, size, fPERM|PAG_COMMIT ) )
+      return NULL;
+   else
+      return ret;
+#else
+   ret = (void *)malloc( size );
+   return ret;
+#endif
+}
+
+/* You are not allowed to use TSD or __regina_get_tsd() here! */
+unsigned long IfcFreeMemory( void *ptr )
+{
+#if defined( WIN32 )
+   /* In opposite to most(!) of the documentation from Microsoft we shouldn't
+    * decommit and release together. This won't work at least under NT4SP6a.
+    * We can first decommit and then release or release at once. FGC.
+    */
+   VirtualFree( ptr, 0, MEM_RELEASE ) ;
+#elif defined( __EMX__ ) && !defined(DOS)
+   if (_osmode == OS2_MODE)
+      DosFreeMem( ptr );
+   else /* DOS or something else */
+      free( ptr );
+#elif defined( OS2 )
+   DosFreeMem( ptr );
+#else
+   free( ptr );
+#endif
+   return 0;
+}

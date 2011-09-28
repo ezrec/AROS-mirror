@@ -5,7 +5,7 @@
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version. 
+ *  (at your option) any later version.
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -17,7 +17,7 @@
  *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-written = 0 
+written = 0
 
 /* ======================= DATE ============================== */
 /* Not a Nice way to do it, but probably the only way ...      */
@@ -28,6 +28,13 @@ Mons   = 'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'
 Months = 'January February March April May June July August',
          'September October November December'
 
+parse source os .
+If os = 'UNIX' | os = 'BEOS' | os = 'QNX' | os = 'SKYOS' Then Signal beforedate
+
+call notify 'date, time NOT TESTABLE'
+exit 0
+
+beforedate:
 call notify "date"
 /* call ch date('C'),   'date'("+%j")+trunc(('date'("+%y")-1)*365.25)+365 */
    call ch date('D'),   strip('date'("+%j"),'L','0')
@@ -58,7 +65,7 @@ call notify 'time'
    /* time(c) */
 
    if (times > 12*3600) then do
-      times2 = times - 12*3600 
+      times2 = times - 12*3600
       suff = 'pm'
       end
    else do
@@ -69,7 +76,7 @@ call notify 'time'
    if ((times2%3600)=0) then
       times2 = 12*3600
 
-   hr = times2%3600 
+   hr = times2%3600
    if (hr==0) then
       hr = '12'
    call ch timec, hr':'right((times%60)//60,2,'0')suff
@@ -90,11 +97,11 @@ call notify 'time'
    if (after > 499999) then
       secs = secs + 1
    if (secs == 60) then do
-      secs = 0 
+      secs = 0
       minutes = minutes + 1
       end
    if (minutes == 60) then do
-      minutes = 0 
+      minutes = 0
       hour = hour + 1
       end    /* ok ... let's just assume it is not midnight .... */
 
@@ -117,7 +124,7 @@ aftertime:
 exit 0
 
 
-ch: procedure expose sigl 
+ch: procedure expose sigl
    parse arg first, second
    if first ^== second then do
       say
@@ -128,7 +135,7 @@ ch: procedure expose sigl
 
 
 notify:
-   parse arg word .
+   parse arg word
    written = written + length(word) + 2
    if written>75 then do
       written = length(word)

@@ -13,14 +13,14 @@ DEMODIR := $(AROS_TESTS)/rexx
 #MM- contrib-regina-quick : \
 #MM      contrib-regina-rexxmast-arosc-quick contrib-regina-rexxmast-reginac-quick
 
-USER_CFLAGS = -I$(SRCDIR)/$(CURDIR)/..
+#USER_CFLAGS = -I$(SRCDIR)/$(CURDIR)/..
 
 %build_prog mmake=contrib-regina-rexxmast-arosc \
     progname=RexxMast targetdir=$(AROS_C) \
-    files=RexxMast uselibs="regina_shared amiga arosc"
+    nix=yes files=RexxMast uselibs="regina_shared rexxsyslib"
 
 %build_progs mmake=contrib-regina-rexxmast-reginac \
     files="sendrexxmsg listen4msg" targetdir=$(DEMODIR) \
-    uselibs="amiga arosc"
+    uselibs="rexxsyslib"
     
 %common

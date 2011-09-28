@@ -5,7 +5,7 @@
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version. 
+ *  (at your option) any later version.
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -19,7 +19,7 @@
 
 /*
  * Tests all builtin functions of rexx, except from:
- * 
+ *
  *   linein, linout, lines, charin, charout, chars
  *     --> tested in fileio.rexx
  *
@@ -62,11 +62,27 @@ call notify 'abs'
 /* ======================== ADDRESS ============================== */
 call notify 'address'
    select
-      when intr = 'regina' then call ch address(), 'SYSTEM'
+      when intr = 'regina' then
+         do
+            call ch address(), 'SYSTEM'
+            call ch address('I'), 'INPUT NORMAL'
+            call ch address('O'), 'REPLACE NORMAL'
+            call ch address('E'), 'REPLACE NORMAL'
+            address system with input fifo 'MYQUEUE' output stem mystem. error append stream 'my.err'
+            call ch address('I'), 'INPUT FIFO MYQUEUE'
+            call ch address('O'), 'REPLACE STEM MYSTEM.'
+            call ch address('E'), 'APPEND STREAM my.err'
+            /*
+             * Reset address to default
+             */
+            Address System WITH INPUT NORMAL OUTPUT NORMAL ERROR NORMAL
+         end
       when intr = 'unirexx' then call ch address(), 'CMD'
       when intr = 'rexximc' then call ch address(), 'UNIX'
       otherwise nop
    end
+
+
 
 /* ========================== ARG ============================== */
 call notify 'arg'
@@ -166,7 +182,7 @@ call notify 'c2d'
    call ch c2d( 'ff81'x, 1), '-127'
    call ch c2d( 'ff81'x, 2), '-127'
    call ch c2d( 'ff81'x, 3), '65409'
-   call ch c2d( 'ffffffffff'x, 5), '-1' 
+   call ch c2d( 'ffffffffff'x, 5), '-1'
 
 
 /* ======================== C2X ============================== */
@@ -219,7 +235,7 @@ call notify 'compare'
 
 /* ======================= COPIES ============================== */
 call notify 'copies'
-   call ch copies('foo',3)     , 'foofoofoo' 
+   call ch copies('foo',3)     , 'foofoofoo'
    call ch copies('x', 10)     , 'xxxxxxxxxx'
    call ch copies('', 50)      , ''
    call ch copies('', 0)       , ''
@@ -271,6 +287,7 @@ call notify 'datatype'
    call ch datatype('','N'), '0'
    call ch datatype('foo bar','S'), '0'
    call ch datatype('??@##_Foo$Bar!!!','S'), '1'
+   call ch datatype('999e+9','S'), '1'
    call ch datatype('','S'), '0'
    call ch datatype('foo bar','U'), '0'
    call ch datatype('Foo Bar','U'), '0'
@@ -333,7 +350,7 @@ call notify 'delstr'
    call ch delstr('', 30), ''
 
 /* ====================== DELWORD ============================== */
-call notify 'delword' 
+call notify 'delword'
    call ch delword('Med lov skal land bygges', 3), 'Med lov '
    call ch delword('Med lov skal land bygges', 1), ''
    call ch delword('Med lov skal land bygges', 1,1), 'lov skal land bygges'
@@ -446,12 +463,12 @@ call notify 'format'
    call ch format(0.0455,,4), '0.0455'
    call ch format(0.00455,,4), '0.0046'
    call ch format(0.000455,,4), '0.0005'
-   call ch format(0.0000455,,4), '0.0000' 
+   call ch format(0.0000455,,4), '0.0000'
    call ch format(0.00000455,,4), '0.0000'
 
-   call ch format(1.00000045,,6), '1.000000'  
+   call ch format(1.00000045,,6), '1.000000'
    call ch format(1.000000045,,7), '1.0000001'  /* this is an error in TRL */
-   call ch format(1.0000000045,,8), '1.00000000'  
+   call ch format(1.0000000045,,8), '1.00000000'
 
    call ch format(12.34,,,,0), '1.234E+1'
    call ch format(12.34,,,3,0), '1.234E+001'
@@ -542,6 +559,15 @@ call notify 'length'
    call ch length('abc'),         3
    call ch length('abcdefghij'), 10
 
+
+/* ======================= LOWER =============================== */
+call notify 'lower'
+   call ch lower('FOOBAR',2,3),  'FoobAR'
+   call ch lower('FOOBAR',3),  'FOobar'
+   call ch lower('FOOBAR',3,8),  'FOobar  '
+   call ch lower('FOOBAR',3,8,'*'),  'FOobar**'
+   call ch lower('FOOBAR',6,3),  'FOOBAr'
+   call ch lower('FOOBAR',8,3),  'FOOBAR'
 
 
 /* ======================== MAX ============================== */
@@ -685,8 +711,7 @@ call notify 'strip'
    call ch strip('  foo   bar   ','B'),      'foo   bar'
    call ch strip('  foo   bar   ','B','*'),  '  foo   bar   '
    call ch strip('  foo   bar',,'r'),        '  foo   ba'
-   call ch strip('  foo' || '0a'x || '09'x || ' '),         'foo'
-   
+   call ch strip('  foo' || '0a'x || '09'x || ' '),         'foo' /* this is not an error */
 
 
 
@@ -721,8 +746,8 @@ call notify 'symbol'
    omega = 'FOOBAR'
    call ch symbol('HEPP'),         'LIT'
    call ch symbol('ALPHA'),        'VAR'
-   call ch symbol('Un*x'),         'BAD' 
-   call ch symbol('gamma.delta'),  'LIT' 
+   call ch symbol('Un*x'),         'BAD'
+   call ch symbol('gamma.delta'),  'LIT'
    call ch symbol('gamma.FOOBAR'), 'VAR'
    call ch symbol('gamma.alpha'),  'LIT'
    call ch symbol('gamma.omega'),  'VAR'
@@ -759,7 +784,7 @@ call notify 'trunc'
    call ch trunc(.00127,4), '0.0012'
    call ch trunc(.1678), '0'
    call ch trunc(1234.5678), '1234'
-   call ch trunc(4.5678, 7), '4.5678000' 
+   call ch trunc(4.5678, 7), '4.5678000'
 
    call ch trunc(10000005.0,2), 10000005.00
    call ch trunc(10000000.5,2), 10000000.50
@@ -771,14 +796,14 @@ call notify 'trunc'
    call ch trunc(10000000.055,2), 10000000.10
    call ch trunc(10000000.0055,2), 10000000.00
 
-   call ch trunc(10000000.04,2), 10000000.00 
-   call ch trunc(10000000.045,2), 10000000.00 
+   call ch trunc(10000000.04,2), 10000000.00
+   call ch trunc(10000000.045,2), 10000000.00
    call ch trunc(10000000.45,2), 10000000.50
 
    call ch trunc(10000000.05,2), 10000000.10
    call ch trunc(10000000.05,2), 10000000.10
    call ch trunc(10000000.05,2), 10000000.10
- 
+
    call ch trunc(99999999.,2), 99999999.00
    call ch trunc(99999999.9,2), 99999999.90
    call ch trunc(99999999.99,2), 100000000.00
@@ -838,6 +863,16 @@ call notify 'trunc'
    call ch trunc(123.12345,5), 123.12345
 
 
+/* ======================= UPPER =============================== */
+call notify 'upper'
+   call ch upper('foobar',2,3),  'fOOBar'
+   call ch upper('foobar',3),  'foOBAR'
+   call ch upper('foobar',3,8),  'foOBAR  '
+   call ch upper('foobar',3,8,'*'),  'foOBAR**'
+   call ch upper('foobar',6,3),  'foobaR'
+   call ch upper('foobar',8,3),  'foobar'
+   call ch upper('foobar',1,1),  'Foobar'
+
 
 /* ======================= VALUE ============================== */
 call notify 'value'
@@ -849,9 +884,9 @@ call notify 'value'
    c = 'A'
 
    call ch value('a'), 'B'
-   call ch value(a), 'C' 
+   call ch value(a), 'C'
    call ch value(c), 'B'
-   call ch value('c'), 'A' 
+   call ch value('c'), 'A'
    call ch value('x.A'), 'foo'
    call ch value(x.B), 'B'
    call ch value('x.B'), 'A'
@@ -882,7 +917,7 @@ call notify 'value'
    call ch value('xyzzy',      , 'ENVIRONMENT'), 'bar'
    call ch value('xyzzy', 'foo', 'ENVIRONMENT'), 'bar'
    call ch value('xyzzy',      , 'ENVIRONMENT'), 'echo'(envvar)
-   
+
 
 /* ======================= VERIFY ============================== */
 call notify 'verify'
@@ -1026,7 +1061,7 @@ call notify 'xrange'
    call ch xrange('f','r'), 'fghijklmnopqr'
    call ch xrange('7d'x,'83'x), '7d7e7f80818283'x
    call ch xrange('a','a'), 'a'
-    
+
 
 
 /* ======================== X2B ============================== */
@@ -1046,7 +1081,7 @@ call notify 'x2c'
    call ch x2c('416263'), 'Abc'
    call ch x2c('DeadBeef'), 'deadbeef'x
    call ch x2c('1 02 03'), '010203'x
-   call ch x2c('11 0222 3333 044444'), '1102223333044444'x 
+   call ch x2c('11 0222 3333 044444'), '1102223333044444'x
    call ch x2c(''), ''
    call ch x2c('2'), '02'x
    call ch x2c('1   02   03'), '010203'x
@@ -1098,31 +1133,31 @@ call notify 'x2d'
    call ch x2d( 'ff81', 4), '-127'
    call ch x2d( 'ff81', 5), '65409'
 
-   call ch x2d( 'ffffffffffff', 12), '-1' 
+   call ch x2d( 'ffffffffffff', 12), '-1'
 
 /* ======================= JUSTIFY ============================= */
 call notify 'justify'
    if intr = 'regina' Then Do
-      call ch justify('Dette er en test',20,'-'), 'Dette--er---en--test' 
-      call ch justify('Dette er en test',10,'-'), 'Dette-er-e' 
-   
-      call ch justify('  Dette er en test',25), 'Dette    er    en    test' 
-      call ch justify('Dette   er en test',24), 'Dette    er    en   test' 
-      call ch justify('Dette er   en test',23), 'Dette   er    en   test' 
-      call ch justify('Dette er en   test',22), 'Dette   er   en   test' 
-      call ch justify('Dette er en test  ',21), 'Dette   er   en  test' 
-      call ch justify('  Dette er en test',20), 'Dette  er   en  test' 
-      call ch justify('Dette   er en test',19), 'Dette  er  en  test' 
-      call ch justify('Dette er   en test',18), 'Dette  er  en test' 
-      call ch justify('Dette er en   test',17), 'Dette er  en test' 
-      call ch justify('Dette er en test  ',16), 'Dette er en test' 
-      call ch justify('  Dette er en test',15), 'Dette er en tes' 
-      call ch justify('Dette   er en test',14), 'Dette er en te' 
-      call ch justify('Dette er   en test',13), 'Dette er en t' 
-      call ch justify('Dette er en   test',12), 'Dette er en ' 
-      call ch justify('Dette er en test  ',11), 'Dette er en' 
-      call ch justify('Dette er en test',10), 'Dette er e' 
-   
+      call ch justify('Dette er en test',20,'-'), 'Dette--er---en--test'
+      call ch justify('Dette er en test',10,'-'), 'Dette-er-e'
+
+      call ch justify('  Dette er en test',25), 'Dette    er    en    test'
+      call ch justify('Dette   er en test',24), 'Dette    er    en   test'
+      call ch justify('Dette er   en test',23), 'Dette   er    en   test'
+      call ch justify('Dette er en   test',22), 'Dette   er   en   test'
+      call ch justify('Dette er en test  ',21), 'Dette   er   en  test'
+      call ch justify('  Dette er en test',20), 'Dette  er   en  test'
+      call ch justify('Dette   er en test',19), 'Dette  er  en  test'
+      call ch justify('Dette er   en test',18), 'Dette  er  en test'
+      call ch justify('Dette er en   test',17), 'Dette er  en test'
+      call ch justify('Dette er en test  ',16), 'Dette er en test'
+      call ch justify('  Dette er en test',15), 'Dette er en tes'
+      call ch justify('Dette   er en test',14), 'Dette er en te'
+      call ch justify('Dette er   en test',13), 'Dette er en t'
+      call ch justify('Dette er en   test',12), 'Dette er en '
+      call ch justify('Dette er en test  ',11), 'Dette er en'
+      call ch justify('Dette er en test',10), 'Dette er e'
+
       call ch justify('Dette er en test',0), ''
       call ch justify('foo',10), 'foo       '
       call ch justify('',10), '          '
@@ -1133,7 +1168,7 @@ call notify 'justify'
 exit 0
 
 
-ch: procedure expose sigl 
+ch: procedure expose sigl
    parse arg first, second
    if first \== second then do
       say

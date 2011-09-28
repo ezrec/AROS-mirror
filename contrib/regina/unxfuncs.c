@@ -1,7 +1,3 @@
-#ifndef lint
-static char *RCSid = "$Id$";
-#endif
-
 /*
  *  The Regina Rexx Interpreter
  *  Copyright (C) 1992  Anders Christensen <anders@pvv.unit.no>
@@ -28,6 +24,8 @@ static char *RCSid = "$Id$";
 #if !defined(_SCO_ELF) && !defined(_SCO_COFF) && !defined(__QNXNTO__)
 # ifndef _XOPEN_SOURCE
 #  define _XOPEN_SOURCE
+# endif
+# ifndef _XOPEN_SOURCE
 #  define _GNU_SOURCE
 # endif
 #endif
@@ -40,7 +38,7 @@ static char *RCSid = "$Id$";
 #endif
 
 #define HAVE_FORK
-#if !defined(__WATCOMC__) && !defined(_MSC_VER)  && !(defined(__IBMC__) && defined(WIN32)) && !defined(__SASC) && !defined(__MINGW32__) && !defined(__BORLANDC__)
+#if defined(__WATCOMC__) || defined(_MSC_VER)  || (defined(__IBMC__) && defined(WIN32)) || defined(__SASC) || defined(__MINGW32__) || defined(__BORLANDC__) || defined(DOS) || defined(__WINS__) || defined(__EPOC32__) || defined(__LCC__) || defined(_AMIGA) || defined(__AROS__)
 # undef HAVE_FORK
 #endif
 #if defined(__WATCOMC__) && defined(__QNX__)
@@ -48,9 +46,9 @@ static char *RCSid = "$Id$";
 #endif
 
 #include "rexx.h"
+#include "utsname.h"
 #include <stdio.h>
 #include <string.h>
-#include <ctype.h>
 
 #ifdef HAVE_ASSERT_H
 # include <assert.h>
@@ -58,10 +56,11 @@ static char *RCSid = "$Id$";
 
 #include <errno.h>
 
-#if defined(VMS) || defined(MAC)
-# include <types.h>
-#include "utsname.h"
-#else
+#ifdef HAVE_CRYPT_H
+# include <crypt.h>
+#endif
+
+#if !defined(MAC)
 # include <sys/types.h>
 # ifdef HAVE_UNISTD_H
 #  include <unistd.h>
@@ -69,23 +68,10 @@ static char *RCSid = "$Id$";
 # if defined(WIN32) && defined(__IBMC__)
 #   include <process.h>
 #   include <direct.h>
-typedef struct utsname
-{
-   char *sysname ;
-   char *nodename ;
-   char *release ;
-   char *version ;
-   char *machine ;
-} _utsname ;
-# elif defined(__WATCOMC__) || defined(_MSC_VER) || defined(__SASC) || defined(__MINGW32__) || defined(__BORLANDC__) || defined(__AROS__) || defined(__WINS__) || defined(__EPOC32__)
-#  include "utsname.h"
-#  if !defined(__SASC) && !defined(__QNX__) && !defined(__AROS__) && !defined(__WINS__) && !defined(__EPOC32__)
+# elif defined(__WATCOMC__) || defined(_MSC_VER) || defined(__MINGW32__) || defined(__BORLANDC__) || defined(__LCC__)
+#  if !defined(__QNX__)
 #   include <process.h>
 #   include <direct.h>
-#  endif
-# else
-#  ifndef VMS
-#  include <sys/utsname.h>
 #  endif
 # endif
 #endif
@@ -102,7 +88,7 @@ streng *unx_popen( tsd_t *TSD, cparamboxptr parms )
 {
    streng *string=NULL, *result=NULL ;
    streng *cptr=NULL ;
-   int length=0, lines=0 ;
+   int length=0, lines=0, hl ;
    int save_internal_queues_option;
 
    if ( TSD->restricted )
@@ -125,30 +111,27 @@ streng *unx_popen( tsd_t *TSD, cparamboxptr parms )
 
    if (parms->next && parms->next->value)
    {
-      lines = lines_in_stack( TSD, NULL ) ;
+      lines = lines_in_stack( TSD, NULL );
+      if ( lines < 0 )
+         lines = 0;
    }
 
-   result = perform( TSD, cptr, TSD->currlevel->environment, TSD->currentnode ) ;
+   result = perform( TSD, cptr, TSD->currlevel->environment, TSD->currentnode, NULL ) ;
    Free_stringTSD( cptr ) ;
 
    if (parms->next && parms->next->value)
    {
       streng *varname=NULL, *varstem=NULL ;
       int stemlen=0 ;
-      char *cptr=NULL, *eptr=NULL ;
+      char *eptr=NULL ;
       streng *tmpptr=NULL ;
 
       varstem = parms->next->value ;
       varname = Str_makeTSD( (stemlen=varstem->len) + 8 ) ;
 
       memcpy( varname->value, varstem->value, stemlen ) ;
-      cptr = varname->value ;
-      eptr = cptr + varstem->len ;
-      for (; cptr<eptr; cptr++)
-      {
-         if (islower(*cptr))
-            *cptr = (char) toupper(*cptr) ;
-      }
+      mem_upper( varname->value, stemlen );
+      eptr = varname->value + stemlen ;
 
       if (*(eptr-1)!='.')
       {
@@ -156,17 +139,18 @@ streng *unx_popen( tsd_t *TSD, cparamboxptr parms )
          stemlen++ ;
       }
 
-      lines = lines_in_stack( TSD, NULL ) - lines ;
+      hl = lines_in_stack( TSD, NULL );
+      lines = ( ( hl < 0 ) ? 0 : hl ) - lines ;
       *eptr = '0' ;
       varname->len = stemlen+1 ;
       tmpptr = int_to_streng( TSD, lines ) ;
-      setvalue( TSD, varname, tmpptr ) ;
+      setvalue( TSD, varname, tmpptr, -1 ) ;
       for (; lines>0; lines--)
       {
          tmpptr = popline( TSD, NULL, NULL, 0 ) ;
          sprintf(eptr, "%d", lines ) ;
          varname->len = strlen( varname->value ) ;
-         setvalue( TSD, varname, tmpptr ) ;
+         setvalue( TSD, varname, tmpptr, -1 ) ;
       }
       Free_stringTSD( varname ); /* bja */
    }
@@ -193,14 +177,14 @@ streng *unx_gettid( tsd_t *TSD, cparamboxptr parms )
    return int_to_streng( TSD, TSD->thread_id ) ;
 }
 
-#ifdef OLD_REGINA_FEATURES
+
 streng *unx_eof( tsd_t *TSD, cparamboxptr parms )
 {
    checkparam(  parms,  0,  0 , "EOF" ) ;
 /*    sprintf(ptr=MallocTSD(SMALLSTR),"%d",eof_on_input()) ; */
    return( nullstringptr() ) ;
 }
-#endif
+
 
 streng *unx_uname( tsd_t *TSD, cparamboxptr parms )
 {
@@ -208,7 +192,7 @@ streng *unx_uname( tsd_t *TSD, cparamboxptr parms )
    char *cptr=NULL ;
    int length=0 ;
    streng *result=NULL ;
-   struct utsname utsbox ;
+   struct regina_utsname utsbox ;
 
    checkparam(  parms,  0,  1 , "UNAME" ) ;
    if (parms->value)
@@ -216,13 +200,13 @@ streng *unx_uname( tsd_t *TSD, cparamboxptr parms )
    else
       option = 'A' ;
 
-   if (uname( &utsbox ) <0)
+   if (TSD->OS->uname( &utsbox ) <0)
        exiterror( ERR_SYSTEM_FAILURE, 1, strerror( errno ) )  ;
 
    switch( option )
    {
       case 'A':
-         result = Str_makeTSD( 1+sizeof(struct utsname)) ;
+         result = Str_makeTSD( 1+sizeof(struct regina_utsname)) ;
          sprintf( result->value, "%s %s %s %s %s", utsbox.sysname,
                   utsbox.nodename, utsbox.release, utsbox.version,
                   utsbox.machine ) ;
@@ -260,23 +244,6 @@ streng *unx_fork( tsd_t *TSD, cparamboxptr parms )
 }
 
 
-#if 0
-char *unx_unixerror( tsd_t *TSD, cparamboxptr parms )
-{
-   const char *errtxt=NULL ;
-   char *result=NULL ;
-   int errnum=0 ; /* change name from errno to not conflist with global errno */
-
-   checkparam(  parms,  1,  1 , "UNIXERROR" ) ;
-   errnum = atozpos( TSD, parms->value, "UNIXERROR", 1 ) ;
-   errtxt = strerror(errnum) ;
-/* unixerror returns char, not streng !                                          bja
-   strcpy( result=MallocTSD(strlen(errtxt)+1+STRHEAD), errtxt ) ;
- */                                                                            /* bja */
-   strcpy( result=MallocTSD(strlen(errtxt)+1), errtxt ) ;
-   return result ;
-}
-#else
 streng *unx_unixerror( tsd_t *TSD, cparamboxptr parms )
 {
    const char *errtxt=NULL ;
@@ -287,19 +254,27 @@ streng *unx_unixerror( tsd_t *TSD, cparamboxptr parms )
    errtxt = strerror(errnum) ;
    return Str_creTSD( errtxt ) ;
 }
-#endif
-
 
 
 streng *unx_chdir( tsd_t *TSD, cparamboxptr parms )
 {
    char *path;
-   int rc;
+   int rc=0;
+   int ok=HOOK_GO_ON ;
 
    checkparam(  parms,  1,  1 , "CD" ) ;
-   path = str_of( TSD, parms->value ) ;
-   rc = chdir( path ) ;
-   FreeTSD( path ) ;
+   /*
+    * Check if we have a registred system exit
+    */
+   if (TSD->systeminfo->hooks & HOOK_MASK(HOOK_SETCWD))
+      ok = hookup_output( TSD, HOOK_SETCWD, parms->value ) ;
+
+   if (ok==HOOK_GO_ON)
+   {
+      path = str_of( TSD, parms->value ) ;
+      rc = chdir( path ) ;
+      FreeTSD( path ) ;
+   }
    return int_to_streng( TSD, rc!=0 ) ;
 }
 
@@ -309,21 +284,71 @@ streng *unx_getenv( tsd_t *TSD, cparamboxptr parms )
    streng *retval=NULL ;
    char *output=NULL ;
    char *path ;
+   int ok=HOOK_GO_ON ;
 
    checkparam(  parms,  1,  1 , "GETENV" ) ;
-   path = str_of( TSD, parms->value ) ;
-   output = mygetenv( TSD, path, NULL, 0 ) ;
-   FreeTSD( path ) ;
-   if ( output )
-   {
-      retval = Str_creTSD( output ) ;
-      FreeTSD( output );
-   }
-   else
-      retval = nullstringptr() ;
 
+   if (TSD->systeminfo->hooks & HOOK_MASK(HOOK_GETENV))
+      ok = hookup_input_output( TSD, HOOK_GETENV, parms->value, &retval ) ;
+
+   if (ok==HOOK_GO_ON)
+   {
+      path = str_of( TSD, parms->value ) ;
+      output = mygetenv( TSD, path, NULL, 0 ) ;
+      FreeTSD( path ) ;
+      if ( output )
+      {
+         retval = Str_creTSD( output ) ;
+         FreeTSD( output );
+      }
+      else
+         retval = nullstringptr() ;
+   }
    return retval ;
 }
+
+
+streng *unx_putenv( tsd_t *TSD, cparamboxptr parms )
+{
+   streng *name,*env;
+   streng *value=NULL;
+   streng *retval=NULL ;
+   int ok=HOOK_GO_ON,i ;
+
+   checkparam(  parms,  1,  1 , "PUTENV" ) ;
+   name = Str_dupstrTSD( parms->value );
+   /*
+    * Argument is of form ENV=[value]
+    */
+   for ( i = 0; i < Str_len(name); i++ )
+   {
+      if ( name->value[i] == '=' )
+      {
+         name->value[i] = '\0';
+         Str_len(name) = i;
+         value = Str_creTSD( (name->value)+i+1 ) ;
+         value->value[Str_len(value)] = '\0';
+         break;
+      }
+   }
+
+   if (TSD->systeminfo->hooks & HOOK_MASK(HOOK_SETENV))
+      ok = hookup_output2( TSD, HOOK_SETENV, name, value );
+
+   if (ok==HOOK_GO_ON)
+   {
+      env = Str_creTSD( "ENVIRONMENT" ) ;
+      retval = ext_pool_value( TSD, name, value, env );
+      Free_stringTSD( env );
+   }
+   Free_stringTSD( name );
+   if ( value )
+     Free_stringTSD( value );
+   if ( !retval )
+       retval = nullstringptr() ;
+   return retval ;
+}
+
 
 streng *unx_crypt( tsd_t *TSD, cparamboxptr parms )
 {
@@ -363,7 +388,7 @@ streng *unx_crypt( tsd_t *TSD, cparamboxptr parms )
    else
       retval = nullstringptr() ;
 #else
-   retval = parms->value ;
+   retval = Str_dup( parms->value );
 #endif
    TSD = TSD; /* keep compiler happy */
    return retval ;

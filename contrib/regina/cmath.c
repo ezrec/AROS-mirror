@@ -1,7 +1,3 @@
-#ifndef lint
-static char *RCSid = "$Id$";
-#endif
-
 /*
  *  The Regina Rexx Interpreter
  *  Copyright (C) 1992-1994  Anders Christensen <anders@pvv.unit.no>
@@ -31,7 +27,6 @@ static char *RCSid = "$Id$";
 #include "rexx.h"
 #include <math.h>
 #include <stdio.h>
-#include <ctype.h>
 #include <string.h>
 
 #ifdef SunKludges
@@ -47,7 +42,7 @@ double myatof( const tsd_t *TSD, const streng *string )
    answer = strtod(str,&ptr) ;
 
    /* remove leading spaces */
-   for (;(*ptr)&&(isspace(*ptr));ptr++) ;
+   for (;(*ptr)&&(rx_isspace(*ptr));ptr++) ;
 #ifdef SUNOS_STRTOD_BUG
    for (;*ptr=='0';ptr++) ;
 #endif /* SUNOS_STRTOD_BUG */
@@ -56,45 +51,6 @@ double myatof( const tsd_t *TSD, const streng *string )
    FreeTSD( str ) ;
 
    return answer ;
-}
-
-
-int myisnumber( const streng *string )
-{
-   const register char *ptr=NULL, *eptr=NULL ;
-   int num=0 ;
-
-   if (!string->len)
-      return 0 ;
-
-   ptr = string->value ;
-   eptr = Str_end( string ) ;
-
-   for (; (ptr<eptr) && (isspace(*ptr)); ptr++) ;
-   if ((ptr<eptr) && ((*ptr=='-') || (*ptr=='+')))
-      for (ptr++; (ptr<eptr) && (isspace(*ptr)); ptr++) ;
-
-   for (; (ptr<eptr) && isdigit(*ptr); ptr++, num++) ;
-   if ((ptr<eptr) && *ptr=='.')
-      for (ptr++;(ptr<eptr) && isdigit(*ptr); ptr++, num++) ;
-
-   if (!num)
-      return 0 ;
-
-   if ((ptr<eptr) && ((*ptr=='e') || (*ptr=='E')))
-   {
-      ptr++ ;
-      num = 0 ;
-      if ((ptr<eptr) && ((*ptr=='-') || (*ptr=='+')))
-         ptr++ ;
-
-      for (; (ptr<eptr) && isdigit(*ptr); ptr++, num++ ) ;
-      if (!num)
-         return 0 ;
-   }
-
-   for (; (ptr<eptr) && (isspace(*ptr)); ptr++) ;
-   return (ptr==eptr) ;
 }
 
 
@@ -111,14 +67,14 @@ int myisinteger( const streng *string )
    cptr = string->value ;
    eptr = cptr + string->len ;
 
-   for (;cptr<eptr && isspace(*cptr); cptr++) ;
+   for (;cptr<eptr && rx_isspace(*cptr); cptr++) ;
    if (cptr<eptr && (*cptr=='-' || *cptr=='+'))
-      for (cptr++; cptr<eptr && isspace(*cptr); cptr++) ;
+      for (cptr++; cptr<eptr && rx_isspace(*cptr); cptr++) ;
 
    if (cptr>=eptr)
       return 0 ;
 
-   for (;cptr<eptr && isdigit(*cptr); cptr++) ;
-   for (;cptr<eptr && isspace(*cptr); cptr++) ;
+   for (;cptr<eptr && rx_isdigit(*cptr); cptr++) ;
+   for (;cptr<eptr && rx_isspace(*cptr); cptr++) ;
    return (cptr==eptr) ;
 }

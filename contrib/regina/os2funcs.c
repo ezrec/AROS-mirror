@@ -1,7 +1,3 @@
-#ifndef lint
-static char *RCSid = "$Id$";
-#endif
-
 /*
  *  The Regina Rexx Interpreter
  *  Copyright (C) 1992-1994  Anders Christensen <anders@pvv.unit.no>
@@ -32,6 +28,19 @@ static char *RCSid = "$Id$";
 # include <fcntl.h>
 #endif
 
+#if defined(__WATCOMC__) && defined(OS2)
+# include <os2.h>
+# define DONT_TYPEDEF_PFN
+#endif
+
+#if defined(__WATCOMC__) && !defined(__QNX__)
+# include <i86.h>
+# if defined(OS2)
+#  define DONT_TYPEDEF_PFN
+#  include <os2.h>
+# endif
+#endif
+
 #include "rexx.h"
 #include <errno.h>
 #include <stdio.h>
@@ -42,7 +51,6 @@ static char *RCSid = "$Id$";
 #ifdef HAVE_LIMITS_H
 # include <limits.h>
 #endif
-#include <ctype.h>
 #include <time.h>
 
 #if defined(VMS)
@@ -83,9 +91,8 @@ static char *RCSid = "$Id$";
 # include <dir.h>
 #endif
 
-
-#ifdef __WATCOMC__
-# include <i86.h>
+#ifdef HAVE_DIRECT_H
+# include <direct.h>
 #endif
 
 #ifdef WIN32
@@ -95,7 +102,7 @@ static char *RCSid = "$Id$";
 # if defined(_MSC_VER)
 #  if _MSC_VER >= 1100
 /* Stupid MSC can't compile own headers without warning at least in VC 5.0 */
-#   pragma warning(disable: 4115 4201 4214)
+#   pragma warning(disable: 4115 4201 4214 4514)
 #  endif
 # endif
 # include <windows.h>
@@ -121,49 +128,41 @@ static char *RCSid = "$Id$";
 
 streng *os2_directory( tsd_t *TSD, cparamboxptr parms )
 {
-   streng *result ;
-#ifdef __EMX__
-   int i;
-#endif
+   streng *result=NULL ;
+   int ok=HOOK_GO_ON ;
    char *path;
 
    checkparam(  parms,  0,  1 , "DIRECTORY" ) ;
 
    if (parms&&parms->value)
    {
-      path = str_of( TSD, parms->value ) ;
-      if (chdir( path ) )
+      if (TSD->systeminfo->hooks & HOOK_MASK(HOOK_SETCWD))
+         ok = hookup_output( TSD, HOOK_SETCWD, parms->value ) ;
+
+      if (ok==HOOK_GO_ON)
       {
+         path = str_of( TSD, parms->value ) ;
+         if (chdir( path ) )
+         {
+            FreeTSD( path ) ;
+            return nullstringptr() ;
+         }
          FreeTSD( path ) ;
-         return nullstringptr() ;
       }
-      FreeTSD( path ) ;
    }
 
-#if defined(HAVE__FULLPATH)
-   result = Str_makeTSD( REXX_PATH_MAX );
-   _fullpath(result->value, ".", REXX_PATH_MAX);
-# if defined(__EMX__)
    /*
-    * Convert / to \ as the API call doesn't do this for us
+    * The remainder of this is for obtaining the current working directory...
     */
-   result->len = strlen( result->value ) ;
-   for ( i=0; i < result->len; i++)
-   {
-      if ( result->value[i] == '/' )
-         result->value[i] = '\\';
-   }
-# endif
-#elif defined(HAVE__TRUENAME)
-   result = Str_makeTSD( _MAX_PATH ) ;
-   _truename(".", result->value);
-#else
-   result = Str_makeTSD( 1024 ) ;
-   if (my_fullpath(result->value, ".", 1024) == -1)
-      result = nullstringptr() ;
-#endif
-   result->len = strlen( result->value ) ;
+   if (TSD->systeminfo->hooks & HOOK_MASK(HOOK_GETCWD))
+      ok = hookup_input( TSD, HOOK_GETCWD, &result ) ;
 
+   if (ok==HOOK_GO_ON)
+   {
+      result = Str_makeTSD( REXX_PATH_MAX );
+      my_fullpath( result->value, "." );
+      result->len = strlen( result->value );
+   }
    return result;
 }
 

@@ -15,6 +15,9 @@
 # define DONT_TYPEDEF_PFN
 # include <io.h>
 # include <os2emx.h>
+#elif defined (__WATCOMC__)
+# define DONT_TYPEDEF_PFN
+# include <os2.h>
 #endif
 
 #include "rexx.h"
@@ -65,10 +68,6 @@ Leave:
    return(retval);
 }
 
-#ifdef DYNAMIC
-/* Deinitialize is called when the thread terminates.
- * This is a wonderful position to place code which frees all allocated stuff!
- */
 static void Deinitialize(void *buf)
 {
    tsd_t *TSD = buf;
@@ -93,6 +92,22 @@ static void Deinitialize(void *buf)
    free(TSD);
 }
 
+int IfcReginaCleanup( VOID )
+{
+   tsd_t **ptsd = FindThreadDataIdx();
+
+   if (*ptsd == NULL)
+      return 0;
+   Deinitialize(*ptsd);
+   *ptsd = NULL;
+
+   return 1;
+}
+
+#ifdef DYNAMIC
+/* Deinitialize is called when the thread terminates.
+ * This is a wonderful position to place code which frees all allocated stuff!
+ */
 #ifdef __EMX__
 /* We provide a DLL entry function. Look at the standard documentation for
  * EMX. See emxdev.doc and testdll6.c. We may use the macros CRT_INIT1 and
@@ -108,27 +123,19 @@ unsigned long _DLL_InitTerm (unsigned long mod_handle, unsigned long flag)
    switch (flag)
    {
       case 0:
-         if (_CRT_init () != 0)
+         if (_CRT_init() != 0)
             return 0;
-         __ctordtorInit ();
-         printf("\nThe regina DLL is initializing. Check if per thread!\n\n");
+         __ctordtorInit();
          return 1;
       case 1:
-         /* This will run ONLY if called per thread */
-#if 0
-         {
-            tsd_t *TSD;
-            TSD = __regina_get_tsd();
-            if (TSD != NULL)
-            {
-               deinit_rexxsaa(TSD);
-               Deinitialize(TSD);
-            }
-         }
-#endif
-         printf("\nThe regina DLL is deinitializing. Check if per thread!\n\n");
-         __ctordtorTerm ();
-         _CRT_term ();
+         /*
+          * This will run ONLY if called on dynamic unload of the complete
+          * library. This means, the last thread will receive an unload
+          * command. Stupid OS/2.
+          */
+         IfcReginaCleanup();
+         __ctordtorTerm();
+         _CRT_term();
          return 1;
       default:
          break;
@@ -145,7 +152,7 @@ static unsigned sizeof_ptr(void)
 }
 
 /* Lowest level memory allocation function for normal circumstances. */
-static void *MTMalloc(const tsd_t *TSD,size_t size)
+static void *MTMalloc( const tsd_t *TSD, size_t size )
 {
    mt_tsd_t *mt;
    MT_mem *new;
@@ -165,10 +172,16 @@ static void *MTMalloc(const tsd_t *TSD,size_t size)
 }
 
 /* Lowest level memory deallocation function for normal circumstances. */
-static void MTFree(const tsd_t *TSD,void *chunk)
+static void MTFree( const tsd_t *TSD, void *chunk )
 {
    mt_tsd_t *mt = TSD->mt_tsd;
    MT_mem *this;
+
+   /*
+    * Just in case...
+    */
+   if (chunk == NULL)
+      return;
 
    this = chunk;
    this--; /* Go to the header of the chunk */
@@ -252,6 +265,11 @@ tsd_t *ReginaInitializeThread(void)
    if (!OK)
       return(NULL);
 
+   {
+      extern OS_Dep_funcs __regina_OS_Os2;
+      retval->OS = &__regina_OS_Os2;
+   }
+
    OK &= init_vars(retval);             /* Initialize the variable module    */
    OK &= init_stacks(retval);           /* Initialize the stack module       */
    OK &= init_filetable(retval);        /* Initialize the files module       */
@@ -270,10 +288,16 @@ tsd_t *ReginaInitializeThread(void)
    OK &= init_vms(retval);              /* Initialize the vmscmd module      */
    OK &= init_vmf(retval);              /* Initialize the vmsfuncs module    */
 #endif
-   OK |= init_arexxf(&__regina_tsd);    /* Initialize the arexxfuncs modules */
+   OK &= init_arexxf(retval);           /* Initialize the arxfuncs modules */
    retval->loopcnt = 1;                 /* stupid r2perl-module              */
    retval->traceparse = -1;
+#ifdef __EMX__
    retval->thread_id = _gettid();
+#elif defined(__WATCOMC__)
+   retval->thread_id = *_threadid;
+#else
+   retval->thread_id = _gettid();
+#endif
 
    if (!OK)
       exiterror( ERR_STORAGE_EXHAUSTED, 0 ) ;

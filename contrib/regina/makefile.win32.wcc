@@ -1,28 +1,32 @@
 #
-# Makefile for Regina REXX Interpreter using Watcom C++ 10.6
+# Makefile for Regina REXX Interpreter using OpenWatcom C/C++ 1.0+
 #
-
-VER=20
-
+# set the environment variable REGINA_SRCDIR and then call
 #
-# good from here down
+# wmake -f makefile.win32.wcc [DEBUG=Y] [FLISTS=N] [MULTI=Y]
 #
 
 SRC=$(%REGINA_SRCDIR)
+
+!include $(SRC)\regina.ver
+VERDOT = $(VER_DOT)
+VERDATE = $(VER_DATE)
+
 LIBFILE=rexx.lib
 DLLBASE=regina
 DLLFILE=$(DLLBASE).dll
 IMPFILE=$(DLLBASE).lib
 
-DLLTEST1=test1.dll
-DLLTEST2=test2.dll
+DLLTEST1=rxtest1.dll
+DLLTEST2=rxtest2.dll
 
 CC              = wcc386
 TARGET=nt
+MULTI = Y
 
 !ifeq DEBUG Y
 CFLAGS  = /d2
-LDFLAGS = DEBUG WATCOM ALL
+LDFLAGS = DEBUG ALL
 !ifeq TRACEMEM Y
 MEMTRACE = /DTRACEMEM
 !else
@@ -40,9 +44,13 @@ NOFLISTS =
 !endif
 
 !ifeq MULTI Y
+THREADING_COMPILE = /bm
 MT_FILE = mt_win32
+THREADING_TARGET = threader.exe
 !else
+THREADING_COMPILE =
 MT_FILE = mt_notmt
+THREADING_TARGET =
 !endif
 
 OFILES =      &
@@ -60,6 +68,7 @@ misc.obj      &
 unxfuncs.obj  &
 os2funcs.obj  &
 cmsfuncs.obj  &
+arxfuncs.obj  &
 shell.obj     &
 rexxext.obj   &
 stack.obj     &
@@ -74,7 +83,6 @@ signals.obj   &
 macros.obj    &
 envir.obj     &
 expr.obj      &
-extlib.obj    &
 yaccsrc.obj   &
 lexsrc.obj    &
 wrappers.obj  &
@@ -83,7 +91,8 @@ instore.obj   &
 extstack.obj  &
 rexxbif.obj   &
 $(MT_FILE).obj   &
-doscmd.obj
+os_win.obj    &
+os_other.obj
 
 
 DLOFILES =      &
@@ -101,6 +110,7 @@ misc.dlo      &
 unxfuncs.dlo  &
 os2funcs.dlo  &
 cmsfuncs.dlo  &
+arxfuncs.dlo  &
 shell.dlo     &
 rexxext.dlo   &
 stack.dlo     &
@@ -115,7 +125,6 @@ signals.dlo   &
 macros.dlo    &
 envir.dlo     &
 expr.dlo      &
-extlib.dlo    &
 yaccsrc.dlo   &
 lexsrc.dlo    &
 wrappers.dlo  &
@@ -124,76 +133,47 @@ instore.dlo   &
 extstack.dlo  &
 rexxbif.dlo   &
 $(MT_FILE).dlo   &
-doscmd.dlo
+os_win.dlo    &
+os_other.dlo
 
-CPPFLAGS        = /DFGC /DWIN32 /i=$(SRC) #/i=d:\h /i=d:\h\nt
-CCFLAGS         = /zz /ei /zq /mf $(CFLAGS) $(CPPFLAGS) $(MEMTRACE) $(NOFLISTS)
+#
+# if VER_SUPP not blank, may need to add double quotes
+#
+CEXTRA   = -DREGINA_VERSION_DATE=$(VER_DATE) -DREGINA_VERSION_MAJOR="$(VER_MAJOR)" -DREGINA_VERSION_MINOR="$(VER_MINOR)" -DREGINA_VERSION_SUPP=$(VER_SUPP)
+CPPFLAGS = /DWIN32 /i=$(SRC) #/i=d:\h /i=d:\h\nt
+CCFLAGS  = /ei /zq /mf /wx $(CFLAGS) $(CPPFLAGS) $(CEXTRA) $(MEMTRACE) $(NOFLISTS) $(THREADING_COMPILE)
 
-DYN_COMP        =/bd /DDYNAMIC
+DYN_COMP        =/bd /DDYNAMIC $(THREADING_COMPILE)
 
 LINK            = wlink
 
 LIBEXE          = wlib
 LIBFLAGS                = /q /n
 
-HFILES = $(SRC)\rexx.h $(SRC)\defs.h $(SRC)\extern.h $(SRC)\types.h $(SRC)\strings.h
+HFILES = $(SRC)\rexx.h $(SRC)\defs.h $(SRC)\extern.h $(SRC)\regina_t.h $(SRC)\strings.h
 
-all : rexx.exe regina.exe execiser.exe $(DLLFILE) $(LIBFILE) test1.dll test2.dll
+MTSSRC = $(SRC)\en.mts $(SRC)\pt.mts $(SRC)\no.mts $(SRC)\de.mts $(SRC)\es.mts $(SRC)\pl.mts $(SRC)\tr.mts $(SRC)\sv.mts
+
+all : rexx.exe regina.exe execiser.exe $(DLLFILE) $(LIBFILE) $(DLLTEST1) $(DLLTEST2) rxstack.exe rxqueue.exe $(THREADING_TARGET) mtb_files
 
 rexx.exe : $(OFILES) rexx.obj nosaa.obj
         @%create dummy.lnk
         @%append dummy.lnk option quiet
-        @%append dummy.lnk option stack=0x20000
+        @%append dummy.lnk option stack=0x10000000
         @%append dummy.lnk option heapsize=40960
         @%append dummy.lnk system $(TARGET)
         @%append dummy.lnk name rexx.exe
         @%append dummy.lnk file rexx.obj
-        @%append dummy.lnk file funcs.obj
-        @%append dummy.lnk file builtin.obj
-        @%append dummy.lnk file error.obj
-        @%append dummy.lnk file variable.obj
-        @%append dummy.lnk file interprt.obj
-        @%append dummy.lnk file debug.obj
-        @%append dummy.lnk file dbgfuncs.obj
-        @%append dummy.lnk file memory.obj
-        @%append dummy.lnk file parsing.obj
-        @%append dummy.lnk file files.obj
-        @%append dummy.lnk file misc.obj
-        @%append dummy.lnk file unxfuncs.obj
-        @%append dummy.lnk file os2funcs.obj
-        @%append dummy.lnk file cmsfuncs.obj
-        @%append dummy.lnk file shell.obj
-        @%append dummy.lnk file rexxext.obj
-        @%append dummy.lnk file stack.obj
-        @%append dummy.lnk file tracing.obj
-        @%append dummy.lnk file interp.obj
-        @%append dummy.lnk file cmath.obj
-        @%append dummy.lnk file convert.obj
-        @%append dummy.lnk file strings.obj
-        @%append dummy.lnk file library.obj
-        @%append dummy.lnk file strmath.obj
-        @%append dummy.lnk file signals.obj
-        @%append dummy.lnk file macros.obj
-        @%append dummy.lnk file envir.obj
-        @%append dummy.lnk file expr.obj
-        @%append dummy.lnk file extlib.obj
-        @%append dummy.lnk file yaccsrc.obj
-        @%append dummy.lnk file lexsrc.obj
-        @%append dummy.lnk file wrappers.obj
-        @%append dummy.lnk file options.obj
         @%append dummy.lnk file nosaa.obj
-        @%append dummy.lnk file instore.obj
-        @%append dummy.lnk file extstack.obj
-        @%append dummy.lnk file rexxbif.obj
-        @%append dummy.lnk file $(MT_FILE).obj
-        @%append dummy.lnk file doscmd.obj
+        for %i in ($(OFILES)) do %append dummy.lnk file %i
+        @%append dummy.lnk library user32,wsock32
         $(LINK) $(LDFLAGS) @dummy.lnk
         del dummy.lnk
 
 regina.exe : $(IMPFILE) regina.obj
         @%create dummy.lnk
         @%append dummy.lnk option quiet
-        @%append dummy.lnk option stack=0x20000
+        @%append dummy.lnk option stack=0x10000000
         @%append dummy.lnk option heapsize=40960
         @%append dummy.lnk system $(TARGET)
         @%append dummy.lnk name regina.exe
@@ -205,38 +185,54 @@ regina.exe : $(IMPFILE) regina.obj
 execiser.exe : $(LIBFILE) execiser.obj
         @%create dummy.lnk
         @%append dummy.lnk option quiet
-        @%append dummy.lnk option stack=0x20000
+        @%append dummy.lnk option stack=0x10000000
         @%append dummy.lnk option heapsize=40960
         @%append dummy.lnk system $(TARGET)
         @%append dummy.lnk name execiser.exe
         @%append dummy.lnk file execiser.obj
-        @%append dummy.lnk file $(LIBFILE)
+        @%append dummy.lnk file $(IMPFILE)
+        @%append dummy.lnk library user32,wsock32
+        $(LINK) $(LDFLAGS) @dummy.lnk
+        del dummy.lnk
+
+threader.exe : $(LIBFILE) threader.obj
+        @%create dummy.lnk
+        @%append dummy.lnk option quiet
+        @%append dummy.lnk option stack=0x10000000
+        @%append dummy.lnk option heapsize=40960
+        @%append dummy.lnk system $(TARGET)
+        @%append dummy.lnk name threader.exe
+        @%append dummy.lnk file threader.obj
+        @%append dummy.lnk file $(IMPFILE)
+        @%append dummy.lnk library user32,wsock32
         $(LINK) $(LDFLAGS) @dummy.lnk
         del dummy.lnk
 
 rxstack.exe : rxstack.obj erexxbif.obj eextstack.obj
         @%create dummy.lnk
         @%append dummy.lnk option quiet
-        @%append dummy.lnk option stack=0x20000
+        @%append dummy.lnk option stack=0x10000000
         @%append dummy.lnk option heapsize=40960
         @%append dummy.lnk system $(TARGET)
         @%append dummy.lnk name rxstack.exe
         @%append dummy.lnk file rxstack.obj
         @%append dummy.lnk file eextstack.obj
         @%append dummy.lnk file erexxbif.obj
+        @%append dummy.lnk library user32,wsock32
         $(LINK) $(LDFLAGS) @dummy.lnk
         del dummy.lnk
 
 rxqueue.exe : rxqueue.obj erexxbif.obj eextstack.obj
         @%create dummy.lnk
         @%append dummy.lnk option quiet
-        @%append dummy.lnk option stack=0x20000
+        @%append dummy.lnk option stack=0x10000000
         @%append dummy.lnk option heapsize=40960
         @%append dummy.lnk system $(TARGET)
         @%append dummy.lnk name rxqueue.exe
         @%append dummy.lnk file rxqueue.obj
         @%append dummy.lnk file eextstack.obj
         @%append dummy.lnk file erexxbif.obj
+        @%append dummy.lnk library user32,wsock32
         $(LINK) $(LDFLAGS) @dummy.lnk
         del dummy.lnk
 
@@ -245,44 +241,7 @@ $(LIBFILE): $(OFILES) client.obj drexx.obj rexxsaa.obj
         @%append lib.rsp +client.obj
         @%append lib.rsp +drexx.obj
         @%append lib.rsp +rexxsaa.obj
-        @%append lib.rsp +funcs.obj
-        @%append lib.rsp +builtin.obj
-        @%append lib.rsp +error.obj
-        @%append lib.rsp +variable.obj
-        @%append lib.rsp +interprt.obj
-        @%append lib.rsp +debug.obj
-        @%append lib.rsp +dbgfuncs.obj
-        @%append lib.rsp +memory.obj
-        @%append lib.rsp +parsing.obj
-        @%append lib.rsp +files.obj
-        @%append lib.rsp +misc.obj
-        @%append lib.rsp +unxfuncs.obj
-        @%append lib.rsp +os2funcs.obj
-        @%append lib.rsp +cmsfuncs.obj
-        @%append lib.rsp +shell.obj
-        @%append lib.rsp +rexxext.obj
-        @%append lib.rsp +stack.obj
-        @%append lib.rsp +tracing.obj
-        @%append lib.rsp +interp.obj
-        @%append lib.rsp +cmath.obj
-        @%append lib.rsp +convert.obj
-        @%append lib.rsp +strings.obj
-        @%append lib.rsp +library.obj
-        @%append lib.rsp +strmath.obj
-        @%append lib.rsp +signals.obj
-        @%append lib.rsp +macros.obj
-        @%append lib.rsp +envir.obj
-        @%append lib.rsp +expr.obj
-        @%append lib.rsp +extlib.obj
-        @%append lib.rsp +yaccsrc.obj
-        @%append lib.rsp +lexsrc.obj
-        @%append lib.rsp +wrappers.obj
-        @%append lib.rsp +options.obj
-        @%append lib.rsp +instore.obj
-        @%append lib.rsp +extstack.obj
-        @%append lib.rsp +rexxbif.obj
-        @%append lib.rsp +$(MT_FILE).obj
-        @%append lib.rsp +doscmd.obj
+        for %i in ($(OFILES)) do %append lib.rsp +%i
         $(LIBEXE) $(LIBFLAGS) $@ @lib.rsp
         del lib.rsp
 
@@ -296,58 +255,104 @@ $(DLLFILE): $(DLOFILES) client.dlo drexx.dlo rexxsaa.dlo
         @%append dummy.lnk file client.dlo
         @%append dummy.lnk file drexx.dlo
         @%append dummy.lnk file rexxsaa.dlo
-        @%append dummy.lnk file funcs.dlo
-        @%append dummy.lnk file builtin.dlo
-        @%append dummy.lnk file error.dlo
-        @%append dummy.lnk file variable.dlo
-        @%append dummy.lnk file interprt.dlo
-        @%append dummy.lnk file debug.dlo
-        @%append dummy.lnk file dbgfuncs.dlo
-        @%append dummy.lnk file memory.dlo
-        @%append dummy.lnk file parsing.dlo
-        @%append dummy.lnk file files.dlo
-        @%append dummy.lnk file misc.dlo
-        @%append dummy.lnk file unxfuncs.dlo
-        @%append dummy.lnk file os2funcs.dlo
-        @%append dummy.lnk file cmsfuncs.dlo
-        @%append dummy.lnk file shell.dlo
-        @%append dummy.lnk file rexxext.dlo
-        @%append dummy.lnk file stack.dlo
-        @%append dummy.lnk file tracing.dlo
-        @%append dummy.lnk file interp.dlo
-        @%append dummy.lnk file cmath.dlo
-        @%append dummy.lnk file convert.dlo
-        @%append dummy.lnk file strings.dlo
-        @%append dummy.lnk file library.dlo
-        @%append dummy.lnk file strmath.dlo
-        @%append dummy.lnk file signals.dlo
-        @%append dummy.lnk file macros.dlo
-        @%append dummy.lnk file envir.dlo
-        @%append dummy.lnk file expr.dlo
-        @%append dummy.lnk file extlib.dlo
-        @%append dummy.lnk file yaccsrc.dlo
-        @%append dummy.lnk file lexsrc.dlo
-        @%append dummy.lnk file wrappers.dlo
-        @%append dummy.lnk file options.dlo
-        @%append dummy.lnk file instore.dlo
-        @%append dummy.lnk file extstack.dlo
-        @%append dummy.lnk file rexxbif.dlo
-        @%append dummy.lnk file $(MT_FILE).dlo
-        @%append dummy.lnk file doscmd.dlo
-        @%append dummy.lnk export _RexxStart
-        @%append dummy.lnk export _RexxRegisterSubcomExe
-        @%append dummy.lnk export _RexxRegisterSubcomDll
-        @%append dummy.lnk export _RexxQuerySubcom
-        @%append dummy.lnk export _RexxDeregisterSubcom
-        @%append dummy.lnk export _RexxVariablePool
-        @%append dummy.lnk export _RexxRegisterExitExe
-        @%append dummy.lnk export _RexxDeregisterExit
-        @%append dummy.lnk export _RexxRegisterFunctionExe
-        @%append dummy.lnk export _RexxRegisterFunctionDll
-        @%append dummy.lnk export _RexxQueryFunction
-        @%append dummy.lnk export _RexxDeregisterFunction
-        @%append dummy.lnk export _ReginaVersion
-        @%append dummy.lnk export ___regina_faked_main
+        for %i in ($(DLOFILES)) do %append dummy.lnk file %i
+        @%append dummy.lnk library user32,wsock32
+        @%append dummy.lnk export '_RexxStart@36'
+        @%append dummy.lnk export RexxStart='_RexxStart@36'
+        @%append dummy.lnk export _RexxStart='_RexxStart@36'
+        @%append dummy.lnk export '_RexxCallBack@20'
+        @%append dummy.lnk export RexxCallBack='_RexxCallBack@20'
+        @%append dummy.lnk export _RexxCallBack='_RexxCallBack@20'
+        @%append dummy.lnk export '_RexxAllocateMemory@4'
+        @%append dummy.lnk export RexxAllocateMemory='_RexxAllocateMemory@4'
+        @%append dummy.lnk export _RexxAllocateMemory='_RexxAllocateMemory@4'
+        @%append dummy.lnk export '_RexxFreeMemory@4'
+        @%append dummy.lnk export RexxFreeMemory='_RexxFreeMemory@4'
+        @%append dummy.lnk export _RexxFreeMemory='_RexxFreeMemory@4'
+        @%append dummy.lnk export '_RexxRegisterSubcomExe@12'
+        @%append dummy.lnk export RexxRegisterSubcomExe='_RexxRegisterSubcomExe@12'
+        @%append dummy.lnk export _RexxRegisterSubcomExe='_RexxRegisterSubcomExe@12'
+        @%append dummy.lnk export '_RexxRegisterSubcomDll@20'
+        @%append dummy.lnk export RexxRegisterSubcomDll='_RexxRegisterSubcomDll@20'
+        @%append dummy.lnk export _RexxRegisterSubcomDll='_RexxRegisterSubcomDll@20'
+        @%append dummy.lnk export '_RexxQuerySubcom@16'
+        @%append dummy.lnk export RexxQuerySubcom='_RexxQuerySubcom@16'
+        @%append dummy.lnk export _RexxQuerySubcom='_RexxQuerySubcom@16'
+        @%append dummy.lnk export '_RexxDeregisterSubcom@8'
+        @%append dummy.lnk export RexxDeregisterSubcom='_RexxDeregisterSubcom@8'
+        @%append dummy.lnk export _RexxDeregisterSubcom='_RexxDeregisterSubcom@8'
+        @%append dummy.lnk export '_RexxVariablePool@4'
+        @%append dummy.lnk export RexxVariablePool='_RexxVariablePool@4'
+        @%append dummy.lnk export _RexxVariablePool='_RexxVariablePool@4'
+        @%append dummy.lnk export '_RexxRegisterExitExe@12'
+        @%append dummy.lnk export RexxRegisterExitExe='_RexxRegisterExitExe@12'
+        @%append dummy.lnk export _RexxRegisterExitExe='_RexxRegisterExitExe@12'
+        @%append dummy.lnk export '_RexxRegisterExitDll@20'
+        @%append dummy.lnk export RexxRegisterExitDll='_RexxRegisterExitDll@20'
+        @%append dummy.lnk export _RexxRegisterExitDll='_RexxRegisterExitDll@20'
+        @%append dummy.lnk export '_RexxDeregisterExit@8'
+        @%append dummy.lnk export RexxDeregisterExit='_RexxDeregisterExit@8'
+        @%append dummy.lnk export _RexxDeregisterExit='_RexxDeregisterExit@8'
+        @%append dummy.lnk export '_RexxQueryExit@16'
+        @%append dummy.lnk export RexxQueryExit='_RexxQueryExit@16'
+        @%append dummy.lnk export _RexxQueryExit='_RexxQueryExit@16'
+        @%append dummy.lnk export '_RexxRegisterFunctionExe@8'
+        @%append dummy.lnk export RexxRegisterFunctionExe='_RexxRegisterFunctionExe@8'
+        @%append dummy.lnk export _RexxRegisterFunctionExe='_RexxRegisterFunctionExe@8'
+        @%append dummy.lnk export '_RexxRegisterFunctionDll@12'
+        @%append dummy.lnk export RexxRegisterFunctionDll='_RexxRegisterFunctionDll@12'
+        @%append dummy.lnk export _RexxRegisterFunctionDll='_RexxRegisterFunctionDll@12'
+        @%append dummy.lnk export '_RexxDeregisterFunction@4'
+        @%append dummy.lnk export RexxDeregisterFunction='_RexxDeregisterFunction@4'
+        @%append dummy.lnk export _RexxDeregisterFunction='_RexxDeregisterFunction@4'
+        @%append dummy.lnk export '_RexxQueryFunction@4'
+        @%append dummy.lnk export RexxQueryFunction='_RexxQueryFunction@4'
+        @%append dummy.lnk export _RexxQueryFunction='_RexxQueryFunction@4'
+        @%append dummy.lnk export '_RexxSetHalt@8'
+        @%append dummy.lnk export RexxSetHalt='_RexxSetHalt@8'
+        @%append dummy.lnk export _RexxSetHalt='_RexxSetHalt@8'
+        @%append dummy.lnk export '_RexxCreateQueue@16'
+        @%append dummy.lnk export RexxCreateQueue='_RexxCreateQueue@16'
+        @%append dummy.lnk export _RexxCreateQueue='_RexxCreateQueue@16'
+        @%append dummy.lnk export '_RexxDeleteQueue@4'
+        @%append dummy.lnk export RexxDeleteQueue='_RexxDeleteQueue@4'
+        @%append dummy.lnk export _RexxDeleteQueue='_RexxDeleteQueue@4'
+        @%append dummy.lnk export '_RexxQueryQueue@8'
+        @%append dummy.lnk export RexxQueryQueue='_RexxQueryQueue@8'
+        @%append dummy.lnk export _RexxQueryQueue='_RexxQueryQueue@8'
+        @%append dummy.lnk export '_RexxAddQueue@12'
+        @%append dummy.lnk export RexxAddQueue='_RexxAddQueue@12'
+        @%append dummy.lnk export _RexxAddQueue='_RexxAddQueue@12'
+        @%append dummy.lnk export '_RexxPullQueue@16'
+        @%append dummy.lnk export RexxPullQueue='_RexxPullQueue@16'
+        @%append dummy.lnk export _RexxPullQueue='_RexxPullQueue@16'
+        @%append dummy.lnk export '_RexxAddMacro@12'
+        @%append dummy.lnk export RexxAddMacro='_RexxAddMacro@12'
+        @%append dummy.lnk export _RexxAddMacro='_RexxAddMacro@12'
+        @%append dummy.lnk export '_RexxDropMacro@4'
+        @%append dummy.lnk export RexxDropMacro='_RexxDropMacro@4'
+        @%append dummy.lnk export _RexxDropMacro='_RexxDropMacro@4'
+        @%append dummy.lnk export '_RexxReorderMacro@8'
+        @%append dummy.lnk export RexxReorderMacro='_RexxReorderMacro@8'
+        @%append dummy.lnk export _RexxReorderMacro='_RexxReorderMacro@8'
+        @%append dummy.lnk export '_RexxSaveMacroSpace@12'
+        @%append dummy.lnk export RexxSaveMacroSpace='_RexxSaveMacroSpace@12'
+        @%append dummy.lnk export _RexxSaveMacroSpace='_RexxSaveMacroSpace@12'
+        @%append dummy.lnk export '_RexxLoadMacroSpace@12'
+        @%append dummy.lnk export RexxLoadMacroSpace='_RexxLoadMacroSpace@12'
+        @%append dummy.lnk export _RexxLoadMacroSpace='_RexxLoadMacroSpace@12'
+        @%append dummy.lnk export '_RexxClearMacroSpace@0'
+        @%append dummy.lnk export RexxClearMacroSpace='_RexxClearMacroSpace@0'
+        @%append dummy.lnk export _RexxClearMacroSpace='_RexxClearMacroSpace@0'
+        @%append dummy.lnk export '_ReginaVersion@4'
+        @%append dummy.lnk export ReginaVersion='_ReginaVersion@4'
+        @%append dummy.lnk export _ReginaVersion='_ReginaVersion@4'
+        @%append dummy.lnk export '___regina_faked_main@8'
+        @%append dummy.lnk export __regina_faked_main='___regina_faked_main@8'
+        @%append dummy.lnk export ___regina_faked_main='___regina_faked_main@8'
+        @%append dummy.lnk export '_ReginaCleanup@0'
+        @%append dummy.lnk export ReginaCleanup='_ReginaCleanup@0'
+        @%append dummy.lnk export _ReginaCleanup='_ReginaCleanup@0'
         $(LINK) $(LDFLAGS) @dummy.lnk
         del dummy.lnk
 
@@ -359,10 +364,10 @@ $(DLLTEST1): test1.dlo $(IMPFILE)
         @%append dummy.lnk system $(TARGET)_dll initinstance terminstance
         @%append dummy.lnk name $(DLLTEST1)
         @%append dummy.lnk file test1.dlo
-        @%append dummy.lnk export Test1Function1=_Test1Function1
-        @%append dummy.lnk export Test1Function2=_Test1Function2
-        @%append dummy.lnk export Test1DropFuncs=_Test1DropFuncs
-        @%append dummy.lnk export Test1LoadFuncs=_Test1LoadFuncs
+        @%append dummy.lnk export Test1Function1='_Test1Function1@20'
+        @%append dummy.lnk export Test1Function2='_Test1Function2@20'
+        @%append dummy.lnk export Test1DropFuncs='_Test1DropFuncs@20'
+        @%append dummy.lnk export Test1LoadFuncs='_Test1LoadFuncs@20'
         @%append dummy.lnk library $(IMPFILE)
         $(LINK) $(LDFLAGS) @dummy.lnk
         del dummy.lnk
@@ -375,10 +380,10 @@ $(DLLTEST2): test2.dlo $(IMPFILE)
         @%append dummy.lnk system $(TARGET)_dll initinstance terminstance
         @%append dummy.lnk name $(DLLTEST2)
         @%append dummy.lnk file test2.dlo
-        @%append dummy.lnk export Test2Function1=_Test2Function1
-        @%append dummy.lnk export Test2Function2=_Test2Function2
-        @%append dummy.lnk export Test2DropFuncs=_Test2DropFuncs
-        @%append dummy.lnk export Test2LoadFuncs=_Test2LoadFuncs
+        @%append dummy.lnk export Test2Function1='_Test2Function1@20'
+        @%append dummy.lnk export Test2Function2='_Test2Function2@20'
+        @%append dummy.lnk export Test2DropFuncs='_Test2DropFuncs@20'
+        @%append dummy.lnk export Test2LoadFuncs='_Test2LoadFuncs@20'
         @%append dummy.lnk library $(IMPFILE)
         $(LINK) $(LDFLAGS) @dummy.lnk
         del dummy.lnk
@@ -423,6 +428,9 @@ misc.obj:     $(SRC)\misc.c $(HFILES)
         $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
 
 unxfuncs.obj: $(SRC)\unxfuncs.c $(HFILES)
+        $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
+
+arxfuncs.obj: $(SRC)\arxfuncs.c $(HFILES)
         $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
 
 os2funcs.obj: $(SRC)\os2funcs.c $(HFILES)
@@ -473,16 +481,16 @@ envir.obj:    $(SRC)\envir.c $(HFILES)
 expr.obj:     $(SRC)\expr.c $(HFILES)
         $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
 
-extlib.obj:   $(SRC)\extlib.c $(HFILES)
-        $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
-
 wrappers.obj: $(SRC)\wrappers.c $(HFILES)
         $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
 
 options.obj:  $(SRC)\options.c $(HFILES)
         $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
 
-doscmd.obj:   $(SRC)\doscmd.c $(HFILES)
+os_win.obj:   $(SRC)\os_win.c $(HFILES)
+        $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
+
+os_other.obj:   $(SRC)\os_other.c $(HFILES)
         $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
 
 instore.obj:  $(SRC)\instore.c $(HFILES)
@@ -581,6 +589,9 @@ misc.dlo:     $(SRC)\misc.c $(HFILES)
 unxfuncs.dlo: $(SRC)\unxfuncs.c $(HFILES)
         $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
 
+arxfuncs.dlo: $(SRC)\arxfuncs.c $(HFILES)
+        $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
+
 os2funcs.dlo: $(SRC)\os2funcs.c $(HFILES)
         $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
 
@@ -595,6 +606,9 @@ rexxext.dlo:  $(SRC)\rexxext.c $(HFILES)
 
 stack.dlo:    $(SRC)\stack.c $(HFILES)
         $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
+
+extstack.dlo:  $(SRC)\extstack.c $(HFILES)
+        $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$@ $(SRC)\extstack.c
 
 tracing.dlo:  $(SRC)\tracing.c $(HFILES)
         $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
@@ -629,16 +643,16 @@ envir.dlo:    $(SRC)\envir.c $(HFILES)
 expr.dlo:     $(SRC)\expr.c $(HFILES)
         $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
 
-extlib.dlo:   $(SRC)\extlib.c $(HFILES)
-        $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
-
 wrappers.dlo: $(SRC)\wrappers.c $(HFILES)
         $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
 
 options.dlo:  $(SRC)\options.c $(HFILES)
         $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
 
-doscmd.dlo:   $(SRC)\doscmd.c $(HFILES)
+os_win.dlo:   $(SRC)\os_win.c $(HFILES)
+        $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
+
+os_other.dlo:   $(SRC)\os_other.c $(HFILES)
         $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
 
 instore.dlo:  $(SRC)\instore.c $(HFILES)
@@ -702,9 +716,32 @@ rexxa.obj:   $(SRC)\regina.c $(HFILES)
 execiser.obj:   $(SRC)\execiser.c $(HFILES)
         $(CC) $(CCFLAGS) /fo=$*.obj $(SRC)\$*.c
 
+threader.obj:   $(SRC)\threader.c $(HFILES)
+        $(CC) $(CCFLAGS) -DWIN32_THREADS /fo=$*.obj $(SRC)\$*.c
+
+#
+# Convert .mts to .mtb
+#
+mtb_files: msgcmp.exe $(MTSSRC) .SYMBOLIC
+        msgcmp $(MTSSRC)
+
+msgcmp.exe : msgcmp.obj
+        @%create dummy.lnk
+        @%append dummy.lnk option quiet
+        @%append dummy.lnk option stack=0x10000000
+        @%append dummy.lnk option heapsize=40960
+        @%append dummy.lnk system $(TARGET)
+        @%append dummy.lnk name msgcmp.exe
+        @%append dummy.lnk file msgcmp.obj
+        $(LINK) $(LDFLAGS) @dummy.lnk
+        del dummy.lnk
+
+msgcmp.obj: $(SRC)\msgcmp.c
+        $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
+
 zip:
         zip rexxw32 README README.W32 rexx.exe regina.exe
-        zip rexxw32 rexx.dll test1.dll test2.dll
+        zip rexxw32 rexx.dll $(DLLTEST1) $(DLLTEST2)
         zip rexxw32 rexx.lib regina.lib
         zip rexxw32 dynfunc.rex dateconv.rex timeconv.rex
         zip rexxw32 newstr.rex rexxcps.rex

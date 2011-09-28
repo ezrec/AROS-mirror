@@ -1,4 +1,4 @@
-#{"Regina Rexx Starter"},(0x101f401e),3,0,0
+#{"Regina Rexx Starter"},(0x101f401e),3,4,0
 ; The Rexx starter application
 "\epoc32\wins\c\system\apps\regina\Regina.app"-"!:\system\apps\Regina\Regina.app"
 "\epoc32\wins\c\system\apps\regina\Regina.aif"-"!:\system\apps\Regina\Regina.aif"

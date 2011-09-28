@@ -3,7 +3,7 @@
 #
 # Using SAS/C on Amiga, dedicated to Regina Henke
 #
-SRCDIR	    = /Regina-2.2
+SRCDIR	    = /Regina-3.1
 DEMODIR	    = $(SRCDIR)/demo
 CC	    = sc
 CEXTRA	    = ANSI DEF _POSIX_SOURCE DEF NO_EXTERNAL_QUEUES
@@ -16,7 +16,7 @@ LD_RXLIB1   = ld -rpath . -rpath /usr/local/lib -shared -o $@
 LD_RXLIB2   = -L. -lregina
 DYNAMIC_LDFLAGS = netinclude:/netlib/net.lib #-Wl,-rpath . -Wl,-rpath /usr/local/lib
 SHL_LD	    = $(CC) -o $(LIBPRE)$(LIBFILE).$(SHL).$(VERDOT) -shared -Wl,-soname,lib$(LIBFILE).$(SHL).$(ABI),-stats $(SHOFILES)
-SHL_TARGETS = $(LIBPRE)$(LIBFILE).a $(LIBPRE)$(LIBFILE).$(SHL) test1.rxlib test2.rxlib
+SHL_TARGETS = $(LIBPRE)$(LIBFILE).a $(LIBPRE)$(LIBFILE).$(SHL) rxtest1.rxlib rxtest2.rxlib
 LDEXTRA	    =
 LIBPRE	    =
 LIBFILE	    = regina
@@ -91,31 +91,31 @@ LEX = lex
 README = $(SRCDIR)/README.* COPYING-LIB
 
 FILES = funcs builtin error variable interprt debug dbgfuncs \
-	memory parsing files misc unxfuncs os2funcs cmsfuncs shell rexxext stack \
+	memory parsing files misc unxfuncs arxfuncs os2funcs cmsfuncs shell rexxext stack \
 	tracing interp cmath convert strings library strmath signals \
-	macros envir extlib wrappers options doscmd alloca mt_notmt nosaa instore #r2perl
+	macros envir wrappers options os_unx alloca mt_notmt nosaa instore #r2perl
 
 CSRCFILES = $(SRCDIR)/funcs.c $(SRCDIR)/builtin.c $(SRCDIR)/error.c $(SRCDIR)/variable.c \
 	$(SRCDIR)/interprt.c $(SRCDIR)/debug.c $(SRCDIR)/dbgfuncs.c $(SRCDIR)/memory.c $(SRCDIR)/parsing.c $(SRCDIR)/files.c \
-	$(SRCDIR)/misc.c $(SRCDIR)/unxfuncs.c $(SRCDIR)/os2funcs.c $(SRCDIR)/cmsfuncs.c $(SRCDIR)/shell.c $(SRCDIR)/rexxext.c $(SRCDIR)/stack.c \
+	$(SRCDIR)/misc.c $(SRCDIR)/unxfuncs.c $(SRCDIR)/arxfuncs.c $(SRCDIR)/os2funcs.c $(SRCDIR)/cmsfuncs.c $(SRCDIR)/shell.c $(SRCDIR)/rexxext.c $(SRCDIR)/stack.c \
 	$(SRCDIR)/tracing.c $(SRCDIR)/interp.c $(SRCDIR)/cmath.c $(SRCDIR)/convert.c $(SRCDIR)/strings.c $(SRCDIR)/library.c \
 	$(SRCDIR)/strmath.c $(SRCDIR)/signals.c $(SRCDIR)/macros.c $(SRCDIR)/envir.c $(SRCDIR)/expr.c \
-	$(SRCDIR)/extlib.c $(SRCDIR)/wrappers.c $(SRCDIR)/options.c $(SRCDIR)/doscmd.c $(SRCDIR)/alloca.c $(SRCDIR)/mt_notmt $(SRCDIR)/nosaa $(SRCDIR)/instore.c #$(SRCDIR)/r2perl.c
+	$(SRCDIR)/wrappers.c $(SRCDIR)/options.c $(SRCDIR)/os_unx.c $(SRCDIR)/alloca.c $(SRCDIR)/mt_notmt $(SRCDIR)/nosaa $(SRCDIR)/instore.c #$(SRCDIR)/r2perl.c
 
 OFILES = funcs.$(OBJ) builtin.$(OBJ) error.$(OBJ) variable.$(OBJ) \
 	interprt.$(OBJ) debug.$(OBJ) dbgfuncs.$(OBJ) memory.$(OBJ) parsing.$(OBJ) files.$(OBJ) \
-	misc.$(OBJ) unxfuncs.$(OBJ) cmsfuncs.$(OBJ) os2funcs.$(OBJ) shell.$(OBJ) rexxext.$(OBJ) stack.$(OBJ) \
+	misc.$(OBJ) unxfuncs.$(OBJ) arxfuncs.$(OBJ) cmsfuncs.$(OBJ) os2funcs.$(OBJ) shell.$(OBJ) rexxext.$(OBJ) stack.$(OBJ) \
 	tracing.$(OBJ) interp.$(OBJ) cmath.$(OBJ) convert.$(OBJ) strings.$(OBJ) library.$(OBJ) \
 	strmath.$(OBJ) signals.$(OBJ) macros.$(OBJ) envir.$(OBJ) expr.$(OBJ) alloca.$(OBJ) \
-	extlib.$(OBJ) yaccsrc.$(OBJ) lexsrc.$(OBJ) options.$(OBJ) doscmd.$(OBJ) wrappers.$(OBJ) $(MT_FILE).$(OBJ) instore.$(OBJ) #nosaa.$(OBJ) r2perl.$(OBJ)
+	yaccsrc.$(OBJ) lexsrc.$(OBJ) options.$(OBJ) os_unx.$(OBJ) wrappers.$(OBJ) $(MT_FILE).$(OBJ) instore.$(OBJ) #nosaa.$(OBJ) r2perl.$(OBJ)
 OBJECTS	    = $(OFILES)
 
 SHOFILES = funcs.sho builtin.sho error.sho variable.sho \
 	interprt.sho debug.sho dbgfuncs.sho memory.sho parsing.sho files.sho \
-	misc.sho unxfuncs.sho cmsfuncs.sho shell.sho os2funcs.sho rexxext.sho stack.sho \
+	misc.sho unxfuncs.sho arxfuncs.sho cmsfuncs.sho shell.sho os2funcs.sho rexxext.sho stack.sho \
 	tracing.sho interp.sho cmath.sho convert.sho strings.sho library.sho \
 	strmath.sho signals.sho macros.sho envir.sho expr.sho alloca.sho \
-	extlib.sho yaccsrc.sho lexsrc.sho wrappers.sho options.sho doscmd.sho \
+	yaccsrc.sho lexsrc.sho wrappers.sho options.sho os_unx.sho \
 	drexx.sho client.sho rexxsaa.sho
 
 DEMODIR = $(SRCDIR)/demo
@@ -125,7 +125,7 @@ TRIPFILES = $(TRIPDIR)/*
 
 ALLSRC = $(CFILES) $(HFILES)
 
-HFILES = $(SRCDIR)/rexx.h $(SRCDIR)/defs.h $(SRCDIR)/extern.h $(SRCDIR)/types.h \
+HFILES = $(SRCDIR)/rexx.h $(SRCDIR)/defs.h $(SRCDIR)/extern.h $(SRCDIR)/regina_t.h \
 		$(SRCDIR)/config.h $(SRCDIR)/strings.h $(SRCDIR)/configur.h $(SRCDIR)/yaccsrc.h \
 		$(SRCDIR)/rxiface.h $(SRCDIR)/rexxsaa.h $(SRCDIR)/utsname.h
 CFILES = $(SRCDIR)/yaccsrc.c $(SRCDIR)/lexsrc.c $(CSRCFILES) $(SRCDIR)/execiser.c \
@@ -142,7 +142,7 @@ JUNK = $(OFILES) rexx.o client.o drexx.o rexxsaa.o execiser.o \#?.lnk
 
 all : rexx$(EXE) execiser$(EXE) rxstack$(EXE) rxqueue$(EXE) #$(SHL_TARGETS)
 
-$(SRCDIR)/rexx.h : $(SRCDIR)/extern.h $(SRCDIR)/strings.h $(SRCDIR)/defs.h $(SRCDIR)/types.h $(SRCDIR)/mt.h
+$(SRCDIR)/rexx.h : $(SRCDIR)/extern.h $(SRCDIR)/strings.h $(SRCDIR)/defs.h $(SRCDIR)/regina_t.h $(SRCDIR)/mt.h
 
 $(SRCDIR)/mt.h : $(SRCDIR)/$(MT_FILE).h
 
@@ -220,6 +220,9 @@ misc.$(OBJ) :	 $(SRCDIR)/misc.c
 unxfuncs.$(OBJ) :$(SRCDIR)/unxfuncs.c
 	$(CC) $(COPT) $(CC2O) $(SRCDIR)/unxfuncs.c
 
+arxfuncs.$(OBJ) :$(SRCDIR)/arxfuncs.c
+	$(CC) $(COPT) $(CC2O) $(SRCDIR)/arxfuncs.c
+
 os2funcs.$(OBJ) :$(SRCDIR)/os2funcs.c
 	$(CC) $(COPT) $(CC2O) $(SRCDIR)/os2funcs.c
 
@@ -268,17 +271,14 @@ envir.$(OBJ) :	 $(SRCDIR)/envir.c
 expr.$(OBJ) :	 $(SRCDIR)/expr.c
 	$(CC) $(COPT) $(CC2O) $(SRCDIR)/expr.c
 
-extlib.$(OBJ) :	 $(SRCDIR)/extlib.c
-	$(CC) $(COPT) $(CC2O) $(SRCDIR)/extlib.c
-
 wrappers.$(OBJ) :$(SRCDIR)/wrappers.c
 	$(CC) $(COPT) $(CC2O) $(SRCDIR)/wrappers.c
 
 options.$(OBJ) : $(SRCDIR)/options.c
 	$(CC) $(COPT) $(CC2O) $(SRCDIR)/options.c
 
-doscmd.$(OBJ) :	 $(SRCDIR)/doscmd.c
-	$(CC) $(COPT) $(CC2O) $(SRCDIR)/doscmd.c
+os_unx.$(OBJ) :	 $(SRCDIR)/os_unx.c
+	$(CC) $(COPT) $(CC2O) $(SRCDIR)/os_unx.c
 
 rexx.$(OBJ) :	 $(SRCDIR)/rexx.c
 	$(CC) $(COPT) $(CC2O) $(SRCDIR)/rexx.c
@@ -414,6 +414,12 @@ unxfuncs.sho :$(SRCDIR)/unxfuncs.c
 	$(O2SHO)
 	$(SAVE2O)
 
+arxfuncs.sho :$(SRCDIR)/arxfuncs.c
+	$(O2SAVE)
+	$(CC) $(COPT) $(CC2O) $(DYN_COMP) -c $(SRCDIR)/arxfuncs.c
+	$(O2SHO)
+	$(SAVE2O)
+
 os2funcs.sho :$(SRCDIR)/os2funcs.c
 	$(O2SAVE)
 	$(CC) $(COPT) $(CC2O) $(DYN_COMP) -c $(SRCDIR)/os2funcs.c
@@ -510,12 +516,6 @@ expr.sho :    $(SRCDIR)/expr.c
 	$(O2SHO)
 	$(SAVE2O)
 
-extlib.sho :  $(SRCDIR)/extlib.c
-	$(O2SAVE)
-	$(CC) $(COPT) $(CC2O) $(DYN_COMP) -c $(SRCDIR)/extlib.c
-	$(O2SHO)
-	$(SAVE2O)
-
 wrappers.sho :$(SRCDIR)/wrappers.c
 	$(O2SAVE)
 	$(CC) $(COPT) $(CC2O) $(DYN_COMP) -c $(SRCDIR)/wrappers.c
@@ -528,9 +528,9 @@ options.sho : $(SRCDIR)/options.c
 	$(O2SHO)
 	$(SAVE2O)
 
-doscmd.sho :  $(SRCDIR)/doscmd.c
+os_unx.sho :  $(SRCDIR)/os_unx.c
 	$(O2SAVE)
-	$(CC) $(COPT) $(CC2O) $(DYN_COMP) -c $(SRCDIR)/doscmd.c
+	$(CC) $(COPT) $(CC2O) $(DYN_COMP) -c $(SRCDIR)/os_unx.c
 	$(O2SHO)
 	$(SAVE2O)
 
@@ -582,13 +582,13 @@ yaccsrc.sho : $(SRCDIR)/yaccsrc.c $(SRCDIR)/defs.h $(SRCDIR)/rexx.h
 test1.$(OBJ): $(SRCDIR)/test1.c
 	$(CC) -c $(COPT) $(CC2O) $(DYN_COMP) $(SRCDIR)/test1.c
 
-test1.$(RXLIB): test1.$(OBJ) $(LIBPRE)$(SHLFILE).$(SHL)
+rxtest1.$(RXLIB): test1.$(OBJ) $(LIBPRE)$(SHLFILE).$(SHL)
 	$(LD_RXLIB1) test1.$(OBJ) $(LD_RXLIB2)
 
 test2.$(OBJ): $(SRCDIR)/test2.c
 	$(CC) -c $(COPT) $(CC2O) $(DYN_COMP) $(SRCDIR)/test2.c
 
-test2.$(RXLIB): test2.$(OBJ) $(LIBPRE)$(SHLFILE).$(SHL)
+rxtest2.$(RXLIB): test2.$(OBJ) $(LIBPRE)$(SHLFILE).$(SHL)
 	$(LD_RXLIB1) test2.$(OBJ) $(LD_RXLIB2)
 
 depend:
@@ -611,7 +611,7 @@ zip:
 
 install: rexx $(LIBPRE)$(LIBFILE).a
 	cp rexx$(PROGEXT) $(BINDIR)/$(PROGNAME)$(PROGEXT)
-	cp ../rexx.1 $(MANDIR)/rexx.$(MANEXT)
+	cp ../regina.1 $(MANDIR)/regina.$(MANEXT)
 	cp $(LIBPRE)$(LIBFILE).a $(LIBDIR)/$(LIBPRE)$(LIBFILE).a
 	ranlib $(LIBDIR)/$(LIBPRE)$(LIBFILE).a
 

@@ -16,10 +16,6 @@
  *  License along with this library; if not, write to the Free
  *  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
-
-/*
- * $Id$
- */
 struct textindex
 {
    unsigned int errorno;
@@ -34,13 +30,10 @@ struct textindex
  * error indicating that the error message files are corrupt will be
  * displayed instead of a real error message.
  */
-#define NUMBER_ERROR_MESSAGES 248
+#define NUMBER_ERROR_MESSAGES 267
 
+/*
+ * Default language index
+ */
 #define LANGUAGE_ENGLISH     0
-#define LANGUAGE_GERMAN      1
-#define LANGUAGE_SPANISH     2
-#define LANGUAGE_NORWEGIAN   3
-#define LANGUAGE_PORTUGUESE  4
 
-#define LANGUAGE_MAXIMUM     5
-                             

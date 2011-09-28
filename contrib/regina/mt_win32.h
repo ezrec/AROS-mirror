@@ -46,8 +46,30 @@
  */
 void ReginaSetMutex(void **mutex);
 void ReginaUnsetMutex(void **mutex);
-#define THREAD_PROTECT(varname) __try { ReginaSetMutex(&varname);
-#define THREAD_UNPROTECT(varname) } __finally { ReginaUnsetMutex(&varname); }
+
+#ifdef __MINGW32__
+# include <excpt.h>
+static EXCEPTION_DISPOSITION myHandler( struct _EXCEPTION_RECORD *p1, void *p2, struct _CONTEXT *p3, void *p4 ) {
+  fprintf( stderr, "\nMinGW Exception handler\n" );
+  return ExceptionCollidedUnwind;
+}
+typedef struct _EXCEPTION_REGISTRATION_TAG {
+  void *prev;
+  void *handler;
+} _EXCEPTION_REGISTRATION;
+static _EXCEPTION_REGISTRATION er_EXCEPTION_REGISTRATION;
+# define __tryVK(pHandler) \
+    er_EXCEPTION_REGISTRATION.handler = pHandler; \
+    __asm__ ( "movl %%fs:0,%%eax;movl %%eax,%0" : : "g" (er_EXCEPTION_REGISTRATION.prev) ); \
+    __asm__ ( "leal %0,%%eax;movl %%eax,%%fs:0" : : "g" (er_EXCEPTION_REGISTRATION) );
+# define	__exceptVK	\
+  __asm__ ( "movl %0,%%eax;movl %%eax,%%fs:0;" : : "g" (er_EXCEPTION_REGISTRATION.prev) );
+# define THREAD_PROTECT(varname)   __tryVK( myHandler ) ReginaSetMutex(&varname);
+# define THREAD_UNPROTECT(varname) __exceptVK           ReginaUnsetMutex(&varname);
+#else
+# define THREAD_PROTECT(varname) __try { ReginaSetMutex(&varname);
+# define THREAD_UNPROTECT(varname) } __finally { ReginaUnsetMutex(&varname); }
+#endif
 
 #define PROTECTION_VAR(varname) static void * varname = NULL;
 

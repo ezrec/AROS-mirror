@@ -1,7 +1,3 @@
-#ifndef lint
-static char *RCSid = "$Id$";
-#endif
-
 /*
  *  The Regina Rexx Interpreter
  *  Copyright (C) 1992-1994  Anders Christensen <anders@pvv.unit.no>
@@ -70,7 +66,6 @@ static char *RCSid = "$Id$";
  */
 
 #include "rexx.h"
-#include <ctype.h>
 #include <string.h>
 #include <stdio.h>  /* Stupid SunOS acc uses stderr in assert(), yuk! */
 #include <assert.h>
@@ -115,24 +110,31 @@ static const streng nullstring={ 0, 0, "" } ;
  * then 0 is returned. This means that both the 'start' parameter and
  * the return value are zero-based.
  */
-int bmstrstr( const streng *heystack, int Offset, const streng *needle )
+int bmstrstr( const streng *heystack, int Offset, const streng *needle,
+              int caseless )
 {
-   const unsigned char *TmpPtr=NULL ;
-   int NeedLen=0, HeyLen=0 ;
-   const unsigned char *NeedPtr=NULL, *HeyPtr=NULL, *HeyBase=NULL ;
-   unsigned int NextChr[256] ;
-   int Tmp=0 ;
-   const unsigned char *eptr ;
+   const unsigned char *TmpPtr, *TmpPtr2;
+   int NeedLen, HeyLen;
+   const unsigned char *NeedPtr, *HeyPtr, *HeyBase;
+   unsigned int NextChr[256];
+   int Tmp;
+   const unsigned char *eptr;
 
-   NeedPtr = (unsigned char*)needle->value ;
-   NeedLen = needle->len ;
+   NeedPtr = (const unsigned char *) needle->value;
+   NeedLen = needle->len;
 
-   HeyBase = (unsigned char *)heystack->value ;
-   HeyLen = heystack->len - Offset ;
-   HeyPtr = HeyBase + Offset ;
+   HeyBase = (const unsigned char *) heystack->value;
+   HeyLen = heystack->len - Offset;
+   HeyPtr = HeyBase + Offset;
 
    /*
-    * First, sometimes we want to search for one character only. Although
+    * Check for a fast break-out first.
+    */
+   if ( HeyLen < NeedLen )
+      return -1;
+
+   /*
+    * Next, sometimes we want to search for one character only. Although
     * Boyer-Moore works for that case, it is hardly efficient. So, if the
     * search pattern has length one, we use the ANSI C memchr() to find
     * the string. That function is likely to to be more efficient, maybe
@@ -145,21 +147,28 @@ int bmstrstr( const streng *heystack, int Offset, const streng *needle )
       if (HeyLen == 0)
          return -1;
 #endif
-      TmpPtr = memchr( HeyPtr, *NeedPtr, HeyLen ) ;
-      if (TmpPtr)
-         return (TmpPtr-HeyBase) ;
+      if ( caseless )
+      {
+         /*
+          * We assume that two memchrs are much faster than several toupper
+          * or tolower. This is not true always, but the opposite is even
+          * wrong.
+          */
+         TmpPtr = (const unsigned char *)memchr( HeyPtr, rx_toupper( *NeedPtr ), HeyLen );
+         TmpPtr2 = (const unsigned char *)memchr( HeyPtr, rx_tolower( *NeedPtr ), HeyLen );
+         if ( TmpPtr == NULL )
+            TmpPtr = TmpPtr2;
+         else if ( ( TmpPtr2 != NULL ) && ( TmpPtr2 < TmpPtr ) )
+            TmpPtr = TmpPtr2;
+      }
       else
-         return -1 ;
+         TmpPtr = (const unsigned char *)memchr( HeyPtr, *NeedPtr, HeyLen );
+      if ( TmpPtr )
+         return TmpPtr - HeyBase;
+      else
+         return -1;
    }
 
-   /*
-    * First we test that the pattern isn't longer than the string to
-    * search in. If the pattern is long, builing the 'next' table will
-    * take a lot of time, so we really want to avoid any action in that
-    * case.
-    */
-   else if (HeyLen < NeedLen)
-      return -1 ;
    /*
     * OK, here is the 'real' search. Basically, it consists of two
     * phases: first a table (next) is built up, and then the string
@@ -179,57 +188,85 @@ int bmstrstr( const streng *heystack, int Offset, const streng *needle )
     * S[1] to S[len(P)]. Clearly, if S[len(P)] is a character not in P,
     * then no match can occur in this area. Else, determine the first,
     * of the next possible match, and move forward to check that.
+    *
+    *
+    * First, we have to set up the table to use during the search.
+    * Initially, we fill the whole table with the 'default' value, and
+    * then we patch the values which should have other values in the
+    * loop following the call to memset().
     */
+   for ( Tmp = 0; Tmp < 256; Tmp++ )
+      NextChr[Tmp] = NeedLen;
+
+   eptr = HeyPtr + HeyLen - NeedLen;
+   NeedLen--;
+
+   TmpPtr = NeedPtr;
+
+   if ( caseless )
+   {
+      for (Tmp = NeedLen; Tmp >= 0; Tmp--, TmpPtr++ )
+         NextChr[rx_tolower(*TmpPtr)] = Tmp;
+
+      while ( HeyPtr <= eptr )
+      {
+         Tmp = NextChr[rx_tolower(HeyPtr[NeedLen])];
+         if ( !Tmp )
+         {
+            /*
+             * A hit here doesn't mean that we actually have the match. It is a
+             * possible match. We still have to compare the whole string.
+             * Remember: Boyer-Moore reduces the lookups for a proper start of
+             * the string, not the string comparisons itself.
+             *
+             * The last character matches, so compare the start.
+             * NeedLen = Str_len( needle ) - 1;
+             */
+            if ( mem_cmpic( HeyPtr, NeedPtr, NeedLen ) == 0 )
+               return HeyPtr - HeyBase;
+            HeyPtr++;
+         }
+         else
+            HeyPtr += Tmp;
+      }
+   }
    else
    {
       /*
-       * First, we have to set up the table to use during the search.
-       * Initially, we fill the whole table with the 'default' value, and
-       * then we patch the values which should have other values in the
-       * loop following the call to memset().
+       * For comments see above.
        */
-      for (Tmp=0; Tmp<256; NextChr[Tmp++]=NeedLen) ;
-      TmpPtr = NeedPtr ;
-      for (Tmp=NeedLen; Tmp; )
-         NextChr[*(TmpPtr++)] = --Tmp ;
+      for (Tmp = NeedLen; Tmp >= 0; Tmp--, TmpPtr++ )
+         NextChr[*TmpPtr] = Tmp;
 
-      eptr = HeyPtr + HeyLen - NeedLen-- ;
-
-      for (;;)
+      while ( HeyPtr <= eptr )
       {
-         if (HeyPtr>eptr)
-            return -1 ;
-
-         HeyPtr += Tmp = NextChr[*(HeyPtr+NeedLen)] ;
-         if (!Tmp)
+         Tmp = NextChr[HeyPtr[NeedLen]];
+         if ( !Tmp )
          {
-            Tmp=NeedLen ;
-            TmpPtr = HeyPtr++ ;
-            for (;;)
-            {
-               if (--Tmp<0)
-                  return (TmpPtr - HeyBase ) ;
-
-               if (TmpPtr[Tmp] != NeedPtr[Tmp])
-                  break ;
-            }
+            if ( memcmp( HeyPtr, NeedPtr, NeedLen ) == 0 )
+               return HeyPtr - HeyBase;
+            HeyPtr++;
          }
+         else
+            HeyPtr += Tmp;
       }
    }
+
+   return -1;
 }
 
 
-static const streng *handle_var( tsd_t *TSD, nodeptr this )
+static const streng *handle_var( tsd_t *TSD, nodeptr thisptr )
 {
-   if (this->type == X_HEAD_SYMBOL)
-      return fix_compound( TSD, this, NULL ) ;
+   if (thisptr->type == X_HEAD_SYMBOL)
+      return fix_compound( TSD, thisptr, NULL ) ;
    else
-      return shortcut( TSD, this ) ;
+      return shortcut( TSD, thisptr ) ;
 }
 
 /*
  * This parses a part of the source string, determined by (start)
- * and (len) into the variables of the (this) tree. Only variables
+ * and (len) into the variables of the (thisptr) tree. Only variables
  * are handled, not patterns. It will be called by doparse() to fit a
  * string into a set of variables and placeholder.
  *
@@ -247,7 +284,7 @@ static const streng *handle_var( tsd_t *TSD, nodeptr this )
  * characters to be parsed by this function. 'len' gives the length
  * of the string to be parsed by this function.
  */
-static void doparse3( tsd_t *TSD, cnodeptr this, const char *start, int len )
+static void doparse3( tsd_t *TSD, cnodeptr thisptr, const char *start, int len )
 {
    int wordlen ;
    streng *tptr ;
@@ -262,20 +299,20 @@ static void doparse3( tsd_t *TSD, cnodeptr this, const char *start, int len )
     * if so, use the rest of the string. If not, scan forwards to
     * identify a word.
     */
-   if (this->p[0])
+   if (thisptr->p[0])
    {
       /*
        * We shall only fetch out one word. First skip leading spaces,
        * then find the end of the next word.
        */
-      while (len && isspace(*start))
+      while (len && rx_isspace(*start))
       {
          start++;
          len--;
       }
 
       wordlen = 0;
-      while ((wordlen < len) && !isspace(start[wordlen]))
+      while ((wordlen < len) && !rx_isspace(start[wordlen]))
          wordlen++;
    }
    else
@@ -286,7 +323,7 @@ static void doparse3( tsd_t *TSD, cnodeptr this, const char *start, int len )
        *      cut the first char if it is a space AND it is not
        *      the only pattern to match.
        */
-      if (CutLast && len && isspace(*start))
+      if (CutLast && len && rx_isspace(*start))
       {
          start++;
          len--;
@@ -301,20 +338,20 @@ static void doparse3( tsd_t *TSD, cnodeptr this, const char *start, int len )
     * It might be a variable, or just a placeholder (dot). The two are
     * handled in each part of the if-statement below. The setting of
     * 'tptr' could be lifted out of the if-statement to save space,
-    * but at the cost of more CPU.
+    * but at the cost of MUCH more CPU.
+    * DON'T DO IT!
     */
-   tptr = Str_ncreTSD( start, wordlen ) ;
-   if (this->type==X_TPL_SYMBOL)
+   if ( thisptr->type == X_TPL_SYMBOL )
    {
-      if (TSD->traceparse)
-         tracevalue(TSD,tptr,'>') ;
+      tptr = Str_ncreTSD( start, wordlen );
+      if ( TSD->traceparse )
+         tracevalue( TSD, tptr, '>' );
 
-      if ( this->p[1]->type == X_HEAD_SYMBOL)
-         fix_compound( TSD, this->p[1], tptr ) ;
+      if ( thisptr->p[1]->type == X_HEAD_SYMBOL )
+         fix_compound( TSD, thisptr->p[1], tptr );
       else
-         setshortcut( TSD, this->p[1], tptr ) ;
+         setshortcut( TSD, thisptr->p[1], tptr );
    }
-   /* bja - a bug there: is not tracing, we have to free tptr anyway !! */
    else
    {
       /*
@@ -328,16 +365,19 @@ static void doparse3( tsd_t *TSD, cnodeptr this, const char *start, int len )
        * temporary storage.
        */
 
-      if (TSD->traceparse)
-         tracevalue(TSD,tptr,'.') ;
-      Free_stringTSD( tptr ) ;
+      if ( TSD->traceparse )
+      {
+         tptr = Str_ncreTSD( start, wordlen );
+         tracevalue( TSD, tptr, '.' );
+         Free_stringTSD( tptr );
+      }
    }
 
    /*
     * Now, this should actually be a tail recursion, but since be don't
     * trust compilers, we are optimizeing it ourselves.
     */
-    if ((this = this->p[0]) != NULL)
+    if ((thisptr = thisptr->p[0]) != NULL)
     {
        start += wordlen ;
        len -= wordlen ;
@@ -347,7 +387,7 @@ static void doparse3( tsd_t *TSD, cnodeptr this, const char *start, int len )
 
 /*
  * This routine parses a string (source) into the template that is
- * specified by the structure in the (this) tree. It handles find the next
+ * specified by the structure in the (thisptr) tree. It handles find the next
  * template, and handles the aread between two templates.
  *
  * It calls it self recursively to handle a sequence of templates.
@@ -358,13 +398,13 @@ static void doparse3( tsd_t *TSD, cnodeptr this, const char *start, int len )
  * each pattern can contain the vars/placeholders as a chain linked
  * in at p[0].
  *
- * 'source' is the string to be parsed, 'this' it a ptr to the top
+ * 'source' is the string to be parsed, 'thisptr' it a ptr to the top
  * of the parsetree that describes how 'source' after start'th
  * position is to be parsed. 'start' is a ptr to the first char in
  * 'source' to be parsed by this part of the template.
  */
 
-void doparse( tsd_t *TSD, const streng *source, cnodeptr this )
+void doparse( tsd_t *TSD, const streng *source, cnodeptr thisptr, int caseless )
 {
    int start=0,point=0,length=0, end=0, nextstart=0, solid=0 ;
    const streng *pattern=NULL ;
@@ -391,7 +431,7 @@ recurse:
     * another pattern further out, in which case we have to find it.
     *
     */
-   if (this->p[1])
+   if (thisptr->p[1])
    {
       /*
        * We are not the last pattern, so first find the next pattern.
@@ -399,7 +439,7 @@ recurse:
        * two main choises: either seek for a string of some sort, or
        * use an offset of some sort.
        */
-      solid = this->p[1]->type ;
+      solid = thisptr->p[1]->type ;
       if ((solid==X_TPL_MVE)||(solid==X_TPL_VAR))
       {
          /*
@@ -409,9 +449,9 @@ recurse:
           * allocated variable, so don't bother to deallocate.
           */
          if (solid==X_TPL_MVE)
-            pattern = this->p[1]->name ;
+            pattern = thisptr->p[1]->name ;
          else
-            pattern = handle_var( TSD, this->p[1]->p[0] ) ;
+            pattern = handle_var( TSD, thisptr->p[1]->p[0] ) ;
          /*
           * Then we must find where in the source string pattern occurs.
           * If it don't occur there, we use the rest of the string, else
@@ -423,7 +463,7 @@ recurse:
           */
          if (Str_len(pattern))
          {
-            end = bmstrstr( source, start, pattern ) ;
+            end = bmstrstr( source, start, pattern, caseless ) ;
             if (end<0)
             {
                point = end = length ;
@@ -454,15 +494,16 @@ recurse:
           * The next pattern to match is not a string to match, but a
           * positional movement, which will always be numeric, and if
           * it contains a sign, that should have been stripped off during
-          * parsing, so check that it is non-negative.
+          * parsing. But a variable may be negative, too.
           */
-         if (this->p[1]->name)
-            xtmp = this->p[1]->name ;
+         if (thisptr->p[1]->name)
+            xtmp = thisptr->p[1]->name ;
          else
-            xtmp = handle_var( TSD, this->p[1]->p[0] ) ;
+            xtmp = handle_var( TSD, thisptr->p[1]->p[0] ) ;
 
-         end = atozpos( TSD, xtmp, "internal", 1 ) ;
-         assert( end >= 0 ) ;
+         end = streng_to_int( TSD, xtmp, &nextstart ) ;
+         if (nextstart)
+            exiterror( ERR_INVALID_INTEGER, 4, tmpstr_of( TSD, xtmp ) );
 
          /*
           * Depending on what sort of positional movement, do the right
@@ -483,8 +524,10 @@ recurse:
             start = point ;
             nextstart = point - end ;
             end = length ;
+            if (nextstart > length)
+               nextstart = length;
             if (nextstart < 0)
-               nextstart = 0 ;
+               nextstart = 0;
 
             point = nextstart ;
          }
@@ -493,13 +536,15 @@ recurse:
          {
             /*
              * If the movement is forward, it is simpler, just move the
-             * position of both the end of this, and the start of next
+             * position of both the end of thisptr, and the start of next
              * to the right point.
              */
             start = point ;
             nextstart = point + end ;
             if (nextstart > length)
-               nextstart = length ;
+               nextstart = length;
+            if (nextstart < 0)
+               nextstart = 0;
             end = nextstart ;
             if (end<=start)
                end = length ;
@@ -512,17 +557,15 @@ recurse:
             /*
              * Same applies if the position is absolute, just move it.
              */
-            if ((end--)==0)
-            {
-               exiterror( ERR_INVALID_INTEGER, 0 )  ;
-            }
+            end--;
+            if (end > length)
+               end = length;
+            if (end < 0)        /* fixes bug 1107757 */
+               end = 0;
 
-            if (end>length)
-               end = length ;
-
-            point = nextstart = end ;
+            point = nextstart = end;
             if (end <= start)
-               end = length ;
+               end = length;
          }
       }
    }
@@ -552,9 +595,9 @@ recurse:
     * since doparse3 expects ptr to last char to use, not ptr to char
     * after last char to use.
     */
-   if (this->p[0])
+   if (thisptr->p[0])
    {
-      doparse3( TSD, this->p[0], source->value+start, end-start);
+      doparse3( TSD, thisptr->p[0], source->value+start, end-start);
       --end;
    }
 
@@ -563,7 +606,7 @@ recurse:
     * operation will take care of the next set of variables to be
     * parsed values into.
     */
-   if ((this=this->p[2]) != NULL)
+   if ((thisptr=thisptr->p[2]) != NULL)
    {
       start = nextstart ;
       goto recurse ;
@@ -582,24 +625,24 @@ recurse:
  * There are no limits on the number of arguments to be parsed,
  * other than memory.
  */
-void parseargtree( tsd_t *TSD, cparamboxptr argbox, cnodeptr this, int upper )
+void parseargtree( tsd_t *TSD, cparamboxptr argbox, cnodeptr thisptr, int flags )
 {
    const streng *source ;
-   streng *uppsrc ;
+   streng *upplow ;
 
    /*
     * All templates in a list of template are connected though the
     * next field of the template.
     */
-   for (; this; this=this->next)
+   for (; thisptr; thisptr=thisptr->next)
    {
-      assert(this->type==X_TPL_SOLID) ;
+      assert(thisptr->type==X_TPL_SOLID) ;
 
       /*
        * Else, it is a tempate into which a string is to be parsed.
        * That string is an argument, to first get that argument,
        * if it exist, else use the nullstring. Never bother about
-       * deallocating this string; either it is part of an arguemnt
+       * deallocating thisptr string; either it is part of an arguemnt
        * which is deallocated somewhere else, or it is the statically
        * allocated nullstring.
        */
@@ -608,14 +651,20 @@ void parseargtree( tsd_t *TSD, cparamboxptr argbox, cnodeptr this, int upper )
       else
          source = &nullstring ;
 
-      if (upper)
+      if (flags & PARSE_UPPER)
       {
-         uppsrc = upcase( Str_dupTSD( source )) ;
-         doparse( TSD, uppsrc, this ) ;
-         Free_stringTSD( uppsrc ) ;
+         upplow = Str_upper( Str_dupTSD( source )) ;
+         doparse( TSD, upplow, thisptr, flags & PARSE_CASELESS ) ;
+         Free_stringTSD( upplow ) ;
+      }
+      else if (flags & PARSE_LOWER)
+      {
+         upplow = Str_lower( Str_dupTSD( source )) ;
+         doparse( TSD, upplow, thisptr, flags & PARSE_CASELESS ) ;
+         Free_stringTSD( upplow ) ;
       }
       else
-         doparse( TSD, source, this ) ;
+         doparse( TSD, source, thisptr, flags & PARSE_CASELESS ) ;
 
       if (argbox)
          argbox = argbox->next ;

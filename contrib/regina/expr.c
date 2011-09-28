@@ -1,7 +1,3 @@
-#ifndef lint
-static char *RCSid = "$Id$";
-#endif
-
 /*
  *  The Regina Rexx Interpreter
  *  Copyright (C) 1993-1994  Anders Christensen <anders@pvv.unit.no>
@@ -24,7 +20,6 @@ static char *RCSid = "$Id$";
 #include "rexx.h"
 
 #include <string.h>
-#include <ctype.h>
 #include <assert.h>
 
 #define TRACEVALUE(a,b) if (TSD->trace_stat=='I') tracevalue(TSD,a,b)
@@ -39,6 +34,16 @@ static void mark_in_expr( const tsd_t *TSD )
 }
 #endif
 
+/*
+ * COMP_IGNORE returns 1 if c shall be ignored on a non-strict comparison
+ * between non-numbers. Previously, this was equal to isspace(c). This was
+ * wrong according to ANSI, section 7.4.7. This fixes bug 594674.
+ */
+#define ANSI_COMP_IGNORE(c) ( (c) == ' ' )
+#define REGINA_COMP_IGNORE(c) ( rx_isspace(c) )
+
+#define FREE_TMP_STRING(str) if ( str )               \
+                                Free_stringTSD( str )
 
 int init_expr( tsd_t *TSD )
 {
@@ -52,17 +57,18 @@ int init_expr( tsd_t *TSD )
 
 static num_descr *copy_num( const tsd_t *TSD, const num_descr *input )
 {
-   num_descr *new=NULL ;
+   num_descr *newptr=NULL ;
 
-   new = MallocTSD( sizeof( num_descr )) ;
-   new->negative = input->negative ;
-   new->size = input->size ;
-   new->max = (input->max < 1) ? 1 : input->max ;
-   new->exp = input->exp ;
-   new->num = MallocTSD( new->max ) ;
-   memcpy( new->num, input->num, new->size ) ;
+   newptr = (num_descr *)MallocTSD( sizeof( num_descr )) ;
+   newptr->negative = input->negative ;
+   newptr->size = input->size ;
+   newptr->max = (input->max < 1) ? 1 : input->max ;
+   newptr->exp = input->exp ;
+   newptr->num = (char *)MallocTSD( newptr->max ) ;
+   newptr->used_digits = input->used_digits;
+   memcpy( newptr->num, input->num, newptr->size ) ;
    TSD = TSD; /* keep compiler happy */
-   return new ;
+   return newptr ;
 }
 
 
@@ -107,41 +113,41 @@ static streng *bool_to_str( const tsd_t *TSD, int input )
    return Str_creTSD( input ? "1" : "0" ) ;
 }
 
-
-static num_descr *str_to_num( const tsd_t *TSD, const streng *input )
-{
-   return get_a_descr( TSD, input ) ;
-}
-
 static num_descr *bool_to_num( const tsd_t *TSD, int input )
 {
    num_descr *num=NULL ;
 
-   num = MallocTSD( sizeof( num_descr )) ;
+   num = (num_descr *)MallocTSD( sizeof( num_descr )) ;
    num->max = 8 ;
-   num->num = MallocTSD( 8 ) ;
+   num->num = (char *)MallocTSD( 8 ) ;
    num->size = 1 ;
    num->negative = 0 ;
    num->exp = 1 ;
    num->num[0] = (char) ((input) ? '1' : '0') ;
+   num->used_digits = TSD->currlevel->currnumsize;
    return num ;
 }
 
-num_descr *calcul( tsd_t *TSD, nodeptr this, num_descr **kill )
+/*
+ * calcul evaluates a numeric expression. thisptr is the current evaluation tree.
+ * kill? return value?
+ * Note: This is one of the most time-consuming routines. Be careful.
+ */
+num_descr *calcul( tsd_t *TSD, nodeptr thisptr, num_descr **kill )
 {
-   num_descr *numthr=NULL, *numone=NULL, *numtwo=NULL ;
+   num_descr *numthr, *numone, *numtwo ;
    num_descr *ntmp1=NULL, *ntmp2=NULL ;
-   int power=0 ;
-   num_descr *nptr=NULL ;
-   streng *sptr=NULL ;
+   num_descr *nptr;
+   streng *sptr;
+   int strip2 = 0; /* fixes bug 1107763, second part */
 
-   switch (/*(unsigned char)*/(this->type))
+   switch ( thisptr->type )
    {
       case 0:
       case 255:
       case X_MINUS:
-         numone = calcul( TSD, this->p[0], &ntmp1 ) ;
-         numtwo = calcul( TSD, this->p[1], &ntmp2 ) ;
+         numone = calcul( TSD, thisptr->p[0], &ntmp1 ) ;
+         numtwo = calcul( TSD, thisptr->p[1], &ntmp2 ) ;
          if (!ntmp2)
             ntmp2 = numtwo = copy_num( TSD, numtwo ) ;
 
@@ -149,8 +155,8 @@ num_descr *calcul( tsd_t *TSD, nodeptr this, num_descr **kill )
          goto do_an_add ;
 
       case X_PLUSS:
-         numone = calcul( TSD, this->p[0], &ntmp1 ) ;
-         numtwo = calcul( TSD, this->p[1], &ntmp2 ) ;
+         numone = calcul( TSD, thisptr->p[0], &ntmp1 ) ;
+         numtwo = calcul( TSD, thisptr->p[1], &ntmp2 ) ;
 do_an_add:
          if (ntmp1)
          {
@@ -165,12 +171,12 @@ do_an_add:
          else
             numthr = copy_num( TSD, numtwo ) ;
 
-         string_add( TSD, numone, numtwo, numthr ) ;
+         string_add( TSD, numone, numtwo, numthr, thisptr->p[0], thisptr->p[1] ) ;
          break ;
 
       case X_MULT:
-         numone = calcul( TSD, this->p[0], &ntmp1 ) ;
-         numtwo = calcul( TSD, this->p[1], &ntmp2 ) ;
+         numone = calcul( TSD, thisptr->p[0], &ntmp1 ) ;
+         numtwo = calcul( TSD, thisptr->p[1], &ntmp2 ) ;
          if (ntmp1)
          {
             numthr = numone ;
@@ -184,61 +190,55 @@ do_an_add:
          else
             numthr = copy_num( TSD, numtwo ) ;
 
-         string_mul( TSD, numone, numtwo, numthr ) ;
+         string_mul( TSD, numone, numtwo, numthr, thisptr->p[0], thisptr->p[1] );
          break ;
 
       case X_DEVIDE:
       case X_MODULUS:
       case X_INTDIV:
-         numone = calcul( TSD, this->p[0], &ntmp1 ) ;
-         numtwo = calcul( TSD, this->p[1], &ntmp2 ) ;
+         numone = calcul( TSD, thisptr->p[0], &ntmp1 ) ;
+         numtwo = calcul( TSD, thisptr->p[1], &ntmp2 ) ;
          if (numtwo->size==1 && numtwo->num[0]=='0')
-             exiterror( ERR_BAD_ARITHMETIC, 0 )  ;
+             exiterror( ERR_ARITH_OVERFLOW, 3 )  ;
 
          numthr = copy_num( TSD, numtwo ) ;
          string_div( TSD, numone, numtwo, numthr, NULL,
-            ((this->type==X_DEVIDE) ? DIVTYPE_NORMAL :
-            ((this->type==X_MODULUS) ? DIVTYPE_REMINDER : DIVTYPE_INTEGER))) ;
+            ((thisptr->type==X_DEVIDE) ? DIVTYPE_NORMAL :
+            ((thisptr->type==X_MODULUS) ? DIVTYPE_REMAINDER : DIVTYPE_INTEGER)),
+            thisptr->p[0], thisptr->p[1] );
+         strip2 = 1;
          break ;
 
       case X_EXP:
-         numone = calcul( TSD, this->p[0], &ntmp1 ) ;
-         power = descr_to_int( calcul( TSD, this->p[1], &ntmp2 )) ;
-         if (ntmp2)
-         {
-            numtwo = ntmp2 ;
-/*            ntmp2 = NULL ; */
-         }
-         else
-            ntmp2 = numtwo = copy_num( TSD, numone ) ;
-
-
+         numone = calcul( TSD, thisptr->p[0], &ntmp1 ) ;
+         numtwo = ntmp2 = calcul( TSD, thisptr->p[1], NULL ) ;
          numthr = copy_num( TSD, numone ) ;
-         string_pow( TSD, numone, power, numtwo, numthr ) ;
+         string_pow( TSD, numone, numtwo, numthr, thisptr->p[0], thisptr->p[1] ) ;
+         strip2 = 1;
          break ;
 
       case X_STRING:
       case X_CON_SYMBOL:
-         if (!this->u.number)
-            this->u.number = get_a_descr( TSD, this->name ) ;
+         if ( !thisptr->u.number )
+            thisptr->u.number = get_a_descr( TSD, NULL, 0, thisptr->name ) ;
 
          if (TSD->trace_stat=='I')
-            tracenumber( TSD, this->u.number, 'L' ) ;
+            tracenumber( TSD, thisptr->u.number, 'L' ) ;
 
          if (kill)
          {
             *kill = NULL ;
-            return this->u.number ;
+            return thisptr->u.number ;
          }
          else
-            return copy_num( TSD, this->u.number ) ;
+            return copy_num( TSD, thisptr->u.number ) ;
 
       case X_SIM_SYMBOL:
       case X_STEM_SYMBOL:
          if (kill)
             *kill = NULL ;
 
-         nptr = shortcutnum( TSD, this ) ;
+         nptr = shortcutnum( TSD, thisptr ) ;
          if (!nptr)
              exiterror( ERR_BAD_ARITHMETIC, 0 )  ;
 
@@ -251,7 +251,7 @@ do_an_add:
          if (kill)
             *kill = NULL ;
 
-         nptr = fix_compoundnum( TSD, this, NULL ) ;
+         nptr = fix_compoundnum( TSD, thisptr, NULL, NULL );
          if (!nptr)
              exiterror( ERR_BAD_ARITHMETIC, 0 )  ;
 
@@ -262,11 +262,11 @@ do_an_add:
 
       case X_U_PLUSS:
       case X_U_MINUS:
-         numthr = calcul( TSD, this->p[0], &ntmp1 ) ;
+         numthr = calcul( TSD, thisptr->p[0], &ntmp1 ) ;
          if (!ntmp1)
             numthr = copy_num( TSD, numthr ) ;
 
-         if (this->type==X_U_MINUS)
+         if (thisptr->type==X_U_MINUS)
             numthr->negative = !numthr->negative ;
 
          if (kill)
@@ -285,10 +285,8 @@ do_an_add:
       case X_CONCAT:
       case X_SPACE:
       {
-         streng *stmp ;
-         numthr = str_to_num( TSD, stmp=evaluate( TSD, this, &sptr )) ;
-         if (sptr)
-            Free_stringTSD( sptr ) ;
+         numthr = get_a_descr( TSD, NULL, 0, evaluate( TSD, thisptr, &sptr ) );
+         FREE_TMP_STRING( sptr );
          if (kill)
             *kill = numthr ;
          return numthr ;
@@ -323,7 +321,7 @@ do_an_add:
       case X_S_GTE:
       case X_S_LT:
       case X_S_LTE:
-         numthr = bool_to_num( TSD, isboolean( TSD, this )) ;
+         numthr = bool_to_num( TSD, isboolean( TSD, thisptr, 0, NULL )) ;
          if (kill)
             *kill = numthr ;
          return numthr ;
@@ -351,20 +349,114 @@ do_an_add:
 
    str_strip( numthr ) ;
    str_round( numthr, TSD->currlevel->currnumsize ) ;
+   if ( strip2 )
+   {
+      /*
+       * ANSI 7.4.10, PostOp, add. rounding for / and **
+       */
+      strip2 = numthr->size;
+      while ( ( strip2 > 1 ) &&
+              ( numthr->exp < strip2) &&
+              ( numthr->num[strip2 - 1] == '0' ) )
+         strip2--;
+      if ( strip2 != numthr->size )
+      {
+         numthr->size = strip2;
+         if ( strip2 < numthr->used_digits )
+            numthr->used_digits = strip2;
+      }
+   }
    return numthr ;
 }
 
-
-
-streng *evaluate( tsd_t *TSD, nodeptr this, streng **kill )
+static void strip_whitespace( tsd_t *TSD, unsigned char **s1,
+                              unsigned char **e1, unsigned char **s2,
+                              unsigned char **e2 )
 {
-   streng *strone=NULL, *strtwo=NULL, *strthr=NULL ;
-   streng *stmp1, *stmp2=NULL, *sptr=NULL ;
-   streng *stmp=NULL ;
-   const streng *cstmp=NULL ;
-   num_descr *ntmp=NULL ;
+   if ( get_options_flag( TSD->currlevel, EXT_STRICT_ANSI )
+   ||   get_options_flag( TSD->currlevel, EXT_STRICT_WHITE_SPACE_COMPARISONS ) )
+   {
+      /*
+       * ANSI 7.4.7 behaviour; non-strict comparisons
+       * removed ONLY spaces, so single TAB not equal to single SPACE
+       */
+      /*
+       * Strip leading spaces - ignored in comparison
+       */
+      for( ; ( *s1 < *e1 ) && ANSI_COMP_IGNORE( **s1 ); (*s1)++ )
+      {
+      }
+      for( ; ( *s2 < *e2 ) && ANSI_COMP_IGNORE( **s2 ); (*s2)++ )
+      {
+      }
+      for ( ; ( *s1 < *e1 ) && ( *s2 < *e2 ) && ( **s1 == **s2 ); (*s1)++, (*s2)++ )
+      {
+      }
+      /*
+       * Strip trailing spaces - ignored in comparison
+       */
+      for ( ; ( *e1 > *s1 ) && ANSI_COMP_IGNORE( *( *e1 - 1 ) ); (*e1)-- )
+      {
+      }
+      for ( ; ( *e2 > *s2 ) && ANSI_COMP_IGNORE( *( *e2 - 1 ) ); (*e2)-- )
+      {
+      }
+   }
+   else
+   {
+      /*
+       * Original Regina behaviour; non-strict comparisons
+       * removed ALL white space, so single TAB equalled single SPACE
+       */
+      /*
+       * Strip leading white space - ignored in comparison
+       */
+      for( ; ( *s1 < *e1 ) && REGINA_COMP_IGNORE( **s1 ); (*s1)++ )
+      {
+      }
+      for( ; ( *s2 < *e2 ) && REGINA_COMP_IGNORE( **s2 ); (*s2)++ )
+      {
+      }
+      for ( ; ( *s1 < *e1 ) && ( *s2 < *e2 ) && ( **s1 == **s2 ); (*s1)++, (*s2)++ )
+      {
+      }
+      /*
+       * Strip trailing white space - ignored in comparison
+       */
+      for ( ; ( *e1 > *s1 ) && REGINA_COMP_IGNORE( *( *e1 - 1 ) ); (*e1)-- )
+      {
+      }
+      for ( ; ( *e2 > *s2 ) && REGINA_COMP_IGNORE( *( *e2 - 1 ) ); (*e2)-- )
+      {
+      }
+   }
+}
 
-   switch (/*(unsigned char)*/(this->type))
+
+/*
+ * evaluate evaluates an expression. The nodeptr "thisptr" must point to an
+ * expression part. The return value is the value of the expression.
+ * For a proper cleanup the caller probably has to delete a the returned
+ * value. For this purpose, the caller may set "kill" to non-NULL.
+ * *kill is set to NULL, if the returned value is a const value and must
+ * not be freed. *kill is set to a temporary value which has to be deleted
+ * after the use of the returned value.
+ * The caller may omit kill, this forces evaluate to create a freshly allocated
+ * return value.
+ */
+streng *evaluate( tsd_t *TSD, nodeptr thisptr, streng **kill )
+{
+#define RETURN_NEW(val) if ( kill )     \
+                           *kill = val; \
+                        return val;
+   streng *strone,*strtwo,*strthr;
+   streng *stmp1,*stmp2;
+   const streng *cstmp;
+   num_descr *ntmp;
+
+   if ( kill )
+      *kill = NULL;
+   switch ( thisptr->type )
    {
       case 0:
       case 255:
@@ -377,66 +469,58 @@ streng *evaluate( tsd_t *TSD, nodeptr this, streng **kill )
       case X_EXP:
       case X_U_MINUS:
       case X_U_PLUSS:
-         stmp = num_to_str( TSD, calcul( TSD, this, &ntmp )) ;
-         if (ntmp)
+         ntmp = NULL;
+         stmp1 = num_to_str( TSD, calcul( TSD, thisptr, &ntmp ) );
+         if ( ntmp )
          {
-            FreeTSD( ntmp->num ) ;
-            FreeTSD( ntmp ) ;
+            FreeTSD( ntmp->num );
+            FreeTSD( ntmp );
          }
-         if (kill)
-            *kill = stmp ;
-
-         return stmp ;
+         RETURN_NEW( stmp1 );
 
       case X_NULL:
          return NULL ;
 
       case X_STRING:
       case X_CON_SYMBOL:
-         cstmp = this->name ;
-         if (TSD->trace_stat=='I')
-            tracevalue( TSD, cstmp, 'L' ) ;
-
-         goto cnsnt ;
+         cstmp = thisptr->name;
+         if ( TSD->trace_stat == 'I' )
+            tracevalue( TSD, cstmp, 'L' );
+         if ( kill )
+            return (streng *) cstmp; /* and *kill is set to NULL above */
+         stmp1 = Str_dupTSD( cstmp );
+         RETURN_NEW( stmp1 );
 
       case X_HEAD_SYMBOL:
-         /* always duplicate, since stmp might point to tmp area */
-         stmp = Str_dupTSD( fix_compound(TSD, this, NULL)) ;
-         if (kill)
-            *kill = stmp ;
-         return stmp ;
+         /* always duplicate, since stmp1 might point to tmp area */
+         stmp1 = Str_dupTSD( fix_compound( TSD, thisptr, NULL ) );
+         RETURN_NEW( stmp1 );
 
       case X_STEM_SYMBOL:
       case X_SIM_SYMBOL:
-         cstmp = shortcut(TSD,this) ;
-cnsnt:   if (kill)
-         {
-            *kill = NULL ;
-            /* FIXME, FGC: I hate the following. The complete code
-             * should be fixed here!
-             */
-            stmp = (streng *) cstmp;
-         }
-         else
-            stmp = Str_dupTSD( cstmp ) ;
-         return stmp ;
+         cstmp = shortcut(TSD,thisptr) ;
+         if ( kill )
+            return (streng *) cstmp; /* and *kill is set to NULL above */
+         stmp1 = Str_dupTSD( cstmp );
+         RETURN_NEW( stmp1 );
 
       case X_IN_FUNC:
       {
-         nodeptr entry ;
-         if ((entry=getlabel(TSD,this->name))!=NULL)
+         nodeptr entry;
+
+         if ( ( entry = getlabel( TSD, thisptr->name ) ) != NULL )
          {
-            this->type = X_IS_INTERNAL ;
-            this->u.node = entry ;
+            if ( entry->u.trace_only )
+               exiterror( ERR_UNEXISTENT_LABEL, 3, tmpstr_of( TSD, thisptr->name ) );
+            thisptr->type = X_IS_INTERNAL;
+            thisptr->u.node = entry;
          }
          else
-            this->u.node = NULL ;
+            thisptr->u.node = NULL;
       }
 
       case X_IS_INTERNAL:
       {
-         proclevel oldlevel ;
-         int stackmark ;
          nodeptr entry ;
          paramboxptr args ;
          streng *ptr ;
@@ -449,37 +533,25 @@ cnsnt:   if (kill)
           */
          if ( get_options_flag( TSD->currlevel, EXT_STRICT_ANSI ) )
          {
-            if ( this->name->value[(this->name->len)-1] == '.' )
-               exiterror( ERR_UNQUOTED_FUNC_STOP, 1, tmpstr_of( TSD, this->name ) )  ;
+            if ( thisptr->name->value[(thisptr->name->len)-1] == '.' )
+               exiterror( ERR_UNQUOTED_FUNC_STOP, 1, tmpstr_of( TSD, thisptr->name ) )  ;
          }
-         if ((entry=this->u.node)!=NULL)
+         if ( ( entry = thisptr->u.node ) != NULL )
          {
-            nodeptr savecurrentnode;  /* pgb */
-            set_sigl( TSD, TSD->currentnode->lineno ) ;
-            oldlevel = TSD->currlevel ;
-            args = initplist( TSD, this ) ;
-            TSD->currlevel = newlevel( TSD, TSD->currlevel ) ;
-            TSD->currlevel->args = args ;
-            stackmark = pushcallstack(TSD,TSD->currentnode) ;
+            set_reserved_value( TSD, POOL0_SIGL, NULL,
+                                TSD->currentnode->lineno, VFLAG_NUM );
+            args = initplist( TSD, thisptr );
 
-            savecurrentnode = TSD->currentnode; /* pgb */
-            ptr = interpret( TSD, entry->next ) ;
-            TSD->currentnode = savecurrentnode; /* pgb */
+            ptr = CallInternalFunction( TSD, entry->next, TSD->currentnode,
+                                        args );
 
-            if (ptr==NULL)
-               exiterror( ERR_NO_DATA_RETURNED, 1, tmpstr_of( TSD, this->name ) )  ;
+            if (ptr==NULL) /* fixes bug 592393 */
+               exiterror( ERR_NO_DATA_RETURNED, 1, tmpstr_of( TSD, thisptr->name ) );
 
-            popcallstack(TSD,stackmark) ;
-            removelevel( TSD, TSD->currlevel ) ;
-            TSD->currlevel = oldlevel ;
-            TSD->currlevel->next = NULL ;
-            TSD->trace_stat = TSD->currlevel->tracestat ;
-            if (kill)
-               *kill = ptr ;
             if (TSD->trace_stat=='I')
-               tracevalue( TSD, ptr, 'F' ) ;
+               tracevalue( TSD, ptr, 'F' );
 
-            return ptr ;
+            RETURN_NEW( ptr );
          }
       }
       /* THIS IS MEANT TO FALL THROUGH! */
@@ -488,120 +560,96 @@ cnsnt:   if (kill)
       {
          streng *ptr ;
 
-         if ((ptr=buildtinfunc( TSD, this )) != NOFUNC)
+         if ((ptr=buildtinfunc( TSD, thisptr )) != NOFUNC)
          {
-            if (this->type != X_IS_BUILTIN)
-               this->type = X_IS_BUILTIN ;
-            if (kill)
-               *kill = ptr ;
+            if (thisptr->type != X_IS_BUILTIN)
+               thisptr->type = X_IS_BUILTIN ;
 
             if (!ptr)
-                exiterror( ERR_NO_DATA_RETURNED, 1, tmpstr_of( TSD, this->name ) )  ;
+                exiterror( ERR_NO_DATA_RETURNED, 1, tmpstr_of( TSD, thisptr->name ) )  ;
 
             if (TSD->trace_stat=='I')
                tracevalue( TSD, ptr, 'F' ) ;
 
-            return ptr ;
+            RETURN_NEW( ptr );
          }
          else
-            this->type = X_IS_EXTERNAL ;
+            thisptr->type = X_IS_EXTERNAL ;
       }
-
+      /* THIS IS MEANT TO FALL THROUGH! */
       case X_IS_EXTERNAL:
       {
-         streng *ptr, *command ;
-         int stackmark ;
-         paramboxptr args, targs ;
+         streng *ptr, *command;
+         int stackmark,len,err;
+         paramboxptr args, targs;
 
          if ( TSD->restricted )
-            exiterror( ERR_RESTRICTED, 5 )  ;
+            exiterror( ERR_RESTRICTED, 5 );
 
-         update_envirs( TSD, TSD->currlevel ) ;
+         update_envirs( TSD, TSD->currlevel );
 
-         args = targs = initplist( TSD, this ) ;
-#if 0
-         command = Str_makeTSD( 1000 ) ;
-         command = Str_catTSD(command,this->name ) ;
-         for (;targs;targs=targs->next)
-            if (targs->value)
-            {
-               command = Str_catstrTSD(command," ") ;
-               command = Str_catTSD(command,targs->value) ;
-            }
+         args = initplist( TSD, thisptr );
+         stackmark = pushcallstack( TSD, TSD->currentnode );
+         ptr = execute_external( TSD, thisptr->name,
+                                 args,
+                                 TSD->systeminfo->environment,
+                                 &err,
+                                 TSD->systeminfo->hooks,
+                                 INVO_FUNCTION );
+         popcallstack( TSD, stackmark );
 
-         stackmark = pushcallstack( TSD, TSD->currentnode ) ;
-         ptr = execute_external(TSD,command,args,TSD->systeminfo->environment,
-                                NULL,0, INVO_FUNCTION);
-         popcallstack( TSD, stackmark ) ;
-         deallocplink( TSD, args ) ;
-
-         if (!ptr)
-            ptr = run_popen( TSD, command, TSD->currlevel->environment ) ;
-
-         if (!ptr)
-         {
-            exiterror( ERR_ROUTINE_NOT_FOUND, 0 )  ;
-            ptr = nullstringptr() ;
-         }
-         if (kill)
-            *kill = ptr ;
-
-         if (TSD->trace_stat=='I')
-            tracevalue( TSD, ptr, 'F' ) ;
-
-         Free_stringTSD( command ) ;
-#else
-
-         stackmark = pushcallstack( TSD, TSD->currentnode ) ;
-         ptr = execute_external(TSD,this->name,
-                                args,
-                                TSD->systeminfo->environment,
-                                NULL,
-                                TSD->systeminfo->hooks,
-                                INVO_FUNCTION);
-         popcallstack( TSD, stackmark ) ;
-
-         if (!ptr)
+         if ( err == -ERR_PROG_UNREADABLE )
          {
             /*
-             * "this->name" wasn't a Rexx program, so
+             * "thisptr->name" wasn't a Rexx program, so
              * see if it is an OS command.
-             * Only do this if the OPTIONS EXT_COMMANDS_AS_FUNCS is
+             * Only do thisptr if the OPTIONS EXT_COMMANDS_AS_FUNCS is
              * set and STRICT_ANSI is NOT set.
              */
-            if ( get_options_flag( TSD->currlevel, EXT_EXT_COMMANDS_AS_FUNCS ) 
+            if ( get_options_flag( TSD->currlevel, EXT_EXT_COMMANDS_AS_FUNCS )
             &&  !get_options_flag( TSD->currlevel, EXT_STRICT_ANSI ) )
             {
-               command = Str_makeTSD( 1000 ) ;
-               command = Str_catTSD(command,this->name ) ;
-               for (;targs;targs=targs->next)
+               len = Str_len( thisptr->name );
+               for( targs = args; targs; targs = targs->next )
                {
-                  if (targs->value)
+                  if ( targs->value )
+                     len += 1 + Str_len( targs->value );
+               }
+               command = Str_makeTSD( len );
+               command = Str_catTSD( command, thisptr->name );
+               for( targs = args; targs; targs = targs->next )
+               {
+                  if ( targs->value )
                   {
-                     command = Str_catstrTSD(command," ") ;
-                     command = Str_catTSD(command,targs->value) ;
+                     command = Str_catstrTSD( command, " " );
+                     command = Str_catTSD( command, targs->value );
                   }
                }
-               ptr = run_popen( TSD, command, TSD->currlevel->environment ) ;
-               Free_stringTSD( command ) ;
+               ptr = run_popen( TSD, command, TSD->currlevel->environment );
+               if ( ptr != NULL )
+                  err = 0;
+               Free_stringTSD( command );
             }
          }
 
-         deallocplink( TSD, args ) ;
+         deallocplink( TSD, args );
 
-         if (!ptr)
+         if ( ptr && ( TSD->trace_stat == 'I' ) )
+            tracevalue( TSD, ptr, 'F' );
+
+         if ( err == -ERR_PROG_UNREADABLE )
          {
-            exiterror( ERR_ROUTINE_NOT_FOUND, 1, tmpstr_of( TSD, this->name ) )  ;
-            ptr = nullstringptr() ;
+            exiterror( ERR_ROUTINE_NOT_FOUND, 1, tmpstr_of( TSD, thisptr->name ) );
          }
-         if (kill)
-            *kill = ptr ;
+         else if ( err )
+         {
+            post_process_system_call( TSD, thisptr->name, -err, NULL, thisptr );
+         }
 
-         if (TSD->trace_stat=='I')
-            tracevalue( TSD, ptr, 'F' ) ;
+         if ( !ptr )
+            exiterror( ERR_NO_DATA_RETURNED, 1, tmpstr_of( TSD, thisptr->name ) );
 
-#endif
-         return ptr ;
+         RETURN_NEW( ptr );
       }
 
       case X_CONCAT:
@@ -609,30 +657,26 @@ cnsnt:   if (kill)
       {
          char *cptr ;
 
-         strone = evaluate( TSD, this->p[0], &stmp1 ) ;
-         strtwo = evaluate( TSD, this->p[1], &stmp2 ) ;
+         strone = evaluate( TSD, thisptr->p[0], &stmp1 ) ;
+         strtwo = evaluate( TSD, thisptr->p[1], &stmp2 ) ;
          strthr = Str_makeTSD(Str_len(strone)+Str_len(strtwo)+1) ;
          cptr = strthr->value ;
          memcpy( cptr, strone->value, strone->len ) ;
          cptr += strone->len ;
-         if (this->type==X_SPACE)
+         if (thisptr->type==X_SPACE)
             *(cptr++) = ' ' ;
 
          memcpy( cptr, strtwo->value, strtwo->len ) ;
          strthr->len = (cptr-strthr->value) + strtwo->len ;
 
-         if (kill)
-            *kill = strthr ;
-         if (stmp1)
-            Free_stringTSD( stmp1 ) ;
-         if (stmp2)
-            Free_stringTSD( stmp2 ) ;
+         FREE_TMP_STRING( stmp1 );
+         FREE_TMP_STRING( stmp2 );
 
          if (TSD->trace_stat=='I')
             tracevalue( TSD, strthr, 'O' ) ;
 
 
-         return strthr ;
+         RETURN_NEW( strthr );
       }
 
 
@@ -666,28 +710,30 @@ cnsnt:   if (kill)
       case X_S_GTE:
       case X_S_LT:
       case X_S_LTE:
-         sptr = bool_to_str( TSD, isboolean( TSD, this )) ;
-         if (kill)
-            *kill = sptr ;
-         return sptr ;
+         stmp1 = bool_to_str( TSD, isboolean( TSD, thisptr, 0, NULL )) ;
+         RETURN_NEW( stmp1 );
 
       default:
          exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "" )  ;
          return NULL ;
    }
+#undef RETURN_NEW
 }
 
 
-
-int isboolean( tsd_t *TSD, nodeptr this )
+/*
+ * isboolean evaluates a boolean expression and returns 0 for false, another
+ * value for true. "thisptr" is the current evaluation tree.
+ * Note: This is one of the most time-consuming routines. Be careful.
+ */
+int isboolean( tsd_t *TSD, nodeptr thisptr, int suberror, const char *op )
 {
-   streng *strone=NULL, *strtwo=NULL ;
-   streng *stmp1=NULL, *stmp2=NULL ;
-   int tmp=0, sint=0 ;
-   streng *sptr=NULL ;
-   num_descr *ntmp=NULL ;
+   streng *strone,*strtwo;
+   streng *stmp1,*stmp2;
+   int tmp,sint;
+   num_descr *ntmp;
 
-   switch (/*(unsigned char)*/(this->type))
+   switch ( thisptr->type )
    {
       case 0:
       case 255:
@@ -700,7 +746,8 @@ int isboolean( tsd_t *TSD, nodeptr this )
       case X_EXP:
       case X_U_MINUS:
       case X_U_PLUSS:
-         tmp = num_to_bool( calcul( TSD, this, &ntmp )) ;
+         ntmp = NULL;
+         tmp = num_to_bool( calcul( TSD, thisptr, &ntmp )) ;
          if (ntmp)
          {
             FreeTSD( ntmp->num ) ;
@@ -710,16 +757,72 @@ int isboolean( tsd_t *TSD, nodeptr this )
 
       case X_STRING:
       case X_CON_SYMBOL:
-         if (!this->u.number)
-            this->u.number = get_a_descr( TSD, this->name ) ;
-         return num_to_bool( this->u.number ) ;
+         if ( !thisptr->u.number )
+            thisptr->u.number = get_a_descr( TSD, NULL, 0, thisptr->name ) ;
+         if ( Str_len( thisptr->name ) != 1 )
+         {
+            /* fixes bug 1111931, "01" is not a logical value in ANSI */
+            if ( get_options_flag( TSD->currlevel, EXT_STRICT_ANSI ) )
+            {
+               if ( op )
+               {
+                  exiterror( ERR_UNLOGICAL_VALUE, suberror, op, tmpstr_of( TSD, thisptr->name ) );
+               }
+               else
+               {
+                  exiterror( ERR_UNLOGICAL_VALUE, suberror, tmpstr_of( TSD, thisptr->name ) );
+               }
+            }
+         }
+         return num_to_bool( thisptr->u.number ) ;
 
       case X_SIM_SYMBOL:
       case X_STEM_SYMBOL:
-         return num_to_bool( shortcutnum( TSD, this )) ;
+         if ( get_options_flag( TSD->currlevel, EXT_STRICT_ANSI ) )
+         {
+            /* fixes bug 1111931 */
+            stmp1 = (streng *) shortcut( TSD, thisptr );
+            tmp = Str_val( stmp1 )[0] - '0';
+            if ( ( Str_len( stmp1 ) != 1 ) || ( ( tmp != 0 ) && ( tmp != 1 ) ) )
+            {
+               if ( op )
+               {
+                  exiterror( ERR_UNLOGICAL_VALUE, suberror, op, tmpstr_of( TSD, stmp1 ) );
+               }
+               else
+               {
+                  exiterror( ERR_UNLOGICAL_VALUE, suberror, tmpstr_of( TSD, stmp1 ) );
+               }
+            }
+            return tmp;
+         }
+         return num_to_bool( shortcutnum( TSD, thisptr )) ;
 
       case X_HEAD_SYMBOL:
-         return num_to_bool( fix_compoundnum( TSD, this, NULL )) ;
+         if ( get_options_flag( TSD->currlevel, EXT_STRICT_ANSI ) )
+         {
+            /* fixes bug 1111931 */
+            volatile char *s;
+
+            stmp1 = (streng *) fix_compound( TSD, thisptr, NULL );
+            tmp = Str_val( stmp1 )[0] - '0';
+            if ( ( Str_len( stmp1 ) != 1 ) || ( ( tmp != 0 ) && ( tmp != 1 ) ) )
+            {
+               s = tmpstr_of( TSD, stmp1 );
+               Free_stringTSD( stmp1 );
+               if ( op )
+               {
+                  exiterror( ERR_UNLOGICAL_VALUE, suberror, op, s );
+               }
+               else
+               {
+                  exiterror( ERR_UNLOGICAL_VALUE, suberror, s );
+               }
+            }
+            Free_stringTSD( stmp1 );
+            return tmp;
+         }
+         return num_to_bool( fix_compoundnum( TSD, thisptr, NULL, NULL ) );
 
       case X_IN_FUNC:
       case X_IS_INTERNAL:
@@ -728,32 +831,31 @@ int isboolean( tsd_t *TSD, nodeptr this )
       case X_IS_EXTERNAL:
       case X_CONCAT:
       case X_SPACE:
-         tmp = str_to_bool( sptr = evaluate( TSD, this, &sptr )) ;
-         if (sptr)
-            Free_stringTSD( sptr ) ;
-         return tmp ;
+         tmp = str_to_bool( evaluate( TSD, thisptr, &stmp1 ) );
+         FREE_TMP_STRING( stmp1 );
+         return tmp;
 
       case X_LOG_NOT:
-         sint = !isboolean( TSD, this->p[0] ) ;
+         sint = !isboolean( TSD, thisptr->p[0], 6, "\\" ) ;
          if (TSD->trace_stat=='I')
             tracebool( TSD, sint, 'U' ) ;
          return sint ;
 
       case X_LOG_OR:
-         sint = ( isboolean(TSD, this->p[0]) | isboolean( TSD, this->p[1] )) ;
+         sint = ( isboolean(TSD, thisptr->p[0], 5, "|") | isboolean( TSD, thisptr->p[1], 6, "|" )) ;
          if (TSD->trace_stat=='I')
             tracebool( TSD, sint, 'U' ) ;
          return sint ;
 
       case X_LOG_AND:
-         sint = ( isboolean(TSD, this->p[0]) & isboolean( TSD, this->p[1] )) ;
+         sint = ( isboolean(TSD, thisptr->p[0], 5, "&" ) & isboolean( TSD, thisptr->p[1], 6, "&" )) ;
          if (TSD->trace_stat=='I')
             tracebool( TSD, sint, 'U' ) ;
          return sint ;
 
       case X_LOG_XOR:
          /* Well, sort of ... */
-         sint = ( isboolean( TSD, this->p[0]) ^ isboolean( TSD, this->p[1] )) ;
+         sint = ( isboolean( TSD, thisptr->p[0], 5, "&&" ) ^ isboolean( TSD, thisptr->p[1], 6, "&&" )) ;
          if (TSD->trace_stat=='I')
             tracebool( TSD, sint, 'U' ) ;
          return sint ;
@@ -770,38 +872,44 @@ int isboolean( tsd_t *TSD, nodeptr this )
          num_descr *rnum, *lnum ;
          streng *lval, *rval ;
 
-         flags = this->u.flags ;
+         flags = thisptr->u.flags ;
          rnum = lnum = 0 ;
          rval = lval = NULL ;
          stmp1 = stmp2 = NULL ;
 
          if (flags.lnum)
          {
-            lnum = this->p[0]->u.number ;
+            if ( !thisptr->p[0]->u.number )
+               thisptr->p[0]->u.number = get_a_descr( TSD, NULL, 0, thisptr->p[0]->name );
+
+            lnum = thisptr->p[0]->u.number ;
             if (TSD->trace_stat=='I')
                tracenumber( TSD, lnum, 'L' ) ;
          }
          else if (flags.lsvar)
-            lnum = shortcutnum( TSD, this->p[0] ) ;
+            lnum = shortcutnum( TSD, thisptr->p[0] ) ;
          else if (flags.lcvar)
-            lnum = fix_compoundnum( TSD, this->p[0], NULL ) ;
+            lnum = fix_compoundnum( TSD, thisptr->p[0], NULL, NULL );
 
          if (!lnum)
-            lval = evaluate( TSD, this->p[0], &stmp1 ) ;
+            lval = evaluate( TSD, thisptr->p[0], &stmp1 ) ;
 
          if (flags.rnum)
          {
-            rnum = this->p[1]->u.number ;
+            if ( !thisptr->p[1]->u.number )
+               thisptr->p[1]->u.number = get_a_descr( TSD, NULL, 0, thisptr->p[1]->name );
+
+            rnum = thisptr->p[1]->u.number ;
             if (TSD->trace_stat=='I')
                tracenumber( TSD, rnum, 'L' ) ;
          }
          else if (flags.rsvar)
-            rnum = shortcutnum( TSD, this->p[1] ) ;
+            rnum = shortcutnum( TSD, thisptr->p[1] ) ;
          else if (flags.rcvar)
-            rnum = fix_compoundnum( TSD, this->p[1], NULL ) ;
+            rnum = fix_compoundnum( TSD, thisptr->p[1], NULL, NULL );
 
          if (!rnum)
-            rval = evaluate( TSD, this->p[1], &stmp2 ) ;
+            rval = evaluate( TSD, thisptr->p[1], &stmp2 ) ;
 
          if (!lnum && !getdescr( TSD, lval, &TSD->ldes ))
             lnum = &TSD->ldes ;
@@ -813,63 +921,39 @@ int isboolean( tsd_t *TSD, nodeptr this )
             tmp = string_test( TSD, lnum, rnum ) ;
          else
          {
-            char *s1, *s2, *e1, *e2 ;
+            unsigned char *s1,*s2,*e1,*e2;
 
-            if (!lval)
+            if ( !lval )
             {
-               assert( !stmp1 ) ;
-               stmp1 = lval = str_norm( TSD, lnum, NULL ) ;
-            }
-
-            if (!rval)
-            {
-               assert( !stmp2 ) ;
-               stmp2 = rval = str_norm( TSD, rnum, NULL ) ;
+               assert( !stmp1 );
+               stmp1 = lval = str_norm( TSD, lnum, NULL );
             }
 
-            s1 = lval->value ;
-            s2 = rval->value ;
-            e1 = s1 + lval->len ;
-            e2 = s2 + rval->len ;
-            /*
-             * Strip leading spaces - ignored in comparison
-             */
-            for(;(s1<e1)&&(isspace(*s1));s1++)
+            if ( !rval )
             {
-               ;
+               assert( !stmp2 );
+               stmp2 = rval = str_norm( TSD, rnum, NULL );
             }
-            for(;(s2<e2)&&(isspace(*s2));s2++)
-            {
-               ;
-            }
-            for (;(s1<e1)&&(s2<e2)&&(*s1==*s2);s1++,s2++)
-            {
-               ;
-            }
-            /*
-             * Strip trailing spaces - ignored in comparison
-             */
-            /*  wait a bit! it is not (isspace(*s1)) we should test , but the end of string!  bja
-            for (;(e1>s1)&&(isspace(*s1));e1--) ;
-            for (;(e2>s2)&&(isspace(*s2));e2--) ;
-            */
-            for (;(e1>s1)&&(isspace(*(e1-1)));e1--) ;                                      /* bja */
-            for (;(e2>s2)&&(isspace(*(e2-1)));e2--) ;                                      /* bja */
 
-            if (s1==e1 && s2==e2)
-               tmp = 0 ;
-            else if (s1<e1 && s2<e2)
-               tmp = (*s1<*s2) ? -1 : 1 ;
+            s1 = (unsigned char *) lval->value;
+            s2 = (unsigned char *) rval->value;
+            e1 = (unsigned char *) s1 + lval->len;
+            e2 = (unsigned char *) s2 + rval->len;
+
+            strip_whitespace( TSD, &s1, &e1, &s2, &e2 );
+
+            if ( s1 == e1 && s2 == e2 )
+               tmp = 0;
+            else if ( s1 < e1 && s2 < e2 )
+               tmp = ( *s1 < *s2 ) ? -1 : 1;
             else
-               tmp = (s1<e1) ? 1 : -1 ;
+               tmp = ( s1 < e1 ) ? 1 : -1;
          }
 
-         if (stmp1)
-            Free_stringTSD( stmp1 ) ;
-         if (stmp2)
-            Free_stringTSD( stmp2 ) ;
+         FREE_TMP_STRING( stmp1 );
+         FREE_TMP_STRING( stmp2 );
 
-         type = this->type ;
+         type = thisptr->type ;
          if (tmp==0)
             sint = (type==X_GTE || type==X_LTE || type==X_EQUAL) ;
          else if (tmp>0)
@@ -890,47 +974,19 @@ int isboolean( tsd_t *TSD, nodeptr this )
       case X_SEQUAL:
       case X_SDIFF:
       {  /* string comparison */
-         char *s1, *s2, *e1, *e2 ;
+         unsigned char *s1, *s2, *e1, *e2 ;
          int type ;
 
-         type = this->type ;
-         strone = evaluate( TSD, this->p[0], &stmp1 ) ;
-         strtwo = evaluate( TSD, this->p[1], &stmp2 ) ;
+         type = thisptr->type ;
+         strone = evaluate( TSD, thisptr->p[0], &stmp1 ) ;
+         strtwo = evaluate( TSD, thisptr->p[1], &stmp2 ) ;
 
-         s1 = strone->value ;
-         s2 = strtwo->value ;
-         e1 = s1 + strone->len ;
-         e2 = s2 + strtwo->len ;
-         /*
-          * Strip leading spaces - ignored in comparison
-          */
-         for(;(s1<e1)&&(isspace(*s1));s1++)
-         {
-            ;
-         }
-         for(;(s2<e2)&&(isspace(*s2));s2++) 
-         {
-            ;
-         }
-         for (;(s1<e1)&&(s2<e2)&&(*s1==*s2);s1++,s2++)
-         {
-            ;
-         }
-         /*
-          * Strip trailing spaces - ignored in comparison
-          */
-         /*  wait a bit! it is not (isspace(*s1)) we should test , but the end of string!     bja
-         for (;(e1>s1)&&(isspace(*s1));e1--) ;
-         for (;(e2>s2)&&(isspace(*s2));e2--) ;
-         */                                                                                /* bja */
-         for (;(e1>s1)&&(isspace(*(e1-1)));e1--)                                           /* bja */
-         {
-            ;
-         }
-         for (;(e2>s2)&&(isspace(*(e2-1)));e2--)                                           /* bja */
-         {
-            ;
-         }
+         s1 = (unsigned char *) strone->value ;
+         s2 = (unsigned char *) strtwo->value ;
+         e1 = (unsigned char *) s1 + strone->len ;
+         e2 = (unsigned char *) s2 + strtwo->len ;
+
+         strip_whitespace( TSD, &s1, &e1, &s2, &e2 );
 
          if (s1==e1 && s2==e2)
             tmp = 0 ;
@@ -939,10 +995,8 @@ int isboolean( tsd_t *TSD, nodeptr this )
          else
             tmp = (s1<e1) ? 1 : -1 ;
 
-         if (stmp1)
-            Free_stringTSD( stmp1 ) ;
-         if (stmp2)
-            Free_stringTSD( stmp2 ) ;
+         FREE_TMP_STRING( stmp1 );
+         FREE_TMP_STRING( stmp2 );
 
          if (tmp==0)
             sint = (type==X_SGTE || type==X_SLTE || type==X_SEQUAL) ;
@@ -969,10 +1023,11 @@ int isboolean( tsd_t *TSD, nodeptr this )
          num_descr *ntmp1, *ntmp2 ;
          num_descr *numone, *numtwo ;
 
-         type = this->type ;
+         type = thisptr->type ;
 
-         numone = calcul( TSD, this->p[0], &ntmp1 ) ;
-         numtwo = calcul( TSD, this->p[1], &ntmp2 ) ;
+         ntmp1 = ntmp2 = NULL;
+         numone = calcul( TSD, thisptr->p[0], &ntmp1 ) ;
+         numtwo = calcul( TSD, thisptr->p[1], &ntmp2 ) ;
          tmp = string_test( TSD, numone, numtwo ) ;
 
          if (ntmp1)
@@ -1000,13 +1055,13 @@ int isboolean( tsd_t *TSD, nodeptr this )
       }
 
       case X_S_DIFF:
-         strone = evaluate( TSD, this->p[0], &stmp1 ) ;
-         strtwo = evaluate( TSD, this->p[1], &stmp2 ) ;
+         strone = evaluate( TSD, thisptr->p[0], &stmp1 ) ;
+         strtwo = evaluate( TSD, thisptr->p[1], &stmp2 ) ;
          tmp = Str_cmp(strone,strtwo)!=0 ;
-         if (stmp1)
-            Free_stringTSD( stmp1 ) ;
-         if (stmp2)
-            Free_stringTSD( stmp2 ) ;
+
+         FREE_TMP_STRING( stmp1 );
+         FREE_TMP_STRING( stmp2 );
+
          if (TSD->trace_stat=='I')
             tracebool( TSD, tmp, 'O' ) ;
 
@@ -1014,13 +1069,13 @@ int isboolean( tsd_t *TSD, nodeptr this )
 
 
       case X_S_EQUAL:
-         strone = evaluate( TSD, this->p[0], &stmp1 ) ;
-         strtwo = evaluate( TSD, this->p[1], &stmp2 ) ;
+         strone = evaluate( TSD, thisptr->p[0], &stmp1 ) ;
+         strtwo = evaluate( TSD, thisptr->p[1], &stmp2 ) ;
          tmp = Str_cmp(strone,strtwo)==0 ;
-         if (stmp1)
-            Free_stringTSD( stmp1 ) ;
-         if (stmp2)
-            Free_stringTSD( stmp2 ) ;
+
+         FREE_TMP_STRING( stmp1 );
+         FREE_TMP_STRING( stmp2 );
+
          if (TSD->trace_stat=='I')
             tracebool( TSD, tmp, 'O' ) ;
 
@@ -1029,17 +1084,17 @@ int isboolean( tsd_t *TSD, nodeptr this )
       case X_S_NGT:
       case X_S_NLT:
       {  /* strict string NOT comparison */
-         char *s1, *s2, *e1, *e2 ;
+         unsigned char *s1, *s2, *e1, *e2 ;
          int type ;
 
-         type = this->type ;
-         strone = evaluate( TSD, this->p[0], &stmp1 ) ;
-         strtwo = evaluate( TSD, this->p[1], &stmp2 ) ;
+         type = thisptr->type ;
+         strone = evaluate( TSD, thisptr->p[0], &stmp1 ) ;
+         strtwo = evaluate( TSD, thisptr->p[1], &stmp2 ) ;
 
-         s1 = strone->value ;
-         s2 = strtwo->value ;
-         e1 = s1 + strone->len ;
-         e2 = s2 + strtwo->len ;
+         s1 = (unsigned char *) strone->value ;
+         s2 = (unsigned char *) strtwo->value ;
+         e1 = (unsigned char *) s1 + strone->len ;
+         e2 = (unsigned char *) s2 + strtwo->len ;
          /*
           * same compare as non-strict except that leading and trailing spaces
           * are retained for comparison.
@@ -1052,10 +1107,8 @@ int isboolean( tsd_t *TSD, nodeptr this )
          else
             tmp = (s1<e1) ? -1 : 1 ;
 
-         if (stmp1)
-            Free_stringTSD( stmp1 ) ;
-         if (stmp2)
-            Free_stringTSD( stmp2 ) ;
+         FREE_TMP_STRING( stmp1 );
+         FREE_TMP_STRING( stmp2 );
 
          if (tmp==0)
             sint = 1;
@@ -1075,17 +1128,17 @@ int isboolean( tsd_t *TSD, nodeptr this )
       case X_S_LT:
       case X_S_LTE:
       {  /* strict string comparison */
-         char *s1, *s2, *e1, *e2 ;
+         unsigned char *s1, *s2, *e1, *e2 ;
          int type ;
 
-         type = this->type ;
-         strone = evaluate( TSD, this->p[0], &stmp1 ) ;
-         strtwo = evaluate( TSD, this->p[1], &stmp2 ) ;
+         type = thisptr->type ;
+         strone = evaluate( TSD, thisptr->p[0], &stmp1 ) ;
+         strtwo = evaluate( TSD, thisptr->p[1], &stmp2 ) ;
 
-         s1 = strone->value ;
-         s2 = strtwo->value ;
-         e1 = s1 + strone->len ;
-         e2 = s2 + strtwo->len ;
+         s1 = (unsigned char *) strone->value ;
+         s2 = (unsigned char *) strtwo->value ;
+         e1 = (unsigned char *) s1 + strone->len ;
+         e2 = (unsigned char *) s2 + strtwo->len ;
          /*
           * same compare as non-strict except that leading and trailing spaces
           * are retained for comparison.
@@ -1098,10 +1151,8 @@ int isboolean( tsd_t *TSD, nodeptr this )
          else
             tmp = (s1<e1) ? 1 : -1 ;
 
-         if (stmp1)
-            Free_stringTSD( stmp1 ) ;
-         if (stmp2)
-            Free_stringTSD( stmp2 ) ;
+         FREE_TMP_STRING( stmp1 );
+         FREE_TMP_STRING( stmp2 );
 
          if (tmp==0)
             sint = (type==X_S_GTE || type==X_S_LTE) ;

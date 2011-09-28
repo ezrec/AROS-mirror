@@ -5,17 +5,33 @@
 # dutch - Gert van der Kooij <geko@wanadoo.nl>
 # french - Mark <cotemark@globetrotter.net>
 # german - <florian@grosse-coosmann.de>
-# norwegian (bokmal) - Vidar Tysse <vtsystem@bgnett.no>
+# norwegian (bokmal) - Vidar Tysse <vtysse@broadpark.no>
 # portuguese - brian <bcarpent@nucleus.com>
 # russian - Oleg Kulikov <kulikov@xanadu.ru>
 # spanish - Pablo Garcia-Abia <Pablo.Garcia@cern.ch>
+# svenska - Jan-Erik L„rka <jan-erik@os2ug.se>
 #
-# 15.4 is %c NOT %s
-#
-# 40.922, 40.923, 49.0, 49.1
-# remove 93.2
-#
-# 25.17
+# Guidelines for Translators
+# --------------------------
+# - Lines beginning with # are comments
+# - Any word in UPPER CASE should not be translated
+# - On some error message lines, there are tokens following the
+#   | character. Again these should not be translated.
+# - Please ensure that the order of the substitutions; ie the %s, %d
+#   placemarkers are maintained. If this is gramatically impossible,
+#   please let me know.
+# - There are some comments at the end of this file under the heading:
+#   "Extra general phrases requiring translation:"
+#   Please translate these phrases also.
+# - Return the translated error messages in a complete file, the same as this
+#   file, with the name XX.mts where XX is the ISO language abbreviation.
+#   Important: Please zip the file up to ensure that the file arrives in
+#              its original form
+#   Add a comment at the top of the file indicating the language, and your name and email address.
+#   If you do not want your email address published in the Regina documentation
+#   please indicate this. I will retain your address as a contact for future
+#   individual message translations, but will only publish your name.
+# - And last but by no means least; thanks!
 #
   0,  1,Error %s running %s, line %d:|<value>,<source>,<linenumber>
   0,  2,Error %s in interactive trace:|<value>
@@ -112,7 +128,7 @@
  26,  2,Value of repetition count expression in DO instruction must be zero or a positive whole number; found "%s"|<value>
  26,  3,Value of FOR expression in DO instruction must be zero or a positive whole number; found "%s"|<value>
  26,  4,Positional parameter of parsing template must be a whole number; found "%s"|<value>
- 26,  5,NUMERIC DIGITS value must be zero or a positive whole number; found "%s"|<value>
+ 26,  5,NUMERIC DIGITS value must be a positive whole number; found "%s"|<value>
  26,  6,NUMERIC FUZZ value must be zero or a positive whole number; found "%s"|<value>
  26,  7,Number used in TRACE setting must be a whole number; found "%s"|<value>
  26,  8,Operand to right of power operator ("**") must be a whole number; found "%s"|<value>
@@ -195,6 +211,21 @@
  40,922,[%s argument %d, too few sub-commands; minimum expected is %d; found %d]|<bif>,<argnumber>,<value>,<value>
  40,923,[%s argument %d, too many sub-commands; maximum expected is %d; found %d]|<bif>,<argnumber>,<value>,<value>
  40,924,[%s argument %d, invalid positional specification; expecting one of "%s"; found "%s"]|<bif>,<argnumber>,<value>,<value>
+ 40,930,[RXQUEUE, function TIMEOUT, expecting a whole number between 0 and %d; found \"%s\"]|<value>,<value>
+ 40,980,Unexpected input, either unknown type or illegal data%s%s|: ,<location>
+ 40,981,Number out of the allowed range%s%s|: ,<location>
+ 40,982,String too big for the defined buffer%s%s|: ,<location>
+ 40,983,Illegal combination of type/size%s%s|: ,<location>
+ 40,984,Unsupported number like NAN, +INF, -INF%s%s|: ,<location>
+ 40,985,Structure too complex for static internal buffer%s%s|: ,<location>
+ 40,986,An element of the structure is missing%s%s|: ,<location>
+ 40,987,A value of the structure is missing%s%s|: ,<location>
+ 40,988,The name or part of the name is illegal for the interpreter%s%s|: ,<location>
+ 40,989,A problem occured at the interface between Regina and GCI%s%s|: ,<location>
+ 40,990,The type won't fit the requirements for basic types (arguments/return value)%s%s|: ,<location>
+ 40,991,The number of arguments is wrong or an argument is missing%s%s|: ,<location>
+ 40,992,GCI's internal stack for arguments got an overflow%s%s|: ,<location>
+ 40,993,GCI counted too many nested LIKE containers%s%s|: ,<location>
  41,  0,Bad arithmetic conversion
  41,  1,Non-numeric value ("%s") to left of arithmetic operation "%s"|<value>,<operator>
  41,  2,Non-numeric value ("%s") to right of arithmetic operation "%s"|<value>,<operator>
@@ -251,6 +282,7 @@
  93,  1,[STREAM command %s must be followed by one of "%s"; found "%s"]|<token>,<value>,<value>
  93,  3,[STREAM command must be one of "%s"; found "%s"]|<value>,<value>
  94,  0,[External queue interface error]
+ 94,  1,[External queue timed out]
  94, 99,[Internal error with external queue interface: %d "%s"]|<description>,<systemerror>
  94,100,[General system error with external queue interface. %s. %s]|<description>,<systemerror>
  94,101,[Error connecting to %s on port %d: "%s"]|<machine>,<portnumber>,<systemerror>
@@ -261,6 +293,9 @@
  94,106,[Maximum number of external queues exceeded: %d]|<maxqueues>
  94,107,[Error occured reading socket: %s]|<systemerror>
  94,108,[Invalid switch passed. Must be one of "%s"]|<switch>
+ 94,109,[Queue \"%s\" not found]|<queuename>
+ 94,110,[%s invalid for external queues]|<bif>
+ 94,111,[RXQUEUE function %s invalid for internal queues]|<functionname>
  95,  0,[Restricted feature used in "safe" mode]
  95,  1,[%s invalid in "safe" mode]|<token>
  95,  2,[%s argument %d invalid in "safe" mode]|<bif>,<argnumber>
@@ -270,11 +305,13 @@
 100,  0,[Unknown filesystem error]
 #
 # Extra general phrases requiring translation:
+# The text in () is the corresponding array name in error.c
 #
-# Error 3 running "<file>" line 1:
-# Unable to open language file: %s
-# Incorrect number of messages in language file: %s
-# Unable to read from language file: %s
-# Unable to display text for error %d.%d; language file: %s not available
-# Unable to display text for error %d.%d; text missing from language file: %s
-# Unable to display text for error %d.%d; language file: %s is corrupt
+# (err1prefix)   "Error %d running \"%.*s\", line %d: %.*s",
+# (suberrprefix) "Error %d.%d: %.*s",
+# (err2prefix)   "Error %d running \"%.*s\": %.*s",
+# (erropen)      "Unable to open language file: %s",
+# (errcount)     "Incorrect number of messages in language file: %s",
+# (errread)      "Unable to read from language file: %s",
+# (errmissing)   "Text missing from language file: %s.mtb",
+# (errcorrupt)   "Language file: %s.mtb is corrupt",

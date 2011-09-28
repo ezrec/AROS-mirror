@@ -1,7 +1,3 @@
-#ifndef lint
-static char *RCSid = "$Id$";
-#endif
-
 /*
  *  The Regina Rexx Interpreter
  *  Copyright (C) 1992-1994  Anders Christensen <anders@pvv.unit.no>
@@ -121,7 +117,6 @@ static char *RCSid = "$Id$";
 #include "rexx.h"
 #include <string.h>
 #include <stdio.h>
-#include <ctype.h>
 #include <assert.h>
 
 
@@ -193,7 +188,7 @@ static streng *unpack_hex( const tsd_t *TSD, const streng *string )
  * with a zero, all of first group must be scanned, which is identical
  * to the whole string if it is normalized.
  */
-static streng *pack_hex( const tsd_t *TSD, const streng *string )
+static streng *pack_hex( tsd_t *TSD, const char *bif, const streng *string )
 {
    streng *result=NULL ;      /* output char string */
    const char *ptr=NULL ;     /* current digit in input hex string */
@@ -221,9 +216,9 @@ static streng *pack_hex( const tsd_t *TSD, const streng *string )
     * Explicitly check for space at start or end. Illegal space within
     * the hex string is checked for during the loop.
     */
-   if ((ptr<end_ptr) && ((isspace(*ptr)) || (isspace(*(end_ptr-1)))))
+   if ((ptr<end_ptr) && ((rx_isspace(*ptr)) || (rx_isspace(*(end_ptr-1)))))
    {
-      exiterror( ERR_INVALID_HEX_CONST, 0 )  ;
+      goto invalid;
    }
 
    /*
@@ -236,7 +231,7 @@ static streng *pack_hex( const tsd_t *TSD, const streng *string )
     * necessary if the first group of hex digits has an even number of
     * digits, but it is cheaper to do it always that check for it.
     */
-   for (; (ptr<end_ptr) && (isxdigit(*ptr)); ptr++ ) ;
+   for (; (ptr<end_ptr) && (rx_isxdigit(*ptr)); ptr++ ) ;
    byte_boundary = !((ptr-string->value)%2) ;
 
 /* Does this statement do anything useful? (Proabably, things crash if
@@ -251,7 +246,7 @@ static streng *pack_hex( const tsd_t *TSD, const streng *string )
     */
    for (count=1,ptr=string->value; ptr<end_ptr; ptr++, count++)
    {
-      if (isspace(*ptr))
+      if (rx_isspace(*ptr))
       {
          /*
           * Just make sure that this space occurs at a byte boundary,
@@ -260,10 +255,10 @@ static streng *pack_hex( const tsd_t *TSD, const streng *string )
          last_blank = count;
          if (!byte_boundary)
          {
-            exiterror( ERR_INVALID_HEX_CONST, 1, count )  ;
+            goto invalid;
          }
       }
-      else if (isxdigit(*ptr))
+      else if (rx_isxdigit(*ptr))
       {
          /*
           * Stuff it into the output array, either as upper or lower
@@ -283,7 +278,7 @@ static streng *pack_hex( const tsd_t *TSD, const streng *string )
       }
       else
       {
-         exiterror( ERR_INVALID_HEX_CONST, 3, (char)*ptr )  ;
+         goto invalid;
       }
    }
 
@@ -294,13 +289,18 @@ static streng *pack_hex( const tsd_t *TSD, const streng *string )
     */
    if (!byte_boundary)
    {
-      exiterror( ERR_INVALID_HEX_CONST, 1, last_blank )  ;
+      goto invalid;
    }
 
    result->len = res_ptr - result->value ;
    assert( result->len <= result->max ) ;
 
    return result ;
+
+invalid:
+   Free_stringTSD( result );
+   exiterror( ERR_INCORRECT_CALL, 25, bif, tmpstr_of( TSD, string ) );
+   return NULL; /* not reached */
 }
 
 
@@ -325,7 +325,8 @@ static streng *pack_hex( const tsd_t *TSD, const streng *string )
  * will also be returned if 'length' is zero, or if 'string' is the
  * nullstring.
  */
-static streng *numerize( const tsd_t *TSD, const streng *string, int length )
+static streng *numerize( tsd_t *TSD, streng *string, int length,
+                         const char *bif, int removeStringOnError )
 {
    int start=0 ;       /* character to start reading at */
    int sign=0 ;        /* is this to be interpreted as signed? */
@@ -342,7 +343,7 @@ static streng *numerize( const tsd_t *TSD, const streng *string, int length )
     * If 'length' is specified and is less than the length of 'string',
     * then set 'start' to the the 'length'th byte, counted backward.
     */
-   if ((length==(-1)) || (length>Str_len(string)))
+   if ((length==-1) || (length>Str_len(string)))
       start = sign = 0 ;
    else
    {
@@ -356,7 +357,7 @@ static streng *numerize( const tsd_t *TSD, const streng *string, int length )
     * Call the correct routine in the string module. The number will
     * always be signed if length is specified.
     */
-   return str_digitize( TSD, string, start, sign ) ;
+   return str_digitize( TSD, string, start, sign, bif, removeStringOnError ) ;
 }
 
 
@@ -392,7 +393,7 @@ streng *std_x2d( tsd_t *TSD, cparamboxptr parms )
     * convert the 'length' a bit. Also, that means that we have to
     * sign extend the number at the left to a byte boundary.
     */
-   packed = pack_hex( TSD, parms->value ) ;
+   packed = pack_hex( TSD, "X2D", parms->value ) ;
    if ((length>0) && (length%2))
    {
       /*
@@ -410,12 +411,17 @@ streng *std_x2d( tsd_t *TSD, cparamboxptr parms )
             packed->value[msb] &= 0x0f ;
       }
    }
-   result = numerize( TSD, packed, ((length!=(-1)) ? ((length+1)/2) : (-1)) ) ;
+   result = numerize( TSD,
+                      packed,
+                      ((length!=-1) ? ((length+1)/2) : -1),
+                      "X2D",
+                      1 ) ;
 
    /*
     * Clean up and return to caller
     */
    Free_stringTSD( packed ) ;
+
    return result ;
 }
 
@@ -428,7 +434,7 @@ streng *std_x2d( tsd_t *TSD, cparamboxptr parms )
 streng *std_x2c( tsd_t *TSD, cparamboxptr parms )
 {
    checkparam(  parms,  1,  1 , "X2C" ) ;
-   return pack_hex( TSD, parms->value ) ;
+   return pack_hex( TSD, "X2C", parms->value ) ;
 }
 
 
@@ -487,9 +493,10 @@ streng *std_b2x( tsd_t *TSD, cparamboxptr parms )
     * it contain leading space, or it is the nullstring. The former is
     * an error, so report it if that is the case.
     */
-   if ((ptr>string->value) && ((first_group==0) || (isspace(*(endptr-1)))))
+   if (Str_len(string) && ((first_group==0) || (rx_isspace(*(endptr-1)))))
    {
-      exiterror( ERR_INVALID_HEX_CONST, 0 )  ;
+      /* fixes 1107969 */
+      exiterror( ERR_INCORRECT_CALL, 24, "B2X", tmpstr_of( TSD, string ) );
    }
 
    /*
@@ -523,7 +530,7 @@ streng *std_b2x( tsd_t *TSD, cparamboxptr parms )
     */
    for (ptr=string->value; ptr<endptr; ptr++)
    {
-      if (isspace(*ptr))
+      if (rx_isspace(*ptr))
       {
          /*
           * The variable 'cur_bit' is a number containing the relative
@@ -534,7 +541,8 @@ streng *std_b2x( tsd_t *TSD, cparamboxptr parms )
           */
          if (cur_bit!=0)
          {
-            exiterror( ERR_INVALID_HEX_CONST, 2, 1+(ptr-string->value) )  ;
+            Free_stringTSD( result );
+            exiterror( ERR_INCORRECT_CALL, 24, "B2X", tmpstr_of( TSD, string ) );
          }
       }
 
@@ -556,7 +564,7 @@ streng *std_b2x( tsd_t *TSD, cparamboxptr parms )
       }
       else
       {
-         exiterror( ERR_INVALID_HEX_CONST, 4, *ptr )  ;
+         exiterror( ERR_INCORRECT_CALL, 24, "B2X", tmpstr_of( TSD, string ) );
       }
    }
 
@@ -615,13 +623,9 @@ streng *std_x2b( tsd_t *TSD, cparamboxptr parms )
     */
    if (end_ptr>ptr)
    {
-      if ((isspace(*ptr)))
+      if (rx_isspace(*ptr) || rx_isspace(*(end_ptr-1)))
       {
-         exiterror( ERR_INVALID_HEX_CONST, 1, 1 )  ;
-      }
-      if ((isspace(*(end_ptr-1))))
-      {
-         exiterror( ERR_INVALID_HEX_CONST, 1, (end_ptr-ptr) )  ;
+         goto invalid;
       }
    }
 
@@ -633,7 +637,7 @@ streng *std_x2b( tsd_t *TSD, cparamboxptr parms )
     */
    for (pos=1; ptr<end_ptr; ptr++,pos++)
    {
-      if (isspace(*ptr))
+      if (rx_isspace(*ptr))
       {
          /*
           * We have found space in the hex string, eat it up, and keep
@@ -648,10 +652,10 @@ streng *std_x2b( tsd_t *TSD, cparamboxptr parms )
          }
          else if (space_stat==1)
          {
-            exiterror( ERR_INVALID_HEX_CONST, 1, pos )  ;
+            goto invalid;
          }
       }
-      else if (isxdigit(*ptr))
+      else if (rx_isxdigit(*ptr))
       {
          /*
           * We have found a hex digit, chop it into four parts, and
@@ -675,7 +679,7 @@ streng *std_x2b( tsd_t *TSD, cparamboxptr parms )
       }
       else
       {
-         exiterror( ERR_INVALID_HEX_CONST, 3, *ptr )  ;
+         goto invalid;
       }
    }
 
@@ -684,6 +688,11 @@ streng *std_x2b( tsd_t *TSD, cparamboxptr parms )
     */
    result->len = res_ptr - result->value ;
    return result ;
+
+invalid:
+   Free_stringTSD( result );
+   exiterror( ERR_INCORRECT_CALL, 25, "X2B", tmpstr_of( TSD, parms->value ) );
+   return NULL; /* not reached */
 }
 
 
@@ -695,15 +704,15 @@ streng *std_x2b( tsd_t *TSD, cparamboxptr parms )
  */
 streng *std_c2d( tsd_t *TSD, cparamboxptr parms )
 {
-   int length=0 ;   /* The length of the input char string */
+   int length ;   /* The length of the input char string */
 
    checkparam(  parms,  1,  2 , "C2D" ) ;
    if ((parms->next)&&(parms->next->value))
       length = atozpos( TSD, parms->next->value, "C2D", 2 ) ;
    else
-      length = (-1) ;
+      length = -1 ;
 
-   return numerize( TSD, parms->value, length ) ;
+   return numerize( TSD, parms->value, length, "C2D", 0 ) ;
 }
 
 
@@ -718,8 +727,13 @@ streng *std_c2x( tsd_t *TSD, cparamboxptr parms )
    return unpack_hex( TSD, parms->value ) ;
 }
 
-
-
+static void check_wholenum( tsd_t *TSD, const char *bif, const streng *arg,
+                            num_descr **num )
+{
+   if ( !myiswnumber( TSD, arg, num,
+                      !get_options_flag( TSD->currlevel, EXT_STRICT_ANSI ) ) )
+      exiterror( ERR_INCORRECT_CALL, 12, bif, 1, tmpstr_of( TSD, arg ) );
+}
 
 /* ---------------------------------------------------------------------
  * Converts a whole number into char string. This is just a wrapper
@@ -727,15 +741,28 @@ streng *std_c2x( tsd_t *TSD, cparamboxptr parms )
  */
 streng *std_d2c( tsd_t *TSD, cparamboxptr parms )
 {
-   int length=0 ;  /* the length of the output string */
+   int length;  /* the length of the output string */
+   num_descr *num;
 
-   checkparam(  parms,  1,  2 , "D2C" ) ;
-   if ((parms->next)&&(parms->next->value))
-      length = atozpos( TSD, parms->next->value, "D2C", 2 ) ;
+   checkparam( parms,  1,  2 , "D2C" );
+
+   check_wholenum( TSD, "D2C", parms->value, &num );
+   if ( parms->next && parms->next->value )
+      length = atozpos( TSD, parms->next->value, "D2C", 2 );
    else
-      length = (-1) ;
+   {
+      /*
+       * The strange syntax forces a check for non-negative first arg if the
+       * second doesn't exist.
+       */
+      if ( num->negative )
+         exiterror( ERR_INCORRECT_CALL, 13, "D2C", 1,
+                    tmpstr_of( TSD, parms->value ) );
 
-   return str_binerize( TSD, parms->value, length ) ;
+      length = -1;
+   }
+
+   return str_binerize( TSD, num, length );
 }
 
 
@@ -747,50 +774,63 @@ streng *std_d2c( tsd_t *TSD, cparamboxptr parms )
  */
 streng *std_d2x( tsd_t *TSD, cparamboxptr parms )
 {
-   int length=0 ;         /* holds the requested langth of the result */
-   streng *result=NULL ;  /* the output streng */
-   streng *packed=NULL ;  /* tmp variable, holds the packed string */
+   int length;         /* holds the requested langth of the result */
+   streng *result;     /* the output streng */
+   streng *packed;     /* tmp variable, holds the packed string */
+   num_descr *num;
 
    /*
     * Check the parameters, and set 'length' to the specified length, or
     * to -1 if the second parameter was not specified.
     */
-   checkparam(  parms,  1,  2 , "D2X" ) ;
-   if ((parms->next)&&(parms->next->value))
-      length = atozpos( TSD, parms->next->value, "D2X", 2 ) ;
+   checkparam(  parms,  1,  2 , "D2X" );
+
+   check_wholenum( TSD, "D2X", parms->value, &num );
+   if ( parms->next && parms->next->value )
+      length = atozpos( TSD, parms->next->value, "D2X", 2 );
    else
-      length = (-1) ;
+   {
+      /*
+       * The strange syntax forces a check for non-negative first arg if the
+       * second doesn't exist.
+       */
+      if ( num->negative )
+         exiterror( ERR_INCORRECT_CALL, 13, "D2X", 1,
+                    tmpstr_of( TSD, parms->value ) );
+
+      length = -1;
+   }
 
    /*
     * Convert the whole number into a hex string in a two step operation.
     * First it is converted into a char string, and then that char string
     * is converted into a hexstring.
     */
-   packed = str_binerize( TSD, parms->value, (length==(-1))?(-1):((length+1)/2) ) ;
-   result = unpack_hex( TSD, packed ) ;
-   Free_stringTSD( packed ) ;
+   packed = str_binerize( TSD, num, ( length == -1 ) ? -1 : ( length+1 ) / 2 );
+   result = unpack_hex( TSD, packed );
+   Free_stringTSD( packed );
 
    /*
     * Since we used char string as a temporary format, the hex string
     * will now be padded with one extra zero at the left. If we specified
-    * length, and that length does notmatch the actual length, we must
-    * strip away the first zero in 'result'
+    * length, and that length does not match the actual length, we must
+    * strip away the first zero in 'result'.
     *
     * Here we check for length>0, since we want to catch it if length was
     * specified, but not if it was 0. In the latter case, the string will
     * be the nullstring, and we don't need to do anything anyway.
     */
-   if ((length>0) && (Str_len(result)!=length) && Str_len(result))
+   if ( ( length > 0 ) && ( Str_len( result ) != length ) && Str_len( result ) )
    {
-      assert( Str_len(result) == length+1 ) ;
-      memmove( result->value, &result->value[1], --result->len ) ;
+      assert( Str_len( result ) == length + 1 );
+      memmove( result->value, &result->value[1], --result->len );
    }
 
    /*
     * Just to be safe, check that we did get the nullstring if length
     * was specified to 0
     */
-   assert( (length!=0) || (Str_len(result)==0) ) ;
+   assert( ( length != 0 ) || ( Str_len(result) == 0 ) );
 
    /*
     * If length was not specified, there might be leading zeros in the
@@ -805,16 +845,16 @@ streng *std_d2x( tsd_t *TSD, cparamboxptr parms )
     * occur, but it will be handled, since the result should then be
     * the nullstring.
     */
-   if ((length==(-1)) && (result->value[0]=='0'))
+   if ( ( length == -1 ) && ( result->value[0] == '0' ) )
    {
-      assert( Str_len(result)>1 ) ;
-      assert(( result->value[0]=='0') && (result->value[1]!='0')) ;
+      assert( Str_len( result ) > 1 );
+      assert( ( result->value[0] == '0') && ( ( result->value[1] != '0' ) || ( Str_len( result ) == 2 ) ) );
 
-      memmove( result->value, &result->value[1], --result->len ) ;
+      memmove( result->value, &result->value[1], --result->len );
    }
 
    /*
     * That's it, now we just have to get out of here
     */
-   return result ;
+   return result;
 }

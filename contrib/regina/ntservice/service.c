@@ -32,6 +32,9 @@
 #include <stdlib.h>
 #include <process.h>
 #include <tchar.h>
+#ifdef __LCC__
+# include <winsvc.h>
+#endif
 
 #include "service.h"
 
@@ -94,24 +97,29 @@ void _CRTAPI1 main(int argc, char **argv)
    if ( (argc > 1) &&
         ((*argv[1] == '-') || (*argv[1] == '/')) )
    {
-       if ( _stricmp( "install", argv[1]+1 ) == 0 && IsItNT() )
+       if ( strlen( argv[1]+1 ) == 7 && _stricmp( "install", argv[1]+1 ) == 0 && IsItNT() )
        {
            CmdInstallService();
        }
-       else if ( _stricmp( "remove", argv[1]+1 ) == 0 && IsItNT() )
+       else if ( strlen( argv[1]+1 ) == 6 && _stricmp( "remove", argv[1]+1 ) == 0 && IsItNT() )
        {
            CmdRemoveService();
        }
-       else if ( _stricmp( "run", argv[1]+1 ) == 0 )
+       else if ( ( strlen( argv[1]+1 ) == 3 && _stricmp( "run", argv[1]+1 ) == 0 ) || ( strlen( argv[1]+1 ) == 1 && _stricmp( "d", argv[1]+1 ) == 0 ) )
        {
            bDebug = TRUE;
            CmdDebugService(argc, argv);
        }
-       else if ( _stricmp( "?", argv[1]+1 ) == 0 || _stricmp( "help", argv[1]+1 ) == 0 )
+       else if ( ( strlen( argv[1]+1 ) == 4 && _stricmp( "stop", argv[1]+1 ) == 0 ) || ( strlen( argv[1]+1 ) == 1 && _stricmp( "k", argv[1]+1 ) == 0 ) )
+       {
+          service_ctrl( SERVICE_CONTROL_STOP );
+       }
+       else if ( ( strlen( argv[1]+1 ) == 1 && _stricmp( "?", argv[1]+1 ) == 0 ) || ( strlen( argv[1]+1 ) == 4 && _stricmp( "help", argv[1]+1 ) == 0 ) )
        {
            printf( "%s -install          to install the service\n", SZAPPNAME );
            printf( "%s -remove           to remove the service\n", SZAPPNAME );
-           printf( "%s -run              to run as a console app\n", SZAPPNAME );
+           printf( "%s -run|-d           to run as a console app\n", SZAPPNAME );
+           printf( "%s -stop|-k          to stop the service\n", SZAPPNAME );
        }
        else
        {

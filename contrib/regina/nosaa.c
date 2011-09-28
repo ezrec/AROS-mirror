@@ -15,12 +15,6 @@ void deinit_rexxsaa( tsd_t *TSD )
    TSD = TSD; /* keep compiler happy */
 }
 
-void *IfcAllocateMemory( unsigned long size )
-{
-   size = size; /* keep compiler happy */
-   return(NULL); /* should never happen! */
-}
-
 int init_client( tsd_t *TSD )
 {
    TSD = TSD; /* keep compiler happy */
