@@ -108,7 +108,7 @@ void SetDefaultWirelessPrefsValues()
     }
     SetNetworkCount(0);
 
-    SetWirelessAutostart(FALSE);
+    SetWirelessDevice(NULL);
 }
 
 void SetDefaultMobilePrefsValues()
@@ -131,7 +131,7 @@ void SetDefaultMobilePrefsValues()
 void InitInterface(struct Interface *iface)
 {
     SetName(iface, DEFAULTNAME);
-    SetIfDHCP(iface, FALSE);
+    SetIfDHCP(iface, TRUE);
     SetIP(iface, DEFAULTIP);
     SetMask(iface, DEFAULTMASK);
     SetDevice(iface, DEFAULTDEVICE);
@@ -144,7 +144,7 @@ BOOL RecursiveCreateDir(CONST_STRPTR dirpath)
 {
     /* Will create directory even if top level directory does not exist */
 
-    BPTR lock = NULL;
+    BPTR lock = BNULL;
     ULONG lastdirseparator = 0;
     ULONG dirpathlen = strlen(dirpath);
     STRPTR tmpdirpath = AllocVec(dirpathlen + 2, MEMF_CLEAR | MEMF_PUBLIC);
@@ -162,18 +162,18 @@ BOOL RecursiveCreateDir(CONST_STRPTR dirpath)
         tmpdirpath[lastdirseparator] = '\0'; /* cut */
 
         /* Unlock any lock from previous interation. Last iteration lock will be returned. */
-        if (lock != NULL)
+        if (lock != BNULL)
         {
             UnLock(lock);
-            lock = NULL;
+            lock = BNULL;
         }
 
         /* Check if directory exists */
         lock = Lock(tmpdirpath, SHARED_LOCK);
-        if (lock == NULL)
+        if (lock == BNULL)
         {
             lock = CreateDir(tmpdirpath);
-            if (lock == NULL)
+            if (lock == BNULL)
                 break; /* Error with creation */
         }
 
@@ -183,12 +183,12 @@ BOOL RecursiveCreateDir(CONST_STRPTR dirpath)
 
     FreeVec(tmpdirpath);
 
-    if (lock == NULL)
+    if (lock == BNULL)
         return FALSE;
     else
     {
         UnLock(lock);
-        lock = NULL;
+        lock = BNULL;
         return TRUE;
     }
 }
@@ -264,12 +264,6 @@ BOOL WriteNetworkPrefs(CONST_STRPTR  destdir)
     fprintf(ConfFile, "%s", (GetAutostart()) ? "True" : "False");
     fclose(ConfFile);
 
-    CombinePath2P(filename, filenamelen, destdir, "WirelessAutoRun");
-    ConfFile = fopen(filename, "w");
-    if (!ConfFile) return FALSE;
-    fprintf(ConfFile, "%s", (GetWirelessAutostart()) ? "True" : "False");
-    fclose(ConfFile);
-
     CombinePath2P(filename, filenamelen, destdir, "MobileAutorun");
     ConfFile = fopen(filename, "w");
     if (!ConfFile) return FALSE;
@@ -299,12 +293,18 @@ BOOL WriteNetworkPrefs(CONST_STRPTR  destdir)
         fprintf
         (
             ConfFile, "%s DEV=%s UNIT=%d %s IP=%s NETMASK=%s %s\n",
-            GetName(iface), GetDevice(iface), GetUnit(iface),
+            GetName(iface), GetDevice(iface), (int)GetUnit(iface),
             (GetNoTracking(iface) ? (CONST_STRPTR)"NOTRACKING" : (CONST_STRPTR)""),
             (GetIfDHCP(iface) ? (CONST_STRPTR)"DHCP" : GetIP(iface)),
             GetMask(iface),
             (GetUp(iface) ? (CONST_STRPTR)"UP" : (CONST_STRPTR)"")
         );
+        if (strstr(GetDevice(iface), "atheros5000.device") != NULL
+            || strstr(GetDevice(iface), "realtek8180.device") != NULL)
+        {
+            SetWirelessDevice(GetDevice(iface));
+            SetWirelessUnit(GetUnit(iface));
+        }
     }
     fclose(ConfFile);
 
@@ -342,6 +342,22 @@ BOOL WriteNetworkPrefs(CONST_STRPTR  destdir)
         fprintf(ConfFile, "DEFAULT GATEWAY %s\n", GetGate());
     }
     fclose(ConfFile);
+
+    CombinePath2P(filename, filenamelen, destdir, "WirelessAutoRun");
+    ConfFile = fopen(filename, "w");
+    if (!ConfFile) return FALSE;
+    fprintf(ConfFile, "%s", (GetWirelessDevice() != NULL) ? "True" : "False");
+    fclose(ConfFile);
+
+    if (GetWirelessDevice() != NULL)
+    {
+        CombinePath2P(filename, filenamelen, destdir, "WirelessDevice");
+        ConfFile = fopen(filename, "w");
+        if (!ConfFile) return FALSE;
+        fprintf(ConfFile, "%s UNIT %ld", GetWirelessDevice(),
+            (long int)GetWirelessUnit());
+        fclose(ConfFile);
+    }
 
     return TRUE;
 }
@@ -411,7 +427,7 @@ BOOL WriteMobilePrefs(CONST_STRPTR destdir)
     if (!ConfFile) return FALSE;
 
     if( strlen(GetMobile_devicename()) > 0 ) fprintf(ConfFile, "DEVICE %s\n" ,GetMobile_devicename() );
-    fprintf(ConfFile, "UNIT %d\n" ,GetMobile_unit() );
+    fprintf(ConfFile, "UNIT %d\n" , (int)GetMobile_unit() );
     if( strlen(GetMobile_username()) > 0 ) fprintf(ConfFile, "USERNAME %s\n" ,GetMobile_username() );
     if( strlen(GetMobile_password()) > 0 ) fprintf(ConfFile, "PASSWORD %s\n" ,GetMobile_password() );
 
@@ -431,7 +447,7 @@ BOOL WriteMobilePrefs(CONST_STRPTR destdir)
 #define BUFSIZE 2048
 BOOL CopyFile(CONST_STRPTR srcfile, CONST_STRPTR dstfile)
 {
-    BPTR from = NULL, to = NULL;
+    BPTR from = BNULL, to = BNULL;
     TEXT buffer[BUFSIZE];
 
     if ((from = Open(srcfile, MODE_OLDFILE)))
@@ -567,6 +583,7 @@ BOOL StopWireless()
 BOOL StartWireless()
 {
     ULONG trycount = 0;
+    TEXT command[80];
 
     /* Startup */
     {
@@ -579,7 +596,9 @@ BOOL StartWireless()
             { TAG_DONE,         0                   }
         };
 
-        SystemTagList("C:WirelessManager \"atheros5000.device\"", tags);
+        snprintf(command, 80, "C:WirelessManager \"%s\" UNIT %ld\n",
+            GetWirelessDevice(), (long int)GetWirelessUnit());
+        SystemTagList(command, tags);
     }
 
     /* Check if startup successful */
@@ -659,14 +678,14 @@ BOOL AddFileFromDefaultStackLocation(CONST_STRPTR filename, CONST_STRPTR dstdir)
     TEXT srcfile[srcfilelen];
     ULONG dstfilelen = strlen(dstdir) + 4 + strlen(filename) + 1;
     TEXT dstfile[dstfilelen];
-    BPTR dstlock = NULL;
+    BPTR dstlock = BNULL;
 
     CombinePath3P(srcfile, srcfilelen, srcdir, "db", filename);
     CombinePath3P(dstfile, dstfilelen, dstdir, "db", filename);
 
     /* Check if the destination file already exists. If yes, do not copy */
     dstlock = Lock(dstfile, SHARED_LOCK);
-    if (dstlock != NULL)
+    if (dstlock != BNULL)
     {
         UnLock(dstlock);
         return TRUE;
@@ -713,7 +732,7 @@ enum ErrorCode UseNetworkPrefs()
     if (!WriteWirelessPrefs(WIRELESS_PATH_ENV)) return NOT_SAVED_PREFS_ENV;
     if (!WriteMobilePrefs(MOBILEBB_PATH_ENV)) return NOT_SAVED_PREFS_ENV;
     if(StopWireless())
-        if (GetWirelessAutostart())
+        if (GetWirelessDevice() != NULL)
             if (!StartWireless()) return NOT_RESTARTED_WIRELESS;
     if (!RestartStack()) return NOT_RESTARTED_STACK;
     if(StopMobile())
@@ -880,27 +899,6 @@ void ReadNetworkPrefs(CONST_STRPTR directory)
             else
             {
                 SetAutostart(FALSE);
-                break;
-            }
-        }
-    }
-    CloseTokenFile(&tok);
-
-    CombinePath2P(filename, filenamelen, directory, "WirelessAutorun");
-    OpenTokenFile(&tok, filename);
-    while (!tok.fend)
-    {
-        GetNextToken(&tok, " \n");
-        if (tok.token)
-        {
-            if (strncmp(tok.token, "True", 4) == 0)
-            {
-                SetWirelessAutostart(TRUE);
-                break;
-            }
-            else
-            {
-                SetWirelessAutostart(FALSE);
                 break;
             }
         }
@@ -1357,9 +1355,14 @@ LONG GetNetworkCount(void)
     return prefs.networkCount;
 }
 
-BOOL GetWirelessAutostart(void)
+STRPTR GetWirelessDevice(void)
 {
-    return prefs.wirelessAutostart;
+    return prefs.wirelessDevice;
+}
+
+LONG GetWirelessUnit(void)
+{
+    return prefs.wirelessUnit;
 }
 
 BOOL GetMobile_Autostart(void)
@@ -1456,9 +1459,14 @@ void SetNetworkCount(LONG w)
     prefs.networkCount = w;
 }
 
-void SetWirelessAutostart(BOOL w)
+void SetWirelessDevice(STRPTR w)
 {
-    prefs.wirelessAutostart = w;
+    prefs.wirelessDevice = w;
+}
+
+void SetWirelessUnit(LONG w)
+{
+    prefs.wirelessUnit = w;
 }
 
 void SetMobile_Autostart(BOOL w)
