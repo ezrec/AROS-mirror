@@ -48,17 +48,25 @@ NVC0AccelDownloadM2MF(PixmapPtr pspix, int x, int y, int w, int h,
 	struct nouveau_grobj *m2mf = pNv->NvMemFormat;
 #if !defined(__AROS__)
 	const int cpp = pspix->drawable.bitsPerPixel / 8;
-#else
-	const int cpp = pspix->bytesperpixel;
-#endif
 	const int line_len = w * cpp;
 	const int line_limit = (128 << 10) / line_len;
 	unsigned src_offset = 0, src_pitch = 0, tiled = 1;
+#else
+	const int cpp = pspix->bytesperpixel;
+	const int line_len = w * cpp;
+	const int line_limit = pNv->GART->size / line_len;
+	unsigned src_offset = 0, src_pitch = 0, tiled = 1;
+	unsigned int exec = (1 << 20) | NVC0_M2MF_EXEC_LINEAR_OUT;
+#endif
 
 	if (!nv50_style_tiled_pixmap(pspix)) {
+
 		tiled = 0;
 		src_pitch = exaGetPixmapPitch(pspix);
 		src_offset = (y * src_pitch) + (x * cpp);
+#if defined(__AROS__)
+		exec |= NVC0_M2MF_EXEC_LINEAR_IN;
+#endif
 	} else {
 		BEGIN_RING(chan, m2mf, NVC0_M2MF_TILING_MODE_IN, 5);
 		OUT_RING  (chan, bo->tile_mode);
@@ -104,7 +112,11 @@ NVC0AccelDownloadM2MF(PixmapPtr pspix, int x, int y, int w, int h,
 		}
 
 		BEGIN_RING(chan, m2mf, NVC0_M2MF_EXEC, 1);
+#if !defined(__AROS__)
 		OUT_RING  (chan, 0x100000 | (tiled << 8));
+#else
+		OUT_RING  (chan, exec | (tiled << 8));
+#endif
 
 		if (nouveau_bo_map(pNv->GART, NOUVEAU_BO_RD)) {
 			MARK_UNDO(chan);
@@ -163,17 +175,24 @@ NVC0AccelUploadM2MF(PixmapPtr pdpix, int x, int y, int w, int h,
 	struct nouveau_grobj *m2mf = pNv->NvMemFormat;
 #if !defined(__AROS__)
 	int cpp = pdpix->drawable.bitsPerPixel / 8;
-#else
-	int cpp = pdpix->bytesperpixel;
-#endif
 	int line_len = w * cpp;
 	int line_limit = (128 << 10) / line_len;
 	unsigned dst_offset = 0, dst_pitch = 0, tiled = 1;
+#else
+	int cpp = pdpix->bytesperpixel;
+	int line_len = w * cpp;
+	int line_limit = pNv->GART->size / line_len;
+	unsigned dst_offset = 0, dst_pitch = 0, tiled = 1;
+	unsigned int exec = (1 << 20) | NVC0_M2MF_EXEC_LINEAR_IN;
+#endif
 
 	if (!nv50_style_tiled_pixmap(pdpix)) {
 		tiled = 0;
 		dst_pitch = exaGetPixmapPitch(pdpix);
 		dst_offset = (y * dst_pitch) + (x * cpp);
+#if defined(__AROS__)
+		exec |= NVC0_M2MF_EXEC_LINEAR_OUT;
+#endif
 	} else {
 		BEGIN_RING(chan, m2mf, NVC0_M2MF_TILING_MODE_OUT, 5);
 		OUT_RING  (chan, bo->tile_mode);
@@ -247,7 +266,11 @@ NVC0AccelUploadM2MF(PixmapPtr pdpix, int x, int y, int w, int h,
 		OUT_RING  (chan, line_count);
 
 		BEGIN_RING(chan, m2mf, NVC0_M2MF_EXEC, 1);
+#if !defined(__AROS__)
 		OUT_RING  (chan, 0x100000 | (tiled << 4));
+#else
+		OUT_RING  (chan, exec | (tiled << 4));
+#endif
 		FIRE_RING (chan);
 
 		if (!tiled)
