@@ -34,11 +34,23 @@ NVC0AccelDownloadM2MF(PixmapPtr pspix, int x, int y, int w, int h,
 		      char *dst, unsigned dst_pitch)
 {
 	ScrnInfoPtr pScrn = xf86Screens[pspix->drawable.pScreen->myNum];
+#else
+Bool
+NVC0AccelDownloadM2MF(PixmapPtr pspix, int x, int y, int w, int h,
+		      char *dst, unsigned dst_pitch,
+		      HIDDT_StdPixFmt dstPixFmt, OOP_Class *cl, OOP_Object *o)
+{
+	ScrnInfoPtr pScrn = globalcarddataptr;
+#endif
 	NVPtr pNv = NVPTR(pScrn);
 	struct nouveau_channel *chan = pNv->chan;
 	struct nouveau_bo *bo = nouveau_pixmap_bo(pspix);
 	struct nouveau_grobj *m2mf = pNv->NvMemFormat;
+#if !defined(__AROS__)
 	const int cpp = pspix->drawable.bitsPerPixel / 8;
+#else
+	const int cpp = pspix->bytesperpixel;
+#endif
 	const int line_len = w * cpp;
 	const int line_limit = (128 << 10) / line_len;
 	unsigned src_offset = 0, src_pitch = 0, tiled = 1;
@@ -50,8 +62,13 @@ NVC0AccelDownloadM2MF(PixmapPtr pspix, int x, int y, int w, int h,
 	} else {
 		BEGIN_RING(chan, m2mf, NVC0_M2MF_TILING_MODE_IN, 5);
 		OUT_RING  (chan, bo->tile_mode);
+#if !defined(__AROS__)
 		OUT_RING  (chan, pspix->drawable.width * cpp);
 		OUT_RING  (chan, pspix->drawable.height);
+#else
+		OUT_RING  (chan, pspix->width * cpp);
+		OUT_RING  (chan, pspix->height);
+#endif
 		OUT_RING  (chan, 1);
 		OUT_RING  (chan, 0);
 	}
@@ -95,6 +112,7 @@ NVC0AccelDownloadM2MF(PixmapPtr pspix, int x, int y, int w, int h,
 		}
 		src = pNv->GART->map;
 
+#if !defined(__AROS__)
 		if (dst_pitch == line_len) {
 			memcpy(dst, src, dst_pitch * line_count);
 			dst += dst_pitch * line_count;
@@ -105,6 +123,15 @@ NVC0AccelDownloadM2MF(PixmapPtr pspix, int x, int y, int w, int h,
 				dst += dst_pitch;
 			}
 		}
+#else
+        (void)i;
+        HiddNouveauReadIntoRAM(
+            (char *)src, line_len,
+            dst, dst_pitch, dstPixFmt,
+            w, line_count,
+            cl, o);
+        dst += dst_pitch * line_count;
+#endif
 		nouveau_bo_unmap(pNv->GART);
 
 		if (!tiled)
@@ -116,16 +143,29 @@ NVC0AccelDownloadM2MF(PixmapPtr pspix, int x, int y, int w, int h,
 	return TRUE;
 }
 
+#if !defined(__AROS__)
 Bool
 NVC0AccelUploadM2MF(PixmapPtr pdpix, int x, int y, int w, int h,
 		    const char *src, int src_pitch)
 {
 	ScrnInfoPtr pScrn = xf86Screens[pdpix->drawable.pScreen->myNum];
+#else
+Bool
+NVC0AccelUploadM2MF(PixmapPtr pdpix, int x, int y, int w, int h,
+		    const char *src, int src_pitch,
+		    HIDDT_StdPixFmt srcPixFmt, OOP_Class *cl, OOP_Object *o)
+{
+	ScrnInfoPtr pScrn = globalcarddataptr;
+#endif
 	NVPtr pNv = NVPTR(pScrn);
 	struct nouveau_channel *chan = pNv->chan;
 	struct nouveau_bo *bo = nouveau_pixmap_bo(pdpix);
 	struct nouveau_grobj *m2mf = pNv->NvMemFormat;
+#if !defined(__AROS__)
 	int cpp = pdpix->drawable.bitsPerPixel / 8;
+#else
+	int cpp = pdpix->bytesperpixel;
+#endif
 	int line_len = w * cpp;
 	int line_limit = (128 << 10) / line_len;
 	unsigned dst_offset = 0, dst_pitch = 0, tiled = 1;
@@ -137,8 +177,13 @@ NVC0AccelUploadM2MF(PixmapPtr pdpix, int x, int y, int w, int h,
 	} else {
 		BEGIN_RING(chan, m2mf, NVC0_M2MF_TILING_MODE_OUT, 5);
 		OUT_RING  (chan, bo->tile_mode);
+#if !defined(__AROS__)
 		OUT_RING  (chan, pdpix->drawable.width * cpp);
 		OUT_RING  (chan, pdpix->drawable.height);
+#else
+		OUT_RING  (chan, pdpix->width * cpp);
+		OUT_RING  (chan, pdpix->height);
+#endif
 		OUT_RING  (chan, 1);
 		OUT_RING  (chan, 0);
 	}
@@ -155,6 +200,7 @@ NVC0AccelUploadM2MF(PixmapPtr pdpix, int x, int y, int w, int h,
 			return FALSE;
 		dst = pNv->GART->map;
 
+#if !defined(__AROS__)
 		if (src_pitch == line_len) {
 			memcpy(dst, src, src_pitch * line_count);
 			src += src_pitch * line_count;
@@ -163,8 +209,17 @@ NVC0AccelUploadM2MF(PixmapPtr pdpix, int x, int y, int w, int h,
 				memcpy(dst, src, line_len);
 				src += src_pitch;
 				dst += line_len;
-                        }
+            }
 		}
+#else
+        (void)i;
+        HiddNouveauWriteFromRAM(
+            (APTR)src, src_pitch, srcPixFmt,
+            dst, line_len,
+            w, line_count,
+            cl, o);
+        src += src_pitch * line_count;
+#endif
 		nouveau_bo_unmap(pNv->GART);
 
 		if (MARK_RING(chan, 16, 4))
@@ -204,7 +259,7 @@ NVC0AccelUploadM2MF(PixmapPtr pdpix, int x, int y, int w, int h,
 	return TRUE;
 }
 
-
+#if !defined(__AROS__)
 struct nvc0_exa_state {
 	struct {
 		PictTransformPtr transform;

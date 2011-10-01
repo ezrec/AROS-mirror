@@ -401,18 +401,10 @@ VOID METHOD(NouveauBitMap, Hidd_BitMap, PutImage)
 
         ObtainSemaphore(&carddata->gartsemaphore);
         
-        if (carddata->architecture >= NV_ARCH_C0)
-        {
-            /* TODO:NVCO: IMPLEMENT */
-            result = FALSE;
-        }
-        else
-        {
-            result = HiddNouveauNVAccelUploadM2MF(
-                        msg->pixels, msg->modulo, msg->pixFmt,
-                        msg->x, msg->y, msg->width, msg->height, 
-                        cl, o);
-        }
+        result = HiddNouveauNVAccelUploadM2MF(
+                    msg->pixels, msg->modulo, msg->pixFmt,
+                    msg->x, msg->y, msg->width, msg->height, 
+                    cl, o);
         
         ReleaseSemaphore(&carddata->gartsemaphore);
 
@@ -461,18 +453,10 @@ VOID METHOD(NouveauBitMap, Hidd_BitMap, GetImage)
 
         ObtainSemaphore(&carddata->gartsemaphore);
         
-        if (carddata->architecture >= NV_ARCH_C0)
-        {
-            /* TODO:NVCO: IMPLEMENT */
-            result = FALSE;
-        }
-        else
-        {
-            result = HiddNouveauNVAccelDownloadM2MF(
-                        msg->pixels, msg->modulo, msg->pixFmt,
-                        msg->x, msg->y, msg->width, msg->height, 
-                        cl, o);
-        }
+        result = HiddNouveauNVAccelDownloadM2MF(
+                    msg->pixels, msg->modulo, msg->pixFmt,
+                    msg->x, msg->y, msg->width, msg->height, 
+                    cl, o);
 
         ReleaseSemaphore(&carddata->gartsemaphore);
 
