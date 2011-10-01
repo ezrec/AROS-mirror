@@ -82,8 +82,9 @@ HIDDNouveauWrapResource(struct CardData * carddata, struct pipe_resource * resou
     {
     case PIPE_FORMAT_B8G8R8A8_UNORM:
     case PIPE_FORMAT_A8R8G8B8_UNORM:
-        depth = 32;
-        break;
+        /* For purpose of blitting render buffer to screen, 32-bit render
+           buffer is treated as 24-bit surface. This is needed so that checks
+           (src->depth == dst->depth) pass. */
     case PIPE_FORMAT_B8G8R8X8_UNORM:
     case PIPE_FORMAT_X8R8G8B8_UNORM:
         depth = 24;
@@ -250,7 +251,9 @@ VOID METHOD(NouveauGallium, Hidd_Gallium, DisplayResource)
             0x03 /* vHidd_GC_DrawMode_Copy */);
         break;    
     case NV_ARCH_C0:
-        /* TODO: NVC0 IMPLEMENT */
+        HIDDNouveauNVC0CopySameFormat(carddata, &srcdata, dstdata, 
+            msg->srcx, msg->srcy, msg->dstx, msg->dsty, msg->width, msg->height, 
+            0x03 /* vHidd_GC_DrawMode_Copy */);
     default:
         /* TODO: Report error */
         break;
