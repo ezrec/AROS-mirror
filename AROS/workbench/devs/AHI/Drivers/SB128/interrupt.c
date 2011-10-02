@@ -29,7 +29,7 @@ All Rights Reserved.
 #include "interrupt.h"
 #include "pci_wrapper.h"
 #ifdef __AROS__
-#define DEBUG 1
+#define DEBUG 0
 #include <aros/debug.h>
 #define DebugPrintF bug
 #endif

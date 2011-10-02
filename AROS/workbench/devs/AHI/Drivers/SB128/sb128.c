@@ -35,7 +35,7 @@ extern struct MMUIFace*            IMMU;
 #include <proto/utility.h>
 
 #ifdef __AROS__
-#define DEBUG 1
+#define DEBUG 0
 #include <aros/debug.h>
 #define DebugPrintF bug
 #endif
