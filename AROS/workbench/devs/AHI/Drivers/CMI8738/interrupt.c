@@ -24,7 +24,7 @@ The Original Code is written by Davy Wentzler.
 #include "misc.h"
 #include "pci_wrapper.h"
 #ifdef __AROS__
-#define DEBUG 1
+#define DEBUG 0
 #include <aros/debug.h>
 #define DebugPrintF bug
 #endif
