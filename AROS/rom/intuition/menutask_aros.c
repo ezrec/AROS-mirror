@@ -1,6 +1,6 @@
 /*
-    Copyright  1995-2010, The AROS Development Team. All rights reserved.
-    Copyright  2001-2003, The MorphOS Development Team. All Rights Reserved.
+    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
+    Copyright © 2001-2003, The MorphOS Development Team. All Rights Reserved.
     $Id$
 */
 
@@ -498,11 +498,16 @@ static void HandleSelection(struct MenuHandlerData *mhd, struct IntuitionBase *I
 static void HandleMouseClick(struct InputEvent *ie, struct MenuHandlerData *mhd,
                              struct IntuitionBase *IntuitionBase)
 {
-    BOOL die = FALSE;
+    BOOL die = FALSE, sticky;
 
     switch(ie->ie_Code) {
     case MENUUP:
-	if (STICKY)
+        sticky = STICKY && (DoubleClick(
+            GetPrivIBase(IntuitionBase)->LastMenuDownSecs,
+            GetPrivIBase(IntuitionBase)->LastMenuDownMicro,
+            ie->ie_TimeStamp.tv_secs, ie->ie_TimeStamp.tv_micro)
+            || mhd->keepmenuup);
+	if (sticky)
 	    break;
 
     case SELECTDOWN:
@@ -523,6 +528,10 @@ static void HandleMouseClick(struct InputEvent *ie, struct MenuHandlerData *mhd,
 		die = TRUE;
 	    }
 	}
+        GetPrivIBase(IntuitionBase)->LastMenuDownSecs =
+            ie->ie_TimeStamp.tv_secs;
+        GetPrivIBase(IntuitionBase)->LastMenuDownMicro =
+            ie->ie_TimeStamp.tv_micro;
 	break;
     } /* switch(ie->ie_Code) */
 

@@ -427,7 +427,7 @@ struct IntIntuitionBase
     char                    	*WorkbenchTitle; /* written by locale as it seems..what a crappy interface*/
 
     /*
-     * savety pad for intuitionbase accesses
+     * safety pad for intuitionbase accesses
      * probably needs to be smarter
      */
     UBYTE                   	 Pad[0x800];
@@ -548,6 +548,8 @@ struct IntIntuitionBase
 
     ULONG                   	 LastClickSecs;
     ULONG                   	 LastClickMicro; /* for doubleclick to front */
+    ULONG                   	 LastMenuDownSecs;
+    ULONG                   	 LastMenuDownMicro; /* for auto sticky/non-sticky menus */
     ULONG                   	 DoubleClickCounter;
     ULONG                    	 DoubleClickButton;
 
