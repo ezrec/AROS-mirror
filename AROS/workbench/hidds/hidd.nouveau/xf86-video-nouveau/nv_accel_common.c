@@ -247,7 +247,7 @@ NVAccelGetCtxSurf2DFormatFromPixmap(PixmapPtr pPix, int *fmt_ret)
 #if !defined(__AROS__)
 	switch (pPix->drawable.bitsPerPixel) {
 #else
-    switch (pPix->bytesperpixel * 8) {
+	switch (pPix->depth) {
 #endif
 	case 32:
 		*fmt_ret = NV04_CONTEXT_SURFACES_2D_FORMAT_A8R8G8B8;

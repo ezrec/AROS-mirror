@@ -135,13 +135,8 @@ NV04EXAPrepareSolid(PixmapPtr pPixmap, int alu, Pixel planemask, Pixel fg)
 		}
 	}
 #else
-	if (pPixmap->depth == 16) {
-		if (pPixmap->depth == 16) {
-			fmt2 = NV04_GDI_RECTANGLE_TEXT_COLOR_FORMAT_A16R5G6B5;
-		} else if (pPixmap->depth == 15) {
-			fmt2 = NV04_GDI_RECTANGLE_TEXT_COLOR_FORMAT_X16A1R5G5B5;
-		}
-	}
+	if (pPixmap->depth == 16)
+		fmt2 = NV04_GDI_RECTANGLE_TEXT_COLOR_FORMAT_A16R5G6B5;
 #endif
 
 	/* When SURFACE_FORMAT_A8R8G8B8 is used with GDI_RECTANGLE_TEXT, the 
@@ -244,8 +239,7 @@ NV04EXAPrepareCopy(PixmapPtr pSrcPixmap, PixmapPtr pDstPixmap, int dx, int dy,
 	if (pSrcPixmap->drawable.bitsPerPixel !=
 	    pDstPixmap->drawable.bitsPerPixel)
 #else
-	if (pSrcPixmap->depth !=
-	    pDstPixmap->depth)
+	if (pSrcPixmap->depth != pDstPixmap->depth)
 #endif
 		return FALSE;
 

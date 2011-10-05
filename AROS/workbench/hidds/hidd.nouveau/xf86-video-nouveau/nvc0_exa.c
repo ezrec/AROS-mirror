@@ -52,7 +52,7 @@ NVC0AccelDownloadM2MF(PixmapPtr pspix, int x, int y, int w, int h,
 	const int line_limit = (128 << 10) / line_len;
 	unsigned src_offset = 0, src_pitch = 0, tiled = 1;
 #else
-	const int cpp = pspix->bytesperpixel;
+	const int cpp = pspix->depth > 16 ? 4 : 2;
 	const int line_len = w * cpp;
 	const int line_limit = pNv->GART->size / line_len;
 	unsigned src_offset = 0, src_pitch = 0, tiled = 1;
@@ -179,7 +179,7 @@ NVC0AccelUploadM2MF(PixmapPtr pdpix, int x, int y, int w, int h,
 	int line_limit = (128 << 10) / line_len;
 	unsigned dst_offset = 0, dst_pitch = 0, tiled = 1;
 #else
-	int cpp = pdpix->bytesperpixel;
+	int cpp = pdpix->depth > 16 ? 4 : 2;
 	int line_len = w * cpp;
 	int line_limit = pNv->GART->size / line_len;
 	unsigned dst_offset = 0, dst_pitch = 0, tiled = 1;

@@ -64,7 +64,7 @@ NVAccelDownloadM2MF(PixmapPtr pspix, int x, int y, int w, int h,
 #if !defined(__AROS__)
 	unsigned cpp = pspix->drawable.bitsPerPixel / 8;
 #else
-	unsigned cpp = pspix->bytesperpixel;
+	unsigned cpp = pspix->depth > 16 ? 4 : 2;
 #endif
 	unsigned line_len = w * cpp;
 	unsigned src_offset = 0, src_pitch = 0, linear = 0;
@@ -206,7 +206,7 @@ NVAccelUploadM2MF(PixmapPtr pdpix, int x, int y, int w, int h,
 #if !defined(__AROS__)
 	unsigned cpp = pdpix->drawable.bitsPerPixel / 8;
 #else
-	unsigned cpp = pdpix->bytesperpixel;
+	unsigned cpp = pdpix->depth > 16 ? 4 : 2;
 #endif
 	unsigned line_len = w * cpp;
 	unsigned dst_offset = 0, dst_pitch = 0, linear = 0;
