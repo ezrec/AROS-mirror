@@ -678,7 +678,7 @@ diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Da
      *
 diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.11-staging/src/gallium/drivers/nouveau/nouveau_fence.c ./mesa/src/gallium/drivers/nouveau/nouveau_fence.c
 --- /data/deadwood/source/Mesa-7.11-staging/src/gallium/drivers/nouveau/nouveau_fence.c	2011-07-09 03:37:09.000000000 +0200
-+++ ./mesa/src/gallium/drivers/nouveau/nouveau_fence.c	2011-09-22 20:01:43.000000000 +0200
++++ ./mesa/src/gallium/drivers/nouveau/nouveau_fence.c	2011-10-01 18:30:20.000000000 +0200
 @@ -31,6 +31,10 @@
  #include <sched.h>
  #endif
@@ -690,6 +690,24 @@ diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Da
  boolean
  nouveau_fence_new(struct nouveau_screen *screen, struct nouveau_fence **fence,
                    boolean emit)
+@@ -93,8 +97,6 @@
+    /* set this now, so that if fence.emit triggers a flush we don't recurse */
+    fence->state = NOUVEAU_FENCE_STATE_EMITTED;
+ 
+-   screen->fence.emit(&screen->base, fence->sequence);
+-
+    ++fence->ref;
+ 
+    if (screen->fence.tail)
+@@ -103,6 +105,8 @@
+       screen->fence.head = fence;
+ 
+    screen->fence.tail = fence;
++
++   screen->fence.emit(&screen->base, fence->sequence);
+ }
+ 
+ void
 @@ -138,7 +142,13 @@
  {
     struct nouveau_fence *fence;
@@ -704,6 +722,14 @@ diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Da
  
     if (screen->fence.sequence_ack == sequence)
        return;
+@@ -219,5 +229,7 @@
+    if (screen->fence.current->state < NOUVEAU_FENCE_STATE_EMITTED)
+       nouveau_fence_emit(screen->fence.current);
+ 
++   nouveau_fence_ref(NULL, &screen->fence.current);
++
+    nouveau_fence_new(screen, &screen->fence.current, FALSE);
+ }
 diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.11-staging/src/gallium/drivers/nv50/nv50_tgsi_to_nc.c ./mesa/src/gallium/drivers/nv50/nv50_tgsi_to_nc.c
 --- /data/deadwood/source/Mesa-7.11-staging/src/gallium/drivers/nv50/nv50_tgsi_to_nc.c	2011-07-09 03:37:09.000000000 +0200
 +++ ./mesa/src/gallium/drivers/nv50/nv50_tgsi_to_nc.c	2011-09-05 20:03:01.000000000 +0200
@@ -718,7 +744,7 @@ diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Da
     const int cube = (insn->Texture.Texture  == TGSI_TEXTURE_CUBE) ? 1 : 0;
 diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.11-staging/src/gallium/drivers/nvfx/nv30_fragtex.c ./mesa/src/gallium/drivers/nvfx/nv30_fragtex.c
 --- /data/deadwood/source/Mesa-7.11-staging/src/gallium/drivers/nvfx/nv30_fragtex.c	2011-04-08 21:31:18.000000000 +0200
-+++ ./mesa/src/gallium/drivers/nvfx/nv30_fragtex.c	2011-09-05 20:03:01.000000000 +0200
++++ ./mesa/src/gallium/drivers/nvfx/nv30_fragtex.c	2011-09-30 21:45:16.000000000 +0200
 @@ -9,7 +9,9 @@
  			  struct nvfx_sampler_state *ps,
  			  const struct pipe_sampler_state *cso)
@@ -741,7 +767,7 @@ diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Da
  	ps->max_lod = (int)CLAMP(cso->max_lod, 0.0, 15.0);
 diff -ur --exclude-from=./mesa/src/aros/mesa.diff.excluded -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.11-staging/src/gallium/drivers/nvfx/nv40_fragtex.c ./mesa/src/gallium/drivers/nvfx/nv40_fragtex.c
 --- /data/deadwood/source/Mesa-7.11-staging/src/gallium/drivers/nvfx/nv40_fragtex.c	2011-04-08 21:31:18.000000000 +0200
-+++ ./mesa/src/gallium/drivers/nvfx/nv40_fragtex.c	2011-09-05 20:03:01.000000000 +0200
++++ ./mesa/src/gallium/drivers/nvfx/nv40_fragtex.c	2011-09-30 21:45:16.000000000 +0200
 @@ -8,7 +8,9 @@
  			  struct nvfx_sampler_state *ps,
  			  const struct pipe_sampler_state *cso)
