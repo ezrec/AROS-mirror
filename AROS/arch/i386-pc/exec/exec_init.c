@@ -520,7 +520,7 @@ void exec_cinit(unsigned long magic, unsigned long addr, struct TagItem *tags)
     rkprintf("Clearing system area...");
 
     /*
-     * Well, if we all in clearing moode, then it's the best occasion to clear
+     * Well, if we are in clearing mood, then it's the best occasion to clear
      * some areas in AROS private 4KB ram area. Hmmm. If there would occur any
      * interrupt at this moment, AROS would be really dead as it is going to
      * destroy its private stuff (which is really needed to make CPU operate
@@ -665,7 +665,7 @@ void exec_cinit(unsigned long magic, unsigned long addr, struct TagItem *tags)
 
 //    exec_SetColors(0x20,0x20,0x20);
 
-    /* Store this values as they may point to interesting stuff */
+    /* Store these values as they may point to interesting stuff */
     KickMemPtr = ExecBase->KickMemPtr;
     KickTagPtr = ExecBase->KickTagPtr;
     KickCheckSum = ExecBase->KickCheckSum;
@@ -820,10 +820,13 @@ void exec_cinit(unsigned long magic, unsigned long addr, struct TagItem *tags)
         LibGetTagData(KRN_KernelLowest, (ULONG)&_end - 0x000a0000, tags);
     InternalAllocAbs((APTR)kernel_lowest, kernel_highest - kernel_lowest, ExecBase);
 
+    /* Protect gap between low and high memory */
+    InternalAllocAbs(0xa0000, 0x100000 - 0xa0000, SysBase);
+
     /* Protect bootup stack from being allocated */
     InternalAllocAbs(0x90000, 0x3000, SysBase);
 
-    /* Protect ACPI & other spaces returned by GRUB loader  */
+    /* Protect ACPI & other spaces returned by GRUB loader */
 
     /* Protect the RSD PTR which is always in the first MB for later use */
     if(arosmb->acpirsdp)
@@ -1229,6 +1232,7 @@ void get_ACPI_RSDPTR(struct arosmb* mb)
 
 
 
+/* Returns limit of 24-bit memory */
 #warning "TODO: We should use info from BIOS here."
 int exec_RamCheck_dma(struct arosmb *arosmb)
 {
@@ -1238,7 +1242,7 @@ int exec_RamCheck_dma(struct arosmb *arosmb)
 
     if(arosmb->flags & MB_FLAGS_MEM)
     {
-	/* If there is upper memory, assume that lower is 1MB. Dirty hack++ */
+	/* If there is upper memory, assume that lower is 640k. Dirty hack++ */
 	if(arosmb->mem_upper)
 	{
 	    if ((arosmb->mem_upper<<10) & 0xff000000)
@@ -1272,6 +1276,7 @@ int exec_RamCheck_dma(struct arosmb *arosmb)
     return (int)ptr;
 }
 
+/* Returns limit of upper memory */
 int exec_RamCheck_fast(struct arosmb *arosmb)
 {
     ULONG volatile *ptr, tmp;
