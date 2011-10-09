@@ -359,6 +359,10 @@ AROS_UFH3(void, ata_PCIEnumerator_h,
      */
     if (SubClass == PCI_SUBCLASS_SATA)
     {
+
+        if(a->ATABase->ata_ScanFlags & ATA_NOSATA2PATA)
+                return;
+
     	APTR hba_phys = NULL;
     	IPTR hba_size = 0;
 	OOP_Object *Driver = NULL;
@@ -767,6 +771,11 @@ static int ata_init(LIBBASETYPEPTR LIBBASE)
                     {
                         D(bug("[ATA  ] ata_init: Disabling Legacy ports\n"));
                         LIBBASE->ata_ScanFlags &= ~ATA_SCANLEGACY;
+                    }
+                    if (strstr(node->ln_Name, "nosata2pata"))
+                    {
+                        D(bug("[ATA  ] ata_init: Disabling SATA mode change\n"));
+                        LIBBASE->ata_ScanFlags |= ATA_NOSATA2PATA;
                     }
                     if (strstr(node->ln_Name, "32bit"))
                     {

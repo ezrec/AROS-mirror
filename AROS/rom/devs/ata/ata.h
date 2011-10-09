@@ -120,7 +120,8 @@ struct ataBase
    UBYTE                   ata_ScanFlags;
 
 #define ATA_SCANPCI		(1 << 0)
-#define ATA_SCANLEGACY		(1 << 1)
+#define ATA_SCANLEGACY  (1 << 1)
+#define ATA_NOSATA2PATA (1 << 2)
    /*
     * memory pool
     */
