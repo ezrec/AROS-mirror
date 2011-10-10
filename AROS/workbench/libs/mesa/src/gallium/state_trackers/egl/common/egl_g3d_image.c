@@ -233,7 +233,7 @@ egl_g3d_create_image(_EGLDriver *drv, _EGLDisplay *dpy, _EGLContext *ctx,
 #ifdef EGL_MESA_drm_image
    case EGL_DRM_BUFFER_MESA:
       ptex = egl_g3d_reference_drm_buffer(dpy,
-            (EGLint) buffer, &gimg->base, attribs);
+            (EGLint) (unsigned long) buffer, &gimg->base, attribs);
       break;
 #endif
 #ifdef EGL_WL_bind_wayland_display

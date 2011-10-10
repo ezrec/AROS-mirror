@@ -107,7 +107,7 @@ egl_g3d_match_config(const _EGLConfig *conf, const _EGLConfig *criteria)
       struct egl_g3d_display *gdpy = egl_g3d_display(conf->Display);
       struct egl_g3d_config *gconf = egl_g3d_config(conf);
       EGLNativePixmapType pix =
-         (EGLNativePixmapType) criteria->MatchNativePixmap;
+         (EGLNativePixmapType) (unsigned long)criteria->MatchNativePixmap;
 
       if (!gdpy->native->is_pixmap_supported(gdpy->native, pix, gconf->native))
          return EGL_FALSE;

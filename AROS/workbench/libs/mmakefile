@@ -42,7 +42,8 @@
 #MM     workbench-libs-openurl \
 #MM     workbench-libs-popupmenu \
 #MM     workbench-libs-version \
-#MM     workbench-libs-identify
+#MM     workbench-libs-identify \
+##MM     workbench-libs-mesa
 
 #MM- includes-generate : \
 #MM     workbench-libs-amigaguide-includes \
