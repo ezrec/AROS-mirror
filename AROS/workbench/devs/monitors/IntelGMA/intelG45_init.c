@@ -483,6 +483,13 @@ AROS_UFH3(void, Enumerator,
 								656, 752, 800,
 								490, 492, 525, 0);
 
+
+        /* Clear initial buffer */
+        uint32_t i,
+            *pixel = (uint32_t *)(sd->initialBitMap + sd->Card.Framebuffer);
+        for(i = 0; i < 640 * 480; i++)
+            *pixel++ = 0;
+
 	G45_LoadState(sd, sd->initialState);
 
 	gfxhidd = OOP_NewObject(sd->IntelG45Class, NULL, NULL);
