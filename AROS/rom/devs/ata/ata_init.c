@@ -219,6 +219,36 @@ BOOL ata_RegisterVolume(ULONG StartCyl, ULONG EndCyl, struct ata_Unit *unit)
     return FALSE;
 }
 
+static AROS_UFH3(void, ATAResetHandler,
+    AROS_UFHA(struct ata_Bus *, bus, A1),
+    AROS_UFHA(APTR, int_code, A5),
+    AROS_UFHA(struct ExecBase *, SysBase, A6))
+{
+    AROS_USERFUNC_INIT
+
+    struct ata_Unit *unit;
+    UWORD i;
+
+    /* Stop DMA */
+    for (i = 0; i < MAX_BUSUNITS; i++)
+    {
+        unit = bus->ab_Units[i];
+        if (unit != NULL)
+        {
+            if(unit->au_DMAPort != NULL)
+            {
+                dma_StopDMA(unit);
+                ata_outl(NULL, dma_PRD, unit->au_DMAPort);
+            }
+        }
+    }
+
+    /* Disable interrupts */
+    ata_out(0x2, ata_AltControl, bus->ab_Alt);
+
+    AROS_USERFUNC_EXIT
+}
+
 static void ata_RegisterBus(IPTR IOBase, IPTR IOAlt, IPTR INTLine,
     IPTR DMABase, BOOL has80Wire, EnumeratorArgs *a)
 {
@@ -261,6 +291,13 @@ static void ata_RegisterBus(IPTR IOBase, IPTR IOAlt, IPTR INTLine,
     ab->ab_PRD          = AllocVecPooled(a->ATABase->ata_MemPool, (PRD_MAX+1) * 2 * sizeof(struct PRDEntry));  
     if ((0x10000 - ((ULONG)ab->ab_PRD & 0xffff)) < PRD_MAX * sizeof(struct PRDEntry))
        ab->ab_PRD      = (void*)((((IPTR)ab->ab_PRD)+0xffff) &~ 0xffff);
+
+    /*
+     * add reset handler for this bus
+     */
+    ab->ab_ResetInt.is_Code = ATAResetHandler;
+    ab->ab_ResetInt.is_Data = ab;
+    AddResetCallback(&ab->ab_ResetInt);
 
     /*
      * scan bus - try to locate all devices (disables irq)
