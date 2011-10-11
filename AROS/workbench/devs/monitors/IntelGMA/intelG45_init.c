@@ -18,7 +18,6 @@
 
 #include "intelG45_intern.h"
 #include "intelG45_regs.h"
-#include "intelG45_logo.h"
 #include "compositing.h"
 
 #define KBYTES 1024
@@ -39,8 +38,6 @@ static uint32_t max(uint32_t a, uint32_t b)
 	else
 		return b;
 }
-
-static const char __attribute__((used)) __greet[] = "!!! This driver is sponsored by iMica !!!\n";
 
 static BOOL IsCompatible(UWORD product_id)
 {
@@ -476,9 +473,7 @@ AROS_UFH3(void, Enumerator,
 	}
 
     	/*
-    	 * Boot logo.
-    	 *
-    	 * Since development of this driver is sponsored, I kindly ask to keep the boot logo with a small "commercial" in this place!
+    	 * Set up initial screen mode.
     	 */
 
     	sd->initialState = AllocVecPooled(sd->MemPool, sizeof(GMAState_t));
@@ -487,42 +482,6 @@ AROS_UFH3(void, Enumerator,
 								640, 480,
 								656, 752, 800,
 								490, 492, 525, 0);
-
-
-    	uint32_t *pixel = (uint32_t *)(sd->initialBitMap + sd->Card.Framebuffer);
-    	uint8_t *stream = header_data;
-	int count=logo_width * logo_height;
-	uint8_t split = *stream++;
-
-	do
-	{
-	    uint8_t cnt = *stream++;
-		
-	    if (cnt >= split)
-	    {
-		cnt -= split-1;
-
-		while(cnt-- && count > 0)
-		{
-		    uint8_t color = *stream++;
-
-		    count--;
-		    *pixel++ = 0xff000000 | (header_data_cmap[color][0] << 16) | (header_data_cmap[color][1] << 8) | (header_data_cmap[color][2]);
-		}
-	    }
-	    else
-	    {
-		uint8_t color = *stream++;
-
-		cnt += 3;
-		while(cnt-- && count > 0)
-		{
-		    count--;
-		    *pixel++ = 0xff000000 | (header_data_cmap[color][0] << 16) | (header_data_cmap[color][1] << 8) | (header_data_cmap[color][2]);
-		}
-	    }
-
-	} while (count > 0);
 
 	G45_LoadState(sd, sd->initialState);
 
@@ -534,16 +493,6 @@ AROS_UFH3(void, Enumerator,
 	    if (err)
 		OOP_DisposeObject(gfxhidd);
 	}
-
-	// Z   |\      _,,,---,,_
-	//  z  /,`.-'`'    -.  ;-;;,_
-	//    |,4-  ) )-,_..;\ (  `'-'
-	//   '---''(_/--'  `-'\_)
-	// In VGA, Kitty runs away too fast.
-	if (sd->pipe == PIPE_A )
-	    delay_ms(sd,1500);
-
-	D(bug("[GMA] %s", __greet));
     }
 
     AROS_LIBFUNC_EXIT
