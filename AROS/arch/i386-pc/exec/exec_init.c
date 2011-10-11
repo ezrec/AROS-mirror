@@ -1419,7 +1419,7 @@ struct rt_node
 ULONG **exec_RomTagScanner(struct ExecBase *SysBase, struct TagItem *tags)
 {
     struct List     rtList;             /* List of modules */
-    UWORD           *ptr = (UWORD*)LibGetTagData(KRN_KernelLowest, (ULONG)&_end, tags);  /* Start looking here */
+    UWORD           *ptr = (UWORD*)LibGetTagData(KRN_KernelLowest, (ULONG)&_end - 0xa0000, tags);  /* Start looking here */
 
     struct Resident *res;               /* module found */
 
