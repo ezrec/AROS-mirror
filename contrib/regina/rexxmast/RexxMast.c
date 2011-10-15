@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <assert.h>
 
+#define DEBUG 0
 #include <aros/debug.h>
 
 static LONG StartFile(struct RexxMsg *);
@@ -29,12 +30,15 @@ static void RemLib(struct RexxMsg *);
 static void AddCon(struct RexxMsg *);
 static void RemCon(struct RexxMsg *);
 
+static UBYTE progdir[256];
+
 int main(int argc, char **argv)
 {
    struct MsgPort *port;
    struct RexxMsg *msg;
    BOOL done = FALSE;
    ULONG mask, signals;
+   BPTR lock;
    struct EasyStruct es =
    {
       sizeof(struct EasyStruct),
@@ -55,6 +59,11 @@ int main(int argc, char **argv)
       return 0;
    }
 
+   lock = Lock("PROGDIR:", SHARED_LOCK);
+   NameFromLock(lock, progdir, sizeof(progdir));
+   D(bug("Got PROGDIR:='%s'\n", progdir));
+   UnLock(lock);
+
    port = CreatePort("REXX", 0);
    es.es_Title = "RexxMast message";
    mask = SIGBREAKF_CTRL_C | (1<<port->mp_SigBit);
@@ -68,7 +77,8 @@ int main(int argc, char **argv)
          while ((msg = (struct RexxMsg *)GetMsg(port)) != NULL)
          {
             BOOL reply=TRUE;
-            
+
+
             if (!IsRexxMsg(msg))
             {
                es.es_TextFormat = "Received message that is not a Rexx message";
@@ -83,6 +93,7 @@ int main(int argc, char **argv)
                     "TOO HIGH"
                   };
                LONG action = msg->rm_Action & RXCODEMASK;
+               D(bug("Got message with action %x\n", action));
                switch (action)
                {
                case RXFUNC:
@@ -147,7 +158,12 @@ int main(int argc, char **argv)
                }
             }
             if (reply)
+            {
+               D(bug("Replying message\n"));
                ReplyMsg((struct Message *)msg);
+            }
+            else
+               D(bug("Not replying to message\n"));
          }
       }
    } while(!done);
@@ -159,13 +175,16 @@ int main(int argc, char **argv)
 
 static LONG StartFile(struct RexxMsg *msg)
 {
-   char text[40];
-   
-   sprintf(text, "PROGDIR:RexxMast SUBTASK %p", (void*)msg);
+   char text[300];
+
+   sprintf(text, "%s%sRexxMast SUBTASK %p", progdir,
+           progdir[strlen(progdir)-1] == ':' ? "" : "/",
+           (void*)msg
+   );
   
    /* FIXME: thread should be used to handle more then one message at a time, not SystemTags */
    return SystemTags(text, SYS_Asynch, TRUE, SYS_Input, NULL,
-              SYS_Output, NULL, TAG_DONE
+                     SYS_Output, NULL, TAG_DONE
    );
 }
 
