@@ -26,7 +26,7 @@
 #include <graphics/monitor.h>
 
 
-#define USE_FAST_PUTPIXEL		1
+#define USE_FAST_PUTPIXEL		0
 #define OPTIMIZE_DRAWPIXEL_FOR_COPY	1
 #define USE_FAST_DRAWPIXEL		1
 #define USE_FAST_GETPIXEL		1
@@ -211,7 +211,7 @@ struct HIDDBitMapData
     ULONG bytesPerPixel; /* bytes per pixel               */
     OOP_Object *bitMap;
 #endif
-    /* WARNING: structure could be extented in the future                */
+    /* WARNING: structure could be extended in the future                */
     
     OOP_Object *friend;	/* Friend bitmap */
     
