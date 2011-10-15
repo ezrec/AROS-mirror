@@ -150,6 +150,14 @@ VOID MNAME_BM(PutPixel)(OOP_Class *cl, OOP_Object *o, struct pHidd_BitMap_PutPix
     return;
 }
 
+/*********  BitMap::GetPixel()  ***************************/
+// FIXME: in theory we shouldn't need this method since the superclass implements it
+
+ULONG MNAME_BM(GetPixel)(OOP_Class *cl, OOP_Object *o, struct pHidd_BitMap_GetPixel *msg)
+{
+    return OOP_DoSuperMethod(cl, o, (OOP_Msg)msg);
+}
+
 /*** BitMap::Get() *******************************************/
 
 VOID MNAME_ROOT(Get)(OOP_Class *cl, OOP_Object *o, struct pRoot_Get *msg)
