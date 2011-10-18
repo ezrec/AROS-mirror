@@ -47,6 +47,9 @@
 
 #include "rxiface.h"
 
+#define DEBUG 0
+#include <aros/debug.h>
+
 /* We can't use AROS_LC1NR, since 'offset'
  * is not constant.
  */
@@ -270,13 +273,33 @@ int init_amigaf ( tsd_t *TSD )
    amiga_tsd_t *atsd = (amiga_tsd_t *)malloc( sizeof(amiga_tsd_t) );
    BPTR old;
    int i;
+   environpart *ep;
 
    if (atsd==NULL) return 0;
 
    TSD->ami_tsd = (void *)atsd;
 
+   /* Initialization of amiga environ handling message ports.
+    * This has to be kept up-to-date with changes made to
+    * add_envir()/clear_environpart() in envir.c
+    */
    atsd->portenvir.envir.e.name = NULL;
    atsd->portenvir.envir.type = ENVIR_AMIGA;
+   ep = &atsd->portenvir.envir.e.input;
+   ep->currnum = -1;
+   ep->maxnum = -1;
+   ep->hdls[2] = ep->hdls[1] = ep->hdls[0] = -1;
+   ep->flags.isinput = 1;
+   ep = &atsd->portenvir.envir.e.output;
+   ep->currnum = -1;
+   ep->maxnum = -1;
+   ep->hdls[2] = ep->hdls[1] = ep->hdls[0] = -1;
+   ep = &atsd->portenvir.envir.e.error;
+   ep->currnum = -1;
+   ep->maxnum = -1;
+   ep->hdls[2] = ep->hdls[1] = ep->hdls[0] = -1;
+   ep->flags.iserror = 1;
+
    atsd->rexxsysbase = (struct RxsLib *)OpenLibrary( "rexxsyslib.library", 44 );
    if ( atsd->rexxsysbase == NULL )
       return 0;
@@ -493,6 +516,8 @@ streng *AmigaSubCom( const tsd_t *TSD, const streng *command, struct envir *envi
    struct RexxMsg *msg;
    struct MsgPort *port = ((struct amiga_envir *)envir)->port;
    streng *retval = NULL;
+
+   D(bug("environment: %s\n", tmpstr_of( (tsd_t *)TSD, envir->e.name)));
 
    msg = createreginamessage( TSD );
    /* Always ask for result, wether to set RESULT or not will be decided later */
