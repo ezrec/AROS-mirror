@@ -274,6 +274,11 @@ void del_envir( tsd_t *TSD, const streng *name )
    struct envir *ptr=NULL ;
 
    ptr = find_envir( TSD, name ) ;
+#if defined(_AMIGA) || defined(__AROS__)
+   /* Amiga environments may not be deleted */
+   if (ptr && ptr->type == ENVIR_AMIGA)
+      return;
+#endif
    if (!ptr)
       return;
 
