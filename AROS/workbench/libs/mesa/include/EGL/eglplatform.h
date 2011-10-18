@@ -135,6 +135,10 @@ typedef EGLNativeWindowType  NativeWindowType;
  * handles are 64 bit types, then EGLint should be defined as a signed 64-bit
  * integer type.
  */
+#if !defined(__AROS__)
 typedef khronos_int32_t EGLint;
+#else
+typedef SIPTR EGLint;
+#endif
 
 #endif /* __eglplatform_h */
