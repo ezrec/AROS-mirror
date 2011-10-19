@@ -494,7 +494,7 @@ static int siamiga_getmessage(lua_State *L)
             {
 		case IDCMP_GADGETDOWN:
 		case IDCMP_GADGETUP:
-                    ((struct Gadget*)(message->IAddress))->UserData = (APTR)(LONG)message->Code;  // active cycle gadget entry
+                    ((struct Gadget*)(message->IAddress))->UserData = (APTR)(IPTR)message->Code;  // active cycle gadget entry
 		    lua_pushliteral(L, "gadget");
                     lua_pushnumber(L, ((struct Gadget*)message->IAddress)->GadgetID );
                     msg_cnt = 2;
@@ -533,7 +533,7 @@ static int siamiga_getmessage(lua_State *L)
                     mitem = ItemAddress(siam->menustrip, message->Code);
                     if (mitem)
                     {
-                        lua_pushnumber(L, (LONG)GTMENUITEM_USERDATA(mitem));
+                        lua_pushnumber(L, (IPTR)GTMENUITEM_USERDATA(mitem));
                     }
                     else
                     {
@@ -659,7 +659,7 @@ static int siamiga_addmenu(lua_State *L)
     struct Window *win = siam->win;
     if (win) luaL_error(L, "You can't add a menu to an open window");
 
-    int id = luaL_checknumber(L, 2);
+    long id = luaL_checknumber(L, 2);
     const char *type = luaL_checkstring(L, 3);
     const char *title = luaL_checkstring(L, 4);
     const char *key = lua_tostring(L, 5);
@@ -937,7 +937,7 @@ static int sigadget_set(lua_State *L)
 {
     Sigadget *sig = checkSigadget(L, 1);
     struct Window *win = sig->win;
-    LONG value;
+    IPTR value;
     char *strvalue;
     switch(sig->type)
     {
@@ -982,7 +982,7 @@ static int sigadget_get(lua_State *L)
     if (win == NULL)
         luaL_error(L, "Gadget must be in an open window");
 
-    LONG result = 0;
+    IPTR result = 0;
     LONG changed = 0;
     switch (sig->type)
     {
@@ -1004,11 +1004,11 @@ static int sigadget_get(lua_State *L)
             break;
         case MX_KIND:
             changed = 1;
-	    lua_pushnumber(L, (int)sig->gad->UserData + 1); // Lua indices start with 1
+	    lua_pushnumber(L, (long)sig->gad->UserData + 1); // Lua indices start with 1
             break;
         case CYCLE_KIND:
             changed = 1;
-            lua_pushnumber(L, (int)sig->gad->UserData + 1);
+            lua_pushnumber(L, (long)sig->gad->UserData + 1);
             break;
 	default:
             luaL_error(L, "Wrong gadget type");
@@ -1246,6 +1246,7 @@ static int sipicture_get(lua_State *L)
 {
     Siamiga *siam = checkSiamiga(L, 1);
     struct Window *win = siam->win;
+
     if (win == NULL) luaL_error(L, "You can't get picture from closed window");
 
     int x = luaL_checknumber(L, 2);
@@ -1258,9 +1259,22 @@ static int sipicture_get(lua_State *L)
 
     int d = GetBitMapAttr(win->RPort->BitMap , BMA_DEPTH);
     struct BitMap *bm = AllocBitMap(w, h, d, 0, win->RPort->BitMap);
+
     if (bm == NULL) luaL_error(L, "Can't allocate bitmap");
 
-    BltRastPortBitMap(win->RPort, x, y, bm, 0, 0, w, h, 0xC0);
+    struct RastPort *rp = AllocMem(sizeof(struct RastPort), MEMF_ANY);
+
+    if (rp == NULL)
+    {
+    	FreeBitMap(bm);
+    	luaL_error(L, "Can't allocate RastPort");
+    }
+
+    InitRastPort(rp);
+    rp->BitMap = bm;
+    ClipBlit(win->RPort, x, y, rp, 0, 0, w, h, 0xC0);
+
+    FreeMem(rp, sizeof(struct RastPort));
 
     Picture *pi = pushPicture(L);
     pi->dto     = NULL;
