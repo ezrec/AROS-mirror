@@ -24,7 +24,7 @@
 #ifndef _SDL_cgxvideo_h
 #define _SDL_cgxvideo_h
 
-
+#include <clib/alib_protos.h>
 #include <exec/exec.h>
 #include <cybergraphx/cybergraphics.h>
 #include <graphics/scale.h>
