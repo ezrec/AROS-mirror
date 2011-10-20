@@ -24,12 +24,12 @@
 #ifndef _SDL_cgxvideo_h
 #define _SDL_cgxvideo_h
 
-#include <clib/alib_protos.h>
 #include <exec/exec.h>
 #include <cybergraphx/cybergraphics.h>
 #include <graphics/scale.h>
 #include <graphics/gfx.h>
 #include <intuition/intuition.h>
+#include <proto/arossupport.h>
 #include <proto/exec.h>
 #include <proto/cybergraphics.h>
 #include <proto/graphics.h>
