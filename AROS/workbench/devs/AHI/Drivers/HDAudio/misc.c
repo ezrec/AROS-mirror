@@ -937,6 +937,7 @@ static void perform_realtek_specific_settings(struct HDAudioChip *card, UWORD de
     send_command_4(card->codecnr, 0x14, VERB_SET_AMP_GAIN, OUTPUT_AMP_GAIN | AMP_GAIN_LR, card); // set amplifier gain: unmute output of FRONT (Port-D)
         
     send_command_12(card->codecnr, 0x14, VERB_SET_PIN_WIDGET_CONTROL, 0x40, card); // output enabled
+    card->speaker_active = TRUE;
         
     // MIC1 pin (0x18) as input
     send_command_12(card->codecnr, card->mic1_nid, VERB_SET_PIN_WIDGET_CONTROL, 0x20, card); // input enabled
@@ -988,6 +989,9 @@ static void perform_realtek_specific_settings(struct HDAudioChip *card, UWORD de
         {
             bug("Adding ALC268 specific support\n");
             
+            card->speaker_nid = 0x14;
+            card->headphone_nid = 0x15;
+
             card->adc_mixer_indices[0] = 2; // line in
             card->adc_mixer_indices[1] = 0; // mic1
             card->adc_mixer_indices[2] = 5; // mic2
@@ -1007,20 +1011,21 @@ static void perform_realtek_specific_settings(struct HDAudioChip *card, UWORD de
             send_command_4(card->codecnr, 0x10, VERB_SET_AMP_GAIN, INPUT_AMP_GAIN | AMP_GAIN_LR | (2 << 8), card); // unmute
             
             // HP-OUT pin (0x15)
-            //send_command_4(card->codecnr, 0x15, VERB_SET_AMP_GAIN, OUTPUT_AMP_GAIN | AMP_GAIN_LR, card); // set amplifier gain: unmute output of HP-OUT (Port-A)
+            send_command_4(card->codecnr, 0x15, VERB_SET_AMP_GAIN, OUTPUT_AMP_GAIN | AMP_GAIN_LR, card); // set amplifier gain: unmute output of HP-OUT (Port-A)
         
-            //send_command_12(card->codecnr, 0x15, VERB_SET_PIN_WIDGET_CONTROL, 0x40, card); // output enabled
+            send_command_12(card->codecnr, 0x15, VERB_SET_PIN_WIDGET_CONTROL, 0x40, card); // output enabled
             
             send_command_12(card->codecnr, 0x14, VERB_SET_EAPD, 0x2, card); // enable EAPD (external power amp)
             
-            //send_command_12(card->codecnr, 0x15, VERB_SET_EAPD, 0x2, card); // enable EAPD (external power amp)
-            
-            switch_nid_to_input(card, 0x15);
+            send_command_12(card->codecnr, 0x15, VERB_SET_EAPD, 0x2, card); // enable EAPD (external power amp)
         }
         else if (device == 0x269) // Dell mini etc.
         {
             bug("Adding ALC269 specific support\n");
             
+            card->speaker_nid = 0x14;
+            card->headphone_nid = 0x15;
+
             card->adc_mixer_indices[0] = 2; // line in
             card->adc_mixer_indices[1] = 0; // mic1
             card->adc_mixer_indices[2] = 1; // mic2
