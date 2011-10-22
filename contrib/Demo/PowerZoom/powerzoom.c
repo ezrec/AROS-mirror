@@ -181,7 +181,6 @@ void readpic(void)
     temprp.BitMap = dtobm;
     ReadPixelArray(imagebuffer, 0, 0, imagewidth * 4,
     	    	   &temprp, 0, 0, imagewidth, imageheight, RECTFMT_ARGB);
-    DeinitRastPort(&temprp);
     
     DisposeDTObject(dto); dto = NULL;
 }
