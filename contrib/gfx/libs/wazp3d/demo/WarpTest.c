@@ -73,6 +73,7 @@
 #include <exec/types.h>
 #include <exec/memory.h>
 #include <libraries/asl.h>
+#include <proto/arossupport.h>
 #include <proto/exec.h>
 #include <proto/intuition.h>
 #include <proto/cybergraphics.h>

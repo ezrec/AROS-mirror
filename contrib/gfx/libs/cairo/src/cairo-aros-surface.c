@@ -39,6 +39,7 @@
 
 #include <exec/types.h>
 #include <cybergraphx/cybergraphics.h>
+#include <proto/arossupport.h>
 #include <proto/cybergraphics.h>
 #include <proto/graphics.h>
 #include <aros/macros.h>
