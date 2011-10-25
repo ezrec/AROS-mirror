@@ -8,8 +8,8 @@ DEMODIR := $(AROS_TESTS)/rexx
 
 #MM- contrib-regina : \
 #MM      contrib-regina-rexxmast-arosc contrib-regina-rexxmast-reginac
-#MM contrib-regina-rexxmast-arosc : includes linklibs
-#MM contrib-regina-rexxmast-reginac : includes linklibs
+#MM contrib-regina-rexxmast-arosc : includes linklibs workbench-libs-rexxsyslib
+#MM contrib-regina-rexxmast-reginac : includes linklibs workbench-libs-rexxsyslib
 #MM- contrib-regina-quick : \
 #MM      contrib-regina-rexxmast-arosc-quick contrib-regina-rexxmast-reginac-quick
 
