@@ -471,9 +471,6 @@
 # /SDL/SDL_ttf/
 /SDL/SDL_ttf/mmakefile
 
-# /ScalosV2/
-/ScalosV2/mmakefile
-
 # /aminet/GadgetTest/
 /aminet/GadgetTest/mmakefile
 
@@ -1510,9 +1507,6 @@
 # /gfx/libs/wazp3d/
 /gfx/libs/wazp3d/mmakefile
 
-# /gfx/libs/wazp3d/Wazp3D-Settings-src/
-/gfx/libs/wazp3d/Wazp3D-Settings-src/mmakefile
-
 # /gfx/libs/wazp3d/Wazp3D-src/
 /gfx/libs/wazp3d/Wazp3D-src/mmakefile
 
@@ -1754,6 +1748,19 @@
 
 # /libini/
 /libini/mmakefile
+
+# /libs/desktop/
+/libs/desktop/mmakefile
+/libs/desktop/libdefs.h
+
+# /libs/security/
+/libs/security/mmakefile
+
+# /libs/thread/
+/libs/thread/mmakefile
+
+# /libs/thread/test/
+/libs/thread/test/mmakefile
 
 # /libxml2/
 /libxml2/mmakefile
