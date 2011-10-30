@@ -21,8 +21,8 @@
    Constant switching of GLX contexts is bad for performance,
    but solves the problem. */
 
-static struct SignalSemaphore GLOBAL_GLX_CONTEXT_SEM;
-static volatile GLXContext GLOBAL_GLX_CONTEXT;
+static struct SignalSemaphore global_glx_context_sem;
+static volatile GLXContext global_glx_context;
 static Display * global_x11_display;
 
 static struct TaskLocalStorage * ctxtls;
@@ -46,14 +46,16 @@ VOID HostGL_SetCurrentContext(AROSMesaContext ctx)
     InsertIntoTLS(ctxtls, ctx);
 }
 
+/* Note: This lock needs to be obtained before doing ANY X11 or GLX call - remember AROS is one
+   process to Linux and different AROS tasks cannot inter-mingle their X11/GLX calls */
 VOID HostGL_Lock()
 {
-    ObtainSemaphore(&GLOBAL_GLX_CONTEXT_SEM);
+    ObtainSemaphore(&global_glx_context_sem);
 }
 
 VOID HostGL_UnLock()
 {
-    ReleaseSemaphore(&GLOBAL_GLX_CONTEXT_SEM);
+    ReleaseSemaphore(&global_glx_context_sem);
 }
 
 /* This funtion needs to be called while holding the semaphore */
@@ -62,11 +64,11 @@ VOID HostGL_SetGlobalGLXContext()
     AROSMesaContext cur_ctx = HostGL_GetCurrentContext();
     if (cur_ctx)
     {
-        if (cur_ctx->glXctx != GLOBAL_GLX_CONTEXT)
+        if (cur_ctx->glXctx != global_glx_context)
         {
-            GLOBAL_GLX_CONTEXT = cur_ctx->glXctx;
+            global_glx_context = cur_ctx->glXctx;
             Display * dsp = HostGL_GetGlobalX11Display();
-            D(bug("TASK: 0x%x, GLX: 0x%x\n",FindTask(NULL), GLOBAL_GLX_CONTEXT));
+            D(bug("TASK: 0x%x, GLX: 0x%x\n",FindTask(NULL), global_glx_context));
 #if defined(RENDERER_SEPARATE_X_WINDOW)
             GLXCALL(glXMakeContextCurrent, dsp, cur_ctx->glXWindow, cur_ctx->glXWindow, cur_ctx->glXctx);
 #endif
@@ -77,15 +79,15 @@ VOID HostGL_SetGlobalGLXContext()
     }
     else
     {
-        GLOBAL_GLX_CONTEXT = NULL;
-        D(bug("TASK: 0x%x, GLX: 0x%x\n",FindTask(NULL), GLOBAL_GLX_CONTEXT));
+        global_glx_context = NULL;
+        D(bug("TASK: 0x%x, GLX: 0x%x\n",FindTask(NULL), global_glx_context));
     }
 }
 
 static int HostGL_Ctx_Manager_Init(LIBBASETYPEPTR LIBBASE)
 {
-    InitSemaphore(&GLOBAL_GLX_CONTEXT_SEM);
-    GLOBAL_GLX_CONTEXT = NULL;
+    InitSemaphore(&global_glx_context_sem);
+    global_glx_context = NULL;
     global_x11_display = XCALL(XOpenDisplay, NULL);
     ctxtls = CreateTLS();
     return 1;
