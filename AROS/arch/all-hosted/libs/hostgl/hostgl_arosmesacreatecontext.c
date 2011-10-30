@@ -134,7 +134,7 @@
     LONG                    screen;
     AROSMesaContext         amesa = NULL;
     LONG                    numreturned;
-    Display                 *dsp;
+    Display                 *dsp = NULL;
 #if defined(RENDERER_SEPARATE_X_WINDOW)
     XVisualInfo             *visinfo;
     GLXFBConfig             *windowfbconfigs;
