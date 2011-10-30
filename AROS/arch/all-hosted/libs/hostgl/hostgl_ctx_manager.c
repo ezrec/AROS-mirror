@@ -59,16 +59,18 @@ VOID HostGL_UnLock()
 }
 
 /* This funtion needs to be called while holding the semaphore */
-VOID HostGL_SetGlobalGLXContext()
+VOID HostGL_UpdateGlobalGLXContext()
 {
     AROSMesaContext cur_ctx = HostGL_GetCurrentContext();
+    Display * dsp = HostGL_GetGlobalX11Display();
+
     if (cur_ctx)
     {
         if (cur_ctx->glXctx != global_glx_context)
         {
             global_glx_context = cur_ctx->glXctx;
-            Display * dsp = HostGL_GetGlobalX11Display();
             D(bug("TASK: 0x%x, GLX: 0x%x\n",FindTask(NULL), global_glx_context));
+
 #if defined(RENDERER_SEPARATE_X_WINDOW)
             GLXCALL(glXMakeContextCurrent, dsp, cur_ctx->glXWindow, cur_ctx->glXWindow, cur_ctx->glXctx);
 #endif
@@ -81,6 +83,8 @@ VOID HostGL_SetGlobalGLXContext()
     {
         global_glx_context = NULL;
         D(bug("TASK: 0x%x, GLX: 0x%x\n",FindTask(NULL), global_glx_context));
+
+        GLXCALL(glXMakeContextCurrent, dsp, None, None, NULL);
     }
 }
 

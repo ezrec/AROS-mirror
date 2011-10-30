@@ -43,10 +43,10 @@
 
     D(bug("TASK: 0x%x, MAKE CURRENT 0x%x\n", FindTask(NULL), amesa->glXctx));
 
-    AROSMesaContext cur_ctx = HostGL_GetCurrentContext();
-
     if (amesa)
     {
+        AROSMesaContext cur_ctx = HostGL_GetCurrentContext();
+
         if (amesa != cur_ctx)
         {
             /* Recalculate buffer dimensions */
@@ -54,24 +54,15 @@
 
             /* Attach */
             HostGL_SetCurrentContext(amesa);
-
-            HostGL_SetGlobalGLXContext();
+            HostGL_UpdateGlobalGLXContext();
         }            
     }
     else
     {
         /* Detach */
         HostGL_SetCurrentContext(NULL);
-        Display * dsp = HostGL_GetGlobalX11Display();
-
-        if (cur_ctx != NULL)
-        {
-            HostGL_SetGlobalGLXContext();
-            GLXCALL(glXMakeContextCurrent, dsp, None, None, NULL);
-        }
+        HostGL_UpdateGlobalGLXContext();
     }
-
-    D(bug("TASK: 0x%x, MAKE CURRENT EXIT 0x%x\n", FindTask(NULL), amesa->glXctx));
 
     HostGL_UnLock();
 

@@ -12,7 +12,7 @@ AROSMesaContext HostGL_GetCurrentContext();
 VOID HostGL_SetCurrentContext(AROSMesaContext ctx);
 VOID HostGL_Lock();
 VOID HostGL_UnLock();
-VOID HostGL_SetGlobalGLXContext();
+VOID HostGL_UpdateGlobalGLXContext();
 Display * HostGL_GetGlobalX11Display();
 
 #endif /* HOSTGL_CTX_MANAGER_H */

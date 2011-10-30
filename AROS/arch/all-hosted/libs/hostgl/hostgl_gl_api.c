@@ -10,7 +10,7 @@
 
 #define HOSTGL_PRE                                          \
     HostGL_Lock();                                          \
-    HostGL_SetGlobalGLXContext();
+    HostGL_UpdateGlobalGLXContext();
 
 #define HOSTGL_POST                                         \
     HostGL_UnLock();
