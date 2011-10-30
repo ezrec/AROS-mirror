@@ -12,10 +12,10 @@
 #include <aros/debug.h>
 
 void *glx_handle = NULL;
-
 struct glx_func glx_func;
 
-static const char *glx_func_names[] = {
+static const char *glx_func_names[] =
+{
     "glXChooseFBConfig",
     "glXGetVisualFromFBConfig",
     "glXCreateNewContext",
@@ -35,7 +35,8 @@ static const char *gl_func_names[];
 
 APTR HostLibBase;
 
-static void *hostlib_load_so(const char *sofile, const char **names, void **funcptr) {
+static void *hostlib_load_so(const char *sofile, const char **names, void **funcptr)
+{
     void *handle;
     char *err;
     const char *name;
@@ -43,12 +44,14 @@ static void *hostlib_load_so(const char *sofile, const char **names, void **func
 
     D(bug("[glx] loading %d functions from %s\n", nfuncs, sofile));
 
-    if ((handle = HostLib_Open(sofile, &err)) == NULL) {
+    if ((handle = HostLib_Open(sofile, &err)) == NULL)
+    {
         bug("[glx] couldn't open '%s': %s\n", sofile, err);
         return NULL;
     }
 
-    while((name = names[i]) != NULL) {
+    while((name = names[i]) != NULL)
+    {
         funcptr[i] = HostLib_GetPointer(handle, name, &err);
         D(bug("%s(%x)\n", name, funcptr[i]));
         if (err != NULL) {
@@ -64,21 +67,25 @@ static void *hostlib_load_so(const char *sofile, const char **names, void **func
     return handle;
 }
 
-static void load_gl_functions(const char **names, void **funcptr) {
+static void load_gl_functions(const char **names, void **funcptr)
+{
     const char * name = NULL;
     int i = 0;
     
-    while ((name = names[i]) != NULL) {
+    while ((name = names[i]) != NULL)
+    {
         funcptr[i] = GLXCALL(glXGetProcAddress, name); /* NULLS are allowed */
         D(if (funcptr[i] == NULL) bug("[glx] Not found: %s\n", name));
         i++;
     }
 }
 
-static int glx_hostlib_init(LIBBASETYPEPTR LIBBASE) {
+static int glx_hostlib_init(LIBBASETYPEPTR LIBBASE)
+{
     D(bug("[glx] hostlib init\n"));
 
-    if ((HostLibBase = OpenResource("hostlib.resource")) == NULL) {
+    if ((HostLibBase = OpenResource("hostlib.resource")) == NULL)
+    {
         bug("[glx] couldn't open hostlib.resource\n");
         return FALSE;
     }
@@ -91,7 +98,8 @@ static int glx_hostlib_init(LIBBASETYPEPTR LIBBASE) {
     return TRUE;
 }
 
-static int glx_hostlib_expunge(LIBBASETYPEPTR LIBBASE) {
+static int glx_hostlib_expunge(LIBBASETYPEPTR LIBBASE)
+{
     D(bug("[glx] hostlib expunge\n"));
 
     if (glx_handle != NULL)
@@ -100,7 +108,11 @@ static int glx_hostlib_expunge(LIBBASETYPEPTR LIBBASE) {
     return TRUE;
 }
 
-static const char *gl_func_names[] = {
+ADD2INITLIB(glx_hostlib_init, 0)
+ADD2EXPUNGELIB(glx_hostlib_expunge, 0)
+
+static const char *gl_func_names[] =
+{
     "glClearIndex",
     "glClearColor",
     "glClear",
@@ -1396,7 +1408,4 @@ static const char *gl_func_names[] = {
     "glTextureBarrierNV",
     NULL
 };
-
-ADD2INITLIB(glx_hostlib_init, 0)
-ADD2EXPUNGELIB(glx_hostlib_expunge, 0)
 

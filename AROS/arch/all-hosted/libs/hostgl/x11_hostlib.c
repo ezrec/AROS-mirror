@@ -12,10 +12,10 @@
 #include <aros/debug.h>
 
 void *x11_handle = NULL;
-
 struct x11_func x11_func;
 
-static const char *x11_func_names[] = {
+static const char *x11_func_names[] =
+{
     "XOpenDisplay",
     "XCreateColormap",
     "XCreateWindow",
@@ -30,22 +30,26 @@ static const char *x11_func_names[] = {
 
 APTR HostLibBase;
 
-void *x11_hostlib_load_so(const char *sofile, const char **names, int nfuncs, void **funcptr) {
+void *x11_hostlib_load_so(const char *sofile, const char **names, int nfuncs, void **funcptr)
+{
     void *handle;
     char *err;
     int i;
 
     D(bug("[x11] loading %d functions from %s\n", nfuncs, sofile));
 
-    if ((handle = HostLib_Open(sofile, &err)) == NULL) {
+    if ((handle = HostLib_Open(sofile, &err)) == NULL)
+    {
         kprintf("[x11] couldn't open '%s': %s\n", sofile, err);
         return NULL;
     }
 
-    for (i = 0; i < nfuncs; i++) {
+    for (i = 0; i < nfuncs; i++)
+    {
         funcptr[i] = HostLib_GetPointer(handle, names[i], &err);
         D(bug("%s(%x)\n", names[i], funcptr[i]));
-        if (err != NULL) {
+        if (err != NULL)
+        {
             kprintf("[x11] couldn't get symbol '%s' from '%s': %s\n", names[i], sofile, err);
             HostLib_Close(handle, NULL);
             return NULL;
@@ -57,15 +61,18 @@ void *x11_hostlib_load_so(const char *sofile, const char **names, int nfuncs, vo
     return handle;
 }
 
-static int x11_hostlib_init(LIBBASETYPEPTR LIBBASE) {
+static int x11_hostlib_init(LIBBASETYPEPTR LIBBASE)
+{
     D(bug("[x11] hostlib init\n"));
 
-    if ((HostLibBase = OpenResource("hostlib.resource")) == NULL) {
+    if ((HostLibBase = OpenResource("hostlib.resource")) == NULL)
+    {
         kprintf("[x11] couldn't open hostlib.resource\n");
         return FALSE;
     }
 
-    if ((x11_handle = x11_hostlib_load_so(X11_SOFILE, x11_func_names, X11_NUM_FUNCS, (void **) &x11_func)) == NULL) {
+    if ((x11_handle = x11_hostlib_load_so(X11_SOFILE, x11_func_names, X11_NUM_FUNCS, (void **) &x11_func)) == NULL)
+    {
         HostLib_Close(x11_handle, NULL);
         return FALSE;
     }
@@ -73,7 +80,8 @@ static int x11_hostlib_init(LIBBASETYPEPTR LIBBASE) {
     return TRUE;
 }
 
-static int x11_hostlib_expunge(LIBBASETYPEPTR LIBBASE) {
+static int x11_hostlib_expunge(LIBBASETYPEPTR LIBBASE)
+{
     D(bug("[x11] hostlib expunge\n"));
 
     if (x11_handle != NULL)

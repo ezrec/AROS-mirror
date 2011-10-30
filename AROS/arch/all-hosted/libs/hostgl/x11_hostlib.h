@@ -9,7 +9,8 @@
 #endif
 #undef timeval
 
-struct x11_func {
+struct x11_func
+{
     Display * (*XOpenDisplay) ( const char* );
     Colormap (*XCreateColormap) ( Display* , Window , Visual* , int );
     Window (*XCreateWindow) ( Display* , Window , int , int , unsigned int , unsigned int , unsigned int , int , unsigned int , Visual* , unsigned long , XSetWindowAttributes* );
@@ -23,6 +24,8 @@ struct x11_func {
 extern void *x11_handle;
 extern struct x11_func x11_func;
 
+#define XCALL(func,...) (x11_func.func(__VA_ARGS__))
+
 #ifdef HOST_OS_linux
 #define X11_SOFILE    "libX11.so.6"
 #endif
@@ -34,7 +37,5 @@ extern struct x11_func x11_func;
 #ifndef X11_SOFILE
 #define X11_SOFILE    "libX11.so"
 #endif
-
-#define XCALL(func,...) (x11_func.func(__VA_ARGS__))
 
 #endif

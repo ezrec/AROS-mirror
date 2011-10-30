@@ -105,5 +105,6 @@ static int HostGL_Ctx_Manager_Expunge(LIBBASETYPEPTR LIBBASE)
     return 1;
 }
 
+/* These functions need to be at priority 1, so that XCALL/GLXCALL/GLCALL are made workable bofore them */
 ADD2INITLIB(HostGL_Ctx_Manager_Init, 1)
 ADD2EXPUNGELIB(HostGL_Ctx_Manager_Expunge, 1)
