@@ -9,15 +9,17 @@ include $(TOP)/config/make.cfg
 
 #MM workbench-libs-hostgl-module : includes
 
-MESA_API_DIRECTORY := $(SRCDIR)/workbench/libs/mesa/src/aros/arosmesa
+MESA_AROS_DIRECTORY := $(SRCDIR)/workbench/libs/mesa/src/aros
+MESA_API_DIRECTORY := $(MESA_AROS_DIRECTORY)/arosmesa
 MESA_ST_DIRECTORY := $(SRCDIR)/workbench/libs/mesa/src/gallium/state_trackers/arosmesa
 MESA_MAPI_DIRECTORY := $(SRCDIR)/workbench/libs/mesa/src/mapi
 
 LIBRARY_SOURCES = \
+                $(MESA_AROS_DIRECTORY)/tls \
                 $(MESA_API_DIRECTORY)/arosmesa_library_api \
                 $(MESA_ST_DIRECTORY)/arosmesa_funcs \
-                hostgl_init \
                 hostgl_gl_api \
+                hostgl_ctx_manager \
                 hostgl_arosmesacreatecontext \
                 hostgl_arosmesadestroycontext \
                 hostgl_arosmesagetconfig \
@@ -34,7 +36,7 @@ LINKLIB_SOURCES = \
                 $(MESA_API_DIRECTORY)/arosmesa_getprocaddress \
 
 
-USER_INCLUDES := -I$(MESA_API_DIRECTORY) -I$(MESA_ST_DIRECTORY) -I$(MESA_MAPI_DIRECTORY) -isystem $(GENINCDIR) $(HOST_X11_CFLAGS) $(KERNEL_INCLUDES)
+USER_INCLUDES := -I$(MESA_AROS_DIRECTORY) -I$(MESA_API_DIRECTORY) -I$(MESA_ST_DIRECTORY) -I$(MESA_MAPI_DIRECTORY) -isystem $(GENINCDIR) $(HOST_X11_CFLAGS) $(KERNEL_INCLUDES)
 USER_CFLAGS := -DHOST_OS_$(ARCH) -DAROSMESA_TYPES='"hostgl_types.h"'
 
 %build_module mmake=workbench-libs-hostgl-module \

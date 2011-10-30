@@ -3,9 +3,9 @@
     $Id$
 */
 
+#include "hostgl_ctx_manager.h"
 #include "glx_hostlib.h"
 #include "arosmesaapim.h"
-#include "hostgl_intern.h"
 
 void mglClearIndex (GLfloat c)
 {

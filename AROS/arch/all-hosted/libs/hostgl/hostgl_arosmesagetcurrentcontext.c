@@ -3,7 +3,7 @@
     $Id$
 */
 
-#include "hostgl_types.h"
+#include "hostgl_ctx_manager.h"
 #include <proto/exec.h>
 
 /*****************************************************************************
@@ -35,8 +35,7 @@
 {
     AROS_LIBFUNC_INIT
 
-    /* TODO: IMPLEMENT */
-    return NULL;
+    return HostGL_GetCurrentContext();
 
     AROS_LIBFUNC_EXIT
 }

@@ -3,8 +3,9 @@
     $Id$
 */
 
-#include "arosmesa_funcs.h"
 #include <proto/exec.h>
+#include "arosmesa_funcs.h"
+#include "hostgl_ctx_manager.h"
 
 /*****************************************************************************
 
@@ -37,29 +38,33 @@
 {
     AROS_LIBFUNC_INIT
 
+    AROSMesaContext cur_ctx = HostGL_GetCurrentContext();
+
     if (amesa)
     {
-        /* TODO: check if not the same */
-        /* struct st_context_iface * cur_ctx = glstapi->get_current(glstapi);*/
-        
-        /* if (amesa->st != cur_ctx) */
+        if (amesa != cur_ctx)
         {
             /* Recalculate buffer dimensions */
             AROSMesaRecalculateBufferWidthHeight(amesa);
 
             /* Attach */
-#if defined(RENDERER_SEPARATE_X_WINDOW)
-            GLXCALL(glXMakeContextCurrent, amesa->XDisplay, amesa->glXWindow, amesa->glXWindow, amesa->glXctx);
-#endif
-#if defined(RENDERER_PBUFFER_WPA)
-            GLXCALL(glXMakeContextCurrent, amesa->XDisplay, amesa->glXPbuffer, amesa->glXPbuffer, amesa->glXctx);
-#endif
+            HostGL_SetCurrentContext(amesa);
+            HOSTGL_PRE
+            /* HOSTGL_PRE will set up correct context internally */
+            HOSTGL_POST
         }            
     }
     else
     {
         /* Detach */
-        /* TODO: how to implement? XDisplay/GLXDrawable needed which are part of amesa */
+        HostGL_SetCurrentContext(NULL);
+
+        if (cur_ctx != NULL)
+        {
+            HOSTGL_PRE
+            GLXCALL(glXMakeContextCurrent, cur_ctx->XDisplay, None, None, NULL);
+            HOSTGL_POST
+        }
     }
 
     AROS_LIBFUNC_EXIT

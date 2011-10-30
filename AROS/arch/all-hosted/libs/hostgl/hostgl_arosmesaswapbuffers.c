@@ -3,7 +3,7 @@
     $Id$
 */
 
-#include "hostgl_types.h"
+#include "hostgl_ctx_manager.h"
 #include <proto/exec.h>
 #include <aros/debug.h>
 #if defined(RENDERER_PBUFFER_WPA)
@@ -12,6 +12,8 @@
 #include <cybergraphx/cybergraphics.h>
 static struct SignalSemaphore * GetX11SemaphoreFromBitmap(struct BitMap * bm);
 #endif
+//FIXME: TEMP
+#include <proto/dos.h>
 
 /*****************************************************************************
 
@@ -44,20 +46,26 @@ static struct SignalSemaphore * GetX11SemaphoreFromBitmap(struct BitMap * bm);
 *****************************************************************************/
 {
     AROS_LIBFUNC_INIT
+//FIXME TEMP
+Delay(1);
 
     if (amesa) 
     {
 #if defined(RENDERER_SEPARATE_X_WINDOW)
+        HOSTGL_PRE
         GLXCALL(glXSwapBuffers, amesa->XDisplay, amesa->glXWindow);
+        HOSTGL_POST
 #endif
 #if defined(RENDERER_PBUFFER_WPA)
         LONG line = 0;
         LONG width = amesa->framebuffer->width;
         LONG height = amesa->framebuffer->height;
         
+        HOSTGL_PRE
         ObtainSemaphore(GetX11SemaphoreFromBitmap(amesa->visible_rp->BitMap));
         GLCALL(glReadPixels, 0, 0, width, height, GL_BGRA, GL_UNSIGNED_BYTE, amesa->swapbuffer);
         ReleaseSemaphore(GetX11SemaphoreFromBitmap(amesa->visible_rp->BitMap));
+        HOSTGL_POST
 
         /* Flip image */
         for (line = 0; line < height / 2; line++)
