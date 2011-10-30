@@ -54,9 +54,8 @@
 
             /* Attach */
             HostGL_SetCurrentContext(amesa);
-            HOSTGL_PRE
-            /* HOSTGL_PRE will set up correct context internally */
-            HOSTGL_POST
+
+            HostGL_SetGlobalGLXContext();
         }            
     }
     else
@@ -67,9 +66,8 @@
 
         if (cur_ctx != NULL)
         {
-            HOSTGL_PRE
+            HostGL_SetGlobalGLXContext();
             GLXCALL(glXMakeContextCurrent, dsp, None, None, NULL);
-            HOSTGL_POST
         }
     }
 

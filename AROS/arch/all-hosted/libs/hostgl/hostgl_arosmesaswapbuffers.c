@@ -50,20 +50,22 @@ static struct SignalSemaphore * GetX11SemaphoreFromBitmap(struct BitMap * bm);
     if (amesa) 
     {
 #if defined(RENDERER_SEPARATE_X_WINDOW)
-        HOSTGL_PRE
+        HostGL_Lock();
+        HostGL_SetGlobalGLXContext();
         GLXCALL(glXSwapBuffers, amesa->XDisplay, amesa->glXWindow);
-        HOSTGL_POST
+        HostGL_UnLock();
 #endif
 #if defined(RENDERER_PBUFFER_WPA)
         LONG line = 0;
         LONG width = amesa->framebuffer->width;
         LONG height = amesa->framebuffer->height;
         
-        HOSTGL_PRE
+        HostGL_Lock();
+        HostGL_SetGlobalGLXContext();
         ObtainSemaphore(GetX11SemaphoreFromBitmap(amesa->visible_rp->BitMap));
         GLCALL(glReadPixels, 0, 0, width, height, GL_BGRA, GL_UNSIGNED_BYTE, amesa->swapbuffer);
         ReleaseSemaphore(GetX11SemaphoreFromBitmap(amesa->visible_rp->BitMap));
-        HOSTGL_POST
+        HostGL_UnLock();
 
         /* Flip image */
         for (line = 0; line < height / 2; line++)

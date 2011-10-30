@@ -8,6 +8,13 @@
 #include "arosmesaapim.h"
 #include <aros/debug.h>
 
+#define HOSTGL_PRE                                          \
+    HostGL_Lock();                                          \
+    HostGL_SetGlobalGLXContext();
+
+#define HOSTGL_POST                                         \
+    HostGL_UnLock();
+
 void mglClearIndex (GLfloat c)
 {
     HOSTGL_PRE

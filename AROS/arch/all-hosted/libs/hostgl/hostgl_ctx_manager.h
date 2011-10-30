@@ -15,11 +15,4 @@ VOID HostGL_UnLock();
 VOID HostGL_SetGlobalGLXContext();
 Display * HostGL_GetGlobalX11Display();
 
-#define HOSTGL_PRE                                          \
-    HostGL_Lock();                                          \
-    HostGL_SetGlobalGLXContext();
-
-#define HOSTGL_POST                                         \
-    HostGL_UnLock();
-
 #endif /* HOSTGL_CTX_MANAGER_H */
