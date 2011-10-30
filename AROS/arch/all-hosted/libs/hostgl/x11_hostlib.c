@@ -2,6 +2,7 @@
 
 #include <aros/symbolsets.h>
 
+#include "hostgl_renderer_config.h"
 #include "x11_hostlib.h"
 
 #include <proto/hostlib.h>
@@ -17,24 +18,26 @@ struct x11_func x11_func;
 static const char *x11_func_names[] =
 {
     "XOpenDisplay",
+    "XCloseDisplay",
+#if defined(RENDERER_SEPARATE_X_WINDOW)
     "XCreateColormap",
     "XCreateWindow",
-    "XCloseDisplay",
     "XDestroyWindow",
     "XFlush",
     "XFree",
-    "XMapWindow"
+    "XMapWindow",
+#endif
+    NULL
 };
-
-#define X11_NUM_FUNCS (8)
 
 APTR HostLibBase;
 
-void *x11_hostlib_load_so(const char *sofile, const char **names, int nfuncs, void **funcptr)
+void *x11_hostlib_load_so(const char *sofile, const char **names, void **funcptr)
 {
     void *handle;
     char *err;
-    int i;
+    const char *name;
+    int i = 0;
 
     D(bug("[x11] loading %d functions from %s\n", nfuncs, sofile));
 
@@ -44,9 +47,9 @@ void *x11_hostlib_load_so(const char *sofile, const char **names, int nfuncs, vo
         return NULL;
     }
 
-    for (i = 0; i < nfuncs; i++)
+    while((name = names[i]) != NULL)
     {
-        funcptr[i] = HostLib_GetPointer(handle, names[i], &err);
+        funcptr[i] = HostLib_GetPointer(handle, name, &err);
         D(bug("%s(%x)\n", names[i], funcptr[i]));
         if (err != NULL)
         {
@@ -54,6 +57,7 @@ void *x11_hostlib_load_so(const char *sofile, const char **names, int nfuncs, vo
             HostLib_Close(handle, NULL);
             return NULL;
         }
+        i++;
     }
 
     D(bug("[x11] done\n"));
@@ -71,7 +75,7 @@ static int x11_hostlib_init(LIBBASETYPEPTR LIBBASE)
         return FALSE;
     }
 
-    if ((x11_handle = x11_hostlib_load_so(X11_SOFILE, x11_func_names, X11_NUM_FUNCS, (void **) &x11_func)) == NULL)
+    if ((x11_handle = x11_hostlib_load_so(X11_SOFILE, x11_func_names, (void **) &x11_func)) == NULL)
     {
         HostLib_Close(x11_handle, NULL);
         return FALSE;

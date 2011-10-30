@@ -222,11 +222,11 @@
     
     visinfo = GLXCALL(glXGetVisualFromFBConfig, dsp, windowfbconfigs[0]);
 
-    swa.colormap = XCALL(XCreateColormap, dsp, RootWindow(amesa->XDisplay, screen), visinfo->visual, AllocNone);
+    swa.colormap = XCALL(XCreateColormap, dsp, RootWindow(dsp, screen), visinfo->visual, AllocNone);
     swamask = CWColormap;
 
     /* Create X window */
-    amesa->XWindow = XCALL(XCreateWindow, dsp, RootWindow(amesa->XDisplay, screen),
+    amesa->XWindow = XCALL(XCreateWindow, dsp, RootWindow(dsp, screen),
         amesa->left, amesa->top, amesa->framebuffer->width, amesa->framebuffer->height, 0,
         visinfo->depth, InputOutput, visinfo->visual, swamask, &swa);
     

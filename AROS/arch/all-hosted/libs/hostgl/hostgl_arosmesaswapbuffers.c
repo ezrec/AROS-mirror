@@ -50,9 +50,11 @@ static struct SignalSemaphore * GetX11SemaphoreFromBitmap(struct BitMap * bm);
     if (amesa) 
     {
 #if defined(RENDERER_SEPARATE_X_WINDOW)
+        Display * dsp = NULL;
         HostGL_Lock();
         HostGL_UpdateGlobalGLXContext();
-        GLXCALL(glXSwapBuffers, amesa->XDisplay, amesa->glXWindow);
+        dsp = HostGL_GetGlobalX11Display();
+        GLXCALL(glXSwapBuffers, dsp, amesa->glXWindow);
         HostGL_UnLock();
 #endif
 #if defined(RENDERER_PBUFFER_WPA)

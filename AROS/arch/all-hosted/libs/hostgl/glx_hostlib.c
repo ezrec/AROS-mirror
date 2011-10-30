@@ -2,6 +2,7 @@
 
 #include <aros/symbolsets.h>
 
+#include "hostgl_renderer_config.h"
 #include "glx_hostlib.h"
 
 #include <proto/hostlib.h>
@@ -17,16 +18,20 @@ struct glx_func glx_func;
 static const char *glx_func_names[] =
 {
     "glXChooseFBConfig",
-    "glXGetVisualFromFBConfig",
     "glXCreateNewContext",
     "glXDestroyContext",
-    "glXCreateWindow",
-    "glXDestroyWindow",
-    "glXCreatePbuffer",
-    "glXDestroyPbuffer",
     "glXGetProcAddress",
     "glXMakeContextCurrent",
     "glXSwapBuffers",
+#if defined(RENDERER_SEPARATE_X_WINDOW)
+    "glXGetVisualFromFBConfig",
+    "glXCreateWindow",
+    "glXDestroyWindow",
+#endif
+#if defined(RENDERER_PBUFFER_WPA)
+    "glXCreatePbuffer",
+    "glXDestroyPbuffer",
+#endif
     NULL
 };
 

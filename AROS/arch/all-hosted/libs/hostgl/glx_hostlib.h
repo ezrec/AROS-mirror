@@ -8,16 +8,20 @@
 struct glx_func
 {
     GLXFBConfig * (*glXChooseFBConfig) (Display *dpy, int screen, const int *attribList, int *nitems);
-    XVisualInfo * (*glXGetVisualFromFBConfig) (Display *dpy, GLXFBConfig config);
     GLXContext (*glXCreateNewContext) (Display *dpy, GLXFBConfig config, int renderType, GLXContext shareList, Bool direct);
     void (*glXDestroyContext) (Display *dpy, GLXContext ctx);
-    GLXWindow (*glXCreateWindow) (Display *dpy, GLXFBConfig config, Window win, const int *attribList);
-    void (*glXDestroyWindow) (Display *dpy, GLXWindow window);
-    GLXPbuffer (*glXCreatePbuffer) (Display *dpy, GLXFBConfig config, const int *attribList);
-    void (*glXDestroyPbuffer) (Display *dpy, GLXPbuffer pbuf);
     void * (*glXGetProcAddress) (const GLubyte *procname);     /* glXGetProcAddress is only to be used internally */
     Bool (*glXMakeContextCurrent) (Display *dpy, GLXDrawable draw, GLXDrawable read, GLXContext ctx);
     void (*glXSwapBuffers) (Display *dpy, GLXDrawable drawable);
+#if defined(RENDERER_SEPARATE_X_WINDOW)
+    XVisualInfo * (*glXGetVisualFromFBConfig) (Display *dpy, GLXFBConfig config);
+    GLXWindow (*glXCreateWindow) (Display *dpy, GLXFBConfig config, Window win, const int *attribList);
+    void (*glXDestroyWindow) (Display *dpy, GLXWindow window);
+#endif
+#if defined(RENDERER_PBUFFER_WPA)
+    GLXPbuffer (*glXCreatePbuffer) (Display *dpy, GLXFBConfig config, const int *attribList);
+    void (*glXDestroyPbuffer) (Display *dpy, GLXPbuffer pbuf);
+#endif
 };
 
 extern void *glx_handle;

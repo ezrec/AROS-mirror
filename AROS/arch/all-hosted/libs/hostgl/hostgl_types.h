@@ -8,11 +8,10 @@
 
 #include <GL/arosmesa.h>
 
+#include "hostgl_renderer_config.h"
+
 #include "x11_hostlib.h"
 #include "glx_hostlib.h"
-
-#undef RENDERER_SEPARATE_X_WINDOW
-#define RENDERER_PBUFFER_WPA
 
 struct arosmesa_framebuffer
 {
