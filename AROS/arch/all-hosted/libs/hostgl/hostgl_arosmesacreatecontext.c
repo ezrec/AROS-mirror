@@ -134,6 +134,7 @@
     LONG                    screen;
     AROSMesaContext         amesa = NULL;
     LONG                    numreturned;
+    Display                 *dsp;
 #if defined(RENDERER_SEPARATE_X_WINDOW)
     XVisualInfo             *visinfo;
     GLXFBConfig             *windowfbconfigs;
@@ -205,13 +206,13 @@
 
     /* X/GLX initialization */
 
-    /* Open connection with the server */
-    amesa->XDisplay = XCALL(XOpenDisplay, NULL);
-    screen = DefaultScreen(amesa->XDisplay);
+    /* Get connection with the server */
+    dsp = HostGL_GetGlobalX11Display();
+    screen = DefaultScreen(dsp);
     
 #if defined(RENDERER_SEPARATE_X_WINDOW)
     /* Choose window config */
-    windowfbconfigs = GLXCALL(glXChooseFBConfig, amesa->XDisplay, screen, windowfbattributes, &numreturned);
+    windowfbconfigs = GLXCALL(glXChooseFBConfig, dsp, screen, windowfbattributes, &numreturned);
     
     if (windowfbconfigs == NULL)
     {
@@ -219,31 +220,31 @@
         goto error_out;
     }
     
-    visinfo = GLXCALL(glXGetVisualFromFBConfig, amesa->XDisplay, windowfbconfigs[0]);
+    visinfo = GLXCALL(glXGetVisualFromFBConfig, dsp, windowfbconfigs[0]);
 
-    swa.colormap = XCALL(XCreateColormap, amesa->XDisplay, RootWindow(amesa->XDisplay, screen), visinfo->visual, AllocNone);
+    swa.colormap = XCALL(XCreateColormap, dsp, RootWindow(amesa->XDisplay, screen), visinfo->visual, AllocNone);
     swamask = CWColormap;
 
     /* Create X window */
-    amesa->XWindow = XCALL(XCreateWindow, amesa->XDisplay, RootWindow(amesa->XDisplay, screen),
+    amesa->XWindow = XCALL(XCreateWindow, dsp, RootWindow(amesa->XDisplay, screen),
         amesa->left, amesa->top, amesa->framebuffer->width, amesa->framebuffer->height, 0,
         visinfo->depth, InputOutput, visinfo->visual, swamask, &swa);
     
     /* Create GLX window */
-    amesa->glXWindow = GLXCALL(glXCreateWindow, amesa->XDisplay, windowfbconfigs[0], amesa->XWindow, NULL);
+    amesa->glXWindow = GLXCALL(glXCreateWindow, dsp, windowfbconfigs[0], amesa->XWindow, NULL);
 
     /* Map (show) the window */
-    XCALL(XMapWindow, amesa->XDisplay, amesa->XWindow);
+    XCALL(XMapWindow, dsp, amesa->XWindow);
     
-    XCALL(XFlush, amesa->XDisplay);
+    XCALL(XFlush, dsp);
 
     /* Create GL context */
-    amesa->glXctx = GLXCALL(glXCreateNewContext, amesa->XDisplay, windowfbconfigs[0], GLX_RGBA_TYPE, NULL, True);
+    amesa->glXctx = GLXCALL(glXCreateNewContext, dsp, windowfbconfigs[0], GLX_RGBA_TYPE, NULL, True);
 #endif
 
 #if defined(RENDERER_PBUFFER_WPA)
     /* Choose window config */
-    pbufferfbconfigs = GLXCALL(glXChooseFBConfig, amesa->XDisplay, screen, pbufferfbattributes, &numreturned);
+    pbufferfbconfigs = GLXCALL(glXChooseFBConfig, dsp, screen, pbufferfbattributes, &numreturned);
     
     if (pbufferfbconfigs == NULL)
     {
@@ -254,13 +255,13 @@
     /* Create GLX Pbuffer */
     pbufferattributes[1] = amesa->framebuffer->width;
     pbufferattributes[3] = amesa->framebuffer->height;
-    amesa->glXPbuffer = GLXCALL(glXCreatePbuffer, amesa->XDisplay, pbufferfbconfigs[0], pbufferattributes);
+    amesa->glXPbuffer = GLXCALL(glXCreatePbuffer, dsp, pbufferfbconfigs[0], pbufferattributes);
     
     amesa->swapbuffer       = AllocVec(amesa->framebuffer->width * amesa->framebuffer->height * 4, MEMF_ANY);
     amesa->swapbufferline   = AllocVec(amesa->framebuffer->width * 4, MEMF_ANY);
 
     /* Create GL context */
-    amesa->glXctx = GLXCALL(glXCreateNewContext, amesa->XDisplay, pbufferfbconfigs[0], GLX_RGBA_TYPE, NULL, True);
+    amesa->glXctx = GLXCALL(glXCreateNewContext, dsp, pbufferfbconfigs[0], GLX_RGBA_TYPE, NULL, True);
 #endif
     
     if (!amesa->glXctx)
@@ -277,15 +278,14 @@
 
 error_out:
 #if defined(RENDERER_SEPARATE_X_WINDOW)
-    if (amesa && amesa->glXWindow) GLXCALL(glXDestroyWindow, amesa->XDisplay, amesa->glXWindow);
-    if (amesa && amesa->XWindow) XCALL(XDestroyWindow, amesa->XDisplay, amesa->XWindow);
+    if (amesa && amesa->glXWindow) GLXCALL(glXDestroyWindow, dsp, amesa->glXWindow);
+    if (amesa && amesa->XWindow) XCALL(XDestroyWindow, dsp, amesa->XWindow);
 #endif
 #if defined(RENDERER_PBUFFER_WPA)
     if (amesa && amesa->swapbufferline) FreeVec(amesa->swapbufferline);
     if (amesa && amesa->swapbuffer) FreeVec(amesa->swapbuffer);
-    if (amesa && amesa->glXPbuffer) GLXCALL(glXDestroyPbuffer, amesa->XDisplay, amesa->glXPbuffer);
+    if (amesa && amesa->glXPbuffer) GLXCALL(glXDestroyPbuffer, dsp, amesa->glXPbuffer);
 #endif
-    if (amesa && amesa->XDisplay) XCALL(XCloseDisplay, amesa->XDisplay);
     if (amesa && amesa->framebuffer) FreeVec(amesa->framebuffer);
     if (amesa) AROSMesaDestroyContext(amesa);
 

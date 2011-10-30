@@ -11,10 +11,6 @@
 
 #include LC_LIBDEFS_FILE
 
-static struct TaskLocalStorage * ctxtls;
-
-#include "glx_hostlib.h"
-
 /* AROS is just one process to host, thus it can only have
    one current GLX context. On the other hand, there can
    be many GL apps running under AROS at the same time, each
@@ -27,6 +23,18 @@ static struct TaskLocalStorage * ctxtls;
 
 static struct SignalSemaphore GLOBAL_GLX_CONTEXT_SEM;
 static volatile GLXContext GLOBAL_GLX_CONTEXT;
+static Display * global_x11_display;
+
+static struct TaskLocalStorage * ctxtls;
+
+
+/* Note: only one AROS task at a time may send commands via the display. Code
+   acquiring display must guarantee this. Opening display in the task itself
+   won't help - just use the this pointer and serialize calls */
+Display * HostGL_GetGlobalX11Display()
+{
+    return global_x11_display;
+}
 
 AROSMesaContext HostGL_GetCurrentContext()
 {
@@ -57,12 +65,13 @@ VOID HostGL_SetGlobalGLXContext()
         if (cur_ctx->glXctx != GLOBAL_GLX_CONTEXT)
         {
             GLOBAL_GLX_CONTEXT = cur_ctx->glXctx;
+            Display * dsp = HostGL_GetGlobalX11Display();
             D(bug("TASK: 0x%x, GLX: 0x%x\n",FindTask(NULL), GLOBAL_GLX_CONTEXT));
 #if defined(RENDERER_SEPARATE_X_WINDOW)
-            GLXCALL(glXMakeContextCurrent, cur_ctx->XDisplay, cur_ctx->glXWindow, cur_ctx->glXWindow, cur_ctx->glXctx);
+            GLXCALL(glXMakeContextCurrent, dsp, cur_ctx->glXWindow, cur_ctx->glXWindow, cur_ctx->glXctx);
 #endif
 #if defined(RENDERER_PBUFFER_WPA)
-            GLXCALL(glXMakeContextCurrent, cur_ctx->XDisplay, cur_ctx->glXPbuffer, cur_ctx->glXPbuffer, cur_ctx->glXctx);
+            GLXCALL(glXMakeContextCurrent, dsp, cur_ctx->glXPbuffer, cur_ctx->glXPbuffer, cur_ctx->glXctx);
 #endif  
         }
     }
@@ -77,6 +86,7 @@ static int HostGL_Ctx_Manager_Init(LIBBASETYPEPTR LIBBASE)
 {
     InitSemaphore(&GLOBAL_GLX_CONTEXT_SEM);
     GLOBAL_GLX_CONTEXT = NULL;
+    global_x11_display = XCALL(XOpenDisplay, NULL);
     ctxtls = CreateTLS();
     return 1;
 }
@@ -84,8 +94,10 @@ static int HostGL_Ctx_Manager_Init(LIBBASETYPEPTR LIBBASE)
 static int HostGL_Ctx_Manager_Expunge(LIBBASETYPEPTR LIBBASE)
 {
     DestroyTLS(ctxtls);
+    XCALL(XCloseDisplay, global_x11_display);
+//TODO: destroy global glx context if not null
     return 1;
 }
 
-ADD2INITLIB(HostGL_Ctx_Manager_Init, 0)
-ADD2EXPUNGELIB(HostGL_Ctx_Manager_Expunge, 0)
+ADD2INITLIB(HostGL_Ctx_Manager_Init, 1)
+ADD2EXPUNGELIB(HostGL_Ctx_Manager_Expunge, 1)

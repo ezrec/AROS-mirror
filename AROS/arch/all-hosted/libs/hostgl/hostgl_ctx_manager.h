@@ -13,6 +13,7 @@ VOID HostGL_SetCurrentContext(AROSMesaContext ctx);
 VOID HostGL_Lock();
 VOID HostGL_UnLock();
 VOID HostGL_SetGlobalGLXContext();
+Display * HostGL_GetGlobalX11Display();
 
 #define HOSTGL_PRE                                          \
     HostGL_Lock();                                          \

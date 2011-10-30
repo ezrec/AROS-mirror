@@ -24,7 +24,6 @@ struct arosmesa_framebuffer
 /* AROSMesa context */
 struct arosmesa_context
 {
-    Display     *XDisplay;
 #if defined(RENDERER_SEPARATE_X_WINDOW)
     Window      XWindow;
     GLXWindow   glXWindow;

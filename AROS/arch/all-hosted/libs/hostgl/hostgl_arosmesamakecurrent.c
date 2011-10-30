@@ -63,11 +63,12 @@
     {
         /* Detach */
         HostGL_SetCurrentContext(NULL);
+        Display * dsp = HostGL_GetGlobalX11Display();
 
         if (cur_ctx != NULL)
         {
             HOSTGL_PRE
-            GLXCALL(glXMakeContextCurrent, cur_ctx->XDisplay, None, None, NULL);
+            GLXCALL(glXMakeContextCurrent, dsp, None, None, NULL);
             HOSTGL_POST
         }
     }

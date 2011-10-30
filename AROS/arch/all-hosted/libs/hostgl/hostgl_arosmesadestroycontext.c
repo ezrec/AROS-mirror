@@ -3,7 +3,7 @@
     $Id$
 */
 
-#include "hostgl_types.h"
+#include "hostgl_ctx_manager.h"
 #include <proto/exec.h>
 #include <aros/debug.h>
 
@@ -41,17 +41,17 @@
 
     if (amesa)
     {
-        GLXCALL(glXDestroyContext, amesa->XDisplay, amesa->glXctx);
+        Display * dsp = HostGL_GetGlobalX11Display();
+        GLXCALL(glXDestroyContext, dsp, amesa->glXctx);
 #if defined(RENDERER_SEPARATE_X_WINDOW)
-        GLXCALL(glXDestroyWindow, amesa->XDisplay, amesa->glXWindow);
-        XCALL(XDestroyWindow, amesa->XDisplay, amesa->XWindow);
+        GLXCALL(glXDestroyWindow, dsp, amesa->glXWindow);
+        XCALL(XDestroyWindow, dsp, amesa->XWindow);
 #endif
 #if defined(RENDERER_PBUFFER_WPA)
-        GLXCALL(glXDestroyPbuffer, amesa->XDisplay, amesa->glXPbuffer);
+        GLXCALL(glXDestroyPbuffer, dsp, amesa->glXPbuffer);
         FreeVec(amesa->swapbufferline);
         FreeVec(amesa->swapbuffer);
 #endif
-        XCALL(XCloseDisplay, amesa->XDisplay);
         
         FreeVec(amesa->framebuffer);
         AROSMesaDestroyContext(amesa);
