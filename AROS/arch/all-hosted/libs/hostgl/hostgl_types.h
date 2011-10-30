@@ -53,4 +53,4 @@ struct arosmesa_context
     ULONG                      left, right;            /* offsets due to window border */    
 };
 
-#endif /* HOSTGL_INTERNAL_H */
+#endif /* HOSTGL_TYPES_H */

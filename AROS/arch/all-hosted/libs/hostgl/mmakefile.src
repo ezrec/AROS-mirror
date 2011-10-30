@@ -16,6 +16,7 @@ MESA_MAPI_DIRECTORY := $(SRCDIR)/workbench/libs/mesa/src/mapi
 LIBRARY_SOURCES = \
                 $(MESA_API_DIRECTORY)/arosmesa_library_api \
                 $(MESA_ST_DIRECTORY)/arosmesa_funcs \
+                hostgl_init \
                 hostgl_gl_api \
                 hostgl_arosmesacreatecontext \
                 hostgl_arosmesadestroycontext \
