@@ -41,7 +41,7 @@
 
     HostGL_Lock();
 
-    D(bug("TASK: 0x%x, MAKE CURRENT 0x%x\n", FindTask(NULL), amesa->glXctx));
+    D(bug("[HostGL] TASK: 0x%x, MAKE CURRENT 0x%x\n", FindTask(NULL), amesa->glXctx));
 
     if (amesa)
     {

@@ -181,14 +181,14 @@
     /* Allocate arosmesa_context struct initialized to zeros */
     if (!(amesa = (AROSMesaContext)AllocVec(sizeof(struct arosmesa_context), MEMF_PUBLIC | MEMF_CLEAR)))
     {
-        D(bug("[AROSMESA] AROSMesaCreateContext: ERROR - failed to allocate AROSMesaContext\n"));
+        D(bug("[HostGL] AROSMesaCreateContext: ERROR - failed to allocate AROSMesaContext\n"));
         goto error_out;
     }
     
     AROSMesaSelectRastPort(amesa, tagList);
     if (!amesa->visible_rp)
     {
-        D(bug("[AROSMESA] AROSMesaCreateContext: ERROR - failed to select visible rastport\n"));
+        D(bug("[HostGL] AROSMesaCreateContext: ERROR - failed to select visible rastport\n"));
         goto error_out;
     }
     
@@ -197,7 +197,7 @@
     amesa->framebuffer = (struct arosmesa_framebuffer *)AllocVec(sizeof(struct arosmesa_framebuffer), MEMF_PUBLIC | MEMF_CLEAR);
     if (!amesa->framebuffer)
     {
-        D(bug("[AROSMESA] AROSMesaCreateContext: ERROR -  failed to create frame buffer\n"));
+        D(bug("[HostGL] AROSMesaCreateContext: ERROR -  failed to create frame buffer\n"));
         goto error_out;
     }
 
@@ -216,7 +216,7 @@
     
     if (windowfbconfigs == NULL)
     {
-        D(bug("[AROSMESA] AROSMesaCreateContext: ERROR -  failed to retrieve windowfbconfigs\n"));
+        D(bug("[HostGL] AROSMesaCreateContext: ERROR -  failed to retrieve windowfbconfigs\n"));
         goto error_out;
     }
     
@@ -248,7 +248,7 @@
     
     if (pbufferfbconfigs == NULL)
     {
-        D(bug("[AROSMESA] AROSMesaCreateContext: ERROR -  failed to retrieve windowfbconfigs\n"));
+        D(bug("[HostGL] AROSMesaCreateContext: ERROR -  failed to retrieve windowfbconfigs\n"));
         goto error_out;
     }
 
@@ -266,11 +266,11 @@
     
     if (!amesa->glXctx)
     {
-        D(bug("[AROSMESA] AROSMesaCreateContext: ERROR -  failed to create GLX context\n"));
+        D(bug("[HostGL] AROSMesaCreateContext: ERROR -  failed to create GLX context\n"));
         goto error_out;
     }
 
-    D(bug("TASK: 0x%x, CREATE 0x%x\n", FindTask(NULL), amesa->glXctx));
+    D(bug("[HostGL] TASK: 0x%x, CREATE 0x%x\n", FindTask(NULL), amesa->glXctx));
 
     HostGL_UnLock();
 

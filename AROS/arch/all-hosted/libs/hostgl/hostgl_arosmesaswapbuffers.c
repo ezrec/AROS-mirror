@@ -45,7 +45,7 @@ static struct SignalSemaphore * GetX11SemaphoreFromBitmap(struct BitMap * bm);
 {
     AROS_LIBFUNC_INIT
 
-    D(bug("TASK: 0x%x, SWAP 0x%x\n", FindTask(NULL), amesa->glXctx));
+    D(bug("[HostGL] TASK: 0x%x, SWAP 0x%x\n", FindTask(NULL), amesa->glXctx));
 
     if (amesa) 
     {

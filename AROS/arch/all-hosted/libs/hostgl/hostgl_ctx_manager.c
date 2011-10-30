@@ -69,7 +69,7 @@ VOID HostGL_UpdateGlobalGLXContext()
         if (cur_ctx->glXctx != global_glx_context)
         {
             global_glx_context = cur_ctx->glXctx;
-            D(bug("TASK: 0x%x, GLX: 0x%x\n",FindTask(NULL), global_glx_context));
+            D(bug("[HostGL] TASK: 0x%x, GLX: 0x%x\n",FindTask(NULL), global_glx_context));
 
 #if defined(RENDERER_SEPARATE_X_WINDOW)
             GLXCALL(glXMakeContextCurrent, dsp, cur_ctx->glXWindow, cur_ctx->glXWindow, cur_ctx->glXctx);
@@ -82,7 +82,7 @@ VOID HostGL_UpdateGlobalGLXContext()
     else
     {
         global_glx_context = NULL;
-        D(bug("TASK: 0x%x, GLX: 0x%x\n",FindTask(NULL), global_glx_context));
+        D(bug("[HostGL] TASK: 0x%x, GLX: 0x%x\n",FindTask(NULL), global_glx_context));
 
         GLXCALL(glXMakeContextCurrent, dsp, None, None, NULL);
     }

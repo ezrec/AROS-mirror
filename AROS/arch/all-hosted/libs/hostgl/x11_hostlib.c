@@ -39,11 +39,11 @@ void *x11_hostlib_load_so(const char *sofile, const char **names, void **funcptr
     const char *name;
     int i = 0;
 
-    D(bug("[x11] loading %d functions from %s\n", nfuncs, sofile));
+    D(bug("[HostGL] loading %d functions from %s\n", nfuncs, sofile));
 
     if ((handle = HostLib_Open(sofile, &err)) == NULL)
     {
-        kprintf("[x11] couldn't open '%s': %s\n", sofile, err);
+        kprintf("[HostGL] couldn't open '%s': %s\n", sofile, err);
         return NULL;
     }
 
@@ -53,7 +53,7 @@ void *x11_hostlib_load_so(const char *sofile, const char **names, void **funcptr
         D(bug("%s(%x)\n", names[i], funcptr[i]));
         if (err != NULL)
         {
-            kprintf("[x11] couldn't get symbol '%s' from '%s': %s\n", names[i], sofile, err);
+            kprintf("[HostGL] couldn't get symbol '%s' from '%s': %s\n", names[i], sofile, err);
             HostLib_Close(handle, NULL);
             return NULL;
         }
@@ -67,11 +67,11 @@ void *x11_hostlib_load_so(const char *sofile, const char **names, void **funcptr
 
 static int x11_hostlib_init(LIBBASETYPEPTR LIBBASE)
 {
-    D(bug("[x11] hostlib init\n"));
+    D(bug("[HostGL] X11 hostlib init\n"));
 
     if ((HostLibBase = OpenResource("hostlib.resource")) == NULL)
     {
-        kprintf("[x11] couldn't open hostlib.resource\n");
+        kprintf("[HostGL] couldn't open hostlib.resource\n");
         return FALSE;
     }
 
@@ -86,7 +86,7 @@ static int x11_hostlib_init(LIBBASETYPEPTR LIBBASE)
 
 static int x11_hostlib_expunge(LIBBASETYPEPTR LIBBASE)
 {
-    D(bug("[x11] hostlib expunge\n"));
+    D(bug("[HostGL] X11 hostlib expunge\n"));
 
     if (x11_handle != NULL)
         HostLib_Close(x11_handle, NULL);

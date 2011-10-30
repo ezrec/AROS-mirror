@@ -47,11 +47,11 @@ static void *hostlib_load_so(const char *sofile, const char **names, void **func
     const char *name;
     int i = 0;
 
-    D(bug("[glx] loading %d functions from %s\n", nfuncs, sofile));
+    D(bug("[HostGL] loading %d functions from %s\n", nfuncs, sofile));
 
     if ((handle = HostLib_Open(sofile, &err)) == NULL)
     {
-        bug("[glx] couldn't open '%s': %s\n", sofile, err);
+        bug("[HostGL] couldn't open '%s': %s\n", sofile, err);
         return NULL;
     }
 
@@ -60,14 +60,14 @@ static void *hostlib_load_so(const char *sofile, const char **names, void **func
         funcptr[i] = HostLib_GetPointer(handle, name, &err);
         D(bug("%s(%x)\n", name, funcptr[i]));
         if (err != NULL) {
-            bug("[glx] couldn't get symbol '%s' from '%s': %s\n", name, sofile, err);
+            bug("[HostGL] couldn't get symbol '%s' from '%s': %s\n", name, sofile, err);
             HostLib_Close(handle, NULL);
             return NULL;
         }
         i++;
     }
 
-    D(bug("[glx] done\n"));
+    D(bug("[HostGL] GLX done\n"));
 
     return handle;
 }
@@ -80,18 +80,18 @@ static void load_gl_functions(const char **names, void **funcptr)
     while ((name = names[i]) != NULL)
     {
         funcptr[i] = GLXCALL(glXGetProcAddress, name); /* NULLS are allowed */
-        D(if (funcptr[i] == NULL) bug("[glx] Not found: %s\n", name));
+        D(if (funcptr[i] == NULL) bug("[HostGL] Not found: %s\n", name));
         i++;
     }
 }
 
 static int glx_hostlib_init(LIBBASETYPEPTR LIBBASE)
 {
-    D(bug("[glx] hostlib init\n"));
+    D(bug("[HostGL] GLX hostlib init\n"));
 
     if ((HostLibBase = OpenResource("hostlib.resource")) == NULL)
     {
-        bug("[glx] couldn't open hostlib.resource\n");
+        bug("[HostGL] couldn't open hostlib.resource\n");
         return FALSE;
     }
 
@@ -105,7 +105,7 @@ static int glx_hostlib_init(LIBBASETYPEPTR LIBBASE)
 
 static int glx_hostlib_expunge(LIBBASETYPEPTR LIBBASE)
 {
-    D(bug("[glx] hostlib expunge\n"));
+    D(bug("[HostGL] GLX hostlib expunge\n"));
 
     if (glx_handle != NULL)
         HostLib_Close(glx_handle, NULL);
