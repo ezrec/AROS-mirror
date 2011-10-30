@@ -12,8 +12,6 @@
 #include <cybergraphx/cybergraphics.h>
 static struct SignalSemaphore * GetX11SemaphoreFromBitmap(struct BitMap * bm);
 #endif
-//FIXME: TEMP
-#include <proto/dos.h>
 
 /*****************************************************************************
 
@@ -46,8 +44,8 @@ static struct SignalSemaphore * GetX11SemaphoreFromBitmap(struct BitMap * bm);
 *****************************************************************************/
 {
     AROS_LIBFUNC_INIT
-//FIXME TEMP
-Delay(1);
+
+    D(bug("TASK: 0x%x, SWAP 0x%x\n", FindTask(NULL), amesa->glXctx));
 
     if (amesa) 
     {

@@ -7,6 +7,7 @@
 #include <proto/exec.h>
 #include "hostgl_ctx_manager.h"
 #include "tls.h"
+#include <aros/debug.h>
 
 #include LC_LIBDEFS_FILE
 
@@ -56,6 +57,7 @@ VOID HostGL_SetGlobalGLXContext()
         if (cur_ctx->glXctx != GLOBAL_GLX_CONTEXT)
         {
             GLOBAL_GLX_CONTEXT = cur_ctx->glXctx;
+            D(bug("TASK: 0x%x, GLX: 0x%x\n",FindTask(NULL), GLOBAL_GLX_CONTEXT));
 #if defined(RENDERER_SEPARATE_X_WINDOW)
             GLXCALL(glXMakeContextCurrent, cur_ctx->XDisplay, cur_ctx->glXWindow, cur_ctx->glXWindow, cur_ctx->glXctx);
 #endif
@@ -67,6 +69,7 @@ VOID HostGL_SetGlobalGLXContext()
     else
     {
         GLOBAL_GLX_CONTEXT = NULL;
+        D(bug("TASK: 0x%x, GLX: 0x%x\n",FindTask(NULL), GLOBAL_GLX_CONTEXT));
     }
 }
 

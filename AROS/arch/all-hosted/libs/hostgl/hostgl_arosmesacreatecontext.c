@@ -3,6 +3,7 @@
     $Id$
 */
 
+#include "hostgl_ctx_manager.h"
 #include "arosmesa_funcs.h"
 #include <proto/exec.h>
 #include <aros/debug.h>
@@ -172,13 +173,15 @@
     };
 #endif
 
+    HostGL_Lock();
+
     /* Standard AROSMesa initialization */
 
     /* Allocate arosmesa_context struct initialized to zeros */
     if (!(amesa = (AROSMesaContext)AllocVec(sizeof(struct arosmesa_context), MEMF_PUBLIC | MEMF_CLEAR)))
     {
         D(bug("[AROSMESA] AROSMesaCreateContext: ERROR - failed to allocate AROSMesaContext\n"));
-        return NULL;
+        goto error_out;
     }
     
     AROSMesaSelectRastPort(amesa, tagList);
@@ -266,21 +269,27 @@
         goto error_out;
     }
 
+    D(bug("TASK: 0x%x, CREATE 0x%x\n", FindTask(NULL), amesa->glXctx));
+
+    HostGL_UnLock();
+
     return amesa;
 
 error_out:
 #if defined(RENDERER_SEPARATE_X_WINDOW)
-    if (amesa->glXWindow) GLXCALL(glXDestroyWindow, amesa->XDisplay, amesa->glXWindow);
-    if (amesa->XWindow) XCALL(XDestroyWindow, amesa->XDisplay, amesa->XWindow);
+    if (amesa && amesa->glXWindow) GLXCALL(glXDestroyWindow, amesa->XDisplay, amesa->glXWindow);
+    if (amesa && amesa->XWindow) XCALL(XDestroyWindow, amesa->XDisplay, amesa->XWindow);
 #endif
 #if defined(RENDERER_PBUFFER_WPA)
-    if (amesa->swapbufferline) FreeVec(amesa->swapbufferline);
-    if (amesa->swapbuffer) FreeVec(amesa->swapbuffer);
-    if (amesa->glXPbuffer) GLXCALL(glXDestroyPbuffer, amesa->XDisplay, amesa->glXPbuffer);
+    if (amesa && amesa->swapbufferline) FreeVec(amesa->swapbufferline);
+    if (amesa && amesa->swapbuffer) FreeVec(amesa->swapbuffer);
+    if (amesa && amesa->glXPbuffer) GLXCALL(glXDestroyPbuffer, amesa->XDisplay, amesa->glXPbuffer);
 #endif
-    if (amesa->XDisplay) XCALL(XCloseDisplay, amesa->XDisplay);
-    if (amesa->framebuffer) FreeVec(amesa->framebuffer);
+    if (amesa && amesa->XDisplay) XCALL(XCloseDisplay, amesa->XDisplay);
+    if (amesa && amesa->framebuffer) FreeVec(amesa->framebuffer);
     if (amesa) AROSMesaDestroyContext(amesa);
+
+    HostGL_UnLock();
     return NULL;
 }
 
