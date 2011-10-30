@@ -22,7 +22,7 @@
     INPUTS
  
     RESULT
-        The return valud is defined as APTR. If it is not NULL, the requested
+        The return value is defined as APTR. If it is not NULL, the requested
         GL function is supported by current configuration of 3D subsystem.
  
     BUGS

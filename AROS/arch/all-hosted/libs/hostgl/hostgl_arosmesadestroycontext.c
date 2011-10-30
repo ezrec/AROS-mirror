@@ -41,6 +41,9 @@
 
     if (amesa)
     {
+        HostGL_Lock();
+//TODO: if the passed context is current context, call MakeCUrrent(NULL) before procedding
+
         Display * dsp = HostGL_GetGlobalX11Display();
         GLXCALL(glXDestroyContext, dsp, amesa->glXctx);
 #if defined(RENDERER_SEPARATE_X_WINDOW)
@@ -55,6 +58,8 @@
         
         FreeVec(amesa->framebuffer);
         AROSMesaDestroyContext(amesa);
+
+        HostGL_UnLock();
     }
 
     AROS_LIBFUNC_EXIT
