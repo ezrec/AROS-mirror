@@ -66,7 +66,7 @@
         FreeVec(amesa->swapbufferline);
         FreeVec(amesa->swapbuffer);
 #endif
-        
+        //TODO: free fbconfigs
         FreeVec(amesa->framebuffer);
         AROSMesaDestroyContext(amesa);
 

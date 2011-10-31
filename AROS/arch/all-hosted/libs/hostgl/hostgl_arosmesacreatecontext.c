@@ -140,13 +140,11 @@
     LONG                    fbattributes[fbattributessize];
 #if defined(RENDERER_SEPARATE_X_WINDOW)
     XVisualInfo             *visinfo;
-    GLXFBConfig             *windowfbconfigs;
     XSetWindowAttributes    swa;
     LONG                    swamask;
 #endif
 
 #if defined(RENDERER_PBUFFER_WPA)
-    GLXFBConfig             *pbufferfbconfigs;
     LONG pbufferattributes[] =
     {
         GLX_PBUFFER_WIDTH,   0,
@@ -196,18 +194,18 @@
     /* Get connection with the server */
     dsp = HostGL_GetGlobalX11Display();
     screen = DefaultScreen(dsp);
+
+    /* Choose fb config */
+    amesa->framebuffer->fbconfigs = GLXCALL(glXChooseFBConfig, dsp, screen, fbattributes, &numreturned);
     
-#if defined(RENDERER_SEPARATE_X_WINDOW)
-    /* Choose window config */
-    windowfbconfigs = GLXCALL(glXChooseFBConfig, dsp, screen, fbattributes, &numreturned);
-    
-    if (windowfbconfigs == NULL)
+    if (amesa->framebuffer->fbconfigs == NULL)
     {
-        D(bug("[HostGL] AROSMesaCreateContext: ERROR -  failed to retrieve windowfbconfigs\n"));
+        D(bug("[HostGL] AROSMesaCreateContext: ERROR -  failed to retrieve fbconfigs\n"));
         goto error_out;
     }
-    
-    visinfo = GLXCALL(glXGetVisualFromFBConfig, dsp, windowfbconfigs[0]);
+
+#if defined(RENDERER_SEPARATE_X_WINDOW)
+    visinfo = GLXCALL(glXGetVisualFromFBConfig, dsp, amesa->framebuffer->fbconfigs[0]);
 
     swa.colormap = XCALL(XCreateColormap, dsp, RootWindow(dsp, screen), visinfo->visual, AllocNone);
     swamask = CWColormap;
@@ -218,7 +216,7 @@
         visinfo->depth, InputOutput, visinfo->visual, swamask, &swa);
     
     /* Create GLX window */
-    amesa->glXWindow = GLXCALL(glXCreateWindow, dsp, windowfbconfigs[0], amesa->XWindow, NULL);
+    amesa->glXWindow = GLXCALL(glXCreateWindow, dsp, amesa->framebuffer->fbconfigs[0], amesa->XWindow, NULL);
 
     /* Map (show) the window */
     XCALL(XMapWindow, dsp, amesa->XWindow);
@@ -226,29 +224,20 @@
     XCALL(XFlush, dsp);
 
     /* Create GL context */
-    amesa->glXctx = GLXCALL(glXCreateNewContext, dsp, windowfbconfigs[0], GLX_RGBA_TYPE, NULL, True);
+    amesa->glXctx = GLXCALL(glXCreateNewContext, dsp, amesa->framebuffer->fbconfigs[0], GLX_RGBA_TYPE, NULL, True);
 #endif
 
 #if defined(RENDERER_PBUFFER_WPA)
-    /* Choose window config */
-    pbufferfbconfigs = GLXCALL(glXChooseFBConfig, dsp, screen, fbattributes, &numreturned);
-    
-    if (pbufferfbconfigs == NULL)
-    {
-        D(bug("[HostGL] AROSMesaCreateContext: ERROR -  failed to retrieve windowfbconfigs\n"));
-        goto error_out;
-    }
-
     /* Create GLX Pbuffer */
     pbufferattributes[1] = amesa->framebuffer->width;
     pbufferattributes[3] = amesa->framebuffer->height;
-    amesa->glXPbuffer = GLXCALL(glXCreatePbuffer, dsp, pbufferfbconfigs[0], pbufferattributes);
+    amesa->glXPbuffer = GLXCALL(glXCreatePbuffer, dsp, amesa->framebuffer->fbconfigs[0], pbufferattributes);
     
     amesa->swapbuffer       = AllocVec(amesa->framebuffer->width * amesa->framebuffer->height * 4, MEMF_ANY);
     amesa->swapbufferline   = AllocVec(amesa->framebuffer->width * 4, MEMF_ANY);
 
     /* Create GL context */
-    amesa->glXctx = GLXCALL(glXCreateNewContext, dsp, pbufferfbconfigs[0], GLX_RGBA_TYPE, NULL, True);
+    amesa->glXctx = GLXCALL(glXCreateNewContext, dsp, amesa->framebuffer->fbconfigs[0], GLX_RGBA_TYPE, NULL, True);
 #endif
     
     if (!amesa->glXctx)
@@ -273,6 +262,7 @@ error_out:
     if (amesa && amesa->swapbuffer) FreeVec(amesa->swapbuffer);
     if (amesa && amesa->glXPbuffer) GLXCALL(glXDestroyPbuffer, dsp, amesa->glXPbuffer);
 #endif
+//TODO: free fbconfigs
     if (amesa && amesa->framebuffer) FreeVec(amesa->framebuffer);
     if (amesa) AROSMesaDestroyContext(amesa);
 
