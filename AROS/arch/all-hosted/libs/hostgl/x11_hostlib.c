@@ -19,12 +19,12 @@ static const char *x11_func_names[] =
 {
     "XOpenDisplay",
     "XCloseDisplay",
+    "XFree",
 #if defined(RENDERER_SEPARATE_X_WINDOW)
     "XCreateColormap",
     "XCreateWindow",
     "XDestroyWindow",
     "XFlush",
-    "XFree",
     "XMapWindow",
 #endif
     NULL

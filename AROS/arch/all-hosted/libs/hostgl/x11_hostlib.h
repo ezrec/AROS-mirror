@@ -13,12 +13,12 @@ struct x11_func
 {
     Display * (*XOpenDisplay) ( const char* );
     int (*XCloseDisplay) ( Display* );
+    int (*XFree) ( void* );
 #if defined(RENDERER_SEPARATE_X_WINDOW)
     Colormap (*XCreateColormap) ( Display* , Window , Visual* , int );
     Window (*XCreateWindow) ( Display* , Window , int , int , unsigned int , unsigned int , unsigned int , int , unsigned int , Visual* , unsigned long , XSetWindowAttributes* );
     int (*XDestroyWindow) ( Display* , Window );
     int (*XFlush) ( Display* );
-    int (*XFree) ( void* );
     int (*XMapWindow) ( Display* , Window );
 #endif
 };

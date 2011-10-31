@@ -245,7 +245,7 @@ error_out:
 #if defined(RENDERER_PBUFFER_WPA)
     if (amesa) HostGL_DeAllocatePBuffer(amesa);
 #endif
-//TODO: free fbconfigs
+    if (amesa && amesa->framebuffer->fbconfigs) XCALL(XFree, amesa->framebuffer->fbconfigs);
     if (amesa && amesa->framebuffer) FreeVec(amesa->framebuffer);
     if (amesa) AROSMesaDestroyContext(amesa);
 

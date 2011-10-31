@@ -65,7 +65,7 @@
 #if defined(RENDERER_PBUFFER_WPA)
         HostGL_DeAllocatePBuffer(amesa);
 #endif
-        //TODO: free fbconfigs
+        XCALL(XFree, amesa->framebuffer->fbconfigs);
         FreeVec(amesa->framebuffer);
         AROSMesaDestroyContext(amesa);
 
