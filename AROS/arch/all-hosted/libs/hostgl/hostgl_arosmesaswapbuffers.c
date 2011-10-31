@@ -4,6 +4,7 @@
 */
 
 #include "hostgl_ctx_manager.h"
+#include "hostgl_funcs.h"
 #include <proto/exec.h>
 #include <aros/debug.h>
 #if defined(RENDERER_PBUFFER_WPA)
@@ -82,10 +83,8 @@ static struct SignalSemaphore * GetX11SemaphoreFromBitmap(struct BitMap * bm);
         WritePixelArray(amesa->swapbuffer, 0, 0, width * 4, amesa->visible_rp, amesa->left, amesa->top, 
             width, height, RECTFMT_BGRA32);
 #endif
+        HostGL_CheckAndUpdateBufferSize(amesa);
     }
-
-    /* TODO: check and update glx drawable size */
-    /* AROSMesaCheckAndUpdateBufferSize(amesa); */
 
     AROS_LIBFUNC_EXIT
 }

@@ -4,6 +4,7 @@
 */
 
 #include "hostgl_ctx_manager.h"
+#include "hostgl_funcs.h"
 #include <proto/exec.h>
 #include <aros/debug.h>
 
@@ -62,9 +63,7 @@
         XCALL(XDestroyWindow, dsp, amesa->XWindow);
 #endif
 #if defined(RENDERER_PBUFFER_WPA)
-        GLXCALL(glXDestroyPbuffer, dsp, amesa->glXPbuffer);
-        FreeVec(amesa->swapbufferline);
-        FreeVec(amesa->swapbuffer);
+        HostGL_DeAllocatePBuffer(amesa);
 #endif
         //TODO: free fbconfigs
         FreeVec(amesa->framebuffer);

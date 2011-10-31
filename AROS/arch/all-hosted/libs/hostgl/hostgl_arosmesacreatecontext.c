@@ -144,16 +144,6 @@
     LONG                    swamask;
 #endif
 
-#if defined(RENDERER_PBUFFER_WPA)
-    LONG pbufferattributes[] =
-    {
-        GLX_PBUFFER_WIDTH,   0,
-        GLX_PBUFFER_HEIGHT,  0,
-        GLX_LARGEST_PBUFFER, False,
-        None
-    };
-#endif
-
     HostGL_Lock();
 
     /* Standard AROSMesa initialization */
@@ -229,12 +219,7 @@
 
 #if defined(RENDERER_PBUFFER_WPA)
     /* Create GLX Pbuffer */
-    pbufferattributes[1] = amesa->framebuffer->width;
-    pbufferattributes[3] = amesa->framebuffer->height;
-    amesa->glXPbuffer = GLXCALL(glXCreatePbuffer, dsp, amesa->framebuffer->fbconfigs[0], pbufferattributes);
-    
-    amesa->swapbuffer       = AllocVec(amesa->framebuffer->width * amesa->framebuffer->height * 4, MEMF_ANY);
-    amesa->swapbufferline   = AllocVec(amesa->framebuffer->width * 4, MEMF_ANY);
+    HostGL_AllocatePBuffer(amesa);
 
     /* Create GL context */
     amesa->glXctx = GLXCALL(glXCreateNewContext, dsp, amesa->framebuffer->fbconfigs[0], GLX_RGBA_TYPE, NULL, True);
@@ -258,9 +243,7 @@ error_out:
     if (amesa && amesa->XWindow) XCALL(XDestroyWindow, dsp, amesa->XWindow);
 #endif
 #if defined(RENDERER_PBUFFER_WPA)
-    if (amesa && amesa->swapbufferline) FreeVec(amesa->swapbufferline);
-    if (amesa && amesa->swapbuffer) FreeVec(amesa->swapbuffer);
-    if (amesa && amesa->glXPbuffer) GLXCALL(glXDestroyPbuffer, dsp, amesa->glXPbuffer);
+    if (amesa) HostGL_DeAllocatePBuffer(amesa);
 #endif
 //TODO: free fbconfigs
     if (amesa && amesa->framebuffer) FreeVec(amesa->framebuffer);
