@@ -5,6 +5,7 @@
 
 #include "hostgl_ctx_manager.h"
 #include "arosmesa_funcs.h"
+#include "hostgl_funcs.h"
 #include <proto/exec.h>
 #include <aros/debug.h>
 
@@ -135,36 +136,17 @@
     AROSMesaContext         amesa = NULL;
     LONG                    numreturned;
     Display                 *dsp = NULL;
+    const LONG              fbattributessize = 20;
+    LONG                    fbattributes[fbattributessize];
 #if defined(RENDERER_SEPARATE_X_WINDOW)
     XVisualInfo             *visinfo;
     GLXFBConfig             *windowfbconfigs;
     XSetWindowAttributes    swa;
     LONG                    swamask;
-    LONG windowfbattributes[] = 
-    {
-        GLX_DRAWABLE_TYPE, GLX_WINDOW_BIT,
-        GLX_RENDER_TYPE,   GLX_RGBA_BIT,
-        GLX_DOUBLEBUFFER,  True,
-        GLX_RED_SIZE,      1,
-        GLX_GREEN_SIZE,    1, 
-        GLX_BLUE_SIZE,     1,
-        None
-    };
-
 #endif
 
 #if defined(RENDERER_PBUFFER_WPA)
     GLXFBConfig             *pbufferfbconfigs;
-    LONG pbufferfbattributes[] = 
-    {
-        GLX_DRAWABLE_TYPE, GLX_PBUFFER_BIT,
-        GLX_RENDER_TYPE,   GLX_RGBA_BIT,
-        GLX_DOUBLEBUFFER,  False,
-        GLX_RED_SIZE,      1,
-        GLX_GREEN_SIZE,    1, 
-        GLX_BLUE_SIZE,     1,
-        None
-    };
     LONG pbufferattributes[] =
     {
         GLX_PBUFFER_WIDTH,   0,
@@ -203,6 +185,11 @@
 
     AROSMesaRecalculateBufferWidthHeight(amesa);
 
+    if (!HostGL_FillFBAttributes(fbattributes, fbattributessize))
+    {
+        D(bug("[HostGL] AROSMesaCreateContext: ERROR -  failed to fill FB attributes\n"));
+        goto error_out;
+    }
 
     /* X/GLX initialization */
 
@@ -212,7 +199,7 @@
     
 #if defined(RENDERER_SEPARATE_X_WINDOW)
     /* Choose window config */
-    windowfbconfigs = GLXCALL(glXChooseFBConfig, dsp, screen, windowfbattributes, &numreturned);
+    windowfbconfigs = GLXCALL(glXChooseFBConfig, dsp, screen, fbattributes, &numreturned);
     
     if (windowfbconfigs == NULL)
     {
@@ -244,7 +231,7 @@
 
 #if defined(RENDERER_PBUFFER_WPA)
     /* Choose window config */
-    pbufferfbconfigs = GLXCALL(glXChooseFBConfig, dsp, screen, pbufferfbattributes, &numreturned);
+    pbufferfbconfigs = GLXCALL(glXChooseFBConfig, dsp, screen, fbattributes, &numreturned);
     
     if (pbufferfbconfigs == NULL)
     {
