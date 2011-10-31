@@ -8,6 +8,6 @@
 
 #include "hostgl_types.h"
 
-BOOL HostGL_FillFBAttributes(LONG * fbattributes, LONG size);
+BOOL HostGL_FillFBAttributes(LONG * fbattributes, LONG size, struct TagItem *tagList);
 
 #endif /* HOSTGL_FUNCS_H */

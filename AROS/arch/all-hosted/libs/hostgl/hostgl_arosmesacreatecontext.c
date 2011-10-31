@@ -136,7 +136,7 @@
     AROSMesaContext         amesa = NULL;
     LONG                    numreturned;
     Display                 *dsp = NULL;
-    const LONG              fbattributessize = 20;
+    const LONG              fbattributessize = 40;
     LONG                    fbattributes[fbattributessize];
 #if defined(RENDERER_SEPARATE_X_WINDOW)
     XVisualInfo             *visinfo;
@@ -185,7 +185,7 @@
 
     AROSMesaRecalculateBufferWidthHeight(amesa);
 
-    if (!HostGL_FillFBAttributes(fbattributes, fbattributessize))
+    if (!HostGL_FillFBAttributes(fbattributes, fbattributessize, tagList))
     {
         D(bug("[HostGL] AROSMesaCreateContext: ERROR -  failed to fill FB attributes\n"));
         goto error_out;
