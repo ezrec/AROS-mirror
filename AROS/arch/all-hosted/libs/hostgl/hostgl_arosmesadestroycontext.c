@@ -41,10 +41,21 @@
 
     if (amesa)
     {
-        HostGL_Lock();
-//TODO: if the passed context is current context, call MakeCUrrent(NULL) before procedding
+        Display * dsp = NULL;
+        AROSMesaContext cur_ctx = NULL;
 
-        Display * dsp = HostGL_GetGlobalX11Display();
+        HostGL_Lock();
+
+        dsp = HostGL_GetGlobalX11Display();
+        cur_ctx = HostGL_GetCurrentContext();
+
+        /* If the passed context is current context, detach it */
+        if (amesa == cur_ctx)
+        {
+            HostGL_SetCurrentContext(NULL);
+            HostGL_UpdateGlobalGLXContext();
+        }
+
         GLXCALL(glXDestroyContext, dsp, amesa->glXctx);
 #if defined(RENDERER_SEPARATE_X_WINDOW)
         GLXCALL(glXDestroyWindow, dsp, amesa->glXWindow);
