@@ -86,8 +86,8 @@ VOID HostGL_AllocatePBuffer(AROSMesaContext amesa)
     pbufferattributes[3] = amesa->framebuffer->height;
     amesa->glXPbuffer = GLXCALL(glXCreatePbuffer, dsp, amesa->framebuffer->fbconfigs[0], pbufferattributes);
 
-    amesa->swapbuffer       = AllocVec(amesa->framebuffer->width * amesa->framebuffer->height * 4, MEMF_ANY);
-    amesa->swapbufferline   = AllocVec(amesa->framebuffer->width * 4, MEMF_ANY);
+    amesa->swapbuffer       = AllocVec(amesa->framebuffer->width * amesa->framebuffer->height * SWAPBUFFER_BPP, MEMF_ANY);
+    amesa->swapbufferline   = AllocVec(amesa->framebuffer->width * SWAPBUFFER_BPP, MEMF_ANY);
 }
 
 VOID HostGL_DeAllocatePBuffer(AROSMesaContext amesa)

@@ -52,4 +52,6 @@ struct arosmesa_context
     ULONG                      left, right;            /* offsets due to window border */    
 };
 
+#define SWAPBUFFER_BPP  (4) /* Swap buffer always has 4 bytes per pixel, even on 16bpp screens */
+
 #endif /* HOSTGL_TYPES_H */

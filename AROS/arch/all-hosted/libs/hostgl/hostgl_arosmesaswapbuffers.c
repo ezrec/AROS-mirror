@@ -63,6 +63,8 @@ static struct SignalSemaphore * GetX11SemaphoreFromBitmap(struct BitMap * bm);
         LONG width = amesa->framebuffer->width;
         LONG height = amesa->framebuffer->height;
         
+        /* This codes works correct with both 16bpp and 32 bpp pixel buffers */
+
         HostGL_Lock();
         HostGL_UpdateGlobalGLXContext();
         ObtainSemaphore(GetX11SemaphoreFromBitmap(amesa->visible_rp->BitMap));
@@ -75,12 +77,12 @@ static struct SignalSemaphore * GetX11SemaphoreFromBitmap(struct BitMap * bm);
         {
             ULONG * start = amesa->swapbuffer + (line * width);
             ULONG * end = amesa->swapbuffer + ((height - line - 1) * width);
-            CopyMem(start, amesa->swapbufferline, width * 4);
-            CopyMem(end, start, width * 4);
-            CopyMem(amesa->swapbufferline, end, width * 4);
+            CopyMem(start, amesa->swapbufferline, width * SWAPBUFFER_BPP);
+            CopyMem(end, start, width * SWAPBUFFER_BPP);
+            CopyMem(amesa->swapbufferline, end, width * SWAPBUFFER_BPP);
         }
 
-        WritePixelArray(amesa->swapbuffer, 0, 0, width * 4, amesa->visible_rp, amesa->left, amesa->top, 
+        WritePixelArray(amesa->swapbuffer, 0, 0, width * SWAPBUFFER_BPP, amesa->visible_rp, amesa->left, amesa->top, 
             width, height, RECTFMT_BGRA32);
 #endif
         HostGL_CheckAndUpdateBufferSize(amesa);
