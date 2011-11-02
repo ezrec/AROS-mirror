@@ -704,8 +704,9 @@ static VOID handleUnprotect(LONG info, char * spath, char * file, char * target,
     else *unprotect = TRUE;
 }
 
+#define dmode (opModes->deletemode)
 ///actionDir()
-BOOL  actionDir(APTR pool, ULONG flags, char *source, char *dest, BOOL quit, UWORD delmode, UWORD protectmode, UWORD overwritemode, struct Hook *dHook, struct Hook *delHook, APTR userdata) 
+BOOL  actionDir(APTR pool, ULONG flags, char *source, char *dest, BOOL quit, UWORD protectmode, UWORD overwritemode, struct Hook *dHook, struct OpModes * opModes, APTR userdata) 
 {
     struct  FileInfoBlock  *FIB, *FIB2;
     struct  dCopyStruct    display;
@@ -713,11 +714,11 @@ BOOL  actionDir(APTR pool, ULONG flags, char *source, char *dest, BOOL quit, UWO
     struct  FileEntry    *fe, *fef, *fel;
 
     BPTR       NewLock, cDir, nDir, nLock;
-    WORD       dmode, pmode, omode, dm, pm, om;
+    WORD       pmode, omode, pm, om;
     ULONG      Success, Success1, Success2, DosError, len;
     char       *dname, *comment, *dpath;
     BOOL       del, created, unprotect, failure;
-    BOOL       stop, overwrite;
+    BOOL       overwrite;
     LONG       info, prot;
 
     if (quit) return TRUE;
@@ -725,7 +726,6 @@ BOOL  actionDir(APTR pool, ULONG flags, char *source, char *dest, BOOL quit, UWO
     display.userdata = userdata;
     askDisplay.userdata = userdata;
 
-    dmode = delmode;
     omode = overwritemode;
     pmode = protectmode;
 
@@ -746,7 +746,6 @@ BOOL  actionDir(APTR pool, ULONG flags, char *source, char *dest, BOOL quit, UWO
                 Success1=Examine(NewLock,FIB);
                 if (Success1) 
                 {
-                    stop = quit;
                     do 
                     {
                         /* For each entry in directory ... */
@@ -800,7 +799,7 @@ BOOL  actionDir(APTR pool, ULONG flags, char *source, char *dest, BOOL quit, UWO
                                 del = FALSE;
 
                                 /* If deleting, ask for confirmation and ask to upprotect */
-                                if (delHook && (dmode != OPMODE_NONE) && ((flags & ACTION_DELETE) != 0))
+                                if (opModes && (dmode != OPMODE_NONE) && ((flags & ACTION_DELETE) != 0))
                                 {
                                     if ((dmode == OPMODE_ASK) || (dmode == OPMODE_YES) || (dmode == OPMODE_ALL) || (dmode == OPMODE_NO))
                                     {
@@ -808,14 +807,14 @@ BOOL  actionDir(APTR pool, ULONG flags, char *source, char *dest, BOOL quit, UWO
                                         askDisplay.file = NULL;
                                         askDisplay.type = 0;
                                         askDisplay.filelen = FIB->fib_Size;
-                                        if (dmode != OPMODE_ALL) dmode = CallHook(delHook, (Object *) &askDisplay, NULL);
+                                        if (dmode != OPMODE_ALL) dmode = CallHook(opModes->askhook, (Object *) &askDisplay, NULL);
                                         if ((dmode == OPMODE_ALL) || (dmode == OPMODE_YES))
                                         {
 
                                             unprotect = FALSE;
                                             info = GetFileInfo(FIB->fib_FileName);
 
-                                            handleUnprotect(info, FIB->fib_FileName, NULL, FIB->fib_FileName, delHook, &pmode, &unprotect);
+                                            handleUnprotect(info, FIB->fib_FileName, NULL, FIB->fib_FileName, opModes->askhook, &pmode, &unprotect);
                                             
                                             if (unprotect) 
                                             {
@@ -825,7 +824,6 @@ BOOL  actionDir(APTR pool, ULONG flags, char *source, char *dest, BOOL quit, UWO
                                     }
                                 }
 
-                                dm = dmode;
                                 om = omode;
                                 pm = pmode;
 
@@ -836,9 +834,6 @@ BOOL  actionDir(APTR pool, ULONG flags, char *source, char *dest, BOOL quit, UWO
                                 if (pm == OPMODE_NO) pm = OPMODE_NONE;
                                 if (pm == OPMODE_YES) pm = OPMODE_ALL;
 
-                                if (dm == OPMODE_NO) dm = OPMODE_NONE;
-                                if (dm == OPMODE_YES) dm = OPMODE_ALL;
-
                                 /* If directory was create or we are deleting, trawer deeper and repeat actions */
                                 if (created || ((flags & ACTION_DELETE) !=0)) 
                                 {
@@ -848,7 +843,7 @@ BOOL  actionDir(APTR pool, ULONG flags, char *source, char *dest, BOOL quit, UWO
                                     } 
                                     else 
                                     {
-                                        quit = actionDir(pool, flags, FIB->fib_FileName, dname, quit, dm, pm, om, dHook, delHook, userdata);
+                                        quit = actionDir(pool, flags, FIB->fib_FileName, dname, quit, pm, om, dHook, opModes, userdata);
                                     }
                                 }
 
@@ -909,7 +904,7 @@ BOOL  actionDir(APTR pool, ULONG flags, char *source, char *dest, BOOL quit, UWO
                                         if (info != -1) 
                                         {
                                             overwrite = FALSE;
-                                            if (delHook && (omode != OPMODE_NONE))
+                                            if (opModes && (omode != OPMODE_NONE))
                                             {
                                                 if (
                                                     (omode == OPMODE_ASK) || (omode == OPMODE_YES) ||
@@ -920,10 +915,10 @@ BOOL  actionDir(APTR pool, ULONG flags, char *source, char *dest, BOOL quit, UWO
                                                     askDisplay.file = FIB->fib_FileName;
                                                     askDisplay.type = 2;
                                                     askDisplay.filelen = 0;
-                                                    if (omode != OPMODE_ALL) omode = CallHook(delHook, (Object *) &askDisplay, NULL);
+                                                    if (omode != OPMODE_ALL) omode = CallHook(opModes->askhook, (Object *) &askDisplay, NULL);
                                                     if ((omode == OPMODE_ALL) || (omode == OPMODE_YES))
                                                     {
-                                                        handleUnprotect(info, dest, FIB->fib_FileName, dpath, delHook, &pmode, &overwrite);
+                                                        handleUnprotect(info, dest, FIB->fib_FileName, dpath, opModes->askhook, &pmode, &overwrite);
                                                     }
                                                 }
                                             }
@@ -943,20 +938,20 @@ BOOL  actionDir(APTR pool, ULONG flags, char *source, char *dest, BOOL quit, UWO
                                 /* If failed, ask if process should continue */
                                 if (failure && !quit) 
                                 {
-                                    if (delHook) 
+                                    if (opModes) 
                                     {
                                         askDisplay.spath = source;
                                         askDisplay.file = FIB->fib_FileName;
                                         askDisplay.type = 3;
                                         askDisplay.filelen = 0;
-                                        if (CallHook(delHook, (Object *) &askDisplay, NULL) == ACCESS_SKIP) 
+                                        if (CallHook(opModes->askhook, (Object *) &askDisplay, NULL) == ACCESS_SKIP) 
                                             quit = FALSE; else quit = TRUE;
                                     } 
                                     else quit = FALSE;
                                 }
 
                                 /* If deleting ask for confirmation and ask to unprotect */
-                                if (!quit && delHook && (dmode != OPMODE_NONE) && ((flags & ACTION_DELETE) !=0))
+                                if (!quit && opModes && (dmode != OPMODE_NONE) && ((flags & ACTION_DELETE) !=0))
                                 {
                                     if (
                                         (dmode == OPMODE_ASK) || (dmode == OPMODE_YES) ||
@@ -967,14 +962,14 @@ BOOL  actionDir(APTR pool, ULONG flags, char *source, char *dest, BOOL quit, UWO
                                         askDisplay.file = FIB->fib_FileName;
                                         askDisplay.type = 0;
                                         askDisplay.filelen = FIB->fib_Size;
-                                        if (dmode != OPMODE_ALL) dmode = CallHook(delHook, (Object *) &askDisplay, NULL);
+                                        if (dmode != OPMODE_ALL) dmode = CallHook(opModes->askhook, (Object *) &askDisplay, NULL);
                                         if ((dmode == OPMODE_ALL) || (dmode == OPMODE_YES))
                                         {
 
                                             info = GetFileInfo(FIB->fib_FileName);
                                             unprotect = FALSE;
 
-                                            handleUnprotect(info, source, FIB->fib_FileName, FIB->fib_FileName, delHook, &pmode, &unprotect);
+                                            handleUnprotect(info, source, FIB->fib_FileName, FIB->fib_FileName, opModes->askhook, &pmode, &unprotect);
 
                                             /* If file ready to be deleted, add it to "to be deleted" list */
                                             if (unprotect) 
@@ -1043,6 +1038,7 @@ BOOL  actionDir(APTR pool, ULONG flags, char *source, char *dest, BOOL quit, UWO
     return quit;
 }
 ///
+#undef dmode
 
 ///CopyContent()
 BOOL CopyContent(APTR p, char *s, char *d, BOOL makeparentdir, ULONG flags, struct Hook *displayHook, struct OpModes *opModes, APTR userdata) 
@@ -1108,6 +1104,7 @@ BOOL CopyContent(APTR p, char *s, char *d, BOOL makeparentdir, ULONG flags, stru
 
     if ((flags & ACTION_COPY) !=0 ) dest = allocString(pool, d);
 
+    /* If copying a directory, create target directory */
     if (makeparentdir && dir && dest) 
     {
         if (destname) 
@@ -1160,7 +1157,8 @@ BOOL CopyContent(APTR p, char *s, char *d, BOOL makeparentdir, ULONG flags, stru
 
     deletesrc = FALSE;
     unprotectsrc = TRUE;
-    if (opModes && ((flags & ACTION_DELETE) != 0) && ((makeparentdir && dir) || !dir))
+    /* If deleting ask for confirmation, ask to unprotect */
+    if (opModes && (opModes->deletemode != OPMODE_NONE) && ((flags & ACTION_DELETE) != 0) && ((makeparentdir && dir) || !dir))
     {
         if (dir) 
         {
@@ -1194,6 +1192,7 @@ BOOL CopyContent(APTR p, char *s, char *d, BOOL makeparentdir, ULONG flags, stru
         }
     }
 
+    /* If copying ask to overwrite, ask to unprotect */
     if (dest) 
     {
         if (opModes && !dir)
@@ -1258,7 +1257,7 @@ BOOL CopyContent(APTR p, char *s, char *d, BOOL makeparentdir, ULONG flags, stru
             else 
             {
                 back = actionDir(
-                    pool, flags, s, dest, FALSE, opModes->deletemode, pmode, omode, displayHook, opModes->askhook, userdata
+                    pool, flags, s, dest, FALSE, pmode, omode, displayHook, opModes, userdata
                 );
             }
         } 
