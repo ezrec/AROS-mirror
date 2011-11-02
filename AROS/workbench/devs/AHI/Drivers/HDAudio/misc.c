@@ -1103,7 +1103,7 @@ static void perform_via_specific_settings(struct HDAudioChip *card, UWORD device
         
     card->adc_mixer_is_mux = TRUE;
         
-    // FRONT pin (0x14)
+    // FRONT pin (0x1C)
     send_command_4(card->codecnr, 0x1C, VERB_SET_AMP_GAIN, OUTPUT_AMP_GAIN | AMP_GAIN_LR | 0x1B, card); // set amplifier gain: unmute output and set to 0dB of FRONT (Port-D)
     send_command_12(card->codecnr, 0x1C, VERB_SET_PIN_WIDGET_CONTROL, 0x40, card); // output enabled
         
@@ -1174,9 +1174,7 @@ static BOOL interrogate_unknown_chip(struct HDAudioChip *card)
         card->dac_volume_nid = dac;
         bug("DAC seems to have volume control\n");
     }
-	
-    
-	
+
     // find FRONT pin
     front = find_pin_widget_with_encoding(card, 0);
     bug("Front PIN = %xh\n", front);
@@ -1187,7 +1185,7 @@ static BOOL interrogate_unknown_chip(struct HDAudioChip *card)
     }
     else
     {
-        send_command_4(card->codecnr, front, VERB_SET_AMP_GAIN, OUTPUT_AMP_GAIN | AMP_GAIN_LR, card); // set amplifier gain: unmute output of FRONT (Port-D)
+        send_command_4(card->codecnr, front, VERB_SET_AMP_GAIN, OUTPUT_AMP_GAIN | AMP_GAIN_LR, card); // set amplifier gain: unmute output of FRONT
         send_command_12(card->codecnr, front, VERB_SET_PIN_WIDGET_CONTROL, 0x40, card); // output enabled
     }
     
@@ -1208,13 +1206,13 @@ static BOOL interrogate_unknown_chip(struct HDAudioChip *card)
     {
         bug("No speaker pin found, continuing anyway!\n");
     }
-    else
-    {
         card->speaker_nid = speaker;
         card->headphone_nid = find_headphone_nid(card);
         
         bug("Headphone NID = %xh\n", card->headphone_nid);
         
+    if (speaker != -1)
+    {
         // check if there is a power amp and if so, enable it
         if (get_parameter(speaker, VERB_GET_PARMS_PIN_CAPS, card) & PIN_CAPS_EAPD_CAPABLE)
         {
@@ -1223,10 +1221,20 @@ static BOOL interrogate_unknown_chip(struct HDAudioChip *card)
         }
         
         send_command_4(card->codecnr, speaker, VERB_SET_AMP_GAIN, OUTPUT_AMP_GAIN | AMP_GAIN_LR, card); // set amplifier gain: unmute output
+    }
 
         send_command_4(card->codecnr, card->headphone_nid, VERB_SET_AMP_GAIN, OUTPUT_AMP_GAIN | AMP_GAIN_LR, card); // set amplifier gain: unmute headphone
         send_command_12(card->codecnr, card->headphone_nid, VERB_SET_PIN_WIDGET_CONTROL, 0xC0, card); // output enabled and headphone enabled
         
+        // check if there is a power amp and if so, enable it
+        if (get_parameter(card->headphone_nid, VERB_GET_PARMS_PIN_CAPS, card) & PIN_CAPS_EAPD_CAPABLE)
+        {
+            bug("Enabling power amp of headphone port\n");
+            send_command_12(card->codecnr, card->headphone_nid, VERB_SET_EAPD, 0x2, card); // enable EAPD (external power amp)
+        }
+        
+    if (speaker != -1)
+    {
         if (card->headphone_nid != 255 && // headphone found NID and
             is_jack_connected(card, card->headphone_nid) == FALSE) // no headphone connected -> switch on the speaker
         {
@@ -1253,9 +1261,9 @@ static BOOL interrogate_unknown_chip(struct HDAudioChip *card)
                  is_jack_connected(card, card->headphone_nid) == TRUE) // headphone connected -> switch off the speaker
         {
             //send_command_4(card->codecnr, speaker, VERB_SET_AMP_GAIN, OUTPUT_AMP_GAIN | AMP_GAIN_LR | (1 << 7), card); // set amplifier gain: mute output
-            send_command_12(card->codecnr, speaker, VERB_SET_PIN_WIDGET_CONTROL, 0x0, card); // output enabled
+            send_command_12(card->codecnr, speaker, VERB_SET_PIN_WIDGET_CONTROL, 0x0, card); // output disabled
         }
-	   }
+    }
 	
 	
 	   UBYTE before_front = 0;
@@ -1308,6 +1316,8 @@ static BOOL interrogate_unknown_chip(struct HDAudioChip *card)
 	  }
 	
 	parm = get_parameter(card->dac_volume_nid, VERB_GET_PARMS_OUTPUT_AMP_CAPS , card);
+    if (parm == 0)
+        parm = get_parameter(0x1, VERB_GET_PARMS_OUTPUT_AMP_CAPS, card);
 	bug("Output amp caps = %lx\n", parm);
 	
 	step_size = (((parm >> 16) & 0x7F) + 1) * 0.25;
@@ -1406,10 +1416,11 @@ static int find_speaker_nid(struct HDAudioChip *card)
                     config_default = send_command_12(card->codecnr, NID, VERB_GET_CONFIG_DEFAULT, 0, card);
                     
                     if ( (((config_default >> 20) & 0xF) == 1) && // the default device/use is a speaker
-                         (((config_default >> 16) & 0xF) == 3) ) // connection type is internal
+                         (((config_default >> 16) & 0xB) == 3)) // connection type is internal
                     {
                        return (int) (NID);
                     }  
+                    //else bug("Pin widget 0x%x not a speaker: config_default=0x%lx\n", NID, config_default);
                 }
             }
         }
@@ -1797,10 +1808,12 @@ BOOL is_jack_connected(struct HDAudioChip *card, UBYTE NID)
     
     if (result & 0x80000000)
     {
+        //bug("jack connected\n");
         return TRUE;
     }
     else
     {
+        //bug("jack disconnected\n");
         return FALSE;
     }
 }
