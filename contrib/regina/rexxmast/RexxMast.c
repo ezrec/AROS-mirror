@@ -193,7 +193,7 @@ static void StartFileSlave(struct RexxMsg *msg)
    UBYTE *comm = (UBYTE *)msg->rm_Args[0];
    BPTR lock, oldlock;
    unsigned int len=0, extlen, commlen = LengthArgstring(comm);
-   struct FileHandle *input = NULL, *output = NULL, *error = NULL;
+   BPTR input = BNULL, output = BNULL, error = BNULL;
    struct Process *process = (struct Process *)msg->rm_Node.mn_ReplyPort->mp_SigTask;
 
    /* Input arguments for calling the RexxStart procedure */
@@ -206,24 +206,24 @@ static void StartFileSlave(struct RexxMsg *msg)
    /* Set input/output to the task that sent the message */
    if (!(msg->rm_Action & RXFF_NOIO))
    {
-      lock = NULL;
-      oldlock = NULL;
+      lock = BNULL;
+      oldlock = BNULL;
       if (process->pr_Task.tc_Node.ln_Type == NT_PROCESS)
       {
          input = process->pr_CIS;
          output = process->pr_COS;
          error = process->pr_CES;
          lock = DupLock(process->pr_CurrentDir);
-         if (lock != NULL)
+         if (lock != BNULL)
          {
             lock = CurrentDir(lock);
             oldlock = DupLock(lock);
             UnLock(lock);
          }
       }
-      if (msg->rm_Stdin != NULL)
+      if (msg->rm_Stdin != BNULL)
          input = msg->rm_Stdin;
-      if (msg->rm_Stdout != NULL)
+      if (msg->rm_Stdout != BNULL)
          output = msg->rm_Stdout;
       
       input = SelectInput(input);
@@ -282,28 +282,28 @@ static void StartFileSlave(struct RexxMsg *msg)
       memcpy(progname, (char *)msg->rm_Args[0], len);
       progname[len] = 0;
       lock = Lock(progname, ACCESS_READ);
-      if (lock == NULL)
+      if (lock == BNULL)
       {
          strcat(progname, msg->rm_FileExt==NULL ? ".rexx" : (const char *)msg->rm_FileExt);
          lock = Lock(progname, ACCESS_READ);
       }
-      if (lock == NULL && strchr(progname, ':') == NULL)
+      if (lock == BNULL && strchr(progname, ':') == NULL)
       {
          strcpy(progname, "REXX:");
          strncat(progname, (char *)msg->rm_Args[0], len);
          lock = Lock(progname, ACCESS_READ);
       }
-      if (lock == NULL)
+      if (lock == BNULL)
       {
          strcat(progname, msg->rm_FileExt==NULL ? ".rexx" : (const char *)msg->rm_FileExt);
          lock = Lock(progname, ACCESS_READ);
       }
-      if (lock == NULL)
+      if (lock == BNULL)
       {
          msg->rm_Result1 = 5;
          msg->rm_Result2 = 1;
          free(progname);
-         if (oldlock != NULL)
+         if (oldlock != BNULL)
             UnLock(CurrentDir(oldlock));
          return;
       }
@@ -361,14 +361,14 @@ static void StartFileSlave(struct RexxMsg *msg)
    /* Return to the old input/output if it was changed */
    if (!(msg->rm_Action & RXFF_NOIO))
    {
-      if (input != NULL)
+      if (input != BNULL)
          SelectInput(input);
-      if (output != NULL)
+      if (output != BNULL)
          SelectOutput(output);
-      if (error != NULL)
+      if (error != BNULL)
          SelectErrorOutput(error);
       updatestdio();
-      if (oldlock != NULL)
+      if (oldlock != BNULL)
          UnLock(CurrentDir(oldlock));
    }
     

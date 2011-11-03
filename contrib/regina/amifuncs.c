@@ -303,7 +303,7 @@ int init_amigaf ( tsd_t *TSD )
    atsd->rexxsysbase = (struct RxsLib *)OpenLibrary( "rexxsyslib.library", 44 );
    if ( atsd->rexxsysbase == NULL )
       return 0;
-   old = CurrentDir(NULL);
+   old = CurrentDir(BNULL);
    atsd->startlock = DupLock( old );
    CurrentDir(old);
    if (on_exit( exit_amigaf, atsd ) == -1)
@@ -871,7 +871,7 @@ streng *amiga_pragma( tsd_t *TSD, cparamboxptr parm1 )
    {
    case 'D':
       {
-         BPTR lock = CurrentDir( NULL );
+         BPTR lock = CurrentDir( BNULL );
          
          NameFromLock( lock, buf, 1023 );
          CurrentDir( lock );
@@ -888,15 +888,15 @@ streng *amiga_pragma( tsd_t *TSD, cparamboxptr parm1 )
             fib = AllocDosObject( DOS_FIB, NULL );
             if ( fib == NULL )
             {
-               if ( lock != NULL )
-                  UnLock( (BPTR)lock );
+               if ( lock != BNULL )
+                  UnLock( lock );
                exiterror( ERR_STORAGE_EXHAUSTED, 0 );
             }
 
-            if ( lock != NULL )
+            if ( lock != BNULL )
                Examine( lock, fib );
       
-            if ( lock == NULL || fib->fib_DirEntryType <= 0 )
+            if ( lock == BNULL || fib->fib_DirEntryType <= 0 )
             {
                FreeDosObject( DOS_FIB, fib );
                Free_string_TSD( TSD, retval );
