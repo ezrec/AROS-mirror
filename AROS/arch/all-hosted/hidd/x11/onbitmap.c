@@ -248,13 +248,19 @@ OOP_Object *X11OnBM__Root__New(OOP_Class *cl, OOP_Object *o, struct pRoot_New *m
     #else
     if (DRAWABLE(data))
     {
-            XSizeHints          sizehint;
+        XSizeHints          sizehint;
     #endif
-        struct MsgPort     *port;        
-        struct notify_msg     *msg;
-            Pixmap               icon;
+        struct MsgPort      *port;
+        struct notify_msg   *msg;
+        Pixmap              icon;
+        XClassHint          *classhint;
 
-            LOCK_X11
+        LOCK_X11
+
+        classhint = XCALL(XAllocClassHint);
+        classhint->res_name = "AROS";
+        classhint->res_class = "AROS";
+        XCALL(XSetClassHint, GetSysDisplay(), MASTERWIN(data), classhint);
         
         XCALL(XStoreName, GetSysDisplay(), MASTERWIN(data), "AROS");
         XCALL(XSetIconName, GetSysDisplay(), MASTERWIN(data), "AROS Screen");
