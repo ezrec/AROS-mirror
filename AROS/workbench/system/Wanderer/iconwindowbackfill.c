@@ -890,7 +890,7 @@ D(bug("[IconWindow.ImageBackFill] MUIM_IconWindow_BackFill_DrawBackground()\n"))
     if ((this_BFI->bfi_Buffer) && (this_BFI->bfi_RastPort))
     {
 
-#warning "TODO: Make Base Tile Offset preference settable"
+      /* "TODO: Make Base Tile Offset preference settable" */
       WORD OffsetX = this_BFI->bfi_Options.bfo_OffsetX;         // the offset within the tile in x direction
       WORD OffsetY = this_BFI->bfi_Options.bfo_OffsetY;         // the offset within the tile in y direction
 
