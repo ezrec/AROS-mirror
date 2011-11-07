@@ -1,0 +1,31 @@
+/* ex_eval.c */
+extern int aborting __ARGS((void));
+extern void update_force_abort __ARGS((void));
+extern int should_abort __ARGS((int retcode));
+extern int aborted_in_try __ARGS((void));
+extern int cause_errthrow __ARGS((char_u *mesg, int severe, int *ignore));
+extern void do_errthrow __ARGS((struct condstack *cstack, char_u *cmdname));
+extern int do_intthrow __ARGS((struct condstack *cstack));
+extern void discard_current_exception __ARGS((void));
+extern void report_make_pending __ARGS((int pending, void *value));
+extern void report_resume_pending __ARGS((int pending, void *value));
+extern void report_discard_pending __ARGS((int pending, void *value));
+extern void ex_if __ARGS((exarg_T *eap));
+extern void ex_endif __ARGS((exarg_T *eap));
+extern void ex_else __ARGS((exarg_T *eap));
+extern void ex_while __ARGS((exarg_T *eap));
+extern void ex_continue __ARGS((exarg_T *eap));
+extern void ex_break __ARGS((exarg_T *eap));
+extern void ex_endwhile __ARGS((exarg_T *eap));
+extern void ex_throw __ARGS((exarg_T *eap));
+extern void do_throw __ARGS((struct condstack *cstack));
+extern void ex_try __ARGS((exarg_T *eap));
+extern void ex_catch __ARGS((exarg_T *eap));
+extern void ex_finally __ARGS((exarg_T *eap));
+extern void ex_endtry __ARGS((exarg_T *eap));
+extern void enter_cleanup __ARGS((cleanup_T *csp));
+extern void leave_cleanup __ARGS((cleanup_T *csp));
+extern int cleanup_conditionals __ARGS((struct condstack *cstack, int searched_cond, int inclusive));
+extern void ex_endfunction __ARGS((exarg_T *eap));
+extern int has_while_cmd __ARGS((char_u *p));
+/* vim: set ft=c : */
