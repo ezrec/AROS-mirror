@@ -56,8 +56,8 @@
 #undef	FALSE
 #define FALSE (0)
 
-#if !defined(AZTEC_C) && !defined(__AROS__)
-static long dos_packet __ARGS((struct MsgPort *, long, long));
+#if !defined(AZTEC_C)
+static long dos_packet __ARGS((struct MsgPort *, long, BPTR));
 #endif
 static int lock2name __ARGS((BPTR lock, char_u *buf, long   len));
 static void out_num __ARGS((long n));
@@ -216,7 +216,7 @@ mch_delay(msec, ignoreinput)
     long    msec;
     int	    ignoreinput;
 {
-#ifndef LATTICE		/* SAS declares void Delay(UNLONG) */
+#if !defined(__AROS__) && !defined(LATTICE)		/* SAS declares void Delay(UNLONG) */
     void	    Delay __ARGS((long));
 #endif
 
@@ -828,7 +828,7 @@ mch_mkdir(name)
     BPTR	lock;
 
     lock = CreateDir(name);
-    if (lock != NULL)
+    if (lock != (BPTR)NULL)
 	UnLock(lock);
 }
 
@@ -932,12 +932,8 @@ mch_exit(r)
 mch_settmode(tmode)
     int		tmode;
 {
-#ifdef __AROS__
-    if (!SetMode(raw_in, tmode == TMODE_RAW ? 1 : 0))
-#else
     if (dos_packet(MP(raw_in), (long)ACTION_SCREEN_MODE,
-					  tmode == TMODE_RAW ? -1L : 0L) == 0)
-#endif
+					  tmode == TMODE_RAW ? (BPTR)-1L : (BPTR)0L) == 0)
 	mch_errmsg(_("cannot change console mode ?!\n"));
 }
 
@@ -992,13 +988,8 @@ mch_get_shellsize()
 	OUT_STR("\233t\233u");	/* CSI t CSI u */
     out_flush();
 
-#ifdef __AROS__
-    if (!Info(raw_out, id)
-		 || (wb_window = (struct Window *) id->id_VolumeNode) == NULL)
-#else
-    if (dos_packet(MP(raw_out), (long)ACTION_DISK_INFO, ((ULONG) id) >> 2) == 0
+    if (dos_packet(MP(raw_out), (long)ACTION_DISK_INFO, MKBADDR(id)) == 0
 	    || (wb_window = (struct Window *)id->id_VolumeNode) == NULL)
-#endif
     {
 	/* it's not an amiga window, maybe aux device */
 	/* terminal type should be set */
@@ -1007,7 +998,7 @@ mch_get_shellsize()
     }
     if (oldwindowtitle == NULL)
 	oldwindowtitle = (char_u *)wb_window->Title;
-    if (id->id_InUse == (BPTR)NULL)
+    if (id->id_InUse == 0)
     {
 	mch_errmsg(_("mch_get_shellsize: not a console??\n"));
 	return FAIL;
@@ -1066,7 +1057,7 @@ out_num(n)
     OUT_STR_NF(tltoa((unsigned long)n));
 }
 
-#if !defined(AZTEC_C) && !defined(__AROS__)
+#if !defined(AZTEC_C)
 /*
  * Sendpacket.c
  *
@@ -1082,6 +1073,10 @@ out_num(n)
 /* #include <proto/dos.h> */
 #include <exec/memory.h>
 
+#ifndef __AROS__
+#define SIPTR LONG
+#endif
+
 /*
  * Function - dos_packet written by Phil Lindsay, Carolyn Scheppner, and Andy
  * Finkel. This function will send a packet of the given type to the Message
@@ -1091,8 +1086,8 @@ out_num(n)
     static long
 dos_packet(pid, action, arg)
     struct MsgPort *pid;    /* process indentifier ... (handlers message port) */
-    long	    action, /* packet type ... (what you want handler to do)   */
-		    arg;    /* single argument */
+    long	    action; /* packet type ... (what you want handler to do)   */
+    BPTR	    arg;    /* single argument */
 {
 # ifdef FEAT_ARP
     struct MsgPort	    *replyport;
@@ -1101,7 +1096,7 @@ dos_packet(pid, action, arg)
 
     if (dos2)
 # endif
-	return DoPkt(pid, action, arg, 0L, 0L, 0L, 0L);	/* use 2.0 function */
+	return DoPkt(pid, action, (SIPTR)arg, 0L, 0L, 0L, 0L);	/* use 2.0 function */
 # ifdef FEAT_ARP
 
     replyport = (struct MsgPort *) CreatePort(NULL, 0);	/* use arp function */
@@ -1134,7 +1129,7 @@ dos_packet(pid, action, arg)
     return (res1);
 # endif
 }
-#endif /* !defined(AZTEC_C) && !defined(__AROS__) */
+#endif /* !defined(AZTEC_C) */
 
 /*
  * Call shell.
@@ -1404,7 +1399,7 @@ mch_expandpath(gap, pat, flags)
     LONG		Result;
     char_u		*starbuf, *sp, *dp;
     int			start_len;
-    int			matches;
+    int			matches = 0;
 
     start_len = gap->ga_len;
 

@@ -2632,7 +2632,7 @@ find_endpos(idx, startpos, m_endpos, hl_endpos, flagsp, end_endpos,
     int		start_idx;
     int		best_idx;
     regmmatch_T	regmatch;
-    regmmatch_T	best_regmatch;	    /* startpos/endpos of best match */
+    regmmatch_T	best_regmatch = {};	    /* startpos/endpos of best match */
     lpos_T	pos;
     char_u	*line;
     int		had_match = FALSE;

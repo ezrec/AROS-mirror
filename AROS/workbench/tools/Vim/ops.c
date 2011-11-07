@@ -3004,7 +3004,7 @@ do_put(regname, dir, count, flags)
     int		delcount;
     int		incr = 0;
     long	j;
-    struct block_def bd;
+    struct block_def bd = {};
 #endif
     char_u	**y_array = NULL;
     long	nr_lines = 0;

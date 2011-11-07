@@ -3172,8 +3172,10 @@ buf_write(buf, fname, sfname, start, end, eap, append, forceit,
 	    struct stat	st_new;
 	    char_u	*dirp;
 	    char_u	*rootname;
+#ifdef UNIX
 #ifndef SHORT_FNAME
 	    int		did_set_shortname;
+#endif
 #endif
 
 	    copybuf = alloc(BUFSIZE + 1);
@@ -3215,8 +3217,10 @@ buf_write(buf, fname, sfname, start, end, eap, append, forceit,
 		    goto nobackup;
 		}
 
+#ifdef UNIX
 #ifndef SHORT_FNAME
 		did_set_shortname = FALSE;
+#endif
 #endif
 
 		/*

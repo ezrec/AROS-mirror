@@ -60,7 +60,7 @@ static struct Gadget propGadget = { NULL, -12, 15, 10, -28,
 	GACT_RELVERIFY+GACT_RIGHTBORDER+GACT_IMMEDIATE,
 	GTYP_PROPGADGET+GTYP_GZZGADGET,
 	NULL, NULL,
-	NULL, NULL, (APTR)&Gadget2SInfo, NULL, NULL };
+	NULL, 0, (APTR)&Gadget2SInfo, 0, NULL };
 
 static struct timerequest *TimerIO;
 static struct MsgPort	  *TimerMP;
@@ -84,8 +84,8 @@ struct TagItem tags[] =
     {WA_Top, 0},
     {WA_Width, 400},
     {WA_Height, 400},
-    {WA_Title, (ULONG)VIM_VERSION_SHORT},
-    {WA_ScreenTitle, (ULONG)VIM_VERSION_LONG},
+    {WA_Title, (IPTR)VIM_VERSION_SHORT},
+    {WA_ScreenTitle, (IPTR)VIM_VERSION_LONG},
     {WA_DragBar, TRUE},			/* enable dragging of the window */
     {WA_DepthGadget, TRUE},		/* enable the depth gadget */
     {WA_CloseGadget, TRUE},		/* enable the close gadget*/
@@ -119,11 +119,12 @@ struct TagItem tags[] =
 	    |IDCMP_INACTIVEWINDOW	/* notify of inactive window */
 	    |IDCMP_ACTIVEWINDOW		/* notify of inactive window */
     },
-    {TAG_DONE, NULL}
+    {TAG_DONE, 0}
 };
 
 #if defined(D)
 #undef D
+#undef kprintf
 #endif
 
 /*#define D(_msg) fprintf(stderr, "%s\n", _msg)*/
@@ -131,7 +132,9 @@ struct TagItem tags[] =
 #define D(_A)
 #define kprintf(s, ...)
 
+#ifdef UNUSED_CODE
 static void AmigaError(const char *string);
+#endif
 
 void HandleEvent(unsigned long * object);
 static UBYTE getrealcolor(guicolor_T i);
@@ -141,8 +144,8 @@ static struct NewWindow vimNewWindow =
     0, 0,		/* window XY origin relative to TopLeft of screen */
     0, 0,		/* window width and height */
     0, 1,		/* detail and block pens */
-    NULL,		/* IDCMP flags */
-    NULL,		/* other window flags */
+    0,			/* IDCMP flags */
+    0,			/* other window flags */
     &propGadget,	/* first gadget in gadget list */
     NULL,		/* custom CHECKMARK imagery */
     "Amiga Vim gui",	/* window title */
@@ -231,6 +234,7 @@ posHeightCharToPoint(int height)
     return (int)(height)*characterHeight;
 }
 
+#ifdef UNUSED_CODE
     static int
 posWidthPointToChar(int width)
 {
@@ -244,6 +248,7 @@ posHeightPointToChar(int height)
     //return (int)floor((float)height/(float)characterHeight)-2;
     return height / characterHeight;
 }
+#endif /* UNUSED_CODE */
 
     static int
 widthCharToPoint(int width)
@@ -257,6 +262,7 @@ heightCharToPoint(int height)
     return (height)*characterHeight;
 }
 
+#ifdef UNUSED_CODE
     static int
 widthPointToChar(int width)
 {
@@ -268,6 +274,7 @@ heightPointToChar(int height)
 {
     return (height)/characterHeight;
 }
+#endif /* UNUSED_CODE */
 
     static void
 refreshBorder(void)
@@ -745,6 +752,7 @@ checkEventHandler(void)
     return OK;
 }
 
+#ifdef UNUSED_CODE
     static int
 charEventHandler(int wtime)
 {
@@ -766,6 +774,7 @@ charEventHandler(int wtime)
 
     return rc;
 }
+#endif
 
 
 /*
@@ -810,7 +819,7 @@ gui_mch_add_menu_item(vimmenu_T *menu, int idx)
     SetAttrib(&menuItemUnion->menuItem, MutualExclude, 0);
     SetAttrib(&menuItemUnion->menuItem, ItemFill, (APTR)menutext);
     SetAttrib(&menuItemUnion->menuItem, SelectFill, NULL);
-    SetAttrib(&menuItemUnion->menuItem, Command, NULL);
+    SetAttrib(&menuItemUnion->menuItem, Command, 0);
     SetAttrib(&menuItemUnion->menuItem, SubItem, NULL);
     SetAttrib(&menuItemUnion->menuItem, NextSelect, MENUNULL);
 
@@ -927,9 +936,9 @@ gui_mch_prepare(int *argc, char **argv)
 {
     D("gui_mch_prepare");
 
-    execBase = (struct ExecBase *)OpenLibrary("exec.library", NULL);
-    gfxBase = (struct GFXBase *)OpenLibrary("graphics.library", NULL);
-    layersBase = (struct LayersBase *)OpenLibrary("layers.library", NULL);
+    execBase = (struct ExecBase *)OpenLibrary("exec.library", 0);
+    gfxBase = (struct GFXBase *)OpenLibrary("graphics.library", 0);
+    layersBase = (struct LayersBase *)OpenLibrary("layers.library", 0);
 
     if (!execBase)
     {
@@ -1230,7 +1239,7 @@ gui_mch_adjust_charsize()
 gui_mch_get_font( char_u *name, int giveErrorIfMissing)
 {
     /*D("gui_mch_get_font");*/
-    return NULL;
+    return (GuiFont)0;
 }
 
     void
@@ -1306,7 +1315,7 @@ gui_mch_free_font(GuiFont font)
 	{"grey90",	32, 229, 229, 229},
 	{"grey95",	33, 242, 242, 242},
 	{"grey80",	34, 204, 204, 204},
-	{NULL, NULL},
+	{NULL, 0},
     };
 
     guicolor_T
@@ -1698,6 +1707,7 @@ gui_mch_draw_menubar(void)
     SetMenuStrip(gui.window, gui.menu);
 }
 
+#ifdef UNUSED_CODE
     static void
 AmigaError(const char *string)
 {
@@ -1715,6 +1725,7 @@ AmigaError(const char *string)
 
     AutoRequest(NULL, &message, &pos, &neg, 0, 0, 300, 300);
 }
+#endif
 
     int
 clip_mch_own_selection(VimClipboard *cbd)

@@ -3085,6 +3085,7 @@ call_func(name, len, retvar, argcount, argvars, firstline, lastline,
 		 N_("E119: Not enough arguments for function: %s"),
 		 N_("E120: Using <SID> not in a script context: %s"),
 		};
+#undef ERROR_UNKNOWN
 #define ERROR_UNKNOWN	0
 #define ERROR_TOOMANY	1
 #define ERROR_TOOFEW	2
@@ -6175,7 +6176,7 @@ f_searchpair(argvars, retvar)
     char_u	*skip;
     char_u	*pat, *pat2, *pat3;
     pos_T	pos;
-    pos_T	firstpos;
+    pos_T	firstpos = {};
     pos_T	save_cursor;
     pos_T	save_pos;
     int		save_p_ws = p_ws;

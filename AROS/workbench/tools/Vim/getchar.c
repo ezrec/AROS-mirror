@@ -4218,7 +4218,7 @@ makemap(fd, buf)
 			return FAIL;
 		    if (mp->m_noremap != REMAP_YES && fprintf(fd, "nore") < 0)
 			return FAIL;
-		    if (fprintf(fd, cmd) < 0)
+		    if (fprintf(fd, "%s", cmd) < 0)
 			return FAIL;
 		    if (buf != NULL && fputs(" <buffer>", fd) < 0)
 			return FAIL;
@@ -4310,7 +4310,7 @@ put_escstr(fd, strstart, what)
 	    }
 	    if (IS_SPECIAL(c) || modifiers)	/* special key */
 	    {
-		if (fprintf(fd, (char *)get_special_key_name(c, modifiers)) < 0)
+		if (fprintf(fd, "%s", (char *)get_special_key_name(c, modifiers)) < 0)
 		    return FAIL;
 		continue;
 	    }

@@ -73,6 +73,10 @@ typedef long off_t;
 # include <unistd.h>
 #endif
 
+#ifdef __AROS__
+# include <time.h>
+#endif
+
 /*
  * arpbase.h must be included before functions.h
  */
