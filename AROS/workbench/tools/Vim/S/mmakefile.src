@@ -1,0 +1,13 @@
+#   $Id$
+include $(TOP)/config/make.cfg
+
+#MM- workbench-tools-vim: workbench-tools-vim-s workbench-tools-vim-envpackage
+
+$copy_files_q mmake=workbench-tools-vim-s \
+              files="Package-Startup" \
+              dst=$(AROS_TOOLS)/Vim/S
+
+#MM
+workbench-tools-vim-envpackage:
+	$(ECHO) "SYS:Tools/Vim" >$(AROS_PACKAGES)/Vim
+

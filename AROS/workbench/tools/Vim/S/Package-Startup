@@ -1,0 +1,4 @@
+; $VER
+; VIM-PackageStartup (c) The AROS Dev Team.
+;
+Path "C" "S" ADD QUIET

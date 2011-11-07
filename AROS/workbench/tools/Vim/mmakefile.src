@@ -1,0 +1,36 @@
+# $Id$
+#
+# Makefile to make Vim
+
+include $(TOP)/config/make.cfg
+
+VIM_VERSION=64
+
+EXEDIR := $(AROS_TOOLS)/Vim/C
+SCRIPTDIR := $(AROS_TOOLS)/Vim/S
+RUNTIMEDIR := $(AROS_TOOLS)/Vim/Vim$(VIM_VERSION)
+
+#MM- workbench-tools : workbench-tools-vim workbench-tools-vim-runtime
+#MM workbench-tools-vim : includes linklibs
+
+#MM
+workbench-tools-vim-runtime:
+	@$(MKDIR) $(RUNTIMEDIR)
+	@cd $(SRCDIR)/workbench/tools/Vim/runtime; $(CP) -a . $(RUNTIMEDIR)/.
+
+FILES  = buffer charset diff digraph edit eval ex_cmds          \
+         ex_cmds2 ex_docmd ex_eval ex_getln fileio fold getchar \
+         main mark mbyte memfile memline menu message misc1   \
+         misc2 move normal ops option os_amiga quickfix         \
+         regexp screen search syntax tag term ui undo         \
+         version window gui_amiga gui
+
+
+USER_CFLAGS := -I$(SRCDIR)/workbench/tools/Vim/proto \
+               -DNO_ARP -DUSE_TMPNAM -DFEAT_GUI_AMIGA
+
+%build_prog mmake=workbench-tools-vim \
+    progname=Vim targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs="arossupport amiga arosc m"
+
+%common
