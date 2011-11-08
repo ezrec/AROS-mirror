@@ -237,6 +237,8 @@ struct WriteLevel
 	    offset = IDESC;
 	    value  = IDESC;
 	    count  = IDESC;
+	    (void)offset; // Unused
+	    (void)value; // Unused
 
 	    while (count --)
 	    {
@@ -255,6 +257,8 @@ struct WriteLevel
 	    offset = IDESC;
 	    value  = IDESC;
 	    count  = IDESC;
+	    (void)offset; // Unused
+	    (void)value; // Unused
 
 	    count <<= 2;
 
