@@ -229,7 +229,9 @@ VOID release_cache_object(ObjectCache *objectCache, OOP_Object *object, struct G
 {
     struct objcache *oc;
     ULONG i;
+#if DEBUG
     BOOL found = FALSE;
+#endif
     
     oc = (struct objcache *)objectCache;
     
@@ -245,7 +247,9 @@ VOID release_cache_object(ObjectCache *objectCache, OOP_Object *object, struct G
 	    if (ci->obj == object) {
 	    	/* Object found */
 		ci->used = FALSE;
+#if DEBUG
 		found = TRUE;
+#endif
 	    }
 	}
     }

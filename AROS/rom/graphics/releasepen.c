@@ -92,7 +92,9 @@
 	    PALEXTRA_REFCNT(pe, n)--;
 	    if (0 == PALEXTRA_REFCNT(pe, n))
 	    {
+#if DEBUG
         	BOOL found = FALSE;
+#endif
         	/* 
         	** I can take this out if the list of shared pens
         	** since this was the last application that used
@@ -101,7 +103,9 @@
         	index = pe->pe_FirstShared;
         	if ((PalExtra_AllocList_Type)n == index)
         	{
+#if DEBUG
         	    found = TRUE;
+#endif
         	    /*
         	    ** it's the very first one.
         	    */
@@ -130,7 +134,9 @@
         	    {
         		if ((PalExtra_AllocList_Type)n == PALEXTRA_ALLOCLIST(pe, index))
         		{
+#if DEBUG
         		    found = TRUE;
+#endif
 
         		    /*
         		    ** Take it out of the list of shared entries
