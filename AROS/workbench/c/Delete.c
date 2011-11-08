@@ -326,6 +326,7 @@ int doDelete(struct AnchorPath *ap, STRPTR *files, BOOL all, BOOL quiet,
             isfile = !isDirectory(ap, forcelinks);
             strcpy(name, ap->ap_Buf);
 	}
+        (void)isfile; // Odd. 'isfile' is never used
         MatchEnd(ap);
         if (deleteit)
         {

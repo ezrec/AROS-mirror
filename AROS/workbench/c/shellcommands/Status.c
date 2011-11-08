@@ -118,6 +118,8 @@ AROS_SHA(STRPTR,COM=,COMMAND,/K,NULL))
 	all = TRUE;
     }
 
+    (void)all; // Odd. 'all' is unused
+
     if (command != NULL)
     {
  	struct List     *cliList;
