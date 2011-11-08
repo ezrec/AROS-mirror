@@ -1380,7 +1380,7 @@ D(bug("[Wanderer] %s: ICONLIST_DISP_SHOWINFO\n", __PRETTY_FUNCTION__));
             drawericon->do_DrawerData->dd_Flags = 2;
         }
 
-#warning "TODO: Icon sort flags are only really for text list mode ... fix"
+        /* TODO: Icon sort flags are only really for text list mode ... fix */
         GET(iconList, MUIA_IconList_SortFlags, &sort_bits);
         if (sort_bits & MUIV_IconList_Sort_ByDate)
         {
@@ -3409,7 +3409,7 @@ D(bug("[Wanderer] %s: Really handing control to Zune ..\n", __PRETTY_FUNCTION__)
         return RETURN_OK;
     }
     
-#warning "TODO: Report an error if we fail to create the Workbench's window ..."
+    /* TODO: Report an error if we fail to create the Workbench's window ... */
     
     return RETURN_ERROR;
 }
@@ -3466,7 +3466,7 @@ D(bug("[Wanderer] %s: Unlocking access to screen @ %x\n", __PRETTY_FUNCTION__, d
                 }
                 else
                 {
-#warning "TODO: We need to handle the possiblity that we fail to lock the pubscreen..."
+/* TODO: We need to handle the possiblity that we fail to lock the pubscreen... */
 D(bug("[Wanderer] %s: Couldnt Lock WB Screen!!\n", __PRETTY_FUNCTION__));
                 }
                 break;
