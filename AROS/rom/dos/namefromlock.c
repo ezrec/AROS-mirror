@@ -124,8 +124,6 @@ struct MyExAllData
     /* Loop over path */
     do
     {
-    	STRPTR sep = NULL;
-
    	curlock = parentlock;
     	parentlock = NULL;
 
@@ -199,9 +197,6 @@ struct MyExAllData
                 }
     	    }
 
-    	    /* Stash away the location of the directory separator */
-    	    sep = name;
-    	    
     	    if (!error)
     	    {
         		s2--;

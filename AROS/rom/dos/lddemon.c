@@ -221,6 +221,7 @@ static struct Library *LDInit(BPTR seglist, struct DosLibrary *DOSBase, struct L
 		node = FindName(list, res->rt_Name);
 		Permit();
 		D(bug("[LDInit] Done calling InitResident(%p) on %s, seg %p node %p\n", res, res->rt_Name, lib, node));
+		(void)lib; // Unused if not in debug
 
 		if( node == NULL )
 		    UnLoadSeg(seglist);
