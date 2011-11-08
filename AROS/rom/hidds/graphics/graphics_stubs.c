@@ -486,7 +486,7 @@ void HIDD_Gfx_CleanViewPort(OOP_Object *obj, struct HIDD_ViewPortData *data)
     p.mID  = static_mid;
     p.Data = data;
 
-    return OOP_DoMethod(obj, (OOP_Msg)msg);
+    OOP_DoMethod(obj, (OOP_Msg)msg);
 }
 
 /***************************************************************/
