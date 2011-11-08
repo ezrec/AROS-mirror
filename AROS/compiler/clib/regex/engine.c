@@ -444,6 +444,7 @@ dissect(struct match *m,
 			if (slow(m, sp, rest, ssub, esub) != NULL) {
 				dp = dissect(m, sp, rest, ssub, esub);
 				assert(dp == rest);
+				(void)dp; // Unused if no assert()
 			} else		/* no */
 				assert(sp == rest);
 			sp = rest;
