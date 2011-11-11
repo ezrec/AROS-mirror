@@ -56,12 +56,12 @@ int main(int argc, char **argv)
     D(bug("[WBRename] Args %d\n", startup->sm_NumArgs));
 
     if (startup->sm_NumArgs != 2)
-	   Cleanup(_(MSG_NEEDS_MORE_ARGS));
+       Cleanup(_(MSG_NEEDS_MORE_ARGS));
 
     parentlock = startup->sm_ArgList[1].wa_Lock;
     oldname    = startup->sm_ArgList[1].wa_Name;
     if ((parentlock == NULL) || (oldname == NULL))
-	   Cleanup(_(MSG_INVALID_LOCK));
+       Cleanup(_(MSG_INVALID_LOCK));
 
     oldlock = CurrentDir(parentlock);
     
@@ -81,14 +81,14 @@ static void MakeGUI(void)
 {
     bt_ok_hook.h_Entry = (APTR)bt_ok_hook_function;
     app = (Object *)ApplicationObject,
-	MUIA_Application_Title      , __(MSG_TITLE),
-	MUIA_Application_Version    , (IPTR) versionstring,
-	MUIA_Application_Copyright  , __(MSG_COPYRIGHT),
-	MUIA_Application_Author     , (IPTR) "The AROS Development Team",
-	MUIA_Application_Description, __(MSG_DESCRIPTION),
-	MUIA_Application_Base       , (IPTR) "WBRENAME",
-	MUIA_Application_UseCommodities, FALSE,
-	MUIA_Application_UseRexx, FALSE,
+    MUIA_Application_Title      , __(MSG_TITLE),
+    MUIA_Application_Version    , (IPTR) versionstring,
+    MUIA_Application_Copyright  , __(MSG_COPYRIGHT),
+    MUIA_Application_Author     , (IPTR) "The AROS Development Team",
+    MUIA_Application_Description, __(MSG_DESCRIPTION),
+    MUIA_Application_Base       , (IPTR) "WBRENAME",
+    MUIA_Application_UseCommodities, FALSE,
+    MUIA_Application_UseRexx, FALSE,
         SubWindow, (IPTR)(window = (Object *)WindowObject,
             MUIA_Window_Title, __(MSG_WINDOW_TITLE),
             MUIA_Window_Width, MUIV_Window_Width_Visible(33),  // Set width at least as 33% of visible screen
@@ -128,11 +128,11 @@ static void MakeGUI(void)
         Cleanup(_(MSG_FAILED_CREATE_APP));
 
     DoMethod(window, MUIM_Notify, MUIA_Window_CloseRequest, TRUE,
-	    app, 2, MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit);
+        app, 2, MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit);
     DoMethod(bt_cancel, MUIM_Notify, MUIA_Pressed, FALSE,
-	    app, 2, MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit);
+        app, 2, MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit);
     DoMethod(bt_ok, MUIM_Notify, MUIA_Pressed, FALSE,
-	    app, 2, MUIM_CallHook, (IPTR)&bt_ok_hook);
+        app, 2, MUIM_CallHook, (IPTR)&bt_ok_hook);
     set(window, MUIA_Window_Open, TRUE);
     set(window, MUIA_Window_ActiveObject, str_name);
     set(window, MUIA_Window_DefaultObject, bt_ok);
@@ -146,7 +146,7 @@ static void bt_ok_hook_function(void)
 
     if (doRename(oldname, newname))
     {
-	   DoMethod(app, MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit);
+       DoMethod(app, MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit);
     }
     else
     {
@@ -161,7 +161,7 @@ static BOOL doRename(const STRPTR oldname, const STRPTR newname)
 {
     BOOL retval = FALSE;
     if (( oldname == NULL) || (newname == NULL))
-	   return retval;
+       return retval;
 
     STRPTR oldinfoname = NULL;
     STRPTR newinfoname = NULL;
@@ -173,7 +173,7 @@ static BOOL doRename(const STRPTR oldname, const STRPTR newname)
     {
         MUI_Request(app, window, 0, _(MSG_ERROR_TITLE), _(MSG_OK), _(MSG_OUTOFMEMORY));
         goto end;
-    }	
+    }    
     strcpy(oldinfoname, oldname);
     strcat(oldinfoname, ".info");
 
@@ -182,7 +182,7 @@ static BOOL doRename(const STRPTR oldname, const STRPTR newname)
     {
         MUI_Request(app, window, 0, _(MSG_ERROR_TITLE), _(MSG_OK), _(MSG_OUTOFMEMORY));
         goto end;
-    }	
+    }    
     strcpy(newinfoname, newname);
     strcat(newinfoname, ".info");
 
@@ -291,7 +291,7 @@ static void Cleanup(STRPTR s)
     MUI_DisposeObject(app);
 
     if (oldlock != (BPTR)-1)
-	   CurrentDir(oldlock);
+       CurrentDir(oldlock);
 
     if (s)
     {
