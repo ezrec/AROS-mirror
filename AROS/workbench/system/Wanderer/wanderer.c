@@ -236,14 +236,14 @@ HOOKPROTO(Wanderer__HookFunc_DisplayCopyFunc, BOOL, struct dCopyStruct *obj, APT
                 {
                     sprintf(
                         d->Buffer, "%s %ld   %s %.2f kBytes   %s %.2f kBytes", 
-                        _(MSG_WANDERER_FILEACCESS_NOOFFILES), d->numfiles, _(MSG_WANDERER_FILEACCESS_ACTUAL), (double) obj->filelen / 1024.0, _(MSG_WANDERER_FILEACCESS_TOTAL), (double) d->bytes / 1024.0
+                        _(MSG_WANDERER_FILEACCESS_NOOFFILES), (long)d->numfiles, _(MSG_WANDERER_FILEACCESS_ACTUAL), (double) obj->filelen / 1024.0, _(MSG_WANDERER_FILEACCESS_TOTAL), (double) d->bytes / 1024.0
                     );
                 }
                 else
                 {
                     sprintf(
                         d->Buffer, "%s %ld   %s %.2f MBytes   %s %.2f kBytes", 
-                        _(MSG_WANDERER_FILEACCESS_NOOFFILES), d->numfiles, _(MSG_WANDERER_FILEACCESS_ACTUAL), (double) obj->filelen / 1048576.0, _(MSG_WANDERER_FILEACCESS_TOTAL), (double) d->bytes / 1024.0
+                        _(MSG_WANDERER_FILEACCESS_NOOFFILES), (long)d->numfiles, _(MSG_WANDERER_FILEACCESS_ACTUAL), (double) obj->filelen / 1048576.0, _(MSG_WANDERER_FILEACCESS_TOTAL), (double) d->bytes / 1024.0
                     );
                 }
             }
@@ -253,14 +253,14 @@ HOOKPROTO(Wanderer__HookFunc_DisplayCopyFunc, BOOL, struct dCopyStruct *obj, APT
                 {
                     sprintf(
                         d->Buffer, "%s %ld   %s %.2f kBytes   %s %.2f MBytes", 
-                        _(MSG_WANDERER_FILEACCESS_NOOFFILES), d->numfiles, _(MSG_WANDERER_FILEACCESS_ACTUAL), (double) obj->filelen / 1024.0, _(MSG_WANDERER_FILEACCESS_TOTAL), (double) d->bytes / 1048576.0
+                        _(MSG_WANDERER_FILEACCESS_NOOFFILES), (long)d->numfiles, _(MSG_WANDERER_FILEACCESS_ACTUAL), (double) obj->filelen / 1024.0, _(MSG_WANDERER_FILEACCESS_TOTAL), (double) d->bytes / 1048576.0
                     );
                 }
                 else
                 {
                     sprintf(
                         d->Buffer, "%s %ld   %s %.2f MBytes   %s %.2f MBytes", 
-                        _(MSG_WANDERER_FILEACCESS_NOOFFILES), d->numfiles, _(MSG_WANDERER_FILEACCESS_ACTUAL), (double) obj->filelen / 1048576.0, _(MSG_WANDERER_FILEACCESS_TOTAL), (double) d->bytes / 1048576.0
+                        _(MSG_WANDERER_FILEACCESS_NOOFFILES), (long)d->numfiles, _(MSG_WANDERER_FILEACCESS_ACTUAL), (double) obj->filelen / 1048576.0, _(MSG_WANDERER_FILEACCESS_TOTAL), (double) d->bytes / 1048576.0
                     );
                 }
             }
@@ -438,7 +438,7 @@ D(bug("[Wanderer]: %s()\n", __PRETTY_FUNCTION__));
     if (msg->type == ICONWINDOW_ACTION_OPEN)
     {
         static unsigned char  buf[1024];
-        IPTR                  offset;
+        D(IPTR                  offset);
         struct IconList_Entry *ent = (void*)MUIV_IconList_NextIcon_Start;
 
         DoMethod(msg->iconlist, MUIM_IconList_NextIcon, MUIV_IconList_NextIcon_Selected, (IPTR)&ent);
@@ -448,7 +448,7 @@ D(bug("[Wanderer] %s: ICONWINDOW_ACTION_OPEN: NextIcon returned MUIV_IconList_Ne
             return;
         }
 
-        offset = strlen(ent->ile_IconEntry->ie_IconNode.ln_Name) - 5;
+        D(offset = strlen(ent->ile_IconEntry->ie_IconNode.ln_Name) - 5);
 
         if ((msg->isroot) && (ent->type == ST_ROOT))
         {
@@ -643,6 +643,9 @@ D(bug("[Wanderer] %s: ICONWINDOW_ACTION_OPEN: offset = %d, buf = %s\n", __PRETTY
                                 NP_UserData,    (IPTR)dropevent,
                                 NP_StackSize,   40000,
                                 TAG_DONE);
+            if (wandererCopyProcess == NULL) {
+                /* TODO: Handle failure to create the copy process */
+            }
         }
     }
     else if (msg->type == ICONWINDOW_ACTION_APPWINDOWDROP)
@@ -1921,7 +1924,7 @@ D(bug("[Wanderer] %s: Calling WBInfo(name = '%s' parent lock = 0x%p)\n", __PRETT
 
                 UnLock(parent);
             }
-            if (file != entry->ile_IconEntry->ie_IconNode.ln_Name)
+            if ((char *)file != entry->ile_IconEntry->ie_IconNode.ln_Name)
             {
                 FreeVec(file);
             }
