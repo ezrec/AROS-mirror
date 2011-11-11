@@ -111,6 +111,9 @@ struct IconWindowVolumeList_DATA
     IPTR                        iwvcd_ShowNetworkBrowser;
     IPTR                        iwvcd_ShowUserFolder;
     char                        *iwvcd_UserFolderPath;
+
+    /* File System update handling */
+    struct MsgPort              *iwvcd_FSNotifyPort;
 };
 
 static char __icwc_intern_TxtBuff[TXTBUFF_LEN];
@@ -617,11 +620,8 @@ BOOL IconWindowVolumeList__Func_ParseBackdrop(Object *self, struct IconEntry *bd
 ///OM_NEW()
 Object *IconWindowVolumeList__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
 {
-    IPTR                            _newIconList__FSNotifyPort = 0;
-
     D(bug("[Wanderer:VolumeList]: %s()\n", __PRETTY_FUNCTION__));
 
-    _newIconList__FSNotifyPort = GetTagData(MUIA_Wanderer_FileSysNotifyPort, (IPTR) NULL, message->ops_AttrList);
 
     self = (Object *) DoSuperNewTags
       (
@@ -634,6 +634,8 @@ Object *IconWindowVolumeList__OM_NEW(Class *CLASS, Object *self, struct opSet *m
     {
         SETUP_INST_DATA;
         D(bug("[Wanderer:VolumeList] %s: SELF = 0x%p\n", __PRETTY_FUNCTION__, self));
+
+        data->iwvcd_FSNotifyPort = (struct MsgPort *)GetTagData(MUIA_Wanderer_FileSysNotifyPort, (IPTR) NULL, message->ops_AttrList);
 
 #ifdef __AROS__
         data->iwcd_ProcessIconListPrefs_hook.h_Entry = ( HOOKFUNC )IconWindowVolumeList__HookFunc_ProcessIconListPrefsFunc;
@@ -1377,7 +1379,7 @@ IPTR IconWindowVolumeList__MUIM_IconList_CreateEntry(struct IClass *CLASS, Objec
                 _volumeIcon__FSNotifyHandler->fshn_Node.ln_Name                 = this_Icon->ie_IconNode.ln_Name;
                 volPrivate->vip_FSNotifyRequest.nr_Name                                = _volumeIcon__FSNotifyHandler->fshn_Node.ln_Name;
                 volPrivate->vip_FSNotifyRequest.nr_Flags                        = NRF_SEND_MESSAGE;
-                volPrivate->vip_FSNotifyRequest.nr_stuff.nr_Msg.nr_Port                = _volumeIcon__FSNotifyPort;
+                volPrivate->vip_FSNotifyRequest.nr_stuff.nr_Msg.nr_Port                = (struct MsgPort *)_volumeIcon__FSNotifyPort;
                 _volumeIcon__FSNotifyHandler->HandleFSUpdate                        = IconWindowVolumeList__HandleFSUpdate;
 
                 if (StartNotify(&volPrivate->vip_FSNotifyRequest))
