@@ -134,7 +134,7 @@ Object *DiskInfo__OM_NEW
                 initial = (BPTR) tag->ti_Data;
                 D(bug("[DiskInfo] %s: initial lock @ 0x%p\n", __PRETTY_FUNCTION__, initial));
                 break;
-#warning "TODO: Remove MUIA_DiskInfo_Aspect"
+            /* TODO: Remove MUIA_DiskInfo_Aspect */
             case MUIA_DiskInfo_Aspect:
                 aspect = tag->ti_Data;
                 D(bug("[DiskInfo] %s: aspect: %d\n", __PRETTY_FUNCTION__, aspect));
@@ -219,7 +219,7 @@ Object *DiskInfo__OM_NEW
             if (fsstartup != NULL)
             {
             deviceinfo = AllocVec(strlen((UBYTE*)AROS_BSTR_ADDR(fsstartup->fssm_Device)) + (fsstartup->fssm_Unit/10 + 1) + 7, MEMF_CLEAR);
-            sprintf(deviceinfo,"%s %s %d", (UBYTE*)AROS_BSTR_ADDR(fsstartup->fssm_Device), _(MSG_UNIT), fsstartup->fssm_Unit);
+            sprintf(deviceinfo,"%s %s %ld", (UBYTE*)AROS_BSTR_ADDR(fsstartup->fssm_Device), _(MSG_UNIT), fsstartup->fssm_Unit);
             }
             D(bug("[DiskInfo] %s: Handler '%s'\n", __PRETTY_FUNCTION__, fshandler));
             break;
@@ -312,7 +312,7 @@ Object *DiskInfo__OM_NEW
                     Child, (IPTR) (grp = (Object *)VGroup,
             Child, (IPTR) HVSpace,
                         Child, (IPTR) ColGroup(2),
-#warning "TODO: Build this list only when data is realy available, and localise"
+                            /* TODO: Build this list only when data is realy available, and localise */
                             Child, (IPTR) TextObject, 
                                 MUIA_Text_PreParse, (IPTR) "\33r",
                                 MUIA_Text_Contents, (IPTR) __(MSG_DOSDEVICE),
@@ -591,7 +591,7 @@ IPTR DiskInfo__MUIM_DiskInfo_HandleNotify
     }
     if (di_Quit)
     {
-#warning "TODO: set MUIV_Application_ReturnID_Quit"
+        /* TODO: set MUIV_Application_ReturnID_Quit */
     }
     return (IPTR)NULL;
 }

@@ -343,7 +343,7 @@ IPTR IconDrawerList__OM_GET(struct IClass *CLASS, Object *obj, struct opGet *mes
     switch (message->opg_AttrID)
     {
         case MUIA_IconDrawerList_Drawer: STORE = (IPTR)data->drawer; return 1;
-#warning "TODO: Get the version/revision from our config.."
+        /* "TODO: Get the version/revision from our config.." */
         case MUIA_Version:                              STORE = (IPTR)1; return 1;
         case MUIA_Revision:                             STORE = (IPTR)3; return 1;
     }

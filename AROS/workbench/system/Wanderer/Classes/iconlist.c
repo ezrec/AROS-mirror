@@ -917,6 +917,7 @@ IPTR IconList__MUIM_IconList_DrawEntry(struct IClass *CLASS, Object *obj, struct
         IconList_GetIconImageRectangle(obj, data, message->entry, &iconrect);
         iconW = iconrect.MaxX - iconrect.MinX + 1;
         iconH = iconrect.MaxY - iconrect.MinY + 1;
+        (void)iconW;(void)iconH;
 
         /* Add the relative position offset of the message->entry */
         offsetx = objX - data->icld_ViewX + message->entry->ie_IconX;
@@ -1312,6 +1313,7 @@ IPTR IconList__MUIM_IconList_DrawEntryLabel(struct IClass *CLASS, Object *obj, s
     IconList_GetIconLabelRectangle(obj, data, message->entry, &iconlabelrect);
     labelW = iconlabelrect.MaxX - iconlabelrect.MinX + 1;
     labelH = iconlabelrect.MaxY - iconlabelrect.MinY + 1;
+    (void)labelW;(void)labelH;
 
     /* Add the relative position offset of the message->entry's label */
     offsetx = (objX - data->icld_ViewX) + message->entry->ie_IconX;
@@ -3595,12 +3597,12 @@ IPTR IconList__MUIM_Draw(struct IClass *CLASS, Object *obj, struct MUIP_Draw *me
 
                 if (data->icld_BufferRastPort == data->icld_DisplayRastPort)
                 {
-                    struct Bitmap *bitmap_New;
+                    struct BitMap *bitmap_New;
                     ULONG tmp_RastDepth;
                     struct Layer_Info *li;
 
                     tmp_RastDepth = GetCyberMapAttr(data->icld_DisplayRastPort->BitMap, CYBRMATTR_DEPTH);
-                    if ((bitmap_New = (struct Bitmap *)AllocBitMap(data->icld_ViewWidth,
+                    if ((bitmap_New = AllocBitMap(data->icld_ViewWidth,
                                         data->icld_ViewHeight,
                                         tmp_RastDepth,
                                         BMF_CLEAR,

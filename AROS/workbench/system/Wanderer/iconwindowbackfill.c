@@ -812,7 +812,6 @@ pb_cleanup_buffer:
     this_BFI->bfi_Buffer = NULL;
   }
 
-pb_cleanup_source:
   if (this_BFI->bfi_Source)
   { 
     ImageBackFill_CloseSourceRecord(this_BFI->bfi_Source);

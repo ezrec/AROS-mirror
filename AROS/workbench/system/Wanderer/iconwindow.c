@@ -827,7 +827,7 @@ IPTR IconWindow__OM_SET(Class *CLASS, Object *self, struct opSet *message)
                     {
                         IPTR                            _IconWin__NewWindowWidth = 0;
                         IPTR                            _IconWin__NewWindowHeight = 0;
-                        IPTR                            _IconWin__NewWindowLeft = 0;
+                        D(IPTR                            _IconWin__NewWindowLeft = 0);
                         IPTR                            _IconWin__NewWindowTop = 0;
 
                         D(bug("[Wanderer:IconWindow] %s: Updating Backdrop Window Dimensions\n", __PRETTY_FUNCTION__));
@@ -837,7 +837,7 @@ IPTR IconWindow__OM_SET(Class *CLASS, Object *self, struct opSet *message)
                         D(bug("[Wanderer:IconWindow] %s: Screen dimensions ..  %d x %d\n", __PRETTY_FUNCTION__, _IconWin__NewWindowWidth, _IconWin__NewWindowHeight));
 
                         _IconWin__NewWindowTop = __Wanderer__Screen->BarHeight + 1;
-                        _IconWin__NewWindowLeft = 0;
+                        D(_IconWin__NewWindowLeft = 0);
 
                         _IconWin__NewWindowHeight -= _IconWin__NewWindowTop;
 

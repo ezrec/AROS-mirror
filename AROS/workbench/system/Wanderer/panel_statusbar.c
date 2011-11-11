@@ -223,7 +223,7 @@ HOOKPROTO(panelStatusBar__HookFunc_UpdateStatusFunc, void, APTR *obj, APTR param
     /* Only change dir if it is a valid directory/volume */
     if ((panelStatusBarPrivate = (struct panel_StatusBar_DATA *)data->iwd_BottomPanel.iwp_PanelPrivate) != NULL)
     {
-        if (panelStatusBarPrivate->iwp_Node.ln_Name != extension_Name)
+        if (panelStatusBarPrivate->iwp_Node.ln_Name != (char *)extension_Name)
             return;
 
         struct List *iconList = NULL;
@@ -325,13 +325,13 @@ static IPTR panelStatusBar__PrefsSetup(Class *CLASS, Object *self, struct opSet 
     SETUP_ICONWINDOW_INST_DATA;
 
     panelStatusBarFSNotifyPort = GetTagData(MUIA_Wanderer_FileSysNotifyPort, (IPTR) NULL, message->ops_AttrList);
-    panelStatusBarFSNotifyList = GetTagData(MUIA_Wanderer_FileSysNotifyList, (IPTR) NULL, message->ops_AttrList);
+    panelStatusBarFSNotifyList = (struct List *)GetTagData(MUIA_Wanderer_FileSysNotifyList, (IPTR) NULL, message->ops_AttrList);
 
     D(bug("[IW.statusbar]: %s()\n", __PRETTY_FUNCTION__));
 
-    if ((panelStatusBarPrivate = (struct panel_StatusBar_DATA *)data->iwd_BottomPanel.iwp_PanelPrivate) != (IPTR)NULL)
+    if ((panelStatusBarPrivate = (struct panel_StatusBar_DATA *)data->iwd_BottomPanel.iwp_PanelPrivate) != NULL)
     {
-        if (panelStatusBarPrivate->iwp_Node.ln_Name != extension_Name)
+        if (panelStatusBarPrivate->iwp_Node.ln_Name != (char *)extension_Name)
             return 0;
 
         extension_PrefsData = AllocVec(STATUSBAR_PREFSSIZE, MEMF_CLEAR);
@@ -341,10 +341,10 @@ static IPTR panelStatusBar__PrefsSetup(Class *CLASS, Object *self, struct opSet 
 
         if ((_prefsNotifyHandler = AllocMem(sizeof(struct Wanderer_FSHandler), MEMF_CLEAR)) != NULL)
         {
-            _prefsNotifyHandler->fshn_Node.ln_Name                     = ExpandEnvName(extension_PrefsFile);
+            _prefsNotifyHandler->fshn_Node.ln_Name                     = ExpandEnvName((STRPTR)extension_PrefsFile);
             panelStatusBar__PrefsNotifyRequest.nr_Name                 = _prefsNotifyHandler->fshn_Node.ln_Name;
             panelStatusBar__PrefsNotifyRequest.nr_Flags                = NRF_SEND_MESSAGE;
-            panelStatusBar__PrefsNotifyRequest.nr_stuff.nr_Msg.nr_Port = panelStatusBarFSNotifyPort;
+            panelStatusBar__PrefsNotifyRequest.nr_stuff.nr_Msg.nr_Port = (struct MsgPort *)panelStatusBarFSNotifyPort;
             _prefsNotifyHandler->HandleFSUpdate                        = panelStatusBar__HandleFSUpdate;
 
             if (StartNotify(&panelStatusBar__PrefsNotifyRequest))
@@ -388,11 +388,11 @@ static IPTR panelStatusBar__Setup(Class *CLASS, Object *self, struct opSet *mess
 
     if (data->iwd_BottomPanel.iwp_PanelPrivate == 0)
     {
-        if ((data->iwd_BottomPanel.iwp_PanelPrivate = AllocVec(sizeof(struct panel_StatusBar_DATA), MEMF_CLEAR)) == NULL)
+        if ((data->iwd_BottomPanel.iwp_PanelPrivate = (IPTR)AllocVec(sizeof(struct panel_StatusBar_DATA), MEMF_CLEAR)) == (IPTR)NULL)
             return 0;
 
         panelStatusBarPrivate = (struct panel_StatusBar_DATA *)data->iwd_BottomPanel.iwp_PanelPrivate;
-        panelStatusBarPrivate->iwp_Node.ln_Name = extension_Name;
+        panelStatusBarPrivate->iwp_Node.ln_Name = (char *)extension_Name;
 
         /* Create the "StatusBar" panel object .. */
         panel_StatusBar = MUI_NewObject(MUIC_Group,
@@ -495,16 +495,16 @@ static IPTR panelStatusBar__Setup(Class *CLASS, Object *self, struct opSet *mess
 ///
 
 ///panelStatusBar__Cleanup()
-static IPTR panelStatusBar__Cleanup(Class *CLASS, Object *self, struct opSet *message)
+static IPTR panelStatusBar__Cleanup(Class *CLASS, Object *self, Msg message)
 {
     SETUP_ICONWINDOW_INST_DATA;
     struct panel_StatusBar_DATA *panelStatusBarPrivate;
 
     D(bug("[IW.statusbar]: %s()\n", __PRETTY_FUNCTION__));
 
-    if ((panelStatusBarPrivate = (struct panel_StatusBar_DATA *)data->iwd_TopPanel.iwp_PanelPrivate) != (IPTR)NULL)
+    if ((panelStatusBarPrivate = (struct panel_StatusBar_DATA *)data->iwd_TopPanel.iwp_PanelPrivate) != NULL)
     {
-        if (panelStatusBarPrivate->iwp_Node.ln_Name != extension_Name)
+        if (panelStatusBarPrivate->iwp_Node.ln_Name != (char *)extension_Name)
             return 0;
 
         if (panelStatusBar__PrefsNotificationObject)
@@ -531,9 +531,9 @@ static IPTR panelStatusBar__OM_GET(Class *CLASS, Object *self, struct opGet *mes
 
     D(bug("[IW.statusbar]: %s()\n", __PRETTY_FUNCTION__));
 
-    if ((panelStatusBarPrivate = (struct panel_StatusBar_DATA *)data->iwd_BottomPanel.iwp_PanelPrivate) != (IPTR)NULL)
+    if ((panelStatusBarPrivate = (struct panel_StatusBar_DATA *)data->iwd_BottomPanel.iwp_PanelPrivate) != NULL)
     {
-        if (panelStatusBarPrivate->iwp_Node.ln_Name != extension_Name)
+        if (panelStatusBarPrivate->iwp_Node.ln_Name != (char *)extension_Name)
             return rv;
 
         switch (message->opg_AttrID)
@@ -557,9 +557,9 @@ static IPTR panelStatusBar__OM_SET(Class *CLASS, Object *self, struct opSet *mes
 
     D(bug("[IW.statusbar]: %s()\n", __PRETTY_FUNCTION__));
 
-    if ((panelStatusBarPrivate = (struct panel_StatusBar_DATA *)data->iwd_BottomPanel.iwp_PanelPrivate) != (IPTR)NULL)
+    if ((panelStatusBarPrivate = (struct panel_StatusBar_DATA *)data->iwd_BottomPanel.iwp_PanelPrivate) != NULL)
     {
-        if (panelStatusBarPrivate->iwp_Node.ln_Name != extension_Name)
+        if (panelStatusBarPrivate->iwp_Node.ln_Name != (char *)extension_Name)
             return rv;
 
         while ((tag = NextTagItem((TAGITEM)&tstate)) != NULL)
@@ -613,7 +613,7 @@ IPTR panelStatusBar__Init()
     D(bug("[IW.statusbar]: %s()\n", __PRETTY_FUNCTION__));
 
     panelStatusBar__Extension.iwe_Node.ln_Pri = PANELSTATUSBAR_PRIORITY;
-    panelStatusBar__Extension.iwe_Node.ln_Name = extension_Name;
+    panelStatusBar__Extension.iwe_Node.ln_Name = (char *)extension_Name;
     panelStatusBar__Extension.iwe_Setup = panelStatusBar__Setup;
     panelStatusBar__Extension.iwe_Cleanup = panelStatusBar__Cleanup;
     panelStatusBar__Extension.iwe_Set = panelStatusBar__OM_SET;

@@ -467,10 +467,6 @@ OM_NEW
 **************************************************************************/
 IPTR IconVolumeList__OM_NEW(struct IClass *CLASS, Object *obj, struct opSet *message)
 {
-  struct IconDrawerList_DATA   *data = NULL;
-//    struct TagItem            *tag = NULL,
-//                                *tags = NULL;
-
 D(bug("[IconVolumeList]: %s()\n", __PRETTY_FUNCTION__));
 
     obj = (Object *)DoSuperNewTags(CLASS, obj, NULL,
@@ -478,8 +474,6 @@ D(bug("[IconVolumeList]: %s()\n", __PRETTY_FUNCTION__));
 
     if (!obj)
     return FALSE;
-
-    data = INST_DATA(CLASS, obj);
 
     SET(obj, MUIA_IconList_DisplayFlags, ICONLIST_DISP_VERTICAL);
     SET(obj, MUIA_IconList_SortFlags, MUIV_IconList_Sort_MASK);
@@ -726,7 +720,7 @@ D(bug("[IconVolumeList]: %s()\n", __PRETTY_FUNCTION__));
 
     switch (message->opg_AttrID)
     {
-#warning "TODO: Get the version/revision from our config.."
+        /* "TODO: Get the version/revision from our config.." */
         case MUIA_Version:                              STORE = (IPTR)1; return 1;
         case MUIA_Revision:                             STORE = (IPTR)3; return 1;
     }
