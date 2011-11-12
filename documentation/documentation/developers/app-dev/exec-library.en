@@ -4,7 +4,7 @@ AROS Application Development Manual
 
 :Authors:   Staf Verhaegen, Sebastian Rittau, Stefan Rieken, Matt Parsons,
             Adam Chodorowski, Fabio Alemagna, Matthias Rustler
-:Copyright: Copyright © 1995-2006, The AROS Development Team
+:Copyright: Copyright © 1995-2011, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Unfinished; integration started (looong way left to go).
@@ -944,6 +944,9 @@ Semaphores
 Tasks
 -----
 
+Task Handling
+^^^^^^^^^^^^^
+
 ============================== ===========================================================
 `AddTask()`_                   Add a task
 `NewAddTask()`_                Add a task
@@ -975,6 +978,32 @@ Tasks
 `ChildWait()`_                 Wait for a task to finish it processing
 ============================== ===========================================================
 
+Task Storage
+^^^^^^^^^^^^
+
+An AROS specific feature for tasks is that each Task gets an array of IPTRs that
+can be used for Task specific data. It can for example be used by shared libraries
+to easily associate data with a task or by compilers to make a program pure.
+
+Slots can allocated with `AllocTaskStorageSlot()`_ and freed with
+`FreeTaskStorageSlot()`_. After a slot has been allocated the data associated
+with the slot can be manipulated by accessing `tc_UnionETask.tc_TaskStorage[slot]`
+from a `struct Task`.
+
+When a new task is run the contents of all the slots of the parent Task are copied
+in the new task, this is valid for AddTask(), NewAddTask() and CreateNewProc().
+When RunCommand() is used the parent TaskStorage is reused in the child; changes
+made in the child to TaskStorage will be visible in parent after the child has
+exited.
+If these default behaviour is not acceptable user code has to implement checks
+and override it.
+
+Autodocs:
+
+============================== ===========================================================
+`AllocTaskStorageSlot()`_      Allocate a TaskStorage slot
+`FreeTaskStorageSlot()`_       Free a TaskStorage slot
+============================== ===========================================================
 
 Devices
 -------
@@ -1090,6 +1119,7 @@ Misc.
 .. _AllocMem(): ../autodocs/exec#allocmem
 .. _AllocPooled(): ../autodocs/exec#allocpooled
 .. _AllocSignal(): ../autodocs/exec#allocsignal
+.. _AllocTaskStorageSlot(): ../autodocs/exec#alloctaskstorageslot
 .. _AllocTrap(): ../autodocs/exec#alloctrap
 .. _AllocVec(): ../autodocs/exec#allocvec
 .. _AllocVecPooled(): ../autodocs/exec#allocvecpooled
@@ -1137,6 +1167,7 @@ Misc.
 .. _FreeMem(): ../autodocs/exec#freemem
 .. _FreePooled(): ../autodocs/exec#freepooled
 .. _FreeSignal(): ../autodocs/exec#freesignal
+.. _FreeTaskStorageSlot(): ../autodocs/exec#freetaskstorageslot
 .. _FreeTrap(): ../autodocs/exec#freetrap
 .. _FreeVec(): ../autodocs/exec#freevec
 .. _FreeVecPooled(): ../autodocs/exec#freevecpooled
