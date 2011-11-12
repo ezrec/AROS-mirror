@@ -11,34 +11,32 @@ graphics
 ======================================= ======================================= ======================================= ======================================= 
 `AddAnimOb()`_                          `AddBob()`_                             `AddDisplayDriverA()`_                  `AddFont()`_                            
 `AddVSprite()`_                         `AllocBitMap()`_                        `AllocDBufInfo()`_                      `AllocRaster()`_                        
-`AllocSpriteDataA()`_                   `AndRectRect()`_                        `AndRectRegion()`_                      `AndRectRegionND()`_                    
-`AndRegionRegion()`_                    `AndRegionRegionND()`_                  `Animate()`_                            `AreaCircle()`_                         
-`AreaDraw()`_                           `AreaEllipse()`_                        `AreaEnd()`_                            `AreaMove()`_                           
-`AreRegionsEqual()`_                    `AskFont()`_                            `AskSoftStyle()`_                       `AttachPalExtra()`_                     
-`AttemptLockLayerRom()`_                `BestModeIDA()`_                        `BitMapScale()`_                        `BltBitMap()`_                          
-`BltBitMapRastPort()`_                  `BltClear()`_                           `BltMaskBitMapRastPort()`_              `BltPattern()`_                         
-`BltRastPortBitMap()`_                  `BltTemplate()`_                        `CalcIVG()`_                            `CBump()`_                              
-`CEND()`_                               `ChangeExtSpriteA()`_                   `ChangeSprite()`_                       `ChangeVPBitMap()`_                     
-`CINIT()`_                              `ClearEOL()`_                           `ClearRectRegion()`_                    `ClearRectRegionND()`_                  
-`ClearRegion()`_                        `ClearRegionRegion()`_                  `ClearRegionRegionND()`_                `ClearScreen()`_                        
-`ClipBlit()`_                           `CloneRastPort()`_                      `CloseFont()`_                          `CloseMonitor()`_                       
-`CMove()`_                              `CoerceMode()`_                         `CopyRegion()`_                         `CopySBitMap()`_                        
-`CreateRastPort()`_                     `CWait()`_                              `DeinitRastPort()`_                     `DisownBlitter()`_                      
-`DisposeRegion()`_                      `DoCollision()`_                        `Draw()`_                               `DrawEllipse()`_                        
-`DrawGList()`_                          `EraseRect()`_                          `ExtendFont()`_                         `FindColor()`_                          
-`FindDisplayInfo()`_                    `Flood()`_                              `FontExtent()`_                         `FreeBitMap()`_                         
-`FreeColorMap()`_                       `FreeCopList()`_                        `FreeCprList()`_                        `FreeDBufInfo()`_                       
-`FreeGBuffers()`_                       `FreeRaster()`_                         `FreeRastPort()`_                       `FreeSprite()`_                         
-`FreeSpriteData()`_                     `FreeVPortCopLists()`_                  `GetAPen()`_                            `GetBitMapAttr()`_                      
-`GetBPen()`_                            `GetColorMap()`_                        `GetDisplayInfoData()`_                 `GetDrMd()`_                            
-`GetExtSpriteA()`_                      `GetGBuffers()`_                        `GetOutlinePen()`_                      `GetRGB32()`_                           
-`GetRGB4()`_                            `GetRPAttrsA()`_                        `GetSprite()`_                          `GetVPModeID()`_                        
-`GfxAssociate()`_                       `GfxFree()`_                            `GfxLookUp()`_                          `GfxNew()`_                             
-`InitArea()`_                           `InitBitMap()`_                         `InitGels()`_                           `InitGMasks()`_                         
-`InitMasks()`_                          `InitRastPort()`_                       `InitTmpRas()`_                         `InitView()`_                           
-`InitVPort()`_                          `IsPointInRegion()`_                    `LoadRGB32()`_                          `LoadRGB4()`_                           
-`LoadView()`_                           `LockLayerRom()`_                       `MakeVPort()`_                          `ModeNotAvailable()`_                   
-`Move()`_                               `MoveSprite()`_                         `MrgCop()`_                             `NewRectRegion()`_                      
+`AllocSpriteDataA()`_                   `AndRectRegion()`_                      `AndRectRegionND()`_                    `AndRegionRegion()`_                    
+`AndRegionRegionND()`_                  `Animate()`_                            `AreaCircle()`_                         `AreaDraw()`_                           
+`AreaEllipse()`_                        `AreaEnd()`_                            `AreaMove()`_                           `AreRegionsEqual()`_                    
+`AskFont()`_                            `AskSoftStyle()`_                       `AttachPalExtra()`_                     `AttemptLockLayerRom()`_                
+`BestModeIDA()`_                        `BitMapScale()`_                        `BltBitMap()`_                          `BltBitMapRastPort()`_                  
+`BltClear()`_                           `BltMaskBitMapRastPort()`_              `BltPattern()`_                         `BltTemplate()`_                        
+`CalcIVG()`_                            `CBump()`_                              `CEND()`_                               `ChangeExtSpriteA()`_                   
+`ChangeSprite()`_                       `ChangeVPBitMap()`_                     `CINIT()`_                              `ClearEOL()`_                           
+`ClearRectRegion()`_                    `ClearRectRegionND()`_                  `ClearRegion()`_                        `ClearRegionRegion()`_                  
+`ClearRegionRegionND()`_                `ClearScreen()`_                        `ClipBlit()`_                           `CloseFont()`_                          
+`CloseMonitor()`_                       `CMove()`_                              `CoerceMode()`_                         `CopySBitMap()`_                        
+`CWait()`_                              `DisownBlitter()`_                      `DisposeRegion()`_                      `DoCollision()`_                        
+`Draw()`_                               `DrawEllipse()`_                        `DrawGList()`_                          `EraseRect()`_                          
+`ExtendFont()`_                         `FindColor()`_                          `FindDisplayInfo()`_                    `Flood()`_                              
+`FontExtent()`_                         `FreeBitMap()`_                         `FreeColorMap()`_                       `FreeCopList()`_                        
+`FreeCprList()`_                        `FreeDBufInfo()`_                       `FreeGBuffers()`_                       `FreeRaster()`_                         
+`FreeSprite()`_                         `FreeSpriteData()`_                     `FreeVPortCopLists()`_                  `GetAPen()`_                            
+`GetBitMapAttr()`_                      `GetBPen()`_                            `GetColorMap()`_                        `GetDisplayInfoData()`_                 
+`GetDrMd()`_                            `GetExtSpriteA()`_                      `GetGBuffers()`_                        `GetOutlinePen()`_                      
+`GetRGB32()`_                           `GetRGB4()`_                            `GetRPAttrsA()`_                        `GetSprite()`_                          
+`GetVPModeID()`_                        `GfxAssociate()`_                       `GfxFree()`_                            `GfxLookUp()`_                          
+`GfxNew()`_                             `InitArea()`_                           `InitBitMap()`_                         `InitGels()`_                           
+`InitGMasks()`_                         `InitMasks()`_                          `InitRastPort()`_                       `InitTmpRas()`_                         
+`InitView()`_                           `InitVPort()`_                          `IsPointInRegion()`_                    `LoadRGB32()`_                          
+`LoadRGB4()`_                           `LoadView()`_                           `LockLayerRom()`_                       `MakeVPort()`_                          
+`ModeNotAvailable()`_                   `Move()`_                               `MoveSprite()`_                         `MrgCop()`_                             
 `NewRegion()`_                          `NextDisplayInfo()`_                    `ObtainBestPenA()`_                     `ObtainPen()`_                          
 `OpenFont()`_                           `OpenMonitor()`_                        `OrRectRegion()`_                       `OrRectRegionND()`_                     
 `OrRegionRegion()`_                     `OrRegionRegionND()`_                   `OwnBlitter()`_                         `PolyDraw()`_                           
@@ -51,12 +49,12 @@ graphics
 `SetOutlinePen()`_                      `SetRast()`_                            `SetRegion()`_                          `SetRGB32()`_                           
 `SetRGB32CM()`_                         `SetRGB4()`_                            `SetRGB4CM()`_                          `SetRPAttrsA()`_                        
 `SetSoftStyle()`_                       `SetWriteMask()`_                       `SortGList()`_                          `StripFont()`_                          
-`SwapRegions()`_                        `SyncSBitMap()`_                        `Text()`_                               `TextExtent()`_                         
-`TextFit()`_                            `TextLength()`_                         `UCopperListInit()`_                    `UnlockLayerRom()`_                     
-`VBeamPos()`_                           `VideoControl()`_                       `WaitBlit()`_                           `WaitBOVP()`_                           
-`WaitTOF()`_                            `WeighTAMatch()`_                       `WriteChunkyPixels()`_                  `WritePixel()`_                         
-`WritePixelArray8()`_                   `WritePixelLine8()`_                    `XorRectRegion()`_                      `XorRectRegionND()`_                    
-`XorRegionRegion()`_                    `XorRegionRegionND()`_                  
+`SyncSBitMap()`_                        `Text()`_                               `TextExtent()`_                         `TextFit()`_                            
+`TextLength()`_                         `UCopperListInit()`_                    `UnlockLayerRom()`_                     `VBeamPos()`_                           
+`VideoControl()`_                       `WaitBlit()`_                           `WaitBOVP()`_                           `WaitTOF()`_                            
+`WeighTAMatch()`_                       `WriteChunkyPixels()`_                  `WritePixel()`_                         `WritePixelArray8()`_                   
+`WritePixelLine8()`_                    `XorRectRegion()`_                      `XorRectRegionND()`_                    `XorRegionRegion()`_                    
+`XorRegionRegionND()`_                  
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -149,11 +147,13 @@ Synopsis
 ::
 
  ULONG AddDisplayDriverA(
-          APTR gfxhidd,
-          struct TagItem * tags );
+          APTR gfxclass,
+          struct TagItem * attrs,
+          const struct TagItem * tags );
  
  ULONG AddDisplayDriver(
-          APTR gfxhidd,
+          APTR gfxclass,
+          struct TagItem * attrs,
           TAG tag, ... );
 
 Function
@@ -167,8 +167,10 @@ Inputs
 ~~~~~~
 ::
 
-     gfxhidd - A newly created driver object
-     tags    - An optional TagList. Valid tags are:
+     gfxhidd - A pointer to an OOP class of the display driver
+     attrs   - Additional attributes to supply to the driver class during object creation
+     tags    - An optional TagList describing how graphics.library should handle the driver.
+               Valid tags are:
 
          DDRV_BootMode     - A boolean value telling that a boot mode driver
                              is being added. Boot mode drivers will automatically
@@ -230,9 +232,11 @@ Result
 
      error - One of following codes:
 
-         DD_OK        - Operation completed OK.
-         DD_NO_MEM    - There is not enough memory to set up internal data.
-         DD_ID_EXISTS - Attempt to assign monitor IDs that are already used.
+         DD_OK           - Operation completed OK.
+         DD_NO_MEM       - There is not enough memory to set up internal data.
+         DD_ID_EXISTS    - Attempt to assign monitor IDs that are already used.
+         DD_IN_USE       - One of boot-mode drivers is in use and can not be shut down.
+         DD_DRIVER_ERROR - Failure to create driver object.
 
 
 Notes
@@ -240,17 +244,6 @@ Notes
 ::
 
      This function is AROS-specific.
-
-
-Bugs
-~~~~
-::
-
-     graphics.library tracks down usage of display drivers. If a driver currently
-     has something on display, it will not be shut down, even if it's boot mode
-     driver. This can cause problems if the new driver attempts to take over
-     the same hardware (for example native mode driver vs VESA driver). So be careful
-     while adding new display drivers on a working system. Know what you do.
 
 
 
@@ -375,8 +368,8 @@ Inputs
              Displayable data has more severe alignment restrictions
              than non-displayable data in some systems.
              Note that it may be not enough to specify only this flag
-             to make the bitmap really displayable. See BMF_SCREEN
-             description.
+             to make the bitmap really displayable. See "INTERNALS"
+             section below.
 
          BMF_INTERLEAVED: tells graphics that you would like your
              bitmap to be allocated with one large chunk of display
@@ -616,62 +609,6 @@ Result
                  when this sprite is not needed anymore.
 
 
-
-----------
-
-AndRectRect()
-=============
-
-Synopsis
-~~~~~~~~
-::
-
- BOOL AndRectRect(
-          struct Rectangle * rect1,
-          struct Rectangle * rect2,
-          struct Rectangle * intersect );
-
-Function
-~~~~~~~~
-::
-
-     Calculate the intersection rectangle between the
-     given Rectangle rect1 and the given Rectangle rect2
-     leaving the result in intersect (if intersect != NULL).
-
-
-Inputs
-~~~~~~
-::
-
-     rect1 - pointer to 1st Rectangle
-     rect2 - pointer to 2nd Rectangle
-     intersect -> pointer to rectangle which will hold result. May be NULL.
-
-
-Result
-~~~~~~
-::
-
-     TRUE if rect1 and rect2 do intersect. In this case intersect (unless NULL)
-     will contain the intersection rectangle.
-
-     FALSE if rect1 and rect2 do not overlap. "intersect" will
-     then be left unchanged.
-
-
-Notes
-~~~~~
-::
-
-     This function does not exist in AmigaOS.
-
-
-
-See also
-~~~~~~~~
-
-`AndRectRegion()`_ `AndRegionRegion()`_ 
 
 ----------
 
@@ -1722,54 +1659,6 @@ Inputs
 
 ----------
 
-BltRastPortBitMap()
-===================
-
-Synopsis
-~~~~~~~~
-::
-
- void BltRastPortBitMap(
-          struct RastPort * srcRastPort,
-          LONG xSrc,
-          LONG ySrc,
-          struct BitMap * destBitMap,
-          LONG xDest,
-          LONG yDest,
-          ULONG xSize,
-          ULONG ySize,
-          ULONG minterm );
-
-Function
-~~~~~~~~
-::
-
-     Copies the content of the rast port into the bitmap.
-     Takes cliprects into consideration.
-
-
-Inputs
-~~~~~~
-::
-
-     srcRastPort - Copy from this RastPort.
-     xSrc, ySrc - This is the upper left corner of the area to copy.
-     destBitMap - Destination BitMap.
-     xDest, yDest - Upper left corner where to place the copy
-     xSize, ySize - The size of the area to copy
-     minterm - How to copy. See BltBitMap() for an explanation.
-
-
-Notes
-~~~~~
-::
-
-     This functions isn't part of AmigaOS3.1
-
-
-
-----------
-
 BltTemplate()
 =============
 
@@ -2374,55 +2263,6 @@ See also
 
 ----------
 
-CloneRastPort()
-===============
-
-Synopsis
-~~~~~~~~
-::
-
- struct RastPort * CloneRastPort(
-          struct RastPort * rp );
-
-Function
-~~~~~~~~
-::
-
-     This function creates a copy of a RastPort.
-
-
-Inputs
-~~~~~~
-::
-
-     rp - The RastPort to clone.
-
-
-Result
-~~~~~~
-::
-
-     A pointer to a RastPort with the same attributes as the RastPort
-     which was specified or NULL if there was not enough memory to perform
-     the operation.
-
-
-Notes
-~~~~~
-::
-
-     This function is AROS specific. For compatibility, there is a
-     function in aros.lib which does the same on Amiga.
-
-
-
-See also
-~~~~~~~~
-
-`CreateRastPort()`_ `FreeRastPort()`_ 
-
-----------
-
 CloseFont()
 ===========
 
@@ -2564,52 +2404,6 @@ Result
 
 ----------
 
-CopyRegion()
-============
-
-Synopsis
-~~~~~~~~
-::
-
- struct Region * CopyRegion(
-          struct Region * region );
-
-Function
-~~~~~~~~
-::
-
-     Make a copy of the given Region.
-
-
-Inputs
-~~~~~~
-::
-
-     region - pointer to a Region structure
-
-
-Result
-~~~~~~
-::
-
-     the copy of the Region, or NULL if not enough memory.
-
-
-Notes
-~~~~~
-::
-
-     This function does not exist in AmigaOS.
-
-
-
-See also
-~~~~~~~~
-
-`NewRegion()`_ `DisposeRegion()`_ 
-
-----------
-
 CopySBitMap()
 =============
 
@@ -2650,48 +2444,6 @@ See also
 ~~~~~~~~
 
 `SyncSBitMap()`_ 
-
-----------
-
-CreateRastPort()
-================
-
-Synopsis
-~~~~~~~~
-::
-
- struct RastPort * CreateRastPort();
-
-Function
-~~~~~~~~
-::
-
-     This function creates a new RastPort.
-
-
-Inputs
-~~~~~~
-::
-
-     None.
-
-
-Result
-~~~~~~
-::
-
-     A pointer to a new RastPort or NULL if there was not enough memory
-     to perform the operation.
-
-
-Notes
-~~~~~
-::
-
-     This function is AROS specific. For compatibility, there is a
-     function in aros.lib which does the same on Amiga.
-
-
 
 ----------
 
@@ -2739,55 +2491,6 @@ See also
 ~~~~~~~~
 
 `CINIT()`_ `CMOVE()`_ `CEND()`_ `graphics/copper.h <../headerfiles/graphics/copper.h>`_ 
-
-----------
-
-DeinitRastPort()
-================
-
-Synopsis
-~~~~~~~~
-::
-
- void DeinitRastPort(
-          struct RastPort * rp );
-
-Function
-~~~~~~~~
-::
-
-     Frees the contents of a RastPort structure. The structure itself
-     is not freed.
-
-
-Inputs
-~~~~~~
-::
-
-     rp - The RastPort which contents are to be freed.
-
-
-Result
-~~~~~~
-::
-
-     None.
-
-
-Notes
-~~~~~
-::
-
-     You can initialize the RastPort again via InitRastPort() but
-     you must not use any other graphics function with it before
-     that.
-
-
-
-See also
-~~~~~~~~
-
-`InitRastPort()`_ 
 
 ----------
 
@@ -3529,54 +3232,6 @@ See also
 
 ----------
 
-FreeRastPort()
-==============
-
-Synopsis
-~~~~~~~~
-::
-
- void FreeRastPort(
-          struct RastPort * rp );
-
-Function
-~~~~~~~~
-::
-
-     This frees a RastPort obtained with CloneRastPort() or
-     CreateRastPort().
-
-
-Inputs
-~~~~~~
-::
-
-     rp - The result of CloneRastPort() or CreateRastPort().
-
-
-Result
-~~~~~~
-::
-
-     None.
-
-
-Notes
-~~~~~
-::
-
-     This function is AROS specific. For compatibility, there is a function
-     with the same name in aros.lib on Amiga.
-
-
-
-See also
-~~~~~~~~
-
-`CloneRastPort()`_ `CreateRastPort()`_ 
-
-----------
-
 FreeSprite()
 ============
 
@@ -4171,18 +3826,20 @@ Tags
      RPTAG_WriteMask (ULONG)         - Bit Mask for writing
      RPTAG_MaxPen (ULONG)            - Maximum pen to render (see SetMaxPen())
 
-     AROS extensions
+     MorphOS- and AmigaOSv4- compatible extensions:
+
      RPTAG_FgColor (ULONG)           - Primary rendering color in A8R8G8B8 format.
                                        Only working on hicolor/truecolor bitmaps/screens.
      RPTAG_BgColor (ULONG)           - Secondary rendering color in A8R8G8B8 format.
                                        Only working on hicolor/truecolor bitmaps/screens.
-     RPTAG_PatternOriginX (WORD)     - X Origin of fill pattern.
-     RPTAG_PatternOriginY (WORD)     - Y Origin of fill pattern.
+     RPTAG_RemapColorFonts (BOOL)    - Automatically remap colorfonts to their color
+                                       on hicolor/truecolor screens.
+
+     AROS-specific extensions:
+
      RPTAG_ClipRectangle (struct Rectangle *) - Rectangle to clip rendering to. Rectangle will
                                                 be cloned.
      RPTAG_ClipRectangleFlags (LONG) - RPCRF_RELRIGHT | RPCRF_RELBOTTOM (see <graphics/rpattr.h>)
-     RPTAG_RemapColorFonts (BOOL)    - Automatically remap colorfonts to their color
-                                       on hicolor/truecolor screens.
              
 
 Notes
@@ -4198,7 +3855,7 @@ Bugs
 ~~~~
 ::
 
-     RPTAG_SoftStyle not supported, yet.
+     RPTAG_SoftStyle and RPTAG_DrawBounds are not supported yet.
 
 
 
@@ -4699,7 +4356,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- BOOL InitRastPort(
+ void InitRastPort(
           struct RastPort * rp );
 
 Function
@@ -4725,13 +4382,6 @@ Result
          Mask, FgPen, AOLPen, and LinePtrn are set to -1.
          The DrawMode is set to JAM2
          The font is set to the standard system font
-
-
-Notes
-~~~~~
-::
-
-     You must call DeinitRastPort() before you free the structure.
 
 
 
@@ -5296,67 +4946,6 @@ Notes
      If the given view is already on display, changes appear immediately.
 
 
-
-----------
-
-NewRectRegion()
-===============
-
-Synopsis
-~~~~~~~~
-::
-
- struct Region * NewRectRegion(
-          WORD MinX,
-          WORD MinY,
-          WORD MaxX,
-          WORD MaxY );
-
-Function
-~~~~~~~~
-::
-
-     Creates a new rectangular Region
-             
-
-Inputs
-~~~~~~
-::
-
-     MinX, MinY, MaxX, MaxY - The extent of the Rect
-             
-
-Result
-~~~~~~
-::
-
-     Pointer to the newly created Region. NULL on failure.
-
-
-Notes
-~~~~~
-::
-
-     This function does not exist in AmigaOS.
-     It does basically the same as:
-
-         struct Rectangle rect;
-         struct Region *region;
-
-         rect.MinX = MinX;
-         rect.MinY = MinY;
-         rect.MaxX = MaxX;
-         rect.MaxY = MaxY;
-
-         region = NewRegion();
-         OrRectRegion(region, &rect);
-
-
-
-See also
-~~~~~~~~
-
-`NewRegion()`_ `OrRectRegion()`_ 
 
 ----------
 
@@ -6505,6 +6094,21 @@ Synopsis
  void ScrollVPort(
           struct ViewPort * vp );
 
+Function
+~~~~~~~~
+::
+
+     Move the ViewPort to the position specified in DxOffset and DyOffset
+     members of the ViewPort structure.
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
 Notes
 ~~~~~
 ::
@@ -6563,6 +6167,8 @@ Notes
      This function is faster than the sequence SetAPen(), SetBPen(),
      SetDrMd().
 
+     This functions turns on PenMode for the RastPort.
+
 
 
 ----------
@@ -6593,6 +6199,13 @@ Inputs
      pen - pen number (0...255)
 
 
+Notes
+~~~~~
+::
+
+     This functions turns on PenMode for the RastPort.
+
+
 
 ----------
 
@@ -6620,6 +6233,13 @@ Inputs
 
      rp  - RastPort
      pen - pen number (0...255)
+
+
+Notes
+~~~~~
+::
+
+     This functions turns on PenMode for the RastPort.
 
 
 
@@ -7240,18 +6860,29 @@ Tags
      RPTAG_DrMd (UBYTE)                    - Drawing mode (graphics/rastport.h)
      RPTAG_OutlinePen (UBYTE)              - Area Outline pen
      RPTAG_WriteMask (ULONG)               - Bit mask for writing
-     
-     AROS extensions
+
+     The following tags are compatible with MorphOS and AmigaOSv4 (V51) :
+
      RPTAG_FgColor (ULONG)                 - Primary rendering color in A8R8G8B8 format.
                                              Only working on hicolor/truecolor bitmaps/screens.
      RPTAG_BgColor (ULONG)                 - Secondary rendering color in A8R8G8B8 format.
                                              Only working on hicolor/truecolor bitmaps/screens.
-     RPTAG_PatternOriginX (WORD)           - X origin of pattern
-     RPTAG_PatternOriginY (WORD)           - Y origin of pattern
-     RPTAG_ClipRectangle (struct Rectangle *) - Clipping rectangle
-     RPTAG_ClipRectangleFlags (LONG)       - RPCRF_RELRIGHT | RPCRF_RELBOTTOM (see graphics/rpattrs.h)
      RPTAG_RemapColorFonts (BOOL)          - Automatically remap colorfonts to their color
                                              on hicolor/truecolor screens.
+
+     AROS-specific extensions
+
+     RPTAG_ClipRectangle (struct Rectangle *) - Clipping rectangle
+     RPTAG_ClipRectangleFlags (LONG)       - RPCRF_RELRIGHT | RPCRF_RELBOTTOM (see graphics/rpattrs.h)
+
+
+Notes
+~~~~~
+::
+
+     Setting one of RPTAG_ClipRectangle or RPTAG_ClipRectangleFlags allocates internal extra data
+     for the RastPort. After finishing using this RastPort, you need to manually deallocate
+     the extra data using FreeVec(rp->RP_Extra).
 
 
 
@@ -7390,46 +7021,6 @@ See also
 ~~~~~~~~
 
 `ExtendFont()`_ 
-
-----------
-
-SwapRegions()
-=============
-
-Synopsis
-~~~~~~~~
-::
-
- VOID SwapRegions(
-          struct Region * region1,
-          struct Region * region2 );
-
-Function
-~~~~~~~~
-::
-
-     Swap the contents of the two regions.
-
-
-Inputs
-~~~~~~
-::
-
-     region1, region2 - pointers to the two regions to swap the contents of
-
-
-Notes
-~~~~~
-::
-
-    This function doesn't exist in AmigaOS
-
-
-
-See also
-~~~~~~~~
-
-`NewRegion()`_ 
 
 ----------
 

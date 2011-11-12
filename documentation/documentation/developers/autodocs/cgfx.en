@@ -12,10 +12,10 @@ cgfx
 `AllocCModeListTagList()`_              `BestCModeIDTagList()`_                 `BltTemplateAlpha()`_                   `CModeRequestTagList()`_                
 `CVideoCtrlTagList()`_                  `DoCDrawMethodTagList()`_               `ExtractColor()`_                       `FillPixelArray()`_                     
 `FreeCModeList()`_                      `GetCyberIDAttr()`_                     `GetCyberMapAttr()`_                    `InvertPixelArray()`_                   
-`IsCyberModeID()`_                      `LockBitMapTagList()`_                  `MovePixelArray()`_                     `ReadPixelArray()`_                     
-`ReadRGBPixel()`_                       `ScalePixelArray()`_                    `UnLockBitMap()`_                       `UnLockBitMapTagList()`_                
-`WriteLUTPixelArray()`_                 `WritePixelArray()`_                    `WritePixelArrayAlpha()`_               `WriteRGBPixel()`_                      
-
+`IsCyberModeID()`_                      `LockBitMapTagList()`_                  `MovePixelArray()`_                     `ProcessPixelArray()`_                  
+`ReadPixelArray()`_                     `ReadRGBPixel()`_                       `ScalePixelArray()`_                    `UnLockBitMap()`_                       
+`UnLockBitMapTagList()`_                `WriteLUTPixelArray()`_                 `WritePixelArray()`_                    `WritePixelArrayAlpha()`_               
+`WriteRGBPixel()`_                      
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -346,6 +346,46 @@ Synopsis
           UWORD DstY,
           UWORD SizeX,
           UWORD SizeY );
+
+
+----------
+
+ProcessPixelArray()
+===================
+
+Synopsis
+~~~~~~~~
+::
+
+ VOID ProcessPixelArray(
+          struct RastPort * rp,
+          ULONG destX,
+          ULONG destY,
+          ULONG sizeX,
+          ULONG sizeY,
+          ULONG operation,
+          LONG value,
+          struct TagItem * taglist );
+ 
+ VOID ProcessPixelArrayTags(
+          struct RastPort * rp,
+          ULONG destX,
+          ULONG destY,
+          ULONG sizeX,
+          ULONG sizeY,
+          ULONG operation,
+          LONG value,
+          TAG tag, ... );
+
+Notes
+~~~~~
+::
+
+     Not implemented.
+     This function exists to get Scalos compiled. Because Scalos
+     has its own fallback code for the case that lib_Version < 50
+     it's not so urgent to implement it.
+
 
 
 ----------

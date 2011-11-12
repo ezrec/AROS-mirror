@@ -10,13 +10,14 @@ kernel
 
 ======================================= ======================================= ======================================= ======================================= 
 `KrnAddExceptionHandler()`_             `KrnAddIRQHandler()`_                   `KrnAllocPages()`_                      `KrnBug()`_                             
-`KrnCause()`_                           `KrnCli()`_                             `KrnCreateContext()`_                   `KrnDecodeLocationA()`_                 
-`KrnDeleteContext()`_                   `KrnDispatch()`_                        `KrnFreePages()`_                       `KrnGetBootInfo()`_                     
-`KrnGetScheduler()`_                    `KrnGetSystemAttr()`_                   `KrnInitMemory()`_                      `KrnIsSuper()`_                         
-`KrnMapGlobal()`_                       `KrnMayGetChar()`_                      `KrnPutChar()`_                         `KrnRegisterModule()`_                  
-`KrnRemExceptionHandler()`_             `KrnRemIRQHandler()`_                   `KrnSchedule()`_                        `KrnSetProtection()`_                   
-`KrnSetScheduler()`_                    `KrnSetSystemAttr()`_                   `KrnStatMemoryA()`_                     `KrnSti()`_                             
-`KrnSwitch()`_                          `KrnUnmapGlobal()`_                     `KrnUnregisterModule()`_                `KrnVirtualToPhysical()`_               
+`KrnCause()`_                           `KrnCli()`_                             `KrnCreateContext()`_                   `KrnDeleteContext()`_                   
+`KrnDispatch()`_                        `KrnDisplayAlert()`_                    `KrnFormatStr()`_                       `KrnFreePages()`_                       
+`KrnGetBootInfo()`_                     `KrnGetCPUCount()`_                     `KrnGetCPUNumber()`_                    `KrnGetScheduler()`_                    
+`KrnGetSystemAttr()`_                   `KrnInitMemory()`_                      `KrnIsSuper()`_                         `KrnMapGlobal()`_                       
+`KrnMayGetChar()`_                      `KrnObtainInput()`_                     `KrnOldStackSwap()`_                    `KrnPutChar()`_                         
+`KrnReleaseInput()`_                    `KrnRemExceptionHandler()`_             `KrnRemIRQHandler()`_                   `KrnSchedule()`_                        
+`KrnSetProtection()`_                   `KrnSetScheduler()`_                    `KrnStackSwap()`_                       `KrnStatMemoryA()`_                     
+`KrnSti()`_                             `KrnSwitch()`_                          `KrnUnmapGlobal()`_                     `KrnVirtualToPhysical()`_               
 
 ======================================= ======================================= ======================================= ======================================= 
 
@@ -351,81 +352,6 @@ See also
 
 ----------
 
-KrnDecodeLocationA()
-====================
-
-Synopsis
-~~~~~~~~
-::
-
- int KrnDecodeLocationA(
-          void * addr,
-          struct TagItem * tags );
- 
- int KrnDecodeLocation(
-          void * addr,
-          TAG tag, ... );
-
-Function
-~~~~~~~~
-::
-
-     Locate the given address in the list of registered modules and return
-     information about it.
-
-
-Inputs
-~~~~~~
-::
-
-     addr - An address to resolve
-     tags - An optional taglist. ti_Tag can be one of the following tags and
-            ti_Data is always a pointer to a storage of specified type.
-            Resulting values will be placed into specified locations if the
-            function succeeds.
-
-         KDL_ModuleName     (char *) - Module name
-         KDL_SegmentName    (char *) - Segment name. Can be NULL if there were
-                                       no segment names provided for the module.
-         KDL_SegmentPointer (BPTR)   - DOS pointer to the corresponding segment.
-                                       Note that it will be different from
-                                       KDL_SegmentStart value
-         
-         KDL_SegmentNumber  (unsigned int) - Order number of the segment in the
-                                             module
-         KDL_SegmentStart   (void *) - Start address of actual segment contents
-                                       in memory.
-         KDL_SegmentEnd     (void *) - End address of actual segment contents
-                                       in memory.
-     
-         The following tags may return NULL values if there was no corresponding
-         information provided for the module:
-
-         KDL_SymbolName     (char *) - Symbol name (function or variable name)
-         KDL_SymbolStart    (void *) - Start address of contents described by this
-                                       symbol.
-         KDL_SymbolEnd      (void *) - End address of contents described by this
-                                       symbol.
-
-
-Result
-~~~~~~
-::
-
-     Zero if lookup failed and no corresponding module found, nonzero
-     otherwise.
-
-
-Notes
-~~~~~
-::
-
-     If the function fails values pointed to by taglist will not be changed.
-
-
-
-----------
-
 KrnDeleteContext()
 ==================
 
@@ -478,6 +404,106 @@ Synopsis
 
 ----------
 
+KrnDisplayAlert()
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+ void KrnDisplayAlert(
+          uint32_t code,
+          const char * text );
+
+Function
+~~~~~~~~
+::
+
+     Inform the user about critical system failure.
+
+
+Inputs
+~~~~~~
+::
+
+     code - Corresponding alert code.
+     text - A NULL-terminated text to print out.
+
+     First three lines are assumed to be a header. Some implementations
+     may print them centered inside a frame.
+
+
+Result
+~~~~~~
+::
+
+     None. This function is not guaranteed to return.
+
+
+Notes
+~~~~~
+::
+
+     This function exists for system internal purposes. Please do not
+     call it from within regular applications! In 99% of cases this function
+     will halt or reboot the machine. Certain structures in RAM, as well as
+     video hardware state, will be irreversibly destroyed.
+
+     'code' parameter is passed for convenience. Based on it, the system
+     can make a decision to log the alert in debug output and continue,
+     instead of displaying a message and halting.
+
+     This function is currently experimental. Its definition may change.
+
+
+
+----------
+
+KrnFormatStr()
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+ int KrnFormatStr(
+          void * putch,
+          const char * format,
+          va_list args );
+
+Function
+~~~~~~~~
+::
+
+     Format a string using C printf() convention, using 'putch'
+     as character output function.
+
+
+Inputs
+~~~~~~
+::
+
+     putch  - A pointer to the output function
+     format - A format string
+     args   - A list of arguments
+
+     A character output function needs to be declared as:
+     
+     int myPutCh(int char, void *KernelBase)
+
+     It is expected to return 1 on success and 0 on failure.
+
+
+Result
+~~~~~~
+::
+
+     Number of succesfully printed characters
+
+
+
+----------
+
 KrnFreePages()
 ==============
 
@@ -507,6 +533,72 @@ Synopsis
 ::
 
  struct TagItem * KrnGetBootInfo();
+
+
+----------
+
+KrnGetCPUCount()
+================
+
+Synopsis
+~~~~~~~~
+::
+
+ unsigned int KrnGetCPUCount();
+
+Function
+~~~~~~~~
+::
+
+     Return total number of processors in the system
+
+
+Inputs
+~~~~~~
+::
+
+     None
+
+
+Result
+~~~~~~
+::
+
+     Number of running CPUs in this system
+
+
+
+----------
+
+KrnGetCPUNumber()
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+ unsigned int KrnGetCPUNumber();
+
+Function
+~~~~~~~~
+::
+
+     Return number of the caller CPU
+
+
+Inputs
+~~~~~~
+::
+
+     None
+
+
+Result
+~~~~~~
+::
+
+     Number of the CPU on which the function is called
+
 
 
 ----------
@@ -541,16 +633,6 @@ Function
      Currently defined attributes are:
 
        KATTR_Architecture [.G] (char *)        - Name of architecture the kernel built for.
-       KATTR_VBlankEnable [SG] (unsigned char) - Enable or disable exec VBlank emulation by kernel.resource.
-                                                 This can be needed for timer.device implementations for
-                                                 systems with only one timer available. In this case timer.device
-                                                 should shut off kernel's VBlank emulation before taking over the
-                                                 timer and drive exec VBlank itself.
-       KATTR_TimerIRQ     [.G] (int)           - Number of high precision periodic timer IRQ to be used by timer.device.
-                                                 Needed if kernel.resource provides a timer which runs at frequency
-                                                 which is multiple of VBlank. Generic timer.device may use this IRQ
-                                                 for improved accuracy. Frequency of this timer is specified in
-                                                 SysBase->ex_EClockFrequency.
 
 
 Inputs
@@ -565,16 +647,6 @@ Result
 ::
 
      Value of the attribute
-
-
-Notes
-~~~~~
-::
-
-     These attributes (except KATTR_Architecture) are of very limited use for end user software.
-     They are valid only in certain system states. For example KATTR_TimerPeriod goes meaningless
-     if timer.device has taken over the system timer. These attributes are provided for system
-     components themselves, so it's better to stay away from them.
 
 
 
@@ -720,6 +792,73 @@ Notes
 
 ----------
 
+KrnObtainInput()
+================
+
+Synopsis
+~~~~~~~~
+::
+
+ int KrnObtainInput();
+
+Function
+~~~~~~~~
+::
+
+     Take over low-level debug input hardware and initialize the input
+
+
+Inputs
+~~~~~~
+::
+
+     None
+
+
+Result
+~~~~~~
+::
+
+     Nonzero for success, zero for failure (for example there's no input channel)
+
+
+
+----------
+
+KrnOldStackSwap()
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+ void KrnOldStackSwap(
+          struct StackSwapStruct * sss );
+
+Function
+~~~~~~~~
+::
+
+     Release low-level debug input hardware and hand it back to the operating system
+
+
+Inputs
+~~~~~~
+::
+
+     None
+
+
+Result
+~~~~~~
+::
+
+     None
+
+
+
+----------
+
 KrnPutChar()
 ============
 
@@ -754,39 +893,27 @@ Result
 
 ----------
 
-KrnRegisterModule()
-===================
+KrnReleaseInput()
+=================
 
 Synopsis
 ~~~~~~~~
 ::
 
- void KrnRegisterModule(
-          const char * name,
-          BPTR segList,
-          ULONG debugType,
-          APTR debugInfo );
+ void KrnReleaseInput();
 
 Function
 ~~~~~~~~
 ::
 
-     Add information about the loaded executable module to the
-     debug information database
+     Release low-level debug input hardware and hand it back to the operating system
 
 
 Inputs
 ~~~~~~
 ::
 
-     name      - Module name
-     segList   - DOS segment list for the module
-     debugType - Type of supplied debug information. The only currently
-                 supported type is DEBUG_ELF.
-     debugInfo - Debug information data. For DEBUG_ELF type this should be
-                 a pointer to struct ELF_DebugInfo, filled in as follows:
-                   eh - a pointer to ELF file header.
-                   sh - a pointer to an array of ELF section headers.
+     None
 
 
 Result
@@ -909,59 +1036,39 @@ Synopsis
 
 ----------
 
-KrnSetSystemAttr()
-==================
+KrnStackSwap()
+==============
 
 Synopsis
 ~~~~~~~~
 ::
 
- int KrnSetSystemAttr(
-          uint32_t id,
-          intptr_t val );
+ void KrnStackSwap(
+          struct StackSwapStruct * sss,
+          LONG_FUNC entry,
+          struct StackSwapArgs args );
 
 Function
 ~~~~~~~~
 ::
 
-     Set values of internal system attributes
+     Release low-level debug input hardware and hand it back to the operating system
 
 
 Inputs
 ~~~~~~
 ::
 
-     id  - ID of the attribute to set. See KrnGetAttr() description for the
-           list of attributes and their meaning.
-     val - New value of the attribute
+     None
 
 
 Result
 ~~~~~~
 ::
 
-     Zero for success and nonzero for failure (unknown or read-only attribute or
-     bad value).
+     None
 
 
-Notes
-~~~~~
-::
-
-     Kernel attributes control various aspects of kernel's low-level functions.
-     The exact semantics of each attribute may vary from system to system.
-     Not all systems support all attributes.
-
-     Please do not alter these attributes from within user software, this will
-     not do any good things. This function is provided mainly for use by
-     other system components which exactly know what they do.
-
-
-
-See also
-~~~~~~~~
-
-`KrnGetSystemAttr()`_ 
 
 ----------
 
@@ -1098,49 +1205,6 @@ Synopsis
  int KrnUnmapGlobal(
           void * virtual,
           uint32_t length );
-
-
-----------
-
-KrnUnregisterModule()
-=====================
-
-Synopsis
-~~~~~~~~
-::
-
- void KrnUnregisterModule(
-          BPTR segList );
-
-Function
-~~~~~~~~
-::
-
-     Remove previously registered module from the debug information database
-
-
-Inputs
-~~~~~~
-::
-
-     segList - DOS segment list for the module to remove
-
-
-Result
-~~~~~~
-::
-
-     None
-
-
-Notes
-~~~~~
-::
-
-     The function correctly supports partial removal of the module
-     (when an existing seglist is broken and only a part of the module
-     is unloaded).
-
 
 
 ----------

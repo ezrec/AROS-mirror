@@ -64,12 +64,12 @@ Inputs
                      multiplication        *
                      division              /
                      modulo                mod, M, m, %
-                            bitwise and           &
+                     bitwise and           &
                      bitwise or            |
                      bitwise not           ~
                      left shift            lsh, L, l
                      right shift           rsh, R, r
-                     negation               -
+                     negation              -
                      exclusive or          xor, X, x
                      bitwise equivalence   eqv, E, e
 
@@ -77,8 +77,8 @@ Inputs
      LFORMAT     --  printf-like specification of what to write.
                      The possible swiches are:
                       
-                     %x  --  hexadecimal output
-                     %o  --  octal output
+                     %xd --  hexadecimal output, width digit d
+                     %od --  octal output, width digit d
                      %n  --  decimal output
                      %c  --  character output (the ANSI-character
                              corresponding to the result value)

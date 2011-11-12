@@ -112,7 +112,7 @@ Synopsis
 ::
 
  APTR OOP_FindClass(
-          UBYTE * classID );
+          CONST_STRPTR classID );
 
 Function
 ~~~~~~~~
@@ -200,7 +200,7 @@ Synopsis
 ::
 
  OOP_AttrBase OOP_GetAttrBase(
-          STRPTR interfaceID );
+          CONST_STRPTR interfaceID );
 
 Function
 ~~~~~~~~
@@ -241,9 +241,10 @@ Synopsis
 ~~~~~~~~
 ::
 
- VOID * OOP_GetMethod(
+ OOP_MethodFunc OOP_GetMethod(
           OOP_Object  * obj,
-          OOP_MethodID mid );
+          OOP_MethodID mid,
+          OOP_Class ** classPtr );
 
 Function
 ~~~~~~~~
@@ -258,8 +259,11 @@ Inputs
 ~~~~~~
 ::
 
-     obj     - pointer to object to get method for.
-     mid     - method id for method to get. This may be obtained with GetMethodID()
+     obj      - pointer to object to get method for.
+     mid      - method id for method to get. This may be obtained with GetMethodID()
+     classPtr - A pointer to a location where implementation class pointer will be stored.
+                The obtained method must be called with this class pointer. This pointer
+                is mandatory!
 
 
 Result
@@ -279,14 +283,6 @@ Notes
      !!!
 
 
-Bugs
-~~~~
-::
-
-     It returns VOID *. I got compiler errors when returning
-     IPTR (*)(Class *, Object *, Msg)
-
-
 
 See also
 ~~~~~~~~
@@ -303,7 +299,7 @@ Synopsis
 ::
 
  OOP_MethodID OOP_GetMethodID(
-          STRPTR interfaceID,
+          CONST_STRPTR interfaceID,
           ULONG methodOffset );
 
 Function
@@ -343,12 +339,12 @@ Synopsis
 
  APTR OOP_NewObject(
           struct OOP_IClass  * classPtr,
-          UBYTE          * classID,
+          CONST_STRPTR classID,
           struct TagItem * tagList );
  
  APTR OOP_NewObjectTags(
           struct OOP_IClass  * classPtr,
-          UBYTE          * classID,
+          CONST_STRPTR classID,
           TAG tag, ... );
 
 Function
@@ -404,7 +400,7 @@ Synopsis
 ::
 
  OOP_AttrBase OOP_ObtainAttrBase(
-          STRPTR interfaceID );
+          CONST_STRPTR interfaceID );
 
 Function
 ~~~~~~~~
@@ -465,7 +461,7 @@ Synopsis
 ::
 
  BOOL OOP_ObtainAttrBases(
-          struct OOP_ABDescr * abd );
+          const struct OOP_ABDescr * abd );
 
 
 ----------
@@ -539,7 +535,7 @@ Synopsis
 ::
 
  VOID OOP_ReleaseAttrBase(
-          STRPTR interfaceID );
+          CONST_STRPTR interfaceID );
 
 Function
 ~~~~~~~~
@@ -583,7 +579,7 @@ Synopsis
 ::
 
  VOID OOP_ReleaseAttrBases(
-          struct OOP_ABDescr * abd );
+          const struct OOP_ABDescr * abd );
 
 
 ----------

@@ -1,0 +1,109 @@
+===
+Cut
+===
+
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <copytopar>`_ `Next <date>`_ 
+
+---------------
+
+Name
+~~~~
+::
+
+
+     Cut
+
+
+Format
+~~~~~~
+::
+
+
+     CUT <string> [CHAR <range> | WORD <range> [SEPARATOR <string>] ]
+
+
+Template
+~~~~~~~~
+::
+
+
+     STRING/A,C=CHAR/K,W=WORD/K,S=SEPARATOR/K
+
+
+Location
+~~~~~~~~
+::
+
+
+     SYS:C
+
+
+Function
+~~~~~~~~
+::
+
+
+     Extracts some characters or words from a string.
+
+
+Result
+~~~~~~
+::
+
+
+     Standard DOS return codes.
+
+
+Notes
+~~~~~
+::
+
+
+th  CHAR  (character)  and WORD arguments allow to define a begin and an end
+ition  in the original string. Words are strings separated by a SEPARATOR (a
+ce character (" ") is the default), which can also be a string. 
+
+sitions  range  is specified using numbers with the form "P1-P2", where "P1"
+ the position of the first character (resp. word) to extract in the original
+ing, "-" is the hyphen-minus character, and "P2" is the position of the last
+racter (resp. word) to extract.
+
+  only  one  position  is  supplied, then only one character (resp. word) is
+racted,  unless  the  hyphen-minus  character is supplied too: P- extracts a 
+ing  begining  at  the  character (resp. word) at position P in the original
+ing until the end, and -P extracts a string starting at the beginning of the
+ginal  string,  and  ending with the character (resp. word) at position P in
+ original string.
+
+
+ EXAMPLES
+
+mple 1:
+ut "A dummy sentence" CHAR 7
+
+ract one character.
+
+mple 2:
+ut "A dummy sentence" CHAR 6-12
+sent
+ract from character 6 to 12.
+
+mple 3:
+ut "A dummy sentence" CHAR -7
+ummy
+ract from character 1 to 7 without specifying the beginning position.
+
+mple 4:
+ut "A dummy sentence" CHAR 12-
+ce
+ract from character 12 of the string until the end.
+
+mple 5:
+ut "A dummy sentence" WORD 2 SEPARATOR "en"
+
+ract the second word (using an user-defined separator).
+
+
+

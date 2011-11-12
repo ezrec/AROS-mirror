@@ -9,13 +9,60 @@ partition
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`AddPartition()`_                       `ClosePartitionTable()`_                `CloseRootPartition()`_                 `CreatePartitionTable()`_               
-`DeletePartition()`_                    `DestroyPartitionTable()`_              `GetPartitionAttrs()`_                  `GetPartitionTableAttrs()`_             
-`OpenPartitionTable()`_                 `OpenRootPartition()`_                  `QueryPartitionAttrs()`_                `QueryPartitionTableAttrs()`_           
-`SetPartitionAttrs()`_                  `SetPartitionTableAttrs()`_             `WritePartitionTable()`_                
+`AddBootFileSystem()`_                  `AddPartition()`_                       `ClosePartitionTable()`_                `CloseRootPartition()`_                 
+`CreatePartitionTable()`_               `DeletePartition()`_                    `DestroyPartitionTable()`_              `FindFileSystemA()`_                    
+`GetFileSystemAttrsA()`_                `GetPartitionAttrs()`_                  `GetPartitionTableAttrs()`_             `LoadBootFileSystems()`_                
+`LoadFileSystem()`_                     `OpenPartitionTable()`_                 `OpenRootPartition()`_                  `QueryPartitionAttrs()`_                
+`QueryPartitionTableAttrs()`_           `SetPartitionAttrs()`_                  `SetPartitionTableAttrs()`_             `WritePartitionTable()`_                
+
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
+
+AddBootFileSystem()
+===================
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG AddBootFileSystem(
+          struct Node * handle );
+
+Function
+~~~~~~~~
+::
+
+ Adds the specified filesystem to the system list of bootable filesystems
+ (actually FileSystem.resource).
+
+
+Inputs
+~~~~~~
+::
+
+ handle - Filesystem handle obtained by FindFileSystemA()
+
+
+Result
+~~~~~~
+::
+
+ Zero if everything went okay or common dos.library-compliant error code.
+
+
+Notes
+~~~~~
+::
+
+ This function can be called during system startup before dos.library is
+ available. In this case filesystem loading will be delayed until dos.library
+ started up. Delayed loading will be handled automatically without any caller's
+ intervention.
+
+
+
+----------
 
 AddPartition()
 ==============
@@ -236,6 +283,118 @@ Notes
 
 ----------
 
+FindFileSystemA()
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+ struct Node * FindFileSystemA(
+          struct PartitionHandle * table,
+          struct TagItem * taglist );
+ 
+ struct Node * FindFileSystem(
+          struct PartitionHandle * table,
+          TAG tag, ... );
+
+Function
+~~~~~~~~
+::
+
+ Locate a filesystem handler in the partition
+
+
+Inputs
+~~~~~~
+::
+
+ ph      - PartitionHandle to the table
+ taglist - Taglist specifying arguments. Possible tags are:
+
+           FST_ID   - specify ID of the filesystem.
+           FST_NAME - specify name of the filesystem.
+
+           If more than one condition is specified for the search, logical
+           AND will be applied to them. Empty taglist will give you the first
+           filesystem in the list.
+
+
+Result
+~~~~~~
+::
+
+ Abstract handle of a filesystem or NULL if the filesystem with the given
+ parameters was not located in the partition.
+
+
+
+----------
+
+GetFileSystemAttrsA()
+=====================
+
+Synopsis
+~~~~~~~~
+::
+
+ void GetFileSystemAttrsA(
+          struct Node * handle,
+          const struct TagItem * taglist );
+ 
+ void GetFileSystemAttrs(
+          struct Node * handle,
+          TAG tag, ... );
+
+Function
+~~~~~~~~
+::
+
+ get attributes of a partition table
+
+
+Inputs
+~~~~~~
+::
+
+ handle      - Filesystem handle
+ taglist - list of attributes; unknown tags are ignored
+     FST_ID      (ULONG *)               - Get 4-characters filesystem ID
+     FST_NAME    (STRPTR *)              - Get a pointer to filesystem name
+     FST_FSENTRY (struct FileSysEntry *) - Fill in the given struct FileSysEntry.
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+Notes
+~~~~~
+::
+
+     Name is returned as a pointer to internally allocated string. You should copy
+     it if you want to keep it after filesystem's partition table had been closed.
+
+     The following fields in struct FileSysEntry will not be filled in:
+       - Node name
+       - fse_Handler
+       - fse_SegList
+     You need to query for filesystem's name separately and copy it into BSTR
+     yourself, if you need to. Loading the handler is done by LoadFileSystem()
+     function.
+
+
+
+See also
+~~~~~~~~
+
+`FindFileSystemA()`_ 
+
+----------
+
 GetPartitionAttrs()
 ===================
 
@@ -245,7 +404,7 @@ Synopsis
 
  LONG GetPartitionAttrs(
           struct PartitionHandle * ph,
-          struct TagItem * taglist );
+          const struct TagItem * taglist );
  
  LONG GetPartitionAttrsTags(
           struct PartitionHandle * ph,
@@ -263,14 +422,52 @@ Inputs
 ::
 
  ph      - PartitionHandle
- taglist - list of attributes; unknown tags are ignored
-     PT_DOSENVEC - struct DosEnvec *; get DosEnvec values
-     PT_TYPE     - struct PartitionType *           ; get partition type (MBR-PC)
-     PT_POSITION - ULONG *           ; position of partition (MBR-PC)
-     PT_ACTIVE   - LONG *           ; is partition active
-     PT_NAME     - STRPTR    ; get name of partition (max 31 Bytes + NULL-byte)
+ taglist - list of attributes, unknown tags are ignored:
+
+     PT_GEOMETRY   - struct DriveGeometry *  ; Fill in DriveGeometry structure
+     PT_DOSENVEC   - struct DosEnvec *       ; Fill in DosEnvec structure
+     PT_TYPE       - struct PartitionType *  ; Get partition type
+     PT_POSITION   - ULONG *                 ; Get position (entry number) of partition within its table.
+                                             ; Returns -1 is there's no table (e. g. if used on disk root)
+     PT_ACTIVE     - LONG *                  ; Get value of "active" flag (PC-MBR specific)
+     PT_BOOTABLE   - LONG *                  ; Get value of "bootable" flag
+     PT_AUTOMOUNT  - LONG *                  ; Get value of "automount" flag
+     PT_NAME       - STRPTR                  ; Get name of partition (max 31 Bytes + NULL-byte)
+     PT_STARTBLOCK - ULONG *                 ; Get number of starting block for the partition (V2)
+     PT_ENDBLOCK   - ULONG *                 ; Get number of ending block for the partition (V2)
 
 
+Result
+~~~~~~
+::
+
+     Currently reserved, always zero.
+
+
+Notes
+~~~~~
+::
+
+     Nested partition tables (e. g. RDB subpartitions on PC MBR drive) are treated as virtual disks.
+     In this case start and end block numbers are relative to the beginning of the virtual disk
+     (which is represented by parent partition containing the RDB itself), not absolute numbers.
+     The same applies to DriveGeomerty and geometry-related fields in DosEnvec structure.
+
+     Note that geometry data can be stored on disk in the partition table ifself (RDB for example), and
+     this way it can not match physical device's geometry (for example, if the disk was partitioned on
+     another operating system which used virtual geometry). In this case you might need to adjust these
+     data in order to mount the file system correctly (if absolute start/end blocks are not
+     cylinder-aligned).
+
+     Starting from V2, partition.library always provides default values for all attributes, even for those
+     not listed as readable in QueryPartitionAttrs() results.
+
+
+
+See also
+~~~~~~~~
+
+`SetPartitionAttrs()`_ 
 
 ----------
 
@@ -283,7 +480,7 @@ Synopsis
 
  LONG GetPartitionTableAttrs(
           struct PartitionHandle * root,
-          struct TagItem * taglist );
+          const struct TagItem * taglist );
  
  LONG GetPartitionTableAttrsTags(
           struct PartitionHandle * root,
@@ -305,6 +502,82 @@ Inputs
      PTT_TYPE     - ULONG *           ; get partition table type
      PTT_MAXLEADIN     - LONG *
      PTT_RESERVED - ULONG *           ; get number of reserved blocks
+
+
+
+----------
+
+LoadBootFileSystems()
+=====================
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG LoadBootFileSystems();
+
+Function
+~~~~~~~~
+::
+
+     Perform a deferred loading of boot filesystems.
+
+
+Inputs
+~~~~~~
+::
+
+     None.
+
+
+Result
+~~~~~~
+::
+
+     Zero if everything went okay or DOS error code in case of failure.
+
+
+Notes
+~~~~~
+::
+
+     This function is actually private, it's called by dos.library during
+     initialization process. There's no sense to call it from within user
+     software.
+
+
+
+----------
+
+LoadFileSystem()
+================
+
+Synopsis
+~~~~~~~~
+::
+
+ BPTR LoadFileSystem(
+          struct Node * handle );
+
+Function
+~~~~~~~~
+::
+
+ Load the specified filesystem as DOS segment list.
+
+
+Inputs
+~~~~~~
+::
+
+ handle - Filesystem handle obtained by FindFileSystemA()
+
+
+Result
+~~~~~~
+::
+
+ DOS seglist or NULL in case of failure.
 
 
 
@@ -390,7 +663,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct PartitionAttribute * QueryPartitionAttrs(
+ const struct PartitionAttribute * QueryPartitionAttrs(
           struct PartitionHandle * table );
 
 Function
@@ -424,7 +697,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct PartitionAttribute * QueryPartitionTableAttrs(
+ const struct PartitionAttribute * QueryPartitionTableAttrs(
           struct PartitionHandle * table );
 
 Function

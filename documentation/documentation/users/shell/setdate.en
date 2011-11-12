@@ -59,18 +59,18 @@ Inputs
 
      FILE     --  File (or pattern) to change the date of.
 
-     WEEKDAY  --  Specification of the day of the date. This is locale
-                  sensitive, and you may use standard keywords such as
-                  'Tomorrow' and 'Yesterday' (in the language used, of
-                  course).
+ WEEKDAY  --  Specification of the day of the date. This is locale
+              sensitive, and you may use standard keywords such as
+          'Tomorrow' and 'Yesterday' (in the language used, of
+          course).
 
-     DATE     --  A date in the format DD-MMM-YY.
-                  MMM is either the number or the first 3 letters of the
-                  month in English.
+ DATE     --  A date in the format DD-MMM-YY.
+              MMM is either the number or the first 3 letters of the
+              month in English.
 
-     TIME     --  Time string in the format HH:MM:SS or HH:MM.
+ TIME     --  Time string in the format HH:MM:SS or HH:MM.
 
-     ALL      --  Recurse through subdirectories.
+ ALL      --  Recurse through subdirectories.
 
 
 Result
@@ -88,16 +88,8 @@ Example
 
      SetDate #? ALL
 
-     Sets the date for all files and directories in the current directory
-     and its subdirectories to the current date.
-
-
-Bugs
-~~~~
-::
-
-
-     ALL flag does not work.
+ Sets the date for all files and directories in the current directory
+ and its subdirectories to the current date.
 
 
 See also

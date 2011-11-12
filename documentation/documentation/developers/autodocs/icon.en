@@ -152,13 +152,6 @@ Inputs
      name  -  name of the icon file without the ".info".
 
 
-Bugs
-~~~~
-::
-
-     Does not yet notify workbench about the deletion.
-
-
 
 ----------
 
@@ -337,7 +330,7 @@ Inputs
 ~~~~~~
 ::
 
-     freelist  - pointer to FreeList struct. It is save to use NULL.
+     freelist  - pointer to FreeList struct. It is safe to use NULL.
 
 
 

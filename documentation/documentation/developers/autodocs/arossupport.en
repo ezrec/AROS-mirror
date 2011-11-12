@@ -9,8 +9,9 @@ arossupport
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`CalcChecksum()`_                       `CreateSegList()`_                      `debugmem()`_                           `FindNextNodes()`_                      
-`FindNode()`_                           `FreeStruct()`_                         `hexdump()`_                            `IsDosEntryA()`_                        
+`CalcChecksum()`_                       `CloneRastPort()`_                      `CreateRastPort()`_                     `CreateSegList()`_                      
+`debugmem()`_                           `DeinitRastPort()`_                     `FindNextNodes()`_                      `FindNode()`_                           
+`FreeRastPort()`_                       `FreeStruct()`_                         `hexdump()`_                            `IsDosEntryA()`_                        
 `kprintf()`_                            `NastyFreeMem()`_                       `Purify_AddMemory()`_                   `Purify_CheckAccess()`_                 
 `Purify_Init()`_                        `Purify_SetState()`_                    `RawPutChars()`_                        `ReadByte()`_                           
 `ReadDouble()`_                         `ReadFloat()`_                          `ReadLong()`_                           `ReadString()`_                         
@@ -90,6 +91,84 @@ See also
 ~~~~~~~~
 
 `exec.library/SumKickData() <./exec#sumkickdata>`_ `exec.library/SumLibrary() <./exec#sumlibrary>`_ 
+
+----------
+
+CloneRastPort()
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+  struct RastPort *CloneRastPort(
+     struct RastPort *rp)
+
+
+Function
+~~~~~~~~
+::
+
+     This function creates a copy of a RastPort.
+
+
+Inputs
+~~~~~~
+::
+
+     rp - The RastPort to clone.
+
+
+Result
+~~~~~~
+::
+
+     A pointer to a RastPort with the same attributes as the RastPort
+     which was specified or NULL if there was not enough memory to perform
+     the operation.
+
+
+
+See also
+~~~~~~~~
+
+`CreateRastPort()`_ `FreeRastPort()`_ 
+
+----------
+
+CreateRastPort()
+================
+
+Synopsis
+~~~~~~~~
+::
+
+  struct RastPort *CreateRastPort(
+     void)
+
+
+Function
+~~~~~~~~
+::
+
+     This function creates a new RastPort.
+
+
+Inputs
+~~~~~~
+::
+
+     None.
+
+
+Result
+~~~~~~
+::
+
+     A pointer to a new RastPort or NULL if there was not enough memory
+     to perform the operation.
+
+
 
 ----------
 
@@ -175,6 +254,47 @@ Notes
      any time.
 
 
+
+----------
+
+DeinitRastPort()
+================
+
+Synopsis
+~~~~~~~~
+::
+
+  void DeinitRastPort(
+     struct RastPort *rp)
+
+
+Function
+~~~~~~~~
+::
+
+     Frees the extra contents associated with a RastPort structure.
+     The structure itself is not freed.
+
+
+Inputs
+~~~~~~
+::
+
+     rp - The RastPort which contents are to be freed.
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+
+See also
+~~~~~~~~
+
+`InitRastPort()`_ 
 
 ----------
 
@@ -272,6 +392,47 @@ Notes
      Must not be called before Purify_Init().
 
 
+
+----------
+
+FreeRastPort()
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+  void FreeRastPort(
+     struct RastPort *rp)
+
+
+Function
+~~~~~~~~
+::
+
+     This frees a RastPort obtained with CloneRastPort() or
+     CreateRastPort().
+
+
+Inputs
+~~~~~~
+::
+
+     rp - The result of CloneRastPort() or CreateRastPort().
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+
+See also
+~~~~~~~~
+
+`CloneRastPort()`_ `CreateRastPort()`_ 
 
 ----------
 
@@ -1062,7 +1223,7 @@ Inputs
 ::
 
      hook - Streamhook
-     dataptr - Put the data here
+     dataptr - Put the data here. If NULL, a new memory block is allocated
      stream - Read from this stream
      sd - Description of the structure to be read. The first element
              is the size of the structure.

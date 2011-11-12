@@ -23,9 +23,11 @@ Autodocs for Modules
 + `console <console>`_
 + `coolimages <coolimages>`_
 + `datatypes <datatypes>`_
++ `debug <debug>`_
 + `desktop <desktop>`_
 + `diskfont <diskfont>`_
 + `dos <dos>`_
++ `efi <efi>`_
 + `exec <exec>`_
 + `expansion <expansion>`_
 + `gadtools <gadtools>`_

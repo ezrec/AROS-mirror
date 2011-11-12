@@ -10,16 +10,16 @@ hyperlayers
 
 ======================================= ======================================= ======================================= ======================================= 
 `BeginUpdate()`_                        `BehindLayer()`_                        `ChangeLayerShape()`_                   `ChangeLayerVisibility()`_              
-`CollectPixelsLayer()`_                 `CreateBehindHookLayer()`_              `CreateBehindLayer()`_                  `CreateLayerTagList()`_                 
-`CreateUpfrontHookLayer()`_             `CreateUpfrontLayer()`_                 `DeleteLayer()`_                        `DisposeLayerInfo()`_                   
-`DoHookClipRects()`_                    `EndUpdate()`_                          `FattenLayerInfo()`_                    `GetFirstFamilyMember()`_               
+`CollectPixelsLayer()`_                 `CreateBehindHookLayer()`_              `CreateBehindLayer()`_                  `CreateBehindLayerTagList()`_           
+`CreateUpfrontHookLayer()`_             `CreateUpfrontLayer()`_                 `CreateUpfrontLayerTagList()`_          `DeleteLayer()`_                        
+`DisposeLayerInfo()`_                   `DoHookClipRects()`_                    `EndUpdate()`_                          `FattenLayerInfo()`_                    
 `InitLayers()`_                         `InstallClipRegion()`_                  `InstallLayerHook()`_                   `InstallLayerInfoHook()`_               
-`IsFrontmostLayer()`_                   `IsLayerHiddenBySibling()`_             `IsLayerVisible()`_                     `LockLayer()`_                          
-`LockLayerInfo()`_                      `LockLayers()`_                         `MoveLayer()`_                          `MoveLayerInFrontOf()`_                 
-`MoveSizeLayer()`_                      `NewLayerInfo()`_                       `ScaleLayer()`_                         `ScrollLayer()`_                        
-`SizeLayer()`_                          `SortLayerCR()`_                        `SwapBitsRastPortClipRect()`_           `ThinLayerInfo()`_                      
-`UnlockLayer()`_                        `UnlockLayerInfo()`_                    `UnlockLayers()`_                       `UpfrontLayer()`_                       
-`WhichLayer()`_                         
+`IsLayerHiddenBySibling()`_             `IsLayerVisible()`_                     `LockLayer()`_                          `LockLayerInfo()`_                      
+`LockLayers()`_                         `MoveLayer()`_                          `MoveLayerInFrontOf()`_                 `MoveSizeLayer()`_                      
+`NewLayerInfo()`_                       `ScaleLayer()`_                         `ScrollLayer()`_                        `SizeLayer()`_                          
+`SortLayerCR()`_                        `SwapBitsRastPortClipRect()`_           `ThinLayerInfo()`_                      `UnlockLayer()`_                        
+`UnlockLayerInfo()`_                    `UnlockLayers()`_                       `UpfrontLayer()`_                       `WhichLayer()`_                         
+
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -133,10 +133,11 @@ Function
     The user can provide a callback hook that will be 
     called when the current layer's information is all backed up
     in ClipRects. The signature of the callback should look as follows:
-        AROS_UFC4(struct Region *, callback,
-            AROS_UFCA(struct Hook   *          , hook       , A0),
-            AROS_UFCA(struct Layer  *          , l          , A2),
-            AROS_UFCA(struct ScaleLayerParam * , arg        , A1));
+
+        AROS_UFC3(BOOL, callback,
+            AROS_UFCA(struct Hook   *       , hook       , A0),
+            AROS_UFCA(struct Layer  *       , l          , A2),
+            AROS_UFCA(struct ShapeHookMsg * , arg        , A1));
 
 
 
@@ -195,6 +196,14 @@ Result
 
     TRUE  - layer was changed to new state
     FALSE - layer could not be changed to new state
+
+
+Notes
+~~~~~
+::
+
+     This is an AROS private function, providing support
+     for showing/hiding windows in intuition.
 
 
 
@@ -333,14 +342,14 @@ Synopsis
 
 ----------
 
-CreateLayerTagList()
-====================
+CreateBehindLayerTagList()
+==========================
 
 Synopsis
 ~~~~~~~~
 ::
 
- struct Layer * CreateLayerTagList(
+ struct Layer * CreateBehindLayerTagList(
           struct Layer_Info * li,
           struct BitMap     * bm,
           LONG x0,
@@ -350,7 +359,7 @@ Synopsis
           LONG flags,
           struct TagItem    * tagList );
  
- struct Layer * CreateLayerTags(
+ struct Layer * CreateBehindLayerTags(
           struct Layer_Info * li,
           struct BitMap     * bm,
           LONG x0,
@@ -412,9 +421,9 @@ Result
 
      Pointer to the newly created layer. NULL if layer could not be 
      created (Probably out of memory).
-     If the layer is created successful you must not free its shape.
+     If the layer is created successfully you must not free its shape.
      The shape is automatically freed when the layer is deleted.
-     
+
 
 
 ----------
@@ -508,6 +517,92 @@ Synopsis
           LONG y1,
           LONG flags,
           struct BitMap     * bm2 );
+
+
+----------
+
+CreateUpfrontLayerTagList()
+===========================
+
+Synopsis
+~~~~~~~~
+::
+
+ struct Layer * CreateUpfrontLayerTagList(
+          struct Layer_Info * li,
+          struct BitMap     * bm,
+          LONG x0,
+          LONG y0,
+          LONG x1,
+          LONG y1,
+          LONG flags,
+          struct TagItem    * tagList );
+ 
+ struct Layer * CreateUpfrontLayerTags(
+          struct Layer_Info * li,
+          struct BitMap     * bm,
+          LONG x0,
+          LONG y0,
+          LONG x1,
+          LONG y1,
+          LONG flags,
+          TAG tag, ... );
+
+Function
+~~~~~~~~
+::
+
+     Create a new layer according to the tags given.
+
+
+Inputs
+~~~~~~
+::
+
+     li    - pointer to LayerInfo structure
+     bm    - pointer to common bitmap
+     x0,y0 - upper left corner of the layer (in parent layer coords)
+     x1,y1 - lower right corner of the layer (in parent layer coords)
+     flags - choose the type of layer by setting some flags
+             If it is to be a super bitmap layer then the tag
+             LA_SUPERBITMAP must be provided along with a 
+             pointer to a valid super bitmap.
+     tagList - a list of tags that specify the properties of the
+               layer. The following tags are currently supported:
+               LA_PRIORITY : priority class of the layer. The
+                             higher the number the further the
+                             layer will be in front of everything
+                             else.
+                             Default value is UPFRONTPRIORITY.
+               LA_HOOK     : Backfill hook
+               LA_SUPERBITMAP : pointer to a superbitmap. The flags
+                               must also represent that this
+                               layer is supposed to be a superbitmap
+                               layer.
+               LA_CHILDOF  : pointer to parent layer. If NULL then
+                             this layer will be created as a old-style
+                             layer.
+               LA_INFRONTOF : pointer to a layer in front of which
+                              this layer is to be created.
+               LA_BEHIND : pointer to a layer behind which this layer
+                          is to be created. Must not give both LA_INFRONTOF
+                          and LA_BEHIND.
+               LA_VISIBLE : FALSE if this layer is to be invisible.
+                            Default value is TRUE
+               LA_SHAPE : The region of the layer that comprises its shape.
+                          This value is optional. The region must be relative to the layer.
+               
+     
+
+Result
+~~~~~~
+::
+
+     Pointer to the newly created layer. NULL if layer could not be 
+     created (Probably out of memory).
+     If the layer is created successfully you must not free its shape.
+     The shape is automatically freed when the layer is deleted.
+
 
 
 ----------
@@ -648,46 +743,6 @@ Synopsis
 
  LONG FattenLayerInfo(
           struct Layer_Info * li );
-
-
-----------
-
-GetFirstFamilyMember()
-======================
-
-Synopsis
-~~~~~~~~
-::
-
- struct Layer * GetFirstFamilyMember(
-          struct Layer * l );
-
-Function
-~~~~~~~~
-::
-
-     Gets the first member of a layer family. If the layer
-     has no children at all this function returns the
-     pointer to the same layer as given.
-     If the layer has children which again have children etc.
-     this function returns the frontmost child.
-
-
-Inputs
-~~~~~~
-::
-
-     l - pointer to a layer structure.                  
-     
-
-Result
-~~~~~~
-::
-
-     Pointer to a layer structure that represents the front
-     most child of the given layer or the layer itself if it
-     has no children.
-     
 
 
 ----------
@@ -845,50 +900,6 @@ Notes
 
 ----------
 
-IsFrontmostLayer()
-==================
-
-Synopsis
-~~~~~~~~
-::
-
- BOOL IsFrontmostLayer(
-          struct Layer * l,
-          BOOL check_invisible );
-
-Function
-~~~~~~~~
-::
-
-    Checks whether this layer is the frontmost layer within
-    its priority. If this layer has children then all of
-    its children will be disregarded. Comparisons are only
-    done with layers that have the same 'depth' of relation-
-    ship (=nesting counter) to the root layer.
-    It can be specified whether invisible siblings are to be
-    considered in the comparison.
-
-
-Inputs
-~~~~~~
-::
-
-    L               - pointer to layer 
-    check_invisible - whether invisible siblings are to be considered
-    
-
-
-Result
-~~~~~~
-::
-
-    TRUE  - layer is frontmost layer within its priority
-    FALSE - layer is not frontmost layer within its priority
-
-
-
-----------
-
 IsLayerHiddenBySibling()
 ========================
 
@@ -990,6 +1001,7 @@ Inputs
 ~~~~~~
 ::
 
+     dummy - unused.
      layer - pointer to layer to be locked
 
 

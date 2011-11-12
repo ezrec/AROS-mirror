@@ -11,29 +11,30 @@ alib
 ======================================= ======================================= ======================================= ======================================= 
 `__sprintf()`_                          `AddAmigaGuideHost()`_                  `AddAppIcon()`_                         `AddAppMenuItem()`_                     
 `AddAppWindow()`_                       `AddAppWindowDropZone()`_               `AllocAslRequestTags()`_                `AllocDosObjectTags()`_                 
-`AllocNamedObject()`_                   `AllocSpriteData()`_                    `ArgArrayDone()`_                       `ArgArrayInit()`_                       
-`ArgInt()`_                             `ArgString()`_                          `ArosInquire()`_                        `AslRequestTags()`_                     
-`AsmAllocPooled()`_                     `AsmCreatePool()`_                      `AsmDeletePool()`_                      `AsmFreePooled()`_                      
-`BeginIO()`_                            `BestCModeIDTags()`_                    `BestModeID()`_                         `BuildEasyRequest()`_                   
-`CallHook()`_                           `CallHookA()`_                          `ChangeExtSprite()`_                    `CheckRexxMsg()`_                       
-`CloseWorkbenchObject()`_               `CoerceMethodA()`_                      `CreateExtIO()`_                        `CreateGadget()`_                       
-`CreateLayerTags()`_                    `CreateMenus()`_                        `CreateNewProcTags()`_                  `CreatePort()`_                         
-`CreateStdIO()`_                        `CreateTask()`_                         `defined()`_                            `DeleteExtIO()`_                        
-`DeletePort()`_                         `DeleteStdIO()`_                        `DeleteTask()`_                         `DoDTMethod()`_                         
-`DoGadgetMethod()`_                     `DoMethodA()`_                          `DoSuperMethodA()`_                     `DoSuperNewTagList()`_                  
-`DrawBevelBox()`_                       `EasyRequest()`_                        `ExtendFontTags()`_                     `FastRand()`_                           
-`FreeIEvents()`_                        `FreeMsgFromStack()`_                   `FreeParamsFromStack()`_                `FreeTagsFromStack()`_                  
-`GetDTAttrs()`_                         `GetExtSprite()`_                       `GetMsgFromStack()`_                    `GetParamsFromStack()`_                 
-`GetRexxVar()`_                         `GetRPAttrs()`_                         `GetTagsFromStack()`_                   `GetVisualInfo()`_                      
-`GT_GetGadgetAttrs()`_                  `GT_SetGadgetAttrs()`_                  `HookEntry()`_                          `HotKey()`_                             
-`InvertString()`_                       `LayoutMenuItems()`_                    `LayoutMenus()`_                        `LibAllocPooled()`_                     
-`LibCreatePool()`_                      `LibDeletePool()`_                      `LibFreePooled()`_                      `LockBitMapTags()`_                     
-`MakeWorkbenchObjectVisible()`_         `MergeSortList()`_                      `NewDTObject()`_                        `NewList()`_                            
-`NewLoadSegTags()`_                     `NewObject()`_                          `NewRawDoFmt()`_                        `ObtainBestPen()`_                      
-`ObtainInfo()`_                         `OpenAmigaGuide()`_                     `OpenAmigaGuideAsync()`_                `OpenCatalog()`_                        
-`OpenScreenTags()`_                     `OpenWindowTags()`_                     `OpenWorkbenchObject()`_                `RangeRand()`_                          
-`ReAllocVec()`_                         `RefreshDTObject()`_                    `RefreshDTObjects()`_                   `ReleaseInfo()`_                        
-`RemoveAmigaGuideHost()`_               `SendAmigaGuideCmd()`_                  `SendAmigaGuideContext()`_              `SetAmigaGuideAttrs()`_                 
+`AllocNamedObject()`_                   `AllocSpriteData()`_                    `AndRectRect()`_                        `ArgArrayDone()`_                       
+`ArgArrayInit()`_                       `ArgInt()`_                             `ArgString()`_                          `ArosInquire()`_                        
+`AslRequestTags()`_                     `AsmAllocPooled()`_                     `AsmCreatePool()`_                      `AsmDeletePool()`_                      
+`AsmFreePooled()`_                      `BeginIO()`_                            `BestCModeIDTags()`_                    `BestModeID()`_                         
+`BuildEasyRequest()`_                   `CallHook()`_                           `CallHookA()`_                          `ChangeExtSprite()`_                    
+`CheckRexxMsg()`_                       `CloseWorkbenchObject()`_               `CoerceMethodA()`_                      `CopyRegion()`_                         
+`CreateExtIO()`_                        `CreateGadget()`_                       `CreateMenus()`_                        `CreateNewProcTags()`_                  
+`CreatePort()`_                         `CreateStdIO()`_                        `CreateTask()`_                         `defined()`_                            
+`DeleteExtIO()`_                        `DeletePort()`_                         `DeleteStdIO()`_                        `DeleteTask()`_                         
+`DoDTMethod()`_                         `DoGadgetMethod()`_                     `DoMethodA()`_                          `DoSuperMethodA()`_                     
+`DoSuperNewTagList()`_                  `DrawBevelBox()`_                       `EasyRequest()`_                        `ErrorOutput()`_                        
+`ExtendFontTags()`_                     `FastRand()`_                           `FreeIEvents()`_                        `FreeMsgFromStack()`_                   
+`FreeParamsFromStack()`_                `FreeTagsFromStack()`_                  `GetDTAttrs()`_                         `GetExtSprite()`_                       
+`GetMsgFromStack()`_                    `GetParamsFromStack()`_                 `GetRexxVar()`_                         `GetRPAttrs()`_                         
+`GetTagsFromStack()`_                   `GetVisualInfo()`_                      `GT_GetGadgetAttrs()`_                  `GT_SetGadgetAttrs()`_                  
+`HookEntry()`_                          `HotKey()`_                             `InvertString()`_                       `LayoutMenuItems()`_                    
+`LayoutMenus()`_                        `LibAllocPooled()`_                     `LibCreatePool()`_                      `LibDeletePool()`_                      
+`LibFreePooled()`_                      `LockBitMapTags()`_                     `MakeWorkbenchObjectVisible()`_         `MergeSortList()`_                      
+`NewDTObject()`_                        `NewList()`_                            `NewLoadSegTags()`_                     `NewObject()`_                          
+`NewRawDoFmt()`_                        `NewRectRegion()`_                      `ObtainBestPen()`_                      `ObtainInfo()`_                         
+`OpenAmigaGuide()`_                     `OpenAmigaGuideAsync()`_                `OpenCatalog()`_                        `OpenScreenTags()`_                     
+`OpenWindowTags()`_                     `OpenWorkbenchObject()`_                `RangeRand()`_                          `ReAllocVec()`_                         
+`RefreshDTObject()`_                    `RefreshDTObjects()`_                   `ReleaseInfo()`_                        `RemoveAmigaGuideHost()`_               
+`SelectErrorOutput()`_                  `SendAmigaGuideCmd()`_                  `SendAmigaGuideContext()`_              `SetAmigaGuideAttrs()`_                 
 `SetAmigaGuideContext()`_               `SetAttrs()`_                           `SetDTAttrs()`_                         `SetGadgetAttrs()`_                     
 `SetInfo()`_                            `SetRexxVar()`_                         `SetRPAttrs()`_                         `SetSuperAttrs()`_                      
 `SetWindowPointer()`_                   `StrDup()`_                             `SystemTags()`_                         `TimeDelay()`_                          
@@ -373,6 +374,51 @@ See also
 ~~~~~~~~
 
 `graphics.library/AllocSpriteDataA() <./graphics#allocspritedataa>`_ 
+
+----------
+
+AndRectRect()
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+  BOOL AndRectRect(
+     struct Rectangle *rect1,
+     struct Rectangle *rect2,
+     struct Rectangle *intersect)
+
+
+Function
+~~~~~~~~
+::
+
+     Calculate the intersection rectangle between the
+     given Rectangle rect1 and the given Rectangle rect2
+     leaving the result in intersect (if intersect != NULL).
+
+
+Inputs
+~~~~~~
+::
+
+     rect1 - pointer to 1st Rectangle
+     rect2 - pointer to 2nd Rectangle
+     intersect - pointer to rectangle which will hold result.
+
+
+Result
+~~~~~~
+::
+
+     TRUE if rect1 and rect2 do intersect. In this case intersect
+     will contain the intersection rectangle.
+
+     FALSE if rect1 and rect2 do not overlap. "intersect" will
+     then be left unchanged.
+
+
 
 ----------
 
@@ -1043,6 +1089,41 @@ Result
 
 ----------
 
+CopyRegion()
+============
+
+Synopsis
+~~~~~~~~
+::
+
+  struct Region *CopyRegion(
+     struct Region *region)
+
+
+Function
+~~~~~~~~
+::
+
+     Make a copy of the given Region.
+
+
+Inputs
+~~~~~~
+::
+
+     region - pointer to a Region structure
+
+
+Result
+~~~~~~
+::
+
+     the copy of the Region, or NULL if not enough memory.
+
+
+
+----------
+
 CreateExtIO()
 =============
 
@@ -1113,28 +1194,6 @@ See also
 ~~~~~~~~
 
 `gadtools.library/CreateGadgetA() <./gadtools#creategadgeta>`_ 
-
-----------
-
-CreateLayerTags()
-=================
-
-Synopsis
-~~~~~~~~
-::
-
-  struct Layer * CreateLayerTags(
-     struct Layer_Info * li,
-     struct BitMap     * bm,
-     LONG                x0,
-     LONG                y0,
-     LONG                x1,
-     LONG                y1,
-     LONG                flags,
-     Tag                 tag1,
-     ...)
-
-
 
 ----------
 
@@ -1675,7 +1734,7 @@ Result
 See also
 ~~~~~~~~
 
-`boopsi.library/NewObjectA() <./boopsi#newobjecta>`_ `boopsi.library/SetAttrsA() <./boopsi#setattrsa>`_ `boopsi.library/GetAttr() <./boopsi#getattr>`_ `boopsi.library/DisposeObject() <./boopsi#disposeobject>`_ `CoerceMethodA()`_ `DoSuperMethodA()`_ `intuition/classusr.h <../headerfiles/intuition/classusr.h>`_ 
+`intuition.library/NewObjectA() <./intuition#newobjecta>`_ `intuition.library/SetAttrsA() <./intuition#setattrsa>`_ `intuition.library/GetAttr() <./intuition#getattr>`_ `intuition.library/DisposeObject() <./intuition#disposeobject>`_ `CoerceMethodA()`_ `DoSuperMethodA()`_ `intuition/classusr.h <../headerfiles/intuition/classusr.h>`_ 
 
 ----------
 
@@ -1725,7 +1784,7 @@ Result
 See also
 ~~~~~~~~
 
-`boopsi.library/NewObjectA() <./boopsi#newobjecta>`_ `boopsi.library/SetAttrsA() <./boopsi#setattrsa>`_ `boopsi.library/GetAttr() <./boopsi#getattr>`_ `boopsi.library/DisposeObject() <./boopsi#disposeobject>`_ `DoMethodA()`_ `CoerceMethodA()`_ `intuition/classes.h <../headerfiles/intuition/classes.h>`_ 
+`intuition.library/NewObjectA() <./intuition#newobjecta>`_ `intuition.library/SetAttrsA() <./intuition#setattrsa>`_ `intuition.library/GetAttr() <./intuition#getattr>`_ `intuition.library/DisposeObject() <./intuition#disposeobject>`_ `DoMethodA()`_ `CoerceMethodA()`_ `intuition/classes.h <../headerfiles/intuition/classes.h>`_ 
 
 ----------
 
@@ -1748,7 +1807,7 @@ Synopsis
 See also
 ~~~~~~~~
 
-`boopsi.library/NewObjectA() <./boopsi#newobjecta>`_ `boopsi.library/SetAttrsA() <./boopsi#setattrsa>`_ `boopsi.library/GetAttr() <./boopsi#getattr>`_ `boopsi.library/DisposeObject() <./boopsi#disposeobject>`_ `DoMethodA()`_ `CoerceMethodA()`_ `intuition/classes.h <../headerfiles/intuition/classes.h>`_ 
+`intuition.library/NewObjectA() <./intuition#newobjecta>`_ `intuition.library/SetAttrsA() <./intuition#setattrsa>`_ `intuition.library/GetAttr() <./intuition#getattr>`_ `intuition.library/DisposeObject() <./intuition#disposeobject>`_ `DoMethodA()`_ `CoerceMethodA()`_ `intuition/classes.h <../headerfiles/intuition/classes.h>`_ 
 
 ----------
 
@@ -1796,6 +1855,42 @@ Synopsis
      struct EasyStruct * easyStruct,
      ULONG             * idcmpPtr,
      ...)
+
+
+
+----------
+
+ErrorOutput()
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+  BPTR ErrorOutput(
+     void)
+
+
+Function
+~~~~~~~~
+::
+
+     Returns the current error stream or 0 if there is no current
+     input stream.
+
+
+Result
+~~~~~~
+::
+
+     Error stream handle.
+
+
+Notes
+~~~~~
+::
+
+     This function is source-compatible with AmigaOS v4.
 
 
 
@@ -2974,6 +3069,62 @@ Function
 
 ----------
 
+NewRectRegion()
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+  struct Region *NewRectRegion(
+     WORD MinX,
+     WORD MinY,
+     WORD MaxX,
+     WORD MaxY)
+
+
+Function
+~~~~~~~~
+::
+
+     Creates a new rectangular Region
+             
+
+Inputs
+~~~~~~
+::
+
+     MinX, MinY, MaxX, MaxY - The extent of the Rect
+             
+
+Result
+~~~~~~
+::
+
+     Pointer to the newly created Region. NULL on failure.
+
+
+Notes
+~~~~~
+::
+
+     This function is a shorthand for:
+
+         struct Rectangle rect;
+         struct Region *region;
+
+         rect.MinX = MinX;
+         rect.MinY = MinY;
+         rect.MaxX = MaxX;
+         rect.MaxY = MaxY;
+
+         region = NewRegion();
+         OrRectRegion(region, &rect);
+
+
+
+----------
+
 ObtainBestPen()
 ===============
 
@@ -3447,6 +3598,49 @@ See also
 ~~~~~~~~
 
 `amigaguide.library/RemoveAmigaGuideHostA() <./amigaguide#removeamigaguidehosta>`_ 
+
+----------
+
+SelectErrorOutput()
+===================
+
+Synopsis
+~~~~~~~~
+::
+
+  BPTR SelectErrorOutput(
+     BPTR fh)
+
+
+Function
+~~~~~~~~
+::
+
+     Sets the current error stream returned by ErrorOutput() to a new
+     value. Returns the old error stream.
+
+
+Inputs
+~~~~~~
+::
+
+     fh - New error stream.
+
+
+Result
+~~~~~~
+::
+
+     Old error stream handle.
+
+
+Notes
+~~~~~
+::
+
+     This function is source-compatible with AmigaOS v4.
+     
+
 
 ----------
 

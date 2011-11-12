@@ -18,9 +18,11 @@ Shell Commands
     + `break <break>`_
     + `cd <cd>`_
     + `changetaskpri <changetaskpri>`_
+    + `clip <clip>`_
     + `conclip <conclip>`_
     + `copy <copy>`_
     + `copytopar <copytopar>`_
+    + `cut <cut>`_
     + `date <date>`_
     + `debug <debug>`_
     + `decoration <decoration>`_
@@ -62,6 +64,7 @@ Shell Commands
     + `newshell <newshell>`_
     + `partition <partition>`_
     + `path <path>`_
+    + `pathpart <pathpart>`_
     + `prompt <prompt>`_
     + `protect <protect>`_
     + `quit <quit>`_
