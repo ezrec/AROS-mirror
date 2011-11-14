@@ -60,7 +60,7 @@ void EntryElementRemove(struct List *entry_List, ULONG entry_ID)
     {
         if (current_Node->EE_E_ID == (IPTR)entry_ID)
         {
-#warning "todo: remove the elements node and free its storage"
+            /* todo: remove the elements node and free its storage */
         }
     }
 }
