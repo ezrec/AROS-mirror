@@ -215,7 +215,8 @@ for group in groups.keys():
 		    path = path + '.php'
 		    file = file + '.php'
 		
-		url  = 'http://aros.sourceforge.net/cgi-bin/%s-download?%s/%s/%s' % (dltype, date, group, file)
+		#url  = 'http://aros.sourceforge.net/cgi-bin/%s-download?%s/%s/%s' % (dltype, date, group, file)
+		url  = 'http://netcologne.dl.sourceforge.net/project/aros/%s/%s/%s/%s' % (dltype, date, group, file)
                 size = formatSize( os.path.getsize( path ) )
                 print '''
                 <table class="layout" border="0" cellspacing="0" cellpadding="0">
