@@ -376,7 +376,7 @@ Looks ugly, eh ? :-) Ok, here are the rules:
   ``()`` below each other (d) if there is much code between. Brackets and 
   parentheses may be in one line if the code between is small (c)
 
-+ Indent by 4 Spaces. Two indent levels may be abbreviated by one tab.
++ Indent by 4 Spaces.
 
   The reasons for this are: 
   
