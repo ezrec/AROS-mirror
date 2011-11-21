@@ -353,11 +353,13 @@ static void RedrawCursor(OOP_Class *cl, OOP_Object *o, OOP_Object *bm,
         *curbmdata = OOP_INST_DATA(bmcl, curbm);
     UWORD pixel_offset;
 
+    /* Copy cursor background into scratch buffer */
     pixel_offset = (y1 - data->cursor_y) * data->cursor_width
         + x1 - data->cursor_x;
     HIDD_Gfx_CopyBox(o, bm, x1 - bmdata->xoffset, y1 - bmdata->yoffset,
         curbm, 0, 0, x2 - x1 + 1, y2 - y1 + 1, data->gc);
 
+    /* Overlay cursor on top of background in scratch buffer */
     HIDD_BM_PutAlphaImage(curbm, data->gc,
         (UBYTE *)(data->cursor_pixels + pixel_offset),
         data->cursor_width * sizeof(ULONG), 0, 0,
@@ -379,7 +381,10 @@ static void BlankCursor(struct VesaGfx_staticdata *data)
         height : data->cursor_height
     };
 
+    BOOL visible = data->cursor_visible;
+    data->cursor_visible = FALSE;
     OOP_DoMethod(data->compositing, (OOP_Msg)&cmsg);
+    data->cursor_visible = visible;
 }
 
 BOOL PCVesa__Hidd_Gfx__SetCursorShape(OOP_Class *cl, OOP_Object *o,
@@ -528,7 +533,6 @@ static void RefreshBox(OOP_Object *gfx, OOP_Object * bm, LONG x1, LONG y1,
 
         if (draw_cursor)
         {
-
             /* Draw strip above cursor area */
             if (bm_y + y1 < min_y)
                 vesaDoRefreshArea(&data->data, bmdata, x1, y1,
