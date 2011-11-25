@@ -284,6 +284,7 @@ LONG MakeConWindow(struct filehandle *fh, struct conbase *conbase)
         if (!GadToolsBase) {
 	    GadToolsBase = OpenLibrary("gadtools.library",0L);
         }
+#if 0    /* FIXME: add menus when they work */
         if (GadToolsBase) {
 	  D(bug("Initializing menus\n"));
 	    fh->vi = (void *)GetVisualInfo(fh->window->WScreen, TAG_END);
@@ -297,6 +298,7 @@ LONG MakeConWindow(struct filehandle *fh, struct conbase *conbase)
 		}
 	    }
 	}
+#endif
 
     	D(bug("contask: window opened\n"));
 	fh->conreadio->io_Data   = (APTR)fh->window;
