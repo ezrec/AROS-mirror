@@ -6,6 +6,8 @@
 #define DEBUG 1
 #include <aros/debug.h>
 
+#include "ahci_header.h"
+
 #include LC_LIBDEFS_FILE
 
 /*
@@ -126,7 +128,7 @@ static int GM_UNIQUENAME(Init)(LIBBASETYPEPTR LIBBASE) {
 
             struct ahci_hba_chip *hba_chip;
             ForeachNode(&LIBBASE->chip_list, hba_chip) {
-                if( ahci_setup_hba(hba_chip) ) {
+                if( ahci_create_hbatask(hba_chip) ) {
                     D(bug("[AHCI] HBA-setup succeed!\n"));
                 }else{
                     // de-allocate everything relating to this HBA-chip and remove it from the list

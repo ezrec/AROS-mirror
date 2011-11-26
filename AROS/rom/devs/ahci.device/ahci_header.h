@@ -13,6 +13,7 @@
 #include <exec/nodes.h>
 #include <exec/devices.h>
 #include <exec/resident.h>
+#include <exec/execbase.h>
 #include <hardware/ahci.h>
 
 #include <utility/utility.h>
@@ -41,6 +42,7 @@
 #include <string.h>
 
 #define HBAHW_D(fmt, ...) D(bug("[HBAHW%d] " fmt, hba_chip->HBANumber, ##__VA_ARGS__))
+#define HBATASK_D(fmt, ...) D(bug("[HBATASK%d] " fmt, hba_chip->HBANumber, ##__VA_ARGS__))
 
 #define HBA_TASK_STACKSIZE  16*1024
 #define HBA_TASK_PRI        10
@@ -78,8 +80,9 @@ struct ahci_hba_chip {
 
     uint32_t   StartingPortNumber;
 
-    struct  MsgPort MsgPort;
-    struct  timerequest tr;
+    struct  timerequest *tr;
+    struct  MsgPort *mp_io;
+    struct  MsgPort *mp_timer;
 
     /*
         List of all implemented ports on a given HBA
@@ -115,9 +118,9 @@ struct ahci_hba_port {
 };
 
 /* ahci_hbahw prototypes */
+void ahci_taskcode_hba(struct ahci_hba_chip *hba_chip, struct Task *parent);
 BOOL ahci_create_interrupt(struct ahci_hba_chip *hba_chip);
 BOOL ahci_create_hbatask(struct ahci_hba_chip *hba_chip);
-BOOL ahci_setup_hba(struct ahci_hba_chip *hba_chip);
 BOOL ahci_init_hba(struct ahci_hba_chip *hba_chip);
 BOOL ahci_reset_hba(struct ahci_hba_chip *hba_chip);
 void ahci_enable_hba(struct ahci_hba_chip *hba_chip);

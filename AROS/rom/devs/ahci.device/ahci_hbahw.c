@@ -6,7 +6,11 @@
 #define DEBUG 1
 #include <aros/debug.h>
 
-#include LC_LIBDEFS_FILE
+#include <proto/exec.h>
+
+#include "ahci_header.h"
+
+//#include LC_LIBDEFS_FILE
 
 /*
     Call every HBA function with pointer to ahci_hba_chip structure as a first argument
@@ -42,33 +46,48 @@ BOOL ahci_create_interrupt(struct ahci_hba_chip *hba_chip) {
     return FALSE;
 }
 
-static void ahci_taskcode_hba(struct ahci_hba_chip *hba_chip, struct Task* parent) {
-    HBAHW_D("HBA task running...\n");
+void ahci_taskcode_hba(struct ahci_hba_chip *hba_chip, struct Task *parent) {
+    HBATASK_D("HBA task running...\n");
 
-    HBAHW_D("Signaling parent %08x\n", parent);
-    Signal(parent, SIGBREAKF_CTRL_C);
+    hba_chip->mp_io = CreateMsgPort();
+    if(hba_chip->mp_io) {
 
-    if ( ahci_init_hba(hba_chip) ) {
-        HBAHW_D("ahci_init_hba done!\n");
-        Wait(0);
-    } else {
-        HBAHW_D("ahci_init_hba failed!\n");
-        /*
-            Something failed while setting up the HW part of the HBA
-            Release all allocated memory and other resources for this HBA
-            and remove us from the list (no ports for example... should not happen)
-        */
+        hba_chip->mp_timer = CreateMsgPort();
+        if(hba_chip->mp_timer) {
+
+            hba_chip->tr = (struct timerequest *)CreateIORequest(hba_chip->mp_timer, sizeof(struct timerequest));
+            if (hba_chip->tr) {
+                FreeSignal(hba_chip->mp_timer->mp_SigBit);
+
+                if (!OpenDevice((STRPTR)"timer.device", UNIT_MICROHZ, (struct IORequest *)hba_chip->tr, 0)) {
+                    HBATASK_D("Signaling parent %08x\n", parent);
+                    Signal(parent, SIGBREAKF_CTRL_C);
+                    Wait(0);
+                }
+                hba_chip->mp_timer->mp_SigBit = AllocSignal(-1);
+                DeleteIORequest((struct IORequest *)hba_chip->tr);
+            }
+
+            DeleteMsgPort(hba_chip->mp_timer);
+        }
 
     }
+
+    /*
+        Something failed while setting up the HW part of the HBA
+        Release all allocated memory and other resources for this HBA
+        and remove us from the list (no ports for example... should not happen)
+    */
+
+    HBAHW_D("ahci_init_hba failed!\n");
 }
 
 BOOL ahci_create_hbatask(struct ahci_hba_chip *hba_chip) {
-    HBAHW_D("Setting up HBA task...\n");
+    HBAHW_D("Creating HBA task\n");
 
-    //move to hba_chip struct
     struct Task     *t;
     struct MemList  *ml;
-    UBYTE *sp = NULL;
+    UBYTE *sp;
 
     struct TagItem tags[] = {
         { TASKTAG_ARG1, (IPTR)hba_chip },
@@ -76,56 +95,30 @@ BOOL ahci_create_hbatask(struct ahci_hba_chip *hba_chip) {
         { TAG_DONE,     0 }
     };
 
-    t = AllocMem(sizeof (struct Task), MEMF_PUBLIC|MEMF_CLEAR);
-    if (t) {
-        ml = AllocMem(sizeof(struct MemList) + sizeof(struct MemEntry), MEMF_PUBLIC | MEMF_CLEAR);
-        if(ml) {
-    	    sp = AllocMem(HBA_TASK_STACKSIZE, MEMF_PUBLIC | MEMF_CLEAR);
-    	    if(sp) {
-                t->tc_SPLower = sp;
-                t->tc_SPUpper = sp + HBA_TASK_STACKSIZE;
-            #if AROS_STACK_GROWS_DOWNWARDS
-		        t->tc_SPReg = (UBYTE *)t->tc_SPUpper-SP_OFFSET;
-            #else
-		        t->tc_SPReg = (UBYTE *)t->tc_SPLower-SP_OFFSET;
-            #endif
+	t=(struct Task *)AllocMem(sizeof(struct Task), MEMF_PUBLIC|MEMF_CLEAR);
+	sp = (UBYTE *)AllocMem(HBA_TASK_STACKSIZE, MEMF_PUBLIC|MEMF_CLEAR);
+    ml = AllocMem(sizeof(struct MemList) + sizeof(struct MemEntry), MEMF_PUBLIC | MEMF_CLEAR);
 
-                ml->ml_NumEntries = 2;
+	if(t && sp && ml) {
+        ml->ml_NumEntries = 2;
+        ml->ml_ME[0].me_Addr = t;
+        ml->ml_ME[0].me_Length = sizeof(struct Task);
+        ml->ml_ME[1].me_Addr = sp;
+        ml->ml_ME[1].me_Length = HBA_TASK_STACKSIZE;
 
-                ml->ml_ME[0].me_Addr = t;
-                ml->ml_ME[0].me_Length = sizeof(struct Task);
+        NEWLIST(&t->tc_MemEntry);
+        t->tc_Node.ln_Type=NT_TASK;
+        t->tc_Node.ln_Pri=HBA_TASK_PRI;
+        t->tc_Node.ln_Name="AHCI task #";
+        t->tc_SPLower=sp;
+        t->tc_SPUpper=sp+HBA_TASK_STACKSIZE;
+        t->tc_SPReg=(UBYTE *)t->tc_SPUpper-SP_OFFSET;
+        AddHead(&t->tc_MemEntry, &ml->ml_Node);
 
-                ml->ml_ME[1].me_Addr = sp;
-                ml->ml_ME[1].me_Length = HBA_TASK_STACKSIZE;
-        
-                NEWLIST(&t->tc_MemEntry);
-                AddHead(&t->tc_MemEntry, &ml->ml_Node);
-
-                t->tc_Node.ln_Name = "HBA task";
-                t->tc_Node.ln_Type = NT_TASK;
-                t->tc_Node.ln_Pri  = HBA_TASK_PRI;
-
-                NewAddTask(t, ahci_taskcode_hba, NULL, tags);
-
-                Wait(SIGBREAKF_CTRL_C);
-                HBAHW_D("Signal from HBA task received\n");
-
-                return TRUE;
-            }
-            FreeMem(ml,sizeof(struct MemList) + sizeof(struct MemEntry));
-        }
-        FreeMem(t,sizeof(struct Task));
-    }
-
-    return FALSE;
-}
-
-BOOL ahci_setup_hba(struct ahci_hba_chip *hba_chip) {
-    HBAHW_D("HBA-setup...\n");
-
-    if( ahci_init_hba(hba_chip) )
+        NewAddTask(t, ahci_taskcode_hba, NULL, tags);
+        Wait(SIGBREAKF_CTRL_C);
         return TRUE;
-
+	}
     return FALSE;
 }
 
@@ -175,8 +168,7 @@ BOOL ahci_init_hba(struct ahci_hba_chip *hba_chip) {
     ahci_enable_hba(hba_chip);
 
     /* Reset the HBA */
-    if ( ahci_reset_hba(hba_chip) )
-    {
+    if ( ahci_reset_hba(hba_chip) ) {
     	int i;
 
         HBAHW_D("Reset done\n");
@@ -213,27 +205,6 @@ BOOL ahci_init_hba(struct ahci_hba_chip *hba_chip) {
                                                                 ((hba_chip->Version >> 8) & 0xf)*10 + (hba_chip->Version & 0xf), hwhba->vs );
         HBAHW_D("Interrupt %u\n",                               hba_chip->IRQ);
 */
-
-        /* Set timer.device up for this HBA-chip and within this task context */
-        /*
-            FIXME: For now ahci_init_hba() is called from ahci_setup_hba(), 
-                    which in turn is called from Init(), but ahci_setup_hba() should create HBA_Task_(hba_number) that would call ahci_init_hba()
-                    and HBA_Task_(hba_number) would also direct commands for the device.
-        */
-        hba_chip->MsgPort.mp_SigBit = SIGB_SINGLE;
-        hba_chip->MsgPort.mp_Flags = PA_SIGNAL;
-        hba_chip->MsgPort.mp_SigTask = FindTask(NULL);
-        hba_chip->MsgPort.mp_Node.ln_Type = NT_MSGPORT;
-        NEWLIST(&hba_chip->MsgPort.mp_MsgList);
-
-        hba_chip->tr.tr_node.io_Message.mn_ReplyPort = &hba_chip->MsgPort;
-        hba_chip->tr.tr_node.io_Message.mn_Length = sizeof(hba_chip->tr);
-
-        if ( (OpenDevice((STRPTR)"timer.device", UNIT_MICROHZ, (struct IORequest *)&hba_chip->tr, 0)) ) {
-            HBAHW_D("Could not open timer.device\n");
-            return FALSE;
-        }
-
         if( !ahci_create_interrupt(hba_chip) )
             return FALSE;
 
@@ -255,8 +226,7 @@ BOOL ahci_init_hba(struct ahci_hba_chip *hba_chip) {
         HBAHW_D("Port numbering starts at %d\n", hba_chip->StartingPortNumber);
 
         ObtainSemaphore(&hba_chip->port_list_lock);
-        for (i = 0; i <= hba_chip->PortCountMax; i++)
-        {
+        for (i = 0; i <= hba_chip->PortCountMax; i++) {
     		if (hba_chip->PortImplementedMask & (1 << i)) {
                 ahci_add_port(hba_chip, hba_chip->StartingPortNumber+i, i);
     		}
@@ -400,7 +370,7 @@ BOOL ahci_init_port(struct ahci_hba_chip *hba_chip, uint32_t port_hba_num) {
 
 /*
     Add a port to the HBA-port list.
-    Physical port number is "port_hba_num" and it is added as unit number "port_unit_num" to the system
+    Physical port number is "port_hba_num" and it is added as exec unit number "port_unit_num" to the system
     Make sure the port in question is free and ready for use, if not make it so
 */
 BOOL ahci_add_port(struct ahci_hba_chip *hba_chip, uint32_t port_unit_num, uint32_t port_hba_num) {
