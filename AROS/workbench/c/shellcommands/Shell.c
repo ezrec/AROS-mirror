@@ -459,6 +459,37 @@ BOOL copyEmbedResult(struct CSource *filtered, struct Redirection *embedRd, stru
 
 /*****************************************************************************/
 
+static LONG l2a(LONG x, STRPTR buf) /* long to ascii */
+{
+   LONG a = (x < 0 ? -x : x);
+   LONG i = 31, j, len = 0;
+   TEXT tmp[32];
+
+   do {
+       tmp[i] = '0' + (a % 10);
+       ++len;
+   } while (i-- && (a /= 10));
+
+   if (x < 0)
+   {
+       tmp[i--] = '-';
+       ++len;
+   }
+
+    for (j = 0; j < len; ++j)
+       buf[j] = tmp[++i];
+
+   buf[j] = '\0';
+   return len;
+}
+
+static void cliVarNum(CONST_STRPTR name, LONG value)
+{
+    TEXT buf[32];
+    LONG len = l2a(value, buf);
+    SetVar(name, buf, len, GVF_LOCAL_ONLY);
+}
+
 
 void setupResidentCommands(void);
 
@@ -577,6 +608,7 @@ AROS_SHA(STRPTR, ,COMMAND,/F,NULL))
     setPath(BNULL, &is);
 
     is.cliNumber = me->pr_TaskNum;
+    cliVarNum("process", is.cliNumber);
 
     if (strcmp(me->pr_Task.tc_Node.ln_Name, "Boot Shell") == 0)
 	is.isBootShell = TRUE;
@@ -2433,6 +2465,9 @@ LONG executeLine(STRPTR command, STRPTR commandArgs, struct Redirection *rd,
     }
  
     D(bug("Done with the command... error=%d\n", error));
+
+    cliVarNum("RC", cli->cli_ReturnCode);
+    cliVarNum("Result2", cli->cli_Result2);
 
     return error;
 }
