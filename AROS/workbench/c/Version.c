@@ -883,7 +883,7 @@ void printverstring(void)
 			       (IPTR) parsedver.pv_name, (IPTR) (*parsedver.pv_name ? " " : ""),
 			       (IPTR) parsedver.pv_vername, (IPTR) parsedver.pv_revname,
 			       (parsedver.pv_datestr ? (IPTR) parsedver.pv_datestr : (IPTR) ""),
-			       (parsedver.pv_extralf ? (IPTR) parsedver.pv_extralf : (IPTR) "\n"),
+			       (parsedver.pv_extralf ? (IPTR) parsedver.pv_extralf : (IPTR) ""),
 			       (parsedver.pv_extrastr ? (IPTR) parsedver.pv_extrastr : (IPTR) ""));
 		}
 		else
