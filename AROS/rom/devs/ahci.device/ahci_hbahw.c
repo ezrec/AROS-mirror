@@ -60,8 +60,22 @@ void ahci_taskcode_hba(struct ahci_hba_chip *hba_chip, struct Task *parent) {
                 FreeSignal(hba_chip->mp_timer->mp_SigBit);
 
                 if (!OpenDevice((STRPTR)"timer.device", UNIT_MICROHZ, (struct IORequest *)hba_chip->tr, 0)) {
+
                     HBATASK_D("Signaling parent %08x\n", parent);
                     Signal(parent, SIGBREAKF_CTRL_C);
+
+                    if(ahci_init_hba(hba_chip)) {
+                        HBATASK_D("HBA initialized\n");
+                    }else{
+                        HBATASK_D("HBA initialisation failed!\n");
+
+                    /* TODO:
+                        Get the semaphore for chip list and remove us from the list,
+                        this will be done when init code of the device releases it and then die (check allocated resources if any and release them before...)
+                    */
+
+                    }
+
                     Wait(0);
                 }
                 hba_chip->mp_timer->mp_SigBit = AllocSignal(-1);
@@ -73,6 +87,7 @@ void ahci_taskcode_hba(struct ahci_hba_chip *hba_chip, struct Task *parent) {
 
     }
 
+    /* FIXME: message port creation failed not ahci_init */
     /*
         Something failed while setting up the HW part of the HBA
         Release all allocated memory and other resources for this HBA
@@ -117,6 +132,7 @@ BOOL ahci_create_hbatask(struct ahci_hba_chip *hba_chip) {
 
         NewAddTask(t, ahci_taskcode_hba, NULL, tags);
         Wait(SIGBREAKF_CTRL_C);
+
         return TRUE;
 	}
     return FALSE;
@@ -212,25 +228,26 @@ BOOL ahci_init_hba(struct ahci_hba_chip *hba_chip) {
 
         /*
             Get the pointer to previous HBA-chip struct in the list (if any)
-            Port numbering starts from 1 if no previous HBA exist else the port number will be
-            starting number of previous HBA-chip ports + the number of implemented ports in that chip
-            Port number 0 (e.g. unit number 0) is reserved/not implemented
+            Port numbering starts from 0 if no previous HBA exist else the port number will be
+            the last implemented port number of previous HBA-chip +1
         */
         struct ahci_hba_chip *prev_hba_chip = (struct ahci_hba_chip*) GetPred(hba_chip);
 
         if ( prev_hba_chip != NULL ) {
-            hba_chip->StartingPortNumber = (prev_hba_chip->StartingPortNumber) + (prev_hba_chip->PortCount);
+            hba_chip->PortMin = (prev_hba_chip->PortMax) + 1;
         }else{
-            hba_chip->StartingPortNumber = 1;
+            hba_chip->PortMin = 0;
         }
-        HBAHW_D("Port numbering starts at %d\n", hba_chip->StartingPortNumber);
 
         ObtainSemaphore(&hba_chip->port_list_lock);
         for (i = 0; i <= hba_chip->PortCountMax; i++) {
     		if (hba_chip->PortImplementedMask & (1 << i)) {
-                ahci_add_port(hba_chip, hba_chip->StartingPortNumber+i, i);
+                ahci_add_port(hba_chip, hba_chip->PortMin+i, i);
     		}
     	}
+
+        HBAHW_D("Ports implemented %d-%d\n", hba_chip->PortMin, hba_chip->PortMax);
+
         ReleaseSemaphore(&hba_chip->port_list_lock);
 
     	/* Enable interrupts for this HBA */
@@ -388,6 +405,7 @@ BOOL ahci_add_port(struct ahci_hba_chip *hba_chip, uint32_t port_unit_num, uint3
         hba_port->port_unit.parent_hba = hba_chip;
         hba_port->port_unit.Port_HBA_Number = port_hba_num;
         hba_port->port_unit.Port_Unit_Number = port_unit_num;
+        hba_chip->PortMax = port_unit_num;
 
         if( ahci_init_port(hba_chip, port_hba_num) ) {
             /* HBA-port list is protected for us in ahci_init_hba */

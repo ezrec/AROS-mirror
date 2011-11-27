@@ -71,14 +71,14 @@ struct ahci_hba_chip {
     uint32_t   Version;
 
     uint32_t   HBANumber;
+    uint32_t   PortMin;
+    uint32_t   PortMax;
 
     uint32_t   CommandSlotCount;
 
     uint32_t   PortImplementedMask;
     uint32_t   PortCountMax;
     uint32_t   PortCount;
-
-    uint32_t   StartingPortNumber;
 
     struct  timerequest *tr;
     struct  MsgPort *mp_io;

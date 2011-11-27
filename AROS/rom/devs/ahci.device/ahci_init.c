@@ -129,10 +129,10 @@ static int GM_UNIQUENAME(Init)(LIBBASETYPEPTR LIBBASE) {
             struct ahci_hba_chip *hba_chip;
             ForeachNode(&LIBBASE->chip_list, hba_chip) {
                 if( ahci_create_hbatask(hba_chip) ) {
-                    D(bug("[AHCI] HBA-setup succeed!\n"));
+                    D(bug("[AHCI] HBA task created!\n"));
                 }else{
                     // de-allocate everything relating to this HBA-chip and remove it from the list
-                    D(bug("[AHCI] HBA-setup failed!\n"));
+                    D(bug("[AHCI] HBA task creation failed!\n"));
                     REMOVE(hba_chip);
                 }
             }
@@ -160,6 +160,7 @@ static int GM_UNIQUENAME(Open)(LIBBASETYPEPTR LIBBASE, struct IORequest *iorq, u
     /* Assume Open failed */
     iorq->io_Error = IOERR_OPENFAIL;
 
+    /*FIXME: Use PortMin and PortMax from hba_chip and do not go through the port list */
     /* Overly complex way of finding port unit... */
     ObtainSemaphore(&LIBBASE->chip_list_lock);
     struct ahci_hba_chip *hba_chip;
