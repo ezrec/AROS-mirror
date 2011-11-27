@@ -18,7 +18,11 @@
 
 static void ahci_hba_Interrupt(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw) {
     struct ahci_hba_chip *hba_chip = (struct ahci_hba_chip *)irq->h_Data;
-    HBAHW_D("IRQ-Handler!\n");
+
+    struct ahci_hwhba *hwhba;
+    hwhba = hba_chip->abar;
+
+    HBAHW_D("Interrupt Status Register %x!\n", hwhba->is);
 }
 
 BOOL ahci_create_interrupt(struct ahci_hba_chip *hba_chip) {
