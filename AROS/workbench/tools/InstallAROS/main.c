@@ -745,10 +745,11 @@ IPTR Install__MUIM_IC_NextStep
 
 				if (!data->instc_options_grub->bootinfo)
 				{
+#if 0
 					char						*tmp_drive=NULL;
 					char						*tmp_device=NULL;
+#endif
 					char						*tmp_grub=NULL;
-					char						*tmp_kernel=NULL;
 #if 0
 					struct	IOStdReq			*ioreq=NULL;
 					struct	MsgPort 			*mp=NULL;
@@ -757,10 +758,11 @@ IPTR Install__MUIM_IC_NextStep
 
 					data->instc_options_grub->bootinfo = TRUE;
 
+#if 0
 					tmp_drive =AllocVec( 100, MEMF_CLEAR | MEMF_PUBLIC );
 					tmp_device =AllocVec( 100, MEMF_CLEAR | MEMF_PUBLIC );
+#endif
 					tmp_grub =AllocVec( 100, MEMF_CLEAR | MEMF_PUBLIC );
-					tmp_kernel =AllocVec( 100, MEMF_CLEAR | MEMF_PUBLIC );
 
                     GET(dest_volume, MUIA_String_Contents, &option);
 					sprintf(tmp_grub ,"%s:boot/grub", (CONST_STRPTR)option);
@@ -835,8 +837,8 @@ IPTR Install__MUIM_IC_NextStep
         get(data->instc_options_main->opt_partmethod,MUIA_Radio_Active,&option);
         if ((int)option == 0 || (int)option == 1)
         {
-            LONG syssize = 0, worksize = 0;
-            IPTR systype, worktype;
+            LONG syssize, worksize;
+            IPTR systype = 0, worktype = 0;
 
             /* Let user try again if either partition size is too big.
                Note that C:Partition will ensure that automatically sized
@@ -1222,7 +1224,7 @@ IPTR Install__MUIM_DispatchInstallProcedure
 static LONG GetPartitionSize(BOOL get_work)
 {
     LONG size = -1;
-    IPTR tmp;
+    IPTR tmp = 0;
 
     if (!get_work)
     {
@@ -1798,7 +1800,7 @@ IPTR Install__MUIM_IC_Install
 			{
 createdirfaild:
 				D(bug("[INSTALLER] Failed to create %s dir!!\n",envDstDir));
-#warning TODO: Should prompt on failure to try again/continue anyhow/exit.
+/* TODO: Should prompt on failure to try again/continue anyhow/exit */
 				goto localecopydone;
 				//data->inst_success = MUIV_Inst_Failed;
 				//return 0;
@@ -1914,6 +1916,10 @@ localecopydone:
         sprintf(tmp,"Protect ADD FLAGS=W ALL QUIET %s:Prefs/Env-Archive", dest_Path);
         D(bug("[INSTALLER] Changing Protection on Env Files (command='%s')\n", tmp));
         success = (BOOL)Execute(tmp, NULL, NULL);
+
+        if (!success) {
+            D(bug("[INSTALLER] Changing Protection on Env Files failed: %d\n", IOErr()));
+        }
     }
 	
 	DoMethod(data->installer,MUIM_Application_InputBuffered);
