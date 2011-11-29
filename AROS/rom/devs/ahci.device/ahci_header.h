@@ -71,8 +71,10 @@ struct ahci_hba_chip {
     uint32_t   Version;
 
     uint32_t   HBANumber;
-    uint32_t   PortMin;
-    uint32_t   PortMax;
+
+    uint32_t   UnitMin;
+    uint32_t   UnitMax;
+
     uint32_t   PortMask;
 
     uint32_t   CommandSlotCount;

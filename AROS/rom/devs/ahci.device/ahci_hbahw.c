@@ -148,7 +148,7 @@ BOOL ahci_create_hbatask(struct ahci_hba_chip *hba_chip) {
 /*
     Set the AHCI HBA to a minimally initialized state.
 
-        * Indicate that the system is AHCI aware by setting bit GHC_AE in HBA's GHC register
+        * Indicate that the system is AHCI aware by setting bit GHC_AE in HBA's GHC register (done in reset code)
         * Determine number of ports implemented by the HBA
         * Ensure that all implemented ports are in IDLE state
         * Determine how many command slots the HBA supports, by reading CAP.NCS
@@ -215,30 +215,34 @@ BOOL ahci_init_hba(struct ahci_hba_chip *hba_chip) {
         /*
             Get the pointer to previous HBA-chip struct in the list (if any)
             Port numbering starts from 0 if no previous HBA exist else the port number will be
-            the last implemented port number of previous HBA-chip +1
+            the last implemented unit number of previous HBA-chip +1
         */
         struct ahci_hba_chip *prev_hba_chip = (struct ahci_hba_chip*) GetPred(hba_chip);
 
         if ( prev_hba_chip != NULL ) {
-            hba_chip->PortMin = (prev_hba_chip->PortMax) + 1;
+            hba_chip->UnitMin = (prev_hba_chip->UnitMax) + 1;
         }else{
-            hba_chip->PortMin = 0;
+            hba_chip->UnitMin = 0;
         }
 
         ObtainSemaphore(&hba_chip->port_list_lock);
 
-        /* Maximum number of ports per controller is 32 (AHCI1.3) */
+        /*
+            Maximum number of ports per controller is 32 (AHCI1.3)
+            As I understand the documentation there may be caps of unimplemented ports between valid ports,
+            e.g ports 0,1 and 3 are implemented but not port number 2
+        */
         for (i = 0; i <= 31; i++) {
     		if (hba_chip->PortMask & (1 << i)) {
-                if( ahci_add_port(hba_chip, hba_chip->PortMin+p, i) ) {
+                if( ahci_add_port(hba_chip, hba_chip->UnitMin+p, i) ) {
                     p++;
                 }
-    		}else{
-                HBAHW_D("Port %d(unit to be %d) unimplemented\n", i, p);
+//          }else{
+//              HBAHW_D("Port %d(unit to be %d) unimplemented\n", i, p);
             }
     	}
 
-        HBAHW_D("Ports implemented %d-%d\n", hba_chip->PortMin, hba_chip->PortMax);
+        HBAHW_D("Units assigned %d-%d\n", hba_chip->UnitMin, hba_chip->UnitMax);
 
         ReleaseSemaphore(&hba_chip->port_list_lock);
 
@@ -397,7 +401,7 @@ BOOL ahci_add_port(struct ahci_hba_chip *hba_chip, uint32_t port_unit_num, uint3
         hba_port->port_unit.parent_hba = hba_chip;
         hba_port->port_unit.Port_HBA_Number = port_hba_num;
         hba_port->port_unit.Port_Unit_Number = port_unit_num;
-        hba_chip->PortMax = port_unit_num;
+        hba_chip->UnitMax = port_unit_num;
 
         if( ahci_init_port(hba_chip, port_hba_num) ) {
             /* HBA-port list is protected for us in ahci_init_hba */

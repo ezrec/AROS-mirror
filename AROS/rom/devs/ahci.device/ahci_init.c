@@ -167,7 +167,7 @@ static int GM_UNIQUENAME(Open)(LIBBASETYPEPTR LIBBASE, struct IORequest *iorq, u
         ObtainSemaphore(&hba_chip->port_list_lock);
         struct ahci_hba_port *hba_port;
         /* If multiple HBA controllers are in place this will speed up the search */
-        if( (unitnum >= hba_chip->PortMin) && (unitnum <= hba_chip->PortMax) ) {
+        if( (unitnum >= hba_chip->UnitMin) && (unitnum <= hba_chip->UnitMax) ) {
             ForeachNode(&hba_chip->port_list, hba_port) {
                 if( (hba_port->port_unit.Port_Unit_Number == unitnum) ) {
                     /* set up IORequest */
