@@ -6,22 +6,10 @@
 #define DEBUG 1
 #include <aros/debug.h>
 
-#include LC_LIBDEFS_FILE
+#include "ahci_header.h"
 
-uint32_t count_bits_set(uint32_t x) {
-    uint32_t c, y = x;
+//#include LC_LIBDEFS_FILE
 
-    c = 0x55555555;
-    y = ((y>>1) & c) + (y & c);
-    c = 0x33333333;
-    y = ((y>>2) & c) + (y & c);
-    y = (y>>4) + y;
-    c = 0x0f0f0f0f;
-    y &= c;
-    y = (y>>8) + y;
-    y = (y>>16) + y;
-    return y & 0x1f;
-}
 
 void delay_ms(struct ahci_hba_chip *hba_chip, uint32_t msec) {
     /* Allocate a signal within this task context */
@@ -59,22 +47,20 @@ void delay_us(struct ahci_hba_chip *hba_chip, uint32_t usec) {
     hba_chip->tr->tr_node.io_Message.mn_ReplyPort->mp_SigTask = NULL;
 }
 
-BOOL wait_until_set(struct ahci_hba_chip *hba_chip, volatile uint32_t *reg, uint32_t bits, uint32_t timeout) {
-	int trys = (timeout + 9999) / 10000;
-	while (trys--) {
+BOOL sleep2_bitmask_set(struct ahci_hba_chip *hba_chip, volatile uint32_t *reg, uint32_t bits, uint32_t timeout) {
+	while (timeout--) {
 		if (((*reg) & bits) == bits)
 			return TRUE;
-        delay_us(hba_chip, 10000);
+        delay_ms(hba_chip, 1);
 	}
 	return FALSE;
 }
 
-BOOL wait_until_clr(struct ahci_hba_chip *hba_chip, volatile uint32_t *reg, uint32_t bits, uint32_t timeout) {
-	int trys = (timeout + 9999) / 10000;
-	while (trys--) {
+BOOL sleep2_bitmask_clr(struct ahci_hba_chip *hba_chip, volatile uint32_t *reg, uint32_t bits, uint32_t timeout) {
+	while (timeout--) {
 		if (((*reg) & bits) == 0)
 			return TRUE;
-        delay_us(hba_chip, 10000);
+        delay_ms(hba_chip, 1);
 	}
 	return FALSE;
 }

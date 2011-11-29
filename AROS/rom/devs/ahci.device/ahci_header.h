@@ -73,12 +73,9 @@ struct ahci_hba_chip {
     uint32_t   HBANumber;
     uint32_t   PortMin;
     uint32_t   PortMax;
+    uint32_t   PortMask;
 
     uint32_t   CommandSlotCount;
-
-    uint32_t   PortImplementedMask;
-    uint32_t   PortCountMax;
-    uint32_t   PortCount;
 
     struct  timerequest *tr;
     struct  MsgPort *mp_io;
@@ -129,11 +126,10 @@ BOOL ahci_init_port(struct ahci_hba_chip *hba_chip, uint32_t port_hba_num);
 BOOL ahci_add_port(struct ahci_hba_chip *hba_chip, uint32_t port_unit_num, uint32_t port_hba_num);
 
 /* ahci_misc prototypes */
-uint32_t count_bits_set(uint32_t x);
 void delay_ms(struct ahci_hba_chip *hba_chip, uint32_t msec);
 void delay_us(struct ahci_hba_chip *hba_chip, uint32_t usec);
-BOOL wait_until_set(struct ahci_hba_chip *hba_chip, volatile uint32_t *reg, uint32_t bits, uint32_t timeout);
-BOOL wait_until_clr(struct ahci_hba_chip *hba_chip, volatile uint32_t *reg, uint32_t bits, uint32_t timeout);
+BOOL sleep2_bitmask_set(struct ahci_hba_chip *hba_chip, volatile uint32_t *reg, uint32_t bits, uint32_t timeout);
+BOOL sleep2_bitmask_clr(struct ahci_hba_chip *hba_chip, volatile uint32_t *reg, uint32_t bits, uint32_t timeout);
 
 #endif // AHCI_HEADER_H
 

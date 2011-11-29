@@ -160,25 +160,29 @@ static int GM_UNIQUENAME(Open)(LIBBASETYPEPTR LIBBASE, struct IORequest *iorq, u
     /* Assume Open failed */
     iorq->io_Error = IOERR_OPENFAIL;
 
-    /*FIXME: Use PortMin and PortMax from hba_chip and do not go through the port list */
     /* Overly complex way of finding port unit... */
     ObtainSemaphore(&LIBBASE->chip_list_lock);
     struct ahci_hba_chip *hba_chip;
     ForeachNode(&LIBBASE->chip_list, hba_chip) {
         ObtainSemaphore(&hba_chip->port_list_lock);
         struct ahci_hba_port *hba_port;
-        ForeachNode(&hba_chip->port_list, hba_port) {
-            if( (hba_port->port_unit.Port_Unit_Number == unitnum) ) {
-                /* set up IORequest */
-                iorq->io_Device     = &LIBBASE->device;
-                iorq->io_Unit       = &hba_port->port_unit.port_exec_unit;
-                iorq->io_Error      = 0;
+        /* If multiple HBA controllers are in place this will speed up the search */
+        if( (unitnum >= hba_chip->PortMin) && (unitnum <= hba_chip->PortMax) ) {
+            ForeachNode(&hba_chip->port_list, hba_port) {
+                if( (hba_port->port_unit.Port_Unit_Number == unitnum) ) {
+                    /* set up IORequest */
+                    iorq->io_Device     = &LIBBASE->device;
+                    iorq->io_Unit       = &hba_port->port_unit.port_exec_unit;
+                    iorq->io_Error      = 0;
 
-                hba_port->port_unit.port_exec_unit.unit_OpenCnt++;
+        iorq->io_Error = IOERR_OPENFAIL;
 
-                ReleaseSemaphore(&hba_chip->port_list_lock);
-                ReleaseSemaphore(&LIBBASE->chip_list_lock);
-                return TRUE;
+                    hba_port->port_unit.port_exec_unit.unit_OpenCnt++;
+
+                    ReleaseSemaphore(&hba_chip->port_list_lock);
+                    ReleaseSemaphore(&LIBBASE->chip_list_lock);
+                    return TRUE;
+                }
             }
         }
         ReleaseSemaphore(&hba_chip->port_list_lock);

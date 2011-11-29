@@ -22,7 +22,10 @@ static void ahci_hba_Interrupt(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw) {
     struct ahci_hwhba *hwhba;
     hwhba = hba_chip->abar;
 
-    HBAHW_D("Interrupt Status Register %x!\n", hwhba->is);
+    /* On my P45DE (ICH10 based) Aros box we share the same interrupt with one of the USB controllers (IRQ rerouting...)*/
+    if(hwhba->is) {
+        HBAHW_D("IS Register %x!\n", hwhba->is);
+    }
 }
 
 BOOL ahci_create_interrupt(struct ahci_hba_chip *hba_chip) {
@@ -165,31 +168,30 @@ BOOL ahci_init_hba(struct ahci_hba_chip *hba_chip) {
     struct ahci_hwhba *hwhba;
     hwhba = hba_chip->abar;
 
+    int i,p=0;
+
     /* BIOS handoff if HBA supports it and BIOS is the current owner of HBA */
     hba_chip->Version = hwhba->vs;
+    HBAHW_D("Version %d%d.%d%d\n", ((hba_chip->Version>>24)&0xff), ((hba_chip->Version>>16)&0xff), ((hba_chip->Version>>8)&0xff), (hba_chip->Version&0xff) );
 
     if ( (hba_chip->Version >= AHCI_VERSION_1_20) ) {
-        if( (hwhba->cap2 && CAP2_BOH) ) {
+        if( (hwhba->cap2 & CAP2_BOH) ) {
             HBAHW_D("HBA supports BIOS/OS handoff\n");
-            if( (hwhba->bohc && BOHC_BOS) ) {
+            if( (hwhba->bohc & BOHC_BOS) ) {
                 hwhba->bohc |= BOHC_OOS;
                 /* Spin on BOHC_BOS bit FIXME: Possible dead lock. No maximum time given on AHCI1.3 specs... */
-                while( (hwhba->bohc && BOHC_BOS) );
+                while( (hwhba->bohc & BOHC_BOS) );
                 delay_ms(hba_chip, 25);
                 /* If after 25ms BOHC_BB bit is still set give bios a minimum of 2 seconds more time to run */
-                if( (hwhba->bohc && BOHC_BB) ) {
+                if( (hwhba->bohc & BOHC_BB) ) {
                     delay_ms(hba_chip, 2500);
                 }
             }
         }
     }
 
-    /* Enable AHCI mode of communication to the HBA */
-    ahci_enable_hba(hba_chip);
-
     /* Reset the HBA */
     if ( ahci_reset_hba(hba_chip) ) {
-    	int i;
 
         HBAHW_D("Reset done\n");
 
@@ -199,36 +201,16 @@ BOOL ahci_init_hba(struct ahci_hba_chip *hba_chip) {
     #endif
 
         hba_chip->CommandSlotCount = 1 + ((hwhba->cap >> CAP_NCS_SHIFT) & CAP_NCS_MASK);
-        hba_chip->PortCountMax = 1 + ((hwhba->cap >> CAP_NP_SHIFT) & CAP_NP_MASK);
 
-	    hba_chip->PortImplementedMask = hwhba->pi;
-	    if (hba_chip->PortImplementedMask == 0) {
-		    hba_chip->PortImplementedMask = 0xffffffff >> (32 - hba_chip->PortCountMax);
-		    HBAHW_D("ports-implemented mask is zero, using 0x%x instead.\n", hba_chip->PortImplementedMask);
+	    hba_chip->PortMask = hwhba->pi;
+	    if (hba_chip->PortMask == 0) {
+            /* Maybe do a probe on ports, though it's explicitly prohibited on unimplemented port */
+		    HBAHW_D("You have a buggy BIOS, no way to find out which port is implemented!\n");
+            return FALSE;
 	    }
 
-	    hba_chip->PortCount = count_bits_set(hba_chip->PortImplementedMask);
-/*
-        HBAHW_D("Interface Speed Support: generation %u\n",    (hwhba->cap >> CAP_ISS_SHIFT) & CAP_ISS_MASK);
-        HBAHW_D("Number of Command Slots: %d (raw %x)\n",      hba_chip->CommandSlotCount, (hwhba->cap >> CAP_NCS_SHIFT) & CAP_NCS_MASK);
-        HBAHW_D("Supports Port Multiplier: %s\n",               (hwhba->cap & CAP_SPM) ? "yes" : "no");
-        HBAHW_D("Supports External SATA: %s\n",                 (hwhba->cap & CAP_SXS) ? "yes" : "no");
-        HBAHW_D("Enclosure Management Supported: %s\n",         (hwhba->cap & CAP_EMS) ? "yes" : "no");
-        HBAHW_D("Supports Command List Override: %s\n",         (hwhba->cap & CAP_SCLO) ? "yes" : "no");
-        HBAHW_D("Supports Staggered Spin-up: %s\n",             (hwhba->cap & CAP_SSS) ? "yes" : "no");
-        HBAHW_D("Supports Mechanical Presence Switch: %s\n",    (hwhba->cap & CAP_SMPS) ? "yes" : "no");
-        HBAHW_D("Supports 64-bit Addressing: %s\n",             (hwhba->cap & CAP_S64A) ? "yes" : "no");
-        HBAHW_D("Supports Native Command Queuing: %s\n",        (hwhba->cap & CAP_SNCQ) ? "yes" : "no");
-        HBAHW_D("Supports SNotification Register: %s\n",        (hwhba->cap & CAP_SSNTF) ? "yes" : "no");
-        HBAHW_D("Supports Command List Override: %s\n",         (hwhba->cap & CAP_SCLO) ? "yes" : "no");
-        HBAHW_D("AHCI Version %u.%u (raw %x)\n",                ((hba_chip->Version >> 24) & 0xf)*10 + ((hba_chip->Version >> 16) & 0xf),
-                                                                ((hba_chip->Version >> 8) & 0xf)*10 + (hba_chip->Version & 0xf), hwhba->vs );
-        HBAHW_D("Interrupt %u\n",                               hba_chip->IRQ);
-*/
         if( !ahci_create_interrupt(hba_chip) )
             return FALSE;
-
-        HBAHW_D("port count %d\n", hba_chip->PortCount);
 
         /*
             Get the pointer to previous HBA-chip struct in the list (if any)
@@ -244,10 +226,16 @@ BOOL ahci_init_hba(struct ahci_hba_chip *hba_chip) {
         }
 
         ObtainSemaphore(&hba_chip->port_list_lock);
-        for (i = 0; i <= hba_chip->PortCountMax; i++) {
-    		if (hba_chip->PortImplementedMask & (1 << i)) {
-                ahci_add_port(hba_chip, hba_chip->PortMin+i, i);
-    		}
+
+        /* Maximum number of ports per controller is 32 (AHCI1.3) */
+        for (i = 0; i <= 31; i++) {
+    		if (hba_chip->PortMask & (1 << i)) {
+                if( ahci_add_port(hba_chip, hba_chip->PortMin+p, i) ) {
+                    p++;
+                }
+    		}else{
+                HBAHW_D("Port %d(unit to be %d) unimplemented\n", i, p);
+            }
     	}
 
         HBAHW_D("Ports implemented %d-%d\n", hba_chip->PortMin, hba_chip->PortMax);
@@ -281,7 +269,7 @@ BOOL ahci_reset_hba(struct ahci_hba_chip *hba_chip) {
     hwhba->ghc |= GHC_HR;
 
     Timeout = 5000;
-    while( (hwhba->ghc && GHC_HR) ) {
+    while( (hwhba->ghc & GHC_HR) ) {
         if( (--Timeout == 0) ) {
             HBAHW_D("Resetting HBA timed out!\n");
             return FALSE;
@@ -310,7 +298,7 @@ void ahci_enable_hba(struct ahci_hba_chip *hba_chip) {
         Leave bits MRSM(2), IE(1) and HR(0) untouched
         Rest of the GHC register is RO (AHCI v1.3) do not set/clr other bits
     */
-    if( !(hwhba->ghc && CAP_SAM) ){
+    if( !(hwhba->ghc & CAP_SAM) ){
         hwhba->ghc |= GHC_AE;
     }
 
@@ -327,8 +315,8 @@ BOOL ahci_disable_hba(struct ahci_hba_chip *hba_chip) {
         If bit CAP_SAM(18) is not set then HBA can be set to AHCI or legacy mode
         If bit GHC_AE(31) is RW then clear the bit along with the other bits (no bits are allowed to be set at the same time)
     */
-    if( (hwhba->ghc && GHC_AE) ){
-        if( !(hwhba->ghc && CAP_SAM) ){
+    if( (hwhba->ghc & GHC_AE) ){
+        if( !(hwhba->ghc & CAP_SAM) ){
             hwhba->ghc = 0x00000000;
             return TRUE;
         }
@@ -355,7 +343,7 @@ BOOL ahci_init_port(struct ahci_hba_chip *hba_chip, uint32_t port_hba_num) {
     	/* Port is not in idle state */
         HBAHW_D("Running of command list is enabled! Disabling it...\n");
 	    hwhba->port[port_hba_num].cmd &= ~PORT_CMD_ST;
-	    if ( !(wait_until_clr(hba_chip, &hwhba->port[port_hba_num].cmd, PORT_CMD_CR, 500000)) ) {
+	    if ( !(sleep2_bitmask_clr(hba_chip, &hwhba->port[port_hba_num].cmd, PORT_CMD_CR, 500)) ) {
             HBAHW_D("ERROR, timeout!\n");
             return FALSE;
         }
@@ -365,7 +353,7 @@ BOOL ahci_init_port(struct ahci_hba_chip *hba_chip, uint32_t port_hba_num) {
     	/* Port is not in idle state */
         HBAHW_D("FIS receive is enabled! Disabling it...\n");
 	    hwhba->port[port_hba_num].cmd &= ~PORT_CMD_FRE;
-	    if ( !(wait_until_clr(hba_chip, &hwhba->port[port_hba_num].cmd, PORT_CMD_FR, 500000)) ) {
+	    if ( !(sleep2_bitmask_clr(hba_chip, &hwhba->port[port_hba_num].cmd, PORT_CMD_FR, 500)) ) {
             HBAHW_D("ERROR, timeout!\n");
             return FALSE;
         }
