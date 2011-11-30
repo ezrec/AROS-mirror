@@ -235,7 +235,7 @@ BoxRender(
 
 		Info->LastLabelDrawn = Active;	// IMPORTANT: must be set up here to DrawOneBox can find it
 
-		for(NULL ; Index < Info->NumLabels && Height > 0 ; Index++, Top += Info->SingleHeight, Height -= Info->SingleHeight)
+		for( ; Index < Info->NumLabels && Height > 0 ; Index++, Top += Info->SingleHeight, Height -= Info->SingleHeight)
 		{
 			if(Index == Active)
 			{
@@ -672,11 +672,13 @@ SetMethod(
 			NeedRefresh = TRUE;
 	}
 
-	NewLabels = (STRPTR *)GetTagData(PIA_Labels,NULL,SetInfo->ops_AttrList);
+	NewLabels = (STRPTR *)GetTagData(PIA_Labels,(IPTR)NULL,SetInfo->ops_AttrList);
 	if(NewLabels != NULL)
 	{
-		for(LabelCount = 0 ; NewLabels[LabelCount] != NULL ; LabelCount++)
-			NULL;
+		for(LabelCount = 0 ; NewLabels[LabelCount] != NULL ; LabelCount++) {
+		    /* Do nothing */
+                }
+			
 	}
 	else
 	{
@@ -841,7 +843,7 @@ DisposeMethod(
 	}
 }
 
-STATIC ULONG
+STATIC Object *
 NewMethod(
 	struct IClass *	class,
 	Object *		object,
@@ -854,7 +856,7 @@ NewMethod(
 	{
 		PopInfo *			Info = INST_DATA(class,object);
 		struct TagItem *	Item;
-		struct TagItem *	TagList = SetInfo -> ops_AttrList;
+		const struct TagItem *	TagList = SetInfo -> ops_AttrList;
 		struct TextAttr	*	Font = NULL;
 		LONG				Width = 0;
 		LONG				Height = 0;
@@ -980,7 +982,7 @@ NewMethod(
 							Info->MaxLen	= MaxLen;
 							Info->MaxWidth	= Width;
 
-							return((ULONG)object);
+							return object;
 						}
 					}
 
@@ -993,7 +995,7 @@ NewMethod(
 		CoerceMethod(class,object,OM_DISPOSE);
 	}
 
-	return(0);
+	return NULL;
 }
 
 STATIC ULONG
@@ -1248,7 +1250,7 @@ LTP_PopupClassDispatcher(
 	REG(a2) Object *		object,
 	REG(a1) Msg				msg)
 #else
-AROS_UFH3(ULONG, LTP_PopupClassDispatcher,
+AROS_UFH3(IPTR, LTP_PopupClassDispatcher,
 	  AROS_UFHA(struct IClass *, class, A0),
 	  AROS_UFHA(Object *, object, A2),
 	  AROS_UFHA(Msg, msg, A1)
@@ -1260,7 +1262,7 @@ AROS_UFH3(ULONG, LTP_PopupClassDispatcher,
 	switch(msg->MethodID)
 	{
 		case OM_NEW:
-			return(NewMethod(class,object,(struct opSet *)msg));
+			return (IPTR)NewMethod(class,object,(struct opSet *)msg);
 
 		case OM_UPDATE:
 		case OM_SET:

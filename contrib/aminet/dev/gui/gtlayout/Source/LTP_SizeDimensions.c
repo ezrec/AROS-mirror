@@ -18,7 +18,7 @@
 
 
 STATIC VOID
-LTP_GetSizeDimensions(LayoutHandle *Handle,ULONG *SizeWidth,ULONG *SizeHeight)
+LTP_GetSizeDimensions(LayoutHandle *Handle,IPTR *SizeWidth,IPTR *SizeHeight)
 {
 	Object	*SizeImage;
 	LONG	 SizeType;
@@ -67,7 +67,7 @@ LTP_GetSizeDimensions(LayoutHandle *Handle,ULONG *SizeWidth,ULONG *SizeHeight)
 ULONG
 LTP_GetSizeWidth(struct LayoutHandle *handle)
 {
-	ULONG SizeWidth;
+	IPTR SizeWidth;
 
 	LTP_GetSizeDimensions(handle,&SizeWidth,NULL);
 
@@ -84,7 +84,7 @@ LTP_GetSizeWidth(struct LayoutHandle *handle)
 ULONG
 LTP_GetSizeHeight(struct LayoutHandle *handle)
 {
-	ULONG SizeHeight;
+	IPTR SizeHeight;
 
 	LTP_GetSizeDimensions(handle,NULL,&SizeHeight);
 

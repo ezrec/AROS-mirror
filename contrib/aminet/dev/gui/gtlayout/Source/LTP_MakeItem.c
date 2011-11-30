@@ -69,7 +69,7 @@ LTP_MakeItem(RootMenu *Root,struct NewMenu *Template)
 
 			IntuiText->LeftEdge	= 2;
 			IntuiText->TopEdge	= (Root->ItemHeight - Root->RPort.TxHeight) / 2;
-			IntuiText->IText	= Template->nm_Label;
+			IntuiText->IText	= (UBYTE *)Template->nm_Label;
 
 				// Now take care of the item itself
 
@@ -86,7 +86,7 @@ LTP_MakeItem(RootMenu *Root,struct NewMenu *Template)
 
 				if(Template->nm_Flags & NM_COMMANDSTRING)
 				{
-					Item->ExtraLabel	= Template->nm_CommKey;
+					Item->ExtraLabel	= (UBYTE *)Template->nm_CommKey;
 					Item->Flags			= ITEMF_Command;
 				}
 				else

@@ -561,17 +561,17 @@ DrawSlider(struct RastPort *rp,LONG left,LONG top,UWORD selected,struct SliderCl
 STATIC VOID
 DoSetMethod(Object *object,struct GadgetInfo *ginfo, Tag tag1, ...)
 {
-	AROS_SLOWSTACKTAGS_PRE(tag1);
+	AROS_NR_SLOWSTACKTAGS_PRE(tag1);
 	DoMethod(object,OM_SET,AROS_SLOWSTACKTAGS_ARG(tag1),ginfo);
-	AROS_SLOWSTACKTAGS_POST
+	AROS_NR_SLOWSTACKTAGS_POST
 }
 
 STATIC VOID
 DoUpdateMethod(Object *object,struct GadgetInfo *ginfo, Tag tag1, ...)
 {
-	AROS_SLOWSTACKTAGS_PRE(tag1);
+	AROS_NR_SLOWSTACKTAGS_PRE(tag1);
 	DoMethod(object,OM_UPDATE,AROS_SLOWSTACKTAGS_ARG(tag1),ginfo,OPUF_INTERIM);
-	AROS_SLOWSTACKTAGS_POST
+	AROS_NR_SLOWSTACKTAGS_POST
 }
 
 STATIC ULONG
@@ -673,7 +673,8 @@ SetMethod(
 	struct opSet *	SetInfo)
 {
 	struct SliderClassData *sd = INST_DATA(class,object);
-	struct TagItem *tag,*list = SetInfo->ops_AttrList;
+	struct TagItem *tag;
+	const struct TagItem *list = SetInfo->ops_AttrList;
 	LONG redraw = GREDRAW_UPDATE;
 	BOOL rawPosition = FALSE;
 	BOOL updatePosition = FALSE;
@@ -811,7 +812,8 @@ NewMethod(
 		struct SliderClassData *sd = INST_DATA(class,result);
 		BOOL failed = FALSE;
 		ULONG freedom = FREEHORIZ;
-		struct TagItem *tag,*list = SetInfo->ops_AttrList;
+		struct TagItem *tag;
+		const struct TagItem *list = SetInfo->ops_AttrList;
 		WORD reference = 0;
 
 		sd->UseTicks = TICKS_None;
@@ -1244,10 +1246,10 @@ LTP_LevelGadgetDrawLabel(LayoutHandle *Handle,ObjectNode *Node,BOOL FullRefresh)
 LONG
 LTP_GetCurrentLevel(ObjectNode *Node)
 {
-	LONG Current,Max;
+	SIPTR Current,Max;
 
-	GetAttr(SLA_Current,Node->Host,(ULONG *)&Current);
-	GetAttr(SLA_Max,Node->Host,(ULONG *)&Max);
+	GetAttr(SLA_Current,(Object *)Node->Host,(IPTR *)&Current);
+	GetAttr(SLA_Max,(Object *)Node->Host,(IPTR *)&Max);
 
 	if(Node->Special.Level.Freedom == FREEVERT)
 		Current = Max - Current;
@@ -1261,7 +1263,7 @@ LTP_GetCurrentLevel(ObjectNode *Node)
 ULONG SAVE_DS ASM
 LTP_LevelClassDispatcher(REG(a0) Class *class,REG(a2) Object *object,REG(a1) Msg msg)
 #else
-AROS_UFH3(ULONG, LTP_LevelClassDispatcher,
+AROS_UFH3(IPTR, LTP_LevelClassDispatcher,
 	  AROS_UFHA(Class *, class, A0),
 	  AROS_UFHA(Object *, object, A2),
 	  AROS_UFHA(Msg, msg, A1)
@@ -1270,13 +1272,13 @@ AROS_UFH3(ULONG, LTP_LevelClassDispatcher,
 {
         AROS_USERFUNC_INIT
 	
-	ULONG result;
+	IPTR result;
 
 	switch(msg->MethodID)
 	{
 		case OM_NEW:
 
-			result = (ULONG)NewMethod(class,object,(struct opSet *)msg);
+			result = (IPTR)NewMethod(class,object,(struct opSet *)msg);
 			break;
 
 		case OM_UPDATE:

@@ -61,7 +61,7 @@ LTP_DrawMultiLineButton(struct RastPort *RPort,LONG Left,LONG Top,LONG Width,LON
 			if(KeyStroke >= Label && KeyStroke < Label + Len)
 			{
 				if(KeyStroke != Label)
-					ThisLeft += TextLength(RPort,Label,(ULONG)KeyStroke - (ULONG)(Label));
+					ThisLeft += TextLength(RPort,Label,(IPTR)KeyStroke - (IPTR)(Label));
 
 				SetSoftStyle(RPort,FSF_UNDERLINED,FSF_UNDERLINED);
 

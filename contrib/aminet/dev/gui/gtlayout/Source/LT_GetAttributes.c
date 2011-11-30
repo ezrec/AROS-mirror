@@ -178,7 +178,7 @@ LT_GetAttributes(LayoutHandle *Handle,LONG ID,...)
 *
 */
 
-LONG LIBENT
+IPTR LIBENT
 LT_GetAttributesA(REG(a0) LayoutHandle *Handle,REG(d0) LONG ID,REG(a1) struct TagItem *TagList)
 {
 	if(Handle)
@@ -204,13 +204,13 @@ LT_GetAttributesA(REG(a0) LayoutHandle *Handle,REG(d0) LONG ID,REG(a1) struct Ta
 
 			if(TagList)
 			{
-				struct TagItem	*TagItem,
-								*TempPtr = TagList;
-				LONG			*Value;
+				struct TagItem	*TagItem;
+				const struct TagItem *TempPtr = TagList;
+				IPTR			*Value;
 
 				while(TagItem = NextTagItem(&TempPtr))
 				{
-					Value = (LONG *)TagItem->ti_Data;
+					Value = (IPTR *)TagItem->ti_Data;
 
 					switch(TagItem->ti_Tag)
 					{
@@ -271,9 +271,9 @@ LT_GetAttributesA(REG(a0) LayoutHandle *Handle,REG(d0) LONG ID,REG(a1) struct Ta
 							case LABO_Object:
 
 								if(Node->Type == BOOPSI_KIND)
-									*Value = (LONG)Node->Host;
+									*Value = (IPTR)Node->Host;
 								else
-									*Value = NULL;
+									*Value = (IPTR)NULL;
 
 								break;
 						}
@@ -388,12 +388,12 @@ LT_GetAttributesA(REG(a0) LayoutHandle *Handle,REG(d0) LONG ID,REG(a1) struct Ta
 				{
 					case BOOPSI_KIND:
 					{
-						ULONG Storage;
+						IPTR Storage;
 
-						if(Gadget && GetAttr(Node->Special.BOOPSI.TagCurrent,Gadget,&Storage))
-							return((LONG)Storage);
+						if(Gadget && GetAttr(Node->Special.BOOPSI.TagCurrent,(Object *)Gadget,&Storage))
+							return((IPTR)Storage);
 						else
-							return(NULL);
+							return((IPTR)(NULL));
 					}
 				}
 				#endif	/* DO_BOOPSI_KIND */
@@ -412,7 +412,7 @@ LT_GetAttributesA(REG(a0) LayoutHandle *Handle,REG(d0) LONG ID,REG(a1) struct Ta
 						{
 							LTP_CopyFraction(Node->Special.String.RealString,((struct StringInfo *)Gadget->SpecialInfo)->Buffer);
 
-							return((LONG)Node->Special.String.RealString);
+							return((IPTR)Node->Special.String.RealString);
 						}
 						else
 						{
@@ -420,7 +420,7 @@ LT_GetAttributesA(REG(a0) LayoutHandle *Handle,REG(d0) LONG ID,REG(a1) struct Ta
 
 							StringInfo = (struct StringInfo *)Gadget->SpecialInfo;
 
-							return((LONG)StringInfo->Buffer);
+							return((IPTR)StringInfo->Buffer);
 						}
 					}
 					else
@@ -437,7 +437,7 @@ LT_GetAttributesA(REG(a0) LayoutHandle *Handle,REG(d0) LONG ID,REG(a1) struct Ta
 							String = Node->Special.String.RealString;
 						}
 
-						return((LONG)String);
+						return((IPTR)String);
 					}
 
 					break;
@@ -446,7 +446,7 @@ LT_GetAttributesA(REG(a0) LayoutHandle *Handle,REG(d0) LONG ID,REG(a1) struct Ta
 				{
 					case PASSWORD_KIND:
 
-						return((LONG)Node->Special.String.RealString);
+						return((IPTR)Node->Special.String.RealString);
 				}
 				#endif
 
@@ -481,14 +481,14 @@ LT_GetAttributesA(REG(a0) LayoutHandle *Handle,REG(d0) LONG ID,REG(a1) struct Ta
 
 				case GROUP_KIND:
 
-					return((LONG)Node->Special.Group.ActivePage);
+					return((IPTR)Node->Special.Group.ActivePage);
 			}
 		}
 		else
 		{
-			return((LONG)Handle->UserData);
+			return((IPTR)Handle->UserData);
 		}
 	}
 
-	return(NULL);
+	return (IPTR)(NULL);
 }

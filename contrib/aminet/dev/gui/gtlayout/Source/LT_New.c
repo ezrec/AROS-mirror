@@ -176,7 +176,7 @@ LT_AddA(
 		ObjectNode *Node;
 		ULONG IDCMP;
 
-		IDCMP = NULL;
+		IDCMP = 0;
 
 		switch(Type)
 		{
@@ -337,8 +337,8 @@ LT_AddA(
 
 			if(TagList)
 			{
-				struct TagItem *TempList = TagList;
-				ULONG ti_Data;
+				const struct TagItem *TempList = TagList;
+				IPTR ti_Data;
 
 				while(TagItem = NextTagItem(&TempList))
 				{
@@ -2006,7 +2006,7 @@ LT_AddA(
 							struct Node	*TextNode;
 							struct MinList *List;
 
-							List = (struct List *)Node->Special.Integer.HistoryHook->h_Data;
+							List = (struct MinList *)Node->Special.Integer.HistoryHook->h_Data;
 
 							Node->Special.Integer.LayoutHandle = Handle;
 							Node->Special.Integer.NumHistoryLines = 0;
@@ -2105,7 +2105,7 @@ LT_AddA(
 									LONG i;
 
 									for(i = 0 ; i < Count ; i++)
-										Node->Special.Box.Lines[i] = (STRPTR)CallHookPkt(Handle->LocaleHook,Handle,(APTR)(FirstLine + i));
+										Node->Special.Box.Lines[i] = (STRPTR)CallHookPkt(Handle->LocaleHook,Handle,(APTR)(IPTR)(FirstLine + i));
 								}
 							}
 						}
@@ -2138,7 +2138,7 @@ LT_AddA(
 										LONG i;
 
 										for(i = 0 ; i < Count ; i++)
-											Node->Special.Box.Lines[i] = (STRPTR)CallHookPkt(Handle->LocaleHook,Handle,(APTR)(LineTable[i]));
+											Node->Special.Box.Lines[i] = (STRPTR)CallHookPkt(Handle->LocaleHook,Handle,(APTR)(IPTR)(LineTable[i]));
 									}
 								}
 							}
@@ -2228,7 +2228,7 @@ LT_AddA(
 								{
 									if(SomeNode = LTP_Alloc(Handle,sizeof(struct Node)))
 									{
-										SomeNode->ln_Name = (STRPTR)CallHookPkt(Handle->LocaleHook,Handle,(APTR)(*LabelTable++));
+										SomeNode->ln_Name = (STRPTR)CallHookPkt(Handle->LocaleHook,Handle,(APTR)(IPTR)(*LabelTable++));
 
 										AddTail(SomeList,SomeNode);
 									}
@@ -2240,7 +2240,7 @@ LT_AddA(
 								{
 									if(SomeNode = LTP_Alloc(Handle,sizeof(struct Node)))
 									{
-										SomeNode->ln_Name = (STRPTR)CallHookPkt(Handle->LocaleHook,Handle,(APTR)(FirstLabel + i));
+										SomeNode->ln_Name = (STRPTR)CallHookPkt(Handle->LocaleHook,Handle,(APTR)(IPTR)(FirstLabel + i));
 
 										AddTail(SomeList,SomeNode);
 									}
@@ -2269,12 +2269,12 @@ LT_AddA(
 								if(LabelTable)
 								{
 									for(i = 0 ; i < Count ; i++)
-										Labels[i] = (STRPTR)CallHookPkt(Handle->LocaleHook,Handle,(APTR)(*LabelTable++));
+										Labels[i] = (STRPTR)CallHookPkt(Handle->LocaleHook,Handle,(APTR)(IPTR)(*LabelTable++));
 								}
 								else
 								{
 									for(i = 0 ; i < Count ; i++)
-										Labels[i] = (STRPTR)CallHookPkt(Handle->LocaleHook,Handle,(APTR)(FirstLabel + i));
+										Labels[i] = (STRPTR)CallHookPkt(Handle->LocaleHook,Handle,(APTR)(IPTR)(FirstLabel + i));
 								}
 
 								Labels[i] = NULL;
@@ -3760,7 +3760,8 @@ LT_NewA(REG(a0) LayoutHandle *handle,REG(a1) struct TagItem *tagList)
 {
 	if(handle != NULL)
 	{
-		struct TagItem *List,*Entry;
+		const struct TagItem *List;
+		struct TagItem *Entry;
 		STRPTR label;
 		LONG type;
 		LONG id;

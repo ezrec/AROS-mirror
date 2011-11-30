@@ -138,7 +138,7 @@ LTP_CloneScreen(struct LayoutHandle *Handle,LONG Width,LONG Height)
 
 	DB(kprintf("Calling openscreen\n"));
 
-	if(Screen = OpenScreenTags(NULL,
+	if((Screen = OpenScreenTags(NULL,
 		SA_Width,		Width,
 		SA_Height,		Height,
 		SA_Overscan,	OSCAN_TEXT,
@@ -157,19 +157,19 @@ LTP_CloneScreen(struct LayoutHandle *Handle,LONG Width,LONG Height)
 		Handle->SimpleClone ? TAG_IGNORE : SA_BackFill,		&Handle->BackfillHook,
 		Handle->SimpleClone ? TAG_IGNORE : SA_BlockPen,		Pens[SHADOWPEN],
 		Handle->SimpleClone ? TAG_IGNORE : SA_DetailPen,	Pens[BACKGROUNDPEN],
-	TAG_DONE))
+	TAG_DONE)))
 	{
 		struct DrawInfo *DrawInfo;
 
 		DB(kprintf("getting drawinfo\n"));
 
-		if(DrawInfo = GetScreenDrawInfo(Screen))
+		if((DrawInfo = GetScreenDrawInfo(Screen)))
 		{
 			APTR VisualInfo;
 
 			DB(kprintf("getting visualinfo\n"));
 
-			if(VisualInfo = GetVisualInfoA(Screen,NULL))
+			if((VisualInfo = GetVisualInfoA(Screen,NULL)))
 			{
 				UnlockPubScreen(NULL,Handle->PubScreen);
 
@@ -238,7 +238,7 @@ LTP_PrepareCloning(struct LayoutHandle *Handle)
 
 			DB(kprintf("getting cloneextra\n"));
 
-			if(Handle->CloneExtra = (struct CloneExtra *)LTP_Alloc(Handle,AllocationSize = sizeof(struct CloneExtra) + (sizeof(LONG) + sizeof(UWORD)) * Handle->DrawInfo->dri_NumPens + sizeof(UWORD)))
+			if((Handle->CloneExtra = (struct CloneExtra *)LTP_Alloc(Handle,AllocationSize = sizeof(struct CloneExtra) + (sizeof(LONG) + sizeof(UWORD)) * Handle->DrawInfo->dri_NumPens + sizeof(UWORD))))
 			{
 				LONG	 i,j,TotalPens = 0;
 				LONG	*Pens;

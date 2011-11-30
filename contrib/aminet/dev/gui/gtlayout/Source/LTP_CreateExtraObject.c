@@ -19,13 +19,13 @@ LTP_CreateExtraObject(LayoutHandle *handle,ObjectNode *parentNode,struct Gadget 
 	ObjectNode		*node;
 	struct Gadget	*gadget;
 
-	if(node = LTP_CreateObjectNode(handle,incAmount ? INCREMENTER_KIND : PICKER_KIND,parentGadget->GadgetID,NULL))
+	if((node = LTP_CreateObjectNode(handle,incAmount ? INCREMENTER_KIND : PICKER_KIND,parentGadget->GadgetID,NULL)))
 	{
 		ng->ng_LeftEdge		= ng->ng_LeftEdge + ng->ng_Width;
 		ng->ng_Width		= incAmount ? (4 + handle->GlyphWidth + 4) : LTP_GetPickerSize(handle);
 		ng->ng_GadgetText	= "";
 		ng->ng_UserData		= node;
-		ng->ng_Flags		= NULL;
+		ng->ng_Flags		= 0;
 
 		if(incAmount)
 			node->Special.Incrementer.Amount = incAmount;
@@ -38,7 +38,7 @@ LTP_CreateExtraObject(LayoutHandle *handle,ObjectNode *parentNode,struct Gadget 
 
 		if(node->Special.Incrementer.Image)
 		{
-			if(gadget = CreateGadgetA(GENERIC_KIND,handle->Previous,ng,NULL))
+			if((gadget = CreateGadgetA(GENERIC_KIND,handle->Previous,ng,NULL)))
 			{
 				gadget->GadgetType		|= GTYP_BOOLGADGET;
 				gadget->Flags			|= GFLG_GADGIMAGE | GFLG_GADGHIMAGE;

@@ -30,7 +30,7 @@ LTP_MakeMenu(RootMenu *Root,MenuNode *Menu,struct NewMenu *Template)
 
 	if(Menu)
 	{
-		STRPTR Label = Template->nm_Label;
+		CONST_STRPTR Label = Template->nm_Label;
 
 			// Use the screen font for the layout
 

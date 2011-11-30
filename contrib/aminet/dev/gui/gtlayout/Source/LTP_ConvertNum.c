@@ -40,7 +40,7 @@ LTP_ConvertNum(BOOL negAllowed,STRPTR buffer,LONG *value)
 		if(*buffer++ != '$')
 			buffer++;
 
-		while(ch = ToUpper(*buffer++))
+		while((ch = ToUpper(*buffer++)))
 		{
 			num = num * 16;
 
@@ -61,7 +61,7 @@ LTP_ConvertNum(BOOL negAllowed,STRPTR buffer,LONG *value)
 		{
 			buffer++;
 
-			while(ch = *buffer++)
+			while((ch = *buffer++))
 			{
 				if((ch < '0') || (ch > '1'))
 					return(FALSE);
@@ -75,7 +75,7 @@ LTP_ConvertNum(BOOL negAllowed,STRPTR buffer,LONG *value)
 			{
 				buffer++;
 
-				while(ch = *buffer++)
+				while((ch = *buffer++))
 				{
 					if((ch < '0') || (ch > '7'))
 						return(FALSE);
@@ -85,7 +85,7 @@ LTP_ConvertNum(BOOL negAllowed,STRPTR buffer,LONG *value)
 			}
 			else
 			{
-				while(ch = *buffer++)
+				while((ch = *buffer++))
 				{
 					if((ch < '0') || (ch > '9'))
 						return(FALSE);

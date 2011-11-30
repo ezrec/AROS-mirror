@@ -106,7 +106,8 @@ LT_LayoutMenusA(REG(a0) LayoutHandle *handle,REG(a1) struct NewMenu *menuTemplat
 
 	if(handle)
 	{
-		struct TagItem	*tag,*List = TagParams;
+		struct TagItem	*tag;
+		const struct TagItem *List = TagParams;
 		LONG			 label = 0,last = 0;	/* For the sake of the compiler, initialize these. */
 		LONG			*Table = NULL;
 		ULONG			 allocSize = 0;	/* For the sake of the compiler, initialize this. */
@@ -169,7 +170,7 @@ LT_LayoutMenusA(REG(a0) LayoutHandle *handle,REG(a1) struct NewMenu *menuTemplat
 						for(i = 0 ; *Table != -1 && i < count ; i++)
 						{
 							if(localTemplate[i].nm_Label != NM_BARLABEL && (localTemplate[i].nm_Type == NM_TITLE || localTemplate[i].nm_Type == NM_ITEM || localTemplate[i].nm_Type == NM_SUB))
-								localTemplate[i].nm_Label = (STRPTR)CallHookPkt(handle->LocaleHook,handle,(APTR)(*Table++));
+								localTemplate[i].nm_Label = (STRPTR)CallHookPkt(handle->LocaleHook,handle,(APTR)(IPTR)(*Table++));
 						}
 					}
 				}
@@ -203,7 +204,7 @@ LT_LayoutMenusA(REG(a0) LayoutHandle *handle,REG(a1) struct NewMenu *menuTemplat
 						{
 							if(localTemplate[i].nm_Label != NM_BARLABEL && (localTemplate[i].nm_Type == NM_TITLE || localTemplate[i].nm_Type == NM_ITEM || localTemplate[i].nm_Type == NM_SUB))
 							{
-								localTemplate[i].nm_Label = (STRPTR)CallHookPkt(handle->LocaleHook,handle,(APTR)label);
+								localTemplate[i].nm_Label = (STRPTR)CallHookPkt(handle->LocaleHook,handle,(APTR)(IPTR)label);
 
 								label++;
 							}

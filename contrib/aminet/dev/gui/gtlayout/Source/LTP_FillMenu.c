@@ -32,7 +32,7 @@ LTP_FillSub(
 
 	do
 	{
-		Node = (ItemNode *)((ULONG)Item - sizeof(struct MinNode));
+		Node = (ItemNode *)((IPTR)Item - sizeof(struct MinNode));
 
 		Node->MenuCode = FULLMENUNUM(MenuID,ItemID,Count);
 
@@ -68,7 +68,7 @@ LTP_FillItem(ULONG MenuID,struct MenuItem *Item)
 
 	do
 	{
-		Node = (ItemNode *)((ULONG)Item - sizeof(struct MinNode));
+		Node = (ItemNode *)((IPTR)Item - sizeof(struct MinNode));
 
 		Node->MenuCode = FULLMENUNUM(MenuID,Count,NOSUB);
 
@@ -106,7 +106,7 @@ LTP_FillMenu(struct Menu *Menu)
 
 	do
 	{
-		Node = (MenuNode *)((ULONG)Menu - sizeof(struct MinNode));
+		Node = (MenuNode *)((IPTR)Menu - sizeof(struct MinNode));
 
 		Node->MenuCode = FULLMENUNUM(Count,NOITEM,NOSUB);
 

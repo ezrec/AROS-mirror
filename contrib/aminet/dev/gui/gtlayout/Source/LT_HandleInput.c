@@ -202,7 +202,7 @@ LT_HandleInput(REG(a0) LayoutHandle *Handle,REG(d0) ULONG MsgQualifier,REG(a1) U
 				if(Handle->Failed)
 					*MsgClass = IDCMP_CLOSEWINDOW;
 				else
-					*MsgClass = NULL;
+					*MsgClass = 0;
 			}
 
 			break;
@@ -215,7 +215,7 @@ LT_HandleInput(REG(a0) LayoutHandle *Handle,REG(d0) ULONG MsgQualifier,REG(a1) U
 
 				LT_EndRefresh(Handle,TRUE);
 
-				*MsgClass = NULL;
+				*MsgClass = 0;
 			}
 
 			break;
@@ -348,13 +348,13 @@ LT_HandleInput(REG(a0) LayoutHandle *Handle,REG(d0) ULONG MsgQualifier,REG(a1) U
 						Box.Height	= Handle->Window->Height;
 					}
 
-					Message.Handle = Handle;
+					Message.Handle = (APTR)Handle;
 
 					CallHookPkt(Handle->HelpHook,&Message,&Box);
 				}
 
 				if(Handle->RawKeyFilter)
-					*MsgClass = NULL;
+					*MsgClass = 0;
 
 				break;
 			}
@@ -362,7 +362,7 @@ LT_HandleInput(REG(a0) LayoutHandle *Handle,REG(d0) ULONG MsgQualifier,REG(a1) U
 			if((*MsgCode >= 99 && *MsgCode <= 103) || *MsgCode == 96 || *MsgCode == 97)
 			{
 				if(Handle->RawKeyFilter)
-					*MsgClass = NULL;
+					*MsgClass = 0;
 
 				break;
 			}
@@ -379,7 +379,7 @@ LT_HandleInput(REG(a0) LayoutHandle *Handle,REG(d0) ULONG MsgQualifier,REG(a1) U
 			if(MapRawKey(&event,Buffer,9,NULL) < 1)
 			{
 				if(Handle->RawKeyFilter)
-					*MsgClass = NULL;
+					*MsgClass = 0;
 
 				break;
 			}
@@ -387,7 +387,7 @@ LT_HandleInput(REG(a0) LayoutHandle *Handle,REG(d0) ULONG MsgQualifier,REG(a1) U
 			if(!(Key = Buffer[0]))
 			{
 				if(Handle->RawKeyFilter)
-					*MsgClass = NULL;
+					*MsgClass = 0;
 
 				break;
 			}
@@ -491,7 +491,7 @@ LT_HandleInput(REG(a0) LayoutHandle *Handle,REG(d0) ULONG MsgQualifier,REG(a1) U
 					*MsgGadget	= Gadget;
 
 					if(Node->Special.List.AutoPageID != -1)
-						*MsgClass = NULL;
+						*MsgClass = 0;
 
 					if(!LTP_NotifyPager(Handle,Node->Special.List.AutoPageID,Node->Current))
 						*MsgClass = IDCMP_CLOSEWINDOW;
@@ -499,7 +499,7 @@ LT_HandleInput(REG(a0) LayoutHandle *Handle,REG(d0) ULONG MsgQualifier,REG(a1) U
 				else
 				{
 					if(Handle->RawKeyFilter)
-						*MsgClass = NULL;
+						*MsgClass = 0;
 				}
 
 				Handle->ActiveFrame = NULL;
@@ -512,7 +512,7 @@ LT_HandleInput(REG(a0) LayoutHandle *Handle,REG(d0) ULONG MsgQualifier,REG(a1) U
 				ObjectNode *Node;
 
 				if(Handle->RawKeyFilter)
-					*MsgClass = NULL;
+					*MsgClass = 0;
 
 				if(Node = Handle->TabKey)
 				{
@@ -585,7 +585,7 @@ LT_HandleInput(REG(a0) LayoutHandle *Handle,REG(d0) ULONG MsgQualifier,REG(a1) U
 							TAG_DONE);
 
 							if(AutoPageID != -1)
-								*MsgClass = NULL;
+								*MsgClass = 0;
 
 							if(!LTP_NotifyPager(Handle,AutoPageID,Choice))
 								*MsgClass = IDCMP_CLOSEWINDOW;
@@ -617,7 +617,7 @@ LT_HandleInput(REG(a0) LayoutHandle *Handle,REG(d0) ULONG MsgQualifier,REG(a1) U
 					else
 					{
 						if(Handle->RawKeyFilter)
-							*MsgClass = NULL;
+							*MsgClass = 0;
 					}
 				}
 				else
@@ -631,7 +631,7 @@ LT_HandleInput(REG(a0) LayoutHandle *Handle,REG(d0) ULONG MsgQualifier,REG(a1) U
 					else
 					{
 						if(Handle->RawKeyFilter)
-							*MsgClass = NULL;
+							*MsgClass = 0;
 					}
 				}
 
@@ -662,7 +662,7 @@ LT_HandleInput(REG(a0) LayoutHandle *Handle,REG(d0) ULONG MsgQualifier,REG(a1) U
 					else
 					{
 						if(Handle->RawKeyFilter)
-							*MsgClass = NULL;
+							*MsgClass = 0;
 					}
 
 					Handle->ClickSeconds = Handle->ClickMicros = 0;
@@ -881,7 +881,7 @@ LT_HandleInput(REG(a0) LayoutHandle *Handle,REG(d0) ULONG MsgQualifier,REG(a1) U
 
 													if(Node->Special.List.AutoPageID != -1)
 													{
-														*MsgClass = NULL;
+														*MsgClass = 0;
 
 														if(!LTP_NotifyPager(Handle,Node->Special.List.AutoPageID,Node->Current))
 															*MsgClass = IDCMP_CLOSEWINDOW;
@@ -920,7 +920,7 @@ LT_HandleInput(REG(a0) LayoutHandle *Handle,REG(d0) ULONG MsgQualifier,REG(a1) U
 
 													if(Node->Special.Radio.AutoPageID != -1)
 													{
-														*MsgClass = NULL;
+														*MsgClass = 0;
 
 														if(!LTP_NotifyPager(Handle,Node->Special.Radio.AutoPageID,Node->Current))
 															*MsgClass = IDCMP_CLOSEWINDOW;
@@ -990,7 +990,7 @@ LT_HandleInput(REG(a0) LayoutHandle *Handle,REG(d0) ULONG MsgQualifier,REG(a1) U
 
 												if(Node->Special.Cycle.AutoPageID != -1)
 												{
-													*MsgClass = NULL;
+													*MsgClass = 0;
 
 													if(!LTP_NotifyPager(Handle,Node->Special.Cycle.AutoPageID,Node->Current))
 														*MsgClass = IDCMP_CLOSEWINDOW;
@@ -1366,7 +1366,7 @@ LT_HandleInput(REG(a0) LayoutHandle *Handle,REG(d0) ULONG MsgQualifier,REG(a1) U
 									if(Swallow)
 									{
 										if(Handle->RawKeyFilter)
-											*MsgClass = NULL;
+											*MsgClass = 0;
 									}
 								}
 							}
@@ -1464,7 +1464,7 @@ LT_HandleInput(REG(a0) LayoutHandle *Handle,REG(d0) ULONG MsgQualifier,REG(a1) U
 								GTMX_Active,Node->Current,
 							TAG_DONE);
 
-							*MsgClass = NULL;
+							*MsgClass = 0;
 						}
 						else
 						{
@@ -1474,7 +1474,7 @@ LT_HandleInput(REG(a0) LayoutHandle *Handle,REG(d0) ULONG MsgQualifier,REG(a1) U
 
 							if(Node->Special.Radio.AutoPageID != -1)
 							{
-								*MsgClass = NULL;
+								*MsgClass = 0;
 
 								if(!LTP_NotifyPager(Handle,Node->Special.Radio.AutoPageID,Node->Current))
 									*MsgClass = IDCMP_CLOSEWINDOW;
@@ -1552,7 +1552,7 @@ LT_HandleInput(REG(a0) LayoutHandle *Handle,REG(d0) ULONG MsgQualifier,REG(a1) U
 								if(Number >= Parent->Min && Number <= Parent->Max)
 									LT_SetAttributes(Handle,Parent->ID,LAPR_Object,Parent,GTIN_Number,Number,TAG_DONE);
 								else
-									*MsgClass = NULL;
+									*MsgClass = 0;
 							}
 						}
 
@@ -1616,7 +1616,7 @@ LT_HandleInput(REG(a0) LayoutHandle *Handle,REG(d0) ULONG MsgQualifier,REG(a1) U
 								*MsgGadget	= Node->Host;
 
 								if(Node->Special.Cycle.AutoPageID != -1)
-									*MsgClass = NULL;
+									*MsgClass = 0;
 
 								if(!LTP_NotifyPager(Handle,Node->Special.Cycle.AutoPageID,Node->Current))
 									*MsgClass = IDCMP_CLOSEWINDOW;
@@ -1679,7 +1679,7 @@ LT_HandleInput(REG(a0) LayoutHandle *Handle,REG(d0) ULONG MsgQualifier,REG(a1) U
 							*MsgGadget	= Node->Host;
 
 							if(Node->Special.Cycle.AutoPageID != -1)
-								*MsgClass = NULL;
+								*MsgClass = 0;
 
 							if(!LTP_NotifyPager(Handle,Node->Special.Cycle.AutoPageID,Node->Current))
 								*MsgClass = IDCMP_CLOSEWINDOW;
@@ -1756,11 +1756,11 @@ LT_HandleInput(REG(a0) LayoutHandle *Handle,REG(d0) ULONG MsgQualifier,REG(a1) U
 							Box.Width	= Node->Width;
 							Box.Height	= Node->Height;
 
-							Message.Handle = Handle;
+							Message.Handle = (APTR)Handle;
 
 							CallHookPkt(Handle->HelpHook,&Message,&Box);
 
-							*MsgClass = NULL;
+							*MsgClass = 0;
 						}
 						else
 							Handle->Previous = NULL;
@@ -1796,11 +1796,11 @@ LT_HandleInput(REG(a0) LayoutHandle *Handle,REG(d0) ULONG MsgQualifier,REG(a1) U
 							Box.Width	= Node->Width;
 							Box.Height	= Node->Height;
 
-							Message.Handle = Handle;
+							Message.Handle = (APTR)Handle;
 
 							CallHookPkt(Handle->HelpHook,&Message,&Box);
 
-							*MsgClass = NULL;
+							*MsgClass = 0;
 						}
 						else
 							Handle->Previous = NULL;
@@ -1873,7 +1873,7 @@ LT_HandleInput(REG(a0) LayoutHandle *Handle,REG(d0) ULONG MsgQualifier,REG(a1) U
 
 							if(Node->Special.Popup.AutoPageID != -1)
 							{
-								*MsgClass = NULL;
+								*MsgClass = 0;
 
 								if(!LTP_NotifyPager(Handle,Node->Special.Popup.AutoPageID,Node->Current))
 									*MsgClass = IDCMP_CLOSEWINDOW;
@@ -1896,7 +1896,7 @@ LT_HandleInput(REG(a0) LayoutHandle *Handle,REG(d0) ULONG MsgQualifier,REG(a1) U
 
 							if(Node->Special.Tab.AutoPageID != -1)
 							{
-								*MsgClass = NULL;
+								*MsgClass = 0;
 
 								if(!LTP_NotifyPager(Handle,Node->Special.Tab.AutoPageID,Node->Current))
 									*MsgClass = IDCMP_CLOSEWINDOW;
@@ -1917,7 +1917,7 @@ LT_HandleInput(REG(a0) LayoutHandle *Handle,REG(d0) ULONG MsgQualifier,REG(a1) U
 
 						if(Node->Special.Cycle.AutoPageID != -1)
 						{
-							*MsgClass = NULL;
+							*MsgClass = 0;
 
 							if(!LTP_NotifyPager(Handle,Node->Special.Cycle.AutoPageID,Node->Current))
 								*MsgClass = IDCMP_CLOSEWINDOW;
@@ -1944,7 +1944,7 @@ LT_HandleInput(REG(a0) LayoutHandle *Handle,REG(d0) ULONG MsgQualifier,REG(a1) U
 								GTMX_Active,Node->Current,
 							TAG_DONE);
 
-							*MsgClass = NULL;
+							*MsgClass = 0;
 						}
 						else
 						{
@@ -1954,7 +1954,7 @@ LT_HandleInput(REG(a0) LayoutHandle *Handle,REG(d0) ULONG MsgQualifier,REG(a1) U
 
 							if(Node->Special.Radio.AutoPageID != -1)
 							{
-								*MsgClass = NULL;
+								*MsgClass = 0;
 
 								if(!LTP_NotifyPager(Handle,Node->Special.Radio.AutoPageID,Node->Current))
 									*MsgClass = IDCMP_CLOSEWINDOW;
@@ -2057,7 +2057,7 @@ LT_HandleInput(REG(a0) LayoutHandle *Handle,REG(d0) ULONG MsgQualifier,REG(a1) U
 						LTP_PutStorage(Node);
 
 						if(Node->Special.List.AutoPageID != -1)
-							*MsgClass = NULL;
+							*MsgClass = (IPTR)NULL;
 
 						if(!LTP_NotifyPager(Handle,Node->Special.List.AutoPageID,Node->Current))
 							*MsgClass = IDCMP_CLOSEWINDOW;
@@ -2095,7 +2095,7 @@ LT_HandleInput(REG(a0) LayoutHandle *Handle,REG(d0) ULONG MsgQualifier,REG(a1) U
 				if(Handle->CurrentLevel)
 					Node = Handle->CurrentLevel;
 				else
-					GETOBJECT((*MsgGadget),Node);
+					(void)GETOBJECT((*MsgGadget),Node);
 			}
 			#else
 			{

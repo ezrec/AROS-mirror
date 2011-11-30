@@ -7,6 +7,9 @@ void UpdateMessageWindow(struct LayoutHandle *Handle);
 int GetMessageCount(void);
 void GlobalCleanup(void);
 
+struct FormatContext;
+struct GlobalData;
+
 /* Tools.c */
 
 VOID LimitedVSPrintf(LONG Size, STRPTR Buffer, STRPTR FormatString, va_list VarArgs);

@@ -1,8 +1,8 @@
 #include "Global.h"
 #include "GTPopUp_text.h"
-//#include "protos.h"
+#include "protos.h"
 
-struct	CatCompArrayType	*AppStrings	= &CatCompArray[0];
+const struct	CatCompArrayType	*AppStrings	= &CatCompArray[0];
 WORD		NumAppStrings	= sizeof(CatCompArray) / sizeof(struct CatCompArrayType);
 
 STRPTR LocaleString(ULONG ID);
@@ -145,9 +145,9 @@ STRPTR LocaleString(ULONG ID)
 
 	if(Catalog)
 	{
-		STRPTR String = GetCatalogStr(Catalog,ID,Builtin);
+		STRPTR String = (STRPTR)GetCatalogStr(Catalog,ID,Builtin);
 
-		if(String[0])
+		if(String && String[0])
 			return(String);
 	}
 

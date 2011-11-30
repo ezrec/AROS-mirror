@@ -309,7 +309,7 @@ LTP_CreateGadgets(LayoutHandle *Handle,struct IBox *Bounds,LONG Left,LONG Top,LO
 				if(Handle->Failed)
 					LTP_DisposeGadgets(Handle);
 				else
-					qsort(Handle->GadgetArray,Handle->Index,sizeof(struct Gadget *),compare);
+					qsort(Handle->GadgetArray,Handle->Index,sizeof(struct Gadget *),(int (*)(const void *, const void *))compare);
 			}
 		}
 	}

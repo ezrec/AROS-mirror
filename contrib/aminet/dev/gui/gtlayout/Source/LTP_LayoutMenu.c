@@ -293,7 +293,7 @@ LTP_LayoutMenu(RootMenu *Root,LONG ExtraFront,LONG ExtraSpace)
 
 					// Move up
 
-				for(Item = (ItemNode *)((ULONG)Menu->Menu.FirstItem - sizeof(struct MinNode)) ; Item->Node.mln_Succ ; Item = (ItemNode *)Item->Node.mln_Succ)
+				for(Item = (ItemNode *)((IPTR)Menu->Menu.FirstItem - sizeof(struct MinNode)) ; Item->Node.mln_Succ ; Item = (ItemNode *)Item->Node.mln_Succ)
 				{
 					if(!(Item->Flags & ITEMF_IsSub))
 						Item->Item.LeftEdge -= Left;
@@ -359,7 +359,7 @@ LTP_LayoutMenu(RootMenu *Root,LONG ExtraFront,LONG ExtraSpace)
 
 		if(Item->Flags & ITEMF_HasSub)
 		{
-			ItemNode *Here = (ItemNode *)((ULONG)Item->Item.SubItem - sizeof(struct MinNode));
+			ItemNode *Here = (ItemNode *)((IPTR)Item->Item.SubItem - sizeof(struct MinNode));
 
 				// Does this one also cross the right screen border?
 
@@ -433,7 +433,7 @@ LTP_LayoutMenu(RootMenu *Root,LONG ExtraFront,LONG ExtraSpace)
 
 		if(Item->Flags & ITEMF_HasSub)
 		{
-			ItemNode *Here = (ItemNode *)((ULONG)Item->Item.SubItem - sizeof(struct MinNode));
+			ItemNode *Here = (ItemNode *)((IPTR)Item->Item.SubItem - sizeof(struct MinNode));
 
 			if(Here->Left + Here->Width > Root->Screen->Width)
 			{

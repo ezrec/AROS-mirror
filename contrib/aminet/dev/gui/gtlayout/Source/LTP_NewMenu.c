@@ -100,8 +100,8 @@ LTP_NewMenu(struct Screen *Screen,struct TextAttr *TextAttr,struct Image *AmigaG
 
 						if(CheckGlyph)
 						{
-							GetAttr(IA_Width,	CheckGlyph,&Root->CheckWidth);
-							GetAttr(IA_Height,	CheckGlyph,&Root->CheckHeight);
+							GetAttr(IA_Width,	(Object *)CheckGlyph,&Root->CheckWidth);
+							GetAttr(IA_Height,	(Object *)CheckGlyph,&Root->CheckHeight);
 						}
 						else
 						{
@@ -117,8 +117,8 @@ LTP_NewMenu(struct Screen *Screen,struct TextAttr *TextAttr,struct Image *AmigaG
 									SYSIA_ReferenceFont,	Root->Font,
 								TAG_DONE))
 								{
-									GetAttr(IA_Width,	Glyph,&Root->CheckWidth);
-									GetAttr(IA_Height,	Glyph,&Root->CheckHeight);
+									GetAttr(IA_Width,	(Object *)Glyph,&Root->CheckWidth);
+									GetAttr(IA_Height,	(Object *)Glyph,&Root->CheckHeight);
 
 									DisposeObject(Glyph);
 								}
@@ -133,8 +133,8 @@ LTP_NewMenu(struct Screen *Screen,struct TextAttr *TextAttr,struct Image *AmigaG
 
 						if(AmigaGlyph)
 						{
-							GetAttr(IA_Width,	AmigaGlyph,&Root->AmigaWidth);
-							GetAttr(IA_Height,	AmigaGlyph,&Root->AmigaHeight);
+							GetAttr(IA_Width,	(Object *)AmigaGlyph,&Root->AmigaWidth);
+							GetAttr(IA_Height,	(Object *)AmigaGlyph,&Root->AmigaHeight);
 						}
 						else
 						{
@@ -150,8 +150,8 @@ LTP_NewMenu(struct Screen *Screen,struct TextAttr *TextAttr,struct Image *AmigaG
 									SYSIA_ReferenceFont,	Root->Font,
 								TAG_DONE))
 								{
-									GetAttr(IA_Width,	Glyph,&Root->AmigaWidth);
-									GetAttr(IA_Height,	Glyph,&Root->AmigaHeight);
+									GetAttr(IA_Width,	(Object *)Glyph,&Root->AmigaWidth);
+									GetAttr(IA_Height,	(Object *)Glyph,&Root->AmigaHeight);
 
 									DisposeObject(Glyph);
 								}

@@ -74,7 +74,7 @@ LT_FindMenuCommand(REG(a0) struct Menu *Menu,REG(d0) UWORD MsgCode,REG(d1) UWORD
 
 	if(!(MsgCode & IECODE_UP_PREFIX))
 	{
-		RootMenu			*Root = (RootMenu *)((ULONG)Menu - offsetof(RootMenu,Menu));
+		RootMenu			*Root = (RootMenu *)((IPTR)Menu - offsetof(RootMenu,Menu));
 		ItemNode			*Item;
 		struct InputEvent	 Event;
 		UBYTE				 ANSIKey[10];

@@ -56,11 +56,11 @@ LTP_CreateCheckGlyph(LONG Width,LONG Height,struct BitMap *Friend,LONG BackPen,L
 
 	Glyph = NULL;
 
-	if(RPort = (struct RastPort *)AllocVec(sizeof(struct RastPort) + sizeof(struct TmpRas) + sizeof(struct AreaInfo) + VECTOR_BYTES(11),MEMF_ANY | MEMF_CLEAR))
+	if((RPort = (struct RastPort *)AllocVec(sizeof(struct RastPort) + sizeof(struct TmpRas) + sizeof(struct AreaInfo) + VECTOR_BYTES(11),MEMF_ANY | MEMF_CLEAR)))
 	{
 		PLANEPTR Plane;
 
-		if(Plane = AllocRaster(Width,Height))
+		if((Plane = AllocRaster(Width,Height)))
 		{
 			struct BitMap *BitMaps[2] = { NULL, NULL };	/* For the sake of the compiler, make sure this is initialized */
 			LONG i,Depth,Max;
@@ -86,7 +86,7 @@ LTP_CreateCheckGlyph(LONG Width,LONG Height,struct BitMap *Friend,LONG BackPen,L
 
 			if(BitMaps[0] && BitMaps[1])
 			{
-				if(Glyph = (struct CheckGlyph *)AllocVec(sizeof(struct CheckGlyph),MEMF_ANY | MEMF_CLEAR))
+				if((Glyph = (struct CheckGlyph *)AllocVec(sizeof(struct CheckGlyph),MEMF_ANY | MEMF_CLEAR)))
 				{
 					struct TmpRas	*TmpRas;
 					struct AreaInfo	*AreaInfo;

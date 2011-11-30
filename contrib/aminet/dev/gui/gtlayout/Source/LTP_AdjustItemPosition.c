@@ -32,7 +32,7 @@ LTP_AdjustItemPosition(struct MenuItem *Item,LONG Left,LONG Top)
 	{
 			// Get back
 
-		Node = (ItemNode *)((ULONG)Item - sizeof(struct MinNode));
+		Node = (ItemNode *)((IPTR)Item - sizeof(struct MinNode));
 
 			// Add up the left edge
 

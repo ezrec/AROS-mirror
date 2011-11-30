@@ -295,7 +295,7 @@ LTP_DetermineSize(LayoutHandle *Handle,ObjectNode *Node)
 							Node->Special.Button.Lines = Lines;
 
 							if(Node->Special.Button.KeyStroke)
-								Node->Special.Button.KeyStroke = &String[((ULONG)Node->Special.Button.KeyStroke) - ((ULONG)Node->Label)];
+								Node->Special.Button.KeyStroke = &String[((IPTR)Node->Special.Button.KeyStroke) - ((IPTR)Node->Label)];
 
 							do
 							{
@@ -498,7 +498,7 @@ LTP_DetermineSize(LayoutHandle *Handle,ObjectNode *Node)
 				Max		= 0;
 				Width	= Node->Chars * GlyphWidth;
 
-				if((ULONG)Node->Special.List.Labels == 0xFFFFFFFF)
+				if((IPTR)Node->Special.List.Labels == 0xFFFFFFFF)
 					Node->Min = Node->Max = -1;
 				else
 				{

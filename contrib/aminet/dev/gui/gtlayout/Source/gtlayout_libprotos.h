@@ -212,7 +212,7 @@ AROS_UFP3(ULONG, LTP_HexEditRoutine,
 #ifndef __AROS__
 ULONG SAVE_DS ASM LTP_ImageDispatch(REG(a0) struct IClass *class, REG(a2) Object *object, REG(a1) Msg msg);
 #else
-AROS_UFP3(ULONG, LTP_ImageDispatch,
+AROS_UFP3(IPTR, LTP_ImageDispatch,
 	  AROS_UFPA(struct IClass *, class, A0),
 	  AROS_UFPA(Object *, object, A2),
 	  AROS_UFPA(Msg, msg, A1)
@@ -238,7 +238,7 @@ LONG LTP_GetCurrentLevel(ObjectNode *Node);
 #ifndef __AROS__
 ULONG SAVE_DS ASM LTP_LevelClassDispatcher(REG(a0) Class *class, REG(a2) Object *object, REG(a1) Msg msg);
 #else
-AROS_UFP3(ULONG, LTP_LevelClassDispatcher,
+AROS_UFP3(IPTR, LTP_LevelClassDispatcher,
 	  AROS_UFPA(Class *, class, A0),
 	  AROS_UFPA(Object *, object, A2),
 	  AROS_UFPA(Msg, msg, A1)
@@ -279,7 +279,7 @@ VOID LTP_PlaceGroups(LayoutHandle *handle, ObjectNode *group, LONG left, LONG to
 #ifndef __AROS__
 ULONG SAVE_DS ASM LTP_PopupClassDispatcher(REG(a0) struct IClass *class, REG(a2) Object *object, REG(a1) Msg msg);
 #else
-AROS_UFP3(ULONG, LTP_PopupClassDispatcher,
+AROS_UFP3(IPTR, LTP_PopupClassDispatcher,
 	  AROS_UFPA(struct IClass *, class, A0),
 	  AROS_UFPA(Object *, object, A2),
 	  AROS_UFPA(Msg, msg, A1)
@@ -341,7 +341,7 @@ BOOL LTP_ObtainTabSize(struct IBox *Box, Tag tag1, ...);
 #ifndef __AROS__
 ULONG SAVE_DS ASM LTP_TabClassDispatcher(REG(a0) struct IClass *class, REG(a2) Object *object, REG(a1) Msg msg);
 #else
-AROS_UFP3(ULONG, LTP_TabClassDispatcher,
+AROS_UFP3(IPTR, LTP_TabClassDispatcher,
 	  AROS_UFPA(struct IClass *, class, A0),
 	  AROS_UFPA(Object *, object, A2),
 	  AROS_UFPA(Msg, msg, A1)
@@ -375,8 +375,8 @@ VOID LIBENT LT_DisposeMenu(REG(a0) struct Menu *Menu);
 struct MenuItem *LIBENT LT_FindMenuCommand(REG(a0) struct Menu *Menu, REG(d0) UWORD MsgCode, REG(d1) UWORD MsgQualifier, REG(a1) struct Gadget *MsgGadget);
 
 /* LT_GetAttributes.c */
-LONG LT_GetAttributes(LayoutHandle *Handle, LONG ID, TAGSPEC);
-LONG LIBENT LT_GetAttributesA(REG(a0) LayoutHandle *Handle, REG(d0) LONG ID, REG(a1) struct TagItem *TagList);
+IPTR LT_GetAttributes(LayoutHandle *Handle, LONG ID, TAGSPEC);
+IPTR LIBENT LT_GetAttributesA(REG(a0) LayoutHandle *Handle, REG(d0) LONG ID, REG(a1) struct TagItem *TagList);
 
 /* LT_GetCode.c */
 LONG LIBENT LT_GetCode(REG(d0) ULONG MsgQualifier, REG(d1) ULONG MsgClass, REG(d2) UWORD MsgCode, REG(a0) struct Gadget *MsgGadget);

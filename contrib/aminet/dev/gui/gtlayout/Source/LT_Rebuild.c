@@ -93,8 +93,8 @@ LTP_Erase(LayoutHandle *Handle)
 BOOL LIBENT
 LT_RebuildTagList(REG(a0) LayoutHandle *handle,REG(d0) BOOL clear,REG(a1) struct TagItem *TagParams)
 {
-	struct TagItem	*item,
-					*list;
+	struct TagItem	*item;
+	const struct TagItem	*list;
 	struct IBox		*bounds = NULL;
 	LONG			 RightEdge,
 					 BottomEdge;

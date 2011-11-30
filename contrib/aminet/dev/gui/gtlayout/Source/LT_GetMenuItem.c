@@ -63,7 +63,7 @@
 struct MenuItem * LIBENT
 LT_GetMenuItem(REG(a0) struct Menu *Menu,REG(d0) ULONG ID)
 {
-	RootMenu *Root = (RootMenu *)((ULONG)Menu - offsetof(RootMenu,Menu));
+	RootMenu *Root = (RootMenu *)((IPTR)Menu - offsetof(RootMenu,Menu));
 	ItemNode *Item;
 
 		// Run down the list...

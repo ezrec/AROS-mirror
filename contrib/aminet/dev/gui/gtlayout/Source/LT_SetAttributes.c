@@ -246,7 +246,8 @@ LT_SetAttributesA(REG(a0) LayoutHandle *handle,REG(d0) LONG id,REG(a1) struct Ta
 	if(handle && TagList)
 	{
 		struct Gadget	*Gadget = NULL;
-		struct TagItem	*ThisTag,*ThisList = TagList;
+		struct TagItem	*ThisTag;
+		const struct TagItem	*ThisList = TagList;
 		ObjectNode		*Node = NULL;
 
 		while(ThisTag = NextTagItem(&ThisList))
@@ -323,7 +324,7 @@ LT_SetAttributesA(REG(a0) LayoutHandle *handle,REG(d0) LONG id,REG(a1) struct Ta
 			STATIC const Tag Filter[2] = { GA_Disabled,TAG_DONE };
 
 			struct TagItem	*NewTags = NULL;
-			ULONG			 Exclude = NULL;
+			ULONG			 Exclude = 0;
 
 			switch(Node->Type)
 			{

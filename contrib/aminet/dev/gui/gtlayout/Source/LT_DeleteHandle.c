@@ -192,15 +192,15 @@ LT_DeleteHandle(REG(a0) LayoutHandle *Handle)
 				{
 					if(intuiMsg->IDCMPWindow == Handle->Window)
 					{
-						Remove(intuiMsg);
+						Remove((struct Node *)intuiMsg);
 
-						ReplyMsg(intuiMsg);
+						ReplyMsg((struct Message *)intuiMsg);
 					}
 				}
 
 				Handle->Window->UserPort = NULL;
 
-				ModifyIDCMP(Handle->Window,NULL);
+				ModifyIDCMP(Handle->Window, 0);
 
 				Permit();
 			}

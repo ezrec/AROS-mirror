@@ -922,7 +922,7 @@ typedef struct RootMenu
 	WORD			ItemHeight;	// Default item height
 	UWORD			TextPen;	// Text rendering pen
 
-	ULONG			CheckWidth,	// Size of the checkmark glyph
+	IPTR 			CheckWidth,	// Size of the checkmark glyph
 				CheckHeight,
 				AmigaWidth,	// Size of the Amiga glyph
 				AmigaHeight;

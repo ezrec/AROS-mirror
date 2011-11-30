@@ -288,7 +288,7 @@ LT_CreateHandleTagList(REG(a0) struct Screen *Screen,REG(a1) struct TagItem *Tag
 
 	if(!Screen)
 	{
-		if(PubScreen = (struct Screen *)GetTagData(LAHN_PubScreen,NULL,TagList))
+		if(PubScreen = (struct Screen *)GetTagData(LAHN_PubScreen,(IPTR)NULL,TagList))
 		{
 			UnlockThePubScreen = FALSE;
 			WA_ScreenTag = WA_PubScreen;
@@ -298,7 +298,7 @@ LT_CreateHandleTagList(REG(a0) struct Screen *Screen,REG(a1) struct TagItem *Tag
 		{
 			STRPTR PubName;
 
-			if(PubName = (STRPTR)GetTagData(LAHN_PubScreenName,NULL,TagList))
+			if(PubName = (STRPTR)GetTagData(LAHN_PubScreenName,(IPTR)NULL,TagList))
 			{
 				if(!(PubScreen = LockPubScreen(PubName)))
 				{
@@ -358,7 +358,7 @@ LT_CreateHandleTagList(REG(a0) struct Screen *Screen,REG(a1) struct TagItem *Tag
 
 			List = TagList;
 
-			while(Entry = NextTagItem(&List))
+			while(Entry = NextTagItem((const struct TagItem **)&List))
 			{
 				switch(Entry->ti_Tag)
 				{

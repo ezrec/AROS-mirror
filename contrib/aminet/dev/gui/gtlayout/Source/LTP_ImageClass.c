@@ -47,7 +47,7 @@ ImageClassErase(struct Image *image,struct impErase *eraseMsg)
 
 /*****************************************************************************/
 
-STATIC ULONG
+STATIC Object *
 ImageClassNew(struct IClass *class,Object *object,struct opSet *SetMethod)
 {
 	struct TagItem *Item;
@@ -59,7 +59,7 @@ ImageClassNew(struct IClass *class,Object *object,struct opSet *SetMethod)
 		if(NewImage = (struct Image *)DoSuperMethodA(class,object,(Msg)SetMethod))
 		{
 			struct ImageInfo	*MoreInfo = INST_DATA(class,NewImage);
-			struct TagItem		*List = SetMethod->ops_AttrList;
+			const struct TagItem	*List = SetMethod->ops_AttrList;
 
 			memset(MoreInfo,0,sizeof(struct ImageInfo));
 
@@ -102,7 +102,7 @@ ImageClassNew(struct IClass *class,Object *object,struct opSet *SetMethod)
 						{
 							CoerceMethod(class,object,OM_DISPOSE);
 
-							return(NULL);
+							return 0;
 						}
 
 						break;
@@ -121,7 +121,7 @@ ImageClassNew(struct IClass *class,Object *object,struct opSet *SetMethod)
 				{
 					CoerceMethod(class,object,OM_DISPOSE);
 
-					return(NULL);
+					return 0;
 				}
 
 					/* Check if the class has been replaced, assuming that the
@@ -132,11 +132,11 @@ ImageClassNew(struct IClass *class,Object *object,struct opSet *SetMethod)
 					MoreInfo->UseFrame = TRUE;
 			}
 
-			return((ULONG)NewImage);
+			return (Object *)NewImage;
 		}
 	}
 
-	return(NULL);
+	return NULL;
 }
 
 
@@ -162,7 +162,7 @@ ImageClassDispose(struct IClass *class,Object *object,Msg msg)
 ULONG SAVE_DS ASM
 LTP_ImageDispatch(REG(a0) struct IClass *class,REG(a2) Object *object,REG(a1) Msg msg)
 #else
-AROS_UFH3(ULONG, LTP_ImageDispatch,
+AROS_UFH3(IPTR, LTP_ImageDispatch,
 	  AROS_UFHA(struct IClass *, class, A0),
 	  AROS_UFHA(Object *, object, A2),
 	  AROS_UFHA(Msg, msg, A1)
@@ -180,7 +180,7 @@ AROS_UFH3(ULONG, LTP_ImageDispatch,
 			return(ImageClassDraw((struct Image *)object,(struct impDraw *)msg,(ImageInfo *)INST_DATA(class,object)));
 
 		case OM_NEW:
-			return(ImageClassNew(class,object,(struct opSet *)msg));
+			return (IPTR)ImageClassNew(class,object,(struct opSet *)msg);
 
 		case OM_DISPOSE:
 			ImageClassDispose(class,object,msg);

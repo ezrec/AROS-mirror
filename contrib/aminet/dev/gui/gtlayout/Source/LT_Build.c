@@ -300,7 +300,7 @@ LT_BuildA(REG(a0) LayoutHandle *handle,REG(a1) struct TagItem *TagParams)
 	bounds 				= NULL;
 	extraWidth			= 0,
 	extraHeight			= 0;
-	IDCMP				= NULL;
+	IDCMP				= 0;
 	align				= 0;
 	LocalMenu			= NULL;
 	LocalMenuTags		= NULL;
@@ -326,7 +326,7 @@ LT_BuildA(REG(a0) LayoutHandle *handle,REG(a1) struct TagItem *TagParams)
 	}
 
 	TagList = (struct TagItem *)TagParams;
-	while(item = NextTagItem(&TagList))
+	while(item = NextTagItem((const struct TagItem **)&TagList))
 	{
 		switch(item->ti_Tag)
 		{
@@ -680,7 +680,7 @@ LT_BuildA(REG(a0) LayoutHandle *handle,REG(a1) struct TagItem *TagParams)
 
 	TagList = (struct TagItem *)TagParams;
 
-	while(item = NextTagItem(&TagList))
+	while(item = NextTagItem((const struct TagItem **)&TagList))
 	{
 		switch((ULONG)item->ti_Tag)
 		{
@@ -731,7 +731,7 @@ LT_BuildA(REG(a0) LayoutHandle *handle,REG(a1) struct TagItem *TagParams)
 								SYSIA_DrawInfo, handle->DrawInfo,
 							TAG_DONE))
 							{
-								ULONG Width;
+								IPTR Width;
 
 								GetAttr(IA_Width,Image,&Width);
 
@@ -882,7 +882,7 @@ LT_BuildA(REG(a0) LayoutHandle *handle,REG(a1) struct TagItem *TagParams)
 
 	TagList = (struct TagItem *)TagParams;
 
-	while(item = NextTagItem(&TagList))
+	while(item = NextTagItem((const struct TagItem **)&TagList))
 	{
 		switch((ULONG)item->ti_Tag)
 		{
@@ -1170,7 +1170,7 @@ LT_GetWindowUserData(REG(a0) struct Window *Window,REG(a1) APTR DefaultValue)
 
 	if(Window != NULL)
 	{
-		if(Window->UserData != NULL && !((ULONG)Window->UserData & 1))
+		if(Window->UserData != NULL && !((IPTR)Window->UserData & 1))
 		{
 			LayoutHandle *Local = (LayoutHandle *)Window->UserData;
 

@@ -95,7 +95,7 @@ LT_GetIMsg(REG(a0) struct LayoutHandle *Handle)
 
 				// For multiple handles sharing the same UserPort
 
-			if(Msg->IDCMPWindow->UserData && !((ULONG)Msg->IDCMPWindow->UserData & 1))
+			if(Msg->IDCMPWindow->UserData && !((IPTR)Msg->IDCMPWindow->UserData & 1))
 			{
 				LayoutHandle *Local = (LayoutHandle *)Msg->IDCMPWindow->UserData;
 
@@ -130,7 +130,7 @@ LT_GetIMsg(REG(a0) struct LayoutHandle *Handle)
 				{
 					CopyMem(Msg,Clone,sizeof(struct IntuiMessage));
 
-					Clone->Class						= NULL;
+					Clone->Class						= 0;
 					Clone->ExecMessage.mn_Node.ln_Name	= (char *)MESSAGE_COOKIE;
 					Clone->ExecMessage.mn_Node.ln_Pri 	= -114;
 					Clone->ExecMessage.mn_ReplyPort		= (struct MsgPort *)Clone;

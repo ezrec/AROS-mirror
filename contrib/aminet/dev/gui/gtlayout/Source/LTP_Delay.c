@@ -40,16 +40,16 @@ LTP_Delay(ULONG Seconds,ULONG Micros)
 	TimeRequest.tr_node.io_Message.mn_ReplyPort	= &TimePort;
 	TimeRequest.tr_node.io_Message.mn_Length	= sizeof(struct timerequest);
 
-	if(!OpenDevice(TIMERNAME,UNIT_VBLANK,&TimeRequest,NULL))
+	if(!OpenDevice(TIMERNAME,UNIT_VBLANK,(struct IORequest *)&TimeRequest,0))
 	{
 		TimeRequest.tr_node.io_Command	= TR_ADDREQUEST;
 		TimeRequest.tr_time.tv_secs 	= Seconds;
 		TimeRequest.tr_time.tv_micro	= Micros;
 
 		SetSignal(0,SIGF_SINGLE);
-		SendIO(&TimeRequest);
-		WaitIO(&TimeRequest);
+		SendIO((struct IORequest *)&TimeRequest);
+		WaitIO((struct IORequest *)&TimeRequest);
 
-		CloseDevice(&TimeRequest);
+		CloseDevice((struct IORequest *)&TimeRequest);
 	}
 }

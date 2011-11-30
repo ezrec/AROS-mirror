@@ -56,7 +56,7 @@ OpenClass(STRPTR Name)
 			}
 		}
 
-		if(Process->pr_Task.tc_Node.ln_Type == NT_PROCESS && Process->pr_HomeDir != NULL)
+		if(Process->pr_Task.tc_Node.ln_Type == NT_PROCESS && Process->pr_HomeDir != BNULL)
 		{
 			strcpy(LocalBuffer,"PROGDIR:Classes/Gadgets");
 			LocalAddPart(LocalBuffer,Name);
@@ -220,7 +220,7 @@ LTP_LayoutGadgets(LayoutHandle *Handle,ObjectNode *Group,LONG Left,LONG Top,LONG
 
 					default:
 
-						NewGadget.ng_Flags = NULL;
+						NewGadget.ng_Flags = 0;
 						break;
 				}
 
@@ -424,7 +424,7 @@ LTP_LayoutGadgets(LayoutHandle *Handle,ObjectNode *Group,LONG Left,LONG Top,LONG
 						#else
 						{
 							IsNonStandardButton = (BOOL)(	(Node->Special.Button.Lines != NULL) ||
-															(Node->Special.Button.ReturnKey != NULL)
+															(Node->Special.Button.ReturnKey != 0)
 														);
 						}
 						#endif /* OLD_STYLE_DEFAULT_KEY */
@@ -451,7 +451,7 @@ LTP_LayoutGadgets(LayoutHandle *Handle,ObjectNode *Group,LONG Left,LONG Top,LONG
 							TAG_DONE))
 							{
 								NewGadget.ng_GadgetText	= "";
-								NewGadget.ng_Flags		= NULL;
+								NewGadget.ng_Flags		= 0;
 
 								if(Gadget = CreateGadgetA(GENERIC_KIND,Handle->Previous,&NewGadget,NULL))
 								{
@@ -728,7 +728,7 @@ LTP_LayoutGadgets(LayoutHandle *Handle,ObjectNode *Group,LONG Left,LONG Top,LONG
 									TAG_DONE))
 									{
 										NewGadget.ng_GadgetText	= "";
-										NewGadget.ng_Flags		= NULL;
+										NewGadget.ng_Flags		= 0;
 
 										if(Gadget = CreateGadgetA(GENERIC_KIND,Handle->Previous,&NewGadget,NULL))
 										{
@@ -993,7 +993,7 @@ LTP_LayoutGadgets(LayoutHandle *Handle,ObjectNode *Group,LONG Left,LONG Top,LONG
 							{
 								LONG Value;
 
-								Value = (LONG)CallHookPkt(Node->Special.Integer.IncrementerHook,(APTR)Node->Special.Integer.Number,(APTR)INCREMENTERMSG_INITIAL);
+								Value = (LONG)CallHookPkt(Node->Special.Integer.IncrementerHook,(APTR)(IPTR)Node->Special.Integer.Number,(APTR)(IPTR)INCREMENTERMSG_INITIAL);
 
 								if(Value < Node->Min)
 									Value = Node->Min;

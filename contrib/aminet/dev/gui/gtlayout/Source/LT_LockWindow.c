@@ -147,10 +147,13 @@ LT_LockWindow(REG(a0) struct Window *window)
 				{
 					STATIC const struct TagItem tags[3] =
 					{
+					    {
 						WA_BusyPointer,		TRUE,
+					    }, {
 						WA_PointerDelay,	TRUE,
-
+					    }, {
 						TAG_DONE
+					    }
 					};
 
 					SetWindowPointerA(window,(struct TagItem *)tags);

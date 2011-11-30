@@ -76,7 +76,7 @@ LTP_Rescale(LayoutHandle *handle,BOOL trimWidth,BOOL trimHeight)
 
 		Forbid();
 
-		LTP_GetDefaultFont((struct TTextAttr *)(handle->TextAttr = &handle->CopyTextAttr));
+		LTP_GetDefaultFont((struct TTextAttr *)(handle->TextAttr = (APTR)&handle->CopyTextAttr));
 
 		LTP_SetFont(handle,LTP_OpenFont(handle->TextAttr));
 

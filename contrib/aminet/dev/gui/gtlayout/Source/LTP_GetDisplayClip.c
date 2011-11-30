@@ -22,7 +22,7 @@
 VOID
 LTP_GetDisplayClip(struct Screen *screen,WORD *left,WORD *top,WORD *width,WORD *height)
 {
-	struct TagItem tags[2] = { VTAG_VIEWPORTEXTRA_GET, NULL, TAG_DONE };
+	struct TagItem tags[2] = { { VTAG_VIEWPORTEXTRA_GET, (IPTR)NULL }, { TAG_DONE } };
 
 	if(!VideoControl(screen->ViewPort.ColorMap,tags))
 	{

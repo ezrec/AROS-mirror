@@ -108,6 +108,8 @@ OTHERS := gtlayout_data
 LINKLIB_FILES = \
 	varargfuncs
 
+USER_CFLAGS := -Wno-parentheses
+
 #MM- aminet-dev-gui-gtlayout : aminet-dev-gui-gtlayout-test
 #MM aminet-dev-gui-gtlayout-test : linklibs-aminet-dev-gui-gtlayout
 

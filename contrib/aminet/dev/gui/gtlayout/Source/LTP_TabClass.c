@@ -209,13 +209,14 @@ DisposeMethod(struct IClass *class,struct Gadget *gadget,Msg msg)
 	LTP_DeleteBitMap(Info->BitMap,FALSE);
 }
 
-STATIC ULONG
+STATIC Object *
 NewMethod(struct IClass *class,struct Gadget *gadget,struct opSet *SetInfo)
 {
 	if(gadget = (struct Gadget *)DoSuperMethodA(class,(Object *)gadget,(Msg)SetInfo))
 	{
 		TabInfo			*Info = INST_DATA(class,gadget);
-		struct TagItem	*Tag,*TagList = SetInfo->ops_AttrList;
+		struct TagItem	*Tag;
+		const struct TagItem *TagList = SetInfo->ops_AttrList;
 		struct TextAttr	*FontAttr;
 		LONG			 Width,Height;
 		struct DrawInfo	*DrawInfo;
@@ -466,7 +467,7 @@ NewMethod(struct IClass *class,struct Gadget *gadget,struct opSet *SetInfo)
 
 								CloseFont(Font);
 
-								return((ULONG)gadget);
+								return((Object *)gadget);
 							}
 						}
 					}
@@ -626,7 +627,6 @@ InactiveMethod(struct IClass *class,struct Gadget *gadget,struct gpGoInactive *I
 BOOL
 LTP_ObtainTabSizeA(struct IBox *Box, struct TagItem *TagList)
 {
-	va_list			 VarArgs;
 	struct TagItem	*Tag;
 	struct TextAttr	*FontAttr;
 	struct DrawInfo	*DrawInfo;
@@ -642,7 +642,7 @@ LTP_ObtainTabSizeA(struct IBox *Box, struct TagItem *TagList)
 	DrawInfo = NULL;
 	Labels = NULL;
 
-	while(Tag = NextTagItem(&TagList))
+	while(Tag = NextTagItem((const struct TagItem **)&TagList))
 	{
 		switch(Tag->ti_Tag)
 		{
@@ -736,7 +736,7 @@ LTP_ObtainTabSize(struct IBox *Box, Tag tag1, ...)
 ULONG SAVE_DS ASM
 LTP_TabClassDispatcher(REG(a0) struct IClass *class,REG(a2) Object *object,REG(a1) Msg msg)
 #else
-AROS_UFH3(ULONG, LTP_TabClassDispatcher,
+AROS_UFH3(IPTR, LTP_TabClassDispatcher,
 	  AROS_UFHA(struct IClass *, class, A0),
 	  AROS_UFHA(Object *, object, A2),
 	  AROS_UFHA(Msg, msg, A1)
@@ -748,7 +748,7 @@ AROS_UFH3(ULONG, LTP_TabClassDispatcher,
 	switch(msg->MethodID)
 	{
 		case OM_NEW:
-			return(NewMethod(class,(struct Gadget *)object,(struct opSet *)msg));
+			return (IPTR)NewMethod(class,(struct Gadget *)object,(struct opSet *)msg);
 
 		case OM_UPDATE:
 		case OM_SET:

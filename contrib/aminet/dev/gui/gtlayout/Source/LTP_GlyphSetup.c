@@ -31,7 +31,7 @@ LTP_GetDefaultFont(struct TTextAttr *TextAttr)
 
 	memset(TextAttr,0,sizeof(*TextAttr));
 
-	AskFont(&LocalRastPort,TextAttr);
+	AskFont(&LocalRastPort,(struct TextAttr *)TextAttr);
 }
 
 

@@ -14,16 +14,13 @@
 
 /*****************************************************************************/
 
-#undef AROS_TAGRETURNTYPE
-#define AROS_TAGRETURNTYPE  LayoutHandle *
 LayoutHandle *
 LT_CreateHandleTags(struct Screen *Screen, Tag tag1,...)
 {
-	AROS_SLOWSTACKTAGS_PRE(tag1)
+	AROS_SLOWSTACKTAGS_PRE_AS(tag1, LayoutHandle *)
 	retval = LT_CreateHandleTagList(Screen, AROS_SLOWSTACKTAGS_ARG(tag1));
 	AROS_SLOWSTACKTAGS_POST
 }
-#undef AROS_TAGRETURNTYPE
 
 VOID
 LT_AddL(LayoutHandle *handle,LONG type,ULONG labelID,LONG id, Tag tag1, ...)
@@ -36,7 +33,7 @@ LT_AddL(LayoutHandle *handle,LONG type,ULONG labelID,LONG id, Tag tag1, ...)
 		{
 			STRPTR label;
 
-			label = (STRPTR)CallHookPkt(handle->LocaleHook, handle, (APTR)labelID);
+			label = (STRPTR)CallHookPkt(handle->LocaleHook, handle, (APTR)(IPTR)labelID);
 
 			LT_AddA(handle, type, label, id, AROS_SLOWSTACKTAGS_ARG(tag1));
 		}
@@ -69,7 +66,6 @@ LT_Add(
 	AROS_NR_SLOWSTACKTAGS_POST
 }
 
-#define AROS_TAGRETURNTYPE struct Window *
 struct Window *
 LT_Layout(LayoutHandle *handle,
 	STRPTR title,
@@ -79,7 +75,7 @@ LT_Layout(LayoutHandle *handle,
 	LONG align,
 	Tag tag1, ...)
 {
-	AROS_SLOWSTACKTAGS_PRE(tag1)
+	AROS_SLOWSTACKTAGS_PRE_AS(tag1, struct Window *)
 
 	retval = LT_Build(handle,
 		LAWN_Title,			title,
@@ -93,27 +89,22 @@ LT_Layout(LayoutHandle *handle,
 	AROS_SLOWSTACKTAGS_POST
 
 }
-#undef AROS_TAGRETURNTYPE
 
-#define AROS_TAGRETURNTYPE struct Menu *
 struct Menu *
 LT_LayoutMenus(LayoutHandle *handle, struct NewMenu *menuTemplate, Tag tag1,...)
 {
-        AROS_SLOWSTACKTAGS_PRE(tag1)
+        AROS_SLOWSTACKTAGS_PRE_AS(tag1, struct Menu *)
         retval = LT_LayoutMenusA(handle, menuTemplate, AROS_SLOWSTACKTAGS_ARG(tag1));
         AROS_SLOWSTACKTAGS_POST
 }
-#undef AROS_TAGRETURNTYPE
 
-#define AROS_TAGRETURNTYPE struct Window *
 struct Window *
 LT_Build(LayoutHandle *Handle, Tag tag1, ...)
 {
-	AROS_SLOWSTACKTAGS_PRE(tag1)
+	AROS_SLOWSTACKTAGS_PRE_AS(tag1, struct Window *)
 	retval = LT_BuildA(Handle, AROS_SLOWSTACKTAGS_ARG(tag1));
 	AROS_SLOWSTACKTAGS_POST
 }
-#undef AROS_TAGRETURNTYPE
 
 VOID
 LT_SetAttributes(LayoutHandle *handle, LONG id, Tag tag1,...)
@@ -123,25 +114,21 @@ LT_SetAttributes(LayoutHandle *handle, LONG id, Tag tag1,...)
 	AROS_NR_SLOWSTACKTAGS_POST
 }
 
-#define AROS_TAGRETURNTYPE LONG
-LONG
+IPTR
 LT_GetAttributes(LayoutHandle *Handle, LONG ID, Tag tag1,...)
 {
-	AROS_SLOWSTACKTAGS_PRE(tag1)
+	AROS_SLOWSTACKTAGS_PRE_AS(tag1, IPTR)
 	retval = LT_GetAttributesA(Handle, ID, AROS_SLOWSTACKTAGS_ARG(tag1));
 	AROS_SLOWSTACKTAGS_POST
 }
-#undef AROS_TAGRETURNTYPE
 
-#define AROS_TAGRETURNTYPE BOOL
 BOOL
 LT_RebuildTags(LayoutHandle *Handle, BOOL Clear, Tag tag1,...)
 {
-	AROS_SLOWSTACKTAGS_PRE(tag1)
+	AROS_SLOWSTACKTAGS_PRE_AS(tag1, BOOL)
 	retval = LT_RebuildTagList(Handle, Clear, AROS_SLOWSTACKTAGS_ARG(tag1));
 	AROS_SLOWSTACKTAGS_POST
 }
-#undef AROS_TAGRETURNTYPE
 
 VOID
 LT_MenuControlTags(struct Window *Window, struct Menu *Menu, Tag tag1,...)
@@ -151,12 +138,10 @@ LT_MenuControlTags(struct Window *Window, struct Menu *Menu, Tag tag1,...)
 	AROS_NR_SLOWSTACKTAGS_POST
 }
 
-#define AROS_TAGRETURNTYPE struct Menu *
 struct Menu *
 LT_NewMenuTags(Tag tag1,...)
 {
-	AROS_SLOWSTACKTAGS_PRE(tag1)
+	AROS_SLOWSTACKTAGS_PRE_AS(tag1, struct Menu *)
 	retval = LT_NewMenuTagList(AROS_SLOWSTACKTAGS_ARG(tag1));
 	AROS_SLOWSTACKTAGS_POST
 }
-#undef AROS_TAGRETURNTYPE

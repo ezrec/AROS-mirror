@@ -12,7 +12,7 @@ struct Hook PopHook;
 char UpdateString[80];
 struct List *MessageList;
 
-void main(void)		//GTPopUpGUI()
+int main(int argc, char **argv)		//GTPopUpGUI()
 {
 	struct LayoutHandle *Handle;
 
@@ -209,6 +209,8 @@ void main(void)		//GTPopUpGUI()
 		LT_DeleteHandle(Handle);
 		GlobalCleanup();
 	}
+
+	return RETURN_OK;
 }
 
 BOOL OpenLibs(void)
@@ -254,7 +256,9 @@ void CloseLibs(void)
 void NewMessageDialog(void)
 {
 	struct LayoutHandle *Handle;
+#if 0
 	char MessageString[512] = "";
+#endif
 
 	STATIC LONG		ToWhomTableEntryID[] =
 	{
@@ -411,7 +415,7 @@ int GetMessageCount(void)
 {
 	struct FileInfoBlock *mailblock;
 	char *dirstring = "samba:mail";
-	int EntryCount = NULL;
+	int EntryCount = 0;
 	BPTR locky;
 
 	if((mailblock = AllocVec(sizeof(*mailblock), 0)) && (locky = Lock(dirstring, SHARED_LOCK)))
@@ -440,7 +444,7 @@ int GetMessageCount(void)
 
 void UpdateMessageWindow(struct LayoutHandle *Handle)
 {
-	sprintf(UpdateString, "current message %ld - count of messages %ld", 0, GetMessageCount());
+	sprintf(UpdateString, "current message %ld - count of messages %ld", (long)0, (long)GetMessageCount());
 	
 	LT_SetAttributes(Handle, BOX_OVERVIEW,
 		LABX_Index,	0,

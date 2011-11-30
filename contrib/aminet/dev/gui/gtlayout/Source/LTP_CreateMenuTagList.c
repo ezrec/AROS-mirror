@@ -56,7 +56,7 @@ LTP_CreateMenuTagList(RootMenu *Root,LONG *ErrorPtr,struct TagItem *TagList)
 
 	for(;;)
 	{
-		Entry = NextTagItem(&List);
+		Entry = NextTagItem((const struct TagItem **)&List);
 
 		if(!Entry || (Entry && Entry->ti_Tag >= LAMN_TitleText && Entry->ti_Tag <= LAMN_SubID))
 		{

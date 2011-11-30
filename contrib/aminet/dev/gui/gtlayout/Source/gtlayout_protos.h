@@ -29,8 +29,8 @@ BOOL LT_Rebuild( struct LayoutHandle *handle, struct IBox *bounds, LONG extraWid
 VOID LT_HandleInput( struct LayoutHandle *handle, ULONG msgQualifier, ULONG *msgClass, UWORD *msgCode, struct Gadget **msgGadget );
 VOID LT_BeginRefresh( struct LayoutHandle *handle );
 VOID LT_EndRefresh( struct LayoutHandle *handle, LONG complete );
-LONG LT_GetAttributesA( struct LayoutHandle *handle, LONG id, struct TagItem *tagList );
-LONG LT_GetAttributes( struct LayoutHandle *handle, LONG id, ... );
+IPTR LT_GetAttributesA( struct LayoutHandle *handle, LONG id, struct TagItem *tagList );
+IPTR LT_GetAttributes( struct LayoutHandle *handle, LONG id, ... );
 VOID LT_SetAttributesA( struct LayoutHandle *handle, LONG id, struct TagItem *tagList );
 VOID LT_SetAttributes( struct LayoutHandle *handle, LONG id, ... );
 VOID LT_AddA( struct LayoutHandle *handle, LONG type, STRPTR label, LONG id, struct TagItem *tagList );

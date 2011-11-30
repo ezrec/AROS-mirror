@@ -73,7 +73,7 @@ LTP_ShrinkMenu(RootMenu *Root,ItemNode *First,ItemNode *Last,LONG Mask)
 
                 if(Here->Item.SubItem)
                 {
-                    ItemNode *Sub = (ItemNode *)((ULONG)Here->Item.SubItem - sizeof(struct MinNode));
+                    ItemNode *Sub = (ItemNode *)((IPTR)Here->Item.SubItem - sizeof(struct MinNode));
 
                     FOREVER
                     {

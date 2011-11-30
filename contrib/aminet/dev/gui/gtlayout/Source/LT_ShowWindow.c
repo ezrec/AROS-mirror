@@ -67,8 +67,8 @@ LT_ShowWindow(REG(a0) LayoutHandle *handle,REG(a1) BOOL activate)
 		ULONG flags,mask;
 
 		window = handle->Window;
-		flags = NULL;
-		mask = NULL;
+		flags = 0;
+		mask = 0;
 
 		WindowToFront(window);
 

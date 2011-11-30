@@ -117,20 +117,29 @@ LT_Init(VOID)
 	{
 		STATIC struct LibraryInitEntry InitTable[] =
 		{
-			TRUE,	"intuition.library",	&IntuitionBase,
-			TRUE,	"graphics.library",		&GfxBase,
-			TRUE,	"utility.library",		&UtilityBase,
-			TRUE,	"gadtools.library",		&GadToolsBase,
-			TRUE,	"keymap.library",		&KeymapBase,
+		    {
+			TRUE,	"intuition.library",	(struct Library **)&IntuitionBase,
+		    }, {
+			TRUE,	"graphics.library",		(struct Library **)&GfxBase,
+		    }, {
+			TRUE,	"utility.library",		(struct Library **)&UtilityBase,
+		    }, {
+			TRUE,	"gadtools.library",		(struct Library **)&GadToolsBase,
+		    }, {
+			TRUE,	"keymap.library",		(struct Library **)&KeymapBase,
+		    }, {
 			FALSE,	"locale.library",		(struct Library **)&LocaleBase
+		    }
 		};
 
 		STATIC struct ClassInitEntry ClassInitTable[] =
 		{
+                    {
 			IMAGECLASS,	
 			sizeof(ImageInfo),
 			(HOOKFUNC)LTP_ImageDispatch,
 			&LTP_ImageClass,
+                    },
 
 			#ifdef DO_LEVEL_KIND
 			{
@@ -330,22 +339,22 @@ LT_Exit(VOID)
 			DefaultLocale = NULL;
 		}
 
-		CloseLibrary(LocaleBase);
+		CloseLibrary((struct Library *)LocaleBase);
 		LocaleBase = NULL;
 
-		CloseLibrary(KeymapBase);
+		CloseLibrary((struct Library *)KeymapBase);
 		KeymapBase = NULL;
 
-		CloseLibrary(GadToolsBase);
+		CloseLibrary((struct Library *)GadToolsBase);
 		GadToolsBase = NULL;
 
-		CloseLibrary(UtilityBase);
+		CloseLibrary((struct Library *)UtilityBase);
 		UtilityBase = NULL;
 
-		CloseLibrary(GfxBase);
+		CloseLibrary((struct Library *)GfxBase);
 		GfxBase = NULL;
 
-		CloseLibrary(IntuitionBase);
+		CloseLibrary((struct Library *)IntuitionBase);
 		IntuitionBase = NULL;
 	}
 }
