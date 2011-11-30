@@ -97,7 +97,7 @@ zsbhdr (struct Vars *v, USHORT type)
   xsendline (v, ZPAD);
   xsendline (v, ZDLE);
 
-  if (v->Crc32t = v->Txfcs32)        /* zsbh32() */
+  if ((v->Crc32t = v->Txfcs32))        /* zsbh32() */
     {
       xsendline (v, ZBIN32);
       zsendline (v, (UBYTE) type);

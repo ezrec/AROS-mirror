@@ -18,13 +18,14 @@
 
 #include "xprzmodem_catalog.h"
 
+struct LocaleInfo;
+
 STRPTR GetLocalString (struct LocaleInfo *li, LONG id);
 
 #define LocaleBase li->li_LocaleBase
 #define catalog    (struct Catalog *)li->li_Catalog
 
 static UBYTE NULLSTRING[] = "";
-
 
 STRPTR
 GetLocalString (struct LocaleInfo *li, LONG id)
@@ -45,7 +46,7 @@ GetLocalString (struct LocaleInfo *li, LONG id)
   }
 
   if ((LocaleBase) && (catalog) && (*s))
-    s = GetCatalogStr (catalog, id, s);
+    s = (STRPTR)GetCatalogStr (catalog, id, s);
 
   return (s);
 }

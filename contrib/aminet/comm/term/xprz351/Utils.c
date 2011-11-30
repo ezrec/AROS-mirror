@@ -115,12 +115,13 @@ struct Library *UtilityBase;
 #define catalog    li.li_Catalog
 
 struct LocaleInfo li;
+struct MyLibrary;
 
 struct TagItem LocalTags[3] =
 {
-  OC_BuiltInLanguage,  "english",
-  OC_Version, 1,
-  TAG_DONE
+    { OC_BuiltInLanguage,  (IPTR)"english", },
+    { OC_Version, 1, },
+    { TAG_DONE },
 };
 
 /**********************************************************
@@ -140,7 +141,7 @@ __UserLibInit (register __a6 struct MyLibrary *libbase)
     return (RETURN_FAIL);
 #endif
 
-  if (LocaleBase = OpenLibrary ("locale.library", 38L))
+  if ((LocaleBase = OpenLibrary ("locale.library", 38L)))
     catalog = OpenCatalogA (NULL, "xprzmodem.catalog", &LocalTags[0]);
 
   return (RETURN_OK);
@@ -387,7 +388,7 @@ XProtocolSetup (register __a0 struct XPR_IO *xio)
      *  "T?" = Use other end's text mode suggestion (default to binary)
      *  "TC" = Ask Comm program for file type
    */
-  if (p = find_option (buf, 'T'))
+  if ((p = find_option (buf, 'T')))
   {
     if (*p == 'Y' || *p == 'N' || *p == '?' || *p == 'C') *sv->option_t = *p;
       else ioerr (xio,  GetLocalString( &li, MSG_INVALID_T_FLAG ));
@@ -400,7 +401,7 @@ XProtocolSetup (register __a0 struct XPR_IO *xio)
      *  "OR" = Resume transfer at end of existing file,
      *  "OS" = Skip file if it already exists; go on to next
    */
-  if (p = find_option (buf, 'O'))
+  if ((p = find_option (buf, 'O')))
   {
     if (*p == 'R' && !xio->xpr_finfo)
       ioerr (xio, GetLocalString( &li, MSG_NO_XPR_FINFO ));
@@ -413,7 +414,7 @@ XProtocolSetup (register __a0 struct XPR_IO *xio)
      * Merge new B(uffer) setting into current settings if given
      * Size of file I/O buffer in kilobytes
    */
-  if (p = find_option (buf, 'B'))
+  if ((p = find_option (buf, 'B')))
   {
     len = atol (p);
     if (len < 1) len = 1;
@@ -425,7 +426,7 @@ XProtocolSetup (register __a0 struct XPR_IO *xio)
      * Number of bytes we're willing to send or receive between ACKs.
      * 0 = unlimited; nonstop streaming data
    */
-  if (p = find_option (buf, 'F'))
+  if ((p = find_option (buf, 'F')))
   {
     len = atol (p);
     if (len < 0) len = 0;
@@ -437,7 +438,7 @@ XProtocolSetup (register __a0 struct XPR_IO *xio)
      * Merge new E(rror limit) setting into other settings if given
      * Number of sequential errors which will cause an abort
    */
-  if (p = find_option (buf, 'E'))
+  if ((p = find_option (buf, 'E')))
   {
     len = atol (p);
     if (len < 1) len = 1;
@@ -450,7 +451,7 @@ XProtocolSetup (register __a0 struct XPR_IO *xio)
      *  "AY" = Automatically call XProtocolReceive() if ZRQINIT string received
      *  "AN" = Don't look for ZRQINIT; user will explicitly activate receive
    */
-  if (p = find_option (buf, 'A'))
+  if ((p = find_option (buf, 'A')))
   {
     if (*p == 'Y' || *p == 'N') *sv->option_a = *p;
       else ioerr (xio, GetLocalString( &li, MSG_INVALID_A_FLAG ));
@@ -461,7 +462,7 @@ XProtocolSetup (register __a0 struct XPR_IO *xio)
      *  "DY" = Delete files after successfully sending them
      *  "DN" = Don't delete files after sending
    */
-  if (p = find_option (buf, 'D'))
+  if ((p = find_option (buf, 'D')))
   {
     if (*p == 'Y' && (xio->xpr_extension < 2 || !xio->xpr_unlink))
       ioerr (xio, GetLocalString( &li, MSG_NO_DY_XPR_UNLINK ));
@@ -474,7 +475,7 @@ XProtocolSetup (register __a0 struct XPR_IO *xio)
      *  "KY" = Keep partially-received file fragments to allow later resumption
      *  "KN" = Delete partially-received file fragments
    */
-  if (p = find_option (buf, 'K'))
+  if ((p = find_option (buf, 'K')))
   {
     if (*p == 'N' && (xio->xpr_extension < 2 || !xio->xpr_unlink))
       ioerr (xio, GetLocalString( &li, MSG_NO_KN_XPR_UNLINK ));
@@ -487,7 +488,7 @@ XProtocolSetup (register __a0 struct XPR_IO *xio)
      *  "SY" = Send full filename including directory path to receiver
      *  "SN" = Send only simple filename portion, not including directory path
    */
-  if (p = find_option (buf, 'S'))
+  if ((p = find_option (buf, 'S')))
   {
     if (*p == 'Y' || *p == 'N') *sv->option_s = *p;
       else ioerr (xio, GetLocalString( &li, MSG_INVALID_S_FLAG ));
@@ -498,7 +499,7 @@ XProtocolSetup (register __a0 struct XPR_IO *xio)
      *  "RY" = Use full filename exactly as received; don't use P option path
      *  "RN" = Ignore received directory path if any; use path from P option
    */
-  if (p = find_option (buf, 'R'))
+  if ((p = find_option (buf, 'R')))
   {
     if (*p == 'Y' || *p == 'N') *sv->option_r = *p;
       else ioerr (xio, GetLocalString( &li, MSG_INVALID_R_FLAG ));
@@ -509,7 +510,7 @@ XProtocolSetup (register __a0 struct XPR_IO *xio)
      *  "Pdir" = Receive files into directory "dir" if RN selected
      *  "dir" can by any valid existing directory, with or without trailing "/"
    */
-  if (p = find_option (buf, 'P'))
+  if ((p = find_option (buf, 'P')))
   {
     strcpy (sv->option_p, p);
     p = sv->option_p + strcspn (sv->option_p, " ,\t\r\n");
@@ -518,7 +519,7 @@ XProtocolSetup (register __a0 struct XPR_IO *xio)
 
   /* Maximum packet size. Must be <=8192 */
 
-  if (p = find_option (buf, 'M'))
+  if ((p = find_option (buf, 'M')))
   {
     len = atol (p);
     if (len < MINBLOCK) len = MINBLOCK;
@@ -527,34 +528,34 @@ XProtocolSetup (register __a0 struct XPR_IO *xio)
   }
 
   /* Modify BPS Rate If We Have The BPS Rate Locked */
-  if (p = find_option(buf,'C'))
+  if ((p = find_option(buf,'C')))
   {
     len = atol(p);
     if ((len < 300)||(len > 58600)) len = 0;
     xprsprintf(sv->option_c,"%ld",len);
   }
 
-  if (p = find_option(buf,'N'))
+  if ((p = find_option(buf,'N')))
   {
     if (*p == 'Y' || *p == 'N') *sv->option_n = *p;
       else ioerr(xio,GetLocalString( &li, MSG_INVALID_N_FLAG ));
   }
-  if (p = find_option(buf,'Q'))
+  if ((p = find_option(buf,'Q')))
   {
     if (*p == 'Y' || *p == 'N') *sv->option_q = *p;
       else ioerr(xio,GetLocalString( &li, MSG_INVALID_Q_FLAG ));
   }
-  if (p = find_option(buf,'Z'))
+  if ((p = find_option(buf,'Z')))
   {
     if (*p == 'Y' || *p == 'N') *sv->option_z = *p;
       else ioerr(xio, GetLocalString( &li, MSG_INVALID_Z_FLAG ));
   }
-  if (p = find_option (buf, 'Y'))
+  if ((p = find_option (buf, 'Y')))
   {
     if (*p == 'Y' || *p == 'N') *sv->option_y = *p;
       else ioerr (xio, GetLocalString( &li, MSG_INVALID_Y_FLAG ));
   }
-  if (p = find_option (buf, 'X'))
+  if ((p = find_option (buf, 'X')))
   {
     len = atol (p);
     if (len < MINRXTO) len = MINRXTO;
@@ -637,7 +638,7 @@ XProtocolHostMon (
      * Scan through serbuff to see if we can match all bytes in the start
      * string in sequence.
   */
-  for (sv->bufpos = serbuff; sv->bufpos < serbuff + actual; ++sv->bufpos)
+  for (sv->bufpos = serbuff; sv->bufpos < (UBYTE *)serbuff + actual; ++sv->bufpos)
   {
     if (*sv->bufpos == *sv->matchptr)
     {                        /* if data matches current position in match */
@@ -949,13 +950,13 @@ zmputs (struct Vars *v, UBYTE * s)
     {
       switch (c = *s++)
         {
-        case '\336':
+        case (UBYTE)'\336':
 #ifdef zedzap
           XprTimeOut(50L);
 #else
           Delay (50L);  
 #endif
-        case '\335':
+        case (UBYTE)'\335':
           break;
         default:
           sendline (v, c);
@@ -1178,11 +1179,11 @@ update_rate (struct Vars *v)
 }                                /* End of void update_rate() */
 
 /**********************************************************
- *      long bfopen(struct Vars *v, UBYTE *mode)
+ *      BPTR bfopen(struct Vars *v, UBYTE *mode)
  *
  * Buffered file I/O fopen() interface routine
  **********************************************************/
-long
+BPTR
 bfopen (struct Vars *v, UBYTE * mode)
 {
   /* Initialize file-handling variables */
@@ -1217,7 +1218,7 @@ bfclose (struct Vars *v)
         (*v->io.xpr_fwrite) (v->Filebuf, 1L, v->Filebufcnt, v->File);
       /* Close the file */
       (*v->io.xpr_fclose) (v->File);
-      v->File = NULL;
+      v->File = BNULL;
     }
 }                                /* End of void bfclose() */
 
@@ -1405,7 +1406,7 @@ upderr (struct Vars *v, char *msg, long mask)
   if (v->NoMask) mask=0;
   v->xpru.xpru_updatemask = XPRU_ERRORMSG | mask;
   v->xpru.xpru_errormsg = msg;
-  if (msg == v->Msgbuf)                /* Ensure message length < 50 */
+  if (msg == (char *)v->Msgbuf)                /* Ensure message length < 50 */
     msg[48] = '\0';
   (*v->io.xpr_update) (&v->xpru);
 #ifdef DEBUGLOG
@@ -1430,7 +1431,7 @@ updmsg (struct Vars *v, char *msg, long mask)
   if (v->NoMask) mask=0;
   v->xpru.xpru_updatemask = XPRU_MSG | mask;
   v->xpru.xpru_msg = msg;
-  if (msg == v->Msgbuf)                /* Ensure message length < 50 */
+  if (msg == (char *)v->Msgbuf)                /* Ensure message length < 50 */
     msg[48] = '\0';
   (*v->io.xpr_update) (&v->xpru);
 #ifdef DEBUGLOG
@@ -1461,7 +1462,7 @@ getfree (void)
 char
 exist (struct Vars *v)
 {
-  long file;
+  BPTR file;
 
 #ifdef DEBUGLOG
   D (DEBUGINFO);

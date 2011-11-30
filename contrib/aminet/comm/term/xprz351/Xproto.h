@@ -15,24 +15,24 @@ struct XPR_IO
     /* File name(s) */
     char *xpr_filename;
     /* Open file */
-    long (*__asm xpr_fopen) (
+    BPTR (*__asm xpr_fopen) (
                              register __a0 char *filename,
                              register __a1 char *accessmode);
     /* Close file */
     long (*__asm xpr_fclose) (
-                             register __a0 long filepointer);
+                             register __a0 BPTR filepointer);
     /* Get char from file */
     long (*__asm xpr_fread) (
                             register __a0 char *buffer,
                             register __d0 long size,
                             register __d1 long count,
-                            register __a1 long fileptr);
+                            register __a1 BPTR fileptr);
     /* Put string to file */
     long (*__asm xpr_fwrite) (
                               register __a0 char *buffer,
                               register __d0 long size,
                               register __d1 long count,
-                              register __a1 long fileptr);
+                              register __a1 BPTR fileptr);
     /* Get char from serial */
     long (*__asm xpr_sread) (
                              register __a0 char *buffer,
@@ -77,7 +77,7 @@ struct XPR_IO
                              register __d0 long typeofinfo);
     /* Seek in a file */
     long (*__asm xpr_fseek) (
-                             register __a0 long fileptr,
+                             register __a0 BPTR fileptr,
                              register __d0 long offset,
                              register __d1 long origin);
     /* Number of extensions */

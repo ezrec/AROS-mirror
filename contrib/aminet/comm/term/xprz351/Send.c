@@ -76,7 +76,7 @@ KPrintF("Pktbuf:%ld   Modembuf:%ld  Outbuf:%ld\n",sizeof(v->Pktbuf),sizeof(v->Mo
     sendbatch (v);
 
   /* Clean up and return */
-  if (err = v->Errcnt)
+  if ((err = v->Errcnt))
     upderr (v, GetLocalString( &li, MSG_SKIPPED_DUE_TO_ERRORS ), XPRU_UPLOAD);
   else
     updmsg (v, GetLocalString( &li, MSG_SEND_DONE ), XPRU_UPLOAD);

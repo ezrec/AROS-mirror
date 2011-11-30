@@ -76,7 +76,7 @@ struct Vars
   UBYTE *Modemchar;                   /* Next char to get from Modembuf */
   UBYTE *Filebuf;                     /* File I/O buffer address */
   UBYTE *Filebufptr;                  /* Current position within Filebuf */
-  long File;                          /* Handle of file being transferred */
+  BPTR File;                          /* Handle of file being transferred */
   long Oldstatus;                     /* Original terminal program's modem settings */
   long Baud;                          /* BPS setting of modem */
   long Strtpos;                       /* Starting byte position of transfer */
@@ -186,7 +186,7 @@ void sendbuf (struct Vars *v);
 short readock (struct Vars *v, short tenths);
 char char_avail (struct Vars *v);
 void update_rate (struct Vars *v);
-long bfopen (struct Vars *v, UBYTE * mode); 
+BPTR bfopen (struct Vars *v, UBYTE * mode); 
 /*void *bfopen (struct Vars *v, UBYTE * mode);  ZEDZAP */
 void bfclose (struct Vars *v);
 void bfseek (struct Vars *v, long pos);
@@ -233,6 +233,7 @@ ULONG getsystime (struct timeval *tv);
 void XprTimeOut(long ticks);
 LONG xprsprintf (STRPTR buffer, STRPTR fmt,...);
 
+struct LocaleInfo;
 
 extern STRPTR GetLocalString(struct LocaleInfo *, LONG);
 
