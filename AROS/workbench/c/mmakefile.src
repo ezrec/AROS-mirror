@@ -5,7 +5,7 @@ include $(TOP)/config/make.cfg
 
 FILES := \
     AddBuffers \
-    AddDatatypes \
+    AddDataTypes \
     Avail \
     Break \
     ChangeTaskPri \

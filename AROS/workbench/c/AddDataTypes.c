@@ -166,7 +166,7 @@ AROS_UFP3(void, AROS_SLIB_ENTRY(FreeFunc, AddDatatypes),
 
 /********************************* CONSTANTS *********************************/
 
-const TEXT Version[] = "$VER: AddDatatypes 42.1 (8.12.2007)\n";
+const TEXT Version[] = "$VER: AddDataTypes 42.1 (8.12.2007)\n";
 
 #define EXCL_LEN 18
 UBYTE ExcludePattern[] = "#?.(info|backdrop)";
