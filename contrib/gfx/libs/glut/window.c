@@ -107,7 +107,7 @@ ULONG __glut_set_windowIDCMP(struct AROSMesaGLUT_TaskNode *__glutTask, int win)
         _glut_setwindow->amglutwin_WindowIDCMPMask =( _glut_setwindow->amglutwin_WindowIDCMPMask | IDCMP_MOUSEMOVE);
       }
       /* Menus */
-      if ((_glut_setwindow->amglutwin_WindowMenuStrip != NULL) || (_glut_setwindow->amglutwin_WindowGlutMenu != (IPTR)NULL))
+      if ((_glut_setwindow->amglutwin_WindowMenuStrip != NULL) || (_glut_setwindow->amglutwin_WindowGlutMenu != NULL))
       {
         _glut_setwindow->amglutwin_WindowIDCMPMask = (_glut_setwindow->amglutwin_WindowIDCMPMask | IDCMP_MENUPICK);
       }
@@ -282,7 +282,7 @@ glutDestroyWindow (int win)
 
 	   if (w->amglutwin_Window)
 		{
-#warning "TODO: We should strip old messages here ..!"
+// TODO: We should strip old messages here ..!
 
         w->amglutwin_Window->UserPort = NULL;		
 		  ModifyIDCMP(w->amglutwin_Window, 0L);

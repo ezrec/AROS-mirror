@@ -149,9 +149,6 @@ glutTimerFunc (unsigned int millis, GLUTtimerCB func, int value)
 
    D(bug("[AMGLUT] In glutTimerFunc()\n"));
 
-
-   struct AROSMesaGLUT_TaskNode *__glutTask = _glut_findtask(FindTask(NULL));
-
    if (millis > 0) {
       for (i = 0; i < MAX_TIMER_CB; i++) {
          GLUTSShotCB *cb = &_glut_timer_cb[i];
