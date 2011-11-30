@@ -128,12 +128,12 @@ main(VOID)
 
 	STATIC ULONG DefaultTags[20 * 2 + 1] =
 	{
-		WA_Top,			NULL,
-		WA_Width,		NULL,
-		WA_Height,		NULL,
-		WA_MinHeight,		NULL,
-		WA_Title,		NULL,
-		WA_MinWidth,		NULL,
+		WA_Top,			(IPTR)NULL,
+		WA_Width,		(IPTR)NULL,
+		WA_Height,		(IPTR)NULL,
+		WA_MinHeight,		(IPTR)NULL,
+		WA_Title,		(IPTR)NULL,
+		WA_MinWidth,		(IPTR)NULL,
 		WA_MaxWidth,		~0,
 		WA_MaxHeight,		~0,
 		WA_Left,		0,
@@ -280,7 +280,7 @@ main(VOID)
 
 							/* Read the startup args if any. */
 
-						if((ArgsPtr = (struct RDArgs *)ReadArgs("D=Device/K,U=Unit/N/K",(LONG *)ArgArray,NULL)))
+						if((ArgsPtr = (struct RDArgs *)ReadArgs("D=Device/K,U=Unit/N/K",(IPTR *)ArgArray,NULL)))
 						{
 								/* Set custom device name. */
 
@@ -327,7 +327,7 @@ main(VOID)
 
 									SerReadRequest -> io_SerFlags |= SERF_SHARED;
 
-									if(!OpenDevice(DeviceName,UnitNumber,&SerReadRequest -> IOSer,0))
+									if(!OpenDevice(DeviceName,UnitNumber,(struct IORequest *)&SerReadRequest -> IOSer,0))
 									{
 											/* Clone the IORequest and fill in the
 											 * approriate reply port for the write
@@ -363,7 +363,7 @@ main(VOID)
 												StackTags[ 3] = DefaultScreen -> Width;
 												StackTags[ 5] = (DefaultScreen -> Font -> ta_YSize) * 17 + DefaultScreen -> WBorTop + DefaultScreen -> WBorBottom + 1;
 												StackTags[ 7] = DefaultScreen -> Font -> ta_YSize + DefaultScreen -> WBorTop + DefaultScreen -> WBorBottom - 1;
-												StackTags[ 9] = (ULONG)("termLite © Copyright 1991 by MXM");
+												StackTags[ 9] = (IPTR)("termLite © Copyright 1991 by MXM");
 												StackTags[11] = DefaultScreen -> Width >> 1;
 
 													/* Open the window. */
@@ -399,7 +399,7 @@ main(VOID)
 																		 * including cut & paste.
 																		 */
 
-																	if(!OpenDevice("console.device",CONU_SNIPMAP,ConReadRequest,0))
+																	if(!OpenDevice("console.device",CONU_SNIPMAP,(struct IORequest *)ConReadRequest,0))
 																	{
 																		BYTE	Terminated = FALSE;
 																		ULONG	SignalSet;
@@ -431,7 +431,7 @@ main(VOID)
 																		ConReadRequest -> io_Length		= CON_READ_SIZE - 1;
 																		ConReadRequest -> io_Data		= ConReadBuffer;
 
-																		SendIO(ConReadRequest);
+																		SendIO((struct IORequest *)ConReadRequest);
 
 																			/* Request a single byte from the
 																			 * serial line.
@@ -441,7 +441,7 @@ main(VOID)
 																		SerReadRequest -> IOSer . io_Length	= 1;
 																		SerReadRequest -> IOSer . io_Data	= SerReadBuffer;
 
-																		SendIO(&SerReadRequest -> IOSer);
+																		SendIO((struct IORequest *)&SerReadRequest -> IOSer);
 
 																		Result = RETURN_OK;
 
@@ -485,7 +485,7 @@ main(VOID)
 																					 * the message list.
 																					 */
 
-																				WaitIO(ConReadRequest);
+																				WaitIO((struct IORequest *)ConReadRequest);
 
 																					/* Send the resulting characters to the
 																					 * serial device.
@@ -495,7 +495,7 @@ main(VOID)
 																				SerWriteRequest -> IOSer . io_Data	= ConReadBuffer;
 																				SerWriteRequest -> IOSer . io_Length	= ConReadRequest -> io_Actual;
 
-																				DoIO(&SerWriteRequest -> IOSer);
+																				DoIO((struct IORequest *)&SerWriteRequest -> IOSer);
 
 																					/* Post another request to the
 																					 * console.
@@ -505,7 +505,7 @@ main(VOID)
 																				ConReadRequest -> io_Length		= CON_READ_SIZE - 1;
 																				ConReadRequest -> io_Data		= ConReadBuffer;
 
-																				SendIO(ConReadRequest);
+																				SendIO((struct IORequest *)ConReadRequest);
 																			}
 
 																				/* Did we get a signal from
@@ -520,7 +520,7 @@ main(VOID)
 																					 * message list.
 																					 */
 
-																				WaitIO(&SerReadRequest -> IOSer);
+																				WaitIO((struct IORequest *)&SerReadRequest -> IOSer);
 
 																					/* Echo the single character to
 																					 * the console.
@@ -530,7 +530,7 @@ main(VOID)
 																				ConWriteRequest -> io_Data	= SerReadBuffer;
 																				ConWriteRequest -> io_Length	= 1;
 
-																				DoIO(ConWriteRequest);
+																				DoIO((struct IORequest *)ConWriteRequest);
 
 																					/* Inquire how many characters
 																					 * are still pending at the
@@ -539,7 +539,7 @@ main(VOID)
 
 																				SerReadRequest -> IOSer . io_Command = SDCMD_QUERY;
 
-																				DoIO(&SerReadRequest -> IOSer);
+																				DoIO((struct IORequest *)&SerReadRequest -> IOSer);
 
 																					/* If there are any, transfer them to
 																					 * the serial line.
@@ -567,7 +567,7 @@ main(VOID)
 																						SerReadRequest -> IOSer . io_Data	= SerReadBuffer;
 																						SerReadRequest -> IOSer . io_Length	= Frag;
 
-																						DoIO(&SerReadRequest -> IOSer);
+																						DoIO((struct IORequest *)&SerReadRequest -> IOSer);
 
 																							/* Transfer them to the window. */
 
@@ -575,7 +575,7 @@ main(VOID)
 																						ConWriteRequest -> io_Data		= SerReadBuffer;
 																						ConWriteRequest -> io_Length		= Frag;
 
-																						DoIO(ConWriteRequest);
+																						DoIO((struct IORequest *)ConWriteRequest);
 
 																						Size -= Frag;
 																					}
@@ -587,7 +587,7 @@ main(VOID)
 																				SerReadRequest -> IOSer . io_Data	= SerReadBuffer;
 																				SerReadRequest -> IOSer . io_Length	= 1;
 
-																				SendIO(&SerReadRequest -> IOSer);
+																				SendIO((struct IORequest *)&SerReadRequest -> IOSer);
 																			}
 																		}
 
@@ -597,13 +597,13 @@ main(VOID)
 																			 * console device.
 																			 */
 
-																		AbortIO(ConReadRequest);
-																		WaitIO(ConReadRequest);
+																		AbortIO((struct IORequest *)ConReadRequest);
+																		WaitIO((struct IORequest *)ConReadRequest);
 
-																		AbortIO(&SerReadRequest -> IOSer);
-																		WaitIO(&SerReadRequest -> IOSer);
+																		AbortIO((struct IORequest *)&SerReadRequest -> IOSer);
+																		WaitIO((struct IORequest *)&SerReadRequest -> IOSer);
 
-																		CloseDevice(ConReadRequest);
+																		CloseDevice((struct IORequest *)ConReadRequest);
 																	}
 
 																		/* Free the console write request. */
@@ -646,7 +646,7 @@ main(VOID)
 
 											/* Close the serial device. */
 
-										CloseDevice(&SerReadRequest -> IOSer);
+										CloseDevice((struct IORequest *)&SerReadRequest -> IOSer);
 									}
 
 										/* Free the serial write request. */
