@@ -143,7 +143,7 @@
 #define BGUI_MakeClassA(tags) 			\
 	AROS_LC1(Class *, BGUI_MakeClassA, 	\
 	AROS_LHA(struct TagItem *, tags, A0), 	\
-	strcut Library *, BGUIBase, 24, BGUI)
+	struct Library *, BGUIBase, 24, BGUI)
 
 #define BGUI_FreeClass(cl) 			\
 	AROS_LC1(BOOL, BGUI_FreeClass, 		\
