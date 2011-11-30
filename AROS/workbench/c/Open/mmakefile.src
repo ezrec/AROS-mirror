@@ -1,4 +1,4 @@
-# Copyright © 2003, The AROS Development Team. All rights reserved.
+# Copyright © 2003-2011, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(TOP)/config/make.cfg
@@ -9,6 +9,8 @@ EXEDIR  := $(AROS_C)
 
 #MM- workbench-c : workbench-c-open
 #MM workbench-c-open : includes linklibs
+
+USER_CFLAGS := -D__ADATE__="\"$(shell date "+%d.%m.%Y")\""
 
 %build_prog mmake=workbench-c-open \
     progname=Open targetdir=$(EXEDIR) \
