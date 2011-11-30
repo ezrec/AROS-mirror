@@ -42,7 +42,9 @@ FILES	:= \
     Why
 
 USER_CFLAGS := -I$(SRCDIR)/rom/dos \
-	       -I$(GENDIR)/workbench/c/shellcommands/shellsegs.h
+	       -I$(GENDIR)/workbench/c/shellcommands/shellsegs.h \
+	       -D__ADATE__="\"$(shell date "+%d.%m.%Y")\""
+
 USER_CFLAGS += $(PARANOIA_CFLAGS)
 
 #MM- workbench-c : workbench-c-shellcommands

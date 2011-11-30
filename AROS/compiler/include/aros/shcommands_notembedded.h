@@ -106,7 +106,7 @@ DEFINE_DOSBase_global                                          \
 __used static const UBYTE name##_version[] = "$VER: "          \
                                  stringify(name) " "           \
 		                 stringify(version) " "        \
-				 "(" __DATE__ ")\n";           \
+				 "(" __ADATE__ ")\n";           \
                                                                \
 DEFINE_main(name)                                              \
 {
