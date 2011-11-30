@@ -279,7 +279,7 @@ glutAddSubMenu (const char *label, int submenu)
     menuentrynode->_gme_type = GLUT_MENU_SUBMENU_ITEM;
     menuentrynode->_gme_label = AllocVec(strlen(label), MEMF_CLEAR|MEMF_PUBLIC);
     strcpy(menuentrynode->_gme_label, label);
-    menuentrynode->_gme_value = _glut_menus[submenu-1];
+    menuentrynode->_gme_value = (SIPTR)_glut_menus[submenu-1];
     
     D(bug("[AMGLUT] glutAddSubMenu: GLUTmenuentry Node @ %x ['%s' SubMenu @ %x]\n", menuentrynode, menuentrynode->_gme_label, menuentrynode->_gme_value));
 

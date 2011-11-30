@@ -119,7 +119,7 @@ glutMainLoopEvent (void)
 
   struct AROSMesaGLUT_TaskNode *__glutTask = _glut_findtask(FindTask(NULL));
 
-    while ((imsg = (struct InutiMessage *)GetMsg(__glutTask->AMGLUTTN_MsgPort)) != NULL)
+    while ((imsg = (struct IntuiMessage *)GetMsg(__glutTask->AMGLUTTN_MsgPort)) != NULL)
     {
       glutwin_NeedsFlush = GL_FALSE;
       glutwin_ChangedVis = GL_FALSE;
@@ -184,7 +184,7 @@ glutMainLoopEvent (void)
                   GLUTselectCB menu_func = NULL;
                   int menu_value = 0;
 
-                  if (w->amglutwin_WindowGlutMenu != (IPTR)NULL)
+                  if (w->amglutwin_WindowGlutMenu != NULL)
                   {
                     if ((_glut_get_newmenu_params((GLUTmenu *)w->amglutwin_WindowGlutMenu, &menu_func, &menu_value, menuNode_UD)))
                     {
@@ -380,7 +380,7 @@ glutMainLoopEvent (void)
              D(bug("[AMGLUT] glutMainLoopEvent: Calling w->visibility\n"));
 
              if (w != __glutTask->AMGLUTTN_WindowCurrent) AROSMesaMakeCurrent(w->amglutwin_context);
-#warning "TODO: Set the correct visibility here! (always sets visible atm!)"
+// TODO: Set the correct visibility here! (always sets visible atm!)
              w->amglutwin_FlagReDisplay = GL_TRUE;
              w->visibility(GLUT_VISIBLE);
           }

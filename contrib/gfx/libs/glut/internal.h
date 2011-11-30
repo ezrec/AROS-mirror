@@ -130,7 +130,7 @@ typedef struct GLUTwindow {
    struct IntuiMessage    *amglutwin_InternalMessage;
 
    struct Menu            *amglutwin_WindowMenuStrip;            /* */   
-   IPTR                   amglutwin_WindowGlutMenu;              /* */
+   APTR                   amglutwin_WindowGlutMenu;              /* */
 
 
    GLenum                 amglutwin_type;
@@ -201,7 +201,7 @@ typedef struct _glut_menu_entries
 #define  GLUT_MENU_ENTRY_ITEM    0x01
 #define  GLUT_MENU_SUBMENU_ITEM  0x02
   char           *_gme_label;
-  int            _gme_value;
+  SIPTR           _gme_value;
 }GLUTmenuentry;
 
 typedef struct {

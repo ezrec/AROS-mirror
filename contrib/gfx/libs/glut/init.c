@@ -304,7 +304,6 @@ __glut_exit_atexit (void)
 {
     D(bug("[AMGLUT] In __glut_exit_atexit() *#*#\n"));
 
-    GLUTwindow *found_GLUTwin = NULL;
     struct AROSMesaGLUT_TaskNode *__glutTask = _glut_findtask(FindTask(NULL));
 
     if (__glutTask->AMGLUTTN_MsgPort != NULL)

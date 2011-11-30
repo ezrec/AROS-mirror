@@ -24,7 +24,7 @@
 void
 glutStrokeCharacter (void *font, int c)
 {
-   const GLUTStrokeFont *sfp = (GLUTStrokeFont *) _glut_font((IPTR)font);
+   const GLUTStrokeFont *sfp = (GLUTStrokeFont *) _glut_font(font);
    const GLUTStrokeChar *scp;
    const GLUTStrokeStrip *ssp;
    const GLUTStrokeVertex *svp;
