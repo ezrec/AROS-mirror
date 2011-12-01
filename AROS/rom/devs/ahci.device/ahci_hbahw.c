@@ -172,7 +172,7 @@ BOOL ahci_init_hba(struct ahci_hba_chip *hba_chip) {
 
     /* BIOS handoff if HBA supports it and BIOS is the current owner of HBA */
     hba_chip->Version = hwhba->vs;
-    HBAHW_D("Version %d%d.%d%d\n", ((hba_chip->Version>>24)&0xff), ((hba_chip->Version>>16)&0xff), ((hba_chip->Version>>8)&0xff), (hba_chip->Version&0xff) );
+    HBAHW_D("Controller version %d%d.%d%d\n", ((hba_chip->Version>>24)&0xff), ((hba_chip->Version>>16)&0xff), ((hba_chip->Version>>8)&0xff), (hba_chip->Version&0xff) );
 
     if ( (hba_chip->Version >= AHCI_VERSION_1_20) ) {
         if( (hwhba->cap2 & CAP2_BOH) ) {
@@ -215,7 +215,7 @@ BOOL ahci_init_hba(struct ahci_hba_chip *hba_chip) {
         /*
             Get the pointer to previous HBA-chip struct in the list (if any)
             Port numbering starts from 0 if no previous HBA exist else the port number will be
-            the last implemented unit number of previous HBA-chip +1
+            the last assigned unit number of previous HBA-chip +1
         */
         struct ahci_hba_chip *prev_hba_chip = (struct ahci_hba_chip*) GetPred(hba_chip);
 
@@ -231,25 +231,41 @@ BOOL ahci_init_hba(struct ahci_hba_chip *hba_chip) {
             Maximum number of ports per controller is 32 (AHCI1.3)
             As I understand the documentation there may be caps of unimplemented ports between valid ports,
             e.g ports 0,1 and 3 are implemented but not port number 2
+
+            FIXME: If port failes to be initialized we just skip it, maybe it would be better to fail then for all? 
         */
         for (i = 0; i <= 31; i++) {
     		if (hba_chip->PortMask & (1 << i)) {
                 if( ahci_add_port(hba_chip, hba_chip->UnitMin+p, i) ) {
                     p++;
+#if DEBUG
+                }else{
+                    HBAHW_D("Port %d(unit to be %d) initialization failed!\n", i, p);
+#endif
                 }
 //          }else{
 //              HBAHW_D("Port %d(unit to be %d) unimplemented\n", i, p);
             }
     	}
 
-        HBAHW_D("Units assigned %d-%d\n", hba_chip->UnitMin, hba_chip->UnitMax);
-
         ReleaseSemaphore(&hba_chip->port_list_lock);
 
-    	/* Enable interrupts for this HBA */
-    	hwhba->ghc |= GHC_IE;
+        if (!p) {
+            HBAHW_D("Units assigned %d-%d\n", hba_chip->UnitMin, hba_chip->UnitMax);
 
-        return TRUE;
+    	    /*
+                Enable interrupts for this HBA
+                Interrupts that are enabled are selected in ahci_init_port per port bases
+            */
+    	    hwhba->ghc |= GHC_IE;
+
+            return TRUE;
+        }
+
+        /*
+            Something failed while setting up the ports
+        */
+        HBAHW_D("Port initialization failed on all ports!\n");
     }
 
     return FALSE;
@@ -269,16 +285,20 @@ BOOL ahci_reset_hba(struct ahci_hba_chip *hba_chip) {
     /* Enable AHCI mode of communication to the HBA */
 	ahci_enable_hba(hba_chip);
 
-    /* Reset HBA */
+    /*
+        Reset HBA
+        -If the HBA has not cleared GHC.HR to ‘0’ within 1 second of software setting GHC.HR to ‘1’, the HBA is in a hung or locked state.
+    */
     hwhba->ghc |= GHC_HR;
 
-    Timeout = 5000;
+    Timeout = 1000;
     while( (hwhba->ghc & GHC_HR) ) {
         if( (--Timeout == 0) ) {
             HBAHW_D("Resetting HBA timed out!\n");
             return FALSE;
             break;
         }
+        delay_ms(hba_chip, 1);
     }
 
     /* Re-enable AHCI mode */
@@ -368,22 +388,20 @@ BOOL ahci_init_port(struct ahci_hba_chip *hba_chip, uint32_t port_hba_num) {
 	/* Clear all implemented bits by setting them to '1' */
     hwhba->port[port_hba_num].serr = tmp;
 
-    /* TODO:
-        Determine which events should cause an interrupt, and set each implemented port’s PxIE
-        register with the appropriate enables. To enable the HBA to generate interrupts, system
-        software must also set GHC.IE to a ‘1’.
-        Note: Due to the multi-tiered nature of the AHCI HBA’s interrupt architecture, system
-        software must always ensure that the PxIS (clear this first) and IS.IPS (clear this second)
-        registers are cleared to ‘0’ before programming the PxIE and GHC.IE registers. This will
-        prevent any residual bits set in these registers from causing an interrupt to be asserted.
+    /*
+        FIXME: Does not clear interrupts from unimplemented ports as they are not parsed here
+                also does not enable appropriate interrupts 
     */
+
+    hwhba->port[port_hba_num].is = (PORT_INT_DHR + PORT_INT_PS + PORT_INT_DS + PORT_INT_SDB + PORT_INT_UF + PORT_INT_DP);
+    hwhba->is = (1 << port_hba_num);
 
     return TRUE;
 }
 
 /*
     Add a port to the HBA-port list.
-    Physical port number is "port_hba_num" and it is added as exec unit number "port_unit_num" to the system
+    Physical port number is "port_hba_num" (0-31) and it is added as exec unit number "port_unit_num" to the system
     Make sure the port in question is free and ready for use, if not make it so
 */
 BOOL ahci_add_port(struct ahci_hba_chip *hba_chip, uint32_t port_unit_num, uint32_t port_hba_num) {
@@ -407,10 +425,12 @@ BOOL ahci_add_port(struct ahci_hba_chip *hba_chip, uint32_t port_unit_num, uint3
             /* HBA-port list is protected for us in ahci_init_hba */
             AddTail((struct List*)&hba_chip->port_list, (struct Node*)hba_port);
             return TRUE;
+        }else{
+            FreeVec(hba_port);
         }
     }
 
-    /* Failed in setting the port up, skipping system unit number, e.g. there is no unit for this port_unit_num */
+    /* No memory for port...? or initialization failed, skipping system unit number, e.g. there is no exec unit for this port (port_unit_num) */
     return FALSE;
 }
 
