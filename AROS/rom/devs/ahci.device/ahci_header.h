@@ -66,7 +66,7 @@ struct ahci_hba_chip {
     IPTR    PCIProductID, PCIVendorID;
 
     APTR    abar;
-    IPTR    IRQ;
+    IPTR    irq;
 
     uint32_t   Version;
 
@@ -90,7 +90,7 @@ struct ahci_hba_chip {
     struct  SignalSemaphore port_list_lock;
     struct  MinList port_list;
 
-    HIDDT_IRQ_Handler *IntHandler;
+    HIDDT_IRQ_Handler   *IntHandler;
 
 };
 

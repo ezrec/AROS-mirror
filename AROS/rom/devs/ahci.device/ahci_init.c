@@ -40,55 +40,48 @@ AROS_UFH3(void, ahci_Enumerator,
     if( !(Base5 == 0) ) {
         struct ahci_hba_chip *hba_chip;
         if( (hba_chip = (struct ahci_hba_chip*) AllocVec(sizeof(struct ahci_hba_chip), MEMF_CLEAR|MEMF_PUBLIC)) ) {
-            if( (hba_chip->IntHandler = (HIDDT_IRQ_Handler *)AllocVec(sizeof(HIDDT_IRQ_Handler), MEMF_CLEAR|MEMF_PUBLIC)) ){
 
-                OOP_Object *PCIDriver;
-                OOP_GetAttr(pciDevice, aHidd_PCIDevice_Driver, (APTR)&PCIDriver);
+            OOP_Object *PCIDriver;
+            OOP_GetAttr(pciDevice, aHidd_PCIDevice_Driver, (APTR)&PCIDriver);
 
-                OOP_GetAttr(pciDevice, aHidd_PCIDevice_VendorID, &VendorID);
-                OOP_GetAttr(pciDevice, aHidd_PCIDevice_ProductID, &ProductID);
+            OOP_GetAttr(pciDevice, aHidd_PCIDevice_VendorID, &VendorID);
+            OOP_GetAttr(pciDevice, aHidd_PCIDevice_ProductID, &ProductID);
 
-                hba_chip->PCIVendorID = VendorID;
-                hba_chip->PCIProductID = ProductID;
+            hba_chip->PCIVendorID = VendorID;
+            hba_chip->PCIProductID = ProductID;
 
-                OOP_GetAttr(pciDevice, aHidd_PCIDevice_Base5, (APTR)&Base5);
-                OOP_GetAttr(pciDevice, aHidd_PCIDevice_Size5, &Base5size);
+            OOP_GetAttr(pciDevice, aHidd_PCIDevice_Base5, (APTR)&Base5);
+            OOP_GetAttr(pciDevice, aHidd_PCIDevice_Size5, &Base5size);
 
-                struct pHidd_PCIDriver_MapPCI mappci,*msg = &mappci;
-    	        mappci.mID = OOP_GetMethodID(IID_Hidd_PCIDriver, moHidd_PCIDriver_MapPCI);
-    	        mappci.PCIAddress = Base5;
-    	        mappci.Length = Base5size;
-    	        hba_chip->abar = (APTR)OOP_DoMethod(PCIDriver, (OOP_Msg)msg);
+            struct pHidd_PCIDriver_MapPCI mappci,*msg = &mappci;
+            mappci.mID = OOP_GetMethodID(IID_Hidd_PCIDriver, moHidd_PCIDriver_MapPCI);
+            mappci.PCIAddress = Base5;
+            mappci.Length = Base5size;
+            hba_chip->abar = (APTR)OOP_DoMethod(PCIDriver, (OOP_Msg)msg);
 
-                OOP_GetAttr(pciDevice, aHidd_PCIDevice_INTLine, &intline);
-                hba_chip->IRQ = intline;
+            OOP_GetAttr(pciDevice, aHidd_PCIDevice_INTLine, &intline);
+            hba_chip->irq = intline;
 
-                hba_chip->HBANumber = ++HBACounter;
+            hba_chip->HBANumber = ++HBACounter;
 
-                struct TagItem attrs[] = {
-                    { aHidd_PCIDevice_isIO,    FALSE },
-                    { aHidd_PCIDevice_isMEM,    TRUE },
-                    { aHidd_PCIDevice_isMaster, TRUE },
-                    { TAG_DONE, 0UL },
-                };
-                OOP_SetAttrs(pciDevice, (struct TagItem*)&attrs);
+            struct TagItem attrs[] = {
+                { aHidd_PCIDevice_isIO,    FALSE },
+                { aHidd_PCIDevice_isMEM,    TRUE },
+                { aHidd_PCIDevice_isMaster, TRUE },
+                { TAG_DONE, 0UL },
+            };
+            OOP_SetAttrs(pciDevice, (struct TagItem*)&attrs);
 
-                /* HBA-chip list is protected for us in Init */
-                AddTail((struct List*)&LIBBASE->chip_list, (struct Node*)hba_chip);
+            /* HBA-chip list is protected for us in Init */
+            AddTail((struct List*)&LIBBASE->chip_list, (struct Node*)hba_chip);
 
-                /* HBA-port linked list is semaphore protected */
-                InitSemaphore(&hba_chip->port_list_lock);
+            /* HBA-port linked list is semaphore protected */
+            InitSemaphore(&hba_chip->port_list_lock);
 
-                /* Initialize the HBA-port list */
-                NEWLIST((struct MinList *)&hba_chip->port_list);
+            /* Initialize the HBA-port list */
+            NEWLIST((struct MinList *)&hba_chip->port_list);
 
-                D(bug("[AHCI] hba%d_chip @ %p\n",HBACounter, hba_chip));
-                D(bug("[AHCI] hba%d IntHandler @ %p\n",HBACounter, hba_chip->IntHandler));
-
-            }else{
-                /* Failed to allocate HIDDT_IRQ_Handler */
-                FreeVec(hba_chip->IntHandler);
-            }
+            D(bug("[AHCI] hba%d_chip @ %p\n",HBACounter, hba_chip));
         }
     }
     OOP_ReleaseAttrBase(IID_Hidd_PCIDevice);

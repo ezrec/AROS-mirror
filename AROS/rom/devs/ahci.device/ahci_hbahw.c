@@ -31,23 +31,24 @@ static void ahci_hba_Interrupt(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw) {
 BOOL ahci_create_interrupt(struct ahci_hba_chip *hba_chip) {
 
     OOP_Object *irqhidd;
-    if ( (irqhidd = OOP_NewObject(NULL, CLID_Hidd_IRQ, NULL)) ) {
 
-        hba_chip->IntHandler->h_Node.ln_Pri = 10;
-        hba_chip->IntHandler->h_Node.ln_Name = "HBA-chip irq";
-        hba_chip->IntHandler->h_Code = ahci_hba_Interrupt;
-        hba_chip->IntHandler->h_Data = hba_chip;
+    irqhidd = OOP_NewObject(NULL, CLID_Hidd_IRQ, NULL);
+    if (irqhidd) {
 
-        struct OOP_Object *o;
-        if ( (o = OOP_NewObject(NULL, CLID_Hidd_IRQ, NULL)) ) {
-            HIDD_IRQ_AddHandler(irqhidd, hba_chip->IntHandler, hba_chip->IRQ);
-            OOP_DisposeObject((OOP_Object *)o);
+        hba_chip->IntHandler = (HIDDT_IRQ_Handler *)AllocVec(sizeof(HIDDT_IRQ_Handler), MEMF_CLEAR|MEMF_PUBLIC);
+        if (hba_chip->IntHandler) {
+
+            hba_chip->IntHandler->h_Node.ln_Pri = 10;
+            hba_chip->IntHandler->h_Node.ln_Name = "HBA-chip irq";
+            hba_chip->IntHandler->h_Code = ahci_hba_Interrupt;
+            hba_chip->IntHandler->h_Data = hba_chip;
+
+            HIDD_IRQ_AddHandler(irqhidd, hba_chip->IntHandler, hba_chip->irq);
             OOP_DisposeObject(irqhidd);
+            HBAHW_D("IntHandler @ %p\n", hba_chip->IntHandler);
             return TRUE;
-        }else{
-            OOP_DisposeObject(irqhidd);
-            return FALSE;
         }
+        OOP_DisposeObject(irqhidd);
     }
 
     return FALSE;
@@ -296,7 +297,6 @@ BOOL ahci_reset_hba(struct ahci_hba_chip *hba_chip) {
         if( (--Timeout == 0) ) {
             HBAHW_D("Resetting HBA timed out!\n");
             return FALSE;
-            break;
         }
         delay_ms(hba_chip, 1);
     }
