@@ -440,10 +440,12 @@ const char *system_type( void )
    return "UNIX" ;
 #elif defined(WIN32)
    return "WIN32" ;
-#elif defined(_AMIGA) || defined(AMIGA)
-   return "AMIGA" ;
 #elif defined(__AROS__)
    return "AROS" ;
+#elif defined(__MORPHOS__)
+   return "MORPHOS" ;
+#elif defined(_AMIGA) || defined(AMIGA)
+   return "AMIGA" ;
 #elif defined(__QNX__)
    return "QNX" ;
 #elif defined(__BEOS__)

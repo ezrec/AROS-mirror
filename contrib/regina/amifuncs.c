@@ -23,6 +23,8 @@
  * arxfuncs.c contains the ARexx functions that are usable on all
  * platforms.
  */
+#if defined(_AMIGA) || defined(__AROS__)
+#define AROS_ALMOST_COMPATIBLE
 #include "rexx.h"
 #include <stdio.h>
 #include <ctype.h>
@@ -38,7 +40,9 @@
 #include <rexx/rxslib.h>
 #include <rexx/storage.h>
 #include <rexx/errors.h>
+#ifdef __AROS__
 #include <rexx/rexxcall.h>
+#endif
 
 #include <proto/alib.h>
 #include <proto/dos.h>
@@ -47,8 +51,18 @@
 
 #include "rxiface.h"
 
+#ifdef __AROS__
+
 #define DEBUG 0
 #include <aros/debug.h>
+
+#else
+
+#define D(x)
+
+#endif
+
+#ifdef __AROS__
 
 /* We can't use AROS_LC1NR, since 'offset'
  * is not constant.
@@ -61,6 +75,66 @@
 	 struct Library *, libbase, _offset, rexxcall \
       ); \
   })
+
+#elif defined(__MORPHOS__)
+
+#include <ppcinline/macros.h>
+
+#define CallRsrcFunc(libbase, offset, rsrc) \
+   LP1NR((-offset), __rsrcfunc, struct RexxRsrc *, rsrc, a0, \
+         struct Library *, libbase, 0, 0, 0, 0, 0, 0 \
+   )
+
+#else
+
+#error define CallRsrcFunc
+
+#endif
+
+#ifdef __AROS__
+
+#define RX_PRIVATETYPE IPTR
+
+#else
+
+#define rm_Private1 rm_TaskBlock
+#define rm_Private2 rm_LibBase
+#define RX_PRIVATETYPE APTR
+
+#endif
+
+#ifndef BNULL
+#define BNULL ((BPTR)NULL)
+#endif
+
+#ifndef RXADDRSRC
+#define RXADDRSRC  0xF0000000 /* Will register a resource node to call the clean up function
+			      * from when the rexx script finishes
+			      * The rexx implementation is free to use the list node fields
+			      * for their own purpose. */
+#define RXREMRSRC  0xF1000000 /* Will unregister an earlier registered resource node */
+#define RXCHECKMSG 0xF2000000 /* Check if private fields are from the Rexx interpreter */
+#define RXSETVAR   0xF3000000 /* Set a variable with a given to a given value */
+#define RXGETVAR   0xF4000000 /* Get the value of a variable with the given name */
+#endif
+
+#ifdef IPTR
+#define RX_RESULTTYPE IPTR
+#define RX_ARGTYPE IPTR
+#else
+#define RX_RESULTTYPE LONG
+#define RX_ARGTYPE STRPTR
+#endif
+
+#if !defined(__GNUC__)
+#undef GetHead
+#define GetHead(_l)  \
+    (((struct List *)_l)->lh_Head->ln_Succ ? ((struct List *)_l)->lh_Head : (struct Node *)0)
+
+#undef GetSucc
+#define GetSucc(_n)  \
+    (((struct Node *)_n)->ln_Succ->ln_Succ ? ((struct Node *)_n)->ln_Succ : (struct Node *)0)
+#endif
 
 struct amiga_envir {
   struct envir envir;
@@ -90,13 +164,18 @@ tsd_t *subtask_tsd;
 /* On AROS delete the allocated resources that are not recycled by the
  * normal C exit handling
  */
-static void exit_amigaf( int dummy, void *ptr )
+static void exit_amigaf( void )
 {
-   amiga_tsd_t *atsd = (amiga_tsd_t *)ptr;
+   tsd_t *TSD = __regina_get_tsd();
+   amiga_tsd_t *atsd = (amiga_tsd_t *)TSD->ami_tsd;
    struct RexxRsrc *rsrc;
   
+#ifdef CallRsrcFunc
    ForeachNode( &atsd->resources, rsrc )
       CallRsrcFunc( rsrc->rr_Base, rsrc->rr_Func, rsrc );
+#else
+#warning Fix calling resources
+#endif
   
    DeleteMsgPort( atsd->replyport );
    Signal( atsd->child, 1<<atsd->subtasksignal );
@@ -104,7 +183,7 @@ static void exit_amigaf( int dummy, void *ptr )
       CloseLibrary( (struct Library *)atsd->rexxsysbase );
    UnLock( CurrentDir( atsd->startlock ) );
   
-   free(ptr);
+   free(atsd);
 }
 
 streng *createstreng( tsd_t *TSD, char *value, int length )
@@ -306,7 +385,7 @@ int init_amigaf ( tsd_t *TSD )
    old = CurrentDir(BNULL);
    atsd->startlock = DupLock( old );
    CurrentDir(old);
-   if (on_exit( exit_amigaf, atsd ) == -1)
+   if (atexit( exit_amigaf ) == -1)
       return 0;
    NewList( &atsd->resources );
    atsd->replyport = CreatePort( NULL, 0 );
@@ -316,12 +395,18 @@ int init_amigaf ( tsd_t *TSD )
    atsd->value = NULL;
 
    THREAD_PROTECT(createtask)
-      subtask_tsd = TSD;
+   subtask_tsd = TSD;
+#ifdef __MORPHOS__
+   atsd->child = NewCreateTask( TASKTAG_NAME, "Regina Helper", TASKTAG_PC, (APTR)ReginaHandleMessages,
+      TASKTAG_CODETYPE, CODETYPE_PPC, TAG_END
+   );
+#else
    atsd->child = CreateTask( "Regina Helper", 0, (APTR)ReginaHandleMessages, 8192 );
+#endif
    if ( atsd->child != NULL )
       Wait(1<<atsd->maintasksignal);
    THREAD_UNPROTECT(createtask)
-      FreeSignal(atsd->maintasksignal);
+   FreeSignal(atsd->maintasksignal);
     
    if ( atsd->child == NULL )
       return 0;
@@ -481,8 +566,8 @@ struct RexxMsg *createreginamessage( const tsd_t *TSD )
    msg = CreateRexxMsg( atsd->replyport, NULL, NULL );
    if ( msg != NULL )
    {
-      msg->rm_Private1 = (IPTR)atsd->listenport;
-      msg->rm_Private2 = (IPTR)TSD;
+      msg->rm_Private1 = (RX_PRIVATETYPE)atsd->listenport;
+      msg->rm_Private2 = (RX_PRIVATETYPE)TSD;
    }
    return msg;
 }
@@ -522,7 +607,7 @@ streng *AmigaSubCom( const tsd_t *TSD, const streng *command, struct envir *envi
    msg = createreginamessage( TSD );
    /* Always ask for result, wether to set RESULT or not will be decided later */
    msg->rm_Action = RXCOMM | RXFF_RESULT;
-   msg->rm_Args[0] = (IPTR)CreateArgstring( (STRPTR)command->value, command->len );
+   msg->rm_Args[0] = (RX_ARGTYPE)CreateArgstring( (STRPTR)command->value, command->len );
    fflush(stdout);
    msg->rm_Stdin = Input();
    msg->rm_Stdout = Output();
@@ -610,8 +695,8 @@ streng *amiga_addlib( tsd_t *TSD, cparamboxptr parm1 )
    if ( parm3 == NULL || parm3->value == NULL || parm3->value->len == 0 )
    {
       msg->rm_Action = RXADDFH;
-      msg->rm_Args[0] = (IPTR)name;
-      msg->rm_Args[1] = (IPTR)pri;
+      msg->rm_Args[0] = (RX_ARGTYPE)name;
+      msg->rm_Args[1] = (RX_ARGTYPE)pri;
       count = 2;
       if ( !FillRexxMsg( msg, 2, 1<<1 ) )
       {
@@ -623,10 +708,10 @@ streng *amiga_addlib( tsd_t *TSD, cparamboxptr parm1 )
    else
    {
       msg->rm_Action = RXADDLIB;
-      msg->rm_Args[0] = (IPTR)name;
-      msg->rm_Args[1] = (IPTR)pri;
-      msg->rm_Args[2] = (IPTR)offset;
-      msg->rm_Args[3] = (IPTR)version;
+      msg->rm_Args[0] = (RX_ARGTYPE)name;
+      msg->rm_Args[1] = (RX_ARGTYPE)pri;
+      msg->rm_Args[2] = (RX_ARGTYPE)offset;
+      msg->rm_Args[3] = (RX_ARGTYPE)version;
       count = 4;
       if ( !FillRexxMsg( msg, 4, 1<<1 | 1<<2 | 1<<3 ) )
       {
@@ -668,7 +753,7 @@ streng *amiga_remlib( tsd_t *TSD, cparamboxptr parm1 )
       exiterror( ERR_STORAGE_EXHAUSTED, 0 );
 
    msg->rm_Action = RXREMLIB;
-   msg->rm_Args[0] = (IPTR)CreateArgstring( parm1->value->value, parm1->value->len );
+   msg->rm_Args[0] = (RX_ARGTYPE)CreateArgstring( parm1->value->value, parm1->value->len );
   
    rexxport = FindPort( "REXX" );
    if (rexxport == NULL )
@@ -705,14 +790,14 @@ streng *try_func_amiga( tsd_t *TSD, const streng *name, cparamboxptr parms, char
       exiterror( ERR_STORAGE_EXHAUSTED, 0 );
   
    msg->rm_Action = RXFUNC | RXFF_RESULT;
-   msg->rm_Args[0] = (IPTR)CreateArgstring( (char *)name->value, name->len );
+   msg->rm_Args[0] = (RX_ARGTYPE)CreateArgstring( (char *)name->value, name->len );
 
    for (parmit = parms, parmcount = 0; parmit != NULL; parmit = parmit->next)
    {
       if ( parmit->value != NULL && parmit->value->len > 0 )
       {
          parmcount++;
-         msg->rm_Args[parmcount] = (IPTR)CreateArgstring( parmit->value->value, parmit->value->len );
+         msg->rm_Args[parmcount] = (RX_ARGTYPE)CreateArgstring( parmit->value->value, parmit->value->len );
       }
    }
    msg->rm_Action |= parmcount;
@@ -728,6 +813,7 @@ streng *try_func_amiga( tsd_t *TSD, const streng *name, cparamboxptr parms, char
    {
       switch (rsrc->rr_Node.ln_Type)
       {
+#ifdef __AROS__
       case RRT_LIB:
          lib = OpenLibrary(rsrc->rr_Node.ln_Name, rsrc->rr_Arg2);
          if (lib == NULL)
@@ -744,6 +830,7 @@ streng *try_func_amiga( tsd_t *TSD, const streng *name, cparamboxptr parms, char
          CloseLibrary(lib);
          result2 = (IPTR)retstring;
          break;
+#endif
       
       case RRT_HOST:
          port = FindPort(rsrc->rr_Node.ln_Name);
@@ -784,7 +871,7 @@ streng *try_func_amiga( tsd_t *TSD, const streng *name, cparamboxptr parms, char
       exiterror( ERR_EXTERNAL_QUEUE, 0 );
    
    return retval;
-};
+}
 
 
 
@@ -807,14 +894,14 @@ streng *amiga_setclip( tsd_t *TSD, cparamboxptr parm1 )
    if ( parm2 == NULL || parm2->value == NULL || parm2->value->len == 0 )
    {
       msg->rm_Action = RXREMCON;
-      msg->rm_Args[0] = (IPTR)str_of( TSD, parm1->value );
+      msg->rm_Args[0] = (RX_ARGTYPE)str_of( TSD, parm1->value );
    }
    else
    {
       msg->rm_Action = RXADDCON;
-      msg->rm_Args[0] = (IPTR)str_of( TSD, parm1->value );
-      msg->rm_Args[1] = (IPTR)parm2->value->value;
-      msg->rm_Args[2] = (IPTR)parm2->value->len;
+      msg->rm_Args[0] = (RX_ARGTYPE)str_of( TSD, parm1->value );
+      msg->rm_Args[1] = (RX_ARGTYPE)parm2->value->value;
+      msg->rm_Args[2] = (RX_ARGTYPE)parm2->value->len;
    }
    
    rexxport = FindPort( "REXX" );
@@ -987,3 +1074,4 @@ void __amiga_clearptr(const tsd_t *TSD, int index)
 
    atsd->ptrs[index - 1] = NULL;
 }
+#endif

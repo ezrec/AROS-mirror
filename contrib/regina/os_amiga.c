@@ -18,8 +18,19 @@
 
 #include <stdlib.h>
 
+#ifdef __AROS__
+
 #define DEBUG 0
 #include <aros/debug.h>
+
+#else
+
+#define D(x)
+#ifndef BNULL
+#define BNULL ((BPTR)NULL)
+#endif
+
+#endif
 
 typedef struct {
    const tsd_t *TSD;

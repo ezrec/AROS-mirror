@@ -167,7 +167,7 @@ tsd_t *ReginaInitializeProcess(void)
       extern OS_Dep_funcs __regina_OS_Unx;
       __regina_tsd.OS = &__regina_OS_Unx;
    }
-#elif defined(_Amiga) || defined(__AROS__)
+#elif defined(_AMIGA) || defined(__AROS__)
    {
       extern OS_Dep_funcs __regina_OS_Amiga;
       __regina_tsd.OS = &__regina_OS_Amiga;

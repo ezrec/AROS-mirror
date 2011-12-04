@@ -16,7 +16,7 @@ LIBDIR = $(TOPDIR)/lib
 MANEXT = l
 MANDIR = $(TOPDIR)/man/man$(MANEXT)
 
-include $(SRCDIR)\regina.ver
+include $(SRCDIR)/regina.ver
 VERDOT = $(VER_DOT)
 VERDATE = $(VER_DATE)
 
@@ -47,7 +47,7 @@ README = $(SRCDIR)/README.* COPYING-LIB
 
 OFILES = funcs.$(OBJ) builtin.$(OBJ) error.$(OBJ) variable.$(OBJ) \
 	interprt.$(OBJ)	debug.$(OBJ) dbgfuncs.$(OBJ) memory.$(OBJ) parsing.$(OBJ) files.$(OBJ) \
-	misc.$(OBJ) unxfuncs.$(OBJ) arxfuncs.$(OBJ) cmsfuncs.$(OBJ) os2funcs.$(OBJ) shell.$(OBJ) rexxext.$(OBJ) stack.$(OBJ) \
+	misc.$(OBJ) unxfuncs.$(OBJ) arxfuncs.$(OBJ) amifuncs.$(OBJ) cmsfuncs.$(OBJ) os2funcs.$(OBJ) shell.$(OBJ) rexxext.$(OBJ) stack.$(OBJ) \
 	tracing.$(OBJ) interp.$(OBJ) cmath.$(OBJ) convert.$(OBJ) strings.$(OBJ)	library.$(OBJ) \
 	strmath.$(OBJ) signals.$(OBJ) macros.$(OBJ) envir.$(OBJ) expr.$(OBJ) $(MT_FILE).$(OBJ) instore.$(OBJ) \
 	yaccsrc.$(OBJ) lexsrc.$(OBJ) options.$(OBJ) $(OS_FILE).$(OBJ) wrappers.$(OBJ) \
@@ -55,7 +55,7 @@ OFILES = funcs.$(OBJ) builtin.$(OBJ) error.$(OBJ) variable.$(OBJ) \
 
 SHOFILES = funcs.sho builtin.sho error.sho variable.sho	\
 	interprt.sho debug.sho dbgfuncs.sho memory.sho parsing.sho files.sho \
-	misc.sho unxfuncs.sho arxfuncs.sho cmsfuncs.sho shell.sho os2funcs.sho rexxext.sho stack.sho	\
+	misc.sho unxfuncs.sho arxfuncs.sho amifuncs.sho cmsfuncs.sho shell.sho os2funcs.sho rexxext.sho stack.sho	\
 	tracing.sho interp.sho cmath.sho convert.sho strings.sho library.sho \
 	strmath.sho signals.sho	macros.sho envir.sho expr.sho $(MT_FILE).sho instore.sho \
 	yaccsrc.sho lexsrc.sho wrappers.sho options.sho $(OS_FILE).sho \
@@ -212,6 +212,9 @@ unxfuncs.$(OBJ)	:$(SRCDIR)/unxfuncs.c	 $(SRCDIR)/rexx.h
 
 arxfuncs.$(OBJ)	:$(SRCDIR)/arxfuncs.c	 $(SRCDIR)/rexx.h
 	$(CC) $(COPT) $(CC2O) -c $(SRCDIR)/arxfuncs.c
+
+amifuncs.$(OBJ)	:$(SRCDIR)/amifuncs.c	 $(SRCDIR)/rexx.h
+	$(CC) $(COPT) $(CC2O) -c $(SRCDIR)/amifuncs.c
 
 os2funcs.$(OBJ)	:$(SRCDIR)/os2funcs.c	 $(SRCDIR)/rexx.h
 	$(CC) $(COPT) $(CC2O) -c $(SRCDIR)/os2funcs.c
@@ -408,6 +411,12 @@ unxfuncs.sho :$(SRCDIR)/unxfuncs.c	 $(SRCDIR)/rexx.h
 arxfuncs.sho :$(SRCDIR)/arxfuncs.c	 $(SRCDIR)/rexx.h
 	$(O2SAVE)
 	$(CC) $(COPT) $(CC2O) $(DYN_COMP) -c $(SRCDIR)/arxfuncs.c
+	$(O2SHO)
+	$(SAVE2O)
+
+amifuncs.sho :$(SRCDIR)/amifuncs.c	 $(SRCDIR)/rexx.h
+	$(O2SAVE)
+	$(CC) $(COPT) $(CC2O) $(DYN_COMP) -c $(SRCDIR)/amifuncs.c
 	$(O2SHO)
 	$(SAVE2O)
 

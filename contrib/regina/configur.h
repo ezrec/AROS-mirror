@@ -461,6 +461,38 @@
 #define HAVE_DIV
 #endif
 
+#if defined(__MORPHOS__) && !( defined(GCC) || defined(__GNUC__) )
+#define STDC_HEADERS          1
+#define TIME_WITH_SYS_TIME    1
+#define HAVE_GETTIMEOFDAY     1
+#define HAVE_MEMCPY           1
+#define HAVE_MEMMOVE          1
+#define HAVE_SETENV           1
+#define HAVE_RANDOM           1
+#define HAVE_RANDOM_DATA      1
+#define HAVE_STRERROR         1
+#define HAVE_STRERROR_R       1
+#define HAVE_VSPRINTF         1
+#define HAVE_FCNTL_H          1
+#define HAVE_LIMITS_H         1
+#define HAVE_MATH_H           1
+#define HAVE_SETJMP_H         1
+#define HAVE_STDARG_H         1
+#define HAVE_STDLIB_H         1
+#define HAVE_STRING_H         1
+#define HAVE_UNISTD_H         1
+#define HAVE_DRAND48
+#define HAVE_STDINT_H         1
+#define HAVE_DIV
+#define HAVE_RAISE            1
+# if !defined( _AMIGA )
+#  define _AMIGA
+# endif
+# if !defined( __AMIGADATE__ )
+#  define __AMIGADATE__ "("__DATE__")"
+# endif
+#endif
+
 #if defined(MAC)
 /* # define HAVE_GRP_H           1 */
 /* # define HAVE_PWD_H           1 */
