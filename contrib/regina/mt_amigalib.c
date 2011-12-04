@@ -6,6 +6,10 @@
 # error mt_amiga.c only works on Amiga or AROS
 #endif
 
+#if !defined(RXLIB)
+# error compiling mt_amiga.c without being a library does not make sense
+#endif
+
 #include "rexx.h"
 
 #include <proto/alib.h>
@@ -55,12 +59,16 @@ static void MTExit(int code)
    exit(code);
 }
 
+void exit_amigaf( APTR ); /* In amifuncs.c */
+
 static void cleanup(int dummy, void *ptr)
 {
    tsd_node_t *node = (tsd_node_t *)ptr;
    mt_tsd_t *mt = (mt_tsd_t *)node->TSD->mt_tsd;
 
    D(bug("[mt_amigalib::cleanup] node=%p\n"));
+
+   exit_amigaf( node->TSD->ami_tsd );
 
    DeletePool( mt->mempool );
 

@@ -118,7 +118,7 @@
 #define RXGETVAR   0xF4000000 /* Get the value of a variable with the given name */
 #endif
 
-#ifdef IPTR
+#ifdef __AROS__
 #define RX_RESULTTYPE IPTR
 #define RX_ARGTYPE IPTR
 #else
@@ -164,10 +164,8 @@ tsd_t *subtask_tsd;
 /* On AROS delete the allocated resources that are not recycled by the
  * normal C exit handling
  */
-static void exit_amigaf( void )
+void exit_amigaf( amiga_tsd_t *atsd )
 {
-   tsd_t *TSD = __regina_get_tsd();
-   amiga_tsd_t *atsd = (amiga_tsd_t *)TSD->ami_tsd;
    struct RexxRsrc *rsrc;
   
 #ifdef CallRsrcFunc
@@ -185,6 +183,14 @@ static void exit_amigaf( void )
   
    free(atsd);
 }
+
+#ifndef RXLIB
+static void exit_amigaf_wrapper( void )
+{
+    tsd_t *TSD = __regina_get_tsd();
+    exit_amigaf( (amiga_tsd_t *)TSD->ami_tsd );
+}
+#endif
 
 streng *createstreng( tsd_t *TSD, char *value, int length )
 {
@@ -385,8 +391,11 @@ int init_amigaf ( tsd_t *TSD )
    old = CurrentDir(BNULL);
    atsd->startlock = DupLock( old );
    CurrentDir(old);
-   if (atexit( exit_amigaf ) == -1)
+#ifndef RXLIB
+   /* When in shared library, mt_amigalib.c will take care of cleaning up */
+   if (atexit( exit_amigaf_wrapper ) == -1)
       return 0;
+#endif
    NewList( &atsd->resources );
    atsd->replyport = CreatePort( NULL, 0 );
    atsd->maintasksignal = AllocSignal( -1 );
