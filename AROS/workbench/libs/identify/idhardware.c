@@ -367,7 +367,7 @@ static CONST_STRPTR handle_notavail(BOOL null4na);
             break;
 
         case IDHW_PLNRAM:
-            result = handle_size(IdentifyBase->hwb.buf_PlainRAM, IDHW_PLNCHIPRAM);
+            result = handle_size(IdentifyBase->hwb.buf_PlainRAM, IDHW_PLNRAM);
             break;
 
         case IDHW_VBR:
@@ -519,6 +519,7 @@ static CONST_STRPTR handle_size(TEXT *buffer, Tag tag)
 {
     CONST_STRPTR result = buffer;
     CONST_STRPTR format;
+    UBYTE fraction = 0;
 
     if (*buffer == '\0')
     {
@@ -529,20 +530,26 @@ static CONST_STRPTR handle_size(TEXT *buffer, Tag tag)
         }
         else if (num < 1000 * 1000)
         {
-            num /= 1024;
+            num /= 102;
             format = _(MSG_KBYTE);
         }
         else if (num < 1000 * 1000 * 1000)
         {
-            num = num / 1024 / 1024;
+            num = num / 1024 / 102;
             format = _(MSG_MBYTE);
         }
         else
         {
-            num = num / 1024 / 1024 / 1024;
+            num = num / 1024 / 1024 / 102;
             format = _(MSG_GBYTE);
         }
-        snprintf(buffer, STRBUFSIZE, format, (long unsigned int)num, '0');
+        if (num >= 1000)
+        {
+            fraction = num % 10;
+            num /= 10;
+        }
+        snprintf(buffer, STRBUFSIZE, format,
+            (long unsigned int)num, '0' + fraction);
     }
     return result;
 }
