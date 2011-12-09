@@ -27,9 +27,13 @@
 #define INLINE __inline__
 #ifndef __STRICT_ANSI__
 #define CONSTF __attribute__ ((const))
+#if defined(__i386__) && !defined(NOREGISTERS)
 #define REGISTERS(n) __attribute__ ((regparm(n)))
 #else
-#warning Remove -ansi switch from your Makefile to get better code.
+#define REGISTERS(n)
+#endif /* __i386__ && !NOREGISTERS */
+#else
+/* NOTE: Remove -ansi for better code some architectures */
 #define CONSTF
 #define REGISTERS(n)
 #endif

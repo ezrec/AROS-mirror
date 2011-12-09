@@ -1194,7 +1194,6 @@ processqueue (void *data, struct taskinfo *task, int r1, int r2)
 {
   realloc_t **tptr = (realloc_t **) data, **tptr1 = (realloc_t **) tmpdata;
   realloc_t *r, *end;
-  int xcalculated = 0, ycalculated = 0;
   end = czoomc.reallocx + cimage.width;
 
   while (tptr1 < tptr && (!cfilter.interrupt || tocalcx == cimage.width || tocalcy == cimage.height))
@@ -1213,14 +1212,12 @@ processqueue (void *data, struct taskinfo *task, int r1, int r2)
 	    {
 	      r->dirty = 0;
 	      tocalcx--;
-	      xcalculated = 1;
 	      calccolumn (r);
 	    }
 	  else
 	    {
 	      r->dirty = 0;
 	      tocalcy--;
-	      ycalculated = 1;
 	      calcline (r);
 	    }
 	}
@@ -1245,7 +1242,7 @@ calculatenewinterruptible (void)
 {
   int tocalcx = 0, tocalcy = 0;
   realloc_t *r, *r2, *end, *end1;
-  realloc_t **table, **tptr, **tptr1;
+  realloc_t **table, **tptr;
 
   /*tptr = table = (realloc_t **) malloc (sizeof (*table) * (cimage.width + cimage.height)); */
   tptr = table = (realloc_t **) tmpdata;
@@ -1295,7 +1292,6 @@ calculatenewinterruptible (void)
 
   if(tptr-table>1)
     myqsort (table, tptr);
-  tptr1 = table;
 
   cfilter.pos = 0;
   cfilter.max = tptr - table;

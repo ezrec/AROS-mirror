@@ -387,13 +387,23 @@ speed_test (fractal_context * c, struct image *img)
 #ifdef SLOWFUNCPTR
   i=calculateswitch(0.0,0.0,0.0,0.0,0);
 #else
-  cfractalc.currentformula->calculate (0.0, 0.0, 0.0, 0.0);
-  if (cfractalc.currentformula->calculate_periodicity != NULL)
-    cfractalc.currentformula->calculate_periodicity (0.0, 0.0, 0.0, 0.0);
-  if (cfractalc.currentformula->smooth_calculate != NULL)
-    cfractalc.currentformula->smooth_calculate (0.0, 0.0, 0.0, 0.0);
-  if (cfractalc.currentformula->smooth_calculate_periodicity != NULL)
-    cfractalc.currentformula->smooth_calculate_periodicity (0.0, 0.0, 0.0, 0.0);
+  /* We use 'i = x(); (void)i;' to prevent the compiler from
+   * optimizing away these calls to CONTSTF functions.
+   */
+  i = cfractalc.currentformula->calculate (0.0, 0.0, 0.0, 0.0);
+  (void)i;
+  if (cfractalc.currentformula->calculate_periodicity != NULL) {
+    i = cfractalc.currentformula->calculate_periodicity (0.0, 0.0, 0.0, 0.0);
+    (void)i;
+  }
+  if (cfractalc.currentformula->smooth_calculate != NULL) {
+    i = cfractalc.currentformula->smooth_calculate (0.0, 0.0, 0.0, 0.0);
+    (void)i;
+  }
+  if (cfractalc.currentformula->smooth_calculate_periodicity != NULL) {
+    i = cfractalc.currentformula->smooth_calculate_periodicity (0.0, 0.0, 0.0, 0.0);
+    (void)i;
+  }
 #endif
   cfractalc.maxiter = 20000000;
 

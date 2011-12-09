@@ -88,14 +88,12 @@
 #ifdef UNCOMPRESS
 /*uncompressed version of loop */
 #ifdef SMOOTHMODE
-// static int FUNCTYPE
-// SCALC (register number_t zre, register number_t zim, register number_t pre, register number_t pim) CONSTF REGISTERS (3);
+CONSTF REGISTERS(3)
 static int FUNCTYPE
 SCALC (register number_t zre, register number_t zim, register number_t pre, register number_t pim)
 #else
-// static int FUNCTYPE
-// CALC (register number_t zre, register number_t zim, register number_t pre, register number_t pim) CONSTF REGISTERS (3);
-static int
+CONSTF REGISTERS(3)
+static int FUNCTYPE
 CALC (register number_t zre, register number_t zim, register number_t pre, register number_t pim)
 #endif
 {
@@ -204,13 +202,11 @@ CALC (register number_t zre, register number_t zim, register number_t pre, regis
 }
 #else
 #ifdef SMOOTHMODE
-// static int FUNCTYPE
-// SCALC (register number_t zre, register number_t zim, register number_t pre, register number_t pim) CONSTF REGISTERS (3);
+CONSTF REGISTERS (3)
 static int FUNCTYPE
 SCALC (register number_t zre, register number_t zim, register number_t pre, register number_t pim)
 #else
-// static int FUNCTYPE
-// CALC (register number_t zre, register number_t zim, register number_t pre, register number_t pim) CONSTF REGISTERS (3);
+CONSTF REGISTERS (3)
 static int FUNCTYPE
 CALC (register number_t zre, register number_t zim, register number_t pre, register number_t pim)
 #endif
@@ -230,7 +226,9 @@ CALC (register number_t zre, register number_t zim, register number_t pre, regis
     {
 #ifdef RPIP
       rp = zre * zre;
+      (void)rp; // May be unused
       ip = zim * zim;
+      (void)ip; // May be unused
 #endif
       while ((iter) && BTEST)
 	{
@@ -285,13 +283,11 @@ CALC (register number_t zre, register number_t zim, register number_t pre, regis
 #ifndef UNCOMPRESS
 
 #ifdef SMOOTHMODE
-// static int FUNCTYPE
-// SPERI (register number_t zre, register number_t zim, register number_t pre, register number_t pim) CONSTF REGISTERS (3);
+CONSTF REGISTERS (3)
 static int FUNCTYPE
 SPERI (register number_t zre, register number_t zim, register number_t pre, register number_t pim)
 #else
-// static int FUNCTYPE
-// PERI (register number_t zre, register number_t zim, register number_t pre, register number_t pim) CONSTF REGISTERS (3);
+CONSTF REGISTERS (3)
 static int FUNCTYPE
 PERI (register number_t zre, register number_t zim, register number_t pre, register number_t pim)
 #endif
@@ -394,13 +390,11 @@ end:
 /*F. : this macros definitions are really strange, but after a while, it's good */
 
 #ifdef SMOOTHMODE
-// static int FUNCTYPE
-// SPERI (register number_t zre, register number_t zim, register number_t pre, register number_t pim) CONSTF REGISTERS (3);
+CONSTF REGISTERS (3)
 static int FUNCTYPE
 SPERI (register number_t zre, register number_t zim, register number_t pre, register number_t pim)
 #else
-// static int FUNCTYPE
-// PERI (register number_t zre, register number_t zim, register number_t pre, register number_t pim) CONSTF REGISTERS (3);
+CONSTF REGISTERS (3)
 static int FUNCTYPE
 PERI (register number_t zre, register number_t zim, register number_t pre, register number_t pim)
 #endif

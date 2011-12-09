@@ -54,7 +54,7 @@ __inline_mathop_ (long double, __fabsl, "fabs")
 #ifndef __OPTIMIZE__
 #define myabs(x) ((x)>0?(x):-(x))
 #else
-#define myabs(x) __fabsl((number_t)(x))
+#define myabs(x) fabsl((number_t)(x))
 #endif
 #else
 #define myabs(x) fabs((number_t)(x))

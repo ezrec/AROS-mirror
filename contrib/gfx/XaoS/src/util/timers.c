@@ -92,9 +92,12 @@ static struct timeb currenttime;
 #ifdef _plan9_
 static int currenttime;
 #endif
+static tl_group group1;
+tl_group *syncgroup = &group1;
+#ifdef HAVE_SETITIMER
 static int registered = 0, reghandler = 0;
-static tl_group group1, group2;
-tl_group *syncgroup = &group1,
+#endif
+tl_group
 #ifdef HAVE_SETITIMER
  *asyncgroup = &group2;
 #else
