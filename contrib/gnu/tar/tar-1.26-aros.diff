@@ -1,6 +1,25 @@
-diff -ur tar-1.26.orig/lib/rtapelib.c tar-1.26/lib/rtapelib.c
---- tar-1.26.orig/lib/rtapelib.c	2010-09-14 06:06:44.000000000 -0400
-+++ tar-1.26/lib/rtapelib.c	2011-12-10 11:22:37.000000000 -0500
+diff -ur tar-1.26.orig//gnu/fcntl.c tar-1.26/gnu/fcntl.c
+--- tar-1.26.orig//gnu/fcntl.c	2011-03-12 04:14:28.000000000 -0500
++++ tar-1.26/gnu/fcntl.c	2011-12-10 12:13:00.000000000 -0500
+@@ -34,6 +34,15 @@
+ #endif
+ #undef fcntl
+ 
++#ifdef __AROS__
++/* This is needed due to the conflicting version
++ * of getdtablesize from bsdsocket.library, which
++ * only counts the number of socket descriptors.
++ */
++#undef getdtablesize
++#define getdtablesize() 256
++#endif
++
+ #if (defined _WIN32 || defined __WIN32__) && ! defined __CYGWIN__
+ /* Get declarations of the Win32 API functions.  */
+ # define WIN32_LEAN_AND_MEAN
+diff -ur tar-1.26.orig//lib/rtapelib.c tar-1.26/lib/rtapelib.c
+--- tar-1.26.orig//lib/rtapelib.c	2010-09-14 06:06:44.000000000 -0400
++++ tar-1.26/lib/rtapelib.c	2011-03-12 04:50:18.000000000 -0500
 @@ -97,7 +97,7 @@
  
  /* If true, always consider file names to be local, even if they contain
@@ -32,9 +51,8 @@ diff -ur tar-1.26.orig/lib/rtapelib.c tar-1.26/lib/rtapelib.c
      if (status == -1)
        {
  	int e = errno;
-Only in tar-1.26/lib: rtapelib.c.orig
-diff -ur tar-1.26.orig/src/misc.c tar-1.26/src/misc.c
---- tar-1.26.orig/src/misc.c	2011-02-16 17:12:16.000000000 -0500
+diff -ur tar-1.26.orig//src/misc.c tar-1.26/src/misc.c
+--- tar-1.26.orig//src/misc.c	2011-02-16 17:12:16.000000000 -0500
 +++ tar-1.26/src/misc.c	2011-03-12 04:50:18.000000000 -0500
 @@ -866,7 +866,7 @@
  pid_t
@@ -54,10 +72,9 @@ diff -ur tar-1.26.orig/src/misc.c tar-1.26/src/misc.c
    size_t size1 = size + alignment;
    if (size1 < size)
      xalloc_die ();
-Only in tar-1.26/src: misc.c.orig
-diff -ur tar-1.26.orig/src/system.c tar-1.26/src/system.c
---- tar-1.26.orig/src/system.c	2010-11-05 04:16:25.000000000 -0400
-+++ tar-1.26/src/system.c	2011-12-10 10:39:56.000000000 -0500
+diff -ur tar-1.26.orig//src/system.c tar-1.26/src/system.c
+--- tar-1.26.orig//src/system.c	2010-11-05 04:16:25.000000000 -0400
++++ tar-1.26/src/system.c	2011-03-12 04:50:18.000000000 -0500
 @@ -190,7 +190,9 @@
    const char *shell = getenv ("SHELL");
    if (! shell)
@@ -135,6 +152,3 @@ diff -ur tar-1.26.orig/src/system.c tar-1.26/src/system.c
  
    if (pid != 0)
      {
-Only in tar-1.26/src: system.c.old
-Only in tar-1.26/src: system.c.orig
-Only in tar-1.26/src: system.c.rej.old
