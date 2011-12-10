@@ -42,9 +42,12 @@
 static APTR hw_status[1024];
 static APTR *bb_map;
 static ULONG temp_index;
+static struct SignalSemaphore BatchBufferLock;
 
 extern struct g45staticdata sd;
 #define sd ((struct g45staticdata*)&(sd))
+#define LOCK_BB          { ObtainSemaphore(&BatchBufferLock); }
+#define UNLOCK_BB        { ReleaseSemaphore(&BatchBufferLock); }
 
 #define BASEADDRESS(p) ((uint32_t)(p) - (intptr_t)sd->Card.Framebuffer)
 struct i915_winsys_batchbuffer *batchbuffer_create(struct i915_winsys *iws);
@@ -119,6 +122,8 @@ VOID init_aros_winsys()
     // allocate batchbuffer
     bb_map = (APTR)((IPTR)AllocGfxMem( 16*4096 + 4096) & ~4095);
     temp_index = reserve_status_index( bb_map );
+
+    InitSemaphore(&BatchBufferLock);
 }
 
 /*******************************************************************
@@ -231,37 +236,39 @@ void batchbuffer_flush(struct i915_winsys_batchbuffer *batch,
 
 #ifndef GALLIUM_SIMULATION
 
-    // wait until previous batchbuffer is ready.
-    while( get_status( temp_index ) ){
-      //  bug("wait...\n");
-    };
+    LOCK_BB
 
-    // copy to gfxmem
-    memcpy(bb_map, batch->map, batch->ptr - batch->map );
+        // wait until previous batchbuffer is ready.
+        while( get_status( temp_index ) ){
+          //  bug("wait...\n");
+        };
 
-    // set status
-    set_status( temp_index , 1 );
+        // copy to gfxmem
+        memcpy(bb_map, batch->map, batch->ptr - batch->map );
 
-    //run
+        // set status
+        set_status( temp_index , 1 );
 
-    LOCK_HW
+        LOCK_HW
 
-        START_RING(7);
+            //run
+            START_RING(7);
+    
+                // start batchbuffer
+                OUT_RING( MI_BATCH_BUFFER_START | (2 << 6) );
+                OUT_RING( BASEADDRESS( bb_map ) | MI_BATCH_NON_SECURE);
 
-            // start batchbuffer
-            OUT_RING( MI_BATCH_BUFFER_START | (2 << 6) );
-            OUT_RING( BASEADDRESS( bb_map ) | MI_BATCH_NON_SECURE);
+                // clean status
+                OUT_RING((0x21 << 23) | 1);
+                OUT_RING( temp_index << 2 );
+                OUT_RING(0);
+                OUT_RING(0);
 
-            // clean status
-            OUT_RING((0x21 << 23) | 1);
-            OUT_RING( temp_index << 2 );
-            OUT_RING(0);
-            OUT_RING(0);
+            ADVANCE_RING();
 
-        ADVANCE_RING();
+        UNLOCK_HW
 
-    UNLOCK_HW
-
+    UNLOCK_BB
 
     // wait...
    // while( get_status( temp_index ) ){};
