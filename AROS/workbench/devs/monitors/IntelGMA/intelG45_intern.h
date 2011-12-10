@@ -121,6 +121,7 @@ struct g45staticdata
 {
     void *MemPool;
     BOOL forced;
+    BOOL disable_gallium;
     ULONG memsize;
 
     /* The rest should be moved to object data */
@@ -156,8 +157,10 @@ struct g45staticdata
 	OOP_Class *				IntelI2C;
 	OOP_Class *				BMClass;
     OOP_Class *				compositingclass;
+    OOP_Class *				galliumclass;
+    
 	OOP_Object          *compositing;
-
+    
 	OOP_Object *			PCIObject;
 	OOP_Object *			PCIDevice;
 	OOP_Object * 			GMAObject;
@@ -212,6 +215,7 @@ enum {
 
 #define IS_BM_ATTR(attr, idx) (((idx)=(attr)-HiddBitMapAttrBase) < num_Hidd_BitMap_Attrs)
 #define IS_GMABM_ATTR(attr, idx) (((idx)=(attr)-HiddGMABitMapAttrBase) < num_Hidd_GMABitMap_Attrs)
+#define HIDD_BM_OBJ(bitmap)     (*(OOP_Object **)&((bitmap)->Planes[0]))
 
 #define SD(cl) ((struct g45staticdata *)cl->UserData)
 
