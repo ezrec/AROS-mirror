@@ -1,6 +1,6 @@
-diff -ruN tar-1.18/lib/rtapelib.c tar-1.18.aros/lib/rtapelib.c
---- tar-1.18/lib/rtapelib.c	2007-06-27 15:49:45.000000000 +0200
-+++ tar-1.18.aros/lib/rtapelib.c	2008-10-28 01:09:18.000000000 +0100
+diff -ur tar-1.26.orig/lib/rtapelib.c tar-1.26/lib/rtapelib.c
+--- tar-1.26.orig/lib/rtapelib.c	2010-09-14 06:06:44.000000000 -0400
++++ tar-1.26/lib/rtapelib.c	2011-12-10 11:22:37.000000000 -0500
 @@ -97,7 +97,7 @@
  
  /* If true, always consider file names to be local, even if they contain
@@ -10,7 +10,20 @@ diff -ruN tar-1.18/lib/rtapelib.c tar-1.18.aros/lib/rtapelib.c
  
  
  
-@@ -474,7 +474,7 @@
+@@ -424,10 +424,12 @@
+ 	}
+   }
+ 
++#ifndef __AROS__
+   /* FIXME: Should somewhat validate the decoding, here.  */
+   if (gethostbyname (remote_host) == NULL)
+     error (EXIT_ON_EXEC_ERROR, 0, _("Cannot connect to %s: resolve failed"),
+ 	   remote_host);
++#endif
+ 
+   if (remote_user && *remote_user == '\0')
+     remote_user = 0;
+@@ -477,7 +479,7 @@
  	return -1;
        }
  
@@ -19,10 +32,11 @@ diff -ruN tar-1.18/lib/rtapelib.c tar-1.18.aros/lib/rtapelib.c
      if (status == -1)
        {
  	int e = errno;
-diff -ruN tar-1.18/src/misc.c tar-1.18.aros/src/misc.c
---- tar-1.18/src/misc.c	2007-06-27 15:30:32.000000000 +0200
-+++ tar-1.18.aros/src/misc.c	2008-10-28 01:01:03.000000000 +0100
-@@ -706,7 +706,7 @@
+Only in tar-1.26/lib: rtapelib.c.orig
+diff -ur tar-1.26.orig/src/misc.c tar-1.26/src/misc.c
+--- tar-1.26.orig/src/misc.c	2011-02-16 17:12:16.000000000 -0500
++++ tar-1.26/src/misc.c	2011-03-12 04:50:18.000000000 -0500
+@@ -866,7 +866,7 @@
  pid_t
  xfork (void)
  {
@@ -31,7 +45,7 @@ diff -ruN tar-1.18/src/misc.c tar-1.18.aros/src/misc.c
    if (p == (pid_t) -1)
      call_arg_fatal ("fork", _("child process"));
    return p;
-@@ -739,7 +739,7 @@
+@@ -899,7 +899,7 @@
  void *
  page_aligned_alloc (void **ptr, size_t size)
  {
@@ -40,10 +54,11 @@ diff -ruN tar-1.18/src/misc.c tar-1.18.aros/src/misc.c
    size_t size1 = size + alignment;
    if (size1 < size)
      xalloc_die ();
-diff -ruN tar-1.18/src/system.c tar-1.18.aros/src/system.c
---- tar-1.18/src/system.c	2007-06-27 15:30:32.000000000 +0200
-+++ tar-1.18.aros/src/system.c	2008-10-28 01:01:03.000000000 +0100
-@@ -210,7 +210,9 @@
+Only in tar-1.26/src: misc.c.orig
+diff -ur tar-1.26.orig/src/system.c tar-1.26/src/system.c
+--- tar-1.26.orig/src/system.c	2010-11-05 04:16:25.000000000 -0400
++++ tar-1.26/src/system.c	2011-12-10 10:39:56.000000000 -0500
+@@ -190,7 +190,9 @@
    const char *shell = getenv ("SHELL");
    if (! shell)
      shell = "/bin/sh";
@@ -53,9 +68,9 @@ diff -ruN tar-1.18/src/system.c tar-1.18.aros/src/system.c
 +    call_arg_fatal ("fork", _("child process"));
    if (child == 0)
      {
-       execlp (shell, "-sh", "-i", (char *) 0);
-@@ -315,7 +317,9 @@
-   int wait_status;
+       priv_set_restore_linkdir ();
+@@ -319,7 +321,9 @@
+   pid_t child_pid;
  
    xpipe (parent_pipe);
 -  child_pid = xfork ();
@@ -65,7 +80,7 @@ diff -ruN tar-1.18/src/system.c tar-1.18.aros/src/system.c
  
    if (child_pid > 0)
      {
-@@ -366,7 +370,9 @@
+@@ -372,7 +376,9 @@
    /* We do need a grandchild tar.  */
  
    xpipe (child_pipe);
@@ -76,8 +91,8 @@ diff -ruN tar-1.18/src/system.c tar-1.18.aros/src/system.c
  
    if (grandchild_pid == 0)
      {
-@@ -476,7 +482,9 @@
-   int wait_status;
+@@ -488,7 +494,9 @@
+   pid_t child_pid;
  
    xpipe (parent_pipe);
 -  child_pid = xfork ();
@@ -87,7 +102,7 @@ diff -ruN tar-1.18/src/system.c tar-1.18.aros/src/system.c
  
    if (child_pid > 0)
      {
-@@ -518,7 +526,9 @@
+@@ -530,7 +538,9 @@
    /* We do need a grandchild tar.  */
  
    xpipe (child_pipe);
@@ -102,16 +117,16 @@ diff -ruN tar-1.18/src/system.c tar-1.18.aros/src/system.c
  
    xpipe (p);
    pipe_handler = signal (SIGPIPE, SIG_IGN);
--  pid = xfork ();
-+  pid = vfork ();
-+  if (pid == (pid_t) -1)
+-  global_pid = xfork ();
++  global_pid = vfork ();
++  if (global_pid == (pid_t) -1)
 +    call_arg_fatal ("fork", _("child process"));
  
-   if (pid != 0)
+   if (global_pid != 0)
      {
-@@ -778,7 +790,9 @@
+@@ -780,7 +792,9 @@
    xpipe (p);
-   pipe_handler = signal (SIGPIPE, SIG_IGN);
+   saved_handler = signal (SIGPIPE, SIG_IGN);
  
 -  pid = xfork ();
 +  pid = vfork ();
@@ -120,3 +135,6 @@ diff -ruN tar-1.18/src/system.c tar-1.18.aros/src/system.c
  
    if (pid != 0)
      {
+Only in tar-1.26/src: system.c.old
+Only in tar-1.26/src: system.c.orig
+Only in tar-1.26/src: system.c.rej.old
