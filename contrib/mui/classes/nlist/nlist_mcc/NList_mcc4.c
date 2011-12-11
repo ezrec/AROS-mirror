@@ -974,7 +974,7 @@ void WidthColumn(struct NLData *data,WORD column,WORD updinfo)
 {
   register struct colinfo *cinfo = data->cols[column].c;
   register struct affinfo *afinfo;
-  WORD curlen,ni,ni1,ni2;
+  WORD curlen,ni,ni1;
   WORD numchar = 0;
   WORD numinfo = 0;
   WORD  colwidth;
@@ -1031,7 +1031,6 @@ void WidthColumn(struct NLData *data,WORD column,WORD updinfo)
       text_last = TRUE;
       is_text = TRUE;
     }
-    ni2 = ni;
     ni++;
     afinfo = &data->aff_infos[ni];
   }

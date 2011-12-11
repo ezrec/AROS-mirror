@@ -256,7 +256,7 @@ MakeStaticHook(dsphook, dspfunc);
 
 static VOID StyleChanged( struct NListtreeP_Data *data, ULONG style )
 {
-  BOOL bp1=FALSE, bp2=FALSE, bp3=FALSE, bp4=FALSE, bi1=FALSE, bi2=FALSE, bi3=FALSE;
+  BOOL bp1=FALSE, bp2=FALSE, bp3=FALSE, bi1=FALSE, bi2=FALSE, bi3=FALSE;
 
   switch( style )
   {
@@ -264,30 +264,30 @@ static VOID StyleChanged( struct NListtreeP_Data *data, ULONG style )
     case MUICFGV_NListtree_Style_Inserted:
     case MUICFGV_NListtree_Style_Mac:
 
-      bp1 = TRUE; bp2 = TRUE; bp3 = TRUE; bp4 = TRUE; bi1 = FALSE; bi2 = FALSE; bi3 = TRUE;
+      bp1 = TRUE; bp2 = TRUE; bp3 = TRUE; bi1 = FALSE; bi2 = FALSE; bi3 = TRUE;
       break;
 
 
     case MUICFGV_NListtree_Style_Lines:
     case MUICFGV_NListtree_Style_Win98:
 
-      bp1 = FALSE; bp2 = TRUE; bp3 = TRUE; bp4 = TRUE; bi1 = FALSE; bi2 = FALSE; bi3 = TRUE;
+      bp1 = FALSE; bp2 = TRUE; bp3 = TRUE; bi1 = FALSE; bi2 = FALSE; bi3 = TRUE;
       break;
 
 
     case MUICFGV_NListtree_Style_Lines3D:
 
-      bp1 = FALSE; bp2 = FALSE; bp3 = TRUE; bp4 = TRUE; bi1 = FALSE; bi2 = FALSE; bi3 = TRUE;
+      bp1 = FALSE; bp2 = FALSE; bp3 = TRUE; bi1 = FALSE; bi2 = FALSE; bi3 = TRUE;
       break;
 
     case MUICFGV_NListtree_Style_Win98Plus:
 
-      bp1 = FALSE; bp2 = TRUE; bp3 = TRUE; bp4 = TRUE; bi1 = FALSE; bi2 = FALSE; bi3 = FALSE;
+      bp1 = FALSE; bp2 = TRUE; bp3 = TRUE; bi1 = FALSE; bi2 = FALSE; bi3 = FALSE;
       break;
 
     case MUICFGV_NListtree_Style_Glow:
 
-      bp1 = FALSE; bp2 = FALSE; bp3 = FALSE; bp4 = TRUE; bi1 = FALSE; bi2 = FALSE; bi3 = TRUE;
+      bp1 = FALSE; bp2 = FALSE; bp3 = FALSE; bi1 = FALSE; bi2 = FALSE; bi3 = TRUE;
       break;
   }
 

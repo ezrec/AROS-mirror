@@ -81,7 +81,7 @@ struct UtilityIFace *IUtility = NULL;
 #include "NList-Demo2.h"
 #include "NList-Demo3.h"
 
-#include "SDI_compiler.h"
+#include <SDI/SDI_compiler.h>
 
 /* *********************************************** */
 

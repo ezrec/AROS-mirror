@@ -521,10 +521,10 @@ HOOKPROTONH(AckFunc, VOID, Object *list, long *val)
   get(stringkey,MUIA_String_Contents, &ackstr);
   DoMethod(list,MUIM_NList_GetEntry,MUIV_NList_GetEntry_Active, &key);
   if (ackstr && key)
-  { LONG res;
+  { 
     IX ix;
     ix.ix_Version = IX_VERSION;
-    res = ParseIX(ackstr,&ix);
+    ParseIX(ackstr,&ix);
     key->kb_Qualifier = (ix.ix_Qualifier & KBQUAL_MASK) | ((ix.ix_QualSame << 12) & KBSYM_MASK);
     key->kb_Code = ix.ix_Code;
     DoMethod(list,MUIM_NList_Redraw,MUIV_NList_Redraw_Active);

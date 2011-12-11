@@ -124,7 +124,6 @@ void NL_SetObjInfos(struct NLData *data,BOOL setall)
 
     if (data->VirtGroup)
     {
-      LONG virtleft,virttop,virtwidth,virtheight,vl,vt,vw,vh;
       Object *o = data->VirtGroup;
       struct IClass *ocl;
 
@@ -132,16 +131,6 @@ void NL_SetObjInfos(struct NLData *data,BOOL setall)
       data->vright = _mright(o);
       data->vtop = _mtop(o);
       data->vbottom = _mbottom(o);
-
-      vl = xget(o, MUIA_Virtgroup_Left);
-      vt = xget(o, MUIA_Virtgroup_Top);
-      vw = xget(o, MUIA_Virtgroup_Width);
-      vh = xget(o, MUIA_Virtgroup_Height);
-
-      virtleft = vl;
-      virttop = vt;
-      virtwidth = vw;
-      virtheight = vh;
 
       data->vdx = -data->mleft;
       data->vdy = -data->mtop;
@@ -754,7 +743,9 @@ IPTR mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
     WORD hmax,linelen,hfirst;
     LONG LPFirst,LPVisible,LPEntries;
     LONG one_more = 0;
-    LONG vfyl,vlyl;
+/*
+ *  LONG vfyl,vlyl;
+ */
     BOOL need_refresh = FALSE;
     BOOL draw_all_force;
     BOOL fullclipped = FALSE;
@@ -958,8 +949,10 @@ IPTR mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
         data->NList_Horiz_Entries = hmax;
     }
 
-    vfyl = (data->vtop - data->vpos) / data->vinc;
-    vlyl = ((data->vbottom - data->vpos) / data->vinc) + 1;
+/*
+ *  vfyl = (data->vtop - data->vpos) / data->vinc;
+ *  vlyl = ((data->vbottom - data->vpos) / data->vinc) + 1;
+ */
 
     if (data->do_draw_all && data->do_draw_title && data->NList_Title/* && (vfyl <= 0)*/)
     {

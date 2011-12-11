@@ -282,6 +282,7 @@ static BOOL NBitmap_ExamineData(Object *dt_obj, uint32 item, struct IClass *cl, 
         pbpa.pbpa_Height = data->height;
 
         error = DoMethodA(dt_obj, (Msg)(VOID*)&pbpa);
+        (void)error;
         D(DBF_DATATYPE, "examine: READPIXELARRAY returned %ld", error);
 
         result = TRUE;
@@ -572,6 +573,7 @@ BOOL NBitmap_OldNewImage(struct IClass *cl, Object *obj)
                 ULONG error;
 
                 error = DoMethod(data->dt_obj[i], PDTM_READPIXELARRAY, data->arraypixels[i], data->fmt, data->arraybpr, 0, 0, data->width, data->height);
+                (void)error;
                 D(DBF_DATATYPE, "new: READPIXELARRAY returned %ld", error);
 
                 // finally create the shades
@@ -894,14 +896,13 @@ void NBitmap_DrawImage(struct IClass *cl, Object *obj)
   if((data = INST_DATA(cl, obj)) != NULL)
   {
     LONG item;
-    ULONG x, y, twidth, theight;
+    ULONG x, y, twidth;
 
     /* coordinates */
     item = 0;
     x = _left(obj);
     y = _top(obj);
     twidth = (data->width + data->border_horiz) - 2;      /* subtract standard 1 pixel border */
-    theight = (data->height + data->border_vert) - 2;
 
     // clear the background first, otherwise a multiply applied alpha channel
     // will become darker and darker every time

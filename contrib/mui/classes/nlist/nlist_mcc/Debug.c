@@ -36,7 +36,7 @@
 #include <proto/timer.h>
 #include <proto/utility.h>
 
-#include "SDI_compiler.h"
+#include <SDI/SDI_compiler.h>
 #include "Debug.h"
 #include "version.h"
 #include "timeval.h"
