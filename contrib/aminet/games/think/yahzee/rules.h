@@ -71,22 +71,22 @@ extern const game   game_definition[MAX_GAMETYPES];
 
 UBYTE
 game_number (
-   struct rules  *rules);
+   const struct rules  *rules);
 
 UBYTE
 num_upper_labels (
-   struct rules  *rules);
+   const struct rules  *rules);
 
 UBYTE
 num_lower_labels (
-   struct rules  *rules);
+   const struct rules  *rules);
 
 UBYTE
 upper_label_len (
-   struct rules  *rules);
+   const struct rules  *rules);
 
 UBYTE
 lower_label_len (
-   struct rules  *rules);
+   const struct rules  *rules);
 
 #endif

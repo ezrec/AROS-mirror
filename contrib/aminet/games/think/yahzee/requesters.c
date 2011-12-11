@@ -144,7 +144,7 @@ string_requester (
          while (!done)
          {
             WaitPort (req_win->UserPort);
-            while (msg = GT_GetIMsg (req_win->UserPort))
+            while ((msg = GT_GetIMsg (req_win->UserPort)))
             {
                switch (msg->Class)
                {

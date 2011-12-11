@@ -80,7 +80,7 @@ delete_gadgets (
 void
 draw_scoreboard (
    struct RastPort  *rp,
-   struct rules     *rules,
+   const struct rules *rules,
    UBYTE             num_players)
 {
    register UBYTE   n;
@@ -191,13 +191,11 @@ delete_scoreboard (
 void
 reset_scoreboard (
    struct RastPort  *rp,
-   struct rules     *rules,
+   const struct rules *rules,
    UBYTE             num_players)
 {
    register UBYTE   i, j;
-   UBYTE   limit;
    
-   limit = num_upper_labels (rules);
    /*delete old scores */
    SetAPen (rp, board_pens[BOARD_PAPERPEN]);
    for (i = 1; i <= num_players; ++i)
@@ -273,7 +271,7 @@ draw_player_numbers (
 void
 draw_possible_score (
    struct RastPort  *rp,
-   struct rules     *rules,
+   const struct rules *rules,
    UWORD             current_player,
    WORD              scoreboard[],
    UBYTE             possible_score[])
@@ -305,7 +303,7 @@ draw_possible_score (
 void
 draw_chosen_score (
    struct RastPort  *rp,
-   struct rules     *rules,
+   const struct rules *rules,
    UBYTE             current_player,
    WORD              scoreboard[],
    BOOL              highlighted)

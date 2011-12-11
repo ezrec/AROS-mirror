@@ -27,7 +27,7 @@
 extern struct Window  *main_win;
 extern struct NewGadget   new_roll_gad;
 extern struct Gadget  die_gads[], *roll_gad, *disp_gad, *gt_gads;
-extern struct rules  *rules;
+extern const struct rules  *rules;
 extern UBYTE   num_players, chosen_num_players;
 extern UBYTE   chosen_gametype, chosen_scoring;
 

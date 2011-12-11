@@ -12,12 +12,12 @@ BOOL
 layout_display (
    struct Screen  *scr,
    struct Window **win,
-   struct rules   *rules,
+   const struct rules   *rules,
    UBYTE           num_players);
 
 void
 init_board_grid (
    struct Window  *win,
-   struct rules   *rules,
+   const struct rules   *rules,
    UBYTE           num_players,
    BOOL            split_board);

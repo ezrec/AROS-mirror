@@ -104,7 +104,7 @@ struct NewMenu new_menu[] = {
 UBYTE   num_players, chosen_num_players = 1;
 UBYTE   chosen_scoring = 0;
 UBYTE   chosen_gametype = 0;
-struct rules  *rules;
+const struct rules  *rules;
 
 void event_loop (void);
 BOOL process_menus (UWORD);

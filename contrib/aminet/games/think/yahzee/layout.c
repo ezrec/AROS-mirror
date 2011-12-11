@@ -39,7 +39,7 @@ extern struct NewGadget   new_roll_gad, new_disp_gad;
 
 static void
 upper_board_extent (
-   struct rules  *rules,
+   const struct rules  *rules,
    UBYTE          num_players,
    BOOL           split_board,
    UWORD          font_w,
@@ -55,7 +55,7 @@ upper_board_extent (
 
 static void
 lower_board_extent (
-   struct rules  *rules,
+   const struct rules  *rules,
    UBYTE          num_players,
    BOOL           split_board,
    UWORD          font_w,
@@ -74,7 +74,7 @@ lower_board_extent (
 static void
 gadget_extent (
    struct Screen  *scr,
-   struct rules   *rules,
+   const struct rules   *rules,
    UWORD          *width,
    UWORD          *height,
    BOOL            vert_gads)
@@ -97,7 +97,7 @@ BOOL
 layout_display (
    struct Screen  *scr,
    struct Window **win,
-   struct rules   *rules,
+   const struct rules   *rules,
    UBYTE           num_players)
 {
    register UBYTE   n;
@@ -292,7 +292,7 @@ layout_display (
 void
 init_board_grid (
    struct Window  *win,
-   struct rules   *rules,
+   const struct rules   *rules,
    UBYTE           num_players,
    BOOL            split_board)
 {

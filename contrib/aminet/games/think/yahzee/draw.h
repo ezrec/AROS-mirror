@@ -42,7 +42,7 @@ delete_gadgets (
 void
 draw_scoreboard (
    struct RastPort  *rp,
-   struct rules     *rules,
+   const struct rules *rules,
    UBYTE             num_players);
 
 void
@@ -52,7 +52,7 @@ delete_scoreboard (
 void
 reset_scoreboard (
    struct RastPort  *rp,
-   struct rules     *rules,
+   const struct rules *rules,
    UBYTE             num_players);
 
 void
@@ -64,7 +64,7 @@ draw_player_numbers (
 void
 draw_possible_score (
    struct RastPort  *rp,
-   struct rules     *rules,
+   const struct rules *rules,
    UWORD             current_player,
    WORD              scoreboard[],
    UBYTE             possible_score[]);
@@ -72,7 +72,7 @@ draw_possible_score (
 void
 draw_chosen_score (
    struct RastPort  *rp,
-   struct rules     *rules,
+   const struct rules *rules,
    UBYTE             current_player,
    WORD              scoreboard[],
    BOOL              highlighted);

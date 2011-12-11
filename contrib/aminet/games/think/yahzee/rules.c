@@ -351,7 +351,7 @@ calc_amer_maxi (
 
 static UBYTE
 num_labels (
-   struct rules  *rules)
+   const struct rules  *rules)
 {
    register UBYTE   n, count = 0;
    
@@ -365,7 +365,7 @@ num_labels (
 
 UBYTE
 game_number (
-   struct rules  *rules)
+   const struct rules  *rules)
 {
    if (rules == &game_definition[1][1])
       return 3;
@@ -379,21 +379,21 @@ game_number (
 
 UBYTE
 num_upper_labels (
-   struct rules  *rules)
+   const struct rules  *rules)
 {
    return (UBYTE)(num_labels (rules) / 2);
 }
 
 UBYTE
 num_lower_labels (
-   struct rules  *rules)
+   const struct rules  *rules)
 {
    return (UBYTE)(num_labels (rules) - num_upper_labels (rules));
 }
 
 UBYTE
 upper_label_len (
-   struct rules  *rules)
+   const struct rules  *rules)
 {
    UBYTE   label_len = 0, temp, limit;
    register UBYTE   n;
@@ -416,7 +416,7 @@ upper_label_len (
 
 UBYTE
 lower_label_len (
-   struct rules  *rules)
+   const struct rules  *rules)
 {
    UBYTE   label_len = 0, temp, limit;
    register UBYTE   n;
