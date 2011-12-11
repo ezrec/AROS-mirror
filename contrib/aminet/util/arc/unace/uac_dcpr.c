@@ -64,7 +64,7 @@ void sortrange(INT left, INT right)
    while (zl < zr);
 
    //sort partial ranges - when very small, sort directly
-   if (left < zr)
+   if (left < zr) {
       if (left < zr - 1)
          sortrange(left, zr);
       else if (sort_freq[left] < sort_freq[zr])
@@ -72,8 +72,9 @@ void sortrange(INT left, INT right)
          xchg_def(sort_freq[left], sort_freq[zr]);
          xchg_def(sort_org[left], sort_org[zr]);
       }
+   }
 
-   if (right > zl)
+   if (right > zl) {
       if (zl < right - 1)
          sortrange(zl, right);
       else if (sort_freq[zl] < sort_freq[right])
@@ -81,6 +82,7 @@ void sortrange(INT left, INT right)
          xchg_def(sort_freq[zl], sort_freq[right]);
          xchg_def(sort_org[zl], sort_org[right]);
       }
+   }
 }
 
 void quicksort(INT n)
@@ -158,7 +160,7 @@ void dcpr_comm(INT comm_size)
    SHORT hash[comm_cpr_hf(255, 255) + 1];
    INT  dpos = 0,
         c,
-        pos,
+        pos = 0,
         len,
         hs;
 

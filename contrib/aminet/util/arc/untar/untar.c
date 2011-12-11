@@ -63,7 +63,6 @@ long OctalToDec(char *s)
 int ReadHeader(FILE *tar, FileHeader *hdr)
 {
     char buf[512];
-    char s[16];
 
     if (fread(buf, 512, 1, tar) == 0) return 0;
 

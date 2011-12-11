@@ -251,7 +251,6 @@ void	PrintTrackHeader( UBYTE*	RawHeader_PT );
 void main( int argc, char** argv )
 {
 	t_Flags		Options_T;
-	int			TotFiles_I		= 0;
 	int			File_I			= 0;
 	int			Result_I		= 0;
 
@@ -503,9 +502,7 @@ int		CheckTracks( FILE*	File_PT,
 	int		Track_I		= 0;
 	UBYTE*	TrackBuf_PT	= NULL;
 	UBYTE	RawHeader_AT [ TRK_TOTAL_SIZE ];
-	USHORT*	Crc_PI		= NULL;
-	USHORT	TrackCrc_I	= NULL;
-	USHORT	CalcCrc_I	= NULL;
+	USHORT	CalcCrc_I	= 0;
 	
 	/* allocate buffer for track data */
 	TrackBuf_PT = (UBYTE*) malloc( TRACK_BUF_SIZE );
@@ -624,10 +621,10 @@ void	PrintFileHeader( UBYTE*	RawHeader_PT )
 	LONG	Time_I = 0;
 #endif
 
-	printf("\n Lowtrack in Archive      : %02d\n", DHEAD_FROM( Header_PT ) );
-	printf(" Hightrack in Archive     : %02d\n", DHEAD_TO( Header_PT ) );
-	printf(" Packed size              : %d bytes\n", DHEAD_CSIZE( Header_PT ));
-	printf(" UnPacked size            : %d bytes\n", DHEAD_SIZE( Header_PT ));
+	printf("\n Lowtrack in Archive      : %02d\n", (int)DHEAD_FROM( Header_PT ) );
+	printf(" Hightrack in Archive     : %02d\n", (int)DHEAD_TO( Header_PT ) );
+	printf(" Packed size              : %d bytes\n", (int)DHEAD_CSIZE( Header_PT ));
+	printf(" UnPacked size            : %d bytes\n", (int)DHEAD_SIZE( Header_PT ));
 	printf(" Serial Number of Creator : Generic\n");
 
 	switch( DHEAD_MACHINE( Header_PT ) ) {
@@ -721,7 +718,7 @@ void	PrintTrackHeader( UBYTE*	RawHeader_PT )
 
 	if ( THEAD_TNUM( Header_PT ) == -1 )
 		printf(" Banner  %5d    %5d   %s  %04X  %04X\n",
-			   THEAD_SIZE( Header_PT ),
+			   (int)THEAD_SIZE( Header_PT ),
 			   THEAD_PLEN( Header_PT ),
 			   TmpStr_AC,
 			   THEAD_USUM( Header_PT ),
@@ -730,7 +727,7 @@ void	PrintTrackHeader( UBYTE*	RawHeader_PT )
 	else
 		printf("  %2d     %5d    %5d   %s  %04X  %04X\n",
 			   THEAD_TNUM( Header_PT ),
-			   THEAD_SIZE( Header_PT ),
+			   (int)THEAD_SIZE( Header_PT ),
 			   THEAD_PLEN( Header_PT ),
 			   TmpStr_AC,
 			   THEAD_USUM( Header_PT ),

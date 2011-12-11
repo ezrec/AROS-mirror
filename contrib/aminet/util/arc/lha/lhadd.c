@@ -84,44 +84,35 @@ FILE *append_it(char *name, FILE *oafp, FILE *nafp)
   int i;
   struct stat stbuf;
   boolean directory;
-D(bug("lhadd.c 87\n"));
   if (stat (name, &stbuf) < 0)
     {
       error ("cannot access", name);
       return oafp;
     }
 
-D(bug("lhadd.c 93\n"));
   directory = is_directory (&stbuf);
-D(bug("lhadd.c 93\n"));
   init_header (name, &stbuf, &hdr);
-D(bug("lhadd.c 93\n"));
   if (!directory && !noexec)
     fp = xfopen (name, READ_BINARY);
   else
     fp = NULL;
-D(bug("lhadd.c 93\n"));
   while (oafp)
     {
-D(bug("lhadd.c 93\n"));
       old_header = ftell (oafp);
       if (!get_header (oafp, &ahdr))
 	{
-D(bug("lhadd.c 93\n"));
 	  fclose (oafp);
 	  oafp = NULL;
 	  break;
 	}
       else
 	{
-D(bug("lhadd.c 93\n"));
 	  cmp = STRING_COMPARE (ahdr.name, hdr.name);
 	  if (cmp < 0)
 	    {			/* SKIP */
 	      /* copy old to new */
 	      if (!noexec)
 		{
-D(bug("lhadd.c 93\n"));
 		  fseek (oafp, old_header, SEEK_SET);
 		  copy_old_one (oafp, nafp, &ahdr);
 		}
@@ -447,21 +438,18 @@ static void remove_files(int filec, char **filev)
 void cmd_add(void)
 {
   LzHeader ahdr;
-  FILE *oafp, *nafp;
+  FILE *oafp, *nafp = NULL;
   int i;
   long old_header;
   boolean old_archive_exist;
-  long new_archive_size;
+  long new_archive_size = 0;
 
   /* exit if no operation */
-D(bug("lhadd 452\n"));
   if (!update_if_newer && cmd_filec == 0)
     {
-D(bug("lhadd 455\n"));
       error ("No files given in argument, do nothing.", "");
       return;
     }
-D(bug("lhadd 459\n"));
   /* open old archive if exist */
   if ((oafp = open_old_archive ()) == NULL)
     old_archive_exist = FALSE;
@@ -477,24 +465,19 @@ D(bug("lhadd 459\n"));
       fclose (oafp);
       oafp = NULL;
     }
-D(bug("lhadd 475\n"));
   if (oafp && archive_is_msdos_sfx1 (archive_name))
     {
-D(bug("lhadd 478\n"));
       skip_msdos_sfx1_code (oafp);
       build_standard_archive_name (new_archive_name_buffer, archive_name);
       new_archive_name = new_archive_name_buffer;
     }
   else
     {
- 	D(bug("lhadd 485\n"));
       new_archive_name = archive_name;
     }
-D(bug("lhadd 488\n"));
   /* build temporary file */
   if (!noexec)
 	{
-	D(bug("lhadd 492\n"));
     nafp = build_temporary_file ();
 	}
   /* find needed files when automatic update */
@@ -503,26 +486,20 @@ D(bug("lhadd 488\n"));
 
   /* build new archive file */
   /* cleaning arguments */
- D(bug("lhadd 501\n"));
   cleaning_files (&cmd_filec, &cmd_filev);
- D(bug("lhadd 503\n"));
   if (cmd_filec == 0)
     {
-	D(bug("lhadd 506\n"));
       if (oafp)
 	fclose (oafp);
       if  (!noexec)
 	fclose (nafp);
       return;
     }
-D(bug("lhadd 513\n"));
 
   for (i = 0; i < cmd_filec; i ++)
     oafp = append_it (cmd_filev[i], oafp, nafp);
-D(bug("lhadd 517\n"));
   if (oafp)
     {
-D(bug("lhadd 520\n"));
       old_header = ftell (oafp);
       while (get_header (oafp, &ahdr))
 	{
@@ -537,10 +514,8 @@ D(bug("lhadd 520\n"));
 	}
       fclose (oafp);
     }
-D(bug("lhadd 535\n"));
   if (!noexec)
     {
-D(bug("lhadd 538\n"));
       write_archive_tail (nafp);
       new_archive_size = ftell (nafp);
       fclose (nafp);
@@ -570,8 +545,8 @@ D(bug("lhadd 538\n"));
 
 void cmd_delete(void)
 {
-  FILE *oafp, *nafp;
-  long new_archive_size;
+  FILE *oafp, *nafp = NULL;
+  long new_archive_size = 0;
 
   /* open old archive if exist */
   if ((oafp = open_old_archive ()) == NULL)

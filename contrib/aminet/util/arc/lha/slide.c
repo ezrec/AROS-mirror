@@ -96,7 +96,7 @@ int method;
     prev       = (node *)malloc(dicsiz * 2 * sizeof(*prev));
     next       = (node *)malloc((max_hash_val + 1) * sizeof(*next));
     if (next == NULL || 
-	method > 1 && alloc_buf() == NULL) {
+	(method > 1 && alloc_buf() == NULL)) {
       if (next) free(next);
       if (prev) free(prev);
       if (parent) free(parent);

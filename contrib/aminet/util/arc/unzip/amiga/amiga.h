@@ -193,7 +193,7 @@ typedef struct stat z_stat;
 
 extern int real_timezone_is_set;
 void tzset(void);
-#define VALID_TIMEZONE(tempvar) (tzset(), real_timezone_is_set)
+#define VALID_TIMEZONE(tempvar) ((void)tempvar, tzset(), real_timezone_is_set)
 
 int Agetch(void);               /* getch() like function, in amiga/filedate.c */
 LONG FileDate(char *, time_t[]);

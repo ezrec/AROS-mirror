@@ -125,9 +125,10 @@ extern struct interfacing interface;
 extern struct tm *localtime ();
 extern char *getenv ();
 
-
+#ifndef FALSE
 #define	FALSE	0
 #define TRUE	1
+#endif
 typedef int boolean;
 
 

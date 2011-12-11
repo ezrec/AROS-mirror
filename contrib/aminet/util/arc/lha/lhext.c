@@ -174,7 +174,7 @@ static void extract_one(FILE *afp, LzHeader *hdr)
 {
   FILE *fp;					/* output file */
   char name[257];
-  int crc;
+  int crc = 0;
   int method;
   boolean save_quiet, save_verbose;
   char *q = hdr->name , c;

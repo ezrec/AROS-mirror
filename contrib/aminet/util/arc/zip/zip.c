@@ -2126,7 +2126,7 @@ char **argv;            /* command line tokens */
    command help in help() above. */
 {
   int d;                /* true if just adding to a zip file */
-  char *e;              /* malloc'd comment buffer */
+  char *e = NULL;       /* malloc'd comment buffer */
   struct flist far *f;  /* steps through found linked list */
   int i;                /* arg counter, root directory flag */
   int kk;               /* next arg type (formerly another re-use of "k") */
@@ -5711,11 +5711,11 @@ char **argv;            /* command line tokens */
     if (noisy) fprintf(mesg, "\nStart commenting files ...\n");
 #endif
     for (z = zfiles; z != NULL; z = z->nxt)
-      if (z->mark)
+      if (z->mark) {
 #if defined(AMIGA) || defined(MACOS)
         if (filenotes && (p = GetComment(z->zname)))
         {
-          if (z->comment = malloc(k = strlen(p)+1))
+          if ((z->comment = malloc(k = strlen(p)+1)))
           {
             z->com = k;
             strcpy(z->comment, p);
@@ -5746,6 +5746,7 @@ char **argv;            /* command line tokens */
             z->com = (extent)k;
           }
         }
+      }
 #ifdef MACOS
     if (noisy) fprintf(mesg, "\n...done");
 #endif

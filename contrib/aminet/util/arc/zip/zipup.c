@@ -400,7 +400,7 @@ struct zlist far *z;    /* zip entry to compress */
   int l = 0;            /* true if this file is a symbolic link */
   int m;                /* method for this entry */
 
-  zoff_t o = 0, p;      /* offsets in zip file */
+  zoff_t o = 0;      /* offsets in zip file */
   zoff_t q = (zoff_t) -3; /* size returned by filetime */
   uzoff_t uq;           /* unsigned q */
   zoff_t s = 0;         /* size of compressed data */
@@ -934,7 +934,6 @@ struct zlist far *z;    /* zip entry to compress */
 #endif /*MMAP */
 
   tempzn += s;
-  p = tempzn; /* save for future fseek() */
 
 #if (!defined(MSDOS) || defined(OS2))
 #if !defined(VMS) && !defined(CMS_MVS) && !defined(__mpexl)

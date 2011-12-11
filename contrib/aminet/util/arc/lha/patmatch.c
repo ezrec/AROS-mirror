@@ -14,7 +14,7 @@ int patmatch(char *p, char *s, int f)
     char c;
 
     c = *p++;
-    while (pc = ((f && islower(c)) ? toupper(c) : c))
+    while ((pc = ((f && islower(c)) ? toupper(c) : c)))
     {
 	if (pc == '*')
 	{

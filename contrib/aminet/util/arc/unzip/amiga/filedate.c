@@ -333,9 +333,9 @@ char *getenv(const char *var)         /* not reentrant! */
     {
         BPTR hand, foot, spine;
         int z = 0;
-        if (foot = Lock("ENV:", ACCESS_READ)) {
+        if ((foot = Lock("ENV:", ACCESS_READ))) {
             spine = CurrentDir(foot);
-            if (hand = Open((char *) var, MODE_OLDFILE)) {
+            if ((hand = Open((char *) var, MODE_OLDFILE))) {
                 z = Read(hand, space, ENVSIZE - 1);
                 Close(hand);
             }

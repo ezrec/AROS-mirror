@@ -219,7 +219,7 @@ int extract(char *parent, int skip);
 int extractfile(struct fileHdr *fh, int skip);
 int readsithdr(struct sitHdr *s);
 int readfilehdr(struct fileHdr *f, int skip);
-check_access(char *fname);
+int check_access(char *fname);
 unsigned short write_file(char *, long, long, unsigned char);
 void outc(char *p, int n, FILE *fp);
 long get4(char *bp);
@@ -611,13 +611,13 @@ Original Packed Ratio Type  CRC  Original Packed Ratio Type  CRC  Name
 -------- ------  ---  ----- ---- -------- ------  ---  ----- ---- ------------
 */
             printf("  %6d %6d %3d%%  -%3s- %04x ",
-                   f->dataLength, f->compDLength,
-                   (f->dataLength != 0) ? (100*f->compDLength)/f->dataLength : 0,
+                   (int)f->dataLength, (int)f->compDLength,
+                   (int)((f->dataLength != 0) ? (100*f->compDLength)/f->dataLength : 0),
                    CompStr[ (f->compDMethod < 4) ? f->compDMethod : 4 ],
                    f->dataCRC);
             printf("  %6d %6d %3d%%  -%3s- %04x %s",
-                   f->rsrcLength, f->compRLength,
-                   (f->rsrcLength != 0) ? (100*f->compRLength)/f->rsrcLength : 0,
+                   (int)f->rsrcLength, (int)f->compRLength,
+                   (int)((f->rsrcLength != 0) ? (100*f->compRLength)/f->rsrcLength : 0),
                    CompStr[ (f->compRMethod < 4) ? f->compRMethod : 4 ],
                    f->rsrcCRC, uname);
           } else {
@@ -645,7 +645,7 @@ Original Packed Ratio Type  CRC  Original Packed Ratio Type  CRC  Name
 }
 
 /* return 0 if OK to write on file fname, -1 otherwise */
-check_access(char *fname) {
+int check_access(char *fname) {
     char temp[10], *tp;
 
     if (access(fname, 0) == -1) {
@@ -670,9 +670,6 @@ write_file(char *fname, long ibytes, long obytes, unsigned char type) {
     int i, n, ch, lastch;
     FILE *outf;
     char temp[256];
-#ifdef __AROS__
-    BPTR lock;
-#endif
 
     crc = INIT_CRC;
     chkcrc = 1;   /* usually can check the CRC */

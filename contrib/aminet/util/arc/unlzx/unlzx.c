@@ -10,7 +10,7 @@
 #include "unlzx.h"
 
 #ifdef AMIGA
-static unsigned char *version_string = "$VER: UnLZX " UNLZX_VERSION " (" UNLZX_VERDATE ")";
+unsigned char *version_string = "$VER: UnLZX " UNLZX_VERSION " (" UNLZX_VERDATE ")";
 #endif /* AMIGA */
 
 #ifndef optind

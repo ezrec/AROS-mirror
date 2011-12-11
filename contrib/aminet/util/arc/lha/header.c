@@ -299,8 +299,8 @@ static time_t generic_to_unix_stamp(long t)
   if (t == 0)
     return (time_t)0;
 
-  year  = ((int)(t >> 16+9) & 0x7f) + 1980;
-  month =  (int)(t >> 16+5) & 0x0f;	/* 1..12 means Jan..Dec */
+  year  = ((int)(t >> (16+9)) & 0x7f) + 1980;
+  month =  (int)(t >> (16+5)) & 0x0f;	/* 1..12 means Jan..Dec */
   day   =  (int)(t >> 16)   & 0x1f;	/* 1..31 means 1st,...31st */
 
   hour  =  ((int)t >> 11) & 0x1f;
@@ -672,7 +672,7 @@ void write_header(FILE *nafp, LzHeader *hdr)
   convdelim(hdr->name, DELIM2);
   if (hdr->header_level != HEADER_LEVEL2)
     {
-      if (p = (char *)rindex(hdr->name, DELIM2))
+      if ((p = (char *)rindex(hdr->name, DELIM2)))
 	name_length = strlen(++p);
       else
 	name_length = strlen(hdr->name);
@@ -716,7 +716,7 @@ void write_header(FILE *nafp, LzHeader *hdr)
       put_byte(0x51);		/* gid and uid */
       put_word(hdr->unix_gid);
       put_word(hdr->unix_uid);
-      if (p = (char *)rindex(hdr->name, DELIM2))
+      if ((p = (char *)rindex(hdr->name, DELIM2)))
 	{
 	  int i;
 	  name_length = p - hdr->name + 1;
@@ -741,7 +741,7 @@ void write_header(FILE *nafp, LzHeader *hdr)
       else
 	{
 	  int i;
-	  if (p = (char *)rindex(hdr->name, DELIM2))
+	  if ((p = (char *)rindex(hdr->name, DELIM2)))
 	    name_length = strlen(++p);
 	  else
 	    {

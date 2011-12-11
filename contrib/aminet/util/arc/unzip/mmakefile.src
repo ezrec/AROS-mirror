@@ -26,19 +26,19 @@ EXEDIR := $(AROS_C)
 
 #MM- aminet-util-arc-unzip: includes linklibs unzip-unzip unzip-unzipsfx unzip-funzip
 
-USER_CFLAGS := -DUNDER='"$(OS)"'
+USER_CFLAGS := -DUNDER='"$(OS)"' -Wno-strict-overflow
 
 %build_prog mmake=unzip-unzip \
     progname=UnZip objdir=$(GENDIR)/$(CURDIR)/UnZip targetdir=$(EXEDIR) \
     files=$(FILES)
 
-USER_CFLAGS := -DSFX -DUNDER='"$(OS)"'
+USER_CFLAGS := -DSFX -DUNDER='"$(OS)"' -Wno-strict-overflow
 
 %build_prog mmake=unzip-unzipsfx \
     progname=UnZipSfx objdir=$(GENDIR)/$(CURDIR)/UnZipSfx targetdir=$(EXEDIR) \
     files=$(FILESX)
 
-USER_CFLAGS := -DFUNZIP -DUNDER='"$(OS)"'
+USER_CFLAGS := -DFUNZIP -DUNDER='"$(OS)"' -Wno-strict-overflow
 
 %build_prog mmake=unzip-funzip \
     progname=fUnZip objdir=$(GENDIR)/$(CURDIR)/fUnZip targetdir=$(EXEDIR) \

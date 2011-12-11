@@ -2378,11 +2378,12 @@ int do_string(__G__ length, option)   /* return PK-type error code */
         /* convert multi-line text into single line with no ctl-chars: */
         tmp_fnote[block_len] = '\0';
         while ((short int) --block_len >= 0)
-            if ((unsigned) tmp_fnote[block_len] < ' ')
+            if ((unsigned) tmp_fnote[block_len] < ' ') {
                 if (tmp_fnote[block_len+1] == ' ')     /* no excess */
                     strcpy(tmp_fnote+block_len, tmp_fnote+block_len+1);
                 else
                     tmp_fnote[block_len] = ' ';
+            }
         tmp_fnote[AMIGA_FILENOTELEN - 1] = '\0';
         if (G.filenotes[G.filenote_slot])
             free(G.filenotes[G.filenote_slot]);     /* should not happen */

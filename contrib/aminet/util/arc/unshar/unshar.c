@@ -413,7 +413,7 @@ char *filename;
 
 	p = filename;
 
-	while (p = myindex(p, '/', 1)) {
+	while ((p = myindex(p, '/', 1))) {
 
 		/* Dir exists, so copy dir part of filename into dir name area */
 
@@ -423,7 +423,7 @@ char *filename;
 		dir[i] = '\0';
 
 		/* Now, see if directory exists, if not then create */
-		if ((dirlock = Lock(dir,ACCESS_READ)) == NULL) {
+		if (((dirlock = Lock(dir,ACCESS_READ))) == BNULL) {
 			dirlock = CreateDir(dir);
 			if (dirlock) {
 				print3("Creating directory ", dir, "\n");
@@ -452,11 +452,11 @@ int echofilename, overwrite;
 {
 	register char *s, *p;
 	char endmarker[100], filename[100],sedstring[100];
-	int endlen, stripfirst, startfile, found = NO, err = NO, skip, sedlen;
+	int endlen, stripfirst = 0, startfile, found = NO, err = NO, skip, sedlen = 0;
 	int append;
-	BPTR filelock;
+	BPTR filelock = BNULL;
 
-	if ((infile = Open(sharfile, MODE_OLDFILE)) == NULL) {
+	if (((infile = Open(sharfile, MODE_OLDFILE))) == BNULL) {
 		print3("Can't open file ", sharfile, " for input\n");
 		return(1);
 	}
@@ -536,7 +536,7 @@ int echofilename, overwrite;
 					/* Check if file exists */
 
 					skip = NO;
-					outfile = NULL;
+					outfile = BNULL;
 					if (!overwrite) {
 						filelock = Lock(filename, ACCESS_READ);
 						if (filelock) {
@@ -597,11 +597,12 @@ int echofilename, overwrite;
 		}
 	}
 
-	if (!err && !CtrlC)
+	if (!err && !CtrlC) {
 		if (found)
 			print("Unshar done\n");
 		else
 			print("No files to unshar\n");
+	}
 	Close(infile);
 	flushin();
 	return(err);
@@ -682,7 +683,7 @@ int *seqnum;
 				if (strnicmp(p, "Part", 4) == 0) {
 					p += 4;
 					while (*p == ' ')
-						*p++;
+						p++;
 					*seqnum = atoi(p);
 					if (*seqnum != 0) {
 						*seqnum += 1000;
@@ -803,4 +804,6 @@ endsort:
 	 */
 	if (CtrlC)
 		print("^C\n");
+
+	return 0;
 }

@@ -1007,7 +1007,7 @@ check_pattern()
        while ((arc_f[i] != NULL) && (flag == FALSE))
        {
           ParsePatternNoCase(arc_f[i], buffer, BUF_SIZE);
-          if (MatchPatternNoCase(buffer, filename) != NULL) flag = TRUE;
+          if (MatchPatternNoCase(buffer, filename) != 0) flag = TRUE;
           i++;
        }
     }

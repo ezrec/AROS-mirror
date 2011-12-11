@@ -23,9 +23,9 @@ static int list_files;
 static void print_size(long packed_size, long original_size)
 {
   if (verbose_listing)
-    printf ("%7d ", packed_size);
+    printf ("%7ld ", packed_size);
 
-  printf ("%7d ", original_size);
+  printf ("%7ld ", original_size);
 
   if (original_size == 0L)
     printf ("******");
@@ -196,10 +196,12 @@ static void list_one(LzHeader *hdr)
   print_size (hdr->packed_size, hdr->original_size);
 
   if (verbose_listing)
+  {
     if (hdr->has_crc)
       printf (" %s %04x", method,hdr->crc);
     else
       printf (" %s ****",method);
+  }
   
   printf (" ");
   print_stamp (hdr->unix_last_modified_stamp);

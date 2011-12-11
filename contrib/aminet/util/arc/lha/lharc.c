@@ -380,12 +380,12 @@ void interrupt(int signo)
 /*									*/
 /*----------------------------------------------------------------------*/
 
-static int sort_by_ascii(char **a, char **b)
+static int sort_by_ascii(const void *a, const void *b)
 {
-    char *p, *q;
+    const char *p, *q;
     int c1, c2;
 
-    p = *a, q = *b;
+    p = *(const char **)a, q = *(const char **)b;
     if (generic_format)
     {
 	do
@@ -783,7 +783,7 @@ FILE *open_old_archive(void)
 	if (cmd == CMD_EXTRACT || cmd == CMD_LIST) return stdin;
 	else return NULL;
     }
-    if (p = (char *)rindex(archive_name,'.'))
+    if ((p = (char *)rindex(archive_name,'.')))
     {
 	if (stricmp(".LHA",p)==0 ||
 	    stricmp(".LZH",p)==0 ||

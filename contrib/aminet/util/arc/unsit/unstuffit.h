@@ -10,7 +10,7 @@ typedef struct sitHdr {         /* 22 bytes */
      OSType         signature2; /* = 'rLau' -- for verification */
      unsigned char  version;    /* version number */
      char           reserved[7];
-};
+} sitHdr;
 
 typedef struct fileHdr { /* 112 bytes */
      unsigned char  compRMethod; /* rsrc fork compression method */
@@ -31,7 +31,7 @@ typedef struct fileHdr { /* 112 bytes */
      unsigned short dataCRC;     /* crc of data fork */
      char           reserved[6];
      unsigned short hdrCRC;      /* crc of file header */
-};
+} fileHdr;
 
 
 /* file format is:
