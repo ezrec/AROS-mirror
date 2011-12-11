@@ -39,7 +39,7 @@ struct Soliton_Data
   About
 ****************************************************************************************/
 
-static ULONG Soliton_About(struct IClass* cl, Object* obj, Msg msg)
+static IPTR Soliton_About(struct IClass* cl, Object* obj, Msg msg)
 {
   struct Soliton_Data* data = (struct Soliton_Data *) INST_DATA(cl, obj);
   setatt(data->WI_About, MUIA_Window_RefWindow, data->WI_Main);
@@ -52,7 +52,7 @@ static ULONG Soliton_About(struct IClass* cl, Object* obj, Msg msg)
   OpenSettings
 ****************************************************************************************/
 
-static ULONG Soliton_OpenSettings(struct IClass* cl, Object* obj, Msg msg)
+static IPTR Soliton_OpenSettings(struct IClass* cl, Object* obj, Msg msg)
 {
   struct Soliton_Data* data = (struct Soliton_Data *) INST_DATA(cl, obj);
   setatt(data->WI_Settings, MUIA_Window_Open, TRUE);
@@ -63,7 +63,7 @@ static ULONG Soliton_OpenSettings(struct IClass* cl, Object* obj, Msg msg)
   Statistics
 ****************************************************************************************/
 
-static ULONG Soliton_Statistics(struct IClass* cl, Object* obj, struct MUIP_Soliton_Statistics* msg)
+static IPTR Soliton_Statistics(struct IClass* cl, Object* obj, struct MUIP_Soliton_Statistics* msg)
 {
   ULONG sigs = 0;
   struct Soliton_Data* data = (struct Soliton_Data *) INST_DATA(cl, obj);
@@ -106,7 +106,7 @@ static ULONG Soliton_Statistics(struct IClass* cl, Object* obj, struct MUIP_Soli
   New / Dispose
 ****************************************************************************************/
 
-static ULONG Soliton_New(struct IClass* cl, Object* obj, struct opSet* msg)
+static IPTR Soliton_New(struct IClass* cl, Object* obj, struct opSet* msg)
 {
   struct Soliton_Data tmp;
 
@@ -158,10 +158,10 @@ static ULONG Soliton_New(struct IClass* cl, Object* obj, struct opSet* msg)
     {
       ErrorReq(MSG_CREATE_MAINWINDOW);
       MUI_DisposeObject(obj);
-      return NULL;
+      return (IPTR)NULL;
     }
 
-    return (ULONG)obj;
+    return (IPTR)obj;
   }
   return 0;
 }
@@ -171,7 +171,7 @@ static ULONG Soliton_New(struct IClass* cl, Object* obj, struct opSet* msg)
   Get / Set
 ****************************************************************************************/
 
-static ULONG Soliton_Get(struct IClass* cl, Object* obj, struct opGet* msg)
+static IPTR Soliton_Get(struct IClass* cl, Object* obj, struct opGet* msg)
 {
   struct Soliton_Data* data = (struct Soliton_Data *) INST_DATA(cl, obj);
   switch (msg->opg_AttrID)
@@ -191,7 +191,7 @@ static ULONG Soliton_Get(struct IClass* cl, Object* obj, struct opGet* msg)
   return DoSuperMethodA(cl, obj, (Msg)msg);
 }
 
-static ULONG Soliton_Set(struct IClass* cl, Object* obj, struct opSet* msg)
+static IPTR Soliton_Set(struct IClass* cl, Object* obj, struct opSet* msg)
 {
   struct Soliton_Data* data = (struct Soliton_Data*)INST_DATA(cl, obj);
   struct TagItem *tag;
@@ -236,7 +236,7 @@ static ULONG Soliton_Set(struct IClass* cl, Object* obj, struct opSet* msg)
   Dispatcher / Init / Exit
 ****************************************************************************************/
 
-DISPATCHERPROTO(Soliton_Dispatcher)
+DISPATCHER(Soliton_Dispatcher)
 {
   switch(msg->MethodID)
   {

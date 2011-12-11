@@ -389,7 +389,7 @@ static ULONG _New(struct IClass* cl, Object* obj, struct opSet * msg)
   Dispatcher / Init / Exit
 ****************************************************************************************/
 
-DISPATCHERPROTO(_Dispatcher)
+DISPATCHER(_Dispatcher)
 {
   switch(msg->MethodID)
   {

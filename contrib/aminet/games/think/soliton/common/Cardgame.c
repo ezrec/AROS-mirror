@@ -1402,7 +1402,7 @@ static void ghostMove(struct Cardgame_Data *data, int x, int y)
   Externe Funktionen
 ****************************************************************************************/
 
-static ULONG _TimerEvent(struct IClass* cl, Object* obj/*, Msg msg*/)
+static IPTR _TimerEvent(struct IClass* cl, Object* obj/*, Msg msg*/)
 {
   struct Cardgame_Data* data = (struct Cardgame_Data *)INST_DATA(cl, obj);
 
@@ -1421,7 +1421,7 @@ static ULONG _TimerEvent(struct IClass* cl, Object* obj/*, Msg msg*/)
   return 0;
 }
 
-static ULONG _TimerReset(struct IClass* cl, Object* obj/*, Msg msg*/)
+static IPTR _TimerReset(struct IClass* cl, Object* obj/*, Msg msg*/)
 {
   struct Cardgame_Data* data = (struct Cardgame_Data *)INST_DATA(cl, obj);
 
@@ -1433,7 +1433,7 @@ static ULONG _TimerReset(struct IClass* cl, Object* obj/*, Msg msg*/)
   return 0;
 }
 
-static ULONG _MoveCards(struct IClass* cl, Object* obj, 
+static IPTR _MoveCards(struct IClass* cl, Object* obj, 
                          struct MUIP_Cardgame_MoveCards* msg)
 {
   struct Cardgame_Data* data = (struct Cardgame_Data*)INST_DATA(cl, obj);
@@ -1443,7 +1443,7 @@ static ULONG _MoveCards(struct IClass* cl, Object* obj,
   return FALSE;
 }
 
-static ULONG _SetEmptyImage(struct IClass* cl, Object* obj, struct MUIP_Cardgame_SetEmptyImage* msg)
+static IPTR _SetEmptyImage(struct IClass* cl, Object* obj, struct MUIP_Cardgame_SetEmptyImage* msg)
 {
   struct Cardgame_Data* data = (struct Cardgame_Data*)INST_DATA(cl, obj);
   if(msg->pile >= 0 && msg->pile < data->pileSize)
@@ -1463,7 +1463,7 @@ static ULONG _SetEmptyImage(struct IClass* cl, Object* obj, struct MUIP_Cardgame
   return FALSE;
 }
 
-static ULONG _SetCards(struct IClass* cl, Object* obj, 
+static IPTR _SetCards(struct IClass* cl, Object* obj, 
                         struct MUIP_Cardgame_SetCards* msg)
 {
   int i;
@@ -1488,7 +1488,7 @@ static ULONG _SetCards(struct IClass* cl, Object* obj,
   return FALSE;
 }
 
-static ULONG _GetCards(struct IClass* cl, Object* obj, 
+static IPTR _GetCards(struct IClass* cl, Object* obj, 
                         struct MUIP_Cardgame_GetCards* msg)
 {
   int i;
@@ -1503,7 +1503,7 @@ static ULONG _GetCards(struct IClass* cl, Object* obj,
   return FALSE;
 }
 
-static ULONG _SetGraphic(struct IClass* cl, Object* obj, 
+static IPTR _SetGraphic(struct IClass* cl, Object* obj, 
                          struct MUIP_Cardgame_SetGraphic* msg)
 {
   struct Cardgame_Data* data = (struct Cardgame_Data*)INST_DATA(cl, obj);
@@ -1727,7 +1727,7 @@ struct Screen *scr, BOOL unpack)
 #endif
 }
 
-static ULONG _Setup(struct IClass* cl, Object* obj, Msg msg)
+static IPTR _Setup(struct IClass* cl, Object* obj, Msg msg)
 {
   struct Cardgame_Data *data;
   struct Screen *scr;
@@ -1830,7 +1830,7 @@ static ULONG _Setup(struct IClass* cl, Object* obj, Msg msg)
   return TRUE;
 }
 
-static ULONG _Cleanup(struct IClass* cl, Object* obj, Msg msg)
+static IPTR _Cleanup(struct IClass* cl, Object* obj, Msg msg)
 {
   struct Cardgame_Data *data;
   struct IORequest* req;
@@ -1869,7 +1869,7 @@ static ULONG _Cleanup(struct IClass* cl, Object* obj, Msg msg)
   return DoSuperMethodA(cl, obj, msg);
 }
 
-static ULONG _AskMinMax(struct IClass *cl, Object *obj, struct MUIP_AskMinMax *msg)
+static IPTR _AskMinMax(struct IClass *cl, Object *obj, struct MUIP_AskMinMax *msg)
 {
   struct Cardgame_Data *data;
   struct Screen *scr;
@@ -1903,7 +1903,7 @@ static ULONG _AskMinMax(struct IClass *cl, Object *obj, struct MUIP_AskMinMax *m
   return 0;
 }
 
-static ULONG _New(struct IClass *cl, Object *obj, struct opSet* msg)
+static IPTR _New(struct IClass *cl, Object *obj, struct opSet* msg)
 {
   struct Cardgame_Data *data;
   LONG tmp;
@@ -1939,10 +1939,10 @@ static ULONG _New(struct IClass *cl, Object *obj, struct opSet* msg)
   data->norekoback = GetTagData(MUIA_Cardgame_NoREKOBack, 0, msg->ops_AttrList);
   data->animspeed = (int)GetTagData(MUIA_Cardgame_MoveSpeed, 0, msg->ops_AttrList);
 
-  return (ULONG)obj;
+  return (IPTR)obj;
 }
 
-static ULONG _Dispose(struct IClass *cl, Object *obj, Msg msg)
+static IPTR _Dispose(struct IClass *cl, Object *obj, Msg msg)
 {
   struct Cardgame_Data *data = (struct Cardgame_Data*)INST_DATA(cl, obj);
 
@@ -1951,7 +1951,7 @@ static ULONG _Dispose(struct IClass *cl, Object *obj, Msg msg)
   return DoSuperMethodA(cl,obj,msg);
 }
 
-static ULONG _Draw(struct IClass *cl, Object *obj, struct MUIP_Draw *msg)
+static IPTR _Draw(struct IClass *cl, Object *obj, struct MUIP_Draw *msg)
 {
   APTR cliphandle = 0;
   struct Cardgame_Data *data = (struct Cardgame_Data*)INST_DATA(cl, obj);
@@ -2005,7 +2005,7 @@ static ULONG _Draw(struct IClass *cl, Object *obj, struct MUIP_Draw *msg)
   return 0;
 }
 
-static ULONG _HandleInput(struct IClass* cl, Object*obj, struct MUIP_HandleInput* msg)
+static IPTR _HandleInput(struct IClass* cl, Object*obj, struct MUIP_HandleInput* msg)
 {
   struct Cardgame_Data* data = (struct Cardgame_Data*)INST_DATA(cl,obj);
 
@@ -2055,11 +2055,12 @@ static ULONG _HandleInput(struct IClass* cl, Object*obj, struct MUIP_HandleInput
   return DoSuperMethodA(cl, obj, (Msg)msg);
 }
 
-static ULONG _Set(struct IClass* cl, Object* obj, struct opSet* msg)
+static IPTR _Set(struct IClass* cl, Object* obj, struct opSet* msg)
 {
   BOOL redraw = FALSE, redrawback = FALSE;
   struct Cardgame_Data* data = (struct Cardgame_Data*)INST_DATA(cl, obj);
-  struct TagItem *tag, *tags = msg->ops_AttrList;
+  struct TagItem *tag;
+  const struct TagItem *tags = msg->ops_AttrList;
 
   while((tag = NextTagItem(&tags)))
   {
@@ -2133,7 +2134,7 @@ static ULONG _Set(struct IClass* cl, Object* obj, struct opSet* msg)
   return DoSuperMethodA(cl, obj, (Msg)msg);
 }
 
-static ULONG _Get(struct IClass* cl, Object* obj, struct opGet* msg)
+static IPTR _Get(struct IClass* cl, Object* obj, struct opGet* msg)
 {
   struct Cardgame_Data* data = (struct Cardgame_Data*)INST_DATA(cl, obj);
   ULONG *store = msg->opg_Storage;
@@ -2158,7 +2159,7 @@ static ULONG _Get(struct IClass* cl, Object* obj, struct opGet* msg)
   Init / Exit / Dispatcher
 ***************************************************************************************/
  
-DISPATCHERPROTO(Cardgame_Dispatcher)
+DISPATCHER(Cardgame_Dispatcher)
 {
   switch(msg->MethodID)
   {

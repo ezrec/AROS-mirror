@@ -43,7 +43,7 @@ struct CButton_Data
   Active
 ****************************************************************************************/
 
-static ULONG CButton_Active(struct IClass* cl, Object* obj/*, Msg msg*/)
+static IPTR CButton_Active(struct IClass* cl, Object* obj/*, Msg msg*/)
 {
   struct CButton_Data* data = (struct CButton_Data *) INST_DATA(cl, obj);
 
@@ -64,7 +64,7 @@ static ULONG CButton_Active(struct IClass* cl, Object* obj/*, Msg msg*/)
   Setup
 ****************************************************************************************/
 
-static ULONG CButton_Setup(struct IClass* cl, Object* obj, Msg msg)
+static IPTR CButton_Setup(struct IClass* cl, Object* obj, Msg msg)
 {
   struct CButton_Data *data = (struct CButton_Data *) INST_DATA(cl,obj);
   struct Screen* scr = _screen(obj);
@@ -112,7 +112,7 @@ static ULONG CButton_Setup(struct IClass* cl, Object* obj, Msg msg)
   New / Dispose
 ****************************************************************************************/
 
-static ULONG CButton_New(struct IClass* cl, Object* obj, struct opSet* msg)
+static IPTR CButton_New(struct IClass* cl, Object* obj, struct opSet* msg)
 {
   struct CButton_Data tmp;
   char *text;
@@ -188,7 +188,7 @@ static ULONG CButton_New(struct IClass* cl, Object* obj, struct opSet* msg)
   return (ULONG)obj;
 }
 
-static ULONG CButton_Dispose(struct IClass* cl, Object* obj, Msg msg)
+static IPTR CButton_Dispose(struct IClass* cl, Object* obj, Msg msg)
 {
   struct CButton_Data* data = (struct CButton_Data *) INST_DATA(cl,obj);
 
@@ -208,7 +208,7 @@ static ULONG CButton_Dispose(struct IClass* cl, Object* obj, Msg msg)
   Set
 ****************************************************************************************/
 
-static ULONG CButton_Set(struct IClass* cl, Object* obj, struct opSet* msg)
+static IPTR CButton_Set(struct IClass* cl, Object* obj, struct opSet* msg)
 {
   struct CButton_Data* data = (struct CButton_Data *) INST_DATA(cl, obj);
   struct TagItem *tag;
@@ -236,7 +236,7 @@ static ULONG CButton_Set(struct IClass* cl, Object* obj, struct opSet* msg)
   Dispatcher / Ini / Exit
 ****************************************************************************************/
 
-DISPATCHERPROTO(CButton_Dispatcher)
+DISPATCHER(CButton_Dispatcher)
 {
   switch(msg->MethodID)
   {

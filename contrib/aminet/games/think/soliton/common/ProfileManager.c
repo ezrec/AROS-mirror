@@ -250,8 +250,8 @@ HOOKPROTONHNO(DestructFunc, LONG, struct Profil* entry)
   return 0;
 }
 
-static struct Hook DispHook = {0,0, (HOOKFUNC)DisplayFunc,0,0};
-static struct Hook DestructHook = {0,0, (HOOKFUNC)DestructFunc,0,0};
+MakeStaticHook(DispHook, DisplayFunc);
+MakeStaticHook(DestructHook, DestructFunc);
 
 /****************************************************************************************
   Add / Rem / Redefine / Select
@@ -493,7 +493,7 @@ static ULONG ProfileManager_Dispose(struct IClass* cl, Object* obj/*, Msg msg*/)
   Dispatcher / Init / Exit
 ****************************************************************************************/
 
-DISPATCHERPROTO(ProfileManager_Dispatcher)
+DISPATCHER(ProfileManager_Dispatcher)
 {
   switch(msg->MethodID)
   {

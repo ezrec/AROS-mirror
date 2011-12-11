@@ -20,7 +20,7 @@
 #define INCLUDE_MUITOOLS_H
 
 #ifdef USE_ZUNE
-#include <mui.h>
+#include <libraries/mui.h>
 #else
 #include <libraries/mui.h>
 #endif
@@ -29,23 +29,8 @@
   MUI
 ****************************************************************************************/
 
-#ifdef __AROS__
-#warning hack! fix it!
-#define HOOKPROTO(name, ret, obj, param) \
-    static ret name(struct Hook *hook, obj, param)
-#define HOOKPROTONH(name, ret, obj, param) \
-    static ret name(struct Hook *hook, obj, param)
-#define HOOKPROTONHNO(name, ret, param) \
-    static ret name(struct Hook *hook, APTR __obj, param)
-#define DISPATCHERPROTO(name) \
-    static ULONG name(struct IClass *cl, Object *obj, Msg msg)
-#else
-#include "SDI_compiler.h"
-#define HOOKPROTO(name, ret, obj, param) static SAVEDS ASM(ret) name(REG(a0, struct Hook *hook), REG(a2, obj), REG(a1, param))
-#define HOOKPROTONH(name, ret, obj, param) static SAVEDS ASM(ret) name(REG(a2, obj), REG(a1, param))
-#define HOOKPROTONHNO(name, ret, param) static SAVEDS ASM(ret) name(REG(a1, param))
-#define DISPATCHERPROTO(name) static ASM(ULONG) SAVEDS name(REG(a0, struct IClass * cl), REG(a2, Object * obj), REG(a1, Msg msg))
-#endif
+#include <SDI/SDI_compiler.h>
+#include <SDI/SDI_hook.h>
 
 #define TAGBASE_KAI (TAG_USER | (0617 << 16))
 
@@ -57,8 +42,34 @@
 #define setatt(obj,attr,value) SetAttrs(obj,attr,value,TAG_DONE)
 
 LONG xget(Object* obj, ULONG attribute);
-ULONG DoSuperNew(struct IClass* cl, Object* obj, ULONG tag1, ...);
 void ErrorReq(int messagenum);
+
+#if !defined(__MORPHOS__)
+#ifdef __AROS__
+static inline Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, Tag tag1, ...)
+{
+    AROS_SLOWSTACKTAGS_PRE_AS(tag1, Object *)
+    retval = (Object *)DoSuperMethod(cl, obj, OM_NEW, AROS_SLOWSTACKTAGS_ARG(tag1), NULL);
+    AROS_SLOWSTACKTAGS_POST
+}
+#else
+static inline Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
+{
+  Object *rc;
+  VA_LIST args;
+
+  ENTER();
+
+  VA_START(args, obj);
+  rc = (Object *)DoSuperMethod(cl, obj, OM_NEW, VA_ARG(args, ULONG), NULL);
+  VA_END(args);
+
+  RETURN(rc);
+  return rc;
+}
+#endif
+#endif // !__MORPHOS__
+
 
 /****************************************************************************************
   MUI-creation"makros"

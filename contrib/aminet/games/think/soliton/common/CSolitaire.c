@@ -574,10 +574,10 @@ static void DisplayStats(struct CSolitaire_Data *data)
   Object *app;
 
   s = data->stats.game_seconds;
-  sprintf(str, "%d:%02d ", s / 60, s % 60);
+  sprintf(str, "%d:%02d ", (int)(s / 60), (int)(s % 60));
   setatt(data->timer, MUIA_Text_Contents, str);
 
-  sprintf(str, "%d", data->stats.game_score);
+  sprintf(str, "%d", (int)data->stats.game_score);
   setatt(data->score, MUIA_Text_Contents, str);
 
   if((app = (Object*) xget(data->obj, MUIA_ApplicationObject)))
@@ -1315,7 +1315,7 @@ static ULONG CSolitaire_Dispose(struct IClass* cl, Object* obj, Msg msg)
   Dispatcher / Init / Exit
 ****************************************************************************************/
 
-DISPATCHERPROTO(CSolitaire_Dispatcher)
+DISPATCHER(CSolitaire_Dispatcher)
 {
   struct CSolitaire_Data* data = (struct CSolitaire_Data *) INST_DATA(cl, obj);
 

@@ -20,6 +20,8 @@ FILES := About \
 EXEDIR := $(CONTRIBDIR)/Games/Soliton
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../images
 
+USER_CFLAGS := -DUSE_ZUNE
+
 #MM aminet-games-think-soliton-program : setup-soliton-catalogs
 
 %build_prog mmake=aminet-games-think-soliton-program \

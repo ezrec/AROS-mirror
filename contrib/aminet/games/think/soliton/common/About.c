@@ -32,11 +32,10 @@
   AboutMUI
 ****************************************************************************************/
 
-static ULONG About_AboutMUI(/*struct IClass* cl,*/ Object* obj/*, Msg msg*/)
+static IPTR About_AboutMUI(/*struct IClass* cl,*/ Object* obj/*, Msg msg*/)
 {
-  Object* app = (Object*)xget(obj, MUIA_ApplicationObject);
-
 #if !defined(USE_ZUNE) && !defined(__AROS__)
+  Object* app = (Object*)xget(obj, MUIA_ApplicationObject);
   Object* aboutwin = AboutmuiObject,
                        MUIA_Window_RefWindow    , obj,
                        MUIA_Aboutmui_Application, app,
@@ -45,7 +44,7 @@ static ULONG About_AboutMUI(/*struct IClass* cl,*/ Object* obj/*, Msg msg*/)
     setatt(aboutwin, MUIA_Window_Open, TRUE);
   return 0;
 #else
-  return WindowObject, End;
+  return (IPTR)WindowObject, End;
 #endif
 }
 
@@ -54,13 +53,15 @@ static ULONG About_AboutMUI(/*struct IClass* cl,*/ Object* obj/*, Msg msg*/)
 ****************************************************************************************/
 static char version_text[50];
 
-static ULONG About_New(struct IClass* cl, Object* obj, struct opSet* msg)
+static IPTR About_New(struct IClass* cl, Object* obj, struct opSet* msg)
 {
   Object *BT_Ok, *BT_MUI;
+#if !defined(USE_ZUNE) && !defined(__AROS__)
   char *text;
 
   sprintf(version_text, GetStr(MSG_ABOUT_VERSION), VERSION_NUMBER, VERSION_DATE);
   text = GetStr(MSG_ABOUT);
+#endif
 
   obj = (Object*)DoSuperNew(cl, obj,
     MUIA_HelpNode          , "COPYRIGHT",
@@ -147,7 +148,7 @@ static ULONG About_New(struct IClass* cl, Object* obj, struct opSet* msg)
   Dispatcher / Init / Exit
 ****************************************************************************************/
 
-DISPATCHERPROTO(About_Dispatcher)
+DISPATCHER(About_Dispatcher)
 {
   switch(msg->MethodID)
   {

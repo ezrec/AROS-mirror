@@ -261,7 +261,7 @@ static ULONG Settings_New(struct IClass* cl, Object* obj, struct opSet* msg)
   Dispatcher / Init / Exit
 ****************************************************************************************/
 
-DISPATCHERPROTO(Settings_Dispatcher)
+DISPATCHER(Settings_Dispatcher)
 {
   switch(msg->MethodID)
   {
@@ -321,7 +321,7 @@ Object* MakeNoneSlider(int min, int max, int val, int text, int help)
                                    TAG_DONE);
 }
 
-DISPATCHERPROTO(NoneSlider_Dispatcher)
+DISPATCHER(NoneSlider_Dispatcher)
 {
   if (msg->MethodID == MUIM_Numeric_Stringify)
   {

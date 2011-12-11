@@ -191,7 +191,7 @@ static void updateDisplay(struct Statistics_Data *data)
   setatt(data->TX_Score, MUIA_Text_Contents, str);
 
   s = data->time_game;
-  sprintf(str, "%d:%02d min", s / 60, s % 60);
+  sprintf(str, "%d:%02d min", (int)s / 60, (int)s % 60);
   setatt(data->TX_Time, MUIA_Text_Contents, str);
 
   // this session
@@ -199,14 +199,14 @@ static void updateDisplay(struct Statistics_Data *data)
   sprintf(str, "%.0f %%", (games ? ((double)data->won_session / (double)games)*100.0 : 0.0));
   setatt(data->TX_Quote_Session, MUIA_Text_Contents, str);
 
-  sprintf(str, "%d", data->won_session);
+  sprintf(str, "%d", (int)data->won_session);
   setatt(data->TX_Wins_Session, MUIA_Text_Contents, str);
 
-  sprintf(str, "%d", data->lost_session);
+  sprintf(str, "%d", (int)data->lost_session);
   setatt(data->TX_Losses_Session, MUIA_Text_Contents, str);
 
   s = data->time_session;
-  sprintf(str, "%d:%02d h", s / 3600, (s % 3600) / 60);
+  sprintf(str, "%d:%02d h", (int)s / 3600, (int)(s % 3600) / 60);
   setatt(data->TX_Time_Session, MUIA_Text_Contents, str);
 
   // all session
@@ -221,7 +221,7 @@ static void updateDisplay(struct Statistics_Data *data)
   setatt(data->TX_Losses_All, MUIA_Text_Contents, str);
 
   s = data->time_session + data->time_all;
-  sprintf(str, "%d:%02d h", s / 3600, (s % 3600) / 60);
+  sprintf(str, "%d:%02d h", (int)s / 3600, (int)(s % 3600) / 60);
   setatt(data->TX_Time_All, MUIA_Text_Contents, str);
 }
 
@@ -230,7 +230,7 @@ static void updateDisplay(struct Statistics_Data *data)
   ClearScores()
 ****************************************************************************************/
 
-static ULONG Statistics_ClearScores(struct IClass* cl, Object* obj, Msg msg)
+static IPTR Statistics_ClearScores(struct IClass* cl, Object* obj, Msg msg)
 {
   struct Statistics_Data* data = (struct Statistics_Data*)INST_DATA(cl, obj);
   if ( MUI_RequestA(_app(obj), obj, 0, "Soliton",
@@ -251,7 +251,7 @@ static ULONG Statistics_ClearScores(struct IClass* cl, Object* obj, Msg msg)
   Enter()
 ****************************************************************************************/
 
-static ULONG Statistics_Enter(struct IClass* cl, Object* obj, Msg msg)
+static IPTR Statistics_Enter(struct IClass* cl, Object* obj, Msg msg)
 {
   struct Statistics_Data* data = (struct Statistics_Data*)INST_DATA(cl, obj);
   struct Score* s;
@@ -276,8 +276,8 @@ HOOKPROTONH(Highscore_DisplayFunc, LONG, char** array, struct Score* entry)
   static char buf4[25];
   if(entry)
   {
-    sprintf(buf1, "%d", entry->points);
-    sprintf(buf3, "%d:%02d min", entry->time/60, entry->time % 60);
+    sprintf(buf1, "%d", (int)entry->points);
+    sprintf(buf3, "%d:%02d min", (int)entry->time/60, (int)entry->time % 60);
     *array++ = entry->name;
     *array++ = buf1;
     *array++ = buf3;
@@ -310,15 +310,15 @@ HOOKPROTONHNO(Highscore_DestructFunc, LONG, struct Score* entry)
   return 0;
 }
 
-static struct Hook DispHook = {0,0, (HOOKFUNC)Highscore_DisplayFunc,0,0};
-static struct Hook CompHook = {0,0, (HOOKFUNC)Highscore_CompareFunc,0,0};
-static struct Hook DestHook = {0,0, (HOOKFUNC)Highscore_DestructFunc,0,0};
+MakeStaticHook(DispHook, Highscore_DisplayFunc);
+MakeStaticHook(CompHook, Highscore_CompareFunc);
+MakeStaticHook(DestHook, Highscore_DestructFunc);
 
 /****************************************************************************************
   New / Dispose
 ****************************************************************************************/
 
-static ULONG Statistics_New(struct IClass* cl, Object* obj, struct opSet* msg)
+static IPTR Statistics_New(struct IClass* cl, Object* obj, struct opSet* msg)
 {
   Object *BT_Close, *BT_Clear;
   struct Statistics_Data tmp;
@@ -543,12 +543,12 @@ static ULONG Statistics_New(struct IClass* cl, Object* obj, struct opSet* msg)
 
     *((struct Statistics_Data*)INST_DATA(cl, obj)) = tmp;
 
-    return((ULONG)obj);
+    return((IPTR)obj);
   }
   return 0;
 }
 
-static ULONG Statistics_Dispose(struct IClass* cl, Object* obj, Msg msg)
+static IPTR Statistics_Dispose(struct IClass* cl, Object* obj, Msg msg)
 {
   struct Statistics_Data* data = (struct Statistics_Data*)INST_DATA(cl,obj);
   SaveHighscores(data);
@@ -560,7 +560,7 @@ static ULONG Statistics_Dispose(struct IClass* cl, Object* obj, Msg msg)
   Set
 ****************************************************************************************/
 
-static ULONG Statistics_Set(struct IClass* cl, Object* obj, struct opSet* msg)
+static IPTR Statistics_Set(struct IClass* cl, Object* obj, struct opSet* msg)
 {
   struct Statistics_Data* data = (struct Statistics_Data*)INST_DATA(cl, obj);
   struct TagItem *tag;
@@ -666,7 +666,7 @@ static ULONG Statistics_Set(struct IClass* cl, Object* obj, struct opSet* msg)
   Dispatcher / Init / Exit
 ****************************************************************************************/
 
-DISPATCHERPROTO(Statistics_Dispatcher)
+DISPATCHER(Statistics_Dispatcher)
 {
   switch(msg->MethodID)
   {
