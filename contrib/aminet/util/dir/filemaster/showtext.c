@@ -67,7 +67,7 @@ struct ProcMsg *pm;
 struct FMList *slist;
 struct FMNode *node;
 struct FMHandle *h;
-WORD ret;
+WORD ret=0;
 
 pm=sinitproc();
 slist=fmmain.sourcedir;
@@ -79,7 +79,7 @@ initproc(slist,pm->cmc->label);
 priority(pm->cmc);
 if(sselected(slist,1)) {
 	while((node=findselnode(slist))) {
-		if (h=openfile(slist,NDFILE(node),OFNORMAL|OFDECRUNCH)) {
+		if ((h=openfile(slist,NDFILE(node),OFNORMAL|OFDECRUNCH))) {
 			ret=showtext(h,pm->cmc);
 			closefile(h);
 		}
@@ -162,7 +162,7 @@ WORD quit=0,mode=0,omode=0,ignorebutton=0,started=1,keypressed=0;
 UBYTE chartab[2];
 ULONG class;
 UWORD code;
-UWORD qualifier;
+UWORD qualifier = 0;
 ULONG point;
 WORD penlist[2];
 
@@ -715,7 +715,6 @@ void textscrollup(struct STL *stl,WORD smooth)
 struct STN *stn;
 struct RastPort *rp;
 WORD yy,apu1,apu2,apu3;
-extern UBYTE space[];
 
 rp=&(stl->screen->RastPort);
 

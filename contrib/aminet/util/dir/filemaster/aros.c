@@ -393,7 +393,7 @@ void rlepack()
 D(bug("function not implemented:  hearconfigdefault "));   
 }
 
-stopoldmod()
+void stopoldmod()
 {
 D(bug("function not implemented:  hearconfigdefault "));   
 }

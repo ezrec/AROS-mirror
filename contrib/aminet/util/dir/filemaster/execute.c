@@ -64,7 +64,7 @@ if (!(setalloc(list,1))) {
 initproc(list,pm->cmc->label);
 priority(pm->cmc);
 if((node=findselnode(list))) {
-	if (h=openfile(list,NDFILE(node),OFNORMAL)) {
+	if ((h=openfile(list,NDFILE(node),OFNORMAL))) {
 		executefile(h,pm->cmc);
 		closefile(h);
 	}
@@ -258,7 +258,7 @@ for(aa=0;aa<10;aa++) {
 	sformat(exename,"t:fmexe.tmp%ld",aa);
 	DeleteFile(exename);
 }
-if(lock=Lock("t:fmexe",SHARED_LOCK)) {
+if((lock=Lock("t:fmexe",SHARED_LOCK))) {
 	UnLock(lock);
 	return(1);
 }

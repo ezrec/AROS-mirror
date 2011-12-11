@@ -244,7 +244,7 @@ for(;;) {
 			buttonbarmsg(gb,MSG_OK,1,MSG_CANCEL,0,0);
 			ret=quickreq(gb);
 			if(ret==1) {
-				while(node=findselnodeall(list)) {
+				while((node=findselnodeall(list))) {
 					node->flags&=~NSELECTED;
 					if(!operoi(list,node,0,ccom?string2:0,cdate?date:0xffffffff,bprot,cflags)) goto opend;
 					outputlistline(list,node);
@@ -311,7 +311,7 @@ cnt2=createoperatewindow(list->workname,node,string1,string2,string3,1,bprot);
 date=datestringtolong(string3);
 freevecpooled(node); node=0;
 if (cnt2&&string1[0]) {
-	if (node=fmcreatedir(list,string1)) {
+	if ((node=fmcreatedir(list,string1))) {
 		if(cnt2==2) {
 			if(openicon(list)) {
 				dob=GetDefDiskObject(WBDRAWER);
@@ -426,7 +426,7 @@ seglist=(APTR)(doslist->dol_misc.dol_handler.dol_Handler);
 #endif
 
 mdir=0;
-if(res1&&seglist==res1->rt_Init||res2&&seglist==res2->rt_Init) {
+if((res1&&seglist==res1->rt_Init)||(res2&&seglist==res2->rt_Init)) {
 	setconnectgroup(gb,2,0,0);
 	romfs=1;
 	mffs=operateconfig->fffs;

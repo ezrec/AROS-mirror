@@ -435,7 +435,7 @@ return(ret);
 #define MODE_ID_MASK (LACE|HIRES|HAM|EXTRA_HALFBRITE)
 ULONG modefallback(ULONG oldmode,WORD wide,WORD high,WORD deep)
 {
-ULONG newmode,bestmode;
+ULONG newmode=0,bestmode;
 struct TagItem tags[6];
 
 if(fmmain.kick>=39) {

@@ -862,7 +862,7 @@ __saveds __asm APTR dlldisplayhookfunc(register __a0 struct Hook *hook,register 
     AROS_USERFUNC_INIT
 #endif
    
-UBYTE *str;
+UBYTE *str = NULL;
 struct DirListLayout *dll=(struct DirListLayout*)lvr->lvr_Entry;
 switch(dll->type)
 {
@@ -1447,7 +1447,7 @@ __saveds __asm APTR comresourcehookfunc(register __a0 struct Hook *hook,register
 #endif
 
 struct CMenuConfig *cmc;
-struct cmenudata *cmd;
+struct cmenudata *cmd = NULL;
 UBYTE *vara;
 
 switch(lvr->lvr_Command)
@@ -1489,9 +1489,9 @@ struct FMConfig *fmc;
 Object *obj;
 ULONG ds[2],dm[2],last = 0,clicked;
 Class *ddlistclass;
-struct GUIBase *gb;
+struct GUIBase *gb = NULL;
 struct GUISlot *gs[4];
-WORD ret,cnt1;
+WORD ret = 0,cnt1;
 WORD cmenutype,cmenucolumns;
 void *moreconfigs[TOTALCOMMANDS];
 UBYTE msg[20];
@@ -1703,7 +1703,6 @@ if(openinitreq(gb)) {
 		fmmain.maxdirlistwidth=fmconfig->dl[0].width+fmconfig->dl[1].width+fmconfig->dl[2].width+fmconfig->dl[3].width+fmconfig->dl[4].width+4;
 	}
 }
-cerr:
 freereq(gb);
 freemem(fmc);
 fmc=0;

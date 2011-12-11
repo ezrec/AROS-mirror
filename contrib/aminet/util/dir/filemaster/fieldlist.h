@@ -162,7 +162,7 @@ WORD cnt1;
 			/*
 			 *	Let the superclass make the object.
 			 */
-			if ( rc = DoSuperMethodA( cl, obj, msg )) {
+			if (( rc = DoSuperMethodA( cl, obj, msg ))) {
 				/*
 				 *	Get instance data.
 				 */
@@ -270,7 +270,7 @@ WORD cnt1;
 			 *	Simply pick up all selected entries
 			 *	from the dragged object.
 			 */
-			while ( entry = ( APTR )FirstSelected( DROP( msg )->bmd_Source )) {
+			while (( entry = ( APTR )FirstSelected( DROP( msg )->bmd_Source ))) {
 				/*
 				 *	Set it on ourselves. We insert it when we are
 				 *	not sortable. We add them sorted when we are
@@ -325,7 +325,7 @@ Class *InitFLClass( void )
 		/*
 		 *	Create the class.
 		 */
-		if ( cl = MakeClass( NULL, NULL, super, sizeof( FLD ), 0L ))
+		if (( cl = MakeClass( NULL, NULL, super, sizeof( FLD ), 0L )))
 			/*
 			 *	Setup dispatcher.
 			 */ 

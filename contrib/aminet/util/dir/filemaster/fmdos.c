@@ -233,7 +233,6 @@ struct FMHandle* openfile(struct FMList *list,UBYTE *name,ULONG flags)
 {
 struct FMHandle *handle=0;
 struct FileInfoBlock *fib=0;
-struct xfdBufferInfo *xfdbi;
 ULONG bufsize;
 WORD retry;
 
@@ -502,7 +501,7 @@ struct FMNode *node;
 if (!(node=allocnode())) return(0);
 if (currentdir(list)) {
 	do {
-		if (lock=CreateDir(name)) {
+		if ((lock=CreateDir(name))) {
 			UnLock(lock);
 			node->flags|=NDIRECTORY;
 			siirran(NDFILE(node),name,fmmain.filelen);
@@ -529,7 +528,7 @@ proc=(struct Process*)FindTask(0);
 oldwinptr=proc->pr_WindowPtr;
 proc->pr_WindowPtr=(APTR)-1;
 if (currentdir(list)) {
-	if (lock=fmlock(list,NDFILE(node))) {
+	if ((lock=fmlock(list,NDFILE(node)))) {
 		if (fmexamine(list,lock,fib,NDFILE(node))) {
 			node->numdate=dstolong(&fib->fib_Date);
 			longtodatestring(NDDATE(node),node->numdate);
@@ -565,7 +564,7 @@ BPTR fminitdirread(struct FMList *list,struct FileInfoBlock *fib,UBYTE *name)
 {
 BPTR lock;
 
-if (lock=fmlock(list,name)) {
+if ((lock=fmlock(list,name))) {
 	if (fmexamine(list,lock,fib,name)) {
 		return(lock);
 	}
@@ -581,7 +580,7 @@ ULONG *ret;
 if(fmmain.pool) {
 	ObtainSemaphore(&fmmain.poolsema);
 	a+=4;
-	if (ret=(ULONG*)AllocPooled(fmmain.pool,a)) *ret++=a;
+	if ((ret=(ULONG*)AllocPooled(fmmain.pool,a))) *ret++=a;
 	ReleaseSemaphore(&fmmain.poolsema);
 } else {
 	ret=AllocVec(a,MEMF_PUBLIC|MEMF_CLEAR);
@@ -615,7 +614,7 @@ void *ret;
 UBYTE *ptr;
 
 do {
-	if(ret=AllocVec(a,b)) return((void*)ret);
+	if((ret=AllocVec(a,b))) return((void*)ret);
 	if(!l) return(0);
 	if (b&MEMF_CHIP) ptr=getstring(MSG_FMDOS_CHIPMEM); else ptr=getstring(MSG_FMDOS_PUBLICMEM);
 } while(requestmsg(l->workname,MSG_RETRY,MSG_CANCEL,MSG_FMDOS_ALLOCATEERR,a,ptr));
@@ -627,8 +626,8 @@ struct IORequest* opendevice(struct FMList *l,UBYTE *name,WORD unit,ULONG flags,
 struct MsgPort *mp;
 struct IORequest *io;
 
-if (mp=CreateMsgPort()) {
-	if (io=CreateIORequest(mp,iolen)) {
+if ((mp=CreateMsgPort())) {
+	if ((io=CreateIORequest(mp,iolen))) {
 		if (!OpenDevice(name,unit,io,flags)) return(io);
 		DeleteIORequest(io);
 	}

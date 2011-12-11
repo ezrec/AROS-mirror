@@ -154,14 +154,14 @@ while(node->succ) {
 	}
 }
 freemem(fib);
-shellsortlist(list,list->head->succ,UtilityBase,fmmain.fileoffset,0,0);
+shellsortlist(list,list->head->succ,(struct Library *)UtilityBase,fmmain.fileoffset,0,0);
 
 doslist=LockDosList(LDF_ASSIGNS|LDF_READ);
 while ((doslist=NextDosEntry(doslist,LDF_ASSIGNS))) adddevice(list,doslist,DLT_DIRECTORY);
 UnLockDosList(LDF_ASSIGNS|LDF_READ);
 node=list->head->succ;
 while(node->flags&NDEVICE) node=node->succ;
-shellsortlist(list,node,UtilityBase,fmmain.fileoffset,0,0);
+shellsortlist(list,node,(struct Library *)UtilityBase,fmmain.fileoffset,0,0);
 
 clearlisti((struct List*)&fmmain.dlist);
 duplist(list,&fmmain.dlist);

@@ -142,8 +142,8 @@ UWORD ftest;
 if((list->flags&LDEVLIST)||(!list->li)) return;
 NewList((struct List*)&list2);
 match=getconfignumber(PARSECONFIG)->moreconfig;
-shellsortlist(list,list->head,UtilityBase,fmmain.fileoffset,0,0);
-if(match->msortby||match->msortud) shellsortlist(list,list->head,UtilityBase,fmmain.fileoffset,match->msortby,match->msortud);
+shellsortlist(list,list->head,(struct Library *)UtilityBase,fmmain.fileoffset,0,0);
+if(match->msortby||match->msortud) shellsortlist(list,list->head,(struct Library *)UtilityBase,fmmain.fileoffset,match->msortby,match->msortud);
 if(match->mdrawersfirst) ftest=NFILE; else ftest=NDIRECTORY;
 if(!match->mmix) {
 	node=list->head;
@@ -155,7 +155,7 @@ if(!match->mmix) {
 		}
 		node=node2;
 	}
-	if(match->msortby==1&&ftest==NDIRECTORY) shellsortlist(&list2,list2.head,UtilityBase,fmmain.fileoffset,0,0);
+	if(match->msortby==1&&ftest==NDIRECTORY) shellsortlist(&list2,list2.head,(struct Library *)UtilityBase,fmmain.fileoffset,0,0);
 	while(list->head->succ) {
 		node=list->head;
 		Remove((struct Node*)node);
@@ -349,7 +349,7 @@ AROS_UFCA(char , c, A1))
 
     char * xyz = putCharFunc->h_Data;
     *xyz = c;
-    putCharFunc->h_Data = (ULONG)putCharFunc->h_Data + 1;
+    putCharFunc->h_Data = (APTR)((IPTR)putCharFunc->h_Data + 1);
 
     AROS_USERFUNC_EXIT
 }

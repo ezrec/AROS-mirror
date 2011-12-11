@@ -47,7 +47,7 @@ void taskwindow(WORD listnum)
 {
 struct GUIBase *gb;
 UBYTE text[500],title[80];
-WORD cnt,c;
+WORD cnt;
 UBYTE *txtptr;
 UBYTE *ptr1;
 struct IntuiMessage *imsg;
@@ -58,7 +58,6 @@ struct IntuiMessage *imsg;
 Forbid();
 txtptr=text;
 for (cnt=0;cnt<LISTS;cnt++) {
-	c=0;
 	ptr1=getstring(MSG_TASKWINDOW_EMPTY);
 	if (fmlist[cnt].flags) {
 		if (fmlist[cnt].flags&LDEVLIST) ptr1=getstring(MSG_TASKWINDOW_DEVLIST);
@@ -72,7 +71,7 @@ for (cnt=0;cnt<LISTS;cnt++) {
 	txtptr+=45;
 }
 Permit();
-txtptr=text; c=0;
+txtptr=text;
 sformat(title,getstring(MSG_TASKWINDOW_LISTS),(WORD)fmmain.li[listnum]->list->listnumber);
 gb=getguibase(title);
 for(cnt=0;cnt<LISTS;cnt++) {
@@ -88,7 +87,7 @@ if(cnt>=10&&cnt<=19) {
 #ifdef V39
 	SetWindowPointer(fmmain.ikkuna,TAG_DONE);
 #endif
-while(imsg=(struct IntuiMessage*)GetMsg(fmmain.ikkuna->UserPort)) ReplyMsg((struct Message*)imsg);
+while((imsg=(struct IntuiMessage*)GetMsg(fmmain.ikkuna->UserPort))) ReplyMsg((struct Message*)imsg);
 }
 
 void nextlist(struct ListInfo *li,WORD cnt)

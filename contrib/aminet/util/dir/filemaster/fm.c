@@ -224,7 +224,7 @@ main (void)
   GfxBase = (struct GfxBase *) OpenLibrary (gfxlib, 39);
   IntuitionBase = (struct IntuitionBase *) OpenLibrary (intlib, 39);
   CxBase = OpenLibrary (comlib, 37);
-  UtilityBase = OpenLibrary (utilib, 39);
+  UtilityBase = (struct UtilityBase *)OpenLibrary (utilib, 39);
   GadToolsBase = OpenLibrary (gadlib, 39);
   KeymapBase = OpenLibrary (keylib, 0);
   WorkbenchBase = OpenLibrary (wblib, 37);
@@ -419,7 +419,7 @@ error2:
   if (TimerBase)
     CloseDevice ((struct IORequest *) &tr);
   CloseLibrary (CxBase);
-  CloseLibrary (UtilityBase);
+  CloseLibrary ((struct Library *)UtilityBase);
   CloseLibrary (GadToolsBase);
   CloseLibrary ((struct Library *) GfxBase);
   CloseLibrary ((struct Library *) IntuitionBase);
@@ -810,9 +810,9 @@ D(bug("fm.c 785...........\n"));
 D(bug("fm.c 790...........\n"));  
 }
 
-STRPTR GetString(struct LocaleInfo *li, ULONG id)
+CONST_STRPTR GetString(struct LocaleInfo *li, ULONG id)
 {
-    STRPTR retval;
+    CONST_STRPTR retval;
  D(bug("fm.c 796...........\n"));
     if (catalog)
       {

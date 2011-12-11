@@ -39,7 +39,7 @@ extern UBYTE space[];
 static void outputline(struct FMList *list,struct FMNode *node,WORD maxlen,WORD offset,WORD xx,WORD yy)
 {
 UBYTE varatxt[512];
-UBYTE *ptr1,*ptr2;
+UBYTE *ptr1=NULL,*ptr2;
 WORD rlen,len,cnt1,apu1;
 struct DirListLayout *dll;
 
@@ -121,8 +121,19 @@ if (rlen<maxlen) Text(fmmain.rp,space,maxlen-rlen);
 
 }
 
+#ifdef __AROS__
+AROS_UFH5(void, scrollndraw,
+        AROS_UFHA(WORD, fline, D0),
+        AROS_UFHA(WORD, liney, D1),
+        AROS_UFHA(WORD, samount, D2),
+        AROS_UFHA(WORD, nlines, D3),
+        AROS_UFHA(struct ReqScrollStruct*, rscroll, A0))
+{
+    AROS_USERFUNC_INIT
+#else
 void scrollndraw(void)
 {
+#endif
 /* fline=line to draw */
 /* liney=pixel offset */
 /* samount=scroll amount */
@@ -131,11 +142,11 @@ void scrollndraw(void)
 WORD xx,yy,aa;
 struct FMList *list;
 struct FMNode *node;
-struct ReqScrollStruct *rscroll;
 struct ListInfo *li;
-WORD fline,liney,samount,nlines;
 
 #ifndef AROS
+struct ReqScrollStruct *rscroll;
+WORD fline,liney,samount,nlines;
 fline=(WORD)getreg(REG_D0);
 liney=(WORD)getreg(REG_D1);
 samount=(WORD)getreg(REG_D2);
@@ -188,6 +199,9 @@ SetDrMd(fmmain.rp,JAM2);
 SetBPen(fmmain.rp,fmconfig->backpen);
 SetFont(fmmain.rp,fmmain.txtfont);
 ReleaseSemaphore(&fmmain.gfxsema);
+#ifdef __AROS__
+AROS_USERFUNC_EXIT
+#endif
 }
 
 void outputlistline(struct FMList *list,struct FMNode *node)

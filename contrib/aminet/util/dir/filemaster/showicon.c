@@ -67,9 +67,9 @@ return(showiconfont(h,1,cmc));
 WORD showiconfont(struct FMHandle *h,WORD type,struct CMenuConfig *cmc)
 {
 WORD ret,quitti,ignorebutton,started;
-WORD x,y,width,height,pagew,pageh,depth,retry=0,apu1,apu2,apu3,txtcolor;
+WORD x,y,width,height,pagew,pageh,depth=0,retry=0,apu1,apu2,apu3,txtcolor;
 ULONG modeid=INVALID_ID;
-UWORD mask,code,numcols;
+UWORD mask,code,numcols=0;
 ULONG class;
 ULONG *coltable=0;
 #ifndef V39
@@ -77,7 +77,7 @@ UBYTE *coltable2=0;
 #endif
 struct Image *i1;
 struct Image *i2;
-struct Gadget *igadg;
+struct Gadget *igadg=NULL;
 struct DiskObject *dob=0;
 struct DrawInfo *di;
 struct Screen *scr=0;
@@ -123,7 +123,7 @@ if(type) {
 
 
 txtcolor=1;
-if(scr=LockPubScreen(workbench)) {
+if((scr=LockPubScreen(workbench))) {
 	di=GetScreenDrawInfo(scr);
 	if(di) {
 		txtcolor=di->dri_Pens[TEXTPEN];
@@ -347,7 +347,7 @@ WORD selectfont(struct FMHandle *h,struct FontContentsHeader *fch,struct TextAtt
 {
 struct GUIBase *gb;
 struct FMList *list;
-struct FontContents *fc1,*fc2,*fc3;
+struct FontContents *fc1,*fc2,*fc3 = NULL;
 struct FontContents *fc4[10];
 UWORD numsizes;
 WORD c=0;
@@ -358,7 +358,7 @@ UBYTE *ptr1;
 WORD ret=0;
 LONG issize;
 UBYTE used[10];
-UBYTE *useptr;
+UBYTE *useptr = NULL;
 
 memseti(used,0,10);
 gb=getguibase(h->filename);

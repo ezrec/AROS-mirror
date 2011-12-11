@@ -144,7 +144,7 @@ return(0);
 WORD createbrokerall(void)
 {
 if(!(fmmain.cxport=CreateMsgPort())) return(0);
-fmmain.cxport->mp_Node.ln_Name=fmbroker.nb_Name;
+fmmain.cxport->mp_Node.ln_Name=(STRPTR)fmbroker.nb_Name;
 AddPort(fmmain.cxport);
 fmbroker.nb_Port=fmmain.cxport;
 fmbroker.nb_Pri=0;

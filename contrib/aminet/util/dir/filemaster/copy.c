@@ -185,7 +185,7 @@ WORD copydir(struct FMList *slist,struct FMList *dlist,UBYTE *dirname,struct Del
 {
 struct FileInfoBlock *fib;
 BPTR lock=0;
-WORD ret=0,ret2,ret3,dret,dflag=0;
+WORD ret=0,ret2,ret3,dret=0,dflag=0;
 UBYTE name[32];
 UBYTE varaname[32];
 UBYTE path1[PATH],path2[PATH];
@@ -270,7 +270,7 @@ struct FileInfoBlock *fib;
 LONG cnt,cnt2=0;
 WORD ret=0,nocont=0;
 UBYTE varaname[32];
-ULONG size,dstsize;
+ULONG size,dstsize = 0;
 BPTR lock=0,olock=0;
 LONG dstdate=0;
 /* struct DeleteConfig dc; */
@@ -312,7 +312,7 @@ if ((hs=openfile(slist,varaname,OFBUFFER|(ds->cconfig->bufsize?ds->cconfig->bufs
 				bytesperblock=512;
 				freeblocks=id->id_NumBlocks-id->id_NumBlocksUsed;
 				if(id->id_DiskType==ID_DOS_DISK||id->id_DiskType==ID_INTER_DOS_DISK) bytesperblock=488;				
-				if((id->id_DiskType&0xffffff00==ID_DOS_DISK&0xffffff00))
+				if(((id->id_DiskType&0xffffff00)==(ID_DOS_DISK&0xffffff00)))
 					size+=((((size+bytesperblock)/bytesperblock)/72)*512);
 				if(freeblocks) freeblocks+=alreadyblocks;
 				if(freeblocks&&(freeblocks-1)*bytesperblock<=size) {
@@ -651,7 +651,7 @@ if (!DeleteFile(name)) {
 		} while(dosrequestmsg(list,1,MSG_FMDOS_REMDELPROT,name));
 		goto dferr;
 	}
-delerr:	if(!req) {
+	if(!req) {
 		ret=dosrequestmsg(list,3,MSG_FMDOS_DELETEERR,name);
 		if(ret>0) goto dretry;
 	} else {

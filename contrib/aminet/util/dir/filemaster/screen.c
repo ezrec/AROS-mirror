@@ -163,7 +163,6 @@ D(bug("screen.c 138 entering.........\n"));
       fmmain.txtshowxsize = fmmain.txtshowfont->tf_XSize;
       fmmain.txtshowbaseline = fmmain.txtshowfont->tf_Baseline;
     }
-scrretry:
   fmmain.myproc = (struct Process *) FindTask (0);
 
   if (flag == 3)
@@ -281,7 +280,7 @@ D(bug("screeen.c: 202...\n"));
 	  ret = 0;
 	  goto anaytto1;
 	}
-      if (di = GetScreenDrawInfo (fmmain.naytto))
+      if ((di = GetScreenDrawInfo (fmmain.naytto)))
 	{
 	  fmconfig->whitepen = di->dri_Pens[SHINEPEN];
 	  fmconfig->blackpen = di->dri_Pens[SHADOWPEN];
@@ -454,7 +453,7 @@ D(bug("screen.c: 425...\n"));
 	}
       if (fmmain.appwinport)
 	{
-	  while (appmsg = (struct AppMessage *) GetMsg (fmmain.appwinport))
+	  while ((appmsg = (struct AppMessage *) GetMsg (fmmain.appwinport)))
 	    ReplyMsg ((struct Message *) appmsg);
 	  DeleteMsgPort (fmmain.appwinport);
 	  fmmain.appwinport = 0;
@@ -1307,7 +1306,6 @@ gadgettables (void)
   struct Gadget *g;
   WORD cnt1, apu2;
 
-  extern APTR launchtable[];
   gkt = &fmmain.gadkeytab[0];
   memseti (gkt, 0,
 	   sizeof (struct GadKeyTab) * (WINDOWLISTS * LISTGADGETS +

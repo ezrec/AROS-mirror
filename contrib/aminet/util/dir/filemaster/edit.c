@@ -185,9 +185,9 @@ strcpy(edit->list->workname,edit->cmc->label);
 D(bug("edit.c fileedit 187 \n")); 
 if(sselected(edit->list,1)) {
 D(bug("edit.c fileedit 189 \n")); 
-	if(edit->node=findselnode(edit->list)) {
+	if((edit->node=findselnode(edit->list))) {
 	D(bug("edit.c fileedit 191 \n")); 
-		if(edit->handle=openfile(edit->list,NDFILE(edit->node),OFNORMAL)) {
+		if((edit->handle=openfile(edit->list,NDFILE(edit->node),OFNORMAL))) {
 			D(bug("edit.c fileedit 193 \n")); 
 			editor(edit);
 			closefile(edit->handle);
@@ -1024,6 +1024,7 @@ edit->changed=1;
 return(ret);
 break;
 }
+return 0;
 }
 
 WORD writefileedit(struct Edit *edit)
@@ -1066,6 +1067,7 @@ diskio(edit->list,edit->ioreq);
 return(1);
 break;
 }
+return 0;
 }
 
 void blockinfo(struct Edit *edit)
@@ -1404,13 +1406,11 @@ return(0);
 
 void *diskeditconfigdefault(struct CMenuConfig *cmc)
 {
-struct DiskEditConfig *config;
 WORD ret;
 
 ret=allocconfig(cmc,sizeof(struct DiskEditConfig));
 if(ret<0) return(cmc->moreconfig);
 if(!ret) return(0);
-config=(struct DiskEditConfig*)cmc->moreconfig;
 return(cmc->moreconfig);
 }
 

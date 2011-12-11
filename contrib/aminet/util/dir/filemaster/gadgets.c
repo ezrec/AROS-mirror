@@ -170,7 +170,7 @@ getwinposition(fmmain.naytto,&newwindow,0,newwindow.Width/2,newwindow.Height/2);
 
 txtptr=txt;
 while(*txtptr++!='\n');
-if (window=OpenWindow(&newwindow)) {
+if ((window=OpenWindow(&newwindow))) {
 	SetAPen(window->RPort,fmconfig->backfillpen);
 	RectFill(window->RPort,window->BorderLeft,window->BorderTop,window->Width-window->BorderRight-1,window->Height-window->BorderBottom-1);
 	if(trycnt==0) SetFont(window->RPort,fmmain.listfont); else SetFont(window->RPort,fmmain.smallfont);
@@ -246,11 +246,11 @@ struct IntuiMessage *message;
 struct Screen *screen,*oldscreen;
 struct RastPort rp;
 
-UWORD tfh,tfw,spaceh=4,spacew=8;
+UWORD tfh=0,tfw=0,spaceh=4,spacew=8;
 WORD gadhnum;
 WORD kplcnt1,kplcnt2;
-WORD quit=0,gadgetnum,txoffset,maxgadw,valikoko;
-WORD apu1,apu2,apu3,apu4,apu5,center=0;
+WORD quit=0,gadgetnum,txoffset,maxgadw,valikoko=0;
+WORD apu1,apu2,apu3,apu4=0,apu5,center=0;
 struct IntString *is;
 ULONG class;
 UWORD code;

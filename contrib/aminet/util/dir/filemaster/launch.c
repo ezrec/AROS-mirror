@@ -341,7 +341,7 @@ endproc (struct FMList *list)
   list->flags &= ~(LACTIVE | LSUBPROC | LUPDATEMSG);
   if (fmmain.ikkuna)
     {
-      while (imsg = (struct IntuiMessage *) GetMsg (fmmain.ikkuna->UserPort))
+      while ((imsg = (struct IntuiMessage *) GetMsg (fmmain.ikkuna->UserPort)))
 	ReplyMsg ((struct Message *) imsg);
     }
   Permit ();
@@ -379,8 +379,6 @@ WORD
 setalloc (struct FMList * list, WORD aa)
 {
   extern struct FMMain fmmain;
-  extern struct Gadget *slider1ptr;
-  extern struct Gadget *slider2ptr;
 
   if (aa == 1 && list->flags & LALLOCATED)
     return (0);
@@ -467,8 +465,8 @@ testabort (struct FMList *list)
 
   if (!(fmconfig->flags & MSUBPROC))
     {
-      while (message =
-	     (struct IntuiMessage *) GetMsg (fmmain.ikkuna->UserPort))
+      while ((message =
+	     (struct IntuiMessage *) GetMsg (fmmain.ikkuna->UserPort)))
 	{
 	  if (message->Class==MOUSEBUTTONS && message->Code==MENUDOWN && list->flags&LACTIVE) list->flags|=LABORTREQ;
 	  ReplyMsg((struct Message*)message);

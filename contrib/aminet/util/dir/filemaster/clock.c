@@ -82,7 +82,7 @@ if(fmmain.appicon) {
 	fmmain.appicon=0;
 }
 if(fmmain.appiconport) {
-	while(appmsg=(struct AppMessage *)GetMsg(fmmain.appiconport)) ReplyMsg((struct Message*)appmsg);
+	while((appmsg=(struct AppMessage *)GetMsg(fmmain.appiconport))) ReplyMsg((struct Message*)appmsg);
 	DeleteMsgPort(fmmain.appiconport);
 	fmmain.appiconport=0;
 }
@@ -136,7 +136,6 @@ WORD setsleep(struct Window **pswin)
 {
 UBYTE clockstr[400];
 WORD apu1,apu2;
-extern UBYTE workbench[];
 struct Screen *wbscr=0;
 struct Window *swin=0;
 
@@ -167,8 +166,8 @@ struct timerequest *gettimerequest(struct MsgPort **amp)
 struct timerequest *tr;
 struct MsgPort *mp;
 
-if (mp=CreateMsgPort()) {
-	if (tr=(struct timerequest*)CreateIORequest(mp,sizeof(struct timerequest))) {
+if ((mp=CreateMsgPort())) {
+	if ((tr=(struct timerequest*)CreateIORequest(mp,sizeof(struct timerequest)))) {
 		*amp=mp;
 		if (!OpenDevice("timer.device",UNIT_VBLANK,(struct IORequest*)tr,0)) return(tr);
 		DeleteIORequest(&tr->tr_node);
@@ -191,7 +190,7 @@ struct TextExtent txtext;
 struct timerequest *tr;
 struct MsgPort *tp;
 ULONG sigmask,sleepsigmask,sigs,tpsig;
-ULONG swinmask,saimask;
+ULONG swinmask=0,saimask=0;
 WORD timeri;
 struct Window *swin=0;
 struct IntuiMessage *imsg;
@@ -295,7 +294,7 @@ while(fmmain.clock) {
 	}
 
 	if(fmmain.cxport) {
-		while(cxmsg=(CxMsg*)GetMsg(fmmain.cxport)) {
+		while((cxmsg=(CxMsg*)GetMsg(fmmain.cxport))) {
 			msgtype=CxMsgID(cxmsg);
 			msgid=CxMsgType(cxmsg);
 			ReplyMsg((struct Message*)cxmsg);

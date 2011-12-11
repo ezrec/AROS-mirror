@@ -108,7 +108,7 @@ if (node&&(mem=allocvec(list,MEMSIZE,0))) {
 	sformatmsg(list->fmmessage1,MSG_FILECLICKING,NDFILE(node));
 	list->fmmessage2[0]=0;
 	fmmessage(list);
-	if (h=openfile(list,NDFILE(node),OFNORMAL|OFDECRUNCH)) {
+	if ((h=openfile(list,NDFILE(node),OFNORMAL|OFDECRUNCH))) {
 		len=h->size;
 		if (len>MEMSIZE) len=MEMSIZE;
 		if (readbufferfile(h,mem,len)==len) {
@@ -134,13 +134,12 @@ deinitproc(pm);
 
 static WORD testclick(struct FMHandle *h,struct FMNode *node,UBYTE *m,WORD usedt)
 {
-UWORD apu1,apu2;
+UWORD apu2;
 ULONG *apu;
 UBYTE *ptr1;
 WORD mod,cnt;
 
 apu=(ULONG*)m;
-apu1=(UWORD)((*apu)>>16);
 
 if ((fmconfig->usepicturedt|usedt)&&*apu==ID_FORM&&*(apu+2)==ID_ILBM) {
 	showpicture(h,getconfignumber(SHOWPICCONFIG));

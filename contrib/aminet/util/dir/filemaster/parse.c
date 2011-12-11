@@ -130,7 +130,7 @@ void parselist(struct FMList *list,WORD matchtype)
 struct FMNode *node;
 UBYTE *token1,*token2,*token3;
 UBYTE *ptr1,*ptr2;
-struct Match *match;
+struct Match *match = NULL;
 UBYTE patname[PATTERN];
 UBYTE patflags[32];
 
