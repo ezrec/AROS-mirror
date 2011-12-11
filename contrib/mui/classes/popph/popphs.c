@@ -303,7 +303,7 @@ IPTR PPHS__MUIM_DragDrop(struct IClass *cl,Object *obj,struct MUIP_DragDrop *msg
     struct PPHS_Data *data = INST_DATA(cl,obj);
 
     char *list_entry;
-    char *current_string;
+    char *current_string = NULL;
     char *buffer;
     char key[ POPPH_MAX_KEY_LEN ];
 
@@ -314,7 +314,7 @@ IPTR PPHS__MUIM_DragDrop(struct IClass *cl,Object *obj,struct MUIP_DragDrop *msg
     {
 	int stringlen;
 	int keylen;
-	int pos;
+	int pos = 0;
 	char *zero;
 
 

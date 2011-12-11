@@ -42,7 +42,7 @@ void CleanUp(void)
 /// xget
 ULONG xget( Object *obj, int attr)
 {
-ULONG val;
+ULONG val = 0;
 
 		get( obj, attr, &val);
 		return( val );

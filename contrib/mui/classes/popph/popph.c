@@ -45,7 +45,7 @@ AROS_UFH3(void *, ObjStrFunc,
     struct Popplaceholder_Data *data = hook->h_Data;
 
     char *list_entry;
-    char *current_string;
+    char *current_string = NULL;
     char *buffer;
     char key[ POPPH_MAX_KEY_LEN ];
 
@@ -59,7 +59,7 @@ AROS_UFH3(void *, ObjStrFunc,
 	char *zero;
 	int keylen;
 	int stringlen;
-	int pos;
+	int pos = 0;
 
 
 	zero = _strchr( list_entry, data->separator );
@@ -164,7 +164,7 @@ IPTR Popph__MUIM_OpenAsl(struct IClass *cl, Object *obj, struct opSet *msg)
     struct Popplaceholder_Data *data = INST_DATA(cl,obj);
 
     Object *app = (Object *)XGET( obj, MUIA_ApplicationObject );
-    struct Window *win;
+    struct Window *win = NULL;
     APTR   req = data->asl_req;
     IPTR   res=0;
 
@@ -218,9 +218,9 @@ IPTR Popph__OM_NEW(struct IClass *cl, Object *obj, Msg msg)
 {
     struct Popplaceholder_Data *data;
 
-    Object *group, *popobj, *popbutton, *string;
+    Object *group, *popobj, *popbutton, *string = NULL;
     Object *lv, *list;
-    int    strmaxlen;
+    int    strmaxlen = 0;
 
 //    ULONG  tag_contents = MUIA_String_Contents;
 //    ULONG  tag_bufpos   = MUIA_String_BufferPos;
@@ -235,9 +235,9 @@ IPTR Popph__OM_NEW(struct IClass *cl, Object *obj, Msg msg)
     Object *popaslbutton = NULL;
     ULONG  use_asl = FALSE;
     APTR   asl_req = NULL;
-    ULONG  asl_type;
+    ULONG  asl_type = 0;
 
-    ULONG  avoid;
+    ULONG  avoid = 0;
 
 
     D(bug(__NAME ": OM_NEW\n"));
