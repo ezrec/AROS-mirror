@@ -123,7 +123,6 @@ int main(void)
 {
     IPTR sigmask;
     BOOL quit = FALSE;
-    struct Window *win;
 
     if (NULL == (IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library",0)))
     {
@@ -133,7 +132,7 @@ int main(void)
 
     if((BGUIBase=OpenLibrary(BGUINAME,0L))) {
         Win = GimmePrefsWindow();
-        win = WindowOpen(Win);
+        WindowOpen(Win);
         GetAttr(WINDOW_SigMask, Win, &sigmask);
 
         while(!quit) {

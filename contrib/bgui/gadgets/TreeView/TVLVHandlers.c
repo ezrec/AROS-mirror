@@ -140,14 +140,14 @@ ULONG				imgstate;
 ULONG				depth;
 UWORD				fpen,bpen;
 UWORD				*dripens;
-BOOL				disabled;
+// BOOL				disabled;
 
 tv = (TVData *) hook->h_Data;
 tn = (TNPTR) lvr->lvr_Entry;
 rp = lvr->lvr_RPort;
 text = tn->tn_Entry;
 rect = &lvr->lvr_Bounds;
-disabled = FALSE;
+// disabled = FALSE;
 depth = TV_TreeNodeDepth(tn) - 1;
 
 /* debug
@@ -173,14 +173,14 @@ switch(lvr->lvr_State)
 		fpen = TEXTPEN;
 		bpen = BACKGROUNDPEN;
 		imgstate = IDS_DISABLED;
-		disabled = TRUE;
+//		disabled = TRUE;
 		break;
 
 	case LVRS_SELECTED_DISABLED:
 		fpen = TEXTPEN;
 		bpen = FILLPEN;
 		imgstate = IDS_DISABLED;
-		disabled = TRUE;
+//		disabled = TRUE;
 		break;
 
 	/* case LVRS_NORMAL: */

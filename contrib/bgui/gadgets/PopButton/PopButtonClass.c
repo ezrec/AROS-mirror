@@ -500,7 +500,7 @@ STATIC ASM ULONG OpenPopupWindow( REG(a0) PMD *pmd, REG(a1) Object *obj, REG(a2)
 {
    struct Screen     *screen = gpi->gpi_GInfo->gi_Screen;
    struct RastPort          rpt;
-   UWORD        sw, sh, wleft, wtop, wwi, wwh, *pens;
+   UWORD        sw, wleft, wtop, wwi, wwh, *pens;
    struct IBox    *ibox;
    struct TextAttr         *tattr = NULL;
    struct TextFont         *tf;
@@ -516,7 +516,6 @@ STATIC ASM ULONG OpenPopupWindow( REG(a0) PMD *pmd, REG(a1) Object *obj, REG(a2)
    ** Get screen dimensions.
    **/
    sw = screen->Width;
-   sh = screen->Height;
 
    /*
    ** Get object bounds and the font

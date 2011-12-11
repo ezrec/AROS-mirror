@@ -168,7 +168,7 @@ ASM REGFUNC3(ULONG, myButtonDispatch,
                                         break;
 
                                 default:
-                                        tag = NULL;
+                                        tag = 0;
                                         break;
                         }
 

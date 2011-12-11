@@ -109,6 +109,7 @@ VOID StartDemo( void )
 	fixed.ta_YSize  = GfxBase->DefaultFont->tf_YSize;
 	fixed.ta_Style  = GfxBase->DefaultFont->tf_Style;
 	fixed.ta_Flags  = GfxBase->DefaultFont->tf_Flags;
+	(void)fixed;
 	Permit();
 
 	/*

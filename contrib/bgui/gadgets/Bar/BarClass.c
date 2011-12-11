@@ -566,7 +566,7 @@ METHOD(BarClassNew,struct opSet *,ops)
 	D(bug("BarClassNew\n"));
 	if(BGUIBase==NULL
 	&& (BGUIBase=OpenLibrary("bgui.library",41))==NULL)
-		return(NULL);
+		return((IPTR)NULL);
 	{
 		struct TagItem default_tags[3];
 

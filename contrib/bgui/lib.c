@@ -418,7 +418,7 @@ ASM REGFUNC3(struct Library *, LibInit,
       /*
        * Create the library.
        */
-      if ((BGUIBase = lib = MakeLibrary((APTR)Vectors, NULL, NULL, sizeof(struct Library), NULL)))
+      if ((BGUIBase = lib = MakeLibrary((APTR)Vectors, NULL, NULL, sizeof(struct Library), BNULL)))
       {
          /*
           * Initialize library structure.

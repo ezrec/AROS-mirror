@@ -121,7 +121,7 @@ struct IntuitionBase *IntuitionBase;
  */
 ULONG ReqA( struct Window *win, UBYTE *gadgets, UBYTE *body, IPTR *args )
 {
-	struct bguiRequest	req = { NULL };
+	struct bguiRequest	req = { };
 
 	req.br_GadgetFormat	= gadgets;
 	req.br_TextFormat	= body;

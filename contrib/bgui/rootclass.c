@@ -402,7 +402,7 @@ METHOD(RootClassSet, struct rmAttr *, ra)
    rc = (ULONG)AsmDoSuperMethod(cl, obj, (ra->ra_Flags & RAF_UPDATE) ? OM_UPDATE : OM_SET, tags, NULL,
 				  (ra->ra_Flags & RAF_INTERIM) ? OPUF_INTERIM : 0);
 
-   return (IPTR)0;//((rc > 0) ? (RAF_UNDERSTOOD|RAF_REDRAW) : 0);
+   return ((rc > 0) ? /* (RAF_UNDERSTOOD|RAF_REDRAW) */ 0 : 0);
 }
 METHOD_END
 ///

@@ -747,11 +747,8 @@ return(pn);
 TNPTR TV_MatchNextEntry(TVData *tv,APTR refentry,ULONG which,ULONG flags,
 	struct tvAnchor *tva)
 {
-TNPTR	tn;
 ULONG	maxdepth = 0,mindepth = 0;
 BOOL	checkmatch,more,next;
-
-tn = NULL;
 
 /*
  * If this is the first call to this function, we have some initial

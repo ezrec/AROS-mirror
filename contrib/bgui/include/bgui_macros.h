@@ -968,7 +968,7 @@
         DoMethod( wobj, WM_GADGETKEY, NULL, gobj, key )
 
 #define WindowOpen(wobj)\
-        ( struct Window * )DoMethod( wobj, WM_OPEN )
+        ({struct Window *win = (struct Window *)DoMethod( wobj, WM_OPEN );win;})
 
 #define WindowClose(wobj)\
         DoMethod( wobj, WM_CLOSE )
