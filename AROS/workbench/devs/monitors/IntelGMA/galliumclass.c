@@ -69,33 +69,49 @@ extern struct g45staticdata sd;
 
 BOOL InitGalliumClass()
 {
-    CloseLibrary( OpenLibrary("gallium.library",0)); // ???
-
-    if((HiddGalliumAttrBase = OOP_ObtainAttrBase(IID_Hidd_Gallium)))
-    {
-
-        struct TagItem Gallium_tags[] =
+    if( sd->force_gallium
+        || sd->ProductID == 0x2582 // GMA 900
+        || sd->ProductID == 0x2782
+        || sd->ProductID == 0x2592
+        || sd->ProductID == 0x2792
+        || sd->ProductID == 0x2772 // GMA 950
+        || sd->ProductID == 0x2776
+        || sd->ProductID == 0x27A2
+        || sd->ProductID == 0x27A6
+        || sd->ProductID == 0x27AE
+        || sd->ProductID == 0x2972 // GMA 3000
+        || sd->ProductID == 0x2973
+        || sd->ProductID == 0x2992
+        || sd->ProductID == 0x2993
+    ){
+        CloseLibrary( OpenLibrary("gallium.library",0)); // ???
+    
+        if((HiddGalliumAttrBase = OOP_ObtainAttrBase(IID_Hidd_Gallium)))
         {
-            {aMeta_SuperID   , (IPTR)CLID_Hidd_Gallium },
-            {aMeta_InterfaceDescr, (IPTR)Gallium_ifdescr },
-            {aMeta_InstSize  , sizeof(struct HIDDGalliumData)},
-            {aMeta_ID        , (IPTR)"hidd.gallium.i915"},
-            {TAG_DONE, 0}
-        };
-
-        sd->galliumclass = OOP_NewObject(NULL, CLID_HiddMeta, Gallium_tags);
-        if (sd->galliumclass)
-        {
-            sd->galliumclass->UserData = sd;
-            OOP_AddClass(sd->galliumclass);
-            i915MemPool = CreatePool(MEMF_PUBLIC | MEMF_CLEAR | MEMF_SEM_PROTECTED, 32 * 1024, 16 * 1024);
-
-            init_aros_winsys();
-            bug("i915 gallium init OK\n");
-            return TRUE;
+    
+            struct TagItem Gallium_tags[] =
+            {
+                {aMeta_SuperID   , (IPTR)CLID_Hidd_Gallium },
+                {aMeta_InterfaceDescr, (IPTR)Gallium_ifdescr },
+                {aMeta_InstSize  , sizeof(struct HIDDGalliumData)},
+                {aMeta_ID        , (IPTR)"hidd.gallium.i915"},
+                {TAG_DONE, 0}
+            };
+    
+            sd->galliumclass = OOP_NewObject(NULL, CLID_HiddMeta, Gallium_tags);
+            if (sd->galliumclass)
+            {
+                sd->galliumclass->UserData = sd;
+                OOP_AddClass(sd->galliumclass);
+                i915MemPool = CreatePool(MEMF_PUBLIC | MEMF_CLEAR | MEMF_SEM_PROTECTED, 32 * 1024, 16 * 1024);
+    
+                init_aros_winsys();
+                bug("i915 gallium init OK\n");
+                return TRUE;
+            }
+    
+            OOP_ReleaseAttrBase((STRPTR)HiddGalliumAttrBase);
         }
-
-        OOP_ReleaseAttrBase((STRPTR)HiddGalliumAttrBase);
     }
 
     return FALSE;
@@ -228,7 +244,7 @@ VOID METHOD(i915Gallium, Hidd_Gallium, DisplayResource)
     br11 = tex->stride;
     br26 = msg->srcx | (msg->srcy << 16);
     br12 =  (uint32_t)aros_buffer(tex->buffer)->map;
-
+  
     LOCK_HW
         START_RING(8);
             OUT_RING(br00);

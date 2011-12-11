@@ -134,25 +134,25 @@ int main(void)
     if (icon)
     {
         STRPTR str;
-
-	str = FindToolType(icon->do_ToolTypes, "FORCEGMA");
-	args[0] = str ? TRUE : FALSE;
-
-	str = FindToolType(icon->do_ToolTypes, "GMA_MEM=");
-	if (str)
-	    sd.memsize = atoi(str);
         
-        str = FindToolType(icon->do_ToolTypes, "DISABLEGALLIUM");
+        str = FindToolType(icon->do_ToolTypes, "FORCEGMA");
+        args[0] = str ? TRUE : FALSE;
+        
+        str = FindToolType(icon->do_ToolTypes, "GMA_MEM=");
+        if (str)
+            sd.memsize = atoi(str);
+        
+        str = FindToolType(icon->do_ToolTypes, "FORCEGALLIUM");
         args[2] = str ? TRUE : FALSE;
     }
 
     if (!WBenchMsg)
-        rdargs = ReadArgs("FORCEGMA/S,GMA_MEM/N,DISABLEGALLIUM/S", args, NULL);
+        rdargs = ReadArgs("FORCEGMA/S,GMA_MEM/N,FORCEGALLIUM/S", args, NULL);
 
     sd.forced  = args[0];
     if (args[1])
-	sd.memsize = *((ULONG *)args[1]);
-    sd.disable_gallium  = args[2];
+        sd.memsize = *((ULONG *)args[1]);
+    sd.force_gallium  = args[2];
 
     if (rdargs)
         FreeArgs(rdargs);
@@ -234,7 +234,7 @@ int main(void)
                 #endif
 
                 /* Init Galliumclass */
-                if( ! sd.disable_gallium )InitGalliumClass();
+                InitGalliumClass();
 
 			    /* Everything is okay, stay resident and exit */
 
