@@ -7,6 +7,16 @@
  **/
 struct XPR_UPDATE;
 struct xpr_option;
+
+#ifdef __AROS__
+#  undef __asm
+#  define __asm
+#  define __a0
+#  define __a1
+#  define __d0
+#  define __d1
+#endif
+
 /*
    *   The structure
  */
@@ -15,9 +25,8 @@ struct XPR_IO
     /* File name(s) */
     char *xpr_filename;
     /* Open file */
-    BPTR (*__asm xpr_fopen) (
-                             register __a0 char *filename,
-                             register __a1 char *accessmode);
+    BPTR (*xpr_fopen)(register __a0 const char *filename,
+                      register __a1 const char *accessmode);
     /* Close file */
     long (*__asm xpr_fclose) (
                              register __a0 BPTR filepointer);
@@ -56,7 +65,7 @@ struct XPR_IO
 
     /* Get string interactively */
     long (*__asm xpr_gets) (
-                            register __a0 char *prompt,
+                            register __a0 const char *prompt,
                             register __a1 char *buffer);
     /* Set and Get serial info */
     long (*__asm xpr_setserial) (
@@ -99,7 +108,7 @@ struct XPR_IO
     long (*xpr_squery) (void);  
 
     /* Get various host ptrs */
-    long (*__asm xpr_getptr) (
+    void * (*__asm xpr_getptr) (
                               register __d0 long type);
   };
 /*
@@ -110,7 +119,7 @@ struct XPR_IO
 /*
    *   The functions
  */
-#ifndef LATTICE
+#if !defined(LATTICE) && !defined(__AROS__)
 extern long XProtocolSend (), XProtocolReceive (), XProtocolSetup (), XProtocolCleanup ();
 #endif
 /*

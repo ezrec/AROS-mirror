@@ -15,9 +15,9 @@ FILES = Send Receive Utils xprgetsystime xprtimeout xprzmodem_locale Zm xprsprin
 #MM
 xprz-includes-copy: $(AROS_INCLUDES)/proto/xpr.h
 
-$(AROS_INCLUDES)/proto/xpr.h : aros/xpr_proto.h
+$(AROS_INCLUDES)/proto/xpr.h : aros/xpr_proto.h Xproto.h
 	@$(ECHO) Copying $^ ...
-	@$(CP) $^ $@
+	@$(CAT) $^ >$@
 
 clean ::
 	-$(RM) $(AROS_INCLUDES)/proto/xpr.h

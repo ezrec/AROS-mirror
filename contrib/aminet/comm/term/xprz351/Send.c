@@ -179,7 +179,7 @@ void
 sendbatch (struct Vars *v)
 {
   UBYTE single, done = FALSE;
-  long fstate;
+  long fstate = 0;
 
 #ifdef DEBUGLOG
   D (DEBUGINFO);
