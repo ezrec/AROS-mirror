@@ -182,7 +182,10 @@ UBYTE randomarray33[256];
 /* the opposite of noteon() */
 #define noteoff(m) ( voicemsg(m,MS_NoteOff) || (voicemsg(m,MS_NoteOn) && (!(m)->mm_Data2)) )
 
+#ifndef offsetof
 #define offsetof(s, m)  (size_t)(&(((s *)0)->m))
+#endif
+
 #define MIN(a,b)    ((a) <= (b) ? (a) : (b))
 #define elementsof(a)  ((sizeof(a) / sizeof(a[0])))
 
@@ -699,9 +702,9 @@ BOOL LoadPrefs(struct Prefs *pref)
 BOOL SavePrefs(struct Globals *glob, struct Prefs *pref, UBYTE *EnvName)
 {
 	BOOL Success = FALSE;
-	BPTR OldDir=NULL;
-	BPTR EnvLock=NULL;
-	BPTR MIDILock=NULL;
+	BPTR OldDir=BNULL;
+	BPTR EnvLock=BNULL;
+	BPTR MIDILock=BNULL;
 	BPTR FH;
 	UBYTE *FileName = "Fireworks.prefs";
 	UBYTE *MIDIName = "MIDI";
@@ -926,7 +929,7 @@ BOOL OpenGUI(struct Globals *glob, struct Prefs *pref)
 						{
 							if (glob->Screen == wbscr)
 							{
-								glob->AppWindow = AddAppWindow( 1, NULL, glob->Window, glob->AppPort, TAG_DONE);
+								glob->AppWindow = AddAppWindow( 1, BNULL, glob->Window, glob->AppPort, TAG_DONE);
 							}
 							
 							UnlockPubScreen( NULL, wbscr );
@@ -1323,7 +1326,6 @@ void MainLoop(struct Globals *glob, struct Prefs *pref)
 	struct IntuiMessage *imsg;
 	ULONG Cl;
 	UWORD Co;
-	APTR IA;
 	
 	ULONG timersig = (1L << glob->treq->tr_node.io_Message.mn_ReplyPort->mp_SigBit);
 	ULONG appsig   = (1L << glob->AppPort->mp_SigBit);
@@ -1433,7 +1435,6 @@ void MainLoop(struct Globals *glob, struct Prefs *pref)
 				{
 					Cl=imsg->Class;
 					Co=imsg->Code;
-					IA=imsg->IAddress;
 					ReplyMsg((struct Message*)imsg);
 					
 					if (Cl==IDCMP_CLOSEWINDOW)
@@ -2172,7 +2173,6 @@ void AsyncSelectScreenMode(struct Globals *glob, struct Prefs *pref)
 
 void AsyncSelectImageFunction(struct Globals *glob, struct Prefs *pref, APTR UserData)
 {
-	BOOL Success = FALSE;
 	UBYTE *filename;
 	UBYTE *ptr, save;
 	BPTR dirlock;
@@ -2227,8 +2227,6 @@ void AsyncSelectImageFunction(struct Globals *glob, struct Prefs *pref, APTR Use
 				}
 				
 				FreeVec(appm);
-				
-				Success = TRUE;
 			}
 			UnLock(dirlock);
 		}
@@ -2704,7 +2702,18 @@ BOOL SelectImage(struct Globals *glob, struct Prefs *pref, struct FileRequester 
 /* MIDI hook function for ASL requester */
 /*--------------------------------------*/
 
+#ifdef __AROS__
+#include <aros/asmcall.h>
+
+AROS_UFH3(ULONG, MIDIFilter,
+		AROS_UFHA(struct Hook *, h, A0),
+		AROS_UFHA(struct FileRequester *, fr, A2),
+		AROS_UFHA(struct AnchorPath *, ap, A1))
+{
+	AROS_USERFUNC_INIT
+#else
 ASM SAVEDS ULONG MIDIFilter (REG(a0) struct Hook *h, REG(a2) struct FileRequester *fr, REG(a1) struct AnchorPath *ap)
+#endif
 {
 	ULONG use = FALSE;
 	
@@ -2747,6 +2756,10 @@ ASM SAVEDS ULONG MIDIFilter (REG(a0) struct Hook *h, REG(a2) struct FileRequeste
 	}
 	return(use);
 }
+#ifdef __AROS__
+  AROS_USERFUNC_EXIT
+}
+#endif
 
 
 
@@ -2761,9 +2774,9 @@ BOOL SelectMIDI(struct Globals *glob, struct Prefs *pref, struct FileRequester *
 	UBYTE initialdrawer[200];
 	UBYTE initialfile  [40];
 	
-	struct Hook filter = {{0}};
+	struct Hook filter = {};
 	UBYTE save, *ptr;
-	
+
 	filter.h_Entry = (HOOKFUNC)MIDIFilter;
 	
 	ptr = PathPart(filebuffer);
@@ -2792,7 +2805,7 @@ BOOL SelectMIDI(struct Globals *glob, struct Prefs *pref, struct FileRequester *
 					ASLFR_Screen, GetScreen(glob),
 					ASLFR_InitialDrawer, initialdrawer,
 					ASLFR_InitialFile, initialfile,
-//					(pref->Flags & PREFF_ASLHOOKS) ? ASLFR_FilterFunc : TAG_IGNORE,	&filter,
+					(pref->Flags & PREFF_ASLHOOKS) ? ASLFR_FilterFunc : TAG_IGNORE,	&filter,
 					TAG_DONE);
 		
 		if (Selected)
@@ -2838,13 +2851,12 @@ void PlayMIDI(struct Globals *glob, struct Prefs *pref)
 		sprintf(CommandString,"Run PlayMF \42%s\42 LINK=\42%s\42 %s REPLACE", pref->MIDIFile, pref->Link, init);
 	}
 
-	if ((out = Output()) == NULL)
+	if ((out = Output()) == BNULL)
 	{
 		if ((out = Open("NIL:", MODE_OLDFILE))) CloseOut = TRUE;
 	}
 
-//	if (!Execute( CommandString, NULL, out))
-	if (!Execute( "Run PlayMF felicida.mid", NULL, NULL))
+	if (!Execute( CommandString, BNULL, out))
 	{
 		AsyncMessage(glob,LaunchTask, "Unable to launch PlayMF.\nPlease make sure it is located somewhere in your search path.","Damn");
 	}

@@ -64,7 +64,7 @@ struct timerequest *OpenTimer(void)
 			}
 			else
 			{
-				TimerBase = (struct Library*)treq->tr_node.io_Device;
+				TimerBase = (struct Device *)treq->tr_node.io_Device;
 				
 				E_Freq      = ReadEClock(&eclock);
 				E_Freq_1000 = E_Freq / 1000;

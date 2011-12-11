@@ -31,7 +31,7 @@ Some fixes here and there to make it compile under AROS/gcc.
 #endif
 
 /* Version string */
-static UBYTE *Version = "$VER: PlayMF 41.0 ("__DATE__")";
+UBYTE *Version = "$VER: PlayMF 41.0 ("__DATE__")";
 
 #define NORMPRI 25
 
@@ -1827,7 +1827,7 @@ BOOL LoadFile(char *name, APTR *ptr, ULONG *len, UBYTE *ErrorString, BOOL *Break
 
 LONG __stdargs Message(UBYTE *Msg,UBYTE *Options,...)
 {
-	LONG retval;
+	LONG retval = 0;
 	
 	BOOL req = FALSE;
 	
@@ -1944,9 +1944,7 @@ ASM void AddAbsTime( REG(a0) ULONG *abstimeLO,
 		       REG(d1) ULONG lowclock,
 		       REG(d2) ULONG division )
 {
-  QUAD temp0,temp1,temp2,temp3,temp4=1;
-  temp1=tempo;
-  temp2=lowclock;
+  QUAD temp0,temp3,temp4=1;
   temp3=division;
 
   temp0=SMult64(tempo,lowclock);
