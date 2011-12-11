@@ -132,6 +132,7 @@ glutMainLoopEvent (void)
       tmp_msg_mouseY = imsg->MouseY;
       tmp_msg_code = imsg->Code;
       tmp_msg_qual = imsg->Qualifier;
+      (void)tmp_msg_qual; // Unused
 
       if ((window_MessageID != GLUT_MSG_WINDOWVIRGIN) && (window_MessageID != GLUT_MSG_WINDOWACTIVE))
       {
