@@ -309,7 +309,7 @@ AROS_UFH3(struct LibraryHeader *, LibInit,
     SysBase = sysbase;
 
     D(bug( "Start...\n" ) );
-    if ((base = (struct LibraryHeader *)MakeLibrary((APTR)LibVectors,NULL,NULL,sizeof(struct LibraryHeader),NULL)))
+    if ((base = (struct LibraryHeader *)MakeLibrary((APTR)LibVectors,NULL,NULL,sizeof(struct LibraryHeader),BNULL)))
     {
         D(bug( "After MakeLibrary()\n" ) );
 

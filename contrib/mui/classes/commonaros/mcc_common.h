@@ -8,4 +8,4 @@
 #define GETINTERFACE(iface, base) TRUE
 #define DROPINTERFACE(iface)
 
-#include "SDI_hook.h"
+#include <SDI/SDI_hook.h>
