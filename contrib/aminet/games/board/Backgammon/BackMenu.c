@@ -95,22 +95,22 @@ struct IntuiText IText[]=
 struct MenuItem menu_item[] = {
   { &menu_item[1],			  /* newgame 0: */
     0,0,133,12,(ITEMTEXT|ITEMENABLED|HIGHCOMP|COMMSEQ),
-    NULL, (APTR) &IText[0], NULL,'N',NULL},
+    0, (APTR) &IText[0], NULL,'N',NULL},
   { &menu_item[2],			  /* about  1: */
     0,15,133,12,(ITEMTEXT|ITEMENABLED|HIGHCOMP|COMMSEQ),
-    NULL,(APTR) &IText[1],NULL,'I',NULL},
+    0,(APTR) &IText[1],NULL,'I',NULL},
   { NULL,				  /* quit  2: */
     0,30,133,12,(ITEMTEXT|ITEMENABLED|HIGHCOMP|COMMSEQ),
-    NULL,(APTR) &IText[2],NULL,'Q',NULL},
+    0,(APTR) &IText[2],NULL,'Q',NULL},
   { &menu_item[4],			  /* help  3: */
     0,0,133,12,(ITEMTEXT|ITEMENABLED|HIGHCOMP|COMMSEQ),
-    NULL,(APTR) &IText[3],NULL,'H',NULL},
+    0,(APTR) &IText[3],NULL,'H',NULL},
   { &menu_item[5],			  /* Takeback 4:  */
     0,15,133,12,(ITEMTEXT|ITEMENABLED|HIGHCOMP|COMMSEQ),
-    NULL,(APTR) &IText[4],NULL,'X',NULL},
+    0,(APTR) &IText[4],NULL,'X',NULL},
   { NULL,				  /* move hint  5: */
     0,30,133,12,(ITEMTEXT|ITEMENABLED|HIGHCOMP|COMMSEQ),
-    NULL,(APTR) &IText[5],NULL,'B',NULL}
+    0,(APTR) &IText[5],NULL,'B',NULL}
 };
 
 

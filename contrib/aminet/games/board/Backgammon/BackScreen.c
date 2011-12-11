@@ -97,7 +97,7 @@ static int		xc, yc,			/* center of board		*/
 			move_num_len,		/* how long it plots		*/
 			bar_left, bar_right;	/* limits of bar		*/
 
-static  shape_rec	*piece_ptr = &norm_piece;
+static const shape_rec	*piece_ptr = &norm_piece;
 
 UWORD			color_table[] = {0x000, 0xDDD, 0xAAA, 0xCCC, 0x444, 0x730, 0xFFD, 0x0AC};
 struct ColorMap		color_map     = {0, 0, sizeof (color_table) / 2, (APTR)&color_table};
@@ -246,7 +246,7 @@ void 	Gsetup (void)
 
   GetPrefs (&prefs, sizeof prefs);
 
-  if (laced = (prefs.LaceWB & LACEWB)) {
+  if ((laced = (prefs.LaceWB & LACEWB))) {
     ns.ViewModes |= LACE;
     ns.Font = &font[1];
     tf = OpenDiskFont(&font[1]);
@@ -374,7 +374,7 @@ void 	PutPiece ( long 	x,
 /* coords are for center of piece					*/
 {
   int		i;
-  shape_rec	*sp = piece_ptr;
+  const shape_rec	*sp = piece_ptr;
 
 
   SetAPen  (rp, color);
@@ -482,13 +482,13 @@ void 	finit ( void )
 	" [click in window to terminate]      \n"};
 
   if (total_games) {
-    sprintf (&s[2][18], "%6d\n", total_games);
-    sprintf (&s[5][14], "%10d  %10d\n", you.total.roll, me.total.roll);
+    sprintf (&s[2][18], "%6d\n", (int)total_games);
+    sprintf (&s[5][14], "%10d  %10d\n", (int)you.total.roll, (int)me.total.roll);
     sprintf (&s[6][20], "%4.1f        %4.1f\n",
 	(float)you.total.average_roll / total_games,
 	(float)me.total.average_roll / total_games);
-    sprintf (&s[7][14], "%10d  %10d\n", you.total.incomplete, me.total.incomplete);
-    sprintf (&s[8][14], "%10d  %10d\n", you.total.wasted, me.total.wasted);
+    sprintf (&s[7][14], "%10d  %10d\n", (int)you.total.incomplete, (int)me.total.incomplete);
+    sprintf (&s[8][14], "%10d  %10d\n", (int)you.total.wasted, (int)me.total.wasted);
     TextScreen (s, 11);
   }
 
