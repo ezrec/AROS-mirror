@@ -64,4 +64,5 @@ char **argv;
 
 	fwrite(unpacked, 1, unplen, file);
 	fclose(file);
+	return 0;
 	}

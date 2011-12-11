@@ -248,7 +248,7 @@ int bfextu(UBYTE *p,int bo,int bc) {
   return r;
 }
 
-#define bfextu1 ((*(src + d0 / 8) >> 7 - (d0 % 8)) & 1)
+#define bfextu1 ((*(src + d0 / 8) >> (7 - (d0 % 8))) & 1)
 
 int bfextu3(UBYTE *p,int bo) {
   int r;
