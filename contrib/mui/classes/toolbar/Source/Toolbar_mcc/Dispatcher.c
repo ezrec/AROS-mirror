@@ -26,7 +26,7 @@
 #include <libraries/mui.h>
 #include "Toolbar_mcc.h"
 
-#include "SDI_compiler.h"
+#include <SDI/SDI_compiler.h>
 
 #include "InstanceData.h"
 #include "Draw.h"

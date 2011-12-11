@@ -28,7 +28,7 @@
 #define MUI_OBSOLETE
 #include <libraries/mui.h>
 
-#include "SDI_compiler.h"
+#include <SDI/SDI_compiler.h>
 
 #include "InstanceData.h"
 #include "ConfigValues.h"

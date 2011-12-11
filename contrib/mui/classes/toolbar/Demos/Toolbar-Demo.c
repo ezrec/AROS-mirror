@@ -84,7 +84,6 @@ int main(int argc,char *argv[])
 	Object	*TX_About;
 
 	ULONG		sigs = 0;
-	ULONG		res = 5;
 
 	/* Here the contents of the toolbar is described.
            Make the description-array and you are almost finished.
@@ -271,7 +270,6 @@ int main(int argc,char *argv[])
 
 				if(open)
 				{
-					res = 0;
 					while (DoMethod(app,MUIM_Application_NewInput,&sigs) != MUIV_Application_ReturnID_Quit)
 					{
 						if (sigs)
