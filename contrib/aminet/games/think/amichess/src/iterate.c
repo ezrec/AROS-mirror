@@ -59,8 +59,8 @@ if(flags&TIMECTL)
 	if(nmovesfrombook<=3) SearchTime=1.5*SearchTime;
 	if(TCinc) if(SearchTime<TCinc)
 		{
-		char *color[2]={"White","Black"};
-/*		printf("TimeLimit[%s]=%6.2f\n",color[side],TimeLimit[side]); */
+/*		char *color[2]={"White","Black"};
+		printf("TimeLimit[%s]=%6.2f\n",color[side],TimeLimit[side]); */
 		if(TimeLimit[side]>30) SearchTime=TCinc;
 		}
 	}

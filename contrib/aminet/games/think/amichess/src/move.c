@@ -512,7 +512,7 @@ else if(strchr("NBRQK",mvstr[0]))
 		{
 		f=leadz(b);
 		CLEARBIT(b,f);
-		if(n1=IsInMoveList(1,f,t,' '))
+		if((n1=IsInMoveList(1,f,t,' ')))
 			{
 			n2=n1;
 			kount++;

@@ -34,7 +34,7 @@ while(1)
 	if(c==NULLBITBOARD) break;
 	for(piece=pawn;piece<=king;piece++)
 		{
-		if(r=c&e[piece])
+		if((r=c&e[piece]))
 			{
 			sq=leadz(r);
 			CLEARBIT(c,sq);
@@ -48,7 +48,7 @@ while(1)
 	if(b==NULLBITBOARD) break;
 	for(piece=pawn;piece<=king;piece++)
 		{
-		if(r=b&d[piece])
+		if((r=b&d[piece]))
 			{
 			sq=leadz(r);
 			CLEARBIT(b,sq);

@@ -114,7 +114,7 @@ int Search(int ply,int depth,int alpha,int beta,int nodetype)
 {
 int best,score,nullscore,savealpha;
 int side,xside,rc,t0,t1,firstmove;
-int fcut,fdel,donull,savenode,nullthreatdone,extend;
+int fcut,fdel,donull,savenode,extend;
 leaf *p,*pbest;
 int g0,g1;
 int upperbound;
@@ -194,7 +194,7 @@ Hashmv[ply]=0;
 upperbound=INFINITY;
 if(flags&USEHASH)
 	{
-	if(rc=TTGet(side,depth,ply,&score,&g1))
+	if((rc=TTGet(side,depth,ply,&score,&g1)))
 		{
 		Hashmv[ply]=g1&MOVEMASK;
 		switch(rc)
@@ -268,7 +268,6 @@ firstmove=true;
 pbest=p;
 best=-INFINITY;
 savealpha=alpha;
-nullthreatdone=false;
 nullscore=INFINITY;
 savenode=nodetype;
 if(nodetype!=PV) nodetype=(nodetype==CUT)?ALL:CUT;
@@ -329,7 +328,7 @@ while(1)
 
 done:
 
-/* if(upperbound<best) printf("Inconsistencies %d %d\n",upperbound,best); */
+if (0 /* disabled */ && upperbound<best) printf("Inconsistencies %d %d\n",upperbound,best);
 if(flags&USEHASH) TTPut(side,depth,ply,savealpha,beta,best,pbest->move);
 if(best>savealpha) history[side][pbest->move&0x0FFF]+=HISTSCORE(depth/DEPTH);
 if(!(pbest->move &(CAPTURE | PROMOTION))&&best>savealpha)

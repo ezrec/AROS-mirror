@@ -234,7 +234,7 @@ void SaveEPD(char *file)
 FILE *fp;
 int r,c,sq,k;
 char c1;
-if(fp=fopen(file,"a"))
+if((fp=fopen(file,"a")))
 	{
 	for(r=sA8;r>=sA1;r-=8)
 		{

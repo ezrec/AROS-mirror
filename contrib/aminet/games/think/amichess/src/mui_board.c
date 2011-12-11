@@ -56,7 +56,6 @@ return (IPTR)obj;
 
 static IPTR mDispose(struct IClass *cl,Object *obj,Msg msg)
 {
-struct Data *data=(struct Data *)INST_DATA(cl,obj);
 return DoSuperMethodA(cl,obj,msg);
 }
 
@@ -111,7 +110,7 @@ static ULONG Dispatcher(register __a0 struct IClass *cl,register __a2 Object *ob
 {
 #endif
 
-ULONG retval;
+ULONG retval = 0;
 switch(msg->MethodID)
 	{
 	case OM_NEW:

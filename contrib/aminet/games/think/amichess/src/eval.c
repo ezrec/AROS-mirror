@@ -48,12 +48,10 @@ int ScoreP(int side)
 int s,sq,i,i1,xside;
 int n1,n2,backward;
 int nfile[8];
-int EnemyKing;
-BitBoard c,t,p,blocker,*e;
+BitBoard c,t,p,blocker;
 PawnSlot *ptable;
 if(board.b[side][pawn]==NULLBITBOARD) return 0;
 xside=1^side;
-EnemyKing=board.king[xside];
 p=board.b[xside][pawn];
 t=board.b[side][pawn];
 c=t;
@@ -167,7 +165,6 @@ if(side==white&&(((c&d2e2[white])>>8)&blocker)) s+=BLOCKDEPAWN;
 if(side==black&&(((c&d2e2[black])<<8)&blocker)) s+=BLOCKDEPAWN;
 if(passed[side]&&board.pmaterial[xside]==0)
 	{
-	e=board.b[xside];
 	i1=board.king[xside];
 	p=passed[side];
 	while(p)
@@ -244,14 +241,12 @@ return s;
 int ScoreN(int side)
 {
 int s,s1,sq,xside;
-int EnemyKing;
 BitBoard c,t;
 if(board.b[side][knight]==NULLBITBOARD) return 0;
 xside=side^1;
 s=s1=0;
 c=board.b[side][knight];
 t=board.b[xside][pawn]; 
-EnemyKing=board.king[xside];
 while(c)
 	{
 	sq=leadz(c);
@@ -272,13 +267,12 @@ return s;
 
 int ScoreB(int side)
 {
-int s,s1,xside,n,sq,EnemyKing;
+int s,s1,xside,n,sq;
 BitBoard c,t;
 if(board.b[side][bishop]==NULLBITBOARD) return 0;
 s=s1=0;
 c=board.b[side][bishop];
 xside=side^1;
-EnemyKing=board.king[xside];
 n=0;
 t=board.b[xside][pawn];
 while(c)
@@ -715,9 +709,8 @@ static const BitBoard corner=0xC3C300000000C3C3ULL;
 int ScoreDev(int side)
 {
 int s=0;
-int sq,xside;
+int sq;
 BitBoard c;
-xside=1^side;
 c=(board.b[side][knight]&nn[side])|(board.b[side][bishop]&bb[side]);
 s+=nbits(c)*(-8);
 if(board.castled[side]||GameCnt/2+1>=20) return s;
@@ -762,7 +755,6 @@ return s;
 int Evaluate(int alpha,int beta)
 {
 int side,xside,s,s1,score;
-int npiece[2];
 BitBoard *b;
 side=board.side;
 xside=1^side;
@@ -774,10 +766,8 @@ EvalCall++;
 phase=PHASE;
 b=board.b[white];
 pieces[white]=b[knight]|b[bishop]|b[rook]|b[queen];
-npiece[white]=nbits(pieces[white]);
 b=board.b[black];
 pieces[black]=b[knight]|b[bishop]|b[rook]|b[queen];
-npiece[black]=nbits(pieces[black]);
 hunged[white]=hunged[black]=0;
 memset(pscore,0,sizeof(pscore));
 s1=MATERIAL;

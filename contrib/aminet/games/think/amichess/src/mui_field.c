@@ -88,7 +88,7 @@ obj=DoSuperNew(cl,obj,
 	MUIA_Draggable,1,
 	MUIA_Dropable,1,
 #ifdef __AROS__
-#warning "Drag and drop not working in Zune here if inputmode is <none>!"
+// FIXME: "Drag and drop not working in Zune here if inputmode is <none>!"
     	MUIA_InputMode, MUIV_InputMode_RelVerify,
 #endif
 TAG_MORE,msg->ops_AttrList);
@@ -159,7 +159,7 @@ cmd[1]='1'+(from/8);
 cmd[2]='a'+(to%8);
 cmd[3]='1'+(to/8);
 cmd[4]=0;
-if((side==white&&cmd[1]=='7'&&cmd[3]=='8')&&(board.b[side][pawn]&BitPosArray[from])||(cmd[1]=='2'&&cmd[3]=='1')&&board.b[side][pawn]&BitPosArray[from])
+if(((side==white&&cmd[1]=='7'&&cmd[3]=='8')&&(board.b[side][pawn]&BitPosArray[from]))||((cmd[1]=='2'&&cmd[3]=='1')&&board.b[side][pawn]&BitPosArray[from]))
 	{
 	promotepiece=0;
 	DoMethod(_app(obj),MUIM_Chess_Promote);
@@ -178,7 +178,7 @@ if((side==white&&cmd[1]=='7'&&cmd[3]=='8')&&(board.b[side][pawn]&BitPosArray[fro
 			strcat(cmd,"N");
 		}
 	}
-if(ptr=ValidateMove(cmd))
+if((ptr=ValidateMove(cmd)))
 	{
 	char text[50];
 /*	DoMethod(_app(obj),MUIM_Chess_Side); */

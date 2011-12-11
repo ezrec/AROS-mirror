@@ -6,14 +6,14 @@ unsigned char leadz(BitBoard b)
 {
 int i;
 #ifdef HAVE64BIT
-if(i=b>>48) return lzArray[i];
-if(i=b>>32) return lzArray[i]+16;
-if(i=b>>16) return lzArray[i]+32;
+if((i=b>>48)) return lzArray[i];
+if((i=b>>32)) return lzArray[i]+16;
+if((i=b>>16)) return lzArray[i]+32;
 return lzArray[(int)b]+48;
 #else
-if(i=b.hi>>16) return lzArray[i];
+if((i=b.hi>>16)) return lzArray[i];
 if(b.hi) return lzArray[b.hi]+16;
-if(i=(b.hi<<16)|(b.lo>>16)) return lzArray[i]+32;
+if((i=(b.hi<<16)|(b.lo>>16))) return lzArray[i]+32;
 return lzArray[b.lo]+48;
 #endif
 }
@@ -80,7 +80,7 @@ void EndSearch(int dummy)
 {
 SETFLAG(flags,TIMEOUT);
 #ifdef __AROS__
-#warning "Disabled signal() call here"
+// FIXME: "Disabled signal() call here"
 #else
 signal(SIGINT,EndSearch);
 #endif

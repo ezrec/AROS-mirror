@@ -170,7 +170,7 @@ int BookBuilderOpen()
 FILE *rfp,*wfp;
 int res;
 char text[100];
-if(rfp=fopen(BOOKRUN,"rb"))
+if((rfp=fopen(BOOKRUN,"rb")))
 	{
 	DoMethod(mui_app,MUIM_Chess_ShowThinking,"Opened existing book!");
 	if(!check_magic(rfp))
@@ -305,7 +305,7 @@ return errcode;
 
 int BookQuery()
 {
-int i,j,k,icnt=0,mcnt,found,tot,maxdistribution;
+int i,j,k,icnt=0,mcnt,found,maxdistribution;
 int matches[MAXMATCH] ;
 leaf m[MAXMOVES];
 leaf pref[MAXMOVES];
@@ -388,12 +388,12 @@ if(mcnt+1)
 	{
 	if(bookmode==BOOKRAND)
 		{
+/*    		int tot; */
 		k=rand();
 		k=k%(mcnt+1);
 		RootPV=m[matches[k]].move;
-/*		printf("\n(Random picked move #%d %s%s from above list)\n",k,algbr[FROMSQ(RootPV)],algbr[TOSQ(RootPV)]); */
+/*		printf("\n(Random picked move #%d %s%s from above list)\n",k,algbr[FROMSQ(RootPV)],algbr[TOSQ(RootPV)]);
 		tot=r[matches[k]].wins+r[matches[k]].draws+r[matches[k]].losses;
-/*
 		if(tot) printf("B p=%2.0f\n",100.0*(r[matches[k]].wins+r[matches[k]].draws)/tot);
 		else printf("p=NO EXPERIENCES\n");
 */

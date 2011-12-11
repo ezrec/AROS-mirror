@@ -173,17 +173,14 @@ GenCnt+=TreePtr[ply+1]-TreePtr[ply];
 
 void GenNonCaptures(int ply)
 {
-int side,piece,sq,t,ep;
-BitBoard b,c,d,friends,notfriends,blocker,notblocker;
+int side,piece,sq,t;
+BitBoard b,c,d,blocker,notblocker;
 BitBoard *a;
 side=board.side;
 a=board.b[side];
-friends=board.friends[side];
-notfriends=~friends;
 blocker=board.blocker;
 notblocker=~blocker;
 node=TreePtr[ply+1];
-ep=board.ep;
 for(piece=knight;piece<=king;piece+=4)
 	{
 	b=a[piece];
@@ -270,12 +267,10 @@ GenCnt+=TreePtr[ply+1]-TreePtr[ply];
 void GenCaptures(int ply)
 {
 int side,piece,sq,t,ep;
-BitBoard b,c,friends,notfriends,enemy,blocker;
+BitBoard b,c,enemy,blocker;
 BitBoard *a;
 side=board.side;
 a=board.b[side];
-friends=board.friends[side];
-notfriends=~friends;
 enemy=board.friends[1^side];
 blocker=board.blocker;
 node=TreePtr[ply+1];

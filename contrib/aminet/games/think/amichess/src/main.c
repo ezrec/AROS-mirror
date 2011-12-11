@@ -96,8 +96,8 @@ CloseLibrary(MUIMasterBase);
 #ifdef __AROS__
 Object *DoSuperNew(struct IClass *cl,Object *obj,Tag tag1,...)
 {
-    AROS_SLOWSTACKTAGS_PRE(tag1)
-    retval = (IPTR)DoSuperMethod(cl,obj,OM_NEW,AROS_SLOWSTACKTAGS_ARG(tag1),0);
+    AROS_SLOWSTACKTAGS_PRE_AS(tag1, Object *)
+    retval = (Object *)DoSuperMethod(cl,obj,OM_NEW,AROS_SLOWSTACKTAGS_ARG(tag1),0);
     AROS_SLOWSTACKTAGS_POST
 }
 #else
@@ -122,11 +122,11 @@ void LoadPieces(char *name)
 {
 BPTR lock;
 FreePieces();
-if(lock=Lock(pieces_folder,SHARED_LOCK))
+if((lock=Lock(pieces_folder,SHARED_LOCK)))
 	{
 	BPTR oldlock=CurrentDir(lock);
 
-	if(piecesgfx=NewDTObject((void *)name,DTA_GroupID,GID_PICTURE,PDTA_DestMode,PMODE_V43,PDTA_Remap,1,PDTA_Screen,wbscreen,PDTA_FreeSourceBitMap,1,PDTA_UseFriendBitMap,1,TAG_END))
+	if((piecesgfx=NewDTObject((void *)name,DTA_GroupID,GID_PICTURE,PDTA_DestMode,PMODE_V43,PDTA_Remap,1,PDTA_Screen,wbscreen,PDTA_FreeSourceBitMap,1,PDTA_UseFriendBitMap,1,TAG_END)))
 		{
 		if(DoDTMethod(piecesgfx,0,0,DTM_PROCLAYOUT,0,1))
 			{
@@ -193,29 +193,29 @@ void LoadBoard(char *name)
 {
 BPTR lock1;
 FreeBoard();
-if(lock1=Lock("PROGDIR:Boards",SHARED_LOCK))
+if((lock1=Lock("PROGDIR:Boards",SHARED_LOCK)))
 	{
 	BPTR oldlock=CurrentDir(lock1);
 	BPTR lock2;
-	if(lock2=Lock(name,SHARED_LOCK))
+	if((lock2=Lock(name,SHARED_LOCK)))
 		{
 		struct BitMap *bm,*wbm=wbscreen->RastPort.BitMap;
 		struct BitMapHeader *bh;
 		CurrentDir(lock2);
-		if(board_light=NewDTObject("Light",DTA_GroupID,GID_PICTURE,PDTA_DestMode,PMODE_V43,PDTA_Remap,1,PDTA_Screen,wbscreen,PDTA_FreeSourceBitMap,1,PDTA_UseFriendBitMap,1,TAG_END))
+		if((board_light=NewDTObject("Light",DTA_GroupID,GID_PICTURE,PDTA_DestMode,PMODE_V43,PDTA_Remap,1,PDTA_Screen,wbscreen,PDTA_FreeSourceBitMap,1,PDTA_UseFriendBitMap,1,TAG_END)))
 			{
 			if(DoDTMethod(board_light,0,0,DTM_PROCLAYOUT,0,1))
 				{
 				GetDTAttrs(board_light,PDTA_BitMapHeader,&bh,PDTA_DestBitMap,&bm,TAG_END);
-				if(board_light_bm=AllocBitMap(pix_x,pix_x,GetBitMapAttr(wbm,BMA_DEPTH),BMF_MINPLANES,wbm)) ScaleBitMaps(bm,bh->bmh_Width,bh->bmh_Height,board_light_bm,pix_x,pix_x);
+				if((board_light_bm=AllocBitMap(pix_x,pix_x,GetBitMapAttr(wbm,BMA_DEPTH),BMF_MINPLANES,wbm))) ScaleBitMaps(bm,bh->bmh_Width,bh->bmh_Height,board_light_bm,pix_x,pix_x);
 				}
 			}
-		if(board_dark=NewDTObject("Dark",DTA_GroupID,GID_PICTURE,PDTA_DestMode,PMODE_V43,PDTA_Remap,1,PDTA_Screen,wbscreen,PDTA_FreeSourceBitMap,1,PDTA_UseFriendBitMap,1,TAG_END))
+		if((board_dark=NewDTObject("Dark",DTA_GroupID,GID_PICTURE,PDTA_DestMode,PMODE_V43,PDTA_Remap,1,PDTA_Screen,wbscreen,PDTA_FreeSourceBitMap,1,PDTA_UseFriendBitMap,1,TAG_END)))
 			{
 			if(DoDTMethod(board_dark,0,0,DTM_PROCLAYOUT,0,1))
 				{
 				GetDTAttrs(board_dark,PDTA_BitMapHeader,&bh,PDTA_DestBitMap,&bm,TAG_END);
-				if(board_dark_bm=AllocBitMap(pix_x,pix_x,GetBitMapAttr(wbm,BMA_DEPTH),BMF_MINPLANES,wbm)) ScaleBitMaps(bm,bh->bmh_Width,bh->bmh_Height,board_dark_bm,pix_x,pix_x);
+				if((board_dark_bm=AllocBitMap(pix_x,pix_x,GetBitMapAttr(wbm,BMA_DEPTH),BMF_MINPLANES,wbm))) ScaleBitMaps(bm,bh->bmh_Width,bh->bmh_Height,board_dark_bm,pix_x,pix_x);
 				}
 			}
 		UnLock(lock2);
@@ -255,7 +255,7 @@ if(snd_signal!=~0) FreeSignal(snd_signal);
 static void LoadSound()
 {
 BPTR lock;
-if(lock=Lock("PROGDIR:Sounds",SHARED_LOCK))
+if((lock=Lock("PROGDIR:Sounds",SHARED_LOCK)))
 	{
 	ULONG i;
 	BPTR oldlock=CurrentDir(lock);
@@ -288,9 +288,9 @@ if(lock=Lock("PROGDIR:Sounds",SHARED_LOCK))
 	snd_K=NewDTObjectA("King",tags);
 	for(i=0;i<8;i++)
 		{
-		sprintf(text,"%c",'a'+i);
+		sprintf(text,"%c",(char)('a'+i));
 		snd_fielda[i]=NewDTObjectA(text,tags);
-		sprintf(text,"%c",'1'+i);
+		sprintf(text,"%c",(char)('1'+i));
 		snd_field1[i]=NewDTObjectA(text,tags);
 		}
 	CurrentDir(oldlock);
@@ -320,7 +320,7 @@ if(voice)
 		{
 		ULONG i=0;
 		char c;
-		while(c=*move)
+		while((c=*move))
 			{
 			if(c=='N') PlaySound(snd_N,1);
 			else if(c=='B') PlaySound(snd_B,1);
@@ -357,7 +357,7 @@ else
 void Ende(void)
 {
 Object *snd;
-if(snd=NewDTObject("PROGDIR:Sounds/End",DTA_GroupID,GID_SOUND,SDTA_SignalTask,FindTask(0),SDTA_SignalBit,snd_sigmask,TAG_END)) PlaySound(snd,1);
+if((snd=NewDTObject("PROGDIR:Sounds/End",DTA_GroupID,GID_SOUND,SDTA_SignalTask,FindTask(0),SDTA_SignalBit,snd_sigmask,TAG_END))) PlaySound(snd,1);
 if(mui_app) MUI_DisposeObject(mui_app);
 ReleasePen(wbscreen->ViewPort.ColorMap,col_white);
 ReleasePen(wbscreen->ViewPort.ColorMap,col_black);
@@ -381,7 +381,6 @@ if(!mui_app) exit(20);
 
 int main(int argc,char *argv[])
 {
-int compilebook=0;
 time_t now;
 Object *snd;
 ULONG signals = 0;
@@ -395,17 +394,17 @@ InitModules();
 if(argc>0)
 	{
 	struct RDArgs *rd;
-	if(rd=ReadArgs("PUBSCREEN/K",(long *)&args,0))
+	if((rd=ReadArgs("PUBSCREEN/K",(long *)&args,0)))
 		{
 		FreeArgs(rd);
 		}
 	}
 else
 	{
-	if(PrgIcon=GetDiskObject("PROGDIR:AmiChess"))
+	if((PrgIcon=GetDiskObject("PROGDIR:AmiChess")))
 		{
 		char *val;
-		if(val=FindToolType(PrgIcon->do_ToolTypes,"PUBSCREEN")) args.pubscreen=val;
+		if((val=FindToolType(PrgIcon->do_ToolTypes,"PUBSCREEN"))) args.pubscreen=val;
 		}
 	}
 if(!(wbscreen=LockPubScreen(args.pubscreen)))
@@ -424,7 +423,7 @@ else
 	}
 snd_signal=AllocSignal(~0);
 snd_sigmask=1<<snd_signal;
-if(snd=NewDTObject("PROGDIR:Sounds/Chess",DTA_GroupID,GID_SOUND,SDTA_SignalTask,FindTask(0),SDTA_SignalBit,snd_sigmask,TAG_END)) PlaySound(snd,0);
+if((snd=NewDTObject("PROGDIR:Sounds/Chess",DTA_GroupID,GID_SOUND,SDTA_SignalTask,FindTask(0),SDTA_SignalBit,snd_sigmask,TAG_END))) PlaySound(snd,0);
 col_white=ObtainBestPen(wbscreen->ViewPort.ColorMap,0xFFFFFFFF,0xFFFFFFFF,0xB0B0B0B0,0);
 col_black=ObtainBestPen(wbscreen->ViewPort.ColorMap,0x90909090,0x48484848,0x00000000,0);
 LoadBoard("Default");

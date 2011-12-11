@@ -3,7 +3,7 @@
 void CalcHashKey()
 {
 int sq,piece,color;
-BitBoard b,h;
+BitBoard b;
 PawnHashKey=HashKey=0;
 for(color=white;color<=black;color++)
 	{
@@ -14,7 +14,6 @@ for(color=white;color<=black;color++)
 			{
 			sq=leadz(b);
 			CLEARBIT(b,sq);
-			h=hashcode[color][piece][sq];
 			HashKey^=hashcode[color][piece][sq];
 			if(piece==pawn) PawnHashKey^=hashcode[color][piece][sq];
 			}

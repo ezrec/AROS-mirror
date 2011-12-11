@@ -11,8 +11,6 @@
 #include <proto/intuition.h>
 #include <proto/muimaster.h>
 
-#warning "Fix DoSuperNew and NotifyWinCloseSelf"
-
 Object *DoSuperNew(struct IClass *cl,Object *obj,Tag tag1,...);
 
 #define NotifyWinCloseSelf(o) DoMethod(o, MUIM_Notify, MUIA_Window_CloseRequest, TRUE, o, 3, MUIM_Set, MUIA_Window_Open, FALSE)
@@ -505,7 +503,7 @@ if(obj)
 		}
 	if((fib=(struct FileInfoBlock *)AllocDosObject(DOS_FIB,0)))
 		{
-		if(lock=Lock(pieces_folder,SHARED_LOCK))
+		if((lock=Lock(pieces_folder,SHARED_LOCK)))
 			{
 			if(Examine(lock,fib)!=DOSFALSE)
 				{
@@ -548,7 +546,6 @@ return DoSuperMethodA(cl,obj,msg);
 
 static void mChessNewgame(struct IClass *cl,Object *obj)
 {
-struct Data *data=(struct Data *)INST_DATA(cl,obj);
 InitVars();
 NewPosition();
 myrating=opprating=0;
@@ -566,7 +563,7 @@ struct Data *data=(struct Data *)INST_DATA(cl,obj);
 if(MUI_AslRequestTags(data->filereq,ASLFR_InitialPattern,"#?",ASLFR_DoSaveMode,0,TAG_END))
 	{
 	BPTR lock;
-	if(lock=Lock(data->filereq->fr_Drawer,SHARED_LOCK))
+	if((lock=Lock(data->filereq->fr_Drawer,SHARED_LOCK)))
 		{
 		BPTR olddir=CurrentDir(lock);
 		DoMethod(obj,MUIM_Chess_ClearList);
@@ -670,7 +667,7 @@ if((flags&USEHASH))
 	if(TTGetPV(board.side,2,rootscore,&pvar[2]))
 		{
 		GenMoves(2); 
-		SANMove(pvar[2],2);
+		SANMove(pvar[1],2);
 		SetAttrs(data->mymove,MUIA_Text_Contents,SANmv,TAG_END);
 		}
 	}
@@ -987,9 +984,9 @@ static void mChessStats(struct IClass *cl,Object *obj)
 {
 char text[100];
 struct Data *data=(struct Data *)INST_DATA(cl,obj);
-sprintf(text,"Nodes: %u -> %u per sec",NodeCnt+QuiesCnt,(ULONG)((NodeCnt+QuiesCnt)/et));
+sprintf(text,"Nodes: %u -> %u per sec",(unsigned)(NodeCnt+QuiesCnt),(unsigned)((NodeCnt+QuiesCnt)/et));
 SetAttrs(data->tx_nodes,MUIA_Text_Contents,text,TAG_END);
-sprintf(text,"Moves: %u -> %u per sec",GenCnt,(ULONG)(GenCnt/et));
+sprintf(text,"Moves: %u -> %u per sec",(unsigned)GenCnt,(unsigned)(GenCnt/et));
 SetAttrs(data->tx_moves,MUIA_Text_Contents,text,TAG_END);
 sprintf(text,"Score: %d <-> %d",maxposnscore[white],maxposnscore[black]);
 SetAttrs(data->tx_score,MUIA_Text_Contents,text,TAG_END);
