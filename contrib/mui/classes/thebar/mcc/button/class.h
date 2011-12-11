@@ -50,9 +50,9 @@
 #include <stdlib.h>
 
 #include <mcc_common.h>
-#include <SDI_compiler.h>
-#include <SDI_stdarg.h>
-#include <SDI_hook.h>
+#include <SDI/SDI_compiler.h>
+#include <SDI/SDI_stdarg.h>
+#include <SDI/SDI_hook.h>
 
 #include "debug.h"
 

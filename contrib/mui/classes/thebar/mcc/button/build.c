@@ -1326,17 +1326,11 @@ LUT8ToBitMap(struct InstData *data,
              BOOL RGB8,
              struct pen *pens)
 {
-    UWORD d;
     ULONG flags;
     struct BitMap *friend;
     struct BitMap *dest;
 
     ENTER();
-
-    if(data->screenDepth>8)
-        d = 8;
-    else
-        d = data->screenDepth;
 
     flags = BMF_CLEAR;
     friend = NULL;
