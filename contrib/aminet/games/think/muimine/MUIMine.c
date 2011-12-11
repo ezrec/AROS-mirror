@@ -256,7 +256,7 @@ int LoadBitMap(struct LoadBitMapData * data)
         with that name in the 'PROGDIR:Images' sub-drectory
     */
     lock = Lock(fname, ACCESS_READ);
-    if (lock == NULL)
+    if (lock == BNULL)
     {
         /*
             could not locate the file name as given, if the file name does
@@ -286,7 +286,7 @@ int LoadBitMap(struct LoadBitMapData * data)
                     */
                     lock = Lock(afname, ACCESS_READ);
                 }
-                if (lock == NULL)
+                if (lock == BNULL)
                 {
                     /*
                         could not lock the file, free the file
@@ -307,7 +307,7 @@ int LoadBitMap(struct LoadBitMapData * data)
                 name specifies the file name part only and if it
                 does then try the "PROGDIR:images" directory
             */
-            if (lock == NULL)
+            if (lock == BNULL)
             {
                 p = FilePart(fname);
                 if (p == fname)
@@ -336,7 +336,7 @@ int LoadBitMap(struct LoadBitMapData * data)
                             */
                             lock = Lock(afname, ACCESS_READ);
                         }
-                        if (lock == NULL)
+                        if (lock == BNULL)
                         {
                             /*
                                 could not lock the file, free the
@@ -359,7 +359,7 @@ int LoadBitMap(struct LoadBitMapData * data)
         check if the picture file was found, if it was NOT then set the
         return error code
     */
-    if (lock == NULL)
+    if (lock == BNULL)
     {
         /*
             if the error code was not set then set it to a 'no file' error
@@ -376,7 +376,7 @@ int LoadBitMap(struct LoadBitMapData * data)
         /*
             try to load the file as a picture datatype
         */
-        if (data->DTObject = NewDTObject((afname) ? afname : fname,
+        if ((data->DTObject = NewDTObject((afname) ? afname : fname,
                                                 DTA_SourceType       ,DTST_FILE,
                                                 DTA_GroupID          ,GID_PICTURE,
                                                 PDTA_Remap           ,TRUE,
@@ -385,7 +385,7 @@ int LoadBitMap(struct LoadBitMapData * data)
                                                 PDTA_DestMode        ,PMODE_V43,
                                                 PDTA_UseFriendBitMap ,TRUE,
                                                 OBP_Precision        ,PRECISION_IMAGE,
-                                                TAG_DONE))
+                                                TAG_DONE)))
         {
             /*
                 picture datatype loaded ok, now layout to screen
@@ -778,7 +778,7 @@ int main(int argc, char *argv[])
             int i;
             char ** newtt;
             char ** ptt;
-            char ** oldtt = dobj->do_ToolTypes;
+            char ** oldtt = (APTR)dobj->do_ToolTypes;
 
             /*
                 determine the maximum number of tool types required
@@ -852,9 +852,9 @@ int main(int argc, char *argv[])
                     put the new tool type array in the disk object and
                     write the disk object to the disk
                 */
-                dobj->do_ToolTypes = newtt;
+                dobj->do_ToolTypes = (APTR)newtt;
                 PutDiskObject(dobjname, dobj);
-                dobj->do_ToolTypes = oldtt;
+                dobj->do_ToolTypes = (APTR)oldtt;
 
                 FreeVec(newtt);
             }
@@ -890,5 +890,7 @@ int main(int argc, char *argv[])
     MUI_DisposeObject(app);             /* dispose all objects. */
     DeleteMFWindowClass(mccMFWindow);   /* delete the custom class. */
     fail(NULL,NULL);                    /* exit, app is already disposed. */
+
+    return 0;
 }
 

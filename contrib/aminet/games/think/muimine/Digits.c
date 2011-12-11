@@ -90,7 +90,7 @@ static ULONG mNew(struct IClass *cl, Object *obj, struct opSet *msg)
     data->ImageBM = NULL;
     SetNumber(data, 0);
 
-    fname = (STRPTR)GetTagData(MUIA_Digits_ImageFile, NULL,
+    fname = (STRPTR)GetTagData(MUIA_Digits_ImageFile, (IPTR)NULL,
                                msg->ops_AttrList);
     SetImageFileName(data, fname);
 
@@ -185,9 +185,10 @@ static ULONG mAskMinMax(struct IClass *cl, Object *obj, struct MUIP_AskMinMax *m
 static ULONG mSet(struct IClass *cl, Object *obj, struct opSet * msg)
 {
     struct DigitsData *data = INST_DATA(cl,obj);
-    struct TagItem *tags, *tag;
+    const struct TagItem *tags;
+    struct TagItem *tag;
 
-    for (tags = msg->ops_AttrList; tag = NextTagItem(&tags); )
+    for (tags = msg->ops_AttrList; (tag = NextTagItem(&tags)); )
     {
         switch (tag->ti_Tag)
         {

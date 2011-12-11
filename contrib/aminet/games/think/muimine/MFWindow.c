@@ -454,13 +454,13 @@ static ULONG mNew(struct IClass *cl, Object *obj, struct opSet *msg)
         initialize game options for window content creation
     */
     minefieldimage = (STRPTR)GetTagData(MUIA_MFWindow_MineFieldImage,
-                                                NULL, msg->ops_AttrList);
+                                                (IPTR)NULL, msg->ops_AttrList);
     startbuttonimage = (STRPTR)GetTagData(MUIA_MFWindow_StartButtonImage,
-                                                NULL, msg->ops_AttrList);
+                                                (IPTR)NULL, msg->ops_AttrList);
     minesdigitsimage = (STRPTR)GetTagData(MUIA_MFWindow_MinesDigitsImage,
-                                                NULL, msg->ops_AttrList);
+                                                (IPTR)NULL, msg->ops_AttrList);
     timedigitsimage = (STRPTR)GetTagData(MUIA_MFWindow_TimeDigitsImage,
-                                                NULL, msg->ops_AttrList);
+                                                (IPTR)NULL, msg->ops_AttrList);
     safestart = (BOOL)GetTagData(MUIA_MFWindow_SafeStart, FALSE,
                                                       msg->ops_AttrList);
 
@@ -678,11 +678,12 @@ static ULONG mDispose(struct IClass *cl, Object *obj, Msg msg)
 static ULONG mSet(struct IClass *cl, Object *obj, struct opSet * msg)
 {
     struct MFWindowData *data = INST_DATA(cl,obj);
-    struct TagItem *tags, *tag;
+    struct TagItem *tag;
+    const struct TagItem *tags;
     ULONG WinOpen = FALSE;
     ULONG ret;
 
-    for (tags = msg->ops_AttrList; tag = NextTagItem(&tags); )
+    for (tags = msg->ops_AttrList; (tag = NextTagItem(&tags)); ) 
     {
         switch (tag->ti_Tag)
         {
@@ -1516,14 +1517,6 @@ static void SetupLevels(Object * obj, struct MFWindowData * data)
 static void SetupImages(Object * obj, struct MFWindowData * data)
 {
     Object *win;
-    struct LevelDataList rList;
-
-    /*
-        initialize the return level data list
-    */
-    rList.NumLevels = 0;
-    rList.Flags = 0;
-    rList.LevelList = NULL;
 
     /*
         create the level editor window
@@ -1636,9 +1629,9 @@ static void SetupImages(Object * obj, struct MFWindowData * data)
             if (GetAttr(MUIA_ISWindow_MineFieldImage, win, (ULONG *)&pstr))
             {
                 l = (pstr) ? strlen(pstr) : 0;
-                if (data->MineFieldImageFile == NULL  &&  l != 0  ||
-                    data->MineFieldImageFile != NULL  &&
-                        (l == 0  || strcmpi(pstr, data->MineFieldImageFile) != 0))
+                if ((data->MineFieldImageFile == NULL  &&  l != 0)  ||
+                    (data->MineFieldImageFile != NULL  &&
+                        (l == 0  || strcmpi(pstr, data->MineFieldImageFile) != 0)))
                 {
                     SetMineFieldImageFileName(data, (l) ? pstr : NULL);
                     running = TRUE;
@@ -1651,9 +1644,9 @@ static void SetupImages(Object * obj, struct MFWindowData * data)
             if (GetAttr(MUIA_ISWindow_StartButtonImage, win, (ULONG *)&pstr))
             {
                 l = (pstr) ? strlen(pstr) : 0;
-                if (data->StartButtonImageFile == NULL  &&  l != 0  ||
-                    data->StartButtonImageFile != NULL  &&
-                        (l == 0  || strcmpi(pstr, data->StartButtonImageFile) != 0))
+                if ((data->StartButtonImageFile == NULL  &&  l != 0)  ||
+                    (data->StartButtonImageFile != NULL  &&
+                        (l == 0  || strcmpi(pstr, data->StartButtonImageFile) != 0)))
                 {
                     SetStartButtonImageFileName(data, (l) ? pstr : NULL);
                     running = TRUE;
@@ -1666,9 +1659,9 @@ static void SetupImages(Object * obj, struct MFWindowData * data)
             if (GetAttr(MUIA_ISWindow_MinesDigitsImage, win, (ULONG *)&pstr))
             {
                 l = (pstr) ? strlen(pstr) : 0;
-                if (data->MinesDigitsImageFile == NULL  &&  l != 0  ||
-                    data->MinesDigitsImageFile != NULL  &&
-                        (l == 0  || strcmpi(pstr, data->MinesDigitsImageFile) != 0))
+                if ((data->MinesDigitsImageFile == NULL  &&  l != 0)  ||
+                    (data->MinesDigitsImageFile != NULL  &&
+                        (l == 0  || strcmpi(pstr, data->MinesDigitsImageFile) != 0)))
                 {
                     SetMinesDigitsImageFileName(data, (l) ? pstr : NULL);
                     running = TRUE;
@@ -1681,9 +1674,9 @@ static void SetupImages(Object * obj, struct MFWindowData * data)
             if (GetAttr(MUIA_ISWindow_TimeDigitsImage, win, (ULONG *)&pstr))
             {
                 l = (pstr) ? strlen(pstr) : 0;
-                if (data->TimeDigitsImageFile == NULL  &&  l != 0  ||
-                    data->TimeDigitsImageFile != NULL  &&
-                        (l == 0  || strcmpi(pstr, data->TimeDigitsImageFile) != 0))
+                if ((data->TimeDigitsImageFile == NULL  &&  l != 0)  ||
+                    (data->TimeDigitsImageFile != NULL  &&
+                        (l == 0  || strcmpi(pstr, data->TimeDigitsImageFile) != 0)))
                 {
                     SetTimeDigitsImageFileName(data, (l) ? pstr : NULL);
                     running = TRUE;

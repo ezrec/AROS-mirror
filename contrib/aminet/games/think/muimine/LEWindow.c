@@ -174,10 +174,10 @@ static ULONG mNew(struct IClass *cl, Object *obj, struct opSet *msg)
         fail if not found
     */
     givList = (struct LevelDataList *)GetTagData(MUIA_LEWindow_GivenLevels,
-                                                 NULL, msg->ops_AttrList);
+                                                 (IPTR)NULL, msg->ops_AttrList);
     if (givList == NULL)
     {
-        return NULL;
+        return (IPTR)NULL;
     }
 
     /*
@@ -185,15 +185,27 @@ static ULONG mNew(struct IClass *cl, Object *obj, struct opSet *msg)
         fail if not found
     */
     retList = (struct LevelDataList *)GetTagData(MUIA_LEWindow_ReturnLevels,
-                                                 NULL, msg->ops_AttrList);
+                                                 (IPTR)NULL, msg->ops_AttrList);
     if (retList == NULL)
     {
-        return NULL;
+        return (IPTR)NULL;
     }
 
     /*
         create the window object
     */
+    okButt = TextObject,
+        ButtonFrame,
+        MUIA_Background, MUII_ButtonBack,
+        MUIA_InputMode, MUIV_InputMode_RelVerify,
+        MUIA_Text_Contents, okbuttlabel + 2,
+        MUIA_Text_PreParse, "\033c",
+        MUIA_Text_HiChar, (LONG)*okbuttlabel,
+        MUIA_ControlChar, (LONG)*okbuttlabel,
+        MUIA_CycleChain, TRUE,
+        MUIA_ShortHelp, GetStr(MSG_LE_OKBUTT_HELP),
+        End;
+
     obj = (Object *)DoSuperNew(cl, obj,
             MUIA_Window_Title, GetStr(MSG_LEWINDOW_TITLE),
             WindowContents, HGroup,
@@ -344,18 +356,7 @@ static ULONG mNew(struct IClass *cl, Object *obj, struct opSet *msg)
 
                     Child, VSpace(0),
 
-                    Child, okButt = TextObject,
-                        ButtonFrame,
-                        MUIA_Background, MUII_ButtonBack,
-                        MUIA_InputMode, MUIV_InputMode_RelVerify,
-                        MUIA_Text_Contents, okbuttlabel + 2,
-                        MUIA_Text_PreParse, "\033c",
-                        MUIA_Text_HiChar, (LONG)*okbuttlabel,
-                        MUIA_ControlChar, (LONG)*okbuttlabel,
-                        MUIA_CycleChain, TRUE,
-                        MUIA_ShortHelp, GetStr(MSG_LE_OKBUTT_HELP),
-                        End,
-
+                    Child, okButt,
                     Child, cancelButt = TextObject,
                         ButtonFrame,
                         MUIA_Background, MUII_ButtonBack,

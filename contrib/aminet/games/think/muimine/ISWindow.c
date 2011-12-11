@@ -33,7 +33,7 @@ struct ISWindowData
 
     return :      TRUE if the name was retrieved, FALSE otherwise
 */
-ULONG GetImageName(Object * strobj, ULONG * store)
+ULONG GetImageName(Object * strobj, IPTR * store)
 {
     STRPTR pstr;
     int l;
@@ -41,10 +41,10 @@ ULONG GetImageName(Object * strobj, ULONG * store)
     if (GetAttr(MUIA_String_Contents, strobj, (ULONG *)&pstr))
     {
         l = (pstr) ? strlen(pstr) : 0;
-        *store = (l) ? (ULONG)pstr : NULL;
+        *store = (l) ? (IPTR)pstr : (IPTR)NULL;
         return TRUE;
     }
-    *store = NULL;
+    *store = (IPTR)NULL;
     return FALSE;
 }
 
@@ -52,10 +52,11 @@ ULONG GetImageName(Object * strobj, ULONG * store)
 /*
     function :    OM_NEW method handler
 */
-SAVEDS ULONG mNew(struct IClass *cl, Object *obj, struct opSet * msg)
+SAVEDS IPTR mNew(struct IClass *cl, Object *obj, struct opSet * msg)
 {
     struct ISWindowData * data;
-    struct TagItem *tags,*tag;
+    const struct TagItem *tags;
+    struct TagItem *tag;
     Object * mfstring, * sbstring, * mdstring, * tdstring,
            * mfpop, * sbpop, * mdpop, * tdpop, * okbutt, * cancelbutt;
     STRPTR mfimage, sbimage, mdimage, tdimage,
@@ -66,7 +67,7 @@ SAVEDS ULONG mNew(struct IClass *cl, Object *obj, struct opSet * msg)
         parse initial taglist
     */
     mfimage = sbimage = mdimage = tdimage = NULL;
-    for (tags = msg->ops_AttrList; tag = NextTagItem(&tags);)
+    for (tags = msg->ops_AttrList; (tag = NextTagItem(&tags));)
     {
         switch (tag->ti_Tag)
         {
@@ -98,6 +99,17 @@ SAVEDS ULONG mNew(struct IClass *cl, Object *obj, struct opSet * msg)
     oklabel = GetStr(MSG_OKBUTT_LABEL);
     cancellabel = GetStr(MSG_CANCELBUTT_LABEL);
 
+    okbutt = TextObject,
+        ButtonFrame,
+        MUIA_CycleChain, 1,
+        MUIA_ShortHelp, GetStr(MSG_ISWINDOW_OKHELP),
+        MUIA_Text_Contents, oklabel + 2,
+        MUIA_Text_PreParse, "\33c",
+        MUIA_Text_HiChar  , *oklabel,
+        MUIA_ControlChar  , *oklabel,
+        MUIA_InputMode    , MUIV_InputMode_RelVerify,
+        MUIA_Background   , MUII_ButtonBack,
+        End;
     /*
         create the window object
     */
@@ -170,17 +182,7 @@ SAVEDS ULONG mNew(struct IClass *cl, Object *obj, struct opSet * msg)
 
             Child, HGroup,
                 MUIA_Group_SameSize, TRUE,
-                Child, okbutt = TextObject,
-                    ButtonFrame,
-                    MUIA_CycleChain, 1,
-                    MUIA_ShortHelp, GetStr(MSG_ISWINDOW_OKHELP),
-                    MUIA_Text_Contents, oklabel + 2,
-                    MUIA_Text_PreParse, "\33c",
-                    MUIA_Text_HiChar  , *oklabel,
-                    MUIA_ControlChar  , *oklabel,
-                    MUIA_InputMode    , MUIV_InputMode_RelVerify,
-                    MUIA_Background   , MUII_ButtonBack,
-                    End,
+                Child, okbutt,
 
                 Child, cancelbutt = TextObject,
                     ButtonFrame,
@@ -233,7 +235,7 @@ SAVEDS ULONG mNew(struct IClass *cl, Object *obj, struct opSet * msg)
     DoMethod(obj, MUIM_Notify,  MUIA_Window_CloseRequest, TRUE,
                 obj, 2, MUIM_ISWindow_ExitCheck, MUIV_ISWindow_ExitCode_Cancel);
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
 
@@ -251,12 +253,13 @@ SAVEDS ULONG mDispose(struct IClass *cl, Object *obj, Msg msg)
 /*
     function :    OM_SET method handler
 */
-SAVEDS ULONG mSet(struct IClass *cl, Object *obj, struct opSet * msg)
+SAVEDS IPTR mSet(struct IClass *cl, Object *obj, struct opSet * msg)
 {
     struct ISWindowData *data = INST_DATA(cl,obj);
-    struct TagItem *tags, *tag;
+    const struct TagItem *tags;
+    struct TagItem *tag;
 
-    for (tags = msg->ops_AttrList; tag = NextTagItem(&tags);)
+    for (tags = msg->ops_AttrList; (tag = NextTagItem(&tags));)
     {
         switch (tag->ti_Tag)
         {
@@ -276,7 +279,7 @@ SAVEDS ULONG mSet(struct IClass *cl, Object *obj, struct opSet * msg)
 static ULONG mGet(struct IClass *cl, Object *obj, struct opGet * msg)
 {
     struct ISWindowData *data = INST_DATA(cl,obj);
-    ULONG *store = msg->opg_Storage;
+    IPTR *store = msg->opg_Storage;
 
     switch (msg->opg_AttrID)
     {
@@ -342,7 +345,7 @@ SAVEDS ASM ULONG ISWindowDispatcher(REG(a0) struct IClass *cl,
                                     REG(a2) Object *obj,
                                     REG(a1) Msg msg)
 #else
-AROS_UFH3(ULONG, ISWindowDispatcher,
+AROS_UFH3(IPTR, ISWindowDispatcher,
  AROS_UFHA(struct IClass *, cl , A0),
  AROS_UFHA(Object *       , obj, A2),
  AROS_UFHA(Msg            , msg, A1))

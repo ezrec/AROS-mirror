@@ -48,7 +48,7 @@ STRPTR GetStr(LONG id)
             pRet = table->cca_Str;
             if (LocaleBase)
             {
-                pRet = GetCatalogStr(Catalog, id, pRet);
+                pRet = (char *)GetCatalogStr(Catalog, id, pRet);
             }
             break;
         }
@@ -64,7 +64,7 @@ STRPTR GetStr(LONG id)
 */
 void OpenStrings(void)
 {
-    if (LocaleBase = OpenLibrary("locale.library", 38))
+    if ((LocaleBase = (struct LocaleBase *)OpenLibrary("locale.library", 38)))
     {
         Catalog = OpenCatalog(NULL, "MUIMine.catalog", TAG_DONE);
     }
@@ -85,7 +85,7 @@ void CloseStrings(void)
 
     if (LocaleBase)
     {
-        CloseLibrary(LocaleBase);
+        CloseLibrary((struct Library *)LocaleBase);
         LocaleBase = NULL;
     }
 }

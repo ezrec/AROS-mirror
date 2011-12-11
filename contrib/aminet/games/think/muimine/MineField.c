@@ -433,7 +433,7 @@ static ULONG mNew(struct IClass *cl, Object *obj, struct opSet *msg)
     {
         data->Flags |= MFF_OPT_SAFESTART;
     }
-    fname = (STRPTR)GetTagData(MUIA_MineField_ImageFile, NULL,
+    fname = (STRPTR)GetTagData(MUIA_MineField_ImageFile, (IPTR)NULL,
                                msg->ops_AttrList);
     SetImageFileName(data, fname);
 
@@ -672,9 +672,10 @@ static ULONG mHandleInput(struct IClass *cl, Object *obj, struct MUIP_HandleInpu
 static ULONG mSet(struct IClass *cl, Object *obj, struct opSet * msg)
 {
     struct MineFieldData *data = INST_DATA(cl,obj);
-    struct TagItem *tags, *tag;
+    const struct TagItem *tags;
+    struct TagItem *tag;
 
-    for (tags = msg->ops_AttrList; tag = NextTagItem(&tags); )
+    for (tags = msg->ops_AttrList; (tag = NextTagItem(&tags)); )
     {
         switch (tag->ti_Tag)
         {

@@ -49,12 +49,12 @@ static ULONG mNew(struct IClass *cl, Object *obj, struct opSet *msg)
         get the level data list initialization attribute,
         fail if not found or there are no levels in the list
     */
-    lList = (struct LevelDataList *)GetTagData(MUIA_BTWindow_LevelList, NULL,
+    lList = (struct LevelDataList *)GetTagData(MUIA_BTWindow_LevelList, (IPTR)NULL,
                                                 msg->ops_AttrList);
     if (lList == NULL  ||  lList->NumLevels == 0
                        ||  lList->LevelList == NULL)
     {
-        return NULL;
+        return (IPTR)NULL;
     }
 
     /*
@@ -64,7 +64,7 @@ static ULONG mNew(struct IClass *cl, Object *obj, struct opSet *msg)
     clabels = (STRPTR *)AllocVec((lList->NumLevels + 1) * sizeof(STRPTR), 0);
     if (clabels == NULL)
     {
-        return NULL;
+        return (IPTR)NULL;
     }
 
     /*
@@ -270,9 +270,10 @@ static ULONG mDispose(struct IClass *cl, Object *obj, Msg msg)
 static ULONG mSet(struct IClass *cl, Object *obj, struct opSet * msg)
 {
     struct BTWindowData *data = INST_DATA(cl,obj);
-    struct TagItem *tags, *tag;
+    const struct TagItem *tags;
+    struct TagItem *tag;
 
-    for (tags = msg->ops_AttrList; tag = NextTagItem(&tags); )
+    for (tags = msg->ops_AttrList; (tag = NextTagItem(&tags)); )
     {
         switch (tag->ti_Tag)
         {
