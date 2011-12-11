@@ -25,7 +25,7 @@
 struct Library  *IconBase;
 
 /* filename and dirlock */
-static BPTR   dir_lock = NULL;
+static BPTR   dir_lock = BNULL;
 static char   prg_name[256];
 
 /* where to put the toolvalues */
@@ -44,27 +44,27 @@ read_tooltypes (void)
    char  *tool_val;
    BPTR   old_dir = -1;
    
-   if (IconBase = OpenLibrary ("icon.library", 33L))
+   if ((IconBase = OpenLibrary ("icon.library", 33L)))
    {
-      if (dir_lock != NULL)
+      if (dir_lock != BNULL)
          old_dir = CurrentDir (dir_lock);
       
-      if (disk_obj = GetDiskObject (prg_name))
+      if ((disk_obj = GetDiskObject (prg_name)))
       {
-         if (tool_val = FindToolType (disk_obj->do_ToolTypes, "PUBSCREEN"))
+         if ((tool_val = FindToolType (disk_obj->do_ToolTypes, "PUBSCREEN")))
             strncpy (pubscr_name, tool_val, 128);
-         if (tool_val = FindToolType (disk_obj->do_ToolTypes, "NOCOLORS"))
+         if ((tool_val = FindToolType (disk_obj->do_ToolTypes, "NOCOLORS")))
             chosen_display = FALSE;
-         if (tool_val = FindToolType (disk_obj->do_ToolTypes, "NUMCOLORS"))
+         if ((tool_val = FindToolType (disk_obj->do_ToolTypes, "NUMCOLORS")))
             chosen_num_colors = atoi (tool_val);
-         if (tool_val = FindToolType (disk_obj->do_ToolTypes, "CORRECTION"))
+         if ((tool_val = FindToolType (disk_obj->do_ToolTypes, "CORRECTION")))
          {
             if (MatchToolValue (tool_val, "Children"))
                chosen_correction = 0;
             else if (MatchToolValue (tool_val, "Adults"))
                chosen_correction = 1;
          }
-         if (tool_val = FindToolType (disk_obj->do_ToolTypes, "OPPONENT"))
+         if ((tool_val = FindToolType (disk_obj->do_ToolTypes, "OPPONENT")))
          {
             if (MatchToolValue (tool_val, "Human"))
                chosen_opponent = 0;
@@ -93,28 +93,28 @@ save_tooltypes (void)
    BPTR   old_dir = -1;
    struct DiskObject  *disk_obj;
    
-   if (IconBase = OpenLibrary ("icon.library", 33L))
+   if ((IconBase = OpenLibrary ("icon.library", 33L)))
    {
-      if (dir_lock != NULL)
+      if (dir_lock != BNULL)
          old_dir = CurrentDir (dir_lock);
       
-      if (disk_obj = GetDiskObject (prg_name))
+      if ((disk_obj = GetDiskObject (prg_name)))
       {
-         old_toolarray = disk_obj->do_ToolTypes;
+         old_toolarray = (APTR)disk_obj->do_ToolTypes;
          while (old_toolarray[n] != NULL)
             ++n;
          
-         old_toolval[0] = FindToolType (old_toolarray, "PUBSCREEN");
-         old_toolval[1] = FindToolType (old_toolarray, "NOCOLORS");
-         old_toolval[2] = FindToolType (old_toolarray, "NUMCOLORS");
-         old_toolval[3] = FindToolType (old_toolarray, "CORRECTION");
-         old_toolval[4] = FindToolType (old_toolarray, "OPPONENT");
+         old_toolval[0] = FindToolType ((APTR)old_toolarray, "PUBSCREEN");
+         old_toolval[1] = FindToolType ((APTR)old_toolarray, "NOCOLORS");
+         old_toolval[2] = FindToolType ((APTR)old_toolarray, "NUMCOLORS");
+         old_toolval[3] = FindToolType ((APTR)old_toolarray, "CORRECTION");
+         old_toolval[4] = FindToolType ((APTR)old_toolarray, "OPPONENT");
          for (i = 0; i < NUM_TOOLTYPES; ++i)
          {
             if (old_toolval[i] == NULL)
                ++n;
          }
-         if (new_toolarray = malloc ((n + 1) * sizeof (*new_toolarray)))
+         if ((new_toolarray = malloc ((n + 1) * sizeof (*new_toolarray))))
          {
             if (pubscr_name[0] != '\0')
             {
@@ -131,7 +131,7 @@ save_tooltypes (void)
             else
                strncpy (tooltypes[1], "(NOCOLORS)", 128);
             strncpy (tooltypes[2], "NUMCOLORS=", 128);
-#warning Changed the following line!
+// NOTE: Changed the following line!
 //            stci_d (num_str, chosen_num_colors);
 sprintf(num_str, "%d" ,chosen_num_colors);
             strncat (tooltypes[2], num_str, 128);         
@@ -207,9 +207,9 @@ sprintf(num_str, "%d" ,chosen_num_colors);
             }
             new_toolarray[i] = NULL;
             
-            disk_obj->do_ToolTypes = new_toolarray;
+            disk_obj->do_ToolTypes = (APTR)new_toolarray;
             PutDiskObject (prg_name, disk_obj);
-            disk_obj->do_ToolTypes = old_toolarray;
+            disk_obj->do_ToolTypes = (APTR)old_toolarray;
             
             free (new_toolarray);
          }
