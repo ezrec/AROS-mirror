@@ -92,7 +92,7 @@ init_rastport (
    struct RastPort  *rp;
    
    
-   if (rp = AllocVec (sizeof (*rp), MEMF_PUBLIC))
+   if ((rp = AllocVec (sizeof (*rp), MEMF_PUBLIC)))
    {
       *rp = *parent_rp;
       rp->Layer = NULL;
@@ -112,7 +112,7 @@ init_rastport (
          register UBYTE   i;
          
          
-         if (rp->BitMap = AllocVec (sizeof (*rp->BitMap), MEMF_PUBLIC))
+         if ((rp->BitMap = AllocVec (sizeof (*rp->BitMap), MEMF_PUBLIC)))
          {
             InitBitMap (rp->BitMap, parent_rp->BitMap->Depth, width, height);
             for (i = 0; i < rp->BitMap->Depth; ++i)
@@ -222,8 +222,8 @@ init_image (
    
    if (imagedata && parent_rp)
    {
-      if (rpi->rp = init_rastport (parent_rp,
-                                   rpi->width, rpi->height))
+      if ((rpi->rp = init_rastport (parent_rp,
+                                   rpi->width, rpi->height)))
       {
          for (y = 0; y < rpi->height; ++y)
          {
@@ -270,8 +270,7 @@ chunkyim_new (
    struct DrawInfo     *dri = NULL;
    ULONG                bgpen;
    
-kprintf("%s %d: data->normal_rpi.rp: %p\n",__FUNCTION__,__LINE__,data->normal_rpi.rp);
-#warning Had to add the following line.
+// NOTE: Had to add the following line.
 data->normal_rpi.rp = NULL;
    
    /* If IA_Width or IA_Height are not explicitly given on initialization, */
@@ -289,10 +288,10 @@ data->normal_rpi.rp = NULL;
    /* Initialize image palette. */
    data->shared_pens = NULL;
    data->screen = (struct Screen *)
-                  GetTagData (CHUNKYIA_Screen, NULL, msg->ops_AttrList);
+                  GetTagData (CHUNKYIA_Screen, (IPTR)NULL, msg->ops_AttrList);
    init_shared_pens (data,
                      (ULONG *)
-                     GetTagData (CHUNKYIA_Palette, NULL, msg->ops_AttrList));
+                     GetTagData (CHUNKYIA_Palette, (IPTR)NULL, msg->ops_AttrList));
    
    if (data->screen)
       dri = GetScreenDrawInfo (data->screen);
@@ -309,10 +308,10 @@ data->normal_rpi.rp = NULL;
    
    
    /* Create images in their own rastports. */
-   data->selected_data = (UBYTE *)GetTagData (CHUNKYIA_SelectedData, NULL,
+   data->selected_data = (UBYTE *)GetTagData (CHUNKYIA_SelectedData, (IPTR)NULL,
                                               msg->ops_AttrList);
    GetAttr (IA_BGPen, obj, (ULONG *)&bgpen);
-   data->def_pens = (UWORD *)GetTagData (IA_Pens, NULL, msg->ops_AttrList);
+   data->def_pens = (UWORD *)GetTagData (IA_Pens, (IPTR)NULL, msg->ops_AttrList);
    
    if (data->screen)
    {
@@ -392,13 +391,14 @@ chunkyim_set (
    struct opSet  *msg)
 {
    struct chunkyidata  *data = INST_DATA (cl, obj);
-   struct TagItem      *ti, *tstate = msg->ops_AttrList;
+   struct TagItem      *ti;
+   const struct TagItem *tstate = msg->ops_AttrList;
    BOOL                 nimg_update = FALSE, simg_update = FALSE;
    UBYTE               *normal_data = NULL;
    ULONG                bgpen;
    
    
-   while (ti = NextTagItem (&tstate))
+   while ((ti = NextTagItem (&tstate)))
    {
       switch (ti->ti_Tag)
       {
@@ -415,7 +415,7 @@ chunkyim_set (
          simg_update = TRUE;
          break;
       case CHUNKYIA_SelectedData:
-         if (data->selected_data = (UBYTE *)ti->ti_Data)
+         if ((data->selected_data = (UBYTE *)ti->ti_Data))
             simg_update = TRUE;
          else
             free_image (&data->selected_rpi);
@@ -504,7 +504,7 @@ chunkyim_draw (
          struct RastPort      *temp_rp;
          
          
-         if (temp_rp = init_rastport (msg->imp_RPort, width, height))
+         if ((temp_rp = init_rastport (msg->imp_RPort, width, height)))
          {
             bsa.bsa_SrcX = 0;
             bsa.bsa_SrcY = 0;
@@ -588,7 +588,7 @@ chunkyi_dispatcher (
 {
 struct chunkyidata  *data = INST_DATA (cl, obj);
 kprintf("%s %d: data->normal_rpi.rp: %p\n",__FUNCTION__,__LINE__,data->normal_rpi.rp);
-      if (retval = (APTR)DoSuperMethodA (cl, obj, msg))
+      if ((retval = (APTR)DoSuperMethodA (cl, obj, msg)))
          chunkyim_new (cl, retval, (struct opSet *)msg);
       break;
 }
@@ -631,8 +631,8 @@ init_chunkyiclass (void)
    Class         *cl;
    extern IPTR   HookEntry();
    
-   if (cl = MakeClass (NULL, "imageclass", NULL,
-                       sizeof (struct chunkyidata), 0))
+   if ((cl = MakeClass (NULL, "imageclass", NULL,
+                       sizeof (struct chunkyidata), 0)))
    {
       cl->cl_Dispatcher.h_Entry = HookEntry;
       cl->cl_Dispatcher.h_SubEntry = chunkyi_dispatcher;
