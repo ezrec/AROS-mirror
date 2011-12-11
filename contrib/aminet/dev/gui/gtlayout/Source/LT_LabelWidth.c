@@ -23,7 +23,7 @@
 *	Width = LT_LabelWidth(Handle,Label);
 *	  D0                    A0    A1
 *
-*	LONG LT_LabelWidth(LayoutHandle *,STRPTR);
+*	LONG LT_LabelWidth(LayoutHandle *,CONST_STRPTR);
 *
 *   FUNCTION
 *	This routine calculates the width of strings in
@@ -45,7 +45,7 @@
 */
 
 LONG LIBENT
-LT_LabelWidth(REG(a0) LayoutHandle *handle,REG(a1) STRPTR label)
+LT_LabelWidth(REG(a0) LayoutHandle *handle,REG(a1) CONST_STRPTR label)
 {
 	if(handle)
 	{
@@ -145,7 +145,7 @@ LT_LabelWidth(REG(a0) LayoutHandle *handle,REG(a1) STRPTR label)
 */
 
 LONG LIBENT
-LT_LabelChars(REG(a0) LayoutHandle *handle,REG(a1) STRPTR label)
+LT_LabelChars(REG(a0) LayoutHandle *handle,REG(a1) CONST_STRPTR label)
 {
 	if(handle)
 		return((LT_LabelWidth(handle,label) + handle->GlyphWidth - 1) / handle->GlyphWidth);

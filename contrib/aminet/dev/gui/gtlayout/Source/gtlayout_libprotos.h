@@ -396,8 +396,8 @@ BOOL LIBENT LT_Init(VOID);
 VOID LIBENT LT_Exit(VOID);
 
 /* LT_LabelWidth.c */
-LONG LIBENT LT_LabelWidth(REG(a0) LayoutHandle *handle, REG(a1) STRPTR label);
-LONG LIBENT LT_LabelChars(REG(a0) LayoutHandle *handle, REG(a1) STRPTR label);
+LONG LIBENT LT_LabelWidth(REG(a0) LayoutHandle *handle, REG(a1) CONST_STRPTR label);
+LONG LIBENT LT_LabelChars(REG(a0) LayoutHandle *handle, REG(a1) CONST_STRPTR label);
 
 /* LT_LayoutMenus.c */
 struct Menu *LT_LayoutMenus(LayoutHandle *handle, struct NewMenu *menuTemplate, TAGSPEC);

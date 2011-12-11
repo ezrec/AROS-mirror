@@ -38,7 +38,7 @@ LTP_MakeMenu(RootMenu *Root,MenuNode *Menu,struct NewMenu *Template)
 
 			// Fill in the size
 
-		Menu->Menu.Width	= TextLength(&Root->RPort,Label,strlen(Label)) + 8;
+		Menu->Menu.Width	= TextLength(&Root->RPort,Label,Label ? strlen(Label) : 0) + 8;
 		Menu->Menu.Height	= Root->Screen->BarHeight;
 
 		Menu->Menu.MenuName	= (BYTE *)Label;
