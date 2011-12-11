@@ -27,7 +27,7 @@ struct message messages[] =
     { Msg_Copy,               Msg_Copy_STR, },
     { Msg_OpenURLPrefs,       Msg_OpenURLPrefs_STR, },
 
-    { NULL },
+    { 0 },
 };
 
 /****************************************************************************/

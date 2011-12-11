@@ -188,12 +188,15 @@ mSetup(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Setup *
 
     if (!DoSuperMethodA(cl,obj,(APTR)msg)) return FALSE;
 
+    p = 0;
     get(data->mouseOutPen,MUIA_Pendisplay_Spec,&p);
     set(data->mouseOutPen,MUIA_Pendisplay_Spec,p);
 
+    p = 0;
     get(data->mouseOverPen,MUIA_Pendisplay_Spec,&p);
     set(data->mouseOverPen,MUIA_Pendisplay_Spec,p);
 
+    p = 0;
     get(data->visitedPen,MUIA_Pendisplay_Spec,&p);
     set(data->visitedPen,MUIA_Pendisplay_Spec,p);
 
@@ -218,6 +221,7 @@ mConfigToGadgets(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MU
         if (po)
         {
             DoMethod(po,MUIM_Pendisplay_SetMUIPen,DEFAULT_MOUSEOUT_PEN);
+            pen = NULL;
             get(po,MUIA_Pendisplay_Spec,&pen);
             set(data->mouseOutPen,MUIA_Pendisplay_Spec,pen);
         }
@@ -228,6 +232,7 @@ mConfigToGadgets(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MU
         if (po)
         {
             DoMethod(po,MUIM_Pendisplay_SetMUIPen,DEFAULT_MOUSEOVER_PEN);
+            pen = NULL;
             get(po,MUIA_Pendisplay_Spec,&pen);
             set(data->mouseOverPen,MUIA_Pendisplay_Spec,pen);
         }
@@ -238,6 +243,7 @@ mConfigToGadgets(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MU
         if (po)
         {
             DoMethod(po,MUIM_Pendisplay_SetMUIPen,DEFAULT_VISITED_PEN);
+            pen = NULL;
             get(po,MUIA_Pendisplay_Spec,&pen);
             set(data->visitedPen,MUIA_Pendisplay_Spec,pen);
         }
