@@ -28,15 +28,15 @@ mytimer_create (void)
 {
    timer_ptr   timer;
    
-   if (timer = AllocVec (sizeof (*timer), MEMF_PUBLIC))
+   if ((timer = AllocVec (sizeof (*timer), MEMF_PUBLIC)))
    {
       timer->mp = NULL;
       timer->io = NULL;
       timer->used = FALSE;
-      if (timer->mp = CreateMsgPort ())
+      if ((timer->mp = CreateMsgPort ()))
       {
-         if (timer->io = (struct timerequest *)
-                         CreateIORequest (timer->mp, sizeof (*timer->io)))
+         if ((timer->io = (struct timerequest *)
+                         CreateIORequest (timer->mp, sizeof (*timer->io))))
          {
             if (0 == OpenDevice (TIMERNAME, UNIT_VBLANK,
                                  (struct IORequest *)timer->io, 0L))

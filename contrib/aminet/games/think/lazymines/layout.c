@@ -170,7 +170,7 @@ layout_display (
                  &field_w[3], &field_h[3]);
    
    *rom_font = FALSE;
-#warning Changed digital_display variable to FALSE!! Otherwise it crashes.
+// NOTE: Changed digital_display variable to FALSE!! Otherwise it crashes.
    digital_display = TRUE; //previous value
    for (i = 0; i < 4; ++i)
    {

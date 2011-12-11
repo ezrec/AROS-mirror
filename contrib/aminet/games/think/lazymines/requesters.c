@@ -203,7 +203,7 @@ about_requester (
    struct TextExtent   te;
    ULONG               box_w = 0, box_h = 0, win_w, win_h;
    LONG                temp;
-   STRPTR              name_str, ver_str, pos, next, real_pos;
+   STRPTR              name_str, ver_str = NULL, pos, next, real_pos;
    
    struct NewGadget    ng;
    struct Gadget      *gad_list, *ok_gad;
@@ -226,8 +226,8 @@ about_requester (
       /* Image extent */
       if (img != NULL)
       {
-         GetAttr (IA_Width, img, &box_w);
-         GetAttr (IA_Height, img, &box_h);
+         GetAttr (IA_Width, (Object *)img, &box_w);
+         GetAttr (IA_Height, (Object *)img, &box_h);
       }
       /* Name extent */
       SetSoftStyle (&layout_rp,
@@ -360,7 +360,7 @@ about_requester (
             temp = te.te_Extent.MaxY - te.te_Extent.MinY + 1;
             if (img != NULL)
             {
-               GetAttr (IA_Height, img, &win_h);
+               GetAttr (IA_Height, (Object *)img, &win_h);
                if (win_h > temp)
                   temp = win_h;
                DrawImageState (req_win->RPort, img,
@@ -370,7 +370,7 @@ about_requester (
                                LINEHEIGHT + (temp - win_h) / 2,
                                IDS_NORMAL, NULL);
                
-               GetAttr (IA_Width, img, &win_w);
+               GetAttr (IA_Width, (Object *)img, &win_w);
             }
             Move (req_win->RPort,
                   req_win->BorderLeft + 2 * INTERWIDTH + LINEWIDTH +

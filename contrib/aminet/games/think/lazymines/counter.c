@@ -125,7 +125,7 @@ counter_draw (
                     GTBB_Recessed, TRUE,
                     TAG_DONE);
       
-      GetAttr (IA_BGPen, digit_images[0], &bgpen);
+      GetAttr (IA_BGPen, (Object *)digit_images[0], &bgpen);
       SetAPen (counter->win->RPort, bgpen);
       RectFill (counter->win->RPort,
                 counter->left + LINEWIDTH, counter->top + LINEHEIGHT,

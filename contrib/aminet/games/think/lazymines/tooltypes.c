@@ -27,7 +27,7 @@
 struct Library  *IconBase;
 
 /* filename and dirlock */
-static BPTR   dir_lock = NULL;
+static BPTR   dir_lock = BNULL;
 static char   prg_name[256];
 
 /* where to put the toolvalues */
@@ -52,7 +52,7 @@ read_tooltypes (void)
    
    if (NULL != (IconBase = OpenLibrary ("icon.library", 33L)))
    {
-      if (dir_lock != NULL)
+      if (dir_lock != BNULL)
          old_dir = CurrentDir (dir_lock);
       
       if (NULL != (disk_obj = GetDiskObject (prg_name)))
@@ -119,26 +119,26 @@ save_tooltypes (void)
    
    if (NULL != (IconBase = OpenLibrary ("icon.library", 33L)))
    {
-      if (dir_lock != NULL)
+      if (dir_lock != BNULL)
          old_dir = CurrentDir (dir_lock);
       
       if (NULL != (disk_obj = GetDiskObject (prg_name)))
       {
-         old_toolarray = disk_obj->do_ToolTypes;
+         old_toolarray = (APTR)disk_obj->do_ToolTypes;
          while (old_toolarray[n] != NULL)
             ++n;
          
-         old_toolval[0] = FindToolType (old_toolarray, "PUBSCREEN");
-         old_toolval[1] = FindToolType (old_toolarray, "LEFT");
-         old_toolval[2] = FindToolType (old_toolarray, "TOP");
-         old_toolval[3] = FindToolType (old_toolarray, "LEVEL");
-         old_toolval[4] = FindToolType (old_toolarray, "OPTIONALROWS");
-         old_toolval[5] = FindToolType (old_toolarray, "OPTIONALCOLS");
-         old_toolval[6] = FindToolType (old_toolarray, "OPTIONALMINES");
-         old_toolval[7] = FindToolType (old_toolarray, "TASK");
-         old_toolval[8] = FindToolType (old_toolarray, "AUTOOPEN");
-         old_toolval[9] = FindToolType (old_toolarray, "WARNINGS");
-         old_toolval[10] = FindToolType (old_toolarray, "NOCOLORS");
+         old_toolval[0] = FindToolType ((APTR)old_toolarray, "PUBSCREEN");
+         old_toolval[1] = FindToolType ((APTR)old_toolarray, "LEFT");
+         old_toolval[2] = FindToolType ((APTR)old_toolarray, "TOP");
+         old_toolval[3] = FindToolType ((APTR)old_toolarray, "LEVEL");
+         old_toolval[4] = FindToolType ((APTR)old_toolarray, "OPTIONALROWS");
+         old_toolval[5] = FindToolType ((APTR)old_toolarray, "OPTIONALCOLS");
+         old_toolval[6] = FindToolType ((APTR)old_toolarray, "OPTIONALMINES");
+         old_toolval[7] = FindToolType ((APTR)old_toolarray, "TASK");
+         old_toolval[8] = FindToolType ((APTR)old_toolarray, "AUTOOPEN");
+         old_toolval[9] = FindToolType ((APTR)old_toolarray, "WARNINGS");
+         old_toolval[10] = FindToolType ((APTR)old_toolarray, "NOCOLORS");
          for (i = 0; i < NUM_TOOLTYPES; ++i)
          {
             if (old_toolval[i] == NULL)
@@ -304,9 +304,9 @@ save_tooltypes (void)
             }
             new_toolarray[i] = NULL;
             
-            disk_obj->do_ToolTypes = new_toolarray;
+            disk_obj->do_ToolTypes = (APTR)new_toolarray;
             PutDiskObject (prg_name, disk_obj);
-            disk_obj->do_ToolTypes = old_toolarray;
+            disk_obj->do_ToolTypes = (APTR)old_toolarray;
             
             free (new_toolarray);
          }

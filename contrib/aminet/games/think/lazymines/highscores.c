@@ -76,7 +76,7 @@ load_high_scores (
    int    i, j, k;
    
    
-   if (NULL != (fh = Open ("lazymines.hiscore", MODE_OLDFILE)))
+   if (BNULL != (fh = Open ("lazymines.hiscore", MODE_OLDFILE)))
    {
       Read (fh, check, sizeof (HSMAGIC));
       if (!strcmp (check, HSMAGIC))
@@ -105,7 +105,7 @@ save_high_scores (void)
    
    if (need_save)
    {
-      if (NULL != (fh = Open ("LazyMines.hiscore", MODE_NEWFILE)))
+      if (BNULL != (fh = Open ("LazyMines.hiscore", MODE_NEWFILE)))
       {
          Write (fh, HSMAGIC, sizeof (HSMAGIC));
          for (i = 0; i < 2; ++i)
@@ -288,7 +288,7 @@ display_high_scores (
             sigmask = Wait (winsig | timersig);
             if (sigmask & winsig)
             {
-               while (msg = GT_GetIMsg (req_win->UserPort))
+               while ((msg = GT_GetIMsg (req_win->UserPort)))
                {
                   switch (msg->Class)
                   {

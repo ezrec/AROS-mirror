@@ -43,7 +43,7 @@
 #define AUTHOR          "Håkan L. Younes"
 #define EMAIL           "lorens@hem.passagen.se"
 
-static char   version[] = "$VER: LazyMines 3.2 (15.12.98)";
+char   version[] = "$VER: LazyMines 3.2 (15.12.98)";
 
 
 void event_loop (void);
@@ -238,7 +238,7 @@ event_loop (void)
       }
       if (sigmask & winsig)
       {
-         while (msg = (struct IntuiMessage *)GetMsg (main_win->UserPort))
+         while ((msg = (struct IntuiMessage *)GetMsg (main_win->UserPort)))
          {
             class = msg->Class;
             code = msg->Code;
@@ -616,7 +616,7 @@ win_game (void)
    button_render ();
    field_win (field);
    if (current_level != OPTIONAL_LEVEL)
-      if (hi_pos = update_high_score (counter_value (time_counter)))
+      if ((hi_pos = update_high_score (counter_value (time_counter))))
          display_high_scores (hi_pos);
 }
 
@@ -679,7 +679,7 @@ new_game (
       while (!done)
       {
          WaitPort (main_win->UserPort);
-         while (msg = (struct IntuiMessage *)GetMsg (main_win->UserPort))
+         while ((msg = (struct IntuiMessage *)GetMsg (main_win->UserPort)))
          {
             if (msg->Class == IDCMP_CHANGEWINDOW)
                done = TRUE;
@@ -756,14 +756,14 @@ new_game (
 BOOL
 initialize (void)
 {
-   if (IntuitionBase = (struct IntuitionBase *)
-                       OpenLibrary ("intuition.library", 37L))
+   if ((IntuitionBase = (struct IntuitionBase *)
+                       OpenLibrary ("intuition.library", 37L)))
    {
-      if (GfxBase = (struct GfxBase *)OpenLibrary ("graphics.library", 37L))
+      if ((GfxBase = (struct GfxBase *)OpenLibrary ("graphics.library", 37L)))
       {
-         if (GadToolsBase = OpenLibrary ("gadtools.library", 37L))
+         if ((GadToolsBase = OpenLibrary ("gadtools.library", 37L)))
          {
-            if (UtilityBase = OpenLibrary ("utility.library", 37L))
+            if ((UtilityBase = OpenLibrary ("utility.library", 37L)))
                return init_display ();
             else
                error_requester (NULL, MSG_OPEN_ERROR, "utility.library");
@@ -798,7 +798,7 @@ init_display (void)
         LockPubScreen ((pubscr_name[0] == '\0') ? NULL : pubscr_name)) ||
        (pub_screen = LockPubScreen (NULL)))
    {
-      if (draw_info = GetScreenDrawInfo (pub_screen))
+      if ((draw_info = GetScreenDrawInfo (pub_screen)))
       {
          gui_pens = draw_info->dri_Pens;
          init_pens (pub_screen);
@@ -839,7 +839,7 @@ init_display (void)
                               GfxBase->DefaultFont->tf_XSize,
                               GfxBase->DefaultFont->tf_YSize, &win_w, &win_h);
             }
-            if (vis_info = GetVisualInfo (pub_screen, TAG_DONE))
+            if ((vis_info = GetVisualInfo (pub_screen, TAG_DONE)))
             {
                zoom_bounds[0] = 0;
                zoom_bounds[1] = 0;
@@ -936,7 +936,7 @@ init_display (void)
                                   GT_VisualInfo, vis_info,
                                   TAG_DONE);
                      
-                        if (field  = field_init (main_win->RPort,
+                        if ((field  = field_init (main_win->RPort,
                                               main_win->BorderLeft +
                                               LINEWIDTH + INTERWIDTH,
                                               main_win->BorderTop +
@@ -946,9 +946,9 @@ init_display (void)
                                               0),
                                               levels[current_level].rows,
                                               levels[current_level].columns,
-                                              levels[current_level].bombs))
+                                              levels[current_level].bombs)))
                         {
-                           return (BOOL)(timer_obj = mytimer_create ());
+                           return (BOOL)(((timer_obj = mytimer_create ())) != NULL);
                         }
                      }
                      else
@@ -993,7 +993,7 @@ init_menu (void)
       new_menu[ITEM_Quit + ITEM_NoColors + 5].nm_Flags |= CHECKED |
                                                           NM_ITEMDISABLED;
    }
-   if (main_menu = CreateLocMenus (new_menu, vis_info, TAG_DONE))
+   if ((main_menu = CreateLocMenus (new_menu, vis_info, TAG_DONE)))
    {
       if (LayoutMenus (main_menu, vis_info,
                        GTMN_NewLookMenus, TRUE, TAG_DONE))

@@ -572,7 +572,7 @@ field_init (
    field_ptr   field;
    
    
-   if (field = AllocVec (sizeof (*field), MEMF_PUBLIC))
+   if ((field = AllocVec (sizeof (*field), MEMF_PUBLIC)))
    {
       field->rp = rp;
       field->left = left;
