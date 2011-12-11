@@ -25,11 +25,10 @@ FILES := start \
 	 filexwindow \
 	 mainwindow \
 	 filexmenu \
-	 display
-	 
-#    	 filexarexx \
-#    	 FileXARexx_rxcl \
-#     	 filexarexx_rxif \
+	 display \
+	 filexarexx \
+	 filexarexx_rxcl \
+	 filexarexx_rxif
 
 USER_CFLAGS := -DUSE_PROTO_INCLUDES \
     	       -DNEED_UTILITYBASE_UTILITYBASE \

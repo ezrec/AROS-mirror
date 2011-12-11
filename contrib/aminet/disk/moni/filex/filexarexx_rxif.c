@@ -12,10 +12,10 @@
 #include <rexx/rxslib.h>
 #include <rexx/errors.h>
 
-#include <clib/alib_protos.h>
-#include <clib/exec_protos.h>
-#include <clib/dos_protos.h>
-#include <clib/rexxsyslib_protos.h>
+#include <proto/alib.h>
+#include <proto/exec.h>
+#include <proto/dos.h>
+#include <proto/rexxsyslib.h>
 
 #include <pragmas/exec_pragmas.h>
 #include <pragmas/dos_pragmas.h>
@@ -26,12 +26,12 @@
 #include <string.h>
 #include <ctype.h>
 
-#include "FileXARexx.h"
+#include "filexarexx.h"
 
 #include "allprotos.h"
-#include "FileX.h"
-#include "FileXStructs.h"
-#include "FileXStrings.h"
+#include "filex.h"
+#include "filexstructs.h"
+#include "filexstrings.h"
 
 /* ARexx Hilfsfunktionen */
 

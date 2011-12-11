@@ -211,8 +211,8 @@ static void UpdateClipConv( BOOL Convert )
 
 	if(( String = GetClip( &Laenge ) ))
 	{
-		UBYTE *FromDaten, *FromTempAlloc = 0;
-		WORD FromLaenge;
+		UBYTE *FromDaten = NULL, *FromTempAlloc = 0;
+		WORD FromLaenge = 0;
 		LONG FromWert;
 		BOOL UseFromWert = FALSE;
 		BOOL Valid = TRUE;

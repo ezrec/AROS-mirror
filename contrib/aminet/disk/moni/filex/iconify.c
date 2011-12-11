@@ -106,7 +106,7 @@ BOOL MakeIconify( void )
 			{
 				dobj->do_Type = 0;
 		
-				if(( appicon = AddAppIconA( 0, 0, GetStr(MSG_APPICONNAME), AppIconPort, NULL, dobj, NULL )))
+				if(( appicon = AddAppIconA( 0, 0, GetStr(MSG_APPICONNAME), AppIconPort, BNULL, dobj, NULL )))
 				{
 					mainflags |= MF_ICONIFIED;
 	

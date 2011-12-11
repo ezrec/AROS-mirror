@@ -1,3 +1,5 @@
+#ifndef FILEXSTRUCTS_H
+#define FILEXSTRUCTS_H
       /******************************/
       /*         Strukturen         */
       /******************************/
@@ -226,3 +228,5 @@ struct MyNewGadget
 #define DEFAULT_COMMANDWINDOW "CON:////ARexx command window/AUTO/CLOSE/WAIT/SCREEN FILEX"
 
 #define GetDDFromFD( x ) ((struct DisplayData *)(((UBYTE *)(x))-sizeof(struct Node)))
+
+#endif /* FILEXSTRUCTS_H */

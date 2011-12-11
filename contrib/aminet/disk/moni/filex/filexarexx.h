@@ -50,9 +50,9 @@ extern char *rexx_extension;
 
 void ReplyRexxCommand( struct RexxMsg *rxmsg, long prim, long sec, char *res );
 void FreeRexxCommand( struct RexxMsg *rxmsg );
-struct RexxMsg *CreateRexxCommand( struct RexxHost *host, char *buff, BPTR fh );
+struct RexxMsg *CreateRexxCommand( struct RexxHost *host, CONST_STRPTR buff, BPTR fh );
 struct RexxMsg *CommandToRexx( struct RexxHost *host, struct RexxMsg *rexx_command_message );
-struct RexxMsg *SendRexxCommand( struct RexxHost *host, char *buff, BPTR fh );
+struct RexxMsg *SendRexxCommand( struct RexxHost *host, CONST_STRPTR buff, BPTR fh );
 
 void CloseDownARexxHost( struct RexxHost *host );
 struct RexxHost *SetupARexxHost( char *basename, struct MsgPort *usrport );

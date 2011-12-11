@@ -11,10 +11,11 @@
 #include <rexx/storage.h>
 #include <rexx/rxslib.h>
 
-#include <clib/alib_protos.h>
-#include <clib/exec_protos.h>
-#include <clib/dos_protos.h>
-#include <clib/rexxsyslib_protos.h>
+#include <proto/alib.h>
+#include <proto/exec.h>
+#include <proto/dos.h>
+#include <proto/rexxsyslib.h>
+#include <proto/utility.h>
 
 #include <pragmas/exec_pragmas.h>
 #include <pragmas/dos_pragmas.h>
@@ -26,9 +27,9 @@
 #include <ctype.h>
 #include <dos/rdargs.h>
 
-#include "filexARexx.h"
+#include "filexarexx.h"
 
-#include "FileXStructs.h"
+#include "filexstructs.h"
 #include "allprotos.h"
 
 struct rxs_stemnode
@@ -72,8 +73,7 @@ void ReplyRexxCommand(
 				result = (char *) secondary;
 			}
 			
-			SetRexxVar( (struct Message *) rexxmessage,
-				"RC2", result, strlen(result) );
+			SetRexxVar(rexxmessage, "RC2", result, strlen(result) );
 			
 			secondary = 0;
 		}
@@ -106,7 +106,7 @@ void FreeRexxCommand( struct RexxMsg *rexxmessage )
 }
 
 
-struct RexxMsg *CreateRexxCommand( struct RexxHost *host, char *buff, BPTR fh )
+struct RexxMsg *CreateRexxCommand( struct RexxHost *host, CONST_STRPTR buff, BPTR fh )
 {
 	struct RexxMsg *rexx_command_message;
 
@@ -117,7 +117,7 @@ struct RexxMsg *CreateRexxCommand( struct RexxHost *host, char *buff, BPTR fh )
 	}
 
 	if( (rexx_command_message->rm_Args[0] =
-		CreateArgstring(buff,strlen(buff))) == NULL )
+		(IPTR)CreateArgstring(buff,strlen(buff))) == 0 )
 	{
 		DeleteRexxMsg(rexx_command_message);
 		return( NULL );
@@ -152,11 +152,11 @@ struct RexxMsg *CommandToRexx( struct RexxHost *host, struct RexxMsg *rexx_comma
 }
 
 
-struct RexxMsg *SendRexxCommand( struct RexxHost *host, char *buff, BPTR fh )
+struct RexxMsg *SendRexxCommand( struct RexxHost *host, CONST_STRPTR buff, BPTR fh )
 {
 	struct RexxMsg *rcm;
 	
-	if( rcm = CreateRexxCommand(host, buff, fh) )
+	if(( rcm = CreateRexxCommand(host, buff, fh) ))
 		return CommandToRexx( host, rcm );
 	else
 		return NULL;
@@ -177,7 +177,7 @@ void CloseDownARexxHost( struct RexxHost *host )
 		{
 			WaitPort( host->port );
 			
-			while( rexxmsg = (struct RexxMsg *) GetMsg(host->port) )
+			while(( rexxmsg = (struct RexxMsg *) GetMsg(host->port) ))
 			{
 				if( rexxmsg->rm_Node.mn_Node.ln_Type == NT_REPLYMSG )
 				{
@@ -197,7 +197,7 @@ void CloseDownARexxHost( struct RexxHost *host )
 		}
 		
 		/* MsgPort leeren */
-		while( rexxmsg = (struct RexxMsg *) GetMsg(host->port) )
+		while(( rexxmsg = (struct RexxMsg *) GetMsg(host->port) ))
 			ReplyRexxCommand( rexxmsg, -20, (long) "Host closing down", NULL );
 		
 		if( !(host->flags & ARB_HF_USRMSGPORT) )
@@ -242,7 +242,7 @@ struct RexxHost *SetupARexxHost( char *basename, struct MsgPort *usrport )
 	Forbid();
 	
 	while( FindPort(host->portname) )
-		sprintf( host->portname, "%s.%ld", basename, ext++ );
+		sprintf( host->portname, "%s.%ld", basename, (long)(ext++) );
 	
 	host->port->mp_Node.ln_Name = host->portname;
 	AddPort( host->port );
@@ -266,7 +266,7 @@ struct RexxHost *SetupARexxHost( char *basename, struct MsgPort *usrport )
 struct rxs_command *FindRXCommand( char *com )
 {
 	struct rxs_command *rxc;
-	int n = strlen( com ), ug = 0, og = command_cnt - 1, pos, cmp;
+	int n = strlen( com ), ug = 0, og = command_cnt - 1, pos, cmp = 0;
 	
 	if( n == 0 )
 		return NULL;
@@ -456,7 +456,7 @@ static struct rxs_stemnode *CreateSTEM( struct rxs_command *rxc, LONG *resarray,
 			
 			/* Die Elemente selbst */
 			
-			while( r = *subarray++ )
+			while(( r = *subarray++ ))
 			{
 				if( !(new = new_stemnode(&first, &old)) )
 				{
@@ -516,7 +516,7 @@ static struct rxs_stemnode *CreateSTEM( struct rxs_command *rxc, LONG *resarray,
 
 static void DoRXCommand( struct RexxHost *host, struct RexxMsg *rexxmsg )
 {
-	struct rxs_command *rxc;
+	struct rxs_command *rxc = NULL;
 	char *argb, *arg;
 	
 	LONG *array = NULL;
@@ -541,7 +541,7 @@ static void DoRXCommand( struct RexxHost *host, struct RexxMsg *rexxmsg )
 
 	if( !( rxc = ParseRXCommand( &arg ) ) )
 	{
-		if( arg = ExpandRXCommand( host, (char *) ARG0(rexxmsg) ) )
+		if(( arg = ExpandRXCommand( host, (char *) ARG0(rexxmsg) ) ))
 		{
 			FreeVec( argb );
 			if( !(argb = AllocVec( strlen(arg) + 2, MEMF_ANY )) )
@@ -564,10 +564,10 @@ static void DoRXCommand( struct RexxHost *host, struct RexxMsg *rexxmsg )
 		/* Msg an ARexx schicken, vielleicht existiert ein Skript */
 		struct RexxMsg *rm;
 		
-		if( rm = CreateRexxCommand(host, (char *) ARG0(rexxmsg), NULL) )
+		if(( rm = CreateRexxCommand(host, (char *) ARG0(rexxmsg), BNULL) ))
 		{
 			/* Original-Msg merken */
-			rm->rm_Args[15] = (STRPTR) rexxmsg;
+			rm->rm_Args[15] = (IPTR) rexxmsg;
 			
 			if( CommandToRexx(host, rm) )
 			{
@@ -629,7 +629,7 @@ static void DoRXCommand( struct RexxHost *host, struct RexxMsg *rexxmsg )
 		host->rdargs->RDA_Source.CS_Buffer = arg;
 		host->rdargs->RDA_Source.CS_Length = strlen(arg);
 		host->rdargs->RDA_Source.CS_CurChr = 0;
-		host->rdargs->RDA_DAList = NULL;
+		host->rdargs->RDA_DAList = (IPTR)NULL;
 		host->rdargs->RDA_Buffer = NULL;
 		
 		if( !ReadArgs(cargstr, argarray, host->rdargs) )
@@ -678,7 +678,7 @@ static void DoRXCommand( struct RexxHost *host, struct RexxMsg *rexxmsg )
 					for( rb = (char *) argarray[0]; *rb; ++rb )
 						*rb = ToUpper( *rb );
 
-					if( SetRexxVar( (struct Message *) rexxmsg, (char *)argarray[0], result, strlen(result) ) )
+					if( SetRexxVar( rexxmsg, (char *)argarray[0], result, strlen(result) ) )
 					{
 						rc = -10;
 						rc2 = (long) "Unable to set Rexx variable";
@@ -701,7 +701,7 @@ static void DoRXCommand( struct RexxHost *host, struct RexxMsg *rexxmsg )
 				else
 				{
 					for( s = stem; s; s = s->succ )
-						rc |= SetRexxVar( (struct Message *) rexxmsg, s->name, s->value, strlen(s->value) );
+						rc |= SetRexxVar( rexxmsg, s->name, s->value, strlen(s->value) );
 					
 					if( rc )
 					{
@@ -758,7 +758,7 @@ void ARexxDispatch( struct RexxHost *host )
 {
 	struct RexxMsg *rexxmsg;
 
-	while( rexxmsg = (struct RexxMsg *) GetMsg(host->port) )
+	while(( rexxmsg = (struct RexxMsg *) GetMsg(host->port) ))
 	{
 		if( (rexxmsg->rm_Action & RXCODEMASK) != RXCOMM )
 		{
@@ -806,7 +806,7 @@ void ARexxDispatch( struct RexxHost *host )
 
 void DoShellCommand( struct RexxHost *host, char *comline, BPTR fhout )
 {
-	struct rxs_command *rxc;
+	struct rxs_command *rxc = NULL;
 	char *argb, *arg;
 	
 	LONG *array = NULL;
@@ -830,7 +830,7 @@ void DoShellCommand( struct RexxHost *host, char *comline, BPTR fhout )
 	
 	if( !( rxc = ParseRXCommand( &arg ) ) )
 	{
-		if( arg = ExpandRXCommand( host, comline ) )
+		if(( arg = ExpandRXCommand( host, comline ) ))
 		{
 			FreeVec( argb );
 			if( !(argb = AllocVec( strlen(arg) + 2, MEMF_ANY )) )
@@ -853,7 +853,7 @@ void DoShellCommand( struct RexxHost *host, char *comline, BPTR fhout )
 		/* Msg an ARexx schicken, vielleicht existiert ein Skript */
 		struct RexxMsg *sentrm, *rm;
 		
-		if( sentrm = SendRexxCommand(host, comline, NULL) )
+		if(( sentrm = SendRexxCommand(host, comline, BNULL) ))
 		{
 			/* auf den Reply warten */
 			BOOL waiting = TRUE;
@@ -862,7 +862,7 @@ void DoShellCommand( struct RexxHost *host, char *comline, BPTR fhout )
 			{
 				WaitPort( host->port );
 				
-				while( rm = (struct RexxMsg *) GetMsg(host->port) )
+				while(( rm = (struct RexxMsg *) GetMsg(host->port) ))
 				{
 					/* Reply? */
 					if( rm->rm_Node.mn_Node.ln_Type == NT_REPLYMSG )
@@ -949,7 +949,7 @@ void DoShellCommand( struct RexxHost *host, char *comline, BPTR fhout )
 		host->rdargs->RDA_Source.CS_Buffer = arg;
 		host->rdargs->RDA_Source.CS_Length = strlen(arg);
 		host->rdargs->RDA_Source.CS_CurChr = 0;
-		host->rdargs->RDA_DAList = NULL;
+		host->rdargs->RDA_DAList = (IPTR)NULL;
 		host->rdargs->RDA_Flags  = RDAF_NOPROMPT;
 		
 		if( !ReadArgs(cargstr, argarray, host->rdargs) )
@@ -1090,9 +1090,9 @@ static struct StandardPacket *CreateStdPkt( void )
 {
 	struct StandardPacket *sp;
 
-	if( sp = AllocMem( sizeof( struct StandardPacket ), MEMF_PUBLIC ))
+	if(( sp = AllocMem( sizeof( struct StandardPacket ), MEMF_PUBLIC )))
 	{
-		if( sp->sp_Msg.mn_ReplyPort = CreatePort( NULL, 0 ))
+		if(( sp->sp_Msg.mn_ReplyPort = CreatePort( NULL, 0 )))
 		{
 			sp->sp_Msg.mn_Node.ln_Name = ( char * )&sp->sp_Pkt;
 			sp->sp_Pkt.dp_Link = &sp->sp_Msg;
@@ -1100,6 +1100,8 @@ static struct StandardPacket *CreateStdPkt( void )
 		}
 		FreeMem( sp, sizeof( struct StandardPacket ));
 	}
+
+	return NULL;
 }
 
 static void DeleteStdPkt( struct StandardPacket *sp )
@@ -1128,7 +1130,7 @@ void CloseCommandShell( void )
 		MyRemoveSignal(  1 << CSsp->sp_Msg.mn_ReplyPort->mp_SigBit );
 
 		Close( CSfh );
-		CSfh = NULL;
+		CSfh = BNULL;
 
 		if( PacketUnterwegs )
 		{
@@ -1196,15 +1198,15 @@ BOOL OpenCommandShell( void )
 	if( MyRexxHost->flags & ARB_HF_CMDSHELL )
 		return( TRUE );
 
-	if( CSfh = Open(arexxcommandshellwindow, MODE_NEWFILE ))
+	if(( CSfh = Open(arexxcommandshellwindow, MODE_NEWFILE )))
 	{
 		FH = BADDR( CSfh );
 	
 		if( FH->fh_Type )
 		{
-			if( CSbuffer = AllocMem( 1024, MEMF_ANY ))
+			if(( CSbuffer = AllocMem( 1024, MEMF_ANY )))
 			{
-				if( CSsp = CreateStdPkt() )
+				if(( CSsp = CreateStdPkt() ))
 				{
 					MyRexxHost->flags |= ARB_HF_CMDSHELL;
 	
@@ -1233,7 +1235,8 @@ BOOL OpenCommandShell( void )
 
 	return( FALSE );
 
-/*	char comline[512], *s;
+#if 0
+	char comline[512], *s;
 	struct RexxMsg *rm;
 
 	if( !fhin )
@@ -1263,7 +1266,7 @@ BOOL OpenCommandShell( void )
 		
 		/* Port des Hosts leeren (asynchrone Replies) */
 		
-		while( rm = (struct RexxMsg *) GetMsg(host->port) )
+		while(( rm = (struct RexxMsg *) GetMsg(host->port)) )
 		{
 			/* Reply? */
 			if( rm->rm_Node.mn_Node.ln_Type == NT_REPLYMSG )
@@ -1287,6 +1290,7 @@ BOOL OpenCommandShell( void )
 			}
 		}
 	}
-	while( host->flags & ARB_HF_CMDSHELL );*/
+	while( host->flags & ARB_HF_CMDSHELL );
+#endif
 }
 

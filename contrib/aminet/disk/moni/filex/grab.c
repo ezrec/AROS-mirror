@@ -207,8 +207,8 @@ void OpenGrabWindow( void )
 		GrabNewGadgets[GD_GRAB_START].CurrentValue = (LONG) GrabStartString;
 		GrabNewGadgets[GD_GRAB_END  ].CurrentValue = (LONG) GrabEndString;
 
-		sprintf(GrabStartString, "%08.lx", grabstart);
-		sprintf(GrabEndString, "%08.lx", grabend);
+		sprintf(GrabStartString, "%08lx", (unsigned long)grabstart);
+		sprintf(GrabEndString, "%08lx", (unsigned long)grabend);
 	}
 
 	if(( err = NewOpenAWindow( &GrabWD, GetStr( MSG_WINDOWTITLE_GRAB ))))

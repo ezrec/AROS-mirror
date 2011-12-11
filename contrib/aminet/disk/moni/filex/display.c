@@ -832,7 +832,7 @@ void DisplayPart( long von, long bis, struct DisplayData *DD )
 	ypos = DD->bby + DD->DI->fbase + startzeile * DD->DI->fhoehe;
 
 #ifdef __AROS__
-    #warning "stegerg: check why this is needed!"
+    // FIXME: stegerg: check why this is needed!
     SetDrMd(DD->Wnd->RPort, JAM2);
 #endif
 			
@@ -1147,10 +1147,7 @@ void RedrawDisplay( struct DisplayData *DD )
 
 void RedrawPart( long von, long bis, struct DisplayData *DD )
 {
-	long lastline;
 	long bispos = bis * DD->BPR + DD->BPR - 1, vonpos = von * DD->BPR;
-
-	lastline = DD->FD->Len / DD->BPR - DD->SPos;
 
 	Printf("RedrawPart: v=%ld b=%ld\n", von, bis );
 

@@ -275,7 +275,7 @@ BOOL GetWert( ULONG *Wert, char *WindowTitle, ULONG Min, ULONG Max )
  * Öffnet eine Informationsrequester.
  */
 
-static ULONG MyMainFullRequest( char *Text, char *ButtonText, APTR Args )
+static ULONG MyMainFullRequest( CONST_STRPTR Text, CONST_STRPTR ButtonText, APTR Args )
 {
 	if( UseAsl )
 	{
@@ -288,7 +288,8 @@ static ULONG MyMainFullRequest( char *Text, char *ButtonText, APTR Args )
 				/* Unterstriche aus dem Gadgettext entfernen */
 
 			{
-				char *gptr = Gadgets, *ptr = ButtonText;
+				char *gptr = Gadgets;
+				CONST_STRPTR ptr = ButtonText;
 	
 				while( *ptr )
 				{
@@ -302,7 +303,7 @@ static ULONG MyMainFullRequest( char *Text, char *ButtonText, APTR Args )
 				/* Standard data. */
 		
 			Easy.es_StructSize = sizeof( struct EasyStruct );
-			Easy.es_Flags = NULL;
+			Easy.es_Flags = 0;
 			Easy.es_Title = GetStr( MSG_WINDOWTITLE_INFO );
 			Easy.es_TextFormat = ( STRPTR )Text;
 			Easy.es_GadgetFormat = ( STRPTR )Gadgets;
@@ -320,17 +321,17 @@ static ULONG MyMainFullRequest( char *Text, char *ButtonText, APTR Args )
 		return( rtEZRequestTags( Text, ButtonText, NULL, Args, RTEZ_ReqTitle, GetStr( MSG_WINDOWTITLE_INFO ), AktuDI->Wnd ? RT_Window : TAG_IGNORE, AktuDI->Wnd, RT_Underscore, '_', TAG_DONE ));
 }
 
-void DisplayLocaleText( char *Text )
+void DisplayLocaleText( CONST_STRPTR Text )
 {
 	MyMainFullRequest( GetStr( Text ), GetStr( MSG_GADGET_CONTINUE ), 0 );
 }
 
-ULONG MyRequest( char *Text, ULONG Data )
+ULONG MyRequest( CONST_STRPTR Text, ULONG Data )
 {
 	return( MyMainFullRequest( GetStr( Text ), GetStr( MSG_GADGET_CONTINUE ), &Data ));
 }
 
-ULONG MyRequestNoLocale( char *Text, ULONG Data )
+ULONG MyRequestNoLocale( CONST_STRPTR Text, ULONG Data )
 {
 	return( MyMainFullRequest( Text, GetStr( MSG_GADGET_CONTINUE ), &Data ));
 }
@@ -342,7 +343,7 @@ ULONG MyRequestNoLocale( char *Text, ULONG Data )
  * beliebigen Anzahl von Argumenten
  */
 
-ULONG __stdargs MyFullRequestNoLocale( char *Text, char *ButtonText, ... )
+ULONG __stdargs MyFullRequestNoLocale( CONST_STRPTR Text, CONST_STRPTR ButtonText, ... )
 {
 	ULONG Result;
 	va_list VarArgs;
@@ -354,7 +355,7 @@ ULONG __stdargs MyFullRequestNoLocale( char *Text, char *ButtonText, ... )
 	return( Result );
 }
 
-ULONG __stdargs MyFullRequest( char *Text, char *ButtonText, ... )
+ULONG __stdargs MyFullRequest( CONST_STRPTR Text, CONST_STRPTR ButtonText, ... )
 {
 	ULONG Result;
 	va_list VarArgs;
@@ -372,12 +373,12 @@ ULONG __stdargs MyFullRequest( char *Text, char *ButtonText, ... )
  * Ermittelt, wenn möglich, einen übersetzten String aus dem ID-String.
  */
 
-char *GetStr(char *idstr)
+CONST_STRPTR GetStr(CONST_STRPTR idstr)
 {
-	char *local;
+	CONST_STRPTR local;
 
 	local = idstr + 2;
-	if(LocaleBase) return((char *)GetCatalogStr(Catalog, idstr[0] * 256L + idstr[1], local));
+	if(LocaleBase) return(GetCatalogStr(Catalog, idstr[0] * 256L + idstr[1], local));
 	else return(local);
 }
 
@@ -550,7 +551,7 @@ void JumpToLocation( LONG Number, struct DisplayData *DD )
  * ACHTUNG!: fullname wird ggf. verändert
  */
 
-BOOL MyRequestFile( char *FullName, char *Title, char *Pattern, BOOL Buffered)
+BOOL MyRequestFile( char *FullName, CONST_STRPTR Title, CONST_STRPTR Pattern, BOOL Buffered)
 {
 	BOOL Success = FALSE;
 	char FileName[256], PathName[256];
@@ -566,7 +567,7 @@ BOOL MyRequestFile( char *FullName, char *Title, char *Pattern, BOOL Buffered)
 		if( Buffered & ( !Pattern ))
 			Pattern = BufferedPattern;
 
-		if( AslRequestTags( Asl_FileFileReq, ASLFR_Window, AktuDI->Wnd, ASLFR_InitialFile, FileName, ASLFR_InitialDrawer, PathName, ASLFR_Window, AktuDI->Wnd, ASLFR_TitleText, Title, ASLFR_InitialPattern, Pattern ? Pattern : "", TAG_DONE ))
+		if( AslRequestTags( Asl_FileFileReq, ASLFR_Window, AktuDI->Wnd, ASLFR_InitialFile, FileName, ASLFR_InitialDrawer, PathName, ASLFR_Window, AktuDI->Wnd, ASLFR_TitleText, Title, ASLFR_InitialPattern, Pattern ? Pattern : (CONST_STRPTR)"", TAG_DONE ))
 		{
 			strcpy( FullName, Asl_FileFileReq->rf_Dir );
 			AddPart( FullName, Asl_FileFileReq->rf_File, 256 );
@@ -613,16 +614,13 @@ BOOL MyRequestFile( char *FullName, char *Title, char *Pattern, BOOL Buffered)
 	return( Success );
 }
 
-void ExecuteARexxCommand(char *Name)
+void ExecuteARexxCommand(CONST_STRPTR Name)
 {
-#ifdef __AROS__
-#warning "stegerg: disabled for quick test!!"
-#else
 	BPTR fh;
 
 	if(Name)
 	{
-		if(fh=Open(arexxcommandwindow,MODE_NEWFILE))
+		if((fh=Open(arexxcommandwindow,MODE_NEWFILE)))
 			SendRexxCommand(MyRexxHost,Name,fh);
 	}
 	else
@@ -631,11 +629,10 @@ void ExecuteARexxCommand(char *Name)
 
 		if( MyRequestFile( fullname, GetStr( MSG_WINDOWTITLE_SELECTCOMMAND ), "#?.filex", FALSE ))
 		{
-			if(fh=Open(arexxcommandwindow,MODE_NEWFILE))
+			if((fh=Open(arexxcommandwindow,MODE_NEWFILE)))
 				SendRexxCommand(MyRexxHost,fullname,fh);
 		}
 	}
-#endif
 }
 
 void ExecuteARexxCommandNumber(LONG Number)

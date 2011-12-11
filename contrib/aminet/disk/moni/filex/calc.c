@@ -49,9 +49,8 @@ static BOOL IsCharInMode( char Zeichen, UWORD Mode )
 			return(( BOOL )(( Zeichen >= '0' ) && ( Zeichen <= '7' )));
 			break;
 	}
-#warning "stegerg: return was missing here! CHECKME!"
 
-    	return TRUE;
+    	return FALSE;
 }
 
 static UBYTE *CalcTasten[] =

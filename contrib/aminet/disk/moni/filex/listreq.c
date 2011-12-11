@@ -23,7 +23,6 @@ static struct Gadget *LRGList;
 static struct Gadget *LRGadgets[4];
 static long LRLeft = -1, LRTop = -1, LRWidth = -1, LRHeight = -1;
 static struct List *LRList;
-#warning "stegerg: LRCurrent and LREntries were defined with no type???"
 static int LRCurrent, LREntries;
 static void ( * LRFunc )( struct List *, struct Node * );
 
@@ -89,8 +88,6 @@ static long MakeLRGadgets( UWORD Breite, UWORD Height )
 		RefreshGadgets(LRGList, LRWnd, 0);
 		GT_RefreshWindow( LRWnd, NULL );
 	}
-
-#warning "stegerg: control reaches end of non-void function -> return missing!"
 
     	return 0;
 }

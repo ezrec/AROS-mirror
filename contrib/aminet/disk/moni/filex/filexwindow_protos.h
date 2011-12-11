@@ -25,7 +25,7 @@ long MyTextLength(struct RastPort * , char * );
 
 UBYTE GetUnderlinedKey(UBYTE * );
 
-int NewOpenAWindow(struct WindowData * , UBYTE * );
+int NewOpenAWindow(struct WindowData * , CONST_STRPTR );
 
 void NewCloseAWindow(struct WindowData * );
 

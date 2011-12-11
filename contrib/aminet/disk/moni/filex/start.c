@@ -104,13 +104,13 @@ LONG __saveds Start(void)
 				{
 					STATIC struct IntuiText BodyText = {0,1,JAM1,5,3,0,(STRPTR)"Kickstart 2.04 or higher required.",NULL};
 
-					AutoRequest(NULL,&BodyText,NULL,&SorryText,NULL,NULL,309,46);
+					AutoRequest(NULL,&BodyText,NULL,&SorryText,0,0,309,46);
 				}
 				else
 				{
 					STATIC struct IntuiText BodyText = {0,1,JAM1,5,3,0,(UBYTE *)"MC68020 or higher required.",NULL};
 
-					AutoRequest(NULL,&BodyText,NULL,&SorryText,NULL,NULL,253,46);
+					AutoRequest(NULL,&BodyText,NULL,&SorryText,0,0,253,46);
 				}
 
 				CloseLibrary((struct Library *)IntuitionBase);

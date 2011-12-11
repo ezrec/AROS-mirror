@@ -1,6 +1,7 @@
 /* Prototypes for functions defined in
 Grab.c
  */
+#include "filexstructs.h"
 
 void GrabMemory(ULONG , ULONG , struct DisplayData * );
 

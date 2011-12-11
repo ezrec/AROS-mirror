@@ -308,7 +308,7 @@ static int MySetupScreen( void )
 				}
 				else
 				{
-					PubScreenStatus(Scr,NULL);
+					PubScreenStatus(Scr,0);
 				}
 			}
 			break;
@@ -435,7 +435,7 @@ void CloseFileXWindow( struct DisplayInhalt *DI )
 	
 		DI->Wnd->UserPort = NULL;
 	
-		ModifyIDCMP( DI->Wnd, NULL );
+		ModifyIDCMP( DI->Wnd, 0 );
 	
 		Permit();
 

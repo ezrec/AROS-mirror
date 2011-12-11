@@ -71,12 +71,12 @@ void MyPrint(UBYTE *start, long laenge, long DisplayTyp, struct Window *Wnd )
 							/* Werte für den Intuitionrequester setzen */
 
 						Easy.es_StructSize = sizeof(struct EasyStruct);
-						Easy.es_Flags = NULL;
+						Easy.es_Flags = 0;
 						Easy.es_Title = GetStr( MSG_WINDOWTITLE_INFO );
 						Easy.es_GadgetFormat	= GetStr( MSG_GADGET_STOPPRINTING );
 						Easy . es_TextFormat = GetStr( MSG_INFO_PRINT_PRINTING );
 
-						if(( ReqWnd = BuildEasyRequestArgs( Wnd, &Easy, NULL, NULL )))
+						if(( ReqWnd = BuildEasyRequestArgs( Wnd, &Easy, 0, NULL )))
 							RequesterOpened = TRUE;
 					}
 					else
@@ -88,7 +88,7 @@ void MyPrint(UBYTE *start, long laenge, long DisplayTyp, struct Window *Wnd )
 					if( RequesterOpened )
 					{
 						register short zeichen = 16;
-						ULONG sigs;
+						ULONG sigs = 0;
 						LONG off=0,k;
 						UBYTE buffer[9+1+35+1+16+2];
 
@@ -104,7 +104,7 @@ void MyPrint(UBYTE *start, long laenge, long DisplayTyp, struct Window *Wnd )
 
 						if(laenge-off<0)zeichen=off-laenge;
 
-						sprintf(buffer,"%08.lx: ",off);
+						sprintf(buffer,"%08lx: ",off);
 
 						for(k=0;k<zeichen;k++)
 						{
@@ -137,7 +137,7 @@ void MyPrint(UBYTE *start, long laenge, long DisplayTyp, struct Window *Wnd )
 								zeichen = 16;
 								if(laenge-off-16<0)zeichen=laenge-off;
 
-								sprintf(buffer,"%08.lx: ",off);
+								sprintf(buffer,"%08lx: ",off);
 
 								for(k=0;k<zeichen;k++)
 								{

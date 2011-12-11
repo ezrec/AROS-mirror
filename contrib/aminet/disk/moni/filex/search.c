@@ -369,8 +369,8 @@ static void InitBM( UBYTE *ss, ULONG typ, ULONG len )
 BOOL SearchNext(int typ,BOOL quiet,BOOL all, struct DisplayData *DD )
 {
 	UBYTE *pos;
-	char *string;
-	LONG len;
+	char *string = NULL;
+	LONG len = 0;
 	BOOL Success = TRUE;
 	struct Window *SWnd;
 
@@ -380,7 +380,7 @@ BOOL SearchNext(int typ,BOOL quiet,BOOL all, struct DisplayData *DD )
 
 	if(searchmode&SM_REPLACE)
 	{
-		char *rstring,*kstring,*krstring;
+		char *rstring = NULL,*kstring,*krstring;
 		long richtung=(typ&BM_BACKWARD)?-1:1;
 
 		if( !(searchmode&SM_STRING))

@@ -8,17 +8,17 @@ BOOL MyGetString(char * , char * , ULONG );
 
 BOOL GetWert(ULONG * , char * , ULONG , ULONG );
 
-void DisplayLocaleText(char * );
+void DisplayLocaleText(CONST_STRPTR );
 
-ULONG MyRequest(char * , ULONG );
+ULONG MyRequest(CONST_STRPTR , ULONG );
 
-ULONG MyRequestNoLocale(char * , ULONG );
+ULONG MyRequestNoLocale(CONST_STRPTR , ULONG );
 
-ULONG __stdargs MyFullRequestNoLocale(char * , char * , ...);
+ULONG __stdargs MyFullRequestNoLocale(CONST_STRPTR , CONST_STRPTR , ...);
 
-ULONG __stdargs MyFullRequest(char * , char * , ...);
+ULONG __stdargs MyFullRequest(CONST_STRPTR , CONST_STRPTR , ...);
 
-char * GetStr(char * );
+CONST_STRPTR GetStr(CONST_STRPTR );
 
 void JumpToByte(void);
 
@@ -26,9 +26,9 @@ void MarkLocation(ULONG , struct DisplayData * );
 
 void JumpToLocation(LONG , struct DisplayData * );
 
-BOOL MyRequestFile(char * , char * , char * , BOOL );
+BOOL MyRequestFile(char * , CONST_STRPTR , CONST_STRPTR , BOOL );
 
-void ExecuteARexxCommand(char * );
+void ExecuteARexxCommand(CONST_STRPTR );
 
 void ExecuteARexxCommandNumber(LONG );
 

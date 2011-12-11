@@ -2,7 +2,7 @@
 #include <dos/dos.h>
 #include <rexx/storage.h>
 
-#include "filexARexx.h"
+#include "filexarexx.h"
 
 #define RESINDEX(stype) (((long) &((struct stype *)0)->res) / sizeof(long))
 

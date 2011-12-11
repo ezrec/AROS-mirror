@@ -1493,7 +1493,7 @@ SegmentSplit(STRPTR Name,LONG StackSize,APTR Function)
 	TAG_DONE);
 
 	if(Child)
-		CLI -> cli_Module = NULL;
+		CLI -> cli_Module = BNULL;
 
 	Permit();
 
@@ -2497,11 +2497,7 @@ void __saveds DoWindow(void)
 		if( mainflags & MF_CLIPCONV )
 			CloseClipConv();
 
-#ifdef __AROS__
-#warning "stegerg: disabled for quick test!!"
-#else
 		CloseCommandShell();
-#endif
 		CloseAllOpenWindows();
 	}
 }
@@ -2659,7 +2655,7 @@ void CloseLibs(void)
 	CloseLibrary(GadToolsBase);
 	CloseLibrary(DiskfontBase);
 	CloseLibrary(AslBase);
-	CloseLibrary(RexxSysBase);
+	CloseLibrary((struct Library *)RexxSysBase);
 	CloseLibrary((struct Library *)IconBase);
 	CloseLibrary(WorkbenchBase);
 	CloseLibrary(IFFParseBase);
