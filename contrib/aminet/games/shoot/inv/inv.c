@@ -490,9 +490,9 @@ else
 
 			CloseWindow(win);
 			}
-		CloseLibrary(IntuitionBase);
+		CloseLibrary((struct Library *)IntuitionBase);
 		}
-	CloseLibrary(GfxBase);
+	CloseLibrary((struct Library *)GfxBase);
 	}
 exit(return_code);
 }
@@ -663,7 +663,7 @@ for(loop = 0;loop<10;loop++)
 FOREVER
 	{
 	
-    while(my_message = (struct intuiMessage *)GetMsg(win->UserPort))
+    while((my_message = (struct IntuiMessage *)GetMsg(win->UserPort)))
 		{
 		class = my_message->Class;
  		code  = my_message->Code;
@@ -682,7 +682,7 @@ FOREVER
                				case 0x4C:       break; /* Pressed */
                				case 0x4C+0x80:
                                         beginshoot = 1;
-                                        shoot[time] =makeBob(1,1,x+7 ,89,shoot_image,8,4,time);
+                                        shoot[time] =makeBob(1,1,x+7 ,89,(UWORD *)shoot_image,8,4,time);
 					AddBob(shoot[time],win->RPort);
 					bobDrawGlist(win);
 					time = (time+1)%10; 
@@ -749,7 +749,7 @@ ship_bob->BobVSprite->X = x;
 
         		
          		/* Change the image of the VSprite: */
-         		enemy_bobs[ loop ]->BobVSprite->ImageData = ship_data[ frame + addit];
+         		enemy_bobs[ loop ]->BobVSprite->ImageData = (UWORD *)(&ship_data[ frame + addit][0]);
 			InitMasks(enemy_bobs[ loop ]->BobVSprite);
 			}
 		}  
@@ -891,14 +891,14 @@ if (NULL == (my_ginfo = setupGelSys(win->RPort, 0xfc)))
 	return_code = RETURN_WARN;
 else
 	{
-	if(NULL == (ship_bob = makeBob(2,8,20,90,good_ship_data,0,0,0)))
+	if(NULL == (ship_bob = makeBob(2,8,20,90,(UWORD *)(good_ship_data),0,0,0)))
 		return_code = RETURN_WARN;
 	else
 		{
 		AddBob(ship_bob,win->RPort);
 		for(loop = 0; loop < MAXBOBS ; loop++)
 			{
- 			if (NULL == (enemy_bobs[ loop ]=makeBob(3,12,20 * vx+4,20 * vy + 13,ship_data[0],4,8,loop )))
+ 			if (NULL == (enemy_bobs[ loop ]=makeBob(3,12,20 * vx+4,20 * vy + 13,(UWORD *)(&ship_data[0][0]),4,8,loop )))
 				{
 				return_code = RETURN_WARN;
 				break;
@@ -969,7 +969,7 @@ bobDrawGlist(win);
 		
 cleanupGelSys(my_ginfo,win->RPort);
 CloseWindow(win);
-CloseLibrary(IntuitionBase);
-CloseLibrary(GfxBase);
+CloseLibrary((struct Library *)IntuitionBase);
+CloseLibrary((struct Library *)GfxBase);
 exit(return_code);
 }
