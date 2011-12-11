@@ -3218,7 +3218,7 @@ locnnetstruct->iterspersec=iterations / TicksToFracSecs(accumtime);
 if(locnnetstruct->adjust==0)
 	locnnetstruct->adjust=1;
 
-
+(void)errorcontext; /* Not used here */
 return;
 }
 
