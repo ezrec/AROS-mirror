@@ -20,7 +20,7 @@
 int main(int argc, char *argv[])
 {
     unsigned long int mb = TESTSIZE;
-    unsigned long int size, passes, d, i, j;
+    unsigned long int size, passes, i, j;
     volatile unsigned long int *mem;
     clock_t start, stop;
 
@@ -68,15 +68,17 @@ int main(int argc, char *argv[])
         start = clock ();
 	for (i = 0; i < passes; i++)
 	    for (j = 0; j < size/sizeof(unsigned long int); j += 16) {
+	        volatile unsigned long int d;
 		d = mem[j]; d = mem[j+1]; d = mem[j+2]; d = mem[j+3];
 		d = mem[j+4]; d = mem[j+5]; d = mem[j+6]; d = mem[j+7];
 		d = mem[j+8]; d = mem[j+9]; d = mem[j+10]; d = mem[j+11];
 		d = mem[j+12]; d = mem[j+13]; d = mem[j+14]; d = mem[j+15];
+		(void)d;
 	    }
         stop = clock ();
 	fprintf(stderr, "%5.3f MB/s\n",
 		(double)(LOOPSIZE/MB)/(double)(stop-start)*(double)CLOCKS_PER_SEC);
     }
-    free (mem);
+    free ((void *)mem);
     exit(0);
 }
