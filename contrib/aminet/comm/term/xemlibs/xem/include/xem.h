@@ -3,6 +3,9 @@
 *   Include file for External Emulator Handling
 *
 **/
+#ifndef XEM_H
+#define XEM_H
+
 /*
 *   The structure
 */
@@ -40,7 +43,7 @@ long		(*xem_sread)(char *buffer, long size, long timeout);
 	void		(*xem_tbeep)(long ntimes, long delay);
 
 /*	Get a string from the user. */
-	long		(*xem_tgets)(char *prompt, char *buffer, long buflen);
+	long		(*xem_tgets)(const char *prompt, char *buffer, long buflen);
 
 /*	 Provide a polished user interface to set the emulator options. */
 	long		(*xem_toptions)(long n, struct xem_option *opt[]);
@@ -123,3 +126,4 @@ struct XEmulatorHostData {
 	BOOL InCSI;			/* INTER-EMULATOR PRIVATE DATA..  DO NOT TOUCH 'EM..!! */
 };
 
+#endif /* XEM_H */
