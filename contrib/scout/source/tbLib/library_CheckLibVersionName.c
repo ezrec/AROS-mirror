@@ -1,7 +1,7 @@
 #include <exec/libraries.h>
 #include <proto/exec.h>
 #include "tblib.h"
-#include "SDI_compiler.h"
+#include <SDI/SDI_compiler.h>
 
 /* /// "CheckLibVersionName()" */
 ULONG CheckLibVersionName( CONST_STRPTR libname,

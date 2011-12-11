@@ -3,7 +3,7 @@
 
 #include "tblib.h"
 #include "memory_internal.h"
-#include "SDI_compiler.h"
+#include <SDI/SDI_compiler.h>
 
 APTR ASM tbAllocPooled( REG(a0, APTR poolHeader),
                         REG(d0, ULONG memSize) )

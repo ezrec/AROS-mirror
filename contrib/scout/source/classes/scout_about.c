@@ -65,37 +65,37 @@ STATIC ULONG mNew( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {
-    APTR abouttext,okButton;
+    IPTR abouttext,okButton;
 
     if ((obj = (Object *)DoSuperNew(cl, obj,
         MUIA_Window_Title, txtAboutTitle,
         WindowContents, VGroup,
             MUIA_Background, MUII_RequesterBack,
-            Child, VGroup,
+            Child, (IPTR)VGroup,
                 TextFrame,
                 MUIA_Background, MUII_TextBack,
-                Child, abouttext = TextObject, End,
-                Child, HGroup,
-                    Child, MyHSpace(0),
-                    Child, URLObject(),
-                    Child, MyHSpace(0),
+                Child, abouttext = (IPTR)TextObject, End,
+                Child, (IPTR)HGroup,
+                    Child, (IPTR)MyHSpace(0),
+                    Child, (IPTR)URLObject(),
+                    Child, (IPTR)MyHSpace(0),
                 End,
-                Child, MyVSpace(4),
+                Child, (IPTR)MyVSpace(4),
             End,
-            Child, MyVSpace(4),
-            Child, HGroup, MUIA_Group_SameWidth, TRUE,
-                Child, MyHSpace(0),
-                Child, okButton = MakeButton(txtMUIContinue),
-                Child, MyHSpace(0),
+            Child, (IPTR)MyVSpace(4),
+            Child, (IPTR)HGroup, MUIA_Group_SameWidth, TRUE,
+                Child, (IPTR)MyHSpace(0),
+                Child, okButton = (IPTR)MakeButton(txtMUIContinue),
+                Child, (IPTR)MyHSpace(0),
             End,
         End,
         TAG_MORE, msg->ops_AttrList)) != NULL)
     {
         set(obj, MUIA_Window_ActiveObject, okButton);
-        MySetContents(abouttext, txtAboutText, vstring, release, COPYRIGHT, portname);
+        MySetContents((APTR)abouttext, txtAboutText, vstring, release, COPYRIGHT, portname);
 
         DoMethod(obj,      MUIM_Notify, MUIA_Window_CloseRequest, TRUE,  MUIV_Notify_Application, 2, MUIM_Application_ReturnID, 1);
-        DoMethod(okButton, MUIM_Notify, MUIA_Pressed,             FALSE, MUIV_Notify_Application, 2, MUIM_Application_ReturnID, 1);
+        DoMethod((Object *)okButton, MUIM_Notify, MUIA_Pressed,             FALSE, MUIV_Notify_Application, 2, MUIM_Application_ReturnID, 1);
     }
 
     return (ULONG)obj;

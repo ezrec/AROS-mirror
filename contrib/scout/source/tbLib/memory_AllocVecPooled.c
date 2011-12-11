@@ -3,7 +3,7 @@
 
 #include "tblib.h"
 #include "memory_internal.h"
-#include "SDI_compiler.h"
+#include <SDI/SDI_compiler.h>
 
 #if defined(__GNUC__)
 APTR AllocVecPooled( APTR poolHeader,

@@ -3,7 +3,7 @@
 
 #include "tblib.h"
 #include "memory_internal.h"
-#include "SDI_compiler.h"
+#include <SDI/SDI_compiler.h>
 
 void * ASM tbCreatePool( REG(d0, ULONG flags),
                          REG(d1, ULONG puddleSize),

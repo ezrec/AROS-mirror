@@ -309,7 +309,7 @@ STATIC ULONG mNew( struct IClass *cl,
 
             Child, (IPTR)(locktext2 = MyTextObject()),
 
-            Child, HGroup,
+            Child, (IPTR)HGroup,
                 Child, (IPTR)KeyLabel2(txtPattern, 'p'),
                 Child, (IPTR)(lockpattern = (Object *)StringObject,
                     MUIA_String_Contents, (IPTR)"#?",
@@ -322,7 +322,7 @@ STATIC ULONG mNew( struct IClass *cl,
 
             Child, (IPTR)MyVSpace(4),
 
-            Child, HGroup, MUIA_Group_SameSize, TRUE,
+            Child, (IPTR)HGroup, MUIA_Group_SameSize, TRUE,
                 Child, (IPTR)(updateButton = MakeButton(txtUpdate)),
                 Child, (IPTR)(printButton  = MakeButton(txtPrint)),
                 Child, (IPTR)(removeButton = MakeButton(txtRemove)),

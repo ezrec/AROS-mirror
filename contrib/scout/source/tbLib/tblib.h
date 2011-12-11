@@ -26,13 +26,13 @@
     #include <stdarg.h>
 #endif
 #ifndef SDI_COMPILER_H
-    #include "SDI_compiler.h"
+    #include <SDI/SDI_compiler.h>
 #endif
 #ifndef SDI_STDARG_H
-    #include "SDI_stdarg.h"
+    #include <SDI/SDI_stdarg.h>
 #endif
 #ifndef SDI_HOOK_H
-    #include "SDI_hook.h"
+    #include <SDI/SDI_hook.h>
 #endif
 
 #if !defined(__amigaos4__) || !defined(__NEW_TIMEVAL_DEFINITION_USED__)

@@ -16,7 +16,7 @@ extern int stcd_i(const char *in, int *value);
 
 #if !defined(__amigaos4__)
 #include <exec/types.h>
-#include "SDI_stdarg.h"
+#include <SDI/SDI_stdarg.h>
 
 STRPTR VASPrintf( CONST_STRPTR fmt, VA_LIST args );
 STRPTR VARARGS68K STDARGS ASPrintf( CONST_STRPTR fmt, ... );

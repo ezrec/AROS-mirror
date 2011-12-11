@@ -1,6 +1,6 @@
 #include <exec/libraries.h>
 #include "tblib.h"
-#include "SDI_compiler.h"
+#include <SDI/SDI_compiler.h>
 
 /* /// "CheckLibVersion()" */
 ULONG CheckLibVersion( struct Library *lib,

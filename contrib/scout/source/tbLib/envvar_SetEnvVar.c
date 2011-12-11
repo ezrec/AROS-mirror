@@ -1,4 +1,4 @@
-#include "SDI_compiler.h"
+#include <SDI/SDI_compiler.h>
 #include <exec/types.h>
 #include <exec/ports.h>
 #include <dos/var.h>

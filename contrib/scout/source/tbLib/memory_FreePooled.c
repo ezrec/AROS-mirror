@@ -3,7 +3,7 @@
 
 #include "tblib.h"
 #include "memory_internal.h"
-#include "SDI_compiler.h"
+#include <SDI/SDI_compiler.h>
 
 void ASM tbFreePooled( REG(a0, APTR poolHeader),
                        REG(a1, APTR memory),

@@ -625,6 +625,7 @@ static void get_wbarg_name(struct WBArg *wbarg, STRPTR buffer, ULONG size)
 }
 
 /* Enable extended debugging for is_in_template() */
+#undef D2
 #if 0
 #define D2(x) x
 #else

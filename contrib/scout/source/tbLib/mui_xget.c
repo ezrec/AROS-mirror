@@ -5,7 +5,7 @@
 #include <proto/intuition.h>
 #include <clib/alib_protos.h>
 #include "tblib.h"
-#include "SDI_compiler.h"
+#include <SDI/SDI_compiler.h>
 
 /* /// "xget()" */
 ULONG xget( Object *obj,

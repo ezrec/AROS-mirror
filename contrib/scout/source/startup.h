@@ -28,7 +28,7 @@
 startup.c
  */
 
-#include "SDI_compiler.h"
+#include <SDI/SDI_compiler.h>
 
 extern struct Args opts;
 

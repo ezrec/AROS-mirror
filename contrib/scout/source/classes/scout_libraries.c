@@ -277,14 +277,14 @@ STATIC ULONG mNew( struct IClass *cl,
 
             Child, (IPTR)MyVSpace(4),
 
-            Child, HGroup, MUIA_Group_SameSize, TRUE,
+            Child, (IPTR)HGroup, MUIA_Group_SameSize, TRUE,
                 Child, (IPTR)(priorityButton = MakeButton(txtPriority)),
                 Child, (IPTR)(removeButton   = MakeButton(txtRemove)),
                 Child, (IPTR)(closeButton    = MakeButton(txtClose)),
                 Child, (IPTR)(funcButton     = MakeButton(txtFunctions)),
             End,
 
-            Child, HGroup, MUIA_Group_SameSize, TRUE,
+            Child, (IPTR)HGroup, MUIA_Group_SameSize, TRUE,
                 Child, (IPTR)(updateButton   = MakeButton(txtUpdate)),
                 Child, (IPTR)(printButton    = MakeButton(txtPrint)),
                 Child, (IPTR)(moreButton     = MakeButton(txtMore)),

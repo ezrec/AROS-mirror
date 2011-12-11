@@ -2,7 +2,7 @@
 #include <proto/exec.h>
 #include <string.h>
 #include "tblib.h"
-#include "SDI_compiler.h"
+#include <SDI/SDI_compiler.h>
 
 /* /// "StuffChar()" */
 struct FormatContext

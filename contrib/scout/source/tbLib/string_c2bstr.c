@@ -3,7 +3,7 @@
 #include <proto/dos.h>
 #include <string.h>
 #include "tblib.h"
-#include "SDI_compiler.h"
+#include <SDI/SDI_compiler.h>
 
 /* /// "c2bstr()" */
 void c2bstr( STRPTR c,

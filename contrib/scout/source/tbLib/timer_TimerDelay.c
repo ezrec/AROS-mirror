@@ -1,6 +1,6 @@
 #include <devices/timer.h>
 #include <proto/exec.h>
-#include "SDI_compiler.h"
+#include <SDI/SDI_compiler.h>
 #include "tblib.h"
 
 /* /// "TimerDelay()" */
@@ -21,6 +21,7 @@ void TimerDelay( struct TimeRequest *treq,
 
         max = secs * 1000000 + mics;
         for (cnt = 0; cnt < max; cnt++) test = *addr;
+        (void)test;
     }
 }
 /* \\\ */

@@ -1,6 +1,6 @@
 #include <exec/execbase.h>
 #include <exec/types.h>
-#include <SDI_compiler.h>
+#include <SDI/SDI_compiler.h>
 
 #if defined(__AROS__)
 extern ULONG SAVEDS realstartup(struct ExecBase *sBase);

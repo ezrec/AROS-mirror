@@ -5,7 +5,7 @@
 #include <proto/exec.h>
 #include <clib/alib_protos.h>
 
-#include "SDI_compiler.h"
+#include <SDI/SDI_compiler.h>
 
 /* /// "FreePort()" */
 void FreePort( struct MsgPort *port )

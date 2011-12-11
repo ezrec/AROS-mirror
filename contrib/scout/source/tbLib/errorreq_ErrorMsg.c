@@ -5,7 +5,7 @@
 #include <string.h>
 #include <stdarg.h>
 #include "tblib.h"
-#include "SDI_compiler.h"
+#include <SDI/SDI_compiler.h>
 
 /* /// "ErrorMsg()" */
 void VARARGS68K STDARGS ErrorMsg( CONST_STRPTR title,

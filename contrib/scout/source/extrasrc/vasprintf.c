@@ -1,5 +1,5 @@
-#include "SDI_compiler.h"
-#include "SDI_stdarg.h"
+#include <SDI/SDI_compiler.h>
+#include <SDI/SDI_stdarg.h>
 #include <proto/exec.h>
 
 #if defined(__MORPHOS__) || defined(__AROS__)

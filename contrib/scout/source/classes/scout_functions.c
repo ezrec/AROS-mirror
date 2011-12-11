@@ -142,7 +142,7 @@ STATIC ULONG mNew( struct IClass *cl,
 
             Child, (IPTR)MyVSpace(4),
 
-            Child, HGroup, MUIA_Group_SameSize, TRUE,
+            Child, (IPTR)HGroup, MUIA_Group_SameSize, TRUE,
                 Child, (IPTR)(disasmButton = MakeButton(txtDisassemble)),
                 Child, (IPTR)(exitButton   = MakeButton(txtExit)),
             End,

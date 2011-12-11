@@ -36,7 +36,7 @@
 #include <libraries/locale.h>
 #include <libraries/iffparse.h>
 
-#include "SDI_compiler.h"
+#include <SDI/SDI_compiler.h>
 
 #include <proto/exec.h>
 #include <proto/dos.h>

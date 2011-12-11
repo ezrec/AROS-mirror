@@ -115,7 +115,7 @@ STATIC ULONG mNew( struct IClass *cl,
         MUIA_Window_ID, MakeID('M','A','I','N'),
         WindowContents, HGroup,
             MUIA_Group_SameHeight, TRUE,
-            Child, VGroup,                  /* This is the SCOUT logo */
+            Child, (IPTR)VGroup,                  /* This is the SCOUT logo */
                 MUIA_Weight    , 0,
                 MUIA_Frame     , MUIV_Frame_Text,
                 MUIA_Background, MUII_SHADOW,
@@ -124,7 +124,7 @@ STATIC ULONG mNew( struct IClass *cl,
                 Child, (IPTR)VSpace(0),
             End,
 
-            Child, ColGroup(5), MUIA_Group_SameSize, TRUE,
+            Child, (IPTR)ColGroup(5), MUIA_Group_SameSize, TRUE,
                 Child, (IPTR)(button[ 0] = MakeButton(txtMainAllocations)),
                 Child, (IPTR)(button[ 1] = MakeButton(txtMainAssigns)),
                 Child, (IPTR)(button[ 2] = MakeButton(txtMainBoopsiClasses)),
@@ -163,9 +163,9 @@ STATIC ULONG mNew( struct IClass *cl,
 		
 		Child, (IPTR)(button[30] = MakeButton(txtMainOOPClasses)),
 		Child, (IPTR)(button[31] = MakeButton(txtMainMonitorClass)),
-		Child, HSpace(0),
-		Child, HSpace(0),
-		Child, HSpace(0),
+		Child, (IPTR)HSpace(0),
+		Child, (IPTR)HSpace(0),
+		Child, (IPTR)HSpace(0),
             End,
         End,
         TAG_MORE, msg->ops_AttrList)) != NULL)
@@ -174,7 +174,7 @@ STATIC ULONG mNew( struct IClass *cl,
     #if !defined(__amigaos4__)
         struct PatchPort *pp;
         struct SetManPort *sp;
-        struct Library *pc;
+        struct Library *pc = NULL;
     #endif
 
         set(obj, MUIA_Window_Title, MyGetWindowTitle("\0", mwd->mwd_Title, sizeof(mwd->mwd_Title)));

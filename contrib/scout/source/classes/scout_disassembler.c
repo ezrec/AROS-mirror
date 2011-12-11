@@ -65,28 +65,28 @@ STATIC ULONG mNew( struct IClass *cl,
                    struct opSet *msg )
 {
     BOOL forceHexDump;
-    APTR list, disasmsource, sizeslider;
+    IPTR list, disasmsource, sizeslider;
 
     forceHexDump = GetTagData(MUIA_DisassemblerWin_ForceHexDump, FALSE, msg->ops_AttrList);
 
     if ((obj = (Object *)DoSuperNew(cl, obj,
         MUIA_Window_ID, MakeID('D','I','S','A'),
         WindowContents, VGroup,
-            Child, list = NListviewObject,
+            Child, list = (IPTR)NListviewObject,
                 MUIA_CycleChain, TRUE,
                 MUIA_ContextMenu, NULL,
                 MUIA_NListview_Horiz_ScrollBar, MUIV_NListview_HSB_None,
                 MUIA_NListview_Vert_ScrollBar, MUIV_NListview_VSB_Always,
-                MUIA_NListview_NList, disasmsource = NFloattextObject,
+                MUIA_NListview_NList, disasmsource = (IPTR)NFloattextObject,
                     ReadListFrame,
                     MUIA_NList_Input, FALSE,
                     MUIA_Font, MUIV_Font_Fixed,
                     MUIA_ContextMenu, NULL,
                 End,
             End,
-            Child, HGroup,
-                Child, MUI_MakeObject(MUIO_Label, (forceHexDump) ? txtHexdumpRange : txtDisassemblyRange, 0),
-                Child, sizeslider = SliderObject,
+            Child, (IPTR)HGroup,
+                Child, (IPTR)MUI_MakeObject(MUIO_Label, (forceHexDump) ? txtHexdumpRange : txtDisassemblyRange, 0),
+                Child, sizeslider = (IPTR)SliderObject,
                     MUIA_CycleChain, TRUE,
                     MUIA_Numeric_Min, 64,
                     MUIA_Numeric_Max, 1024,
@@ -99,9 +99,9 @@ STATIC ULONG mNew( struct IClass *cl,
         struct DisassemblerWinData *dwd = INST_DATA(cl, obj);
         APTR parent;
 
-        dwd->dwd_SourceList = list;
-        dwd->dwd_SourceFloattext = disasmsource;
-        dwd->dwd_DisasmSizeSlider = sizeslider;
+        dwd->dwd_SourceList = (APTR)list;
+        dwd->dwd_SourceFloattext = (APTR)disasmsource;
+        dwd->dwd_DisasmSizeSlider = (APTR)sizeslider;
         dwd->dwd_Address = (APTR)GetTagData(MUIA_DisassemblerWin_Address, (ULONG)NULL, msg->ops_AttrList);
         dwd->dwd_Range = GetTagData(MUIA_DisassemblerWin_Range, 128, msg->ops_AttrList);
         dwd->dwd_ForceHexDump = forceHexDump;
@@ -116,13 +116,13 @@ STATIC ULONG mNew( struct IClass *cl,
     #endif
 
         set(obj, MUIA_Window_DefaultObject, list);
-        nnset(sizeslider, MUIA_Numeric_Value, dwd->dwd_Range);
+        nnset((APTR)sizeslider, MUIA_Numeric_Value, dwd->dwd_Range);
 
         parent = (APTR)GetTagData(MUIA_Window_ParentWindow, (ULONG)NULL, msg->ops_AttrList);
 
         DoMethod(parent,     MUIM_Window_AddChildWindow, obj);
         DoMethod(obj,        MUIM_Notify,              MUIA_Window_CloseRequest, TRUE,  MUIV_Notify_Application, 5, MUIM_Application_PushMethod, parent, 2, MUIM_Window_RemChildWindow, obj);
-        DoMethod(sizeslider, MUIM_Notify,              MUIA_Numeric_Value,       MUIV_EveryTime, obj,            3, MUIM_Set, MUIA_DisassemblerWin_Range, MUIV_TriggerValue);
+        DoMethod((APTR)sizeslider, MUIM_Notify,              MUIA_Numeric_Value,       MUIV_EveryTime, obj,            3, MUIM_Set, MUIA_DisassemblerWin_Range, MUIV_TriggerValue);
     }
 
     return (ULONG)obj;

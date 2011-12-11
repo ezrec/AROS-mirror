@@ -994,7 +994,7 @@ short SendStartupMsg( CONST_STRPTR PortName, CONST_STRPTR RString, BOOL IsFileNa
    STRPTR buffer = NULL;
    ULONG    buflen;
 
-   if ((RString) && ((rmsg = CreateRexxMsg(ScoutPort,NULL,PortName))) != NULL) {
+   if ((RString) && ((rmsg = CreateRexxMsg(ScoutPort,NULL,(char *)PortName))) != NULL) {
 
       rmsg->rm_Action = (RXCOMM|RXFF_STRING);
 
@@ -1007,17 +1007,17 @@ short SendStartupMsg( CONST_STRPTR PortName, CONST_STRPTR RString, BOOL IsFileNa
              */
             _snprintf(buffer, buflen, "'%s'", RString);
 
-            rmsg->rm_Args[0] = CreateArgstring (buffer, buflen);
+            rmsg->rm_Args[0] = (IPTR)CreateArgstring (buffer, buflen);
          }
       } else {
-         rmsg->rm_Args[0] = CreateArgstring (RString,(LONG) strlen (RString));
+         rmsg->rm_Args[0] = (IPTR)CreateArgstring (RString,(LONG) strlen (RString));
       }
 
       if (rmsg->rm_Args[0]) {
          if (SafePutToPort ((struct Message *) rmsg, RXSDIR)) {
             flag=TRUE;
          } else {
-            DeleteArgstring (rmsg->rm_Args[0]);
+            DeleteArgstring ((UBYTE *)rmsg->rm_Args[0]);
             DeleteRexxMsg (rmsg);
          }
       } else {
