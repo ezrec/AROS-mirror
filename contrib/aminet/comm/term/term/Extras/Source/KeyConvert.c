@@ -27,7 +27,7 @@ ConvertKey(ULONG Qualifier,UWORD Code,ULONG Prev,STRPTR Buffer,LONG Len)
 
 	FakeInputEvent->ie_Code				= Code;
 	FakeInputEvent->ie_Qualifier		= Qualifier;
-	FakeInputEvent->ie_position.ie_addr	= (APTR)Prev;
+	FakeInputEvent->ie_position.ie_addr	= (APTR)(IPTR)Prev;
 
 		/* Clear the buffer (sortof). */
 
@@ -66,23 +66,23 @@ ConvertTheKey(STRPTR Buffer,LONG *Len,UWORD Code,UWORD Qualifier,ULONG Prev)
 
 		STATIC struct { STRPTR RawCode; UBYTE Result; } ConversionTable[15] =
 		{
-			(STRPTR)"A",	CUP,
-			(STRPTR)"B",	CDN,
-			(STRPTR)"C",	CFW,
-			(STRPTR)"D",	CBK,
+			{ (STRPTR)"A",	CUP, },
+			{ (STRPTR)"B",	CDN, },
+			{ (STRPTR)"C",	CFW, },
+			{ (STRPTR)"D",	CBK, },
 
-			(STRPTR)"?~",	HLP,
+			{ (STRPTR)"?~",	HLP, },
 
-			(STRPTR)"0~",	FN1,
-			(STRPTR)"1~",	FN2,
-			(STRPTR)"2~",	FN3,
-			(STRPTR)"3~",	FN4,
-			(STRPTR)"4~",	FN5,
-			(STRPTR)"5~",	FN6,
-			(STRPTR)"6~",	FN7,
-			(STRPTR)"7~",	FN8,
-			(STRPTR)"8~",	FN9,
-			(STRPTR)"9~",	F10
+			{ (STRPTR)"0~",	FN1, },
+			{ (STRPTR)"1~",	FN2, },
+			{ (STRPTR)"2~",	FN3, },
+			{ (STRPTR)"3~",	FN4, },
+			{ (STRPTR)"4~",	FN5, },
+			{ (STRPTR)"5~",	FN6, },
+			{ (STRPTR)"6~",	FN7, },
+			{ (STRPTR)"7~",	FN8, },
+			{ (STRPTR)"8~",	FN9, },
+			{ (STRPTR)"9~",	F10 },
 		};
 
 		STATIC UBYTE SeqLens[15] = { 1,1,1,1,2,2,2,2,2,2,2,2,2,2,2 };
@@ -93,7 +93,7 @@ ConvertTheKey(STRPTR Buffer,LONG *Len,UWORD Code,UWORD Qualifier,ULONG Prev)
 			/* If it's a function or cursor key, clear the qualifier. */
 
 		if(Code >= CURSOR_UP_CODE && Code <= F10_CODE)
-			Qualifier = NULL;
+			Qualifier = 0;
 		else
 		{
 				/* Does it have a numeric keypad qualifier set? */

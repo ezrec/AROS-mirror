@@ -98,7 +98,7 @@ LONG xem_tgets_glue(STRPTR Prompt, STRPTR Buffer, ULONG Size);
 VOID xem_tbeep_glue(ULONG Times, ULONG Delay);
 LONG xem_macrodispatch_glue(struct XEmulatorMacroKey *XEM_MacroKey);
 
-LONG xpr_fopen_glue(STRPTR FileName, STRPTR AccessMode);
+BPTR xpr_fopen_glue(STRPTR FileName, STRPTR AccessMode);
 LONG xpr_fclose_glue(struct Buffer *File);
 LONG xpr_fread_glue(APTR Buffer, LONG Size, LONG Count, struct Buffer *File);
 LONG xpr_fwrite_glue(APTR Buffer, LONG Size, LONG Count, struct Buffer *File);
@@ -106,7 +106,7 @@ LONG xpr_fseek_glue(struct Buffer *File, LONG Offset, LONG Origin);
 LONG xpr_sread_glue(APTR Buffer, ULONG Size, ULONG Timeout);
 LONG xpr_swrite_glue(APTR Buffer, LONG Size);
 LONG xpr_update_glue(struct XPR_UPDATE *UpdateInfo);
-LONG xpr_gets_glue(STRPTR Prompt, STRPTR Buffer);
+LONG xpr_gets_glue(char *Prompt, char *Buffer);
 LONG xpr_setserial_glue(LONG Status);
 LONG xpr_ffirst_glue(STRPTR Buffer, STRPTR Pattern);
 LONG xpr_fnext_glue(LONG OldState, STRPTR Buffer, STRPTR Pattern);
@@ -145,10 +145,10 @@ VOID GuideDisplay(LONG ContextID);
 
 /* ARexx.c */
 BOOL IsNumeric(STRPTR String);
-STRPTR CreateResult(STRPTR ResultString, LONG *Results);
-STRPTR CreateResultLen(STRPTR ResultString, LONG *Results, LONG Len);
-BOOL CreateVarArgs(STRPTR Value, struct RexxPkt *Packet, STRPTR Stem, ...);
-STRPTR CreateVar(STRPTR Value, struct RexxPkt *Packet, STRPTR Name);
+STRPTR CreateResult(CONST_STRPTR ResultString, LONG *Results);
+STRPTR CreateResultLen(CONST_STRPTR ResultString, LONG *Results, LONG Len);
+BOOL CreateVarArgs(CONST_STRPTR Value, struct RexxPkt *Packet, STRPTR Stem, ...);
+STRPTR CreateVar(CONST_STRPTR Value, struct RexxPkt *Packet, STRPTR Name);
 STRPTR CreateMatchBuffer(STRPTR Pattern);
 BOOL MatchBuffer(STRPTR Buffer, STRPTR Name);
 VOID DeleteMatchBuffer(STRPTR Buffer);
@@ -229,7 +229,7 @@ STRPTR RexxRead(struct RexxPkt *Pkt);
 /* ASCIIPanel.c */
 struct Window *CreateASCIIWindow(BOOL Send);
 VOID DeleteASCIIWindow(struct Window *Window, BOOL WaitForIt);
-VOID AddASCIIMessage(STRPTR Message, ...);
+VOID AddASCIIMessage(CONST_STRPTR Message, ...);
 VOID UpdateASCIIWindow(LONG Bytes, LONG MaxBytes, LONG Lines);
 BOOL HandleASCIIWindow(VOID);
 
@@ -256,7 +256,7 @@ VOID SZ_FreeBoxes(struct TextBox *FirstBox);
 LONG SZ_BoxWidth(LONG Chars);
 LONG SZ_BoxHeight(LONG Lines);
 struct TextBox *SZ_CreateTextBox(struct TextBox **FirstBox, ...);
-VOID SZ_SetBoxTitles(struct TextBox *Box, STRPTR Array, ...);
+VOID SZ_SetBoxTitles(struct TextBox *Box, CONST_STRPTR Array, ...);
 VOID SZ_SetLine(struct RastPort *RPort, struct TextBox *Box, LONG Line, STRPTR String);
 VOID SZ_PrintLine(struct RastPort *RPort, struct TextBox *Box, LONG Line, STRPTR String, ...);
 VOID SZ_DrawBoxes(struct RastPort *RPort, struct TextBox *FirstBox);
@@ -277,7 +277,7 @@ VOID DeleteSearchContext(struct SearchContext *Context);
 struct SearchContext *CreateSearchContext(struct Window *ParentWindow, STRPTR Buffer, struct Hook *HistoryHook, struct List *HistoryHookList, BOOL *Forward, BOOL *IgnoreCase, BOOL *WholeWords);
 
 /* Call.c */
-VOID MakeCall(STRPTR Name, STRPTR Number);
+VOID MakeCall(CONST_STRPTR Name, CONST_STRPTR Number);
 VOID StopCall(BOOL Finish);
 
 /* Capture.c */
@@ -321,11 +321,11 @@ VOID HandleChatGadget(UWORD GadgetCode);
 VOID MarkChatGadgetAsActive(VOID);
 
 /* Choose.c */
-struct FileRequester *SaveDrawer(struct Window *Parent, STRPTR TitleText, STRPTR PositiveText, STRPTR DrawerName, LONG DrawerNameSize);
-struct FileRequester *OpenDrawer(struct Window *Parent, STRPTR TitleText, STRPTR PositiveText, STRPTR DrawerName, LONG DrawerNameSize);
-struct FileRequester *SaveFile(struct Window *Parent, STRPTR TitleText, STRPTR PositiveText, STRPTR Pattern, STRPTR FullName, LONG FullNameSize);
-struct FileRequester *OpenSingleFile(struct Window *Parent, STRPTR TitleText, STRPTR PositiveText, STRPTR Pattern, STRPTR FullName, LONG FullNameSize);
-struct FileRequester *OpenSeveralFiles(struct Window *Parent, STRPTR TitleText, STRPTR PositiveText, STRPTR Pattern, STRPTR FullName, LONG FullNameSize);
+struct FileRequester *SaveDrawer(struct Window *Parent, CONST_STRPTR TitleText, CONST_STRPTR PositiveText, STRPTR DrawerName, LONG DrawerNameSize);
+struct FileRequester *OpenDrawer(struct Window *Parent, CONST_STRPTR TitleText, CONST_STRPTR PositiveText, STRPTR DrawerName, LONG DrawerNameSize);
+struct FileRequester *SaveFile(struct Window *Parent, CONST_STRPTR TitleText, CONST_STRPTR PositiveText, STRPTR Pattern, STRPTR FullName, LONG FullNameSize);
+struct FileRequester *OpenSingleFile(struct Window *Parent, CONST_STRPTR TitleText, CONST_STRPTR PositiveText, CONST_STRPTR Pattern, STRPTR FullName, LONG FullNameSize);
+struct FileRequester *OpenSeveralFiles(struct Window *Parent, CONST_STRPTR TitleText, CONST_STRPTR PositiveText, CONST_STRPTR Pattern, STRPTR FullName, LONG FullNameSize);
 BOOL OpenAnyFont(struct Window *Parent, STRPTR FontName, WORD *FontSize);
 BOOL OpenFixedFont(struct Window *Parent, STRPTR FontName, WORD *FontSize);
 
@@ -334,8 +334,8 @@ VOID CloseClip(VOID);
 LONG GetClip(STRPTR Buffer, LONG Len);
 LONG OpenClip(LONG Unit);
 BOOL GetClipContents(LONG Unit, APTR *Buffer, LONG *Size);
-BOOL AddClip(STRPTR Buffer, LONG Size);
-BOOL SaveClip(STRPTR Buffer, LONG Size);
+BOOL AddClip(CONST_STRPTR Buffer, LONG Size);
+BOOL SaveClip(CONST_STRPTR Buffer, LONG Size);
 LONG LoadClip(STRPTR Buffer, LONG Size);
 BOOL WriteTranslatedToClip(struct IFFHandle *Handle, STRPTR Buffer, LONG Length);
 
@@ -363,7 +363,7 @@ VOID StripGlobals(struct Configuration *LocalConfig);
 VOID FinalFix(struct Configuration *LocalConfig, BOOL UnusedIsPhonebook, LONG Version, LONG Revision);
 VOID FixOldConfig(struct Configuration *LocalConfig, UBYTE ConfigChunkType, BOOL IsPhonebook, LONG Version, LONG Revision);
 VOID FixScreenPens(struct ScreenSettings *ScreenConfig);
-VOID ResetConfig(struct Configuration *LocalConfig, STRPTR PathBuffer);
+VOID ResetConfig(struct Configuration *LocalConfig, CONST_STRPTR PathBuffer);
 VOID DeleteConfigEntry(struct Configuration *LocalConfig, LONG Type);
 VOID ResetConfigEntry(struct Configuration *LocalConfig, LONG Type);
 APTR GetConfigEntry(struct Configuration *LocalConfig, LONG Type);
@@ -391,7 +391,7 @@ BOOL ReadIFFData(STRPTR Name, APTR Data, LONG Size, ULONG Type);
 
 /* Console.c */
 VOID ConProcess(STRPTR String, LONG Size);
-VOID ConPrintf(STRPTR String, ...);
+VOID ConPrintf(CONST_STRPTR String, ...);
 VOID ConProcessUpdate(VOID);
 VOID ConOutputUpdate(VOID);
 VOID ConFontScaleUpdate(VOID);
@@ -403,8 +403,8 @@ VOID ConResetTerminal(VOID);
 BOOL SetConsoleQuiet(BOOL NewSettings);
 
 /* ControlSequences.c */
-VOID SerialCommand(STRPTR String);
-VOID ConsoleCommand(STRPTR String);
+VOID SerialCommand(CONST_STRPTR String);
+VOID ConsoleCommand(CONST_STRPTR String);
 
 /* CopyPanel.c */
 BOOL CopyPanel(struct Window *Parent, struct Configuration *LocalConfig, BOOL Selective);
@@ -420,15 +420,15 @@ BOOL CursorPanelConfig(struct Configuration *LocalConfig, struct CursorKeys *Cur
 #ifdef __AROS__
 AROS_UFP2(VOID, CustomStuffText,
 	AROS_UFPA(UBYTE, Char, D0),
-	AROS_UFPA(LONG *, Data, A3));
+	AROS_UFPA(IPTR *, Data, A3));
 AROS_UFP2(VOID, CustomCountChar,
 	AROS_UFPA(UBYTE, Char, D0),
-	AROS_UFPA(LONG *, Data, A3));
+	AROS_UFPA(IPTR *, Data, A3));
 #else
 VOID SAVE_DS ASM CustomStuffText(REG(a3) LONG *Data, REG(d0) UBYTE Char);
 VOID ASM CustomCountChar(REG(a3) LONG *Count, REG(d0) UBYTE Char);
 #endif
-LONG ShowInfo(struct Window *Parent, STRPTR Title, STRPTR Continue, STRPTR FormatString, ...);
+LONG ShowInfo(struct Window *Parent, CONST_STRPTR Title, CONST_STRPTR Continue, CONST_STRPTR FormatString, ...);
 
 /* DatePanel.c */
 BOOL DatePanel(struct Window *Parent, struct TimeDateNode *Node);
@@ -561,7 +561,7 @@ VOID Update_CR_LF_Translation(VOID);
 BOOL FastMacroPanelConfig(struct Configuration *LocalConfig, struct List *FastMacroList, STRPTR LastFastMacros, struct Window *Parent, BOOL *ChangedPtr);
 
 /* FastMacros.c */
-struct MacroNode *CreateFastMacroNode(STRPTR Macro);
+struct MacroNode *CreateFastMacroNode(CONST_STRPTR Macro);
 BOOL SaveFastMacros(STRPTR Name, struct List *FastMacroList);
 BOOL LoadFastMacros(STRPTR Name, struct List *FastMacroList);
 
@@ -572,13 +572,13 @@ BOOL OpenFastWindow(VOID);
 VOID HandleFastWindowGadget(ULONG MsgClass, UWORD MsgCode);
 
 /* FileBuffer.c */
-LONG BPrintf(struct Buffer *Buffer, STRPTR Format, ...);
+LONG BPrintf(struct Buffer *Buffer, CONST_STRPTR Format, ...);
 BOOL BufferFlush(struct Buffer *Buffer);
 BOOL BufferClose(struct Buffer *Buffer);
-struct Buffer *BufferOpen(STRPTR Name, STRPTR AccessMode);
+struct Buffer *BufferOpen(CONST_STRPTR Name, CONST_STRPTR AccessMode);
 BOOL BufferSeek(struct Buffer *Buffer, LONG Offset, LONG Origin);
 LONG BufferRead(struct Buffer *Buffer, STRPTR Destination, LONG Size);
-LONG BufferWrite(struct Buffer *Buffer, STRPTR Source, LONG Size);
+LONG BufferWrite(struct Buffer *Buffer, CONST_STRPTR Source, LONG Size);
 
 /* FixPath.c */
 VOID AttachCLI(struct WBStartup *Startup);
@@ -619,9 +619,9 @@ VOID PubScreenStuff(VOID);
 VOID ConfigSetup(VOID);
 BOOL DisplayReset(VOID);
 BOOL DeleteDisplay(VOID);
-STRPTR CreateDisplay(BOOL UsePresetSize, BOOL Activate);
+CONST_STRPTR CreateDisplay(BOOL UsePresetSize, BOOL Activate);
 VOID CloseAll(VOID);
-STRPTR OpenAll(STRPTR ConfigPath);
+CONST_STRPTR OpenAll(CONST_STRPTR ConfigPath);
 
 /* Job.c */
 VOID DeleteJobQueue(JobQueue *Queue);
@@ -644,8 +644,8 @@ LONG KeyConvert(struct IntuiMessage *Message, STRPTR Buffer, LONG *Len);
 
 /* Launch.c */
 VOID DeleteLaunchMsg(LaunchMsg *Startup);
-LaunchMsg *CreateRexxCmdLaunchMsg(STRPTR RexxCmd, struct RexxPkt *RexxPkt, LAUNCHCLEANUP Cleanup);
-LaunchMsg *CreateProgramLaunchMsg(STRPTR Program, LAUNCHCLEANUP Cleanup);
+LaunchMsg *CreateRexxCmdLaunchMsg(CONST_STRPTR RexxCmd, struct RexxPkt *RexxPkt, LAUNCHCLEANUP Cleanup);
+LaunchMsg *CreateProgramLaunchMsg(CONST_STRPTR Program, LAUNCHCLEANUP Cleanup);
 LONG LaunchSomething(STRPTR OriginalStreamName, BOOL Synchronous, LaunchMsg *Startup);
 VOID LaunchSetup(VOID);
 LONG GetLaunchCounter(VOID);
@@ -682,16 +682,16 @@ VOID LanguageCheck(VOID);
 VOID SmallCurrency(STRPTR Buffer, LONG BufferSize);
 VOID InsertGrouping(STRPTR Buffer, STRPTR GroupData, STRPTR GroupSeparator);
 VOID CreateSum(LONG Quantity, BOOL UseCurrency, STRPTR Buffer, LONG BufferSize);
-VOID LocalizeString(STRPTR *Strings, LONG From, LONG To);
-VOID LocalizeStringTable(STRPTR *Strings, LONG *Table);
-STRPTR LocaleString(ULONG ID);
+VOID LocalizeString(CONST_STRPTR *Strings, LONG From, LONG To);
+VOID LocalizeStringTable(CONST_STRPTR *Strings, LONG *Table);
+CONST_STRPTR LocaleString(ULONG ID);
 #ifdef __AROS__
-AROS_UFP3(STRPTR, LocaleHookFunc,
+AROS_UFP3(CONST_STRPTR, LocaleHookFunc,
  AROS_UFPA(struct Hook * , UnusedHook , A0),
  AROS_UFPA(APTR          , Unused, A2),
  AROS_UFPA(LONG          , ID, A1));
 #else
-STRPTR SAVE_DS ASM LocaleHookFunc(REG(a0) struct Hook *UnusedHook, REG(a2) APTR Unused, REG(a1) LONG ID);
+CONST_STRPTR SAVE_DS ASM LocaleHookFunc(REG(a0) struct Hook *UnusedHook, REG(a2) APTR Unused, REG(a1) LONG ID);
 #endif
 BOOL FormatStamp(struct DateStamp *Stamp, STRPTR BothBuffer, LONG BothBufferSize, BOOL SubstituteDay);
 VOID FormatTime(STRPTR Buffer, LONG BufferSize, LONG Hours, LONG Minutes, LONG Seconds);
@@ -838,14 +838,14 @@ BOOL PhonePanel(ULONG InitialQualifier);
 BOOL SaveChanges(struct Window *Parent);
 BOOL EditConfig(struct Configuration *Config, LONG Type, ULONG Qualifier, struct Window *Window);
 BOOL ChangeState(LONG Type, LONG Default, struct PhoneNode *Node);
-STRPTR *BuildLabels(PhonebookHandle *PhoneHandle);
+CONST_STRPTR *BuildLabels(PhonebookHandle *PhoneHandle);
 VOID FindGroup(struct List *List, LONG *GroupIndex, LONG *NodeIndex, PhoneNode *Wanted);
 
 /* PhonePanelUI.c */
 LayoutHandle *CreateEditorHandle(PhoneListContext *Context, BOOL Activate);
 LayoutHandle *CreateManagerHandle(PhoneListContext *Context, struct Window *Parent);
 LayoutHandle *CreateSelectorHandle(struct Window *Parent, STRPTR Name, STRPTR Number, STRPTR Comment, BYTE *Mode);
-LayoutHandle *CreateGroupHandle(struct Window *Parent, STRPTR *Labels, ULONG Group);
+LayoutHandle *CreateGroupHandle(struct Window *Parent, CONST_STRPTR *Labels, ULONG Group);
 LayoutHandle *CreateSortHandle(struct Window *Parent, WORD *Criteria, BOOL *Reverse);
 VOID UpdatePasswordWindow(LayoutHandle *Handle);
 BOOL GetWindowPassword(LayoutHandle *Handle, STRPTR Password);
@@ -856,13 +856,13 @@ BOOL PickDisplayMode(struct Window *Parent, ULONG *CurrentMode, struct Configura
 
 /* PickFile.c */
 BOOL ValidateFile(STRPTR FileName, LONG Type, STRPTR RealName);
-BOOL PickFile(struct Window *Window, STRPTR Directory, STRPTR Pattern, STRPTR Prompt, STRPTR Name, LONG Type);
+BOOL PickFile(struct Window *Window, CONST_STRPTR Directory, CONST_STRPTR Pattern, CONST_STRPTR Prompt, STRPTR Name, LONG Type);
 
 /* PickScreen.c */
 BOOL PickScreen(struct Window *Window, STRPTR Name);
 
 /* Print.c */
-BOOL PrintText(BPTR File, struct Window *ReqWindow, LONG *Error, STRPTR String, ...);
+BOOL PrintText(BPTR File, struct Window *ReqWindow, LONG *Error, CONST_STRPTR String, ...);
 BOOL PrintFileInformation(BPTR File, struct Window *ReqWindow, LONG *Error, STRPTR Name, ULONG Flags);
 BOOL PrintEntry(BPTR File, struct Window *ReqWindow, BOOL Plain, LONG *Error, struct PhoneEntry *Entry, ULONG Flags);
 BOOL PrintScreen(BPTR File, struct Window *ReqWindow, LONG *Error);
@@ -894,7 +894,7 @@ BOOL RatePanel(struct Window *Parent, PhonebookHandle *PhoneHandle, PhoneEntry *
 
 /* Remember.c */
 VOID FinishRecord(VOID);
-BOOL CreateRecord(STRPTR BBSName);
+BOOL CreateRecord(CONST_STRPTR BBSName);
 VOID DeleteRecord(VOID);
 VOID RememberResetOutput(VOID);
 VOID RememberOutputText(STRPTR String, LONG Size);
@@ -955,7 +955,7 @@ VOID SerWrite(APTR Buffer, LONG Size);
 VOID RestartSerial(VOID);
 VOID ClearSerial(VOID);
 VOID DeleteSerial(VOID);
-STRPTR GetSerialError(LONG Error, BOOL *ResetPtr);
+CONST_STRPTR GetSerialError(LONG Error, BOOL *ResetPtr);
 BOOL CreateSerial(STRPTR ErrorBuffer, LONG ErrorBufferSize);
 LONG ReconfigureSerial(struct Window *Window, struct SerialSettings *SerialConfig);
 VOID ReopenSerial(VOID);
@@ -1014,7 +1014,7 @@ BOOL SoundPanelConfig(struct SoundConfig *SoundConfig, STRPTR LastSound, BOOL *C
 /* Speech.c */
 VOID DeleteSpeech(VOID);
 BOOL CreateSpeech(VOID);
-VOID Say(STRPTR String, ...);
+VOID Say(CONST_STRPTR String, ...);
 VOID SpeechSetup(VOID);
 
 /* SpeechPanel.c */
@@ -1077,9 +1077,9 @@ VOID EraseWindow(struct Window *Window, UWORD *Pens);
 LONG GetListMaxPen(UWORD *Pens);
 VOID FillBox(struct RastPort *RPort, LONG Left, LONG Top, LONG Width, LONG Height);
 VOID FillWindowBox(struct Window *Window, LONG Left, LONG Top, LONG Width, LONG Height);
-VOID PlaceText(struct RastPort *RPort, LONG Left, LONG Top, STRPTR String, LONG Len);
+VOID PlaceText(struct RastPort *RPort, LONG Left, LONG Top, CONST_STRPTR String, LONG Len);
 VOID SetPens(struct RastPort *RPort, ULONG APen, ULONG BPen, ULONG DrMd);
-LONG Atol(STRPTR Buffer);
+LONG Atol(CONST_STRPTR Buffer);
 VOID StripSpaces(STRPTR String);
 VOID ReplaceWindowInfo(struct WindowInfo *NewInfo);
 VOID PutWindowInfo(LONG ID, LONG Left, LONG Top, LONG Width, LONG Height);
@@ -1122,17 +1122,17 @@ VOID MoveList(struct List *From, struct List *To);
 struct List *CreateList(VOID);
 VOID DeleteList(struct List *List);
 VOID MoveNode(struct List *List, struct Node *Node, LONG How);
-VOID LogAction(STRPTR String, ...);
-BOOL GetString(BOOL LoadGadget, BOOL Password, LONG MaxChars, STRPTR Prompt, STRPTR Buffer);
+VOID LogAction(CONST_STRPTR String, ...);
+BOOL GetString(BOOL LoadGadget, BOOL Password, LONG MaxChars, CONST_STRPTR Prompt, STRPTR Buffer);
 VOID WakeUp(struct Window *Window, LONG Sound);
 VOID BlockWindows(VOID);
 VOID ReleaseWindows(VOID);
 LONG LineRead(BPTR File, STRPTR Buffer, LONG MaxChars);
 LONG GetBaudRate(STRPTR Buffer);
-LONG GetFileSize(STRPTR Name);
+LONG GetFileSize(CONST_STRPTR Name);
 VOID PutDimensionTags(struct Window *Reference, LONG Left, LONG Top, LONG Width, LONG Height);
 struct TagItem *GetDimensionTags(struct Window *Reference, struct TagItem *Tags);
-LONG ShowRequest(struct Window *Window, STRPTR Text, STRPTR Gadgets, ...);
+LONG ShowRequest(struct Window *Window, CONST_STRPTR Text, CONST_STRPTR Gadgets, ...);
 VOID CloseWindowSafely(struct Window *Window);
 VOID DelayTime(LONG Secs, LONG Micros);
 VOID WaitTime(VOID);
@@ -1157,15 +1157,15 @@ VOID BuildFontName(STRPTR Destination, LONG DestinationSize, STRPTR Name, LONG S
 VOID FixName(STRPTR Name);
 VOID ShowError(struct Window *Window, LONG Primary, LONG Secondary, STRPTR String);
 struct List *BuildModeList(LONG *Index, ULONG DisplayMode, MODEFILTER ModeFilter, APTR UserData);
-BOOL IsAssign(STRPTR Name);
+BOOL IsAssign(CONST_STRPTR Name);
 BOOL LockInAssign(BPTR TheLock, STRPTR TheAssignment);
 VOID DeleteBitMap(struct BitMap *BitMap);
 struct BitMap *CreateBitMap(ULONG Width, ULONG Height, ULONG Depth, ULONG Flags, struct BitMap *Friend);
-BOOL LaunchRexxAsync(STRPTR Command);
-BOOL LaunchCommand(STRPTR Command);
-BOOL LaunchCommandAsync(STRPTR Command);
-struct Process *LaunchProcess(STRPTR Name, VOID (*Entry )(VOID ), BPTR Stream);
-BOOL String2Boolean(STRPTR String);
+BOOL LaunchRexxAsync(CONST_STRPTR Command);
+BOOL LaunchCommand(CONST_STRPTR Command);
+BOOL LaunchCommandAsync(CONST_STRPTR Command);
+struct Process *LaunchProcess(CONST_STRPTR Name, VOID (*Entry )(VOID ), BPTR Stream);
+BOOL String2Boolean(CONST_STRPTR String);
 VOID SendMessageGetReply(struct MsgPort *Port, struct Message *Message);
 VOID SetOnlineState(BOOL IsOnline);
 VOID SwapMem(APTR FromPtr, APTR ToPtr, LONG Size);
@@ -1180,7 +1180,7 @@ VOID CancelZModem(VOID);
 VOID WaitForHandshake(VOID);
 VOID ShakeHands(struct Task *Notify, ULONG NotifyMask);
 struct ViewPortExtra *GetViewPortExtra(struct ViewPort *ViewPort);
-BPTR OpenToAppend(STRPTR Name, BOOL *Created);
+BPTR OpenToAppend(CONST_STRPTR Name, BOOL *Created);
 VOID PushStatus(WORD NewStatus);
 VOID PopStatus(VOID);
 WORD GetStatus(VOID);
@@ -1225,8 +1225,8 @@ BOOL ChangeProtocol(STRPTR ProtocolName, LONG Type);
 BOOL ProtocolSetup(BOOL IgnoreOptions);
 
 /* TransferPanel.c */
-VOID AddTransferInfo(BOOL Error, STRPTR Message, ...);
-BOOL TransferPanel(STRPTR Title);
+VOID AddTransferInfo(BOOL Error, CONST_STRPTR Message, ...);
+BOOL TransferPanel(CONST_STRPTR Title);
 VOID DeleteTransferPanel(BOOL WaitForPrompt);
 
 /* Translate.c */
@@ -1237,8 +1237,8 @@ STRPTR CodeToName(UBYTE Code);
 VOID FreeTranslationTable(struct TranslationEntry **Table);
 struct TranslationEntry **AllocTranslationTable(VOID);
 VOID FreeTranslationEntry(struct TranslationEntry *Entry);
-LONG TranslateString(STRPTR From, STRPTR To);
-struct TranslationEntry *AllocTranslationEntry(STRPTR String);
+LONG TranslateString(CONST_STRPTR From, STRPTR To);
+struct TranslationEntry *AllocTranslationEntry(CONST_STRPTR String);
 BOOL FillTranslationTable(struct TranslationEntry **Table);
 BOOL IsStandardTable(struct TranslationEntry **Table);
 VOID TranslateBack(STRPTR From, LONG Len, STRPTR To, LONG ToLen);
@@ -1278,28 +1278,24 @@ BOOL FindLibDev(struct Window *Parent, STRPTR File, LONG Type, LONG *Error);
 
 /* VSPrintf.c */
 #ifdef __AROS__
-AROS_UFP2(VOID, StuffChar,
-	AROS_UFPA(UBYTE, Char, D0),
-	AROS_UFPA(struct FormatContext *, Context, A3));
+struct FormatContext *StuffChar(struct FormatContext *Context, UBYTE Char);
 #else
 VOID ASM StuffChar(REG(a3) struct FormatContext *Context, REG(d0) UBYTE Char);
 #endif
-VOID LimitedVSPrintf(LONG Size, STRPTR Buffer, STRPTR FormatString, va_list VarArgs);
-VOID LimitedSPrintf(LONG Size, STRPTR Buffer, STRPTR FormatString, ...);
-VOID VSPrintf(STRPTR Buffer, STRPTR FormatString, va_list VarArgs);
-VOID SPrintf(STRPTR Buffer, STRPTR FormatString, ...);
+VOID LimitedVSPrintf(LONG Size, STRPTR Buffer, CONST_STRPTR FormatString, va_list VarArgs);
+VOID LimitedSPrintf(LONG Size, STRPTR Buffer, CONST_STRPTR FormatString, ...);
+VOID VSPrintf(STRPTR Buffer, CONST_STRPTR FormatString, va_list VarArgs);
+VOID SPrintf(STRPTR Buffer, CONST_STRPTR FormatString, ...);
 #ifdef __AROS__
-AROS_UFP2(VOID, CountChar,
-	AROS_UFPA(UBYTE, dummy, D0),
-	AROS_UFPA(ULONG *,Count, A3));
+ULONG *CountChar(ULONG *Count, UBYTE Char);
 #else
 VOID ASM CountChar(REG(a3) ULONG *Count);
 #endif
-ULONG GetFormatLength(STRPTR FormatString, va_list VarArgs);
-ULONG GetFormatLengthArgs(STRPTR FormatString, ...);
-VOID LimitedStrcat(LONG Size, STRPTR To, STRPTR From);
-VOID LimitedStrcpy(LONG Size, STRPTR To, STRPTR From);
-VOID LimitedStrncpy(LONG Size, STRPTR To, STRPTR From, LONG FromSize);
+ULONG GetFormatLength(CONST_STRPTR FormatString, va_list VarArgs);
+ULONG GetFormatLengthArgs(CONST_STRPTR FormatString, ...);
+VOID LimitedStrcat(LONG Size, STRPTR To, CONST_STRPTR From);
+VOID LimitedStrcpy(LONG Size, STRPTR To, CONST_STRPTR From);
+VOID LimitedStrncpy(LONG Size, STRPTR To, CONST_STRPTR From, LONG FromSize);
 
 /* WindowMarker.c */
 VOID WindowMarkerStop(VOID);
@@ -1311,17 +1307,17 @@ VOID WindowMarkerMoveMouse(VOID);
 VOID WindowMarkerTransfer(ULONG MsgQualifier);
 
 /* XEM.c */
-LONG SAVE_DS xem_sflush(VOID);
-LONG SAVE_DS xem_squery(VOID);
-LONG SAVE_DS ASM xem_sread(REG(a0) APTR Buffer, REG(d0) LONG Size, REG(d1) ULONG Timeout);
-ULONG SAVE_DS ASM xem_toptions(REG(d0) LONG NumOpts, REG(a0) struct xem_option **Opts);
-LONG SAVE_DS ASM xem_swrite(REG(a0) STRPTR Buffer, REG(d0) LONG Size);
-LONG SAVE_DS xem_sbreak(VOID);
-VOID SAVE_DS xem_sstart(VOID);
-LONG SAVE_DS xem_sstop(VOID);
-LONG SAVE_DS ASM xem_tgets(REG(a0) STRPTR Prompt, REG(a1) STRPTR Buffer, REG(d0) ULONG Size);
-VOID SAVE_DS ASM xem_tbeep(REG(d0) ULONG Times, REG(d1) ULONG UnusedDelay);
-LONG SAVE_DS ASM xem_macrodispatch(REG(a0) struct XEmulatorMacroKey *XEM_MacroKey);
+long SAVE_DS xem_sflush(void);
+long SAVE_DS xem_squery(void);
+long SAVE_DS ASM xem_sread(REG(a0) char *Buffer, REG(d0) long Size, REG(d1) long Timeout);
+long SAVE_DS ASM xem_toptions(REG(d0) long NumOpts, REG(a0) struct xem_option *Opts[]);
+long SAVE_DS ASM xem_swrite(REG(a0) char *Buffer, REG(d0) long Size);
+long SAVE_DS xem_sbreak(void);
+void SAVE_DS xem_sstart(void);
+long SAVE_DS xem_sstop(void);
+long SAVE_DS ASM xem_tgets(REG(a0) const char *Prompt, REG(a1) char *Buffer, REG(d0) long Size);
+void SAVE_DS ASM xem_tbeep(REG(d0) long Times, REG(d1) long UnusedDelay);
+long SAVE_DS ASM xem_macrodispatch(REG(a0) struct XEmulatorMacroKey *XEM_MacroKey);
 BOOL SetEmulatorOptions(LONG Mode);
 VOID CloseEmulator(BOOL Exit);
 BOOL OpenEmulator(STRPTR Name);
@@ -1330,26 +1326,26 @@ VOID HandleXEM(VOID);
 BOOL HandleXEMJob(JobNode *UnusedJob);
 
 /* XPR.c */
-LONG SAVE_DS ASM xpr_fopen(REG(a0) STRPTR FileName, REG(a1) STRPTR AccessMode);
-LONG SAVE_DS ASM xpr_fclose(REG(a0) struct Buffer *File);
-LONG SAVE_DS ASM xpr_fread(REG(a0) APTR Buffer, REG(d0) LONG Size, REG(d1) LONG Count, REG(a1) struct Buffer *File);
-LONG SAVE_DS ASM xpr_fwrite(REG(a0) APTR Buffer, REG(d0) LONG Size, REG(d1) LONG Count, REG(a1) struct Buffer *File);
-LONG SAVE_DS ASM xpr_fseek(REG(a0) struct Buffer *File, REG(d0) LONG Offset, REG(d1) LONG Origin);
-LONG SAVE_DS ASM xpr_sread(REG(a0) APTR Buffer, REG(d0) ULONG Size, REG(d1) ULONG Timeout);
-LONG SAVE_DS ASM xpr_swrite(REG(a0) APTR Buffer, REG(d0) LONG Size);
-LONG SAVE_DS xpr_sflush(VOID);
-LONG SAVE_DS ASM xpr_update(REG(a0) struct XPR_UPDATE *UpdateInfo);
-LONG SAVE_DS xpr_chkabort(VOID);
-LONG SAVE_DS ASM xpr_gets(REG(a0) STRPTR Prompt, REG(a1) STRPTR Buffer);
-LONG SAVE_DS ASM xpr_setserial(REG(d0) LONG Status);
-LONG SAVE_DS ASM xpr_ffirst(REG(a0) STRPTR Buffer, REG(a1) STRPTR UnusedPattern);
-LONG SAVE_DS ASM xpr_fnext(REG(d0) LONG UnusedOldState, REG(a0) STRPTR Buffer, REG(a1) STRPTR UnusedPattern);
-LONG SAVE_DS ASM xpr_finfo(REG(a0) STRPTR FileName, REG(d0) LONG InfoType);
-ULONG SAVE_DS ASM xpr_options(REG(d0) LONG NumOpts, REG(a0) struct xpr_option **Opts);
-LONG SAVE_DS ASM xpr_unlink(REG(a0) STRPTR FileName);
-LONG SAVE_DS xpr_squery(VOID);
-LONG SAVE_DS ASM xpr_getptr(REG(d0) LONG InfoType);
-LONG SAVE_DS ASM xpr_stealopts(REG(a0) STRPTR UnusedPrompt, REG(a1) STRPTR Buffer);
+BPTR SAVE_DS ASM xpr_fopen(REG(a0) const char *FileName, REG(a1) const char *AccessMode);
+long SAVE_DS ASM xpr_fclose(REG(a0) BPTR File);
+long SAVE_DS ASM xpr_fread(REG(a0) char *Buffer, REG(d0) long Size, REG(d1) long Count, REG(a1) BPTR File);
+long SAVE_DS ASM xpr_fwrite(REG(a0) char *Buffer, REG(d0) long Size, REG(d1) long Count, REG(a1) BPTR File);
+long SAVE_DS ASM xpr_fseek(REG(a0) BPTR File, REG(d0) long Offset, REG(d1) long Origin);
+long SAVE_DS ASM xpr_sread(REG(a0) char *Buffer, REG(d0) long Size, REG(d1) long Timeout);
+long SAVE_DS ASM xpr_swrite(REG(a0) char *Buffer, REG(d0) long Size);
+long SAVE_DS xpr_sflush(void);
+long SAVE_DS ASM xpr_update(REG(a0) struct XPR_UPDATE *UpdateInfo);
+long SAVE_DS xpr_chkabort(void);
+long SAVE_DS ASM xpr_gets(REG(a0) const char *Prompt, REG(a1) char *Buffer);
+long SAVE_DS ASM xpr_setserial(REG(d0) long Status);
+long SAVE_DS ASM xpr_ffirst(REG(a0) char *Buffer, REG(a1) char *UnusedPattern);
+long SAVE_DS ASM xpr_fnext(REG(d0) long UnusedOldState, REG(a0) char *Buffer, REG(a1) char *UnusedPattern);
+long SAVE_DS ASM xpr_finfo(REG(a0) char *FileName, REG(d0) long InfoType);
+long SAVE_DS ASM xpr_options(REG(d0) long NumOpts, REG(a0) struct xpr_option **Opts);
+long SAVE_DS ASM xpr_unlink(REG(a0) char *FileName);
+long SAVE_DS xpr_squery(void);
+void *SAVE_DS ASM xpr_getptr(REG(d0) long InfoType);
+long SAVE_DS ASM xpr_stealopts(REG(a0) const char *UnusedPrompt, REG(a1) char *Buffer);
 
 /* zmodem.c */
 LONG ZTransmit(struct WBArg *ArgList, LONG NumArgs, BOOL TextMode);

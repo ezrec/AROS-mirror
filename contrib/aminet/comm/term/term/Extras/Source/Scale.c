@@ -136,7 +136,7 @@ CreateScale(struct Window *Parent)
 VOID
 PrintScaled(STRPTR Buffer,LONG Size,LONG Scale)
 {
-	LONG SrcY,DestX,DestY,SizeX;
+	LONG SrcY,DestX = 0,DestY = 0,SizeX = 0;
 
 		/* Determine the scale of the destination character. */
 

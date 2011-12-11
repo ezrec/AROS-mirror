@@ -33,7 +33,7 @@ CannotChangeColours(struct Configuration *LocalConfig,LONG OriginalColourMode)
 {
 	if(LocalConfig->ScreenConfig->ColourMode == OriginalColourMode && !LocalConfig->ScreenConfig->UseWorkbench && LocalConfig->ScreenConfig->ColourMode == Config->ScreenConfig->ColourMode && Screen)
 	{
-		LONG ThisDepth,RequestedDepth;
+		LONG ThisDepth,RequestedDepth = 1;
 
 		ThisDepth = GetBitMapDepth(Window->WScreen->RastPort.BitMap);
 
@@ -336,7 +336,7 @@ ScreenPanel(struct Window *Parent,struct Configuration *LocalConfig)
 	STATIC BYTE InitialPage = 0;
 
 	LayoutHandle *Handle;
-	STRPTR PageTitle[6];
+	CONST_STRPTR PageTitle[6];
 	BOOL UseIt;
 
 	UseIt = FALSE;
@@ -666,7 +666,7 @@ ScreenPanel(struct Window *Parent,struct Configuration *LocalConfig)
 						LA_Type,	VERTICAL_KIND,
 					TAG_DONE);
 					{
-						LONG Depth;
+						LONG Depth = 1;
 
 						switch(PrivateConfig->ScreenConfig->ColourMode)
 						{
@@ -887,10 +887,10 @@ ScreenPanel(struct Window *Parent,struct Configuration *LocalConfig)
 			LONG ColourNumber,Count,i;
 			struct Gadget *MsgGadget;
 			WORD Red,Green,Blue;
-			UWORD *DefaultPens;
+			UWORD *DefaultPens = NULL;
 			ULONG MsgClass;
 			UWORD MsgCode;
-			LONG Depth;
+			LONG Depth = 1;
 			BOOL Done;
 
 			ColourNumber = 0;

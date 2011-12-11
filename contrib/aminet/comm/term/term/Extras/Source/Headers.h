@@ -54,7 +54,7 @@
 #include <devices/serial.h>
 
 #ifdef __AROS__
-#warning Some AROS-specific defines that need to go into other files
+// FIXME: Some AROS-specific defines that need to go into other files
 #define SER_STATF_COMCD		(1<<1)
 #define SER_STATF_COMDSR	(1<<2)
 #define SER_STATF_COMRTS	(1<<3)
@@ -220,11 +220,20 @@
 
 	/* Include the XPR definitions. */
 
+#ifdef __AROS__
+#include <proto/xpr.h>
+#else
 #include "xproto.h"
+#endif
 
 	/* Include the XEM definitions. */
 
+#ifdef __AROS__
+#include <xem.h>
+#include <proto/xem.h>
+#else
 #include "xem.h"
+#endif
 
 	/* Include the rendezvous interface definitions. */
 

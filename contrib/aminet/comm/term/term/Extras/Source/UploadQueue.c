@@ -629,7 +629,7 @@ HandleQueueWindow(LayoutHandle *Handle)
 STATIC VOID SAVE_DS
 QueueEntry(VOID)
 {
-	if(TransferQueue = CreateMsgQueue(NULL,0))
+	if(TransferQueue = CreateMsgQueue(0,0))
 	{
 		struct MsgPort		*AppPort;
 		struct AppIcon		*AppIcon;
@@ -665,13 +665,13 @@ QueueEntry(VOID)
 							LoadedIcon = GetDiskObject("PROGDIR:term_DropIcon");
 					}
 
-					AppIcon = AddAppIconA(APP_ICON,NULL,LocaleString(MSG_UPLOADQUEUE_TERM_UPLOAD_LIST_TXT),AppPort,NULL,LoadedIcon ? LoadedIcon : &DropIcon,NULL);
+					AppIcon = AddAppIconA(APP_ICON,0,LocaleString(MSG_UPLOADQUEUE_TERM_UPLOAD_LIST_TXT),AppPort,BNULL,LoadedIcon ? LoadedIcon : &DropIcon,NULL);
 				}
 				else
 					AppIcon = NULL;
 
 				AppWindow		= NULL;
-				WindowMask		= NULL;
+				WindowMask		= 0;
 				Handle			= NULL;
 				LocalWindow		= NULL;
 				TransferMask	= TransferQueue->SigMask;
@@ -736,7 +736,7 @@ QueueEntry(VOID)
 														LoadedIcon = GetDiskObject("PROGDIR:term_DropIcon");
 												}
 
-												AppIcon = AddAppIconA(APP_ICON,NULL,LocaleString(MSG_UPLOADQUEUE_TERM_UPLOAD_LIST_TXT),AppPort,NULL,LoadedIcon ? LoadedIcon : &DropIcon,NULL);
+												AppIcon = AddAppIconA(APP_ICON,0,LocaleString(MSG_UPLOADQUEUE_TERM_UPLOAD_LIST_TXT),AppPort,BNULL,LoadedIcon ? LoadedIcon : &DropIcon,NULL);
 											}
 											else
 												AppIcon = NULL;
@@ -816,7 +816,7 @@ QueueEntry(VOID)
 								Handle = NULL;
 							}
 
-							WindowMask	= NULL;
+							WindowMask	= 0;
 							LocalWindow	= NULL;
 
 							RestoreWindowPtr(OldPtr);
@@ -843,7 +843,7 @@ QueueEntry(VOID)
 									LT_DeleteHandle(Handle);
 
 									Handle		= NULL;
-									WindowMask	= NULL;
+									WindowMask	= 0;
 									LocalWindow	= NULL;
 
 									RestoreWindowPtr(OldPtr);
@@ -867,7 +867,7 @@ QueueEntry(VOID)
 									Permit();
 
 									if(WorkbenchBase)
-										AppWindow = AddAppWindowA(APP_WINDOW,NULL,Handle->Window,AppPort,NULL);
+										AppWindow = AddAppWindowA(APP_WINDOW,0,Handle->Window,AppPort,NULL);
 									else
 										AppWindow = NULL;
 
@@ -912,7 +912,7 @@ QueueEntry(VOID)
 
 								RestoreWindowPtr(OldPtr);
 
-								WindowMask	= NULL;
+								WindowMask	= 0;
 								LocalWindow	= NULL;
 
 								break;
@@ -956,7 +956,7 @@ QueueEntry(VOID)
 										{
 											if(Handle = QueuePanel(NULL))
 											{
-												AppWindow = AddAppWindowA(APP_WINDOW,NULL,Handle->Window,AppPort,NULL);
+												AppWindow = AddAppWindowA(APP_WINDOW,0,Handle->Window,AppPort,NULL);
 
 												LocalWindow = Handle->Window;
 

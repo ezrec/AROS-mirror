@@ -112,7 +112,7 @@ RebuildReadyMask(JobQueue *Queue)
 
 		/* Collect the mask bits. */
 
-	for(Node = (JobNode *)Queue->ReadyList.mlh_Head, Mask = NULL ; Node->Node.ln_Succ ; Node = (JobNode *)Node->Node.ln_Succ)
+	for(Node = (JobNode *)Queue->ReadyList.mlh_Head, Mask = 0 ; Node->Node.ln_Succ ; Node = (JobNode *)Node->Node.ln_Succ)
 	{
 		if(Node->Type == JOBTYPE_Wait)
 			Mask |= Node->Mask;
@@ -133,7 +133,7 @@ RebuildReadyMask(JobQueue *Queue)
 			 * for something to happen.
 			 */
 
-		if(Mask == NULL)
+		if(Mask == 0)
 			Queue->QueueWait = NullQueue;
 		else
 			Queue->QueueWait = WaitQueue;
@@ -414,7 +414,7 @@ UpdateJob(JobQueue *Queue,JobNode *Job,ULONG Mask)
 
 		if(Job->Type == JOBTYPE_Wait)
 		{
-			if(Mask == NULL)
+			if(Mask == 0)
 				SuspendJob(Queue,Job);
 			else
 			{
@@ -442,7 +442,7 @@ GetJobMask(JobNode *Job)
 
 	DB(kprintf("%s: %s %s\n",RexxPortName,__FUNC__,Job->Node.ln_Name));
 
-	Mask = NULL;
+	Mask = 0;
 
 	if(Job)
 	{

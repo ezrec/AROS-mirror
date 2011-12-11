@@ -15,7 +15,10 @@
 
 	/* Local symbols. */
 
-STATIC UBYTE SpeechString[512],TranslatedString[512];
+#ifndef __AROS__
+STATIC UBYTE SpeechString[512];
+STATIC UBYTE TranslatedString[512];
+#endif
 STATIC struct narrator_rb *NarratorRequest;
 STATIC struct MsgPort *NarratorPort;
 STATIC BOOL DidSpeak;
@@ -115,7 +118,7 @@ CreateSpeech()
 	 */
 
 VOID
-Say(STRPTR String,...)
+Say(CONST_STRPTR String,...)
 {
 #ifndef __AROS__
 	if(SpeechConfig.Enabled && English)

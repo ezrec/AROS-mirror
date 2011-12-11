@@ -670,7 +670,7 @@ TransferMarker(struct MarkerContext *Context,ULONG Qualifier)
 				}
 			}
 
-			Context->TransferStartStop(Context,UserData,NULL);
+			Context->TransferStartStop(Context,UserData,0);
 		}
 	}
 }

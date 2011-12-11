@@ -19,7 +19,7 @@
 	 */
 
 BOOL
-PrintText(BPTR File,struct Window *ReqWindow,LONG *Error,STRPTR String,...)
+PrintText(BPTR File,struct Window *ReqWindow,LONG *Error,CONST_STRPTR String,...)
 {
 	UBYTE LocalBuffer[256];
 	va_list	VarArgs;
@@ -73,7 +73,7 @@ STATIC BOOL
 PrintHeader(BPTR File,struct Window *ReqWindow,LONG *Error,ULONG Code,BOOL Plain)
 {
 	UBYTE LocalBuffer[256];
-	STRPTR String;
+	CONST_STRPTR String;
 	LONG Len;
 
 	String = LocaleString(Code);
@@ -207,7 +207,7 @@ PrintFileInformation(BPTR File,struct Window *ReqWindow,LONG *Error,STRPTR Name,
 
 					if(DateToStr(&DateTime))
 					{
-						LimitedSPrintf(sizeof(DummyBuffer) - ((LONG)Index - (LONG)DummyBuffer),Index," %-9s %s",Date,Time);
+						LimitedSPrintf(sizeof(DummyBuffer) - ((IPTR)Index - (IPTR)DummyBuffer),Index," %-9s %s",Date,Time);
 
 						while(*Index)
 							Index++;
@@ -217,7 +217,7 @@ PrintFileInformation(BPTR File,struct Window *ReqWindow,LONG *Error,STRPTR Name,
 					/* Add the file comment. */
 
 				if(Flags & PRINT_COMMENT)
-					LimitedSPrintf(sizeof(DummyBuffer) - ((LONG)Index - (LONG)DummyBuffer),Index,"\n: %s",FileInfo->fib_Comment);
+					LimitedSPrintf(sizeof(DummyBuffer) - ((IPTR)Index - (IPTR)DummyBuffer),Index,"\n: %s",FileInfo->fib_Comment);
 
 				Continue = PrintText(File,ReqWindow,Error,"%s\n",DummyBuffer);
 			}
@@ -730,7 +730,7 @@ PrintSomething(LONG Source)
 		/* Fill in the easy requester structure. */
 
 	Easy.es_StructSize		= sizeof(struct EasyStruct);
-	Easy.es_Flags			= NULL;
+	Easy.es_Flags			= 0;
 	Easy.es_Title			= (STRPTR)LocaleString(MSG_TERMAUX_TERM_REQUEST_TXT);
 	Easy.es_GadgetFormat	= (STRPTR)LocaleString(MSG_PRINT_STOP_TXT);
 
@@ -741,7 +741,7 @@ PrintSomething(LONG Source)
 
 		/* The requester is to be displayed while printing. */
 
-	if(ReqWindow = BuildEasyRequest(Window,&Easy,NULL))
+	if(ReqWindow = BuildEasyRequest(Window,&Easy,0))
 	{
 		BPTR SomeFile;
 
@@ -759,7 +759,7 @@ PrintSomething(LONG Source)
 
 				Error = IoErr();
 
-				SomeFile = NULL;
+				SomeFile = BNULL;
 			}
 			else
 				SomeFile = PrinterCapture;
@@ -951,7 +951,7 @@ PrintScreenGfx()
 		{
 				/* Open the printer driver */
 
-			if(!OpenDevice("printer.device",0,(struct IORequest *)PrintRequest,NULL))
+			if(!OpenDevice("printer.device",0,(struct IORequest *)PrintRequest,0))
 			{
 				struct RastPort *RPort;
 
@@ -976,7 +976,7 @@ PrintScreenGfx()
 
 						/* Allocate offscreen buffer to hold the window contents */
 
-					if(BitMap = CreateBitMap(Width,Height,GetBitMapDepth(Window->RPort->BitMap),NULL,Window->RPort->BitMap))
+					if(BitMap = CreateBitMap(Width,Height,GetBitMapDepth(Window->RPort->BitMap),0,Window->RPort->BitMap))
 					{
 						struct EasyStruct Easy;
 						struct Window *ReqWindow;
@@ -1009,14 +1009,14 @@ PrintScreenGfx()
 							/* Set up the abort requester */
 
 						Easy.es_StructSize		= sizeof(Easy);
-						Easy.es_Flags			= NULL;
+						Easy.es_Flags			= 0;
 						Easy.es_Title			= LocaleString(MSG_TERMAUX_TERM_REQUEST_TXT);
 						Easy.es_GadgetFormat	= LocaleString(MSG_GLOBAL_ABORT_GAD);
 						Easy.es_TextFormat		= LocaleString(MSG_PRINTING_SCREEN_TXT);
 
 							/* Create the abort requester */
 
-						if(ReqWindow = BuildEasyRequest(Window,&Easy,NULL))
+						if(ReqWindow = BuildEasyRequest(Window,&Easy,0))
 						{
 							ULONG Signals;
 

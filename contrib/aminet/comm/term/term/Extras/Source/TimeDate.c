@@ -150,7 +150,7 @@ CopyTimeDateList(struct List *From,struct List *To,BOOL SkipFirst)
 VOID
 AdaptTimeDateNode(struct TimeDateNode *Node)
 {
-	STRPTR Comment = Node->Header.Comment[0] ? Node->Header.Comment : LocaleString(MSG_TERMPHONE_NO_COMMENT_TXT);
+	CONST_STRPTR Comment = Node->Header.Comment[0] ? Node->Header.Comment : LocaleString(MSG_TERMPHONE_NO_COMMENT_TXT);
 
 	if(Node->Header.Month == -1)
 	{

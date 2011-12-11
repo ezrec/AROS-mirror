@@ -744,7 +744,7 @@ AROS_UFH3(STATIC ULONG, PhoneListViewRender,
 
 			/* Determine maximum index text length. */
 
-		Template = 3 * ((ULONG)Hook->h_Data) + TextLength(RPort," - ",3);
+		Template = 3 * ((IPTR)Hook->h_Data) + TextLength(RPort," - ",3);
 
 			/* Get the vanilla name. */
 
@@ -901,7 +901,7 @@ CreateManagerHandle(PhoneListContext *Context,struct Window *Parent)
 				Max = Size;
 		}
 
-		ListViewHook.h_Data = (APTR)Max;
+		ListViewHook.h_Data = (APTR)(IPTR)Max;
 
 		LT_New(Handle,
 			LA_Type,	VERTICAL_KIND,
@@ -1409,7 +1409,7 @@ CreateSelectorHandle(struct Window *Parent,STRPTR Name,STRPTR Number,STRPTR Comm
 }
 
 LayoutHandle *
-CreateGroupHandle(struct Window *Parent,STRPTR *Labels,ULONG Group)
+CreateGroupHandle(struct Window *Parent,CONST_STRPTR *Labels,ULONG Group)
 {
 	LayoutHandle *Handle;
 

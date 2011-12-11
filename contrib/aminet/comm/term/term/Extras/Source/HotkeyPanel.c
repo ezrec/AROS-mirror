@@ -57,57 +57,57 @@ AROS_UFH3(STATIC ULONG, EditRoutine,
 
 	STATIC struct CodeName KeyTable[] =
 	{
-		'\r',	"Return",
-		'\b',	"Backspace",
-		'\033',	"Escape",
-		' ',	"Spacebar",
-		',',	"Comma",
-		'\177',	"Delete",
-		'\t',	"Tab",
+            { '\r',	"Return", },
+            { '\b',	"Backspace", },
+            { '\033',	"Escape", },
+            { ' ',	"Spacebar", },
+            { ',',	"Comma", },
+            { '\177',	"Delete", },
+            { '\t',	"Tab", },
 
-		0
+            { 0 },
 	};
 
 		/* Special raw key codes */
 
 	STATIC struct CodeName RawTable[] =
 	{
-		CURSOR_UP_CODE,		"Cursor_Up",
-		CURSOR_DOWN_CODE,	"Cursor_Down",
-		CURSOR_RIGHT_CODE,	"Cursor_Right",
-		CURSOR_LEFT_CODE,	"Cursor_Left",
+		{ CURSOR_UP_CODE,		"Cursor_Up", },
+		{ CURSOR_DOWN_CODE,	"Cursor_Down", },
+		{ CURSOR_RIGHT_CODE,	"Cursor_Right", },
+		{ CURSOR_LEFT_CODE,	"Cursor_Left", },
 
-		F01_CODE,			"F1",
-		F02_CODE,			"F2",
-		F03_CODE,			"F3",
-		F04_CODE,			"F4",
-		F05_CODE,			"F5",
-		F06_CODE,			"F6",
-		F07_CODE,			"F7",
-		F08_CODE,			"F8",
-		F09_CODE,			"F9",
-		F10_CODE,			"F10",
+		{ F01_CODE,			"F1", },
+		{ F02_CODE,			"F2", },
+		{ F03_CODE,			"F3", },
+		{ F04_CODE,			"F4", },
+		{ F05_CODE,			"F5", },
+		{ F06_CODE,			"F6", },
+		{ F07_CODE,			"F7", },
+		{ F08_CODE,			"F8", },
+		{ F09_CODE,			"F9", },
+		{ F10_CODE,			"F10", },
 
-		HELP_CODE,			"Help",
+		{ HELP_CODE,			"Help", },
 
-		0
+		{ 0 },
 	};
 
 		/* Qualifier key codes. */
 
 	STATIC struct CodeName QualifierTable[] =
 	{
-		SHIFT_KEY,				"Shift ",
-		ALT_KEY,				"Alt ",
-		CONTROL_KEY,			"Control ",
-		IEQUALIFIER_LCOMMAND,	"LAmiga ",
-		IEQUALIFIER_RCOMMAND,	"RAmiga ",
-		IEQUALIFIER_LEFTBUTTON,	"Left_Button ",
-		IEQUALIFIER_MIDBUTTON,	"Middle_Button ",
-		IEQUALIFIER_RBUTTON,	"Right_Button ",
-		IEQUALIFIER_NUMERICPAD,	"Numeric_Pad ",
+		{ SHIFT_KEY,				"Shift ", },
+		{ ALT_KEY,				"Alt ", },
+		{ CONTROL_KEY,			"Control ", },
+		{ IEQUALIFIER_LCOMMAND,	"LAmiga ", },
+		{ IEQUALIFIER_RCOMMAND,	"RAmiga ", },
+		{ IEQUALIFIER_LEFTBUTTON,	"Left_Button ", },
+		{ IEQUALIFIER_MIDBUTTON,	"Middle_Button ", },
+		{ IEQUALIFIER_RBUTTON,	"Right_Button ", },
+		{ IEQUALIFIER_NUMERICPAD,	"Numeric_Pad ", },
 
-		0
+		{ 0 },
 	};
 
 	ULONG Qualifier;
@@ -173,7 +173,7 @@ AROS_UFH3(STATIC ULONG, EditRoutine,
 
 				CopyMem(Work->IEvent,&Event,sizeof(struct InputEvent));
 
-				Event.ie_Qualifier = NULL;
+				Event.ie_Qualifier = 0;
 
 					/* Translate the event */
 

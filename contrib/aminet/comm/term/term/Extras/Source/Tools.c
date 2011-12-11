@@ -145,7 +145,7 @@ FillWindowBox(struct Window *Window,LONG Left,LONG Top,LONG Width,LONG Height)
 	 */
 
 VOID
-PlaceText(struct RastPort *RPort,LONG Left,LONG Top,STRPTR String,LONG Len)
+PlaceText(struct RastPort *RPort,LONG Left,LONG Top,CONST_STRPTR String,LONG Len)
 {
 	Move(RPort,Left,Top + RPort->TxBaseline);
 	Text(RPort,String,Len);
@@ -180,7 +180,7 @@ SetPens(struct RastPort *RPort,ULONG APen,ULONG BPen,ULONG DrMd)
 	 */
 
 LONG
-Atol(STRPTR Buffer)
+Atol(CONST_STRPTR Buffer)
 {
 	LONG Result;
 
@@ -255,7 +255,7 @@ VOID
 PutWindowInfo(LONG ID,LONG Left,LONG Top,LONG Width,LONG Height)
 {
 	LONG WindowLeft,WindowTop,WindowWidth,WindowHeight;
-	struct WindowInfo *Info;
+	struct WindowInfo *Info = NULL;
 	ULONG IntuiLock;
 	LONG i;
 
@@ -271,7 +271,7 @@ PutWindowInfo(LONG ID,LONG Left,LONG Top,LONG Width,LONG Height)
 		}
 	}
 
-	IntuiLock = LockIBase(NULL);
+	IntuiLock = LockIBase(0);
 
 	WindowLeft		= Window->LeftEdge;
 	WindowTop		= Window->TopEdge;
@@ -280,7 +280,7 @@ PutWindowInfo(LONG ID,LONG Left,LONG Top,LONG Width,LONG Height)
 
 	UnlockIBase(IntuiLock);
 
-	Info->WindowFlags = NULL;
+	Info->WindowFlags = 0;
 
 	if(WindowWidth == Width && WindowLeft == Left)
 		Info->WindowFlags |= WC_EXPANDWIDTH;
@@ -327,7 +327,7 @@ PutWindowInfo(LONG ID,LONG Left,LONG Top,LONG Width,LONG Height)
 VOID
 GetWindowInfo(LONG ID,LONG *Left,LONG *Top,LONG *Width,LONG *Height,LONG DefWidth,LONG DefHeight)
 {
-	LONG WindowLeft,WindowTop,WindowWidth,WindowHeight;
+	LONG WindowLeft = 0,WindowTop = 0,WindowWidth = 0,WindowHeight = 0;
 	struct WindowInfo *Info;
 	ULONG IntuiLock;
 	LONG i;
@@ -357,7 +357,7 @@ GetWindowInfo(LONG ID,LONG *Left,LONG *Top,LONG *Width,LONG *Height,LONG DefWidt
 	{
 		if(Window)
 		{
-			IntuiLock = LockIBase(NULL);
+			IntuiLock = LockIBase(0);
 
 			WindowLeft		= Window->LeftEdge;
 			WindowTop		= Window->TopEdge;
@@ -603,14 +603,11 @@ GoodStream(BPTR Stream)
 	{
 		struct FileHandle *Handle = (struct FileHandle *)BADDR(Stream);
 
-#warning Deactivated to make it compile for AROS.
-#ifndef __AROS__
 		if(Handle->fh_Type)
 		{
 			if(IsInteractive(Stream))
 				return(TRUE);
 		}
-#endif
 	}
 
 	return(FALSE);
@@ -1382,7 +1379,7 @@ MoveNode(struct List *List,struct Node *Node,LONG How)
 	 */
 
 VOID
-LogAction(STRPTR String,...)
+LogAction(CONST_STRPTR String,...)
 {
 	if(Config->CaptureConfig->LogActions && Config->CaptureConfig->LogFileName[0])
 	{
@@ -1419,7 +1416,7 @@ LogAction(STRPTR String,...)
 			DateStamp(&DateTime.dat_Stamp);
 
 			DateTime.dat_Format		= FORMAT_DEF;
-			DateTime.dat_Flags		= NULL;
+			DateTime.dat_Flags		= 0;
 			DateTime.dat_StrDay		= NULL;
 			DateTime.dat_StrDate	= DateBuffer;
 			DateTime.dat_StrTime	= TimeBuffer;
@@ -1444,7 +1441,7 @@ LogAction(STRPTR String,...)
 	 */
 
 BOOL
-GetString(BOOL LoadGadget,BOOL Password,LONG MaxChars,STRPTR Prompt,STRPTR Buffer)
+GetString(BOOL LoadGadget,BOOL Password,LONG MaxChars,CONST_STRPTR Prompt,STRPTR Buffer)
 {
 	enum	{	GAD_OK=1,GAD_CANCEL,GAD_STRING };
 
@@ -1829,7 +1826,7 @@ GetBaudRate(STRPTR Buffer)
 	 */
 
 LONG
-GetFileSize(STRPTR Name)
+GetFileSize(CONST_STRPTR Name)
 {
 	BPTR FileLock;
 	LONG FileSize = 0;
@@ -1919,14 +1916,14 @@ GetDimensionTags(struct Window *Reference,struct TagItem *Tags)
 	}
 }
 
-	/* ShowRequest(struct Window *Window,STRPTR Text,STRPTR Gadgets,...):
+	/* ShowRequest(struct Window *Window,CONST_STRPTR Text,STRPTR CONST_Gadgets,...):
 	 *
 	 *	Really quite simple varargs version of Intuition's
 	 *	EasyRequest requester.
 	 */
 
 LONG
-ShowRequest(struct Window *Window,STRPTR Text,STRPTR Gadgets,...)
+ShowRequest(struct Window *Window,CONST_STRPTR Text,CONST_STRPTR Gadgets,...)
 {
 	struct EasyStruct Easy;
 	va_list VarArgs;
@@ -1941,7 +1938,7 @@ ShowRequest(struct Window *Window,STRPTR Text,STRPTR Gadgets,...)
 		/* Standard data. */
 
 	Easy.es_StructSize		= sizeof(struct EasyStruct);
-	Easy.es_Flags			= NULL;
+	Easy.es_Flags			= 0;
 	Easy.es_Title			= LocaleString(MSG_TERMAUX_TERM_REQUEST_TXT);
 	Easy.es_TextFormat		= Text;
 	Easy.es_GadgetFormat	= Gadgets;
@@ -1984,7 +1981,7 @@ ShowRequest(struct Window *Window,STRPTR Text,STRPTR Gadgets,...)
 			{
 				WaitPort(ReqWindow->UserPort);
 
-				IDCMP = NULL;
+				IDCMP = 0;
 
 				Result = SysReqHandler(ReqWindow,&IDCMP,FALSE);
 
@@ -2032,7 +2029,7 @@ CloseWindowSafely(struct Window *Window)
 		Window->UserPort = NULL;
 	}
 
-	ModifyIDCMP(Window,NULL);
+	ModifyIDCMP(Window,0);
 
 	Permit();
 
@@ -2125,7 +2122,7 @@ StartTime(LONG Secs,LONG Micros)
 BOOL
 GetEnvDOS(STRPTR Name,STRPTR Buffer,LONG BufferSize)
 {
-	if(GetVar(Name,Buffer,256,NULL) >= 0)
+	if(GetVar(Name,Buffer,256,0) >= 0)
 		return(TRUE);
 	else
 	{
@@ -2578,29 +2575,29 @@ ShowError(struct Window *Window,LONG Primary,LONG Secondary,STRPTR String)
 {
 	STATIC LONG LocalErrors[][2] =
 	{
-		ERR_SAVE_ERROR,			MSG_ERR_COULD_NOT_SAVE_FILE_TXT,
-		ERR_LOAD_ERROR,			MSG_ERR_COULD_NOT_LOAD_FILE_TXT,
-		ERR_OUTDATED,			MSG_ERR_OUTDATED_TXT,
-		ERR_EXECUTE_ERROR,		MSG_ERR_COULD_NOT_EXECUTE_PROGRAM_TXT,
+		{ ERR_SAVE_ERROR,			MSG_ERR_COULD_NOT_SAVE_FILE_TXT, },
+		{ ERR_LOAD_ERROR,			MSG_ERR_COULD_NOT_LOAD_FILE_TXT, },
+		{ ERR_OUTDATED,			MSG_ERR_OUTDATED_TXT, },
+		{ ERR_EXECUTE_ERROR,		MSG_ERR_COULD_NOT_EXECUTE_PROGRAM_TXT, },
 
-		ERR_FILE_NOT_FOUND,		MSG_VERIFY_NO_FILE_TXT,
-		ERR_DRAWER_NOT_FOUND,	MSG_VERIFY_DRAWER_NOT_FOUND_TXT,
-		ERR_PROGRAM_NOT_FOUND,	MSG_VERIFY_NO_PROGRAM_TXT,
-		ERR_NOT_A_FILE,			MSG_VERIFY_DRAWER_NOT_A_FILE_TXT,
-		ERR_NOT_A_DRAWER,		MSG_VERIFY_FILE_NOT_A_DRAWER_TXT,
+		{ ERR_FILE_NOT_FOUND,		MSG_VERIFY_NO_FILE_TXT, },
+		{ ERR_DRAWER_NOT_FOUND,	MSG_VERIFY_DRAWER_NOT_FOUND_TXT, },
+		{ ERR_PROGRAM_NOT_FOUND,	MSG_VERIFY_NO_PROGRAM_TXT, },
+		{ ERR_NOT_A_FILE,			MSG_VERIFY_DRAWER_NOT_A_FILE_TXT, },
+		{ ERR_NOT_A_DRAWER,		MSG_VERIFY_FILE_NOT_A_DRAWER_TXT, },
 
-		IFFERR_NOMEM,			MSG_IFFERR_NOMEM_TXT,
-		IFFERR_READ,			MSG_IFFERR_READ_TXT,
-		IFFERR_WRITE,			MSG_IFFERR_WRITE_TXT,
-		IFFERR_SEEK,			MSG_IFFERR_SEEK_TXT,
-		IFFERR_MANGLED,			MSG_IFFERR_MANGLED_TXT,
-		IFFERR_NOTIFF,			MSG_IFFERR_NOTIFF_TXT,
+		{ IFFERR_NOMEM,			MSG_IFFERR_NOMEM_TXT, },
+		{ IFFERR_READ,			MSG_IFFERR_READ_TXT, },
+		{ IFFERR_WRITE,			MSG_IFFERR_WRITE_TXT, },
+		{ IFFERR_SEEK,			MSG_IFFERR_SEEK_TXT, },
+		{ IFFERR_MANGLED,			MSG_IFFERR_MANGLED_TXT, },
+		{ IFFERR_NOTIFF,			MSG_IFFERR_NOTIFF_TXT, },
 
-		0
+		{ 0 },
 	};
 
 	UBYTE LocalBuffer1[FAULT_MAX],LocalBuffer2[FAULT_MAX];
-	STRPTR PrimaryError,SecondaryError;
+	CONST_STRPTR PrimaryError,SecondaryError;
 
 	PrimaryError = SecondaryError = NULL;
 
@@ -2765,7 +2762,7 @@ BuildModeList(LONG *Index,ULONG DisplayMode,MODEFILTER ModeFilter,APTR UserData)
 	 */
 
 BOOL
-IsAssign(STRPTR Name)
+IsAssign(CONST_STRPTR Name)
 {
 	LONG NameLen	= strlen(Name) - 1;
 	BOOL Result		= FALSE;
@@ -2789,8 +2786,6 @@ IsAssign(STRPTR Name)
 				 * BCPL to `C' style string.
 				 */
 
-#warning Deactivated to make it compile for AROS.
-#ifndef __AROS__
 			AssignName = (STRPTR)BADDR(DosList->dol_Name);
 
 				/* Does the name length match? */
@@ -2806,7 +2801,6 @@ IsAssign(STRPTR Name)
 					break;
 				}
 			}
-#endif
 		}
 
 			/* Unlock the list of assignments. */
@@ -3006,7 +3000,7 @@ LaunchRexxCleanup(LaunchMsg *Startup)
 	 */
 
 BOOL
-LaunchRexxAsync(STRPTR Command)
+LaunchRexxAsync(CONST_STRPTR Command)
 {
 	LaunchMsg *Startup;
 
@@ -3034,9 +3028,9 @@ LaunchRexxAsync(STRPTR Command)
 	 */
 
 STATIC BOOL
-LaunchCommandCommon(STRPTR Command, BOOL Synchronous)
+LaunchCommandCommon(CONST_STRPTR OriginalCommand, BOOL Synchronous)
 {
-	STRPTR		 OriginalCommand;
+	STRPTR		 Command;
 	UBYTE		 NameBuffer[MAX_FILENAME_LENGTH];
 	BOOL		 IsScript;
 	BPTR		 CommandFile;
@@ -3046,10 +3040,10 @@ LaunchCommandCommon(STRPTR Command, BOOL Synchronous)
 
 		/* Chop off the arguments. */
 
-	while(*Command == ' ' || *Command == '\t')
-		Command++;
+	while(*OriginalCommand == ' ' || *OriginalCommand == '\t')
+		OriginalCommand++;
 
-	OriginalCommand = Command;
+	Command = (STRPTR)OriginalCommand;
 
 	CopyMem(Command,NameBuffer,sizeof(NameBuffer) - 1);
 
@@ -3154,7 +3148,7 @@ LaunchCommandCommon(STRPTR Command, BOOL Synchronous)
 		/* If we had to make a copy of the command name, release the memory. */
 
 	if(Command != OriginalCommand)
-		FreeVecPooled(Command);
+		FreeVecPooled((APTR)Command);
 
 		/* Do the work. */
 
@@ -3167,7 +3161,7 @@ LaunchCommandCommon(STRPTR Command, BOOL Synchronous)
 	 */
 
 BOOL
-LaunchCommand(STRPTR Command)
+LaunchCommand(CONST_STRPTR Command)
 {
 	return(LaunchCommandCommon(Command,TRUE));
 }
@@ -3178,7 +3172,7 @@ LaunchCommand(STRPTR Command)
 	 */
 
 BOOL
-LaunchCommandAsync(STRPTR Command)
+LaunchCommandAsync(CONST_STRPTR Command)
 {
 	return(LaunchCommandCommon(Command,FALSE));
 }
@@ -3190,16 +3184,13 @@ LaunchCommandAsync(STRPTR Command)
 	 */
 
 struct Process *
-LaunchProcess(STRPTR Name,VOID (*Entry)(VOID),BPTR Stream)
+LaunchProcess(CONST_STRPTR Name,VOID (*Entry)(VOID),BPTR Stream)
 {
 	struct MsgPort *ConsoleTask;
 
-#warning Deactivated to make it compile for AROS.
-#ifndef __AROS__
 	if(Stream && GoodStream(Stream))
 		ConsoleTask = ((struct FileHandle *)BADDR(Stream))->fh_Type;
 	else
-#endif
 		ConsoleTask = NULL;
 
 	return(CreateNewProcTags(
@@ -3211,7 +3202,7 @@ LaunchProcess(STRPTR Name,VOID (*Entry)(VOID),BPTR Stream)
 
 		ConsoleTask ? TAG_IGNORE : TAG_DONE,0,
 
-		NP_Output,	ConsoleTask ? NULL : Stream,
+		NP_Output,	ConsoleTask ? BNULL : Stream,
 
 		ConsoleTask ? NP_Input : TAG_IGNORE,Stream,
 	TAG_DONE));
@@ -3224,9 +3215,9 @@ LaunchProcess(STRPTR Name,VOID (*Entry)(VOID),BPTR Stream)
 	 */
 
 BOOL
-String2Boolean(STRPTR String)
+String2Boolean(CONST_STRPTR String)
 {
-	STATIC STRPTR TrueOptions[] =
+	STATIC CONST_STRPTR TrueOptions[] =
 	{
 		"ON",
 		"TRUE",
@@ -3348,7 +3339,7 @@ OpenIFFClip(LONG Unit,LONG Mode)
 
 	if(Handle = AllocIFF())
 	{
-		if(Handle->iff_Stream = (ULONG)OpenClipboard(Unit))
+		if(Handle->iff_Stream = (IPTR)OpenClipboard(Unit))
 		{
 			InitIFFasClip(Handle);
 
@@ -3383,7 +3374,7 @@ CloseIFFStream(struct IFFHandle *Handle)
 		BOOL Result;
 
 		CloseIFF(Handle);
-		Result = Close(Handle->iff_Stream);
+		Result = Close((BPTR)Handle->iff_Stream);
 		FreeIFF(Handle);
 
 		return(Result);
@@ -3408,14 +3399,14 @@ OpenIFFStream(STRPTR Name,LONG Mode)
 
 	if(Handle = AllocIFF())
 	{
-		if(Handle->iff_Stream = Open(Name,Mode))
+		if(Handle->iff_Stream = (IPTR)Open(Name,Mode))
 		{
 			InitIFFasDOS(Handle);
 
 			if(!(Error = OpenIFF(Handle,(Mode == MODE_NEWFILE) ? IFFF_WRITE : IFFF_READ)))
 				return(Handle);
 
-			Close(Handle->iff_Stream);
+			Close((BPTR)Handle->iff_Stream);
 
 			if(Mode == MODE_NEWFILE)
 				DeleteFile(Name);
@@ -3546,7 +3537,10 @@ ShakeHands(struct Task *Notify,ULONG NotifyMask)
 struct ViewPortExtra *
 GetViewPortExtra(struct ViewPort *ViewPort)
 {
-	struct TagItem Tags[2] = { VTAG_VIEWPORTEXTRA_GET, NULL, TAG_DONE };
+	struct TagItem Tags[2] = {
+            { VTAG_VIEWPORTEXTRA_GET, (IPTR)NULL, },
+            { TAG_DONE }
+        };
 
 	if(!VideoControl(ViewPort->ColorMap,Tags))
 		return((struct ViewPortExtra *)Tags[0].ti_Data);
@@ -3562,7 +3556,7 @@ GetViewPortExtra(struct ViewPort *ViewPort)
 	 */
 
 BPTR
-OpenToAppend(STRPTR Name,BOOL *Created)
+OpenToAppend(CONST_STRPTR Name,BOOL *Created)
 {
 	BPTR FileHandle;
 	BPTR FileLock;
@@ -3588,7 +3582,7 @@ OpenToAppend(STRPTR Name,BOOL *Created)
 
 				SetIoErr(Error);
 
-				return(NULL);
+				return(BNULL);
 			}
 		}
 
@@ -3863,6 +3857,7 @@ LocalCreateTask(STRPTR Name,LONG Priority,TASKENTRY Entry,ULONG StackSize,LONG N
 		struct MemEntry	MemEntry;
 	};
 	struct MemList *LocalMemList,*MemList;
+	struct MemEntry *MemEntry;
 	struct FatMemList FatMemList;
 	struct Task *Task;
 
@@ -3899,10 +3894,11 @@ LocalCreateTask(STRPTR Name,LONG Priority,TASKENTRY Entry,ULONG StackSize,LONG N
 		 */
 
 	LocalMemList->ml_NumEntries			= 2;
-	LocalMemList->ml_ME[0].me_Reqs		= MEMF_ANY|MEMF_PUBLIC|MEMF_CLEAR;
-	LocalMemList->ml_ME[0].me_Length	= sizeof(struct Task);
-	LocalMemList->ml_ME[1].me_Reqs		= MEMF_ANY|MEMF_CLEAR;
-	LocalMemList->ml_ME[1].me_Length	= StackSize + NumArgs * sizeof(LONG);
+	MemEntry = &LocalMemList->ml_ME[0];
+	MemEntry[0].me_Reqs		= MEMF_ANY|MEMF_PUBLIC|MEMF_CLEAR;
+	MemEntry[0].me_Length	= sizeof(struct Task);
+	MemEntry[1].me_Reqs		= MEMF_ANY|MEMF_CLEAR;
+	MemEntry[1].me_Length	= StackSize + NumArgs * sizeof(LONG);
 
 		/* Try the allocation. */
 
@@ -3915,11 +3911,11 @@ LocalCreateTask(STRPTR Name,LONG Priority,TASKENTRY Entry,ULONG StackSize,LONG N
 	#ifndef __AROS__
 			/* Check if the allocation did work. */
     	
-		if((ULONG)MemList & 0x80000000)
+		if((IPTR)MemList & 0x80000000)
 		{
 				/* Strip the failure bit. */
 
-			MemList = (struct MemList *)((ULONG)MemList & ~0x80000000);
+			MemList = (struct MemList *)((IPTR)MemList & ~0x80000000);
 		}
 		else
 	#endif
@@ -3939,8 +3935,8 @@ LocalCreateTask(STRPTR Name,LONG Priority,TASKENTRY Entry,ULONG StackSize,LONG N
 			Task->tc_Node.ln_Name	= Name;
 
 			Task->tc_SPLower		= MemList->ml_ME[1].me_Addr;
-			Task->tc_SPUpper		= (APTR)((ULONG)Task->tc_SPLower + MemList->ml_ME[1].me_Length);
-			Task->tc_SPReg			= (APTR)((ULONG)Task->tc_SPUpper - NumArgs * sizeof(LONG));
+			Task->tc_SPUpper		= (APTR)((IPTR)Task->tc_SPLower + MemList->ml_ME[1].me_Length);
+			Task->tc_SPReg			= (APTR)((IPTR)Task->tc_SPUpper - NumArgs * sizeof(IPTR));
 
 				/* Add the memory to be released when the Task exits. */
 
@@ -3956,7 +3952,7 @@ LocalCreateTask(STRPTR Name,LONG Priority,TASKENTRY Entry,ULONG StackSize,LONG N
 				va_list VarArgs;
 
 				va_start(VarArgs,NumArgs);
-				CopyMem(VarArgs,Task->tc_SPReg,NumArgs * sizeof(LONG));
+				CopyMem(VarArgs,Task->tc_SPReg,NumArgs * sizeof(IPTR));
 				va_end(VarArgs);
 			}
 
@@ -4050,7 +4046,7 @@ SpeechSynthesizerAvailable()
 
 	if(LocalTranslatorBase = OpenLibrary("translator.library",0))
 	{
-#warning Deactivated to make it compile for AROS.
+//FIXME: Deactivated to make it compile for AROS.
 #ifndef __AROS__
 		struct narrator_rb NarratorRequest;
 

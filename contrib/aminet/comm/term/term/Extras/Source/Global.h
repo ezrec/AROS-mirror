@@ -195,7 +195,11 @@ typedef BOOL (* SENDLINE)(STRPTR,LONG);
 
 	/* PutChar routine for RawDoFmt(). */
 
+#ifdef __AROS__
+typedef VOID_FUNC PUTCHAR;
+#else
 typedef VOID (* PUTCHAR)(UBYTE Char,APTR PutChData);
+#endif
 
 	/* Mode filter function callback. */
 
@@ -719,7 +723,7 @@ enum	{ DT_FIRST_UNIT,DT_NEXT_UNIT };
 	/* This macro lets us long-align structures on the stack */
 
 #define D_S(type,name)	char a_##name[sizeof(type)+3]; \
-			type *name = (type *)((LONG)(a_##name+3) & ~3);
+			type *name = (type *)((IPTR)(a_##name+3) & ~3);
 
 	/* Like sizeof(..), but for a structure entry. */
 
@@ -1555,8 +1559,8 @@ struct TextBox
 	LONG			 NumChars,		/* Number of chars per line. */
 				 NumLines;		/* Number of lines. */
 
-	STRPTR			*Title,			/* Line titles. */
-				*Text;			/* Line texts. */
+	CONST_STRPTR		*Title;			/* Line titles. */
+	STRPTR			*Text;			/* Line texts. */
 
 	LONG			 TitleFgPen,
 				 TitleBgPen,
@@ -1690,7 +1694,7 @@ struct Buffer
 	BOOLEAN			 Written;			/* Last access has written data. */
 
 	LONG			 Action;			/* Action to perform. */
-	LONG			 ActionData[2];			/* Seek and the like. */
+	IPTR			 ActionData[2];			/* Seek and the like. */
 	LONG			 Result;			/* Return value. */
 
 	BPTR			 FileHandle;			/* Dos filehandle. */
@@ -2072,7 +2076,7 @@ typedef struct PhoneListContext
 	PhonebookHandle		*PhoneHandle;		/* The phonebook currently in use */
 	struct List		*CurrentList;		/* List currently being displayed */
 	LONG			 NumEntries;		/* Number of entries in that list */
-	STRPTR			*GroupLabels;		/* The labels to go into the group display */
+	CONST_STRPTR		*GroupLabels;		/* The labels to go into the group display */
 	struct MsgPort		*WindowPort;		/* The MsgPort to use for the windows attached */
 										/* to this control panel */
 	PhoneNode		*SelectedNode;		/* Currently active entry (from the list) */
@@ -2169,7 +2173,7 @@ struct AttributeEntry
 	STRPTR	 Name;		/* Name or NULL for numeric value */
 	UBYTE	 Type;		/* Node type (INFO_TEXT through INFO_MAPPED) */
 	BOOLEAN	 ReadOnly;	/* If information happens to be read-only */
-	STRPTR	*Mappings;	/* Type mappings if applicable */
+	CONST_STRPTR	*Mappings;	/* Type mappings if applicable */
 	WORD	 NodeID;	/* Node ID code */
 };
 

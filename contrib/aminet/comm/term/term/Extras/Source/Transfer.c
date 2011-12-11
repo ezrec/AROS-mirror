@@ -40,9 +40,9 @@ STATIC LONG TransferCompare(struct FileTransferNode **A, struct FileTransferNode
 STATIC VOID
 CommonStartReceive(LONG Type,STRPTR Name,BOOL WaitForIt)
 {
-	STRPTR From,To,Cmd;
+	STRPTR From = NULL,To = NULL,Cmd = NULL;
 	BOOL IsBinary;
-	LONG Mode;
+	LONG Mode = 0;
 
 	if(Type == TRANSFER_ASCII && Config->TransferConfig->ASCIIDownloadType == XFER_INTERNAL)
 	{
@@ -112,8 +112,8 @@ CommonStartReceive(LONG Type,STRPTR Name,BOOL WaitForIt)
 	{
 		struct FileRequester	*FileRequest;
 		UBYTE					 DummyBuffer[MAX_FILENAME_LENGTH];
-		BPTR					 NewDir = NULL,
-								 OldDir = NULL;
+		BPTR					 NewDir = BNULL,
+								 OldDir = BNULL;
 
 		ClearGenericList(GenericListTable[GLIST_DOWNLOAD],FALSE);
 
@@ -247,7 +247,7 @@ CommonStartSend(LONG Type,STRPTR TheFile,struct FileTransferInfo **TransferInfoP
 {
 	STRPTR From,To,Name;
 	BOOL IsBinary;
-	LONG Mode;
+	LONG Mode = 0;
 
 	if(TheFile)
 		TheFile = ReplaceName(TheFile);
@@ -328,10 +328,10 @@ CommonStartSend(LONG Type,STRPTR TheFile,struct FileTransferInfo **TransferInfoP
 	{
 		struct FileRequester	*FileRequest;
 		UBYTE					 DummyBuffer[MAX_FILENAME_LENGTH];
-		STRPTR					 UploadPath;
+		STRPTR					 UploadPath = "";
 		BOOL					 DidSend = TRUE;
-		BPTR					 NewDir = NULL,
-								 OldDir = NULL;
+		BPTR					 NewDir = BNULL,
+								 OldDir = BNULL;
 
 			/* We are uploading data. */
 
@@ -881,7 +881,7 @@ BuildString(STRPTR Source,STRPTR From,STRPTR To,BYTE Type,BOOL ReceiveMode,STRPT
 		UBYTE LocalBuffer[MAX_FILENAME_LENGTH],TempBuffer[MAX_FILENAME_LENGTH];
 		struct FileRequester *FileRequest;
 		STRPTR Index,Dest;
-		struct Node *Node;
+		struct Node *Node = NULL;
 
 		Index = Source;
 		Dest = LocalBuffer;
@@ -1974,7 +1974,7 @@ SaveProtocolOpts()
 			XprIO->xpr_gets			= xpr_gets_glue;
 			XprIO->xpr_options		= xpr_options_glue;
 		#else
-			XprIO->xpr_gets			= xpr_gets;
+			XprIO->xpr_gets			= (APTR)xpr_gets;
 			XprIO->xpr_options		= xpr_options;
 		#endif	/* USE_GLUE */
 

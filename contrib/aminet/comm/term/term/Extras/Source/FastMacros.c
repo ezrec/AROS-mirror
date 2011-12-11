@@ -19,7 +19,7 @@
 	 */
 
 struct MacroNode *
-CreateFastMacroNode(STRPTR Macro)
+CreateFastMacroNode(CONST_STRPTR Macro)
 {
 	struct MacroNode *Node;
 

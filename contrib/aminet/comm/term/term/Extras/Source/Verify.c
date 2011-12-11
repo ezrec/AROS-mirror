@@ -175,7 +175,7 @@ FindDrawer(struct Window *Parent,STRPTR Drawer,BOOL CanCreate,LONG *Error)
 		LT_LockWindow(Parent);
 
 		if(*Error == ERR_NOT_A_DRAWER)
-			ShowError(Parent,*Error,NULL,Drawer);
+			ShowError(Parent,*Error,0,Drawer);
 		else
 			ShowError(Parent,ERR_DRAWER_NOT_FOUND,*Error,Drawer);
 
@@ -246,7 +246,7 @@ FindFile(struct Window *Parent,STRPTR File,LONG *Error)
 		LT_LockWindow(Parent);
 
 		if(*Error == ERR_NOT_A_FILE)
-			ShowError(Parent,*Error,NULL,File);
+			ShowError(Parent,*Error,0,File);
 		else
 			ShowError(Parent,ERR_FILE_NOT_FOUND,*Error,File);
 
@@ -717,7 +717,7 @@ FindProgram(struct Window *Parent,STRPTR Program,LONG *Error)
 		LT_LockWindow(Parent);
 
 		if(*Error == ERR_NOT_A_FILE)
-			ShowError(Parent,*Error,NULL,Program);
+			ShowError(Parent,*Error,0,Program);
 		else
 			ShowError(Parent,ERR_PROGRAM_NOT_FOUND,*Error,Program);
 
@@ -839,7 +839,7 @@ FindLibDev(struct Window *Parent,STRPTR File,LONG Type,LONG *Error)
 		LT_LockWindow(Parent);
 
 		if(*Error == ERR_NOT_A_FILE)
-			ShowError(Parent,*Error,NULL,File);
+			ShowError(Parent,*Error,0,File);
 		else
 			ShowError(Parent,ERR_FILE_NOT_FOUND,*Error,File);
 

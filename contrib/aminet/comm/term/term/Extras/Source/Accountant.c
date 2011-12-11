@@ -57,7 +57,7 @@ AccountantEntry(VOID)
 
 		if(TimeRequest = (struct timerequest *)CreateIORequest(TimePort,sizeof(struct timerequest)))
 		{
-			if(!OpenDevice(TIMERNAME,UNIT_VBLANK,(struct IORequest *)TimeRequest,NULL))
+			if(!OpenDevice(TIMERNAME,UNIT_VBLANK,(struct IORequest *)TimeRequest,0))
 			{
 					/* Now create the communications port */
 

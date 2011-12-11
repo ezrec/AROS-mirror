@@ -212,7 +212,7 @@ CreateASCIIWindow(BOOL Send)
 
 				Move = FALSE;
 
-				IntuiLock = LockIBase(NULL);
+				IntuiLock = LockIBase(0);
 
 				if(IntuitionBase->ActiveScreen == PanelWindow->WScreen)
 					Activate = TRUE;
@@ -314,7 +314,7 @@ DeleteASCIIWindow(struct Window *Window,BOOL WaitForIt)
 }
 
 VOID
-AddASCIIMessage(STRPTR Message,...)
+AddASCIIMessage(CONST_STRPTR Message,...)
 {
 	UBYTE TempBuffer[256];
 	struct Node *Node;

@@ -131,7 +131,7 @@ ExtractNextItem(STRPTR From,STRPTR To,LONG ToLen)
 		/* No trailing bar? */
 
 		if(Start >= Len)
-			To[0] = NULL;
+			To[0] = 0;
 		else
 		{
 			NumberLen = Len - Start;

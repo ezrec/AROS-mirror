@@ -40,7 +40,7 @@ ClonePath(BPTR StartPath)
 			{
 				if(New->path_Lock = DupLock(List->path_Lock))
 				{
-					New->path_Next = NULL;
+					New->path_Next = BNULL;
 
 					if(Last)
 						Last->path_Next = MKBADDR(New);

@@ -178,7 +178,7 @@ ClosePrinterCapture(BOOL Force)
 
 			CheckItem(MEN_CAPTURE_TO_PRINTER,FALSE);
 
-			PrinterCapture = NULL;
+			PrinterCapture = BNULL;
 
 			ConOutputUpdate();
 
@@ -473,7 +473,7 @@ CaptureToPrinter(APTR Buffer,LONG Size)
 			}
 			while(--Count > 0);
 
-			Count = (ULONG)Dst - (ULONG)&LocalBuffer[0];
+			Count = (IPTR)Dst - (IPTR)&LocalBuffer[0];
 
 			while(Count > 0 && LocalBuffer[Count - 1] == ' ')
 				Count--;
@@ -490,7 +490,7 @@ CaptureToPrinter(APTR Buffer,LONG Size)
 
 						CheckItem(MEN_CAPTURE_TO_PRINTER,FALSE);
 
-						PrinterCapture = NULL;
+						PrinterCapture = BNULL;
 
 						ConOutputUpdate();
 
@@ -518,7 +518,7 @@ CaptureToPrinter(APTR Buffer,LONG Size)
 
 					CheckItem(MEN_CAPTURE_TO_PRINTER,FALSE);
 
-					PrinterCapture = NULL;
+					PrinterCapture = BNULL;
 
 					ConOutputUpdate();
 				}

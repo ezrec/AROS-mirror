@@ -15,7 +15,7 @@
 
 	/* Local data. */
 
-STATIC STRPTR				 ContextList[55];
+STATIC CONST_STRPTR				 ContextList[55];
 STATIC AMIGAGUIDECONTEXT	 Context;
 STATIC struct NewAmigaGuide	 NewGuide;
 STATIC struct Process		*GuideProcess;
@@ -252,7 +252,7 @@ GuideLaunch(LONG ContextID)
 					NewGuide.nag_BaseName	= "termHelp";
 					NewGuide.nag_Name		= Config->PathConfig->HelpFile;
 					NewGuide.nag_ClientPort	= "TERM_HELP";
-					NewGuide.nag_Context	= ContextList;
+					NewGuide.nag_Context	= (STRPTR *)ContextList;
 					NewGuide.nag_Screen		= Window->WScreen;
 
 						/* Launch the server process. */

@@ -174,7 +174,7 @@ main(VOID)
 					Width	= 253;
 				}
 
-				AutoRequest(NULL,Body,NULL,&SorryText,NULL,NULL,Width,46);
+				AutoRequest(NULL,Body,NULL,&SorryText,0,0,Width,46);
 
 				CloseLibrary((struct Library *)IntuitionBase);
 			}

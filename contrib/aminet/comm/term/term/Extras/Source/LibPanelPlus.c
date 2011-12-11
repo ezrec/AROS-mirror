@@ -36,7 +36,7 @@ ASCIITransferPanel(struct Window *Window,struct Configuration *LocalConfig)
 
 	struct TransferSettings	*OldSettings;
 	LayoutHandle *Handle;
-	STRPTR PageTitle[4];
+	CONST_STRPTR PageTitle[4];
 
 	if(!(OldSettings = CreateNewConfigEntry(PREF_TRANSFER)))
 	{
@@ -614,7 +614,7 @@ ExternalCommandPanel(struct Window *Parent,STRPTR Command)
 						{
 							*Index = 0;
 
-							Args = &LocalCommand[(ULONG)Index - (ULONG)LocalBuffer + 1];
+							Args = &LocalCommand[(IPTR)Index - (IPTR)LocalBuffer + 1];
 						}
 						else
 							Args = NULL;

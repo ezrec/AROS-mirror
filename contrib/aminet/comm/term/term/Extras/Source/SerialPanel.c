@@ -168,7 +168,7 @@ SerialPanel(struct Window *Parent,struct Configuration *LocalConfig)
 	STATIC BYTE InitialPage = 0;
 
 	LayoutHandle *Handle;
-	STRPTR PageLabels[5];
+	CONST_STRPTR PageLabels[5];
 	BOOL UseIt;
 
 	UseIt = FALSE;

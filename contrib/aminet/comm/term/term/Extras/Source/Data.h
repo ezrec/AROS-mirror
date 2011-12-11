@@ -398,7 +398,7 @@ extern BOOL			 DidTransfer;
 extern struct Window		*TransferWindow;
 extern UBYTE			 TransferTitleBuffer[256];
 extern BOOL			 TransferZoomed;
-extern STRPTR			 TransferWindowTitle;
+extern CONST_STRPTR		 TransferWindowTitle;
 
 extern struct LayoutHandle	*TransferHandle;
 extern struct List		 TransferInfoList;
@@ -534,7 +534,7 @@ extern struct SignalSemaphore	 DoubleBufferSemaphore;
 extern struct XEM_IO		*XEM_IO;
 extern ULONG			 XEM_Signal;
 extern struct XEmulatorHostData XEM_HostData;
-extern UBYTE			*OptionTitle;
+extern CONST UBYTE		*OptionTitle;
 extern struct List		 XEM_MacroList;
 extern struct XEmulatorMacroKey *XEM_MacroKeys;
 extern UBYTE			 EmulationName[MAX_FILENAME_LENGTH];
@@ -643,10 +643,10 @@ extern WORD			 NumCodes;
 
 
 extern UWORD			PenTable[16];
-extern STRPTR			ParityMappings[];
-extern STRPTR			BooleanMappings[];
-extern STRPTR			DuplexMappings[];
-extern STRPTR			HandshakingMappings[];
+extern CONST_STRPTR		ParityMappings[];
+extern CONST_STRPTR		BooleanMappings[];
+extern CONST_STRPTR		DuplexMappings[];
+extern CONST_STRPTR		HandshakingMappings[];
 extern UBYTE			TextAttributeTable[16];
 extern WORD			ForegroundPen,
 				BackgroundPen;

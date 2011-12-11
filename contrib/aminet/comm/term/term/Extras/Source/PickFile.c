@@ -25,7 +25,7 @@ ValidateFile(STRPTR FileName,LONG Type,STRPTR RealName)
 
 	if(Segment = LoadSeg(FileName))
 	{
-		ULONG *SegmentData;
+		BPTR *SegmentData;
 		UWORD *Match;
 		BPTR SegPtr;
 		BOOL GotIt;
@@ -36,10 +36,10 @@ ValidateFile(STRPTR FileName,LONG Type,STRPTR RealName)
 
 		do
 		{
-			SegmentData = (ULONG *)BADDR(SegPtr);
+			SegmentData = (BPTR *)BADDR(SegPtr);
 
-			SegPtr	= (BPTR)SegmentData[0];
-			Size	= SegmentData[-1] - 2 * sizeof(ULONG) - sizeof(struct Resident);
+			SegPtr	= SegmentData[0];
+			Size	= (IPTR)SegmentData[-1] - 2 * sizeof(ULONG) - sizeof(struct Resident);
 			Match	= (UWORD *)(SegmentData + 1);
 
 			while(!GotIt && Size > 0)
@@ -119,7 +119,7 @@ AddFile(struct List *List,STRPTR Name)
 	 */
 
 STATIC VOID
-FileMultiScan(struct List *FileList,STRPTR Directory,STRPTR Pattern,LONG Type)
+FileMultiScan(struct List *FileList,CONST_STRPTR Directory,CONST_STRPTR Pattern,LONG Type)
 {
 	UBYTE MatchBuffer[MAX_FILENAME_LENGTH];
 	struct MsgPort *FileSysTask;
@@ -211,7 +211,7 @@ FileMultiScan(struct List *FileList,STRPTR Directory,STRPTR Pattern,LONG Type)
 	 */
 
 STATIC struct List *
-BuildFileList(STRPTR Directory,STRPTR Pattern,LONG Type)
+BuildFileList(CONST_STRPTR Directory,CONST_STRPTR Pattern,LONG Type)
 {
 	struct List	*FileList;
 	APTR OldPtr;
@@ -355,7 +355,7 @@ BuildFileList(STRPTR Directory,STRPTR Pattern,LONG Type)
 	 */
 
 BOOL
-PickFile(struct Window *Window,STRPTR Directory,STRPTR Pattern,STRPTR Prompt,STRPTR Name,LONG Type)
+PickFile(struct Window *Window,CONST_STRPTR Directory,CONST_STRPTR Pattern,CONST_STRPTR Prompt,STRPTR Name,LONG Type)
 {
 	UBYTE DummyBuffer[MAX_FILENAME_LENGTH];
 	struct FileRequester *FileRequest;

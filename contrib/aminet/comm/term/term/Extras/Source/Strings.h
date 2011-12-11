@@ -8297,7 +8297,7 @@ struct LocaleInfo
 
 #ifdef CATCOMP_CODE
 
-STRPTR GetString(struct LocaleInfo *li, LONG stringNum)
+CONST_STRPTR GetString(struct LocaleInfo *li, LONG stringNum)
 {
 LONG   *l;
 UWORD  *w;

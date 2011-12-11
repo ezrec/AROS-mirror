@@ -26,7 +26,7 @@ STATIC BOOL				CallActive;
 	 */
 
 STATIC VOID
-InitPhoneLogEntry(struct PhoneLogEntry *Item,STRPTR Number,STRPTR Name)
+InitPhoneLogEntry(struct PhoneLogEntry *Item,CONST_STRPTR Number,CONST_STRPTR Name)
 {
 	struct ClockData ClockData;
 	struct timeval Now;
@@ -108,7 +108,7 @@ CallDate(LONG Seconds,BPTR FileHandle)
 	 */
 
 VOID
-MakeCall(STRPTR Name,STRPTR Number)
+MakeCall(CONST_STRPTR Name,CONST_STRPTR Number)
 {
 		/* End previous entry. */
 
@@ -211,7 +211,7 @@ StopCall(BOOL Finish)
 			/* Finis... */
 
 		Close(CallFile);
-		CallFile = NULL;
+		CallFile = BNULL;
 	}
 
 		/* Now what about the PhoneLog file? */

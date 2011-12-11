@@ -304,9 +304,9 @@ EmulationPanel(struct Window *Parent,struct Configuration *LocalConfig)
 
 	STATIC BYTE InitialPage = 0;
 
-	LONG Depth,CurrentDepth;
+	LONG Depth = 1,CurrentDepth = 1; /* COLOUR_MONO */
 	LayoutHandle *Handle;
-	STRPTR PageTitle[5];
+	CONST_STRPTR PageTitle[5];
 	BOOL PenChoices;
 	BOOL UseIt;
 

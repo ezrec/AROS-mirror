@@ -46,8 +46,8 @@ xem_squery(VOID)
 	return(-1);
 }
 
-LONG SAVE_DS ASM
-xem_sread(REG(a0) APTR Buffer,REG(d0) LONG Size,REG(d1) ULONG Timeout)
+long SAVE_DS ASM
+xem_sread(REG(a0) char *Buffer,REG(d0) long Size,REG(d1) long Timeout)
 {
 	DB(kprintf("xem_sread(0x%08lx,%ld,%ld)\n",Buffer,Size,Timeout));
 
@@ -224,15 +224,15 @@ xem_sread(REG(a0) APTR Buffer,REG(d0) LONG Size,REG(d1) ULONG Timeout)
 		return(-1);
 }
 
-ULONG SAVE_DS ASM
-xem_toptions(REG(d0) LONG NumOpts,REG(a0) struct xem_option **Opts)
+long SAVE_DS ASM
+xem_toptions(REG(d0) long NumOpts,REG(a0) struct xem_option *Opts[])
 {
 	if(NumOpts && Opts)
 	{
 		enum	{	GAD_USE=1,GAD_CANCEL,GAD_SPECIAL };
 
 		LayoutHandle	*Handle;
-		ULONG			 Flags = NULL;
+		ULONG			 Flags = 0;
 
 			/* We only have 32 bits! */
 
@@ -548,7 +548,7 @@ xem_toptions(REG(d0) LONG NumOpts,REG(a0) struct xem_option **Opts)
 					LT_UnlockWindow(PanelWindow);
 				}
 				else
-					Flags = NULL;
+					Flags = 0;
 			}
 
 			LT_DeleteHandle(Handle);
@@ -557,7 +557,7 @@ xem_toptions(REG(d0) LONG NumOpts,REG(a0) struct xem_option **Opts)
 		return(Flags);
 	}
 	else
-		return(NULL);
+		return(0);
 }
 
 	/* xem_swrite():
@@ -565,8 +565,8 @@ xem_toptions(REG(d0) LONG NumOpts,REG(a0) struct xem_option **Opts)
 	 *	Send a few bytes across the serial line.
 	 */
 
-LONG SAVE_DS ASM
-xem_swrite(REG(a0) STRPTR Buffer,REG(d0) LONG Size)
+long SAVE_DS ASM
+xem_swrite(REG(a0) char *Buffer,REG(d0) long Size)
 {
 	if(WriteRequest)
 	{
@@ -625,8 +625,8 @@ xem_sstop(VOID)
 	 *	Get a string from the user.
 	 */
 
-LONG SAVE_DS ASM
-xem_tgets(REG(a0) STRPTR Prompt,REG(a1) STRPTR Buffer,REG(d0) ULONG Size)
+long SAVE_DS ASM
+xem_tgets(REG(a0) const char *Prompt,REG(a1) char *Buffer,REG(d0) long Size)
 {
 	enum	{	GAD_Use=1,GAD_Cancel,GAD_String };
 
@@ -792,8 +792,8 @@ xem_tgets(REG(a0) STRPTR Prompt,REG(a1) STRPTR Buffer,REG(d0) ULONG Size)
 	 *	Beep the terminal display.
 	 */
 
-VOID SAVE_DS ASM
-xem_tbeep(REG(d0) ULONG Times,REG(d1) ULONG UnusedDelay)	/* ZZZ: what does delay do? */
+void SAVE_DS ASM
+xem_tbeep(REG(d0) long Times,REG(d1) long UnusedDelay)	/* ZZZ: what does delay do? */
 {
 	LONG i;
 
@@ -819,7 +819,7 @@ xem_tbeep(REG(d0) ULONG Times,REG(d1) ULONG UnusedDelay)	/* ZZZ: what does delay
 	 *	Dispatch a macro key call.
 	 */
 
-LONG SAVE_DS ASM
+long SAVE_DS ASM
 xem_macrodispatch(REG(a0) struct XEmulatorMacroKey *XEM_MacroKey)
 {
 	CALLBACK Routine;
@@ -985,8 +985,8 @@ SetupEmulator(VOID)
 			XEM_IO->xem_sstop				= xem_sstop;
 			XEM_IO->xem_tbeep				= xem_tbeep;
 			XEM_IO->xem_tgets				= xem_tgets;
-			XEM_IO->xem_toptions			= xem_toptions;
-			XEM_IO->xem_process_macrokeys	= xem_macrodispatch;
+			XEM_IO->xem_toptions			= (APTR)xem_toptions;
+			XEM_IO->xem_process_macrokeys	= (APTR)xem_macrodispatch;
 #endif	/* USE_GLUE */
 
 			return(TRUE);
@@ -1020,11 +1020,11 @@ CloseEmulator(BOOL Exit)
 		XEmulatorBase = NULL;
 
 		WindowJob = SingleWindowJob;
-		UpdateJobMask(MainJobQueue,XEMJob,NULL);
+		UpdateJobMask(MainJobQueue,XEMJob,0);
 
 		if(!Exit)
 		{
-			XEM_Signal = NULL;
+			XEM_Signal = 0;
 
 			strcpy(EmulationName,LocaleString(MSG_TERMXEM_NO_EMULATION_TXT));
 
@@ -1103,12 +1103,12 @@ OpenEmulator(STRPTR Name)
 		XEmulatorBase = NULL;
 	}
 
-	XEM_Signal = NULL;
+	XEM_Signal = 0;
 
 	strcpy(EmulationName,LocaleString(MSG_TERMXEM_NO_EMULATION_TXT));
 
 	WindowJob = SingleWindowJob;
-	UpdateJobMask(MainJobQueue,XEMJob,NULL);
+	UpdateJobMask(MainJobQueue,XEMJob,0);
 
 	return(FALSE);
 }
@@ -1189,7 +1189,7 @@ SetupXEM_MacroKeys(struct MacroKeys *Keys)
 			/* Take care of the rest, add support for the xON key. */
 
 		XEM_MacroKeys[k].xmk_Type 		= XMKT_COOKED;
-		XEM_MacroKeys[k].xmk_Qualifier	= NULL;
+		XEM_MacroKeys[k].xmk_Qualifier	= 0;
 		XEM_MacroKeys[k].xmk_Code		= XON;
 		XEM_MacroKeys[k].xmk_UserData	= (APTR)xOn;
 
@@ -1198,7 +1198,7 @@ SetupXEM_MacroKeys(struct MacroKeys *Keys)
 			/* Take care of the xOFF key. */
 
 		XEM_MacroKeys[k].xmk_Type 		= XMKT_COOKED;
-		XEM_MacroKeys[k].xmk_Qualifier	= NULL;
+		XEM_MacroKeys[k].xmk_Qualifier	= 0;
 		XEM_MacroKeys[k].xmk_Code		= XOF;
 		XEM_MacroKeys[k].xmk_UserData	= (APTR)xOff;
 
@@ -1206,7 +1206,7 @@ SetupXEM_MacroKeys(struct MacroKeys *Keys)
 
 			/* Make the emulator notice the new settings. */
 
-		XEmulatorMacroKeyFilter(XEM_IO,&XEM_MacroList);
+		XEmulatorMacroKeyFilter(XEM_IO,(struct XEmulatorMacroKey *)&XEM_MacroList);
 	}
 }
 

@@ -529,7 +529,7 @@ SaveWindow(STRPTR Name,struct Window *Window)
 
 			/* This is where the window contents will go */
 
-		if(BitMap = AllocBitMap(Width,Height,GetBitMapAttr(Window->RPort->BitMap,BMA_DEPTH),NULL,Window->RPort->BitMap))
+		if(BitMap = AllocBitMap(Width,Height,GetBitMapAttr(Window->RPort->BitMap,BMA_DEPTH),0,Window->RPort->BitMap))
 		{
 			struct RastPort RPort;
 			LONG NumColours;

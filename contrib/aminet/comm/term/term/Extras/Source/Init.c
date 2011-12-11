@@ -65,7 +65,7 @@ AddExtraAssignment(STRPTR LocalDir,STRPTR Assign)
 			{
 				UnLock(FileLock);
 
-				FileLock = NULL;
+				FileLock = BNULL;
 			}
 		}
 	}
@@ -273,7 +273,7 @@ LoadKeyMap(STRPTR Name)
 		{
 			UnLoadSeg(KeySegment);
 
-			KeySegment = NULL;
+			KeySegment = BNULL;
 		}
 	}
 
@@ -414,7 +414,7 @@ TTYResize()
 		if(Columns > 0 && Lines > 0)
 		{
 			WriteRequest->IOSer.io_Command	= UWCMD_TTYRESIZE;
-			WriteRequest->IOSer.io_Data		= (APTR)((Columns << 16) | (Lines));
+			WriteRequest->IOSer.io_Data		= (APTR)(IPTR)((Columns << 16) | (Lines));
 			WriteRequest->IOSer.io_Length	= (WindowWidth << 16) | (WindowHeight);
 
 			DoIO((struct IORequest *)WriteRequest);
@@ -479,7 +479,7 @@ VOID
 Current2DefaultPalette(struct Configuration *SomeConfig)
 {
 	ColourTable	*Table;
-	UWORD *Colour12;
+	UWORD *Colour12 = AtomicColours; /* COLOUR_MONO */
 
 	Table = NULL;
 
@@ -570,7 +570,7 @@ VOID
 Default2CurrentPalette(struct Configuration *SomeConfig)
 {
 	ColourTable	*Table;
-	UWORD *Colour12;
+	UWORD *Colour12 = AtomicColours;
 
 	Table = NULL;
 
@@ -891,7 +891,7 @@ PubScreenStuff()
 			/* Are we to make our screen public? */
 
 		if(Config->ScreenConfig->MakeScreenPublic)
-			PubScreenStatus(Screen,NULL);
+			PubScreenStatus(Screen,0);
 		else
 			PubScreenStatus(Screen,PSNF_PRIVATE);
 	}
@@ -1099,7 +1099,7 @@ ConfigSetup()
 		{
 			UnLoadSeg(KeySegment);
 
-			KeySegment = NULL;
+			KeySegment = BNULL;
 		}
 	}
 	else
@@ -1362,7 +1362,7 @@ BOOL
 DisplayReset()
 {
 	BOOL Success = TRUE;
-	STRPTR Result;
+	CONST_STRPTR Result;
 
 		/* Delete the display (if possible).
 		 * This will go wrong if there
@@ -1621,15 +1621,15 @@ DeleteDisplay()
 	 *	Open the display and allocate associated data.
 	 */
 
-STRPTR
+CONST_STRPTR
 CreateDisplay(BOOL UsePresetSize,BOOL Activate)
 {
-	LONG ErrorCode,Top,Height,Count,RealDepth,i;
+	LONG ErrorCode,Top,Height,Count,RealDepth = 1,i;
 	LONG StatusWidth,StatusHeight;
 	struct Rectangle DisplayClip;
 	UWORD PenArray[16];
 	ULONG X_DPI,Y_DPI;
-	ULONG TagArray[9];
+	IPTR TagArray[9];
 	BOOL OpenFailed;
 	BOOL RethinkPens;
 
@@ -1948,7 +1948,7 @@ CreateDisplay(BOOL UsePresetSize,BOOL Activate)
 					LocalScreen = SharedScreen;
 
 					if(Config->ScreenConfig->MakeScreenPublic)
-						PubScreenStatus(LocalScreen,NULL);
+						PubScreenStatus(LocalScreen,0);
 					else
 						PubScreenStatus(LocalScreen,PSNF_PRIVATE);
 				}
@@ -2471,7 +2471,7 @@ CreateDisplay(BOOL UsePresetSize,BOOL Activate)
 					}
 
 					TagArray[Count++] = SA_Pens;
-					TagArray[Count++] = (LONG)PenArray;
+					TagArray[Count++] = (IPTR)PenArray;
 
 					TagArray[Count++] = SA_BlockPen;
 					TagArray[Count++] = PenArray[SHADOWPEN];
@@ -2529,7 +2529,7 @@ CreateDisplay(BOOL UsePresetSize,BOOL Activate)
 					}
 
 					TagArray[Count++] = SA_Pens;
-					TagArray[Count++] = (LONG)PenArray;
+					TagArray[Count++] = (IPTR)PenArray;
 
 					TagArray[Count++] = SA_BlockPen;
 					TagArray[Count++] = PenArray[SHADOWPEN];
@@ -2562,7 +2562,7 @@ CreateDisplay(BOOL UsePresetSize,BOOL Activate)
 						RealDepth = MaxDepth;
 
 					TagArray[Count++] = SA_Pens;
-					TagArray[Count++] = (LONG)PenArray;
+					TagArray[Count++] = (IPTR)PenArray;
 
 					TagArray[Count++] = SA_BlockPen;
 					TagArray[Count++] = PenArray[SHADOWPEN];
@@ -3307,7 +3307,7 @@ CreateDisplay(BOOL UsePresetSize,BOOL Activate)
 
 		/* Add a tick if printer capture is active. */
 
-	CheckItem(MEN_CAPTURE_TO_PRINTER,PrinterCapture != NULL);
+	CheckItem(MEN_CAPTURE_TO_PRINTER,PrinterCapture != BNULL);
 
 		/* Add a tick if the buffer is frozen. */
 
@@ -3640,11 +3640,11 @@ CloseAll()
 	 *	if anything went wrong.
 	 */
 
-STRPTR
-OpenAll(STRPTR ConfigPath)
+CONST_STRPTR
+OpenAll(CONST_STRPTR ConfigPath)
 {
 	UBYTE PathBuffer[MAX_FILENAME_LENGTH];
-	STRPTR Result,ConfigFileName;
+	CONST_STRPTR Result,ConfigFileName;
 	UBYTE LocalBuffer[256];
 	LONG ErrorCode,i;
 	BOOL ZapPhonebook;
@@ -3708,7 +3708,7 @@ OpenAll(STRPTR ConfigPath)
 
 		/* Check if we should use the old style sliders. */
 
-	if(GetVar("termoldsliders",PathBuffer,sizeof(PathBuffer),NULL) >= 0)
+	if(GetVar("termoldsliders",PathBuffer,sizeof(PathBuffer),0) >= 0)
 		SliderType = SLIDER_KIND;
 	else
 		SliderType = LEVEL_KIND;
@@ -3781,7 +3781,7 @@ OpenAll(STRPTR ConfigPath)
 		{
 			STATIC UBYTE LocalBuffer[256];
 
-			STRPTR String;
+			CONST_STRPTR String;
 			BOOL GotIt;
 			LONG i;
 
@@ -3807,7 +3807,7 @@ OpenAll(STRPTR ConfigPath)
 		}
 	}
 
-	if(GetVar("termoldcycle",PathBuffer,sizeof(PathBuffer),NULL) >= 0 || GetVar("RussLeBar",PathBuffer,sizeof(PathBuffer),NULL) >= 0)
+	if(GetVar("termoldcycle",PathBuffer,sizeof(PathBuffer),0) >= 0 || GetVar("RussLeBar",PathBuffer,sizeof(PathBuffer),0) >= 0)
 	{
 		LONG Value;
 
@@ -3869,7 +3869,7 @@ OpenAll(STRPTR ConfigPath)
 
 	ConsoleRequest->io_Message.mn_Length = sizeof(struct IOStdReq);
 
-	if(OpenDevice("console.device",CONU_LIBRARY,(struct IORequest *)ConsoleRequest,NULL))
+	if(OpenDevice("console.device",CONU_LIBRARY,(struct IORequest *)ConsoleRequest,0))
 		return(LocaleString(MSG_TERMINIT_FAILED_TO_OPEN_CONSOLE_DEVICE_TXT));
 
 	ConsoleDevice = ConsoleRequest->io_Device;
@@ -3894,7 +3894,7 @@ OpenAll(STRPTR ConfigPath)
 
 	for(i = 0 ; JobInitTable[i].Name ; i++)
 	{
-		if(!(*JobInitTable[i].Node = CreateJob(JobInitTable[i].Name,JobInitTable[i].Type,JobInitTable[i].Function,NULL)))
+		if(!(*JobInitTable[i].Node = CreateJob(JobInitTable[i].Name,JobInitTable[i].Type,JobInitTable[i].Function,0)))
 			return(LocaleString(MSG_GLOBAL_NO_AUX_BUFFERS_TXT));
 	}
 
@@ -4360,7 +4360,7 @@ OpenAll(STRPTR ConfigPath)
 
 		/* Create the special event queue. */
 
-	if(!(SpecialQueue = CreateMsgQueue(NULL,0)))
+	if(!(SpecialQueue = CreateMsgQueue(0,0)))
 		return(LocaleString(MSG_GLOBAL_NO_AUX_BUFFERS_TXT));
 
 		/* Set up the serial driver. */

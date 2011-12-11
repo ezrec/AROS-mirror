@@ -107,7 +107,7 @@ AddLine(STRPTR Line,LONG Size)
 		ULONG Signals;
 		BOOL Notify;
 
-		Signals = NULL;
+		Signals = 0;
 
 		ObtainSemaphore(&BufferSemaphore);
 

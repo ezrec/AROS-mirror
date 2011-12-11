@@ -70,7 +70,7 @@ struct UpdateMessage
 	 * window.
 	 */
 
-STATIC STRPTR			 ConfigBufferState[3],
+STATIC CONST_STRPTR			 ConfigBufferState[3],
 						 ConfigEmulation[6],
 						 ConfigParity[6];
 
@@ -190,17 +190,17 @@ DoStatusInfo(APTR Object,UBYTE Mode,UBYTE Type,STRPTR String)
 		{
 			STATIC UBYTE Codes[8][2] =
 			{
-				STATUSBOX_STATUS_FONT,			0,
-				STATUSBOX_STATUS_FONT,			1,
+				{ STATUSBOX_STATUS_FONT,			0, },
+				{ STATUSBOX_STATUS_FONT,			1, },
 
-				STATUSBOX_PROTOCOL_TERMINAL,	0,
-				STATUSBOX_PROTOCOL_TERMINAL,	1,
+				{ STATUSBOX_PROTOCOL_TERMINAL,	0, },
+				{ STATUSBOX_PROTOCOL_TERMINAL,	1, },
 
-				STATUSBOX_RATE_PARAMETERS,		0,
-				STATUSBOX_RATE_PARAMETERS,		1,
+				{ STATUSBOX_RATE_PARAMETERS,		0, },
+				{ STATUSBOX_RATE_PARAMETERS,		1, },
 
-				STATUSBOX_TIME_ONLINE,			0,
-				STATUSBOX_TIME_ONLINE,			1
+				{ STATUSBOX_TIME_ONLINE,			0, },
+				{ STATUSBOX_TIME_ONLINE,			1 },
 			};
 
 			struct ObjectCarrier *Carrier = (struct ObjectCarrier *)Object;
@@ -244,7 +244,7 @@ DoStatusInfo(APTR Object,UBYTE Mode,UBYTE Type,STRPTR String)
 	 */
 
 STATIC VOID
-DoInfo(APTR Object,UBYTE Mode,UBYTE Type,STRPTR String)
+DoInfo(APTR Object,UBYTE Mode,UBYTE Type,CONST_STRPTR String)
 {
 	struct UpdateMessage	*Msg;
 	LONG					 Len = strlen(String) + 1;
@@ -547,7 +547,7 @@ StatusServer()
 
 	struct RastPort			*RPort;
 
-	APTR					 SomeObject;
+	APTR					 SomeObject = NULL;
 	struct ObjectCarrier	 Carrier;
 
 	struct timerequest		*StatusTimeRequest;
@@ -590,7 +590,7 @@ StatusServer()
 							*New = NULL;
 
 	BOOL					 AllFine = TRUE;
-	LONG					 Mode;
+	LONG					 Mode = 0;
 
 	StatusLineWidth = 0;
 
@@ -885,7 +885,7 @@ StatusServer()
 							if(Now.tv_secs != LastTime.tv_secs)
 							{
 								UBYTE Sum[20];
-								WORD What;
+								WORD What = 0;
 
 								LastTime = Now;
 

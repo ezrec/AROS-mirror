@@ -869,7 +869,7 @@ ConTransferHost(STRPTR Buffer,LONG Len)
 		/* How much room is left? */
 
 	if(Buffer != ReadBuffer)
-		MaxSize = SerialBufferSize - ((LONG)Buffer - (LONG)ReadBuffer);
+		MaxSize = SerialBufferSize - ((IPTR)Buffer - (IPTR)ReadBuffer);
 	else
 		MaxSize = SerialBufferSize;
 
@@ -938,7 +938,7 @@ ConTransferHost_Translate_CR_LF(STRPTR String,LONG Size)
 	LONG MaxSize;
 
 	if(String != ReadBuffer)
-		MaxSize = SerialBufferSize - ((LONG)String - (LONG)ReadBuffer);
+		MaxSize = SerialBufferSize - ((IPTR)String - (IPTR)ReadBuffer);
 	else
 		MaxSize = SerialBufferSize;
 
@@ -1013,7 +1013,7 @@ ConProcess(STRPTR String,LONG Size)
 						}
 						while(--Count > 0);
 
-						if((Count = (ULONG)Dst - (ULONG)LocalBuffer) > 0)
+						if((Count = (IPTR)Dst - (IPTR)LocalBuffer) > 0)
 							(*CaptureData)(LocalBuffer,Count);
 					}
 				}
@@ -1066,7 +1066,7 @@ ConProcess(STRPTR String,LONG Size)
 	 */
 
 VOID
-ConPrintf(STRPTR String,...)
+ConPrintf(CONST_STRPTR String,...)
 {
 	UBYTE LocalBuffer[256];
 	va_list	VarArgs;

@@ -489,7 +489,7 @@ HandlePacket(VOID)
 					{
 						MenuItem = ItemAddress(PacketMenu,MsgCode);
 
-						switch((ULONG)GTMENUITEM_USERDATA(MenuItem))
+						switch((IPTR)GTMENUITEM_USERDATA(MenuItem))
 						{
 							case MEN_TOGGLE_ECHO:
 
@@ -533,7 +533,7 @@ HandlePacket(VOID)
 													case 0:
 
 														Close(SomeFile);
-														SomeFile = NULL;
+														SomeFile = BNULL;
 														break;
 												}
 											}
@@ -542,7 +542,7 @@ HandlePacket(VOID)
 											{
 												LONG Len;
 
-												LineRead(NULL,NULL,NULL);
+												LineRead(BNULL,NULL,0);
 
 												while(Len = LineRead(SomeFile,DummyBuffer,sizeof(DummyBuffer) - 1))
 												{
@@ -574,7 +574,7 @@ HandlePacket(VOID)
 
 									if(FileRequest = SaveFile(PacketWindow,LocaleString(MSG_PACKET_SAVE_HISTORY_TXT),NULL,NULL,DummyBuffer,sizeof(DummyBuffer)))
 									{
-										BPTR SomeFile = NULL;
+										BPTR SomeFile = BNULL;
 										LONG Error = 0;
 
 										FreeAslRequest(FileRequest);
@@ -773,7 +773,7 @@ PacketProcessEntry(VOID)
 	{
 		if((PacketSignal = AllocSignal(-1)) != -1)
 		{
-			STATIC ULONG MenuTags[] =
+			STATIC IPTR MenuTags[] =
 			{
 				LAMN_TitleID,			MSG_PACKET_PROJECT_MEN,
 					LAMN_ItemID,		MSG_PACKET_LOAD_HISTORY_MEN,
@@ -783,18 +783,18 @@ PacketProcessEntry(VOID)
 					LAMN_ItemID,		MSG_PACKET_CLEAR_HISTORY_MEN,
 						LAMN_UserData,	MEN_CLEARHISTORY,
 
-					LAMN_ItemText,		(ULONG)NM_BARLABEL,
+					LAMN_ItemText,		(IPTR)NM_BARLABEL,
 
 					LAMN_ItemID,		MSG_PACKET_OTHER_WINDOW_MEN,
 						LAMN_UserData,	MEN_OTHERWINDOW,
 
-					LAMN_ItemText,		(ULONG)NM_BARLABEL,
+					LAMN_ItemText,		(IPTR)NM_BARLABEL,
 
 					LAMN_ItemID,		MSG_PACKET_TOGGLE_ECHO_MEN,
 						LAMN_UserData,	MEN_TOGGLE_ECHO,
 						LAMN_Toggle,	TRUE,
 
-					LAMN_ItemText,		(ULONG)NM_BARLABEL,
+					LAMN_ItemText,		(IPTR)NM_BARLABEL,
 
 					LAMN_ItemID,		MSG_PACKET_QUIT_MEN,
 						LAMN_UserData,	MEN_QUITPANEL,

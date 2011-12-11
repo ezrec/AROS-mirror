@@ -254,7 +254,7 @@ FreeTranslationEntry(struct TranslationEntry *Entry)
 	 */
 
 LONG
-TranslateString(STRPTR From,STRPTR To)
+TranslateString(CONST_STRPTR From,STRPTR To)
 {
 	BOOL GotControl,GotEscape;
 	LONG Len,Count,i;
@@ -454,7 +454,7 @@ TranslateString(STRPTR From,STRPTR To)
 	 */
 
 struct TranslationEntry *
-AllocTranslationEntry(STRPTR String)
+AllocTranslationEntry(CONST_STRPTR String)
 {
 	UBYTE LocalBuffer[256];
 	LONG Count;

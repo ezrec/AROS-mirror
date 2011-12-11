@@ -311,7 +311,7 @@ InsertGrouping(STRPTR Buffer,STRPTR GroupData,STRPTR GroupSeparator)
 
 		/* Look how long the resulting string is */
 
-	j = ((LONG)Index - (LONG)LocalBuffer) - 1;
+	j = ((IPTR)Index - (IPTR)LocalBuffer) - 1;
 
 		/* Copy it back */
 
@@ -535,7 +535,7 @@ CreateSum(LONG Quantity,BOOL UseCurrency,STRPTR Buffer,LONG BufferSize)
 	 */
 
 VOID
-LocalizeString(STRPTR *Strings,LONG From,LONG To)
+LocalizeString(CONST_STRPTR *Strings,LONG From,LONG To)
 {
 	if(!Strings[0])
 	{
@@ -552,7 +552,7 @@ LocalizeString(STRPTR *Strings,LONG From,LONG To)
 	 */
 
 VOID
-LocalizeStringTable(STRPTR *Strings,LONG *Table)
+LocalizeStringTable(CONST_STRPTR *Strings,LONG *Table)
 {
 	while(*Table != -1)
 		*Strings++ = LocaleString(*Table++);
@@ -565,7 +565,7 @@ LocalizeStringTable(STRPTR *Strings,LONG *Table)
 	 *	Obtain a string from the translation pool.
 	 */
 
-STRPTR
+CONST_STRPTR
 LocaleString(ULONG ID)
 {
 	STRPTR Builtin;
@@ -603,9 +603,9 @@ LocaleString(ULONG ID)
 
 	if(Catalog)
 	{
-		STRPTR String = GetCatalogStr(Catalog,ID,Builtin);
+		CONST_STRPTR String = GetCatalogStr(Catalog,ID,Builtin);
 
-		if(String[0])
+		if(String && String[0])
 			return(String);
 	}
 
@@ -613,10 +613,10 @@ LocaleString(ULONG ID)
 }
 
 #ifndef __AROS__
-STRPTR SAVE_DS ASM
+CONST_STRPTR SAVE_DS ASM
 LocaleHookFunc(REG(a0) struct Hook *UnusedHook,REG(a2) APTR Unused,REG(a1) LONG ID)
 #else
-AROS_UFH3(STRPTR, LocaleHookFunc,
+AROS_UFH3(CONST_STRPTR, LocaleHookFunc,
  AROS_UFHA(struct Hook * , UnusedHook , A0),
  AROS_UFHA(APTR          , Unused, A2),
  AROS_UFHA(LONG          , ID, A1))
@@ -710,7 +710,7 @@ FormatStamp(struct DateStamp *Stamp,STRPTR BothBuffer,LONG BothBufferSize,BOOL S
 			if(SubstituteDay)
 			{
 				struct DateStamp Today;
-				STRPTR String;
+				CONST_STRPTR String;
 
 					/* Get the current time */
 
@@ -778,7 +778,7 @@ FormatStamp(struct DateStamp *Stamp,STRPTR BothBuffer,LONG BothBufferSize,BOOL S
 		CopyMem(Stamp,&DateTime.dat_Stamp,sizeof(struct DateStamp));
 
 		DateTime.dat_Format		= FORMAT_DOS;
-		DateTime.dat_Flags		= SubstituteDay ? DTF_SUBST : NULL;
+		DateTime.dat_Flags		= SubstituteDay ? DTF_SUBST : 0;
 		DateTime.dat_StrDay		= NULL;
 		DateTime.dat_StrDate	= DateBuffer;
 		DateTime.dat_StrTime	= TimeBuffer;

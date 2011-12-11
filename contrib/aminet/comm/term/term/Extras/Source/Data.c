@@ -435,20 +435,20 @@ BYTE GfxTable[256] =
 
 struct SpecialKey SpecialKeys[14] =
 {
-	XOF,	(JUMP)DoxON_xOFF,	/* Halt data flow. */
-	XON,	(JUMP)DoxON_xOFF,	/* Restart data flow. */
-	BEL,	(JUMP)DoBeep,		/* Ring the bell. */
-	BKS,	(JUMP)DoBackspace,	/* Erase a character. */
-	ENT,	(JUMP)DoLF_FF_VT,	/* Enter key. */
-	FFD,	(JUMP)DoFF,		/* Form feed. */
-	VTB,	(JUMP)DoLF_FF_VT,	/* Vertical tab (huh?). */
-	RET,	(JUMP)DoCR,		/* Return key. */
-	TAB,	(JUMP)DoTab,		/* Move to next tab stop. */
-	SI,	(JUMP)DoShiftIn,	/* Change to graphics mode */
-	SO,	(JUMP)DoShiftOut,	/* Change out of graphics mode. */
-	ENQ,	(JUMP)DoEnq,		/* Transmit answerback message. */
-	ESC,	(JUMP)DoEsc,		/* Start new control sequence. */
-	CSI,	(JUMP)DoCsi		/* Start new control sequence. */
+	{ XOF,	(JUMP)DoxON_xOFF,	/* Halt data flow. */ },
+	{ XON,	(JUMP)DoxON_xOFF,	/* Restart data flow. */ },
+	{ BEL,	(JUMP)DoBeep,		/* Ring the bell. */ },
+	{ BKS,	(JUMP)DoBackspace,	/* Erase a character. */ },
+	{ ENT,	(JUMP)DoLF_FF_VT,	/* Enter key. */ },
+	{ FFD,	(JUMP)DoFF,		/* Form feed. */ },
+	{ VTB,	(JUMP)DoLF_FF_VT,	/* Vertical tab (huh?). */ },
+	{ RET,	(JUMP)DoCR,		/* Return key. */ },
+	{ TAB,	(JUMP)DoTab,		/* Move to next tab stop. */ },
+	{ SI,	(JUMP)DoShiftIn,	/* Change to graphics mode */ },
+	{ SO,	(JUMP)DoShiftOut,	/* Change out of graphics mode. */ },
+	{ ENQ,	(JUMP)DoEnq,		/* Transmit answerback message. */ },
+	{ ESC,	(JUMP)DoEsc,		/* Start new control sequence. */ },
+	{ CSI,	(JUMP)DoCsi		/* Start new control sequence. */ },
 };
 
 JUMP *SpecialTable;
@@ -619,7 +619,7 @@ BOOL			 DidTransfer;
 struct Window		*TransferWindow;
 UBYTE			 TransferTitleBuffer[256];
 BOOL			 TransferZoomed;
-STRPTR			 TransferWindowTitle;
+CONST_STRPTR		 TransferWindowTitle;
 
 struct LayoutHandle	*TransferHandle;
 struct List		 TransferInfoList;
@@ -768,7 +768,7 @@ struct SignalSemaphore	 DoubleBufferSemaphore;
 struct XEM_IO		*XEM_IO;
 ULONG			 XEM_Signal;
 struct XEmulatorHostData XEM_HostData;
-UBYTE			*OptionTitle;
+CONST UBYTE		*OptionTitle;
 struct List		 XEM_MacroList;
 struct XEmulatorMacroKey *XEM_MacroKeys;
 UBYTE			 EmulationName[MAX_FILENAME_LENGTH];
@@ -804,16 +804,16 @@ struct TranslationEntry	**SendTable,
 
 struct WindowInfo WindowInfoTable[] =
 {
-	WINDOW_PACKET,		WC_ALIGNBELOW|WC_EXPANDWIDTH,	0,0,0,0,
-	WINDOW_STATUS,		WC_ALIGNRIGHT,			0,0,0,0,
-	WINDOW_REVIEW,		WC_ALIGNTOP|WC_EXPANDWIDTH,	0,0,0,0,
-	WINDOW_FAST,		WC_ALIGNTOP|WC_ALIGNSIDE,	0,0,0,0,
-	WINDOW_MAIN,		NULL,				-1,-1,0,0,
-	WINDOW_CHARTAB,		WC_ALIGNTOP,			0,0,0,0,
-	WINDOW_QUEUE,		WC_ALIGNLEFT|WC_ALIGNTOP,	0,0,0,0,
-	WINDOW_FILETRANSFER,	WC_ALIGNLEFT|WC_ALIGNTOP,	0,0,0,0,
+	{ WINDOW_PACKET,		WC_ALIGNBELOW|WC_EXPANDWIDTH,	0,0,0,0, },
+	{ WINDOW_STATUS,		WC_ALIGNRIGHT,			0,0,0,0, },
+	{ WINDOW_REVIEW,		WC_ALIGNTOP|WC_EXPANDWIDTH,	0,0,0,0, },
+	{ WINDOW_FAST,		WC_ALIGNTOP|WC_ALIGNSIDE,	0,0,0,0, },
+	{ WINDOW_MAIN,		0,				-1,-1,0,0, },
+	{ WINDOW_CHARTAB,		WC_ALIGNTOP,			0,0,0,0, },
+	{ WINDOW_QUEUE,		WC_ALIGNLEFT|WC_ALIGNTOP,	0,0,0,0, },
+	{ WINDOW_FILETRANSFER,	WC_ALIGNLEFT|WC_ALIGNTOP,	0,0,0,0, },
 
-	-1
+	{ -1 },
 };
 
 struct SignalSemaphore WindowInfoSemaphore;
@@ -917,9 +917,9 @@ struct DiskObject DropIcon =
 	&DropImage,
 	NULL,
 	NULL,
+	0,
 	NULL,
-	NULL,
-	NULL,
+	0,
 	NULL},
 
 	WBTOOL,
@@ -1176,176 +1176,176 @@ struct ControlCode ANSICode[] =
 {
 	/* Single character sequences */
 
-	'A',	Table0,	NULL,	 0 ,	1,	(EPTR)VT52_CursorUp,		/* Cursor up */
-	'B',	Table0,	NULL,	 0 ,	1,	(EPTR)VT52_CursorDown,		/* Cursor down */
-	'C',	Table0,	NULL,	 0 ,	1,	(EPTR)VT52_CursorRight,		/* Cursor right */
-	'D',	Table0,	NULL,	 0 ,	1,	(EPTR)VT52_CursorLeft,		/* Cursor left */
-	'F',	Table0,	NULL,	 0 ,	1,	(EPTR)Ignore,			/* Enter graphics mode */
-	'G',	Table0,	NULL,	 0 ,	1,	(EPTR)Ignore,			/* Exit graphics mode */
-	'H',	Table0,	NULL,	 0 ,	1,	(EPTR)VT52_CursorHome,		/* Cursor to home */
-	'I',	Table0,	NULL,	 0 ,	1,	(EPTR)VT52_RevLF,		/* Reverse line feed */
-	'J',	Table0,	NULL,	 0 ,	1,	(EPTR)VT52_EraseEOS,		/* Erase to end of screen */
-	'K',	Table0,	NULL,	 0 ,	1,	(EPTR)VT52_EraseEOL,		/* Erase to end of line */
-	'W',	Table0,	NULL,	 0 ,	1,	(EPTR)VT52_PrintOn,		/* Enter printer controller mode */
-	'X',	Table0,	NULL,	 0 ,	1,	(EPTR)VT52_PrintOff,		/* Exit printer controller mode */
-	']',	Table0,	NULL,	 0 ,	1,	(EPTR)VT52_PrintScreen,		/* Print screen */
-	'V',	Table0,	NULL,	 0 ,	1,	(EPTR)VT52_PrintLine,		/* Print cursor line */
-	'^',	Table0,	NULL,	 0 ,	1,	(EPTR)Ignore,			/* Enter auto print mode */
-	'_',	Table0,	NULL,	 0 ,	1,	(EPTR)Ignore,			/* Exit auto print mode */
+	{ 'A',	Table0,	NULL,	 0 ,	1,	(EPTR)VT52_CursorUp,		/* Cursor up */ },
+	{ 'B',	Table0,	NULL,	 0 ,	1,	(EPTR)VT52_CursorDown,		/* Cursor down */ },
+	{ 'C',	Table0,	NULL,	 0 ,	1,	(EPTR)VT52_CursorRight,		/* Cursor right */ },
+	{ 'D',	Table0,	NULL,	 0 ,	1,	(EPTR)VT52_CursorLeft,		/* Cursor left */ },
+	{ 'F',	Table0,	NULL,	 0 ,	1,	(EPTR)Ignore,			/* Enter graphics mode */ },
+	{ 'G',	Table0,	NULL,	 0 ,	1,	(EPTR)Ignore,			/* Exit graphics mode */ },
+	{ 'H',	Table0,	NULL,	 0 ,	1,	(EPTR)VT52_CursorHome,		/* Cursor to home */ },
+	{ 'I',	Table0,	NULL,	 0 ,	1,	(EPTR)VT52_RevLF,		/* Reverse line feed */ },
+	{ 'J',	Table0,	NULL,	 0 ,	1,	(EPTR)VT52_EraseEOS,		/* Erase to end of screen */ },
+	{ 'K',	Table0,	NULL,	 0 ,	1,	(EPTR)VT52_EraseEOL,		/* Erase to end of line */ },
+	{ 'W',	Table0,	NULL,	 0 ,	1,	(EPTR)VT52_PrintOn,		/* Enter printer controller mode */ },
+	{ 'X',	Table0,	NULL,	 0 ,	1,	(EPTR)VT52_PrintOff,		/* Exit printer controller mode */ },
+	{ ']',	Table0,	NULL,	 0 ,	1,	(EPTR)VT52_PrintScreen,		/* Print screen */ },
+	{ 'V',	Table0,	NULL,	 0 ,	1,	(EPTR)VT52_PrintLine,		/* Print cursor line */ },
+	{ '^',	Table0,	NULL,	 0 ,	1,	(EPTR)Ignore,			/* Enter auto print mode */ },
+	{ '_',	Table0,	NULL,	 0 ,	1,	(EPTR)Ignore,			/* Exit auto print mode */ },
 
 /*	'D',	Table0,	NULL,	 0 ,	1,	(EPTR)CursorScrollDown,		// IND */
-	'M',	Table0,	NULL,	 0 ,	1,	(EPTR)CursorScrollUp,		/* RI */
-	'E',	Table0,	NULL,	 0 ,	1,	(EPTR)NextLine,			/* NEL */
-	'7',	Table0,	NULL,	 0 ,	1,	(EPTR)SaveCursor,		/* DECSC */
-	'8',	Table0,	NULL,	 0 ,	1,	(EPTR)LoadCursor,		/* DECRC */
-	'=',	Table0,	NULL,	 0 ,	1,	(EPTR)NumericAppMode,		/* DECPAM */
-	'>',	Table0,	NULL,	 0 ,	1,	(EPTR)NumericAppMode,		/* DECPNM */
-	'N',	Table0,	NULL,	 0 ,	1,	(EPTR)Ignore,			/* SS2 */
-	'O',	Table0,	NULL,	 0 ,	1,	(EPTR)Ignore,			/* SS3 */
+	{ 'M',	Table0,	NULL,	 0 ,	1,	(EPTR)CursorScrollUp,		/* RI */ },
+	{ 'E',	Table0,	NULL,	 0 ,	1,	(EPTR)NextLine,			/* NEL */ },
+	{ '7',	Table0,	NULL,	 0 ,	1,	(EPTR)SaveCursor,		/* DECSC */ },
+	{ '8',	Table0,	NULL,	 0 ,	1,	(EPTR)LoadCursor,		/* DECRC */ },
+	{ '=',	Table0,	NULL,	 0 ,	1,	(EPTR)NumericAppMode,		/* DECPAM */ },
+	{ '>',	Table0,	NULL,	 0 ,	1,	(EPTR)NumericAppMode,		/* DECPNM */ },
+	{ 'N',	Table0,	NULL,	 0 ,	1,	(EPTR)Ignore,			/* SS2 */ },
+	{ 'O',	Table0,	NULL,	 0 ,	1,	(EPTR)Ignore,			/* SS3 */ },
 /*	'H',	Table0,	NULL,	 0 ,	1,	(EPTR)SetTab,			// HTS */
-	'P',	Table0,	NULL,	 0 ,	1,	(EPTR)Ignore,			/* DCS */
-	'/',	Table0,	NULL,	 0 ,	1,	(EPTR)Ignore,			/* ST */
-	'Z',	Table0,	NULL,	 0 ,	1,	(EPTR)RequestTerminal,		/* DECID */
-	'c',	Table0,	NULL,	 0 ,	1,	(EPTR)Reset,			/* RIS */
-	'<',	Table0,	NULL,	 0 ,	1,	(EPTR)VT52_EnterANSI,		/* VT52 "Enter ANSI mode" */
-	'~',	Table0,	NULL,	 0 ,	1,	(EPTR)Ignore,			/* LS1R */
-	'n',	Table0,	NULL,	 0 ,	1,	(EPTR)Ignore,			/* LS2 */
-	0x7D,	Table0,	NULL,	 0 ,	1,	(EPTR)Ignore,			/* LS2R */
-	'o',	Table0,	NULL,	 0 ,	1,	(EPTR)Ignore,			/* LS3 */
-	'|',	Table0,	NULL,	 0 ,	1,	(EPTR)Ignore,			/* LS3R */
+	{ 'P',	Table0,	NULL,	 0 ,	1,	(EPTR)Ignore,			/* DCS */ },
+	{ '/',	Table0,	NULL,	 0 ,	1,	(EPTR)Ignore,			/* ST */ },
+	{ 'Z',	Table0,	NULL,	 0 ,	1,	(EPTR)RequestTerminal,		/* DECID */ },
+	{ 'c',	Table0,	NULL,	 0 ,	1,	(EPTR)Reset,			/* RIS */ },
+	{ '<',	Table0,	NULL,	 0 ,	1,	(EPTR)VT52_EnterANSI,		/* VT52 "Enter ANSI mode" */ },
+	{ '~',	Table0,	NULL,	 0 ,	1,	(EPTR)Ignore,			/* LS1R */ },
+	{ 'n',	Table0,	NULL,	 0 ,	1,	(EPTR)Ignore,			/* LS2 */ },
+	{ 0x7D,	Table0,	NULL,	 0 ,	1,	(EPTR)Ignore,			/* LS2R */ },
+	{ 'o',	Table0,	NULL,	 0 ,	1,	(EPTR)Ignore,			/* LS3 */ },
+	{ '|',	Table0,	NULL,	 0 ,	1,	(EPTR)Ignore,			/* LS3R */ },
 
-	/* Double character sequences */
+	{ /* Double character sequences */ },
 
-	'[',	Table0,	NULL,	's',	2,	(EPTR)SaveCursor,
-	'[',	Table0,	NULL,	'u',	2,	(EPTR)LoadCursor,
+	{ '[',	Table0,	NULL,	's',	2,	(EPTR)SaveCursor, },
+	{ '[',	Table0,	NULL,	'u',	2,	(EPTR)LoadCursor, },
 
-	'(',	Table0,	NULL,	'A',	2,	(EPTR)FontStuff,		/* SCS */
-	'(',	Table0,	NULL,	'B',	2,	(EPTR)FontStuff,		/* ASCII font */
-	'(',	Table0,	NULL,	'0',	2,	(EPTR)FontStuff,		/* DEC special graphics font */
-	'(',	Table0,	NULL,	'<',	2,	(EPTR)Ignore,			/* DEC supplemental font */
-	'(',	Table0,	NULL,	'4',	2,	(EPTR)Ignore,			/* Dutch font */
-	'(',	Table0,	NULL,	'5',	2,	(EPTR)Ignore,			/* Finnish font */
-	'(',	Table0,	NULL,	'C',	2,	(EPTR)Ignore,			/* Finnish font */
-	'(',	Table0,	NULL,	'R',	2,	(EPTR)Ignore,			/* French font */
-	'(',	Table0,	NULL,	'Q',	2,	(EPTR)Ignore,			/* French Canadian font */
-	'(',	Table0,	NULL,	'K',	2,	(EPTR)Ignore,			/* German font */
-	'(',	Table0,	NULL,	'Y',	2,	(EPTR)Ignore,			/* Italian font */
-	'(',	Table0,	NULL,	'6',	2,	(EPTR)Ignore,			/* Norwegian/Danish font */
-	'(',	Table0,	NULL,	'E',	2,	(EPTR)Ignore,			/* Norwegian/Danish font */
-	'(',	Table0,	NULL,	'Z',	2,	(EPTR)Ignore,			/* Spanish font */
-	'(',	Table0,	NULL,	'7',	2,	(EPTR)Ignore,			/* Swedish font */
-	'(',	Table0,	NULL,	'H',	2,	(EPTR)Ignore,			/* Swedish font */
-	'(',	Table0,	NULL,	'=',	2,	(EPTR)Ignore,			/* Swiss font */
+	{ '(',	Table0,	NULL,	'A',	2,	(EPTR)FontStuff,		/* SCS */ },
+	{ '(',	Table0,	NULL,	'B',	2,	(EPTR)FontStuff,		/* ASCII font */ },
+	{ '(',	Table0,	NULL,	'0',	2,	(EPTR)FontStuff,		/* DEC special graphics font */ },
+	{ '(',	Table0,	NULL,	'<',	2,	(EPTR)Ignore,			/* DEC supplemental font */ },
+	{ '(',	Table0,	NULL,	'4',	2,	(EPTR)Ignore,			/* Dutch font */ },
+	{ '(',	Table0,	NULL,	'5',	2,	(EPTR)Ignore,			/* Finnish font */ },
+	{ '(',	Table0,	NULL,	'C',	2,	(EPTR)Ignore,			/* Finnish font */ },
+	{ '(',	Table0,	NULL,	'R',	2,	(EPTR)Ignore,			/* French font */ },
+	{ '(',	Table0,	NULL,	'Q',	2,	(EPTR)Ignore,			/* French Canadian font */ },
+	{ '(',	Table0,	NULL,	'K',	2,	(EPTR)Ignore,			/* German font */ },
+	{ '(',	Table0,	NULL,	'Y',	2,	(EPTR)Ignore,			/* Italian font */ },
+	{ '(',	Table0,	NULL,	'6',	2,	(EPTR)Ignore,			/* Norwegian/Danish font */ },
+	{ '(',	Table0,	NULL,	'E',	2,	(EPTR)Ignore,			/* Norwegian/Danish font */ },
+	{ '(',	Table0,	NULL,	'Z',	2,	(EPTR)Ignore,			/* Spanish font */ },
+	{ '(',	Table0,	NULL,	'7',	2,	(EPTR)Ignore,			/* Swedish font */ },
+	{ '(',	Table0,	NULL,	'H',	2,	(EPTR)Ignore,			/* Swedish font */ },
+	{ '(',	Table0,	NULL,	'=',	2,	(EPTR)Ignore,			/* Swiss font */ },
 
-	')',	Table0,	NULL,	'A',	2,	(EPTR)FontStuff,		/* SCS */
-	')',	Table0,	NULL,	'B',	2,	(EPTR)FontStuff,		/* ASCII font */
-	')',	Table0,	NULL,	'0',	2,	(EPTR)FontStuff,		/* DEC special graphics font */
-	')',	Table0,	NULL,	'<',	2,	(EPTR)Ignore,			/* DEC supplemental font */
-	')',	Table0,	NULL,	'4',	2,	(EPTR)Ignore,			/* Dutch font */
-	')',	Table0,	NULL,	'5',	2,	(EPTR)Ignore,			/* Finnish font */
-	')',	Table0,	NULL,	'C',	2,	(EPTR)Ignore,			/* Finnish font */
-	')',	Table0,	NULL,	'R',	2,	(EPTR)Ignore,			/* French font */
-	')',	Table0,	NULL,	'Q',	2,	(EPTR)Ignore,			/* French Canadian font */
-	')',	Table0,	NULL,	'K',	2,	(EPTR)Ignore,			/* German font */
-	')',	Table0,	NULL,	'Y',	2,	(EPTR)Ignore,			/* Italian font */
-	')',	Table0,	NULL,	'6',	2,	(EPTR)Ignore,			/* Norwegian/Danish font */
-	')',	Table0,	NULL,	'E',	2,	(EPTR)Ignore,			/* Norwegian/Danish font */
-	')',	Table0,	NULL,	'Z',	2,	(EPTR)Ignore,			/* Spanish font */
-	')',	Table0,	NULL,	'7',	2,	(EPTR)Ignore,			/* Swedish font */
-	')',	Table0,	NULL,	'H',	2,	(EPTR)Ignore,			/* Swedish font */
-	')',	Table0,	NULL,	'=',	2,	(EPTR)Ignore,			/* Swiss font */
+	{ ')',	Table0,	NULL,	'A',	2,	(EPTR)FontStuff,		/* SCS */ },
+	{ ')',	Table0,	NULL,	'B',	2,	(EPTR)FontStuff,		/* ASCII font */ },
+	{ ')',	Table0,	NULL,	'0',	2,	(EPTR)FontStuff,		/* DEC special graphics font */ },
+	{ ')',	Table0,	NULL,	'<',	2,	(EPTR)Ignore,			/* DEC supplemental font */ },
+	{ ')',	Table0,	NULL,	'4',	2,	(EPTR)Ignore,			/* Dutch font */ },
+	{ ')',	Table0,	NULL,	'5',	2,	(EPTR)Ignore,			/* Finnish font */ },
+	{ ')',	Table0,	NULL,	'C',	2,	(EPTR)Ignore,			/* Finnish font */ },
+	{ ')',	Table0,	NULL,	'R',	2,	(EPTR)Ignore,			/* French font */ },
+	{ ')',	Table0,	NULL,	'Q',	2,	(EPTR)Ignore,			/* French Canadian font */ },
+	{ ')',	Table0,	NULL,	'K',	2,	(EPTR)Ignore,			/* German font */ },
+	{ ')',	Table0,	NULL,	'Y',	2,	(EPTR)Ignore,			/* Italian font */ },
+	{ ')',	Table0,	NULL,	'6',	2,	(EPTR)Ignore,			/* Norwegian/Danish font */ },
+	{ ')',	Table0,	NULL,	'E',	2,	(EPTR)Ignore,			/* Norwegian/Danish font */ },
+	{ ')',	Table0,	NULL,	'Z',	2,	(EPTR)Ignore,			/* Spanish font */ },
+	{ ')',	Table0,	NULL,	'7',	2,	(EPTR)Ignore,			/* Swedish font */ },
+	{ ')',	Table0,	NULL,	'H',	2,	(EPTR)Ignore,			/* Swedish font */ },
+	{ ')',	Table0,	NULL,	'=',	2,	(EPTR)Ignore,			/* Swiss font */ },
 
-	'+',	Table0,	NULL,	'A',	2,	(EPTR)Ignore,			/* British font */
-	'+',	Table0,	NULL,	'B',	2,	(EPTR)Ignore,			/* ASCII font */
-	'+',	Table0,	NULL,	'0',	2,	(EPTR)Ignore,			/* DEC special graphics font */
-	'+',	Table0,	NULL,	'<',	2,	(EPTR)Ignore,			/* DEC supplemental font */
-	'+',	Table0,	NULL,	'4',	2,	(EPTR)Ignore,			/* Dutch font */
-	'+',	Table0,	NULL,	'5',	2,	(EPTR)Ignore,			/* Finnish font */
-	'+',	Table0,	NULL,	'C',	2,	(EPTR)Ignore,			/* Finnish font */
-	'+',	Table0,	NULL,	'R',	2,	(EPTR)Ignore,			/* French font */
-	'+',	Table0,	NULL,	'Q',	2,	(EPTR)Ignore,			/* French Canadian font */
-	'+',	Table0,	NULL,	'K',	2,	(EPTR)Ignore,			/* German font */
-	'+',	Table0,	NULL,	'Y',	2,	(EPTR)Ignore,			/* Italian font */
-	'+',	Table0,	NULL,	'6',	2,	(EPTR)Ignore,			/* Norwegian/Danish font */
-	'+',	Table0,	NULL,	'E',	2,	(EPTR)Ignore,			/* Norwegian/Danish font */
-	'+',	Table0,	NULL,	'Z',	2,	(EPTR)Ignore,			/* Spanish font */
-	'+',	Table0,	NULL,	'7',	2,	(EPTR)Ignore,			/* Swedish font */
-	'+',	Table0,	NULL,	'H',	2,	(EPTR)Ignore,			/* Swedish font */
-	'+',	Table0,	NULL,	'=',	2,	(EPTR)Ignore,			/* Swiss font */
+	{ '+',	Table0,	NULL,	'A',	2,	(EPTR)Ignore,			/* British font */ },
+	{ '+',	Table0,	NULL,	'B',	2,	(EPTR)Ignore,			/* ASCII font */ },
+	{ '+',	Table0,	NULL,	'0',	2,	(EPTR)Ignore,			/* DEC special graphics font */ },
+	{ '+',	Table0,	NULL,	'<',	2,	(EPTR)Ignore,			/* DEC supplemental font */ },
+	{ '+',	Table0,	NULL,	'4',	2,	(EPTR)Ignore,			/* Dutch font */ },
+	{ '+',	Table0,	NULL,	'5',	2,	(EPTR)Ignore,			/* Finnish font */ },
+	{ '+',	Table0,	NULL,	'C',	2,	(EPTR)Ignore,			/* Finnish font */ },
+	{ '+',	Table0,	NULL,	'R',	2,	(EPTR)Ignore,			/* French font */ },
+	{ '+',	Table0,	NULL,	'Q',	2,	(EPTR)Ignore,			/* French Canadian font */ },
+	{ '+',	Table0,	NULL,	'K',	2,	(EPTR)Ignore,			/* German font */ },
+	{ '+',	Table0,	NULL,	'Y',	2,	(EPTR)Ignore,			/* Italian font */ },
+	{ '+',	Table0,	NULL,	'6',	2,	(EPTR)Ignore,			/* Norwegian/Danish font */ },
+	{ '+',	Table0,	NULL,	'E',	2,	(EPTR)Ignore,			/* Norwegian/Danish font */ },
+	{ '+',	Table0,	NULL,	'Z',	2,	(EPTR)Ignore,			/* Spanish font */ },
+	{ '+',	Table0,	NULL,	'7',	2,	(EPTR)Ignore,			/* Swedish font */ },
+	{ '+',	Table0,	NULL,	'H',	2,	(EPTR)Ignore,			/* Swedish font */ },
+	{ '+',	Table0,	NULL,	'=',	2,	(EPTR)Ignore,			/* Swiss font */ },
 
-	'*',	Table0,	NULL,	'A',	2,	(EPTR)Ignore,			/* British font */
-	'*',	Table0,	NULL,	'B',	2,	(EPTR)Ignore,			/* ASCII font */
-	'*',	Table0,	NULL,	'0',	2,	(EPTR)Ignore,			/* DEC special graphics font */
-	'*',	Table0,	NULL,	'<',	2,	(EPTR)Ignore,			/* DEC supplemental font */
-	'*',	Table0,	NULL,	'4',	2,	(EPTR)Ignore,			/* Dutch font */
-	'*',	Table0,	NULL,	'5',	2,	(EPTR)Ignore,			/* Finnish font */
-	'*',	Table0,	NULL,	'C',	2,	(EPTR)Ignore,			/* Finnish font */
-	'*',	Table0,	NULL,	'R',	2,	(EPTR)Ignore,			/* French font */
-	'*',	Table0,	NULL,	'Q',	2,	(EPTR)Ignore,			/* French Canadian font */
-	'*',	Table0,	NULL,	'K',	2,	(EPTR)Ignore,			/* German font */
-	'*',	Table0,	NULL,	'Y',	2,	(EPTR)Ignore,			/* Italian font */
-	'*',	Table0,	NULL,	'6',	2,	(EPTR)Ignore,			/* Norwegian/Danish font */
-	'*',	Table0,	NULL,	'E',	2,	(EPTR)Ignore,			/* Norwegian/Danish font */
-	'*',	Table0,	NULL,	'Z',	2,	(EPTR)Ignore,			/* Spanish font */
-	'*',	Table0,	NULL,	'7',	2,	(EPTR)Ignore,			/* Swedish font */
-	'*',	Table0,	NULL,	'H',	2,	(EPTR)Ignore,			/* Swedish font */
-	'*',	Table0,	NULL,	'=',	2,	(EPTR)Ignore,			/* Swiss font */
+	{ '*',	Table0,	NULL,	'A',	2,	(EPTR)Ignore,			/* British font */ },
+	{ '*',	Table0,	NULL,	'B',	2,	(EPTR)Ignore,			/* ASCII font */ },
+	{ '*',	Table0,	NULL,	'0',	2,	(EPTR)Ignore,			/* DEC special graphics font */ },
+	{ '*',	Table0,	NULL,	'<',	2,	(EPTR)Ignore,			/* DEC supplemental font */ },
+	{ '*',	Table0,	NULL,	'4',	2,	(EPTR)Ignore,			/* Dutch font */ },
+	{ '*',	Table0,	NULL,	'5',	2,	(EPTR)Ignore,			/* Finnish font */ },
+	{ '*',	Table0,	NULL,	'C',	2,	(EPTR)Ignore,			/* Finnish font */ },
+	{ '*',	Table0,	NULL,	'R',	2,	(EPTR)Ignore,			/* French font */ },
+	{ '*',	Table0,	NULL,	'Q',	2,	(EPTR)Ignore,			/* French Canadian font */ },
+	{ '*',	Table0,	NULL,	'K',	2,	(EPTR)Ignore,			/* German font */ },
+	{ '*',	Table0,	NULL,	'Y',	2,	(EPTR)Ignore,			/* Italian font */ },
+	{ '*',	Table0,	NULL,	'6',	2,	(EPTR)Ignore,			/* Norwegian/Danish font */ },
+	{ '*',	Table0,	NULL,	'E',	2,	(EPTR)Ignore,			/* Norwegian/Danish font */ },
+	{ '*',	Table0,	NULL,	'Z',	2,	(EPTR)Ignore,			/* Spanish font */ },
+	{ '*',	Table0,	NULL,	'7',	2,	(EPTR)Ignore,			/* Swedish font */ },
+	{ '*',	Table0,	NULL,	'H',	2,	(EPTR)Ignore,			/* Swedish font */ },
+	{ '*',	Table0,	NULL,	'=',	2,	(EPTR)Ignore,			/* Swiss font */ },
 
-	'#',	Table0,	NULL,	'3',	2,	(EPTR)ScaleFont,		/* DECHDL (top half) */
-	'#',	Table0,	NULL,	'4',	2,	(EPTR)ScaleFont,		/* DECHDL (bottom half) */
-	'#',	Table0,	NULL,	'5',	2,	(EPTR)ScaleFont,		/* DECSWL */
-	'#',	Table0,	NULL,	'6',	2,	(EPTR)ScaleFont,		/* DECDWL */
-	'#',	Table0,	NULL,	'8',	2,	(EPTR)AlignmentTest,		/* DECALN */
-	' ',	Table0,	NULL,	'F',	2,	(EPTR)Ignore,			/* S7C1T */
-	' ',	Table0,	NULL,	'G',	2,	(EPTR)Ignore,			/* C8C1T */
+	{ '#',	Table0,	NULL,	'3',	2,	(EPTR)ScaleFont,		/* DECHDL (top half) */ },
+	{ '#',	Table0,	NULL,	'4',	2,	(EPTR)ScaleFont,		/* DECHDL (bottom half) */ },
+	{ '#',	Table0,	NULL,	'5',	2,	(EPTR)ScaleFont,		/* DECSWL */ },
+	{ '#',	Table0,	NULL,	'6',	2,	(EPTR)ScaleFont,		/* DECDWL */ },
+	{ '#',	Table0,	NULL,	'8',	2,	(EPTR)AlignmentTest,		/* DECALN */ },
+	{ ' ',	Table0,	NULL,	'F',	2,	(EPTR)Ignore,			/* S7C1T */ },
+	{ ' ',	Table0,	NULL,	'G',	2,	(EPTR)Ignore,			/* C8C1T */ },
 
-	/* Three character sequence */
+	{ /* Three character sequence */ },
 
-	'Y',	Table7,	NULL,	 0 ,	3,	(EPTR)VT52_SetCursor,		/* Direct cursor address */
+	{ 'Y',	Table7,	NULL,	 0 ,	3,	(EPTR)VT52_SetCursor,		/* Direct cursor address */ },
 
-	/* Multiple character sequences */
+	{ /* Multiple character sequences */ },
 
-	'(',	Table6,	Term0,	'D',	0,	(EPTR)Ignore,			/* SCS */
+	{ '(',	Table6,	Term0,	'D',	0,	(EPTR)Ignore,			/* SCS */ },
 
-	'[',	Table3,	NULL,	'i',	0,	(EPTR)PrinterController,	/* Print mode */
+	{ '[',	Table3,	NULL,	'i',	0,	(EPTR)PrinterController,	/* Print mode */ },
 
-	'[',	Table3,	NULL,	'n',	0,	(EPTR)RequestInformation,	/* DSR */
-	'[',	Table3,	NULL,	'c',	0,	(EPTR)RequestTerminal,		/* DA */
-	'[',	Table3,	NULL,	'x',	0,	(EPTR)RequestTerminalParams,	/* DECREQTPARM */
-	'[',	Table3,	NULL,	'h',	0,	(EPTR)SetSomething,		/* Terminal modes */
-	'[',	Table3,	NULL,	'l',	0,	(EPTR)SetSomething,		/* Terminal modes */
+	{ '[',	Table3,	NULL,	'n',	0,	(EPTR)RequestInformation,	/* DSR */ },
+	{ '[',	Table3,	NULL,	'c',	0,	(EPTR)RequestTerminal,		/* DA */ },
+	{ '[',	Table3,	NULL,	'x',	0,	(EPTR)RequestTerminalParams,	/* DECREQTPARM */ },
+	{ '[',	Table3,	NULL,	'h',	0,	(EPTR)SetSomething,		/* Terminal modes */ },
+	{ '[',	Table3,	NULL,	'l',	0,	(EPTR)SetSomething,		/* Terminal modes */ },
 
-	'[',	Table4,	NULL,	'h',	0,	(EPTR)Ignore,
-	'[',	Table5,	NULL,	'p',	0,	(EPTR)Ignore,			/* DECSCL */
+	{ '[',	Table4,	NULL,	'h',	0,	(EPTR)Ignore, },
+	{ '[',	Table5,	NULL,	'p',	0,	(EPTR)Ignore,			/* DECSCL */ },
 
-	'[',	Table1,	NULL,	'A',	0,	(EPTR)MoveCursor,		/* CUU */
-	'[',	Table1,	NULL,	'B',	0,	(EPTR)MoveCursor,		/* CUD */
-	'[',	Table1,	NULL,	'C',	0,	(EPTR)MoveCursor,		/* CUF */
-	'[',	Table1,	NULL,	'D',	0,	(EPTR)MoveCursor,		/* CUB */
-	'[',	Table1,	NULL,	'G',	0,	(EPTR)MoveColumn,
-	'[',	Table3,	NULL,	'K',	0,	(EPTR)EraseLine,		/* EL/DECSEL */
-	'[',	Table3,	NULL,	'J',	0,	(EPTR)EraseScreen,		/* ED/DECSED */
-	'[',	Table1,	NULL,	'P',	0,	(EPTR)EraseCharacters,		/* DCH */
-	'[',	Table1,	NULL,	'X',	0,	(EPTR)EraseCharacters,		/* ECH (sort of) */
-	'[',	Table1,	NULL,	'@',	0,	(EPTR)InsertCharacters,		/* ICH */
-	'[',	Table1,	NULL,	'L',	0,	(EPTR)InsertLine,		/* IL */
-	'[',	Table1,	NULL,	'M',	0,	(EPTR)ClearLine,		/* DL */
-	'[',	Table1,	NULL,	'g',	0,	(EPTR)SetTabs,			/* TBC */
-	'[',	Table5,	NULL,	'q',	0,	(EPTR)Ignore,			/* DECSCA */
+	{ '[',	Table1,	NULL,	'A',	0,	(EPTR)MoveCursor,		/* CUU */ },
+	{ '[',	Table1,	NULL,	'B',	0,	(EPTR)MoveCursor,		/* CUD */ },
+	{ '[',	Table1,	NULL,	'C',	0,	(EPTR)MoveCursor,		/* CUF */ },
+	{ '[',	Table1,	NULL,	'D',	0,	(EPTR)MoveCursor,		/* CUB */ },
+	{ '[',	Table1,	NULL,	'G',	0,	(EPTR)MoveColumn, },
+	{ '[',	Table3,	NULL,	'K',	0,	(EPTR)EraseLine,		/* EL/DECSEL */ },
+	{ '[',	Table3,	NULL,	'J',	0,	(EPTR)EraseScreen,		/* ED/DECSED */ },
+	{ '[',	Table1,	NULL,	'P',	0,	(EPTR)EraseCharacters,		/* DCH */ },
+	{ '[',	Table1,	NULL,	'X',	0,	(EPTR)EraseCharacters,		/* ECH (sort of) */ },
+	{ '[',	Table1,	NULL,	'@',	0,	(EPTR)InsertCharacters,		/* ICH */ },
+	{ '[',	Table1,	NULL,	'L',	0,	(EPTR)InsertLine,		/* IL */ },
+	{ '[',	Table1,	NULL,	'M',	0,	(EPTR)ClearLine,		/* DL */ },
+	{ '[',	Table1,	NULL,	'g',	0,	(EPTR)SetTabs,			/* TBC */ },
+	{ '[',	Table5,	NULL,	'q',	0,	(EPTR)Ignore,			/* DECSCA */ },
 
-	'[',	Table2,	NULL,	'H',	0,	(EPTR)SetAbsolutePosition,	/* CUP */
-	'[',	Table2,	NULL,	'f',	0,	(EPTR)SetTopPosition,		/* HVP */
-	'[',	Table2,	NULL,	'm',	0,	(EPTR)SetAttributes,		/* SGR */
-	'[',	Table2,	NULL,	'y',	0,	(EPTR)Ignore,			/* DECTST */
-	'[',	Table2,	NULL,	'r',	0,	(EPTR)SetRegion,		/* DECSTBM */
+	{ '[',	Table2,	NULL,	'H',	0,	(EPTR)SetAbsolutePosition,	/* CUP */ },
+	{ '[',	Table2,	NULL,	'f',	0,	(EPTR)SetTopPosition,		/* HVP */ },
+	{ '[',	Table2,	NULL,	'm',	0,	(EPTR)SetAttributes,		/* SGR */ },
+	{ '[',	Table2,	NULL,	'y',	0,	(EPTR)Ignore,			/* DECTST */ },
+	{ '[',	Table2,	NULL,	'r',	0,	(EPTR)SetRegion,		/* DECSTBM */ },
 
-	'[',	Table1,	NULL,	'S',	0,	(EPTR)ScrollUp,
-	'[',	Table1,	NULL,	'T',	0,	(EPTR)ScrollDown,
-	'[',	Table1,	NULL,	'E',	0,	(EPTR)MoveCursorDown,
-	'[',	Table1,	NULL,	'F',	0,	(EPTR)MoveCursorUp,
+	{ '[',	Table1,	NULL,	'S',	0,	(EPTR)ScrollUp, },
+	{ '[',	Table1,	NULL,	'T',	0,	(EPTR)ScrollDown, },
+	{ '[',	Table1,	NULL,	'E',	0,	(EPTR)MoveCursorDown, },
+	{ '[',	Table1,	NULL,	'F',	0,	(EPTR)MoveCursorUp, },
 
-	'[',	Table8,	NULL,	'z',	0,	(EPTR)Ignore,			/* DEC private stuff */
-	'[',	Table8,	NULL,	'{',	0,	(EPTR)Ignore			/* DEC private stuff */
+	{ '[',	Table8,	NULL,	'z',	0,	(EPTR)Ignore,			/* DEC private stuff */ },
+	{ '[',	Table8,	NULL,	'{',	0,	(EPTR)Ignore			/* DEC private stuff */ },
 };
 
 WORD NumCodes = NUM_ELEMENTS(ANSICode);
@@ -1435,21 +1435,21 @@ struct TextBufferInfo	*ReviewInfoData;
 /**********************************************************************/
 
 
-STRPTR BooleanMappings[] =
+CONST_STRPTR BooleanMappings[] =
 {
 	"OFF",
 	"ON",
 	NULL
 };
 
-STATIC STRPTR TransferMappings1[] =
+STATIC CONST_STRPTR TransferMappings1[] =
 {
 	"XPR",
 	"PROGRAM",
 	NULL
 };
 
-STATIC STRPTR TransferMappings2[] =
+STATIC CONST_STRPTR TransferMappings2[] =
 {
 	"XPR",
 	"PROGRAM",
@@ -1457,7 +1457,7 @@ STATIC STRPTR TransferMappings2[] =
 	NULL
 };
 
-STATIC STRPTR TransferMappings3[] =
+STATIC CONST_STRPTR TransferMappings3[] =
 {
 	"XPR",
 	"PROGRAM",
@@ -1466,7 +1466,7 @@ STATIC STRPTR TransferMappings3[] =
 	NULL
 };
 
-STATIC STRPTR DestructiveBSMappings[] =
+STATIC CONST_STRPTR DestructiveBSMappings[] =
 {
 	"OFF",
 	"OVERSTRIKE",
@@ -1474,7 +1474,7 @@ STATIC STRPTR DestructiveBSMappings[] =
 	NULL
 };
 
-STRPTR ParityMappings[] =
+CONST_STRPTR ParityMappings[] =
 {
 	"NONE",
 	"EVEN",
@@ -1484,7 +1484,7 @@ STRPTR ParityMappings[] =
 	NULL
 };
 
-STRPTR HandshakingMappings[] =
+CONST_STRPTR HandshakingMappings[] =
 {
 	"NONE",
 	"RTSCTS",
@@ -1492,14 +1492,14 @@ STRPTR HandshakingMappings[] =
 	NULL
 };
 
-STRPTR DuplexMappings[] =
+CONST_STRPTR DuplexMappings[] =
 {
 	"FULL",
 	"HALF",
 	NULL
 };
 
-STATIC STRPTR ColourMappings[] =
+STATIC CONST_STRPTR ColourMappings[] =
 {
 	"FOUR",
 	"EIGHT",
@@ -1508,7 +1508,7 @@ STATIC STRPTR ColourMappings[] =
 	NULL
 };
 
-STATIC STRPTR StatusMappings[] =
+STATIC CONST_STRPTR StatusMappings[] =
 {
 	"DISABLED",
 	"STANDARD",
@@ -1516,7 +1516,7 @@ STATIC STRPTR StatusMappings[] =
 	NULL
 };
 
-STATIC STRPTR BellMappings[] =
+STATIC CONST_STRPTR BellMappings[] =
 {
 	"NONE",
 	"VISIBLE",
@@ -1526,7 +1526,7 @@ STATIC STRPTR BellMappings[] =
 	NULL
 };
 
-STATIC STRPTR AlertMappings[] =
+STATIC CONST_STRPTR AlertMappings[] =
 {
 	"NONE",
 	"BELL",
@@ -1535,7 +1535,7 @@ STATIC STRPTR AlertMappings[] =
 	NULL
 };
 
-STATIC STRPTR EmulationMappings[] =
+STATIC CONST_STRPTR EmulationMappings[] =
 {
 	"INTERNAL",
 	"ATOMIC",
@@ -1545,7 +1545,7 @@ STATIC STRPTR EmulationMappings[] =
 	NULL
 };
 
-STATIC STRPTR FontMappings[] =
+STATIC CONST_STRPTR FontMappings[] =
 {
 	"STANDARD",
 	"IBM",
@@ -1553,7 +1553,7 @@ STATIC STRPTR FontMappings[] =
 	NULL
 };
 
-STATIC STRPTR EOL_Mappings[] =
+STATIC CONST_STRPTR EOL_Mappings[] =
 {
 	"IGNORE",
 	"CR",
@@ -1563,7 +1563,7 @@ STATIC STRPTR EOL_Mappings[] =
 	NULL
 };
 
-STATIC STRPTR IdentifyMappings[] =
+STATIC CONST_STRPTR IdentifyMappings[] =
 {
 	"IGNORE",
 	"FILETYPE",
@@ -1571,35 +1571,35 @@ STATIC STRPTR IdentifyMappings[] =
 	NULL
 };
 
-STATIC STRPTR ApplicationMappings[] =
+STATIC CONST_STRPTR ApplicationMappings[] =
 {
 	"STANDARD",
 	"APPLICATION",
 	NULL
 };
 
-STATIC STRPTR FontScaleMappings[] =
+STATIC CONST_STRPTR FontScaleMappings[] =
 {
 	"NORMAL",
 	"HALF",
 	NULL
 };
 
-STATIC STRPTR ScrollMappings[] =
+STATIC CONST_STRPTR ScrollMappings[] =
 {
 	"JUMP",
 	"SMOOTH",
 	NULL
 };
 
-STATIC STRPTR SexMappings[] =
+STATIC CONST_STRPTR SexMappings[] =
 {
 	"MALE",
 	"FEMALE",
 	NULL
 };
 
-STATIC STRPTR OnlineMappings[] =
+STATIC CONST_STRPTR OnlineMappings[] =
 {
 	"TIME",
 	"COST",
@@ -1607,14 +1607,14 @@ STATIC STRPTR OnlineMappings[] =
 	NULL
 };
 
-STATIC STRPTR AutoDateMappings[] =
+STATIC CONST_STRPTR AutoDateMappings[] =
 {
 	"NAME",
 	"INCLUDE",
 	NULL
 };
 
-STATIC STRPTR PacingMappings[] =
+STATIC CONST_STRPTR PacingMappings[] =
 {
 	"DIRECT",
 	"ECHO",
@@ -1625,14 +1625,14 @@ STATIC STRPTR PacingMappings[] =
 	NULL
 };
 
-STATIC STRPTR OpenBufferMappings[] =
+STATIC CONST_STRPTR OpenBufferMappings[] =
 {
 	"TOP",
 	"END",
 	NULL
 };
 
-STATIC STRPTR BufferPositionMappings[] =
+STATIC CONST_STRPTR BufferPositionMappings[] =
 {
 	"LEFT",
 	"MID",
@@ -1640,7 +1640,7 @@ STATIC STRPTR BufferPositionMappings[] =
 	NULL
 };
 
-STATIC STRPTR OwnDevUnitRequestMappings[] =
+STATIC CONST_STRPTR OwnDevUnitRequestMappings[] =
 {
 	"RELEASE",
 	"RELEASERETRY",
@@ -1648,7 +1648,7 @@ STATIC STRPTR OwnDevUnitRequestMappings[] =
 	NULL
 };
 
-STATIC STRPTR TransferErrorNotifyMappings[] =
+STATIC CONST_STRPTR TransferErrorNotifyMappings[] =
 {
 	"NEVER",
 	"ALWAYS",
@@ -1657,7 +1657,7 @@ STATIC STRPTR TransferErrorNotifyMappings[] =
 	NULL
 };
 
-STATIC STRPTR DialModeMappings[] =
+STATIC CONST_STRPTR DialModeMappings[] =
 {
 	"PULSE",
 	"TONE",
@@ -1666,7 +1666,7 @@ STATIC STRPTR DialModeMappings[] =
 	NULL
 };
 
-STATIC STRPTR RequesterModeMappings[] =
+STATIC CONST_STRPTR RequesterModeMappings[] =
 {
 	"CENTRE",
 	"PREFS",
@@ -1674,14 +1674,14 @@ STATIC STRPTR RequesterModeMappings[] =
 	NULL
 };
 
-STATIC STRPTR BufferModeMappings[] =
+STATIC CONST_STRPTR BufferModeMappings[] =
 {
 	"DATAFLOW",
 	"REVIEW",
 	NULL
 };
 
-STATIC STRPTR IdentificationMappings[] =
+STATIC CONST_STRPTR IdentificationMappings[] =
 {
 	"VT200",
 	"VT102",
@@ -1692,373 +1692,373 @@ STATIC STRPTR IdentificationMappings[] =
 
 struct AttributeEntry AttributeTable[] =
 {
-	0,	"TERM",				INFO_STEM,	TRUE,	NULL,			ATTR_APPLICATION,
+	{ 0,	"TERM",				INFO_STEM,	TRUE,	NULL,			ATTR_APPLICATION, },
 
-	1,	 "VERSION",			INFO_TEXT,	TRUE,	NULL,			ATTR_APPLICATION_VERSION,
-	1,	 "SCREEN",			INFO_TEXT,	TRUE,	NULL,			ATTR_APPLICATION_SCREEN,
+	{ 1,	 "VERSION",			INFO_TEXT,	TRUE,	NULL,			ATTR_APPLICATION_VERSION, },
+	{ 1,	 "SCREEN",			INFO_TEXT,	TRUE,	NULL,			ATTR_APPLICATION_SCREEN, },
 
-	1,	 "SESSION",			INFO_STEM,	TRUE,	NULL,			ATTR_APPLICATION_SESSION,
-	2,	  "ONLINE",			INFO_BOOLEAN,	TRUE,	NULL,			ATTR_APPLICATION_SESSION_ONLINE,
-	2,	  "SESSIONSTART",		INFO_TEXT,	TRUE,	NULL,			ATTR_APPLICATION_SESSION_SESSIONSTART,
-	2,	  "BYTESSENT",			INFO_NUMERIC,	TRUE,	NULL,			ATTR_APPLICATION_SESSION_BYTESSENT,
-	2,	  "BYTESRECEIVED",		INFO_NUMERIC,	TRUE,	NULL,			ATTR_APPLICATION_SESSION_BYTESRECEIVED,
-	2,	  "CONNECTMESSAGE",		INFO_TEXT,	TRUE,	NULL,			ATTR_APPLICATION_SESSION_CONNECTMESSAGE,
-	2,	  "BBSNAME",			INFO_TEXT,	TRUE,	NULL,			ATTR_APPLICATION_SESSION_BBSNAME,
-	2,	  "BBSNUMBER",			INFO_TEXT,	TRUE,	NULL,			ATTR_APPLICATION_SESSION_BBSNUMBER,
-	2,	  "BBSCOMMENT",			INFO_TEXT,	TRUE,	NULL,			ATTR_APPLICATION_SESSION_BBSCOMMENT,
-	2,	  "USERNAME",			INFO_TEXT,	TRUE,	NULL,			ATTR_APPLICATION_SESSION_USERNAME,
-	2,	  "ONLINEMINUTES",		INFO_NUMERIC,	TRUE,	NULL,			ATTR_APPLICATION_SESSION_ONLINEMINUTES,
-	2,	  "ONLINECOST",			INFO_NUMERIC,	TRUE,	NULL,			ATTR_APPLICATION_SESSION_ONLINECOST,
+	{ 1,	 "SESSION",			INFO_STEM,	TRUE,	NULL,			ATTR_APPLICATION_SESSION, },
+	{ 2,	  "ONLINE",			INFO_BOOLEAN,	TRUE,	NULL,			ATTR_APPLICATION_SESSION_ONLINE, },
+	{ 2,	  "SESSIONSTART",		INFO_TEXT,	TRUE,	NULL,			ATTR_APPLICATION_SESSION_SESSIONSTART, },
+	{ 2,	  "BYTESSENT",			INFO_NUMERIC,	TRUE,	NULL,			ATTR_APPLICATION_SESSION_BYTESSENT, },
+	{ 2,	  "BYTESRECEIVED",		INFO_NUMERIC,	TRUE,	NULL,			ATTR_APPLICATION_SESSION_BYTESRECEIVED, },
+	{ 2,	  "CONNECTMESSAGE",		INFO_TEXT,	TRUE,	NULL,			ATTR_APPLICATION_SESSION_CONNECTMESSAGE, },
+	{ 2,	  "BBSNAME",			INFO_TEXT,	TRUE,	NULL,			ATTR_APPLICATION_SESSION_BBSNAME, },
+	{ 2,	  "BBSNUMBER",			INFO_TEXT,	TRUE,	NULL,			ATTR_APPLICATION_SESSION_BBSNUMBER, },
+	{ 2,	  "BBSCOMMENT",			INFO_TEXT,	TRUE,	NULL,			ATTR_APPLICATION_SESSION_BBSCOMMENT, },
+	{ 2,	  "USERNAME",			INFO_TEXT,	TRUE,	NULL,			ATTR_APPLICATION_SESSION_USERNAME, },
+	{ 2,	  "ONLINEMINUTES",		INFO_NUMERIC,	TRUE,	NULL,			ATTR_APPLICATION_SESSION_ONLINEMINUTES, },
+	{ 2,	  "ONLINECOST",			INFO_NUMERIC,	TRUE,	NULL,			ATTR_APPLICATION_SESSION_ONLINECOST, },
 
-	1,	 "AREXX",			INFO_TEXT,	TRUE,	NULL,			ATTR_APPLICATION_AREXX,
-	1,	 "LASTERROR",			INFO_NUMERIC,	TRUE,	NULL,			ATTR_APPLICATION_LASTERROR,
+	{ 1,	 "AREXX",			INFO_TEXT,	TRUE,	NULL,			ATTR_APPLICATION_AREXX, },
+	{ 1,	 "LASTERROR",			INFO_NUMERIC,	TRUE,	NULL,			ATTR_APPLICATION_LASTERROR, },
 
-	1,	 "TERMINAL",			INFO_STEM,	TRUE,	NULL,			ATTR_APPLICATION_TERMINAL,
-	2,	  "ROWS",			INFO_NUMERIC,	TRUE,	NULL,			ATTR_APPLICATION_TERMINAL_ROWS,
-	2,	  "COLUMNS",			INFO_NUMERIC,	TRUE,	NULL,			ATTR_APPLICATION_TERMINAL_COLUMNS,
+	{ 1,	 "TERMINAL",			INFO_STEM,	TRUE,	NULL,			ATTR_APPLICATION_TERMINAL, },
+	{ 2,	  "ROWS",			INFO_NUMERIC,	TRUE,	NULL,			ATTR_APPLICATION_TERMINAL_ROWS, },
+	{ 2,	  "COLUMNS",			INFO_NUMERIC,	TRUE,	NULL,			ATTR_APPLICATION_TERMINAL_COLUMNS, },
 
-	1,	 "BUFFER",			INFO_STEM,	TRUE,	NULL,			ATTR_APPLICATION_BUFFER,
-	2,	  "SIZE",			INFO_NUMERIC,	TRUE,	NULL,			ATTR_APPLICATION_BUFFER_SIZE,
+	{ 1,	 "BUFFER",			INFO_STEM,	TRUE,	NULL,			ATTR_APPLICATION_BUFFER, },
+	{ 2,	  "SIZE",			INFO_NUMERIC,	TRUE,	NULL,			ATTR_APPLICATION_BUFFER_SIZE, },
 
-	0,	"SERIALPREFS",			INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_SERIAL,
-	1,	 "BAUDRATE",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_SERIAL_BAUDRATE,
-	1,	 "BREAKLENGTH",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_SERIAL_BREAKLENGTH,
-	1,	 "BUFFERSIZE",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_SERIAL_BUFFERSIZE,
-	1,	 "DEVICENAME",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_SERIAL_DEVICENAME,
-	1,	 "UNIT",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_SERIAL_UNIT,
-	1,	 "BITSPERCHAR",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_SERIAL_BITSPERCHAR,
-	1,	 "PARITYMODE",			INFO_MAPPED,	FALSE,	ParityMappings,		ATTR_PREFS_SERIAL_PARITYMODE,
-	1,	 "STOPBITS",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_SERIAL_STOPBITS,
-	1,	 "HANDSHAKINGMODE",		INFO_MAPPED,	FALSE,	HandshakingMappings,	ATTR_PREFS_SERIAL_HANDSHAKINGMODE,
-	1,	 "DUPLEXMODE",			INFO_MAPPED,	FALSE,	DuplexMappings,		ATTR_PREFS_SERIAL_DUPLEXMODE,
-	1,	 "INTERNALXONXOFF",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_SERIAL_XONXOFF,
-	1,	 "XONXOFF",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_SERIAL_XONXOFF,
-	1,	 "HIGHSPEED",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_SERIAL_HIGHSPEED,
-	1,	 "SHARED",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_SERIAL_SHARED,
-	1,	 "STRIPBIT8",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_SERIAL_STRIPBIT8,
-	1,	 "CARRIERCHECK",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_SERIAL_CARRIERCHECK,
-	1,	 "PASSXONXOFFTHROUGH",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_SERIAL_PASSXONXOFFTHROUGH,
-	1,	 "QUANTUM",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_SERIAL_QUANTUM,
-	1,	 "USEOWNDEVUNIT",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_SERIAL_USE_OWNDEVUNIT,
-	1,	 "OWNDEVUNITREQUESTS",		INFO_MAPPED,	FALSE,	OwnDevUnitRequestMappings,	ATTR_PREFS_SERIAL_OWNDEVUNIT_REQUEST,
-	1,	 "DIRECTCONNECTION",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_SERIAL_DIRECT_CONNECTION,
-	1,	 "RELEASEWHENONLINE",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_SERIAL_RELEASE_WHEN_ONLINE,
-	1,	 "RELEASEWHENDIALING",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_SERIAL_RELEASE_WHEN_DIALING,
-	1,	 "NOODUIFSHARED",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_SERIAL_NO_ODU_IF_SHARED,
-	1,	 "LOCALECHO",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_SERIAL_LOCAL_ECHO,
+	{ 0,	"SERIALPREFS",			INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_SERIAL, },
+	{ 1,	 "BAUDRATE",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_SERIAL_BAUDRATE, },
+	{ 1,	 "BREAKLENGTH",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_SERIAL_BREAKLENGTH, },
+	{ 1,	 "BUFFERSIZE",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_SERIAL_BUFFERSIZE, },
+	{ 1,	 "DEVICENAME",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_SERIAL_DEVICENAME, },
+	{ 1,	 "UNIT",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_SERIAL_UNIT, },
+	{ 1,	 "BITSPERCHAR",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_SERIAL_BITSPERCHAR, },
+	{ 1,	 "PARITYMODE",			INFO_MAPPED,	FALSE,	ParityMappings,		ATTR_PREFS_SERIAL_PARITYMODE, },
+	{ 1,	 "STOPBITS",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_SERIAL_STOPBITS, },
+	{ 1,	 "HANDSHAKINGMODE",		INFO_MAPPED,	FALSE,	HandshakingMappings,	ATTR_PREFS_SERIAL_HANDSHAKINGMODE, },
+	{ 1,	 "DUPLEXMODE",			INFO_MAPPED,	FALSE,	DuplexMappings,		ATTR_PREFS_SERIAL_DUPLEXMODE, },
+	{ 1,	 "INTERNALXONXOFF",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_SERIAL_XONXOFF, },
+	{ 1,	 "XONXOFF",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_SERIAL_XONXOFF, },
+	{ 1,	 "HIGHSPEED",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_SERIAL_HIGHSPEED, },
+	{ 1,	 "SHARED",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_SERIAL_SHARED, },
+	{ 1,	 "STRIPBIT8",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_SERIAL_STRIPBIT8, },
+	{ 1,	 "CARRIERCHECK",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_SERIAL_CARRIERCHECK, },
+	{ 1,	 "PASSXONXOFFTHROUGH",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_SERIAL_PASSXONXOFFTHROUGH, },
+	{ 1,	 "QUANTUM",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_SERIAL_QUANTUM, },
+	{ 1,	 "USEOWNDEVUNIT",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_SERIAL_USE_OWNDEVUNIT, },
+	{ 1,	 "OWNDEVUNITREQUESTS",		INFO_MAPPED,	FALSE,	OwnDevUnitRequestMappings,	ATTR_PREFS_SERIAL_OWNDEVUNIT_REQUEST, },
+	{ 1,	 "DIRECTCONNECTION",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_SERIAL_DIRECT_CONNECTION, },
+	{ 1,	 "RELEASEWHENONLINE",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_SERIAL_RELEASE_WHEN_ONLINE, },
+	{ 1,	 "RELEASEWHENDIALING",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_SERIAL_RELEASE_WHEN_DIALING, },
+	{ 1,	 "NOODUIFSHARED",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_SERIAL_NO_ODU_IF_SHARED, },
+	{ 1,	 "LOCALECHO",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_SERIAL_LOCAL_ECHO, },
 
-	0,	"MODEMPREFS",			INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_MODEM,
-	1,	 "MODEMINITTEXT",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_MODEM_MODEMINITTEXT,
-	1,	 "MODEMEXITTEXT",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_MODEM_MODEMEXITTEXT,
-	1,	 "MODEMHANGUPTEXT",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_MODEM_MODEMHANGUPTEXT,
-	1,	 "DIALPREFIXTEXT",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_MODEM_DIALPREFIXTEXT,
-	1,	 "DIALSUFFIXTEXT",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_MODEM_DIALSUFFIXTEXT,
-	1,	 "NOCARRIERTEXT",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_MODEM_NOCARRIERTEXT,
-	1,	 "NODIALTONETEXT",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_MODEM_NODIALTONETEXT,
-	1,	 "CONNECTTEXT",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_MODEM_CONNECTTEXT,
-	1,	 "VOICETEXT",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_MODEM_VOICETEXT,
-	1,	 "RINGTEXT",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_MODEM_RINGTEXT,
-	1,	 "BUSYTEXT",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_MODEM_BUSYTEXT,
-	1,	 "OKTEXT",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_MODEM_OKTEXT,
-	1,	 "ERRORTEXT",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_MODEM_ERRORTEXT,
-	1,	 "REDIALDELAY",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_MODEM_REDIALDELAY,
-	1,	 "DIALRETRIES",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_MODEM_DIALRETRIES,
-	1,	 "DIALTIMEOUT",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_MODEM_DIALTIMEOUT,
-	1,	 "CONNECTAUTOBAUD",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_MODEM_CONNECTAUTOBAUD,
-	1,	 "HANGUPDROPSDTR",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_MODEM_HANGUPDROPSDTR,
-	1,	 "REDIALAFTERHANGUP",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_MODEM_REDIALAFTERHANGUP,
-	1,	 "NOCARRIERISBUSY",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_MODEM_NOCARRIERISBUSY,
-	1,	 "CONNECTLIMIT",		INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_MODEM_CONNECTLIMIT,
-	1,	 "CONNECTLIMITMACRO",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_MODEM_CONNECTLIMITMACRO,
-	1,	 "TIMETOCONNECT",		INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_MODEM_TIME_TO_CONNECT,
-	1,	 "VERBOSEDIALING",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_MODEM_VERBOSEDIALING,
-	1,	 "DIALMODE",			INFO_MAPPED,	FALSE,	DialModeMappings,	ATTR_PREFS_MODEM_DIAL_MODE,
-	1,	 "INTERDIALDELAY",		INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_MODEM_INTER_DIAL_DELAY,
-	1,	 "CHARSENDDELAY",		INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_MODEM_CHAR_SEND_DELAY,
-	1,	 "DONOTSENDCOMMANDS",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_MODEM_DO_NOT_SEND_COMMANDS,
-	1,	 "PBXPREFIXTEXT",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_MODEM_PBX_PREFIX,
-	1,	 "PBX",				INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_MODEM_PBX_MODE,
+	{ 0,	"MODEMPREFS",			INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_MODEM, },
+	{ 1,	 "MODEMINITTEXT",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_MODEM_MODEMINITTEXT, },
+	{ 1,	 "MODEMEXITTEXT",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_MODEM_MODEMEXITTEXT, },
+	{ 1,	 "MODEMHANGUPTEXT",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_MODEM_MODEMHANGUPTEXT, },
+	{ 1,	 "DIALPREFIXTEXT",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_MODEM_DIALPREFIXTEXT, },
+	{ 1,	 "DIALSUFFIXTEXT",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_MODEM_DIALSUFFIXTEXT, },
+	{ 1,	 "NOCARRIERTEXT",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_MODEM_NOCARRIERTEXT, },
+	{ 1,	 "NODIALTONETEXT",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_MODEM_NODIALTONETEXT, },
+	{ 1,	 "CONNECTTEXT",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_MODEM_CONNECTTEXT, },
+	{ 1,	 "VOICETEXT",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_MODEM_VOICETEXT, },
+	{ 1,	 "RINGTEXT",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_MODEM_RINGTEXT, },
+	{ 1,	 "BUSYTEXT",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_MODEM_BUSYTEXT, },
+	{ 1,	 "OKTEXT",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_MODEM_OKTEXT, },
+	{ 1,	 "ERRORTEXT",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_MODEM_ERRORTEXT, },
+	{ 1,	 "REDIALDELAY",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_MODEM_REDIALDELAY, },
+	{ 1,	 "DIALRETRIES",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_MODEM_DIALRETRIES, },
+	{ 1,	 "DIALTIMEOUT",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_MODEM_DIALTIMEOUT, },
+	{ 1,	 "CONNECTAUTOBAUD",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_MODEM_CONNECTAUTOBAUD, },
+	{ 1,	 "HANGUPDROPSDTR",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_MODEM_HANGUPDROPSDTR, },
+	{ 1,	 "REDIALAFTERHANGUP",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_MODEM_REDIALAFTERHANGUP, },
+	{ 1,	 "NOCARRIERISBUSY",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_MODEM_NOCARRIERISBUSY, },
+	{ 1,	 "CONNECTLIMIT",		INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_MODEM_CONNECTLIMIT, },
+	{ 1,	 "CONNECTLIMITMACRO",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_MODEM_CONNECTLIMITMACRO, },
+	{ 1,	 "TIMETOCONNECT",		INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_MODEM_TIME_TO_CONNECT, },
+	{ 1,	 "VERBOSEDIALING",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_MODEM_VERBOSEDIALING, },
+	{ 1,	 "DIALMODE",			INFO_MAPPED,	FALSE,	DialModeMappings,	ATTR_PREFS_MODEM_DIAL_MODE, },
+	{ 1,	 "INTERDIALDELAY",		INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_MODEM_INTER_DIAL_DELAY, },
+	{ 1,	 "CHARSENDDELAY",		INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_MODEM_CHAR_SEND_DELAY, },
+	{ 1,	 "DONOTSENDCOMMANDS",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_MODEM_DO_NOT_SEND_COMMANDS, },
+	{ 1,	 "PBXPREFIXTEXT",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_MODEM_PBX_PREFIX, },
+	{ 1,	 "PBX",				INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_MODEM_PBX_MODE, },
 
-	0,	"COMMANDPREFS",			INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_COMMANDS,
-	1,	 "STARTUPMACROTEXT",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_COMMANDS_STARTUPMACROTEXT,
-	1,	 "LOGINMACROTEXT",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_COMMANDS_LOGINMACROTEXT,
-	1,	 "LOGOFFMACROTEXT",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_COMMANDS_LOGOFFMACROTEXT,
-	1,	 "UPLOADMACROTEXT",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_COMMANDS_UPLOADMACROTEXT,
-	1,	 "DOWNLOADMACROTEXT",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_COMMANDS_DOWNLOADMACROTEXT,
+	{ 0,	"COMMANDPREFS",			INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_COMMANDS, },
+	{ 1,	 "STARTUPMACROTEXT",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_COMMANDS_STARTUPMACROTEXT, },
+	{ 1,	 "LOGINMACROTEXT",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_COMMANDS_LOGINMACROTEXT, },
+	{ 1,	 "LOGOFFMACROTEXT",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_COMMANDS_LOGOFFMACROTEXT, },
+	{ 1,	 "UPLOADMACROTEXT",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_COMMANDS_UPLOADMACROTEXT, },
+	{ 1,	 "DOWNLOADMACROTEXT",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_COMMANDS_DOWNLOADMACROTEXT, },
 
-	0,	"SCREENPREFS",			INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_SCREEN,
-	1,	 "COLOURMODE",			INFO_MAPPED,	FALSE,	ColourMappings,		ATTR_PREFS_SCREEN_COLOURMODE,
-	1,	 "FONTNAME",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_SCREEN_FONTNAME,
-	1,	 "FONTSIZE",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_SCREEN_FONTSIZE,
-	1,	 "MAKESCREENPUBLIC",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_SCREEN_MAKESCREENPUBLIC,
-	1,	 "SHANGHAIWINDOWS",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_SCREEN_SHANGHAIWINDOWS,
-	1,	 "BLINKING",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_SCREEN_BLINKING,
-	1,	 "FASTERLAYOUT",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_SCREEN_FASTERLAYOUT,
-	1,	 "TITLEBAR",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_SCREEN_TITLEBAR,
-	1,	 "STATUSLINEMODE",		INFO_MAPPED,	FALSE,	StatusMappings,		ATTR_PREFS_SCREEN_STATUSLINEMODE,
-	1,	 "USEPUBSCREEN",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_SCREEN_USEWORKBENCH,
-	1,	 "PUBSCREENNAME",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_SCREEN_PUBSCREENNAME,
-	1,	 "ONLINEDISPLAY",		INFO_MAPPED,	FALSE,	OnlineMappings,		ATTR_PREFS_SCREEN_ONLINEDISPLAY,
-	1,	 "USEPENS",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_SCREEN_USEPENS,
-	1,	 "WINDOWBORDER",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_SCREEN_WINDOW_BORDER,
-	1,	 "SPLITSTATUS",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_SCREEN_SPLIT_STATUS,
+	{ 0,	"SCREENPREFS",			INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_SCREEN, },
+	{ 1,	 "COLOURMODE",			INFO_MAPPED,	FALSE,	ColourMappings,		ATTR_PREFS_SCREEN_COLOURMODE, },
+	{ 1,	 "FONTNAME",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_SCREEN_FONTNAME, },
+	{ 1,	 "FONTSIZE",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_SCREEN_FONTSIZE, },
+	{ 1,	 "MAKESCREENPUBLIC",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_SCREEN_MAKESCREENPUBLIC, },
+	{ 1,	 "SHANGHAIWINDOWS",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_SCREEN_SHANGHAIWINDOWS, },
+	{ 1,	 "BLINKING",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_SCREEN_BLINKING, },
+	{ 1,	 "FASTERLAYOUT",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_SCREEN_FASTERLAYOUT, },
+	{ 1,	 "TITLEBAR",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_SCREEN_TITLEBAR, },
+	{ 1,	 "STATUSLINEMODE",		INFO_MAPPED,	FALSE,	StatusMappings,		ATTR_PREFS_SCREEN_STATUSLINEMODE, },
+	{ 1,	 "USEPUBSCREEN",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_SCREEN_USEWORKBENCH, },
+	{ 1,	 "PUBSCREENNAME",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_SCREEN_PUBSCREENNAME, },
+	{ 1,	 "ONLINEDISPLAY",		INFO_MAPPED,	FALSE,	OnlineMappings,		ATTR_PREFS_SCREEN_ONLINEDISPLAY, },
+	{ 1,	 "USEPENS",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_SCREEN_USEPENS, },
+	{ 1,	 "WINDOWBORDER",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_SCREEN_WINDOW_BORDER, },
+	{ 1,	 "SPLITSTATUS",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_SCREEN_SPLIT_STATUS, },
 
-	0,	"TERMINALPREFS",		INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_TERMINAL,
-	1,	 "BELLMODE",			INFO_MAPPED,	FALSE,	BellMappings,		ATTR_PREFS_TERMINAL_BELLMODE,
-	1,	 "ALERTMODE",			INFO_MAPPED,	FALSE,	AlertMappings,		ATTR_PREFS_MISC_ALERTMODE,
-	1,	 "EMULATIONMODE",		INFO_MAPPED,	FALSE,	EmulationMappings,	ATTR_PREFS_TERMINAL_EMULATIONMODE,
-	1,	 "FONTMODE",			INFO_MAPPED,	FALSE,	FontMappings,		ATTR_PREFS_TERMINAL_FONTMODE,
-	1,	 "SENDCRMODE",			INFO_MAPPED,	FALSE,	EOL_Mappings,		ATTR_PREFS_TERMINAL_SENDCRMODE,
-	1,	 "SENDLFMODE",			INFO_MAPPED,	FALSE,	EOL_Mappings,		ATTR_PREFS_TERMINAL_SENDLFMODE,
-	1,	 "RECEIVECRMODE",		INFO_MAPPED,	FALSE,	EOL_Mappings,		ATTR_PREFS_TERMINAL_RECEIVECRMODE,
-	1,	 "RECEIVELFMODE",		INFO_MAPPED,	FALSE,	EOL_Mappings,		ATTR_PREFS_TERMINAL_RECEIVELFMODE,
-	1,	 "NUMCOLUMNS",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_TERMINAL_NUMCOLUMNS,
-	1,	 "NUMLINES",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_TERMINAL_NUMLINES,
-	1,	 "KEYMAPNAME",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TERMINAL_KEYMAPNAME,
-	1,	 "EMULATIONNAME",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TERMINAL_EMULATIONNAME,
-	1,	 "FONTNAME",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TERMINAL_FONTNAME,
-	1,	 "FONTSIZE",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_TERMINAL_FONTSIZE,
-	1,	 "USETERMINALPROCESS",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_TERMINAL_USETERMINALPROCESS,
-	1,	 "AUTOSIZE",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_TERMINAL_AUTOSIZE,
+	{ 0,	"TERMINALPREFS",		INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_TERMINAL, },
+	{ 1,	 "BELLMODE",			INFO_MAPPED,	FALSE,	BellMappings,		ATTR_PREFS_TERMINAL_BELLMODE, },
+	{ 1,	 "ALERTMODE",			INFO_MAPPED,	FALSE,	AlertMappings,		ATTR_PREFS_MISC_ALERTMODE, },
+	{ 1,	 "EMULATIONMODE",		INFO_MAPPED,	FALSE,	EmulationMappings,	ATTR_PREFS_TERMINAL_EMULATIONMODE, },
+	{ 1,	 "FONTMODE",			INFO_MAPPED,	FALSE,	FontMappings,		ATTR_PREFS_TERMINAL_FONTMODE, },
+	{ 1,	 "SENDCRMODE",			INFO_MAPPED,	FALSE,	EOL_Mappings,		ATTR_PREFS_TERMINAL_SENDCRMODE, },
+	{ 1,	 "SENDLFMODE",			INFO_MAPPED,	FALSE,	EOL_Mappings,		ATTR_PREFS_TERMINAL_SENDLFMODE, },
+	{ 1,	 "RECEIVECRMODE",		INFO_MAPPED,	FALSE,	EOL_Mappings,		ATTR_PREFS_TERMINAL_RECEIVECRMODE, },
+	{ 1,	 "RECEIVELFMODE",		INFO_MAPPED,	FALSE,	EOL_Mappings,		ATTR_PREFS_TERMINAL_RECEIVELFMODE, },
+	{ 1,	 "NUMCOLUMNS",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_TERMINAL_NUMCOLUMNS, },
+	{ 1,	 "NUMLINES",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_TERMINAL_NUMLINES, },
+	{ 1,	 "KEYMAPNAME",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TERMINAL_KEYMAPNAME, },
+	{ 1,	 "EMULATIONNAME",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TERMINAL_EMULATIONNAME, },
+	{ 1,	 "FONTNAME",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TERMINAL_FONTNAME, },
+	{ 1,	 "FONTSIZE",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_TERMINAL_FONTSIZE, },
+	{ 1,	 "USETERMINALPROCESS",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_TERMINAL_USETERMINALPROCESS, },
+	{ 1,	 "AUTOSIZE",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_TERMINAL_AUTOSIZE, },
 
-	0,	"PATHPREFS",			INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_PATHS,
-	1,	 "ASCIIUPLOADPATH",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_PATHS_ASCIIUPLOADPATH,
-	1,	 "ASCIIDOWNLOADPATH",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_PATHS_ASCIIDOWNLOADPATH,
-	1,	 "TEXTUPLOADPATH",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_PATHS_TEXTUPLOADPATH,
-	1,	 "TEXTDOWNLOADPATH",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_PATHS_TEXTDOWNLOADPATH,
-	1,	 "BINARYUPLOADPATH",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_PATHS_BINARYUPLOADPATH,
-	1,	 "BINARYDOWNLOADPATH",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_PATHS_BINARYDOWNLOADPATH,
-	1,	 "CONFIGPATH",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_PATHS_CONFIGPATH,
-	1,	 "EDITORNAME",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_PATHS_EDITORNAME,
-	1,	 "HELPFILENAME",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_PATHS_HELPFILENAME,
+	{ 0,	"PATHPREFS",			INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_PATHS, },
+	{ 1,	 "ASCIIUPLOADPATH",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_PATHS_ASCIIUPLOADPATH, },
+	{ 1,	 "ASCIIDOWNLOADPATH",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_PATHS_ASCIIDOWNLOADPATH, },
+	{ 1,	 "TEXTUPLOADPATH",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_PATHS_TEXTUPLOADPATH, },
+	{ 1,	 "TEXTDOWNLOADPATH",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_PATHS_TEXTDOWNLOADPATH, },
+	{ 1,	 "BINARYUPLOADPATH",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_PATHS_BINARYUPLOADPATH, },
+	{ 1,	 "BINARYDOWNLOADPATH",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_PATHS_BINARYDOWNLOADPATH, },
+	{ 1,	 "CONFIGPATH",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_PATHS_CONFIGPATH, },
+	{ 1,	 "EDITORNAME",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_PATHS_EDITORNAME, },
+	{ 1,	 "HELPFILENAME",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_PATHS_HELPFILENAME, },
 
-	0,	"MISCPREFS",			INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_MISC,
-	1,	 "PRIORITY",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_MISC_PRIORITY,
-	1,	 "BACKUPCONFIG",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_MISC_BACKUPCONFIG,
-	1,	 "OPENFASTMACROPANEL",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_MISC_OPENFASTMACROPANEL,
-	1,	 "RELEASEDEVICE",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_MISC_RELEASEDEVICE,
-	1,	 "OVERRIDEPATH",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_MISC_OVERRIDEPATH,
-	1,	 "AUTOUPLOAD",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_MISC_AUTOUPLOAD,
-	1,	 "SETARCHIVEDBIT",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_MISC_SETARCHIVEDBIT,
-	1,	 "COMMENTMODE",			INFO_MAPPED,	FALSE,	IdentifyMappings,	ATTR_PREFS_MISC_COMMENTMODE,
-	1,	 "TRANSFERICONS",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_MISC_TRANSFERICONS,
-	1,	 "CREATEICONS",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_MISC_CREATEICONS,
-	1,	 "SIMPLEIO",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_MISC_SIMPLEIO,
-	1,	 "HIDEUPLOADICON",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_MISC_HIDE_UPLOAD_ICON,
-	1,	 "TRANSFERPERFMETER",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_MISC_TRANSFER_PERFMETER,
-	1,	 "IOBUFFERSIZE",		INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_MISC_IOBUFFERSIZE,
-	1,	 "PROTECTIVEMODE",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_MISC_OVERWRITE_WARNING,
-	1,	 "ALERTMODE",			INFO_MAPPED,	FALSE,	AlertMappings,		ATTR_PREFS_MISC_ALERTMODE,
-	1,	 "REQUESTERMODE",		INFO_MAPPED,	FALSE,	RequesterModeMappings,	ATTR_PREFS_MISC_REQUESTERMODE,
-	1,	 "REQUESTERWIDTH",		INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_MISC_REQUESTERWIDTH,
-	1,	 "REQUESTERHEIGHT",		INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_MISC_REQUESTERHEIGHT,
-	1,	 "WAITSTRING",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_MISC_WAITSTRING,
-	1,	 "WAITCOMMAND",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_MISC_WAITSTRING,
-	1,	 "CONSOLEWINDOW",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_MISC_CONSOLEWINDOW,
-	1,	 "SUPPRESSOUTPUT",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_MISC_SUPPRESSOUTPUT,
+	{ 0,	"MISCPREFS",			INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_MISC, },
+	{ 1,	 "PRIORITY",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_MISC_PRIORITY, },
+	{ 1,	 "BACKUPCONFIG",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_MISC_BACKUPCONFIG, },
+	{ 1,	 "OPENFASTMACROPANEL",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_MISC_OPENFASTMACROPANEL, },
+	{ 1,	 "RELEASEDEVICE",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_MISC_RELEASEDEVICE, },
+	{ 1,	 "OVERRIDEPATH",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_MISC_OVERRIDEPATH, },
+	{ 1,	 "AUTOUPLOAD",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_MISC_AUTOUPLOAD, },
+	{ 1,	 "SETARCHIVEDBIT",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_MISC_SETARCHIVEDBIT, },
+	{ 1,	 "COMMENTMODE",			INFO_MAPPED,	FALSE,	IdentifyMappings,	ATTR_PREFS_MISC_COMMENTMODE, },
+	{ 1,	 "TRANSFERICONS",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_MISC_TRANSFERICONS, },
+	{ 1,	 "CREATEICONS",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_MISC_CREATEICONS, },
+	{ 1,	 "SIMPLEIO",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_MISC_SIMPLEIO, },
+	{ 1,	 "HIDEUPLOADICON",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_MISC_HIDE_UPLOAD_ICON, },
+	{ 1,	 "TRANSFERPERFMETER",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_MISC_TRANSFER_PERFMETER, },
+	{ 1,	 "IOBUFFERSIZE",		INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_MISC_IOBUFFERSIZE, },
+	{ 1,	 "PROTECTIVEMODE",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_MISC_OVERWRITE_WARNING, },
+	{ 1,	 "ALERTMODE",			INFO_MAPPED,	FALSE,	AlertMappings,		ATTR_PREFS_MISC_ALERTMODE, },
+	{ 1,	 "REQUESTERMODE",		INFO_MAPPED,	FALSE,	RequesterModeMappings,	ATTR_PREFS_MISC_REQUESTERMODE, },
+	{ 1,	 "REQUESTERWIDTH",		INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_MISC_REQUESTERWIDTH, },
+	{ 1,	 "REQUESTERHEIGHT",		INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_MISC_REQUESTERHEIGHT, },
+	{ 1,	 "WAITSTRING",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_MISC_WAITSTRING, },
+	{ 1,	 "WAITCOMMAND",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_MISC_WAITSTRING, },
+	{ 1,	 "CONSOLEWINDOW",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_MISC_CONSOLEWINDOW, },
+	{ 1,	 "SUPPRESSOUTPUT",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_MISC_SUPPRESSOUTPUT, },
 
-	0,	"CLIPBOARDPREFS",		INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_CLIPBOARD,
-	1,	 "UNIT",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_CLIPBOARD_UNIT,
-	1,	 "LINEDELAY",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_CLIPBOARD_LINEDELAY,
-	1,	 "CHARDELAY",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_CLIPBOARD_CHARDELAY,
-	1,	 "INSERTPREFIXTEXT",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_CLIPBOARD_INSERTPREFIXTEXT,
-	1,	 "INSERTSUFFIXTEXT",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_CLIPBOARD_INSERTSUFFIXTEXT,
-	1,	 "LINEPROMPTTEXT",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_CLIPBOARD_LINEPROMPT,
-	1,	 "TEXTPACING",			INFO_MAPPED,	FALSE,	PacingMappings,		ATTR_PREFS_CLIPBOARD_TEXTPACING,
-	1,	 "SENDTIMEOUT",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_CLIPBOARD_SENDTIMEOUT,
-	1,	 "CONVERTLF",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_CLIPBOARD_CONVERTLF,
+	{ 0,	"CLIPBOARDPREFS",		INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_CLIPBOARD, },
+	{ 1,	 "UNIT",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_CLIPBOARD_UNIT, },
+	{ 1,	 "LINEDELAY",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_CLIPBOARD_LINEDELAY, },
+	{ 1,	 "CHARDELAY",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_CLIPBOARD_CHARDELAY, },
+	{ 1,	 "INSERTPREFIXTEXT",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_CLIPBOARD_INSERTPREFIXTEXT, },
+	{ 1,	 "INSERTSUFFIXTEXT",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_CLIPBOARD_INSERTSUFFIXTEXT, },
+	{ 1,	 "LINEPROMPTTEXT",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_CLIPBOARD_LINEPROMPT, },
+	{ 1,	 "TEXTPACING",			INFO_MAPPED,	FALSE,	PacingMappings,		ATTR_PREFS_CLIPBOARD_TEXTPACING, },
+	{ 1,	 "SENDTIMEOUT",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_CLIPBOARD_SENDTIMEOUT, },
+	{ 1,	 "CONVERTLF",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_CLIPBOARD_CONVERTLF, },
 
-	0,	"CAPTUREPREFS",			INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_CAPTURE,
-	1,	 "LOGACTIONS",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_CAPTURE_LOGACTIONS,
-	1,	 "LOGCALLS",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_CAPTURE_LOGCALLS,
-	1,	 "LOGFILENAME",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_CAPTURE_LOGFILENAME,
-	1,	 "MAXBUFFERSIZE",		INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_CAPTURE_MAXBUFFERSIZE,
-	1,	 "BUFFER",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_CAPTURE_BUFFER,
-	1,	 "CONNECTAUTOCAPTURE",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_CAPTURE_CONNECTAUTOCAPTURE,
-	1,	 "AUTOCAPTUREDATE",		INFO_MAPPED,	FALSE,	AutoDateMappings,	ATTR_PREFS_CAPTURE_AUTOCAPTUREDATE,
-	1,	 "CAPTUREFILTER",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_CAPTURE_CAPTUREFILTER,
-	1,	 "CAPTUREPATH",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_CAPTURE_CAPTUREPATH,
-	1,	 "CALLLOGFILENAME",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_CAPTURE_CALLLOGFILENAME,
-	1,	 "BUFFERSAVEPATH",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_CAPTURE_BUFFERSAVEPATH,
-	1,	 "OPENBUFFERWINDOW",		INFO_MAPPED,	FALSE,	OpenBufferMappings,	ATTR_PREFS_CAPTURE_OPENBUFFERWINDOW,
-	1,	 "OPENBUFFERSCREEN",		INFO_MAPPED,	FALSE,	OpenBufferMappings,	ATTR_PREFS_CAPTURE_OPENBUFFERSCREEN,
-	1,	 "BUFFERSCREENPOSITION",	INFO_MAPPED,	FALSE,	BufferPositionMappings,	ATTR_PREFS_CAPTURE_BUFFERSCREENPOSITION,
-	1,	 "BUFFERWIDTH",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_CAPTURE_BUFFERWIDTH,
-	1,	 "REMEMBERBUFFERWINDOW",	INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_CAPTURE_REMEMBER_BUFFERWINDOW,
-	1,	 "REMEMBERBUFFERSCREEN",	INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_CAPTURE_REMEMBER_BUFFERSCREEN,
-	1,	 "SEARCHHISTORY",		INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_CAPTURE_SEARCH_HISTORY,
-	1,	 "CONVERTCHARACTERS",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_CAPTURE_CONVERTCHARACTERS,
-	1,	 "BUFFERMODE",			INFO_MAPPED,	FALSE,	BufferModeMappings,	ATTR_PREFS_CAPTURE_BUFFERMODE,
-	1,	 "BUFFERSAFETYMEMORY",		INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_CAPTURE_BUFFERSAFETYMEMORY,
+	{ 0,	"CAPTUREPREFS",			INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_CAPTURE, },
+	{ 1,	 "LOGACTIONS",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_CAPTURE_LOGACTIONS, },
+	{ 1,	 "LOGCALLS",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_CAPTURE_LOGCALLS, },
+	{ 1,	 "LOGFILENAME",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_CAPTURE_LOGFILENAME, },
+	{ 1,	 "MAXBUFFERSIZE",		INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_CAPTURE_MAXBUFFERSIZE, },
+	{ 1,	 "BUFFER",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_CAPTURE_BUFFER, },
+	{ 1,	 "CONNECTAUTOCAPTURE",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_CAPTURE_CONNECTAUTOCAPTURE, },
+	{ 1,	 "AUTOCAPTUREDATE",		INFO_MAPPED,	FALSE,	AutoDateMappings,	ATTR_PREFS_CAPTURE_AUTOCAPTUREDATE, },
+	{ 1,	 "CAPTUREFILTER",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_CAPTURE_CAPTUREFILTER, },
+	{ 1,	 "CAPTUREPATH",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_CAPTURE_CAPTUREPATH, },
+	{ 1,	 "CALLLOGFILENAME",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_CAPTURE_CALLLOGFILENAME, },
+	{ 1,	 "BUFFERSAVEPATH",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_CAPTURE_BUFFERSAVEPATH, },
+	{ 1,	 "OPENBUFFERWINDOW",		INFO_MAPPED,	FALSE,	OpenBufferMappings,	ATTR_PREFS_CAPTURE_OPENBUFFERWINDOW, },
+	{ 1,	 "OPENBUFFERSCREEN",		INFO_MAPPED,	FALSE,	OpenBufferMappings,	ATTR_PREFS_CAPTURE_OPENBUFFERSCREEN, },
+	{ 1,	 "BUFFERSCREENPOSITION",	INFO_MAPPED,	FALSE,	BufferPositionMappings,	ATTR_PREFS_CAPTURE_BUFFERSCREENPOSITION, },
+	{ 1,	 "BUFFERWIDTH",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_CAPTURE_BUFFERWIDTH, },
+	{ 1,	 "REMEMBERBUFFERWINDOW",	INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_CAPTURE_REMEMBER_BUFFERWINDOW, },
+	{ 1,	 "REMEMBERBUFFERSCREEN",	INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_CAPTURE_REMEMBER_BUFFERSCREEN, },
+	{ 1,	 "SEARCHHISTORY",		INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_CAPTURE_SEARCH_HISTORY, },
+	{ 1,	 "CONVERTCHARACTERS",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_CAPTURE_CONVERTCHARACTERS, },
+	{ 1,	 "BUFFERMODE",			INFO_MAPPED,	FALSE,	BufferModeMappings,	ATTR_PREFS_CAPTURE_BUFFERMODE, },
+	{ 1,	 "BUFFERSAFETYMEMORY",		INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_CAPTURE_BUFFERSAFETYMEMORY, },
 
-	0,	"FILEPREFS",			INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_FILE,
-	1,	 "TRANSFERPROTOCOLNAME",	INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_FILE_TRANSFERPROTOCOLNAME,
-	1,	 "TRANSLATIONFILENAME",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_FILE_TRANSLATIONFILENAME,
-	1,	 "MACROFILENAME",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_FILE_MACROFILENAME,
-	1,	 "CURSORFILENAME",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_FILE_CURSORFILENAME,
-	1,	 "FASTMACROFILENAME",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_FILE_FASTMACROFILENAME,
+	{ 0,	"FILEPREFS",			INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_FILE, },
+	{ 1,	 "TRANSFERPROTOCOLNAME",	INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_FILE_TRANSFERPROTOCOLNAME, },
+	{ 1,	 "TRANSLATIONFILENAME",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_FILE_TRANSLATIONFILENAME, },
+	{ 1,	 "MACROFILENAME",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_FILE_MACROFILENAME, },
+	{ 1,	 "CURSORFILENAME",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_FILE_CURSORFILENAME, },
+	{ 1,	 "FASTMACROFILENAME",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_FILE_FASTMACROFILENAME, },
 
-	0,	"EMULATIONPREFS",		INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_EMULATION,
-	1,	 "IDENTIFICATION",		INFO_MAPPED,	FALSE,	IdentificationMappings,	ATTR_PREFS_EMULATION_IDENTIFICATION,
-	1,	 "CURSORMODE",			INFO_MAPPED,	FALSE,	ApplicationMappings,	ATTR_PREFS_EMULATION_CURSORMODE,
-	1,	 "NUMERICMODE",			INFO_MAPPED,	FALSE,	ApplicationMappings,	ATTR_PREFS_EMULATION_NUMERICMODE,
-	1,	 "CURSORWRAP",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_EMULATION_CURSORWRAP,
-	1,	 "LINEWRAP",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_EMULATION_LINEWRAP,
-	1,	 "INSERTMODE",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_EMULATION_INSERTMODE,
-	1,	 "NEWLINEMODE",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_EMULATION_NEWLINEMODE,
-	1,	 "FONTSCALEMODE",		INFO_MAPPED,	FALSE,	FontScaleMappings,	ATTR_PREFS_EMULATION_FONTSCALEMODE,
-	1,	 "SCROLLMODE",			INFO_MAPPED,	FALSE,	ScrollMappings,		ATTR_PREFS_EMULATION_SCROLLMODE,
-	1,	 "DESTRUCTIVEBACKSPACE",	INFO_MAPPED,	FALSE,	DestructiveBSMappings,	ATTR_PREFS_EMULATION_DESTRUCTIVEBACKSPACE,
-	1,	 "SWAPBSDELETE",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_EMULATION_SWAPBSDELETE,
-	1,	 "PRINTERENABLED",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_EMULATION_PRINTERENABLED,
-	1,	 "ANSWERBACKTEXT",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_EMULATION_ANSWERBACKTEXT,
-	1,	 "CLSRESETSCURSOR",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_EMULATION_CLS_RESETS_CURSOR,
-	1,	 "CURSORLOCKED",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_EMULATION_CURSORLOCKED,
-	1,	 "FONTLOCKED",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_EMULATION_FONTLOCKED,
-	1,	 "NUMPADLOCKED",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_EMULATION_NUMPADLOCKED,
-	1,	 "MAXPRESCROLL",		INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_EMULATION_MAXSCROLL,
-	1,	 "MAXJUMP",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_EMULATION_MAXJUMP,
-	1,	 "WRAPLOCKED",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_EMULATION_WRAPLOCKED,
-	1,	 "STYLELOCKED",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_EMULATION_STYLELOCKED,
-	1,	 "COLOURLOCKED",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_EMULATION_COLOURLOCKED,
-	1,	 "USEPENS",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_EMULATION_USEPENS,
+	{ 0,	"EMULATIONPREFS",		INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_EMULATION, },
+	{ 1,	 "IDENTIFICATION",		INFO_MAPPED,	FALSE,	IdentificationMappings,	ATTR_PREFS_EMULATION_IDENTIFICATION, },
+	{ 1,	 "CURSORMODE",			INFO_MAPPED,	FALSE,	ApplicationMappings,	ATTR_PREFS_EMULATION_CURSORMODE, },
+	{ 1,	 "NUMERICMODE",			INFO_MAPPED,	FALSE,	ApplicationMappings,	ATTR_PREFS_EMULATION_NUMERICMODE, },
+	{ 1,	 "CURSORWRAP",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_EMULATION_CURSORWRAP, },
+	{ 1,	 "LINEWRAP",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_EMULATION_LINEWRAP, },
+	{ 1,	 "INSERTMODE",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_EMULATION_INSERTMODE, },
+	{ 1,	 "NEWLINEMODE",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_EMULATION_NEWLINEMODE, },
+	{ 1,	 "FONTSCALEMODE",		INFO_MAPPED,	FALSE,	FontScaleMappings,	ATTR_PREFS_EMULATION_FONTSCALEMODE, },
+	{ 1,	 "SCROLLMODE",			INFO_MAPPED,	FALSE,	ScrollMappings,		ATTR_PREFS_EMULATION_SCROLLMODE, },
+	{ 1,	 "DESTRUCTIVEBACKSPACE",	INFO_MAPPED,	FALSE,	DestructiveBSMappings,	ATTR_PREFS_EMULATION_DESTRUCTIVEBACKSPACE, },
+	{ 1,	 "SWAPBSDELETE",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_EMULATION_SWAPBSDELETE, },
+	{ 1,	 "PRINTERENABLED",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_EMULATION_PRINTERENABLED, },
+	{ 1,	 "ANSWERBACKTEXT",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_EMULATION_ANSWERBACKTEXT, },
+	{ 1,	 "CLSRESETSCURSOR",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_EMULATION_CLS_RESETS_CURSOR, },
+	{ 1,	 "CURSORLOCKED",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_EMULATION_CURSORLOCKED, },
+	{ 1,	 "FONTLOCKED",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_EMULATION_FONTLOCKED, },
+	{ 1,	 "NUMPADLOCKED",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_EMULATION_NUMPADLOCKED, },
+	{ 1,	 "MAXPRESCROLL",		INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_EMULATION_MAXSCROLL, },
+	{ 1,	 "MAXJUMP",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_EMULATION_MAXJUMP, },
+	{ 1,	 "WRAPLOCKED",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_EMULATION_WRAPLOCKED, },
+	{ 1,	 "STYLELOCKED",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_EMULATION_STYLELOCKED, },
+	{ 1,	 "COLOURLOCKED",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_EMULATION_COLOURLOCKED, },
+	{ 1,	 "USEPENS",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_EMULATION_USEPENS, },
 
-	0,	"TRANSFERPREFS",		INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_TRANSFER,
-	1,	 "QUIETTRANSFER",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_QUIET_TRANSFER,
-	1,	 "MANGLEFILENAMES",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_MANGLE_FILE_NAMES,
-	1,	 "LINEDELAY",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_LINEDELAY,
-	1,	 "CHARDELAY",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_CHARDELAY,
-	1,	 "LINEPROMPTTEXT",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_LINEPROMPT,
-	1,	 "TEXTPACING",			INFO_MAPPED,	FALSE,	PacingMappings,		ATTR_PREFS_TRANSFER_TEXTPACING,
-	1,	 "SENDTIMEOUT",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_SENDTIMEOUT,
-	1,	 "STRIPBIT8",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_STRIP_BIT_8,
-	1,	 "IGNOREDATAPASTTERMINATOR",	INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_IGNORE_DATA_PAST_ARNOLD,
-	1,	 "TERMINATORCHAR",		INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_TERMINATOR_CHAR,
-	1,	 "ERRORNOTIFYCOUNT",		INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_ERROR_NOTIFY_COUNT,
-	1,	 "ERRORNOTIFYWHEN",		INFO_MAPPED,	FALSE,	TransferErrorNotifyMappings,	ATTR_PREFS_TRANSFER_ERROR_NOTIFY_WHEN,
-	1,	 "OVERRIDEPATH",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_OVERRIDEPATH,
-	1,	 "SETARCHIVEDBIT",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_SETARCHIVEDBIT,
-	1,	 "COMMENTMODE",			INFO_MAPPED,	FALSE,	IdentifyMappings,	ATTR_PREFS_TRANSFER_COMMENTMODE,
-	1,	 "TRANSFERICONS",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_TRANSFERICONS,
-	1,	 "HIDEUPLOADICON",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_HIDE_UPLOAD_ICON,
-	1,	 "TRANSFERPERFMETER",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_TRANSFER_PERFMETER,
-	1,	 "DEFAULTLIBRARY",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_DEFAULT_LIBRARY,
-	1,	 "DEFAULTPROTOCOL",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_DEFAULT_LIBRARY,
-	1,	 "ASCIIUPLOADLIBRARY",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_ASCII_UPLOAD_LIBRARY,
-	1,	 "ASCIIUPLOADPROTOCOL",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_ASCII_UPLOAD_LIBRARY,
-	1,	 "ASCIIDOWNLOADLIBRARY",	INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_ASCII_DOWNLOAD_LIBRARY,
-	1,	 "ASCIIDOWNLOADPROTOCOL",	INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_ASCII_DOWNLOAD_LIBRARY,
-	1,	 "TEXTUPLOADLIBRARY",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_TEXT_UPLOAD_LIBRARY,
-	1,	 "TEXTUPLOADPROTOCOL",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_TEXT_UPLOAD_LIBRARY,
-	1,	 "TEXTDOWNLOADLIBRARY",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_TEXT_DOWNLOAD_LIBRARY,
-	1,	 "TEXTDOWNLOADPROTOCOL",	INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_TEXT_DOWNLOAD_LIBRARY,
-	1,	 "BINARYUPLOADLIBRARY",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_BINARY_UPLOAD_LIBRARY,
-	1,	 "BINARYUPLOADPROTOCOL",	INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_BINARY_UPLOAD_LIBRARY,
-	1,	 "BINARYDOWNLOADLIBRARY",	INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_BINARY_DOWNLOAD_LIBRARY,
-	1,	 "BINARYDOWNLOADPROTOCOL",	INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_BINARY_DOWNLOAD_LIBRARY,
-	1,	 "DEFAULTTYPE",			INFO_MAPPED,	FALSE,	TransferMappings1,	ATTR_PREFS_TRANSFER_DEFAULT_TYPE,
-	1,	 "DEFAULTSENDSIGNATURE",	INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_DEFAULT_SEND_SIGNATURE,
-	1,	 "DEFAULTRECEIVESIGNATURE",	INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_DEFAULT_RECEIVE_SIGNATURE,
-	1,	 "ASCIIUPLOADTYPE",		INFO_MAPPED,	FALSE,	TransferMappings3,	ATTR_PREFS_TRANSFER_ASCII_UPLOAD_TYPE,
-	1,	 "ASCIIUPLOADSIGNATURE",	INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_ASCII_UPLOAD_SIGNATURE,
-	1,	 "ASCIIDOWNLOADTYPE",		INFO_MAPPED,	FALSE,	TransferMappings3,	ATTR_PREFS_TRANSFER_ASCII_DOWNLOAD_TYPE,
-	1,	 "ASCIIDOWNLOADSIGNATURE",	INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_ASCII_DOWNLOAD_SIGNATURE,
-	1,	 "TEXTUPLOADTYPE",		INFO_MAPPED,	FALSE,	TransferMappings2,	ATTR_PREFS_TRANSFER_TEXT_UPLOAD_TYPE,
-	1,	 "TEXTUPLOADSIGNATURE",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_TEXT_UPLOAD_SIGNATURE,
-	1,	 "TEXTDOWNLOADTYPE",		INFO_MAPPED,	FALSE,	TransferMappings2,	ATTR_PREFS_TRANSFER_TEXT_DOWNLOAD_TYPE,
-	1,	 "TEXTDOWNLOADSIGNATURE",	INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_TEXT_DOWNLOAD_SIGNATURE,
-	1,	 "BINARYUPLOADTYPE",		INFO_MAPPED,	FALSE,	TransferMappings2,	ATTR_PREFS_TRANSFER_BINARY_UPLOAD_TYPE,
-	1,	 "BINARYUPLOADSIGNATURE",	INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_BINARY_UPLOAD_SIGNATURE,
-	1,	 "BINARYDOWNLOADTYPE",		INFO_MAPPED,	FALSE,	TransferMappings2,	ATTR_PREFS_TRANSFER_BINARY_DOWNLOAD_TYPE,
-	1,	 "BINARYDOWNLOADSIGNATURE",	INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_BINARY_DOWNLOAD_SIGNATURE,
-	1,	 "IDENTIFYCOMMAND",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_IDENTIFY_COMMAND,
-	1,	 "EXPANDBLANKLINES",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_EXPAND_BLANK_LINES,
+	{ 0,	"TRANSFERPREFS",		INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_TRANSFER, },
+	{ 1,	 "QUIETTRANSFER",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_QUIET_TRANSFER, },
+	{ 1,	 "MANGLEFILENAMES",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_MANGLE_FILE_NAMES, },
+	{ 1,	 "LINEDELAY",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_LINEDELAY, },
+	{ 1,	 "CHARDELAY",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_CHARDELAY, },
+	{ 1,	 "LINEPROMPTTEXT",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_LINEPROMPT, },
+	{ 1,	 "TEXTPACING",			INFO_MAPPED,	FALSE,	PacingMappings,		ATTR_PREFS_TRANSFER_TEXTPACING, },
+	{ 1,	 "SENDTIMEOUT",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_SENDTIMEOUT, },
+	{ 1,	 "STRIPBIT8",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_STRIP_BIT_8, },
+	{ 1,	 "IGNOREDATAPASTTERMINATOR",	INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_IGNORE_DATA_PAST_ARNOLD, },
+	{ 1,	 "TERMINATORCHAR",		INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_TERMINATOR_CHAR, },
+	{ 1,	 "ERRORNOTIFYCOUNT",		INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_ERROR_NOTIFY_COUNT, },
+	{ 1,	 "ERRORNOTIFYWHEN",		INFO_MAPPED,	FALSE,	TransferErrorNotifyMappings,	ATTR_PREFS_TRANSFER_ERROR_NOTIFY_WHEN, },
+	{ 1,	 "OVERRIDEPATH",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_OVERRIDEPATH, },
+	{ 1,	 "SETARCHIVEDBIT",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_SETARCHIVEDBIT, },
+	{ 1,	 "COMMENTMODE",			INFO_MAPPED,	FALSE,	IdentifyMappings,	ATTR_PREFS_TRANSFER_COMMENTMODE, },
+	{ 1,	 "TRANSFERICONS",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_TRANSFERICONS, },
+	{ 1,	 "HIDEUPLOADICON",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_HIDE_UPLOAD_ICON, },
+	{ 1,	 "TRANSFERPERFMETER",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_TRANSFER_PERFMETER, },
+	{ 1,	 "DEFAULTLIBRARY",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_DEFAULT_LIBRARY, },
+	{ 1,	 "DEFAULTPROTOCOL",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_DEFAULT_LIBRARY, },
+	{ 1,	 "ASCIIUPLOADLIBRARY",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_ASCII_UPLOAD_LIBRARY, },
+	{ 1,	 "ASCIIUPLOADPROTOCOL",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_ASCII_UPLOAD_LIBRARY, },
+	{ 1,	 "ASCIIDOWNLOADLIBRARY",	INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_ASCII_DOWNLOAD_LIBRARY, },
+	{ 1,	 "ASCIIDOWNLOADPROTOCOL",	INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_ASCII_DOWNLOAD_LIBRARY, },
+	{ 1,	 "TEXTUPLOADLIBRARY",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_TEXT_UPLOAD_LIBRARY, },
+	{ 1,	 "TEXTUPLOADPROTOCOL",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_TEXT_UPLOAD_LIBRARY, },
+	{ 1,	 "TEXTDOWNLOADLIBRARY",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_TEXT_DOWNLOAD_LIBRARY, },
+	{ 1,	 "TEXTDOWNLOADPROTOCOL",	INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_TEXT_DOWNLOAD_LIBRARY, },
+	{ 1,	 "BINARYUPLOADLIBRARY",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_BINARY_UPLOAD_LIBRARY, },
+	{ 1,	 "BINARYUPLOADPROTOCOL",	INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_BINARY_UPLOAD_LIBRARY, },
+	{ 1,	 "BINARYDOWNLOADLIBRARY",	INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_BINARY_DOWNLOAD_LIBRARY, },
+	{ 1,	 "BINARYDOWNLOADPROTOCOL",	INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_BINARY_DOWNLOAD_LIBRARY, },
+	{ 1,	 "DEFAULTTYPE",			INFO_MAPPED,	FALSE,	TransferMappings1,	ATTR_PREFS_TRANSFER_DEFAULT_TYPE, },
+	{ 1,	 "DEFAULTSENDSIGNATURE",	INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_DEFAULT_SEND_SIGNATURE, },
+	{ 1,	 "DEFAULTRECEIVESIGNATURE",	INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_DEFAULT_RECEIVE_SIGNATURE, },
+	{ 1,	 "ASCIIUPLOADTYPE",		INFO_MAPPED,	FALSE,	TransferMappings3,	ATTR_PREFS_TRANSFER_ASCII_UPLOAD_TYPE, },
+	{ 1,	 "ASCIIUPLOADSIGNATURE",	INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_ASCII_UPLOAD_SIGNATURE, },
+	{ 1,	 "ASCIIDOWNLOADTYPE",		INFO_MAPPED,	FALSE,	TransferMappings3,	ATTR_PREFS_TRANSFER_ASCII_DOWNLOAD_TYPE, },
+	{ 1,	 "ASCIIDOWNLOADSIGNATURE",	INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_ASCII_DOWNLOAD_SIGNATURE, },
+	{ 1,	 "TEXTUPLOADTYPE",		INFO_MAPPED,	FALSE,	TransferMappings2,	ATTR_PREFS_TRANSFER_TEXT_UPLOAD_TYPE, },
+	{ 1,	 "TEXTUPLOADSIGNATURE",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_TEXT_UPLOAD_SIGNATURE, },
+	{ 1,	 "TEXTDOWNLOADTYPE",		INFO_MAPPED,	FALSE,	TransferMappings2,	ATTR_PREFS_TRANSFER_TEXT_DOWNLOAD_TYPE, },
+	{ 1,	 "TEXTDOWNLOADSIGNATURE",	INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_TEXT_DOWNLOAD_SIGNATURE, },
+	{ 1,	 "BINARYUPLOADTYPE",		INFO_MAPPED,	FALSE,	TransferMappings2,	ATTR_PREFS_TRANSFER_BINARY_UPLOAD_TYPE, },
+	{ 1,	 "BINARYUPLOADSIGNATURE",	INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_BINARY_UPLOAD_SIGNATURE, },
+	{ 1,	 "BINARYDOWNLOADTYPE",		INFO_MAPPED,	FALSE,	TransferMappings2,	ATTR_PREFS_TRANSFER_BINARY_DOWNLOAD_TYPE, },
+	{ 1,	 "BINARYDOWNLOADSIGNATURE",	INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_BINARY_DOWNLOAD_SIGNATURE, },
+	{ 1,	 "IDENTIFYCOMMAND",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_IDENTIFY_COMMAND, },
+	{ 1,	 "EXPANDBLANKLINES",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_TRANSFER_EXPAND_BLANK_LINES, },
 
-	0,	"SPEECHPREFS",			INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_SPEECH,
-	1,	 "RATE",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_SPEECH_RATE,
-	1,	 "PITCH",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_SPEECH_PITCH,
-	1,	 "FREQUENCY",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_SPEECH_FREQUENCY,
-	1,	 "SEXMODE",			INFO_MAPPED,	FALSE,	SexMappings,		ATTR_PREFS_SPEECH_SEXMODE,
-	1,	 "VOLUME",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_SPEECH_VOLUME,
-	1,	 "SPEECH",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_SPEECH_SPEECH,
+	{ 0,	"SPEECHPREFS",			INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_SPEECH, },
+	{ 1,	 "RATE",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_SPEECH_RATE, },
+	{ 1,	 "PITCH",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_SPEECH_PITCH, },
+	{ 1,	 "FREQUENCY",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_SPEECH_FREQUENCY, },
+	{ 1,	 "SEXMODE",			INFO_MAPPED,	FALSE,	SexMappings,		ATTR_PREFS_SPEECH_SEXMODE, },
+	{ 1,	 "VOLUME",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_SPEECH_VOLUME, },
+	{ 1,	 "SPEECH",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_SPEECH_SPEECH, },
 
-	0,	"TRANSLATIONPREFS",		INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_TRANSLATIONS,
-	1,	 NULL,				INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_TRANSLATIONS_X,
-	2,	 "SEND",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSLATIONS_X_SEND,
-	2,	 "RECEIVE",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSLATIONS_X_RECEIVE,
+	{ 0,	"TRANSLATIONPREFS",		INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_TRANSLATIONS, },
+	{ 1,	 NULL,				INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_TRANSLATIONS_X, },
+	{ 2,	 "SEND",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSLATIONS_X_SEND, },
+	{ 2,	 "RECEIVE",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_TRANSLATIONS_X_RECEIVE, },
 
-	0,	"FASTMACROPREFS",		INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_FASTMACROS,
-	1,	 "COUNT",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_FASTMACROS_COUNT,
-	1,	  NULL,				INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_FASTMACROS_X,
-	2,	  "NAME",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_FASTMACROS_X_NAME,
-	2,	  "CODE",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_FASTMACROS_X_CODE,
+	{ 0,	"FASTMACROPREFS",		INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_FASTMACROS, },
+	{ 1,	 "COUNT",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_FASTMACROS_COUNT, },
+	{ 1,	  NULL,				INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_FASTMACROS_X, },
+	{ 2,	  "NAME",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_FASTMACROS_X_NAME, },
+	{ 2,	  "CODE",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_FASTMACROS_X_CODE, },
 
-	0,	"HOTKEYPREFS",			INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_HOTKEYS,
-	1,	 "TERMSCREENTOFRONTTEXT",	INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_HOTKEYS_TERMSCREENTOFRONTTEXT,
-	1,	 "BUFFERSCREENTOFRONTTEXT",	INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_HOTKEYS_BUFFERSCREENTOFRONTTEXT,
-	1,	 "SKIPDIALENTRYTEXT",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_HOTKEYS_SKIPDIALENTRYTEXT,
-	1,	 "ABORTAREXX",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_HOTKEYS_ABORTAREXX,
-	1,	 "COMMODITYPRIORITY",		INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_HOTKEYS_COMMODITYPRIORITY,
-	1,	 "HOTKEYSENABLED",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_HOTKEYS_HOTKEYSENABLED,
+	{ 0,	"HOTKEYPREFS",			INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_HOTKEYS, },
+	{ 1,	 "TERMSCREENTOFRONTTEXT",	INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_HOTKEYS_TERMSCREENTOFRONTTEXT, },
+	{ 1,	 "BUFFERSCREENTOFRONTTEXT",	INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_HOTKEYS_BUFFERSCREENTOFRONTTEXT, },
+	{ 1,	 "SKIPDIALENTRYTEXT",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_HOTKEYS_SKIPDIALENTRYTEXT, },
+	{ 1,	 "ABORTAREXX",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_HOTKEYS_ABORTAREXX, },
+	{ 1,	 "COMMODITYPRIORITY",		INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_HOTKEYS_COMMODITYPRIORITY, },
+	{ 1,	 "HOTKEYSENABLED",		INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_HOTKEYS_HOTKEYSENABLED, },
 
-	0,	"CURSORKEYPREFS",		INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_CURSORKEYS,
-	1,	 "UPTEXT",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_CURSORKEYS_UPTEXT,
-	1,	 "RIGHTTEXT",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_CURSORKEYS_RIGHTTEXT,
-	1,	 "DOWNTEXT",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_CURSORKEYS_DOWNTEXT,
-	1,	 "LEFTTEXT",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_CURSORKEYS_LEFTTEXT,
+	{ 0,	"CURSORKEYPREFS",		INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_CURSORKEYS, },
+	{ 1,	 "UPTEXT",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_CURSORKEYS_UPTEXT, },
+	{ 1,	 "RIGHTTEXT",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_CURSORKEYS_RIGHTTEXT, },
+	{ 1,	 "DOWNTEXT",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_CURSORKEYS_DOWNTEXT, },
+	{ 1,	 "LEFTTEXT",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_CURSORKEYS_LEFTTEXT, },
 
-	1,	 "SHIFT",			INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_CURSORKEYS_SHIFT,
-	2,	  "UPTEXT",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_CURSORKEYS_SHIFT_UPTEXT,
-	2,	  "RIGHTTEXT",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_CURSORKEYS_SHIFT_RIGHTTEXT,
-	2,	  "DOWNTEXT",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_CURSORKEYS_SHIFT_DOWNTEXT,
-	2,	  "LEFTTEXT",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_CURSORKEYS_SHIFT_LEFTTEXT,
+	{ 1,	 "SHIFT",			INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_CURSORKEYS_SHIFT, },
+	{ 2,	  "UPTEXT",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_CURSORKEYS_SHIFT_UPTEXT, },
+	{ 2,	  "RIGHTTEXT",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_CURSORKEYS_SHIFT_RIGHTTEXT, },
+	{ 2,	  "DOWNTEXT",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_CURSORKEYS_SHIFT_DOWNTEXT, },
+	{ 2,	  "LEFTTEXT",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_CURSORKEYS_SHIFT_LEFTTEXT, },
 
-	1,	 "ALT",				INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_CURSORKEYS_ALT,
-	2,	  "UPTEXT",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_CURSORKEYS_ALT_UPTEXT,
-	2,	  "RIGHTTEXT",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_CURSORKEYS_ALT_RIGHTTEXT,
-	2,	  "DOWNTEXT",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_CURSORKEYS_ALT_DOWNTEXT,
-	2,	  "LEFTTEXT",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_CURSORKEYS_ALT_LEFTTEXT,
+	{ 1,	 "ALT",				INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_CURSORKEYS_ALT, },
+	{ 2,	  "UPTEXT",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_CURSORKEYS_ALT_UPTEXT, },
+	{ 2,	  "RIGHTTEXT",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_CURSORKEYS_ALT_RIGHTTEXT, },
+	{ 2,	  "DOWNTEXT",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_CURSORKEYS_ALT_DOWNTEXT, },
+	{ 2,	  "LEFTTEXT",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_CURSORKEYS_ALT_LEFTTEXT, },
 
-	1,	 "CONTROL",			INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_CURSORKEYS_CONTROL,
-	2,	  "UPTEXT",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_CURSORKEYS_CONTROL_UPTEXT,
-	2,	  "RIGHTTEXT",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_CURSORKEYS_CONTROL_RIGHTTEXT,
-	2,	  "DOWNTEXT",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_CURSORKEYS_CONTROL_DOWNTEXT,
-	2,	  "LEFTTEXT",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_CURSORKEYS_CONTROL_LEFTTEXT,
+	{ 1,	 "CONTROL",			INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_CURSORKEYS_CONTROL, },
+	{ 2,	  "UPTEXT",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_CURSORKEYS_CONTROL_UPTEXT, },
+	{ 2,	  "RIGHTTEXT",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_CURSORKEYS_CONTROL_RIGHTTEXT, },
+	{ 2,	  "DOWNTEXT",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_CURSORKEYS_CONTROL_DOWNTEXT, },
+	{ 2,	  "LEFTTEXT",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_CURSORKEYS_CONTROL_LEFTTEXT, },
 
-	0,	"FUNCTIONKEYPREFS",		INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_FUNCTIONKEYS,
-	1,	  NULL,				INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_FUNCTIONKEYS_X,
-	1,	 "SHIFT",			INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_FUNCTIONKEYS_SHIFT,
-	2,	   NULL,			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_FUNCTIONKEYS_SHIFT_X,
-	1,	 "ALT",				INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_FUNCTIONKEYS_ALT,
-	2,	   NULL,			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_FUNCTIONKEYS_ALT_X,
-	1,	 "CONTROL",			INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_FUNCTIONKEYS_CONTROL,
-	2,	   NULL,			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_FUNCTIONKEYS_CONTROL_X,
+	{ 0,	"FUNCTIONKEYPREFS",		INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_FUNCTIONKEYS, },
+	{ 1,	  NULL,				INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_FUNCTIONKEYS_X, },
+	{ 1,	 "SHIFT",			INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_FUNCTIONKEYS_SHIFT, },
+	{ 2,	   NULL,			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_FUNCTIONKEYS_SHIFT_X, },
+	{ 1,	 "ALT",				INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_FUNCTIONKEYS_ALT, },
+	{ 2,	   NULL,			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_FUNCTIONKEYS_ALT_X, },
+	{ 1,	 "CONTROL",			INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_FUNCTIONKEYS_CONTROL, },
+	{ 2,	   NULL,			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_FUNCTIONKEYS_CONTROL_X, },
 
-	0,	"PROTOCOLPREFS",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_PROTOCOL,
+	{ 0,	"PROTOCOLPREFS",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_PROTOCOL, },
 
-	0,	"CONSOLEPREFS",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_CONSOLE,
+	{ 0,	"CONSOLEPREFS",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_CONSOLE, },
 
-	0,	"SOUNDPREFS",			INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_SOUND,
-	1,	 "BELLNAME",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_SOUND_BELLNAME,
-	1,	 "CONNECTNAME",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_SOUND_CONNECTNAME,
-	1,	 "DISCONNECTNAME",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_SOUND_DISCONNECTNAME,
-	1,	 "GOODTRANSFERNAME",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_SOUND_GOODTRANSFERNAME,
-	1,	 "BADTRANSFERNAME",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_SOUND_BADTRANSFERNAME,
-	1,	 "RINGNAME",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_SOUND_RINGNAME,
-	1,	 "VOICENAME",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_SOUND_VOICENAME,
-	1,	 "ERRORNAME",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_SOUND_ERROR,
-	1,	 "PRELOAD",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_SOUND_PRELOAD,
-	1,	 "VOLUME",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_SOUND_VOLUME,
+	{ 0,	"SOUNDPREFS",			INFO_STEM,	FALSE,	NULL,			ATTR_PREFS_SOUND, },
+	{ 1,	 "BELLNAME",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_SOUND_BELLNAME, },
+	{ 1,	 "CONNECTNAME",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_SOUND_CONNECTNAME, },
+	{ 1,	 "DISCONNECTNAME",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_SOUND_DISCONNECTNAME, },
+	{ 1,	 "GOODTRANSFERNAME",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_SOUND_GOODTRANSFERNAME, },
+	{ 1,	 "BADTRANSFERNAME",		INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_SOUND_BADTRANSFERNAME, },
+	{ 1,	 "RINGNAME",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_SOUND_RINGNAME, },
+	{ 1,	 "VOICENAME",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_SOUND_VOICENAME, },
+	{ 1,	 "ERRORNAME",			INFO_TEXT,	FALSE,	NULL,			ATTR_PREFS_SOUND_ERROR, },
+	{ 1,	 "PRELOAD",			INFO_BOOLEAN,	FALSE,	NULL,			ATTR_PREFS_SOUND_PRELOAD, },
+	{ 1,	 "VOLUME",			INFO_NUMERIC,	FALSE,	NULL,			ATTR_PREFS_SOUND_VOLUME, },
 
-	0,	"PHONEBOOK",			INFO_STEM,	TRUE,	NULL,			ATTR_PHONEBOOK,
+	{ 0,	"PHONEBOOK",			INFO_STEM,	TRUE,	NULL,			ATTR_PHONEBOOK, },
 
-	1,	 "COUNT",			INFO_NUMERIC,	TRUE,	NULL,			ATTR_PHONEBOOK_COUNT,
-	1,	  NULL,				INFO_STEM,	TRUE,	NULL,			ATTR_PHONEBOOK_X,
-	2,	  "NAME",			INFO_TEXT,	TRUE,	NULL,			ATTR_PHONEBOOK_X_NAME,
-	2,	  "NUMBER",			INFO_TEXT,	TRUE,	NULL,			ATTR_PHONEBOOK_X_NUMBER,
-	2,	  "COMMENTTEXT",		INFO_TEXT,	TRUE,	NULL,			ATTR_PHONEBOOK_X_COMMENTTEXT,
-	2,	  "USERNAME",			INFO_TEXT,	TRUE,	NULL,			ATTR_PHONEBOOK_X_USERNAME,
-	2,	  "PASSWORDTEXT",		INFO_TEXT,	TRUE,	NULL,			ATTR_PHONEBOOK_X_PASSWORDTEXT
+	{ 1,	 "COUNT",			INFO_NUMERIC,	TRUE,	NULL,			ATTR_PHONEBOOK_COUNT, },
+	{ 1,	  NULL,				INFO_STEM,	TRUE,	NULL,			ATTR_PHONEBOOK_X, },
+	{ 2,	  "NAME",			INFO_TEXT,	TRUE,	NULL,			ATTR_PHONEBOOK_X_NAME, },
+	{ 2,	  "NUMBER",			INFO_TEXT,	TRUE,	NULL,			ATTR_PHONEBOOK_X_NUMBER, },
+	{ 2,	  "COMMENTTEXT",		INFO_TEXT,	TRUE,	NULL,			ATTR_PHONEBOOK_X_COMMENTTEXT, },
+	{ 2,	  "USERNAME",			INFO_TEXT,	TRUE,	NULL,			ATTR_PHONEBOOK_X_USERNAME, },
+	{ 2,	  "PASSWORDTEXT",		INFO_TEXT,	TRUE,	NULL,			ATTR_PHONEBOOK_X_PASSWORDTEXT },
 };
 
 WORD AttributeTableSize = NUM_ELEMENTS(AttributeTable);
@@ -2067,62 +2067,83 @@ WORD AttributeTableSize = NUM_ELEMENTS(AttributeTable);
 
 STATIC struct ExclusionInfo ExclusionInfoTable_00[] =
 {
-	1,2, 5,6, -1,-1
+    { 1,2 }, { 5,6 }, { -1,-1 }
 };
 
 STATIC struct ExclusionInfo ExclusionInfoTable_01[] =
 {
-	0,1, -1,-1
+    { 0,1 }, { -1,-1 }
 };
 
 STATIC struct ExclusionInfo ExclusionInfoTable_02[] =
 {
-	2,3, -1,-1
+    { 2,3 }, { -1,-1 }
 };
 
 STATIC struct ExclusionInfo ExclusionInfoTable_03[] =
 {
-	0,1, 0,2, 0,3, 0,4, 1,2, 1,3, 1,4, 2,3, 2,4, 3,4, -1,-1
+    { 0,1 }, { 0,2 }, { 0,3 }, { 0,4 }, { 1,2 }, { 1,3 }, { 1,4 }, { 2,3 }, { 2,4 }, { 3,4 }, { -1,-1 }
 };
 
 STATIC struct ExclusionInfo ExclusionInfoTable_04[] =
 {
-	0,1, 0,2, 1,2, -1,-1
+    { 0,1 }, { 0,2 }, { 1,2 }, { -1,-1 }
 };
 
 STATIC struct ExclusionInfo ExclusionInfoTable_05[] =
 {
-	0,2, 0,3, 0,4, 0,5, 2,3, 2,4, 2,5, 3,4, 3,5, 4,5, -1,-1
+    { 0,2 }, { 0,3 }, { 0,4 }, { 0,5 }, { 2,3 }, { 2,4 }, { 2,5 }, { 3,4 }, { 3,5 }, { 4,5 }, { -1,-1 }
 };
 
 STATIC struct ExclusionInfo ExclusionInfoTable_06[] =
 {
-	2,3, -1,-1
+    { 2,3, }, { -1,-1 }
 };
 
 STATIC struct ExclusionInfo ExclusionInfoTable_07[] =
 {
-	0,1, -1,-1
+    { 0,1, }, { -1,-1 }
 };
 
 STATIC struct ExclusionInfo ExclusionInfoTable_08[] =
 {
-	0,1, -1,-1
+    { 0,1, }, { -1,-1 }
 };
 
 STATIC struct ExclusionInfo ExclusionInfoTable_09[] =
 {
-	0,1, -1,-1
+    { 0,1, }, { -1,-1 }
 };
 
 STATIC struct ExclusionInfo ExclusionInfoTable_10[] =
 {
-	1,2, 2,3, 2,4, 2,5, 2,6, 2,7, 2,8, 2,9, 2,10, 2,11, 4,5, 6,7, 8,9, 8,10, 8,11, 9,10, 9,11, 10,11, -1,-1
+    { 1,2, },
+    { 2,3, },
+    { 2,4, },
+    { 2,5, },
+    { 2,6, },
+    { 2,7, },
+    { 2,8, },
+    { 2,9, },
+    { 2,10, },
+    { 2,11, },
+    { 4,5, },
+    { 6,7, },
+    { 8,9, },
+    { 8,10, },
+    { 8,11, },
+    { 9,10, },
+    { 9,11, },
+    { 10,11, },
+    { -1,-1 }
 };
 
 STATIC struct ExclusionInfo ExclusionInfoTable_11[] =
 {
-	2,3, 2,4, 3,4, -1,-1
+    { 2,3, },
+    { 2,4, },
+    { 3,4, },
+    { -1,-1 }
 };
 
 	/* This is where the information on what arguments exclude
@@ -2199,65 +2220,65 @@ struct ExclusionInfo *ExclusionTable[] =
 
 UWORD InclusionTable[] =
 {
-	/* ACTIVATE */		NULL,
+	/* ACTIVATE */		0,
 	/* ADD */		INCLUDE_05|INCLUDE_06,
-	/* BAUD */		NULL,
-	/* BEEPSCREEN */	NULL,
-	/* CALLMENU */		NULL,
-	/* CAPTURE */		NULL,
-	/* CLEAR */		NULL,
-	/* CLEARSCREEN */	NULL,
-	/* CLOSE */		NULL,
-	/* CLOSEDEVICE */	NULL,
-	/* CLOSEREQUESTER */	NULL,
-	/* DEACTIVATE */	NULL,
+	/* BAUD */		0,
+	/* BEEPSCREEN */	0,
+	/* CALLMENU */		0,
+	/* CAPTURE */		0,
+	/* CLEAR */		0,
+	/* CLEARSCREEN */	0,
+	/* CLOSE */		0,
+	/* CLOSEDEVICE */	0,
+	/* CLOSEREQUESTER */	0,
+	/* DEACTIVATE */	0,
 	/* DELAY */		INCLUDE_00|INCLUDE_01|INCLUDE_02,
-	/* DIAL */		NULL,
+	/* DIAL */		0,
 	/* DUPLEX */		INCLUDE_00|INCLUDE_01,
-	/* EXECTOOL */		NULL,
-	/* FAULT */		NULL,
-	/* GETATTR */		NULL,
-	/* GETCLIP */		NULL,
-	/* GOONLINE */		NULL,
-	/* HANGUP */		NULL,
+	/* EXECTOOL */		0,
+	/* FAULT */		0,
+	/* GETATTR */		0,
+	/* GETCLIP */		0,
+	/* GOONLINE */		0,
+	/* HANGUP */		0,
 	/* HELP */		INCLUDE_00|INCLUDE_01,
-	/* OPEN */		NULL,
-	/* OPENDEVICE */	NULL,
-	/* OPENREQUESTER */	NULL,
+	/* OPEN */		0,
+	/* OPENDEVICE */	0,
+	/* OPENREQUESTER */	0,
 	/* PARITY */		INCLUDE_00|INCLUDE_01|INCLUDE_02|INCLUDE_03|INCLUDE_04,
-	/* PASTECLIP */		NULL,
-	/* PRINT */		NULL,
+	/* PASTECLIP */		0,
+	/* PRINT */		0,
 	/* PROTOCOL */		INCLUDE_00|INCLUDE_01|INCLUDE_02,
 	/* PROCESSIO */		INCLUDE_00|INCLUDE_01,
-	/* PUTCLIP */		NULL,
-	/* QUIT */		NULL,
+	/* PUTCLIP */		0,
+	/* QUIT */		0,
 	/* READ */		INCLUDE_00|INCLUDE_01,
-	/* RECEIVEFILE */	NULL,
-	/* REDIAL */		NULL,
-	/* REMOVE */		NULL,
-	/* REQUESTFILE */	NULL,
-	/* REQUESTNOTIFY */	NULL,
-	/* REQUESTNUMBER */	NULL,
-	/* REQUESTRESPONSE */	NULL,
-	/* REQUESTSTRING */	NULL,
-	/* RESETSCREEN */	NULL,
-	/* RESETSTYLES */	NULL,
-	/* RESETTEXT */		NULL,
-	/* RESETTIMER */	NULL,
-	/* RX */		NULL,
-	/* SAVE */		NULL,
+	/* RECEIVEFILE */	0,
+	/* REDIAL */		0,
+	/* REMOVE */		0,
+	/* REQUESTFILE */	0,
+	/* REQUESTNOTIFY */	0,
+	/* REQUESTNUMBER */	0,
+	/* REQUESTRESPONSE */	0,
+	/* REQUESTSTRING */	0,
+	/* RESETSCREEN */	0,
+	/* RESETSTYLES */	0,
+	/* RESETTEXT */		0,
+	/* RESETTIMER */	0,
+	/* RX */		0,
+	/* SAVE */		0,
 	/* SAVEAS */		INCLUDE_00|INCLUDE_02|INCLUDE_03|INCLUDE_04|INCLUDE_05,
-	/* SELECTITEM */	NULL,
+	/* SELECTITEM */	0,
 	/* SEND */		INCLUDE_03|INCLUDE_04,
-	/* SENDBREAK */		NULL,
-	/* SENDFILE */		NULL,
+	/* SENDBREAK */		0,
+	/* SENDFILE */		0,
 	/* SETATTR */		INCLUDE_02|INCLUDE_03,
-	/* SPEAK */		NULL,
+	/* SPEAK */		0,
 	/* STOPBITS */		INCLUDE_00|INCLUDE_01,
 	/* TEXTBUFFER */	INCLUDE_00|INCLUDE_01,
 	/* TIMEOUT */		INCLUDE_00|INCLUDE_01,
 	/* TRAP */		INCLUDE_00|INCLUDE_01,
-	/* WAIT */		NULL,
+	/* WAIT */		0,
 	/* WINDOW */		INCLUDE_01|INCLUDE_02|INCLUDE_03|INCLUDE_04|INCLUDE_05|INCLUDE_06|INCLUDE_07|INCLUDE_08|INCLUDE_09|INCLUDE_10|INCLUDE_11,
 };
 
@@ -2267,67 +2288,67 @@ UWORD InclusionTable[] =
 
 struct CommandInfo CommandTable[] =
 {
-	TRUE,	FALSE,	RexxActivate,		"ACTIVATE",		 NULL,
-	TRUE,	FALSE,	RexxAdd,		"ADDITEM",		"TO/A,BEFORE/S,AFTER/S,RESPONSE/K,COMMAND/K,PHONE/K/F,NAME/K/F",
-	FALSE,	FALSE,	RexxBaud,		"BAUD",			"RATE/A/N",
-	FALSE,	FALSE,	RexxBeepScreen,		"BEEPSCREEN",		 NULL,
-	FALSE,	FALSE,	RexxCallMenu,		"CALLMENU",		"TITLE/A/F",
-	FALSE,	FALSE,	RexxCapture,		"CAPTURE",		"TO/A,NAME/K,OVERWRITE/S,APPEND/S,SKIP/S",
-	FALSE,	FALSE,	RexxClear,		"CLEAR",		"FROM/A,FORCE/S",
-	FALSE,	FALSE,	RexxClearScreen,	"CLEARSCREEN",		 NULL,
-	FALSE,	FALSE,	RexxClose,		"CLOSE",		"FROM/A",
-	FALSE,	FALSE,	RexxCloseDevice,	"CLOSEDEVICE",		 NULL,
-	TRUE,	FALSE,	RexxCloseRequester,	"CLOSEREQUESTER",	 NULL,
-	TRUE,	FALSE,	RexxDeactivate,		"DEACTIVATE",		 NULL,
-	FALSE,	FALSE,	RexxDelay,		"DELAY",		"MIC=MICROSECONDS/K/N,SEC=SECONDS/N,MIN=MINUTES/K/N,QUIET/S",
-	FALSE,	FALSE,	RexxDial,		"DIAL",			"WAIT=SYNC/S,NUM/F",
-	FALSE,	FALSE,	RexxDuplex,		"DUPLEX",		"FULL/S,HALF=ECHO/S",
-	TRUE,	TRUE,	RexxExecTool,		"EXECTOOL",		"CONSOLE/S,ASYNC/S,PORT/S,COMMAND/A/F",
-	TRUE,	FALSE,	RexxFault,		"FAULT",		"CODE/A/N",
-	TRUE,	FALSE,	RexxGetAttr,		"GETATTR",		"OBJECT/A,FIELD,STEM/K,VAR/K",
-	FALSE,	FALSE,	RexxGetClip,		"GETCLIP",		"UNIT/K/N",
-	FALSE,	FALSE,	RexxGoOnline,		"GOONLINE",		 NULL,
-	FALSE,	FALSE,	RexxHangup,		"HANGUP",		 NULL,
-	TRUE,	FALSE,	RexxHelp,		"HELP",			"COMMAND,PROMPT/S",
-	FALSE,	FALSE,	RexxOpen,		"OPEN",			"NAME/K,TO/A",
-	FALSE,	FALSE,	RexxOpenDevice,		"OPENDEVICE",		"NAME/K,UNIT/K/N",
-	FALSE,	FALSE,	RexxOpenRequester,	"OPENREQUESTER",	"REQUESTER/A",
-	FALSE,	FALSE,	RexxParity,		"PARITY",		"EVEN/S,ODD/S,NONE/S,MARK/S,SPACE/S",
-	TRUE,	FALSE,	RexxPasteClip,		"PASTECLIP",		"UNIT/K/N",
-	FALSE,	FALSE,	RexxPrint,		"PRINT",		"FROM/A,TO/K,SERIAL/S,MODEM/S,SCREEN/S,TERMINAL/S,USER/S,COMMENT/S,SIZE/S,DATE/S,ATTR/S",
-	FALSE,	FALSE,	RexxProtocol,		"PROTOCOL",		"NONE/S,RTSCTS/S,RTSCTSDTR/S",
-	FALSE,	FALSE,	RexxProcessIO,		"PROCESSIO",		"ON/S,OFF/S",
-	FALSE,	FALSE,	RexxPutClip,		"PUTCLIP",		"UNIT/K/N,TEXT/A/F",
-	TRUE,	FALSE,	RexxQuit,		"QUIT",			"FORCE/S",
-	FALSE,	FALSE,	RexxRead,		"READ",			"NUM/K/N,CR/S,NOECHO/S,VERBATIM/S,TIMEOUT/K/N,TERMINATOR/K,PROMPT/K/F",
-	FALSE,	FALSE,	RexxReceiveFile,	"RECEIVEFILE",		"MODE/K,NAME/K",
-	FALSE,	FALSE,	RexxRedial,		"REDIAL",		 NULL,
-	TRUE,	FALSE,	RexxRemove,		"REMITEM",		"FROM/A,NAME/K/F",
-	FALSE,	FALSE,	RexxRequestFile,	"REQUESTFILE",		"TITLE/K,PATH/K,FILE/K,PATTERN/K,MULTI/S,STEM=NAME/K",
-	FALSE,	FALSE,	RexxRequestNotify,	"REQUESTNOTIFY",	"TITLE/K,PROMPT/A/F",
-	FALSE,	FALSE,	RexxRequestNumber,	"REQUESTNUMBER",	"DEFAULT/K/N,PROMPT/K/F",
-	FALSE,	FALSE,	RexxRequestResponse,	"REQUESTRESPONSE",	"TITLE/K,OPTIONS/K,PROMPT/A/F",
-	FALSE,	FALSE,	RexxRequestString,	"REQUESTSTRING",	"SECRET/S,DEFAULT/K,PROMPT/K/F",
-	FALSE,	FALSE,	RexxResetScreen,	"RESETSCREEN",		 NULL,
-	FALSE,	FALSE,	RexxReset,		"RESET",		"CLEAR/S,STYLES/S,TEXT/S,TIMER/S",
-	FALSE,	FALSE,	RexxResetStyles,	"RESETSTYLES",		 NULL,
-	FALSE,	FALSE,	RexxResetText,		"RESETTEXT",		 NULL,
-	FALSE,	FALSE,	RexxResetTimer,		"RESETTIMER",		 NULL,
-	TRUE,	TRUE,	RexxRX,			"RX",			"CONSOLE/S,ASYNC/S,COMMAND/A/F",
-	FALSE,	FALSE,	RexxSave,		"SAVE",			"FROM/A",
-	FALSE,	FALSE,	RexxSaveAs,		"SAVEAS",		"NAME/K,FROM/A",
-	TRUE,	FALSE,	RexxSelect,		"SELECTITEM",		"NAME/K,FROM/A,NEXT/S,PREV=PREVIOUS/S,TOP/S,BOTTOM/S",
-	FALSE,	FALSE,	RexxSend,		"SEND",			"NOECHO/S,LOCAL/S,LITERAL/S,BYTE/K/N,TEXT/F",
-	FALSE,	FALSE,	RexxSendBreak,		"SENDBREAK",		 NULL,
-	FALSE,	FALSE,	RexxSendFile,		"SENDFILE",		"MODE/K,NAMES/M",
-	FALSE,	FALSE,	RexxSetAttr,		"SETATTR",		"OBJECT/A,FIELD,STEM/K,VAR",
-	TRUE,	FALSE,	RexxSpeak,		"SPEAK",		"TEXT/A/F",
-	FALSE,	FALSE,	RexxStopBits,		"STOPBITS",		"0/S,1/S",
-	FALSE,	FALSE,	RexxTextBuffer,		"TEXTBUFFER",		"LOCK/S,UNLOCK/S",
-	FALSE,	FALSE,	RexxTimeout,		"TIMEOUT",		"SEC=SECONDS/N,OFF/S",
-	FALSE,	FALSE,	RexxTrap,		"TRAP",			"ON/S,OFF/S",
-	FALSE,	FALSE,	RexxWait,		"WAIT",			"NOECHO/S,TIMEOUT/K/N,TEXT/F",
-	FALSE,	FALSE,	RexxWindow,		"WINDOW",		"NAMES/A/M,OPEN/S,CLOSE/S,ACTIVATE/S,MIN/S,MAX/S,FRONT/S,BACK/S,TOP/S,BOTTOM/S,UP/S,DOWN/S",
+	{ TRUE,	FALSE,	RexxActivate,		"ACTIVATE",		 NULL, },
+	{ TRUE,	FALSE,	RexxAdd,		"ADDITEM",		"TO/A,BEFORE/S,AFTER/S,RESPONSE/K,COMMAND/K,PHONE/K/F,NAME/K/F", },
+	{ FALSE,	FALSE,	RexxBaud,		"BAUD",			"RATE/A/N", },
+	{ FALSE,	FALSE,	RexxBeepScreen,		"BEEPSCREEN",		 NULL, },
+	{ FALSE,	FALSE,	RexxCallMenu,		"CALLMENU",		"TITLE/A/F", },
+	{ FALSE,	FALSE,	RexxCapture,		"CAPTURE",		"TO/A,NAME/K,OVERWRITE/S,APPEND/S,SKIP/S", },
+	{ FALSE,	FALSE,	RexxClear,		"CLEAR",		"FROM/A,FORCE/S", },
+	{ FALSE,	FALSE,	RexxClearScreen,	"CLEARSCREEN",		 NULL, },
+	{ FALSE,	FALSE,	RexxClose,		"CLOSE",		"FROM/A", },
+	{ FALSE,	FALSE,	RexxCloseDevice,	"CLOSEDEVICE",		 NULL, },
+	{ TRUE,	FALSE,	RexxCloseRequester,	"CLOSEREQUESTER",	 NULL, },
+	{ TRUE,	FALSE,	RexxDeactivate,		"DEACTIVATE",		 NULL, },
+	{ FALSE,	FALSE,	RexxDelay,		"DELAY",		"MIC=MICROSECONDS/K/N,SEC=SECONDS/N,MIN=MINUTES/K/N,QUIET/S", },
+	{ FALSE,	FALSE,	RexxDial,		"DIAL",			"WAIT=SYNC/S,NUM/F", },
+	{ FALSE,	FALSE,	RexxDuplex,		"DUPLEX",		"FULL/S,HALF=ECHO/S", },
+	{ TRUE,	TRUE,	RexxExecTool,		"EXECTOOL",		"CONSOLE/S,ASYNC/S,PORT/S,COMMAND/A/F", },
+	{ TRUE,	FALSE,	RexxFault,		"FAULT",		"CODE/A/N", },
+	{ TRUE,	FALSE,	RexxGetAttr,		"GETATTR",		"OBJECT/A,FIELD,STEM/K,VAR/K", },
+	{ FALSE,	FALSE,	RexxGetClip,		"GETCLIP",		"UNIT/K/N", },
+	{ FALSE,	FALSE,	RexxGoOnline,		"GOONLINE",		 NULL, },
+	{ FALSE,	FALSE,	RexxHangup,		"HANGUP",		 NULL, },
+	{ TRUE,	FALSE,	RexxHelp,		"HELP",			"COMMAND,PROMPT/S", },
+	{ FALSE,	FALSE,	RexxOpen,		"OPEN",			"NAME/K,TO/A", },
+	{ FALSE,	FALSE,	RexxOpenDevice,		"OPENDEVICE",		"NAME/K,UNIT/K/N", },
+	{ FALSE,	FALSE,	RexxOpenRequester,	"OPENREQUESTER",	"REQUESTER/A", },
+	{ FALSE,	FALSE,	RexxParity,		"PARITY",		"EVEN/S,ODD/S,NONE/S,MARK/S,SPACE/S", },
+	{ TRUE,	FALSE,	RexxPasteClip,		"PASTECLIP",		"UNIT/K/N", },
+	{ FALSE,	FALSE,	RexxPrint,		"PRINT",		"FROM/A,TO/K,SERIAL/S,MODEM/S,SCREEN/S,TERMINAL/S,USER/S,COMMENT/S,SIZE/S,DATE/S,ATTR/S", },
+	{ FALSE,	FALSE,	RexxProtocol,		"PROTOCOL",		"NONE/S,RTSCTS/S,RTSCTSDTR/S", },
+	{ FALSE,	FALSE,	RexxProcessIO,		"PROCESSIO",		"ON/S,OFF/S", },
+	{ FALSE,	FALSE,	RexxPutClip,		"PUTCLIP",		"UNIT/K/N,TEXT/A/F", },
+	{ TRUE,	FALSE,	RexxQuit,		"QUIT",			"FORCE/S", },
+	{ FALSE,	FALSE,	RexxRead,		"READ",			"NUM/K/N,CR/S,NOECHO/S,VERBATIM/S,TIMEOUT/K/N,TERMINATOR/K,PROMPT/K/F", },
+	{ FALSE,	FALSE,	RexxReceiveFile,	"RECEIVEFILE",		"MODE/K,NAME/K", },
+	{ FALSE,	FALSE,	RexxRedial,		"REDIAL",		 NULL, },
+	{ TRUE,	FALSE,	RexxRemove,		"REMITEM",		"FROM/A,NAME/K/F", },
+	{ FALSE,	FALSE,	RexxRequestFile,	"REQUESTFILE",		"TITLE/K,PATH/K,FILE/K,PATTERN/K,MULTI/S,STEM=NAME/K", },
+	{ FALSE,	FALSE,	RexxRequestNotify,	"REQUESTNOTIFY",	"TITLE/K,PROMPT/A/F", },
+	{ FALSE,	FALSE,	RexxRequestNumber,	"REQUESTNUMBER",	"DEFAULT/K/N,PROMPT/K/F", },
+	{ FALSE,	FALSE,	RexxRequestResponse,	"REQUESTRESPONSE",	"TITLE/K,OPTIONS/K,PROMPT/A/F", },
+	{ FALSE,	FALSE,	RexxRequestString,	"REQUESTSTRING",	"SECRET/S,DEFAULT/K,PROMPT/K/F", },
+	{ FALSE,	FALSE,	RexxResetScreen,	"RESETSCREEN",		 NULL, },
+	{ FALSE,	FALSE,	RexxReset,		"RESET",		"CLEAR/S,STYLES/S,TEXT/S,TIMER/S", },
+	{ FALSE,	FALSE,	RexxResetStyles,	"RESETSTYLES",		 NULL, },
+	{ FALSE,	FALSE,	RexxResetText,		"RESETTEXT",		 NULL, },
+	{ FALSE,	FALSE,	RexxResetTimer,		"RESETTIMER",		 NULL, },
+	{ TRUE,	TRUE,	RexxRX,			"RX",			"CONSOLE/S,ASYNC/S,COMMAND/A/F", },
+	{ FALSE,	FALSE,	RexxSave,		"SAVE",			"FROM/A", },
+	{ FALSE,	FALSE,	RexxSaveAs,		"SAVEAS",		"NAME/K,FROM/A", },
+	{ TRUE,	FALSE,	RexxSelect,		"SELECTITEM",		"NAME/K,FROM/A,NEXT/S,PREV=PREVIOUS/S,TOP/S,BOTTOM/S", },
+	{ FALSE,	FALSE,	RexxSend,		"SEND",			"NOECHO/S,LOCAL/S,LITERAL/S,BYTE/K/N,TEXT/F", },
+	{ FALSE,	FALSE,	RexxSendBreak,		"SENDBREAK",		 NULL, },
+	{ FALSE,	FALSE,	RexxSendFile,		"SENDFILE",		"MODE/K,NAMES/M", },
+	{ FALSE,	FALSE,	RexxSetAttr,		"SETATTR",		"OBJECT/A,FIELD,STEM/K,VAR", },
+	{ TRUE,	FALSE,	RexxSpeak,		"SPEAK",		"TEXT/A/F", },
+	{ FALSE,	FALSE,	RexxStopBits,		"STOPBITS",		"0/S,1/S", },
+	{ FALSE,	FALSE,	RexxTextBuffer,		"TEXTBUFFER",		"LOCK/S,UNLOCK/S", },
+	{ FALSE,	FALSE,	RexxTimeout,		"TIMEOUT",		"SEC=SECONDS/N,OFF/S", },
+	{ FALSE,	FALSE,	RexxTrap,		"TRAP",			"ON/S,OFF/S", },
+	{ FALSE,	FALSE,	RexxWait,		"WAIT",			"NOECHO/S,TIMEOUT/K/N,TEXT/F", },
+	{ FALSE,	FALSE,	RexxWindow,		"WINDOW",		"NAMES/A/M,OPEN/S,CLOSE/S,ACTIVATE/S,MIN/S,MAX/S,FRONT/S,BACK/S,TOP/S,BOTTOM/S,UP/S,DOWN/S", },
 };
 
 WORD CommandTableSize = NUM_ELEMENTS(CommandTable);
@@ -2407,24 +2428,24 @@ JobNode		*XEMJob,
 
 struct JobInitStruct JobInitTable[] =
 {
-	"XEM",			&XEMJob,		HandleXEMJob,		JOBTYPE_Wait,
-	"SerialCheck",		&SerialCheckJob,	HandleSerialCheckJob,	JOBTYPE_Wait,
-	"Serial",		&SerialJob,		HandleSerialJob,	JOBTYPE_Wait,
-	"OwnDevUnit",		&OwnDevUnitJob,		HandleOwnDevUnitJob,	JOBTYPE_Wait,
-	"Window",		&SingleWindowJob,	HandleWindowJob,	JOBTYPE_Wait,
-	"WindowAndXEM",		&WindowAndXEMJob,	HandleWindowAndXEMJob,	JOBTYPE_Wait,
-	"Rexx",			&RexxJob,		HandleRexxJob,		JOBTYPE_Wait,
-	"MsgQueue",		&QueueJob,		HandleQueueJob,		JOBTYPE_Wait,
-	"ReleaseSerial",	&ReleaseSerialJob,	HandleReleaseSerial,	JOBTYPE_Once,
-	"StartupFile",		&StartupFileJob,	HandleStartupFile,	JOBTYPE_Disposable,
-	"Iconify",		&IconifyJob,		HandleIconifyJob,	JOBTYPE_Once,
-	"RebuildMenu",		&RebuildMenuJob,	HandleRebuildMenuJob,	JOBTYPE_Once,
-	"ResetDisplay",		&ResetDisplayJob,	HandleResetDisplayJob,	JOBTYPE_Once,
-	"OnlineCleanup",	&OnlineCleanupJob,	HandleOnlineCleanupJob,	JOBTYPE_Once,
-	"SerialCache",		&SerialCacheJob,	HandleSerialCacheJob,	JOBTYPE_Always,
-	"DisplayCost",		&DisplayCostJob,	HandleDisplayCostJob,	JOBTYPE_Always,
-	"TerminalTest",		&TerminalTestJob,	HandleTerminalTestJob,	JOBTYPE_Always,
-	NULL
+	{ "XEM",			&XEMJob,		HandleXEMJob,		JOBTYPE_Wait, },
+	{ "SerialCheck",		&SerialCheckJob,	HandleSerialCheckJob,	JOBTYPE_Wait, },
+	{ "Serial",		&SerialJob,		HandleSerialJob,	JOBTYPE_Wait, },
+	{ "OwnDevUnit",		&OwnDevUnitJob,		HandleOwnDevUnitJob,	JOBTYPE_Wait, },
+	{ "Window",		&SingleWindowJob,	HandleWindowJob,	JOBTYPE_Wait, },
+	{ "WindowAndXEM",		&WindowAndXEMJob,	HandleWindowAndXEMJob,	JOBTYPE_Wait, },
+	{ "Rexx",			&RexxJob,		HandleRexxJob,		JOBTYPE_Wait, },
+	{ "MsgQueue",		&QueueJob,		HandleQueueJob,		JOBTYPE_Wait, },
+	{ "ReleaseSerial",	&ReleaseSerialJob,	HandleReleaseSerial,	JOBTYPE_Once, },
+	{ "StartupFile",		&StartupFileJob,	HandleStartupFile,	JOBTYPE_Disposable, },
+	{ "Iconify",		&IconifyJob,		HandleIconifyJob,	JOBTYPE_Once, },
+	{ "RebuildMenu",		&RebuildMenuJob,	HandleRebuildMenuJob,	JOBTYPE_Once, },
+	{ "ResetDisplay",		&ResetDisplayJob,	HandleResetDisplayJob,	JOBTYPE_Once, },
+	{ "OnlineCleanup",	&OnlineCleanupJob,	HandleOnlineCleanupJob,	JOBTYPE_Once, },
+	{ "SerialCache",		&SerialCacheJob,	HandleSerialCacheJob,	JOBTYPE_Always, },
+	{ "DisplayCost",		&DisplayCostJob,	HandleDisplayCostJob,	JOBTYPE_Always, },
+	{ "TerminalTest",		&TerminalTestJob,	HandleTerminalTestJob,	JOBTYPE_Always, },
+	{ NULL },
 };
 
 

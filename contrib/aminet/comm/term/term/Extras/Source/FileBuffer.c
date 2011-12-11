@@ -33,7 +33,7 @@ enum	{	BUF_CLOSE,BUF_SEEK,BUF_FILL,BUF_FLUSH };
 	 */
 
 STATIC BPTR
-OpenFileWithMode(STRPTR Name,STRPTR ModeString)
+OpenFileWithMode(CONST_STRPTR Name,CONST_STRPTR ModeString)
 {
 	LONG Mode;
 
@@ -59,7 +59,7 @@ OpenFileWithMode(STRPTR Name,STRPTR ModeString)
 					UnLock(SomeLock);
 
 					if(!DeleteFile(Name))
-						return(NULL);
+						return(BNULL);
 				}
 
 				Mode = MODE_READWRITE;
@@ -75,7 +75,7 @@ OpenFileWithMode(STRPTR Name,STRPTR ModeString)
 
 		default:
 
-			return(NULL);
+			return(BNULL);
 	}
 
 	return(Open(Name,Mode));
@@ -103,7 +103,7 @@ ObtainInfo(struct Buffer *File)
 			 * filing system task (MsgPort) to be given.
 			 */
 
-		if(!DoPkt(File->InfoPort,ACTION_DISK_INFO,MKBADDR(&File->InfoData),0,0,0,0))
+		if(!DoPkt(File->InfoPort,ACTION_DISK_INFO,(SIPTR)MKBADDR(&File->InfoData),0,0,0,0))
 		{
 			File->InfoData.id_NumBlocks		= 0;
 			File->InfoData.id_BytesPerBlock	= 0;
@@ -196,10 +196,7 @@ FileBufferServer(VOID)
 		}
 		else
 		{
-#warning Deactivated to make it compile for AROS.
-#ifndef __AROS__
 			Buffer->InfoPort = ((struct FileHandle *)BADDR(Buffer->FileHandle))->fh_Type;
-#endif
 			ObtainInfo(Buffer);
 
 			Signal((struct Task *)Buffer->Caller,SIG_HANDSHAKE);
@@ -528,7 +525,7 @@ IsValidBuffer(struct Buffer *Buffer)
 	 */
 
 STATIC struct Buffer *
-OpenFileSimple(STRPTR Name,STRPTR AccessMode)
+OpenFileSimple(CONST_STRPTR Name,CONST_STRPTR AccessMode)
 {
 	struct Buffer *Buffer;
 
@@ -556,10 +553,7 @@ OpenFileSimple(STRPTR Name,STRPTR AccessMode)
 
 			if(Buffer->WriteAccess)
 			{
-#warning Deactivated to make it compile for AROS.
-#ifndef __AROS__
 				Buffer->InfoPort = ((struct FileHandle *)BADDR(Buffer->FileHandle))->fh_Type;
-#endif
 				ObtainInfo(Buffer);
 			}
 
@@ -586,7 +580,7 @@ OpenFileSimple(STRPTR Name,STRPTR AccessMode)
 	 */
 
 STATIC struct Buffer *
-OpenFileBuffered(STRPTR Name,STRPTR AccessMode)
+OpenFileBuffered(CONST_STRPTR Name,CONST_STRPTR AccessMode)
 {
 	struct Buffer *Buffer;
 	LONG Size;
@@ -613,7 +607,7 @@ OpenFileBuffered(STRPTR Name,STRPTR AccessMode)
 
 			/* Set up the first buffer. */
 
-		Buffer->DataBuffer[0] = (UBYTE *)(((ULONG)(Buffer + 1) + 15) & ~15);
+		Buffer->DataBuffer[0] = (UBYTE *)(((IPTR)(Buffer + 1) + 15) & ~15);
 
 			/* Set up the individual buffers. */
 
@@ -640,8 +634,8 @@ OpenFileBuffered(STRPTR Name,STRPTR AccessMode)
 
 		Buffer->Message.mn_Length		= sizeof(struct Buffer);
 
-		Buffer->ActionData[ARG_NAME]	= (LONG)Name;
-		Buffer->ActionData[ARG_MODE]	= (LONG)AccessMode;
+		Buffer->ActionData[ARG_NAME]	= (IPTR)Name;
+		Buffer->ActionData[ARG_MODE]	= (IPTR)AccessMode;
 
 		Buffer->Child	= Process;
 		Buffer->Caller	= (struct Process *)FindTask(NULL);
@@ -679,7 +673,7 @@ OpenFileBuffered(STRPTR Name,STRPTR AccessMode)
 	 */
 
 LONG
-BPrintf(struct Buffer *Buffer,STRPTR Format,...)
+BPrintf(struct Buffer *Buffer,CONST_STRPTR Format,...)
 {
 	UBYTE	String[256];
 	va_list	VarArgs;
@@ -768,7 +762,7 @@ BufferClose(struct Buffer *Buffer)
 	 */
 
 struct Buffer *
-BufferOpen(STRPTR Name,STRPTR AccessMode)
+BufferOpen(CONST_STRPTR Name,CONST_STRPTR AccessMode)
 {
 		/* Simple file handling? */
 
@@ -923,7 +917,7 @@ BufferRead(struct Buffer *Buffer,STRPTR Destination,LONG Size)
 	 */
 
 LONG
-BufferWrite(struct Buffer *Buffer,STRPTR Source,LONG Size)
+BufferWrite(struct Buffer *Buffer,CONST_STRPTR Source,LONG Size)
 {
 	if(Buffer->SimpleIO)
 	{

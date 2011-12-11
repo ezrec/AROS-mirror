@@ -59,7 +59,7 @@ CallMenu(STRPTR Name,ULONG Code)
 					struct MenuItem *MenuItem = ItemAddress(Menu,FULLMENUNUM(MenuNum,Item,Sub));
 
 					if(MenuItem && (MenuItem->Flags & ITEMENABLED))
-						HandleMenuCode((ULONG)TermMenu[i].nm_UserData,NULL);
+						HandleMenuCode((IPTR)TermMenu[i].nm_UserData,0);
 
 					break;
 				}
@@ -112,7 +112,7 @@ CallMenu(STRPTR Name,ULONG Code)
 					struct MenuItem *MenuItem = ItemAddress(Menu,FULLMENUNUM(MenuNum,Item,Sub));
 
 					if(MenuItem && (MenuItem->Flags & ITEMENABLED))
-						HandleMenuCode((ULONG)TermMenu[i].nm_UserData,NULL);
+						HandleMenuCode((IPTR)TermMenu[i].nm_UserData,0);
 				}
 
 				break;
@@ -142,7 +142,7 @@ CallMenu(STRPTR Name,ULONG Code)
 	 */
 
 STATIC VOID
-CommonControlProcessing(STRPTR String,BOOL LocalOnly)
+CommonControlProcessing(CONST_STRPTR String,BOOL LocalOnly)
 {
 	UBYTE LocalBuffer[256];
 	BOOL GotControl,GotEscape;
@@ -481,7 +481,7 @@ CommonControlProcessing(STRPTR String,BOOL LocalOnly)
 							LocalBuffer[Count++] = '\n';
 						else
 						{
-							STRPTR What;
+							STRPTR What = NULL;
 							LONG j;
 
 							switch(Config->TerminalConfig->SendLF)
@@ -545,7 +545,7 @@ CommonControlProcessing(STRPTR String,BOOL LocalOnly)
 							LocalBuffer[Count++] = '\r';
 						else
 						{
-							STRPTR What;
+							STRPTR What = NULL;
 							LONG j;
 
 							switch(Config->TerminalConfig->SendCR)
@@ -815,7 +815,7 @@ CommonControlProcessing(STRPTR String,BOOL LocalOnly)
 	 */
 
 VOID
-SerialCommand(STRPTR String)
+SerialCommand(CONST_STRPTR String)
 {
 	CommonControlProcessing(String,FALSE);
 }
@@ -827,7 +827,7 @@ SerialCommand(STRPTR String)
 	 */
 
 VOID
-ConsoleCommand(STRPTR String)
+ConsoleCommand(CONST_STRPTR String)
 {
 	CommonControlProcessing(String,TRUE);
 }

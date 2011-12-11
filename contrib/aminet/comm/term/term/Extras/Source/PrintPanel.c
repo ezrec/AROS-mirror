@@ -207,7 +207,7 @@ PrintPanel(struct Window *Window,struct List *PhoneList,LONG Count)
 
 								LT_UpdateStrings(Handle);
 
-								Flags = NULL;
+								Flags = 0;
 
 								for(i = 0 ; i < 6 ; i++)
 								{
@@ -245,12 +245,12 @@ PrintPanel(struct Window *Window,struct List *PhoneList,LONG Count)
 			struct EasyStruct  Easy;
 
 			Easy.es_StructSize		= sizeof(struct EasyStruct);
-			Easy.es_Flags			= NULL;
+			Easy.es_Flags			= 0;
 			Easy.es_Title			= (UBYTE *)LocaleString(MSG_TERMAUX_TERM_REQUEST_TXT);
 			Easy.es_GadgetFormat	= (UBYTE *)LocaleString(MSG_PRINT_STOP_TXT);
 			Easy.es_TextFormat		= (UBYTE *)LocaleString(MSG_PRINT_PRINTING_PHONEBOOK_TXT);
 
-			if(ReqWindow = BuildEasyRequest(Window,&Easy,NULL))
+			if(ReqWindow = BuildEasyRequest(Window,&Easy,0))
 			{
 				struct PhoneNode *TempNode;
 				BOOL Continue;

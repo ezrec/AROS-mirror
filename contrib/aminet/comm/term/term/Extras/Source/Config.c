@@ -15,7 +15,7 @@
 
 	/* Reset routine function pointer. */
 
-typedef VOID (* RESET)(APTR,STRPTR);
+typedef VOID (* RESET)(APTR,CONST_STRPTR);
 
 /*****************************************************************************/
 
@@ -620,7 +620,7 @@ ReadSystemPrefs(STRPTR Name,ULONG ID,APTR Data,LONG Size,LONG Count)
 					{
 						Count--;
 
-						Data = (APTR)((ULONG)Data + Size);
+						Data = (APTR)((IPTR)Data + Size);
 					}
 					else
 						break;
@@ -1803,9 +1803,9 @@ GetConfigEntryPointer(struct Configuration *LocalConfig,LONG Type)
 	 */
 
 VOID
-ResetConfig(struct Configuration *LocalConfig,STRPTR PathBuffer)
+ResetConfig(struct Configuration *LocalConfig,CONST_STRPTR PathBuffer)
 {
-	STRPTR Arg;
+	CONST_STRPTR Arg;
 	LONG Type;
 	APTR Data;
 
@@ -2140,7 +2140,7 @@ SavePhonebook(STRPTR Name,PhonebookHandle *PhoneHandle)
 PhonebookHandle *
 LoadPhonebook(STRPTR Name)
 {
-	struct PhoneEntry		**Phonebook;
+	struct PhoneEntry		**Phonebook = NULL;
 	struct IFFHandle		*Handle;
 	struct ContextNode		*Chunk;
 	UBYTE					 ConfigChunkType;

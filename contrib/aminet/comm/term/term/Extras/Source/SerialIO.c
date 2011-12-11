@@ -451,7 +451,7 @@ GetSerialInfo(ULONG *Waiting,UWORD *Status)
 	 */
 
 STATIC VOID
-SetSerialAttributes(struct IOExtSer *Request,struct TagItem *Tags)
+SetSerialAttributes(struct IOExtSer *Request,const struct TagItem *Tags)
 {
 	struct TagItem *Tag;
 
@@ -555,13 +555,13 @@ SetSerialAttributes(struct IOExtSer *Request,struct TagItem *Tags)
 	 */
 
 STATIC ULONG
-GetSerialAttributes(struct IOExtSer *Request,struct TagItem *Tags)
+GetSerialAttributes(struct IOExtSer *Request,const struct TagItem *Tags)
 {
 	struct TagItem	*Tag;
 	ULONG			*Data;
 	ULONG			 Result;
 
-	Result = NULL;
+	Result = 0;
 
 	while(Tag = NextTagItem(&Tags))
 	{
@@ -746,24 +746,32 @@ SetBothSerialAttributes(Tag FirstTag,...)
 BYTE
 SetSerialReadAttributes(Tag FirstTag,...)
 {
+#ifdef __AROS__
+        AROS_SLOWSTACKTAGS_PRE_AS(FirstTag,BYTE)
+#else
+        BYTE retval;
+#endif
 	if(ReadRequest)
 	{
 		if(ReadQueued)
 			StopSerialRead();
 
-		SetSerialAttributes(ReadRequest,(struct TagItem *)&FirstTag);
+		SetSerialAttributes(ReadRequest,AROS_SLOWSTACKTAGS_ARG(FirstTag));
 
 		if(ReadRequest->IOSer.io_Device)
 		{
 			ReadRequest->IOSer.io_Command = SDCMD_SETPARAMS;
 
-			return(DoIO((struct IORequest *)ReadRequest));
+			retval = DoIO((struct IORequest *)ReadRequest);
 		}
 		else
-			return(0);
+			retval = 0;
 	}
 	else
-		return(IOERR_SELFTEST);
+		retval = IOERR_SELFTEST;
+#ifdef __AROS__
+        AROS_SLOWSTACKTAGS_POST
+#endif
 }
 
 	/* GetSerialWriteAttributes():
@@ -777,7 +785,7 @@ GetSerialWriteAttributes(Tag FirstTag,...)
 	if(WriteRequest)
 		return(GetSerialAttributes(WriteRequest,(struct TagItem *)&FirstTag));
 	else
-		return(NULL);
+		return(0);
 }
 
 	/* DropDTR(STRPTR Device,LONG Unit):

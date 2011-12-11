@@ -288,33 +288,33 @@ STATIC BYTE ID_InvalidTab[256] =
 
 STATIC struct Suffix TextSuffix[] =
 {
-	".C",		TYPE_C,
-	".CPP",		TYPE_C,
-	".CXX",		TYPE_C,
-	".C++",		TYPE_C,
-	".CC",		TYPE_C,
-	".H",		TYPE_H,
-	".ASM",		TYPE_ASM,
-	".A",		TYPE_ASM,
-	".S",		TYPE_ASM,
-	".I",		TYPE_I,
-	".BAS",		TYPE_BASIC,
-	".GFA",		TYPE_BASIC,
-	".REXX",	TYPE_REXX,
-	".CED",		TYPE_REXX,
-	".TTX",		TYPE_REXX,
-	".VLT",		TYPE_REXX,
-	".CPR",		TYPE_REXX,
-	".TxEd",	TYPE_REXX,
-	".ADPro",	TYPE_REXX,
-	".TEX",		TYPE_TEX,
-	".STY",		TYPE_TEX,
-	".MF",		TYPE_METAFONT,
-	".MOD",		TYPE_MOD,
-	".DEF",		TYPE_MOD,
-	".PS",		TYPE_POSTSCRIPT,
-	".GUIDE",	TYPE_AMIGAGUIDE,
-	".UUE",		TYPE_UUENCODED
+	{ ".C",		TYPE_C, },
+	{ ".CPP",		TYPE_C, },
+	{ ".CXX",		TYPE_C, },
+	{ ".C++",		TYPE_C, },
+	{ ".CC",		TYPE_C, },
+	{ ".H",		TYPE_H, },
+	{ ".ASM",		TYPE_ASM, },
+	{ ".A",		TYPE_ASM, },
+	{ ".S",		TYPE_ASM, },
+	{ ".I",		TYPE_I, },
+	{ ".BAS",		TYPE_BASIC, },
+	{ ".GFA",		TYPE_BASIC, },
+	{ ".REXX",	TYPE_REXX, },
+	{ ".CED",		TYPE_REXX, },
+	{ ".TTX",		TYPE_REXX, },
+	{ ".VLT",		TYPE_REXX, },
+	{ ".CPR",		TYPE_REXX, },
+	{ ".TxEd",	TYPE_REXX, },
+	{ ".ADPro",	TYPE_REXX, },
+	{ ".TEX",		TYPE_TEX, },
+	{ ".STY",		TYPE_TEX, },
+	{ ".MF",		TYPE_METAFONT, },
+	{ ".MOD",		TYPE_MOD, },
+	{ ".DEF",		TYPE_MOD, },
+	{ ".PS",		TYPE_POSTSCRIPT, },
+	{ ".GUIDE",	TYPE_AMIGAGUIDE, },
+	{ ".UUE",		TYPE_UUENCODED },
 };
 
 	/* Some more file name suffixes for executable files and the
@@ -323,10 +323,10 @@ STATIC struct Suffix TextSuffix[] =
 
 STATIC struct Suffix ExecutableSuffix[] =
 {
-	".device",	TYPE_DEVICE,
-	".library",	TYPE_LIBRARY,
-	"FileSystem",	TYPE_FILESYS,
-	"Handler",	TYPE_HANDLER
+	{ ".device",	TYPE_DEVICE, },
+	{ ".library",	TYPE_LIBRARY, },
+	{ "FileSystem",	TYPE_FILESYS, },
+	{ "Handler",	TYPE_HANDLER },
 };
 
 	/* Miscellaneous magic cookies. */
@@ -373,7 +373,7 @@ LONG
 GetFileType(STRPTR Name,BOOL AttachComment)
 {
 	UBYTE IFFType[5];
-	STRPTR TypeName;
+	CONST_STRPTR TypeName;
 	ULONG *Buffer;
 	LONG i,Len;
 	LONG Type;
@@ -460,11 +460,11 @@ GetFileType(STRPTR Name,BOOL AttachComment)
 
 						case 0x000003F3:
 
-							if(Buffer[10] == 'LSFX')
+							if(Buffer[10] == AROS_MAKE_ID('L','S','F','X'))
 								Type = TYPE_LHPAK;
 							else
 							{
-								if(Buffer[11] == 'SFX!')
+								if(Buffer[11] == AROS_MAKE_ID('S','F','X','!'))
 									Type = TYPE_LHASFX;
 								else
 									Type = TYPE_EXECUTABLE;
@@ -522,61 +522,61 @@ GetFileType(STRPTR Name,BOOL AttachComment)
 							Type = TYPE_CPIO;
 							break;
 
-						case 'FLIB':
+						case AROS_MAKE_ID('F','L','I','B'):
 
 							Type = TYPE_FLIB;
 							break;
 
-						case '\211PNG':
+						case AROS_MAKE_ID('\211','P','N','G'):
 
 							Type = TYPE_PNG;
 							break;
 
-						case 'FORM':
+						case AROS_MAKE_ID('F','O','R','M'):
 
 							switch(Buffer[2])
 							{
-								case 'ILBM':
+								case AROS_MAKE_ID('I','L','B','M'):
 
 									Type = TYPE_ILBM;
 									break;
 
-								case 'ANIM':
+								case AROS_MAKE_ID('A','N','I','M'):
 
 									Type = TYPE_ANIM;
 									break;
 
-								case '8SVX':
+								case AROS_MAKE_ID('8','S','V','X'):
 
 									Type = TYPE_8SVX;
 									break;
 
-								case 'SMUS':
+								case AROS_MAKE_ID('S','M','U','S'):
 
 									Type = TYPE_SMUS;
 									break;
 
-								case 'FTXT':
+								case AROS_MAKE_ID('F','T','X','T'):
 
 									Type = TYPE_FTXT;
 									break;
 
-								case 'PREF':
+								case AROS_MAKE_ID('P','R','E','F'):
 
 									Type = TYPE_PREFS;
 									break;
 
-								case 'TERM':
+								case AROS_MAKE_ID('T','E','R','M'):
 
 									Type = TYPE_TERM;
 									break;
 
-								case 'AVCF':
+								case AROS_MAKE_ID('A','V','C','F'):
 
 									Type = TYPE_AMIGAVISION;
 									break;
 
-								case 'CDAF':
+								case AROS_MAKE_ID('C','D','A','F'):
 
 									Type = TYPE_CDAF;
 									break;
@@ -594,38 +594,38 @@ GetFileType(STRPTR Name,BOOL AttachComment)
 
 							break;
 
-						case 'IMP!':
+						case AROS_MAKE_ID('I','M','P','!'):
 
 							Type = TYPE_IMPLODER;
 							break;
 
-						case 'PP20':
+						case AROS_MAKE_ID('P','P','2','0'):
 
 							Type = TYPE_POWERPACKER;
 							break;
 
-						case 'DMS!':
+						case AROS_MAKE_ID('D','M','S','!'):
 
 							Type = TYPE_DMS;
 							break;
 
-						case 'Warp':
+						case AROS_MAKE_ID('W','a','r','p'):
 
 							Type = TYPE_WARP;
 							break;
 
-						case 'ZOM5':
-						case 'ZOOM':
+						case AROS_MAKE_ID('Z','O','M','5'):
+						case AROS_MAKE_ID('Z','O','O','M'):
 
 							Type = TYPE_ZOOM;
 							break;
 
-						case 'ZOO ':
+						case AROS_MAKE_ID('Z','O','O',' '):
 
 							Type = TYPE_ZOO;
 							break;
 
-						case 'GIF8':
+						case AROS_MAKE_ID('G','I','F','8'):
 
 							Type = TYPE_GIF;
 							break;
@@ -653,7 +653,7 @@ GetFileType(STRPTR Name,BOOL AttachComment)
 
 						/* Check for JFIF... */
 
-					if(LongCompare(&CharBuffer[6],'JFIF'))
+					if(LongCompare(&CharBuffer[6],AROS_MAKE_ID('J','F','I','F')))
 						Type = TYPE_JFIF;
 
 						/* Check for `freeze' output file. */
@@ -676,57 +676,57 @@ GetFileType(STRPTR Name,BOOL AttachComment)
 
 						/* Check for MacPaint... */
 
-					if(LongCompare(ByteBuffer,'PNTG'))
+					if(LongCompare(ByteBuffer,AROS_MAKE_ID('P','N','T','G')))
 						Type = TYPE_MACPAINT;
 
 						/* Check for SuperPaint... */
 
-					if(LongCompare(ByteBuffer,'SPTG'))
+					if(LongCompare(ByteBuffer,AROS_MAKE_ID('S','P','T','G')))
 						Type = TYPE_SUPERPAINT;
 
 						/* Check for PICT... */
 
-					if(LongCompare(ByteBuffer,'PICT'))
+					if(LongCompare(ByteBuffer,AROS_MAKE_ID('P','I','C','T')))
 						Type = TYPE_PICT;
 
 						/* Check for executable... */
 
-					if(LongCompare(ByteBuffer,'APPL') || LongCompare(ByteBuffer,'PRES') || LongCompare(ByteBuffer,'FDOC') || LongCompare(ByteBuffer,'cdev') || LongCompare(ByteBuffer,'INIT'))
+					if(LongCompare(ByteBuffer,AROS_MAKE_ID('A','P','P','L')) || LongCompare(ByteBuffer,AROS_MAKE_ID('P','R','E','S')) || LongCompare(ByteBuffer,AROS_MAKE_ID('F','D','O','C')) || LongCompare(ByteBuffer,AROS_MAKE_ID('c','d','e','v')) || LongCompare(ByteBuffer,AROS_MAKE_ID('I','N','I','T')))
 						Type = TYPE_MACEXECUTABLE;
 
 						/* Check for StuffIt archive... */
 
-					if(LongCompare(ByteBuffer,'SIT!') || LongCompare(ByteBuffer,'SIT2'))
+					if(LongCompare(ByteBuffer,AROS_MAKE_ID('S','I','T','!')) || LongCompare(ByteBuffer,AROS_MAKE_ID('S','I','T','2')))
 						Type = TYPE_STUFFIT;
 
 						/* Check for PackIt archive... */
 
-					if(LongCompare(ByteBuffer,'PIT '))
+					if(LongCompare(ByteBuffer,AROS_MAKE_ID('P','I','T',' ')))
 						Type = TYPE_PACKIT;
 
 						/* Check for self-extracting Compact archive. */
 
-					if(LongCompare(ByteBuffer,'APPL') && LongCompare(&ByteBuffer[4],'EXTR'))
+					if(LongCompare(ByteBuffer,AROS_MAKE_ID('A','P','P','L')) && LongCompare(&ByteBuffer[4],AROS_MAKE_ID('E','X','T','R')))
 						Type = TYPE_COMPACT;
 
 						/* Check for MacCompress archive. */
 
-					if(LongCompare(ByteBuffer,'ZIVM'))
+					if(LongCompare(ByteBuffer,AROS_MAKE_ID('Z','I','V','M')))
 						Type = TYPE_MACCOMPRESS;
 
 						/* Check for LhArc archive with MacBinary header. */
 
-					if(LongCompare(ByteBuffer,'LARC'))
+					if(LongCompare(ByteBuffer,AROS_MAKE_ID('L','A','R','C')))
 						Type = TYPE_LHARC;
 
 						/* Check for Compact archive. */
 
-					if(LongCompare(ByteBuffer,'PACT'))
+					if(LongCompare(ByteBuffer,AROS_MAKE_ID('P','A','C','T')))
 						Type = TYPE_COMPACT;
 
 						/* Check for Diamond archive. */
 
-					if(LongCompare(ByteBuffer,'Pack'))
+					if(LongCompare(ByteBuffer,AROS_MAKE_ID('P','a','c','k')))
 						Type = TYPE_DIAMOND;
 				}
 

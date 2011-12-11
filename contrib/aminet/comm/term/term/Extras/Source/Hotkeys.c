@@ -122,7 +122,7 @@ TermCxServer(VOID)
 	{
 			/* Add the port to the public list. */
 
-		CxPort->mp_Node.ln_Name = TermBroker.nb_Name;
+		CxPort->mp_Node.ln_Name = (STRPTR)TermBroker.nb_Name;
 
 		AddPort(CxPort);
 

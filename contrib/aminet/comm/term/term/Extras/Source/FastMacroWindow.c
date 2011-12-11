@@ -107,7 +107,7 @@ CreateScroller(struct Screen *Screen)
 				SYSIA_DrawInfo,	DrawInfo,
 			TAG_DONE))
 			{
-				ULONG SizeWidth,SizeHeight;
+				IPTR SizeWidth,SizeHeight;
 
 				GetAttr(IA_Width,	SizeImage,&SizeWidth);
 				GetAttr(IA_Height,	SizeImage,&SizeHeight);
@@ -120,7 +120,7 @@ CreateScroller(struct Screen *Screen)
 					SYSIA_DrawInfo,	DrawInfo,
 				TAG_DONE))
 				{
-					ULONG ArrowHeight;
+					IPTR ArrowHeight;
 
 					GetAttr(IA_Height,ScrollerInfo->UpImage,&ArrowHeight);
 
@@ -453,7 +453,8 @@ STATIC ULONG
 SetMethod(Class *class,struct Gadget *gadget,struct opSet *msg)
 {
 	struct GridData *GridData = INST_DATA(class,gadget);
-	struct TagItem *List,*Item;
+	const struct TagItem *List;
+	struct TagItem *Item;
 	struct RastPort *RPort;
 	LONG Delta;
 
@@ -908,7 +909,7 @@ HandleInputMethod(Class *class,struct Gadget *gadget,struct gpInput *msg)
 STATIC ULONG ASM SAVE_DS
 ClassDispatcher(REG(a0) Class *class,REG(a2) struct Gadget *gadget,REG(a1) Msg msg)
 #else
-AROS_UFH3(STATIC ULONG, ClassDispatcher,
+AROS_UFH3(STATIC IPTR, ClassDispatcher,
  AROS_UFHA(Class *        , class , A0),
  AROS_UFHA(struct Gadget *, gadget, A2),
  AROS_UFHA(Msg            , msg, A1))
@@ -925,7 +926,7 @@ AROS_UFH3(STATIC ULONG, ClassDispatcher,
 
 		case OM_NEW:
 
-			return((ULONG)NewMethod(class,gadget,(struct opSet *)msg));
+			return((IPTR)NewMethod(class,gadget,(struct opSet *)msg));
 
 		case OM_SET:
 		case OM_UPDATE:
@@ -970,7 +971,7 @@ ChangeWindowSize(struct Window *LocalWindow,LONG MinWidth,LONG MinHeight)
 
 	NeedChange = FALSE;
 
-	IntuiLock = LockIBase(NULL);
+	IntuiLock = LockIBase(0);
 
 	if(MinWidth > LocalWindow->Width)
 	{
@@ -1039,7 +1040,7 @@ ChangeWindowSize(struct Window *LocalWindow,LONG MinWidth,LONG MinHeight)
 STATIC BOOL
 WindowSizeControl(struct Window *LocalWindow,Object *LocalObject)
 {
-	ULONG ItemWidth,ItemHeight;
+	IPTR ItemWidth,ItemHeight;
 	BOOL DidReset;
 
 	GetAttr(GG_ItemWidth,	LocalObject,&ItemWidth);
@@ -1148,7 +1149,7 @@ OpenFastWindow()
 		return(TRUE);
 	}
 
-	if(GridClass = MakeClass(NULL,GADGETCLASS,NULL,sizeof(struct GridData),NULL))
+	if(GridClass = MakeClass(NULL,GADGETCLASS,NULL,sizeof(struct GridData),0))
 	{
 		InitHook(&GridClass->cl_Dispatcher,(HOOKFUNC)ClassDispatcher,NULL);
 
@@ -1156,11 +1157,11 @@ OpenFastWindow()
 		{
 			STATIC struct TagItem GridToPropMap[] =
 			{
-				GG_TopRow,	PGA_Top,
-				GG_Visible,	PGA_Visible,
-				GG_Total,	PGA_Total,
+				{ GG_TopRow,	PGA_Top, },
+				{ GG_Visible,	PGA_Visible, },
+				{ GG_Total,	PGA_Total, },
 
-				TAG_DONE
+                                { TAG_DONE },
 			};
 
 			if(GridObject = NewObject(GridClass,NULL,
@@ -1172,16 +1173,14 @@ OpenFastWindow()
 			{
 				STATIC struct TagItem PropToGridMap[] =
 				{
-					PGA_Top,	GG_TopRow,
-
-					TAG_DONE
+                                    { PGA_Top,	GG_TopRow, },
+                                    { TAG_DONE },
 				};
 
 				STATIC struct TagItem ArrowToGridMap[] =
 				{
-					GA_ID,		GG_ScrollArrow,
-
-					TAG_DONE
+                                    { GA_ID,		GG_ScrollArrow, },
+                                    { TAG_DONE }
 				};
 
 				LONG Left,Top,Width,Height;

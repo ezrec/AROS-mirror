@@ -38,9 +38,9 @@ LockDevice(STRPTR Device,LONG Unit,STRPTR ErrorString,LONG ErrorStringSize)
 
 	if(OwnDevUnitBase)
 	{
-		STRPTR Error;
-
 #ifndef __AROS__
+		CONST_STRPTR Error;
+
 		if(Error = AttemptDevUnit(Device,Unit,TermIDString,OwnDevBit))
 		{
 				/* Check for the type of error, if any */

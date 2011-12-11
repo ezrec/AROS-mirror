@@ -35,13 +35,13 @@ IsNumeric(STRPTR String)
 	return(TRUE);
 }
 
-	/* CreateResult(STRPTR ResultString,LONG *Results):
+	/* CreateResult(CONST_STRPTR ResultString,LONG *Results):
 	 *
 	 *	Create a proper Rexx result string.
 	 */
 
 STRPTR
-CreateResult(STRPTR ResultString,LONG *Results)
+CreateResult(CONST_STRPTR ResultString,LONG *Results)
 {
 	STRPTR Result;
 
@@ -54,14 +54,14 @@ CreateResult(STRPTR ResultString,LONG *Results)
 	return(Result);
 }
 
-	/* CreateResultLen(STRPTR ResultString,LONG *Results):
+	/* CreateResultLen(CONST_STRPTR ResultString,LONG *Results):
 	 *
 	 *	Create a proper Rexx result string given the
 	 *	length of the source string.
 	 */
 
 STRPTR
-CreateResultLen(STRPTR ResultString,LONG *Results,LONG Len)
+CreateResultLen(CONST_STRPTR ResultString,LONG *Results,LONG Len)
 {
 	STRPTR Result;
 
@@ -80,7 +80,7 @@ CreateResultLen(STRPTR ResultString,LONG *Results,LONG Len)
 	 */
 
 BOOL
-CreateVarArgs(STRPTR Value,struct RexxPkt *Packet,STRPTR Stem,...)
+CreateVarArgs(CONST_STRPTR Value,struct RexxPkt *Packet,STRPTR Stem,...)
 {
 	UBYTE Name[256];
 	va_list VarArgs;
@@ -90,7 +90,7 @@ CreateVarArgs(STRPTR Value,struct RexxPkt *Packet,STRPTR Stem,...)
 	LimitedVSPrintf(sizeof(Name),Name,Stem,VarArgs);
 	va_end(VarArgs);
 
-	if(Result = SetRexxVar((struct Message *)Packet->RexxMsg,Name,Value,strlen(Value)))
+	if((Result = SetRexxVar(Packet->RexxMsg,Name,(char *)Value,strlen(Value))))
 	{
 		Packet->Results[0] = RC_ERROR;
 		Packet->Results[1] = Result;
@@ -107,11 +107,11 @@ CreateVarArgs(STRPTR Value,struct RexxPkt *Packet,STRPTR Stem,...)
 	 */
 
 STRPTR
-CreateVar(STRPTR Value,struct RexxPkt *Packet,STRPTR Name)
+CreateVar(CONST_STRPTR Value,struct RexxPkt *Packet,STRPTR Name)
 {
 	LONG Result;
 
-	if(Result = SetRexxVar((struct Message *)Packet->RexxMsg,Name,Value,strlen(Value)))
+	if(Result = SetRexxVar(Packet->RexxMsg,Name,(char *)Value,strlen(Value)))
 	{
 		Packet->Results[0] = RC_ERROR;
 		Packet->Results[1] = Result;
@@ -410,7 +410,7 @@ ParseRexxCommand(struct RexxMsg *RexxMsg)
 		/* Clear the local variables. */
 
 	CommandBuffer[0]	= 0;
-	Command				= RexxMsg->rm_Args[0];
+	Command				= (STRPTR)RexxMsg->rm_Args[0];
 	CommandArgs			= NULL;
 	Len					= 0;
 
@@ -504,7 +504,7 @@ ParseRexxCommand(struct RexxMsg *RexxMsg)
 
 			if(CommandInfo->Arguments)
 			{
-				LONG *Array;
+				IPTR *Array;
 
 					/* Determine length of argument string. */
 
@@ -518,7 +518,7 @@ ParseRexxCommand(struct RexxMsg *RexxMsg)
 					 * string.
 					 */
 
-				if(Array = (LONG *)AllocVecPooled(12 * sizeof(LONG) + Len + 2,MEMF_ANY | MEMF_CLEAR))
+				if(Array = (IPTR *)AllocVecPooled(12 * sizeof(IPTR) + Len + 2,MEMF_ANY | MEMF_CLEAR))
 				{
 					struct RDArgs *Args;
 					STRPTR Buffer;
@@ -712,7 +712,7 @@ RexxPktCleanup(struct RexxPkt *Packet,STRPTR Result)
 			LimitedSPrintf(sizeof(Buffer),Buffer,"%ld",LastRexxError = Packet->Results[1]);
 
 			if(Packet->RexxMsg)
-				SetRexxVar((struct Message *)Packet->RexxMsg,"TERM.LASTERROR",Buffer,strlen(Buffer));
+				SetRexxVar(Packet->RexxMsg,"TERM.LASTERROR",Buffer,strlen(Buffer));
 		}
 
 		ReplyRexxCommand(Packet->RexxMsg,Packet->Results[0],Packet->Results[1]);
@@ -727,7 +727,7 @@ RexxPktCleanup(struct RexxPkt *Packet,STRPTR Result)
 			if(Packet->RexxMsg)
 			{
 				if(Packet->RexxMsg->rm_Action & RXFF_RESULT)
-					ReplyRexxCommand(Packet->RexxMsg,0,(LONG)Result);
+					ReplyRexxCommand(Packet->RexxMsg,0,(IPTR)Result);
 				else
 				{
 					DeleteArgstring(Result);
@@ -813,7 +813,7 @@ RexxServer(VOID)
 
 							LimitedSPrintf(sizeof(Buffer),Buffer,"%ld",LastRexxError = TERMERROR_UNKNOWN_COMMAND);
 
-							SetRexxVar((struct Message *)RexxMsg,"TERM.LASTERROR",Buffer,strlen(Buffer));
+							SetRexxVar(RexxMsg,"TERM.LASTERROR",Buffer,strlen(Buffer));
 
 							ReplyRexxCommand(RexxMsg,RC_ERROR,TERMERROR_UNKNOWN_COMMAND);
 						}

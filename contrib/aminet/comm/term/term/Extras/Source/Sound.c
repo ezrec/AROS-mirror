@@ -41,6 +41,7 @@ typedef LONG Fixed;
 
 	/* Unity = Fixed 1.0 = maximum volume */
 
+#undef Unity
 #define Unity 0x10000L
 
 	/* Double-buffering information. */
@@ -141,7 +142,7 @@ LoadSound(STRPTR Name,BOOL Warn)
 			struct VoiceHeader Header;
 			SampleType Channel;
 			BOOL SingleChannel;
-			UBYTE Compression;
+			UBYTE Compression = CMP_NONE;
 
 			Channel			= SAMPLE_STEREO;
 			SingleChannel	= TRUE;
@@ -484,12 +485,12 @@ ReplaySound(struct SoundInfo *SoundInfo,struct IOAudio *SoundControlRequest,stru
 
 		/* Left channel available? */
 
-	if(!(((ULONG)SoundRequestLeft->ioa_Request.io_Unit) & (LEFT0F | LEFT1F)))
+	if(!(((IPTR)SoundRequestLeft->ioa_Request.io_Unit) & (LEFT0F | LEFT1F)))
 		Left = NULL;
 
 		/* Right channel available? */
 
-	if(!(((ULONG)SoundRequestRight->ioa_Request.io_Unit) & (RIGHT0F | RIGHT1F)))
+	if(!(((IPTR)SoundRequestRight->ioa_Request.io_Unit) & (RIGHT0F | RIGHT1F)))
 		Right = NULL;
 
 		/* Fill up left buffer. */
@@ -693,7 +694,7 @@ PlaySound(struct SoundInfo *SoundInfo)
 
 			if(SoundTimeRequest = (struct timerequest *)CreateIORequest(SoundTimePort,sizeof(struct timerequest)))
 			{
-				if(!OpenDevice(TIMERNAME,UNIT_VBLANK,(struct IORequest *)SoundTimeRequest,NULL))
+				if(!OpenDevice(TIMERNAME,UNIT_VBLANK,(struct IORequest *)SoundTimeRequest,0))
 				{
 					SoundTimeRequest->tr_node.io_Command	= TR_ADDREQUEST;
 					SoundTimeRequest->tr_time				= SoundInfo->SoundTime;
@@ -805,7 +806,7 @@ PlaySound(struct SoundInfo *SoundInfo)
 								 * channels on the fly.
 								 */
 
-							if(!OpenDevice(AUDIONAME,NULL,(struct IORequest *)SoundControlRequest,NULL))
+							if(!OpenDevice(AUDIONAME,0,(struct IORequest *)SoundControlRequest,0))
 							{
 									/* Clone the sound control request. */
 
@@ -814,8 +815,8 @@ PlaySound(struct SoundInfo *SoundInfo)
 
 									/* Separate the channels. */
 
-								SoundRequestLeft ->ioa_Request.io_Unit = (struct Unit *)((ULONG)SoundRequestLeft ->ioa_Request.io_Unit & (LEFT0F  | LEFT1F));
-								SoundRequestRight->ioa_Request.io_Unit = (struct Unit *)((ULONG)SoundRequestRight->ioa_Request.io_Unit & (RIGHT0F | RIGHT1F));
+								SoundRequestLeft ->ioa_Request.io_Unit = (struct Unit *)((IPTR)SoundRequestLeft ->ioa_Request.io_Unit & (LEFT0F  | LEFT1F));
+								SoundRequestRight->ioa_Request.io_Unit = (struct Unit *)((IPTR)SoundRequestRight->ioa_Request.io_Unit & (RIGHT0F | RIGHT1F));
 
 									/* Replay the sound... */
 
@@ -853,7 +854,7 @@ SoundLoad(LONG Sound,BOOL Warn)
 {
 	struct SoundInfo **Info;
 	BOOL Success;
-	STRPTR Name;
+	STRPTR Name = "";
 
 	Info	= &SoundSlot[Sound];
 	Success	= FALSE;

@@ -19,7 +19,7 @@
 #  undef Dispatch
 # endif
 # define Dispatch MyDispatch
-AROS_UFP3(STATIC ULONG, Dispatch,
+AROS_UFP3(STATIC IPTR, Dispatch,
  AROS_UFPA(Class *        , class , A0),
  AROS_UFPA(Object *       , obj, A2),
  AROS_UFPA(Msg            , msg, A1));
@@ -268,12 +268,13 @@ DisposeMethod(Class *class,Object *object,Msg UnusedMsg)
 		CloseFont(Info->Font);
 }
 
-STATIC ULONG
+STATIC Object *
 NewMethod(Class *class,Object *object,struct opSet *SetInfo)
 {
 	if(object = (Object *)DoSuperMethodA(class,object,(Msg)SetInfo))
 	{
-		struct TagItem	*Tag,*TagList;
+		struct TagItem	*Tag;
+		const struct TagItem	*TagList;
 		LONG			 Width,Height;
 		MatrixInfo		*Info;
 		struct TextAttr	*Font;
@@ -360,7 +361,7 @@ NewMethod(Class *class,Object *object,struct opSet *SetInfo)
 					Info->PixelWidth	= Info->Width	* Info->CellWidth;
 					Info->PixelHeight	= Info->Height	* Info->CellHeight;
 
-					return((ULONG)object);
+					return(object);
 				}
 			}
 		}
@@ -368,7 +369,7 @@ NewMethod(Class *class,Object *object,struct opSet *SetInfo)
 		CoerceMethod(class,object,OM_DISPOSE);
 	}
 
-	return(0);
+	return(NULL);
 }
 
 STATIC ULONG
@@ -559,7 +560,7 @@ HitTestMethod(Class *class,Object *object,struct gpHitTest *HitInfo)
 STATIC ULONG SAVE_DS ASM
 Dispatch(REG(a0) Class *class,REG(a2) Object *object,REG(a1) Msg msg)
 #else
-AROS_UFH3(STATIC ULONG, Dispatch,
+AROS_UFH3(STATIC IPTR, Dispatch,
  AROS_UFHA(Class *        , class , A0),
  AROS_UFHA(Object *       , object, A2),
  AROS_UFHA(Msg            , msg, A1))
@@ -572,7 +573,7 @@ AROS_UFH3(STATIC ULONG, Dispatch,
 	{
 		case OM_NEW:
 
-			return(NewMethod(class,object,(struct opSet *)msg));
+			return((IPTR)NewMethod(class,object,(struct opSet *)msg));
 
 		case OM_UPDATE:
 		case OM_SET:

@@ -32,7 +32,7 @@ OpenStreams(STRPTR StreamName,BPTR *InputStream,BPTR *OutputStream)
 		if(GoodStream(Stream))
 		{
 			*InputStream	= Stream;
-			*OutputStream	= NULL;
+			*OutputStream	= BNULL;
 		}
 		else
 		{
@@ -82,7 +82,7 @@ LaunchEntry(VOID)
 
 		/* Open the streams. */
 
-	InputStream = OutputStream = NULL;
+	InputStream = OutputStream = BNULL;
 
 	if(!OpenStreams(Startup->Message.mn_Node.ln_Name,&InputStream,&OutputStream))
 		Startup->Result2 = IoErr();
@@ -91,10 +91,7 @@ LaunchEntry(VOID)
 		if(!OutputStream)
 		{
 			SelectInput(InputStream);
-#warning Deactivated to make it compile for AROS.
-#ifndef __AROS__
 			SetConsoleTask(((struct FileHandle *)BADDR(InputStream))->fh_Type);
-#endif
 
 			if(!(OutputStream = Open("CONSOLE:",MODE_NEWFILE)))
 				Startup->Result2 = IoErr();
@@ -126,7 +123,7 @@ LaunchEntry(VOID)
 			{
 					/* And put in the command to execute. */
 
-				if(RexxMsg->rm_Args[0] = CreateArgstring(Startup->Command,strlen(Startup->Command)))
+				if(RexxMsg->rm_Args[0] = (IPTR)CreateArgstring(Startup->Command,strlen(Startup->Command)))
 				{
 						/* Flag the message as a command to be executed. */
 
@@ -158,7 +155,7 @@ LaunchEntry(VOID)
 
 						/* And clean up the rest. */
 
-					DeleteArgstring(RexxMsg->rm_Args[0]);
+					DeleteArgstring((STRPTR)RexxMsg->rm_Args[0]);
 				}
 				else
 					Startup->Result2 = ERROR_NO_FREE_STORE;
@@ -216,7 +213,7 @@ LaunchEntry(VOID)
 	 */
 
 STATIC LaunchMsg *
-CreateLaunchMsg(WORD Type,STRPTR Command,struct RexxPkt *RexxPkt,LAUNCHCLEANUP Cleanup)
+CreateLaunchMsg(WORD Type,CONST_STRPTR Command,struct RexxPkt *RexxPkt,LAUNCHCLEANUP Cleanup)
 {
 	LaunchMsg *Startup;
 
@@ -255,7 +252,7 @@ DeleteLaunchMsg(LaunchMsg *Startup)
 	 */
 
 LaunchMsg *
-CreateRexxCmdLaunchMsg(STRPTR RexxCmd,struct RexxPkt *RexxPkt,LAUNCHCLEANUP Cleanup)
+CreateRexxCmdLaunchMsg(CONST_STRPTR RexxCmd,struct RexxPkt *RexxPkt,LAUNCHCLEANUP Cleanup)
 {
 	return(CreateLaunchMsg(LAUNCH_RexxCmd,RexxCmd,RexxPkt,Cleanup));
 }
@@ -266,7 +263,7 @@ CreateRexxCmdLaunchMsg(STRPTR RexxCmd,struct RexxPkt *RexxPkt,LAUNCHCLEANUP Clea
 	 */
 
 LaunchMsg *
-CreateProgramLaunchMsg(STRPTR Program,LAUNCHCLEANUP Cleanup)
+CreateProgramLaunchMsg(CONST_STRPTR Program,LAUNCHCLEANUP Cleanup)
 {
 	return(CreateLaunchMsg(LAUNCH_Program,Program,NULL,Cleanup));
 }
@@ -357,7 +354,7 @@ LaunchSomething(STRPTR OriginalStreamName,BOOL Synchronous,LaunchMsg *Startup)
 
 	Result = Error = 0;
 
-	InputStream = OutputStream = NULL;
+	InputStream = OutputStream = BNULL;
 
 	if(Startup->Type == LAUNCH_Program)
 	{
@@ -379,7 +376,7 @@ LaunchSomething(STRPTR OriginalStreamName,BOOL Synchronous,LaunchMsg *Startup)
 				 */
 
 			if(Synchronous == FALSE)
-				InputStream = OutputStream = NULL;
+				InputStream = OutputStream = BNULL;
 		}
 
 		Startup->Result		= Result;
@@ -395,16 +392,16 @@ LaunchSomething(STRPTR OriginalStreamName,BOOL Synchronous,LaunchMsg *Startup)
 
 			STATIC struct TagItem DefaultTags[] =
 			{
-				NP_Entry,		LaunchEntry,
-				NP_StackSize,	8000,
-				NP_Name,		"term Child Process",
-				NP_Cli,			TRUE,
-				NP_Input,		NULL,
-				NP_Output,		NULL,
-				NP_CloseInput,	FALSE,
-				NP_CloseOutput,	FALSE,
+				{ NP_Entry,		(IPTR)LaunchEntry, },
+				{ NP_StackSize,	8000, },
+				{ NP_Name,		(IPTR)"term Child Process", },
+				{ NP_Cli,			TRUE, },
+				{ NP_Input,		(IPTR)NULL, },
+				{ NP_Output,		(IPTR)NULL, },
+				{ NP_CloseInput,	FALSE, },
+				{ NP_CloseOutput,	FALSE, },
 
-				TAG_DONE
+				{ TAG_DONE }
 			};
 
 			struct Process *Child;

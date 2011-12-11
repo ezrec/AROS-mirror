@@ -528,7 +528,7 @@ DeleteSerial()
 	 *	Return an error message for each possible serial device error.
 	 */
 
-STRPTR
+CONST_STRPTR
 GetSerialError(LONG Error,BOOL *ResetPtr)
 {
 	BOOL Reset;
@@ -753,7 +753,7 @@ CreateSerial(STRPTR ErrorBuffer,LONG ErrorBufferSize)
 
 	if(Error != 0)
 	{
-		STRPTR String;
+		CONST_STRPTR String;
 
 		if(!(String = GetSerialError(Error,NULL)))
 			String = LocaleString(MSG_SERIAL_ERROR_DEVBUSY_TXT);
@@ -886,7 +886,7 @@ ReconfigureSerial(struct Window *Window,struct SerialSettings *SerialConfig)
 			if(Error = SetFlags())
 			{
 				UBYTE LocalBuffer[256];
-				STRPTR String;
+				CONST_STRPTR String;
 				BOOL Reset;
 
 					/* Get the error message. */
@@ -1104,13 +1104,13 @@ UpdateSerialJob()
 	if(!Get_xOFF() && ReadPort && ProcessIO)
 		Mask = SIG_SERIAL;
 	else
-		Mask = NULL;
+		Mask = 0;
 
 	if(Mask)
 	{
 		if(DataHold)
 		{
-			Mask = NULL;
+			Mask = 0;
 
 			ActivateJob(MainJobQueue,SerialCacheJob);
 		}

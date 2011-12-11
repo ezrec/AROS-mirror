@@ -56,7 +56,7 @@ STATIC BOOL					PrintFormFeed,
 VOID
 UpdatePens()
 {
-	LONG ForePen,BackPen,Attrs,TextFlags,Mask;
+	LONG ForePen,BackPen,Attrs,TextFlags,Mask = 0;
 
 		/* Update the colour mask. */
 
@@ -1565,31 +1565,31 @@ RequestTerminalParams(STRPTR Buffer)
 {
 	STATIC WORD ParityTable[][2] =
 	{
-		PARITY_NONE,	1,
-		PARITY_ODD,		4,
-		PARITY_EVEN,	5,
-		-1,				1
+		{ PARITY_NONE,	1, },
+		{ PARITY_ODD,		4, },
+		{ PARITY_EVEN,	5, },
+		{ -1,				1 },
 	};
 
 	STATIC WORD SpeedTable[][2] =
 	{
-		50,		0,
-		75,		8,
-		110,	16,
-		132,	24,
-		150,	32,
-		200,	40,
-		300,	48,
-		600,	56,
-		1200,	64,
-		1800,	72,
-		2000,	80,
-		2400,	88,
-		3600,	96,
-		4800,	104,
-		9600,	112,
-		19200,	120,
-		-1
+		{ 50,		0, },
+		{ 75,		8, },
+		{ 110,	16, },
+		{ 132,	24, },
+		{ 150,	32, },
+		{ 200,	40, },
+		{ 300,	48, },
+		{ 600,	56, },
+		{ 1200,	64, },
+		{ 1800,	72, },
+		{ 2000,	80, },
+		{ 2400,	88, },
+		{ 3600,	96, },
+		{ 4800,	104, },
+		{ 9600,	112, },
+		{ 19200,	120, },
+		{ -1 },
 	};
 
 	UBYTE LocalBuffer[40];
@@ -1597,7 +1597,7 @@ RequestTerminalParams(STRPTR Buffer)
 	WORD Value;
 	LONG Parity;
 	LONG Bits;
-	LONG Speed;
+	LONG Speed = 0;
 	LONG Delta,d;
 	LONG i;
 

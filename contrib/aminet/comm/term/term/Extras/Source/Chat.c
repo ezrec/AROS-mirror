@@ -25,7 +25,7 @@ STATIC STRPTR		 ChatBuffer,
 					 ChatUndo,
 					 ChatWork,
 					 ChatTemp;
-STATIC ULONG		 ChatPosition;
+STATIC IPTR		 ChatPosition;
 STATIC Object		*ChatGadget;
 STATIC BOOL			 ChatWasActive;
 

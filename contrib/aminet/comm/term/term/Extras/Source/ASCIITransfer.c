@@ -22,10 +22,10 @@ STATIC SENDLINE	ASCIISendLine;
 STATIC LONG
 MangleASCIIBuffer(BYTE TranslateCR,BYTE TranslateLF,STRPTR Source,LONG SourceLen,STRPTR Destination)
 {
-	LONG	CR_Len,
-			LF_Len;
-	STRPTR	CR_String,
-			LF_String;
+	LONG	CR_Len = 0,
+			LF_Len = 0;
+	STRPTR	CR_String = NULL,
+			LF_String = NULL;
 	LONG	Mask;
 	LONG	Len = 0;
 
@@ -576,7 +576,7 @@ InternalASCIIUpload(STRPTR SingleFile,BOOL WaitForIt)
 	if(NewDir = Lock(Config->PathConfig->ASCIIUploadPath,SHARED_LOCK))
 		OldDir = CurrentDir(NewDir);
 	else
-		OldDir = NULL;
+		OldDir = BNULL;
 
 	BlockWindows();
 
@@ -856,7 +856,7 @@ InternalASCIIDownload(STRPTR Name,BOOL WaitForIt)
 
 		/* Is the name empty? */
 
-	NewDir = OldDir = NULL;
+	NewDir = OldDir = BNULL;
 
 	if(DownloadPath[0])
 	{

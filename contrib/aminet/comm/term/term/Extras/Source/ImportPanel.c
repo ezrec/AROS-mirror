@@ -144,7 +144,7 @@ ImportPanel(struct Window *Parent,PhonebookHandle *PhoneHandle,PhoneEntry *Entry
 			ULONG				 MsgClass;
 			UWORD				 MsgCode;
 			struct Gadget		*MsgGadget;
-			PhoneNode			*Node;
+			PhoneNode			*Node = NULL;
 
 			GuideContext(CONTEXT_IMPORT);
 

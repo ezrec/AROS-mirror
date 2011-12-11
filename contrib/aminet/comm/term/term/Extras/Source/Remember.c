@@ -96,7 +96,7 @@ FinishRecord()
 		{
 			BPTR			FileHandle;
 			LONG			Error = 0;
-			struct timeval	Delta = { 0,0 };
+			struct timeval	Delta = { };
 
 			FreeAslRequest(FileRequest);
 
@@ -268,7 +268,7 @@ FinishRecord()
 						if(!ActiveEntry->Config->CommandConfig)
 						{
 							if(!CreateConfigEntry(ActiveEntry->Config,PREF_COMMAND))
-								ShowError(Window,ERROR_NO_FREE_STORE,NULL,NULL);
+								ShowError(Window,ERROR_NO_FREE_STORE,0,NULL);
 						}
 
 						if(ActiveEntry->Config->CommandConfig)
@@ -324,7 +324,7 @@ FinishRecord()
 	 */
 
 BOOL
-CreateRecord(STRPTR BBSName)
+CreateRecord(CONST_STRPTR BBSName)
 {
 	DeleteRecord();
 

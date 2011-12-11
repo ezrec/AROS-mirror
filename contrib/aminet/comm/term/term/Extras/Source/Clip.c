@@ -261,14 +261,14 @@ GetClipContents(LONG Unit,APTR *Buffer,LONG *Size)
 	return((BOOL)(Store != NULL));
 }
 
-	/* AddClip(STRPTR Buffer,LONG Size):
+	/* AddClip(CONST_STRPTR Buffer,LONG Size):
 	 *
 	 *	Merge previous clipboard contents with new text,
 	 *	then store the new string in the clipboard.
 	 */
 
 BOOL
-AddClip(STRPTR Buffer,LONG Size)
+AddClip(CONST_STRPTR Buffer,LONG Size)
 {
 	LONG Bytes;
 	APTR Store;
@@ -286,7 +286,7 @@ AddClip(STRPTR Buffer,LONG Size)
 				{
 					if(WriteChunkBytes(Handle,Store,Bytes) == Bytes)
 					{
-						if(WriteChunkBytes(Handle,Buffer,Size) != Size)
+						if(WriteChunkBytes(Handle,(APTR)Buffer,Size) != Size)
 							Error = IoErr();
 					}
 					else
@@ -326,7 +326,7 @@ AddClip(STRPTR Buffer,LONG Size)
 	 */
 
 BOOL
-SaveClip(STRPTR Buffer,LONG Size)
+SaveClip(CONST_STRPTR Buffer,LONG Size)
 {
 	LONG Error;
 
@@ -340,7 +340,7 @@ SaveClip(STRPTR Buffer,LONG Size)
 			{
 				if(!(Error = PushChunk(Handle,0,ID_CHRS,IFFSIZE_UNKNOWN)))
 				{
-					if(WriteChunkBytes(Handle,Buffer,Size) == Size)
+					if(WriteChunkBytes(Handle,(APTR)Buffer,Size) == Size)
 						Error = PopChunk(Handle);
 					else
 						Error = IoErr();

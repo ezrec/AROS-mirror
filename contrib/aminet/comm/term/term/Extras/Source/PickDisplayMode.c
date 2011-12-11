@@ -22,7 +22,7 @@ FilterModeID(ULONG ID,APTR UserData)
 
 	if(GetDisplayInfoData(NULL,(APTR)&DimensionInfo,sizeof(struct DimensionInfo),DTAG_DIMS,ID))
 	{
-		if(DimensionInfo.MaxDepth >= (LONG)UserData && DimensionInfo.MaxDepth <= 8)
+		if(DimensionInfo.MaxDepth >= (LONG)(IPTR)UserData && DimensionInfo.MaxDepth <= 8)
 			return(TRUE);
 	}
 
@@ -39,7 +39,7 @@ FilterModeID(ULONG ID,APTR UserData)
 BOOL
 PickDisplayMode(struct Window *Parent,ULONG *CurrentMode,struct Configuration *Config)
 {
-	LONG MinDepth;
+	LONG MinDepth = 1;
 	BOOL Success;
 
 	Success = FALSE;
@@ -77,7 +77,7 @@ PickDisplayMode(struct Window *Parent,ULONG *CurrentMode,struct Configuration *C
 		struct List	*ModeList;
 		LONG Index;
 
-		if(ModeList = BuildModeList(&Index,*CurrentMode,Config ? (MODEFILTER)FilterModeID : (MODEFILTER)NULL,(APTR)MinDepth))
+		if(ModeList = BuildModeList(&Index,*CurrentMode,Config ? (MODEFILTER)FilterModeID : (MODEFILTER)NULL,(APTR)(IPTR)MinDepth))
 		{
 			struct LayoutHandle *Handle;
 
@@ -263,7 +263,7 @@ PickDisplayMode(struct Window *Parent,ULONG *CurrentMode,struct Configuration *C
 	}
 	else
 	{
-		LONG DisplayWidth,DisplayHeight,Depth,OverscanType;
+		LONG DisplayWidth,DisplayHeight,Depth = 0,OverscanType = 0;
 		struct ScreenModeRequester *Request;
 		struct TagItem DimensionTags[5];
 		struct Rectangle DisplayClip;

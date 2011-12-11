@@ -31,23 +31,39 @@ CopyConfig(struct Configuration *LocalConfig,LONG WhichPart)
 {
 	STATIC LONG TypeMappings[][2] =
 	{
+	    {
 		GAD_SERIAL,			PREF_SERIAL,
+	    }, {
 		GAD_MODEM,			PREF_MODEM,
+	    }, {
 		GAD_SCREEN,			PREF_SCREEN,
+	    }, {
 		GAD_TERMINAL,		PREF_TERMINAL,
+	    }, {
 		GAD_EMULATION,		PREF_EMULATION,
+	    }, {
 		GAD_CLIPBOARD,		PREF_CLIP,
+	    }, {
 		GAD_CAPTURE,		PREF_CAPTURE,
+	    }, {
 		GAD_COMMANDS,		PREF_COMMAND,
+	    }, {
 		GAD_MISC,			PREF_MISC,
+	    }, {
 		GAD_PATHS,			PREF_PATH,
+	    }, {
 		GAD_TRANSFER,		PREF_TRANSFER,
+	    }, {
 		GAD_TRANSLATION,	PREF_TRANSLATIONFILENAME,
+	    }, {
 		GAD_KEYMACROS,		PREF_MACROFILENAME,
+	    }, {
 		GAD_CURSORKEYS,		PREF_CURSORFILENAME,
+	    }, {
 		GAD_FASTMACROS,		PREF_FASTMACROFILENAME,
-
+	    }, {
 		-1
+	    }
 	};
 
 	LONG i;
@@ -290,7 +306,7 @@ CopyPanel(struct Window *Parent,struct Configuration *LocalConfig,BOOL Selective
 
 							case GAD_USE:
 
-								Bits = NULL;
+								Bits = 0;
 
 								if(LT_GetAttributes(Handle,GAD_COPYTOALL,TAG_DONE))
 								{

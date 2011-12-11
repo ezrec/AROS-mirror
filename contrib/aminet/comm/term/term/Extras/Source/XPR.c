@@ -17,10 +17,10 @@
 
 STATIC BOOL CheckForCarrierLoss(UWORD SerialStatus);
 STATIC VOID HandleCarrierLoss(VOID);
-STATIC VOID PrintBox(LONG Box, LONG Line, STRPTR String, ...);
+STATIC VOID PrintBox(LONG Box, LONG Line, CONST_STRPTR String, ...);
 STATIC BOOL OpenTransferWindow(VOID);
 STATIC LONG CheckAbort(BOOL CheckCarrier);
-STATIC STRPTR NewFileName(STRPTR Source, STRPTR Buffer, LONG BufferSize);
+STATIC STRPTR NewFileName(CONST_STRPTR Source, STRPTR Buffer, LONG BufferSize);
 STATIC VOID IdentifySource(STRPTR Name, STRPTR BBSName, struct DateStamp *OpenDate);
 STATIC LONG GetSeconds(STRPTR String);
 STATIC STRPTR TruncateName(STRPTR FileName);
@@ -108,7 +108,7 @@ HandleCarrierLoss()
 	 */
 
 STATIC VOID
-PrintBox(LONG Box,LONG Line,STRPTR String,...)
+PrintBox(LONG Box,LONG Line,CONST_STRPTR String,...)
 {
 	UBYTE LocalBuffer[256];
 	va_list VarArgs;
@@ -265,7 +265,7 @@ CheckAbort(BOOL CheckCarrier)
 	 */
 
 STATIC STRPTR
-NewFileName(STRPTR Source,STRPTR Buffer,LONG BufferSize)
+NewFileName(CONST_STRPTR Source,STRPTR Buffer,LONG BufferSize)
 {
 	if(Config->TransferConfig->OverridePath && !Uploading)
 	{
@@ -300,7 +300,7 @@ NewFileName(STRPTR Source,STRPTR Buffer,LONG BufferSize)
 
 	LimitedStrcpy(BufferSize,Buffer,Source);
 
-	return(Source);
+	return(Buffer);
 }
 
 	/* IdentifySource(STRPTR Name,STRPTR BBSName,struct DateStamp *OpenDate):
@@ -425,8 +425,6 @@ IsBlockMappedDevice(struct MsgPort *Handler)
 
 	while(Entry = NextDosEntry(Entry,LDF_DEVICES))
 	{
-#warning Deactivated to make it compile for AROS.
-#ifndef __AROS__
 		if(Entry->dol_Task == Handler)
 		{
 			struct FileSysStartupMsg *Startup = (struct FileSysStartupMsg *)BADDR(Entry->dol_misc.dol_handler.dol_Startup);
@@ -466,7 +464,6 @@ IsBlockMappedDevice(struct MsgPort *Handler)
 				}
 			}
 		}
-#endif
 	}
 
 	UnLockDosList(LDF_DEVICES | LDF_READ);
@@ -537,7 +534,7 @@ CalculateBlocks(LONG Size,LONG BlockSize)
 STATIC BYTE
 SerialErrorReport(struct IOExtSer *Request)
 {
-	STRPTR ErrorMessage;
+	CONST_STRPTR ErrorMessage;
 	BOOL IsFatal;
 
 	switch(Request->IOSer.io_Error)
@@ -616,8 +613,8 @@ SerialErrorReport(struct IOExtSer *Request)
 	 *	Open a file for random access.
 	 */
 
-LONG SAVE_DS ASM
-xpr_fopen(REG(a0) STRPTR FileName,REG(a1) STRPTR AccessMode)
+BPTR SAVE_DS ASM
+xpr_fopen(REG(a0) const char *FileName,REG(a1) const char *AccessMode)
 {
 	UBYTE RealName[MAX_FILENAME_LENGTH];
 	struct Buffer *File;
@@ -690,7 +687,7 @@ xpr_fopen(REG(a0) STRPTR FileName,REG(a1) STRPTR AccessMode)
 		CurrentFile = File;
 	}
 
-	return((LONG)File);
+	return((BPTR)File);
 }
 
 	/* xpr_fclose(struct Buffer *File):
@@ -698,9 +695,10 @@ xpr_fopen(REG(a0) STRPTR FileName,REG(a1) STRPTR AccessMode)
 	 *	Close a file opened by xpr_fopen.
 	 */
 
-LONG SAVE_DS ASM
-xpr_fclose(REG(a0) struct Buffer *File)
+long SAVE_DS ASM
+xpr_fclose(REG(a0) BPTR FileP)
 {
+	struct Buffer *File = (struct Buffer *)FileP;
 	UBYTE RealName[MAX_FILENAME_LENGTH];
 	struct DateStamp OpenDate;
 	BOOL WriteAccess,Used;
@@ -871,9 +869,10 @@ xpr_fclose(REG(a0) struct Buffer *File)
 	 *	Read a few bytes from a file.
 	 */
 
-LONG SAVE_DS ASM
-xpr_fread(REG(a0) APTR Buffer,REG(d0) LONG Size,REG(d1) LONG Count,REG(a1) struct Buffer *File)
+long SAVE_DS ASM
+xpr_fread(REG(a0) char *Buffer,REG(d0) long Size,REG(d1) long Count,REG(a1) BPTR FileP)
 {
+	struct Buffer *File = (struct Buffer *)FileP;
 	DB(kprintf("xpr_fread(0x%08lx,%ld,%ld,0x%08lx)\n",Buffer,Size,Count,File));
 
 	return(BufferRead(File,Buffer,Size * Count) / Size);
@@ -884,9 +883,10 @@ xpr_fread(REG(a0) APTR Buffer,REG(d0) LONG Size,REG(d1) LONG Count,REG(a1) struc
 	 *	Write a few bytes to a file.
 	 */
 
-LONG SAVE_DS ASM
-xpr_fwrite(REG(a0) APTR Buffer,REG(d0) LONG Size,REG(d1) LONG Count,REG(a1) struct Buffer *File)
+long SAVE_DS ASM
+xpr_fwrite(REG(a0) char *Buffer,REG(d0) LONG Size,REG(d1) long Count,REG(a1) BPTR FileP)
 {
+	struct Buffer *File = (struct Buffer *)FileP;
 	DB(kprintf("xpr_fwrite(0x%08lx,%ld,%ld,0x%08lx)\n",Buffer,Size,Count,File));
 
 	return(BufferWrite(File,Buffer,Size * Count) / Size);
@@ -897,9 +897,11 @@ xpr_fwrite(REG(a0) APTR Buffer,REG(d0) LONG Size,REG(d1) LONG Count,REG(a1) stru
 	 *	Move the read/write pointer in a file.
 	 */
 
-LONG SAVE_DS ASM
-xpr_fseek(REG(a0) struct Buffer *File,REG(d0) LONG Offset,REG(d1) LONG Origin)
+long SAVE_DS ASM
+xpr_fseek(REG(a0) BPTR FileP,REG(d0) long Offset,REG(d1) long Origin)
 {
+	struct Buffer *File = (struct Buffer *)FileP;
+
 	DB(kprintf("xpr_fseek(0x%08lx,%ld,%ld)\n",File,Offset,Origin));
 
 	return(BufferSeek(File,Offset,Origin) ? 0 : -1);
@@ -911,8 +913,8 @@ xpr_fseek(REG(a0) struct Buffer *File,REG(d0) LONG Offset,REG(d1) LONG Origin)
 	 *	timeouts).
 	 */
 
-LONG SAVE_DS ASM
-xpr_sread(REG(a0) APTR Buffer,REG(d0) ULONG Size,REG(d1) ULONG Timeout)
+long SAVE_DS ASM
+xpr_sread(REG(a0) char *Buffer,REG(d0) long Size,REG(d1) long Timeout)
 {
 	DB(kprintf("xpr_sread(0x%08lx,%ld,%ld)\n",Buffer,Size,Timeout));
 
@@ -1211,8 +1213,8 @@ xpr_sread(REG(a0) APTR Buffer,REG(d0) ULONG Size,REG(d1) ULONG Timeout)
 	 *	Write a few bytes to the serial port.
 	 */
 
-LONG SAVE_DS ASM
-xpr_swrite(REG(a0) APTR Buffer,REG(d0) LONG Size)
+long SAVE_DS ASM
+xpr_swrite(REG(a0) char *Buffer,REG(d0) long Size)
 {
 	DB(kprintf("xpr_swrite(0x%08lx,%ld)\n",Buffer,Size));
 
@@ -1429,7 +1431,7 @@ xpr_update(REG(a0) struct XPR_UPDATE *UpdateInfo)
 					if(CurrentFile->InfoData.id_NumBlocks && CurrentFile->InfoData.id_BytesPerBlock)
 					{
 						LONG DisplaySpace,DisplayPercent;
-						STRPTR DisplayMessage;
+						CONST_STRPTR DisplayMessage;
 
 						DisplayMessage	= "";
 						DisplayPercent	= (100 * CurrentFile->InfoData.id_NumBlocksUsed) / CurrentFile->InfoData.id_NumBlocks;
@@ -1715,8 +1717,8 @@ xpr_chkabort()
 	 *	Prompt the user for string input.
 	 */
 
-LONG SAVE_DS ASM
-xpr_gets(REG(a0) STRPTR Prompt,REG(a1) STRPTR Buffer)
+long SAVE_DS ASM
+xpr_gets(REG(a0) const char *Prompt,REG(a1) char *Buffer)
 {
 	enum	{	GAD_OK=1,GAD_CANCEL,GAD_STRING };
 
@@ -2017,8 +2019,8 @@ xpr_setserial(REG(d0) LONG Status)
 	 *	its name.
 	 */
 
-LONG SAVE_DS ASM
-xpr_ffirst(REG(a0) STRPTR Buffer,REG(a1) STRPTR UnusedPattern)
+long SAVE_DS ASM
+xpr_ffirst(REG(a0) char *Buffer,REG(a1) char *UnusedPattern)
 {
 	DB(kprintf("xpr_ffirst(0x%08lx,\"%s\")\n",Buffer,Pattern));
 
@@ -2066,8 +2068,8 @@ xpr_ffirst(REG(a0) STRPTR Buffer,REG(a1) STRPTR UnusedPattern)
 	 *	- if any - and return its name.
 	 */
 
-LONG SAVE_DS ASM
-xpr_fnext(REG(d0) LONG UnusedOldState,REG(a0) STRPTR Buffer,REG(a1) STRPTR UnusedPattern)
+long SAVE_DS ASM
+xpr_fnext(REG(d0) long UnusedOldState,REG(a0) char *Buffer,REG(a1) char *UnusedPattern)
 {
 	DB(kprintf("xpr_fnext(%ld,0x%08lx,\"%s\")\n",OldState,Buffer,Pattern));
 
@@ -2118,8 +2120,8 @@ xpr_fnext(REG(d0) LONG UnusedOldState,REG(a0) STRPTR Buffer,REG(a1) STRPTR Unuse
 	 *	Return information on a given file.
 	 */
 
-LONG SAVE_DS ASM
-xpr_finfo(REG(a0) STRPTR FileName,REG(d0) LONG InfoType)
+long SAVE_DS ASM
+xpr_finfo(REG(a0) char *FileName,REG(d0) long InfoType)
 {
 	UBYTE RealName[MAX_FILENAME_LENGTH];
 
@@ -2163,8 +2165,8 @@ xpr_finfo(REG(a0) STRPTR FileName,REG(d0) LONG InfoType)
 	 *	transfer protocol options.
 	 */
 
-ULONG SAVE_DS ASM
-xpr_options(REG(d0) LONG NumOpts,REG(a0) struct xpr_option **Opts)
+long SAVE_DS ASM
+xpr_options(REG(d0) long NumOpts,REG(a0) struct xpr_option **Opts)
 {
 	DB(kprintf("xpr_options(%ld,0x%08lx)\n",NumOpts,Opts));
 
@@ -2175,7 +2177,7 @@ xpr_options(REG(d0) LONG NumOpts,REG(a0) struct xpr_option **Opts)
 		LayoutHandle *Handle;
 		ULONG Flags;
 
-		Flags = NULL;
+		Flags = 0;
 
 			/* We only have 32 bits! */
 
@@ -2489,7 +2491,7 @@ xpr_options(REG(d0) LONG NumOpts,REG(a0) struct xpr_option **Opts)
 					LT_UnlockWindow(PanelWindow);
 				}
 				else
-					Flags = NULL;
+					Flags = 0;
 			}
 
 			LT_DeleteHandle(Handle);
@@ -2498,7 +2500,7 @@ xpr_options(REG(d0) LONG NumOpts,REG(a0) struct xpr_option **Opts)
 		return(Flags);
 	}
 	else
-		return(NULL);
+		return(0);
 }
 
 	/* xpr_unlink(STRPTR FileName):
@@ -2506,8 +2508,8 @@ xpr_options(REG(d0) LONG NumOpts,REG(a0) struct xpr_option **Opts)
 	 *	Remove (delete) a given file.
 	 */
 
-LONG SAVE_DS ASM
-xpr_unlink(REG(a0) STRPTR FileName)
+long SAVE_DS ASM
+xpr_unlink(REG(a0) char *FileName)
 {
 	DB(kprintf("xpr_unlink(\"%s\")\n",FileName));
 
@@ -2566,15 +2568,15 @@ xpr_squery()
 	 *	Return a pointer to the term custom screen.
 	 */
 
-LONG SAVE_DS ASM
+APTR SAVE_DS ASM
 xpr_getptr(REG(d0) LONG InfoType)
 {
 	DB(kprintf("xpr_getptr(%ld)\n",InfoType));
 
 	if(InfoType == 1)
-		return((LONG)Window->WScreen);
+		return((APTR)Window->WScreen);
 	else
-		return(-1);
+		return((APTR)-1);
 }
 
 	/* xpr_stealopts(STRPTR Prompt,STRPTR Buffer):
@@ -2583,8 +2585,8 @@ xpr_getptr(REG(d0) LONG InfoType)
 	 *	for xpr_gets).
 	 */
 
-LONG SAVE_DS ASM
-xpr_stealopts(REG(a0) STRPTR UnusedPrompt,REG(a1) STRPTR Buffer)
+long SAVE_DS ASM
+xpr_stealopts(REG(a0) const char *UnusedPrompt,REG(a1) char *Buffer)
 {
 	DB(kprintf("xpr_stealopts(\"%s\",\"%s\")\n",Prompt,Buffer));
 

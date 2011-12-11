@@ -507,10 +507,13 @@ HighlightActiveEntry(PhoneListContext *Context,BOOL Activate)
 STATIC VOID
 UpdateWindowTitle(PhoneListContext *Context)
 {
-	STRPTR Title;
+	CONST_STRPTR Title;
 
-	if(Context->PhoneHandle->DialMarker > 0)
-		LimitedSPrintf(sizeof(Context->WindowTitle),Title = Context->WindowTitle,LocaleString(MSG_PHONEPANEL_SELECTED_OUT_OF_TXT),LocaleString(MSG_PHONEPANEL_PHONEBOOK_TXT),Context->PhoneHandle->DialMarker,Context->PhoneHandle->NumPhoneEntries);
+	if(Context->PhoneHandle->DialMarker > 0) {
+		STRPTR Temp;
+		LimitedSPrintf(sizeof(Context->WindowTitle),Temp = Context->WindowTitle,LocaleString(MSG_PHONEPANEL_SELECTED_OUT_OF_TXT),LocaleString(MSG_PHONEPANEL_PHONEBOOK_TXT),Context->PhoneHandle->DialMarker,Context->PhoneHandle->NumPhoneEntries);
+		Title = Temp;
+	}
 	else
 		Title = LocaleString(MSG_PHONEPANEL_PHONEBOOK_TXT);
 
@@ -545,11 +548,11 @@ GetActiveGroup(PhoneListContext *Context)
 {
 	if(Context->PhoneHandle->DefaultGroup > 0)
 	{
-		STRPTR Name;
+		CONST_STRPTR Name;
 
 		Name = Context->GroupLabels[Context->PhoneHandle->DefaultGroup];
 
-		return((PhoneGroupNode *)((ULONG)Name - offsetof(PhoneGroupNode,LocalName)));
+		return((PhoneGroupNode *)((IPTR)Name - offsetof(PhoneGroupNode,LocalName)));
 	}
 	else
 		return(NULL);
@@ -1006,7 +1009,7 @@ LoadNewPhonebook(PhoneListContext *Context)
 
 		if(LocalPhoneHandle)
 		{
-			STRPTR *OtherLabels;
+			CONST_STRPTR *OtherLabels;
 
 				/* The group labels need to be rebuilt. */
 
@@ -1295,7 +1298,7 @@ ChangeGroup(PhoneListContext *Context)
 
 		if(Success)
 		{
-			STRPTR *OtherLabels;
+			CONST_STRPTR *OtherLabels;
 
 				/* Now update the labels */
 
@@ -1397,7 +1400,7 @@ STATIC VOID
 SplitGroup(PhoneListContext *Context)
 {
 	PhoneGroupNode *PhoneGroup;
-	STRPTR *OtherLabels;
+	CONST_STRPTR *OtherLabels;
 
 	DetachList(Context);
 
@@ -1469,7 +1472,7 @@ SelectNewTaggedEntry(PhoneListContext *Context,LONG How)
 
 		if(SelectedNode->Entry->Count >= 0)
 		{
-			LONG i,Which;
+			LONG i,Which = 0;
 			BOOL ListIsReady;
 
 			DetachList(Context);
@@ -1568,7 +1571,7 @@ MoveActiveEntry(PhoneListContext *Context,LONG How)
 			Context->SelectedIndex = MovePhoneEntry(Context->PhoneHandle,Context->SelectedIndex,How);
 		else
 		{
-			LONG NewPosition;
+			LONG NewPosition = 0;
 
 			switch(How)
 			{
@@ -1732,7 +1735,7 @@ PhonePanel(ULONG InitialQualifier)
 		struct Window			*MsgWindow;
 		ULONG					 CompleteQualifier;
 		LONG					 ClickAction;
-		LayoutHandle			*Handle;
+		LayoutHandle			*Handle = NULL;
 		BOOL					 Done = FALSE;
 
 			/* We will need these pointers later */

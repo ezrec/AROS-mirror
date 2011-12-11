@@ -233,7 +233,7 @@ RexxWait(struct RexxPkt *Pkt)
 						{
 							ULONG NewLength;
 
-							NewLength = (ULONG)NewData - (ULONG)ReadBuffer;
+							NewLength = (IPTR)NewData - (IPTR)ReadBuffer;
 
 							if(NewLength + strlen(Result) != Length)
 							{
@@ -338,7 +338,7 @@ ExamineBeforeSending(STRPTR FileName,struct FileTransferInfo *Info,LONG *Results
 STATIC BPTR
 ChangeDirBeforeSending(LONG Mode)
 {
-	BPTR NewDir = NULL;
+	BPTR NewDir = BNULL;
 
 	switch(Mode)
 	{
@@ -675,7 +675,7 @@ RexxSaveAs(struct RexxPkt *Pkt)
 		else
 		{
 			struct FileRequester *FileRequest;
-			LONG TitleID;
+			LONG TitleID = 0;
 
 			FileName = NULL;
 
@@ -1359,7 +1359,7 @@ RexxPrint(struct RexxPkt *Pkt)
 			};
 
 	LONG	Index,Mode = -1;
-	ULONG	Flags = NULL;
+	ULONG	Flags = 0;
 
 	if(Args[ARG_PRINT_SERIAL])
 		Flags |= PRINT_SERIAL;
@@ -1433,14 +1433,14 @@ RexxPrint(struct RexxPkt *Pkt)
 			struct EasyStruct Easy;
 
 			Easy.es_StructSize		= sizeof(struct EasyStruct);
-			Easy.es_Flags			= NULL;
+			Easy.es_Flags			= 0;
 			Easy.es_Title			= (UBYTE *)LocaleString(MSG_TERMAUX_TERM_REQUEST_TXT);
 			Easy.es_GadgetFormat	= (UBYTE *)LocaleString(MSG_PRINT_STOP_TXT);
 			Easy.es_TextFormat		= (UBYTE *)LocaleString(MSG_GLOBAL_PRINTING_TXT);
 
 			BlockWindows();
 
-			if(ReqWindow = BuildEasyRequest(Window,&Easy,NULL))
+			if(ReqWindow = BuildEasyRequest(Window,&Easy,0))
 			{
 				struct GenericList *List;
 
@@ -1566,7 +1566,7 @@ RexxOpenRequester(struct RexxPkt *Pkt)
 	}
 	else
 	{
-		ULONG Code;
+		ULONG Code = 0;
 		LONG i;
 
 		switch(Index)
@@ -1676,14 +1676,14 @@ RexxOpenRequester(struct RexxPkt *Pkt)
 
 			if(TermMenu[i].nm_Label != NM_BARLABEL && (TermMenu[i].nm_Type == NM_ITEM || TermMenu[i].nm_Type == NM_SUB))
 			{
-				if((ULONG)TermMenu[i].nm_UserData == Code)
+				if((ULONG)(IPTR)TermMenu[i].nm_UserData == Code)
 				{
 					struct DataMsg *Msg;
 
 					if(Msg = (struct DataMsg *)CreateMsgItem(sizeof(struct DataMsg)))
 					{
 						Msg->Type = DATAMSGTYPE_MENU;
-						Msg->Size = (ULONG)TermMenu[i].nm_UserData;
+						Msg->Size = (ULONG)(IPTR)TermMenu[i].nm_UserData;
 						Msg->Data = NULL;
 
 						PutMsgItem(SpecialQueue,(struct MsgItem *)Msg);
@@ -1724,7 +1724,7 @@ RexxOpen(struct RexxPkt *Pkt)
 		else
 		{
 			struct FileRequester *FileRequest;
-			LONG TitleID;
+			LONG TitleID = 0;
 
 			FileName = NULL;
 
@@ -1986,7 +1986,7 @@ RexxOpen(struct RexxPkt *Pkt)
 					{
 						LONG Len;
 
-						LineRead(NULL,NULL,NULL);
+						LineRead(BNULL,NULL,0);
 
 						while((Len = LineRead(SomeFile,FileName,80)) > 0)
 							CaptureParser(ParserStuff,FileName,Len,(COPTR)AddLine);
@@ -2307,7 +2307,7 @@ RexxCapture(struct RexxPkt *Pkt)
 	ConOutputUpdate();
 
 	CheckItem(MEN_CAPTURE_TO_FILE,		FileCapture != NULL);
-	CheckItem(MEN_CAPTURE_TO_PRINTER,	PrinterCapture != NULL);
+	CheckItem(MEN_CAPTURE_TO_PRINTER,	PrinterCapture != BNULL);
 
 	return(NULL);
 }
@@ -2592,7 +2592,7 @@ RexxBaud(struct RexxPkt *Pkt)
 {
 	enum	{	ARG_BAUD_RATE };
 
-	LONG Rate = *(LONG *)Args[ARG_BAUD_RATE],Min = MILLION,Diff,Index;
+	LONG Rate = *(LONG *)Args[ARG_BAUD_RATE],Min = MILLION,Diff,Index = 0;
 	UBYTE Number[10];
 	LONG i;
 
@@ -2652,14 +2652,14 @@ RexxCallMenu(struct RexxPkt *Pkt)
 			{
 					/* Does the name match our template? */
 
-				if(MatchBuffer(Buffer,TermMenu[i].nm_Label))
+				if(MatchBuffer(Buffer,(STRPTR)TermMenu[i].nm_Label))
 				{
 					struct DataMsg *Msg;
 
 					if(Msg = (struct DataMsg *)CreateMsgItem(sizeof(struct DataMsg)))
 					{
 						Msg->Type = DATAMSGTYPE_MENU;
-						Msg->Size = (ULONG)TermMenu[i].nm_UserData;
+						Msg->Size = (ULONG)(IPTR)TermMenu[i].nm_UserData;
 						Msg->Data = NULL;
 
 						PutMsgItem(SpecialQueue,(struct MsgItem *)Msg);
@@ -2989,7 +2989,7 @@ RexxFault(struct RexxPkt *Pkt)
 
 	LONG Code = *(LONG *)Args[ARG_FAULT_CODE];
 	UBYTE RexxResultString[MAX_FILENAME_LENGTH];
-	STRPTR Result;
+	CONST_STRPTR Result;
 
 	if(Code >= ERR10_001 && Code <= ERR10_048)
 		Result = LocaleString(MSG_AREXX_SYSERR10_001_TXT + Code - ERR10_001);
@@ -3409,7 +3409,7 @@ RexxRequestNotify(struct RexxPkt *Pkt)
 	struct EasyStruct Easy;
 
 	Easy.es_StructSize		= sizeof(struct EasyStruct);
-	Easy.es_Flags			= NULL;
+	Easy.es_Flags			= 0;
 	Easy.es_TextFormat		= Args[ARG_REQUESTNOTIFY_PROMPT];
 	Easy.es_GadgetFormat	= LocaleString(MSG_GLOBAL_CONTINUE_TXT);
 
@@ -3488,7 +3488,7 @@ RexxRequestResponse(struct RexxPkt *Pkt)
 	LONG Result;
 
 	Easy.es_StructSize	= sizeof(struct EasyStruct);
-	Easy.es_Flags		= NULL;
+	Easy.es_Flags		= 0;
 	Easy.es_TextFormat	= Args[ARG_REQUESTRESPONSE_PROMPT];
 
 	if(Args[ARG_REQUESTRESPONSE_OPTIONS])

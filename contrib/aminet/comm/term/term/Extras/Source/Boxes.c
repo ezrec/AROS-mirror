@@ -97,7 +97,7 @@ SZ_LeftOffsetN(LONG DataArray,...)
 	LONG	*Data = &DataArray,
 			 Len,
 			 Max = 0;
-	STRPTR	 String;
+	CONST_STRPTR	 String;
 
 	while(*Data != -1)
 	{
@@ -425,7 +425,7 @@ SZ_CreateTextBox(struct TextBox **FirstBox,...)
 	Box->TitleBgPen	= SZ_BackPen;
 	Box->TextPen	= SZ_TextPen;
 
-	if(!(Box->Title = (STRPTR *)AllocVecPooled(sizeof(STRPTR) * Lines,MEMF_ANY | MEMF_CLEAR)))
+	if(!(Box->Title = (CONST_STRPTR *)AllocVecPooled(sizeof(CONST_STRPTR) * Lines,MEMF_ANY | MEMF_CLEAR)))
 	{
 		SZ_FreeBox(Box);
 
@@ -484,11 +484,11 @@ SZ_CreateTextBox(struct TextBox **FirstBox,...)
 	 */
 
 VOID
-SZ_SetBoxTitles(struct TextBox *Box,STRPTR Array,...)
+SZ_SetBoxTitles(struct TextBox *Box,CONST_STRPTR Array,...)
 {
 	if(Box)
 	{
-		STRPTR	*Data = &Array;
+		CONST_STRPTR	*Data = &Array;
 		LONG	 i = 0;
 
 		while(*Data != NULL)

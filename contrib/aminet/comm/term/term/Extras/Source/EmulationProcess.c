@@ -18,7 +18,7 @@ STATIC struct Process *EmulationProcess;
 STATIC VOID SAVE_DS
 EmulationProcessEntry(VOID)
 {
-	if(TerminalQueue = CreateMsgQueue(NULL,40))
+	if(TerminalQueue = CreateMsgQueue(0,40))
 	{
 		struct MsgQueue	*Queue;
 		struct DataMsg *Msg;

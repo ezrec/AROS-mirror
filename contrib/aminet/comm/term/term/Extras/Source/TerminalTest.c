@@ -46,7 +46,7 @@ MicroSetup(VOID)
 	{
 		if(MicroRequest = (struct timerequest *)CreateIORequest(MicroPort,sizeof(struct timerequest)))
 		{
-			if(!OpenDevice(TIMERNAME,UNIT_MICROHZ,(struct IORequest *)MicroRequest,NULL))
+			if(!OpenDevice(TIMERNAME,UNIT_MICROHZ,(struct IORequest *)MicroRequest,0))
 				return(TRUE);
 		}
 	}
@@ -64,7 +64,7 @@ StopTerminalTest()
 	if(TestFile)
 	{
 		Close(TestFile);
-		TestFile = NULL;
+		TestFile = BNULL;
 	}
 
 	if(MainJobQueue && TerminalTestJob)
@@ -94,7 +94,7 @@ StartTerminalTest(ULONG Qualifier)
 			else
 			{
 				Close(TestFile);
-				TestFile = NULL;
+				TestFile = BNULL;
 			}
 		}
 

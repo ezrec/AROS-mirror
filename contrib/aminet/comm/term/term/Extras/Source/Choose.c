@@ -36,7 +36,7 @@ GetDirEntryType(STRPTR Name)
 }
 
 STATIC struct FileRequester *
-SelectDrawerCommon(struct Window *Parent,STRPTR TitleText,STRPTR PositiveText,STRPTR DrawerName,LONG DrawerNameSize,BOOL SaveMode)
+SelectDrawerCommon(struct Window *Parent,CONST_STRPTR TitleText,CONST_STRPTR PositiveText,STRPTR DrawerName,LONG DrawerNameSize,BOOL SaveMode)
 {
 	struct FileRequester *DrawerRequester;
 	struct TagItem LocalTags[4+1+1],*TagPtr;
@@ -57,7 +57,7 @@ SelectDrawerCommon(struct Window *Parent,STRPTR TitleText,STRPTR PositiveText,ST
 	if(TitleText)
 	{
 		TagPtr->ti_Tag	= ASLFR_TitleText;
-		TagPtr->ti_Data	= (ULONG)TitleText;
+		TagPtr->ti_Data	= (IPTR)TitleText;
 
 		TagPtr++;
 	}
@@ -103,19 +103,19 @@ SelectDrawerCommon(struct Window *Parent,STRPTR TitleText,STRPTR PositiveText,ST
 }
 
 struct FileRequester *
-SaveDrawer(struct Window *Parent,STRPTR TitleText,STRPTR PositiveText,STRPTR DrawerName,LONG DrawerNameSize)
+SaveDrawer(struct Window *Parent,CONST_STRPTR TitleText,CONST_STRPTR PositiveText,STRPTR DrawerName,LONG DrawerNameSize)
 {
 	return(SelectDrawerCommon(Parent,TitleText,PositiveText,DrawerName,DrawerNameSize,TRUE));
 }
 
 struct FileRequester *
-OpenDrawer(struct Window *Parent,STRPTR TitleText,STRPTR PositiveText,STRPTR DrawerName,LONG DrawerNameSize)
+OpenDrawer(struct Window *Parent,CONST_STRPTR TitleText,CONST_STRPTR PositiveText,STRPTR DrawerName,LONG DrawerNameSize)
 {
 	return(SelectDrawerCommon(Parent,TitleText,PositiveText,DrawerName,DrawerNameSize,FALSE));
 }
 
 struct FileRequester *
-SaveFile(struct Window *Parent,STRPTR TitleText,STRPTR PositiveText,STRPTR Pattern,STRPTR FullName,LONG FullNameSize)
+SaveFile(struct Window *Parent,CONST_STRPTR TitleText,CONST_STRPTR PositiveText,STRPTR Pattern,STRPTR FullName,LONG FullNameSize)
 {
 	UBYTE LocalDrawerName[MAX_FILENAME_LENGTH];
 	struct TagItem LocalTags[4+2+1],*TagPtr;
@@ -135,7 +135,7 @@ SaveFile(struct Window *Parent,STRPTR TitleText,STRPTR PositiveText,STRPTR Patte
 		Flags |= FRF_DOPATTERNS;
 
 		TagPtr->ti_Tag	= ASLFR_InitialPattern;
-		TagPtr->ti_Data	= (ULONG)Pattern;
+		TagPtr->ti_Data	= (IPTR)Pattern;
 
 		TagPtr++;
 	}
@@ -143,7 +143,7 @@ SaveFile(struct Window *Parent,STRPTR TitleText,STRPTR PositiveText,STRPTR Patte
 	if(TitleText)
 	{
 		TagPtr->ti_Tag	= ASLFR_TitleText;
-		TagPtr->ti_Data	= (ULONG)TitleText;
+		TagPtr->ti_Data	= (IPTR)TitleText;
 
 		TagPtr++;
 	}
@@ -239,7 +239,7 @@ SaveFile(struct Window *Parent,STRPTR TitleText,STRPTR PositiveText,STRPTR Patte
 }
 
 struct FileRequester *
-OpenSingleFile(struct Window *Parent,STRPTR TitleText,STRPTR PositiveText,STRPTR Pattern,STRPTR FullName,LONG FullNameSize)
+OpenSingleFile(struct Window *Parent,CONST_STRPTR TitleText,CONST_STRPTR PositiveText,CONST_STRPTR Pattern,STRPTR FullName,LONG FullNameSize)
 {
 	UBYTE LocalDrawerName[MAX_FILENAME_LENGTH];
 	struct TagItem LocalTags[4+2+1],*TagPtr;
@@ -259,7 +259,7 @@ OpenSingleFile(struct Window *Parent,STRPTR TitleText,STRPTR PositiveText,STRPTR
 		Flags |= FRF_DOPATTERNS;
 
 		TagPtr->ti_Tag	= ASLFR_InitialPattern;
-		TagPtr->ti_Data	= (ULONG)Pattern;
+		TagPtr->ti_Data	= (IPTR)Pattern;
 
 		TagPtr++;
 	}
@@ -267,7 +267,7 @@ OpenSingleFile(struct Window *Parent,STRPTR TitleText,STRPTR PositiveText,STRPTR
 	if(TitleText)
 	{
 		TagPtr->ti_Tag	= ASLFR_TitleText;
-		TagPtr->ti_Data	= (ULONG)TitleText;
+		TagPtr->ti_Data	= (IPTR)TitleText;
 
 		TagPtr++;
 	}
@@ -342,7 +342,7 @@ OpenSingleFile(struct Window *Parent,STRPTR TitleText,STRPTR PositiveText,STRPTR
 }
 
 struct FileRequester *
-OpenSeveralFiles(struct Window *Parent,STRPTR TitleText,STRPTR PositiveText,STRPTR Pattern,STRPTR FullName,LONG FullNameSize)
+OpenSeveralFiles(struct Window *Parent,CONST_STRPTR TitleText,CONST_STRPTR PositiveText,CONST_STRPTR Pattern,STRPTR FullName,LONG FullNameSize)
 {
 	UBYTE LocalDrawerName[MAX_FILENAME_LENGTH];
 	struct TagItem LocalTags[4+3+1],*TagPtr;
@@ -362,7 +362,7 @@ OpenSeveralFiles(struct Window *Parent,STRPTR TitleText,STRPTR PositiveText,STRP
 		Flags |= FRF_DOPATTERNS;
 
 		TagPtr->ti_Tag	= ASLFR_InitialPattern;
-		TagPtr->ti_Data	= (ULONG)Pattern;
+		TagPtr->ti_Data	= (IPTR)Pattern;
 
 		TagPtr++;
 	}
@@ -370,7 +370,7 @@ OpenSeveralFiles(struct Window *Parent,STRPTR TitleText,STRPTR PositiveText,STRP
 	if(TitleText)
 	{
 		TagPtr->ti_Tag	= ASLFR_TitleText;
-		TagPtr->ti_Data	= (ULONG)TitleText;
+		TagPtr->ti_Data	= (IPTR)TitleText;
 
 		TagPtr++;
 	}
@@ -378,7 +378,7 @@ OpenSeveralFiles(struct Window *Parent,STRPTR TitleText,STRPTR PositiveText,STRP
 	if(PositiveText)
 	{
 		TagPtr->ti_Tag	= ASLFR_PositiveText;
-		TagPtr->ti_Data	= (ULONG)PositiveText;
+		TagPtr->ti_Data	= (IPTR)PositiveText;
 
 		TagPtr++;
 	}

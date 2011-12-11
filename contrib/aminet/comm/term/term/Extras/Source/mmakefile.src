@@ -132,7 +132,7 @@ FILES := \
 	StackCall \
 	VersionTag
 
-USER_CFLAGS = -DINCLUDEALL -DCPU_ANY
+USER_CFLAGS = -DINCLUDEALL -DCPU_ANY -Wno-parentheses
 
 %build_prog mmake=aminet-comm-term-term \
     progname=Term targetdir=$(CONTRIBDIR)/Misc/aminet \

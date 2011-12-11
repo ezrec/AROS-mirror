@@ -188,7 +188,7 @@ STATIC VOID
 Buffer_Scroll(struct MarkerContext *Context,LONG UnusedDeltaX,LONG DeltaY)
 {
 	TextBufferInfo *BufferInfo;
-	LONG NewTopLine;
+	SIPTR NewTopLine;
 
 	BufferInfo = Context->UserData;
 
@@ -278,10 +278,8 @@ Buffer_PutLine(APTR UserData,STRPTR Buffer,LONG Length)
 STATIC BOOL
 Buffer_Transfer(struct MarkerContext *Context,LONG Line,LONG Left,LONG Right,MARKER_Put Put,APTR UserData)
 {
-	TextBufferInfo *BufferInfo;
 	BOOL Result;
 
-	BufferInfo = Context->UserData;
 	Result = TRUE;
 
 	SafeObtainSemaphoreShared(&RasterSemaphore);
@@ -691,12 +689,12 @@ CreateScroller(TextBufferInfo *BufferInfo,LONG Height)
 {
 	STATIC struct TagItem ArrowMappings[] =
 	{
-		GA_ID,	GA_ID,
+            { GA_ID,	GA_ID, },
 
-		TAG_END
+            { TAG_END }
 	};
 
-	ULONG ArrowWidth,ArrowHeight;
+	IPTR ArrowWidth,ArrowHeight;
 	struct Screen *Screen;
 	LONG SizeType;
 	BOOL Result;
@@ -795,7 +793,7 @@ CreateScroller(TextBufferInfo *BufferInfo,LONG Height)
 			SYSIA_DrawInfo,	BufferInfo->BufferDrawInfo,
 		TAG_DONE))
 		{
-			ULONG SizeWidth,SizeHeight;
+			IPTR SizeWidth,SizeHeight;
 
 			GetAttr(IA_Width,	SizeImage,&SizeWidth);
 			GetAttr(IA_Height,	SizeImage,&SizeHeight);
@@ -1162,8 +1160,7 @@ HandleBuffer(struct SignalSemaphore *Access,TextBufferInfo **Data)
 	struct IntuiMessage *Message;
 	ULONG MsgClass;
 	UWORD MsgCode,MsgQualifier,MsgGadgetID;
-	LONG MouseX,MouseY;
-	UBYTE Char,FullChar;
+	UBYTE Char,FullChar = 0;
 	UBYTE PercentBuffer[80],SearchBuffer[256];
 	STRPTR PercentTemplate;
 	struct SearchContext *Context;
@@ -1401,7 +1398,7 @@ HandleBuffer(struct SignalSemaphore *Access,TextBufferInfo **Data)
 		{
 			if(Context && Context->SearchWindow == Message->IDCMPWindow)
 			{
-				MsgClass = NULL;
+				MsgClass = 0;
 
 				if(HandleSearchMessage(Context,&Message))
 				{
@@ -1433,8 +1430,6 @@ HandleBuffer(struct SignalSemaphore *Access,TextBufferInfo **Data)
 				MsgClass		= Message->Class;
 				MsgCode			= Message->Code;
 				MsgQualifier	= Message->Qualifier;
-				MouseX			= Message->MouseX - BufferInfo->Left;
-				MouseY			= Message->MouseY - BufferInfo->Top;
 				Seconds			= Message->Seconds;
 				Micros			= Message->Micros;
 
@@ -1511,7 +1506,7 @@ HandleBuffer(struct SignalSemaphore *Access,TextBufferInfo **Data)
 
 			if(MsgClass == IDCMP_MOUSEMOVE || ((MsgClass == IDCMP_GADGETDOWN || MsgClass == IDCMP_GADGETUP) && MsgGadgetID == GAD_SCROLLER))
 			{
-				GetAttr(PGA_Top,BufferInfo->Scroller,(ULONG *)&NewTopLine);
+				GetAttr(PGA_Top,BufferInfo->Scroller,(IPTR *)&NewTopLine);
 
 				DisplayDirty		= TRUE;
 				DoNotUpdateScroller	= TRUE;
@@ -1865,7 +1860,7 @@ HandleBuffer(struct SignalSemaphore *Access,TextBufferInfo **Data)
 						break;
 					else
 					{
-						switch((ULONG)GTMENUITEM_USERDATA(MenuItem))
+						switch((ULONG)(IPTR)GTMENUITEM_USERDATA(MenuItem))
 						{
 							case MEN_COPYCLIP:
 
@@ -2229,7 +2224,7 @@ CreateBufferInfo(struct Screen *Parent,BOOL *pSearchForward,BOOL *pIgnoreCase,BO
 							BufferInfo->Parent = Parent;
 							BufferInfo->Screen = Parent;
 
-							if(BufferInfo->Queue = CreateMsgQueue(NULL,0))
+							if(BufferInfo->Queue = CreateMsgQueue(0,0))
 								BufferInfo->QueueMask = BufferInfo->Queue->SigMask;
 							else
 								BufferInfo->Screen = NULL;
@@ -2254,14 +2249,14 @@ CreateBufferInfo(struct Screen *Parent,BOOL *pSearchForward,BOOL *pIgnoreCase,BO
 						{
 							if(BufferInfo->BufferDrawInfo = GetScreenDrawInfo(BufferInfo->Screen))
 							{
-								ULONG *MenuTags;
+								IPTR *MenuTags;
 
 								CreateMenuGlyphs(BufferInfo->Screen,BufferInfo->BufferDrawInfo,&BufferInfo->BufferAmigaGlyph,&BufferInfo->BufferCheckGlyph);
 
 								if(Parent)
 								{
 									char STR_COLON[] = ":";
-									STATIC ULONG ReviewTags[] =
+									STATIC IPTR ReviewTags[] =
 									{
 										LAMN_TitleID,			MSG_TERMREVIEW_PROJECT_MEN,
 											LAMN_ItemID,		MSG_TERMREVIEW_SEARCH_MEN,
@@ -2269,12 +2264,12 @@ CreateBufferInfo(struct Screen *Parent,BOOL *pSearchForward,BOOL *pIgnoreCase,BO
 											LAMN_ItemID,		MSG_TERMREVIEW_REPEAT_SEARCH_MEN,
 												LAMN_UserData,	MEN_REPEAT,
 
-											LAMN_ItemText,		(ULONG)NM_BARLABEL,
+											LAMN_ItemText,		(IPTR)NM_BARLABEL,
 
 											LAMN_ItemID,		MSG_TERMREVIEW_CLEAR_BUFFER_MEN,
 												LAMN_UserData,	MEN_CLEARBUF_CONTENTS,
 
-											LAMN_ItemText,		(ULONG)NM_BARLABEL,
+											LAMN_ItemText,		(IPTR)NM_BARLABEL,
 
 											LAMN_ItemID,		MSG_TERMREVIEW_CLOSE_BUFFER_MEN,
 												LAMN_UserData,	MEN_QUITBUF,
@@ -2291,20 +2286,20 @@ CreateBufferInfo(struct Screen *Parent,BOOL *pSearchForward,BOOL *pIgnoreCase,BO
 											LAMN_ItemID,		MSG_TERMDATA_CLEAR_MEN,
 												LAMN_UserData,	MEN_CLEARCLIP,
 
-											LAMN_ItemText,		(ULONG)NM_BARLABEL,
+											LAMN_ItemText,		(IPTR)NM_BARLABEL,
 
 											LAMN_ItemID,		MSG_SELECT_ALL_MEN,
 												LAMN_UserData,	MEN_SELECT_ALL_CLIP,
 
 										TAG_DONE
 									};
-									ReviewTags[25] = STR_COLON;
+									ReviewTags[25] = (IPTR)STR_COLON;
 
 									MenuTags = ReviewTags;
 								}
 								else
 								{
-									STATIC ULONG BufferTags[] =
+									STATIC IPTR BufferTags[] =
 									{
 										LAMN_TitleID,			MSG_TERMBUFFER_PROJECT_MEN,
 											LAMN_ItemID,		MSG_TERMBUFFER_SEARCH_MEN,
@@ -2312,17 +2307,17 @@ CreateBufferInfo(struct Screen *Parent,BOOL *pSearchForward,BOOL *pIgnoreCase,BO
 											LAMN_ItemID,		MSG_TERMBUFFER_REPEAT_SEARCH_MEN,
 												LAMN_UserData,	MEN_REPEAT,
 
-											LAMN_ItemText,		(ULONG)NM_BARLABEL,
+											LAMN_ItemText,		(IPTR)NM_BARLABEL,
 
 											LAMN_ItemID,		MSG_TERMBUFFER_GO_TO_MAIN_SCREEN_MEN,
 												LAMN_UserData,	MEN_GOTO,
 
-											LAMN_ItemText,		(ULONG)NM_BARLABEL,
+											LAMN_ItemText,		(IPTR)NM_BARLABEL,
 
 											LAMN_ItemID,		MSG_TERMBUFFER_CLEAR_BUFFER_MEN,
 												LAMN_UserData,	MEN_CLEARBUF_CONTENTS,
 
-											LAMN_ItemText,		(ULONG)NM_BARLABEL,
+											LAMN_ItemText,		(IPTR)NM_BARLABEL,
 
 											LAMN_ItemID,		MSG_TERMBUFFER_CLOSE_BUFFER_MEN,
 												LAMN_UserData,	MEN_QUITBUF,
@@ -2335,7 +2330,7 @@ CreateBufferInfo(struct Screen *Parent,BOOL *pSearchForward,BOOL *pIgnoreCase,BO
 											LAMN_ItemID,		MSG_TERMDATA_CLEAR_MEN,
 												LAMN_UserData,	MEN_CLEARCLIP,
 
-											LAMN_ItemText,		(ULONG)NM_BARLABEL,
+											LAMN_ItemText,		(IPTR)NM_BARLABEL,
 
 											LAMN_ItemID,		MSG_SELECT_ALL_MEN,
 												LAMN_UserData,	MEN_SELECT_ALL_CLIP,

@@ -22,7 +22,7 @@ STATIC VOID
 GetScreenInfo(struct Screen *Screen,WORD *Left,WORD *Top,WORD *Width,WORD *Height)
 {
 	struct ViewPortExtra	*Extra;
-	struct TagItem			 Tags[2] = { VTAG_VIEWPORTEXTRA_GET, NULL, TAG_DONE };
+	struct TagItem			 Tags[2] = { { VTAG_VIEWPORTEXTRA_GET, (IPTR)NULL }, { TAG_DONE }};
 
 	if(!VideoControl(Screen->ViewPort.ColorMap,Tags))
 		Extra = (struct ViewPortExtra *)Tags[0].ti_Data;
@@ -83,7 +83,7 @@ CustomStuffText(REG(a3) LONG *Data,REG(d0) UBYTE Char)
 #else
 AROS_UFH2(VOID, CustomStuffText,
  AROS_UFHA(UBYTE          , Char, D0),
- AROS_UFHA(LONG *         , Data, A3))
+ AROS_UFHA(IPTR *         , Data, A3))
 #endif
 {
 #ifdef __AROS__
@@ -115,7 +115,7 @@ AROS_UFH2(VOID, CustomStuffText,
 
 		if(Data[6])
 		{
-			Width = TextLength((APTR)Data[6],IText->IText,(LONG)Buffer - (LONG)IText->IText - 1);
+			Width = TextLength((APTR)Data[6],IText->IText,(IPTR)Buffer - (IPTR)IText->IText - 1);
 
 				/* More than we got before? */
 
@@ -131,7 +131,7 @@ AROS_UFH2(VOID, CustomStuffText,
 
 				/* Get ready for the next line */
 
-			Data[1] = (LONG)(++IText);
+			Data[1] = (IPTR)(++IText);
 
 				/* Start of next line */
 
@@ -143,7 +143,7 @@ AROS_UFH2(VOID, CustomStuffText,
 	else
 		*Buffer++ = Char;						/* Just store the character */
 
-	Data[0] = (LONG)Buffer;						/* Remember for next char */
+	Data[0] = (IPTR)Buffer;						/* Remember for next char */
 
 #ifdef __AROS__
     AROS_USERFUNC_EXIT
@@ -156,7 +156,7 @@ CustomCountChar(REG(a3) LONG *Count,REG(d0) UBYTE Char)
 #else
 AROS_UFH2(VOID, CustomCountChar,
  AROS_UFHA(UBYTE         , Char , D0),
- AROS_UFHA(LONG *        , Count, A3))
+ AROS_UFHA(IPTR *        , Count, A3))
 #endif
 {
 #ifdef __AROS__
@@ -172,7 +172,7 @@ AROS_UFH2(VOID, CustomCountChar,
 }
 
 STATIC struct IntuiText *
-BuildITextTable(STRPTR FormatString,va_list VarArgs,UBYTE Terminator,LONG *Information,LONG *MoreData)
+BuildITextTable(CONST_STRPTR FormatString,va_list VarArgs,UBYTE Terminator,IPTR *Information,IPTR *MoreData)
 {
 	struct IntuiText *Primitive;
 
@@ -189,11 +189,11 @@ BuildITextTable(STRPTR FormatString,va_list VarArgs,UBYTE Terminator,LONG *Infor
 	{
 			/* Room for the char buffer */
 
-		MoreData[0]	= (LONG)(Primitive + Information[1]);
+		MoreData[0]	= (IPTR)(Primitive + Information[1]);
 
 			/* Room for the IntuiTexts */
 
-		MoreData[1] = (LONG)Primitive;
+		MoreData[1] = (IPTR)Primitive;
 
 			/* Separator char to use */
 
@@ -223,7 +223,7 @@ BuildITextTable(STRPTR FormatString,va_list VarArgs,UBYTE Terminator,LONG *Infor
 	 */
 
 LONG
-ShowInfo(struct Window *Parent,STRPTR Title,STRPTR Continue,STRPTR FormatString,...)
+ShowInfo(struct Window *Parent,CONST_STRPTR Title,CONST_STRPTR Continue,CONST_STRPTR FormatString,...)
 {
 	struct Screen *Screen;
 	ULONG IntuiLock;
@@ -237,7 +237,7 @@ ShowInfo(struct Window *Parent,STRPTR Title,STRPTR Continue,STRPTR FormatString,
 	else
 		Screen = LockPubScreen(NULL);
 
-	IntuiLock = LockIBase(NULL);
+	IntuiLock = LockIBase(0);
 
 	PopBack = (BOOL)(IntuitionBase->FirstScreen != Screen);
 
@@ -252,16 +252,16 @@ ShowInfo(struct Window *Parent,STRPTR Title,STRPTR Continue,STRPTR FormatString,
 
 		if(DrawInfo = GetScreenDrawInfo(Screen))
 		{
-			LONG Information[3],GadgetInformation[3];
-			LONG MoreData[7],GadgetData[7];
+			IPTR Information[3],GadgetInformation[3];
+			IPTR MoreData[7],GadgetData[7];
 			struct Image *GadgetFrameImage;
 			struct IntuiText *GadgetText;
 			struct TextAttr FontTemplate;
 			struct Gadget **GadgetTable;
 			struct IntuiText *BodyText;
 			struct TextFont *Font;
-			LONG FullButtonWidth;
-			LONG DistX,DistY;
+			LONG FullButtonWidth = 0;
+			LONG DistX = 0,DistY;
 			LONG RoomX,RoomY;
 			va_list VarArgs;
 
@@ -385,7 +385,7 @@ ShowInfo(struct Window *Parent,STRPTR Title,STRPTR Continue,STRPTR FormatString,
 				WORD Width,Height,Left,Top;
 				struct Image *DepthImage;
 				LONG FullTitleWidth;
-				ULONG DepthWidth;
+				IPTR DepthWidth;
 
 					/* Before we do anything else, set up the */
 					/* full width of the window title; this includes */
@@ -404,7 +404,7 @@ ShowInfo(struct Window *Parent,STRPTR Title,STRPTR Continue,STRPTR FormatString,
 					SYSIA_DrawInfo,	DrawInfo,
 				TAG_DONE))
 				{
-					GetAttr(IA_Width,DepthImage,&DepthWidth);
+					GetAttr(IA_Width,(Object *)DepthImage,&DepthWidth);
 
 					DisposeObject(DepthImage);
 				}
@@ -427,7 +427,7 @@ ShowInfo(struct Window *Parent,STRPTR Title,STRPTR Continue,STRPTR FormatString,
 
 					/* Pointer to screen rastport used for measuring the text */
 
-				MoreData[6] = (LONG)&Screen->RastPort;
+				MoreData[6] = (IPTR)&Screen->RastPort;
 
 					/* Now do the magic formatting... */
 

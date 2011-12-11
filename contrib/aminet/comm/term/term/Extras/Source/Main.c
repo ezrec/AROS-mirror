@@ -134,7 +134,7 @@ Main()
 		 */
 
 	DOSBase		= (struct DosLibrary *)OpenLibrary("dos.library",0);
-	UtilityBase	= OpenLibrary("utility.library",0);
+	UtilityBase	= (struct UtilityBase *)OpenLibrary("utility.library",0);
 
 	if(DOSBase && UtilityBase)
 	{
@@ -154,7 +154,7 @@ Main()
 		{
 				/* No home directory to return to. */
 
-			WBenchLock = NULL;
+			WBenchLock = BNULL;
 
 				/* Use the ReadArgs parser, allocate the
 				 * argument vectors...
@@ -168,7 +168,7 @@ Main()
 
 						/* Parse the args (if any). */
 
-					if(ReadArgs(ArgTemplate,(LONG *)ArgArray,ArgsPtr))
+					if(ReadArgs(ArgTemplate,(IPTR *)ArgArray,ArgsPtr))
 					{
 							/* Pop a running `term' to the front? */
 
@@ -436,7 +436,7 @@ Main()
 
 				Forbid();
 
-				if(!(TermPort = TermPort = (struct TermPort *)FindPort(TERMPORTNAME)))
+				if(!(TermPort = (struct TermPort *)FindPort(TERMPORTNAME)))
 					LaunchNew = TRUE;
 				else
 				{
@@ -499,7 +499,7 @@ Main()
 		/* Close the libraries. */
 
 	CloseLibrary((struct Library *)DOSBase);
-	CloseLibrary(UtilityBase);
+	CloseLibrary((struct Library *)UtilityBase);
 
 		/* If run from Workbench, return the startup message. */
 
@@ -524,7 +524,7 @@ Main()
 STATIC BOOL
 HandleInput()
 {
-	STRPTR			 Result;
+	CONST_STRPTR		 Result;
 	SENDLINE		 OriginalSendLine;
 	PhonebookHandle	*PhoneHandle;
 
@@ -803,7 +803,7 @@ HandleInput()
 							break;
 						}
 					}
-					while(PhonePanel(NULL));
+					while(PhonePanel(0));
 
 					if(!GlobalPhoneHandle->AutoExit)
 						KeepRedialing = FALSE;
@@ -1068,7 +1068,7 @@ ClearDialMenu()
 			{
 				do
 				{
-					if((ULONG)GTMENUITEM_USERDATA(Item) >= DIAL_MENU_LIMIT)
+					if((ULONG)(IPTR)GTMENUITEM_USERDATA(Item) >= DIAL_MENU_LIMIT)
 					{
 						Item->Flags &= ~CHECKED;
 
@@ -1095,7 +1095,7 @@ EnterItemToDialList(BOOL AddedSomething,struct MenuItem *Item)
 {
 	ULONG Index;
 
-	Index = (ULONG)GTMENUITEM_USERDATA(Item);
+	Index = (ULONG)(IPTR)GTMENUITEM_USERDATA(Item);
 
 	if(Index >= DIAL_MENU_LIMIT && (Item->Flags & (ITEMENABLED|CHECKIT|CHECKED)) == (ITEMENABLED|CHECKIT|CHECKED))
 	{
@@ -1179,7 +1179,7 @@ HandleMenu(ULONG Code,ULONG Qualifier)
 
 		if(MenuItem = ItemAddress(Menu,Code))
 		{
-			HandleMenuCode((ULONG)GTMENUITEM_USERDATA(MenuItem),Qualifier);
+			HandleMenuCode((ULONG)(IPTR)GTMENUITEM_USERDATA(MenuItem),Qualifier);
 
 			Code = MenuItem->NextSelect;
 		}
@@ -1247,7 +1247,7 @@ HandleIconify()
 
 					/* Reset the icon type. */
 
-				Icon->do_Type = NULL;
+				Icon->do_Type = 0;
 
 					/* Default icon position. */
 
@@ -1262,7 +1262,7 @@ HandleIconify()
 
 						/* Add the application icon. */
 
-					if(AppIcon = AddAppIconA(0,0,TermIDString,IconPort,NULL,Icon,NULL))
+					if(AppIcon = AddAppIconA(0,0,TermIDString,IconPort,BNULL,Icon,NULL))
 					{
 						struct AppMessage *AppMessage;
 
@@ -1347,7 +1347,7 @@ HandleIconify()
 
 								if(IconTerminated && !MainTerminated)
 								{
-									STRPTR String;
+									CONST_STRPTR String;
 
 										/* Create the display. */
 
@@ -2113,54 +2113,54 @@ HandleKeyboardInput(UBYTE Char,UWORD Code,ULONG Qualifier,STRPTR InputBuffer,LON
 	{
 		STATIC STRPTR StringTable[22][2] =
 		{
-			"0",	"\033Op",
-			"1",	"\033Oq",
-			"2",	"\033Or",
-			"3",	"\033Os",
-			"4",	"\033Ot",
-			"5",	"\033Ou",
-			"6",	"\033Ov",
-			"7",	"\033Ow",
-			"8",	"\033Ox",
-			"9",	"\033Oy",
-			"-",	"\033Om",
-			"+",	"\033Ol",	/* This should really be a comma */
-			".",	"\033On",
+			{ "0",	"\033Op", },
+			{ "1",	"\033Oq", },
+			{ "2",	"\033Or", },
+			{ "3",	"\033Os", },
+			{ "4",	"\033Ot", },
+			{ "5",	"\033Ou", },
+			{ "6",	"\033Ov", },
+			{ "7",	"\033Ow", },
+			{ "8",	"\033Ox", },
+			{ "9",	"\033Oy", },
+			{ "-",	"\033Om", },
+			{ "+",	"\033Ol",	/* This should really be a comma */ },
+			{ ".",	"\033On", },
 
-			"(",	"\033OP",
-			"[",	"\033OP",
-			"{",	"\033OP",
-			"]",	"\033OQ",
-			")",	"\033OQ",
-			"}",	"\033OQ",
-			"/",	"\033OR",
-			"*",	"\033OS",
+			{ "(",	"\033OP", },
+			{ "[",	"\033OP", },
+			{ "{",	"\033OP", },
+			{ "]",	"\033OQ", },
+			{ ")",	"\033OQ", },
+			{ "}",	"\033OQ", },
+			{ "/",	"\033OR", },
+			{ "*",	"\033OS", },
 
-			"\r",	"\033OM"
+			{ "\r",	"\033OM" },
 		};
 
 		STATIC struct { UBYTE Code; STRPTR String; } CodeTable[18] =
 		{
-			0x0F,	"\033Op",	/* "0" */
-			0x1D,	"\033Oq",	/* "1" */
-			0x1E,	"\033Or",	/* "2" */
-			0x1F,	"\033Os",	/* "3" */
-			0x2D,	"\033Ot",	/* "4" */
-			0x2E,	"\033Ou",	/* "5" */
-			0x2F,	"\033Ov",	/* "6" */
-			0x3D,	"\033Ow",	/* "7" */
-			0x3E,	"\033Ox",	/* "8" */
-			0x3F,	"\033Oy",	/* "9" */
-			0x4A,	"\033Om",	/* "-" */
-			0x5E,	"\033Ol",	/* "+", but this should really be a comma */
-			0x3C,	"\033On",	/* "." */
+			{ 0x0F,	"\033Op",	/* "0" */ },
+			{ 0x1D,	"\033Oq",	/* "1" */ },
+			{ 0x1E,	"\033Or",	/* "2" */ },
+			{ 0x1F,	"\033Os",	/* "3" */ },
+			{ 0x2D,	"\033Ot",	/* "4" */ },
+			{ 0x2E,	"\033Ou",	/* "5" */ },
+			{ 0x2F,	"\033Ov",	/* "6" */ },
+			{ 0x3D,	"\033Ow",	/* "7" */ },
+			{ 0x3E,	"\033Ox",	/* "8" */ },
+			{ 0x3F,	"\033Oy",	/* "9" */ },
+			{ 0x4A,	"\033Om",	/* "-" */ },
+			{ 0x5E,	"\033Ol",	/* "+", but this should really be a comma */ },
+			{ 0x3C,	"\033On",	/* "." */ },
 
-			0x5A,	"\033OP",	/* "[" */
-			0x5B,	"\033OQ",	/* "]" */
-			0x5C,	"\033OR",	/* "/" */
-			0x5D,	"\033OS",	/* "*" */
+			{ 0x5A,	"\033OP",	/* "[" */ },
+			{ 0x5B,	"\033OQ",	/* "]" */ },
+			{ 0x5C,	"\033OR",	/* "/" */ },
+			{ 0x5D,	"\033OS",	/* "*" */ },
 
-			0x43,	"\033OM"	/* <cr> */
+			{ 0x43,	"\033OM"	/* <cr> */ },
 		};
 
 		STRPTR	String = NULL;
@@ -2544,7 +2544,7 @@ HandleQueueJob(JobNode *UnusedJob)
 
 			case DATAMSGTYPE_MENU:
 
-				HandleMenuCode((ULONG)Item->Size,(ULONG)Item->Data);
+				HandleMenuCode((ULONG)Item->Size,(IPTR)Item->Data);
 
 				break;
 
@@ -3286,7 +3286,7 @@ HandleMenuCode(ULONG Code,ULONG Qualifier)
 
 				FreeAslRequest(FileRequest);
 
-				SomeFile = NULL;
+				SomeFile = BNULL;
 
 				if(GetFileSize(DummyBuffer))
 				{
@@ -3842,7 +3842,7 @@ HandleMenuCode(ULONG Code,ULONG Qualifier)
 		case MEN_WAIT:
 
 			Easy.es_StructSize		= sizeof(struct EasyStruct);
-			Easy.es_Flags			= NULL;
+			Easy.es_Flags			= 0;
 			Easy.es_Title			= LocaleString(MSG_TERMAUX_TERM_REQUEST_TXT);
 			Easy.es_GadgetFormat	= LocaleString(MSG_GLOBAL_CONTINUE_TXT);
 			Easy.es_TextFormat		= LocaleString(MSG_TERMMAIN_WAITING_TXT);
@@ -3870,7 +3870,7 @@ HandleMenuCode(ULONG Code,ULONG Qualifier)
 				if(ReadPort && !Get_xOFF() && ProcessIO)
 					Mask = SIG_SERIAL;
 				else
-					Mask = NULL;
+					Mask = 0;
 
 				More = FALSE;
 
@@ -3888,7 +3888,7 @@ HandleMenuCode(ULONG Code,ULONG Qualifier)
 
 					if(Signals & PORTMASK(ReqWindow->UserPort))
 					{
-						ULONG IDCMP = NULL;
+						ULONG IDCMP = 0;
 						LONG Result;
 
 						Result = SysReqHandler(ReqWindow,&IDCMP,FALSE);
@@ -3918,7 +3918,7 @@ HandleMenuCode(ULONG Code,ULONG Qualifier)
 
 						if(Get_xOFF())
 						{
-							Mask = NULL;
+							Mask = 0;
 							More = FALSE;
 						}
 					}
@@ -4234,7 +4234,7 @@ HandleMenuCode(ULONG Code,ULONG Qualifier)
 								case 0:
 
 									Close(SomeFile);
-									SomeFile = NULL;
+									SomeFile = BNULL;
 									break;
 
 								case 1:
@@ -4248,7 +4248,7 @@ HandleMenuCode(ULONG Code,ULONG Qualifier)
 						{
 							LONG Len;
 
-							LineRead(NULL,NULL,NULL);
+							LineRead(BNULL,NULL,0);
 
 							while((Len = LineRead(SomeFile,DummyBuffer,80)) > 0)
 								CaptureParser(ParserStuff,DummyBuffer,Len,(COPTR)AddLine);
@@ -4286,7 +4286,7 @@ HandleMenuCode(ULONG Code,ULONG Qualifier)
 
 					FreeAslRequest(FileRequest);
 
-					SomeFile = NULL;
+					SomeFile = BNULL;
 
 						/* If the file we are about
 						 * to create already exists,

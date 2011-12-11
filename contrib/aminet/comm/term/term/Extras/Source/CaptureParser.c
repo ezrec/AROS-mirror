@@ -234,11 +234,17 @@ CaptureParserInit()
 		{
 			STATIC struct { UBYTE Key; SPECIAL_JUMP Routine; } LocalSpecialKeys[] =
 			{
+			    {
 				'\b',	SpecialBackspace,
+			    }, {
 				'\r',	SpecialReturn,
+			    }, {
 				'\t',	SpecialTab,
+			    }, {
 				27,		SpecialEsc,
+			    }, {
 				155,	SpecialCSI
+			    }
 			};
 
 			LONG i;

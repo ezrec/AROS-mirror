@@ -18,7 +18,7 @@
 	 *	Map an index value to a boolean string.
 	 */
 
-STATIC STRPTR
+STATIC CONST_STRPTR
 ToBoolean(LONG Value)
 {
 	if(Value)
@@ -33,9 +33,9 @@ ToBoolean(LONG Value)
 	 */
 
 STATIC LONG
-FromBoolean(STRPTR Value)
+FromBoolean(CONST_STRPTR Value)
 {
-	STATIC STRPTR BoolTrueMappings[] =
+	STATIC CONST_STRPTR BoolTrueMappings[] =
 	{
 		"TRUE",
 		"ON",
@@ -61,8 +61,8 @@ FromBoolean(STRPTR Value)
 	 *	Map an index to a string.
 	 */
 
-STATIC STRPTR
-ToMap(LONG Index,STRPTR *Mappings)
+STATIC CONST_STRPTR
+ToMap(LONG Index,CONST_STRPTR *Mappings)
 {
 	LONG i;
 
@@ -81,7 +81,7 @@ ToMap(LONG Index,STRPTR *Mappings)
 	 */
 
 STATIC LONG
-FromMap(STRPTR String,STRPTR *Mappings)
+FromMap(CONST_STRPTR String,CONST_STRPTR *Mappings)
 {
 	LONG i;
 
@@ -355,7 +355,7 @@ FromIndex(LONG Index,LONG Count1,LONG Count2,BOOL IncludeRoot)
 	 */
 
 STATIC LONG
-GetSingleAttribute(LONG ID,LONG Index,LONG Count1,STRPTR *Result)
+GetSingleAttribute(LONG ID,LONG Index,LONG Count1, CONST_STRPTR *Result)
 {
 	STATIC UBYTE ResultBuffer[MAXPUBSCREENNAME + 1];
 
@@ -2016,10 +2016,10 @@ GetSingleAttribute(LONG ID,LONG Index,LONG Count1,STRPTR *Result)
 	 */
 
 STATIC LONG
-SetSingleAttribute(LONG ID,LONG Index,LONG Count1,STRPTR Input)
+SetSingleAttribute(LONG ID,LONG Index,LONG Count1,CONST_STRPTR Input)
 {
 	LONG Number,Error,i;
-	STRPTR String;
+	CONST_STRPTR String;
 
 	Error	= 0;
 	String	= NULL;
@@ -4585,7 +4585,7 @@ RexxGetAttr(struct RexxPkt *Pkt)
 			else
 			{
 				LONG Level,Max,Min;
-				STRPTR Result;
+				CONST_STRPTR Result;
 
 				Max = 0;
 				Min = 0;
@@ -4745,7 +4745,7 @@ RexxGetAttr(struct RexxPkt *Pkt)
 		}
 		else
 		{
-			STRPTR Result;
+			CONST_STRPTR Result;
 
 			if(Args[ARG_GETATTR_STEM])
 				LimitedSPrintf(sizeof(DstName),DstName,"%s.%s",Args[ARG_GETATTR_STEM],SrcName);
@@ -4837,7 +4837,7 @@ RexxSetAttr(struct RexxPkt *Pkt)
 				{
 					UBYTE FullName[160];
 					LONG Level,Max,Min;
-					STRPTR Result;
+					CONST_STRPTR Result;
 
 					Max = 0;
 					Min = 0;
@@ -4904,7 +4904,7 @@ RexxSetAttr(struct RexxPkt *Pkt)
 							{
 								LimitedSPrintf(sizeof(FullName),FullName,"%s.%s",DstName,FromIndex(Index,Count1,0,FALSE));
 
-								if(!GetRexxVar((struct Message *)Pkt->RexxMsg,FullName,&Result))
+								if(!GetRexxVar(Pkt->RexxMsg,FullName,(char **)&Result))
 								{
 									if(ResultCode[1] = SetSingleAttribute(AttributeTable[Index].NodeID,Index,Count1,Result))
 									{
@@ -4931,7 +4931,7 @@ RexxSetAttr(struct RexxPkt *Pkt)
 									{
 										LimitedSPrintf(sizeof(FullName),FullName,"%s.%s",DstName,FromIndex(Index + j,i,0,FALSE));
 
-										if(!GetRexxVar((struct Message *)Pkt->RexxMsg,FullName,&Result))
+										if(!GetRexxVar(Pkt->RexxMsg,FullName,(char **)&Result))
 										{
 											if(ResultCode[1] = SetSingleAttribute(AttributeTable[Index + j].NodeID,Index + j,i,Result))
 											{
@@ -4965,13 +4965,13 @@ RexxSetAttr(struct RexxPkt *Pkt)
 			}
 			else
 			{
-				STRPTR Result;
+				CONST_STRPTR Result;
 
 				if(Args[ARG_SETATTR_STEM])
 				{
 					LimitedSPrintf(sizeof(DstName),DstName,"%s.%s",Args[ARG_SETATTR_STEM],SrcName);
 
-					if(!GetRexxVar((struct Message *)Pkt->RexxMsg,DstName,&Result))
+					if(!GetRexxVar(Pkt->RexxMsg,DstName,(char **)&Result))
 					{
 						if(ResultCode[1] = SetSingleAttribute(AttributeTable[Index].NodeID,Index,Count1,Result))
 							ResultCode[0] = RC_ERROR;

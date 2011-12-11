@@ -27,10 +27,10 @@ STATIC struct ModemSettings		*OriginalModemConfig;
 	/* Local routines. */
 
 STATIC VOID QuickHangup(struct DialNode *DialNode);
-STATIC VOID DialPrintBox(LayoutHandle *Handle, LONG Box, LONG Line, STRPTR String, ...);
-STATIC BOOL SendLocalModemCommand(LayoutHandle *Handle, STRPTR Command, STRPTR Message, STRPTR ErrorMessage);
+STATIC VOID DialPrintBox(LayoutHandle *Handle, LONG Box, LONG Line, CONST_STRPTR String, ...);
+STATIC BOOL SendLocalModemCommand(LayoutHandle *Handle, CONST_STRPTR Command, CONST_STRPTR Message, CONST_STRPTR ErrorMessage);
 STATIC VOID BuildName(STRPTR Name, LONG MaxNameLen, STRPTR Date);
-STATIC VOID OpenAutoCaptureFile(STRPTR SomeName);
+STATIC VOID OpenAutoCaptureFile(CONST_STRPTR SomeName);
 STATIC VOID Connect(PhonebookHandle *PhoneHandle,struct DialNode *DialNode);
 STATIC LayoutHandle *OpenDialPanel(BOOL *Record,BOOL *SkipLoginMacro);
 
@@ -97,7 +97,7 @@ QuickHangup(struct DialNode *DialNode)
 	 */
 
 STATIC VOID
-DialPrintBox(LayoutHandle *Handle,LONG Box,LONG Line,STRPTR String,...)
+DialPrintBox(LayoutHandle *Handle,LONG Box,LONG Line,CONST_STRPTR String,...)
 {
 	UBYTE LocalBuffer[256];
 	va_list VarArgs;
@@ -118,7 +118,7 @@ DialPrintBox(LayoutHandle *Handle,LONG Box,LONG Line,STRPTR String,...)
 	 */
 
 STATIC BOOL
-SendModemCommandGetResponse(LayoutHandle *Handle,STRPTR Command)
+SendModemCommandGetResponse(LayoutHandle *Handle,CONST_STRPTR Command)
 {
 	ULONG Signals,SerialMask,WindowMask;
 	ULONG LastBytesOut;
@@ -244,7 +244,7 @@ SendModemCommandGetResponse(LayoutHandle *Handle,STRPTR Command)
 	 */
 
 STATIC BOOL
-SendLocalModemCommand(LayoutHandle *Handle,STRPTR Command,STRPTR Message,STRPTR ErrorMessage)
+SendLocalModemCommand(LayoutHandle *Handle,CONST_STRPTR Command,CONST_STRPTR Message,CONST_STRPTR ErrorMessage)
 {
 		/* Show the message. */
 
@@ -297,7 +297,7 @@ BuildName(STRPTR Name,LONG MaxNameLen,STRPTR Date)
 	 */
 
 STATIC VOID
-OpenAutoCaptureFile(STRPTR SomeName)
+OpenAutoCaptureFile(CONST_STRPTR SomeName)
 {
 	struct DateTime	DateTime;
 	UBYTE Date[20],Time[20];
@@ -404,7 +404,7 @@ Connect(PhonebookHandle *PhoneHandle,struct DialNode *DialNode)
 {
 	struct ModemSettings *ModemConfig;
 	ULONG RateIs;
-	STRPTR Name;
+	CONST_STRPTR Name;
 
 		/* Check which modem configuration to use later. */
 
@@ -493,7 +493,7 @@ Connect(PhonebookHandle *PhoneHandle,struct DialNode *DialNode)
 
 	if(Config->CaptureConfig->ConnectAutoCapture && Config->CaptureConfig->CapturePath[0])
 	{
-		STRPTR FileName;
+		CONST_STRPTR FileName;
 
 		if(DialNode->Entry)
 			FileName = DialNode->Entry->Header->Name;
@@ -742,11 +742,11 @@ DialPanel(PhonebookHandle *PhoneHandle)
 
 		UBYTE					DialBuffer[300];
 
-		LONG					DialTimeout,DialRetries,DialAttempt;
+		LONG					DialTimeout = 0,DialRetries,DialAttempt;
 
 		struct DialNode *		DialNode;
 
-		LONG					RedialTimeout;
+		LONG					RedialTimeout = 0;
 
 		WORD					Start,Stop;
 
@@ -790,7 +790,7 @@ DialPanel(PhonebookHandle *PhoneHandle)
 		if(OwnDevUnitBase && Config->SerialConfig->ReleaseODUWhenDialing && Config->SerialConfig->SatisfyODURequests != ODU_KEEP && !(Config->SerialConfig->Shared && Config->SerialConfig->NoODUIfShared))
 			ODUMask = SIG_OWNDEVUNIT;
 		else
-			ODUMask = NULL;
+			ODUMask = 0;
 
 			/* And get the window port mask ready */
 
@@ -1155,7 +1155,7 @@ DialPanel(PhonebookHandle *PhoneHandle)
 					if(OwnDevUnitBase && CurrentSerialConfig->ReleaseODUWhenDialing && CurrentSerialConfig->SatisfyODURequests != ODU_KEEP && !(CurrentSerialConfig->Shared && CurrentSerialConfig->NoODUIfShared))
 						ODUMask = SIG_OWNDEVUNIT;
 					else
-						ODUMask = NULL;
+						ODUMask = 0;
 
 						/* Send the modem init command. */
 
