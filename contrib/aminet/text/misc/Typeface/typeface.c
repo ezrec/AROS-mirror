@@ -58,7 +58,7 @@ Object *NormalCheck, *BoldCheck, *ItalicCheck, *UnderCheck;
 Object *ExtCheck, *RevCheck, *AspectCycle, *BlankButton;
 ULONG Proportional, Normal, Bold, Italic, ULine, Extended, Reversed;
 ULONG Height, Width, Baseline, Smear, Aspect;
-STRPTR PropLabels[3], AspectLabels[4], SaveLabels[3];
+CONST_STRPTR PropLabels[3], AspectLabels[4], SaveLabels[3];
 
 struct Window *PrefsWnd;
 Object *PrefsWndObj;
@@ -77,7 +77,7 @@ extern ULONG PixelBorder;
 char PrefFixFontName[MAXFONTNAME];
 UWORD PrefFixFontHeight;
 char PrefFixBuffer[256];
-STRPTR PrefsPages[6], BorderLabels[4];
+CONST_STRPTR PrefsPages[6], BorderLabels[4];
 struct Hook *TBDisplayHook, *TBResourceHook, *TBCompareHook;
 
 struct Window *AssignWnd;
@@ -130,6 +130,7 @@ struct Screen *defscr;
 static struct TextAttr topaz8 = { "topaz.font",8,FS_NORMAL,FPF_ROMFONT };
 BPTR lock;
 int i;
+MakeStaticHook(WindowRef, WindowHook);
 
 #ifdef __AROS__
   IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library", 37);
@@ -158,7 +159,7 @@ int i;
       MyError(GetString(msgNoBguiLib));
   }
 #ifdef __AROS__
-#warning AROS does not yet have a textfield.gadget
+// FIXME: AROS does not yet have a textfield.gadget
 #else
   if ((TextFieldBase = OpenLibrary("gadgets/textfield.gadget",3)) == NULL)
   {
@@ -214,7 +215,7 @@ int i;
 
   if ((FontWndHook = AllocVec(sizeof(struct Hook),MEMF_CLEAR)) == NULL)
     ErrorCode(ALLOCVEC);
-  FontWndHook->h_Entry = (HOOKFUNC)WindowHook;
+  InitHook(FontWndHook, WindowRef, NULL);
 
   LoadPrefs();
   SetupScreen();
@@ -281,8 +282,7 @@ BOOL unique_pub_name = TRUE;
   ScreenToFront(Screen);
 }
 
-SAVEDS ASM ULONG WindowHook(TF_REGPARAM(a0, struct Hook *, hook), TF_REGPARAM(a2, Object *, o),
-  TF_REGPARAM(a1, struct IntuiMessage *, msg))
+HOOKPROTONO(WindowHook, ULONG, struct IntuiMessage *msg)
 {
 ULONG height,pos;
 struct IBox newp;
@@ -1373,13 +1373,13 @@ void LoadChosenFont(void)
   RedrawAll();
 }
 
-void MyError(char *message)
+void MyError(CONST_STRPTR message)
 {
   ShowReq(message,GetString(msgCancel));
   Quit();
 }
 
-LONG ShowReq(char *text,char *gadgets,...)
+LONG ShowReq(CONST_STRPTR text,CONST_STRPTR gadgets,...)
 {
 va_list va;
 LONG req_return;
@@ -1715,23 +1715,20 @@ void CloseEditFontWnd(BOOL obj)
   if (obj) ClrDisposeObject(&ParamWndObj);
 }
 
-SAVEDS ASM LONG TBCompareFunc(TF_REGPARAM(a0, struct Hook *, hook), TF_REGPARAM(a2, Object *, o),
-  TF_REGPARAM(a1, struct lvCompare *, lvc))
+HOOKPROTONHNO(TBCompareFunc, LONG, struct lvCompare *lvc)
 {
   if (lvc->lvc_EntryA < lvc->lvc_EntryB) return -1;
   if (lvc->lvc_EntryA > lvc->lvc_EntryB) return 1;
   return 0;
 }
 
-SAVEDS ASM LONG TBResourceFunc(TF_REGPARAM(a0, struct Hook *, hook), TF_REGPARAM(a2, Object *, o),
-  TF_REGPARAM(a1, struct lvResource *, lvr))
+HOOKPROTONHNO(TBResourceFunc, LONG, struct lvResource * lvr)
 {
   if (lvr->lvr_Command == LVRC_MAKE) return (LONG)lvr->lvr_Entry;
   return 0;
 }
 
-SAVEDS ASM char *TBDisplayFunc(TF_REGPARAM(a0, struct Hook *, hook), TF_REGPARAM(a2, Object *, o),
-  TF_REGPARAM(a1, struct lvRender *, lvr))
+HOOKPROTONHNO(TBDisplayFunc, CONST_STRPTR, struct lvRender *lvr)
 {
   switch ((ULONG)lvr->lvr_Entry)
   {
@@ -1786,6 +1783,9 @@ extern struct VectorItem ZoomInImage[], ZoomOutImage[];
   {
     if (PrefsWndObj == NULL)
     {
+      MakeStaticHook(TBCompareRef, TBCompareFunc);
+      MakeStaticHook(TBResourceRef, TBResourceFunc);
+      MakeStaticHook(TBDisplayRef, TBDisplayFunc);
       PrefsPages[0] = GetString(msgPrefsScreen);
       PrefsPages[1] = GetString(msgPrefsToolBar);
       PrefsPages[2] = GetString(msgPrefsEdit);
@@ -1798,11 +1798,13 @@ extern struct VectorItem ZoomInImage[], ZoomOutImage[];
       SaveLabels[1] = GetString(msgPrefsProg);
       SetupMenus(Menus);
       if ((TBDisplayHook = AllocVec(sizeof(struct Hook),MEMF_CLEAR)) == NULL) ErrorCode(ALLOCVEC);
-      TBDisplayHook->h_Entry = (HOOKFUNC)TBDisplayFunc;
+      InitHook(TBDisplayHook, TBDisplayRef, NULL);
       if ((TBResourceHook = AllocVec(sizeof(struct Hook),MEMF_CLEAR)) == NULL) ErrorCode(ALLOCVEC);
+      InitHook(TBResourceHook, TBResourceRef, NULL);
       TBResourceHook->h_Entry = (HOOKFUNC)TBResourceFunc;
       if ((TBCompareHook = AllocVec(sizeof(struct Hook),MEMF_CLEAR)) == NULL) ErrorCode(ALLOCVEC);
       TBCompareHook->h_Entry = (HOOKFUNC)TBCompareFunc;
+      InitHook(TBCompareHook, TBCompareRef, NULL);
 
       PrefsWndObj = WindowObject,
 	WINDOW_Screen,Screen,
@@ -2882,7 +2884,7 @@ static struct EasyStruct req =
   WakeWindows();
 }
 
-void PutPositive(struct Window *wnd, char *name, LONG value, LONG min,
+void PutPositive(struct Window *wnd, CONST_STRPTR name, LONG value, LONG min,
   LONG *dest)
 {
   if (value > min)

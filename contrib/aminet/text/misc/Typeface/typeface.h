@@ -15,7 +15,7 @@
 #include <proto/keymap.h>
 
 #ifdef __AROS__
-#warning No textfield.gadget in AROS yet
+// FIXME: No textfield.gadget in AROS yet
 #else
 #include <clib/textfield_protos.h>
 #endif
@@ -23,7 +23,7 @@
 #include <exec/exec.h>
 
 #ifdef __AROS__
-#warning No textfield.gadget in AROS yet
+// FIXME: No textfield.gadget in AROS yet
 #else
 #include <gadgets/textfield.h>
 #endif
@@ -41,7 +41,7 @@
 #define CATCOMP_NUMBERS
 #include "locale.h"
 
-STRPTR GetString(ULONG id);
+CONST_STRPTR GetString(ULONG id);
 void InitLocale(STRPTR catname, ULONG version);
 void CleanupLocale(void);
 
@@ -240,8 +240,8 @@ struct CharNode;
 
 void Setup(void);
 void SetupScreen(void);
-SAVEDS ASM ULONG WindowHook(TF_REGPARAM(a0, struct Hook *, hook), TF_REGPARAM(a2, Object *, o),
-  TF_REGPARAM(a1, struct IntuiMessage *, msg));
+
+HOOKPROTONHNO(WindowHook, ULONG, struct IntuiMessage *msg);
 void OpenFontWnd(void);
 void CloseFontWnd(void);
 void Quit(void);
@@ -251,8 +251,8 @@ ULONG CheckObjMsg(struct Window *wnd, Object *obj);
 void CheckOpenCharWin(ULONG pressed, ULONG shift);
 void SharedMsgs(ULONG code,struct CharNode *node);
 void LoadChosenFont(void);
-void MyError(char *message);
-LONG ShowReq(char *text,char *gadgets,...);
+void MyError(CONST_STRPTR message);
+LONG ShowReq(CONST_STRPTR text,CONST_STRPTR gadgets,...);
 void ClrDisposeObject(Object **obj);
 void ClrWindowClose(Object **obj,struct Window **wnd);
 void SleepWindows(void);
@@ -262,12 +262,10 @@ void KernTables(ULONG to, ULONG from);
 void ClearCurrentFont(void);
 void OpenEditFontWnd(void);
 void CloseEditFontWnd(BOOL obj);
-SAVEDS ASM LONG TBCompareFunc(TF_REGPARAM(a0, struct Hook *, hook), TF_REGPARAM(a2, Object *, o),
-  TF_REGPARAM(a1, struct lvCompare *, lvc));
-SAVEDS ASM LONG TBResourceFunc(TF_REGPARAM(a0, struct Hook *, hook), TF_REGPARAM(a2, Object *, o),
-  TF_REGPARAM(a1, struct lvResource *, lvr));
-SAVEDS char *TBDisplayFunc(TF_REGPARAM(a0, struct Hook *, hook), TF_REGPARAM(a2, Object *, o),
-  TF_REGPARAM(a1, struct lvRender *, lvr));
+
+HOOKPROTONHNO(TBCompareFunc, LONG, struct lvCompare *lvc);
+HOOKPROTONHNO(TBResourceFunc, LONG, struct lvResource *lvr);
+HOOKPROTONHNO(TBDisplayFunc, CONST_STRPTR, struct lvRender *lvr);
 void OpenPrefsWnd(void);
 void ClosePrefsWnd(BOOL obj);
 void OpenAssignWnd(void);
@@ -281,7 +279,7 @@ void CloseKernWnd(BOOL obj);
 void OpenSaveWnd(void);
 void CloseSaveWnd(void);
 void OpenAboutWnd(void);
-void PutPositive(struct Window *wnd,char *name,LONG value,LONG min,
+void PutPositive(struct Window *wnd,CONST_STRPTR name,LONG value,LONG min,
   LONG *dest);
 void NewHeights(void);
 void NewWidths(void);
@@ -331,15 +329,7 @@ void CloseCharWin(struct CharNode *node);
 Object *CreateSysImage(ULONG which,struct DrawInfo *dri);
 Object *CreatePropGadg(ULONG freedom,Tag tag1,...);
 Object *CreateButtonGadg(Object *image,Tag tag1,...);
-#ifdef __AROS__
-AROS_UFP3(void, CharHook,
-    AROS_UFPA(struct Hook *, hook, A0),
-    AROS_UFPA(Object *, o, A2),
-    AROS_UFPA(struct IntuiMessage *, msg, A1));
-#else
-SAVEDS ASM void CharHook(TF_REGPARAM(a0, struct Hook *, hook), TF_REGPARAM(a2, Object *, o),
-  TF_REGPARAM(a1, struct IntuiMessage *, msg));
-#endif
+HOOKPROTONO(CharHook, void, struct IntuiMessage *msg);
 void ForceResizeChar(struct CharNode *node);
 void SetScrollers(struct CharNode *node);
 void RedrawEdit(struct CharNode *node);
@@ -371,7 +361,7 @@ void PreviewMsgs(ULONG code);
 void SetPreviewScroller();
 void PreviewAll(void);
 UBYTE *SaveFont(BOOL tables,BOOL preview);
-ULONG SaveShowReq(char *text,char *gadgets,...);
+ULONG SaveShowReq(CONST_STRPTR text,CONST_STRPTR gadgets,...);
 void WriteCharData(struct charDef *cd, UBYTE *fontdataptr, ULONG dest,
   ULONG src, ULONG *off, ULONG mod);
 void OpenQueryWidthWnd(void);

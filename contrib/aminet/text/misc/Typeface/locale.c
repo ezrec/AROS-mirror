@@ -35,9 +35,9 @@ void CleanupLocale(void)
 
 /*********************************************************************************************/
 
-STRPTR GetString(ULONG id)
+CONST_STRPTR GetString(ULONG id)
 {
-    STRPTR retval;
+    CONST_STRPTR retval;
     
     if (catalog)
     {

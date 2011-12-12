@@ -8,6 +8,9 @@
 #   include <exec/types.h>
 #endif
 
+#include <SDI/SDI_compiler.h>
+#include <SDI/SDI_hook.h>
+
 #ifdef __AROS__
 
 /* AROS */
@@ -21,10 +24,6 @@
 #ifndef AROS_MACROS_H
 #   include <aros/macros.h>
 #endif
-
-#define SAVEDS
-#define ASM
-#define TF_REGPARAM(reg,type,name) type name
 
 #define LONG2BE(x) AROS_LONG2BE(x)
 #define WORD2BE(x) AROS_WORD2BE(x)
@@ -44,7 +43,6 @@
 
 #define SAVEDS
 #define ASM
-#define TF_REGPARAM(reg,type,name) register type name asm(#reg)
 
 #else
 
@@ -52,7 +50,6 @@
 
 #define SAVEDS __geta4
 #define ASM
-#define TF_REGPARAM(reg,type,name) __ ## reg type name
 
 #endif
 

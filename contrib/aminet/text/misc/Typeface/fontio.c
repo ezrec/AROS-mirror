@@ -38,7 +38,7 @@ Object *all, *cancel, *update, *clear;
     SetPreviewFont();
     SetPreviewScroller();
 #ifdef __AROS__
-#warning No textfield.gadget in AROS
+// FIXME: No textfield.gadget in AROS
 #else
     ActivateGadget((struct Gadget *)PreviewStr,PreviewWnd,NULL);
 #endif
@@ -72,7 +72,7 @@ Object *all, *cancel, *update, *clear;
 		ButtonFrame,
 		FRM_Recessed,TRUE,
 #ifdef __AROS__
-#warning No textfield.gadget in AROS
+// FIXME: No textfield.gadget in AROS
 #else
 		StartMember,
 		  PreviewStr = ExternalObject,
@@ -133,7 +133,7 @@ Object *all, *cancel, *update, *clear;
       ErrorCode(OPENWINDOW);
     SetPreviewScroller();
 #ifdef __AROS__
-#warning No textfield.gadget in AROS
+// FIXME: No textfield.gadget in AROS
 #else
     ActivateGadget((struct Gadget *)PreviewStr,PreviewWnd,NULL);
 #endif
@@ -166,10 +166,10 @@ UBYTE *oldfont;
   FirstChar = fchar;
   LastChar = lchar;
 #ifdef __AROS__
-#warning No textfield.gadget in AROS
-#warning When we have textfield.gadget, dont forget that PreviewFont is in <disk format>!!
-#warning That is: always big endian! And structure format/aligning like on Amiga. Must convert
-#warning the font first if we want to memory-preview it in AROS!!!
+// FIXME: No textfield.gadget in AROS
+// FIXME: When we have textfield.gadget, dont forget that PreviewFont is in <disk format>!!
+// FIXME: That is: always big endian! And structure format/aligning like on Amiga. Must convert
+// FIXME: the font first if we want to memory-preview it in AROS!!!
 #else
   if (PreviewWnd)
   {
@@ -193,7 +193,7 @@ ULONG top;
   {
     case ID_CLEAR:
 #ifdef __AROS__
-#warning No textfield.gadget in AROS
+// FIXME: No textfield.gadget in AROS
 #else
       SetGadgetAttrs((struct Gadget *)PreviewStr,PreviewWnd,NULL,
 	TEXTFIELD_Text,"",TAG_DONE);
@@ -209,7 +209,7 @@ ULONG top;
     case ID_PREVIEWSCROLL:
       GetAttr(PGA_Top,PreviewScroll,&top);
 #ifdef __AROS__
-#warning No textfield.gadget in AROS
+// FIXME: No textfield.gadget in AROS
 #else
       SetGadgetAttrs((struct Gadget *)PreviewStr,PreviewWnd,NULL,
 	TEXTFIELD_Top,top,TAG_DONE);
@@ -227,7 +227,7 @@ ULONG top;
 void SetPreviewScroller()
 {
 #ifdef __AROS__
-#warning No textfield.gadget in AROS
+// FIXME: No textfield.gadget in AROS
 #else
 ULONG lines,visible,top;
 
@@ -245,6 +245,9 @@ ULONG lines,visible,top;
 
 void PreviewAll(void)
 {
+#ifdef __AROS__
+// FIXME: No textfield.gadget in AROS
+#else
 int i,j;
 char listtext[((PREVIEW_WIDTH+1)*(256/PREVIEW_WIDTH))+1];
 
@@ -267,9 +270,6 @@ char listtext[((PREVIEW_WIDTH+1)*(256/PREVIEW_WIDTH))+1];
     listtext[(i*(PREVIEW_WIDTH+1))+PREVIEW_WIDTH] = '\n';
   }
   listtext[((PREVIEW_WIDTH+1)*(256/PREVIEW_WIDTH))] = '\0';
-#ifdef __AROS__
-#warning No textfield.gadget in AROS
-#else
   SetGadgetAttrs((struct Gadget *)PreviewStr,PreviewWnd,NULL,
     TEXTFIELD_Text,listtext,TAG_DONE);
   ActivateGadget((struct Gadget *)PreviewStr,PreviewWnd,NULL);
@@ -437,7 +437,7 @@ BPTR fontfile, contfile, lock;
     dfh->dfh_DF_ln_Type = NT_FONT;
     *(ULONG *)dfh->dfh_DF_ln_Name = LONG2BE((ULONG)((ULONG)dfh->dfh_Name-hunkstart));
     *(UWORD *)dfh->dfh_FileID = WORD2BE(DFH_ID);
-    sprintf(dfh->dfh_Name,"$VER: %s%d 39.0 (%s)",FontName,Height,datestr);
+    sprintf(dfh->dfh_Name,"$VER: %s%d 39.0 (%s)",FontName,(int)Height,datestr);
 
     fontdataptr = ((UBYTE *)dfh)+sizeof(struct FileDiskFontHeader);
     fontlocptr = (struct charDef *)(fontdataptr+((bitwidth/8)*Height));
@@ -540,7 +540,6 @@ BPTR fontfile, contfile, lock;
 	  SaveShowReq(GetString(msgSaveCreateError),GetString(msgCancel),
 	    fontpath);
 	  if (buffer) FreeVec(buffer);
-#warning CHECKME: was "return" with no value
 	  return 0;
 	}
 	else UnLock(lock);
@@ -548,7 +547,6 @@ BPTR fontfile, contfile, lock;
       else
       {
 	if (buffer) FreeVec(buffer);
-#warning CHECKME: was "return" with no value
 	return 0;
       }
     }
@@ -564,7 +562,6 @@ BPTR fontfile, contfile, lock;
 	GetString(msgSaveWarnExistsGadgets),filename))
       {
 	if (buffer) FreeVec(buffer);
-#warning CHECKME: was "return" with no value
 	return 0;
       }
     }
@@ -622,7 +619,7 @@ BPTR fontfile, contfile, lock;
   return (NULL);
 }
 
-ULONG SaveShowReq(char *text,char *gadgets,...)
+ULONG SaveShowReq(CONST_STRPTR text,CONST_STRPTR gadgets,...)
 {
 va_list va;
 struct EasyStruct req =

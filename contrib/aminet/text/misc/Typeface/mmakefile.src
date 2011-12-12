@@ -9,7 +9,8 @@ FILES  := char checkbox error node locale \
 
 EXEDIR := $(CONTRIBDIR)/Misc/aminet/Typeface
 
-USER_CFLAGS := -DINTUITION_NO_INLINE_STDARG
+USER_CFLAGS := -DINTUITION_NO_INLINE_STDARG \
+	       -Wno-unused-function
 
 #MM aminet-text-misc-typeface : setup-typeface-catalogs contrib-bgui
 

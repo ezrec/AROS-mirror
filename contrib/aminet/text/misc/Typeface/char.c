@@ -166,6 +166,7 @@ Object *toolbarsub;
 ULONG gw,gh,top;
 UWORD width,height;
 static ULONG scroll2edit[] = { GA_ID,EG_Update,TAG_DONE };
+MakeStaticHook(CharHookRef, CharHook);
 
   if ((node = (struct CharNode *)CreateNode(sizeof(struct CharNode),
     CharWndList)) == NULL) Quit();
@@ -182,8 +183,7 @@ static ULONG scroll2edit[] = { GA_ID,EG_Update,TAG_DONE };
   else sprintf(node->chln_Title,GetString(msgZeroTitle));
   if ((node->chln_Hook = AllocVec(sizeof(struct Hook),MEMF_CLEAR)) == NULL)
     ErrorCode(ALLOCVEC);
-  node->chln_Hook->h_Entry = (HOOKFUNC)CharHook;
-  node->chln_Hook->h_Data = node;
+  InitHook(node->chln_Hook, CharHookRef, node);
   node->chln_Character = CharBuffer+charnum;
   node->chln_Number = charnum;
   width = (Prefs.PixelX*node->chln_Character->chr_Width)+(2*EG_XOFFSET)+
@@ -484,8 +484,6 @@ static ULONG scroll2edit[] = { GA_ID,EG_Update,TAG_DONE };
   RefreshGList((struct Gadget *)node->chln_HorizGadg,node->chln_Window,
     NULL,-1);
     
-#warning CHECKME: there was no return statement at all
-
  return node;
 }
 
@@ -548,18 +546,8 @@ Object *CreateButtonGadg(Object *image,Tag tag1,...)
     TAG_MORE,&tag1));
 }
 
-#ifdef __AROS__
-AROS_UFH3(void, CharHook,
-    AROS_UFHA(struct Hook *, hook, A0),
-    AROS_UFHA(Object *, o, A2),
-    AROS_UFHA(struct IntuiMessage *, msg, A1))
-#else
-SAVEDS ASM void CharHook(TF_REGPARAM(a0, struct Hook *, hook), TF_REGPARAM(a2, Object *, o),
-  TF_REGPARAM(a1, struct IntuiMessage *, msg))
-#endif
+HOOKPROTONO(CharHook, void, struct IntuiMessage *msg)
 {
-    AROS_USERFUNC_INIT
-
 struct InputEvent *ievent;
 char trans[2];
 
@@ -588,10 +576,8 @@ char trans[2];
       }
       break;
   }
-
-    AROS_USERFUNC_EXIT
 }
-
+  
 void ForceResizeChar(struct CharNode *node)
 {
 struct Character *chr;
@@ -911,7 +897,7 @@ int i,j;
 void OpenResetKernWnd(void)
 {
 Object *reset, *cancel;
-char *warn;
+CONST_STRPTR warn;
 extern struct NewMenu Menus[];
 
   if (ResetKernWnd)
