@@ -408,7 +408,6 @@ cnd_xpline( struct bwb_line *l, char *buffer )
 struct bwb_line *
 bwb_while( struct bwb_line *l )
    {
-   register int n;
    struct bwb_line *wendnext;
    struct exp_ese *e;
 

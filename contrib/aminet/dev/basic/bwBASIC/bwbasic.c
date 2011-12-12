@@ -48,6 +48,35 @@
 #include "bwbasic.h"
 #include "bwb_mes.h"
 
+struct exp_op exp_ops[ N_OPERATORS ] =
+   {
+   { "NOT",     OP_NOT,         12 },   /* multiple-character operators */
+   { "AND",     OP_AND,         13 },   /* should be tested first because */
+   { "OR",      OP_OR,          14 },   /* e.g. a ">=" would be matched */
+   { "XOR",     OP_XOR,         15 },   /* as "=" if the single-character */
+   { "IMP",     OP_IMPLIES,     16 },   /* operator came first */
+   { "EQV",     OP_EQUIV,       17 },
+   { "MOD",     OP_MODULUS,     4  },
+   { "<>",      OP_NOTEQUAL,    7  },
+   { "<=",      OP_LTEQ,        10 },
+   { "=<",      OP_LTEQ,        10 },   /* allow either form */
+   { ">=",      OP_GTEQ,        11 },
+   { "=>",      OP_GTEQ,        11 },   /* allow either form */
+   { "<",       OP_LESSTHAN,    8  },
+   { ">",       OP_GREATERTHAN, 9  },
+   { "^",       OP_EXPONENT,    0  },
+   { "*",       OP_MULTIPLY,    2  },
+   { "/",       OP_DIVIDE,      2  },
+   { "\\",      OP_INTDIVISION, 3  },
+   { "+",       OP_ADD,         5  },
+   { "-",       OP_SUBTRACT,    5  },
+   { "=",       OP_EQUALS,      6  },
+   { "=",       OP_ASSIGN,      6  },   /* don't worry: OP_EQUALS will be converted to OP_ASSIGN if necessary */
+   { ";",       OP_STRJOIN,     18 },
+   { ",",       OP_STRTAB,      19 }
+   };
+
+
 char bwb_progfile[ MAXARGSIZE ];
 struct bwb_line bwb_start, bwb_end;
 char *bwb_ebuf;				/* error buffer */
@@ -110,7 +139,6 @@ int
 main( int argc, char **argv )
    {
    static FILE *input = NULL;
-   static int jump_set = FALSE;
    static char start_buf[] = "\0";
    static char end_buf[] = "\0";
    register int n;
@@ -334,7 +362,7 @@ main( int argc, char **argv )
 
 ***************************************************************/
 
-bwb_fload( FILE *file )
+int bwb_fload( FILE *file )
    {
 
    while ( feof( file ) == FALSE )
@@ -365,10 +393,9 @@ bwb_fload( FILE *file )
 
 ***************************************************************/
 
-bwb_ladd( char *buffer, int replace )
+int bwb_ladd( char *buffer, int replace )
    {
    struct bwb_line *l, *previous;
-   register int n, a;
    static char *s_buffer;
    static int init = FALSE;
    static int prev_num = 0;
@@ -596,7 +623,6 @@ struct bwb_line *
 bwb_xtxtline( char *buffer )
    {
    struct bwb_line *c;
-   register int n, a;
    char *p;
    int loop;
 
@@ -962,7 +988,7 @@ ln_asbuf( struct bwb_line *l, char *s )
 
 ***************************************************************/
 
-bwb_gets( char *buffer )
+int bwb_gets( char *buffer )
    {
    bwb_number = 0;
    sprintf( bwb_ebuf, "\r%s\n", PROMPT );

@@ -515,7 +515,6 @@ struct prn_fmt *
 get_prnfmt( char *buffer, int *position, FILE *f )
    {
    static struct prn_fmt retstruct;
-   register int c;
    int loop;
 
    /* set some defaults */
@@ -764,7 +763,6 @@ int
 xputc( FILE *f, char c )
    {
    static int tab_pending = FALSE;
-   register int i;
 
    /* check for pending TAB */
 
@@ -985,7 +983,6 @@ fnc_tab( int argc, struct bwb_variable *argv )
    static struct bwb_variable nvar;
    static int init = FALSE;
    static char t_string[ 4 ];
-   static char nvar_name[] = "(tmp)";
    bstring *b;
    
    /* initialize nvar if necessary */
@@ -1135,7 +1132,6 @@ fnc_pos( int argc, struct bwb_variable *argv )
    {
    static struct bwb_variable nvar;
    static int init = FALSE;
-   static char nvar_name[] = "<pos()>";
 
    /* initialize nvar if necessary */
 
@@ -1164,7 +1160,6 @@ fnc_err( int argc, struct bwb_variable *argv )
    {
    static struct bwb_variable nvar;
    static int init = FALSE;
-   static char nvar_name[] = "<err()>";
 
    /* initialize nvar if necessary */
 
@@ -1193,7 +1188,6 @@ fnc_erl( int argc, struct bwb_variable *argv )
    {
    static struct bwb_variable nvar;
    static int init = FALSE;
-   static char nvar_name[] = "<erl()>";
 
    /* initialize nvar if necessary */
 
@@ -1393,6 +1387,7 @@ bwb_xerror( char *message )
 
 ***************************************************************/
 
+#ifndef __AROS__
 int
 matherr( struct exception *except )
    {
@@ -1402,12 +1397,12 @@ matherr( struct exception *except )
 
    return FALSE;
    }
+#endif
 
 static struct bwb_variable * 
 bwb_esetovar( struct exp_ese *e )
    {
    static struct bwb_variable b;
-   static init = FALSE;
 
    var_make( &b, e->type );
 

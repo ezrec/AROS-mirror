@@ -59,8 +59,8 @@ static int inp_assign( char *b, struct bwb_variable *v );
 static int inp_advws( FILE *f );
 static int inp_xgetc( FILE *f, int is_string );
 static int inp_eatcomma( FILE *f );
-static char_saved = FALSE;
-static cs;
+static int char_saved = FALSE;
+static int cs;
 
 /***************************************************************
 
@@ -654,7 +654,6 @@ bwb_xinp( struct bwb_line *l, FILE *f )
    struct bwb_variable *v;
    char c;
    register int n;
-   int pos;
    int *pp;
    int n_params;
    char tbuf[ MAXSTRINGSIZE + 1 ];

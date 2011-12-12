@@ -122,8 +122,7 @@ struct bwb_line *
 bwb_run( struct bwb_line *l )
    {
    struct bwb_line *current, *x;
-   int go_lnumber;                /* line number to go to */
-   register int n;                /* counter */
+   int go_lnumber = 0;                /* line number to go to */
    char tbuf[ MAXSTRINGSIZE + 1 ];
    struct exp_ese *e;
    FILE *input;
@@ -618,7 +617,6 @@ struct bwb_line *
 bwb_xlist( struct bwb_line *l, FILE *file )
    {
    struct bwb_line *start, *end, *current;
-   register int n;
    static int s, e;
    int f, r;
    char tbuf[ MAXSTRINGSIZE + 1 ];
@@ -808,7 +806,6 @@ bwb_gosub( struct bwb_line *l )
    {
    struct bwb_line *x, *nl;
    int save_pos;
-   register int c;
    char atbuf[ MAXSTRINGSIZE + 1 ];
    char btbuf[ MAXSTRINGSIZE + 1 ];
 
@@ -966,7 +963,6 @@ bwb_return( struct bwb_line *l )
 struct bwb_line *
 bwb_on( struct bwb_line *l )
    {
-   struct bwb_line *x;
    char varname[ MAXVARNAMESIZE + 1 ];
    static int p;
    struct exp_ese *rvar;
@@ -1264,7 +1260,6 @@ struct bwb_line *
 bwb_delete( struct bwb_line *l )
    {
    struct bwb_line *start, *end, *current, *previous, *p;
-   register int n;
    static int s, e;
    int f;
    char tbuf[ MAXSTRINGSIZE + 1 ];

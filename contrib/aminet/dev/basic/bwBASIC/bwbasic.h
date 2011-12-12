@@ -384,38 +384,13 @@ extern char *err_table[ N_ERRORS ];	/* table of error messages */
 
 /* Operator Table */
 
-static struct
+struct exp_op
    {
    char symbol[ 8 ];                    /* BASIC symbol for the operator */
    int operation;                       /* internal code for the operator */
    int precedence;                      /* level of precedence, 0 = highest */
-   } exp_ops[ N_OPERATORS ] =
-   {
-   { "NOT",     OP_NOT,         12 },   /* multiple-character operators */
-   { "AND",     OP_AND,         13 },   /* should be tested first because */
-   { "OR",      OP_OR,          14 },   /* e.g. a ">=" would be matched */
-   { "XOR",     OP_XOR,         15 },   /* as "=" if the single-character */
-   { "IMP",     OP_IMPLIES,     16 },   /* operator came first */
-   { "EQV",     OP_EQUIV,       17 },
-   { "MOD",     OP_MODULUS,     4  },
-   { "<>",      OP_NOTEQUAL,    7  },
-   { "<=",      OP_LTEQ,        10 },
-   { "=<",      OP_LTEQ,        10 },   /* allow either form */
-   { ">=",      OP_GTEQ,        11 },
-   { "=>",      OP_GTEQ,        11 },   /* allow either form */
-   { "<",       OP_LESSTHAN,    8  },
-   { ">",       OP_GREATERTHAN, 9  },
-   { "^",       OP_EXPONENT,    0  },
-   { "*",       OP_MULTIPLY,    2  },
-   { "/",       OP_DIVIDE,      2  },
-   { "\\",      OP_INTDIVISION, 3  },
-   { "+",       OP_ADD,         5  },
-   { "-",       OP_SUBTRACT,    5  },
-   { "=",       OP_EQUALS,      6  },
-   { "=",       OP_ASSIGN,      6  },   /* don't worry: OP_EQUALS will be converted to OP_ASSIGN if necessary */
-   { ";",       OP_STRJOIN,     18 },
-   { ",",       OP_STRTAB,      19 }
    };
+extern struct exp_op exp_ops[ N_OPERATORS ];
 
 /* Prototypes for publicly available functions and data */
 

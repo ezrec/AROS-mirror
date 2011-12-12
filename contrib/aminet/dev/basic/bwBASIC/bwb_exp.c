@@ -54,10 +54,10 @@ int exp_esc = 0;                        /* expression stack counter */
 struct exp_ese *
 bwb_exp( char *expression, int assignment, int *position )
    {
-   struct exp_ese *rval;			/* return value */
+   struct exp_ese *rval = NULL;			/* return value */
    int entry_level, main_loop, adv_loop, err_condition;
    char *e;                                     /* pointer to current string */
-   int r;                                       /* return value from functions */
+   int r = 0;                                   /* return value from functions */
    register int c;                              /* quick counter */
 
 #if INTENSIVE_DEBUG

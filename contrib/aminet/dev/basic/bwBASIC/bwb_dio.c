@@ -79,9 +79,8 @@ static int dio_flush( int dev_number );
 struct bwb_line *
 bwb_open( struct bwb_line *l )
    {
-   FILE *fp;
+   FILE *fp = NULL;
    struct exp_ese *e;
-   register int n;
    int previous_buffer;
    char atbuf[ MAXSTRINGSIZE + 1 ];
    char first[ MAXSTRINGSIZE + 1 ];
@@ -1151,7 +1150,6 @@ bwb_field( struct bwb_line *l )
    bstring *b;
    int current_pos;
    char atbuf[ MAXSTRINGSIZE + 1 ];
-   char btbuf[ MAXSTRINGSIZE + 1 ];
 
    current_pos = 0;
 
@@ -1507,7 +1505,6 @@ bwb_get( struct bwb_line *l )
    register int i;
    struct exp_ese *e;
    char atbuf[ MAXSTRINGSIZE + 1 ];
-   char btbuf[ MAXSTRINGSIZE + 1 ];
 
    /* first read device number */
 
@@ -1628,9 +1625,7 @@ bwb_put( struct bwb_line *l )
    int rec_number;
    register int i;
    struct exp_ese *e;
-   struct bwb_variable *v;
    char atbuf[ MAXSTRINGSIZE + 1 ];
-   char btbuf[ MAXSTRINGSIZE + 1 ];
 
    /* first read device number */
 

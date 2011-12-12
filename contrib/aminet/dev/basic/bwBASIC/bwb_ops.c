@@ -743,7 +743,6 @@ op_divide( int level, int precision )
 static int
 op_assign( int level, int precision )
    {
-   bstring *s, *d;
 
    /* Make sure the position one level below is a variable */
 
@@ -1886,7 +1885,6 @@ op_and( int level, int precision )
 static int
 op_not( int level, int precision )
    {
-   unsigned char r;
 
    switch( precision )
       {

@@ -1553,7 +1553,6 @@ fnc_string( int argc, struct bwb_variable *argv )
    int length;
    register int i;
    char c;
-   struct bwb_variable *v;
    static char *tbuf;
    static int init = FALSE;
 

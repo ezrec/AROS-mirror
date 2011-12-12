@@ -123,6 +123,7 @@ bwb_common( struct bwb_line *l )
 
       }
 
+      return l;
    }
 
 /***********************************************************
@@ -549,6 +550,7 @@ bwb_erase( struct bwb_line *l )
 
       }
 
+      return l;
    }
 
 /***********************************************************
@@ -658,7 +660,7 @@ bwb_swap( struct bwb_line *l )
 
 ***********************************************************/
 
-bwb_const( char *lb, char *sb, int *n )
+int bwb_const( char *lb, char *sb, int *n )
    {
    register int s;
 
@@ -701,7 +703,7 @@ bwb_const( char *lb, char *sb, int *n )
 
 ***********************************************************/
 
-bwb_getvarname( char *lb, char *sb, int *n )
+int bwb_getvarname( char *lb, char *sb, int *n )
    {
    register int s;
 
@@ -756,7 +758,6 @@ struct bwb_variable *
 var_find( char *buffer )
    {
    struct bwb_variable *v;
-   size_t array_size;
 
 #if INTENSIVE_DEBUG
    sprintf( bwb_ebuf, "in var_find(): received <%s>", buffer );
@@ -1450,7 +1451,6 @@ dim_getparams( char *buffer, int *pos, int *n_params, int **pp )
    static int params[ MAX_DIMS ];
    int x_pos, s_pos;
    int paren_found;
-   register int n;
    struct exp_ese *e;
    char tbuf[ MAXSTRINGSIZE + 1 ];
 
@@ -1492,7 +1492,6 @@ dim_getparams( char *buffer, int *pos, int *n_params, int **pp )
                *n_params = 1;
                params[ 0 ] = dim_base;
                *pp = params;
-               free( tbuf );
                return TRUE;
                }
             else
@@ -1739,7 +1738,6 @@ bwb_option( struct bwb_line *l )
 int *
 var_findival( struct bwb_variable *v, int *pp )
    {
-   register int n;
    size_t offset;
    int *p;
 
@@ -1798,7 +1796,6 @@ var_findival( struct bwb_variable *v, int *pp )
 double *
 var_finddval( struct bwb_variable *v, int *pp )
    {
-   register int n;
    size_t offset;
    double *p;
 
@@ -1858,7 +1855,6 @@ var_finddval( struct bwb_variable *v, int *pp )
 float *
 var_findfval( struct bwb_variable *v, int *pp )
    {
-   register int n;
    size_t offset;
    float *r;
    float *p;
@@ -1947,7 +1943,6 @@ var_findfval( struct bwb_variable *v, int *pp )
 bstring *
 var_findsval( struct bwb_variable *v, int *pp )
    {
-   register int n;
    size_t offset;
    bstring *p;
 

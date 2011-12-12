@@ -225,7 +225,6 @@ line_start( char *buffer, int *pos, int *lnpos, int *lnum, int *cmdpos,
    int *cmdnum, int *startpos )
    {
    static int position;
-   register int n;
    static char *tbuf;
    static int init = FALSE;
 
@@ -687,8 +686,6 @@ bwb_numseq( char *buffer, int *start, int *end )
 int
 bwb_freeline( struct bwb_line *l )
    {
-   register int n;
-
    /* free arguments if there are any */
    
    free( l );

@@ -54,7 +54,6 @@ int
 exp_paren( char *expression )
    {
    struct exp_ese *e;
-   register int c;
    int s_pos;                           /* position in build buffer */
    int loop;
    int paren_level;
@@ -723,7 +722,6 @@ int
 exp_function( char *expression )
    {
    struct exp_ese *e;
-   register int c;
    int s_pos;                           /* position in build buffer */
    int loop;
    int paren_level;
