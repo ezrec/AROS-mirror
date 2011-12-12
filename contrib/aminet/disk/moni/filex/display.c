@@ -1715,7 +1715,7 @@ void AdjustWindowSize( struct DisplayInhalt *DI )
 	}
 }
 
-void SetStatusZeile( UBYTE *String, struct DisplayData *DD )
+void SetStatusZeile( CONST_STRPTR String, struct DisplayData *DD )
 {
 	WORD StringLaenge;
 

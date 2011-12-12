@@ -63,7 +63,7 @@ static UBYTE *CalcTasten[] =
 	"0", "±", "=", "+"
 };
 
-static UBYTE *CalcModes[] =
+static CONST_STRPTR CalcModes[] =
 {
 	MSG_GADGET_CALC_CYCLE_BIN,
 	MSG_GADGET_CALC_CYCLE_DEC,
@@ -709,7 +709,7 @@ BOOL OpenCalc( void )
 
 	if( !Localized )
 	{
-		UBYTE **s;
+		CONST_STRPTR *s;
 
 		Localized = TRUE;
 		s = CalcModes;

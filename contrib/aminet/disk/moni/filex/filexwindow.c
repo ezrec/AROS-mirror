@@ -215,7 +215,7 @@ void MyFilledDrawBevelBox(struct RastPort *rp,long x,long y,long b,long h,BOOL r
  * Ermittelt die Breite in Pixeln einer Zeichenkette(ohne den Unterstrich '_').
  */
 
-long MyTextLength( struct RastPort *rp, char *ptr)
+long MyTextLength( struct RastPort *rp, CONST_STRPTR ptr)
 {
 	long len = 0;
 	char text[40];
@@ -403,7 +403,7 @@ static long GetHeight(struct MyNewGadget *NewGadget, struct WindowInfo *wi )
  * Liefert den Buchstaben nach dem '_' oder 0, falls kein '_' vorhanden.
  */
 
-UBYTE GetUnderlinedKey(UBYTE *String)
+UBYTE GetUnderlinedKey(CONST_STRPTR String)
 {
 	while(*String && (*String != '_')) String++;
 
@@ -412,10 +412,10 @@ UBYTE GetUnderlinedKey(UBYTE *String)
 }
 
 /*
- * int NewOpenAWindow( struct WindowData *WD, UBYTE *Title );
+ * int NewOpenAWindow( struct WindowData *WD, CONST_STRPTR Title );
  */
 
-int NewOpenAWindow( struct WindowData *WD, UBYTE *Title )
+int NewOpenAWindow( struct WindowData *WD, CONST_STRPTR Title )
 {
 	struct Gadget **Gadgets;
 
@@ -471,12 +471,12 @@ int NewOpenAWindow( struct WindowData *WD, UBYTE *Title )
 
 			while( Gad->Typ )
 			{
-				Gad->Title = GetStr( Gad->Title );
+				Gad->Title = (UBYTE *)GetStr( Gad->Title );
 				Gad->Key = GetUnderlinedKey( Gad->Title );
 
 				if( Gad->Typ == CYCLE_KIND )
 				{
-					char **String = ( char ** ) Gad->CurrentValue;
+					CONST_STRPTR *String = ( CONST_STRPTR * ) Gad->CurrentValue;
 
 					while( *String )
 					{

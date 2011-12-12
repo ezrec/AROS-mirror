@@ -4,5 +4,5 @@ listreq.c
 
 void CloseLR(void);
 
-BOOL OpenListReq(struct List * , char * , void (* )());
+BOOL OpenListReq(struct List * , CONST_STRPTR , void (* )());
 

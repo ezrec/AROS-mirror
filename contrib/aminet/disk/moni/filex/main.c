@@ -1183,9 +1183,9 @@ static struct MyArgs
 
 struct DiskObject *dob;
 
-char *ParseArgsAndAllocThings( void )
+CONST_STRPTR ParseArgsAndAllocThings( void )
 {
-	char *errorstring;
+	CONST_STRPTR errorstring;
 	char *String;
 	long k;
 
@@ -1429,7 +1429,7 @@ char *ParseArgsAndAllocThings( void )
 
 void __saveds NewTaskStart( void )
 {
-	char *errorstring;
+	CONST_STRPTR errorstring;
 
 	if((errorstring = ParseArgsAndAllocThings()))
 	{
@@ -1502,7 +1502,7 @@ SegmentSplit(STRPTR Name,LONG StackSize,APTR Function)
 
 int main(void)
 {
-	UBYTE *errorstring;
+	CONST_STRPTR errorstring;
 	struct Process *myproc;
 
 	myproc = (struct Process *)SysBase -> ThisTask;
@@ -2502,7 +2502,7 @@ void __saveds DoWindow(void)
 	}
 }
 
-UBYTE *AllocRequester()
+CONST_STRPTR AllocRequester()
 { 
 		/* Den Haupt-Filerequester allokieren */
 

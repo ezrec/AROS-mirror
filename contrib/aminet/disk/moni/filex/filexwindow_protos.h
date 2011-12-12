@@ -21,9 +21,9 @@ void SetzeMuster(struct Window * );
 
 void MyFilledDrawBevelBox(struct RastPort * , long , long , long , long , BOOL );
 
-long MyTextLength(struct RastPort * , char * );
+long MyTextLength(struct RastPort * , CONST_STRPTR );
 
-UBYTE GetUnderlinedKey(UBYTE * );
+UBYTE GetUnderlinedKey(CONST_STRPTR );
 
 int NewOpenAWindow(struct WindowData * , CONST_STRPTR );
 

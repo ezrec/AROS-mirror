@@ -74,7 +74,7 @@ long GetFitWidth(struct DisplayInhalt * );
 
 void AdjustWindowSize(struct DisplayInhalt * );
 
-void SetStatusZeile(UBYTE * , struct DisplayData * );
+void SetStatusZeile(CONST_STRPTR , struct DisplayData * );
 
 void UpdateStatusZeile(struct DisplayData * );
 

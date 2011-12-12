@@ -72,7 +72,7 @@ void DoARexxMsg(void);
 
 extern struct DiskObject * dob;
 
-char * ParseArgsAndAllocThings(void);
+CONST_STRPTR ParseArgsAndAllocThings(void);
 
 void __saveds NewTaskStart(void);
 
@@ -146,7 +146,7 @@ void CloseAllOpenWindows(void);
 
 void __saveds DoWindow(void);
 
-UBYTE * AllocRequester(void);
+CONST_STRPTR AllocRequester(void);
 
 void FreeRequester(void);
 

@@ -36,7 +36,7 @@ static long ClipConvLeft = -1, ClipConvTop = -1, ClipConvWidth = -1;
 static long ClipConvTo, ClipConvFrom;
 static char *FromStringDisplay, *ToStringDisplay;
 
-static char *CCModeNames[] =
+static CONST_STRPTR CCModeNames[] =
 {
 	MSG_GADGET_CLIPCONV_CYCLE_BIN,
 	MSG_GADGET_CLIPCONV_CYCLE_DEC,
@@ -49,7 +49,7 @@ static char *CCModeNames[] =
 
 static BOOL Localized = FALSE;
 
-static void SetClipConvFromGadget( char *text )
+static void SetClipConvFromGadget( CONST_STRPTR text)
 {
 	if( FromStringDisplay ) FreeVec( FromStringDisplay );
 
@@ -63,7 +63,7 @@ static void SetClipConvFromGadget( char *text )
 	}
 }
 
-static void SetClipConvToGadget( char *text )
+static void SetClipConvToGadget( CONST_STRPTR text)
 {
 	if( ToStringDisplay ) FreeVec( ToStringDisplay );
 
@@ -647,7 +647,7 @@ static int MakeClipConvGadgets( UWORD Breite )
 
 	{
 		UWORD DummyBreite;
-		char **Inhalt;
+		CONST_STRPTR *Inhalt;
 
 		Inhalt = CCModeNames;
 
@@ -831,7 +831,7 @@ BOOL OpenClipConv( void )
 
 	if( !Localized )
 	{
-		char **s;
+		CONST_STRPTR *s;
 
 		Localized = TRUE;
 		s = CCModeNames;
@@ -883,7 +883,7 @@ BOOL OpenClipConv( void )
 		UWORD ClipConvHeight;
 		UWORD MinWidth = 0;
 		UWORD DummyBreite;
-		char **Inhalt;
+		CONST_STRPTR *Inhalt;
 
 		Inhalt = CCModeNames;
 

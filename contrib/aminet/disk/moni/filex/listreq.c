@@ -251,7 +251,7 @@ static void DoLRWndMsg( void )
 	}
 }
 
-BOOL OpenListReq( struct List *List, char *Title, void ( * Func )())
+BOOL OpenListReq( struct List *List, CONST_STRPTR Title, void ( * Func )())
 {
 	if( LRWnd )
 	{

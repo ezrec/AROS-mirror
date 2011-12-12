@@ -8,11 +8,11 @@ void ReplyRexxCommand(struct RexxMsg * , long , long , char * );
 
 void FreeRexxCommand(struct RexxMsg * );
 
-struct RexxMsg * CreateRexxCommand(struct RexxHost * , char * , BPTR );
+struct RexxMsg * CreateRexxCommand(struct RexxHost * , CONST_STRPTR , BPTR );
 
 struct RexxMsg * CommandToRexx(struct RexxHost * , struct RexxMsg * );
 
-struct RexxMsg * SendRexxCommand(struct RexxHost * , char * , BPTR );
+struct RexxMsg * SendRexxCommand(struct RexxHost * , CONST_STRPTR , BPTR );
 
 void CloseDownARexxHost(struct RexxHost * );
 

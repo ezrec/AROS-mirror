@@ -866,7 +866,7 @@ void SetScreenOwnPublic( void )
 															TAG_END );
 	
 	
-			if( rtScreenModeRequest( screenmodereq, GetStr( MSG_WINDOWTITLE_SCREENMODE ), RTSC_Flags, SCREQF_OVERSCANGAD | SCREQF_AUTOSCROLLGAD | SCREQF_SIZEGADS | SCREQF_DEPTHGAD | SCREQF_GUIMODES, TAG_DONE ))
+			if( rtScreenModeRequest( screenmodereq, (char *)GetStr( MSG_WINDOWTITLE_SCREENMODE ), RTSC_Flags, SCREQF_OVERSCANGAD | SCREQF_AUTOSCROLLGAD | SCREQF_SIZEGADS | SCREQF_DEPTHGAD | SCREQF_GUIMODES, TAG_DONE ))
 			{
 				SetScreenModeData( TRUE, screenmodereq->DisplayID, screenmodereq->DisplayWidth, screenmodereq->DisplayHeight, screenmodereq->DisplayDepth, screenmodereq->OverscanType, screenmodereq->AutoScroll );
 				ReopenDisplay( SF_OWN_PUBLIC );
