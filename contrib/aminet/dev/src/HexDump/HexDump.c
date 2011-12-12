@@ -58,7 +58,7 @@ main (UWORD argc, STRPTR *argv)
       #define    BUFFSIZE    240
       
       // Open dos.library
-      if (DOSBase = (struct DosLibrary *) OpenLibrary ("dos.library", LIBRARY_MINIMUM))
+      if ((DOSBase = (struct DosLibrary *) OpenLibrary ("dos.library", LIBRARY_MINIMUM)))
       {
          LONG   err;
          if ((ap = AllocVec (sizeof (struct AnchorPath) + BUFFSIZE, MEMF_CLEAR)) != 0)
@@ -79,7 +79,7 @@ main (UWORD argc, STRPTR *argv)
                {
 
                   // Open file
-                  if (File = Open (ap -> ap_Buf, MODE_OLDFILE))
+                  if ((File = Open (ap -> ap_Buf, MODE_OLDFILE)))
                   {
 
                      UWORD    k;
@@ -93,7 +93,7 @@ main (UWORD argc, STRPTR *argv)
                         UWORD    j;
 
                         // Print offset
-                        printf ("\033[1m%08lx:\033[22m  ", offset);
+                        printf ("\033[1m%08lx:\033[22m  ", (unsigned long)offset);
 
                         // Hex dumping ...
                         for (j = 0; j < k; j++)
