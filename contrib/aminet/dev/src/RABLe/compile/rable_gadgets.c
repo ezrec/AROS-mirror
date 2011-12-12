@@ -433,8 +433,8 @@ return (&fgad4);
 UBYTE buff1[10];
 UBYTE buff2[10];
 
-struct StringInfo si1={buff1,NULL,0,10,0,0,0,0,0,0,NULL,NULL,NULL};
-struct StringInfo si2={buff2,NULL,0,10,0,0,0,0,0,0,NULL,NULL,NULL};
+struct StringInfo si1={buff1,NULL,0,10,0,0,0,0,0,0,NULL,0,NULL};
+struct StringInfo si2={buff2,NULL,0,10,0,0,0,0,0,0,NULL,0,NULL};
 
 struct IntuiText itext1={30,31,JAM1,-15,0,NULL,"W",     NULL};
 struct IntuiText itext2={30,31,JAM1,-15,0,NULL,"H",     NULL};
@@ -461,21 +461,21 @@ struct Border border3={-3,-3,30,31,JAM1,5,border3_points,NULL};
 /* the requester's gadgets */
 struct Gadget reqgad1={NULL,40,25,60,20,GFLG_GADGHCOMP|GFLG_TABCYCLE,
 GACT_LONGINT,GTYP_STRGADGET|GTYP_REQGADGET,(APTR)&border3,NULL,&itext1,
-NULL,(APTR)&si1,501,NULL};
+0,(APTR)&si1,501,NULL};
 
 struct Gadget reqgad2={&reqgad1,40,40,60,20,GFLG_GADGHCOMP|GFLG_TABCYCLE,
 GACT_LONGINT,GTYP_STRGADGET|GTYP_REQGADGET,(APTR)&border3,NULL,&itext2,
-NULL,(APTR)&si2,502,NULL};
+0,(APTR)&si2,502,NULL};
 
 struct Gadget reqgad3={&reqgad2,10,55,55,15,GFLG_GADGHCOMP, /* OKAY */
 GACT_IMMEDIATE|GACT_RELVERIFY|GACT_ENDGADGET,
 GTYP_BOOLGADGET|GTYP_REQGADGET,(APTR)&border1,NULL,&itext3,
-NULL,NULL,503,NULL};
+0,NULL,503,NULL};
 
 struct Gadget reqgad4={&reqgad3,74,55,55,15,GFLG_GADGHCOMP, /* CANCEL */
 GACT_IMMEDIATE|GACT_RELVERIFY|GACT_ENDGADGET,
 GTYP_BOOLGADGET|GTYP_REQGADGET,(APTR)&border1,NULL,&itext4,
-NULL,NULL,504,NULL};
+0,NULL,504,NULL};
 
 /************** structures for palette sliders **************/
 
@@ -496,15 +496,15 @@ struct PropInfo slider_info3={FREEHORIZ|AUTOKNOB,0,0,MAXBODY*1/16,
 
 struct Gadget rslider={&pgad32,20,35,50,12,GFLG_GADGHCOMP,
 GACT_IMMEDIATE|GACT_RELVERIFY,GTYP_PROPGADGET,(APTR)&no_img1,NULL,&itext6,
-NULL,(APTR)&slider_info1,601,NULL};
+0,(APTR)&slider_info1,601,NULL};
 
 struct Gadget gslider={&rslider,100,35,50,12,GFLG_GADGHCOMP,
 GACT_IMMEDIATE|GACT_RELVERIFY,GTYP_PROPGADGET,(APTR)&no_img2,NULL,&itext7,
-NULL,(APTR)&slider_info2,602,NULL};
+0,(APTR)&slider_info2,602,NULL};
 
 struct Gadget bslider={&gslider,180,35,50,12,GFLG_GADGHCOMP,
 GACT_IMMEDIATE|GACT_RELVERIFY,GTYP_PROPGADGET,(APTR)&no_img3,NULL,&itext8,
-NULL,(APTR)&slider_info3,603,NULL};
+0,(APTR)&slider_info3,603,NULL};
 
 
 struct Gadget *get_pal(void)

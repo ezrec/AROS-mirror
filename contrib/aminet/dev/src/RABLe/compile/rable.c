@@ -119,7 +119,7 @@ extern struct PropInfo slider_info3;
 
 /************************************************************/
 
-main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
     InitLibs();
     screenmode=openASL();
@@ -129,12 +129,11 @@ main(int argc, char *argv[])
         clean_exit("Cannot open menu!", RETURN_FAIL );
     process_events();
     clean_exit(NULL, RETURN_OK);
+    return 0;
 }
 
 void wbmain(void)   /* If started from WB */
 {
-    long temp = 0;
-    char tempchar = NULL;
     main(0, NULL);
 }
 
@@ -175,24 +174,23 @@ struct ScreenModeRequester *openASL(void)
 struct ScreenModeRequester *smr;
 BOOL result=FALSE;
 
-struct TagItem smrtags[] =
-    {
-    ASLSM_TitleText, (ULONG)"Select screen for RABLe Paint",
-    ASLSM_InitialLeftEdge, 40,
-    ASLSM_InitialTopEdge, 20,
-    ASLSM_InitialWidth, 340,
-    ASLSM_InitialHeight, 180,
-    ASLSM_DoWidth, TRUE,
-    ASLSM_DoHeight, TRUE,
-    ASLSM_DoDepth, FALSE,
-    ASLSM_DoOverscanType, FALSE,
-    ASLSM_DoAutoScroll, TRUE,
-    ASLSM_MinWidth, 640,
-    ASLSM_MinHeight, 400,
-    TAG_DONE
+struct TagItem smrtags[] = {
+    { ASLSM_TitleText, (IPTR)"Select screen for RABLe Paint" }, 
+    { ASLSM_InitialLeftEdge, 40 }, 
+    { ASLSM_InitialTopEdge, 20 }, 
+    { ASLSM_InitialWidth, 340 }, 
+    { ASLSM_InitialHeight, 180 }, 
+    { ASLSM_DoWidth, TRUE }, 
+    { ASLSM_DoHeight, TRUE }, 
+    { ASLSM_DoDepth, FALSE }, 
+    { ASLSM_DoOverscanType, FALSE }, 
+    { ASLSM_DoAutoScroll, TRUE }, 
+    { ASLSM_MinWidth, 640 }, 
+    { ASLSM_MinHeight, 400 }, 
+    { TAG_DONE }
     };
 
-if(smr=AllocAslRequest(ASL_ScreenModeRequest,NULL))
+if((smr=AllocAslRequest(ASL_ScreenModeRequest,NULL)))
     {
     result=AslRequest(smr,smrtags);
     FreeAslRequest(smr);
@@ -400,15 +398,12 @@ struct IntuiMessage *message;
 ULONG mclass;
 USHORT code;
 BOOL done = FALSE;
-SHORT mousex, mousey;
 
-struct Gadget *gadget;
+struct Gadget *gadget = NULL;
 
 while (NULL != (message = (struct IntuiMessage *)GetMsg(win->UserPort)))
     {
     code   = message->Code;
-    mousex = message->MouseX;
-    mousey = message->MouseY;
     mclass = message->Class;
 
     if ((mclass==IDCMP_GADGETDOWN)||(mclass==IDCMP_GADGETUP))
@@ -579,7 +574,6 @@ BOOL menu_handler(UWORD menuNumber, BOOL done)
 {
 UWORD menuNum;
 UWORD itemNum;
-UWORD subNum;
 UBYTE filepath[512];
 struct MenuItem *item;
 
@@ -588,7 +582,6 @@ while ((menuNumber != MENUNULL) && (!done))
 	item = ItemAddress(strip, menuNumber);
 	menuNum = MENUNUM(menuNumber);
 	itemNum = ITEMNUM(menuNumber);
-	subNum = SUBNUM(menuNumber);
                     
 	if ((menuNum==0) && (itemNum==0)) /* user chose new */
 	{
@@ -746,11 +739,11 @@ void LoadPic(char *filename)
         "Okay"
         };
 
-if(mypic = NewDTObject(filename,
+if((mypic = NewDTObject(filename,
     DTA_SourceType,  DTST_FILE,    /* source is a file */
     DTA_GroupID,     GID_PICTURE,  /* must be a picture */
     PDTA_Remap,      FALSE,
-    TAG_DONE))
+    TAG_DONE)))
     {
 
     /* get attributes we are interested in */
@@ -773,7 +766,7 @@ if(mypic = NewDTObject(filename,
         while(!done) /* wait for window to resize */
             {
             WaitPort( window1->UserPort );
-            while (mess=(struct IntuiMessage *)GetMsg(window1->UserPort))
+            while ((mess=(struct IntuiMessage *)GetMsg(window1->UserPort)))
                 {
                 if(mess->Class==IDCMP_CHANGEWINDOW) done=TRUE;
                 ReplyMsg((struct Message *)mess);
@@ -806,7 +799,7 @@ if(mypic = NewDTObject(filename,
 
         AddDTObject(window1,NULL,mypic,-1);
         Delay(20);
-        RefreshDTObjects(mypic,window1,NULL,NULL);
+        RefreshDTObjects(mypic,window1,NULL,0);
         RemoveDTObject(window1,mypic);
     }
   else EasyRequest(window1, &warning2, NULL); /* warn: picture too big */
@@ -851,7 +844,7 @@ void SavePic(char *filename)
    bmhd.bmh_Depth	= depth;
    bmhd.bmh_Masking	= 0;
    bmhd.bmh_Compression	= 0;  /* we're not using compression */
-#warning Deactivated the following line
+// FIXME: Deactivated the following line
 //   bmhd.flags		= BMHDF_CMAPOK;
    bmhd.bmh_Transparent	= 0;
    bmhd.bmh_XAspect	= DI.Resolution.x;
@@ -938,7 +931,7 @@ void SavePic(char *filename)
    PopChunk(iff);
 
    /* initialize a temporary BitMap */
-   if(bmap=AllocVec(sizeof(struct BitMap),MEMF_CLEAR))
+   if((bmap=AllocVec(sizeof(struct BitMap),MEMF_CLEAR)))
       {
       InitBitMap(bmap,depth,width,height);
       for(i=0;i<depth;i++)
@@ -980,7 +973,7 @@ void SavePic(char *filename)
       planes[iPlane] = (BYTE *)bmap->Planes[iPlane];
 
    /* Write out a BODY chunk header */
-   error=PushChunk(iff, NULL, ID_BODY, IFFSIZE_UNKNOWN);
+   error=PushChunk(iff, BNULL, ID_BODY, IFFSIZE_UNKNOWN);
    if(error) {printf("PushChunk BODY error = %ld\n",error);
              PopChunk(iff);
              for(i=0;i<depth;i++) FreeRaster(bmap->Planes[i],width,height);
@@ -1044,8 +1037,8 @@ size_req.ReqBorder=&border2;
 si1.LongInt=window1->Width-window1->BorderLeft-window1->BorderRight;
 si2.LongInt=window1->Height-window1->BorderTop-window1->BorderBottom;
 /* we want numerical gadgets to show actual size of canvas */
-sprintf(si1.Buffer,"%d",si1.LongInt);
-sprintf(si2.Buffer,"%d",si2.LongInt);
+sprintf(si1.Buffer,"%d",(int)si1.LongInt);
+sprintf(si2.Buffer,"%d",(int)si2.LongInt);
 
 Request(&size_req,window1);  /* show requester */
 }
