@@ -11,7 +11,7 @@
 
 #if	AMIGA
 #define	AMG_MAXBUF	1024
-static long terminal;
+static BPTR     terminal;
 static char	scrn_tmp[AMG_MAXBUF+1];
 static int	scrn_tmp_p = 0;
 #endif
@@ -126,7 +126,7 @@ int ttopen(void)
  * interpreter. On VMS it puts the terminal back in a reasonable state.
  * Another no-operation on CPM.
  */
-ttclose()
+void ttclose()
 {
 #if	AMIGA
 	amg_flush();
@@ -160,7 +160,7 @@ ttclose()
  * On CPM terminal I/O unbuffered, so we just write the byte out. Ditto on
  * MS-DOS (use the very very raw console output routine).
  */
-ttputc(c)
+void ttputc(c)
 #if	AMIGA
 	char c;
 #endif
@@ -193,7 +193,7 @@ ttputc(c)
 #endif
 }
 
-amg_flush()
+void amg_flush()
 {
 	if(scrn_tmp_p)
 		Write(terminal,scrn_tmp,scrn_tmp_p);
@@ -204,10 +204,11 @@ amg_flush()
  * Flush terminal buffer. Does real work where the terminal output is buffered
  * up. A no-operation on systems where byte at a time terminal I/O is done.
  */
-ttflush()
+int ttflush()
 {
 #if	AMIGA
 	amg_flush();
+	return 0;
 #endif
 #if	VMS
 	int	status;
@@ -224,11 +225,14 @@ ttflush()
 	return (status);
 #endif
 #if	CPM
+	return 0;
 #endif
 #if	MSDOS
+	return 0;
 #endif
 #if	V7
 	fflush(stdout);
+	return 0;
 #endif
 }
 
@@ -237,7 +241,7 @@ ttflush()
  * at all. More complex in VMS that almost anyplace else, which figures. Very
  * simple on CPM, because the system can do exactly what you want.
  */
-ttgetc()
+int ttgetc()
 {
 #if	AMIGA
 	char ch;

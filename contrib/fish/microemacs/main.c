@@ -14,6 +14,8 @@
  *      - Ported to Amiga.
  */
 #include        <stdio.h>
+#include        <stdlib.h>
+#include        <string.h>
 #include        "ed.h"
 
 #if     VMS
@@ -110,7 +112,6 @@ extern  int     killregion();           /* Kill region.                 */
 extern  int     copyregion();           /* Copy region to kill buffer.  */
 extern  int     spawncli();             /* Run CLI in a subjob.         */
 extern  int     spawn();                /* Run a command in a subjob.   */
-extern  int     quickexit();            /* low keystroke style exit.    */
 
 /*
  * Command table.
@@ -119,73 +120,73 @@ extern  int     quickexit();            /* low keystroke style exit.    */
  * control-X commands.
  */
 KEYTAB  keytab[] = {
-        CTRL|'@',               &setmark,
-        CTRL|'A',               &gotobol,
-        CTRL|'B',               &backchar,
-        CTRL|'C',               &spawncli,      /* Run CLI in subjob.   */
-        CTRL|'D',               &forwdel,
-        CTRL|'E',               &gotoeol,
-        CTRL|'F',               &forwchar,
-        CTRL|'G',               &ctrlg,
-        CTRL|'H',               &backdel,
-        CTRL|'I',               &tab,
-        CTRL|'J',               &indent,
-        CTRL|'K',               &kill,
-        CTRL|'L',               &refresh,
-        CTRL|'M',               &newline,
-        CTRL|'N',               &forwline,
-        CTRL|'O',               &openline,
-        CTRL|'P',               &backline,
-        CTRL|'Q',               &quote,         /* Often unreachable    */
-        CTRL|'R',               &backsearch,
-        CTRL|'S',               &forwsearch,    /* Often unreachable    */
-        CTRL|'T',               &twiddle,
-        CTRL|'V',               &forwpage,
-        CTRL|'W',               &killregion,
-        CTRL|'Y',               &yank,
-        CTRL|'Z',               &quickexit,     /* quick save and exit  */
-        CTLX|CTRL|'B',          &listbuffers,
-        CTLX|CTRL|'C',          &quit,          /* Hard quit.           */
-        CTLX|CTRL|'F',          &filename,
-        CTLX|CTRL|'L',          &lowerregion,
-        CTLX|CTRL|'O',          &deblank,
-        CTLX|CTRL|'N',          &mvdnwind,
-        CTLX|CTRL|'P',          &mvupwind,
-        CTLX|CTRL|'R',          &fileread,
-        CTLX|CTRL|'S',          &filesave,      /* Often unreachable    */
-        CTLX|CTRL|'U',          &upperregion,
-        CTLX|CTRL|'V',          &filevisit,
-        CTLX|CTRL|'W',          &filewrite,
-        CTLX|CTRL|'X',          &swapmark,
-        CTLX|CTRL|'Z',          &shrinkwind,
-        CTLX|'!',               &spawn,         /* Run 1 command.       */
-        CTLX|'=',               &showcpos,
-        CTLX|'(',               &ctlxlp,
-        CTLX|')',               &ctlxrp,
-        CTLX|'1',               &onlywind,
-        CTLX|'2',               &splitwind,
-        CTLX|'B',               &usebuffer,
-        CTLX|'E',               &ctlxe,
-        CTLX|'F',               &setfillcol,
-        CTLX|'K',               &killbuffer,
-        CTLX|'N',               &nextwind,
-        CTLX|'P',               &prevwind,
-        CTLX|'Z',               &enlargewind,
-        META|CTRL|'H',          &delbword,
-        META|'!',               &reposition,
-        META|'.',               &setmark,
-        META|'>',               &gotoeob,
-        META|'<',               &gotobob,
-        META|'B',               &backword,
-        META|'C',               &capword,
-        META|'D',               &delfword,
-        META|'F',               &forwword,
-        META|'L',               &lowerword,
-        META|'U',               &upperword,
-        META|'V',               &backpage,
-        META|'W',               &copyregion,
-        META|0x7F,              &delbword,
-        0x7F,                   &backdel
+        { CTRL|'@',               &setmark, },
+        { CTRL|'A',               &gotobol, },
+        { CTRL|'B',               &backchar, },
+        { CTRL|'C',               &spawncli,      /* Run CLI in subjob.   */ },
+        { CTRL|'D',               &forwdel, },
+        { CTRL|'E',               &gotoeol, },
+        { CTRL|'F',               &forwchar, },
+        { CTRL|'G',               &ctrlg, },
+        { CTRL|'H',               &backdel, },
+        { CTRL|'I',               &tab, },
+        { CTRL|'J',               &indent, },
+        { CTRL|'K',               &kill, },
+        { CTRL|'L',               &refresh, },
+        { CTRL|'M',               &newline, },
+        { CTRL|'N',               &forwline, },
+        { CTRL|'O',               &openline, },
+        { CTRL|'P',               &backline, },
+        { CTRL|'Q',               &quote,         /* Often unreachable    */ },
+        { CTRL|'R',               &backsearch, },
+        { CTRL|'S',               &forwsearch,    /* Often unreachable    */ },
+        { CTRL|'T',               &twiddle, },
+        { CTRL|'V',               &forwpage, },
+        { CTRL|'W',               &killregion, },
+        { CTRL|'Y',               &yank, },
+        { CTRL|'Z',               &quickexit,     /* quick save and exit  */ },
+        { CTLX|CTRL|'B',          &listbuffers, },
+        { CTLX|CTRL|'C',          &quit,          /* Hard quit.           */ },
+        { CTLX|CTRL|'F',          &filename, },
+        { CTLX|CTRL|'L',          &lowerregion, },
+        { CTLX|CTRL|'O',          &deblank, },
+        { CTLX|CTRL|'N',          &mvdnwind, },
+        { CTLX|CTRL|'P',          &mvupwind, },
+        { CTLX|CTRL|'R',          &fileread, },
+        { CTLX|CTRL|'S',          &filesave,      /* Often unreachable    */ },
+        { CTLX|CTRL|'U',          &upperregion, },
+        { CTLX|CTRL|'V',          &filevisit, },
+        { CTLX|CTRL|'W',          &filewrite, },
+        { CTLX|CTRL|'X',          &swapmark, },
+        { CTLX|CTRL|'Z',          &shrinkwind, },
+        { CTLX|'!',               &spawn,         /* Run 1 command.       */ },
+        { CTLX|'=',               &showcpos, },
+        { CTLX|'(',               &ctlxlp, },
+        { CTLX|')',               &ctlxrp, },
+        { CTLX|'1',               &onlywind, },
+        { CTLX|'2',               &splitwind, },
+        { CTLX|'B',               &usebuffer, },
+        { CTLX|'E',               &ctlxe, },
+        { CTLX|'F',               &setfillcol, },
+        { CTLX|'K',               &killbuffer, },
+        { CTLX|'N',               &nextwind, },
+        { CTLX|'P',               &prevwind, },
+        { CTLX|'Z',               &enlargewind, },
+        { META|CTRL|'H',          &delbword, },
+        { META|'!',               &reposition, },
+        { META|'.',               &setmark, },
+        { META|'>',               &gotoeob, },
+        { META|'<',               &gotobob, },
+        { META|'B',               &backword, },
+        { META|'C',               &capword, },
+        { META|'D',               &delfword, },
+        { META|'F',               &forwword, },
+        { META|'L',               &lowerword, },
+        { META|'U',               &upperword, },
+        { META|'V',               &backpage, },
+        { META|'W',               &copyregion, },
+        { META|0x7F,              &delbword, },
+        { 0x7F,                   &backdel },
 };
 
 #define NKEYTAB (sizeof(keytab)/sizeof(keytab[0]))
@@ -267,7 +268,8 @@ short lk_map[][2] = {
 
 
 
-main(argc, argv)
+int main(argc, argv)
+int argc;
 char    *argv[];
 {
         register int    c;
@@ -302,7 +304,7 @@ loop:
                 n = 4;                          /* with argument of 4 */
                 mflag = 0;                      /* that can be discarded. */
                 mlwrite("Arg: 4");
-                while ((c=getkey()) >='0' && c<='9' || c==(CTRL|'U') || c=='-'){
+                while (((c=getkey()) >='0' && c<='9') || c==(CTRL|'U') || c=='-'){
                         if (c == (CTRL|'U'))
                                 n = n*4;
                         /*
@@ -360,7 +362,7 @@ loop:
  * as an argument, because the main routine may have been told to read in a
  * file by default, and we want the buffer name to be right.
  */
-edinit(bname)
+void edinit(bname)
 char    bname[];
 {
         register BUFFER *bp;
@@ -394,7 +396,10 @@ char    bname[];
  * and arranges to move it to the "lastflag", so that the next command can
  * look at it. Return the status of command.
  */
-execute(c, f, n)
+int execute(c, f, n)
+	int c;
+	int f;
+	int n;
 {
         register KEYTAB *ktp;
         register int    status;
@@ -437,7 +442,7 @@ execute(c, f, n)
  * Do the standard keyboard preprocessing. Convert the keys to the internal
  * character set.
  */
-getkey()
+int getkey()
 {
         register int    c;
 
@@ -471,7 +476,7 @@ getkey()
  * Get a key.
  * Apply control modifications to the read key.
  */
-getctl()
+int getctl()
 {
         register int    c;
 
@@ -487,19 +492,23 @@ getctl()
  * Fancy quit command, as implemented by Norm. If the current buffer has
  * changed do a write current buffer and exit emacs, otherwise simply exit.
  */
-quickexit(f, n)
+int  quickexit(f, n)
+	int f;
+	int n;
 {
         if ((curbp->b_flag&BFCHG) != 0          /* Changed.             */
         && (curbp->b_flag&BFTEMP) == 0)         /* Real.                */
                 filesave(f, n);
-        quit(f, n);                             /* conditionally quit   */
+        return quit(f, n);                             /* conditionally quit   */
 }
 
 /*
  * Quit command. If an argument, always quit. Otherwise confirm if a buffer
  * has been changed and not written out. Normally bound to "C-X C-C".
  */
-quit(f, n)
+int quit(f, n)
+	int f;
+	int n;
 {
         register int    s;
 
@@ -517,7 +526,9 @@ quit(f, n)
  * Error if not at the top level in keyboard processing. Set up variables and
  * return.
  */
-ctlxlp(f, n)
+int ctlxlp(f, n)
+	int f;
+	int n;
 {
         if (kbdmip!=NULL || kbdmop!=NULL) {
                 mlwrite("Not now");
@@ -532,7 +543,9 @@ ctlxlp(f, n)
  * End keyboard macro. Check for the same limit conditions as the above
  * routine. Set up the variables and return to the caller.
  */
-ctlxrp(f, n)
+int ctlxrp(f, n)
+	int f;
+	int n;
 {
         if (kbdmip == NULL) {
                 mlwrite("Not now");
@@ -548,7 +561,9 @@ ctlxrp(f, n)
  * The command argument is the number of times to loop. Quit as soon as a
  * command gets an error. Return TRUE if all ok, else FALSE.
  */
-ctlxe(f, n)
+int ctlxe(f, n)
+	int f;
+	int n;
 {
         register int    c;
         register int    af;
@@ -583,7 +598,9 @@ ctlxe(f, n)
  * Beep the beeper. Kill off any keyboard macro, etc., that is in progress.
  * Sometimes called as a routine, to do general aborting of stuff.
  */
-ctrlg(f, n)
+int ctrlg(f, n)
+	int f;
+	int n;
 {
         (*term.t_beep)();
         if (kbdmip != NULL) {

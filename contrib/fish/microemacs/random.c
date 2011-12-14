@@ -11,7 +11,9 @@ int     tabsize;                        /* Tab size (0: use real tabs)  */
 /*
  * Set fill column to n. 
  */
-setfillcol(f, n)
+int setfillcol(f, n)
+	int f;
+	int n;
 {
         fillcol = n;
         return(TRUE);
@@ -24,17 +26,17 @@ setfillcol(f, n)
  * column, but the column that would be used on an infinite width display.
  * Normally this is bound to "C-X =".
  */
-showcpos(f, n)
+int showcpos(f, n)
+	int f;
+	int n;
 {
         register LINE   *clp;
         register long   nch;
         register int    cbo;
-        register long   nbc;
-        register int    cac;
+        register long   nbc = 0;
+        register int    cac = 0;
         register int    ratio;
         register int    col;
-        register int    i;
-        register int    c;
 
         clp = lforw(curbp->b_linep);            /* Grovel the data.     */
         cbo = 0;
@@ -68,7 +70,7 @@ showcpos(f, n)
 /*
  * Return current column.  Stop at first non-blank given TRUE argument.
  */
-getccol(bflg)
+int getccol(bflg)
 int bflg;
 {
         register int c, i, col;
@@ -93,7 +95,9 @@ int bflg;
  * work. This fixes up a very common typo with a single stroke. Normally bound
  * to "C-T". This always works within a line, so "WFEDIT" is good enough.
  */
-twiddle(f, n)
+int twiddle(f, n)
+	int f;
+	int n;
 {
         register LINE   *dotp;
         register int    doto;
@@ -121,7 +125,9 @@ twiddle(f, n)
  * inserted 0 times, for regularity. Bound to "M-Q" (for me) and "C-Q" (for
  * Rich, and only on terminals that don't need XON-XOFF).
  */
-quote(f, n)
+int quote(f, n)
+	int f;
+	int n;
 {
         register int    s;
         register int    c;
@@ -147,7 +153,9 @@ quote(f, n)
  * done in this slightly funny way because the tab (in ASCII) has been turned
  * into "C-I" (in 10 bit code) already. Bound to "C-I".
  */
-tab(f, n)
+int tab(f, n)
+	int f;
+	int n;
 {
         if (n < 0)
                 return (FALSE);
@@ -165,7 +173,9 @@ tab(f, n)
  * and then back up over them. Everything is done by the subcommand
  * procerssors. They even handle the looping. Normally this is bound to "C-O".
  */
-openline(f, n)
+int openline(f, n)
+	int f;
+	int n;
 {
         register int    i;
         register int    s;
@@ -190,9 +200,10 @@ openline(f, n)
  * has to be done. This would not be as critical if screen update were a lot
  * more efficient.
  */
-newline(f, n)
+int newline(f, n)
+	int f;
+	int n;
 {
-        int nicol;
         register LINE   *lp;
         register int    s;
 
@@ -219,7 +230,9 @@ newline(f, n)
  * the line. Normally this command is bound to "C-X C-O". Any argument is
  * ignored.
  */
-deblank(f, n)
+int deblank(f, n)
+	int f;
+	int n;
 {
         register LINE   *lp1;
         register LINE   *lp2;
@@ -236,7 +249,7 @@ deblank(f, n)
                 return (TRUE);
         curwp->w_dotp = lforw(lp1);
         curwp->w_doto = 0;
-        return (ldelete(nld));
+        return (ldelete(nld, TRUE));
 }
 
 /*
@@ -247,7 +260,9 @@ deblank(f, n)
  * of tabs and spaces. Return TRUE if all ok. Return FALSE if one of the
  * subcomands failed. Normally bound to "C-J".
  */
-indent(f, n)
+int indent(f, n)
+	int f;
+	int n;
 {
         register int    nicol;
         register int    c;
@@ -279,7 +294,9 @@ indent(f, n)
  * If any argument is present, it kills rather than deletes, to prevent loss
  * of text if typed with a big argument. Normally bound to "C-D".
  */
-forwdel(f, n)
+int forwdel(f, n)
+	int f;
+	int n;
 {
         if (n < 0)
                 return (backdel(f, -n));
@@ -297,7 +314,9 @@ forwdel(f, n)
  * forward, this actually does a kill if presented with an argument. Bound to
  * both "RUBOUT" and "C-H".
  */
-backdel(f, n)
+int backdel(f, n)
+	int f;
+	int n;
 {
         register int    s;
 
@@ -321,7 +340,9 @@ backdel(f, n)
  * number of newlines. If called with a negative argument it kills backwards
  * that number of newlines. Normally bound to "C-K".
  */
-kill(f, n)
+int kill(f, n)
+	int f;
+	int n;
 {
         register int    chunk;
         register LINE   *nextp;
@@ -360,11 +381,12 @@ kill(f, n)
  * happens when you type a carriage return also happens when a carriage return
  * is yanked back from the kill buffer.
  */
-yank(f, n)
+int yank(f, n)
+	int f;
+	int n;
 {
         register int    c;
         register int    i;
-        extern   int    kused;
 
         if (n < 0)
                 return (FALSE);

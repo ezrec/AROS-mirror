@@ -16,27 +16,27 @@
  *      NOTE:  This function may leaving trailing blanks.
  * Returns TRUE on success, FALSE on errors.
  */
-wrapword(n)
-int n;
+int wrapword()
 {
-        register int cnt, oldp;
-        oldp = (int)curwp->w_dotp;
+        register int cnt;
+        struct LINE *oldp;
+        oldp = curwp->w_dotp;
         cnt = -1;
         do {                            
                 cnt++;
-                if (! backchar(NULL, 1))
+                if (! backchar(0, 1))
                         return(FALSE);
         }
         while (! inword());
-        if (! backword(NULL, 1))
+        if (! backword(0, 1))
                 return(FALSE);
-        if (oldp == (int) (curwp->w_dotp && curwp->w_doto)) {
-                if (! backdel(NULL, 1))
+        if ((oldp == curwp->w_dotp) && curwp->w_doto) {
+                if (! backdel(0, 1))
                         return(FALSE);
-                if (! newline(NULL, 1))
+                if (! newline(0, 1))
                         return(FALSE);
         }
-        return(forwword(NULL, 1) && forwchar(NULL, cnt));
+        return(forwword(0, 1) && forwchar(0, cnt));
 }
                                 
 /*
@@ -44,7 +44,9 @@ int n;
  * performed by the "backchar" and "forwchar" routines. Error if you try to
  * move beyond the buffers.
  */
-backword(f, n)
+int backword(f, n)
+	int f;
+	int n;
 {
         if (n < 0)
                 return (forwword(f, -n));
@@ -67,7 +69,9 @@ backword(f, n)
  * Move the cursor forward by the specified number of words. All of the motion
  * is done by "forwchar". Error if you try and move beyond the buffer's end.
  */
-forwword(f, n)
+int forwword(f, n)
+	int f;
+	int n;
 {
         if (n < 0)
                 return (backword(f, -n));
@@ -89,7 +93,9 @@ forwword(f, n)
  * convert any characters to upper case. Error if you try and move beyond the
  * end of the buffer. Bound to "M-U".
  */
-upperword(f, n)
+int upperword(f, n)
+	int f;
+	int n;
 {
         register int    c;
 
@@ -119,7 +125,9 @@ upperword(f, n)
  * convert characters to lower case. Error if you try and move over the end of
  * the buffer. Bound to "M-L".
  */
-lowerword(f, n)
+int lowerword(f, n)
+	int f;
+	int n;
 {
         register int    c;
 
@@ -150,7 +158,9 @@ lowerword(f, n)
  * characters to lower case. Error if you try and move past the end of the
  * buffer. Bound to "M-C".
  */
-capword(f, n)
+int capword(f, n)
+	int f;
+	int n;
 {
         register int    c;
 
@@ -190,7 +200,9 @@ capword(f, n)
  * the right number of words. Put dot back where it was and issue the kill
  * command for the right number of characters. Bound to "M-D".
  */
-delfword(f, n)
+int delfword(f, n)
+	int f;
+	int n;
 {
         register int    size;
         register LINE   *dotp;
@@ -223,7 +235,9 @@ delfword(f, n)
  * counting the characters. When dot is finally moved to its resting place,
  * fire off the kill command. Bound to "M-Rubout" and to "M-Backspace".
  */
-delbword(f, n)
+int delbword(f, n)
+	int f;
+	int n;
 {
         register int    size;
 
@@ -253,7 +267,7 @@ delbword(f, n)
  * Return TRUE if the character at dot is a character that is considered to be
  * part of a word. The word character list is hard coded. Should be setable.
  */
-inword()
+int inword()
 {
         register int    c;
 

@@ -13,7 +13,9 @@
  * beginning of the current line.
  * Trivial.
  */
-gotobol(f, n)
+int gotobol(f, n)
+	int f;
+	int n;
 {
         curwp->w_doto  = 0;
         return (TRUE);
@@ -25,8 +27,9 @@ gotobol(f, n)
  * location. Error if you try and move out of the buffer. Set the flag if the
  * line pointer for dot changes.
  */
-backchar(f, n)
-register int    n;
+int backchar(f, n)
+	int f;
+	int n;
 {
         register LINE   *lp;
 
@@ -48,7 +51,9 @@ register int    n;
 /*
  * Move the cursor to the end of the current line. Trivial. No errors.
  */
-gotoeol(f, n)
+int gotoeol(f, n)
+	int f;
+	int n;
 {
         curwp->w_doto  = llength(curwp->w_dotp);
         return (TRUE);
@@ -60,8 +65,9 @@ gotoeol(f, n)
  * location, and move ".". Error if you try and move off the end of the
  * buffer. Set the flag if the line pointer for dot changes.
  */
-forwchar(f, n)
-register int    n;
+int forwchar(f, n)
+	int f;
+	int n;
 {
         if (n < 0)
                 return (backchar(f, -n));
@@ -83,7 +89,9 @@ register int    n;
  * considered to be hard motion; it really isn't if the original value of dot
  * is the same as the new value of dot. Normally bound to "M-<".
  */
-gotobob(f, n)
+int gotobob(f, n)
+	int f;
+	int n;
 {
         curwp->w_dotp  = lforw(curbp->b_linep);
         curwp->w_doto  = 0;
@@ -96,7 +104,9 @@ gotobob(f, n)
  * (ZJ). The standard screen code does most of the hard parts of update.
  * Bound to "M->".
  */
-gotoeob(f, n)
+int gotoeob(f, n)
+	int f;
+	int n;
 {
         curwp->w_dotp  = curbp->b_linep;
         curwp->w_doto  = 0;
@@ -110,7 +120,9 @@ gotoeob(f, n)
  * controls how the goal column is set. Bound to "C-N". No errors are
  * possible.
  */
-forwline(f, n)
+int forwline(f, n)
+	int f;
+	int n;
 {
         register LINE   *dlp;
 
@@ -134,7 +146,9 @@ forwline(f, n)
  * alternate. Figure out the new line and call "movedot" to perform the
  * motion. No errors are possible. Bound to "C-P".
  */
-backline(f, n)
+int backline(f, n)
+	int f;
+	int n;
 {
         register LINE   *dlp;
 
@@ -157,7 +171,7 @@ backline(f, n)
  * column, return the best choice for the offset. The offset is returned.
  * Used by "C-N" and "C-P".
  */
-getgoal(dlp)
+int getgoal(dlp)
 register LINE   *dlp;
 {
         register int    c;
@@ -189,8 +203,9 @@ register LINE   *dlp;
  * the overlap; this value is the default overlap value in ITS EMACS. Because
  * this zaps the top line in the display window, we have to do a hard update.
  */
-forwpage(f, n)
-register int    n;
+int forwpage(f, n)
+	int f;
+	int n;
 {
         register LINE   *lp;
 
@@ -220,8 +235,9 @@ register int    n;
  * EMACS manual. Bound to "M-V". We do a hard update for exactly the same
  * reason.
  */
-backpage(f, n)
-register int    n;
+int backpage(f, n)
+	int f;
+	int n;
 {
         register LINE   *lp;
 
@@ -249,7 +265,9 @@ register int    n;
  * Set the mark in the current window to the value of "." in the window. No
  * errors are possible. Bound to "M-.".
  */
-setmark(f, n)
+int setmark(f, n)
+	int f;
+	int n;
 {
         curwp->w_markp = curwp->w_dotp;
         curwp->w_marko = curwp->w_doto;
@@ -263,7 +281,9 @@ setmark(f, n)
  * that moves the mark about. The only possible error is "no mark". Bound to
  * "C-X C-X".
  */
-swapmark(f, n)
+int swapmark(f, n)
+	int f;
+	int n;
 {
         register LINE   *odotp;
         register int    odoto;

@@ -24,6 +24,7 @@ extern  int     ansieeol();
 extern  int     ansieeop();
 extern  int     ansibeep();
 extern  int     ansiopen();
+extern  int     ansiparm();
 
 /*
  * Standard terminal interface dispatch table. Most of the fields point into
@@ -43,7 +44,9 @@ TERM    term    = {
         &ansibeep
 };
 
-ansimove(row, col)
+int ansimove(row, col)
+int row;
+int col;
 {
         ttputc(ESC);
         ttputc('[');
@@ -51,29 +54,33 @@ ansimove(row, col)
         ttputc(';');
         ansiparm(col+1);
         ttputc('H');
+        return 0;
 }
 
-ansieeol()
+int ansieeol()
 {
         ttputc(ESC);
         ttputc('[');
         ttputc('K');
+        return 0;
 }
 
-ansieeop()
+int ansieeop()
 {
         ttputc(ESC);
         ttputc('[');
         ttputc('J');
+        return 0;
 }
 
-ansibeep()
+int ansibeep()
 {
         ttputc(BEL);
         ttflush();
+        return 0;
 }
 
-ansiparm(n)
+int ansiparm(n)
 register int    n;
 {
         register int    q;
@@ -82,11 +89,12 @@ register int    n;
         if (q != 0)
                 ansiparm(q);
         ttputc((n%10) + '0');
+        return 0;
 }
 
 #endif
 
-ansiopen()
+int ansiopen(void)
 {
 #if     V7
         register char *cp;
@@ -102,5 +110,6 @@ ansiopen()
         }
 #endif
         ttopen();
+        return 0;
 }
 

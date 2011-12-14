@@ -48,6 +48,8 @@
 #define META    0x0200                  /* Meta flag, or'ed in          */
 #define CTLX    0x0400                  /* ^X flag, or'ed in            */
 
+#undef  FALSE
+#undef  TRUE
 #define FALSE   0                       /* False, no, bad, etc.         */
 #define TRUE    1                       /* True, yes, good, etc.        */
 #define ABORT   2                       /* Death, ^G, abort, etc.       */
@@ -194,3 +196,63 @@ extern  LINE    *lalloc();              /* Allocate a line              */
 
 
 
+int  addline(const char *text);
+void amg_flush(void);
+int  anycb(void);
+int  backchar(int f, int n);
+int  backdel(int f, int n);
+int  backline(int f, int n);
+int  backpage(int f, int n);
+int  backword(int f, int n);
+int  bclear(BUFFER *bp);
+int  ctrlg(int f, int n);
+void edinit(char bname[]);
+int  eq(int a, int b);
+int  execute(int c, int f, int n);
+int  ffclose(void);
+int  ffgetline(char buf[], int nbuf);
+int  ffputline(char buf[], int nbuf);
+int  ffropen(const char *fn);
+int  ffwopen(const char *fn);
+int  forwchar(int f, int n);
+int  forwword(int f, int n);
+int  getccol(int f);
+int  getctl(void);
+int  getgoal(LINE *dlp);
+int  getkey(void);
+int  getregion(REGION *r);
+int  inword(void);
+void itoa(char buf[], int width, int num);
+void kdelete(void);
+int  kinsert(int c);
+int  kremove(int n);
+void lchange(int f);
+int  ldelete(int n, int f);
+int  ldelnewline(void);
+void lfree(LINE *lp);
+int  linsert(int n, int c);
+int  lnewline(void);
+int  makelist(void);
+void makename(char bname[], char fname[]);
+void mlerase(void);
+void mlputi(int i, int r);
+void mlputli(long l, int r);
+void mlputs(const char *s);
+int  mlreply(const char *prompt, char *buf, int nbuf);
+void mlwrite(const char *fmt, ...);
+int  mlyesno(const char *prompt);
+void modeline(WINDOW *wp);
+void movecursor(int row, int col);
+int  mvupwind(int f, int n);
+int  newline(int f, int n);
+int  quickexit(int f, int n);
+int  readin(char fname[]);
+int  readpattern(const char *p);
+int  shrinkwind(int f, int n);
+int  ttopen(void);
+void update(void);
+void updateline(int row, char vline[], char pline[]);
+void vtinit(void);
+void vttidy(void);
+int  wrapword(void);
+int  writeout(const char *s);

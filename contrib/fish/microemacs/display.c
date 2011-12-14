@@ -11,6 +11,9 @@
  */
 
 #include        <stdio.h>
+#include        <stdarg.h>
+#include        <string.h>
+#include        <stdlib.h>
 #include        "ed.h"
 
 #define WFDEBUG 0                       /* Window flag debug. */
@@ -80,7 +83,7 @@ void vtinit(void)
  * system prompt will be written in the line). Shut down the channel to the
  * terminal.
  */
-vttidy()
+void vttidy()
 {
     movecursor(term.t_nrow, 0);
     (*term.t_eeol)();
@@ -92,7 +95,9 @@ vttidy()
  * screen. There is no checking for nonsense values; this might be a good
  * idea during the early stages.
  */
-vtmove(row, col)
+void vtmove(row, col)
+	int row;
+	int col;
 {
     vtrow = row;
     vtcol = col;
@@ -104,7 +109,7 @@ vtmove(row, col)
  * only puts printing characters into the virtual terminal buffers. Only
  * column overflow is checked.
  */
-vtputc(c)
+void vtputc(c)
     int c;
 {
     register VIDEO      *vp;
@@ -134,7 +139,7 @@ vtputc(c)
  * Erase from the end of the software cursor to the end of the line on which
  * the software cursor is located.
  */
-vteeol()
+void vteeol()
 {
     register VIDEO      *vp;
 
@@ -278,7 +283,7 @@ out:
 #endif
 
 
-#warning: added the next line, otherwise there is garbage in the status line
+// NOTE: added the next line, otherwise there is garbage in the status line
         modeline(wp);
 
 
@@ -363,7 +368,8 @@ out:
  * row and column variables. It does try an exploit erase to end of line. The
  * RAINBOW version of this routine uses fast video.
  */
-updateline(row, vline, pline)
+void updateline(row, vline, pline)
+    int row;
     char vline[];
     char pline[];
 {
@@ -457,7 +463,7 @@ updateline(row, vline, pline)
  * change the modeline format by hacking at this routine. Called by "update"
  * any time there is a dirty window.
  */
-modeline(wp)
+void modeline(wp)
     WINDOW *wp;
 {
     register char *cp;
@@ -540,7 +546,9 @@ modeline(wp)
  * and column "col". The row and column arguments are origin 0. Optimize out
  * random calls. Update "ttrow" and "ttcol".
  */
-movecursor(row, col)
+void movecursor(row, col)
+	int row;
+	int col;
     {
     if (row!=ttrow || col!=ttcol)
         {
@@ -555,7 +563,7 @@ movecursor(row, col)
  * is not considered to be part of the virtual screen. It always works
  * immediately; the terminal buffer is flushed via a call to the flusher.
  */
-mlerase()
+void mlerase()
     {
     movecursor(term.t_nrow, 0);
     (*term.t_eeol)();
@@ -568,8 +576,8 @@ mlerase()
  * ABORT. The ABORT status is returned if the user bumps out of the question
  * with a ^G. Used any time a confirmation is required.
  */
-mlyesno(prompt)
-    char *prompt;
+int mlyesno(prompt)
+    const char *prompt;
     {
     register int s;
     char buf[64];
@@ -601,9 +609,10 @@ mlyesno(prompt)
  * lets macros run at full speed. The reply is always terminated by a carriage
  * return. Handle erase, kill, and abort keys.
  */
-mlreply(prompt, buf, nbuf)
-    char *prompt;
+int mlreply(prompt, buf, nbuf)
+    const char *prompt;
     char *buf;
+    int nbuf;
     {
     register int cpos;
     register int i;
@@ -733,14 +742,13 @@ mlreply(prompt, buf, nbuf)
  * stack grows down; this assumption is made by the "++" in the argument scan
  * loop. Set the "message line" flag TRUE.
  */
-mlwrite(fmt, arg)
-    char *fmt;
+void mlwrite(const char *fmt, ...)
     {
     register int c;
-    register char *ap;
+    va_list ap;
 
     movecursor(term.t_nrow, 0);
-    ap = (char *) &arg;
+    va_start(ap, fmt);
     while ((c = *fmt++) != 0) {
         if (c != '%') {
             (*term.t_putchar)(c);
@@ -751,28 +759,23 @@ mlwrite(fmt, arg)
             c = *fmt++;
             switch (c) {
                 case 'd':
-                    mlputi(*(int *)ap, 10);
-                    ap += sizeof(int);
+                    mlputi(va_arg(ap, int), 10);
                     break;
 
                 case 'o':
-                    mlputi(*(int *)ap,  8);
-                    ap += sizeof(int);
+                    mlputi(va_arg(ap, int),  8);
                     break;
 
                 case 'x':
-                    mlputi(*(int *)ap, 16);
-                    ap += sizeof(int);
+                    mlputi(va_arg(ap, int), 16);
                     break;
 
                 case 'D':
-                    mlputli(*(long *)ap, 10);
-                    ap += sizeof(long);
+                    mlputli(va_arg(ap, long), 10);
                     break;
 
                 case 's':
-                    mlputs(*(char **)ap);
-                    ap += sizeof(char *);
+                    mlputs(va_arg(ap, const char *));
                     break;
 
                 default:
@@ -784,6 +787,7 @@ mlwrite(fmt, arg)
     (*term.t_eeol)();
     (*term.t_flush)();
     mpresf = TRUE;
+    va_end(ap);
     }
 
 /*
@@ -791,8 +795,8 @@ mlwrite(fmt, arg)
  * the characters in the string all have width "1"; if this is not the case
  * things will get screwed up a little.
  */
-mlputs(s)
-    char *s;
+void mlputs(s)
+    const char *s;
     {
     register int c;
 
@@ -807,7 +811,9 @@ mlputs(s)
  * Write out an integer, in the specified radix. Update the physical cursor
  * position. This will not handle any negative numbers; maybe it should.
  */
-mlputi(i, r)
+void mlputi(i, r)
+	int i;
+	int r;
     {
     register int q;
     static char hexdigits[] = "0123456789ABCDEF";
@@ -830,8 +836,9 @@ mlputi(i, r)
 /*
  * do the same except as a long integer.
  */
-mlputli(l, r)
+void mlputli(l, r)
     long l;
+    int r;
     {
     register long q;
 
@@ -852,7 +859,7 @@ mlputli(l, r)
 
 #if RAINBOW
 
-putline(row, col, buf)
+void putline(row, col, buf)
     int row, col;
     char buf[];
     {

@@ -6,6 +6,8 @@
  * for the display system.
  */
 #include        <stdio.h>
+#include        <string.h>
+#include        <stdlib.h>
 #include        "ed.h"
 
 /*
@@ -14,7 +16,9 @@
  * if the use count is 0. Otherwise, they come
  * from some other window.
  */
-usebuffer(f, n)
+int usebuffer(f, n)
+	int f;
+	int n;
 {
         register BUFFER *bp;
         register WINDOW *wp;
@@ -64,7 +68,9 @@ usebuffer(f, n)
  * if the buffer has been changed). Then free the header
  * line and the buffer header. Bound to "C-X K".
  */
-killbuffer(f, n)
+int killbuffer(f, n)
+	int f;
+	int n;
 {
         register BUFFER *bp;
         register BUFFER *bp1;
@@ -108,7 +114,9 @@ killbuffer(f, n)
  * the windows that are displaying the
  * list. Bound to "C-X C-B".
  */
-listbuffers(f, n)
+int listbuffers(f, n)
+	int f;
+	int n;
 {
         register WINDOW *wp;
         register BUFFER *bp;
@@ -152,7 +160,7 @@ listbuffers(f, n)
  * if everything works. Return FALSE if there
  * is an error (if there is no memory).
  */
-makelist()
+int makelist()
 {
         register char   *cp1;
         register char   *cp2;
@@ -161,7 +169,6 @@ makelist()
         register LINE   *lp;
         register int    nbytes;
         register int    s;
-        register int    type;
         char            b[6+1];
         char            line[128];
 
@@ -215,7 +222,7 @@ makelist()
         return (TRUE);                          /* All done             */
 }
 
-itoa(buf, width, num)
+void itoa(buf, width, num)
 register char   buf[];
 register int    width;
 register int    num;
@@ -237,8 +244,8 @@ register int    num;
  * on the end. Return TRUE if it worked and
  * FALSE if you ran out of room.
  */
-addline(text)
-char    *text;
+int addline(text)
+const char    *text;
 {
         register LINE   *lp;
         register int    i;
@@ -268,7 +275,7 @@ char    *text;
  * Return FALSE if no buffers
  * have been changed.
  */
-anycb()
+int anycb()
 {
         register BUFFER *bp;
 
@@ -292,6 +299,8 @@ anycb()
 BUFFER  *
 bfind(bname, cflag, bflag)
 register char   *bname;
+	int cflag;
+	int bflag;
 {
         register BUFFER *bp;
         register LINE   *lp;
@@ -341,7 +350,7 @@ register char   *bname;
  * that are required. Return TRUE if everything
  * looks good.
  */
-bclear(bp)
+int bclear(bp)
 register BUFFER *bp;
 {
         register LINE   *lp;

@@ -40,7 +40,9 @@ extern  short   iochan;                         /* In "termio.c"        */
  * repaint. Bound to "C-C". The message at the start in VMS puts out a newline.
  * Under some (unknown) condition, you don't get one free when DCL starts up.
  */
-spawncli(f, n)
+int spawncli(f, n)
+	int f;
+	int n;
 {
 #if     AMIGA
         BPTR newcli;
@@ -95,7 +97,9 @@ spawncli(f, n)
  * character to be typed, then mark the screen as garbage so a full repaint is
  * done. Bound to "C-X !".
  */
-spawn(f, n)
+int spawn(f, n)
+	int f;
+	int n;
 {
         register int    s;
         char            line[NLINE];

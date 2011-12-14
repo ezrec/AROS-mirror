@@ -11,6 +11,8 @@
  */
 
 #include        <stdio.h>
+#include        <string.h>
+#include        <stdlib.h>
 #include        "ed.h"
 
 /*
@@ -18,7 +20,9 @@
  * ".", for the string. If found, reset the "." to be just after the match
  * string, and [perhaps] repaint the display. Bound to "C-S".
  */
-forwsearch(f, n)
+int forwsearch(f, n)
+	int f;
+	int n;
     {
     register LINE *clp;
     register int cbo;
@@ -87,7 +91,9 @@ fail:;
  * pointing at the first character of the pattern [the last character that was
  j matched]. Bound to "C-R".
  */
-backsearch(f, n)
+int backsearch(f, n)
+	int f;
+	int n;
     {
     register LINE *clp;
     register int cbo;
@@ -166,7 +172,7 @@ fail:;
  * Compare two characters. The "bc" comes from the buffer. It has it's case
  * folded out. The "pc" is from the pattern.
  */
-eq(bc, pc)
+int eq(bc, pc)
     int bc;
     int pc;
     {
@@ -188,11 +194,11 @@ eq(bc, pc)
  * and there is no old pattern, it is an error. Display the old pattern, in the
  * style of Jeff Lomicka. There is some do-it-yourself control expansion.
  */
-readpattern(prompt)
-    char *prompt;
+int readpattern(prompt)
+    const char *prompt;
     {
     register char *cp1;
-    register char *cp2;
+    register const char *cp2;
     register int c;
     register int s;
     char tpat[NPAT+20];

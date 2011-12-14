@@ -12,6 +12,7 @@
  */
 
 #include        <stdio.h>
+#include        <stdlib.h>
 #include        "ed.h"
 
 #define NBLOCK  16                      /* Line block chunk size        */
@@ -52,7 +53,7 @@ register int    used;
  * might be in. Release the memory. The buffers are updated too; the magic
  * conditions described in the above comments don't hold here.
  */
-lfree(lp)
+void lfree(lp)
 register LINE   *lp;
 {
         register BUFFER *bp;
@@ -98,7 +99,7 @@ register LINE   *lp;
  * displayed in more than 1 window we change EDIT t HARD. Set MODE if the
  * mode line needs to be updated (the "*" has to be set).
  */
-lchange(flag)
+void lchange(flag)
 register int    flag;
 {
         register WINDOW *wp;
@@ -126,7 +127,9 @@ register int    flag;
  * greater than the place where you did the insert. Return TRUE if all is
  * well, and FALSE on errors.
  */
-linsert(n, c)
+int linsert(n, c)
+	int n;
+	int c;
 {
         register char   *cp1;
         register char   *cp2;
@@ -210,7 +213,7 @@ linsert(n, c)
  * update of dot and mark is a bit easier then in the above case, because the
  * split forces more updating.
  */
-lnewline()
+int lnewline()
 {
         register char   *cp1;
         register char   *cp2;
@@ -263,7 +266,9 @@ lnewline()
  * deleted, and FALSE if they were not (because dot ran into the end of the
  * buffer. The "kflag" is TRUE if the text should be put in the kill buffer.
  */
-ldelete(n, kflag)
+int ldelete(n,kflag)
+	int n;
+	int kflag;
 {
         register char   *cp1;
         register char   *cp2;
@@ -330,7 +335,7 @@ ldelete(n, kflag)
  * about in memory. Return FALSE on error and TRUE if all looks ok. Called by
  * "ldelete" only.
  */
-ldelnewline()
+int ldelnewline()
 {
         register char   *cp1;
         register char   *cp2;
@@ -412,7 +417,7 @@ ldelnewline()
  * new kill context is being created. The kill buffer array is released, just
  * in case the buffer has grown to immense size. No errors.
  */
-kdelete()
+void kdelete()
 {
         if (kbufp != NULL) {
                 free((char *) kbufp);
@@ -428,7 +433,8 @@ kdelete()
  * put something in the kill buffer you are going to put more stuff there too
  * later. Return TRUE if all is well, and FALSE on errors.
  */
-kinsert(c)
+int kinsert(c)
+	int c;
 {
         register char   *nbufp;
         register int    i;
@@ -452,7 +458,8 @@ kinsert(c)
  * "n" is off the end, it returns "-1". This lets the caller just scan along
  * until it gets a "-1" back.
  */
-kremove(n)
+int kremove(n)
+	int n;
 {
         if (n >= kused)
                 return (-1);

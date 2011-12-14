@@ -6,6 +6,8 @@
  * in "fileio.c".
  */
 #include        <stdio.h>
+#include        <string.h>
+#include        <stdlib.h>
 #include        "ed.h"
 
 /*
@@ -15,7 +17,9 @@
  * "read a file into the current buffer" code.
  * Bound to "C-X C-R".
  */
-fileread(f, n)
+int fileread(f, n)
+	int f;
+	int n;
 {
         register int    s;
         char            fname[NFILEN];
@@ -34,7 +38,9 @@ fileread(f, n)
  * text, and switch to the new buffer.
  * Bound to C-X C-V.
  */
-filevisit(f, n)
+int filevisit(f, n)
+	int f;
+	int n;
 {
         register BUFFER *bp;
         register WINDOW *wp;
@@ -118,7 +124,7 @@ filevisit(f, n)
  * to read in a file specified on the command line as
  * an argument.
  */
-readin(fname)
+int readin(fname)
 char    fname[];
 {
         register LINE   *lp1;
@@ -189,7 +195,7 @@ out:
  * I suppose that this information could be put in
  * a better place than a line of code.
  */
-makename(bname, fname)
+void makename(bname, fname)
 char    bname[];
 char    fname[];
 {
@@ -235,7 +241,9 @@ char    fname[];
  * is more compatable with Gosling EMACS than
  * with ITS EMACS. Bound to "C-X C-W".
  */
-filewrite(f, n)
+int filewrite(f, n)
+	int f;
+	int n;
 {
         register WINDOW *wp;
         register int    s;
@@ -264,7 +272,9 @@ filewrite(f, n)
  * name for the buffer. Bound to "C-X C-S". May
  * get called by "C-Z".
  */
-filesave(f, n)
+int filesave(f, n)
+	int f;
+	int n;
 {
         register WINDOW *wp;
         register int    s;
@@ -295,8 +305,8 @@ filesave(f, n)
  * a macro for this. Most of the grief is error
  * checking of some sort.
  */
-writeout(fn)
-char    *fn;
+int writeout(fn)
+const char    *fn;
 {
         register int    s;
         register LINE   *lp;
@@ -336,7 +346,9 @@ char    *fn;
  * as needing an update. You can type a blank line at the
  * prompt if you wish.
  */
-filename(f, n)
+int filename(f, n)
+	int f;
+	int n;
 {
         register WINDOW *wp;
         register int    s;

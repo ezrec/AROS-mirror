@@ -120,6 +120,7 @@ char    *str;
 
 putnpad(str, n)
 char    *str;
+int n;
 {
         tputs(str, n, ttputc);
 }
@@ -129,5 +130,5 @@ char    *str;
 int dummy_to_make_compiler_happy;
 #endif
 */
-#endif TERMCAP
+#endif /* TERMCAP */
 
