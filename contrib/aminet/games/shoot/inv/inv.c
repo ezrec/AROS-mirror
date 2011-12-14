@@ -45,7 +45,7 @@ struct GelsInfo *setupGelSys(struct RastPort *rPort, BYTE reserved);
 VOID cleanupGelSys(struct GelsInfo *gInfo, struct RastPort *rPort);
 VOID do_bobs(struct Window *win);
 VOID freeVSprite(struct VSprite *vsprite);
-VOID main();
+int  main(int argc, char **argv);
 
 
 
@@ -467,7 +467,7 @@ struct GelsInfo *my_ginfo;
 struct Window	   *win;
 struct Bob  *enemy_bobs[ MAXBOBS ];
 struct Bob *ship_bob;
-VOID main()
+int main(int argc, char **argv)
 {
 
 
