@@ -97,7 +97,7 @@ if(obj)
 	struct Data *data=(struct Data *)INST_DATA(cl,obj);
 	data->num=GetTagData(MUIA_UserData,0,msg->ops_AttrList);
 	}
-return(ULONG)obj;
+return(IPTR)obj;
 }
 
 static ULONG mFieldAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)

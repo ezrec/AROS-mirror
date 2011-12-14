@@ -772,7 +772,7 @@ SearchDepth=msg->depth;
 static void mChessTime(struct IClass *cl,Object *obj,struct MUIP_Chess_Time *msg)
 {
 struct Data *data=(struct Data *)INST_DATA(cl,obj);
-ULONG val;
+IPTR val;
 char text[50];
 switch(msg->flag)
 	{
