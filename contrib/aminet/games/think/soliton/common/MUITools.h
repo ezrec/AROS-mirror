@@ -38,10 +38,10 @@
   MUI-help functions
 ****************************************************************************************/
 
-#define getatt(obj,attr,store) GetAttr(attr,obj,(ULONG *)store)
+#define getatt(obj,attr,store) GetAttr(attr,obj,store)
 #define setatt(obj,attr,value) SetAttrs(obj,attr,value,TAG_DONE)
 
-LONG xget(Object* obj, ULONG attribute);
+IPTR xget(Object* obj, ULONG attribute);
 void ErrorReq(int messagenum);
 
 #if !defined(__MORPHOS__)

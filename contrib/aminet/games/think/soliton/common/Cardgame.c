@@ -1906,7 +1906,7 @@ static IPTR _AskMinMax(struct IClass *cl, Object *obj, struct MUIP_AskMinMax *ms
 static IPTR _New(struct IClass *cl, Object *obj, struct opSet* msg)
 {
   struct Cardgame_Data *data;
-  LONG tmp;
+  SIPTR tmp;
 
   obj = (Object*)DoSuperNew(cl, obj,
                             MUIA_FillArea, FALSE,
@@ -2137,7 +2137,7 @@ static IPTR _Set(struct IClass* cl, Object* obj, struct opSet* msg)
 static IPTR _Get(struct IClass* cl, Object* obj, struct opGet* msg)
 {
   struct Cardgame_Data* data = (struct Cardgame_Data*)INST_DATA(cl, obj);
-  ULONG *store = msg->opg_Storage;
+  IPTR *store = msg->opg_Storage;
 
   switch(msg->opg_AttrID)
   {

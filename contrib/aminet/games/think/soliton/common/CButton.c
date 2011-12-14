@@ -185,7 +185,7 @@ static IPTR CButton_New(struct IClass* cl, Object* obj, struct opSet* msg)
   DoMethod(obj, MUIM_Notify, MUIA_Pressed, TRUE,
            obj, 1, MUIM_CButton_Active);
 
-  return (ULONG)obj;
+  return (IPTR)obj;
 }
 
 static IPTR CButton_Dispose(struct IClass* cl, Object* obj, Msg msg)

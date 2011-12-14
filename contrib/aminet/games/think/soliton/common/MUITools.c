@@ -41,9 +41,9 @@ long GetControlChar(char* label)
   MUI-Hilfstools
 ****************************************************************************************/
 
-LONG xget(Object* obj, ULONG attribute)
+IPTR xget(Object* obj, ULONG attribute)
 { 
-  LONG x = 0;
+  IPTR x = 0;
   getatt(obj, attribute, &x);
   return x;
 }

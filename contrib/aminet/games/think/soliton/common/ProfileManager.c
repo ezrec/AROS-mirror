@@ -106,14 +106,14 @@ static void submitCardgame(struct ProfileManager_Data *data)
   Open / Close / LoadProfile
 ****************************************************************************************/
 
-static ULONG ProfileManager_Open(/*struct IClass* cl,*/ Object* obj/*, Msg msg*/)
+static IPTR ProfileManager_Open(/*struct IClass* cl,*/ Object* obj/*, Msg msg*/)
 {
   setatt(_app(obj), MUIA_Application_Sleep, TRUE);
   setatt(obj, MUIA_Window_Open, TRUE);
   return 0;
 }
 
-static ULONG ProfileManager_Close(struct IClass* cl, Object* obj/*, Msg msg*/)
+static IPTR ProfileManager_Close(struct IClass* cl, Object* obj/*, Msg msg*/)
 {
   struct ProfileManager_Data* data = (struct ProfileManager_Data *) INST_DATA(cl, obj);
   setatt(obj, MUIA_Window_Open, FALSE);
@@ -141,7 +141,7 @@ BOOL getlin(BPTR f, char * buf, ULONG size)
   return TRUE;
 }
 
-static ULONG ProfileManager_LoadProfiles(struct IClass* cl, Object* obj/*, Msg msg*/)
+static IPTR ProfileManager_LoadProfiles(struct IClass* cl, Object* obj/*, Msg msg*/)
 {
   struct ProfileManager_Data *data = (struct ProfileManager_Data *) INST_DATA(cl, obj);
   char id[300];
@@ -257,7 +257,7 @@ MakeStaticHook(DestructHook, DestructFunc);
   Add / Rem / Redefine / Select
 ****************************************************************************************/
 
-static ULONG ProfileManager_Add(struct IClass* cl, Object* obj/*, Msg msg*/)
+static IPTR ProfileManager_Add(struct IClass* cl, Object* obj/*, Msg msg*/)
 {
   struct ProfileManager_Data* data = (struct ProfileManager_Data *) INST_DATA(cl, obj);
   struct Profil *p;
@@ -275,14 +275,14 @@ static ULONG ProfileManager_Add(struct IClass* cl, Object* obj/*, Msg msg*/)
   return FALSE;
 }
 
-static ULONG ProfileManager_Rem(struct IClass* cl, Object* obj/*, Msg msg*/)
+static IPTR ProfileManager_Rem(struct IClass* cl, Object* obj/*, Msg msg*/)
 {
   struct ProfileManager_Data* data = (struct ProfileManager_Data *) INST_DATA(cl, obj);
   DoMethod(data->LV_Profiles, MUIM_List_Remove, MUIV_List_Remove_Active);
   return 0;
 }
 
-static ULONG ProfileManager_Redefine(struct IClass* cl, Object* obj/*, Msg msg*/)
+static IPTR ProfileManager_Redefine(struct IClass* cl, Object* obj/*, Msg msg*/)
 {
   struct ProfileManager_Data* data = (struct ProfileManager_Data *) INST_DATA(cl, obj);
 
@@ -301,7 +301,7 @@ static ULONG ProfileManager_Redefine(struct IClass* cl, Object* obj/*, Msg msg*/
   return 0;
 }
 
-static ULONG ProfileManager_Select(struct IClass* cl, Object* obj/*, Msg msg*/)
+static IPTR ProfileManager_Select(struct IClass* cl, Object* obj/*, Msg msg*/)
 {
   struct ProfileManager_Data* data = (struct ProfileManager_Data *) INST_DATA(cl, obj);
   struct Profil* p = NULL;
@@ -332,7 +332,7 @@ static ULONG ProfileManager_Select(struct IClass* cl, Object* obj/*, Msg msg*/)
   Set / Get
 ****************************************************************************************/
 
-static ULONG ProfileManager_Set(struct IClass* cl, Object* obj, struct opSet* msg)
+static IPTR ProfileManager_Set(struct IClass* cl, Object* obj, struct opSet* msg)
 {
   struct ProfileManager_Data* data = (struct ProfileManager_Data *) INST_DATA(cl, obj);
   struct TagItem *tag;
@@ -356,7 +356,7 @@ static ULONG ProfileManager_Set(struct IClass* cl, Object* obj, struct opSet* ms
   New / Dispose
 ****************************************************************************************/
 
-static ULONG ProfileManager_New(struct IClass* cl, Object* obj, struct opSet* msg)
+static IPTR ProfileManager_New(struct IClass* cl, Object* obj, struct opSet* msg)
 {
   Object *BT_Close, *BT_Add, *BT_Rem;
   struct ProfileManager_Data tmp;
@@ -457,13 +457,13 @@ static ULONG ProfileManager_New(struct IClass* cl, Object* obj, struct opSet* ms
     data->menusize = 0;
     data->cardgame = NULL;
 
-    return (ULONG)obj;
+    return (IPTR)obj;
   }
   return 0;
 }
 
 /* Dispose and Save */
-static ULONG ProfileManager_Dispose(struct IClass* cl, Object* obj/*, Msg msg*/)
+static IPTR ProfileManager_Dispose(struct IClass* cl, Object* obj/*, Msg msg*/)
 {
   struct ProfileManager_Data* data = (struct ProfileManager_Data *) INST_DATA(cl, obj);
   BPTR f;

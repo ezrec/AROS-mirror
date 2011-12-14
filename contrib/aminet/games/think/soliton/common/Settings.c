@@ -54,12 +54,12 @@ struct Settings_Data
   Close
 ****************************************************************************************/
 
-static ULONG Settings_Close(/*struct IClass* cl,*/ Object* obj, struct MUIP_Settings_Close* msg)
+static IPTR Settings_Close(/*struct IClass* cl,*/ Object* obj, struct MUIP_Settings_Close* msg)
 {
   Object* app;
 
   setatt(obj, MUIA_Window_Open, FALSE);
-  getatt(obj, MUIA_ApplicationObject, &app);
+  getatt(obj, MUIA_ApplicationObject, (IPTR *)&app);
   switch (msg->typ) 
   {
     case 0: 
@@ -85,7 +85,7 @@ static ULONG Settings_Close(/*struct IClass* cl,*/ Object* obj, struct MUIP_Sett
   Get
 ****************************************************************************************/
 
-static ULONG Settings_Get(struct IClass* cl, Object* obj, struct opGet* msg)
+static IPTR Settings_Get(struct IClass* cl, Object* obj, struct opGet* msg)
 {
   struct Settings *s;
   struct Settings_Data* data = (struct Settings_Data *) INST_DATA(cl, obj);
@@ -108,7 +108,7 @@ static ULONG Settings_Get(struct IClass* cl, Object* obj, struct opGet* msg)
       s->stack      =  (ULONG)xget(data->SL_Stack     , MUIA_Numeric_Value);
       s->equalcolor =   (BOOL)xget(data->CH_EqualColor, MUIA_Selected     );
 
-      *(msg->opg_Storage) = (ULONG)s;
+      *(msg->opg_Storage) = (IPTR)s;
       return TRUE;
   }
   return DoSuperMethodA(cl, obj, (Msg)msg);
@@ -118,7 +118,7 @@ static ULONG Settings_Get(struct IClass* cl, Object* obj, struct opGet* msg)
   New
 ****************************************************************************************/
 
-static ULONG Settings_New(struct IClass* cl, Object* obj, struct opSet* msg)
+static IPTR Settings_New(struct IClass* cl, Object* obj, struct opSet* msg)
 {
   Object *BT_Save, *BT_Use, *BT_Cancel;
   struct Settings_Data tmp;
@@ -251,7 +251,7 @@ static ULONG Settings_New(struct IClass* cl, Object* obj, struct opSet* msg)
 
     *((struct Settings_Data*)INST_DATA(cl, obj)) = tmp;
 
-    return (ULONG)obj;
+    return (IPTR)obj;
   }
   return 0;
 }
@@ -334,9 +334,9 @@ DISPATCHER(NoneSlider_Dispatcher)
     }
     else
     {
-      sprintf(data->buf, "%3ld", m->value);
+      sprintf(data->buf, "%3ld", (long)m->value);
     }
-    return (ULONG)data->buf;
+    return (IPTR)data->buf;
   }
   return DoSuperMethodA(cl,obj,msg);
 }

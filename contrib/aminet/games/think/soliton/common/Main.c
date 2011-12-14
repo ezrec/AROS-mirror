@@ -186,7 +186,7 @@ static void ExitAll(void)
   main
 ****************************************************************************************/
 
-void main(void)
+int main(int argc, char **argv)
 {
   if(InitAll())
   {
@@ -209,4 +209,6 @@ void main(void)
       ErrorReq(MSG_CREATE_APPLICATION);
   }
   ExitAll();
+
+  return 0;
 }

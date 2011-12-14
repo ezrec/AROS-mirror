@@ -138,7 +138,7 @@ static IPTR About_New(struct IClass* cl, Object* obj, struct opSet* msg)
     DoMethod(BT_Ok , MUIM_Notify, MUIA_Pressed            , FALSE, obj, 3, MUIM_Set, MUIA_Window_Open, FALSE);
     DoMethod(BT_MUI, MUIM_Notify, MUIA_Pressed            , FALSE, obj, 1, MUIM_About_AboutMUI);
 
-    return (ULONG)obj;
+    return (IPTR)obj;
   }
   return 0;
 }

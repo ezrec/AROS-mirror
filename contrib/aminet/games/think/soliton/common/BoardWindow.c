@@ -148,7 +148,7 @@ enum {
   Quit
 ****************************************************************************************/
 
-static ULONG _Quit(/*struct IClass* cl,*/ Object* obj/*, Msg msg*/)
+static IPTR _Quit(/*struct IClass* cl,*/ Object* obj/*, Msg msg*/)
 {
   Object* app = (Object *) xget(obj, MUIA_ApplicationObject);
   struct Settings* s = (struct Settings *) xget(app, MUIA_Soliton_Settings);
@@ -166,7 +166,7 @@ static ULONG _Quit(/*struct IClass* cl,*/ Object* obj/*, Msg msg*/)
   NewSettings
 ****************************************************************************************/
 
-static ULONG _NewSettings(struct IClass* cl, Object* obj/*, Msg msg*/)
+static IPTR _NewSettings(struct IClass* cl, Object* obj/*, Msg msg*/)
 {
   struct BoardWindow_Data* data = (struct BoardWindow_Data *) INST_DATA(cl, obj);
   Object* app = (Object *) xget(obj, MUIA_ApplicationObject);
@@ -202,7 +202,7 @@ static ULONG _NewSettings(struct IClass* cl, Object* obj/*, Msg msg*/)
   NewGame
 ****************************************************************************************/
 
-static ULONG _NewGame(struct IClass* cl, Object* obj/*, Msg msg*/)
+static IPTR _NewGame(struct IClass* cl, Object* obj/*, Msg msg*/)
 {
   struct BoardWindow_Data* data = (struct BoardWindow_Data *) INST_DATA(cl, obj);
   struct Settings* s = (struct Settings *) xget(_app(obj), MUIA_Soliton_Settings);
@@ -249,7 +249,7 @@ static struct NewMenu Menu[] = {
   { NM_END ,  (STRPTR)NULL                     , 0, 0, 0, (APTR)0            },
 };
 
-static ULONG _New(struct IClass* cl, Object* obj, struct opSet * msg)
+static IPTR _New(struct IClass* cl, Object* obj, struct opSet * msg)
 {
   Object *BT_New;
   Object *BT_Sweep;
@@ -263,7 +263,7 @@ static ULONG _New(struct IClass* cl, Object* obj, struct opSet * msg)
   for(nm = Menu; nm->nm_Type != NM_END; ++nm)
   {
     if(nm->nm_Label != NM_BARLABEL)
-      nm->nm_Label = GetStr((ULONG)nm->nm_Label);
+      nm->nm_Label = GetStr((IPTR)nm->nm_Label);
   }
 
   tmp.BT_Move = CButtonObject(GetStr(MSG_WIN_MOVE), 
@@ -368,9 +368,11 @@ static ULONG _New(struct IClass* cl, Object* obj, struct opSet * msg)
     DoMethod(MenuObj(tmp.strip, MEN_UNDO       ), MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime, tmp.solitaire          , 1, MUIM_CSolitaire_Undo);
     DoMethod(MenuObj(tmp.strip, MEN_MANPROFILES), MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime, tmp.WI_ProfileManager  , 1, MUIM_ProfileManager_Open);
 
-    DoMethod((gm = MenuObj(tmp.strip, MEN_KLONDIKE)), MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime, tmp.solitaire          , 2, MUIM_CSolitaire_GameMode, GAMEMODE_KLONDIKE);
+    gm = MenuObj(tmp.strip, MEN_KLONDIKE);
+    DoMethod(gm, MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime, tmp.solitaire          , 2, MUIM_CSolitaire_GameMode, GAMEMODE_KLONDIKE);
     setatt(gm, MUIA_ObjectID, ID_MENU_KLONDIKE);
-    DoMethod((gm = MenuObj(tmp.strip, MEN_FREECELL)), MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime, tmp.solitaire          , 2, MUIM_CSolitaire_GameMode, GAMEMODE_FREECELL);
+    gm = MenuObj(tmp.strip, MEN_FREECELL);
+    DoMethod(gm, MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime, tmp.solitaire          , 2, MUIM_CSolitaire_GameMode, GAMEMODE_FREECELL);
     setatt(gm, MUIA_ObjectID, ID_MENU_FREECELL);
 
     DoMethod(obj, MUIM_Notify, MUIA_Window_Activate, MUIV_EveryTime, tmp.solitaire, 3, MUIM_Set, MUIA_Cardgame_TimerRunning, MUIV_TriggerValue);
@@ -380,7 +382,7 @@ static ULONG _New(struct IClass* cl, Object* obj, struct opSet * msg)
 
     *((struct BoardWindow_Data *) INST_DATA(cl, obj)) = tmp;
 
-    return (ULONG)obj;
+    return (IPTR)obj;
   }
   return 0;
 }

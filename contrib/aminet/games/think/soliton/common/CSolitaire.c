@@ -1228,7 +1228,7 @@ static BOOL clickCard(struct CSolitaire_Data * data, int p, int nr, BOOL dblclck
   return FALSE;
 }
 
-static ULONG SetGameMode(struct IClass* cl, Object* obj, enum GameMode mode)
+static IPTR SetGameMode(struct IClass* cl, Object* obj, enum GameMode mode)
 {
   Object *app;
   struct CSolitaire_Data * data;
@@ -1254,14 +1254,14 @@ static ULONG SetGameMode(struct IClass* cl, Object* obj, enum GameMode mode)
   case GAMEMODE_FREECELL:
     ti[0].ti_Data = 16;
     ti[1].ti_Data = 2;
-    ti[2].ti_Data = (ULONG) "T,0,0,2;T,16,0,2;T,32,0,2;T,48,0,2;A,71,0,20;"
+    ti[2].ti_Data = (IPTR) "T,0,0,2;T,16,0,2;T,32,0,2;T,48,0,2;A,71,0,20;"
         "B,87,0,20;C,103,0,20;D,119,0,20;V,0,2,18;V,17,2,18;V,34,2,18;"
         "V,51,2,18;V,68,2,18;V,85,2,18;V,102,2,18;V,119,2,18;";
     break;
   case GAMEMODE_KLONDIKE:
     ti[0].ti_Data = 7;
     ti[1].ti_Data = 7;
-    ti[2].ti_Data = (ULONG) "T,0,0,60;H,7,0,3;A,21,0,13;B,28,0,13;C,35,0,13;"
+    ti[2].ti_Data = (IPTR) "T,0,0,60;H,7,0,3;A,21,0,13;B,28,0,13;C,35,0,13;"
         "D,42,0,13;V,0,7,18;V,7,7,18;V,14,7,18;V,21,7,18;V,28,7,18;V,35,7,18;"
         "V,42,7,18;";
     break;
@@ -1275,14 +1275,14 @@ static ULONG SetGameMode(struct IClass* cl, Object* obj, enum GameMode mode)
   data->undohead  = NULL;
   ClearAll(&data->stats);
   data->stats.finished = TRUE;
-  return (ULONG)obj;
+  return (IPTR)obj;
 }
 
 /****************************************************************************************
   New / Dispose
 ****************************************************************************************/
 
-static ULONG CSolitaire_New(struct IClass* cl, Object* obj, struct opSet* msg)
+static IPTR CSolitaire_New(struct IClass* cl, Object* obj, struct opSet* msg)
 {
   struct CSolitaire_Data * data;
 
@@ -1294,13 +1294,13 @@ static ULONG CSolitaire_New(struct IClass* cl, Object* obj, struct opSet* msg)
     data->movebutton = (Object*)GetTagData(MUIA_CSolitaire_MoveButton, 0, msg->ops_AttrList);
     data->score      = (Object*)GetTagData(MUIA_CSolitaire_Score     , 0, msg->ops_AttrList);
     SetGameMode(cl,obj,GAMEMODE_KLONDIKE);
-    return (ULONG) obj;
+    return (IPTR) obj;
   }
   else
     return 0;
 }
 
-static ULONG CSolitaire_Dispose(struct IClass* cl, Object* obj, Msg msg)
+static IPTR CSolitaire_Dispose(struct IClass* cl, Object* obj, Msg msg)
 {
   struct CSolitaire_Data * data = (struct CSolitaire_Data *) INST_DATA(cl,obj);
 

@@ -184,7 +184,7 @@ static IPTR Soliton_Get(struct IClass* cl, Object* obj, struct opGet* msg)
     case MUIA_Soliton_Settings:
     {
       struct Settings* s = (struct Settings*)xget(data->WI_Settings, MUIA_Settings_Settings);
-      *(msg->opg_Storage) = (ULONG)s;
+      *(msg->opg_Storage) = (IPTR)s;
       return TRUE;
     }
   }
