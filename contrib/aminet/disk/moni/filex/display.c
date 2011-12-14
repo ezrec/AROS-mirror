@@ -1566,7 +1566,7 @@ void MakeDisplay( struct DisplayInhalt *DI )
 			long TempHoehe, TempTyp;
 			struct DrawInfo *dri;
 			Object *sizeimage;
-			ULONG sizew = 18, sizeh = 10;
+			IPTR  sizew = 18, sizeh = 10;
 			ULONG voffset;
 
 			dri = GetScreenDrawInfo(DI->Wnd->WScreen);
@@ -1574,7 +1574,7 @@ void MakeDisplay( struct DisplayInhalt *DI )
 			{
 			    sizeimage = NewObject(NULL, SYSICLASS,
 				    	SYSIA_Which, SIZEIMAGE,
-					SYSIA_DrawInfo, (ULONG)dri,
+					SYSIA_DrawInfo, (IPTR)dri,
 					TAG_DONE);
 
 			    if (sizeimage)

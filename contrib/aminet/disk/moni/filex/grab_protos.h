@@ -3,7 +3,7 @@ Grab.c
  */
 #include "filexstructs.h"
 
-void GrabMemory(ULONG , ULONG , struct DisplayData * );
+void GrabMemory(IPTR , IPTR , struct DisplayData * );
 
 extern struct MyNewGadget GrabNewGadgets[5];
 

@@ -514,7 +514,7 @@ BOOL LoadBlock(char *fullname)
 		Close(fh);
 	}
 	else
-		MyRequest( MSG_INFO_GLOBAL_CANTOPENFILE, ( ULONG )fullname );
+		MyRequest( MSG_INFO_GLOBAL_CANTOPENFILE, ( IPTR )fullname );
 
 	return(Success);		
 }
@@ -554,7 +554,7 @@ BOOL SaveBlock( char *Name )
 
 		if(!(mainflags&MF_OVERWRITE))
 			if(GetFileLaengeName(Name))
-				if( 0 == MyFullRequest( MSG_INFO_GLOBAL_FILEALREADYEXISTS, MSG_GADGET_YESNO, ( ULONG )Name ))
+				if( 0 == MyFullRequest( MSG_INFO_GLOBAL_FILEALREADYEXISTS, MSG_GADGET_YESNO, ( IPTR )Name ))
 					return(Success);
 
 		if((fh=Open(Name,MODE_NEWFILE)))
@@ -564,7 +564,7 @@ BOOL SaveBlock( char *Name )
 					/* Falls nicht vollständig geschrieben, löschen */
 	
 				Close(fh);
-				MyRequest( MSG_INFO_GLOBAL_CANTSAVEFILE, ( ULONG )Name );
+				MyRequest( MSG_INFO_GLOBAL_CANTSAVEFILE, ( IPTR )Name );
 				DeleteFile(Name);
 			}
 			else
@@ -575,7 +575,7 @@ BOOL SaveBlock( char *Name )
 			}
 		}
 		else
-			MyRequest( MSG_INFO_GLOBAL_CANTOPENFILE, ( ULONG )Name );
+			MyRequest( MSG_INFO_GLOBAL_CANTOPENFILE, ( IPTR )Name );
 
 		FreeMem( blockmem, blocklaenge );
 	}
@@ -798,7 +798,7 @@ void OpenFillWindow( void )
 		return;
 	}
 
-	FillNewGadgets[ GD_FILL_STRING ].CurrentValue = (LONG) fillstring;
+	FillNewGadgets[ GD_FILL_STRING ].CurrentValue = (IPTR) fillstring;
 	FillNewGadgets[ GD_FILL_STRINGFILL ].CurrentValue =	( fillmode & FM_STRING ) ? TRUE : FALSE;
 
 	if(( err = NewOpenAWindow( &FillWD, GetStr(MSG_WINDOWTITLE_FILL))))

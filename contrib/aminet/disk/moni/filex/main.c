@@ -1177,7 +1177,7 @@ static struct MyArgs
 	UBYTE *ma_CommandsName;
 	UBYTE *ma_LanguageName;
 	UBYTE *ma_KeyName;
-	LONG ma_Sync;
+	IPTR   ma_Sync;
 	UBYTE *ma_FileName;
 } myargs = { 0,0,0,0,0,0,0,0 };
 
@@ -1483,7 +1483,7 @@ SegmentSplit(STRPTR Name,LONG StackSize,APTR Function)
 	Forbid();
 
 	Child = CreateNewProcTags(
-		NP_CommandName,	(LONG)"FileX",
+		NP_CommandName,	(IPTR)"FileX",
 		NP_Name,	Name,
 		NP_StackSize,	StackSize,
 		NP_Entry,	Function,
@@ -1500,7 +1500,7 @@ SegmentSplit(STRPTR Name,LONG StackSize,APTR Function)
 	return(Child);
 }
 
-int main(void)
+LONG start(void)
 {
 	CONST_STRPTR errorstring;
 	struct Process *myproc;
@@ -1526,7 +1526,7 @@ int main(void)
 
 		GetProgramName(programname,256);
 
-		if(!(cliargs=ReadArgs("PUBSCREEN/K,PORTNAME/K,STARTUP/K,SETTINGS/K,COMMANDS/K,LANGUAGE/K,KEY/K,SYNC/S,FILE",(LONG *)&myargs,0)))
+		if(!(cliargs=ReadArgs("PUBSCREEN/K,PORTNAME/K,STARTUP/K,SETTINGS/K,COMMANDS/K,LANGUAGE/K,KEY/K,SYNC/S,FILE",(IPTR *)&myargs,0)))
 		{
 			PrintFault( IoErr(), "FileX");
 			CloseLibs();
@@ -1666,7 +1666,7 @@ BOOL LoadUserDisplaytyp(char *fullname)
 		Close(fh);
 	}
 	else
-		MyRequest( MSG_INFO_GLOBAL_CANTOPENFILE, ( ULONG )fullname );
+		MyRequest( MSG_INFO_GLOBAL_CANTOPENFILE, ( IPTR )fullname );
 
 	return(Success);
 }
@@ -2118,7 +2118,7 @@ BOOL Save( struct FileData *FD )
 
 	if(!(mainflags&MF_OVERWRITE))
 		if(GetFileLaengeName(FD->Name))
-			if(0 == MyFullRequest( MSG_INFO_GLOBAL_FILEALREADYEXISTS, MSG_GADGET_YESNO, ( ULONG )FD->Name ))
+			if(0 == MyFullRequest( MSG_INFO_GLOBAL_FILEALREADYEXISTS, MSG_GADGET_YESNO, ( IPTR )FD->Name ))
 				return(Success);
 
 	if((fh=Open(FD->Name,MODE_NEWFILE)))
@@ -2128,7 +2128,7 @@ BOOL Save( struct FileData *FD )
 						/* Falls nicht vollständig geschrieben, löschen */
 
 			Close( fh );
-			MyRequest( MSG_INFO_GLOBAL_CANTSAVEFILE, ( ULONG )FD->Name );
+			MyRequest( MSG_INFO_GLOBAL_CANTSAVEFILE, ( IPTR )FD->Name );
 			DeleteFile( FD->Name );
 		}
 		else
@@ -2142,7 +2142,7 @@ BOOL Save( struct FileData *FD )
 		}
 	}
 	else
-		MyRequest( MSG_INFO_GLOBAL_CANTSAVEFILE, ( ULONG )FD->Name );
+		MyRequest( MSG_INFO_GLOBAL_CANTSAVEFILE, ( IPTR )FD->Name );
 
 	return(Success);
 }
@@ -2175,7 +2175,7 @@ BOOL SaveAsFile( struct FileData *FD )
 
 void DisplayFromScroller( struct DisplayData *DD )
 {
-	ULONG newasp,oldasp=DD->SPos,oldpos=DD->CPos;
+	IPTR  newasp,oldasp=DD->SPos,oldpos=DD->CPos;
 
 	GetAttr(PGA_Top,(APTR)DD->PropGadget,&newasp);
 
@@ -2614,7 +2614,10 @@ void CloseAll(void)
 	if(arexxcommandwindow)FreeVec(arexxcommandwindow);
 
 #ifdef AREXX
-	if(MyRexxHost)CloseDownARexxHost(MyRexxHost);
+	if(MyRexxHost) {
+		CloseDownARexxHost(MyRexxHost);
+		MyRexxHost = NULL;
+	}
 #endif
 	FreeSearchHistory();
 

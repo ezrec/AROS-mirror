@@ -10,9 +10,7 @@
 #include <proto/utility.h>
 #include <clib/alib_protos.h>
 
-#ifdef __AROS__
-#include <aros/asmcall.h>
-#endif
+#include <SDI/SDI_hook.h>
 
 #include <ctype.h>
 #include <string.h>
@@ -111,25 +109,13 @@ static long DoCalcOp( UWORD Op, long eins, long zwei )
 	return 0;
 }
 
-#ifdef __AROS__
-AROS_UFH3S(ULONG, CalcHookFunc,
-    AROS_UFHA(struct Hook *, hook, A0),
-    AROS_UFHA(struct SGWork *, sgw, A2),
-    AROS_UFHA(unsigned long *, msg, A1))
+HOOKPROTO(CalcHookFunc, ULONG, struct SGWork *sgw, Msg msg)
 {
-    AROS_USERFUNC_INIT
-#else
-
-static ULONG __saveds __asm CalcHookFunc(	register __a0 struct Hook *hook,
-					register __a2 struct SGWork *sgw,
-					register __a1 unsigned long *msg	)
-{
-#endif
 
 /*	struct InputEvent *ie;*/
 	ULONG return_code = ~0;
 
-	if( *msg == SGH_KEY )
+	if( msg->MethodID == SGH_KEY )
 	{
 /*		ie = sgw->IEvent;
 
@@ -195,16 +181,9 @@ static ULONG __saveds __asm CalcHookFunc(	register __a0 struct Hook *hook,
 		return_code = 0;
 
    return(return_code);
-
-#ifdef __AROS__
-    AROS_USERFUNC_EXIT
-#endif
 }
 
-static struct Hook CalcHook =
-{
-	{0, 0}, (ULONG (*)()) CalcHookFunc, 0, 0
-};
+MakeStaticHook(CalcHook, CalcHookFunc);
 
 #define MAXCALCSTRINGLEN (8 * 4 + 2)
 
@@ -484,7 +463,7 @@ static int MakeCalcGadgets( UWORD Breite )
 	ng.ng_Width = Breite - 2 * BORDERX - 2 * BEVELX - 2 * INNERX;
 	ng.ng_Height = CalcWI->TF->tf_YSize + 6;
 
-	CycleTags[0].ti_Data = ( ULONG )CalcModes;	/* Anzahl */
+	CycleTags[0].ti_Data = ( IPTR )CalcModes;	/* Anzahl */
 	CycleTags[1].ti_Data = CalcMode;	/* Active */
 
 	CalcGadgets[k] = g = CreateGadgetA( CYCLE_KIND, g, &ng, CycleTags);

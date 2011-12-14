@@ -15,9 +15,9 @@
 #include "allprotos.h"
 #include "filexstrings.h"
 
-static ULONG grabstart, grabend;
+static IPTR grabstart, grabend;
 
-void GrabMemory( ULONG start, ULONG end, struct DisplayData *DD )
+void GrabMemory( IPTR start, IPTR end, struct DisplayData *DD )
 {
 /*	if(start>=0xf00000)return;*/
 /*	if(end>0xf00000)end=0xf00000;*/
@@ -144,7 +144,7 @@ static void DoGrabWndMsg(void)
 					case GD_GRAB_START:
 						if(!IsHexString(GetString(GrabWD.Gadgets[GD_GRAB_START])))
 						{
-							MyRequest( MSG_INFO_GLOBAL_ILLEGALCHARACTERS, ( ULONG )GetString( GrabWD.Gadgets[ GD_GRAB_START ]));
+							MyRequest( MSG_INFO_GLOBAL_ILLEGALCHARACTERS, ( IPTR )GetString( GrabWD.Gadgets[ GD_GRAB_START ]));
 							ActivateGadget(GrabWD.Gadgets[GD_GRAB_START],GrabWD.Wnd,0);
 						}
 						else
@@ -154,7 +154,7 @@ static void DoGrabWndMsg(void)
 					case GD_GRAB_END:
 						if(!IsHexString(GetString(GrabWD.Gadgets[GD_GRAB_END])))
 						{
-							MyRequest( MSG_INFO_GLOBAL_ILLEGALCHARACTERS, ( ULONG )GetString( GrabWD.Gadgets[ GD_GRAB_END ]));
+							MyRequest( MSG_INFO_GLOBAL_ILLEGALCHARACTERS, ( IPTR )GetString( GrabWD.Gadgets[ GD_GRAB_END ]));
 							ActivateGadget(GrabWD.Gadgets[GD_GRAB_END],GrabWD.Wnd,0);
 						}
 						break;
@@ -165,10 +165,10 @@ static void DoGrabWndMsg(void)
 
 	if( wie == 1 )
 	{
-		ULONG start, end;
+		unsigned long start, end;
 
-		stch_l( GetString( GrabWD.Gadgets[ GD_GRAB_START ] ), (LONG *)&start);
-		stch_l( GetString( GrabWD.Gadgets[ GD_GRAB_END ] ), (LONG *)&end);
+		stch_l( GetString( GrabWD.Gadgets[ GD_GRAB_START ] ), &start);
+		stch_l( GetString( GrabWD.Gadgets[ GD_GRAB_END ] ), &end);
 
 		GrabMemory( start, end, AktuDD );
 	}
@@ -193,8 +193,8 @@ void OpenGrabWindow( void )
 
 	if( AktuDD->FD->Typ == FD_GRAB )
 	{
-		grabstart = ( ULONG )AktuDD->FD->Mem;
-		grabend = ( ULONG )AktuDD->FD->Mem + AktuDD->FD->Len;
+		grabstart = ( IPTR )AktuDD->FD->Mem;
+		grabend = ( IPTR )AktuDD->FD->Mem + AktuDD->FD->Len;
 	}
 
 	if((grabstart==0)&&(grabend==0))
@@ -204,8 +204,8 @@ void OpenGrabWindow( void )
 	}
 	else
 	{
-		GrabNewGadgets[GD_GRAB_START].CurrentValue = (LONG) GrabStartString;
-		GrabNewGadgets[GD_GRAB_END  ].CurrentValue = (LONG) GrabEndString;
+		GrabNewGadgets[GD_GRAB_START].CurrentValue = (IPTR) GrabStartString;
+		GrabNewGadgets[GD_GRAB_END  ].CurrentValue = (IPTR) GrabEndString;
 
 		sprintf(GrabStartString, "%08lx", (unsigned long)grabstart);
 		sprintf(GrabEndString, "%08lx", (unsigned long)grabend);

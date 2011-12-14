@@ -390,7 +390,7 @@ static void free_stemlist( struct rxs_stemnode *first )
 }
 
 
-static struct rxs_stemnode *CreateSTEM( struct rxs_command *rxc, LONG *resarray, char *stembase )
+static struct rxs_stemnode *CreateSTEM( struct rxs_command *rxc, IPTR *resarray, char *stembase )
 {
 	struct rxs_stemnode *first = NULL, *old = NULL, *new;
 	char resb[512], *rs, *rb;
@@ -441,8 +441,8 @@ static struct rxs_stemnode *CreateSTEM( struct rxs_command *rxc, LONG *resarray,
 		
 		if( optm )
 		{
-			long *r, index = 0;
-			LONG **subarray = (LONG **) *resarray++;
+			IPTR *r, index = 0;
+			IPTR **subarray = (IPTR **) *resarray++;
 			struct rxs_stemnode *countnd;
 			
 			/* Anzahl der Elemente */
@@ -519,9 +519,9 @@ static void DoRXCommand( struct RexxHost *host, struct RexxMsg *rexxmsg )
 	struct rxs_command *rxc = NULL;
 	char *argb, *arg;
 	
-	LONG *array = NULL;
-	LONG *argarray;
-	LONG *resarray;
+	IPTR *array = NULL;
+	IPTR *argarray;
+	IPTR *resarray;
 	
 	char *cargstr = NULL;
 	long rc=20, rc2=0;
@@ -809,9 +809,9 @@ void DoShellCommand( struct RexxHost *host, char *comline, BPTR fhout )
 	struct rxs_command *rxc = NULL;
 	char *argb, *arg;
 	
-	LONG *array = NULL;
-	LONG *argarray;
-	LONG *resarray;
+	IPTR *array = NULL;
+	IPTR *argarray;
+	IPTR *resarray;
 	
 	char *cargstr = NULL;
 	long rc=10, rc2=0;

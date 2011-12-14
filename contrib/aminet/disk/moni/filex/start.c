@@ -31,7 +31,7 @@ extern struct ExecBase	*SysBase;
 #define MACHINE_OKAY (1)
 #endif
 
-extern LONG main(void);
+extern LONG start(void);
 
 /* 
  * LONG __saveds Start(void)
@@ -40,23 +40,38 @@ extern LONG main(void);
  * oder eine Fehlermeldung ausgegeben.
  */
 
+#include <aros/debug.h>
+
+#ifdef __AROS__
+__startup static AROS_ENTRY(int, Start,
+		AROS_UFHA(char *, argstr, A0),
+		AROS_UFHA(ULONG, argsize, D0),
+		struct ExecBase *, AbsExecBase)
+#else
+#define AbsExecBase (*(struct ExecBase **)4)
+#define AROS_USERFUNC_INIT
+#define AROS_USERFUNC_EXIT
+
 LONG __saveds Start(void)
+#endif
 {
+	AROS_USERFUNC_INIT
+
 	static const unsigned char versionstring[] =
 		"\0$VER:FileX "VSTRING" ("DATE") © 1993-1994 by Klaas Hermanns.";
 		/* Get SysBase. */
 
 #ifdef __AROS__
     	(void)versionstring;
-#else
-	SysBase = *(struct ExecBase **)4;
+#endif
+	SysBase = AbsExecBase;
+	bug("SysBase = %p\n", SysBase);
 
 		/* Is the minimum required processor type and Kickstart 2.04 (or higher)
 		 * available?
 		 */
-#endif
 	if(MACHINE_OKAY && (SysBase -> LibNode . lib_Version > 37 || (SysBase -> LibNode . lib_Version == 37 && SysBase -> SoftVer >= 175)))
-		return(main());
+		return(start());
 	else
 	{
 		register struct Process *ThisProcess = (struct Process *)SysBase -> ThisTask;
@@ -125,4 +140,6 @@ LONG __saveds Start(void)
 	}
 	
 	return 0; /* stegerg: there was no return at all */
+
+	AROS_USERFUNC_EXIT
 }

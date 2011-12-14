@@ -448,7 +448,7 @@ int NewOpenAWindow( struct WindowData *WD, CONST_STRPTR Title )
 		{{GT_Underscore, '_'}, {GA_Disabled, 0}, {0, 0}};
 		
 		static struct TagItem StringTags[4] =
-		{{GTST_String, 0}, {GTST_MaxChars, 0}, {GTST_EditHook, (LONG) 0}, {TAG_DONE}};
+		{{GTST_String, 0}, {GTST_MaxChars, 0}, {GTST_EditHook, (IPTR) 0}, {TAG_DONE}};
 		
 		static struct TagItem IntegerTags[2] =
 		{{GTIN_Number, 0}, {TAG_DONE}};
@@ -579,7 +579,7 @@ int NewOpenAWindow( struct WindowData *WD, CONST_STRPTR Title )
 					ng.ng_Flags = PLACETEXT_LEFT;
 
 					Tags[2].ti_Tag = TAG_MORE;
-					Tags[2].ti_Data = (LONG)IntegerTags;
+					Tags[2].ti_Data = (IPTR)IntegerTags;
 
 					IntegerTags[0].ti_Data = Gad->CurrentValue;
 
@@ -592,7 +592,7 @@ int NewOpenAWindow( struct WindowData *WD, CONST_STRPTR Title )
 					ng.ng_Flags = PLACETEXT_LEFT;
 
 					Tags[2].ti_Tag = TAG_MORE;
-					Tags[2].ti_Data = (LONG)StringTags;
+					Tags[2].ti_Data = (IPTR)StringTags;
 
 					StringTags[0].ti_Data = Gad->CurrentValue;
 					StringTags[1].ti_Data = Gad->Max;
@@ -601,7 +601,7 @@ int NewOpenAWindow( struct WindowData *WD, CONST_STRPTR Title )
 						GadgetTyp = STRING_KIND;
 
 					StringTags[2].ti_Tag = GTST_EditHook;
-					StringTags[2].ti_Data = (LONG) &SearchHook;
+					StringTags[2].ti_Data = (IPTR) &SearchHook;
 					
 					break;
 
@@ -611,7 +611,7 @@ int NewOpenAWindow( struct WindowData *WD, CONST_STRPTR Title )
 					ng.ng_Flags = PLACETEXT_LEFT;
 
 					Tags[2].ti_Tag = TAG_MORE;
-					Tags[2].ti_Data = (LONG)SliderTags;
+					Tags[2].ti_Data = (IPTR)SliderTags;
 	
 					SliderTags[0].ti_Data = Gad->Min;
 					SliderTags[1].ti_Data = Gad->Max;
@@ -625,7 +625,7 @@ int NewOpenAWindow( struct WindowData *WD, CONST_STRPTR Title )
 					ng.ng_Flags = PLACETEXT_LEFT;
 
 					Tags[2].ti_Tag = TAG_MORE;
-					Tags[2].ti_Data = (LONG)CheckboxTags;
+					Tags[2].ti_Data = (IPTR)CheckboxTags;
 
 					CheckboxTags[0].ti_Data = Gad->CurrentValue;
 
@@ -649,7 +649,7 @@ int NewOpenAWindow( struct WindowData *WD, CONST_STRPTR Title )
 					ng.ng_Flags = PLACETEXT_ABOVE;
 
 					Tags[2].ti_Tag = TAG_MORE;
-					Tags[2].ti_Data = (LONG) ListviewTags;
+					Tags[2].ti_Data = (IPTR) ListviewTags;
 
 					ListviewTags[0].ti_Data = Gad->CurrentValue;
 
@@ -662,7 +662,7 @@ int NewOpenAWindow( struct WindowData *WD, CONST_STRPTR Title )
 					ng.ng_Height = WD->WI->TF->tf_YSize + 6;
 
 					Tags[2].ti_Tag = TAG_MORE;
-					Tags[2].ti_Data = (LONG) CycleTags;
+					Tags[2].ti_Data = (IPTR) CycleTags;
 
 					CycleTags[0].ti_Data = Gad->CurrentValue;
 					CycleTags[1].ti_Data = Gad->Min;

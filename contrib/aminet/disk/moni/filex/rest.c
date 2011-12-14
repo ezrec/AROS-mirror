@@ -72,7 +72,7 @@ BOOL MyGetString( char *String, char *WindowTitle, ULONG Max )
 	long err;
 
 	GetStringNewGadgets[ GD_GETSTRING_STRING ].Max = Max;
-	GetStringNewGadgets[ GD_GETSTRING_STRING ].CurrentValue = ( ULONG )String;
+	GetStringNewGadgets[ GD_GETSTRING_STRING ].CurrentValue = ( IPTR )String;
 
 	if(( err = NewOpenAWindow( &GetStringWD, WindowTitle )))
 		MyRequest( MSG_INFO_GLOBAL_CANTOPENWINDOW, err );
@@ -326,12 +326,12 @@ void DisplayLocaleText( CONST_STRPTR Text )
 	MyMainFullRequest( GetStr( Text ), GetStr( MSG_GADGET_CONTINUE ), 0 );
 }
 
-ULONG MyRequest( CONST_STRPTR Text, ULONG Data )
+ULONG MyRequest( CONST_STRPTR Text, IPTR Data )
 {
 	return( MyMainFullRequest( GetStr( Text ), GetStr( MSG_GADGET_CONTINUE ), &Data ));
 }
 
-ULONG MyRequestNoLocale( CONST_STRPTR Text, ULONG Data )
+ULONG MyRequestNoLocale( CONST_STRPTR Text, IPTR Data )
 {
 	return( MyMainFullRequest( Text, GetStr( MSG_GADGET_CONTINUE ), &Data ));
 }
@@ -411,7 +411,7 @@ void JumpToByte(void)
 	long err;
 	UBYTE NumberString[9];
 
-	JumptoNewGadgets[ GD_JUMPTO_NUMBER ].CurrentValue = ( LONG ) NumberString;
+	JumptoNewGadgets[ GD_JUMPTO_NUMBER ].CurrentValue = ( IPTR ) NumberString;
 	sprintf( NumberString, "%lx", wert );
 
 	if(( err = NewOpenAWindow( &JumptoWD, GetStr(MSG_WINDOWTITLE_JUMPTOBYTE))))
@@ -472,7 +472,7 @@ void JumpToByte(void)
 								case GD_JUMPTO_OK:
 									if( !IsHexString( GetString(JumptoWD.Gadgets[GD_JUMPTO_NUMBER])))
 									{
-										MyRequest( MSG_INFO_GLOBAL_ILLEGALCHARACTERS, ( ULONG )GetString(JumptoWD.Gadgets[GD_JUMPTO_NUMBER]));
+										MyRequest( MSG_INFO_GLOBAL_ILLEGALCHARACTERS, ( IPTR )GetString(JumptoWD.Gadgets[GD_JUMPTO_NUMBER]));
 										ActivateGadget(JumptoWD.Gadgets[GD_JUMPTO_NUMBER],JumptoWD.Wnd,0);
 									}
 									else
@@ -716,7 +716,7 @@ BOOL SaveClip(STRPTR Buffer,LONG Size)
 
 		if((Handle = AllocIFF()))
 		{
-			if((Handle -> iff_Stream = (ULONG)OpenClipboard(clipboardunit)))
+			if((Handle -> iff_Stream = (IPTR)OpenClipboard(clipboardunit)))
 			{
 				InitIFFasClip(Handle);
 
@@ -762,7 +762,7 @@ UBYTE *GetClip( ULONG *laenge )
 
 	if((Handle = AllocIFF()))
 	{
-		if((Handle -> iff_Stream = (ULONG)OpenClipboard(clipboardunit)))
+		if((Handle -> iff_Stream = (IPTR)OpenClipboard(clipboardunit)))
 		{
 			InitIFFasClip(Handle);
 

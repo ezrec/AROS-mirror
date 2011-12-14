@@ -15,6 +15,8 @@
 #include <aros/asmcall.h>
 #endif
 
+#include <SDI/SDI_hook.h>
+
 #include <string.h>
 #include <ctype.h>
 
@@ -213,7 +215,7 @@ static void UpdateClipConv( BOOL Convert )
 	{
 		UBYTE *FromDaten = NULL, *FromTempAlloc = 0;
 		WORD FromLaenge = 0;
-		LONG FromWert;
+		long FromWert;
 		BOOL UseFromWert = FALSE;
 		BOOL Valid = TRUE;
 
@@ -580,30 +582,13 @@ static void UpdateClipConvSignal( void )
 	UpdateClipConv( FALSE );
 }
 
-#ifdef __AROS__
-AROS_UFH3S(ULONG, ClipHookFunc,
-    AROS_UFHA(struct Hook *, hook, A0),
-    AROS_UFHA(APTR, Obj, A2),
-    AROS_UFHA(APTR, Msg, A1))
+HOOKPROTONONP(ClipHookFunc, ULONG)
 {
-    AROS_USERFUNC_INIT
-#else
-static ULONG __saveds __asm ClipHookFunc(	register __a0 struct Hook *hook,
-					register __a2 APTR Obj,
-					register __a1 APTR Msg	)
-{
-#endif
-	Signal( hook->h_Data, SIGBREAKF_CTRL_E );
+   Signal( hook->h_Data, SIGBREAKF_CTRL_E );
    return(0);
-#ifdef __AROS__
-    AROS_USERFUNC_EXIT
-#endif
 }
 
-static struct Hook ClipHook =
-{
-	{0, 0}, (ULONG (*)()) ClipHookFunc, 0, 0
-};
+MakeStaticHook(ClipHook, ClipHookFunc);
 
 static void SetClipConvFrom( UWORD From )
 {
@@ -676,7 +661,7 @@ static int MakeClipConvGadgets( UWORD Breite )
 	ng.ng_GadgetText = 0;
 	ng.ng_Height = ClipConvWI->TF->tf_YSize + 6;
 
-	CycleTags[0].ti_Data = ( ULONG )CCModeNames;
+	CycleTags[0].ti_Data = ( IPTR )CCModeNames;
 	CycleTags[1].ti_Data = ClipConvFrom;
 
 	ClipConvGadgets[0] = g = CreateGadgetA( CYCLE_KIND, g, &ng, CycleTags);

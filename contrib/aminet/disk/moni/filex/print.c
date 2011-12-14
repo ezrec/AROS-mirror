@@ -81,7 +81,7 @@ void MyPrint(UBYTE *start, long laenge, long DisplayTyp, struct Window *Wnd )
 					}
 					else
 					{
-						if(CALL_HANDLER == rtEZRequestTags(GetStr(MSG_INFO_PRINT_PRINTING), GetStr(MSG_GADGET_STOPPRINTING), 0L, 0L, RTEZ_ReqTitle, GetStr( MSG_WINDOWTITLE_INFO ), (LONG)RT_ReqHandler, (LONG)&hinfo,  Wnd ? RT_Window : TAG_IGNORE, Wnd, RT_Underscore, '_', TAG_DONE))
+						if(CALL_HANDLER == rtEZRequestTags(GetStr(MSG_INFO_PRINT_PRINTING), GetStr(MSG_GADGET_STOPPRINTING), 0L, 0L, RTEZ_ReqTitle, GetStr( MSG_WINDOWTITLE_INFO ), (IPTR)RT_ReqHandler, (IPTR)&hinfo,  Wnd ? RT_Window : TAG_IGNORE, Wnd, RT_Underscore, '_', TAG_DONE))
 							RequesterOpened = TRUE;
 					}
 				
@@ -104,7 +104,7 @@ void MyPrint(UBYTE *start, long laenge, long DisplayTyp, struct Window *Wnd )
 
 						if(laenge-off<0)zeichen=off-laenge;
 
-						sprintf(buffer,"%08lx: ",off);
+						sprintf(buffer,"%08lx: ",(unsigned long)off);
 
 						for(k=0;k<zeichen;k++)
 						{
@@ -137,7 +137,7 @@ void MyPrint(UBYTE *start, long laenge, long DisplayTyp, struct Window *Wnd )
 								zeichen = 16;
 								if(laenge-off-16<0)zeichen=laenge-off;
 
-								sprintf(buffer,"%08lx: ",off);
+								sprintf(buffer,"%08lx: ",(unsigned long)off);
 
 								for(k=0;k<zeichen;k++)
 								{

@@ -216,10 +216,10 @@ BOOL OpenMiscSettings( void )
 	MiscNewGadgets[ GD_MISC_PROGRAMPRIO ].CurrentValue = taskpri;
 	MiscNewGadgets[ GD_MISC_USEASL ].CurrentValue = UseAsl;
 	MiscNewGadgets[ GD_MISC_OVERWRITE ].CurrentValue = (mainflags&MF_OVERWRITE) ? TRUE : FALSE;
-	MiscNewGadgets[ GD_MISC_COMMANDSHELLWINDOW ].CurrentValue = (LONG) arexxcommandshellwindow;
-	MiscNewGadgets[ GD_MISC_COMMANDWINDOW ].CurrentValue = (LONG) arexxcommandwindow;
-	MiscNewGadgets[ GD_MISC_DISPLAY ].CurrentValue = (LONG) DisplayStrings;
-	MiscNewGadgets[ GD_MISC_SPACE ].CurrentValue = (LONG) SpaceStrings;
+	MiscNewGadgets[ GD_MISC_COMMANDSHELLWINDOW ].CurrentValue = (IPTR) arexxcommandshellwindow;
+	MiscNewGadgets[ GD_MISC_COMMANDWINDOW ].CurrentValue = (IPTR) arexxcommandwindow;
+	MiscNewGadgets[ GD_MISC_DISPLAY ].CurrentValue = (IPTR) DisplayStrings;
+	MiscNewGadgets[ GD_MISC_SPACE ].CurrentValue = (IPTR) SpaceStrings;
 	MiscNewGadgets[ GD_MISC_DISPLAY ].Max = 2;
 	MiscNewGadgets[ GD_MISC_SPACE ].Max = 3;
 	MiscNewGadgets[ GD_MISC_DISPLAY ].Min = AktuDD->DisplayForm - 1;

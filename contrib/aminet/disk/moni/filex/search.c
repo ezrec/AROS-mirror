@@ -11,9 +11,8 @@
 #include <proto/keymap.h>
 #include <proto/gadtools.h>
 #include <clib/alib_protos.h>
-#ifdef __AROS__
-#include <aros/asmcall.h>
-#endif
+
+#include <SDI/SDI_hook.h>
 
 #include <string.h>
 #include <ctype.h>
@@ -134,14 +133,14 @@ int TestHexString(char *s)
 		if(isxdigit(*s))	anz++;
 		else if(!(*s==' '))
 		{
-			MyRequest( MSG_INFO_GLOBAL_ILLEGALCHARACTERS, ( ULONG )starts );
+			MyRequest( MSG_INFO_GLOBAL_ILLEGALCHARACTERS, ( IPTR )starts );
 			return(-1);
 		}
 		s++;
 	}
 	if(anz%2!=0)
 	{
-		MyRequest( MSG_INFO_GLOBAL_HEXSTRINGNICHTBYTEALIGNED, ( ULONG )starts );
+		MyRequest( MSG_INFO_GLOBAL_HEXSTRINGNICHTBYTEALIGNED, ( IPTR )starts );
 		return(-1);
 	}
 	else	return(anz);
@@ -516,7 +515,7 @@ BOOL SearchNext(int typ,BOOL quiet,BOOL all, struct DisplayData *DD )
 					if((all==FALSE)&&(EndeFlag==FALSE))
 					{
 						if(!quiet)
-							MyRequest( MSG_INFO_SEARCH_STRINGNOTFOUND, ( ULONG )searchstring );
+							MyRequest( MSG_INFO_SEARCH_STRINGNOTFOUND, ( IPTR )searchstring );
 					}
 				}
 
@@ -566,8 +565,8 @@ BOOL SearchNext(int typ,BOOL quiet,BOOL all, struct DisplayData *DD )
 			{
 				if(!quiet)
 				{
-				if(searchmode&SM_STRING)MyRequest( MSG_INFO_SEARCH_STRINGNOTFOUND, ( ULONG )searchstring );
-				else MyRequest( MSG_INFO_SEARCH_STRINGNOTFOUND, ( ULONG )searchstring );
+				if(searchmode&SM_STRING)MyRequest( MSG_INFO_SEARCH_STRINGNOTFOUND, ( IPTR )searchstring );
+				else MyRequest( MSG_INFO_SEARCH_STRINGNOTFOUND, ( IPTR )searchstring );
     	    	    	    	}
 				Success=FALSE;
 			}
@@ -793,24 +792,13 @@ void SendMsg( struct Window * w, UBYTE Key )
 	}
 }
 
-#ifdef __AROS__
-AROS_UFH3S(ULONG, SearchHookFunc,
-    AROS_UFHA(struct Hook *, hook, A0),
-    AROS_UFHA(struct SGWork *, sgw, A2),
-    AROS_UFHA(unsigned long *, msg, A1))
+HOOKPROTO(SearchHookFunc, ULONG, struct SGWork *sgw, Msg msg)
 {
-    AROS_USERFUNC_INIT
-#else
-static ULONG __saveds __asm SearchHookFunc(	register __a0 struct Hook *hook,
-						register __a2 struct SGWork *sgw,
-						register __a1 unsigned long *msg	)
-{
-#endif
 	struct InputEvent *ie;
 	ULONG return_code = ~0;
 	static long ShiftSearchLaenge = -1;
 
-	if( *msg == SGH_KEY )
+	if( msg->MethodID == SGH_KEY )
 	{
 		ie = sgw->IEvent;
 
@@ -1020,16 +1008,9 @@ static ULONG __saveds __asm SearchHookFunc(	register __a0 struct Hook *hook,
 		return_code = 0;
 
    return(return_code);
-
-#ifdef __AROS__
-    AROS_USERFUNC_EXIT
-#endif
 }
 
-struct Hook SearchHook =
-{
-	{0, 0}, (ULONG (*)()) SearchHookFunc, 0, 0
-};
+MakeHook(SearchHook, SearchHookFunc);
 
 BOOL OpenSearchWindow( BOOL ReplaceMode )
 {
@@ -1043,15 +1024,15 @@ BOOL OpenSearchWindow( BOOL ReplaceMode )
 
 	if( !IsListEmpty( &SHList ))
 	{
-	 	SearchNewGadgets[ GD_SEARCH_SEARCHSTRING ].CurrentValue = (LONG) SHList.lh_TailPred->ln_Name;
+	 	SearchNewGadgets[ GD_SEARCH_SEARCHSTRING ].CurrentValue = (IPTR) SHList.lh_TailPred->ln_Name;
 		SHAktu = SHList.lh_TailPred;
 	}
 	else
-	 	SearchNewGadgets[ GD_SEARCH_SEARCHSTRING ].CurrentValue = (LONG) 0;
+	 	SearchNewGadgets[ GD_SEARCH_SEARCHSTRING ].CurrentValue = (IPTR) 0;
 
 	if( !IsListEmpty( &RHList ))
 	{
-		SearchNewGadgets[ GD_SEARCH_REPLACESTRING ].CurrentValue = (LONG) RHList.lh_TailPred->ln_Name;
+		SearchNewGadgets[ GD_SEARCH_REPLACESTRING ].CurrentValue = (IPTR) RHList.lh_TailPred->ln_Name;
 		RHAktu = RHList.lh_TailPred;
 	}
 	else

@@ -10,9 +10,9 @@ BOOL GetWert(ULONG * , char * , ULONG , ULONG );
 
 void DisplayLocaleText(CONST_STRPTR );
 
-ULONG MyRequest(CONST_STRPTR , ULONG );
+ULONG MyRequest(CONST_STRPTR , IPTR );
 
-ULONG MyRequestNoLocale(CONST_STRPTR , ULONG );
+ULONG MyRequestNoLocale(CONST_STRPTR , IPTR );
 
 ULONG __stdargs MyFullRequestNoLocale(CONST_STRPTR , CONST_STRPTR , ...);
 

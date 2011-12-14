@@ -36,7 +36,7 @@ BOOL LoadSettings( UBYTE *Name, BOOL quiet )
 
 	if((Handle = AllocIFF()))
 	{
-	if((Handle -> iff_Stream = (ULONG)Open(Name,MODE_OLDFILE)))
+	if((Handle -> iff_Stream = (IPTR)Open(Name,MODE_OLDFILE)))
 	{
 	InitIFFasDOS(Handle);
 
@@ -175,7 +175,7 @@ BOOL LoadSettings( UBYTE *Name, BOOL quiet )
 		}
 		else
 		{
-			MyRequest( MSG_INFO_GLOBAL_UNKNOWNVERSIONCANTLOADSETTINGS, ( ULONG )Name );
+			MyRequest( MSG_INFO_GLOBAL_UNKNOWNVERSIONCANTLOADSETTINGS, ( IPTR )Name );
 			quiet = TRUE;
 		}
 		}
@@ -188,7 +188,7 @@ BOOL LoadSettings( UBYTE *Name, BOOL quiet )
 	}
 
 	if(( !quiet ) && ( !Success ))
-		MyRequest( MSG_INFO_GLOBAL_CANTLOADSETTINGS, ( ULONG )Name );
+		MyRequest( MSG_INFO_GLOBAL_CANTLOADSETTINGS, ( IPTR )Name );
 
 	if(Success)
 		strcpy( SettingsFullName, Name );
@@ -218,7 +218,7 @@ BOOL SaveSettings( UBYTE *Name, BOOL quiet )
 
 	if((Handle = AllocIFF()))
 	{
-	if((Handle -> iff_Stream = (ULONG)Open(Name,MODE_NEWFILE)))
+	if((Handle -> iff_Stream = (IPTR)Open(Name,MODE_NEWFILE)))
 	{
 	InitIFFasDOS(Handle);
 
@@ -372,7 +372,7 @@ BOOL SaveSettings( UBYTE *Name, BOOL quiet )
 	}
 
 	if((!quiet)&&(!Success))
-		MyRequest( MSG_INFO_GLOBAL_CANTSAVESETTINGS, ( ULONG )Name );
+		MyRequest( MSG_INFO_GLOBAL_CANTSAVESETTINGS, ( IPTR )Name );
 
 	return(Success);
 }

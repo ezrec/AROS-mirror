@@ -43,7 +43,7 @@
 		/* Prototypes der lokalen Funktionen */
 
 static int MySetupScreen( void );
-static LONG OpenFileXWindow( struct DisplayInhalt *DI );
+static IPTR OpenFileXWindow( struct DisplayInhalt *DI );
 
 		/* Variablen */
 
@@ -340,7 +340,7 @@ static int MySetupScreen( void )
 
 LONG OpenDisplay( void )
 {
-	ULONG err;
+	IPTR err;
 	struct DisplayInhalt *DI;
 
 	if(( err = MySetupScreen()))
@@ -637,12 +637,12 @@ void ReopenDisplay( long type )
 }
 
 /*
- * static LONG OpenFileXWindow( void )
+ * static IPTR OpenFileXWindow( void )
  * 
  * Öffnet das HauptFileXWindow.
  */
 
-static LONG OpenFileXWindow( struct DisplayInhalt *DI )
+static IPTR OpenFileXWindow( struct DisplayInhalt *DI )
 {
 		/* Sicherheitsabfrage: Falls das Window schon auf ist, direkt zurück */
 
@@ -696,7 +696,7 @@ static LONG OpenFileXWindow( struct DisplayInhalt *DI )
 						IDCMP_SIZEVERIFY );
 		/* Versuchen ein AppWindow draus zu machen */
 
-	DI->AppWnd = AddAppWindowA( 1, (ULONG)DI, DI->Wnd, AppPort, NULL );
+	DI->AppWnd = AddAppWindowA( 1, (IPTR)DI, DI->Wnd, AppPort, NULL );
 
 		/* Window in den Prozess eintragen */
 

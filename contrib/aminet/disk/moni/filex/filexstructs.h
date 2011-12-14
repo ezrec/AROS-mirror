@@ -115,7 +115,7 @@ struct MyNewGadget
 	UBYTE Key, Disabled;
 	char *Title;
 	WORD Min, Max;
-	LONG CurrentValue;
+	IPTR CurrentValue;
 	UBYTE MinHexs, MinChars;
 };
 
