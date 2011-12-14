@@ -241,8 +241,8 @@ struct Args {
   STRPTR from;
   STRPTR to;
   STRPTR palette;
-  ULONG  view;
-  ULONG  save;
+  IPTR   view;
+  IPTR   save;
 
   /* preparsed args */
   enum PaletteMode palettemode;
@@ -259,7 +259,7 @@ static int  CheckArgs(struct Args *args);
 static void MakeName(char *buf, char *name);
 
 #ifdef __AROS__
-ULONG main(void)
+int   main(int argc, char **argv)
 #else
 ULONG start(void)
 #endif
@@ -294,12 +294,12 @@ ULONG start(void)
     args.from = version; /* is deleted by optimizer */
     /* clear Args structure */
     for(i = 0; i < sizeof(struct Args)/4; ++i)
-      ((ULONG *)&args)[i] = 0;
+      ((IPTR *)&args)[i] = 0;
 
     if((ico = (struct IconRepresentation *)
     AllocMem(sizeof(struct IconRepresentation), MEMF_CLEAR)))
     {
-      if((rda = ReadArgs(PARAM, (LONG *) &args, 0)))
+      if((rda = ReadArgs(PARAM, (IPTR *) &args, 0)))
       {
         if(CheckArgs(&args))
         {
