@@ -477,7 +477,7 @@ for(cnt1=0;cnt1<GUIGROUPS;cnt1++) {
 freemem(gb);
 }
 
-ULONG initgroup[]={
+IPTR initgroup[]={
 	GROUP_BackFill,4,
 	GROUP_HorizOffset,4,
 	GROUP_VertOffset,4,
@@ -489,14 +489,14 @@ Object *recurseslot(struct GUIBase *gb,WORD group)
 Object *obj=0;
 struct GUIGroup *gg;
 struct GUISlot *gs;
-ULONG *memtag;
-ULONG *tptr;
+IPTR *memtag;
+IPTR *tptr;
 WORD cnt1;
 
 #ifdef GUIDEBUG
 printf("RECURSESLOT: %ld:\n",group);
 #endif
-memtag=allocmem(sizeof(ULONG)*256);
+memtag=allocmem(sizeof(memtag[0])*256);
 if(!memtag) goto error;
 tptr=memtag;
 gg=gb->groups[group];
@@ -507,7 +507,7 @@ if(gg->alignment) {
 }
 if(!group) {
 	CopyMem(initgroup,tptr,sizeof(initgroup));
-	tptr+=sizeof(initgroup)/sizeof(ULONG);
+	tptr+=sizeof(initgroup)/sizeof(initgroup[0]);
 } else {
 	*tptr++=GROUP_Spacing;
 	*tptr++=GRSPACE_NORMAL;

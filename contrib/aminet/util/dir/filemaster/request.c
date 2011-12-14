@@ -115,6 +115,7 @@ UBYTE reqtxt[200];
 va_list args;
 va_start(args,msg);
 sformatti(reqtxt,getstring(msg),args);
+va_end(args);
 return(request2(title,pos,neg,reqtxt));
 }
 
@@ -125,6 +126,7 @@ UBYTE reqtxt[200];
 va_list args;
 va_start(args,txt);
 sformatti(reqtxt,txt,args);
+va_end(args);
 return(request2(title,pos,neg,reqtxt));
 }
 
@@ -158,6 +160,7 @@ UBYTE dostxt1[200];
 va_list args;
 va_start(args,msg);
 sformatti(dostxt1,getstring(msg),args);
+va_end(args);
 return(dosrequesti(list,flag,dostxt1));
 }
 
@@ -168,6 +171,7 @@ UBYTE dostxt1[200];
 va_list args;
 va_start(args,txt);
 sformatti(dostxt1,txt,args);
+va_end(args);
 return(dosrequesti(list,flag,dostxt1));
 }
 

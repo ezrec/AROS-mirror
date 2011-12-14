@@ -664,8 +664,8 @@ D(bug("fmconfig ...........\n"));
 	cmc->position = 1;
       cmc->cmenucount = apu2 + 1;
 D(bug("fm.c 621...........\n")); 
-      strcpy (cmc->label, ptr1);
-      strcpy (cmc->shortcut, ptr3);
+      strncpy (cmc->label, ptr1, sizeof(cmc->label));
+      strncpy (cmc->shortcut, ptr3, sizeof(cmc->shortcut));
 D(bug("fm.c 624...........\n")); 
       ptr3 += strlen (ptr3) + 1;
 D(bug("fm.c 648...........\n")); 
@@ -813,15 +813,24 @@ D(bug("fm.c 790...........\n"));
 CONST_STRPTR GetString(struct LocaleInfo *li, ULONG id)
 {
     CONST_STRPTR retval;
+    int i;
+
+    for (i = 0; CatCompArray[i].cca_ID != 0; i++)
+    	    if (CatCompArray[i].cca_ID == id)
+    	    	    break;
+
+    if (CatCompArray[i].cca_ID == 0)
+    	    return "--placeholder--";
+
  D(bug("fm.c 796...........\n"));
     if (catalog)
       {
 	D(bug("fm.c 799...........\n")); 
-        retval = GetCatalogStr(catalog, id, CatCompArray[id].cca_Str);
+        retval = GetCatalogStr(catalog, id, CatCompArray[i].cca_Str);
 	D(bug("fm.c 801...........\n")); 
       } else {
 	D(bug("fm.c 803...........\n"));
-        retval = CatCompArray[id].cca_Str;
+        retval = CatCompArray[i].cca_Str;
 	D(bug("fm.c 805...........\n")); 
       }
  

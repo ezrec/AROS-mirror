@@ -88,7 +88,7 @@ while(node2->succ) {
 
 if(nodes<=1) return;
 
-sortbuf=allocmem((LONG)nodes*4);
+sortbuf=allocmem((LONG)nodes*sizeof(struct FMNode *));
 if(!sortbuf) return;
 
 ptr1=sortbuf+nodes; i=nodes;
@@ -340,18 +340,10 @@ void __asm formathook(void);
 void __asm rawdo(register __a0 UBYTE*,register __a1 void*,register __a3 UBYTE*);
 #else
 
-AROS_UFH3(VOID, formathook,
-AROS_UFCA(struct Hook *, putCharFunc, A0),
-AROS_UFCA(struct Locale *, locale, A2),
-AROS_UFCA(char , c, A1))
+char *formathook(char *data, char c)
 {
-    AROS_USERFUNC_INIT
-
-    char * xyz = putCharFunc->h_Data;
-    *xyz = c;
-    putCharFunc->h_Data = (APTR)((IPTR)putCharFunc->h_Data + 1);
-
-    AROS_USERFUNC_EXIT
+    *data = c;
+    return data;
 }
 
 void rawdo(UBYTE*, void*, UBYTE*);
@@ -363,6 +355,7 @@ void sformatmsg(UBYTE *ptr,LONG form,...)
 va_list args;
 va_start(args,form);
 sformatti(ptr,getstring(form),args);
+va_end(args);
 }
 
 void sformat(UBYTE *ptr,UBYTE *form,...)
@@ -372,21 +365,25 @@ D(bug("sformat nodes.c 376...........\n"));
 va_start(args,form);
 D(bug("sformat nodes.c 377...........\n")); 
 sformatti(ptr,form,args);
+va_end(args);
 }
 
 void sformatti(UBYTE *ptr,UBYTE *form,va_list args)
 {
-struct Hook hook;
 extern struct Locale *locale;
 D(bug("nodes.c 385 sformatti...........\n")); 
 ObtainSemaphore(&fmmain.msgsema);
 if(locale&&!(fmconfig->flags&MLOCALE)) {
+#ifdef __AROS__
+	VNewRawDoFmt(form, (VOID_FUNC)formathook, ptr, args);
+#else
+        struct Hook hook;
 	hook.h_Data=ptr;
 	hook.h_Entry=(HOOKFUNC)formathook;
 D(bug("FormatString nodes.c 388...........\n"));  
 	FormatString(locale,form,args, &hook);
 D(bug("FormatString nodes.c 391...........\n"));
-
+#endif
   } else {
  	rawdo(form,args,ptr);
  }

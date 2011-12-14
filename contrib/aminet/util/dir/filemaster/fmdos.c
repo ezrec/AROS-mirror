@@ -575,12 +575,12 @@ return(0);
 
 void *allocvecpooled(LONG a)
 {
-ULONG *ret;
+SIPTR *ret;
 
 if(fmmain.pool) {
 	ObtainSemaphore(&fmmain.poolsema);
 	a+=4;
-	if ((ret=(ULONG*)AllocPooled(fmmain.pool,a))) *ret++=a;
+	if ((ret=(SIPTR*)AllocPooled(fmmain.pool,a))) *ret++=a;
 	ReleaseSemaphore(&fmmain.poolsema);
 } else {
 	ret=AllocVec(a,MEMF_PUBLIC|MEMF_CLEAR);
@@ -589,11 +589,11 @@ return((void*)ret);
 }
 void freevecpooled(void *a)
 {
-ULONG *b;
+SIPTR *b;
 
 if(fmmain.pool) {
 	ObtainSemaphore(&fmmain.poolsema);
-	b=((ULONG*)a)-1;
+	b=((SIPTR *)a)-1;
 	FreePooled(fmmain.pool,b,*b);
 	ReleaseSemaphore(&fmmain.poolsema);
 } else {
