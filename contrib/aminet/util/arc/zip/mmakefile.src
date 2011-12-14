@@ -35,13 +35,15 @@ EXEDIR := $(AROS_C)
 
 #MM- aminet-util-arc-zip: includes linklibs zip-zip zip-zipnote zip-zipcloak zip-zipsplit
 
-USER_CFLAGS := $(CUSEMEM) -DUNDER='"$(OS)"' -Wno-strict-overflow
+USER_WARNINGS := -Wno-strict-overflow -Wno-format-security
+
+USER_CFLAGS := $(CUSEMEM) -DUNDER='"$(OS)"' $(USER_WARNINGS)
 
 %build_prog mmake=zip-zip \
     progname=Zip objdir=$(GENDIR)/$(CURDIR)/Zip targetdir=$(EXEDIR) \
     files=$(FILESZ)
 
-USER_CFLAGS := $(CUSEMEM) -DUTIL -DUNDER='"$(OS)"' -Wno-strict-overflow
+USER_CFLAGS := $(CUSEMEM) -DUTIL -DUNDER='"$(OS)"' $(USER_WARNINGS)
 
 %build_prog mmake=zip-zipnote \
     progname=ZipNote objdir=$(GENDIR)/$(CURDIR)/ZipNote targetdir=$(EXEDIR) \
@@ -57,7 +59,7 @@ USER_CFLAGS := $(CUSEMEM) -DUTIL -DUNDER='"$(OS)"' -Wno-strict-overflow
 
 # Low-memory version. By default we don't build it.
 
-USER_CFLAGS := $(CLOWMEM) -DUNDER='"$(OS)"' -Wno-strict-overflow
+USER_CFLAGS := $(CLOWMEM) -DUNDER='"$(OS)"' $(USER_WARNINGS)
 
 %build_prog mmake=zip-ziplm \
     progname=ZipLM objdir=$(GENDIR)/$(CURDIR)/ZipLM targetdir=$(EXEDIR) \

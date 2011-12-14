@@ -10,6 +10,8 @@ EXEDIR := $(CONTRIBDIR)/Misc/aminet/C
 
 #MM aminet-util-arc-unarj : includes linklibs
 
+USER_CFLAGS := -Wno-format-security
+
 %build_prog mmake=aminet-util-arc-unarj \
     progname=unarj targetdir=$(EXEDIR) \
     files=$(FILES) uselibs="arossupport amiga arosc m"

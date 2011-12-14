@@ -132,7 +132,7 @@ static void print_tiny_usage_and_exit(void)
 /* TEMPORARY */
 long __bufsiz = 4096;
 
-void main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
     char *p, inpbuf[256];
 D(bug("lharc.c 137...."));
@@ -299,7 +299,7 @@ work:
 	exit(0);
 #endif
 
-    exit(0);
+    return 0;
 }
 
 static void message_1(char *title, char *subject, char *name)

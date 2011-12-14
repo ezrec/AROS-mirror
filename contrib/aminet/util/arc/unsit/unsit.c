@@ -230,7 +230,7 @@ int getbit();
 int gethuffbyte(int decode);
 
 
-void main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
     extern int optind;
     extern char *optarg;
 
@@ -321,7 +321,7 @@ void main(int argc, char *argv[]) {
     */
  
     status = extract("", 0);
-    exit((status < 0) ? 1 : 0);
+    return ((status < 0) ? 1 : 0);
 }
 
 void usage() {

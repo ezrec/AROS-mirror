@@ -433,7 +433,7 @@ void cmd_delete(void);
 
 /* Prototypes for functions defined in lharc.c */
 
-void main(int argc,
+int  main(int argc,
           char **argv);
 void message(char *subject,
              char *name);

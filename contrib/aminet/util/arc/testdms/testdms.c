@@ -206,7 +206,7 @@ typedef struct {
 *
 *************************************************************************/
 
-void 	main		( int 		argc, 
+int 	main		( int 		argc, 
 					  char** 	argv );
 
 int		ParseParams( int		argc,
@@ -248,7 +248,7 @@ void	PrintTrackHeader( UBYTE*	RawHeader_PT );
 * Parameters : none
 *
 ********************************************************************/
-void main( int argc, char** argv )
+int main( int argc, char** argv )
 {
 	t_Flags		Options_T;
 	int			File_I			= 0;
@@ -265,7 +265,7 @@ void main( int argc, char** argv )
 		  File_I < argc; File_I++ )
 		Result_I = CheckFile( argv[ File_I ], &Options_T );
 
-	exit( Result_I );
+	return Result_I;
 }
 
 

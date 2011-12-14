@@ -368,6 +368,7 @@ int skip;
 
 char *getname(s1,s2,mode)
 char *s1,*s2;
+int mode;
 {
 	char endchar = ' ';
 
