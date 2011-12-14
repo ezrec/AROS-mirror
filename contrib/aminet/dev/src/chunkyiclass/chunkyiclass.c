@@ -275,7 +275,7 @@ data->normal_rpi.rp = NULL;
    
    /* If IA_Width or IA_Height are not explicitly given on initialization, */
    /* set them to their corresponding values in IA_Data.                   */
-   GetAttr (IA_Data, obj, (ULONG *)&normal_data);
+   GetAttr (IA_Data, obj, (IPTR *)&normal_data);
    if (normal_data != NULL)
    {
       if (!FindTagItem (IA_Width, msg->ops_AttrList))
@@ -310,7 +310,7 @@ data->normal_rpi.rp = NULL;
    /* Create images in their own rastports. */
    data->selected_data = (UBYTE *)GetTagData (CHUNKYIA_SelectedData, (IPTR)NULL,
                                               msg->ops_AttrList);
-   GetAttr (IA_BGPen, obj, (ULONG *)&bgpen);
+   GetAttr (IA_BGPen, obj, (IPTR *)&bgpen);
    data->def_pens = (UWORD *)GetTagData (IA_Pens, (IPTR)NULL, msg->ops_AttrList);
    
    if (data->screen)
@@ -363,16 +363,16 @@ chunkyim_get (
    switch (msg->opg_AttrID)
    {
    case IA_Pens:
-      *msg->opg_Storage = (ULONG)data->def_pens;
+      *msg->opg_Storage = (IPTR)data->def_pens;
       break;
    case CHUNKYIA_SelectedBGPen:
       *msg->opg_Storage = data->selected_bgpen;
       break;
    case CHUNKYIA_SelectedData:
-      *msg->opg_Storage = (ULONG)data->selected_data;
+      *msg->opg_Storage = (IPTR)data->selected_data;
       break;
    case CHUNKYIA_Screen:
-      *msg->opg_Storage = (ULONG)data->screen;
+      *msg->opg_Storage = (IPTR)data->screen;
       break;
    default:
       retval = FALSE;
@@ -395,7 +395,7 @@ chunkyim_set (
    const struct TagItem *tstate = msg->ops_AttrList;
    BOOL                 nimg_update = FALSE, simg_update = FALSE;
    UBYTE               *normal_data = NULL;
-   ULONG                bgpen;
+   IPTR                 bgpen;
    
    
    while ((ti = NextTagItem (&tstate)))
@@ -427,7 +427,7 @@ chunkyim_set (
       }
    }
    
-   GetAttr (IA_Data, obj, (ULONG *)&normal_data);
+   GetAttr (IA_Data, obj, (IPTR *)&normal_data);
    if (nimg_update && data->screen && normal_data)
    {
       GetAttr (IA_BGPen, obj, &bgpen);
@@ -459,8 +459,8 @@ chunkyim_draw (
 {
    struct chunkyidata  *data = INST_DATA (cl, obj);
    struct rp_info      *rpi;
-   LONG                 left, top;
-   ULONG                width, height;
+   SIPTR                left, top;
+   IPTR                 width, height;
    
    
    switch (msg->imp_State)
@@ -478,8 +478,8 @@ chunkyim_draw (
    
    if (rpi->rp)
    {
-      GetAttr (IA_Left, obj, (ULONG *)&left);
-      GetAttr (IA_Top, obj, (ULONG *)&top);
+      GetAttr (IA_Left, obj, &left);
+      GetAttr (IA_Top, obj, &top);
       if (msg->MethodID == IM_DRAWFRAME)
       {
          width = msg->imp_Dimensions.Width;
@@ -540,11 +540,11 @@ chunkyim_hitframe (
    Object             *obj,
    struct impHitTest  *msg)
 {
-   LONG   left, top;
+   SIPTR  left, top;
    
    
-   GetAttr (IA_Left, obj, (ULONG *)&left);
-   GetAttr (IA_Top, obj, (ULONG *)&top);
+   GetAttr (IA_Left, obj, &left);
+   GetAttr (IA_Top, obj, &top);
    
    return (BOOL)(msg->imp_Point.X >= left && msg->imp_Point.Y >= top &&
                  msg->imp_Point.X < left + msg->imp_Dimensions.Width &&
@@ -559,11 +559,11 @@ chunkyim_eraseframe (
    Object           *obj,
    struct impErase  *msg)
 {
-   LONG   left, top;
+   SIPTR  left, top;
    
    
-   GetAttr (IA_Left, obj, (ULONG *)&left);
-   GetAttr (IA_Top, obj, (ULONG *)&top);
+   GetAttr (IA_Left, obj, &left);
+   GetAttr (IA_Top, obj, &top);
    left += msg->imp_Offset.X;
    top += msg->imp_Offset.Y;
    
@@ -574,34 +574,30 @@ chunkyim_eraseframe (
 
 
 /* !!!dispatcher for chunkyiclass!!! */
-ULONG /*__saveds*/ 
+IPTR  /*__saveds*/ 
 chunkyi_dispatcher (
    Class   *cl,
    Object  *obj,
    Msg      msg)
 {
-   APTR   retval = NULL;
+   IPTR   retval = 0;
    
    switch (msg->MethodID)
    {
    case OM_NEW:
-{
-struct chunkyidata  *data = INST_DATA (cl, obj);
-kprintf("%s %d: data->normal_rpi.rp: %p\n",__FUNCTION__,__LINE__,data->normal_rpi.rp);
-      if ((retval = (APTR)DoSuperMethodA (cl, obj, msg)))
-         chunkyim_new (cl, retval, (struct opSet *)msg);
+      if ((retval = DoSuperMethodA (cl, obj, msg)))
+         chunkyim_new (cl, (Object *)retval, (struct opSet *)msg);
       break;
-}
    case OM_DISPOSE:
       chunkyim_dispose (cl, obj);
-      retval = (APTR)DoSuperMethodA (cl, obj, msg);
+      retval = DoSuperMethodA (cl, obj, msg);
       break;
    case OM_GET:
-      if (!(retval = (APTR)(ULONG)chunkyim_get (cl, obj, (struct opGet *)msg)))
-         retval = (APTR)DoSuperMethodA (cl, obj, msg);
+      if (!(retval = chunkyim_get (cl, obj, (struct opGet *)msg)))
+         retval = DoSuperMethodA (cl, obj, msg);
       break;
    case OM_SET:
-      retval = (APTR)1;
+      retval = 1;
       DoSuperMethodA (cl, obj, msg);
       chunkyim_set (cl, obj, (struct opSet *)msg);
       break;
@@ -610,17 +606,17 @@ kprintf("%s %d: data->normal_rpi.rp: %p\n",__FUNCTION__,__LINE__,data->normal_rp
       chunkyim_draw (cl, obj, (struct impDraw *)msg);
       break;
    case IM_HITFRAME:
-      retval = (APTR)(ULONG)chunkyim_hitframe (cl, obj, (struct impHitTest *)msg);
+      retval = chunkyim_hitframe (cl, obj, (struct impHitTest *)msg);
       break;
    case IM_ERASEFRAME:
       chunkyim_eraseframe (cl, obj, (struct impErase *)msg);
       break;
    default: /* method not recognized by chunkyiclass */
-      retval = (APTR)DoSuperMethodA (cl, obj, msg);
+      retval = DoSuperMethodA (cl, obj, msg);
       break;
    }
       
-   return (ULONG)retval;
+   return retval;
 }
 
 
