@@ -115,7 +115,7 @@ counter_draw (
 {
    if (counter->digital)
    {
-      ULONG   bgpen;
+      IPTR    bgpen;
       
       
       DrawBevelBox (counter->win->RPort,

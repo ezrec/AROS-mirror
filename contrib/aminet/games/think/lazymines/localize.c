@@ -92,7 +92,7 @@ CreateLocMenus (
       
       if (nm[i].nm_Label != NM_BARLABEL)
       {
-         nm[i].nm_CommKey = GetString (&li, (LONG)nm[i].nm_Label);
+         nm[i].nm_CommKey = GetString (&li, (IPTR)nm[i].nm_Label);
          nm[i].nm_Label = nm[i].nm_CommKey + 2;
          if (nm[i].nm_CommKey[0] == ' ')
             nm[i].nm_CommKey = NULL;

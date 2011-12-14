@@ -144,7 +144,7 @@ BOOL   playing = TRUE;
 BOOL   time_on = FALSE;
 
 
-void
+int
 main (
    int    argc,
    char  *argv[])

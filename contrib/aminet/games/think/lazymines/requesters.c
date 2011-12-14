@@ -201,7 +201,7 @@ about_requester (
 {
    struct RastPort     layout_rp;
    struct TextExtent   te;
-   ULONG               box_w = 0, box_h = 0, win_w, win_h;
+   IPTR                box_w = 0, box_h = 0, win_w, win_h;
    LONG                temp;
    STRPTR              name_str, ver_str = NULL, pos, next, real_pos;
    
