@@ -33,7 +33,7 @@ static void ResetBestTimes(struct LevelData * pLevel);
 /*
     function :    OM_NEW method handler for MFWindow class
 */
-static ULONG mNew(struct IClass *cl, Object *obj, struct opSet *msg)
+static IPTR mNew(struct IClass *cl, Object *obj, struct opSet *msg)
 {
     int i;
     struct LevelData * pLevel;
@@ -244,14 +244,14 @@ static ULONG mNew(struct IClass *cl, Object *obj, struct opSet *msg)
     /*
         return the object (or NULL)
     */
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
 
 /*
     function :    OM_DELETE method handler for BTWindow class
 */
-static ULONG mDispose(struct IClass *cl, Object *obj, Msg msg)
+static IPTR mDispose(struct IClass *cl, Object *obj, Msg msg)
 {
     struct BTWindowData *data = INST_DATA(cl, obj);
 
@@ -267,7 +267,7 @@ static ULONG mDispose(struct IClass *cl, Object *obj, Msg msg)
 /*
     function :    OM_SET method handler for BTWindow class
 */
-static ULONG mSet(struct IClass *cl, Object *obj, struct opSet * msg)
+static IPTR mSet(struct IClass *cl, Object *obj, struct opSet * msg)
 {
     struct BTWindowData *data = INST_DATA(cl,obj);
     const struct TagItem *tags;
@@ -297,14 +297,14 @@ static ULONG mSet(struct IClass *cl, Object *obj, struct opSet * msg)
 /*
     function :    OM_GET method handler for BTWindow class
 */
-static ULONG mGet(struct IClass *cl, Object *obj, struct opGet * msg)
+static IPTR mGet(struct IClass *cl, Object *obj, struct opGet * msg)
 {
     struct BTWindowData *data = INST_DATA(cl, obj);
-    ULONG *store = msg->opg_Storage;
+    IPTR *store = msg->opg_Storage;
 
     if (msg->opg_AttrID == MUIA_BTWindow_Level)
     {
-        *store = (ULONG)data->DisplayedLevel;
+        *store = (IPTR)data->DisplayedLevel;
         return TRUE;
     }
 
@@ -316,7 +316,7 @@ static ULONG mGet(struct IClass *cl, Object *obj, struct opGet * msg)
 /*
     function :    MUIM_BTWindow_ResetLevel method handler for BTWindow class
 */
-static ULONG mResetLevel(struct IClass *cl, Object *obj, Msg msg)
+static IPTR mResetLevel(struct IClass *cl, Object *obj, Msg msg)
 {
     struct BTWindowData *data = INST_DATA(cl, obj);
     struct LevelData * pLevel;
@@ -356,7 +356,7 @@ static ULONG mResetLevel(struct IClass *cl, Object *obj, Msg msg)
 /*
     function :    MUIM_BTWindow_ResetAll method handler for BTWindow class
 */
-static ULONG mResetAll(struct IClass *cl, Object *obj, Msg msg)
+static IPTR mResetAll(struct IClass *cl, Object *obj, Msg msg)
 {
     struct Object * app = NULL;
     struct BTWindowData *data = INST_DATA(cl, obj);
@@ -395,20 +395,8 @@ static ULONG mResetAll(struct IClass *cl, Object *obj, Msg msg)
 /*
     function :    class dispatcher
 */
-#ifndef __AROS__
-SAVEDS ASM ULONG BTWindowDispatcher(
-        REG(a0) struct IClass *cl,
-        REG(a2) Object *obj,
-        REG(a1) Msg msg)
-#else
-AROS_UFH3(ULONG, BTWindowDispatcher,
- AROS_UFHA(struct IClass *, cl , A0),
- AROS_UFHA(Object *       , obj, A2),
- AROS_UFHA(Msg            , msg, A1))
-#endif
+DISPATCHER(BTWindowDispatcher)
 {
-    AROS_USERFUNC_INIT
-
     switch (msg->MethodID)
     {
         case OM_NEW:     return mNew    (cl, obj, (APTR)msg);
@@ -424,8 +412,6 @@ AROS_UFH3(ULONG, BTWindowDispatcher,
     }
 
     return DoSuperMethodA(cl, obj, msg);
-
-    AROS_USERFUNC_EXIT
 }
 
 
@@ -650,7 +636,7 @@ struct MUI_CustomClass * CreateBTWindowClass()
 {
     return MUI_CreateCustomClass(NULL, MUIC_Window, NULL,
                                        sizeof(struct BTWindowData),
-                                       BTWindowDispatcher);
+                                       ENTRY(BTWindowDispatcher));
 }
 
 /*

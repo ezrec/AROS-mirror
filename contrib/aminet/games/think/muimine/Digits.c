@@ -94,7 +94,7 @@ static ULONG mNew(struct IClass *cl, Object *obj, struct opSet *msg)
                                msg->ops_AttrList);
     SetImageFileName(data, fname);
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
 
@@ -283,21 +283,8 @@ static ULONG mDraw(struct IClass *cl, Object *obj, struct MUIP_Draw *msg)
     return 0;
 }
 
-
-#ifndef __AROS__
-SAVEDS ASM ULONG DigitsDispatcher(
-        REG(a0) struct IClass *cl,
-        REG(a2) Object *obj,
-        REG(a1) Msg msg)
-#else
-AROS_UFH3(ULONG, DigitsDispatcher,
- AROS_UFHA(struct IClass *, cl , A0),
- AROS_UFHA(Object *       , obj, A2),
- AROS_UFHA(Msg            , msg, A1))
-#endif
+DISPATCHER(DigitsDispatcher)
 {
-    AROS_USERFUNC_INIT
-
     switch (msg->MethodID)
     {
         case OM_NEW          : return        mNew(cl, obj, (APTR)msg);
@@ -310,8 +297,6 @@ AROS_UFH3(ULONG, DigitsDispatcher,
     }
 
     return DoSuperMethodA(cl, obj, msg);
-
-    AROS_USERFUNC_EXIT
 }
 
 
@@ -553,7 +538,7 @@ struct MUI_CustomClass * CreateDigitsClass()
 {
     return MUI_CreateCustomClass(NULL, MUIC_Area, NULL,
                                        sizeof(struct DigitsData),
-                                       DigitsDispatcher);
+                                       ENTRY(DigitsDispatcher));
 }
 
 /*

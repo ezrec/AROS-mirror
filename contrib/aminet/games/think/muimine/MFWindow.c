@@ -252,7 +252,7 @@ struct NewMenu * CreateNewMenus(void)
         if (pNewMenu->nm_Label != NM_BARLABEL  &&
             pNewMenu->nm_Type  != NM_END)
         {
-            pNewMenu->nm_CommKey = GetStr((LONG)pNewMenu->nm_Label);
+            pNewMenu->nm_CommKey = GetStr((IPTR)pNewMenu->nm_Label);
             pNewMenu->nm_Label = pNewMenu->nm_CommKey+2;
 
             if (pNewMenu->nm_CommKey[0] == ' ')
@@ -427,7 +427,7 @@ void SetTimeDigitsImageFileName(struct MFWindowData * data, STRPTR newname)
 /*
     function :    OM_NEW method handler for MFWindow class
 */
-static ULONG mNew(struct IClass *cl, Object *obj, struct opSet *msg)
+static IPTR mNew(struct IClass *cl, Object *obj, struct opSet *msg)
 {
     ULONG level;
     BOOL safestart;
@@ -645,14 +645,14 @@ static ULONG mNew(struct IClass *cl, Object *obj, struct opSet *msg)
         DisposeLevelData(&levels);
     }
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
 
 /*
     function :    OM_DELETE method handler for MFWindow class
 */
-static ULONG mDispose(struct IClass *cl, Object *obj, Msg msg)
+static IPTR mDispose(struct IClass *cl, Object *obj, Msg msg)
 {
     struct MFWindowData *data = INST_DATA(cl, obj);
 
@@ -675,7 +675,7 @@ static ULONG mDispose(struct IClass *cl, Object *obj, Msg msg)
 /*
     function :    OM_SET method handler for MFWindow class
 */
-static ULONG mSet(struct IClass *cl, Object *obj, struct opSet * msg)
+static IPTR mSet(struct IClass *cl, Object *obj, struct opSet * msg)
 {
     struct MFWindowData *data = INST_DATA(cl,obj);
     struct TagItem *tag;
@@ -736,7 +736,7 @@ static ULONG mSet(struct IClass *cl, Object *obj, struct opSet * msg)
                                                              MENU_GAME_SAFESTART);
                             if (ssitem)
                             {
-                                ULONG l;
+                                IPTR l;
                                 if (GetAttr(MUIA_Menuitem_Checked, ssitem, &l))
                                 {
                                     if (l)
@@ -839,35 +839,35 @@ static ULONG mSet(struct IClass *cl, Object *obj, struct opSet * msg)
 /*
     function :    OM_GET method handler for MFWindow class
 */
-static ULONG mGet(struct IClass *cl, Object *obj, struct opGet * msg)
+static IPTR mGet(struct IClass *cl, Object *obj, struct opGet * msg)
 {
     struct MFWindowData *data = INST_DATA(cl, obj);
-    ULONG *store = msg->opg_Storage;
+    IPTR *store = msg->opg_Storage;
 
     switch (msg->opg_AttrID)
     {
         case MUIA_MFWindow_Level:
-            *store = (ULONG)data->Levels.CurrentLevel;
+            *store = (IPTR)data->Levels.CurrentLevel;
             return TRUE;
 
         case MUIA_MFWindow_MineFieldImage:
-            *store = (ULONG)data->MineFieldImageFile;
+            *store = (IPTR)data->MineFieldImageFile;
             return TRUE;
 
         case MUIA_MFWindow_StartButtonImage:
-            *store = (ULONG)data->StartButtonImageFile;
+            *store = (IPTR)data->StartButtonImageFile;
             return TRUE;
 
         case MUIA_MFWindow_MinesDigitsImage:
-            *store = (ULONG)data->MinesDigitsImageFile;
+            *store = (IPTR)data->MinesDigitsImageFile;
             return TRUE;
 
         case MUIA_MFWindow_TimeDigitsImage:
-            *store = (ULONG)data->TimeDigitsImageFile;
+            *store = (IPTR)data->TimeDigitsImageFile;
             return TRUE;
 
         case MUIA_MFWindow_SafeStart:
-            *store = (ULONG)((data->Options & MFW_OPT_SAFESTART) != 0);
+            *store = (IPTR)((data->Options & MFW_OPT_SAFESTART) != 0);
             return TRUE;
     }
 
@@ -877,7 +877,7 @@ static ULONG mGet(struct IClass *cl, Object *obj, struct opGet * msg)
 /*
     function :    MUIM_MFWindow_CheckBestTime method handler for MFWindow class
 */
-static ULONG mCheckBestTime(struct IClass *cl, Object *obj, Msg msg)
+static IPTR mCheckBestTime(struct IClass *cl, Object *obj, Msg msg)
 {
     struct MFWindowData * data = INST_DATA(cl, obj);
     CheckBestTime(obj, data);
@@ -887,20 +887,8 @@ static ULONG mCheckBestTime(struct IClass *cl, Object *obj, Msg msg)
 /*
     function :    class dispatcher
 */
-#ifndef __AROS__
-SAVEDS ASM ULONG MFWindowDispatcher(
-        REG(a0) struct IClass *cl,
-        REG(a2) Object *obj,
-        REG(a1) Msg msg)
-#else
-AROS_UFH3(ULONG, MFWindowDispatcher,
- AROS_UFHA(struct IClass *, cl , A0),
- AROS_UFHA(Object *       , obj, A2),
- AROS_UFHA(Msg            , msg, A1))
-#endif
+DISPATCHER(MFWindowDispatcher)
 {
-    AROS_USERFUNC_INIT
-
     switch (msg->MethodID)
     {
         case OM_NEW:     return mNew    (cl, obj, (APTR)msg);
@@ -913,8 +901,6 @@ AROS_UFH3(ULONG, MFWindowDispatcher,
     }
 
     return DoSuperMethodA(cl, obj, msg);
-
-    AROS_USERFUNC_EXIT
 }
 
 
@@ -1626,7 +1612,7 @@ static void SetupImages(Object * obj, struct MFWindowData * data)
             /*
                 get mine field image file and check if updated
             */
-            if (GetAttr(MUIA_ISWindow_MineFieldImage, win, (ULONG *)&pstr))
+            if (GetAttr(MUIA_ISWindow_MineFieldImage, win, (IPTR *)&pstr))
             {
                 l = (pstr) ? strlen(pstr) : 0;
                 if ((data->MineFieldImageFile == NULL  &&  l != 0)  ||
@@ -1641,7 +1627,7 @@ static void SetupImages(Object * obj, struct MFWindowData * data)
             /*
                 get start button image file and check if updated
             */
-            if (GetAttr(MUIA_ISWindow_StartButtonImage, win, (ULONG *)&pstr))
+            if (GetAttr(MUIA_ISWindow_StartButtonImage, win, (IPTR *)&pstr))
             {
                 l = (pstr) ? strlen(pstr) : 0;
                 if ((data->StartButtonImageFile == NULL  &&  l != 0)  ||
@@ -1656,7 +1642,7 @@ static void SetupImages(Object * obj, struct MFWindowData * data)
             /*
                 get mines left digits image file and check if updated
             */
-            if (GetAttr(MUIA_ISWindow_MinesDigitsImage, win, (ULONG *)&pstr))
+            if (GetAttr(MUIA_ISWindow_MinesDigitsImage, win, (IPTR *)&pstr))
             {
                 l = (pstr) ? strlen(pstr) : 0;
                 if ((data->MinesDigitsImageFile == NULL  &&  l != 0)  ||
@@ -1671,7 +1657,7 @@ static void SetupImages(Object * obj, struct MFWindowData * data)
             /*
                 get time taken digits image file and check if updated
             */
-            if (GetAttr(MUIA_ISWindow_TimeDigitsImage, win, (ULONG *)&pstr))
+            if (GetAttr(MUIA_ISWindow_TimeDigitsImage, win, (IPTR *)&pstr))
             {
                 l = (pstr) ? strlen(pstr) : 0;
                 if ((data->TimeDigitsImageFile == NULL  &&  l != 0)  ||
@@ -1782,7 +1768,7 @@ struct MUI_CustomClass * CreateMFWindowClass(void)
                             struct MUI_CustomClass * cmfw;
                             cmfw = MUI_CreateCustomClass(NULL, MUIC_Window, NULL,
                                                            sizeof(struct MFWindowData),
-                                                           MFWindowDispatcher);
+                                                           ENTRY(MFWindowDispatcher));
                             if (cmfw)
                             {
                                 return cmfw;

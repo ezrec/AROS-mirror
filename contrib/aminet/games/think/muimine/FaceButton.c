@@ -64,7 +64,7 @@ void FreeFaceButtonImageBM(struct FaceButtonData * data);
 /*
     function :    OM_NEW method handler for FaceButton class
 */
-static ULONG mNew(struct IClass *cl, Object *obj, struct opSet *msg)
+static IPTR mNew(struct IClass *cl, Object *obj, struct opSet *msg)
 {
     struct FaceButtonData *data;
     STRPTR fname;
@@ -88,14 +88,14 @@ static ULONG mNew(struct IClass *cl, Object *obj, struct opSet *msg)
                                msg->ops_AttrList);
     SetImageFileName(data, fname);
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
 
 /*
     function :    OM_DELETE method handler for FaceButton class
 */
-static ULONG mDispose(struct IClass *cl, Object *obj, Msg msg)
+static IPTR mDispose(struct IClass *cl, Object *obj, Msg msg)
 {
     struct FaceButtonData *data = INST_DATA(cl, obj);
 
@@ -109,7 +109,7 @@ static ULONG mDispose(struct IClass *cl, Object *obj, Msg msg)
 /*
     function :    MUIM_Setup method handler for FaceButton class
 */
-static ULONG mSetup(struct IClass *cl, Object *obj, struct MUIP_Setup * msg)
+static IPTR mSetup(struct IClass *cl, Object *obj, struct MUIP_Setup * msg)
 {
     struct FaceButtonData *data = INST_DATA(cl, obj);
 
@@ -133,7 +133,7 @@ static ULONG mSetup(struct IClass *cl, Object *obj, struct MUIP_Setup * msg)
 /*
     function :    MUIM_Cleanup method handler for FaceButton class
 */
-static ULONG mCleanup(struct IClass *cl, Object *obj, Msg msg)
+static IPTR mCleanup(struct IClass *cl, Object *obj, Msg msg)
 {
 //    struct FaceButtonData *data = INST_DATA(cl, obj);
 
@@ -145,7 +145,7 @@ static ULONG mCleanup(struct IClass *cl, Object *obj, Msg msg)
 /*
     function :    MUIM_AskMinMax method handler for FaceButton class
 */
-static ULONG mAskMinMax(struct IClass *cl, Object *obj, struct MUIP_AskMinMax *msg)
+static IPTR mAskMinMax(struct IClass *cl, Object *obj, struct MUIP_AskMinMax *msg)
 {
     struct FaceButtonData *data = INST_DATA(cl, obj);
 
@@ -176,7 +176,7 @@ static ULONG mAskMinMax(struct IClass *cl, Object *obj, struct MUIP_AskMinMax *m
 /*
     function :    OM_SET method handler for FaceButton class
 */
-static ULONG mSet(struct IClass *cl, Object *obj, struct opSet * msg)
+static IPTR mSet(struct IClass *cl, Object *obj, struct opSet * msg)
 {
     struct FaceButtonData *data = INST_DATA(cl,obj);
     const struct TagItem *tags;
@@ -220,7 +220,7 @@ static ULONG mSet(struct IClass *cl, Object *obj, struct opSet * msg)
 /*
     function :    MUIM_Draw method handler for FaceButton class
 */
-static ULONG mDraw(struct IClass *cl, Object *obj, struct MUIP_Draw *msg)
+static IPTR mDraw(struct IClass *cl, Object *obj, struct MUIP_Draw *msg)
 {
     struct FaceButtonData *data = INST_DATA(cl, obj);
 
@@ -258,21 +258,8 @@ static ULONG mDraw(struct IClass *cl, Object *obj, struct MUIP_Draw *msg)
     return 0;
 }
 
-
-#ifndef __AROS__
-SAVEDS ASM ULONG FaceButtonDispatcher(
-        REG(a0) struct IClass *cl,
-        REG(a2) Object *obj,
-        REG(a1) Msg msg)
-#else
-AROS_UFH3(ULONG, FaceButtonDispatcher,
- AROS_UFHA(struct IClass *, cl , A0),
- AROS_UFHA(Object *       , obj, A2),
- AROS_UFHA(Msg            , msg, A1))
-#endif
+DISPATCHER(FaceButtonDispatcher)
 {
-    AROS_USERFUNC_INIT
-
     switch (msg->MethodID)
     {
         case OM_NEW          : return        mNew(cl, obj, (APTR)msg);
@@ -285,8 +272,6 @@ AROS_UFH3(ULONG, FaceButtonDispatcher,
     }
 
     return DoSuperMethodA(cl, obj, msg);
-
-    AROS_USERFUNC_EXIT
 }
 
 
@@ -430,7 +415,7 @@ struct MUI_CustomClass * CreateFaceButtonClass()
 {
     return MUI_CreateCustomClass(NULL, MUIC_Area, NULL,
                                        sizeof(struct FaceButtonData),
-                                       FaceButtonDispatcher);
+                                       ENTRY(FaceButtonDispatcher));
 }
 
 /*

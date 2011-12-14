@@ -199,7 +199,7 @@ static VOID stccpy(char *dest,char *source,int len)
 
 
 #ifndef USE_ZUNE_ON_AMIGA
-ULONG __stdargs DoSuperNew(struct IClass *cl,Object *obj,ULONG tag1,...)
+IPTR __stdargs DoSuperNew(struct IClass *cl,Object *obj,IPTR tag1,...)
 {
         return(DoSuperMethod(cl,obj,OM_NEW,&tag1,NULL));
 }
@@ -643,7 +643,7 @@ int main(int argc, char *argv[])
     {
         STRPTR pstr, minefieldimagett, startbuttonimagett,
                minesdigitsimagett, timedigitsimagett, safestarttt;
-        ULONG ss;
+        IPTR ss;
         int i;
         BOOL updatett = FALSE;
 
@@ -652,7 +652,7 @@ int main(int argc, char *argv[])
             has changed and create a new tool type for it
         */
         minefieldimagett = NULL;
-        if (GetAttr(MUIA_MFWindow_MineFieldImage, window, (ULONG *)&pstr))
+        if (GetAttr(MUIA_MFWindow_MineFieldImage, window, (IPTR *)&pstr))
         {
             if ((pstr != NULL  ||  minefieldimage != NULL)  &&
                 (pstr == NULL  ||  minefieldimage == NULL  ||
@@ -677,7 +677,7 @@ int main(int argc, char *argv[])
             has changed and create a new tool type for it
         */
         startbuttonimagett = NULL;
-        if (GetAttr(MUIA_MFWindow_StartButtonImage, window, (ULONG *)&pstr))
+        if (GetAttr(MUIA_MFWindow_StartButtonImage, window, (IPTR *)&pstr))
         {
             if ((pstr != NULL  ||  startbuttonimage != NULL)  &&
                 (pstr == NULL  ||  startbuttonimage == NULL  ||
@@ -702,7 +702,7 @@ int main(int argc, char *argv[])
             has changed and create a new tool type for it
         */
         minesdigitsimagett = NULL;
-        if (GetAttr(MUIA_MFWindow_MinesDigitsImage, window, (ULONG *)&pstr))
+        if (GetAttr(MUIA_MFWindow_MinesDigitsImage, window, (IPTR *)&pstr))
         {
             if ((pstr != NULL  ||  minesdigitsimage != NULL)  &&
                 (pstr == NULL  ||  minesdigitsimage == NULL  ||
@@ -727,7 +727,7 @@ int main(int argc, char *argv[])
             has changed and create a new tool type for it
         */
         timedigitsimagett = NULL;
-        if (GetAttr(MUIA_MFWindow_TimeDigitsImage, window, (ULONG *)&pstr))
+        if (GetAttr(MUIA_MFWindow_TimeDigitsImage, window, (IPTR *)&pstr))
         {
             if ((pstr != NULL  ||  timedigitsimage != NULL)  &&
                 (pstr == NULL  ||  timedigitsimage == NULL  ||

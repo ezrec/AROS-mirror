@@ -38,7 +38,7 @@ ULONG GetImageName(Object * strobj, IPTR * store)
     STRPTR pstr;
     int l;
 
-    if (GetAttr(MUIA_String_Contents, strobj, (ULONG *)&pstr))
+    if (GetAttr(MUIA_String_Contents, strobj, (IPTR *)&pstr))
     {
         l = (pstr) ? strlen(pstr) : 0;
         *store = (l) ? (IPTR)pstr : (IPTR)NULL;
@@ -276,7 +276,7 @@ SAVEDS IPTR mSet(struct IClass *cl, Object *obj, struct opSet * msg)
 /*
     function :    OM_GET method handler
 */
-static ULONG mGet(struct IClass *cl, Object *obj, struct opGet * msg)
+static IPTR mGet(struct IClass *cl, Object *obj, struct opGet * msg)
 {
     struct ISWindowData *data = INST_DATA(cl,obj);
     IPTR *store = msg->opg_Storage;
@@ -309,10 +309,10 @@ static ULONG mGet(struct IClass *cl, Object *obj, struct opGet * msg)
                   ok to close the window and sets the exit code if it can be
                   else gives a message to close the requesters
 */
-static ULONG mExitCheck(struct IClass *cl, Object *obj, struct MUIP_ISWindow_ExitCheck * msg)
+static IPTR mExitCheck(struct IClass *cl, Object *obj, struct MUIP_ISWindow_ExitCheck * msg)
 {
     struct ISWindowData *data = INST_DATA(cl,obj);
-    ULONG isactive;
+    IPTR isactive;
 
     GetAttr(MUIA_Popasl_Active, data->MineFieldPop, &isactive);
     if (!isactive) GetAttr(MUIA_Popasl_Active, data->StartButtonPop, &isactive);
@@ -340,19 +340,8 @@ static ULONG mExitCheck(struct IClass *cl, Object *obj, struct MUIP_ISWindow_Exi
 /*
     function :    class dispatcher
 */
-#ifndef __AROS__
-SAVEDS ASM ULONG ISWindowDispatcher(REG(a0) struct IClass *cl,
-                                    REG(a2) Object *obj,
-                                    REG(a1) Msg msg)
-#else
-AROS_UFH3(IPTR, ISWindowDispatcher,
- AROS_UFHA(struct IClass *, cl , A0),
- AROS_UFHA(Object *       , obj, A2),
- AROS_UFHA(Msg            , msg, A1))
-#endif
+DISPATCHER(ISWindowDispatcher)
 {
-    AROS_USERFUNC_INIT
-
     switch (msg->MethodID)
     {
         case OM_NEW        : return(mNew      (cl, obj, (APTR)msg));
@@ -365,8 +354,6 @@ AROS_UFH3(IPTR, ISWindowDispatcher,
     }
 
     return(DoSuperMethodA(cl,obj,msg));
-
-    AROS_USERFUNC_EXIT
 }
 
 
@@ -380,7 +367,7 @@ struct MUI_CustomClass * CreateISWindowClass()
 {
     return MUI_CreateCustomClass(NULL, MUIC_Window, NULL,
                                        sizeof(struct ISWindowData),
-                                       ISWindowDispatcher);
+                                       ENTRY(ISWindowDispatcher));
 }
 
 /*

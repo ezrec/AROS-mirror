@@ -55,26 +55,10 @@
 #endif
 
 /* Compiler specific stuff */
+#include <SDI/SDI_compiler.h>
+#include <SDI/SDI_hook.h>
 
-#ifdef _DCC
-
-#define REG(x) __ ## x
-#define ASM
-#define SAVEDS __geta4
-
-#else
-
-#define REG(x) register __ ## x
-
-#if defined __MAXON__ || defined __GNUC__
-#define ASM
-#define SAVEDS
-#else
-#define ASM    __asm
-#define SAVEDS __saveds
-#endif /* if defined ... */
-
-
+#ifndef _DCC
 #ifdef __SASC
 #include <pragmas/exec_sysbase_pragmas.h>
 #else
@@ -138,7 +122,7 @@ extern struct Library *IntuitionBase, *UtilityBase, *GfxBase, *DOSBase, *IconBas
 #define __stdargs
 #endif
 
-ULONG __stdargs DoSuperNew(struct IClass *cl,Object *obj,ULONG tag1,...);
+IPTR __stdargs DoSuperNew(struct IClass *cl,Object *obj,IPTR tag1,...);
 
 //
 //  parameter structure for loading a bitmap from a file using datatypes

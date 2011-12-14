@@ -395,7 +395,7 @@ BOOL GetCoOrdQue(struct CoOrdQue * que, int * px, int * py)
 /*
     function :    OM_NEW method handler for MineField class
 */
-static ULONG mNew(struct IClass *cl, Object *obj, struct opSet *msg)
+static IPTR mNew(struct IClass *cl, Object *obj, struct opSet *msg)
 {
     struct MineFieldData *data;
     STRPTR fname;
@@ -437,14 +437,14 @@ static ULONG mNew(struct IClass *cl, Object *obj, struct opSet *msg)
                                msg->ops_AttrList);
     SetImageFileName(data, fname);
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
 
 /*
     function :    OM_DELETE method handler for MineField class
 */
-static ULONG mDispose(struct IClass *cl, Object *obj, Msg msg)
+static IPTR mDispose(struct IClass *cl, Object *obj, Msg msg)
 {
     struct MineFieldData *data = INST_DATA(cl, obj);
 
@@ -464,7 +464,7 @@ static ULONG mDispose(struct IClass *cl, Object *obj, Msg msg)
 /*
     function :    MUIM_Setup method handler for MineField class
 */
-static ULONG mSetup(struct IClass *cl, Object *obj, struct MUIP_Setup * msg)
+static IPTR mSetup(struct IClass *cl, Object *obj, struct MUIP_Setup * msg)
 {
     struct MineFieldData *data = INST_DATA(cl, obj);
 
@@ -501,7 +501,7 @@ static ULONG mSetup(struct IClass *cl, Object *obj, struct MUIP_Setup * msg)
 /*
     function :    MUIM_Cleanup method handler for MineField class
 */
-static ULONG mCleanup(struct IClass *cl, Object *obj, Msg msg)
+static IPTR mCleanup(struct IClass *cl, Object *obj, Msg msg)
 {
     struct MineFieldData *data = INST_DATA(cl, obj);
 
@@ -521,7 +521,7 @@ static ULONG mCleanup(struct IClass *cl, Object *obj, Msg msg)
 /*
     function :    MUIM_AskMinMax method handler for MineField class
 */
-static ULONG mAskMinMax(struct IClass *cl, Object *obj, struct MUIP_AskMinMax *msg)
+static IPTR mAskMinMax(struct IClass *cl, Object *obj, struct MUIP_AskMinMax *msg)
 {
     int x, y;
     struct MineFieldData *data = INST_DATA(cl, obj);
@@ -566,7 +566,7 @@ static ULONG mAskMinMax(struct IClass *cl, Object *obj, struct MUIP_AskMinMax *m
 /*
     function :    MUIM_HandleInput method handler for MineField class
 */
-static ULONG mHandleInput(struct IClass *cl, Object *obj, struct MUIP_HandleInput *msg)
+static IPTR mHandleInput(struct IClass *cl, Object *obj, struct MUIP_HandleInput *msg)
 {
     struct IntuiMessage *imsg = msg->imsg;
     struct MineFieldData *data = INST_DATA(cl, obj);
@@ -669,7 +669,7 @@ static ULONG mHandleInput(struct IClass *cl, Object *obj, struct MUIP_HandleInpu
 /*
     function :    OM_SET method handler for MineField class
 */
-static ULONG mSet(struct IClass *cl, Object *obj, struct opSet * msg)
+static IPTR mSet(struct IClass *cl, Object *obj, struct opSet * msg)
 {
     struct MineFieldData *data = INST_DATA(cl,obj);
     const struct TagItem *tags;
@@ -767,55 +767,55 @@ static ULONG mSet(struct IClass *cl, Object *obj, struct opSet * msg)
 /*
     function :    OM_GET method handler for MineField class
 */
-static ULONG mGet(struct IClass *cl, Object *obj, struct opGet * msg)
+static IPTR mGet(struct IClass *cl, Object *obj, struct opGet * msg)
 {
     struct MineFieldData *data = INST_DATA(cl, obj);
-    ULONG *store = msg->opg_Storage;
+    IPTR *store = msg->opg_Storage;
 
     switch (((struct opGet *)msg)->opg_AttrID)
     {
         case MUIA_MineField_Width:
-            *store = (ULONG)data->Width;
+            *store = (IPTR)data->Width;
             return TRUE;
 
         case MUIA_MineField_Height:
-            *store = (ULONG)data->Height;
+            *store = (IPTR)data->Height;
             return TRUE;
 
         case MUIA_MineField_NumMines:
-            *store = (ULONG)data->NumMines;
+            *store = (IPTR)data->NumMines;
             return TRUE;
 
         case MUIA_MineField_SafeStart:
-            *store = (ULONG)((data->Flags & MFF_OPT_SAFESTART) != 0);
+            *store = (IPTR)((data->Flags & MFF_OPT_SAFESTART) != 0);
             return TRUE;
 
         case MUIA_MineField_TimeTaken:
-            *store = (ULONG)data->TimeTaken;
+            *store = (IPTR)data->TimeTaken;
             return TRUE;
 
         case MUIA_MineField_MinesLeft:
-            *store = (ULONG)data->MinesLeft;
+            *store = (IPTR)data->MinesLeft;
             return TRUE;
 
         case MUIA_MineField_GameInitialized:
-            *store = (ULONG)((data->Flags & MFF_STATE_INITIALIZED) != 0);
+            *store = (IPTR)((data->Flags & MFF_STATE_INITIALIZED) != 0);
             return TRUE;
 
         case MUIA_MineField_GameRunning:
-            *store = (ULONG)((data->Flags & MFF_STATE_RUNNING) != 0);
+            *store = (IPTR)((data->Flags & MFF_STATE_RUNNING) != 0);
             return TRUE;
 
         case MUIA_MineField_GameWon:
-            *store = (ULONG)((data->Flags & MFF_STATE_WON) != 0);
+            *store = (IPTR)((data->Flags & MFF_STATE_WON) != 0);
             return TRUE;
 
         case MUIA_MineField_GameLost:
-            *store = (ULONG)((data->Flags & MFF_STATE_LOST) != 0);
+            *store = (IPTR)((data->Flags & MFF_STATE_LOST) != 0);
             return TRUE;
 
         case MUIA_MineField_MouseDown:
-            *store = (ULONG)((data->Flags & MFF_INP_LEFTMOUSE) != 0  ||
+            *store = (IPTR)((data->Flags & MFF_INP_LEFTMOUSE) != 0  ||
                              (data->Flags & (MFF_INP_RIGHTMOUSE | MFF_INP_SHIFT))
                                     == (MFF_INP_RIGHTMOUSE | MFF_INP_SHIFT));
             return TRUE;
@@ -828,7 +828,7 @@ static ULONG mGet(struct IClass *cl, Object *obj, struct opGet * msg)
 /*
     function :    MUIM_Draw method handler for MineField class
 */
-static ULONG mDraw(struct IClass *cl, Object *obj, struct MUIP_Draw *msg)
+static IPTR mDraw(struct IClass *cl, Object *obj, struct MUIP_Draw *msg)
 {
     struct MineFieldData *data = INST_DATA(cl, obj);
 
@@ -893,7 +893,7 @@ static ULONG mDraw(struct IClass *cl, Object *obj, struct MUIP_Draw *msg)
 /*
     function :    MUIM_MineField_Init method handler for MineField class
 */
-static ULONG mMineFieldInit(struct IClass *cl, Object *obj, Msg msg)
+static IPTR mMineFieldInit(struct IClass *cl, Object *obj, Msg msg)
 {
     struct MineFieldData *data = INST_DATA(cl, obj);
 
@@ -914,7 +914,7 @@ static ULONG mMineFieldInit(struct IClass *cl, Object *obj, Msg msg)
 /*
     function :    MUIM_MineField_TimerTick method handler for MineField class
 */
-static ULONG mTimerTick(struct IClass *cl, Object *obj, Msg msg)
+static IPTR mTimerTick(struct IClass *cl, Object *obj, Msg msg)
 {
     struct MineFieldData *data = INST_DATA(cl, obj);
 
@@ -943,21 +943,8 @@ static ULONG mTimerTick(struct IClass *cl, Object *obj, Msg msg)
     return 0;
 }
 
-
-#ifndef __AROS__
-SAVEDS ASM ULONG MineFieldDispatcher(
-        REG(a0) struct IClass *cl,
-        REG(a2) Object *obj,
-        REG(a1) Msg msg)
-#else
-AROS_UFH3(ULONG, MineFieldDispatcher,
- AROS_UFHA(struct IClass *, cl , A0),
- AROS_UFHA(Object *       , obj, A2),
- AROS_UFHA(Msg            , msg, A1))
-#endif
+DISPATCHER(MineFieldDispatcher)
 {
-    AROS_USERFUNC_INIT
-    
     switch (msg->MethodID)
     {
         case OM_NEW             : return            mNew(cl, obj, (APTR)msg);
@@ -974,8 +961,6 @@ AROS_UFH3(ULONG, MineFieldDispatcher,
     }
 
     return DoSuperMethodA(cl, obj, msg);
-
-    AROS_USERFUNC_EXIT
 }
 
 
@@ -2535,7 +2520,7 @@ struct MUI_CustomClass * CreateMineFieldClass()
 {
     return MUI_CreateCustomClass(NULL, MUIC_Area, NULL,
                                        sizeof(struct MineFieldData),
-                                       MineFieldDispatcher);
+                                       ENTRY(MineFieldDispatcher));
 }
 
 /*

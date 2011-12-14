@@ -145,7 +145,7 @@ static const struct Hook LevelListDisplayHook =
 /*
     function :    OM_NEW method handler for MFWindow class
 */
-static ULONG mNew(struct IClass *cl, Object *obj, struct opSet *msg)
+static IPTR mNew(struct IClass *cl, Object *obj, struct opSet *msg)
 {
     struct LevelDataList *givList, *retList;
     STRPTR okbuttlabel, cancelbuttlabel, addbuttlabel, delbuttlabel,
@@ -449,14 +449,14 @@ static ULONG mNew(struct IClass *cl, Object *obj, struct opSet *msg)
     /*
         return the object (or NULL)
     */
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
 
 /*
     function :    OM_DELETE method handler for LEWindow class
 */
-static ULONG mDispose(struct IClass *cl, Object *obj, Msg msg)
+static IPTR mDispose(struct IClass *cl, Object *obj, Msg msg)
 {
     struct LEWindowData *data = INST_DATA(cl, obj);
 
@@ -473,7 +473,7 @@ static ULONG mDispose(struct IClass *cl, Object *obj, Msg msg)
     function :    OM_SET method handler for LEWindow class
 */
 /*
-static ULONG mSet(struct IClass *cl, Object *obj, struct opSet * msg)
+static IPTR mSet(struct IClass *cl, Object *obj, struct opSet * msg)
 {
     struct LEWindowData *data = INST_DATA(cl,obj);
     struct TagItem *tags, *tag;
@@ -492,7 +492,7 @@ static ULONG mSet(struct IClass *cl, Object *obj, struct opSet * msg)
     function :    OM_GET method handler for LEWindow class
 */
 /*
-static ULONG mGet(struct IClass *cl, Object *obj, struct opGet * msg)
+static IPTR mGet(struct IClass *cl, Object *obj, struct opGet * msg)
 {
     struct LEWindowData *data = INST_DATA(cl, obj);
     ULONG *store = msg->opg_Storage;
@@ -516,7 +516,7 @@ static ULONG mGet(struct IClass *cl, Object *obj, struct opGet * msg)
                 any changes that have been made since the level was last
                 selected.
 */
-static ULONG mUndoLevel(struct IClass *cl, Object *obj, Msg msg)
+static IPTR mUndoLevel(struct IClass *cl, Object *obj, Msg msg)
 {
     struct LEWindowData *data = INST_DATA(cl, obj);
     if (data->SelectedLevel)
@@ -543,7 +543,7 @@ static ULONG mUndoLevel(struct IClass *cl, Object *obj, Msg msg)
                 the edit data from the given level data list and rebuilds
                 the level list.
 */
-static ULONG mUndoAll(struct IClass *cl, Object *obj, Msg msg)
+static IPTR mUndoAll(struct IClass *cl, Object *obj, Msg msg)
 {
     struct LEWindowData *data = INST_DATA(cl, obj);
 
@@ -565,7 +565,7 @@ static ULONG mUndoAll(struct IClass *cl, Object *obj, Msg msg)
                 at the end initialized to defaults. The level list is rebuilt
                 and the new level is selected for editing.
 */
-static ULONG mAddLevel(struct IClass *cl, Object *obj, Msg msg)
+static IPTR mAddLevel(struct IClass *cl, Object *obj, Msg msg)
 {
     struct LEWindowData *data = INST_DATA(cl, obj);
 
@@ -641,7 +641,7 @@ static ULONG mAddLevel(struct IClass *cl, Object *obj, Msg msg)
                 delete the level then the edit data is reallocated without
                 the selected level and the level list is rebuilt.
 */
-static ULONG mDeleteLevel(struct IClass *cl, Object *obj, Msg msg)
+static IPTR mDeleteLevel(struct IClass *cl, Object *obj, Msg msg)
 {
     struct LEWindowData *data = INST_DATA(cl, obj);
     struct EditLevelData * selLevel = GetSelectedLevel(data);
@@ -674,7 +674,7 @@ static ULONG mDeleteLevel(struct IClass *cl, Object *obj, Msg msg)
             }
             else
             {
-                ULONG nameptr = (ULONG)selLevel->Name;
+                IPTR nameptr = (IPTR)selLevel->Name;
                 i = MUI_RequestA(_app(obj), obj, 0,
                                  GetStr(MSG_LEWINDOW_TITLE),
                                  GetStr(MSG_YESNO_GADGETS),
@@ -753,7 +753,7 @@ static ULONG mDeleteLevel(struct IClass *cl, Object *obj, Msg msg)
                 the window is then set to TRUE to signal the close of the
                 window.
 */
-static ULONG mReturnLevels(struct IClass *cl, Object *obj, Msg msg)
+static IPTR mReturnLevels(struct IClass *cl, Object *obj, Msg msg)
 {
     struct LEWindowData *data = INST_DATA(cl, obj);
 
@@ -847,7 +847,7 @@ static ULONG mReturnLevels(struct IClass *cl, Object *obj, Msg msg)
                 now selected in the list becomes the currnt edit level and
                 the level edit strings are set with the new level's data.
 */
-static ULONG mSelectLevel(struct IClass *cl, Object *obj, Msg msg)
+static IPTR mSelectLevel(struct IClass *cl, Object *obj, Msg msg)
 {
     struct LEWindowData *data = INST_DATA(cl, obj);
     struct EditLevelData * selLevel = GetSelectedLevel(data);
@@ -877,7 +877,7 @@ static ULONG mSelectLevel(struct IClass *cl, Object *obj, Msg msg)
 /*
     function :  handler for MUIM_LEWindow_EditUpdate
 */
-static ULONG mEditUpdate(struct IClass * cl, Object * obj, struct EditUpdateParams * msg)
+static IPTR mEditUpdate(struct IClass * cl, Object * obj, struct EditUpdateParams * msg)
 {
     struct LEWindowData *data = INST_DATA(cl, obj);
 
@@ -956,20 +956,8 @@ static ULONG mEditUpdate(struct IClass * cl, Object * obj, struct EditUpdatePara
 /*
     function :    class dispatcher
 */
-#ifndef __AROS__
-SAVEDS ASM ULONG LEWindowDispatcher(
-        REG(a0) struct IClass *cl,
-        REG(a2) Object *obj,
-        REG(a1) Msg msg)
-#else
-AROS_UFH3(ULONG, LEWindowDispatcher,
- AROS_UFHA(struct IClass *, cl , A0),
- AROS_UFHA(Object *       , obj, A2),
- AROS_UFHA(Msg            , msg, A1))
-#endif
+DISPATCHER(LEWindowDispatcher)
 {
-    AROS_USERFUNC_INIT
-
     switch (msg->MethodID)
     {
         case OM_NEW:     return mNew    (cl, obj, (APTR)msg);
@@ -1000,8 +988,6 @@ AROS_UFH3(ULONG, LEWindowDispatcher,
     }
 
     return DoSuperMethodA(cl, obj, msg);
-
-    AROS_USERFUNC_EXIT
 }
 
  
@@ -1546,7 +1532,7 @@ struct MUI_CustomClass * CreateLEWindowClass()
 {
     return MUI_CreateCustomClass(NULL, MUIC_Window, NULL,
                                        sizeof(struct LEWindowData),
-                                       LEWindowDispatcher);
+                                       ENTRY(LEWindowDispatcher));
 }
 
 /*
