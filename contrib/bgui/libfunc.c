@@ -443,6 +443,7 @@ makeproto Object *BGUI_NewObject(ULONG classID, Tag tag1, ...)
    /* Determine the va list length, skipping GROUP_Member tagsets */
    for (tag = tag1; gm_depth >= 0; tag = va_arg(va, IPTR) ) {
        data = va_arg(va, IPTR);
+       (void)data;
        len++;
 
        switch (tag) {
