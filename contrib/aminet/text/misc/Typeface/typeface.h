@@ -121,7 +121,7 @@ struct TFPreferences
   UWORD Version;
   ULONG Flags, ScrModeID, ScrDepth;
   ULONG VecHeight, PixelX, PixelY;
-  ULONG SaveTo;
+  IPTR  SaveTo;
   UBYTE ScrFontName[MAXFONTNAME];
   UWORD ScrFontHeight;
   UBYTE ThisPubName[MAXPUBSCREENNAME], DefPubName[MAXPUBSCREENNAME];

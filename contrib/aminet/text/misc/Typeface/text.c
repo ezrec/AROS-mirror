@@ -19,7 +19,7 @@ void SetupMenus(struct NewMenu *menus)
 {
   while (menus->nm_Type != NM_END)
   {
-    switch ((ULONG)(menus->nm_UserData))
+    switch ((IPTR)(menus->nm_UserData))
     {
       case ID_PROJECTMENU:
 	menus->nm_Label = GetString(msgMenuProjectTitle);

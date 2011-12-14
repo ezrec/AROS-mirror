@@ -187,7 +187,7 @@ UBYTE *oldfont;
 
 void PreviewMsgs(ULONG code)
 {
-ULONG top;
+IPTR top;
 
   switch (code)
   {
@@ -388,7 +388,7 @@ BPTR fontfile, contfile, lock;
 
   strcpy(fontpath,SavePath);
   AddPart(fontpath,FontName,256);
-  sprintf(filename,"%s/%ld",fontpath,Height);
+  sprintf(filename,"%s/%ld",fontpath,(long)Height);
 
   DateStamp(&(dt.dat_Stamp));
   dt.dat_Format = FORMAT_CDN;
@@ -429,20 +429,20 @@ BPTR fontfile, contfile, lock;
     if (preview)
       hunkstart = 0;
     else
-      hunkstart = (ULONG)longptr;	/* All relocs relative to here */
+      hunkstart = (IPTR)longptr;	/* All relocs relative to here */
     *longptr++ = LONG2BE(0x70FF4E75);		/* MOVEQ #-1,D0 RTS */
     relocstart = (ULONG *)(buffer+filesize-((9+(tables ? 2 : 0))*4));
 
     dfh = (struct FileDiskFontHeader *)longptr;
     dfh->dfh_DF_ln_Type = NT_FONT;
-    *(ULONG *)dfh->dfh_DF_ln_Name = LONG2BE((ULONG)((ULONG)dfh->dfh_Name-hunkstart));
+    *(ULONG *)dfh->dfh_DF_ln_Name = LONG2BE((LONG)((IPTR)dfh->dfh_Name-hunkstart));
     *(UWORD *)dfh->dfh_FileID = WORD2BE(DFH_ID);
     sprintf(dfh->dfh_Name,"$VER: %s%d 39.0 (%s)",FontName,(int)Height,datestr);
 
     fontdataptr = ((UBYTE *)dfh)+sizeof(struct FileDiskFontHeader);
     fontlocptr = (struct charDef *)(fontdataptr+((bitwidth/8)*Height));
-    if ((ULONG)fontlocptr % 2 > 0)
-      fontlocptr = (struct charDef *)((((ULONG)fontlocptr/2)+1)*2);
+    if ((IPTR)fontlocptr % 2 > 0)
+      fontlocptr = (struct charDef *)((((IPTR)fontlocptr/2)+1)*2);
     fontkernptr = (WORD *)((UBYTE *)fontlocptr+
       numchars*sizeof(struct charDef));
 
@@ -480,14 +480,14 @@ BPTR fontfile, contfile, lock;
     *(UWORD *)dfh->dfh_TF_tf_BoldSmear = WORD2BE(Smear);
     dfh->dfh_TF_tf_LoChar = FirstChar;
     dfh->dfh_TF_tf_HiChar = LastChar;
-    *(ULONG *)dfh->dfh_TF_tf_CharData = LONG2BE((ULONG)((ULONG)fontdataptr-hunkstart));
+    *(ULONG *)dfh->dfh_TF_tf_CharData = LONG2BE((ULONG)((IPTR)fontdataptr-hunkstart));
     *(UWORD *)dfh->dfh_TF_tf_Modulo = WORD2BE(bitwidth/8);
-    *(ULONG *)dfh->dfh_TF_tf_CharLoc = LONG2BE((ULONG)((ULONG)fontlocptr-hunkstart));
+    *(ULONG *)dfh->dfh_TF_tf_CharLoc = LONG2BE((ULONG)((IPTR)fontlocptr-hunkstart));
     if (tables)
     {
-      *(ULONG *)dfh->dfh_TF_tf_CharSpace = LONG2BE((LONG)((ULONG)fontkernptr-hunkstart));
+      *(ULONG *)dfh->dfh_TF_tf_CharSpace = LONG2BE((LONG)((IPTR)fontkernptr-hunkstart));
       *(ULONG *)dfh->dfh_TF_tf_CharKern = LONG2BE(
-	(ULONG)((ULONG)fontkernptr+(numchars*2)-hunkstart));
+	(ULONG)((IPTR)fontkernptr+(numchars*2)-hunkstart));
     }
     for (i = FirstChar, offbit = 0; i < LastChar+1; i++)
     {
@@ -512,13 +512,13 @@ BPTR fontfile, contfile, lock;
     *relocstart++ = LONG2BE(0x00000000);
     if (tables)
     {
-      *relocstart++ = LONG2BE((ULONG)(&(dfh->dfh_TF_tf_CharKern))-hunkstart);
-      *relocstart++ = LONG2BE((ULONG)(&(dfh->dfh_TF_tf_CharSpace))-hunkstart);
+      *relocstart++ = LONG2BE((IPTR)(&(dfh->dfh_TF_tf_CharKern))-hunkstart);
+      *relocstart++ = LONG2BE((IPTR)(&(dfh->dfh_TF_tf_CharSpace))-hunkstart);
     }
-    *relocstart++ = LONG2BE((ULONG)(&(dfh->dfh_TF_tf_CharLoc))-hunkstart);
-    *relocstart++ = LONG2BE((ULONG)(&(dfh->dfh_TF_tf_CharData))-hunkstart);
-    *relocstart++ = LONG2BE((ULONG)(&(dfh->dfh_TF_tf_Message_mn_Node_ln_Name))-hunkstart);
-    *relocstart++ = LONG2BE((ULONG)(&(dfh->dfh_DF_ln_Name))-hunkstart);
+    *relocstart++ = LONG2BE((IPTR)(&(dfh->dfh_TF_tf_CharLoc))-hunkstart);
+    *relocstart++ = LONG2BE((IPTR)(&(dfh->dfh_TF_tf_CharData))-hunkstart);
+    *relocstart++ = LONG2BE((IPTR)(&(dfh->dfh_TF_tf_Message_mn_Node_ln_Name))-hunkstart);
+    *relocstart++ = LONG2BE((IPTR)(&(dfh->dfh_DF_ln_Name))-hunkstart);
     *relocstart++ = LONG2BE(0x00000000);
     *relocstart++ = LONG2BE(0x000003F2);
 
@@ -672,7 +672,7 @@ ULONG i,j,width,widthi,modi,offset;
 void OpenQueryWidthWnd(void)
 {
 Object *load, *info;
-ULONG args[2];
+IPTR  args[2];
 extern char FontName[256];
 extern ULONG Height;
 
@@ -744,7 +744,7 @@ extern ULONG Height;
     if (Width > 10) SetAttrs(QueryWidthNum,STRINGA_BufferPos,2);
     if (Width > 100) SetAttrs(QueryWidthNum,STRINGA_BufferPos,3);
   }
-  args[0] = (ULONG)FontName;
+  args[0] = (IPTR)FontName;
   args[1] = Height;
   if ((QueryWnd = WindowOpen(QueryWndObj)) == NULL) ErrorCode(OPENWINDOW);
   ActivateGadget((struct Gadget *)QueryWidthNum,QueryWnd,NULL);
@@ -819,7 +819,7 @@ ULONG tags[3];
   }
   UnpackChar(CharBuffer+256,NewFont,LastChar-FirstChar+1);
   KernTables(256,LastChar-FirstChar+1);
-  sprintf(WinTitle,"%s/%ld",FontName,(ULONG)font->ta_YSize);
+  sprintf(WinTitle,"%s/%ld",FontName,(long)font->ta_YSize);
   SetAttrs(FontWndObj,WINDOW_Title,WinTitle,TAG_DONE);
   CloseFont(NewFont); NewFont = NULL;
   DataChanged = FALSE;

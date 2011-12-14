@@ -22,7 +22,7 @@ ULONG Check_NEW(Class *cl, Object *obj, struct opSet *ops)
   {
     struct TagItem tags[6];
     tags[0].ti_Tag = BUTTON_SelectedVector;
-    tags[0].ti_Data = (ULONG)check;
+    tags[0].ti_Data = (IPTR)check;
     tags[1].ti_Tag = LAB_NoPlaceIn;
     tags[1].ti_Data = TRUE;
     tags[2].ti_Tag = BT_NoRecessed;
@@ -32,7 +32,7 @@ ULONG Check_NEW(Class *cl, Object *obj, struct opSet *ops)
     tags[4].ti_Tag = GA_ToggleSelect;
     tags[4].ti_Data = TRUE;
     tags[5].ti_Tag = TAG_MORE;
-    tags[5].ti_Data = (ULONG)ops->ops_AttrList;
+    tags[5].ti_Data = (IPTR)ops->ops_AttrList;
 
     rc = DoSuperMethod(cl,obj,OM_NEW,tags,NULL);
     if (rc == 0)

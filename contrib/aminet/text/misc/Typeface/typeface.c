@@ -36,7 +36,7 @@ struct NameInfo ModeIDName;
 Object *FontWndObj, *CharObj, *ScrollObj;
 Class *CharClass, *EditClass, *SlideClass, *LVClass;
 WORD SpaceTable[257], KernTable[257];
-ULONG FirstChar, LastChar, ScaleX, ScaleY, UseTable, ScrWidth, ScrHeight;
+IPTR  FirstChar, LastChar, ScaleX, ScaleY, UseTable, ScrWidth, ScrHeight;
 char WinTitle[256], FontPath[256], SavePath[256], FontName[256];
 char *KeyLabelTable;
 BOOL CustomScreen = TRUE, ChangeScreen = FALSE, FlagError;
@@ -56,8 +56,11 @@ struct Window *ParamWnd;
 Object *ParamWndObj, *PropCycle, *HeightInt, *WidthInt, *BaseInt, *SmearInt;
 Object *NormalCheck, *BoldCheck, *ItalicCheck, *UnderCheck;
 Object *ExtCheck, *RevCheck, *AspectCycle, *BlankButton;
-ULONG Proportional, Normal, Bold, Italic, ULine, Extended, Reversed;
-ULONG Height, Width, Baseline, Smear, Aspect;
+/* GetAttr wants IPTR */
+IPTR  Proportional, Normal, Bold, Italic, ULine, Extended, Reversed;
+/* GetAttr wants IPTR */
+IPTR  Width, Aspect;
+LONG  Height, Baseline, Smear;
 CONST_STRPTR PropLabels[3], AspectLabels[4], SaveLabels[3];
 
 struct Window *PrefsWnd;
@@ -73,7 +76,7 @@ ULONG PrefScrModeID,PrefScrDepth;
 char PrefScrFontName[MAXFONTNAME];
 UWORD PrefScrFontHeight;
 char PrefThisPubName[MAXPUBSCREENNAME], PrefDefPubName[MAXPUBSCREENNAME];
-extern ULONG PixelBorder;
+extern IPTR PixelBorder;
 char PrefFixFontName[MAXFONTNAME];
 UWORD PrefFixFontHeight;
 char PrefFixBuffer[256];
@@ -284,12 +287,12 @@ BOOL unique_pub_name = TRUE;
 
 HOOKPROTONO(WindowHook, ULONG, struct IntuiMessage *msg)
 {
-ULONG height,pos;
+IPTR  height,pos;
 struct IBox newp;
 
   if ((msg->Class == IDCMP_CHANGEWINDOW) && (msg->Code == CWCODE_MOVESIZE))
   {
-    GetAttr(WINDOW_Bounds,FontWndObj,(ULONG *)&newp);
+    GetAttr(WINDOW_Bounds,FontWndObj,(IPTR *)&newp);
     if ((newp.Width != FontSize.Width) || (newp.Height != FontSize.Height))
     {
       height = (FontWnd->Height-FontWnd->BorderTop-FontWnd->BorderBottom-
@@ -305,7 +308,7 @@ struct IBox newp;
 	CG_SizeY,height,
 	CG_Redraw,TRUE,TAG_DONE);
     }
-    GetAttr(WINDOW_Bounds,FontWndObj,(ULONG *)&FontSize);
+    GetAttr(WINDOW_Bounds,FontWndObj,(IPTR *)&FontSize);
   }
   return 0;
 }
@@ -381,11 +384,11 @@ ULONG height;
     FontWnd->BorderTop+FontWnd->BorderBottom+(2*SizeY(2));
   OldWindowPtr = ((struct Process *)FindTask(NULL))->pr_WindowPtr;
   ((struct Process *)FindTask(NULL))->pr_WindowPtr = FontWnd;
-  GetAttr(WINDOW_Bounds,FontWndObj,(ULONG *)&CharSize);
+  GetAttr(WINDOW_Bounds,FontWndObj,(IPTR *)&CharSize);
   CharSize.Left += (CharSize.Width + Screen->RastPort.Font->tf_YSize);
   CharSize.Width = Screen->Width - CharSize.Left;
   CharSize.Height = Screen->Height - CharSize.Top;
-  GetAttr(WINDOW_Bounds,FontWndObj,(ULONG *)&FontSize);
+  GetAttr(WINDOW_Bounds,FontWndObj,(IPTR *)&FontSize);
 }
 
 void CloseFontWnd(void)
@@ -479,10 +482,11 @@ void QuitScreen(void)
 
 void MsgLoop(void)
 {
-ULONG signal,winsig,code,scroll_pos,pressed,old_height,left,first,last;
-ULONG old_bline,shift;
+IPTR  signal,winsig,code,scroll_pos,pressed,old_height,left,first,last;
+IPTR  old_bline,shift;
 UWORD tb_entry;
-LONG temp,normal,height;
+SIPTR temp,normal;
+LONG  height;
 BOOL free_node,redraw = FALSE;
 struct CharNode *node,*oldnode;
 char *fontstr;
@@ -872,7 +876,7 @@ BPTR lock;
 	    break;
 	  case ID_ASSIGN:
 	  case ID_ASSIGNADD:
-	    GetAttr(STRINGA_TextVal,FontDirStr,(ULONG *)&fontstr);
+	    GetAttr(STRINGA_TextVal,FontDirStr,(IPTR *)&fontstr);
 	    strcpy(FontPath,fontstr);
 	    SleepWindows();
 	    if ((lock = Lock(FontPath,ACCESS_READ)) != 0)
@@ -890,13 +894,13 @@ BPTR lock;
 	    break;
 	  case ID_ASSIGNPATH:
 	    SleepWindows();
-	    GetAttr(STRINGA_TextVal,FontDirStr,(ULONG *)&fontstr);
+	    GetAttr(STRINGA_TextVal,FontDirStr,(IPTR *)&fontstr);
 	    SetAttrs(DirReqObj,
 	      ASLFR_InitialHeight,Screen->Height,
 	      ASLFR_InitialDrawer,fontstr,TAG_DONE);
 	    if (DoRequest(DirReqObj) == FRQ_OK)
 	    {
-	      GetAttr(FRQ_Drawer,DirReqObj,(ULONG *)&fontstr);
+	      GetAttr(FRQ_Drawer,DirReqObj,(IPTR *)&fontstr);
 	      SetGadgetAttrs((struct Gadget *)FontDirStr,AssignWnd,NULL,
 		STRINGA_TextVal,fontstr,TAG_DONE);
 	    }
@@ -917,7 +921,7 @@ BPTR lock;
 	    break;
 	  case ID_ACCEPT:
           {
-	  LONG space,kern;
+	    SIPTR space,kern;
 
 	    GetAttr(STRINGA_LongVal,ResetSpaceInt,&space);
 	    GetAttr(STRINGA_LongVal,ResetKernInt,&kern);
@@ -1071,13 +1075,13 @@ BPTR lock;
 		{
 		  FirstChar = first;
 		  LastChar = last;
-		  GetAttr(STRINGA_TextVal,SaveDirStr,(ULONG *)&fontstr);
+		  GetAttr(STRINGA_TextVal,SaveDirStr,(IPTR *)&fontstr);
 		  strcpy(SavePath,fontstr);
-		  GetAttr(STRINGA_TextVal,FontNameStr,(ULONG *)&fontstr);
+		  GetAttr(STRINGA_TextVal,FontNameStr,(IPTR *)&fontstr);
 		  strcpy(FontName,fontstr);
 		  GetAttr(GA_Selected,TableCheck,&UseTable);
 		  SaveFont(UseTable,FALSE);
-		  sprintf(WinTitle,"%s/%ld",FontName,Height);
+		  sprintf(WinTitle,"%s/%ld",FontName,(long)Height);
 		  SetAttrs(FontWndObj,WINDOW_Title,WinTitle,TAG_DONE);
 		  CloseSaveWnd();
 		}
@@ -1085,7 +1089,7 @@ BPTR lock;
 	    }
 	    break;
 	  case ID_GETSAVEDIR:
-	    GetAttr(STRINGA_TextVal,SaveDirStr,(ULONG *)&fontstr);
+	    GetAttr(STRINGA_TextVal,SaveDirStr,(IPTR *)&fontstr);
 	    SetAttrs(SaveReqObj,
 	      ASLFR_Window,SaveWnd,
 	      ASLFR_InitialHeight,Screen->Height,
@@ -1093,7 +1097,7 @@ BPTR lock;
 	    WindowBusy(SaveWndObj);
 	    if (DoRequest(SaveReqObj) == FRQ_OK)
 	    {
-	      GetAttr(FRQ_Drawer,SaveReqObj,(ULONG *)&fontstr);
+	      GetAttr(FRQ_Drawer,SaveReqObj,(IPTR *)&fontstr);
 	      SetGadgetAttrs((struct Gadget *)SaveDirStr,SaveWnd,NULL,
 		STRINGA_TextVal,fontstr,TAG_DONE);
 	    }
@@ -1724,13 +1728,13 @@ HOOKPROTONHNO(TBCompareFunc, LONG, struct lvCompare *lvc)
 
 HOOKPROTONHNO(TBResourceFunc, LONG, struct lvResource * lvr)
 {
-  if (lvr->lvr_Command == LVRC_MAKE) return (LONG)lvr->lvr_Entry;
+  if (lvr->lvr_Command == LVRC_MAKE) return (IPTR)lvr->lvr_Entry;
   return 0;
 }
 
 HOOKPROTONHNO(TBDisplayFunc, CONST_STRPTR, struct lvRender *lvr)
 {
-  switch ((ULONG)lvr->lvr_Entry)
+  switch ((IPTR)lvr->lvr_Entry)
   {
     case FTBAR_WIDTHL:
       return GetString(prefsDecWidth);
@@ -2270,7 +2274,7 @@ extern struct VectorItem ZoomInImage[], ZoomOutImage[];
 
     SetAttrs(SizeCheck,GA_Selected,Prefs.CharSize,TAG_DONE);
     SetAttrs(ShiftCheck,GA_Selected,InvertShift,TAG_DONE);
-    SetAttrs(ChrWCycle,CYC_Active,(ULONG)Prefs.CharWidth,TAG_DONE);
+    SetAttrs(ChrWCycle,CYC_Active,(IPTR)Prefs.CharWidth,TAG_DONE);
     SetAttrs(ChrHInt,STRINGA_LongVal,Prefs.CharHeight,TAG_DONE);
     strcpy(PrefFixFontName,Prefs.FixedFontName);
     PrefFixFontHeight = Prefs.FixedFontHeight;
@@ -2918,7 +2922,7 @@ UBYTE *new_char;
     }
     chr->chr_Height = Height;
   }
-  sprintf(WinTitle,"%s/%ld",FontName,Height);
+  sprintf(WinTitle,"%s/%ld",FontName,(long)Height);
   SetAttrs(FontWndObj,WINDOW_Title,WinTitle,TAG_DONE);
 }
 
@@ -3049,7 +3053,7 @@ UBYTE *free;
 
 void GetScreenRatio(struct Screen *scr)
 {
-ULONG vti[4];
+IPTR  vti[4];
 struct ViewPortExtra *vpe;
 
   ScaleX = 1000;
@@ -3099,11 +3103,11 @@ char *GetPubName(BOOL screen)
 
 void CopyPubName(void)
 {
-ULONG custom;
+IPTR  custom;
 char *name;
 
   GetAttr(GA_Selected,CustButton,&custom);
-  GetAttr(STRINGA_TextVal,PubStr,(ULONG *)&name);
+  GetAttr(STRINGA_TextVal,PubStr,(IPTR *)&name);
   strcpy(custom ? PrefThisPubName : PrefDefPubName,name);
 }
 
@@ -3147,7 +3151,7 @@ WORD x,y;
   node = (struct CharNode *)CharWndList->lh_Head;
   while (node->chln_Node.ln_Succ)
   {
-    GetAttr(WINDOW_Bounds,node->chln_Object,(ULONG *)&bounds);
+    GetAttr(WINDOW_Bounds,node->chln_Object,(IPTR *)&bounds);
     if (y+bounds.Height > node->chln_Window->WScreen->Height)
     {
       x += node->chln_Window->RPort->TxWidth*3;

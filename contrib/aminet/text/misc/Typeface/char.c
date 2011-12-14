@@ -9,7 +9,7 @@
 struct Window *ResetKernWnd;
 Object *ResetKernWndObj, *ResetSpaceInt, *ResetKernInt;
 
-ULONG PixelBorder = 1;
+IPTR  PixelBorder = 1;
 extern struct TFPreferences Prefs;
 
 struct VectorItem LineArrowLeft[] =
@@ -532,18 +532,22 @@ Object *CreateSysImage(ULONG which,struct DrawInfo *dri)
 
 Object *CreatePropGadg(ULONG freedom,Tag tag1,...)
 {
-  return (NewObject(NULL,PROPGCLASS,
+  AROS_SLOWSTACKTAGS_PRE_AS(tag1, Object *)
+  retval = NewObject(NULL,PROPGCLASS,
     PGA_Freedom,freedom,
     PGA_NewLook,TRUE,
     PGA_Borderless,TRUE,
-    TAG_MORE,&tag1));
+    TAG_MORE,AROS_SLOWSTACKTAGS_ARG(tag1));
+  AROS_SLOWSTACKTAGS_POST
 }
 
 Object *CreateButtonGadg(Object *image,Tag tag1,...)
 {
-  return (NewObject(NULL,BUTTONGCLASS,
+  AROS_SLOWSTACKTAGS_PRE_AS(tag1, Object *)
+  retval = NewObject(NULL,BUTTONGCLASS,
     GA_Image,image,
-    TAG_MORE,&tag1));
+    TAG_MORE,AROS_SLOWSTACKTAGS_ARG(tag1));
+  AROS_SLOWSTACKTAGS_POST
 }
 
 HOOKPROTONO(CharHook, void, struct IntuiMessage *msg)
@@ -581,7 +585,7 @@ char trans[2];
 void ForceResizeChar(struct CharNode *node)
 {
 struct Character *chr;
-LONG l,t,w,h;
+IPTR l,t,w,h;
 
   chr = node->chln_Character;
   GetAttr(EG_XOffset,node->chln_EditGadg,&l);
@@ -599,7 +603,7 @@ LONG l,t,w,h;
 
 void SetScrollers(struct CharNode *node)
 {
-ULONG l,t,w,h;
+IPTR  l,t,w,h;
 
   GetAttr(EG_XOffset,node->chln_EditGadg,&l);
   GetAttr(EG_YOffset,node->chln_EditGadg,&t);
@@ -716,7 +720,7 @@ struct CharNode *node;
 
 void ZoomIn(struct CharNode *node)
 {
-ULONG x,y,max_x,max_y;
+IPTR  x,y,max_x,max_y;
 
   GetAttr(EG_PixelX,node->chln_EditGadg,&x);
   GetAttr(EG_PixelY,node->chln_EditGadg,&y);
@@ -742,7 +746,7 @@ ULONG x,y,max_x,max_y;
 
 void ZoomOut(struct CharNode *node)
 {
-ULONG x,y;
+IPTR  x,y;
 
   GetAttr(EG_PixelX,node->chln_EditGadg,&x);
   GetAttr(EG_PixelY,node->chln_EditGadg,&y);
@@ -762,7 +766,7 @@ ULONG x,y;
 
 void SetMinWindowSize(struct CharNode *node, ULONG oldx)
 {
-ULONG x,y;
+IPTR x,y;
 
   GetAttr(EG_PixelX,node->chln_EditGadg,&x);
   GetAttr(EG_PixelY,node->chln_EditGadg,&y);

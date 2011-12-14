@@ -6,6 +6,8 @@
 
 #include "typeface.h"
 
+#include <SDI/SDI_hook.h>
+
 #ifdef __AROS__
 extern struct Library *BGUIBase;
 #endif
@@ -54,24 +56,17 @@ struct CharGadgData
   ULONG cg_ShiftPressed;
 };
 
-#ifdef __AROS__
-AROS_UFP3(ULONG, DispatchCharGadg,
-    AROS_UFPA(Class *, cl, A0),
-    AROS_UFPA(Object *, o, A2),
-    AROS_UFPA(Msg, msg, A1));
-#else
-SAVEDS ASM ULONG DispatchCharGadg(TF_REGPARAM(a0, Class *, cl), TF_REGPARAM(a2, Object *, o), TF_REGPARAM(a1, Msg, msg));
-#endif
-ULONG CharGadg_NEW(Class *cl,Object *o,struct opSet *ops);
-ULONG CharGadg_RENDER(Class *cl,struct Gadget *gadg,struct gpRender *gpr);
-ULONG CharGadg_GOACTIVE(Class *cl,struct Gadget *gadg,struct gpInput *gpi);
-ULONG CharGadg_HANDLEINPUT(Class *cl,struct Gadget *gadg,
+DISPATCHERPROTO(DispatchCharGadg);
+IPTR CharGadg_NEW(Class *cl,Object *o,struct opSet *ops);
+IPTR CharGadg_RENDER(Class *cl,struct Gadget *gadg,struct gpRender *gpr);
+IPTR CharGadg_GOACTIVE(Class *cl,struct Gadget *gadg,struct gpInput *gpi);
+IPTR CharGadg_HANDLEINPUT(Class *cl,struct Gadget *gadg,
   struct gpInput *gpi);
-ULONG CharGadg_GOINACTIVE(Class *cl,struct Gadget *gadg,
+IPTR CharGadg_GOINACTIVE(Class *cl,struct Gadget *gadg,
   struct gpGoInactive *gpgi);
-ULONG CharGadg_SET(Class *cl,struct Gadget *gadg,struct opSet *ops);
-ULONG CharGadg_GET(Class *cl,Object *o,struct opGet *opg);
-ULONG CharGadg_DIMENSIONS(Class *cl,struct Gadget *gadg,
+IPTR CharGadg_SET(Class *cl,struct Gadget *gadg,struct opSet *ops);
+IPTR CharGadg_GET(Class *cl,Object *o,struct opGet *opg);
+IPTR CharGadg_DIMENSIONS(Class *cl,struct Gadget *gadg,
   struct bmDimensions *dim);
 void CharGadg_DrawChar(struct RastPort *rp,struct GadgetInfo *gi,
   BOOL selected,ULONG x,ULONG y,ULONG w,ULONG h,char gchar,BOOL lines);
@@ -85,7 +80,7 @@ Class *super,*cl = NULL;
   if ((super = BGUI_GetClassPtr(BGUI_BASE_GADGET)))
   {
     if ((cl = MakeClass(NULL,NULL,super,sizeof(struct CharGadgData),0)))
-      cl->cl_Dispatcher.h_Entry = (HOOKFUNC)DispatchCharGadg;
+      cl->cl_Dispatcher.h_Entry = ENTRY(DispatchCharGadg);
   }
   return cl;
 }
@@ -98,70 +93,59 @@ struct TextFont *gadget_font;
   return (gadget_font->tf_YSize+(CG_YOFFSET*2))*height;
 }
 
-#ifdef __AROS__
-AROS_UFH3(ULONG, DispatchCharGadg,
-    AROS_UFHA(Class *, cl, A0),
-    AROS_UFHA(Object *, o, A2),
-    AROS_UFHA(Msg, msg, A1))
-#else
-SAVEDS ASM ULONG DispatchCharGadg(TF_REGPARAM(a0, Class *, cl), TF_REGPARAM(a2, Object *, o), TF_REGPARAM(a1, Msg, msg))
-#endif
+DISPATCHER(DispatchCharGadg)
 {
-    AROS_USERFUNC_INIT
-
-ULONG retval;
+IPTR retval;
 
   switch (msg->MethodID)
   {
     case OM_NEW:
-      retval = CharGadg_NEW(cl,o,(struct opSet *)msg);
+      retval = CharGadg_NEW(cl,obj,(struct opSet *)msg);
       break;
     case OM_SET:
-      retval = CharGadg_SET(cl,(struct Gadget *)o,(struct opSet *)msg);
+      retval = CharGadg_SET(cl,(struct Gadget *)obj,(struct opSet *)msg);
       break;
     case OM_GET:
-      retval = CharGadg_GET(cl,o,(struct opGet *)msg);
+      retval = CharGadg_GET(cl,obj,(struct opGet *)msg);
       break;
     case GM_RENDER:
-      retval = CharGadg_RENDER(cl,(struct Gadget *)o,(struct gpRender *)msg);
+      retval = CharGadg_RENDER(cl,(struct Gadget *)obj,(struct gpRender *)msg);
       break;
     case GM_GOACTIVE:
-      retval = CharGadg_GOACTIVE(cl,(struct Gadget *)o,
+      retval = CharGadg_GOACTIVE(cl,(struct Gadget *)obj,
 	(struct gpInput *)msg);
       break;
     case GM_HANDLEINPUT:
-      retval = CharGadg_HANDLEINPUT(cl,(struct Gadget *)o,
+      retval = CharGadg_HANDLEINPUT(cl,(struct Gadget *)obj,
 	(struct gpInput *)msg);
       break;
     case GM_GOINACTIVE:
-      retval = CharGadg_GOINACTIVE(cl,(struct Gadget *)o,
+      retval = CharGadg_GOINACTIVE(cl,(struct Gadget *)obj,
 	(struct gpGoInactive *)msg);
       break;
     case BASE_DIMENSIONS:
-      retval = CharGadg_DIMENSIONS(cl,(struct Gadget *)o,
+      retval = CharGadg_DIMENSIONS(cl,(struct Gadget *)obj,
 	(struct bmDimensions *)msg);
       break;
     default:
-      retval = DoSuperMethodA(cl,o,(Msg)msg);
+      retval = DoSuperMethodA(cl,obj,(Msg)msg);
       break;
   }
   return retval;
-
-    AROS_USERFUNC_EXIT
 }
 
-ULONG CharGadg_NEW(Class *cl,Object *o,struct opSet *ops)
+IPTR CharGadg_NEW(Class *cl,Object *o,struct opSet *ops)
 {
 struct CharGadgData *cgd = NULL;
-ULONG retval;
+IPTR retval;
 
-  retval = (ULONG)DoSuperMethodA(cl,o,(Msg)ops);
+  retval = DoSuperMethodA(cl,o,(Msg)ops);
   if (retval)
   {
     cgd = INST_DATA(cl,retval);
 
     cgd->cg_TextFont = (struct TextFont *)
-      GetTagData(CG_Font,(ULONG)GfxBase->DefaultFont,ops->ops_AttrList);
+      GetTagData(CG_Font,(IPTR)GfxBase->DefaultFont,ops->ops_AttrList);
     cgd->cg_SizeX = GetTagData(CG_SizeX,8,ops->ops_AttrList);
     cgd->cg_SizeY = GetTagData(CG_SizeY,8,ops->ops_AttrList);
 
@@ -174,12 +158,12 @@ ULONG retval;
   return retval;
 }
 
-ULONG CharGadg_RENDER(Class *cl,struct Gadget *gadg,struct gpRender *gpr)
+IPTR CharGadg_RENDER(Class *cl,struct Gadget *gadg,struct gpRender *gpr)
 {
 struct CharGadgData *cgd = INST_DATA(cl,(Object *)gadg);
 struct TextFont *old_tf = NULL;
 struct RastPort *rp;
-ULONG retval;
+IPTR retval;
 int i,j;
 
   retval = DoSuperMethodA(cl,(Object *)gadg,(Msg)gpr);
@@ -221,11 +205,11 @@ int i,j;
   return retval;
 }
 
-ULONG CharGadg_GOACTIVE(Class *cl,struct Gadget *gadg,struct gpInput *gpi)
+IPTR CharGadg_GOACTIVE(Class *cl,struct Gadget *gadg,struct gpInput *gpi)
 {
 struct CharGadgData *cgd = INST_DATA(cl,(Object *)gadg);
 struct GadgetInfo *gi;
-ULONG retval;
+IPTR retval;
 int i,j;
 
   retval = DoSuperMethodA(cl,(Object *)gadg,(Msg)gpi);
@@ -246,12 +230,12 @@ int i,j;
   return retval;
 }
 
-ULONG CharGadg_HANDLEINPUT(Class *cl,struct Gadget *gadg,struct gpInput *gpi)
+IPTR CharGadg_HANDLEINPUT(Class *cl,struct Gadget *gadg,struct gpInput *gpi)
 {
 struct CharGadgData *cgd = INST_DATA(cl,(Object *)gadg);
 struct GadgetInfo *gi = gpi->gpi_GInfo;
 struct InputEvent *ie = gpi->gpi_IEvent;
-ULONG retval = GMR_MEACTIVE;
+IPTR retval = GMR_MEACTIVE;
 int i,j;
 
   DoSuperMethodA(cl,(Object *)gadg,(Msg)gpi);
@@ -296,7 +280,7 @@ int i,j;
   return retval;
 }
 
-ULONG CharGadg_GOINACTIVE(Class *cl,struct Gadget *gadg,
+IPTR CharGadg_GOINACTIVE(Class *cl,struct Gadget *gadg,
   struct gpGoInactive *gpgi)
 {
 struct CharGadgData *cgd = INST_DATA(cl,(Object *)gadg);
@@ -304,7 +288,7 @@ struct TextFont *old_tf = NULL;
 struct GadgetInfo *gi;
 struct RastPort *rp;
 struct TagItem inactive;
-ULONG retval;
+IPTR retval;
 
   retval = DoSuperMethodA(cl,(Object *)gadg,(Msg)gpgi);
   if ((cgd->cg_FirstX != -1) && (cgd->cg_FirstY != -1))
@@ -338,12 +322,12 @@ ULONG retval;
   return retval;
 }
 
-ULONG CharGadg_SET(Class *cl,struct Gadget *gadg,struct opSet *ops)
+IPTR CharGadg_SET(Class *cl,struct Gadget *gadg,struct opSet *ops)
 {
 struct CharGadgData *cgd = INST_DATA(cl,(Object *)gadg);
 struct TagItem *tags, *tag;
 struct RastPort *rp;
-ULONG retval;
+IPTR retval;
 
   retval = DoSuperMethodA(cl,(Object *)gadg,(Msg)ops);
   tags = ops->ops_AttrList;
@@ -370,10 +354,10 @@ ULONG retval;
   return retval;
 }
 
-ULONG CharGadg_GET(Class *cl,Object *o,struct opGet *opg)
+IPTR CharGadg_GET(Class *cl,Object *o,struct opGet *opg)
 {
 struct CharGadgData *cgd = INST_DATA(cl,o);
-ULONG retval = 0;
+IPTR retval = 0;
 
   switch (opg->opg_AttrID)
   {
@@ -396,10 +380,10 @@ ULONG retval = 0;
   return retval;
 }
 
-ULONG CharGadg_DIMENSIONS(Class *cl,struct Gadget *gadg,struct bmDimensions *dim)
+IPTR CharGadg_DIMENSIONS(Class *cl,struct Gadget *gadg,struct bmDimensions *dim)
 {
 struct CharGadgData *cgd = INST_DATA(cl,gadg);
-ULONG retval;
+IPTR retval;
 
   retval = DoSuperMethodA(cl,(Object *)gadg,(Msg)dim);
   if (retval)
@@ -493,22 +477,15 @@ struct EditGadgData
   UWORD eg_Toggle, eg_FirstPixelState;
 };
 
-#ifdef __AROS__
-AROS_UFP3(ULONG, DispatchEditGadg,
-    AROS_UFPA(Class *, cl, A0),
-    AROS_UFPA(Object *, o, A2),
-    AROS_UFPA(Msg, msg, A1));
-#else
-SAVEDS ASM ULONG DispatchEditGadg(TF_REGPARAM(a0, Class *, cl), TF_REGPARAM(a2, Object *, o), TF_REGPARAM(a1, Msg, msg));
-#endif
-ULONG EditGadg_NEW(Class *cl,Object *o,struct opSet *ops);
-ULONG EditGadg_GET(Class *cl,Object *o,struct opGet *opg);
-ULONG EditGadg_SET(Class *cl,struct Gadget *gadg,struct opSet *ops);
-ULONG EditGadg_RENDER(Class *cl,struct Gadget *gadg,struct gpRender *gpr);
-ULONG EditGadg_GOACTIVE(Class *cl,struct Gadget *gadg,struct gpInput *gpi);
-ULONG EditGadg_HANDLEINPUT(Class *cl,struct Gadget *gadg,
+DISPATCHERPROTO(DispatchEditGadg);
+IPTR EditGadg_NEW(Class *cl,Object *o,struct opSet *ops);
+IPTR EditGadg_GET(Class *cl,Object *o,struct opGet *opg);
+IPTR EditGadg_SET(Class *cl,struct Gadget *gadg,struct opSet *ops);
+IPTR EditGadg_RENDER(Class *cl,struct Gadget *gadg,struct gpRender *gpr);
+IPTR EditGadg_GOACTIVE(Class *cl,struct Gadget *gadg,struct gpInput *gpi);
+IPTR EditGadg_HANDLEINPUT(Class *cl,struct Gadget *gadg,
   struct gpInput *gpi);
-ULONG EditGadg_DIMENSIONS(Class *cl,struct Gadget *gadg,
+IPTR EditGadg_DIMENSIONS(Class *cl,struct Gadget *gadg,
   struct bmDimensions *dim);
 void EditGadg_TogglePixel(struct Gadget *gadg,struct gpInput *gpi,
   struct EditGadgData *egd,WORD i,WORD j,BOOL first);
@@ -520,7 +497,7 @@ Class *super,*cl = NULL;
   if ((super = BGUI_GetClassPtr(BGUI_BASE_GADGET)))
   {
     if ((cl = MakeClass(NULL,NULL,super,sizeof(struct EditGadgData),0)))
-      cl->cl_Dispatcher.h_Entry = (HOOKFUNC)DispatchEditGadg;
+      cl->cl_Dispatcher.h_Entry = ENTRY(DispatchEditGadg);
   }
   return cl;
 }
@@ -550,59 +527,48 @@ struct RastPort *rp;
   }
 }
 
-#ifdef __AROS__
-AROS_UFH3(ULONG, DispatchEditGadg,
-    AROS_UFHA(Class *, cl, A0),
-    AROS_UFHA(Object *, o, A2),
-    AROS_UFHA(Msg, msg, A1))
-#else
-SAVEDS ASM ULONG DispatchEditGadg(TF_REGPARAM(a0, Class *, cl), TF_REGPARAM(a2, Object *, o), TF_REGPARAM(a1, Msg, msg))
-#endif
+DISPATCHER(DispatchEditGadg)
 {
-    AROS_USERFUNC_INIT
-
-ULONG retval;
+IPTR retval;
 
   switch (msg->MethodID)
   {
     case OM_NEW:
-      retval = EditGadg_NEW(cl,o,(struct opSet *)msg);
+      retval = EditGadg_NEW(cl,obj,(struct opSet *)msg);
       break;
     case OM_GET:
-      retval = EditGadg_GET(cl,o,(struct opGet *)msg);
+      retval = EditGadg_GET(cl,obj,(struct opGet *)msg);
       break;
     case OM_SET:
     case OM_UPDATE:
-      retval = EditGadg_SET(cl,(struct Gadget *)o,(struct opSet *)msg);
+      retval = EditGadg_SET(cl,(struct Gadget *)obj,(struct opSet *)msg);
       break;
     case GM_RENDER:
-      retval = EditGadg_RENDER(cl,(struct Gadget *)o,(struct gpRender *)msg);
+      retval = EditGadg_RENDER(cl,(struct Gadget *)obj,(struct gpRender *)msg);
       break;
     case GM_GOACTIVE:
-      retval = EditGadg_GOACTIVE(cl,(struct Gadget *)o,
+      retval = EditGadg_GOACTIVE(cl,(struct Gadget *)obj,
 	(struct gpInput *)msg);
       break;
     case GM_HANDLEINPUT:
-      retval = EditGadg_HANDLEINPUT(cl,(struct Gadget *)o,
+      retval = EditGadg_HANDLEINPUT(cl,(struct Gadget *)obj,
 	(struct gpInput *)msg);
       break;
     case BASE_DIMENSIONS:
-      retval = EditGadg_DIMENSIONS(cl,(struct Gadget *)o,
+      retval = EditGadg_DIMENSIONS(cl,(struct Gadget *)obj,
 	(struct bmDimensions *)msg);
       break;
     default:
-      retval = DoSuperMethodA(cl,o,(Msg)msg);
+      retval = DoSuperMethodA(cl,obj,(Msg)msg);
       break;
   }
   return retval;
-
-    AROS_USERFUNC_EXIT
 }
 
-ULONG EditGadg_NEW(Class *cl,Object *o,struct opSet *ops)
+IPTR EditGadg_NEW(Class *cl,Object *o,struct opSet *ops)
 {
 struct EditGadgData *egd;
-ULONG retval = 0;
+IPTR retval = 0;
 
   retval = (ULONG)DoSuperMethodA(cl,o,(Msg)ops);
   if (retval)
@@ -627,7 +593,7 @@ ULONG retval = 0;
   return retval;
 }
 
-ULONG EditGadg_RENDER(Class *cl,struct Gadget *gadg,struct gpRender *gpr)
+IPTR EditGadg_RENDER(Class *cl,struct Gadget *gadg,struct gpRender *gpr)
 {
 struct RastPort *rp;
 struct EditGadgData *egd = INST_DATA(cl,(Object *)gadg);
@@ -635,7 +601,7 @@ struct DrawInfo *dri = gpr->gpr_GInfo->gi_DrInfo;
 struct Character *chr;
 UBYTE pen1,pen2,pen3,pen4;
 UWORD ew,eh,i,j,x,y,w,h,p;
-ULONG retval = 0;
+IPTR retval = 0;
 
   retval = DoSuperMethodA(cl,(Object *)gadg,(Msg)gpr);
   if (retval == 0)
@@ -727,11 +693,11 @@ ULONG retval = 0;
   return retval;
 }
 
-ULONG EditGadg_GET(Class *cl,Object *o,struct opGet *opg)
+IPTR EditGadg_GET(Class *cl,Object *o,struct opGet *opg)
 {
 struct EditGadgData *egd = INST_DATA(cl,o);
 UWORD ew,eh;
-ULONG retval = 0;
+IPTR retval = 0;
 
   switch (opg->opg_AttrID)
   {
@@ -764,10 +730,10 @@ ULONG retval = 0;
   return retval;
 }
 
-ULONG EditGadg_SET(Class *cl,struct Gadget *gadg,struct opSet *ops)
+IPTR EditGadg_SET(Class *cl,struct Gadget *gadg,struct opSet *ops)
 {
 struct TagItem *tags, *tag;
-ULONG retval,pos;
+IPTR retval,pos;
 UWORD ew,eh;
 struct EditGadgData *egd = INST_DATA(cl,(Object *)gadg);
 
@@ -891,13 +857,13 @@ struct EditGadgData *egd = INST_DATA(cl,(Object *)gadg);
   return retval;
 }
 
-ULONG EditGadg_GOACTIVE(Class *cl,struct Gadget *gadg,struct gpInput *gpi)
+IPTR EditGadg_GOACTIVE(Class *cl,struct Gadget *gadg,struct gpInput *gpi)
 {
 struct EditGadgData *egd = INST_DATA(cl,(Object *)gadg);
 /*struct DrawInfo *dri = gpi->gpi_GInfo->gi_DrInfo;*/
 WORD i,j;
 UWORD ew,eh;
-ULONG retval;
+IPTR retval;
 
   retval = DoSuperMethodA(cl,(Object *)gadg,(Msg)gpi);
   EditGadg_GetSize(egd,gadg->Width,gadg->Height,&ew,&eh);
@@ -913,14 +879,14 @@ ULONG retval;
   return retval;
 }
 
-ULONG EditGadg_HANDLEINPUT(Class *cl,struct Gadget *gadg,
+IPTR EditGadg_HANDLEINPUT(Class *cl,struct Gadget *gadg,
   struct gpInput *gpi)
 {
 struct GadgetInfo *gi = gpi->gpi_GInfo;
 struct InputEvent *ie = gpi->gpi_IEvent;
 struct EditGadgData *egd = INST_DATA(cl,(Object *)gadg);
 /*struct DrawInfo *dri = gpi->gpi_GInfo->gi_DrInfo;*/
-ULONG retval = GMR_MEACTIVE;
+IPTR retval = GMR_MEACTIVE;
 WORD i,j;
 UWORD ew,eh;
 
@@ -954,10 +920,10 @@ UWORD ew,eh;
   return retval;
 }
 
-ULONG EditGadg_DIMENSIONS(Class *cl,struct Gadget *gadg,struct bmDimensions *dim)
+IPTR EditGadg_DIMENSIONS(Class *cl,struct Gadget *gadg,struct bmDimensions *dim)
 {
 struct EditGadgData *egd = INST_DATA(cl,gadg);
-ULONG retval;
+IPTR retval;
 
   retval = DoSuperMethodA(cl,(Object *)gadg,(Msg)dim);
   if (retval)
@@ -1032,17 +998,10 @@ struct SlideGadgData
   ULONG sg_Total,sg_Visible;
 };
 
-#ifdef __AROS__
-AROS_UFP3(ULONG, DispatchSlideGadg,
-    AROS_UFPA(Class *, cl, A0),
-    AROS_UFPA(Object *, o, A2),
-    AROS_UFPA(Msg, msg, A1));
-#else
-SAVEDS ASM ULONG DispatchSlideGadg(TF_REGPARAM(a0, Class *, cl), TF_REGPARAM(a2, Object *, o), TF_REGPARAM(a1, Msg, msg));
-#endif
-ULONG SlideGadg_NOTIFY(Class *cl,Object *o,struct opUpdate *opu);
-ULONG SlideGadg_NEW(Class *cl,Object *o,struct opSet *ops);
-ULONG SlideGadg_SET(Class *cl,Object *o,struct opSet *ops);
+DISPATCHERPROTO(DispatchSlideGadg);
+IPTR SlideGadg_NOTIFY(Class *cl,Object *o,struct opUpdate *opu);
+IPTR SlideGadg_NEW(Class *cl,Object *o,struct opSet *ops);
+IPTR SlideGadg_SET(Class *cl,Object *o,struct opSet *ops);
 
 Class *InitSlideGadgClass(void)
 {
@@ -1052,51 +1011,40 @@ Class *super, *cl = NULL;
   {
     cl = MakeClass(NULL,NULL,super,0,0);
     if (cl)
-      cl->cl_Dispatcher.h_Entry = (HOOKFUNC)DispatchSlideGadg;
+      cl->cl_Dispatcher.h_Entry = ENTRY(DispatchSlideGadg);
   }
   return cl;
 }
 
-#ifdef __AROS__
-AROS_UFH3(ULONG, DispatchSlideGadg,
-    AROS_UFHA(Class *, cl, A0),
-    AROS_UFHA(Object *, o, A2),
-    AROS_UFHA(Msg, msg, A1))
-#else
-SAVEDS ASM ULONG DispatchSlideGadg(TF_REGPARAM(a0, Class *, cl), TF_REGPARAM(a2, Object *, o), TF_REGPARAM(a1, Msg, msg))
-#endif
+DISPATCHER(DispatchSlideGadg)
 {
-    AROS_USERFUNC_INIT
-
-ULONG retval;
+IPTR retval;
 
   switch (msg->MethodID)
   {
     case OM_NEW:
-      retval = SlideGadg_NEW(cl,o,(struct opSet *)msg);
+      retval = SlideGadg_NEW(cl,obj,(struct opSet *)msg);
       break;
     case OM_SET:
     case OM_UPDATE:
-      retval = SlideGadg_SET(cl,o,(struct opSet *)msg);
+      retval = SlideGadg_SET(cl,obj,(struct opSet *)msg);
       break;
     case OM_NOTIFY:
-      retval = SlideGadg_NOTIFY(cl,o,(struct opUpdate *)msg);
+      retval = SlideGadg_NOTIFY(cl,obj,(struct opUpdate *)msg);
       break;
     default:
-      retval = DoSuperMethodA(cl,o,(Msg)msg);
+      retval = DoSuperMethodA(cl,obj,(Msg)msg);
       break;
   }
   return retval;
-
-    AROS_USERFUNC_EXIT
 }
 
-ULONG SlideGadg_NEW(Class *cl,Object *o,struct opSet *ops)
+IPTR  SlideGadg_NEW(Class *cl,Object *o,struct opSet *ops)
 {
 struct SlideGadgData *sgd = NULL;
-ULONG retval;
+IPTR  retval;
 
-  retval = (ULONG)DoSuperMethodA(cl,o,(Msg)ops);
+  retval = DoSuperMethodA(cl,o,(Msg)ops);
   if (retval)
   {
     sgd = INST_DATA(cl,retval);
@@ -1107,13 +1055,13 @@ ULONG retval;
   return retval;
 }
 
-ULONG SlideGadg_SET(Class *cl,Object *o,struct opSet *ops)
+IPTR SlideGadg_SET(Class *cl,Object *o,struct opSet *ops)
 {
 struct SlideGadgData *sgd = INST_DATA(cl,o);
 struct GadgetInfo *gi = ops->ops_GInfo;
 struct TagItem *tags, *tag;
 struct TagItem inactive;
-ULONG retval;
+IPTR retval;
 
   retval = DoSuperMethodA(cl,o,(Msg)ops);
   tags = ops->ops_AttrList;
@@ -1127,11 +1075,11 @@ ULONG retval;
   return retval;
 }
 
-ULONG SlideGadg_NOTIFY(Class *cl,Object *o,struct opUpdate *opu)
+IPTR SlideGadg_NOTIFY(Class *cl,Object *o,struct opUpdate *opu)
 {
 struct SlideGadgData *sgd = INST_DATA(cl,o);
 struct TagItem tags[3];
-ULONG pos = 0;
+IPTR  pos = 0;
 
   GetAttr(PGA_Top,o,&pos);
   Gadg_SetTag(&tags[0],GA_ID,((struct Gadget *)o)->GadgetID);
@@ -1139,7 +1087,7 @@ ULONG pos = 0;
   if (opu->opu_AttrList == NULL)
     Gadg_SetTag(&tags[2],TAG_DONE,0);
   else
-    Gadg_SetTag(&tags[2],TAG_MORE,(ULONG)opu->opu_AttrList);
+    Gadg_SetTag(&tags[2],TAG_MORE,(IPTR)opu->opu_AttrList);
   return DoSuperMethod(cl,o,OM_NOTIFY,tags,opu->opu_GInfo,opu->opu_Flags);
 }
 
@@ -1174,21 +1122,12 @@ struct TagItem *tag;
   }
 }
 
-#ifdef __AROS__
-AROS_UFH3(ULONG, DispatchFL,
-    AROS_UFHA(Class *, cl, A0),
-    AROS_UFHA(Object *, obj, A2),
-    AROS_UFHA(Msg, msg, A1))
-#else
-SAVEDS ASM ULONG DispatchFL(TF_REGPARAM(a0, Class *, cl), TF_REGPARAM(a2, Object *, obj), TF_REGPARAM(a1, Msg, msg))
-#endif
+DISPATCHER(DispatchFL)
 {
-    AROS_USERFUNC_INIT
-
 FLD *fld;
 APTR entry;
 struct IBox *ib;
-ULONG rc,spot;
+IPTR  rc,spot;
 
   switch (msg->MethodID)
   {
@@ -1213,7 +1152,7 @@ ULONG rc,spot;
       fld = (FLD *)INST_DATA(cl,obj);
       if (QUERY(msg)->bmdp_Source == fld->fld_Accept)
       {
-	GetAttr(LISTV_ViewBounds,obj,(ULONG *)&ib);
+	GetAttr(LISTV_ViewBounds,obj,(IPTR *)&ib);
 	if (QUERY(msg)->bmdp_Mouse.X < ib->Width)
 	  return BQR_ACCEPT;
       }
@@ -1244,8 +1183,6 @@ ULONG rc,spot;
       break;
   }
   return rc;
-
-    AROS_USERFUNC_EXIT
 }
 
 Class *InitFLClass(void)
@@ -1255,7 +1192,7 @@ Class *super,*cl = NULL;
   if ((super = BGUI_GetClassPtr(BGUI_LISTVIEW_GADGET)))
   {
     if ((cl = MakeClass(NULL,NULL,super,sizeof(FLD),0)))
-      cl->cl_Dispatcher.h_Entry = (HOOKFUNC)DispatchFL;
+      cl->cl_Dispatcher.h_Entry = ENTRY(DispatchFL);
   }
   return cl;
 }
