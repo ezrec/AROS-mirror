@@ -884,7 +884,7 @@ xpr_fread(REG(a0) char *Buffer,REG(d0) long Size,REG(d1) long Count,REG(a1) BPTR
 	 */
 
 long SAVE_DS ASM
-xpr_fwrite(REG(a0) char *Buffer,REG(d0) LONG Size,REG(d1) long Count,REG(a1) BPTR FileP)
+xpr_fwrite(REG(a0) char *Buffer,REG(d0) long Size,REG(d1) long Count,REG(a1) BPTR FileP)
 {
 	struct Buffer *File = (struct Buffer *)FileP;
 	DB(kprintf("xpr_fwrite(0x%08lx,%ld,%ld,0x%08lx)\n",Buffer,Size,Count,File));
@@ -1243,8 +1243,8 @@ xpr_swrite(REG(a0) char *Buffer,REG(d0) long Size)
 	 *	Release the contents of all serial buffers.
 	 */
 
-LONG SAVE_DS
-xpr_sflush()
+long SAVE_DS
+xpr_sflush(void)
 {
 	DB(kprintf("xpr_sflush()\n"));
 
@@ -1256,7 +1256,7 @@ xpr_sflush()
 	 *	Update the information displayed in the transfer window.
 	 */
 
-LONG SAVE_DS ASM
+long SAVE_DS ASM
 xpr_update(REG(a0) struct XPR_UPDATE *UpdateInfo)
 {
 	STATIC UBYTE RealName[MAX_FILENAME_LENGTH];
@@ -1693,8 +1693,8 @@ xpr_update(REG(a0) struct XPR_UPDATE *UpdateInfo)
 	 *	Check if the user has aborted the transfer.
 	 */
 
-LONG SAVE_DS
-xpr_chkabort()
+long SAVE_DS
+xpr_chkabort(void)
 {
 	LONG Result;
 
@@ -1894,8 +1894,8 @@ xpr_gets(REG(a0) const char *Prompt,REG(a1) char *Buffer)
 	 *	Set/read the serial status (parameters).
 	 */
 
-LONG SAVE_DS ASM
-xpr_setserial(REG(d0) LONG Status)
+long SAVE_DS ASM
+xpr_setserial(REG(d0) long Status)
 {
 	DB(kprintf("xpr_setserial(0x%08lx)\n",Status));
 
@@ -2542,8 +2542,8 @@ xpr_unlink(REG(a0) char *FileName)
 	 *	Check how many characters are present in the serial buffer.
 	 */
 
-LONG SAVE_DS
-xpr_squery()
+long SAVE_DS
+xpr_squery(void)
 {
 	DB(kprintf("xpr_squery()\n"));
 
@@ -2568,8 +2568,8 @@ xpr_squery()
 	 *	Return a pointer to the term custom screen.
 	 */
 
-APTR SAVE_DS ASM
-xpr_getptr(REG(d0) LONG InfoType)
+void *SAVE_DS ASM
+xpr_getptr(REG(d0) long InfoType)
 {
 	DB(kprintf("xpr_getptr(%ld)\n",InfoType));
 

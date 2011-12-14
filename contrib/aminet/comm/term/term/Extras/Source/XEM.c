@@ -15,14 +15,14 @@
 
 typedef VOID (*CALLBACK)(VOID);
 
-LONG SAVE_DS
-xem_sflush(VOID)
+long SAVE_DS
+xem_sflush(void)
 {
-	return((LONG)FlushSerialRead());
+	return((long)FlushSerialRead());
 }
 
-LONG SAVE_DS
-xem_squery(VOID)
+long SAVE_DS
+xem_squery(void)
 {
 	if(WriteRequest)
 	{
@@ -583,8 +583,8 @@ xem_swrite(REG(a0) char *Buffer,REG(d0) long Size)
 	 *	Send a break signal across the serial line.
 	 */
 
-LONG SAVE_DS
-xem_sbreak(VOID)
+long SAVE_DS
+xem_sbreak(void)
 {
 	if(!WriteRequest)
 		return(-1);
@@ -601,8 +601,8 @@ xem_sbreak(VOID)
 	 *	Restart serial read activity.
 	 */
 
-VOID SAVE_DS
-xem_sstart(VOID)
+void SAVE_DS
+xem_sstart(void)
 {
 	RestartSerial();
 }
@@ -612,8 +612,8 @@ xem_sstart(VOID)
 	 *	Stop serial read activity.
 	 */
 
-LONG SAVE_DS
-xem_sstop(VOID)
+long SAVE_DS
+xem_sstop(void)
 {
 	ClearSerial();
 
