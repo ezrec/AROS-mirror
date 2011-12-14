@@ -263,7 +263,7 @@ initproc (struct FMList *list, UBYTE * txt)
   struct Process *proc;
   UBYTE *txt2;
 
-  if ((LONG) txt != 1)
+  if ((IPTR) txt != 1)
     txt2 = txt;
   else
     txt2 = 0;
@@ -439,7 +439,7 @@ ongadget (struct Gadget *gadg, WORD cnt)
 		    gadg->TopEdge + gadg->Height);
 	  SetAPen (fmmain.rp, fmconfig->txtpen);
 	  SetSoftStyle (fmmain.rp, 1, 1);
-	  txt[0] = (UBYTE)(ULONG) gadg->UserData;
+	  txt[0] = (UBYTE)(IPTR) gadg->UserData;
 	  txt[1] = 0;
 	  textextent (fmmain.rp, txt, &apu1, &apu2);
 	  Move (fmmain.rp, (gadg->Width - apu1 + 1) / 2 + gadg->LeftEdge,

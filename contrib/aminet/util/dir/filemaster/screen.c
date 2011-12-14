@@ -1097,7 +1097,7 @@ alloclistgads (WORD x, WORD y, WORD width, WORD height, WORD mirror,
   apu5 += widthi;
   li->taskgadget.LeftEdge = apu5;
   li->taskgadget.GadgetID = linum + 401;
-  li->taskgadget.UserData = (APTR) (ULONG)linum;
+  li->taskgadget.UserData = (APTR) (IPTR)linum;
   apu5 += widthi;
   li->rtaskgadget.LeftEdge = apu5;
   li->rtaskgadget.GadgetID = linum + 421;

@@ -49,10 +49,7 @@
 #include <proto/bgui.h>
 #include <libraries/bgui_macros.h>
 
-#ifdef AROS
-/* ruct Library          *BGUIBase=NULL; */
-#include <aros/asmcall.h>
-#endif
+#include <SDI/SDI_hook.h>
 
 /*
  *	Tags for this subclass.
@@ -133,23 +130,12 @@ STATIC void __saveds __asm SetFLAttr(register __a0 FLD *fld, register __a1 struc
  *	SAS users!
  */
 
-#ifdef __AROS__
-AROS_UFH3S(ULONG, DispatchFL,
-    AROS_UFHA(Class *, cl, A0),
-    AROS_UFHA(Object *, obj, A2),
-    AROS_UFHA(Msg, msg, A1))
-#else
-STATIC ULONG __saveds __asm DispatchFL(register __a0 Class *cl,register __a2 Object *obj, register __a1 Msg msg )
-#endif
+DISPATCHER(DispatchFL)
 {
-#ifdef __AROS__
-    	AROS_USERFUNC_INIT
-#endif
-
 	FLD		       *fld,*fld2;
 	APTR			entry;
 	struct IBox	       *ib;
-	ULONG			rc, spot;
+	IPTR                    rc, spot;
 ULONG *acceptapu;
 WORD cnt1;
 
@@ -229,7 +215,7 @@ WORD cnt1;
 				/*
 				 *	Get the listview class list bounds.
 				 */
-				GetAttr( LISTV_ViewBounds, obj, ( ULONG * )&ib );
+				GetAttr( LISTV_ViewBounds, obj, ( IPTR * )&ib );
 
 				/*
 				 *	Mouse inside view bounds? Since the superclass
@@ -306,9 +292,6 @@ WORD cnt1;
 			break;
 	}
 	return( rc );
-#ifdef __AROS__
-    	AROS_USERFUNC_EXIT
-#endif
 }
 /*
  *	Simple class initialization.
@@ -329,7 +312,7 @@ Class *InitFLClass( void )
 			/*
 			 *	Setup dispatcher.
 			 */ 
-			cl->cl_Dispatcher.h_Entry = ( HOOKFUNC  )DispatchFL;
+			cl->cl_Dispatcher.h_Entry = ENTRY(DispatchFL);
 		}
 	return( cl );
 }

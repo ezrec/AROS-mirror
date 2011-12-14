@@ -361,7 +361,7 @@ while(!quit) {
 			default:
 			ie.ie_Code=code;
 			ie.ie_Qualifier=qualifier;
-			ie.ie_EventAddress=(APTR*)*((ULONG*)im->IAddress);
+			ie.ie_EventAddress=(APTR*)*((IPTR *)im->IAddress);
 			if (MapRawKey(&ie,chartab,2,0)==1) {
 				switch(ToUpper(chartab[0]))
 				{

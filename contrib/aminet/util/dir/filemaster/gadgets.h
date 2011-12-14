@@ -47,25 +47,25 @@ struct IntString {
 #define SCHANGE 0x40000000
 #define SENABLE 0
 
-WORD reqwindow(ULONG*);
+WORD reqwindow(IPTR *);
 void reqwindowtext(UBYTE*);
-void dobutton(WORD*,ULONG*,WORD,ULONG);
-void donumbutton(WORD*,ULONG*,WORD,WORD,ULONG);
-void donumbuttonstring(WORD*,ULONG*,UBYTE*,WORD,ULONG);
-void doletterbutton(WORD*,ULONG*,WORD,WORD,ULONG);
-void doletterbuttonstring(WORD*,ULONG*,UBYTE*,WORD,ULONG);
-void dotext(WORD*,ULONG*,WORD,ULONG);
-void dostring(WORD*,ULONG*,UBYTE*,ULONG);
-void dobuttonstring(WORD*,ULONG*,UBYTE*,ULONG);
-ULONG *doswitch(WORD*,ULONG*,WORD,WORD,ULONG);
-ULONG *doswitchstring(WORD*,ULONG*,UBYTE*,WORD,ULONG);
-ULONG *dotoggle(WORD*,ULONG*,WORD,WORD,ULONG);
-ULONG *dotogglestring(WORD*,ULONG*,UBYTE*,WORD,ULONG);
-ULONG *dointegergad(WORD*,ULONG*,struct IntString*,ULONG);
-void dostringgad(WORD*,ULONG*,UBYTE*,WORD,ULONG);
-ULONG *docyclenumber(WORD*,ULONG*,ULONG,WORD,WORD,WORD);
-ULONG *docyclestring(WORD*,ULONG*,WORD,ULONG,WORD,UBYTE*,...);
-ULONG *docycle(WORD*,ULONG*,WORD,ULONG,WORD,WORD,...);
+void dobutton(WORD*,IPTR*,WORD,ULONG);
+void donumbutton(WORD*,IPTR*,WORD,WORD,ULONG);
+void donumbuttonstring(WORD*,IPTR*,UBYTE*,WORD,ULONG);
+void doletterbutton(WORD*,IPTR*,WORD,WORD,ULONG);
+void doletterbuttonstring(WORD*,IPTR*,UBYTE*,WORD,ULONG);
+void dotext(WORD*,IPTR*,WORD,ULONG);
+void dostring(WORD*,IPTR*,UBYTE*,ULONG);
+void dobuttonstring(WORD*,IPTR*,UBYTE*,ULONG);
+IPTR *doswitch(WORD*,IPTR*,WORD,WORD,ULONG);
+IPTR *doswitchstring(WORD*,IPTR*,UBYTE*,WORD,ULONG);
+IPTR *dotoggle(WORD*,IPTR*,WORD,WORD,ULONG);
+IPTR *dotogglestring(WORD*,IPTR*,UBYTE*,WORD,ULONG);
+IPTR *dointegergad(WORD*,IPTR*,struct IntString*,ULONG);
+void dostringgad(WORD*,IPTR*,UBYTE*,WORD,ULONG);
+IPTR *docyclenumber(WORD*,IPTR*,ULONG,WORD,WORD,WORD);
+IPTR *docyclestring(WORD*,IPTR*,WORD,ULONG,WORD,UBYTE*,...);
+IPTR *docycle(WORD*,IPTR*,WORD,ULONG,WORD,WORD,...);
 WORD pressgadget(struct Window*,struct Gadget*);
 void unpressgadget(struct Window*,struct Gadget*);
 

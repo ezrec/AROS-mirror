@@ -127,7 +127,7 @@ WORD c,apu1;
 UBYTE exename[32];
 UBYTE para[PATH];
 struct CommandLineInterface *cli;
-ULONG  *fl;
+BPTR *fl;
 WORD len;
 UBYTE *shellwindow;
 UBYTE fmexe[32];
@@ -158,16 +158,16 @@ apu1=0;len=101;
 
 cli=(struct CommandLineInterface*)BADDR(fmmain.myproc->pr_CLI); 
 
-fl=(ULONG*)BADDR(cli->cli_CommandDir); 
+fl=(BPTR *)BADDR(cli->cli_CommandDir); 
 if(!fl) {
 	proc2=(struct Process*)FindTask("Workbench");
 	if(proc2) {
 		cli=(struct CommandLineInterface*)BADDR(proc2->pr_CLI); 
-		fl=(ULONG*)BADDR(cli->cli_CommandDir); 
+		fl=(BPTR*)BADDR(cli->cli_CommandDir); 
 	}
 }
 while(fl) {
-	if(NameFromLock((BPTR)fl[1],para,PATH)) {
+	if(NameFromLock(fl[1],para,PATH)) {
 		if(len>100) {
 			if(apu1) txtwrite(lock," add",1);
 			txtwrite(lock,"Path >NIL:",0);
@@ -178,7 +178,7 @@ while(fl) {
 		txtwrite(lock,"\"",0);
 		len+=strlen(para)+3;
 	}
-	fl=(ULONG*)(fl[0]<<2);
+	fl=(BPTR*)BADDR(fl[0]);
 }
 if(apu1) txtwrite(lock," add",1);
 

@@ -54,7 +54,7 @@ struct GUIBase {
 };
 #endif
 
-WORD reqinfowindow(UBYTE*,UBYTE*,UWORD,LONG,...);
+WORD reqinfowindow(UBYTE*,UBYTE*,UWORD,SIPTR,...);
 
 struct GUISlot *getguislot(struct GUIBase*,Object*,WORD,WORD,void*);
 
@@ -82,7 +82,7 @@ struct GUISlot *reqtogglemsg(struct GUIBase*,WORD,WORD,UWORD,BOOL*);
 struct GUISlot *reqbuttonmsg(struct GUIBase*,WORD,WORD,UWORD);
 struct GUISlot *reqbutton(struct GUIBase*,UBYTE*,WORD,UWORD);
 
-void buttonbarmsg(struct GUIBase*,LONG,...);
+void buttonbarmsg(struct GUIBase*,SIPTR,...);
 void buttonbar(struct GUIBase*,void*,...);
 void startbuttonbar(struct GUIBase*);
 
@@ -92,7 +92,7 @@ struct GUISlot *reqinfomsg(struct GUIBase*,WORD,WORD,UWORD);
 struct GUISlot *reqstring(struct GUIBase*,WORD,UBYTE*,WORD);
 struct GUISlot *reqinteger(struct GUIBase*,WORD,LONG*,LONG,LONG);
 
-struct GUISlot *reqcyclemsg(struct GUIBase*,WORD,WORD*,LONG,...);
+struct GUISlot *reqcyclemsg(struct GUIBase*,WORD,WORD*,SIPTR,...);
 struct GUISlot *reqcycle(struct GUIBase*,WORD,WORD*,UBYTE*,...);
 struct GUISlot *reqcycle2msg(struct GUIBase*,WORD,WORD*);
 

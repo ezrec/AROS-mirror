@@ -137,12 +137,12 @@ WORD cnt;
 if(!li) {
 	for(cnt=0;cnt<LISTS;cnt++) {
 		if(fmmain.li[cnt]) {
-			fmmain.li[cnt]->taskgadget.UserData=(APTR)(fmmain.li[cnt]->list->listnumber+'0');
+			fmmain.li[cnt]->taskgadget.UserData=(APTR)(IPTR)(fmmain.li[cnt]->list->listnumber+'0');
 			ongadget(&fmmain.li[cnt]->taskgadget,LISTGADGETS);
 		}
 	}	
 } else {
-	li->taskgadget.UserData=(APTR)(li->list->listnumber+'0');
+	li->taskgadget.UserData=(APTR)(IPTR)(li->list->listnumber+'0');
 	ongadget(&li->taskgadget,LISTGADGETS);
 }
 gadgettables();

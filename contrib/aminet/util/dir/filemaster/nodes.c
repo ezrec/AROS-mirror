@@ -374,7 +374,7 @@ D(bug("sformat nodes.c 377...........\n"));
 sformatti(ptr,form,args);
 }
 
-void sformatti(UBYTE *ptr,UBYTE *form,UBYTE *args)
+void sformatti(UBYTE *ptr,UBYTE *form,va_list args)
 {
 struct Hook hook;
 extern struct Locale *locale;

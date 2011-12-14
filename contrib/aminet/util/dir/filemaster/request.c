@@ -151,7 +151,7 @@ if (ret==3) return(-1);
 return(0);
 }
 
-WORD dosrequestmsg(struct FMList *list,WORD flag,LONG msg,...)
+WORD dosrequestmsg(struct FMList *list,WORD flag,SIPTR msg,...)
 {
 UBYTE dostxt1[200];
 

@@ -927,7 +927,7 @@ struct Hook dlldisplayhook  = { {NULL, NULL}, (HOOKFUNC)dlldisplayhookfunc,  NUL
 
 struct DirListLayout *setdllgads(struct GUIBase *gb,struct GUISlot *gs)
 {
-ULONG data;
+IPTR data;
 struct DirListLayout *dll;
 
 GetAttr(LISTV_LastClicked,gs->obj,&data);
@@ -1487,7 +1487,8 @@ WORD commands(struct FMConfig *ofmc)
 {
 struct FMConfig *fmc;
 Object *obj;
-ULONG ds[2],dm[2],last = 0,clicked;
+ULONG ds[2],dm[2],last = 0;
+IPTR clicked;
 Class *ddlistclass;
 struct GUIBase *gb = NULL;
 struct GUISlot *gs[4];

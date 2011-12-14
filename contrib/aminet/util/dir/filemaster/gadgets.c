@@ -61,7 +61,7 @@ extern struct FMConfig *fmconfig;
 void textextent(struct RastPort*,UBYTE*,WORD*,WORD*);
 void textextentuc(struct RastPort*,UBYTE*,WORD*,WORD*);
 ULONG power2(WORD);
-void supercheck(struct Window*,ULONG*,ULONG*,ULONG*);
+void supercheck(struct Window*,IPTR *,IPTR *,IPTR*);
 void copyus(UBYTE*,UBYTE*);
 void getwinposition(struct Screen*,struct NewWindow*,WORD,WORD,WORD);
 
@@ -236,7 +236,7 @@ endofline=100,endoftaulu=101
 */
 
 
-WORD reqwindow(ULONG *taulu)
+WORD reqwindow(IPTR *taulu)
 {
 struct NewWindow newwindow;
 struct NewGadget ngad;
@@ -254,15 +254,15 @@ WORD apu1,apu2,apu3,apu4=0,apu5,center=0;
 struct IntString *is;
 ULONG class;
 UWORD code;
-ULONG *tauluptr,*realtaulu,*super=0;
+IPTR *tauluptr,*realtaulu,*super=0;
 ULONG gadgettype;
 UBYTE asciicode;
 WORD txtlentab[72];		/* gadget widths */
 WORD txtmaxlentab[64];		/* maximum widths (cleared) */
 WORD rowwidth[64];
 UBYTE shortcuts[72];
-ULONG addressi[144];
-ULONG tags[9];
+IPTR  addressi[144];
+IPTR  tags[9];
 ULONG array[64];
 WORD arrayptr,retgadget;
 UBYTE *vptr;
@@ -295,7 +295,7 @@ while(*taulu<4) {
 	taulu++;
 	break;
 	case GADSUPER:
-	super=(ULONG*)*(taulu+1);
+	super=(IPTR*)*(taulu+1);
 	taulu+=2;
 	break;
 	}
@@ -505,7 +505,7 @@ while(txtlentab[kplcnt1]!=-1) {
 			break;
 			case CYCLE_KIND:
 			tags[0]=GTCY_Labels;
-			tags[1]=(ULONG)&array[arrayptr];
+			tags[1]=(IPTR)&array[arrayptr];
 			tags[2]=GTCY_Active;
 			tags[3]=*(tauluptr+((*(tauluptr+1))&0xff)+1);
 			for(apu1=0;apu1<((*(tauluptr+1))&0xff)-1;apu1++) {
@@ -560,8 +560,8 @@ while(txtlentab[kplcnt1]!=-1) {
 			if(!(gtgad=CreateGadgetA(gadgettype,gtgad,&ngad,(struct TagItem*)tags))) goto endreq;
 		}
 		ngad.ng_TextAttr->ta_Style=0;
-		addressi[gadgetnum*2]=(ULONG)tauluptr;
-		addressi[gadgetnum*2+1]=(ULONG)gtgad;
+		addressi[gadgetnum*2]=(IPTR)tauluptr;
+		addressi[gadgetnum*2+1]=(IPTR)gtgad;
 		if(gadgettype!=TEXT_KIND) gadgetnum++;
 		if ((gadgettype==STRING_KIND||gadgettype==INTEGER_KIND)&&!fstringgad) fstringgad=gtgad;
 		tauluptr+=((*(tauluptr+1))&0xff)+2;
@@ -625,7 +625,7 @@ while (quit==-2) {
 		if(code&0x80) break;
 		ie.ie_Code=code;
 		ie.ie_Qualifier=message->Qualifier;
-		ie.ie_EventAddress=(APTR*)*((ULONG*)message->IAddress);
+		ie.ie_EventAddress=(APTR*)*((IPTR*)message->IAddress);
 		if (MapRawKey(&ie,chartab,2,0)==1) asciicode=ToUpper(chartab[0]); else break;
 
 		if(asciicode==27) {
@@ -635,7 +635,7 @@ while (quit==-2) {
 		for(apu1=0;apu1<gadgetnum;apu1++) {
 			if(shortcuts[apu1]==asciicode||(asciicode==13&&retgadget==shortcuts[apu1])) {
 				asciicode=shortcuts[apu1];
-				tauluptr=(ULONG*)addressi[apu1*2];
+				tauluptr=(IPTR*)addressi[apu1*2];
 				vgad=(struct Gadget*)addressi[apu1*2+1];
 				if(*tauluptr!=BUTTON_KIND&&(vgad->Flags&GADGDISABLED)) break;
 				switch(*tauluptr)
@@ -694,8 +694,8 @@ while (quit==-2) {
 		case IDCMP_GADGETUP:		
 		vgad=(struct Gadget*)message->IAddress;
 		for(apu1=0;apu1<gadgetnum;apu1++) {
-			if(addressi[apu1*2+1]==(ULONG)vgad) {
-				tauluptr=(ULONG*)addressi[apu1*2];
+			if(addressi[apu1*2+1]==(IPTR)vgad) {
+				tauluptr=(IPTR*)addressi[apu1*2];
 				switch(*tauluptr)
 				{
 					case INTEGER_KIND:
@@ -752,7 +752,7 @@ while (quit==-2) {
 
 for(apu1=0;apu1<gadgetnum;apu1++) {
 	vgad=(struct Gadget*)addressi[apu1*2+1];
-	tauluptr=(ULONG*)addressi[apu1*2];
+	tauluptr=(IPTR*)addressi[apu1*2];
 	switch(*tauluptr) {
 		case STRING_KIND:
 		memseti((void*)*(tauluptr+2),0,*(tauluptr+3));
@@ -844,25 +844,25 @@ TextExtent(rp,varaptr,strlen(varaptr),&te);
 }
 #endif
 
-void dotext(WORD *c,ULONG *t,WORD msg,ULONG type)
+void dotext(WORD *c,IPTR *t,WORD msg,ULONG type)
 {
 t+=*c;
 *t++=TEXT_KIND;
 *t++=1|(type&0xffffff00);
-*t++=(ULONG)getstring(msg);
+*t++=(IPTR)getstring(msg);
 (*c)+=3;
 if(type&1) { *t=100; (*c)++; }
 }
-void dostring(WORD *c,ULONG *t,UBYTE *msg,ULONG type)
+void dostring(WORD *c,IPTR *t,UBYTE *msg,ULONG type)
 {
 UBYTE *ptr;
-ULONG *tt;
+IPTR *tt;
 
 tt=t;
 t+=*c;
 *t++=TEXT_KIND;
 *t++=1|(type&0xffffff00);
-*t++=(ULONG)msg;
+*t++=(IPTR)msg;
 (*c)+=3;
 if(type&1) { *t=100; (*c)++; }
 ptr=scanchar(msg,'\n');
@@ -871,39 +871,39 @@ if(ptr) {
 	dostring(c,tt,ptr,type);
 }
 }
-void dobutton(WORD *c,ULONG *t,WORD msg,ULONG type)
+void dobutton(WORD *c,IPTR *t,WORD msg,ULONG type)
 {
 dobuttonstring(c,t,getstring(msg),type);
 }
-void dobuttonstring(WORD *c,ULONG *t,UBYTE *msg,ULONG type)
+void dobuttonstring(WORD *c,IPTR *t,UBYTE *msg,ULONG type)
 {
 t+=*c;
 *t++=BUTTON_KIND;
 *t++=1|(type&0xffffff00);
-*t++=(ULONG)msg;
+*t++=(IPTR)msg;
 (*c)+=3;
 if(type&GADGEOF) { *t=100; (*c)++; }
 }
-void doletterbutton(WORD *c,ULONG *t,WORD msg,WORD letter,ULONG type)
+void doletterbutton(WORD *c,IPTR *t,WORD msg,WORD letter,ULONG type)
 {
 donumbuttonstring(c,t,getstring(msg),letter+'A'-'0',type);
 }
-void doletterbuttonstring(WORD *c,ULONG *t,UBYTE *msg,WORD letter,ULONG type)
+void doletterbuttonstring(WORD *c,IPTR *t,UBYTE *msg,WORD letter,ULONG type)
 {
 donumbuttonstring(c,t,msg,letter+'A'-'0',type);
 }
-void donumbutton(WORD *c,ULONG *t,WORD msg,WORD num,ULONG type)
+void donumbutton(WORD *c,IPTR *t,WORD msg,WORD num,ULONG type)
 {
 donumbuttonstring(c,t,getstring(msg),num,type);
 }
-void donumbuttonstring(WORD *c,ULONG *t,UBYTE *msg,WORD num,ULONG type)
+void donumbuttonstring(WORD *c,IPTR *t,UBYTE *msg,WORD num,ULONG type)
 {
 UBYTE *txt;
 
 t+=*c;
 *t++=BUTTON_KIND;
 *t++=15L<<16|2;
-*t=(ULONG)(t+1);
+*t=(IPTR)(t+1);
 t++;
 txt=(UBYTE*)t++;
 *txt++='_';
@@ -911,24 +911,24 @@ txt=(UBYTE*)t++;
 *txt=0;
 
 *t++=BUTTON_KIND;
-*t++=(LONG)(num+'0')<<24|14L<<16|1|GADGTEXTNUC|(type&0xffffff00);
-*t++=(ULONG)msg;
+*t++=(SIPTR)(num+'0')<<24|14L<<16|1|GADGTEXTNUC|(type&0xffffff00);
+*t++=(IPTR)msg;
 
 (*c)+=7;
 if(type&GADGEOF) { *t=100; (*c)++; }
 }
 
 
-ULONG *docyclenumber(WORD *c,ULONG *t,ULONG type,WORD sel,WORD s,WORD e)
+IPTR *docyclenumber(WORD *c,IPTR *t,ULONG type,WORD sel,WORD s,WORD e)
 {
 WORD cnt,num;
-ULONG *dat;
+IPTR *dat;
 
 num=e-s+1;
 t+=*c;
 *t++=CYCLE_KIND;
 *t++=(num+1)|(type&0xffffff00);
-for(cnt=s;cnt<=e;cnt++) *t++=(ULONG)(&gadnumbers[cnt*2]);
+for(cnt=s;cnt<=e;cnt++) *t++=(IPTR)(&gadnumbers[cnt*2]);
 dat=t;
 if(sel>=num) sel=num-1;
 *t++=sel;
@@ -937,15 +937,15 @@ if(type&GADGEOF) { *t=100; (*c)++; }
 return(dat);
 }
 
-ULONG *docyclestring(WORD *c,ULONG *t,WORD num,ULONG type,WORD sel,UBYTE *txt1,...)
+IPTR *docyclestring(WORD *c,IPTR *t,WORD num,ULONG type,WORD sel,UBYTE *txt1,...)
 {
 WORD cnt;
-ULONG *dat;
+IPTR *dat;
 
 t+=*c;
 *t++=CYCLE_KIND;
 *t++=(num+1)|(type&0xffffff00);
-for(cnt=0;cnt<num;cnt++) *t++=(ULONG)(*(&txt1+cnt));
+for(cnt=0;cnt<num;cnt++) *t++=(IPTR)(*(&txt1+cnt));
 dat=t;
 if(sel>=num) sel=num-1;
 *t++=sel;
@@ -954,15 +954,15 @@ if(type&GADGEOF) { *t=100; (*c)++; }
 return(dat);
 }
 
-ULONG *docycle(WORD *c,ULONG *t,WORD num,ULONG type,WORD sel,WORD msg1,...)
+IPTR *docycle(WORD *c,IPTR *t,WORD num,ULONG type,WORD sel,WORD msg1,...)
 {
 WORD cnt;
-ULONG *dat;
+IPTR *dat;
 
 t+=*c;
 *t++=CYCLE_KIND;
 *t++=(num+1)|(type&0xffffff00);
-for(cnt=0;cnt<num;cnt++) *t++=(ULONG)getstring(*(&msg1+cnt));
+for(cnt=0;cnt<num;cnt++) *t++=(IPTR)getstring(*(&msg1+cnt));
 dat=t;
 if(sel>=num) sel=num-1;
 *t++=sel;
@@ -970,32 +970,32 @@ if(sel>=num) sel=num-1;
 if(type&GADGEOF) { *t=100; (*c)++; }
 return(dat);
 }
-ULONG *doswitch(WORD *c,ULONG *t,WORD msg,WORD num,ULONG type)
+IPTR *doswitch(WORD *c,IPTR *t,WORD msg,WORD num,ULONG type)
 {
 return(doswitchstring(c,t,getstring(msg),num,type));
 }
-ULONG *doswitchstring(WORD *c,ULONG *t,UBYTE *msg,WORD num,ULONG type)
+IPTR *doswitchstring(WORD *c,IPTR *t,UBYTE *msg,WORD num,ULONG type)
 {
-ULONG *dat;
+IPTR *dat;
 
 if(num) num=1;
 t+=*c;
 *t++=TOGGLE_KIND;
 *t++=2;
-*t++=(ULONG)msg;
+*t++=(IPTR)msg;
 dat=t;
 *t++=num;
 (*c)+=4;
 if(type&GADGEOF) { *t=100; (*c)++; }
 return(dat);
 }
-ULONG *dotoggle(WORD *c,ULONG *t,WORD msg,WORD num,ULONG type)
+IPTR *dotoggle(WORD *c,IPTR *t,WORD msg,WORD num,ULONG type)
 {
 return(dotogglestring(c,t,getstring(msg),num,type));
 }
-ULONG *dotogglestring(WORD *c,ULONG *t,UBYTE *msg,WORD num,ULONG type)
+IPTR *dotogglestring(WORD *c,IPTR *t,UBYTE *msg,WORD num,ULONG type)
 {
-ULONG *dat;
+IPTR *dat;
 WORD numi=num?1:0;
 
 dostring(c,t,msg,(type&0xffffff00)|GADGTEXTRIGHT);
@@ -1003,25 +1003,25 @@ dat=docycle(c,t,2,(type&1)|GADGMAXSIZE,numi,MSG_NON,MSG_YESN);
 return(dat);
 }
 
-ULONG *dointegergad(WORD *c,ULONG *t,struct IntString *is,ULONG type)
+IPTR *dointegergad(WORD *c,IPTR *t,struct IntString *is,ULONG type)
 {
-ULONG *dat;
+IPTR *dat;
 
 t+=*c;
 *t++=INTEGER_KIND;
 *t++=1|(type&0xffffff00);
 dat=t;
-*t++=(ULONG)is;
+*t++=(IPTR)is;
 (*c)+=3;
 if(type&GADGEOF) { *t=100; (*c)++; }
 return(dat);
 }
-void dostringgad(WORD *c,ULONG *t,UBYTE *string,WORD maxlen,ULONG type)
+void dostringgad(WORD *c,IPTR *t,UBYTE *string,WORD maxlen,ULONG type)
 {
 t+=*c;
 *t++=STRING_KIND;
 *t++=2|(type&0xffffff00);
-*t++=(ULONG)string;
+*t++=(IPTR)string;
 *t++=maxlen;
 (*c)+=4;
 if(type&GADGEOF) { *t=100; (*c)++; }
@@ -1041,10 +1041,10 @@ number of modified gadgets amount of ulongs
 
 */
 
-void supercheck(struct Window *win,ULONG *super,ULONG *taulu,ULONG *addressi)
+void supercheck(struct Window *win,IPTR *super,IPTR *taulu,IPTR *addressi)
 {
 struct Gadget *vgad;
-ULONG *tauluptr;
+IPTR *tauluptr;
 WORD gadnum,gadvalue,listnum;
 WORD cnt=0,apu1,apu2;
 UBYTE selected,sel2;
@@ -1057,7 +1057,7 @@ while(super&&super[cnt]) {
 	gadvalue=(lapu>>8)&0xff;
 	sel2=gadvalue&0x80; gadvalue&=~0x80;
 	listnum=(lapu)&0xff;
-	tauluptr=(ULONG*)addressi[gadnum*2];
+	tauluptr=(IPTR*)addressi[gadnum*2];
 	vgad=(struct Gadget*)addressi[gadnum*2+1];
 	switch(*tauluptr)
 	{
@@ -1077,7 +1077,7 @@ while(super&&super[cnt]) {
 			gadnum=lapu&0xff;
 			apu2=(lapu>>8)&0xff;
 			vgad=(struct Gadget*)addressi[gadnum*2+1];
-			tauluptr=(ULONG*)addressi[gadnum*2];
+			tauluptr=(IPTR*)addressi[gadnum*2];
 			if(lapu&SDISABLE && !(vgad->Flags&GADGDISABLED)) {
 				RemoveGadget(win,vgad);
 				vgad->Flags|=GADGDISABLED;
@@ -1126,7 +1126,8 @@ while(super&&super[cnt]) {
 WORD simplebguirequest(Object *o)
 {
 struct Window *w;
-ULONG signal,sigs,rc;
+IPTR signal;
+ULONG sigs,rc;
 WORD ret=0;
 
 if(o) {

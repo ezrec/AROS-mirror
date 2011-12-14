@@ -70,7 +70,7 @@ static void pictureinfo(struct FMHandle *h,WORD width,WORD height,WORD deep,ULON
 WORD apu1;
 LONG apu3;
 struct DisplayInfo di;
-ULONG infotags[10];
+IPTR infotags[10];
 
 h->owner->fmmessage2[0]=0;
 if(width&&height) {
@@ -79,20 +79,20 @@ if(width&&height) {
 	if (GetDisplayInfoData(0,(UBYTE*)&di,sizeof(struct DisplayInfo),DTAG_DISP,modeid)>0) {
 		apu1=0;
 		if(di.PixelSpeed<=35)
-			infotags[apu1++]=(ULONG)getstring(MSG_SHOWPIC_SHIRES);
+			infotags[apu1++]=(IPTR)getstring(MSG_SHOWPIC_SHIRES);
 		else if(di.PixelSpeed<=70)
-			infotags[apu1++]=(ULONG)getstring(MSG_SHOWPIC_HIRES);
-		if(di.PropertyFlags&DIPF_IS_LACE) infotags[apu1++]=(ULONG)getstring(MSG_SHOWPIC_LACE);
+			infotags[apu1++]=(IPTR)getstring(MSG_SHOWPIC_HIRES);
+		if(di.PropertyFlags&DIPF_IS_LACE) infotags[apu1++]=(IPTR)getstring(MSG_SHOWPIC_LACE);
 		if(di.PropertyFlags&DIPF_IS_HAM) {
 			if(deep<=6) {
-				infotags[apu1++]=(ULONG)getstring(MSG_SHOWPIC_HAM6);
+				infotags[apu1++]=(IPTR)getstring(MSG_SHOWPIC_HAM6);
 				apu3=4096;
 			} else {
-				infotags[apu1++]=(ULONG)getstring(MSG_SHOWPIC_HAM8);
+				infotags[apu1++]=(IPTR)getstring(MSG_SHOWPIC_HAM8);
 				apu3=262144;
 			}
 		}
-		if(di.PropertyFlags&DIPF_IS_EXTRAHALFBRITE) infotags[apu1++]=(ULONG)getstring(MSG_SHOWPIC_EHB);
+		if(di.PropertyFlags&DIPF_IS_EXTRAHALFBRITE) infotags[apu1++]=(IPTR)getstring(MSG_SHOWPIC_EHB);
 	}	
 	sformat(h->owner->fmmessage2,getstring(MSG_SHOWPIC_INFO2),width,height,deep,apu3,infotags[0],infotags[1],infotags[2]);
 }
@@ -468,7 +468,7 @@ WORD openshowscreen(struct FMList *list,WORD wide,WORD high,WORD deep,ULONG mode
 {
 struct Rectangle spos, dclip, txto, stdo, maxo;
 WORD oscan,apu2;
-ULONG scrtags[24];
+IPTR scrtags[24];
 #ifndef V39
 WORD apu1;
 #endif
@@ -508,14 +508,14 @@ scrtags[4]=SA_Width; scrtags[5]=wide;
 scrtags[6]=SA_Height; scrtags[7]=high;
 scrtags[8]=SA_Depth;if(fmmain.kick<39&&deep>6) scrtags[9]=6; else scrtags[9]=deep;
 scrtags[10]=SA_Type; scrtags[11]=CUSTOMSCREEN;
-scrtags[12]=SA_BitMap; scrtags[13]=(ULONG)(shows->bitmap);
+scrtags[12]=SA_BitMap; scrtags[13]=(IPTR)(shows->bitmap);
 scrtags[14]=SA_DisplayID; scrtags[15]=modeid;
 scrtags[16]=SA_Quiet; scrtags[17]=1;
 scrtags[18]=SA_AutoScroll; scrtags[19]=1;
-scrtags[20]=SA_BackFill; scrtags[21]=(ULONG)LAYERS_NOBACKFILL;
+scrtags[20]=SA_BackFill; scrtags[21]=(IPTR)LAYERS_NOBACKFILL;
 if (oscan) {
 	clipit(wide,high,&spos,&dclip,&txto,&stdo,&maxo);
-	scrtags[22]=SA_DClip; scrtags[23]=(ULONG)&dclip;
+	scrtags[22]=SA_DClip; scrtags[23]=(IPTR)&dclip;
 }
 
 if (!(shows->screen=OpenScreenTagList(0,(struct TagItem*)scrtags))) {

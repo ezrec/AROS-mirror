@@ -480,7 +480,7 @@ while(!quit) {
 	}
 	ie.ie_Code=code&(~0x80);
 	ie.ie_Qualifier=message->Qualifier&(~0x80);
-	ie.ie_EventAddress=(APTR*)*((ULONG*)message->IAddress);
+	ie.ie_EventAddress=(APTR*)*((IPTR*)message->IAddress);
 	if (MapRawKey(&ie,chartab,2,0)==1) {
 		asciicode=chartab[0];
 		switch(edit->mode)

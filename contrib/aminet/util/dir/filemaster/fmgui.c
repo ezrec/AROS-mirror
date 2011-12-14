@@ -65,7 +65,7 @@ if(gs) {
 return(gs);
 }
 
-static void guimulticonvert2(void **text,LONG *msgs)
+static void guimulticonvert2(void **text,IPTR *msgs)
 {
 void **txtptr;
 txtptr=text;
@@ -76,7 +76,7 @@ while(*msgs) {
 *txtptr=0;
 }
 
-static void guimulticonvert(UBYTE **text,LONG *msgs)
+static void guimulticonvert(UBYTE **text,IPTR *msgs)
 {
 UBYTE **txtptr;
 txtptr=text;
@@ -212,7 +212,7 @@ cycletab[2]=0;
 return(reqcyclei(gb,id,selected,cycletab));
 }
 
-struct GUISlot *reqcyclemsg(struct GUIBase *gb,WORD id,WORD *selected,LONG cycles,...)
+struct GUISlot *reqcyclemsg(struct GUIBase *gb,WORD id,WORD *selected,SIPTR cycles,...)
 {
 UBYTE *cycletab[64];
 guimulticonvert(cycletab,&cycles);
@@ -383,7 +383,7 @@ for(cnt1=0;cnt1<GUIGROUPS;cnt1++) {
 				}
 			}
 			if(gs->type==STRING_KIND||gs->type==INTEGER_KIND) {
-				ss[cnt3++]=(ULONG)gs->obj;
+				ss[cnt3++]=(IPTR)gs->obj;
 			}
 		}
 	}
@@ -522,12 +522,12 @@ for(cnt1=0;cnt1<gg->used;cnt1++) {
 	gs=&gg->slots[cnt1];
 	if(gs->type>=1000) {
 		*tptr++=GROUP_Member;
-		*tptr++=(ULONG)recurseslot(gb,gs->type-1000);
+		*tptr++=(IPTR)recurseslot(gb,gs->type-1000);
 		*tptr++=TAG_END;
 		*tptr++=0;
 	} else {
 		*tptr++=GROUP_Member;
-		*tptr++=(ULONG)gs->obj;
+		*tptr++=(IPTR)gs->obj;
 		*tptr++=TAG_END;
 		*tptr++=0;
 		#ifdef GUIDEBUG
@@ -548,7 +548,7 @@ freemem(memtag);
 return(obj);
 }
 
-ULONG initrequtags[]={
+IPTR  initrequtags[]={
 	WINDOW_Title,0,
 	WINDOW_Screen,0,
 	WINDOW_Font,0,
@@ -564,8 +564,8 @@ ULONG initrequtags[]={
 
 BOOL initrequ(struct GUIBase *gb)
 {
-ULONG memtag[sizeof(initrequtags)+32*sizeof(ULONG)];
-ULONG *tptr;
+IPTR memtag[(sizeof(initrequtags) + sizeof(IPTR) - 1)/sizeof(IPTR)+32];
+IPTR *tptr;
 
 #ifdef GUIDEBUG
 printf("INITREQU");
@@ -573,12 +573,12 @@ printf("INITREQU");
 if(!gb) return(0);
 tptr=memtag;
 CopyMem(initrequtags,tptr,sizeof(initrequtags));
-tptr[1]=(ULONG)gb->title;
-if(gb->screen) tptr[3]=(ULONG)gb->screen; else tptr[3]=(ULONG)fmmain.naytto;
-tptr[5]=(ULONG)&fmconfig->reqfontattr;
-tptr[7]=(ULONG)&fmconfig->smallfontattr;
+tptr[1]=(IPTR)gb->title;
+if(gb->screen) tptr[3]=(IPTR)gb->screen; else tptr[3]=(IPTR)fmmain.naytto;
+tptr[5]=(IPTR)&fmconfig->reqfontattr;
+tptr[7]=(IPTR)&fmconfig->smallfontattr;
 tptr+=sizeof(initrequtags)/sizeof(ULONG);
-*tptr++=(ULONG)recurseslot(gb,0);
+*tptr++=(IPTR)recurseslot(gb,0);
 *tptr++=0;
 *tptr=0;
 gb->obj=BGUI_NewObjectA(BGUI_WINDOW_OBJECT,(struct TagItem*)memtag);
@@ -658,7 +658,7 @@ void buttonbari(struct GUIBase *gb,void **buttons)
 {
 startbuttonbar(gb);
 while(*buttons) {
-	reqbutton(gb,buttons[0],(LONG)buttons[1],guiUC);
+	reqbutton(gb,buttons[0],(IPTR)buttons[1],guiUC);
 	buttons+=2;
 }
 }
@@ -667,21 +667,21 @@ void buttonbar(struct GUIBase *gb,void *button,...)
 {
 buttonbari(gb,&button);
 }
-void buttonbarmsg(struct GUIBase *gb,LONG button,...)
+void buttonbarmsg(struct GUIBase *gb,SIPTR button,...)
 {
 void *text[32];
-guimulticonvert2(text,&button);
+guimulticonvert2(text,(IPTR *)&button);
 buttonbari(gb,text);
 }
 
-WORD reqinfowindow(UBYTE *title,UBYTE *body,UWORD flags,LONG button,...)
+WORD reqinfowindow(UBYTE *title,UBYTE *body,UWORD flags,SIPTR button,...)
 {
 struct GUIBase *gb;
 void *text[32];
 WORD ret;
 
 ret=0;
-guimulticonvert2(text,&button);
+guimulticonvert2(text,(IPTR *)&button);
 gb=getguibase(title);
 reqinfo(gb,body,-1,flags);
 buttonbari(gb,text);
@@ -696,7 +696,7 @@ struct GUISlot *gs;
 struct GUIGroup *gg;
 struct CycleData *cd;
 WORD cnt1,cnt2;
-ULONG data;
+IPTR data;
 
 for(cnt1=0;cnt1<GUIGROUPS;cnt1++) {
 	gg=gb->groups[cnt1];
@@ -740,7 +740,7 @@ WORD cnt1,cnt2;
 struct GUISlot *gs;
 struct GUIGroup *gg;
 struct CycleData *cd;
-LONG data=-1;
+SIPTR data=-1;
 
 for(cnt1=0;cnt1<GUIGROUPS;cnt1++) {
 	gg=gb->groups[cnt1];
@@ -751,21 +751,21 @@ for(cnt1=0;cnt1<GUIGROUPS;cnt1++) {
 				switch(gs->type)
 				{
 				case STRING_KIND:
-				GetAttr(STRINGA_TextVal,gs->obj,(ULONG*)gs->data);
+				GetAttr(STRINGA_TextVal,gs->obj,(IPTR*)gs->data);
 				break;
 				case INTEGER_KIND:
-				GetAttr(STRINGA_LongVal,gs->obj,(ULONG*)gs->data);
+				GetAttr(STRINGA_LongVal,gs->obj,(IPTR*)gs->data);
 				break;
 				case CYCLE_KIND:
 				cd=(struct CycleData*)gs->data;
-				GetAttr(CYC_Active,gs->obj,(ULONG*)&data);
+				GetAttr(CYC_Active,gs->obj,(IPTR*)&data);
 				*cd->selected=data;
 				break;
 				case 10:
-				GetAttr(GA_SELECTED,gs->obj,(ULONG*)&data);
+				GetAttr(GA_SELECTED,gs->obj,(IPTR*)&data);
 				break;
 				case PALETTE_KIND:
-				GetAttr(PALETTE_CurrentColor,gs->obj,(ULONG*)&data);
+				GetAttr(PALETTE_CurrentColor,gs->obj,(IPTR*)&data);
 				break;
 				}
 			}
@@ -850,7 +850,8 @@ for(cnt1=0;cnt1<GUIGROUPS;cnt1++) {
 WORD reqmsghandler(struct GUIBase *gb)
 {
 Object *obj;
-ULONG signal,sigs;
+IPTR signal;
+ULONG sigs;
 ULONG rc;
 WORD ret;
 
