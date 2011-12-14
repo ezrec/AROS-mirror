@@ -587,17 +587,17 @@ int main()
 			{
 				UBYTE *aa_File;
 				UBYTE *aa_Link;
-				ULONG  aa_Replace;
-				ULONG  aa_GM;
-				ULONG  aa_GS;
-				ULONG  aa_XG;
-				ULONG  aa_MT32;
+				IPTR   aa_Replace;
+				IPTR   aa_GM;
+				IPTR   aa_GS;
+				IPTR   aa_XG;
+				IPTR   aa_MT32;
 			} AA = {NULL, NULL, FALSE, FALSE, FALSE, FALSE, FALSE};
 			
 			static UBYTE	*Template = "FILE,LINK/K,REPLACE/S,GM/S,GS/S,XG/S,MT32/S";
 			
 
-			if ((RDArgs=ReadArgs(Template, (LONG *)&AA, 0)))
+			if ((RDArgs=ReadArgs(Template, (IPTR *)&AA, 0)))
 			{
 				ReturnCode = RETURN_ERROR;
 				
@@ -1830,9 +1830,7 @@ LONG __stdargs Message(UBYTE *Msg,UBYTE *Options,...)
 	LONG retval = 0;
 	
 	BOOL req = FALSE;
-	
-	va_list Arg;
-	va_start(Arg,Options);
+	IPTR *Arg = ((IPTR *)&Options)+1;
 	
 	// if (Options) if (strchr(Options,'|')) req = TRUE;
 	if (Options) req = TRUE;
@@ -1858,7 +1856,6 @@ LONG __stdargs Message(UBYTE *Msg,UBYTE *Options,...)
 			retval=0;
 		}
 	}
-	va_end(Arg);
 	
 	return(retval);
 }

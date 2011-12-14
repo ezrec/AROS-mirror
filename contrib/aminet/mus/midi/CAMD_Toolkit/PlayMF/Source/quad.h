@@ -56,16 +56,20 @@
 #include <sys/types.h>
 #include <sys/cdefs.h>
 #include <limits.h>
+#include <stdint.h>
 
 /*
- * Depending on the desired operation, we view a `long long' (aka quad_t) in
+ * Depending on the desired operation, we view a `long long' in
  * one or more of the following formats.
+ *
+ * Note that 'long' can be either 64 or 32 bits, and int could even be 16,
+ * so we need to use stdint types here.
  */
 union uu {
-	quad_t	q;		/* as a (signed) quad */
-	quad_t	uq;		/* as an unsigned quad */
-	long	sl[2];		/* as two signed longs */
-	u_long	ul[2];		/* as two unsigned longs */
+	int64_t		q;		/* as a (signed) quad */
+	uint64_t	uq;		/* as an unsigned quad */
+	int32_t 	sl[2];		/* as two signed longs */
+	uint32_t	ul[2];		/* as two unsigned longs */
 };
 
 /*
@@ -79,9 +83,9 @@ union uu {
  * These are used for shifting, and also below for halfword extraction
  * and assembly.
  */
-#define	QUAD_BITS	(sizeof(quad_t) * CHAR_BIT)
-#define	LONG_BITS	(sizeof(long) * CHAR_BIT)
-#define	HALF_BITS	(sizeof(long) * CHAR_BIT / 2)
+#define	QUAD_BITS	(sizeof(int64_t) * CHAR_BIT)
+#define	LONG_BITS	(sizeof(int32_t) * CHAR_BIT)
+#define	HALF_BITS	(sizeof(int32_t) * CHAR_BIT / 2)
 
 /*
  * Extract high and low shortwords from longword, and move low shortword of
@@ -96,7 +100,7 @@ union uu {
 #define	LHALF(x)	((x) & ((1 << HALF_BITS) - 1))
 #define	LHUP(x)		((x) << HALF_BITS)
 
-extern u_quad_t __qdivrem __P((u_quad_t u, u_quad_t v, u_quad_t *rem));
+extern u_quad_t __qdivrem __P((uint64_t u, uint64_t v, uint64_t *rem));
 
 /*
  * XXX

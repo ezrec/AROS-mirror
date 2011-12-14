@@ -49,13 +49,13 @@ static char sccsid[] = "@(#)qdivrem.c	8.1 (Berkeley) 6/4/93";
 #define	B	(1 << HALF_BITS)	/* digit base */
 
 /* Combine two `digits' to make a single two-digit number. */
-#define	COMBINE(a, b) (((u_long)(a) << HALF_BITS) | (b))
+#define	COMBINE(a, b) (((uint32_t)(a) << HALF_BITS) | (b))
 
 /* select a type for digits in base B: use unsigned short if they fit */
 #if ULONG_MAX == 0xffffffff && USHRT_MAX >= 0xffff
 typedef unsigned short digit;
 #else
-typedef u_long digit;
+typedef uint32_t digit;
 #endif
 
 /*
@@ -64,9 +64,9 @@ typedef u_long digit;
  * We may assume len >= 0.  NOTE THAT THIS WRITES len+1 DIGITS.
  */
 static void
-shl(register digit *p, register int len, register int sh)
+shl(register digit *p, register int32_t len, register int32_t sh)
 {
-	register int i;
+	register int32_t i;
 
 	for (i = 0; i < len; i++)
 		p[i] = LHALF(p[i] << sh) | (p[i + 1] >> (HALF_BITS - sh));
@@ -77,18 +77,18 @@ shl(register digit *p, register int len, register int sh)
  * __qdivrem(u, v, rem) returns u/v and, optionally, sets *rem to u%v.
  *
  * We do this in base 2-sup-HALF_BITS, so that all intermediate products
- * fit within u_long.  As a consequence, the maximum length dividend and
+ * fit within uint32_t.  As a consequence, the maximum length dividend and
  * divisor are 4 `digits' in this base (they are shorter if they have
  * leading zeros).
  */
-u_quad_t
+uint64_t
 __qdivrem(uq, vq, arq)
-	u_quad_t uq, vq, *arq;
+	uint64_t uq, vq, *arq;
 {
 	union uu tmp;
 	digit *u, *v, *q;
 	register digit v1, v2;
-	u_long qhat, rhat, t;
+	uint32_t qhat, rhat, t;
 	int m, n, d, j, i;
 	digit uspace[5], vspace[5], qspace[5];
 
@@ -139,7 +139,7 @@ __qdivrem(uq, vq, arq)
 	v[4] = LHALF(tmp.ul[L]);
 	for (n = 4; v[1] == 0; v++) {
 		if (--n == 1) {
-			u_long rbj;	/* r*B+u[j] (not root boy jim) */
+			uint32_t rbj;	/* r*B+u[j] (not root boy jim) */
 			digit q1, q2, q3, q4;
 
 			/*
@@ -215,7 +215,7 @@ __qdivrem(uq, vq, arq)
 			rhat = uj1;
 			goto qhat_too_big;
 		} else {
-			u_long n = COMBINE(uj0, uj1);
+			uint32_t n = COMBINE(uj0, uj1);
 			qhat = n / v1;
 			rhat = n % v1;
 		}

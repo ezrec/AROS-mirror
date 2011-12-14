@@ -408,16 +408,16 @@ LONG  ShellInterface(void)
 				ULONG *aa_WinW;
 				ULONG *aa_WinH;
 				UBYTE *aa_Image;
-				ULONG  aa_Tile;
-				ULONG  aa_Fullscreen;
-				ULONG  aa_Double;
-				ULONG  aa_Sparks;
-				ULONG  aa_GM;
-				ULONG  aa_GS;
-				ULONG  aa_XG;
-				ULONG  aa_MT32;
-				ULONG  aa_NoHooks;
-				ULONG  aa_NoTS;
+				IPTR   aa_Tile;
+				IPTR   aa_Fullscreen;
+				IPTR   aa_Double;
+				IPTR   aa_Sparks;
+				IPTR   aa_GM;
+				IPTR   aa_GS;
+				IPTR   aa_XG;
+				IPTR   aa_MT32;
+				IPTR   aa_NoHooks;
+				IPTR   aa_NoTS;
 			} AA;
 			
 			static UBYTE	*Template = "L=LINK/K,M=MODE/K/N,S=SENSITIVITY/K/N,WX=WINX/K/N,WY=WINY/K/N,WW=WINW/K/N,WH=WINH/K/N,I=IMAGE/K,T=TILE/S,FS=FULLSCREEN/S,D=DOUBLE/S,SP=SPARKS/S,GM/S,GS/S,XG/S,MT32/S,NH=NOHOOKS/S,NTS=NOTIMESTAMPING/S";
@@ -439,7 +439,7 @@ LONG  ShellInterface(void)
 				LoadPrefs(pref);
 				
 				memset(&AA, 0, sizeof(struct ArgArray));
-				if ((RDArgs=ReadArgs(Template, (LONG *)&AA, 0)))
+				if ((RDArgs=ReadArgs(Template, (IPTR *)&AA, 0)))
 				{
 					BOOL fault = FALSE;
 					UWORD opts;
@@ -929,7 +929,7 @@ BOOL OpenGUI(struct Globals *glob, struct Prefs *pref)
 						{
 							if (glob->Screen == wbscr)
 							{
-								glob->AppWindow = AddAppWindow( 1, BNULL, glob->Window, glob->AppPort, TAG_DONE);
+								glob->AppWindow = AddAppWindow( 1, 0, glob->Window, glob->AppPort, TAG_DONE);
 							}
 							
 							UnlockPubScreen( NULL, wbscr );
@@ -1490,14 +1490,14 @@ void MainLoop(struct Globals *glob, struct Prefs *pref)
 						BOOL SaveWatch = Watch;
 						
 						struct MenuItem *n;
-						ULONG pick;
+						IPTR pick;
 						
 						Watch = FALSE;
 						
 						while( (Co != MENUNULL) && Active)
 						{
 							n = ItemAddress( glob->Window->MenuStrip, (ULONG)Co );
-							pick = (ULONG) GTMENUITEM_USERDATA( n );
+							pick = (IPTR) GTMENUITEM_USERDATA( n );
 							
 							switch(pick)
 							{
