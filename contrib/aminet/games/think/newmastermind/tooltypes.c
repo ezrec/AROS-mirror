@@ -42,7 +42,7 @@ read_tooltypes (void)
 {
    struct DiskObject  *disk_obj;
    char  *tool_val;
-   BPTR   old_dir = -1;
+   BPTR   old_dir = (BPTR)-1;
    
    if ((IconBase = OpenLibrary ("icon.library", 33L)))
    {
@@ -74,7 +74,7 @@ read_tooltypes (void)
          FreeDiskObject (disk_obj);
       }
       
-      if (old_dir != -1)
+      if (old_dir != (BPTR)-1)
          CurrentDir (old_dir);
       
       CloseLibrary (IconBase);
@@ -90,7 +90,7 @@ save_tooltypes (void)
    char  *old_toolval[NUM_TOOLTYPES];
    char   tooltypes[NUM_TOOLTYPES][129];
    char   num_str[7];
-   BPTR   old_dir = -1;
+   BPTR   old_dir = (BPTR)-1;
    struct DiskObject  *disk_obj;
    
    if ((IconBase = OpenLibrary ("icon.library", 33L)))
@@ -216,7 +216,7 @@ sprintf(num_str, "%d" ,chosen_num_colors);
          FreeDiskObject (disk_obj);
       }
       
-      if (old_dir != -1)
+      if (old_dir != (BPTR)-1)
          CurrentDir (old_dir);
       
       CloseLibrary (IconBase);
