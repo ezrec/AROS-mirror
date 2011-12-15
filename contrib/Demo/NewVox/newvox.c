@@ -521,10 +521,10 @@ void getevents(void)
 
 /***********************************************************************************/
 
-main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
     int done;
-    int i,k;
+    int i;
     float ss,sa,a,s;
     int x0,y0;
 
@@ -605,7 +605,7 @@ main(int argc, char *argv[])
 	 sa    = angular speed
      */
     done=0;
-    a=0; k=x0=y0=0;
+    a=0; x0=y0=0;
     s=1024; /*s=4096;*/
     ss=startflyspeed; sa=0;
     while(!done)
@@ -650,6 +650,7 @@ main(int argc, char *argv[])
     }
 
     cleanup(0);
+    return 0;
 }
 
 /***********************************************************************************/
