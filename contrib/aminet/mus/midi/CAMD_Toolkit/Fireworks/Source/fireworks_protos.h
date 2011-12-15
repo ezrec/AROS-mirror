@@ -11,7 +11,8 @@ void NormalPointer(struct Globals *glob, struct Prefs *pref);
 
                               /* message.c */
 
-LONG __stdargs Message(UBYTE *Msg,UBYTE *Options,...);
+#define Message(Msg, Options, Args...) \
+({ IPTR args[] = { AROS_PP_VARIADIC_CAST2IPTR(Args) }; MessageA(Msg, Options, args); })
 LONG           MessageA(UBYTE *Msg,UBYTE *Options,APTR Args);
 LONG __stdargs AsyncMessage(struct Globals *glob, TaskFlag flg, UBYTE *Msg,UBYTE *Options,...);
                                /* timer.c */

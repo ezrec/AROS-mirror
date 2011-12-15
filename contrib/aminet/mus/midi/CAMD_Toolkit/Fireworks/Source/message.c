@@ -9,32 +9,14 @@ extern BOOL WBMode;
 /* Show a message to the user */
 /*----------------------------*/
 
-LONG __stdargs Message(UBYTE *Msg,UBYTE *Options,...)
-{
-	LONG retval;
-
-	va_list Args;
-	va_start(Args,Options);
-
-	retval = MessageA(Msg, Options, Args);
-	
-	va_end(Args);
-	
-	return(retval);
-}
-
 LONG MessageA(UBYTE *Msg,UBYTE *Options,APTR Args)
 {
 	LONG retval;
 	
 	BOOL req = FALSE;
 
-	kprintf("---------------MessageA_start: ");
-	vkprintf(Msg,Args);
-	kprintf("\n");
-
-	// if (Options) if (strchr(Options,'|')) req = TRUE;
-	if (Options) req = TRUE;
+	if (Options && strchr(Options,'|'))
+		req = TRUE;
 	
 	if (IntuitionBase && (WBMode || req))
 	{
