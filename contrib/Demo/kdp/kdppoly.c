@@ -11,9 +11,7 @@ void KDPffpoly(KDPvertex *v1,KDPvertex *v2,KDPvertex *v3,UBYTE col,UBYTE *vmem)
   KDPvertex *temp;
   int dx1, dx2, dx3;
   int xp1, xp2, xp3;
-  int xx;
   int rx1,rx2;
-  int x13pos;
   UBYTE *vm;
   int j;
   float l;
@@ -60,10 +58,8 @@ void KDPffpoly(KDPvertex *v1,KDPvertex *v2,KDPvertex *v3,UBYTE col,UBYTE *vmem)
   xp1=(int)(v1->x*65536);
   xp2=(int)(v1->x*65536);
   xp3=(int)(v2->x*65536);
-  xx=xp3;
 
   d=(v2->y-v1->y);
-  x13pos=(int)(xp1+(dx2*d));
 
 
   l=v1->x+((float)((float)dx2/65536)*(v2->y-v1->y));
@@ -139,7 +135,6 @@ void KDPfgpoly(KDPvertex *v1,KDPvertex *v2,KDPvertex *v3,UBYTE *vmem)
   int dc1,dc2,dc3;
   int xp1, xp2, xp3;
   int cp1,cp2,cp3;
-  int xx,cc;
   int rx1,rx2;
   int x13pos;
   int c13pos;
@@ -209,11 +204,9 @@ void KDPfgpoly(KDPvertex *v1,KDPvertex *v2,KDPvertex *v3,UBYTE *vmem)
   xp1=(int)(v1->x*65536);
   xp2=(int)(v1->x*65536);
   xp3=(int)(v2->x*65536);
-  xx=xp3;
   cp1=(int)(v1->c*65536);
   cp2=(int)(v1->c*65536);
   cp3=(int)(v2->c*65536);
-  cc=cp3;
 
   d=(v2->y-v1->y);
   x13pos=(int)(xp1+(dx2*d));
@@ -327,7 +320,6 @@ void KDPfgcpoly(KDPvertex *v1,KDPvertex *v2,KDPvertex *v3,UBYTE col,UBYTE *vmem)
   int dc1,dc2,dc3;
   int xp1, xp2, xp3;
   int cp1,cp2,cp3;
-  int xx,cc;
   int rx1,rx2;
   int x13pos;
   int c13pos;
@@ -397,11 +389,9 @@ void KDPfgcpoly(KDPvertex *v1,KDPvertex *v2,KDPvertex *v3,UBYTE col,UBYTE *vmem)
   xp1=(int)(v1->x*65536);
   xp2=(int)(v1->x*65536);
   xp3=(int)(v2->x*65536);
-  xx=xp3;
   cp1=(int)(v1->c*65536);
   cp2=(int)(v1->c*65536);
   cp3=(int)(v2->c*65536);
-  cc=cp3;
 
   d=(v2->y-v1->y);
   x13pos=(int)(xp1+(dx2*d));
@@ -516,7 +506,6 @@ void KDPftpoly(KDPvertex *v1,KDPvertex *v2,KDPvertex *v3,UBYTE *tex,UBYTE *vmem)
   int xp1, xp2, xp3;
   int up1,up2,up3;
   int vp1,vp2,vp3;
-  int xx,uu,vv;
   int rx1,rx2;
   int x13pos;
   int u13pos,v13pos;
@@ -592,15 +581,12 @@ void KDPftpoly(KDPvertex *v1,KDPvertex *v2,KDPvertex *v3,UBYTE *tex,UBYTE *vmem)
   xp1=(int)(v1->x*65536);
   xp2=(int)(v1->x*65536);
   xp3=(int)(v2->x*65536);
-  xx=xp3;
   up1=(int)(v1->u*65536);
   up2=(int)(v1->u*65536);
   up3=(int)(v2->u*65536);
-  uu=up3;
   vp1=(int)(v1->v*65536);
   vp2=(int)(v1->v*65536);
   vp3=(int)(v2->v*65536);
-  vv=vp3;
 
 
 
@@ -730,7 +716,6 @@ void KDPfftpoly(KDPvertex *v1,KDPvertex *v2,KDPvertex *v3,UBYTE col,UBYTE *tex,U
   int xp1, xp2, xp3;
   int up1,up2,up3;
   int vp1,vp2,vp3;
-  int xx,uu,vv;
   int rx1,rx2;
   int x13pos;
   int u13pos,v13pos;
@@ -806,15 +791,12 @@ void KDPfftpoly(KDPvertex *v1,KDPvertex *v2,KDPvertex *v3,UBYTE col,UBYTE *tex,U
   xp1=(int)(v1->x*65536);
   xp2=(int)(v1->x*65536);
   xp3=(int)(v2->x*65536);
-  xx=xp3;
   up1=(int)(v1->u*65536);
   up2=(int)(v1->u*65536);
   up3=(int)(v2->u*65536);
-  uu=up3;
   vp1=(int)(v1->v*65536);
   vp2=(int)(v1->v*65536);
   vp3=(int)(v2->v*65536);
-  vv=vp3;
 
 
 
@@ -948,7 +930,6 @@ void KDPfgtpoly(KDPvertex *v1,KDPvertex *v2,KDPvertex *v3,UBYTE *tex,UBYTE *vmem
   int up1,up2,up3;
   int vp1,vp2,vp3;
   int cp1,cp2,cp3;
-  int xx,uu,vv,cc;
   int rx1,rx2;
   int x13pos;
   int u13pos,v13pos,c13pos;
@@ -1030,19 +1011,15 @@ void KDPfgtpoly(KDPvertex *v1,KDPvertex *v2,KDPvertex *v3,UBYTE *tex,UBYTE *vmem
   xp1=(int)(v1->x*65536);
   xp2=(int)(v1->x*65536);
   xp3=(int)(v2->x*65536);
-  xx=xp3;
   up1=(int)(v1->u*65536);
   up2=(int)(v1->u*65536);
   up3=(int)(v2->u*65536);
-  uu=up3;
   vp1=(int)(v1->v*65536);
   vp2=(int)(v1->v*65536);
   vp3=(int)(v2->v*65536);
-  vv=vp3;
   cp1=(int)(v1->c*65536);
   cp2=(int)(v1->c*65536);
   cp3=(int)(v2->c*65536);
-  cc=cp3;
 
 
   d=(v2->y-v1->y);

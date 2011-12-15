@@ -11,27 +11,24 @@ float partvx[NUM];
 float partvy[NUM];
 float grv[NUM];  
 
-main()
+int main(int argc, char **argv)
 {
   KDPscreen screen;
   KDPmouse mouse;
   UBYTE *vmem;
-  float grav=2;
   float ox,oy;
-  float grx,gry;
   int n;
-  int i,j,ii;
+  int i,ii;
   UBYTE pal[256*3];
-  int x,y;
-  int tel,dir;
+  int tel = 0,dir;
   UBYTE sp[256],sp2[256];
   float xdif,ydif,len; 
-  float pgrav,ograv;
+  float ograv;
   if (!(KDPopen(&screen)))
     {
     printf("kdp failed!\n");
     KDPclose(&screen);
-    return;
+    return 1;
     }
   
   KDPpalRange(0  ,0  ,0  ,
@@ -68,7 +65,6 @@ main()
   i=0;
   n=500;
   dir=0;
-  pgrav=20;
   ograv=50; 
   while(mouse.button!=3)
     {
@@ -126,6 +122,8 @@ main()
     }
 
   KDPclose(&screen);
+
+  return 0;
 }
 
     

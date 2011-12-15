@@ -75,7 +75,7 @@ static void getarguments(void)
 	
 	if (args[ARG_DRAWMODE])
 	{
-	    int i = (int)*(IPTR **)args[ARG_DRAWMODE];
+	    int i = (int)args[ARG_DRAWMODE];
 	    
 	    if ((i >= 0) && (i <= 8)) flip = i;
 	}
@@ -383,12 +383,8 @@ int main(int argc,char **argv)
   int i,ii;
   int frame=0;
   float secs;
-  int blr;
   int col;
   int tel=0;
-  //int ia,ib,ic;
-  float dz;
-  int rem=0;
   int rt=0;
 
    if (argc < 2)
@@ -449,7 +445,6 @@ int main(int argc,char **argv)
 				{
 				    da+=(float)mouse.xspeed/500;
 				}
-	blr=1;
 				zx+=(float)mouse.yspeed/50;
 				rt++;
 				}

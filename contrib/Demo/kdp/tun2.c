@@ -19,11 +19,10 @@ void make_tuntab(float persp,float po,float rot,float ox,float oy,float mulx,flo
 {
   float xx, yy;
   int x,y;
-  float vx, vy;
+  float vx, vy = 0.0;
   float pe;
   float mx;
   float dvx=0;
-  int l;
   int blk;
   for (y=0; y<26; y++)
     for (x=0; x<41; x++)
@@ -46,9 +45,8 @@ void stampblok(UBYTE *vmem,UBYTE *txt)
 {
     int   dx1, dy1, dx2, dy2, dx, dy;
     int   tx1, ty1, tx2, ty2, tx, ty;
-    int   i, j, x, y, o;
+    int   x, y, o;
     int x2,y2,blk;
-    int lx1,lx2,lx3,ldx1,ldx2,ldx3;
     for(y2=0;y2<25;y2++)
       for(x2=0;x2<40;x2++)
         {
@@ -98,23 +96,23 @@ void stampblok(UBYTE *vmem,UBYTE *txt)
 
 
 
-main()
+int main(int argc, char **argv)
 {
   KDPscreen screen;
   KDPmouse  mouse;
   int i;
-  int x,y;
-  float ox,oy;
+  // int x,y;
+  float ox = 0.0,oy = 0.0;
   float mx,my;
   float mulx,muly;
   UBYTE *vmem;
   float mmx;
-  float rot;
-  float tox,toy;
-  float doy;
-  float qx,qy;
+  float rot = 0.0;
+  float tox = 0.0,toy = 0.0;
+  float doy = 0.0;
+  float qx = 0.0,qy = 0.0;
   float l;
-  float sl;
+  // float sl;
   text1=KDPloadFile("raw/tg-1.raw");
   text2=KDPloadFile("raw/tg-2.raw");
   //pal=KDPloadFile("tun-l.pal");
@@ -217,5 +215,7 @@ main()
       }
     }
   KDPclose(&screen);
+
+  return 0;
 }
 

@@ -189,7 +189,7 @@ void KDPsp256(int x,int y,int size,UBYTE *tex,UBYTE *vmem)
 	  for(xx=x1;xx<x2;xx++)
 		{
 		*vmem=KDPcoltab[*vmem+tex[((v>>8)&0xffffff00)+(u>>16)]];
-		*vmem++;
+		vmem++;
 		u+=du;
 		}
 	  vmem+=dx;
@@ -376,7 +376,7 @@ void KDPpalRange(float r1,float g1,float b1,int r2,int g2,int b2, int begin, int
 int KDPfindCol(UBYTE *pl,int red,int green,int blue)
 {
   int r,g,b;
-  int col;
+  int col = 0;
   int dif;
   int mindif;
   int i;
@@ -439,8 +439,11 @@ int KDPreadBMP(char *filename,UBYTE *pal,UBYTE *image)
   ypm=   KDPgetIlong(&file[42]);
   numcol=KDPgetIlong(&file[46]);
   impcol=KDPgetIlong(&file[50]);
-  //printf("Filesize: %d \nBitmapoffs:%d\nBitmapInfoHeader size:%d\nWidth:%d  Height:%d Planes:%d \nBits/Pixel:%d\nCompression:%d Uncompressed size:%d\nX-Pixels/meter:%d Y-Pixels/meter:%d \nColors used:%d Important colors:%d\n",
-  //        filesize,bitmapoffset,bisize,width,height,planes,bitpix,comp,usize,xpm,ypm,numcol,impcol);
+
+  if (0) {
+  printf("Filesize: %d \nBitmapoffs:%d\nBitmapInfoHeader size:%d\nWidth:%d  Height:%d Planes:%d \nBits/Pixel:%d\nCompression:%d Uncompressed size:%d\nX-Pixels/meter:%d Y-Pixels/meter:%d \nColors used:%d Important colors:%d\n",
+          (int)filesize,(int)bitmapoffset,(int)bisize,(int)width,(int)height,(int)planes,(int)bitpix,(int)comp,(int)usize,(int)xpm,(int)ypm,(int)numcol,(int)impcol);
+  }
 
   if (pal!=0)
     for(i=0;i<256;i++)

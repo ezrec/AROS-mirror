@@ -181,9 +181,8 @@ int main(int argc,char **argv)
   UBYTE sp1[16*16],sp2[16*16];
   int frame=0;
   float secs;
-  float len;
   int blr;
-  int tel2;
+  int tel2 = 0;
   int tel=0,flip=0;
   //int ia,ib,ic;
   int kl;

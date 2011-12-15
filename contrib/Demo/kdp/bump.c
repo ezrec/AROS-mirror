@@ -71,7 +71,6 @@ void load_pictures()
 void make_lightpicture(int xpos, int ypos)
 {
   int x, y;
-  int xx,yy,sx,sy;
   memset(light, 0, 256*256);
   for (y=0; y<256; y++)
     for (x=0; x<256; x++)
@@ -82,7 +81,6 @@ void make_lightpicture(int xpos, int ypos)
 
 void shade_picture()
 {
-  int x, y;
   int xdelta, ydelta;
   int o;
 
@@ -106,16 +104,12 @@ void shade_picture()
       vmem[o]=0;
 }
 
-main()
+int main(int argc, char **argv)
 {
   KDPscreen screen;
   KDPmouse  mouse;
-  int i=0;
-  float m;
-  float dm;
   float mx,my;
-  int dz=1;
-  float xx,yy;
+  float xx = 0.0,yy = 0.0;
   
   getarguments();
   
@@ -153,5 +147,7 @@ if (KDPopen(&screen))
       }
     }
   KDPclose(&screen);
+
+  return 0;
 }
 

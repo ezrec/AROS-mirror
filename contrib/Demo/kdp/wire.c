@@ -141,7 +141,6 @@ int main(int argc,char **argv)
 	KDPscreen screen;
 	KDPmouse mouse;
 	UBYTE *vmem;
-	UBYTE *samp=(UBYTE *) 0xBFE101;
   float a=0,b=0,c=0;
   float da,db,dc;
   float zx=20;
@@ -149,8 +148,7 @@ int main(int argc,char **argv)
   int frame=0;
   float secs;
   int ia,ib,ic;
-  int kl;
-  int x1,x2,y1,y2;
+  int kl = 0;
 
    if (argc < 2)
    {

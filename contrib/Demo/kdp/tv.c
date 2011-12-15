@@ -7,23 +7,23 @@
 UBYTE vm2[64000];
 UBYTE tv[64000];
 
-main()
+int main(int argc, char **argv)
 {
   KDPscreen screen;
   KDPmouse mouse;
   UBYTE *vmem;
   UBYTE *vm; 
   UBYTE kl;
-  int t;
+  int t = 0;
   int ofs;
   int tt;
-  int t2;
+  int t2 = 0;
   int i;
   if (!(KDPopen(&screen)))
     {
     printf("kdp failed!\n");
     KDPclose(&screen);
-    return;
+    return 1;
     }
   
   vmem=screen.vmem;
@@ -87,5 +87,7 @@ main()
     }
 
   KDPclose(&screen);
+
+  return 0;
 }
 

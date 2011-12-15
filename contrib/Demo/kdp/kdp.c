@@ -104,7 +104,7 @@ int handle_events()
 //open screen and setup a greyscale palette
 int KDPopen(KDPscreen *screen)
 {
-    int i, wx, wy;
+    int i, wx = 0, wy = 0;
     
     if (!(IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library", 39)))
     {
@@ -239,7 +239,7 @@ void KDPsetColor(UBYTE num, UBYTE r, UBYTE g, UBYTE b)
 //(r,g,b,r,g,b,r,g,b,......)
 void KDPsetPal(UBYTE *pal)
 {
-  unsigned int i, p=0;
+  unsigned int i;
   ULONG r,g,b;
   
   if (wbscreen)
@@ -311,7 +311,7 @@ void *KDPloadFile(char *filename)
   FILE *fp;
   int len;
   void *mem=0;
-  if (fp=fopen(filename,"rb"))
+  if ((fp=fopen(filename,"rb")))
     {
     fseek(fp,0,SEEK_END);
     len=ftell(fp);

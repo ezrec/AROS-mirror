@@ -17,7 +17,6 @@ int load3d(char *filename)
 {
   UBYTE *file;
   int pointo;
-  int faceo;
   int i;
   float xofs,yofs,zofs;
 
@@ -28,7 +27,6 @@ int load3d(char *filename)
   pointo=KDPgetMlong(&file[6]);
   numf=KDPgetMword(&file[10])+1;
   nump=KDPgetMword(&file[pointo])+1;
-  faceo=12;
   
   pointo+=2;
   for(i=0;i<nump;i++)
@@ -105,22 +103,15 @@ int main(int argc,char **argv)
 	KDPscreen screen;
 	KDPmouse mouse;
 	UBYTE *vmem;
-	int ofs;
 	UBYTE pal[2][256*3];
-   UBYTE *v2;
    
   float a=0,b=0,c=0;
   float da=0,db=0,dc=0;
   int i;
   float zx=20;
   float m=1;
-  int t=0,fl=0;
   float speed=0;
-  float xs=2,ys;
   float qx=0,qy=0;
-  int tel;
-  int delx=1;
-  UBYTE *ra2;
 
    if (argc < 2)
    {
@@ -141,11 +132,7 @@ int main(int argc,char **argv)
 						200,255,pal[0]);
   for(i=0;i<256;i++)
     pal[1][i]=pal[0][i]/2;
-  xs=100+rand()%100;
-  ys=100+rand()%100;
   KDPreadBMP("bmp/cir.bmp",0,tex);
-tel=0;
-	xs=2000;ys=2000;
 	if(KDPopen(&screen))
 	{
 	vmem=screen.vmem;

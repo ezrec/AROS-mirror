@@ -250,24 +250,19 @@ int main(int argc,char **argv)
 	{
 	KDPscreen screen;
 	KDPmouse mouse;
-	UBYTE *vmem;
+	UBYTE *vmem = NULL;
   float a=0,b=0,c=0;
   float da,db,dc;
   float zx=20;
-  int i,ii;
-  UBYTE sp1[16*16],sp2[16*16];
+  int i;
+  UBYTE sp1[16*16];
   int frame=0;
   float secs;
-  float rzx;
-  int blr;
-  int ia,ib,ic;
   int frm;
   int tel=0,flip=0;
-  //int ia,ib,ic;
   int kl;
-  int col;
-  float speed;
-  float dz;
+  float speed = 0.0;
+  float dz = 0.0;
 
    if (argc < 2)
    {
@@ -311,9 +306,6 @@ int main(int argc,char **argv)
 		KDPsetPal(pal);
 
         
-		for(i=0;i<16*16;i++)
-			sp2[i]=sp1[i]/5;
-
 		vmem=screen.vmem;
 	  KDPgetMouse(&mouse);
 	  KDPgetMouse(&mouse);
@@ -328,13 +320,11 @@ int main(int argc,char **argv)
 				{
 				dc+=(float)mouse.yspeed/500;
 				db+=(float)mouse.xspeed/500;
-				blr=0;
 				dz=0;
 				}
 			if(mouse.button==1)
 				{
 				da+=(float)mouse.xspeed/500;
-	blr=1;
 				kl+=mouse.yspeed;
 				if(kl<0) kl=0;
 				if(kl>255) kl=255;
@@ -358,7 +348,6 @@ int main(int argc,char **argv)
 			  b+=db;
 			  c+=dc;
 			  zx+=(dz);
-			  rzx=zx+(frm*0.3);
 			  //sub(vmem);
 			  //KDPblur(2,vmem);
 			  KDPcls(vme[frm]);
