@@ -487,7 +487,7 @@ void getevents(void)
 }
 /********************MAIN PROC******************************/
 
-int main()
+int main(int argc, char **argv)
 {
     int frame=0, u;
     unsigned char pal[768];
@@ -536,4 +536,6 @@ int main()
         }while(!ende);
 	
     cleanup(0);
+
+    return 0;
 }
