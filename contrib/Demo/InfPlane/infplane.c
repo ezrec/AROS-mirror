@@ -94,7 +94,6 @@ void rotate3d(float *xr, float *yr, float *zr,  /* le point a faire tourner */
 
 void initinfplane(void)
 {
-  int x,y;
   FILE * fichier;
   char * c;
   
@@ -559,9 +558,6 @@ static void getevents(void)
 
 static void action(void)
 {
-  int fichier;
-
-
   float Xd,Yd,Zd;
   float dzz=0;
   float aa=0,thet=0; 
