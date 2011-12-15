@@ -211,7 +211,7 @@ pal_top = HIGH-100;
 
     /* open the main screen */
     screen1 = OpenScreenTags(NULL,
-              SA_Title,     (ULONG)"Welcome to RABLe-Paint",
+              SA_Title,     (IPTR)"Welcome to RABLe-Paint",
               SA_Depth,     5,         
               SA_DisplayID, screenmode->sm_DisplayID,
               TAG_DONE);
@@ -319,13 +319,13 @@ pal_top = HIGH-100;
     fr = (struct FileRequester *)
         AllocAslRequestTags(ASL_FileRequest,
               ASL_Window,     window1,
-              ASL_Hail,       (ULONG)"Load or Save Picture",
+              ASL_Hail,       (IPTR)"Load or Save Picture",
               ASL_Height,     180,
               ASL_Width,      300,
               ASL_LeftEdge,   20,
               ASL_TopEdge,    20,
-              ASL_OKText,     (ULONG)"Okay",
-              ASL_CancelText, (ULONG)"Cancel",
+              ASL_OKText,     (IPTR)"Okay",
+              ASL_CancelText, (IPTR)"Cancel",
               TAG_DONE);
 
               if (fr == NULL)
@@ -855,32 +855,32 @@ void SavePic(char *filename)
    /* init IFFHandle */
    if(!(iff=AllocIFF())) {printf("AllocIFF failed.\n"); return;}
 
-   if(!(iff->iff_Stream=Open(filename, MODE_NEWFILE)))
+   if(!(iff->iff_Stream=(IPTR)Open(filename, MODE_NEWFILE)))
              {printf("Cannot open iff_Stream.\n");
               FreeIFF(iff);
               return;}
 
    InitIFFasDOS(iff);
    error=OpenIFF(iff,IFFF_WRITE);
-   if(error) {printf("OpenIFF error = %ld\n",error);
-              Close(iff->iff_Stream);
+   if(error) {printf("OpenIFF error = %ld\n",(long)error);
+              Close((BPTR)iff->iff_Stream);
               FreeIFF(iff);
               return;}
 
    /* create FORM chunk */
    error=PushChunk(iff,ID_ILBM,ID_FORM,IFFSIZE_UNKNOWN);
-   if(error) {printf("PushChunk FORM error = %ld\n",error);
+   if(error) {printf("PushChunk FORM error = %ld\n",(long)error);
               CloseIFF(iff);
-              Close(iff->iff_Stream);
+              Close((BPTR)iff->iff_Stream);
               FreeIFF(iff);
               return;}
 
    /* write BMHD chunk */
    error=PushChunk(iff,ID_ILBM,ID_BMHD,sizeof(struct BitMapHeader));
-   if(error) {printf("PushChunk BMHD error = %ld\n",error);
+   if(error) {printf("PushChunk BMHD error = %ld\n",(long)error);
               PopChunk(iff);
               CloseIFF(iff);
-              Close(iff->iff_Stream);
+              Close((BPTR)iff->iff_Stream);
               FreeIFF(iff);
               return;}
 
@@ -890,7 +890,7 @@ void SavePic(char *filename)
               PopChunk(iff);
               PopChunk(iff);
               CloseIFF(iff);
-              Close(iff->iff_Stream);
+              Close((BPTR)iff->iff_Stream);
               FreeIFF(iff);
               return;
               }
@@ -899,10 +899,10 @@ void SavePic(char *filename)
    
    /* write CMAP chunk */
    error=PushChunk(iff,ID_ILBM,ID_CMAP,ncolors*3);
-   if(error) {printf("PushChunk CMAP error = %ld\n",error);
+   if(error) {printf("PushChunk CMAP error = %ld\n",(long)error);
               PopChunk(iff);
               CloseIFF(iff);
-              Close(iff->iff_Stream);
+              Close((BPTR)iff->iff_Stream);
               FreeIFF(iff);
               return;}
 
@@ -922,7 +922,7 @@ void SavePic(char *filename)
               PopChunk(iff);
               PopChunk(iff);
               CloseIFF(iff);
-              Close(iff->iff_Stream);
+              Close((BPTR)iff->iff_Stream);
               FreeIFF(iff);
               return;
               }
@@ -945,7 +945,7 @@ void SavePic(char *filename)
              FreeVec(bmap);
              PopChunk(iff);
              CloseIFF(iff);
-             Close(iff->iff_Stream);
+             Close((BPTR)iff->iff_Stream);
              FreeIFF(iff);
              return;
            }
@@ -956,7 +956,7 @@ void SavePic(char *filename)
       {  printf("Could not allocate memory for BitMap.\n");    
          PopChunk(iff);
          CloseIFF(iff);
-         Close(iff->iff_Stream);
+         Close((BPTR)iff->iff_Stream);
          FreeIFF(iff);
          return; 
       }
@@ -973,13 +973,13 @@ void SavePic(char *filename)
       planes[iPlane] = (BYTE *)bmap->Planes[iPlane];
 
    /* Write out a BODY chunk header */
-   error=PushChunk(iff, BNULL, ID_BODY, IFFSIZE_UNKNOWN);
-   if(error) {printf("PushChunk BODY error = %ld\n",error);
+   error=PushChunk(iff, 0, ID_BODY, IFFSIZE_UNKNOWN);
+   if(error) {printf("PushChunk BODY error = %ld\n",(long)error);
              PopChunk(iff);
              for(i=0;i<depth;i++) FreeRaster(bmap->Planes[i],width,height);
              FreeVec(bmap);
              CloseIFF(iff);
-             Close(iff->iff_Stream);
+             Close((BPTR)iff->iff_Stream);
              FreeIFF(iff);
              return;}
 
@@ -998,7 +998,7 @@ void SavePic(char *filename)
               for(i=0;i<depth;i++) FreeRaster(bmap->Planes[i],width,height);
               FreeVec(bmap);
               CloseIFF(iff);
-              Close(iff->iff_Stream);
+              Close((BPTR)iff->iff_Stream);
               FreeIFF(iff);
               return;
               }
@@ -1016,7 +1016,7 @@ void SavePic(char *filename)
    for(i=0;i<depth;i++) FreeRaster(bmap->Planes[i],width,height);
    FreeVec(bmap);
    CloseIFF(iff);
-   Close(iff->iff_Stream);
+   Close((BPTR)iff->iff_Stream);
    FreeIFF(iff);
 }
 
