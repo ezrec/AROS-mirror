@@ -128,7 +128,6 @@ struct NewMenu mynewmenu[] =
 /*
  * FUNCTION PROTOTYPES ------------------------------
  */
-void main( int, char ** );
 void ProcessMsg(void);
 int  JMH_EasyReq( char *, char *, char *);
 void JMH_Complain(char *);
@@ -164,12 +163,12 @@ struct Library       *GadToolsBase  = NULL;
 int JMH_EasyReq( char *title, char *text, char *resp ) {
    static struct EasyStruct es = {
       sizeof(struct EasyStruct),
-      NULL,
+      0,
       NULL,
       NULL,
       NULL
    };
-   int stat;
+   int stat = 0;
 
 
    if ( MG.fBeQuiet == FALSE )
@@ -239,6 +238,8 @@ int JMH_Query(char *t, char *response) {
       stat = JMH_EasyReq( buf, t, resp );
       return(stat);
    }
+
+   return 0;
 }
 
 /*
@@ -279,7 +280,7 @@ void JMH_Quit( char *t )
 
 
          swworknode = (struct SWNode *)MG.list.lh_Head;
-         while ( swnode = (struct SWNode *)( swworknode->node.ln_Succ ) )
+         while (( swnode = (struct SWNode *)( swworknode->node.ln_Succ ) ))
          {
             FreeVec( swworknode );
             swworknode = swnode;
@@ -333,7 +334,7 @@ VOID JMH_InitVars()
 /**
  ** M A I N   P R O G R A M   -----------------------
  **/
-void main( int argc, char *argv[] )
+int main( int argc, char *argv[] )
 {
    UBYTE            **ttypes,
                      *temp;
@@ -349,7 +350,7 @@ void main( int argc, char *argv[] )
       OpenLibrary("intuition.library",37L);
    if (!IntuitionBase) JMH_Quit("Cannot open intuition.library 37+");
 
-   IconBase = (struct IconBase *)OpenLibrary("icon.library",37L);
+   IconBase = OpenLibrary("icon.library",37L);
    if (!IconBase) JMH_Quit("Cannot open icon.library 37+");
 
    CxBase = OpenLibrary("commodities.library",37L);
@@ -378,7 +379,7 @@ void main( int argc, char *argv[] )
    MG.fRunFromWB = TRUE;
 
    // get opts from TOOLTYPES in icon
-   ttypes = ArgArrayInit( argc, argv );
+   ttypes = ArgArrayInit( argc, (STRPTR *)argv );
 
    // user-specified priority for the commodity
    newbroker.nb_Pri = (BYTE)ArgInt( ttypes, "CX_PRIORITY", 0 );
@@ -424,12 +425,12 @@ void main( int argc, char *argv[] )
    newbroker.nb_Port = MG.broker_mp;
    MG.cxsigflag = 1L << MG.broker_mp->mp_SigBit;
 
-   if ( MG.broker = CxBroker(&newbroker, &errorcode) )
+   if (( MG.broker = CxBroker(&newbroker, &errorcode) ))
    {
       //
       // Establish hotkey filter
       // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      if ( filter = HotKey( MG.szHotkeyDesc, MG.broker_mp, EVT_HOTKEY ) )
+      if (( filter = HotKey( MG.szHotkeyDesc, MG.broker_mp, EVT_HOTKEY ) ))
       {
          AttachCxObj( MG.broker, filter );
       }
@@ -467,10 +468,12 @@ void main( int argc, char *argv[] )
    //
    // Empty message port of all remaining messages
    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   while ( msg = (CxMsg *)GetMsg( MG.broker_mp ) )
+   while (( msg = (CxMsg *)GetMsg( MG.broker_mp ) ))
       ReplyMsg( (struct Message *)msg );
 
    JMH_Quit( NULL );
+
+   return 0;
 }
 
 void ProcessMsg()
@@ -486,7 +489,7 @@ void ProcessMsg()
    {
       sigrcvd = Wait( SIGBREAKF_CTRL_C | MG.cxsigflag );
 
-      while ( msg = (CxMsg *)GetMsg( MG.broker_mp ) )
+      while (( msg = (CxMsg *)GetMsg( MG.broker_mp ) ))
       {
          msgid = CxMsgID( msg );
          msgtype = CxMsgType( msg );
@@ -553,7 +556,7 @@ BOOL fnPopupJumpList( void )
    if ( MG.list.lh_Head->ln_Succ )
    {
       swworknode = (struct SWNode *)MG.list.lh_Head;
-      while ( swnode = (struct SWNode *)( swworknode->node.ln_Succ ) )
+      while (( swnode = (struct SWNode *)( swworknode->node.ln_Succ ) ))
       {
          FreeVec( swworknode );
          swworknode = swnode;
@@ -662,7 +665,6 @@ BOOL HandleEvents( void )
    struct Screen       *currscr = NULL;
    ULONG                imsgClass;
    UWORD                imsgCode;
-   UWORD                imsgQual;
    UWORD                uwCode = 0xFFFF;
    UWORD                uwListItem = 0;
    ULONG                imsgSeconds = 0;
@@ -760,7 +762,6 @@ BOOL HandleEvents( void )
       {
          imsgClass   = imsg->Class;
          imsgCode    = imsg->Code;
-         imsgQual    = imsg->Qualifier;
          imsgSeconds = imsg->Seconds;
          imsgMicros  = imsg->Micros;
          gad = (struct Gadget *)imsg->IAddress;
@@ -917,7 +918,7 @@ BOOL HandleEvents( void )
                while ( ( imsgCode != MENUNULL ) && ( !fTerminated ) )
                {
                   mitem = ItemAddress( menu, imsgCode );
-                  switch( (ULONG)GTMENUITEM_USERDATA( mitem ) )
+                  switch( (IPTR)GTMENUITEM_USERDATA( mitem ) )
                   {
                      case ID_MENU_HIDE:
                         fTerminated = TRUE;
@@ -1012,7 +1013,7 @@ struct Gadget *CreateAllGadgets( struct Gadget **glistptr, void *vi,
    ng.ng_TextAttr   = NULL;
    ng.ng_VisualInfo = vi;
    ng.ng_GadgetID   = GAD_LISTVIEW;
-   ng.ng_Flags      = NULL;
+   ng.ng_Flags      = 0;
    MG.listview = gad = CreateGadget( LISTVIEW_KIND, gad, &ng,
                                      GTLV_Labels      , &MG.list,
                                      GTLV_Selected    , 0,
