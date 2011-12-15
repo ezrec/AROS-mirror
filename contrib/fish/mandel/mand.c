@@ -80,7 +80,6 @@ struct DosLibrary* DOSBase;
 struct   GfxBase       *GfxBase;
 struct   IntuitionBase *IntuitionBase;
 
-
 #ifndef LATTICE
 /*---------------------------*/
 /* Some Lattice(?) functions */
@@ -90,7 +89,7 @@ struct   IntuitionBase *IntuitionBase;
 void loc_abort(char *s);
 
 
-#warning FIXME: Original used Lattice which has Chk_Abort()
+// FIXME: Original used Lattice which has Chk_Abort()
 int Chk_Abort() /* Disabled by now */
 {
 return 0;
@@ -537,11 +536,11 @@ command:
                fputs("Must <G>enerate or <L>oad first!\n",console);
                goto command;
             }
-            if (disp_mand() == NULL)
+            if (disp_mand() == 0)
                wait_close();
             goto command;
          case 'G':
-            if (gen_mand() == NULL)
+            if (gen_mand() == 0)
                wait_close();
             goto command;
          case 'A':
@@ -560,7 +559,7 @@ command:
          case '<':
             if (redir_fp) {
                fclose(redir_fp);
-               redir_fp == NULL;
+               redir_fp = NULL;
             }
             redir_fp = fopen(stpblk(cmd+1),"r");
             if (redir_fp == NULL)
@@ -579,7 +578,7 @@ command:
    return 0;
 }
 
-ill_cmd()
+void ill_cmd()
 {
    fputs("Unknown command!\n",console);
 }
@@ -599,7 +598,7 @@ int i;
 /*-----------------------------------------*/
 /* Non-intelligent virtual memory handling */
 
-v_pos_line(l)
+void v_pos_line(l)
 int l;
 {
    if (l < v_starty) {
@@ -620,7 +619,7 @@ int l;
    }
 }
 
-v_flush()
+void v_flush()
 {
    fseek(v_fp,(long)(v_starty*max_x*sizeof(UWORD)+v_offset),0);
    fwrite(v_mand_store,max_x*sizeof(UWORD),max_mem,v_fp);
@@ -658,7 +657,8 @@ char *s;
 }
 
 
-SetPresets(preset)
+void SetPresets(preset)
+int preset;
 {
    /* these are some common defaults, preset here to avoid repetitive
     * assignments in the case statements below.  Feel free to override

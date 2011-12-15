@@ -43,7 +43,7 @@ SHORT pts6_br[]=
 struct Border border6a_tl=
 {
   0, 0, 	/* LeftEdge, TopEdge */
-  NULL, NULL, JAM1,   /* FrontPen, BackPen, DrawMode */
+  0, 0, JAM1,   /* FrontPen, BackPen, DrawMode */
   3,		/* Count */
   pts6_tl,	/* *XY */
   NULL		/* *NextBorder */
@@ -51,7 +51,7 @@ struct Border border6a_tl=
 struct Border border6a_br=
 {
   0, 0, 	/* LeftEdge, TopEdge */
-  NULL, NULL, JAM1,   /* FrontPen, BackPen, DrawMode */
+  0, 0, JAM1,   /* FrontPen, BackPen, DrawMode */
   3,		/* Count */
   pts6_br,	/* *XY */
   &border6a_tl		/* *NextBorder */
@@ -59,7 +59,7 @@ struct Border border6a_br=
 struct Border border6b_tl=
 {
   0, 0, 	/* LeftEdge, TopEdge */
-  NULL, NULL, JAM1,   /* FrontPen, BackPen, DrawMode */
+  0, 0, JAM1,   /* FrontPen, BackPen, DrawMode */
   3,		/* Count */
   pts6_tl,	/* *XY */
   NULL		/* *NextBorder */
@@ -67,7 +67,7 @@ struct Border border6b_tl=
 struct Border border6b_br=
 {
   0, 0, 	/* LeftEdge, TopEdge */
-  NULL, NULL, JAM1,   /* FrontPen, BackPen, DrawMode */
+  0, 0, JAM1,   /* FrontPen, BackPen, DrawMode */
   3,		/* Count */
   pts6_br,	/* *XY */
   &border6b_tl		/* *NextBorder */
@@ -145,7 +145,7 @@ struct Gadget g_add=
   (APTR)&border6a_br,   /* GadgetRender */
   (APTR)&border6b_br,                   /* SelectRender */
   &t_add,	       /* *GadgetText */
-  NULL, 		  /* MutualExclude */
+  0,    		  /* MutualExclude */
   NULL, 		  /* SpecialInfo */
   6,		       /* GadgetID */
   NULL			  /* UserData */
@@ -167,7 +167,7 @@ struct Gadget g_del=
   (APTR)&border6a_br,   /* GadgetRender */
   (APTR)&border6b_br,                   /* SelectRender */
   &t_del,	       /* *GadgetText */
-  NULL, 		  /* MutualExclude */
+  0,    		  /* MutualExclude */
   NULL, 		  /* SpecialInfo */
   7,		       /* GadgetID */
   NULL			  /* UserData */
@@ -196,7 +196,7 @@ struct Gadget g_edi=
   (APTR)&border6a_br,   /* GadgetRender */
   (APTR)&border6b_br,                   /* SelectRender */
   &t_edi,	       /* *GadgetText */
-  NULL, 		  /* MutualExclude */
+  0,    		  /* MutualExclude */
   NULL, 		  /* SpecialInfo */
   8,		       /* GadgetID */
   NULL			  /* UserData */
@@ -225,7 +225,7 @@ struct Gadget g_chk=
   (APTR)&border6a_br,   /* GadgetRender */
   (APTR)&border6b_br,                   /* SelectRender */
   &t_chk,	       /* *GadgetText */
-  NULL, 		  /* MutualExclude */
+  0,    		  /* MutualExclude */
   NULL, 		  /* SpecialInfo */
   9,		       /* GadgetID */
   NULL			  /* UserData */
@@ -254,7 +254,7 @@ struct Gadget g_shr=
   (APTR)&border6a_br,   /* GadgetRender */
   (APTR)&border6b_br,                   /* SelectRender */
   &t_shr,	       /* *GadgetText */
-  NULL, 		  /* MutualExclude */
+  0,    		  /* MutualExclude */
   NULL, 		  /* SpecialInfo */
   10,			/* GadgetID */
   NULL			  /* UserData */
@@ -283,7 +283,7 @@ struct Gadget g_hlp=
   (APTR)&border6a_br,   /* GadgetRender */
   (APTR)&border6b_br,                   /* SelectRender */
   &t_hlp,	       /* *GadgetText */
-  NULL, 		  /* MutualExclude */
+  0,    		  /* MutualExclude */
   NULL, 		  /* SpecialInfo */
   11,			/* GadgetID */
   NULL			  /* UserData */
@@ -312,7 +312,7 @@ struct Gadget g_beg=
   (APTR)&border6a_br,   /* GadgetRender */
   (APTR)&border6b_br,                   /* SelectRender */
   &t_beg,	       /* *GadgetText */
-  NULL, 		  /* MutualExclude */
+  0,    		  /* MutualExclude */
   NULL, 		  /* SpecialInfo */
   12,			/* GadgetID */
   NULL			  /* UserData */
@@ -341,7 +341,7 @@ struct Gadget g_bkb=
   (APTR)&border6a_br,   /* GadgetRender */
   (APTR)&border6b_br,                   /* SelectRender */
   &t_bkb,	       /* *GadgetText */
-  NULL, 		  /* MutualExclude */
+  0,    		  /* MutualExclude */
   NULL, 		  /* SpecialInfo */
   13,			/* GadgetID */
   NULL			  /* UserData */
@@ -370,7 +370,7 @@ struct Gadget g_bki=
   (APTR)&border6a_br,   /* GadgetRender */
   (APTR)&border6b_br,                   /* SelectRender */
   &t_bki,	       /* *GadgetText */
-  NULL, 		  /* MutualExclude */
+  0,    		  /* MutualExclude */
   NULL, 		  /* SpecialInfo */
   14,			/* GadgetID */
   NULL			  /* UserData */
@@ -392,7 +392,7 @@ struct Gadget g_fwi=
   (APTR)&border6a_br,   /* GadgetRender */
   (APTR)&border6b_br,                   /* SelectRender */
   &t_fwi,	       /* *GadgetText */
-  NULL, 		  /* MutualExclude */
+  0,    		  /* MutualExclude */
   NULL, 		  /* SpecialInfo */
   15,			/* GadgetID */
   NULL			  /* UserData */
@@ -414,7 +414,7 @@ struct Gadget g_fwb=
   (APTR)&border6a_br,   /* GadgetRender */
   (APTR)&border6b_br,                   /* SelectRender */
   &t_fwb,	       /* *GadgetText */
-  NULL, 		  /* MutualExclude */
+  0,    		  /* MutualExclude */
   NULL, 		  /* SpecialInfo */
   16,			/* GadgetID */
   NULL			  /* UserData */
@@ -436,7 +436,7 @@ struct Gadget g_eol=
   (APTR)&border6a_br,   /* GadgetRender */
   (APTR)&border6b_br,                   /* SelectRender */
   &t_eol,	       /* *GadgetText */
-  NULL, 		  /* MutualExclude */
+  0,    		  /* MutualExclude */
   NULL, 		  /* SpecialInfo */
   17,			/* GadgetID */
   NULL			  /* UserData */
@@ -508,7 +508,7 @@ struct Gadget gadget_display[6]=
     (APTR) &border_big_box,               /* GadgetRender */
     NULL,		/* SelectRender */
     NULL,		/* *GadgetText */
-    NULL,		/* MutualExclude */
+    0,   		/* MutualExclude */
     NULL,		/* SpecialInfo */
     0,		     /* GadgetID */
     NULL		/* UserData */
@@ -522,7 +522,7 @@ struct Gadget gadget_display[6]=
     (APTR) &border_text60,               /* GadgetRender */
     NULL,		/* SelectRender */
     NULL,		/* *GadgetText */
-    NULL,		/* MutualExclude */
+    0,   		/* MutualExclude */
     NULL,		/* SpecialInfo */
     1,		     /* GadgetID */
     NULL		/* UserData */
@@ -536,7 +536,7 @@ struct Gadget gadget_display[6]=
     (APTR) &border_text60,               /* GadgetRender */
     NULL,		/* SelectRender */
     NULL,		/* *GadgetText */
-    NULL,		/* MutualExclude */
+    0,   		/* MutualExclude */
     NULL,		/* SpecialInfo */
     2,		     /* GadgetID */
     NULL		/* UserData */
@@ -550,7 +550,7 @@ struct Gadget gadget_display[6]=
     (APTR) &border_text60,               /* GadgetRender */
     NULL,		/* SelectRender */
     NULL,		/* *GadgetText */
-    NULL,		/* MutualExclude */
+    0,   		/* MutualExclude */
     NULL,		/* SpecialInfo */
     3,		     /* GadgetID */
     NULL		/* UserData */
@@ -564,7 +564,7 @@ struct Gadget gadget_display[6]=
     (APTR) &border_text60,               /* GadgetRender */
     NULL,		/* SelectRender */
     NULL,		/* *GadgetText */
-    NULL,		/* MutualExclude */
+    0,   		/* MutualExclude */
     NULL,		/* SpecialInfo */
     4,		     /* GadgetID */
     NULL		/* UserData */
@@ -578,7 +578,7 @@ struct Gadget gadget_display[6]=
     (APTR) &border_text60,               /* GadgetRender */
     NULL,		/* SelectRender */
     NULL,		/* *GadgetText */
-    NULL,		/* MutualExclude */
+    0,   		/* MutualExclude */
     NULL,		/* SpecialInfo */
     5,		     /* GadgetID */
     NULL		/* UserData */

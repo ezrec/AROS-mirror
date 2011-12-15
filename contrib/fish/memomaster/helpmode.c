@@ -153,7 +153,7 @@ void Mode_Help()
       {
       Class = msg->Class;
       address = msg->IAddress;
-      ReplyMsg( (struct Library *)msg );
+      ReplyMsg( (struct Message *)msg );
       switch( Class )
 	{
 	case CLOSEWINDOW:

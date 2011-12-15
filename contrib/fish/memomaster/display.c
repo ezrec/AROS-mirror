@@ -22,22 +22,22 @@ static SHORT gbp_br[]=
 
 static struct Border gbu_tl=
   {
-  0, 0, NULL, NULL, JAM1, 3, gbp_tl, NULL,
+  0, 0, 0, 0, JAM1, 3, gbp_tl, NULL,
   };
 
 static struct Border gbu_br=
   {
-  0, 0, NULL, NULL, JAM1, 3, gbp_br, &gbu_tl,
+  0, 0, 0, 0, JAM1, 3, gbp_br, &gbu_tl,
   };
 
 static struct Border gbs_tl=
   {
-  0, 0, NULL, NULL, JAM1, 3, gbp_tl, NULL,
+  0, 0, 0, 0, JAM1, 3, gbp_tl, NULL,
   };
 
 static struct Border gbs_br=
   {
-  0, 0, NULL, NULL, JAM1, 3, gbp_br, &gbs_tl,
+  0, 0, 0, 0, JAM1, 3, gbp_br, &gbs_tl,
   };
 
 static struct IntuiText req_g_txt_2=
@@ -78,7 +78,7 @@ static struct Gadget req_g_2=
   (APTR) &gbu_br, /* GadgetRender */
   (APTR) &gbs_br, /* SelectRender */
   &req_g_txt_2,  /* GadgetText */
-  NULL, 	 /* MutualExclude */
+  0L,   	 /* MutualExclude */
   NULL, 	 /* SpecialInfo */
   2,		 /* GadgetID */
   NULL		 /* UserData */
@@ -100,7 +100,7 @@ static struct Gadget req_g_1=
   (APTR) &gbu_br, /* GadgetRender */
   (APTR) &gbs_br, /* SelectRender */
   &req_g_txt_1,  /* GadgetText */
-  NULL, 	 /* MutualExclude */
+  0L,   	 /* MutualExclude */
   NULL, 	 /* SpecialInfo */
   1,		 /* GadgetID */
   NULL		 /* UserData */
@@ -113,15 +113,6 @@ static struct Requester my_requester=
   0, 0, 	     /* Width, Height */
   0, 0, 	     /* RelLeft, RelTop */
   &req_g_1,	     /* ReqGadget */
-  NULL, 	     /* ReqBorder */
-  NULL, 	     /* ReqText */
-  NULL, 	     /* Flags */
-  0,		     /* BackFill */
-  NULL, 	     /* ReqLayer */
-  NULL, 	     /* ReqPad1 */
-  NULL, 	     /* ImageBMap */
-  NULL, 	     /* RWindow */
-  NULL		     /* ReqPad2 */
   };
 
 static struct NewWindow my_new_window=
@@ -147,13 +138,13 @@ static struct NewWindow my_new_window=
   };
 
 
-Display(char **txt, int Mode, int FColour, int BColour)
+int Display(char **txt, int Mode, int FColour, int BColour)
 {
   extern int Colour[4];
   BOOL close_me,failed;
   struct IntuiMessage *my_message;
   BOOL result;
-  int linelen,maxlen,txtline,choice;
+  int linelen,maxlen,txtline,choice = 0;
   struct Window *my_window=NULL;
   struct IntuiText *IT1,*IT2;
   struct Remember *txt_RK=NULL;
@@ -272,7 +263,7 @@ Display(char **txt, int Mode, int FColour, int BColour)
     while( !close_me )
       {
       Wait( 1 << my_window->UserPort->mp_SigBit );
-      while(my_message=(struct IntuiMessage *) GetMsg(my_window->UserPort))
+      while((my_message=(struct IntuiMessage *) GetMsg(my_window->UserPort)))
 	{
 	gp = (struct Gadget *)my_message->IAddress;
 	ReplyMsg( (struct Message *)my_message );
@@ -303,7 +294,7 @@ void DisplayH(char **txt)
   Display(txt, 1, 2, 3);
   }
 /*====================================================================*/
-DisplayC(char **txt)
+int DisplayC(char **txt)
   {
   return Display(txt, 0, 2, 3);
   }

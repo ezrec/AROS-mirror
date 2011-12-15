@@ -216,6 +216,7 @@ int main(int argc, char **argv)
 	FreeMemory();	
 	CloseLibrary((struct Library *)GfxBase);
 
+	return 0;
 }	/* end of main() */
 
 

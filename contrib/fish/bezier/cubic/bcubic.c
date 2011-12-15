@@ -131,7 +131,7 @@ char *av[];
 {
     register IMESS *mess;
     char notdone = 1;
-    short mx, my, basex, basey, mm, mrmb = 0;
+    short mx = 0, my = 0, basex = 0, basey = 0, mm, mrmb = 0;
     short gg, gy;
     short pt = -1;
     XPI *po;
@@ -249,6 +249,7 @@ char *av[];
 	}
     }
     exiterr(1, NULL);
+    return 1;
 }
 
 int exiterr(n, str)

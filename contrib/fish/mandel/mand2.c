@@ -114,10 +114,10 @@ struct MenuItem OptionsItems[OPTIONS_COUNT] =
       ITEMTEXT | COMMSEQ | ITEMENABLED | HIGHCOMP, /* flags */
       0,                               /* mutual exclude */
       &OptionsText[0],                 /* text */
-      NULL,                            /* select */
+      0,                               /* select */
       'S',                             /* command */
-      NULL,                            /* next item */
-      NULL,                            /* next select */
+      0,                               /* next item */
+      0,                               /* next select */
       },
       {
       &OptionsItems[2],                /* next menuitem */
@@ -126,10 +126,10 @@ struct MenuItem OptionsItems[OPTIONS_COUNT] =
       ITEMTEXT | COMMSEQ | ITEMENABLED | HIGHCOMP, /* flags */
       0,                               /* mutual exclude */
       &OptionsText[1],                 /* text */
-      NULL,                            /* select */
+      0,                               /* select */
       'Q',                             /* command */
-      NULL,                            /* next item */
-      NULL,                            /* next select */
+      0,                               /* next item */
+      0,                               /* next select */
       },
       {
       &OptionsItems[3],                /* next menuitem */
@@ -138,10 +138,10 @@ struct MenuItem OptionsItems[OPTIONS_COUNT] =
       ITEMTEXT | COMMSEQ | ITEMENABLED | HIGHCOMP, /* flags */
       0,                               /* mutual exclude */
       &OptionsText[2],                 /* text */
-      NULL,                            /* select */
+      0,                               /* select */
       'F',                             /* command */
-      NULL,                            /* next item */
-      NULL,                            /* next select */
+      0,                               /* next item */
+      0,                               /* next select */
       },
       {
       &OptionsItems[4],                /* next menuitem */
@@ -150,10 +150,10 @@ struct MenuItem OptionsItems[OPTIONS_COUNT] =
       ITEMTEXT | COMMSEQ | ITEMENABLED | HIGHCOMP, /* flags */
       0,                               /* mutual exclude */
       &OptionsText[3],                 /* text */
-      NULL,                            /* select */
+      0,                               /* select */
       'R',                             /* command */
-      NULL,                            /* next item */
-      NULL,                            /* next select */
+      0,                               /* next item */
+      0,                               /* next select */
       },
       {
       NULL,                            /* next menuitem */
@@ -162,10 +162,10 @@ struct MenuItem OptionsItems[OPTIONS_COUNT] =
       ITEMTEXT | COMMSEQ | ITEMENABLED | HIGHCOMP, /* flags */
       0,                               /* mutual exclude */
       &OptionsText[4],                 /* text */
-      NULL,                            /* select */
+      0,                               /* select */
       'C',                             /* command */
-      NULL,                            /* next item */
-      NULL,                            /* next select */
+      0,                               /* next item */
+      0,                               /* next select */
       },
    };
 
@@ -179,10 +179,6 @@ struct MenuItem ZoomItems[ZOOM_COUNT] =
       ITEMTEXT | ITEMENABLED | HIGHCOMP, /* flags */
       0,                               /* mutual exclude */
       &ZoomText[0],                 /* text */
-      NULL,                            /* select */
-      NULL,                            /* command */
-      NULL,                            /* next item */
-      NULL,                            /* next select */
       },
       {
       &ZoomItems[2],                /* next menuitem */
@@ -191,10 +187,6 @@ struct MenuItem ZoomItems[ZOOM_COUNT] =
       ITEMTEXT | ITEMENABLED | HIGHCOMP, /* flags */
       0,                               /* mutual exclude */
       &ZoomText[1],                 /* text */
-      NULL,                            /* select */
-      NULL,                            /* command */
-      NULL,                            /* next item */
-      NULL,                            /* next select */
       },
       {
       &ZoomItems[3],                /* next menuitem */
@@ -203,10 +195,6 @@ struct MenuItem ZoomItems[ZOOM_COUNT] =
       ITEMTEXT | ITEMENABLED | HIGHCOMP, /* flags */
       0,                               /* mutual exclude */
       &ZoomText[2],                 /* text */
-      NULL,                            /* select */
-      NULL,                            /* command */
-      NULL,                            /* next item */
-      NULL,                            /* next select */
       },
       {
       &ZoomItems[4],                /* next menuitem */
@@ -215,10 +203,6 @@ struct MenuItem ZoomItems[ZOOM_COUNT] =
       ITEMTEXT | ITEMENABLED | HIGHCOMP, /* flags */
       0,                               /* mutual exclude */
       &ZoomText[3],                 /* text */
-      NULL,                            /* select */
-      NULL,                            /* command */
-      NULL,                            /* next item */
-      NULL,                            /* next select */
       },
       {
       &ZoomItems[5],                /* next menuitem */
@@ -227,10 +211,6 @@ struct MenuItem ZoomItems[ZOOM_COUNT] =
       ITEMTEXT | ITEMENABLED | HIGHCOMP, /* flags */
       0,                               /* mutual exclude */
       &ZoomText[4],                 /* text */
-      NULL,                            /* select */
-      NULL,                            /* command */
-      NULL,                            /* next item */
-      NULL,                            /* next select */
       },
       {
       NULL,                            /* next menuitem */
@@ -239,10 +219,6 @@ struct MenuItem ZoomItems[ZOOM_COUNT] =
       ITEMTEXT | ITEMENABLED | HIGHCOMP, /* flags */
       0,                               /* mutual exclude */
       &ZoomText[5],                 /* text */
-      NULL,                            /* select */
-      NULL,                            /* command */
-      NULL,                            /* next item */
-      NULL,                            /* next select */
       },
    };
 

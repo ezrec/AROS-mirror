@@ -189,7 +189,7 @@ extern int Project0VanillaKey( void );
 
 ULONG __stdargs FastRand( unsigned long seed );
 UWORD __stdargs RangeRand( unsigned long maxValue );      
-void  __stdargs main(int argc, union wbstart argv);
+int main(int argc, char **argv);
 extern int  MakeScWd(void);
 extern void  FreeScWd(void);
 extern void  CopyWBGfx(void);

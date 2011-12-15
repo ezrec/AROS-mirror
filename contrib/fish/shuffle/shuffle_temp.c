@@ -210,11 +210,11 @@ int Project0CloseWindow( void )
 
 int  MakeScWd(void)
 {
- if(info.sc = CloneScreen(Scr))
+ if((info.sc = CloneScreen(Scr)))
  {
   info.oldcmap = info.sc->ViewPort.ColorMap;
   info.sc->ViewPort.ColorMap = Scr->ViewPort.ColorMap;
-  if(info.wd = MakeWd(info.sc))
+  if((info.wd = MakeWd(info.sc)))
   {
    CopyWBGfx();
    return (TRUE);
@@ -291,7 +291,7 @@ void Play(void)
    if(sigrcvd & (1L<<Project0Wnd->UserPort->mp_SigBit))end = TRUE;
    if(sigrcvd & (1L<<info.wd->UserPort->mp_SigBit))
    {
-    while(msg = (struct IntuiMessage *)GetMsg(info.wd->UserPort))
+    while((msg = (struct IntuiMessage *)GetMsg(info.wd->UserPort)))
     {
      class = msg->Class;
      code  = msg->Code;
@@ -313,7 +313,7 @@ void Play(void)
             case 'S'    : ntext.TopEdge  = 40;
                           ntext.LeftEdge = 40;
                           ntext.NextText = &s2;
-                          sprintf(number,"%3ld",info.moves);
+                          sprintf(number,"%3ld",(long)info.moves);
                           DisplayReq(&s1);
                           break;
             case 0x1b   :
@@ -393,7 +393,7 @@ void Play(void)
             ntext.TopEdge  = 40;
             ntext.LeftEdge = 70;
             ntext.NextText = &end4;
-            sprintf(number,"%3ld",info.moves);
+            sprintf(number,"%3ld",(long)info.moves);
             DisplayReq(&end1);
             ScreenToBack(info.sc);
             end = TRUE;
@@ -474,7 +474,7 @@ void SliceBoard(void)
   for(i = 0;i < info.resolution[info.res].x_res;i++)
   {
    DrawBorder(rp,&b1,info.x_pos[i],info.y_pos[j]);
-   sprintf(number,"%3ld",n);
+   sprintf(number,"%3ld",(long)n);
    if(info.numbers)PrintIText(rp,&ntext,info.x_pos[i] + ( info.w / 2),
                                         info.y_pos[j] + ( info.h / 2));
    n++;
@@ -633,7 +633,7 @@ void DisplayReq(struct IntuiText *text)
 {
  struct Message *msg;
  struct Window *hwd;
- if(hwd = OpenWindowTags(NULL,
+ if((hwd = OpenWindowTags(NULL,
           WA_Left,(ULONG)(info.sc->Width  / 2 - 120),
           WA_Top ,(ULONG)(info.sc->Height / 2 - 60),
           WA_Width,240,
@@ -642,7 +642,7 @@ void DisplayReq(struct IntuiText *text)
           WA_Flags,WFLG_ACTIVATE|WFLG_BORDERLESS|WFLG_SMART_REFRESH | WFLG_RMBTRAP,
           WA_CustomScreen,info.sc,
           TAG_DONE
- ))
+ )))
  {
   SetRast(hwd->RPort,2);
   SetAPen(hwd->RPort,1);
@@ -653,7 +653,7 @@ void DisplayReq(struct IntuiText *text)
   Draw(hwd->RPort,2,2);
   PrintIText(hwd->RPort,text,6,6);
   WaitPort(hwd->UserPort);
-  while(msg = GetMsg(hwd->UserPort))ReplyMsg(msg);
+  while((msg = GetMsg(hwd->UserPort)))ReplyMsg(msg);
   CloseWindow(hwd);  
  }
 }

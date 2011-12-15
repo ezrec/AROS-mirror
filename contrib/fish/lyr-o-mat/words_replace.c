@@ -65,7 +65,7 @@ void ReplaceLineA(UBYTE *von)
     len = (long)(orig - von);
     if(len >= 0)
     {
-     if(tline = (UBYTE *)calloc(1,strlen(von) + strlen(cl->cl_Node.ln_Name) + strlen(rep) + 2L))
+     if((tline = (UBYTE *)calloc(1,strlen(von) + strlen(cl->cl_Node.ln_Name) + strlen(rep) + 2L)))
      {
       memcpy(tline,von,len);
       strcat(tline,rep);

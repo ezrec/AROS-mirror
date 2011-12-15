@@ -20,7 +20,7 @@ char *ctime();
  * Convert month as MMM (eg JUL) to month number (eg 2 for FEB).
  *   Does not assume case or that text is NULL terminated
  */
-Month2Num(char *MonthTxt)
+int Month2Num(char *MonthTxt)
   {
   int x, month;
   char m[4];
@@ -96,7 +96,7 @@ BOOL CheckDate(int dd, int mm, int yy)
  */
 void Today(char *Today_buf)
   {
-  long GMTsecs;
+  time_t GMTsecs;
   char *time_str;
 
   GMTsecs = time(NULL);
@@ -114,7 +114,7 @@ void Today(char *Today_buf)
   }
 
 /*==========================================================================*/
-date2days(dd,mm,yy)
+int date2days(dd,mm,yy)
 int dd,mm,yy;
 /* Returns number of days since start of 1970, ie 1 Jan 1970 is day 1 */
 {

@@ -9,7 +9,7 @@
 
 extern struct GfxBase *GfxBase;
 
-static struct FileHandle *_W_fh;
+static BPTR _W_fh;
 static long flag;
 static void cWrite();
 
@@ -30,7 +30,7 @@ colors=(1<<scr->BitMap.Depth);
 if(vm&HAM)colors=16;
 if(vm&EXTRA_HALFBRITE)colors=32;
 
-if((_W_fh=Open(filename,MODE_NEWFILE))==NULL)flag=NOOPEN;
+if((_W_fh=Open(filename,MODE_NEWFILE))==BNULL)flag=NOOPEN;
 cWrite((char *)"FORM",4L);
 tmp=(long)(3L*colors+(scr->Width)/8L*(scr->Height)*(scr->BitMap.Depth)+60L);
 cWrite((char *)&tmp,4L);

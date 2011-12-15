@@ -4,22 +4,22 @@ long __OSlibversion = 37;
 struct shu_data info =
        {
         {
-         8,8,
-         16,8,
-         16,16,
-         4,4,
-         8,4,
+         { 8,8, },
+         { 16,8, },
+         { 16,16, },
+         { 4,4, },
+         { 8,4, },
         },
         {
-         DIR_UP,DIR_DOWN,
-         DIR_DOWN,DIR_UP,
-         DIR_LEFT,DIR_RIGHT,
-         DIR_RIGHT,DIR_LEFT,
+         { DIR_UP,DIR_DOWN, },
+         { DIR_DOWN,DIR_UP, },
+         { DIR_LEFT,DIR_RIGHT, },
+         { DIR_RIGHT,DIR_LEFT, },
         }, 
-        100,80,60,40,20,1,       
+	{ 100,80,60,40,20,1, },
         0,
-        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, },
+	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, },
         0,
         0,
         DIR_UP,
@@ -74,9 +74,9 @@ extern BPTR               _Backstdout;
 
 /* ----------------------------------------------------------------- */
 
-void LoadIcon(int argc, union wbstart argv);
+void LoadIcon(int argc, char **argv);
 
-void __stdargs main(int argc, union wbstart argv)
+int  main(int argc, char **argv)
 {
  int end = FALSE;
  if (TRUE == openlibs())
@@ -104,21 +104,21 @@ void __stdargs main(int argc, union wbstart argv)
  exit(0);
 }
 
-//void LoadIcon(int argc,char **argv)
-void LoadIcon(int argc, union wbstart argv)
+void LoadIcon(int argc,char **argv)
 {
  long i;
  UBYTE fname[256];
  if(!argc)
  {
-  if(argv.msg)
+  struct WBStartup *msg = (struct WBStartup  *)argv;
+  if(msg)
   {
-   if(argv.msg->sm_NumArgs > 1)
+   if(msg->sm_NumArgs > 1)
    {
-    for(i = 1; i < argv.msg->sm_NumArgs;i++)
+    for(i = 1; i < msg->sm_NumArgs;i++)
     {
-     NameFromLock(argv.msg->sm_ArgList[i].wa_Lock,fname,256);
-     AddPart(fname,argv.msg->sm_ArgList[i].wa_Name,256);
+     NameFromLock(msg->sm_ArgList[i].wa_Lock,fname,256);
+     AddPart(fname,msg->sm_ArgList[i].wa_Name,256);
      load_config(fname);
     }
    }

@@ -244,7 +244,6 @@ extern __far ULONG            RangeSeed;
       
 ULONG __stdargs FastRand(ULONG seed );
 /*UWORD __stdargs RangeRand( unsigned long maxValue );*/
-void  __stdargs main(int argc,union wbstart argv);
 void newpattern(UBYTE *name);
 void newclass(UBYTE *name);
 void newword(UBYTE *name);
@@ -266,5 +265,5 @@ void ReplaceLine(void);
 void ReplaceLineA(UBYTE *von);
 struct classnode *LookForClass(UBYTE *cls);
 void line_out(UBYTE *line);
-void LoadApp(int argc,union wbstart argv);
+void LoadApp(int argc,char **argv);
 

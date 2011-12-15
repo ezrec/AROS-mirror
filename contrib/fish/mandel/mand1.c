@@ -64,7 +64,7 @@ void loc_abort(char *s);
 /*----------------*/
 /* Color routines */
 
-init_colors()
+void init_colors()
 {
    switch (color_set) {
       case 0: init_cincr(); break;
@@ -72,7 +72,7 @@ init_colors()
    }
 }
 
-init_cincr()
+void init_cincr()
 /* this routine initializes the color table with sequential values from
  * 0 to 4095
  */
@@ -84,7 +84,7 @@ init_cincr()
 }
 
 
-init_c7rot()
+void init_c7rot()
 /* this routine initializes the color table with this pattern:
  * 0 = 0
  * 1-15 = unit steps of blue
@@ -120,7 +120,7 @@ init_c7rot()
 }
 
 
-gen_mand()
+int gen_mand()
 {
    void write_out();
 
@@ -172,7 +172,7 @@ gen_mand()
       modified = TRUE;
       for (x_coord = 0; x_coord < max_x; x_coord++)
          {
-         while (message = (struct IntuiMessage *)GetMsg(w->UserPort))
+         while ((message = (struct IntuiMessage *)GetMsg(w->UserPort)))
             {
             class = message->Class;
             code  = message->Code;
@@ -248,7 +248,7 @@ u_i.f = -2.0  + (((float)y_coord) * 4.0 / 200.0);
    return (0);
 }
  
-disp_mand()
+int disp_mand()
 {
    void write_out();
 
@@ -324,7 +324,7 @@ int x, y;
 }
 
 
-DrawZoomCenter()
+void DrawZoomCenter()
 {
    SetDrMd(w->RPort, COMPLEMENT);
    Move(w->RPort, 0, ZoomCenterY);
@@ -334,7 +334,7 @@ DrawZoomCenter()
 }
 
 
-RecalcZoomBox()
+void RecalcZoomBox()
 {
    ZoomBoxSizeX = (abs(w->MouseX - ZoomCenterX) << 1) + 1;
    ZoomBoxSizeY = (abs(w->MouseY - ZoomCenterY) << 1) + 1;
@@ -345,7 +345,7 @@ RecalcZoomBox()
 }
 
 
-DrawZoomBox()
+void DrawZoomBox()
 {
    SHORT endx, endy;
 
@@ -361,7 +361,7 @@ DrawZoomBox()
 }
 
 
-CloseDisplay()
+void CloseDisplay()
 {
    if (w) CloseWindow(w);
    if (screen) CloseScreen(screen);

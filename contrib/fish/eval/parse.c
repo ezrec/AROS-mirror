@@ -343,7 +343,7 @@ void evaluate(char *s,int showout,VARPTR vlist,VARPTR clist)
                 printf("There must be valid variable name on the left side of the '='.\n");
                 return;
                 }
-        if (varname[n]!=EOS || t.type!=VARIABLE && t.type!=CONSTANT)
+        if (varname[n]!=EOS || (t.type!=VARIABLE && t.type!=CONSTANT))
                 {
                 printf("\"%s\" is not a valid variable name.\n",varname);
                 return;

@@ -130,6 +130,7 @@ if(wdw)          CloseWindow(wdw);
 if(scr)          CloseScreen(scr);
 if(GfxBase)      CloseLibrary((struct Library *)GfxBase);
 if(IntuitionBase)CloseLibrary((struct Library *)IntuitionBase);
+return 0;
 }
 
 void newscreen()

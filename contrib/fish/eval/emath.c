@@ -371,7 +371,7 @@ double bessj(int m,double x)
 
     {
     int     i,negm,negx;
-    double  c,j0,j1,ans,nextterm,seed1,seed0;
+    double  c,j0,j1,ans,nextterm=1,seed1,seed0;
 
     negm=(m<0);
     if (m<0)

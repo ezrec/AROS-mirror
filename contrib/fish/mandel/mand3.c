@@ -77,7 +77,7 @@ struct NewWindow aw = {
    0, 10,
    100, 70,
    -1, -1,
-   NULL,
+   0,
    WINDOWDRAG|WINDOWSIZING|SMART_REFRESH,
    NULL,
    NULL,
@@ -115,7 +115,7 @@ extern SHORT ZoomCenterX, ZoomCenterY, ZoomBoxSizeX, ZoomBoxSizeY;
 extern SHORT ZoomBoxStartX, ZoomBoxStartY;
 
 
-open_winds()
+int open_winds()
 {
    int i,color;
 
@@ -123,7 +123,7 @@ open_winds()
    nw.Height = max_y+STARTY;
 
    if (color_mode & NOT_HOLDANDMODIFY) {
-      ns.ViewModes = NULL;
+      ns.ViewModes = 0;
       ns.Depth = 5;
    }
    else {
@@ -199,7 +199,7 @@ void wait_close()
    for (EVER)
       {
       Wait((1 << w->UserPort->mp_SigBit));
-      while (message = (struct IntuiMessage *)GetMsg(w->UserPort))
+      while ((message = (struct IntuiMessage *)GetMsg(w->UserPort)))
          {
          class = message->Class;
          code  = message->Code;
@@ -323,7 +323,7 @@ void wait_close()
                   }
                break; /* breaks MENUPICK switch statement */
             case INTUITICKS:
-              code = NULL;
+              code = 0;
             case MOUSEBUTTONS:
               if (SettingCenter)
                  {
@@ -353,7 +353,7 @@ void wait_close()
 }
 
 
-anal_mand()
+int anal_mand(void)
 {
    union kludge x_gap,y_gap,z_r,z_i,u_r,u_i,const0,const1,const2,const4;
    union kludge const12,temp,temp2,temp3;
@@ -396,7 +396,7 @@ anal_mand()
    RectFill(rp2,LEFTW2+1,TOPW2+1,RIGHTW2-1,BOTTOMW2-1);
 
    for (EVER) {
-      if (message = (struct IntuiMessage *)GetMsg(w->UserPort)) {
+      if ((message = (struct IntuiMessage *)GetMsg(w->UserPort))) {
          class = message->Class;
          code  = message->Code;
          ReplyMsg((struct Message *)message);
@@ -406,7 +406,7 @@ anal_mand()
             CloseDisplay();
             return (0);
          }
-         if (class == MOUSEBUTTONS)
+         if (class == MOUSEBUTTONS) {
             if (code == SELECTDOWN) {
                if (w->MouseY < STARTY)
                   lines = !lines;
@@ -415,6 +415,7 @@ anal_mand()
             }
             else if (code == SELECTUP)
                select = FALSE;
+	 }
       }
       if ((last_x != w->MouseX || last_y != w->MouseY) && select &&
           w->MouseX < max_x && w->MouseY >= STARTY && w->MouseY < max_y+STARTY) {

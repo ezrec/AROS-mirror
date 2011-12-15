@@ -249,7 +249,7 @@ struct Image image =
 void saveasinfo()
 {
 	char tooltypes[KEYNUMMER][256];
-	long tooltypesadr[KEYNUMMER+1];
+	IPTR tooltypesadr[KEYNUMMER+1];
 	int k;
 	struct DiskObject *diskobj;
 	struct DiskObject mydiskobj =
@@ -263,11 +263,11 @@ void saveasinfo()
 		WBTOOL,0,0,NO_ICON_POSITION,NO_ICON_POSITION,0,0,4096
 	};
 	
-	mydiskobj.do_ToolTypes=(char **)&tooltypesadr[0];
+	mydiskobj.do_ToolTypes=(STRPTR *)&tooltypesadr[0];
 	
 	for(k=0;k<KEYNUMMER;k++)
 	{
-		tooltypesadr[k]=(LONG)tooltypes[k];
+		tooltypesadr[k]=(IPTR)tooltypes[k];
 		sprintf(tooltypes[k],"%s=%s",tt[k],keys[k]);
 	}
 	tooltypesadr[k]=0;
@@ -311,8 +311,6 @@ void open(void)
 			int aktu,a,e,k;
 			
 			Read(fh,mem,memlen);
-#warning CHECKME whats this???? To checks separated by commas?
-/*			for(k=0,aktu=0;aktu<memlen,k<KEYNUMMER;aktu++,k++)*/
 			for(k=0,aktu=0;aktu<memlen && k<KEYNUMMER;aktu++,k++)
 			{
 				for(;mem[aktu]!='\"';aktu++);

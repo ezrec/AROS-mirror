@@ -39,7 +39,7 @@ struct IntuitionBase *IntuitionBase=NULL;
 ULONG ilock;
 
 
-main()
+int main(int argc, char **argv)
 {
   if(NULL==(IntuitionBase = (struct IntuitionBase *) OpenLibrary("intuition.library",0)))
     printf("ERROR: could not open intuition.library !\n");
@@ -48,8 +48,9 @@ main()
     ilock=LockIBase(0);
     if(IntuitionBase->ActiveWindow!=NULL)   /* oh, what a hack... :) */
       if(IntuitionBase->ActiveWindow->UserData==NULL)
-        IntuitionBase->ActiveWindow->UserData=FindTask(NULL);
+        IntuitionBase->ActiveWindow->UserData=(APTR)FindTask(NULL);
     UnlockIBase(ilock);
-    CloseLibrary(IntuitionBase);
+    CloseLibrary((struct Library *)IntuitionBase);
    }
+  return 0;
 }

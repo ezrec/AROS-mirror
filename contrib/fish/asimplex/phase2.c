@@ -80,7 +80,7 @@ ULONG   *iter;        /* Zeiger auf "Anzahl Iterationen"                     */
 {
   USHORT  method = STEEPEST_ASCENT, rowflag = LAMBDA_0;
   USHORT  phase = flags & (PHASE_I | PHASE_II), verbose = flags & VERBOSE;
-  SHORT   r ,s ,nm = n-m, i, qs, lastpos = nm-1; /* lastpos: 0,...,(n-m)-1 */
+  SHORT   r ,s ,nm = n-m, i, qs = 0, lastpos = nm-1; /* lastpos: 0,...,(n-m)-1 */
   DOUBLE  c0_old;
   VOID    BTRAN(), FTRAN();
   USHORT  PRICE(), CHUZR(), WRETA();
@@ -320,7 +320,7 @@ USHORT  *rowflag;           /* LAMBDA_0, LAMBDA_1 oder LAMBDA_2 */
   REGISTER SHORT  i;
   DOUBLE          lambda2 = upper[ABS(qs)-1];
   REGISTER DOUBLE dqi, dummy, min = lambda2;
-  SHORT           sigma = SGN(qs), min_i;
+  SHORT           sigma = SGN(qs), min_i = 0;
 
   *rowflag = LAMBDA_2;
 

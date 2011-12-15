@@ -94,7 +94,7 @@ struct DiskObject Shell =
 	(APTR)&ShellI1,	/* Render Image */
 	(APTR)&ShellI2,	/* Select Image */
 	NULL,			/* Gadget Text */
-	NULL,			/* Mutual Exclude */
+	0L,  			/* Mutual Exclude */
 	NULL,			/* Special Info */
 	100,			/* Gadget ID */
 	(APTR) 0x0001,		/* User Data (Revision) */
@@ -112,15 +112,15 @@ struct DiskObject Shell =
 
 struct TagItem       FRTags[] =
                      {
-                      ASL_Hail,NULL,
-                      ASL_FuncFlags,0L,
-                      ASL_LeftEdge,0L,
-                      ASL_TopEdge,0L,
-                      ASL_Dir,0L,
-                      ASL_Pattern,(IPTR)"~(#?.info)",
-                      ASL_File,0L,
-                      TAG_DONE,0L
-                     };
+                      { ASL_Hail,(IPTR)NULL, },
+                      { ASL_FuncFlags,0L, },
+                      { ASL_LeftEdge,0L, },
+                      { ASL_TopEdge,0L, },
+                      { ASL_Dir,0L, },
+                      { ASL_Pattern,(IPTR)"~(#?.info)", },
+                      { ASL_File,0L, },
+                      { TAG_DONE,0L },
+                      };
                      
 struct EasyStruct ExistsReq =
        {
@@ -143,11 +143,11 @@ void save_config(ULONG mode)
                      AddPart(fname,info.f_file,256);
                      save = TRUE;
                      break;
-  case SAVE_AS     : FRTags[0].ti_Data = (ULONG)"Save Shuffle Configuration";
+  case SAVE_AS     : FRTags[0].ti_Data = (IPTR)"Save Shuffle Configuration";
                      FRTags[1].ti_Data = FILF_SAVE;
-                     FRTags[4].ti_Data = (ULONG)info.f_dir;
-                     FRTags[6].ti_Data = (ULONG)info.f_file;
-                     if(FileReq = (struct FileRequester *)AllocAslRequest(ASL_FileRequest,FRTags))
+                     FRTags[4].ti_Data = (IPTR)info.f_dir;
+                     FRTags[6].ti_Data = (IPTR)info.f_file;
+                     if((FileReq = (struct FileRequester *)AllocAslRequest(ASL_FileRequest,FRTags)))
                      {
                       if(RequestFile(FileReq))
                       { 
@@ -174,13 +174,13 @@ void save_config(ULONG mode)
  }
  if(save)
  {
-  if(f = fopen(fname,"w"))
+  if((f = fopen(fname,"w")))
   {
    fprintf(f,"%s\n",SHUFFLE_HEADER);
-   fprintf(f,"%ld\n",info.res);
-   fprintf(f,"%ld\n",info.numbers);
-   fprintf(f,"&ld\n",info.mode);
-   fprintf(f,"%ld\n",info.m_shuffles);
+   fprintf(f,"%ld\n",(long)info.res);
+   fprintf(f,"%ld\n",(long)info.numbers);
+   fprintf(f,"%ld\n",(long)info.mode);
+   fprintf(f,"%ld\n",(long)info.m_shuffles);
    fclose(f);
    if(info.writeicon)
    {
@@ -203,9 +203,9 @@ void load_config(UBYTE *name)
  }
  else
  {
-  FRTags[0].ti_Data = (ULONG)"Load Shuffle Configuration";
+  FRTags[0].ti_Data = (IPTR)"Load Shuffle Configuration";
   FRTags[1].ti_Data = 0L;
-  if(FileReq = (struct FileRequester *)AllocAslRequest(ASL_FileRequest,FRTags))
+  if((FileReq = (struct FileRequester *)AllocAslRequest(ASL_FileRequest,FRTags)))
   {
    if(RequestFile(FileReq))
    {
@@ -218,7 +218,7 @@ void load_config(UBYTE *name)
  }
  if(load)
   {
-   if(f = fopen(fname,"r"))
+   if((f = fopen(fname,"r")))
    {
     fgets(fname,256,f);
     if(!strncmp(fname,SHUFFLE_HEADER,strlen(SHUFFLE_HEADER)))

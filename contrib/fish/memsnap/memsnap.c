@@ -288,7 +288,7 @@ main (int argc, char **argv)		/* provide a memory 'meter' */
 	WBenchMsg = (struct WBStartup *) argv;
 
     if (!OpenLibs())		/* failure => under 1.3 */
-	return;
+	return RETURN_FAIL;
 
     GetOurIcon(WBenchMsg);
     if (InitWinTextInfo(&wtinfo))
@@ -311,22 +311,22 @@ main (int argc, char **argv)		/* provide a memory 'meter' */
 	biggadget.Width = -wtinfo.roffset-wtinfo.loffset;
 	biggadget.Height = wtinfo.font_y;
 
-	if (w = OpenWindowTagList(&nw, wtags))
+	if ((w = OpenWindowTagList(&nw, wtags)))
 	{
 	    if (w->Width != nw.Width)
 	    {
 		Msg("Window too small for text\nChoose a smaller font");
 		CloseAll();
-		return;
+		return RETURN_FAIL;
 	    }
 
-	    if (menu = AllocMemSnapMenu(w))
+	    if ((menu = AllocMemSnapMenu(w)))
 		SetMenuStrip(w, menu);
 	    else
 	    {
 		Msg("Couldn't create menus");
 		CloseAll();
-		return;
+		return RETURN_FAIL;
 	    }
 
 	    wtinfo.window = w;
@@ -337,7 +337,7 @@ main (int argc, char **argv)		/* provide a memory 'meter' */
 
 	    for (;;)		/* main event loop */
 	    {
-		while (msg = (struct IntuiMessage *) GetMsg(w->UserPort))
+		while ((msg = (struct IntuiMessage *) GetMsg(w->UserPort)))
 		{
 		    class = msg->Class;
 		    code = msg->Code;
@@ -391,7 +391,7 @@ makelarge:		    if (small)	/* to do: move if nec. */
 
 			case QUIT:
 			    CloseAll();
-			    return;
+			    return RETURN_OK;
 			}
 		    }
 
@@ -424,5 +424,5 @@ makelarge:		    if (small)	/* to do: move if nec. */
     FreeOurIcon();
 
     CloseAll();
-    return 0;
+    return RETURN_FAIL;
 }

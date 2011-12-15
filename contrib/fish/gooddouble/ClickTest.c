@@ -30,7 +30,7 @@
 
 struct IntuitionBase *IntuitionBase;
 
-main()
+int main(int argc, char **argv)
 {
     LONG ret_val = 5L;
 
@@ -76,7 +76,7 @@ main()
 
     while ( ! fDone ) {
         WaitPort( testWnd->UserPort );
-        while ( msg = (struct IntuiMessage *)GetMsg( testWnd->UserPort ) ) {
+        while (( msg = (struct IntuiMessage *)GetMsg( testWnd->UserPort ) )) {
 
             class       =   msg->Class;
             code        =   msg->Code;
@@ -128,7 +128,7 @@ main()
         }
     }
 
-    while ( msg = (struct IntuiMessage *)GetMsg( testWnd->UserPort ) )
+    while (( msg = (struct IntuiMessage *)GetMsg( testWnd->UserPort )) )
         ReplyMsg( (struct Message *)msg );
 
     CloseWindow( testWnd );

@@ -71,7 +71,7 @@ struct MinList *LoadData()
 
   mlp=(struct MinList *)AllocRemember(&RK,sizeof(struct MinList),MEMF_PUBLIC);
   if (mlp == NULL) return mlp;  /* Failed. No memory to start list  */
-  NewList(mlp);
+  NewList((struct List *)mlp);
   fp=fopen("memos:memodata.dat","r");
 
   if (fp == NULL ) return mlp;  /* File isn't there. Return empty list */
@@ -86,7 +86,7 @@ struct MinList *LoadData()
     memcpy((char *)&(p->mim_MI),(char *)&mi,sizeof(struct Memo_Item) );
     p->mim_Select = 0;	/*  All memos start off deselected  */
     p->mim_MI.mi_Text[60]='\0';
-    AddTail(mlp,p);
+    AddTail((struct List *)mlp,(struct Node *)p);
     OK=fread((char *)&mi,sizeof(struct Memo_Item),1,fp);
     }
   fclose(fp);
@@ -101,23 +101,22 @@ struct MinList *LoadData()
  *
  * !!!!!!! Currently no error checking !!!!!!!
  */
-SaveData()
+int SaveData()
   {
   FILE *fp;
   int Save_Status=1;	 /* Assume success */
-  int errr;
   struct MinNode *n;
   struct MI_Mem *m;
 
-  errr=remove("memos:memodata.bak");
-  errr=rename("memos:memodata.dat","memos:memodata.bak");
+  remove("memos:memodata.bak");
+  rename("memos:memodata.dat","memos:memodata.bak");
   if (LISTEMPTY) return Save_Status;
   fp=fopen("memos:memodata.dat","w");
   n=MemListPtr->mlh_Head;
   while (n->mln_Succ)
     {
     m=(struct MI_Mem *)n;
-    errr=fwrite((char *)&(m->mim_MI),sizeof(struct Memo_Item),1,fp);
+    fwrite((char *)&(m->mim_MI),sizeof(struct Memo_Item),1,fp);
     n = n->mln_Succ;
     }
   fclose(fp);

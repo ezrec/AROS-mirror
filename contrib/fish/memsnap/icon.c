@@ -39,7 +39,7 @@ TTString(char *name, char *def)
 {
 	char *what;
 	if (onekeyobj)
-		if (what = FindToolType(onekeyobj->do_ToolTypes, name))
+		if ((what = FindToolType(onekeyobj->do_ToolTypes, name)))
 			return what;
 	return def;
 }
@@ -50,7 +50,7 @@ TTInt(char *name, LONG def)
 {
 	char *what;
 	if (onekeyobj)
-		if (what = FindToolType(onekeyobj->do_ToolTypes, name))
+		if ((what = FindToolType(onekeyobj->do_ToolTypes, name)))
 			StrToLong(what, &def);
 	return def;
 }

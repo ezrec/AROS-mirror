@@ -105,7 +105,7 @@ for(xc=0,yc=0;!xc;)
 void cycle0()
 {
 float xinc,yinc;
-float x,y,xx,yy;
+float x,y,xx=0.0,yy=0.0;
 
 long color,xcrd,ycrd;
 short xstep,ystep;

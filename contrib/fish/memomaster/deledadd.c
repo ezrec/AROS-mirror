@@ -79,19 +79,19 @@ static UBYTE type_buffer[2];
 
 static struct StringInfo memo_string_info=
   {
-  memo_buffer, undo_buffer, 0, 61, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL
+  memo_buffer, undo_buffer, 0, 61,
   };
 static struct StringInfo date_string_info=
   {
-  date_buffer, undo_buffer, 0, 10, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL
+  date_buffer, undo_buffer, 0, 10,
   };
 static struct StringInfo notice_string_info=
   {
-  notice_buffer, undo_buffer, 0, 3, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL
+  notice_buffer, undo_buffer, 0, 3,
   };
 static struct StringInfo type_string_info=
   {
-  type_buffer, undo_buffer, 0, 2, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL
+  type_buffer, undo_buffer, 0, 2,
   };
 
 /*----------------------------------------------------------------------
@@ -136,47 +136,47 @@ static SHORT noti_bpts[]=
 
 static struct Border type_brd=
   {
-  0, 0,  NULL, NULL, JAM1, 5, type_bpts, NULL
+  0, 0,  0, 0, JAM1, 5, type_bpts, NULL
   };
 
 static struct Border memo_brd=
   {
-  0, 0,  NULL, NULL, JAM1, 5, memo_bpts, NULL
+  0, 0,  0, 0, JAM1, 5, memo_bpts, NULL
   };
 
 static struct Border date_brd=
   {
-  0, 0,  NULL, NULL, JAM1, 5, date_bpts, NULL
+  0, 0,  0, 0, JAM1, 5, date_bpts, NULL
   };
 
 static struct Border noti_brd=
   {
-  0, 0,  NULL, NULL, JAM1, 5, noti_bpts, NULL
+  0, 0,  0, 0, JAM1, 5, noti_bpts, NULL
   };
 
 static struct Gadget memo_gadget=
   {
   NULL, 20, 32, DEA_MEMO_W, DEA_SGAD_H, GADGHCOMP, RELVERIFY,
-  STRGADGET|REQGADGET,(APTR)&memo_brd,NULL,&memo_string_text,NULL,
+  STRGADGET|REQGADGET,(APTR)&memo_brd,NULL,&memo_string_text, 0,
   (APTR) &memo_string_info,0,NULL
   };
 
 static struct Gadget date_gadget=
   {
   &memo_gadget,100, 14, DEA_DATE_W, DEA_SGAD_H, GADGHCOMP, RELVERIFY,
-  STRGADGET|REQGADGET, (APTR)&date_brd, NULL, &date_string_text, NULL,
+  STRGADGET|REQGADGET, (APTR)&date_brd, NULL, &date_string_text, 0,
   (APTR) &date_string_info, 0, NULL
   };
 static struct Gadget notice_gadget=
   {
   &date_gadget,300, 14, DEA_NOTI_W, DEA_SGAD_H, GADGHCOMP, RELVERIFY,
-  STRGADGET|REQGADGET, (APTR)&noti_brd, NULL, &notice_string_text, NULL,
+  STRGADGET|REQGADGET, (APTR)&noti_brd, NULL, &notice_string_text, 0,
   (APTR) &notice_string_info, 0, NULL
   };
 static struct Gadget type_gadget=
   {
   &notice_gadget,400, 14, DEA_TYPE_W, DEA_SGAD_H, GADGHCOMP, RELVERIFY,
-  STRGADGET|REQGADGET, (APTR)&type_brd, NULL, &type_string_text, NULL,
+  STRGADGET|REQGADGET, (APTR)&type_brd, NULL, &type_string_text, 0,
   (APTR) &type_string_info, 0, NULL
   };
 
@@ -199,22 +199,22 @@ static SHORT bb_pts_bl[]=   /*Bottom right points*/
 
 static struct Border bb0_tr=
   {
-  0, 0,  NULL, NULL, JAM1, 3, bb_pts_tr, NULL
+  0, 0,  0, 0, JAM1, 3, bb_pts_tr, NULL
   };
 
 static struct Border bb0_bl=
   {
-  0, 0,  NULL, NULL, JAM1, 3, bb_pts_bl, &bb0_tr
+  0, 0,  0, 0, JAM1, 3, bb_pts_bl, &bb0_tr
   };
 
 static struct Border bb1_tr=
   {
-  0, 0,  NULL, NULL, JAM1, 3, bb_pts_tr, NULL
+  0, 0,  0, 0, JAM1, 3, bb_pts_tr, NULL
   };
 
 static struct Border bb1_bl=
   {
-  0, 0,  NULL, NULL, JAM1, 3, bb_pts_bl, &bb1_tr
+  0, 0,  0, 0, JAM1, 3, bb_pts_bl, &bb1_tr
   };
 
 static struct Gadget ok_gadget=
@@ -232,24 +232,18 @@ static struct Gadget ok_gadget=
   (APTR) &bb0_bl, /* GadgetRender */
   (APTR) &bb1_bl,          /* SelectRender */
   &ok_text,	 /* GadgetText */
-  NULL, 	 /* MutualExclude */
-  NULL, 	 /* SpecialInfo */
-  0,		 /* GadgetID */
-  NULL		 /* UserData */
   };
 
 static struct Gadget help_gadget=
   {
   &ok_gadget,314, 47, DEA_BGAD_W, DEA_BGAD_H, GADGHIMAGE, RELVERIFY,
   BOOLGADGET|REQGADGET, (APTR)&bb0_bl, (APTR)&bb1_bl, &help_text,
-  NULL, NULL, 0, NULL
   };
 
 static struct Gadget cancel_gadget=
   {
   &help_gadget,514, 47, DEA_BGAD_W, DEA_BGAD_H, GADGHIMAGE, RELVERIFY|ENDGADGET,
   BOOLGADGET|REQGADGET, (APTR)&bb0_bl, (APTR)&bb1_bl, &cancel_text,
-  NULL, NULL, 0, NULL
   };
 
 static SHORT requester_border_points[]=
@@ -282,13 +276,6 @@ static struct Requester my_requester=
   &cancel_gadget,    /* ReqGadget */
   &requester_border, /* ReqBorder */
   &requester_text,   /* ReqText */
-  NULL, 	     /* Flags */
-  NULL, 		/* BackFill */
-  NULL, 	     /* ReqLayer */
-  NULL, 	     /* ReqPad1 */
-  NULL, 	     /* ImageBMap */
-  NULL, 	     /* RWindow */
-  NULL		     /* ReqPad2 */
   };
 
 static struct Window *my_window;
@@ -298,9 +285,9 @@ static struct NewWindow my_new_window=
   0,		 /* LeftEdge */
   0,		 /* TopEdge */
   640,		 /* Width */
-  75,		/* Height */
-  NULL, 	    /* DetailPen */
-  NULL, 	    /* BlockPen */
+  75,		 /* Height */
+  0, 	         /* DetailPen */
+  0,	 	 /* BlockPen */
   GADGETUP|	 /* IDCMPFlags */
   REQCLEAR,
   SMART_REFRESH| /* Flags */
@@ -335,11 +322,13 @@ static char *err_txt_reqfail[]={
   "   Failed to open ADD requester   ",
   '\0'
   };
+#if 0
 static char *err_txt_fopenfail[]={
   "",
   "   Failed to open memo file   ",
   '\0'
   };
+#endif
 static char *err_txt_dateinv2[]={
   "",
   "   Couldn\'t write since date was invalid   ",
@@ -375,7 +364,7 @@ BOOL Edit()
 	strcpy( ((struct MI_Mem *)n)->mim_MI.mi_Notice, m.mi_Notice);
 	strcpy( ((struct MI_Mem *)n)->mim_MI.mi_Type, m.mi_Type);
 	strcpy( ((struct MI_Mem *)n)->mim_MI.mi_Text, m.mi_Text);
-	Remove((struct List *)n);
+	Remove((struct Node *)n);
 	MemIns((struct MI_Mem *)n);
 	DataAmended=TRUE;
 	}
@@ -446,7 +435,7 @@ BOOL Del()
 	{
 	Remove((struct Node *)n);
 	DataAmended=TRUE;
-	if ( n = DisplayFirst)
+	if (( n = DisplayFirst))
 	  {
 	  if (LISTEMPTY)
 	    DisplayFirst = NULL;
@@ -475,7 +464,7 @@ BOOL MemIns(struct MI_Mem *m)
 
   if (LISTEMPTY)
     {
-    AddHead(MemListPtr,(struct MinNode *)m);
+    AddHead((struct List *)MemListPtr,(struct Node *)m);
     }
   else
     {
@@ -500,7 +489,7 @@ BOOL MemIns(struct MI_Mem *m)
 	}
       else
 	{
-	Insert( (struct List *)MemListPtr,(struct Node *)m,n->mln_Pred);
+	Insert( (struct List *)MemListPtr,(struct Node *)m,(struct Node *)n->mln_Pred);
 	found=TRUE;
 	}
       }
@@ -575,7 +564,7 @@ BOOL MemoReq(struct Memo_Item *mim)
   while( !close_me )
     {
     Wait( 1 << my_window->UserPort->mp_SigBit );
-    while(my_message=(struct IntuiMessage *) GetMsg(my_window->UserPort))
+    while((my_message=(struct IntuiMessage *) GetMsg(my_window->UserPort)))
       {
       class = my_message->Class;
       address = my_message->IAddress;

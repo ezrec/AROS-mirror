@@ -176,7 +176,7 @@ void closewindow(void)
 		{
 			if((InputIO=CreateIORequest(InputMP,sizeof(struct IOStdReq))))
 			{
-				if(!OpenDevice("input.device",NULL,(struct IORequest *)InputIO,NULL))
+				if(!OpenDevice("input.device",0,(struct IORequest *)InputIO,0))
 				{
 					FakeEvent->ie_NextEvent=0;
 					FakeEvent->ie_Class=IECLASS_CLOSEWINDOW;

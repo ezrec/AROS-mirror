@@ -207,7 +207,7 @@ int addtemplateClicked( void )
  GT_SetGadgetAttrs(Project0Gadgets[GDX_templatestring],Project0Wnd,NULL,
                    GA_Disabled,FALSE,TAG_DONE);
  GT_SetGadgetAttrs(Project0Gadgets[GDX_templatestring],Project0Wnd,NULL,
-                   GTST_String,(ULONG)"",TAG_DONE);
+                   GTST_String,(IPTR)"",TAG_DONE);
  ActivateGadget(Project0Gadgets[GD_templatestring],Project0Wnd,NULL);
  edit.pattern = 0;
  return (TRUE);
@@ -233,7 +233,7 @@ int addclassClicked( void )
  GT_SetGadgetAttrs(Project0Gadgets[GDX_addword],Project0Wnd,NULL,
                    GA_Disabled,FALSE,TAG_DONE);
  GT_SetGadgetAttrs(Project0Gadgets[GDX_class_string],Project0Wnd,NULL,
-                   GTST_String,(ULONG)"",TAG_DONE);
+                   GTST_String,(IPTR)"",TAG_DONE);
  ActivateGadget(Project0Gadgets[GD_class_string],Project0Wnd,NULL);
  edit.class = 0;
  return (TRUE);
@@ -262,7 +262,7 @@ int addwordClicked( void )
  GT_SetGadgetAttrs(Project0Gadgets[GDX_wordstring],Project0Wnd,NULL,
                    GA_Disabled,FALSE,TAG_DONE);
  GT_SetGadgetAttrs(Project0Gadgets[GDX_wordstring],Project0Wnd,NULL,
-                   GTST_String,(ULONG)"",TAG_DONE);
+                   GTST_String,(IPTR)"",TAG_DONE);
  ActivateGadget(Project0Gadgets[GD_wordstring],Project0Wnd,NULL);
  edit.word = 0;
  return (TRUE);
@@ -453,7 +453,7 @@ int Project0ShowPInfo( void )
  line_out("***************************************");
  if(winfo.numpattern)
  {
-  sprintf(line,"* %6ld Patterns",winfo.numpattern);
+  sprintf(line,"* %6ld Patterns",(long)winfo.numpattern);
   line_out(line);
   for(p = winfo.pattern.lh_Head;p->ln_Succ;p=p->ln_Succ)
   {
@@ -476,7 +476,7 @@ int Project0ShowCInfo( void )
  line_out("***************************************");
  if(winfo.numclass)
  {
-  sprintf(line,"\n* %6ld Classes",winfo.numclass);
+  sprintf(line,"\n* %6ld Classes",(long)winfo.numclass);
   line_out(line);
   for(p = winfo.class.lh_Head;p->ln_Succ;p=p->ln_Succ)
   {
@@ -485,9 +485,9 @@ int Project0ShowCInfo( void )
    if(c->cl_Words.lh_Head->ln_Succ)
    {
     if(c->cl_NumWords > 1)
-      sprintf(line,"** Class : %s :  %ld words ** %s, %s...",p->ln_Name,c->cl_NumWords,c->cl_Words.lh_Head->ln_Name,c->cl_Words.lh_Head->ln_Succ->ln_Name);
+      sprintf(line,"** Class : %s :  %ld words ** %s, %s...",p->ln_Name,(long)c->cl_NumWords,c->cl_Words.lh_Head->ln_Name,c->cl_Words.lh_Head->ln_Succ->ln_Name);
     else
-      sprintf(line,"** Class : %s :  %ld words ** %s",p->ln_Name,c->cl_NumWords,c->cl_Words.lh_Head->ln_Name);
+      sprintf(line,"** Class : %s :  %ld words ** %s",p->ln_Name,(long)c->cl_NumWords,c->cl_Words.lh_Head->ln_Name);
     line_out(line);
    }
    else line_out("*** No words in this class !!");

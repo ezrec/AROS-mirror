@@ -41,7 +41,9 @@
 #define COMPL_LEN  64   /* maximum length of filename completion */
 #define FILTER "~(#?.info)"
 #define FILTER_LEN 10
+#ifndef __GNUC__
 #pragma amicall(SysBase, 0, observe_input(a0))
+#endif
 
 #define int_start()
 #define int_end()
@@ -77,7 +79,7 @@ BOOL open_libs()
 void close_libs()
 {
   if(NULL!=IntuitionBase)
-    CloseLibrary(IntuitionBase);
+    CloseLibrary((struct Library *)IntuitionBase);
   if(NULL!=KeymapBase)
     CloseLibrary(KeymapBase);
   if(NULL!=UtilityBase)
@@ -190,14 +192,14 @@ void put_into_stream(char *str)
 {
   /* puts the given string into the input stream */
   int i;
-  struct cq_pair {UBYTE code, qual;} raw_char;
+  TEXT raw_char[2];
 
   event.ie_NextEvent=NULL;    /* recycle received event */
   for(i=0; str[i]!=0; i++)
    {
-    MapANSI(&str[i],1,&raw_char,1,NULL);
-    event.ie_Code=raw_char.code;
-    event.ie_Qualifier=raw_char.qual;
+    MapANSI(&str[i],1,&raw_char[0],1,NULL);
+    event.ie_Code=raw_char[0];
+    event.ie_Qualifier=raw_char[1];
     io_req->io_Data=(APTR)&event;
     io_req->io_Length=sizeof(struct InputEvent);
     io_req->io_Command=IND_WRITEEVENT;
@@ -205,7 +207,7 @@ void put_into_stream(char *str)
    }
 }
 
-serve_handler()
+void serve_handler(void)
 {
   /* Waits for a Signal from the handler, finds the appropriate completion
      for the given part of the path and puts it into the input stream
@@ -224,7 +226,7 @@ kprintf("cfn: waiting for sig\n");
     Wait(sig);
 kprintf("cfn: received sig\n");
     ilock=LockIBase(0);
-    proc=IntuitionBase->ActiveWindow->UserData; /* set by cfn_newshell */
+    proc=(struct Process *)IntuitionBase->ActiveWindow->UserData; /* set by cfn_newshell */
     UnlockIBase(ilock);
 kprintf("cfn: proc = %x\n", proc);
     if(proc!=NULL)    /* set by "cfn_newshell" (should be started first) */
@@ -244,7 +246,7 @@ kprintf("cfn: proc = %x\n", proc);
 kprintf("cfn: buf = [%s]\n",buf);
 
       old_lock=CurrentDir(proc->pr_CurrentDir);   /* CDir of the input shell */
-      strpos=(int)((int)PathPart(buf)-(int)buf);
+      strpos=(int)((IPTR)PathPart(buf)-(IPTR)buf);
       tmp=buf[strpos];
       buf[strpos]=0;
       path_lock=Lock(buf,ACCESS_READ);
@@ -258,19 +260,19 @@ kprintf("cfn: buf = [%s]\n",buf);
 }
 
 
-main()
+int main(int argc, char **argv)
 {
   if(open_libs())
    {
-    if(port=CreatePort(NULL,0))
+    if((port=CreatePort(NULL,0)))
      {
-      if(handler=AllocMem(sizeof(struct Interrupt),MEMF_PUBLIC|MEMF_CLEAR))
+      if((handler=AllocMem(sizeof(struct Interrupt),MEMF_PUBLIC|MEMF_CLEAR)))
        {
-        if(io_req=(struct IOStdReq *)CreateExtIO(port,sizeof(struct IOStdReq)))
+        if((io_req=(struct IOStdReq *)CreateExtIO(port,sizeof(struct IOStdReq))))
          {
           if(!OpenDevice("input.device",0,(struct IORequest *)io_req,0))
            {
-            handler->is_Code=observe_input;
+            handler->is_Code=(VOID_FUNC)observe_input;
             handler->is_Data=NULL;
             handler->is_Node.ln_Pri=1;  /* just before console.device */
             handler->is_Node.ln_Name="cfn";
@@ -294,4 +296,5 @@ main()
   else
     puts("cfn: ERROR: could not open intuition.library !\n");
   close_libs();
+  return 0;
 }

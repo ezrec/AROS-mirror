@@ -48,19 +48,20 @@ UBYTE *mode0Labels[] = {
 
 
 struct NewMenu Project0NewMenu[] = {
-	NM_TITLE, (STRPTR)"Project", NULL, 0, NULL, NULL,
-	NM_ITEM, (STRPTR)"Load...", (STRPTR)"L", 0, 0L, (APTR)Project0loadconfig,
-	NM_ITEM, (STRPTR)"Save", (STRPTR)"C", 0, 0L, (APTR)Project0saveconfig,
- NM_ITEM, (STRPTR)"Save as...", (STRPTR)"S", 0, 0L, (APTR)Project0saveasconfig,
-	NM_ITEM, (STRPTR)NM_BARLABEL, NULL, 0, 0L, NULL,
-	NM_ITEM, (STRPTR)"Save as default", (STRPTR)"D", 0, 0L, (APTR)Project0savedefault,
-	NM_ITEM, (STRPTR)NM_BARLABEL, NULL, 0, 0L, NULL,
-	NM_ITEM, (STRPTR)"About...", (STRPTR)"A", 0, 0L, (APTR)Project0about,
-	NM_ITEM, (STRPTR)NM_BARLABEL, NULL, 0, 0L, NULL,
-	NM_ITEM, (STRPTR)"Quit", (STRPTR)"Q", 0, 0L, (APTR)Project0quit,
- NM_TITLE, (STRPTR)"Options", NULL, 0, NULL, NULL,
- NM_ITEM, (STRPTR)"Write Icons", (STRPTR)"I",CHECKIT | MENUTOGGLE | CHECKED , 0L, (APTR)Project0Icon,
-	NM_END, NULL, NULL, 0, 0L, NULL };
+	{ NM_TITLE, (STRPTR)"Project", NULL, 0, 0L, NULL, },
+	{ NM_ITEM, (STRPTR)"Load...", (STRPTR)"L", 0, 0L, (APTR)Project0loadconfig, },
+	{ NM_ITEM, (STRPTR)"Save", (STRPTR)"C", 0, 0L, (APTR)Project0saveconfig, },
+ { NM_ITEM, (STRPTR)"Save as...", (STRPTR)"S", 0, 0L, (APTR)Project0saveasconfig, },
+	{ NM_ITEM, (STRPTR)NM_BARLABEL, NULL, 0, 0L, NULL, },
+	{ NM_ITEM, (STRPTR)"Save as default", (STRPTR)"D", 0, 0L, (APTR)Project0savedefault, },
+	{ NM_ITEM, (STRPTR)NM_BARLABEL, NULL, 0, 0L, NULL, },
+	{ NM_ITEM, (STRPTR)"About...", (STRPTR)"A", 0, 0L, (APTR)Project0about, },
+	{ NM_ITEM, (STRPTR)NM_BARLABEL, NULL, 0, 0L, NULL, },
+	{ NM_ITEM, (STRPTR)"Quit", (STRPTR)"Q", 0, 0L, (APTR)Project0quit, },
+ { NM_TITLE, (STRPTR)"Options", NULL, 0, 0L, NULL, },
+ { NM_ITEM, (STRPTR)"Write Icons", (STRPTR)"I",CHECKIT | MENUTOGGLE | CHECKED , 0L, (APTR)Project0Icon, },
+	{ NM_END, NULL, NULL, 0, 0L, NULL }
+};
 
 UWORD Project0GTypes[] = {
 	BUTTON_KIND,
@@ -71,11 +72,11 @@ UWORD Project0GTypes[] = {
 };
 
 struct NewGadget Project0NGad[] = {
-	14, 4, 346, 14, (UBYTE *)"_Start", NULL, GD_start, PLACETEXT_IN, NULL, (APTR)startClicked,
-	14, 24, 136, 15, (UBYTE *)"_Tiles", NULL, GD_tiles, PLACETEXT_RIGHT, NULL, (APTR)tilesClicked,
-	278, 24, 82, 15, (UBYTE *)"Shu_ffle", NULL, GD_shuffle, PLACETEXT_LEFT, NULL, (APTR)shuffleClicked,
-	278, 44, 26, 11, (UBYTE *)"_Numbers", NULL, GD_numbers, PLACETEXT_LEFT, NULL, (APTR)numbersClicked,
-	14, 41, 136, 15, (UBYTE *)"_Mode", NULL, GD_mode, PLACETEXT_RIGHT, NULL, (APTR)modeClicked
+	{ 14, 4, 346, 14, (UBYTE *)"_Start", NULL, GD_start, PLACETEXT_IN, NULL, (APTR)startClicked, },
+	{ 14, 24, 136, 15, (UBYTE *)"_Tiles", NULL, GD_tiles, PLACETEXT_RIGHT, NULL, (APTR)tilesClicked, },
+	{ 278, 24, 82, 15, (UBYTE *)"Shu_ffle", NULL, GD_shuffle, PLACETEXT_LEFT, NULL, (APTR)shuffleClicked, },
+	{ 278, 44, 26, 11, (UBYTE *)"_Numbers", NULL, GD_numbers, PLACETEXT_LEFT, NULL, (APTR)numbersClicked, },
+	{ 14, 41, 136, 15, (UBYTE *)"_Mode", NULL, GD_mode, PLACETEXT_RIGHT, NULL, (APTR)modeClicked },
 };
 
 IPTR Project0GTags[] = {
@@ -161,7 +162,7 @@ int HandleProject0IDCMP( void )
 	int			(*func)(void);
 	int			running = TRUE;
 
-	while( m = GT_GetIMsg( Project0Wnd->UserPort )) {
+	while(( m = GT_GetIMsg( Project0Wnd->UserPort ))) {
 
 		CopyMem(( char * )m, ( char * )&Project0Msg, (long)sizeof( struct IntuiMessage ));
 

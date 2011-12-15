@@ -4,7 +4,7 @@
 
 /*
  *	you may comment this out to save c. 200 bytes, if not interested
- *	in the MIDDLE button (just put /* at the start of the line)
+ *	in the MIDDLE button (just put // at the start of the line)
  */
 #define ALL_BUTTONS /* */
 
@@ -13,7 +13,7 @@
  *	have it commented out if you don't want registerized arguments
  *	(e.g. if your compiler doesn't support these)
  */
-/* #define GDC_REGARGS /* */
+// #define GDC_REGARGS /* */
 
 
 #ifdef  ALL_BUTTONS

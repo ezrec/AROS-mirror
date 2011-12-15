@@ -95,7 +95,7 @@ struct NewGadget Project0NGad[] = {
  224,107,70,14,(UBYTE *)"->_To ",NULL,GD_toline,PLACETEXT_LEFT,NULL,(APTR)tolineClicked, 
 };
 
-ULONG Project0GTags[] = {
+IPTR Project0GTags[] = {
 	(GTLV_ReadOnly), TRUE, (TAG_DONE),
 	(GTST_MaxChars), 256, (STRINGA_Justification), (GACT_STRINGCENTER), (GT_Underscore), '_', (TAG_DONE),
 	(GTIN_Number), 1, (GTIN_MaxChars), 3, (STRINGA_Justification), (GACT_STRINGCENTER), (GT_Underscore), '_', (TAG_DONE),

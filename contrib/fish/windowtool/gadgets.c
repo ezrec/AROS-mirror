@@ -242,7 +242,7 @@ long InitStuff( void )
     if ( NOT g )
         return( 4l );
 
-    WindowTags[ 6 ].ti_Data = (LONG)GList;
+    WindowTags[ 6 ].ti_Data = (IPTR)GList;
 
     if ( NOT( Menus = CreateMenus( NewMenu, GTMN_FrontPen, 0l, TAG_DONE )))
         return( 6l );

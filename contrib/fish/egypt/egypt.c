@@ -486,6 +486,7 @@ int main()
 	    }
       }
       closelibs();
+      return 0;
     }
 
 /********************/
@@ -522,7 +523,7 @@ SHORT SelectOption()
 
 		Wait( 1 << window->UserPort->mp_SigBit );
 
-		while ( msg = (struct IntuiMessage *)GetMsg(window->UserPort ))
+		while (( msg = (struct IntuiMessage *)GetMsg(window->UserPort )))
 		    {
 			ULONG class = msg->Class;
 			struct Gadget *iaddress = msg->IAddress;
@@ -627,7 +628,7 @@ BOOL About()
 	    {
 		Wait( 1 << window->UserPort->mp_SigBit );
 
-		while ( msg = (struct IntuiMessage *)GetMsg(window->UserPort ))
+		while (( msg = (struct IntuiMessage *)GetMsg(window->UserPort )))
 		    {
 			if ( (msg->Class == MOUSEBUTTONS) && (msg->Code == SELECTUP) )
 			    loop = FALSE;
@@ -762,13 +763,10 @@ BOOL Game()
 
 		Wait(1 << window->UserPort->mp_SigBit);
 
-		while ( msg = (struct IntuiMessage *)GetMsg(window->UserPort) )
+		while (( msg = (struct IntuiMessage *)GetMsg(window->UserPort) ))
 		    {
 			ULONG class = msg->Class;
 			USHORT code = msg->Code;
-			struct Gadget *iaddress = msg->IAddress;
-			SHORT mousex = msg->MouseX;
-			SHORT mousey = msg->MouseY;
 
 			ReplyMsg((struct Message *)msg);
 
@@ -843,7 +841,7 @@ BOOL Game()
 		    {
 			Wait( 1 << window->UserPort->mp_SigBit );
 
-			while ( msg = (struct IntuiMessage *)GetMsg(window->UserPort ))
+			while (( msg = (struct IntuiMessage *)GetMsg(window->UserPort )))
 			    {
 				if ( (msg->Class == MOUSEBUTTONS) && (msg->Code == SELECTUP) )
 				    loop = FALSE;

@@ -156,7 +156,7 @@ int highlitY = 0;
 int highlitXonDown;
 int highlitYonDown;
 
-BPTR SpeakFH = NULL;
+BPTR SpeakFH = BNULL;
 
 struct Window *wG = NULL;
 struct RastPort *rpG;

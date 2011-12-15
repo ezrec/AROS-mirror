@@ -18,6 +18,8 @@ int main(int argc, char **argv)
       SwitchBox();
       CloseDisplay();
       CloseLibrary(MathTransBase);
+      return RETURN_OK;
     }
+    return RETURN_FAIL;
 }
 

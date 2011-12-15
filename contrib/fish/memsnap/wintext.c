@@ -31,7 +31,7 @@ BOOL InitWinTextInfo(WINTEXTINFO *wti)	/* for Workbench screen at moment */
 		wti->tattr.ta_Name = TTString("FONTNAME", "topaz.font");
 		wti->tattr.ta_YSize = TTInt("FONTHEIGHT", 8);
 
-		if (wti->tf = OpenDiskFont(&wti->tattr))
+		if ((wti->tf = OpenDiskFont(&wti->tattr)))
 		{
 			wti->font_x = wti->tf->tf_XSize;
 			wti->font_y = wti->tf->tf_YSize;

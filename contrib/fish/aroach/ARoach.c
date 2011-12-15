@@ -971,5 +971,6 @@ int nVis;
     
 	CleanExit(RETURN_OK);
 
+    return 0;
 }
 

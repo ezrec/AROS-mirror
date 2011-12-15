@@ -53,8 +53,8 @@ char *template=
 
 struct cliresults 
 {
-	long pri;
-	long popup;
+	IPTR pri;
+	IPTR popup;
 	char *settings;
 	char *keys[KEYNUMMER];
 };
@@ -75,7 +75,7 @@ void checkstartup(int argc,char *argv[],struct WBStartup *msg)
 		GetCurrentDirName(prgname,300);
 		AddPart(prgname,argv[0],300);
 		
-		if(!(cliargs=ReadArgs(template,(LONG *)&clir,0)))
+		if(!(cliargs=ReadArgs(template,(IPTR *)&clir,0)))
 			{
 			fh=Output();
 			sprintf(text,"WindowTool V1.0 : Error in Commandline !\nUSAGE: %s\n",template);
@@ -124,7 +124,7 @@ void checkstartup(int argc,char *argv[],struct WBStartup *msg)
 								strcpy(keys[k],key);
 				if((key=FindToolType(infoobj->do_ToolTypes,"CX_PRIORITY")))
 						{
-							int dummy;
+							long dummy;
 							sscanf(key,"%ld",&dummy);
 							nb.nb_Pri=(BYTE)dummy;
 						}

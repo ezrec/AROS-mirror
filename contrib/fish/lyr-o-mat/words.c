@@ -28,34 +28,35 @@ UBYTE *mode0Labels[] = {
 	NULL };
 
 struct NewMenu Project0NewMenu[] = {
-	NM_TITLE, (STRPTR)"Project", NULL, 0, NULL, NULL,
-	NM_ITEM, (STRPTR)"Load ", NULL, 0, NULL, NULL,
-	NM_SUB, (STRPTR)"Pattern & Classes", (STRPTR)"L", 0, 0L, (APTR)Project0Loadall,
-	NM_SUB, (STRPTR)"Pattern only", NULL, 0, 0L, (APTR)Project0Loadpattern,
-	NM_SUB, (STRPTR)"Classes only", NULL, 0, 0L, (APTR)Project0Loadclasses,
-	NM_ITEM, (STRPTR)"Append", NULL, 0, NULL, NULL,
-	NM_SUB, (STRPTR)"Pattern & Classes", (STRPTR)"A", 0, 0L, (APTR)Project0appendall,
-	NM_SUB, (STRPTR)"Pattern only", NULL, 0, 0L, (APTR)Project0appendpattern,
-	NM_SUB, (STRPTR)"Classes only", NULL, 0, 0L, (APTR)Project0appendclasses,
-	NM_ITEM, (STRPTR)"Save ", NULL, 0, NULL, NULL,
-	NM_SUB, (STRPTR)"Pattern & Classes", (STRPTR)"S", 0, 0L, (APTR)Project0saveall,
-	NM_SUB, (STRPTR)"Pattern only", NULL, 0, 0L, (APTR)Project0savepattern,
-	NM_SUB, (STRPTR)"Classes only", NULL, 0, 0L, (APTR)Project0saveclasses,
-	NM_ITEM, (STRPTR)"Save as Default", (STRPTR)"D", 0, 0L, (APTR)Project0savedefault,
-	NM_ITEM, (STRPTR)NM_BARLABEL, NULL, 0, 0L, NULL,
-	NM_ITEM, (STRPTR)"About...",NULL, 0, 0L, (APTR)Project0about,
-	NM_ITEM, (STRPTR)NM_BARLABEL, NULL, 0, 0L, NULL,
-	NM_ITEM, (STRPTR)"Quit...", (STRPTR)"Q", 0, 0L, (APTR)Project0quit,
-  NM_TITLE, (STRPTR)"Output", NULL, 0, NULL, NULL,
-  NM_ITEM, (STRPTR)"Window", (STRPTR)"W", CHECKED | CHECKIT | MENUTOGGLE, 0L, (APTR)Project0ConWd,
-  NM_ITEM, (STRPTR)"Printer", (STRPTR)"P", CHECKIT | MENUTOGGLE, 0L, (APTR)Project0Item0,
-  NM_TITLE, (STRPTR)"Info",NULL, 0, NULL, NULL,
-  NM_ITEM, (STRPTR)"Show complete info", (STRPTR)"I", 0, 0L, (APTR)Project0ShowInfo,
-  NM_ITEM, (STRPTR)"Show pattern info",NULL, 0, 0L, (APTR)Project0ShowPInfo,
-  NM_ITEM, (STRPTR)"Show class info", NULL, 0, 0L, (APTR)Project0ShowCInfo,
-  NM_TITLE, (STRPTR)"Options",NULL, 0, NULL, NULL,
-  NM_ITEM, (STRPTR)"Write Icons", (STRPTR)"C", CHECKIT | MENUTOGGLE | CHECKED, 0L, (APTR)Project0WriteIcon,
-  NM_END, NULL, NULL, 0, 0L, NULL };
+    { NM_TITLE, (STRPTR)"Project", NULL, 0, 0L, NULL, },
+    { NM_ITEM, (STRPTR)"Load ", NULL, 0, 0L, NULL, },
+    { NM_SUB, (STRPTR)"Pattern & Classes", (STRPTR)"L", 0, 0L, (APTR)Project0Loadall, },
+    { NM_SUB, (STRPTR)"Pattern only", NULL, 0, 0L, (APTR)Project0Loadpattern, },
+    { NM_SUB, (STRPTR)"Classes only", NULL, 0, 0L, (APTR)Project0Loadclasses, },
+    { NM_ITEM, (STRPTR)"Append", NULL, 0, 0L, NULL, },
+    { NM_SUB, (STRPTR)"Pattern & Classes", (STRPTR)"A", 0, 0L, (APTR)Project0appendall, },
+    { NM_SUB, (STRPTR)"Pattern only", NULL, 0, 0L, (APTR)Project0appendpattern, },
+    { NM_SUB, (STRPTR)"Classes only", NULL, 0, 0L, (APTR)Project0appendclasses, },
+    { NM_ITEM, (STRPTR)"Save ", NULL, 0, 0L, NULL, },
+    { NM_SUB, (STRPTR)"Pattern & Classes", (STRPTR)"S", 0, 0L, (APTR)Project0saveall, },
+    { NM_SUB, (STRPTR)"Pattern only", NULL, 0, 0L, (APTR)Project0savepattern, },
+    { NM_SUB, (STRPTR)"Classes only", NULL, 0, 0L, (APTR)Project0saveclasses, },
+    { NM_ITEM, (STRPTR)"Save as Default", (STRPTR)"D", 0, 0L, (APTR)Project0savedefault, },
+    { NM_ITEM, (STRPTR)NM_BARLABEL, NULL, 0, 0L, NULL, },
+    { NM_ITEM, (STRPTR)"About...",NULL, 0, 0L, (APTR)Project0about, },
+    { NM_ITEM, (STRPTR)NM_BARLABEL, NULL, 0, 0L, NULL, },
+    { NM_ITEM, (STRPTR)"Quit...", (STRPTR)"Q", 0, 0L, (APTR)Project0quit, },
+    { NM_TITLE, (STRPTR)"Output", NULL, 0, 0, 0, },
+    { NM_ITEM, (STRPTR)"Window", (STRPTR)"W", CHECKED | CHECKIT | MENUTOGGLE, 0L, (APTR)Project0ConWd, },
+    { NM_ITEM, (STRPTR)"Printer", (STRPTR)"P", CHECKIT | MENUTOGGLE, 0L, (APTR)Project0Item0, },
+    { NM_TITLE, (STRPTR)"Info",NULL, 0, 0, NULL, },
+    { NM_ITEM, (STRPTR)"Show complete info", (STRPTR)"I", 0, 0L, (APTR)Project0ShowInfo, },
+    { NM_ITEM, (STRPTR)"Show pattern info",NULL, 0, 0L, (APTR)Project0ShowPInfo, },
+    { NM_ITEM, (STRPTR)"Show class info", NULL, 0, 0L, (APTR)Project0ShowCInfo, },
+    { NM_TITLE, (STRPTR)"Options",NULL, 0, 0, 0L, },
+    { NM_ITEM, (STRPTR)"Write Icons", (STRPTR)"C", CHECKIT | MENUTOGGLE | CHECKED, 0L, (APTR)Project0WriteIcon, },
+    { NM_END, NULL, NULL, 0, 0L, NULL },
+};
 
 UWORD Project0GTypes[] = {
 	STRING_KIND,
@@ -76,21 +77,21 @@ UWORD Project0GTypes[] = {
 };
 
 struct NewGadget Project0NGad[] = {
-	276, 100, 196, 14, NULL, NULL, GD_wordstring, 0, NULL, (APTR)wordstringClicked,
-	276, 100, 196, 66, (UBYTE *)"Word", NULL, GD_wordlist, PLACETEXT_ABOVE, NULL, (APTR)wordlistClicked,
-	11,  100, 202, 14, NULL, NULL, GD_class_string, 0, NULL, (APTR)class_stringClicked,
-	11,  100, 202, 66, (UBYTE *)"Class", NULL, GD_classlist, PLACETEXT_ABOVE, NULL, (APTR)classlistClicked,
-	11, 181, 461, 14, NULL, NULL, GD_templatestring, 0, NULL, (APTR)templatestringClicked,
-	11, 23, 461, 64, NULL, NULL, GD_templatelist, PLACETEXT_ABOVE, NULL, (APTR)templatelistClicked,
-	272, 2, 52, 13, (UBYTE *)"Number of Patterns", NULL, GD_numpat, PLACETEXT_RIGHT, NULL, (APTR)numpatClicked,
-	11, 2, 118, 16, (UBYTE *)"_Generate", NULL, GD_generate, PLACETEXT_IN, NULL, (APTR)generateClicked,
-	11, 83, 75, 12, (UBYTE *)"Add", NULL, GD_addtemplate, PLACETEXT_IN, NULL, (APTR)addtemplateClicked,
-	397, 83, 75, 12, (UBYTE *)"Delete", NULL, GD_deltemplate, PLACETEXT_IN, NULL, (APTR)deltemplateClicked,
-	11, 168, 75, 12, (UBYTE *)"Add", NULL, GD_addclass, PLACETEXT_IN, NULL, (APTR)addclassClicked,
-	97, 168, 75, 12, (UBYTE *)"Delete", NULL, GD_delclass, PLACETEXT_IN, NULL, (APTR)delclassClicked,
-	276, 168, 75, 12, (UBYTE *)"Add", NULL, GD_addword, PLACETEXT_IN, NULL, (APTR)addwordClicked,
-	362, 168, 75, 12, (UBYTE *)"Delete", NULL, GD_delword, PLACETEXT_IN, NULL, (APTR)delwordClicked,
-  133, 2, 118, 16, NULL, NULL, GD_mode, 0, NULL, (APTR)modeClicked
+	{ 276, 100, 196, 14, NULL, NULL, GD_wordstring, 0, NULL, (APTR)wordstringClicked, },
+	{ 276, 100, 196, 66, (UBYTE *)"Word", NULL, GD_wordlist, PLACETEXT_ABOVE, NULL, (APTR)wordlistClicked, },
+	{ 11,  100, 202, 14, NULL, NULL, GD_class_string, 0, NULL, (APTR)class_stringClicked, },
+	{ 11,  100, 202, 66, (UBYTE *)"Class", NULL, GD_classlist, PLACETEXT_ABOVE, NULL, (APTR)classlistClicked, },
+	{ 11, 181, 461, 14, NULL, NULL, GD_templatestring, 0, NULL, (APTR)templatestringClicked, },
+	{ 11, 23, 461, 64, NULL, NULL, GD_templatelist, PLACETEXT_ABOVE, NULL, (APTR)templatelistClicked, },
+	{ 272, 2, 52, 13, (UBYTE *)"Number of Patterns", NULL, GD_numpat, PLACETEXT_RIGHT, NULL, (APTR)numpatClicked, },
+	{ 11, 2, 118, 16, (UBYTE *)"_Generate", NULL, GD_generate, PLACETEXT_IN, NULL, (APTR)generateClicked, },
+	{ 11, 83, 75, 12, (UBYTE *)"Add", NULL, GD_addtemplate, PLACETEXT_IN, NULL, (APTR)addtemplateClicked, },
+	{ 397, 83, 75, 12, (UBYTE *)"Delete", NULL, GD_deltemplate, PLACETEXT_IN, NULL, (APTR)deltemplateClicked, },
+	{ 11, 168, 75, 12, (UBYTE *)"Add", NULL, GD_addclass, PLACETEXT_IN, NULL, (APTR)addclassClicked, },
+	{ 97, 168, 75, 12, (UBYTE *)"Delete", NULL, GD_delclass, PLACETEXT_IN, NULL, (APTR)delclassClicked, },
+	{ 276, 168, 75, 12, (UBYTE *)"Add", NULL, GD_addword, PLACETEXT_IN, NULL, (APTR)addwordClicked, },
+	{ 362, 168, 75, 12, (UBYTE *)"Delete", NULL, GD_delword, PLACETEXT_IN, NULL, (APTR)delwordClicked, },
+	{ 133, 2, 118, 16, NULL, NULL, GD_mode, 0, 0, (APTR)modeClicked }
 };
 
 IPTR Project0GTags[] = {
@@ -177,7 +178,7 @@ int HandleProject0IDCMP( void )
 	int			(*func)(void);
 	int			running = TRUE;
 
-	while( m = GT_GetIMsg( Project0Wnd->UserPort )) {
+	while(( m = GT_GetIMsg( Project0Wnd->UserPort ))) {
 
 		CopyMem(( char * )m, ( char * )&Project0Msg, (long)sizeof( struct IntuiMessage ));
 
@@ -248,8 +249,8 @@ int OpenProject0Window( void )
 		ng.ng_Height     = ComputeY( ng.ng_Height);
 
 		if ( Project0GTypes[ lc ] == LISTVIEW_KIND ) {
-			if ( tmp = FindTagItem( GTLV_ShowSelected, ( struct TagItem * )&Project0GTags[ tc ] )) {
-				if ( tmp->ti_Data ) tmp->ti_Data = (ULONG)g;
+			if (( tmp = FindTagItem( GTLV_ShowSelected, ( struct TagItem * )&Project0GTags[ tc ] ))) {
+				if ( tmp->ti_Data ) tmp->ti_Data = (IPTR)g;
 			}
 		}
 

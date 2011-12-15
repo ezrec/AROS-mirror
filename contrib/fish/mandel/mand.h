@@ -166,5 +166,20 @@ extern   int     SPFieee();
 #define ZOOM_ZOOMOUT10    5
 #define ZOOM_COUNT        6
 
+void CloseDisplay(void);
+void SetPresets(int preset);
+void v_flush(void);
+void v_pos_line(int l);
+void ill_cmd(void);
+int gen_mand(void);
+int disp_mand(void);
+void init_colors(void);
+int open_winds(void);
+void init_cincr(void);
+void init_c7rot(void);
+void Information(SHORT page);
+void DrawZoomCenter(void);
+void DrawZoomBox(void);
+void RecalcZoomBox(void);
 void ZoomAlongDarling(KLUDGE_INT rzoom, KLUDGE_INT izoom);
 void AvailableCommands();

@@ -219,7 +219,7 @@ static BOOLEAN process_line(FILE *stream,int showinp,int showout,VARPTR vlist,
     {
     char    rname[100];
     char    input[MAXINPUT+1];
-    int     bequiet,i,m0,m1,m2,n,nargs;
+    int     bequiet,i,m0,m1=0,m2=0,n=0,nargs;
 
     input[0]=EOS;
     if (!nextline(input,stream))
@@ -434,11 +434,12 @@ static BOOLEAN process_line(FILE *stream,int showinp,int showout,VARPTR vlist,
             evaluate(&input[m0],showout,vlist,clist);
             break;
             }
-        if (!strcmp(&input[m0],"?"))
+        if (!strcmp(&input[m0],"?")) {
             if (showout && print_help(stream,0,0,input))
                 continue;
             else
                 break;
+	}
         for (i=m0+1;isspace(input[i]);i++);
         if (input[i]=='?')
             {

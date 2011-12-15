@@ -86,6 +86,8 @@ int main(int argc, char **argv) {
 	FreeRaster(tmpras.RasPtr, TMPWIDTH, TMPHEIGHT);
 	for (j=0; j<5; j++) for (i=0; i< N_BIT_PLANES; i++)
 		FreeRaster(bitmap[j].Planes[i], WIDTH, MAXHINOLACE);
+
+	return 0;
 }
 
 #define MAXPOINTS 64L

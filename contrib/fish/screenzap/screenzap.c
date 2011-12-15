@@ -241,4 +241,5 @@ int main(int argc, char **argv)
 	}
 	ReplyMsg((struct Message *)msg);
 	loc_abort(0);
+	return 0;
 }

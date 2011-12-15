@@ -379,4 +379,6 @@ char **argv;
 	else OpenAll(file,0);
 	DoSnow((long)number,(long)refresh,(long)wind);
 	loc_abort(0);
+
+	return 0;
 }

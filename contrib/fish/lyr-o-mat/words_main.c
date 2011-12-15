@@ -19,7 +19,7 @@ BOOL openlibs(void)
   GfxBase = (struct GfxBase *)OpenLibrary("graphics.library",0);
   IconBase = OpenLibrary("icon.library",0);
   IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library",0);
-  UtilityBase = OpenLibrary("utility.library",0);
+  UtilityBase = (struct UtilityBase *)OpenLibrary("utility.library",0);
   GadToolsBase = OpenLibrary("gadtools.library",0);
 
   if (!AslBase || !GfxBase || !IconBase || !IntuitionBase || !UtilityBase || !GadToolsBase)
@@ -33,7 +33,7 @@ void closelibs(void)
   if (GfxBase) CloseLibrary((struct Library *)GfxBase);
   if (IconBase) CloseLibrary(IconBase);
   if (IntuitionBase) CloseLibrary((struct Library *)IntuitionBase);
-  if (UtilityBase) CloseLibrary(UtilityBase);
+  if (UtilityBase) CloseLibrary((struct Library *)UtilityBase);
   if (GadToolsBase) CloseLibrary(GadToolsBase);
 }
 
@@ -51,7 +51,7 @@ extern BPTR               _Backstdout;
 /* ----------------------------------------------------------------- */
 
 
-void __stdargs main(int argc,union  wbstart argv)
+int main(int argc, char **argv)
 {
  int end = FALSE;
  time(&RangeSeed);
@@ -100,35 +100,36 @@ closelibs();
  exit(0);
 }
 
-void LoadApp(int argc,union wbstart argv)
+void LoadApp(int argc,char **argv)
 {
  struct DiskObject *dobj;
  UBYTE             *tool;
  long i;
  if(!argc)
  {
-  if(argv.msg)
+  struct WBStartup *msg = (struct WBStartup *)argv;
+  if(msg)
   {
-   if(argv.msg->sm_NumArgs > 1)
+   if(msg->sm_NumArgs > 1)
    {
-    for(i = 1; i < argv.msg->sm_NumArgs;i++)
+    for(i = 1; i < msg->sm_NumArgs;i++)
     {
-     NameFromLock(argv.msg->sm_ArgList[i].wa_Lock,winfo.d_dir,256);
-     strcpy(winfo.d_name,argv.msg->sm_ArgList[i].wa_Name);
+     NameFromLock(msg->sm_ArgList[i].wa_Lock,winfo.d_dir,256);
+     strcpy(winfo.d_name,msg->sm_ArgList[i].wa_Name);
      loadAll(MODE_LOADCONFIG,"Loading Application...");
     }
    }
 
-   if(dobj = GetDiskObject(argv.msg->sm_ArgList->wa_Name))
+   if((dobj = GetDiskObject(msg->sm_ArgList->wa_Name)))
    {
     long left   = 0L;
     long top    = 50L;
     long width  = 320L;
     long height = 150L;
-    if(tool = FindToolType(dobj->do_ToolTypes,"LEFTEDGE"))left   = atol(tool);
-    if(tool = FindToolType(dobj->do_ToolTypes,"TOPEDGE")) top    = atol(tool);
-    if(tool = FindToolType(dobj->do_ToolTypes,"WIDTH"))   width  = atol(tool);
-    if(tool = FindToolType(dobj->do_ToolTypes,"HEIGHT"))  height = atol(tool);
+    if((tool = FindToolType(dobj->do_ToolTypes,"LEFTEDGE")))left   = atol(tool);
+    if((tool = FindToolType(dobj->do_ToolTypes,"TOPEDGE"))) top    = atol(tool);
+    if((tool = FindToolType(dobj->do_ToolTypes,"WIDTH")))   width  = atol(tool);
+    if((tool = FindToolType(dobj->do_ToolTypes,"HEIGHT")))  height = atol(tool);
     left   = (left < 0) ? 0 : (left > Scr->Width ) ? Scr->Width  : left; 
     top    = (top  < 0) ? 0 : (top  > Scr->Height) ? Scr->Height : top;
     width  = (width  > (Scr->Width  - left)) ? Scr->Width  - left : width;

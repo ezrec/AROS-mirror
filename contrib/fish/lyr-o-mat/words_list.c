@@ -14,7 +14,7 @@ void newpattern(UBYTE *name)
    winfo.currentpattern->pt_Node.ln_Name = strdup(name);
   }
  }
- else if(p = (struct patternnode *)calloc(1,sizeof(struct patternnode)))
+ else if((p = (struct patternnode *)calloc(1,sizeof(struct patternnode))))
  {
   p->pt_Node.ln_Name = strdup(name);
   s = p->pt_Node.ln_Name + strlen(p->pt_Node.ln_Name) - 1;
@@ -36,7 +36,7 @@ void newclass(UBYTE *name)
    winfo.currentclass->cl_Node.ln_Name = strdup(name);
   }
  }
- else if(c = (struct classnode *)calloc(1,sizeof(struct classnode)))
+ else if((c = (struct classnode *)calloc(1,sizeof(struct classnode))))
  {
   c->cl_Node.ln_Name = strdup(name);
   c->cl_NumWords = 0L;
@@ -63,7 +63,7 @@ void newword(UBYTE *name)
     winfo.currentword->wn_Node.ln_Name = strdup(name);
    }
   }
-  else  if(w = (struct wordnode *)calloc(1,sizeof(struct wordnode)))
+  else  if((w = (struct wordnode *)calloc(1,sizeof(struct wordnode))))
   {
    w->wn_Node.ln_Name = strdup(name);
    s = w->wn_Node.ln_Name + strlen(w->wn_Node.ln_Name) - 1;
@@ -122,7 +122,7 @@ void delwordlist(struct classnode *cl)
 {
  struct Node *n;
  list_off(LIST_WD);
- while(n = RemHead(&cl->cl_Words))
+ while((n = RemHead(&cl->cl_Words)))
  {
   free(n->ln_Name);
   free(n);
@@ -144,14 +144,14 @@ void delAll(void)
  edit.word    = 0;
  if(winfo.nach){free(winfo.nach);winfo.nach = NULL;};
  list_off(LIST_PT);list_off(LIST_CL);list_off(LIST_WD);
- while(n = RemHead(&winfo.pattern))
+ while((n = RemHead(&winfo.pattern)))
  {
   free(n->ln_Name);
   free(n);
  }
- while(cl = (struct classnode *)RemHead(&winfo.class))
+ while((cl = (struct classnode *)RemHead(&winfo.class)))
  {
-  while(n = RemHead(&cl->cl_Words))
+  while((n = RemHead(&cl->cl_Words)))
   {
    free(n->ln_Name);
    free(n);
@@ -218,6 +218,8 @@ ULONG NodeToNum(struct List *list,struct Node *node)
  ULONG num = 0;
  struct Node *n;
  for(n = list->lh_Head;n->ln_Succ;n = n->ln_Succ,num++)
-  if(node == n) return num;
+  if(node == n)
+    break;
+ return num;
 }
 

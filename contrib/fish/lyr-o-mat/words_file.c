@@ -54,7 +54,7 @@ struct DiskObject icon =
 	(APTR)&icI1,	/* Render Image */
 	NULL,			/* Select Image */
 	NULL,			/* Gadget Text */
-	NULL,			/* Mutual Exclude */
+	0L,  			/* Mutual Exclude */
 	NULL,			/* Special Info */
 	0,			/* Gadget ID */
 	NULL,			/* User Data */
@@ -73,14 +73,14 @@ struct DiskObject icon =
 
 struct TagItem       FRTags[] =
                      {
-                      ASL_Hail,NULL,
-                      ASL_FuncFlags,0L,
-                      ASL_LeftEdge,0L,
-                      ASL_TopEdge,0L,
-                      ASL_Dir,0L,
-                      ASL_Pattern,(IPTR)"~(#?.info)",
-                      ASL_File,0L,
-                      TAG_DONE,0L
+                      { ASL_Hail,(IPTR)NULL, },
+                      { ASL_FuncFlags,0L, },
+                      { ASL_LeftEdge,0L, },
+                      { ASL_TopEdge,0L, },
+                      { ASL_Dir,0L, },
+                      { ASL_Pattern,(IPTR)"~(#?.info)", },
+                      { ASL_File,0L, },
+                      { TAG_DONE,0L },
                      };
 
 
@@ -106,13 +106,13 @@ void saveAll(ULONG mode,UBYTE *title)
  int write_it = FALSE;
  struct  FileRequester *FileReq;
  FILE *file;
- FRTags[0].ti_Data = (ULONG)title;
+ FRTags[0].ti_Data = (IPTR)title;
  FRTags[1].ti_Data = FILF_SAVE;
- FRTags[4].ti_Data = (ULONG)winfo.l_dir;
- FRTags[6].ti_Data = (ULONG)winfo.l_name;
+ FRTags[4].ti_Data = (IPTR)winfo.l_dir;
+ FRTags[6].ti_Data = (IPTR)winfo.l_name;
  if(mode != MODE_SAVECONFIG)
  {
-  if(FileReq = (struct FileRequester *)AllocAslRequest(ASL_FileRequest,FRTags))
+  if((FileReq = (struct FileRequester *)AllocAslRequest(ASL_FileRequest,FRTags)))
   {
    if(RequestFile(FileReq))
    {
@@ -136,7 +136,7 @@ void saveAll(ULONG mode,UBYTE *title)
  else write_it = TRUE;
  if(write_it)
  {
-  if(file = fopen(fname,"w"))
+  if((file = fopen(fname,"w")))
   {
    fprintf(file,"%s",ID_STRING);
    if(edit.s_p == 1)
@@ -166,7 +166,7 @@ void saveAll(ULONG mode,UBYTE *title)
     BPTR lock;
     strcpy(winfo.icon_name,fname);
     strcat(winfo.icon_name,".info");
-    if(lock = Lock(winfo.icon_name,SHARED_LOCK))UnLock(lock);
+    if((lock = Lock(winfo.icon_name,SHARED_LOCK)))UnLock(lock);
      else
       PutDiskObject(fname,&icon);
    }
@@ -182,13 +182,13 @@ void loadAll(ULONG mode,UBYTE *title)
  FILE  *file;
  UBYTE *s;
  int attempt_load = FALSE;
- FRTags[0].ti_Data = (ULONG)title;
+ FRTags[0].ti_Data = (IPTR)title;
  FRTags[1].ti_Data = 0L;
- FRTags[4].ti_Data = (ULONG)winfo.l_dir;
- FRTags[6].ti_Data = (ULONG)winfo.l_name;
+ FRTags[4].ti_Data = (IPTR)winfo.l_dir;
+ FRTags[6].ti_Data = (IPTR)winfo.l_name;
  if(mode != MODE_LOADCONFIG)
  {
-  if(FileReq = (struct FileRequester *)AllocAslRequest(ASL_FileRequest,FRTags))
+  if((FileReq = (struct FileRequester *)AllocAslRequest(ASL_FileRequest,FRTags)))
   {
    if(RequestFile(FileReq))
    {
@@ -205,7 +205,7 @@ void loadAll(ULONG mode,UBYTE *title)
  {
   strcpy(fname,winfo.d_dir);
   AddPart(fname,winfo.d_name,256);
-  if(file = fopen(fname,"r"))
+  if((file = fopen(fname,"r")))
   {
    fclose(file);
    attempt_load = TRUE;
@@ -229,7 +229,7 @@ void loadAll(ULONG mode,UBYTE *title)
   edit.pmode = 1;
   GT_SetGadgetAttrs(Project0Gadgets[GDX_mode],Project0Wnd,NULL,
                     GTCY_Active,0,TAG_DONE);
-  if(file = fopen(fname,"r"))
+  if((file = fopen(fname,"r")))
   {
    if(mode == MODE_LOADFILE)delAll();
    fgets(id,256,file);
@@ -301,13 +301,13 @@ int checkfile(UBYTE *fname,ULONG mode)
  UBYTE check[20];
  switch(mode)
  {
-  case MODE_CHECKEXIST : if(file = fopen(fname,"r"))
+  case MODE_CHECKEXIST : if((file = fopen(fname,"r")))
                           {
                            rc = TRUE;
                            fclose(file);
                           }
                           break;
-  case MODE_CHECKFILE   : if(file = fopen(fname,"r"))
+  case MODE_CHECKFILE   : if((file = fopen(fname,"r")))
                           {
                            fgets(check,20,file);
                            if(!strcmp(check,ID_STRING))rc = TRUE;

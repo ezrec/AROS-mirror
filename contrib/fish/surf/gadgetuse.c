@@ -159,8 +159,8 @@ void ClearHourGlass() {
 void GadgetHandler(gadaddr)
     struct Gadget *gadaddr;
 {
-    short curival;
-    float curfval;
+    short curival = 0;
+    float curfval = 0.0;
 
     if( gadaddr->UserData ) {
         GadgetUpdate( gadaddr, true );

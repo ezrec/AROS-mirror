@@ -684,6 +684,7 @@ for (turns=0;turns<13;turns++)
 
       }   /* for */
 }   /* while */
+return 0;
 }   /* end of main */
 
 void roll_dice(bones)

@@ -58,8 +58,7 @@ BOOL WBStart;
 char date_today[10];
 char MWTitle[60];
 
-#warning Deactivated the following lines
-#if 0
+#ifdef __DICE__
 /*========================================================================
  *###======   wbmain() function   ========================================
  * DICE specific function. Program starts here if executed from WorkBench
@@ -74,7 +73,7 @@ int wbmain(struct WBStartup *wbs)
 /*==========================================================================*/
 /*###======   main() function   ============================================*/
 /*==========================================================================*/
-main(int argc, char *argv[])
+int main(int argc, char *argv[])
   {
   BOOL MFound;
   FILE *fp;
@@ -119,6 +118,10 @@ main(int argc, char *argv[])
   if (((argc > 1) && (Check)) || (WBStart))
     MFound=MemoChk(FALSE);
 
+  if (!MFound) {
+  	  /* Error checking? */
+  }
+
   if (!Check)
     {
     mm_w=MainWindow();
@@ -131,9 +134,10 @@ main(int argc, char *argv[])
     Action();
     }
   CleanUp();
+  return 1;
   }
 /*=====================================================================*/
-CleanUp()
+int CleanUp()
   {
   if(mm_w)CloseWindow(mm_w);
   FreeRemember(&RK,TRUE);
@@ -143,7 +147,7 @@ CleanUp()
 /*=====================================================================*/
 void Action()
   {
-  int Class,ID,x;
+  int Class,ID;
   struct IntuiMessage *msg;
   APTR address;
   BOOL finished,result;
@@ -168,6 +172,7 @@ void Action()
       Class = msg->Class;
       address = msg->IAddress;
       ReplyMsg( (struct Message *)msg );
+      result = TRUE;
       switch( Class )
 	{
 	case CLOSEWINDOW:
@@ -286,9 +291,10 @@ kprintf("GADGETUP: ID = %d\n", ID);
 	    }
 	  break;
 	}
+	if (!result) { /* Error handling? */};
       }
     }
-  if (DataAmended) x=SaveData();
+  if (DataAmended) SaveData();
   }
 
 /*========================================================================
@@ -504,7 +510,7 @@ void Display_Blank(int gadg_no )
  *   Display_Block(DisplayFirst);
  *
  */
-Shrink()
+int Shrink()
   {
   SHORT Points[]= {
 	19, 2,
@@ -523,13 +529,6 @@ Shrink()
     GADGHCOMP,		    /* Flags */
     RELVERIFY,		    /* Activation */
     BOOLGADGET, 	    /* GadgetType */
-    NULL,		    /* GadgetRender */
-    NULL,		    /* SelectRender */
-    NULL,		    /* *GadgetText */
-    NULL,		    /* MutualExclude */
-    NULL,		    /* SpecialInfo */
-    NULL,		    /* GadgetID */
-    NULL		    /* UserData */
     };
 
   struct NewWindow nsw=
@@ -569,7 +568,7 @@ Shrink()
     return -1;
     }
   Wait(1 << sw->UserPort->mp_SigBit);
-  while (msg = (struct IntuiMessage *) GetMsg( sw->UserPort ) )
+  while ((msg = (struct IntuiMessage *) GetMsg( sw->UserPort )) )
     {
     ReplyMsg( (struct Message *)msg );
     }
@@ -596,7 +595,7 @@ Shrink()
  * Colour[3] used for highlighted text - eg selected memos
  *
  */
-SetColours()
+int SetColours()
 /* Current algorithm -
  *	0. If file S:MMASTER.CONFIG exists, colours are first 4 bytes.
  *	1. If standard WB1.3 colours then use as .....
@@ -684,7 +683,7 @@ struct Window *MainWindow()
     {
     0,0,	      /* LeftEdge, TopEdge */
     640, 200,	      /* Width, Height */
-    NULL,NULL,		    /* DetailPen, BlockPen */
+    0,0,      		    /* DetailPen, BlockPen */
     CLOSEWINDOW|      /* IDCMPFlags */
     GADGETDOWN|
     GADGETUP,

@@ -208,7 +208,7 @@ int dotimes()
 {
 	int myhour,myminute,day,month,year,wday,mytot,x,y,gmttot,min,hour,a;
 	struct DateStamp now;
-	char buf[40],buf1[40],c,*ptr;
+	char buf[40],buf1[40],c=0,*ptr;
 
 	DateStamp(&now);
 	myhour=now.ds_Minute/60; myminute=now.ds_Minute%60;
@@ -245,7 +245,7 @@ int dotimes()
 			Text(rp,buf,6);
 		}
 	}
-	sprintf(buf,"%2d:%02d:%02d, ",myhour,myminute,now.ds_Tick/TICKS_PER_SECOND);
+	sprintf(buf,"%2d:%02d:%02d, ",(int)myhour,(int)myminute,(int)(now.ds_Tick/TICKS_PER_SECOND));
 	SetAPen(rp,clockcol);
 	Move(rp,timeoff,Window->BorderTop + BORDERY + OTHERROW * FONTHEIGHT + FONTBASE);
 	Text(rp,buf,10);
@@ -322,8 +322,9 @@ int iconify()
 			sec=now.ds_Tick/TICKS_PER_SECOND;
 			day=now.ds_Days;
 			CalcDate(&day,&month,&year);
-			sprintf(buf,"CHIP:%4d FAST:%4d %02d-%3s-%02d %2d:%02d:%02d",
-				AvailMem(MEMF_CHIP)>>10,AvailMem(MEMF_FAST)>>10,
+			sprintf(buf,"CHIP:%4lu FAST:%4lu %02d-%3s-%02d %2d:%02d:%02d",
+				(unsigned long)AvailMem(MEMF_CHIP)>>10,
+				(unsigned long)AvailMem(MEMF_FAST)>>10,
 				day,shortmonths[month],year%100,hour,min,sec);
 			if (v2) {
 				if (IntuitionBase->ActiveWindow==Window) {

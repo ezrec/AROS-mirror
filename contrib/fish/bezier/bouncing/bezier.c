@@ -216,6 +216,7 @@ char *av[];
 	}
     }
     exiterr(1, NULL);
+    return 1;
 }
 
 void exiterr(n, str)

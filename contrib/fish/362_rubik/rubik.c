@@ -149,7 +149,7 @@ void showtwist (short i, short j)
 int main (int argc, char **argv)
 	{
 	int i,j;
-	int pen;
+	int pen = 1;
 		
 	size = 2048;
 	scaling = 7;
