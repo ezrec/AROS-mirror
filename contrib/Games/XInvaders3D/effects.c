@@ -49,13 +49,12 @@ VECTOR4 star_thrust[4] = {{ 0.0f, 0.0f, 50.0f, 1.0f },
 
 void Stars_init ( void )
 {
-   int i, j, k, l, m;
+   int i, j, k, m;
    for ( i=0; i<MAX_STARS; i++ )
    {
       m = rand () % 4;
       j = rand () % 800;
       k = rand () % 800;
-      l = rand () % 1000;
       Vector_copy ( star_start, stars[i].pos );
 
       stars[i].pos[XPOS] = (float)j;

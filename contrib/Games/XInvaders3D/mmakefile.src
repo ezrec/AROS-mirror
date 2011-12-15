@@ -5,8 +5,7 @@ FILES := game aliens player effects object camera vec4x1 mat4x4 main-aros
 
 EXEDIR := $(CONTRIBDIR)/Games/XInvaders3D
 
-USER_CFLAGS = -DGAME_AROS -O2 -ffast-math -funroll-loops \
-                 -fomit-frame-pointer -fexpensive-optimizations
+USER_CFLAGS = -DGAME_AROS
 
 #MM- contrib-games : XInvaders3D
 

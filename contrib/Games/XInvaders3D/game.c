@@ -325,7 +325,7 @@ void Game_overlay ( void )
 {
    char buffer[256], tmp_num[2];
    int  i, x, *tmp_score[20];
-   int  life[6] = { 0, 450, 25, 450, 12, 425 }; 
+   const int const life[6] = { 0, 450, 25, 450, 12, 425 }; 
 
    if ( gv->display_fps )
    {
@@ -339,7 +339,7 @@ void Game_overlay ( void )
 
       Draw_text ( buffer, 0, 475, RED );
    }
-  
+
    /* convert score into a vector-font */
    sprintf ( buffer, "%ld", gv->pscore );
    tmp_num[0] = '0';
@@ -376,7 +376,6 @@ void Game_overlay ( void )
          gv->key_FIRE );
    Draw_text ( buffer, 200, 470, WHITE );
 #endif
-
 }
 
 /*================================================================*/
