@@ -67,7 +67,7 @@ struct NewScreen NewScreen =
    NULL,
    };
 
-void main(argc,argv)
+int main(argc,argv)
 int argc;
 char *argv[];
 {
@@ -81,12 +81,12 @@ char *argv[];
    PLANEPTR myplane;
    struct IntuiMessage *msg;
    ULONG  colormap[770],rl,gl,bl;
-   int i,i3,x1,y1,x2,y2,x3,y3,x9,y9,nn,nnm1,nf,pf,ffi,co,fpal,z,zd,zm;
-   int cc,c2,c6,cd,co2;
+   int i,i3,x1,y1,x2,y2,x3,y3,x9,y9,nn,nnm1,ffi,co,fpal,z,zd,zm;
+   int cc,c2,c6,cd;
    double fs,ff,sif,y0,ye,z1,z2,s2,z3,a,m,fr,fg,fb,ar,ag,ab,cf,nn1,nnf;
    double pr[256],pg[256],pb[256];
 
-   nf=6;     nn=63;   /* Anzahl Bitplanes, Farben */
+   nn=63;   /* Anzahl Bitplanes, Farben */
    nn1=(double)(nn-1); nnm1=(nn-1)*3;
    nnf=(double)(0xffffffff);
 
@@ -95,7 +95,7 @@ char *argv[];
    x1=250;   y1=140;      z1=0.0;
    x2= 90;   y2=y1;       z2=0.0;   z3=0.0;
 
-   fs=0.0; ff=4000.0; sif=273.0+sin(0.15);  pf=0;  /* Farben */
+   fs=0.0; ff=4000.0; sif=273.0+sin(0.15);  /* Farben */
    c2=15*256; c6=15*16; co=2;
    cf=1.0; cc=0;        fr=0.0; fg=0.0; fb=0.0;
 
@@ -208,7 +208,6 @@ char *argv[];
    /* Interpretation der CLI-Parameter */
    if (argc > 1) { zm=atoi(argv[argc-1]); zd=1; } /* Laufzeit begrenzt */
    z  = 0;
-   co2= 0;
 
    while (z < zm)     /* Schleife über vorgegebene Anzahl Durchgänge */
      {
@@ -315,4 +314,5 @@ char *argv[];
    CloseLibrary((struct Library *)IntuitionBase);
    CloseLibrary((struct Library *)GfxBase);
 
+   return 0;
 }
