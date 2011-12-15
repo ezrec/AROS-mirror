@@ -40,7 +40,7 @@ UBYTE	    	    	remaptable[256];
 UBYTE 			Keys[128];
 char			s[256];
 WORD	    	    	winx = -1, winy = -1;
-LONG			args[NUM_ARGS];
+IPTR			args[NUM_ARGS];
 BOOL	    	    	forcescreen, forcewindow;
 BOOL	    	    	mustremap, truecolor, remapped, wbscreen = TRUE;
 
