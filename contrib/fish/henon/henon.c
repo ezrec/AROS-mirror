@@ -77,17 +77,17 @@ struct NewWindow my_new_window=
   "The Hénon picture :",
   NULL,          /* Screen      */
   NULL,          /* BitMap      */
-  NULL,          /* MinWidth    */
-  NULL,          /* MinHeight   */
-  NULL,          /* MaxWidth    */
-  NULL,          /* MaxHeight   */
+  0,             /* MinWidth    */
+  0,             /* MinHeight   */
+  0,             /* MaxWidth    */
+  0,             /* MaxHeight   */
   CUSTOMSCREEN   /* Type        */
 };
 
 
 struct TextAttr my_font=
 {
-  "topaz.font",TOPAZ_EIGHTY,NULL,FPF_ROMFONT
+  "topaz.font",TOPAZ_EIGHTY,0,FPF_ROMFONT
 };
 
 struct IntuiText black_text=
@@ -103,11 +103,12 @@ struct IntuiText black_text=
 void cleanexit(void);
 
 
-void main(int argc,char **argv)
+int main(int argc,char **argv)
 {
   unsigned char buf[20];
   double xx,x,y,xa,a,xymin,xymax,xystep,cosinus,sinus,precalc;
-  ULONG i,class,itera;
+  ULONG i,class;
+  long itera;
   BOOL close_me=FALSE;
   struct IntuiMessage *my_message;
   BOOL os2=TRUE;
@@ -123,7 +124,7 @@ void main(int argc,char **argv)
       Write(Output(),argv[0],strlen(argv[0]));
       Write(Output()," <a> <xymin> <xymax> <xystep> <itera>\n",38);
       cleanexit();
-      return;
+      return RETURN_FAIL;
     }
   }
   
@@ -131,7 +132,7 @@ void main(int argc,char **argv)
   {
     puts("Bad args.");
     cleanexit();
-    return;
+    return RETURN_FAIL;
   }
 
   sscanf(argv[1],"%lf",&a);
@@ -151,7 +152,7 @@ void main(int argc,char **argv)
     {
       puts("Can't open Intuition !");
       cleanexit();
-      return;
+      return RETURN_FAIL;
     }
   }
 
@@ -160,7 +161,7 @@ void main(int argc,char **argv)
   {
     puts("Can't open Graphics !");
     cleanexit();
-    return;
+    return RETURN_FAIL;
   }
   
   MathIeeeDoubTransBase=(struct Library *)
@@ -169,7 +170,7 @@ void main(int argc,char **argv)
   {
     puts("Can't open IEEE library !");
     cleanexit();
-    return;
+    return RETURN_FAIL;
   }
 
   if(os2) 
@@ -181,7 +182,7 @@ void main(int argc,char **argv)
   {
     puts("Can't open Screen");
     cleanexit();
-    return;
+    return RETURN_FAIL;
   }
 
   my_new_window.Screen=my_screen;
@@ -190,7 +191,7 @@ void main(int argc,char **argv)
   {
     puts("Can't open Window");
     cleanexit();
-    return;
+    return RETURN_FAIL;
   }
 
   SetAPen(my_window->RPort,1);
@@ -236,7 +237,7 @@ SetAPen(my_window->RPort,1);
   PrintIText(my_window->RPort,&black_text,8,31);
   sprintf(buf,"XYStep : %lf",xystep);
   PrintIText(my_window->RPort,&black_text,8,39);
-  sprintf(buf,"Itera  : %ld",itera);
+  sprintf(buf,"Itera  : %ld",(long)itera);
   PrintIText(my_window->RPort,&black_text,8,47);
 
   /****** TERMINATE PROGRAM ******/
@@ -255,6 +256,8 @@ SetAPen(my_window->RPort,1);
   }
 
   cleanexit();
+
+  return RETURN_OK;
 }
 
 void cleanexit()
