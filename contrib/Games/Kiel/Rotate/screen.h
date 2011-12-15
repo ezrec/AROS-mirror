@@ -398,9 +398,9 @@ int i;
     error=TRUE;
   else
   {
-    WindowItem[1].ti_Data = (ULONG)Screen;
-    InfoWindowItem[4].ti_Data = (ULONG)Screen;
-    ResultWindowItem[4].ti_Data = (ULONG)Screen;
+    WindowItem[1].ti_Data = (IPTR)Screen;
+    InfoWindowItem[4].ti_Data = (IPTR)Screen;
+    ResultWindowItem[4].ti_Data = (IPTR)Screen;
     SetRGB4(&Screen->ViewPort,7,0,7,0);
 
     if((Window=(struct Window *) OpenWindowTagList(NULL,WindowItem))==NULL)

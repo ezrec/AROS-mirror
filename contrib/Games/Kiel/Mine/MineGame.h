@@ -4,7 +4,7 @@ char number[4];
 
 clearwin();
   if(WinSize(Window,350,200)==FALSE)
-    fprintf(stderr,_(MSG_ERRORWINRESIZE));
+    fprintf(stderr,"%s",_(MSG_ERRORWINRESIZE));
 /*  clearwin();*/
   drawfield(40,60,130,75);
   drawfield(40,90,130,105);
@@ -72,7 +72,7 @@ BOOL weiter=FALSE;
 
 clearwin();
   if(WinSize(Window,250,200)==FALSE)
-    fprintf(stderr,_(MSG_ERRORWINRESIZE));
+    fprintf(stderr,"%s",_(MSG_ERRORWINRESIZE));
 /*  clearwin();*/
   write_text(75,25,"HighScores:",1);
   sprintf(outtext,"%3d %s %s",Zeiten[ANFAENGER],_(MSG_SEC),_(MSG_BEGINNER));
@@ -283,7 +283,7 @@ void GameInit()
 
 clearwin();
     if(WinSize(Window,width*box_width+left+right,height*box_width+oben+unten+5)==FALSE)
-      fprintf(stderr,_(MSG_ERRORWINRESIZE));
+      fprintf(stderr,"%s",_(MSG_ERRORWINRESIZE));
 /*    clearwin();*/
 
 
