@@ -1,7 +1,7 @@
 # $Id$
 include $(TOP)/config/make.cfg
 
-FILES := hextris stdsys arosio
+FILES := hextris stdsys arosio shape
 
 EXEDIR := $(CONTRIBDIR)/Games/CXHextris
 

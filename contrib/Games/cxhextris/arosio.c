@@ -184,16 +184,14 @@ ULONG	    	     WinMask;
     position_t grid[MAXROW][MAXCOLUMN];
     char buffer[512];
 
-void main(argc, argv)
+int main(argc, argv)
 int argc;
 char **argv;
 {
-    int width, height, i, bufsize=20, inverse=0, pleasure=0, window_size = 0;
+    int width, height, i, inverse=0, pleasure=0;
     struct timeval tp, ltp;
     struct timezone tzp;
     double intvl = 0, newintvl;
-    fd_set fdst;
-    struct passwd  *pwent;
 /* The following variables are required by hextris */
     int score = 0, rows = 0, game_over = 1, game_view = 1, oldscore = 0;
 
@@ -262,15 +260,13 @@ char **argv;
     	    {
 	    	struct Message *m;
 		
-	    	ULONG sigs;
-		
 	    	TimerIO->tr_time.tv_sec = tp.tv_sec;
 		TimerIO->tr_time.tv_micro = tp.tv_usec;
 
 		SetSignal(0, TimerMask);
 		
 		SendIO(&TimerIO->tr_node);
-		sigs = Wait(TimerMask | WinMask);
+		Wait(TimerMask | WinMask);
 		if (!(CheckIO(&TimerIO->tr_node))) AbortIO(&TimerIO->tr_node);
 		WaitIO(&TimerIO->tr_node);
 		
