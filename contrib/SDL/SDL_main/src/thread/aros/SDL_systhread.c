@@ -86,7 +86,10 @@ void SDL_SYS_SetupThread(void)
 
 Uint32 SDL_ThreadID(void)
 {
-	return((Uint32)FindTask(NULL));
+	/* FIXME: Ugh. This implies that all tasks
+	 * are allocated in MEMF_32BIT
+	 */
+	return((Uint32)(IPTR)FindTask(NULL));
 }
 
 void SDL_SYS_WaitThread(SDL_Thread *thread)
