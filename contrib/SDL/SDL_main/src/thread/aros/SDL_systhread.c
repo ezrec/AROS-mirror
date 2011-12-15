@@ -61,14 +61,14 @@ int SDL_SYS_CreateThread(SDL_Thread *thread, void *args)
 	D(bug("Sending %lx to the new thread...\n",args));
 
 	if(args)
-		SDL_snprintf(buffer, SDL_arraysize(buffer),"%ld",args);
+		SDL_snprintf(buffer, SDL_arraysize(buffer),"%p",args);
 
 	thread->handle=(struct Task *)CreateNewProcTags(NP_Output,Output(),
-					NP_Name,(ULONG)"SDL subtask",
+					NP_Name,(IPTR)"SDL subtask",
 					NP_CloseOutput, FALSE,
 					NP_StackSize, 98304,
-					NP_Entry,(ULONG)RunThread,
-					args ? NP_Arguments : TAG_IGNORE,(ULONG)buffer,
+					NP_Entry,(IPTR)RunThread,
+					args ? NP_Arguments : TAG_IGNORE,(IPTR)buffer,
 					TAG_DONE);
 
 	if(!thread->handle)

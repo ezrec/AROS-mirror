@@ -785,8 +785,8 @@ static int CGX_CreateWindow(_THIS, SDL_Surface *screen,	int w, int h, int bpp, U
 									WA_Height,SDL_Display->Height,
 									WA_Flags,WFLG_ACTIVATE|WFLG_RMBTRAP|WFLG_BORDERLESS|WFLG_BACKDROP|WFLG_REPORTMOUSE,
 									WA_IDCMP,IDCMP_RAWKEY|IDCMP_MOUSEBUTTONS|IDCMP_MOUSEMOVE,
-									WA_BackFill, (ULONG)LAYERS_NOBACKFILL,
-									WA_CustomScreen,(ULONG)SDL_Display,
+									WA_BackFill, (IPTR)LAYERS_NOBACKFILL,
+									WA_CustomScreen,(IPTR)SDL_Display,
 									TAG_DONE);
 		FillPixelArray(SDL_Window->RPort,SDL_Window->BorderLeft,SDL_Window->BorderTop,SDL_Display->Width,SDL_Display->Height,0x00000000);
 		D(bug("Opening backdrop window %ldx%ld on display %lx!\n",SDL_Display->Width,SDL_Display->Height,SDL_Display));
@@ -809,8 +809,8 @@ static int CGX_CreateWindow(_THIS, SDL_Surface *screen,	int w, int h, int bpp, U
 												((flags&SDL_RESIZABLE) ? WFLG_SIZEGADGET|WFLG_SIZEBBOTTOM : 0))),
 									WA_IDCMP,	IDCMP_RAWKEY|IDCMP_CLOSEWINDOW|IDCMP_MOUSEBUTTONS|IDCMP_NEWSIZE|
 												IDCMP_MOUSEMOVE|IDCMP_ACTIVEWINDOW|IDCMP_INACTIVEWINDOW,
-									WA_BackFill, (ULONG)LAYERS_NOBACKFILL,
-									WA_PubScreen,(ULONG)SDL_Display,
+									WA_BackFill, (IPTR)LAYERS_NOBACKFILL,
+									WA_PubScreen,(IPTR)SDL_Display,
 									TAG_DONE);
 		FillPixelArray(SDL_Window->RPort,SDL_Window->BorderLeft,SDL_Window->BorderTop,w,h,0x00000000);
 		D(bug("Opening WB window of size: %ldx%ld!\n",w,h));

@@ -291,7 +291,7 @@ void SDL_SYS_JoystickUpdate(SDL_Joystick *joystick)
 {
 	ULONG data;
 #ifndef NO_LOWLEVEL_EXT
-	ULONG data_ext;
+	ULONG data_ext = 0;
 #endif
 	int	i;
 	
@@ -417,7 +417,7 @@ void SDL_SYS_JoystickUpdate(SDL_Joystick *joystick)
 		{
 			if(i == 1)
 			{
-#warning WTF?
+// FIXME: WTF?
 				data &= ~(joybut[2]);
 			}
 

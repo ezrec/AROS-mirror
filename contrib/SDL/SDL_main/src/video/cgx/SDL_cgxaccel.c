@@ -121,8 +121,8 @@ int CGX_LockHWSurface(_THIS, SDL_Surface *surface)
 			Uint32 pitch;
 
 			if((surface->hwdata->lock = LockBitMapTags(surface->hwdata->bmap,
-					LBMI_BASEADDRESS,(ULONG)&surface->pixels,
-					LBMI_BYTESPERROW,(ULONG)&pitch,TAG_DONE)) != NULL)
+					LBMI_BASEADDRESS,(IPTR)&surface->pixels,
+					LBMI_BYTESPERROW,(IPTR)&pitch,TAG_DONE)) != NULL)
 			{
 				D(bug("Done...\n"));
 				surface->pitch=pitch;
@@ -464,7 +464,7 @@ int CGX_ColorKeyToAlpha(_THIS,SDL_Surface *surface, Uint32 key)
 	int pixnum=0;
 	
 	D(bug("CGX_ColorKeyToAlpha\n"));
-#warning Potential endianess issue here!
+//NOTE: Potential endianess issue here!
 	
 	/* Only works for 32bits surfaces in ARGB format */
 	if	(  (surface->format->BytesPerPixel == 4)

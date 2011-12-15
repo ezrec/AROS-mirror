@@ -75,7 +75,7 @@ int CGX_GetVideoModes(_THIS)
 				struct DimensionInfo info;
 
 				/* ULONG GetDisplayInfoData( CONST DisplayInfoHandle handle, APTR buf, ULONG size, ULONG tagID, ULONG displayID ); */
-				if(GetDisplayInfoData(h,(char *)&info,(ULONG)sizeof(struct DimensionInfo),(ULONG)DTAG_DIMS,(ULONG)NULL))
+				if(GetDisplayInfoData(h,(char *)&info,(ULONG)sizeof(struct DimensionInfo),(ULONG)DTAG_DIMS,(IPTR)NULL))
 				{
 					int ok=0;
 

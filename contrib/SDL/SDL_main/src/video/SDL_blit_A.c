@@ -225,6 +225,7 @@ static void BlitNto1SurfaceAlphaKey(SDL_BlitInfo *info)
 }
 
 #if GCC_ASMBLIT
+#if MMX_ASMBLIT
 /* fast RGB888->(A)RGB888 blending with surface alpha=128 special case */
 static void BlitRGBtoRGBSurfaceAlpha128MMX(SDL_BlitInfo *info)
 {
@@ -440,6 +441,7 @@ static void BlitRGBtoRGBPixelAlphaMMX(SDL_BlitInfo *info)
 	}
 	emms();
 }
+#endif
 /* End GCC_ASMBLIT */
 
 #elif MSVC_ASMBLIT
@@ -1575,6 +1577,7 @@ static void BlitRGBtoRGBPixelAlpha(SDL_BlitInfo *info)
 
 #if GCC_ASMBLIT
 /* fast (as in MMX with prefetch) ARGB888->(A)RGB888 blending with pixel alpha */
+#if MMX_ASMBLIT
 static void BlitRGBtoRGBPixelAlphaMMX3DNOW(SDL_BlitInfo *info)
 {
 	int width = info->d_width;
@@ -1689,6 +1692,7 @@ static void BlitRGBtoRGBPixelAlphaMMX3DNOW(SDL_BlitInfo *info)
 	"emms\n"
 		:   );
 }
+#endif
 /* End GCC_ASMBLIT*/
 
 #elif MSVC_ASMBLIT
@@ -1870,6 +1874,7 @@ static void Blit16to16SurfaceAlpha128(SDL_BlitInfo *info, Uint16 mask)
 }
 
 #if GCC_ASMBLIT
+#if MMX_ASMBLIT
 /* fast RGB565->RGB565 blending with surface alpha */
 static void Blit565to565SurfaceAlphaMMX(SDL_BlitInfo *info)
 {
@@ -2152,6 +2157,7 @@ static void Blit555to555SurfaceAlphaMMX(SDL_BlitInfo *info)
 		emms();
 	}
 }
+#endif
 /* End GCC_ASMBLIT */
 
 #elif MSVC_ASMBLIT

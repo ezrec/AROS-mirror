@@ -412,7 +412,7 @@ int  SDL_SYS_CDInit(void)
 		ULONG	devnamelen;
 		
 		startup = BADDR(dlist->dol_misc.dol_handler.dol_Startup);
-		if ((ULONG) startup > 0x400 &&
+		if ((IPTR) startup > 0x400 &&
 		    (startup->fssm_Unit & 0xff000000) == 0 &&
 		     startup->fssm_Device && startup->fssm_Environ)
 		{

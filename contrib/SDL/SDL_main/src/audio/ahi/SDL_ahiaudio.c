@@ -178,7 +178,8 @@ static void AHI_PlayAudio(_THIS)
 
 			do
 			{
-				*buf++ = *buf - 128;
+				*buf = *buf - 128;
+				buf++;
 				mixbufsize--;
 			}
 			while (mixbufsize);
@@ -191,7 +192,8 @@ static void AHI_PlayAudio(_THIS)
 
 			do
 			{
-				*buf++ = *buf - 32768;
+				*buf = *buf - 32768;
+				buf++;
 				mixbufsize -= 2;
 			}
 			while (mixbufsize > 0);
@@ -382,7 +384,7 @@ static int AHI_OpenAudio(_THIS, SDL_AudioSpec *spec)
 	hidden->ctrl_req.ahir_Std.io_Message.mn_Length = sizeof(struct AHIRequest);
 	hidden->ctrl_req.ahir_Version = 4;
 
-	if (OpenDevice(AHINAME, 0, (struct IORequest *)&hidden->ctrl_req, NULL) != 0)
+	if (OpenDevice(AHINAME, 0, (struct IORequest *)&hidden->ctrl_req, 0) != 0)
 	{
 		D(bug("could not open ahi\n"));
 		SDL_SetError("Unable to open AHI device! Error code %d.\n", hidden->ctrl_req.ahir_Std.io_Error);

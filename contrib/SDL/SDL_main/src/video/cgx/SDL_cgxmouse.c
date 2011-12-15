@@ -120,9 +120,9 @@ WMcursor *CGX_CreateWMCursor(_THIS, Uint8 *data, Uint8 *mask, int w, int h, int 
 			// Create Pointer Object
 			cursor->PointerObj = (Object *)NewObject(NULL,	
 													(STRPTR)"pointerclass",
-													POINTERA_BitMap,      (LONG)cursor->CursorBM,
-													POINTERA_XOffset,     (LONG)(-hot_x),
-													POINTERA_YOffset,     (LONG)(-hot_y),
+													POINTERA_BitMap,      (IPTR)cursor->CursorBM,
+													POINTERA_XOffset,     (SIPTR)(-hot_x),
+													POINTERA_YOffset,     (SIPTR)(-hot_y),
 													TAG_DONE);
 													
 			if (!cursor->PointerObj)

@@ -80,6 +80,8 @@ FILES := \
     src/loadso/dummy/SDL_sysloadso
 
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/include
+USER_CFLAGS   := -Wno-unused-but-set-variable \
+		 -DICONV_INBUF_NONCONST
 
 %build_linklib mmake=development-SDL libname=SDL files=$(FILES)
 
