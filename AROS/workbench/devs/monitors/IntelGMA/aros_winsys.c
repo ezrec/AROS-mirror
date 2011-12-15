@@ -347,10 +347,10 @@ struct i915_winsys_buffer *
                              enum i915_winsys_buffer_tile *tiling,
                              enum i915_winsys_buffer_type type)
 {
-     D(bug("[GMA winsys] buffer_create_tiled stride=%d heigh=%d type:%s\n",*stride,height,i915_type_to_name(type)));
+    D(bug("[GMA winsys] buffer_create_tiled stride=%d heigh=%d type:%s\n",*stride,height,i915_type_to_name(type)));
+    // Tiling is not implemented.
     *tiling = I915_TILE_NONE;
-     IMPLEMENT();
-     return 0;
+    return buffer_create( iws, *stride * height, type );
 }
 
 
