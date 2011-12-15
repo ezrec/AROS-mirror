@@ -75,7 +75,7 @@ struct TextAttr screen_font = {
 };
 
 struct NewScreen new_screen = {
-  0, 0, 320, 200, 3, PURPLE, PURPLE, NULL, CUSTOMSCREEN,
+  0, 0, 320, 200, 3, PURPLE, PURPLE, 0, CUSTOMSCREEN,
   &screen_font, NULL, NULL, NULL
 };
 
@@ -117,11 +117,11 @@ struct Border gadget_border1 = {
 
 struct Gadget lotto_gadget = {
   NULL, 83, 106, 51, 17, GADGHCOMP, RELVERIFY, BOOLGADGET,
-  (APTR)&gadget_border1, NULL, &lotto_text, NULL, NULL, LOTTO_GADGET, NULL
+  (APTR)&gadget_border1, NULL, &lotto_text, 0, NULL, LOTTO_GADGET, NULL
 };
 struct Gadget quit_gadget = {
   &lotto_gadget, 186, 106, 51, 17, GADGHCOMP, RELVERIFY, BOOLGADGET,
-  (APTR)&gadget_border1, NULL, &quit_text, NULL, NULL, QUIT_GADGET, NULL
+  (APTR)&gadget_border1, NULL, &quit_text, 0, NULL, QUIT_GADGET, NULL
 };
 
 /************************
@@ -190,7 +190,7 @@ void exit();
 *  M A I N  P R O G R A M
 ***************************/
 
-void main(void)
+int main(int argc, char **argv)
 {
   open_all();
   initialize();
