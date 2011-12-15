@@ -31,6 +31,10 @@
  *	with Bezier Cubic equations.
  */
 
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
 /* !!!
  #include <typedefs.h>
 */ 
@@ -59,12 +63,23 @@ struct IntuitionBase * IntuitionBase;
 #define MINGRAN 10		    /* must be at least 10  */
 #define CSIZE	(ONE/MINGRAN+2)
 
-typedef unsigned long ulong;
-typedef unsigned short uword;
-typedef unsigned char  ubyte;
-
 typedef struct PropInfo XPI;
 typedef struct Image	IM;
+
+void uparams(void);
+void recalculate_all(void);
+void plotcurve(void);
+void do_help(void);
+int  init_cubic(void);
+int  exiterr(int n, char *str);
+void precalculate(void);
+void clearwindow(void);
+void init_gadgets(NW *nw, XPI **ppo);
+void mmult_l(LONG *a,LONG *b,LONG *d,int n1,int n2,int n3);
+void translate(int x, int y, int z, UWORD *wx, UWORD *wy);
+void plotcontrolpts(void);
+void recalculate_one(int pt, int dx, int dy, int dz);
+int  findpoint(int wx, int wy);
 
 /*
 extern IMESS *GetMsg();
@@ -87,8 +102,13 @@ NW Nw = {
 #define GRAPHICS_LIB 2
 int openlibs(int dummy)
 {
-  GfxBase = (struct GfxBase *)OpenLibrary("graphics.library",0);
-  IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library",0);
+  if ((GfxBase = (struct GfxBase *)OpenLibrary("graphics.library",0))) {
+    if ((IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library",0))) {
+      return TRUE;
+     }
+     CloseLibrary((struct Library *)GfxBase);
+  }
+  return FALSE;
 }
 
 void closelibs(int dummy)
@@ -105,7 +125,8 @@ short Ux, Uy, Mx, My;
 short SStep = 512/16;
 short TStep = 512/16;
 
-main(ac, av)
+int main(ac, av)
+int ac;
 char *av[];
 {
     register IMESS *mess;
@@ -134,7 +155,7 @@ char *av[];
 	WaitPort(Win->UserPort);
 	mm = 0;
 	gg = 0;
-	while (mess = GetMsg(Win->UserPort)) {
+	while ((mess = (struct IntuiMessage *)GetMsg(Win->UserPort))) {
 	    switch(mess->Class) {
 	    case CLOSEWINDOW:
 		notdone = 0;
@@ -191,10 +212,9 @@ char *av[];
 	    default:
 		break;
 	    }
-	    ReplyMsg(mess);
+	    ReplyMsg((struct Message *)mess);
 	}
 	if (gg) {
-	    char buf[32];
 	    mm = 0;
 	    if (gg == GADGETUP)
 		gg = 0;
@@ -208,7 +228,8 @@ char *av[];
 		plotcontrolpts();
     	    	SetDrMd(Rp, JAM1);
 		Move(Rp, 32, Win->BorderTop + 1 + Rp->TxBaseline);
-		sprintf (buf, "Step: %-3ld", SStep);
+		snprintf (buf, sizeof(buf), "Step: %-3ld", (long)SStep);
+		buf[sizeof(buf)-1] = 0;
 		Text(Rp, buf, strlen(buf));
 		
 	    }
@@ -230,7 +251,8 @@ char *av[];
     exiterr(1, NULL);
 }
 
-exiterr(n, str)
+int exiterr(n, str)
+int n;
 char *str;
 {
     if (n) {
@@ -242,9 +264,10 @@ char *str;
 	closelibs(-1);
 	exit(1);
     }
+    return 1;
 }
 
-uparams()
+void uparams()
 {
     Ux = Win->BorderLeft;
     Uy = Win->BorderTop;
@@ -252,47 +275,47 @@ uparams()
     My = Win->Height- Win->BorderBottom;
 }
 
-long	Pmatrix[3][4][4] = {	 0,50,100,150,	      /* X    */
-				 0,50,100,150,
-				 0,50,100,150,
-				 0,50,100,150,
+LONG	Pmatrix[3][4][4] = { { { 0,50,100,150, },      /* X    */
+			       { 0,50,100,150, },
+			       { 0,50,100,150, },
+			       { 0,50,100,150, }, },{
 
-				 0, 0, 0, 0,	    /* Y    */
-				16,16,16,16,
-				32,32,32,32,
-				48,48,48,48,
+			       { 0, 0, 0, 0, },	    /* Y    */
+			       {16,16,16,16, },
+			       {32,32,32,32, },
+			       {48,48,48,48, }, },{
 
-				 0,16,16, 0,	    /* Z    */
-				16,32,32,16,
-				16,32,32,16,
-				 0,16,16, 0
+			       { 0,16,16, 0, },	    /* Z    */
+			       {16,32,32,16, },
+			       {16,32,32,16, },
+			       { 0,16,16, 0 }  }
 			    };
 
-long	Mmatrix[4][4] = {  -1,	3, -3,	1,
-			    3, -6,  3,	0,
-			   -3,	3,  0,	0,
-			    1,	0,  0,	0
+LONG	Mmatrix[4][4] = {{ -1,	3, -3,	1, },
+			 {  3, -6,  3,	0, },
+			 { -3,	3,  0,	0, },
+			 {  1,	0,  0,	0 },
 			};
 
-long	Mmatrix_trans[4][4];
+LONG	Mmatrix_trans[4][4];
 
-long	Amatrix[CSIZE][4];  /* # entries used depends on step rate  */
-long	Bmatrix[CSIZE][4];  /* # entries used depends on step rate  */
-long	*CXarray;	    /* each contains CSIZE*CSIZE*4 bytes    */
-long	*CYarray;
-long	*CZarray;
+LONG	Amatrix[CSIZE][4];  /* # entries used depends on step rate  */
+LONG	Bmatrix[CSIZE][4];  /* # entries used depends on step rate  */
+LONG	*CXarray;	    /* each contains CSIZE*CSIZE*4 bytes    */
+LONG	*CYarray;
+LONG	*CZarray;
 short	Amax, Bmax;
 
 
-init_cubic()
+int init_cubic()
 {
-    register short i, j;
+    UWORD i, j;
 
-    CXarray = (long *)malloc(CSIZE*CSIZE*4);
-    CYarray = (long *)malloc(CSIZE*CSIZE*4);
-    CZarray = (long *)malloc(CSIZE*CSIZE*4);
+    CXarray = (LONG *)malloc(CSIZE*CSIZE*sizeof(LONG));
+    CYarray = (LONG *)malloc(CSIZE*CSIZE*sizeof(LONG));
+    CZarray = (LONG *)malloc(CSIZE*CSIZE*sizeof(LONG));
     if (!CXarray || !CYarray || !CZarray) {
-	printf("unable to allocate %ld bytes\n", CSIZE*CSIZE*4*3);
+	printf("unable to allocate %ld bytes\n", (long)(CSIZE*CSIZE*4*3));
 	return(0);
     }
     /* Transpose Mmatrix    */
@@ -314,11 +337,13 @@ init_cubic()
  *   no need to take the square root)
  */
 
-findpoint(wx, wy)
+int findpoint(wx, wy)
+int wx;
+int wy;
 {
-    register short i, pt;
-    register ulong minrange = -1;
-    ulong range;
+    register WORD i, pt;
+    register ULONG minrange = -1;
+    ULONG range;
     short x, y;
 
     pt = 0;
@@ -355,18 +380,18 @@ findpoint(wx, wy)
  *	inherently (that is, it takes no work to transpose it).
  */
 
-precalculate()
+void precalculate()
 {
-    long Smatrix[4], Tmatrix[4];
+    LONG Smatrix[4], Tmatrix[4];
 
-    register short s, t, i;
+    UWORD s, t, i;
 
     Smatrix[3] = Tmatrix[3] = ONE;
     for (s = i = 0; s <= ONE; s += SStep) {
 	Smatrix[2] = s;
 	Smatrix[1] = (s * s) >> SSF;
 	Smatrix[0] = (Smatrix[1] * s) >> SSF;
-	mmult_l(Smatrix,Mmatrix,Amatrix[i],1,4,4);
+	mmult_l(Smatrix,&Mmatrix[0][0],Amatrix[i],1,4,4);
 	++i;
 	if (s != ONE && s + SStep > ONE)
 	    s = ONE - SStep;
@@ -376,7 +401,7 @@ precalculate()
 	Tmatrix[2] = t;
 	Tmatrix[1] = (t * t) >> SSF;
 	Tmatrix[0] = (Tmatrix[1] * t) >> SSF;
-	mmult_l(Mmatrix_trans,Tmatrix,Bmatrix[i],4,4,1);
+	mmult_l(&Mmatrix_trans[0][0],Tmatrix,Bmatrix[i],4,4,1);
 	++i;
 	if (t != ONE && t + TStep > ONE)
 	    t = ONE - TStep;
@@ -393,10 +418,10 @@ precalculate()
  *  matrix, which means that it is a simple number.
  */
 
-recalculate_all()
+void recalculate_all()
 {
-    register short t, i, s, idx;
-    register long *A, *B;
+    UWORD t, i, s, idx;
+    LONG *A, *B;
     long C[3];		/* 3D result Coordinates    */
 
     for (s = 0; s < Amax; ++s) {
@@ -405,8 +430,8 @@ recalculate_all()
 	for (t = 0; t < Bmax; ++t, ++idx) {
 	    B = Bmatrix[t];
 	    for (i = 0; i < 3; ++i) {
-		long T[4];
-		mmult_l(A,Pmatrix[i],T,1,4,4);
+		LONG T[4];
+		mmult_l(A,&Pmatrix[i][0][0],&T[0],1,4,4);
 		C[i] = T[0] * B[0] +
 		       T[1] * B[1] +
 		       T[2] * B[2] +
@@ -430,10 +455,11 @@ recalculate_all()
  *  actual plotting.
  */
 
-recalculate_one(pt, dx, dy, dz)
+void recalculate_one(pt, dx, dy, dz)
+int pt, dx, dy, dz;
 {
-    register short t, i, idx, col;
-    register long  temp;
+    UWORD t, idx, col;
+    LONG  temp;
     long     arow;
     short    s, row;
 
@@ -457,11 +483,11 @@ recalculate_one(pt, dx, dy, dz)
 }
 
 
-plotcurve()
+void plotcurve()
 {
-    register short i, s, t, idx;
-    uword x, y;
-    static short Corr[CSIZE][2];
+    UWORD i, s, t, idx;
+    UWORD x, y;
+    static UWORD Corr[CSIZE][2];
 
     for (s = 0; s < Amax; ++s) {
 	idx = s * Bmax;
@@ -469,7 +495,7 @@ plotcurve()
 	Move(Rp, x, y);
 	for (i = t = 0; t < Bmax; ++t, ++idx, ++i)
 	    translate(CXarray[idx]>>SSFD, CYarray[idx]>>SSFD, CZarray[idx]>>SSFD, &Corr[i][0], &Corr[i][1]);
-	PolyDraw(Rp, i, Corr);
+	PolyDraw(Rp, i, &Corr[0][0]);
     }
     for (t = 0; t < Bmax; ++t) {
 	idx = t;
@@ -477,14 +503,14 @@ plotcurve()
 	Move(Rp, x, y);
 	for (s = i = 0; s < Amax; ++s, idx += Bmax, ++i)
 	    translate(CXarray[idx]>>SSFD, CYarray[idx]>>SSFD, CZarray[idx]>>SSFD, &Corr[i][0], &Corr[i][1]);
-	PolyDraw(Rp, i, Corr);
+	PolyDraw(Rp, i, &Corr[0][0]);
     }
 }
 
 
-plotcontrolpts()
+void plotcontrolpts()
 {
-    register short i;
+    UWORD i;
     short x, y;
 
     SetAPen(Rp, 1);
@@ -498,8 +524,9 @@ plotcontrolpts()
     SetAPen(Rp, 3);
 }
 
-translate(x, y, z, wx, wy)
-uword *wx, *wy;
+void translate(x, y, z, wx, wy)
+UWORD *wx, *wy;
+int x, y, z;
 {
     *wx = Ux + 50 + x + y/2;
     *wy = My - 50 - (z + y/2);
@@ -517,14 +544,15 @@ uword *wx, *wy;
  *  NOTE: This isn't the most efficient way to handle matrix multiplication.
  */
 
-mmult_l(a,b,d,n1,n2,n3)
-long *a, *b, *d;
+void mmult_l(a,b,d,n1,n2,n3)
+LONG *a, *b, *d;
+int n1, n2, n3;
 {
-    register short i, j, k;
-    register long *an2 = a;
-    register long *bn3;
-    register long *dn3 = d;
-    register long sum;
+    UWORD i, j, k;
+    LONG *an2 = a;
+    LONG *bn3;
+    LONG *dn3 = d;
+    LONG sum;
 
     for (i = 0; i < n1; ++i, dn3 += n3, an2 += n2) {
 	for (j = 0; j < n3; ++j) {
@@ -541,7 +569,7 @@ long *a, *b, *d;
  *  MISC
  */
 
-clearwindow()
+void clearwindow()
 {
     SetAPen(Rp, 0);
     RectFill(Rp, Ux, Uy, Mx - 1, My - 1);
@@ -567,7 +595,7 @@ struct Border Border[] = {
 };
 
 ITEXT Itext[] = {
-    { 0,1,JAM2,3,2,NULL,(ubyte *)"?",NULL }
+    { 0,1,JAM2,3,2,NULL,(UBYTE *)"?",NULL }
 };
 
 IM Images[] = {
@@ -588,9 +616,9 @@ GADGET Gadgets[] = {
 };
 
 GADGET *Gc;
-long GUx, GUy;
+LONG GUx, GUy;
 
-init_gadgets(nw, ppo)
+void init_gadgets(nw, ppo)
 NW *nw;
 XPI **ppo;
 {
@@ -643,9 +671,9 @@ XPI **ppo;
 }
 
 
-do_help()
+void do_help()
 {
-    long fh;
+    BPTR fh;
     static char *help[] = {
 "",
 "(C)Copyright 1987 by Matthew Dillon, All Rights Reserved",
@@ -670,7 +698,7 @@ do_help()
 
     fh = Open("con:0/0/640/200/HELP", 1006);
     if (fh) {
-	register short i;
+	UWORD i;
 	char c;
 	for (i = 0; help[i]; ++i) {
 	    Write(fh, help[i], strlen(help[i]));
