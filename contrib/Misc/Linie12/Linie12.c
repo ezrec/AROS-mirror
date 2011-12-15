@@ -128,11 +128,11 @@ struct IntuiText MText[10] = {
   { 0,1,JAM2,CHECKWIDTH,0,NULL,"Ende        ",NULL }
   };
 
-struct MenuItem MIt[11] = { NULL };
+struct MenuItem MIt[11] = { };
 
 struct Menu Men = { NULL,0,0,136,0,MENUENABLED,"Symmetrie ",MIt };
 
-void main(argc,argv)
+int main(argc,argv)
 int argc;
 char *argv[];
 {
@@ -147,24 +147,24 @@ char *argv[];
    ULONG class;
    USHORT code;
    ULONG colormap[200],rl,gl,bl;
-   int i,i3,y1,y2,x3,y3,x4,y4,u3,u4,nn,nnm1,nf,pf,ffi,co,fpal,z,zd,zm;
-   int cc,c2,c6,cd,co2,vx,vy,vx0,vy0,ww,w2,dspieg,frot,fzei;
+   int i,i3,y1=0,y2=0,x3=0,y3=0,x4=0,y4=0,u3=0,u4=0,nn,nnm1,ffi,co,fpal,z,zd,zm;
+   int cc,c2,c6,cd,vx,vy,vx0,vy0,ww,w2,dspieg,frot=0,fzei;
    double fs,ff,sif,a,m,fr,fg,fb,ar,ag,ab,cf,nn1,nnf;
-   double vf,y,pi,drot,ddrot;
+   double y,pi,drot,ddrot;
    double pr[64],pg[64],pb[64];
 
-   nf=6;     nn=63;   /* Anzahl Bitplanes, Farben */
+   nn=63;   /* Anzahl Bitplanes, Farben */
    nn1=(double)(nn-1);  nnm1=(nn-1)*3;
    nnf=(double)(0xffffffff);
 
    y9=254; fpal=1; asp=1.9;  /* Vorbelegung für PAL */
 
    vx0=3;   vy0=2;     vx=vx0; vy=vy0;
-   vf=.98;  vfi=1;
+   vfi=1;
    rot=.3;  drot=-.04; ddrot=.011;  pi=3.1415926536;
    dx=10;
 
-   fs=0.0; ff=4000.0;  sif=273.0+sin(0.15);  pf=0;  /* Farben */
+   fs=0.0; ff=4000.0;  sif=273.0+sin(0.15);  /* Farben */
    c2=15*256; c6=15*16; co=2;
    cf=1.0; cc=0;        fr=0.0; fg=0.0; fb=0.0;
 
@@ -314,11 +314,10 @@ char *argv[];
    /* Interpretation der CLI-Parameter */
    if (argc > 1) { zm=atoi(argv[argc-1]); zd=1; } /* Laufzeit begrenzt */
    z  = 0;
-   co2= 0;
 
    while (z < zm)     /* Schleife über vorgegebene Anzahl Durchgänge */
      {
-       if (msg = (struct IntuiMessage *)GetMsg(Window->UserPort))
+       if ((msg = (struct IntuiMessage *)GetMsg(Window->UserPort)))
          { class=msg->Class;
            code =msg->Code ;
            ReplyMsg((struct Message *)msg);
@@ -567,4 +566,6 @@ char *argv[];
    CloseScreen (Screen);
    CloseLibrary((struct Library *)IntuitionBase);
    CloseLibrary((struct Library *)GfxBase);
+
+   return 0;
 }
