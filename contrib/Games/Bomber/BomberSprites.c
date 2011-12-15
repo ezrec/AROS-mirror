@@ -32,9 +32,11 @@ void LoadSprites ()
 void LoadBlocks ()
 {
   FILE          *SSFFile;
-  unsigned char Pixel;
   unsigned char RGBPal [256][3];
+#if 0
+  unsigned char Pixel;
   int           DAC, o1, o2;
+#endif
   char          *RawBuf;
 
   //Assign memory to sprite buffer
