@@ -146,7 +146,7 @@ struct Image rollright =
 {
 0,0,				/*	LeftEdge, TopEdge		*/
 27,14,3,			/*	Width, Height, Depth	*/
-&rollrightdata[0],
+(UWORD *)&rollrightdata[0],
 7,0,				/*	PlanePick, PlaneOnOff	*/
 NULL				/*	Pointer to next Image	*/
 };
@@ -155,7 +155,7 @@ struct Image rollleft =
 {
 0,0,				/*	LeftEdge, TopEdge		*/
 27,14,3,			/*	Width, Height, Depth	*/
-&rollleftdata[0],
+(UWORD *)&rollleftdata[0],
 7,0,				/*	PlanePick, PlaneOnOff	*/
 NULL				/*	Pointer to next Image	*/
 };
@@ -164,7 +164,7 @@ struct Image yawleft =
 {
 0,0,				/*	LeftEdge, TopEdge		*/
 15,14,3,			/*	Width, Height, Depth	*/
-&yawleftdata[0],
+(UWORD *)&yawleftdata[0],
 7,0,				/*	PlanePick, PlaneOnOff	*/
 NULL				/*	Pointer to next Image	*/
 };
@@ -173,7 +173,7 @@ struct Image yawright =
 {
 0,0,				/*	LeftEdge, TopEdge		*/
 15,14,3,			/*	Width, Height, Depth	*/
-&yawrightdata[0],
+(UWORD *)&yawrightdata[0],
 7,0,				/*	PlanePick, PlaneOnOff	*/
 NULL				/*	Pointer to next Image	*/
 };
@@ -182,7 +182,7 @@ struct Image climb =
 {
 0,0,				/*	LeftEdge, TopEdge		*/
 14,15,3,			/*	Width, Height, Depth	*/
-&climbdata[0],
+(UWORD *)&climbdata[0],
 7,0,				/*	PlanePick, PlaneOnOff	*/
 NULL				/*	Pointer to next Image	*/
 };
@@ -191,7 +191,7 @@ struct Image dive =
 {
 0,0,				/*	LeftEdge, TopEdge		*/
 14,15,3,			/*	Width, Height, Depth	*/
-&divedata[0],
+(UWORD *)&divedata[0],
 7,0,				/*	PlanePick, PlaneOnOff	*/
 NULL				/*	Pointer to next Image	*/
 };

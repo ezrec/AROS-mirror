@@ -375,34 +375,34 @@ struct Gadget DieGadg [6] ={
    BLANKL,BLANKT,            /* Left Edge, Top Edge */   
    BLANKW,BLANKH,            /* Width, Height */
    GADGHIMAGE + GADGIMAGE,      /*Flags--highlight type, render type */
-   NULL,                  /* Activation flags */
+   0,                     /* Activation flags */
    BOOLGADGET,               /* Gadget type */
    (APTR)&DieImage[5],         /* Image structure for drawing gadget */
    (APTR)&Blank,            /* Alternate image for highlighting */
    NULL,                  /* Intuitext structure for gadget text */
-   NULL,                  /* Mutual exclude, non-functional */
+   0,                     /* Mutual exclude, non-functional */
    NULL,                  /* Special info for proportional, string */
-   NULL,         
+   0,
 
          /* Gadget ID */
    NULL,                  /* User Data */
 },
 
 {&DieGadg[0],BLANKL,BLANKS+BLANKT,BLANKW,BLANKH,   /* DieGadg 1-4 */
-GADGHIMAGE + GADGIMAGE,NULL,BOOLGADGET,
-(APTR)&DieImage[5],(APTR)&Blank,NULL,NULL,NULL,NULL,NULL},
+GADGHIMAGE + GADGIMAGE, 0  ,BOOLGADGET,
+(APTR)&DieImage[5],(APTR)&Blank},
 
 {&DieGadg[1],BLANKL,(2*BLANKS)+BLANKT,BLANKW,BLANKH,
-GADGHIMAGE + GADGIMAGE,NULL,BOOLGADGET,
-(APTR)&DieImage[5],(APTR)&Blank,NULL,NULL,NULL,NULL,NULL},
+GADGHIMAGE + GADGIMAGE, 0  ,BOOLGADGET,
+(APTR)&DieImage[5],(APTR)&Blank},
 
 {&DieGadg[2],BLANKL,(3*BLANKS)+BLANKT,BLANKW,BLANKH,
-GADGHIMAGE + GADGIMAGE,NULL,BOOLGADGET,
-(APTR)&DieImage[5],(APTR)&Blank,NULL,NULL,NULL,NULL,NULL},
+GADGHIMAGE + GADGIMAGE, 0  ,BOOLGADGET,
+(APTR)&DieImage[5],(APTR)&Blank},
 
 {&DieGadg[3],BLANKL,(4*BLANKS)+BLANKT,BLANKW,BLANKH,
-GADGHIMAGE + GADGIMAGE,NULL,BOOLGADGET,
-(APTR)&DieImage[5],(APTR)&Blank,NULL,NULL,NULL,NULL,NULL},
+GADGHIMAGE + GADGIMAGE, 0  ,BOOLGADGET,
+(APTR)&DieImage[5],(APTR)&Blank},
 
 };
 
@@ -417,9 +417,9 @@ struct Gadget ButtonGadget =
    (APTR)&Blank,            /* Image structure for drawing gadget */
    NULL,                  /* Alternate image for highlighting */
    NULL,                  /* Intuitext structure for gadget text */
-   NULL,                  /* Mutual exclude, non-functional */
+   0,                     /* Mutual exclude, non-functional */
    NULL,                  /* Special info for proportional, string */
-   NULL,                  /* Gadget ID */
+   0,                     /* Gadget ID */
    NULL,                  /* User Data */
 };
 
@@ -433,9 +433,9 @@ struct Gadget ScoreGadget ={
    NULL,                  /* Image structure for drawing gadget */
    NULL,                  /* Alternate image for highlighting */
    NULL,                  /* Intuitext structure for gadget text */
-   NULL,                  /* Mutual exclude, non-functional */
+   0,                     /* Mutual exclude, non-functional */
    NULL,                  /* Special info for proportional, string */
-   NULL,                  /* Gadget ID */
+   0,                     /* Gadget ID */
    NULL                  /* User Data */
 };
 /************* finally, the Menus and their ITexts *************/
@@ -549,27 +549,27 @@ struct MenuItem Menu0Item[4] = {
    ITEMTEXT | ITEMENABLED | HIGHCOMP,   /* Flags */
    0,            /* no mutual exclude */
    (APTR)&Menu0IText[0],   /* Render info */   
-   NULL,NULL,NULL,         /*Alt Image, Command (amiga) char, subitem*/
+   0,0,0,                  /*Alt Image, Command (amiga) char, subitem*/
    MENUNULL      /* next select */
    },
 
    {&Menu0Item[2],0,9,210,9,ITEMTEXT | ITEMENABLED | HIGHCOMP,
-   0,(APTR)&Menu0IText[1],NULL,NULL,NULL,MENUNULL},
+   0,(APTR)&Menu0IText[1],   0,   0,   0,MENUNULL},
 
    {&Menu0Item[3],0,18,210,9,ITEMTEXT | ITEMENABLED | HIGHCOMP,
-   0,(APTR)&Menu0IText[2],NULL,NULL,NULL,MENUNULL},
+   0,(APTR)&Menu0IText[2],   0,   0,   0,MENUNULL},
 
    {NULL,0,27,210,9,ITEMTEXT | ITEMENABLED | HIGHCOMP,
-   0,(APTR)&Menu0IText[3],NULL,NULL,NULL,MENUNULL}
+   0,(APTR)&Menu0IText[3],   0,   0,   0,MENUNULL}
 };
 
 struct MenuItem Menu1Item[2] = {
    
    {&Menu1Item[1],0,0,140,9,ITEMTEXT | ITEMENABLED | HIGHCOMP,
-   0,(APTR)&Menu1IText[0],NULL,NULL,NULL,MENUNULL},
+   0,(APTR)&Menu1IText[0],   0,   0,   0,MENUNULL},
 
    {NULL,0,9,140,9,ITEMTEXT | ITEMENABLED | HIGHCOMP,
-   0,(APTR)&Menu1IText[1],NULL,NULL,NULL,MENUNULL}
+   0,(APTR)&Menu1IText[1],   0,   0,   0,MENUNULL}
 
 };
 
@@ -625,7 +625,7 @@ struct NewWindow NewBoardWindow =
 
 /* *************************Program Begins Here******************* */
 
-void main()
+int main(int argc, char **argv)
 {
    USHORT bones [DICE];         /* The array for dice values */
    USHORT cats;
@@ -713,7 +713,7 @@ while(changed && bones[TURNS]<3)
 
 OffGadget(&ButtonGadget,BdWdw,NULL);
 for(dieno = 0; dieno < DICE ; dieno++)      /* turn gadgets off */
-   DieGadg[dieno].Activation = NULL;
+   DieGadg[dieno].Activation = 0;
 
 }/* end of roll_dice */
 
@@ -804,8 +804,7 @@ USHORT IMsg()
    struct IntuiMessage *BdMsg;      /* Intuition message structure */
    ULONG Mclass;               /* Message class */
    USHORT Mcode,flag;            /* Message code */
-   APTR Maddress;               /* Address of structure that caused message */
-   SHORT Mmx, Mmy ;            /* Message mouse x and y */
+   SHORT Mmy ;            /* Message mouse x and y */
 
 
 flag = 35;
@@ -814,8 +813,6 @@ while ((BdMsg = (struct IntuiMessage *)GetMsg(BdWdw->UserPort)))
    {
    Mclass = BdMsg->Class;
    Mcode = BdMsg->Code;
-   Maddress = BdMsg->IAddress;
-   Mmx = BdMsg->MouseX;
    Mmy = BdMsg->MouseY;
    ReplyMsg((struct Message *)BdMsg);
    switch (Mclass) {
@@ -1101,7 +1098,7 @@ if (InitImages() != TRUE) {
    if (( BdWdw = (struct Window *)OpenWindow(&NewBoardWindow)) == NULL)
       exit(FALSE);
 
-SetMenuStrip(BdWdw,&BdMenu);
+SetMenuStrip(BdWdw,&BdMenu[0]);
 
 init_pad();      /* draw the score pad */
 
@@ -1117,13 +1114,13 @@ void init_pad()
    int count, column;
 
    WVPort = (struct ViewPort *)ViewPortAddress(BdWdw); /* find the viewport */
-   LoadRGB4(WVPort,&colormap,8);   /* load our new set of colors */
+   LoadRGB4(WVPort,&colormap[0],8);   /* load our new set of colors */
 
    SetAPen (BdRp,BLKP);
    Move(BdRp,0,VLINT);
    SetDrMd (BdRp,JAM2);      /* JAM2 substituted */
 
-   PolyDraw(BdRp,8,&boardlines);
+   PolyDraw(BdRp,8,&boardlines[0]);
 
 /* Put in text and horizontal lines for board */
 
@@ -1191,13 +1188,12 @@ int InitImages()
 
    if ((SpotData_chip = (UBYTE (*)[114]) AllocMem(sizeof(SpotData),MEMF_CHIP))   == 0) return(FALSE);   /* allocate chip memory for images */
 
-   row = 0;
-   while (row < 6)
+   for (row = 0; row < 6; row++)
    {
       for (col=0 ; col < 114 ;col++){
             SpotData_chip[row][col] = SpotData[row][col];
             }
-      DieImage[row].ImageData = SpotData_chip[row++];
+      DieImage[row].ImageData = (UWORD *)SpotData_chip[row];
    }   
 
 

@@ -19,6 +19,9 @@
 *								*
 ****************************************************************/
 
+#include <stdio.h>
+#include <stdlib.h>
+
 #include <intuition/intuition.h>
 #include <graphics/gfxmacros.h>
 #include <exec/memory.h>
@@ -43,12 +46,21 @@ long palette[8] = {
 extern struct Tile ff[3][3][3], fb[3][3][3];
 extern struct Objectinfo SliceInfo[3][3];
 
+BOOL allocinfo(struct Objectinfo *objectinfo);
+void deallocinfo(struct Objectinfo *objectinfo);
+void matrixinit(struct Matrix *um);
+void doframe(struct Screen *screen);
+void doobject(struct RastPort *rap, struct Objectinfo *objectinfo, int doit);
+void rubik(struct Screen *screen, struct Window *window); 
+int  dographics(void);
+void cubeinit(void);
+
 struct GfxBase * GfxBase;
 struct IntuitionBase * IntuitionBase;
 /*
  extern void *AllocMem(), *AllocRaster(), *GetMsg();
 */
-main() {
+int main(int argc, char **argv) {
 	WORD i, j, error = FALSE;
 	cubeinit();		/* Build the cube and all 9 slices */
 	if ((GfxBase = (struct GfxBase *)OpenLibrary("graphics.library",0))==NULL) exit(-1);
@@ -88,11 +100,10 @@ struct NewWindow nw = {0, TOP, WIDTH, HEIGHT, -1, -1, CLOSEWINDOW,
 	WINDOWCLOSE | SIMPLE_REFRESH | ACTIVATE, 
 	NULL, NULL, " ", NULL, NULL, 0, 0, 0, 0, CUSTOMSCREEN};
 
-dographics()
+int dographics()
 {
 	struct Screen *screen;
 	struct Window *window;
-	struct RastPort *w;
 
 	if ((IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library",0L))==NULL)
 		return (-1); 
@@ -113,14 +124,14 @@ dographics()
 
 	CloseWindow(window);
 	CloseScreen(screen);
+
+	return 0;
 }
 
-rubik(screen, window)
+void rubik(screen, window)
 struct Screen *screen;
 struct Window *window;
 {
-	struct Tile *tile;
-	struct Objectinfo *obj;
 	WORD i, j, error;
 	struct IntuiMessage *message;
 
@@ -141,7 +152,7 @@ struct Window *window;
 		ri[j].BitMap = &bitmap[j];
 		rip[j] = &ri[j];
 	}
-	/*SetRast(rp[frametoggle],0L);	/* Clear raster we're displaying */
+	// SetRast(rp[frametoggle],0L);	/* Clear raster we're displaying */
 	for (j=0; j<4; j++) SetOPen(rp[j],1L);
 	/* Pixels in rp[4] will be  either "all bits on" or "all bits off" */
 	SetOPen(rp[4],0L); SetAPen(rp[4],7L);
@@ -183,7 +194,7 @@ struct Window *window;
 			}
 		} while (message);
 
-		doframe(screen, window);	/* Advance the position */
+		doframe(screen);	/* Advance the position */
 
 		/* Here goes the screen flip */
 			/* Take a deep breath and hold it */
@@ -198,7 +209,7 @@ finis:	for (i=0; i<3; i++) for (j=0; j<3; j++)
 	screen->ViewPort.RasInfo = oldrip;	/* Restore rasinfo pointer */
 }
 
-doframe(screen)
+void doframe(screen)
 struct Screen *screen;
 {
 	WORD i, j, pcount, a1, a2, s1, temp;
@@ -267,7 +278,7 @@ struct Screen *screen;
 	frametoggle ^= 1;	/* Next time, we'll use the other screen */
 }
 
-deallocinfo(objectinfo)
+void deallocinfo(objectinfo)
 struct Objectinfo *objectinfo;
 {
 	if ((objectinfo->bufpoints) && (objectinfo->bufpointsize))
@@ -281,7 +292,7 @@ struct Objectinfo *objectinfo;
 		(long)objectinfo->colorbufsize);
 }
 
-allocinfo(objectinfo)
+BOOL allocinfo(objectinfo)
 struct Objectinfo *objectinfo;
 {
 	WORD *nextcolor;

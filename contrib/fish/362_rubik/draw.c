@@ -2,11 +2,13 @@
 
 #include "header.c"
 
+#define y1 myy1
+
 extern struct GfxBase * GfxBase;
 int twistlist[21];
 int x1,y1,x2,y2,x3,y3;
 
-char tr [120] =			/*	transformations for 90 degree side rotates	*/
+int tr [120] =			/*	transformations for 90 degree side rotates	*/
 	{
 	0,2,8,6,
 	1,5,7,3,

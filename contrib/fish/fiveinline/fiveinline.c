@@ -23,6 +23,9 @@ struct TextFont *topazfont;
 #define CELLWIDTH 20
 #define CELLHEIGHT 16
 
+#define y0 myy0
+#define y1 myy1
+
 BOOL    gamewon=FALSE,firstmove=TRUE;
 USHORT  mclass,mcode,msx,msy;
 SHORT   d,i,j,k,l,x,y,amx,amy,start;
@@ -43,7 +46,7 @@ struct TextAttr topaz8 =
     "topaz.font", 8, 0, 0
 };
 
-VOID main()
+int main(int argc, char **argv)
 {
 
     AttackFactor=4;
@@ -94,7 +97,7 @@ Loop:
         ov=ov+1;
 
         CreateMes(&prompt,50,5,"I won");
-        AutoRequest(Wind,&prompt,&yprompt,&yprompt,NULL,NULL,160,50);
+        AutoRequest(Wind,&prompt,&yprompt,&yprompt,0,0,160,50);
 
         goto NewGame;
     }
@@ -109,7 +112,7 @@ Human_first:
     if (gamewon) {
         xv=xv+1;
         CreateMes(&prompt,37,5,"You won!");
-        AutoRequest(Wind,&prompt,&yprompt,&yprompt,NULL,NULL,160,50);
+        AutoRequest(Wind,&prompt,&yprompt,&yprompt,0,0,160,50);
 
         goto NewGame;
     }
@@ -139,7 +142,7 @@ HumanLoop:
                 ClearMenuStrip(Wind);
                 show_About();
 
-                while((mesg=(struct IntuiMessage *) GetMsg((struct Message *)Wind->UserPort)) != NULL) ReplyMsg((struct Message *)mesg);
+                while(((mesg=(struct IntuiMessage *) GetMsg(Wind->UserPort)) != NULL)) ReplyMsg((struct Message *)mesg);
 
                 SetMenuStrip(Wind,&Menu1);
                 goto HumanLoop;
@@ -439,10 +442,10 @@ VOID setup_menu()
     m0.Width=50;
     m0.Height=10;
     m0.Flags=ITEMTEXT|HIGHCOMP|ITEMENABLED;
-    m0.MutualExclude=NULL;
+    m0.MutualExclude=0;
     m0.ItemFill=(APTR)&t0;
     m0.SelectFill=NULL;
-    m0.Command=NULL;
+    m0.Command=0;
     m0.SubItem=NULL;
 
     CreateMes(&t1,0,0,"Quit");
@@ -453,10 +456,10 @@ VOID setup_menu()
     m1.Width=50;
     m1.Height=10;
     m1.Flags=ITEMTEXT|HIGHCOMP|ITEMENABLED;
-    m1.MutualExclude=NULL;
+    m1.MutualExclude=0;
     m1.ItemFill=(APTR)&t1;
     m1.SelectFill=NULL;
-    m1.Command=NULL;
+    m1.Command=0;
     m1.SubItem=NULL;
 
     Menu1.NextMenu=NULL;

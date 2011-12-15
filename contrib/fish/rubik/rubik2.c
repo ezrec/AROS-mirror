@@ -4,10 +4,24 @@
 extern struct RastPort *rp[2];
 extern UWORD frametoggle, framecount, newcube;
 extern struct GfxBase * GfxBase;
+	
+void slice00init(void);
+void slice10init(void);
+void slice20init(void);
+void slice01init(void);
+void slice11init(void);
+void slice21init(void);
+void slice02init(void);
+void slice12init(void);
+void slice22init(void);
+void dopoints(struct Matrix *bm, struct Vector *bp, WORD numpoints, struct Vector *pointstart[], struct Vector *bufpoints);
+void matrix(struct Vector *dest,struct Vector *src, struct Matrix *bm);
 
-doobject(rap, objectinfo, dorot)
+
+void doobject(rap, objectinfo, dorot)
 struct RastPort *rap;
-struct Objectinfo *objectinfo; {
+struct Objectinfo *objectinfo; 
+int dorot; {
 	struct Vector **nextp;
 	WORD tcount = 0, *nextcolor;
 
@@ -33,12 +47,10 @@ struct Objectinfo *objectinfo; {
 	nextcolor = objectinfo->colorbuf;
 	nextp = objectinfo->pptrbuf;
 	for (tcount=0; tcount<objectinfo->numtiles; tcount++) {
-		struct Tile *np;
 		struct Vector *c0, *c1, *c2;
 		WORD vc;
 		long tcolor;
 
-		np = (objectinfo->tiles)[tcount];
 		/* Backface removal */
 		/* Construct normal to Tile using vector cross product, and
 		   test its z component.  If normal faces away from the
@@ -117,7 +129,7 @@ void yzrot(bm, sine, cosine) struct Matrix *bm; WORD sine, cosine; {
 	bm->uv32 = tmp;
 }
 
-perspect(dest) struct Vector *dest; {
+void perspect(dest) struct Vector *dest; {
 	LONG zinv = 0x00400000;		/* 1.0 */
 	dest->z = (dest->z < 64) ? 64 : dest->z;
 	zinv /= 0x200 + dest->z;
@@ -125,19 +137,19 @@ perspect(dest) struct Vector *dest; {
 	dest->y = mul3d(dest->y,(WORD)zinv);
 }
 
-addvect(bp, src, dest) struct Vector *bp, *src, *dest; {
+void addvect(bp, src, dest) struct Vector *bp, *src, *dest; {
 	dest->x = src->x + bp->x;
 	dest->y = src->y + bp->y;
 	dest->z = src->z + bp->z;
 }
 
-matmult(dest, src1, src2) struct Matrix *dest, *src1, *src2; {
-	matrix(&dest->uv11, &src1->uv11, src2);
-	matrix(&dest->uv21, &src1->uv21, src2);
-	matrix(&dest->uv31, &src1->uv31, src2);
+void matmult(dest, src1, src2) struct Matrix *dest, *src1, *src2; {
+	matrix((struct Vector *)&dest->uv11, (struct Vector *)&src1->uv11, src2);
+	matrix((struct Vector *)&dest->uv21, (struct Vector *)&src1->uv21, src2);
+	matrix((struct Vector *)&dest->uv31, (struct Vector *)&src1->uv31, src2);
 }
 
-matrix(dest, src, bm)
+void matrix(dest, src, bm)
 struct Vector *dest, *src;
 struct Matrix *bm;
 {
@@ -149,7 +161,7 @@ struct Matrix *bm;
 			mul3d(src->z,bm->uv33);
 }
 
-dopoints(bm, bp, numpoints, pointstart, bufpoints)
+void dopoints(bm, bp, numpoints, pointstart, bufpoints)
 struct Matrix *bm;
 struct Vector *bp, *pointstart[], *bufpoints;
 WORD numpoints; 
@@ -177,9 +189,9 @@ struct Vector *slicepoints[3][3][32];
 struct Tile *slicetiles[3][3][21];
 struct Objectinfo SliceInfo[3][3];
 
-matrixinit(um) struct Matrix *um; {*um = cameramatrix;}
+void matrixinit(um) struct Matrix *um; {*um = cameramatrix;}
 
-cubeinit() {
+void cubeinit() {
 	WORD i, j, k, l, a1, s1, count=0;
 	for (i=0; i<4; i++) for (j=0; j<4; j++) {
 		for (k=0; k<4; k++) {
@@ -253,7 +265,7 @@ struct Tile
 	ft00 = {vt00,1}, ft10 = {vt10,1}, ft01 = {vt01,1},
 	ft11 = {vt11,1}, ft02 = {vt02,1}, ft12 = {vt12,1};
 
-slice20init() {
+void slice20init() {
 	WORD i,j, count=12;
 
 	for (i=0; i<3; i++) for (j=0; j<3; j++) 
@@ -261,35 +273,35 @@ slice20init() {
 	SliceInfo[2][0].numtiles = count;
 }
 
-slice10init() {
+void slice10init() {
 	WORD count=12;
 
 	slicetiles[1][0][count++] = &ft10;
 	SliceInfo[1][0].numtiles = count;
 }
 
-slice00init() {
+void slice00init() {
 	WORD count=12;
 
 	slicetiles[0][0][count++] = &ft00;
 	SliceInfo[0][0].numtiles = count;
 }
 
-slice01init() {
+void slice01init() {
 	WORD count=12;
 
 	slicetiles[0][1][count++] = &ft01;
 	SliceInfo[0][1].numtiles = count;
 }
 
-slice11init() {
+void slice11init() {
 	WORD count=12;
 
 	slicetiles[1][1][count++] = &ft11;
 	SliceInfo[1][1].numtiles = count;
 }
 
-slice21init() {
+void slice21init() {
 	WORD i,j, count=12;
 
 	for (i=0; i<3; i++) for (j=0; j<3; j++) 
@@ -297,7 +309,7 @@ slice21init() {
 	SliceInfo[2][1].numtiles = count;
 }
 
-slice22init() {
+void slice22init() {
 	WORD i,j, count=12;
 
 	for (i=0; i<3; i++) for (j=0; j<3; j++)
@@ -305,14 +317,14 @@ slice22init() {
 	SliceInfo[2][2].numtiles = count;
 }
 
-slice12init() {
+void slice12init() {
 	WORD count=12;
 
 	slicetiles[1][2][count++] = &ft12;
 	SliceInfo[1][2].numtiles = count;
 }
 
-slice02init() {
+void slice02init() {
 	WORD count=12;
 
 	slicetiles[0][2][count++] = &ft02;

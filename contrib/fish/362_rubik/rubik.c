@@ -29,6 +29,8 @@ extern struct Gadget normalgadget,solvegadget,setupgadget;
 
 extern struct GfxBase * GfxBase;
 
+#define gamma mygamma
+
 /*	size is half the side length of a SMALL cube...1/6 of whole cube	*/
 unsigned short size;
 short mode;
@@ -144,7 +146,7 @@ void showtwist (short i, short j)
 	showcube (alpha,beta,gamma,i,j,delta);
 	}
 
-void main (char *cmd)
+int main (int argc, char **argv)
 	{
 	int i,j;
 	int pen;
