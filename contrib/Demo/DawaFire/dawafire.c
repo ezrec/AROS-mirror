@@ -138,7 +138,6 @@ void refresh () {
   static double k=0;
   int i;
 
-  unsigned char * buffy256_tmp = buffy256;
   unsigned char * blur = buffy256;
 
   particle * precurrentparticle;
@@ -244,7 +243,7 @@ void refresh () {
   blur += 2*W;
   
   for (i=0; i<W*(H-3); i++)
-    * (blur++) =
+    * (blur) =
         ( * (blur-W-1)     +
           * (blur-W)       +
           * (blur-W+1)     +
@@ -255,6 +254,7 @@ void refresh () {
           * (blur+1)       +
           * (blur+W) ) >> 3;
 
+     blur++;
 
     if (truecolor)
     {
