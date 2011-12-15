@@ -818,7 +818,7 @@ bwb_gosub( struct bwb_line *l )
       case '\n':
       case '\r':
       case ':':
-         sprintf( bwb_ebuf, err_noln );
+         strcpy( bwb_ebuf, err_noln );
          bwb_error( bwb_ebuf );
          l->next->position = 0;
          return l->next;
@@ -984,7 +984,7 @@ bwb_on( struct bwb_line *l )
       case '\n':
       case '\r':
       case ':':
-         sprintf( bwb_ebuf, err_incomplete );
+         strcpy( bwb_ebuf, err_incomplete );
          bwb_error( bwb_ebuf );
          l->next->position = 0;
          return l->next;
@@ -1079,7 +1079,7 @@ bwb_on( struct bwb_line *l )
 
    if ( ( v < 1 ) || ( v > num_lines ))
       {
-      sprintf( bwb_ebuf, err_valoorange );
+      strcpy( bwb_ebuf, err_valoorange );
       bwb_error( bwb_ebuf );
       l->next->position = 0;
       return l->next;
