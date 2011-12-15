@@ -186,6 +186,8 @@ main (
    
    finalize ();
    finalize_locale ();
+
+   return RETURN_OK;
 }
 
 
