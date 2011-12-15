@@ -35,9 +35,7 @@
 #ifdef  __AROS__
     #define   DEBUG 1
     #include  <aros/debug.h>
-
-    #include  <stdio.h>
-    #define   Printf  printf      /* Must be after #include <proto/dos.h> */
+    #include  <exec/rawfmt.h>
 #else
     #define  D(x)
     #include <thor/tinyio.h>
@@ -125,7 +123,7 @@ struct UtilityBase *UtilityBase;
 
 BOOL   abortFlag;
 BOOL   failcondition;
-LONG   tclower;
+IPTR   tclower;
 ULONG  depth;
 ULONG  scount;
 ULONG  bufsize;
@@ -224,12 +222,7 @@ int main(void)
     struct Message  *msg;
     struct RDArgs   *ra;
     
-#ifdef AROS
     IPTR    args[14];
-#else
-    char   *args[14];
-#endif
-    
     ULONG   res = 0;
     BPTR    oldlock;
     
@@ -237,7 +230,7 @@ int main(void)
     
     this = (struct Process *)FindTask(NULL);
     
-    if(this->pr_CLI == NULL)
+    if(this->pr_CLI == BNULL)
     {
 	msg = WaitPort(&(this->pr_MsgPort));
 	msg = GetMsg(&(this->pr_MsgPort));
@@ -249,14 +242,14 @@ int main(void)
 
     /* Can't be started from WB */
     
-    tclower = (LONG)(this->pr_Task.tc_SPLower);
+    tclower = (IPTR)(this->pr_Task.tc_SPLower);
 
     DOSBase = (struct DosLibrary *)(OpenLibrary("dos.library", 37L));
 
     if(DOSBase != NULL)
     {
 
-	oldlock = CurrentDir(NULL);
+	oldlock = CurrentDir(BNULL);
 	CurrentDir(oldlock);
 	
 	UtilityBase = (struct UtilityBase *)OpenLibrary("utility.library", 37L);
@@ -355,7 +348,7 @@ ULONG CopyMain(char *sourcename, char *destname)
 
     struct MinList dirlist, copylist;
 
-    sourcelock = CurrentDir(NULL);
+    sourcelock = CurrentDir(BNULL);
     SetSignal(0L, SIGMASK);
 
     NewList((struct List *)&resolvelist);
@@ -421,7 +414,7 @@ ULONG CopyMain(char *sourcename, char *destname)
     {
 	dest = Lock(destname, SHARED_LOCK);
 
-	if(dest == NULL)
+	if(dest == BNULL)
 	{
 	    D(bug("Destination not found\n"));
 	    
@@ -431,7 +424,7 @@ ULONG CopyMain(char *sourcename, char *destname)
 		{
 		    dest = CreateDir(destname);
 		    
-		    if(dest == NULL)
+		    if(dest == BNULL)
 		    {
 			PostFailure(Fatal(),
 				    "Can't create destination drawer \"%s\"",
@@ -446,7 +439,7 @@ ULONG CopyMain(char *sourcename, char *destname)
 					"Can't change the lock to \"%s\"",
 					destname);
 			    UnLock(dest);
-			    dest = NULL; /* SDuvan: Was a bug here! */
+			    dest = BNULL; /* SDuvan: Was a bug here! */
 			    DeleteFile(destname);
 			    res = RETURN_ERROR;
 			}
@@ -464,7 +457,7 @@ ULONG CopyMain(char *sourcename, char *destname)
 
 	D(bug("CopyMain part 3b\n"));
 	
-	if(dest != NULL)
+	if(dest != BNULL)
 	{
 	    D(bug("Checking IsDir() on %s\n", destname));
 	    
@@ -481,7 +474,7 @@ ULONG CopyMain(char *sourcename, char *destname)
 		
 		D(bug("Dest unlocked\n"));
 		
-		dest = NULL;
+		dest = BNULL;
 	    }
 	}
 	
@@ -620,7 +613,7 @@ ULONG MainCopyProcess(BPTR source, BPTR dest, struct MinList *dirlist,
 	    if(!quieter)
 		Printf("\n\nSetting the archive bits, please wait...\n");
 	    
-	    if(!(SetAList(NULL, dirlist)))
+	    if(!(SetAList(BNULL, dirlist)))
 		res = 3;
 	}
     }
@@ -643,7 +636,7 @@ ULONG MainCopyProcess(BPTR source, BPTR dest, struct MinList *dirlist,
 	    if(!quieter)
 		Printf("\nRemoving old files...\n\n");
 	    
-	    if(!(DeleteDirList(NULL, copylist, FALSE)))
+	    if(!(DeleteDirList(BNULL, copylist, FALSE)))
 		res = 2;
 	}
     }
@@ -666,7 +659,7 @@ BOOL CopyEntryList(struct MinList *dirlist, BPTR dest)
        linked files and directories */
     if(!nocopy)
     {
-	if(!CopyDir(NULL, dest, dirlist))
+	if(!CopyDir(BNULL, dest, dirlist))
 	{
 	    fine = FALSE;
 	}
@@ -745,7 +738,7 @@ BOOL AddMatch(struct AnchorPath *ap, struct MinList *dirlist)
     
     de->de_sourcelock = DupLock(ap->ap_Current->an_Lock);
     
-    if(de->de_sourcelock != NULL)
+    if(de->de_sourcelock != BNULL)
     {	
 	/* We need to call this first to find out if this
 	   is a directory or not.... */
@@ -821,7 +814,7 @@ BOOL CheckAbort(void)
     if(abortFlag)
 	return TRUE;
     
-#warning  Take care of stack check
+// FIXME:  Take care of stack check
 #ifndef __AROS__
     if((getreg(REG_A7) - tclower) < 1024)
     {
@@ -867,7 +860,7 @@ void PostFailure(LONG error, char *failtext, ...)
     {
 
 #ifdef  __AROS__
-	vsprintf(failbuffer, failtext, args);
+	VNewRawDoFmt(failtext, RAWFMTFUNC_STRING, failbuffer, args);
 #else
 	tinyvsprintf(failbuffer, failtext, args);
 #endif
@@ -884,7 +877,7 @@ void PostFailure(LONG error, char *failtext, ...)
 ///FindSoftOrginal
 BOOL FindSoftOrginal(struct DirEntry *de)
 {
-    BPTR dirlock, objectlock = NULL;
+    BPTR dirlock, objectlock = BNULL;
 
     struct FileLock *flock;
 
@@ -899,10 +892,10 @@ BOOL FindSoftOrginal(struct DirEntry *de)
 	return FALSE;
     }
 
-    dirlock = CurrentDir(NULL);
+    dirlock = CurrentDir(BNULL);
     CurrentDir(dirlock);
 
-#warning  Using lock internals here
+// NOTICE: Using lock internals here
 
     flock = (struct FileLock *)(BADDR(dirlock));
     
@@ -924,7 +917,7 @@ BOOL FindSoftOrginal(struct DirEntry *de)
     {
 	objectlock = ParentDir(dirlock);
 	
-	if(objectlock != NULL)
+	if(objectlock != BNULL)
 	{
 	    strcpy(de->de_linkname, FilePart(buffer));
 	    
@@ -1000,7 +993,7 @@ BOOL FindHardOrginal(struct DirEntry *de)
     {
 	de->de_linklock = ParentDir(lock);
 
-	if(de->de_linklock != NULL)
+	if(de->de_linklock != BNULL)
 	{
 	    strcpy(de->de_linkname, fib.fib_FileName);
 	    UnLock(lock);
@@ -1045,18 +1038,18 @@ BOOL SetAFlag(struct DirEntry *de)
 {
     BPTR  lock;
     LONG  err = 0;
-    BPTR  oldlock = NULL;
+    BPTR  oldlock = BNULL;
     BPTR  parent;
 
     if(CheckAbort())
 	return FALSE;
     
-    if(de->de_sourcelock != NULL)
+    if(de->de_sourcelock != BNULL)
 	oldlock = CurrentDir(de->de_sourcelock);
     
     lock = Lock(de->de_name, SHARED_LOCK);
 
-    if(lock != NULL)
+    if(lock != BNULL)
     {
 	if(Examine(lock, &fib))
 	{
@@ -1067,7 +1060,7 @@ BOOL SetAFlag(struct DirEntry *de)
 	    {
 		parent = ParentDir(lock);
 
-		if(parent != NULL)
+		if(parent != BNULL)
 		{
 		    UnLock(parent);
 		}
@@ -1077,7 +1070,7 @@ BOOL SetAFlag(struct DirEntry *de)
 		}
 	    }
 
-	    if(parent != NULL)
+	    if(parent != BNULL)
 	    {
 		if((!(fib.fib_Protection & FIBF_ARCHIVE)) ||
 		   (de->de_flags & (DEF_SOFTLINK | DEF_HARDLINK)))
@@ -1263,7 +1256,7 @@ BOOL MustUpdate(BPTR destlock, struct DirEntry *de)
     CurrentDir(destlock);
     dest = Lock(de->de_name, SHARED_LOCK);
 
-    if(dest != NULL)
+    if(dest != BNULL)
     {
 	if(!Examine(dest, &fib))
 	{
@@ -1315,7 +1308,7 @@ BOOL CopyFileEntry(struct DirEntry *de, BPTR sourcelock, BPTR destlock)
 	CurrentDir(sourcelock);
 	source = Open(de->de_name, MODE_OLDFILE);
 	
-	if(source == NULL)
+	if(source == BNULL)
 	{
 	    PostFailure(IoErr(), "Can't open the source file \"%s\"",
 			de->de_name);
@@ -1331,7 +1324,7 @@ BOOL CopyFileEntry(struct DirEntry *de, BPTR sourcelock, BPTR destlock)
 	{
 	    tmp = Lock(de->de_name, EXCLUSIVE_LOCK);
 
-	    if(tmp != NULL)
+	    if(tmp != BNULL)
 	    {
 		if(ChangeMode(CHANGE_LOCK, tmp, SHARED_LOCK))
 		{
@@ -1370,7 +1363,7 @@ BOOL CopyFileEntry(struct DirEntry *de, BPTR sourcelock, BPTR destlock)
 			    case ST_SOFTLINK:
 			    case ST_LINKDIR:
 				UnLock(tmp);
-				tmp = NULL;
+				tmp = BNULL;
 				fine = DeleteFile(de->de_name);
 				break;
 			    }
@@ -1411,7 +1404,7 @@ BOOL CopyFileEntry(struct DirEntry *de, BPTR sourcelock, BPTR destlock)
 	
 	dest = Open(de->de_name, MODE_NEWFILE);
 
-	if (dest == NULL)
+	if (dest == BNULL)
 	{
 	    err = IoErr();
 	    Close(source);
@@ -1464,7 +1457,7 @@ BOOL CopyDirEntry(struct DirEntry *de, BPTR sourcelock, BPTR destlock)
 
     newlock = Lock(de->de_name, SHARED_LOCK);
 
-    if(newlock != NULL)
+    if(newlock != BNULL)
     {
 	if(!IsDir(newlock, de->de_name))
 	{
@@ -1495,13 +1488,13 @@ BOOL CopyDirEntry(struct DirEntry *de, BPTR sourcelock, BPTR destlock)
 		return TRUE;
 	    }
 
-	    newlock = NULL;
+	    newlock = BNULL;
 	}
     }
     else
 	err = IoErr();
 
-    if(newlock != NULL)
+    if(newlock != BNULL)
     {
 	UnLock(newlock);
 	
@@ -1537,7 +1530,7 @@ BOOL CopyDirEntry(struct DirEntry *de, BPTR sourcelock, BPTR destlock)
 	    {
 		dest = Open(de->de_name, MODE_NEWFILE);
 
-		if(dest == NULL)
+		if(dest == BNULL)
 		{
 		    PostFailure(Fatal(), 
 				"Can't create dummy link directory \"%s\"",
@@ -1558,7 +1551,7 @@ BOOL CopyDirEntry(struct DirEntry *de, BPTR sourcelock, BPTR destlock)
 	    {
 		newlock = CreateDir(de->de_name);
 
-		if(newlock == NULL)
+		if(newlock == BNULL)
 		{
 		    PostFailure(Fatal(), "Can't create new directory \"%s\"",
 				de->de_name);
@@ -1633,7 +1626,7 @@ BOOL SetRootLock(struct DirEntry *de)
     if(rootlock)
 	UnLock(rootlock);
 
-    rootlock = NULL;
+    rootlock = BNULL;
 
     if(de != NULL)
     {
@@ -1674,7 +1667,7 @@ BOOL CopyDir(BPTR sourcelock, BPTR destlock, struct MinList *dirlist)
 	    return fine;
 	}
 	
-	if(sourcelock == NULL)
+	if(sourcelock == BNULL)
 	{
 	    if(!SetRootLock(de))
 		fine = FALSE;
@@ -1685,8 +1678,8 @@ BOOL CopyDir(BPTR sourcelock, BPTR destlock, struct MinList *dirlist)
 	    fine = FALSE;
     }
     
-    if(sourcelock == NULL)
-	SetRootLock(NULL);
+    if(sourcelock == BNULL)
+	SetRootLock(BNULL);
     
     return fine;
 }
@@ -1734,9 +1727,9 @@ struct DirEntry *DupDirEntry(struct DirEntry *se)
     
     /* Kopiere jetzt die Daten */
     memcpy(de, se, sizeof(struct DirEntry));
-    de->de_sourcelock = NULL;
-    de->de_linklock   = NULL;
-    de->de_dirlock    = NULL;                       /* Erstmal löschen */
+    de->de_sourcelock = BNULL;
+    de->de_linklock   = BNULL;
+    de->de_dirlock    = BNULL;                       /* Erstmal löschen */
     NewList((struct List *)(&(de->de_sublist)));    /* Wird nicht geduppt */
     
     if(se->de_sourcelock == 0 ||
@@ -1780,9 +1773,9 @@ struct DirEntry *AllocDirEntry(struct FileInfoBlock *fib)
     de->de_protection = fib->fib_Protection;
     de->de_date = fib->fib_Date;
     de->de_flags = 0L;
-    de->de_sourcelock = NULL;
-    de->de_linklock = NULL;
-    de->de_dirlock = NULL;    /* Muß vom Caller ausgefüllt werden */
+    de->de_sourcelock = BNULL;
+    de->de_linklock = BNULL;
+    de->de_dirlock = BNULL;    /* Muß vom Caller ausgefüllt werden */
     de->de_linkname[0] = 0;
     de->de_length = fib->fib_Size;
     NewList((struct List *)(&(de->de_sublist)));
@@ -1895,7 +1888,7 @@ BOOL KillForce(char *name, BOOL force)
 
     lock = Lock(name, EXCLUSIVE_LOCK);
 
-    if(lock != NULL)
+    if(lock != BNULL)
     {
 	UnLock(lock);
 
@@ -1924,7 +1917,7 @@ BOOL KillForce(char *name, BOOL force)
 /// CopySubDirectory
 BOOL CopySubDirectory(struct DirEntry *de, BPTR source, BPTR dest)
 {
-    BPTR  newdest = NULL;
+    BPTR  newdest = BNULL;
     BPTR  destlock;
     BPTR  newsource;
     BOOL  fine;
@@ -1940,7 +1933,7 @@ BOOL CopySubDirectory(struct DirEntry *de, BPTR source, BPTR dest)
     {
 	newdest = Lock(de->de_name, SHARED_LOCK);
 
-	if(newdest == NULL)
+	if(newdest == BNULL)
 	{
 	    if((IoErr() != ERROR_OBJECT_NOT_FOUND) || (!nocopy))
 		PostFailure(Fatal(), "Can't lock the new directory \"%s\"",
@@ -1960,7 +1953,7 @@ BOOL CopySubDirectory(struct DirEntry *de, BPTR source, BPTR dest)
     CurrentDir((de->de_sourcelock) ? (de->de_sourcelock) : (source));
     newsource = Lock(de->de_name, SHARED_LOCK);
 
-    if(newsource == NULL)
+    if(newsource == BNULL)
     {
 	PostFailure(IoErr(), "Can't lock the source directory \"%s\"",
 		    de->de_name);
@@ -1992,7 +1985,7 @@ BOOL CopySubDirectory(struct DirEntry *de, BPTR source, BPTR dest)
 	if((!leaveempty) && (!nocopy) && DirEmpty(newdest, de->de_name))
 	{
 	    UnLock(newdest);
-	    newdest = NULL;
+	    newdest = BNULL;
 	    CurrentDir(dest);
 
 	    if(KillForce(de->de_name, TRUE))
@@ -2035,7 +2028,7 @@ BOOL PrepareLink(struct DirEntry *de, BPTR source, BPTR dest)
 
     if(!(de->de_sourcelock))
     {
-	if(rootlock == NULL)
+	if(rootlock == BNULL)
 	{
 	    PostFailure(ERROR_OBJECT_NOT_FOUND,
 			"The root lock of the link \"%s\" is not set.\n",
@@ -2195,7 +2188,7 @@ BOOL PathRelative(BPTR relpath, BPTR path, char *name, char *buffer,
     slash = NULL;
     lock = DupLock(path);
 
-    if(lock==NULL)
+    if(lock==BNULL)
 	return FALSE;
 
     for(;;)
@@ -2228,7 +2221,7 @@ BOOL PathRelative(BPTR relpath, BPTR path, char *name, char *buffer,
 	UnLock(lock);
 	lock = newlock;
 	
-	if(newlock == NULL)
+	if(newlock == BNULL)
 	{
 	    /* Either something got wrong or the object we are looking for is
 	       not related to the relative path */
@@ -2247,7 +2240,7 @@ BOOL PathRelative(BPTR relpath, BPTR path, char *name, char *buffer,
           newlock = ParentDir(lock);
           UnLock(lock);
     
-	  if(newlock == NULL)
+	  if(newlock == BNULL)
 	  {
 	      if(IoErr() == 0)
 	          *slash = ':';
@@ -2280,7 +2273,7 @@ BOOL CreateLink(char *name, BPTR melock, char *linkname, BPTR linklock,
 	CurrentDir(linklock);
 	lock = Lock(linkname, SHARED_LOCK);
 
-	if(lock == NULL)
+	if(lock == BNULL)
 	{
 	    PostFailure(IoErr(), "Can't lock the object \"%s\" the link is going to",
 			linkname);
@@ -2338,7 +2331,7 @@ BOOL CreateLink(char *name, BPTR melock, char *linkname, BPTR linklock,
     }
     else
     {
-	if(!MakeLink(name, lock, FALSE))
+	if(!MakeLink(name, (APTR)lock, FALSE))
 	{
 	    PostFailure(IoErr(), "Can't create the hardlink \"%s\"", name);
 
@@ -2435,7 +2428,7 @@ BOOL ResolveLinks(struct MinList *list, BPTR dest)
 		destlock = Lock(buffer, SHARED_LOCK);
 
 		/* If the destination can't be found... */
-		if(destlock == NULL)
+		if(destlock == BNULL)
 		{
 		    if(IoErr() == ERROR_OBJECT_NOT_FOUND)
 		    {
@@ -2488,7 +2481,7 @@ BOOL ResolveLinks(struct MinList *list, BPTR dest)
 			rc = FALSE;
 			resolved = FALSE;
 		    }
-		    else if((destlock = CreateDir(de->de_name)) != NULL)
+		    else if((destlock = CreateDir(de->de_name)) != BNULL)
 		    {
 			UnLock(destlock);
 			resolved = TRUE;
@@ -2524,7 +2517,7 @@ BOOL ResolveLinks(struct MinList *list, BPTR dest)
 /// DeleteEntry
 void DeleteEntry(struct DirEntry *de, BOOL all)
 {
-    BPTR  oldlock = NULL;
+    BPTR  oldlock = BNULL;
 
     if(all || (!(onlya && (de->de_protection & FIBF_ARCHIVE))))
     {
@@ -2602,7 +2595,7 @@ BOOL DeleteDirList(BPTR source, struct MinList *dirlist, BOOL all)
 	    CurrentDir((de->de_sourcelock) ? (de->de_sourcelock) : (source));
 	    newsource = Lock(de->de_name, SHARED_LOCK);
 
-	    if(newsource == NULL)
+	    if(newsource == BNULL)
 	    {
 		PostFailure(Fatal(), "Can't lock new directory \"%s\"",
 			    de->de_name);
@@ -2733,7 +2726,7 @@ BOOL SetAList(BPTR source, struct MinList *dirlist)
 	    CurrentDir((de->de_sourcelock) ? (de->de_sourcelock) : (source));
 	    newsource = Lock(de->de_name, SHARED_LOCK);
 
-	    if(newsource == NULL)
+	    if(newsource == BNULL)
 	    {
 		PostFailure(IoErr(), "Can't lock new directory \"%s\"",
 			    de->de_name);
@@ -2912,7 +2905,7 @@ struct CopyNode *AllocCopyNode(BPTR from, ULONG size, ULONG *limit)
 	{
 	    lastchancebusy  = TRUE;
 	    cn              = &lastchancenode;
-	    cn->cn_Buffer   = (LONG)buffer;
+	    cn->cn_Buffer   = buffer;
 	    cn->cn_release  = FALSE;
 	    size            = BUFFERSIZE;
 	}
@@ -2920,7 +2913,7 @@ struct CopyNode *AllocCopyNode(BPTR from, ULONG size, ULONG *limit)
     else
     {
 	*limit         -= size;
-	cn->cn_Buffer   = (LONG)(cn + 1);
+	cn->cn_Buffer   = (cn + 1);
 	cn->cn_release  = TRUE;
     }
     
@@ -2936,7 +2929,7 @@ struct CopyNode *AllocCopyNode(BPTR from, ULONG size, ULONG *limit)
 	cn->cn_DosPacket.dp_Type           = ACTION_READ;   /* Read */
 	cn->cn_Command                     = ACTION_READ;
 	cn->cn_DosPacket.dp_Arg1           = ((struct FileHandle *)BADDR(from))->fh_Arg1;
-	cn->cn_DosPacket.dp_Arg2           = cn->cn_Buffer;
+	cn->cn_DosPacket.dp_Arg2           = (SIPTR)cn->cn_Buffer;
 	cn->cn_DosPacket.dp_Arg3           = size;
 	cn->cn_BufSize                     = size;
 	cn->cn_BackTick                    = cn;
@@ -3104,7 +3097,7 @@ BOOL AsyncCopy(BPTR from, BPTR to, ULONG readsize, char *name)
 			    cn->cn_DosPacket.dp_Type  = ACTION_WRITE;
 			    cn->cn_Command            = ACTION_WRITE;
 			    cn->cn_DosPacket.dp_Arg1  = arg1;
-			    cn->cn_DosPacket.dp_Arg2  = cn->cn_Buffer;
+			    cn->cn_DosPacket.dp_Arg2  = (SIPTR)cn->cn_Buffer;
 			    readsize                 += cn->cn_BufSize;
 			    cn->cn_DosPacket.dp_Arg3  = cn->cn_DosPacket.dp_Res1;
 			    cn->cn_WriteSize          = cn->cn_DosPacket.dp_Res1;
@@ -3125,7 +3118,7 @@ BOOL AsyncCopy(BPTR from, BPTR to, ULONG readsize, char *name)
 				if(report)
 				{
 				    if(ErrorReport(cn->cn_DosPacket.dp_Res2,
-						   REPORT_STREAM, (LONG)from,
+						   REPORT_STREAM, (SIPTR)from,
 						   NULL))
 				    {
 					/* Cancled */
@@ -3166,7 +3159,7 @@ BOOL AsyncCopy(BPTR from, BPTR to, ULONG readsize, char *name)
 			    if(report)
 			    {
 				if(ErrorReport(cn->cn_DosPacket.dp_Res2,
-					       REPORT_STREAM, (LONG)to, NULL))
+					       REPORT_STREAM, (SIPTR)to, NULL))
 				{
 				    /* User canceled */
 				    report = FALSE;
@@ -3177,7 +3170,7 @@ BOOL AsyncCopy(BPTR from, BPTR to, ULONG readsize, char *name)
 				       the write request */
 				    cn->cn_DosPacket.dp_Type = ACTION_WRITE;
 				    cn->cn_DosPacket.dp_Arg1 = arg1;
-				    cn->cn_DosPacket.dp_Arg2 = cn->cn_Buffer;
+				    cn->cn_DosPacket.dp_Arg2 = (SIPTR)cn->cn_Buffer;
 				    cn->cn_DosPacket.dp_Arg3 = cn->cn_WriteSize;
 				    SendPkt(&(cn->cn_DosPacket), writeport,
 					    &ioport);
