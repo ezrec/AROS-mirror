@@ -46,7 +46,7 @@ struct MenuItem mi[MENUITEMS] =          /* main menu structures */
  {
  NULL,0,0,70,11,
  ITEMTEXT|ITEMENABLED|HIGHCOMP,
- NULL,NULL,NULL,NULL,NULL,NULL
+ 0, 0, 0, 0, 0, 0
  }
 };
 struct MenuItem sizemenu[MENUITEMS] =    /* sub menu for sizes */
@@ -54,14 +54,14 @@ struct MenuItem sizemenu[MENUITEMS] =    /* sub menu for sizes */
  {
  NULL,60,0,90,11,
  ITEMTEXT|ITEMENABLED|HIGHCOMP|CHECKIT,
- NULL,NULL,NULL,NULL,NULL,NULL
+ 0, 0, 0, 0, 0, 0
  }
 };
 struct MenuItem about =                  /* about, credits & help */
 {
  NULL,60,0,160,70,
  ITEMTEXT|ITEMENABLED,
- NULL,(APTR)&abouttxt1,NULL,NULL,NULL,NULL
+ 0,(APTR)&abouttxt1,0,0,0,0
 };
 
 struct Menu menu=
@@ -76,9 +76,9 @@ struct NewScreen ns=                     /* screen low-rez, 8 colors */
 {
  0,0,320,200,3,
  1,0,
- NULL,
+ 0,
  CUSTOMSCREEN,
- NULL,NULL,NULL,NULL
+ 0, 0, 0, 0,
 };
 
 struct NewWindow nw=                     /* window for menus & gadgets */
@@ -87,9 +87,9 @@ struct NewWindow nw=                     /* window for menus & gadgets */
  1,0,
  CLOSEWINDOW|GADGETUP|MENUPICK|MENUVERIFY|VANILLAKEY,
  BORDERLESS|NOCAREREFRESH|WINDOWCLOSE|ACTIVATE,
- NULL, NULL,
+ 0, 0,
  "Maze 3D Demo",
- NULL, NULL, NULL,NULL,NULL,NULL,
+ 0, 0, 0, 0, 0, 0,
  CUSTOMSCREEN
 };
 
@@ -116,7 +116,7 @@ struct RastPort *rp;
 
 ULONG  class,code;
 BOOL   WorkBench=FALSE,demomode=FALSE,forward();
-void   right(),left(),demo(),newmaze(),leave(),main(),show3d(),showmaze();
+void   right(),left(),demo(),newmaze(),leave(),show3d(),showmaze();
 void   statusline();
 short  i,j,xsize,ysize,mazesize=2,x,y,wayout,moves;
 char   *mymaze=NULL,areapts[7*5],*raster=NULL,buffer[20];
@@ -125,8 +125,8 @@ char   heading[][7]={"North"," East ","South"," West "};
 
 int IsPassage(short, short);
 
-void main(argc,argv)
-short argc;
+int main(argc,argv)
+int argc;
 char argv[];
 {
  if (!argc) WorkBench=TRUE;      /* open stuff */
@@ -305,7 +305,7 @@ void newmaze()
  statusline(10,"Moves:");
  statusline(30,"Looking");
  statusline(60,"Size:");
- sprintf(buffer,"%ld*%ld",xsize,ysize);
+ sprintf(buffer,"%ld*%ld",(long)xsize,(long)ysize);
  statusline(70,buffer);
 
  maze(xsize,ysize,mymaze);                     /* genarate a new maze */
@@ -391,7 +391,7 @@ BOOL forward()                /* move one step forward if possible */
  y+=dirincs[direction][1];
  moves++;
  sprintf(buffer," %ld/%ld ",
-         moves,xsize-3-x+((wayout-y)<0?-(wayout-y):(wayout-y)));
+         (long)moves,(long)(xsize-3-x+((wayout-y)<0?-(wayout-y):(wayout-y))));
  statusline(20,buffer);
  show3d();
 
@@ -403,7 +403,7 @@ BOOL forward()                /* move one step forward if possible */
   Text(rp,"Solved in",9);
   SetAPen(rp,6);
   SetBPen(rp,2);  /*  DWR: changed  */
-  sprintf(buffer,"%ld moves.",moves);
+  sprintf(buffer,"%ld moves.",(long)moves);
   Move(rp,94-strlen(buffer)*4,116);
   Text(rp,buffer,strlen(buffer));
  }
@@ -412,14 +412,16 @@ BOOL forward()                /* move one step forward if possible */
 
 void left()                 /* turn left */
 {
- direction=(--direction) & 3;
+ direction--;
+ direction=direction & 3;
  show3d();
  statusline(40,heading[direction]);
 }
 
 void right()                /* turn right */
 {
- direction=(++direction) & 3;
+  direction++;
+ direction=direction & 3;
  show3d();
  statusline(40,heading[direction]);
 }

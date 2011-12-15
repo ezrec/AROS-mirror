@@ -15,6 +15,10 @@
  *  Bezier functions for your own use.
  */
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 /* !!!
  #include <typedefs.h>
 */ 
@@ -40,6 +44,15 @@ struct IntuitionBase * IntuitionBase;
 typedef struct PropInfo XPI;
 typedef struct Image	IM;
 
+void init_gadgets(NW *nw, XPI **ppo);
+void drawpoints(WORD a[4][2], int is, int ie);
+void drawcurve(WORD a[4][2]);
+void movepoint(WORD a[4][2], int pt, int x, int y);
+WORD getpoint(WORD a[4][2], int x, int y);
+void setpoint(WORD a[4][2], int pt, int x, int y);
+void setbounds(WORD a[4][2]);
+void exiterr(int n, char *str);
+
 /* !!!
  extern IMESS *GetMsg();
 */
@@ -59,8 +72,12 @@ NW Nw = {
 #define GRAPHICS_LIB 2
 int openlibs(int dummy)
 {
-  GfxBase = (struct GfxBase *)OpenLibrary("graphics.library",0);
-  IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library",0);
+  if ((GfxBase = (struct GfxBase *)OpenLibrary("graphics.library",0))) {
+    if ((IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library",0)))
+      return TRUE;
+    CloseLibrary((struct Library *)GfxBase);
+  }
+  return FALSE;
 }
 
 void closelibs(int dummy)
@@ -73,18 +90,19 @@ void closelibs(int dummy)
 
 WIN *Win;
 RP  *Rp;
-short Ux, Uy, Lx, Ly;
-short Step = 128;
+WORD Ux, Uy, Lx, Ly;
+WORD Step = 128;
 
-main(ac, av)
+int main(ac, av)
+int ac;
 char *av[];
 {
     register IMESS *mess;
-    short notdone = 1;
-    short pt = -1;
-    short ptarray[4][2];
+    WORD notdone = 1;
+    WORD pt = -1;
+    WORD ptarray[4][2];
 
-    short gy, gg = 0;
+    WORD gy, gg = 0;
     XPI *po;
 
     exiterr(!openlibs(INTUITION_LIB|GRAPHICS_LIB), "unable to open libs");
@@ -100,7 +118,7 @@ char *av[];
     while (notdone) {
 	short mx, my, mm = 0;
 	WaitPort(Win->UserPort);
-	while (mess = (struct IntuiMessage *)GetMsg(Win->UserPort)) {
+	while ((mess = (struct IntuiMessage *)GetMsg(Win->UserPort))) {
 	    switch(mess->Class) {
 	    case CLOSEWINDOW:
 		notdone = 0;
@@ -149,7 +167,7 @@ char *av[];
 		gg = 0;
 	    if (gy + 1 >= 0)
 		Step = gy + 1;
-	    sprintf(buf, "gran: %4ld/%ld", Step, ONE);
+	    sprintf(buf, "gran: %4ld/%ld", (long)Step, (long)ONE);
 	    drawcurve(ptarray);
 	    SetDrMd(Rp, JAM1);
 	    Move(Rp, Ux + 1, Uy + 16);
@@ -159,7 +177,8 @@ char *av[];
     exiterr(1, NULL);
 }
 
-exiterr(n, str)
+void exiterr(n, str)
+int n;
 char *str;
 {
     if (n) {
@@ -172,8 +191,8 @@ char *str;
     }
 }
 
-setbounds(a)
-register long *a;
+void setbounds(a)
+register WORD a[4][2];
 {
     Ux = Win->BorderLeft;
     Uy = Win->BorderTop;
@@ -182,19 +201,21 @@ register long *a;
     drawcurve(a);
 }
 
-setpoint(a, pt, x, y)
-register short a[4][2];
+void setpoint(a, pt, x, y)
+register WORD a[4][2];
+int pt, x, y;
 {
     a[pt][0] = x;
     a[pt][1] = y;
     drawpoints(a, pt, pt + 1);
 }
 
-getpoint(a, x, y)
-register short a[4][2];
+WORD getpoint(a, x, y)
+register WORD a[4][2];
+int x, y;
 {
-    register short i, bi;
-    register long r, br;
+    register WORD i, bi;
+    register LONG r, br;
 
     for (i = bi = 0, br = 0x7FFFFFFF; i < 4; ++i) {
 	r = (x-a[i][0])*(x-a[i][0]) + (y-a[i][1])*(y-a[i][1]);
@@ -206,8 +227,9 @@ register short a[4][2];
     return(bi);
 }
 
-movepoint(a, pt, x, y)
-register short a[4][2];
+void movepoint(a, pt, x, y)
+register WORD a[4][2];
+int pt, x, y;
 {
     SetAPen(Rp, 0);
     drawpoints(a, pt, pt + 1);
@@ -225,13 +247,13 @@ register short a[4][2];
  *  equal 128, I must divide by 512^1
  */
 
-drawcurve(a)
-register short a[4][2];
+void drawcurve(a)
+register WORD a[4][2];
 {
-    long  m1[4];	/* t matrix		    */
-    long  mr[4];	/* partial result matrix    */
-    long  corr[2];
-    register short t, i;
+    LONG  m1[4];	/* t matrix		    */
+    LONG  mr[4];	/* partial result matrix    */
+    LONG  corr[2];
+    register WORD t, i;
     char  lastpt = 0;
 
     SetAPen(Rp, 0);
@@ -264,10 +286,11 @@ oncemore:
     }
 }
 
-drawpoints(a, is, ie)
-register short a[4][2];
+void drawpoints(a, is, ie)
+register WORD a[4][2];
+int is, ie;
 {
-    register short i;
+    register WORD i;
     for (i = is; i < ie; ++i) {
 	Move(Rp, a[i][0] - 2, a[i][1]);
 	Draw(Rp, a[i][0] + 2, a[i][1]);
@@ -302,9 +325,9 @@ GADGET Gadgets[] = {
 };
 
 GADGET *Gc;
-long GUx, GUy;
+LONG GUx, GUy;
 
-init_gadgets(nw, ppo)
+void init_gadgets(nw, ppo)
 NW *nw;
 XPI **ppo;
 {

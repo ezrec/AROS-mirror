@@ -104,7 +104,7 @@ void do_help();
 /*
  *   MainLine
  */
-void main() {
+int main(int argc, char **argv) {
    long i ;
    USHORT keycode, stop, freeze;
 
@@ -115,7 +115,7 @@ void main() {
        OpenLibrary("intuition.library", INTUITION_REV)) == NULL)
       done(21);
 
-   GfxBase = (struct GfxBase *)OpenLibrary("graphics.library", NULL);
+   GfxBase = (struct GfxBase *)OpenLibrary("graphics.library", 0);
    if (GfxBase == NULL) done(22);
 
    if ( (scr = OpenScreen(&newscreen)) == NULL)  done(26);

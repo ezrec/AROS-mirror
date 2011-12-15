@@ -49,7 +49,7 @@ struct NewWindow new_window =
 *  FUNCTIONS
 **************/
 
-void main( int argc, char *argv[] );
+int  main( int argc, char *argv[] );
 void print_key( USHORT key );
 void program_end( char *error );
 void program_begin( void );
@@ -59,7 +59,7 @@ void window_input( void );
 *  M A I N
 ************/
 
-void main( int argc, char *argv[] )
+int main( int argc, char *argv[] )
 {
   /* quit if not run from the CLI -- nowhere to send output */
   if (argc)
@@ -68,6 +68,7 @@ void main( int argc, char *argv[] )
     window_input();
   }
   program_end( NULL );
+  return 0;
 }
 
 /*****************
@@ -133,7 +134,7 @@ void window_input( void )
     Wait( 1L<<win->UserPort->mp_SigBit );
 
     /* for each input message */
-    while (imessage = (struct IntuiMessage *)GetMsg( win->UserPort ))
+    while ((imessage = (struct IntuiMessage *)GetMsg( win->UserPort )))
     {
       switch (imessage->Class)
       {
@@ -141,7 +142,7 @@ void window_input( void )
           finished = TRUE;                  /* end the program */
           break;
         case RAWKEY:
-          if (key = input_key( imessage ))  /* if a key was pressed */
+          if ((key = input_key( imessage )))  /* if a key was pressed */
             print_key( key );               /* print it */
           break;
       }
@@ -169,7 +170,7 @@ char *command_keys[] =
 
 void print_key( USHORT key )
 {
-  char c;
+  int c;
 
   /* check for qualifiers */
   if (key & QUAL_LSHIFT)

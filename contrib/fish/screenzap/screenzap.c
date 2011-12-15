@@ -6,6 +6,7 @@
  */
  
 #include <stdlib.h>
+#include <string.h>
 #include <stdio.h>
 #include <intuition/intuitionbase.h>
 #include <graphics/gfxbase.h>
@@ -39,13 +40,13 @@ struct IntuiText GadText[4] =
 struct Gadget Gad[4]=
 {
 	{ &Gad[1], 7, 12, 310, 24, GADGHCOMP, RELVERIFY | GADGIMMEDIATE ,
-	BOOLGADGET, (APTR) &GadBord1, NULL, &GadText[0], NULL, NULL, 0, NULL},
+	BOOLGADGET, (APTR) &GadBord1, NULL, &GadText[0], 0, NULL, 0, NULL},
 	{ &Gad[2], 7, 39, 310, 24, GADGHCOMP, RELVERIFY | GADGIMMEDIATE ,
-	BOOLGADGET, (APTR) &GadBord1, NULL, &GadText[1], NULL, NULL, 1, NULL},
+	BOOLGADGET, (APTR) &GadBord1, NULL, &GadText[1], 0, NULL, 1, NULL},
 	{ &Gad[3], 323, 12, 310, 24, GADGHCOMP, RELVERIFY | GADGIMMEDIATE ,
-	BOOLGADGET, (APTR) &GadBord1, NULL, &GadText[2], NULL, NULL, 2, NULL},
+	BOOLGADGET, (APTR) &GadBord1, NULL, &GadText[2], 0, NULL, 2, NULL},
 	{ NULL, 323, 39, 310, 24, GADGHCOMP, RELVERIFY | GADGIMMEDIATE ,
-	BOOLGADGET, (APTR) &GadBord1, NULL, &GadText[3], NULL, NULL, 3, NULL}
+	BOOLGADGET, (APTR) &GadBord1, NULL, &GadText[3], 0, NULL, 3, NULL}
 };
 
 struct NewWindow nw =
@@ -152,7 +153,7 @@ int nr;
 	struct Screen *Curs,*Nexts;
 	struct Window *Curw;
 	int x,y=0;
-	char *Title;
+	char Title[64];
 
 	Forbid();
 	if (nr==0) Curs = myw->WScreen;
@@ -178,13 +179,13 @@ int nr;
 		if (nr==2) Curs=NULL;
 	}
 	Permit();
-	if ((x>1) && (y>1)) sprintf(&Title,"%d Screens, %d Windows Zapped.",x,y);
-	if ((x>1) && (y==1)) sprintf(&Title,"%d Screens, 1 Window Zapped.",x);
-	if ((x==1) && (y>1)) sprintf(&Title,"1 Screen, %d Windows Zapped.",y);
-	if ((x==1) && (y==1)) Title="1 Screen & 1 Window Zapped.";
-	if ((x>1) && (y==0)) sprintf(&Title,"%d Screens Zapped.",x);
-	if ((x==1) && (y==0)) Title = "1 Screen Zapped.";
-	if (x==0) Title = "Nothing Zapped";
+	if ((x>1) && (y>1)) sprintf(Title,"%d Screens, %d Windows Zapped.",x,y);
+	if ((x>1) && (y==1)) sprintf(Title,"%d Screens, 1 Window Zapped.",x);
+	if ((x==1) && (y>1)) sprintf(Title,"1 Screen, %d Windows Zapped.",y);
+	if ((x==1) && (y==1)) strcpy(Title, "1 Screen & 1 Window Zapped.");
+	if ((x>1) && (y==0)) sprintf(Title,"%d Screens Zapped.",x);
+	if ((x==1) && (y==0)) strcpy(Title, "1 Screen Zapped.");
+	if (x==0) strcpy(Title, "Nothing Zapped");
 	SetWindowTitles(myw,Title,"ScreenZapper V2.3 (c) 1989 Lars R. Clausen. This Program is PD.");
 }
 
@@ -221,7 +222,7 @@ void WindowZap()
 	Permit();
 }
 
-void main()
+int main(int argc, char **argv)
 {
 	struct IntuiMessage *msg;
 	struct Gadget *gad;

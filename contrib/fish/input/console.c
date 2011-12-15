@@ -26,7 +26,7 @@ whether it was successful.
 BOOL console_open( void )
 {
   if (!(ConsoleError = OpenDevice( "console.device", -1L,
-                                 (struct IORequest *)&ConsoleReq, NULL )))
+                                 (struct IORequest *)&ConsoleReq, 0 )))
     ConsoleDevice = ConsoleReq.io_Device;
 
   return (ConsoleError == FALSE);

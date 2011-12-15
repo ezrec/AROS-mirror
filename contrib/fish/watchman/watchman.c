@@ -242,7 +242,7 @@ static struct Gadget gadget =		/* Used to move and quit */
   NULL,
   NULL,
   NULL,
-  NULL,
+  0,
   NULL,
   0, 0
 };
@@ -267,10 +267,9 @@ struct Window *win;
 void CloseStuff(int);
 
 void OpenStuff () {
-        int i,j;
+	int i;
         extern USHORT *Eyemap_chip;
         extern USHORT *Manmap_chip[];
-        PLANEPTR pl;
 
         if (!(IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library", 0L)))
                 CloseStuff (1);
@@ -297,15 +296,15 @@ void OpenStuff () {
         }
         SetAPen(win->RPort, 1L);
         SetDrMd(win->RPort, JAM1);
-        BltTemplate(Manmap_chip[0], 0L, 12L, win->RPort, 0L, 0L, 88L, 88L);
+        BltTemplate((PLANEPTR)Manmap_chip[0], 0L, 12L, win->RPort, 0L, 0L, 88L, 88L);
 
         SetAPen(win->RPort, 2L);
 	SetWriteMask(win->RPort, 2L);       /* Braindead COMPLEMENT */
-        BltTemplate(Manmap_chip[1], 0L, 12L, win->RPort, 0L, 0L, 88L, 88L);
+        BltTemplate((PLANEPTR)Manmap_chip[1], 0L, 12L, win->RPort, 0L, 0L, 88L, 88L);
         SetWriteMask(win->RPort, 255L);     /* Braindead COMPLEMENT */
         if (!(timerport = CreatePort(NULL, 0L))
             || !(timermsg = CreateStdIO(timerport))
-            || OpenDevice(TIMERNAME,UNIT_VBLANK, timermsg, 0L))
+            || OpenDevice(TIMERNAME,UNIT_VBLANK, (struct IORequest *)timermsg, 0L))
                 CloseStuff(1);
 }
 
@@ -313,13 +312,13 @@ void CloseStuff (exitcode)
 int exitcode; 
 {
         if (timermsg)       {
-                CloseDevice(timermsg);
+                CloseDevice((struct IORequest *)timermsg);
                 DeleteStdIO(timermsg);
         }
         if (timerport)          DeletePort(timerport);
         if (win)                CloseWindow(win);
-        if (IntuitionBase)      CloseLibrary(IntuitionBase);
-        if (GfxBase)            CloseLibrary(GfxBase);
+        if (IntuitionBase)      CloseLibrary((struct Library *)IntuitionBase);
+        if (GfxBase)            CloseLibrary((struct Library *)GfxBase);
         if (Eyemap_chip)        FreeMem(Eyemap_chip, (LONG)sizeof(Eyemap));
         if (Manmap_chip[0])     FreeMem(Manmap_chip[0], (LONG)sizeof(Manmap[0]));
         if (Manmap_chip[1])     FreeMem(Manmap_chip[1], (LONG)sizeof(Manmap[1]));
@@ -344,7 +343,7 @@ int idx, OffX, OffY, col;
                 { 2, 1, 2, 1,-2,-1,-2,-1}};
 
         SetAPen(win->RPort, (LONG)col);
-        BltTemplate(Eyemap_chip, 0L, 2L, win->RPort,
+        BltTemplate((PLANEPTR)Eyemap_chip, 0L, 2L, win->RPort,
                 (LONG)(OffX + direct[0][idx&7]), 
                 (LONG)(OffY + direct[1][idx&7]), 4L, 4L);
 }
@@ -369,12 +368,12 @@ int *x,*y;
 *	so why bother?
 */
 
-main ()
+int main (int argc, char **argv)
 {
     ULONG msgclass;  		/* Message class from Intuition message */
     struct IntuiMessage *msg;	/* The msg we got */
     int Mx, My,			/* Mouse's current relative offset */ 
-    	LastL, LastR, 		/* Last index for left&right Eye */
+    	LastL = 0, LastR = 0, 	/* Last index for left&right Eye */
     	NewL, NewR;		/* New index    --   ""   --     */
     ULONG PrevSecs, PrevMics;	/* Time of last click */
 
@@ -387,11 +386,11 @@ main ()
         timermsg->io_Command = TR_ADDREQUEST;   /* add a new timer request */
         timermsg->io_Actual = 0;                /* seconds */
         timermsg->io_Length = 100000;           /* microseconds */
-        DoIO(timermsg);                         /* Wait for a while... */
-        while(msg = (struct IntuiMessage *)GetMsg(win->UserPort)) {    
+        DoIO((struct IORequest *)timermsg);                         /* Wait for a while... */
+        while((msg = (struct IntuiMessage *)GetMsg(win->UserPort))) {    
             /* User action */
             msgclass = msg->Class;
-            ReplyMsg (msg);
+            ReplyMsg ((struct Message *)msg);
             switch (msgclass) {
             case GADGETDOWN:
                 if (DoubleClick(PrevSecs, PrevMics, msg->Seconds, msg->Micros))

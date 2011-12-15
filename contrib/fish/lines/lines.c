@@ -292,6 +292,7 @@ void init()
 }
 
 int range_rand(minv,maxv)
+int minv, maxv;
 {
 	register int i1;
 	

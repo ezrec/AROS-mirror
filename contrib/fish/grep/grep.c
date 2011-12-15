@@ -133,6 +133,7 @@ char	lbuf[LMAX];
 char	pbuf[PMAX];
 /*******************************************************/
 int main(argc, argv)
+int argc;
 char *argv[];
 {
    register char   *p;
@@ -406,7 +407,7 @@ char  *stop;	      /* Pattern end   */
 {
    fprintf(stderr, "-GREP-E-%s, pattern is\"%s\"\n", message, source);
    fprintf(stderr, "-GREP-E-Stopped at byte %d, '%c'\n",
-	 stop-source, stop[-1]);
+	 (int)(stop-source), stop[-1]);
    error("?GREP-E-Bad pattern\n");
 }
 /*******************************************************/
@@ -476,7 +477,7 @@ char		   *pattern;  /* (partial) pattern to match   */
    while ((op = *p++) != ENDPAT) {
       if (debug > 1)
 	 printf("byte[%d] = 0%o, '%c', op = 0%o\n",
-	       l-line, *l, *l, op);
+	       (int)(l-line), *l, *l, op);
       switch(op) {
       case CHAR:
 	 if (tolower(*l) != *p++)

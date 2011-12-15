@@ -35,7 +35,7 @@ short maze(short width,short height,char * area)
 
   /* we need a 'stack' to store those positions, from where we can */
   /* continue if we get into a dead end */
- if(!(stack=(short*) AllocMem(width*height,NULL))) return(NULL);
+ if(!(stack=(short*) AllocMem(width*height,MEMF_ANY))) return 0;
 
  stackptr=1;
  StackX=x;StackY=y;

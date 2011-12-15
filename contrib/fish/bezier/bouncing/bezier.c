@@ -32,6 +32,10 @@
  *	using D = 2
  */
 
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
 /* !!!
  #include <typedefs.h>
 */ 
@@ -52,12 +56,27 @@ struct IntuitionBase * IntuitionBase;
  #include <xmisc.h>
 */
 
+#define random myrandom
  
 #define     SHIFTS  9
 #define     ONE     (1<<SHIFTS)
 
 typedef struct PropInfo XPI;
 typedef struct Image	IM;
+
+void init_gadgets(NW *nw, XPI **ppo);
+void moveauto(WORD au[4][2], WORD ar[4][2]);
+LONG random(LONG n);
+void loadauto(WORD a[4][2], LONG seed);
+void drawpoints(WORD a[4][2], int is, int ie);
+void drawcurve(WORD a[4][2]);
+void movepoint(WORD a[4][2], int pt, int x, int y);
+void setpoint(WORD a[4][2], int pt, int x, int y);
+void drawcurve(WORD a[4][2]);
+void setbounds(WORD a[4][2]);
+LONG random(LONG n);
+void exiterr(int n, char *str);
+int  getpoint(WORD a[4][2], int x, int y);
 
 #define MYGADGETS   (WINDOWSIZING|WINDOWDRAG|WINDOWDEPTH|WINDOWCLOSE)
 
@@ -75,8 +94,12 @@ NW Nw = {
 
 int openlibs(int dummy)
 {
-  GfxBase = (struct GfxBase *)OpenLibrary("graphics.library",0);
-  IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library",0);
+  if ((GfxBase = (struct GfxBase *)OpenLibrary("graphics.library",0))) {
+    if ((IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library",0)))
+      return TRUE;
+    CloseLibrary((struct Library *)GfxBase);
+  }
+  return FALSE;
 }
 
 void closelibs(int dummy)
@@ -89,21 +112,22 @@ void closelibs(int dummy)
 
 WIN *Win;
 RP  *Rp;
-short Ux, Uy, Lx, Ly;
-short Step = 128;
+WORD Ux, Uy, Lx, Ly;
+WORD Step = 128;
 
-main(ac, av)
+int main(ac, av)
+int ac;
 char *av[];
 {
     register IMESS *mess;
-    short notdone = 1;
-    short pt = -1;
-    short ptarray[4][2];
-    short auarray[4][2];    /* auto move */
-    short au = 0;
-    long  delay = 0;
+    WORD notdone = 1;
+    WORD pt = -1;
+    WORD ptarray[4][2];
+    WORD auarray[4][2];    /* auto move */
+    WORD au = 0;
+    LONG  delay = 0;
 
-    short gy, gg = 0;
+    WORD gy, gg = 0;
     XPI *po;
 
     if (ac >= 2) {
@@ -124,7 +148,7 @@ char *av[];
     setpoint(ptarray, 3, 60, 60);
     setbounds(ptarray);
     while (notdone) {
-	short mx, my, mm = 0;
+	WORD mx, my, mm = 0;
 	if (au == 0) {
 	    WaitPort(Win->UserPort);
 	} else {
@@ -132,7 +156,7 @@ char *av[];
 		Delay(delay);
 	    moveauto(auarray, ptarray);
 	}
-	while (mess = GetMsg(Win->UserPort)) {
+	while ((mess = (struct IntuiMessage *)GetMsg(Win->UserPort))) {
 	    switch(mess->Class) {
 	    case CLOSEWINDOW:
 		notdone = 0;
@@ -171,7 +195,7 @@ char *av[];
 	    default:
 		break;
 	    }
-	    ReplyMsg(mess);
+	    ReplyMsg((struct Message *)mess);
 	}
 	if (mm && pt >= 0) {
 	    movepoint(ptarray, pt, mx, my);
@@ -183,7 +207,7 @@ char *av[];
 		gg = 0;
 	    if (gy + 1 >= 0 && gy + 1 != Step) {
 		Step = gy + 1;
-		sprintf(buf, "gran: %4ld/%ld", Step, ONE);
+		sprintf(buf, "gran: %4ld/%ld", (long)Step, (long)ONE);
 		drawcurve(ptarray);
 		SetDrMd(Rp, JAM1);
 		Move(Rp, Ux + 1, Uy + 16);
@@ -194,7 +218,8 @@ char *av[];
     exiterr(1, NULL);
 }
 
-exiterr(n, str)
+void exiterr(n, str)
+int n;
 char *str;
 {
     if (n) {
@@ -207,8 +232,8 @@ char *str;
     }
 }
 
-setbounds(a)
-register long *a;
+void setbounds(a)
+register WORD a[4][2];
 {
     Ux = Win->BorderLeft;
     Uy = Win->BorderTop;
@@ -217,19 +242,21 @@ register long *a;
     drawcurve(a);
 }
 
-setpoint(a, pt, x, y)
-register short a[4][2];
+void setpoint(a, pt, x, y)
+register WORD a[4][2];
+int pt, x, y;
 {
     a[pt][0] = x;
     a[pt][1] = y;
     drawpoints(a, pt, pt + 1);
 }
 
-getpoint(a, x, y)
-register short a[4][2];
+int getpoint(a, x, y)
+register WORD a[4][2];
+int x, y;
 {
-    register short i, bi;
-    register long r, br;
+    register WORD i, bi;
+    register LONG r, br;
 
     for (i = bi = 0, br = 0x7FFFFFFF; i < 4; ++i) {
 	r = (x-a[i][0])*(x-a[i][0]) + (y-a[i][1])*(y-a[i][1]);
@@ -241,8 +268,9 @@ register short a[4][2];
     return(bi);
 }
 
-movepoint(a, pt, x, y)
-register short a[4][2];
+void movepoint(a, pt, x, y)
+register WORD a[4][2];
+int pt, x, y;
 {
     SetAPen(Rp, 0);
     drawpoints(a, pt, pt + 1);
@@ -261,15 +289,15 @@ register short a[4][2];
  *  equal 128, I must divide by 512^1
  */
 
-drawcurve(a)
-register short a[4][2];
+void drawcurve(a)
+register WORD a[4][2];
 {
-    long  mr[4];		/* Holds T(t)B partial result	*/
+    LONG  mr[4];		/* Holds T(t)B partial result	*/
     char  lastpt;
-    short array[ONE][2];	/* hold points to plot		*/
-    register long  ttt3, t3, tt3;
-    register short t, i, n;
-    register long tt, ttt;
+    WORD array[ONE][2];	/* hold points to plot		*/
+    register LONG  ttt3, t3, tt3;
+    register WORD t, i, n;
+    register LONG tt, ttt;
 
     lastpt = 0;
     for (t = n = 0; t <= ONE; t += Step) {     /*  t = 0 to 1	   */
@@ -302,15 +330,16 @@ oncemore:
     RectFill(Rp, Ux, Uy, Lx - 1, Ly - 1);
     SetAPen(Rp, 1);
     Move(Rp, a[0][0], a[0][1]);
-    PolyDraw(Rp, n, array);
+    PolyDraw(Rp, n, &array[0][0]);
     drawpoints(a, 0, 4);
 }
 
 
-drawpoints(a, is, ie)
-register short a[4][2];
+void drawpoints(a, is, ie)
+register WORD a[4][2];
+int is, ie;
 {
-    register short i;
+    register WORD i;
     for (i = is; i < ie; ++i) {
 	Move(Rp, a[i][0] - 2, a[i][1]);
 	Draw(Rp, a[i][0] + 2, a[i][1]);
@@ -323,11 +352,12 @@ register short a[4][2];
  *  AUTO ROUTINES   ------------------------------------------------------
  */
 
-loadauto(a, seed)
-register short a[4][2];
+void loadauto(a, seed)
+register WORD a[4][2];
+LONG seed;
 {
-    register short i, j;
-    register long n;
+    register WORD i, j;
+    register LONG n;
     n = random(seed);
     for (i = 0; i < 4; ++i) {
 	for (j = 0; j < 2; ++j) {
@@ -338,12 +368,12 @@ register short a[4][2];
     }
 }
 
-moveauto(au, ar)
-register short au[4][2];
-register short ar[4][2];
+void moveauto(au, ar)
+register WORD au[4][2];
+register WORD ar[4][2];
 {
-    register short i, j;
-    short lb[2], mb[2];
+    register WORD i, j;
+    WORD lb[2], mb[2];
 
     lb[0] = Ux; lb[1] = Uy;
     mb[0] = Lx; mb[1] = Ly;
@@ -360,7 +390,8 @@ register short ar[4][2];
     drawcurve(ar);
 }
 
-random(n)
+LONG random(n)
+LONG n;
 {
     return((n ^ (n >> 8)) * 13 + 1);
 }
@@ -392,9 +423,9 @@ GADGET Gadgets[] = {
 };
 
 GADGET *Gc;
-long GUx, GUy;
+LONG GUx, GUy;
 
-init_gadgets(nw, ppo)
+void init_gadgets(nw, ppo)
 NW *nw;
 XPI **ppo;
 {

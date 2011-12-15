@@ -51,6 +51,8 @@
 #include <intuition/intuitionbase.h>
 #include <stdio.h>
 
+#define abort myabort
+
 void exit(int);
 
 /* Function Prototypes */
@@ -200,7 +202,7 @@ char *s;
 }
 
 void branch(xs,ys,len,dir,rl)
-int xs,ys,len,dir;
+int xs,ys,len,dir,rl;
 {
 	int r,xe,ye;
 
@@ -277,7 +279,7 @@ int x,y,ex,ey,d,l;
 
 void init_rand()
 {
-	long sec,mic,x;
+	LONG sec,mic,x;
 	int i;
 
 	CurrentTime(&sec,&mic);
