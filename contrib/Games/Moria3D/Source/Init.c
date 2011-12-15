@@ -245,8 +245,8 @@ int16 InitScreen(void)
 					   MyColor.RGB[a][2]);
 	}
 
-	MyWD1Tags[4].ti_Data = (ULONG)MyScreen;
-	MyWD2Tags[4].ti_Data = (ULONG)MyScreen;
+	MyWD1Tags[4].ti_Data = (IPTR)MyScreen;
+	MyWD2Tags[4].ti_Data = (IPTR)MyScreen;
 
 	if (NULL != (MyWindow1 = OpenWindowTagList(NULL,MyWD1Tags)))
 	{

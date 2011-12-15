@@ -37,12 +37,11 @@ fix strtod1000(char * MyStr, char ** EndStr)
 int16 ParseFile(FILE *MyFile,char *Buffer)
 {
     int16 Error=0;
-    int16 Pad;
     char  *Pos;
     char  *Pos2;
     char  *Pos3;
 
-    Pad=fscanf(MyFile,"%s",Buffer);
+    fscanf(MyFile,"%s",Buffer);
 
     Pos=Buffer;
 
@@ -64,7 +63,7 @@ int16 ParseFile(FILE *MyFile,char *Buffer)
 				 {
 				     *Pos=(char)32;
 				     Pos++;
-				     Pad=fscanf(MyFile,"%s",Pos);
+				     fscanf(MyFile,"%s",Pos);
 				 }
 			     else
 				 Pos++;
@@ -88,7 +87,7 @@ int16 ParseFile(FILE *MyFile,char *Buffer)
 					     if (*Pos==(char)0)
 						 {
 						     Pos=Pos2;
-						     Pad=fscanf(MyFile,"%s",Pos);
+						     fscanf(MyFile,"%s",Pos);
 						 }
 					     else
 						 Pos++;
@@ -119,7 +118,6 @@ int16 ParseFile(FILE *MyFile,char *Buffer)
 int16 LoadMissions(char *Name)
 {
     int16    Error=0;
-    int16    Pad;
     char     PadStr[512];
     FILE     *MissionFile = NULL;
     pMission PosMission = NULL;
@@ -134,15 +132,15 @@ int16 LoadMissions(char *Name)
 	    if (!strcmp(PadStr,"OnFile"))           /* Parse loader helpers */
 		while (strcmp(PadStr,"OnFileEnd"))
 		{
-		    Pad=ParseFile(MissionFile,PadStr);
+		    ParseFile(MissionFile,PadStr);
 		}
 	    else if (!strcmp(PadStr,"Missions"))    /* Parse Missions */
 		while (strcmp(PadStr,"MissionsEnd"))
 		{
-		    Pad=ParseFile(MissionFile,PadStr);
+		    ParseFile(MissionFile,PadStr);
 		    if (!strcmp(PadStr,"NumMissions:"))
 		    {
-			Pad=ParseFile(MissionFile,PadStr);
+			ParseFile(MissionFile,PadStr);
 			MyMissions.Num=strtol(PadStr,0,0);
 			MyMissions.Missions=(pMission)MemAlloc((int32)(MyMissions.Num*sizeof(Mission)));
 			if (MyMissions.Missions==0)
@@ -154,12 +152,12 @@ int16 LoadMissions(char *Name)
 		    }
 		    else if (!strcmp(PadStr,"MissionsName:"))
 		    {
-			Pad=ParseFile(MissionFile,PadStr);
+			ParseFile(MissionFile,PadStr);
 			strcpy(MyMissions.Name,PadStr);
 		    }
 		    else if (!strcmp(PadStr,"MissionsStorry:"))
 		    {
-			Pad=ParseFile(MissionFile,PadStr);
+			ParseFile(MissionFile,PadStr);
 			if (*PadStr!='@')
 			{
 			    MyMissions.Storry="MissionsStorry";
@@ -176,15 +174,15 @@ int16 LoadMissions(char *Name)
 	    {
 		while (strcmp(PadStr,"MissionEnd"))
 		{
-		    Pad=ParseFile(MissionFile,PadStr);
+		    ParseFile(MissionFile,PadStr);
 		    if (!strcmp(PadStr,"MissionName:"))
 		    {
-			Pad=ParseFile(MissionFile,PadStr);
+			ParseFile(MissionFile,PadStr);
 			strcpy(PosMission->Name,PadStr);
 		    }
 		    else if (!strcmp(PadStr,"MissionStorry:"))
 		    {
-			Pad=ParseFile(MissionFile,PadStr);
+			ParseFile(MissionFile,PadStr);
 			if (*PadStr!='@')
 			{
 			    PosMission->Storry="MissionStorry";
@@ -198,7 +196,7 @@ int16 LoadMissions(char *Name)
 		    }
 		    else if (!strcmp(PadStr,"NumLevels:"))
 		    {
-			Pad=ParseFile(MissionFile,PadStr);
+			ParseFile(MissionFile,PadStr);
 			PosMission->Num=strtol(PadStr,0,0);
 			PosMission->Levels=(pLevel)MemAlloc((int32)(PosMission->Num*sizeof(Level)));
 			if (PosMission==0)
@@ -210,7 +208,7 @@ int16 LoadMissions(char *Name)
 		    }
 		    else if (!strcmp(PadStr,"Level:"))
 		    {
-			Pad=ParseFile(MissionFile,PadStr);
+			ParseFile(MissionFile,PadStr);
 			if (*PadStr!='@')
 			{
 			    printf("Levelnames should have a leeding @\n");
@@ -312,7 +310,6 @@ void LoadFading(char * Name,pFade MyFade)
 int16 LoadLevel(char * Name)
 {
     int16      Error=0;
-    int16      Pad;
     char       PadStr[512];
     FILE     * LevelFile;
     pPnt       PosPoint = NULL;
@@ -330,16 +327,16 @@ int16 LoadLevel(char * Name)
     {
 	while (!feof(LevelFile))
 	{
-	    Pad=ParseFile(LevelFile,PadStr);
+	    ParseFile(LevelFile,PadStr);
 	    if (!strcmp(PadStr,"Header"))
 	    {
 		while(strcmp(PadStr,"HeaderEnd"))
 		{
-		    Pad=ParseFile(LevelFile,PadStr);
+		    ParseFile(LevelFile,PadStr);
 		    /* To be considered */
 		    if (!strcmp(PadStr,"Colors:"))
 		    {
-			Pad=ParseFile(LevelFile,PadStr);
+			ParseFile(LevelFile,PadStr);
 			if (PadStr[0] != '@')
 			{
 			    printf("Colors must be in a file!\n");
@@ -353,7 +350,7 @@ int16 LoadLevel(char * Name)
 		    }
 		    if (!strcmp(PadStr,"Fadeing:"))
 		    {
-			Pad=ParseFile(LevelFile,PadStr);
+			ParseFile(LevelFile,PadStr);
 			if (PadStr[0] != '@')
 			{
 			    printf("Fading must be in a file!\n");
@@ -367,7 +364,7 @@ int16 LoadLevel(char * Name)
 		    }
 		    if (!strcmp(PadStr,"Rings:"))
 		    {
-			Pad=ParseFile(LevelFile,PadStr);
+			ParseFile(LevelFile,PadStr);
 			MyLevelData.NumRings = strtol(PadStr,0,0);
 		    }
 		}
@@ -376,21 +373,21 @@ int16 LoadLevel(char * Name)
 	    {
 		while(strcmp(PadStr,"PointsEnd"))
 		{
-		    Pad=ParseFile(LevelFile,PadStr);
+		    ParseFile(LevelFile,PadStr);
 		    if (!strcmp(PadStr,"NumPoints:"))
 		    {
-			Pad=ParseFile(LevelFile,PadStr);
+			ParseFile(LevelFile,PadStr);
 			MyLevelData.NumPoints=strtol(PadStr,0,0);
 			MyLevelData.Points=(pPnt)MemAlloc((int32)(MyLevelData.NumPoints*sizeof(Pnt)));
 			PosPoint=MyLevelData.Points;
 		    }
 		    else if (!strcmp(PadStr,"Point:"))
 		    {
-			Pad=ParseFile(LevelFile,PadStr);
+			ParseFile(LevelFile,PadStr);
 			PosPoint->x=(fix)strtod1000(PadStr,0);
-			Pad=ParseFile(LevelFile,PadStr);
+			ParseFile(LevelFile,PadStr);
 			PosPoint->y=(fix)strtod1000(PadStr,0);
-			Pad=ParseFile(LevelFile,PadStr);
+			ParseFile(LevelFile,PadStr);
 			PosPoint->z=(fix)strtod1000(PadStr,0);
 			PosPoint++;
 		    }
@@ -401,17 +398,17 @@ int16 LoadLevel(char * Name)
 	    {
 		while(strcmp(PadStr,"TexturesEnd"))
 		{
-		    Pad=ParseFile(LevelFile,PadStr);
+		    ParseFile(LevelFile,PadStr);
 		    if (!strcmp(PadStr,"NumTextures:"))
 		    {
-			Pad=ParseFile(LevelFile,PadStr);
+			ParseFile(LevelFile,PadStr);
 			MyLevelData.NumTextures=strtol(PadStr,0,0);
 			MyLevelData.Textures=(pTexture)MemAlloc((int32)(MyLevelData.NumTextures*sizeof(Texture)));
 			PosTexture=MyLevelData.Textures;
 		    }
 		    else if (!strcmp(PadStr,"Texture:"))
 		    {
-			Pad=ParseFile(LevelFile,PadStr);
+			ParseFile(LevelFile,PadStr);
 			if (PadStr[0] != '@')
 			{
 			    printf("Textures should be in a file\n");
@@ -430,27 +427,27 @@ int16 LoadLevel(char * Name)
 	    {
 		while(strcmp(PadStr,"SidesEnd"))
 		{
-		    Pad=ParseFile(LevelFile,PadStr);
+		    ParseFile(LevelFile,PadStr);
 		    if (!strcmp(PadStr,"NumSides:"))
 		    {
-			Pad=ParseFile(LevelFile,PadStr);
+			ParseFile(LevelFile,PadStr);
 			MyLevelData.NumSides=strtol(PadStr,0,0);
 			MyLevelData.Sides=(pSide)MemAlloc((int32)(MyLevelData.NumSides*sizeof(Side)));
 			PosSide=MyLevelData.Sides;
 		    }
 		    else if (!strcmp(PadStr,"Side:"))
 		    {
-			Pad=ParseFile(LevelFile,PadStr);
+			ParseFile(LevelFile,PadStr);
 			if (strtol(PadStr,0,0) != 0)
 			{
 			    PosSide->Back=&MyLevelData.Textures[strtol(PadStr,0,0)];
 			    for (v=0;v<4;v++)
 			    {
-				Pad=ParseFile(LevelFile,PadStr);
+				ParseFile(LevelFile,PadStr);
 				PosSide->BackPnts[v].x=strtod1000(PadStr,0);
-				Pad=ParseFile(LevelFile,PadStr);
+				ParseFile(LevelFile,PadStr);
 				PosSide->BackPnts[v].y=strtod1000(PadStr,0);
-				Pad=ParseFile(LevelFile,PadStr);
+				ParseFile(LevelFile,PadStr);
 				PosSide->BackPnts[v].z=strtod1000(PadStr,0);
 			    }
 			}
@@ -458,17 +455,17 @@ int16 LoadLevel(char * Name)
 			{
 			    PosSide->Back=0;
 			}
-			Pad=ParseFile(LevelFile,PadStr);
+			ParseFile(LevelFile,PadStr);
 			if (strtol(PadStr,0,0) != 0)
 			{
 			    PosSide->Front=&MyLevelData.Textures[strtol(PadStr,0,0)];
 			    for (v=0;v<4;v++)
 			    {
-				Pad=ParseFile(LevelFile,PadStr);
+				ParseFile(LevelFile,PadStr);
 				PosSide->FrontPnts[v].x=strtod1000(PadStr,0);
-				Pad=ParseFile(LevelFile,PadStr);
+				ParseFile(LevelFile,PadStr);
 				PosSide->FrontPnts[v].y=strtod1000(PadStr,0);
-				Pad=ParseFile(LevelFile,PadStr);
+				ParseFile(LevelFile,PadStr);
 				PosSide->FrontPnts[v].z=strtod1000(PadStr,0);
 			    }
 			}
@@ -485,10 +482,10 @@ int16 LoadLevel(char * Name)
 	    {
 		while(strcmp(PadStr,"CubesEnd"))
 		{
-		    Pad=ParseFile(LevelFile,PadStr);
+		    ParseFile(LevelFile,PadStr);
 		    if (!strcmp(PadStr,"NumCubes:"))
 		    {
-			Pad=ParseFile(LevelFile,PadStr);
+			ParseFile(LevelFile,PadStr);
 			MyLevelData.NumCubes=strtol(PadStr,0,0);
 			MyLevelData.Cubes=(pCube)MemAlloc((int32)(MyLevelData.NumCubes*sizeof(Cube)));
 			PosCube=MyLevelData.Cubes;
@@ -499,15 +496,15 @@ int16 LoadLevel(char * Name)
 
 			for (v=0;v<8;v++) /* Read 8 Points */
 			{
-			    Pad=ParseFile(LevelFile,PadStr);
+			    ParseFile(LevelFile,PadStr);
 			    MyPoints[v]=strtol(PadStr,0,0);
 			}
-			Pad=ParseFile(LevelFile,PadStr); /* Read Light */
+			ParseFile(LevelFile,PadStr); /* Read Light */
 			PosCube->Light=strtod1000(PadStr,0);
 
 			for (v=0;v<6;v++) /* Read 6 Sides */
 			{
-			    Pad=ParseFile(LevelFile,PadStr);
+			    ParseFile(LevelFile,PadStr);
 			    if (strtol(PadStr,0,0) != 0)
 			    {
 				PosCube->Sides[v].Back=MyLevelData.Sides[strtol(PadStr,0,0)-1].Back;
@@ -520,7 +517,7 @@ int16 LoadLevel(char * Name)
 				PosCube->Sides[v].FrontPnts[1]=MyLevelData.Sides[strtol(PadStr,0,0)-1].FrontPnts[1];
 				PosCube->Sides[v].FrontPnts[2]=MyLevelData.Sides[strtol(PadStr,0,0)-1].FrontPnts[2];
 				PosCube->Sides[v].FrontPnts[3]=MyLevelData.Sides[strtol(PadStr,0,0)-1].FrontPnts[3];
-				Pad=ParseFile(LevelFile,PadStr);
+				ParseFile(LevelFile,PadStr);
 				PosCube->Sides[v].Light=strtod1000(PadStr,0);
 			    }
 			    else
@@ -574,7 +571,7 @@ int16 LoadLevel(char * Name)
 				    PosCube->Sides[5].Pnts[3]=&MyLevelData.Points[MyPoints[SideBottom3]-1];
 				}
 			    }
-			    Pad=ParseFile(LevelFile,PadStr);
+			    ParseFile(LevelFile,PadStr);
 			    if (strtol(PadStr,0,0) != 0)
 			    {
 				PosCube->Cubes[v]=&MyLevelData.Cubes[strtol(PadStr,0,0)-1];
@@ -594,10 +591,10 @@ int16 LoadLevel(char * Name)
 	    {
 		while(strcmp(PadStr,"PolygonsEnd"))
 		{
-		    Pad=ParseFile(LevelFile,PadStr);
+		    ParseFile(LevelFile,PadStr);
 		    if (!strcmp(PadStr,"NumPolygons:"))
 		    {
-			Pad=ParseFile(LevelFile,PadStr);
+			ParseFile(LevelFile,PadStr);
 			MyLevelData.NumPolygons=strtol(PadStr,0,0);
 			MyLevelData.Polygons=(pPolygon)MemAlloc((int32)(MyLevelData.NumPolygons*sizeof(Polygon)));
 			PosPolygon=MyLevelData.Polygons;
@@ -606,33 +603,33 @@ int16 LoadLevel(char * Name)
 		    {
 			/* Read NumPoints */
 
-			Pad=ParseFile(LevelFile,PadStr);
+			ParseFile(LevelFile,PadStr);
 			PosPolygon->NumPoints=strtol(PadStr,0,0);
 
 			/* Read Points */
 
 			for (u=0;u<PosPolygon->NumPoints;u++)
 			{
-			    Pad=ParseFile(LevelFile,PadStr);
+			    ParseFile(LevelFile,PadStr);
 			    PosPolygon->Pnts[u].x=strtod1000(PadStr,0);
-			    Pad=ParseFile(LevelFile,PadStr);
+			    ParseFile(LevelFile,PadStr);
 			    PosPolygon->Pnts[u].y=strtod1000(PadStr,0);
-			    Pad=ParseFile(LevelFile,PadStr);
+			    ParseFile(LevelFile,PadStr);
 			    PosPolygon->Pnts[u].z=strtod1000(PadStr,0);
 			}
 
 			/* Read Normal */
 
-			Pad=ParseFile(LevelFile,PadStr);
+			ParseFile(LevelFile,PadStr);
 			PosPolygon->Normal.x=strtod1000(PadStr,0);
-			Pad=ParseFile(LevelFile,PadStr);
+			ParseFile(LevelFile,PadStr);
 			PosPolygon->Normal.y=strtod1000(PadStr,0);
-			Pad=ParseFile(LevelFile,PadStr);
+			ParseFile(LevelFile,PadStr);
 			PosPolygon->Normal.z=strtod1000(PadStr,0);
 
 			/* Read Textures */
 
-			Pad=ParseFile(LevelFile,PadStr);
+			ParseFile(LevelFile,PadStr);
 
 			if (strtol(PadStr,0,0) == 0)
 			{
@@ -646,16 +643,16 @@ int16 LoadLevel(char * Name)
 
 			    for (u=0;u<4;u++)
 			    {
-				Pad=ParseFile(LevelFile,PadStr);
+				ParseFile(LevelFile,PadStr);
 				PosPolygon->BackPnts[u].x=strtod1000(PadStr,0);
-				Pad=ParseFile(LevelFile,PadStr);
+				ParseFile(LevelFile,PadStr);
 				PosPolygon->BackPnts[u].y=strtod1000(PadStr,0);
-				Pad=ParseFile(LevelFile,PadStr);
+				ParseFile(LevelFile,PadStr);
 				PosPolygon->BackPnts[u].z=strtod1000(PadStr,0);
 			    }
 			}
 
-			Pad=ParseFile(LevelFile,PadStr);
+			ParseFile(LevelFile,PadStr);
 
 			if (strtol(PadStr,0,0) == 0)
 			{
@@ -669,11 +666,11 @@ int16 LoadLevel(char * Name)
 
 			    for (u=0;u<4;u++)
 			    {
-				Pad=ParseFile(LevelFile,PadStr);
+				ParseFile(LevelFile,PadStr);
 				PosPolygon->FrontPnts[u].x=strtod1000(PadStr,0);
-				Pad=ParseFile(LevelFile,PadStr);
+				ParseFile(LevelFile,PadStr);
 				PosPolygon->FrontPnts[u].y=strtod1000(PadStr,0);
-				Pad=ParseFile(LevelFile,PadStr);
+				ParseFile(LevelFile,PadStr);
 				PosPolygon->FrontPnts[u].z=strtod1000(PadStr,0);
 			    }
 			}
@@ -686,10 +683,10 @@ int16 LoadLevel(char * Name)
 	    {
 		while(strcmp(PadStr,"MeshesEnd"))
 		{
-		    Pad=ParseFile(LevelFile,PadStr);
+		    ParseFile(LevelFile,PadStr);
 		    if (!strcmp(PadStr,"NumMeshes:"))
 		    {
-			Pad=ParseFile(LevelFile,PadStr);
+			ParseFile(LevelFile,PadStr);
 			MyLevelData.NumMeshes=strtol(PadStr,0,0);
 			MyLevelData.Meshes=(pMesh)MemAlloc((int32)(MyLevelData.NumMeshes*sizeof(Mesh)));
 			PosMesh=MyLevelData.Meshes;
@@ -698,7 +695,7 @@ int16 LoadLevel(char * Name)
 		    {
 			/* Read NumPolygons */
 
-			Pad=ParseFile(LevelFile,PadStr);
+			ParseFile(LevelFile,PadStr);
 			PosMesh->NumPolygons=strtol(PadStr,0,0);
 
 			/* Read Polygons */
@@ -707,20 +704,20 @@ int16 LoadLevel(char * Name)
 			{
 			    /* Read Polygon */
 
-			    Pad=ParseFile(LevelFile,PadStr);
+			    ParseFile(LevelFile,PadStr);
 			    PosMesh->Polygons[u] = &MyLevelData.Polygons[strtol(PadStr,0,0)-1];
 
-			    Pad=ParseFile(LevelFile,PadStr);
+			    ParseFile(LevelFile,PadStr);
 			    PosMesh->Base[u].x=strtod1000(PadStr,0);
-			    Pad=ParseFile(LevelFile,PadStr);
+			    ParseFile(LevelFile,PadStr);
 			    PosMesh->Base[u].y=strtod1000(PadStr,0);
-			    Pad=ParseFile(LevelFile,PadStr);
+			    ParseFile(LevelFile,PadStr);
 			    PosMesh->Base[u].z=strtod1000(PadStr,0);
 			}
 
 			/* Read Light */
 
-			Pad=ParseFile(LevelFile,PadStr);
+			ParseFile(LevelFile,PadStr);
 			PosMesh->Light=strtod1000(PadStr,0);
 
 			PosMesh++;
@@ -731,10 +728,10 @@ int16 LoadLevel(char * Name)
 	    {
 		while(strcmp(PadStr,"BotsEnd"))
 		{
-		    Pad=ParseFile(LevelFile,PadStr);
+		    ParseFile(LevelFile,PadStr);
 		    if (!strcmp(PadStr,"NumBots:"))
 		    {
-			Pad=ParseFile(LevelFile,PadStr);
+			ParseFile(LevelFile,PadStr);
 			MyLevelData.NumBots=strtol(PadStr,0,0);
 			MyLevelData.Bots=(pBot)MemAlloc((int32)(MyLevelData.NumBots*sizeof(Bot)));
 			PosBot=MyLevelData.Bots;
@@ -765,53 +762,53 @@ int16 LoadLevel(char * Name)
 
 			/* Read Position */
 
-			Pad=ParseFile(LevelFile,PadStr);
+			ParseFile(LevelFile,PadStr);
 			PosBot->Pos.x=strtod1000(PadStr,0);
-			Pad=ParseFile(LevelFile,PadStr);
+			ParseFile(LevelFile,PadStr);
 			PosBot->Pos.y=strtod1000(PadStr,0);
-			Pad=ParseFile(LevelFile,PadStr);
+			ParseFile(LevelFile,PadStr);
 			PosBot->Pos.z=strtod1000(PadStr,0);
 
 			/* Read Direction */
 
-			Pad=ParseFile(LevelFile,PadStr);
+			ParseFile(LevelFile,PadStr);
 			PosBot->Direction.a.x=strtod1000(PadStr,0);
-			Pad=ParseFile(LevelFile,PadStr);
+			ParseFile(LevelFile,PadStr);
 			PosBot->Direction.a.y=strtod1000(PadStr,0);
-			Pad=ParseFile(LevelFile,PadStr);
+			ParseFile(LevelFile,PadStr);
 			PosBot->Direction.a.z=strtod1000(PadStr,0);
 
-			Pad=ParseFile(LevelFile,PadStr);
+			ParseFile(LevelFile,PadStr);
 			PosBot->Direction.b.x=strtod1000(PadStr,0);
-			Pad=ParseFile(LevelFile,PadStr);
+			ParseFile(LevelFile,PadStr);
 			PosBot->Direction.b.y=strtod1000(PadStr,0);
-			Pad=ParseFile(LevelFile,PadStr);
+			ParseFile(LevelFile,PadStr);
 			PosBot->Direction.b.z=strtod1000(PadStr,0);
 
-			Pad=ParseFile(LevelFile,PadStr);
+			ParseFile(LevelFile,PadStr);
 			PosBot->Direction.c.x=strtod1000(PadStr,0);
-			Pad=ParseFile(LevelFile,PadStr);
+			ParseFile(LevelFile,PadStr);
 			PosBot->Direction.c.y=strtod1000(PadStr,0);
-			Pad=ParseFile(LevelFile,PadStr);
+			ParseFile(LevelFile,PadStr);
 			PosBot->Direction.c.z=strtod1000(PadStr,0);
 
 			/* Read Speed */
 
-			Pad=ParseFile(LevelFile,PadStr);
+			ParseFile(LevelFile,PadStr);
 			PosBot->Speed.x=strtod1000(PadStr,0);
-			Pad=ParseFile(LevelFile,PadStr);
+			ParseFile(LevelFile,PadStr);
 			PosBot->Speed.y=strtod1000(PadStr,0);
-			Pad=ParseFile(LevelFile,PadStr);
+			ParseFile(LevelFile,PadStr);
 			PosBot->Speed.z=strtod1000(PadStr,0);
 
 			/* Read Size */
 
-			Pad=ParseFile(LevelFile,PadStr);
+			ParseFile(LevelFile,PadStr);
 			PosBot->Size=strtod1000(PadStr,0);
 
 			/* Read Cube */
 
-			Pad=ParseFile(LevelFile,PadStr);
+			ParseFile(LevelFile,PadStr);
 			PosBot->Cube=&MyLevelData.Cubes[strtol(PadStr,0,0)-1];
 
 			if (PosBot->Cube->FirstBot != 0)
@@ -824,17 +821,17 @@ int16 LoadLevel(char * Name)
 
 			/* Read Type */
 
-			Pad=ParseFile(LevelFile,PadStr);
+			ParseFile(LevelFile,PadStr);
 			PosBot->Type=strtol(PadStr,0,0);
 
 			/* Read Light */
 
-			Pad=ParseFile(LevelFile,PadStr);
+			ParseFile(LevelFile,PadStr);
 			PosBot->Light=strtod1000(PadStr,0);
 
 			/* Read Mesh */
 
-			Pad=ParseFile(LevelFile,PadStr);
+			ParseFile(LevelFile,PadStr);
 
 			if (strtol(PadStr,0,0) == 0)
 			{

@@ -24,7 +24,6 @@ void WaitKey(void);
 
 int main(int arcc,char ** argv)
 {
-    int16     	Pad;
     int16     	x=-1;
     Mission 	* MyMission;
     char      	LevelName[512];
@@ -45,7 +44,7 @@ int main(int arcc,char ** argv)
     InitCleanUp();
 
     printf("Loading Missions ...\n");
-    Pad=LoadMissions("Missions");
+    LoadMissions("Missions");
 
     while((x<0)|(x>=MyMissions.Num))
     {
