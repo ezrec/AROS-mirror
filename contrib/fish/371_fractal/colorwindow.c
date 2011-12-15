@@ -36,12 +36,12 @@ static struct NewWindow CW_nwdw={150,50,150,150,0,1,MOUSEBUTTONS,
               NULL,NULL,(UBYTE *)"COLORWINDOW 4.1",NULL,NULL,0,0,0,0,
               CUSTOMSCREEN
                };
-static struct CW_1 { short Xmin,Ymin,Xmax,Ymax; };
+struct CW_1 { short Xmin,Ymin,Xmax,Ymax; };
 static struct CW_1 CW_s1[]={ {10,70,140,120},
               {10,134,45,140},{15,53,135,60},{15,85,45,95},{60,85,90,95},
               {105,85,135,95},{15,105,45,115},{60,105,90,115},{105,105,135,115}
                };
-static struct CW_2 { short X,Y; char *Txt; short Len; };
+struct CW_2 { short X,Y; char *Txt; short Len; };
 static struct CW_2 CW_s2[]={ {10,140,"EXIT",4},{23,18,"R",1},{73,18,"G",1},
               {123,18,"B",1},{2,59,"<",1},{140,59,">",1},{40,80,"WaveForms",9},
               {105,115,"NEXT",4}

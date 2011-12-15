@@ -35,7 +35,7 @@ void OpenAll(filename,backup)
 char *filename;
 int backup;
 {
-	long sec,mic;
+	ULONG sec,mic;
 	
 	if ((GfxBase=(struct GfxBase *)OpenLibrary("graphics.library",0L))==0) loc_abort("No gfxbase");
 	if ((IntuitionBase=(struct IntuitionBase *)OpenLibrary("intuition.library",0L))==0)
@@ -65,7 +65,7 @@ char *filename;
 	FILE  	*fd;
 	struct	BitMapHeader bmhd;
 	long  	formsize;
-	UWORD 	*colortable[32],modes;
+	UWORD 	colortable[32],modes;
 	
 	if (!(fd = fopen (filename, "r")))
 		return(0);
@@ -159,7 +159,7 @@ UWORD *modes;
 		*formsize -= ch.chunksize;
 		if (ch.chunksize & 1)		/*  Odd length chunk  */
 		{
-			*formsize --;
+			(*formsize)--;
 			fseek (fd, 1L, 1);
 		}
 	}
@@ -278,7 +278,7 @@ long mass,refresh,wind;
 	y=AllocMem(800L,0L);
 	if (mass>MAXSNOWMASS) mass=MAXSNOWMASS;
 	for (i=0;i<mass;i++) y[i]=-(rand()%w->Height);
-	while ((msg=GetMsg(w->UserPort))==0)
+	while ((msg=(struct IntuiMessage *)GetMsg(w->UserPort))==0)
 	{
 		if (refresh!=-1)
 		{

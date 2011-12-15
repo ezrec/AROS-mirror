@@ -1363,7 +1363,7 @@ FILE	*fin;			/* current input file */
 char	**gargv;		/* global argument array */
 int	gargc;			/* global argument count */
 
-yylex()
+int yylex()
 {
 	int	c;
 
@@ -1497,7 +1497,8 @@ int moreinput()
 	return 1;
 }
 
-void main(argc,argv)
+int main(argc,argv)
+	int argc;
 	char **argv;
 {
 	fprintf(stderr,BANNER);			/* hello... */
@@ -1533,13 +1534,15 @@ void main(argc,argv)
 		signal(SIGFPE, fpecatch);	/* catch math errors */
 		yyparse();			/* start parsing */
 	}
+
+	return 0;
 }
 
 #ifdef AMIGA
 
 char *nextarg()
 {
-	static BPTR olddir = -1L;
+	static BPTR olddir = (BPTR)-1L;
 
 	if (gargc > 0)
 	{
@@ -1549,7 +1552,7 @@ char *nextarg()
 	}
 	else if (gargc-- == 0)
 	{
-		if (olddir != (-1L))
+		if (olddir != ((BPTR)-1L))
 			CurrentDir(olddir);
 		return "-";
 	}

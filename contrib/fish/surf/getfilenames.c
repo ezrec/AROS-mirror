@@ -140,10 +140,10 @@ static struct Requester R_InFile = {
     &G_InFile,
     NULL,
     &TextInFile,
-    NULL,
+    0,
     2, /* backfill */
     NULL,
-    {NULL},
+    {},
     NULL,
     NULL,
     NULL,
@@ -159,10 +159,10 @@ static struct Requester R_OutFile = {
     &G_OutFile,
     NULL,
     &TextOutFile,
-    NULL,
+    0,
     2, /* backfill */
     NULL,
-    { NULL },
+    { },
     NULL,
     NULL,
     NULL,
@@ -172,10 +172,8 @@ static bool
 WaitForUser() {
     struct IntuiMessage mycopy,
                         *orig;
-    long wakeupmask;
-
     for(;;) {
-        wakeupmask = Wait( 1<< CntrlWin->UserPort->mp_SigBit );
+        Wait( 1<< CntrlWin->UserPort->mp_SigBit );
 
         /*
          * handle messages for the control window
@@ -184,7 +182,7 @@ WaitForUser() {
         while( (orig =(struct IntuiMessage *) GetMsg( CntrlWin->UserPort )) ) {
 
             mycopy = *orig;
-            ReplyMsg( orig );
+            ReplyMsg( (struct Message *)orig );
 
             if( mycopy.Class == GADGETUP ) {
                 USHORT code;

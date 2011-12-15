@@ -59,8 +59,6 @@ static short cycle=CYCLE0;
 static short fractal1=STRATT;
 static short maxcol,counter;
 extern short xc,yc,xoffset,yoffset;
-static float resave,imsave,restep,imstep;
-static float re,re2,im,im2,tmp,lambdahalva;
 
 
 double pow(),sqrt(),atan(),log(),atof(),exp(),sin(),cos(),fabs(),tan();
@@ -108,8 +106,6 @@ void cycle0()
 {
 float xinc,yinc;
 float x,y,xx,yy;
-float h,p;
-short res,itr;
 
 long color,xcrd,ycrd;
 short xstep,ystep;
@@ -208,7 +204,7 @@ switch(fractal1)
 PutBoolGadget(110,160,(gadb+0));
 
 Wait(1L << gwdw->UserPort->mp_SigBit);
-while(imsg=(struct IntuiMessage *)GetMsg(gwdw->UserPort))
+while((imsg=(struct IntuiMessage *)GetMsg(gwdw->UserPort)))
       ReplyMsg((struct Message *)imsg);
 CloseWindow(gwdw);
 

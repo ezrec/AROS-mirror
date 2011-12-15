@@ -136,6 +136,8 @@ Complex eval_tree(n)		/* evaluate the complex value of a tree */
 	default:	/* should NEVER see this... */
 			execerror("internal - unknown node-type", NULL);
 	}
+
+	return ({Complex zero={}; zero;});
 }
 
 /* delete all nodes of a tree */

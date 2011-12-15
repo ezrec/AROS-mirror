@@ -113,7 +113,7 @@ void InitWindow()
         exit(10);
     }
 
-    IntuitionBase = OpenLibrary("intuition.library",0);
+    IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library",0);
     if( IntuitionBase == 0 ) {
         OutErr("intuition library won't open");
         exit(10);

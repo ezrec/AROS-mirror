@@ -84,8 +84,8 @@ struct RastPort *rp[3];		/* rastport for each layer */
 short i,j,k,n;
 struct GfxBase *GfxBase;
 
-SHORT  boxoffsets[] = { 802, 2010, 3218 };
-USHORT colortable[] = { 0x000, 0xf00, 0x0f0, 0x00f };
+WORD  boxoffsets[] = { 802, 2010, 3218 };
+UWORD colortable[] = { 0x000, 0xf00, 0x0f0, 0x00f };
 			/* black, red, green, blue */
 UBYTE *displaymem;
 UBYTE *colorpalette;
@@ -96,12 +96,12 @@ struct Layer *layer[3];
  
 void FreeMemory();
 
-void main()
+int main(int argc, char **argv)
 {
 	GfxBase = (struct GfxBase *)OpenLibrary("graphics.library",0);
 	if (GfxBase == NULL) exit(1);
 
-	LayersBase = (struct LayersBase *)OpenLibrary("layers.library",0); 
+	LayersBase = OpenLibrary("layers.library",0); 
 	if(LayersBase == NULL) exit(2);
 
 	oldview = GfxBase->ActiView;	/* save current view, go back later */
@@ -191,26 +191,26 @@ void main()
 	Text(rp[2],"Layer 2",7);
 	
 	Delay(120);	/* 2 seconds before first change */
-	BehindLayer((LONG)li,layer[2]);
+	BehindLayer(0,layer[2]);
 
 	Delay(120);	/* another change 2 seconds later */
 
-	UpfrontLayer((LONG)li,layer[0]);
+	UpfrontLayer(0,layer[0]);
 
 	for(i=0; i<30; i++)
 	{
-		MoveLayer((LONG)li,layer[1],1,3);
+		MoveLayer(0,layer[1],1,3);
 		Delay(10);	/* wait .16 seconds (uses DOS function) */
 		
 	}
 
     cleanup3:
 	LoadView(oldview);              /* put back the old view  */
-	DeleteLayer((LONG)li,layer[2]);
+	DeleteLayer(0,layer[2]);
     cleanup2:
-	DeleteLayer((LONG)li,layer[1]);
+	DeleteLayer(0,layer[1]);
     cleanup1:
-	DeleteLayer((LONG)li,layer[0]);
+	DeleteLayer(0,layer[0]);
 
 	DisposeLayerInfo(li);
 	FreeMemory();	

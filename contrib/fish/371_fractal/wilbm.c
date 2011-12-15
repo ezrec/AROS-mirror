@@ -10,7 +10,6 @@
 extern struct GfxBase *GfxBase;
 
 static struct FileHandle *_W_fh;
-static void prepbuff();
 static long flag;
 static void cWrite();
 

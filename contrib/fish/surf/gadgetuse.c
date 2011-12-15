@@ -116,7 +116,7 @@ void GadgetUpdate(gad, exists)
         temp = (long)( potvalue * (vp->maxival - vp->minival ))/ MAXPOT
                 + vp->minival;
         vp->curival = temp;
-        sprintf(dbuff,"%-12d", temp);
+        sprintf(dbuff,"%-12d", (int)temp);
     }
     /*
      * find '['

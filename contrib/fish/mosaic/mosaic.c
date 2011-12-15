@@ -78,15 +78,15 @@ struct Gadget Gadget1 =
   NULL,
   366, 107,
   64, 24,
-  NULL,
+  0,
   RELVERIFY,
   BOOLGADGET,
   (APTR) & Border1,
   NULL,
   &IText1,
+  0,
   NULL,
-  NULL,
-  NULL,
+  0,
   NULL
 };
 
@@ -121,7 +121,7 @@ struct NewWindow NewWindowStructure2 =
   465, 10,
   170, 120,
   0, 1,
-  NULL,
+  0,
   WINDOWDRAG + WINDOWDEPTH + NOCAREREFRESH,
   NULL,
   NULL,
@@ -178,8 +178,7 @@ UWORD  backfill[8] =
 UWORD  solid[8] =
 {0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF};
 
-void
-main (void)
+int main (int argc, char **argv)
 {
   UWORD code;
   ULONG class;
@@ -205,7 +204,7 @@ main (void)
   rpS = wS->RPort;
 
   {
-    struct Process* proc = (struct Process *)FindTask(0L);
+    /* struct Process* proc = (struct Process *)FindTask(0L); */
     /* APTR temp = proc->pr_WindowPtr; */
 
     /* proc->pr_WindowPtr = (APTR)-1L; */
@@ -280,7 +279,7 @@ restart:
 	    }
 	  if (class == MOUSEMOVE)
 	    MoveBox (MouseX, MouseY);
-	  if (class == MOUSEBUTTONS)
+	  if (class == MOUSEBUTTONS) {
 	    if (code & 0x0080)
 	      {
 		if ((highlitXonDown == highlitX) &&
@@ -315,6 +314,7 @@ restart:
 		highlitXonDown = highlitX;
 		highlitYonDown = highlitY;
 	      }
+	  }
 	  if ((class == GADGETUP) || (class == GADGETDOWN))
 	    if (object == (void *) &Gadget1)
 	      goto restart;

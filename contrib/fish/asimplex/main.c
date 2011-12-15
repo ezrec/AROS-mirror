@@ -73,11 +73,10 @@ STRPTR errors[] = {
 
 
 
-void main(void)
+int main(int argc, char **argv)
 {
   INT     error;
-  SHORT   start, stop, length, i;
-  BOOL    end = _FALSE;
+  SHORT   start, stop;
   USHORT  verbose = 0, result;
   TEXT    ch;
   STRPTR  sptr;
@@ -90,7 +89,7 @@ void main(void)
 
   if(!(IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library",0))) {
     Leave("Can't find \"intuition.library\"!");
-    return;
+    return RETURN_FAIL;
   }
 
   puts("\f\033[1mASimplex Version 1.2");
@@ -101,14 +100,14 @@ void main(void)
 
     printf(">> ");
 
-    if(NULL != (error = GetInput(args))) {
+    if(0 != (error = GetInput(args))) {
       PrintError(error,NULL);
       Leave("");
     }
     Cap(args,0,BUFFER);
 
     if(SearchExpr(args,&start,&stop)) {
-      length = GetExpr(line,args,start,stop);
+      GetExpr(line,args,start,stop);
 
       if(strcmp(line,"HELP") == 0) {
         puts("   HELP");
@@ -122,7 +121,7 @@ void main(void)
       else if(strcmp(line,"QUIT") == 0) {
         do {
           printf("?? Really [Y,N] ? ");
-          if(NULL != (error = GetInput(args))) {
+          if(0 != (error = GetInput(args))) {
             PrintError(error,NULL);
             Leave("");
           }
@@ -141,14 +140,14 @@ void main(void)
       else if(strcmp(line,"PRIORITY") == 0) {
         sptr = args+stop+1;
         if(SearchExpr(sptr,&start,&stop)) {
-          length = GetExpr(line,sptr,start,stop);
+          GetExpr(line,sptr,start,stop);
           pri = (LONG)atoi(line);
           if(pri<0L) pri = 0L;
           if(pri>20L) pri = 20L;
           SetTaskPri(FindTask((STRPTR)0),pri);
-          printf("   Changed task priority to %ld.\n",pri);
+          printf("   Changed task priority to %ld.\n",(long)pri);
         }
-        else printf("   Current task priority is %ld.\n",pri);
+        else printf("   Current task priority is %ld.\n",(long)pri);
       }
 
       else if(strcmp(line,"LOAD") == 0) {
@@ -190,8 +189,8 @@ void main(void)
             else PrintSolution();
           }
 
-          printf("-> %ld iterations needed.\n",iter1+iter2);
-          if(file[1]) fprintf(file[1],"-> %ld iterations needed.\n",iter1+iter2);
+          printf("-> %ld iterations needed.\n",(long)(iter1+iter2));
+          if(file[1]) fprintf(file[1],"-> %ld iterations needed.\n",(long)(iter1+iter2));
           GiveMemBack();
           GetRidOfLists();
           minimize = _FALSE;
@@ -207,10 +206,10 @@ void main(void)
         h = sec/3600L;
         min = (sec-3600L*h)/60;
         sec -= 3600L*h+60*min;
-        printf("-> Used time: %3ld : %02ld : %02ld,%02ld\n",h,min,sec,sec100);
+        printf("-> Used time: %3ld : %02ld : %02ld,%02ld\n",(long)h,(long)min,(long)sec,(long)sec100);
         if(file[1]) {
-          fprintf(file[1],"-> Used time: %3ld : %02ld : %02ld,%02ld\f",h,min,
-                  sec,sec100);
+          fprintf(file[1],"-> Used time: %3ld : %02ld : %02ld,%02ld\f",(long)h,(long)min,
+                  (long)sec,(long)sec100);
           fclose(file[1]);
           file[1] = NULL;
         }
@@ -226,6 +225,7 @@ void main(void)
 
   } /* FOREVER */
 
+  return RETURN_OK;
 }
 
 

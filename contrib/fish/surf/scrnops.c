@@ -51,11 +51,9 @@ void FreeOldDither() {
 bool AllocDither()
 {
     int i;
-    float reallevels;
     if( GrayPat) return(true);
 
     DitherLevels = 1 << DitherPower;
-    reallevels = (float) DitherLevels - 0.5;
     DitherMask = DitherLevels -1;
     GrayPat = (UWORD *)malloc(DitherLoc(DitherLevels)*sizeof(UWORD));
     if( !GrayPat ) {
@@ -167,9 +165,6 @@ void SetHourGlassCol()
 void ClrWindow(drawaxis)
 bool drawaxis;
 {
-    long BkColAdj; /* background color adjusted for number of bit planes */
-
-    BkColAdj = (BackColor * NumColors) / 32;
     SetRast(rp, BackColor);  /* clear the window to colour 0 */
     SetAPen(rp, WinFgCol );
     /*
@@ -315,9 +310,7 @@ void SwitchBox()
     RefreshGadgets(SurfWinDef.FirstGadget, SurfWin, NULL );
 
     while(1) {
-        long wakeupmask;
-
-        wakeupmask = Wait( SignalMask );
+        Wait( SignalMask );
         /*
          * for now, we ignore the wakeupmask,
          * just read messages from each. if I notice a performance problem,
@@ -408,7 +401,7 @@ void OutErr(errstr)
     errtext.IText = (UBYTE *)errstr;
 
     WBenchToFront();
-    AutoRequest(CntrlWin, &errtext, NULL, &negtext, NULL, NULL,
+    AutoRequest(CntrlWin, &errtext, NULL, &negtext, 0, 0,
         8*strlen(errstr)+ 40, 60 );
     WindowToFront( CntrlWin );
 

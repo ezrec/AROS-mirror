@@ -127,7 +127,7 @@ static short fractal=LCOSZ;
 static short counter;
 extern short xc,yc,xoffset,yoffset;
 static float resave,imsave,restep,imstep;
-static float re,re2,im,im2,tmp,lambdahalva;
+static float re2,im2,lambdahalva;
 
 
 double sqrt(),atan(),log(),atof(),exp(),sin(),cos(),fabs();
@@ -471,7 +471,7 @@ for(counter=0;counter<maxiter;counter++)
 
 void esinz()
 {
-register float rereg,imreg,tmpreg,lambdahalvareg;
+register float rereg,imreg,tmpreg;
 
 imreg=imsave;
 rereg=resave;
@@ -684,7 +684,6 @@ void nr4()
 {
 register float rereg,imreg,re2,im2;
 float re,im,reim,ret,imt,ren,imn,tmp;
-short coltmp;
 
 imreg=imsave;
 rereg=resave;
@@ -719,7 +718,6 @@ void nr5()
 {
 register float rereg,imreg,re2,im2;
 float re,im,reim,ret,imt,ren,imn,tmp;
-short coltmp;
 
 imreg=imsave;
 rereg=resave;
@@ -752,7 +750,7 @@ for(counter=0;counter<maxiter;counter++)
 
 void magnet0()
 {
-register float rereg,imreg,tmpreg,absreg;
+register float rereg,imreg,absreg;
 float tmp,ret,imt,ren,imn;
 
 rereg=resave;
@@ -785,7 +783,7 @@ for(counter=0;counter<maxiter;counter++)
 
 void magnet1()
 {
-register float rereg,imreg,tmpreg,absreg;
+register float rereg,imreg,absreg;
 float tmp,ret,imt,ren,imn;
 
 rereg=0;
@@ -818,7 +816,7 @@ for(counter=0;counter<maxiter;counter++)
 
 void magnet2()
 {
-register float rereg,imreg,tmpreg,absreg;
+register float rereg,imreg,absreg;
 float tmp,ret,imt,ren,imn,magr,magi,magr2,magi2;
 
 magr=(magre-1)*(magre-2)-magim*magim;
@@ -859,7 +857,7 @@ for(counter=0;counter<maxiter;counter++)
 
 void magnet3()
 {
-register float rereg,imreg,tmpreg,absreg;
+register float rereg,imreg,absreg;
 float tmp,ret,imt,ren,imn,magr,magi,magr2,magi2;
 
 magr=(resave-1)*(resave-2)-imsave*imsave;

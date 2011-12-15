@@ -6,7 +6,7 @@ void SwitchBox();
 struct Library * MathTransBase;
 struct Library * MathBase;
 
-void main()
+int main(int argc, char **argv)
 {
     MathBase = OpenLibrary("mathffp.library",0);
     MathTransBase = OpenLibrary("mathtrans.library",0);

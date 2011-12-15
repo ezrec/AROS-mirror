@@ -140,7 +140,6 @@ STRPTR  str;
 {
   SHORT   start, stop, length;
   LONG    t;
-  TEXT    ch;
   VOID    PrintError();
   /* SHORT   GetExpr(); */
   STRPTR  ptr;
@@ -288,7 +287,7 @@ BOOL Pass1()
   ITEMPTR NewListEl();
 
   printf("P1 0");
-  sprintf(line_nr,"%ld",count);
+  sprintf(line_nr,"%ld",(long)count);
 
   ptr[0] = line;
 
@@ -457,8 +456,8 @@ BOOL Pass1()
       switch(actual) {
 
         case BIT_ROWS:
-          if(length!=1 || (ch = buf[0][0])!='N' && ch!='E' && ch!='L' && 
-             ch!='G') {
+          if(length!=1 || ((ch = buf[0][0])!='N' && ch!='E' && ch!='L' && 
+             ch!='G')) {
             puts("");
             PrintError(ERR_INV_ROWS_TYPE,buf[0]);
             return(_FALSE);
@@ -590,8 +589,8 @@ finish:  /* Sprungmarke, falls feof(file[0]) oder ENDATA erreicht */
   if(position[NAME] >= position[ROWS] ||
      position[ROWS] >= position[COLUMNS] ||
      position[COLUMNS] >= position[RHS] ||
-     position[RANGES] != -1 && position[BOUNDS] != -1 &&
-     position[RANGES] >= position[BOUNDS]                ) {
+     (position[RANGES] != -1 && position[BOUNDS] != -1 &&
+      position[RANGES] >= position[BOUNDS])               ) {
     puts("");
     PrintError(ERR_ORDER,NULL);
     return(_FALSE);
@@ -616,7 +615,7 @@ LONG *c;
   SHORT i, len = strlen(line_nr);
 
   for(i=0; i<len; ++i) printf("%c",8);
-  sprintf(line_nr,"%ld",++(*c));
+  sprintf(line_nr,"%ld",(long)(++(*c)));
   printf("%s",line_nr);
 }
 
@@ -793,7 +792,7 @@ BOOL ChooseSymbols()
   DeleteList(&list[RHS_LIST]);
 
   if(symbflag & BIT_RANGES) {
-    if(dptr = SearchEl(symbols[RANGES],list[RANGES_LIST],_FALSE,NULL))
+    if((dptr = SearchEl(symbols[RANGES],list[RANGES_LIST],_FALSE,NULL)))
          num_lines = dptr->anz;
     else num_lines = 0;
   }
@@ -864,7 +863,7 @@ STRPTR  str;
 
   do {
     printf("?? Your choice : ");
-    if(error = GetInput(line)) {
+    if((error = GetInput(line))) {
       PrintError(error,NULL);
       return(NULL);
     }
@@ -890,7 +889,7 @@ BOOL Pass2()
 
 {
   TEXT    ch;
-  SHORT   i, j, count, start[5], stop[5], length;
+  SHORT   i, j, count, start[5], stop[5];
   STRPTR  ptr[5];
   ITEMPTR iptr;
   DOUBLE  *ptr1, *ptr2;
@@ -943,7 +942,7 @@ BOOL Pass2()
     if(SearchExpr(ptr[0],&start[0],&stop[0])) {
 
       if(start[0] == 0) break; /* Abbruch von do{}while, Beginn neuer Sektion */
-      length = GetExpr(buf[0],ptr[0],start[0],stop[0]);
+      GetExpr(buf[0],ptr[0],start[0],stop[0]);
       if(!(iptr = SearchEl(buf[0],list[VAR_LIST],_FALSE,NULL))) {
         PrintError(ERR_FATAL,NULL);
         return(_FALSE);
@@ -952,23 +951,23 @@ BOOL Pass2()
 
       if(SearchExpr((ptr[1] = ptr[0]+stop[0]+1),&start[1],&stop[1]) &&
          SearchExpr((ptr[2] = ptr[1]+stop[1]+1),&start[2],&stop[2])    ) {
-        length = GetExpr(buf[1],ptr[1],start[1],stop[1]);
-        length = GetExpr(buf[2],ptr[2],start[2],stop[2]);
+        GetExpr(buf[1],ptr[1],start[1],stop[1]);
+        GetExpr(buf[2],ptr[2],start[2],stop[2]);
         if(strcmp(symbols[GOAL],buf[1]) == 0)
           c[j-1] = minimize ? -atof(buf[2]) : atof(buf[2]);
         else {
-          if(iptr = SearchEl(buf[1],list[ROWS_LIST],_TRUE,NULL))
+          if((iptr = SearchEl(buf[1],list[ROWS_LIST],_TRUE,NULL)))
             SetM(A,n,iptr->nr,j,atof(buf[2]));
         }
 
         if(SearchExpr((ptr[3] = ptr[2]+stop[2]+1),&start[3],&stop[3]) &&
           SearchExpr((ptr[4] = ptr[3]+stop[3]+1),&start[4],&stop[4])    ) {
-          length = GetExpr(buf[1],ptr[3],start[3],stop[3]);
-          length = GetExpr(buf[2],ptr[4],start[4],stop[4]);
+          GetExpr(buf[1],ptr[3],start[3],stop[3]);
+          GetExpr(buf[2],ptr[4],start[4],stop[4]);
           if(strcmp(symbols[GOAL],buf[1]) == 0)
             c[j-1] = minimize ? -atof(buf[2]) : atof(buf[2]);
           else {
-            if(iptr = SearchEl(buf[1],list[ROWS_LIST],_TRUE,NULL))
+            if((iptr = SearchEl(buf[1],list[ROWS_LIST],_TRUE,NULL)))
               SetM(A,n,iptr->nr,j,atof(buf[2]));
           }
         }
@@ -1002,28 +1001,28 @@ BOOL Pass2()
       if(SearchExpr(ptr[0],&start[0],&stop[0])) {
 
         if(start[0] == 0) break; /* Abbruch von do{}while, neue Sektion */
-        length = GetExpr(buf[0],ptr[0],start[0],stop[0]);
+        GetExpr(buf[0],ptr[0],start[0],stop[0]);
         if(strcmp(symbols[RHS],buf[0]) == 0) {
           if(SearchExpr((ptr[1] = ptr[0]+stop[0]+1),&start[1],&stop[1]) &&
              SearchExpr((ptr[2] = ptr[1]+stop[1]+1),&start[2],&stop[2])    ) {
-            length = GetExpr(buf[1],ptr[1],start[1],stop[1]);
+            GetExpr(buf[1],ptr[1],start[1],stop[1]);
             if(!(iptr = SearchEl(buf[1],list[ROWS_LIST],_TRUE,NULL))) {
               PrintError(ERR_FATAL,NULL);
               return(_FALSE);
             }
             i = iptr->nr;
-            length = GetExpr(buf[2],ptr[2],start[2],stop[2]);
+            GetExpr(buf[2],ptr[2],start[2],stop[2]);
             b[i-1] = atof(buf[2]);
 
             if(SearchExpr((ptr[3] = ptr[2]+stop[2]+1),&start[3],&stop[3]) &&
                SearchExpr((ptr[4] = ptr[3]+stop[3]+1),&start[4],&stop[4])    ) {
-              length = GetExpr(buf[1],ptr[3],start[3],stop[3]);
+              GetExpr(buf[1],ptr[3],start[3],stop[3]);
               if(!(iptr = SearchEl(buf[1],list[ROWS_LIST],_TRUE,NULL))) {
                 PrintError(ERR_FATAL,NULL);
                 return(_FALSE);
               }
               i = iptr->nr;
-              length = GetExpr(buf[2],ptr[4],start[4],stop[4]);
+              GetExpr(buf[2],ptr[4],start[4],stop[4]);
               b[i-1] = atof(buf[2]);
             }
           }
@@ -1058,13 +1057,13 @@ BOOL Pass2()
       if(SearchExpr(ptr[0],&start[0],&stop[0])) {
 
         if(start[0] == 0) break; /* Abbruch von do{}while, neue Sektion */
-        length = GetExpr(buf[0],ptr[0],start[0],stop[0]);
+        GetExpr(buf[0],ptr[0],start[0],stop[0]);
 
         if(strcmp(buf[0],symbols[RANGES]) == 0) {
 
           if(SearchExpr((ptr[1] = ptr[0]+stop[0]+1),&start[1],&stop[1]) &&
              SearchExpr((ptr[2] = ptr[1]+stop[1]+1),&start[2],&stop[2])   ) {
-            length = GetExpr(buf[1],ptr[1],start[1],stop[1]);
+            GetExpr(buf[1],ptr[1],start[1],stop[1]);
             if(!(iptr = SearchEl(buf[1],list[ROWS_LIST],_TRUE,NULL))) {
               PrintError(ERR_FATAL,NULL);
               return(_FALSE);
@@ -1076,7 +1075,7 @@ BOOL Pass2()
             ptr1 = A+(LONG)(iptr->nr-1)*nn;
             ptr2 = A+(LONG)(num_rows+i-1)*nn;
             CopyMemQuick(ptr1,ptr2,(LONG)((LONG)num_var*S_DOUBLE));
-            length = GetExpr(buf[2],ptr[2],start[2],stop[2]);
+            GetExpr(buf[2],ptr[2],start[2],stop[2]);
             if(*iptr->string == 'L') {
               SetM(A,n,num_rows+i,num_var+num_slack+i,-1.0);
               b[num_rows+i-1] = b[iptr->nr-1]-atof(buf[2]);
@@ -1088,7 +1087,7 @@ BOOL Pass2()
 
             if(SearchExpr((ptr[3] = ptr[2]+stop[2]+1),&start[3],&stop[3]) &&
               SearchExpr((ptr[4] = ptr[3]+stop[3]+1),&start[4],&stop[4])   ) {
-              length = GetExpr(buf[1],ptr[3],start[3],stop[3]);
+              GetExpr(buf[1],ptr[3],start[3],stop[3]);
               if(!(iptr = SearchEl(buf[1],list[ROWS_LIST],_TRUE,NULL))) {
                 PrintError(ERR_FATAL,NULL);
                 return(_FALSE);
@@ -1100,7 +1099,7 @@ BOOL Pass2()
               ptr1 = A+(LONG)(iptr->nr-1)*nn;
               ptr2 = A+(LONG)(num_rows+i-1)*nn;
               CopyMemQuick(ptr1,ptr2,(LONG)((LONG)num_var*S_DOUBLE));
-              length = GetExpr(buf[2],ptr[4],start[4],stop[4]);
+              GetExpr(buf[2],ptr[4],start[4],stop[4]);
               if(*iptr->string == 'L') {
                 SetM(A,n,num_rows+i,num_var+num_slack+i,-1.0);
                 b[num_rows+i-1] = b[iptr->nr-1]-atof(buf[2]);
@@ -1141,19 +1140,19 @@ BOOL Pass2()
       if(SearchExpr(ptr[0],&start[0],&stop[0])) {
 
         if(start[0] == 0) break; /* Abbruch von do{}while, neue Sektion */
-        length = GetExpr(buf[0],ptr[0],start[0],stop[0]);
+        GetExpr(buf[0],ptr[0],start[0],stop[0]);
 
         if(SearchExpr((ptr[1] = ptr[0]+stop[0]+1),&start[1],&stop[1]) &&
            SearchExpr((ptr[2] = ptr[1]+stop[1]+1),&start[2],&stop[2]) &&
            SearchExpr((ptr[3] = ptr[2]+stop[2]+1),&start[3],&stop[3])   ) {
-          length = GetExpr(buf[1],ptr[1],start[1],stop[1]);
+          GetExpr(buf[1],ptr[1],start[1],stop[1]);
           if(strcmp(buf[1],symbols[BOUNDS]) == 0) {
-            length = GetExpr(buf[2],ptr[2],start[2],stop[2]);
+            GetExpr(buf[2],ptr[2],start[2],stop[2]);
             if(!(iptr = SearchEl(buf[2],list[VAR_LIST],_FALSE,NULL))) {
               PrintError(ERR_FATAL,NULL);
               return(_FALSE);
             }
-            length = GetExpr(buf[3],ptr[3],start[3],stop[3]);
+            GetExpr(buf[3],ptr[3],start[3],stop[3]);
             if(buf[0][0] == 'U') upper[iptr->nr-1] = atof(buf[3]);
             else                 lower[iptr->nr-1] = atof(buf[3]);
           }
@@ -1310,7 +1309,7 @@ STRPTR  str;
   VOID    PrintError();
   ITEMPTR ptr;
 
-  if(ptr = AllocMem(SIZE_ITEM,MEMF_CLEAR)) {
+  if((ptr = AllocMem(SIZE_ITEM,MEMF_CLEAR))) {
     ptr->next = list;
     strcpy(ptr->string,str);
   }
@@ -1456,8 +1455,8 @@ BOOL TakeMem()
 
   mem_needed = S_SHORT*(mm+2L*nn)+S_DOUBLE*(mm*(mm+nn+8L)+6L*nn);
 
-  if(mem_needed > (mem_avail = AvailMem(NULL))) {
-    sprintf(line,"%ld needed,%ld available",mem_needed,mem_avail);
+  if(mem_needed > (mem_avail = AvailMem(MEMF_ANY))) {
+    sprintf(line,"%ld needed,%ld available",(long)mem_needed,(long)mem_avail);
     PrintError(ERR_MEM,line);
     return(_FALSE);
   }
@@ -1468,7 +1467,7 @@ BOOL TakeMem()
   b2q     = AllocMem(mm*S_DOUBLE,MEMF_CLEAR);
   c       = AllocMem(nn*S_DOUBLE,MEMF_CLEAR);
   c2      = AllocMem((nn+mm)*S_DOUBLE,MEMF_CLEAR);
-  upper   = AllocMem((nn+mm)*S_DOUBLE,NULL);
+  upper   = AllocMem((nn+mm)*S_DOUBLE,MEMF_ANY);
   lower   = AllocMem(nn*S_DOUBLE,MEMF_CLEAR);
   x       = AllocMem((nn+mm)*S_DOUBLE,MEMF_CLEAR);
   cq      = AllocMem(nn*S_DOUBLE,MEMF_CLEAR);

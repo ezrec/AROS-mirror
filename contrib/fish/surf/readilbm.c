@@ -389,7 +389,7 @@ int     len;
 {
     if (fread (pointer, len, 1, fin) == 0)  {
         char outbuff[90];
-	sprintf(outbuff,"Fread Error in reading input file at %d ", ftell(fin));
+	sprintf(outbuff,"Fread Error in reading input file at %d ", (int)ftell(fin));
 	OutErr(outbuff);
     }
 }                               /* FRead */

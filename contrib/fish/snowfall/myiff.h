@@ -48,8 +48,10 @@ struct ChunkHeader {
 
 
 /*  Useful macro from EA (the only useful thing they ever made)  */
+#ifndef MAKE_ID
 #define MAKE_ID(a, b, c, d)\
 	( ((long)(a)<<24) + ((long)(b)<<16) + ((long)(c)<<8) + (long)(d) )
+#endif
 
 /*  IFF types we may encounter  */
 #define	FORM	MAKE_ID('F', 'O', 'R', 'M')

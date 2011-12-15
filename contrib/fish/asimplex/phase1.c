@@ -322,7 +322,7 @@ SHORT   *Nminus;
 {
   REGISTER DOUBLE dummy, *ptr1;
   REGISTER SHORT  j, i, *ptr2;
-  SHORT           nm = nn-mm, anzneg = 0;
+  SHORT           anzneg = 0;
 
   /* künstliche Variable aus Nq entfernen und gleichzeitig Nminus erstellen */
 
@@ -369,7 +369,6 @@ DOUBLE  *A, *AB1, *b, *b2q, *help;
 {
   REGISTER SHORT  j, i, mm = *m, *ptr;
   DOUBLE          *dest, *src;
-  SHORT           column;
   LONG            length = (LONG)nn*(LONG)sizeof(DOUBLE);
 
   for(ptr=B,i=0; i<mm && (*ptr++)<=nn; ++i);

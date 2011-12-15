@@ -76,7 +76,7 @@ long __stack = 16000;	/* enough for 1000 Roaches */
 enum { OPT_ROACHES, OPT_SPEED, OPT_SQUISH, OPT_SCREEN, OPT_HELP,
 	   OPT_COUNT};
 
-ULONG opts[OPT_COUNT];
+IPTR opts[OPT_COUNT];
 
 char ExtendedHelp[] =	/* Yes, ReadArgs() _can_ give extended help! */
     "\n"
@@ -102,7 +102,7 @@ struct TagItem roachWindowTags[] = {
 	{WA_IDCMP, IDCMP_MOUSEBUTTONS},
 	{WA_PubScreenName, (IPTR) PubScreen},
     {WA_PubScreenFallBack, TRUE},
-	{TAG_DONE, NULL}
+	{TAG_DONE}
 };
 
 /*
@@ -118,7 +118,7 @@ struct TagItem userWindowTags[] = {
 	{WA_Title, (IPTR) "ARoach"},
 	{WA_PubScreenName, (IPTR) PubScreen},
     {WA_PubScreenFallBack, TRUE},
-	{TAG_DONE, NULL}
+	{TAG_DONE}
 };
 
 /*
@@ -710,10 +710,10 @@ void
 Tooltypes2RDArgs(struct RDArgs *rda, int argc, char **argv)
 {
 char *cmdline, tmpbuffer[MAXCMDLINE];
-char **ttarray, *tt;
+STRPTR *ttarray, tt;
 int linelen;
 
-	if ((ttarray = ArgArrayInit(argc, argv))) {
+	if ((ttarray = ArgArrayInit(argc, (STRPTR *)argv))) {
 
 		*tmpbuffer = '\0';
 		tt = *ttarray;
@@ -880,7 +880,7 @@ void CleanExit(LONG ReturnCode)
    -------------------------------------------------------------- */
 void Die(const UBYTE * msg)
 {
-	printf(msg);
+	printf("%s", msg);
 	CleanExit(RETURN_FAIL);
 }
 

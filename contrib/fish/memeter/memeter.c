@@ -1,14 +1,14 @@
-#define Main main
-#define __regargs
-#define SPrintf sprintf
 #include <exec/memory.h>
 #include <exec/types.h>
+#include <proto/alib.h>
+#include <proto/dos.h>
 #include <proto/exec.h>
 #include <proto/intuition.h>
 #include <proto/gadtools.h>
 #include <proto/graphics.h>
 #include <intuition/intuition.h>
 #include <libraries/gadtools.h>
+#include <workbench/startup.h>
 #include <graphics/gfxbase.h>
 #include <graphics/text.h>
 
@@ -41,7 +41,7 @@ struct Library *GadToolsBase;
 struct GfxBase *GfxBase;
 char *GadText[] = { "Chip", "Fast", "Total" };
 
-long __regargs Main(char *argv[], struct WBStartup *WBenchMsg)
+int main(int argc, char **argv)
 {
 	struct TextFont *TF;
 	struct RastPort *rp;
@@ -64,7 +64,7 @@ long __regargs Main(char *argv[], struct WBStartup *WBenchMsg)
 	if (!(TimerPort = CreateMsgPort()))
 		goto Exit;
 	TimerSignal = 1L << TimerPort->mp_SigBit;
-	if (Dev = OpenDevice(TIMERNAME, UNIT_VBLANK, (struct IORequest *)&TimeReq, 0L))
+	if ((Dev = OpenDevice(TIMERNAME, UNIT_VBLANK, (struct IORequest *)&TimeReq, 0L)))
 		goto Exit;
 	TimeReq.tr_node.io_Message.mn_ReplyPort = TimerPort;
 	TimeReq.tr_node.io_Command = TR_ADDREQUEST;
@@ -133,13 +133,13 @@ long __regargs Main(char *argv[], struct WBStartup *WBenchMsg)
 			diff = Snapshot[i]-Avail[i];
 			if (MaxUsed[i] < diff)
 				MaxUsed[i] = diff;
-			SPrintf(Buf, " %10ld %10ld %10ld", Avail[i], MaxUsed[i], diff);
+			__sprintf(Buf, " %10ld %10ld %10ld", Avail[i], MaxUsed[i], diff);
 			Move(rp, ng.ng_LeftEdge + 5, Win->BorderTop + V_SPACING + (GAD_HEIGHT + V_SPACING) * (i+1) + TF->tf_Baseline + 2);
 			Text(rp, Buf, 33);
-//			GT_SetGadgetAttrs(GadTab[i], Win, NULL, GTTX_Text, Buf, TAG_DONE);	/* Blinks on refresh !! */
+			GT_SetGadgetAttrs(GadTab[i], Win, NULL, GTTX_Text, Buf, TAG_DONE);	/* Blinks on refresh !! */
 		}
 		Signal = Wait((1L << Win->UserPort->mp_SigBit) | TimerSignal);
-		while (IMsg = (struct IntuiMessage *)GetMsg(Win->UserPort)) {
+		while ((IMsg = (struct IntuiMessage *)GetMsg(Win->UserPort))) {
 			switch (IMsg->Class) {
 			case IDCMP_CLOSEWINDOW:	
 				Quit = TRUE;

@@ -159,6 +159,7 @@ int xval, yval;
 
 
 void EditBezPt(xval, yval)
+	int xval, yval;
 {
     int segno = NumBezPts -2;
 

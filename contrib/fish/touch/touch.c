@@ -37,7 +37,7 @@ char trashBuf[512];
 struct RDArgs ra=
 {
    {NULL,0,0},
-   NULL,
+   0,
    trashBuf,
    512,
    "FILE/A/M"
@@ -47,16 +47,14 @@ char *version="$VER: Touch V1.01 (17.7.93)";
 
 char *copyright="Copyright 1993 by Dave Schreiber.  All Rights Reserved";
 
-int main(void);
-
-main(void)
+int main(int argc, char **argv)
 {
-   ULONG args[2];
+   IPTR args[2];
    char **filenames;
    int c;
 
    /*Get the list of filenames/patterns*/
-   args[0]=NULL;
+   args[0]=0;
    ReadArgs("FILE/A/M",args,&ra);
    filenames=(char **)args[0];
 

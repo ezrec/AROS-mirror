@@ -33,7 +33,7 @@ typedef struct symbol {		/* general symbol - numerous types */
 		void	(*vptr)();	/* COMMAND */
 		UserFunc ufunc;		/* USER FUNCTION */
 	} u;
-	struct Symbol	*left, *right;	/* children */
+	struct symbol	*left, *right;	/* children */
 } Symbol;
 
 
@@ -57,6 +57,28 @@ typedef struct node {
 #define	sqr(x)	(x)*(x)
 #define sign(x)	((x) >= 0.0 ? '+' : '-')
 
+#ifdef __GNUC__ /* Workaround for built-in function name conflicts */
+#define cadd my_cadd
+#define csub my_csub
+#define cmul my_cmul
+#define cdiv my_cdiv
+#define cneg my_cneg
+#define csqr my_csqr
+#define csqrt my_csqrt
+#define conj my_conj
+#define cexp my_cexp
+#define clog my_clog
+#define cpow my_cpow
+#define csin my_csin
+#define ccos my_ccos
+#define ctan my_ctan
+#define casin my_casin
+#define cacos my_cacos
+#define catan my_catan
+#define csinh my_csinh
+#define ccosh my_ccosh
+#define ctanh my_ctanh
+#endif
 /* Lattice-generated prototypes (some of them) */
 /* Prototypes for functions defined in cmath.c */
 Complex cadd(Complex w, Complex z);
@@ -98,8 +120,8 @@ void	warning(char *, char *),
 	yyerror(char *),
 	execerror(char *, char *),
 	welcome(void),
-	prompt(void),
-	main(int, char **);
+	prompt(void);
+int     main(int, char **);
 
 /* Prototypes for functions defined in symbol.c */
 Symbol *lookup(char *s);

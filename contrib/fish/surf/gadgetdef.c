@@ -361,7 +361,7 @@ static struct Gadget G_TiltAng = {
 static char DispKspec[] = {"Kspecular=[     ] " };
 
 static struct IntuiText TextKspec = {
-    1,1,JAM1, -sizeof(DispKspec)*COL, TxOff, NULL,
+    1,1,JAM1, (WORD)-sizeof(DispKspec)*COL, TxOff, NULL,
     (UBYTE *)DispKspec, NULL
  };
 
@@ -390,7 +390,7 @@ static struct Gadget G_Kspec = {
 static char DispKdiffuse[] = {"Kdiffuse=[     ] " };
 
 static struct IntuiText TextKdiffuse = {
-    1,1,JAM1, -sizeof(DispKdiffuse)*COL, TxOff, NULL,
+    1,1,JAM1, (WORD)-sizeof(DispKdiffuse)*COL, TxOff, NULL,
     (UBYTE *)DispKdiffuse, NULL
  };
 
@@ -427,7 +427,7 @@ static struct IntuiText PtProperties = {
 static char DispPtIntens[] = {"Intensity=[     ] " };
 
 static struct IntuiText TextPtIntens = {
-    1,1,JAM1, -sizeof(DispPtIntens)*COL, TxOff, NULL,
+    1,1,JAM1, (WORD)-sizeof(DispPtIntens)*COL, TxOff, NULL,
     (UBYTE *)DispPtIntens, &PtProperties
  };
 
@@ -463,7 +463,7 @@ static struct IntuiText DispAmbient= {
 static char DispBkIntens[] = { "Ambience=[     ] " };
 
 static struct IntuiText TextBkIntens = {
-    1,1,JAM1, -sizeof(DispBkIntens)*COL, TxOff, NULL,
+    1,1,JAM1, (WORD)-sizeof(DispBkIntens)*COL, TxOff, NULL,
     (UBYTE *) DispBkIntens, &DispAmbient
  };
 
@@ -495,7 +495,7 @@ static struct Gadget G_BkIntens = {
 static char DispSurfDist[] = {"Surf Dist=[     ] " };
 
 static struct IntuiText TextSurfDist = {
-    1,1,JAM1, -sizeof(DispSurfDist)*COL, TxOff, NULL,
+    1,1,JAM1, (WORD)-sizeof(DispSurfDist)*COL, TxOff, NULL,
     (UBYTE *) DispSurfDist, NULL
  };
 
@@ -536,7 +536,7 @@ static struct IntuiText TextPtLocXYZ = {
 static char DispPtLocX[] = { "x=[     ] " };
 
 static struct IntuiText TextPtLocX = {
-    1,1,JAM1, -sizeof(DispPtLocX)*COL, TxOff, NULL,
+    1,1,JAM1, (WORD)-sizeof(DispPtLocX)*COL, TxOff, NULL,
     (UBYTE *) DispPtLocX, &TextPtLocXYZ
  };
 
@@ -567,7 +567,7 @@ static struct Gadget G_PtLocX = {
 static char DispPtLocY[] = "y=[     ] ";
 
 static struct IntuiText TextPtLocY = {
-    1,1,JAM1, -sizeof(DispPtLocY)*COL, TxOff, NULL,
+    1,1,JAM1, (WORD)-sizeof(DispPtLocY)*COL, TxOff, NULL,
     (UBYTE *) DispPtLocY, NULL
  };
 
@@ -598,7 +598,7 @@ static struct Gadget G_PtLocY = {
 static char DispPtLocZ[] = { "z=[     ] " };
 
 static struct IntuiText TextPtLocZ = {
-    1,1,JAM1, -sizeof(DispPtLocZ)*COL, TxOff, NULL,
+    1,1,JAM1, (WORD)-sizeof(DispPtLocZ)*COL, TxOff, NULL,
     (UBYTE *)DispPtLocZ, NULL
  };
 
@@ -627,7 +627,7 @@ static struct Gadget G_PtLocZ = {
 static char DispRepH[] = { "Map RepH=[     ] " };
 
 static struct IntuiText TextRepH = {
-    1,1,JAM1, -sizeof(DispRepH)*COL, TxOff, NULL,
+    1,1,JAM1, (WORD)-sizeof(DispRepH)*COL, TxOff, NULL,
     (UBYTE *)DispRepH, NULL
  };
 
@@ -657,7 +657,7 @@ static struct Gadget G_RepH = {
 static char DispRepV[] = { "Map RepV=[     ] " };
 
 static struct IntuiText TextRepV = {
-    1,1,JAM1, -sizeof(DispRepV)*COL, TxOff, NULL,
+    1,1,JAM1, (WORD)-sizeof(DispRepV)*COL, TxOff, NULL,
     (UBYTE *)DispRepV, NULL
  };
 

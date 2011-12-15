@@ -31,7 +31,7 @@ void SetPerspective(  value)
 
 
 
-void SetRevAxis( value)
+void SetRevAxis( int value)
 
 {
     RevAxis = (value)? RevY : RevX;

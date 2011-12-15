@@ -70,7 +70,7 @@ double sqrt(),atan(),log(),atof(),exp(),sin(),cos(),fabs();
 struct RastPort *rport;
 
 
-void main()
+int main(int argc, char **argv)
 {
 
 IntuitionBase=(struct IntuitionBase *)OpenLibrary("intuition.library",0L);
@@ -128,8 +128,8 @@ while((mennum!=MENU0)||(itmnum!=QUIT));
 
 if(wdw)          CloseWindow(wdw);
 if(scr)          CloseScreen(scr);
-if(GfxBase)      CloseLibrary(GfxBase);
-if(IntuitionBase)CloseLibrary(IntuitionBase);
+if(GfxBase)      CloseLibrary((struct Library *)GfxBase);
+if(IntuitionBase)CloseLibrary((struct Library *)IntuitionBase);
 }
 
 void newscreen()

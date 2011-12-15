@@ -40,7 +40,7 @@ void CalcDate(int *day, int *month, int *year2);
 #define COLCHARSX   (CITYCHARS + CITYSPACE + TIMECHARS)
 #define COLWIDTH    (COLCHARSX * FONTWIDTH + SPACEX)
 
-void main(argc,argv)
+int main(argc,argv)
 int argc;
 char *argv[];
 {
@@ -292,9 +292,8 @@ int *day,*month,*year2;
 int iconify()
 {
 	char buf[60];
-	int day,month,year,hour,min,sec,x,y,gmttot,dayoff,len=-1,xp=-1,h,w,v2=0;
+	int day,month,year,hour,min,sec,x,gmttot,dayoff,len=-1,xp=-1,h,w,v2=0;
 	struct DateStamp now;
-	struct Screen *scr;
 	
 	ULONG class;
 	USHORT code;
@@ -363,9 +362,9 @@ int iconify()
 			SendIO((struct IORequest *)&timereq.tr_node);
 			continue;
 		}
-		while (Mesg=(struct IntuiMessage *)GetMsg(Window->UserPort)) {
+		while ((Mesg=(struct IntuiMessage *)GetMsg(Window->UserPort))) {
 			class=Mesg->Class; code=Mesg->Code;
-			x=Window->MouseX; y=Window->MouseY;
+			x=Window->MouseX;
 			ReplyMsg((struct Message *)Mesg);
 			if (class==CLOSEWINDOW) quit();
 			if (class==MOUSEBUTTONS && code==MENUDOWN) {

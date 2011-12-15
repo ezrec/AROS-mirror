@@ -123,7 +123,7 @@ ULONG   *iter;        /* Zeiger auf "Anzahl Iterationen"                     */
       printf("@@ ");
       if(phase == PHASE_I) printf("phase I : ");
       else                 printf("phase II: ");
-      printf("iter# %5ld : s =%4d, r =",count,s);
+      printf("iter# %5ld : s =%4d, r =",(long)count,(int)s);
       if(rowflag == LAMBDA_2) printf(" np , ");
       else                    printf("%4d, ",r);
       printf("c0 = %16.10lg\n",minimize ? -(*c0) : *c0);
@@ -133,7 +133,7 @@ ULONG   *iter;        /* Zeiger auf "Anzahl Iterationen"                     */
         fprintf(file[1],"@@ ");
         if(phase == PHASE_I) fprintf(file[1],"phase I : ");
         else                 fprintf(file[1],"phase II: ");
-        fprintf(file[1],"iter# %5ld : s =%4d, r =",count,s);
+        fprintf(file[1],"iter# %5ld : s =%4d, r =",(long)count,(int)s);
         if(rowflag == LAMBDA_2) fprintf(file[1]," np , ");
         else                    fprintf(file[1],"%4d, ",r);
         fprintf(file[1],"c0 = %16.10lg\n",minimize ? -(*c0) : *c0);

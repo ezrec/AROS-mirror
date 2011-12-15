@@ -35,7 +35,6 @@ typedef struct
 } NameAndScore;
 
 void MoveBox (int MouseX, int MouseY);
-void main (void);
 void QuitGame(int rc);
 void warning(char *msg);
 void fatal(char *msg);

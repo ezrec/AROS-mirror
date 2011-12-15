@@ -25,7 +25,7 @@ void cprin(fp, prefix, suffix, z)	/* print a complex number to file fp */
 	char *prefix, *suffix;
 	Complex z;
 {
-	fprintf(fp, prefix);
+	fputs(prefix, fp);
 
 	if (z.imag == 0.0)
 		fprintf(fp, "%.*g", precision, z.real);
@@ -33,9 +33,9 @@ void cprin(fp, prefix, suffix, z)	/* print a complex number to file fp */
 		fprintf(fp, "%.*g i", precision, z.imag);
 	else
 		fprintf(fp, "%.*g %c %.*g i",
-			precision, z.real, sign(z.imag), precision, abs(z.imag));
+			precision, z.real, sign(z.imag), precision, fabs(z.imag));
 
-	fprintf(fp, suffix);
+	fputs(suffix, fp);
 }
 
 double Re(z)		/* real part of complex number */
@@ -238,11 +238,7 @@ Complex ctan(z)		/* complex tangent */
 {
 	if (z.imag == 0.0)
 	{
-		/*
-		 z.real = tan(z.real);
-		*/
-		z.real = sin(z.real);
-#warning replaced tan by sin!
+	        z.real = tan(z.real);
 		return z;
 	}
 	else
