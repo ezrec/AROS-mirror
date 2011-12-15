@@ -48,7 +48,7 @@ static const struct debug_named_value debug_options[] = {
 unsigned i915_debug = 0;
 
 DEBUG_GET_ONCE_FLAGS_OPTION(i915_debug, "I915_DEBUG", debug_options, 0)
-DEBUG_GET_ONCE_BOOL_OPTION(i915_no_tiling, "I915_NO_TILING", TRUE)
+DEBUG_GET_ONCE_BOOL_OPTION(i915_no_tiling, "I915_NO_TILING", FALSE)
 DEBUG_GET_ONCE_BOOL_OPTION(i915_lie, "I915_LIE", FALSE)
 DEBUG_GET_ONCE_BOOL_OPTION(i915_use_blitter, "I915_USE_BLITTER", FALSE)
 
