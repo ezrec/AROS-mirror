@@ -46,7 +46,7 @@ _CXBRK (VOID)
 
 // Main
 int
-main (UWORD argc, STRPTR *argv)
+main (int argc, char **argv)
 {
    // No args or '?'
    if (argc == 1 || *argv [1] == '?')
