@@ -122,7 +122,7 @@ void getarguments(void)
     	puts("Tip: You can have different window size by using WIDTH and HEIGHT start arguments!");
     }
     
-    FreeArgs(p);
+    FreeArgs(myargs);
 }
 
 /***********************************************************************************/
@@ -309,7 +309,7 @@ void render(void)
     {
     	for(x = 0; x < 256; x++)
 	{
-	    a = (UBYTE)((s[x] ^ s[y] & s[(UBYTE)((x ^ y) & 255)]) & 255);
+	    a = (UBYTE)(((s[x] ^ s[y]) & s[(UBYTE)((x ^ y) & 255)]) & 255);
 	    if (a > 37) p[((UBYTE)((d + y) & 255)) * 256 + (UBYTE)((c + x) & 255)] = a * 8 - 30;
 	}
     }
@@ -446,7 +446,7 @@ void getevents(void)
 
 /***********************************************************************************/
 
-main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
     BOOL done = FALSE;
     
@@ -468,6 +468,7 @@ main(int argc, char *argv[])
     }
 
     cleanup(0);
+    return 0;
 }
 
 /***********************************************************************************/

@@ -115,7 +115,7 @@ static void Trash_It_256(void)
 
 static void CalcRain(UBYTE *plas, WORD intensity)
 {
-    UWORD x, y, i, a;
+    UWORD i, a;
     
     Zeiger = Zeiger2 = chunkybuffer;
     
@@ -138,7 +138,7 @@ static void CalcRain(UBYTE *plas, WORD intensity)
 
 static void CalcWorm(UBYTE *seg3)
 {
-    UWORD x, x2, y, y2, mo, col, peri;
+    UWORD x, x2, y2, col, peri;
     double r;
     
     r = 26.4;
@@ -186,12 +186,15 @@ static void DoWorm(UBYTE *plas, UBYTE *seg3, WORD move)
     WORD loopx;
     
     UBYTE *dest = chunkybuffer;
-    UBYTE *seg2 = chunkybuffer2;
-    UWORD bx;
     UWORD dx;
     UWORD off;
+#if 0
+    UBYTE *seg2 = chunkybuffer2;
+    UWORD bx;
     
-    bx = dx = 0;
+    bx = 
+#endif
+    dx = 0;
     
     while(loopy--)
     {

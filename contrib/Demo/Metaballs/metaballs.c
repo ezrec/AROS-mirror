@@ -38,7 +38,7 @@ static void cleanup(char *msg);
 
 #define balls 20
 
-static WORD x, y, i;
+static WORD x, i;
 
 static struct
 {

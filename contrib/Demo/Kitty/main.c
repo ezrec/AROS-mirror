@@ -60,7 +60,7 @@ static void getvisual(void)
 }
 
 #if KITTYSPRITE_PACKED
-static UBYTE *unpack_byterun1(UBYTE *source, UBYTE *dest, LONG unpackedsize)
+static BOOL unpack_byterun1(const UBYTE *source, UBYTE *dest, LONG unpackedsize)
 {
     UBYTE r;
     BYTE c;
@@ -73,7 +73,7 @@ static UBYTE *unpack_byterun1(UBYTE *source, UBYTE *dest, LONG unpackedsize)
     	    while(c-- >= 0)
 	    {
 		*dest++ = *source++;
-		if (--unpackedsize <= 0) return source;
+		if (--unpackedsize <= 0) return FALSE;
 	    }
 	}
 	else if (c != -128)
@@ -84,11 +84,12 @@ static UBYTE *unpack_byterun1(UBYTE *source, UBYTE *dest, LONG unpackedsize)
 	    while(c-- >= 0)
 	    {
 		*dest++ = r;
-		if (--unpackedsize <= 0) return source;
+		if (--unpackedsize <= 0) return FALSE;
 	    }
 	}
     }
-    
+   
+    return TRUE;
 }
 #endif
 

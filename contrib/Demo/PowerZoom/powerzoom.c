@@ -243,7 +243,6 @@ void nicezoom(void)
     LONG pix_w, pix_h, pix_size;
     int  iter = 0;
     
-    ULONG *src;
     ULONG *dest = (ULONG *)imagebuffer2;
     
     stepx = imagewidth  * 0x10000 / zoomwidth;
@@ -251,8 +250,6 @@ void nicezoom(void)
 
     for(y = 0, gy = 0; y < zoomheight; y++, gy += stepy)
     {
-    	src = ((ULONG *)imagebuffer) + (gy / 0x10000) * imagewidth;
-
 #   	define PRINT(d) // if (y == 1 && x == 2) d
 	
     	for(x = 0, gx = 0; x < zoomwidth; x++, gx += stepx)
@@ -417,7 +414,7 @@ void handleall(void)
 
 /***********************************************************************************/
 
-main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
     getarguments();
     openlibs();
@@ -427,6 +424,7 @@ main(int argc, char *argv[])
     makewin();
     handleall();
     cleanup(0);
+    return 0;
 }
 
 /***********************************************************************************/

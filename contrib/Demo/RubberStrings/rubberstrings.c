@@ -40,7 +40,7 @@ static void cleanup(char *msg);
 #define radius 5
 #define speed 3
 
-static WORD x, y, i, ctr;
+static WORD x, i;
 
 static struct
 {
@@ -247,15 +247,8 @@ static void initpalette(void)
 
 static void initstuff(void)
 {    
-    int j=1;
-
     for(i = 1; i <= balls; i++)
     {
-        if(i&0x1)
-         j=i;
-        else
-         j=balls-i;
-
     	ball[i - 1].dia = 2*W;
 	ball[i - 1].rand = (BYTE)(20.0+20.0*sin(i*pi/balls*13));
 	ball[i - 1].p = malloc(SQR(ball[i - 1].dia));
