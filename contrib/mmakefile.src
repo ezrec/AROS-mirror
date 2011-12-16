@@ -18,7 +18,7 @@ include $(TOP)/config/make.cfg
 #MM- contrib-complete : contrib-development
 #MM- contrib-complete : contrib-gnu
 #MM- contrib-complete : contrib-networking
-#MM- contrib-complete : contrib-pack-bzip2
+#MM- contrib-complete : contrib-pack
 #MM- contrib-complete : contrib-scout
 #MM- contrib-complete : contrib-multimedia
 
