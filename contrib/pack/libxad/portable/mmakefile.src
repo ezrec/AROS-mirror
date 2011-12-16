@@ -6,40 +6,6 @@ include $(TOP)/config/make.cfg
 HFILES   = \
     include/ConvertE
 
-CFILES = \
-    clients/HA \
-    clients/TR-DOS \
-    clients/Ace \
-    clients/AMPK \
-    clients/bzip2 \
-    clients/CAB \
-    clients/Cpio \
-    clients/CrunchDisk \
-    clients/DMS \
-    clients/DCS \
-    clients/IFF-CDAF \
-    clients/FS_Amiga \
-    clients/FS_FAT \
-    clients/FS_SOS \
-    clients/LhA \
-    clients/LhF \
-    clients/LZX \
-    clients/MDC \
-    clients/MXM-SimpleArc \
-    clients/PackDev \
-    clients/PackDisk \
-    clients/RPM \
-    clients/StuffIt \
-    clients/SuperDuper3 \
-    clients/Tar \
-    clients/xDisk \
-    clients/xMash \
-    clients/Zip \
-    clients/Zoom \
-    clients/xadIO_Compress \
-    clients/xadIO_XPK \
-    clients/xadIO
-
 CHARSET = \
     cs_atarist_to_unicode \
     cs_c64_to_unicode \
@@ -78,4 +44,4 @@ USER_CFLAGS := -Wno-uninitialized -Wno-parentheses -I$(AROS_INCLUDES)/SDI -I$(SR
 
 %build_module mmake=contrib-pack-xadmaster-library \
   modname=xadmaster modtype=library uselibs=rom \
-  files="$(FILES)"
+  files="xadmaster_init $(FILES) clients"

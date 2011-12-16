@@ -78,12 +78,16 @@ xadSTRPTR dosname)
 static xadERROR writedisk(struct IOStdReq *io, xadUINT8 *data, xadSize size,
 xadSize ofs, const struct xadArchiveInfoP *ai, xadPTR sec)
 {
+#if !defined(__AROS__)
   struct ExecBase *SysBase;
+#endif
   struct xadMasterBaseP *xadMasterBase;
   xadERROR e = 0;
 
   xadMasterBase = ai->xaip_MasterBase;
+#if !defined(__AROS__)
   SysBase = xadMasterBase->xmb_SysBase;
+#endif
 
   io->io_Length = size;
   io->io_Data = data;
@@ -172,13 +176,17 @@ const struct DriveGeometry *dg)
 FUNCHOOK(OutHookDisk) /* struct Hook *hook, struct xadArchiveInfoP *ai,
 struct xadHookParam *param */
 {
+#if !defined(__AROS__)
   struct ExecBase *SysBase;
+#endif
   struct UtilityBase *UtilityBase;
   struct DiskHookPrivate *dhp;
   struct xadMasterBaseP *xadMasterBase;
 
   xadMasterBase = ai->xaip_MasterBase;
+#if !defined(__AROS__)
   SysBase = xadMasterBase->xmb_SysBase;
+#endif
   UtilityBase = xadMasterBase->xmb_UtilityBase;
   dhp = (struct DiskHookPrivate *) param->xhp_PrivatePtr;
 
@@ -438,11 +446,15 @@ struct xadHookParam *param */
   struct xadMasterBaseP *xadMasterBase;
   struct DosLibrary *DOSBase;
   struct DiskHookPrivate *dhp;
+#if !defined(__AROS__)
   struct ExecBase *SysBase;
+#endif
   xadUINT32 i;
 
   xadMasterBase = ai->xaip_MasterBase;
+#if !defined(__AROS__)
   SysBase = xadMasterBase->xmb_SysBase;
+#endif
   dhp = (struct DiskHookPrivate *) param->xhp_PrivatePtr;
   DOSBase = xadMasterBase->xmb_DOSBase;
 
