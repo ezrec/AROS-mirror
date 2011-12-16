@@ -9,6 +9,7 @@ FILES	:= \
     Ask \
     CD \
     Clip \
+    Cut \
     Echo \
     Else \
     EndCLI \
