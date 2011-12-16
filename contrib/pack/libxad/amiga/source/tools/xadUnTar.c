@@ -164,8 +164,22 @@ struct TarBlockInfo {
 #define TF_LONGLINK     'K'  /* longlink block, preceedes the full block */
 #define TF_EXTENSION    'x'  /* XXX */
 
-ASM(ULONG SAVEDS) progrhook(REG(a0, struct Hook *), REG(a1, struct xadProgressInfo *));
+#if !defined(__AROS__)
+ASM(ULONG) SAVEDS progrhook(REG(a0, struct Hook *),
+  REG(a1, struct xadProgressInfo *));
 ASM(ULONG SAVEDS) workhook(REG(a0, struct Hook *), REG(a1, struct xadHookParam *));
+#else
+  AROS_UFP3(ULONG, progrhook,
+  AROS_UFPA(struct Hook *, hook, A0),
+  AROS_UFPA(void *, ai, A2),
+  AROS_UFPA(struct xadProgressInfo *, pi,  A1));
+  
+  AROS_UFP3(ULONG, workhook,
+  AROS_UFPA(struct Hook *, hook, A0),
+  AROS_UFPA(void *, ai, A2),
+  AROS_UFPA(struct xadHookParam *, hp,  A1));
+#endif
+
 static ULONG octtonum(STRPTR oct, LONG width, LONG *ok);
 static BOOL checktarsum(struct TarHeader *th);
 static LONG handleblock(struct TarBlockInfo *t);
@@ -730,9 +744,18 @@ static LONG handleblock(struct TarBlockInfo *t)
 }
 
 /* Because of SAS-err, this cannot be SAVEDS */
+#if !defined(__AROS__)
 ASM(ULONG SAVEDS) workhook(REG(a0, struct Hook *hook),
 REG(a1, struct xadHookParam *hp))
 {
+#else
+  AROS_UFH3(ULONG, workhook,
+  AROS_UFHA(struct Hook *, hook, A0),
+  AROS_UFHA(void *, ai, A2),
+  AROS_UFHA(struct xadHookParam *, hp,  A1))
+{
+    AROS_USERFUNC_INIT
+#endif
   ULONG err = 0;
   /* This hook gets the data and instead of saving, it calls the handleblock()
   function with 512 byte blocks (tar block size). It is an XAD output hook and
@@ -791,11 +814,23 @@ REG(a1, struct xadHookParam *hp))
     err = XADERR_BREAK;
 
   return err;
+#if defined(__AROS__)
+  AROS_USERFUNC_EXIT
+#endif
 }
 
-ASM(ULONG SAVEDS) progrhook(REG(a0, struct Hook *hook),
+#if !defined(__AROS__)
+ASM(ULONG) SAVEDS progrhook(REG(a0, struct Hook *hook),
 REG(a1, struct xadProgressInfo *pi))
 {
+#else
+  AROS_UFH3(ULONG, progrhook,
+  AROS_UFHA(struct Hook *, hook, A0),
+  AROS_UFHA(void *, ai, A2),
+  AROS_UFHA(struct xadProgressInfo *, pi,  A1))
+{
+    AROS_USERFUNC_INIT
+#endif
   ULONG ret = 0;
   struct xHookArgs *h;
   STRPTR name;
@@ -915,6 +950,9 @@ REG(a1, struct xadProgressInfo *pi))
     ret |= XADPIF_OK;
 
   return ret;
+#if defined(__AROS__)
+  AROS_USERFUNC_EXIT
+#endif
 }
 
 static void ShowProt(ULONG i)

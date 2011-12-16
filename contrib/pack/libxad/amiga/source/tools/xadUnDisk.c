@@ -68,8 +68,15 @@ struct Args {
   ULONG    usesectorlabels;
 };
 
+#if !defined(__AROS__)
 ASM(ULONG) SAVEDS progrhook(REG(a0, struct Hook *),
   REG(a1, struct xadProgressInfo *));
+#else
+  AROS_UFP3(ULONG, progrhook,
+  AROS_UFPA(struct Hook *, hook, A0),
+  AROS_UFPA(void *, ai, A2),
+  AROS_UFPA(struct xadProgressInfo *, pi,  A1));
+#endif
 static struct Hook prhook = {{0,0},(ULONG (*)()) progrhook, 0, 0};
 static void ShowTexts(struct xadTextInfo *ti);
 static void SaveTexts(struct xadTextInfo *ti, STRPTR name);
@@ -318,9 +325,19 @@ int main(void)
   return ret;
 }
 
+#if !defined(__AROS__)
 ASM(ULONG) SAVEDS progrhook(REG(a0, struct Hook *hook),
 REG(a1, struct xadProgressInfo *pi))
 {
+#else
+  AROS_UFH3(ULONG, progrhook,
+  AROS_UFHA(struct Hook *, hook, A0),
+  AROS_UFHA(void *, ai, A2),
+  AROS_UFHA(struct xadProgressInfo *, pi,  A1))
+{
+    AROS_USERFUNC_INIT
+#endif
+
   ULONG ret = 0;
 
   switch(pi->xpi_Mode)
@@ -399,6 +416,10 @@ REG(a1, struct xadProgressInfo *pi))
     ret |= XADPIF_OK;
 
   return ret;
+
+#if defined(__AROS__)
+  AROS_USERFUNC_EXIT
+#endif
 }
 
 static void ShowTexts(struct xadTextInfo *ti)
