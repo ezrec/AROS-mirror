@@ -46,7 +46,13 @@ UBYTE version[] = "$VER: ZAP 1.2 (20.08.2001)";
 #define ZAP_REVISION    2
 
 
-#define XADBASE REG(a6, struct xadMasterBase *xadMasterBase)
+#if !defined(__AROS__)
+#define XADBASE  REG(a6, struct xadMasterBase *xadMasterBase)
+#else
+#undef INLINE
+#define INLINE __inline__
+#define XADBASE struct xadMasterBase *xadMasterBase
+#endif
 
 /* work-doing macros */
 #define SKIP(offset) if ((err = xadHookAccess(XADAC_INPUTSEEK, \
@@ -143,13 +149,19 @@ static void ZAP_rledecode(UBYTE *in, UBYTE *out) {
   }
 }
 
-
-ASM(BOOL) ZAP_RecogData(REG(d0, ULONG size), REG(a0, UBYTE *data), XADBASE) {
+#if !defined(__AROS__)
+ASM(BOOL) ZAP_RecogData(REG(d0, ULONG size), REG(a0, STRPTR data), XADBASE) {
+#else
+BOOL ZAP_RecogData(ULONG size, STRPTR data, XADBASE) {
+#endif
   return (BOOL) (strncmp("ZAP V1.41", data+4, 9) == 0);
 }
 
-
+#if !defined(__AROS__)
 ASM(LONG) ZAP_GetInfo(REG(a0, struct xadArchiveInfo *ai), XADBASE) {
+#else
+LONG ZAP_GetInfo(struct xadArchiveInfo *ai, XADBASE) {
+#endif
   UBYTE buffer[4], *textin = NULL;
   struct xadDiskInfo *xdi = NULL;
   struct xadTextInfo *ti;
@@ -210,7 +222,11 @@ struct ZAPstate {
   UBYTE data[ZAP_BLOCKSIZE+260], temp[ZAP_BLOCKSIZE], block;
 };
 
+#if !defined(__AROS__)
 ASM(LONG) ZAP_UnArchive(REG(a0, struct xadArchiveInfo *ai), XADBASE) {
+#else
+LONG ZAP_UnArchive(struct xadArchiveInfo *ai, XADBASE) {
+#endif
   struct ZAPstate *zs;
   UBYTE buffer[4], cyl, block;
   LONG err = XADERR_OK;
@@ -258,7 +274,11 @@ exit_handler:
   return err;
 }
 
+#if !defined(__AROS__)
 ASM(void) ZAP_Free(REG(a0, struct xadArchiveInfo *ai), XADBASE) {
+#else
+void ZAP_Free(struct xadArchiveInfo *ai, XADBASE) {
+#endif
   if (ai->xai_PrivateClient) {
     FREE(ai->xai_PrivateClient);
     ai->xai_PrivateClient = NULL;

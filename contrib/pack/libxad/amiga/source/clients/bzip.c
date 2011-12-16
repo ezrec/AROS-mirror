@@ -20,6 +20,8 @@
 
 /* $VER: bzip.c 1.2 (17.08.2002) */
 
+#define XAD_OBSOLETE
+
 #include <libraries/xadmaster.h>
 #include <proto/xadmaster.h>
 #include <string.h>
@@ -32,7 +34,13 @@ void KPrintF(char *fmt, ...);
 #define D(x)
 #endif
 
+#if !defined(__AROS__)
 #define XADBASE  REG(a6, struct xadMasterBase *xadMasterBase)
+#else
+#undef INLINE
+#define INLINE __inline__
+#define XADBASE struct xadMasterBase *xadMasterBase
+#endif
 
 #ifndef XADMASTERFILE
 #define bzip_Client     FirstClient
@@ -42,15 +50,22 @@ const UBYTE version[] = "$VER: bzip 1.2 (17.08.2002)";
 #define BZIP_VERSION    1
 #define BZIP_REVISION   2
 
-
+#if !defined(__AROS__)
 ASM(BOOL) bzip_RecogData(REG(d0, ULONG size), REG(a0, STRPTR data), XADBASE) {
+#else
+BOOL bzip_RecogData(ULONG size, STRPTR data, XADBASE) {
+#endif
   if (data[0] != 'B' || data[1] != 'Z' || data[2] != '0') return 0;
   if (data[3] <  '1' || data[3] > '9') return 0;
   return 1;
 }
 
 /* there's only one file in a bzip archive - the uncompressed data */
+#if !defined(__AROS__)
 ASM(LONG) bzip_GetInfo(REG(a0, struct xadArchiveInfo *ai), XADBASE) {
+#else
+LONG bzip_GetInfo(struct xadArchiveInfo *ai, XADBASE) {
+#endif
   struct TagItem tags[]  = {
     { XAD_OBJNAMESIZE, 0 },
     { TAG_DONE, 0 }
@@ -575,7 +590,11 @@ static void bzip_MakeCRC32R(ULONG *buf, ULONG ID) {
 #define ALLOC(t,v,l) if (!((v) = (t) xadAllocVec((l),0))) ERROR(NOMEMORY)
 #define FREE(x) xadFreeObjectA((x), NULL)
 
-ASM(LONG) SAVEDS bzip_UnArchive(REG(a0, struct xadArchiveInfo *ai), XADBASE) {
+#if !defined(__AROS__)
+ASM(LONG) bzip_UnArchive(REG(a0, struct xadArchiveInfo *ai), XADBASE) {
+#else
+LONG bzip_UnArchive(struct xadArchiveInfo *ai, XADBASE) {
+#endif
   struct BZIPstate *bzs;
   UBYTE sizechar;
   LONG err;

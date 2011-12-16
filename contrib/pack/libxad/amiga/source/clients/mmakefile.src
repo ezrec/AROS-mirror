@@ -1,0 +1,47 @@
+# Copyright © 2011, The AROS Development Team. All rights reserved.
+# $Id: mmakefile.src 39571 2011-06-28 01:31:58Z NicJA $
+
+include $(TOP)/config/make.cfg
+
+USER_CFLAGS     := -I$(AROS_INCLUDES)/SDI -I$(SRCDIR)/$(CURDIR)/../../../portable/include
+LDFLAGS += -nostartfiles
+
+#MM- xadmaster-clients : \
+#MM xadmaster-client-ar \
+#MM xadmaster-client-bzip \
+#MM xadmaster-client-dimp \
+#MM xadmaster-client-msa \
+#MM xadmaster-client-packdir \
+#MM xadmaster-client-zap
+
+#MM- xadmaster-clients-quick : \
+#MM xadmaster-client-ar-quick \
+#MM xadmaster-client-bzip-quick \
+#MM xadmaster-client-dimp-quick \
+#MM xadmaster-client-msa-quick \
+#MM xadmaster-client-packdir-quick \
+#MM xadmaster-client-zap-quick
+
+%build_prog mmake=xadmaster-client-ar \
+    files="extheader ar" progname=ar targetdir=$(AROS_LIBS)/XAD \
+    uselibs="arossupport amiga arosc m debug"
+
+%build_prog mmake=xadmaster-client-bzip \
+    files="extheader bzip" progname=bzip targetdir=$(AROS_LIBS)/XAD \
+    uselibs="arossupport amiga arosc m debug"
+
+%build_prog mmake=xadmaster-client-dimp \
+    files="extheader DImp" progname=DImp targetdir=$(AROS_LIBS)/XAD \
+    uselibs="arossupport amiga arosc m debug"
+
+%build_prog mmake=xadmaster-client-msa \
+    files="extheader MSA" progname=MSA targetdir=$(AROS_LIBS)/XAD \
+    uselibs="arossupport amiga arosc m debug"
+
+%build_prog mmake=xadmaster-client-packdir \
+    files="extheader PackDir" progname=PackDir targetdir=$(AROS_LIBS)/XAD \
+    uselibs="arossupport amiga arosc m debug"
+
+%build_prog mmake=xadmaster-client-zap \
+    files="extheader ZAP" progname=ZAP targetdir=$(AROS_LIBS)/XAD \
+    uselibs="arossupport amiga arosc m debug"
