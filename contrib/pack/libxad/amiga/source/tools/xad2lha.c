@@ -37,7 +37,9 @@
 
 struct xadMasterBase *	 xadMasterBase = 0;
 struct DosLibrary *	 DOSBase = 0;
+#if !defined(__AROS__)
 struct ExecBase *	 SysBase  = 0;
+#endif
 
 #define MINPRINTSIZE	51200	/* 50KB */
 
@@ -66,12 +68,18 @@ ULONG MakeLH(STRPTR mem, ULONG size, ULONG bits);
 void ProcessEntry(struct xadFileInfo *fi, struct xadArchiveInfo *ai, struct Args *args, BPTR outfh,
   STRPTR tmp);
 
+#if !defined(__AROS__)
 ULONG start(void)
+#else
+int main(void)
+#endif
 {
   ULONG ret = RETURN_FAIL;
   struct DosLibrary *dosbase;
 
+#if !defined(__AROS__)
   SysBase = (*((struct ExecBase **) 4));
+#endif
   { /* test for WB and reply startup-message */
     struct Process *task;
     if(!(task = (struct Process *) FindTask(0))->pr_CLI)
@@ -481,7 +489,7 @@ void MakeEntry2(struct xadFileInfo *fi, STRPTR tmp, BPTR fh, STRPTR mem, ULONG s
     headersize += i+3;
     if(m != fi->xfi_FileName)
     {
-      i = m-fi->xfi_FileName-1;
+      i = m - (STRPTR)fi->xfi_FileName-1;
       Store16(tmp + headersize-2, i+3); /* set header size */
       tmp[headersize++] = 0x02;
       for(j = 0; j < i; ++j)

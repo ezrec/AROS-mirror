@@ -73,6 +73,7 @@ FILES = \
 
 USER_CFLAGS := -Wno-uninitialized -Wno-parentheses -I$(AROS_INCLUDES)/SDI -I$(SRCDIR)/$(CURDIR)/../amiga/include/C -I$(SRCDIR)/$(CURDIR)/include -I$(SRCDIR)/$(CURDIR)/ -I$(SRCDIR)/$(CURDIR)/amiga
 
+#MM- contrib-pack-xadmaster : contrib-pack-xadmaster-library
 #MM- contrib-pack-xadmaster-library : includes
 
 %build_module mmake=contrib-pack-xadmaster-library \

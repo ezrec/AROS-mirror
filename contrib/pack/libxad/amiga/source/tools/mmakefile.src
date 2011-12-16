@@ -1,0 +1,25 @@
+# Copyright © 2003-2010, The AROS Development Team. All rights reserved.
+# $Id: mmakefile.src 39345 2011-06-17 05:55:29Z jmcmullan $
+
+include $(TOP)/config/make.cfg
+
+FILES := \
+    exe2arc \
+    xad2lha \
+    xadLibInfo \
+    xadUnDisk \
+    xadUnFile \
+    xadUnTar
+
+SKIPPED := xadList
+
+USER_CFLAGS     := -I$(AROS_INCLUDES)/SDI -I$(SRCDIR)/$(CURDIR)/../../include/C -I$(SRCDIR)/$(CURDIR)/../../../portable/include
+
+#MM- contrib-pack-xadmaster : contrib-pack-xadmaster-tools
+#MM- contrib-pack-xadmaster-tools : contrib-pack-xadmaster-library
+
+%build_progs mmake=contrib-pack-xadmaster-tools \
+    files=$(FILES) targetdir=$(AROS_C) \
+    uselibs="arossupport amiga arosc m debug"
+
+%common

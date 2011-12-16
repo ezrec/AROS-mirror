@@ -41,7 +41,9 @@
 
 struct xadMasterBase *	xadMasterBase = 0;
 struct DosLibrary *	 DOSBase = 0;
+#if !defined(__AROS__)
 struct ExecBase *	 SysBase  = 0;
+#endif
 
 #define MINPRINTSIZE	51200	/* 50KB */
 #define NAMEBUFSIZE	512
@@ -156,12 +158,18 @@ void CalcPercent(ULONG cr, ULONG ucr, ULONG *p1, ULONG *p2);
   STRPTR *GetNames(STRPTR *names);
 #endif
 
+#if !defined(__AROS__)
 ULONG start(void)
+#else
+int main(void)
+#endif
 {
   ULONG ret = RETURN_FAIL, numerr = 0;
   struct DosLibrary *dosbase;
 
+#if !defined(__AROS__)
   SysBase = (*((struct ExecBase **) 4));
+#endif
   { /* test for WB and reply startup-message */
     struct Process *task;
     if(!(task = (struct Process *) FindTask(0))->pr_CLI)
