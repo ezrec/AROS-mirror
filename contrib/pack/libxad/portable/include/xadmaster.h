@@ -102,7 +102,11 @@ typedef struct TagItem * xadTAGPTR;
 struct xadMasterBase {
   struct Library       xmb_LibNode;
 #ifdef XAD_OBSOLETE
+#if !defined(__AROS__)
   struct ExecBase *    xmb_SysBase;
+#else
+  void *               xmb_Reserved0;
+#endif
   struct DosLibrary *  xmb_DOSBase;
   struct UtilityBase * xmb_UtilityBase;
   xadSize              xmb_RecogSize;   /* read only */

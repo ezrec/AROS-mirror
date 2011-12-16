@@ -35,6 +35,8 @@ struct xadMasterBaseP {
   struct Library         xmb_LibNode;
 #if !defined(__AROS__)
   struct ExecBase *      xmb_SysBase;
+#else
+  void *                 xmb_Reserved0;
 #endif
   struct DosLibrary *    xmb_DOSBase;
   struct UtilityBase *   xmb_UtilityBase;
