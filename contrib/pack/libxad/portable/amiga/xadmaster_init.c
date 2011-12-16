@@ -50,12 +50,13 @@ static void InitClients(LIBBASETYPEPTR LIBBASE)
 
           while(ExNext(lock, fib))
           {
-            BPTR sl;
+            BPTR seg, sl;
 
-            if((sl = BADDR(LoadSeg(fib->fib_FileName))))
+            if (seg = LoadSeg(fib->fib_FileName))
             {
               xadBOOL need = XADFALSE;
-
+              sl = BADDR(seg);
+#if !defined(__AROS__)
               {
                 xadUINT32 i, size = *((xadUINT32 *) (sl-4))-16; /* 16 --> xadForman size */
 
@@ -74,6 +75,26 @@ static void InitClients(LIBBASETYPEPTR LIBBASE)
                   }
                 }
               }
+#else
+              while(seg)
+              {
+                STRPTR addr = (STRPTR)((IPTR)BADDR(seg) - sizeof(ULONG));
+                ULONG size = *(ULONG *)addr;
+
+                for(addr += sizeof(xadUINT32), size -= sizeof(xadUINT32);
+                   size >= sizeof(struct xadForeman);
+                   size -= 2, addr += 2)
+                {
+                  struct xadForeman *xcFM = (struct xadForeman *)addr;
+                  if ( xcFM->xfm_ID == XADFOREMAN_ID )
+                  {
+                    if (xadAddClients(LIBBASE, xcFM->xfm_FirstClient, XADCF_EXTERN))
+                      need = XADTRUE;
+                  }
+                }
+                seg = *(BPTR *)BADDR(seg);
+              }
+#endif
               if(!need)
                 UnLoadSeg(MKBADDR(sl));
               else /* add this seglist */
