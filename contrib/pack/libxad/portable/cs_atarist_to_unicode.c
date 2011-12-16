@@ -23,6 +23,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+#include <libraries/xadmaster.h>
+
 static const xadUINT16 atarist[] = {
 0x00C7, /* LATIN CAPITAL LETTER C WITH CEDILLA */
 0x00FC, /* LATIN SMALL LETTER U WITH DIAERESIS */

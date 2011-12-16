@@ -229,7 +229,7 @@ struct xadMasterBaseP {
 #define XADM_AI(ai)   ((struct xadArchiveInfoP *) ai)
 #endif
 
-#if defined(AMIGA) && !defined(__amigaos4__)
+#if defined(AMIGA) && !defined(__amigaos4__) && !defined(__AROS__)
 typedef ASM(xadBOOL) (*XCRECOGTYPE)
   (REG(d0, xadSize size), REG(a0, const xadUINT8 *data),
    REG(a6, struct xadMasterBaseP *xadMasterBase));

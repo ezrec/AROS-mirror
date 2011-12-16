@@ -23,6 +23,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+#include <libraries/xadmaster.h>
+
 #define UUNDEF 0xFFFF  /* Unicode undefined character code */
 
 /*  The code 0xFFFF is illegal in Unicode. This means it may never

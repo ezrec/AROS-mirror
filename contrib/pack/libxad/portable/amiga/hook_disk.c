@@ -66,7 +66,11 @@ xadSTRPTR dosname)
 
     if((m = DeviceProc(dosname)))
     {
-      DoPkt1(m, ACTION_INHIBIT, onflag ? DOSTRUE : DOSFALSE);
+#if !defined(__AROS__)
+	DoPkt1(m, ACTION_INHIBIT, onflag ? DOSTRUE : DOSFALSE);
+#else
+	DoPkt(m, ACTION_INHIBIT, onflag ? DOSTRUE : DOSFALSE, 0, 0, 0, 0);
+#endif
     }
   }
 }
@@ -336,7 +340,11 @@ struct xadHookParam *param */
                 if(denv && denv->de_TableSize < 64 && !(denv->de_SizeBlock &
                 0x127) && (denv->de_LowCyl <= denv->de_HighCyl))
                 {
+#if !defined(__AROS__)
                   if(!OpenDevice(((xadSTRPTR)(fssm->fssm_Device<<2))+1,
+#else
+                  if(!OpenDevice((xadSTRPTR)AROS_BSTR_ADDR(fssm->fssm_Device),
+#endif
                   fssm->fssm_Unit, (struct IORequest *)io, 0))
                   {
 #ifdef DEBUG
@@ -628,7 +636,11 @@ struct xadHookParam *param */
                 if(denv && denv->de_TableSize < 64 && !(denv->de_SizeBlock &
                 0x127) && (denv->de_LowCyl <= denv->de_HighCyl))
                 {
+#if !defined(__AROS__)
                   if(!OpenDevice(((xadSTRPTR)(fssm->fssm_Device<<2))+1,
+#else
+                  if(!OpenDevice((xadSTRPTR)AROS_BSTR_ADDR(fssm->fssm_Device),
+#endif
                   fssm->fssm_Unit, (struct IORequest *)io, 0))
                   {
 #ifdef DEBUG
