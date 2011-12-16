@@ -1,0 +1,12 @@
+# $Id: mmakefile 38211 2011-04-14 09:32:19Z sonic $
+include $(TOP)/config/make.cfg
+
+INCLUDES	:= $(wildcard libraries/*.h)
+DEST_INCLUDES	:= $(foreach f,$(INCLUDES),$(AROS_INCLUDES)/$(f))
+
+#MM
+xadmaster-includes : $(DEST_INCLUDES)
+	@$(NOP)
+
+$(AROS_INCLUDES)/%.h : %.h
+	@$(CP) $< $@

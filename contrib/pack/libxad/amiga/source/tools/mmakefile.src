@@ -15,10 +15,10 @@ SKIPPED := xadList
 
 USER_CFLAGS     := -I$(AROS_INCLUDES)/SDI -I$(SRCDIR)/$(CURDIR)/../../include/C -I$(SRCDIR)/$(CURDIR)/../../../portable/include
 
-#MM- contrib-pack-xadmaster : contrib-pack-xadmaster-tools
-#MM- contrib-pack-xadmaster-tools : contrib-pack-xadmaster-library
+#MM- contrib-pack-xadmaster : xadmaster-tools
+#MM- xadmaster-tools : xadmaster-library
 
-%build_progs mmake=contrib-pack-xadmaster-tools \
+%build_progs mmake=xadmaster-tools \
     files=$(FILES) targetdir=$(AROS_C) \
     uselibs="arossupport amiga arosc m debug"
 

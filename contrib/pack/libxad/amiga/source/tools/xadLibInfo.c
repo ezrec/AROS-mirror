@@ -87,11 +87,13 @@ int main(void)
       ASSIGN_XAD
       ret = 0;
       if((xc = xadGetClientInfo()))
+      {
         Printf("\033[4mClients of xadmaster.library %ld.%ld\033[0m\n\n"
 	"Name                      |  ID  | MV |  VER  | Flags\n"
 	"--------------------------+------+----+-------+------------------------------\n",
 	xadmasterbase->xmb_LibNode.lib_Version,
 	xadmasterbase->xmb_LibNode.lib_Revision);
+      }
       
       while(xc && !(SetSignal(0L,0L) & SIGBREAKF_CTRL_C))
       {
