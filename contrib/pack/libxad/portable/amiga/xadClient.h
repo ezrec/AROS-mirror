@@ -28,8 +28,10 @@
 #include "ConvertE.c"
 #define SDI_TO_ANSI
 #include "SDI_ASM_STD_protos.h"
+#if !defined(__AROS__)
 #ifdef NO_INLINE_STDARG
 #include "stubs.h"
+#endif
 #endif
 
 #ifdef XADMASTERFILE

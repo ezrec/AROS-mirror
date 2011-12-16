@@ -437,7 +437,7 @@ struct xadHookParam *param */
   }
   return 0;
 }
-ENDFUNC
+ENDHOOK
 
 /************************** read-from-disk hook **************************/
 FUNCHOOK(InHookDisk) /* struct Hook *hook, struct xadArchiveInfoP *ai,
@@ -717,6 +717,6 @@ struct xadHookParam *param */
   }
   return 0;
 }
-ENDFUNC
+ENDHOOK
 
 #endif /* XADMASTER_HOOK_DISK_C */

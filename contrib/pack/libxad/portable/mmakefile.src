@@ -37,11 +37,11 @@ FILES = \
     $(HFILES) \
     $(CHARSET)
 
-USER_CFLAGS := -Wno-uninitialized -Wno-parentheses -I$(AROS_INCLUDES)/SDI -I$(SRCDIR)/$(CURDIR)/../amiga/include/C -I$(SRCDIR)/$(CURDIR)/include -I$(SRCDIR)/$(CURDIR)/ -I$(SRCDIR)/$(CURDIR)/amiga
+USER_CFLAGS := -D__DOS_NOLIBBASE__ -D__UTILITY_NOLIBBASE__ -Wno-uninitialized -Wno-parentheses -I$(AROS_INCLUDES)/SDI -I$(SRCDIR)/$(CURDIR)/include -I$(SRCDIR)/$(CURDIR)/ -I$(SRCDIR)/$(CURDIR)/amiga
 
 #MM- contrib-pack-xadmaster : xadmaster-library
 #MM- xadmaster-library : includes xadmaster-includes
 
 %build_module mmake=xadmaster-library \
-  modname=xadmaster modtype=library uselibs=rom \
-  files="xadmaster_init $(FILES) clients"
+  modname=xadmaster modtype=library \
+  files="xadmaster_init $(FILES) clients" uselibs=rom

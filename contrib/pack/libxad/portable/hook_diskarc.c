@@ -184,6 +184,6 @@ FUNCHOOK(InHookDiskArc)
 
   return err;
 }
-ENDFUNC
+ENDHOOK
 
 #endif /* XADMASTER_HOOK_DISKARC_C */

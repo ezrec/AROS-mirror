@@ -186,7 +186,7 @@ struct xadHookParam *param */
   }
   return 0;
 }
-ENDFUNC
+ENDHOOK
 
 static xadERROR opendestfile(struct xadArchiveInfoP *ai)
 {
@@ -368,6 +368,6 @@ struct xadHookParam *param */
   }
   return 0;
 }
-ENDFUNC
+ENDHOOK
 
 #endif /* XADMASTER_HOOK_FH_C */

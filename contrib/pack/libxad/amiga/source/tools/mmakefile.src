@@ -14,7 +14,7 @@ FILES := \
 
 SKIPPED := 
 
-USER_CFLAGS     := -I$(AROS_INCLUDES)/SDI -I$(SRCDIR)/$(CURDIR)/../../include/C -I$(SRCDIR)/$(CURDIR)/../../../portable/include
+USER_CFLAGS     := -I$(AROS_INCLUDES)/SDI -I$(SRCDIR)/$(CURDIR)/../../../portable/include
 
 #MM- contrib-pack-xadmaster : xadmaster-tools
 #MM- xadmaster-tools : xadmaster-library

@@ -142,7 +142,7 @@ FUNCHOOK(InHookStream)
 
   return err;
 }
-ENDFUNC
+ENDHOOK
 
 /*************************** write-to-mem hook **************************/
 
@@ -224,6 +224,6 @@ FUNCHOOK(OutHookStream)
 
   return err;
 }
-ENDFUNC
+ENDHOOK
 
 #endif /* XADMASTER_HOOK_STREAM_C */

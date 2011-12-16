@@ -41,8 +41,10 @@
 #define SDI_TO_ANSI
 #include "SDI_ASM_STD_protos.h"
 #include "SDI_compiler.h"
+#if !defined(__AROS__)
 #ifdef NO_INLINE_STDARG
 #include "stubs.h"
+#endif
 #endif
 
 #define PROTOHOOK(name) \
@@ -53,8 +55,17 @@
 
 #define FUNCHOOK(name) PROTOHOOK(name) {
 
-#define ENDFUNC }
+#if !defined(__AROS__)
+#   define ENDFUNC }
+#   define ENDHOOK ENDFUNC
+#else
+#   include <aros/asmcall.h>
+#   define ENDFUNC AROS_LIBFUNC_EXIT \
+}
+# define ENDHOOK }
+#endif
 
+#if !defined(__AROS__)
 /* xadAddDiskEntry - clientfunc.c */
 ASM(xadERROR) LIBxadAddDiskEntryA(REG(a0, struct xadDiskInfo *di), REG(a1, struct xadArchiveInfoP *ai), REG(a2, xadTAGPTR tags), REG(a6, struct xadMasterBaseP *xadMasterBase));
 #define FUNCxadAddDiskEntry ASM(xadERROR) LIBxadAddDiskEntryA(REG(a0, struct xadDiskInfo *di), REG(a1, struct xadArchiveInfoP *ai), REG(a2, xadTAGPTR tags), REG(a6, struct xadMasterBaseP *xadMasterBase)) { \
@@ -173,6 +184,183 @@ ASM(xadERROR) LIBxadHookTagAccessA(REG(d0, xadUINT32 command), REG(d1, xadSignSi
 ASM(struct xadClient *) LIBxadRecogFileA(REG(d0, xadSize size), REG(a0, const void *mem), REG(a1, xadTAGPTR tags), REG(a6, struct xadMasterBaseP *xadMasterBase));
 #define FUNCxadRecogFile ASM(struct xadClient *) LIBxadRecogFileA(REG(d0, xadSize size), REG(a0, const void *mem), REG(a1, xadTAGPTR tags), REG(a6, struct xadMasterBaseP *xadMasterBase)) { \
   struct UtilityBase *UtilityBase = xadMasterBase->xmb_UtilityBase;
+  
+#else
+
+/********************** AROS **************************/
+
+/* xadAddDiskEntry - clientfunc.c */
+//AROS_LP3(xadERROR, xadAddDiskEntryA, AROS_LPA(struct xadDiskInfo *, di, A0), AROS_LPA(struct xadArchiveInfoP *, ai, A1), AROS_LPA(xadTAGPTR, tags, A2), struct xadMasterBaseP *, xadMasterBase, 26, xadmaster);
+#define FUNCxadAddDiskEntry \
+AROS_LH3(xadERROR, xadAddDiskEntryA, AROS_LHA(struct xadDiskInfo *, di, A0), AROS_LHA(struct xadArchiveInfoP *, ai, A1), AROS_LHA(xadTAGPTR, tags, A2), struct xadMasterBaseP *, xadMasterBase, 26, xadmaster) { \
+    AROS_LIBFUNC_INIT \
+    struct UtilityBase *UtilityBase = xadMasterBase->xmb_UtilityBase;
+
+/* xadAddFileEntry - clientfunc.c */
+//AROS_LP3(xadERROR, xadAddFileEntryA, AROS_LPA(struct xadFileInfo *, fi, A0), AROS_LPA(struct xadArchiveInfoP *, ai, A1), AROS_LPA(xadTAGPTR, tags, A2), struct xadMasterBaseP *, xadMasterBase, 25, xadmaster);
+#define FUNCxadAddFileEntry \
+AROS_LH3(xadERROR, xadAddFileEntryA, AROS_LHA(struct xadFileInfo *, fi, A0), AROS_LHA(struct xadArchiveInfoP *, ai, A1), AROS_LHA(xadTAGPTR, tags, A2), struct xadMasterBaseP *, xadMasterBase, 25, xadmaster) { \
+    AROS_LIBFUNC_INIT \
+    struct UtilityBase *UtilityBase = xadMasterBase->xmb_UtilityBase;
+
+/* xadAllocObject - objects.c */
+//AROS_LP2(xadPTR, xadAllocObjectA, AROS_LPA(xadUINT32, type, D0), AROS_LPA(xadTAGPTR, tags, A0), struct xadMasterBaseP *, xadMasterBase, 5, xadmaster);
+#define FUNCxadAllocObject \
+AROS_LH2(xadPTR, xadAllocObjectA, AROS_LHA(xadUINT32, type, D0), AROS_LHA(xadTAGPTR, tags, A0), struct xadMasterBaseP *, xadMasterBase, 5, xadmaster) { \
+    AROS_LIBFUNC_INIT \
+    struct UtilityBase *UtilityBase = xadMasterBase->xmb_UtilityBase;
+
+/* xadAllocVec - objects.c */
+//AROS_LP2(xadPTR, xadAllocVec, AROS_LPA(xadSize, size, D0), AROS_LPA(xadUINT32, flags, D1), struct xadMasterBaseP *, xadMasterBase, 18, xadmaster);
+#define FUNCxadAllocVec \
+AROS_LH2(xadPTR, xadAllocVec, AROS_LHA(xadSize, size, D0), AROS_LHA(xadUINT32, flags, D1), struct xadMasterBaseP *, xadMasterBase, 18, xadmaster) { \
+    AROS_LIBFUNC_INIT \
+
+/* xadCalcCRC16 - crc.c */
+//AROS_LP4(xadUINT16, xadCalcCRC16, AROS_LPA(xadUINT16, id, D0), AROS_LPA(xadUINT16, init, D1), AROS_LPA(xadSize, size, D2), AROS_LPA(const xadUINT8 *, buffer, A0), struct xadMasterBaseP *, xadMasterBase, 16, xadmaster);
+#define FUNCxadCalcCRC16 \
+AROS_LH4(xadUINT16, xadCalcCRC16, AROS_LHA(xadUINT16, id, D0), AROS_LHA(xadUINT16, init, D1), AROS_LHA(xadSize, size, D2), AROS_LHA(const xadUINT8 *, buffer, A0), struct xadMasterBaseP *, xadMasterBase, 16, xadmaster) { \
+    AROS_LIBFUNC_INIT \
+
+/* xadCalcCRC32 - crc.c */
+//AROS_LP4(xadUINT32, xadCalcCRC32, AROS_LPA(xadUINT32, id, D0), AROS_LPA(xadUINT32, init, D1), AROS_LPA(xadSize, size, D2), AROS_LPA(const xadUINT8 *, buffer, A0), struct xadMasterBaseP *, xadMasterBase, 17, xadmaster);
+#define FUNCxadCalcCRC32 \
+AROS_LH4(xadUINT32, xadCalcCRC32, AROS_LHA(xadUINT32, id, D0), AROS_LHA(xadUINT32, init, D1), AROS_LHA(xadSize, size, D2), AROS_LHA(const xadUINT8 *, buffer, A0), struct xadMasterBaseP *, xadMasterBase, 17, xadmaster) { \
+    AROS_LIBFUNC_INIT \
+
+/* xadConvertDates - dates.c */
+//AROS_LP1(xadERROR, xadConvertDatesA, AROS_LPA(xadTAGPTR, tags, A0), struct xadMasterBaseP *, xadMasterBase, 15, xadmaster);
+#define FUNCxadConvertDates \
+AROS_LH1(xadERROR, xadConvertDatesA, AROS_LHA(xadTAGPTR, tags, A0), struct xadMasterBaseP *, xadMasterBase, 15, xadmaster) { \
+    AROS_LIBFUNC_INIT \
+    struct UtilityBase *UtilityBase = xadMasterBase->xmb_UtilityBase;
+
+/* xadConvertName - filename.c */
+//AROS_LP2(xadSTRPTR, xadConvertNameA, AROS_LPA(xadUINT32, charset, D0), AROS_LPA(xadTAGPTR, tags, A0), struct xadMasterBaseP *, xadMasterBase, 28, xadmaster);
+#define FUNCxadConvertName \
+AROS_LH2(xadSTRPTR, xadConvertNameA, AROS_LHA(xadUINT32, charset, D0), AROS_LHA(xadTAGPTR, tags, A0), struct xadMasterBaseP *, xadMasterBase, 28, xadmaster) { \
+    AROS_LIBFUNC_INIT \
+    struct UtilityBase *UtilityBase = xadMasterBase->xmb_UtilityBase;
+
+/* xadConvertProtection - protection.c */
+//AROS_LP1(xadERROR, xadConvertProtectionA, AROS_LPA(xadTAGPTR, tags, A0), struct xadMasterBaseP *, xadMasterBase, 21, xadmaster);
+#define FUNCxadConvertProtection \
+AROS_LH1(xadERROR, xadConvertProtectionA, AROS_LHA(xadTAGPTR, tags, A0), struct xadMasterBaseP *, xadMasterBase, 21, xadmaster) { \
+    AROS_LIBFUNC_INIT \
+    struct UtilityBase *UtilityBase = xadMasterBase->xmb_UtilityBase;
+
+/* xadCopyMem - copymem.c */
+//AROS_LP3(void, xadCopyMem, AROS_LPA(const void *, s, A0), AROS_LPA(xadPTR, d, A1), AROS_LPA(xadSize, size, D0), struct xadMasterBaseP *, xadMasterBase, 19, xadmaster);
+#define FUNCxadCopyMem \
+AROS_LH3(void, xadCopyMem, AROS_LHA(const void *, s, A0), AROS_LHA(xadPTR, d, A1), AROS_LHA(xadSize, size, D0), struct xadMasterBaseP *, xadMasterBase, 19, xadmaster) { \
+    AROS_LIBFUNC_INIT \
+
+/* xadDiskUnArc - diskunarc.c */
+//AROS_LP2(xadERROR, xadDiskUnArcA, AROS_LPA(struct xadArchiveInfoP *, ai, A0), AROS_LPA(xadTAGPTR, tags, A1), struct xadMasterBaseP *, xadMasterBase, 11, xadmaster);
+#define FUNCxadDiskUnArc \
+AROS_LH2(xadERROR, xadDiskUnArcA, AROS_LHA(struct xadArchiveInfoP *, ai, A0), AROS_LHA(xadTAGPTR, tags, A1), struct xadMasterBaseP *, xadMasterBase, 11, xadmaster) { \
+    AROS_LIBFUNC_INIT \
+    struct UtilityBase *UtilityBase = xadMasterBase->xmb_UtilityBase;
+
+/* xadFileUnArc - fileunarc.c */
+//AROS_LP2(xadERROR, xadFileUnArcA, AROS_LPA(struct xadArchiveInfoP *, ai, A0), AROS_LPA(xadTAGPTR, tags, A1), struct xadMasterBaseP *, xadMasterBase, 10, xadmaster);
+#define FUNCxadFileUnArc \
+AROS_LH2(xadERROR, xadFileUnArcA, AROS_LHA(struct xadArchiveInfoP *, ai, A0), AROS_LHA(xadTAGPTR, tags, A1), struct xadMasterBaseP *, xadMasterBase, 10, xadmaster) { \
+    AROS_LIBFUNC_INIT \
+    struct UtilityBase *UtilityBase = xadMasterBase->xmb_UtilityBase;
+
+/* xadFreeHookAccess - hook.c */
+//AROS_LP2(void, xadFreeHookAccessA, AROS_LPA(struct xadArchiveInfoP *, ai, A0), AROS_LPA(xadTAGPTR, tags, A1), struct xadMasterBaseP *, xadMasterBase, 24, xadmaster);
+#define FUNCxadFreeHookAccess \
+AROS_LH2(void, xadFreeHookAccessA, AROS_LHA(struct xadArchiveInfoP *, ai, A0), AROS_LHA(xadTAGPTR, tags, A1), struct xadMasterBaseP *, xadMasterBase, 24, xadmaster) { \
+    AROS_LIBFUNC_INIT \
+    struct UtilityBase *UtilityBase = xadMasterBase->xmb_UtilityBase;
+
+/* xadFreeInfo - info.c */
+//AROS_LP1(void, xadFreeInfo, AROS_LPA(struct xadArchiveInfoP *, ai, A0), struct xadMasterBaseP *, xadMasterBase, 9, xadmaster);
+#define FUNCxadFreeInfo \
+AROS_LH1(void, xadFreeInfo, AROS_LHA(struct xadArchiveInfoP *, ai, A0), struct xadMasterBaseP *, xadMasterBase, 9, xadmaster) { \
+    AROS_LIBFUNC_INIT \
+
+/* xadFreeObject - objects.c */
+//AROS_LP2(void, xadFreeObjectA, AROS_LPA(xadPTR, object, A0), AROS_LPA(xadTAGPTR, tags, A1), struct xadMasterBaseP *, xadMasterBase, 6, xadmaster);
+#define FUNCxadFreeObject \
+AROS_LH2(void, xadFreeObjectA, AROS_LHA(xadPTR, object, A0), AROS_LHA(xadTAGPTR, tags, A1), struct xadMasterBaseP *, xadMasterBase, 6, xadmaster) { \
+    AROS_LIBFUNC_INIT \
+
+/* xadGetClientInfo - clientfunc.c */
+//AROS_LP0(struct xadClient *, xadGetClientInfo, struct xadMasterBaseP *, xadMasterBase, 13, xadmaster);
+#define FUNCxadGetClientInfo \
+AROS_LH0(struct xadClient *, xadGetClientInfo, struct xadMasterBaseP *, xadMasterBase, 13, xadmaster) { \
+    AROS_LIBFUNC_INIT \
+
+/* xadGetDefaultName - filename.c */
+//AROS_LP1(xadSTRPTR, xadGetDefaultNameA, AROS_LPA(xadTAGPTR, tags, A0), struct xadMasterBaseP *, xadMasterBase, 29, xadmaster);
+#define FUNCxadGetDefaultName \
+AROS_LH1(xadSTRPTR, xadGetDefaultNameA, AROS_LHA(xadTAGPTR, tags, A0), struct xadMasterBaseP *, xadMasterBase, 29, xadmaster) { \
+    AROS_LIBFUNC_INIT \
+    struct UtilityBase *UtilityBase = xadMasterBase->xmb_UtilityBase;
+
+/* xadGetDiskInfo - diskfile.c */
+//AROS_LP2(xadERROR, xadGetDiskInfoA, AROS_LPA(struct xadArchiveInfoP *, ai, A0), AROS_LPA(xadTAGPTR, tags, A1), struct xadMasterBaseP *, xadMasterBase, 22, xadmaster);
+#define FUNCxadGetDiskInfo \
+AROS_LH2(xadERROR, xadGetDiskInfoA, AROS_LHA(struct xadArchiveInfoP *, ai, A0), AROS_LHA(xadTAGPTR, tags, A1), struct xadMasterBaseP *, xadMasterBase, 22, xadmaster) { \
+    AROS_LIBFUNC_INIT \
+    struct UtilityBase *UtilityBase = xadMasterBase->xmb_UtilityBase;
+
+/* xadGetErrorText - error.c */
+//AROS_LP1(xadSTRPTR, xadGetErrorText, AROS_LPA(xadERROR, errnum, D0), struct xadMasterBaseP *, xadMasterBase, 12, xadmaster);
+#define FUNCxadGetErrorText \
+AROS_LH1(xadSTRPTR, xadGetErrorText, AROS_LHA(xadERROR, errnum, D0), struct xadMasterBaseP *, xadMasterBase, 12, xadmaster) { \
+    AROS_LIBFUNC_INIT \
+
+/* xadGetFilename - filename.c */
+//AROS_LP5(xadERROR, xadGetFilenameA, AROS_LPA(xadUINT32, buffersize, D0), AROS_LPA(xadSTRPTR, buffer, A0), AROS_LPA(const xadSTRING *, path, A1), AROS_LPA(const xadSTRING *, name, A2), AROS_LPA(xadTAGPTR, tags, A3), struct xadMasterBaseP *, xadMasterBase, 27, xadmaster);
+#define FUNCxadGetFilename \
+AROS_LH5(xadERROR, xadGetFilenameA, AROS_LHA(xadUINT32, buffersize, D0), AROS_LHA(xadSTRPTR, buffer, A0), AROS_LHA(const xadSTRING *, path, A1), AROS_LHA(const xadSTRING *, name, A2), AROS_LHA(xadTAGPTR, tags, A3), struct xadMasterBaseP *, xadMasterBase, 27, xadmaster) { \
+    AROS_LIBFUNC_INIT \
+    struct UtilityBase *UtilityBase = xadMasterBase->xmb_UtilityBase;
+
+/* xadGetInfo - info.c */
+//AROS_LP2(xadERROR, xadGetInfoA, AROS_LPA(struct xadArchiveInfoP *, ai, A0), AROS_LPA(xadTAGPTR, tags, A1), struct xadMasterBaseP *, xadMasterBase, 8, xadmaster);
+#define FUNCxadGetInfo \
+AROS_LH2(xadERROR, xadGetInfoA, AROS_LHA(struct xadArchiveInfoP *, ai, A0), AROS_LHA(xadTAGPTR, tags, A1), struct xadMasterBaseP *, xadMasterBase, 8, xadmaster) { \
+    AROS_LIBFUNC_INIT \
+
+/* xadGetHookAccess - hook.c */
+//AROS_LP2(xadERROR, xadGetHookAccessA, AROS_LPA(struct xadArchiveInfoP *, ai, A0), AROS_LPA(xadTAGPTR, tags, A1), struct xadMasterBaseP *, xadMasterBase, 23, xadmaster);
+#define FUNCxadGetHookAccess \
+AROS_LH2(xadERROR, xadGetHookAccessA, AROS_LHA(struct xadArchiveInfoP *, ai, A0), AROS_LHA(xadTAGPTR, tags, A1), struct xadMasterBaseP *, xadMasterBase, 23, xadmaster) { \
+    AROS_LIBFUNC_INIT \
+    struct UtilityBase *UtilityBase = xadMasterBase->xmb_UtilityBase;
+
+/* xadGetSystemInfo - info.c */
+//AROS_LP0(struct xadSystemInfo *, xadGetSystemInfo, struct xadMasterBaseP *, xadMasterBase, 30, xadmaster);
+#define FUNCxadGetSystemInfo \
+AROS_LH0(struct xadSystemInfo *, xadGetSystemInfo, struct xadMasterBaseP *, xadMasterBase, 30, xadmaster) { \
+    AROS_LIBFUNC_INIT \
+
+/* xadHookAccess - clientfunc.c */
+//AROS_LP4(xadERROR, xadHookAccess, AROS_LPA(xadUINT32, command, D0), AROS_LPA(xadSignSize, data, D1),  AROS_LPA(xadPTR, buffer, A0), AROS_LPA(struct xadArchiveInfoP *, ai, A1), struct xadMasterBaseP *, xadMasterBase, 14, xadmaster);
+#define FUNCxadHookAccess \
+AROS_LH4(xadERROR, xadHookAccess, AROS_LHA(xadUINT32, command, D0), AROS_LHA(xadSignSize, data, D1), AROS_LHA(xadPTR, buffer, A0), AROS_LHA(struct xadArchiveInfoP *, ai, A1), struct xadMasterBaseP *, xadMasterBase, 14, xadmaster) { \
+    AROS_LIBFUNC_INIT \
+
+/* xadHookTagAccess - clientfunc.c */
+//AROS_LP5(xadERROR, xadHookTagAccessA, AROS_LPA(xadUINT32, command, D0), AROS_LPA(xadSignSize, data, D1),  AROS_LPA(xadPTR, buffer, A0), AROS_LPA(struct xadArchiveInfoP *, ai, A1), AROS_LPA(xadTAGPTR, tags, A2), struct xadMasterBaseP *, xadMasterBase, 20, xadmaster);
+#define FUNCxadHookTagAccess \
+AROS_LH5(xadERROR, xadHookTagAccessA, AROS_LHA(xadUINT32, command, D0), AROS_LHA(xadSignSize, data, D1), AROS_LHA(xadPTR, buffer, A0), AROS_LHA(struct xadArchiveInfoP *, ai, A1), AROS_LHA(xadTAGPTR, tags, A2), struct xadMasterBaseP *, xadMasterBase, 20, xadmaster) { \
+    AROS_LIBFUNC_INIT \
+    struct UtilityBase *UtilityBase = xadMasterBase->xmb_UtilityBase;
+
+/* xadRecogFile - info.c */
+//AROS_LP3(struct xadClient *, xadRecogFileA, AROS_LPA(xadSize, size, D0), AROS_LPA(const void *, mem, A0), AROS_LPA(xadTAGPTR, tags, A1), struct xadMasterBaseP *, xadMasterBase, 7, xadmaster);
+#define FUNCxadRecogFile \
+AROS_LH3(struct xadClient *, xadRecogFileA, AROS_LHA(xadSize, size, D0), AROS_LHA(const void *, mem, A0), AROS_LHA(xadTAGPTR, tags, A1), struct xadMasterBaseP *, xadMasterBase, 7, xadmaster) { \
+    AROS_LIBFUNC_INIT \
+    struct UtilityBase *UtilityBase = xadMasterBase->xmb_UtilityBase;
+
+#endif
 
 /*** END auto-generated section */
 
@@ -251,9 +439,6 @@ void DebugResource(struct xadMasterBaseP *, const xadSTRING *, ...);       /* pr
 #define DEBUGFLAG_CONTINUE      (1<<12)
 #define DEBUGFLAG_CONTINUEEND   (1<<13)
 
-extern struct ExecBase * SysBase;
-extern struct DosLibrary * DOSBase;
-extern struct UtilityBase * UtilityBase;
 extern struct xadMasterBase * xadMasterBase;
 
 xadSTRPTR xadGetObjectTypeName(xadUINT32 type); /* objects.c */
