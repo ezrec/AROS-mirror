@@ -31,6 +31,7 @@
 	       Structures
 **************************************/
 
+struct Node __mayalias;
 #if (AROS_FLAVOUR & AROS_FLAVOUR_BINCOMPAT)
 struct Node
 {
@@ -42,7 +43,7 @@ struct Node
        the native machine because of binary compatibility.
     */
     char	* ln_Name;
-} __mayalias;
+};
 
 #else
 struct Node
@@ -53,14 +54,15 @@ struct Node
     char	* ln_Name;
     UBYTE	  ln_Type;
     BYTE	  ln_Pri;
-} __mayalias;
+};
 #endif /* AROS_FLAVOUR */
 
+struct MinNode __mayalias;
 struct MinNode
 {
     struct MinNode * mln_Succ,
 		   * mln_Pred;
-} __mayalias;
+};
 
 
 /**************************************
