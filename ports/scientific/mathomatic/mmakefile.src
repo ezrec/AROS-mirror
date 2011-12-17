@@ -13,10 +13,10 @@ include $(TOP)/config/make.cfg
 #MM  ports-scientific-mathomatic-quick : ports-scientific-mathomatic-fetch
 
 REPOSITORIES := http://www.panix.com/~gesslein
-ARCHBASE     := mathomatic-15.1.3
+ARCHBASE     := mathomatic-15.7.2
 TARGETDIR    := $(AROS_CONTRIB)/Utilities/Scientific/Mathomatic
 
-USER_CFLAGS  := -DVERSION=\"15.1.3\"
+USER_CFLAGS  := -DVERSION=\"15.7.2\"
 
 FILES := main globals am solve help parse cmds simplify \
 		 factor super unfactor poly diff integrate \

@@ -7,7 +7,7 @@ include $(TOP)/config/make.cfg
 #MM- ports-devel-cflow : ports-devel-cflow-drawericon
 
 PACKAGE      := cflow
-VERSION      := 1.3
+VERSION      := 1.4
 TARGETDIR    := $(AROS_CONTRIB)/Development/CFLow
 REPOSITORIES := gnu://cflow
 

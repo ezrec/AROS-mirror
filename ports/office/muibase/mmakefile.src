@@ -18,7 +18,7 @@ include $(TOP)/config/make.cfg
 #MM  ports-office-muibase-quick : ports-office-muibase-fetch
 
 REPOSITORIES := sf://muibase
-ARCHBASE     := MUIbaseSource-2.9
+ARCHBASE     := MUIbaseSource-2.10
 TARGETDIR    := $(AROS_CONTRIB)/Office/MUIbase
 BASE_SRCD    := src/base
 LANG_SRCD    := src/lang
@@ -35,8 +35,8 @@ USER_INCLUDES:= -I$(PORTSDIR)/muibase/$(ARCHBASE)/src -I$(PORTSDIR)/muibase/$(AR
 USER_CFLAGS  := -fno-strict-aliasing -Wno-implicit-function-declaration \
                 -DAMIGA -DMUI -DMBASE -DUSE_HOOKENTRY -DNO_INLINE_STDARG
 MB_VERSION   := 2
-MB_REVISION  := 9
-MB_VERSTR    := 2.9
+MB_REVISION  := 10
+MB_VERSTR    := 2.10
 DATE         := date
 
 BASE_SRCS := $(BASE_SRCD)/main $(BASE_SRCD)/error $(BASE_SRCD)/server \
@@ -57,7 +57,7 @@ LANG_SRCS := $(LANG_SRCD)/compile $(LANG_SRCD)/program $(LANG_SRCD)/programbinge
 	$(LANG_SRCD)/func $(LANG_SRCD)/funccmp $(LANG_SRCD)/funcmath $(LANG_SRCD)/funcstr $(LANG_SRCD)/funcdate $(LANG_SRCD)/funclist \
 	$(LANG_SRCD)/funcio $(LANG_SRCD)/funcsfw $(LANG_SRCD)/funcdb $(LANG_SRCD)/funcprintf $(LANG_SRCD)/funcreq
 
-AMIGA_SRCS := $(AMIGA_SRCD)/codeset $(AMIGA_SRCD)/dosutil $(AMIGA_SRCD)/font $(AMIGA_SRCD)/exec
+AMIGA_SRCS := $(AMIGA_SRCD)/codeset $(AMIGA_SRCD)/adosutil $(AMIGA_SRCD)/font $(AMIGA_SRCD)/exec
 
 MUI_SRCS := $(MUI_SRCD)/mui $(MUI_SRCD)/rexx_mui $(MUI_SRCD)/requesters_mui $(MUI_SRCD)/break_mui \
 	$(MUI_SRCD)/structureeditor_mui $(MUI_SRCD)/table_mui $(MUI_SRCD)/attribute_mui \
@@ -68,10 +68,10 @@ MUI_SRCS := $(MUI_SRCD)/mui $(MUI_SRCD)/rexx_mui $(MUI_SRCD)/requesters_mui $(MU
 	$(MUI_SRCD)/programeditor_mui $(MUI_SRCD)/progoutput_mui $(MUI_SRCD)/setformats_mui
 
 MUIEXT_SRCS := $(MUIEXT_SRCD)/ExtEditor_mcc $(MUIEXT_SRCD)/ExtApplication_mcc $(MUIEXT_SRCD)/ExtWindow_mcc \
-	$(MUIEXT_SRCD)/StringText_mcc $(MUIEXT_SRCD)/NewCycle_mcc \
-	$(MUIEXT_SRCD)/DDList_mcc $(MUIEXT_SRCD)/SFWList_mcc $(MUIEXT_SRCD)/EditLabels_mcc \
-	$(MUIEXT_SRCD)/PopEditLabels_mcc $(MUIEXT_SRCD)/DataTypes_mcc $(MUIEXT_SRCD)/WindowButton_mcc \
-	$(MUIEXT_SRCD)/ActGroup_mcc
+	$(MUIEXT_SRCD)/StringText_mcc $(MUIEXT_SRCD)/RefAttrSelector_mcc $(MUIEXT_SRCD)/NewCycle_mcc \
+	$(MUIEXT_SRCD)/DDList_mcc $(MUIEXT_SRCD)/SFWList_mcc $(MUIEXT_SRCD)/EditLabels_mcc $(MUIEXT_SRCD)/ActGroup_mcc \
+	$(MUIEXT_SRCD)/PopEditLabels_mcc $(MUIEXT_SRCD)/DataTypes_mcc $(MUIEXT_SRCD)/WindowButton_mcc
+
 
 AUTO_SRCS := y.tab appstrings_cat
 
