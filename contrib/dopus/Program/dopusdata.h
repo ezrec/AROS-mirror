@@ -45,7 +45,9 @@ extern struct IntuitionBase *IntuitionBase;      /* intuition.library */
 extern struct GfxBase *GfxBase;                  /* graphics.library */
 extern struct Library *IconBase;                 /* icon.library */
 extern struct Library *DiskfontBase;             /* diskfont.library */
+#ifdef USE_POWERPACKER
 extern struct PPBase *PPBase;                    /* powerpacker.library */
+#endif
 extern struct Library *LayersBase;               /* layers.library */
 extern struct Library *WorkbenchBase;            /* workbench.library */
 extern struct MusicBase *MUSICBase;              /* music.library */

@@ -78,9 +78,9 @@ char *path;
     struct RastPort *dirp;
     long i;
 #ifdef __SASC__
-    bigint a;
+    bigint a = 0;
 #else
-    unsigned long long a;
+    unsigned long long a = 0;
 #endif
     int b,c,isd=-1,cx,cy,fail=0,xoffset,yoffset,titwidth;
     static char disktxt[11][60],buf[256],formstr[80],diskname[256],dname[10],buf1[40];
@@ -88,7 +88,8 @@ char *path;
     struct DateStamp ds;
     struct MsgPort *prt;
     struct Gadget contgad;
-    char *gad_gads[2], *uscore,cont_key;
+    const char *gad_gads[2];
+    char *uscore,cont_key;
     BPTR lock;
     UBYTE old_change_state;
     ULONG class;
@@ -146,9 +147,9 @@ getnewdisk:
                         sprintf(buf1,"%qd",a);
 #endif
                         b=strlen(buf1);
-                        lsprintf(buf,"%ld",infodata.id_NumBlocks);
+                        lsprintf(buf,"%ld",(long)infodata.id_NumBlocks);
                         lsprintf(formstr,"%%%lds %s; %%%ldld %s; %%s",
-                            b,globstring[STR_DISKINFO_BYTES],
+                            (long)b,globstring[STR_DISKINFO_BYTES],
                             strlen(buf),globstring[STR_DISKINFO_BLOCKS]);
                         getsizestring(buf,a);
                         lsprintf(disktxt[2],formstr,buf1,infodata.id_NumBlocks,buf);
@@ -180,9 +181,9 @@ getnewdisk:
                             buf,globstring[STR_DISKINFO_FULL],
                             buf1,globstring[STR_DISKINFO_SFREE]);
                         lsprintf(disktxt[6],"%ld %s",
-                            infodata.id_BytesPerBlock,
+                            (long)infodata.id_BytesPerBlock,
                             globstring[STR_DISKINFO_BYTESPERBLOCK]);
-                        lsprintf(disktxt[7],"%ld",infodata.id_NumSoftErrors);
+                        lsprintf(disktxt[7],"%ld",(long)infodata.id_NumSoftErrors);
                         switch (infodata.id_DiskState) {
                             case ID_VALIDATING:
                                 strcpy(disktxt[8],globstring[STR_VALIDATING]);

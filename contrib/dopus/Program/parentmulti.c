@@ -93,13 +93,13 @@ int do_parent_multi(path)
 char *path;
 {
     ULONG class;
-    UWORD gadgetid;
+    UWORD gadgetid=0;
     struct Window *rwindow;
     struct Gadget *gadlist;
     struct DOpusListView *listview,*view;
     BPTR lock,parentlock,temp;
-    char buf[256],**table;
-    char *uscore,key[2];
+    char buf[256];
+    char **table,*uscore,key[2];
     int a,count,lastsel=-1;
     ULONG lastseconds=0,lastmicros=0,seconds,micros;
 

@@ -45,11 +45,13 @@ int act,inact,rexx;
     struct FileInfoBlock __aligned fileinfo;
     int a,b,special=0,candoicon=1,old,specflags,noshow=0,err;
     int sourcewild=0,destwild=0,firstset=0,breakout,rexarg,protstuff[2];
-    int pt=1,okayflag,show,lastfile,flag,exist,count,data,mask=0,temp;
-    int globflag,noremove,doicons=0,total,value=0,progtype,blocksize,retval=0;
+    int pt=1,okayflag=0,show,lastfile,flag,exist,count,data,mask=0,temp;
+    int globflag=0,noremove,doicons=0,total,value=0,progtype=0,blocksize=0,retval=0;
     long long byte,bb;
+#ifndef __AROS__
     ULONG class;
     UWORD code;
+#endif
     struct Directory *file = NULL,*tempfile,*nextfile,filebuf,dummyfile;
     char *sourcename,*destname,*oldiconname,*newiconname;
     char *buf,*buf1,*buf2,*namebuf,*srename,*drename,*ptr,*database;
@@ -528,7 +530,7 @@ functionloop:
                     file->userdata2=blocksize;
                     setdirsize(file,dos_global_bytecount,act);
                     refreshwindow(act,0);
-D({char p[256]; unsigned long long s=0; ULONG f=0; strcpy(p,sourcename); getdircontentsinfo(p,&s,&f); sprintf(p,"size: %qd, files: %ld\n",s,f); bug("%s",p);})
+D({char p[256]; unsigned long long s=0; ULONG f=0; strcpy(p,sourcename); getdircontentsinfo(p,&s,&f); sprintf(p,"size: %qd, files: %ld\n",s,(long)f); bug("%s",p);})
                 }
                 if (file->type>=ENTRY_DIRECTORY) data+=file->userdata+1;
                 else {
@@ -680,7 +682,7 @@ D({char p[256]; unsigned long long s=0; ULONG f=0; strcpy(p,sourcename); getdirc
                   strcpy(buf,file->name);
                   c = strchr(buf,':');
                   if (c) *c = 0;
-                  a = AssignLock(buf,NULL)?1:0;
+                  a = AssignLock(buf,BNULL)?1:0;
 //D(bug("Removing assign %s\t%s\n",buf,a?"success":"failure"));
                  }
                 else if ((a=delfile(sourcename,file->name,globstring[STR_DELETING],
@@ -1439,7 +1441,7 @@ D(bug("viewfile() returned %ld\n",a));
                 getprot(temp,file->protbuf);
                 if (file->type>=ENTRY_DIRECTORY) {
                     protstuff[0]=data; protstuff[1]=mask;
-                    if ((a=recursedir(sourcename,NULL,R_PROTECT,(int)protstuff)) &&
+                    if ((a=recursedir(sourcename,NULL,R_PROTECT,(SIPTR)protstuff)) &&
                         status_justabort) break;
                     if (!a && !func_external_file[0]) setdirsize(file,dos_global_bytecount,act);
                 }
@@ -1557,7 +1559,7 @@ D(bug("viewfile() returned %ld\n",a));
                 }
                 if (status_justabort || !file) break;
                 if (file->type>=ENTRY_DIRECTORY) {
-                    if (!(recursedir(sourcename,NULL,R_DATESTAMP,(int)&datetime.dat_Stamp))) {
+                    if (!(recursedir(sourcename,NULL,R_DATESTAMP,(SIPTR)&datetime.dat_Stamp))) {
                         okayflag=1;
                         if (!func_external_file[0]) setdirsize(file,dos_global_bytecount,act);
                     }

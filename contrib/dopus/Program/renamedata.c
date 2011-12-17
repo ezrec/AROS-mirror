@@ -134,7 +134,7 @@ int getrenamedata(src,dst)
 char *src,*dst;
 {
     ULONG class;
-    UWORD code,gadgetid,qual;
+    UWORD code,gadgetid=0,qual;
     struct Window *rwindow;
     struct Gadget *gadlist;
 

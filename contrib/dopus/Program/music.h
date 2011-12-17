@@ -50,7 +50,8 @@ struct MusicBase {
             ml_Tempo,
             ml_Tracks,
             ml_SongPos;
-    struct Library *ml_DOSBase, *ml_PPBase;
+    struct Library *ml_DOSBase;
+    struct Library *ml_PPBase;
     char   *ml_SongName;
 };
 

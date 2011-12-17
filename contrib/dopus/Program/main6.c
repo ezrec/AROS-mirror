@@ -195,7 +195,7 @@ int getpal()
 
     p=(GfxBase->DisplayFlags&PAL)?1:0;
 //    if (system_version2>=OSVER_37) {
-        if (screen=LockPubScreen(NULL)) {
+        if ((screen=LockPubScreen(NULL))) {
             if ((modeid=GetVPModeID(&(screen->ViewPort)))!=INVALID_ID) {
                 if (!((modeid&MONITOR_ID_MASK)==NTSC_MONITOR_ID ||
                     (modeid&MONITOR_ID_MASK)==PAL_MONITOR_ID))
@@ -260,8 +260,8 @@ D(bug("Simulating RMB click\n"));
     }
 }
 
-char *getfiledescription(name,win)
-char *name;
+const char *getfiledescription(name,win)
+const char *name;
 int win;
 {
     int a;
@@ -284,6 +284,9 @@ void fixhlen(win)
 int win;
 {
     int a;
+
+    if (!dopus_curwin[win])
+    	    return;
 
     if (dopus_curwin[win]->total>0 &&
         (dopus_curwin[win]->firstentry->type==ENTRY_CUSTOM ||
@@ -346,7 +349,7 @@ char *get_our_pubscreen()
             struct List *pubscreenlist;
             struct PubScreenNode *node;
 
-            if (pubscreenlist=LockPubScreenList()) {
+            if ((pubscreenlist=LockPubScreenList())) {
                 for (node=(struct PubScreenNode *)pubscreenlist->lh_Head;
                     node->psn_Node.ln_Succ;
                     node=(struct PubScreenNode *)node->psn_Node.ln_Succ) {

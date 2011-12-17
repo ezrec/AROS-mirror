@@ -42,14 +42,14 @@ void doidcmp()
 {
     int x,y,a,function,wmes,stringgd=0,waitbits,b,x1,y1,c,win,dir,num;
     ULONG class;
-    UWORD code,gadgetid,menunum,itemnum,qual;
+    UWORD code,gadgetid=0,menunum,itemnum,qual;
     UBYTE old_change_state;
     char buf[80],buf2[30],ch;
     struct dopusgadgetbanks *bank,*bank1;
     struct AppMessage *apmsg;
     struct dopushotkey *hotkey;
     struct dopusfuncpar par;
-    struct Gadget *gad;
+    struct Gadget *gad = NULL;
     struct MenuItem *item;
 
 //foreverloop:
@@ -271,8 +271,8 @@ D(bug("DOS notification message\n"));
                             c=0;
                             for (a=0;a<4;a++) {
                                 if ((old_change_state&(1<<a))!=(disk_change_state&(1<<a))) {
-                                    lsprintf(buf,"DF%ld:",a);
-                                    lsprintf(buf2,"PC%ld:",a);
+                                    lsprintf(buf,"DF%ld:",(long)a);
+                                    lsprintf(buf2,"PC%ld:",(long)a);
                                     for (b=0;b<2;b++) {
                                         if ((Stricmp(dopus_curwin[b]->realdevice,buf)==0) ||
                                             (Stricmp(dopus_curwin[b]->realdevice,buf2)==0)) {

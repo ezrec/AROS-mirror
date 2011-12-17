@@ -257,7 +257,8 @@ struct Directory *addafter;
 UWORD ownerid,groupid;
 {
     struct Directory *addposition=NULL,*entry,*workfirst,*newentry;
-    char *description=NULL,*owner=NULL,*group=NULL;
+    const char *description=NULL;
+    char *owner=NULL,*group=NULL;
 
     if (status_iconified && status_flags&STATUS_ISINBUTTONS) return((struct Directory *)1);
 
@@ -303,7 +304,7 @@ UWORD ownerid,groupid;
               strcpy(newentry->dispstr,dispstr);
 //            else return(0);
         }
-        lsprintf(newentry->name,"%ld",dir->total);
+        lsprintf(newentry->name,"%ld",(long)dir->total);
     }
     else {
         LStrnCpy(newentry->name,name,FILEBUF_SIZE-2);
@@ -317,7 +318,7 @@ UWORD ownerid,groupid;
            {
             char *c,*d=newentry->name;
 
-            while (c=strchr(d,'.')) d=c+1;
+            while ((c=strchr(d,'.'))) d=c+1;
             if ((d == newentry->name) || (d == (newentry->name+1))) c = NULL;
             else c=d-1;
             if (c)
@@ -557,7 +558,7 @@ UWORD ownerid,groupid;
 
     /* Link the new entry */
 
-    switch ((int)addposition)
+    switch ((IPTR)addposition)
      {
       case -1:   /* Add at head of list */
         newentry->next=workfirst;
@@ -967,7 +968,7 @@ void setnullpointer(wind)
 struct Window *wind;
 {
 D(bug("null_pointer at %lx\n",null_pointer));
-    SetPointer(wind,null_pointer,1,16,0,0);
+    SetPointer(wind,(UWORD *)null_pointer,1,16,0,0);
 }
 
 void free_file_memory(file)

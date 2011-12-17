@@ -33,7 +33,7 @@ the existing commercial status of Directory Opus 5.
 
 #define NUM_TYPES 5
 
-editfunction(func,type,data)
+int editfunction(func,type,data)
 struct dopusfunction *func;
 int type;
 APTR data;
@@ -41,15 +41,15 @@ APTR data;
     int a,selitem,x,y,b,ofp,obp,curtype=0,tof,waitbits;
     ULONG class;
     UWORD code,qual,gadgetid;
-    struct Gadget *gad;
+    struct Gadget *gad = NULL;
     char
         flagsel[NUMFLAGS],*funclist[MAXFUNCS+1],functype[MAXFUNCS],
         *displist[MAXFUNCS+1],buf[256],buf1[256],*ptr,t;
     struct DOpusRemember *key=NULL;
     struct DOpusListView *view;
     struct fileclass fclass;
-    struct dopusfiletype *ftype;
-    struct dopushotkey *hotkey;
+    struct dopusfiletype *ftype=NULL;
+    struct dopushotkey *hotkey=NULL;
     unsigned char c;
 
     if (type==CFG_FILETYPE) ftype=(struct dopusfiletype *)data;
@@ -216,7 +216,7 @@ startedit:
                                 if (type==CFG_FILETYPE) {
                                     LStrnCpy(edit_namebuf,ftype->type,22);
                                     edit_namebuf[22]=0;
-                                    lsprintf(buf," (%ld)",curtype+1);
+                                    lsprintf(buf," (%ld)",(long)(curtype+1));
                                     StrConcat(edit_namebuf,buf,28);
                                 }
                                 copytoclip(func,funclist,functype,flagsel);
@@ -604,7 +604,7 @@ char *func,type,*disp;
     if (!disp) return;
     if (!func || !func[0] || type<0 || type>=NUM_TYPES) disp[0]=0;
     else {
-        strcpy(disp,functypestr[type]);
+        strcpy(disp,functypestr[(int)type]);
         StrConcat(disp,spacestring,13);
         StrConcat(disp,func,MAXFUNCLISTLEN-2);
     }
@@ -663,7 +663,7 @@ struct RastPort *r;
 int x,y,fg,num;
 {
     int a,b,ac,dn,w,h,x1,y1;
-    char *ptr;
+    const char *ptr;
 
     switch ((b=(1<<((screen_depth > 4) ? 4 : screen_depth)))) {
         case 4: ac=2; dn=2; break;
@@ -759,7 +759,7 @@ int x,y,w,h;
 
 void showfuncob(r,name,fp,bp,type,x,y)
 struct RastPort *r;
-char *name;
+const char *name;
 int fp,bp,type,x,y;
 {
     int a,op,l;
@@ -799,7 +799,7 @@ char *buf;
     }
 }
 
-getselflags(buf)
+int getselflags(buf)
 char *buf;
 {
     int a,flags=0;
@@ -931,7 +931,7 @@ int selitem;
 
     if (selitem>-1) {
         if (selitem<MAXFUNCS-1) {
-            CopyMem(&funclist[selitem+1],&funclist[selitem],(MAXFUNCS-1-selitem)*4);
+            CopyMem(&funclist[selitem+1],&funclist[selitem],(MAXFUNCS-1-selitem)*sizeof(funclist[0]));
             CopyMem(&functype[selitem+1],&functype[selitem],(MAXFUNCS-1-selitem));
             for (a=selitem;a<MAXFUNCS-1;a++)
                 makedispfunc(funclist[a],functype[a],displist[a]);
@@ -971,9 +971,10 @@ void checkswapgad()
     }
 }
 
-funcrequester(type,buf,title)
+int funcrequester(type,buf,title)
 int type;
-char *buf,*title;
+char *buf;
+const char *title;
 {
     struct Window *wind;
     ULONG class;
@@ -988,21 +989,21 @@ char *buf,*title;
         case FREQ_FILETYPE:
         case FREQ_FILECLASS:
             setup_list_window(&requestwin,&cmdlist,&cmdcancelgad,1);
-            requestwin.Title=title;
+            requestwin.Title=(char *)title;
             if (!(wind=openwindow(&requestwin))) return(0);
             setuplist(&cmdlist,-1,-1);
             switch (type) {
                 case FREQ_FILETYPE:
-                    cmdlist.items=classopslist;
+                    cmdlist.items=(char **)classopslist;
                     break;
                 case FREQ_FILECLASS:
-                    cmdlist.items=fileclasslist;
+                    cmdlist.items=(char **)fileclasslist;
                     break;
                 case FREQ_ARGREQ:
-                    cmdlist.items=arglist;
+                    cmdlist.items=(char **)arglist;
                     break;
                 case FT_INTERNAL:
-                    cmdlist.items=commandlist;
+                    cmdlist.items=(char **)commandlist;
                     break;
             }
             cmdlist.window=wind;
@@ -1240,9 +1241,9 @@ int add;
     }
     else RefreshListView(editlists,3);
     edit_funcbuf[0]=0;
-    lsprintf(edit_stackbuf,"%ld",func->stack);
-    lsprintf(edit_prioritybuf,"%ld",func->pri);
-    lsprintf(edit_delaybuf,"%ld",func->delay);
+    lsprintf(edit_stackbuf,"%ld",(long)func->stack);
+    lsprintf(edit_prioritybuf,"%ld",(long)func->pri);
+    lsprintf(edit_delaybuf,"%ld",(long)func->delay);
     RefreshGList(&editfuncgadgets[6],Window,NULL,3);
     if (type==CFG_FILETYPE) RefreshGList(&editfuncgadgets[13],Window,NULL,1);
 }
@@ -1265,7 +1266,7 @@ char **funclist,**displist,*flagsel;
     makeselflags(0,flagsel);
 }
 
-fixfunctypelist(ftype)
+int fixfunctypelist(ftype)
 struct dopusfiletype *ftype;
 {
     int a,type=-1,b;
@@ -1292,7 +1293,7 @@ int type;
                 (void *)AddAppIconA(MY_APPOBJECT,0,
                     cfg_string[STR_DROP_A_TOOL_HERE],
                     appport,
-                    NULL,dropboxicon,NULL);
+                    BNULL,dropboxicon,NULL);
         }
         else if (!Screen) {
             appobject=
@@ -1315,7 +1316,7 @@ int type;
 }
 
 void do_gad_label(txt,x,y)
-char *txt;
+const char *txt;
 int x,y;
 {
     char buf[140];

@@ -57,19 +57,19 @@ struct Gadget
         GFLG_GADGHNONE|GFLG_RELRIGHT,
         GACT_RIGHTBORDER,
         GTYP_BOOLGADGET,
-        NULL,NULL,NULL,NULL,NULL,0,NULL},
+        NULL,NULL,NULL,0L,NULL,0,NULL},
     iconbutpropgad={
         &dummybordergad,-14,0,11,0,
         GFLG_GADGHNONE|GFLG_RELRIGHT,
         GACT_IMMEDIATE|GACT_RELVERIFY|GACT_FOLLOWMOUSE|GACT_RIGHTBORDER,
         GTYP_PROPGADGET,
-        (APTR)&iconbutpropimage,NULL,NULL,NULL,(APTR)&iconbutpropinfo,BUTPROP,NULL},
+        (APTR)&iconbutpropimage,NULL,NULL,0L,(APTR)&iconbutpropinfo,BUTPROP,NULL},
     iconbutexitgad={
         &iconbutpropgad,0,0,11,10,
         GFLG_GADGIMAGE|GFLG_GADGHIMAGE|GFLG_RELRIGHT,
         GACT_RELVERIFY|GACT_RIGHTBORDER,
         GTYP_BOOLGADGET,(APTR)&uniconifyimage[0],(APTR)&uniconifyimage[1],
-        NULL,NULL,NULL,BUTEXIT,NULL};
+        NULL,0,NULL,BUTEXIT,NULL};
 
 struct NewWindow
     icon_win={
@@ -94,24 +94,24 @@ static struct timerequest iconify_timereq;
 static struct DiskObject iconify_appicon={
     0,0,
         {NULL,0,0,80,41,GFLG_GADGBACKFILL,0,0,
-        (APTR)&appicon_image,NULL,NULL,NULL,NULL,NULL,NULL},
-    0,NULL,NULL,NO_ICON_POSITION,NO_ICON_POSITION,NULL,NULL,NULL};
+        (APTR)&appicon_image}
+};
 
 void iconify(louise,buttons,banknum)
 int louise,buttons,banknum;
 {
     ULONG class;
-    UWORD code,gadgetid;
+    UWORD code,gadgetid=0;
     struct DOpusDateTime dt;
     struct Screen scrbuf,*sptr;
     struct DrawInfo *drinfo;
     int
         wmes,chipc,fast,h,m,s,waitbits,
-        a,b,nheight,nwidth,buttonrows,oldrows,olddata_gadgetrow_offset,x,y,x1,y1,c,d,w,
-        fastnum,chipnum,bankcount,bankstep,menunum,itemnum,num,cdelay,
+        a=0,b,nheight,nwidth,buttonrows=0,oldrows,olddata_gadgetrow_offset,x,y,x1,y1,c,d,w,
+        fastnum=0,chipnum=0,bankcount=0,bankstep=0,menunum,itemnum,num,cdelay,
         usage,oldusage=100;
     char date[16],time[16],buf[50],buf1[50],buf2[50],ampm,formstring[100],*old;
-    struct dopusgadgetbanks *bank,*oldbank,**bankarray;
+    struct dopusgadgetbanks *bank,*oldbank,**bankarray=NULL;
     struct dopushotkey *hotkey;
     struct dopusfuncpar par;
     struct AppMessage *amsg;
@@ -160,7 +160,7 @@ int louise,buttons,banknum;
             ++bankcount;
             bank=bank->next;
         }
-        if ((bankarray=LAllocRemember(&icon_key,bankcount*4,MEMF_CLEAR))) {
+        if ((bankarray=LAllocRemember(&icon_key,bankcount*sizeof(bankarray[0]),MEMF_CLEAR))) {
             bank=dopus_firstgadbank;
             for (a=0;a<bankcount;a++) {
                 bankarray[a]=bank;
@@ -189,7 +189,7 @@ int louise,buttons,banknum;
             if (!WorkbenchBase ||
                 !(appmenu=AddAppMenuItemA(0,0,(UBYTE *)str_arexx_portname,appmsg_port,NULL)) ||
                 !(appicon=AddAppIconA(0,0,(UBYTE *)"Directory Opus",
-                          appmsg_port,NULL,user_appicon == NULL ? &iconify_appicon : user_appicon,NULL))) {
+                          appmsg_port,BNULL,user_appicon == NULL ? &iconify_appicon : user_appicon,NULL))) {
               icon_type&=~(ICON_APPICON);
               if (appicon)
                {
@@ -382,44 +382,46 @@ int louise,buttons,banknum;
                 if (fastnum>1) {
                     if (icon_type&ICON_C_AND_F) {
                         lsprintf(buf1,"%lc:%%%ldld %lc:%%%ldld ",
-                            globstring[STR_CLOCK_CHIP][0],chipnum,
-                            globstring[STR_CLOCK_FAST][0],fastnum);
+                            globstring[STR_CLOCK_CHIP][0],(long)chipnum,
+                            globstring[STR_CLOCK_FAST][0],(long)fastnum);
                     }
                     else {
                         lsprintf(buf1,"%s%%%ldld %s%%%ldld ",
-                            globstring[STR_CLOCK_CHIP],chipnum,
-                            globstring[STR_CLOCK_FAST],fastnum);
+                            globstring[STR_CLOCK_CHIP],(long)chipnum,
+                            globstring[STR_CLOCK_FAST],(long)fastnum);
                     }
                     lsprintf(buf,buf1,chipc,fast);
                 }
                 else {
                     if (icon_type&ICON_C_AND_F) {
                         lsprintf(buf1,"%lc:%%%ldld ",
-                            globstring[STR_CLOCK_MEM][0],chipnum);
+                            globstring[STR_CLOCK_MEM][0],(long)chipnum);
                     }
                     else {
                         lsprintf(buf1,"%s%%%ldld ",
-                            globstring[STR_CLOCK_MEM],chipnum);
+                            globstring[STR_CLOCK_MEM],(long)chipnum);
                     }
                     lsprintf(buf,buf1,chipc);
                 }
                 strcat(formstring,buf);
             }
-#ifndef __AROS__
             if (icon_type&ICON_CPU) {
+#ifdef __AROS__
+		usage = getusage();
+#else
                 if (sysinfo)
                  {
                   GetCpuUsage(sysinfo,&sicpu);
                   usage = 100 * sicpu.used_cputime_lastsec / sicpu.used_cputime_lastsec_hz;
                  }
                 else usage = getusage()/*/10*/;
+#endif
 
                 if (! usage) usage=oldusage;
-                lsprintf(buf,"CPU:%3ld%% ",usage);
+                lsprintf(buf,"CPU:%3ld%% ",(long)usage);
                 strcat(formstring,buf);
                 oldusage=usage;
             }
-#endif
             DateStamp(&(dt.dat_Stamp));
             initdatetime(&dt,date,time,0);
             if (icon_type&ICON_DATE) {
@@ -433,7 +435,7 @@ int louise,buttons,banknum;
                     if (h>11) { ampm='P'; h-=12; }
                     else ampm='A';
                     if (h==0) h=12;
-                    lsprintf(time,"%2ld:%02ld:%02ld%lc",h,m,s,ampm);
+                    lsprintf(time,"%2ld:%02ld:%02ld%c",(long)h,(long)m,(long)s,(char)ampm);
                 }
                 strcat(formstring,time);
                 strcat(formstring," ");
@@ -750,7 +752,7 @@ ULONG type/*,nottype*/;
 }
 
 void iconstatustext(buf,buttons)
-char *buf;
+const char *buf;
 int buttons;
 {
 // HUX    int a;

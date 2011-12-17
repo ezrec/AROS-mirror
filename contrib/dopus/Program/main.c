@@ -66,7 +66,7 @@ char *argv[];
     struct WBStartup *WBmsg;
     struct WBArg *p;
 //    struct DiskObject *dobj;
-    const char **toolarray;
+    UBYTE * const *toolarray;
     char *s,*startdir=NULL,buf[32];
 //    BPTR lock;
 
@@ -160,7 +160,7 @@ char *argv[];
 
     GfxBase = DOpusBase->GfxBase;
     IntuitionBase = DOpusBase->IntuitionBase;
-    LayersBase = DOpusBase->LayersBase;
+    LayersBase = (struct Library *)DOpusBase->LayersBase;
 #ifdef __SASC
     DOSBase = (struct DosLibrary *)OpenLibrary( "dos.library", 39 );
 #endif
@@ -168,8 +168,8 @@ char *argv[];
     IconBase = OpenLibrary("icon.library",0);
     WorkbenchBase = OpenLibrary("workbench.library",37);
     CxBase = OpenLibrary("commodities.library",37);
-    RexxSysBase = (struct RxsLib *)OpenLibrary("rexxsyslib.library",0);
-    UtilityBase = (struct UtilityBase *)OpenLibrary("utility.library",37);
+    RexxSysBase = OpenLibrary("rexxsyslib.library",0);
+    UtilityBase = OpenLibrary("utility.library",37);
     CyberGfxBase = OpenLibrary("cybergraphics.library",40);
 #ifndef __AROS__
     PopupMenuBase = (struct PopupMenuBase *)OpenLibrary("popupmenu.library", 9);
@@ -194,7 +194,9 @@ char *argv[];
 
 //    OpenXFDlib();
 
-//    PPBase=(struct PPBase *)open_dopus_library("powerpacker.library",0);
+#ifdef USE_POWERPACKER
+    PPBase=(struct PPBase *)open_dopus_library("powerpacker.library",0);
+#endif
     MUSICBase = (struct MusicBase *)open_dopus_library("inovamusic.library",0);
     ScreenNotifyBase = OpenLibrary("screennotify.library",0);
 #endif
@@ -271,7 +273,9 @@ D(bug("beepwave: %lx\n",beepwave));
                     case 'Q': status_flags|=STATUS_IANSCRAP2; break;
 #endif
                     case 'x': xfdMasterBase = (struct xfdMasterBase *)OpenLibrary("xfdmaster.library",38); break;
+#ifdef USE_XADMASTER
                     case 'X': xadMasterBase = (struct xadMasterBase *)OpenLibrary("xadmaster.library",4); break;
+#endif
                     case 'B': staybehindWB = TRUE;
                 }
             }
@@ -282,14 +286,16 @@ D(bug("beepwave: %lx\n",beepwave));
         WBmsg=(struct WBStartup *)argv;
         p=WBmsg->sm_ArgList;
         if ((user_appicon=/*dobj=*/GetDiskObject(p->wa_Name))) {
-            toolarray=(const char **)user_appicon/*dobj*/->do_ToolTypes;
+            toolarray=(UBYTE * const *)user_appicon/*dobj*/->do_ToolTypes;
             if ((s=(char *)FindToolType(toolarray,"ICONSTART")))   iconstart=atoi(s);
             if ((s=(char *)FindToolType(toolarray,"BUTTONSTART"))) iconstart=atoi(s)?2:iconstart;
             if ((s=(char *)FindToolType(toolarray,"CONFIGFILE")))  LStrnCpy(str_config_basename,s,256);
             if ((s=(char *)FindToolType(toolarray,"CHECK")))       ck=atoi(s);
             if (FindToolType(toolarray,"USEAHI"))        useAHI=TRUE;
             if (FindToolType(toolarray,"FORCEOPENXFD"))  xfdMasterBase = (struct xfdMasterBase *)OpenLibrary("xfdmaster.library",38);
+#ifdef USE_XADMASTER
             if (FindToolType(toolarray,"FORCEOPENXAD"))  xadMasterBase = (struct xadMasterBase *)OpenLibrary("xadmaster.library",4);
+#endif
             if (FindToolType(toolarray,"BEHINDWB")) staybehindWB = TRUE;
 #ifndef __AROS__
             if (FindToolType(toolarray,"USESYSINFO"))
@@ -335,12 +341,7 @@ else D(bug("FAILED!\n"));
     nil_file_handle=Open("NIL:",MODE_NEWFILE);
     main_proc->pr_CIS=nil_file_handle;
     main_proc->pr_COS=nil_file_handle;
-#ifdef __AROS__
-#warning Set pr_ConsoleTask to something sensible instead of NULL
-    main_proc->pr_ConsoleTask=NULL;
-#else
     main_proc->pr_ConsoleTask=(APTR)((struct FileHandle *)BADDR(nil_file_handle))->fh_Type;
-#endif
 
     if ((s=strstri(BaseName(str_config_basename),".CFG"))) *s=0;
 
@@ -464,6 +465,9 @@ do_remember_config(remember_data);
 
     if (!(dir_memory_pool=LibCreatePool(MEMF_ANY|MEMF_CLEAR,16384,1024)))
         quit();
+
+    if (config->bufcount == 0)
+    	    config->bufcount = 2;
 
     allocdirbuffers(config->bufcount);
 
@@ -1621,6 +1625,7 @@ struct Library *OpenXFDlib(void)
 
 struct Library *OpenXADlib(void)
  {
+#ifdef USE_XADMASTER
   if (xadMasterBase == NULL)
    {
     Forbid();
@@ -1636,6 +1641,9 @@ struct Library *OpenXADlib(void)
     Permit();
    }
   return (struct Library *)xadMasterBase;
+#else
+  return NULL;
+#endif
  }
 int atoi(const char *str)
 {

@@ -96,7 +96,6 @@ int depth;
 UWORD *coltab;
 {
     struct DimensionInfo dims;
-    struct RastPort *font_rp;
 
     font_scr.Width=GfxBase->NormalDisplayColumns;
     font_scr.Height=STDSCREENHEIGHT;
@@ -124,7 +123,6 @@ D(bug("Font screen ModeID: %lx\n",font_scr.Extension[0].ti_Data));
         CloseScreen(fontscreen);
         return(0);
     }
-    font_rp=fontwindow->RPort;
     if (coltab) {
         int a,num;
 
@@ -165,7 +163,7 @@ char *file;
 void doreadhelp(file)
 char *file;
 {
-    int a,b,helpsize,inmsg;
+    int a,b=0,helpsize,inmsg;
     char *helpbuf,*buf;
     struct Help *temph,*curhelp;
 
@@ -344,7 +342,7 @@ static STRPTR helpcontext[] = {
     "Version",
      NULL };
 
-char *getAGnode(char *buf,char *func)
+char *getAGnode(char *buf,const char *func)
  {
   int i;
 
@@ -359,13 +357,14 @@ char *getAGnode(char *buf,char *func)
  }
 
 void dohelp(name,func,key,qual,defmsg)
-char *name,*func;
+const char *name,*func;
 int key,qual;
-char *defmsg;
+const char *defmsg;
 {
     if (dopus_firsthelp)
      {
-      char *msg=NULL,*buf=NULL,buf1[40],buf2[30];
+      const char *msg=NULL;
+      char *buf=NULL,buf1[40],buf2[30];
       struct Help *help=dopus_firsthelp;
       int s,s1;
 

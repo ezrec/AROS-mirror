@@ -38,7 +38,7 @@ struct makedirlist {
 struct recurse {
     struct recurse *last;
     char *dir,*dest;
-    int data;
+    SIPTR data;
     APTR data2;
     APTR data3;
     BPTR lock;
@@ -53,7 +53,8 @@ struct recurse *current_recurse;
 
 int recursedir(fdir,fdest,dowhat,fdata)
 char *fdir,*fdest;
-int dowhat,fdata;
+int dowhat;
+SIPTR fdata;
 {
     struct FileInfoBlock __aligned myfinfo;
     struct FileInfoBlock __aligned enfinfo;
@@ -67,24 +68,24 @@ int dowhat,fdata;
          *adest,
          *ndir,
          *ndest;
-    int suc,
+    int suc=0,
         to_do,
         ret=0,
         a,
         err,
-        adata,
+        adata=0,
         depth=0,
         b,
         rtry,
-        data=fdata,
         *pstuff,
         blocks;
+    SIPTR data=fdata;
     struct recpath *crec=NULL,*trec;
     struct RecursiveDirectory *cur_recurse,
                               *addparent_recurse,
                               *new_rec,
                               *pos_rec,
-                              *cur_parent,
+                              *cur_parent = NULL,
                               *cur_lastparent=NULL;
     APTR data2=NULL,
          adata2=NULL,
@@ -124,7 +125,7 @@ int dowhat,fdata;
       for(entry = lister.firstentry; entry && (!(entry->selected));) entry=entry->next;
       arcfillfib(&myfinfo,entry);
 
-      mylock = NULL;
+      mylock = BNULL;
      }
     else
      {
@@ -712,7 +713,7 @@ D(bug("getdircontentsinfo(%s)\n",path));
      {
       if ((eac = AllocDosObject(DOS_EXALLCONTROL,NULL)))
        {
-        eac->eac_LastKey = NULL;
+        eac->eac_LastKey = 0;
 
         do
          {

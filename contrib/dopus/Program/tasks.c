@@ -68,13 +68,13 @@ static struct EmulLibEntry GATE_keyhandler = { TRAP_LIB, 0, (void (*)(void))keyh
 struct Gadget
   abortopgad={
     NULL,0,0,104,0,GFLG_GADGHCOMP,GACT_RELVERIFY,GTYP_BOOLGADGET,
-    NULL,NULL,NULL,NULL,NULL,0,NULL};
+  };
 
 static struct NewWindow
   progresswindow={
     0,0,0,0,255,255,
     IDCMP_GADGETUP|IDCMP_RAWKEY,WFLG_RMBTRAP|WFLG_ACTIVATE,
-    NULL,NULL,NULL,NULL,NULL,0,0,0,0,CUSTOMSCREEN};
+    NULL,NULL,NULL,0L,NULL,0,0,0,0,CUSTOMSCREEN};
 
 static struct Window *pwindow;
 static struct RastPort *prp;
@@ -120,7 +120,7 @@ void __saveds hotkeytaskcode()
   UWORD gadgetid/*,norm_height,norm_width*/;
 //  struct IntuiMessage *dummymsg;
   struct dopushotkey *hotkey;
-  CxObj *broker,*hotkey_filter,*mmb_filter=NULL;
+  CxObj *broker,*hotkey_filter=NULL,*mmb_filter=NULL;
   CxMsg *cxmsg;
 /*
   norm_height=scrdata_norm_height;
@@ -140,7 +140,7 @@ void __saveds hotkeytaskcode()
      {
       char tmp[8];
 
-      lsprintf(tmp," (%ld)",system_dopus_runcount+1);
+      lsprintf(tmp," (%ld)",(long)system_dopus_runcount+1);
       strcat(cxname,tmp);
      }
     hotkey_broker.nb_Name = cxname;
@@ -256,6 +256,8 @@ void __saveds hotkeytaskcode()
       else if (sig&INPUTSIG_HOTKEY)
         command=HOTKEY_HOTKEY;
     }
+#else
+    (void)sig; // Unused
 #endif
     switch (command) {
       case HOTKEY_ABORT:
@@ -553,7 +555,7 @@ char *title;
 int value,total,flag;
 {
   struct TextFont *font;
-  char *gadtxt[] = { globstring[STR_ABORT], NULL };
+  const char *gadtxt[] = { globstring[STR_ABORT], NULL };
   int a,incignore = 0;
 
   if (flag & 0x80)
@@ -674,7 +676,8 @@ void progresstext(y,val,total,text)
 int y,val,total;
 char *text;
 {
-  char buf[80],*ptr;
+  char buf[80];
+  const char *ptr;
   int x,y1,len;
 
 D(bug("progresstext(Y=%ld,V=%ld,Vmax=%ld,%s)\n",y,val,total,text?text:"<NULL>"));
@@ -813,12 +816,12 @@ static char *Kstr = "K  ";
 
 void __saveds clocktask()
 {
-  ULONG chipc,fast,wmes,h,m,s,/*secs,micro,*/cx,sig,cy,len,ct,chipnum,fastnum,a,active=1,usage;
+  ULONG chipc,fast,wmes,h,m,s,/*secs,micro,*/cx,sig,cy,len,ct,chipnum,fastnum,a,active=1,usage=0;
   UWORD clock_width,clock_height,scr_height;
   char buf[160],date[20],time[20],formstring[160],memstring[160],ampm;
   struct MsgPort *clock_time_port;
   struct timerequest ctimereq;
-  struct DOpusDateTime datetime = {0};
+  struct DOpusDateTime datetime = {};
   struct dopustaskmsg *cmsg;
   struct RastPort clock_rp;
 #ifndef __AROS__    
@@ -855,17 +858,17 @@ void __saveds clocktask()
   s = (config->scrclktype&SCRCLOCK_BYTES)?1:0;
 
   if (config->scrclktype&SCRCLOCK_C_AND_F) {
-    lsprintf(memstring,"%lc:%%-%ldld%s",globstring[STR_CLOCK_CHIP][0],chipnum+m,Kstr+s);
+    lsprintf(memstring,"%lc:%%-%ldld%s",globstring[STR_CLOCK_CHIP][0],(long)(chipnum+m),Kstr+s);
     if (fastnum>1) {
-      lsprintf(memstring+strlen(memstring),"%lc:%%-%ldld%s",globstring[STR_CLOCK_FAST][0],fastnum+m,Kstr+s);
-      lsprintf(memstring+strlen(memstring),"%lc:%%-%ldld%s",globstring[STR_CLOCK_TOTAL][0],a+m,Kstr+s);
+      lsprintf(memstring+strlen(memstring),"%lc:%%-%ldld%s",globstring[STR_CLOCK_FAST][0],(long)(fastnum+m),Kstr+s);
+      lsprintf(memstring+strlen(memstring),"%lc:%%-%ldld%s",globstring[STR_CLOCK_TOTAL][0],(long)(a+m),Kstr+s);
     }
   }
   else {
-    lsprintf(memstring,"%s%%-%ldld%s",globstring[STR_CLOCK_CHIP],chipnum+m,Kstr+s);
+    lsprintf(memstring,"%s%%-%ldld%s",globstring[STR_CLOCK_CHIP],(long)(chipnum+m),Kstr+s);
     if (fastnum>1) {
-      lsprintf(memstring+strlen(memstring),"%s%%-%ldld%s",globstring[STR_CLOCK_FAST],fastnum+m,Kstr+s);
-      lsprintf(memstring+strlen(memstring),"%s%%-%ldld%s",globstring[STR_CLOCK_TOTAL],a+m,Kstr+s);
+      lsprintf(memstring+strlen(memstring),"%s%%-%ldld%s",globstring[STR_CLOCK_FAST],(long)(fastnum+m),Kstr+s);
+      lsprintf(memstring+strlen(memstring),"%s%%-%ldld%s",globstring[STR_CLOCK_TOTAL],(long)(a+m),Kstr+s);
     }
   }
 
@@ -918,16 +921,16 @@ void __saveds clocktask()
               strcat(formstring,buf);
             }
             if (config->scrclktype&SCRCLOCK_CPU) {
+#ifndef __AROS__
               if (sysinfo)
                {
-#ifndef __AROS__
                 GetCpuUsage(sysinfo,&sicpu);
                 usage = 100 * sicpu.used_cputime_lastsec / sicpu.used_cputime_lastsec_hz;
+               } else
 #endif
-               }
-              else usage = getusage()/*/10*/;
+                usage = getusage()/*/10*/;
 
-              lsprintf(buf,"CPU:%3ld%%  ",usage);
+              lsprintf(buf,"CPU:%3ld%%  ",(long)usage);
               strcat(formstring,buf);
             }
             if (config->scrclktype&(SCRCLOCK_DATE|SCRCLOCK_TIME)) {
@@ -945,7 +948,7 @@ void __saveds clocktask()
                   if (h>11) { ampm='P'; h-=12; }
                   else ampm='A';
                   if (h==0) h=12;
-                  lsprintf(time,"%2ld:%02ld:%02ld%lc",h,m,s,ampm);
+                  lsprintf(time,"%2ld:%02ld:%02ld%lc",(long)h,(long)m,(long)s,ampm);
                 }
                 strcat(formstring,time);
               }

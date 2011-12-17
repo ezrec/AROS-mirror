@@ -30,9 +30,9 @@ the existing commercial status of Directory Opus 5.
 
 #include "dopuslib.h"
 
-__saveds DoStrCombine(register char *buf __asm("a0"),
-    register char *one __asm("a1"),
-    register char *two __asm("a2"),
+__saveds int DoStrCombine(register char *buf __asm("a0"),
+    register const char *one __asm("a1"),
+    register const char *two __asm("a2"),
     register int lim __asm("d0"))
 {
     register int a;
@@ -42,8 +42,8 @@ __saveds DoStrCombine(register char *buf __asm("a0"),
     return(DoStrConcat(buf,two,lim));
 }
 
-__saveds DoStrConcat(register char *buf __asm("a0"),
-    register char *cat __asm("a1"),
+__saveds int DoStrConcat(register char *buf __asm("a0"),
+    register const char *cat __asm("a1"),
     register int lim __asm("d0"))
 {
     register int a,b;
@@ -58,7 +58,7 @@ __saveds DoStrConcat(register char *buf __asm("a0"),
     return(0);
 }
 
-__saveds DoAtoh(register unsigned char *buf __asm("a0"),
+__saveds int DoAtoh(register unsigned char *buf __asm("a0"),
     register int len __asm("d0"))
 {
     int a,c,d,e,f;
@@ -76,6 +76,7 @@ __saveds DoAtoh(register unsigned char *buf __asm("a0"),
         if (buf[a]>='0' && buf[a]<='9') d=buf[a]-'0';
         else if (buf[a]>='A' && buf[a]<='F') d=10+(buf[a]-'A');
         else if (buf[a]>='a' && buf[a]<='f') d=10+(buf[a]-'a');
+	else d=0;
         c+=(d*f);
         f/=16;
     }

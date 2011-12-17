@@ -30,7 +30,9 @@ the existing commercial status of Directory Opus 5.
 
 //#include <fctype.h>
 #include <string.h>
-//#include <stdlib.h>
+#include <stdlib.h>
+
+#define atoi myatoi
 
 //#include <exec/types.h>
 //#include <exec/memory.h>
@@ -54,7 +56,16 @@ the existing commercial status of Directory Opus 5.
 #include <debug.h>
 #endif
 
-#if defined(__PPC__) || defined(__AROS__)
+#if defined(__AROS__)
+  #undef  __saveds
+  #define __saveds
+  #define __chip	__attribute__((section(".data.MEMF_CHIP")))
+  #define __aligned	__attribute__((__aligned__(4)))
+  #define __asm(A)
+  #define __stdargs
+  #define __regargs
+  #define _exit exit
+#elif defined(__PPC__)
   #undef  __saveds
   #define __saveds
   #define __chip
@@ -67,7 +78,7 @@ the existing commercial status of Directory Opus 5.
 //extern struct DosLibrary *DOSBase;
 struct DOpusBase *DOpusBase = NULL;
 
-void main(int,char **);
+int main(int,char **);
 void WBRun(int,char **);
 int setarg(struct WBArg *,char *,BPTR);
 BPTR CloneCommandDir(const char *);
@@ -108,11 +119,12 @@ static inline LONG atoi(char *str)
   return i;
  }
 
-void main(argc,argv)
+int main(argc,argv)
 int argc;
 char *argv[];
 {
-    int a,out,x,y,flag;
+    int a,x,y,flag;
+    BPTR out;
     struct MsgPort *port,*port1,*cont;
     struct Process *myproc;
     struct Message msg;
@@ -123,7 +135,9 @@ char *argv[];
     struct Interrupt *interrupt;
     struct IOStdReq *inputreq;
 
-    if (argc<2 || !(DOpusBase=(struct DOpusBase *)OpenLibrary("dopus.library",0))) return /*_exit(0)*/;
+    (void)version;
+
+    if (argc<2 || !(DOpusBase=(struct DOpusBase *)OpenLibrary("dopus.library",0))) return 0;
     IntuitionBase=DOpusBase->IntuitionBase;
     GfxBase=DOpusBase->GfxBase;
 
@@ -131,7 +145,7 @@ char *argv[];
     cli=BADDR(myproc->pr_CLI);
     if (cont=GetConsoleTask()) {
         struct InfoData __aligned ind;
-        ULONG arg=MKBADDR(&ind);
+        IPTR arg=(IPTR)MKBADDR(&ind);
 
         if (SendPacket(cont,ACTION_DISK_INFO,&arg,1))
             win=(struct Window *)ind.id_VolumeNode;
@@ -149,7 +163,7 @@ char *argv[];
             }
         }
         if (cli && !cli->cli_CommandDir) {
-            BPTR path = NULL;
+            BPTR path = BNULL;
 
             for (a=0;a<7;a++) if ((path=CloneCommandDir(pathlists[a]))) break;
             cli->cli_CommandDir=path;
@@ -162,7 +176,7 @@ char *argv[];
             if (out) {
                 if (port=LCreatePort(NULL,0)) {
                     if (inputreq=(struct IOStdReq *)LCreateExtIO(port,sizeof(struct IOStdReq))) {
-                        if (!(OpenDevice("input.device",NULL,(struct IORequest *)inputreq,NULL))) {
+                        if (!(OpenDevice("input.device",0,(struct IORequest *)inputreq,0))) {
                             if (interrupt=AllocMem(sizeof(struct Interrupt),MEMF_CLEAR|MEMF_PUBLIC)) {
                                 interrupt->is_Code=(APTR)InputHandler;
                                 interrupt->is_Node.ln_Pri=51;
@@ -227,7 +241,7 @@ char *argv[];
         break;
      }
     CloseLibrary((struct Library *)DOpusBase);
-    //_exit(0);
+    _exit(0);
 }
 
 struct PathList
@@ -241,7 +255,7 @@ BPTR CloneCommandDir(const char *taskname)
     struct Process *teacher;
     struct CommandLineInterface *teachcli;
     struct PathList *wext,*mext,*lastmext=NULL;
-    BPTR newpath=NULL;
+    BPTR newpath=BNULL;
 
     Forbid();
     if (teacher=(struct Process *)FindTask(taskname))
@@ -252,7 +266,7 @@ BPTR CloneCommandDir(const char *taskname)
          {
           if (!(mext = AllocVec(sizeof(struct PathList),MEMF_PUBLIC))) break;
 
-          mext->nextPath=NULL;
+          mext->nextPath=BNULL;
           mext->pathLock=DupLock(wext->pathLock);
           if (!newpath) newpath=MKBADDR(mext);
 
@@ -275,7 +289,7 @@ char **argv;
     int stacksize,i,ok=1;
     struct Process *ourtask;
     struct MsgPort *replyport=NULL;
-    BPTR olddir=-1;
+    BPTR olddir=(BPTR)-1;
     struct IconBase *IconBase;
     struct DOpusRemember *key=NULL;
     struct CommandLineInterface *cli;
@@ -325,7 +339,7 @@ char **argv;
           else
            {
             if (cli = BADDR(ourtask->pr_CLI))
-              stacksize = cli->cli_DefaultStack*4;
+              stacksize = cli->cli_DefaultStack*sizeof(IPTR);
             else stacksize = 4096;
            }
 
@@ -357,7 +371,7 @@ char **argv;
      }
     if (replyport) LDeletePort(replyport);
     if (diskobj) FreeDiskObject(diskobj);
-    if (olddir!=-1) CurrentDir(olddir);
+    if (olddir!=(BPTR)-1) CurrentDir(olddir);
     if (WBStartup) {
         /*if (WBStartup->sm_Segment)*/ UnLoadSeg(WBStartup->sm_Segment);
         if (WBStartup->sm_ArgList) {

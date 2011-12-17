@@ -229,7 +229,7 @@ char *argv[];
 
 	formatreq.rb_extend=&stringex;
 	formatreq.rb_idcmpflags=0;
-	formatreq.rb_string_table=string_table;
+	formatreq.rb_string_table=(APTR)string_table;
 
 	for (a=0;a<2;a++) {
 		stringex.Pens[a]=vis->vi_stringcol[a];
@@ -498,7 +498,7 @@ char *name;
 		BADDR(((struct FileSysStartupMsg *)BADDR(devnode->dn_Startup))->fssm_Environ);
 
 	tracks=dosenvec->de_HighCyl-dosenvec->de_LowCyl+1;
-	tracksize=(dosenvec->de_BlocksPerTrack*dosenvec->de_Surfaces)*(dosenvec->de_SizeBlock*4);
+	tracksize=(dosenvec->de_BlocksPerTrack*dosenvec->de_Surfaces)*(dosenvec->de_SizeBlock*sizeof(ULONG));
 	size=tracks*tracksize;
 
 	getsizestring(sizebuf,size);
@@ -521,7 +521,7 @@ ULONG a;
 		getfloatstr((double)((double)a/1024),buf);
 		LStrCat(buf,"M");
 	}
-	else lsprintf(buf,"%ldK",a);
+	else lsprintf(buf,"%ldK",(long)a);
 }
 
 void getfloatstr(f,buf)
@@ -538,11 +538,11 @@ char *buf;
 	if (c==100) {
 		c=0; ++a;
 	}
-	lsprintf(buf1,"%ld",c); buf1[1]=0;
-	lsprintf(buf,"%ld.%s",a,buf1);
+	lsprintf(buf1,"%ld",(long)c); buf1[1]=0;
+	lsprintf(buf,"%ld.%s",(long)a,buf1);
 }
 
-do_format(reqbase,border,device,name,flags,quick)
+int do_format(reqbase,border,device,name,flags,quick)
 struct RequesterBase *reqbase;
 Object_Border *border;
 char *device,*name;
@@ -645,7 +645,7 @@ char quick;
 	return((txt==STR_SUCCESS));
 }
 
-do_initialise(device_req,name,dostype,firstblock,numblocks,reserved,memtype,flags)
+int do_initialise(device_req,name,dostype,firstblock,numblocks,reserved,memtype,flags)
 struct IOExtTD *device_req;
 char *name;
 ULONG dostype;
@@ -777,7 +777,7 @@ ULONG flags;
 	return(0);
 }
 
-do_raw_format(reqbase,border,device_req,tracksize,lowtrack,numtracks,memtype,flags)
+int do_raw_format(reqbase,border,device_req,tracksize,lowtrack,numtracks,memtype,flags)
 struct RequesterBase *reqbase;
 Object_Border *border;
 struct IOExtTD *device_req;
@@ -788,7 +788,7 @@ ULONG flags;
 	ULONG *trackbuffer,*verifybuffer;
 	struct DOpusRemember *key=NULL;
 	ULONG offset;
-	int track,a,cmpsize,ret;
+	int track,a,cmpsize=0,ret;
 	char infobuf[80];
 
 	if (!(trackbuffer=(ULONG *)LAllocRemember(&key,tracksize,memtype|MEMF_CLEAR)))

@@ -170,7 +170,7 @@ struct CommandList commandlist[]={
     {"User4",FUNC_AUTO4,0},
     {"Verify",FUNC_VERIFY,0},
     {"Version",FUNC_VERSION,0},
-    {NULL,NULL}};
+    {NULL,0}};
 
 /* ARexx and Function data */
 

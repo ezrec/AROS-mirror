@@ -29,7 +29,7 @@ extern const struct DefaultString default_strings[];
 struct StringData stringdata = {default_strings,STR_STRING_COUNT,NULL,NULL,
     0,STRING_VERSION,NULL,NULL};
 
-#warning Remove DOpusBase as global variable
+// FIXME: Remove DOpusBase as global variable
 /* AROS: DOpusBase global var shadows the parameter with the same name */
 
 void set_global_dopusbase(struct DOpusBase *base)
@@ -69,7 +69,7 @@ kprintf("DOPUS_INIT: ct: %p, cb: %p\n"
 
     if (DoReadStringFile(&stringdata,"dopus4_lib.catalog"))
     {
-        string_table=stringdata.string_table;
+        string_table=(const char **)stringdata.string_table;
         initstrings();
     }
     else
@@ -510,7 +510,7 @@ AROS_LH2(int, Assign,
 }
 
 AROS_LH1(char *, BaseName,
-	AROS_LHA(char *, path, 	A0),
+	AROS_LHA(const char *, path, 	A0),
 	struct Library *, DOpusBase, 33, DOpus)
 {
     AROS_LIBFUNC_INIT
@@ -535,7 +535,7 @@ AROS_LH3(int , PathName,
 
 AROS_LH3(int , TackOn,
 	AROS_LHA(char *, path, 	A0),
-	AROS_LHA(char *, file, 	A1),
+	AROS_LHA(const char *, file, 	A1),
 	AROS_LHA(int , len, 	D0),
 	struct Library *, DOpusBase, 37, DOpus)
 {
@@ -572,7 +572,7 @@ AROS_LH3(int , SearchPathList,
 }
 
 AROS_LH2(int , CheckExist,
-	AROS_LHA(char *, name, 	A0),
+	AROS_LHA(const char *, name, 	A0),
 	AROS_LHA(int *, size, 	A1),
 	struct Library *, DOpusBase, 53, DOpus)
 {
@@ -743,7 +743,7 @@ AROS_LH2(int, CompareDate,
 AROS_LH7(int, AddGadgets,
 	AROS_LHA(struct Window *, win, A0),
 	AROS_LHA(struct Gadget *, firstgad, A1),
-	AROS_LHA(char **, text, A2),
+	AROS_LHA(const char **, text, A2),
 	AROS_LHA(int, count, 	D0),
 	AROS_LHA(int, fg, 	D1),
 	AROS_LHA(int, bg, 	D2),
@@ -772,7 +772,7 @@ AROS_LH2(int, DoRMBGadget,
 AROS_LH4(void, DoCycleGadget,
 	AROS_LHA(struct Gadget *, gad,		A0),
 	AROS_LHA(struct Window *, window,	A1),
-	AROS_LHA(char **	, choices,	A2),
+	AROS_LHA(const char **	, choices,	A2),
 	AROS_LHA(int 		, select,	D0),
 	struct Library *, DOpusBase, 78, DOpus)
 {
@@ -785,7 +785,7 @@ AROS_LH4(void, DoCycleGadget,
 
 AROS_LH5(void, UScoreText,
 	AROS_LHA(struct RastPort *, rp,		A0),
-	AROS_LHA(char *, buf,	A1),
+	AROS_LHA(const char *, buf,	A1),
 	AROS_LHA(int, xp,	D0),
 	AROS_LHA(int, yp,	D1),
 	AROS_LHA(int, up,	D2),
@@ -870,7 +870,7 @@ AROS_LH8(void, Do3DFrame,
 	AROS_LHA(int, y, D1),
 	AROS_LHA(int, w, D2),
 	AROS_LHA(int, h, D3),
-	AROS_LHA(char *, title, A1),
+	AROS_LHA(const char *, title, A1),
 	AROS_LHA(int, hi, D4),
 	AROS_LHA(int, lo, D5),
 	struct Library *, DOpusBase, 76, DOpus)
@@ -983,7 +983,7 @@ AROS_LH3(int, GetSliderPos,
 {
     AROS_LIBFUNC_INIT
 
-    DoGetSliderPos(gad, count, lines);
+    return DoGetSliderPos(gad, count, lines);
 
     AROS_LIBFUNC_EXIT
 }
@@ -1155,7 +1155,7 @@ AROS_LH7(void, ObjectText,
 	AROS_LHA(short, top,	D1),
 	AROS_LHA(short, width,	D2),
 	AROS_LHA(short, height,	D3),
-	AROS_LHA(char *, text,		A1),
+	AROS_LHA(const char *, text,		A1),
 	AROS_LHA(short, textpos,	D4),
 	struct Library *, DOpusBase, 92, DOpus)
 {

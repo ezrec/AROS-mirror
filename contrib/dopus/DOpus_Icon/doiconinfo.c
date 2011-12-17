@@ -206,12 +206,13 @@ char *name;
 	struct DiskObject *dobj;
 	struct DOpusListView *view;
 	char
-		buf[256],namebuf[256],inamebuf[33],*ptr,date[11],time[11],*olddeftool,
-		**ttarray,**oldtooltypes,**tttemp;
+		buf[256],namebuf[256],inamebuf[33],*ptr,date[11],time[11],*olddeftool=NULL;
+	char **ttarray,**tttemp=NULL;
+	STRPTR *oldtooltypes;
 	struct DOpusDateTime datetime;
 	ULONG class;
 	UWORD code;
-	int a,b,x,y,gadgetid,ret,gotid=0,newdef,ttcount=0,curtt=-1,compflag=0;
+	int a,b,x,y,gadgetid=0,ret,gotid=0,ttcount=0,curtt=-1,compflag=0;
 	BPTR lock;
 	struct InfoData __aligned infodata;
 	struct FileInfoBlock __aligned fileinfo;
@@ -220,14 +221,13 @@ char *name;
 	struct Window *window;
 	struct RastPort *rp;
 	struct Gadget
-		*icongad,
 		*gad,	
 		*tooltypegads=NULL,
 		*protectbitgads=NULL,
 		*stackgad=NULL,
 		*commentgad=NULL,
 		*defaulttoolgad=NULL;
-	char *stack_buf,*comment_buf,*tooltype_buf,*defaulttool_buf;
+	char *stack_buf=NULL,*comment_buf,*tooltype_buf=NULL,*defaulttool_buf=NULL;
 	struct DOpusListView *tooltypelist;
 	struct IntuiMessage *msg;
 	struct Rectangle icon_rec;
@@ -238,7 +238,6 @@ char *name;
 
 	strcpy(namebuf,name); if ((ptr=strstr(namebuf,".info"))) *ptr=0;
 	if (!(dobj=GetDiskObject(namebuf))) return(-2);
-	icongad=(struct Gadget *)&(dobj->do_Gadget);
 	oldtooltypes=dobj->do_ToolTypes;
 
 	switch (dobj->do_Type) {
@@ -388,10 +387,10 @@ char *name;
 			skip_text.FrontPen=0;
 			cancel_text.FrontPen=0;
 		}
-		save_text.IText=string_table[STR_SAVE];
-		skip_text.IText=string_table[STR_SKIP];
-		cancel_text.IText=string_table[STR_CANCEL];
-		icon_menu.MenuName=string_table[STR_ICON];
+		save_text.IText=(STRPTR)string_table[STR_SAVE];
+		skip_text.IText=(STRPTR)string_table[STR_SKIP];
+		cancel_text.IText=(STRPTR)string_table[STR_CANCEL];
+		icon_menu.MenuName=(STRPTR)string_table[STR_ICON];
 		SetMenuStrip(window,&icon_menu);
 	}
 
@@ -428,7 +427,7 @@ char *name;
 		if (stackgad=addreqgadgets(&icon_req,temp_gadgets)) {
 			stack_buf=((struct StringInfo *)stackgad->SpecialInfo)->Buffer;
 			if (dobj->do_StackSize<4096) dobj->do_StackSize=4096;
-			lsprintf(stack_buf,"%ld",dobj->do_StackSize);
+			lsprintf(stack_buf,"%ld",(long)dobj->do_StackSize);
 		}
 	}
 
@@ -483,6 +482,7 @@ char *name;
 
 	y=40+textyoff;
 	for (a=0;a<6;a++) {
+		const char *ptr;
 		ptr=specific_gadtext[dobj->do_Type-1][a];
 		if (ptr) {
 			if (a<4) x=94+textxoff;
@@ -501,13 +501,13 @@ char *name;
 
 	switch (dobj->do_Type) {
 		case WBDISK:
-			lsprintf(buf,"%ld",infodata.id_NumBlocks);
+			lsprintf(buf,"%ld",(long)infodata.id_NumBlocks);
 			UScoreText(rp,buf,102+textxoff,40+textyoff,-1);
-			lsprintf(buf,"%ld",infodata.id_NumBlocksUsed);
+			lsprintf(buf,"%ld",(long)infodata.id_NumBlocksUsed);
 			UScoreText(rp,buf,102+textxoff,50+textyoff,-1);
-			lsprintf(buf,"%ld",infodata.id_NumBlocks-infodata.id_NumBlocksUsed);
+			lsprintf(buf,"%ld",(long)infodata.id_NumBlocks-infodata.id_NumBlocksUsed);
 			UScoreText(rp,buf,102+textxoff,60+textyoff,-1);
-			lsprintf(buf,"%ld",infodata.id_BytesPerBlock);
+			lsprintf(buf,"%ld",(long)infodata.id_BytesPerBlock);
 			UScoreText(rp,buf,102+textxoff,70+textyoff,-1);
 
 			switch (infodata.id_DiskState) {
@@ -529,21 +529,21 @@ char *name;
 		case WBTOOL:
 			Move(rp,102+textxoff,40+textyoff);
 			if (gotid) {
-				lsprintf(buf,"%ld",fileinfo.fib_NumBlocks);
+				lsprintf(buf,"%ld",(long)fileinfo.fib_NumBlocks);
 				Text(rp,buf,strlen(buf));
 			}
 			else Text(rp,"---",3);
 			Move(rp,102+textxoff,50+textyoff);
 			if (gotid) {
-				lsprintf(buf,"%ld",fileinfo.fib_Size);
+				lsprintf(buf,"%ld",(long)fileinfo.fib_Size);
 				Text(rp,buf,strlen(buf));
 			}
 			else Text(rp,"---",3);
 
 		case WBDRAWER:
-			if ((ttarray=oldtooltypes)) {
+			if ((ttarray=(char**)oldtooltypes)) {
 				for (ttcount=0;;ttcount++) if (!ttarray[ttcount]) break;
-				if (ttarray=AllocMem((ttcount+1)*4,MEMF_CLEAR)) {
+				if (ttarray=AllocMem((ttcount+1)*sizeof(ttarray[0]),MEMF_CLEAR)) {
 					for (a=0;a<ttcount;a++) {
 						if (oldtooltypes[a] &&
 							(ttarray[a]=AllocMem(strlen(oldtooltypes[a])+1,0)))
@@ -646,7 +646,7 @@ hiliteimage:
 deletettype:
 								if (ttcount>0 && curtt>-1 && curtt<ttcount && tooltypelist) {
 									if (ttarray) {
-										if (ttcount>1 && !(tttemp=AllocMem(ttcount*4,MEMF_CLEAR)))
+										if (ttcount>1 && !(tttemp=AllocMem(ttcount*sizeof(tttemp[0]),MEMF_CLEAR)))
 											break;
 										if (ttarray[curtt]) FreeMem(ttarray[curtt],strlen(ttarray[curtt])+1);
 										if (ttcount==1) {
@@ -654,11 +654,11 @@ deletettype:
 											ttarray=NULL;
 											goto deletedtype;
 										}
-										if (curtt>0) CopyMem((char *)ttarray,(char *)tttemp,curtt*4);
+										if (curtt>0) CopyMem((char *)ttarray,(char *)tttemp,curtt*sizeof(ttarray[0]));
 										if (curtt<(ttcount-1))
 											CopyMem((char *)&ttarray[curtt+1],(char *)&tttemp[curtt],
-												(ttcount-1-curtt)*4);
-										FreeMem(ttarray,(ttcount+1)*4); ttarray=tttemp;
+												(ttcount-1-curtt)*sizeof(ttarray[0]));
+										FreeMem(ttarray,(ttcount+1)*sizeof(ttarray[0])); ttarray=tttemp;
 									}
 deletedtype:
 									tooltypelist->items=ttarray;
@@ -676,10 +676,10 @@ deletedtype:
 									RefreshStrGad(tooltypegads,window);
 								}
 								else if (tooltypelist) {
-									if (!(tttemp=AllocMem((ttcount+2)*4,MEMF_CLEAR))) break;
+									if (!(tttemp=AllocMem((ttcount+2)*sizeof(tttemp[0]),MEMF_CLEAR))) break;
 									if (ttarray) {
-										CopyMem((char *)ttarray,(char *)tttemp,ttcount*4);
-										FreeMem(ttarray,(ttcount+1)*4);
+										CopyMem((char *)ttarray,(char *)tttemp,ttcount*sizeof(ttarray[0]));
+										FreeMem(ttarray,(ttcount+1)*sizeof(ttarray[0]));
 									}
 									ttarray=tttemp;
 									curtt=ttcount++;
@@ -721,17 +721,15 @@ saveicon:
 									olddeftool=dobj->do_DefaultTool;
 									if (dobj->do_DefaultTool=
 										LAllocRemember(&icon_req.rb_memory,strlen(defaulttool_buf)+1,0)) {
-										newdef=1;
 										strcpy(dobj->do_DefaultTool,defaulttool_buf);
 									}
-									else newdef=0;
 								}
 								if (commentgad) {
 									comment_buf[79]=0;
 									SetComment(namebuf,comment_buf);
 								}
 
-								dobj->do_ToolTypes=ttarray;
+								dobj->do_ToolTypes=(STRPTR *)ttarray;
 								PutDiskObject(namebuf,dobj);
 
 								if (defaulttoolgad) dobj->do_DefaultTool=olddeftool;
@@ -782,7 +780,7 @@ endreq:
 		for (a=0;a<ttcount;a++) {
 			if (ttarray[a]) FreeMem(ttarray[a],strlen(ttarray[a])+1);
 		}
-		FreeMem(ttarray,(ttcount+1)*4);
+		FreeMem(ttarray,(ttcount+1)*sizeof(ttarray[0]));
 	}
 	if (tooltypelist) RemoveListView(tooltypelist,1);
 	if (small) ClearMenuStrip(window);
@@ -798,7 +796,7 @@ BOOL selected;
 struct Rectangle *rect;
 {
 	struct Region *reg,*oldreg;
-	int x,y,w,h;
+	int x,y,w=0,h=0;
 
 	struct Rectangle size = {0};
 
@@ -903,7 +901,7 @@ struct DateStamp *ds;
         //kprintf("!!!! getroot(%s)\n", name);
 
         lock = Lock(name, ACCESS_READ);
-        if (NULL == lock)
+        if (BNULL == lock)
         {
             //kprintf("Could not get lock in getroot()\n");
             return 0;

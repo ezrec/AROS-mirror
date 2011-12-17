@@ -76,7 +76,7 @@ int __saveds DoRawkeyToStr(register UWORD code __asm("d0"),
             ConsoleDevice=(struct ConsoleDevice *)req->io_Device;
             inev.ie_NextEvent=NULL;
             inev.ie_Class=IECLASS_RAWKEY;
-            inev.ie_SubClass=NULL;
+            inev.ie_SubClass=0;
             inev.ie_Code=code;
             inev.ie_Qualifier=qual&(IEQUALIFIER_LSHIFT|IEQUALIFIER_RSHIFT);
             inev.ie_EventAddress=NULL;
@@ -183,7 +183,7 @@ const static struct TagItem
 void __saveds DoSetBusyPointer(register struct Window *wind __asm("a0"))
 {
 //    if (IntuitionBase->LibNode.lib_Version>38)
-        SetWindowPointerA(wind,busytags);
+        SetWindowPointerA(wind,(struct TagItem *)busytags);
 //    else if (IntuitionBase->LibNode.lib_Version<36)
 //        SetPointer(wind,busydata13,22,16,-6,0);
 //    else SetPointer(wind,busydata20,16,16,-6,0);

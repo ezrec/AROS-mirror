@@ -30,7 +30,7 @@ the existing commercial status of Directory Opus 5.
 
 #include "diskop.h"
 
-void main(argc,argv)
+int main(argc,argv)
 int argc;
 char *argv[];
 {
@@ -41,14 +41,10 @@ char *argv[];
 	int arg;
 
 	if (!(DOpusBase=(struct DOpusBase *)OpenLibrary("dopus.library",18)))
-#ifdef __AROS__
-		exit(0);
-#else
 #ifdef __SASC_60
 		__exit(0);
 #else
 		_exit(0);
-#endif
 #endif
 
 	if ((vis=LAllocRemember(&memkey,sizeof(struct VisInfo),MEMF_CLEAR)) &&
@@ -107,7 +103,7 @@ char *argv[];
 			else stringname[0]=0;
 
 			if (ReadStringFile(stringdata,stringname)) {
-				string_table=stringdata->string_table;
+				string_table=(const char **)stringdata->string_table;
 
 				switch (argv[1][0]) {
 					case 'f':
@@ -133,14 +129,10 @@ char *argv[];
 	LFreeRemember(&memkey);
 
 	CloseLibrary((struct Library *)DOpusBase);
-#ifdef __AROS__
-		exit(0);
-#else
 #ifdef __SASC_60
 		__exit(0);
 #else
 		_exit(0);
-#endif
 #endif
 }
 
@@ -175,7 +167,7 @@ char *portname;
 	}
 }
 
-dopus_message(cmd,data,portname)
+int dopus_message(cmd,data,portname)
 int cmd;
 APTR data;
 char *portname;
@@ -231,7 +223,7 @@ struct TagItem **gadgets;
 int mask,*count;
 {
 	int gad;
-	struct Gadget *gadget=NULL,*newgadget,*firstgadget;
+	struct Gadget *gadget=NULL,*newgadget,*firstgadget=NULL;
 
 	for (gad=0;;gad++) {
 		if (!gadgets[gad]) break;
@@ -250,13 +242,13 @@ int mask,*count;
 
 int error_rets[]={1,0};
 
-check_error(reqbase,str,gadtxt)
+int check_error(reqbase,str,gadtxt)
 struct RequesterBase *reqbase;
-char *str;
+const char *str;
 int gadtxt;
 {
 	struct DOpusSimpleRequest req;
-	char *error_gads[3];
+	const char *error_gads[3];
 
 	req.text=str;
 	error_gads[0]=string_table[gadtxt];
@@ -286,7 +278,7 @@ ULONG *sector;
 	return(sum);
 }
 
-do_writeblock(device_req,buffer,offset)
+int do_writeblock(device_req,buffer,offset)
 struct IOExtTD *device_req;
 APTR buffer;
 ULONG offset;
@@ -300,25 +292,21 @@ ULONG offset;
 
 void inhibit_drive(device,state)
 char *device;
-ULONG state;
+IPTR  state;
 {
 	struct MsgPort *handler;
 
-#if 0
 	if (DOSBase->dl_lib.lib_Version<36) {
 		if (handler=(struct MsgPort *)DeviceProc(device))
 			SendPacket(handler,ACTION_INHIBIT,&state,1);
 	}
 	else Inhibit(device,state);
-#else
-	Inhibit(device,state);
-#endif
 }
 
 void border_text(reqbase,border,infobuf)
 struct RequesterBase *reqbase;
 Object_Border *border;
-char *infobuf;
+const char *infobuf;
 {
 	struct RastPort *rp;
 
@@ -342,7 +330,14 @@ char *infobuf;
 struct DeviceNode *find_device(name)
 char *name;
 {
-#ifndef __AROS__
+#ifdef __AROS__
+	struct DosList *dl;
+
+	if (dl = LockDosList(LDF_DEVICES | LDF_READ))
+		dl = (APTR)FindDosEntry(dl,name,LDF_DEVICES);
+	UnLockDosList(LDF_DEVICES | LDF_READ);
+	return (struct DeviceNode *)dl;
+#else
 	struct RootNode *rootnode;
 	struct DosInfo *dosinfo;
 	struct DeviceNode *devnode;
@@ -376,13 +371,6 @@ char *name;
 
 	Permit();
 	return(NULL);
-#else
-	struct DosList *dl;
-
-	if (dl = LockDosList(LDF_DEVICES | LDF_READ))
-		dl = (APTR)FindDosEntry(dl,name,LDF_DEVICES);
-	UnLockDosList(LDF_DEVICES | LDF_READ);
-	return dl;
 #endif
 }
 
@@ -397,32 +385,20 @@ char *alike;
     char **listtable,devname[32];
     
     if (alike) alikenode=find_device(alike);
-/*
-    Forbid();   
-        
-    rootnode=(struct RootNode *) DOSBase->dl_Root;
-    dosinfo=(struct DosInfo *) BADDR(rootnode->rn_Info);
-    devnode=(struct DeviceNode *) BADDR(dosinfo->di_DevInfo);
-*/
     devnode = (struct DeviceNode *)LockDosList(LDF_READ | LDF_DEVICES);
       
     while ((devnode = (struct DeviceNode *)NextDosEntry((struct DosList *)devnode,LDF_DEVICES))) {
-        if (/*devnode->dn_Type==DLT_DEVICE && devnode->dn_Task &&*/
-            devnode->dn_Startup>512) {
+        if (devnode->dn_Startup>(BPTR)512) {
             if (!alikenode || like_devices(devnode,alikenode)) 
                 ++count;
         }
-//        devnode=(struct DeviceNode *) BADDR(devnode->dn_Next);
     }
           
-    if ((listtable=LAllocRemember(key,count*4,MEMF_CLEAR))) {
+    if ((listtable=LAllocRemember(key,count*sizeof(listtable[0]),MEMF_CLEAR))) {
         devnode = (struct DeviceNode *)LockDosList(LDF_READ | LDF_DEVICES);
-//        devnode=(struct DeviceNode *) BADDR(dosinfo->di_DevInfo);
         count=0;
         while ((devnode = (struct DeviceNode *)NextDosEntry((struct DosList *)devnode,LDF_DEVICES))) {
-//        while (devnode) {
-            if (/*devnode->dn_Type==DLT_DEVICE && devnode->dn_Task &&*/
-                devnode->dn_Startup>512) {
+            if (devnode->dn_Startup>(BPTR)512) {
                 if (!alikenode || like_devices(devnode,alikenode)) {
                     BtoCStr((BPTR)devnode->dn_Name,devname,32);
                     strcat(devname,":");
@@ -431,14 +407,12 @@ char *alike;
                     ++count;
                 }
             }
-//            devnode=(struct DeviceNode *) BADDR(devnode->dn_Next);
         }
         UnLockDosList(LDF_READ | LDF_DEVICES);
         sort_device_list(listtable);
     }
     UnLockDosList(LDF_READ | LDF_DEVICES);
 
-//    Permit();
     return(listtable);
 }
 
@@ -460,7 +434,7 @@ char **table;
 			}
 }
 
-check_disk(reqbase,device_req,name,prot)
+int check_disk(reqbase,device_req,name,prot)
 struct RequesterBase *reqbase;
 struct IOExtTD *device_req;
 char *name;
@@ -491,7 +465,7 @@ int prot;
 	return(1);
 }
 
-check_abort(window)
+int check_abort(window)
 struct Window *window;
 {
 	struct IntuiMessage *msg;
@@ -505,9 +479,9 @@ struct Window *window;
 	return(abort);
 }
 
-check_blank_disk(reqbase,device,action)
+int check_blank_disk(reqbase,device,action)
 struct RequesterBase *reqbase;
-char *device,*action;
+const char *device,*action;
 {
 	BPTR lock;
 	struct InfoData __aligned info;
@@ -560,7 +534,8 @@ struct Gadget *gadget;
 int count;
 struct DOpusListView *list;
 {
-	int file,listid='LIST';
+	BPTR file;
+	int listid=MAKE_ID('L','I','S','T');
 	UWORD len;
 	char envname[80],null=0;
 
@@ -602,7 +577,8 @@ struct Gadget *firstgadget;
 int count;
 struct DOpusListView *list;
 {
-	int file,size,a,b,*lbuf;
+	BPTR file;
+	int size,a,b,*lbuf;
 	char envname[80],*nptr;
 	struct Gadget *gadget;
 	UWORD gadgettype,gadgetid,len,*buf;
@@ -623,7 +599,7 @@ struct DOpusListView *list;
 
 	for (a=0;a<size/2;) {
 		lbuf=(int *)&buf[a];
-		if (lbuf[0]=='LIST') {
+		if (lbuf[0]==MAKE_ID('L','I','S','T')) {
 			a+=2;
 			nptr=(char *)&buf[a];
 			if (list) {
@@ -705,7 +681,7 @@ char *exclude;
 	list->topitem=def;
 }
 
-like_devices(node,likenode)
+int like_devices(node,likenode)
 struct DeviceNode *node,*likenode;
 {
 	struct DosEnvec *envec,*likeenvec;
@@ -725,7 +701,7 @@ struct DeviceNode *node,*likenode;
 	return(1);
 }
 
-open_device(device,handle)
+int open_device(device,handle)
 char *device;
 struct DeviceHandle *handle;
 {

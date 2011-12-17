@@ -41,12 +41,12 @@ void chkabort(void) { return; }
 
 int onworkbench=0;
 
-main(argc,argv)
+int main(argc,argv)
 int argc;
 char *argv[];
 {
     ULONG class;
-    UWORD gadgetid,code;
+    UWORD gadgetid=0,code;
     int num,a;
     char portname[50],rportname[50],oldconfigname[256]/*,oldlanguage[30]*/;
     struct WBStartup *wbmsg;
@@ -162,9 +162,9 @@ char *argv[];
 
         if (wbmsg->sm_NumArgs>1) {
             num=atoi(wbmsg->sm_ArgList[1].wa_Name);
-            lsprintf(portname,"dopus4_config_port%ld",num);
+            lsprintf(portname,"dopus4_config_port%ld",(long)num);
             if (!(conport=LCreatePort(portname,20))) quit();
-            lsprintf(rportname,"dopus4_config_reply%ld",num);
+            lsprintf(rportname,"dopus4_config_reply%ld",(long)num);
             Forbid();
             if (!(cmdport=FindPort(rportname))) {
                 LDeletePort(conport);
@@ -580,7 +580,7 @@ int scr;
 }
 
 void initsidegads(gads,toggle,vert)
-char **gads;
+const char **gads;
 int toggle,vert;
 {
     int num,a,x,y,x1,ac,dn,gnum,rnum,w,h;
@@ -649,8 +649,8 @@ void inittickgads(gads,flag,flag2)
 struct ConfigGadget *gads;
 int flag,flag2;
 {
-    int num,a,y,gad,last,lasty,dy,xp,yp,fl,b;
-    char **namearray;
+    int num,a,y,gad,last=0,lasty,dy,xp,yp,fl=0,b;
+    const char **namearray;
     struct StringInfo *sinfo;
 
     removetickgads();
@@ -665,7 +665,7 @@ int flag,flag2;
     if (!num) return;
 
     if (!(tickgad=LAllocRemember(&tickkey,sizeof(struct Gadget)*num,MEMF_CLEAR)) ||
-        !(namearray=LAllocRemember(&tickkey,num*4,MEMF_CLEAR))) return;
+        !(namearray=LAllocRemember(&tickkey,num*sizeof(namearray[0]),MEMF_CLEAR))) return;
 
     y=y_off+46;
     lasty=y;
@@ -870,7 +870,7 @@ void removetickgads()
         x_bot,y_bot);
 }
 
-processtickgad(gads,flag,sel,num)
+int processtickgad(gads,flag,sel,num)
 struct ConfigGadget *gads;
 int flag,sel,num;
 {
@@ -1189,12 +1189,13 @@ void makestring(char *buf,...)
     if (first) ActivateStrGad(first,Window);
 }
 
-getstring(text,buf,len,num)
-char *text,*buf;
+int getstring(text,buf,len,num)
+const char *text;
+char *buf;
 int len,num;
 {
     struct DOpusSimpleRequest req;
-    char *gads[3];
+    const char *gads[3];
     static int rets[2]={1,0};
     int a;
 
@@ -1212,7 +1213,7 @@ int len,num;
     req.strbuf=buf;
     req.strlen=len;
     req.flags=num|SRF_BORDERS|SRF_RECESSHI|SRF_EXTEND;
-    req.value=(int)&stringex;
+    req.value=(IPTR)&stringex;
     req.font=NULL;
     req.title="ConfigOpus";
     busy();
@@ -1221,17 +1222,17 @@ int len,num;
     return(a);
 }
 
-request(text)
-char *text;
+int request(text)
+const char *text;
 {
     return(do_request(text,cfg_string[STR_OKAY],cfg_string[STR_CANCEL]));
 }
 
-do_request(text,pos,neg)
-char *text,*pos,*neg;
+int do_request(text,pos,neg)
+const char *text,*pos,*neg;
 {
     struct DOpusSimpleRequest req;
-    char *gads[3];
+    const char *gads[3];
     static int rets[2]={1,0};
     int a;
 
@@ -1281,7 +1282,7 @@ char *str;
 static char lasttitle[80];
 
 void doscreentitle(str)
-char *str;
+const char *str;
 {
     if (str && str!=(char *)-1) strcpy(lasttitle,str);
     SetWindowTitles(Window,lasttitle,(char *)-1);
@@ -1394,15 +1395,16 @@ int num;
 void load_palette(screen,palette,numcols)
 struct Screen *screen;
 ULONG *palette;
+int numcols;
 {
     if (!screen) {
         /*if (version2>=OSVER_39)*/ {
             int a,b;
 
-            for (a=0,b=0;a<numcols;a++) {
+            for (a=0,b=0;a<numcols;a++,b+=3) {
                 SetRGB32(&Window->WScreen->ViewPort,
                     screen_pens[a].pen,
-                    palette[b++],palette[b++],palette[b++]);
+                    palette[b+0],palette[b+1],palette[b+2]);
             }
         }
     }

@@ -103,7 +103,7 @@ void seename(win)
 int win;
 {
     long long tot;
-    int bl,a;
+    int bl,a=0;
     static char buf[256];
 
     if (win<0 || status_iconified) return;
@@ -233,8 +233,8 @@ int win,clear;
             }
             else if (config->showfree&SHOWFREE_BLOCKS) {
                 if (dopus_curwin[win]->flags&DWF_READONLY)
-                    lsprintf(buf," (%ld)",dopus_curwin[win]->diskblock);
-                else lsprintf(buf," %ld",dopus_curwin[win]->diskblock);
+                    lsprintf(buf," (%ld)",(long)dopus_curwin[win]->diskblock);
+                else lsprintf(buf," %ld",(long)dopus_curwin[win]->diskblock);
             }
             else if (config->showfree&SHOWFREE_PERCENT) {
 #ifdef __SASC__
@@ -254,8 +254,8 @@ int win,clear;
 #endif
                 if (b>100) b=100;
                 if (dopus_curwin[win]->flags&DWF_READONLY)
-                    lsprintf(buf," (%ld%%)",b);
-                else lsprintf(buf," %ld%%",b);
+                    lsprintf(buf," (%ld%%)",(long)b);
+                else lsprintf(buf," %ld%%",(long)b);
             }
             StrCombine(buf3,buf,str_space_string,14);
             len2=12; len3=strlen(buf);
@@ -373,7 +373,9 @@ struct DateStamp *ds;
     struct InfoData __aligned info;
     BPTR lock1;
     struct FileLock *lock2;
+#ifndef __AROS__
     char *p;
+#endif
     struct DeviceList *dl;
     int a;
 
@@ -381,8 +383,12 @@ struct DateStamp *ds;
     lock2=(struct FileLock *) BADDR(lock1);
     for (a=0;a<FILEBUF_SIZE;a++) name[a]=0;
     dl=(struct DeviceList *)BADDR(lock2->fl_Volume);
+#ifdef __AROS__
+    LStrnCpy(name, AROS_BSTR_ADDR(dl->dl_Name), AROS_BSTR_strlen(dl->dl_Name));
+#else
     p=(char *) BADDR(dl->dl_Name);
     if (p) LStrnCpy(name,p+1,*p);
+#endif
     if (ds) CopyMem((char *)&dl->dl_VolumeDate,(char *)ds,sizeof(struct DateStamp));
     Info(lock1,&info);
     UnLock(lock1);

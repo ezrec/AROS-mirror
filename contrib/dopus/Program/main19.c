@@ -170,9 +170,10 @@ UWORD gadid;
     }
 }
 
-int simplerequest(char *txt,...)
+int simplerequest(const char *txt,...)
 {
-    char *gads[11],*cancelgad=NULL,*gad;
+    const char *gads[11];
+    char *cancelgad=NULL,*gad;
     int a,r,rets[10],gnum,rnum;
     va_list ap;
     struct DOpusSimpleRequest request;
@@ -201,11 +202,12 @@ int simplerequest(char *txt,...)
 }
 
 int whatsit(txt,max,buffer,skiptxt)
-char *txt;
+const char *txt;
 int max;
-char *buffer,*skiptxt;
+char *buffer;
+const char *skiptxt;
 {
-    char *gads[4];
+    const char *gads[4];
     int a=1,rets[3];
     struct DOpusSimpleRequest request;
 
@@ -229,7 +231,7 @@ char *buffer,*skiptxt;
 
 int dorequest(request,txt,gads,rets,window)
 struct DOpusSimpleRequest *request;
-char *txt,**gads;
+const char *txt,**gads;
 int *rets;
 struct Window *window;
 {
@@ -275,7 +277,7 @@ struct Window *window;
     else request->flags&=~SRF_BORDERS;
 
     request->flags|=SRF_RECESSHI|SRF_EXTEND;
-    request->value=(int)&requester_stringex;
+    request->value=(IPTR)&requester_stringex;
     fix_stringex(&requester_stringex);
 
     a=DoSimpleRequest(win,request);
@@ -283,7 +285,7 @@ struct Window *window;
 }
 
 int checkfiletypefunc(name,fn)
-char *name;
+const char *name;
 int fn;
 {
     struct dopusfiletype *type;
@@ -309,7 +311,7 @@ int fn;
 }
 
 struct dopusfiletype *checkfiletype(fullname,ftype,funconly)
-char *fullname;
+const char *fullname;
 int ftype,funconly;
 {
     struct FileInfoBlock __aligned info;
@@ -324,7 +326,7 @@ int ftype,funconly;
         if (status_haveaborted) break;
         if (ftype==-2) {
             if (type->iconpath && type->recognition &&
-                (dochecktype(type,fullname,(IPTR)file,&info))) {
+                (dochecktype(type,fullname,file,&info))) {
                 Close(file);
                 return(type);
             }
@@ -349,14 +351,14 @@ int ftype,funconly;
 
 int dochecktype(type,name,fileparam,info)
 struct dopusfiletype *type;
-char *name;
-int fileparam;
+const char *name;
+BPTR fileparam;
 struct FileInfoBlock *info;
 {
     unsigned char buf[514],buf2[1024],*recog;
     int
-        a,b,c,d,len,operation,fail,prot[2],tprot,equ,val,oldpos,
-        err,gotone=0,test;
+        a,b,c,d,len,operation,fail=0,prot[2],tprot,equ,val=0,oldpos,
+        err=0,gotone=0,test;
     struct DateStamp ds1,ds2;
     BPTR file = (BPTR)fileparam;
 
@@ -374,7 +376,7 @@ struct FileInfoBlock *info;
             switch (operation) {
                 case FTYC_MATCH:
                 case FTYC_MATCHI:
-                    if (!(checktypechars((IPTR)file,buf,(operation == FTYC_MATCHI) ? 1 : 0))) fail=1;
+                    if (!(checktypechars(file,buf,(operation == FTYC_MATCHI) ? 1 : 0))) fail=1;
                     D(bug("checktypechars(): %ld\n",!fail));
                     break;
                 case FTYC_MATCHNAME:
@@ -438,7 +440,7 @@ struct FileInfoBlock *info;
                     break;
                 case FTYC_SEARCHFOR:
                     oldpos=Seek(file,0,OFFSET_CURRENT);
-                    if ((val=typesearch((IPTR)file,buf,SEARCH_NOCASE|SEARCH_WILDCARD,NULL,0))==-1) {
+                    if ((val=typesearch(file,buf,SEARCH_NOCASE|SEARCH_WILDCARD,NULL,0))==-1) {
                         fail=1;
                         Seek(file,oldpos,OFFSET_BEGINNING);
                     }
@@ -461,14 +463,13 @@ struct FileInfoBlock *info;
     return(0);
 }
 
-int checktypechars(fileparam,match,nocase)
-int fileparam;
+int checktypechars(file,match,nocase)
+BPTR file;
 unsigned char *match;
 int nocase;
 {
     unsigned char matchbuf[258],c1,c2;
     int len,clen,a,first=1,m,val,bpos;
-    BPTR file=(BPTR)fileparam;
 
     len=strlen(match);
 
@@ -526,8 +527,8 @@ D(bug("match: %s\tpattern: %s (match[0] = %ld)\n",match+first,matchbuf+m,match[0
     return(1);
 }
 
-int typesearch(fileparam,find,flags,buffer,bufsize)
-int fileparam;
+int typesearch(file,find,flags,buffer,bufsize)
+BPTR file;
 char *find;
 int flags;
 char *buffer;
@@ -535,7 +536,6 @@ int bufsize;
 {
     unsigned char *findbuf,matchbuf[256];
     int matchsize,a,len,size,oldpos;
-    BPTR file=(BPTR)fileparam;
 
     len=strlen(find);
     if (find[0]=='$') {
@@ -574,7 +574,7 @@ int bufsize;
             oldpos=Seek(file,0,OFFSET_CURRENT);
             if ((size=Read(file,findbuf,32000))<1) break;
             if ((searchbuffer(findbuf,size,matchbuf,matchsize,flags))==1) {
-                oldpos+=((int)search_found_position-(int)findbuf);
+                oldpos+=((SIPTR)search_found_position-(SIPTR)findbuf);
                 FreeMem(findbuf,32004);
                 return(oldpos);
             }

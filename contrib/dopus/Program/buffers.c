@@ -39,7 +39,10 @@ int newnum;
     int win,a,num;
     struct DirectoryWindow *dir,*next;
 
+    bug("AAALOC DIR BUFFERS: %d\n", newnum);
+
     for (win=0;win<2;win++) {
+    	bug("  %d\n", data_buffer_count[win]);
         if (data_buffer_count[win]>newnum) {
             dir=dopus_firstwin[win];
             for (a=0;a<newnum;a++) dir=dir->next;
@@ -77,6 +80,8 @@ int newnum;
             }
         }
     }
+
+    bug("AAALOC DIR BUFFERS: %p %p\n", dopus_curwin[0], dopus_curwin[1]);
 }
 
 /* Searches both buffer lists for a given directory, and displays it in
@@ -463,10 +468,10 @@ int type;
            Arg2   = entry text
            Arg3   = userdata          */
 
-        msg->rm_Args[0]=(STRPTR)type;
-        msg->rm_Args[1]=entry->name;
-        msg->rm_Args[2]=entry->comment;
-        msg->rm_Args[3]=(STRPTR)entry->protection;
+        msg->rm_Args[0]=(IPTR)type;
+        msg->rm_Args[1]=(IPTR)entry->name;
+        msg->rm_Args[2]=(IPTR)entry->comment;
+        msg->rm_Args[3]=(IPTR)entry->protection;
 
         /* Fill in the message correctly.
            Arguments are integer/string/string/integer
@@ -528,7 +533,7 @@ int type;
 
 void makespecialdir(win,title)
 int win;
-char *title;
+const char *title;
 {
     freedir(dopus_specialwin[win],win);
     if (dopus_curwin[win]!=dopus_specialwin[win]) {

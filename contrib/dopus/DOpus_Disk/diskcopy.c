@@ -196,7 +196,7 @@ char *argv[];
 
 	diskcopyreq.rb_extend=NULL;
 	diskcopyreq.rb_idcmpflags=0;
-	diskcopyreq.rb_string_table=string_table;
+	diskcopyreq.rb_string_table=(APTR)string_table;
 
 	if (!(window=OpenRequester(&diskcopyreq)) ||
 		!(gadlist=addreqgadgets(&diskcopyreq,diskcopy_gadgets,0,&gadcount)) ||
@@ -419,7 +419,7 @@ char *name;
 	myproc->pr_WindowPtr=wsave;
 }
 
-do_diskcopy(reqbase,border,source,dest,verify,bump,check)
+int do_diskcopy(reqbase,border,source,dest,verify,bump,check)
 struct RequesterBase *reqbase;
 Object_Border *border;
 char *source,*dest;
@@ -434,7 +434,7 @@ int verify,bump,check;
 	ULONG tracksize,lowtrack[2],numtracks,memtype,deviceunit[2],deviceflags[2],track;
 	ULONG trackcount,trackmod,curtrack,offset;
 	char devicename[2][40],infobuf[80];
-	int a,b,drives,abort=0,err=0,cmpsize,txt=-1;
+	int a,b,drives,abort=0,err=0,cmpsize=0,txt=-1;
 	char *buffer=NULL,*dev_table[2];
 	ULONG *verifybuffer=NULL,*cmpbuffer;
 	struct DOpusRemember *memkey=NULL;

@@ -160,11 +160,11 @@ void doconfig()
 
     if (!(checkwindowquit())) return;
 
-    lsprintf(replyname,"%s%ld",config_replyport_basename,system_dopus_runcount);
+    lsprintf(replyname,"%s%ld",config_replyport_basename,(long)system_dopus_runcount);
     if (!(conport=LCreatePort(replyname,20))) return;
 
-    lsprintf(buf,"%ld",system_dopus_runcount);
-    lsprintf(buf1,"dopus4_config%ld",system_dopus_runcount);
+    lsprintf(buf,"%ld",(long)system_dopus_runcount);
+    lsprintf(buf1,"dopus4_config%ld",(long)system_dopus_runcount);
 
     strcpy(funcpath,"ConfigOpus");
 
@@ -193,7 +193,7 @@ void doconfig()
     }
 
     dostatustext(globstring[STR_WAITING_FOR_PORT]);
-    lsprintf(portname,"dopus4_config_port%ld",system_dopus_runcount);
+    lsprintf(portname,"dopus4_config_port%ld",(long)system_dopus_runcount);
     cmdport=NULL;
 
     for (a=0;a<100;a++) {
@@ -530,11 +530,11 @@ struct ViewData *vdata;
 
         if (!rexx || rexx_argcount<1 ||
             (win=atoi(rexx_args[0]))<0 || win>1) win=data_active_window;
-        lsprintf(arglistbuf,"@%ld",win);
+        lsprintf(arglistbuf,"@%ld",(long)win);
         abase=2;
         --rexx_argcount;
     }
-    else lsprintf(arglistbuf,"!%ld",arglist);
+    else lsprintf(arglistbuf,"!%ld",(long)arglist);
 
     args[2]=arglistbuf;
     argcount=3;
@@ -657,14 +657,14 @@ void setup_externals()
         FindSystemFile("ConfigOpus",funcbuf,256,SYSFILE_MODULE);
         configopus_segment=LoadSeg(funcbuf);
     }
-    else configopus_segment=NULL;
+    else configopus_segment=BNULL;
 
     for (a=0;a<3;a++) {
         if (config->loadexternal&(1<<a)) {
             FindSystemFile(external_modules[a],funcbuf,256,SYSFILE_MODULE);
             external_mod_segment[a]=LoadSeg(funcbuf);
         }
-        else external_mod_segment[a]=NULL;
+        else external_mod_segment[a]=BNULL;
     }
 
     main_proc->pr_WindowPtr=wsave;

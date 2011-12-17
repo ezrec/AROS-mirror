@@ -36,4 +36,6 @@ struct DOpusBase *DOpusBase;
 struct IntuitionBase *IntuitionBase;
 struct GfxBase *GfxBase;
 struct Library *WorkbenchBase;
+#ifdef USE_POWERPACKER
 struct Library *PPBase;
+#endif

@@ -184,10 +184,10 @@ static struct TagItem
 int getmakelinkdata(char *namebuf, char *destbuf, int *type)
 {
     ULONG class;
-    UWORD gadgetid,code;
+    UWORD gadgetid=0,code;
     struct Window *swindow;
     struct Gadget *name_gad,*makelink_type_gad, *makelink_destname_gad;
-    char *makelink_type_array[3] = {globstring[STR_MAKELINK_TYPE_SOFT], globstring[STR_MAKELINK_TYPE_HARD], NULL};
+    const char *makelink_type_array[3] = {globstring[STR_MAKELINK_TYPE_SOFT], globstring[STR_MAKELINK_TYPE_HARD], NULL};
     char makelink_namebuf[108], makelink_destbuf[256];
     int makelink_type;
     int ret=0;
@@ -222,6 +222,7 @@ int getmakelinkdata(char *namebuf, char *destbuf, int *type)
         while ((IMsg=(struct IntuiMessage *)GetMsg(swindow->UserPort))) {
             class=IMsg->Class;
             code=IMsg->Code;
+            (void)code; // Unused for now
             switch (class)
              {
               case IDCMP_GADGETUP:
@@ -329,7 +330,7 @@ int makelink(int rexx)
      {
       if ((lock = Lock(path,ACCESS_READ)))
        {
-        if (MakeLink(name,lock,FALSE))
+        if (MakeLink(name,(APTR)lock,FALSE))
          {
           dostatustext(str_okaystring);
           return 1;

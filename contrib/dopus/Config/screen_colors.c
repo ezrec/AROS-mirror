@@ -44,7 +44,7 @@ int pen,prop;
         GetRGB32(vp->ColorMap,pen,1,cbuf);
         for (a=0;a<3;a++) {
             scalecol(&cbuf[a]);
-            lsprintf(palette_buf[a],"%ld",cbuf[a]);
+            lsprintf(palette_buf[a],"%ld",(long)cbuf[a]);
             if (prop) FixSliderPot(Window,&palettegads[a],cbuf[a],1<<bpg,1,1);
             ShowSlider(Window,&palettegads[a]);
             RefreshGList(&palettegads[a+3],Window,NULL,1);
@@ -353,7 +353,7 @@ int special;
 
 void solidblock(r,txt,x,y,w,h,fg,bg,bord)
 struct RastPort *r;
-char *txt;
+const char *txt;
 int x,y,w,h,fg,bg,bord;
 {
     if (bord&1)

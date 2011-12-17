@@ -802,7 +802,7 @@ static void inline PUTCODE(char **c, UWORD x, WORD y)
 void drawentry(char *text, int win)
 {
   struct RastPort *rp = &dir_rp[win];
-  int len=0,/*x0=rp->cp_x,*/x,y0,y1,fg/*=GetAPen(rp)*/,bg/*=GetBPen(rp)*/;
+  int len=0,/*x0=rp->cp_x,*/x,y0,y1,fg=GetAPen(rp),bg=GetBPen(rp);
   char *t=NULL;
   struct TextCode *c=(struct TextCode *)text;
   WORD skip;
@@ -856,7 +856,7 @@ void drawentry(char *text, int win)
       default:
         if (!t) t = &(c->type);
         len++;
-        c=(struct TextMode *)(&(c->code));
+        c=(struct TextCode *)(&(c->code));
         break;
      }
    }
@@ -975,7 +975,7 @@ void builddisplaystring(display,sbuf,win)
  {
   char sizebuf[20];
   int fg,bg;
-  char *sptr,*c;
+  const char *sptr,*c;
   int  a,b,w,l,w1;
   struct TextExtent te;
 //D(char *dbg=sbuf;)
@@ -1139,7 +1139,7 @@ void builddisplaystring(display,sbuf,win)
           case DISPLAY_DATE:
             if ((sptr=display->datebuf)) {
               for(c=sptr;*c;c++) if (*c==' ') break;
-              w=TextLength(&dir_rp[win],sptr,b=(int)c-(int)sptr)+scrdata_font_xsize;
+              w=TextLength(&dir_rp[win],sptr,b=(IPTR)c-(IPTR)sptr)+scrdata_font_xsize;
   /*
               if (w > column[3])
                {

@@ -52,7 +52,9 @@ struct IntuitionBase *IntuitionBase = NULL; /* intuition.library */
 struct GfxBase *GfxBase = NULL;             /* graphics.library */
 struct Library *IconBase = NULL;            /* icon.library */
 struct Library *DiskfontBase = NULL;        /* diskfont.library */
-//struct PPBase *PPBase = NULL;               /* powerpacker.library */
+#ifdef USE_POWERPACKER
+struct PPBase *PPBase = NULL;               /* powerpacker.library */
+#endif
 struct Library *LayersBase = NULL;          /* layers.library */
 struct Library *WorkbenchBase = NULL;       /* workbench.library */
 struct MusicBase *MUSICBase/* = NULL*/;         /* music.library */
@@ -64,7 +66,9 @@ struct Library *ScreenNotifyBase/* = NULL*/;    /* screennotify.library */
 struct Library *CyberGfxBase/* = NULL*/;        /* cybergraphics.library */
 struct PopupMenuBase *PopupMenuBase/* = NULL*/; /* popupmenu.library */
 struct xfdMasterBase *xfdMasterBase/* = NULL*/; /* xfdmaster.library */
+#ifdef USE_XADMASTER
 struct xadMasterBase *xadMasterBase/* = NULL*/; /* xadmaster.library */
+#endif
 struct Library *SysInfoBase/* = NULL*/;         /* sysinfo.library */
 struct Library *LocaleBase = NULL;          /* locale.library */
 struct muBase *muBase/* = NULL*/;               /* multiuser.library */

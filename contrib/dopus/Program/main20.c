@@ -108,7 +108,9 @@ D(bug("Freeing special dirs\n"));
 #endif
     /*if (IconBase)*/ CloseLibrary(IconBase);
     /*if (DiskfontBase)*/ CloseLibrary(DiskfontBase);
-//    /*if (PPBase)*/ CloseLibrary((struct Library *)PPBase);
+#ifdef USE_POWERPACKER
+    /*if (PPBase)*/ CloseLibrary((struct Library *)PPBase);
+#endif
     /*if (WorkbenchBase)*/ CloseLibrary(WorkbenchBase);
     /*if (CxBase)*/ CloseLibrary(CxBase);
     /*if (RexxSysBase)*/ CloseLibrary((struct Library *)RexxSysBase);
@@ -118,7 +120,9 @@ D(bug("Freeing special dirs\n"));
     CLOSE_PM_LIB;
 #endif
     CloseLibrary((struct Library *)xfdMasterBase);
+#ifdef USE_XADMASTER
     CloseLibrary((struct Library *)xadMasterBase);
+#endif
 #ifndef __AROS__    
     if (sysinfo)
      {

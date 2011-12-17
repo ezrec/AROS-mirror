@@ -29,7 +29,7 @@ the existing commercial status of Directory Opus 5.
 */
 
 #include "dopus.h"
-#ifndef __AROS__
+#ifdef USE_XADMASTER
 #include <proto/xadmaster.h>
 #endif
 
@@ -37,7 +37,7 @@ the existing commercial status of Directory Opus 5.
 
 int readarchive(struct DirectoryWindow *dir,int win)
 {
-#ifndef __AROS__
+#ifdef USE_XADMASTER
    BPTR lock;
    long len, i;
    struct xadFileInfo *xfi;
@@ -187,13 +187,13 @@ D(bug("readarchive/add: %s\n",buf));
 //     dostatustext("OK");
      return(1);
     }
-#endif
+#endif /* USE_XADMASTER */
    return(0);
 }
 
 void freearchive(struct DirectoryWindow *dir)
 {
-#ifndef __AROS__
+#ifdef USE_XADMASTER
  if (dir->xai)
   {
 D(bug("Freeing dir->xai: %lx\n",dir->xai));
@@ -209,7 +209,7 @@ D(bug("Freeing dir->xai: %lx\n",dir->xai));
 
 BOOL getsourcefromarc(struct DirectoryWindow *dir, char *buf, char *file)
  {
-#ifndef __AROS__
+#ifdef USE_XADMASTER
 D(bug("getsourcefromarc(%s,%s)\n",buf?buf:"<NULL>",file?file:"<NULL>"));
   if (dir && (dir->flags & DWF_ARCHIVE))
    {
@@ -229,7 +229,7 @@ D(bug("getsourcefromarc(%s,%s)\n",buf?buf:"<NULL>",file?file:"<NULL>"));
 
 BOOL unarcfiledir(const struct DirectoryWindow *dir, const char *path, char *namebuf, const char *file)
 {
-#ifndef __AROS__
+#ifdef USE_XADMASTER
  if (dir->xai)
   {
    if (dir->arcname)

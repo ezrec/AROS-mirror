@@ -59,10 +59,10 @@ int encryptstate;
 //    ULONG owner_info;
 
     buffer=NULL;
-/*
     infile=NULL;
+/*
     outfile=NULL;
-*/
+ */
     inhandle=0;
     outhandle=0;
 
@@ -305,7 +305,8 @@ D(bug("findfile(%s)\n",name?name:"<NULL>"));
 }
 
 int delfile(name,nam,errs,unprotect,errcheck)
-char *name,*nam,*errs;
+char *name,*nam;
+const char *errs;
 int unprotect,errcheck;
 {
     int suc,a,err,try=0,recplus=0;

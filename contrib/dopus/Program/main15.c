@@ -29,9 +29,11 @@ the existing commercial status of Directory Opus 5.
 */
 
 #include "dopus.h"
+#ifdef USE_XADMASTER
+#include <proto/xadmaster.h>
+#endif
 #ifndef __AROS__
 #include <proto/inovamusic.h>
-#include <proto/xadmaster.h>
 #else
 #include "music.h"
 #endif
@@ -102,7 +104,7 @@ D(bug("filetype %s matched\n",type->type));
         file->selected=old;
     }
 
-#ifndef __AROS__
+#ifdef USE_XADMASTER
     if (OpenXADlib())
      {
       BPTR fh;
@@ -229,7 +231,7 @@ int *found,skipall;
 
     *found=0;
     if (!(in=Open(name,MODE_OLDFILE))) return(0);
-    suc=typesearch((IPTR)in,str_search_string,search_flags,NULL,0);
+    suc=typesearch(in,str_search_string,search_flags,NULL,0);
     Close(in);
     if (suc>-1) {
         char buf[350];
@@ -612,7 +614,7 @@ D(bug("internal_function: func_external_file = %s\n",func_external_file));
                               if (entry->type == ENTRY_DEVICE)
                                 if (!strcmp(entry->comment,"<VOL>"))
                                  {
-                                  relabel_disk(NULL,entry->name);
+                                  relabel_disk(0,entry->name);
                                   unselect(actwin,entry);
                                  }
                            }

@@ -67,7 +67,9 @@ char *argv[];
 		GfxBase=DOpusBase->GfxBase;
 
 		WorkbenchBase=OpenLibrary("workbench.library",0);
+#ifdef USE_POWERPACKER
 		PPBase=OpenLibrary("powerpacker.library",0);
+#endif
 
 		for (arg=1;arg<argc;arg++) {
 			if (argv[arg][0]=='&') port=&argv[arg][1];
@@ -104,7 +106,9 @@ char *argv[];
 		FreeStringFile(stringdata);
 
 		if (WorkbenchBase) CloseLibrary(WorkbenchBase);
+#ifdef USE_POWERPACKER
 		if (PPBase) CloseLibrary(PPBase);
+#endif
 	}
 	LFreeRemember(&memkey);
 	CloseLibrary((struct Library *)DOpusBase);

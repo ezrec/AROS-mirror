@@ -179,6 +179,7 @@ struct Requester *requester;
 		print_status(handle,string_table[STR_LOADING_FILE],handle->progress_y);
 	}
 
+#ifdef USE_POWERPACKER
 	if (PPBase) {
 		FOREVER {
 			if ((a=ppLoadData(filename,
@@ -195,6 +196,7 @@ struct Requester *requester;
 		size=buffersize;
 		filesize=buffersize;
 	}
+#endif
 
 	if (!buffer) {
 		buffersize=filesize;

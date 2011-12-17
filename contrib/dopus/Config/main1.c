@@ -31,15 +31,15 @@ the existing commercial status of Directory Opus 5.
 #include "config.h"
 #include <workbench/icon.h>
 
-static char displenmap[]={DISPLAY_NAME,DISPLAY_COMMENT,DISPLAY_FILETYPE,DISPLAY_OWNER,DISPLAY_GROUP};
+static int displenmap[]={DISPLAY_NAME,DISPLAY_COMMENT,DISPLAY_FILETYPE,DISPLAY_OWNER,DISPLAY_GROUP};
 
-dooperationconfig()
+int dooperationconfig(void)
 {
     ULONG class;
-    UWORD code,gadgetid,qual;
+    UWORD code,gadgetid=0,qual;
     char *flag=NULL,*flag2=NULL;
     struct ConfigUndo *undo;
-    struct Gadget *gad;
+    struct Gadget *gad=NULL;
     int lastsel=-1,a,disppos=0,b,formatwin=0,x,y;
     struct DOpusListView *view;
     struct DOpusRemember *borderkey=NULL;
@@ -148,7 +148,7 @@ clearlast:
                                 b=gadgetid-FORMAT_LENGTH;
                                 a=atoi(formatlen_buf[b]);
                                 if (a<20) a=20; else if (a>MAX_DISPLAYLENGTH) a=MAX_DISPLAYLENGTH;
-                                lsprintf(formatlen_buf[b],"%ld",a);
+                                lsprintf(formatlen_buf[b],"%ld",(long)a);
                                 RefreshStrGad(gad,Window);
                                 config->displaylength[formatwin][displenmap[b]]=a;
                                 if (code!=0x9) getnextgadget(gad);
@@ -341,14 +341,14 @@ clearlast:
     }
 }
 
-dosystemconfig()
+int dosystemconfig()
 {
     ULONG class;
-    UWORD code,gadgetid,qual,hotcode,hotqual;
+    UWORD code,gadgetid=0,qual,hotcode,hotqual;
     char *flag=NULL,*flag2=NULL,buf[80],buf1[80],buf2[80],*ptr;
         char buf3[10], buf4[10], buf5[10], buf6[10];
     struct ConfigUndo *undo;
-    struct Gadget *gad;
+    struct Gadget *gad=NULL;
     struct ConfigGadget *congad;
     int a,lastsel=-1,tick,x,y;
     struct DOpusListView *view;
@@ -600,7 +600,7 @@ dosystemconfig()
                                 if (tick) inittickgads(systemgadgets[gadgetid],(flag)?(int)*flag:0,(flag2)?(int)*flag2:0);
                                 switch (gadgetid) {
                                     case SYS_AMIGADOS:
-                                        lsprintf(buf,"%ld",config->priority);
+                                        lsprintf(buf,"%ld",(long)config->priority);
                                         makestring(config->outputcmd,config->output,config->shellstartup,
                                             buf,NULL);
                                         break;
@@ -609,7 +609,7 @@ dosystemconfig()
                                             config->startupscript,config->uniconscript,config->configreturnscript,NULL);
                                         break;
                                     case SYS_DIRECTORIES:
-                                        lsprintf(buf,"%ld",config->bufcount);
+                                        lsprintf(buf,"%ld",(long)config->bufcount);
                                         makestring(buf,NULL);
                                         break;
                                     case SYS_HOTKEYS:
@@ -664,13 +664,13 @@ dosystemconfig()
                                         BltTemplate((PLANEPTR)DOpusBase->pdb_check,0,2,rp,x_off+208,y_off+174,13,7);
 */                                        break;
                                     case SYS_VIEWPLAY:
-                                        lsprintf(buf,"%ld",config->showdelay);
-                                        lsprintf(buf1,"%ld",config->fadetime);
-                                        lsprintf(buf2,"%ld",config->tabsize);
-                                        lsprintf( buf3, "%ld", config->viewtext_topleftx ); //HUX
-                                        lsprintf( buf4, "%ld", config->viewtext_toplefty ); //HUX
-                                        lsprintf( buf5, "%ld", config->viewtext_width ); //HUX
-                                        lsprintf( buf6, "%ld", config->viewtext_height ); //HUX
+                                        lsprintf(buf,"%ld",(long)config->showdelay);
+                                        lsprintf(buf1,"%ld",(long)config->fadetime);
+                                        lsprintf(buf2,"%ld",(long)config->tabsize);
+                                        lsprintf( buf3, "%ld", (long)config->viewtext_topleftx ); //HUX
+                                        lsprintf( buf4, "%ld", (long)config->viewtext_toplefty ); //HUX
+                                        lsprintf( buf5, "%ld", (long)config->viewtext_width ); //HUX
+                                        lsprintf( buf6, "%ld", (long)config->viewtext_height ); //HUX
                                         makestring( buf, buf1, buf2, buf3, buf4, buf5, buf6, NULL ); //HUX
 //                                        makestring(buf,buf1,buf2,NULL);
                                         break;
@@ -772,7 +772,7 @@ struct Gadget *fgad;
     }
 }
 
-fixformlist(win)
+int fixformlist(win)
 int win;
 {
     int a,b,d;
@@ -798,14 +798,15 @@ int win;
 
     lim=(network)?5:3;
     for (a=0;a<lim;a++) {
-        if (config->displaylength[win][displenmap[a]]<20) config->displaylength[win][displenmap[a]]=20;
-        else if (config->displaylength[win][displenmap[a]]>MAX_DISPLAYLENGTH) config->displaylength[win][displenmap[a]]=MAX_DISPLAYLENGTH;
-        lsprintf(formatlen_buf[a],"%ld",config->displaylength[win][displenmap[a]]);
+    	int map = displenmap[a];
+        if (config->displaylength[win][map]<20) config->displaylength[win][map]=20;
+        else if (config->displaylength[win][map]>MAX_DISPLAYLENGTH) config->displaylength[win][map]=MAX_DISPLAYLENGTH;
+        lsprintf(formatlen_buf[a],"%ld",(long)config->displaylength[win][map]);
     }
     RefreshGList(&formatgads[6],Window,NULL,-1/*lim*/); //HUX was 5
 }
 
-system_requester(buf,buf2,gad,bit)
+int system_requester(buf,buf2,gad,bit)
 char *buf,*buf2;
 struct Gadget *gad;
 int bit;
@@ -846,7 +847,7 @@ int make;
         for (count=3,type=firsttype;type;count++,type=type->next) {
             if (LStrCmpI(type->type,"Default")==0) --count;
         }
-        if (iconlistview.items=LAllocRemember(&key,(count+1)*4,MEMF_CLEAR)) {
+        if (iconlistview.items=LAllocRemember(&key,(count+1)*sizeof(iconlistview.items[0]),MEMF_CLEAR)) {
             for (a=0;a<3;a++) iconlistview.items[a]=icontypes[a];
             if (config->drawericon[0]) icontypes[0][1]='*'; else icontypes[0][1]=' ';
             if (config->toolicon[0]) icontypes[1][1]='*'; else icontypes[1][1]=' ';

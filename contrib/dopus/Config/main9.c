@@ -29,7 +29,7 @@ the existing commercial status of Directory Opus 5.
 */
 
 #include "config.h"
-#ifndef __AROS__
+#ifdef USE_POWERPACKER
 #include <proto/powerpacker.h>
 #endif
 
@@ -53,13 +53,15 @@ void readhelp()
     if (in=Open(helpfilename,MODE_OLDFILE))
      {
       Read(in, &id, 4);
-      if ((id == 'PX20') || (id == 'PP11') || (id == 'PP20'))
+      if ((id == MAKE_ID('P','X','2','0')) || (id == MAKE_ID('P','P','1','1')) || (id == MAKE_ID('P','P','2','0')))
        {
+#ifdef USE_POWERPACKER
         struct PPBase *PPBase;
         char *pptemp;
+#endif
 
         Close(in);
-#ifndef __AROS__
+#ifdef USE_POWERPACKER
         if (PPBase = OpenLibrary("powerpacker.library",0))
           {
            if (!(ppLoadData(helpfilename,DECR_NONE,MEMF_CLEAR,&pptemp,&helpsize,NULL)))
@@ -82,7 +84,7 @@ void readhelp()
 }
 
 void makehelpname(path)
-char *path;
+const char *path;
 {
     int a,b;
 
@@ -143,7 +145,7 @@ D(bug("dohelpmsg: %s\n",text));
         }
         else buf[a]=text[a];
     }
-    if (!(helpbuf=LAllocRemember(&key,(lines+2)*4,MEMF_CLEAR))) {
+    if (!(helpbuf=LAllocRemember(&key,(lines+2)*sizeof(helpbuf[0]),MEMF_CLEAR))) {
         LFreeRemember(&key);
         return;
     }
@@ -318,8 +320,8 @@ void load_clips()
         if ((Read(file,(char *)&clip,sizeof(struct Clip)))<sizeof(struct Clip))
             break;
         if (clip.func.function &&
-            (funcbuf=LAllocRemember(&clipkey,(int)clip.func.function,0))) {
-            if ((Read(file,funcbuf,(int)clip.func.function))<(int)clip.func.function)
+            (funcbuf=LAllocRemember(&clipkey,(IPTR)clip.func.function,0))) {
+            if ((Read(file,funcbuf,(IPTR)clip.func.function))<(IPTR)clip.func.function)
                 break;
         }
         else funcbuf=NULL;
@@ -338,7 +340,7 @@ void load_clips()
 
 void save_clips()
 {
-    int file;
+    BPTR file;
     struct Clip *clip;
     char *function;
 
@@ -351,7 +353,7 @@ void save_clips()
         if ((Write(file,(char *)clip,sizeof(struct Clip)))<sizeof(struct Clip))
             break;
         if (function &&
-            ((Write(file,(char *)function,(int)clip->func.function))<(int)clip->func.function))
+            ((Write(file,(char *)function,(IPTR)clip->func.function))<(IPTR)clip->func.function))
             break;
         clip=clip->next;
     }
@@ -359,7 +361,7 @@ void save_clips()
     Close(file);
 }
 
-readfile(name,buf,size)
+int readfile(name,buf,size)
 char *name,**buf;
 int *size;
 {
@@ -388,20 +390,20 @@ void init_strings()
     sampleclearrmb.txt[0].text=cfg_string[STR_EDIT_SAMPLE];
     sampleclearrmb.txt[1].text=cfg_string[STR_CLEAR];
 
-    newtext.IText=cfg_string[STR_MENU_DEFAULT];
-    opentext.IText=cfg_string[STR_MENU_OPEN];
-    savetext.IText=cfg_string[STR_MENU_SAVE];
-    saveastext.IText=cfg_string[STR_MENU_SAVE_AS];
-    cuttext.IText=cfg_string[STR_MENU_CUT];
-    copytext.IText=cfg_string[STR_MENU_COPY];
-    pastetext.IText=cfg_string[STR_MENU_PASTE];
-    erasetext.IText=cfg_string[STR_MENU_ERASE];
-    clearcliptext.IText=cfg_string[STR_MENU_CLEARCLIPS];
-    newclasstext.IText=cfg_string[STR_MENU_NEW];
-    editclasstext.IText=cfg_string[STR_MENU_EDIT];
-    duplicateclasstext.IText=cfg_string[STR_MENU_DUPLICATE];
-    deleteclasstext.IText=cfg_string[STR_MENU_DELETE];
-    clearclasstext.IText=cfg_string[STR_CLEAR];
+    newtext.IText=(char *)cfg_string[STR_MENU_DEFAULT];
+    opentext.IText=(char *)cfg_string[STR_MENU_OPEN];
+    savetext.IText=(char *)cfg_string[STR_MENU_SAVE];
+    saveastext.IText=(char *)cfg_string[STR_MENU_SAVE_AS];
+    cuttext.IText=(char *)cfg_string[STR_MENU_CUT];
+    copytext.IText=(char *)cfg_string[STR_MENU_COPY];
+    pastetext.IText=(char *)cfg_string[STR_MENU_PASTE];
+    erasetext.IText=(char *)cfg_string[STR_MENU_ERASE];
+    clearcliptext.IText=(char *)cfg_string[STR_MENU_CLEARCLIPS];
+    newclasstext.IText=(char *)cfg_string[STR_MENU_NEW];
+    editclasstext.IText=(char *)cfg_string[STR_MENU_EDIT];
+    duplicateclasstext.IText=(char *)cfg_string[STR_MENU_DUPLICATE];
+    deleteclasstext.IText=(char *)cfg_string[STR_MENU_DELETE];
+    clearclasstext.IText=(char *)cfg_string[STR_CLEAR];
 
     for (a=0;a<5;a++) {
         gadrowstext[a].FrontPen=0;

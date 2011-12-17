@@ -30,10 +30,10 @@ the existing commercial status of Directory Opus 5.
 
 #include "config.h"
 
-dofiletypeconfig()
+int dofiletypeconfig()
 {
     ULONG class;
-    UWORD code,gadgetid;
+    UWORD code,gadgetid=0;
     struct ConfigUndo *undo;
     struct DOpusRemember *key;
     struct DOpusListView *view;
@@ -298,7 +298,7 @@ struct DOpusRemember **key;
     LFreeRemember(key);
     type=firsttype;
     for (count=0;type;count++,type=type->next);
-    if (!(list=LAllocRemember(key,(count+1)*4,MEMF_CLEAR))) return(NULL);
+    if (!(list=LAllocRemember(key,(count+1)*sizeof(list[0]),MEMF_CLEAR))) return(NULL);
     type=firsttype;
     for (a=0;a<count;a++) {
         if (list[a]=LAllocRemember(key,60,MEMF_CLEAR)) {
@@ -319,7 +319,7 @@ char **list;
     RefreshListView(&filetypeactionlist,1);
 }
 
-doinitfiletypetext(id)
+int doinitfiletypetext(id)
 int id;
 {
     int mode=-1;
@@ -352,7 +352,7 @@ struct dopusfiletype *type;
     doscreentitle(title);
 }
 
-editfiletype(type,key,new)
+int editfiletype(type,key,new)
 struct dopusfiletype *type;
 struct DOpusRemember **key;
 int new;
@@ -392,7 +392,7 @@ int new;
     return(b);
 }
 
-editclass(class,new)
+int editclass(class,new)
 struct fileclass *class;
 int new;
 {
@@ -478,10 +478,12 @@ void readfileclasses()
     FreeMem(classbuf,size);
 }
 
-importfileclasses()
+int importfileclasses()
 {
-    int in,size,pos,lsize,num,a,b,tpos,ret=0;
-    char *classbuf,**classlist,*classarray,**classtypeid,**classrecog,buf[256],buf2[256];
+    BPTR in;
+    int size,pos,lsize,num,a,b,tpos,ret=0;
+    char *classbuf,*classarray,**classtypeid,**classrecog,buf[256],buf2[256];
+    unsigned char **classlist;
     struct DOpusRemember *key;
 
     filereq.flags=0;
@@ -512,9 +514,9 @@ importfileclasses()
     for (a=0,num=0;a<size;a++) if (!classbuf[a]) ++num;
     num/=2;
 
-    if ((classlist=LAllocRemember(&key,(num+1)*4,MEMF_CLEAR)) &&
-        (classtypeid=LAllocRemember(&key,(num+1)*4,MEMF_CLEAR)) &&
-        (classrecog=LAllocRemember(&key,(num+1)*4,MEMF_CLEAR)) &&
+    if ((classlist=LAllocRemember(&key,(num+1)*sizeof(classlist[0]),MEMF_CLEAR)) &&
+        (classtypeid=LAllocRemember(&key,(num+1)*sizeof(classtypeid[0]),MEMF_CLEAR)) &&
+        (classrecog=LAllocRemember(&key,(num+1)*sizeof(classrecog[0]),MEMF_CLEAR)) &&
         (classarray=LAllocRemember(&key,num+1,MEMF_CLEAR))) {
         pos=0; a=0;
         FOREVER {
@@ -538,7 +540,7 @@ importfileclasses()
         }
         if (classlist[0] &&
             (dolistwindow(cfg_string[STR_SELECT_CLASSES_TO_IMPORT],332,72,
-                classlist,DLVF_MULTI|DLVF_HIREC,classarray,NULL))) {
+                (char **)classlist,DLVF_MULTI|DLVF_HIREC,classarray,NULL))) {
             for (a=0;a<num;a++) {
                 if (classarray[a]) {
                     if (!(addfileclass(classlist[a],classtypeid[a],classrecog[a]))) break;
@@ -551,7 +553,7 @@ importfileclasses()
     return(ret);
 }
 
-savefileclasses()
+int savefileclasses()
 {
     struct fileclass *fclass;
     BPTR out;
@@ -568,15 +570,18 @@ D(bug("classname: %s\n",classname));
     fclass=firstclass;
     while (fclass) {
         if (fclass->type[0]) {
-            if ((Write(out,fclass->type,(a=strlen(fclass->type))))<a) break;
+            a=strlen(fclass->type);
+            if ((Write(out,fclass->type,a))<a) break;
             if (fclass->typeid[0]) {
                 Write(out,&g,1);
-                if ((Write(out,fclass->typeid,(a=strlen(fclass->typeid))))<a) break;
+                a=strlen(fclass->typeid);
+                if ((Write(out,fclass->typeid,a))<a) break;
             }
         }
         Write(out,&f,1);
         if (fclass->recognition) {
-            if ((Write(out,fclass->recognition,(a=(strlen(fclass->recognition)+1))))<a)
+            a=strlen(fclass->recognition)+1;
+            if ((Write(out,fclass->recognition,a))<a)
                 break;
         }
         else Write(out,&f,1);
@@ -586,10 +591,10 @@ D(bug("classname: %s\n",classname));
     return(1);
 }
 
-addfileclass(type,typeid,recog)
+int addfileclass(type,typeid,recog)
 char *type,*typeid,*recog;
 {
-    struct fileclass *fclass,*newclass,*last;
+    struct fileclass *fclass,*newclass,*last=NULL;
 
     fclass=firstclass;
     while (fclass) {
@@ -643,10 +648,10 @@ struct fileclass *fclass;
     FreeMem(fclass,sizeof(struct fileclass));
 }
 
-char **makeclasslist(key)
+unsigned char **makeclasslist(key)
 struct DOpusRemember **key;
 {
-    char **list;
+    unsigned char **list;
     int count,a;
     struct fileclass *fclass;
 
@@ -654,7 +659,7 @@ struct DOpusRemember **key;
     if (!firstclass) return(NULL);
     fclass=firstclass;
     for (count=0;fclass;count++,fclass=fclass->next);
-    if (!(list=LAllocRemember(key,(count+1)*4,MEMF_CLEAR))) return(NULL);
+    if (!(list=LAllocRemember(key,(count+1)*sizeof(IPTR),MEMF_CLEAR))) return(NULL);
     fclass=firstclass;
     for (a=0;a<count;a++) {
         if (list[a]=LAllocRemember(key,40,MEMF_CLEAR)) strcpy(list[a],fclass->type);
@@ -663,7 +668,7 @@ struct DOpusRemember **key;
     return(list);
 }
 
-readline(buf,pos,buf1,size)
+int readline(buf,pos,buf1,size)
 char *buf;
 int pos;
 char *buf1;
@@ -684,18 +689,20 @@ int size;
     return(pos);
 }
 
-editfileclass(fclass,new)
+int editfileclass(fclass,new)
 struct fileclass *fclass;
 int new;
 {
     int a,b,old,selitem,lasta=-1,x,y,mx,my,off,temp,waitbits,remapp=0,char_w;
     ULONG class,sec,mic,oldsec,oldmic;
-    UWORD code,gadgetid,qual;
+    UWORD code,gadgetid=0,qual;
     struct Gadget *gad;
     struct DOpusListView *view;
     struct DOpusRemember *key=NULL;
-    char
-        *classlist[MAXFUNCS+1],classtype[MAXFUNCS],*displist[MAXFUNCS+1],
+    unsigned char
+        *classlist[MAXFUNCS+1];
+    char 
+    	classtype[MAXFUNCS],*displist[MAXFUNCS+1],
         *templist,temptype,buf[16];
     unsigned char c;
 
@@ -952,7 +959,6 @@ int new;
                                 if (editclassgadgets[3].Flags&GFLG_DISABLED) seteditclassgads(1);
                                 RemoveListView(&editclasslist,1);
                                 LFreeRemember(&key);
-                                freefunclist(classlist);
                                 Window->Flags&=~WFLG_RMBTRAP;
                                 FSSetMenuStrip(Window,&projectmenu);
                                 if (remapp) rem_appobject(0);
@@ -1062,7 +1068,7 @@ getfileview:
                     selitem=view->itemselected;
                     if (classlist[selitem]) strcpy(edit_funcbuf,classlist[selitem]);
                     else edit_funcbuf[0]=0;
-//kprintf("selitem: %ld\tedit_funcbuf: %s\n",selitem,edit_funcbuf);
+//kprintf("selitem: %ld\tedit_funcbuf: %s\n",(long)selitem,edit_funcbuf);
                     RefreshStrGad(&editclassgadgets[7],Window);
                     showclassop(classtype[selitem]);
                     ActivateStrGad(&editclassgadgets[7],Window);
@@ -1076,7 +1082,8 @@ getfileview:
 
 void makeeditclasslist(class,classlist,classtype)
 struct fileclass *class;
-char **classlist,*classtype;
+unsigned char **classlist;
+char *classtype;
 {
     int a,b,len,type,pos,num;
     char buf[256];
@@ -1125,7 +1132,8 @@ doandor:
 }
 
 void dispclasslist(classlist,classtype,displist)
-char **classlist,*classtype,**displist;
+unsigned char **classlist;
+char *classtype,**displist;
 {
     int a;
     char buf[80],*ptr;
@@ -1158,18 +1166,20 @@ int on;
 }
 
 void removeclassentry(classlist,classtype,entry)
-char **classlist,*classtype;
+unsigned char **classlist;
+char *classtype;
 int entry;
 {
     if (entry<MAXFUNCS-1) {
-        CopyMem(&classlist[entry+1],&classlist[entry],(MAXFUNCS-1-entry)*4);
+        CopyMem(&classlist[entry+1],&classlist[entry],(MAXFUNCS-1-entry)*sizeof(classlist[0]));
         CopyMem(&classtype[entry+1],&classtype[entry],(MAXFUNCS-1-entry));
     }
     classlist[MAXFUNCS-1]=NULL;
 }
 
 void insertnewclass(classlist,classtype,entry,displist,string,type)
-char **classlist,*classtype;
+unsigned char **classlist;
+char *classtype;
 int entry;
 char **displist,*string;
 int type;
@@ -1178,8 +1188,8 @@ int type;
     int a;
 
     a=MAXFUNCS-entry-1;
-    CopyMem(&classlist[entry],templist,a*4);
-    CopyMem(templist,&classlist[entry+1],a*4);
+    CopyMem(&classlist[entry],templist,a*sizeof(classlist[0]));
+    CopyMem(templist,&classlist[entry+1],a*sizeof(templist[0]));
     classlist[entry]=getcopy(string,-1,NULL);
     CopyMem(&classtype[entry],temptype,a);
     CopyMem(temptype,&classtype[entry+1],a);
@@ -1198,9 +1208,10 @@ int type;
 
 void endclassedit(item,classlist,classtype,displist)
 int item;
-char **classlist,*classtype,**displist;
+unsigned char **classlist;
+char *classtype,**displist;
 {
-//kprintf("classtype[item]: %ld\tbuf: %s\n",classtype[item],edit_funcbuf);
+//kprintf("classtype[item]: %ld\tbuf: %s\n",(long)classtype[item],edit_funcbuf);
     freestring(classlist[item]);
     if (classtype[item]<1 || classopvals[classtype[item]-1]<FTYC_COMMANDOK) {
         if (edit_funcbuf[0]) classlist[item]=getcopy(edit_funcbuf,-1,NULL);
@@ -1371,7 +1382,7 @@ void load_file_view()
 }
 
 void file_view_text(txt,line)
-char *txt;
+const char *txt;
 int line;
 {
     int len;
@@ -1386,7 +1397,7 @@ int line;
 
 void show_file_view(void)
 {
-    int line,a,off,old,top,bottom,scroll,ox,px,aox,apx,char_w;
+    int line,a,off,old,top,bottom,scroll,ox,px,aox=0,apx,char_w;
     char buf[80],buf2[30];
 
     top=0; bottom=5; scroll=0;
@@ -1412,7 +1423,7 @@ void show_file_view(void)
             if (fileview_lines<=line+fileview_topline) file_view_text(NULL,line);
             else {
                 off=(fileview_topline+line)*16;
-                lsprintf(buf,"%08lx: ",off);
+                lsprintf(buf,"%08lx: ",(unsigned long)off);
                 old=off; ox=px=-1;
                 for (a=0;a<4;a++) {
 /*                    lsprintf(buf2,"%02lx%02lx%02lx%02lx ",
@@ -1448,7 +1459,7 @@ void show_file_view(void)
                 }
                 if (ox>-1) {
                     SetAPen(rp,screen_pens[2].pen);
-                    lsprintf(buf2,"%02lx",fileview_buf[fileview_offset]);
+                    lsprintf(buf2,"%02lx",(unsigned long)fileview_buf[fileview_offset]);
                     Move(rp,x_off+9+(10+ox)*char_w,y_off+27+(line*8));
                     Text(rp,buf2,2);
                     buf2[0]=(isprint(fileview_buf[fileview_offset])?fileview_buf[fileview_offset]:'.');
@@ -1477,8 +1488,8 @@ int num,pos;
     }
     else {
         y=y_off+39+(26*pos);
-        if (fileview_type==0) lsprintf(buf,"$%08lx",num);
-        else lsprintf(buf,"%09ld",num);
+        if (fileview_type==0) lsprintf(buf,"$%08lx",(unsigned long)num);
+        else lsprintf(buf,"%09ld",(long)num);
         UScoreText(rp,buf,x_off+543,y,-1);
     }
 }

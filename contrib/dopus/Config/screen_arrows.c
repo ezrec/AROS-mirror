@@ -32,7 +32,7 @@ the existing commercial status of Directory Opus 5.
 
 void showupdownslider()
 {
-	int x,y,ay[2],a,height;
+	int x,y=0,ay[2],a,height;
 
 	if (config->arrowsize[0]<8) config->arrowsize[0]=8;
 	else if (config->arrowsize[0]>20) config->arrowsize[0]=20;
@@ -84,7 +84,7 @@ void showupdownslider()
 
 void showleftrightslider()
 {
-	int y,x,ax[2],a,width;
+	int y=0,x=0,ax[2],a,width;
 
 	if (config->arrowsize[1]<8) config->arrowsize[1]=8;
 	else if (config->arrowsize[1]>20) config->arrowsize[1]=20;
@@ -136,7 +136,7 @@ void showleftrightslider()
 
 void showstringgadget()
 {
-	int x,ax[2],a,y,width;
+	int x=0,ax[2],a,y,width;
 
 	if (config->arrowsize[2]<8) config->arrowsize[2]=8;
 	else if (config->arrowsize[2]>20) config->arrowsize[2]=20;

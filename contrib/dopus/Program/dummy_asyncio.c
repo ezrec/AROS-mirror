@@ -1,6 +1,7 @@
 /* AROS: This is dummy implementation for the asyncio library just to prevent
 linker errors */
-#warning We should port the real asyncio.lib
+// FIXME: We should port the real asyncio.lib, especially since
+//        ABIv1 has full DOS Packet support
 
 
 #include "dopus.h"

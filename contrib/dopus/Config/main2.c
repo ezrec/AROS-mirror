@@ -32,15 +32,15 @@ the existing commercial status of Directory Opus 5.
 
 static struct dopusgadgetbanks *currentbank,*selbank;
 
-dogadgetconfig()
+int dogadgetconfig()
 {
     ULONG class;
-    UWORD code,gadgetid;
+    UWORD code,gadgetid=0;
     struct ConfigUndo *undo;
     struct DOpusRemember *gadkey=NULL;
     struct dopusgadgetbanks *bank,*bank2;
     struct newdopusfunction *secondgad;
-    struct Gadget *gad;
+    struct Gadget *gad=NULL;
     struct Border *unselborder,*selborder;
     char buf[80];
     int a,b,x,y,mode=-1;
@@ -376,7 +376,8 @@ int show;
 {
     int a;
     struct dopusgadgetbanks *bank2;
-    char buf[60],*ptr;
+    char buf[60];
+    const char *ptr;
 
     if (show) {
         for (a=0;a<GADCOUNT;a++) {
@@ -393,7 +394,7 @@ int show;
             ++a;
             bank2=bank2->next;
         }
-        lsprintf(buf,"%s %ld",cfg_string[STR_GADGET_BANK_NUMBER],a+1);
+        lsprintf(buf,"%s %ld",cfg_string[STR_GADGET_BANK_NUMBER],(long)(a+1));
         if (paint_state) strcat(buf,cfg_string[STR_PAINT_STATE]);
         ptr=buf;
     }
@@ -424,7 +425,7 @@ struct Gadget *gadget;
     SetBPen(rp,screen_pens[0].pen);
 }
 
-makenewbank(insert)
+int makenewbank(insert)
 int insert;
 {
     struct dopusgadgetbanks *bank,*bank2;
@@ -485,7 +486,7 @@ struct dopusgadgetbanks *bank;
 }
 
 void dogadgetinfo(str)
-char *str;
+const char *str;
 {
     int tx,ex,len,x;
 
@@ -513,12 +514,12 @@ char *str;
 static struct newdopusfunction *selmenu;
 static int menuoffset;
 
-domenuconfig()
+int domenuconfig()
 {
     ULONG class;
-    UWORD code,gadgetid;
+    UWORD code,gadgetid=0;
     struct ConfigUndo *undo;
-    struct Gadget *gad;
+    struct Gadget *gad=NULL;
     struct DOpusRemember *menukey=NULL;
     struct newdopusfunction *secondmenu;
     int a,b,x,y,mode=-1,gid,mnum=-1,omnum;
@@ -948,7 +949,7 @@ struct newdopusfunction *menu;
     }
 }
 
-doinitmenutext(id)
+int doinitmenutext(id)
 int id;
 {
     int mode=-1;

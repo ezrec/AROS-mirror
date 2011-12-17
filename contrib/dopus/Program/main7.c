@@ -239,7 +239,7 @@ BOOL OpenAHI(void)
   if((AHImp = CreateMsgPort())) {
     if((AHIio = (struct AHIRequest *)CreateIORequest(AHImp,sizeof(struct AHIRequest)))) {
       AHIio->ahir_Version = 4;
-      if(!(AHIDevice = OpenDevice(AHINAME, AHI_NO_UNIT,(struct IORequest *) AHIio,NULL))) {
+      if(!(AHIDevice = OpenDevice(AHINAME, AHI_NO_UNIT,(struct IORequest *) AHIio,0))) {
         AHIBase = (struct Library *) AHIio->ahir_Std.io_Device;
         return TRUE;
       }
@@ -287,7 +287,7 @@ __saveds ULONG AHISoundFunc(
 #endif
     if (AHIloops)  // Will it work for stereo sounds too?
      {
-      AHI_SetSound(smsg->ahism_Channel,AHI_NOSOUND,0,0,actrl,NULL);
+      AHI_SetSound(smsg->ahism_Channel,AHI_NOSOUND,0,0,actrl,0);
       Signal(actrl->ahiac_UserData,1L<<AHIsignal);
      }
     else AHIloops++;
@@ -305,9 +305,9 @@ int loop;
     UBYTE *p8data;
     ULONG size,class,rsize,chan=0,pan=Unity/2,waitbits,sigs;
     UWORD code;
-    char *psample,*ry,*compressbuf;
+    char *psample=NULL,*ry,*compressbuf;
     ChunkHeader *p8chunk;
-    int a,b,stereo,*vxcheck,finish,playsize;
+    int a,b,stereo,*vxcheck,finish,playsize=0;
     struct IOAudio *audioptr[2];
     UBYTE *playdata[2];
 /*
@@ -382,7 +382,7 @@ D(bug("AHI opened\n"));
 #ifdef __MORPHOS__
         AHISoundHook.h_Entry = &GATE_AHISoundFunc;
 #else
-        AHISoundHook.h_Entry = AHISoundFunc;
+        AHISoundHook.h_Entry = (IPTR (*)())AHISoundFunc;
 #endif
         if ((actrl = AHI_AllocAudio(AHIA_AudioID,         AHI_DEFAULT_ID,
                                     AHIA_MixFreq,         AHI_DEFAULT_FREQ,
@@ -414,7 +414,7 @@ D(bug("LoadSound(0)=%ld, LoadSound(1)=%ld\n",snd0,snd1));
                 { AHIP_Vol         , vhdr?vhdr->vh_Volume:Unity },
                 { AHIP_Pan         , 0L },
                 { AHIP_Sound       , 1 },
-                { AHIP_EndChannel  , NULL },
+                { AHIP_EndChannel  , (IPTR)NULL },
                 { TAG_END }
               };
 
@@ -426,7 +426,7 @@ D(bug("LoadSound(0)=%ld, LoadSound(1)=%ld\n",snd0,snd1));
                 AHIP_Vol         , vhdr?vhdr->vh_Volume:Unity,
                 AHIP_Pan         , stereo?Unity:pan,
                 AHIP_Sound       , 0,
-                AHIP_EndChannel  , NULL,
+                AHIP_EndChannel  , (IPTR)NULL,
                 stereo?TAG_MORE:TAG_END, (Tag)ahitags2);
 D(bug("Playing through AHI\n"));
              }
@@ -681,7 +681,7 @@ D(bug("Playing through AHI\n"));
                     AHIP_Vol         , 0x10000L,
                     AHIP_Pan         , 0x8000L,
                     AHIP_Sound       , 0,
-                    AHIP_EndChannel  , NULL,
+                    AHIP_EndChannel  , (IPTR)NULL,
                     TAG_END);
                 Delay(6);
                }
@@ -792,12 +792,12 @@ UWORD data;
 APTR buffer;
 {
     struct MsgPort *handler;
-    ULONG args[2];
+    IPTR args[2];
 
     if (!(handler=(struct MsgPort *)DeviceProc(device))) return(-1);
 
     args[0]=data;
-    args[1]=(ULONG)buffer;
+    args[1]=(IPTR)buffer;
     if (!(SendPacket(handler,action,args,2))) {
         if (action2) return(!(SendPacket(handler,action2,args,2)));
         return(1);

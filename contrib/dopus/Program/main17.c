@@ -35,9 +35,10 @@ static unsigned char displenmap[]={DISPLAY_NAME,DISPLAY_COMMENT,DISPLAY_FILETYPE
 int rexxdisp(msg,cmd,command)
 struct RexxMsg *msg;
 struct CommandList *cmd;
-char *command;
+const char *command;
 {
-    int a,b,c,f,val,function,win,statval,retval;
+    SIPTR a, val;
+    int b,c,f,function,win,statval,retval;
     long long d;
     char buf[520],*buf1,pad[8],buf2[10],*buf3,*ptr,*retbuf;
     unsigned char ch;
@@ -550,7 +551,7 @@ char *command;
                     else d=scrdata_statustext_pos;
                     break;
                 case RXSTATUS_CONFIGURATION_ADDRESS:
-                    lsprintf(buf,"%ld",config);
+                    lsprintf(buf,"%ld",(long)config);
                     buf1=buf;
                     break;
                 case RXSTATUS_FIRST_NODE:
@@ -564,9 +565,9 @@ char *command;
                         else if (c==2) dopus_firsthotkey=(struct dopushotkey *)val;
                     }
                     else {
-                        if (c==0) lsprintf(buf,"%ld",dopus_firsttype);
-                        else if (c==1) lsprintf(buf,"%ld",dopus_firstgadbank);
-                        else if (c==2) lsprintf(buf,"%ld",dopus_firsthotkey);
+                        if (c==0) lsprintf(buf,"%ld",(long)dopus_firsttype);
+                        else if (c==1) lsprintf(buf,"%ld",(long)dopus_firstgadbank);
+                        else if (c==2) lsprintf(buf,"%ld",(long)dopus_firsthotkey);
                         buf1=buf;
                     }
                     break;
@@ -574,7 +575,7 @@ char *command;
                     bank=dopus_firstgadbank;
                     for (a=0;bank && bank!=dopus_curgadbank;a++) bank=bank->next;
                     if (bank!=dopus_curgadbank) a=-1;
-                    lsprintf(buf,"%ld",a);
+                    lsprintf(buf,"%ld",(long)a);
                     buf1=buf;
                     break;
             }
@@ -590,11 +591,11 @@ char *command;
                 win=data_active_window;
             if ((entry=findfile(dopus_curwin[win],rexx_args[0],NULL))) {
                 getprot(entry->protection,buf2);
-                lsprintf(buf,"%s%lc%ld%lc%ld%lc%ld%lc%ld%lc%ld%lc%ld%lc%s%lc%s%lc",
-                    entry->name,pad[0],(int)entry->size,pad[0],entry->subtype,pad[0],
-                    entry->type,pad[0],entry->selected,pad[0],
-                    entry->date.ds_Days,pad[0],
-                    (entry->date.ds_Minute*60)+(entry->date.ds_Tick/50),pad[0],
+                lsprintf(buf,"%s%c%ld%lc%ld%c%ld%c%ld%c%ld%c%ld%c%s%c%s%c",
+                    entry->name,pad[0],(long)entry->size,pad[0],(long)entry->subtype,pad[0],
+                    (long)entry->type,pad[0],(long)entry->selected,pad[0],
+                    (long)entry->date.ds_Days,pad[0],
+                    (long)(entry->date.ds_Minute*60)+(entry->date.ds_Tick/50),pad[0],
                     entry->comment,pad[0],buf2,pad[0]);
                 rexx_set_return(msg,0,buf);
                 return(1);
@@ -738,7 +739,7 @@ doentryselection:
             if ((b=atoi(rexx_args[2]))==0) d=0;
             else {
                 if (status_iconified) strcpy(rexx_args[7],"0");
-                d=(int)addfile(dopus_curwin[data_active_window],data_active_window,
+                a=(IPTR)addfile(dopus_curwin[data_active_window],data_active_window,
                     rexx_args[0],
                     atoi(rexx_args[1]),
                     b,
@@ -751,7 +752,7 @@ doentryselection:
                 fixprop(data_active_window);
                 doposprop(data_active_window);
             }
-            rexx_return(msg,d?1:0);
+            rexx_return(msg,a?1:0);
             return(1);
 
         case FUNC_REMOVEFILE:
@@ -811,7 +812,7 @@ doentryselection:
                         else entry=(struct Directory *)-1;
                     }
                 }
-                if ((a=(int)addfile(dopus_curwin[data_active_window],
+                if ((a=(IPTR)addfile(dopus_curwin[data_active_window],
                     data_active_window,buf2,c,ENTRY_CUSTOM,
                     &ds,rexx_args[0],d,CUSTOMENTRY_USER,
                     (rexx_argcount>5)?atoi(rexx_args[5]):0,NULL,entry,0,0))) {
@@ -920,7 +921,7 @@ doentryselection:
                         if (b<0 || b>1) b=data_active_window;
                         for (a=0;a<=DISPLAY_LAST;a++) {
                             if (config->displaypos[b][a]==-1) break;
-                            lsprintf(buf2,"%ld ",config->displaypos[b][a]);
+                            lsprintf(buf2,"%ld ",(long)config->displaypos[b][a]);
                             strcat(buf,buf2);
                         }
                         retbuf=buf;
@@ -1012,7 +1013,7 @@ doentryselection:
 
                     case MOD_FONT:
                         if (b<0 || b>=FONT_LAST) break;
-                        lsprintf(buf,"%s/%ld",config->fontbufs[b],config->fontsizes[b]);
+                        lsprintf(buf,"%s/%ld",config->fontbufs[b],(long)config->fontsizes[b]);
                         retbuf=buf;
                         break;
 
@@ -1034,11 +1035,11 @@ doentryselection:
                         buf[0]=0;
                         if (b<0 || b>1) b=data_active_window;
                         lsprintf(buf,"%ld %ld %ld %ld %ld",
-                            config->displaylength[b][DISPLAY_NAME],
-                            config->displaylength[b][DISPLAY_COMMENT],
-                            config->displaylength[b][DISPLAY_FILETYPE],
-                            config->displaylength[b][DISPLAY_OWNER],
-                            config->displaylength[b][DISPLAY_GROUP]);
+                            (long)config->displaylength[b][DISPLAY_NAME],
+                            (long)config->displaylength[b][DISPLAY_COMMENT],
+                            (long)config->displaylength[b][DISPLAY_FILETYPE],
+                            (long)config->displaylength[b][DISPLAY_OWNER],
+                            (long)config->displaylength[b][DISPLAY_GROUP]);
                         retbuf=buf;
                         break;
 
@@ -1062,15 +1063,15 @@ doentryselection:
 
                     case MOD_WINDOWXY:
                         if (!status_iconified && status_publicscreen && Window)
-                            lsprintf(buf,"%ld %ld",Window->LeftEdge,Window->TopEdge);
-                        else lsprintf(buf,"%ld %ld",config->wbwinx,config->wbwiny);
+                            lsprintf(buf,"%ld %ld",(long)Window->LeftEdge,(long)Window->TopEdge);
+                        else lsprintf(buf,"%ld %ld",(long)config->wbwinx,(long)config->wbwiny);
                         retbuf=buf;
                         break;
 
                     case MOD_WINDOWSIZE:
                         if (!status_iconified && status_publicscreen && Window)
-                            lsprintf(buf,"%ld %ld",Window->Width,Window->Height);
-                        else lsprintf(buf,"%ld %ld",config->scr_winw,config->scr_winh);
+                            lsprintf(buf,"%ld %ld",(long)Window->Width,(long)Window->Height);
+                        else lsprintf(buf,"%ld %ld",(long)config->scr_winw,(long)config->scr_winh);
                         retbuf=buf;
                         break;
 
@@ -1081,11 +1082,11 @@ doentryselection:
                     case MOD_WINDOWXYWH:
                         if (!status_iconified && status_publicscreen && Window) {
                             lsprintf(buf,"%ld %ld %ld %ld",
-                                Window->LeftEdge,Window->TopEdge,Window->Width,Window->Height);
+                                (long)Window->LeftEdge,(long)Window->TopEdge,(long)Window->Width,(long)Window->Height);
                         }
                         else {
                             lsprintf(buf,"%ld %ld %ld %ld",
-                                config->wbwinx,config->wbwiny,config->scr_winw,config->scr_winh);
+                                (long)config->wbwinx,(long)config->wbwiny,(long)config->scr_winw,(long)config->scr_winh);
                         }
                         retbuf=buf;
                         break;
@@ -1416,7 +1417,7 @@ D(bug("rexx_args(%s,%s,%s)\n",rexx_args[0]?rexx_args[0]:"<NULL>",rexx_args[1]?re
 }
 
 int parse(buf)
-unsigned char *buf;
+const unsigned char *buf;
 {
     int len,argno,argpos,a,withinquote,havequoted;
 D(bug("parse cmd(%s)\n",buf));

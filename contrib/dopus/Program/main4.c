@@ -284,8 +284,10 @@ int readfile(name,buf,size)
 char *name,**buf;
 int *size;
 {
-    int in,retval /*loadpp*/ = 0;
-/*
+    int retval /*loadpp*/ = 0;
+    BPTR in;
+#ifdef USE_POWERPACKER
+    int loadpp = 0;
     if (PPBase) {
         if ((in=ppLoadData(name,DECR_POINTER,MEMF_CLEAR,buf,size,NULL))) {
             if (in==PP_OPENERR || in==PP_READERR) return(-1);
@@ -294,7 +296,7 @@ int *size;
         else loadpp=1;
     }
     if (!loadpp)
-*/
+#endif
     if (CheckExist(name,size)>=0 || !(in=Open(name,MODE_OLDFILE))) return(-1);
     if ((*buf=AllocVec(*size,MEMF_ANY)))
      {
@@ -445,7 +447,7 @@ int high;
 
 void dolittlegads(gad,txt,num)
 struct Gadget *gad;
-char *txt;
+const char *txt;
 int num;
 {
     int a,y;

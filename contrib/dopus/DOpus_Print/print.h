@@ -58,7 +58,9 @@ extern struct Library *IconBase;
 extern struct ExecBase *SysBase;
 extern struct DosLibrary *DOSBase;
 extern struct Library *WorkbenchBase;
+#ifdef USE_POWERPACKER
 extern struct Library *PPBase;
+#endif
 
 struct Directory {
 	struct Directory *last,*next;

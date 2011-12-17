@@ -32,12 +32,12 @@ the existing commercial status of Directory Opus 5.
 
 char old_general_font[30];
 
-doscreenconfig()
+int doscreenconfig()
 {
     ULONG class;
-    UWORD code,gadgetid,qual;
+    UWORD code,gadgetid=0,qual;
     struct ConfigUndo *undo;
-    struct Gadget *gad;
+    struct Gadget *gad=NULL;
     int mode=-1,realpen=1,x,y,cursel=-1,a,b,fontnum=0,arrowact=0,c;
     char *fg=NULL,*bg=NULL,buf[256],*ptr;
     struct DOpusListView *view;
@@ -381,7 +381,7 @@ doscreenconfig()
 
                             case SCREENMODE_WIDTH:
                                 a=atoi(screenwidth_buf);
-                                if (a%2) lsprintf(screenwidth_buf,"%ld",a+1);
+                                if (a%2) lsprintf(screenwidth_buf,"%ld",(long)(a+1));
                                 CheckNumGad(&screenmodegads[SCREENMODE_WIDTH-300],Window,curmode->minw,curmode->maxw);
                                 config->scrw=atoi(screenwidth_buf);
                                 config->scr_winw=config->scrw;
@@ -410,7 +410,7 @@ doscreenconfig()
                                     a=GetSliderPos(&screenmodegads[SCREENMODE_SLIDER-300],curmode->maxdepth-1,1)+2;
                                 if (a>curmode->maxdepth) a=curmode->maxdepth;
                                 else if (a<2) a=2;
-                                lsprintf(screendepth_buf,"%ld",(1<<a));
+                                lsprintf(screendepth_buf,"%ld",(long)(1<<a));
                                 RefreshStrGad(&screenmodegads[SCREENMODE_DEPTH-300],Window);
                                 config->scrdepth=a;
                                 FixSliderPot(Window,&screenmodegads[SCREENMODE_SLIDER-300],config->scrdepth-2,curmode->maxdepth-1,1,2);
@@ -670,7 +670,7 @@ int mode;
             screenmodeview.itemselected=-1; wclone=0;
             busy();
             if ((a=initscreenmodes()) &&
-                (screenmodelist=LAllocRemember(&screenkey,(a+1)*4,MEMF_CLEAR))) {
+                (screenmodelist=LAllocRemember(&screenkey,(a+1)*sizeof(screenmodelist[0]),MEMF_CLEAR))) {
                 screenmode=firstmode;
                 for (b=0;b<a;b++) {
                     if (screenmodelist[b]=LAllocRemember(&screenkey,DISPLAYNAMELEN,MEMF_CLEAR))
@@ -741,15 +741,15 @@ int mode;
                 if (!fontdatabuf) break;
                 num=((struct AvailFontsHeader *)fontdatabuf)->afh_NumEntries;
                 if (!num ||
-                    !(fontlist=LAllocRemember(&fontkey,(num+1)*4,MEMF_CLEAR)) ||
-                    !(fontsizelist=LAllocRemember(&fontkey,(num+1)*4,MEMF_CLEAR)))
+                    !(fontlist=LAllocRemember(&fontkey,(num+1)*sizeof(fontlist[0]),MEMF_CLEAR)) ||
+                    !(fontsizelist=LAllocRemember(&fontkey,(num+1)*sizeof(fontsizelist[0]),MEMF_CLEAR)))
                     break;
-                if (!(noproplist=LAllocRemember(&fontkey,(num+1)*4,MEMF_CLEAR)) ||
-                    !(nopropsizelist=LAllocRemember(&fontkey,(num+1)*4,MEMF_CLEAR))) {
+                if (!(noproplist=LAllocRemember(&fontkey,(num+1)*sizeof(noproplist[0]),MEMF_CLEAR)) ||
+                    !(nopropsizelist=LAllocRemember(&fontkey,(num+1)*sizeof(nopropsizelist[0]),MEMF_CLEAR))) {
                     noproplist=fontlist;
                     nopropsizelist=fontsizelist;
                 }
-                if (!(only8list=LAllocRemember(&fontkey,(num+1)*4,MEMF_CLEAR)))
+                if (!(only8list=LAllocRemember(&fontkey,(num+1)*sizeof(only8list[0]),MEMF_CLEAR)))
                     only8list=fontlist;
                 avail=(struct AvailFonts *)&fontdatabuf[sizeof(UWORD)];
                 sortfontlist(avail,num,0);
@@ -771,7 +771,7 @@ int mode;
                     }
                     if (a==fontnum) {
                         fontlist[fontnum]=(char *)avail[fnum].af_Attr.ta_Name;
-                        fontsizelist[fontnum]=LAllocRemember(&fontkey,(avail[fnum].af_Attr.ta_Style+1)*4,MEMF_CLEAR);
+                        fontsizelist[fontnum]=LAllocRemember(&fontkey,(avail[fnum].af_Attr.ta_Style+1)*sizeof(fontsizelist[fontnum][0]),MEMF_CLEAR);
                         if (!(avail[fnum].af_Attr.ta_Flags&FPF_PROPORTIONAL)) {
                             noproplist[nopropnum]=fontlist[fontnum];
                             nopropsizelist[nopropnum]=fontsizelist[fontnum];
@@ -788,7 +788,7 @@ int mode;
                             if (!fontsizelist[a][b])
                              {
                               if (/*b>-1 &&*/ (fontsizelist[a][b]=LAllocRemember(&fontkey,8,MEMF_CLEAR)))
-                                  lsprintf(fontsizelist[a][b],"%4ld",avail[fnum].af_Attr.ta_YSize);
+                                  lsprintf(fontsizelist[a][b],"%4ld",(long)avail[fnum].af_Attr.ta_YSize);
                               break;
                              }
 //D(bug("fontsizelist[%ld][%ld]=%lx (%s)\n",a,b,fontsizelist[a][b],fontsizelist[a][b]));

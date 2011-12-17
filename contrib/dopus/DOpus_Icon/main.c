@@ -86,7 +86,7 @@ char *argv[];
 	else stringname[0]=0;
 
 	if (ReadStringFile(&stringdata,stringname)) {
-		string_table=stringdata.string_table;
+		string_table=(const char **)stringdata.string_table;
 
 		setup_strings();
 
@@ -186,7 +186,7 @@ struct RequesterBase *reqbase;
 struct TagItem **gadgets;
 {
 	int gad;
-	struct Gadget *gadget=NULL,*newgadget,*firstgadget;
+	struct Gadget *gadget=NULL,*newgadget,*firstgadget=NULL;
 
 	for (gad=0;;gad++) {
 		if (!gadgets[gad]) break;

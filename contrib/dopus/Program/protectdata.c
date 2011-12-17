@@ -226,7 +226,7 @@ int getprotectdata(prot,mask)
 int *prot,*mask;
 {
     ULONG class;
-    UWORD gadgetid,code;
+    UWORD gadgetid=0,code;
     int oldprot,a,x,y;
     struct Gadget *gadlist;
     Object_Border *old_text,*new_text,*mask_text;

@@ -93,7 +93,7 @@ trysave:
     unbusy();
 }
 
-doload(type,def)
+int doload(type,def)
 int type,def;
 {
     char *path,buf[80],*menulist[6],menuarray[6],**ftypelist,*typearray;
@@ -242,7 +242,7 @@ tryload:
                     b++;
                     ftype=ftype->next;
                 }
-                if (!(ftypelist=LAllocRemember(&fkey,(b+1)*4,MEMF_CLEAR)) ||
+                if (!(ftypelist=LAllocRemember(&fkey,(b+1)*sizeof(ftypelist[0]),MEMF_CLEAR)) ||
                     !(typearray=LAllocRemember(&fkey,b+1,MEMF_CLEAR))) break;
                 ftype=newcstuff->firsttype;
                 for (a=0;a<b;a++) {
@@ -282,7 +282,7 @@ tryload:
                     b++;
                     fhotkey=fhotkey->next;
                 }
-                if (!(ftypelist=LAllocRemember(&fkey,(b+1)*4,MEMF_CLEAR)) ||
+                if (!(ftypelist=LAllocRemember(&fkey,(b+1)*sizeof(ftypelist[0]),MEMF_CLEAR)) ||
                     !(typearray=LAllocRemember(&fkey,b+1,MEMF_CLEAR))) break;
                 fhotkey=newcstuff->firsthotkey;
                 for (a=0;a<b;a++) {
@@ -329,7 +329,7 @@ tryload:
                 CopyMem((char *)newcstuff->config->scrollborders,
                     (char *)config->scrollborders,sizeof(struct Rectangle)*2);
                 CopyMem((char *)newcstuff->config->new_palette,
-                    (char *)config->new_palette,sizeof(ULONG)*48);
+                    (char *)config->new_palette,sizeof(config->new_palette[0])*48);
                 strcpy(config->pubscreen_name,newcstuff->config->pubscreen_name);
                 config->slider_pos=newcstuff->config->slider_pos;
                 freecon=3;
@@ -380,8 +380,8 @@ struct Config *config1,*config2;
     LFreeRemember(&key);
 }
 
-dolistwindow(title,w,h,items,flags,selarray,item)
-char *title;
+int dolistwindow(title,w,h,items,flags,selarray,item)
+const char *title;
 int w,h;
 char **items;
 int flags;
@@ -393,7 +393,7 @@ int *item;
     ULONG class;
     UWORD code;
     int a,gadgetid,all=1,count;
-    char **gadtxt;
+    const char **gadtxt;
 
     listlist.w=w;
     listlist.h=h;
@@ -419,7 +419,7 @@ int *item;
     listlist.itemselected=-1;
     setuplist(&listlist,-1,-1);
 
-    requestwin.Title=title;
+    requestwin.Title=(char *)title;
 
     if (!(wind=openwindow(&requestwin))) return(0);
 
@@ -510,7 +510,7 @@ char **funclist,*functype,*flagsel;
     unbusy();
 }
 
-pasteclip(func,funclist,functype,displist,flagsel)
+int pasteclip(func,funclist,functype,displist,flagsel)
 struct dopusfunction *func;
 char **funclist,*functype,**displist,*flagsel;
 {
@@ -520,7 +520,7 @@ char **funclist,*functype,**displist,*flagsel;
     int a,b,ret=0;
 
     if (!clipcount) return(0);
-    if (!(cliplist=LAllocRemember(&key,(clipcount+1)*4,MEMF_CLEAR))) return(0);
+    if (!(cliplist=LAllocRemember(&key,(clipcount+1)*sizeof(cliplist[0]),MEMF_CLEAR))) return(0);
     busy();
     clip=firstclip;
     for (a=0;a<clipcount;a++) {
@@ -536,9 +536,9 @@ char **funclist,*functype,**displist,*flagsel;
         for (b=0;b<a;b++) if (!(clip=clip->next)) break;
         if (clip) {
             erasefunction(func,funclist,displist,flagsel);
-            lsprintf(edit_stackbuf,"%ld",clip->func.stack);
-            lsprintf(edit_prioritybuf,"%ld",clip->func.pri);
-            lsprintf(edit_delaybuf,"%ld",clip->func.delay);
+            lsprintf(edit_stackbuf,"%ld",(long)clip->func.stack);
+            lsprintf(edit_prioritybuf,"%ld",(long)clip->func.pri);
+            lsprintf(edit_delaybuf,"%ld",(long)clip->func.delay);
             strcpy(edit_namebuf,clip->name);
             func->key=0; func->qual=0;
             func->fpen=clip->func.fpen; func->bpen=clip->func.bpen;

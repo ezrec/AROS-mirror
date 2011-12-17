@@ -33,13 +33,13 @@ the existing commercial status of Directory Opus 5.
 static struct DOpusRemember *hkey;
 static char **hotkeylist;
 
-dohotkeysconfig()
+int dohotkeysconfig()
 {
     ULONG class;
-    UWORD code,gadgetid;
+    UWORD code,gadgetid=0;
     struct ConfigUndo *undo;
     struct DOpusListView *view;
-    struct dopushotkey hotkey,*newhot,*hot,*swapfirst=NULL;
+    struct dopushotkey hotkey,*newhot=NULL,*hot,*swapfirst=NULL;
     int a,mode=-1;
 
     showconfigscreen(CFG_HOTKEYS);
@@ -207,7 +207,7 @@ void makehotkeylist()
         hotkey=hotkey->next;
     }
     if (count &&
-        (hotkeylist=LAllocRemember(&hkey,(count+1)*4,MEMF_CLEAR)) &&
+        (hotkeylist=LAllocRemember(&hkey,(count+1)*sizeof(hotkeylist[0]),MEMF_CLEAR)) &&
         (buf=LAllocRemember(&hkey,count*80,MEMF_CLEAR))) {
         hotkey=firsthotkey;
         for (a=0;a<count;a++) {
@@ -223,7 +223,7 @@ void makehotkeylist()
     RefreshListView(&hotkeyslist,1);
 }
 
-doedithotkey(hotkey)
+int doedithotkey(hotkey)
 struct dopushotkey *hotkey;
 {
     int a;
@@ -250,7 +250,7 @@ int x1,y1,bc,tc;
     SetDrMd(r,JAM2);
 }
 
-fixrmbimage(rmb,gad,on,x,y)
+int fixrmbimage(rmb,gad,on,x,y)
 struct RMBGadget *rmb;
 struct Gadget *gad;
 int on,x,y;

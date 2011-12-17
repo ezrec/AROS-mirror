@@ -38,19 +38,22 @@ the existing commercial status of Directory Opus 5.
 */
 
 #include "dopuslib.h"
-#ifndef __AROS__
+
+#include <libraries/iffparse.h>
+
+#ifdef USE_POWERPACKER
 #include <proto/powerpacker.h>
 #endif
 
 extern struct IntuiText defaulttext[];
-extern char *devtypes[];
+extern const char *devtypes[];
 
 typedef struct {
     ULONG ckID;
     ULONG ckSize;
 } ChunkHeader;
 
-char **string_table;
+const char **string_table;
 
 const struct DefaultString default_strings[] =
 {
@@ -83,12 +86,12 @@ const struct DefaultString default_strings[] =
 
 void initstrings(void)
 {
-    defaulttext[0].IText=string_table[STR_FILEREQ_FILE];
-    defaulttext[1].IText=string_table[STR_FILEREQ_DRAWER];
-    defaulttext[2].IText=string_table[STR_FILEREQ_ACCEPT];
-    defaulttext[3].IText=string_table[STR_CANCEL];
-    defaulttext[4].IText=string_table[STR_FILEREQ_PARENT];
-    defaulttext[5].IText=string_table[STR_FILEREQ_DRIVES];
+    defaulttext[0].IText=(UBYTE *)string_table[STR_FILEREQ_FILE];
+    defaulttext[1].IText=(UBYTE *)string_table[STR_FILEREQ_DRAWER];
+    defaulttext[2].IText=(UBYTE *)string_table[STR_FILEREQ_ACCEPT];
+    defaulttext[3].IText=(UBYTE *)string_table[STR_CANCEL];
+    defaulttext[4].IText=(UBYTE *)string_table[STR_FILEREQ_PARENT];
+    defaulttext[5].IText=(UBYTE *)string_table[STR_FILEREQ_DRIVES];
 
     devtypes[0] = string_table[STR_DEV_DEV];
     devtypes[1] = string_table[STR_DEV_ASN];
@@ -100,13 +103,13 @@ void initstrings(void)
 int __saveds DoReadStringFile(register struct StringData *stringdata __asm("a0"), register char *filename __asm("a1"))
 {
     int a;
-    struct DefaultString *defstr;
-//    BPTR file;
+    const struct DefaultString *defstr;
+    BPTR file;
 
 //D(bug("ReadStringFile(%lx,%s)\n",stringdata,filename);Delay(50));
     if (!stringdata) return(0);
     if (!stringdata->string_table) {
-        if (!(stringdata->string_table=AllocMem(stringdata->string_count*4,MEMF_CLEAR)))
+        if (!(stringdata->string_table=AllocMem(stringdata->string_count*sizeof(stringdata->string_table[0]),MEMF_CLEAR)))
             return(0);
     }
 //D(bug("ReadStringFile(%s)\n",filename));
@@ -122,16 +125,20 @@ int __saveds DoReadStringFile(register struct StringData *stringdata __asm("a0")
         stringdata->string_table[defstr[a].string_id]=defstr[a].string;
 //D(bug("%ld\t%s\n",defstr[a].string_id,defstr[a].string));
     }
-/*
     if (filename && (file=Open(filename,MODE_OLDFILE))) {
+#ifdef USE_POWERPACKER
         struct Library *PPBase;
         struct Process *myproc;
         APTR wsave;
+#endif
         ULONG test[3];
 
         Read(file,(char *)test,12);
-        if (test[0]=='PX20' || test[0]=='PP11' || test[0]=='PP20') {
+        if (test[0]==MAKE_ID('P','X','2','0') ||
+            test[0]==MAKE_ID('P','P','1','1') ||
+            test[0]==MAKE_ID('P','P','2','0')) {
             Close(file);
+#ifdef USE_POWERPACKER
             if ((PPBase=OpenLibrary("powerpacker.library",0))) {
                 myproc=(struct Process *)FindTask(NULL);
                 wsave=myproc->pr_WindowPtr;
@@ -147,6 +154,7 @@ int __saveds DoReadStringFile(register struct StringData *stringdata __asm("a0")
                 myproc->pr_WindowPtr=wsave;
                 CloseLibrary(PPBase);
             }
+#endif /* USE_POWERPACKER */
         }
         else {
             if (test[0]==ID_FORM && test[2]==ID_OSTR) {
@@ -191,8 +199,8 @@ int __saveds DoReadStringFile(register struct StringData *stringdata __asm("a0")
             }
         }
     }
-*/
-    if (filename) if (filename[0]) if (stringdata->LocaleBase = OpenLibrary("locale.library",38))
+
+    if (filename && filename[0] && (stringdata->LocaleBase = OpenLibrary("locale.library",38)))
      {
       struct Library *LocaleBase = stringdata->LocaleBase;
 /*
@@ -220,7 +228,7 @@ D(bug("catalog: %s\tlanguage: %s\n",catname,lang));
         for (a = 0; a < stringdata->string_count; a++)
          {
           if (!defstr[a].string) break;
-          stringdata->string_table[defstr[a].string_id]=GetCatalogStr(stringdata->catalog,defstr[a].string_id,defstr[a].string);
+          stringdata->string_table[defstr[a].string_id]=(char *)GetCatalogStr(stringdata->catalog,defstr[a].string_id,defstr[a].string);
 //D(bug("%ld\t%s\n",defstr[a].string_id,GetCatalogStr(stringdata->catalog,defstr[a].string_id,defstr[a].string)));
          }
        }
@@ -241,7 +249,7 @@ void __saveds DoFreeStringFile(register struct StringData *stringdata __asm("a0"
         }
         if (stringdata->string_table) {
 //D(bug("FreeStringFile:free table\n");Delay(50));
-            FreeMem(stringdata->string_table,stringdata->string_count*4);
+            FreeMem(stringdata->string_table,stringdata->string_count*sizeof(stringdata->string_table[0]));
             stringdata->string_table=NULL;
         }
 // JRZ: begin

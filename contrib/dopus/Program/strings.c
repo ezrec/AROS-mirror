@@ -39,7 +39,7 @@ the existing commercial status of Directory Opus 5.
 
 #include "dopus.h"
 
-char **globstring;
+const char **globstring;
 
 static const struct DefaultString
 	default_strings[]={
@@ -422,7 +422,7 @@ char *file;
 //D(bug("STR_STRING_COUNT=%ld\n",STR_STRING_COUNT));
 //D(for(a=0;a<STR_STRING_COUNT;a++) bug("%ld\t%s\n",default_strings[a].string_id,default_strings[a].string));
     if (!(ReadStringFile(&stringdata,file))) quit();
-    globstring=stringdata.string_table;
+    globstring=(const char **)stringdata.string_table;
 /*
     for (a=0;a<12;a++) {
         date_months[a]=globstring[STR_MONTH_JANUARY+a];

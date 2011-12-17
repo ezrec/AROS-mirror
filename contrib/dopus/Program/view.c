@@ -59,7 +59,7 @@ void view_unbusy(struct ViewData *);
 void view_doscroll(struct ViewData *,int,int);
 int view_lineup(struct ViewData *);
 int view_linedown(struct ViewData *);
-void view_status_text(struct ViewData *,char *);
+void view_status_text(struct ViewData *,const char *);
 void view_printtext(struct ViewData *,int);
 void view_checkprint(struct ViewData *,int);
 void view_makeuphex(struct ViewData *,char *,unsigned char *,int);
@@ -69,8 +69,8 @@ void view_viewhilite(struct ViewData *,int,int,int,int);
 void view_clearhilite(struct ViewData *,int);
 void view_fix_scroll_gadget(struct ViewData *);
 void view_clearsearch(struct ViewData *);
-int view_simplerequest (struct ViewData *,char *,...);
-int view_whatsit(struct ViewData *,char *,int,char *);
+int view_simplerequest (struct ViewData *,const char *,...);
+int view_whatsit(struct ViewData *,const char *,int,char *);
 
 struct ViewMessage {
   char *filename;
@@ -126,7 +126,7 @@ static struct NewWindow viewwin={
 static struct Gadget *viewGadgets[VIEW_GAD_COUNT];
 
 int viewfile(filename,name,function,initialsearch,viewdata,wait,noftype)
-char *filename,*name;
+const char *filename,*name;
 int function;
 char *initialsearch;
 struct ViewData *viewdata;
@@ -204,7 +204,7 @@ void __saveds view_file_process()
 
   Forbid();
   for (a=0;;a++) {
-    lsprintf(portname,"DOPUS_VIEW%ld",a);
+    lsprintf(portname,"DOPUS_VIEW%ld",(long)a);
     if (!(FindPort(portname))) break;
   }
   Permit();
@@ -371,7 +371,7 @@ D(bug("linecount = %ld\n",vdata->view_line_count));
                   for (a=0;a<MAXTABS;a++) view_console_unit->cu_TabStops[a]=a*config->tabsize;
                   view_console_unit->cu_TabStops[MAXTABS-1]=0xffff;
 
-                  lsprintf(buf,"\x9b\x30\x20\x70\x9b%ld\x75\x9b%ld\x74",vdata->view_max_line_length+1,vdata->view_lines_per_screen); //turn off cursor, set line length, set page height
+                  lsprintf(buf,"\x9b\x30\x20\x70\x9b%ld\x75\x9b%ld\x74",(long)vdata->view_max_line_length+1,(long)vdata->view_lines_per_screen); //turn off cursor, set line length, set page height
                   view_print(vdata,buf,1,strlen(buf));
 
                   vdata->view_max_line_length=255;
@@ -453,7 +453,8 @@ struct ViewData *vdata;
 int view_loadfile(struct ViewData *vdata)
  {
   struct IntuiMessage *msg;
-  int a, in, fsize;
+  int a, fsize = 0;
+  BPTR in;
 
 /*     if ((vdata->view_file_size&15)==0)
     vdata->view_buffer_size=vdata->view_file_size+16;
@@ -1741,7 +1742,7 @@ int view_linedown(struct ViewData *vdata)
   return(1);
 }
 
-void view_status_text(struct ViewData *vdata, char *str)
+void view_status_text(struct ViewData *vdata, const char *str)
 {
   static char buf[108];
   struct Gadget *g = viewGadgets[VIEW_FILENAME];
@@ -1891,8 +1892,12 @@ int line;
     buf3[8],buf3[9],buf3[10],buf3[11],buf3[12],buf3[13],buf3[14],buf3[15],
     buf2);*/
   lsprintf((char *)textbuf,
-    "%08lx: %08lx %08lx %08lx %08lx %s\n",line*16,
-    ((long *)hex)[0],((long *)hex)[1],((long *)hex)[2],((long *)hex)[3],buf2);
+    "%08lx: %08lx %08lx %08lx %08lx %s\n",(long)(line*16),
+    (long)((ULONG *)hex)[0],
+    (long)((ULONG *)hex)[1],
+    (long)((ULONG *)hex)[2],
+    (long)((ULONG *)hex)[3],
+    buf2);
   if (c>-1) {
     for (b=c;b<46;b++)
       textbuf[b]=' ';
@@ -2044,9 +2049,9 @@ struct ViewData *vdata;
     vdata->view_pick_charoffset=-1;
 }
 
-int view_simplerequest(struct ViewData *vdata,char *txt,...)
+int view_simplerequest(struct ViewData *vdata,const char *txt,...)
 {
-  char *gads[4],*cancelgad=NULL,*gad;
+  const char *gads[4],*cancelgad=NULL,*gad;
   int a/*=1*/,r,rets[3],num;
   va_list ap;
   struct DOpusSimpleRequest request;
@@ -2079,11 +2084,11 @@ int view_simplerequest(struct ViewData *vdata,char *txt,...)
 
 int view_whatsit(vdata,txt,max,buffer)
 struct ViewData *vdata;
-char *txt;
+const char *txt;
 int max;
 char *buffer;
 {
-  char *gads[3];
+  const char *gads[3];
   int rets[2];
   struct DOpusSimpleRequest request;
 

@@ -131,11 +131,11 @@ static inline void dotitle(struct BitMapHeader *bmhd)
     getcolstring(cols);
     getviewmodes(modes);
     lsprintf(title,"%ld x %ld x %ld (page %ld x %ld) %s cols (%s)",
-        bmhd->bmh_Width,
-        bmhd->bmh_Height,
-        bmhd->bmh_Depth,
-        bmhd->bmh_PageWidth,
-        bmhd->bmh_PageHeight,
+        (long)bmhd->bmh_Width,
+        (long)bmhd->bmh_Height,
+        (long)bmhd->bmh_Depth,
+        (long)bmhd->bmh_PageWidth,
+        (long)bmhd->bmh_PageHeight,
         cols,modes);
     dostatustext(title);
 }
@@ -157,7 +157,6 @@ char *name;
         imagewidth, imageheight,
         minwidth, minheight, maxwidth, maxheight,
         depth,
-        coppersize,
         viewmode,
         maxframes;
     UWORD colourlist[4];
@@ -322,7 +321,6 @@ D(bug("viewmode(0) = %08lx\n",viewmode));
                   break;
               case ID_CTBL:
                   if ((copperlist=LAllocRemember(&iffkey,chunksize,MEMF_CLEAR))) {
-                      coppersize=chunksize;
                       copperheight=chunksize/32;
                       CopyMem((char *)&picbuffer[bufferpos],(char *)copperlist,chunksize);
                       CopyMem((char *)&picbuffer[bufferpos],(char *)colourlist,8);
@@ -384,7 +382,7 @@ D(bug("viewmode(0) = %08lx\n",viewmode));
         numcolours=coloursize/3;
 
         if (/*system_version2>=OSVER_39 &&*/ !specialformat)
-            colourtable_8=LAllocRemember(&iffkey,(coloursize+2)*4,MEMF_CLEAR);
+            colourtable_8=LAllocRemember(&iffkey,(coloursize+2)*sizeof(colourtable_8[0]),MEMF_CLEAR);
 
         colourtable_4=LAllocRemember(&iffkey,numcolours*sizeof(UWORD),MEMF_CLEAR);
     }
@@ -1092,7 +1090,7 @@ int rowbytes,sourcebytes;
     sourcebytes/=4;
 
     for (column=0;column<sourcebytes;column++) {
-        data=(unsigned char *)(image+(column*4));
+        data=(unsigned char *)(image+(column*sizeof(data[0])));
         opcount=*delta++;
         while (opcount--) {
             ch=*delta++;
@@ -1168,7 +1166,7 @@ int rowbytes,sourcebytes;
     sourcebytes/=4;
 
     for (column=0;column<sourcebytes;column++) {
-        data=(unsigned char *)(image+(column*4));
+        data=(unsigned char *)(image+(column*sizeof(data[0])));
         opcount=*opcode++;
         while (opcount--) {
             ch=*opcode++;
@@ -1201,7 +1199,7 @@ struct Window *wind;
     struct IntuiMessage *msg;
     ULONG class;
     UWORD code,qual;
-    int ticks,waitfor=0,pon=0,waitbits,retcode=1,gottimer=0,origspeed,startanim,delta;
+    int ticks,waitfor=0,pon=0,waitbits,retcode=1,gottimer=0,origspeed,startanim=0,delta;
     struct timerequest treq;
 
     while ((msg=(struct IntuiMessage *) GetMsg(wind->UserPort)))
@@ -1383,7 +1381,7 @@ char *str;
         if (bmhd.bmh_Depth==8) strcpy(str,"256K");
         else strcpy(str,"4096");
     }
-    else lsprintf(str,"%ld",1<<bmhd.bmh_Depth);
+    else lsprintf(str,"%ld",(long)(1<<bmhd.bmh_Depth));
 }
 
 void gfxprint(wind,rast,x,y,w,h,iff)
@@ -1442,10 +1440,10 @@ int x,y,w,h,iff;
     union printerIO *print_request; /* IO request for Print operation */
     APTR save;
     ULONG class;
-    UWORD code,gadgetid,qual;
+    UWORD code,gadgetid=0,qual;
     int a,/*b,*/abort=0,goff,fnum;
     char buf[200],modes[140],*ptr,pactcode[6],cols[30],title[120];
-    char
+    const char
         *printgadtxt[9],
         *printabortgadtxt[2]={NULL,NULL},
         *print_aspect_txt[2],
@@ -1530,8 +1528,8 @@ D(bug("Print screen ModeID: %lx\n",class));
 
         lsprintf(buf,"%12s : %ld x %ld",
             globstring[STR_IMAGE_SIZE],
-            bmhd.bmh_Width,
-            bmhd.bmh_Height);
+            (long)bmhd.bmh_Width,
+            (long)bmhd.bmh_Height);
         iffinfotxt(prp,buf,7,35+goff);
 
         if (anim.first_frame) {
@@ -1539,49 +1537,49 @@ D(bug("Print screen ModeID: %lx\n",class));
             else fnum=anim.framenum-1;
             lsprintf(buf,"%12s : %ld %s %ld @ %ld/sec",
                 globstring[STR_NUM_FRAMES],
-                fnum,
+                (long)fnum,
                 globstring[STR_OF],
-                anim.framecount+(1-got_dpan),
-                anim.framespersec);
+                (long)anim.framecount+(1-got_dpan),
+                (long)anim.framespersec);
             iffinfotxt(prp,buf,7,43+goff);
 
             lsprintf(buf,"%12s : ANIM Op %ld",
                 globstring[STR_ANIM_TYPE],
-                anim.type);
+                (long)anim.type);
             iffinfotxt(prp,buf,7,51+goff);
 
             lsprintf(title,"IFF ANIM : %s   %s %ld %s %ld   %ld x %ld x %s\n\n",
                 ptr,
                 globstring[STR_FRAME],
-                fnum,
+                (long)fnum,
                 globstring[STR_OF],
-                anim.framecount+1,
-                bmhd.bmh_Width,
-                bmhd.bmh_Height,
+                (long)anim.framecount+1,
+                (long)bmhd.bmh_Width,
+                (long)bmhd.bmh_Height,
                 cols);
         }
         else {
             lsprintf(buf,"%12s : %ld x %ld",
                 globstring[STR_PAGE_SIZE],
-                bmhd.bmh_PageWidth,
-                bmhd.bmh_PageHeight);
+                (long)bmhd.bmh_PageWidth,
+                (long)bmhd.bmh_PageHeight);
             iffinfotxt(prp,buf,7,43+goff);
 
             lsprintf(buf,"%12s : %ld x %ld",
                 globstring[STR_SCREEN_SIZE],
-                iffscreen->Width,
-                iffscreen->Height);
+                (long)iffscreen->Width,
+                (long)iffscreen->Height);
             iffinfotxt(prp,buf,7,51+goff);
 
             lsprintf(title,"IFF ILBM : %s   %ld x %ld x %s\n\n",
                 ptr,
-                bmhd.bmh_Width,
-                bmhd.bmh_Height,
+                (long)bmhd.bmh_Width,
+                (long)bmhd.bmh_Height,
                 cols);
         }
         lsprintf(buf,"%12s : %ld",
             globstring[STR_DEPTH],
-            bmhd.bmh_Depth);
+            (long)bmhd.bmh_Depth);
         iffinfotxt(prp,buf,7,67+goff);
 
         lsprintf(buf,"%12s : %s",
@@ -1608,14 +1606,14 @@ D(bug("Print screen ModeID: %lx\n",class));
 
         lsprintf(buf,"%12s : %ld",
             globstring[STR_FONT_SIZE],
-            show_global_font->tf_YSize);
+            (long)show_global_font->tf_YSize);
         iffinfotxt(prp,buf,7,35+goff);
 
         lsprintf(buf,"%12s : %ld (%ld - %ld)",
             globstring[STR_NUM_CHARS],
-            (show_global_font->tf_HiChar-show_global_font->tf_LoChar)+1,
-            show_global_font->tf_LoChar,
-            show_global_font->tf_HiChar);
+            (long)(show_global_font->tf_HiChar-show_global_font->tf_LoChar)+1,
+            (long)show_global_font->tf_LoChar,
+            (long)show_global_font->tf_HiChar);
         iffinfotxt(prp,buf,7,51+goff);
 
         lsprintf(buf,"%12s :",
@@ -1637,10 +1635,10 @@ D(bug("Print screen ModeID: %lx\n",class));
         iffinfotxt(prp,buf,7,75+goff);
 
         lsprintf(title,"Font : %s/%ld   %ld chars (%ld - %ld)\n\n",
-            fontname,show_global_font->tf_YSize,
-            (show_global_font->tf_HiChar-show_global_font->tf_LoChar)+1,
-            show_global_font->tf_LoChar,
-            show_global_font->tf_HiChar);
+            fontname,(long)show_global_font->tf_YSize,
+            (long)(show_global_font->tf_HiChar-show_global_font->tf_LoChar)+1,
+            (long)show_global_font->tf_LoChar,
+            (long)show_global_font->tf_HiChar);
     }
     else if (show_global_icon) {
         lsprintf(buf,"%12s : %s",
@@ -1866,11 +1864,10 @@ endprint:
 int InitDHIRES(mp)
 int mp;
 {
-#ifdef __AROS__
-#warning Not implemented because of copper usage
+#if defined(__AROS__) && !defined(__mc68000)
+// NOTICE: Not implemented because of copper usage
 //bug("InitDHIRES(): NOT IMPLEMENTED BECAUSE OF COPPER MACRO USAGE\n");
 return 0;
-
 #else
     int line,creg,top,oscan,lace;
     struct UCopList *ucop;
