@@ -157,7 +157,7 @@ int pipe(int filedes[2])
                  pipenum++,((struct Process*)FindTask(NULL))->pr_ProcessID);
 #else
         snprintf(pipe_name, sizeof(pipe_name), "/T/%x.%08x",
-                 pipenum++,GetUniqueID());
+                 pipenum++,(int)GetUniqueID());
 #endif
 #else
 #if defined(__AROS__)
@@ -505,7 +505,9 @@ int execve(const char *filename, char *const argv[], char *const envp[])
         char *filename_conv = 0;
         char *interpreter_conv = 0;
         char *fname;
+#ifdef __amigaos4__
         struct Task *thisTask = FindTask(0);
+#endif
 
         FUNC;
 
@@ -803,12 +805,7 @@ exchild(struct op *t, int flags,
 /*current input output*/
         int i;
 /*close conditions*/
-#if defined (__AROS__)
-	FILE* amigafd[3];
-#else
         long amigafd[3];
-#endif
-        int amigafd_close[3] = {0, 0, 0};
         struct Process *proc = NULL;
         struct Task *thisTask = FindTask(0);
         struct userdata taskdata;
@@ -842,7 +839,6 @@ exchild(struct op *t, int flags,
         for(i = 0; i < 3; i++)
         {
             __get_default_file(i, &amigafd[i]);
-            if(close_fd == i) amigafd_close[i] = true;
         }
 
         if(t->str) {
@@ -866,20 +862,19 @@ exchild(struct op *t, int flags,
             NP_CloseError,           (IPTR) false,
             NP_Cli,                  (IPTR) true,
             NP_Name,                 name,
-#if !defined(__AROS__)
             NP_CommandName,          name,
-#endif
 #ifdef __amigaos4__
             NP_UserData,             (int)&taskdata,
             NP_NotifyOnDeathSigTask, thisTask,
 #endif
 #ifdef __AROS__
             NP_UserData,             &taskdata,
+            NP_NotifyOnDeath,	     (IPTR) true,
 #endif
             TAG_DONE);
 
         if ( proc != NULL ) {
-#ifndef __amigaos4__
+#if !defined(__amigaos4__) && !defined(__AROS__)
 #warning this code has been included!
 #ifndef __AROS__
                 proc->pr_Task.tc_UserData = &taskdata;

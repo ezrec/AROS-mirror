@@ -871,6 +871,7 @@ pushs(int type, Area *areap)
         if (type == SFILE || type == SSTDIN) {
                 char *dummy;
                 Xinit(s->xs, dummy, 256, s->areap);
+                (void)dummy; // Unused
         } else
                 memset(&s->xs, 0, sizeof(s->xs));
         return s;

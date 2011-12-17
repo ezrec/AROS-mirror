@@ -48,7 +48,7 @@ copy_env(struct Hook *hook, APTR userdata, struct ScanVarsMsg *message)
 
                 ++env_size;
 
-                snprintf(buffer,size-1,"%s=%.*s", message->sv_Name, message->sv_VarLen, message->sv_Var);
+                snprintf(buffer,size-1,"%s=%.*s", message->sv_Name, (int)message->sv_VarLen, message->sv_Var);
 
                 *env  = buffer;
                 env++;

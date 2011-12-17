@@ -234,9 +234,6 @@ change_flag(enum sh_flag f,
         int what,         /* flag to change */
         int newval)       /* what is changing the flag (command line vs set) */
 {
-        int oldval;
-
-        oldval = Flag(f);
         Flag(f) = newval;
         /* Turning off -p? */
         if (f == FPOSIX && newval) {

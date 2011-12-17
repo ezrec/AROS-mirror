@@ -498,6 +498,8 @@ c_trap(char **wp)
                                         shprintf(" %s", p->name);
                         shprintf(newline);
                 }
+#else
+		(void)anydfl; // Unused
 #endif
                 return 0;
         }

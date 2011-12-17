@@ -95,6 +95,7 @@ c_cd(char **wp)
          */
 
         xp = (char *) 0;
+        (void)xp; // Should be unused.
 
         cdpath = str_val(global("CDPATH"));
         do {
