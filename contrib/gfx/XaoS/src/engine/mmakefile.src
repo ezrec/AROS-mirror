@@ -9,7 +9,7 @@ include $(TOP)/config/make.cfg
 USER_CFLAGS := -DAROS -I$(SRCDIR)/$(CURDIR)/../include -I../include
 
 ifeq ($(AROS_TARGET_CPU), i386)
-USER_CFLAGS := -O2 -fstrength-reduce -ffast-math -fomit-frame-pointer -funroll-loops
+USER_CFLAGS := -DAROS -I$(SRCDIR)/$(CURDIR)/../include -I../include -O2 -fstrength-reduce -ffast-math -fomit-frame-pointer -funroll-loops
 endif
 
 FILES := \
