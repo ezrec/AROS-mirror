@@ -26,7 +26,7 @@ LIBAPI void DeleteRMHandler(RNDMH *RNDMH);
 LIBAPI APTR AllocRenderMem(RNDMH *RNDMH, ULONG size);
 LIBAPI void FreeRenderMem(RNDMH *RNDMH, APTR mem, ULONG size);
 LIBAPI APTR AllocRenderVec(RNDMH *RNDMH, ULONG size);
-LIBAPI void FreeRenderVec(ULONG *mem);
+LIBAPI void FreeRenderVec(APTR mem);
 LIBAPI APTR AllocRenderVecClear(APTR mem, ULONG size);
 
 #endif

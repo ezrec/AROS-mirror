@@ -24,8 +24,8 @@ static void inittexture(WORD *coords, WORD *texcoords, LONG width, LONG height, 
 	LONG bordertableft[8], bordertabright[8];
 	LONG *bpl, *bpr;
 	LONG y, indexleft, indexright, ycountleft, ycountright;
-	FLOAT stxl, styl, aktleftx, stxr, styr, aktrightx, f;
-	FLOAT dtxl, dtyl, deltaxleft, dtxr, dtyr, deltaxright;
+	FLOAT stxl = 0.0, styl = 0.0, aktleftx = 0.0, stxr = 0.0, styr = 0.0, aktrightx = 0.0, f;
+	FLOAT dtxl = 0.0, dtyl = 0.0, deltaxleft = 0.0, dtxr = 0.0, dtyr = 0.0, deltaxright = 0.0;
 
 	LONG turnindex = 
 		((coords[2]-coords[0]) * (coords[5]-coords[1]) -
@@ -350,7 +350,7 @@ static void scale_line_rgb(RNDSCALE *sce, struct ScaleData *data, ULONG *src, UL
 
 LIBAPI RNDSCALE *CreateScaleEngineA(UWORD sw, UWORD sh, UWORD dw, UWORD dh, struct TagItem *tags)
 {
-	RNDMH *rmh = (RNDMH *) GetTagData(RND_RMHandler, NULL, tags);
+	RNDMH *rmh = (RNDMH *) GetTagData(RND_RMHandler, (IPTR)NULL, tags);
 	UWORD format = GetTagData(RND_PixelFormat, PIXFMT_CHUNKY_CLUT, tags);
 	APTR scalefunc;
 	UWORD bpp;
@@ -375,7 +375,7 @@ LIBAPI RNDSCALE *CreateScaleEngineA(UWORD sw, UWORD sh, UWORD dw, UWORD dh, stru
 	sce = AllocRenderVec(rmh, sizeof(RNDSCALE));
 	if (sce)
 	{
-		UWORD *coords = (UWORD *) GetTagData(RND_DestCoordinates, NULL, tags);
+		UWORD *coords = (UWORD *) GetTagData(RND_DestCoordinates, (IPTR)NULL, tags);
 		if (coords)
 		{
 			sce->usecoords = TRUE;
@@ -431,7 +431,7 @@ LIBAPI ULONG ScaleA(RNDSCALE *sce, UBYTE *src, UBYTE *dst, struct TagItem *tags)
 		result = CONV_NOT_ENOUGH_MEMORY;
 		if ((*sce->initfunc)(sce, &scdata))
 		{
-			struct Hook *linehook = (struct Hook *) GetTagData(RND_LineHook, NULL, tags);
+			struct Hook *linehook = (struct Hook *) GetTagData(RND_LineHook, (IPTR)NULL, tags);
 			LONG tsw = GetTagData(RND_SourceWidth, sce->sw, tags);
 			LONG tdw = GetTagData(RND_DestWidth, sce->dw, tags) * sce->bpp;
 			LONG y;

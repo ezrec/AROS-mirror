@@ -46,7 +46,7 @@ LIBAPI void CreatePenTableA(UBYTE *src, RNDPAL *srcpal, UWORD width, UWORD heigh
 		LONG i;
 		WORD table[256];
 		LONG tsw = GetTagData(RND_SourceWidth, width, tags);
-		UBYTE *secondary = (UBYTE *) GetTagData(RND_PenTable, NULL, tags);
+		UBYTE *secondary = (UBYTE *) GetTagData(RND_PenTable, (IPTR)NULL, tags);
 
 		memfill32((ULONG *) table, 256 * sizeof(WORD), 0xffffffff);
 		
@@ -91,13 +91,13 @@ LIBAPI ULONG Chunky2RGBA(UBYTE *src, UWORD width, UWORD height,
 		struct RND_ProgressMessage progmsg;
 		struct RND_LineMessage linemsg;
 
-		struct Hook *proghook = (struct Hook *) GetTagData(RND_ProgressHook, NULL, tags);
-		struct Hook *linehook = (struct Hook *) GetTagData(RND_LineHook, NULL, tags);
+		struct Hook *proghook = (struct Hook *) GetTagData(RND_ProgressHook, (IPTR)NULL, tags);
+		struct Hook *linehook = (struct Hook *) GetTagData(RND_LineHook, (IPTR)NULL, tags);
 		LONG tsw = GetTagData(RND_SourceWidth, width, tags);
 		LONG tdw = GetTagData(RND_DestWidth, width, tags);
 		ULONG colormode = GetTagData(RND_ColorMode, COLORMODE_CLUT, tags);
 		LONG left = GetTagData(RND_LeftEdge, 0, tags);
-		UBYTE *pentab = (UBYTE *) GetTagData(RND_PenTable, NULL, tags);
+		UBYTE *pentab = (UBYTE *) GetTagData(RND_PenTable, (IPTR)NULL, tags);
 		LONG y, x;
 
 		progmsg.RND_PMsg_type = PMSGTYPE_LINES_CONVERTED;
@@ -268,7 +268,7 @@ LIBAPI void Planar2ChunkyA(UWORD **planetab, UWORD bytewidth, UWORD rows, UWORD 
 	
 
 #ifdef	RENDER_LITTLE_ENDIAN
-#warning "Endianess fixes in Planar2ChunkyA() not yet done!"
+//#warning "Endianess fixes in Planar2ChunkyA() not yet done!"
 #endif
 	
 	for (y = 0; y < rows; ++y)
@@ -312,10 +312,10 @@ LIBAPI void Chunky2BitMapA(UBYTE *src, UWORD sx, UWORD sy, UWORD width, UWORD he
 	LONG tsw;
 	UBYTE *pentab;
 	LONG y, x;
-	UWORD words[8];
+	UWORD words[8] = {};
 	if (!src || !bm || !width || !height) return;
 	tsw = GetTagData(RND_SourceWidth, width, tags);
-	pentab = (UBYTE *) GetTagData(RND_PenTable, NULL, tags);
+	pentab = (UBYTE *) GetTagData(RND_PenTable, (IPTR)NULL, tags);
 	
 	src += sx + sy * tsw;
 	
@@ -385,14 +385,14 @@ LIBAPI void Chunky2BitMapA(UBYTE *src, UWORD sx, UWORD sy, UWORD width, UWORD he
 			switch (bm->Depth)
 			{
 				default:
-				case 8:	((UWORD *) bm->Planes[7])[offs] = ((UWORD *) bm->Planes[7])[offs] & mask | (words[7] << x);
-				case 7:	((UWORD *) bm->Planes[6])[offs] = ((UWORD *) bm->Planes[6])[offs] & mask | (words[6] << x);
-				case 6:	((UWORD *) bm->Planes[5])[offs] = ((UWORD *) bm->Planes[5])[offs] & mask | (words[5] << x);
-				case 5:	((UWORD *) bm->Planes[4])[offs] = ((UWORD *) bm->Planes[4])[offs] & mask | (words[4] << x);
-				case 4:	((UWORD *) bm->Planes[3])[offs] = ((UWORD *) bm->Planes[3])[offs] & mask | (words[3] << x);
-				case 3:	((UWORD *) bm->Planes[2])[offs] = ((UWORD *) bm->Planes[2])[offs] & mask | (words[2] << x);
-				case 2:	((UWORD *) bm->Planes[1])[offs] = ((UWORD *) bm->Planes[1])[offs] & mask | (words[1] << x);
-				case 1:	((UWORD *) bm->Planes[0])[offs] = ((UWORD *) bm->Planes[0])[offs] & mask | (words[0] << x);
+				case 8:	((UWORD *) bm->Planes[7])[offs] = (((UWORD *) bm->Planes[7])[offs] & mask) | (words[7] << x);
+				case 7:	((UWORD *) bm->Planes[6])[offs] = (((UWORD *) bm->Planes[6])[offs] & mask) | (words[6] << x);
+				case 6:	((UWORD *) bm->Planes[5])[offs] = (((UWORD *) bm->Planes[5])[offs] & mask) | (words[5] << x);
+				case 5:	((UWORD *) bm->Planes[4])[offs] = (((UWORD *) bm->Planes[4])[offs] & mask) | (words[4] << x);
+				case 4:	((UWORD *) bm->Planes[3])[offs] = (((UWORD *) bm->Planes[3])[offs] & mask) | (words[3] << x);
+				case 3:	((UWORD *) bm->Planes[2])[offs] = (((UWORD *) bm->Planes[2])[offs] & mask) | (words[2] << x);
+				case 2:	((UWORD *) bm->Planes[1])[offs] = (((UWORD *) bm->Planes[1])[offs] & mask) | (words[1] << x);
+				case 1:	((UWORD *) bm->Planes[0])[offs] = (((UWORD *) bm->Planes[0])[offs] & mask) | (words[0] << x);
 			}
 		}
 		

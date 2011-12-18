@@ -47,7 +47,7 @@ typedef struct Histogram
 LIBAPI RNDHISTO *CreateHistogramA(struct TagItem *tags);
 LIBAPI void DeleteHistogram(RNDHISTO *h);
 LIBAPI ULONG AddRGB(RNDHISTO *h, ULONG rgb, ULONG count);
-LIBAPI ULONG QueryHistogram(RNDHISTO *h, Tag tag);
+LIBAPI IPTR  QueryHistogram(RNDHISTO *h, Tag tag);
 LIBAPI ULONG AddRGBImageA(RNDHISTO *h, ULONG *rgb, UWORD width, UWORD height, struct TagItem *tags);
 LIBAPI ULONG AddChunkyImageA(RNDHISTO *histogram, UBYTE *chunky, UWORD width, UWORD height, RNDPAL *palette, struct TagItem *tags);
 LIBAPI struct RNDHistoEntry **CreateHistogramPointerArray(RNDHISTO *histogram);

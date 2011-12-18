@@ -37,7 +37,7 @@ LIBAPI RNDHISTO *CreateHistogramA(struct TagItem *tags)
 			return NULL;
 	}
 
-	rmh = (APTR) GetTagData(RND_RMHandler, NULL, tags);
+	rmh = (APTR) GetTagData(RND_RMHandler, (IPTR)NULL, tags);
 	h = AllocRenderVecClear(rmh, sizeof(RNDHISTO));
 	if (h)
 	{
@@ -72,7 +72,7 @@ LIBAPI void DeleteHistogram(RNDHISTO *h)
 			node = nextnode;
 		}
 	
-		FreeRenderVec((ULONG *) h);
+		FreeRenderVec((IPTR *) h);
 	}
 }
 
@@ -82,9 +82,9 @@ LIBAPI void DeleteHistogram(RNDHISTO *h)
 **	queryhistogram
 */
 
-LIBAPI ULONG QueryHistogram(RNDHISTO *h, Tag tag)
+LIBAPI IPTR QueryHistogram(RNDHISTO *h, Tag tag)
 {
-	ULONG result = 0xffffffff;
+	IPTR result = ~0;
 	switch (tag)
 	{
 		case RND_NumColors:
@@ -94,10 +94,10 @@ LIBAPI ULONG QueryHistogram(RNDHISTO *h, Tag tag)
 			result = h->numpixels;
 			break;
 		case RND_RMHandler:
-			result = (ULONG) h->rmh;
+			result = (IPTR) h->rmh;
 			break;
 		case RND_HSType:
-			result = (ULONG) h->type;
+			result = (IPTR) h->type;
 			break;
 	}
 	return result;
@@ -212,7 +212,7 @@ LIBAPI ULONG AddRGBImageA(RNDHISTO *h, ULONG *rgb, UWORD width, UWORD height, st
 	if (h && rgb && width && height)
 	{
 		struct RND_ProgressMessage progmsg;
-		struct Hook *proghook = (struct Hook *) GetTagData(RND_ProgressHook, NULL, tags);
+		struct Hook *proghook = (struct Hook *) GetTagData(RND_ProgressHook, (IPTR)NULL, tags);
 		UWORD totw = (UWORD) GetTagData(RND_SourceWidth, width, tags);
 		UWORD y, x;
 
@@ -265,7 +265,7 @@ LIBAPI ULONG AddChunkyImageA(RNDHISTO *h, UBYTE *chunky,
 	if (h && p && chunky && width && height)
 	{
 		struct RND_ProgressMessage progmsg;
-		struct Hook *proghook = (struct Hook *) GetTagData(RND_ProgressHook, NULL, tags);
+		struct Hook *proghook = (struct Hook *) GetTagData(RND_ProgressHook, (IPTR)NULL, tags);
 		UWORD totw = (UWORD) GetTagData(RND_SourceWidth, width, tags);
 		UWORD y, x;
 

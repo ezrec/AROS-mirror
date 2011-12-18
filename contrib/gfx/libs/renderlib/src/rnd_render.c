@@ -859,7 +859,7 @@ static ULONG initrender(struct RenderData *rnd, struct TagItem *tags)
 	rnd->tsw = GetTagData(RND_SourceWidth, rnd->width, tags);
 	rnd->tdw = GetTagData(RND_DestWidth, rnd->width, tags);
 
-	rnd->pentab = (UBYTE *) GetTagData(RND_PenTable, NULL, tags);
+	rnd->pentab = (UBYTE *) GetTagData(RND_PenTable, (IPTR)NULL, tags);
 	if (!rnd->pentab)
 	{
 		LONG oz = GetTagData(RND_OffsetColorZero, 0, tags);
@@ -876,15 +876,15 @@ static ULONG initrender(struct RenderData *rnd, struct TagItem *tags)
 		}
 	}
 
-	rnd->proghook = (struct Hook *) GetTagData(RND_ProgressHook, NULL, tags);
-	rnd->linehook = (struct Hook *) GetTagData(RND_LineHook, NULL, tags);
+	rnd->proghook = (struct Hook *) GetTagData(RND_ProgressHook, (IPTR)NULL, tags);
+	rnd->linehook = (struct Hook *) GetTagData(RND_LineHook, (IPTR)NULL, tags);
 	
 	rnd->fetchmsg.RND_LMsg_type = LMSGTYPE_LINE_FETCH;
 	rnd->rendermsg.RND_LMsg_type = LMSGTYPE_LINE_RENDERED;
 	rnd->progmsg.RND_PMsg_type = PMSGTYPE_LINES_RENDERED;
 	rnd->progmsg.RND_PMsg_total = rnd->height;
 
-	rnd->scaleengine = (struct ScaleEngine *) GetTagData(RND_ScaleEngine, NULL, tags);
+	rnd->scaleengine = (struct ScaleEngine *) GetTagData(RND_ScaleEngine, (IPTR)NULL, tags);
 	if (rnd->scaleengine)
 	{
 		/* override */
@@ -904,6 +904,8 @@ static ULONG initrender(struct RenderData *rnd, struct TagItem *tags)
 		if (rnd->dithermode == DITHERMODE_RANDOM)
 		{
 			LONG i, seed;
+			/* quicker than asking for the time-of-day */
+			seed = (IPTR)FindTask(NULL);
 			LONG amount = GetTagData(RND_DitherAmount, 128, tags);
 			rnd->randtab = AllocRenderMem(rnd->rmh, NUMRAND);
 			if (!rnd->randtab) return REND_NOT_ENOUGH_MEMORY;

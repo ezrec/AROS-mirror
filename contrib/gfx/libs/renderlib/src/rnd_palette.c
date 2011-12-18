@@ -30,7 +30,7 @@ LIBAPI RNDPAL *CreatePaletteA(struct TagItem *tags)
 			return NULL;
 	}
 
-	rmh = (APTR) GetTagData(RND_RMHandler, NULL, tags);
+	rmh = (APTR) GetTagData(RND_RMHandler, (IPTR)NULL, tags);
 	p = AllocRenderVecClear(rmh, sizeof(RNDPAL));
 	if (p)
 	{
@@ -232,7 +232,7 @@ LIBAPI void FlushPalette(RNDPAL *palette)
 static WORD calcpen(RNDPAL *p, ULONG rgb)
 {
 	LONG i, d;
-	WORD besti;
+	WORD besti = 0;
 	LONG bestd = 196000;
 	WORD r, g, b;
 	WORD dr, dg, db;
@@ -261,7 +261,7 @@ static WORD calcpen(RNDPAL *p, ULONG rgb)
 static WORD calcpen2(RNDPAL *p, WORD r, WORD g, WORD b)
 {
 	LONG i, d;
-	WORD besti;
+	WORD besti = 0;
 	LONG bestd = 196000;
 	WORD dr, dg, db;
 	ULONG rgb;
@@ -483,11 +483,11 @@ static LONG cmplum(ULONG rgb1, ULONG rgb2)
 
 static LONG cmpfunc_lum_desc(APTR data, APTR rgb1, APTR rgb2)
 {
-	return -cmplum((ULONG) rgb1, (ULONG) rgb2);
+	return -cmplum((IPTR) rgb1, (IPTR) rgb2);
 }
 static LONG cmpfunc_lum_asc(APTR data, APTR rgb1, APTR rgb2)
 {
-	return cmplum((ULONG) rgb1, (ULONG) rgb2);
+	return cmplum((IPTR) rgb1, (IPTR) rgb2);
 }
 
 
@@ -513,11 +513,11 @@ static LONG cmpsat(ULONG rgb1, ULONG rgb2)
 
 static LONG cmpfunc_sat_desc(APTR data, APTR rgb1, APTR rgb2)
 {
-	return -cmpsat((ULONG) rgb1, (ULONG) rgb2);
+	return -cmpsat((IPTR) rgb1, (IPTR) rgb2);
 }
 static LONG cmpfunc_sat_asc(APTR data, APTR rgb1, APTR rgb2)
 {
-	return cmpsat((ULONG) rgb1, (ULONG) rgb2);
+	return cmpsat((IPTR) rgb1, (IPTR) rgb2);
 }
 
 
@@ -585,7 +585,7 @@ LIBAPI ULONG SortPaletteA(RNDPAL *p, ULONG mode, struct TagItem *tags)
 		struct SortHistoEntry *table = NULL;
 		struct SortHistoEntry **reftable = NULL;
 		LONG (*cmpfunc)(APTR, APTR, APTR) = NULL;
-		RNDHISTO *h = (RNDHISTO *) GetTagData(RND_Histogram, NULL, tags);
+		RNDHISTO *h = (RNDHISTO *) GetTagData(RND_Histogram, (IPTR)NULL, tags);
 		LONG i;
 
 		ObtainSemaphore(&p->lock);
@@ -669,8 +669,8 @@ LIBAPI ULONG SortPaletteA(RNDPAL *p, ULONG mode, struct TagItem *tags)
 
 		result = SORTP_SUCCESS;
 
-fail:	if (table) FreeRenderVec((ULONG *) table);
-		if (reftable) FreeRenderVec((ULONG *) reftable);
+fail:	if (table) FreeRenderVec(table);
+		if (reftable) FreeRenderVec(reftable);
 
 		ReleaseSemaphore(&p->lock);
 	}

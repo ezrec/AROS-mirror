@@ -342,8 +342,8 @@ LIBAPI ULONG ExtractPaletteA(RNDHISTO *h, RNDPAL *p, UWORD numcol, struct TagIte
 				
 				if (numhcol > numcol)
 				{
-					RNDMH *rmh = (APTR) GetTagData(RND_RMHandler, (ULONG) h->rmh, tags);
-					struct Hook *proghook = (struct Hook *) GetTagData(RND_ProgressHook, NULL, tags);
+					RNDMH *rmh = (APTR) GetTagData(RND_RMHandler, (IPTR) h->rmh, tags);
+					struct Hook *proghook = (struct Hook *) GetTagData(RND_ProgressHook, (IPTR)NULL, tags);
 
 					result = Quantize(rmh, hparray, numhcol, pptr, numcol, proghook, h);
 				}

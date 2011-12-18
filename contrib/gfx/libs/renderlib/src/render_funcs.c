@@ -4,8 +4,6 @@
 #include "lib_init.h"
 #include "render_funcs.h"
 
-static int dummy;
-
 AROS_LH1(void, DeleteRMHandler,
     AROS_LHA(APTR, rmh, A0),
     struct Library *, RenderBase, 8, Render)

@@ -60,7 +60,7 @@ LIBAPI void ApplyAlphaChannelA(ULONG *src, UWORD width, UWORD height, ULONG *dst
 	LONG tsw = GetTagData(RND_SourceWidth, width, tags);
 	LONG tdw = GetTagData(RND_DestWidth, width, tags);
 	LONG taw = GetTagData(RND_AlphaWidth, width, tags);
-	UBYTE *alpha = (UBYTE *) GetTagData(RND_AlphaChannel, (ULONG) src, tags);
+	UBYTE *alpha = (UBYTE *) GetTagData(RND_AlphaChannel, (IPTR) src, tags);
 	LONG alphaoffs = GetTagData(RND_AlphaModulo, 4, tags);
 	LONG x, s, d, a;
 	ULONG col1, col2, rgb;
@@ -210,8 +210,8 @@ LIBAPI void MixAlphaChannelA(ULONG *src1, ULONG *src2, UWORD width, UWORD height
 	LONG tsw1 = GetTagData(RND_SourceWidth, width, tags);
 	LONG tsw2 = GetTagData(RND_SourceWidth2, width, tags);
 	LONG tdw = GetTagData(RND_DestWidth, width, tags);
-	UBYTE *alpha1 = (UBYTE *) GetTagData(RND_AlphaChannel, (ULONG) src1, tags);
-	UBYTE *alpha2 = (UBYTE *) GetTagData(RND_AlphaChannel2, (ULONG) src2, tags);
+	UBYTE *alpha1 = (UBYTE *) GetTagData(RND_AlphaChannel, (IPTR) src1, tags);
+	UBYTE *alpha2 = (UBYTE *) GetTagData(RND_AlphaChannel2, (IPTR) src2, tags);
 	LONG taw1 = GetTagData(RND_AlphaWidth, width, tags);
 	LONG taw2 = GetTagData(RND_AlphaWidth2, width, tags);
 	LONG aoffs1 = GetTagData(RND_AlphaModulo, 4, tags);
@@ -287,7 +287,7 @@ LIBAPI void CreateAlphaArrayA(ULONG *rgb, UWORD width, UWORD height, struct TagI
 {
 	LONG tsw = GetTagData(RND_SourceWidth, width, tags);
 	LONG taw = GetTagData(RND_AlphaWidth, width, tags);
-	UBYTE *dst = (UBYTE *) GetTagData(RND_AlphaChannel, (ULONG) rgb, tags);
+	UBYTE *dst = (UBYTE *) GetTagData(RND_AlphaChannel, (IPTR) rgb, tags);
 	LONG aoffs = GetTagData(RND_AlphaModulo, 4, tags);
 	ULONG maskrgb = GetTagData(RND_MaskRGB, 0x000000, tags);
 	LONG x;

@@ -145,14 +145,14 @@ LIBAPI RNDMH *CreateRMHandlerA(struct TagItem *tags)
 
 		case RMHTYPE_PRIVATE:
 		{	
-			struct MemChunk *mc = (struct MemChunk *) GetTagData(RND_MemBlock, NULL, tags);
+			struct MemChunk *mc = (struct MemChunk *) GetTagData(RND_MemBlock, (IPTR)NULL, tags);
 			ULONG size = GetTagData(RND_MemSize, 0, tags);
 			if (!mc || !size) goto fail;
 			rmh->mh.mh_Node.ln_Type = NT_MEMORY;
 			rmh->mh.mh_Node.ln_Name = NULL;
 			rmh->mh.mh_First = mc;
 			rmh->mh.mh_Lower = (APTR) mc;
-			rmh->mh.mh_Upper = (APTR) ((ULONG) mc + size);
+			rmh->mh.mh_Upper = (APTR) ((IPTR) mc + size);
 			rmh->mh.mh_Free = size;
 			mc->mc_Next = NULL;
 			mc->mc_Bytes = size;
@@ -200,22 +200,23 @@ LIBAPI void FreeRenderMem(RNDMH *rmh, APTR mem, ULONG size)
 
 LIBAPI APTR AllocRenderVec(RNDMH *rmh, ULONG size)
 {
-	ULONG *mem;
-	size += 8;
+	IPTR *mem;
+	size += sizeof(IPTR)*2;
 	mem = AllocRenderMem(rmh, size);
 	if (mem)
 	{
-		*mem++ = (ULONG) rmh;
+		*mem++ = (IPTR) rmh;
 		*mem++ = size;
 	}
 	return mem;
 }
 
-LIBAPI void FreeRenderVec(ULONG *mem)
+LIBAPI void FreeRenderVec(APTR ptr)
 {
+	IPTR *mem = ptr;
 	if (mem)
 	{
-		ULONG size = *--mem;
+		ULONG size = *(--mem);
 		RNDMH *rmh = (RNDMH *) *--mem;
 		FreeRenderMem(rmh, mem, size);
 	}
@@ -236,7 +237,7 @@ LIBAPI APTR AllocRenderVecClear(APTR rmh, ULONG size)
 
 LIBAPI void TurboFillMem(APTR dst, ULONG len, ULONG v)
 {
-	if (((((ULONG) dst) & 3) == 0) && ((len & 3) == 0))
+	if (((((IPTR) dst) & 3) == 0) && ((len & 3) == 0))
 	{	
 		v &= 0xff;
 		v = (v<<8) | v;
@@ -252,13 +253,13 @@ LIBAPI void TurboFillMem(APTR dst, ULONG len, ULONG v)
 
 LIBAPI void TurboCopyMem(APTR src, APTR dst, ULONG len)
 {
-	if (((ULONG) dst > (ULONG) src) && ((ULONG) dst < (ULONG) src + len))
+	if (((IPTR) dst > (IPTR) src) && ((IPTR) dst < (IPTR) src + len))
 	{
 		memcpy8reverse((UBYTE *) src, (UBYTE *) dst, len);
 		return;
 	}
 
-	if ((((ULONG) src) & 3) || (((ULONG) dst) & 3) || len & 3)
+	if ((((IPTR) src) & 3) || (((IPTR) dst) & 3) || len & 3)
 	{
 		CopyMem(src, dst, len);
 		return;

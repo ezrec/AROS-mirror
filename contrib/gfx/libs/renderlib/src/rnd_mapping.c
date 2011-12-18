@@ -31,7 +31,7 @@ LIBAPI ULONG MapRGBArrayA(RNDPAL *pal, ULONG *src, UWORD width, UWORD height, UB
 		{
 			LONG tsw = GetTagData(RND_SourceWidth, width, tags);
 			LONG tdw = GetTagData(RND_DestWidth, width, tags);
-			UBYTE *pentab = (UBYTE *) GetTagData(RND_PenTable, NULL, tags);
+			UBYTE *pentab = (UBYTE *) GetTagData(RND_PenTable, (IPTR)NULL, tags);
 			LONG y, x;
 
 			if (pentab)
@@ -90,7 +90,7 @@ LIBAPI ULONG MapChunkyArrayA(RNDMAP *pal, UBYTE *src, RNDPAL *srcpal, UWORD widt
 		{
 			LONG tsw = GetTagData(RND_SourceWidth, width, tags);
 			LONG tdw = GetTagData(RND_DestWidth, width, tags);
-			UBYTE *pentab = (UBYTE *) GetTagData(RND_PenTable, NULL, tags);
+			UBYTE *pentab = (UBYTE *) GetTagData(RND_PenTable, (IPTR)NULL, tags);
 			LONG y, x;
 
 			if (pentab)
