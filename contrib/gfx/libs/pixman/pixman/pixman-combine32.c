@@ -107,7 +107,7 @@ combine_mask_alpha_ca (const uint32_t *src, uint32_t *mask)
 static force_inline uint32_t
 combine_mask (const uint32_t *src, const uint32_t *mask, int i)
 {
-    uint32_t s, m;
+    uint32_t s, m = 0;
 
     if (mask)
     {

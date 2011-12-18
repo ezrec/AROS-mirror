@@ -103,7 +103,7 @@ combine_mask_alpha_ca (const comp4_t *src, comp4_t *mask)
 static force_inline comp4_t
 combine_mask (const comp4_t *src, const comp4_t *mask, int i)
 {
-    comp4_t s, m;
+    comp4_t s, m = 0;
 
     if (mask)
     {

@@ -347,7 +347,6 @@ pixman_rasterize_trapezoid (pixman_image_t *          image,
                             int                       y_off)
 {
     int bpp;
-    int width;
     int height;
 
     pixman_fixed_t y_off_fixed;
@@ -361,7 +360,6 @@ pixman_rasterize_trapezoid (pixman_image_t *          image,
     if (!pixman_trapezoid_valid (trap))
 	return;
 
-    width = image->bits.width;
     height = image->bits.height;
     bpp = PIXMAN_FORMAT_BPP (image->bits.format);
 

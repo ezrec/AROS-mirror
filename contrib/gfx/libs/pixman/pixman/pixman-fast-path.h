@@ -31,8 +31,9 @@
 #define PIXMAN_REPEAT_COVER -1
 
 static force_inline pixman_bool_t
-repeat (pixman_repeat_t repeat, int *c, int size)
+repeat (pixman_repeat_t repeat, void *ptr, int size)
 {
+    int *c = ptr;
     if (repeat == PIXMAN_REPEAT_NONE)
     {
 	if (*c < 0 || *c >= size)

@@ -343,15 +343,15 @@ PREFIX (_print) (region_type_t *rgn)
 
     fprintf (stderr, "num: %d size: %d\n", num, size);
     fprintf (stderr, "extents: %d %d %d %d\n",
-             rgn->extents.x1,
-	     rgn->extents.y1,
-	     rgn->extents.x2,
-	     rgn->extents.y2);
+             (int)rgn->extents.x1,
+	     (int)rgn->extents.y1,
+	     (int)rgn->extents.x2,
+	     (int)rgn->extents.y2);
     
     for (i = 0; i < num; i++)
     {
 	fprintf (stderr, "%d %d %d %d \n",
-	         rects[i].x1, rects[i].y1, rects[i].x2, rects[i].y2);
+	         (int)rects[i].x1, (int)rects[i].y1, (int)rects[i].x2, (int)rects[i].y2);
     }
     
     fprintf (stderr, "\n");
