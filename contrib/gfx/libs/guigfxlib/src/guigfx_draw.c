@@ -1543,7 +1543,7 @@ struct BitMap SAVE_DS ASM *CreatePictureBitMapA(REG(a0) DRAWHANDLE *dh, REG(a1) 
 					data->autodither = GetTagData(GGFX_AutoDither, dh->autodither, tags);
 					data->dithermode = GetTagData(GGFX_DitherMode, dh->dithermode, tags);
 					data->ditheramount = GetTagData(GGFX_DitherAmount, dh->ditheramount, tags);
-					data->callbackhook = (struct Hook *) GetTagData(GGFX_CallBackHook, NULL, tags);
+					data->callbackhook = (struct Hook *) GetTagData(GGFX_CallBackHook, (IPTR)NULL, tags);
 					data->usescalepixelarray = FALSE;
 					data->rastlock = NULL;
 
@@ -1653,11 +1653,11 @@ BOOL SAVE_DS ASM DrawPictureA(
 			data->destheight = GetTagData(GGFX_DestHeight, pic->height, tags);
 			data->dithermode = GetTagData(GGFX_DitherMode, dh->dithermode, tags);
 			data->ditheramount = GetTagData(GGFX_DitherAmount, dh->ditheramount, tags);
-			data->callbackhook = (struct Hook *) GetTagData(GGFX_CallBackHook, NULL, tags);
+			data->callbackhook = (struct Hook *) GetTagData(GGFX_CallBackHook, (IPTR)NULL, tags);
 			data->autodither = GetTagData(GGFX_AutoDither, dh->autodither, tags);
-			data->rastlock = (struct SignalSemaphore *) GetTagData(GGFX_RastLock, NULL, tags);
+			data->rastlock = (struct SignalSemaphore *) GetTagData(GGFX_RastLock, (IPTR)NULL, tags);
 
-			data->coords = (WORD *) GetTagData(RND_DestCoordinates, NULL, tags);
+			data->coords = (WORD *) GetTagData(RND_DestCoordinates, (IPTR)NULL, tags);
 
 			data->clearbg = !!data->coords;
 		//	data->bgcolor = GetTagData(GGFX_BGColor, 0x000000, tags);

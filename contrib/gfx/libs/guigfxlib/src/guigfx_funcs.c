@@ -239,7 +239,7 @@ AROS_LH3(struct BitMap *, CreatePictureBitMapA,
 AROS_LH3(ULONG, DoPictureMethodA,
     AROS_LHA(APTR, pic, A0),
     AROS_LHA(ULONG, method, D0),
-    AROS_LHA(ULONG *, arg, A1),
+    AROS_LHA(IPTR *, arg, A1),
     struct Library *, GuiGFXBase, 23, GuiGFX)
 {
     AROS_LIBFUNC_INIT

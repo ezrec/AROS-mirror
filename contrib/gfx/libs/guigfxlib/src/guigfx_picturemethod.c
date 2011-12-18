@@ -135,7 +135,7 @@ BOOL ExtractAlphaArray(PIC *pic)
 ULONG SAVE_DS ASM DoPictureMethodA(
 	REG(a0) APTR pic, 
 	REG(d0) ULONG method, 
-	REG(a1) ULONG *arg)
+	REG(a1) IPTR *arg)
 {
 	ULONG result = FALSE;
 
@@ -1369,8 +1369,8 @@ ULONG ASM SAVE_DS mixrgbalpha(	register __a0 struct Hook *hook,
 		struct mixalphadata *args = (struct mixalphadata *)(hook->h_Data);
 
 		MixAlphaChannel((ULONG *) buffer, args->destbuffer, args->width, 1,	args->destbuffer,
-				RND_AlphaChannel, args->alphachannel_source ? (ULONG) buffer : NULL,
-				RND_AlphaChannel2, args->alphachannel_dest ? (ULONG) args->destbuffer : NULL,
+				RND_AlphaChannel, args->alphachannel_source ? (IPTR) buffer : (IPTR)NULL,
+				RND_AlphaChannel2, args->alphachannel_dest ? (IPTR) args->destbuffer : (IPTR)NULL,
 				TAG_DONE);
 
 		args->destbuffer += args->totalwidth_dest;
@@ -1504,8 +1504,8 @@ ULONG PIC_MixAlpha(PIC *pic, PIC *mixpic, TAGLIST tags)
 									RND_SourceWidth, mixpic->width,
 									RND_SourceWidth2, pic->width,
 									RND_DestWidth, pic->width,
-									RND_AlphaChannel, mixpic->alphapresent ? (IPTR) source : NULL,
-									RND_AlphaChannel2, pic->alphapresent ? (IPTR) dest : NULL,
+									RND_AlphaChannel, mixpic->alphapresent ? (IPTR) source : (IPTR) NULL,
+									RND_AlphaChannel2, pic->alphapresent ? (IPTR) dest : (IPTR) NULL,
 									RND_AlphaWidth, mixpic->width,
 									RND_AlphaWidth2, pic->width,
 									TAG_DONE);
@@ -1619,7 +1619,7 @@ ULONG PIC_RenderPaletteA(PIC *pic, APTR palette, TAGLIST tags)
 	ObtainSemaphore(&pic->semaphore);
 
 
-	pentab = (UBYTE *) GetTagData(GGFX_PenTable, NULL, tags);
+	pentab = (UBYTE *) GetTagData(GGFX_PenTable, (IPTR)NULL, tags);
 	palfmt = GetTagData(GGFX_PaletteFormat, PALFMT_RGB8, tags);
 
 
@@ -1632,7 +1632,7 @@ ULONG PIC_RenderPaletteA(PIC *pic, APTR palette, TAGLIST tags)
 
 		if (palfmt == PALFMT_PALETTE)
 		{
-			if ((numcolors = GetPaletteAttrs(palette, NULL)))
+			if ((numcolors = GetPaletteAttrs(palette, 0)))
 			{
 				ULONG rgb;
 				for (i = 0; i < numcolors; ++i)
@@ -2403,10 +2403,10 @@ void AutoCutChunky(char *array, int w, int h, int totalwidth,
 }	
 
 
-void AutoCutRGB(unsigned long *array, int w, int h, int totalwidth,
+void AutoCutRGB(ULONG *array, int w, int h, int totalwidth,
 	int *neww, int *newh, int *xoffs, int *yoffs)
 {
-	unsigned long rgb, *p;
+	ULONG rgb, *p;
 	int i;
 //	int x = 0, y = 0;
 	

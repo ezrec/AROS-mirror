@@ -160,31 +160,31 @@ int GetBitMapInfoA(struct BitMap *bm, ULONG displayID, TAGLIST tags)
 			}
 		}
 
-		if ((p = (LONG *) GetTagData(BMAPATTR_Width, NULL, tags)))
+		if ((p = (LONG *) GetTagData(BMAPATTR_Width, (IPTR)NULL, tags)))
 		{
 			*p = GetBitMapAttr(bm, BMA_WIDTH);
 			count++;
 		}
 
-		if ((p = (LONG *) GetTagData(BMAPATTR_Height, NULL, tags)))
+		if ((p = (LONG *) GetTagData(BMAPATTR_Height, (IPTR)NULL, tags)))
 		{
 			*p = GetBitMapAttr(bm, BMA_HEIGHT);
 			count++;
 		}
 
-		if ((p = (LONG *) GetTagData(BMAPATTR_Depth, NULL, tags)))
+		if ((p = (LONG *) GetTagData(BMAPATTR_Depth, (IPTR)NULL, tags)))
 		{
 			*p = depth;
 			count++;
 		}
 
-		if ((p = (LONG *) GetTagData(BMAPATTR_CyberGFX, NULL, tags)))
+		if ((p = (LONG *) GetTagData(BMAPATTR_CyberGFX, (IPTR)NULL, tags)))
 		{
 			*p = (LONG) cyberbitmap;
 			count++;
 		}
 
-		if ((p = (LONG *) GetTagData(BMAPATTR_BitMapFormat, NULL, tags)))
+		if ((p = (LONG *) GetTagData(BMAPATTR_BitMapFormat, (IPTR)NULL, tags)))
 		{
 			if (cyberbitmap)
 			{
@@ -221,7 +221,7 @@ int GetBitMapInfoA(struct BitMap *bm, ULONG displayID, TAGLIST tags)
 			count++;
 		}
 
-		if ((p = (LONG *) GetTagData(BMAPATTR_PixelFormat, NULL, tags)))
+		if ((p = (LONG *) GetTagData(BMAPATTR_PixelFormat, (IPTR)NULL, tags)))
 		{
 			LONG bf;
 
@@ -243,7 +243,7 @@ int GetBitMapInfoA(struct BitMap *bm, ULONG displayID, TAGLIST tags)
 			count++;
 		}
 
-		if ((p = (LONG *) GetTagData(BMAPATTR_Flags, NULL, tags)))
+		if ((p = (LONG *) GetTagData(BMAPATTR_Flags, (IPTR)NULL, tags)))
 		{
 			*p = GetBitMapAttr(bm, BMA_FLAGS);
 			count++;

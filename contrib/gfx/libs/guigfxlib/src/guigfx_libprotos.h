@@ -38,7 +38,7 @@ void LIBENT GGFX_Exit(void);
 
 /* guigfx_picturemethod */
 
-ULONG SAVE_DS ASM DoPictureMethodA(REG(a0) APTR, REG(d0) ULONG, REG(a1) ULONG *);
+ULONG SAVE_DS ASM DoPictureMethodA(REG(a0) APTR, REG(d0) ULONG, REG(a1) IPTR *);
 
 
 /* guigfx_picture */

@@ -437,7 +437,7 @@ PIC SAVE_DS ASM *MakePictureA(
 
 				success = FALSE;
 				
-				userpalette = (PALETTE) GetTagData(GGFX_Palette, NULL, taglist);
+				userpalette = (PALETTE) GetTagData(GGFX_Palette, (IPTR)NULL, taglist);
 				paletteformat = GetTagData(GGFX_PaletteFormat, PALFMT_RGB8, taglist);
 			
 				if (userpalette)
@@ -902,51 +902,51 @@ ULONG SAVE_DS ASM GetPictureAttrsA(REG(a0) PIC *pic, REG(a1) TAGLIST tags)
 
 	if (pic)
 	{
-		ULONG *p;
+		IPTR *p;
 		
-		if ((p = (ULONG *) GetTagData(PICATTR_Width, NULL, tags)))
+		if ((p = (IPTR *) GetTagData(PICATTR_Width, (IPTR)NULL, tags)))
 		{
 			*p = pic->width;
 			count++;
 		}
 	
-		if ((p = (ULONG *) GetTagData(PICATTR_Height, NULL, tags)))
+		if ((p = (IPTR *) GetTagData(PICATTR_Height, (IPTR)NULL, tags)))
 		{
 			*p = pic->height;
 			count++;
 		}
 	
-		if ((p = (ULONG *) GetTagData(PICATTR_RawData, NULL, tags)))
+		if ((p = (IPTR *) GetTagData(PICATTR_RawData, (IPTR)NULL, tags)))
 		{
-			*p = (ULONG) pic->array;
+			*p = (IPTR) pic->array;
 			count++;
 		}
 	
-		if ((p = (ULONG *) GetTagData(PICATTR_PixelFormat, NULL, tags)))
+		if ((p = (IPTR *) GetTagData(PICATTR_PixelFormat, (IPTR)NULL, tags)))
 		{
 			*p = pic->pixelformat;
 			count++;
 		}
 	
-		if ((p = (ULONG *) GetTagData(PICATTR_AspectX, NULL, tags)))
+		if ((p = (IPTR *) GetTagData(PICATTR_AspectX, (IPTR)NULL, tags)))
 		{
 			*p = pic->aspectx;
 			count++;
 		}
 	
-		if ((p = (ULONG *) GetTagData(PICATTR_AspectY, NULL, tags)))
+		if ((p = (IPTR *) GetTagData(PICATTR_AspectY, (IPTR)NULL, tags)))
 		{
 			*p = pic->aspecty;
 			count++;
 		}
 
-		if ((p = (ULONG *) GetTagData(PICATTR_AlphaPresent, NULL, tags)))
+		if ((p = (IPTR *) GetTagData(PICATTR_AlphaPresent, (IPTR)NULL, tags)))
 		{
-			*p = (ULONG) pic->alphapresent;
+			*p = (IPTR) pic->alphapresent;
 			count++;
 		}
 		
-		if ((p = (ULONG *) GetTagData(PICATTR_NumPaletteEntries, NULL, tags)))
+		if ((p = (IPTR *) GetTagData(PICATTR_NumPaletteEntries, (IPTR)NULL, tags)))
 		{
 			if (pic->palette)
 			{
@@ -959,7 +959,7 @@ ULONG SAVE_DS ASM GetPictureAttrsA(REG(a0) PIC *pic, REG(a1) TAGLIST tags)
 			count++;
 		}
 
-		if ((p = (ULONG *) GetTagData(PICATTR_Palette, NULL, tags)))
+		if ((p = (IPTR *) GetTagData(PICATTR_Palette, (IPTR)NULL, tags)))
 		{
 			if (pic->palette)
 			{
@@ -1023,7 +1023,7 @@ PIC SAVE_DS ASM *ClonePictureA(REG(a0) PIC *pic, REG(a1) TAGLIST tags)
 						{
 							ULONG numcolors;
 							
-							if ((numcolors = GetPaletteAttrs(pic->palette, NULL)))
+							if ((numcolors = GetPaletteAttrs(pic->palette, 0)))
 							{
 								ImportPalette(newpalette, pic->palette, numcolors, 
 									RND_PaletteFormat, PALFMT_PALETTE, TAG_DONE);

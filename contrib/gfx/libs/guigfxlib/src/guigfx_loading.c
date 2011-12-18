@@ -77,7 +77,7 @@ PIC *LoadPictureDT(STRPTR file_name, TAGLIST tags)
 	
 		TurboFillMem(&pic, sizeof(PIC), 0);
 	
-		errptr = (LONG *) GetTagData(GGFX_ErrorCode, (ULONG) errptr, tags);
+		errptr = (LONG *) GetTagData(GGFX_ErrorCode, (IPTR) errptr, tags);
 
 	
 		if ((obj = NewDTObject(file_name, PDTA_DestMode, PMODE_V43,
@@ -101,7 +101,7 @@ PIC *LoadPictureDT(STRPTR file_name, TAGLIST tags)
 			
 				if (displayID == INVALID_ID)
 				{
-					displayID = NULL;
+					displayID = 0;
 				}
 
 				#ifdef DEBUG
@@ -220,7 +220,7 @@ PIC *LoadPictureDT(STRPTR file_name, TAGLIST tags)
 															RND_EHBPalette, displayID & EXTRA_HALFBRITE,
 															TAG_DONE);
 			
-														if (!ReadBitMapArray(bmap, &pic, displayID, NULL))
+														if (!ReadBitMapArray(bmap, &pic, displayID, TAG_END))
 														{
 															err = ERROR_NO_FREE_STORE;
 														}
@@ -251,7 +251,7 @@ PIC *LoadPictureDT(STRPTR file_name, TAGLIST tags)
 		
 										case PIXFMT_0RGB_32:
 										{
-											if (!ReadBitMapArray(bmap, &pic, displayID, NULL))
+											if (!ReadBitMapArray(bmap, &pic, displayID, TAG_END))
 											{
 												err = ERROR_NO_FREE_STORE;
 											}
@@ -312,7 +312,7 @@ PIC *LoadPictureDT(STRPTR file_name, TAGLIST tags)
 				GGFX_PixelFormat, pic.pixelformat,
 				GGFX_AspectX, pic.aspectx,
 				GGFX_AspectY, pic.aspecty,
-				GGFX_Palette, (ULONG)(pic.palette),
+				GGFX_Palette, (IPTR)(pic.palette),
 				GGFX_Owner, TRUE,
 				TAG_DONE)))
 			{
@@ -444,7 +444,7 @@ PIC *LoadJPEG(STRPTR filename, TAGLIST tags)
 		char *buffer = NULL;
 
 		ULONG hstype = GetTagData(GGFX_HSType, HSTYPE_UNDEFINED, tags);
-		LONG *errptr = (LONG *) GetTagData(GGFX_ErrorCode, NULL, tags);
+		LONG *errptr = (LONG *) GetTagData(GGFX_ErrorCode, (IPTR)NULL, tags);
 
 		if (fh = Open(filename, MODE_OLDFILE))
 		{
@@ -604,7 +604,7 @@ BOOL SAVE_DS ASM IsPictureA(REG(a0) char *file_name, REG(a1) TAGLIST tags)
 	         dth = dtn->dtn_Header;
 	         if (dth->dth_GroupID == GID_PICTURE)   /* is it a picture? */
 	         {
-				char **formatname = (char **) GetTagData(GGFX_FormatName, NULL, tags);
+				char **formatname = (char **) GetTagData(GGFX_FormatName, (IPTR)NULL, tags);
 
 	            it_is = TRUE;
 	

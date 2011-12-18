@@ -115,11 +115,10 @@ ULONG PIC_Convolve(PIC *pic, KERNEL *kernel, TAGLIST tags)
 					ULONG *sbufptr = source;
 					ULONG *dbufptr = dest;
 					int SUMR, SUMG, SUMB;
-					int k, div, inc;
+					int k, div;
 					ULONG rgb;
 					
 					div = kernel->divisor;
-					inc = kernel->increment;
 					
 					for (y = 0; y < destheight; y++) 
 					{
