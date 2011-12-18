@@ -12,7 +12,7 @@ FILES := library \
 	 scale \
 	 utils
 
-USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../../include
+USER_INCLUDES := -idirafter $(SRCDIR)/$(CURDIR)/../../include
 USER_CFLAGS := -DNO_INLINE_STDARG
 USER_CFLAGS += $(PARANOIA_CFLAGS)
 
