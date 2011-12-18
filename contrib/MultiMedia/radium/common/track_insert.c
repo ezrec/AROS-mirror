@@ -56,7 +56,7 @@ void DeleteTracks(
 	
 	if(num_tracks<3) return;
 
-	fprintf(stderr,"delete track. Curr: %d, num_tracks: %d, todelete: %d\n",tracknum,num_tracks,todelete);
+	fprintf(stderr,"delete track. Curr: %d, num_tracks: %d, todelete: %d\n",(int)tracknum,(int)num_tracks,(int)todelete);
 
 	for(lokke=tracknum ; lokke<num_tracks-1+todelete;lokke++){
 	  wtrack=CB_CopyTrack(

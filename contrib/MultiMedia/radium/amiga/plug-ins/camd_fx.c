@@ -36,50 +36,73 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 
 
 struct CAMD_FX CAMD_fxs[CAMD_NUM_FX]={
+    {
 	"Program Change",0,127,PROGRAMCHANGE_CC,
-
+    },{
 	"-----------------------",0,0,-1,
-
+    },{
 	"Channel Preassure",0,127,CHANNELPREASSURE_CC,
-
+    },{
 	"-----------------------",0,0,-1,
-
+    },{
 	"Pitch7",-64,63,PITCH7_CC,
+    },{
 	"Pitch14",-0x2000,0x1fff,PITCH14_CC,
-
+    },{
 	"-----------------------",0,0,-1,
-
+    },{
 	"Modulation7.",0,127,1,
+    },{
 	"Modulation14.",0,0x3fff,129,
+    },{
 
 	"-----------------------",0,0,-1,
+    },{
 
 	"Portamento7.",0,127,5,
+    },{
 	"Portamento14.",0,0x3fff,5,
+    },{
 
 	"-----------------------",0,0,-1,
+    },{
 
 	"Volume7.",0,127,7,
+    },{
 	"Volume14.",0,0x3fff,135,
+    },{
 
 	"-----------------------",0,0,-1,
+    },{
 
 	"Pan7.",-64,63,10,
+    },{
 	"Pan14.",-0x2000,0x1fff,138,
+    },{
 
 	"-----------------------",0,0,-1,
+    },{
 
 	"Chorus.",0,127,93,
+    },{
 	"Reverb.",0,127,91,
+    },{
 	"Attack.",0,127,73,
+    },{
 	"Release.",0,127,72,
+    },{
 	"CutOff",0,127,74,
+    },{
 	"Resonance",0,127,71,
+    },{
 	"Tremolo",0,127,92,
-   "Phaser",0,127,95,
-
+    },{
+	"Phaser",0,127,95,
+    },{
 	"-----------------------",0,0,-1,
+    },{
 	"Other CC",0,0,OTHER_CC
+    }
 };
 
 char *camd_fxs_fullnames[CAMD_NUM_FX]={
@@ -360,7 +383,7 @@ int CAMDgetFX(struct Tracker_Windows *window,struct Tracks *track,struct FX *fx)
 	}
 
 	for(;;){
-		selection=GFX_Menu(window,NULL,menutitle,CAMD_NUM_FX,menutext);
+		selection=GFX_Menu(window,(ReqType)0,menutitle,CAMD_NUM_FX,menutext);
 		if(-1==selection){
 			return FX_FAILED;
 		}

@@ -9,7 +9,7 @@
 void GC_amiga_set_toany(void){return;}
 
 GC_API int GC_collect_a_little GC_PROTO((void)){
-  return;
+  return 0;
 }
 
 

@@ -162,7 +162,7 @@ void SetMaxUndos(struct Tracker_Windows *window){
 	char seltext[50];
 
 	sprintf(seltext,"Max Undos (now: %d): ",max_num_undos);
-	newmax=GFX_GetInteger(window,NULL,seltext,3,2000000);
+	newmax=GFX_GetInteger(window,(ReqType)0,seltext,3,2000000);
 	if(newmax==2) return;
 
 	max_num_undos=newmax;

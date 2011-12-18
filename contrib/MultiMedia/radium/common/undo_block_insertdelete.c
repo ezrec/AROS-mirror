@@ -90,7 +90,7 @@ void *Undo_Do_Block_Insert(
 		return Undo_Do_Block_Delete(window,wblock,wtrack,realline,pointer);
 	}
 
-	fprintf(stderr,"ubi->blockpos: %d\n",ubi->blockpos);
+	fprintf(stderr,"ubi->blockpos: %d\n",(int)ubi->blockpos);
 	ubi->wblock=(struct WBlocks *)ListFindElement1(&window->wblocks->l,ubi->blockpos);
 	DeleteBlock(ubi->blockpos);
 

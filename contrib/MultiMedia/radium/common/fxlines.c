@@ -258,7 +258,7 @@ struct FX *selectFX(
 			menutext[lokke]=getTrackFX(wtrack->track,lokke)->name;
 		}
 		menutext[lokke]="New FX";
-		selection=GFX_Menu(window,NULL,"Select FX",num_usedFX+1,menutext);
+		selection=GFX_Menu(window,(ReqType)0,"Select FX",num_usedFX+1,menutext);
 		if(selection==-1) return NULL;
 		if(selection<num_usedFX) return getTrackFX(wtrack->track,selection);
 	}

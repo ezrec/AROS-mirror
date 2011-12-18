@@ -41,7 +41,7 @@ char *BS_makelistname(struct Blocks *block){
 
 char *BS_maketolistname(int num,struct Blocks *block){
 	char *listname=talloc_atomic(strlen("%.2d - %.2d - %s")+strlen(block->name)+10);
-	sprintf(listname,"%.2d - %.2d - %s",(int)num,block->l.num,block->name);
+	sprintf(listname,"%.2d - %.2d - %s",(int)num,(int)block->l.num,block->name);
 	return listname;
 }
 
@@ -75,8 +75,8 @@ void BS_UpdateBlockList(void){
 
 	BS_from0List.mlh_Head=(struct MinNode *)fromroot;
 	GT_SetGadgetAttrs(BlockSelectGadgets[0],BlockSelectWnd,NULL,
-		(GTLV_Labels), (ULONG)&BS_from0List,
-		(GTLV_ShowSelected), NULL,
+		(GTLV_Labels), (IPTR)&BS_from0List,
+		(GTLV_ShowSelected), (IPTR)NULL,
 		(GTLV_Selected), root->song->tracker_windows->wblock->l.num,
 		(TAG_DONE)
 	);
@@ -122,8 +122,8 @@ void BS_UpdatePlayList(void){
 
 	BS_to0List.mlh_Head=(struct MinNode *)toroot;
 	GT_SetGadgetAttrs(BlockSelectGadgets[1],BlockSelectWnd,NULL,
-		(GTLV_Labels), (ULONG)&BS_to0List,
-		(GTLV_ShowSelected), NULL,
+		(GTLV_Labels), (IPTR)&BS_to0List,
+		(GTLV_ShowSelected), (IPTR)NULL,
 		(GTLV_Selected), root->curr_playlist,
 		(TAG_DONE)
 	);

@@ -44,7 +44,7 @@ void UpdateWTrackHeader(
 	maxwidth-=2*window->fontwidth;
 	maxwidth/=window->fontwidth;
 
-	sprintf(temp,"%d: %.*s",wtrack->l.num,maxwidth,wtrack->track->patch==NULL ? wtrack->track->trackname : wtrack->track->patch->name);
+	sprintf(temp,"%d: %.*s",(int)wtrack->l.num,maxwidth,wtrack->track->patch==NULL ? wtrack->track->trackname : wtrack->track->patch->name);
 	GFX_T_Text(
 		window,1,temp,
 		wtrack->x+1,

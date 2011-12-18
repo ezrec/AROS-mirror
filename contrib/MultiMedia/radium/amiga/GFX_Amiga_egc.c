@@ -361,7 +361,7 @@ bool GFX_SelectEditFont(struct Tracker_Windows *tvisual){
 		return false;
 	}
 
-	if(AslRequestTags(requester,0L)==NULL){
+	if(AslRequestTags(requester,0L)==0){
 		FreeAslRequest(requester);
 		return false;
 	}
@@ -404,7 +404,7 @@ bool GFX_SelectHeaderFont(struct Tracker_Windows *tvisual){
 		TAG_END
 	);
 
-	if(AslRequestTags(requester,0L)==NULL){
+	if(AslRequestTags(requester,0L)==0){
 		RError("Could not open asl-requester\n");
 		FreeAslRequest(requester);
 		return false;
@@ -963,7 +963,7 @@ ReqType GFX_OpenReq(struct Tracker_Windows *tvisual,int width,int height,char *t
 }
 
 void GFX_CloseReq(struct Tracker_Windows *tvisual,ReqType reqtype){
-	if(reqtype==NULL) return;
+	if(reqtype==BNULL) return;
 	Close(reqtype);
 }
 
@@ -972,7 +972,7 @@ int GFX_GetInteger(struct Tracker_Windows *tvisual,ReqType reqtype,char *text,in
 	char rettext[50];
 	int ret=min-1;
 
-	if(reqtype==NULL){
+	if(reqtype==BNULL){
 		file=GFX_OpenReq(tvisual,strlen(text)+10,4,"title");
 	}else{
 		file=reqtype;
@@ -992,7 +992,7 @@ int GFX_GetInteger(struct Tracker_Windows *tvisual,ReqType reqtype,char *text,in
 		ret=atoi(rettext);
 	}
 
-	if(reqtype==NULL){
+	if(reqtype==BNULL){
 		GFX_CloseReq(tvisual,file);
 	}
 
@@ -1004,7 +1004,7 @@ float GFX_GetFloat(struct Tracker_Windows *tvisual,ReqType reqtype,char *text,fl
 	char rettext[50];
 	float ret=min-1.0f;
 
-	if(reqtype==NULL){
+	if(reqtype==BNULL){
 		file=GFX_OpenReq(tvisual,strlen(text)+10,4,"title");
 	}else{
 		file=reqtype;
@@ -1033,7 +1033,7 @@ float GFX_GetFloat(struct Tracker_Windows *tvisual,ReqType reqtype,char *text,fl
 		}
 	}
 
-	if(reqtype==NULL){
+	if(reqtype==BNULL){
 		GFX_CloseReq(tvisual,file);
 	}
 
@@ -1046,7 +1046,7 @@ char *GFX_GetString(struct Tracker_Windows *tvisual,ReqType reqtype,char *text){
 	char temp[70];
 	char *rettext=NULL;
 
-	if(reqtype==NULL){
+	if(reqtype==BNULL){
 		file=GFX_OpenReq(tvisual,strlen(text)+10,4,"title");
 	}else{
 		file=reqtype;
@@ -1064,7 +1064,7 @@ char *GFX_GetString(struct Tracker_Windows *tvisual,ReqType reqtype,char *text){
 		sprintf(rettext,"%s",temp);
 	}
 
-	if(reqtype==NULL){
+	if(reqtype==BNULL){
 		GFX_CloseReq(tvisual,file);
 	}
 
@@ -1087,7 +1087,7 @@ int GFX_Menu(
 	int lokke,ret=0;
 	struct FileRequester *requester;
 
-	if(reqtype==NULL || num_sel>20){
+	if(reqtype==BNULL || num_sel>20){
 #ifdef USEPROGRESSBAR
 		file=OpenCon(tvisual->fontwidth*(30),tvisual->fontheight,"Please Wait...",screenname);
 
@@ -1139,15 +1139,15 @@ int GFX_Menu(
 
 		if(requester==NULL){
 			RError("Could not open asl-requester, 1\n");
-			Execute("delete rad:trackertemp/#? >NIL:",NULL,NULL);
+			Execute("delete rad:trackertemp/#? >NIL:",BNULL,BNULL);
 			return -1;
 		}
 
 		debug("hallo4\n");
 
-		if(AslRequestTags(requester,0L)==NULL){
+		if(AslRequestTags(requester,0L)==0){
 			FreeAslRequest(requester);
-			Execute("delete rad:trackertemp/#? >NIL:",NULL,NULL);
+			Execute("delete rad:trackertemp/#? >NIL:",BNULL,BNULL);
 			return -1;
 		}
 
@@ -1155,7 +1155,7 @@ int GFX_Menu(
 
 		if(requester->fr_File==NULL){
 			FreeAslRequest(requester);
-			Execute("delete rad:trackertemp/#? >NIL:",NULL,NULL);
+			Execute("delete rad:trackertemp/#? >NIL:",BNULL,BNULL);
 			return -1;
 		}
 
@@ -1164,14 +1164,14 @@ int GFX_Menu(
 			lokke++;
 			if(lokke==num_sel){
 				FreeAslRequest(requester);
-				Execute("delete rad:trackertemp/#? >NIL:",NULL,NULL);
+				Execute("delete rad:trackertemp/#? >NIL:",BNULL,BNULL);
 				return -1;
 			}
 		}
 
 		FreeAslRequest(requester);
 
-		Execute("delete rad:trackertemp/#? >NIL:",NULL,NULL);
+		Execute("delete rad:trackertemp/#? >NIL:",BNULL,BNULL);
 
 		return lokke;
 
@@ -1229,7 +1229,7 @@ char *GFX_GetLoadFileName(
 		return NULL;
 	}
 
-	if(AslRequestTags(requester,0L)==NULL){
+	if(AslRequestTags(requester,0L)==0){
 		FreeAslRequest(requester);
 		return NULL;
 	}
@@ -1274,7 +1274,7 @@ char *GFX_GetSaveFileName(
 		return NULL;
 	}
 
-	if(AslRequestTags(requester,0L)==NULL){
+	if(AslRequestTags(requester,0L)==0){
 		FreeAslRequest(requester);
 		return NULL;
 	}

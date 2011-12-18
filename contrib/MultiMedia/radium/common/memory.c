@@ -40,7 +40,7 @@ int init_memory(void){
 	tmemory=GC_malloc_atomic(tmemorysize);
 	tmemoryisused=0;
 
-	return (int) tmemory;
+	return (int)(tmemory != NULL);
 }
 
 

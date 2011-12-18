@@ -167,7 +167,7 @@ int ClusterClicked( void )
 				break;
 			}
 		}else{
-			name=CAMD_getClusterName(NULL);
+			name=CAMD_getClusterName((ReqType)0);
 			break;
 		}
 	}
@@ -420,6 +420,8 @@ int CC2G(int gadget){
 		case GD_Mo:
 			return 7;
 	}
+
+	return 0;
 }
 
 void SliderClicked(int gadgetnum){
@@ -560,6 +562,8 @@ int CC2GB(int gadget){
 		case GD_B8:
 			return 7;
 	}
+
+	return 0;
 }
 
 extern const int G2CC[8];

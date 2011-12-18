@@ -258,7 +258,6 @@ void AddTrackReallineNote(
 	float maxx=(float)(*wtrack->track->instrument->getMaxVelocity)(wtrack->track);
 
 	int s_x1,s_x2;
-	int s_y1,s_y2;
 
 	realline=FindRealLineForNote(wblock,note->Tline,note);
 	subtrack=FindFirstFreeSubTrack(wtrack,realline,&note->l.p);
@@ -288,9 +287,6 @@ void AddTrackReallineNote(
 	s_x1=u_x1-(2*window->fontwidth/3);
 	s_x1=max(wtrack->fxwidth*subtrack/wtrack->num_vel+1,s_x1);
 	s_x2=s_x1+(4*window->fontwidth/3);
-
-	s_y1=u_y1-(window->fontheight/16);
-	s_y2=s_y1+(window->fontheight/6);
 
 	u_y1_start=u_y1;
 	realline_start=realline;
@@ -421,9 +417,7 @@ void AddTrackReallineNote(
 
 	s_x1=u_x1-(2*window->fontwidth/3);
 	s_x1=max(wtrack->fxwidth*subtrack/wtrack->num_vel+1,s_x1);
-	s_y1=u_y1-(window->fontheight/16);
 	s_x2=s_x1+(4*window->fontwidth/3);
-	s_y2=s_y1+(window->fontheight/8);
 
 	InsertTRLElement(
 		window,

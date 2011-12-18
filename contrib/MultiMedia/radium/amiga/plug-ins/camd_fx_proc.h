@@ -25,6 +25,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 
 #ifndef TRACKER_INCLUDE
 
+struct CAMD_FX;
+
 extern void CAMD_treatFX(struct FX *fx,int val,struct Tracks *track,int skip);
 extern void CAMD_closeFX(struct FX *fx,struct Tracks *track);
 

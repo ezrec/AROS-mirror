@@ -90,7 +90,7 @@ bool AmigaConfig(void){
 			printf("Failed. Using Worbench screen instead.\n");
 			screenmodesel=1;
 		}else{
-			if(AslRequestTags(requester,0L)==NULL){
+			if(AslRequestTags(requester,0L)==0){
 				printf("Failed. Using Worbench screen instead.\n");
 				screenmodesel=1;
 				FreeAslRequest(requester);
@@ -98,12 +98,12 @@ bool AmigaConfig(void){
 				if (file) fprintf(
 					file,
 					"%d\n%d\n%d\n%d\n%d\n%d\n",
-					requester->sm_DisplayID,
-					requester->sm_DisplayWidth,
-					requester->sm_DisplayHeight,
-					requester->sm_DisplayDepth,
-					requester->sm_OverscanType,
-					requester->sm_AutoScroll
+					(int)requester->sm_DisplayID,
+					(int)requester->sm_DisplayWidth,
+					(int)requester->sm_DisplayHeight,
+					(int)requester->sm_DisplayDepth,
+					(int)requester->sm_OverscanType,
+					(int)requester->sm_AutoScroll
 				);
 				if(requester->sm_DisplayDepth<3){
 					fprintf(stderr,"Warning, at least 8 colors is required for normal operation!\n");
@@ -115,7 +115,7 @@ bool AmigaConfig(void){
 					TAG_END
 				);
 				if(frequester!=NULL){
-					if(AslRequestTags(frequester,0L)==NULL){
+					if(AslRequestTags(frequester,0L)==0){
 						fprintf(stderr,"Could not open font. Using topaz8.\n");
 						if (file) fprintf(file,"topaz.font\n8\n0\n0");
 					}else{
@@ -165,8 +165,10 @@ bool ReadAmigaConfig(bool conf){
 	FILE *file;
 	char temp[500];
 
-	long tid;
+	time_t tid;
+#ifdef __AMIGAOS__
 	struct tm *Tm;
+#endif
 
 
 	time(&tid);
@@ -180,7 +182,7 @@ bool ReadAmigaConfig(bool conf){
 	screenname[strlen(screenname)-1]=0;
 #else
         screenname=malloc(strlen("RADIUM: Started: ")+100);
-        sprintf(screenname,"RADIUM. Started: %ld",time);
+        sprintf(screenname,"RADIUM. Started: %ld",(long)time);
 #endif
 
 

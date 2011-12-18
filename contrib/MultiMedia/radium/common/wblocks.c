@@ -333,7 +333,7 @@ void AppendWBlock(struct Tracker_Windows *window){
 	);
 	BS_UpdateBlockList();
 
-	fprintf(stderr,"allo: %d\n",allocated);
+	fprintf(stderr,"allo: %d\n",(int)allocated);
 }
 
 void AppendWBlock_spes(struct Tracker_Windows *window,int num_lines,NInt num_tracks){
@@ -350,7 +350,7 @@ void AppendWBlock_spes(struct Tracker_Windows *window,int num_lines,NInt num_tra
 	);
 	BS_UpdateBlockList();
 
-	fprintf(stderr,"allo: %d\n",allocated);
+	fprintf(stderr,"allo: %d\n",(int)allocated);
 }
 
 

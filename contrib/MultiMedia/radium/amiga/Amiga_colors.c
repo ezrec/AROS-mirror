@@ -65,7 +65,7 @@ void Amiga_ConfigColors(void){
 		num_colors*=2;
 	}
 
-	fprintf(file,"%d\n",num_colors);
+	fprintf(file,"%d\n",(int)num_colors);
 
 	table=talloc_atomic((size_t)(sizeof(ULONG)*num_colors*3));
 
@@ -73,7 +73,7 @@ void Amiga_ConfigColors(void){
 
 	for(lokke=0;lokke<num_colors;lokke++){
 		for(lokke2=0;lokke2<3;lokke2++){
-			fprintf(file,"%lu\n",table[lokke*3+lokke2]);
+			fprintf(file,"%lu\n",(unsigned long)table[lokke*3+lokke2]);
 		}
 	}
 

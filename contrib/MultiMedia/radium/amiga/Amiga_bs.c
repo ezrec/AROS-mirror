@@ -87,9 +87,9 @@ struct NewGadget BlockSelectNGad[] = {
   {	133, 101, 37, 13, (UBYTE *)"<=", NULL, GD_BS_remove, PLACETEXT_IN, NULL, NULL}
 };
 
-ULONG BlockSelectGTags[] = {
-	(GTLV_ShowSelected), NULL, (TAG_DONE),
-	(GTLV_ShowSelected), NULL, (TAG_DONE),
+IPTR BlockSelectGTags[] = {
+	(GTLV_ShowSelected), (IPTR)NULL, (TAG_DONE),
+	(GTLV_ShowSelected), (IPTR)NULL, (TAG_DONE),
 	(TAG_DONE),
 	(TAG_DONE)
 };

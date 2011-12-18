@@ -240,7 +240,7 @@ void Block_Properties_CurrPos(
 
 	reqtype=GFX_OpenReq(window,33,5,"Block Properties");
 
-	sprintf(seltext,"Number of tracks (now %d): ",wblock->block->num_tracks);
+	sprintf(seltext,"Number of tracks (now %d): ",(int)wblock->block->num_tracks);
 	num_tracks=GFX_GetInteger(window,reqtype,seltext,2,200);
 	if(num_tracks==1) num_tracks=wblock->block->num_tracks;
 

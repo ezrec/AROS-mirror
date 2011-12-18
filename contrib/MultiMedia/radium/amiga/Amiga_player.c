@@ -217,7 +217,7 @@ bool SAVEDS Amiga_initplayer1(void){
 	}
 
 
-	myhook->hook.h_Entry=(ULONG(*)())&timercallback;
+	myhook->hook.h_Entry=(HOOKFUNC)&timercallback;
 	myhook->task=amigatimertask;
 
 	while(waitforamigatimersig==-1) Delay(20);

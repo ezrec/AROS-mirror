@@ -41,7 +41,7 @@ void SetMouseActionMainLPB(
 ){
 	struct WBlocks *wblock=window->wblock;
 
-	int newlpb=GFX_GetInteger(window,NULL,"New LPB: >",0,99);
+	int newlpb=GFX_GetInteger(window,(ReqType)0,"New LPB: >",0,99);
 	if(newlpb==-1) return;
 
 	Undo_MainTempo(window,wblock);
@@ -64,7 +64,7 @@ void SetMouseActionMainBPM(
 ){
 	struct WBlocks *wblock=window->wblock;
 
-	int newtempo=GFX_GetInteger(window,NULL,"New tempo: >",0,999);
+	int newtempo=GFX_GetInteger(window,(ReqType)0,"New tempo: >",0,999);
 	if(newtempo==-1) return;
 
 	Undo_MainTempo(window,wblock);
@@ -93,7 +93,7 @@ void SetMouseActionRelTempo(
 
 	sprintf(temp,"New RelTempoMax (%.1f - 99.9) :",max);
 
-	ret=GFX_GetFloat(window,NULL,temp,max,99.9f);
+	ret=GFX_GetFloat(window,(ReqType)0,temp,max,99.9f);
 
 	if(ret<max){
 		return;

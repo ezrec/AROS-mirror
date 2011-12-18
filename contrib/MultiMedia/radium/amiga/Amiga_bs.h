@@ -59,7 +59,7 @@ extern struct MinList        BS_to0List;
 extern struct TextAttr       topaz8;
 extern UWORD                 BlockSelectGTypes[];
 extern struct NewGadget      BlockSelectNGad[];
-extern ULONG                 BlockSelectGTags[];
+extern IPTR                  BlockSelectGTags[];
 
 extern int SetupScreen( void );
 extern void CloseDownScreen( void );

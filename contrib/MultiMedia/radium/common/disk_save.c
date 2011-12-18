@@ -52,7 +52,7 @@ void SaveAs(struct Root *theroot){
 
 	PlayStop();
 
-	filename=GFX_GetSaveFileName(theroot->song->tracker_windows,NULL,"Select file to save","work:radiumsongs");
+	filename=GFX_GetSaveFileName(theroot->song->tracker_windows,(ReqType)0,"Select file to save","work:radiumsongs");
 
 	if( ! access(filename,F_OK)){
 		while(
@@ -63,8 +63,8 @@ void SaveAs(struct Root *theroot){
 		){
 			ret=GFX_GetString(
 				theroot->song->tracker_windows,
-				NULL,
-				"File allready excists, are you shure? (yes/no)"
+				(ReqType)0,
+				"File already exists, are you sure? (yes/no)"
 			);
 		}
 		if(!strcmp("no",ret)) return;

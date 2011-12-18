@@ -47,7 +47,7 @@ char *errortaskname;
 SAVEDS void ErrorProcess(void)
 {
 	char constring[200];
-	BPTR file=NULL;
+	BPTR file=BNULL;
 	ULONG sig;
 	ErrorSig=AllocSignal(ErrorSig);
 	hassent=1;
@@ -59,7 +59,7 @@ SAVEDS void ErrorProcess(void)
 	for(;;){
 		sig=Wait(1L<<ErrorSig|SIGBREAKF_CTRL_C);
 		if(sig&1L<<ErrorSig){
-			if(file==NULL){
+			if(file==BNULL){
 				file=Open(constring,0x3ee);
 			}
 //			fprintf(stderr,errorstring);
@@ -69,7 +69,7 @@ SAVEDS void ErrorProcess(void)
 		if(sig&SIGBREAKF_CTRL_C) break;
 	}
 
-	if(file!=NULL){
+	if(file!=BNULL){
 		Close(file);
 	}
 	FreeSignal(ErrorSig);

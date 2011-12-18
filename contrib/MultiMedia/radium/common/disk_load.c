@@ -166,14 +166,14 @@ bool Load_CurrPos(struct Tracker_Windows *window){
 		){
 			ret=GFX_GetString(
 				window,
-				NULL,
+				(ReqType)0,
 				temp
 			);
 		}
 		if(!strcmp("no",ret)) return false;
 	}
 
-	filename=GFX_GetLoadFileName(window,NULL,"Select file to load","work:radiumsongs");
+	filename=GFX_GetLoadFileName(window,(ReqType)0,"Select file to load","work:radiumsongs");
 
 	if(filename==NULL) return false;
 

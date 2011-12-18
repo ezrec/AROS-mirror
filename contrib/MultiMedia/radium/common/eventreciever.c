@@ -97,7 +97,7 @@ bool Quit(struct Tracker_Windows *window){
 		){
 			ret=GFX_GetString(
 				window,
-				NULL,
+				(ReqType)0,
 				temp
 			);
 		}

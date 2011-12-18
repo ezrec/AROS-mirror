@@ -56,6 +56,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 
 #include "Amiga_instrprop.h"
 
+#undef CopyMem
 #define CopyMem(a,b,c) memcpy(b,a,c)
 
 int myHandleCPPWindowIDCMP( void )
@@ -66,7 +67,7 @@ int myHandleCPPWindowIDCMP( void )
 	BOOL			running = TRUE;
 	struct Gadget *gad;
 
-	while( m = GT_GetIMsg( CPPWindowWnd->UserPort )) {
+	while(( m = GT_GetIMsg( CPPWindowWnd->UserPort ))) {
 		CopyMem(( char * )m, ( char * )&CPPWindowMsg, (long)sizeof( struct IntuiMessage ));
 		GT_ReplyIMsg( m );
 		switch ( CPPWindowMsg.Class ) {

@@ -149,7 +149,9 @@ int main(int argc,char **argv){
 	bool doconfig=false;
 	FILE *file;
 	bool firsttime=true;
+#ifdef __AMIGAOS__
 	struct stat st;
+#endif
 
 
 // Used to keap track of number of downs before ups.
@@ -209,7 +211,7 @@ int main(int argc,char **argv){
 
 //	SetTaskPri(FindTask(0),20);
 
-	keyPort=CreatePort(NULL,NULL);
+	keyPort=CreatePort(NULL,0);
 	if(keyPort==NULL){
 		fprintf(stderr,"Could not open keyport\n");
 		return 16;
@@ -220,13 +222,13 @@ int main(int argc,char **argv){
 		DeletePort(keyPort);
 		return 17;
 	}
-	if(OpenDevice("input.device",NULL,(struct IORequest *)InputIO,NULL)!=0){
+	if(OpenDevice("input.device",0,(struct IORequest *)InputIO,0)!=0){
 		fprintf(stderr,"Could not open input.device\n");
 		DeleteExtIO((struct IORequest *)InputIO);
 		DeletePort(keyPort);
 		return 15;
 	}
-	InputBase=(struct Library *)InputIO->io_Device;
+	InputBase=(struct Device *)InputIO->io_Device;
 
 	if(argc>1){
 		if(!strcmp(argv[1],"-config")){
@@ -285,7 +287,7 @@ int main(int argc,char **argv){
 
 newprogram:
 
-	fprintf(stderr,"freemem, start: %d\n",AvailMem(MEMF_ANY));
+	fprintf(stderr,"freemem, start: %lu\n",(unsigned long)AvailMem(MEMF_ANY));
 
 	free(num_down);
 	num_down=calloc(1,1000);
@@ -430,7 +432,7 @@ newprogram:
 		}
 
 		if (signal & 1L<<BlockSelectWnd->UserPort->mp_SigBit){
-			while(msg=GT_GetIMsg(BlockSelectWnd->UserPort)){
+			while((msg=GT_GetIMsg(BlockSelectWnd->UserPort))){
 				BS_handleevents(msg);
 			}
 		}
@@ -465,7 +467,7 @@ exit:
 
 
 
-	fprintf(stderr,"freemem1: %d\n",AvailMem(MEMF_ANY));
+	fprintf(stderr,"freemem1: %lu\n",(unsigned long)AvailMem(MEMF_ANY));
 //	GC_free(root);
 
 
@@ -476,7 +478,7 @@ exit:
 
 
 
-	fprintf(stderr,"freemem2: %d\n",AvailMem(MEMF_ANY));
+	fprintf(stderr,"freemem2: %lu\n",(unsigned long)AvailMem(MEMF_ANY));
 
 	return 0;
 }

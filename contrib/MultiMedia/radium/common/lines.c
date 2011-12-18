@@ -152,7 +152,7 @@ void InsertLines_CurrPos(
 
 	PlayStop();
 
-	toinsert=GFX_GetInteger(window,NULL,"Number of lines to insert\n(number can be negative): ",-(num_lines-curr_line),10000);
+	toinsert=GFX_GetInteger(window,(ReqType)0,"Number of lines to insert\n(number can be negative): ",-(num_lines-curr_line),10000);
 
 	if(toinsert==-(num_lines-curr_line)-1) return;
 

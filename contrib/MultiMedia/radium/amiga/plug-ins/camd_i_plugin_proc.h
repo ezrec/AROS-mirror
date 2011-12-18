@@ -2,6 +2,8 @@
 
 #ifndef TRACKER_INCLUDE
 
+struct MidiLink;
+
 void CAMDchangeTrackPan(int newpan,struct Tracks *track);
 void CAMDchangevelocity(int velocity,struct Tracks *track,struct Notes *note);
 void CAMDstopnote(int notenum,int velocity, struct Tracks *track,struct Notes *note);
