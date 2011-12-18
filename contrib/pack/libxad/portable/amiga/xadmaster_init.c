@@ -149,8 +149,10 @@ static int Init(LIBBASETYPEPTR LIBBASE)
 
 	    /* add internal clients */
 	    xadAddClients(LIBBASE, RealFirstClient, 0);
+#if 0 /* This crashes when YAM loads xadmaster.library. The code was taken from ABIV1, it is possible it needs to be reworked for ABIV0 */
 	    /* load and add external clients */
 	    InitClients(LIBBASE);
+#endif
 
 	    for(cl = XADB(LIBBASE)->xmb_FirstClient; cl; cl = cl->xc_Next)
 	    {
