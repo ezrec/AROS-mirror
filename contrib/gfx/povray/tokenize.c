@@ -3768,7 +3768,7 @@ static void Parse_Write(void)
      CASE4 (CONCAT_TOKEN,STRUPR_TOKEN,STRLWR_TOKEN,STRING_ID_TOKEN)
        UNGET
        temp=Parse_Formatted_String();
-       fprintf(User_File->File,temp);
+       fprintf(User_File->File,"%s",temp);
        POV_FREE(temp);
        if (Parse_Comma_RParen())
        {

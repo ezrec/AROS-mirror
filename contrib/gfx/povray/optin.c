@@ -1447,6 +1447,7 @@ void process_variable(TOKEN variable,char *value)
     case END_COLUMN_OP:
       { /* tw */
       if (sscanf (value, DBL_FORMAT_STRING, &floatval) != SCANF_EOF)
+      {
         if(floatval > 0.0 && floatval <= 1.0)
         {
           opts.Last_Column = -1;
@@ -1454,12 +1455,14 @@ void process_variable(TOKEN variable,char *value)
         }
         else
           opts.Last_Column = (int) floatval;
+      }
       } /* tw */
       return;
 
     case END_ROW_OP:
       { /* tw */ 
       if (sscanf (value, DBL_FORMAT_STRING, &floatval) != SCANF_EOF)
+      {
         if(floatval > 0.0 && floatval <= 1.0)
         {
           opts.Last_Line = -1;
@@ -1467,6 +1470,7 @@ void process_variable(TOKEN variable,char *value)
         }
         else
           opts.Last_Line = (int) floatval;
+      }
       } /* tw */
       return;
 

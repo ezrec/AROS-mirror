@@ -2338,7 +2338,7 @@ static void compute_lighted_texture(COLOUR ResCol, TEXTURE *Texture, VECTOR IPoi
   int inside_hollow_object;
   int one_colour_found, colour_found;
   DBL w1, w2;
-  DBL Normal_Direction, New_Weight, TempWeight;
+  DBL New_Weight, TempWeight;
   DBL Att, Trans, Max_Radiosity_Contribution;
   VECTOR LayNormal, TopNormal;
   COLOUR LayCol, RflCol, RfrCol, FilCol;

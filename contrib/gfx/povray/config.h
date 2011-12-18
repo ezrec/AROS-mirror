@@ -10,7 +10,7 @@
  * like a GUI interface.
  */
 #ifndef MAIN_RETURN_TYPE
-#define MAIN_RETURN_TYPE void
+#define MAIN_RETURN_TYPE int
 #endif
 
 #ifndef MAIN_RETURN_STATEMENT
@@ -201,7 +201,7 @@
 #endif
 
 #ifndef CONST       /* How to define a local variable - normally 'const' */
-#define CONST
+#define CONST	const
 #endif
 
 #ifndef CDECL
@@ -394,13 +394,6 @@
 #else
 #define WAIT_FOR_KEYPRESS_EXISTS
 #endif
-
-#ifndef GET_KEY /* Gets a keystroke from the user without waiting */
-#define GET_KEY
-#else
-#define GET_KEY_EXISTS
-#endif
-
 
 /*
  * Functions that write text for the user to see.  These functions will

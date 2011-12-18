@@ -1176,6 +1176,7 @@ static void ProcessKernTable(FontFileInfo *ffile, long kern_table_offset)
     /* Read in a subtable */
     
     temp16 = READUSHORT(ffile->fp);                      /* Subtable version */
+    (void)temp16; // Unused
     length = READUSHORT(ffile->fp);                       /* Subtable length */
     kern_table->tables[i].coverage = READUSHORT(ffile->fp); /* Coverage bits */
     
@@ -1645,6 +1646,7 @@ static USHORT ProcessFormat4Glyph(FontFileInfo *ffile, unsigned int search_char)
     }
   
     temp16 = READUSHORT(ffile->fp);  /* Skip over 'reservedPad' */
+    (void)temp16; // Unused
   
     for (i = 0; i < ffile->segCount; i++)
     {

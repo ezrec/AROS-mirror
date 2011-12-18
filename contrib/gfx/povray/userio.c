@@ -41,13 +41,13 @@ static void PrintToStream(int stream, char *s)
 {
   if (Stream_Info[stream].handle != NULL)
   {
-    fprintf(Stream_Info[stream].handle, s);
+    fputs(s, Stream_Info[stream].handle);
     fflush(Stream_Info[stream].handle);
   }
 
   if (Stream_Info[ALL_STREAM].handle != NULL)
   {
-    fprintf(Stream_Info[ALL_STREAM].handle, s);
+    fputs(s, Stream_Info[ALL_STREAM].handle);
     fflush(Stream_Info[ALL_STREAM].handle);
   }
 }
@@ -402,49 +402,49 @@ void Destroy_Text_Streams()
 /****************************************************************************/
 void POV_Std_Banner(char *s)
 {
-  fprintf(stderr, s);
+  fputs(s, stderr);
   fflush(stderr);
 }
 
 /****************************************************************************/
 void POV_Std_Warning(char *s)
 {
-  fprintf(stderr, s);
+  fputs(s, stderr);
   fflush(stderr);
 }
 
 /****************************************************************************/
 void POV_Std_Status_Info(char *s)
 {
-  fprintf(stderr, s);
+  fputs(s, stderr);
   fflush(stderr);
 }
 
 /****************************************************************************/
 void POV_Std_Render_Info(char *s)
 {
-  fprintf(stderr, s);
+  fputs(s, stderr);
   fflush(stderr);
 }
 
 /****************************************************************************/
 void POV_Std_Debug_Info(char *s)
 {
-  fprintf(stderr, s);
+  fputs(s, stderr);
   fflush(stderr);
 }
 
 /****************************************************************************/
 void POV_Std_Fatal(char *s)
 {
-  fprintf(stderr, s);
+  fputs(s, stderr);
   fflush(stderr);
 }
 
 /****************************************************************************/
 void POV_Std_Statistics(char *s)
 {
-  fprintf(stderr, s);
+  fputs(s, stderr);
   fflush(stderr);
 }
 
