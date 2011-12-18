@@ -322,7 +322,7 @@ static long ra_average_near(OT_BLOCK *block, void *void_info)
 {
   long ind, i;
   WT_AVG *info = (WT_AVG *) void_info;
-  VECTOR half, delta, delta_unit;
+  VECTOR half, delta, delta_unit = {};
   COLOUR tc, prediction;
   DBL ri, error_reuse, dir_diff, in_front, dist, weight, square_dist, dr, dg, db;
   DBL error_reuse_rotate, error_reuse_translate, inverse_dist, cos_diff_from_nearest;

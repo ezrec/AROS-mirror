@@ -721,7 +721,7 @@ void Compute_Polygon(POLYGON *Polyg, int Number, VECTOR *Points)
 {
   int i;
   DBL x, y, z, d;
-  VECTOR o, u, v, w, N;
+  VECTOR o, u = {}, v = {}, w = {}, N;
   MATRIX a, b;
 
   /* Create polygon data. */

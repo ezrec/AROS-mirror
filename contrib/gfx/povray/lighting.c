@@ -1719,7 +1719,7 @@ static void Diffuse (FINISH *Finish, VECTOR IPoint, RAY *Eye, VECTOR  Layer_Norm
   DBL Light_Source_Depth, Cos_Shadow_Angle;
   RAY Light_Source_Ray;
   LIGHT_SOURCE *Light_Source;
-  VECTOR REye;
+  VECTOR REye = {};
   COLOUR Light_Colour;
 
   if ((Finish->Diffuse == 0.0) && (Finish->Specular == 0.0) && (Finish->Phong == 0.0))

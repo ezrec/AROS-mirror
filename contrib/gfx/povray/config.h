@@ -9,13 +9,9 @@
  * These two are used if POV is being called from within another program
  * like a GUI interface.
  */
-#ifndef MAIN_RETURN_TYPE
 #define MAIN_RETURN_TYPE int
-#endif
 
-#ifndef MAIN_RETURN_STATEMENT
-#define MAIN_RETURN_STATEMENT
-#endif
+#define MAIN_RETURN_STATEMENT return 0;
 
 
 /*

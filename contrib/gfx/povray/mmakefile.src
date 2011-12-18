@@ -74,6 +74,8 @@ FILES = aros     \
 
 #MM povray : includes linklibs linklibs-png
 
+USER_CFLAGS := -Wno-array-bounds
+
 %build_prog mmake=povray \
     progname=povray targetdir=$(EXEDIR) \
     files=$(FILES) uselibs="png amiga z arosc m"
