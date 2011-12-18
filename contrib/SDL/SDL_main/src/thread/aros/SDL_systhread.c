@@ -61,7 +61,7 @@ int SDL_SYS_CreateThread(SDL_Thread *thread, void *args)
 	D(bug("Sending %lx to the new thread...\n",args));
 
 	if(args)
-		SDL_snprintf(buffer, SDL_arraysize(buffer),"%p",args);
+		SDL_snprintf(buffer, SDL_arraysize(buffer),"%ld",(long)args);
 
 	thread->handle=(struct Task *)CreateNewProcTags(NP_Output,Output(),
 					NP_Name,(IPTR)"SDL subtask",
