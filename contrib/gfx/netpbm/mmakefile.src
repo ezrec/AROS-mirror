@@ -15,6 +15,7 @@ USER_INCLUDES := -I$(PORTSDIR)/netpbm/$(ARCHBASE) \
                  -I$(PORTSDIR)/netpbm/$(ARCHBASE)/lib \
                  -I$(PORTSDIR)/netpbm/$(ARCHBASE)/lib/util \
                  -I$(PORTSDIR)/netpbm/$(ARCHBASE)converter/ppm
+USER_CFLAGS := -Wno-uninitialized -Wno-unused-but-set-variable -Wno-format
 
 PNGTOPNMFILES := converter/other/pngtopnm lib/util/nstring lib/util/shhopt \
          lib/libpm lib/libpnm1 lib/libpnm2 lib/libpbm1 lib/libpbm2 \
