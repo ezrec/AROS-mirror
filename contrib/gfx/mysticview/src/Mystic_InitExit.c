@@ -114,7 +114,7 @@ void DeleteMView(struct mview *mv)
 	
 		if (mv->newbroker)
 		{
-			Free(mv->newbroker->nb_Name);
+			Free((APTR)mv->newbroker->nb_Name);
 			Free(mv->newbroker);
 		}
 
@@ -302,7 +302,7 @@ struct mview *CreateMView(struct mainsettings *mvs, char *progfilename)
 				
 				while (count < 64)		// better we limit the show to something reasonable...
 				{
-					Free(mv->newbroker->nb_Name);
+					Free((APTR)mv->newbroker->nb_Name);
 					if ((mv->newbroker->nb_Name = _StrDup(tempname)))
 					{
 						if ((mv->broker = CxBroker(mv->newbroker, NULL)))

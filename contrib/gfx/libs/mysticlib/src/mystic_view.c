@@ -217,7 +217,7 @@ APTR SAVE_DS ASM CreateView(
 	
 			view->readysignal = GetTagData(MVIEW_ReadySignal, -1, tags);
 
-			view->rastlock = (struct SignalSemaphore *) GetTagData(MVIEW_RPSemaphore, NULL, tags);
+			view->rastlock = (struct SignalSemaphore *) GetTagData(MVIEW_RPSemaphore, (IPTR)NULL, tags);
 	
 			ParseViewAttrs(view, tags);
 	
@@ -317,81 +317,82 @@ void ASM SAVE_DS GetViewAttrs(REG(a0) APTR mview, REG(a1) TAGLIST tags)
 	if (view)
 	{	
 		ULONG *ptr;
+		IPTR *iptr;
 
-		if ((ptr = (ULONG *) GetTagData(MVIEW_BackColor, NULL, tags)))
+		if ((ptr = (ULONG *) GetTagData(MVIEW_BackColor, (IPTR)NULL, tags)))
 		{
 			*ptr = view->backcolor;
 		}
-		if ((ptr = (ULONG *) GetTagData(MVIEW_TextColor, NULL, tags)))
+		if ((ptr = (ULONG *) GetTagData(MVIEW_TextColor, (IPTR)NULL, tags)))
 		{
 			*ptr = view->textcolor;
 		}
-		if ((ptr = (ULONG *) GetTagData(MVIEW_MarkColor, NULL, tags)))
+		if ((ptr = (ULONG *) GetTagData(MVIEW_MarkColor, (IPTR)NULL, tags)))
 		{
 			*ptr = view->markcolor;
 		}
 		
-		if ((ptr = (ULONG *) GetTagData(MVIEW_Precision, NULL, tags)))
+		if ((ptr = (ULONG *) GetTagData(MVIEW_Precision, (IPTR)NULL, tags)))
 		{
 			*ptr = view->precision;
 		}
-		if ((ptr = (ULONG *) GetTagData(MVIEW_DestX, NULL, tags)))
+		if ((ptr = (ULONG *) GetTagData(MVIEW_DestX, (IPTR)NULL, tags)))
 		{
 			*ptr = view->viewx;
 		}
-		if ((ptr = (ULONG *) GetTagData(MVIEW_DestY, NULL, tags)))
+		if ((ptr = (ULONG *) GetTagData(MVIEW_DestY, (IPTR)NULL, tags)))
 		{
 			*ptr = view->viewy;
 		}
-		if ((ptr = (ULONG *) GetTagData(MVIEW_DestWidth, NULL, tags)))
+		if ((ptr = (ULONG *) GetTagData(MVIEW_DestWidth, (IPTR)NULL, tags)))
 		{
 			*ptr = view->viewwidth;
 		}
-		if ((ptr = (ULONG *) GetTagData(MVIEW_DestHeight, NULL, tags)))
+		if ((ptr = (ULONG *) GetTagData(MVIEW_DestHeight, (IPTR)NULL, tags)))
 		{
 			*ptr = view->viewheight;
 		}
-		if ((ptr = (ULONG *) GetTagData(MVIEW_DisplayMode, NULL, tags)))
+		if ((ptr = (ULONG *) GetTagData(MVIEW_DisplayMode, (IPTR)NULL, tags)))
 		{
 			*ptr = view->displaymode;
 		}
-		if ((ptr = (ULONG *) GetTagData(MVIEW_PreviewMode, NULL, tags)))
+		if ((ptr = (ULONG *) GetTagData(MVIEW_PreviewMode, (IPTR)NULL, tags)))
 		{
 			*ptr = view->previewmode;
 		}
-		if ((ptr = (ULONG *) GetTagData(MVIEW_Picture, NULL, tags)))
+		if ((ptr = (ULONG *) GetTagData(MVIEW_Picture, (IPTR)NULL, tags)))
 		{
-			*ptr = (ULONG) view->showpic;
+			*ptr = (IPTR) view->showpic;
 		}
 
-		if ((ptr = (ULONG *) GetTagData(MVIEW_Zoom, NULL, tags)))
+		if ((ptr = (ULONG *) GetTagData(MVIEW_Zoom, (IPTR)NULL, tags)))
 		{
-			*ptr = (ULONG) (view->zoom * 65536);
+			*ptr = (IPTR) (view->zoom * 65536);
 		}
-		if ((ptr = (ULONG *) GetTagData(MVIEW_XPos, NULL, tags)))
+		if ((ptr = (ULONG *) GetTagData(MVIEW_XPos, (IPTR)NULL, tags)))
 		{
-			*ptr = (ULONG) (view->xpos * 65536);
+			*ptr = (IPTR) (view->xpos * 65536);
 		}
-		if ((ptr = (ULONG *) GetTagData(MVIEW_YPos, NULL, tags)))
+		if ((ptr = (ULONG *) GetTagData(MVIEW_YPos, (IPTR)NULL, tags)))
 		{
-			*ptr = (ULONG) (view->ypos * 65536);
+			*ptr = (IPTR) (view->ypos * 65536);
 		}
 
-		if ((ptr = (ULONG *) GetTagData(MVIEW_PictureX, NULL, tags)))
+		if ((ptr = (ULONG *) GetTagData(MVIEW_PictureX, (IPTR)NULL, tags)))
 		{
-			*ptr = (ULONG) view->dx + view->viewx;
+			*ptr = (IPTR) view->dx + view->viewx;
 		}
-		if ((ptr = (ULONG *) GetTagData(MVIEW_PictureY, NULL, tags)))
+		if ((ptr = (ULONG *) GetTagData(MVIEW_PictureY, (IPTR)NULL, tags)))
 		{
-			*ptr = (ULONG) view->dy + view->viewy;
+			*ptr = (IPTR) view->dy + view->viewy;
 		}
-		if ((ptr = (ULONG *) GetTagData(MVIEW_PictureWidth, NULL, tags)))
+		if ((iptr = (IPTR *) GetTagData(MVIEW_PictureWidth, (IPTR)NULL, tags)))
 		{
-			*ptr = (ULONG) view->dw;
+			*ptr = (IPTR) view->dw;
 		}
-		if ((ptr = (ULONG *) GetTagData(MVIEW_PictureHeight, NULL, tags)))
+		if ((iptr = (IPTR *) GetTagData(MVIEW_PictureHeight, (IPTR)NULL, tags)))
 		{
-			*ptr = (ULONG) view->dh;
+			*ptr = (IPTR) view->dh;
 		}
 	}
 }
@@ -1798,7 +1799,6 @@ LONG SAVEDS picdrawfunc(APTR subtask, BYTE abortsignal)
 		if (!picturevalid)
 		{
 			APTR drawhandle;
-			BOOL displayed = FALSE;
 
 			ObtainSemaphore(&view->semaphore);		//[
 			
@@ -1869,7 +1869,7 @@ LONG SAVEDS picdrawfunc(APTR subtask, BYTE abortsignal)
 							if (quickpic)
 							{
 								if (DrawPicture(drawhandle, quickpic, view->viewx + dx, view->viewy + dy,
-									RND_DestCoordinates, view->angle && (view->displaymode != MVDISPMODE_FIT) ? (IPTR)view->coordinates : NULL,
+									RND_DestCoordinates, view->angle && (view->displaymode != MVDISPMODE_FIT) ? (IPTR)view->coordinates : (IPTR)NULL,
 									GGFX_AutoDither, FALSE,
 									GGFX_DitherMode, DITHERMODE_NONE,
 									GGFX_DestWidth, dw, GGFX_DestHeight, dh,
@@ -1947,7 +1947,7 @@ LONG SAVEDS picdrawfunc(APTR subtask, BYTE abortsignal)
 										GGFX_CallBackHook, (IPTR)&drawsubhook,
 										TAG_DONE))*/
 								if (DrawPicture(drawhandle, view->showpic, view->viewx + dx, view->viewy + dy,
-										RND_DestCoordinates, view->angle && (view->displaymode != MVDISPMODE_FIT) ? (IPTR)view->coordinates : NULL,
+										RND_DestCoordinates, view->angle && (view->displaymode != MVDISPMODE_FIT) ? (IPTR)view->coordinates : (IPTR)NULL,
 										GGFX_DestWidth, dw, GGFX_DestHeight, dh,
 										GGFX_SourceWidth, sw, GGFX_SourceHeight, sh,
 										GGFX_SourceX, sx, GGFX_SourceY, sy,
@@ -1989,8 +1989,6 @@ LONG SAVEDS picdrawfunc(APTR subtask, BYTE abortsignal)
 						{
 							ReleasePip(view);
 						}
-					
-						displayed = !abort;
 					}
 				}
 				else
@@ -2023,7 +2021,7 @@ LONG SAVEDS picdrawfunc(APTR subtask, BYTE abortsignal)
 
 	DB(kprintf("***drawtask: returning\n"));
 
-	return NULL;
+	return 0;
 }
 
 
@@ -2251,7 +2249,7 @@ void ParseViewAttrs(struct picview *view, struct TagItem *tags)
 		BOOL resetview = FALSE;
 		int newviewdata = 0;
 		ULONG newcolor;
-		ULONG t;
+		IPTR t;
 
 
 

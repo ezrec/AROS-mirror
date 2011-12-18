@@ -988,7 +988,7 @@ LONG SAVEDS scanfunc(struct subtask *subtask, BYTE abortsignal)
 
 	ReleaseData(subtask);
 
-	return NULL;
+	return 0;
 }
 
 /*<<*****************************************************************/
@@ -1567,18 +1567,9 @@ struct PHMessage *CreatePHMessage(struct PicHandler *handler, ULONG msgtype, ULO
 
 
 
-BOOL STDARGS PostPHMessage(struct PicHandler *handler, ULONG msgtype, ...)
+BOOL PostPHMessageA(struct PicHandler *handler, ULONG msgtype, ULONG *data)
 {
-	va_list va;
-	ULONG *data;
 	BOOL success = TRUE;
-
-	va_start(va, msgtype);
-#ifdef __MORPHOS__
-	data = (ULONG *) va->overflow_arg_area;
-#else
-	data = (ULONG *) va;
-#endif
 
 	if (handler)
 	{
@@ -1766,7 +1757,7 @@ LONG SAVEDS pichandlefunc(struct subtask *subtask, BYTE abortsignal)
 
 	ReleaseData(subtask);
 
-	return NULL;
+	return 0;
 }
 
 
@@ -1779,20 +1770,12 @@ LONG SAVEDS pichandlefunc(struct subtask *subtask, BYTE abortsignal)
 
 --------------------------------------------------------------------*/
 
-struct PicHandler * STDARGS PicHandler_Create(ULONG dummy, ...)
+struct PicHandler *PicHandler_CreateA(ULONG dummy, IPTR *args)
 {
-	va_list va;
-	struct TagItem *tags;
+	struct TagItem *tags = (struct TagItem *)args;
 
 	struct PicHandler *pichandler;
 	BOOL success = FALSE;
-
-	va_start(va, dummy);
-#ifdef __MORPHOS__
-	tags = (struct TagItem *) va->overflow_arg_area;
-#else
-	tags = (struct TagItem *) va;
-#endif
 
 	if ((pichandler = Malloclear(sizeof(struct PicHandler))))
 	{
@@ -1804,7 +1787,7 @@ struct PicHandler * STDARGS PicHandler_Create(ULONG dummy, ...)
 		pichandler->recursive = (BOOL) GetTagData(PICH_Recursive, TRUE, tags);
 		pichandler->includedirs = (BOOL) GetTagData(PICH_IncludeDirs, FALSE, tags);
 		pichandler->simplescanning = (BOOL) GetTagData(PICH_SimpleScanning, FALSE, tags);
-		pichandler->rejectpattern = _StrDup((char *) GetTagData(PICH_Reject, NULL, tags));
+		pichandler->rejectpattern = _StrDup((char *) GetTagData(PICH_Reject, (IPTR)NULL, tags));
 		pichandler->notifymask = GetTagData(PICH_Notify, PHNOTIFY_NOTHING, tags);
 		pichandler->bufferpercent = GetTagData(PICH_BufferPercent, 40, tags);
 		pichandler->autocrop = GetTagData(PICH_AutoCrop, FALSE, tags);
@@ -1890,7 +1873,7 @@ void PicHandler_Delete(struct PicHandler *pichandler)
 
 ULONG PicHandler_GetSigMask(struct PicHandler *pichandler)
 {
-	ULONG sigmask = NULL;
+	ULONG sigmask = 0;
 
 	if (pichandler)
 	{
@@ -1919,30 +1902,19 @@ ULONG PicHandler_GetSigMask(struct PicHandler *pichandler)
 ----------------------------------------------------------------------
 *********************************************************************/
 
-BOOL STDARGS PicHandler_AddPatternList(
-	struct PicHandler *pichandler,
-	char **patternlist,
-	...)
+BOOL PicHandler_AddPatternListA(struct PicHandler *pichandler, char **patternlist, IPTR *args)
 {
 	BOOL result = FALSE;
 
 	if (pichandler && patternlist)
 	{
-		va_list va;
-		struct TagItem *tags;
+		struct TagItem *tags = (struct TagItem *)args;
 		char *rejectpattern;
 		BOOL recursive, includedirs, simplescanning;
 		char *filepattern;
 
-		va_start(va, patternlist);
-#ifdef __MORPHOS__
-		tags = (struct TagItem *) va->overflow_arg_area;
-#else
-		tags = (struct TagItem *) va;
-#endif
-
 		recursive = (BOOL) GetTagData(PICH_Recursive, (ULONG) pichandler->recursive, tags);
-		rejectpattern = (char *) GetTagData(PICH_Reject, (ULONG) pichandler->rejectpattern, tags);
+		rejectpattern = (char *) GetTagData(PICH_Reject, (IPTR) pichandler->rejectpattern, tags);
 		includedirs = (BOOL) GetTagData(PICH_IncludeDirs, (ULONG) pichandler->includedirs, tags);
 		simplescanning = (BOOL) GetTagData(PICH_SimpleScanning, (ULONG) pichandler->simplescanning, tags);
 
@@ -1980,29 +1952,18 @@ BOOL STDARGS PicHandler_AddPatternList(
 ----------------------------------------------------------------------
 *********************************************************************/
 
-BOOL STDARGS PicHandler_SetAttributes(
-	struct PicHandler *pichandler,
-	...)
+BOOL PicHandler_SetAttributesA(struct PicHandler *pichandler, IPTR *args)
 {
 	BOOL success = FALSE;
 
 	if (pichandler)
 	{
-		va_list va;
-		struct TagItem *tags;
+		struct TagItem *tags = (struct TagItem *)args;
 		int sortmode;
 		BOOL reverse;
 		int errors = 0;
 		char *rejectpattern;
 		int bufferpercent;
-
-
-		va_start(va, pichandler);
-#ifdef __MORPHOS__
-		tags = (struct TagItem *) va->overflow_arg_area;
-#else
-		tags = (struct TagItem *) va;
-#endif
 
 		sortmode = (int) GetTagData(PICH_SortMode, pichandler->sortmode, tags);
 		reverse = (BOOL) GetTagData(PICH_SortReverse, pichandler->reverse, tags);
@@ -2027,7 +1988,7 @@ BOOL STDARGS PicHandler_SetAttributes(
 		pichandler->bufferpercent = bufferpercent;
 
 		rejectpattern = (char *) GetTagData(PICH_Reject, ~0, tags);
-		if ((ULONG) rejectpattern != ~0)
+		if ((IPTR) rejectpattern != ~0)
 		{
 			if ((rejectpattern = _StrDup(rejectpattern)))
 			{
@@ -3069,7 +3030,7 @@ LONG SAVEDS loadfunc(struct subtask *subtask, BYTE abortsignal)
 
 	ReleaseData(subtask);
 
-	return NULL;
+	return 0;
 }
 
 /*<<*****************************************************************/
@@ -3376,9 +3337,7 @@ BOOL PicHandler_Remove(struct PicHandler *pichandler, int id)
 ----------------------------------------------------------------------
 *********************************************************************/
 
-BOOL STDARGS PicHandler_AppendScanList(
-	char **patternlist,
-	...)
+BOOL PicHandler_AppendScanListA( char **patternlist, IPTR *args) 
 {
 	BOOL result = FALSE;
 
@@ -3414,25 +3373,17 @@ BOOL STDARGS PicHandler_AppendScanList(
 		if (locked)
 		{
 			struct ScanList *scanlist = (struct ScanList *) scanlist_semaphore;
-			va_list va;
-			struct TagItem *tags;
+			struct TagItem *tags = (struct TagItem *)args;
 
 			char *rejectpattern;
 			BOOL recursive, includedirs, simplescanning;
 
 			char *filepattern;
 
-			va_start(va, patternlist);
-#ifdef __MORPHOS__
-			tags = (struct TagItem *) va->overflow_arg_area;
-#else
-			tags = (struct TagItem *) va;
-#endif
-
 			recursive = (BOOL) GetTagData(PICH_Recursive, TRUE, tags);
 			includedirs = (BOOL) GetTagData(PICH_IncludeDirs, FALSE, tags);
 			simplescanning = (BOOL) GetTagData(PICH_SimpleScanning, FALSE, tags);
-			rejectpattern = (char *) GetTagData(PICH_Reject, NULL, tags);
+			rejectpattern = (char *) GetTagData(PICH_Reject, (IPTR)NULL, tags);
 
 
 			result = TRUE;

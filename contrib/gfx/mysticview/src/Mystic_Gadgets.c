@@ -58,20 +58,10 @@ void DeleteFakeGadgetList(struct FakeGadgetList *fgl)
 
 --------------------------------------------------------------------*/
 
-struct FakeGadgetList * STDARGS CreateFakeGadgetList(struct Window *win, ...)
+struct FakeGadgetList *CreateFakeGadgetListA(struct Window *win, IPTR *tags)
 {
-//	va_list va;
-//	struct TagItem *taglist;
+//	struct TagItem *taglist = (struct TagItem *)tags;
 	struct FakeGadgetList *fgl;
-
-/*
-	va_start(va, win);
-#ifdef __MORPHOS__
-	taglist = (struct TagItem *) va->overflow_arg_area;
-#else
-	taglist = (struct TagItem *) va;
-#endif
-*/
 
 	if ((fgl = Malloclear(sizeof(struct FakeGadgetList))))
 	{
@@ -128,18 +118,10 @@ void DeleteFakeGadget(struct FakeGadget *fg)
 
 --------------------------------------------------------------------*/
 
-struct FakeGadget * STDARGS CreateFakeGadget(ULONG id, ULONG type, ...)
+struct FakeGadget *CreateFakeGadgetA(ULONG id, ULONG type, IPTR *tags)
 {
-	va_list va;
-	struct TagItem *taglist;
+	struct TagItem *taglist = (struct TagItem *)tags;
 	struct FakeGadget *fg;
-
-	va_start(va, type);
-#ifdef __MORPHOS__
-	taglist = (struct TagItem *) va->overflow_arg_area;
-#else
-	taglist = (struct TagItem *) va;
-#endif
 
 	if ((fg = Malloclear(sizeof(struct FakeGadget))))
 	{

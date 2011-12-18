@@ -103,6 +103,7 @@ BOOL Scan(struct FileList *filelist, struct ScanListNode *snode, ULONG abortsign
 		if ((tbuf = Malloc(l)))
 		{
 			iswild = ParsePatternNoCase(argument, tbuf, l);
+			(void)iswild; // Odd. Unused?
 			Free(tbuf);
 		}
 

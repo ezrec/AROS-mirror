@@ -396,7 +396,7 @@ void MVFunction_SetHideMode(struct mview *mv, struct mainsettings *settings, PIC
 
 					if (dob)
 					{
-						mv->appicon = AddAppIcon(1, 0, PROGNAME, mv->appmsgport, NULL, dob, NULL);
+						mv->appicon = AddAppIcon(1, 0, PROGNAME, mv->appmsgport, BNULL, dob, NULL);
 					}
 				}
 				break;

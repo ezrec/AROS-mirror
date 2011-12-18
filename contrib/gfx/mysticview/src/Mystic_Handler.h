@@ -260,12 +260,18 @@ extern LONG PicHandler_GetListIndex(struct PicHandler *pichandler, int id);
 extern void PicHandler_LockFileList(struct PicHandler *ph);
 extern void PicHandler_UnLockFileList(struct PicHandler *ph);
 
-extern struct PicHandler * STDARGS PicHandler_Create(ULONG dummy, ...);
+extern struct PicHandler *PicHandler_CreateA(ULONG dummy, IPTR *args);
+#define PicHandler_Create(dummy, ...) \
+    ({ IPTR args[] = { __VA_ARGS__ }; PicHandler_CreateA(dummy, args); })
 extern void PicHandler_Delete(struct PicHandler *pichandler);
 extern ULONG PicHandler_GetSigMask(struct PicHandler *pichandler);
 
-extern BOOL STDARGS PicHandler_SetAttributes(struct PicHandler *pichandler, ...);
-extern BOOL STDARGS PicHandler_AddPatternList(struct PicHandler *pichandler, char **patternlist, ...);
+extern BOOL PicHandler_SetAttributesA(struct PicHandler *pichandler, IPTR *args);
+#define PicHandler_SetAttributes(pichandler, ...) \
+    ({ IPTR args[] = { __VA_ARGS__ }; PicHandler_SetAttributesA(pichandler, args); })
+extern BOOL PicHandler_AddPatternListA(struct PicHandler *pichandler, char **patternlist, IPTR *args);
+#define PicHandler_AddPatternList(pichandler, patternlist, ...) \
+    ({ IPTR args[] = { __VA_ARGS__ }; PicHandler_AddPatternListA(pichandler, patternlist, args); })
 extern struct PHMessage *PicHandler_GetNotification(struct PicHandler *handler);
 extern void PicHandler_Acknowledge(struct PicHandler *handler, struct PHMessage *msg);
 
@@ -279,12 +285,15 @@ extern BOOL PicHandler_RequestPic(struct PicHandler *pichandler, ULONG id);
 extern PICTURE *PicHandler_ObtainPicture(struct PicHandler *pichandler, ULONG id);
 extern void PicHandler_ReleasePicture(struct PicHandler *pichandler, ULONG id);
 
-extern BOOL STDARGS PostPHMessage(struct PicHandler *handler, ULONG msgtype, ...);
+extern BOOL PostPHMessageA(struct PicHandler *handler, ULONG msgtype, ULONG *args);
+#define PostPHMessage(handler, msgtype, ...) \
+    ({ ULONG args[] = { __VA_ARGS__ }; PostPHMessageA(handler, msgtype, args); })
 
 extern struct FileListNode *CreateFileListNode(char *fullname, char *formatID, long filesize, int scanindex, struct DateStamp *datestamp, BOOL isdir);
 extern void InsertFileNode(struct FileList *filelist, struct FileListNode *newnode);
 
-extern BOOL STDARGS PicHandler_AppendScanList(char **patternlist, ...);
-
+extern BOOL PicHandler_AppendScanListA(char **patternlist, IPTR *args);
+#define PicHandler_AppendScanList(patternlist, ...) \
+    ({ IPTR args[] = { __VA_ARGS__ }; PicHandler_AppendScanListA(patternlist, args); })
 
 #endif

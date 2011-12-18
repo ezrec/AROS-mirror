@@ -76,7 +76,7 @@ BOOL AppendPicHandler(struct pichandler *ph, char **filepatterns)
 
 	if (ph && filepatterns)
 	{
-		success = PicHandler_AddPatternList(ph->newPicHandler, filepatterns, NULL);
+		success = PicHandler_AddPatternList(ph->newPicHandler, filepatterns, TAG_END);
 	}
 	
 	return success;
@@ -88,13 +88,10 @@ BOOL AppendPicHandler(struct pichandler *ph, char **filepatterns)
 **
 */
 
-struct pichandler * STDARGS CreatePicHandler(char **filepatternlist,
-	BOOL asyncscanning,
-	...)
+struct pichandler *CreatePicHandlerA(char **filepatternlist, BOOL asyncscanning, IPTR *args)
 {
 	struct pichandler *wrappedpichandler;
-	va_list va;
-	struct TagItem *tags;
+	struct TagItem *tags = (struct TagItem *)args;
 	BOOL recursive;
 	int sortmode;
 	char *rejectpattern;
@@ -104,13 +101,6 @@ struct pichandler * STDARGS CreatePicHandler(char **filepatternlist,
 	BOOL simplescanning;
 	BOOL includedirs;
 	
-	va_start(va, asyncscanning);
-#ifdef __MORPHOS__
-	tags = (struct TagItem *) va->overflow_arg_area;
-#else
-	tags = (struct TagItem *) va;
-#endif
-
 	if ((wrappedpichandler = Malloc(sizeof(struct pichandler))))
 	{
 		BOOL success = FALSE;
@@ -132,14 +122,14 @@ struct pichandler * STDARGS CreatePicHandler(char **filepatternlist,
 		recursive = (BOOL) GetTagData(PICH_Recursive, TRUE, tags);
 		simplescanning = (BOOL) GetTagData(PICH_SimpleScanning, FALSE, tags);
 		sortmode = (int) GetTagData(PICH_SortMode, SORTMODE_NONE, tags);
-		rejectpattern = (char *) GetTagData(PICH_Reject, NULL, tags);
+		rejectpattern = (char *) GetTagData(PICH_Reject, (IPTR)NULL, tags);
 		reverse = (BOOL) GetTagData(PICH_SortReverse, FALSE, tags);
 		bufferpercent = GetTagData(PICH_BufferPercent, 10, tags);
 		autocrop = GetTagData(PICH_AutoCrop, FALSE, tags);
 		includedirs = GetTagData(PICH_IncludeDirs, FALSE, tags);
 		
 		if ((wrappedpichandler->newPicHandler = 
-				PicHandler_Create(NULL,
+				PicHandler_Create(0,
 					PICH_Recursive, recursive,
 					PICH_SortMode, sortmode,
 					PICH_SortReverse, reverse,

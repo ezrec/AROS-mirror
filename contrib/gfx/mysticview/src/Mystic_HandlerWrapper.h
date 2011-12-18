@@ -68,7 +68,9 @@ extern void ReleasePic(struct pichandler *ph);
 extern void SetSortMode(struct pichandler *pichandler, ULONG sortmode, BOOL reverse);
 extern BOOL AppendPicHandler(struct pichandler *ph, char **filepatterns);
 
-extern struct pichandler * STDARGS CreatePicHandler(char **filepatternlist, BOOL asyncscanning, ...);
+extern struct pichandler *CreatePicHandlerA(char **filepatternlist, BOOL asyncscanning, IPTR *args);
+#define CreatePicHandler(filepatternlist, asyncscanning, ...) \
+    ({ IPTR args[] = { __VA_ARGS__ }; CreatePicHandlerA(filepatternlist, asyncscanning, args); });
 extern void DeletePicHandler(struct pichandler *pichandler);
 extern ULONG NewPicSignal(struct pichandler *pichandler);
 

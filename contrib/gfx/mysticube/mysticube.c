@@ -180,7 +180,7 @@ void DeleteMVWindow (struct mvwindow *win)
 ----------------------------------------------------------------------
 *********************************************************************/
 
-#define inserttag(x,t,d) {(x)->ti_Tag=(t);((x)++)->ti_Data=(ULONG)(d);}
+#define inserttag(x,t,d) {(x)->ti_Tag=(t);((x)++)->ti_Data=(IPTR)(d);}
 
 struct mvwindow *CreateMVWindow (struct Screen *scr)
 {
@@ -988,7 +988,7 @@ void mysticube(struct mvwindow *win, struct cube *cube)
 	
 				Move(win->window->RPort, win->innerleft, 
 					win->innertop + win->innerheight - win->window->RPort->TxHeight + win->window->RPort->TxBaseline);
-				sprintf(text, "fps: %ld", (ULONG) ((double) 1000 / (double) time));
+				sprintf(text, "fps: %ld", (long) ((double) 1000 / (double) time));
 				Text(win->window->RPort, text, strlen(text));
 			}
 		}

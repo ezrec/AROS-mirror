@@ -224,9 +224,9 @@ APTR SubTask(LONG (* function)(struct subtask *, BYTE),
 					NP_StackSize, stacksize > 32768 ? stacksize: 32768,
 					NP_Name, (ULONG) st->procname, TAG_DONE))
 #else
-				if ((st->subproc = CreateNewProcTags(NP_Entry, (ULONG) SubTaskEntry,
+				if ((st->subproc = CreateNewProcTags(NP_Entry, (IPTR) SubTaskEntry,
 					NP_StackSize, stacksize > 4000 ? stacksize: 4000,
-					NP_Name, (ULONG) st->procname, TAG_DONE)))
+					NP_Name, (IPTR) st->procname, TAG_DONE)))
 #endif
 				{
 					struct MsgPort *port = NULL;
@@ -369,7 +369,7 @@ LONG WaitSubTask(APTR subtask)
 		return st->result;
 	}
 
-	return NULL;
+	return 0;
 }
 
 
@@ -400,7 +400,7 @@ LONG CloseSubTask(APTR subtask)
 		return result;
 	}
 
-	return NULL;
+	return 0;
 }
 
 

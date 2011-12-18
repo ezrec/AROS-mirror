@@ -603,21 +603,11 @@ char **CreateMainSettingsArray(struct mainsettings *settings, char **ttypes)
 
 *********************************************************************/
 
-struct pathsettings * STDARGS CreatePathSettings(char **ttypes, struct pathsettings *oldsettings, ...)
+struct pathsettings *CreatePathSettingsA(char **ttypes, struct pathsettings *oldsettings, IPTR *args)
 {
 	struct pathsettings *mvs;
-//	va_list va;
-//	struct TagItem *tags;
+//	struct TagItem *tags = (struct TagItem *)args;
 	int i;
-
-/*
-	va_start(va, oldsettings);
-#ifdef __MORPHOS__
-	taglist = (struct TagItem *) va->overflow_arg_area;
-#else
-	taglist = (struct TagItem *) va;
-#endif
-*/
 
 	if ((mvs = Malloclear(sizeof(struct pathsettings))))
 	{
@@ -838,7 +828,7 @@ struct mainsettings *LoadDefaultSettings(char *filename)
 
 	if ((dob = GetDiskObject(filename)))
 	{
-		settings = CreateMainSettings((char **)dob->do_ToolTypes, NULL, NULL);
+		settings = CreateMainSettings((char **)dob->do_ToolTypes, NULL, TAG_END);
 		FreeDiskObject(dob);
 	}
 
@@ -946,7 +936,7 @@ struct mainsettings *LoadPreset(char *filename, struct mainsettings *oldsettings
 
 	if ((settingsarray = LoadStringList(filename)))
 	{
-		settings = CreateMainSettings(settingsarray, oldsettings, NULL);
+		settings = CreateMainSettings(settingsarray, oldsettings, TAG_END);
 
 		DeleteStringList(settingsarray);
 	}
@@ -1058,25 +1048,15 @@ void DeletePathSettings(struct pathsettings *settings)
 
 *********************************************************************/
 
-struct mainsettings * STDARGS CreateMainSettings(char **ttypes, struct mainsettings *oldsettings, ...)
+struct mainsettings * CreateMainSettingsA(char **ttypes, struct mainsettings *oldsettings, IPTR *args)
 {
 	struct mainsettings *mvs;
-//	va_list va;
-//	struct TagItem *tags;
-
-/*
-	va_start(va, oldsettings);
-#ifdef __MORPHOS__
-	tags = (struct TagItem *) va->overflow_arg_area;
-#else
-	tags = (struct TagItem *) va;
-#endif
-*/
+//	struct TagItem *tags = (struct TagItem *)args;
 
 	if ((mvs = Malloclear(sizeof(struct mainsettings))))
 	{
 		char *s;
-		LONG temp;
+		long temp;
 
 		if (oldsettings)
 		{
@@ -1631,7 +1611,7 @@ struct pathsettings *LoadPathSettings(char *pathname, struct pathsettings *oldse
 {
 	struct pathsettings *currentsettings;
 
-	if ((currentsettings = CreatePathSettings(NULL, oldsettings, NULL)))
+	if ((currentsettings = CreatePathSettings(NULL, oldsettings, TAG_END)))
 	{
 		struct pathsettings *tempsettings;
 
@@ -1644,7 +1624,7 @@ struct pathsettings *LoadPathSettings(char *pathname, struct pathsettings *oldse
 			{
 				if ((array = LoadStringList(fullname)))
 				{
-					if ((tempsettings = CreatePathSettings(array, currentsettings, NULL)))
+					if ((tempsettings = CreatePathSettings(array, currentsettings, TAG_END)))
 					{
 						DeletePathSettings(currentsettings);
 						currentsettings = tempsettings;

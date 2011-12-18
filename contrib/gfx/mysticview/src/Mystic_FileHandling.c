@@ -160,7 +160,7 @@ BOOL PicDelete(struct mview *mv, char *name, int confirmlevel)
 			if (delete)
 			{
 				char *command;
-				long error;
+				LONG error;
 				BOOL retry;
 
 				do
@@ -221,7 +221,7 @@ BOOL PicCopy(struct mview *mv, char *sname, char *dname, int confirmlevel)
 
 		while (destname)
 		{
-			long error = 0;
+			LONG error = 0;
 			
 			if (Exists(destname))
 			{
@@ -333,7 +333,7 @@ BOOL PicMove(struct mview *mv, char *sname, char *dname, int confirmlevel)
 
 		while (destname)
 		{
-			long error = 0;
+			LONG error = 0;
 			
 			if (Exists(destname))
 			{

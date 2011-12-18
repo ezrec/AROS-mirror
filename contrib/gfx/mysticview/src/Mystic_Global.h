@@ -182,8 +182,8 @@ enum MENUITEMS
 #define		MITEM_PUBSCREEN1	(0x1000 +	30)
 
 
-#define CLEARMENUITEM(menu, a) ToggleMenuFlags(menu,a,NULL,CHECKED);
-#define SETMENUITEM(menu, a) ToggleMenuFlags(menu,a,CHECKED+CHECKIT,NULL);
+#define CLEARMENUITEM(menu, a) ToggleMenuFlags(menu,a,0,CHECKED);
+#define SETMENUITEM(menu, a) ToggleMenuFlags(menu,a,CHECKED+CHECKIT,0);
 
 
 extern void ToggleMenuFlags(struct Menu *menu, ULONG id, UWORD set, UWORD clear);
@@ -439,7 +439,7 @@ enum PRIORITIES
 
 #define RNG(b,x,t) ((x) < (b) ? (b) : ((x) > (t) ? (t) : (x)))
 
-#define inserttag(x,t,d) {(x)->ti_Tag=(t);((x)++)->ti_Data=(ULONG)(d);}
+#define inserttag(x,t,d) {(x)->ti_Tag=(t);((x)++)->ti_Data=(IPTR)(d);}
 
 #define	LOCK(a) {if(a){ObtainSemaphore((struct SignalSemaphore *)(a));}}
 #define	LOCKREAD(a) {if(a){ObtainSemaphoreShared((struct SignalSemaphore *)(a));}}

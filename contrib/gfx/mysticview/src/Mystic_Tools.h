@@ -52,8 +52,8 @@ extern int StrLen(char *s);
 extern long FileSize(char *filename);
 extern BOOL CallSubTask(LONG (* function)(APTR data), APTR data, int prio, int stack, LONG *result);
 
-
-extern STRPTR STDARGS _StrDupCat(ULONG dummy, ...);
-
+extern STRPTR _StrDupCatA(CONST_STRPTR *args);
+#define _StrDupCat(...) \
+    ({ CONST_STRPTR args[] = { __VA_ARGS__, NULL  }; _StrDupCatA(args); })
 
 #endif

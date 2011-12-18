@@ -124,10 +124,14 @@ enum FGADSTATUS
 #define INVALID_FAKEGADGET		(0xffffffff)
 
 void DeleteFakeGadgetList(struct FakeGadgetList *fgl);
-struct FakeGadgetList * STDARGS CreateFakeGadgetList(struct Window *win, ...);
+#define CreateFakeGadgetList(win, ...) \
+    ({ IPTR args[] = { __VA_ARGS__ }; CreateFakeGadgetListA(win, args); })
+struct FakeGadgetList *CreateFakeGadgetListA(struct Window *win, IPTR *args);
+#define CreateFakeGadget(id, type, ...) \
+    ({ IPTR args[] = { __VA_ARGS__ }; CreateFakeGadgetA(id, type, args); })
+struct FakeGadget *CreateFakeGadgetA(ULONG id, ULONG type, IPTR *args);
 void RemFakeGadget(struct FakeGadget *fg);
 void DeleteFakeGadget(struct FakeGadget *fg);
-struct FakeGadget * STDARGS CreateFakeGadget(ULONG id, ULONG type, ...);
 void AddFakeGadget(struct FakeGadgetList *fgl, struct FakeGadget *fg);
 void GetLayoutData(struct FakeGadgetList *fgl, int orientation, int *minwidth, int *minheight);
 BOOL LayoutFakeGadgetList(struct FakeGadgetList *fgl, int orientation, int width, int height, int x, int y);

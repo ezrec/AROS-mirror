@@ -269,12 +269,7 @@ APTR SubTask(LONG (* function)(struct subtask *, BYTE),
 				st->msg.mn_Length = sizeof(struct subtask);
 				st->selfdestruct = selfdestruct;
 
-    	    	    	#ifdef __AROS__
-			#warning "FIXME: sprintf causes crash here. evil clib. or something!"
-			    	strcpy(st->procname, "subtask_by_mv.library");
-			#else
-				sprintf(st->procname, name, GetUniqueID());
-			#endif
+				__sprintf(st->procname, name, GetUniqueID());
 			
 
 #ifdef __MORPHOS__
@@ -282,9 +277,9 @@ APTR SubTask(LONG (* function)(struct subtask *, BYTE),
 					NP_StackSize, 32768,
 					NP_Name, (ULONG) st->procname, TAG_DONE))
 #else
-				if ((st->subproc = CreateNewProcTags(NP_Entry, (ULONG) SubTaskEntry,
+				if ((st->subproc = CreateNewProcTags(NP_Entry, (IPTR) SubTaskEntry,
 					NP_StackSize, SUBTASK_STACKSIZE,
-					NP_Name, (ULONG) st->procname, TAG_DONE)))
+					NP_Name, (IPTR) st->procname, TAG_DONE)))
 #endif
 				{
 					struct MsgPort *port = NULL;
@@ -425,7 +420,7 @@ LONG WaitSubTask(APTR subtask)
 		return st->result;
 	}
 	
-	return NULL;
+	return 0;
 }
 
 
@@ -456,7 +451,7 @@ LONG CloseSubTask(APTR subtask)
 		return result;
 	}
 
-	return NULL;
+	return 0;
 }
 
 

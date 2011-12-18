@@ -936,7 +936,7 @@ char **MultiFileRequest(struct FileRequester *fr, struct Window *win,
 	filereqfilterhook.h_Data = NULL;
 
 	if(AslRequestTags(fr,ASLFR_TitleText,(IPTR)title,
-			ASLFR_FilterFunc, onlypictures ? (IPTR)&filereqfilterhook : NULL,
+			ASLFR_FilterFunc, onlypictures ? (IPTR)&filereqfilterhook : (IPTR)NULL,
 			ASLFR_RejectIcons, TRUE,
 			ASLFR_RejectPattern, (IPTR)rejpat,
 			ASLFR_Window, (IPTR)win,
@@ -1111,21 +1111,12 @@ BOOL CallSubTask(LONG (* function)(APTR data), APTR data, int prio, int stack, L
 
 
 
-STRPTR STDARGS _StrDupCat(ULONG dummy, ...)
+STRPTR _StrDupCatA(CONST_STRPTR *stringlist)
 {
-	va_list va;
-	STRPTR *stringlist;
 	int numargs = 0;
 	int len = 0;
 	STRPTR newstring = NULL;
 	
-	va_start(va, dummy);
-#ifdef __MORPHOS__
-	stringlist = (STRPTR *) va->overflow_arg_area;
-#else
-	stringlist = (STRPTR *) va;
-#endif
-
 	while (stringlist[numargs])
 	{
 		len += strlen((char *) stringlist[numargs++]);

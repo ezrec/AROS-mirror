@@ -168,10 +168,14 @@ struct pathsettings
 
 --------------------------------------------------------------------*/
 
-extern struct mainsettings * STDARGS CreateMainSettings(char **ttypes, struct mainsettings *oldsettings, ...);
+extern struct mainsettings *CreateMainSettingsA(char **ttypes, struct mainsettings *oldsettings, IPTR *args);
+#define CreateMainSettings(ttypes, oldsettings, ...) \
+    ({ IPTR args[] = { __VA_ARGS__ }; CreateMainSettingsA(ttypes, oldsettings, args); })
 extern void DeleteMainSettings(struct mainsettings *settings);
 
-extern struct pathsettings * STDARGS CreatePathSettings(char **ttypes, struct pathsettings *oldsettings, ...);
+extern struct pathsettings *CreatePathSettingsA(char **ttypes, struct pathsettings *oldsettings, IPTR *args);
+#define CreatePathSettings(ttypes, oldsettings, ...) \
+    ({ IPTR args[] = { __VA_ARGS__ }; CreatePathSettingsA(ttypes, oldsettings, args); })
 extern void DeletePathSettings(struct pathsettings *settings);
 
 extern BOOL GetBooleanSetting(char **ttypes, char *name, BOOL def);

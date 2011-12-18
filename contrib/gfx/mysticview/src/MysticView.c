@@ -689,7 +689,7 @@ struct MVButtons *CreateButtons(PICTURE *pic, PICTURE *animpic, struct mvwindow 
 				AddPicture(buttons->psm, buttons->animpic, NULL);
 			}
 
-			if ((buttons->gadgetlist = CreateFakeGadgetList(win->window, NULL)))
+			if ((buttons->gadgetlist = CreateFakeGadgetList(win->window, TAG_END)))
 			{
 				success = TRUE;
 
@@ -775,7 +775,7 @@ struct MVButtons *CreateButtons(PICTURE *pic, PICTURE *animpic, struct mvwindow 
 						GAD_SLIDE, FGADTYPE_TOGGLE,
 						FGDT_WIDTH, buttons->gadgetwidth,
 						FGDT_HEIGHT, buttons->gadgetheight,
-						FGDT_BITMAP, buttons->bitmap,
+						FGDT_BITMAP, (IPTR)buttons->bitmap,
 						FGDT_PICX_INACTIVE, buttons->gadgetwidth * 4,
 						FGDT_PICY_INACTIVE, buttons->gadgetheight * 0,
 						FGDT_PICX_PRESSED, buttons->gadgetwidth * 4,
@@ -1193,9 +1193,9 @@ char *SetPicInfoText(struct viewdata *viewdata, PICTURE *pic, struct mainsetting
 
 				args[0] = viewdata->pathname;
 				args[1] = viewdata->filename;
-				args[2] = (APTR) w;
-				args[3] = (APTR) h;
-				args[4] = (APTR) d;
+				args[2] = (APTR) (IPTR) w;
+				args[3] = (APTR) (IPTR) h;
+				args[4] = (APTR) (IPTR) d;
 				args[5] = viewdata->formatname;
 
 				infotext = FormatInfoText(viewdata->picturetext, settings->picformat, args);
@@ -1293,11 +1293,11 @@ char *SetPicInfoText(struct viewdata *viewdata, PICTURE *pic, struct mainsetting
 				{
 					if (status & PICHSTATUS_LOADING)
 					{
-						sprintf(viewdata->statustext, MVTEXT_STAT_SCANNINGLOADING, maxpic);
+						sprintf(viewdata->statustext, MVTEXT_STAT_SCANNINGLOADING, (long)maxpic);
 					}
 					else
 					{
-						sprintf(viewdata->statustext, MVTEXT_STAT_SCANNING, maxpic);
+						sprintf(viewdata->statustext, MVTEXT_STAT_SCANNING, (long)maxpic);
 					}
 				}
 				else
@@ -1371,7 +1371,7 @@ ULONG NewPicHandler(struct viewdata *viewdata, char **filepatternlist, struct ma
 		viewdata->pichandler = CreatePicHandler(filepatternlist,
 			settings->asyncscanning,
 			PICH_SimpleScanning, settings->simplescanning,
-			PICH_Reject, settings->rejectpattern,
+			PICH_Reject, (IPTR)settings->rejectpattern,
 			PICH_SortMode, settings->sortmode,
 			PICH_SortReverse, settings->reverse,
 			PICH_BufferPercent, settings->bufferpercent,
@@ -1384,7 +1384,7 @@ ULONG NewPicHandler(struct viewdata *viewdata, char **filepatternlist, struct ma
 	}
 	else
 	{
-		return NULL;
+		return 0;
 	}
 }
 
@@ -1449,9 +1449,9 @@ void DeleteNewMenuItems(struct NewMenu *newmenu)
 		{
 			if (newmenu->nm_Label != NM_BARLABEL)
 			{
-				Free(newmenu->nm_Label);
+				Free((APTR)newmenu->nm_Label);
 			}
-			Free(newmenu->nm_CommKey);
+			Free((APTR)newmenu->nm_CommKey);
 
 		} while (newmenu++->nm_Type != NM_END);
 
@@ -1508,7 +1508,7 @@ struct NewMenu *CreateNewMenuItems(int num, char **commkeys,
 					if (c[0] == '_')
 					{
 						c++;
-						nm->nm_Flags = NULL;
+						nm->nm_Flags = 0;
 					}
 					nm->nm_CommKey = _StrDup(c);
 					commkeys++;
@@ -2417,9 +2417,6 @@ int HandleMView (struct mview *mv,
 	BOOL setviewrelative = FALSE;
 	
 	ULONG currentidcmp = mv->window->idcmpmask;
-	int holdmx = -1, holdmy = -1;
-	
-
 
 
 	/*
@@ -2628,7 +2625,6 @@ int HandleMView (struct mview *mv,
 
 			if (signals & idcmpsignal)
 			{
-				static LONG lastclick_seconds = 0, lastclick_micros = 0;
 				struct IntuiMessage myImsg;
 			//	BOOL setviewrelative = FALSE;
 				BOOL relayoutmenus = FALSE;
@@ -2844,8 +2840,6 @@ int HandleMView (struct mview *mv,
 										if (myImsg.MouseX >= x && myImsg.MouseX < x+w && myImsg.MouseY >= y && myImsg.MouseY < y+h)
 										{
 											newidcmp |= IDCMP_INTUITICKS;
-											holdmx = myImsg.MouseX;
-											holdmy = myImsg.MouseY;
 											if (settings->leftmouseaction == MOUSEACTION_DRAG)
 											{
 												newidcmp |= IDCMP_MOUSEMOVE;
@@ -2853,8 +2847,6 @@ int HandleMView (struct mview *mv,
 											}
 										}
 									}
-									lastclick_seconds = myImsg.Seconds;
-									lastclick_micros = myImsg.Micros;
 									break;
 								}
 							}
@@ -2934,8 +2926,6 @@ int HandleMView (struct mview *mv,
 									ModifyIDCMP(win, mv->window->idcmpmask | IDCMP_MOUSEMOVE | IDCMP_INTUITICKS);
 									mousebutton = TRUE;
 
-											lastclick_seconds = myImsg.Seconds;
-											lastclick_micros = myImsg.Micros;
 
 											break;
 										}
@@ -3248,7 +3238,7 @@ int HandleMView (struct mview *mv,
 											char *newpath = FullName(viewdata->pathname, viewdata->filename);
 											if (newpath)
 											{
-												char *newpath2 = _StrDupCat(NULL, newpath, "/#?", NULL);
+												char *newpath2 = _StrDupCat(newpath, "/#?");
 												if (newpath2)
 												{
 													char *filepatternlist[2];
@@ -3327,7 +3317,7 @@ int HandleMView (struct mview *mv,
 							while((myImsg.Code != MENUNULL) && (status == STATUS_WORKING))
 							{
 								struct MenuItem *item = ItemAddress(menu, myImsg.Code);
-								ULONG code = (ULONG) GTMENUITEM_USERDATA(item);
+								IPTR code = (IPTR)GTMENUITEM_USERDATA(item);
 
 								switch (code)
 								{
@@ -3829,7 +3819,7 @@ int HandleMView (struct mview *mv,
 									case MITEM_RESETSETTINGS:
 									{
 										struct mainsettings *new;
-										if ((new = CreateMainSettings(NULL, NULL, NULL)))
+										if ((new = CreateMainSettings(NULL, NULL, TAG_END)))
 										{
 											DeleteMainSettings(settings);
 											settings = new;
@@ -3841,7 +3831,7 @@ int HandleMView (struct mview *mv,
 									case MITEM_RESTORESETTINGS:
 									{
 										struct mainsettings *new;
-										if ((new = CreateMainSettings(NULL, oldsettings, NULL)))
+										if ((new = CreateMainSettings(NULL, oldsettings, TAG_END)))
 										{
 											DeleteMainSettings(settings);
 											settings = new;
@@ -4572,7 +4562,7 @@ int mymain(int argc, char **argv)
 		initpathsettings = LoadPathSettings("ENV:MysticView", NULL);
 
     	#ifdef __AROS__
-	#warning "Fix AROS WBenchMsg/_WBenchMsg/not_in_any_header stuff"
+	// FIXME: Fix AROS WBenchMsg/_WBenchMsg/not_in_any_header stuff
 	#define _WBenchMsg WBenchMsg
 	extern struct WBStartup *WBenchMsg;
 	#endif
@@ -4591,7 +4581,7 @@ int mymain(int argc, char **argv)
 
 			initsettings = LoadDefaultSettings(progfilename);
 
-			if ((newsettings = CreateMainSettings(ttypes, initsettings, NULL)))
+			if ((newsettings = CreateMainSettings(ttypes, initsettings, TAG_END)))
 			{
 				DeleteMainSettings(initsettings);
 				initsettings = newsettings;
@@ -4635,7 +4625,7 @@ int mymain(int argc, char **argv)
 
 				if ((dob = GetDiskObject(progfilename)))
 				{
-					initsettings = CreateMainSettings((char **)dob->do_ToolTypes, NULL, NULL);
+					initsettings = CreateMainSettings((char **)dob->do_ToolTypes, NULL, TAG_END);
 					FreeDiskObject(dob);
 				}
 			}
@@ -4683,7 +4673,7 @@ int mymain(int argc, char **argv)
 					Free(fullname);
 				}
 			}
-			if ((newsettings = CreateMainSettings(ttypes, initsettings, NULL)))
+			if ((newsettings = CreateMainSettings(ttypes, initsettings, TAG_END)))
 			{
 				DeleteMainSettings(initsettings);
 				initsettings = newsettings;
@@ -4692,8 +4682,8 @@ int mymain(int argc, char **argv)
 			if (opts[ARG_APPEND] && startfilepatternlist)
 			{
 				if (PicHandler_AppendScanList(startfilepatternlist,
-					PICH_Reject, initsettings ? (ULONG) initsettings->rejectpattern : (ULONG) TRUE,
-					PICH_Recursive, initsettings ? (ULONG) initsettings->recursive : (ULONG) TRUE,
+					PICH_Reject, initsettings ? (IPTR) initsettings->rejectpattern : (IPTR) TRUE,
+					PICH_Recursive, initsettings ? (IPTR) initsettings->recursive : (IPTR) TRUE,
 					TAG_DONE))
 				{
 					goto appended_raus;
@@ -4713,12 +4703,12 @@ int mymain(int argc, char **argv)
 			struct mainsettings *oldsettings;
 			struct pathsettings *pathsettings = NULL;
 
-			if ((settings = CreateMainSettings(NULL, initsettings, NULL)))
+			if ((settings = CreateMainSettings(NULL, initsettings, TAG_END)))
 			{
 			//	if (pathsettings = LoadPathSettings("ENV:MysticView", initpathsettings))
-				if ((pathsettings = CreatePathSettings(NULL, initpathsettings, NULL)))
+				if ((pathsettings = CreatePathSettings(NULL, initpathsettings, TAG_END)))
 				{
-					if ((oldsettings = CreateMainSettings(NULL, settings, NULL)))
+					if ((oldsettings = CreateMainSettings(NULL, settings, TAG_END)))
 					{
 						struct viewdata *viewdata;
 

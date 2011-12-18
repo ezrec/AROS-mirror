@@ -381,7 +381,7 @@ void ToggleMenuFlags(struct Menu *menu, ULONG id, UWORD set, UWORD clear)
 				struct MenuItem *si = mi->SubItem;
 				do
 				{
-					if (GTMENUITEM_USERDATA(si) == (APTR)id)
+					if (GTMENUITEM_USERDATA(si) == (APTR)(IPTR)id)
 					{
 						si->Flags &= ~clear;
 						si->Flags |= set;
@@ -389,7 +389,7 @@ void ToggleMenuFlags(struct Menu *menu, ULONG id, UWORD set, UWORD clear)
 				} while ((si = si->NextItem));
 			}
 
-			if (GTMENUITEM_USERDATA(mi) == (APTR)id)
+			if (GTMENUITEM_USERDATA(mi) == (APTR)(IPTR)id)
 			{
 				mi->Flags &= ~clear;
 				mi->Flags |= set;
@@ -421,14 +421,14 @@ ULONG GetMenuFlag(struct Menu *menu, ULONG id, int true, int false)
 				struct MenuItem *si = mi->SubItem;
 				do
 				{
-					if (GTMENUITEM_USERDATA(si) == (APTR)id)
+					if (GTMENUITEM_USERDATA(si) == (APTR)(IPTR)id)
 					{
 						return (ULONG)((si->Flags & CHECKED) ? true : false);
 					}
 				} while ((si = si->NextItem));
 			}
 
-			if (GTMENUITEM_USERDATA(mi) == (APTR)id)
+			if (GTMENUITEM_USERDATA(mi) == (APTR)(IPTR)id)
 			{
 				return (ULONG)((mi->Flags & CHECKED) ? true : false);
 			}
@@ -459,14 +459,14 @@ struct MenuItem *FindMenuItem(struct Menu *menu, ULONG id)
 				struct MenuItem *si = mi->SubItem;
 				do
 				{
-					if (GTMENUITEM_USERDATA(si) == (APTR)id)
+					if (GTMENUITEM_USERDATA(si) == (APTR)(IPTR)id)
 					{
 						return si;
 					}
 				} while ((si = si->NextItem));
 			}
 
-			if (GTMENUITEM_USERDATA(mi) == (APTR)id)
+			if (GTMENUITEM_USERDATA(mi) == (APTR)(IPTR)id)
 			{
 				return mi;
 			}
@@ -679,11 +679,7 @@ int getrandom(int min, int max)
 
 BOOL InitGlobal(void)
 {
-#ifdef __AROS__
-	sprintf(mypersonalID, "CBF%lx", GetUniqueID());
-#else
-	sprintf(mypersonalID, "CBF%x", GetUniqueID());
-#endif
+	sprintf(mypersonalID, "CBF%lx", (long)GetUniqueID());
 
 	MysticBase = OpenLibrary("mysticview.library", MYSTIC_VERSION);
 	if (!MysticBase)
