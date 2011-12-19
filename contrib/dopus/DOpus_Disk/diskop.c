@@ -302,9 +302,9 @@ void inhibit_drive(device,state)
 char *device;
 ULONG state;
 {
+#if 0
 	struct MsgPort *handler;
 
-#if 0
 	if (DOSBase->dl_lib.lib_Version<36) {
 		if (handler=(struct MsgPort *)DeviceProc(device))
 			SendPacket(handler,ACTION_INHIBIT,&state,1);
@@ -382,7 +382,7 @@ char *name;
 	if (dl = LockDosList(LDF_DEVICES | LDF_READ))
 		dl = (APTR)FindDosEntry(dl,name,LDF_DEVICES);
 	UnLockDosList(LDF_DEVICES | LDF_READ);
-	return dl;
+	return (struct DeviceNode *)dl;
 #endif
 }
 
@@ -408,7 +408,7 @@ char *alike;
       
     while ((devnode = (struct DeviceNode *)NextDosEntry((struct DosList *)devnode,LDF_DEVICES))) {
         if (/*devnode->dn_Type==DLT_DEVICE && devnode->dn_Task &&*/
-            devnode->dn_Startup>512) {
+            devnode->dn_Startup>(BPTR)512) {
             if (!alikenode || like_devices(devnode,alikenode)) 
                 ++count;
         }
@@ -422,7 +422,7 @@ char *alike;
         while ((devnode = (struct DeviceNode *)NextDosEntry((struct DosList *)devnode,LDF_DEVICES))) {
 //        while (devnode) {
             if (/*devnode->dn_Type==DLT_DEVICE && devnode->dn_Task &&*/
-                devnode->dn_Startup>512) {
+                devnode->dn_Startup>(BPTR)512) {
                 if (!alikenode || like_devices(devnode,alikenode)) {
                     BtoCStr((BPTR)devnode->dn_Name,devname,32);
                     strcat(devname,":");
@@ -560,7 +560,8 @@ struct Gadget *gadget;
 int count;
 struct DOpusListView *list;
 {
-	int file,listid='LIST';
+	BPTR file;
+	int listid=MAKE_ID('L','I','S','T');
 	UWORD len;
 	char envname[80],null=0;
 
@@ -602,7 +603,8 @@ struct Gadget *firstgadget;
 int count;
 struct DOpusListView *list;
 {
-	int file,size,a,b,*lbuf;
+	BPTR file;
+	int size,a,b,*lbuf;
 	char envname[80],*nptr;
 	struct Gadget *gadget;
 	UWORD gadgettype,gadgetid,len,*buf;
@@ -623,7 +625,7 @@ struct DOpusListView *list;
 
 	for (a=0;a<size/2;) {
 		lbuf=(int *)&buf[a];
-		if (lbuf[0]=='LIST') {
+		if (lbuf[0]==MAKE_ID('L','I','S','T')) {
 			a+=2;
 			nptr=(char *)&buf[a];
 			if (list) {

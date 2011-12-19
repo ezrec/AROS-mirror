@@ -51,7 +51,7 @@ void close_device(struct DeviceHandle *);
 char **get_device_list(struct DOpusRemember **,char *);
 void sort_device_list(char **);
 struct DeviceNode *find_device(char *);
-void inhibit_drive(char *,IPTR);
+void inhibit_drive(char *,ULONG);
 ULONG do_checksum(ULONG *);
 int do_writeblock(struct IOExtTD *,APTR,ULONG);
 void border_text(struct RequesterBase *,Object_Border *,const char *);
