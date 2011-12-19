@@ -390,7 +390,8 @@ struct ExtNewScreen *clone;
 }
 
 int copy_string(string,copy,memkey)
-char *string,**copy;
+const char *string;
+char **copy;
 struct DOpusRemember **memkey;
 {
     if (!string) {

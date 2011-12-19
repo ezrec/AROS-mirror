@@ -187,7 +187,7 @@ int getmakelinkdata(char *namebuf, char *destbuf, int *type)
     UWORD gadgetid,code;
     struct Window *swindow;
     struct Gadget *name_gad,*makelink_type_gad, *makelink_destname_gad;
-    char *makelink_type_array[3] = {globstring[STR_MAKELINK_TYPE_SOFT], globstring[STR_MAKELINK_TYPE_HARD], NULL};
+    const char *makelink_type_array[3] = {globstring[STR_MAKELINK_TYPE_SOFT], globstring[STR_MAKELINK_TYPE_HARD], NULL};
     char makelink_namebuf[108], makelink_destbuf[256];
     int makelink_type;
     int ret=0;

@@ -23,7 +23,8 @@ FILES	:= \
 
 #MM- dopus-library : setup includes linklibs dopus-includes
 
-USER_CFLAGS := -D__DOPUS_NOLIBBASE__ -I$(DOPUSDIR)/Development/include
+USER_CFLAGS := -D__DOPUS_NOLIBBASE__ -I$(DOPUSDIR)/Development/include \
+	       -Wno-parentheses -Wno-address
 
 %build_module mmake=dopus-library \
     modname=dopus modtype=library prefix=$(DOPUSDIR) \

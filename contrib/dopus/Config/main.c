@@ -41,7 +41,7 @@ void chkabort(void) { return; }
 
 int onworkbench=0;
 
-main(argc,argv)
+int main(argc,argv)
 int argc;
 char *argv[];
 {
@@ -580,7 +580,7 @@ int scr;
 }
 
 void initsidegads(gads,toggle,vert)
-char **gads;
+const char **gads;
 int toggle,vert;
 {
     int num,a,x,y,x1,ac,dn,gnum,rnum,w,h;
@@ -650,7 +650,7 @@ struct ConfigGadget *gads;
 int flag,flag2;
 {
     int num,a,y,gad,last,lasty,dy,xp,yp,fl,b;
-    char **namearray;
+    const char **namearray;
     struct StringInfo *sinfo;
 
     removetickgads();
@@ -870,7 +870,7 @@ void removetickgads()
         x_bot,y_bot);
 }
 
-processtickgad(gads,flag,sel,num)
+int processtickgad(gads,flag,sel,num)
 struct ConfigGadget *gads;
 int flag,sel,num;
 {
@@ -1189,12 +1189,13 @@ void makestring(char *buf,...)
     if (first) ActivateStrGad(first,Window);
 }
 
-getstring(text,buf,len,num)
-char *text,*buf;
+int getstring(text,buf,len,num)
+const char *text;
+char *buf;
 int len,num;
 {
     struct DOpusSimpleRequest req;
-    char *gads[3];
+    const char *gads[3];
     static int rets[2]={1,0};
     int a;
 
@@ -1221,17 +1222,17 @@ int len,num;
     return(a);
 }
 
-request(text)
-char *text;
+int request(text)
+const char *text;
 {
     return(do_request(text,cfg_string[STR_OKAY],cfg_string[STR_CANCEL]));
 }
 
-do_request(text,pos,neg)
-char *text,*pos,*neg;
+int do_request(text,pos,neg)
+const char *text,*pos,*neg;
 {
     struct DOpusSimpleRequest req;
-    char *gads[3];
+    const char *gads[3];
     static int rets[2]={1,0};
     int a;
 
@@ -1281,7 +1282,7 @@ char *str;
 static char lasttitle[80];
 
 void doscreentitle(str)
-char *str;
+const char *str;
 {
     if (str && str!=(char *)-1) strcpy(lasttitle,str);
     SetWindowTitles(Window,lasttitle,(char *)-1);

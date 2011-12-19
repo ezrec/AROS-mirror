@@ -680,7 +680,7 @@ D({char p[256]; unsigned long long s=0; ULONG f=0; strcpy(p,sourcename); getdirc
                   strcpy(buf,file->name);
                   c = strchr(buf,':');
                   if (c) *c = 0;
-                  a = AssignLock(buf,NULL)?1:0;
+                  a = AssignLock(buf,BNULL)?1:0;
 //D(bug("Removing assign %s\t%s\n",buf,a?"success":"failure"));
                  }
                 else if ((a=delfile(sourcename,file->name,globstring[STR_DELETING],

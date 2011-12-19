@@ -289,7 +289,7 @@ D(bug("ARBITER_LAUNCH: %s, flags: %lx\n",arb_launch->launch_name,arb_msg->flags)
 }
 
 struct Screen *open_subprocess_screen(title,font,memkey,pens)
-char *title;
+const char *title;
 struct TextFont *font;
 struct DOpusRemember **memkey;
 short *pens;
@@ -355,7 +355,7 @@ short *pens;
     }
     newscreen.Type=CUSTOMSCREEN|NS_EXTENDED;
     newscreen.Font=screenattr;
-    newscreen.DefaultTitle=title;
+    newscreen.DefaultTitle=(STRPTR)title;
     newscreen.Gadgets=NULL;
     newscreen.Extension=screentags;
     newscreen.Depth=config->scrdepth;

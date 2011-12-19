@@ -206,12 +206,13 @@ char *name;
 	struct DiskObject *dobj;
 	struct DOpusListView *view;
 	char
-		buf[256],namebuf[256],inamebuf[33],*ptr,date[11],time[11],*olddeftool,
-		**ttarray,**oldtooltypes,**tttemp;
+		buf[256],namebuf[256],inamebuf[33],*ptr,date[11],time[11],*olddeftool=NULL;
+	char **ttarray,**tttemp=NULL;
+	STRPTR *oldtooltypes;
 	struct DOpusDateTime datetime;
 	ULONG class;
 	UWORD code;
-	int a,b,x,y,gadgetid,ret,gotid=0,newdef,ttcount=0,curtt=-1,compflag=0;
+	int a,b,x,y,gadgetid=0,ret,gotid=0,ttcount=0,curtt=-1,compflag=0;
 	BPTR lock;
 	struct InfoData __aligned infodata;
 	struct FileInfoBlock __aligned fileinfo;
@@ -220,14 +221,13 @@ char *name;
 	struct Window *window;
 	struct RastPort *rp;
 	struct Gadget
-		*icongad,
 		*gad,	
 		*tooltypegads=NULL,
 		*protectbitgads=NULL,
 		*stackgad=NULL,
 		*commentgad=NULL,
 		*defaulttoolgad=NULL;
-	char *stack_buf,*comment_buf,*tooltype_buf,*defaulttool_buf;
+	char *stack_buf=NULL,*comment_buf,*tooltype_buf=NULL,*defaulttool_buf=NULL;
 	struct DOpusListView *tooltypelist;
 	struct IntuiMessage *msg;
 	struct Rectangle icon_rec;
@@ -238,7 +238,6 @@ char *name;
 
 	strcpy(namebuf,name); if ((ptr=strstr(namebuf,".info"))) *ptr=0;
 	if (!(dobj=GetDiskObject(namebuf))) return(-2);
-	icongad=(struct Gadget *)&(dobj->do_Gadget);
 	oldtooltypes=dobj->do_ToolTypes;
 
 	switch (dobj->do_Type) {
@@ -388,10 +387,10 @@ char *name;
 			skip_text.FrontPen=0;
 			cancel_text.FrontPen=0;
 		}
-		save_text.IText=string_table[STR_SAVE];
-		skip_text.IText=string_table[STR_SKIP];
-		cancel_text.IText=string_table[STR_CANCEL];
-		icon_menu.MenuName=string_table[STR_ICON];
+		save_text.IText=(STRPTR)string_table[STR_SAVE];
+		skip_text.IText=(STRPTR)string_table[STR_SKIP];
+		cancel_text.IText=(STRPTR)string_table[STR_CANCEL];
+		icon_menu.MenuName=(STRPTR)string_table[STR_ICON];
 		SetMenuStrip(window,&icon_menu);
 	}
 
@@ -483,6 +482,7 @@ char *name;
 
 	y=40+textyoff;
 	for (a=0;a<6;a++) {
+		const char *ptr;
 		ptr=specific_gadtext[dobj->do_Type-1][a];
 		if (ptr) {
 			if (a<4) x=94+textxoff;

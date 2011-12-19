@@ -59,7 +59,7 @@ void view_unbusy(struct ViewData *);
 void view_doscroll(struct ViewData *,int,int);
 int view_lineup(struct ViewData *);
 int view_linedown(struct ViewData *);
-void view_status_text(struct ViewData *,char *);
+void view_status_text(struct ViewData *,const char *);
 void view_printtext(struct ViewData *,int);
 void view_checkprint(struct ViewData *,int);
 void view_makeuphex(struct ViewData *,char *,unsigned char *,int);
@@ -69,8 +69,8 @@ void view_viewhilite(struct ViewData *,int,int,int,int);
 void view_clearhilite(struct ViewData *,int);
 void view_fix_scroll_gadget(struct ViewData *);
 void view_clearsearch(struct ViewData *);
-int view_simplerequest (struct ViewData *,char *,...);
-int view_whatsit(struct ViewData *,char *,int,char *);
+int view_simplerequest (struct ViewData *,const char *,...);
+int view_whatsit(struct ViewData *,const char *,int,char *);
 
 struct ViewMessage {
   char *filename;
@@ -126,7 +126,7 @@ static struct NewWindow viewwin={
 static struct Gadget *viewGadgets[VIEW_GAD_COUNT];
 
 int viewfile(filename,name,function,initialsearch,viewdata,wait,noftype)
-char *filename,*name;
+const char *filename,*name;
 int function;
 char *initialsearch;
 struct ViewData *viewdata;
@@ -1741,7 +1741,7 @@ int view_linedown(struct ViewData *vdata)
   return(1);
 }
 
-void view_status_text(struct ViewData *vdata, char *str)
+void view_status_text(struct ViewData *vdata, const char *str)
 {
   static char buf[108];
   struct Gadget *g = viewGadgets[VIEW_FILENAME];
@@ -2044,9 +2044,9 @@ struct ViewData *vdata;
     vdata->view_pick_charoffset=-1;
 }
 
-int view_simplerequest(struct ViewData *vdata,char *txt,...)
+int view_simplerequest(struct ViewData *vdata,const char *txt,...)
 {
-  char *gads[4],*cancelgad=NULL,*gad;
+  const char *gads[4],*cancelgad=NULL,*gad;
   int a/*=1*/,r,rets[3],num;
   va_list ap;
   struct DOpusSimpleRequest request;
@@ -2079,11 +2079,11 @@ int view_simplerequest(struct ViewData *vdata,char *txt,...)
 
 int view_whatsit(vdata,txt,max,buffer)
 struct ViewData *vdata;
-char *txt;
+const char *txt;
 int max;
 char *buffer;
 {
-  char *gads[3];
+  const char *gads[3];
   int rets[2];
   struct DOpusSimpleRequest request;
 

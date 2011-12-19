@@ -750,7 +750,7 @@ ULONG type/*,nottype*/;
 }
 
 void iconstatustext(buf,buttons)
-char *buf;
+const char *buf;
 int buttons;
 {
 // HUX    int a;

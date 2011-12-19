@@ -35,7 +35,7 @@ static unsigned char displenmap[]={DISPLAY_NAME,DISPLAY_COMMENT,DISPLAY_FILETYPE
 int rexxdisp(msg,cmd,command)
 struct RexxMsg *msg;
 struct CommandList *cmd;
-char *command;
+const char *command;
 {
     int a,b,c,f,val,function,win,statval,retval;
     long long d;
@@ -1416,7 +1416,7 @@ D(bug("rexx_args(%s,%s,%s)\n",rexx_args[0]?rexx_args[0]:"<NULL>",rexx_args[1]?re
 }
 
 int parse(buf)
-unsigned char *buf;
+const unsigned char *buf;
 {
     int len,argno,argpos,a,withinquote,havequoted;
 D(bug("parse cmd(%s)\n",buf));

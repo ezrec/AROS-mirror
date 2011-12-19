@@ -445,7 +445,7 @@ int high;
 
 void dolittlegads(gad,txt,num)
 struct Gadget *gad;
-char *txt;
+const char *txt;
 int num;
 {
     int a,y;

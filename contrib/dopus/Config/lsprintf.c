@@ -27,7 +27,7 @@
 */
 
 #include <proto/exec.h>
-#include <aros/asmcall.h>
+#include <exec/rawfmt.h>
 
 void SwapMem(char *src, char *dst, int size)
 {
@@ -41,23 +41,12 @@ void SwapMem(char *src, char *dst, int size)
 	}
 }
 
-AROS_UFH2 (void, stuffChar, 
-	AROS_UFHA(char, c, D0),
-	AROS_UFHA(char **, buf, A3)
-)
+void lsprintf(char *str, const char *fmt, ...)
 {
-	AROS_USERFUNC_INIT
-	*(*buf) ++ = c;
-	AROS_USERFUNC_EXIT
-}
-
-void lsprintf(char *str, char *fmt, ...)
-{
-	char *buf;
-	
-	buf = str;
-	
-	RawDoFmt(fmt,&fmt+1,(VOID_FUNC)stuffChar, &buf);
+	va_list args;
+	va_start(args, fmt);
+	VNewRawDoFmt(fmt,RAWFMTFUNC_STRING, str, args);
+	va_end(args);
 
 }
 
