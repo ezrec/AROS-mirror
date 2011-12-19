@@ -434,7 +434,7 @@ int verify,bump,check;
 	ULONG tracksize,lowtrack[2],numtracks,memtype,deviceunit[2],deviceflags[2],track;
 	ULONG trackcount,trackmod,curtrack,offset;
 	char devicename[2][40],infobuf[80];
-	int a,b,drives,abort=0,err=0,cmpsize,txt=-1;
+	int a,b,drives,abort=0,err=0,cmpsize=0,txt=-1;
 	char *buffer=NULL,*dev_table[2];
 	ULONG *verifybuffer=NULL,*cmpbuffer;
 	struct DOpusRemember *memkey=NULL;

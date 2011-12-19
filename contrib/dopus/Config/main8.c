@@ -36,10 +36,10 @@ static char **hotkeylist;
 int dohotkeysconfig()
 {
     ULONG class;
-    UWORD code,gadgetid;
+    UWORD code,gadgetid=0;
     struct ConfigUndo *undo;
     struct DOpusListView *view;
-    struct dopushotkey hotkey,*newhot,*hot,*swapfirst=NULL;
+    struct dopushotkey hotkey,*newhot=NULL,*hot,*swapfirst=NULL;
     int a,mode=-1;
 
     showconfigscreen(CFG_HOTKEYS);

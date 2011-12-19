@@ -68,13 +68,13 @@ static struct EmulLibEntry GATE_keyhandler = { TRAP_LIB, 0, (void (*)(void))keyh
 struct Gadget
   abortopgad={
     NULL,0,0,104,0,GFLG_GADGHCOMP,GACT_RELVERIFY,GTYP_BOOLGADGET,
-    NULL,NULL,NULL,NULL,NULL,0,NULL};
+  };
 
 static struct NewWindow
   progresswindow={
     0,0,0,0,255,255,
     IDCMP_GADGETUP|IDCMP_RAWKEY,WFLG_RMBTRAP|WFLG_ACTIVATE,
-    NULL,NULL,NULL,NULL,NULL,0,0,0,0,CUSTOMSCREEN};
+    NULL,NULL,NULL,0L,NULL,0,0,0,0,CUSTOMSCREEN};
 
 static struct Window *pwindow;
 static struct RastPort *prp;
@@ -120,7 +120,7 @@ void __saveds hotkeytaskcode()
   UWORD gadgetid/*,norm_height,norm_width*/;
 //  struct IntuiMessage *dummymsg;
   struct dopushotkey *hotkey;
-  CxObj *broker,*hotkey_filter,*mmb_filter=NULL;
+  CxObj *broker,*hotkey_filter=NULL,*mmb_filter=NULL;
   CxMsg *cxmsg;
 /*
   norm_height=scrdata_norm_height;
@@ -256,6 +256,8 @@ void __saveds hotkeytaskcode()
       else if (sig&INPUTSIG_HOTKEY)
         command=HOTKEY_HOTKEY;
     }
+#else
+    (void)sig; // Unused
 #endif
     switch (command) {
       case HOTKEY_ABORT:
@@ -814,12 +816,12 @@ static char *Kstr = "K  ";
 
 void __saveds clocktask()
 {
-  ULONG chipc,fast,wmes,h,m,s,/*secs,micro,*/cx,sig,cy,len,ct,chipnum,fastnum,a,active=1,usage;
+  ULONG chipc,fast,wmes,h,m,s,/*secs,micro,*/cx,sig,cy,len,ct,chipnum,fastnum,a,active=1,usage=0;
   UWORD clock_width,clock_height,scr_height;
   char buf[160],date[20],time[20],formstring[160],memstring[160],ampm;
   struct MsgPort *clock_time_port;
   struct timerequest ctimereq;
-  struct DOpusDateTime datetime = {0};
+  struct DOpusDateTime datetime = {};
   struct dopustaskmsg *cmsg;
   struct RastPort clock_rp;
 #ifndef __AROS__    

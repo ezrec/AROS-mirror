@@ -35,11 +35,11 @@ static struct dopusfunction *seldrive;
 int dodriveconfig()
 {
     ULONG class;
-    UWORD code,gadgetid,qual;
+    UWORD code,gadgetid=0,qual;
     struct ConfigUndo *undo;
     struct DOpusRemember *gadkey;
     struct dopusfunction *seconddrive;
-    struct Gadget *gad;
+    struct Gadget *gad=NULL;
     struct Border *unselborder,*selborder;
     int a,b,x,y,mode=-1,editon=0,dnum=-1,odnum;
     char buf[256];

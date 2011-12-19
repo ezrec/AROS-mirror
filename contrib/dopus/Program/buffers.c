@@ -463,10 +463,10 @@ int type;
            Arg2   = entry text
            Arg3   = userdata          */
 
-        msg->rm_Args[0]=(STRPTR)type;
-        msg->rm_Args[1]=entry->name;
-        msg->rm_Args[2]=entry->comment;
-        msg->rm_Args[3]=(STRPTR)entry->protection;
+        msg->rm_Args[0]=(IPTR)type;
+        msg->rm_Args[1]=(IPTR)entry->name;
+        msg->rm_Args[2]=(IPTR)entry->comment;
+        msg->rm_Args[3]=(IPTR)entry->protection;
 
         /* Fill in the message correctly.
            Arguments are integer/string/string/integer

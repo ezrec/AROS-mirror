@@ -721,17 +721,15 @@ saveicon:
 									olddeftool=dobj->do_DefaultTool;
 									if (dobj->do_DefaultTool=
 										LAllocRemember(&icon_req.rb_memory,strlen(defaulttool_buf)+1,0)) {
-										newdef=1;
 										strcpy(dobj->do_DefaultTool,defaulttool_buf);
 									}
-									else newdef=0;
 								}
 								if (commentgad) {
 									comment_buf[79]=0;
 									SetComment(namebuf,comment_buf);
 								}
 
-								dobj->do_ToolTypes=ttarray;
+								dobj->do_ToolTypes=(STRPTR *)ttarray;
 								PutDiskObject(namebuf,dobj);
 
 								if (defaulttoolgad) dobj->do_DefaultTool=olddeftool;
@@ -798,7 +796,7 @@ BOOL selected;
 struct Rectangle *rect;
 {
 	struct Region *reg,*oldreg;
-	int x,y,w,h;
+	int x,y,w=0,h=0;
 
 	struct Rectangle size = {0};
 
@@ -903,7 +901,7 @@ struct DateStamp *ds;
         //kprintf("!!!! getroot(%s)\n", name);
 
         lock = Lock(name, ACCESS_READ);
-        if (NULL == lock)
+        if (BNULL == lock)
         {
             //kprintf("Could not get lock in getroot()\n");
             return 0;

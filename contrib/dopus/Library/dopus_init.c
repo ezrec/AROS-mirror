@@ -29,7 +29,7 @@ extern const struct DefaultString default_strings[];
 struct StringData stringdata = {default_strings,STR_STRING_COUNT,NULL,NULL,
     0,STRING_VERSION,NULL,NULL};
 
-#warning Remove DOpusBase as global variable
+// FIXME: Remove DOpusBase as global variable
 /* AROS: DOpusBase global var shadows the parameter with the same name */
 
 void set_global_dopusbase(struct DOpusBase *base)

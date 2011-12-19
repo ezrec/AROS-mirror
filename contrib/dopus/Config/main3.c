@@ -41,15 +41,15 @@ APTR data;
     int a,selitem,x,y,b,ofp,obp,curtype=0,tof,waitbits;
     ULONG class;
     UWORD code,qual,gadgetid;
-    struct Gadget *gad;
+    struct Gadget *gad = NULL;
     char
         flagsel[NUMFLAGS],*funclist[MAXFUNCS+1],functype[MAXFUNCS],
         *displist[MAXFUNCS+1],buf[256],buf1[256],*ptr,t;
     struct DOpusRemember *key=NULL;
     struct DOpusListView *view;
     struct fileclass fclass;
-    struct dopusfiletype *ftype;
-    struct dopushotkey *hotkey;
+    struct dopusfiletype *ftype=NULL;
+    struct dopushotkey *hotkey=NULL;
     unsigned char c;
 
     if (type==CFG_FILETYPE) ftype=(struct dopusfiletype *)data;
@@ -1293,7 +1293,7 @@ int type;
                 (void *)AddAppIconA(MY_APPOBJECT,0,
                     cfg_string[STR_DROP_A_TOOL_HERE],
                     appport,
-                    NULL,dropboxicon,NULL);
+                    BNULL,dropboxicon,NULL);
         }
         else if (!Screen) {
             appobject=

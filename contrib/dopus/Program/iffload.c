@@ -1201,7 +1201,7 @@ struct Window *wind;
     struct IntuiMessage *msg;
     ULONG class;
     UWORD code,qual;
-    int ticks,waitfor=0,pon=0,waitbits,retcode=1,gottimer=0,origspeed,startanim,delta;
+    int ticks,waitfor=0,pon=0,waitbits,retcode=1,gottimer=0,origspeed,startanim=0,delta;
     struct timerequest treq;
 
     while ((msg=(struct IntuiMessage *) GetMsg(wind->UserPort)))
@@ -1442,7 +1442,7 @@ int x,y,w,h,iff;
     union printerIO *print_request; /* IO request for Print operation */
     APTR save;
     ULONG class;
-    UWORD code,gadgetid,qual;
+    UWORD code,gadgetid=0,qual;
     int a,/*b,*/abort=0,goff,fnum;
     char buf[200],modes[140],*ptr,pactcode[6],cols[30],title[120];
     const char

@@ -46,7 +46,7 @@ int argc;
 char *argv[];
 {
     ULONG class;
-    UWORD gadgetid,code;
+    UWORD gadgetid=0,code;
     int num,a;
     char portname[50],rportname[50],oldconfigname[256]/*,oldlanguage[30]*/;
     struct WBStartup *wbmsg;
@@ -649,7 +649,7 @@ void inittickgads(gads,flag,flag2)
 struct ConfigGadget *gads;
 int flag,flag2;
 {
-    int num,a,y,gad,last,lasty,dy,xp,yp,fl,b;
+    int num,a,y,gad,last=0,lasty,dy,xp,yp,fl=0,b;
     const char **namearray;
     struct StringInfo *sinfo;
 
@@ -1395,6 +1395,7 @@ int num;
 void load_palette(screen,palette,numcols)
 struct Screen *screen;
 ULONG *palette;
+int numcols;
 {
     if (!screen) {
         /*if (version2>=OSVER_39)*/ {

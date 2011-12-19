@@ -78,9 +78,9 @@ char *path;
     struct RastPort *dirp;
     long i;
 #ifdef __SASC__
-    bigint a;
+    bigint a = 0;
 #else
-    unsigned long long a;
+    unsigned long long a = 0;
 #endif
     int b,c,isd=-1,cx,cy,fail=0,xoffset,yoffset,titwidth;
     static char disktxt[11][60],buf[256],formstr[80],diskname[256],dname[10],buf1[40];

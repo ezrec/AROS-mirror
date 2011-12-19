@@ -67,12 +67,12 @@ int dowhat,fdata;
          *adest,
          *ndir,
          *ndest;
-    int suc,
+    int suc=0,
         to_do,
         ret=0,
         a,
         err,
-        adata,
+        adata=0,
         depth=0,
         b,
         rtry,
@@ -84,7 +84,7 @@ int dowhat,fdata;
                               *addparent_recurse,
                               *new_rec,
                               *pos_rec,
-                              *cur_parent,
+                              *cur_parent = NULL,
                               *cur_lastparent=NULL;
     APTR data2=NULL,
          adata2=NULL,
@@ -712,7 +712,7 @@ D(bug("getdircontentsinfo(%s)\n",path));
      {
       if ((eac = AllocDosObject(DOS_EXALLCONTROL,NULL)))
        {
-        eac->eac_LastKey = NULL;
+        eac->eac_LastKey = 0;
 
         do
          {

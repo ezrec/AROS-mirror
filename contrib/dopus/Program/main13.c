@@ -103,7 +103,7 @@ void seename(win)
 int win;
 {
     long long tot;
-    int bl,a;
+    int bl,a=0;
     static char buf[256];
 
     if (win<0 || status_iconified) return;

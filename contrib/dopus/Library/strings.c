@@ -76,6 +76,7 @@ __saveds int DoAtoh(register unsigned char *buf __asm("a0"),
         if (buf[a]>='0' && buf[a]<='9') d=buf[a]-'0';
         else if (buf[a]>='A' && buf[a]<='F') d=10+(buf[a]-'A');
         else if (buf[a]>='a' && buf[a]<='f') d=10+(buf[a]-'a');
+	else d=0;
         c+=(d*f);
         f/=16;
     }

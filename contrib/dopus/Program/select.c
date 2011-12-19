@@ -36,10 +36,10 @@ void doselection(win,state)
 int win,state;
 {
     int
-        a,b,c,d,e,x,y,ox,oy,fa,la,juststart,atot,drag,offx,offy,candrag,
+        a,b,c,d,e,x,y,ox,oy,fa,la,juststart,atot,drag,offx=0,offy=0,candrag,
         comp=-1,oc,gad,multidrag=0,type,okrepeatdrag=0;
-    ULONG class;
-    UWORD code,qual;
+    ULONG class=0;
+    UWORD code=0,qual=0;
     char buf[40],*ptr;
     struct Directory *next;
 
@@ -282,8 +282,7 @@ int win;
 {
     ULONG class;
     UWORD code;
-    int x,y,d,a,ret=0;
-    struct Directory *temp;
+    int x,y,d,ret=0;
 
     if (data_active_window!=win) {
         makeactive(win,0);
@@ -291,6 +290,9 @@ int win;
     }
 #ifdef _USE_SMALL_Q
     if (dopus_curwin[win]->total>0 && status_flags&STATUS_IANSCRAP) {
+        struct Directory *temp;
+        int a;
+
         CurrentTime(&time_current_sec,&time_current_micro);
         y=Window->MouseY;
         a=(y-scrdata_dirwin_ypos[data_active_window]-2)/scrdata_font_ysize;
@@ -314,6 +316,8 @@ int win;
         }
         if (ret) return;
     }
+#else
+    (void)ret; // Unused
 #endif
     FOREVER {
         while (!getintuimsg()) {
@@ -802,6 +806,7 @@ int *prot;
 void wildselect(wild,boobs,and,mode)
 char *wild;
 int boobs,and;
+int mode;
 {
     char buf[256];
     struct Directory *temp;

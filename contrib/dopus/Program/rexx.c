@@ -99,7 +99,7 @@ int allfuncs;
         else if (RexxSysBase) {
             if (msg->rm_Node.mn_Node.ln_Type==NT_REPLYMSG) {
                 if (msg->rm_Args[1]) rexx_msg_reply(msg);
-                DeleteArgstring(msg->rm_Args[0]);
+                DeleteArgstring((STRPTR)msg->rm_Args[0]);
                 DeleteRexxMsg(msg);
                 --replies_pending;
             }
@@ -136,7 +136,7 @@ D(bug("rexx.2.%s\n",commandlist[cmd].name));
                         }
                     }
                     if (!commandlist[cmd].name) {
-                        rexx_command(msg->rm_Args[0],msg);
+                        rexx_command((STRPTR)msg->rm_Args[0],msg);
                         dontreply=1;
                     }
                 }

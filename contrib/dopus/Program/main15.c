@@ -612,7 +612,7 @@ D(bug("internal_function: func_external_file = %s\n",func_external_file));
                               if (entry->type == ENTRY_DEVICE)
                                 if (!strcmp(entry->comment,"<VOL>"))
                                  {
-                                  relabel_disk(NULL,entry->name);
+                                  relabel_disk(0,entry->name);
                                   unselect(actwin,entry);
                                  }
                            }

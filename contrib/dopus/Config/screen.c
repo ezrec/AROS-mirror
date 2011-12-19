@@ -35,9 +35,9 @@ char old_general_font[30];
 int doscreenconfig()
 {
     ULONG class;
-    UWORD code,gadgetid,qual;
+    UWORD code,gadgetid=0,qual;
     struct ConfigUndo *undo;
-    struct Gadget *gad;
+    struct Gadget *gad=NULL;
     int mode=-1,realpen=1,x,y,cursel=-1,a,b,fontnum=0,arrowact=0,c;
     char *fg=NULL,*bg=NULL,buf[256],*ptr;
     struct DOpusListView *view;

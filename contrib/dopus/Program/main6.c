@@ -195,7 +195,7 @@ int getpal()
 
     p=(GfxBase->DisplayFlags&PAL)?1:0;
 //    if (system_version2>=OSVER_37) {
-        if (screen=LockPubScreen(NULL)) {
+        if ((screen=LockPubScreen(NULL))) {
             if ((modeid=GetVPModeID(&(screen->ViewPort)))!=INVALID_ID) {
                 if (!((modeid&MONITOR_ID_MASK)==NTSC_MONITOR_ID ||
                     (modeid&MONITOR_ID_MASK)==PAL_MONITOR_ID))
@@ -346,7 +346,7 @@ char *get_our_pubscreen()
             struct List *pubscreenlist;
             struct PubScreenNode *node;
 
-            if (pubscreenlist=LockPubScreenList()) {
+            if ((pubscreenlist=LockPubScreenList())) {
                 for (node=(struct PubScreenNode *)pubscreenlist->lh_Head;
                     node->psn_Node.ln_Succ;
                     node=(struct PubScreenNode *)node->psn_Node.ln_Succ) {

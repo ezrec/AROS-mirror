@@ -338,7 +338,7 @@ void load_clips()
 
 void save_clips()
 {
-    int file;
+    BPTR file;
     struct Clip *clip;
     char *function;
 
@@ -388,20 +388,20 @@ void init_strings()
     sampleclearrmb.txt[0].text=cfg_string[STR_EDIT_SAMPLE];
     sampleclearrmb.txt[1].text=cfg_string[STR_CLEAR];
 
-    newtext.IText=cfg_string[STR_MENU_DEFAULT];
-    opentext.IText=cfg_string[STR_MENU_OPEN];
-    savetext.IText=cfg_string[STR_MENU_SAVE];
-    saveastext.IText=cfg_string[STR_MENU_SAVE_AS];
-    cuttext.IText=cfg_string[STR_MENU_CUT];
-    copytext.IText=cfg_string[STR_MENU_COPY];
-    pastetext.IText=cfg_string[STR_MENU_PASTE];
-    erasetext.IText=cfg_string[STR_MENU_ERASE];
-    clearcliptext.IText=cfg_string[STR_MENU_CLEARCLIPS];
-    newclasstext.IText=cfg_string[STR_MENU_NEW];
-    editclasstext.IText=cfg_string[STR_MENU_EDIT];
-    duplicateclasstext.IText=cfg_string[STR_MENU_DUPLICATE];
-    deleteclasstext.IText=cfg_string[STR_MENU_DELETE];
-    clearclasstext.IText=cfg_string[STR_CLEAR];
+    newtext.IText=(char *)cfg_string[STR_MENU_DEFAULT];
+    opentext.IText=(char *)cfg_string[STR_MENU_OPEN];
+    savetext.IText=(char *)cfg_string[STR_MENU_SAVE];
+    saveastext.IText=(char *)cfg_string[STR_MENU_SAVE_AS];
+    cuttext.IText=(char *)cfg_string[STR_MENU_CUT];
+    copytext.IText=(char *)cfg_string[STR_MENU_COPY];
+    pastetext.IText=(char *)cfg_string[STR_MENU_PASTE];
+    erasetext.IText=(char *)cfg_string[STR_MENU_ERASE];
+    clearcliptext.IText=(char *)cfg_string[STR_MENU_CLEARCLIPS];
+    newclasstext.IText=(char *)cfg_string[STR_MENU_NEW];
+    editclasstext.IText=(char *)cfg_string[STR_MENU_EDIT];
+    duplicateclasstext.IText=(char *)cfg_string[STR_MENU_DUPLICATE];
+    deleteclasstext.IText=(char *)cfg_string[STR_MENU_DELETE];
+    clearclasstext.IText=(char *)cfg_string[STR_CLEAR];
 
     for (a=0;a<5;a++) {
         gadrowstext[a].FrontPen=0;

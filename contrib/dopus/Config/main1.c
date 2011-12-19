@@ -36,10 +36,10 @@ static char displenmap[]={DISPLAY_NAME,DISPLAY_COMMENT,DISPLAY_FILETYPE,DISPLAY_
 int dooperationconfig(void)
 {
     ULONG class;
-    UWORD code,gadgetid,qual;
+    UWORD code,gadgetid=0,qual;
     char *flag=NULL,*flag2=NULL;
     struct ConfigUndo *undo;
-    struct Gadget *gad;
+    struct Gadget *gad=NULL;
     int lastsel=-1,a,disppos=0,b,formatwin=0,x,y;
     struct DOpusListView *view;
     struct DOpusRemember *borderkey=NULL;
@@ -344,11 +344,11 @@ clearlast:
 int dosystemconfig()
 {
     ULONG class;
-    UWORD code,gadgetid,qual,hotcode,hotqual;
+    UWORD code,gadgetid=0,qual,hotcode,hotqual;
     char *flag=NULL,*flag2=NULL,buf[80],buf1[80],buf2[80],*ptr;
         char buf3[10], buf4[10], buf5[10], buf6[10];
     struct ConfigUndo *undo;
-    struct Gadget *gad;
+    struct Gadget *gad=NULL;
     struct ConfigGadget *congad;
     int a,lastsel=-1,tick,x,y;
     struct DOpusListView *view;

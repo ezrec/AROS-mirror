@@ -146,7 +146,7 @@ struct Window *window;
 struct TextFont *font;
 {
     ULONG class;
-    UWORD gadgetid;
+    UWORD gadgetid = 0;
     struct Window *swindow;
     struct Gadget *gadlist;
     struct RequesterBase search_req;

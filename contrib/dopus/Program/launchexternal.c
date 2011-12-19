@@ -657,14 +657,14 @@ void setup_externals()
         FindSystemFile("ConfigOpus",funcbuf,256,SYSFILE_MODULE);
         configopus_segment=LoadSeg(funcbuf);
     }
-    else configopus_segment=NULL;
+    else configopus_segment=BNULL;
 
     for (a=0;a<3;a++) {
         if (config->loadexternal&(1<<a)) {
             FindSystemFile(external_modules[a],funcbuf,256,SYSFILE_MODULE);
             external_mod_segment[a]=LoadSeg(funcbuf);
         }
-        else external_mod_segment[a]=NULL;
+        else external_mod_segment[a]=BNULL;
     }
 
     main_proc->pr_WindowPtr=wsave;

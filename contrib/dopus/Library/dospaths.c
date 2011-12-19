@@ -79,7 +79,7 @@ int __saveds DoAssign(register char *name __asm("a0"), register char *dir __asm(
         dev=(struct DeviceList *)BADDR(dev->dl_Next);
     }
 */
-    found = AssignLock(nname,NULL)?ASSIGN_OK:ASSIGN_NODEV;
+    found = AssignLock(nname,BNULL)?ASSIGN_OK:ASSIGN_NODEV;
 
     if (!dir || !dir[0]) return(found);
 

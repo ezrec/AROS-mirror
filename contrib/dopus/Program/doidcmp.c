@@ -42,14 +42,14 @@ void doidcmp()
 {
     int x,y,a,function,wmes,stringgd=0,waitbits,b,x1,y1,c,win,dir,num;
     ULONG class;
-    UWORD code,gadgetid,menunum,itemnum,qual;
+    UWORD code,gadgetid=0,menunum,itemnum,qual;
     UBYTE old_change_state;
     char buf[80],buf2[30],ch;
     struct dopusgadgetbanks *bank,*bank1;
     struct AppMessage *apmsg;
     struct dopushotkey *hotkey;
     struct dopusfuncpar par;
-    struct Gadget *gad;
+    struct Gadget *gad = NULL;
     struct MenuItem *item;
 
 //foreverloop:

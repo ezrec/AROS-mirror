@@ -93,7 +93,7 @@ int do_parent_multi(path)
 char *path;
 {
     ULONG class;
-    UWORD gadgetid;
+    UWORD gadgetid=0;
     struct Window *rwindow;
     struct Gadget *gadlist;
     struct DOpusListView *listview,*view;

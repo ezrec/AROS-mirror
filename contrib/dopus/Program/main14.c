@@ -33,7 +33,7 @@ the existing commercial status of Directory Opus 5.
 void doassign(rexx)
 int rexx;
 {
-    int a,blank=0,tot;
+    int a=0,blank=0,tot=0;
     char buf[FILEBUF_SIZE],buf1[256];
     struct Directory *dev,*next;
     BPTR lock;
@@ -57,7 +57,7 @@ int rexx;
                     if (buf1[0]==0) blank=1;
                 }
                 strcpy(buf,dev->name); buf[(strlen(buf)-1)]=0;
-                if (blank) a = AssignLock(buf,NULL);
+                if (blank) a = AssignLock(buf,BNULL);
                 else switch (dev->size)
                  {
                   case DLT_DIRECTORY:

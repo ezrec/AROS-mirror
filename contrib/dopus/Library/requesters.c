@@ -54,7 +54,7 @@ const struct TextAttr
 struct Window * __saveds R_OpenRequester(register struct RequesterBase *reqbase __asm("a0"))
 {
     struct NewWindow newwin;
-    struct Screen *screen,screendata;
+    struct Screen *screen=NULL,screendata;
     struct Window *window=NULL,*center_window=NULL;
     short width,height,attempt;
 
@@ -199,7 +199,7 @@ struct Window * __saveds R_OpenRequester(register struct RequesterBase *reqbase 
 
             newwin.FirstGadget=NULL;
             newwin.CheckMark=NULL;
-            newwin.Title=reqbase->rb_title;
+            newwin.Title=(STRPTR)reqbase->rb_title;
 
             /* Try to open window; if we succeed, then render border and fill
                in background */
@@ -274,8 +274,8 @@ APTR __saveds R_AddRequesterObject(register struct RequesterBase *reqbase __asm(
 {
     struct RequesterObject *object=NULL,*tempobject;
     struct PrivateData *private;
-    ULONG data;
-    int tag,size,type,xoffset,yoffset;
+    IPTR data;
+    int tag,size=0,type=0,xoffset,yoffset;
     struct StringInfo *stringinfo=NULL;
     struct PropInfo *propinfo;
     struct Image *propimage;
@@ -560,7 +560,7 @@ APTR __saveds R_AddRequesterObject(register struct RequesterBase *reqbase __asm(
 
             case RO_TextNum:
                 if (!reqbase->rb_flags&RBF_STRINGS || !reqbase->rb_string_table) break;
-                data=(ULONG)reqbase->rb_string_table[data];
+                data=(IPTR)reqbase->rb_string_table[data];
 
             case RO_Text:
                 if (!object || !data) break;
@@ -786,7 +786,7 @@ void __saveds R_ObjectText(register struct RequesterBase *reqbase __asm("a0"),
     register unsigned short textpos __asm("d4"))
 {
     struct RastPort *rp;
-    short x,y,text_width,text_height,cx,cy,len,got_uscore=-1,uscoreok=1;
+    short x=0,y=0,text_width,text_height,cx,cy,len,got_uscore=-1,uscoreok=1;
     const char *ptr;
     char textbuf[82];
 

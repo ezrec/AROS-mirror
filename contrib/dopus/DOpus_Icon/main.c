@@ -186,7 +186,7 @@ struct RequesterBase *reqbase;
 struct TagItem **gadgets;
 {
 	int gad;
-	struct Gadget *gadget=NULL,*newgadget,*firstgadget;
+	struct Gadget *gadget=NULL,*newgadget,*firstgadget=NULL;
 
 	for (gad=0;;gad++) {
 		if (!gadgets[gad]) break;

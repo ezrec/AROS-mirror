@@ -52,18 +52,18 @@ int __saveds DoDoSimpleRequest(register struct Window *window __asm("a0"),
 {
     int
         textlen,a,b,c,cw,cy,cb,sw,height,maxlen,llen,num,gwidth=0,gspace,gx,ty,ac,ogy,
-        gadgetid,ls,gy,last,gnum,lines,dl,strgad,sfy,hnum,rows=1,macc,ogx,
+        gadgetid=0,ls,gy,last,gnum,lines,dl,strgad,sfy,hnum,rows=1,macc,ogx,
         maxwidth,winwidth,winheight,xoffset,yoffset,d;
     struct NewWindow *newwindow;
     struct DOpusRemember *key;
-    struct Gadget *gadgets,*contgad,*gad,*glassgad=NULL;
+    struct Gadget *gadgets,*contgad,*gad=NULL,*glassgad=NULL;
     struct Screen *screen;
     struct Window *Window;
     struct RastPort *rp,testrp;
     struct TextFont *fnt,*tfnt;
-    struct StringInfo *sinfo;
+    struct StringInfo *sinfo=NULL;
     struct IntuiMessage *Msg;
-    struct StringExtend *extend;
+    struct StringExtend *extend=NULL;
     char *text,*keys,*buf,ch,*strbuf=NULL;
     const char **gadptr;
     ULONG class;

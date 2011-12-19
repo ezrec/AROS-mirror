@@ -352,13 +352,13 @@ int ftype,funconly;
 int dochecktype(type,name,fileparam,info)
 struct dopusfiletype *type;
 const char *name;
-int fileparam;
+BPTR fileparam;
 struct FileInfoBlock *info;
 {
     unsigned char buf[514],buf2[1024],*recog;
     int
-        a,b,c,d,len,operation,fail,prot[2],tprot,equ,val,oldpos,
-        err,gotone=0,test;
+        a,b,c,d,len,operation,fail=0,prot[2],tprot,equ,val=0,oldpos,
+        err=0,gotone=0,test;
     struct DateStamp ds1,ds2;
     BPTR file = (BPTR)fileparam;
 
@@ -463,14 +463,13 @@ struct FileInfoBlock *info;
     return(0);
 }
 
-int checktypechars(fileparam,match,nocase)
-int fileparam;
+int checktypechars(file,match,nocase)
+BPTR file;
 unsigned char *match;
 int nocase;
 {
     unsigned char matchbuf[258],c1,c2;
     int len,clen,a,first=1,m,val,bpos;
-    BPTR file=(BPTR)fileparam;
 
     len=strlen(match);
 
@@ -528,8 +527,8 @@ D(bug("match: %s\tpattern: %s (match[0] = %ld)\n",match+first,matchbuf+m,match[0
     return(1);
 }
 
-int typesearch(fileparam,find,flags,buffer,bufsize)
-int fileparam;
+int typesearch(file,find,flags,buffer,bufsize)
+BPTR file;
 char *find;
 int flags;
 char *buffer;
@@ -537,7 +536,6 @@ int bufsize;
 {
     unsigned char *findbuf,matchbuf[256];
     int matchsize,a,len,size,oldpos;
-    BPTR file=(BPTR)fileparam;
 
     len=strlen(find);
     if (find[0]=='$') {

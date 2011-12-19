@@ -318,7 +318,7 @@ UWORD ownerid,groupid;
            {
             char *c,*d=newentry->name;
 
-            while (c=strchr(d,'.')) d=c+1;
+            while ((c=strchr(d,'.'))) d=c+1;
             if ((d == newentry->name) || (d == (newentry->name+1))) c = NULL;
             else c=d-1;
             if (c)
@@ -968,7 +968,7 @@ void setnullpointer(wind)
 struct Window *wind;
 {
 D(bug("null_pointer at %lx\n",null_pointer));
-    SetPointer(wind,null_pointer,1,16,0,0);
+    SetPointer(wind,(UWORD *)null_pointer,1,16,0,0);
 }
 
 void free_file_memory(file)

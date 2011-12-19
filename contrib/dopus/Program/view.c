@@ -453,7 +453,8 @@ struct ViewData *vdata;
 int view_loadfile(struct ViewData *vdata)
  {
   struct IntuiMessage *msg;
-  int a, in, fsize;
+  int a, fsize = 0;
+  BPTR in;
 
 /*     if ((vdata->view_file_size&15)==0)
     vdata->view_buffer_size=vdata->view_file_size+16;

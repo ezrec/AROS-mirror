@@ -788,7 +788,7 @@ ULONG flags;
 	ULONG *trackbuffer,*verifybuffer;
 	struct DOpusRemember *key=NULL;
 	ULONG offset;
-	int track,a,cmpsize,ret;
+	int track,a,cmpsize=0,ret;
 	char infobuf[80];
 
 	if (!(trackbuffer=(ULONG *)LAllocRemember(&key,tracksize,memtype|MEMF_CLEAR)))

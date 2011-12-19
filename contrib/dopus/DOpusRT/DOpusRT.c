@@ -121,7 +121,8 @@ int main(argc,argv)
 int argc;
 char *argv[];
 {
-    int a,out,x,y,flag;
+    int a,x,y,flag;
+    BPTR out;
     struct MsgPort *port,*port1,*cont;
     struct Process *myproc;
     struct Message msg;
@@ -132,7 +133,7 @@ char *argv[];
     struct Interrupt *interrupt;
     struct IOStdReq *inputreq;
 
-    if (argc<2 || !(DOpusBase=(struct DOpusBase *)OpenLibrary("dopus.library",0))) return /*_exit(0)*/;
+    if (argc<2 || !(DOpusBase=(struct DOpusBase *)OpenLibrary("dopus.library",0))) return 0;
     IntuitionBase=DOpusBase->IntuitionBase;
     GfxBase=DOpusBase->GfxBase;
 
@@ -158,7 +159,7 @@ char *argv[];
             }
         }
         if (cli && !cli->cli_CommandDir) {
-            BPTR path = NULL;
+            BPTR path = BNULL;
 
             for (a=0;a<7;a++) if ((path=CloneCommandDir(pathlists[a]))) break;
             cli->cli_CommandDir=path;
@@ -171,7 +172,7 @@ char *argv[];
             if (out) {
                 if (port=LCreatePort(NULL,0)) {
                     if (inputreq=(struct IOStdReq *)LCreateExtIO(port,sizeof(struct IOStdReq))) {
-                        if (!(OpenDevice("input.device",NULL,(struct IORequest *)inputreq,NULL))) {
+                        if (!(OpenDevice("input.device",0,(struct IORequest *)inputreq,0))) {
                             if (interrupt=AllocMem(sizeof(struct Interrupt),MEMF_CLEAR|MEMF_PUBLIC)) {
                                 interrupt->is_Code=(APTR)InputHandler;
                                 interrupt->is_Node.ln_Pri=51;
@@ -250,7 +251,7 @@ BPTR CloneCommandDir(const char *taskname)
     struct Process *teacher;
     struct CommandLineInterface *teachcli;
     struct PathList *wext,*mext,*lastmext=NULL;
-    BPTR newpath=NULL;
+    BPTR newpath=BNULL;
 
     Forbid();
     if (teacher=(struct Process *)FindTask(taskname))
@@ -261,7 +262,7 @@ BPTR CloneCommandDir(const char *taskname)
          {
           if (!(mext = AllocVec(sizeof(struct PathList),MEMF_PUBLIC))) break;
 
-          mext->nextPath=NULL;
+          mext->nextPath=BNULL;
           mext->pathLock=DupLock(wext->pathLock);
           if (!newpath) newpath=MKBADDR(mext);
 
@@ -284,7 +285,7 @@ char **argv;
     int stacksize,i,ok=1;
     struct Process *ourtask;
     struct MsgPort *replyport=NULL;
-    BPTR olddir=-1;
+    BPTR olddir=(BPTR)-1;
     struct IconBase *IconBase;
     struct DOpusRemember *key=NULL;
     struct CommandLineInterface *cli;
@@ -366,7 +367,7 @@ char **argv;
      }
     if (replyport) LDeletePort(replyport);
     if (diskobj) FreeDiskObject(diskobj);
-    if (olddir!=-1) CurrentDir(olddir);
+    if (olddir!=(BPTR)-1) CurrentDir(olddir);
     if (WBStartup) {
         /*if (WBStartup->sm_Segment)*/ UnLoadSeg(WBStartup->sm_Segment);
         if (WBStartup->sm_ArgList) {

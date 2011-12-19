@@ -33,7 +33,7 @@ the existing commercial status of Directory Opus 5.
 int dofiletypeconfig()
 {
     ULONG class;
-    UWORD code,gadgetid;
+    UWORD code,gadgetid=0;
     struct ConfigUndo *undo;
     struct DOpusRemember *key;
     struct DOpusListView *view;
@@ -480,7 +480,8 @@ void readfileclasses()
 
 int importfileclasses()
 {
-    int in,size,pos,lsize,num,a,b,tpos,ret=0;
+    BPTR in;
+    int size,pos,lsize,num,a,b,tpos,ret=0;
     char *classbuf,*classarray,**classtypeid,**classrecog,buf[256],buf2[256];
     unsigned char **classlist;
     struct DOpusRemember *key;
@@ -590,7 +591,7 @@ D(bug("classname: %s\n",classname));
 int addfileclass(type,typeid,recog)
 char *type,*typeid,*recog;
 {
-    struct fileclass *fclass,*newclass,*last;
+    struct fileclass *fclass,*newclass,*last=NULL;
 
     fclass=firstclass;
     while (fclass) {
@@ -691,7 +692,7 @@ int new;
 {
     int a,b,old,selitem,lasta=-1,x,y,mx,my,off,temp,waitbits,remapp=0,char_w;
     ULONG class,sec,mic,oldsec,oldmic;
-    UWORD code,gadgetid,qual;
+    UWORD code,gadgetid=0,qual;
     struct Gadget *gad;
     struct DOpusListView *view;
     struct DOpusRemember *key=NULL;

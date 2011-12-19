@@ -35,12 +35,12 @@ static struct dopusgadgetbanks *currentbank,*selbank;
 int dogadgetconfig()
 {
     ULONG class;
-    UWORD code,gadgetid;
+    UWORD code,gadgetid=0;
     struct ConfigUndo *undo;
     struct DOpusRemember *gadkey=NULL;
     struct dopusgadgetbanks *bank,*bank2;
     struct newdopusfunction *secondgad;
-    struct Gadget *gad;
+    struct Gadget *gad=NULL;
     struct Border *unselborder,*selborder;
     char buf[80];
     int a,b,x,y,mode=-1;
@@ -517,9 +517,9 @@ static int menuoffset;
 int domenuconfig()
 {
     ULONG class;
-    UWORD code,gadgetid;
+    UWORD code,gadgetid=0;
     struct ConfigUndo *undo;
-    struct Gadget *gad;
+    struct Gadget *gad=NULL;
     struct DOpusRemember *menukey=NULL;
     struct newdopusfunction *secondmenu;
     int a,b,x,y,mode=-1,gid,mnum=-1,omnum;
