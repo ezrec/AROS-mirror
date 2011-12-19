@@ -97,14 +97,13 @@ __stdargs LONG WriteCharAsync(struct AsyncFile *file, UBYTE ch);
 __stdargs LONG SeekAsync(struct AsyncFile *file, LONG position, BYTE mode);
 #else
 
-/* AROS: We have no __stdargs keyword */
-struct AsyncFile * /* __stdargs */ OpenAsync(const STRPTR fileName, UBYTE accessMode, LONG bufferSize);
-LONG /* __stdargs */ CloseAsync(struct AsyncFile *file);
-LONG /* __stdargs */ ReadAsync(struct AsyncFile *file, APTR buffer, LONG numBytes);
-LONG /* __stdargs */ ReadCharAsync(struct AsyncFile *file);
-LONG /* __stdargs */ WriteAsync(struct AsyncFile *file, APTR buffer, LONG numBytes);
-LONG /* __stdargs */ WriteCharAsync(struct AsyncFile *file, UBYTE ch);
-LONG /* __stdargs */ SeekAsync(struct AsyncFile *file, LONG position, BYTE mode);
+struct AsyncFile * __stdargs OpenAsync(const STRPTR fileName, UBYTE accessMode, LONG bufferSize);
+LONG __stdargs CloseAsync(struct AsyncFile *file);
+LONG __stdargs ReadAsync(struct AsyncFile *file, APTR buffer, LONG numBytes);
+LONG __stdargs ReadCharAsync(struct AsyncFile *file);
+LONG __stdargs WriteAsync(struct AsyncFile *file, APTR buffer, LONG numBytes);
+LONG __stdargs WriteCharAsync(struct AsyncFile *file, UBYTE ch);
+LONG __stdargs SeekAsync(struct AsyncFile *file, LONG position, BYTE mode);
 #endif
 
 /*****************************************************************************/

@@ -47,7 +47,7 @@ int __saveds DoAssign(register char *name __asm("a0"), register char *dir __asm(
     int len,found/*=ASSIGN_NODEV*/;
 
     LStrCpy(nname,name);
-    if (len=strlen(nname)==0) return(ASSIGN_NODEV);
+    if ((len=strlen(nname))==0) return(ASSIGN_NODEV);
     if (nname[len-1]==':') nname[len-1]=0;
 /*
     root=(struct RootNode *) DOSBase->dl_Root;

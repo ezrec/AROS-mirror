@@ -536,9 +536,9 @@ char **funclist,*functype,**displist,*flagsel;
         for (b=0;b<a;b++) if (!(clip=clip->next)) break;
         if (clip) {
             erasefunction(func,funclist,displist,flagsel);
-            lsprintf(edit_stackbuf,"%ld",clip->func.stack);
-            lsprintf(edit_prioritybuf,"%ld",clip->func.pri);
-            lsprintf(edit_delaybuf,"%ld",clip->func.delay);
+            lsprintf(edit_stackbuf,"%ld",(long)clip->func.stack);
+            lsprintf(edit_prioritybuf,"%ld",(long)clip->func.pri);
+            lsprintf(edit_delaybuf,"%ld",(long)clip->func.delay);
             strcpy(edit_namebuf,clip->name);
             func->key=0; func->qual=0;
             func->fpen=clip->func.fpen; func->bpen=clip->func.bpen;

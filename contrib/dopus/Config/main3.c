@@ -216,7 +216,7 @@ startedit:
                                 if (type==CFG_FILETYPE) {
                                     LStrnCpy(edit_namebuf,ftype->type,22);
                                     edit_namebuf[22]=0;
-                                    lsprintf(buf," (%ld)",curtype+1);
+                                    lsprintf(buf," (%ld)",(long)(curtype+1));
                                     StrConcat(edit_namebuf,buf,28);
                                 }
                                 copytoclip(func,funclist,functype,flagsel);
@@ -1241,9 +1241,9 @@ int add;
     }
     else RefreshListView(editlists,3);
     edit_funcbuf[0]=0;
-    lsprintf(edit_stackbuf,"%ld",func->stack);
-    lsprintf(edit_prioritybuf,"%ld",func->pri);
-    lsprintf(edit_delaybuf,"%ld",func->delay);
+    lsprintf(edit_stackbuf,"%ld",(long)func->stack);
+    lsprintf(edit_prioritybuf,"%ld",(long)func->pri);
+    lsprintf(edit_delaybuf,"%ld",(long)func->delay);
     RefreshGList(&editfuncgadgets[6],Window,NULL,3);
     if (type==CFG_FILETYPE) RefreshGList(&editfuncgadgets[13],Window,NULL,1);
 }

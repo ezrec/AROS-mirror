@@ -140,7 +140,7 @@ void __saveds hotkeytaskcode()
      {
       char tmp[8];
 
-      lsprintf(tmp," (%ld)",system_dopus_runcount+1);
+      lsprintf(tmp," (%ld)",(long)system_dopus_runcount+1);
       strcat(cxname,tmp);
      }
     hotkey_broker.nb_Name = cxname;
@@ -858,17 +858,17 @@ void __saveds clocktask()
   s = (config->scrclktype&SCRCLOCK_BYTES)?1:0;
 
   if (config->scrclktype&SCRCLOCK_C_AND_F) {
-    lsprintf(memstring,"%lc:%%-%ldld%s",globstring[STR_CLOCK_CHIP][0],chipnum+m,Kstr+s);
+    lsprintf(memstring,"%lc:%%-%ldld%s",globstring[STR_CLOCK_CHIP][0],(long)(chipnum+m),Kstr+s);
     if (fastnum>1) {
-      lsprintf(memstring+strlen(memstring),"%lc:%%-%ldld%s",globstring[STR_CLOCK_FAST][0],fastnum+m,Kstr+s);
-      lsprintf(memstring+strlen(memstring),"%lc:%%-%ldld%s",globstring[STR_CLOCK_TOTAL][0],a+m,Kstr+s);
+      lsprintf(memstring+strlen(memstring),"%lc:%%-%ldld%s",globstring[STR_CLOCK_FAST][0],(long)(fastnum+m),Kstr+s);
+      lsprintf(memstring+strlen(memstring),"%lc:%%-%ldld%s",globstring[STR_CLOCK_TOTAL][0],(long)(a+m),Kstr+s);
     }
   }
   else {
-    lsprintf(memstring,"%s%%-%ldld%s",globstring[STR_CLOCK_CHIP],chipnum+m,Kstr+s);
+    lsprintf(memstring,"%s%%-%ldld%s",globstring[STR_CLOCK_CHIP],(long)(chipnum+m),Kstr+s);
     if (fastnum>1) {
-      lsprintf(memstring+strlen(memstring),"%s%%-%ldld%s",globstring[STR_CLOCK_FAST],fastnum+m,Kstr+s);
-      lsprintf(memstring+strlen(memstring),"%s%%-%ldld%s",globstring[STR_CLOCK_TOTAL],a+m,Kstr+s);
+      lsprintf(memstring+strlen(memstring),"%s%%-%ldld%s",globstring[STR_CLOCK_FAST],(long)(fastnum+m),Kstr+s);
+      lsprintf(memstring+strlen(memstring),"%s%%-%ldld%s",globstring[STR_CLOCK_TOTAL],(long)(a+m),Kstr+s);
     }
   }
 
@@ -930,7 +930,7 @@ void __saveds clocktask()
                }
               else usage = getusage()/*/10*/;
 
-              lsprintf(buf,"CPU:%3ld%%  ",usage);
+              lsprintf(buf,"CPU:%3ld%%  ",(long)usage);
               strcat(formstring,buf);
             }
             if (config->scrclktype&(SCRCLOCK_DATE|SCRCLOCK_TIME)) {
@@ -948,7 +948,7 @@ void __saveds clocktask()
                   if (h>11) { ampm='P'; h-=12; }
                   else ampm='A';
                   if (h==0) h=12;
-                  lsprintf(time,"%2ld:%02ld:%02ld%lc",h,m,s,ampm);
+                  lsprintf(time,"%2ld:%02ld:%02ld%lc",(long)h,(long)m,(long)s,ampm);
                 }
                 strcat(formstring,time);
               }

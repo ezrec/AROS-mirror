@@ -222,6 +222,7 @@ int getmakelinkdata(char *namebuf, char *destbuf, int *type)
         while ((IMsg=(struct IntuiMessage *)GetMsg(swindow->UserPort))) {
             class=IMsg->Class;
             code=IMsg->Code;
+            (void)code; // Unused for now
             switch (class)
              {
               case IDCMP_GADGETUP:

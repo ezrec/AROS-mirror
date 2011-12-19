@@ -78,7 +78,7 @@ int num,move,flags;
                     if (one!=-1) {
                         /*if (version2)*/ {
                             size=config->fontsizes[num];
-                            lsprintf(fontsize_buf,"%ld",size);
+                            lsprintf(fontsize_buf,"%ld",(long)size);
                             RefreshStrGad(&fontsizegadget,Window);
                             fontsizelistview.itemselected=-1;
                         }

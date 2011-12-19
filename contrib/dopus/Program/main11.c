@@ -382,24 +382,24 @@ int louise,buttons,banknum;
                 if (fastnum>1) {
                     if (icon_type&ICON_C_AND_F) {
                         lsprintf(buf1,"%lc:%%%ldld %lc:%%%ldld ",
-                            globstring[STR_CLOCK_CHIP][0],chipnum,
-                            globstring[STR_CLOCK_FAST][0],fastnum);
+                            globstring[STR_CLOCK_CHIP][0],(long)chipnum,
+                            globstring[STR_CLOCK_FAST][0],(long)fastnum);
                     }
                     else {
                         lsprintf(buf1,"%s%%%ldld %s%%%ldld ",
-                            globstring[STR_CLOCK_CHIP],chipnum,
-                            globstring[STR_CLOCK_FAST],fastnum);
+                            globstring[STR_CLOCK_CHIP],(long)chipnum,
+                            globstring[STR_CLOCK_FAST],(long)fastnum);
                     }
                     lsprintf(buf,buf1,chipc,fast);
                 }
                 else {
                     if (icon_type&ICON_C_AND_F) {
                         lsprintf(buf1,"%lc:%%%ldld ",
-                            globstring[STR_CLOCK_MEM][0],chipnum);
+                            globstring[STR_CLOCK_MEM][0],(long)chipnum);
                     }
                     else {
                         lsprintf(buf1,"%s%%%ldld ",
-                            globstring[STR_CLOCK_MEM],chipnum);
+                            globstring[STR_CLOCK_MEM],(long)chipnum);
                     }
                     lsprintf(buf,buf1,chipc);
                 }
@@ -415,7 +415,7 @@ int louise,buttons,banknum;
                 else usage = getusage()/*/10*/;
 
                 if (! usage) usage=oldusage;
-                lsprintf(buf,"CPU:%3ld%% ",usage);
+                lsprintf(buf,"CPU:%3ld%% ",(long)usage);
                 strcat(formstring,buf);
                 oldusage=usage;
             }
@@ -433,7 +433,7 @@ int louise,buttons,banknum;
                     if (h>11) { ampm='P'; h-=12; }
                     else ampm='A';
                     if (h==0) h=12;
-                    lsprintf(time,"%2ld:%02ld:%02ld%lc",h,m,s,ampm);
+                    lsprintf(time,"%2ld:%02ld:%02ld%c",(long)h,(long)m,(long)s,(char)ampm);
                 }
                 strcat(formstring,time);
                 strcat(formstring," ");

@@ -521,7 +521,7 @@ ULONG a;
 		getfloatstr((double)((double)a/1024),buf);
 		LStrCat(buf,"M");
 	}
-	else lsprintf(buf,"%ldK",a);
+	else lsprintf(buf,"%ldK",(long)a);
 }
 
 void getfloatstr(f,buf)
@@ -538,8 +538,8 @@ char *buf;
 	if (c==100) {
 		c=0; ++a;
 	}
-	lsprintf(buf1,"%ld",c); buf1[1]=0;
-	lsprintf(buf,"%ld.%s",a,buf1);
+	lsprintf(buf1,"%ld",(long)c); buf1[1]=0;
+	lsprintf(buf,"%ld.%s",(long)a,buf1);
 }
 
 int do_format(reqbase,border,device,name,flags,quick)

@@ -162,9 +162,9 @@ char *argv[];
 
         if (wbmsg->sm_NumArgs>1) {
             num=atoi(wbmsg->sm_ArgList[1].wa_Name);
-            lsprintf(portname,"dopus4_config_port%ld",num);
+            lsprintf(portname,"dopus4_config_port%ld",(long)num);
             if (!(conport=LCreatePort(portname,20))) quit();
-            lsprintf(rportname,"dopus4_config_reply%ld",num);
+            lsprintf(rportname,"dopus4_config_reply%ld",(long)num);
             Forbid();
             if (!(cmdport=FindPort(rportname))) {
                 LDeletePort(conport);

@@ -147,7 +147,7 @@ char **buffer;
 int *selbase;
 {
     ULONG class;
-    UWORD gadgetid,code;
+    UWORD gadgetid=0,code;
     struct Window *swindow;
     struct Gadget *gadlist,*sel_type_gad;
     const char *select_base_array[4],*select_type_array[3];

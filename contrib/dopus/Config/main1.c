@@ -148,7 +148,7 @@ clearlast:
                                 b=gadgetid-FORMAT_LENGTH;
                                 a=atoi(formatlen_buf[b]);
                                 if (a<20) a=20; else if (a>MAX_DISPLAYLENGTH) a=MAX_DISPLAYLENGTH;
-                                lsprintf(formatlen_buf[b],"%ld",a);
+                                lsprintf(formatlen_buf[b],"%ld",(long)a);
                                 RefreshStrGad(gad,Window);
                                 config->displaylength[formatwin][displenmap[b]]=a;
                                 if (code!=0x9) getnextgadget(gad);
@@ -600,7 +600,7 @@ int dosystemconfig()
                                 if (tick) inittickgads(systemgadgets[gadgetid],(flag)?(int)*flag:0,(flag2)?(int)*flag2:0);
                                 switch (gadgetid) {
                                     case SYS_AMIGADOS:
-                                        lsprintf(buf,"%ld",config->priority);
+                                        lsprintf(buf,"%ld",(long)config->priority);
                                         makestring(config->outputcmd,config->output,config->shellstartup,
                                             buf,NULL);
                                         break;
@@ -609,7 +609,7 @@ int dosystemconfig()
                                             config->startupscript,config->uniconscript,config->configreturnscript,NULL);
                                         break;
                                     case SYS_DIRECTORIES:
-                                        lsprintf(buf,"%ld",config->bufcount);
+                                        lsprintf(buf,"%ld",(long)config->bufcount);
                                         makestring(buf,NULL);
                                         break;
                                     case SYS_HOTKEYS:
@@ -664,13 +664,13 @@ int dosystemconfig()
                                         BltTemplate((PLANEPTR)DOpusBase->pdb_check,0,2,rp,x_off+208,y_off+174,13,7);
 */                                        break;
                                     case SYS_VIEWPLAY:
-                                        lsprintf(buf,"%ld",config->showdelay);
-                                        lsprintf(buf1,"%ld",config->fadetime);
-                                        lsprintf(buf2,"%ld",config->tabsize);
-                                        lsprintf( buf3, "%ld", config->viewtext_topleftx ); //HUX
-                                        lsprintf( buf4, "%ld", config->viewtext_toplefty ); //HUX
-                                        lsprintf( buf5, "%ld", config->viewtext_width ); //HUX
-                                        lsprintf( buf6, "%ld", config->viewtext_height ); //HUX
+                                        lsprintf(buf,"%ld",(long)config->showdelay);
+                                        lsprintf(buf1,"%ld",(long)config->fadetime);
+                                        lsprintf(buf2,"%ld",(long)config->tabsize);
+                                        lsprintf( buf3, "%ld", (long)config->viewtext_topleftx ); //HUX
+                                        lsprintf( buf4, "%ld", (long)config->viewtext_toplefty ); //HUX
+                                        lsprintf( buf5, "%ld", (long)config->viewtext_width ); //HUX
+                                        lsprintf( buf6, "%ld", (long)config->viewtext_height ); //HUX
                                         makestring( buf, buf1, buf2, buf3, buf4, buf5, buf6, NULL ); //HUX
 //                                        makestring(buf,buf1,buf2,NULL);
                                         break;

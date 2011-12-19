@@ -394,7 +394,7 @@ int show;
             ++a;
             bank2=bank2->next;
         }
-        lsprintf(buf,"%s %ld",cfg_string[STR_GADGET_BANK_NUMBER],a+1);
+        lsprintf(buf,"%s %ld",cfg_string[STR_GADGET_BANK_NUMBER],(long)(a+1));
         if (paint_state) strcat(buf,cfg_string[STR_PAINT_STATE]);
         ptr=buf;
     }

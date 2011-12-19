@@ -427,7 +427,7 @@ char *name;
 		if (stackgad=addreqgadgets(&icon_req,temp_gadgets)) {
 			stack_buf=((struct StringInfo *)stackgad->SpecialInfo)->Buffer;
 			if (dobj->do_StackSize<4096) dobj->do_StackSize=4096;
-			lsprintf(stack_buf,"%ld",dobj->do_StackSize);
+			lsprintf(stack_buf,"%ld",(long)dobj->do_StackSize);
 		}
 	}
 
@@ -501,13 +501,13 @@ char *name;
 
 	switch (dobj->do_Type) {
 		case WBDISK:
-			lsprintf(buf,"%ld",infodata.id_NumBlocks);
+			lsprintf(buf,"%ld",(long)infodata.id_NumBlocks);
 			UScoreText(rp,buf,102+textxoff,40+textyoff,-1);
-			lsprintf(buf,"%ld",infodata.id_NumBlocksUsed);
+			lsprintf(buf,"%ld",(long)infodata.id_NumBlocksUsed);
 			UScoreText(rp,buf,102+textxoff,50+textyoff,-1);
-			lsprintf(buf,"%ld",infodata.id_NumBlocks-infodata.id_NumBlocksUsed);
+			lsprintf(buf,"%ld",(long)infodata.id_NumBlocks-infodata.id_NumBlocksUsed);
 			UScoreText(rp,buf,102+textxoff,60+textyoff,-1);
-			lsprintf(buf,"%ld",infodata.id_BytesPerBlock);
+			lsprintf(buf,"%ld",(long)infodata.id_BytesPerBlock);
 			UScoreText(rp,buf,102+textxoff,70+textyoff,-1);
 
 			switch (infodata.id_DiskState) {
@@ -529,19 +529,19 @@ char *name;
 		case WBTOOL:
 			Move(rp,102+textxoff,40+textyoff);
 			if (gotid) {
-				lsprintf(buf,"%ld",fileinfo.fib_NumBlocks);
+				lsprintf(buf,"%ld",(long)fileinfo.fib_NumBlocks);
 				Text(rp,buf,strlen(buf));
 			}
 			else Text(rp,"---",3);
 			Move(rp,102+textxoff,50+textyoff);
 			if (gotid) {
-				lsprintf(buf,"%ld",fileinfo.fib_Size);
+				lsprintf(buf,"%ld",(long)fileinfo.fib_Size);
 				Text(rp,buf,strlen(buf));
 			}
 			else Text(rp,"---",3);
 
 		case WBDRAWER:
-			if ((ttarray=oldtooltypes)) {
+			if ((ttarray=(char**)oldtooltypes)) {
 				for (ttcount=0;;ttcount++) if (!ttarray[ttcount]) break;
 				if (ttarray=AllocMem((ttcount+1)*4,MEMF_CLEAR)) {
 					for (a=0;a<ttcount;a++) {

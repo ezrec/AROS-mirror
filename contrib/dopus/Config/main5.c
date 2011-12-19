@@ -1209,7 +1209,7 @@ int item;
 unsigned char **classlist;
 char *classtype,**displist;
 {
-//kprintf("classtype[item]: %ld\tbuf: %s\n",classtype[item],edit_funcbuf);
+//kprintf("classtype[item]: %ld\tbuf: %s\n",(long)classtype[item],edit_funcbuf);
     freestring(classlist[item]);
     if (classtype[item]<1 || classopvals[classtype[item]-1]<FTYC_COMMANDOK) {
         if (edit_funcbuf[0]) classlist[item]=getcopy(edit_funcbuf,-1,NULL);
@@ -1395,7 +1395,7 @@ int line;
 
 void show_file_view(void)
 {
-    int line,a,off,old,top,bottom,scroll,ox,px,aox,apx,char_w;
+    int line,a,off,old,top,bottom,scroll,ox,px,aox=0,apx,char_w;
     char buf[80],buf2[30];
 
     top=0; bottom=5; scroll=0;
@@ -1421,7 +1421,7 @@ void show_file_view(void)
             if (fileview_lines<=line+fileview_topline) file_view_text(NULL,line);
             else {
                 off=(fileview_topline+line)*16;
-                lsprintf(buf,"%08lx: ",off);
+                lsprintf(buf,"%08lx: ",(unsigned long)off);
                 old=off; ox=px=-1;
                 for (a=0;a<4;a++) {
 /*                    lsprintf(buf2,"%02lx%02lx%02lx%02lx ",
@@ -1457,7 +1457,7 @@ void show_file_view(void)
                 }
                 if (ox>-1) {
                     SetAPen(rp,screen_pens[2].pen);
-                    lsprintf(buf2,"%02lx",fileview_buf[fileview_offset]);
+                    lsprintf(buf2,"%02lx",(unsigned long)fileview_buf[fileview_offset]);
                     Move(rp,x_off+9+(10+ox)*char_w,y_off+27+(line*8));
                     Text(rp,buf2,2);
                     buf2[0]=(isprint(fileview_buf[fileview_offset])?fileview_buf[fileview_offset]:'.');
@@ -1486,8 +1486,8 @@ int num,pos;
     }
     else {
         y=y_off+39+(26*pos);
-        if (fileview_type==0) lsprintf(buf,"$%08lx",num);
-        else lsprintf(buf,"%09ld",num);
+        if (fileview_type==0) lsprintf(buf,"$%08lx",(unsigned long)num);
+        else lsprintf(buf,"%09ld",(long)num);
         UScoreText(rp,buf,x_off+543,y,-1);
     }
 }
