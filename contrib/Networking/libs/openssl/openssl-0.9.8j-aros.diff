@@ -190,7 +190,7 @@ diff -ruN openssl-0.9.8j/apps/s_time.c openssl-0.9.8j-aros/apps/s_time.c
 diff -ruN openssl-0.9.8j/Configure openssl-0.9.8j-aros/Configure
 --- openssl-0.9.8j/Configure	2008-12-29 01:18:23.000000000 +0100
 +++ openssl-0.9.8j-aros/Configure	2011-07-19 20:10:02.000000000 +0200
-@@ -540,6 +540,12 @@
+@@ -540,6 +540,13 @@
  ##### Compaq Non-Stop Kernel (Tandem)
  "tandem-c89","c89:-Ww -D__TANDEM -D_XOPEN_SOURCE -D_XOPEN_SOURCE_EXTENDED=1 -D_TANDEM_SOURCE -DB_ENDIAN::(unknown):::THIRTY_TWO_BIT:::",
  
@@ -199,6 +199,7 @@ diff -ruN openssl-0.9.8j/Configure openssl-0.9.8j-aros/Configure
 +"aros-x86_64-cross","$ENV{'AROS_CC'}:-DL_ENDIAN -DMD32_REG_T=int -g -Wall $ENV{'AROS_CFLAGS'}:::AROS::SIXTY_FOUR_BIT_LONG RC4_CHAR RC4_CHUNK DES_INT DES_UNROLL BF_PTR:${no_asm}::::::$ENV{'AROS_RANLIB'}",
 +"aros-ppc-cross","$ENV{'AROS_CC'}:-DB_ENDIAN -g -Wall $ENV{'AROS_CFLAGS'}:::AROS::BN_LLONG RC4_CHAR RC4_CHUNK DES_UNROLL BF_PTR:${no_asm}::::::$ENV{'AROS_RANLIB'}",
 +"aros-arm-cross","$ENV{'AROS_CC'}:-DL_ENDIAN -g -Wall $ENV{'AROS_CFLAGS'}:::AROS::BN_LLONG RC4_CHAR RC4_CHUNK DES_UNROLL BF_PTR:${no_asm}::::::$ENV{'AROS_RANLIB'}",
++"aros-m68k-cross","$ENV{'AROS_CC'}:-DB_ENDIAN -g -Wall $ENV{'AROS_CFLAGS'} -Wno-unused-but-set-variable -Wno-unused-variable -Wno-format:::AROS::BN_LLONG RC4_CHAR RC4_CHUNK DES_UNROLL BF_PTR:${no_asm}::::::$ENV{'AROS_RANLIB'}",
 +
  );
  
