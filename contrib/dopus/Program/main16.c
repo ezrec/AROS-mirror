@@ -359,14 +359,13 @@ char *getAGnode(char *buf,char *func)
  }
 
 void dohelp(name,func,key,qual,defmsg)
-const char *name,*func;
+char *name,*func;
 int key,qual;
-const char *defmsg;
+char *defmsg;
 {
     if (dopus_firsthelp)
      {
-      const char *msg=NULL;
-      char *buf=NULL,buf1[40],buf2[30];
+      char *msg=NULL,*buf=NULL,buf1[40],buf2[30];
       struct Help *help=dopus_firsthelp;
       int s,s1;
 

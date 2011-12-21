@@ -553,7 +553,7 @@ char *title;
 int value,total,flag;
 {
   struct TextFont *font;
-  const char *gadtxt[] = { globstring[STR_ABORT], NULL };
+  char *gadtxt[] = { globstring[STR_ABORT], NULL };
   int a,incignore = 0;
 
   if (flag & 0x80)
@@ -674,8 +674,7 @@ void progresstext(y,val,total,text)
 int y,val,total;
 char *text;
 {
-  char buf[80];
-  const char *ptr;
+  char buf[80],*ptr;
   int x,y1,len;
 
 D(bug("progresstext(Y=%ld,V=%ld,Vmax=%ld,%s)\n",y,val,total,text?text:"<NULL>"));

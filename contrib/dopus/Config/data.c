@@ -136,7 +136,7 @@ struct RMBGadget
         NULL,0,0,104,12,RGF_ALTTEXT,0,
         {{NULL,2,1,100,10,1,0},{NULL,2,1,100,10,1,0}}};
 
-const char
+char
     *commandlist[95],
     *arglist[18],
     *classopslist[13];
@@ -147,7 +147,7 @@ int classopvals[]={
 
 struct DOpusListView
     cmdlist={
-        1,NULL,0,0,332,88,NULL,(char **)commandlist,NULL,DLVF_HIREC,8,
+        1,NULL,0,0,332,88,NULL,commandlist,NULL,DLVF_HIREC,8,
         0,0,0,0,0,0,0,0,0,0,-1,NULL},
     listlist={
         1,NULL,0,0,0,0,NULL,NULL,NULL,DLVF_HIREC,8,
@@ -209,7 +209,7 @@ char filebuf[256],dirbuf[258];
 struct DOpusFileReq filereq={
     NULL,dirbuf,filebuf,NULL,162,22,10,0,NULL,NULL};
 
-const char *defdir[5]={"","SYS:","SYS:","S:","REXX:"};
+char *defdir[5]={"","SYS:","SYS:","S:","REXX:"};
 
 struct newdopusfunction *selgad;
 struct Gadget *seligad;
@@ -357,9 +357,9 @@ UWORD
         0xaaa,0x000,0xfff,0x05b,0xea4,0x707,0xff0,0xc20,
         0xf80,0xf0f,0x963,0x0f9,0x4f3,0x000,0xfff,0x259};
 
-const char *palettenames[14];
+char *palettenames[14];
 
-const char *fontplacenames[FONT_COUNT+1];
+char *fontplacenames[FONT_COUNT+1];
 
 int fontplaceflags[]={
     FFLAG_8ONLY,0,FFLAG_NOPROP,0,0,0,0,0,FFLAG_NOPROP,0,0,0};
@@ -371,10 +371,10 @@ int fontplacevals[]={
 
 struct DOpusListView
     palettelist={
-        2,NULL,0,0,250,56,NULL,(char **)palettenames,NULL,
+        2,NULL,0,0,250,56,NULL,palettenames,NULL,
         DLVF_SLOW|DLVF_HIREC,8,0,0,0,0,0,0,0,0,0,0,-1,NULL},
     fontplacelist={
-        1,NULL,0,0,176,64,NULL,(char **)fontplacenames,NULL,
+        1,NULL,0,0,176,64,NULL,fontplacenames,NULL,
         DLVF_SLOW|DLVF_LEAVE|DLVF_HIREC,8,0,0,0,0,0,0,0,0,0,0,-1,&fontlistview},
     fontlistview={
         2,NULL,0,0,176,64,NULL,NULL,NULL,
@@ -383,15 +383,15 @@ struct DOpusListView
         3,NULL,0,0,32,64,NULL,NULL,NULL,
         DLVF_SLOW|DLVF_LEAVE|DLVF_HIREC,8,0,0,0,0,0,0,0,0,0,0,-1,NULL},
     listformatlists[2]={
-        {1,NULL,0,0,196,56,NULL,(char **)formatnames,NULL,
+        {1,NULL,0,0,196,56,NULL,formatnames,NULL,
         DLVF_SLOW|DLVF_HIREC,8,0,0,0,0,0,0,0,0,0,0,-1,&listformatlists[1]},
-        {2,NULL,0,0,196,56,NULL,(char **)selectedformatnames,NULL,
+        {2,NULL,0,0,196,56,NULL,selectedformatnames,NULL,
         DLVF_SLOW|DLVF_LEAVE|DLVF_CHECK|DLVF_TOGGLE|DLVF_HIREC,8,0,0,0,0,0,0,0,0,0,0,-1,NULL}},
     iconlistview={
         3,NULL,0,0,452,104,NULL,NULL,NULL,
         DLVF_TTOP|DLVF_LEAVE|DLVF_HIREC,8,0,0,0,0,0,0,0,0,0,0,-1,NULL};
 
-const char
+char
     *formatnames[FORMAT_MAXNUM+1],
     *selectedformatnames[FORMAT_MAXNUM+1];
 
@@ -408,7 +408,7 @@ char *helpbuffer = NULL;
 int helpsize;
 char currenthelpname[256];
 
-unsigned char **fileclasslist;
+char **fileclasslist;
 
 char *fileclasstype[4];
 
@@ -434,14 +434,14 @@ struct AppMessage *appmsg;
 unsigned char *fileview_buf;
 int fileview_lines,fileview_size,fileview_topline,fileview_type,fileview_oldtop;
 int fileview_offset,fileview_position;
-const char *fileview_types[2];
+char *fileview_types[2];
 char *icontypes[3];
 
 struct StringData stringdata;
 
 int network;
 
-const char *ftype_funcs[]={
+char *ftype_funcs[]={
     "AnsiRead",
     "HexRead",
     "LoopPlay",
@@ -569,4 +569,4 @@ struct DOpusRemember *borderkey;
 short palettegad_xy[16][4];
 int bpg;
 
-const char *left_right_cycle[3];
+char *left_right_cycle[3];

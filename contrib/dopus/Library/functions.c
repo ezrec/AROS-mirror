@@ -48,13 +48,13 @@ D(bug("Seed()\n");/*Delay(50);*/)
     RangeSeed = FastRand(seed);
 }
 
-UWORD __saveds Random(register UWORD limit __asm("d0"))
+UWORD /*__saveds*/ Random(register UWORD limit __asm("d0"))
 {
 D(bug("Random()\n");/*Delay(50);*/)
     return RangeRand(limit+1);
 }
 
-void __saveds BtoCStr(register BSTR bstr __asm("a0"), register char *cstr __asm("a1"), register int len __asm("d0"))
+void /*__saveds*/ BtoCStr(register BSTR bstr __asm("a0"), register char *cstr __asm("a1"), register int len __asm("d0"))
 {
 #ifndef __AROS__
     char *c = (char *)BADDR(bstr);
@@ -92,7 +92,17 @@ void SwapMem(register char *src __asm("a0"), register char *dst __asm("a1"), reg
 }
 
 #ifdef __AROS__
-#include <exec/rawfmt.h>
+AROS_UFH2 (void, stuffChar,
+        AROS_UFHA(char, c, D0),
+        AROS_UFHA(char **, buf, A3)
+)
+{
+    AROS_USERFUNC_INIT
+
+    *(*buf) ++ = c;
+
+    AROS_USERFUNC_EXIT
+}
 #else
 void stuffChar(register char c __asm("d0"), register char **buf __asm("a3"))
 {
@@ -101,24 +111,31 @@ void stuffChar(register char c __asm("d0"), register char **buf __asm("a3"))
 }
 #endif
 
-#ifdef __AROS__
 #include <stdarg.h>
-#else
+#ifndef __AROS__
 #include <clib/alib_stdio_protos.h>
 #endif
 
-void __saveds __stdargs LSprintf(char *buf, const char *fmt, ...)
-{
-#ifdef __AROS__
+void __saveds __stdargs LSprintf(char *buf, char *fmt, ...)
+ {
   va_list args;
+  char *buf2 = buf;
+
+//D(bug("LSprintf()\n");/*Delay(50);*/)
   va_start(args,fmt);
-  VNewRawDoFmt(fmt, RAWFMTFUNC_STRING, buf, args);
+//    movem.l a2/a3/a6,-(sp)
+//    move.l 4*4(sp),a3
+//    move.l 5*4(sp),a0
+//    lea.l 6*4(sp),a1
+//    lea.l stuffChar(pc),a2
+//    move.l 4,a6
+//    jsr _LVORawDoFmt(a6)
+  RawDoFmt(fmt,args,stuffChar,&buf2);
+//  sprintf(buf,fmt,args);
   va_end(args);
-#else
-  APTR args = (&fmt)+1;
-  RawDoFmt(fmt,args,(VOID_FUNC)stuffChar,&buf);
-#endif
-}
+//    movem.l (sp)+,a2/a3/a6
+//    rts
+ }
 
 unsigned char __saveds LToUpper(register unsigned char c __asm("d0"))
 {
@@ -144,7 +161,7 @@ void __saveds StrToLower(register unsigned char *src __asm("a0"), register unsig
     while((*dst++ = ToLower(*src++)));
 }
 
-void __saveds LStrnCat(register char *s1 __asm("a0"), register const char *s2 __asm("a1"), register int len __asm("d0"))
+void /*__saveds*/ LStrnCat(register char *s1 __asm("a0"), register char *s2 __asm("a1"), register int len __asm("d0"))
 
 {
 D(bug("LStrnCat()\n");/*Delay(50);*/)
@@ -157,14 +174,14 @@ D(bug("LStrnCat()\n");/*Delay(50);*/)
     *s1=0;
 }
 
-void __saveds LStrCat(register char *s1 __asm("a0"), register const char *s2 __asm("a1"))
+void /*__saveds*/ LStrCat(register char *s1 __asm("a0"), register char *s2 __asm("a1"))
 
 {
 D(bug("LStrCat()\n");/*Delay(50);*/)
     LStrnCat(s1,s2,0xffff);
 }
 
-void __saveds LStrCpy(register char *dst __asm("a0"), register const char *src __asm("a1"))
+void /*__saveds*/ LStrCpy(register char *dst __asm("a0"), register char *src __asm("a1"))
 
 {
 //char *d=dst,*s=src;
@@ -175,7 +192,7 @@ void __saveds LStrCpy(register char *dst __asm("a0"), register const char *src _
 //strcpy(dst,src);
 }
 
-void __saveds LStrnCpy(register char *dst __asm("a0"), register const char *src __asm("a1"), register int len __asm("d0"))
+void /*__saveds*/ LStrnCpy(register char *dst __asm("a0"), register char *src __asm("a1"), register int len __asm("d0"))
 
 {
     char c;
@@ -192,7 +209,7 @@ void __saveds LStrnCpy(register char *dst __asm("a0"), register const char *src 
 //strncpy(dst,src,len);
 }
 
-int __saveds LStrnCmpI(register const char *s1 __asm("a0"), register const char *s2 __asm("a1"), register int len __asm("d0"))
+int __saveds LStrnCmpI(register char *s1 __asm("a0"), register char *s2 __asm("a1"), register int len __asm("d0"))
 
 {
     register char c1,c2,diff;
@@ -213,14 +230,14 @@ int __saveds LStrnCmpI(register const char *s1 __asm("a0"), register const char 
     return 0;
 }
 
-int __saveds LStrCmpI(register const char *s1 __asm("a0"), register const char *s2 __asm("a1"))
+int /*__saveds*/ LStrCmpI(register char *s1 __asm("a0"), register char *s2 __asm("a1"))
 
 {
 //D(bug("LStrCmpI()\n");/*Delay(50);*/)
     return LStrnCmpI(s1,s2,0x7fff);
 }
 
-int __saveds LStrnCmp(register const char *s1 __asm("a0"), register const char *s2 __asm("a1"), register int len __asm("d0"))
+int /*__saveds*/ LStrnCmp(register char *s1 __asm("a0"), register char *s2 __asm("a1"), register int len __asm("d0"))
 
 {
     register char c1,c2,diff;
@@ -241,8 +258,8 @@ int __saveds LStrnCmp(register const char *s1 __asm("a0"), register const char *
     return 0;
 }
 
-int __saveds LStrCmp(register const char *s1 __asm("a0"),
-            register const char *s2 __asm("a1"))
+int /*__saveds*/ LStrCmp(register char *s1 __asm("a0"),
+            register char *s2 __asm("a1"))
 
 {
 //D(bug("LStrCmp()\n");/*Delay(50);*/)

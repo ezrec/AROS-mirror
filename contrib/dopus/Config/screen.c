@@ -32,7 +32,7 @@ the existing commercial status of Directory Opus 5.
 
 char old_general_font[30];
 
-int doscreenconfig()
+doscreenconfig()
 {
     ULONG class;
     UWORD code,gadgetid,qual;

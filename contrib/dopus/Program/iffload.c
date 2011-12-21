@@ -1445,7 +1445,7 @@ int x,y,w,h,iff;
     UWORD code,gadgetid,qual;
     int a,/*b,*/abort=0,goff,fnum;
     char buf[200],modes[140],*ptr,pactcode[6],cols[30],title[120];
-    const char
+    char
         *printgadtxt[9],
         *printabortgadtxt[2]={NULL,NULL},
         *print_aspect_txt[2],

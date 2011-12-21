@@ -46,10 +46,10 @@ char protect_flags[6]={          /* The protection bits we understand */
 	FIBF_EXECUTE,
 	FIBF_DELETE};
 
-const char
-	*specific_gadtext[5][6],       /* Icon-specific gadget labels */
-	*icon_type_names[8];           /* Names of different icon types */
 char
+	*specific_gadtext[5][6],       /* Icon-specific gadget labels */
+	*icon_type_names[8],           /* Names of different icon types */
+
 	protect_keys[6]={                       /* Key equivalents for protection bits */
 		0x21,                                 /* Script */
 		0x20,                                 /* Archived */

@@ -150,7 +150,7 @@ struct DOpusListView {
 	struct Window *window; /* Window to add the ListView to              */
 	int x,y;               /* x & y position of ListView                 */
 	int w,h;               /* Width and height of ListView               */
-	const char *title;     /* Title of ListView                          */
+	char *title;           /* Title of ListView                          */
 	char **items;          /* Null-terminated array of items to display  */
 	char *selectarray;     /* Table of selection status used with        */
 	                       /*   DLVB_MULTI. See docs for more info.      */
@@ -250,8 +250,8 @@ struct RMBGadget {
 /* SimpleRequest structure */
 
 struct DOpusSimpleRequest {
-	const char *text;           /* Text to display            */
-	const char **gads;          /* Gadget names               */
+	char *text;                 /* Text to display            */
+	char **gads;                /* Gadget names               */
 	int *rets;                  /* Gadget return values       */
 	int hi,lo;                  /* 3D hi and lo pen colours   */
 	int fg,bg;                  /* Text Fg and Bg pen colours */
@@ -259,8 +259,8 @@ struct DOpusSimpleRequest {
 	int strlen;                 /* Maximum string length      */
 	int flags;                  /* Flags, see below           */
 	struct TextFont *font;      /* Font to use, must be open  */
-	SIPTR value;                /* Value for booleans         */
-	const char *title;          /* Title for req with borders */
+	int value;                  /* Value for booleans         */
+	char *title;                /* Title for req with borders */
 };
 
 #define SRB_LONGINT   0  /* Integer gadget                          */

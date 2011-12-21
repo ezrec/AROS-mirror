@@ -290,7 +290,7 @@ D(bug("DoGetCheckImage: fg = %ld, bg = %ld\n",fg,bg));
     return(image);
 }
 
-void __saveds DoDo3DFrame(register struct RastPort *rp __asm("a0"), register int x __asm("d0"), register int y __asm("d1"), register int w __asm("d2"), register int h __asm("d3"), register const char *title __asm("a1"), register int hi __asm("d4"), register int lo __asm("d5"))
+void __saveds DoDo3DFrame(register struct RastPort *rp __asm("a0"), register int x __asm("d0"), register int y __asm("d1"), register int w __asm("d2"), register int h __asm("d3"), register char *title __asm("a1"), register int hi __asm("d4"), register int lo __asm("d5"))
 {
     char of,ob;
     int a,l;

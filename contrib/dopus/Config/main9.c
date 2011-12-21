@@ -82,7 +82,7 @@ void readhelp()
 }
 
 void makehelpname(path)
-const char *path;
+char *path;
 {
     int a,b;
 
@@ -359,7 +359,7 @@ void save_clips()
     Close(file);
 }
 
-int readfile(name,buf,size)
+readfile(name,buf,size)
 char *name,**buf;
 int *size;
 {

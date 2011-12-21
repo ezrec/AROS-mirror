@@ -353,7 +353,7 @@ int special;
 
 void solidblock(r,txt,x,y,w,h,fg,bg,bord)
 struct RastPort *r;
-const char *txt;
+char *txt;
 int x,y,w,h,fg,bg,bord;
 {
     if (bord&1)

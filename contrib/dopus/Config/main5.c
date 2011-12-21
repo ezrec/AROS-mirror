@@ -30,7 +30,7 @@ the existing commercial status of Directory Opus 5.
 
 #include "config.h"
 
-int dofiletypeconfig()
+dofiletypeconfig()
 {
     ULONG class;
     UWORD code,gadgetid;
@@ -319,7 +319,7 @@ char **list;
     RefreshListView(&filetypeactionlist,1);
 }
 
-int doinitfiletypetext(id)
+doinitfiletypetext(id)
 int id;
 {
     int mode=-1;
@@ -352,7 +352,7 @@ struct dopusfiletype *type;
     doscreentitle(title);
 }
 
-int editfiletype(type,key,new)
+editfiletype(type,key,new)
 struct dopusfiletype *type;
 struct DOpusRemember **key;
 int new;
@@ -392,7 +392,7 @@ int new;
     return(b);
 }
 
-int editclass(class,new)
+editclass(class,new)
 struct fileclass *class;
 int new;
 {
@@ -478,11 +478,10 @@ void readfileclasses()
     FreeMem(classbuf,size);
 }
 
-int importfileclasses()
+importfileclasses()
 {
     int in,size,pos,lsize,num,a,b,tpos,ret=0;
-    char *classbuf,*classarray,**classtypeid,**classrecog,buf[256],buf2[256];
-    unsigned char **classlist;
+    char *classbuf,**classlist,*classarray,**classtypeid,**classrecog,buf[256],buf2[256];
     struct DOpusRemember *key;
 
     filereq.flags=0;
@@ -539,7 +538,7 @@ int importfileclasses()
         }
         if (classlist[0] &&
             (dolistwindow(cfg_string[STR_SELECT_CLASSES_TO_IMPORT],332,72,
-                (char **)classlist,DLVF_MULTI|DLVF_HIREC,classarray,NULL))) {
+                classlist,DLVF_MULTI|DLVF_HIREC,classarray,NULL))) {
             for (a=0;a<num;a++) {
                 if (classarray[a]) {
                     if (!(addfileclass(classlist[a],classtypeid[a],classrecog[a]))) break;
@@ -552,7 +551,7 @@ int importfileclasses()
     return(ret);
 }
 
-int savefileclasses()
+savefileclasses()
 {
     struct fileclass *fclass;
     BPTR out;
@@ -587,7 +586,7 @@ D(bug("classname: %s\n",classname));
     return(1);
 }
 
-int addfileclass(type,typeid,recog)
+addfileclass(type,typeid,recog)
 char *type,*typeid,*recog;
 {
     struct fileclass *fclass,*newclass,*last;
@@ -644,10 +643,10 @@ struct fileclass *fclass;
     FreeMem(fclass,sizeof(struct fileclass));
 }
 
-unsigned char **makeclasslist(key)
+char **makeclasslist(key)
 struct DOpusRemember **key;
 {
-    unsigned char **list;
+    char **list;
     int count,a;
     struct fileclass *fclass;
 
@@ -664,7 +663,7 @@ struct DOpusRemember **key;
     return(list);
 }
 
-int readline(buf,pos,buf1,size)
+readline(buf,pos,buf1,size)
 char *buf;
 int pos;
 char *buf1;
@@ -685,7 +684,7 @@ int size;
     return(pos);
 }
 
-int editfileclass(fclass,new)
+editfileclass(fclass,new)
 struct fileclass *fclass;
 int new;
 {
@@ -695,10 +694,8 @@ int new;
     struct Gadget *gad;
     struct DOpusListView *view;
     struct DOpusRemember *key=NULL;
-    unsigned char
-        *classlist[MAXFUNCS+1];
-    char 
-    	classtype[MAXFUNCS],*displist[MAXFUNCS+1],
+    char
+        *classlist[MAXFUNCS+1],classtype[MAXFUNCS],*displist[MAXFUNCS+1],
         *templist,temptype,buf[16];
     unsigned char c;
 
@@ -1079,8 +1076,7 @@ getfileview:
 
 void makeeditclasslist(class,classlist,classtype)
 struct fileclass *class;
-unsigned char **classlist;
-char *classtype;
+char **classlist,*classtype;
 {
     int a,b,len,type,pos,num;
     char buf[256];
@@ -1129,8 +1125,7 @@ doandor:
 }
 
 void dispclasslist(classlist,classtype,displist)
-unsigned char **classlist;
-char *classtype,**displist;
+char **classlist,*classtype,**displist;
 {
     int a;
     char buf[80],*ptr;
@@ -1163,8 +1158,7 @@ int on;
 }
 
 void removeclassentry(classlist,classtype,entry)
-unsigned char **classlist;
-char *classtype;
+char **classlist,*classtype;
 int entry;
 {
     if (entry<MAXFUNCS-1) {
@@ -1175,8 +1169,7 @@ int entry;
 }
 
 void insertnewclass(classlist,classtype,entry,displist,string,type)
-unsigned char **classlist;
-char *classtype;
+char **classlist,*classtype;
 int entry;
 char **displist,*string;
 int type;
@@ -1205,8 +1198,7 @@ int type;
 
 void endclassedit(item,classlist,classtype,displist)
 int item;
-unsigned char **classlist;
-char *classtype,**displist;
+char **classlist,*classtype,**displist;
 {
 //kprintf("classtype[item]: %ld\tbuf: %s\n",classtype[item],edit_funcbuf);
     freestring(classlist[item]);
@@ -1379,7 +1371,7 @@ void load_file_view()
 }
 
 void file_view_text(txt,line)
-const char *txt;
+char *txt;
 int line;
 {
     int len;

@@ -30,7 +30,7 @@ the existing commercial status of Directory Opus 5.
 
 #include "iconinfo.h"
 
-const char **string_table;
+char **string_table;
 
 struct DefaultString
 	default_strings[]={

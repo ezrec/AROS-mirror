@@ -229,7 +229,7 @@ char *argv[];
 
 	formatreq.rb_extend=&stringex;
 	formatreq.rb_idcmpflags=0;
-	formatreq.rb_string_table=(APTR)string_table;
+	formatreq.rb_string_table=string_table;
 
 	for (a=0;a<2;a++) {
 		stringex.Pens[a]=vis->vi_stringcol[a];
@@ -542,7 +542,7 @@ char *buf;
 	lsprintf(buf,"%ld.%s",a,buf1);
 }
 
-int do_format(reqbase,border,device,name,flags,quick)
+do_format(reqbase,border,device,name,flags,quick)
 struct RequesterBase *reqbase;
 Object_Border *border;
 char *device,*name;
@@ -645,7 +645,7 @@ char quick;
 	return((txt==STR_SUCCESS));
 }
 
-int do_initialise(device_req,name,dostype,firstblock,numblocks,reserved,memtype,flags)
+do_initialise(device_req,name,dostype,firstblock,numblocks,reserved,memtype,flags)
 struct IOExtTD *device_req;
 char *name;
 ULONG dostype;
@@ -777,7 +777,7 @@ ULONG flags;
 	return(0);
 }
 
-int do_raw_format(reqbase,border,device_req,tracksize,lowtrack,numtracks,memtype,flags)
+do_raw_format(reqbase,border,device_req,tracksize,lowtrack,numtracks,memtype,flags)
 struct RequesterBase *reqbase;
 Object_Border *border;
 struct IOExtTD *device_req;

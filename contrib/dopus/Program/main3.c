@@ -257,8 +257,7 @@ struct Directory *addafter;
 UWORD ownerid,groupid;
 {
     struct Directory *addposition=NULL,*entry,*workfirst,*newentry;
-    const char *description=NULL;
-    char *owner=NULL,*group=NULL;
+    char *description=NULL,*owner=NULL,*group=NULL;
 
     if (status_iconified && status_flags&STATUS_ISINBUTTONS) return((struct Directory *)1);
 

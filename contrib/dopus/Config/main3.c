@@ -33,7 +33,7 @@ the existing commercial status of Directory Opus 5.
 
 #define NUM_TYPES 5
 
-int editfunction(func,type,data)
+editfunction(func,type,data)
 struct dopusfunction *func;
 int type;
 APTR data;
@@ -663,7 +663,7 @@ struct RastPort *r;
 int x,y,fg,num;
 {
     int a,b,ac,dn,w,h,x1,y1;
-    const char *ptr;
+    char *ptr;
 
     switch ((b=(1<<((screen_depth > 4) ? 4 : screen_depth)))) {
         case 4: ac=2; dn=2; break;
@@ -759,7 +759,7 @@ int x,y,w,h;
 
 void showfuncob(r,name,fp,bp,type,x,y)
 struct RastPort *r;
-const char *name;
+char *name;
 int fp,bp,type,x,y;
 {
     int a,op,l;
@@ -799,7 +799,7 @@ char *buf;
     }
 }
 
-int getselflags(buf)
+getselflags(buf)
 char *buf;
 {
     int a,flags=0;
@@ -971,10 +971,9 @@ void checkswapgad()
     }
 }
 
-int funcrequester(type,buf,title)
+funcrequester(type,buf,title)
 int type;
-char *buf;
-const char *title;
+char *buf,*title;
 {
     struct Window *wind;
     ULONG class;
@@ -989,21 +988,21 @@ const char *title;
         case FREQ_FILETYPE:
         case FREQ_FILECLASS:
             setup_list_window(&requestwin,&cmdlist,&cmdcancelgad,1);
-            requestwin.Title=(char *)title;
+            requestwin.Title=title;
             if (!(wind=openwindow(&requestwin))) return(0);
             setuplist(&cmdlist,-1,-1);
             switch (type) {
                 case FREQ_FILETYPE:
-                    cmdlist.items=(char **)classopslist;
+                    cmdlist.items=classopslist;
                     break;
                 case FREQ_FILECLASS:
-                    cmdlist.items=(char **)fileclasslist;
+                    cmdlist.items=fileclasslist;
                     break;
                 case FREQ_ARGREQ:
-                    cmdlist.items=(char **)arglist;
+                    cmdlist.items=arglist;
                     break;
                 case FT_INTERNAL:
-                    cmdlist.items=(char **)commandlist;
+                    cmdlist.items=commandlist;
                     break;
             }
             cmdlist.window=wind;
@@ -1266,7 +1265,7 @@ char **funclist,**displist,*flagsel;
     makeselflags(0,flagsel);
 }
 
-int fixfunctypelist(ftype)
+fixfunctypelist(ftype)
 struct dopusfiletype *ftype;
 {
     int a,type=-1,b;
@@ -1316,7 +1315,7 @@ int type;
 }
 
 void do_gad_label(txt,x,y)
-const char *txt;
+char *txt;
 int x,y;
 {
     char buf[140];

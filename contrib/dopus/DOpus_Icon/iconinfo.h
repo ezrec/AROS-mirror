@@ -29,16 +29,7 @@ the existing commercial status of Directory Opus 5.
 */
 
 #include <aros/debug.h>
-#if defined(__AROS__)
-  #undef  __saveds
-  #define __saveds
-  #define __chip	__attribute__((section(".data.MEMF_CHIP")))
-  #define __aligned	__attribute__((__aligned__(4)))
-  #define __asm(A)
-  #define __stdargs
-  #define __regargs
-  #define _exit exit
-#elif defined(__PPC__)
+#if defined(__PPC__) || defined(__AROS__)
   #undef  __saveds
   #define __saveds
   #define __chip
@@ -111,8 +102,8 @@ extern struct Library *LayersBase;
 //extern struct Library *SysBase;
 
 extern char protect_flags[6];
-extern const char *specific_gadtext[5][6];
-extern const char *icon_type_names[];
+extern char *specific_gadtext[5][6];
+extern char *icon_type_names[];
 extern char protect_keys[6];
 
 extern struct DefaultString default_strings[];

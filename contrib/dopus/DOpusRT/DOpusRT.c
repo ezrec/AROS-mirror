@@ -54,16 +54,7 @@ the existing commercial status of Directory Opus 5.
 #include <debug.h>
 #endif
 
-#if defined(__AROS__)
-  #undef  __saveds
-  #define __saveds
-  #define __chip	__attribute__((section(".data.MEMF_CHIP")))
-  #define __aligned	__attribute__((__aligned__(4)))
-  #define __asm(A)
-  #define __stdargs
-  #define __regargs
-  #define _exit exit
-#elif defined(__PPC__)
+#if defined(__PPC__) || defined(__AROS__)
   #undef  __saveds
   #define __saveds
   #define __chip
@@ -76,7 +67,7 @@ the existing commercial status of Directory Opus 5.
 //extern struct DosLibrary *DOSBase;
 struct DOpusBase *DOpusBase = NULL;
 
-int main(int,char **);
+void main(int,char **);
 void WBRun(int,char **);
 int setarg(struct WBArg *,char *,BPTR);
 BPTR CloneCommandDir(const char *);
@@ -117,7 +108,7 @@ static inline LONG atoi(char *str)
   return i;
  }
 
-int main(argc,argv)
+void main(argc,argv)
 int argc;
 char *argv[];
 {

@@ -28,24 +28,24 @@ the existing commercial status of Directory Opus 5.
 
 */
 
-int main(int,char **);
+void main(int,char **);
 void get_vis_info(struct VisInfo *,char *);
-int dopus_message(int,APTR,char *);
+dopus_message(int,APTR,char *);
 void fill_out_req(struct RequesterBase *,struct VisInfo *);
 struct Gadget *addreqgadgets(struct RequesterBase *,struct TagItem **,int,int *);
-int check_error(struct RequesterBase *,const char *,int);
-int check_disk(struct RequesterBase *,struct IOExtTD *,char *,int);
-int check_abort(struct Window *window);
-int check_blank_disk(struct RequesterBase *,const char *,const char *);
+check_error(struct RequesterBase *,char *,int);
+check_disk(struct RequesterBase *,struct IOExtTD *,char *,int);
+check_abort(struct Window *window);
+check_blank_disk(struct RequesterBase *,char *,char *);
 void set_env(char *,struct Gadget *,int,struct DOpusListView *);
 void get_env(char *,struct Gadget *,int,struct DOpusListView *);
 void fix_listview(struct RequesterBase *,struct DOpusListView *);
 void select_device(struct DOpusListView *,char *);
-int like_devices(struct DeviceNode *,struct DeviceNode *);
+like_devices(struct DeviceNode *,struct DeviceNode *);
 void drive_motor(struct IOExtTD *,int);
 void show_sel_item(struct DOpusListView *);
 
-int open_device(char *,struct DeviceHandle *);
+open_device(char *,struct DeviceHandle *);
 void close_device(struct DeviceHandle *);
 
 char **get_device_list(struct DOpusRemember **,char *);
@@ -53,35 +53,24 @@ void sort_device_list(char **);
 struct DeviceNode *find_device(char *);
 void inhibit_drive(char *,ULONG);
 ULONG do_checksum(ULONG *);
-int do_writeblock(struct IOExtTD *,APTR,ULONG);
-void border_text(struct RequesterBase *,Object_Border *,const char *);
+do_writeblock(struct IOExtTD *,APTR,ULONG);
+void border_text(struct RequesterBase *,Object_Border *,char *);
 
 void diskop_format(struct VisInfo *,char *,int,char **);
 void show_device_info(struct RequesterBase *,Object_Border *,char *);
 void getsizestring(char *,ULONG);
 void getfloatstr(double,char *);
-int do_format(struct RequesterBase *,Object_Border *,char *,char *,ULONG,char);
-int do_initialise(struct IOExtTD *,char *,ULONG,ULONG,ULONG,ULONG,ULONG,ULONG);
-int do_raw_format(struct RequesterBase *,Object_Border *,struct IOExtTD *,ULONG,ULONG,ULONG,ULONG,ULONG);
+do_format(struct RequesterBase *,Object_Border *,char *,char *,ULONG,char);
+do_initialise(struct IOExtTD *,char *,ULONG,ULONG,ULONG,ULONG,ULONG,ULONG);
+do_raw_format(struct RequesterBase *,Object_Border *,struct IOExtTD *,ULONG,ULONG,ULONG,ULONG,ULONG);
 void write_trashcan(struct RequesterBase *,Object_Border *,char *);
 
 void diskop_diskcopy(struct VisInfo *,char *,int,char **);
 void show_diskcopy_info(struct RequesterBase *,Object_Border *,char *);
-int do_diskcopy(struct RequesterBase *,Object_Border *,char *,char *,int,int,int);
+do_diskcopy(struct RequesterBase *,Object_Border *,char *,char *,int,int,int);
 void bump_disk_name(char *);
 
 void diskop_install(struct VisInfo *,int,char **);
 void show_install_info(struct RequesterBase *,Object_Border *,char *);
-int install_compare_block(ULONG *,ULONG *,ULONG);
-int do_install(struct RequesterBase *,Object_Border *,char *,int,int);
-
-#ifdef __AROS__
-#include <exec/rawfmt.h>
-static inline void lsprintf(char *buf, const char *fmt, ...)
-{
-  va_list args;
-  va_start(args, fmt);
-  VNewRawDoFmt(fmt, RAWFMTFUNC_STRING, buf, args);
-  va_end(args);
-}
-#endif
+install_compare_block(ULONG *,ULONG *,ULONG);
+do_install(struct RequesterBase *,Object_Border *,char *,int,int);

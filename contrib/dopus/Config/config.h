@@ -35,16 +35,7 @@ the existing commercial status of Directory Opus 5.
   #define D(x)
 #endif
 
-#if defined(__AROS__)
-  #undef  __saveds
-  #define __saveds
-  #define __chip	__attribute__((section(".data.MEMF_CHIP")))
-  #define __aligned	__attribute__((__aligned__(4)))
-  #define __asm(A)
-  #define __stdargs
-  #define __regargs
-  #define _exit exit
-#elif defined(__PPC__)
+#if defined(__PPC__) || defined(__AROS__)
   #undef  __saveds
   #define __saveds
   #define __chip
@@ -533,13 +524,14 @@ struct ColourSel {
 
 extern struct ColourSel coloursel[];
 
-extern const char
+extern char
     *mainmenugads[14],
     *listviewgads[3],
     *listviewgads2[4],
     *operationgads[14],
     *systemgads[14],
     *gadgetgads[11],
+    *functypelist[],
     ftype_funcmap[],
     *functypestr[],
     *editfuncgads[6],
@@ -569,9 +561,6 @@ extern const char
     *hotkeysgadgets[],
     *windownames[2],*errorcheckingtxt[],*separatenames[3];
 
-extern char
-    *functypelist[];
-
 extern struct ConfigGadget
     *operationgadgets[8],*systemgadgets[9],scr_generalgadgets[];
 
@@ -596,8 +585,7 @@ struct ConfigUndo {
 };
 
 extern struct ConfigUndo *makeundo();
-extern char *getcopy(),*compilefunclist(),**makefiletypelist();
-extern unsigned char **makeclasslist();
+extern char *getcopy(),*compilefunclist(),**makefiletypelist(),**makeclasslist();
 extern struct dopusgadgetbanks *lastbank();
 
 extern int fontplaceflags[],fontplacevals[];
@@ -706,7 +694,7 @@ extern char *helpbuffer;
 extern int helpsize;
 extern char currenthelpname[256];
 
-extern unsigned char **fileclasslist;
+extern char **fileclasslist;
 extern char *fileclasstype[];
 extern char maxlength[5];
 
@@ -722,10 +710,9 @@ extern struct AppMessage *appmsg;
 extern unsigned char *fileview_buf;
 extern int fileview_lines,fileview_size,fileview_topline,fileview_type,fileview_oldtop;
 extern int fileview_offset,fileview_position;
-extern const char *fileview_types[];
+extern char *fileview_types[];
 
-extern char *icontypes[];
-extern const char *palettenames[14],*fontplacenames[FONT_COUNT+1];
+extern char *icontypes[],*palettenames[14],*fontplacenames[FONT_COUNT+1];
 
 extern struct IntuiText
     newtext,opentext,savetext,saveastext,cuttext,copytext,
@@ -735,7 +722,7 @@ extern struct IntuiText
 
 extern int network;
 
-extern const char *ftype_funcs[];
+extern char *ftype_funcs[];
 
 extern struct StringData stringdata;
 
@@ -803,7 +790,7 @@ extern struct DOpusRemember *borderkey;
 extern short palettegad_xy[16][4];
 extern int bpg;
 
-extern const char *left_right_cycle[3];
+extern char *left_right_cycle[3];
 
 #include "configstrings.h"
 

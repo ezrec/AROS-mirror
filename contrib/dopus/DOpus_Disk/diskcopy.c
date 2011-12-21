@@ -196,7 +196,7 @@ char *argv[];
 
 	diskcopyreq.rb_extend=NULL;
 	diskcopyreq.rb_idcmpflags=0;
-	diskcopyreq.rb_string_table=(APTR)string_table;
+	diskcopyreq.rb_string_table=string_table;
 
 	if (!(window=OpenRequester(&diskcopyreq)) ||
 		!(gadlist=addreqgadgets(&diskcopyreq,diskcopy_gadgets,0,&gadcount)) ||
@@ -419,7 +419,7 @@ char *name;
 	myproc->pr_WindowPtr=wsave;
 }
 
-int do_diskcopy(reqbase,border,source,dest,verify,bump,check)
+do_diskcopy(reqbase,border,source,dest,verify,bump,check)
 struct RequesterBase *reqbase;
 Object_Border *border;
 char *source,*dest;

@@ -115,7 +115,7 @@ int __saveds DoAssign(register char *name __asm("a0"), register char *dir __asm(
     return(ASSIGN_NODEV);
 }
 
-char * __saveds DoBaseName(register const char *path __asm("a0"))
+char * __saveds DoBaseName(register char *path __asm("a0"))
 {
     return FilePart(path);
 /*
@@ -164,7 +164,7 @@ int __saveds DoPathName(register BPTR lock __asm("a0"), register char *buf __asm
     return((int)strlen(buf));
 }
 
-int __saveds DoTackOn(register char *path __asm("a0"), register const char *file __asm("a1"), register int len __asm("d0"))
+int __saveds DoTackOn(register char *path __asm("a0"), register char *file __asm("a1"), register int len __asm("d0"))
 {
     int a;
 
@@ -256,7 +256,7 @@ int __saveds DoSearchPathList(register char *name __asm("a0"), register char *bu
     return(pass);
 }
 
-int __saveds DoCheckExist(register const char *name __asm("a0"), register int *size __asm("a1"))
+int __saveds DoCheckExist(register char *name __asm("a0"), register int *size __asm("a1"))
 {
     int a=0;
     BPTR lock;

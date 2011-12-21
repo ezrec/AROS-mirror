@@ -48,16 +48,7 @@ the existing commercial status of Directory Opus 5.
   #define D(x)
 #endif
 
-#if defined(__AROS__)
-  #undef  __saveds
-  #define __saveds
-  #define __chip	__attribute__((section(".data.MEMF_CHIP")))
-  #define __aligned	__attribute__((__aligned__(4)))
-  #define __asm(A)
-  #define __stdargs
-  #define __regargs
-  #define _exit exit
-#elif defined(__PPC__)
+#if defined(__PPC__) || defined(__AROS__)
   #undef  __saveds
   #define __saveds
   #define __chip
@@ -128,7 +119,7 @@ extern struct Library *LayersBase;
 int __saveds DoAssign(register char *name __asm("a0"),
     register char *dir __asm("a1"));
 
-char *__saveds DoBaseName(register const char *path __asm("a0"));
+char *__saveds DoBaseName(register char *path __asm("a0"));
 
 int __saveds DoCompareLock(register BPTR l1 __asm("a0"),
     register BPTR l2 __asm("a1"));
@@ -143,7 +134,7 @@ int __saveds DoSendPacket(register struct MsgPort *port __asm("a0"),
     register int nargs __asm("d1"));
 
 int __saveds DoTackOn(register char *path __asm("a0"),
-    register const char *file __asm("a1"),
+    register char *file __asm("a1"),
     register int len __asm("d0"));
 
 void __saveds DoStampToStr(register struct DOpusDateTime *dt __asm("a0"));
@@ -172,12 +163,12 @@ void __saveds DoDoArrow(register struct RastPort * __asm("a0"),
     register int __asm("d6"));
 
 int __saveds DoStrCombine(register char *buf __asm("a0"),
-    register const char *one __asm("a1"),
-    register const char *two __asm("a2"),
+    register char *one __asm("a1"),
+    register char *two __asm("a2"),
     register int lim __asm("d0"));
 
 int __saveds DoStrConcat(register char *buf __asm("a0"),
-    register const char *cat __asm("a1"),
+    register char *cat __asm("a1"),
     register int lim __asm("d0"));
 
 void __saveds DoDecode_RLE(register char *source __asm("a0"),
@@ -190,7 +181,7 @@ int __saveds DoSearchPathList(register char * __asm("a0"),
     register char * __asm("a1"),
     register int __asm("d0"));
 
-int __saveds DoCheckExist(register const char * __asm("a0"),
+int __saveds DoCheckExist(register char * __asm("a0"),
     register int * __asm("a1"));
 
 int __saveds DoRawkeyToStr(register UWORD __asm("d0"),
@@ -204,7 +195,7 @@ int __saveds DoDoRMBGadget(register struct RMBGadget * __asm("a0"),
 
 int __saveds DoAddGadgets(register struct Window * __asm("a0"),
     register struct Gadget * __asm("a1"),
-    register const char ** __asm("a2"),
+    register char ** __asm("a2"),
     register int __asm("d0"),
     register int __asm("d1"),
     register int __asm("d2"),
@@ -228,7 +219,7 @@ int __saveds DoDoSimpleRequest(register struct Window * __asm("a0"),
 
 void __saveds DoDoCycleGadget(register struct Gadget * __asm("a0"),
     register struct Window * __asm("a1"),
-    register const char ** __asm("a2"),
+    register char ** __asm("a2"),
     register int __asm("d0"));
 
 void __saveds DoDrawRadioButton(register struct RastPort * __asm("a0"),
@@ -253,7 +244,7 @@ struct Image *__saveds DoGetCheckImage(register UBYTE fg __asm("d0"),
     register struct DOpusRemember **key __asm("a0"));
 
 void __saveds DoUScoreText(register struct RastPort * __asm("a0"),
-    register const char * __asm("a1"),
+    register char * __asm("a1"),
     register int __asm("d0"),
     register int __asm("d1"),
     register int __asm("d2"));
@@ -263,7 +254,7 @@ void __saveds DoDo3DFrame(register struct RastPort * __asm("a0"),
     register int __asm("d1"),
     register int __asm("d2"),
     register int __asm("d3"),
-    register const char * __asm("a1"),
+    register char * __asm("a1"),
     register int __asm("d4"),
     register int __asm("d5"));
 
@@ -288,13 +279,13 @@ int __saveds DoGetDevices(register struct ConfigStuff * __asm("a0"));
 void __saveds DoAssignGadget(register struct ConfigStuff * __asm("a0"),
     register int __asm("d0"),
     register int __asm("d1"),
-    register const char * __asm("a1"),
-    register const char * __asm("a2"));
+    register char * __asm("a1"),
+    register char * __asm("a2"));
 
 void __saveds DoAssignMenu(register struct ConfigStuff * __asm("a0"),
     register int __asm("d0"),
-    register const char * __asm("a1"),
-    register const char * __asm("a2"));
+    register char * __asm("a1"),
+    register char * __asm("a2"));
 
 void __saveds DoFreeConfig(register struct ConfigStuff * __asm("a0"));
 
@@ -378,7 +369,7 @@ void __saveds R_ObjectText(register struct RequesterBase *reqbase __asm("a0"),
     register short top __asm("d1"),
     register short width __asm("d2"),
     register short height __asm("d3"),
-    register const char *text __asm("a1"),
+    register char *text __asm("a1"),
     register unsigned short textpos __asm("d4"));
 
 /* language.c */
@@ -422,19 +413,19 @@ void Seed(register int seed __asm("d0"));
 UWORD Random(register UWORD limit __asm("d0"));
 void BtoCStr(register BSTR bstr __asm("a0"), register char *cstr __asm("a1"), register int len __asm("d0"));
 void SwapMem(register char *src __asm("a0"), register char *dst __asm("a1"), register int size __asm("d0"));
-__stdargs void LSprintf(char *buf, const char *fmt, ...);
+__stdargs void LSprintf(char *buf, char *fmt, ...);
 unsigned char LToUpper(register unsigned char c __asm("d0"));
 unsigned char LToLower(register unsigned char c __asm("d0"));
 void StrToUpper(register unsigned char *src __asm("a0"), register unsigned char *dst __asm("a1"));
 void StrToLower(register unsigned char *src __asm("a0"), register unsigned char *dst __asm("a1"));
-void LStrnCat(register char *s1 __asm("a0"), register const char *s2 __asm("a1"), register int len __asm("d0"));
-void LStrCat(register char *s1 __asm("a0"), register const char *s2 __asm("a1"));
-void LStrCpy(register char *dst __asm("a0"), register const char *src __asm("a1"));
-void LStrnCpy(register char *dst __asm("a0"), register const char *src __asm("a1"), register int len __asm("d0"));
-int LStrnCmpI(register const char *s1 __asm("a0"), register const char *s2 __asm("a1"), register int len __asm("d0"));
-int LStrCmpI(register const char *s1 __asm("a0"), register const char *s2 __asm("a1"));
-int LStrnCmp(register const char *s1 __asm("a0"), register const char *s2 __asm("a1"), register int len __asm("d0"));
-int LStrCmp(register const char *s1 __asm("a0"), register const char *s2 __asm("a1"));
+void LStrnCat(register char *s1 __asm("a0"), register char *s2 __asm("a1"), register int len __asm("d0"));
+void LStrCat(register char *s1 __asm("a0"), register char *s2 __asm("a1"));
+void LStrCpy(register char *dst __asm("a0"), register char *src __asm("a1"));
+void LStrnCpy(register char *dst __asm("a0"), register char *src __asm("a1"), register int len __asm("d0"));
+int LStrnCmpI(register char *s1 __asm("a0"), register char *s2 __asm("a1"), register int len __asm("d0"));
+int LStrCmpI(register char *s1 __asm("a0"), register char *s2 __asm("a1"));
+int LStrnCmp(register char *s1 __asm("a0"), register char *s2 __asm("a1"), register int len __asm("d0"));
+int LStrCmp(register char *s1 __asm("a0"), register char *s2 __asm("a1"));
 
 void Do3DBox(register struct RastPort *rp __asm("a0"),register int x __asm("d0"),register int y __asm("d1"),register int w __asm("d2"),register int h __asm("d3"),register int tp __asm("d4"),register int bp __asm("d5"));
 void Do3DStringBox(register struct RastPort *rp __asm("a0"),register int x __asm("d0"),register int y __asm("d1"),register int w __asm("d2"),register int h __asm("d3"),register int tp __asm("d4"),register int bp __asm("d5"));
@@ -485,7 +476,7 @@ enum {
     STR_STRING_COUNT
 };
 
-extern const char **string_table;
+extern char **string_table;
 
 void initstrings(void);
 

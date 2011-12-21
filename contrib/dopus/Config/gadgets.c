@@ -30,18 +30,16 @@ the existing commercial status of Directory Opus 5.
 
 #include "config.h"
 
-const char
+char
     *mainmenugads[14],
     *listviewgads[3],
     *listviewgads2[4],
     *operationgads[14],
     *systemgads[14],
     *gadgetgads[11],
-    *gadflaglist[17];
-char
-    *functypelist[14];
+    *gadflaglist[17],
+    *functypelist[14],
 
-const char
     ftype_funcmap[]={
         FTFUNC_CLICKMCLICK,
         FTFUNC_DOUBLECLICK,
@@ -279,9 +277,9 @@ struct DOpusListView
     editlists[3]={
         {EDIT_FUNCTIONS,NULL,0,0,464,40,NULL,NULL,NULL,DLVF_ENDNL|DLVF_LEAVE|DLVF_HIREC,8,
         0,0,0,0,0,0,0,0,0,0,-1,&editlists[1]},
-        {EDIT_FLAGS,NULL,0,0,226,40,NULL,(char **)gadflaglist,NULL,
+        {EDIT_FLAGS,NULL,0,0,226,40,NULL,gadflaglist,NULL,
         DLVF_MULTI|DLVF_CHECK|DLVF_SLOW|DLVF_HIREC,8,0,0,0,0,0,0,0,0,0,0,-1,NULL},
-        {EDIT_FUNCTIONTYPE,NULL,0,0,272,48,NULL,(char **)functypelist,NULL,
+        {EDIT_FUNCTIONTYPE,NULL,0,0,272,48,NULL,functypelist,NULL,
         DLVF_SLOW|DLVF_LEAVE|DLVF_HIREC,8,0,0,0,0,0,0,0,0,0,0,-1,NULL}},
     editclasslist={
         1,NULL,0,0,580,48,NULL,NULL,NULL,DLVF_LEAVE|DLVF_ENDNL|DLVF_HIREC,8,
@@ -610,7 +608,7 @@ extern UBYTE glass_data[2][36];
 extern UBYTE uparrow_data[];
 extern UBYTE downarrow_data[];
 
-const char
+char
     *windownames[2],
     *separatenames[3];
 

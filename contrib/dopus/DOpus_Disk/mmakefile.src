@@ -7,8 +7,7 @@ USER_CFLAGS := -I$(DOPUSDIR)/Development/include \
     -I$(SRCDIR)/$(CURDIR)/../include \
     -D__REXXSYSLIB_STDLIBBASE__ \
     -D__UTILITY_STDLIBBASE__ \
-    -D__LOCALE_STDLIBBASE__ \
-    -Wno-parentheses
+    -D__LOCALE_STDLIBBASE__
 
 %build_prog mmake=DOpus_Disk \
     progname=DOpus_Disk targetdir=$(DOPUSDIR)/Modules \

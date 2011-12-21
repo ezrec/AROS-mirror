@@ -95,7 +95,7 @@ const static struct NewWindow defaultwindow={
     WFLG_SMART_REFRESH|WFLG_NOCAREREFRESH|WFLG_ACTIVATE|WFLG_RMBTRAP|WFLG_DRAGBAR,
     NULL,NULL,NULL,NULL,NULL,0,0,0,0,CUSTOMSCREEN};
 
-const char *devtypes[5]={"  <DEV>","  <ASN>","  <VOL>","  <DFR>","  <NBD>"};
+char *devtypes[5]={"  <DEV>","  <ASN>","  <VOL>","  <DFR>","  <NBD>"};
 
 extern char nullstring[];
 

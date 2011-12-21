@@ -51,7 +51,7 @@ struct RequesterBase {
 	struct TextFont *rb_font;            /* Requester font                 */
 	char *rb_screenname;                 /* Screen name to open on         */
 	struct Screen *rb_screen;            /* Screen pointer to open on      */
-	const char *rb_title;                /* Window title (RBF_BORDERS)     */
+	char *rb_title;                      /* Window title (RBF_BORDERS)     */
 
 	struct DOpusRemember *rb_memory;     /* Memory key                     */
 	struct RequesterObject *rb_objects;  /* Requester objects              */
@@ -63,7 +63,7 @@ struct RequesterBase {
 	ULONG rb_idcmpflags;                 /* IDCMP flags or 0 for standard  */
 
 	APTR rb_privatedata;                 /* Private requester data         */
-	const char **rb_string_table;              /* String table (RBF_STRINGS)     */
+	char **rb_string_table;              /* String table (RBF_STRINGS)     */
 };
 
 /* rb_flags */

@@ -93,7 +93,7 @@ trysave:
     unbusy();
 }
 
-int doload(type,def)
+doload(type,def)
 int type,def;
 {
     char *path,buf[80],*menulist[6],menuarray[6],**ftypelist,*typearray;
@@ -380,8 +380,8 @@ struct Config *config1,*config2;
     LFreeRemember(&key);
 }
 
-int dolistwindow(title,w,h,items,flags,selarray,item)
-const char *title;
+dolistwindow(title,w,h,items,flags,selarray,item)
+char *title;
 int w,h;
 char **items;
 int flags;
@@ -393,7 +393,7 @@ int *item;
     ULONG class;
     UWORD code;
     int a,gadgetid,all=1,count;
-    const char **gadtxt;
+    char **gadtxt;
 
     listlist.w=w;
     listlist.h=h;
@@ -419,7 +419,7 @@ int *item;
     listlist.itemselected=-1;
     setuplist(&listlist,-1,-1);
 
-    requestwin.Title=(char *)title;
+    requestwin.Title=title;
 
     if (!(wind=openwindow(&requestwin))) return(0);
 
@@ -510,7 +510,7 @@ char **funclist,*functype,*flagsel;
     unbusy();
 }
 
-int pasteclip(func,funclist,functype,displist,flagsel)
+pasteclip(func,funclist,functype,displist,flagsel)
 struct dopusfunction *func;
 char **funclist,*functype,**displist,*flagsel;
 {

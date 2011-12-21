@@ -30,7 +30,7 @@ the existing commercial status of Directory Opus 5.
 
 #include "diskop.h"
 
-int main(argc,argv)
+void main(argc,argv)
 int argc;
 char *argv[];
 {
@@ -107,7 +107,7 @@ char *argv[];
 			else stringname[0]=0;
 
 			if (ReadStringFile(stringdata,stringname)) {
-				string_table=(const char **)stringdata->string_table;
+				string_table=stringdata->string_table;
 
 				switch (argv[1][0]) {
 					case 'f':
@@ -175,7 +175,7 @@ char *portname;
 	}
 }
 
-int dopus_message(cmd,data,portname)
+dopus_message(cmd,data,portname)
 int cmd;
 APTR data;
 char *portname;
@@ -250,13 +250,13 @@ int mask,*count;
 
 int error_rets[]={1,0};
 
-int check_error(reqbase,str,gadtxt)
+check_error(reqbase,str,gadtxt)
 struct RequesterBase *reqbase;
-const char *str;
+char *str;
 int gadtxt;
 {
 	struct DOpusSimpleRequest req;
-	const char *error_gads[3];
+	char *error_gads[3];
 
 	req.text=str;
 	error_gads[0]=string_table[gadtxt];
@@ -286,7 +286,7 @@ ULONG *sector;
 	return(sum);
 }
 
-int do_writeblock(device_req,buffer,offset)
+do_writeblock(device_req,buffer,offset)
 struct IOExtTD *device_req;
 APTR buffer;
 ULONG offset;
@@ -318,7 +318,7 @@ ULONG state;
 void border_text(reqbase,border,infobuf)
 struct RequesterBase *reqbase;
 Object_Border *border;
-const char *infobuf;
+char *infobuf;
 {
 	struct RastPort *rp;
 
@@ -460,7 +460,7 @@ char **table;
 			}
 }
 
-int check_disk(reqbase,device_req,name,prot)
+check_disk(reqbase,device_req,name,prot)
 struct RequesterBase *reqbase;
 struct IOExtTD *device_req;
 char *name;
@@ -491,7 +491,7 @@ int prot;
 	return(1);
 }
 
-int check_abort(window)
+check_abort(window)
 struct Window *window;
 {
 	struct IntuiMessage *msg;
@@ -505,9 +505,9 @@ struct Window *window;
 	return(abort);
 }
 
-int check_blank_disk(reqbase,device,action)
+check_blank_disk(reqbase,device,action)
 struct RequesterBase *reqbase;
-const char *device,*action;
+char *device,*action;
 {
 	BPTR lock;
 	struct InfoData __aligned info;
@@ -705,7 +705,7 @@ char *exclude;
 	list->topitem=def;
 }
 
-int like_devices(node,likenode)
+like_devices(node,likenode)
 struct DeviceNode *node,*likenode;
 {
 	struct DosEnvec *envec,*likeenvec;
@@ -725,7 +725,7 @@ struct DeviceNode *node,*likenode;
 	return(1);
 }
 
-int open_device(device,handle)
+open_device(device,handle)
 char *device;
 struct DeviceHandle *handle;
 {

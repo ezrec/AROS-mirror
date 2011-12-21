@@ -91,6 +91,6 @@ enum {
 
 	STR_STRING_COUNT};
 
-extern const char **string_table;
+extern char **string_table;
 
 #endif

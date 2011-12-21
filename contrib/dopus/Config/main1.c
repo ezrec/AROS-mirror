@@ -33,7 +33,7 @@ the existing commercial status of Directory Opus 5.
 
 static char displenmap[]={DISPLAY_NAME,DISPLAY_COMMENT,DISPLAY_FILETYPE,DISPLAY_OWNER,DISPLAY_GROUP};
 
-int dooperationconfig(void)
+dooperationconfig()
 {
     ULONG class;
     UWORD code,gadgetid,qual;
@@ -341,7 +341,7 @@ clearlast:
     }
 }
 
-int dosystemconfig()
+dosystemconfig()
 {
     ULONG class;
     UWORD code,gadgetid,qual,hotcode,hotqual;
@@ -772,7 +772,7 @@ struct Gadget *fgad;
     }
 }
 
-int fixformlist(win)
+fixformlist(win)
 int win;
 {
     int a,b,d;
@@ -805,7 +805,7 @@ int win;
     RefreshGList(&formatgads[6],Window,NULL,-1/*lim*/); //HUX was 5
 }
 
-int system_requester(buf,buf2,gad,bit)
+system_requester(buf,buf2,gad,bit)
 char *buf,*buf2;
 struct Gadget *gad;
 int bit;

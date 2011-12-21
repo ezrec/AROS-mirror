@@ -528,7 +528,7 @@ int type;
 
 void makespecialdir(win,title)
 int win;
-const char *title;
+char *title;
 {
     freedir(dopus_specialwin[win],win);
     if (dopus_curwin[win]!=dopus_specialwin[win]) {

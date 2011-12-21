@@ -378,7 +378,7 @@ enum {
 	STR_PROTECT_CANCEL=413,
     STR_STRING_COUNT};
 
-extern const char **globstring;
+extern char **globstring;
 extern char str_okaystring[30];
 extern char str_cancelstring[30];
 

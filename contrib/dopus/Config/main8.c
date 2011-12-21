@@ -33,7 +33,7 @@ the existing commercial status of Directory Opus 5.
 static struct DOpusRemember *hkey;
 static char **hotkeylist;
 
-int dohotkeysconfig()
+dohotkeysconfig()
 {
     ULONG class;
     UWORD code,gadgetid;
@@ -223,7 +223,7 @@ void makehotkeylist()
     RefreshListView(&hotkeyslist,1);
 }
 
-int doedithotkey(hotkey)
+doedithotkey(hotkey)
 struct dopushotkey *hotkey;
 {
     int a;
@@ -250,7 +250,7 @@ int x1,y1,bc,tc;
     SetDrMd(r,JAM2);
 }
 
-int fixrmbimage(rmb,gad,on,x,y)
+fixrmbimage(rmb,gad,on,x,y)
 struct RMBGadget *rmb;
 struct Gadget *gad;
 int on,x,y;

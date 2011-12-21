@@ -260,8 +260,8 @@ D(bug("Simulating RMB click\n"));
     }
 }
 
-const char *getfiledescription(name,win)
-const char *name;
+char *getfiledescription(name,win)
+char *name;
 int win;
 {
     int a;

@@ -373,9 +373,7 @@ struct DateStamp *ds;
     struct InfoData __aligned info;
     BPTR lock1;
     struct FileLock *lock2;
-#ifndef __AROS__
     char *p;
-#endif
     struct DeviceList *dl;
     int a;
 
@@ -383,12 +381,8 @@ struct DateStamp *ds;
     lock2=(struct FileLock *) BADDR(lock1);
     for (a=0;a<FILEBUF_SIZE;a++) name[a]=0;
     dl=(struct DeviceList *)BADDR(lock2->fl_Volume);
-#ifdef __AROS__
-    LStrnCpy(name, AROS_BSTR_ADDR(dl->dl_Name), AROS_BSTR_strlen(dl->dl_Name));
-#else
     p=(char *) BADDR(dl->dl_Name);
     if (p) LStrnCpy(name,p+1,*p);
-#endif
     if (ds) CopyMem((char *)&dl->dl_VolumeDate,(char *)ds,sizeof(struct DateStamp));
     Info(lock1,&info);
     UnLock(lock1);

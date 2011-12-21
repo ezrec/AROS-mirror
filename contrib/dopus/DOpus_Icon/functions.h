@@ -28,18 +28,7 @@ the existing commercial status of Directory Opus 5.
 
 */
 
-#ifdef __AROS__
-#include <exec/rawfmt.h>
-static inline void lsprintf(char *buf, const char *fmt, ...)
-{
-  va_list args;
-  va_start(args, fmt);
-  VNewRawDoFmt(fmt, RAWFMTFUNC_STRING, buf, args);
-  va_end(args);
-}
-#else
-void lsprintf(char *,char *,...);
-#endif
+//void lsprintf __ARGS((char *,char *,...));
 
 void get_vis_info(struct VisInfo *,char *);
 int dopus_message(int,APTR,char *);

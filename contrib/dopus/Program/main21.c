@@ -560,7 +560,7 @@ int num;
 
 int gettextlength(font,text,len,width)
 struct TextFont *font;
-const char *text;
+char *text;
 int *len,width;
 {
     struct RastPort testrast;
@@ -572,7 +572,7 @@ int *len,width;
 
 int dotextlength(r,text,len,width)
 struct RastPort *r;
-const char *text;
+char *text;
 int *len,width;
 {
     int l,x=0;

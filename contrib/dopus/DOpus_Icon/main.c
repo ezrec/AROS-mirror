@@ -86,7 +86,7 @@ char *argv[];
 	else stringname[0]=0;
 
 	if (ReadStringFile(&stringdata,stringname)) {
-		string_table=(const char **)stringdata.string_table;
+		string_table=stringdata.string_table;
 
 		setup_strings();
 

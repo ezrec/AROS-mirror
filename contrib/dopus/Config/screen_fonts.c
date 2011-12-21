@@ -32,7 +32,7 @@ the existing commercial status of Directory Opus 5.
 
 #define ABS(x) ((x)<0?-(x):(x))
 
-int initfontlist(num,move,flags)
+initfontlist(num,move,flags)
 int num,move,flags;
 {
     int a,b,dist=0,one,val,size=-1;

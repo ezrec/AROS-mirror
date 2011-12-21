@@ -43,14 +43,14 @@ the existing commercial status of Directory Opus 5.
 #endif
 
 extern struct IntuiText defaulttext[];
-extern const char *devtypes[];
+extern char *devtypes[];
 
 typedef struct {
     ULONG ckID;
     ULONG ckSize;
 } ChunkHeader;
 
-const char **string_table;
+char **string_table;
 
 const struct DefaultString default_strings[] =
 {
@@ -83,12 +83,12 @@ const struct DefaultString default_strings[] =
 
 void initstrings(void)
 {
-    defaulttext[0].IText=(UBYTE *)string_table[STR_FILEREQ_FILE];
-    defaulttext[1].IText=(UBYTE *)string_table[STR_FILEREQ_DRAWER];
-    defaulttext[2].IText=(UBYTE *)string_table[STR_FILEREQ_ACCEPT];
-    defaulttext[3].IText=(UBYTE *)string_table[STR_CANCEL];
-    defaulttext[4].IText=(UBYTE *)string_table[STR_FILEREQ_PARENT];
-    defaulttext[5].IText=(UBYTE *)string_table[STR_FILEREQ_DRIVES];
+    defaulttext[0].IText=string_table[STR_FILEREQ_FILE];
+    defaulttext[1].IText=string_table[STR_FILEREQ_DRAWER];
+    defaulttext[2].IText=string_table[STR_FILEREQ_ACCEPT];
+    defaulttext[3].IText=string_table[STR_CANCEL];
+    defaulttext[4].IText=string_table[STR_FILEREQ_PARENT];
+    defaulttext[5].IText=string_table[STR_FILEREQ_DRIVES];
 
     devtypes[0] = string_table[STR_DEV_DEV];
     devtypes[1] = string_table[STR_DEV_ASN];
@@ -100,7 +100,7 @@ void initstrings(void)
 int __saveds DoReadStringFile(register struct StringData *stringdata __asm("a0"), register char *filename __asm("a1"))
 {
     int a;
-    const struct DefaultString *defstr;
+    struct DefaultString *defstr;
 //    BPTR file;
 
 //D(bug("ReadStringFile(%lx,%s)\n",stringdata,filename);Delay(50));
@@ -220,7 +220,7 @@ D(bug("catalog: %s\tlanguage: %s\n",catname,lang));
         for (a = 0; a < stringdata->string_count; a++)
          {
           if (!defstr[a].string) break;
-          stringdata->string_table[defstr[a].string_id]=(char *)GetCatalogStr(stringdata->catalog,defstr[a].string_id,defstr[a].string);
+          stringdata->string_table[defstr[a].string_id]=GetCatalogStr(stringdata->catalog,defstr[a].string_id,defstr[a].string);
 //D(bug("%ld\t%s\n",defstr[a].string_id,GetCatalogStr(stringdata->catalog,defstr[a].string_id,defstr[a].string)));
          }
        }
