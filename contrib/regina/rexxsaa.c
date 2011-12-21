@@ -1329,7 +1329,7 @@ EXPORT_C APIRET APIENTRY RexxVariablePool(PSHVBLOCK RequestBlockList )
                   else
                      Req->shvret |= RXSHV_BADN ;
 
-                  if (!Req->shvret | RXSHV_BADN)
+                  if (!(Req->shvret & RXSHV_BADN))
                   {
                      rc=IfcVarPool( TSD, Code, Lengths, Strings, &allocated );
                      FillReqValue( Req, Lengths[0], Strings[0] ) ;
