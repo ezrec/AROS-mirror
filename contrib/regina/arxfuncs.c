@@ -942,7 +942,7 @@ streng *arexx_trim( tsd_t *TSD, cparamboxptr parm1 )
   parm = *parm1;
   parm.next = (paramboxptr)&T_parm;
 
-  return std_strip( TSD, parm1 );
+  return std_strip( TSD, &parm );
 }
 
 
