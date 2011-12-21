@@ -196,7 +196,6 @@ static streng *pack_hex( tsd_t *TSD, const char *bif, const streng *string )
    char *res_ptr=NULL ;       /* ptr to current char in output string */
    int byte_boundary=0 ;      /* boolean, are we at at byte bounary? */
    int count;                 /* used to count positions */
-   int last_blank=0;          /* used to report last byte errors */
 
    /*
     * Allow one extra char for padding, ignore that allocated string
@@ -252,7 +251,6 @@ static streng *pack_hex( tsd_t *TSD, const char *bif, const streng *string )
           * Just make sure that this space occurs at a byte boundary,
           * except from that, ignore it.
           */
-         last_blank = count;
          if (!byte_boundary)
          {
             goto invalid;

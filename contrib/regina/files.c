@@ -2404,7 +2404,7 @@ static streng *readoneline( tsd_t *TSD, fileboxptr ptr )
 static int positionfile_SEEK_SET( tsd_t *TSD, const char *bif, int argno, fileboxptr ptr, int oper, int lineno )
 {
    int ch=0x00 ;
-   int from_line=0, old_errno=0, tmp=0 ;
+   int from_line=0, tmp=0 ;
    long from_char=0L ;
    int ret;
 
@@ -2552,7 +2552,6 @@ static int positionfile_SEEK_SET( tsd_t *TSD, const char *bif, int argno, filebo
           * It will also happen if we are seeking backwards for the
           * first line.
           */
-         old_errno = errno ;
          errno = 0 ;
          if (fseek(ptr->fileptr,0,SEEK_SET))
          {
@@ -3555,7 +3554,7 @@ static int calc_chars_left( tsd_t *TSD, fileboxptr ptr )
    int left=0 ;
    long oldpoint=0L, newpoint=0L ;
 
-   if (! ptr->flag & FLAG_READ)
+   if (! (ptr->flag & FLAG_READ))
       return 0 ;
 
    /*
@@ -3957,7 +3956,7 @@ static streng *getstatus( tsd_t *TSD, const streng *filename , int subcommand )
    char tmppwd[50];
    char tmpgrp[50];
    char *ptmppwd=tmppwd,*ptmpgrp=tmpgrp;
-#if !(defined(VMS) || defined(MAC) || defined(OS2) || defined(DOS) || (defined (__WATCOMC__) && !defined(__QNX__)) || defined(_MSC_VER) || (defined(WIN32) && defined(__IBMC__)) || defined(__MINGW32__) || defined(__BORLANDC__) || defined(__EPOC32__) || defined(__LCC__))
+#if !(defined(VMS) || defined(MAC) || defined(OS2) || defined(DOS) || (defined (__WATCOMC__) && !defined(__QNX__)) || defined(_MSC_VER) || (defined(WIN32) && defined(__IBMC__)) || defined(__MINGW32__) || defined(__BORLANDC__) || defined(__EPOC32__) || defined(__LCC__) || defined(__AROS__))
    struct passwd *ppwd;
    struct group *pgrp;
 #endif
@@ -4057,7 +4056,7 @@ static streng *getstatus( tsd_t *TSD, const streng *filename , int subcommand )
                (long)(buffer.st_dev), (long)(buffer.st_ino),
                buffer.st_mode & ACCESSPERMS, buffer.st_nlink,
                ptmppwd, ptmpgrp,
-               (off_t)(buffer.st_size) ) ;
+               (long long)(buffer.st_size) ) ;
          else
             sprintf( result->value,
                "%ld %ld %03o %d %s %s %ld",
@@ -4091,7 +4090,7 @@ static streng *getstatus( tsd_t *TSD, const streng *filename , int subcommand )
          {
             result = Str_makeTSD( 50 ) ;
             if ( sizeof(off_t) == 8 )
-               sprintf( result->value, "%lld", (off_t)(buffer.st_size) ) ;
+               sprintf( result->value, "%lld", (long long)(buffer.st_size) ) ;
             else
                sprintf( result->value, "%ld", (long)(buffer.st_size) ) ;
          }
@@ -4495,13 +4494,12 @@ static streng *getseek( tsd_t *TSD, const streng *filename, const streng *cmd )
    int seek_sign=0;
    long seek_offset=0,pos=0;
    int pos_type=OPER_NONE,num_params=0;
-   int str_start=0,str_end=(-1),words;
+   int str_start=0,str_end=(-1);
    fileboxptr ptr;
    streng *result=NULL;
    char buf[20];
 
    str = str_ofTSD(cmd);
-   words = 4;
    for (i=0;i<Str_len(cmd);i++)
    {
       switch(state)
@@ -4685,6 +4683,8 @@ streng *std_chars( tsd_t *TSD, cparamboxptr parms )
 
    if (parms&&parms->next&&parms->next->value)
       opt = getoptionchar( TSD, parms->next->value, "CHARS", 2, "CN", "" ) ;
+
+   (void)opt; // Unused for now
 
    string = (parms->value && parms->value->len) ? parms->value : ft->stdio_ptr[0]->filename0 ;
    /*

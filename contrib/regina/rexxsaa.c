@@ -463,6 +463,7 @@ int IfcSubCmd( tsd_t *TSD, int EnvLen, const char *EnvStr,
          MAKERXSTRING( Ret, subcmd_result + ILLEGAL_USE_SIZE, RXAUTOBUFLEN) ;
          OldResult = subcmd_result + ILLEGAL_USE_SIZE ;
          rvalue = handler( &Cmd, &Flags, &Ret ) ;
+         (void)rvalue; // FIXME: Should this be tested?
          TSD->var_indicator = 0;
          if (Flags==RXSUBCOM_OK)
             RCode = RXFLAG_OK ;
@@ -1210,12 +1211,10 @@ EXPORT_C APIRET APIENTRY RexxVariablePool(PSHVBLOCK RequestBlockList )
    int rc=0, allocated ;
    char *Strings[2] ;
    PSHVBLOCK Req=RequestBlockList ;
-   rex_tsd_t *rt;
    tsd_t *TSD = getGlobalTSD();
 
    if ( TSD == NULL )
       TSD = GLOBAL_ENTRY_POINT();
-   rt = (rex_tsd_t *)TSD->rex_tsd;
    StartupInterface(TSD);
 
    if (!RequestBlockList) /* FGC: I assume we must have at least one param */
@@ -1602,11 +1601,9 @@ int IfcExecFunc( tsd_t *TSD,
 {
    int i=0, length=0, rc=0, RCode=0 ;
    RXSTRING *params, retstr ;
-   rex_tsd_t *rt;
    char execfunc_result[ILLEGAL_USE_SIZE+RXAUTOBUFLEN] ;
    RexxFunctionHandler *FullFunc;
 
-   rt = (rex_tsd_t *)TSD->rex_tsd;
    assert( Name ) ;
    assert( Params >= 0 ) ;
    FullFunc = (RexxFunctionHandler *)Func;

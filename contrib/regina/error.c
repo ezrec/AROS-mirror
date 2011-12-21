@@ -517,15 +517,6 @@ int lineno_of( cnodeptr node )
       return 0 ;
 }
 
-static int charno_of( cnodeptr node )
-{
-   if (node)
-      return (node->charnr>=0) ? node->charnr : 0 ;
-   else
-      return 0 ;
-}
-
-
 /* only to be used by syntax and runtime errors, and the halt condition
  * FIXME: FGC: This function is used while initializing the runtime system.
  *             Maybe, we don't have a functional tsd_t!
@@ -535,7 +526,7 @@ void exiterror( int errorno, int suberrorno, ... )
 {
    staticstreng( nofile, "<name>" );
    va_list argptr;
-   int lineno,charno,signtype;
+   int lineno,signtype;
    streng *inputfile;
    streng *suberror_streng=NULL;
    streng *errmsg;
@@ -584,11 +575,9 @@ void exiterror( int errorno, int suberrorno, ... )
    if ( TSD->currentnode )
    {
       lineno = lineno_of( TSD->currentnode );
-      charno = charno_of( TSD->currentnode );
    }
    else
    {
-      charno = 0;
       lineno = parser_data.tline;
    }
 

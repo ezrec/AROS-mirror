@@ -1096,7 +1096,7 @@ streng *std_date( tsd_t *TSD, cparamboxptr parms )
 {
    static const char *fmt = "%02d/%02d/%02d" ;
    static const char *sdate = "%04d%02d%02d" ;
-   static const char *iso = "%04d-%02d-%02d" ;
+   // static const char *iso = "%04d-%02d-%02d" ; // Unused
    char format = 'N' ;
    char suppformat = 'N' ;
    int length=0 ;

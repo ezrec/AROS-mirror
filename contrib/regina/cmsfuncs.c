@@ -306,13 +306,11 @@ streng *cms_state( tsd_t *TSD, cparamboxptr parms )
 streng *cms_state( tsd_t *TSD, cparamboxptr parms )
 {
    /* this is a bit too easy ... but STREAM() function should handle it */
-   streng *retval=NULL ;
    int rcode=0 ;
    struct stat buffer ;
    char *fn;
 
    checkparam(  parms,  1,  1 , "STATE" ) ;
-   retval = Str_makeTSD( BOOL_STR_LENGTH ) ;
 
    /* will generate warning under Ultrix, don't care */
    fn = str_of(TSD,parms->value);

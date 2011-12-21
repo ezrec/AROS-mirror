@@ -3118,7 +3118,6 @@ num_descr *shortcutnum( tsd_t *TSD, nodeptr thisptr )
    variableptr vptr;
    num_descr *result;
    const streng *resstr;
-   char ch;
    var_tsd_t *vt;
 
    vt = (var_tsd_t *)TSD->var_tsd;
@@ -3131,7 +3130,6 @@ num_descr *shortcutnum( tsd_t *TSD, nodeptr thisptr )
          DSTART;DPRINT((TSD,"shortcutnum:       "));DVAR(TSD,"valid vptr",vptr);
                 DPRINT((TSD," on start"));DEND;
          SEEK_EXPOSED( vptr );
-         ch = 'V';
          if ( vptr->flag & VFLAG_NUM )
          {
             result = vptr->num;

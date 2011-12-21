@@ -265,6 +265,7 @@ void halt_raised( tsd_t *TSD )
    exiterror( ERR_PROG_INTERRUPT, 0 );
 }
 
+#if !defined(__WINS__) && !defined(__EPOC32__) && !defined(__AROS__)
 /* Yuk! Some of these should *really* have been volatilized */
 static void halt_handler( int num )
 {
@@ -288,7 +289,6 @@ static void halt_handler( int num )
 #endif
 }
 
-#if !defined(__WINS__) && !defined(__EPOC32__) && !defined(__AROS__)
 # if defined(SIGHUP)
 static void hup_handler( int dummy )
 {

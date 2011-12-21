@@ -62,7 +62,7 @@ static const struct __regina_option all_options[] = {  /* Must be alphabetically
 } ;
 
 
-void do_options( const tsd_t *TSD, proclevel pl, streng *options, int toggle )
+void do_options( tsd_t *TSD, proclevel pl, streng *options, int toggle )
 {
    char *cptr,*eptr,*start;
    int length,inverse=0,tmp;

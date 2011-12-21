@@ -228,6 +228,7 @@ static void do_pause_at_exit( void )
       printf("\nPress ENTER key to exit...");
       fflush( stdout );
       ch = getchar();
+      (void)ch; // Unused
    }
 }
 

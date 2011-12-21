@@ -65,9 +65,7 @@ int init_tracing( tsd_t *TSD )
 int pushcallstack( const tsd_t *TSD, treenode *thisptr )
 {
    nodeptr *tmpptr;
-   tra_tsd_t *tt;
 
-   tt = (tra_tsd_t *)TSD->tra_tsd;
    if ( TSD->systeminfo->cstackcnt >= TSD->systeminfo->cstackmax )
    {
       assert( TSD->systeminfo->cstackcnt == TSD->systeminfo->cstackmax );
@@ -90,9 +88,6 @@ int pushcallstack( const tsd_t *TSD, treenode *thisptr )
 
 void popcallstack( const tsd_t *TSD, int value )
 {
-   tra_tsd_t *tt;
-
-   tt = (tra_tsd_t *)TSD->tra_tsd;
    if ( value >= 0 )
    {
       assert( TSD->systeminfo->cstackcnt >= value );

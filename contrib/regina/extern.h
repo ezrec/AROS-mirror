@@ -551,7 +551,7 @@ extern "C" {
 /*
  * Routines in options.c
  */
-   void do_options( const tsd_t *TSD, proclevel pl, streng *options, int ) ;
+   void do_options( tsd_t *TSD, proclevel pl, streng *options, int ) ;
    int get_options_flag( cproclevel, int ) ;
    void set_options_flag( proclevel, int, int ) ;
 

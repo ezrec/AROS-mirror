@@ -1279,6 +1279,7 @@ static streng *do_an_external( tsd_t *TSD,
                      ct->StringsCount, ct->Lengths, ct->Strings,
                      Str_len( queue ), Str_val( queue ),
                      &RetLength, &RetString, &RC, called, gci_info );
+   (void)rc; // FIXME: Should 'rc' be tested for success?
 
    Free_stringTSD( queue );
    RemoveParams( TSD ) ;

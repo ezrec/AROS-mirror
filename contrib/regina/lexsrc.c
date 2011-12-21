@@ -269,7 +269,7 @@ YY_BUFFER_STATE yy_scan_bytes YY_PROTO(( yyconst char *bytes, int len ));
 #line 268 "flex.skl"
 
 static void *yy_flex_alloc YY_PROTO(( yy_size_t ));
-static void *yy_flex_realloc YY_PROTO(( void *, yy_size_t ));
+static inline void *yy_flex_realloc YY_PROTO(( void *, yy_size_t ));
 static void yy_flex_free YY_PROTO(( void * ));
 
 #define yy_new_buffer yy_create_buffer
@@ -303,7 +303,7 @@ extern char *yytext;
 static yy_state_type yy_get_previous_state YY_PROTO(( void ));
 static yy_state_type yy_try_NUL_trans YY_PROTO(( yy_state_type current_state ));
 static int yy_get_next_buffer YY_PROTO(( void ));
-static void yy_fatal_error YY_PROTO(( yyconst char msg[] ));
+static inline void yy_fatal_error YY_PROTO(( yyconst char msg[] ));
 #line 302 "flex.skl"
 
 /* Done after the current pattern has been matched and before the
@@ -4681,9 +4681,9 @@ static int yy_top_state()
 
 #line 1540 "flex.skl"
 #ifdef YY_USE_PROTOS
-static void yy_fatal_error( yyconst char msg[] )
+static inline void yy_fatal_error( yyconst char msg[] )
 #else
-static void yy_fatal_error( msg )
+static inline void yy_fatal_error( msg )
 char msg[];
 #endif
         {
@@ -4756,9 +4756,9 @@ yy_size_t size;
         }
 
 #ifdef YY_USE_PROTOS
-static void *yy_flex_realloc( void *ptr, yy_size_t size )
+static inline void *yy_flex_realloc( void *ptr, yy_size_t size )
 #else
-static void *yy_flex_realloc( ptr, size )
+static inline void *yy_flex_realloc( ptr, size )
 void *ptr;
 yy_size_t size;
 #endif

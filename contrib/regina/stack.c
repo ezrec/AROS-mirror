@@ -593,7 +593,7 @@ static int use_external( const tsd_t *TSD, const streng *queue_name )
       SetSessionName( TSD, st );
 
 #if defined(NO_EXTERNAL_QUEUES)
-   (queue_name);
+   (void)(queue_name);
    return 0;        /* trivial */
 #else
 
@@ -962,7 +962,7 @@ streng *popline( tsd_t *TSD, const streng *queue_name, int *result, unsigned lon
 int lines_in_stack( tsd_t *TSD, const streng *queue_name )
 {
    stk_tsd_t *st ;
-   int lines ;
+   int lines = 0 ;
    Queue *q ;
 
    st = (stk_tsd_t *)TSD->stk_tsd;
@@ -1286,7 +1286,7 @@ static streng *SetCurrentQueue( const tsd_t *TSD, stk_tsd_t *st, Queue *q,
      && ( st->current_queue != q ) )
       delete_an_external_queue( TSD, st, st->current_queue );
 #else
-   (TSD);
+   (void)(TSD);
 #endif
    st->current_queue = q;
 
@@ -1317,7 +1317,7 @@ int create_queue( tsd_t *TSD, const streng *queue_name, streng **result )
          /*
           * Create a unique queue name
           */
-         sprintf(buf,"S%d-%ld-%d", getpid(), clock(), st->runner++ );
+         sprintf(buf,"S%d-%ld-%d", (int)getpid(), clock(), st->runner++ );
          new_queue = Str_cre_TSD( TSD, buf ) ;
       }
       else
@@ -1347,7 +1347,7 @@ int create_queue( tsd_t *TSD, const streng *queue_name, streng **result )
                /*
                 * Create a unique queue name
                 */
-               sprintf(buf,"S%d-%ld-%d", getpid(), clock(), st->runner++ );
+               sprintf(buf,"S%d-%ld-%d", (int)getpid(), clock(), st->runner++ );
                new_queue = Str_cre_TSD( TSD, buf ) ;
                rc = 1;
             }
@@ -1476,10 +1476,8 @@ int delete_queue( tsd_t *TSD, const streng *queue_name )
  */
 int timeout_queue( tsd_t *TSD, const streng *timeout, const streng *queue_name )
 {
-   stk_tsd_t *st;
    int rc = 0 ;
 
-   st = (stk_tsd_t *)TSD->stk_tsd;
    if ( !use_external( TSD, queue_name ) )
    {
       exiterror( ERR_EXTERNAL_QUEUE, 111, "TIMEOUT" ) ;
@@ -1744,7 +1742,6 @@ int addr_same_queue( const tsd_t *TSD, const Queue *q1, const Queue *q2 )
  */
 Queue *addr_redir_queue( const tsd_t *TSD, Queue *q )
 {
-   stk_tsd_t *st ;
    Queue *retval ;
    Buffer *b ;
 #if !defined( NO_EXTERNAL_QUEUES )
@@ -1752,7 +1749,6 @@ Queue *addr_redir_queue( const tsd_t *TSD, Queue *q )
    StackLine *ptr ;
 #endif
 
-   st = (stk_tsd_t *)TSD->stk_tsd ;
    assert( ( q->type == QisSESSION )
         || ( q->type == QisInternal )
         || ( q->type == QisExternal ) ) ;

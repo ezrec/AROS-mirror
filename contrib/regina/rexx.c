@@ -454,6 +454,7 @@ static void just_compile( tsd_t *TSD, char *outputname )
     * enter_macro() actually does the tokenising...
     */
    ipt = enter_macro( TSD, SrcStr, &instore_buf, &instore_length );
+   (void)ipt; // FIXME: Should this be tested for success?
    fclose( TSD->systeminfo->input_fp );
 
    outfp = fopen( outputname, "wb" );
@@ -701,7 +702,7 @@ int main(int argc,char *argv[])
    int compile_to_tokens=0;
    int execute_from_tokens=0;
    int locale_set=0;
-   int stdinput, rcode;
+   int rcode;
    jmp_buf jbuf;
 
 #ifdef MAC
@@ -760,7 +761,6 @@ int main(int argc,char *argv[])
 
       if ( processed < argc )
       {
-         stdinput = 0;
          TSD->systeminfo->input_file = get_external_routine( TSD,
                                 argv[processed], &TSD->systeminfo->input_fp );
          if ( !TSD->systeminfo->input_file )
@@ -772,7 +772,6 @@ int main(int argc,char *argv[])
       }
       else
       {
-         stdinput = 1;
          TSD->systeminfo->input_file = Str_crestrTSD( "<stdin>" );
          TSD->systeminfo->input_fp = NULL;
          if ( compile_to_tokens )

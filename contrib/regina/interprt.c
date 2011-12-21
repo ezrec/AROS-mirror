@@ -504,9 +504,6 @@ streng *interpret(tsd_t * volatile TSD, treenode * volatile thisptr)
    num_descr *tdescr=NULL ;
    volatile nodeptr secure_this ;
    tsd_t * volatile secure_TSD ;
-   itp_tsd_t * volatile it;
-
-   it = (itp_tsd_t *)TSD->itp_tsd;
 
    nstktrigger = nstacktrigger(TSD);
    stktrigger = stacktrigger(TSD);
@@ -530,7 +527,6 @@ streng *interpret(tsd_t * volatile TSD, treenode * volatile thisptr)
           */
          thisptr = secure_this ;
          TSD = secure_TSD ;
-         it = (itp_tsd_t *)TSD->itp_tsd ;
 
          tdescr = NULL ;
          innerloop = NULL ;
