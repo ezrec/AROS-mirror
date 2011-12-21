@@ -30,7 +30,7 @@ the existing commercial status of Directory Opus 5.
 
 #include "dopuslib.h"
 
-char * __regargs getstringcopy(char *str)
+char * __regargs getstringcopy(const char *str)
 {
     char *newstr=NULL;
 
@@ -1095,7 +1095,7 @@ int __saveds DoGetDevices(register struct ConfigStuff *cstuff __asm("a0"))
   return 1;
 }
 
-void __saveds DoAssignGadget(register struct ConfigStuff *cstuff __asm("a0"), register int bk __asm("d0"), register int gad __asm("d1"), register char *name __asm("a1"), register char *func __asm("a2"))
+void __saveds DoAssignGadget(register struct ConfigStuff *cstuff __asm("a0"), register int bk __asm("d0"), register int gad __asm("d1"), register const char *name __asm("a1"), register const char *func __asm("a2"))
 {
     struct dopusgadgetbanks *bank,*temp;
     int a;
@@ -1124,7 +1124,7 @@ void __saveds DoAssignGadget(register struct ConfigStuff *cstuff __asm("a0"), re
     }
 }
 
-void __saveds DoAssignMenu(register struct ConfigStuff *cstuff __asm("a0"), register int men __asm("d0"), register char *name __asm("a1"), register char *func __asm("a2"))
+void __saveds DoAssignMenu(register struct ConfigStuff *cstuff __asm("a0"), register int men __asm("d0"), register const char *name __asm("a1"), register const char *func __asm("a2"))
 {
     struct Config *config;
 
@@ -1135,7 +1135,7 @@ void __saveds DoAssignMenu(register struct ConfigStuff *cstuff __asm("a0"), regi
         config->menu[men].name=NULL;
         if (name && name[0]) config->menu[men].name=getstringcopy(name);
     }
-    if (func!=(char *)-1) {
+    if (func!=(const char *)-1) {
         freestring(config->menu[men].function);
         config->menu[men].function=NULL;
         if (func && func[0]) config->menu[men].function=getstringcopy(func);
@@ -1272,7 +1272,7 @@ tryloop:
     else if (type==SYSFILE_MODULE) {
         struct DOpusSimpleRequest req;
         char reqbuf[300];
-        static char *req_gads[3];
+        static const char *req_gads[3];
         static int req_rets[2]={1,0};
 
         req_gads[0]=string_table[STR_TRY_AGAIN];

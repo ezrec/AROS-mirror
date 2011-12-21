@@ -30,7 +30,7 @@ the existing commercial status of Directory Opus 5.
 
 #include "dopuslib.h"
 
-__saveds DoFSSetMenuStrip(register struct Window *window __asm("a0"),
+__saveds int DoFSSetMenuStrip(register struct Window *window __asm("a0"),
     register struct Menu *firstmenu __asm("a1"))
 {
     struct Menu *menu;

@@ -280,7 +280,7 @@ APTR __saveds R_AddRequesterObject(register struct RequesterBase *reqbase __asm(
     struct PropInfo *propinfo;
     struct Image *propimage;
     struct Gadget *gadget=NULL;
-    char **string;
+    const char **string;
 
     if (!taglist || !reqbase || !reqbase->rb_window) return(NULL);
 
@@ -567,24 +567,24 @@ APTR __saveds R_AddRequesterObject(register struct RequesterBase *reqbase __asm(
                 string=NULL;
                 switch (object->ro_type) {
                     case OBJECT_TEXT:
-                        string=&((Object_Text *)object->ro_data)->ot_text;
+                        string=(const char **)&((Object_Text *)object->ro_data)->ot_text;
                         break;
 
                     case OBJECT_GADGET:
-                        string=&((Object_Gadget *)object->ro_data)->og_text;
+                        string=(const char **)&((Object_Gadget *)object->ro_data)->og_text;
                         break;
 
                     case OBJECT_BORDER:
-                        string=&((Object_Border *)object->ro_data)->ob_text;
+                        string=(const char **)&((Object_Border *)object->ro_data)->ob_text;
                         break;
 
                     case OBJECT_LISTVIEW:
-                        string=&((Object_ListView *)object->ro_data)->ol_listview.title;
+                        string=(const char **)&((Object_ListView *)object->ro_data)->ol_listview.title;
                         break;
                 }
                 if (string &&
                     (*string=DoAllocRemember(&reqbase->rb_memory,strlen((char *)data)+1,0)))
-                    LStrCpy(*string,(char *)data);
+                    LStrCpy((char *)(*string),(const char *)data);
                 break;
 
     /* Text positioning */
@@ -782,12 +782,13 @@ void __saveds R_ObjectText(register struct RequesterBase *reqbase __asm("a0"),
     register short top __asm("d1"),
     register short width __asm("d2"),
     register short height __asm("d3"),
-    register char *text __asm("a1"),
+    register const char *text __asm("a1"),
     register unsigned short textpos __asm("d4"))
 {
     struct RastPort *rp;
     short x,y,text_width,text_height,cx,cy,len,got_uscore=-1,uscoreok=1;
-    char *ptr,textbuf[82];
+    const char *ptr;
+    char textbuf[82];
 
     rp=reqbase->rb_window->RPort;
 

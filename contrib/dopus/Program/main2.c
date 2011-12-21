@@ -856,7 +856,7 @@ void drawentry(char *text, int win)
       default:
         if (!t) t = &(c->type);
         len++;
-        c=(struct TextMode *)(&(c->code));
+        c=(struct TextCode *)(&(c->code));
         break;
      }
    }
@@ -975,7 +975,7 @@ void builddisplaystring(display,sbuf,win)
  {
   char sizebuf[20];
   int fg,bg;
-  char *sptr,*c;
+  const char *sptr,*c;
   int  a,b,w,l,w1;
   struct TextExtent te;
 //D(char *dbg=sbuf;)

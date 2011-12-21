@@ -394,7 +394,8 @@ char *buffer;
 int *moretodo,star,reload,quote;
 struct function_data *funcdata;
 {
-    char buf3[256],*ptr,filebuf[FILEBUF_SIZE],dirbuf[256],*spath,defbuf[256],titlebuf[80];
+    const char *ptr;
+    char buf3[256],filebuf[FILEBUF_SIZE],dirbuf[256],*spath,defbuf[256],titlebuf[80];
     int a,pos,bufpos,d,f,sblen,buftitpos,h,qad,def,tit;
     struct Directory *cust=NULL,dummy;
     struct args *arg;
@@ -863,7 +864,7 @@ domultifiles:
                 funcdata->file_request.dirbuf=buf3;
                 funcdata->file_request.filebuf=filebuf; filebuf[0]=0;
                 if (!(h&DFRF_DIRREQ)) {
-                    ptr=BaseName(buf3);
+                    char *ptr=BaseName(buf3);
                     if (ptr>buf3) {
                         if (ptr[(strlen(ptr)-1)]!='/') {
                             strcpy(filebuf,ptr);
@@ -1429,7 +1430,8 @@ struct Directory *fbuf;
 
 int dirrequester(freq,buf,title)
 struct DOpusFileReq *freq;
-char *buf,*title;
+char *buf;
+const char *title;
 {
     if (title) freq->title=title;
     else freq->title=globstring[STR_SELECT_A_DIRECTORY];
@@ -1444,7 +1446,8 @@ char *buf,*title;
 }
 
 void do_title_string(string,buf,ml,name)
-char *string,*buf;
+const char *string;
+char *buf;
 int ml;
 char *name;
 {

@@ -170,9 +170,10 @@ UWORD gadid;
     }
 }
 
-int simplerequest(char *txt,...)
+int simplerequest(const char *txt,...)
 {
-    char *gads[11],*cancelgad=NULL,*gad;
+    const char *gads[11];
+    char *cancelgad=NULL,*gad;
     int a,r,rets[10],gnum,rnum;
     va_list ap;
     struct DOpusSimpleRequest request;
@@ -201,11 +202,12 @@ int simplerequest(char *txt,...)
 }
 
 int whatsit(txt,max,buffer,skiptxt)
-char *txt;
+const char *txt;
 int max;
-char *buffer,*skiptxt;
+char *buffer;
+const char *skiptxt;
 {
-    char *gads[4];
+    const char *gads[4];
     int a=1,rets[3];
     struct DOpusSimpleRequest request;
 
@@ -229,7 +231,7 @@ char *buffer,*skiptxt;
 
 int dorequest(request,txt,gads,rets,window)
 struct DOpusSimpleRequest *request;
-char *txt,**gads;
+const char *txt,**gads;
 int *rets;
 struct Window *window;
 {
@@ -283,7 +285,7 @@ struct Window *window;
 }
 
 int checkfiletypefunc(name,fn)
-char *name;
+const char *name;
 int fn;
 {
     struct dopusfiletype *type;
@@ -309,7 +311,7 @@ int fn;
 }
 
 struct dopusfiletype *checkfiletype(fullname,ftype,funconly)
-char *fullname;
+const char *fullname;
 int ftype,funconly;
 {
     struct FileInfoBlock __aligned info;
@@ -349,7 +351,7 @@ int ftype,funconly;
 
 int dochecktype(type,name,fileparam,info)
 struct dopusfiletype *type;
-char *name;
+const char *name;
 int fileparam;
 struct FileInfoBlock *info;
 {

@@ -168,7 +168,7 @@ int initscreenmodes()
 }
 
 int addscreenmode(name,minw,minh,maxw,maxh,defw,defh,depth,mode)
-char *name;
+const char *name;
 UWORD minw,minh,maxw,maxh,defw,defh,depth;
 ULONG mode;
 {

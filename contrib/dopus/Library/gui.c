@@ -184,7 +184,7 @@ void __saveds EnableGadget(register struct Gadget *gad __asm("a0"), register str
      }
 }
 
-int __saveds DoAddGadgets(register struct Window *win __asm("a0"), register struct Gadget *firstgad __asm("a1"), register char **text __asm("a2"), register int count __asm("d0"), register int fg __asm("d1"), register int bg __asm("d2"), register int add __asm("d3"))
+int __saveds DoAddGadgets(register struct Window *win __asm("a0"), register struct Gadget *firstgad __asm("a1"), register const char **text __asm("a2"), register int count __asm("d0"), register int fg __asm("d1"), register int bg __asm("d2"), register int add __asm("d3"))
 {
     int num=0,realcount=0,of,ob,a,x,y,b,c,up,xp,yp,bl,len,offset;
     char buf[80];
@@ -396,7 +396,7 @@ end_rmb:
     return(ret);
 }
 
-void __saveds DoDoCycleGadget(register struct Gadget *gad __asm("a0"), register struct Window *window __asm("a1"), register char **choices __asm("a2"), register int select __asm("d0"))
+void __saveds DoDoCycleGadget(register struct Gadget *gad __asm("a0"), register struct Window *window __asm("a1"), register const char **choices __asm("a2"), register int select __asm("d0"))
 {
     int op,a;
     struct RastPort *rp;
@@ -415,7 +415,7 @@ void __saveds DoDoCycleGadget(register struct Gadget *gad __asm("a0"), register 
 }
 
 void __saveds DoUScoreText(register struct RastPort *rp __asm("a0"),
-    register char *buf __asm("a1"),
+    register const char *buf __asm("a1"),
     register int xp __asm("d0"),
     register int yp __asm("d1"),
     register int up __asm("d2"))

@@ -124,7 +124,7 @@ int dowhat,fdata;
       for(entry = lister.firstentry; entry && (!(entry->selected));) entry=entry->next;
       arcfillfib(&myfinfo,entry);
 
-      mylock = NULL;
+      mylock = BNULL;
      }
     else
      {

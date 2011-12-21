@@ -3,13 +3,23 @@
 #include "view.h"
 
 
-#if !defined(__PPC__) && !defined(__AROS__)
+#ifdef __AROS__
+#include <exec/rawfmt.h>
+
+void lsprintf(char *str, const char *fmt, ...)
+{
+    va_list args;
+    va_start(args, fmt);
+    VNewRawDoFmt(fmt,RAWFMTFUNC_STRING,str,args);
+    va_end(args);
+}
+#elif !defined(__PPC__)
 void stuffChar(register char c __asm("d0"), register char ** buf __asm("a3"))
 {
     *(*buf) ++ = c;
 }
 
-void lsprintf(char *str, char *fmt, ...)
+void lsprintf(char *str, const char *fmt, ...)
 {
     RawDoFmt(fmt,&fmt+1,stuffChar,&str);
 }

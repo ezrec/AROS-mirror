@@ -150,7 +150,7 @@ int *selbase;
     UWORD gadgetid,code;
     struct Window *swindow;
     struct Gadget *gadlist,*sel_type_gad;
-    char *select_base_array[4],*select_type_array[3];
+    const char *select_base_array[4],*select_type_array[3];
     int a,ret=0;
 
     fix_requester(&select_req,globstring[STR_ENTER_SELECT_PATTERN]);

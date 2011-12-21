@@ -64,7 +64,8 @@ int __saveds DoDoSimpleRequest(register struct Window *window __asm("a0"),
     struct StringInfo *sinfo;
     struct IntuiMessage *Msg;
     struct StringExtend *extend;
-    char *text,*keys,*buf,ch,*strbuf,**gadptr;
+    char *text,*keys,*buf,ch,*strbuf=NULL;
+    const char **gadptr;
     ULONG class;
     UWORD code;
 
@@ -121,7 +122,7 @@ int __saveds DoDoSimpleRequest(register struct Window *window __asm("a0"),
         !(newwindow=(struct NewWindow *)DoAllocRemember(&key,sizeof(struct NewWindow),MEMF_CLEAR)) ||
         !(gadgets=(struct Gadget *)DoAllocRemember(&key,sizeof(struct Gadget)*(num+1),MEMF_CLEAR)) ||
         !(contgad=(struct Gadget *)DoAllocRemember(&key,sizeof(struct Gadget),MEMF_CLEAR)) ||
-        !(gadptr=(char **)DoAllocRemember(&key,(num+hnum+1)*4,MEMF_CLEAR)) ||
+        !(gadptr=(const char **)DoAllocRemember(&key,(num+hnum+1)*sizeof(const char *),MEMF_CLEAR)) ||
         !(buf=(char *)DoAllocRemember(&key,sw+2,0))) {
         DoFreeRemember(&key);
         return(0);
@@ -186,7 +187,7 @@ int __saveds DoDoSimpleRequest(register struct Window *window __asm("a0"),
     if (simple->flags&SRF_BORDERS) {
         xoffset=screen->WBorLeft;
         yoffset=screen->WBorTop+screen->Font->ta_YSize+1;
-        newwindow->Title=simple->title;
+        newwindow->Title=(char *)simple->title;
     }
     else {
         xoffset=0;
@@ -432,7 +433,7 @@ int __saveds DoDoSimpleRequest(register struct Window *window __asm("a0"),
     if (num) {
         if (simple->flags&SRF_RECESSHI)
             DoAddGadgetBorders(&key,gadgets,num,simple->hi,simple->lo);
-        DoAddGadgets(Window,gadgets,gadptr,num,simple->hi,simple->lo,1);
+        DoAddGadgets(Window,gadgets,(const char **)gadptr,num,simple->hi,simple->lo,1);
     }
     if (simple->strbuf) {
         SetAPen(rp,0);

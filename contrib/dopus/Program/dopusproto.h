@@ -32,10 +32,10 @@ the existing commercial status of Directory Opus 5.
 
 /* assembly.c */
 
-#if defined(__PPC__) || defined(__AROS__)
+#if defined(__PPC__)
 #define lsprintf sprintf
 #else
-void lsprintf (char *,char *,...);
+void lsprintf (char *,const char *,...);
 #endif
 /* void Keyhandler(void); */
 int countlines(struct ViewData *);
@@ -58,7 +58,7 @@ int install_arbiter(void);
 void remove_arbiter(void);
 int arbiter_command(int,APTR,int);
 void __saveds arbiter_process(void);
-struct Screen *open_subprocess_screen(char *,struct TextFont *,struct DOpusRemember **,short *);
+struct Screen *open_subprocess_screen(const char *,struct TextFont *,struct DOpusRemember **,short *);
 
 /* archive.c */
 
@@ -86,7 +86,7 @@ int replacepart(char *,char *,char *);
 void dolistbuffers(int);
 int checkcurrentbuffer(int);
 void userentrymessage(struct DirectoryWindow *,struct Directory *,int);
-void makespecialdir(int,char *);
+void makespecialdir(int,const char *);
 void check_old_buffer(int);
 void refreshwindow(int,int);
 void go_to_buffer(int,struct DirectoryWindow *);
@@ -179,7 +179,7 @@ int dateformat(int);
 int checkscreenmode(int);
 void doarrowgadgets(struct Gadget *,int);
 void makermbgad(struct RMBGadget *,struct Gadget *,int);
-void dolittlegads(struct Gadget *,char *,int);
+void dolittlegads(struct Gadget *,const char *,int);
 void rectfill(struct RastPort *,int,int,int,int);
 int isvalidwindow(int);
 int _isdigit(unsigned char);
@@ -197,7 +197,7 @@ struct Directory *checkdirtot(struct DirectoryWindow *);
 struct Directory *checkdevtot(struct DirectoryWindow *);
 struct Directory *checkalltot(struct DirectoryWindow *);
 struct Directory *findfile(struct DirectoryWindow *,char *,int *);
-int delfile(char *,char *,char *,int,int);
+int delfile(char *,char *,const char *,int,int);
 int getwildrename(char *,char *,char *,char *);
 void filloutcopydata(struct Directory *);
 void filloutcopydatafile(char *);
@@ -217,7 +217,7 @@ int isvalidgad(struct newdopusfunction *);
 int getpal(void);
 void quickfixmenus(void);
 int getdummypath(char *,int);
-char *getfiledescription(char *,int);
+const char *getfiledescription(const char *,int);
 void fixhlen(int);
 char *get_our_pubscreen(void);
 void change_port_name(char *);
@@ -243,12 +243,12 @@ void newcli(char *);
 void getprot(int,char *);
 int getprotval(char *);
 int checkexistreplace(char *,char *,struct DateStamp *,int,int);
-int lockandexamine(char *,struct FileInfoBlock *);
+int lockandexamine(const char *,struct FileInfoBlock *);
 void layoutcenter(int);
 void fix_rmb_gadgets(void);
 void dosizedirwindows(int);
 void sizedirwindow_gfx(int);
-void fix_requester(struct RequesterBase *,char *);
+void fix_requester(struct RequesterBase *,const char *);
 void fix_stringex(struct StringExtend *);
 struct Gadget *addreqgadgets(struct RequesterBase *,struct TagItem **,int,int *);
 void set_reqobject_text(struct TagItem *,char *);
@@ -283,7 +283,7 @@ char *parsedatetime(char *,char *,char *,int *);
 void copy_datestamp(struct DateStamp *,struct DateStamp *);
 //void readkeys(APTR);
 ULONG clone_screen(struct Screen *,struct ExtNewScreen *);
-int copy_string(char *,char **,struct DOpusRemember **);
+int copy_string(const char *,char **,struct DOpusRemember **);
 char *strstri(char *,char *);
 struct MsgPort *CreateUniquePort(char *,char *,int *);
 int identify_and_load(int,int);
@@ -293,7 +293,7 @@ int identify_and_load(int,int);
 void iconify(int,int,int);
 void remiclock(void);
 int getmaxmem(ULONG/*,ULONG*/);
-void iconstatustext(char *,int);
+void iconstatustext(const char *,int);
 void cleanupiconify(void);
 
 /* main12.c */
@@ -346,14 +346,14 @@ int setupfontdisplay(int,UWORD *);
 void cleanup_fontdisplay(void);
 void readhelp(char *);
 void doreadhelp(char *);
-void dohelp(char *,char *,int,int,char *);
+void dohelp(const char *,const char *,int,int,const char *);
 void checkstringgads(int);
 void setdirsize(struct Directory *,long long,int);
 
 /* main17.c */
 
-int rexxdisp(struct RexxMsg *,struct CommandList *,char *);
-int parse(unsigned char *);
+int rexxdisp(struct RexxMsg *,struct CommandList *,const char *);
+int parse(const unsigned char *);
 void changebuffer(int);
 char *dosstatus(int,char *,char *);
 void dopustofront(void);
@@ -377,14 +377,14 @@ void doreselect(struct DirWindowPars *,int);
 void shutthingsdown(int);
 void setupwindreq(struct Window *);
 void hilite_req_gadget(struct Window *,UWORD);
-int simplerequest (char *,...);
-int whatsit(char *,int,char *,char *);
-struct dopusfiletype *checkfiletype(char *,int,int);
-int checkfiletypefunc(char *,int);
-int dochecktype(struct dopusfiletype *,char *,int,struct FileInfoBlock *);
+int simplerequest (const char *,...);
+int whatsit(const char *,int,char *,const char *);
+struct dopusfiletype *checkfiletype(const char *,int,int);
+int checkfiletypefunc(const char *,int);
+int dochecktype(struct dopusfiletype *,const char *,int,struct FileInfoBlock *);
 int checktypechars(int,unsigned char *,int);
 int typesearch(int,char *,int,char *,int);
-int dorequest(struct DOpusSimpleRequest *,char *,char **,int *,struct Window *);
+int dorequest(struct DOpusSimpleRequest *,const char *,const char **,int *,struct Window *);
 int searchbuffer(char *,int,char *,int,int);
 
 /* main20.c */
@@ -415,8 +415,8 @@ void fix_gadget_highlight(struct newdopusfunction *,struct Gadget *,int);
 void init_menus(void);
 void layout_menus(void);
 int maxgadwidth(struct TextFont *,char **,int);
-int gettextlength(struct TextFont *,char *,int *,int);
-int dotextlength(struct RastPort *,char *,int *,int);
+int gettextlength(struct TextFont *,const char *,int *,int);
+int dotextlength(struct RastPort *,const char *,int *,int);
 void doposdriveprop(void);
 int getgadbankcount(void);
 void doposgadgetprop(int);
@@ -448,8 +448,8 @@ int openscriptfile(struct dopusfuncpar *,struct function_data *);
 int closescriptfile(struct dopusfuncpar *,int,struct function_data *);
 int getdummyfile(struct Directory *,char *,struct DOpusFileReq *);
 int filloutdummy(char *,struct Directory *);
-int dirrequester(struct DOpusFileReq *,char *,char *);
-void do_title_string(char *,char *,int,char *);
+int dirrequester(struct DOpusFileReq *,char *,const char *);
+void do_title_string(const char *,char *,int,char *);
 void addreqfilename(char *,int);
 struct Directory *custgetfirst(struct function_data *);
 void custnextsel(struct Directory **);
@@ -468,12 +468,12 @@ int checkcycling(void);
 
 int doerror(int);
 void geterrorstring(char *,int);
-void dostatustext(char *);
+void dostatustext(const char *);
 void okay(void);
 void myabort(void);
 void dofilename(char *);
 void geterrorhelp(int);
-int checkerror(char *,char *,int);
+int checkerror(const char *,const char *,int);
 
 /* doidcmp.c */
 
@@ -579,7 +579,7 @@ void progresstext(int,int,int,char *);
 
 /* view.c */
 
-int viewfile(char *,char *,int,char *,struct ViewData *,int,int);
+int viewfile(const char *,const char *,int,char *,struct ViewData *,int,int);
 void cleanupviewfile(struct ViewData *);
 
 

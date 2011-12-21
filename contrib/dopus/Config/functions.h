@@ -42,7 +42,7 @@ void fixcstuff(struct ConfigStuff *);
 void cstufffix(struct ConfigStuff *);
 void cleanconfigscreen(void);
 void showconfigscreen(int);
-void initsidegads(char **,int,int);
+void initsidegads(const char **,int,int);
 void inittickgads(struct ConfigGadget *,int,int);
 void removetickgads(void);
 int processtickgad(struct ConfigGadget *,int,int,int);
@@ -56,12 +56,12 @@ void freefunction(struct dopusfunction *);
 void freenewfunction(struct newdopusfunction *);
 char *getcopy(char *,int,struct DOpusRemember **);
 void makestring(char *buf,...);
-int getstring(char *,char *,int,int);
-int request(char *);
-int do_request(char *,char *,char *);
+int getstring(const char *,char *,int,int);
+int request(const char *);
+int do_request(const char *,const char *,const char *);
 void doglassimage(struct Gadget *);
 void freestring(char *);
-void doscreentitle(char *);
+void doscreentitle(const char *);
 struct IntuiMessage *getintuimsg(void);
 struct TextFont *getfont(char *,int *,int);
 void load_palette(struct Screen *,ULONG *,int);
@@ -94,7 +94,7 @@ void showgadgets(struct dopusgadgetbanks *,int);
 void showgadgetname(struct newdopusfunction *,struct Gadget *);
 int makenewbank(int);
 struct dopusgadgetbanks *lastbank(struct dopusgadgetbanks *);
-void dogadgetinfo(char *);
+void dogadgetinfo(const char *);
 int domenuconfig(void);
 void showmenus(int);
 void showmenuname(struct newdopusfunction *,struct Gadget *);
@@ -116,7 +116,7 @@ void docolourbox(struct RastPort *,int,int,int,int);
 void docoloursel(struct RastPort *,int,int,int);
 void drawcompbox(struct RastPort *,int,int,int,int);
 void showkey(UWORD,UWORD,int,int,int,int);
-void showfuncob(struct RastPort *,char *,int,int,int,int,int);
+void showfuncob(struct RastPort *,const char *,int,int,int,int,int);
 void makeselflags(int,char *);
 int getselflags(char *);
 void checkmutflags(char *,int);
@@ -126,7 +126,7 @@ void deleteentry(char **,char *,char **,int);
 void endedit(void);
 void setupforedit(int,int);
 void checkswapgad(void);
-int funcrequester(int,char *,char *);
+int funcrequester(int,char *,const char *);
 void makenewentry(char **,char *,char **,int);
 void setupcolourbox(struct RastPort *,int,int,int,int);
 void getfiletypefunc(struct dopusfunction *,struct dopusfiletype *,int);
@@ -137,7 +137,7 @@ void erasefunction(struct dopusfunction *,char **,char **,char *);
 int fixfunctypelist(struct dopusfiletype *);
 void add_appobject(int);
 void rem_appobject(int);
-void do_gad_label(char *,int,int);
+void do_gad_label(const char *,int,int);
 
 /* main4.c */
 
@@ -145,7 +145,7 @@ int dodriveconfig(void);
 void showdrives(void);
 void showdrivename(struct dopusfunction *,struct Gadget *);
 int doinitdrivetext(int);
-int docolourgad(struct RastPort *,int,int,int,int,char *,int *,int *,int);
+int docolourgad(struct RastPort *,int,int,int,int,const char *,int *,int *,int);
 void driveeditoff(void);
 void deletedrive(struct dopusfunction *);
 void sortdrivebank(int);
@@ -166,15 +166,15 @@ int savefileclasses(void);
 int addfileclass(char *,char *,char *);
 void freefileclasses(void);
 void removefileclass(struct fileclass *);
-char **makeclasslist(struct DOpusRemember **);
+unsigned char **makeclasslist(struct DOpusRemember **);
 int readline(char *,int,char *,int);
 int editfileclass(struct fileclass *,int);
-void makeeditclasslist(struct fileclass *,char **,char *);
-void dispclasslist(char **,char *,char **);
+void makeeditclasslist(struct fileclass *,unsigned char **,char *);
+void dispclasslist(unsigned char **,char *,char **);
 void seteditclassgads(int);
-void removeclassentry(char **,char *,int);
-void insertnewclass(char **,char *,int,char **,char *,int);
-void endclassedit(int,char **,char *,char **);
+void removeclassentry(unsigned char **,char *,int);
+void insertnewclass(unsigned char **,char *,int,char **,char *,int);
+void endclassedit(int,unsigned char **,char *,char **);
 void makeclassrecog(struct fileclass *,unsigned char **,unsigned char *);
 void checkclassswap(void);
 void showclassop(int);
@@ -182,7 +182,7 @@ struct fileclass *getfileclasslist(int);
 void draw_file_view(void);
 void free_file_view(void);
 void load_file_view(void);
-void file_view_text(char *,int);
+void file_view_text(const char *,int);
 void show_file_view(void);
 void show_view_number(int,int);
 void cursor_fileview(int);
@@ -198,13 +198,13 @@ void removescreenedit(int);
 void showcolourvals(int,int);
 void updatecolourvals(int,int);
 void showscreencolours(int,char **,char **,int);
-void solidblock(struct RastPort *,char *,int,int,int,int,int,int,int);
+void solidblock(struct RastPort *,const char *,int,int,int,int,int,int,int);
 void showcolourscycle(int,int,int);
 
 /* screen_screenmode.c */
 
 int initscreenmodes(void);
-int addscreenmode(char *,UWORD,UWORD,UWORD,UWORD,UWORD,UWORD,UWORD,ULONG);
+int addscreenmode(const char *,UWORD,UWORD,UWORD,UWORD,UWORD,UWORD,UWORD,ULONG);
 struct ScreenMode *showdisplaydesc(void);
 void fixmodegads(struct ScreenMode *);
 void fixdefaultgads(struct ScreenMode *);
@@ -243,7 +243,7 @@ void unbusy(void);
 void dosave(int);
 int doload(int,int);
 void copyconfigonly(struct Config *,struct Config *);
-int dolistwindow(char *,int,int,char **,int,char *,int *);
+int dolistwindow(const char *,int,int,char **,int,char *,int *);
 void copytoclip(struct dopusfunction *,char **,char *,char *);
 int pasteclip(struct dopusfunction *,char **,char *,char **,char *);
 void makefilebuffer(char *);
@@ -267,7 +267,7 @@ void fix_gad_pos(struct Gadget *,short *);
 /* main9.c */
 
 void readhelp(void);
-void makehelpname(char *);
+void makehelpname(const char *);
 void doconfighelp(void);
 void dohelpmsg(char *);
 void load_clips(void);
@@ -279,7 +279,7 @@ void setup_list_window(struct NewWindow *,struct DOpusListView *,struct Gadget *
 /* lsprintf.asm */
 
 void SwapMem(register char *src __asm("a0"),register char *dst __asm("a1"),register int size __asm("d0"));
-void lsprintf (char *,char *,...);
+void lsprintf (char *,const char *,...);
 
 /* strings.c */
 

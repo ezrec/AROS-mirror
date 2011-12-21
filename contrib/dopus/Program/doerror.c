@@ -103,7 +103,7 @@ int err;
 }
 
 void dostatustext(text)
-char *text;
+const char *text;
 {
     int x,len,l;
     struct RastPort *r;
@@ -215,7 +215,7 @@ int st;
 }
 
 int checkerror(action,name,err)
-char *action,*name;
+const char *action,*name;
 int err;
 {
     char buf[300],buf2[200];

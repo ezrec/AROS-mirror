@@ -214,7 +214,7 @@ D(bug("checkexistreplace() returned %ld\n",a));
 }
 
 int lockandexamine(name,fib)
-char *name;
+const char *name;
 struct FileInfoBlock *fib;
 {
     BPTR lock;
@@ -581,7 +581,7 @@ int dx;
 
 void fix_requester(req,title)
 struct RequesterBase *req;
-char *title;
+const char *title;
 {
     req->rb_fg=screen_pens[config->requestfg].pen;
     req->rb_bg=screen_pens[config->requestbg].pen;

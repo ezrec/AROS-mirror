@@ -32,7 +32,7 @@ the existing commercial status of Directory Opus 5.
 
 static struct dopusfunction *seldrive;
 
-dodriveconfig()
+int dodriveconfig()
 {
     ULONG class;
     UWORD code,gadgetid,qual;
@@ -448,7 +448,7 @@ struct Gadget *gadget;
     }
 }
 
-doinitdrivetext(id)
+int doinitdrivetext(id)
 int id;
 {
     int mode=-1;
@@ -486,10 +486,10 @@ int id;
     return(mode);
 }
 
-docolourgad(r,x,y,mx,my,name,fp,bp,type)
+int docolourgad(r,x,y,mx,my,name,fp,bp,type)
 struct RastPort *r;
 int x,y,mx,my;
-char *name;
+const char *name;
 int *fp,*bp,type;
 {
     int num,box;
