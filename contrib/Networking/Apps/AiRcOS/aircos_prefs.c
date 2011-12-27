@@ -48,8 +48,8 @@
 #include "locale.h"
 
 
-char *aircos_Prefs_DefUser;
-char *aircos_Prefs_DefNick;
+const char *aircos_Prefs_DefUser;
+const char *aircos_Prefs_DefNick;
 
 BOOL aircosApp_loadPrefs()
 {

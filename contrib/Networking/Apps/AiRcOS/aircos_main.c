@@ -196,8 +196,8 @@ D(bug("[AiRcOS] TextEditor_Dispatcher: OM_NEW\n"));
       struct CustomTEInstData *data = INST_DATA(CLASS, self);
 
       data->cte_ChanPriv = (struct IRC_Channel_Priv *)GetTagData (MUIA_CustTextEditor_ChannelPrivate, (ULONG) NULL, ((struct opSet *)message)->ops_AttrList);;
-      data->cte_ServPriv = (struct IRC_Channel_Priv *)GetTagData (MUIA_CustTextEditor_ServerPrivate, (ULONG) NULL, ((struct opSet *)message)->ops_AttrList);;
-      return self;
+      data->cte_ServPriv = (struct IRC_Server_Priv *)GetTagData (MUIA_CustTextEditor_ServerPrivate, (ULONG) NULL, ((struct opSet *)message)->ops_AttrList);;
+      return (IPTR)self;
     }
     return FALSE;
     break;
@@ -293,14 +293,16 @@ D(bug("[AiRcOS] TextEditor_Dispatcher: MUIM_DragQuery\n"));
 		case MUIM_DragDrop:
 		{
 D(bug("[AiRcOS] TextEditor_Dispatcher: MUIM_DragDrop\n"));
-         struct MUIP_DragDrop *drop_msg = (struct MUIP_DragDrop *)message;
-         ULONG active;
+#if 0
+			 struct MUIP_DragDrop *drop_msg = (struct MUIP_DragDrop *)message;
+			 ULONG active;
 
-			//if(GetAttr(MUIA_List_Active, drop_msg->obj, &active))
-			//{
-				//DoMethod(obj, MUIM_TextEditor_InsertText, StdEntries[active]);
-			//}
+			if(GetAttr(MUIA_List_Active, drop_msg->obj, &active))
+			{
+				DoMethod(obj, MUIM_TextEditor_InsertText, StdEntries[active]);
+			}
 			break;
+#endif
 		}
 
       case MUIM_HandleEvent:
@@ -354,7 +356,7 @@ D(bug("[AiRcOS] TextEditor_Dispatcher: MUIM_TextEditor_HandleEvent: Valid cursor
                    crsr_Ncomplete.MinX = 0;
                    crsr_Ncomplete.MaxY = crsr_Ncomplete.MinY;
 
-                   inputGadBuffer = DoMethod( self, MUIM_TextEditor_ExportText );                                      
+                   inputGadBuffer = (APTR)DoMethod( self, MUIM_TextEditor_ExportText );                                      
 
                    int curline = 0, cur_pos=0;
                    while (curline <= crsr_Ncomplete.MinY)
@@ -732,7 +734,7 @@ D(bug("[AiRcOS] serverconnect(%s)\n",makeThisConnection->connection_server));
 
     struct sockaddr_in sa;
     struct hostent *hp=NULL;
-    int t=0;
+//    int t=0;
 
     if (!(SocketBase))
     {
@@ -766,7 +768,7 @@ D(bug("[AiRcOS](serverconnect) Failed to allocate recieve buffer!\n"));
 
 D(bug("[AiRcOS](serverconnect) found hostname record for '%s'\n",hp->h_name));
 
-#warning "TODO: hostent record seems malformed?"
+// TODO: hostent record seems malformed?"
 //    for (t = 0, makeThisConnection->connection_socket = -1; makeThisConnection->connection_socket < 0 && hp->h_addr_list[t] != NULL; t++)
 // {
         memset(&sa, 0L, sizeof(struct sockaddr_in));
@@ -796,7 +798,7 @@ D(bug("[AiRcOS](serverconnect) socket lvl connection established\n[AiRcOS](serve
                     makeThisConnection->connection_user);
                 aircosApp_sendline(makeThisConnection);
 D(bug("[AiRcOS](serverconnect) Sent USER NAME ..\n"));
-                if (makeThisConnection->connection_pass != "")
+                if (makeThisConnection->connection_pass[0] != 0)
                 {
                     sprintf(makeThisConnection->connection_buff_send, "PASS :%s\n", makeThisConnection->connection_pass);
                     aircosApp_sendline(makeThisConnection);
@@ -911,13 +913,13 @@ D(bug("\n"));
             *AiRcOS_Base->Ai_tmp = '\0';
     }
     
-#warning "CHECKME: added NULL check for connection_serv_ARGS[1]"
+// CHECKME: added NULL check for connection_serv_ARGS[1]"
     if (process_thisConnection->connection_serv_ARGS[1] && (pos = atoi(process_thisConnection->connection_serv_ARGS[1])))
     {
 D(bug("[AiRcOS](processserverdata) Calling IRC DoNumeric funtion for %d\n", pos));
         pos = aircos_IRC_donumeric(process_thisConnection, pos);
     }
-#warning "CHECKME: added NULL check for connection_serv_ARGS[1]"
+// CHECKME: added NULL check for connection_serv_ARGS[1]"
     else if (process_thisConnection->connection_serv_ARGS[1])
     {
 D(bug("[AiRcOS](processserverdata) Text Command recieved '%s'\n",process_thisConnection->connection_serv_ARGS[1]));
@@ -937,7 +939,7 @@ D(bug("[AiRcOS](processserverdata) Calling IRC NOP funtion\n"));
     }
 D(bug("[AiRcOS](processserverdata) Returned from IRC funtion\n"));
     
-#warning "CHECKME: added NULL check for connection_serv_ARGS[1]"
+// CHECKME: added NULL check for connection_serv_ARGS[1]"
     if (process_thisConnection->connection_serv_ARGS[1] && strncmp(process_thisConnection->connection_serv_ARGS[1], "Closing", 7) == 0)
     {
     return (AiRcOS_Base->Ai_reconnect = 0);
@@ -1034,7 +1036,7 @@ D(bug("[AiRcOS](serverconnect_func) Failed to create connection page!!.\n"));
         set(AiRcOS_Base->aircos_quickconnectwin, MUIA_Window_Open, FALSE);
       
 D(bug("[AiRcOS](serverconnect_func) Socket connection successfull\n"));
-        if (join_channel != "")
+        if (join_channel[0] != 0)
         {
 D(bug("[AiRcOS](serverconnect_func) Attempting to join channel %s ..\n", join_channel));
 
@@ -1276,7 +1278,7 @@ int main(int argc, char **argv)
     IPTR                    argarray[TOTAL_ARGS] = { 0 };
     struct RDArgs           *args = NULL;
     
-    BPTR                    lock = NULL;
+    BPTR                    lock = BNULL;
 
 //    struct IRC_Server_Priv  *irc_server_priv    = NULL;
 //    struct IRC_Channel_Priv  *irc_channel_priv  = NULL;
@@ -1388,8 +1390,8 @@ D(bug("[AiRcOS](main) Failed to allocate pool!!\n"));
     */
     /* Get the speech icon image */
         
-        lock = NULL;
-        if ((lock = Lock(SPEEKTYPE_IMAGE, ACCESS_READ)) != NULL)
+        lock = BNULL;
+        if ((lock = Lock(SPEEKTYPE_IMAGE, ACCESS_READ)) != BNULL)
         {
             AiRcOS_Base->aircos_got_speekimg = TRUE;
     
@@ -1399,8 +1401,8 @@ D(bug("[AiRcOS](main) Failed to allocate pool!!\n"));
         
     /* Get the user icon image */
         
-        lock = NULL;
-        if ((lock = Lock(USERTYPE_IMAGE, ACCESS_READ)) != NULL)
+        lock = BNULL;
+        if ((lock = Lock(USERTYPE_IMAGE, ACCESS_READ)) != BNULL)
         {
             AiRcOS_Base->aircos_got_userimg = TRUE;
     
@@ -1410,8 +1412,8 @@ D(bug("[AiRcOS](main) Failed to allocate pool!!\n"));
     
     /* Get the font etc icons */
         
-        lock = NULL;
-        if ((lock = Lock(FONT_BACK_IMAGE, ACCESS_READ)) != NULL)
+        lock = BNULL;
+        if ((lock = Lock(FONT_BACK_IMAGE, ACCESS_READ)) != BNULL)
         {
             AiRcOS_Base->aircos_got_fontbaimg = TRUE;
     
@@ -1419,8 +1421,8 @@ D(bug("[AiRcOS](main) Failed to allocate pool!!\n"));
         }
         else AiRcOS_Base->aircos_got_fontbaimg = FALSE;
         
-        lock = NULL;
-        if ((lock = Lock(FONT_BOLD_IMAGE, ACCESS_READ)) != NULL)
+        lock = BNULL;
+        if ((lock = Lock(FONT_BOLD_IMAGE, ACCESS_READ)) != BNULL)
         {
             AiRcOS_Base->aircos_got_fontboimg = TRUE;
     
@@ -1428,8 +1430,8 @@ D(bug("[AiRcOS](main) Failed to allocate pool!!\n"));
         }
         else AiRcOS_Base->aircos_got_fontboimg = FALSE;
         
-        lock = NULL;
-        if ((lock = Lock(FONT_COLOR_IMAGE, ACCESS_READ)) != NULL)
+        lock = BNULL;
+        if ((lock = Lock(FONT_COLOR_IMAGE, ACCESS_READ)) != BNULL)
         {
             AiRcOS_Base->aircos_got_fontcoimg = TRUE;
     
@@ -1437,8 +1439,8 @@ D(bug("[AiRcOS](main) Failed to allocate pool!!\n"));
         }
         else AiRcOS_Base->aircos_got_fontcoimg = FALSE;
         
-        lock = NULL;
-        if ((lock = Lock(FONT_DEF_IMAGE, ACCESS_READ)) != NULL)
+        lock = BNULL;
+        if ((lock = Lock(FONT_DEF_IMAGE, ACCESS_READ)) != BNULL)
         {
             AiRcOS_Base->aircos_got_fontdeimg = TRUE;
     
@@ -1446,8 +1448,8 @@ D(bug("[AiRcOS](main) Failed to allocate pool!!\n"));
         }
         else AiRcOS_Base->aircos_got_fontdeimg = FALSE;
         
-        lock = NULL;
-        if ((lock = Lock(FONT_ITAL_IMAGE, ACCESS_READ)) != NULL)
+        lock = BNULL;
+        if ((lock = Lock(FONT_ITAL_IMAGE, ACCESS_READ)) != BNULL)
         {
             AiRcOS_Base->aircos_got_fontitimg = TRUE;
     
@@ -1455,8 +1457,8 @@ D(bug("[AiRcOS](main) Failed to allocate pool!!\n"));
         }
         else AiRcOS_Base->aircos_got_fontitimg = FALSE;
         
-        lock = NULL;
-        if ((lock = Lock(FONT_LARGE_IMAGE, ACCESS_READ)) != NULL)
+        lock = BNULL;
+        if ((lock = Lock(FONT_LARGE_IMAGE, ACCESS_READ)) != BNULL)
         {
             AiRcOS_Base->aircos_got_fontlaimg = TRUE;
     
@@ -1464,8 +1466,8 @@ D(bug("[AiRcOS](main) Failed to allocate pool!!\n"));
         }
         else AiRcOS_Base->aircos_got_fontlaimg = FALSE;
         
-        lock = NULL;
-        if ((lock = Lock(FONT_SMALL_IMAGE, ACCESS_READ)) != NULL)
+        lock = BNULL;
+        if ((lock = Lock(FONT_SMALL_IMAGE, ACCESS_READ)) != BNULL)
         {
             AiRcOS_Base->aircos_got_fontsmimg = TRUE;
     
@@ -1473,8 +1475,8 @@ D(bug("[AiRcOS](main) Failed to allocate pool!!\n"));
         }
         else AiRcOS_Base->aircos_got_fontsmimg = FALSE;
         
-        lock = NULL;
-        if ((lock = Lock(FONT_UNDER_IMAGE, ACCESS_READ)) != NULL)
+        lock = BNULL;
+        if ((lock = Lock(FONT_UNDER_IMAGE, ACCESS_READ)) != BNULL)
         {
             AiRcOS_Base->aircos_got_fontunimg = TRUE;
     
@@ -1482,8 +1484,8 @@ D(bug("[AiRcOS](main) Failed to allocate pool!!\n"));
         }
         else AiRcOS_Base->aircos_got_fontunimg = FALSE;
         
-        lock = NULL;
-        if ((lock = Lock(POP_PIC_IMAGE, ACCESS_READ)) != NULL)
+        lock = BNULL;
+        if ((lock = Lock(POP_PIC_IMAGE, ACCESS_READ)) != BNULL)
         {
             AiRcOS_Base->aircos_got_poppicimg = TRUE;
     
@@ -1491,8 +1493,8 @@ D(bug("[AiRcOS](main) Failed to allocate pool!!\n"));
         }
         else AiRcOS_Base->aircos_got_poppicimg = FALSE;
         
-        lock = NULL;
-        if ((lock = Lock(POP_SMILEY_IMAGE, ACCESS_READ)) != NULL)
+        lock = BNULL;
+        if ((lock = Lock(POP_SMILEY_IMAGE, ACCESS_READ)) != BNULL)
         {
             AiRcOS_Base->aircos_got_popsmiimg = TRUE;
     
@@ -1500,8 +1502,8 @@ D(bug("[AiRcOS](main) Failed to allocate pool!!\n"));
         }
         else AiRcOS_Base->aircos_got_popsmiimg = FALSE;
         
-        lock = NULL;
-        if ((lock = Lock(POP_URL_IMAGE, ACCESS_READ)) != NULL)
+        lock = BNULL;
+        if ((lock = Lock(POP_URL_IMAGE, ACCESS_READ)) != BNULL)
         {
             AiRcOS_Base->aircos_got_popurlimg = TRUE;
     
@@ -1614,12 +1616,12 @@ D(bug("[AiRcOS](main) Zune Application Objects Created\n"));
             ( IPTR ) AiRcOS_Base->aircos_app, 3, MUIM_CallHook, ( IPTR )&AiRcOS_Base->aircos_menuhook, MUIV_EveryTime
          );
     
-         set( (IPTR)AiRcOS_Base->butt_connectServer, MUIA_CycleChain, 1);
+         set( (APTR)AiRcOS_Base->butt_connectServer, MUIA_CycleChain, 1);
     
-         set( (IPTR)AiRcOS_Base->quickcon_servadd, MUIA_String_Contents, _(MSG_DEFAULT_SERVER));
-         set( (IPTR)AiRcOS_Base->quickcon_servport, MUIA_String_Integer, 6665);
-         set( (IPTR)AiRcOS_Base->quickcon_servpass, MUIA_String_Contents,"");
-         set( (IPTR)AiRcOS_Base->quickcon_channel, MUIA_String_Contents, _(MSG_DEFAULT_CHAN));
+         set( (APTR)AiRcOS_Base->quickcon_servadd, MUIA_String_Contents, _(MSG_DEFAULT_SERVER));
+         set( (APTR)AiRcOS_Base->quickcon_servport, MUIA_String_Integer, 6665);
+         set( (APTR)AiRcOS_Base->quickcon_servpass, MUIA_String_Contents,"");
+         set( (APTR)AiRcOS_Base->quickcon_channel, MUIA_String_Contents, _(MSG_DEFAULT_CHAN));
     
     
 D(bug("[AiRcOS] prepare connect hook\n"));
@@ -1649,14 +1651,14 @@ D(bug("[AiRcOS] prepare connect hook\n"));
                 AiRcOS_Base->aircos_quickconnectwin, 3, MUIM_Set, MUIA_Window_Open, TRUE
          );
     
-          set((IPTR)AiRcOS_Base->aircos_clientwin, MUIA_Window_Open, TRUE);
+          set((APTR)AiRcOS_Base->aircos_clientwin, MUIA_Window_Open, TRUE);
 
           serverconnectWin = aircos_showServerConnect(); 
           aircosApp_loadPrefs();
 
-          set((IPTR)AiRcOS_Base->quickcon_servuser, MUIA_String_Contents, aircos_Prefs_DefUser);
-          set((IPTR)AiRcOS_Base->quickcon_nick, MUIA_String_Contents, aircos_Prefs_DefNick);
-          set((IPTR)AiRcOS_Base->aircos_quickconnectwin, MUIA_Window_Open, TRUE);
+          set((APTR)AiRcOS_Base->quickcon_servuser, MUIA_String_Contents, aircos_Prefs_DefUser);
+          set((APTR)AiRcOS_Base->quickcon_nick, MUIA_String_Contents, aircos_Prefs_DefNick);
+          set((APTR)AiRcOS_Base->aircos_quickconnectwin, MUIA_Window_Open, TRUE);
 
           aircosApp_MainProcessLoop();
         }

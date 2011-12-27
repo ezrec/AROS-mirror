@@ -137,7 +137,7 @@ char *FormatToSend(char *unformatted_string)
 char *FormatToDisplay(char *formatted_string)
 {
   int    pos = 0, code = 0, swap_code = 0;
-  IPTR	buff_position = NULL;
+  APTR	buff_position = NULL;
   BOOL   format_bold = FALSE, format_reverse = FALSE, format_underline = FALSE, format_cleared = FALSE;
 
 D(bug("[AiRcOS] formattodisplay( %d chars, '%s')\n", strlen(formatted_string), formatted_string));
@@ -264,7 +264,7 @@ D(bug("[AiRcOS] formattodisplay: copied string end(%d bytes)\n", remaining_chars
          }
          else
          {
-           ULONG diff = src_code_len - dst_code_len;
+           D(ULONG diff = src_code_len - dst_code_len;)
 D(bug("[AiRcOS] formattodisplay: new Escape sequence is %d bytes shorter!!\n", diff));         
          }
 
@@ -382,6 +382,7 @@ D(bug("[AiRcOS] ## IRC ## DoJoin('%s') [ nick='%s', server ='%s' ]\n", currentCo
 D(bug("[AiRcOS]#DoJoin# YOU have joined channel ..\n"));
       struct IRC_Channel_Priv *irc_newChannel = NULL;
       irc_newChannel = aircos_add_channel(currentConnection->connected_server->serv_name, currentConnection->connection_serv_ARGS[2]);
+      (void)irc_newChannel; // FIXME: Should we check for success?
     }
 	else
 	{
@@ -544,8 +545,6 @@ D(bug("[AiRcOS](irc;DoNick) Users Record found - removing\n"));
             if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline), MEMF_CLEAR ) ))
             {
 D(bug("[AiRcOS](irc;DoNick) Displaying Message\n"));
-               char *tmpline = (char *)&sa[1];
-
 		         sa->so_name = AllocVec(strlen( username ) + strlen( nicknamenew ) + strlen(_(MSG_CHANGED_NICK)) + 1,MEMF_CLEAR|MEMF_PUBLIC);
 		         sprintf( sa->so_name, _(MSG_CHANGED_NICK), username, nicknamenew );
 
@@ -709,7 +708,7 @@ static int aircos_IRC_doprivmsg(struct IRC_Connection_Private	*currentConnection
 {
 D(bug("[AiRcOS] ## IRC ## DoPrivMsg()\n"));
 
-#warning "TODO : DoPrivMsg() If the user is on our ignore list, do nothing.."
+// TODO : DoPrivMsg() If the user is on our ignore list, do nothing.."
 
     if (!isIRCChannel(currentConnection->connection_serv_ARGS[2]))
 	{
@@ -1043,14 +1042,12 @@ static int aircos_CLIENT_doSingleArg(struct IRC_Channel_Priv  *sendOnThisChannel
 D(bug("[AiRcOS] ## CLIENT ## DoSingleArg(Action:'%s', Arg:'",sendOnThisChannel->chan_send_ARGS[0]));
    int action_argcount = 1;
 //   int i = 0;
-   ULONG action_argsize = 0;
 
    while (sendOnThisChannel->chan_send_ARGS[action_argcount] != NULL)
    {
 D(bug(" %s",sendOnThisChannel->chan_send_ARGS[action_argcount]));
        action_argcount++;
        *(sendOnThisChannel->chan_send_ARGS[action_argcount]-1) = ' ';
-       action_argsize = strlen(sendOnThisChannel->chan_send_ARGS[action_argcount])+1;
    }
 D(bug("')\n"));
 
@@ -1066,14 +1063,12 @@ static int aircos_CLIENT_doMe(struct IRC_Channel_Priv  *sendOnThisChannel)
 D(bug("[AiRcOS] ## CLIENT ## DoMe('"));
    int action_argcount = 1;
 //   int i = 0;
-   ULONG action_argsize = 0;
 
 while (sendOnThisChannel->chan_send_ARGS[action_argcount] != NULL)
    {
 D(bug(" %s",sendOnThisChannel->chan_send_ARGS[action_argcount]));
       action_argcount++;
       *(sendOnThisChannel->chan_send_ARGS[action_argcount]-1) = ' ';
-      action_argsize = strlen(sendOnThisChannel->chan_send_ARGS[action_argcount])+1;
    }
 D(bug("')\n"));
 
@@ -1607,11 +1602,11 @@ AROS_UFH3(void, parseoutput_func,
    char                    *rawoutput = NULL;
    int pos, found = 0;
 
-   rawoutput = DoMethod( obj, MUIM_TextEditor_ExportText );
+   rawoutput = (char *)DoMethod( obj, MUIM_TextEditor_ExportText );
 
 D(bug("[AiRcOS](parseoutput_func) Parse output for channel '%s' [%x:'%s']\n", sendOnThisChannel->chan_name, rawoutput, rawoutput));
 
-   if (rawoutput == "") return;
+   if (rawoutput[0] == 0) return;
 
    if (!(rawoutput[0] == '/'))
    {

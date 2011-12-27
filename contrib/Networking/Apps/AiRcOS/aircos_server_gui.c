@@ -54,12 +54,12 @@ Object                        *select_dropbox_server = NULL;
 
 STRPTR	                     network_list_empty[2] =
 {
-  {"<List Empty>"},
+  "<List Empty>",
   NULL
 };
 STRPTR	                     server_list_empty[2] =
 {
-  {"<List Empty>"},
+  "<List Empty>",
   NULL
 };
 Object	                     *servermodWin;
@@ -74,7 +74,7 @@ STRPTR	                     *server_list;
 
 #define AIRCOS_DEF_SERVERSFILE "servers.dat"
 
-aircosApp_LoadServers()
+void aircosApp_LoadServers()
 {
   aircos_Prefs_ServersLoaded = TRUE;
 }
@@ -176,7 +176,7 @@ D(bug("[AiRcOS] updatenetworklist_func: ERROR - couldnt allocate memory for netw
   if (!(new_dropbox_network = MUI_MakeObject(MUIO_Cycle, NULL, network_list)))
   {
 D(bug("[AiRcOS] updatenetworklist_func: Failed to create Network dropdown\n"));
-    return NULL;
+    return;
   }
 
   if (DoMethod(select_dropboxgrp_network, MUIM_Group_InitChange))
@@ -266,7 +266,7 @@ D(bug("[AiRcOS] updateserverlist_func: ERROR - couldnt allocate memory for serve
   if (!(new_dropbox_server = MUI_MakeObject(MUIO_Cycle, NULL, server_list)))
   {
 D(bug("[AiRcOS] updateserverlist_func: Failed to create Server dropdown\n"));
-    return NULL;
+    return;
   }
 
   if (DoMethod(select_dropboxgrp_server, MUIM_Group_InitChange))
@@ -323,7 +323,7 @@ D(bug("[AiRcOS](serversave_func) created new server node for '%s'\n", newsaveSer
      newsaveServer->asn_Network = newsaveNetwork;
      get( input_server_port, MUIA_String_Integer, &newsaveServer->asn_Port);
 
-#warning "TODO: we need to store the password also here .."
+// TODO: we need to store the password also here .."
 
      AddTail((struct List *)&aircos_Prefs_Servers, (struct Node *)&newsaveServer->asn_Node);
      newsaveServer_update = TRUE;
