@@ -1448,7 +1448,10 @@ int main(int argc,char *argv[])
     get(cn->Window, MUIA_Window_Open, &iresult);
     if ((BOOL) iresult == TRUE)
     {
-        int command, sel_sock, mui_res, ret, local_errno, optlen;
+#ifdef DEBUGLV3
+	int local_errno;
+#endif
+        int command, sel_sock, mui_res, ret, optlen;
         struct fd_set readfd, writefd, exceptfd;
         SOCKET highest_sock = INVALID_SOCKET;
         ULONG sigs = 0, sigmask = 0;
@@ -1682,8 +1685,8 @@ int main(int argc,char *argv[])
                                                 }
                                         }
                                 } else if (sel_sock < 0) {
-                                        local_errno = errno;
                                         #ifdef DEBUGLV3
+                                        local_errno = errno;
                                         DebugOutput("\nMainLoop(): sel_sock < 0\n");
                                         #endif
                                         
@@ -2802,6 +2805,8 @@ int GetFtpCommand(struct buffer *buffer, Connection *cn)
         DebugOutput("GetFtpCommand(): Valid command not found\n");
         DebugOutput(buffer->ptr);
     } 
+#else
+    (void)done; // Unused
 #endif
     
     return command;
@@ -3214,7 +3219,7 @@ BOOL RefreshLocalView(Connection *cn)
     ViewColumn vc, *vcptr;
     BOOL b_ret = TRUE;
     IPTR itemp;
-    APTR lock;
+    BPTR lock;
 
     get(cn->S_LEFT_VIEW_PATH, MUIA_String_Contents, &itemp);
     caf_strncpy(path, (char *) itemp, 512);
@@ -3285,7 +3290,7 @@ BOOL RefreshLocalView(Connection *cn)
                 if (vcptr)
                     DoMethod(lv->ListView, MUIM_NList_InsertSingle, (IPTR *) vcptr, MUIV_NList_Insert_Top);
             } else {
-                snprintf(temp, 512, "LOCAL: Examine() failed, the specified path is not a directory, fib->fib_DirEntryType = %d", fib->fib_DirEntryType);
+                snprintf(temp, 512, "LOCAL: Examine() failed, the specified path is not a directory, fib->fib_DirEntryType = %d", (int)fib->fib_DirEntryType);
                 MUI_AddStatusWindow(cn, temp);
                 set(cn->S_LEFT_VIEW_PATH, MUIA_String_Contents, cn->lv.CurrentPath);
             }
@@ -3834,6 +3839,7 @@ char *BufferAddStr(buffer *buf, char *string)
         return 0;
     }
     copied = caf_strcpy(ret_ptr, string);
+    (void)copied; // FIXME: Check for overrun!
     buf->curpos += slen+1+pad;
 
     return ret_ptr;
@@ -4129,7 +4135,7 @@ BOOL LocalDirScan(Connection *cn, char *pathname, char *basepath, int base_start
 {
     struct FileInfoBlock *fib = 0;
     char temp[512], curdir[512];
-    APTR lock = &lock;
+    BPTR lock = (BPTR)-1;
     char *ptr;
 
     fib = AllocDosObject(DOS_FIB, NULL);
@@ -4312,6 +4318,7 @@ void LoadConfig(Connection *cn)
 
                             // Read number of records in file
                             nrecords = MemReadDword(&ptr);
+                            (void)nrecords; // FIXME: Check # of records!
 
 #ifdef DEBUGLV2
                             printf("LoadConfig(): connect_timeout = %d\n", itemp);
@@ -4465,6 +4472,7 @@ void LoadConfig2(Connection *cn)
 
                             // Read configuration version
                             config_version = MemReadDword(&ptr);
+                            (void)config_version; // FIXME: Check version!
 
                             // Read number of records
                             nrecs =  MemReadDword(&ptr);
@@ -5124,7 +5132,7 @@ void OnDeleteBtnClick(Connection *cn)
 void OnLeftListviewDblClick(Connection *cn)
 {
     LocalView *lv = &cn->lv;
-    APTR lock, lockp;
+    BPTR lock, lockp;
     ViewColumn *vc;
     char temp[512];
     IPTR itmp;
