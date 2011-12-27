@@ -74,6 +74,7 @@ extern int errno;
 # ifndef HAVE_SELECT
 #  define HAVE_SELECT
 # endif
+# undef select
 # define select( args... )	WaitSelect( args, NULL )
 #endif
 

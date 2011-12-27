@@ -373,10 +373,9 @@ home_dir (void)
 static char *
 wgetrc_file_name (void)
 {
-  char *env, *home;
   char *file = NULL;
-
 #ifndef _AMIGASF
+  char *env, *home;
 
   /* Try the environment.  */
   env = getenv ("WGETRC");
