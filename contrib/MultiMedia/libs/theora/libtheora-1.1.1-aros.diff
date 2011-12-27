@@ -1,6 +1,6 @@
-diff -ur libtheora-1.1.1.orig/config.sub libtheora-1.1.1/config.sub
---- libtheora-1.1.1.orig/config.sub	2011-12-21 03:34:20.000000000 -0500
-+++ libtheora-1.1.1/config.sub	2009-10-01 14:04:08.000000000 -0400
+diff -Naur libtheora-1.1.1-orig/config.sub libtheora-1.1.1/config.sub
+--- libtheora-1.1.1-orig/config.sub	2009-02-24 04:50:50.000000000 +0100
++++ libtheora-1.1.1/config.sub	2011-12-27 11:21:52.575097366 +0100
 @@ -1216,6 +1216,8 @@
  		;;
  	-none)
@@ -10,18 +10,10 @@ diff -ur libtheora-1.1.1.orig/config.sub libtheora-1.1.1/config.sub
  	*)
  		# Get rid of the `-' at the beginning of $os.
  		os=`echo $os | sed 's/[^-]*-//'`
-diff -ur libtheora-1.1.1.orig/configure libtheora-1.1.1/configure
---- libtheora-1.1.1.orig/configure	2011-12-21 03:30:03.000000000 -0500
-+++ libtheora-1.1.1/configure	2011-12-21 03:35:26.000000000 -0500
-@@ -11849,7 +11849,6 @@
- fi
- 
- 
--echo "==== I AM $host ====="
- cflags_save="$CFLAGS"
- if test -z "$GCC"; then
-         case $host in
-@@ -11861,6 +11860,10 @@
+diff -Naur libtheora-1.1.1-orig/configure libtheora-1.1.1/configure
+--- libtheora-1.1.1-orig/configure	2009-10-01 20:04:08.000000000 +0200
++++ libtheora-1.1.1/configure	2011-12-27 11:22:31.356545090 +0100
+@@ -11861,6 +11861,10 @@
  else
  
          case $host in
@@ -32,9 +24,9 @@ diff -ur libtheora-1.1.1.orig/configure libtheora-1.1.1/configure
          *)
                  DEBUG="-g -Wall -Wno-parentheses -DDEBUG -D__NO_MATH_INLINES"
                  CFLAGS="-Wall -Wno-parentheses -O3 -fforce-addr -fomit-frame-pointer -finline-functions -funroll-loops"
-diff -ur libtheora-1.1.1.orig/configure.ac libtheora-1.1.1/configure.ac
---- libtheora-1.1.1.orig/configure.ac	2009-10-01 14:04:08.000000000 -0400
-+++ libtheora-1.1.1/configure.ac	2011-12-21 03:35:15.000000000 -0500
+diff -Naur libtheora-1.1.1-orig/configure.ac libtheora-1.1.1/configure.ac
+--- libtheora-1.1.1-orig/configure.ac	2009-10-01 20:00:33.000000000 +0200
++++ libtheora-1.1.1/configure.ac	2011-12-27 11:23:23.475691517 +0100
 @@ -166,6 +166,10 @@
  else
  
