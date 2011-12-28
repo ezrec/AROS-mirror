@@ -60,7 +60,7 @@ extern BOOL using_proxy;      /* are we using an HTTP proxy gateway? */
 **
 */
 PUBLIC int HTLoadHTTP ARGS4 (
-	char *, 		arg,
+	CONST char *, 		arg,
 	HTParentAnchor *,	anAnchor,
 	HTFormat,		format_out,
 	HTStream*,		sink)
@@ -75,7 +75,6 @@ PUBLIC int HTLoadHTTP ARGS4 (
   HTStream *target;		/* Unconverted data */
   HTFormat format_in;			/* Format arriving in the message */
   
-  BOOL had_header;		/* Have we had at least one header? */
   char *line_buffer;
   char *line_kept_clean;
   BOOL extensions;		/* Assume good HTTP server */
@@ -115,7 +114,6 @@ PUBLIC int HTLoadHTTP ARGS4 (
      so we can start over here... */
   eol = 0;
   bytes_already_read = 0;
-  had_header = NO;
   length = 0;
   doing_redirect = 0;
   compressed = 0;
@@ -180,9 +178,9 @@ PUBLIC int HTLoadHTTP ARGS4 (
   
   if (extensions) 
     {
+#if	0
       int n, i;
       
-#if	0
       if (!HTPresentations) HTFormatInit();
       n = HTList_count(HTPresentations);
       
@@ -286,7 +284,6 @@ PUBLIC int HTLoadHTTP ARGS4 (
              command);
   
   HTProgress ("Sending HTTP request.");
-
   status = NETWRITE(s, command, (int)strlen(command));
 #ifdef PEM_AUTH
   if(body) {
@@ -352,7 +349,6 @@ PUBLIC int HTLoadHTTP ARGS4 (
   {
     /* Get numeric status etc */
     BOOL end_of_file = NO;
-    HTAtom * encoding = HTAtom_for("8bit");
     int buffer_length = INIT_LINE_SIZE;
     
     line_buffer = (char *) malloc(buffer_length * sizeof(char));

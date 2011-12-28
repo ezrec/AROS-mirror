@@ -117,7 +117,7 @@ Editor (const UBYTE *filename)
 
 	if (erslt)
 	{
-		sprintf (buf, "Editor returned error %ld\nMessage discarded", erslt);
+		sprintf (buf, "Editor returned error %ld\nMessage discarded", (long)erslt);
 		application_user_feedback (buf);
 		goto leave;
 	}
@@ -174,7 +174,7 @@ SendMail (const int edit, const UBYTE *filename)
 		*buf   = malloc (256),
 		*fname = malloc (len);
 	BPTR
-		inp = NULL;
+		inp = BNULL;
 
 	if (!buf)
 	{
@@ -221,7 +221,7 @@ SendMail (const int edit, const UBYTE *filename)
 		if (rslt < 0)
 			sprintf (buf, "Could not initiate %s", amiga_sendmail);
 		else
-			sprintf (buf, "Error from %s\nReturn value %ld", amiga_sendmail, rslt);
+			sprintf (buf, "Error from %s\nReturn value %ld", amiga_sendmail, (long)rslt);
 		application_user_feedback (buf);
 	}
 
@@ -270,7 +270,7 @@ AppendHeader (BPTR file)
 	winptr = me->pr_WindowPtr;
 	me->pr_WindowPtr = (APTR) -1;
 
-	if (header = Open ((UBYTE *) H_Name, MODE_OLDFILE))
+	if ((header = Open ((UBYTE *) H_Name, MODE_OLDFILE)))
 	{
 		while (FGets (header, buf, 254))
 		{
@@ -311,7 +311,7 @@ AppendSignature (BPTR file)
 	winptr = me->pr_WindowPtr;
 	me->pr_WindowPtr = (APTR) -1;
 
-	if (sig = Open ((UBYTE *) S_Name, MODE_OLDFILE))
+	if ((sig = Open ((UBYTE *) S_Name, MODE_OLDFILE)))
 	{
 		Write (file, "-- \n", 4);
 		while (FGets (sig, buf, 254))
@@ -327,7 +327,7 @@ AppendSignature (BPTR file)
 	return;
 }
 
-static const UBYTE
+static const char
 	HEADER_Start [] = "To: %s\nSubject: %s%s\n";
 static long
 	temp_inx = 1;
@@ -338,7 +338,7 @@ OpenTemp (UBYTE *ptr)
 	BPTR
 		t;
 
-	sprintf (ptr, "T:T.%lx.%ld.mosaic", FindTask (NULL), temp_inx++);
+	sprintf (ptr, "T:T.%p.%ld.mosaic", FindTask (NULL), (long)(temp_inx++));
 	t = Open (ptr, MODE_NEWFILE);
 	if (!t)
 	{
@@ -357,7 +357,7 @@ Compose (const char *where, const char *orig_url)
 	BPTR
 		mail;
 	LONG
-		rslt;
+		rslt = 0;
 
 	if (!ptr)
 	{
@@ -437,7 +437,7 @@ HTLoadMail (const char * arg, HTParentAnchor * anchor, HTFormat format_out, HTSt
 		ptr += 7;
 
 	rslt = (int) Compose (ptr, anchor->address);
-	CTRACE (stderr, "Compose() returned %ld\n", rslt);
+	CTRACE (stderr, "Compose() returned %ld\n", (long)rslt);
 
 	return rslt;
 }

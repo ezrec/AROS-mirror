@@ -220,7 +220,7 @@ PUBLIC int HTOutputBinary ARGS2( int,		input,
 
 	  if (buf)
 	    {
-	      sprintf (buf, msg_fmt, err);
+	      sprintf (buf, msg_fmt, (long)err);
 	      application_user_feedback (buf);
 	      free (buf);
 	    }
@@ -537,7 +537,7 @@ PUBLIC int HTCopy ARGS3(int,			file_number,
       {
 	int i;
 
-	fprintf (stderr, "HTCopy: put_block on input_buffer '", input_buffer);
+	fprintf (stderr, "HTCopy: put_block on input_buffer '");
 	for (i = 0; i < status; i++)
 		if (isprint (input_buffer [i]))
 			fputc (input_buffer [i], stderr);

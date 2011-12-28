@@ -352,15 +352,15 @@ PRIVATE void HTMIME_put_character ARGS2(HTStream *, me, char, c)
 		fprintf (stderr, "[MIME_put_char] Lowercased to '%s'\n", me->value);
 	      me->format = HTAtom_for(me->value);
 	      if (TRACE)
-		fprintf (stderr, "[MIME_put_char] Got content-type value atom 0x%08x\n",
-			 me->format);
+		fprintf (stderr, "[MIME_put_char] Got content-type value atom '%s'\n",
+			 me->format->name);
 	      break;
 	    case CONTENT_TRANSFER_ENCODING:
 	      me->encoding = HTAtom_for(me->value);
 	      if (TRACE)
 		fprintf (stderr,
 			 "[MIME_put_char] Picked up transfer_encoding '%s'\n",
-			 me->encoding);
+			 me->encoding->name);
 	      break;
 	    case CONTENT_ENCODING:
 	      me->compression_encoding = strdup (me->value);
@@ -502,14 +502,14 @@ PRIVATE void HTMIME_free ARGS1(HTStream *, me)
       if (TRACE)
 	fprintf (stderr, "[HTMIME_free] Caught case where we didn't get a target.\n");
       if (TRACE)
-	fprintf (stderr, "  me 0x%08x, me->target 0x%08x\n", me, me->target);
+	fprintf (stderr, "  me %p, me->target %p\n", me, me->target);
       me->format = HTAtom_for ("text/html");
       me->target = HTStreamStack(me->format, me->targetRep, 0,
 				 me->sink, me->anchor);
       if (TRACE)
-	fprintf (stderr, "  me->target->isa 0x%08x\n", me->target->isa);
+	fprintf (stderr, "  me->target->isa %p\n", me->target->isa);
       if (TRACE)
-	fprintf (stderr, "  *me->target->isa 0x%08x\n", *me->target->isa);
+	fprintf (stderr, "  *me->target->isa '%s'\n", me->target->isa->name);
       me->targetClass = *me->target->isa;
       (*me->targetClass.put_string) (me->target, "<H1>ERROR IN HTTP/1.0 RESPONSE</H1> The remote server returned a HTTP/1.0 response that Mosaic's MIME parser could not understand.  Please contact the server maintainer.<P> Sorry for the inconvenience,"
 "<P><ADDRESS>The Management</ADDRESS>");

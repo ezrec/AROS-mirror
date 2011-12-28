@@ -292,6 +292,6 @@ extern void HTAnchor_setProtocol PARAMS((HTParentAnchor * me,
 */
 extern char * HTAnchor_physical PARAMS((HTParentAnchor * me));
 extern void HTAnchor_setPhysical PARAMS((HTParentAnchor * me,
-                                        char * protocol));
+                                        CONST char * protocol));
 
 #endif /* HTANCHOR_H */

@@ -26,6 +26,7 @@
 **                it is to be kept.
 */
 #ifdef __STDC__
+	struct sockaddr_in;
         extern char * HTInetString(struct sockaddr_in* sin);
 #else
         extern char * HTInetString();
@@ -100,7 +101,7 @@ extern unsigned int HTCardinal PARAMS((int *pstatus,
 
 extern char * HTHostName NOPARAMS;
 
-extern int HTDoConnect (char *, char *, int, int *);
+extern int HTDoConnect (CONST char *, CONST char *, int, int *);
 
 extern int HTDoRead (int, void *, unsigned);
 

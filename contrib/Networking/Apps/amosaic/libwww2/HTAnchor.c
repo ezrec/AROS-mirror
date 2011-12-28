@@ -106,7 +106,7 @@ PUBLIC HTChildAnchor * HTAnchor_findChild
 
   child = HTChildAnchor_new ();
   if (TRACE) fprintf(stderr, "new Anchor %p named `%s' is child of %p\n",
-       (void*)child, (int)tag ? tag : (CONST char *)"" , (void*)parent); /* int for apollo */
+       (void*)child, tag ? (CONST char *)tag : (CONST char *)"" , (void*)parent); /* int for apollo */
   HTList_addObject (parent->children, child);
   child->parent = parent;
   StrAllocCopy(child->tag, tag);
@@ -525,7 +525,7 @@ PUBLIC char * HTAnchor_physical ARGS1(HTParentAnchor *, me)
 }
 
 PUBLIC void HTAnchor_setPhysical ARGS2(HTParentAnchor *, me,
-	char *,	physical)
+	CONST char *,	physical)
 {
     StrAllocCopy(me->physical, physical);
 }

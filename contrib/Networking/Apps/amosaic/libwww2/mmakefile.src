@@ -47,7 +47,8 @@ FILES := \
 # Don't use these:
 #	HTFTP \
 
-USER_CFLAGS := $(USER_CFLAGS) -DUSE_DIRENT -D__BSD_VISIBLE=1
+USER_CFLAGS += -DUSE_DIRENT -D__BSD_VISIBLE=1
+USER_CFLAGS += -Wno-format-contains-nul
 
 %build_linklib mmake=linklibs-www2 libname=www2 files=$(FILES)
 

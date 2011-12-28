@@ -44,7 +44,7 @@ HTParse:  Parse a URL relative to another URL
                          
  */
 
-extern char * HTParse  PARAMS((char * aName, char * relatedName, int wanted));
+extern char * HTParse  PARAMS((CONST char * aName, CONST char * relatedName, int wanted));
 
 
 /*
@@ -119,7 +119,7 @@ HTEscape:  Encode unacceptable characters in string
    represented in the form %xy where X and Y are two hex digits.
    
  */
-extern char * HTEscape PARAMS((char * str));
+extern char * HTEscape PARAMS((CONST char * str));
 
 
 /*

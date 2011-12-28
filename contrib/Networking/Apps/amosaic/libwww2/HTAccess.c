@@ -127,11 +127,10 @@ extern HTProtocol HTWAIS;
 **
 */
 PRIVATE int get_physical ARGS2(
-	char *, 	addr,
+	CONST char *, 	addr,
 	HTParentAnchor *,	anchor)
 {
     char * access=0;	/* Name of access method */
-    char * physical = 0;
 
     HTAnchor_setPhysical(anchor, addr);
 
@@ -305,7 +304,7 @@ PUBLIC HTStream *HTSaveStream ARGS1(HTParentAnchor *, anchor)
 
 /* This is exported all the way to gui-documents.c at the moment,
    to tell mo_load_window_text when to use a redirected URL instead. */
-char *use_this_url_instead;
+CONST char *use_this_url_instead;
 
 PRIVATE int HTLoadDocument ARGS4(
 	CONST char *,		full_address,
@@ -314,7 +313,6 @@ PRIVATE int HTLoadDocument ARGS4(
 	HTStream*,		sink)
 {
     int 	status;
-    HText *	text;
 
     use_this_url_instead = NULL;
 

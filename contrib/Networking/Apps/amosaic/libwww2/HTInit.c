@@ -241,7 +241,7 @@ static char *Cleanse(char *s) /* no leading or trailing space, all lower case */
     return(news);
 }
 
-static ProcessMailcapEntry(FILE *fp, struct MailcapEntry *mc)
+static int ProcessMailcapEntry(FILE *fp, struct MailcapEntry *mc)
 {
     int rawentryalloc = 2000, len;
     char *rawentry, *s, *t, *LineBuf;
@@ -313,7 +313,7 @@ static ProcessMailcapEntry(FILE *fp, struct MailcapEntry *mc)
 }
 
 
-static ProcessMailcapFile(char *file)
+static int ProcessMailcapFile(char *file)
 {
     struct MailcapEntry mc;
     FILE *fp;
@@ -575,7 +575,7 @@ static void getword(char *word, char *line, char stop, char stop2)
     ++x;
   y=0;
 
-  while (line[y++] = line[x++])
+  while ((line[y++] = line[x++]))
     ;
 
   return;

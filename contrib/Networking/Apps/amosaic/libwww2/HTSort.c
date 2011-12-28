@@ -42,7 +42,7 @@ void HTSortAdd (char *str)
   return;
 }
 
-static int dsortf (char **s1, char **s2)
+static int dsortf (const void *s1, const void *s2)
 {
   return (strcmp (*(char **)s1, *(char **)s2));
 }

@@ -15,7 +15,7 @@
 #include "tcp.h"		/* for TOUPPER */
 #include <ctype.h> 		/* for toupper - should be in tcp.h */
 
-extern void mo_gui_notify_progress (char *);
+extern void mo_gui_notify_progress (CONST char *);
 extern int mo_gui_check_icon (int);
 extern void mo_gui_clear_icon (void);
 
@@ -47,7 +47,7 @@ PUBLIC void HTClearActiveIcon NOARGS
 
 PUBLIC BOOL HTConfirm ARGS1(CONST char *, Msg)
 {
-  extern int prompt_for_yes_or_no (char *);
+  extern int prompt_for_yes_or_no (CONST char *);
 
   if (prompt_for_yes_or_no (Msg))
     return(YES);
@@ -57,7 +57,7 @@ PUBLIC BOOL HTConfirm ARGS1(CONST char *, Msg)
 
 PUBLIC char * HTPrompt ARGS2(CONST char *, Msg, CONST char *, deflt)
 {
-  extern char *prompt_for_string (char *);
+  extern char *prompt_for_string (CONST char *);
   char *Tmp = prompt_for_string (Msg);
   char *rep = 0;
 
@@ -67,7 +67,7 @@ PUBLIC char * HTPrompt ARGS2(CONST char *, Msg, CONST char *, deflt)
 
 PUBLIC char * HTPromptPassword ARGS1(CONST char *, Msg)
 {
-  extern char *prompt_for_password (char *);
+  extern char *prompt_for_password (CONST char *);
   char *Tmp = prompt_for_password (Msg);
 
   return Tmp;

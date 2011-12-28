@@ -419,19 +419,20 @@ PUBLIC CONST char * HTFileSuffix ARGS1(HTAtom*, rep)
 */
 
 PUBLIC HTFormat HTFileFormat ARGS4 (
-			char *, filename,
+			CONST char *, infilename,
 			HTAtom **,	pencoding,
 			HTAtom *,	default_type,
 			int *, compressed)
 {
   HTSuffix *suff;
   int n, i, lf;
+  char *filename;
 
-  if (!filename)
+  if (!infilename)
     return NULL;
 
   /* Make a copy to hack and slash. */
-  filename = strdup (filename);
+  filename = strdup (infilename);
 
   lf = strlen (filename);
 
@@ -544,7 +545,7 @@ PUBLIC HTFormat HTFileFormat ARGS4 (
 /*	Determine file format from file name -- string version
 **	------------------------------------------------------
 */
-PUBLIC char *HTFileMimeType ARGS2 (
+PUBLIC CONST char *HTFileMimeType ARGS2 (
 			CONST char *,	filename,
 			CONST char *,	default_type)
 {
@@ -566,7 +567,8 @@ PUBLIC char *HTFileMimeType ARGS2 (
 char *HTDescribeURL (char *url)
 {
   char line[512];
-  char *type, *t, *st = NULL;
+  CONST char *type;
+  char *t, *st = NULL;
   char *host;
   char *access;
   int i;
@@ -879,7 +881,9 @@ PUBLIC int HTLoadFile ARGS4 (
 {
     char * filename;
     HTFormat format;
+#ifdef vms
     int fd = -1;		/* Unix file descriptor number = INVALID */
+#endif
     char * nodename = 0;
     char * newname=0;	/* Simplified name of file */
     HTAtom * encoding;	/* @@ not used yet */
@@ -918,7 +922,7 @@ PUBLIC int HTLoadFile ARGS4 (
 	}
     }
 #else
-
+    (void)nodename; // Unused
     free(filename);
 
 /*	For unix, we try to translate the name into the name of a transparently
@@ -931,7 +935,9 @@ PUBLIC int HTLoadFile ARGS4 (
 
     {		/* try local file system */
 	char * localname = HTLocalName(addr);
+#ifdef GOT_READ_DIR
 	struct stat dir_info;
+#endif
 
 	if (!localname)
 	  goto suicide;
@@ -1264,8 +1270,8 @@ forget_multi:
 
 /* End of directory reading section
 */
-#endif
 open_file:
+#endif
 	{
 	    FILE * fp = fopen(localname,"r");
 	    if(TRACE) fprintf (stderr, "HTFile: Opening `%s' gives %p\n",
@@ -1300,5 +1306,5 @@ open_file:
 
 /*		Protocol descriptors
 */
-PUBLIC HTProtocol HTFTP  = { "ftp", HTFTPLoad, 0 };
-PUBLIC HTProtocol HTFile = { "file", HTLoadFile, 0 };
+PUBLIC HTProtocol HTFTP  = { "ftp", (void *)HTFTPLoad, 0 };
+PUBLIC HTProtocol HTFile = { "file", (void *)HTLoadFile, 0 };

@@ -47,7 +47,7 @@
 #if 0
 PRIVATE char *hostname=0;		/* The name of this host */
 #else
-#warning "FIXME: Dummy hostname to avoid crash"
+// FIXME: Dummy hostname to avoid crash
 PRIVATE char *hostname="aros_dummy_hostname";
 #endif
 
@@ -336,9 +336,11 @@ struct in_addr SOCKS_ftpsrv;
 #endif
 
 
-PUBLIC int HTDoConnect (char *url, char *protocol, int default_port, int *s)
+PUBLIC int HTDoConnect (CONST char *url, CONST char *protocol, int default_port, int *s)
 {
-#ifndef __AROS__
+#ifdef __AROS__
+  return HT_LOADED;
+#else
 #ifndef _DNET
   struct sockaddr_in soc_address;
   struct sockaddr_in *sin = &soc_address;

@@ -96,6 +96,7 @@ PRIVATE void init_acceptable NOARGS
 
 PRIVATE CONST char hex[17] = "0123456789abcdef";
 
+#if 0
 /*	Decode one hex character
 */
 
@@ -106,7 +107,7 @@ PRIVATE char from_hex ARGS1(char, c)
 			: (c>='a')&&(c<='f') ? c-'a'+10
 			:		       0;
 }
-
+#endif
 
 
 /*	Paste in an Anchor
@@ -153,12 +154,11 @@ PRIVATE int parse_menu ARGS2 (
   char ch;
   char line[BIG];
   char address[BIG];
-  char *name, *selector;		/* Gopher menu fields */
+  char *name, *selector = NULL;		/* Gopher menu fields */
   char *host;
   char *port;
   char *p = line;
   extern int interrupted_in_htgetcharacter;
-  CONST char *title;
 
 #define TAB		'\t'
 #define HEX_ESCAPE	'%'
@@ -546,7 +546,7 @@ PRIVATE void de_escape ARGS2(char *, command, CONST char *, selector)
 **
 */
 PUBLIC int HTLoadGopher ARGS4(
-	char *, 	arg,
+	CONST char *, 	arg,
 	HTParentAnchor *,	anAnchor,
 	HTFormat,		format_out,
 	HTStream*,		sink)

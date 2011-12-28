@@ -21,6 +21,8 @@
 #ifndef HTATOM_H
 #define HTATOM_H
 
+#include "HTUtils.h"
+
 typedef struct _HTAtom HTAtom;
 struct _HTAtom {
         HTAtom *        next;
@@ -29,13 +31,13 @@ struct _HTAtom {
 
 
 #ifdef __STDC__
-extern HTAtom * HTAtom_for(char * string);
+extern HTAtom * HTAtom_for(CONST char * string);
 #else
 extern HTAtom * HTAtom_for();
 #endif
 
 #ifdef __STDC__
-extern HTAtom * HTAtom_exists(char * string);
+extern HTAtom * HTAtom_exists(CONST char * string);
 #else
 extern HTAtom * HTAtom_exists();
 #endif

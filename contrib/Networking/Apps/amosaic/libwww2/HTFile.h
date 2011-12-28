@@ -141,11 +141,11 @@ HTFileFormat: Get Representation and Encoding from file name
 #define COMPRESSED_GNUZIP 2
 
 extern HTFormat HTFileFormat PARAMS((
-                char *    filename,
+                CONST char *    filename,
                 HTAtom **       pEncoding,
                 HTAtom *,
                 int *compressed));
-extern char * HTFileMimeType PARAMS((
+extern CONST char * HTFileMimeType PARAMS((
                 CONST char *    filename,
                 CONST char *    default_type));
 extern char *HTDescribeURL (char *);

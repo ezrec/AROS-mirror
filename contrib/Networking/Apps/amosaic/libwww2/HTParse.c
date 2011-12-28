@@ -140,11 +140,11 @@ PRIVATE void scan(name, parts)
 **	returns		A pointer to a malloc'd string which MUST BE FREED
 */
 #ifdef __STDC__
-char * HTParse(char * aName, char * relatedName, int wanted)
+char * HTParse(CONST char * aName, CONST char * relatedName, int wanted)
 #else
 char * HTParse(aName, relatedName, wanted)
-    char * aName;
-    char * relatedName;
+    CONST char * aName;
+    CONST char * relatedName;
     int wanted;
 #endif
 
@@ -233,7 +233,7 @@ char * HTParse(aName, relatedName, wanted)
                   {
                     if (TRACE)
                       fprintf (stderr, "[Parse] Copying '%s' to '%s', %d bytes\n", 
-                               p+1, p, strlen (p+1));
+                               p+1, p, (int)strlen (p+1));
                     bcopy (p+1, p, strlen(p+1));
                     if (TRACE)
                       fprintf (stderr, "[Parse] Setting '%c' to 0...\n",
@@ -435,10 +435,10 @@ static unsigned char isAcceptable[96] =
 #define HT_HEX(i) (i < 10 ? '0'+i : 'A'+ i - 10)
 
 /* The string returned from here, if any, can be free'd by caller. */
-char *HTEscape (char *part)
+char *HTEscape (CONST char *part)
 {
-  char *q, *u;
-  char *p, *s, *e;		/* Pointers into keywords */
+  char *q;
+  CONST char *p;		/* Pointers into keywords */
   char *escaped;
 
   if (!part)

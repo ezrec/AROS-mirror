@@ -234,7 +234,7 @@ PRIVATE void HTFWriter_free ARGS1(HTStream *, me)
 		  }
 		  if (TRACE)
 		  {
-			fprintf (stderr, "SystemTags() result %ld\n", rslt);
+			fprintf (stderr, "SystemTags() result %ld\n", (long)rslt);
 		  }
 
 	  }
@@ -331,7 +331,6 @@ PRIVATE void HTFWriter_free ARGS1(HTStream *, me)
   if (binary_transfer)
     rename_binary_file (me->fnam);
 
- really_done:
   free (me->fnam);
   free (me);
 

@@ -41,11 +41,11 @@ typedef struct _HTStreamClass {
                                 
         void (*put_string) PARAMS((
                 HTStream*       me,
-                char *    str));
+                CONST char *    str));
                 
         void (*put_block) PARAMS((
                 HTStream*       me,
-                char *    str,
+                CONST char *    str,
                 int             len));
                 
         void (*handle_interrupt) PARAMS((

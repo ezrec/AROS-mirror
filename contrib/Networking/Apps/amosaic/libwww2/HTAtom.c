@@ -26,10 +26,10 @@ PRIVATE HTAtom * hash_table[HASH_SIZE];
 PRIVATE BOOL initialised = NO;
 
 #ifdef __STDC__
-PUBLIC HTAtom * HTAtom_for(char * string)
+PUBLIC HTAtom * HTAtom_for(CONST char * string)
 #else
 PUBLIC HTAtom * HTAtom_for(string)
-    char * string;
+    CONST char * string;
 #endif
 {
     int hash;
@@ -80,10 +80,10 @@ PUBLIC HTAtom * HTAtom_for(string)
 
 
 #ifdef __STDC__
-PUBLIC HTAtom * HTAtom_exists(char * string)
+PUBLIC HTAtom * HTAtom_exists(CONST char * string)
 #else
 PUBLIC HTAtom * HTAtom_exists(string)
-    char * string;
+    CONST char * string;
 #endif
 {
     int hash;

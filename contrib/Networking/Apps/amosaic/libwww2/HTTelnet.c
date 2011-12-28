@@ -161,13 +161,14 @@ PRIVATE int remote_session ARGS2(char *, access, char *, host)
   char command[256];
   char *xterm_str;
   enum _login_protocol { telnet, rlogin, tn3270 } login_protocol;
-  extern char *global_xterm_str;
 #if defined(_AMIGA) || defined(__AROS__)
   /* FIXME: remote_session doesn't do tn3270 properly for Amiga */
   BPTR seglist;
   extern char *amiga_telnet;
   extern char *amiga_rlogin;
   extern void application_user_feedback (char *);
+#else
+  extern char *global_xterm_str;
 #endif
 
   if (!access || !host)
