@@ -6647,6 +6647,8 @@ IPTR IconList__MUIM_DragDrop(struct IClass *CLASS, Object *obj, struct MUIP_Drag
                     strcpy(dragDropEvent->drop_TargetPath, directory_path);
                     AddPart(dragDropEvent->drop_TargetPath, drop_target_node->ie_IconListEntry.label, fulllen);
                 }
+                else
+                    goto dragdropdone;
             }
             else
             {
