@@ -50,6 +50,10 @@ amiga-m68k-bootiso:
     The native version for m68k Amigas or WinUAE. This version is binary
     compatible with AmigaOS. This is the CD-ROM ISO image, which
     contains all AROS system files.
+amiga-m68k-contrib:
+    This archive contains all the contributed programs
+    compiled for the m68k architecture, for use with the
+    Amiga port.
 darwin-i386-system:
     The hosted version for Darwin and MacOS X on i386 platform.
     Should work on all Intel MacOS X versions starting from 10.4. It requires
