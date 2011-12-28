@@ -188,7 +188,7 @@ void AddFileSystemTask(struct ACDRBase *acdrbase, struct IOFileSys *iofs)
 void ACDR_work(struct ACDRBase *acdrbase)
 {
     struct IOFileSys 	*iofs;
-    struct ACDRHandle 	*acdrhandle;
+    struct ACDRHandle 	*acdrhandle, *handle2;
     struct Message  	 msg;
     struct DosPacket 	 packet;
     LONG    	    	 retval;
@@ -645,6 +645,27 @@ D(bug("[acdr] examine: name=%s ([0]=%x)\n", ead->ed_Name, ead->ed_Name[0]));
                 sendPacket(acdrbase, &packet, acdrhandle->device->taskmp);
                 if (packet.dp_Res1)
                     error = 0;
+                else
+                    error = packet.dp_Res2;
+                break;
+
+            case FSA_SAME_LOCK:
+                packet.dp_Type = ACTION_SAME_LOCK;
+                packet.dp_Arg1 =
+                    (acdrhandle ==  &acdrhandle->device->rootfh) ?
+                    0 :
+                    (IPTR)MKBADDR(acdrhandle->handle);
+                handle2 = iofs->io_Union.io_SAME_LOCK.io_Lock[1];
+                packet.dp_Arg2 =
+                    (handle2 ==  &handle2->device->rootfh) ?
+                    0 :
+                    (IPTR)MKBADDR(handle2->handle);
+                sendPacket(acdrbase, &packet, acdrhandle->device->taskmp);
+                if (packet.dp_Res1)
+                {
+                    iofs->io_Union.io_SAME_LOCK.io_Same = LOCK_SAME;
+                    error = 0;
+                }
                 else
                     error = packet.dp_Res2;
                 break;

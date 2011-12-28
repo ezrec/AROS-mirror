@@ -191,7 +191,7 @@ static void AddFileSystemTask(struct ASFSBase *asfsbase, struct IOFileSys *iofs)
 void ASFS_work(struct ASFSBase *asfsbase)
 {
     struct IOFileSys 	*iofs;
-    struct ASFSHandle 	*asfshandle;
+    struct ASFSHandle 	*asfshandle, *handle2;
     struct Message  	 msg;
     struct DosPacket 	 packet;
     LONG    	    	 retval;
@@ -520,7 +520,7 @@ D(bug("[SFS] examine: error=%d, packet.dp_Res1=%p\n", error, packet.dp_Res1));
 
 //                            if (iofs->io_DirPos == 1) iofs->io_DirPos = 0;
 
-//kprintf("****************acdr examine: pos = %lx\n", iofs->io_DirPos);
+//kprintf("****************asfs examine: pos = %lx\n", iofs->io_DirPos);
 D(bug("[SFS] examine: pos=%d, mode=%d\n", iofs->io_DirPos, mode));
 
                             switch (mode)
@@ -598,12 +598,12 @@ D(bug("[SFS] the next one\n"));
                 break;
 
             case FSA_EXAMINE_NEXT:
-//kprintf("****************acdr examineNext: lock = %lx\n", acdrhandle->handle);
+//kprintf("****************asfs examineNext: lock = %lx\n", asfshandle->handle);
                 packet.dp_Type = ACTION_EXAMINE_NEXT;
                 packet.dp_Arg1 = (IPTR)asfshandle->handle;
                 packet.dp_Arg2 = (IPTR)BADDR(iofs->io_Union.io_EXAMINE_NEXT.io_fib);
                 sendPacket(asfsbase, &packet, asfshandle->device->taskmp);
-//kprintf("****************acdr examinenext: pos = %lx\n", iofs->io_Union.io_EXAMINE_NEXT.io_fib->fib_DiskKey);
+//kprintf("****************asfs examinenext: pos = %lx\n", iofs->io_Union.io_EXAMINE_NEXT.io_fib->fib_DiskKey);
                 if (packet.dp_Res1)
                     error = 0;
                 else
@@ -652,7 +652,7 @@ D(bug("[SFS] the next one\n"));
                             new->handle = (void *)packet.dp_Res1;
                             new->flags |= AHF_IS_LOCK;
                             new->device = asfshandle->device;
-//kprintf("****************acdr-create dir: lock = %lx\n", new->handle);
+//kprintf("****************asfs-create dir: lock = %lx\n", new->handle);
                         }
                         else
                         {
@@ -727,6 +727,27 @@ D(bug("[SFS] FSA_RENAME %s %s\n", iofs->io_Union.io_RENAME.io_Filename, iofs->io
                 sendPacket(asfsbase, &packet, asfshandle->device->taskmp);
                 if (packet.dp_Res1)
                     error = 0;
+                else
+                    error = packet.dp_Res2;
+                break;
+
+            case FSA_SAME_LOCK:
+                packet.dp_Type = ACTION_SAME_LOCK;
+                packet.dp_Arg1 =
+                    (asfshandle ==  &asfshandle->device->rootfh) ?
+                    0 :
+                    (IPTR)MKBADDR(asfshandle->handle);
+                handle2 = iofs->io_Union.io_SAME_LOCK.io_Lock[1];
+                packet.dp_Arg2 =
+                    (handle2 ==  &handle2->device->rootfh) ?
+                    0 :
+                    (IPTR)MKBADDR(handle2->handle);
+                sendPacket(asfsbase, &packet, asfshandle->device->taskmp);
+                if (packet.dp_Res1)
+                {
+                    iofs->io_Union.io_SAME_LOCK.io_Same = LOCK_SAME;
+                    error = 0;
+                }
                 else
                     error = packet.dp_Res2;
                 break;
@@ -825,7 +846,7 @@ D(bug("[SFS] FSA_SET_OWNER %s %u %u\n", iofs->io_Union.io_SET_OWNER.io_Filename,
                     {
 #warning "I hope volumenode is always valid"
                         global->DevList->dl_Ext.dl_AROS.dl_Device = iofs->IOFS.io_Device;
-                        global->DevList->dl_Ext.dl_AROS.dl_Unit = (struct Unit *)&acdrhandle->device->rootfh;
+                        global->DevList->dl_Ext.dl_AROS.dl_Unit = (struct Unit *)&asfshandle->device->rootfh;
                     }
 #endif
                     error = 0;
@@ -873,7 +894,7 @@ D(bug("[SFS] FSA_SET_OWNER %s %u %u\n", iofs->io_Union.io_SET_OWNER.io_Filename,
 #if 0
             case FSA_ALL_OTHER_MESSAGES:
                 prepare packet;
-                sendPacket(acdrbase, &packet, acdrhandle->device->taskmp);
+                sendPacket(asfsbase, &packet, asfshandle->device->taskmp);
                 error = packet.dp_Res2;
                 newhandle->oldfh=packet.dp_Res1;
                 iofs->IOFS.io_Unit=(struct Unit *)newhandle;
@@ -898,7 +919,7 @@ D(bug("[SFS] FSA_SET_OWNER %s %u %u\n", iofs->io_Union.io_SET_OWNER.io_Filename,
             iofs->io_DosError = error;
             ReplyMsg(&iofs->IOFS.io_Message);
 
-        } /* ((iofs=(struct IOFileSys *)GetMsg(&acdrbase->port))) */
+        } /* ((iofs=(struct IOFileSys *)GetMsg(&asfsbase->port))) */
 
         Wait(1<<asfsbase->port.mp_SigBit);
 
