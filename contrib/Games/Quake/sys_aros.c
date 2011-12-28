@@ -4,9 +4,12 @@
 #include <stdio.h>
 #include <sys/time.h>
 #include <unistd.h>
+#include <fcntl.h>
 #include <string.h>
 #include <ctype.h>
 #include <errno.h>
+
+#include <sys/stat.h>
 
 #include <proto/dos.h>
 #include <proto/exec.h>
@@ -47,61 +50,7 @@ struct FileNode {
 // AROS Specific variables
 // =======================================================================
 
-struct MinList filelist;
-ULONG current_handleno;
 APTR aros_membase = NULL;
-
-// =======================================================================
-// AROS Specific functions
-// =======================================================================
-
-static void AROS_Sys_Init()
-{
-    NEWLIST(&filelist);
-    current_handleno = 0;
-}
-
-static int AROS_Sys_AddOpenFile(BPTR file)
-{
-    struct FileNode *fn;
-    fn = AllocVec(sizeof (*fn), MEMF_ANY);
-    if (NULL == fn)
-    	return -1;
-    
-    fn->file = file;
-    fn->handle = current_handleno ++;
-    
-    AddTail((struct List *)&filelist, (struct Node *)fn);
-    
-    return fn->handle;
-}
-
-static BPTR AROS_Sys_GetOpenFile(int handle)
-{
-    struct FileNode *fn;
-    ForeachNode(&filelist, fn) {
-    	if (handle == fn->handle)
-	    return fn->file;
-    }
-    return NULL;
-}
-
-static BPTR AROS_Sys_RemoveOpenFile(int handle)
-{
-    struct FileNode *fn, *safefn;
-    ForeachNodeSafe(&filelist, fn, safefn) {
-    	if (handle == fn->handle) {
-	    BPTR file;
-	    
-	    file = fn->file;
-	    Remove((struct Node *)fn);
-	    FreeVec(fn);
-	    
-	    return file;
-	}
-    }
-    return NULL;
-}
 
 // =======================================================================
 // General routines
@@ -194,22 +143,14 @@ static char end2[] =
 #endif
 void Sys_Quit (void)
 {
-	struct FileNode *node, *nextnode;
 	printf("Sys_Quit\n");
 	
-	/* Free the open files in the filenode list */
-	node = (struct FileNode *)filelist.mlh_Head;
-	
-	ForeachNodeSafe(&filelist, node, nextnode) {
-		Remove((struct Node *)node);
-		Close(node->file);
-		FreeVec(node);
-	}
-	
 	Host_Shutdown();
-#if 0
-#warning What does this mean ?
+#ifdef FNDELAY
+    /* Set stdin as non-blocking */
     fcntl (0, F_SETFL, fcntl (0, F_GETFL, 0) & ~FNDELAY);
+#endif
+#if 0
 	if (registered.value)
 		printf("%s", end2);
 	else
@@ -236,7 +177,7 @@ void Sys_Error (char *error, ...)
     char        string[1024];
     
 // change stdin to non blocking
-#if 0
+#ifdef FNDELAY
     fcntl (0, F_SETFL, fcntl (0, F_GETFL, 0) & ~FNDELAY);
 #endif
     
@@ -274,105 +215,24 @@ returns -1 if not present
 */
 int	Sys_FileTime (char *path)
 {
-
-    struct FileInfoBlock *fib;
-    int time = -1;
-    BPTR lock;
-    
-    printf("Sys_FileTime(path=%s)\n", path);
-	
-    fib = AllocDosObject(DOS_FIB, 0);
-    if (fib) {
-	    
-	lock = Lock(path, ACCESS_READ);
-	if (lock) {
-	
-	    if (Examine(lock, fib)) {
-#warning Fix this time conversion	    
-	    	// DateStamp(&fib->fib_Date);
-		time = 123;
-		
-	    }
-	    UnLock(lock);
-	}
-	
-	FreeDosObject(DOS_FIB, fib);
-    }
-	
-    return time;
-
-#if 0
 	struct	stat	buf;
 	
 	if (stat (path,&buf) == -1)
 		return -1;
 
 	return buf.st_mtime;
-#endif	
-	
 }
 
 
 void Sys_mkdir (char *path)
 {
-    BPTR lock;
-    
-    printf("Sys_mkdir(%s)\n", path);
-    
-    lock = CreateDir(path);
-    if (lock) {
-    	UnLock(lock);
-    }
-    
-#if 0    
     mkdir (path, 0777);
-#endif    
 }
 
 
 
 int Sys_FileOpenRead (char *path, int *handle)
 {
-	BPTR lock, file;
-	int size = -1;
-	int h = -1;
-	
-	printf("Sys_FileOpenRead(%s)\n", path);
-
-	lock = Lock(path, ACCESS_READ);
-	if (lock) {
-		struct FileInfoBlock *fib;
-	    
-		fib = AllocDosObject(DOS_FIB, NULL);
-		if (fib) {
-			if (Examine(lock, fib)) {
-				size = fib->fib_Size;
-			}
-			FreeDosObject(DOS_FIB, fib);
-		}
-		UnLock(lock);
-	}
-	
-	if (-1 == size)
-		return -1;
-	
-	file = Open(path, MODE_OLDFILE);
-	if (!file)
-		return -1;
-	
-	h = AROS_Sys_AddOpenFile(file);
-	if (-1 == h) {
-		Close(file);
-		return -1;
-	}
-	
-	*handle = h;
-	
-	printf("returned size: %d, handle=%d\n", size, h);
-		
-	return size;
-
-#if 0
 	int	h;
 	struct stat	fileinfo;
     
@@ -386,29 +246,10 @@ int Sys_FileOpenRead (char *path, int *handle)
 		Sys_Error ("Error fstating %s", path);
 
 	return fileinfo.st_size;
-	
-#endif	
 }
 
 int Sys_FileOpenWrite (char *path)
 {
-	BPTR file;
-	int handle;
-	printf("Sys_FileOpenWrite(%s)\n", path);
-	
-	file = Open(path, MODE_READWRITE);
-	if (!file)
-		return -1;
-		
-	handle = AROS_Sys_AddOpenFile(file);
-	if (-1 == handle) {
-		Close(file);
-		return -1;
-	}
-	
-	return handle;
-	
-#if 0	
 	int     handle;
 
 	umask (0);
@@ -420,112 +261,52 @@ int Sys_FileOpenWrite (char *path)
 		Sys_Error ("Error opening %s: %s", path,strerror(errno));
 
 	return handle;
-#endif	
 }
 
 int Sys_FileWrite (int handle, void *src, int count)
 {
-	BPTR file;
-	
-	printf("Sys_FileWrite\n");
-	file = AROS_Sys_GetOpenFile(handle);
-	
-
-	return Write (file, src, count);
-#if 0
 	return write (handle, src, count);
-#endif	
 }
 
 void Sys_FileClose (int handle)
 {
-	BPTR file;
-	
-	printf("Sys_FileClose\n");
-	
-	file = AROS_Sys_RemoveOpenFile(handle);
-	
-	Close (file);
-
-#if 0 
 	close (handle);
-#endif	
-	
 }
 
 void Sys_FileSeek (int handle, int position)
 {
-	BPTR file;
-	
-	printf("Sys_FileSeek\n");
-	
-	file = AROS_Sys_GetOpenFile(handle);
-
-	Seek (file, position, OFFSET_BEGINNING);
-#if 0
 	lseek (handle, position, SEEK_SET);
-#endif	
 }
 
 int Sys_FileRead (int handle, void *dest, int count)
 {
-
-	BPTR file;
-	
-	int retval;
-	
-	printf("Sys_FileRead(handle=%d, dest=%p, count=%d\n"
-		, handle, dest, count);
-	
-	file = AROS_Sys_GetOpenFile(handle);
-
-
-	retval = Read (file, dest, count);
-	
-	printf("Returning %d\n", retval);
-	
-	return retval;
-#if 0
 	return read (handle, dest, count);
-#endif    
 }
 
 void Sys_DebugLog(char *file, char *fmt, ...)
 {
-    va_list argptr; 
     static char data[1024];
-    
-    
-#if 0    
     int fd;
-#endif    
-    BPTR fh;
+    va_list argptr;
+
     printf("Sys_DebugLog\n");
     
     va_start(argptr, fmt);
     vsprintf(data, fmt, argptr);
     va_end(argptr);
-//    fd = open(file, O_WRONLY | O_BINARY | O_CREAT | O_APPEND, 0666);
 
-    fh = Open(file, MODE_READWRITE);
-    if (file) {
-    	Write(fh, data, strlen(data));
-	Close(fh);
-    }
-
-#if 0
     fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0666);
     write(fd, data, strlen(data));
     close(fd);
-#endif    
 }
 
 void Sys_EditFile(char *filename)
 {
-
-	printf("!!! Sys_EditFile: not implemented uet\n");
-#if 0
 	char cmd[256];
+#ifdef __AROS__
+	sprintf(cmd, "edit %s", filename);
+	Execute(cmd, BNULL, BNULL);
+#else
 	char *term;
 	char *editor;
 	
@@ -560,24 +341,6 @@ double Sys_FloatTime (void)
     }
 
     return (tp.tv_sec - secbase) + tp.tv_usec/1000000.0;
-
-
-#if 0
-    struct timeval tp;
-    struct timezone tzp; 
-    static int      secbase; 
-    
-    gettimeofday(&tp, &tzp);  
-
-    if (!secbase)
-    {
-        secbase = tp.tv_sec;
-        return tp.tv_usec/1000000.0;
-    }
-
-    return (tp.tv_sec - secbase) + tp.tv_usec/1000000.0;
-#endif
-    
 }
 
 // =======================================================================
@@ -664,8 +427,6 @@ int main (int c, char **v)
 
 //	static char cwd[1024];
 
-	AROS_Sys_Init();
-
 //	signal(SIGFPE, floating_point_exception_handler);
 #if 0
 	signal(SIGFPE, SIG_IGN);
@@ -695,10 +456,10 @@ int main (int c, char **v)
 // caching is disabled by default, use -cachedir to enable
 //	parms.cachedir = cachedir;
 
-#warning What does this mean ?
-#if 0
+#ifdef FNDELAY
+	/* Set stdin as non-blocking */
 	fcntl(0, F_SETFL, fcntl (0, F_GETFL, 0) | FNDELAY);
-#endif	
+#endif
 
 printf("Initing host, memsize=%d\n", parms.memsize);
     Host_Init(&parms);
@@ -710,8 +471,8 @@ printf("Check for nostdout\n");
 	if (COM_CheckParm("-nostdout"))
 		nostdout = 1;
 	else {
-#if 0	
-#warning What does this mean ?
+#ifdef FNDELAY
+		/* Set stdin as non-blocking */
 		fcntl(0, F_SETFL, fcntl (0, F_GETFL, 0) | FNDELAY);
 #endif
 		printf ("Linux Quake -- Version %0.3f\n", LINUX_VERSION);
@@ -728,10 +489,7 @@ printf("Entering main loop\n");
         {   // play vcrfiles at max speed
             if (time < sys_ticrate.value && (vcrFile == -1 || recording) )
             {
-#warning Fix this
-
-//				usleep(1);
-				
+		usleep(1);
                 continue;       // not time to run a server only tic yet
             }
             time = sys_ticrate.value;
@@ -759,9 +517,7 @@ Sys_MakeCodeWriteable
 */
 void Sys_MakeCodeWriteable (unsigned long startaddr, unsigned long length)
 {
-
-#if 0
-
+#ifndef __AROS__
 	int r;
 	unsigned long addr;
 	int psize = getpagesize();

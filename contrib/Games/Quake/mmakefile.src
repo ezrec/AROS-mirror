@@ -43,12 +43,13 @@ BUILD_RELEASE_DIR=release$(ARCH)$(GLIBC)
 
 CC=$(AROS_CC)
 
+CFLAGS += -Wno-format-security -nix
 BASE_CFLAGS=-Dstricmp=strcasecmp
 
 DEBUG_CFLAGS=$(CFLAGS) $(BASE_CFLAGS) -g
 
 AROSCFLAGS=-DAROS $(RELEASE_CFLAGS)
-AROSLDFLAGS=-L$(LIBDIR) -larosc -larosm -lamiga -lautoinit
+AROSLDFLAGS=-L$(LIBDIR) -larosc -larosm -lamiga -lautoinit -nix
 
 DO_CC=$(CC) $(CFLAGS) -o $@ -c $<
 DO_DEBUG_CC=$(CC) $(DEBUG_CFLAGS) -o $@ -c $<

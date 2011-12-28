@@ -161,7 +161,7 @@ void	VID_Init (unsigned char *palette)
    
    
 
-#warning Move this to main() ?
+// FIXME: Move this to main() ?
    IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library", 37);
    if (NULL == IntuitionBase) {
    	Sys_Error("Error opening intuition.library");
@@ -203,6 +203,7 @@ void	VID_Init (unsigned char *palette)
    vid.fullbright = 256 - LittleLong (*((int *)vid.colormap + 2048));
    
     verbose=COM_CheckParm("-verbose");
+    (void)verbose; // FIXME: Unused
 
 
 // check for command-line window size
@@ -431,7 +432,7 @@ printf("New dims: %d, %d\n", vid.width, vid.height);
 	while (rects)
 	{
 		
-#warning Optimize this. Just rerender the part inside the rect
+// FIXME: Optimize this. Just rerender the part inside the rect
 		if (aros_use_cgfx) {
 		
 		    WriteLUTPixelArray(
