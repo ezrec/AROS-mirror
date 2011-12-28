@@ -222,9 +222,9 @@ SAVEDS ASM BPTR LibClose(REG(a6) struct Library *lib)
     */
    if (lib->lib_Flags & LIBF_DELEXP)
 #ifdef __AROS__
-      return REGCALL2(BPTR, BGUIGadget_3_LibExpunge,
-                REGPARAM(D0, struct Library *, lib),
-                REGPARAM(A6, struct ExecBase *, SysBase));
+      return AROS_CALL1(BPTR, BGUIGadget_3_LibExpunge,
+      		AROS_LCA(struct Library *, lib, D0),
+      		struct ExecBase *, SysBase);
 #else
       return LibExpunge(lib);
 #endif

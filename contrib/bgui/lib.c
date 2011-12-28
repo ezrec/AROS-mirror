@@ -526,9 +526,9 @@ makeproto SAVEDS ASM BPTR LibClose(REG(a6) struct Library *lib)
     */
    if (lib->lib_Flags & LIBF_DELEXP) {
 #ifdef __AROS__
-      return AROS_LC1(BPTR, LibExpunge,
+      return AROS_CALL1(BPTR, BGUI_3_LibExpunge,
                 AROS_LCA(struct Library *, lib, D0),
-                struct ExecBase *, SysBase, 3, BGUI);
+                struct ExecBase *, SysBase);
 #else
       return LibExpunge(lib);
 #endif
