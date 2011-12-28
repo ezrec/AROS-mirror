@@ -24,7 +24,16 @@
 #define HTParseInet		HTPaInet
 #endif
 
+#ifdef __AROS__
+#include <netdb.h>
+#include <sys/socket.h>
+#include <sys/ioctl.h>
+#include <netinet/in.h>
 #include <proto/bsdsocket.h>
+
+#define ioctl IoctlSocket
+#endif
+
 #include <unistd.h>
 #ifdef __STDC__
 #include <stdlib.h>
@@ -74,8 +83,6 @@ extern int errno;
 
 extern char *sys_errlist[];		/* see man perror on cernvax */
 extern int sys_nerr;
-
- #define ioctl(s,f,v) IoctlSocket(s,f,v)
 #endif /* _AMIGA */
 
 #ifndef _DNET
@@ -175,7 +182,6 @@ PUBLIC CONST char * HTInetString ARGS1(SockA*,sin)
 **	*sin	is filled in. If no port is specified in str, that
 **		field is left unchanged in *sin.
 */
-#ifndef __AROS__
 PUBLIC int HTParseInet ARGS2(SockA *,sin, CONST char *,str)
 {
   char *port;
@@ -191,7 +197,7 @@ PUBLIC int HTParseInet ARGS2(SockA *,sin, CONST char *,str)
   strcpy(host, str);		/* Take a copy we can mutilate */
 
   /* Parse port number if present */
-  if (port=strchr(host, ':'))
+  if ((port=strchr(host, ':')))
     {
       *port++ = 0;		/* Chop off port */
       if (port[0]>='0' && port[0]<='9')
@@ -272,7 +278,6 @@ PUBLIC int HTParseInet ARGS2(SockA *,sin, CONST char *,str)
 
   return 0;	/* OK */
 }
-#endif
 
 
 /*	Derive the name of the host on which we are
@@ -338,9 +343,6 @@ struct in_addr SOCKS_ftpsrv;
 
 PUBLIC int HTDoConnect (CONST char *url, CONST char *protocol, int default_port, int *s)
 {
-#ifdef __AROS__
-  return HT_LOADED;
-#else
 #ifndef _DNET
   struct sockaddr_in soc_address;
   struct sockaddr_in *sin = &soc_address;
@@ -407,7 +409,7 @@ PUBLIC int HTDoConnect (CONST char *url, CONST char *protocol, int default_port,
     int val = 1;
     char line[256];
 
-    ret = ioctl(*s, FIONBIO, &val);
+    ret = ioctl(*s, FIONBIO, (void *)&val);
     if (ret == -1)
       {
 	sprintf (line, "Could not make connection non-blocking.");
@@ -537,7 +539,7 @@ PUBLIC int HTDoConnect (CONST char *url, CONST char *protocol, int default_port,
       int val = 0;
       char line[256];
 
-      ret = ioctl(*s, FIONBIO, &val);
+      ret = ioctl(*s, FIONBIO, (void *)&val);
       if (ret == -1)
 	{
 	  sprintf (line, "Could not restore socket to blocking.");
@@ -616,7 +618,6 @@ PUBLIC int HTDoConnect (CONST char *url, CONST char *protocol, int default_port,
     return -1;
   }
   return 0;
-#endif
 #endif
 }
 
