@@ -837,7 +837,7 @@ AROS_LH1(void, beginio,
 	fh = iofs->io_Union.io_SAME_LOCK.io_Lock[0],
 	fh2 = iofs->io_Union.io_SAME_LOCK.io_Lock[1];
 	  
-	if (strcmp(fh->hostname, fh2->hostname))
+	if (strcasecmp(fh->hostname, fh2->hostname))
 	    iofs->io_Union.io_SAME_LOCK.io_Same = LOCK_DIFFERENT;
 	else
 	    iofs->io_Union.io_SAME_LOCK.io_Same = LOCK_SAME;
