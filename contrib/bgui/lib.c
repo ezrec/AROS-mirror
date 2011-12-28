@@ -524,14 +524,15 @@ makeproto SAVEDS ASM BPTR LibClose(REG(a6) struct Library *lib)
    /*
     * Delayed expunge pending?
     */
-   if (lib->lib_Flags & LIBF_DELEXP)
+   if (lib->lib_Flags & LIBF_DELEXP) {
 #ifdef __AROS__
-      REGCALL2(BPTR, BGUI_3_LibExpunge,
-                REGPARAM(D0, struct Library *, lib),
-                REGPARAM(A6, struct ExecBase *, SysBase));
+      return AROS_LC1(BPTR, LibExpunge,
+                AROS_LCA(struct Library *, lib, D0),
+                struct ExecBase *, SysBase, 3, BGUI);
 #else
       return LibExpunge(lib);
 #endif
+   }
    /*
     * Otherwise we remain in memory.
     */
