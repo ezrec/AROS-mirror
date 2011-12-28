@@ -1124,7 +1124,7 @@ COM_Init
 */
 void COM_Init (char *basedir)
 {
-	byte    swaptest[2] = {1,0};
+//FIXME:	byte    swaptest[2] = {1,0};
 
 // set the byte swapping variables in a portable manner 
 	if ( 1 /**(short *)swaptest == 1 */)

@@ -503,7 +503,7 @@ void Con_DrawInput (void)
 	y = con_vislines-16;
 
 	for (i=0 ; i<con_linewidth ; i++)
-		Draw_Character ( (i+1)<<3, con_vislines - 16, text[i]);
+		Draw_Character ( (i+1)<<3, y, text[i]);
 
 // remove cursor
 	key_lines[edit_line][key_linepos] = 0;

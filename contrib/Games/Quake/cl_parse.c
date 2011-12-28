@@ -335,7 +335,9 @@ void CL_ParseUpdate (int bits)
 	qboolean	forcelink;
 	entity_t	*ent;
 	int			num;
+#ifdef GLQUAKE
 	int			skin;
+#endif
 
 	if (cls.signon == SIGNONS - 1)
 	{	// first update is the final signon stage
