@@ -24,11 +24,11 @@ extern int lib_version;
 
 /* local functions */
 
-ULONG dispatchHTMLGad(Class *, Object *, Msg);
-ULONG RenderHTMLGad(Class *, struct Gadget *, struct gpRender *);
+IPTR dispatchHTMLGad(Class *, Object *, Msg);
+IPTR RenderHTMLGad(Class *, struct Gadget *, struct gpRender *);
 struct Region *installClipRegion(struct Window *, struct Layer *,
 				 struct Region *);
-void NotifyChange(Class *, Object *, struct gpInput *, Tag,ULONG);
+void NotifyChange(Class *, Object *, struct gpInput *, Tag,IPTR);
 void HTML_reset_search(Widget);
 void new_button_press(HTMLGadClData *HTML_Data,long x,long y);
 void new_button_release(HTMLGadClData *HTML_Data,Object *obj,long x,long y);
@@ -68,25 +68,6 @@ extern long IsIsMapForm(HTMLGadClData *,char *);
 #define DEBUG1 0 /* Debug the image decoding */
 #define DEBUG2 0 /* Debug the forms handling */
 
-#ifndef __AROS__
-ULONG SAVEDS ASM LayoutFunc(REG(a0) struct Hook *h,REG(a2) Object *obj,REG(a1) struct MUI_LayoutMsg *lm);
-
-ULONG SAVEDS ASM ScrollHookFunc(REG(a0) struct Hook *hook,
-			   REG(a2) APTR	      object,
-			   REG(a1) struct ScrollHookMsg *msg);
-#else
-AROS_UFP3(ULONG, LayoutFunc,
-    AROS_UFPA(struct Hook *, h, A0),
-    AROS_UFPA(Object *, obj, A2),
-    AROS_UFPA(struct MUI_LayoutMsg *, lm, A1));
-
-AROS_UFP3(ULONG, ScrollHookFunc,
-    AROS_UFPA(struct Hook *, hokk, A0),
-    AROS_UFPA(APTR, object, A2),
-    AROS_UFPA(struct ScrollHookMsg *, msg, A1));
-    
-#endif
-
 extern IPTR HookEntry();
 extern mo_window window;
 
@@ -112,89 +93,32 @@ typedef struct TextFont * TextFontP;
 #define HIKEY_ALT	(0x200)
 #define HIKEY_CTRL	(0x400)
 
+#ifndef MUIA_FillArea
 #define MUIA_FillArea 0x804294A3 /* V4 BOOL (private) */
+#endif
 #define MUIV_Listview_MultiSelect_Def 1
 
 /********* CLASS HANDLING *************/
-
-#ifndef __AROS__
-ASM ULONG HTMLGadClDispatch(REG(a0) Class *cl,
-			      REG(a2) Object *obj,
-			     REG(a1) Msg msg);
-
-ASM ULONG HTMLTextClDispatch(REG(a0) Class *cl,
-			      REG(a2) Object *obj,
-			     REG(a1) Msg msg);
-
-ASM ULONG HTMLTextNClDispatch(REG(a0) Class *cl,
-			      REG(a2) Object *obj,
-			     REG(a1) Msg msg);
-#else
-AROS_UFP3(ULONG, HTMLGadClDispatch,
-    AROS_UFPA(Class *, cl, A0),
-    AROS_UFPA(Object *, obj, A2),
-    AROS_UFPA(Msg, msg, A1));
-
-AROS_UFP3(ULONG, HTMLTextClDispatch,
-    AROS_UFPA(Class *, cl, A0),
-    AROS_UFPA(Object *, obj, A2),
-    AROS_UFPA(Msg, msg, A1));
-
-AROS_UFP3(ULONG, HTMLTextNClDispatch,
-    AROS_UFPA(Class *, cl, A0),
-    AROS_UFPA(Object *, obj, A2),
-    AROS_UFPA(Msg, msg, A1));
-
-#endif
 
 /************************************************************
   Initilize the new HTML MUI Gadget Class (was initHTMLGadClass)
 ************************************************************/
 struct MUI_CustomClass *HTMLText;
 struct MUI_CustomClass *HTMLTextN;
-struct Hook ScrollHook;
-struct Hook FormButton_hook;
-struct Hook FormString_hook;
-struct Hook FormRadio_hook;
-struct Hook TextEdit_hook;
-static struct Hook LayoutHook = { {0,0}, LayoutFunc, NULL, NULL };
+extern struct Hook LayoutHook;
+extern struct Hook ScrollHook;
+extern struct Hook FormButton_hook;
+extern struct Hook FormString_hook;
+extern struct Hook FormRadio_hook;
+extern struct Hook TextEdit_hook;
 
-struct MUI_CustomClass *HTMLGadClInit(void)
-{
-	struct MUI_CustomClass *cl;
-
-	/* Create the HTML gadget class */
-	if (!(cl = MUI_CreateCustomClass(NULL,MUIC_Group,NULL,
-						sizeof(HTMLGadClData),(APTR)HTMLGadClDispatch)))
-		fail(NULL, "Failed to create HTMLGad class."); /* Failed, cleanup */
-
-	if (!(HTMLText = MUI_CreateCustomClass(NULL,MUIC_Area,NULL,
-						sizeof(HTMLTextClData),(APTR)HTMLTextClDispatch)))
-		fail(NULL, "Failed to create HTMLText class."); /* Failed, cleanup */
-
-	if (!(HTMLTextN = MUI_CreateCustomClass(NULL,MUIC_Area,NULL,
-						sizeof(HTMLTextNClData),(APTR)HTMLTextNClDispatch)))
-		fail(NULL, "Failed to create HTMLTextN class."); /* Failed, cleanup */
-
-  return cl;
-}
-
-/*******************************************************
-  Free our MUI HTML Gadget Class
-*******************************************************/
-BOOL HTMLGadClFree(struct MUI_CustomClass *mcc)
-{
-	MUI_DeleteCustomClass(HTMLText);
-	MUI_DeleteCustomClass(HTMLTextN);
-	MUI_DeleteCustomClass(mcc);
-	return 0;
-}
 #ifndef USE_ZUNE
-ULONG __stdargs DoSuperNew(struct IClass *cl,Object *obj,ULONG tag1,...)
+IPTR __stdargs DoSuperNew(struct IClass *cl,Object *obj,IPTR tag1,...)
 {
 	return(DoSuperMethod(cl,obj,OM_NEW,&tag1,NULL));
 }
 #endif
+
 /*************** INSTANCE HANDLING (METHODS) *************/
 /*
 ** AskMinMax method will be called before the window is opened
@@ -202,7 +126,7 @@ ULONG __stdargs DoSuperNew(struct IClass *cl,Object *obj,ULONG tag1,...)
 ** minimum, maximum and default size of our object.
 */
 
-static ULONG HTMLGadClAskMinMax(Class *cl, Object *obj, struct MUIP_AskMinMax *msg){
+static IPTR HTMLGadClAskMinMax(Class *cl, Object *obj, struct MUIP_AskMinMax *msg){
   /*
    ** let our superclass first fill in what it thinks about sizes.
    ** this will e.g. add the size of frame and inner spacing.
@@ -225,7 +149,7 @@ static ULONG HTMLGadClAskMinMax(Class *cl, Object *obj, struct MUIP_AskMinMax *m
   return(0);
 }
 
-static ULONG HTMLGadClNew(Class *cl, Object *obj,struct opSet *msg){
+static IPTR HTMLGadClNew(Class *cl, Object *obj,struct opSet *msg){
 /* CHECK LAST PARAM */
    
 	HTMLGadClData *inst; 
@@ -271,39 +195,39 @@ static ULONG HTMLGadClNew(Class *cl, Object *obj,struct opSet *msg){
   inst->is_index = FALSE;
   inst->percent_vert_space = 0;
   
-  inst->raw_text = (char *)GetTagData(HTMLA_raw_text, NULL,
+  inst->raw_text = (char *)GetTagData(HTMLA_raw_text, (IPTR)NULL,
 				      ((opSetP)msg)->ops_AttrList);
-  inst->font = (TextFontP)GetTagData(HTMLA_font, NULL,
+  inst->font = (TextFontP)GetTagData(HTMLA_font, (IPTR)NULL,
 				     ((opSetP)msg)->ops_AttrList);
-  inst->italic_font = (TextFontP)GetTagData(HTMLA_italic_font, NULL,
+  inst->italic_font = (TextFontP)GetTagData(HTMLA_italic_font, (IPTR)NULL,
 					    ((opSetP)msg)->ops_AttrList);
-  inst->bold_font = (TextFontP)GetTagData(HTMLA_bold_font, NULL,
+  inst->bold_font = (TextFontP)GetTagData(HTMLA_bold_font, (IPTR)NULL,
 					  ((opSetP)msg)->ops_AttrList);
-  inst->fixed_font = (TextFontP)GetTagData(HTMLA_fixed_font, NULL,
+  inst->fixed_font = (TextFontP)GetTagData(HTMLA_fixed_font, (IPTR)NULL,
 					   ((opSetP)msg)->ops_AttrList);
-  inst->header1_font = (TextFontP)GetTagData(HTMLA_header1_font, NULL,
+  inst->header1_font = (TextFontP)GetTagData(HTMLA_header1_font, (IPTR)NULL,
 					     ((opSetP)msg)->ops_AttrList);
-  inst->header2_font = (TextFontP)GetTagData(HTMLA_header2_font, NULL,
+  inst->header2_font = (TextFontP)GetTagData(HTMLA_header2_font, (IPTR)NULL,
 					     ((opSetP)msg)->ops_AttrList);
-  inst->header3_font = (TextFontP)GetTagData(HTMLA_header3_font, NULL,
+  inst->header3_font = (TextFontP)GetTagData(HTMLA_header3_font, (IPTR)NULL,
 					     ((opSetP)msg)->ops_AttrList);
-  inst->header4_font = (TextFontP)GetTagData(HTMLA_header4_font, NULL,
+  inst->header4_font = (TextFontP)GetTagData(HTMLA_header4_font, (IPTR)NULL,
 					     ((opSetP)msg)->ops_AttrList);
-  inst->header5_font = (TextFontP)GetTagData(HTMLA_header5_font, NULL,
+  inst->header5_font = (TextFontP)GetTagData(HTMLA_header5_font, (IPTR)NULL,
 					     ((opSetP)msg)->ops_AttrList);
-  inst->header6_font = (TextFontP)GetTagData(HTMLA_header6_font, NULL,
+  inst->header6_font = (TextFontP)GetTagData(HTMLA_header6_font, (IPTR)NULL,
 					     ((opSetP)msg)->ops_AttrList);
-  inst->address_font = (TextFontP)GetTagData(HTMLA_address_font, NULL,
+  inst->address_font = (TextFontP)GetTagData(HTMLA_address_font, (IPTR)NULL,
 					     ((opSetP)msg)->ops_AttrList);
-  inst->plain_font = (TextFontP)GetTagData(HTMLA_plain_font, NULL,
+  inst->plain_font = (TextFontP)GetTagData(HTMLA_plain_font, (IPTR)NULL,
 					   ((opSetP)msg)->ops_AttrList);
-  inst->listing_font = (TextFontP)GetTagData(HTMLA_listing_font, NULL,
+  inst->listing_font = (TextFontP)GetTagData(HTMLA_listing_font, (IPTR)NULL,
 					     ((opSetP)msg)->ops_AttrList);
   inst->previously_visited_test =
-   (visitTestProc)GetTagData(HTMLA_visit_func, NULL,
+   (visitTestProc)GetTagData(HTMLA_visit_func, (IPTR)NULL,
 			     ((opSetP)msg)->ops_AttrList);
   inst->resolveImage =
-   (resolveImageProc)GetTagData(HTMLA_image_func, NULL,
+   (resolveImageProc)GetTagData(HTMLA_image_func, (IPTR)NULL,
 				((opSetP)msg)->ops_AttrList);
 
 	inst->keyctrl = GetTagData(HTMLA_ScrollKeys, TRUE,
@@ -341,18 +265,18 @@ static ULONG HTMLGadClNew(Class *cl, Object *obj,struct opSet *msg){
 
   inst->reparsing=0;
 
-  return (ULONG)obj;
+  return (IPTR)obj;
 }
 
-static ULONG HTMLGadClDispose(Class *cl, Object *obj, Msg msg){
+static IPTR HTMLGadClDispose(Class *cl, Object *obj, Msg msg){
 	return(DoSuperMethodA(cl,obj,msg));
 }
 
-#define C24C3_32(x) (((x&0xFF0000)<<8)|((x&0xFF0000))|((x&0xFF0000)>>8)|((x&0xFF0000)>>16)),\
-(((x&0xFF00)<<16)|((x&0xFF00)<<8)|((x&0xFF00))|((x&0xFF00)>>8)),\
-(((x&0xFF)<<24)|((x&0xFF)<<16)|((x&0xFF)<<8)|((x&0xFF)))
+#define C24CR_32(x) (((x&0xFF0000)<<8)|((x&0xFF0000))|((x&0xFF0000)>>8)|((x&0xFF0000)>>16))
+#define C24CG_32(x) (((x&0xFF00)<<16)|((x&0xFF00)<<8)|((x&0xFF00))|((x&0xFF00)>>8))
+#define C24CB_32(x) (((x&0xFF)<<24)|((x&0xFF)<<16)|((x&0xFF)<<8)|((x&0xFF)))
 
-static ULONG HTMLGadClSetup(Class *cl, Object *obj, Msg msg){
+static IPTR HTMLGadClSetup(Class *cl, Object *obj, Msg msg){
 	HTMLGadClData *inst=INST_DATA(cl,obj);
 	long col;
 
@@ -362,7 +286,7 @@ static ULONG HTMLGadClSetup(Class *cl, Object *obj, Msg msg){
   /* Allow input to gadget */
 //  MUI_RequestIDCMP(obj, IDCMP_MOUSEBUTTONS | IDCMP_MOUSEMOVE | IDCMP_RAWKEY);
 
-	col = ObtainBestPen(_screen(obj)->ViewPort.ColorMap,C24C3_32(Rdata.u_anchor),
+	col = ObtainBestPen(_screen(obj)->ViewPort.ColorMap,C24CR_32(Rdata.u_anchor),C24CG_32(Rdata.u_anchor),C24CB_32(Rdata.u_anchor),
 				OBP_Precision, PRECISION_IMAGE, TAG_DONE);
 	if(col!=-1)
 		inst->anchor_fg=col;
@@ -375,7 +299,7 @@ I mean: FollowedLink, same with UnfollowedLink and
            ?ActiveLink
 */
 
-	col = ObtainBestPen(_screen(obj)->ViewPort.ColorMap,C24C3_32(Rdata.f_anchor),
+	col = ObtainBestPen(_screen(obj)->ViewPort.ColorMap,C24CR_32(Rdata.f_anchor),C24CG_32(Rdata.f_anchor),C24CB_32(Rdata.f_anchor),
 				OBP_Precision, PRECISION_IMAGE, TAG_DONE);
 	if(col!=-1)
 		inst->visitedAnchor_fg=col;
@@ -383,7 +307,7 @@ I mean: FollowedLink, same with UnfollowedLink and
 		inst->visitedAnchor_fg=1;
 	inst->visitedAnchor_fgc=col;
 
-	col = ObtainBestPen(_screen(obj)->ViewPort.ColorMap,C24C3_32(Rdata.a_anchor),
+	col = ObtainBestPen(_screen(obj)->ViewPort.ColorMap,C24CR_32(Rdata.a_anchor),C24CG_32(Rdata.a_anchor),C24CB_32(Rdata.a_anchor),
 				OBP_Precision, PRECISION_IMAGE, TAG_DONE);
 	if(col!=-1)
 		inst->activeAnchor_fg=col;
@@ -394,7 +318,7 @@ I mean: FollowedLink, same with UnfollowedLink and
   return TRUE;
 }
 
-static ULONG HTMLGadClCleanup( Class *cl, Object *obj, Msg msg){
+static IPTR HTMLGadClCleanup( Class *cl, Object *obj, Msg msg){
 	HTMLGadClData *inst = INST_DATA(cl, obj);
 //	MUI_RejectIDCMP(obj,IDCMP_MOUSEBUTTONS | IDCMP_MOUSEMOVE | IDCMP_RAWKEY); /* and more */
 
@@ -413,7 +337,7 @@ static ULONG HTMLGadClCleanup( Class *cl, Object *obj, Msg msg){
 }  
 
 
-static ULONG HTMLGadClShow(Class *cl, Object *obj, Msg msg){
+static IPTR HTMLGadClShow(Class *cl, Object *obj, Msg msg){
 	HTMLGadClData *inst; 
 
 	DoSuperMethodA(cl,obj,msg);
@@ -440,7 +364,7 @@ static ULONG HTMLGadClShow(Class *cl, Object *obj, Msg msg){
 	return TRUE;
 }
 
-static ULONG HTMLGadClHide(Class *cl, Object *obj, Msg msg){
+static IPTR HTMLGadClHide(Class *cl, Object *obj, Msg msg){
 	HTMLGadClData *inst; 
 
 	DoSuperMethodA(cl,obj,msg);
@@ -457,7 +381,7 @@ static ULONG HTMLGadClHide(Class *cl, Object *obj, Msg msg){
 	return TRUE;
 }
 
-static ULONG HTMLGadClResetAmigaGadgets( Class *cl, Object *obj, Msg msg){
+static IPTR HTMLGadClResetAmigaGadgets( Class *cl, Object *obj, Msg msg){
 
 	HTMLGadClData *inst = INST_DATA(cl, obj);
 
@@ -483,7 +407,7 @@ static ULONG HTMLGadClResetAmigaGadgets( Class *cl, Object *obj, Msg msg){
 	return TRUE;
 }  
 
-static ULONG HTMLGadClResetAmigaGadgetsNoScroll( Class *cl, Object *obj, Msg msg){
+static IPTR HTMLGadClResetAmigaGadgetsNoScroll( Class *cl, Object *obj, Msg msg){
 
 	HTMLGadClData *inst = INST_DATA(cl, obj);
 
@@ -496,7 +420,7 @@ static ULONG HTMLGadClResetAmigaGadgetsNoScroll( Class *cl, Object *obj, Msg msg
 	return TRUE;
 }  
 
-static ULONG HTMLGadClResetTopLeft( Class *cl, Object *obj, Msg msg){
+static IPTR HTMLGadClResetTopLeft( Class *cl, Object *obj, Msg msg){
 
 	HTMLGadClData *inst = INST_DATA(cl, obj);
 
@@ -506,99 +430,100 @@ static ULONG HTMLGadClResetTopLeft( Class *cl, Object *obj, Msg msg){
 	return TRUE;
 }  
 
-static ULONG HTMLGadClGet(Class *cl, Object *obj, Msg msg){
+static IPTR HTMLGadClGet(Class *cl, Object *obj, Msg msg){
 
   HTMLGadClData *inst = INST_DATA(cl, obj);
   switch (((opGetP)msg)->opg_AttrID) {
   case HTMLA_title:
-    *(((opGetP)msg)->opg_Storage) = (ULONG)(inst->title);
+    *(((opGetP)msg)->opg_Storage) = (IPTR)(inst->title);
     break;
     
   case HTMLA_raw_text:
-    *(((opGetP)msg)->opg_Storage) = (ULONG)(inst->raw_text);
+    *(((opGetP)msg)->opg_Storage) = (IPTR)(inst->raw_text);
     break;
     
   case HTMLA_image_load:
     *(((opGetP)msg)->opg_Storage) =
-     (ULONG)(inst->inlined_image_to_load);
+     (IPTR)(inst->inlined_image_to_load);
     break;
     
   case HTMLA_new_href:
     *(((opGetP)msg)->opg_Storage) =
-     (ULONG)(inst->chosen_anchor);
+     (IPTR)(inst->chosen_anchor);
     /*
        if ((IsDelayedHRef(inst, inst->chosen_anchor->anchorHRef)) ||
        (inst->chosen_anchor->pic_data->delayed == 2)) {
        *(((opGetP)msg)->opg_Storage) =
-       (ULONG)(inst->chosen_anchor->edata);
+       (IPTR)(inst->chosen_anchor->edata);
        } else {
        *(((opGetP)msg)->opg_Storage) =
-       (ULONG)(inst->chosen_anchor->anchorHRef);
+       (IPTR)(inst->chosen_anchor->anchorHRef);
        }
        */
     break;
   case HTMLA_post_text:
-    *(((opGetP)msg)->opg_Storage) = (ULONG)inst->post_text;
+    *(((opGetP)msg)->opg_Storage) = (IPTR)inst->post_text;
     break;
 
   case HTMLA_post_href:
-    *(((opGetP)msg)->opg_Storage) = (ULONG)inst->post_href;
+    *(((opGetP)msg)->opg_Storage) = (IPTR)inst->post_href;
     break;
    
   case HTMLA_get_href:
-    *(((opGetP)msg)->opg_Storage) = (ULONG)inst->post_href;
+    *(((opGetP)msg)->opg_Storage) = (IPTR)inst->post_href;
     break;
    
   case HTMLA_doc_height:
-    *(((opGetP)msg)->opg_Storage) = (ULONG)(inst->doc_height);
+    *(((opGetP)msg)->opg_Storage) = (IPTR)(inst->doc_height);
     break;
 
   case HTMLA_view_height:
-    *(((opGetP)msg)->opg_Storage) = (ULONG)(inst->view_height);
+    *(((opGetP)msg)->opg_Storage) = (IPTR)(inst->view_height);
     break;
 
   case HTMLA_doc_width:
-    *(((opGetP)msg)->opg_Storage) = (ULONG)(inst->doc_width);
+    *(((opGetP)msg)->opg_Storage) = (IPTR)(inst->doc_width);
     break;
     
   case HTMLA_view_width:
-	*(((opGetP)msg)->opg_Storage) = (ULONG)(inst->view_width);
+	*(((opGetP)msg)->opg_Storage) = (IPTR)(inst->view_width);
 	break;
 
   case HTMLA_anchor_fg:
-    *(((opGetP)msg)->opg_Storage) = (ULONG)(inst->anchor_fg);
+    *(((opGetP)msg)->opg_Storage) = (IPTR)(inst->anchor_fg);
     break;
     
   case HTMLA_visited_fg:
-    *(((opGetP)msg)->opg_Storage) = (ULONG)(inst->visitedAnchor_fg);
+    *(((opGetP)msg)->opg_Storage) = (IPTR)(inst->visitedAnchor_fg);
     break;
     
   case HTMLA_active_fg:
-    *(((opGetP)msg)->opg_Storage) = (ULONG)(inst->activeAnchor_fg);
+    *(((opGetP)msg)->opg_Storage) = (IPTR)(inst->activeAnchor_fg);
     break;
     
   case HTMLA_inst:
-    *(((opGetP)msg)->opg_Storage) = (ULONG)(inst);
+    *(((opGetP)msg)->opg_Storage) = (IPTR)(inst);
     break;
     
   case HTMLA_scroll_y:
-    *(((opGetP)msg)->opg_Storage) = (ULONG)(inst->scroll_y);
+    *(((opGetP)msg)->opg_Storage) = (IPTR)(inst->scroll_y);
     break;
 
   case HTMLA_Top:
-    *(((opGetP)msg)->opg_Storage) = (ULONG)(inst->scroll_y);
+    *(((opGetP)msg)->opg_Storage) = (IPTR)(inst->scroll_y);
     break;
   case HTMLA_Left:
-    *(((opGetP)msg)->opg_Storage) = (ULONG)(inst->scroll_x);
+    *(((opGetP)msg)->opg_Storage) = (IPTR)(inst->scroll_x);
     break;
   }
   
   return DoSuperMethodA(cl, obj, msg);
 }
 
-static ULONG HTMLGadClSet(Class *cl, Object *obj, Msg msg){
+static IPTR HTMLGadClSet(Class *cl, Object *obj, Msg msg){
 	HTMLGadClData *inst = INST_DATA(cl, obj);
-	struct TagItem *tstate, *ti;
+	const struct TagItem *tstate;
+	struct TagItem *ti;
 	struct RastPort *rp;
   
 	ti = ((opSetP)msg)->ops_AttrList;
@@ -670,10 +595,10 @@ static ULONG HTMLGadClSet(Class *cl, Object *obj, Msg msg){
   return DoSuperMethodA(cl, obj, msg);
 }
 
-static HandleInput(struct MUIP_HandleInput *msg)
+static IPTR HandleInput(struct MUIP_HandleInput *msg)
 {
 	HTMLGadClData *inst = INST_DATA(HTMLGadClass, HTML_Gad);
-	long data;
+	long data = 0;
 	UWORD keycode;
 	Object *obj=HTML_Gad;
 
@@ -696,7 +621,7 @@ static HandleInput(struct MUIP_HandleInput *msg)
 				break;
 
 			case IDCMP_MOUSEMOVE: {
-				char *href, *old;
+				char *href, *old = NULL;
 				struct ele_rec *eptr;
 				int epos;
 				if (Rdata.track_pointer_motion && inst->active) {
@@ -819,10 +744,11 @@ static HandleInput(struct MUIP_HandleInput *msg)
 }
 
 
+#if 0
 /*------------------------------------------------------------------------
   Draw the HTML Gadget
   ------------------------------------------------------------------------*/
-static ULONG HTMLGadClDraw(Class *cl, Object *obj, struct MUIP_Draw *msg){
+static IPTR HTMLGadClDraw(Class *cl, Object *obj, struct MUIP_Draw *msg){
 	HTMLGadClData *HTML_Data = INST_DATA(cl, obj);
 
 	DoSuperMethodA(cl,obj,(Msg)msg);
@@ -839,7 +765,7 @@ static ULONG HTMLGadClDraw(Class *cl, Object *obj, struct MUIP_Draw *msg){
 //		   was ready, i.e. after a window resize.  This is MUI's fault (still!) */
 //  
 //		if (HTML_Data->html_objects == NULL) {
-//    NotifyChange(cl, (Object *)g, (struct gpInput *)msg, HTML_mui_resize, (ULONG)NULL);
+//    NotifyChange(cl, (Object *)g, (struct gpInput *)msg, HTML_mui_resize, (IPTR)NULL);
 //			ResetAmigaGadgets(); /* Hope this is correct */
 //			HTMLSetText(HTML_Data, HTML_Data->raw_text, NULL, NULL, 0, NULL, NULL);
 // 			}
@@ -851,8 +777,9 @@ static ULONG HTMLGadClDraw(Class *cl, Object *obj, struct MUIP_Draw *msg){
 
 	return 0;
 }
+#endif
 
-SAVEDS ULONG HTMLGadClPlaceObject(struct IClass *cl,Object *obj,struct MUIP_PlaceObject *msg)
+SAVEDS IPTR HTMLGadClPlaceObject(struct IClass *cl,Object *obj,struct MUIP_PlaceObject *msg)
 {
 	HTMLGadClData *inst = INST_DATA(cl, obj);
 
@@ -878,12 +805,12 @@ SAVEDS ULONG HTMLGadClPlaceObject(struct IClass *cl,Object *obj,struct MUIP_Plac
 
 /* WORKING ON THIS */
 /* TEMP COMMENT OUT */
-static ULONG HTMLGadClSetText(Class *cl, Object *obj, Msg msg)
+static IPTR HTMLGadClSetText(Class *cl, Object *obj, Msg msg)
 {
  return 0;
 }
 #if FALSE
-static ULONG   HTMLGadClSetText(Class *cl, Object *obj, Msg msg)
+static IPTR   HTMLGadClSetText(Class *cl, Object *obj, Msg msg)
 {
   HTMLGadClData *inst = INST_DATA(cl, o);
   struct TagItem *tstate, *ti;
@@ -1038,20 +965,8 @@ HERE
 /********************************************************
   The main gadget handler routine
 ********************************************************/
-#ifndef __AROS__
-ASM ULONG HTMLGadClDispatch(REG(a0) Class *cl,
-			      REG(a2) Object *obj,
-			      REG(a1) Msg msg)
+DISPATCHER(HTMLGadClDispatch)
 {
-#else
-AROS_UFH3(ULONG, HTMLGadClDispatch,
-    AROS_UFHA(Class *, cl, A0),
-    AROS_UFHA(Object *, obj, A2),
-    AROS_UFHA(Msg, msg, A1))
-{
-  AROS_USERFUNC_INIT
-#endif
-
 /*  kprintf("Method %08lx issued\n",msg->MethodID); */
 
   switch (msg->MethodID) { /* approx calling order */
@@ -1095,10 +1010,6 @@ AROS_UFH3(ULONG, HTMLGadClDispatch,
 
 
   return(DoSuperMethodA(cl,obj,msg));
-
-#ifdef __AROS__
-  AROS_USERFUNC_EXIT
-#endif
 }
 
 
@@ -1163,8 +1074,8 @@ void new_button_release(HTMLGadClData *HTML_Data,Object *obj,long x,long y)
 
 				if (eptr->pic_data == NULL) {
 					HTML_Data->inlined_image_to_load = eptr->edata;
-					set(obj,HTMLA_image_load,(ULONG)(eptr->edata));
-					set(G_Norm,HTMLA_image_load,(ULONG)(eptr->edata));
+					set(obj,HTMLA_image_load,(IPTR)(eptr->edata));
+					set(G_Norm,HTMLA_image_load,(IPTR)(eptr->edata));
 /*					if(eptr->pic_data)
 						eptr->pic_data->delayed = 0;
 					else
@@ -1185,8 +1096,8 @@ void new_button_release(HTMLGadClData *HTML_Data,Object *obj,long x,long y)
 
 					if (eptr->pic_data == NULL) {
 						HTML_Data->inlined_image_to_load = eptr->edata;
-						set(obj,HTMLA_image_load,(ULONG)(eptr->edata));
-						set(G_Norm,HTMLA_image_load,(ULONG)(eptr->edata));
+						set(obj,HTMLA_image_load,(IPTR)(eptr->edata));
+						set(G_Norm,HTMLA_image_load,(IPTR)(eptr->edata));
 /*						if(eptr->pic_data)
 							eptr->pic_data->delayed = 0;
 						else
@@ -1217,12 +1128,12 @@ void new_button_release(HTMLGadClData *HTML_Data,Object *obj,long x,long y)
 					malloc(strlen(eptr->anchorHRef) + 256);
 					sprintf(buf, "%s?%d,%d",
 					eptr->anchorHRef,
-					x + HTML_Data->scroll_x - eptr->x,
-					y + HTML_Data->scroll_y - eptr->y);
+					(int)(x + HTML_Data->scroll_x - eptr->x),
+					(int)(y + HTML_Data->scroll_y - eptr->y));
 					}
 				HTML_Data->chosen_anchor = buf;
-				set(obj,HTMLA_new_href,(ULONG)(buf));
-				set(G_Norm,HTMLA_new_href,(ULONG)(buf));
+				set(obj,HTMLA_new_href,(IPTR)(buf));
+				set(G_Norm,HTMLA_new_href,(IPTR)(buf));
 	    		}
 			}
 		}
@@ -1265,8 +1176,6 @@ long HTMLFormImages=0;
 
 int LoadInlinedImage(char *img)
 {
-  struct Gadget *g;
-  struct Window *w;
   HTMLGadClData *inst;
   void *ptr;
   char *url = mo_url_canonicalize(img, cached_url);
@@ -1371,7 +1280,7 @@ int LoadInlinedImages()
            the Boopsi gadget has changed.
 *********************************************************************/
 void NotifyChange(Class *cl, Object *o, struct gpInput *gpi, Tag tag,
-		  ULONG data){
+		  IPTR data){
   struct TagItem tt[3];
 
   tt[0].ti_Tag = tag;
@@ -1540,7 +1449,7 @@ int ImageLoadAndCache(HTMLGadClData *HTML_Data, char *src)
 	img_data->mask_bitmap=NULL;
  
 	if (dtobject = NewDTObject(fnam, DTA_GroupID,GID_PICTURE, PDTA_Remap, TRUE, TAG_DONE)){
-		ULONG *pentable;
+		IPTR *pentable;
 		int numpens;
 		struct BitMap *OrgBitMap;
 
@@ -1637,7 +1546,7 @@ int ImageLoadAndCache(HTMLGadClData *HTML_Data, char *src)
 	img_data->mask_bitmap=NULL;
  
 	if (dtobject = NewDTObject(fnam, DTA_GroupID,GID_PICTURE, PDTA_Remap, FALSE, TAG_DONE)){
-		ULONG *pentable;
+		IPTR *pentable;
 		int numpens;
 		struct BitMap *OrgBitMap;
 
@@ -1755,13 +1664,12 @@ int ImageLoadAndCache(HTMLGadClData *HTML_Data, char *src)
 int ImageLoadAndCache(HTMLGadClData *HTML_Data, char *src)
 {
 	APTR dtobject;
-	struct BitMap *bm1 = NULL, *bm2;
+	struct BitMap *bm1 = NULL;
 	struct BitMapHeader *bmh = NULL;
-	struct gpLayout mygpLayout;
 	ImageInfo *img_data;
 	char *fnam;
 	int rc;
-	struct RastPort *tmpRp1,*tmpRp2;
+	struct RastPort *tmpRp1,*tmpRp2 = NULL;
 	struct BitMap *b;
 
   if (!src) {
@@ -1831,7 +1739,7 @@ int ImageLoadAndCache(HTMLGadClData *HTML_Data, char *src)
 
 
 		if(bmh->bmh_Masking==mskHasTransparentColor){
-			long x,y,c=bmh->bmh_Transparent;
+			long x,y;
 
 			tmpRp1->BitMap=bm1;
 
@@ -1860,7 +1768,7 @@ int ImageLoadAndCache(HTMLGadClData *HTML_Data, char *src)
  else {
       FILE *fp;
       unsigned char *data;
-      int width, height, colrs, bg;
+      int width, height, colrs;
 
       fp = fopen(fnam, "r");
 
@@ -1902,7 +1810,7 @@ int ImageLoadAndCache(HTMLGadClData *HTML_Data, char *src)
 ** minimum, maximum and default size of our object.
 */
 
-static ULONG HTMLTextClAskMinMax(Class *cl, Object *obj, struct MUIP_AskMinMax *msg){
+static IPTR HTMLTextClAskMinMax(Class *cl, Object *obj, struct MUIP_AskMinMax *msg){
   /*
    ** let our superclass first fill in what it thinks about sizes.
    ** this will e.g. add the size of frame and inner spacing.
@@ -1924,22 +1832,22 @@ static ULONG HTMLTextClAskMinMax(Class *cl, Object *obj, struct MUIP_AskMinMax *
   return(0);
 }
 
-static ULONG HTMLTextClSetup(Class *cl, Object *obj, Msg msg){
+static IPTR HTMLTextClSetup(Class *cl, Object *obj, Msg msg){
   if (!DoSuperMethodA(cl,obj,msg))
    return FALSE;
   MUI_RequestIDCMP(obj, IDCMP_MOUSEBUTTONS | IDCMP_MOUSEMOVE | IDCMP_RAWKEY);
   return TRUE;
 }
 
-static ULONG HTMLTextClCleanup( Class *cl, Object *obj, Msg msg){
+static IPTR HTMLTextClCleanup( Class *cl, Object *obj, Msg msg){
 	MUI_RejectIDCMP(obj,IDCMP_MOUSEBUTTONS | IDCMP_MOUSEMOVE | IDCMP_RAWKEY);
 	return (DoSuperMethodA(cl,obj,msg));
 }  
 
-static ULONG HTMLTextClSet(Class *cl, Object *obj, Msg msg){
+static IPTR HTMLTextClSet(Class *cl, Object *obj, Msg msg){
 	HTMLTextClData *inst = INST_DATA(cl, obj);
-	struct TagItem *tstate, *ti;
-	long test;
+	const struct TagItem *tstate;
+	struct TagItem *ti;
 
 	ti = ((opSetP)msg)->ops_AttrList;
 	tstate = ti;
@@ -2019,7 +1927,7 @@ static ULONG HTMLTextClSet(Class *cl, Object *obj, Msg msg){
 /*------------------------------------------------------------------------
   Draw the HTML Gadget
   ------------------------------------------------------------------------*/
-static ULONG HTMLTextClDraw(Class *cl, Object *obj, struct MUIP_Draw *msg){
+static IPTR HTMLTextClDraw(Class *cl, Object *obj, struct MUIP_Draw *msg){
 	HTMLTextClData *inst = INST_DATA(cl, obj);
 
 	DoSuperMethodA(cl,obj,(Msg)msg);
@@ -2137,7 +2045,7 @@ static ULONG HTMLTextClDraw(Class *cl, Object *obj, struct MUIP_Draw *msg){
 	return 0;
 }
 
-static ULONG HTMLTextClHandleInput(Class *cl, Object *obj, struct MUIP_HandleInput *msg)
+static IPTR HTMLTextClHandleInput(Class *cl, Object *obj, struct MUIP_HandleInput *msg)
 {
 	DoSuperMethodA(cl,obj,(Msg)msg);
 //	kprintf("Getting input msg\n");
@@ -2148,19 +2056,8 @@ static ULONG HTMLTextClHandleInput(Class *cl, Object *obj, struct MUIP_HandleInp
 /********************************************************
   The main HTMLText handler routine
 ********************************************************/
-#ifndef __AROS__
-ASM ULONG HTMLTextClDispatch(REG(a0) Class *cl,
-			      REG(a2) Object *obj,
-			      REG(a1) Msg msg)
+DISPATCHER(HTMLTextClDispatch)
 {
-#else
-AROS_UFH3(ULONG, HTMLTextClDispatch,
-    AROS_UFHA(Class *, cl, A0),
-    AROS_UFHA(Object *, obj, A2),
-    AROS_UFHA(Msg, msg, A1))
-{
-    AROS_USERFUNC_INIT
-#endif
 	switch (msg->MethodID) { /* approx calling order */
 		case MUIM_AskMinMax  : return(HTMLTextClAskMinMax(cl,obj,(APTR)msg));
 		case MUIM_Draw       : return(HTMLTextClDraw(cl,obj,(APTR)msg));
@@ -2191,10 +2088,6 @@ AROS_UFH3(ULONG, HTMLTextClDispatch,
 
   }
   return(DoSuperMethodA(cl,obj,msg));
-
-#ifdef __AROS__
-  AROS_USERFUNC_EXIT
-#endif
 }
 
 /*********************  HTMLTextN  *********************/
@@ -2207,7 +2100,7 @@ AROS_UFH3(ULONG, HTMLTextClDispatch,
 ** minimum, maximum and default size of our object.
 */
 
-static ULONG HTMLTextNClAskMinMax(Class *cl, Object *obj, struct MUIP_AskMinMax *msg){
+static IPTR HTMLTextNClAskMinMax(Class *cl, Object *obj, struct MUIP_AskMinMax *msg){
   /*
    ** let our superclass first fill in what it thinks about sizes.
    ** this will e.g. add the size of frame and inner spacing.
@@ -2229,20 +2122,21 @@ static ULONG HTMLTextNClAskMinMax(Class *cl, Object *obj, struct MUIP_AskMinMax 
   return(0);
 }
 
-static ULONG HTMLTextNClSetup(Class *cl, Object *obj, Msg msg){
+static IPTR HTMLTextNClSetup(Class *cl, Object *obj, Msg msg){
   if (!DoSuperMethodA(cl,obj,msg))
    return FALSE;
   MUI_RequestIDCMP(obj, IDCMP_MOUSEBUTTONS | IDCMP_MOUSEMOVE | IDCMP_RAWKEY);
   return TRUE;
 }
 
-static ULONG HTMLTextNClCleanup( Class *cl, Object *obj, Msg msg){
+static IPTR HTMLTextNClCleanup( Class *cl, Object *obj, Msg msg){
 	MUI_RejectIDCMP(obj,IDCMP_MOUSEBUTTONS | IDCMP_MOUSEMOVE | IDCMP_RAWKEY);
 	return (DoSuperMethodA(cl,obj,msg));
 }  
-static ULONG HTMLTextNClSet(Class *cl, Object *obj, Msg msg){
+static IPTR HTMLTextNClSet(Class *cl, Object *obj, Msg msg){
 	HTMLTextClData *inst = INST_DATA(cl, obj);
-	struct TagItem *tstate, *ti;
+	const struct TagItem *tstate;
+	struct TagItem *ti;
   
 	ti = ((opSetP)msg)->ops_AttrList;
 	tstate = ti;
@@ -2278,7 +2172,7 @@ static ULONG HTMLTextNClSet(Class *cl, Object *obj, Msg msg){
   return DoSuperMethodA(cl, obj, msg);
 }
 
-static ULONG HTMLTextNClDraw(Class *cl, Object *obj, struct MUIP_Draw *msg){
+static IPTR HTMLTextNClDraw(Class *cl, Object *obj, struct MUIP_Draw *msg){
 	HTMLTextClData *inst = INST_DATA(cl, obj);
 
 	DoSuperMethodA(cl,obj,(Msg)msg);
@@ -2295,7 +2189,7 @@ static ULONG HTMLTextNClDraw(Class *cl, Object *obj, struct MUIP_Draw *msg){
 		   was ready, i.e. after a window resize.  This is MUI's fault (still!) */
   
 		if (inst->HTML_Data->html_objects == NULL) {
-//    NotifyChange(cl, (Object *)g, (struct gpInput *)msg, HTML_mui_resize, (ULONG)NULL);
+//    NotifyChange(cl, (Object *)g, (struct gpInput *)msg, HTML_mui_resize, (IPTR)NULL);
 			DoMethod(HTML_Gad,HTMLM_ResetAmigaGadgets); /* Hope this is correct */
 			HTMLSetText(inst->HTML_Data, inst->HTML_Data->raw_text, NULL, NULL, 0, NULL, NULL);
  			}
@@ -2306,7 +2200,7 @@ static ULONG HTMLTextNClDraw(Class *cl, Object *obj, struct MUIP_Draw *msg){
 	return 0;
 }
 
-static ULONG HTMLTextNClHandleInput(Class *cl, Object *obj, struct MUIP_HandleInput *msg)
+static IPTR HTMLTextNClHandleInput(Class *cl, Object *obj, struct MUIP_HandleInput *msg)
 {
 	DoSuperMethodA(cl,obj,(Msg)msg);
 	HandleInput(msg);
@@ -2316,33 +2210,19 @@ static ULONG HTMLTextNClHandleInput(Class *cl, Object *obj, struct MUIP_HandleIn
 /********************************************************
   The main HTMLTextN handler routine
 ********************************************************/
-#ifndef __AROS__
-ASM ULONG HTMLTextNClDispatch(REG(a0) Class *cl,
-			      REG(a2) Object *obj,
-			      REG(a1) Msg msg)
+DISPATCHER(HTMLTextNClDispatch)
 {
-#else
-AROS_UFH3(ULONG, HTMLTextNClDispatch,
-    AROS_UFHA(Class *, cl, A0),
-    AROS_UFHA(Object *, obj, A2),
-    AROS_UFHA(Msg, msg, A1))
-{
-  AROS_USERFUNC_INIT
-#endif
-	switch (msg->MethodID) {
-		case MUIM_AskMinMax  : return(HTMLTextNClAskMinMax(cl,obj,(APTR)msg));
-		case MUIM_Draw       : return(HTMLTextNClDraw(cl,obj,(APTR)msg));
-		case OM_SET          : return(HTMLTextNClSet(cl,obj,(APTR)msg));
-		case MUIM_Setup      : return(HTMLTextNClSetup(cl,obj,(APTR)msg));
-		case MUIM_Cleanup    : return(HTMLTextNClCleanup(cl,obj,(APTR)msg));
-		case MUIM_HandleInput: return(HTMLTextNClHandleInput(cl,obj,(APTR)msg));
+   switch (msg->MethodID) {
+	case MUIM_AskMinMax  : return(HTMLTextNClAskMinMax(cl,obj,(APTR)msg));
+	case MUIM_Draw       : return(HTMLTextNClDraw(cl,obj,(APTR)msg));
+	case OM_SET          : return(HTMLTextNClSet(cl,obj,(APTR)msg));
+	case MUIM_Setup      : return(HTMLTextNClSetup(cl,obj,(APTR)msg));
+	case MUIM_Cleanup    : return(HTMLTextNClCleanup(cl,obj,(APTR)msg));
+	case MUIM_HandleInput: return(HTMLTextNClHandleInput(cl,obj,(APTR)msg));
 
 //		case MUIM_Show       : return(HTMLTextNClShow(cl,obj,(APTR)msg));
   }
   return(DoSuperMethodA(cl,obj,msg));
-#ifdef __AROS__
-  AROS_USERFUNC_EXIT
-#endif
 }
 
 /*****************************************************
@@ -2479,7 +2359,7 @@ MakeWidget(HTMLGadClData *HTML_Data, char *edata,
 	WidgetInfo *widget,*cw;
 	char *tptr;
 	char *type,*value,*name,*options;
-	long size,width,height,crows,ccols,widgettype;
+	long width,height;
 
 //	kprintf("Called MakeWidget\n");
 //	kprintf("FormInfo : action: %s method: %s\n",Form->action,Form->method);
@@ -2493,8 +2373,8 @@ MakeWidget(HTMLGadClData *HTML_Data, char *edata,
 			SetAttrs(widget->MUI_Object,
 				MUIA_NewGroup_Left,x+mui_add(HTML_Data->view_left-HTML_Data->scroll_x),
 				MUIA_NewGroup_Top,y+mui_add(HTML_Data->view_top-HTML_Data->scroll_y),TAG_DONE);
-			GetAttr(MUIA_NewGroup_Width,widget->MUI_Object,(ULONG *)&widget->width);
-			GetAttr(MUIA_NewGroup_Height,widget->MUI_Object,(ULONG *)&widget->height);
+			GetAttr(MUIA_NewGroup_Width,widget->MUI_Object,(IPTR *)&widget->width);
+			GetAttr(MUIA_NewGroup_Height,widget->MUI_Object,(IPTR *)&widget->height);
 			}
 		return widget;
 		}
@@ -2682,7 +2562,7 @@ MakeWidget(HTMLGadClData *HTML_Data, char *edata,
 			height=10;
 			break;}
 		case FTYPE_SELECT:{
-			char **cyclelist,**selectedlist,**valuelist,**returnlist, *returns,*selected;
+			char **cyclelist,**selectedlist,**returnlist, *returns,*selected;
 			long i,n;
 			tptr=ParseMarkTag(edata,MT_INPUT,"MULTIPLE");
 			if(tptr){
@@ -2894,8 +2774,8 @@ void AddNewForm(HTMLGadClData *HTML_Data,FormInfo *Form){
 
 void AddNewWidgets(HTMLGadClData *HTML_Data)
 {
-	WidgetInfo *widget,*cw,*ow;
-	struct Window *win;
+	WidgetInfo *cw;
+	struct Window *win = NULL;
 
 	if(HTML_Data->widget_list){
 		if(!(HTML_Data->object_flags&Object_Changing)){
@@ -2992,7 +2872,7 @@ void DisposeForms(FormInfo *Form){
 void HideWidgets(HTMLGadClData *HTML_Data)
 {
 	WidgetInfo *ow,*nw;
-	struct Window *win;
+	struct Window *win = NULL;
 
 	if(HTML_Data->widget_list){
 		HTML_Data->object_flags|=Object_Changing;
@@ -3117,7 +2997,7 @@ void ClearWidget(FormPartInfo *fp)
 
 void ResetWidget(FormPartInfo *fp)
 {
-	long n;
+	long n = 0;
 	switch(fp->Type){
 		case FTYPE_TEXT:
 		case FTYPE_PASSWORD:
@@ -3167,7 +3047,7 @@ static Object *ButtonPressed;
 
 char *GetFormPartValue(FormPartInfo *fp,long *gadget)
 {
-	char *res;
+	char *res = "";
 	WidgetInfo *w;
 	long i,t;
 	BOOL found;
@@ -3329,14 +3209,10 @@ struct FormButtonHookMsg
 BOOL GetFormQuery(FormInfo *Form,char **res,char **resurl)
 {
 	int do_post_urlencoded = 0;
-	char *text;
 	char *query;
 	long len, i;
 
-	WidgetInfo *cw;
 	FormPartInfo *fp;
-	LONG size;
-	char *buf;
 	char *url;
 	char *method;
 	BOOL success=0;
@@ -3418,31 +3294,19 @@ void SubmitForm(struct FormButtonHookMsg *msg)
 #if DEBUG2==1
 		kprintf("URL: %s\nQuery: %s\n",url,query);
 #endif
-		SetAttrs(HTML_Gad,HTMLA_post_href,(ULONG)url,
-						HTMLA_post_text,(ULONG)query,TAG_DONE);
+		SetAttrs(HTML_Gad,HTMLA_post_href,(IPTR)url,
+						HTMLA_post_text,(IPTR)query,TAG_DONE);
 		}
 	else{
 #if DEBUG2==1
 		kprintf("URL: %s\n",url);
 #endif
-		set(HTML_Gad,HTMLA_get_href,(ULONG)url);
+		set(HTML_Gad,HTMLA_get_href,(IPTR)url);
 		}
 }
 
-#ifndef __AROS__
-ULONG SAVEDS ASM FormButtonFunc(REG(a0) struct Hook *hook,
-			   REG(a2) APTR	      object,
-			   REG(a1) struct FormButtonHookMsg *msg)
+HOOKPROTO(FormButtonFunc, IPTR, Object *object, struct FormButtonHookMsg *msg)
 {
-#else
-AROS_UFH3(ULONG, FormButtonFunc,
-    AROS_UFHA(struct Hook *, hook, A0),
-    AROS_UFHA(APTR, object, A2),
-    AROS_UFHA(struct FormButtonHookMsg *, msg, A1))
-{
-    AROS_USERFUNC_INIT
-
-#endif
 	FormPartInfo *fp;
 
 	if(msg->widget->type==FTYPE_BUTTON_S){
@@ -3458,45 +3322,16 @@ AROS_UFH3(ULONG, FormButtonFunc,
 			ClearWidget(fp);
 		}
 	return 0;
-#ifdef __AROS__
-    AROS_USERFUNC_EXIT
-#endif
 }
 
-#ifndef __AROS__
-ULONG SAVEDS ASM FormStringFunc(REG(a0) struct Hook *hook,
-			   REG(a2) APTR	      object,
-			   REG(a1) struct FormButtonHookMsg *msg)
+HOOKPROTONO(FormStringFunc, IPTR, struct FormButtonHookMsg *msg)
 {
-#else
-AROS_UFH3(ULONG, FormStringFunc,
-    AROS_UFHA(struct Hook *, hook, A0),
-    AROS_UFHA(APTR, object, A2),
-    AROS_UFHA(struct FormButtonHookMsg *, msg, A1))
-{
-    AROS_USERFUNC_INIT
-#endif
-	char *res;
 	SubmitForm(msg);
 	return 0;
-#ifdef __AROS__
-    AROS_USERFUNC_EXIT
-#endif
 }
 
-struct Hook FormButton_hook=
-{
-	{0,0},
-	(APTR)FormButtonFunc,
-	0,0
-};
-
-struct Hook FormString_hook=
-{
-	{0,0},
-	(APTR)FormStringFunc,
-	0,0
-};
+MakeHook(FormButton_hook, FormButtonFunc);
+MakeHook(FormString_hook, FormStringFunc);
 
 void ImageSubmitForm(FormInfo *fptr,char *name,int x,int y)
 {
@@ -3537,8 +3372,8 @@ void ImageSubmitForm(FormInfo *fptr,char *name,int x,int y)
 		kprintf("Query %s\n",newquery);
 #endif
 
-		SetAttrs(HTML_Gad,HTMLA_post_href,(ULONG)url,
-					HTMLA_post_text,(ULONG)newquery,TAG_DONE);
+		SetAttrs(HTML_Gad,HTMLA_post_href,(IPTR)url,
+					HTMLA_post_text,(IPTR)newquery,TAG_DONE);
 		}
 	else{
 		len=strlen(url)+(name ? 2*strlen(name) : 0)+16; /* Coordinates larger than 6 diggits is _highly_ unlikely */
@@ -3574,25 +3409,13 @@ void ImageSubmitForm(FormInfo *fptr,char *name,int x,int y)
 		kprintf("Query %s\n",newquery);
 #endif
 
-		set(HTML_Gad,HTMLA_get_href,(ULONG)newquery);
+		set(HTML_Gad,HTMLA_get_href,(IPTR)newquery);
 		}
 }
 
 
-#ifndef __AROS__
-ULONG SAVEDS ASM FormRadioFunc(REG(a0) struct Hook *hook,
-			   REG(a2) APTR	      object,
-			   REG(a1) struct FormButtonHookMsg *msg)
+HOOKPROTONO(FormRadioFunc, IPTR, struct FormButtonHookMsg *msg)
 {
-#else
-AROS_UFH3(ULONG, FormRadioFunc,
-    AROS_UFHA(struct Hook *, hook, A0),
-    AROS_UFHA(APTR, object, A2),
-    AROS_UFHA(struct FormButtonHookMsg *, msg, A1))
-{
-    AROS_USERFUNC_INIT
-
-#endif
 	WidgetInfo *cw;
 
 	for(cw=msg->widget->PrevRadio;cw;cw=cw->PrevRadio)
@@ -3600,17 +3423,9 @@ AROS_UFH3(ULONG, FormRadioFunc,
 	for(cw=msg->widget->NextRadio;cw;cw=cw->NextRadio)
 		set(cw->MUI_SubObject,MUIA_Selected,FALSE);
 	return 0;
-#ifdef __AROS__
-    AROS_USERFUNC_EXIT
-#endif
 }
 
-struct Hook FormRadio_hook=
-{
-	{0,0},
-	(APTR)FormRadioFunc,
-	0,0
-};
+MakeHook(FormRadio_hook, FormRadioFunc);
 
 char *ComposeCommaList(char **values, int nof){
 	long n,size=0,oldvalue;
@@ -3639,21 +3454,9 @@ struct TextEditHookMsg
 	FormInfo *Form;
 };
 
-#ifndef __AROS__
-static ULONG SAVEDS ASM TextEditFunc(REG(a0) struct Hook *hook,
-			   REG(a2) APTR	      obj,
-			   REG(a1) struct TextEditHookMsg *msg)
+HOOKPROTO(TextEditFunc, IPTR, Object *obj, struct TextEditHookMsg *msg)
 {
-#else
-AROS_UFH3(ULONG, TextEditFunc,
-    AROS_UFHA(struct Hook *, hook, A0),
-    AROS_UFHA(APTR, obj, A2),
-    AROS_UFHA(struct TextEditHookMsg *, msg, A1))
-{
-    AROS_USERFUNC_INIT
-
-#endif
-	LONG res;
+	LONG res = 0;
 
 	get(obj,MUIA_TEF_Active,&res);
 
@@ -3662,16 +3465,9 @@ AROS_UFH3(ULONG, TextEditFunc,
 	else
 		set(HTML_Gad,HTMLA_ScrollKeys,TRUE);
 	return 0;
-#ifdef __AROS__
-    AROS_USERFUNC_EXIT
-#endif
 }
-struct Hook TextEdit_hook=
-{
-	{0,0},
-	(APTR)TextEditFunc,
-	0,0
-};
+
+MakeHook(TextEdit_hook, TextEditFunc);
 
 void FreeCommaList(char **values, int nof)
 {
@@ -3687,17 +3483,8 @@ void FreeCommaList(char **values, int nof)
 ** not implement a specific lm_Type.
 */
 
-#ifndef __AROS__
-ULONG SAVEDS ASM LayoutFunc(REG(a0) struct Hook *h,REG(a2) Object *obj,REG(a1) struct MUI_LayoutMsg *lm)
+HOOKPROTONO(LayoutFunc, IPTR, struct MUI_LayoutMsg *lm)
 {
-#else
-AROS_UFH3(ULONG, LayoutFunc,
-    AROS_UFHA(struct Hook *, h, A0),
-    AROS_UFHA(Object *, obj, A2),
-    AROS_UFHA(struct MUI_LayoutMsg, *lm, A1))
-{
-    AROS_USERFUNC_INIT
-#endif
 	HTMLGadClData *inst=INST_DATA(HTMLGadClass,HTML_Gad);
 	switch (lm->lm_Type)
 	{
@@ -3797,11 +3584,10 @@ AROS_UFH3(ULONG, LayoutFunc,
 		}
 	}
 	return(MUILM_UNKNOWN);
-
-#ifdef __AROS__
-    AROS_USERFUNC_EXIT
-#endif
 }
+
+MakeHook(LayoutHook, LayoutFunc);
+
 #if 0
 Calling sequence when loading new page:
 
@@ -3863,3 +3649,35 @@ All in all:
 Editing does not work.
 
 #endif
+
+struct MUI_CustomClass *HTMLGadClInit(void)
+{
+	struct MUI_CustomClass *cl;
+
+	/* Create the HTML gadget class */
+	if (!(cl = MUI_CreateCustomClass(NULL,MUIC_Group,NULL,
+						sizeof(HTMLGadClData),ENTRY(HTMLGadClDispatch))))
+		fail(NULL, "Failed to create HTMLGad class."); /* Failed, cleanup */
+
+	if (!(HTMLText = MUI_CreateCustomClass(NULL,MUIC_Area,NULL,
+						sizeof(HTMLTextClData),ENTRY(HTMLTextClDispatch))))
+		fail(NULL, "Failed to create HTMLText class."); /* Failed, cleanup */
+
+	if (!(HTMLTextN = MUI_CreateCustomClass(NULL,MUIC_Area,NULL,
+						sizeof(HTMLTextNClData),ENTRY(HTMLTextNClDispatch))))
+		fail(NULL, "Failed to create HTMLTextN class."); /* Failed, cleanup */
+
+  return cl;
+}
+
+/*******************************************************
+  Free our MUI HTML Gadget Class
+*******************************************************/
+BOOL HTMLGadClFree(struct MUI_CustomClass *mcc)
+{
+	MUI_DeleteCustomClass(HTMLText);
+	MUI_DeleteCustomClass(HTMLTextN);
+	MUI_DeleteCustomClass(mcc);
+	return 0;
+}
+

@@ -42,10 +42,12 @@ EXEDIR := $(CONTRIBDIR)/Networking/Apps/AMosaic
 
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../libwww2
 
+USER_CFLAGS  += -Wno-parentheses -Wno-format-contains-nul
+
 #MM mui-amosaic : includes linklibs linklibs-www2
 
 %build_prog mmake=mui-amosaic \
     progname=AMosaic targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="www2 mui arossupport amiga arosc"
+    files=$(FILES) uselibs="www2 mui arossupport amiga net arosc"
 
 %common

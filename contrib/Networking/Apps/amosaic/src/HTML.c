@@ -145,9 +145,10 @@ extern void HideWidgets(HTMLGadClData *);
 static void CallLinkCallbacks(HTMLGadClData *);
 void ViewRedisplay(HTMLGadClData *, int, int, int, int);
 
-
+#if 0
 //static Cursor in_anchor_cursor = NULL;
 static void *in_anchor_cursor = NULL;
+#endif
 
 /*
  * Either the vertical or hortizontal scrollbar has been moved
@@ -321,7 +322,7 @@ ReformatWindow(HTMLGadClData * HTML_Data)
 
 }
 
-
+#if 0
 /*
  * Initialize is called when the widget is first initialized.
  * Check to see that all the starting resources are valid.
@@ -414,6 +415,7 @@ Initialize(HTMLGadClData * request, HTMLGadClData * new)
 
         return;
 }
+#endif
 
 
 #ifdef DEBUG
@@ -444,7 +446,7 @@ ViewRedisplay(
 	int doc_y;
 	int i, start, end, guess;
 
-	struct Region *new, *old;
+	struct Region *new, *old = NULL;
 	struct Rectangle rect;
 
 	/*
@@ -707,7 +709,7 @@ SetAnchor(HTMLGadClData * HTML_Data)
 	DisposeRegion(new);
 }
 
-
+#if 0
 /*
  * Draw selection for all elements in the widget
  * from start to end.
@@ -838,7 +840,7 @@ SetSelection(HTMLGadClData * HTML_Data)
 	end_pos = HTML_Data->sel_end_pos;
 	DrawSelection(HTML_Data, start, end, start_pos, end_pos);
 }
-
+#endif
 
 /*
  * Erase the selection from start to end
@@ -1028,7 +1030,7 @@ UnsetAnchor(HTMLGadClData * HTML_Data)
 	}
 }
 
-
+#if 0
 /*
  * Erase the old selection, and draw the new one in such a way
  * that advantage is taken of overlap, and there is no obnoxious
@@ -1245,7 +1247,7 @@ ChangeSelection(HTMLGadClData * HTML_Data, struct ele_rec *start, struct ele_rec
 		}
 	}
 }
-
+#endif
 
 
 /* MDF - I should port this!! */
@@ -1284,7 +1286,7 @@ CallLinkCallbacks(HTMLGadClData * HTML_Data)
 	}
 }
 
-
+#if 0
 /*
  * Search through the whole document, and recolor the internal elements with
  * the passed HREF.
@@ -1317,6 +1319,7 @@ RecolorInternalHRefs(HTMLGadClData * HTML_Data, char *href)
 		start = start->next;
 	}
 }
+#endif
 
 /*
  *************************************************************************
@@ -1337,7 +1340,7 @@ HTMLGetText(HTMLGadClData *w, int pretty)
 {
 	HTMLGadClData * HTML_Data = w;
 	char *text;
-	char *tptr, *buf;
+	char *tptr = NULL, *buf;
 	struct ele_rec *start;
 	struct ele_rec *end;
 
@@ -2180,7 +2183,6 @@ void
 HTMLSetText(HTMLGadClData *HTML_Data, char *text, char *header_text, char *footer_text, int element_id, char *target_anchor, void *ptr)
 {
 //	HTMLGadClData *HTML_Data = INST_DATA(HTMLGadClass,HTML_Gad);
-	WidgetInfo *wptr = (WidgetInfo *)ptr;
 	struct ele_rec *start;
 	struct ele_rec *eptr;
 	int newy;
@@ -2369,7 +2371,7 @@ fprintf (stderr, "calling in HTMLSetText\n");
 #define TOLOWER(x)      (tolower(x))
 #else
 extern char map_table[];
-#define TOLOWER(x)      (map_table[x])
+#define TOLOWER(x)      (map_table[(int)(x)])
 #endif /* NOT_ASCII */
 
 

@@ -122,11 +122,12 @@ char *machine;
 char *shortmachine;
 char *machine_with_domain;
 
+#if !defined(_AMIGA) && !defined(__AROS__)
 XColor fg_color, bg_color;
 
 static void *busy_cursor;
+#endif
 static int busy = 0;
-static Widget *busylist = NULL;
 char *cached_url = NULL;
 
 /* Forward declaration of test predicate. */
@@ -218,8 +219,8 @@ mo_status mo_busy (void)
  ****************************************************************************/
 mo_status mo_redisplay_window (mo_window *win)
 {
-  struct Gadget *g;
-  struct Window *w;
+  //struct Gadget *g;
+  //struct Window *w;
   char *curl = cached_url;
   cached_url = win->cached_url;
 
@@ -600,7 +601,7 @@ void mo_gui_notify_progress(char *msg)
 //  mo_window *win = current_win;
   char word3[100];
   static char sz[15];
-  int page, x, y;
+  int page = 0, x, y;
 
 //  if (!Rdata.track_pointer_motion)
 //    return;
@@ -1365,7 +1366,6 @@ int gargc;
 void fire_er_up(int gargc, char **gargv)
 {
   char *home_opt;
-  mo_window *win;
 
   /* Pick up default or overridden value out of X resources. */
   home_document = Rdata.home_document;
@@ -1707,7 +1707,7 @@ void mo_do_gui (int argc, char **argv)
 
 long atorgb(char *s)
 {
-	long r,g,b;
+	int r,g,b;
 	sscanf(s,"%d/%d/%d\n",&r,&g,&b);
 	return (r<<16)+(g<<8)+b;
 }
@@ -1726,7 +1726,7 @@ char *amiga_rlogin;	/* not in Rdata, because needed by libwww2 */
 void amiga_load_prefs(void)
 {
   FILE *fp;
-  char *s, *p;
+  char *s;
   char line[1004], param[100], *value ;
   void RexxMenu(int, char *) ;
 

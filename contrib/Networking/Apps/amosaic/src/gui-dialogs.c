@@ -78,7 +78,7 @@ typedef enum
 
 static char default_save_dir[255] ;
 
-char *format_opts[4];
+const char *format_opts[4];
 
 /* ------------------------------------------------------------------------ */
 /* ----------------------------- SAVE WINDOW ------------------------------ */
@@ -91,7 +91,7 @@ static unsigned long save_win_cb(struct Hook *h, void *o, int *msg)
 	mo_window *win = (mo_window *)h->h_Data;
 	Object *window = (Object *)o;
 	FILE *fp;
-	char *fname;
+	char *fname = "NIL:";
 
 	get(win->format_optmenu, MUIA_Cycle_Active, &(win->save_format));
 	
@@ -152,8 +152,6 @@ static unsigned long save_win_cb(struct Hook *h, void *o, int *msg)
 
 mo_status mo_post_save_window (mo_window *win)
 {
-	extern char *url;
-
 	if (!win->save_win)
 		{
 			struct Hook *save_win_cb_hook = malloc(sizeof(struct Hook));
@@ -215,8 +213,7 @@ mo_status mo_post_save_window (mo_window *win)
 #ifdef HAVE_GETCD
 		else getcd(0, default_save_dir);
 #else
-#warning This is definitely buggy!
-		else getcwd(default_save_dir,1024);
+		else getcwd(default_save_dir,sizeof(default_save_dir)-1);
 #endif
 	}
 	AddPart(default_save_dir, FilePart(win->cached_url), 200);
@@ -239,21 +236,20 @@ mo_status mo_post_savebinary_window (mo_window *win)
 	struct FileRequester *fr;
 	struct Window *w = NULL;
 	int result;
-	char *cmd, *urlname;
+	char *cmd = NULL, *urlname;
 	
 	if (!*default_save_dir) {
 		if (Rdata.download_dir) strcpy(default_save_dir, Rdata.download_dir);
 #ifdef HAVE_GETCD
 		else getcd(0, default_save_dir);
 #else
-#warning This is definitely buggy!
-		else getcwd(default_save_dir,1024);
+		else getcwd(default_save_dir,sizeof(default_save_dir)-1);
 #endif
 	}
 	urlname = FilePart(url) ;
 	fr = MUI_AllocAslRequestTags(ASL_FileRequest, ASLFR_TitleText, GetamosaicString(MSG_REQ_SAVEBINARY_TITLE),
 						 TAG_DONE);
-	GetAttr(MUIA_Window_Window, WI_Main, (ULONG *)(&w));
+	GetAttr(MUIA_Window_Window, WI_Main, (IPTR *)(&w));
 	result = MUI_AslRequestTags(fr, ASLFR_Window, w, ASLFR_PositiveText, GetamosaicString(MSG_REQ_SAVEBINARY_POSTEXT),
 						ASLFR_DoSaveMode, TRUE,
 						ASLFR_InitialDrawer, default_save_dir,
@@ -290,7 +286,7 @@ static unsigned long open_win_cb(struct Hook *h, void *o, int *msg)
 {
 	mo_window *win = (mo_window *)h->h_Data;
 	Object *window = (Object *)o;
-	char *url;
+	char *url = "";
 
 	set(window, MUIA_Window_Open, FALSE);
 
@@ -368,7 +364,7 @@ mo_status mo_post_open_window (mo_window *win)
 		}
 
 	{
-		char *url;
+		char *url = "";
 		get(TX_URL,MUIA_String_Contents,&url);
 		set(win->open_text,MUIA_String_Contents,url);
 	}		 
@@ -424,13 +420,12 @@ mo_status mo_post_source_window (mo_window *win)
 static unsigned long search_win_cb(struct Hook *h, void *o, int *msg)
 {
 	mo_window *win = (mo_window *)h->h_Data;
-	Object *window = (Object *)o;
 
 	switch (*msg)
 		{
 		case 0: /* Search */
 			{
-				char *str;
+				char *str = NULL;
 
 	get(win->search_win_text, MUIA_String_Contents, &str);
 
@@ -440,7 +435,7 @@ static unsigned long search_win_cb(struct Hook *h, void *o, int *msg)
 
 				if (str && *str)
 					{
-						int backward, caseless, rc;
+						int backward = 0, caseless = 0, rc;
 
 			get(win->search_backwards_toggle, MUIA_Selected, &backward);
 			get(win->search_caseless_toggle, MUIA_Selected, &caseless);

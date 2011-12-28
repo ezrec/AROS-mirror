@@ -18,7 +18,7 @@
 /*  Prototypes	*/
 extern void OpenamosaicCatalog(struct Locale *, STRPTR);
 extern void CloseamosaicCatalog(void);
-extern STRPTR GetamosaicString(LONG);
+extern CONST_STRPTR GetamosaicString(LONG);
 
 /*  Definitions */
 #define MSG_MENU_PROJECT 0

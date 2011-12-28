@@ -552,7 +552,7 @@ int HText_getTextLength (HText *me)
   if (me)
     return me->srclen;
   else
-    return NULL;
+    return 0;
 }
 
 BOOL HText_select (HText *text)
@@ -774,11 +774,11 @@ void application_user_feedback (char *str)
 
 static long paswd=0;
 
-char *prompt_for_string (char *questionstr)
+char *prompt_for_string (CONST char *questionstr)
 {
 /*---*/
   extern mo_window *current_win;
-  char *str;
+  char *str = "";
   ULONG signal;
   int done=0;
   Object *w, *s, *ok, *cancel;

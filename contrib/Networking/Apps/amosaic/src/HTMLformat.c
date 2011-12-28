@@ -2688,8 +2688,6 @@ ImagePlace(HTMLGadClData * HTML_Data, struct mark_up *mptr, int *x, int *y, unsi
 void
 WidgetPlace(HTMLGadClData * HTML_Data, struct mark_up *mptr, int *x, int *y, unsigned int width)
 {
-	char *tptr;
-
 	SetElement(HTML_Data, E_WIDGET, currentFont, *x, *y, mptr->start);
 
 	/*
@@ -2724,7 +2722,7 @@ WidgetPlace(HTMLGadClData * HTML_Data, struct mark_up *mptr, int *x, int *y, uns
 	{
 		int extra;
 		int baseline;
-		XFontStruct *fp;
+//sb		XFontStruct *fp;
 
 		extra = 2 * IMAGE_BORDER;
 
@@ -5770,7 +5768,6 @@ ParseTextToPrettyString(HTMLGadClData * HTML_Data, struct ele_rec *elist, struct
 			struct ele_rec *endp, int start_pos, int end_pos,
 			int space_width, int lmargin)
 {
-	int line;
 	int newline;
 	int lead_spaces;
 	int epos;
@@ -5848,7 +5845,6 @@ ParseTextToPrettyString(HTMLGadClData * HTML_Data, struct ele_rec *elist, struct
 	lead_spaces = 0;
 	last = start;
 	eptr = start;
-	line = eptr->line_number;
 	while ((eptr != NULL)&&(eptr != end))
 	{
 		/*

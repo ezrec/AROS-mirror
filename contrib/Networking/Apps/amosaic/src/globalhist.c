@@ -584,7 +584,7 @@ mo_status mo_cache_data (char *url, void *info, int type)
   if (type == 0)
     {
       if (TRACE)
-        fprintf (stderr, "[mo_cache_data] Caching '%s', data 0x%08x\n",
+        fprintf (stderr, "[mo_cache_data] Caching '%s', data %p\n",
                  url, info);
       mo_cache_image_data (l->cached_data, info);
     }
@@ -683,7 +683,7 @@ static mo_status mo_dump_cached_cd_array (void)
   for (i = 0; i < size_of_cached_cd_array; i++)
     {
       if (cached_cd_array[i])
-        fprintf (stderr, "  %02d data 0x%08x last_access %d\n", i,
+        fprintf (stderr, "  %02d data %p last_access %d\n", i,
                  cached_cd_array[i]->image_data, 
                  cached_cd_array[i]->last_access);
       else
@@ -701,7 +701,7 @@ static mo_status mo_init_cached_cd_array (void)
   size_of_cached_cd_array += CHUNK_OF_IMAGES;
 
   if (TRACE)
-    fprintf (stderr, "[mo_init] Did it 0x%08x -- allocated %d pointers.\n",
+    fprintf (stderr, "[mo_init] Did it %p -- allocated %d pointers.\n",
              cached_cd_array,
              size_of_cached_cd_array);
 
@@ -719,7 +719,7 @@ static mo_status mo_grow_cached_cd_array (void)
      sizeof (cached_data *) * (size_of_cached_cd_array + CHUNK_OF_IMAGES));
 
   if (TRACE)
-    fprintf (stderr, "[grow] cached_cd_array 0x%08x, size_of_cached_cd_array 0x%08x, sum 0x%08x\n",
+    fprintf (stderr, "[grow] cached_cd_array %p, size_of_cached_cd_array 0x%08x, sum %p\n",
              cached_cd_array, size_of_cached_cd_array, 
              cached_cd_array + size_of_cached_cd_array);
   bzero ((char *)(cached_cd_array + size_of_cached_cd_array), 
@@ -767,7 +767,7 @@ static mo_status mo_sort_cached_cd_array (void)
 
   if (TRACE)
     {
-      fprintf (stderr, "[mo_sort_cached_cd_array] Sorting 0x%08x!\n",
+      fprintf (stderr, "[mo_sort_cached_cd_array] Sorting %p!\n",
                cached_cd_array);
       mo_dump_cached_cd_array ();
     }
@@ -794,7 +794,7 @@ static mo_status mo_remove_cd_from_cached_cd_array (cached_data *cd)
           if (TRACE)
             fprintf 
               (stderr, 
-               "[mo_remove_cd_from_cached_cd_array] Found data 0x%08x, location %d\n", 
+               "[mo_remove_cd_from_cached_cd_array] Found data %p, location %d\n", 
                cached_cd_array[i]->image_data, i);
           freed_kbytes = mo_kbytes_in_image_data 
             (cached_cd_array[i]->image_data);
@@ -844,7 +844,7 @@ static mo_status mo_add_cd_to_cached_cd_array (cached_data *cd)
     {
       int num_to_remove = 0;
       if (TRACE)
-        fprintf (stderr, "[mo_add_cd] Going to sort 0x%08x...\n", 
+        fprintf (stderr, "[mo_add_cd] Going to sort %p...\n", 
                  cached_cd_array);
       mo_sort_cached_cd_array ();
       if (TRACE)
@@ -863,7 +863,7 @@ static mo_status mo_add_cd_to_cached_cd_array (cached_data *cd)
               cached_cd_array[num_to_remove] != NULL)
             {
               if (TRACE)
-                fprintf (stderr, "        ** going to try to remove %d; last_access %d < dont_nuke_after_me %d??\n",cached_cd_array[num_to_remove]->last_access,dont_nuke_after_me);
+                fprintf (stderr, "        ** going to try to remove %d; last_access %d < dont_nuke_after_me %d??\n",num_to_remove, cached_cd_array[num_to_remove]->last_access,dont_nuke_after_me);
               if (cached_cd_array[num_to_remove]->last_access <
                   dont_nuke_after_me)
                 {
@@ -926,7 +926,7 @@ static mo_status mo_add_cd_to_cached_cd_array (cached_data *cd)
     {
       fprintf 
         (stderr, 
-         "[mo_add_cd_to_cached_cd_array] Added cd, data 0x%08x, num %d\n",
+         "[mo_add_cd_to_cached_cd_array] Added cd, data %p, num %d\n",
          cd->image_data, num);
       fprintf 
         (stderr,

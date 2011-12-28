@@ -34,7 +34,7 @@ void setup_font(struct TextAttr *t, char *name, char *pref)
   t->ta_Name = name;
   t->ta_YSize = size;
   t->ta_Style = style;
-  t->ta_Flags = NULL;
+  t->ta_Flags = 0;
 }
 
 
@@ -97,8 +97,6 @@ void open_fonts(void)
 
 void close_fonts(void)
 {
-  static char name[15][50];
-
   close_font(tf_norm);
   close_font(tf_bold);
   close_font(tf_ital);

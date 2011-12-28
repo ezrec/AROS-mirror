@@ -82,7 +82,9 @@ ImageInfo no_image;
 ImageInfo delayed_image;
 ImageInfo anchored_image;
 
+#if !defined(_AMIGA) && !defined(__AROS__)
 static int allocation_index[256];
+#endif
 
 /* MDF - Special function to create an Amiga BitMap from some bits in
    a header file.  The header file must first be converted from XBM format

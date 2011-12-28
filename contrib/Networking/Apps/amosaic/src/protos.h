@@ -16,7 +16,7 @@ BOOL SpinnerClFree(Class *);
 
 /* main.c */
 
-void main(int, char **);
+int main(int, char **);
 int get_filename(char **);
 void setup_win(mo_window *);
 char *gui_whichscreen(void);

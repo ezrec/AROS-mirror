@@ -18,10 +18,11 @@ struct NewGroupData
 long kprintf(char *,...);
 #endif
 
-SAVEDS ULONG NewGroupSet(struct IClass *cl,Object *obj,Msg msg)
+SAVEDS IPTR NewGroupSet(struct IClass *cl,Object *obj,Msg msg)
 {
 	struct NewGroupData *inst=INST_DATA(cl,obj);
-	struct TagItem *tstate, *ti;
+	const struct TagItem *tstate;
+	struct TagItem *ti;
   
 	ti = ((opSetP)msg)->ops_AttrList;
 	tstate = ti;
@@ -35,10 +36,9 @@ SAVEDS ULONG NewGroupSet(struct IClass *cl,Object *obj,Msg msg)
 	return DoSuperMethodA(cl, obj, msg);
 }
 
-SAVEDS ULONG NewGroupGet(struct IClass *cl,Object *obj,Msg msg)
+SAVEDS IPTR NewGroupGet(struct IClass *cl,Object *obj,Msg msg)
 {
 	struct NewGroupData *inst=INST_DATA(cl,obj);
-	struct TagItem *tstate, *ti;
   
 	switch (((opGetP)msg)->opg_AttrID) {
 		case MUIA_NewGroup_Left:   *(((opGetP)msg)->opg_Storage) = (ULONG)(inst->NewLeft); break;
@@ -49,7 +49,7 @@ SAVEDS ULONG NewGroupGet(struct IClass *cl,Object *obj,Msg msg)
 	return DoSuperMethodA(cl, obj, msg);
 }
 
-SAVEDS ULONG NewGroupNew(struct IClass *cl,Object *obj,Msg msg)
+SAVEDS IPTR NewGroupNew(struct IClass *cl,Object *obj,Msg msg)
 {
 	struct NewGroupData *inst;
 	if (!(obj= (Object *)DoSuperMethodA(cl,obj,msg)))
@@ -57,22 +57,22 @@ SAVEDS ULONG NewGroupNew(struct IClass *cl,Object *obj,Msg msg)
 
 	inst = INST_DATA(cl, obj);
 
-	inst->NewWidth    = GetTagData(MUIA_NewGroup_Width, NULL,((opSetP)msg)->ops_AttrList);
-	inst->NewHeight   = GetTagData(MUIA_NewGroup_Height, NULL,((opSetP)msg)->ops_AttrList);
+	inst->NewWidth    = GetTagData(MUIA_NewGroup_Width, 0,((opSetP)msg)->ops_AttrList);
+	inst->NewHeight   = GetTagData(MUIA_NewGroup_Height, 0,((opSetP)msg)->ops_AttrList);
 
 	inst->NewLeft     = GetTagData(MUIA_NewGroup_Left, 0x80000000,((opSetP)msg)->ops_AttrList);
 	inst->NewTop      = GetTagData(MUIA_NewGroup_Top, 0x80000000,((opSetP)msg)->ops_AttrList);
 
-	inst->ChildWidth  = GetTagData(MUIA_NewGroup_ChildWidth, NULL,((opSetP)msg)->ops_AttrList);
-	inst->ChildHeight = GetTagData(MUIA_NewGroup_ChildHeight, NULL,((opSetP)msg)->ops_AttrList);
+	inst->ChildWidth  = GetTagData(MUIA_NewGroup_ChildWidth, 0,((opSetP)msg)->ops_AttrList);
+	inst->ChildHeight = GetTagData(MUIA_NewGroup_ChildHeight, 0,((opSetP)msg)->ops_AttrList);
 
 	inst->InitialLeft = 0x80000000;
 	inst->InitialTop  = 0x80000000;
 
-	return (ULONG)obj;
+	return (IPTR)obj;
 }
 
-SAVEDS ULONG NewGroupAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
+SAVEDS IPTR NewGroupAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
 {
 	struct NewGroupData *inst = INST_DATA(cl, obj);
 
@@ -104,14 +104,13 @@ SAVEDS ULONG NewGroupAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinM
 	return(0);
 }
 
-SAVEDS ULONG NewGroupPlaceObject(struct IClass *cl,Object *obj,struct MUIP_PlaceObject *msg)
+SAVEDS IPTR NewGroupPlaceObject(struct IClass *cl,Object *obj,struct MUIP_PlaceObject *msg)
 {
 	struct NewGroupData *inst = INST_DATA(cl, obj);
-	ULONG res,old_x,old_y,virt_x,virt_y;
+	ULONG res,old_x=0,old_y=0;
 
 	if(MUIMasterBase->lib_Version<11)
 		{
-//		kprintf("GVirt: left: %ld top: %ld\n",virt_x,virt_y);
 //		kprintf("Obj: left: %ld top: %ld\n",inst->NewLeft,inst->NewTop);
 
 
@@ -150,7 +149,7 @@ SAVEDS ULONG NewGroupPlaceObject(struct IClass *cl,Object *obj,struct MUIP_Place
 		return DoSuperMethodA(cl,obj,(Msg)msg);
 }
 
-SAVEDS ULONG NewGroupLayout(struct IClass *cl,Object *obj,struct MUIP_PlaceObject *msg)
+SAVEDS IPTR NewGroupLayout(struct IClass *cl,Object *obj,struct MUIP_PlaceObject *msg)
 {
 	struct NewGroupData *inst = INST_DATA(cl, obj);
 
@@ -166,9 +165,8 @@ SAVEDS ULONG NewGroupLayout(struct IClass *cl,Object *obj,struct MUIP_PlaceObjec
 	return TRUE;
 }
 
-SAVEDS ASM ULONG NewGroupDispatcher(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
+DISPATCHER(NewGroupDispatcher)
 {
-	ULONG res;
 	switch (msg->MethodID){
 		case OM_NEW              : return(NewGroupNew        (cl,obj,(APTR)msg));
 		case MUIM_AskMinMax      : return(NewGroupAskMinMax  (cl,obj,(APTR)msg));
@@ -186,7 +184,7 @@ struct MUI_CustomClass *NewGroupClInit(void)
 
   /* Create the HTML gadget class */
   if (!(cl = MUI_CreateCustomClass(NULL,MUIC_Group,NULL,
-			      sizeof(struct NewGroupData),NewGroupDispatcher)))
+			      sizeof(struct NewGroupData),ENTRY(NewGroupDispatcher))))
     fail(NULL, "Failed to create New Group class."); /* Failed, cleanup */
   return cl;
 }

@@ -18,7 +18,9 @@
 static const char VersionTag[] = "\0$VER: TextEditField.c 1.0 (12.06.95)";
 
 #define MUIA_Prop_Delta                 0x8042c5f4 /* is. LONG              */
+#ifndef MUIA_Prop_DeltaFactor
 #define MUIA_Prop_DeltaFactor           0x80427c5e /* isg LONG              */
+#endif
 
 #define PreAlloc 256 /* Preallocate 256 bytes */
 
@@ -35,17 +37,9 @@ struct EditFuncMsg
 void fail(APTR,APTR);
 #ifndef __AROS__
 long kprintf(char *,...);
-ULONG SAVEDS ASM EditFunc(REG(a0) struct Hook *hook,
-			   REG(a2) APTR	      object,
-			   REG(a1) struct EditFuncMsg *msg);
-#else
-
-AROS_UFP3(ULONG, EditFunc,
-    AROS_UFPA(struct Hook *, hook, A0),
-    AROS_UFPA(APTR, object, A2),
-    AROS_UFPA(struct EditFuncMsg *, msg, A1));
-    
 #endif
+
+HOOKPROTO(EditFunc, IPTR, APTR object, struct EditFuncMsg *msg);
 
 #define IEQUALIFIER_SHIFT (IEQUALIFIER_LSHIFT | IEQUALIFIER_RSHIFT)
 #define IEQUALIFIER_ALT (IEQUALIFIER_LALT | IEQUALIFIER_RALT)
@@ -54,7 +48,7 @@ AROS_UFP3(ULONG, EditFunc,
 #define HIKEY_ALT	(0x200)
 #define HIKEY_CTRL	(0x400)
 
-static struct Hook EditHook={{0,0},(APTR)EditFunc,NULL,NULL};
+MakeStaticHook(EditHook, EditFunc);
 
 /*
  * Class data
@@ -117,9 +111,9 @@ struct TextFieldClData
 
 static LONG LineLength(char *str)
 {
-	LONG l=(LONG)str;
+	char *l=str;
 	for(;*str!='\n' && *str!=0;str++);
-	return (LONG)str-l;
+	return (LONG)(str-l);
 }
 
 static LONG LongestLine(struct TextFieldClData *inst)
@@ -283,7 +277,6 @@ static void RefreshTextArea(struct Window *window,
 	LONG line,charpos,dx,dy,nchars,nwidth,ypos,nlines,nheight,rnchars;
 	LONG endcolumn;
 	char *linetext,*rtext;
-	struct Region *region;
 	BYTE DrMode;
 	APTR cliphandle;
 
@@ -375,7 +368,7 @@ static void SetText(struct TextFieldClData *inst,char *text)
 	if(oldmem) FreeVec(oldmem);
 }
 
-static long cnt;
+//static long cnt;
 
 /* Return true if redraw is needed */
 
@@ -385,11 +378,8 @@ BOOL InsertChar(Object *obj,struct TextFieldClData *inst,long ascii)
 	long cursor_x,cursor_y;
 
 	LONG i;
-	char str[]=" ";
 
-	str[0]=(char)ascii;
-
-//	kprintf("Getting char %s at %ld\n",str,cnt);
+//	kprintf("Getting char %c at %ld\n",(char)ascii,cnt);
 //	return;
 
 	cursor_x=inst->cursor_x;
@@ -475,7 +465,7 @@ BOOL InsertChar(Object *obj,struct TextFieldClData *inst,long ascii)
 			else if(cursor_y>0){
 				textpos--;
 				ascii=127;
-				inst->icr_ncx=(LONG)inst->linearray[cursor_y]-(LONG)inst->linearray[cursor_y-1]-1;
+				inst->icr_ncx=(LONG)(inst->linearray[cursor_y]-inst->linearray[cursor_y-1])-1;
 				inst->icr_ncy=cursor_y-1;
 				}
 			}
@@ -555,7 +545,7 @@ BOOL HandleSpecialKeys(struct TextFieldClData *inst,long key)
 				inst->icr_ncy=inst->cursor_y;
 				}
 			else if(inst->cursor_y>0){
-				inst->icr_ncx=(LONG)inst->linearray[inst->cursor_y]-(LONG)inst->linearray[inst->cursor_y-1]-1;
+				inst->icr_ncx=(LONG)(inst->linearray[inst->cursor_y]-inst->linearray[inst->cursor_y-1])-1;
 				inst->icr_ncy=inst->cursor_y-1;
 				}
 			return TRUE;
@@ -648,7 +638,7 @@ BOOL HandleSpecialKeys(struct TextFieldClData *inst,long key)
  * TextEditField methods
  */
 
-static ULONG mTextEditFieldNew(struct IClass *cl,Object *obj,struct opSet *msg)
+static IPTR mTextEditFieldNew(struct IClass *cl,Object *obj,struct opSet *msg)
 {
 	struct TextEditFieldClData *inst;
 
@@ -704,17 +694,17 @@ static ULONG mTextEditFieldNew(struct IClass *cl,Object *obj,struct opSet *msg)
 	DoMethodA(obj, (Msg) msg);     	/* and set attributes with OM_SET. */
 	msg->MethodID = OM_NEW; 	/* restore method id		   */
 
-	return((ULONG)obj);
+	return((IPTR)obj);
 }
 
-static ULONG mTextEditFieldDispose(struct IClass *cl,Object *obj,Msg msg)
+static IPTR mTextEditFieldDispose(struct IClass *cl,Object *obj,Msg msg)
 {
 	return(DoSuperMethodA(cl,obj,msg));
 }
 
-static ULONG mTextEditFieldShow(struct IClass *cl,Object *obj,Msg msg)
+static IPTR mTextEditFieldShow(struct IClass *cl,Object *obj,Msg msg)
 {
-	ULONG res;
+//	ULONG res;
 	struct TextEditFieldClData *inst=INST_DATA(cl,obj);
 	struct TextFieldClData *inst2=INST_DATA(TextFieldCl,inst->TextField);
 
@@ -734,10 +724,10 @@ static ULONG mTextEditFieldShow(struct IClass *cl,Object *obj,Msg msg)
 	return TRUE;
 }
 
-static ULONG mTextEditFieldSet(struct IClass *cl,Object *obj,struct opSet *msg)
+static IPTR mTextEditFieldSet(struct IClass *cl,Object *obj,struct opSet *msg)
 {
-	struct Data *inst = INST_DATA(cl,obj);
-	struct TagItem *tags,*tag;
+	const struct TagItem *tags;
+	struct TagItem *tag;
 
 	for (tags=msg->ops_AttrList;tag=NextTagItem(&tags);)
 	{
@@ -750,7 +740,7 @@ static ULONG mTextEditFieldSet(struct IClass *cl,Object *obj,struct opSet *msg)
 }
 
 
-static ULONG mTextEditFieldGet(struct IClass *cl,Object *obj,Msg msg)
+static IPTR mTextEditFieldGet(struct IClass *cl,Object *obj,Msg msg)
 {
 //	struct TextFieldClData *inst = INST_DATA(cl,obj);
 
@@ -762,20 +752,8 @@ static ULONG mTextEditFieldGet(struct IClass *cl,Object *obj,Msg msg)
 	return(DoSuperMethodA(cl,obj,msg));
 }
 
-
-#ifndef __AROS__
-static SAVEDS ASM ULONG TextEditFieldDispatcher(REG(a0) struct IClass *cl,
-				   REG(a2) Object *obj,
-				   REG(a1) Msg msg)
+DISPATCHER(TextEditFieldDispatcher)
 {
-#else
-AROS_UFH3S(ULONG, TextEditFieldDispatcher,
-    AROS_UFHA(struct IClass *, cl, A0),
-    AROS_UFHA(Object *, obj, A2),
-    AROS_UFHA(Msg, msg, A1))
-{
-    	AROS_USERFUNC_INIT
-#endif
 	switch (msg->MethodID)
 	{
 		case OM_NEW			: return(mTextEditFieldNew     (cl,obj,(APTR)msg));
@@ -788,20 +766,17 @@ AROS_UFH3S(ULONG, TextEditFieldDispatcher,
 	}
 
 	return(DoSuperMethodA(cl,obj,msg));
-
-#ifdef __AROS__
-    	AROS_USERFUNC_EXIT
-#endif
 }
 
 /*
  * The text area class
  */
 
-static ULONG mTextFieldNew(struct IClass *cl,Object *obj,struct opSet *msg)
+static IPTR mTextFieldNew(struct IClass *cl,Object *obj,struct opSet *msg)
 {
 	struct TextFieldClData *inst;
-	struct TagItem *tags,*tag;
+	const struct TagItem *tags;
+	struct TagItem *tag;
 
 	if (!(obj = (Object *)DoSuperMethodA(cl,obj,(Msg)msg)))
 		return(0);
@@ -828,10 +803,10 @@ static ULONG mTextFieldNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
 	ParseText(inst);
 
-	return((ULONG)obj);
+	return((IPTR)obj);
 }
 
-static ULONG mTextFieldDispose(struct IClass *cl,Object *obj,Msg msg)
+static IPTR mTextFieldDispose(struct IClass *cl,Object *obj,Msg msg)
 {
 	struct TextFieldClData *inst=INST_DATA(cl,obj);
 
@@ -850,10 +825,11 @@ static ULONG mTextFieldDispose(struct IClass *cl,Object *obj,Msg msg)
 }
 
 
-static ULONG mTextFieldSet(struct IClass *cl,Object *obj,struct opSet *msg)
+static IPTR mTextFieldSet(struct IClass *cl,Object *obj,struct opSet *msg)
 {
 	struct TextFieldClData *inst = INST_DATA(cl,obj);
-	struct TagItem *tags,*tag;
+	const struct TagItem *tags;
+	struct TagItem *tag;
 
 	for (tags=msg->ops_AttrList;tag=NextTagItem(&tags);)
 	{
@@ -908,20 +884,20 @@ static ULONG mTextFieldSet(struct IClass *cl,Object *obj,struct opSet *msg)
 }
 
 
-static ULONG mTextFieldGet(struct IClass *cl,Object *obj,Msg msg)
+static IPTR mTextFieldGet(struct IClass *cl,Object *obj,Msg msg)
 {
 	struct TextFieldClData *inst = INST_DATA(cl,obj);
 	
 	switch (((struct opGet *)msg)->opg_AttrID)
 	{
-		case MUIA_TEF_Text: 	*(((struct opGet *)msg)->opg_Storage) = (ULONG)(inst->text); break;
-		case MUIA_TEF_Active:	*(((struct opGet *)msg)->opg_Storage) = (ULONG)(inst->active); break;
+		case MUIA_TEF_Text: 	*(((struct opGet *)msg)->opg_Storage) = (IPTR)(inst->text); break;
+		case MUIA_TEF_Active:	*(((struct opGet *)msg)->opg_Storage) = (IPTR)(inst->active); break;
 	}
 
 	return(DoSuperMethodA(cl,obj,msg));
 }
 
-static SAVEDS ULONG TextFieldAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
+static SAVEDS IPTR TextFieldAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
 {
 	struct TextFieldClData *inst = INST_DATA(cl,obj);
 	DoSuperMethodA(cl,obj,(Msg)msg);
@@ -941,10 +917,10 @@ static SAVEDS ULONG TextFieldAskMinMax(struct IClass *cl,Object *obj,struct MUIP
 	return(0);
 }
 
-static SAVEDS ULONG TextFieldDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
+static SAVEDS IPTR TextFieldDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 {
 	struct TextFieldClData *inst=INST_DATA(cl,obj);
-	LONG delta,tmp;
+//	LONG delta,tmp;
 	DoSuperMethodA(cl,obj,(Msg)msg);
 
 	if (msg->flags & MADF_DRAWOBJECT){
@@ -1037,7 +1013,7 @@ static SAVEDS ULONG TextFieldDraw(struct IClass *cl,Object *obj,struct MUIP_Draw
 	return 0;
 }
 
-static ULONG TextFieldShow(struct IClass *cl,Object *obj,struct MUIP_Show *msg)
+static IPTR TextFieldShow(struct IClass *cl,Object *obj,struct MUIP_Show *msg)
 {
 	struct TextFieldClData *inst=INST_DATA(cl,obj);
 	DoSuperMethodA(cl,obj,(Msg)msg);
@@ -1055,7 +1031,7 @@ static ULONG TextFieldShow(struct IClass *cl,Object *obj,struct MUIP_Show *msg)
 	return TRUE;
 }
 
-static SAVEDS ULONG TextFieldSetup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg){
+static SAVEDS IPTR TextFieldSetup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg){
 	struct TextFieldClData *inst=INST_DATA(cl,obj);
 
 	if (!(DoSuperMethodA(cl,obj,(Msg)msg)))
@@ -1073,12 +1049,12 @@ static SAVEDS ULONG TextFieldSetup(struct IClass *cl,Object *obj,struct MUIP_Set
 	return TRUE;
 }
 
-static SAVEDS ULONG TextFieldCleanup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg){
+static SAVEDS IPTR TextFieldCleanup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg){
 	MUI_RejectIDCMP(obj,IDCMP_MOUSEBUTTONS|IDCMP_RAWKEY|IDCMP_VANILLAKEY);
 	return(DoSuperMethodA(cl,obj,(Msg)msg));
 }
 
-SAVEDS ULONG TextFieldHandleInput(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
+SAVEDS IPTR TextFieldHandleInput(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
 {
 	#define _between(a,x,b) ((x)>=(a) && (x)<=(b))
 	#define _isinobject(x,y) (_between(_mleft(obj),(x),_mright(obj)) && _between(_mtop(obj),(y),_mbottom(obj)))
@@ -1157,12 +1133,12 @@ SAVEDS ULONG TextFieldHandleInput(struct IClass *cl,Object *obj,struct MUIP_Hand
 	return(0);
 }
 
-SAVEDS ULONG TextFieldFileChange(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
+SAVEDS IPTR TextFieldFileChange(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
 {
 	struct TextFieldClData *inst=INST_DATA(cl,obj);
 	APTR fh;
 	APTR mem;
-	ULONG size;
+	IPTR size;
 //	kprintf("Getting filenotification\n");
 	if(inst->FileName)
 		if(fh=fopen(inst->FileName,"r")){
@@ -1186,19 +1162,8 @@ SAVEDS ULONG TextFieldFileChange(struct IClass *cl,Object *obj,struct MUIP_Handl
 	return 0;
 }
 
-#ifndef __AROS__
-static SAVEDS ASM ULONG TextFieldDispatcher(REG(a0) struct IClass *cl,
-				   REG(a2) Object *obj,
-				   REG(a1) Msg msg)
+DISPATCHER(TextFieldDispatcher)
 {
-#else
-AROS_UFH3S(ULONG, TextFieldDispatcher,
-    AROS_UFHA(struct IClass *, cl, A0),
-    AROS_UFHA(Object *, obj, A2),
-    AROS_UFHA(Msg, msg, A1))
-{
-    	AROS_USERFUNC_INIT
-#endif
 	switch (msg->MethodID)
 	{
 		case MUIM_HandleInput: return(TextFieldHandleInput(cl,obj,(APTR)msg));
@@ -1215,10 +1180,6 @@ AROS_UFH3S(ULONG, TextFieldDispatcher,
 	}
 
 	return(DoSuperMethodA(cl,obj,msg));
-
-#ifdef __AROS__
-    	AROS_USERFUNC_EXIT
-#endif
 }
 
 Class *TextEditFieldClInit(void)
@@ -1233,7 +1194,7 @@ Class *TextEditFieldClInit(void)
       MUI_FreeClass(SuperClass);
       fail(NULL, "Failed to create TextEditField class.");
     }
-  cl->cl_Dispatcher.h_Entry = (APTR)TextEditFieldDispatcher;
+  cl->cl_Dispatcher.h_Entry = ENTRY(TextEditFieldDispatcher);
   cl->cl_Dispatcher.h_SubEntry = NULL;
   cl->cl_Dispatcher.h_Data = NULL;
 
@@ -1247,7 +1208,7 @@ Class *TextEditFieldClInit(void)
       FreeClass(cl);
       fail(NULL, "Failed to create TextEditField class.");
     }
-  TextFieldCl->cl_Dispatcher.h_Entry = (APTR)TextFieldDispatcher;
+  TextFieldCl->cl_Dispatcher.h_Entry = ENTRY(TextFieldDispatcher);
   TextFieldCl->cl_Dispatcher.h_SubEntry = NULL;
   TextFieldCl->cl_Dispatcher.h_Data = NULL;
 
@@ -1262,22 +1223,11 @@ BOOL TextEditFieldClFree(Class *cl)
 }
 
 
-#ifndef __AROS__
-ULONG SAVEDS ASM EditFunc(REG(a0) struct Hook *hook,
-			   REG(a2) APTR	      object,
-			   REG(a1) struct EditFuncMsg *msg)
+HOOKPROTO(EditFunc, IPTR, APTR object, struct EditFuncMsg *msg)
 {
-#else
-AROS_UFH3(ULONG, EditFunc,
-    AROS_UFHA(struct Hook *, hook, A0),
-    AROS_UFHA(APTR, object, A2),
-    AROS_UFHA(struct EditFuncMsg *, msg, A1))
-{
-    	AROS_USERFUNC_INIT
-#endif
 	char buffer[256],buffer2[256]="run ";
 	APTR fh;
-	long res;
+	long res = TRUE;
 
 	struct TextFieldClData *inst=INST_DATA(msg->cl,msg->obj);
 
@@ -1285,7 +1235,7 @@ AROS_UFH3(ULONG, EditFunc,
 		inst->FileName=malloc(128);
 
 		do{
-			sprintf(inst->FileName,"t:TextEditFieldTemp.%d",inst->FileNo);
+			sprintf(inst->FileName,"t:TextEditFieldTemp.%d",(int)inst->FileNo);
 			if(fh=fopen(inst->FileName,"r")){
 				fclose(fh);
 				inst->FileNo++;
@@ -1301,7 +1251,7 @@ AROS_UFH3(ULONG, EditFunc,
 		if(!inst->notifying){
 			memset(&inst->FileNotify,0,sizeof(struct NotifyRequest));
 			inst->FileNotify.nr_Name=inst->FileName;
-			inst->FileNotify.nr_UserData=(ULONG)msg->obj; /* So that main knows what to call */
+			inst->FileNotify.nr_UserData=(IPTR)msg->obj; /* So that main knows what to call */
 			inst->FileNotify.nr_Flags=NRF_SEND_MESSAGE;
 			inst->FileNotify.nr_stuff.nr_Msg.nr_Port=FileNotifyPort;
 			res=StartNotify(&inst->FileNotify);
@@ -1317,11 +1267,7 @@ AROS_UFH3(ULONG, EditFunc,
 		strcat(buffer2," ");
 		strcat(buffer2,inst->FileName);
 
-		Execute(buffer2,NULL,NULL);
+		Execute(buffer2,BNULL,BNULL);
 	}
-	return TRUE;
-
-#ifdef __AROS__
-    	AROS_USERFUNC_EXIT
-#endif
+	return res;
 }

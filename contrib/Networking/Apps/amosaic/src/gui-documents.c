@@ -113,6 +113,7 @@ mo_status mo_forward_impossible (mo_window *win)
 
 /* ---------------------- mo_annotate_edit_possible ----------------------- */
 
+#if 0
 static void mo_annotate_edit_possible (mo_window *win)
 {
 //  XmxRSetSensitive (win->menubar, mo_annotate_edit, XmxSensitive);
@@ -126,14 +127,13 @@ static void mo_annotate_edit_impossible (mo_window *win)
 //  XmxRSetSensitive (win->menubar, mo_annotate_delete, XmxNotSensitive);
   return;
 }
-
+#endif
 
 /* ------------------------------------------------------------------------ */
 
 static void mo_set_text (Object *HTML_Gad, char *txt, char *ans, int id, 
                          char *target_anchor, void *cached_stuff)
 {
-  struct Window *win;
   HTMLGadClData *HTML_Data =INST_DATA(HTMLGadClass,HTML_Gad);
   
 
@@ -298,7 +298,7 @@ static mo_status mo_do_window_text (mo_window *win, char *url, char *txt,
 
   if (win->history_list && win->current_node)
     {
-      int n, i;
+      int n = 0, i;
 
       get(win->history_list, MUIA_List_Entries, &n);
       for (i=0; i<n; i++) {
@@ -326,13 +326,14 @@ static mo_status mo_do_window_text (mo_window *win, char *url, char *txt,
   else
     mo_forward_impossible (win);
 
-/*
+#if 0
   if (win->current_node && 
       mo_is_editable_annotation (win, win->current_node->text))
     mo_annotate_edit_possible (win);
   else
     mo_annotate_edit_impossible (win);
-*/
+#endif
+
   mo_not_busy ();
 
   return mo_succeed;
@@ -356,14 +357,14 @@ static mo_status mo_do_window_text (mo_window *win, char *url, char *txt,
 
 mo_status mo_set_win_current_node (mo_window *win, mo_node *node)
 {
-  void *to_free = NULL;
+//  void *to_free = NULL;
   mo_status r;
 
   mo_snarf_scrollbar_values (win);
 
   if (win->current_node && win->reloading)
     {
-      to_free = win->current_node->cached_stuff;
+//      to_free = win->current_node->cached_stuff;
 
       win->current_node->cached_stuff = NULL;
     }
@@ -521,7 +522,6 @@ mo_status mo_refresh_window_text (mo_window *win)
 mo_status mo_load_window_text (mo_window *win, char *url, char *ref)
 {
   char *newtext = NULL, *newtexthead = NULL;
-  HTMLGadClData *inst = INST_DATA(HTMLGadClass,HTML_Gad);
 
   mo_busy ();
 
@@ -674,8 +674,6 @@ mo_status mo_load_window_text (mo_window *win, char *url, char *ref)
       mo_gui_done_with_icon ();
       mo_not_busy ();
     }
-
- outtahere:
 
 //	if(!inst->have_forms)
 		ShowHtml_RG();
@@ -852,7 +850,6 @@ mo_status mo_post_load_window_text (mo_window *win, char *url,
       mo_not_busy ();
     }
 
- outtahere:
 	if(!inst->have_forms)
 		ShowHtml_RG();
 

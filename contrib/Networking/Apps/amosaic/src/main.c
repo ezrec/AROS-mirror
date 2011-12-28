@@ -54,11 +54,11 @@ void PasteStringClipBoard(char *string);
   Initialize everything, load an initial URL, and enter main loop.
 ------------------------------------------------------------------------*/
 
-void main(int argc, char **argv)
+int main(int argc, char **argv)
 {
 	BOOL running=TRUE;
 	ULONG signal;
-	HTMLGadClData *inst;
+	HTMLGadClData *inst = NULL;
 	int transfer_in_progress=0;
 
 	/* A LOT OF THE STUFF AT THE TOP HERE SHOULD BE MOVED EVENTUALLY! */
@@ -145,7 +145,7 @@ void main(int argc, char **argv)
 	window.scrolled_win = INST_DATA(HTMLGadClass,HTML_Gad);
 	window.view = WI_Main;
 
-	get(HTML_Gad, HTMLA_inst, (ULONG *)(&inst));
+	get(HTML_Gad, HTMLA_inst, (IPTR *)(&inst));
 //	window.scrolled_win=inst;
 
 	Rdata.track_pointer_motion=0;
@@ -158,8 +158,10 @@ void main(int argc, char **argv)
 	/* */
 
 	while (running) {
+#ifdef HAVE_REXX
 		extern ULONG RexxSignalBits ;
 		void RexxDispatch(void) ;
+#endif
 		int a;
 
 #ifdef TRACE_INPUT
@@ -273,7 +275,7 @@ void main(int argc, char **argv)
 		break;
 
 	case mo_search_index:{
-		char *str, *esc_str;
+		char *str = "", *esc_str;
 		int len = strlen(cached_url);
 
 		get(STR_Search, MUIA_String_Contents, &str);
@@ -299,7 +301,7 @@ void main(int argc, char **argv)
 		case ID_STRINGURL:{
 			int i = transfer_in_progress;
 
-			get(TX_URL, MUIA_String_Contents, (ULONG *)(&tmp));
+			get(TX_URL, MUIA_String_Contents, (IPTR *)(&tmp));
 			url = malloc(strlen(tmp)+1);
 			strcpy(url, tmp);
 			transfer_in_progress = 1;
@@ -314,7 +316,7 @@ void main(int argc, char **argv)
 		case ID_GOTOANCHOR:{
 		int i = transfer_in_progress;
 
-		GetAttr(HTMLA_new_href, HTML_Gad, (ULONG *)(&tmp));
+		GetAttr(HTMLA_new_href, HTML_Gad, (IPTR *)(&tmp));
 		url = malloc(strlen(tmp)+1);
 		strcpy(url, tmp);
 		transfer_in_progress = 1;
@@ -329,7 +331,7 @@ void main(int argc, char **argv)
 		case ID_GETTEXT:{
 		int i = transfer_in_progress;
 
-		GetAttr(HTMLA_get_href, HTML_Gad, (ULONG *)(&tmp));
+		GetAttr(HTMLA_get_href, HTML_Gad, (IPTR *)(&tmp));
 		url = malloc(strlen(tmp)+1);
 		strcpy(url, tmp);
 		transfer_in_progress = 1;
@@ -344,12 +346,12 @@ void main(int argc, char **argv)
 		case ID_POSTTEXT:{
 		int i = transfer_in_progress;
 		char *query;
-		GetAttr(HTMLA_post_href, HTML_Gad, (ULONG *)(&tmp));
+		GetAttr(HTMLA_post_href, HTML_Gad, (IPTR *)(&tmp));
 		url = malloc(strlen(tmp)+1);
 		strcpy(url, tmp);
 		free(tmp); /* Yes, it is legal to free it here */
 
-		GetAttr(HTMLA_post_text, HTML_Gad, (ULONG *)(&tmp));
+		GetAttr(HTMLA_post_text, HTML_Gad, (IPTR *)(&tmp));
 		query = malloc(strlen(tmp)+1);
 		strcpy(query, tmp);
 		free(tmp); /* Yes, it is legal to free it here */
@@ -417,8 +419,8 @@ void main(int argc, char **argv)
 		TO_HTML_FlushImageCache();
 
 //mjw	mo_flush_image_cache(&window);
-//mjw	GetAttr(MUIA_Boopsi_Object, HTML_Gad, (ULONG *)(&g));
-//mjw	GetAttr(MUIA_Window_Window, WI_Main, (ULONG *)(&w));
+//mjw	GetAttr(MUIA_Boopsi_Object, HTML_Gad, (IPTR *)(&g));
+//mjw	GetAttr(MUIA_Window_Window, WI_Main, (IPTR *)(&w));
 //mjw	RefreshGList(g, w, NULL, 1);
 		}
 		break;
@@ -486,7 +488,7 @@ void main(int argc, char **argv)
 		break;
 
 	case mo_url_to_clipboard:
-		get(TX_URL, MUIA_String_Contents, (ULONG *)(&tmp));
+		get(TX_URL, MUIA_String_Contents, (IPTR *)(&tmp));
 		PasteStringClipBoard(tmp);	
 		break;
 
@@ -515,7 +517,7 @@ void main(int argc, char **argv)
 
 			transfer_in_progress = 1;
 			if (!i) {
-				char *img;
+				char *img = NULL;
 				HTMLFormImages=0;
 				get(HTML_Gad, HTMLA_image_load, &img);
 				Rdata.track_pointer_motion=0;
@@ -611,6 +613,8 @@ void main(int argc, char **argv)
 		CloseLibrary(LocaleBase);
 
 	fail(App,NULL);
+
+	return 0;
 }
 
 
@@ -627,7 +631,7 @@ int get_filename(char **name)
 
 	fr = MUI_AllocAslRequestTags(ASL_FileRequest, ASL_Hail, GetamosaicString(MSG_REQ_OPEN_LOCAL_TITLE),
 						 TAG_DONE);
-	GetAttr(MUIA_Window_Window, WI_Main, (ULONG *)(&w));
+	GetAttr(MUIA_Window_Window, WI_Main, (IPTR *)(&w));
 	result = MUI_AslRequestTags(fr, ASLFR_Window, w, TAG_DONE);
 	if (result) {
 		f = malloc(255);
@@ -671,10 +675,10 @@ void setup_win(struct mo_window *win)
 */
 char *gui_whichscreen(void)
 {
-	struct Screen *scr;
+	struct Screen *scr = NULL;
 	struct PubScreenNode *p;
 	struct List *l;
-	char *name;
+	char *name = "Workbench";
 
 	get(WI_Main, MUIA_Window_Screen, &scr);
 	l = LockPubScreenList();
@@ -778,9 +782,9 @@ static void locate_mime_files(void)
 //mjw sleep() { }
 
 
-void WriteLong(struct IOStdReq *ior,long *ldata)
+void WriteLong(struct IOStdReq *ior,LONG ldata)
 {
-	ior->io_Data = ldata;
+	ior->io_Data = &ldata;
 	ior->io_Length = 4;
 	ior->io_Command = CMD_WRITE;
 	DoIO((struct IORequest *)ior);
@@ -795,7 +799,7 @@ void PasteStringClipBoard(char *string)
 
 	if((ReplyPort=CreateMsgPort())){
 		if((ior=(struct IOStdReq *)CreateExtIO(ReplyPort,sizeof(struct IOClipReq)))){
-			if(!OpenDevice("clipboard.device",unit,(struct IORequest *)ior,NULL)){
+			if(!OpenDevice("clipboard.device",unit,(struct IORequest *)ior,0)){
 
 				slen=strlen(string);
 				odd= slen & 1;
@@ -805,11 +809,11 @@ void PasteStringClipBoard(char *string)
 				ior->io_Error=0;
 				((struct IOClipReq *)ior)->io_ClipID=0;
 
-				WriteLong(ior,(LONG *)"FORM");
-				WriteLong(ior,&length);
-				WriteLong(ior,(LONG *)"FTXT");
-				WriteLong(ior,(LONG *)"CHRS");
-				WriteLong(ior,&slen);
+				WriteLong(ior,MAKE_ID('F','O','R','M'));
+				WriteLong(ior,length);
+				WriteLong(ior,MAKE_ID('F','T','X','T'));
+				WriteLong(ior,MAKE_ID('C','H','R','S'));
+				WriteLong(ior,slen);
 
 				ior->io_Data = string;
 				ior->io_Length = slen;

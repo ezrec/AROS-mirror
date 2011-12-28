@@ -192,6 +192,7 @@ extern char *HTAppVersion;
 #define MO_MACHINE_TYPE "Amiga"
 #endif
 #if defined(__AROS__)
+#undef  MO_MACHINE_TYPE
 #define MO_MACHINE_TYPE "AROS"
 #endif
 #ifndef MO_MACHINE_TYPE

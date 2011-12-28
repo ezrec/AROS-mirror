@@ -47,7 +47,7 @@ extern mo_window window;
 
 ULONG TO_HTMLGetScreenDepth(void)
 {
-	struct Screen *scr;
+	struct Screen *scr = NULL;
 	get(window.view,MUIA_Window_Screen,&scr);
 	if(!scr)
 		return 3L;
@@ -78,14 +78,14 @@ void TO_HTML_FlushImageCache(void)
 
 void TO_HTML_LoadInlinedImage(void)
 {
-	char *img;
+	char *img = NULL;
 	get(HTML_Gad, HTMLA_image_load, &img);
 	LoadInlinedImage(img);
 }
 
 char **TO_HTMLGetImageSrcs (mo_window *win,int *num)
 {
-	HTMLGadClData *inst;
+	HTMLGadClData *inst = NULL;
 	get(HTML_Gad, HTMLA_inst, (ULONG *)(&inst));
 	return HTMLGetImageSrcs(inst, num);
 }

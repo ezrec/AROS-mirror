@@ -23,8 +23,12 @@
 extern AppData Rdata;
 
 #define MUIA_Prop_Delta                 0x8042c5f4 /* is. LONG              */
+#ifndef MUIA_Prop_DeltaFactor
 #define MUIA_Prop_DeltaFactor           0x80427c5e /* isg LONG              */
+#endif
+#ifndef MUIA_FillArea
 #define MUIA_FillArea 0x804294A3 /* V4 BOOL (private) */
+#endif
 
 #define mui_version (MUIMasterBase->lib_Version)
 
@@ -103,19 +107,9 @@ void SaveHotlist(void);
 
 struct HotlistGroupEntry GroupRootList,*CurrentShownURLGroup;
 
-#ifndef __AROS__
-SAVEDS ASM long URLStrObjFunc(REG(a2) Object *pop,REG(a1) Object *str)
+HOOKPROTO(URLStrObjFunc, long, Object *pop, Object *str)
 {
-#else
-AROS_UFH3(long, URLStrObjFunc,
-    AROS_UFHA(struct Hook *, hook, A0),
-    AROS_UFHA(Object *, pop, A2),
-    AROS_UFHA(Object *, str, A1))
-{
-  AROS_USERFUNC_INIT
-#endif
-
-  char *s;
+  char *s = NULL;
   struct HotlistEntry *x;
   int i;
   get(str,MUIA_String_Contents,&s);
@@ -135,39 +129,23 @@ AROS_UFH3(long, URLStrObjFunc,
     }
   }
   return(TRUE);
-#ifdef __AROS__
-  AROS_USERFUNC_EXIT
-#endif
 }
 
-struct Hook URLStrObjHook={{NULL,NULL},(VOID *)URLStrObjFunc,NULL,NULL};
+MakeHook(URLStrObjHook, URLStrObjFunc);
 
-#ifndef __AROS__
-SAVEDS ASM void URLObjStrFunc(REG(a2) Object *pop,REG(a1) Object *str)
+HOOKPROTO(URLObjStrFunc, void, Object *pop, Object *str)
 {
-#else
-AROS_UFH3(void, URLObjStrFunc,
-    AROS_UFHA(struct Hook *, hook, A0),
-    AROS_UFHA(Object *, pop, A2),
-    AROS_UFHA(Object *, str, A1))
-{
-  AROS_USERFUNC_INIT
-#endif
-
   struct HotlistEntry *x;
   DoMethod(pop,MUIM_List_GetEntry,MUIV_List_GetEntry_Active,&x);
   set(str,MUIA_String_Contents,x->Location);
   set(str,MUIA_String_Acknowledge,TRUE);
-#ifdef __AROS__
-  AROS_USERFUNC_EXIT
-#endif
 }
 
-struct Hook URLObjStrHook={{NULL,NULL},(VOID *)URLObjStrFunc,NULL,NULL};
+MakeHook(URLObjStrHook, URLObjStrFunc);
 
 void ShowHotlist(struct HotlistGroupEntry *hge)
 {
-  long i,Count;
+  long i,Count = 0;
   set(TX_HotlistGroupTitle,MUIA_Text_Contents,hge->FullTitle);
   set(URLList,MUIA_List_Quiet,TRUE);
   set(URLGroupList,MUIA_List_Quiet,TRUE);
@@ -193,18 +171,8 @@ void ShowHotlist(struct HotlistGroupEntry *hge)
   CurrentShownURLGroup=hge;    
 }
 
-#ifndef __AROS__
-SAVEDS ASM APTR SelectHotlistConstructFunc(REG(a0) struct Hook *hook,REG(a2) APTR pool,REG(a1) struct HotlistGroupEntry *hge)
+HOOKPROTO(SelectHotlistConstructFunc, APTR, APTR pool, struct HotlistGroupEntry *hge)
 {
-#else
-AROS_UFH3(APTR, SelectHotlistConstructFunc,
-    AROS_UFHA(struct Hook *, hook, A0),
-    AROS_UFHA(APTR, pool, A2),
-    AROS_UFHA(struct HotlistGroupEntry *, hge, A1))
-{
-  AROS_USERFUNC_INIT
-#endif
-
   struct HotlistGroupEntry *new;
   if((new=AllocPooled(pool,sizeof(struct HotlistGroupEntry))))
   {
@@ -212,82 +180,36 @@ AROS_UFH3(APTR, SelectHotlistConstructFunc,
     return(new);
   }
   return(NULL);
-
-#ifdef __AROS__
-  AROS_USERFUNC_EXIT
-#endif
 }
-struct Hook SelectHotlistConstructHook = {{NULL,NULL},(void *)SelectHotlistConstructFunc,NULL,NULL};
+MakeHook(SelectHotlistConstructHook , SelectHotlistConstructFunc);
 
 
-#ifndef __AROS__
-SAVEDS ASM VOID SelectHotlistDestructFunc(REG(a0) struct Hook *hook,REG(a2) APTR pool,REG(a1) struct HotlistGroupEntry *hge)
+HOOKPROTO(SelectHotlistDestructFunc, VOID, APTR pool, struct HotlistGroupEntry *hge)
 {
-#else
-AROS_UFH3(VOID, SelectHotlistDestructFunc,
-    AROS_UFHA(struct Hook *, hook, A0),
-    AROS_UFHA(APTR, pool, A2),
-    AROS_UFHA(struct HotlistGroupEntry *, hge, A1))
-{
-  AROS_USERFUNC_INIT
-#endif
-
   FreePooled(pool,hge,sizeof(struct HotlistGroupEntry));
-
-#ifdef __AROS__
-  AROS_USERFUNC_EXIT
-#endif
 }
-struct Hook SelectHotlistDestructHook = {{NULL,NULL},(void *)SelectHotlistDestructFunc,NULL,NULL};
+MakeHook(SelectHotlistDestructHook , SelectHotlistDestructFunc);
 
 
-#ifndef __AROS__
-SAVEDS ASM LONG SelectHotlistCompareFunc(REG(a0) struct Hook *hook, REG(a1) struct HotlistGroupEntry *hge1,REG(a2) struct HotlistGroupEntry *hge2)
+HOOKPROTO(SelectHotlistCompareFunc, LONG, struct HotlistGroupEntry *hge2, struct HotlistGroupEntry *hge1)
 {
-#else
-AROS_UFH3(LONG, SelectHotlistCompareFunc,
-    AROS_UFHA(struct Hook *, hook, A0),
-    AROS_UFHA(struct HotlistGroupEntry *, hge2, A2), /* hge2 is correct here */
-    AROS_UFHA(struct HotlistGroupEntry *, hge1, A1)) /* hge1 is correct here */
-{
-  AROS_USERFUNC_INIT
-#endif
-
   return(stricmp(hge1->FullTitle,hge2->FullTitle));
-
-#ifdef __AROS__
-  AROS_USERFUNC_EXIT
-#endif
 }
 
-struct Hook SelectHotlistCompareHook = {{NULL,NULL},(void *)SelectHotlistCompareFunc,NULL,NULL};
+MakeHook(SelectHotlistCompareHook , SelectHotlistCompareFunc);
 
 
-#ifndef __AROS__
-SAVEDS ASM LONG SelectHotlistDisplayFunc(REG(a0) struct Hook *hook,REG(a2) char **array,REG(a1) struct HotlistGroupEntry *hge)
+HOOKPROTO(SelectHotlistDisplayFunc, LONG, char **array, struct HotlistGroupEntry *hge)
 {
-#else
-AROS_UFH3(LONG, SelectHotlistDisplayFunc,
-    AROS_UFHA(struct Hook *, hook, A0),
-    AROS_UFHA(char **, array, A2),
-    AROS_UFHA(struct HotlistGroupEntry *, hge, A1))
-{
-  AROS_USERFUNC_INIT
-#endif
-
   *array  = hge->FullTitle[0]?hge->FullTitle:"Root";
   return(0);
-
-#ifdef __AROS__
-  AROS_USERFUNC_EXIT
-#endif
 }
 
-struct Hook SelectHotlistDisplayHook = {{NULL,NULL},(void *)SelectHotlistDisplayFunc,NULL,NULL};
+MakeHook(SelectHotlistDisplayHook , SelectHotlistDisplayFunc);
 
 void ScanHotlistGroups(APTR List,struct HotlistGroupEntry *hge,struct HotlistGroupEntry *HiddenGroup)
 {
-  long anz,i;
+  long anz = 0,i;
   if(hge!=HiddenGroup)
     DoMethod(List,MUIM_List_InsertSingle,hge,MUIV_List_Insert_Sorted);
   get(hge->ChildList,MUIA_List_Entries,&anz);
@@ -370,18 +292,8 @@ struct HotlistGroupEntry *SelectHotlistGroup(char *Title,struct HotlistGroupEntr
 }
 ///
 ///HotlistLinkFunctions
-#ifndef __AROS__
-SAVEDS ASM APTR HotlistConstructFunc(REG(a0) struct Hook *hook,REG(a2) APTR pool,REG(a1) struct HotlistEntry *he)
+HOOKPROTO(HotlistConstructFunc, APTR, APTR pool, struct HotlistEntry *he)
 {
-#else
-AROS_UFH3(APTR, HotlistConstructFunc,
-    AROS_UFHA(struct Hook *, hook, A0),
-    AROS_UFHA(APTR, pool, A2),
-    AROS_UFHA(struct HotlistEntry *, he, A1))
-{
-  AROS_USERFUNC_INIT
-#endif
-
   struct HotlistEntry *new;
   if((new=AllocPooled(pool,sizeof(struct HotlistEntry))))
   {
@@ -389,93 +301,37 @@ AROS_UFH3(APTR, HotlistConstructFunc,
     return(new);
   }
   return(NULL);
-
-#ifdef __AROS__
-  AROS_USERFUNC_EXIT
-#endif
 }
 
-struct Hook HotlistConstructHook = {{NULL,NULL},(void *)HotlistConstructFunc,NULL,NULL};
+MakeHook(HotlistConstructHook , HotlistConstructFunc);
 
 
-#ifndef __AROS__
-SAVEDS ASM VOID HotlistDestructFunc(REG(a0) struct Hook *hook,REG(a2) APTR pool,REG(a1) struct HotlistEntry *he)
+HOOKPROTO(HotlistDestructFunc, VOID, APTR pool, struct HotlistEntry *he)
 {
-#else
-AROS_UFH3(VOID, HotlistDestructFunc,
-    AROS_UFHA(struct Hook *, hook, A0),
-    AROS_UFHA(APTR, pool, A2),
-    AROS_UFHA(struct Hotlist *, he, A1))
-{
-  AROS_USERFUNC_INIT
-#endif
-
   FreePooled(pool,he,sizeof(struct HotlistEntry));
-
-#ifdef __AROS__
-  AROS_USERFUNC_EXIT
-#endif
 }
 
-struct Hook HotlistDestructHook = {{NULL,NULL},(void *)HotlistDestructFunc,NULL,NULL};
+MakeHook(HotlistDestructHook , HotlistDestructFunc);
 
 
-#ifndef __AROS__
-SAVEDS ASM LONG HotlistCompareFunc(REG(a0) struct Hook *hook, REG(a1) struct HotlistEntry *he1,REG(a2) struct HotlistEntry *he2)
+HOOKPROTO(HotlistCompareFunc, LONG, struct HotlistEntry *he2, struct HotlistEntry *he1)
 {
-#else
-AROS_UFH3(LONG,HotlistCompareFunc,
-    AROS_UFHA(struct Hook *, hook, A0),
-    AROS_UFHA(struct HotlistEntry *, he2, A2), /* he2 is correct here */
-    AROS_UFHA(struct HotlistEntry *, he1, A1)) /* he1 is correct here */
-{
-  AROS_USERFUNC_INIT
-#endif
-
   return(stricmp(he1->Title,he2->Title));
-
-#ifdef __AROS__
-  AROS_USERFUNC_EXIT
-#endif
 }
-struct Hook HotlistCompareHook = {{NULL,NULL},(void *)HotlistCompareFunc,NULL,NULL};
+MakeHook(HotlistCompareHook , HotlistCompareFunc);
 
 
-#ifndef __AROS__
-SAVEDS ASM LONG HotlistDisplayFunc(REG(a0) struct Hook *hook,REG(a2) char **array,REG(a1) struct HotlistEntry *he)
+HOOKPROTO(HotlistDisplayFunc, LONG, char **array, struct HotlistEntry *he)
 {
-#else
-AROS_UFH3(LONG,HotlistDisplayFunc,
-    AROS_UFHA(struct Hook *, hook, A0),
-    AROS_UFHA(char **, array, A2),
-    AROS_UFHA(struct HotlistEntry *, he, A1))
-{
-  AROS_USERFUNC_INIT
-#endif
-
   *array  = he->Title;
   return(0);
-  
-#ifdef __AROS__
-  AROS_USERFUNC_EXIT
-#endif
 }
-struct Hook HotlistDisplayHook = {{NULL,NULL},(void *)HotlistDisplayFunc,NULL,NULL};
+MakeHook(HotlistDisplayHook , HotlistDisplayFunc);
 
 
-#ifndef __AROS__
-SAVEDS ASM void HotlistButtonsFunc(REG(a2) Object *List,REG(a1) APTR *arg)
+HOOKPROTO(HotlistButtonsFunc, void, Object *List, APTR *arg)
 {
-#else
-AROS_UFH3(void, HotlistButtonsFunc,
-    AROS_UFHA(struct Hook *, hook, A0),
-    AROS_UFHA(Object *, List, A2),
-    AROS_UFHA(APTR *, arg, A1))
-{
-  AROS_USERFUNC_INIT
-#endif
-
-  long Count,Selected;
+  long Count = 0,Selected = 0;
   get(List,MUIA_List_Entries,&Count);
   get(List,MUIA_List_Active,&Selected);
   if(Selected==-1)
@@ -494,12 +350,9 @@ AROS_UFH3(void, HotlistButtonsFunc,
     set(BT_HotlistUp,MUIA_Disabled,Selected<1?TRUE:FALSE);
     set(BT_HotlistDown,MUIA_Disabled,Selected==Count-1?TRUE:FALSE);
   }
-#ifdef __AROS__
-  AROS_USERFUNC_EXIT
-#endif
 }
 
-struct Hook HotlistButtonsHook={{NULL,NULL},(VOID *)HotlistButtonsFunc,NULL,NULL};
+MakeHook(HotlistButtonsHook, HotlistButtonsFunc);
  
 BOOL EditHotlistEntry(struct HotlistEntry *Entry)
 {
@@ -551,7 +404,7 @@ BOOL EditHotlistEntry(struct HotlistEntry *Entry)
           break;
         case 2:
           {
-            char *Title,*Location;
+            char *Title = NULL,*Location = NULL;
             get(ST_Title,MUIA_String_Contents,&Title);
             get(ST_Location,MUIA_String_Contents,&Location);
             strcpy(Entry->Title,Title);
@@ -572,18 +425,9 @@ BOOL EditHotlistEntry(struct HotlistEntry *Entry)
   return(ret);
 }
 
-#ifndef __AROS__
-SAVEDS ASM void HotlistNewFunc(REG(a2) Object *List,REG(a1) APTR *arg)
+HOOKPROTO(HotlistNewFunc, void, Object *List, APTR *arg)
 {
-#else
-AROS_UFH3(void, HotlistNewFunc,
-    AROS_UFHA(struct Hook *, hook, A0),
-    AROS_UFHA(Object *, List, A2),
-    AROS_UFHA(APTR *, arg, A1))
-{
-  AROS_USERFUNC_INIT
-#endif
-  char *Title,*Location;
+  char *Title = NULL,*Location = NULL;
   struct HotlistEntry Entry;
   struct tm *p;
   time_t t;
@@ -603,51 +447,24 @@ AROS_UFH3(void, HotlistNewFunc,
     DoMethod(CurrentShownURLGroup->LinkList,MUIM_List_InsertSingle,&Entry,MUIV_List_Insert_Bottom);
     SaveHotlist();
   }
-#ifdef __AROS__
-  AROS_USERFUNC_EXIT
-#endif
 }
-struct Hook HotlistNewHook={{NULL,NULL},(VOID *)HotlistNewFunc,NULL,NULL};
+MakeHook(HotlistNewHook, HotlistNewFunc);
 
 
-#ifndef __AROS__
-SAVEDS ASM void HotlistDeleteFunc(REG(a2) Object *List,REG(a1) APTR *arg)
+HOOKPROTO(HotlistDeleteFunc, void, Object *List, APTR *arg)
 {
-#else
-AROS_UFH3(void, HotlistDeleteFunc,
-    AROS_UFHA(struct Hook *, hook, A0),
-    AROS_UFHA(Object *, List, A2),
-    AROS_UFHA(APTR *, arg, A1))
-{
-  AROS_USERFUNC_INIT
-
-#endif
-  long Active;
+  long Active = 0;
   get(List,MUIA_List_Active,&Active);
   DoMethod(List,MUIM_List_Remove,Active);
   DoMethod(CurrentShownURLGroup->LinkList,MUIM_List_Remove,Active);
   SaveHotlist();
+}
 
-#ifdef __AROS__
-  AROS_USERFUNC_EXIT
-#endif
-}     
-struct Hook HotlistDeleteHook={{NULL,NULL},(VOID *)HotlistDeleteFunc,NULL,NULL};
+MakeHook(HotlistDeleteHook, HotlistDeleteFunc);
 
-
-#ifndef __AROS__
-SAVEDS ASM void HotlistEditFunc(REG(a2) Object *List,REG(a1) APTR *arg)
+HOOKPROTO(HotlistEditFunc, void, Object *List, APTR *arg)
 {
-#else
-AROS_UFH3(void, HotlistEditFunc,
-    AROS_UFHA(struct Hook *, hook, A0),
-    AROS_UFHA(Object *, List, A2),
-    AROS_UFHA(APTR *, arg, A1))
-{
-  AROS_USERFUNC_INIT
-#endif
-
-  long Active;
+  long Active = 0;
   struct HotlistEntry *Entry;
   get(List,MUIA_List_Active,&Active);
   DoMethod(List,MUIM_List_GetEntry,Active,&Entry);
@@ -658,27 +475,13 @@ AROS_UFH3(void, HotlistEditFunc,
     DoMethod(CurrentShownURLGroup->LinkList,MUIM_List_InsertSingle,Entry,Active);
     SaveHotlist();
   }
+}
 
-#ifdef __AROS__
-  AROS_USERFUNC_EXIT
-#endif
-}     
-struct Hook HotlistEditHook={{NULL,NULL},(VOID *)HotlistEditFunc,NULL,NULL};
+MakeHook(HotlistEditHook, HotlistEditFunc);
 
-
-#ifndef __AROS__
-SAVEDS ASM void HotlistAddFunc(REG(a2) Object *List,REG(a1) APTR *arg)
+HOOKPROTO(HotlistAddFunc, void, Object *List, APTR *arg)
 {
-#else
-AROS_UFH3(void, HotlistAddFunc,
-    AROS_UFHA(struct Hook *, hook, A0),
-    AROS_UFHA(Object *, List, A2),
-    AROS_UFHA(APTR *, arg, A1))
-{
-  AROS_USERFUNC_INIT
-#endif
-
-  char *Title,*Location;
+  char *Title = NULL,*Location = NULL;
   struct HotlistEntry Entry;
   struct tm *p;
   time_t t;
@@ -695,51 +498,23 @@ AROS_UFH3(void, HotlistAddFunc,
   DoMethod(List,MUIM_List_InsertSingle,&Entry,MUIV_List_Insert_Bottom);
   DoMethod(CurrentShownURLGroup->LinkList,MUIM_List_InsertSingle,&Entry,MUIV_List_Insert_Bottom);
   SaveHotlist();
-
-#ifdef __AROS__
-  AROS_USERFUNC_EXIT
-#endif
 }
-struct Hook HotlistAddHook={{NULL,NULL},(VOID *)HotlistAddFunc,NULL,NULL};
 
+MakeHook(HotlistAddHook, HotlistAddFunc);
 
-#ifndef __AROS__
-SAVEDS ASM void HotlistSortFunc(REG(a2) Object *List,REG(a1) APTR *arg)
+HOOKPROTO(HotlistSortFunc, void, Object *List, APTR *arg)
 {
-#else
-AROS_UFH3(void, HotlistSortFunc,
-    AROS_UFHA(struct Hook *, hook, A0),
-    AROS_UFHA(Object *, List, A2),
-    AROS_UFHA(APTR *, arg, A1))
-{
-  AROS_USERFUNC_INIT
-#endif
-
   DoMethod(List,MUIM_List_Sort);
   DoMethod(CurrentShownURLGroup->LinkList,MUIM_List_Sort);
   set(List,MUIA_List_Active,MUIV_List_Active_Off);
   SaveHotlist();
+}
 
-#ifdef __AROS__
-  AROS_USERFUNC_EXIT
-#endif
-}     
-struct Hook HotlistSortHook={{NULL,NULL},(VOID *)HotlistSortFunc,NULL,NULL};
+MakeHook(HotlistSortHook, HotlistSortFunc);
 
-
-#ifndef __AROS__
-SAVEDS ASM void HotlistMoveFunc(REG(a2) Object *List,REG(a1) APTR *arg)
+HOOKPROTO(HotlistMoveFunc, void, Object *List, APTR *arg)
 {
-#else
-AROS_UFH3(void, HotlistMoveFunc,
-    AROS_UFHA(struct Hook *, hook, A0),
-    AROS_UFHA(Object *, List, A2),
-    AROS_UFHA(APTR *, arg, A1))
-{
-  AROS_USERFUNC_INIT
-#endif
-
-  long Active;
+  long Active = 0;
   struct HotlistEntry *he;
   struct HotlistGroupEntry *hge;
 
@@ -755,27 +530,13 @@ AROS_UFH3(void, HotlistMoveFunc,
       SaveHotlist();
     }
   }
-
-#ifdef __AROS__
-  AROS_USERFUNC_EXIT
-#endif
 }
-struct Hook HotlistMoveHook={{NULL,NULL},(VOID *)HotlistMoveFunc,NULL,NULL};
 
+MakeHook(HotlistMoveHook, HotlistMoveFunc);
 
-#ifndef __AROS__
-SAVEDS ASM void HotlistUpFunc(REG(a2) Object *List,REG(a1) APTR *arg)
+HOOKPROTO(HotlistUpFunc, void, Object *List, APTR *arg)
 {
-#else
-AROS_UFH3(void, HotlistUpFunc,
-    AROS_UFHA(struct Hook *, hook, A0),
-    AROS_UFHA(Object *, List, A2),
-    AROS_UFHA(APTR *, arg, A1))
-{
-  AROS_USERFUNC_INIT
-#endif
-
-  long Count,Selected;
+  long Count = 0,Selected = 0;
   get(List,MUIA_List_Entries,&Count);
   get(List,MUIA_List_Active,&Selected);
   if(Selected>0)
@@ -785,27 +546,14 @@ AROS_UFH3(void, HotlistUpFunc,
     set(List,MUIA_List_Active,Selected-1);
     SaveHotlist();
   }
-  
-#ifdef __AROS__
-  AROS_USERFUNC_EXIT
-#endif
-}     
-struct Hook HotlistUpHook={{NULL,NULL},(VOID *)HotlistUpFunc,NULL,NULL};
+}
+
+MakeHook(HotlistUpHook, HotlistUpFunc);
 
 
-#ifndef __AROS__
-SAVEDS ASM void HotlistDownFunc(REG(a2) Object *List,REG(a1) APTR *arg)
+HOOKPROTO(HotlistDownFunc, void, Object *List, APTR *arg)
 {
-#else
-AROS_UFH3(void, HotlistDownFunc,
-    AROS_UFHA(struct Hook *, hook, A0),
-    AROS_UFHA(Object *, List, A2),
-    AROS_UFHA(APTR *, arg, A1))
-{
-  AROS_USERFUNC_INIT
-#endif
-
-  long Count,Selected;
+  long Count = 0,Selected = 0;
   get(List,MUIA_List_Entries,&Count);
   get(List,MUIA_List_Active,&Selected);
   if(Selected>-1&&Selected<Count-1)
@@ -815,28 +563,14 @@ AROS_UFH3(void, HotlistDownFunc,
     set(List,MUIA_List_Active,Selected+1);
     SaveHotlist();
   }  
-
-#ifdef __AROS__
-  AROS_USERFUNC_EXIT
-#endif
 }     
-struct Hook HotlistDownHook={{NULL,NULL},(VOID *)HotlistDownFunc,NULL,NULL};
+MakeHook(HotlistDownHook, HotlistDownFunc);
          
 ///
 ///HotlistGroupFunctions
 
-#ifndef __AROS__
-SAVEDS ASM VOID HotlistGroupDestructFunc(REG(a0) struct Hook *hook,REG(a2) APTR pool,REG(a1) struct HotlistGroupEntry *hge)
+HOOKPROTO(HotlistGroupDestructFunc, VOID, APTR pool, struct HotlistGroupEntry *hge)
 {
-#else
-AROS_UFH3(VOID, HotlistGroupDestructFunc,
-    AROS_UFHA(struct Hook *, hook, A0),
-    AROS_UFHA(APTR, pool, A2),
-    AROS_UFHA(struct HotlistGroupEntry *, hge, A1))
-{
-  AROS_USERFUNC_INIT
-#endif
-
   if(hge->ChildList)
   {
     DoMethod(hge->ChildList,MUIM_List_Clear,TRUE);
@@ -848,47 +582,18 @@ AROS_UFH3(VOID, HotlistGroupDestructFunc,
     MUI_DisposeObject(hge->LinkList);
   }   
   FreePooled(pool,hge,sizeof(struct HotlistGroupEntry));
-
-#ifdef __AROS__
-  AROS_USERFUNC_EXIT
-#endif
 }
-struct Hook HotlistGroupDestructHook = {{NULL,NULL},(void *)HotlistGroupDestructFunc,NULL,NULL};
+MakeHook(HotlistGroupDestructHook , HotlistGroupDestructFunc);
  
- 
-#ifndef __AROS__
-SAVEDS ASM LONG HotlistGroupCompareFunc(REG(a0) struct Hook *hook, REG(a1) struct HotlistGroupEntry *hge1,REG(a2) struct HotlistGroupEntry *hge2)
+HOOKPROTO(HotlistGroupCompareFunc, LONG, struct HotlistGroupEntry *hge2, struct HotlistGroupEntry *hge1)
 {
-#else
-AROS_UFH3(LONG, HotlistGroupCompareFunc,
-    AROS_UFHA(struct Hook *, hook, A0),
-    AROS_UFHA(struct HotlistGroupEntry *, hge2, A2), /* hge2 is correct! */
-    AROS_UFHA(struct HotlistGroupEntry *, hge1, A1)) /* hge1 is correct! */
-{
-  AROS_USERFUNC_INIT
-#endif
-
   return(stricmp(hge1->Title,hge2->Title));
-
-#ifdef __AROS__
-  AROS_USERFUNC_EXIT
-#endif
 }
-struct Hook HotlistGroupCompareHook = {{NULL,NULL},(void *)HotlistGroupCompareFunc,NULL,NULL};
+MakeHook(HotlistGroupCompareHook , HotlistGroupCompareFunc);
  
  
-#ifndef __AROS__
-SAVEDS ASM APTR HotlistGroupConstructFunc(REG(a0) struct Hook *hook,REG(a2) APTR pool,REG(a1) struct HotlistGroupEntry *hge)
+HOOKPROTO(HotlistGroupConstructFunc, APTR, APTR pool, struct HotlistGroupEntry *hge)
 {
-#else
-AROS_UFH3(APTR, HotlistGroupConstructFunc,
-    AROS_UFHA(struct Hook *, hook, A0),
-    AROS_UFHA(APTR, pool, A2),
-    AROS_UFHA(struct HotlistGroupEntry *, hge, A1))
-{
-  AROS_USERFUNC_INIT
-#endif
-
   struct HotlistGroupEntry *new;
   if((new=AllocPooled(pool,sizeof(struct HotlistGroupEntry))))
   {
@@ -907,50 +612,22 @@ AROS_UFH3(APTR, HotlistGroupConstructFunc,
     FreePooled(pool,hge,sizeof(struct HotlistGroupEntry));
   }
   return(NULL);
-
-#ifdef __AROS__
-  AROS_USERFUNC_EXIT
-#endif
 }
 
-struct Hook HotlistGroupConstructHook = {{NULL,NULL},(void *)HotlistGroupConstructFunc,NULL,NULL};
+MakeHook(HotlistGroupConstructHook , HotlistGroupConstructFunc);
 
 
-#ifndef __AROS__
-SAVEDS ASM LONG HotlistGroupDisplayFunc(REG(a0) struct Hook *hook,REG(a2) char **array,REG(a1) struct HotlistGroupEntry *hge)
+HOOKPROTO(HotlistGroupDisplayFunc, LONG, char **array, struct HotlistGroupEntry *hge)
 {
-#else
-AROS_UFH3(LONG, HotlistGroupDisplayFunc,
-    AROS_UFHA(struct Hook *, hook, A0),
-    AROS_UFHA(char **, array, A2),
-    AROS_UFHA(struct HotlistGroupEntry *, hge, A1))
-{
-  AROS_USERFUNC_INIT
-#endif
-
   *array  = hge->Title;
   return(0);
-
-#ifdef __AROS__
-  AROS_USERFUNC_EXIT
-#endif
 }
-struct Hook HotlistGroupDisplayHook = {{NULL,NULL},(void *)HotlistGroupDisplayFunc,NULL,NULL};
+MakeHook(HotlistGroupDisplayHook , HotlistGroupDisplayFunc);
  
  
-#ifndef __AROS__
-SAVEDS ASM void HotlistGroupButtonsFunc(REG(a2) Object *List,REG(a1) APTR *arg)
+HOOKPROTO(HotlistGroupButtonsFunc, void, Object *List, APTR *arg)
 {
-#else
-AROS_UFH3(void, HotlistGroupButtonsFunc,
-    AROS_UFHA(struct Hook *, hook, A0),
-    AROS_UFHA(Object *, List, A2),
-    AROS_UFHA(APTR *, arg, A1))
-{
-  AROS_USERFUNC_INIT
-#endif
-
-  long Count,Selected;
+  long Count = 0,Selected = 0;
   get(List,MUIA_List_Active,&Selected);
   if(Selected==-1)
   {
@@ -967,28 +644,13 @@ AROS_UFH3(void, HotlistGroupButtonsFunc,
     set(BT_HotlistGroupUp,MUIA_Disabled,Selected<1?TRUE:FALSE);
     set(BT_HotlistGroupDown,MUIA_Disabled,Selected==Count-1?TRUE:FALSE);   
   }
-  
-#ifdef __AROS__
-  AROS_USERFUNC_EXIT
-#endif
 }
 
-struct Hook HotlistGroupButtonsHook={{NULL,NULL},(VOID *)HotlistGroupButtonsFunc,NULL,NULL};
+MakeHook(HotlistGroupButtonsHook, HotlistGroupButtonsFunc);
 
-
-#ifndef __AROS__
-SAVEDS ASM void HotlistGroupSelectFunc(REG(a2) Object *List,REG(a1) APTR *arg)
+HOOKPROTO(HotlistGroupSelectFunc, void, Object *List, APTR *arg)
 {
-#else
-AROS_UFH3(void, HotlistGroupSelectFunc,
-    AROS_UFHA(struct Hook *, hook, A0),
-    AROS_UFHA(Object *, List, A2),
-    AROS_UFHA(APTR *, arg, A1))
-{
-  AROS_USERFUNC_INIT
-#endif
-
-  long Selected;
+  long Selected = 0;
   get(List,MUIA_List_Active,&Selected);
   if(Selected!=-1)
   {
@@ -996,36 +658,17 @@ AROS_UFH3(void, HotlistGroupSelectFunc,
     DoMethod(CurrentShownURLGroup->ChildList,MUIM_List_GetEntry,Selected,&hge);
     ShowHotlist(hge);
   }
-
-#ifdef __AROS__
-  AROS_USERFUNC_EXIT
-#endif
 }
 
-struct Hook HotlistGroupSelectHook={{NULL,NULL},(VOID *)HotlistGroupSelectFunc,NULL,NULL};
+MakeHook(HotlistGroupSelectHook, HotlistGroupSelectFunc);
  
- 
-#ifndef __AROS__
-SAVEDS ASM void HotlistGroupParentFunc(REG(a2) Object *List,REG(a1) APTR *arg)
+HOOKPROTO(HotlistGroupParentFunc, void, Object *List, APTR *arg)
 {
-#else
-AROS_UFH3(void, HotlistGroupParentFunc,
-    AROS_UFHA(struct Hook *, hook, A0),
-    AROS_UFHA(Object *, List, A2),
-    AROS_UFHA(APTR *, arg, A1))
-{
-  AROS_USERFUNC_INIT
-#endif
-
   if(CurrentShownURLGroup->Parent)
     ShowHotlist(CurrentShownURLGroup->Parent);
-
-#ifdef __AROS__
-  AROS_USERFUNC_EXIT
-#endif
 }
 
-struct Hook HotlistGroupParentHook={{NULL,NULL},(VOID *)HotlistGroupParentFunc,NULL,NULL};
+MakeHook(HotlistGroupParentHook, HotlistGroupParentFunc);
 
 BOOL EditHotlistGroupEntry(struct HotlistGroupEntry *Entry)
 {
@@ -1074,10 +717,10 @@ BOOL EditHotlistGroupEntry(struct HotlistGroupEntry *Entry)
           break;
         case 2:
           {
-            char *Title;
+            char *Title = NULL;
             get(ST_Title,MUIA_String_Contents,&Title);
             strcpy(Entry->Title,Title);
-            *PathPart(Entry->FullTitle)=NULL;
+            *PathPart(Entry->FullTitle)=0;
             AddPart(Entry->FullTitle,Entry->Title,200);
             ret=TRUE;
             edit_running=FALSE;
@@ -1095,18 +738,8 @@ BOOL EditHotlistGroupEntry(struct HotlistGroupEntry *Entry)
   return(ret);
 }
 
-#ifndef __AROS__
-SAVEDS ASM void HotlistGroupNewFunc(REG(a2) Object *List,REG(a1) APTR *arg)
+HOOKPROTO(HotlistGroupNewFunc, void, Object *List, APTR *arg)
 {
-#else
-AROS_UFH3(void, HotlistGroupNewFunc,
-    AROS_UFHA(struct Hook *, hook, A0),
-    AROS_UFHA(Object *, List, A2),
-    AROS_UFHA(APTR *, arg, A1))
-{
-  AROS_USERFUNC_INIT
-#endif
-
   struct HotlistGroupEntry Entry;
   strcpy(Entry.Title,GetamosaicString(MSG_HOTLIST_GROUP_DEFAULTNAME));
   Entry.Parent=CurrentShownURLGroup;
@@ -1118,52 +751,23 @@ AROS_UFH3(void, HotlistGroupNewFunc,
     DoMethod(CurrentShownURLGroup->ChildList,MUIM_List_InsertSingle,&Entry,MUIV_List_Insert_Bottom);
     SaveHotlist();
   }
-
-#ifdef __AROS__
-  AROS_USERFUNC_EXIT
-#endif
 }
-struct Hook HotlistGroupNewHook={{NULL,NULL},(VOID *)HotlistGroupNewFunc,NULL,NULL};
+MakeHook(HotlistGroupNewHook, HotlistGroupNewFunc);
 
 
-#ifndef __AROS__
-SAVEDS ASM void HotlistGroupDeleteFunc(REG(a2) Object *List,REG(a1) APTR *arg)
+HOOKPROTO(HotlistGroupDeleteFunc, void, Object *List, APTR *arg)
 {
-#else
-AROS_UFH3(void, HotlistGroupDeleteFunc,
-    AROS_UFHA(struct Hook *, hook, A0),
-    AROS_UFHA(Object *, List, A2),
-    AROS_UFHA(APTR *, arg, A1))
-{
-  AROS_USERFUNC_INIT
-#endif
-
-  long Active;
+  long Active = 0;
   get(List,MUIA_List_Active,&Active);
   DoMethod(List,MUIM_List_Remove,Active);
   DoMethod(CurrentShownURLGroup->ChildList,MUIM_List_Remove,Active);
   SaveHotlist();
-
-#ifdef __AROS__
-  AROS_USERFUNC_EXIT
-#endif
 }     
-struct Hook HotlistGroupDeleteHook={{NULL,NULL},(VOID *)HotlistGroupDeleteFunc,NULL,NULL};
+MakeHook(HotlistGroupDeleteHook, HotlistGroupDeleteFunc);
 
-
-#ifndef __AROS__
-SAVEDS ASM void HotlistGroupEditFunc(REG(a2) Object *List,REG(a1) APTR *arg)
+HOOKPROTO(HotlistGroupEditFunc, void, Object *List, APTR *arg)
 {
-#else
-AROS_UFH3(void, HotlistGroupEditFunc,
-    AROS_UFHA(struct Hook *, hook, A0),
-    AROS_UFHA(Object *, List, A2),
-    AROS_UFHA(APTR *, arg, A1))
-{
-  AROS_USERFUNC_INIT
-#endif
-
-  long Active;
+  long Active = 0;
   struct HotlistGroupEntry *Entry;
   get(List,MUIA_List_Active,&Active);
   DoMethod(List,MUIM_List_GetEntry,Active,&Entry);
@@ -1174,40 +778,21 @@ AROS_UFH3(void, HotlistGroupEditFunc,
     DoMethod(CurrentShownURLGroup->ChildList,MUIM_List_InsertSingle,Entry,Active);
     SaveHotlist();
   }
-
-#ifdef __AROS__
-  AROS_USERFUNC_EXIT
-#endif
 }     
-struct Hook HotlistGroupEditHook={{NULL,NULL},(VOID *)HotlistGroupEditFunc,NULL,NULL};
+MakeHook(HotlistGroupEditHook, HotlistGroupEditFunc);
 
-
-#ifndef __AROS__
-SAVEDS ASM void HotlistGroupSortFunc(REG(a2) Object *List,REG(a1) APTR *arg)
+HOOKPROTO(HotlistGroupSortFunc, void, Object *List, APTR *arg)
 {
-#else
-AROS_UFH3(void, HotlistGroupSortFunc,
-    AROS_UFHA(struct Hook *, hook, A0),
-    AROS_UFHA(Object *, List, A2),
-    AROS_UFHA(APTR *, arg, A1))
-{
-  AROS_USERFUNC_INIT
-#endif
-
   DoMethod(List,MUIM_List_Sort);
   DoMethod(CurrentShownURLGroup->ChildList,MUIM_List_Sort);
   set(List,MUIA_List_Active,MUIV_List_Active_Off);
   SaveHotlist();
-
-#ifdef __AROS__
-  AROS_USERFUNC_EXIT
-#endif
 }     
-struct Hook HotlistGroupSortHook={{NULL,NULL},(VOID *)HotlistGroupSortFunc,NULL,NULL};
+MakeHook(HotlistGroupSortHook, HotlistGroupSortFunc);
 
 void CopyHotlistGroup(struct HotlistGroupEntry *source,struct HotlistGroupEntry *dest)
 {
-  long anz,i;
+  long anz = 0,i;
   get(source->LinkList,MUIA_List_Entries,&anz);
   for(i=0;i<anz;i++)
   {
@@ -1226,19 +811,9 @@ void CopyHotlistGroup(struct HotlistGroupEntry *source,struct HotlistGroupEntry 
   }
 }
 
-#ifndef __AROS__
-SAVEDS ASM void HotlistGroupUpFunc(REG(a2) Object *List,REG(a1) APTR *arg)
+HOOKPROTO(HotlistGroupUpFunc, void, Object *List, APTR *arg)
 {
-#else
-AROS_UFH3(void, HotlistGroupUpFunc,
-    AROS_UFHA(struct Hook *, hook, A0),
-    AROS_UFHA(Object *, List, A2),
-    AROS_UFHA(APTR *, arg, A1))
-{
-  AROS_USERFUNC_INIT
-#endif
-
-  long Count,Selected;
+  long Count = 0,Selected = 0;
   get(List,MUIA_List_Entries,&Count);
   get(List,MUIA_List_Active,&Selected);
   if(Selected>0)
@@ -1248,27 +823,12 @@ AROS_UFH3(void, HotlistGroupUpFunc,
     set(List,MUIA_List_Active,Selected-1);
     SaveHotlist();
   }
-
-#ifdef __AROS__
-  AROS_USERFUNC_EXIT
-#endif
 }     
-struct Hook HotlistGroupUpHook={{NULL,NULL},(VOID *)HotlistGroupUpFunc,NULL,NULL};
+MakeHook(HotlistGroupUpHook, HotlistGroupUpFunc);
 
-
-#ifndef __AROS__
-SAVEDS ASM void HotlistGroupDownFunc(REG(a2) Object *List,REG(a1) APTR *arg)
+HOOKPROTO(HotlistGroupDownFunc, void, Object *List, APTR *arg)
 {
-#else
-AROS_UFH3(void, HotlistGroupDownFunc,
-    AROS_UFHA(struct Hook *, hook, A0),
-    AROS_UFHA(Object *, List, A2),
-    AROS_UFHA(APTR *, arg, A1))
-{
-  AROS_USERFUNC_INIT
-#endif
-
-  long Count,Selected;
+  long Count = 0,Selected = 0;
   get(List,MUIA_List_Entries,&Count);
   get(List,MUIA_List_Active,&Selected);
   if(Selected>-1&&Selected<Count-1)
@@ -1278,20 +838,15 @@ AROS_UFH3(void, HotlistGroupDownFunc,
     set(List,MUIA_List_Active,Selected+1);
     SaveHotlist();
   }  
-  
-#ifdef __AROS__
-  AROS_USERFUNC_EXIT
-#endif
 }     
-struct Hook HotlistGroupDownHook={{NULL,NULL},(VOID *)HotlistGroupDownFunc,NULL,NULL};
+MakeHook(HotlistGroupDownHook, HotlistGroupDownFunc);
  
 ///
 ///Hotlist Load/Save
 void LoadHotlist(void)
 {
-  char buffer[530],*d;
+  char buffer[530];
   FILE *file;
-  struct HotlistEntry new;
   struct HotlistGroupEntry *CurrentList;
   set(App,MUIA_Application_Sleep,TRUE);
   CurrentShownURLGroup=&GroupRootList;
@@ -1325,7 +880,6 @@ void LoadHotlist(void)
               if(!strnicmp(buffer,"@GROUP",6))
               {
                 struct HotlistGroupEntry *NewCurrent;
-                int i;
                 struct HotlistGroupEntry hge;
                 hge.Depth=depth;
                 hge.Parent=CurrentList;
@@ -1344,19 +898,18 @@ void LoadHotlist(void)
                 {
                   CurrentList=CurrentList->Parent;
                   depth--;
-                  *PathPart(FullPath)=NULL;
+                  *PathPart(FullPath)=0;
                 }
                 else
                 {
                   char *d;
                   struct HotlistEntry new;
                   d=strstr(buffer," ");
-                  *d=NULL;
+                  *d=0;
                   strcpy(new.Location,buffer);
                   strcpy(new.Date,d+1);
                   if(fgets(buffer,128,file))
                   {
-                    struct HotlistGroupEntry *hge;
                     buffer[strlen(buffer)-1]=0;
                     strcpy(new.Title,buffer);
                     DoMethod(CurrentList->LinkList,MUIM_List_InsertSingle,&new,MUIV_List_Insert_Bottom);
@@ -1376,7 +929,7 @@ void LoadHotlist(void)
 
 void SaveGroup(FILE *file,struct HotlistGroupEntry *hge)
 {
-  long anz,i;
+  long anz = 0,i;
   get(hge->LinkList,MUIA_List_Entries,&anz);
   for(i=0;i<anz;i++)
   {
@@ -1432,11 +985,11 @@ void mui_init(void)
 #ifdef HAVE_REXX
   extern struct Mui_Command RexxCommands[] ;
 #endif
-  ULONG win_open;
+  ULONG win_open = 0;
 
   Object *SB_Vert,*SB_Horiz;
 
-  Object *OK_Button,*BT_ShowEm;
+  Object *BT_ShowEm;
 
   visit_func = anchor_visited_predicate;
   image_func = ImageResolve;
@@ -1902,7 +1455,7 @@ void mui_init(void)
 						break;
 					default:
 						Label=RexxMacroNames[i];
-						UserData=(APTR)(i+mo_macro_1);
+						UserData=(APTR)(IPTR)(i+mo_macro_1);
 						ShortCuts[i][0]='0'+(i+1)%10;
 						break;
 				}
@@ -2147,7 +1700,7 @@ VOID init(VOID)
 void SetImageButtons(long state)
 {
 	long s;
-	long win_open;
+	long win_open = 0;
 	s=state;
 
 	get(WI_Main,MUIA_Window_Open,&win_open);

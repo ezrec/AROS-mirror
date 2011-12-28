@@ -523,7 +523,7 @@ mo_status mo_dump_history (mo_window *win)
 {
   mo_node *node;
   fprintf (stderr, "----------------- history -------------- \n");
-  fprintf (stderr, "HISTORY is 0x%08x\n", win->history);
+  fprintf (stderr, "HISTORY is %p\n", win->history);
   for (node = win->history; node != NULL; node = node->next)
     {
       fprintf (stderr, "NODE %d %s\n", node->position, node->url);
@@ -563,7 +563,7 @@ static unsigned long history_list_cb(struct Hook *h, void *o, void *msg)
 {
   mo_window *win = (mo_window *)h->h_Data;
   Object *list = (Object *)o;
-  int x;
+  int x = 0;
 
   get(list, MUIA_List_Active, &x);
   mo_visit_position (win, x+1);

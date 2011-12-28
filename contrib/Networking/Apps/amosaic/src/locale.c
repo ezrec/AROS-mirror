@@ -158,10 +158,11 @@ void OpenamosaicCatalog(struct Locale *loc, STRPTR language)
 
   if (language == NULL)
   { tag = TAG_IGNORE;
+    tagarg = 0;
   }
   else
   { tag = OC_Language;
-    tagarg = (LONG) language;
+    tagarg = (IPTR) language;
   }
   if (LocaleBase != NULL  &&  amosaic_Catalog == NULL)
   { amosaic_Catalog = OpenCatalog(loc, (STRPTR) "amosaic.catalog",
@@ -179,7 +180,7 @@ void CloseamosaicCatalog(void)
   amosaic_Catalog = NULL;
 }
 
-STRPTR GetamosaicString(LONG strnum)
+CONST_STRPTR GetamosaicString(LONG strnum)
 { STRPTR defaultstr = NULL;
   LONG i;
 

@@ -68,13 +68,13 @@ extern char *home_document;
 
 #define MAX_DOCUMENTS_MENU_ITEMS 120
 #define DOCUMENTS_MENU_COUNT_OFFSET 5000
+#if 0
 /* List of URL's matching items in documents menu. */
 static char *urllist[MAX_DOCUMENTS_MENU_ITEMS];
 
   
 /* ------------------------------ menubar_cb ------------------------------ */
 
-#if 0
 do_menubar(mo_window *win, int i)
 {
   switch (i)
@@ -680,6 +680,7 @@ static XmxMenubarStruct simple_menuspec[] =
 
 #endif
 
+#ifndef __AROS__
 /* -------------------- mo_make_document_view_menubar --------------------- */
 
 /* We now allow a single customizable menu.  
@@ -705,7 +706,6 @@ static mo_status mo_file_exists (char *filename)
 
 static void mo_grok_menubar (char *filename)
 {
-#ifndef __AROS__
   FILE *fp;
   char line[MO_LINE_LENGTH];
   char *status;
@@ -801,7 +801,6 @@ static void mo_grok_menubar (char *filename)
 
  screwed_no_file:
   return;
-#endif
 }
 
 static void mo_try_to_grok_menubar (void)
@@ -834,7 +833,6 @@ static void mo_try_to_grok_menubar (void)
 
 static int grokked_menubar = 0;
 
-#ifndef __AROS__
 XmxMenuRecord *mo_make_document_view_menubar (Widget form)
 {
   /* If we've never tried to set up the user's configurable menubar by

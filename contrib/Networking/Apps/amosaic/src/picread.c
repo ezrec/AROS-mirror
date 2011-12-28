@@ -80,16 +80,12 @@ unsigned char *ReadXbmBitmap(FILE *fp, char *datafile, int *w, int *h,
 	char *t;
 	char *t2;
 	unsigned char *ptr, *dataP;
-	int bytes_per_line, version10p, raster_length, padding;
+	int bytes_per_line, version10p = 0, raster_length, padding;
 	int i, bytes, temp, value;
 	int Ncolors, charspp, xpmformat;
-        static unsigned long fg_pixel, bg_pixel;
-        static int done_fetch_colors = 0;
 //        extern XColor fg_color, bg_color;
 //        extern Widget view;
 //        extern int Vclass;
-	int blackbit;
-	int whitebit;
 
 	*w = 0;
 	*h = 0;
@@ -154,9 +150,14 @@ unsigned char *ReadXbmBitmap(FILE *fp, char *datafile, int *w, int *h,
 	}
 	if (xpmformat)
 	{
-//		dataP = ReadXpmPixmap(fp, datafile, w, h, colrs, Ncolors, charspp);
-//		return(dataP);
-                return(NULL);
+#ifdef __AROS__
+		(void)Ncolors;
+		(void)charspp;
+		return NULL;
+#else
+		dataP = ReadXpmPixmap(fp, datafile, w, h, colrs, Ncolors, charspp);
+		return(dataP);
+#endif
 	}
 	if (*w == 0)
 	{
@@ -227,8 +228,6 @@ unsigned char *ReadXbmBitmap(FILE *fp, char *datafile, int *w, int *h,
 	}
 	else
 	{
-		int cnt = 0;
-		int lim = bytes_per_line * 8;
 		for (bytes = 0; bytes < raster_length; bytes++)
 		{
 			if (fscanf(fp, " 0x%x%*[,}]%*[ \r\n]", &value) != 1)

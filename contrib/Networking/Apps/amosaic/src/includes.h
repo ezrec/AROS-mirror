@@ -63,19 +63,10 @@
 #include <stdio.h>
 #include <ctype.h>
 
-#ifndef __AROS__
-#define REG(x) register __ ## x
-#define ASM    __asm
-#define SAVEDS __saveds
-#else
+#include <SDI/SDI_compiler.h>
+#include <SDI/SDI_hook.h>
 
-#ifndef AROS_ASMCALL_H
-#include <aros/asmcall.h>
-#endif
-
-#define REG(x) /* */
-#define ASM /* */
-#define SAVEDS /* */
+#ifdef __AROS__
 #define __far /* */
 #define __regargs /* */
 #define __stdargs /* */

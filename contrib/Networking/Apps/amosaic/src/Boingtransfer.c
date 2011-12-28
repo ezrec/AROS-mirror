@@ -44,12 +44,12 @@ struct BoingTransferMessage
 ///SendChildTaskAction
 void SendChildTaskAction(struct BoingTransferClData *data,Object *obj,ULONG Action)
 {
-  APTR app;
+  APTR app = NULL;
   char PortName[30];      
   struct BoingTransferMessage MsgSend;
   struct MsgPort *ChildPort,*ReplyPort;
 
-  sprintf(PortName,"BoingPort.%x",data->AutoMoveProc);
+  sprintf(PortName,"BoingPort.%p",data->AutoMoveProc);
   if(ReplyPort=CreateMsgPort())
   {
     get(obj,MUIA_ApplicationObject,&app);
@@ -78,11 +78,11 @@ void SendChildTaskAction(struct BoingTransferClData *data,Object *obj,ULONG Acti
 ///AutoMove
 static void SAVEDS AutoMove(void)
 {
-  APTR App,Obj;
+  APTR App = NULL,Obj = NULL;
   char PortName[30];
   struct MsgPort *Port;
 
-  sprintf(PortName,"BoingPort.%x",SysBase->ThisTask);
+  sprintf(PortName,"BoingPort.%p",SysBase->ThisTask);
   if(Port=CreateMsgPort())
   {
     BOOL running=TRUE;
@@ -122,7 +122,7 @@ void CreateAutoMoveProc(struct BoingTransferClData *data,Object *obj)
   {
     if(data->AutoMoveProc=CreateNewProcTags(NP_Entry,AutoMove,NP_Name,"BoingMover",NP_Priority,-1,TAG_DONE))
     {
-      sprintf(PortName,"BoingPort.%x",data->AutoMoveProc);
+      sprintf(PortName,"BoingPort.%p",data->AutoMoveProc);
       while(!FindPort(PortName))
         Delay(1);
       SendChildTaskAction(data,obj,0);
@@ -169,7 +169,7 @@ BOOL InitBitMaps(Object *obj,struct BoingTransferClData *data)
   {
     InitTmpRas(&data->TmpRaster,data->Bitplane,RASSIZE(AlignValue(data->BitMapSize),AlignValue(data->BitMapSize)));
     InitArea(&data->AInfo,data->Buffer,10);
-    if(data->Mask=AllocBitMap(data->BitMapSize,data->BitMapSize,1,NULL,NULL))
+    if(data->Mask=AllocBitMap(data->BitMapSize,data->BitMapSize,1,0,NULL))
     {
       InitRastPort(&data->MaskRP);
       data->MaskRP.BitMap=data->Mask;
@@ -180,7 +180,7 @@ BOOL InitBitMaps(Object *obj,struct BoingTransferClData *data)
 
       for(i=0;i<FRAMES;i++)
       {
-        if(data->BitMap[i]=AllocBitMap(data->BitMapSize,data->BitMapSize,_screen(obj)->RastPort.BitMap->Depth,NULL,NULL))
+        if(data->BitMap[i]=AllocBitMap(data->BitMapSize,data->BitMapSize,_screen(obj)->RastPort.BitMap->Depth,0,NULL))
         {
           InitRastPort(&data->RP[i]);
           data->RP[i].BitMap=data->BitMap[i];
@@ -200,13 +200,13 @@ BOOL InitBitMaps(Object *obj,struct BoingTransferClData *data)
 }
 ///
 ///GetXYPos: turn 3d coordinates into 2d coordinates
-void __inline __regargs GetXYPos(double Offset,long x,long y,double Radius,long *ResX,long *ResY)
+static void __inline __regargs GetXYPos(double Offset,long x,long y,double Radius,long *ResX,long *ResY)
 {
   double rx,ry;
   double XAbstand, YAbstand;
   
 #ifdef __AROS__
-#warning otherwise crash because of -1 coords passed to Area functions
+// FIXME: otherwise crash because of -1 coords passed to Area functions
   Radius -= 1.0;
 #endif
 
@@ -222,7 +222,7 @@ void __inline __regargs GetXYPos(double Offset,long x,long y,double Radius,long 
 }
 ///
 ///DrawBoingBall
-void __inline DrawBoingBall(struct RastPort *RP,double Radius,struct BoingTransferClData *data,Object *obj,long WinkelOffset,long RedPen,long WhitePen)
+static void __inline DrawBoingBall(struct RastPort *RP,double Radius,struct BoingTransferClData *data,Object *obj,long WinkelOffset,long RedPen,long WhitePen)
 {
   long x,y,xw,ResX,ResY;
 
@@ -278,7 +278,7 @@ void __regargs CalculateBoingBall(struct BoingTransferClData *data,Object *obj)
 }
 ///
 ///BoingTransferAskMinMax
-SAVEDS static ULONG BoingTransferAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
+SAVEDS static IPTR BoingTransferAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
 {
   DoSuperMethodA(cl,obj,(Msg)msg);
 
@@ -294,7 +294,7 @@ SAVEDS static ULONG BoingTransferAskMinMax(struct IClass *cl,Object *obj,struct 
 }
 ///
 ///BoingTransferSetup
-SAVEDS static ULONG BoingTransferSetup(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
+SAVEDS static IPTR BoingTransferSetup(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
 {
   struct BoingTransferClData *data = INST_DATA(cl,obj);
   if(!(DoSuperMethodA(cl,obj,(Msg)msg)))
@@ -315,7 +315,7 @@ SAVEDS static ULONG BoingTransferSetup(struct IClass *cl,Object *obj,struct MUIP
 }
 ///
 ///BoingTransferCleanup
-SAVEDS static ULONG BoingTransferCleanup(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
+SAVEDS static IPTR BoingTransferCleanup(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
 {
   struct BoingTransferClData *data = INST_DATA(cl,obj);
 
@@ -333,7 +333,7 @@ SAVEDS static ULONG BoingTransferCleanup(struct IClass *cl,Object *obj,struct MU
 }
 ///
 ///BoingTransferShow
-SAVEDS static ULONG BoingTransferShow(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
+SAVEDS static IPTR BoingTransferShow(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
 {
   struct BoingTransferClData *data = INST_DATA(cl,obj);
   if(!(DoSuperMethodA(cl,obj,(Msg)msg)))
@@ -371,10 +371,11 @@ SAVEDS  ULONG BoingTransferHide(struct IClass *cl,Object *obj,struct MUIP_Handle
 }
 ///  
 /// BoingTransferSet
-SAVEDS static ULONG BoingTransferSet(struct IClass *cl,Object *obj,Msg msg)
+SAVEDS static IPTR BoingTransferSet(struct IClass *cl,Object *obj,Msg msg)
 {
   struct BoingTransferClData *data = INST_DATA(cl,obj);
-  struct TagItem *tags,*tag;
+  const struct TagItem *tags;
+  struct TagItem *tag;
 
   for (tags=((struct opSet *)msg)->ops_AttrList;tag=NextTagItem(&tags);)
   {
@@ -399,7 +400,7 @@ SAVEDS static ULONG BoingTransferSet(struct IClass *cl,Object *obj,Msg msg)
 } 
 ///
 ///BoingTransferDraw
-SAVEDS static ULONG BoingTransferDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
+SAVEDS static IPTR BoingTransferDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 {
   long LeftEdge,TopEdge,Frame;
   struct BoingTransferClData *data = INST_DATA(cl,obj);
@@ -422,7 +423,7 @@ SAVEDS static ULONG BoingTransferDraw(struct IClass *cl,Object *obj,struct MUIP_
       {
         FreeBitMap(data->Back);
         data->Back=NULL;
-        if(data->Back=AllocBitMap(_mwidth(obj),_mheight(obj),_screen(obj)->RastPort.BitMap->Depth,NULL,NULL))
+        if(data->Back=AllocBitMap(_mwidth(obj),_mheight(obj),_screen(obj)->RastPort.BitMap->Depth,0,NULL))
         {
           data->BackRP.BitMap=data->Back;
           ClipBlit(_rp(obj),_mleft(obj),_mtop(obj),&data->BackRP,0,0,_mwidth(obj),_mheight(obj),0xc0);
@@ -457,7 +458,7 @@ SAVEDS static ULONG BoingTransferDraw(struct IClass *cl,Object *obj,struct MUIP_
 }
 ///
 ///BoingTransferDispatcher
-SAVEDS ASM ULONG BoingTransferDispatcher(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
+DISPATCHER(BoingTransferDispatcher)
 {
   switch(msg->MethodID)
   {
@@ -535,7 +536,7 @@ Class *BoingTransferClInit(void)
       fail(NULL, "Failed to create Boing class.");
     }
 
-  cl->cl_Dispatcher.h_Entry = (APTR)BoingTransferDispatcher;
+  cl->cl_Dispatcher.h_Entry = ENTRY(BoingTransferDispatcher);
   cl->cl_Dispatcher.h_SubEntry = NULL;
   cl->cl_Dispatcher.h_Data = NULL;
 
