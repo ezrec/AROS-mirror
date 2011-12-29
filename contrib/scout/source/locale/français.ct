@@ -1,4 +1,4 @@
-## version $VER: scout.ct 4.0 (31.01.2011) - Herve & Jean-Frederic
+## version $VER: scout.ct 4.1 (29.12.2011) - Herve & Jean-Frederic
 ## language français
 ## codeset 0
 ;
@@ -148,7 +148,7 @@ _Continuer
 ;
 ;
 txtAboutTitle
-À propos de Scout
+A propos de Scout
 ; About Scout
 ;
 ;
@@ -565,7 +565,7 @@ Voulez-vous vraiment supprimer la commande\n\
 ;
 ;
 txtCommandsTitle
-COMMANDES RÉSIDENTES
+COMMANDES RESIDENTES
 ; RESIDENT COMMANDS
 ;
 ;
@@ -595,7 +595,7 @@ Taille
 ;
 ;
 txtCommandSystem
-SYSTÈME
+SYSTEME
 ; SYSTEM
 ;
 ;
@@ -605,7 +605,7 @@ INTERNE
 ;
 ;
 txtCommandDisabled
-DÉSACTIVÉ
+DESACTIVE
 ; DISABLED
 ;
 ;
@@ -662,12 +662,12 @@ Voulez-vous vraiment supprimer la commodité\n\
 ;
 ;
 txtCommoditiesTitle
-COMMODITÉS
+COMMODITES
 ; COMMODITIES
 ;
 ;
 txtCommoditiesDetailTitle
-COMMODITÉ
+COMMODITE
 ; COMMODITY
 ;
 ;
@@ -722,7 +722,7 @@ Type filtre
 ;
 ;
 txtCommodityTypeSend
-Envoyer
+Envoyeur
 ; Send
 ;
 ;
@@ -732,22 +732,21 @@ Signal
 ;
 ;
 txtCommodityTypeTranslate
-Traduire
+Traducteur
 ; Translate
 ;
 ;
 txtCommodityTypeBroker
-Échange
+Echangeur
 ; Broker
 ;
 ;
 txtCommodityTypeDebug
-Déboguer
-; Debug
+Debugueur
 ;
 ;
 txtCommodityTypeCustom
-Personalisé
+Personnel
 ; Custom
 ;
 ;
@@ -809,12 +808,12 @@ Commandes supportées:
 ;
 ;
 txtDevicesTitle
-PÉRIPHÉRIQUES
+PERIPHERIQUES
 ; DEVICES
 ;
 ;
 txtDevicesDetailTitle
-PÉRIPHÉRIQUE
+PERIPHERIQUE
 ; DEVICE
 ;
 ;
@@ -1430,12 +1429,12 @@ Voulez-vous vraiment supprimer le gestionnaire\n\
 ;
 ;
 txtInputHandlersTitle
-GESTIONNAIRES D'ENTRÉES
+GESTIONNAIRES D'ENTREES
 ; INPUTHANDLERS
 ;
 ;
 txtInputHandlersDetailTitle
-GESTIONNAIRE D'ENTRÉE
+GESTIONNAIRE D'ENTREE
 ; INPUTHANDLER
 ;
 ;
@@ -1621,12 +1620,12 @@ Désolé, le compte est déjà à zéro!
 ;
 ;
 txtLibrariesTitle
-BIBLIOTHÈQUES
+BIBLIOTHEQUES
 ; LIBRARIES
 ;
 ;
 txtLibrariesDetailTitle
-BIBLIOTHÈQUES
+BIBLIOTHEQUES
 ; LIBRARY
 ;
 ;
@@ -1757,17 +1756,17 @@ Accès
 ;
 ;
 txtLockOwn
-PROPRIÉTAIRE
+PROPRIETAIRE
 ; OWN
 ;
 ;
 txtLockShared
-PARTAGÉ
+PARTAGE
 ; SHARED
 ;
 ;
 txtLockSharedInvalid
-PARTAGÉ (%ld)
+PARTAGE (%ld)
 ; SHARED (%ld)
 ;
 ;
@@ -1811,7 +1810,7 @@ Voulez-vous vraiment supprimer la gestion de mémoire basse\n\
 ;
 ;
 txtLowMemoryTitle
-MÉMOIRE BASSE
+MEMOIRE BASSE
 ; LOWMEMORY
 ;
 ;
@@ -1831,12 +1830,12 @@ txtLowMemoryPrintLine
 ;
 ; strings in memory window
 txtMemoryTitle
-MÉMOIRE
+MEMOIRE
 ; MEMORY
 ;
 ;
 txtMemoryDetailTitle
-MÉMOIRE
+MEMOIRE
 ; MEMORY
 ;
 ;
@@ -1956,12 +1955,12 @@ illisible
 ;
 ;
 txtMountsTitle
-PÉRIPHÉRIQUES MONTÉS
+PERIPHERIQUES MONTES
 ; MOUNTED DEVICES
 ;
 ;
 txtMountsDetailTitle
-PÉRIPHÉRIQUE MONTÉ
+PERIPHERIQUE MONTE
 ; MOUNTED DEVICE
 ;
 ;
@@ -2061,7 +2060,7 @@ Périphérique:
 ;
 ;
 txtFSSMDiskState
-État:
+Etat:
 ; DiskState:
 ;
 ;
@@ -2216,7 +2215,7 @@ octets
 ;
 ;
 txtMountsPrintHeader
-\n  Adresse  Nom      Unité  Têtes    Cylindres     État      Sys. fic. gestion. ou périph.\n\n
+\n  Adresse  Nom      Unité  Têtes    Cylindres     Etat      Sys. fic. gestion. ou périph.\n\n
 ; \n  Address  Name     Unit   Heads    Cylinders     State     Filesys. Handler or Device\n\n
 ;
 ;
@@ -2355,12 +2354,12 @@ msgSelectNewPriority
 ;
 ; strings in residents window
 txtResidentsTitle
-RÉSIDENTS
+RESIDENTS
 ; RESIDENTS
 ;
 ;
 txtResidentsDetailTitle
-RÉSIDENT
+RESIDENT
 ; RESIDENT
 ;
 ;
@@ -2572,12 +2571,12 @@ MCOMPAT_NOBODY (seulement un viewport)
 ;
 ;
 txtScreenModesTitle
-MODES ÉCRAN
+MODES ECRAN
 ; SCREENMODES
 ;
 ;
 txtScreenModesDetailTitle
-MODE ÉCRAN
+MODE ECRAN
 ; SCREENMODE
 ;
 ;
@@ -2893,7 +2892,7 @@ Voulez-vous vraiment supprimer le sémaphore\n\
 ;
 ;
 txtSemaphoresTitle
-SÉMAPHORES
+SEMAPHORES
 ; SEMAPHORES
 ;
 ;
@@ -2945,7 +2944,7 @@ msgSelectNewSignal
 ;
 ; strings in system window
 txtSystemTitle
-SYSTÈME
+SYSTEME
 ; SYSTEM
 ;
 ;
@@ -3100,7 +3099,7 @@ VBlank:
 ;
 ;
 txtSystemPower
-Énergie:
+Energie:
 ; Power:
 ;
 ;
@@ -3751,12 +3750,12 @@ NUM
 ;
 ;
 txtTaskState
-État
+Etat
 ; tc_State
 ;
 ;
 txtTaskState2
-État:
+Etat:
 ; tc_State:
 ;
 ;
@@ -4121,7 +4120,7 @@ Taille
 ;
 ;
 txtTasksPrintHeader
-\n  Adresse  Type     Pri NUM État         SigWait  Pile disp. Nom\n\n
+\n  Adresse  Type     Pri NUM Etat         SigWait  Pile disp. Nom\n\n
 ; \n  Address  Type     Pri NUM State         SigWait  FreeStack Name\n\n
 ;
 ;
@@ -4424,7 +4423,7 @@ Voulez-vous vraiment fermer la fenêtre\n\
 ;
 ;
 txtWindowsTitle
-ÉCRAN & FENÊTRES
+ECRAN & FENÊTRES
 ; SCREENS & WINDOWS
 ;
 ;
@@ -4434,7 +4433,7 @@ FENÊTRE
 ;
 ;
 txtWindowsDetailTitleScreen
-ÉCRAN
+ECRAN
 ; SCREEN
 ;
 ;
@@ -4484,7 +4483,7 @@ Titre:
 ;
 ;
 txtWindowNextScreen
-Écran suivant:
+Ecran suivant:
 ; NextScreen:
 ;
 ;
@@ -4930,7 +4929,7 @@ Fonction
 ;
 ;
 txtState
-État
+Etat
 ; State
 ;
 ;
@@ -5030,7 +5029,7 @@ Fréquence de mixage:
 ;
 ;
 txtAudioModeMaxPlaySamples
-Échantillon max.:
+Echantillon max.:
 ; max. Play Samples:
 ;
 ;
@@ -5187,7 +5186,7 @@ HEXDUMP
 ;
 ;
 txtDisassemblyTitle
-DÉSASSEMBLEUR
+DESASSEMBLEUR
 ; DISASSEMBLY
 ;
 ; strings in flags window
@@ -5402,12 +5401,12 @@ Projet
 ;
 ;
 txtMenuAbout
-?\0À propos...
+?\0A propos...
 ; ?\0About...
 ;
 ;
 txtMenuAboutMUI
-À propos de MUI...
+A propos de MUI...
 ; About MUI...
 ;
 ;
