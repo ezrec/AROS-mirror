@@ -1,0 +1,48 @@
+# Copyright © 2004-2011, The AROS Development Team. All rights reserved.
+# $Id: mmakefile.src 42554 2011-11-20 20:51:20Z olivieradam $
+
+include $(TOP)/config/make.cfg
+
+ICONS := def_MUIbase
+
+#MM- iconset-Gorilla-icons-aros-extras-office-muibase-clean : iconset-Gorilla-icons-aros-extras-office-muibase-envarc-clean
+#MM- iconset-Gorilla-icons-aros-extras-office-muibase : iconset-Gorilla-icons-aros-extras-office-muibase-envarc
+
+BD_OBJS := $(addprefix  $(AROS_ENVARC)/SYS/, $(addsuffix .info,$(ICONS)))
+
+#MM
+iconset-Gorilla-icons-aros-extras-office-muibase-envarc : $(BD_OBJS)
+
+ifeq (,)
+
+$(AROS_ENVARC)/SYS/%.info : $(SRCDIR)/$(CURDIR)/%.info.src $(SRCDIR)/$(CURDIR)/%.png
+	@$(ECHO) "Creating   $(subst $(TARGETDIR)/,,$@)..."
+	@$(ILBMTOICON) $+ $@
+
+else
+
+$(AROS_ENVARC)/SYS/%.info : $(SRCDIR)/$(CURDIR)/.info.src $(SRCDIR)/$(CURDIR)/
+	@$(ECHO) "Creating   $(subst $(TARGETDIR)/,,$@)..."
+	@$(ILBMTOICON) $+ $@
+
+endif
+
+$(BD_OBJS) : | $(AROS_ENVARC)/SYS
+GLOB_MKDIRS += $(AROS_ENVARC)/SYS
+
+iconset-Gorilla-icons-aros-extras-office-muibase-envarc-clean : FILES := $(BD_OBJS)
+#MM
+iconset-Gorilla-icons-aros-extras-office-muibase-envarc-clean ::
+	@$(RM) $(FILES)
+
+.PHONY: iconset-Gorilla-icons-aros-extras-office-muibase-envarc iconset-Gorilla-icons-aros-extras-office-muibase-envarc-clean
+
+
+# Delete generated makefiles
+#MM
+clean ::
+	@$(RM) $(TOP)/$(CURDIR)/mmakefile $(TOP)/$(CURDIR)/mmakefile.bak
+
+include $(SRCDIR)/config/make.tail
+
+BDID := $(BDTARGETID)

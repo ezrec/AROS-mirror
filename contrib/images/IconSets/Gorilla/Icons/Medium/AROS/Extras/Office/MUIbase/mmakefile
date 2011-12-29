@@ -1,0 +1,49 @@
+# Copyright © 2004, The AROS Development Team. All rights reserved.
+# $Id: mmakefile.src 33489 2010-06-07 23:03:12Z mazze $
+
+include $(TOP)/config/make.cfg
+
+#MM- iconset-Gorilla-contrib-icons-extras-office : iconset-Gorilla-contrib-icons-extras-office-muibase
+
+ICONS := MUIbase
+
+#MM- iconset-Gorilla-contrib-icons-extras-office-clean : iconset-Gorilla-contrib-icons-extras-office-muibase-clean
+
+BD_OBJS := $(addprefix  $(CONTRIBDIR)/Office/MUIbase/, $(addsuffix .info,$(ICONS)))
+
+#MM
+iconset-Gorilla-contrib-icons-extras-office-muibase : $(BD_OBJS)
+
+ifeq (,)
+
+$(CONTRIBDIR)/Office/MUIbase/%.info : $(SRCDIR)/$(CURDIR)/%.info.src $(SRCDIR)/$(CURDIR)/%.png
+	@$(ECHO) "Creating   $(subst $(TARGETDIR)/,,$@)..."
+	@$(ILBMTOICON) $+ $@
+
+else
+
+$(CONTRIBDIR)/Office/MUIbase/%.info : $(SRCDIR)/$(CURDIR)/.info.src $(SRCDIR)/$(CURDIR)/
+	@$(ECHO) "Creating   $(subst $(TARGETDIR)/,,$@)..."
+	@$(ILBMTOICON) $+ $@
+
+endif
+
+$(BD_OBJS) : | $(CONTRIBDIR)/Office/MUIbase
+GLOB_MKDIRS += $(CONTRIBDIR)/Office/MUIbase
+
+iconset-Gorilla-contrib-icons-extras-office-muibase-clean : FILES := $(BD_OBJS)
+#MM
+iconset-Gorilla-contrib-icons-extras-office-muibase-clean ::
+	@$(RM) $(FILES)
+
+.PHONY: iconset-Gorilla-contrib-icons-extras-office-muibase iconset-Gorilla-contrib-icons-extras-office-muibase-clean
+
+
+# Delete generated makefiles
+#MM
+clean ::
+	@$(RM) $(TOP)/$(CURDIR)/mmakefile $(TOP)/$(CURDIR)/mmakefile.bak
+
+include $(SRCDIR)/config/make.tail
+
+BDID := $(BDTARGETID)

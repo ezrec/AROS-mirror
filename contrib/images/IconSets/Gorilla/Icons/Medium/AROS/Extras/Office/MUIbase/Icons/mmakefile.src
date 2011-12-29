@@ -1,0 +1,11 @@
+# Copyright © 2004-2011, The AROS Development Team. All rights reserved.
+# $Id: mmakefile.src 42554 2011-11-20 20:51:20Z olivieradam $
+
+include $(TOP)/config/make.cfg
+
+ICONS := def_MUIbase
+
+#MM- iconset-Gorilla-icons-aros-extras-office-muibase-clean : iconset-Gorilla-icons-aros-extras-office-muibase-envarc-clean
+#MM- iconset-Gorilla-icons-aros-extras-office-muibase : iconset-Gorilla-icons-aros-extras-office-muibase-envarc
+%build_icons mmake=iconset-Gorilla-icons-aros-extras-office-muibase-envarc icons=$(ICONS) \
+             dir=$(AROS_ENVARC)/SYS

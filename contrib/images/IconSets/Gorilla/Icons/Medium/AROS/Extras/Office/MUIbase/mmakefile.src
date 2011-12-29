@@ -1,0 +1,11 @@
+# Copyright © 2004, The AROS Development Team. All rights reserved.
+# $Id: mmakefile.src 33489 2010-06-07 23:03:12Z mazze $
+
+include $(TOP)/config/make.cfg
+
+#MM- iconset-Gorilla-contrib-icons-extras-office : iconset-Gorilla-contrib-icons-extras-office-muibase
+
+ICONS := MUIbase
+
+#MM- iconset-Gorilla-contrib-icons-extras-office-clean : iconset-Gorilla-contrib-icons-extras-office-muibase-clean
+%build_icons mmake=iconset-Gorilla-contrib-icons-extras-office-muibase icons=$(ICONS) dir=$(CONTRIBDIR)/Office/MUIbase
