@@ -71,7 +71,7 @@ static ULONG flags_to_ddflags(ULONG flags)
     {
     	ret = DDFLAGS_SHOWICONS;
     }
-    
+
     return ret;    
 }
 
@@ -267,7 +267,7 @@ BOOL ReadIconPNG(struct DiskObject **ret, BPTR file, struct IconBase *IconBase)
     	DeletePool(pool);
 	return FALSE;
     }
-    
+
     icon->pool = pool;
     
     icon->iconPNG.filebuffer = (UBYTE *)(icon + 1);
@@ -313,7 +313,7 @@ BOOL ReadIconPNG(struct DiskObject **ret, BPTR file, struct IconBase *IconBase)
 	DO(icon)->do_Gadget.Width   = width;
 	DO(icon)->do_Gadget.Height  = height;
 	DO(icon)->do_StackSize      = AROS_STACKSIZE;
-		
+
 	if (chunkpointer[0])
 	{
 	    UBYTE *chunkdata;
@@ -403,6 +403,7 @@ BOOL ReadIconPNG(struct DiskObject **ret, BPTR file, struct IconBase *IconBase)
 		    DO(icon)->do_DrawerData->dd_NewWindow.TopEdge  = 20;
 		    DO(icon)->do_DrawerData->dd_NewWindow.Width    = 300;
 		    DO(icon)->do_DrawerData->dd_NewWindow.Height   = 200;		    
+            DO(icon)->do_Gadget.UserData = (APTR)1; /* See DupDiskObject logic */
 		}
 		
 		switch(attr)
@@ -631,7 +632,7 @@ BOOL ReadIconPNG(struct DiskObject **ret, BPTR file, struct IconBase *IconBase)
 	    }
 	}
     }
-    
+
     /* Make fallback planar images */
     
     if (!MakePlanarImages(icon, IconBase))
