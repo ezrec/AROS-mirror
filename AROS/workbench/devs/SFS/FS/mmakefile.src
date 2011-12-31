@@ -31,7 +31,7 @@ USER_CFLAGS += $(PARANOIA_CFLAGS)
     progname=sfs.handler targetdir=$(AROS_DEVS) \
     files="$(FILES)" usestartup=no uselibs="arossupport rom m"
 
-USER_CFLAGS := -DAROS_KERNEL $(USER_CFLAGS)
+USER_CFLAGS := -DAROS_KERNEL $(USER_CFLAGS) -O0
 
 %build_module mmake=workbench-devs-sfs \
 	modname=sfs modtype=device modsuffix=handler \
