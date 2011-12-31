@@ -1,6 +1,6 @@
 /*
-Copyright  2002-2011, The AROS Development Team. All rights reserved.
-$Id$
+    Copyright © 2001-2011, The AROS Development Team. All rights reserved.
+    $Id$
 */
 
 #include "../portable_macros.h"
@@ -489,7 +489,7 @@ static void IconList_GetIconImageRectangle(Object *obj, struct IconList_DATA *da
 #endif
 
     /* Get basic width/height */    
-    GetIconRectangleA(NULL, entry->ie_DiskObj, NULL, rect, NULL);
+    GetIconRectangleA(NULL, entry->ie_DiskObj, NULL, rect, __iconList_DrawIconStateTags);
 #if defined(DEBUG_ILC_ICONPOSITIONING)
     D(bug("[IconList] %s: MinX %d, MinY %d      MaxX %d, MaxY %d\n", __PRETTY_FUNCTION__, rect->MinX, rect->MinY, rect->MaxX, rect->MaxY));
 #endif
@@ -697,7 +697,7 @@ static void RenderEntryField(Object *obj, struct IconList_DATA *data,
                                          struct IconEntry *entry, struct Rectangle *rect,
                              LONG index, BOOL firstvis, BOOL lastvis)
 {
-    STRPTR text, renderflag = "<UHOH>";
+    STRPTR text = NULL, renderflag = "<UHOH>";
     struct TextExtent te;
     ULONG fit;
 
@@ -847,7 +847,6 @@ IPTR IconList__MUIM_IconList_DrawEntry(struct IClass *CLASS, Object *obj, struct
 
     ULONG                       objX, objY, objW, objH;
     LONG                        iconX, iconY;
-    ULONG                       iconW, iconH;
 
     if (data->icld_BufferRastPort == data->icld_DisplayRastPort)
     {
@@ -1293,7 +1292,6 @@ IPTR IconList__MUIM_IconList_DrawEntryLabel(struct IClass *CLASS, Object *obj, s
 
     ULONG                       objX, objY, objW, objH;
     LONG                        labelX, labelY;
-    ULONG                       labelW, labelH;
 
     if ((data->icld_DisplayFlags & ICONLIST_DISP_MODELIST) == ICONLIST_DISP_MODELIST)
         return FALSE;
@@ -1329,9 +1327,6 @@ IPTR IconList__MUIM_IconList_DrawEntryLabel(struct IClass *CLASS, Object *obj, s
 
     /* Get the dimensions and affected area of message->entry's label */
     IconList_GetIconLabelRectangle(obj, data, message->entry, &iconlabelrect);
-    labelW = iconlabelrect.MaxX - iconlabelrect.MinX + 1;
-    labelH = iconlabelrect.MaxY - iconlabelrect.MinY + 1;
-    (void)labelW;(void)labelH;
 
     /* Add the relative position offset of the message->entry's label */
     offsetx = (objX - data->icld_ViewX) + message->entry->ie_IconX;
@@ -2179,7 +2174,7 @@ IPTR IconList__OM_SET(struct IClass *CLASS, Object *obj, struct opSet *message)
                         {
                             struct BitMap *bitmap_New = NULL;
                             ULONG tmp_RastDepth;
-                            struct Layer_Info *li;
+                            struct Layer_Info *li = NULL;
 
                             tmp_RastDepth = GetCyberMapAttr(data->icld_DisplayRastPort->BitMap, CYBRMATTR_DEPTH);
                             if ((bitmap_New = AllocBitMap(data->icld_ViewWidth,
@@ -2501,7 +2496,7 @@ IPTR IconList__OM_GET(struct IClass *CLASS, Object *obj, struct opGet *message)
         case MUIA_Virtgroup_Top:                        STORE = (IPTR)data->icld_ViewY; return 1;
         case MUIA_Family_List:                          STORE = (IPTR)&(data->icld_IconList); return 1; /* Get our list object */
 
-        /* warning TODO: Get the version/revision from our config.. */
+        /* TODO: Get the version/revision from our config.. */
         case MUIA_Version:                              STORE = (IPTR)1; return 1;
         case MUIA_Revision:                             STORE = (IPTR)7; return 1;
     }
@@ -2763,7 +2758,7 @@ D(bug("[IconList]: %s()\n", __PRETTY_FUNCTION__));
         if (data->icld_DisplayFlags & ICONLIST_DISP_BUFFERED)
         {
             struct BitMap *bitmap_New = NULL;
-            struct Layer_Info *li;
+            struct Layer_Info *li = NULL;
 
             ULONG tmp_RastDepth = GetCyberMapAttr(data->icld_DisplayRastPort->BitMap, CYBRMATTR_DEPTH);
             if ((bitmap_New = AllocBitMap(data->icld_ViewWidth,
@@ -3209,7 +3204,7 @@ IPTR IconList__MUIM_Draw(struct IClass *CLASS, Object *obj, struct MUIP_Draw *me
             }
         )
 #endif
-        if ((data->icld_UpdateMode == UPDATE_HEADERENTRY) && (data->update_entry < NUM_COLUMNS)) /* draw the header entry */
+        if ((data->icld_UpdateMode == UPDATE_HEADERENTRY) && ((IPTR)data->update_entry < NUM_COLUMNS)) /* draw the header entry */
         {
             struct Rectangle         field_rect;
             LONG                 index, i, firstvis, lastvis;
@@ -3231,7 +3226,7 @@ IPTR IconList__MUIM_Draw(struct IClass *CLASS, Object *obj, struct MUIP_Draw *me
                 if (index == lastvis)
                     field_rect.MaxX += HEADERLINE_SPACING_RIGHT;
 
-                if (data->update_entry != index)
+                if ((IPTR)data->update_entry != index)
                 {                
                     field_rect.MinX += data->icld_LVMAttribs->lmva_ColumnWidth[index];
                     if (index == firstvis)
@@ -3243,10 +3238,10 @@ IPTR IconList__MUIM_Draw(struct IClass *CLASS, Object *obj, struct MUIP_Draw *me
 
             clip = MUI_AddClipping(muiRenderInfo(obj), _mleft(obj), _mtop(obj), _mright(obj) - _mleft(obj) + 1, data->icld_LVMAttribs->lmva_HeaderHeight);
 
-            if (data->icld_LVMAttribs->lmva_LastSelectedColumn == data->update_entry)
-                RenderListViewModeHeaderField(obj, data, &field_rect, data->update_entry, TRUE);
+            if (data->icld_LVMAttribs->lmva_LastSelectedColumn == (IPTR)data->update_entry)
+                RenderListViewModeHeaderField(obj, data, &field_rect, (IPTR)data->update_entry, TRUE);
             else
-                RenderListViewModeHeaderField(obj, data, &field_rect, data->update_entry, FALSE);
+                RenderListViewModeHeaderField(obj, data, &field_rect, (IPTR)data->update_entry, FALSE);
 
             data->icld_UpdateMode = 0;
             data->update_entry = NULL;
@@ -3437,7 +3432,7 @@ IPTR IconList__MUIM_Draw(struct IClass *CLASS, Object *obj, struct MUIP_Draw *me
             struct Region       *region = NULL;
             struct Rectangle    xrect,
                                 yrect;
-            BOOL                scroll_caused_damage;
+            BOOL                scroll_caused_damage = FALSE;
 
 #if defined(DEBUG_ILC_ICONRENDERING)
             D(bug("[IconList] %s#%d: UPDATE_SCROLL.\n", __PRETTY_FUNCTION__, draw_id));
@@ -3627,7 +3622,7 @@ IPTR IconList__MUIM_Draw(struct IClass *CLASS, Object *obj, struct MUIP_Draw *me
                 {
                     struct BitMap *bitmap_New;
                     ULONG tmp_RastDepth;
-                    struct Layer_Info *li;
+                    struct Layer_Info *li = NULL;
 
                     tmp_RastDepth = GetCyberMapAttr(data->icld_DisplayRastPort->BitMap, CYBRMATTR_DEPTH);
                     if ((bitmap_New = AllocBitMap(data->icld_ViewWidth,
@@ -5676,7 +5671,7 @@ IPTR IconList__MUIM_HandleEvent(struct IClass *CLASS, Object *obj, struct MUIP_H
                                 data->icld_LVMAttribs->lmva_LastSelectedColumn = clickColumn;
 
                                 data->icld_UpdateMode = UPDATE_HEADERENTRY;
-                                data->update_entry = clickColumn;
+                                data->update_entry = (APTR)(IPTR)clickColumn;
 
                                 MUI_Redraw(obj, MADF_DRAWUPDATE);
 
@@ -6818,7 +6813,7 @@ IPTR IconList__MUIM_DragDrop(struct IClass *CLASS, Object *obj, struct MUIP_Drag
     else
     {
 #if defined(DEBUG_ILC_ICONDRAGDROP)
-        D(bug("[IconList] %s: BUG - DragDrop recieved with no source icons!\n", __PRETTY_FUNCTION__));
+        D(bug("[IconList] %s: BUG - DragDrop received with no source icons!\n", __PRETTY_FUNCTION__));
 #endif
         NNSET(obj, MUIA_IconList_IconsDropped, (IPTR)NULL);
     }
