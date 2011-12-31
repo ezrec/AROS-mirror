@@ -473,9 +473,9 @@ D(bug("[IconVolumeList]: %s()\n", __PRETTY_FUNCTION__));
                     TAG_MORE, (IPTR) message->ops_AttrList);
 
     if (!obj)
-    return FALSE;
+        return FALSE;
 
-    SET(obj, MUIA_IconList_DisplayFlags, ICONLIST_DISP_VERTICAL);
+    SET(obj, MUIA_IconList_DisplayFlags, (ICONLIST_DISP_VERTICAL | ICONLIST_DISP_MODEDEFAULT));
     SET(obj, MUIA_IconList_SortFlags, MUIV_IconList_Sort_ByName);
 
 D(bug("[IconVolumeList] obj @ %p\n", obj));
