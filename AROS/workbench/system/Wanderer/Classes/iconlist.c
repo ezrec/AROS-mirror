@@ -113,9 +113,9 @@ static struct Hook      __iconlist_UpdateLabels_hook;
 
 // N.B: We Handle frame/background rendering so make sure icon.library doesnt do it ..
 static struct TagItem          __iconList_DrawIconStateTags[] = {
-    { ICONDRAWA_Frameless, TRUE                },
+    { ICONDRAWA_Frameless, TRUE         },
     { ICONDRAWA_Borderless, TRUE        },
-    { ICONDRAWA_EraseBackground, FALSE        },
+    { ICONDRAWA_EraseBackground, FALSE  },
     { TAG_DONE,                         }
 };
 
@@ -128,31 +128,31 @@ static struct TagItem                __iconList_BackBuffLayerTags[] =
 #endif
 
 #ifndef NO_ICON_POSITION
-#define NO_ICON_POSITION                               (0x8000000) /* belongs to workbench/workbench.h */
+#define NO_ICON_POSITION                        (0x8000000) /* belongs to workbench/workbench.h */
 #endif
 
-#define UPDATE_HEADERENTRY                                1
-#define UPDATE_SINGLEENTRY                                     2
-#define UPDATE_SCROLL                                          3
-#define UPDATE_RESIZE                                          4
+#define UPDATE_HEADERENTRY                      1
+#define UPDATE_SINGLEENTRY                      2
+#define UPDATE_SCROLL                           3
+#define UPDATE_RESIZE                           4
 
-#define LEFT_BUTTON                                    1
-#define RIGHT_BUTTON                                   2
-#define MIDDLE_BUTTON                                  4
+#define LEFT_BUTTON                             1
+#define RIGHT_BUTTON                            2
+#define MIDDLE_BUTTON                           4
 
-#define ICONLIST_DRAWMODE_NORMAL                       1
-#define ICONLIST_DRAWMODE_FAST                         2
+#define ICONLIST_DRAWMODE_NORMAL                1
+#define ICONLIST_DRAWMODE_FAST                  2
 
 /* Values used for List View-Mode */
-#define COLOR_COLUMN_BACKGROUND                         0
-#define COLOR_COLUMN_BACKGROUND_SORTED                    1
-#define COLOR_COLUMN_BACKGROUND_LASSO                    2
-#define COLOR_COLUMN_BACKGROUND_LASSO_SORTED        3
+#define COLOR_COLUMN_BACKGROUND                 0
+#define COLOR_COLUMN_BACKGROUND_SORTED          1
+#define COLOR_COLUMN_BACKGROUND_LASSO           2
+#define COLOR_COLUMN_BACKGROUND_LASSO_SORTED    3
 
-#define COLOR_SELECTED_BACKGROUND                       4
-#define COLOR_SELECTED_BACKGROUND_SORTED            5
+#define COLOR_SELECTED_BACKGROUND               4
+#define COLOR_SELECTED_BACKGROUND_SORTED        5
 
-#define MIN_COLUMN_WIDTH 10
+#define MIN_COLUMN_WIDTH    10
 
 #define COLUMN_ALIGN_LEFT   0
 #define COLUMN_ALIGN_CENTER 1
@@ -170,17 +170,17 @@ static struct TagItem                __iconList_BackBuffLayerTags[] =
 #define ENTRY_SPACING_RIGHT 1
 #define ENTRY_EXTRAWIDTH    (ENTRY_SPACING_LEFT + ENTRY_SPACING_RIGHT)
 
-#define HEADERLINE_SPACING_TOP                    3
-#define HEADERLINE_SPACING_BOTTOM           3
-#define HEADERLINE_EXTRAHEIGHT                    (HEADERLINE_SPACING_TOP + HEADERLINE_SPACING_BOTTOM)
+#define HEADERLINE_SPACING_TOP          3
+#define HEADERLINE_SPACING_BOTTOM       3
+#define HEADERLINE_EXTRAHEIGHT          (HEADERLINE_SPACING_TOP + HEADERLINE_SPACING_BOTTOM)
 
 #define HEADERLINE_SPACING_LEFT         1
 #define HEADERLINE_SPACING_RIGHT        1
-#define HEADERLINE_EXTRAWIDTH                     (HEADERLINE_SPACING_LEFT + HEADERLINE_SPACING_RIGHT)
+#define HEADERLINE_EXTRAWIDTH           (HEADERLINE_SPACING_LEFT + HEADERLINE_SPACING_RIGHT)
 
 #define HEADERENTRY_SPACING_LEFT        4
-#define HEADERENTRY_SPACING_RIGHT           4
-#define HEADERENTRY_EXTRAWIDTH                    (HEADERENTRY_SPACING_LEFT + HEADERENTRY_SPACING_RIGHT)
+#define HEADERENTRY_SPACING_RIGHT       4
+#define HEADERENTRY_EXTRAWIDTH          (HEADERENTRY_SPACING_LEFT + HEADERENTRY_SPACING_RIGHT)
 
 enum
 {
@@ -196,7 +196,7 @@ enum
                          Support Functions
 **************************************************************************/
 
-#define ForeachPrevNode(list, node)                    \
+#define ForeachPrevNode(list, node)                        \
 for                                                        \
 (                                                          \
     node = (void *)(((struct List *)(list))->lh_TailPred); \
