@@ -898,7 +898,7 @@ exchild(struct op *t, int flags,
 
                 if(flags & XPIPEI)
                 {
-                      __get_default_file(i,&f);
+                      __get_default_file(i,(long *)&f);
                       NameFromFH(f,pname,sizeof(pname)-1);
                 }
 

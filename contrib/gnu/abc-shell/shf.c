@@ -224,7 +224,7 @@ shf_close(struct shf *shf)
 		UBYTE pname[256];
 
 
-		 __get_default_file(shf->fd,&f);
+		 __get_default_file(shf->fd,(long *)&f);
 		NameFromFH(f,pname,255);
 
 		if(close(shf->fd) < 0) ret = EOF;
@@ -271,7 +271,7 @@ shf_fdclose(struct shf *shf)
 		    UBYTE pname[256];
 
 
-		     __get_default_file(shf->fd,&f);
+		     __get_default_file(shf->fd,(long *)&f);
 		     NameFromFH(f,pname,255);
 
 		    if(close(shf->fd) < 0) ret = EOF;

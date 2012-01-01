@@ -183,7 +183,7 @@ execute(struct op * volatile t,
                             BPTR f = 0;
                             if(chain)
                             {
-                                __get_default_file(0,&f);
+                                __get_default_file(0,(long *)&f);
                                 NameFromFH(f,pname,sizeof(pname)-1);
 
                             }
