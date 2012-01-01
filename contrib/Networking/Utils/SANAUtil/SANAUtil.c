@@ -1018,9 +1018,9 @@ static int stch_i(const char *str, int *result)
  * Main program
  *
  */
-void main()
+int main(int argc, char **argv)
 {
-  static ULONG ArgArray[NUM_ARGS];
+  static IPTR ArgArray[NUM_ARGS];
   static char dev_name_string[256];
   static char buff[256];
   static LONG dev_unit_num;
@@ -1157,5 +1157,7 @@ void main()
     OffLine();
 
   CleanExit(NULL, 0);
+
+  return 0;
 }
 
