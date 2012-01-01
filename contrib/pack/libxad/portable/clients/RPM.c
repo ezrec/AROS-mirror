@@ -88,8 +88,8 @@ XADGETINFO(RPM) {
     { TAG_DONE, 0 }
   };
 
-  tags[0].ti_Data = (xadUINT32) &tags[2];
-  tags[2].ti_Data = (xadUINT32) ai;
+  tags[0].ti_Data = (xadIPTR) &tags[2];
+  tags[2].ti_Data = (xadIPTR) ai;
 
   RPMALLOC(xadUINT8 *, buffer, 96+80); /* buffer = 96 bytes buffer for reading */
   fname = (xadSTRPTR) buffer + 96; /* fname = 80 bytes for final archive filename */
@@ -159,7 +159,7 @@ XADGETINFO(RPM) {
   xadCopyMem(XADM fname, fi->xfi_FileName, (xadUINT32)namelen);
 
   /* fill in today's date */
-  datetags[1].ti_Data = (xadUINT32) &fi->xfi_Date;
+  datetags[1].ti_Data = (xadIPTR) &fi->xfi_Date;
   xadConvertDatesA(XADM datetags);
 
   /* call 'get info' on embedded archive for accurate filesizes */
@@ -189,9 +189,9 @@ XADUNARCHIVE(RPM) {
   xadINT32 err, recog = 0;
 
   tags[0].ti_Tag  = XAD_ARCHIVEINFO;
-  tags[0].ti_Data = (xadUINT32) ai;
+  tags[0].ti_Data = (xadIPTR) ai;
   tags[2].ti_Tag  = XAD_INXADSTREAM;
-  tags[2].ti_Data = (xadUINT32) tags;
+  tags[2].ti_Data = (xadIPTR) tags;
   tags[1].ti_Tag  = tags[3].ti_Tag = TAG_DONE;
 
   RPMALLOCOBJ(struct xadArchiveInfo *, ai2, XADOBJ_ARCHIVEINFO, NULL);

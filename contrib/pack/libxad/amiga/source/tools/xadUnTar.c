@@ -32,6 +32,7 @@
 #include <utility/hooks.h>
 #include "SDI_version.h"
 #include "SDI_compiler.h"
+#include "SDI_hook.h"
 #define SDI_TO_ANSI
 #include "SDI_ASM_STD_protos.h"
 
@@ -88,25 +89,25 @@ struct Args {
   STRPTR   password;
   STRPTR * file;
   LONG *   namesize;
-  ULONG    ffs;
-  ULONG    sfs;
-  ULONG    info;
-  ULONG    quiet;
-  ULONG    askmakedir;
-  ULONG    overwrite;
-  ULONG    noabs;
-  ULONG    nodate;
-  ULONG    noextern;
-  ULONG    nokillpart;
-  ULONG    noprot;
-  ULONG    notree;
-  ULONG    shortname;
-  ULONG    nopaxheader;
+  IPTR     ffs;
+  IPTR     sfs;
+  IPTR     info;
+  IPTR     quiet;
+  IPTR     askmakedir;
+  IPTR     overwrite;
+  IPTR     noabs;
+  IPTR     nodate;
+  IPTR     noextern;
+  IPTR     nokillpart;
+  IPTR     noprot;
+  IPTR     notree;
+  IPTR     shortname;
+  IPTR     nopaxheader;
 
   /* parameter, no ReadArgs part */
-  ULONG    directrun;
-  ULONG    printerr;
-  ULONG    numextract;
+  IPTR     directrun;
+  IPTR     printerr;
+  IPTR     numextract;
 };
 
 struct TarHeader {              /* byte offset */
@@ -164,21 +165,8 @@ struct TarBlockInfo {
 #define TF_LONGLINK     'K'  /* longlink block, preceedes the full block */
 #define TF_EXTENSION    'x'  /* XXX */
 
-#if !defined(__AROS__)
-ASM(ULONG) SAVEDS progrhook(REG(a0, struct Hook *),
-  REG(a1, struct xadProgressInfo *));
-ASM(ULONG SAVEDS) workhook(REG(a0, struct Hook *), REG(a1, struct xadHookParam *));
-#else
-  AROS_UFP3(ULONG, progrhook,
-  AROS_UFPA(struct Hook *, hook, A0),
-  AROS_UFPA(void *, ai, A2),
-  AROS_UFPA(struct xadProgressInfo *, pi,  A1));
-  
-  AROS_UFP3(ULONG, workhook,
-  AROS_UFPA(struct Hook *, hook, A0),
-  AROS_UFPA(void *, ai, A2),
-  AROS_UFPA(struct xadHookParam *, hp,  A1));
-#endif
+HOOKPROTONO(progrhook, ULONG, struct xadProgressInfo *pi);
+HOOKPROTONO(workhook, ULONG, struct xadHookParam *pi);
 
 static ULONG octtonum(STRPTR oct, LONG width, LONG *ok);
 static BOOL checktarsum(struct TarHeader *th);
@@ -229,7 +217,7 @@ int main(void)
       {
         rda->RDA_ExtHelp = OPTIONS;
 
-        if(ReadArgs(PARAM, (LONG *) &args, rda))
+        if(ReadArgs(PARAM, (IPTR *) &args, rda))
         {
           LONG namesize = 0;
 
@@ -247,12 +235,8 @@ int main(void)
 
             if((ai = (struct xadArchiveInfo *) xadAllocObjectA(XADOBJ_ARCHIVEINFO, 0)))
             {
-              struct Hook outhook;
               struct xadFileInfo *fi;
-
-              memset(&outhook, 0, sizeof(struct Hook));
-              outhook.h_Entry = (ULONG (*)()) workhook;
-              outhook.h_Data = &args;
+              MakeHookWithData(outhook, workhook, &args);
 
               args.directrun = 1;
               /* Try as normal archive (plain tar). */
@@ -744,18 +728,8 @@ static LONG handleblock(struct TarBlockInfo *t)
 }
 
 /* Because of SAS-err, this cannot be SAVEDS */
-#if !defined(__AROS__)
-ASM(ULONG SAVEDS) workhook(REG(a0, struct Hook *hook),
-REG(a1, struct xadHookParam *hp))
+HOOKPROTONO(workhook, ULONG, struct xadHookParam *hp)
 {
-#else
-  AROS_UFH3(ULONG, workhook,
-  AROS_UFHA(struct Hook *, hook, A0),
-  AROS_UFHA(void *, ai, A2),
-  AROS_UFHA(struct xadHookParam *, hp,  A1))
-{
-    AROS_USERFUNC_INIT
-#endif
   ULONG err = 0;
   /* This hook gets the data and instead of saving, it calls the handleblock()
   function with 512 byte blocks (tar block size). It is an XAD output hook and
@@ -790,11 +764,10 @@ REG(a1, struct xadHookParam *hp))
     else
     {
       struct TarBlockInfo *t = (struct TarBlockInfo *) hp->xhp_PrivatePtr;
+      MakeHookWithData(hook_tmpl, progrhook, &t->HookArgs);
 
       t->Args = (struct Args *) hook->h_Data;
-      t->Hook.h_Entry = (ULONG (*)()) progrhook;
-      t->Hook.h_Data = &t->HookArgs;
-      t->HookArgs.name = t->Filename;
+      t->Hook = hook_tmpl;
     }
     break;
   case XADHC_FREE:
@@ -814,23 +787,10 @@ REG(a1, struct xadHookParam *hp))
     err = XADERR_BREAK;
 
   return err;
-#if defined(__AROS__)
-  AROS_USERFUNC_EXIT
-#endif
 }
 
-#if !defined(__AROS__)
-ASM(ULONG) SAVEDS progrhook(REG(a0, struct Hook *hook),
-REG(a1, struct xadProgressInfo *pi))
+HOOKPROTONO(progrhook, ULONG, struct xadProgressInfo *pi)
 {
-#else
-  AROS_UFH3(ULONG, progrhook,
-  AROS_UFHA(struct Hook *, hook, A0),
-  AROS_UFHA(void *, ai, A2),
-  AROS_UFHA(struct xadProgressInfo *, pi,  A1))
-{
-    AROS_USERFUNC_INIT
-#endif
   ULONG ret = 0;
   struct xHookArgs *h;
   STRPTR name;
@@ -950,9 +910,6 @@ REG(a1, struct xadProgressInfo *pi))
     ret |= XADPIF_OK;
 
   return ret;
-#if defined(__AROS__)
-  AROS_USERFUNC_EXIT
-#endif
 }
 
 static void ShowProt(ULONG i)

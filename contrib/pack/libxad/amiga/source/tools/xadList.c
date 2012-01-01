@@ -34,9 +34,9 @@ SDI_GLOBALLIBBASE(struct ExecBase, SysBase, ExecIFace, IExec)
 
 struct Args {
   STRPTR *file;
-  ULONG   all;
-  ULONG   noextern;
-  ULONG	  onlyknown;
+  IPTR    all;
+  IPTR    noextern;
+  IPTR 	  onlyknown;
 };
 
 #if !defined(__AROS__)
@@ -77,7 +77,7 @@ int main(void)
       args.file = a;
       args.all = args.noextern = args.onlyknown = 0;
       
-      if((rda = ReadArgs(PARAM, (LONG *) &args, 0)))
+      if((rda = ReadArgs(PARAM, (IPTR *) &args, 0)))
       {
         struct AnchorPath *ap;
 

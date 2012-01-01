@@ -36,6 +36,7 @@
 #include <utility/hooks.h>
 #include "SDI_version.h"
 #include "SDI_compiler.h"
+#include "SDI_hook.h"
 #define SDI_TO_ANSI
 #include "SDI_ASM_STD_protos.h"
 
@@ -125,35 +126,27 @@ struct Args {
   STRPTR * file;
 #endif
   LONG *   namesize;
-  ULONG    ffs;
-  ULONG	   sfs;
-  ULONG    info;
-  ULONG    quiet;
-  ULONG    askmakedir;
-  ULONG    overwrite;
-  ULONG	   showprot;
-  ULONG    verbose;
-  ULONG    diskarchive;
+  IPTR     ffs;
+  IPTR 	   sfs;
+  IPTR     info;
+  IPTR     quiet;
+  IPTR     askmakedir;
+  IPTR     overwrite;
+  IPTR 	   showprot;
+  IPTR     verbose;
+  IPTR     diskarchive;
   LONG *   entry;
-  ULONG    diskimage;
-  ULONG    noabs;
-  ULONG    nocomment;
-  ULONG    nodate;
-  ULONG    noextern;
-  ULONG	   nokillpart;
-  ULONG    noprot;
-  ULONG    notree;
+  IPTR     diskimage;
+  IPTR     noabs;
+  IPTR     nocomment;
+  IPTR     nodate;
+  IPTR     noextern;
+  IPTR 	   nokillpart;
+  IPTR     noprot;
+  IPTR     notree;
 };
 
-#if !defined(__AROS__)
-ASM(ULONG) SAVEDS progrhook(REG(a0, struct Hook *),
-  REG(a1, struct xadProgressInfo *));
-#else
-  AROS_UFP3(ULONG, progrhook,
-  AROS_UFPA(struct Hook *, hook, A0),
-  AROS_UFPA(void *, ai, A2),
-  AROS_UFPA(struct xadProgressInfo *, pi,  A1));
-#endif
+HOOKPROTO(progrhook, ULONG, void *ai, struct xadProgressInfo *pi);
 void ShowProt(ULONG i);
 LONG CheckNameSize(STRPTR name, ULONG size);
 void CalcPercent(ULONG cr, ULONG ucr, ULONG *p1, ULONG *p2);
@@ -206,12 +199,12 @@ int main(void)
       {
         rda->RDA_ExtHelp = OPTIONS1 OPTIONS2;
 
-        if(ReadArgs(PARAM, (LONG *) &args, rda))
+        if(ReadArgs(PARAM, (IPTR *) &args, rda))
         {
           LONG namesize = 0;
-	  struct Hook prhook;
 	  UBYTE filename[NAMEBUFSIZE];
 	  struct xHookArgs xh;
+	  MakeHook(prhook, progrhook);
 
 #ifdef MULTIFILE
 	  STRPTR *argstring;
@@ -221,8 +214,6 @@ int main(void)
 	  xh.flags = xh.finish = xh.lastprint = xh.extractmode = 0;
 
 	  /* Note! The hook may change the filename!!! */
-          memset(&prhook, 0, sizeof(struct Hook));
-          prhook.h_Entry = (ULONG (*)()) progrhook;
           prhook.h_Data = &xh;
           
           if(args.namesize && *args.namesize > 0)
@@ -251,7 +242,7 @@ int main(void)
             ti[1].ti_Tag = XAD_NOEXTERN;
 	    ti[1].ti_Data = args.noextern;
 	    ti[2].ti_Tag = args.password ? XAD_PASSWORD : TAG_IGNORE;
-	    ti[2].ti_Data = (ULONG) args.password;
+	    ti[2].ti_Data = (IPTR) args.password;
 	    ti[3].ti_Tag = args.entry ? XAD_ENTRYNUMBER : TAG_IGNORE;
 	    ti[3].ti_Data = args.entry ? *args.entry : 1;
 	    ti[4].ti_Tag = TAG_DONE;
@@ -259,7 +250,7 @@ int main(void)
 	    ti2[1].ti_Tag = XAD_NOEMPTYERROR;
 	    ti2[1].ti_Data = TRUE;
 	    ti2[2].ti_Tag = args.quiet ? TAG_IGNORE : XAD_PROGRESSHOOK;
-	    ti2[2].ti_Data = (ULONG) &prhook;
+	    ti2[2].ti_Data = (IPTR) &prhook;
 	    ti2[3].ti_Tag = TAG_DONE;
 	    ti2[4].ti_Tag = TAG_DONE; /* needed later for loop */
 
@@ -281,7 +272,7 @@ int main(void)
 		    else
 		      sf0 = sf = sf2;
 		    sf->xsf_Type = XAD_INFILENAME;
-		    sf->xsf_Data = (ULONG) *(args.from++);
+		    sf->xsf_Data = (IPTR) *(args.from++);
 		  }
 		  else
 		    err = XADERR_NOMEMORY;
@@ -291,14 +282,14 @@ int main(void)
 	          if(args.diskarchive)
 	          {
 	            ti[0].ti_Tag = XAD_INSPLITTED;
-	            ti[0].ti_Data = (ULONG) sf0;
+	            ti[0].ti_Data = (IPTR) sf0;
 
 		    ti2[0].ti_Tag = XAD_INDISKARCHIVE;
-		    ti2[0].ti_Data = (ULONG) ti;
+		    ti2[0].ti_Data = (IPTR) ti;
 	            if((err = xadGetDiskInfoA(ai, ti2)))
 	            {
 	              ti2[0].ti_Tag = XAD_INSPLITTED;
-	              ti2[0].ti_Data = (ULONG) sf0;
+	              ti2[0].ti_Data = (IPTR) sf0;
 	              if(!xadGetDiskInfoA(ai, ti2))
 	                err = 0;
 	            }
@@ -306,7 +297,7 @@ int main(void)
 	          else if(args.diskimage)
 	          {
 	            ti2[0].ti_Tag = XAD_INSPLITTED;
-	            ti2[0].ti_Data = (ULONG) sf0;
+	            ti2[0].ti_Data = (IPTR) sf0;
 	            err = xadGetDiskInfoA(ai, ti2);
 	          }
 	          else
@@ -327,14 +318,14 @@ int main(void)
 	      else if(args.diskarchive)
 	      {
 	        ti[0].ti_Tag = XAD_INFILENAME;
-	        ti[0].ti_Data = (ULONG) *args.from;
+	        ti[0].ti_Data = (IPTR) *args.from;
 
 		ti2[0].ti_Tag = XAD_INDISKARCHIVE;
-		ti2[0].ti_Data = (ULONG) ti;
+		ti2[0].ti_Data = (IPTR) ti;
 	        if((err = xadGetDiskInfoA(ai, ti2)))
 	        {
 	          ti2[0].ti_Tag = XAD_INFILENAME;
-	          ti2[0].ti_Data = (ULONG) *args.from;
+	          ti2[0].ti_Data = (IPTR) *args.from;
 	          if(!xadGetDiskInfoA(ai, ti2))
 	            err = 0;
 	        }
@@ -348,7 +339,7 @@ int main(void)
 	            *args.from[strlen(*args.from)-1] = 0; /* strip ':' */
 	            dvi->xdi_DOSName = *args.from;
 	            ti2[0].ti_Tag = XAD_INDEVICE;
-	            ti2[0].ti_Data = (ULONG) dvi;
+	            ti2[0].ti_Data = (IPTR) dvi;
 	            err = xadGetDiskInfoA(ai, ti2);
 /*	            *args.from[strlen(*args.from)] = ':'; */
 	          }
@@ -358,7 +349,7 @@ int main(void)
 	        else
 	        {
 	          ti2[0].ti_Tag = XAD_INFILENAME;
-	          ti2[0].ti_Data = (ULONG) *args.from;
+	          ti2[0].ti_Data = (IPTR) *args.from;
 	          err = xadGetDiskInfoA(ai, ti2);
 	        }
 	      }
@@ -374,14 +365,14 @@ int main(void)
 	      if(args.diskarchive)
 	      { 
 	        ti[0].ti_Tag = XAD_INFILENAME;
-	        ti[0].ti_Data = (ULONG) args.from;
+	        ti[0].ti_Data = (IPTR) args.from;
 
 		ti2[0].ti_Tag = XAD_INDISKARCHIVE;
-		ti2[0].ti_Data = (ULONG) ti;
+		ti2[0].ti_Data = (IPTR) ti;
 	        if((err = xadGetDiskInfoA(ai, ti2)))
 	        {
 	          ti2[0].ti_Tag = XAD_INFILENAME;
-	          ti2[0].ti_Data = (ULONG) args.from;
+	          ti2[0].ti_Data = (IPTR) args.from;
 	          if(!xadGetDiskInfoA(ai, ti2))
 	            err = 0;
 	        }
@@ -395,7 +386,7 @@ int main(void)
 	            args.from[strlen(args.from)-1] = 0; /* strip ':' */
 	            dvi->xdi_DOSName = args.from;
 	            ti2[0].ti_Tag = XAD_INDEVICE;
-	            ti2[0].ti_Data = (ULONG) dvi;
+	            ti2[0].ti_Data = (IPTR) dvi;
 	            err = xadGetDiskInfoA(ai, ti2);
 /*	            args.from[strlen(args.from)] = ':'; */
 	          }
@@ -405,7 +396,7 @@ int main(void)
 	        else
 	        {
 	          ti2[0].ti_Tag = XAD_INFILENAME;
-	          ti2[0].ti_Data = (ULONG) args.from;
+	          ti2[0].ti_Data = (IPTR) args.from;
 	          err = xadGetDiskInfoA(ai, ti2);
 	        }
 	      }
@@ -447,7 +438,7 @@ int main(void)
 		        Printf("%-15s", xfi->xfi_EntryInfo);
 	              if(args.showprot)
 	                ShowProt(xfi->xfi_Protection);
-	              Printf("%s\n", args.notree ? FilePart(xfi->xfi_FileName) :
+	              Printf("%s\n", args.notree ? (xadSTRPTR)FilePart(xfi->xfi_FileName) :
 	              xfi->xfi_FileName);
 	            }
 		    else if(xfi->xfi_Flags & XADFIF_GROUPED)
@@ -460,7 +451,7 @@ int main(void)
 		        Printf("%-15s", xfi->xfi_EntryInfo);
 	              if(args.showprot)
 	                ShowProt(xfi->xfi_Protection);
-	              Printf("%s\n", args.notree ? FilePart(xfi->xfi_FileName) :
+	              Printf("%s\n", args.notree ? (xadSTRPTR)FilePart(xfi->xfi_FileName) :
 	              xfi->xfi_FileName);
 	              grsize += xfi->xfi_Size;
 	              if(xfi->xfi_Flags & XADFIF_ENDOFGROUP)
@@ -482,7 +473,7 @@ int main(void)
 		        Printf("%-15s", xfi->xfi_EntryInfo);
 	              if(args.showprot)
 	                ShowProt(xfi->xfi_Protection);
-	              Printf("%s\n", args.notree ? FilePart(xfi->xfi_FileName) :
+	              Printf("%s\n", args.notree ? (xadSTRPTR)FilePart(xfi->xfi_FileName) :
 	              xfi->xfi_FileName);
 	            }
 		    else
@@ -499,7 +490,7 @@ int main(void)
 		        Printf("%-15s", xfi->xfi_EntryInfo);
 	              if(args.showprot)
 	                ShowProt(xfi->xfi_Protection);
-	              Printf("%s\n", args.notree ? FilePart(xfi->xfi_FileName) :
+	              Printf("%s\n", args.notree ? (xadSTRPTR)FilePart(xfi->xfi_FileName) :
 	              xfi->xfi_FileName);
 	            }
 	            if(xfi->xfi_Flags & XADFIF_LINK)
@@ -563,10 +554,10 @@ int main(void)
 		    {
 #ifdef MULTIFILE
 		      if(!args.file || MatchPatternNoCase(parsebuf, args.notree ?
-		      FilePart(fi->xfi_FileName) : fi->xfi_FileName))
+		      (xadSTRPTR)FilePart(fi->xfi_FileName) : fi->xfi_FileName))
 #else
 		      if(!args.file || CheckName(args.file, args.notree ?
-		      FilePart(fi->xfi_FileName) : fi->xfi_FileName))
+		      (xadSTRPTR)FilePart(fi->xfi_FileName) : fi->xfi_FileName))
 #endif
 		      {
 		        CopyMem(args.destdir, filename, strlen(args.destdir)+1);
@@ -693,7 +684,7 @@ int main(void)
 	          }
 	        }
 	        ti2[3].ti_Tag = XAD_STARTCLIENT;
-	        ti2[3].ti_Data = (ULONG) ai->xai_Client->xc_Next;
+	        ti2[3].ti_Data = (IPTR) ai->xai_Client->xc_Next;
 	        xadFreeInfo(ai);
 	        if(--loop)
 	        {
@@ -767,18 +758,8 @@ int main(void)
 }
 
 /* Because of SAS-err, this cannot be SAVEDS */
-#if !defined(__AROS__)
-ASM(ULONG) SAVEDS progrhook(REG(a0, struct Hook *hook),
-REG(a1, struct xadProgressInfo *pi))
+HOOKPROTO(progrhook, ULONG, void *ai, struct xadProgressInfo *pi)
 {
-#else
-  AROS_UFH3(ULONG, progrhook,
-  AROS_UFHA(struct Hook *, hook, A0),
-  AROS_UFHA(void *, ai, A2),
-  AROS_UFHA(struct xadProgressInfo *, pi,  A1))
-{
-    AROS_USERFUNC_INIT
-#endif
   ULONG ret = 0;
   STRPTR name = ((struct xHookArgs *) (hook->h_Data))->name;
 
@@ -900,9 +881,6 @@ REG(a1, struct xadProgressInfo *pi))
     ret |= XADPIF_OK;
 
   return ret;
-#if defined(__AROS__)
-  AROS_USERFUNC_EXIT
-#endif
 }
 
 void ShowProt(ULONG i)
@@ -994,7 +972,7 @@ STRPTR *GetNames(STRPTR *names)
 {
   struct AnchorPath *APath;
   STRPTR *result = 0, s, f, *r;
-  ULONG *filelist, *fl = 0, *a, *b, retval = 0, namesize = 0;
+  IPTR *filelist, *fl = 0, *a, *b, retval = 0, namesize = 0;
   LONG i;
 
   if((APath = (struct AnchorPath *) AllocMem(sizeof(struct AnchorPath)+512, MEMF_PUBLIC|MEMF_CLEAR)))
@@ -1010,7 +988,7 @@ STRPTR *GetNames(STRPTR *names)
         if(APath->ap_Info.fib_DirEntryType < 0)
         {
           i = strlen(APath->ap_Buf)+1;
-          if(!(a = (ULONG *) AllocVec(i+4, MEMF_ANY)))
+          if(!(a = (IPTR *) AllocVec(i+sizeof(IPTR), MEMF_ANY)))
             break;
           CopyMem(APath->ap_Buf, a+1, i);
           namesize += i;
@@ -1020,22 +998,22 @@ STRPTR *GetNames(STRPTR *names)
           }
           else if(stricmp((STRPTR) (filelist+1), APath->ap_Buf) >= 0)
           {
-            *a = (ULONG) filelist; filelist = a;
+            *a = (IPTR) filelist; filelist = a;
           }
           else
           {
             for(b = filelist; *b && (i = stricmp((STRPTR) (*b+4),
-            APath->ap_Buf)) < 0; b = (ULONG *) *b)
+            APath->ap_Buf)) < 0; b = (IPTR *) *b)
               ;
-            *a = *b; *b = (ULONG) a;
+            *a = *b; *b = (IPTR) a;
           }
         }
       }
       if(fl)
       {
-        for(b = fl; *b; b = (ULONG *) *b)
+        for(b = fl; *b; b = (IPTR *) *b)
           ;
-        *b = (ULONG) filelist;
+        *b = (IPTR) filelist;
       }
       else
         fl = filelist;
@@ -1048,13 +1026,13 @@ STRPTR *GetNames(STRPTR *names)
     if(!retval)
     {
       i = 0;
-      for(b = fl; b; b = (ULONG *) *b)
+      for(b = fl; b; b = (IPTR *) *b)
         ++i;
       if((result = (STRPTR *)AllocVec((i+1)*sizeof(STRPTR)+namesize, MEMF_ANY)))
       {
         s = ((STRPTR) result)+((i+1)*sizeof(STRPTR));
         i = 0;
-        for(b = fl; b; b = (ULONG *) *b)
+        for(b = fl; b; b = (IPTR *) *b)
         {
           result[i++] = s;
           for(f = (STRPTR) (b+1); *f; ++f)
@@ -1067,7 +1045,7 @@ STRPTR *GetNames(STRPTR *names)
 
     while(fl)
     {
-      a = (ULONG *) *fl;
+      a = (IPTR *) *fl;
       FreeVec(fl);
       fl = a;
     }

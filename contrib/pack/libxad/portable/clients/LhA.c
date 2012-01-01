@@ -1788,10 +1788,10 @@ static void LHAdecode_start_lz5(struct LhADecrData *dat)
 
 static void LhAUnRegister(struct xadInOut *io, xadUINT32 size)
 {
-  xadUINT32 j;
+  xadIPTR j;
   xadSTRPTR a;
 
-  j = (xadUINT32) io->xio_InFuncPrivate;
+  j = (xadIPTR) io->xio_InFuncPrivate;
   a = io->xio_InBuffer;
   while(size--)
   {

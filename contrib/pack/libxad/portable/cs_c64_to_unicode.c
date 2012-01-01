@@ -226,7 +226,7 @@ UUNDEF, /* UNDEFINED */
 0xF138, /* TWO SMALL BLACK SQUARES DIAGONAL LEFT TO RIGHT (CUS) */
 };
 
-static xadUINT16 petsciilc_to_unicode(xadUINT16 i) /* Lower Case charset */
+static inline xadUINT16 petsciilc_to_unicode(xadUINT16 i) /* Lower Case charset */
 {
     if      (i >= 192 && i <= 223) i = petsciilc[i-96];
     else if (i >= 224 && i <= 254) i = petsciilc[i-64];

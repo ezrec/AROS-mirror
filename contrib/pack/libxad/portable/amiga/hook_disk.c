@@ -102,7 +102,7 @@ xadSize ofs, const struct xadArchiveInfoP *ai, xadPTR sec)
         return XADERR_OUTPUT;
     }
     io->io_Command = ETD_WRITE;
-    ((struct IOExtTD *) io)->iotd_SecLabel = (xadUINT32) sec;
+    ((struct IOExtTD *) io)->iotd_SecLabel = (xadIPTR) sec;
     ((struct IOExtTD *) io)->iotd_Count = 0xFFFFFFFF;
   }
   else
@@ -339,7 +339,7 @@ struct xadHookParam *param */
 
               fssm = (struct FileSysStartupMsg *) BADDR(dsl->dol_misc.
                      dol_handler.dol_Startup);
-              if((xadINT32) fssm > 200)
+              if((xadIPTR) fssm > 200)
               {
                 const struct DosEnvec *denv;
                 denv = ((struct DosEnvec *) BADDR(fssm->fssm_Environ));
@@ -639,7 +639,7 @@ struct xadHookParam *param */
 
               fssm = (struct FileSysStartupMsg *) BADDR(dsl->dol_misc.
                       dol_handler.dol_Startup);
-              if((xadINT32) fssm > 200)
+              if((xadIPTR) fssm > 200)
               {
                 const struct DosEnvec *denv;
                 denv = ((struct DosEnvec *) BADDR(fssm->fssm_Environ));

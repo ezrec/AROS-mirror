@@ -25,7 +25,7 @@
 
 #include <libraries/xadmaster.h>
 
-static const xadUINT16 atarist[] = {
+static const xadUINT16 atarist[0x80] = {
 0x00C7, /* LATIN CAPITAL LETTER C WITH CEDILLA */
 0x00FC, /* LATIN SMALL LETTER U WITH DIAERESIS */
 0x00E9, /* LATIN SMALL LETTER E WITH ACUTE */
@@ -156,10 +156,10 @@ static const xadUINT16 atarist[] = {
 0x00AF  /* MACRON */
 };
 
-static xadUINT16 atarist_to_unicode(xadUINT16 i)
+static inline xadUINT16 atarist_to_unicode(xadUINT16 i)
 {
     if (i > 0x7F)
-        i = atarist[i-0x80];
+        i = atarist[i & 0x7f];
 
     return i;
 }

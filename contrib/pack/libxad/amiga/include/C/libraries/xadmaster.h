@@ -52,6 +52,7 @@ typedef uint8_t            xadUINT8;
 typedef int8_t             xadINT8;
 typedef uint32_t           xadSize;
 typedef int32_t            xadSignSize;
+typedef intptr_t           xadIPTR;
 #else
 typedef unsigned long      xadUINT32;
 typedef signed long        xadINT32;
@@ -61,6 +62,7 @@ typedef unsigned char      xadUINT8;
 typedef signed char        xadINT8;
 typedef xadUINT32          xadSize;
 typedef xadINT32           xadSignSize;
+typedef unsigned long      xadIPTR;
 #endif
 typedef void *             xadPTR;
 typedef char               xadSTRING;
@@ -290,7 +292,7 @@ struct xadMasterBase {
 
 struct xadHookParam {
   xadUINT32    xhp_Command;
-  xadSignSize  xhp_CommandData;
+  xadIPTR      xhp_CommandData;
   xadPTR       xhp_BufferPtr;
   xadSize      xhp_BufferSize;
   xadSize      xhp_DataPos;        /* current seek position */
@@ -343,7 +345,7 @@ struct xadSplitFile { /* for XAD_INSPLITTED */
   struct xadSplitFile *xsf_Next;
   xadUINT32            xsf_Type; /* XAD_INFILENAME, XAD_INFILEHANDLE, XAD_INMEMORY, XAD_INHOOK */
   xadSize              xsf_Size; /* necessary for XAD_INMEMORY, useful for others */
-  xadUINT32            xsf_Data; /* FileName, Filehandle, Hookpointer or Memory */
+  xadIPTR              xsf_Data; /* FileName, Filehandle, Hookpointer or Memory */
 };
 
 struct xadSkipInfo {
@@ -812,8 +814,8 @@ struct xadForeman {
   xadUINT32          xfm_ID;          /* must be XADFOREMAN_ID */
   xadUINT16          xfm_Version;     /* set to XADFOREMAN_VERSION */
   xadUINT16          xfm_Reserved;
-  xadSTRPTR          xfm_VersString;  /* pointer to $VER: string */
-  struct xadClient * xfm_FirstClient; /* pointer to first client */
+  const xadSTRING        * xfm_VersString;  /* pointer to $VER: string */
+  const struct xadClient * xfm_FirstClient; /* pointer to first client */
 };
 
 #define XADFOREMAN_SECURITY     0x70FF4E75 /* MOVEQ #-1,D0 and RTS */

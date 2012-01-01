@@ -38,6 +38,7 @@ typedef uint32_t           xadSize;
 typedef int32_t            xadSignSize;
 #define XADSIZE            "ld"
 #define XADSSIZE           "lu"
+typedef intptr_t           xadIPTR;
 #else
 typedef unsigned long      xadUINT32;
 typedef signed long        xadINT32;
@@ -49,6 +50,7 @@ typedef xadUINT32          xadSize;
 typedef xadINT32           xadSignSize;
 #define XADSIZE            "ld"
 #define XADSSIZE           "lu"
+typedef unsigned long      xadIPTR;
 #endif
 typedef void *             xadPTR;
 typedef char               xadSTRING;
@@ -296,7 +298,7 @@ struct xadMasterBase {
 
 struct xadHookParam {
   xadUINT32    xhp_Command;
-  xadSignSize  xhp_CommandData;
+  xadIPTR      xhp_CommandData;
   xadPTR       xhp_BufferPtr;
   xadSize      xhp_BufferSize;
   xadSize      xhp_DataPos;        /* current seek position */
@@ -349,7 +351,7 @@ struct xadSplitFile { /* for XAD_INSPLITTED */
   struct xadSplitFile *xsf_Next;
   xadUINT32            xsf_Type; /* XAD_INFILENAME, XAD_INFILEHANDLE, XAD_INMEMORY, XAD_INHOOK */
   xadSize              xsf_Size; /* necessary for XAD_INMEMORY, useful for others */
-  xadUINT32            xsf_Data; /* FileName, Filehandle, Hookpointer or Memory */
+  xadIPTR              xsf_Data; /* FileName, Filehandle, Hookpointer or Memory */
 };
 
 struct xadSkipInfo {

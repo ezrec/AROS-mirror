@@ -186,7 +186,7 @@ XADGETINFO(Tar)
         if(th.th_Typeflag == TF_AFILE || th.th_Typeflag == TF_FILE
         || th.th_Typeflag == TF_DIR)
         {
-          name[--a-1] == 0;
+          name[--a-1] = 0;
           th.th_Typeflag = TF_DIR;
         }
       }

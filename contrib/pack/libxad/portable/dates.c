@@ -267,7 +267,7 @@ FUNCxadConvertDates /* xadTAGPTR tags */
             DropInterface((struct Interface *)IIntuition);
           }
 #else
-          CurrentTime(&timeval, &xadi.xd_Micros);
+          CurrentTime((ULONG *)&timeval, (ULONG *)&xadi.xd_Micros);
 #endif
           
           CloseLibrary((struct Library *) IntuitionBase);

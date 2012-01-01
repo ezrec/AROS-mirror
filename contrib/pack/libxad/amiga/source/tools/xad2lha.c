@@ -53,13 +53,16 @@ struct ExecBase *	 SysBase  = 0;
   "QUIET      Turns off progress report\n"				\
   "HEADER0    Produces header level 0 files\n"
 
+/* 'remainder' is a built-in function in later gcc versions */
+#define remainder my_remainder
+
 struct Args {
   STRPTR   from;
   STRPTR   to;
   STRPTR   password;
-  ULONG    noextern;
-  ULONG    quiet;
-  ULONG    header0;
+  IPTR     noextern;
+  IPTR     quiet;
+  IPTR     header0;
 };
 
 void MakeEntry0(struct xadFileInfo *fi, STRPTR tmp, BPTR fh, STRPTR mem, ULONG size, ULONG *ressize);
@@ -110,7 +113,7 @@ int main(void)
       {
         rda->RDA_ExtHelp = OPTIONS;
 
-        if(ReadArgs(PARAM, (LONG *) &args, rda))
+        if(ReadArgs(PARAM, (IPTR *) &args, rda))
         {
           struct xadArchiveInfo *ai;
           struct xadFileInfo *fi;
@@ -168,13 +171,13 @@ int main(void)
 	              struct TagItem ti[5];
 
 	  	      ti[0].ti_Tag = XAD_INFILENAME;
-	  	      ti[0].ti_Data = (ULONG) args.from;
+	  	      ti[0].ti_Data = (IPTR) args.from;
 	  	      ti[1].ti_Tag = XAD_ENTRYNUMBER;
 	  	      ti[1].ti_Data = di->xdi_EntryNumber;
 	  	      ti[2].ti_Tag = XAD_NOEXTERN;
 	  	      ti[2].ti_Data = args.noextern;
 	  	      ti[3].ti_Tag = args.password ? XAD_PASSWORD : TAG_IGNORE;
-	  	      ti[3].ti_Data = (ULONG) args.password;
+	  	      ti[3].ti_Data = (IPTR) args.password;
 	  	      ti[4].ti_Tag = TAG_DONE;
 
 		      if(!args.quiet)
@@ -487,7 +490,7 @@ void MakeEntry2(struct xadFileInfo *fi, STRPTR tmp, BPTR fh, STRPTR mem, ULONG s
     tmp[headersize] = 0x01;
     CopyMem(m, tmp+headersize+1, i);
     headersize += i+3;
-    if(m != fi->xfi_FileName)
+    if(m != (STRPTR)fi->xfi_FileName)
     {
       i = m - (STRPTR)fi->xfi_FileName-1;
       Store16(tmp + headersize-2, i+3); /* set header size */

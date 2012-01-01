@@ -25,7 +25,7 @@
 
 #include <libraries/xadmaster.h>
 
-static const xadUINT16 ibmcp437[] = {
+static const xadUINT16 ibmcp437[0x80] = {
 0x00c7, /* LATIN CAPITAL LETTER C WITH CEDILLA */
 0x00fc, /* LATIN SMALL LETTER U WITH DIAERESIS */
 0x00e9, /* LATIN SMALL LETTER E WITH ACUTE */
@@ -156,10 +156,10 @@ static const xadUINT16 ibmcp437[] = {
 0x00a0  /* NO-BREAK SPACE */
 };
 
-static xadUINT16 ibmcp437_to_unicode(xadUINT16 i)
+static inline xadUINT16 ibmcp437_to_unicode(xadUINT16 i)
 {
     if (i > 0x7F)
-        i = ibmcp437[i-0x80];
+        i = ibmcp437[i & 0x7F];
 
     return i;
 }

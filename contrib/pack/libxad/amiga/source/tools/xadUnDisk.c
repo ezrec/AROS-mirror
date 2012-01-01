@@ -35,6 +35,7 @@
 #include <utility/hooks.h>
 #include "SDI_version.h"
 #include "SDI_compiler.h"
+#include "SDI_hook.h"
 #define SDI_TO_ANSI
 #include "SDI_ASM_STD_protos.h"
 
@@ -57,27 +58,20 @@ struct Args {
   LONG *   entry;
   STRPTR   password;
   STRPTR   savetexts;
-  ULONG    noextern;
-  ULONG    info;
-  ULONG    showtexts;
-  ULONG    overwrite;
-  ULONG    ignoregeometry;
-  ULONG    format;
-  ULONG    diskimage;
-  ULONG    noaskinsert;
-  ULONG    usesectorlabels;
+  IPTR     noextern;
+  IPTR     info;
+  IPTR     showtexts;
+  IPTR     overwrite;
+  IPTR     ignoregeometry;
+  IPTR     format;
+  IPTR     diskimage;
+  IPTR     noaskinsert;
+  IPTR     usesectorlabels;
 };
 
-#if !defined(__AROS__)
-ASM(ULONG) SAVEDS progrhook(REG(a0, struct Hook *),
-  REG(a1, struct xadProgressInfo *));
-#else
-  AROS_UFP3(ULONG, progrhook,
-  AROS_UFPA(struct Hook *, hook, A0),
-  AROS_UFPA(void *, ai, A2),
-  AROS_UFPA(struct xadProgressInfo *, pi,  A1));
-#endif
-static struct Hook prhook = {{0,0},(ULONG (*)()) progrhook, 0, 0};
+HOOKPROTONO(progrhook, ULONG, struct xadProgressInfo *pi);
+MakeStaticHook(prhook, progrhook);
+
 static void ShowTexts(struct xadTextInfo *ti);
 static void SaveTexts(struct xadTextInfo *ti, STRPTR name);
 static LONG WriteDisk(struct Args *, struct TagItem *);
@@ -124,7 +118,7 @@ int main(void)
       args.entry = &def;
 
       xadMasterBase = xadmasterbase;
-      if((rda = ReadArgs(PARAM, (LONG *) &args, 0)))
+      if((rda = ReadArgs(PARAM, (IPTR *) &args, 0)))
       {
         if(args.to || args.info)
         {
@@ -267,7 +261,7 @@ int main(void)
                     err = AskInsertDisk(args.to);
 
                   if(!err && !(err = xadDiskUnArc(ai, dvi ? XAD_OUTDEVICE :
-                  XAD_OUTFILENAME, dvi ? (ULONG) dvi : (ULONG) args.to,
+                  XAD_OUTFILENAME, dvi ? (IPTR) dvi : (IPTR) args.to,
                   XAD_ENTRYNUMBER, *args.entry, args.lowcyl ?
                   XAD_LOWCYLINDER : TAG_IGNORE, args.lowcyl ? *args.lowcyl :
                   0, args.highcyl ? XAD_HIGHCYLINDER : TAG_IGNORE,
@@ -325,19 +319,8 @@ int main(void)
   return ret;
 }
 
-#if !defined(__AROS__)
-ASM(ULONG) SAVEDS progrhook(REG(a0, struct Hook *hook),
-REG(a1, struct xadProgressInfo *pi))
+HOOKPROTONO(progrhook, ULONG, struct xadProgressInfo *pi)
 {
-#else
-  AROS_UFH3(ULONG, progrhook,
-  AROS_UFHA(struct Hook *, hook, A0),
-  AROS_UFHA(void *, ai, A2),
-  AROS_UFHA(struct xadProgressInfo *, pi,  A1))
-{
-    AROS_USERFUNC_INIT
-#endif
-
   ULONG ret = 0;
 
   switch(pi->xpi_Mode)
@@ -416,10 +399,6 @@ REG(a1, struct xadProgressInfo *pi))
     ret |= XADPIF_OK;
 
   return ret;
-
-#if defined(__AROS__)
-  AROS_USERFUNC_EXIT
-#endif
 }
 
 static void ShowTexts(struct xadTextInfo *ti)
@@ -463,7 +442,7 @@ static void SaveTexts(struct xadTextInfo *ti, STRPTR name)
   {
     if(ti->xti_Size && ti->xti_Text)
     {
-      sprintf(namebuf, "%s.%lu", name, i);
+      sprintf(namebuf, "%s.%lu", name, (long)i);
       if((fh = Open(namebuf, MODE_NEWFILE)))
       {
         if(Write(fh, ti->xti_Text, ti->xti_Size) != ti->xti_Size)
@@ -536,7 +515,7 @@ static LONG WriteDisk(struct Args *args, struct TagItem *ti)
         if(!(err = xadGetHookAccess(ai, XAD_OVERWRITE, args->overwrite,
         XAD_IGNOREGEOMETRY, args->ignoregeometry, XAD_FORMAT, args->format, XAD_VERIFY,
         TRUE, XAD_PROGRESSHOOK, &prhook, dvi ? XAD_OUTDEVICE : XAD_OUTFILENAME,
-        dvi ? (ULONG) dvi : (ULONG) args->to, TAG_MORE, ti)))
+        dvi ? (IPTR) dvi : (IPTR) args->to, TAG_MORE, ti)))
         {
           err = xadHookAccess(XADAC_COPY, ai->xai_InSize, 0, ai);
           xadFreeHookAccess(ai, err ? XAD_WASERROR : TAG_DONE, err, TAG_DONE);
@@ -607,7 +586,7 @@ static struct TagItem *GetMyTags(STRPTR name, LONG *reserr)
   {
     if((ti = (struct TagItem *) xadAllocVec(sizeof(struct TagItem)*2, MEMF_ANY|MEMF_CLEAR)))
     {
-      if((ti[0].ti_Data = (ULONG) xadAllocObjectA(XADOBJ_DEVICEINFO, 0)))
+      if((ti[0].ti_Data = (IPTR) xadAllocObjectA(XADOBJ_DEVICEINFO, 0)))
       {
         name[i-1] = 0; /* strip ':' */
         ((struct xadDeviceInfo *)ti[0].ti_Data)->xdi_DOSName = name;
@@ -623,7 +602,7 @@ static struct TagItem *GetMyTags(STRPTR name, LONG *reserr)
   {
     struct AnchorPath *APath;
     STRPTR s, f;
-    ULONG *filelist, *fl = 0, *a, *b, retval = 0, namesize = 0;
+    IPTR *filelist, *fl = 0, *a, *b, retval = 0, namesize = 0;
 
     if((APath = (struct AnchorPath *) AllocMem(sizeof(struct AnchorPath)+512, MEMF_PUBLIC|MEMF_CLEAR)))
     {
@@ -638,7 +617,7 @@ static struct TagItem *GetMyTags(STRPTR name, LONG *reserr)
           if(APath->ap_Info.fib_DirEntryType < 0)
           {
             i = strlen(APath->ap_Buf)+1;
-            if(!(a = (ULONG *) AllocVec(i+4, MEMF_ANY)))
+            if(!(a = (IPTR *) AllocVec(i+sizeof(IPTR), MEMF_ANY)))
               break;
             CopyMem(APath->ap_Buf, a+1, i);
             namesize += i;
@@ -648,22 +627,22 @@ static struct TagItem *GetMyTags(STRPTR name, LONG *reserr)
             }
             else if(stricmp((STRPTR) (filelist+1), APath->ap_Buf) >= 0)
             {
-              *a = (ULONG) filelist; filelist = a;
+              *a = (IPTR) filelist; filelist = a;
             }
             else
             {
               for(b = filelist; *b && (i = stricmp((STRPTR) (*b+4),
-              APath->ap_Buf)) < 0; b = (ULONG *) *b)
+              APath->ap_Buf)) < 0; b = (IPTR *) *b)
                 ;
-              *a = *b; *b = (ULONG) a;
+              *a = *b; *b = (IPTR) a;
             }
           }
         }
         if(fl)
         {
-          for(b = fl; *b; b = (ULONG *) *b)
+          for(b = fl; *b; b = (IPTR *) *b)
             ;
-          *b = (ULONG) filelist;
+          *b = (IPTR) filelist;
         }
         else
           fl = filelist;
@@ -678,7 +657,7 @@ static struct TagItem *GetMyTags(STRPTR name, LONG *reserr)
       if(!retval)
       {
         i = 0;
-        for(b = fl; b; b = (ULONG *) *b)
+        for(b = fl; b; b = (IPTR *) *b)
           ++i;
         if((ti = (struct TagItem *) xadAllocVec(2*sizeof(struct TagItem)+namesize, MEMF_ANY|MEMF_CLEAR)))
         {
@@ -686,7 +665,7 @@ static struct TagItem *GetMyTags(STRPTR name, LONG *reserr)
           if(i == 1)
           {
             ti[0].ti_Tag = XAD_INFILENAME;
-            ti[0].ti_Data = (ULONG) s;
+            ti[0].ti_Data = (IPTR) s;
             for(f = (STRPTR) (fl+1); *f; ++f)
               *(s++) = *f;
             /* *s = 0; */
@@ -695,17 +674,17 @@ static struct TagItem *GetMyTags(STRPTR name, LONG *reserr)
           {
             struct xadSplitFile *sf = 0, *sf2;
             ti[0].ti_Tag = XAD_INSPLITTED;
-            for(b = fl; !err && b; b = (ULONG *) *b)
+            for(b = fl; !err && b; b = (IPTR *) *b)
             {
               if((sf2 = xadAllocObjectA(XADOBJ_SPLITFILE, 0)))
               {
                 if(sf)
                   sf->xsf_Next = sf2;
                 else
-                  ti[0].ti_Data = (ULONG) sf2;
+                  ti[0].ti_Data = (IPTR) sf2;
                 sf = sf2;
                 sf->xsf_Type = XAD_INFILENAME;
-                sf->xsf_Data = (ULONG) s;
+                sf->xsf_Data = (IPTR) s;
               }
               else
                 err = XADERR_NOMEMORY;
@@ -721,7 +700,7 @@ static struct TagItem *GetMyTags(STRPTR name, LONG *reserr)
 
       while(fl)
       {
-        a = (ULONG *) *fl;
+        a = (IPTR *) *fl;
         FreeVec(fl);
         fl = a;
       }

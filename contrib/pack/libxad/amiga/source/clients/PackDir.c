@@ -189,10 +189,12 @@ LONG PackDir_GetInfo(struct xadArchiveInfo *ai, XADBASE) {
     { TAG_DONE, 0 }
   };
 
+#if 0
   struct TagItem addtags[] = {
     { XAD_SETINPOS, 0 },
     { TAG_DONE, 0 }
   };
+#endif
 
   /* allocate memory for state information */
   if (!(state = xadAllocVec(sizeof(struct PackDir_state),0)))

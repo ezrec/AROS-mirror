@@ -195,7 +195,7 @@ XADIOFUNCMODEBITS xadUINT32 xadIOGetBitsLow(struct xadInOut *io, xadUINT8 bits)
 #endif
 
 #ifdef XADIOGETBITSLOWR
-XADIOFUNCMODEBITS xadUINT32 xadIOGetBitsLowR(struct xadInOut *io, xadUINT8 bits)
+XADIOFUNCMODEBITS inline xadUINT32 xadIOGetBitsLowR(struct xadInOut *io, xadUINT8 bits)
 {
   xadUINT32 x;
 

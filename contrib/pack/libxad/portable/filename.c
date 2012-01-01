@@ -130,7 +130,7 @@ const xadSTRING *buffer, xadUINT32 len)
         ;
       if(*a) i = PATHSIGN;
       else if(i == PATHSIGN) i = PATHSIGNMAPPER;
-      str->ucstring[str->ucsize++] == i;
+      str->ucstring[str->ucsize++] = i;
       --len;
       str->bufsize -= 2;
     }
@@ -159,7 +159,7 @@ const xadSTRING *buffer, xadUINT32 len)
       else if(i == PATHSIGN) i = PATHSIGNMAPPER;
       if(!i)
         break;
-      str->ucstring[str->ucsize++] == i;
+      str->ucstring[str->ucsize++] = i;
       --len;
       str->bufsize -= 2;
     }

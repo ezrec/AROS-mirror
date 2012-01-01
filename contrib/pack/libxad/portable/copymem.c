@@ -38,7 +38,7 @@ FUNCxadCopyMem /* const void *s, xadPTR d, xadSize size */
   if(!size || d == s) /* no need to copy */
     return;
 
-  if(!(((xadSize)s|(xadSize)d|size)&3)) /* all longword aligned */
+  if(!(((xadIPTR)s|(xadIPTR)d|size)&3)) /* all longword aligned */
   {
     const xadUINT32 *a;
     xadUINT32 *b;

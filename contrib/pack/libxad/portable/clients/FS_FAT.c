@@ -273,7 +273,7 @@ static xadINT32 FATparsedir(struct FATDiskParseData *pd, xadINT32 pos, xadINT32 
                   fi->xfi_Next = pd->FileList;
                   pd->FileList = fi;
                 }
-                fi->xfi_PrivateInfo = (xadPTR) cluster;
+                fi->xfi_PrivateInfo = (xadPTR) (xadIPTR) cluster;
                 str = fi->xfi_FileName;
                 if(curnamesize)
                 {
@@ -404,8 +404,8 @@ XADGETINFO(FSFAT)
                     pd.DirList = fi->xfi_Next;
                     fi->xfi_Next = pd.FileList; /* add to list */
                     pd.FileList = pd.CurDir = fi;
-                    err = FATparsedir(&pd, (xadINT32) ((((xadINT32) fi->xfi_PrivateInfo)-2)*FATPI(ai)->ClusterSize+
-                    FATPI(ai)->StartBlock), (xadINT32) fi->xfi_PrivateInfo);
+                    err = FATparsedir(&pd, (xadINT32) ((((xadIPTR) fi->xfi_PrivateInfo)-2)*FATPI(ai)->ClusterSize+
+                    FATPI(ai)->StartBlock), (xadIPTR) fi->xfi_PrivateInfo);
                   }
                 }
 
@@ -462,8 +462,8 @@ XADGETINFO(FSFAT)
                     pd.DirList = fi->xfi_Next;
                     fi->xfi_Next = pd.FileList; /* add to list */
                     pd.FileList = pd.CurDir = fi;
-                    err = FATparsedir(&pd, (xadINT32) ((((xadINT32) fi->xfi_PrivateInfo)-2)*FATPI(ai)->ClusterSize+
-                    FATPI(ai)->StartBlock), (xadINT32) fi->xfi_PrivateInfo);
+                    err = FATparsedir(&pd, (xadINT32) ((((xadIPTR) fi->xfi_PrivateInfo)-2)*FATPI(ai)->ClusterSize+
+                    FATPI(ai)->StartBlock), (xadIPTR) fi->xfi_PrivateInfo);
                   }
                 }
 
@@ -507,7 +507,7 @@ XADUNARCHIVE(FSFAT)
   xadUINT32 i, block, s;
 
   i = ai->xai_CurFile->xfi_Size;
-  block = (xadUINT32) ai->xai_CurFile->xfi_PrivateInfo;
+  block = (xadIPTR) ai->xai_CurFile->xfi_PrivateInfo;
   while(i && !err)
   {
     s = FATPI(ai)->StartBlock+(block-2)*FATPI(ai)->ClusterSize;

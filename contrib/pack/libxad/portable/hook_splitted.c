@@ -203,7 +203,7 @@ FUNCHOOK(InHookSplitted)
             if(!sf->xsf_Data) return XADERR_BADPARAMS;
             break;
           case XAD_INFILEHANDLE:
-            sd[i].xsd_InFileHandle = /*(BPTR)*/ sf->xsf_Data;
+            sd[i].xsd_InFileHandle = (BPTR)sf->xsf_Data;
             sd[i].xsd_Hook = &ai->xaip_MasterBase->xmb_InHookFH;
             if(!sf->xsf_Data) return XADERR_BADPARAMS;
             break;

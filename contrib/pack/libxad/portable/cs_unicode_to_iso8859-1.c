@@ -34,7 +34,7 @@
  *    normalized to form C (i.e. Composed).
  */
 
-static xadUINT16 unicode_to_iso8859_1(xadUINT16 a, xadUINT16 mchar)
+static inline xadUINT16 unicode_to_iso8859_1(xadUINT16 a, xadUINT16 mchar)
 {
     if (a > 0x00FF)
     {

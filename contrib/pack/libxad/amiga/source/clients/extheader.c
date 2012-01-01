@@ -29,9 +29,9 @@ extern const xadSTRING version[];
 extern const struct xadClient FirstClient;
 
 #if !defined(__AROS__)
-struct xadForeman xadForeman USED =
+const struct xadForeman xadForeman USED =
 #else
-struct xadForeman xadForeman __attribute__((used, section(".aros.init"))) =
+const struct xadForeman xadForeman __attribute__((used, section(".aros.init"))) =
 #endif
 { XADFOREMAN_SECURITY, XADFOREMAN_ID, XADFOREMAN_VERSION, 0, version,
 &FirstClient };

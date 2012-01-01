@@ -2149,16 +2149,16 @@ XADGETINFO(CAB) {
       nametags[0].ti_Data = (GETWORD(cffile_Attribs) & cffileUTFNAME)
                           ? CHARSET_UNICODE_UTF8 : CHARSET_WINDOWS;
       nametags[1].ti_Data = (xadUINT32) (namep - namebuf);
-      nametags[2].ti_Data = (xadUINT32) namebuf;
+      nametags[2].ti_Data = (xadIPTR) namebuf;
       fi->xfi_FileName = xadConvertNameA(XADM CHARSET_HOST, nametags);
       if (!fi->xfi_FileName) ERROR(NOMEMORY);
 
       prottags[0].ti_Data = GETWORD(cffile_Attribs);
-      prottags[1].ti_Data = (xadUINT32) &fi->xfi_Protection;
+      prottags[1].ti_Data = (xadIPTR) &fi->xfi_Protection;
       xadConvertProtectionA(XADM prottags);
 
       datetags[0].ti_Data = (GETWORD(cffile_Date)<<16)|GETWORD(cffile_Time);
-      datetags[1].ti_Data = (xadUINT32) &fi->xfi_Date;
+      datetags[1].ti_Data = (xadIPTR) &fi->xfi_Date;
       xadConvertDatesA(XADM datetags);
 
       /* which folder is this file in? */

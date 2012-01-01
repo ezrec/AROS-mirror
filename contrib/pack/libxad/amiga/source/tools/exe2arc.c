@@ -97,7 +97,7 @@ int main(void)
     DOSBase = dosbase;
 
     args.to = args.type = 0;
-    if((rda = ReadArgs(PARAM, (LONG *) &args, 0)))
+    if((rda = ReadArgs(PARAM, (IPTR *) &args, 0)))
     {
       BPTR infh;
 

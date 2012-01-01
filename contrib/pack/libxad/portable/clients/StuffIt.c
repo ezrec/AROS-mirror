@@ -2624,7 +2624,7 @@ static xadUINT8 PackIt_Put(struct xadInOut *io, xadUINT8 data)
 {
   xadUINT32 a;
 
-  a = (xadUINT32) io->xio_PutFuncPrivate;
+  a = (xadIPTR) io->xio_PutFuncPrivate;
   if(!io->xio_OutSize && !a)
   {
     io->xio_Error = XADERR_DECRUNCH;
@@ -2656,7 +2656,7 @@ static xadUINT8 PackIt_Put(struct xadInOut *io, xadUINT8 data)
         io->xio_Flags |= XADIOF_LASTOUTBYTE;
     }
 
-    io->xio_PutFuncPrivate = (xadPTR) a;
+    io->xio_PutFuncPrivate = (xadPTR) (xadIPTR) a;
   }
 
   return data;

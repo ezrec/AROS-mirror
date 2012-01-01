@@ -138,12 +138,12 @@ BOOL ar_RecogData(ULONG size, STRPTR d, XADBASE) {
 }
 
 #if !defined(__AROS__)
-ASM(LONG) ar_GetInfo(REG(a0, struct xadArchiveInfo *ai), XADBASE) {
+ASM(xadERROR) ar_GetInfo(REG(a0, struct xadArchiveInfo *ai), XADBASE) {
 #else
-LONG ar_GetInfo(struct xadArchiveInfo *ai, XADBASE) {
+xadERROR ar_GetInfo(struct xadArchiveInfo *ai, XADBASE) {
 #endif
   UBYTE *ext_names = NULL, *bsd_name = NULL, *namep, *pend;
-  ULONG filenum = 1, skiplen = 8, namelen, extnameslen;
+  ULONG filenum = 1, skiplen = 8, namelen, extnameslen = 0;
   struct xadFileInfo *link = NULL,  *fi;
   LONG err = XADERR_OK;
   struct ar_hdr hdr;
@@ -289,11 +289,11 @@ LONG ar_GetInfo(struct xadArchiveInfo *ai, XADBASE) {
     }
 
     prottags[0].ti_Data = ar_readnum(hdr.ar_mode, 8, 8);
-    prottags[1].ti_Data = (ULONG) &fi->xfi_Protection;
+    prottags[1].ti_Data = (IPTR) &fi->xfi_Protection;
     xadConvertProtectionA(prottags);
 
     datetags[0].ti_Data = ar_readnum(hdr.ar_date, 12, 10);
-    datetags[1].ti_Data = (ULONG) &fi->xfi_Date;
+    datetags[1].ti_Data = (IPTR) &fi->xfi_Date;
     xadConvertDatesA(datetags);
 
     if (link) link->xfi_Next = fi; else ai->xai_FileInfo = fi;
@@ -312,9 +312,9 @@ LONG ar_GetInfo(struct xadArchiveInfo *ai, XADBASE) {
 }
 
 #if !defined(__AROS__)
-ASM(LONG) ar_UnArchive(REG(a0, struct xadArchiveInfo *ai), XADBASE) {
+ASM(xadERROR) ar_UnArchive(REG(a0, struct xadArchiveInfo *ai), XADBASE) {
 #else
-LONG ar_UnArchive(struct xadArchiveInfo *ai, XADBASE) {
+xadERROR ar_UnArchive(struct xadArchiveInfo *ai, XADBASE) {
 #endif
   return xadHookAccess(XADAC_COPY, ai->xai_CurFile->xfi_Size, NULL, ai);
 }
@@ -326,7 +326,7 @@ const struct xadClient ar_Client = {
 
   /* client functions */
   (BOOL (*)()) ar_RecogData,
-  (LONG (*)()) ar_GetInfo,
-  (LONG (*)()) ar_UnArchive,
+  (xadERROR (*)()) ar_GetInfo,
+  (xadERROR (*)()) ar_UnArchive,
   NULL
 };

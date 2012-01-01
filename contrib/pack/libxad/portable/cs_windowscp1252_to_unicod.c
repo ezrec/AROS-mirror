@@ -66,7 +66,7 @@ UUNDEF, /* UNDEFINED */
 0x0178  /* LATIN CAPITAL LETTER Y WITH DIAERESIS */
 };
 
-static xadUINT16 windowscp1252_to_unicode(xadUINT16 i)
+static inline xadUINT16 windowscp1252_to_unicode(xadUINT16 i)
 {
     if (i > 0x7F && i < 0xA0)
         i = windowscp1252[i-0x80];

@@ -68,7 +68,7 @@ FUNCxadGetDiskInfo /* struct xadArchiveInfoP *ai, xadTAGPTR tags */
     {
       struct xadClient *xc;
       ai->xaip_InHookParam.xhp_Command = XADHC_IMAGEINFO;
-      ai->xaip_InHookParam.xhp_CommandData = (xadINT32) ii;
+      ai->xaip_InHookParam.xhp_CommandData = (xadIPTR) ii;
       if(CallHookPkt(ai->xaip_InHook, ai, &ai->xaip_InHookParam))
       {
 #ifdef DEBUG

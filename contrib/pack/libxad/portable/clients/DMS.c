@@ -1249,7 +1249,7 @@ struct xadArchiveInfo *ai, xadINT32 *more, xadINT32 crypted, xadINT32 *ret)
       }
 
       if(stop > 1)
-        err = xadHookAccess(XADM XADAC_INPUTSEEK, -sizeof(struct DMSTrack), &t, ai);
+        err = xadHookAccess(XADM XADAC_INPUTSEEK, -(int)sizeof(struct DMSTrack), &t, ai);
 
       if(!tracksize || lowcyl == -1 || highcyl == -1 || tracksize % (2*512))
         err = XADERR_ILLEGALDATA;
@@ -1522,7 +1522,7 @@ XADUNARCHIVE(DMS)
 
         if(!(err = DecrunchDMS(&t, ai, xadMasterBase, &res, d)))
         { /* xdi_PrivateInfo contains start pos of useful data */
-          if(ai->xai_InPos > (xadUINT32) di->xdi_PrivateInfo) /* skip unusable parts */
+          if(ai->xai_InPos > (xadIPTR) di->xdi_PrivateInfo) /* skip unusable parts */
           {
             if(i == EndGetM16(t.TrackNumber))
             {
