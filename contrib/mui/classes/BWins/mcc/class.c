@@ -174,7 +174,7 @@ mSets(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
 {
     struct data    *data = INST_DATA(cl,obj);
     struct TagItem *tag;
-    const struct TagItem *tstate;
+    struct TagItem *tstate;
 
     for (tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
     {

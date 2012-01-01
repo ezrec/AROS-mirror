@@ -50,7 +50,7 @@ IPTR BrowserPreferences__OM_DISPOSE(struct IClass *cl, Object *obj, Msg msg)
 IPTR BrowserPreferences__OM_SET(Class *cl, Object *obj, struct opSet *msg)
 {
     struct BrowserPreferences_DATA *data = (struct BrowserPreferences_DATA *) INST_DATA(cl, obj);
-    const struct TagItem *tags  = msg->ops_AttrList;
+    struct TagItem *tags  = msg->ops_AttrList;
     struct TagItem *tag;
 
     while ((tag = NextTagItem(&tags)) != NULL)

@@ -122,7 +122,7 @@ STATIC ASM VOID AddMembers( REG(a0) Class *cl, REG(a1) Object *obj, REG(a2) stru
 {
    PD                *pd = INST_DATA(cl, obj);
    PM                *pm;
-   const struct TagItem    *tstate = attr;
+   struct TagItem    *tstate = attr;
    struct TagItem    *tag;
 
    /*
@@ -264,7 +264,7 @@ METHOD(PageClassSetUpdate, struct opUpdate *, opu)
 {
    PD                *pd = INST_DATA( cl, obj );
    struct TagItem    *attr = opu->opu_AttrList, *tag;
-   const struct TagItem *tstate = attr;
+   struct TagItem *tstate = attr;
    struct GadgetInfo *gi = opu->opu_GInfo;
    PM                *pm;
    ULONG              data;

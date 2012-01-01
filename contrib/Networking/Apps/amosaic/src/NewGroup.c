@@ -21,7 +21,7 @@ long kprintf(char *,...);
 SAVEDS IPTR NewGroupSet(struct IClass *cl,Object *obj,Msg msg)
 {
 	struct NewGroupData *inst=INST_DATA(cl,obj);
-	const struct TagItem *tstate;
+	struct TagItem *tstate;
 	struct TagItem *ti;
   
 	ti = ((opSetP)msg)->ops_AttrList;

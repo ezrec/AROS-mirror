@@ -85,7 +85,7 @@ STATIC ASM IPTR ButtonSetAttrs(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) s
    BC              *bc = BASE_DATA(obj);
    IPTR             data;
    Tag              attr;
-   const struct TagItem  *tstate = ops->ops_AttrList;
+   struct TagItem  *tstate = ops->ops_AttrList;
    struct TagItem  *tag;
    BOOL             vis = FALSE;
 

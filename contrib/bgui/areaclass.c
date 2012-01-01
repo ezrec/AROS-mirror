@@ -53,7 +53,7 @@ METHOD(AreaClassNew, struct opSet *,ops)
    AD             *ad;
    IPTR            rc;
    struct TagItem *tags, *tag;
-   const struct TagItem *tstate;
+   struct TagItem *tstate;
 
    tags = DefTagList(BGUI_AREA_GADGET, ops->ops_AttrList);
    /*

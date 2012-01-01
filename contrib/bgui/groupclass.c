@@ -127,7 +127,7 @@ STATIC IPTR ASM SetGroupNodeAttrs(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1
 {
    MD              *md = INST_DATA(cl, obj);
    IPTR             data;
-   const struct TagItem  *tstate = ops->ops_AttrList;
+   struct TagItem  *tstate = ops->ops_AttrList;
    struct TagItem  *tag;
    BOOL             relayout = FALSE;
 

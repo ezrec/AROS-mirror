@@ -274,7 +274,7 @@ NewMethod(Class *class,Object *object,struct opSet *SetInfo)
 	if(object = (Object *)DoSuperMethodA(class,object,(Msg)SetInfo))
 	{
 		struct TagItem	*Tag;
-		const struct TagItem	*TagList;
+		struct TagItem	*TagList;
 		LONG			 Width,Height;
 		MatrixInfo		*Info;
 		struct TextAttr	*Font;

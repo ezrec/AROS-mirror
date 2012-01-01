@@ -2060,7 +2060,7 @@ static IPTR _Set(struct IClass* cl, Object* obj, struct opSet* msg)
   BOOL redraw = FALSE, redrawback = FALSE;
   struct Cardgame_Data* data = (struct Cardgame_Data*)INST_DATA(cl, obj);
   struct TagItem *tag;
-  const struct TagItem *tags = msg->ops_AttrList;
+  struct TagItem *tags = msg->ops_AttrList;
 
   while((tag = NextTagItem(&tags)))
   {

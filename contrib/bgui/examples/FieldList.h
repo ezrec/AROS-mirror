@@ -81,7 +81,7 @@ typedef struct {
 STATIC ASM VOID SetFLAttr( REG(a0) FLD *fld, REG(a1) struct TagItem *attr )
 {
 	struct TagItem		*tag;
-	const struct TagItem *tstate = attr;
+	struct TagItem *tstate = attr;
 
 	/*
 	 *	Scan attribute list.

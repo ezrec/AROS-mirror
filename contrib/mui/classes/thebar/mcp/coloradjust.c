@@ -97,7 +97,7 @@ mColorWheelSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct colorWheelData *data = INST_DATA(cl,obj);
     struct TagItem *tag;
-    const struct TagItem *tstate;
+    struct TagItem *tstate;
 
     for(tstate = msg->ops_AttrList; (tag = NextTagItem((APTR)&tstate)); )
     {
@@ -329,7 +329,7 @@ mGradientSliderSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct gradientSliderData *data = INST_DATA(cl,obj);
     struct TagItem *tag;
-    const struct TagItem *tstate;
+    struct TagItem *tstate;
     BOOL rgb = FALSE;
 
     for(tstate = msg->ops_AttrList; (tag = NextTagItem((APTR)&tstate)); )
@@ -636,7 +636,7 @@ mColoradjustSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct coloradjustData *data = INST_DATA(cl,obj);
     struct TagItem *tag;
-    const struct TagItem *tstate;
+    struct TagItem *tstate;
     BOOL nonotify = FALSE, wheel = FALSE, hsb = FALSE, rgb = FALSE, grad = FALSE, comp = FALSE;
 
     for(tstate = msg->ops_AttrList; (tag = NextTagItem((APTR)&tstate)); )

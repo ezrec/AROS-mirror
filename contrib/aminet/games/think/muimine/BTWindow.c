@@ -270,7 +270,7 @@ static IPTR mDispose(struct IClass *cl, Object *obj, Msg msg)
 static IPTR mSet(struct IClass *cl, Object *obj, struct opSet * msg)
 {
     struct BTWindowData *data = INST_DATA(cl,obj);
-    const struct TagItem *tags;
+    struct TagItem *tags;
     struct TagItem *tag;
 
     for (tags = msg->ops_AttrList; (tag = NextTagItem(&tags)); )

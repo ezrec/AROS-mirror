@@ -672,7 +672,7 @@ static IPTR mHandleInput(struct IClass *cl, Object *obj, struct MUIP_HandleInput
 static IPTR mSet(struct IClass *cl, Object *obj, struct opSet * msg)
 {
     struct MineFieldData *data = INST_DATA(cl,obj);
-    const struct TagItem *tags;
+    struct TagItem *tags;
     struct TagItem *tag;
 
     for (tags = msg->ops_AttrList; (tag = NextTagItem(&tags)); )

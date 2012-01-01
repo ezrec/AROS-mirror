@@ -174,7 +174,7 @@ IPTR BrowserApp__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
     Object *preferencesManagerMenuItem, *openFileMenuItem;
 
     /* Parse initial attributes --------------------------------------------*/
-    while ((tag = NextTagItem((const struct TagItem **)&tstate)) != NULL)
+    while ((tag = NextTagItem(&tstate)) != NULL)
     {
         switch (tag->ti_Tag)
         {
@@ -428,7 +428,7 @@ IPTR BrowserApp__OM_SET(Class *cl, Object *obj, struct opSet *msg)
     struct TagItem *tags  = msg->ops_AttrList;
     struct TagItem *tag;
     
-    while ((tag = NextTagItem((const struct TagItem **)&tags)) != NULL)
+    while ((tag = NextTagItem(&tags)) != NULL)
     {
     	switch(tag->ti_Tag)
 	{

@@ -116,7 +116,7 @@ METHOD(ViewClassNew, struct opSet *, ops)
 {
    VD             *vd;
    IPTR            rc;
-   const struct TagItem *tstate;
+   struct TagItem *tstate;
    struct TagItem *tag, *tags;
 
    tags = DefTagList(BGUI_VIEW_GADGET, ops->ops_AttrList);
@@ -263,7 +263,7 @@ METHOD(ViewClassSet, struct opSet *, ops)
    VD             *vd = INST_DATA(cl, obj);
    ULONG           rc = 1, update = FALSE;
    IPTR            data;
-   const struct TagItem *tstate = ops->ops_AttrList;
+   struct TagItem *tstate = ops->ops_AttrList;
    struct TagItem *tag;
 
    /*

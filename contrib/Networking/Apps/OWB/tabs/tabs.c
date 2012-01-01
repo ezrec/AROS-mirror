@@ -155,7 +155,7 @@ IPTR Tabs__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
     layout_hook->h_SubEntry = (HOOKFUNC)Tabs_Layout_Function;
 
     /* Parse initial attributes --------------------------------------------*/
-    while ((tag = NextTagItem((const struct TagItem **) &tstate)) != NULL)
+    while ((tag = NextTagItem( &tstate)) != NULL)
     {
         switch (tag->ti_Tag)
         {
@@ -231,7 +231,7 @@ IPTR Tabs__OM_SET(Class *cl, Object *obj, struct opSet *msg)
     struct TagItem *tags  = msg->ops_AttrList;
     struct TagItem *tag;
     
-    while ((tag = NextTagItem((const struct TagItem**) &tags)) != NULL)
+    while ((tag = NextTagItem( &tags)) != NULL)
     {
     	switch(tag->ti_Tag)
 	{

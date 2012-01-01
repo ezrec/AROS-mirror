@@ -94,7 +94,7 @@ METHOD(IClassNew, struct opSet *, ops)
     */
    if ((rc = NewSuperObject(cl, obj, tags)))
    {
-      const struct TagItem *tstate;
+      struct TagItem *tstate;
       struct TagItem *tag;
       id = INST_DATA(cl, rc);
 
@@ -159,7 +159,7 @@ METHOD(IClassSetUpdate, struct opUpdate *, opu)
 {
    ID             *id = INST_DATA(cl, obj);
    IPTR            data;
-   const struct TagItem *tstate = opu->opu_AttrList;
+   struct TagItem *tstate = opu->opu_AttrList;
    struct TagItem *tag;
    BOOL            update = FALSE;
    LONG            old_level = id->id_Level;

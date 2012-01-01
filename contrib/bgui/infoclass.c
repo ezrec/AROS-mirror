@@ -107,7 +107,7 @@ METHOD_END
 METHOD(InfoClassSetUpdate, struct opSet *, ops)
 {
    ID              *id = INST_DATA(cl, obj);
-   const struct TagItem  *tstate = ops->ops_AttrList;
+   struct TagItem  *tstate = ops->ops_AttrList;
    struct TagItem  *tag;
    BOOL             vc = FALSE;
    ULONG            data;

@@ -186,7 +186,7 @@ STATIC ASM UWORD ValidateColor( REG(a0) PD *pd, REG(d0) ULONG pen )
 METHOD(PaletteClassNew, struct opSet *,ops)
 {
    PD             *pd;
-   const struct TagItem *tstate = ops->ops_AttrList;
+   struct TagItem *tstate = ops->ops_AttrList;
    struct TagItem *tag;
    Object         *label;
    IPTR            rc, data;

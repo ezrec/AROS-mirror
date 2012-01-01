@@ -247,7 +247,7 @@ LT_SetAttributesA(REG(a0) LayoutHandle *handle,REG(d0) LONG id,REG(a1) struct Ta
 	{
 		struct Gadget	*Gadget = NULL;
 		struct TagItem	*ThisTag;
-		const struct TagItem	*ThisList = TagList;
+		struct TagItem	*ThisList = TagList;
 		ObjectNode		*Node = NULL;
 
 		while(ThisTag = NextTagItem(&ThisList))

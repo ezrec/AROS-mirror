@@ -209,7 +209,7 @@ STATIC METHOD(MXClassNew, struct opSet *, ops)
 {
    MD             *md;
    IPTR            rc, data;
-   const struct TagItem *tstate;
+   struct TagItem *tstate;
    struct TagItem *tags = ops->ops_AttrList, *tag;
    int             type = MXTYPE_RADIOBUTTON;
 
@@ -345,7 +345,7 @@ STATIC METHOD(MXClassSetUpdate, struct opUpdate *, opu)
 {
    MD                *md = INST_DATA(cl, obj);
    struct GadgetInfo *gi = opu->opu_GInfo;
-   const struct TagItem    *tstate = opu->opu_AttrList;
+   struct TagItem    *tstate = opu->opu_AttrList;
    struct TagItem    *tag, ttag[2];
    struct opSet       set;
    ULONG              data, i;

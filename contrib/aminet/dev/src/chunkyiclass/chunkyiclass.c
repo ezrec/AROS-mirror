@@ -392,7 +392,7 @@ chunkyim_set (
 {
    struct chunkyidata  *data = INST_DATA (cl, obj);
    struct TagItem      *ti;
-   const struct TagItem *tstate = msg->ops_AttrList;
+   struct TagItem *tstate = msg->ops_AttrList;
    BOOL                 nimg_update = FALSE, simg_update = FALSE;
    UBYTE               *normal_data = NULL;
    IPTR                 bgpen;

@@ -35,7 +35,7 @@ IPTR SearchBar__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
     Object *bt_close;
     
     /* Parse initial attributes --------------------------------------------*/
-    while ((tag = NextTagItem((const struct TagItem **)&tstate)) != NULL)
+    while ((tag = NextTagItem(&tstate)) != NULL)
     {
         switch (tag->ti_Tag)
         {

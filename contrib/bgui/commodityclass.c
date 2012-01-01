@@ -102,7 +102,7 @@ METHOD(CommClassNew, struct opSet *, ops)
    CD                *cd;
    IPTR               rc, data;
    ULONG              un = NBU_UNIQUE | NBU_NOTIFY;
-   const struct TagItem *tstate = ops->ops_AttrList;
+   struct TagItem *tstate = ops->ops_AttrList;
    struct TagItem    *tag;
 
    /*

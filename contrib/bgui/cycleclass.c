@@ -167,7 +167,7 @@ METHOD(CycleClassSetUpdate, struct opUpdate *, opu)
    CD                 *cd = INST_DATA(cl, obj);
    ULONG               oact = cd->cd_Active;
    IPTR                data;
-   const struct TagItem *tstate = opu->opu_AttrList;
+   struct TagItem *tstate = opu->opu_AttrList;
    struct TagItem     *tag;
    WORD                dis = GADGET(obj)->Flags & GFLG_DISABLED;
    UBYTE             **new_labels = NULL;

@@ -74,7 +74,7 @@ METHOD(SystemClassSet, struct opSet *, ops)
 {
    SD                *sd = INST_DATA(cl, obj);
    struct TagItem    *tag;
-   const struct TagItem *tstate = ops->ops_AttrList;
+   struct TagItem *tstate = ops->ops_AttrList;
    ULONG              data;
    ULONG              rc;
 

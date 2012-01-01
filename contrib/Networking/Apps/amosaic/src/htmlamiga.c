@@ -522,7 +522,7 @@ static IPTR HTMLGadClGet(Class *cl, Object *obj, Msg msg){
 
 static IPTR HTMLGadClSet(Class *cl, Object *obj, Msg msg){
 	HTMLGadClData *inst = INST_DATA(cl, obj);
-	const struct TagItem *tstate;
+	struct TagItem *tstate;
 	struct TagItem *ti;
 	struct RastPort *rp;
   
@@ -1846,7 +1846,7 @@ static IPTR HTMLTextClCleanup( Class *cl, Object *obj, Msg msg){
 
 static IPTR HTMLTextClSet(Class *cl, Object *obj, Msg msg){
 	HTMLTextClData *inst = INST_DATA(cl, obj);
-	const struct TagItem *tstate;
+	struct TagItem *tstate;
 	struct TagItem *ti;
 
 	ti = ((opSetP)msg)->ops_AttrList;
@@ -2135,7 +2135,7 @@ static IPTR HTMLTextNClCleanup( Class *cl, Object *obj, Msg msg){
 }  
 static IPTR HTMLTextNClSet(Class *cl, Object *obj, Msg msg){
 	HTMLTextClData *inst = INST_DATA(cl, obj);
-	const struct TagItem *tstate;
+	struct TagItem *tstate;
 	struct TagItem *ti;
   
 	ti = ((opSetP)msg)->ops_AttrList;

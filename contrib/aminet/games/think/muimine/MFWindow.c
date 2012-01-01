@@ -679,7 +679,7 @@ static IPTR mSet(struct IClass *cl, Object *obj, struct opSet * msg)
 {
     struct MFWindowData *data = INST_DATA(cl,obj);
     struct TagItem *tag;
-    const struct TagItem *tags;
+    struct TagItem *tags;
     ULONG WinOpen = FALSE;
     ULONG ret;
 

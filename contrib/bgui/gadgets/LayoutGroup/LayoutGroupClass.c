@@ -350,7 +350,7 @@ METHOD_END
 static ULONG GroupSet(Class *cl,Object *obj,struct opSet *ops)
 {
 	GD *gd;
-	const struct TagItem *tstate;
+	struct TagItem *tstate;
 	struct TagItem *tag;
 	ULONG success;
 	BOOL refresh;
@@ -589,7 +589,7 @@ static BOOL SetGroupNodeAttributes(MD *md,struct opSet *ops)
 {
 	BOOL success;
 	struct TagItem *tag;
-	const struct TagItem *tstate;
+	struct TagItem *tstate;
 
 	for(tstate=ops->ops_AttrList,success=TRUE;success==TRUE && (tag=NextTagItem(&tstate));)
 	{
@@ -840,7 +840,7 @@ METHOD(GroupNodeClassMultipleGet,struct ogpMGet *,ogp)
 	MD *md=INST_DATA(cl,obj);
 	IPTR got;
 	struct TagItem *tag;
-	const struct TagItem *tstate;
+	struct TagItem *tstate;
 
 	for(got=0,tstate=ogp->ogpg_AttrList;(tag=NextTagItem(&tstate));got++)
 	{

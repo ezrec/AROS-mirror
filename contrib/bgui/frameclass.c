@@ -624,7 +624,7 @@ STATIC ASM VOID SetFrameAttrs(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) st
    FD                *fd = INST_DATA(cl, obj);
    struct TextFont   *tf;
    IPTR      temp = (IPTR)NULL;
-   const struct TagItem *tstate = attr;
+   struct TagItem *tstate = attr;
    struct TagItem    *tag;
    Object   *ob   = NULL;
    IPTR      data;

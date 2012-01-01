@@ -910,7 +910,7 @@ STATIC ASM VOID SetDimensions( REG(a0) Object *obj, REG(a1) struct grmDimensions
 STATIC METHOD(PMBClassNew, struct opSet *, ops )
 {
    PMD         *pmd;
-   const struct TagItem *tstate = ops->ops_AttrList;
+   struct TagItem *tstate = ops->ops_AttrList;
    struct TagItem    *tag;
    struct PopMenu    *pm=NULL;
    IPTR               rc = 0L;
@@ -997,7 +997,7 @@ METHOD_END
 STATIC METHOD(PMBClassSet, struct opSet *, ops )
 {
    PMD         *pmd = ( PMD * )INST_DATA( cl, obj );
-   const struct TagItem *tstate = ops->ops_AttrList;
+   struct TagItem *tstate = ops->ops_AttrList;
    struct TagItem *tag;
    struct RastPort         *rp;
    ULONG        rc = 0L;

@@ -109,7 +109,7 @@ METHOD(ProgressClassSetUpdate, struct opUpdate *, opu)
    ULONG            tmp, odone = pd->pd_Done;
    IPTR             data;
    struct TagItem  *attr = opu->opu_AttrList, *tag;
-   const struct TagItem *tstate = attr;
+   struct TagItem *tstate = attr;
    BOOL             vc = FALSE;
 
    /*

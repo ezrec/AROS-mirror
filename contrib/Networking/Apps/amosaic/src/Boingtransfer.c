@@ -374,7 +374,7 @@ SAVEDS  ULONG BoingTransferHide(struct IClass *cl,Object *obj,struct MUIP_Handle
 SAVEDS static IPTR BoingTransferSet(struct IClass *cl,Object *obj,Msg msg)
 {
   struct BoingTransferClData *data = INST_DATA(cl,obj);
-  const struct TagItem *tags;
+  struct TagItem *tags;
   struct TagItem *tag;
 
   for (tags=((struct opSet *)msg)->ops_AttrList;tag=NextTagItem(&tags);)

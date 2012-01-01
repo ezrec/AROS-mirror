@@ -282,7 +282,7 @@ makeproto ASM VOID SetImageBounds(REG(a0) Object *obj, REG(a1) struct IBox *boun
 makeproto ASM VOID UnmapTags(REG(a0) struct TagItem *tags, REG(a1) struct TagItem *map)
 {
    struct TagItem *tag, *tag1;
-   const struct TagItem *at = map;
+   struct TagItem *at = map;
 
    /*
     * Go through the mapped tag-list.
@@ -306,7 +306,7 @@ makeproto ASM VOID UnmapTags(REG(a0) struct TagItem *tags, REG(a1) struct TagIte
 makeproto ASM Object *CreateVector(REG(a0) struct TagItem *attr)
 {
    struct TagItem    *tag;
-   const struct TagItem *tstate = attr;
+   struct TagItem *tstate = attr;
 
    while ((tag = NextTagItem(&tstate)))
    {
@@ -322,9 +322,9 @@ makeproto ASM Object *CreateVector(REG(a0) struct TagItem *attr)
 makeproto ASM struct TagItem *BGUI_NextTagItem(REG(a0) struct TagItem **t)
 {
    struct TagItem *rt, *tag, *tag2;
-   const struct TagItem *tstate;
+   struct TagItem *tstate;
 
-   rt = NextTagItem((const struct TagItem **)t);
+   rt = NextTagItem(t);
 
    if (rt)
    {

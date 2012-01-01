@@ -2446,7 +2446,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct InstData *data = INST_DATA(cl, obj);
     struct TagItem *tag;
-    const struct TagItem *tstate;
+    struct TagItem *tstate;
     ULONG flags = 0, res;
 
     ENTER();

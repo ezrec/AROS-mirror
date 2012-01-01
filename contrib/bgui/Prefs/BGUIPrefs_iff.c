@@ -83,7 +83,7 @@ void
 SaveTagList( struct IFFHandle *iff, ULONG type, struct TagItem *tags )
 {
 	struct	TagItem	*tag;
-	const struct TagItem *tstate = tags;
+	struct TagItem *tstate = tags;
 	ULONG	zero = TAG_DONE;
 
 	PushChunk( iff, ID_BGUI, ID_DTAG, IFFSIZE_UNKNOWN );

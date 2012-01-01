@@ -40,7 +40,7 @@ quit
 ULONG GetAttrs( Object *obj, Tag tag1, ... )
 {
 	AROS_SLOWSTACKTAGS_PRE_AS(tag1, ULONG)
-        const struct TagItem    *tstate = AROS_SLOWSTACKTAGS_ARG(tag1);
+        struct TagItem          *tstate = AROS_SLOWSTACKTAGS_ARG(tag1);
         struct TagItem          *tag;
         ULONG                    num = 0L;
 

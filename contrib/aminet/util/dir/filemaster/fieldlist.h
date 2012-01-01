@@ -93,7 +93,7 @@ STATIC void __saveds __asm SetFLAttr(register __a0 FLD *fld, register __a1 struc
 	/*
 	 *	Scan attribute list.
 	 */
-	while ( (tag = NextTagItem( (const struct TagItem **)&tstate ))) {
+	while ( (tag = NextTagItem(&tstate ))) {
 		switch ( tag->ti_Tag ) {
 
 			case	FL_AcceptDrop0:

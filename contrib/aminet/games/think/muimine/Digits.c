@@ -185,7 +185,7 @@ static ULONG mAskMinMax(struct IClass *cl, Object *obj, struct MUIP_AskMinMax *m
 static ULONG mSet(struct IClass *cl, Object *obj, struct opSet * msg)
 {
     struct DigitsData *data = INST_DATA(cl,obj);
-    const struct TagItem *tags;
+    struct TagItem *tags;
     struct TagItem *tag;
 
     for (tags = msg->ops_AttrList; (tag = NextTagItem(&tags)); )

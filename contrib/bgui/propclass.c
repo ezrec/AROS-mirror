@@ -309,7 +309,7 @@ METHOD(PropClassSetUpdate, struct opUpdate *, opu)
 {
    PD             *pd = INST_DATA(cl, obj);
    BC             *bc = BASE_DATA(obj);
-   const struct TagItem *tstate = opu->opu_AttrList;
+   struct TagItem *tstate = opu->opu_AttrList;
    struct TagItem *tag;
    ULONG           type, redraw = 0, ho, vo;
    LONG            tmp, val, omin = 0, omax = 0, olev = 0, oldtop = 0, oldtot = 0, oldvis = 0;

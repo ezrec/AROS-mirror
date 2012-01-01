@@ -67,7 +67,7 @@ IPTR BookmarkManager__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
     Object *insert_bt, *remove_bt, *change_bt, *up_bt, *down_bt;
     
     /* Parse initial attributes --------------------------------------------*/
-    while ((tag = NextTagItem((const struct TagItem **)&tstate)) != NULL)
+    while ((tag = NextTagItem(&tstate)) != NULL)
     {
         switch (tag->ti_Tag)
         {
@@ -451,7 +451,7 @@ IPTR BookmarkManager__OM_GET(Class *cl, Object *obj, struct opGet *msg)
 IPTR BookmarkManager__OM_SET(Class *cl, Object *obj, struct opSet *msg)
 {
     struct BookmarkManager_DATA *data = (struct BookmarkManager_DATA *) INST_DATA(cl, obj);
-    const struct TagItem *tags  = msg->ops_AttrList;
+    struct TagItem *tags  = msg->ops_AttrList;
     struct TagItem *tag;
 
     while ((tag = NextTagItem(&tags)) != NULL)

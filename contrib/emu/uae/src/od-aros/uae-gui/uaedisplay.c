@@ -70,7 +70,7 @@ ZUNE_CUSTOMCLASS_INLINE_10
 
     OM_NEW, struct opSet *,
     (
-         const struct TagItem *tstate = message->ops_AttrList;
+         struct TagItem *tstate = message->ops_AttrList;
          struct TagItem       *tag;
 
 	 self = (Object *)DoSuperNewTags
@@ -105,7 +105,7 @@ ZUNE_CUSTOMCLASS_INLINE_10
 
     OM_SET, struct opSet *,
     (
-	 const struct TagItem *tstate = message->ops_AttrList;
+	 struct TagItem *tstate = message->ops_AttrList;
          struct TagItem       *tag;
 
 	 BOOL sizechanged = FALSE;

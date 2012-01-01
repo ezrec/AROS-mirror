@@ -453,7 +453,7 @@ STATIC ULONG
 SetMethod(Class *class,struct Gadget *gadget,struct opSet *msg)
 {
 	struct GridData *GridData = INST_DATA(class,gadget);
-	const struct TagItem *List;
+	struct TagItem *List;
 	struct TagItem *Item;
 	struct RastPort *RPort;
 	LONG Delta;

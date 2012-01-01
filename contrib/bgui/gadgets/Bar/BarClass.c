@@ -414,7 +414,7 @@ static ULONG BarSet(Class *cl,Object *obj,struct opUpdate *opu,BOOL creation)
 {
 	GD *gd;
 	struct TagItem *tag;
-	const struct TagItem *tstate;
+	struct TagItem *tstate;
 	ULONG success;
 	BOOL redraw,redraw_knob,position_changed;
 	LONG horizontal_position,vertical_position;

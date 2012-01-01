@@ -111,7 +111,7 @@ METHOD(ScreenReqClassSetUpdate, struct opSet *, ops)
 {
    SD             *sd = INST_DATA(cl, obj);
    ULONG           data, rc;
-   const struct TagItem *tstate = ops->ops_AttrList;
+   struct TagItem *tstate = ops->ops_AttrList;
    struct TagItem *tag;
 
    /*

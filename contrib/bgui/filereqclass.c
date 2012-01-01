@@ -107,7 +107,7 @@ METHOD(FileReqClassSetUpdate, struct opSet *, ops)
    FD             *fd = INST_DATA(cl, obj);
    IPTR            data, rc;
    struct TagItem *tag;
-   const struct TagItem *tstate = ops->ops_AttrList;
+   struct TagItem *tstate = ops->ops_AttrList;
    BOOL            path_update = FALSE;
 
    /*

@@ -55,7 +55,7 @@ ULONG GetImageName(Object * strobj, IPTR * store)
 SAVEDS IPTR mNew(struct IClass *cl, Object *obj, struct opSet * msg)
 {
     struct ISWindowData * data;
-    const struct TagItem *tags;
+    struct TagItem *tags;
     struct TagItem *tag;
     Object * mfstring, * sbstring, * mdstring, * tdstring,
            * mfpop, * sbpop, * mdpop, * tdpop, * okbutt, * cancelbutt;
@@ -256,7 +256,7 @@ SAVEDS ULONG mDispose(struct IClass *cl, Object *obj, Msg msg)
 SAVEDS IPTR mSet(struct IClass *cl, Object *obj, struct opSet * msg)
 {
     struct ISWindowData *data = INST_DATA(cl,obj);
-    const struct TagItem *tags;
+    struct TagItem *tags;
     struct TagItem *tag;
 
     for (tags = msg->ops_AttrList; (tag = NextTagItem(&tags));)

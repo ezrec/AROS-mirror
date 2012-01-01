@@ -114,7 +114,7 @@ IPTR Toolbar_GetAttrib(struct IClass *cl, Object *obj, struct opGet *msg)
 IPTR Toolbar_SetAttrib(struct IClass *cl, Object *obj, struct opSet *msg)
 {
   struct Toolbar_Data *data = (struct Toolbar_Data *)INST_DATA(cl, obj);
-  const struct TagItem *tags;
+  struct TagItem *tags;
   struct TagItem *tag;
 
   for(tags=msg->ops_AttrList; (tag=NextTagItem(&tags)) != NULL; )

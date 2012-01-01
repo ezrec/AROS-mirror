@@ -1105,7 +1105,7 @@ typedef struct
 
 void SetFLAttr(FLD *fld,struct TagItem *attr)
 {
-const struct TagItem *tstate = attr;
+struct TagItem *tstate = attr;
 struct TagItem *tag;
 
   while ((tag = NextTagItem(&tstate)))

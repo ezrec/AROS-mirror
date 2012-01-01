@@ -475,7 +475,7 @@ static ULONG Set(struct IClass *cl, Object *obj, struct opSet *msg)
 #endif
 {
     struct Data *data = INST_DATA(cl, obj);
-    const struct TagItem *tags;
+    struct TagItem *tags;
     struct TagItem *tag;
     LONG first = MUIV_NList_First_Top ;
     BOOL changed = FALSE, textchanged = FALSE ;

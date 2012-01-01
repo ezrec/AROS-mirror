@@ -26,7 +26,7 @@ IPTR TabbedGroup__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
 {
     struct TabbedGroup_DATA *data = NULL; 
     struct TagItem *tag = NULL;
-    const struct TagItem *tstate = message->ops_AttrList;
+    struct TagItem *tstate = message->ops_AttrList;
     /* Lay tabs horizontally by default */
     BYTE direction = HORIZONTAL_TABBED;
 

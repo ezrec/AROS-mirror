@@ -123,7 +123,7 @@ struct TagItem {
 
 #include <stdio.h>
 typedef int xadFileHandle;
-typedef const struct TagItem * xadTAGPTR;
+typedef struct TagItem * xadTAGPTR;
 
 /* is a tag's data a pointer, an int, or a 64-bit size? */
 #define TAG_PTR (0x80000000UL)

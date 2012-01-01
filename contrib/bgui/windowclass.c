@@ -454,7 +454,7 @@ STATIC struct Hook BackFill_hook = { {NULL, NULL}, (HOOKFUNC)BackFill_func, NULL
 STATIC METHOD(WindowClassSetUpdate, struct opSet *, ops)
 {
    WD              *wd = INST_DATA(cl, obj);
-   const struct TagItem  *tstate = ops->ops_AttrList;
+   struct TagItem  *tstate = ops->ops_AttrList;
    struct TagItem  *tag;
    struct Window   *w = wd->wd_WindowPtr;
    IPTR             data;
@@ -698,7 +698,7 @@ STATIC METHOD(WindowClassNew, struct opSet *, ops)
    IPTR            rc=0;
    IPTR            data;
    ULONG           idcmp;
-   const struct TagItem *tstate;
+   struct TagItem *tstate;
    struct TagItem *tag, *tags;
    BOOL            fail = FALSE;
 
@@ -4063,7 +4063,7 @@ METHOD_END
 STATIC METHOD(WindowClassSetupGadget, struct wmSetupGadget *, wmsg)
 {
    WD *wd = INST_DATA(cl, obj);
-   const struct TagItem  *tstate = wmsg->wmsg_Tags;
+   struct TagItem  *tstate = wmsg->wmsg_Tags;
    struct TagItem *tag;
 
    while ((tag = NextTagItem(&tstate)))

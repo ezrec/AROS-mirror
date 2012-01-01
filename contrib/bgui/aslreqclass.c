@@ -129,7 +129,7 @@ METHOD(AslReqClassSetUpdate, struct opSet *, ops)
    AD             *ad = INST_DATA(cl, obj);
    Tag             attr;
    IPTR            data;
-   const struct TagItem *tstate;
+   struct TagItem *tstate;
    struct TagItem *tags, *tag;
    BOOL            asl = FALSE;
 

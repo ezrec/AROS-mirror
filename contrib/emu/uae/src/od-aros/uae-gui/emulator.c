@@ -68,7 +68,7 @@ IPTR Emulator__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
 IPTR Emulator__OM_SET(Class *CLASS, Object *self, struct opSet *message)
 {
     struct Emulator_DATA *data   = INST_DATA(CLASS, self);
-    const struct TagItem *tstate = message->ops_AttrList;
+    struct TagItem *tstate = message->ops_AttrList;
     struct TagItem       *tag;
 
     while ((tag = NextTagItem(&tstate)) != NULL)

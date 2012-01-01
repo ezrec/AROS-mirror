@@ -613,7 +613,7 @@ METHOD(VectorClassSet, struct opSet *, ops)
    VD                *vd = INST_DATA(cl, obj);
    IPTR               data;
    struct TagItem    *tag;
-   const struct TagItem *tstate = ops->ops_AttrList;
+   struct TagItem *tstate = ops->ops_AttrList;
    BOOL               resize = FALSE;
    struct VectorItem *vi;
    ULONG              rc;

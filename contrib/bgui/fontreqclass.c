@@ -117,7 +117,7 @@ METHOD(FontReqClassSetUpdate, struct opSet *, ops)
 {
    FD             *fd = INST_DATA(cl, obj);
    IPTR            data, rc;
-   const struct TagItem *tstate = ops->ops_AttrList;
+   struct TagItem *tstate = ops->ops_AttrList;
    struct TagItem *tag;
 
    /*

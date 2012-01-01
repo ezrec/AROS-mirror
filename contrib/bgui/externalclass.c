@@ -83,7 +83,7 @@ typedef struct {
  */
 STATIC ASM BOOL SetupAttrList(REG(a0) ED *ed, REG(a1) struct TagItem *attr)
 {
-   const struct TagItem *tstate;
+   struct TagItem *tstate;
    struct TagItem *tag;
 
    /*
@@ -127,7 +127,7 @@ STATIC ASM BOOL SetupAttrList(REG(a0) ED *ed, REG(a1) struct TagItem *attr)
  */
 STATIC ASM VOID GetTrackChanges( REG(a0) ED *ed )
 {
-   const struct TagItem    *tstate = ed->ed_TrackList;
+   struct TagItem    *tstate = ed->ed_TrackList;
    struct TagItem *tag;
 
    /*
@@ -147,7 +147,7 @@ STATIC ASM VOID SetupSize(REG(a0) Class *cl, REG(a1) Object *obj)
    ED                 *ed = INST_DATA(cl, obj);
    BC                 *bc = BASE_DATA(obj);
    struct IBox        *box = &bc->bc_InnerBox;
-   const struct TagItem *tstate = ed->ed_AttrList;
+   struct TagItem *tstate = ed->ed_AttrList;
    struct TagItem *tag;
 
    /*

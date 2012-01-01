@@ -179,7 +179,7 @@ static IPTR mAskMinMax(struct IClass *cl, Object *obj, struct MUIP_AskMinMax *ms
 static IPTR mSet(struct IClass *cl, Object *obj, struct opSet * msg)
 {
     struct FaceButtonData *data = INST_DATA(cl,obj);
-    const struct TagItem *tags;
+    struct TagItem *tags;
     struct TagItem *tag;
 
     for (tags = msg->ops_AttrList; (tag = NextTagItem(&tags)); )

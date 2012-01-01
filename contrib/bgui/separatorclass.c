@@ -103,7 +103,7 @@ METHOD(SepClassSet, struct opSet *, ops)
    SD              *sd = INST_DATA(cl, obj);
    ULONG            rc, data;
    struct TagItem  *tag;
-   const struct TagItem *tstate = ops->ops_AttrList;
+   struct TagItem *tstate = ops->ops_AttrList;
 
    rc = AsmDoSuperMethodA(cl, obj, (Msg)ops);
 

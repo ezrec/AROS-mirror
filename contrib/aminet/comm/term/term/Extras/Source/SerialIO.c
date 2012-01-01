@@ -455,7 +455,7 @@ SetSerialAttributes(struct IOExtSer *Request,const struct TagItem *Tags)
 {
 	struct TagItem *Tag;
 
-	while(Tag = NextTagItem(&Tags))
+	while(Tag = NextTagItem((struct TagItem **)&Tags))
 	{
 		switch(Tag->ti_Tag)
 		{
@@ -563,7 +563,7 @@ GetSerialAttributes(struct IOExtSer *Request,const struct TagItem *Tags)
 
 	Result = 0;
 
-	while(Tag = NextTagItem(&Tags))
+	while(Tag = NextTagItem((struct TagItem **)&Tags))
 	{
 		if(!(Data = (ULONG *)Tag->ti_Data))
 			Data = &Result;

@@ -66,7 +66,7 @@ METHOD(DGMClassSet, struct opSet *, ops)
 {
    DD                  *dd = INST_DATA(cl, obj);
    struct TagItem      *tag;
-   const struct TagItem *tstate = ops->ops_AttrList;
+   struct TagItem *tstate = ops->ops_AttrList;
    struct IntuiMessage *imsg;
    IPTR                *ptr = NULL;
    IPTR                *res = NULL;

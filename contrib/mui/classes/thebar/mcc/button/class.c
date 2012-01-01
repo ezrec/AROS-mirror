@@ -521,7 +521,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct InstData *data = INST_DATA(cl,obj);
     struct TagItem  *tag, *vmt, *rat, *sct, *sut, *lpt, *ekt, *ract;
-    const struct TagItem *tstate;
+    struct TagItem *tstate;
     BOOL redraw, setidcmp, back, sel, pressed, over;
     IPTR res;
 

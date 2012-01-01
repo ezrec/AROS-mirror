@@ -862,7 +862,7 @@ METHOD(ListClassNew, struct opSet *, ops)
    IPTR         rc, data;
    ULONG        sort = LVAP_TAIL;
    struct TagItem *tags, *tag;
-   const struct TagItem *tstate;
+   struct TagItem *tstate;
    ULONG       *new_weights = NULL;
    APTR        *new_entries = NULL;
    int          i;
@@ -1037,7 +1037,7 @@ METHOD_END
 METHOD(ListClassSetUpdate, struct opUpdate *, opu)
 {
    LD             *ld = INST_DATA( cl, obj );
-   const struct TagItem *tstate = opu->opu_AttrList;
+   struct TagItem *tstate = opu->opu_AttrList;
    struct TagItem *tag;
    LVE            *lve;
    IPTR            data;

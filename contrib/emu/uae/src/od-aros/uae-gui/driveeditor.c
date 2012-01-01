@@ -212,7 +212,7 @@ IPTR DriveEditor__OM_DISPOSE(Class *CLASS, Object *self, Msg message)
 IPTR DriveEditor__OM_SET(Class *CLASS, Object *self, struct opSet *message)
 {
     struct DriveEditor_DATA *data   = INST_DATA(CLASS, self);
-    const struct TagItem    *tstate = message->ops_AttrList;
+    struct TagItem    *tstate = message->ops_AttrList;
     struct TagItem          *tag;
 
     while ((tag = NextTagItem(&tstate)) != NULL)

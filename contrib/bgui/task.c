@@ -1571,7 +1571,7 @@ static void LoadPrefs(UBYTE *name)
 makeproto struct TagItem *DefTagList(ULONG id, struct TagItem *tags)
 {
    struct TagItem *deftags, *newtags, *t, *tag;
-   const struct TagItem *tstate1, *tstate2;
+   struct TagItem *tstate1, *tstate2;
    int             fr_deftype = 0;
 
    int n1, n2;
@@ -1623,7 +1623,7 @@ makeproto struct TagItem *DefTagList(ULONG id, struct TagItem *tags)
 
 makeproto SAVEDS ASM ULONG BGUI_CountTagItems(REG(a0) struct TagItem *tags)
 {
-   const struct TagItem *tstate = tags;
+   struct TagItem *tstate = tags;
    ULONG n = 0;
 
    while (NextTagItem(&tstate)) n++;
@@ -1634,7 +1634,7 @@ makeproto SAVEDS ASM ULONG BGUI_CountTagItems(REG(a0) struct TagItem *tags)
 makeproto SAVEDS ASM struct TagItem *BGUI_MergeTagItems(REG(a0) struct TagItem *tags1, REG(a1) struct TagItem *tags2)
 {
    struct TagItem *tags, *t, *tag;
-   const struct TagItem *tstate1 = tags1, *tstate2 = tags2;
+   struct TagItem *tstate1 = tags1, *tstate2 = tags2;
 
    int n1 = BGUI_CountTagItems(tags1);
    int n2 = BGUI_CountTagItems(tags2);
@@ -1659,7 +1659,7 @@ makeproto SAVEDS ASM struct TagItem *BGUI_MergeTagItems(REG(a0) struct TagItem *
 makeproto SAVEDS ASM struct TagItem *BGUI_CleanTagItems(REG(a0) struct TagItem *tags, REG(d0) LONG dir)
 {
    struct TagItem *tag, *tag2;
-   const struct TagItem *tstate = tags;
+   struct TagItem *tstate = tags;
 
    if (dir)
    {

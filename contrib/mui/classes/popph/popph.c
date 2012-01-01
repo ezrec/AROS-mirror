@@ -519,7 +519,7 @@ IPTR Popph__OM_DISPOSE(struct IClass *cl, Object *obj, struct opSet *msg)
 IPTR Popph__OM_SET(struct IClass *cl, Object *obj, Msg msg)
 {
     struct Popplaceholder_Data *data = INST_DATA(cl,obj);
-    const struct TagItem *tags;
+    struct TagItem *tags;
     struct TagItem *tag;
 
     for( ( tags=((struct opSet *)msg)->ops_AttrList ) ; ( tag=NextTagItem(&tags) ) ; )

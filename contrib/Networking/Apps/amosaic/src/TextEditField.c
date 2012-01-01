@@ -726,7 +726,7 @@ static IPTR mTextEditFieldShow(struct IClass *cl,Object *obj,Msg msg)
 
 static IPTR mTextEditFieldSet(struct IClass *cl,Object *obj,struct opSet *msg)
 {
-	const struct TagItem *tags;
+	struct TagItem *tags;
 	struct TagItem *tag;
 
 	for (tags=msg->ops_AttrList;tag=NextTagItem(&tags);)
@@ -775,7 +775,7 @@ DISPATCHER(TextEditFieldDispatcher)
 static IPTR mTextFieldNew(struct IClass *cl,Object *obj,struct opSet *msg)
 {
 	struct TextFieldClData *inst;
-	const struct TagItem *tags;
+	struct TagItem *tags;
 	struct TagItem *tag;
 
 	if (!(obj = (Object *)DoSuperMethodA(cl,obj,(Msg)msg)))
@@ -828,7 +828,7 @@ static IPTR mTextFieldDispose(struct IClass *cl,Object *obj,Msg msg)
 static IPTR mTextFieldSet(struct IClass *cl,Object *obj,struct opSet *msg)
 {
 	struct TextFieldClData *inst = INST_DATA(cl,obj);
-	const struct TagItem *tags;
+	struct TagItem *tags;
 	struct TagItem *tag;
 
 	for (tags=msg->ops_AttrList;tag=NextTagItem(&tags);)
