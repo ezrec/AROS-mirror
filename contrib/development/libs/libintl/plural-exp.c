@@ -113,7 +113,7 @@ EXTRACT_PLURAL_EXPRESSION (nullentry, pluralp, npluralsp)
 	goto no_plural;
       else
 	{
-	  char *endp;
+	  const char *endp;
 	  unsigned long int n;
 	  struct parse_args args;
 

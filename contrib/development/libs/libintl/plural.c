@@ -673,7 +673,7 @@ int yyparse (void);
 int yychar;						\
 							\
 /* The semantic value of the lookahead symbol. */	\
-YYSTYPE yylval;						\
+YYSTYPE yylval = {};					\
 							\
 /* Number of parse errors so far.  */			\
 int yynerrs;

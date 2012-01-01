@@ -110,7 +110,7 @@ _nl_find_domain (dirname, locale, domainname, domainbinding)
      done.  */
   alias_value = NULL;
   if (alias_value != NULL)
-    locale = strdupa ((char *)alias_value);
+    locale = strdupa (alias_value);
 
   /* Now we determine the single parts of the locale name.  First
      look for the language.  Termination symbols are `_' and `@' if
