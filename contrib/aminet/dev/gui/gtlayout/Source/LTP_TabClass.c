@@ -216,7 +216,7 @@ NewMethod(struct IClass *class,struct Gadget *gadget,struct opSet *SetInfo)
 	{
 		TabInfo			*Info = INST_DATA(class,gadget);
 		struct TagItem	*Tag;
-		const struct TagItem *TagList = SetInfo->ops_AttrList;
+		struct TagItem  *TagList = SetInfo->ops_AttrList;
 		struct TextAttr	*FontAttr;
 		LONG			 Width,Height;
 		struct DrawInfo	*DrawInfo;
@@ -642,7 +642,7 @@ LTP_ObtainTabSizeA(struct IBox *Box, struct TagItem *TagList)
 	DrawInfo = NULL;
 	Labels = NULL;
 
-	while(Tag = NextTagItem((const struct TagItem **)&TagList))
+	while(Tag = NextTagItem(&TagList))
 	{
 		switch(Tag->ti_Tag)
 		{

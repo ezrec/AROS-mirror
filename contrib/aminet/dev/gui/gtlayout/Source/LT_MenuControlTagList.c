@@ -116,7 +116,7 @@ VOID LIBENT
 LT_MenuControlTagList(REG(a0) struct Window *Window,REG(a1) struct Menu *IntuitionMenu,REG(a2) struct TagItem *Tags)
 {
 	RootMenu *			Root = (RootMenu *)((IPTR)IntuitionMenu - offsetof(RootMenu,Menu));
-	const struct TagItem *	List;
+	struct TagItem *	List;
 	struct TagItem *	Entry;
 	ULONG				ID;
 	MenuNode *			Menu = NULL;

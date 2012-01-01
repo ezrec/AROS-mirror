@@ -674,7 +674,7 @@ SetMethod(
 {
 	struct SliderClassData *sd = INST_DATA(class,object);
 	struct TagItem *tag;
-	const struct TagItem *list = SetInfo->ops_AttrList;
+	struct TagItem *list = SetInfo->ops_AttrList;
 	LONG redraw = GREDRAW_UPDATE;
 	BOOL rawPosition = FALSE;
 	BOOL updatePosition = FALSE;
@@ -813,7 +813,7 @@ NewMethod(
 		BOOL failed = FALSE;
 		ULONG freedom = FREEHORIZ;
 		struct TagItem *tag;
-		const struct TagItem *list = SetInfo->ops_AttrList;
+		struct TagItem *list = SetInfo->ops_AttrList;
 		WORD reference = 0;
 
 		sd->UseTicks = TICKS_None;

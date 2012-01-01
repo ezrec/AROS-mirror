@@ -205,8 +205,8 @@ LT_GetAttributesA(REG(a0) LayoutHandle *Handle,REG(d0) LONG ID,REG(a1) struct Ta
 			if(TagList)
 			{
 				struct TagItem	*TagItem;
-				const struct TagItem *TempPtr = TagList;
-				IPTR			*Value;
+				struct TagItem  *TempPtr = TagList;
+				IPTR		*Value;
 
 				while(TagItem = NextTagItem(&TempPtr))
 				{

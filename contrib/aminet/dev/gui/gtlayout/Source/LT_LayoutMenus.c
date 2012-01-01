@@ -107,7 +107,7 @@ LT_LayoutMenusA(REG(a0) LayoutHandle *handle,REG(a1) struct NewMenu *menuTemplat
 	if(handle)
 	{
 		struct TagItem	*tag;
-		const struct TagItem *List = TagParams;
+		struct TagItem  *List = TagParams;
 		LONG			 label = 0,last = 0;	/* For the sake of the compiler, initialize these. */
 		LONG			*Table = NULL;
 		ULONG			 allocSize = 0;	/* For the sake of the compiler, initialize this. */

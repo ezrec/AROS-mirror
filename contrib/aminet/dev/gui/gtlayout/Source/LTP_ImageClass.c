@@ -59,7 +59,7 @@ ImageClassNew(struct IClass *class,Object *object,struct opSet *SetMethod)
 		if(NewImage = (struct Image *)DoSuperMethodA(class,object,(Msg)SetMethod))
 		{
 			struct ImageInfo	*MoreInfo = INST_DATA(class,NewImage);
-			const struct TagItem	*List = SetMethod->ops_AttrList;
+			struct TagItem		*List = SetMethod->ops_AttrList;
 
 			memset(MoreInfo,0,sizeof(struct ImageInfo));
 

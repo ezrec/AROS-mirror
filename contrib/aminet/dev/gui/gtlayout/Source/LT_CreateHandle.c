@@ -358,7 +358,7 @@ LT_CreateHandleTagList(REG(a0) struct Screen *Screen,REG(a1) struct TagItem *Tag
 
 			List = TagList;
 
-			while(Entry = NextTagItem((const struct TagItem **)&List))
+			while(Entry = NextTagItem(&List))
 			{
 				switch(Entry->ti_Tag)
 				{

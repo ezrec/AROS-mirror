@@ -337,7 +337,7 @@ LT_AddA(
 
 			if(TagList)
 			{
-				const struct TagItem *TempList = TagList;
+				struct TagItem *TempList = TagList;
 				IPTR ti_Data;
 
 				while(TagItem = NextTagItem(&TempList))
@@ -3760,7 +3760,7 @@ LT_NewA(REG(a0) LayoutHandle *handle,REG(a1) struct TagItem *tagList)
 {
 	if(handle != NULL)
 	{
-		const struct TagItem *List;
+		struct TagItem *List;
 		struct TagItem *Entry;
 		STRPTR label;
 		LONG type;

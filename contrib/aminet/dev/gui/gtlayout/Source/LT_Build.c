@@ -326,7 +326,7 @@ LT_BuildA(REG(a0) LayoutHandle *handle,REG(a1) struct TagItem *TagParams)
 	}
 
 	TagList = (struct TagItem *)TagParams;
-	while(item = NextTagItem((const struct TagItem **)&TagList))
+	while(item = NextTagItem(&TagList))
 	{
 		switch(item->ti_Tag)
 		{
@@ -680,7 +680,7 @@ LT_BuildA(REG(a0) LayoutHandle *handle,REG(a1) struct TagItem *TagParams)
 
 	TagList = (struct TagItem *)TagParams;
 
-	while(item = NextTagItem((const struct TagItem **)&TagList))
+	while(item = NextTagItem(&TagList))
 	{
 		switch((ULONG)item->ti_Tag)
 		{
@@ -882,7 +882,7 @@ LT_BuildA(REG(a0) LayoutHandle *handle,REG(a1) struct TagItem *TagParams)
 
 	TagList = (struct TagItem *)TagParams;
 
-	while(item = NextTagItem((const struct TagItem **)&TagList))
+	while(item = NextTagItem(&TagList))
 	{
 		switch((ULONG)item->ti_Tag)
 		{

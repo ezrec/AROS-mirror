@@ -856,7 +856,7 @@ NewMethod(
 	{
 		PopInfo *			Info = INST_DATA(class,object);
 		struct TagItem *	Item;
-		const struct TagItem *	TagList = SetInfo -> ops_AttrList;
+		struct TagItem *	TagList = SetInfo -> ops_AttrList;
 		struct TextAttr	*	Font = NULL;
 		LONG				Width = 0;
 		LONG				Height = 0;

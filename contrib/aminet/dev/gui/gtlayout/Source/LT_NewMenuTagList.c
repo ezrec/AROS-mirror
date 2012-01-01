@@ -267,7 +267,7 @@ LT_NewMenuTagList(REG(a0) struct TagItem *TagList)
 					 Error;
 	struct Screen	*Screen = NULL;
 	struct TextAttr	*TextAttr = NULL;
-	const struct TagItem	*List;
+	struct TagItem	*List;
 	struct TagItem	*Entry;
 	LayoutHandle	*Handle = NULL;
 	struct Hook		*LocaleHook = NULL;
