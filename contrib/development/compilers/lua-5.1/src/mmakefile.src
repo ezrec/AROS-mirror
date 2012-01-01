@@ -31,6 +31,8 @@ EXEDIR :=	$(CONTRIBDIR)/Development/Lua
 
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../luafilesystem/src
 
+USER_CFLAGS   += -Wno-uninitialized
+
 #MM- contrib-development-lua : contrib-development-lua-lua \
 #MM  contrib-development-lua-amilua \
 #MM  contrib-development-lua-luac \

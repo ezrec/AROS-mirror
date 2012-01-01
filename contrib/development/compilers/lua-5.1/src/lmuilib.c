@@ -523,7 +523,7 @@ static int Muiobj_make_id(lua_State *L)
 static int Muiobj_check(lua_State *L)
 {
   Muiobj mo = checkMui(L, 1);
-  lua_pushboolean(L, (int)mo);
+  lua_pushboolean(L, (int)(mo != NULL));
   return 1;
 }
 
