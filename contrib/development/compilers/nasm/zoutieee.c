@@ -954,11 +954,12 @@ static void ieee_write_file (int debuginfo) {
        	    	ieee_putascii("ASI%X,R%X,%lX,+.\r\n", i, pub->index,pub->offset);
 	    else
        	    	ieee_putascii("ASI%X,%lX,%lX,+.\r\n", i, pub->segment*16,pub->offset);
-	    if (debuginfo)
+	    if (debuginfo) {
 	    	if (pub->type >= 0x100)
 	    	    ieee_putascii("ATI%X,T%X.\r\n", i, pub->type - 0x100);
 		else
 	    	    ieee_putascii("ATI%X,%X.\r\n", i, pub->type);
+	    }
  	    i++;
         }
     }
@@ -972,11 +973,12 @@ static void ieee_write_file (int debuginfo) {
        	    ieee_putascii("ASI%X,R%X,%lX,+.\r\n", i, pub->index,pub->offset);
 	else
        	    ieee_putascii("ASI%X,%lX,%lX,+.\r\n", i, pub->segment*16,pub->offset);
-	if (debuginfo)
+	if (debuginfo) {
 	    if (pub->type >= 0x100)
 	    	ieee_putascii("ATI%X,T%X.\r\n", i, pub->type - 0x100);
 	    else
 	    	ieee_putascii("ATI%X,%X.\r\n", i, pub->type);
+	}
  	i++;
         pub = pub->next;
     }
@@ -1019,11 +1021,12 @@ static void ieee_write_file (int debuginfo) {
        	    	ieee_putascii("ASN%X,R%X,%lX,+.\r\n", i, loc->index,loc->offset);
 	    else
        	    	ieee_putascii("ASN%X,%lX,%lX,+.\r\n", i, loc->segment*16,loc->offset);
-	    if (debuginfo)
+	    if (debuginfo) {
 		if (loc->type >= 0x100)
 	 	    ieee_putascii("ATN%X,T%X.\r\n", i, loc->type - 0x100);
 		else
 	    	    ieee_putascii("ATN%X,%X.\r\n", i, loc->type);
+	    }
  	    i++;
         }
     }
@@ -1099,7 +1102,7 @@ static void ieee_putascii(char *format, ...)
 		if ((buffer[i] & 0xff) > 31)
 			checksum+=buffer[i];
 	va_end(ap);
-	fprintf(ofp,buffer);
+	fprintf(ofp,"%s",buffer);
 }
 
 /*
@@ -1316,10 +1319,6 @@ static void dbgls_deflabel (char *name, long segment,
 			  long offset, int is_global, char *special) 
 {
     struct ieeeSection *seg;
-    int used_special;		/* have we used the special text? */
-
-    /* Keep compiler from warning about special and used_special */
-    used_special = special ? FALSE : FALSE;
 
     /*
      * If it's a special-retry from pass two, discard it.

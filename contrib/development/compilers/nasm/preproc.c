@@ -2745,7 +2745,7 @@ static int expand_mmacro (Token *tline)
      * If we had a label, push it on as the first line of
      * the macro expansion.
      */
-    if (label)
+    if (label) {
 	if (dont_prepend<0)
 	    free_tlist(startline);
 	else {
@@ -2764,6 +2764,7 @@ static int expand_mmacro (Token *tline)
 		tt->text = nasm_strdup(":");
 	    }
 	}
+    }
 
     list->uplevel (m->nolist ? LIST_MACRO_NOLIST : LIST_MACRO);
 

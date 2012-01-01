@@ -579,13 +579,14 @@ static void parse_cmdline(int argc, char **argv)
 	int i;
 	argv++;
 	if (!stopoptions && argv[0][0] == '-' && argv[0][1] == '@') {
-	    if ((p = get_param (argv[0], argc > 1 ? argv[1] : NULL, &i)))
+	    if ((p = get_param (argv[0], argc > 1 ? argv[1] : NULL, &i))) {
 		if ((rfile = fopen(p, "r"))) {
 		    process_respfile (rfile);
 		    fclose(rfile);
 		} else
 		    report_error (ERR_NONFATAL | ERR_NOFILE | ERR_USAGE,
 			    "unable to open response file `%s'", p);
+	    }
 	} else
 	    i = process_arg (argv[0], argc > 1 ? argv[1] : NULL);
 	argv += i, argc -= i;

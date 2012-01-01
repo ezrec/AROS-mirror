@@ -20,6 +20,8 @@
 #define MANT_WORDS 6		       /* 64 bits + 32 for accuracy == 96 */
 #define MANT_DIGITS 28		       /* 29 digits don't fit in 96 bits */
 
+#define round myround
+
 /*
  * guaranteed top bit of from is set
  * => we only have to worry about _one_ bit shift to the left
