@@ -17,7 +17,10 @@
 #include <stdio.h>
 #include <string.h>
 
+#if !defined(__GNUC__)
 #pragma amiga-align
+#endif
+
 #include <exec/memory.h>
 #include <exec/libraries.h>
 #include <devices/timer.h>
@@ -39,7 +42,9 @@
 #endif
 #include <clib/alib_protos.h>
 #include <clib/macros.h>
+#if !defined(__GNUC__)
 #pragma default-align
+#endif
 
 #include <sys/socket.h>
 #include <arpa/inet.h>
@@ -123,12 +128,12 @@ void TSHalv(struct Timestamp *src, struct Timestamp *dst)
 
 void Ami2NTP(struct timeval *tv,struct Timestamp *ts)
 {
-  ts->seconds = tv->tv_secs+2461449600-UTCdiff;
+  ts->seconds = tv->tv_secs+2461449600UL-UTCdiff;
   ts->fractions = (tv->tv_micro*4295)|1;
 }
 void NTP2Ami(struct timeval *tv,struct Timestamp *ts)
 {
-  tv->tv_secs = ts->seconds-2461449600+UTCdiff;
+  tv->tv_secs = ts->seconds-2461449600UL+UTCdiff;
   tv->tv_micro = ts->fractions/4295;
 }
 
@@ -334,7 +339,7 @@ int main(int argc,char *argv[])
       if(locale = OpenLocale(NULL)) {
         UTCdiff = -locale->loc_GMTOffset*60;
         if(verbose)
-          printf("UTC difference not given, locale.library told %ld mins...\n",-locale->loc_GMTOffset);
+          printf("UTC difference not given, locale.library told %ld mins...\n",(long)-locale->loc_GMTOffset);
         CloseLocale(locale);
       } else {
         retval=11;
