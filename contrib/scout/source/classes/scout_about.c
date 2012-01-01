@@ -61,7 +61,7 @@ STATIC APTR URLObject( void )
     return url;
 }
 
-STATIC ULONG mNew( struct IClass *cl,
+STATIC IPTR mNew( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {
@@ -98,10 +98,10 @@ STATIC ULONG mNew( struct IClass *cl,
         DoMethod((Object *)okButton, MUIM_Notify, MUIA_Pressed,             FALSE, MUIV_Notify_Application, 2, MUIM_Application_ReturnID, 1);
     }
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
-STATIC ULONG mDispose( struct IClass *cl,
+STATIC IPTR mDispose( struct IClass *cl,
                        Object *obj,
                        Msg msg )
 {
@@ -110,13 +110,13 @@ STATIC ULONG mDispose( struct IClass *cl,
     return DoSuperMethodA(cl, obj, msg);
 }
 
-STATIC ULONG mAbout( UNUSED struct IClass *cl,
+STATIC IPTR mAbout( UNUSED struct IClass *cl,
                      Object *obj,
                      UNUSED Msg msg )
 {
     APTR app;
     BOOL done = FALSE;
-    ULONG result = 0;
+    IPTR result = 0;
 
     app = (APTR)xget(obj, MUIA_ApplicationObject);
     set(app, MUIA_Application_Sleep, TRUE);

@@ -154,7 +154,7 @@ void ASM tbDeletePool( REG(a0, void *poolHeader) );
 
 #ifndef __MORPHOS__
 #if defined(__AROS__)
-IPTR DoSuperNew(struct IClass *cl, Object *obj, Tag tag1, ...);
+#define DoSuperNew(cl, obj, ...) DoSuperNewTags(cl, obj, NULL, __VA_ARGS__)
 #else
 ULONG VARARGS68K STDARGS DoSuperNew( struct IClass *cl, Object *obj, ... );
 #endif

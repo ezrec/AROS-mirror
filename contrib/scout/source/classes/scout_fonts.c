@@ -40,7 +40,7 @@ struct FontCallbackUserData {
     ULONG ud_Count;
 };
 
-HOOKPROTONHNO(fontslist_con2func, LONG, struct NList_ConstructMessage *msg)
+HOOKPROTONHNO(fontslist_con2func, IPTR, struct NList_ConstructMessage *msg)
 {
     return AllocListEntry(msg->pool, msg->entry, sizeof(struct FontEntry));
 }
@@ -257,7 +257,7 @@ STATIC void SendCallback( struct FontEntry *fe,
     SendEncodedEntry(fe, sizeof(struct FontEntry));
 }
 
-STATIC ULONG mNew( struct IClass *cl,
+STATIC IPTR mNew( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {
@@ -294,7 +294,7 @@ STATIC ULONG mNew( struct IClass *cl,
         fwd->fwd_RemoveButton = removeButton;
         fwd->fwd_MoreButton = moreButton;
 
-        parent = (APTR)GetTagData(MUIA_Window_ParentWindow, (ULONG)NULL, msg->ops_AttrList);
+        parent = (APTR)GetTagData(MUIA_Window_ParentWindow, (IPTR)NULL, msg->ops_AttrList);
 
         set(obj, MUIA_Window_Title, MyGetWindowTitle(txtFontsTitle, fwd->fwd_Title, sizeof(fwd->fwd_Title)));
         set(obj, MUIA_Window_DefaultObject, fontslist);
@@ -316,10 +316,10 @@ STATIC ULONG mNew( struct IClass *cl,
         DoMethod(fontslist,       MUIM_NList_Sort3, MUIV_NList_Sort3_SortType_1, MUIV_NList_SortTypeAdd_None, MUIV_NList_Sort3_SortType_Both);
     }
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
-STATIC ULONG mDispose( struct IClass *cl,
+STATIC IPTR mDispose( struct IClass *cl,
                        Object *obj,
                        Msg msg )
 {
@@ -331,7 +331,7 @@ STATIC ULONG mDispose( struct IClass *cl,
     return DoSuperMethodA(cl, obj, msg);
 }
 
-STATIC ULONG mUpdate( struct IClass *cl,
+STATIC IPTR mUpdate( struct IClass *cl,
                       Object *obj,
                       UNUSED Msg msg )
 {
@@ -365,7 +365,7 @@ STATIC ULONG mUpdate( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mPrint( UNUSED struct IClass *cl,
+STATIC IPTR mPrint( UNUSED struct IClass *cl,
                      UNUSED Object *obj,
                      UNUSED Msg msg )
 {
@@ -374,7 +374,7 @@ STATIC ULONG mPrint( UNUSED struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mClose( struct IClass *cl,
+STATIC IPTR mClose( struct IClass *cl,
                      Object *obj,
                      UNUSED Msg msg )
 {
@@ -382,7 +382,7 @@ STATIC ULONG mClose( struct IClass *cl,
     struct FontEntry *fe;
 
     if ((fe = (struct FontEntry *)GetActiveEntry(fwd->fwd_FontList)) != NULL) {
-        LONG cnt;
+        SIPTR cnt;
 
         if (IsDec(fe->fe_Accessors, &cnt) && cnt > 0) {
             ULONG answer;
@@ -410,7 +410,7 @@ STATIC ULONG mClose( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mRemove( struct IClass *cl,
+STATIC IPTR mRemove( struct IClass *cl,
                       Object *obj,
                       UNUSED Msg msg )
 {
@@ -432,7 +432,7 @@ STATIC ULONG mRemove( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mMore( struct IClass *cl,
+STATIC IPTR mMore( struct IClass *cl,
                     Object *obj,
                     UNUSED Msg msg )
 {
@@ -457,7 +457,7 @@ STATIC ULONG mMore( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mListChange( struct IClass *cl,
+STATIC IPTR mListChange( struct IClass *cl,
                           Object *obj,
                           UNUSED Msg msg )
 {

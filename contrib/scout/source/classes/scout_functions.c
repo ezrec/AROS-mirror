@@ -50,7 +50,7 @@ struct FunctionsEntry {
     TEXT fe_FuncName[FILENAME_LENGTH];
 };
 
-HOOKPROTONHNO(funclist_con2func, LONG, struct NList_ConstructMessage *msg)
+HOOKPROTONHNO(funclist_con2func, IPTR, struct NList_ConstructMessage *msg)
 {
     return AllocListEntry(msg->pool, msg->entry, sizeof(struct FunctionsEntry));
 }
@@ -91,8 +91,8 @@ STATIC LONG funclist_cmp2colfunc( struct FunctionsEntry *fe1,
     switch (column) {
         default:
         case 0:
-        case 1: return (LONG)fe1->fe_Offset - (LONG)fe2->fe_Offset;
-        case 2: return (LONG)fe1->fe_Address - (LONG)fe2->fe_Address;
+        case 1: return (IPTR)fe1->fe_Offset - (IPTR)fe2->fe_Offset;
+        case 2: return (IPTR)fe1->fe_Address - (IPTR)fe2->fe_Address;
         case 3: return stricmp(fe1->fe_FuncName, fe2->fe_FuncName);
     }
 }
@@ -128,7 +128,7 @@ HOOKPROTONHNO(funclist_cmp2func, LONG, struct NList_CompareMessage *msg)
 }
 MakeStaticHook(funclist_cmp2hook, funclist_cmp2func);
 
-STATIC ULONG mNew( struct IClass *cl,
+STATIC IPTR mNew( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {
@@ -157,7 +157,7 @@ STATIC ULONG mNew( struct IClass *cl,
         fwd->fwd_FunctionsCount = funccount;
         fwd->fwd_DisassembleButton = disasmButton;
 
-        parent = (APTR)GetTagData(MUIA_Window_ParentWindow, (ULONG)NULL, msg->ops_AttrList);
+        parent = (APTR)GetTagData(MUIA_Window_ParentWindow, (IPTR)NULL, msg->ops_AttrList);
 
         set(obj, MUIA_Window_DefaultObject, funclist);
         set(disasmButton, MUIA_Disabled, TRUE);
@@ -171,10 +171,10 @@ STATIC ULONG mNew( struct IClass *cl,
         DoMethod(funclist,     MUIM_NList_Sort3, MUIV_NList_Sort3_SortType_1, MUIV_NList_SortTypeAdd_None, MUIV_NList_Sort3_SortType_Both);
     }
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
-STATIC ULONG mDispose( struct IClass *cl,
+STATIC IPTR mDispose( struct IClass *cl,
                        Object *obj,
                        Msg msg )
 {
@@ -186,7 +186,7 @@ STATIC ULONG mDispose( struct IClass *cl,
     return (DoSuperMethodA(cl, obj, msg));
 }
 
-STATIC ULONG mShowFunctions( struct IClass *cl,
+STATIC IPTR mShowFunctions( struct IClass *cl,
                              Object *obj,
                              Msg msg )
 {
@@ -324,7 +324,7 @@ STATIC ULONG mShowFunctions( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mListChange( struct IClass *cl,
+STATIC IPTR mListChange( struct IClass *cl,
                           Object *obj,
                           UNUSED Msg msg )
 {
@@ -343,7 +343,7 @@ STATIC ULONG mListChange( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mDisassemble( struct IClass *cl,
+STATIC IPTR mDisassemble( struct IClass *cl,
                            Object *obj,
                            UNUSED Msg msg )
 {

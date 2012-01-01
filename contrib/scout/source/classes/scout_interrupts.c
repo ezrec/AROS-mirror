@@ -60,7 +60,7 @@ STATIC CONST_STRPTR intTypeShort[] = {
     "7 / NMI"
 };
 
-HOOKPROTONHNO(inttree_confunc, LONG, struct MUIP_NListtree_ConstructMessage *msg)
+HOOKPROTONHNO(inttree_confunc, IPTR, struct MUIP_NListtree_ConstructMessage *msg)
 {
     return AllocListEntry(msg->MemPool, msg->UserData, sizeof(struct InterruptEntry));
 }
@@ -325,7 +325,7 @@ STATIC void RemoveCallback( struct InterruptEntry *ie,
     }
 }
 
-STATIC ULONG mNew( struct IClass *cl,
+STATIC IPTR mNew( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {
@@ -360,7 +360,7 @@ STATIC ULONG mNew( struct IClass *cl,
         iwd->iwd_RemoveButton = removeButton;
         iwd->iwd_MoreButton = moreButton;
 
-        parent = (APTR)GetTagData(MUIA_Window_ParentWindow, (ULONG)NULL, msg->ops_AttrList);
+        parent = (APTR)GetTagData(MUIA_Window_ParentWindow, (IPTR)NULL, msg->ops_AttrList);
 
         set(obj, MUIA_Window_Title, MyGetWindowTitle(txtInterruptsTitle, iwd->iwd_Title, sizeof(iwd->iwd_Title)));
         set(obj, MUIA_Window_DefaultObject, inttree);
@@ -379,10 +379,10 @@ STATIC ULONG mNew( struct IClass *cl,
         DoMethod(exitButton,   MUIM_Notify, MUIA_Pressed,               FALSE,          obj,                     3, MUIM_Set, MUIA_Window_CloseRequest, TRUE);
     }
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
-STATIC ULONG mDispose( struct IClass *cl,
+STATIC IPTR mDispose( struct IClass *cl,
                        Object *obj,
                        Msg msg )
 {
@@ -394,7 +394,7 @@ STATIC ULONG mDispose( struct IClass *cl,
     return DoSuperMethodA(cl, obj, msg);
 }
 
-STATIC ULONG mUpdate( struct IClass *cl,
+STATIC IPTR mUpdate( struct IClass *cl,
                       Object *obj,
                       UNUSED Msg msg )
 {
@@ -427,7 +427,7 @@ STATIC ULONG mUpdate( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mPrint( UNUSED struct IClass *cl,
+STATIC IPTR mPrint( UNUSED struct IClass *cl,
                      UNUSED Object *obj,
                      UNUSED Msg msg )
 {
@@ -436,7 +436,7 @@ STATIC ULONG mPrint( UNUSED struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mRemove( struct IClass *cl,
+STATIC IPTR mRemove( struct IClass *cl,
                       Object *obj,
                       UNUSED Msg msg )
 {
@@ -460,7 +460,7 @@ STATIC ULONG mRemove( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mMore( struct IClass *cl,
+STATIC IPTR mMore( struct IClass *cl,
                     Object *obj,
                     UNUSED Msg msg )
 {
@@ -489,7 +489,7 @@ STATIC ULONG mMore( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mListChange( struct IClass *cl,
+STATIC IPTR mListChange( struct IClass *cl,
                           Object *obj,
                           UNUSED Msg msg )
 {

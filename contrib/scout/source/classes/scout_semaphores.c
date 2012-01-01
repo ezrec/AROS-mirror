@@ -41,7 +41,7 @@ struct SemaphoresCallbackUserData {
     ULONG ud_Count;
 };
 
-HOOKPROTONHNO(semalist_con2func, LONG, struct NList_ConstructMessage *msg)
+HOOKPROTONHNO(semalist_con2func, IPTR, struct NList_ConstructMessage *msg)
 {
     return AllocListEntry(msg->pool, msg->entry, sizeof(struct SemaphoreEntry));
 }
@@ -211,7 +211,7 @@ STATIC void SendCallback( struct SemaphoreEntry *se,
     SendEncodedEntry(se, sizeof(struct SemaphoreEntry));
 }
 
-STATIC ULONG mNew( struct IClass *cl,
+STATIC IPTR mNew( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {
@@ -250,7 +250,7 @@ STATIC ULONG mNew( struct IClass *cl,
         swd->swd_RemoveButton = removeButton;
         swd->swd_PriorityButton = priorityButton;
 
-        parent = (APTR)GetTagData(MUIA_Window_ParentWindow, (ULONG)NULL, msg->ops_AttrList);
+        parent = (APTR)GetTagData(MUIA_Window_ParentWindow, (IPTR)NULL, msg->ops_AttrList);
 
         set(obj, MUIA_Window_Title, MyGetWindowTitle(txtSemaphoresTitle, swd->swd_Title, sizeof(swd->swd_Title)));
         set(obj, MUIA_Window_DefaultObject, semlist);
@@ -273,10 +273,10 @@ STATIC ULONG mNew( struct IClass *cl,
         DoMethod(semlist,        MUIM_NList_Sort3, MUIV_NList_Sort3_SortType_1, MUIV_NList_SortTypeAdd_None, MUIV_NList_Sort3_SortType_Both);
     }
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
-STATIC ULONG mDispose( struct IClass *cl,
+STATIC IPTR mDispose( struct IClass *cl,
                        Object *obj,
                        Msg msg )
 {
@@ -288,7 +288,7 @@ STATIC ULONG mDispose( struct IClass *cl,
     return DoSuperMethodA(cl, obj, msg);
 }
 
-STATIC ULONG mUpdate( struct IClass *cl,
+STATIC IPTR mUpdate( struct IClass *cl,
                       Object *obj,
                       UNUSED Msg msg )
 {
@@ -322,7 +322,7 @@ STATIC ULONG mUpdate( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mPrint( UNUSED struct IClass *cl,
+STATIC IPTR mPrint( UNUSED struct IClass *cl,
                      UNUSED Object *obj,
                      UNUSED Msg msg )
 {
@@ -331,7 +331,7 @@ STATIC ULONG mPrint( UNUSED struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mObtain( struct IClass *cl,
+STATIC IPTR mObtain( struct IClass *cl,
                       Object *obj,
                       UNUSED Msg msg )
 {
@@ -349,7 +349,7 @@ STATIC ULONG mObtain( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mRelease( struct IClass *cl,
+STATIC IPTR mRelease( struct IClass *cl,
                        Object *obj,
                        UNUSED Msg msg )
 {
@@ -357,7 +357,7 @@ STATIC ULONG mRelease( struct IClass *cl,
     struct SemaphoreEntry *se;
 
     if ((se = (struct SemaphoreEntry *)GetActiveEntry(swd->swd_SemaphoreList)) != NULL) {
-        LONG nest;
+        SIPTR nest;
 
         if (IsDec(se->se_NestCount, &nest) && nest > 0) {
             if (MyRequest(msgYesNo, msgWantToReleaseSemaphore, se->se_Name)) {
@@ -373,7 +373,7 @@ STATIC ULONG mRelease( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mRemove( struct IClass *cl,
+STATIC IPTR mRemove( struct IClass *cl,
                       Object *obj,
                       UNUSED Msg msg )
 {
@@ -391,7 +391,7 @@ STATIC ULONG mRemove( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mPriority( struct IClass *cl,
+STATIC IPTR mPriority( struct IClass *cl,
                         Object *obj,
                         UNUSED Msg msg )
 {
@@ -413,7 +413,7 @@ STATIC ULONG mPriority( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mListChange( struct IClass *cl,
+STATIC IPTR mListChange( struct IClass *cl,
                           Object *obj,
                           UNUSED Msg msg )
 {

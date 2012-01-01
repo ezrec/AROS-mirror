@@ -128,7 +128,7 @@ struct ETask
 #define pr_ReturnAddr                   pr_ra
 #endif
 
-HOOKPROTONHNO(seglist_con2func, LONG, struct NList_ConstructMessage *msg)
+HOOKPROTONHNO(seglist_con2func, IPTR, struct NList_ConstructMessage *msg)
 {
     return AllocListEntry(msg->pool, msg->entry, sizeof(struct SegListEntry));
 }
@@ -257,7 +257,7 @@ STATIC void SetDetails( struct IClass *cl,
     MySetContents(tdwd->tdwd_Texts[18], "$%08lx", tc->tc_SPReg);
     MySetContents(tdwd->tdwd_Texts[19], "$%08lx", tc->tc_SPLower);
     MySetContents(tdwd->tdwd_Texts[20], "$%08lx", tc->tc_SPUpper);
-    MySetContents(tdwd->tdwd_Texts[21], "%lD", (ULONG)tc->tc_SPUpper - (ULONG)tc->tc_SPLower);
+    MySetContents(tdwd->tdwd_Texts[21], "%lD", (ULONG)((IPTR)tc->tc_SPUpper - (IPTR)tc->tc_SPLower));
     set(tdwd->tdwd_Texts[22], MUIA_DisassemblerButton_Address, tc->tc_Switch);
     set(tdwd->tdwd_Texts[23], MUIA_DisassemblerButton_Address, tc->tc_Launch);
     MySetContents(tdwd->tdwd_Texts[24], "$%08lx", tc->tc_MemEntry);
@@ -329,7 +329,7 @@ STATIC void SetDetails( struct IClass *cl,
         APTR subgroup, texts[40], seglist;
         struct Process *pr = (struct Process *)te->te_Addr;
         STRPTR path;
-        LONG *seg = NULL;
+        BPTR *seg = NULL;
         struct MinList tmplist;
         struct SegListEntry *sle;
 
@@ -581,9 +581,9 @@ STATIC void SetDetails( struct IClass *cl,
         seg = (LONG *)BADDR(GetProcSegList(pr, GPSLF_CLI | GPSLF_SEG));
     #else
         if (pr->pr_CLI != ZERO) {
-            seg = (LONG *)BADDR(((struct CommandLineInterface *)BADDR(pr->pr_CLI))->cli_Module);
+            seg = (BPTR *)BADDR(((struct CommandLineInterface *)BADDR(pr->pr_CLI))->cli_Module);
         } else if (pr->pr_SegList) {
-            seg = (LONG *)BADDR(((BPTR *)BADDR(pr->pr_SegList))[3]);
+            seg = (BPTR *)BADDR(((BPTR *)BADDR(pr->pr_SegList))[3]);
         }
         if (!points2ram((APTR)seg)) {
             seg = NULL;
@@ -594,15 +594,15 @@ STATIC void SetDetails( struct IClass *cl,
                 if ((sle = AllocVec(sizeof(struct SegListEntry), MEMF_CLEAR)) != NULL) {
                     ULONG size;
 
-                    size = *(seg - 1);
-                    _snprintf(sle->sle_Lower, sizeof(sle->sle_Lower), "$%08lx", (ULONG)seg + 4);
-                    _snprintf(sle->sle_Upper, sizeof(sle->sle_Upper), "$%08lx", (ULONG)seg + size - 4);
+                    size = ((ULONG *)seg)[-1];
+                    _snprintf(sle->sle_Lower, sizeof(sle->sle_Lower), "$%08lx", (ULONG)((IPTR)seg + 4));
+                    _snprintf(sle->sle_Upper, sizeof(sle->sle_Upper), "$%08lx", (ULONG)((IPTR)seg + size - 4));
                     _snprintf(sle->sle_Size, sizeof(sle->sle_Size), "%12lD", size);
 
                     AddTail((struct List *)&tmplist, (struct Node *)sle);
                 }
 
-                seg = (LONG *)BADDR(*seg);
+                seg = (BPTR *)BADDR(*seg);
             }
         }
 
@@ -698,7 +698,7 @@ STATIC void SetDetails( struct IClass *cl,
     }
 }
 
-STATIC ULONG mNew( struct IClass *cl,
+STATIC IPTR mNew( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {
@@ -810,7 +810,7 @@ STATIC ULONG mNew( struct IClass *cl,
         CopyMemQuick(texts, tdwd->tdwd_Texts, sizeof(tdwd->tdwd_Texts));
         tdwd->tdwd_MainGroup = maingroup;
 
-        parent = (APTR)GetTagData(MUIA_Window_ParentWindow, (ULONG)NULL, msg->ops_AttrList);
+        parent = (APTR)GetTagData(MUIA_Window_ParentWindow, (IPTR)NULL, msg->ops_AttrList);
 
         set(obj, MUIA_Window_DefaultObject, group);
 
@@ -819,10 +819,10 @@ STATIC ULONG mNew( struct IClass *cl,
         DoMethod(exitButton,     MUIM_Notify, MUIA_Pressed,             FALSE, obj,                     3, MUIM_Set, MUIA_Window_CloseRequest, TRUE);
     }
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
-STATIC ULONG mDispose( struct IClass *cl,
+STATIC IPTR mDispose( struct IClass *cl,
                        Object *obj,
                        Msg msg )
 {
@@ -831,7 +831,7 @@ STATIC ULONG mDispose( struct IClass *cl,
     return DoSuperMethodA(cl, obj, msg);
 }
 
-STATIC ULONG mSet( struct IClass *cl,
+STATIC IPTR mSet( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {

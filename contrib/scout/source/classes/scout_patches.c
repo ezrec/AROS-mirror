@@ -40,7 +40,7 @@ struct PatchesCallbackUserData {
     ULONG ud_Count;
 };
 
-HOOKPROTONHNO(patchlist_con2func, LONG, struct NList_ConstructMessage *msg)
+HOOKPROTONHNO(patchlist_con2func, IPTR, struct NList_ConstructMessage *msg)
 {
     return AllocListEntry(msg->pool, msg->entry, sizeof(struct PatchEntry));
 }
@@ -426,7 +426,7 @@ STATIC void SendCallback( struct PatchEntry *pe,
     SendEncodedEntry(pe, sizeof(struct PatchEntry));
 }
 
-STATIC ULONG mNew( struct IClass *cl,
+STATIC IPTR mNew( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {
@@ -461,7 +461,7 @@ STATIC ULONG mNew( struct IClass *cl,
         pwd->pwd_EnableButton = enableButton;
         pwd->pwd_DisableButton = disableButton;
 
-        parent = (APTR)GetTagData(MUIA_Window_ParentWindow, (ULONG)NULL, msg->ops_AttrList);
+        parent = (APTR)GetTagData(MUIA_Window_ParentWindow, (IPTR)NULL, msg->ops_AttrList);
 
         set(obj, MUIA_Window_Title, MyGetWindowTitle(txtPatchesTitle, pwd->pwd_Title, sizeof(pwd->pwd_Title)));
         set(obj, MUIA_Window_DefaultObject, patchlist);
@@ -489,10 +489,10 @@ STATIC ULONG mNew( struct IClass *cl,
     #endif
     }
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
-STATIC ULONG mDispose( struct IClass *cl,
+STATIC IPTR mDispose( struct IClass *cl,
                        Object *obj,
                        Msg msg )
 {
@@ -504,7 +504,7 @@ STATIC ULONG mDispose( struct IClass *cl,
     return (DoSuperMethodA(cl, obj, msg));
 }
 
-STATIC ULONG mUpdate( struct IClass *cl,
+STATIC IPTR mUpdate( struct IClass *cl,
                       Object *obj,
                       UNUSED Msg msg )
 {
@@ -537,7 +537,7 @@ STATIC ULONG mUpdate( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mPrint( UNUSED struct IClass *cl,
+STATIC IPTR mPrint( UNUSED struct IClass *cl,
                      UNUSED Object *obj,
                      UNUSED Msg msg )
 {
@@ -546,7 +546,7 @@ STATIC ULONG mPrint( UNUSED struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mListChange( struct IClass *cl,
+STATIC IPTR mListChange( struct IClass *cl,
                           Object *obj,
                           UNUSED Msg msg )
 {
@@ -565,7 +565,7 @@ STATIC ULONG mListChange( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mEnable( UNUSED struct IClass *cl,
+STATIC IPTR mEnable( UNUSED struct IClass *cl,
                       UNUSED Object *obj,
                       UNUSED Msg msg )
 {
@@ -618,7 +618,7 @@ STATIC ULONG mEnable( UNUSED struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mDisable( UNUSED struct IClass *cl,
+STATIC IPTR mDisable( UNUSED struct IClass *cl,
                        UNUSED Object *obj,
                        UNUSED Msg msg )
 {

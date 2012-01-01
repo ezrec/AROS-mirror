@@ -60,7 +60,7 @@ struct NSDCommandEntry {
     TEXT nce_CmdName[64];
 };
 
-HOOKPROTONHNO(nsdlist_con2func, LONG, struct NList_ConstructMessage *msg)
+HOOKPROTONHNO(nsdlist_con2func, IPTR, struct NList_ConstructMessage *msg)
 {
     return AllocListEntry(msg->pool, msg->entry, sizeof(struct NSDCommandEntry));
 }
@@ -568,7 +568,7 @@ STATIC void SetDetails( struct IClass *cl,
     }
 }
 
-STATIC ULONG mNew( struct IClass *cl,
+STATIC IPTR mNew( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {
@@ -640,7 +640,7 @@ STATIC ULONG mNew( struct IClass *cl,
         ddwd->ddwd_NSDList = nsdList;
         ddwd->ddwd_MainGroup = mainGroup;
 
-        parent = (APTR)GetTagData(MUIA_Window_ParentWindow, (ULONG)NULL, msg->ops_AttrList);
+        parent = (APTR)GetTagData(MUIA_Window_ParentWindow, (IPTR)NULL, msg->ops_AttrList);
 
         set(obj, MUIA_Window_DefaultObject, group);
 
@@ -650,10 +650,10 @@ STATIC ULONG mNew( struct IClass *cl,
         DoMethod(nsdList, MUIM_NList_Sort3, MUIV_NList_Sort3_SortType_1, MUIV_NList_SortTypeAdd_None, MUIV_NList_Sort3_SortType_Both);
     }
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
-STATIC ULONG mDispose( struct IClass *cl,
+STATIC IPTR mDispose( struct IClass *cl,
                        Object *obj,
                        Msg msg )
 {
@@ -662,7 +662,7 @@ STATIC ULONG mDispose( struct IClass *cl,
     return DoSuperMethodA(cl, obj, msg);
 }
 
-STATIC ULONG mSet( struct IClass *cl,
+STATIC IPTR mSet( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {

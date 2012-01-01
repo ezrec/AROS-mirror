@@ -80,7 +80,7 @@ STATIC void SetDetails( struct IClass *cl,
     set(obj, MUIA_Window_Title, MyGetChildWindowTitle(txtLibrariesDetailTitle, le->le_Name, ldwd->ldwd_Title, sizeof(ldwd->ldwd_Title)));
 }
 
-STATIC ULONG mNew( struct IClass *cl,
+STATIC IPTR mNew( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {
@@ -145,7 +145,7 @@ STATIC ULONG mNew( struct IClass *cl,
         CopyMemQuick(texts, ldwd->ldwd_Texts, sizeof(ldwd->ldwd_Texts));
         ldwd->ldwd_MainGroup = mainGroup;
 
-        parent = (APTR)GetTagData(MUIA_Window_ParentWindow, (ULONG)NULL, msg->ops_AttrList);
+        parent = (APTR)GetTagData(MUIA_Window_ParentWindow, (IPTR)NULL, msg->ops_AttrList);
 
         set(obj, MUIA_Window_DefaultObject, group);
 
@@ -154,10 +154,10 @@ STATIC ULONG mNew( struct IClass *cl,
         DoMethod(exitButton,     MUIM_Notify, MUIA_Pressed,             FALSE, obj,                     3, MUIM_Set, MUIA_Window_CloseRequest, TRUE);
     }
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
-STATIC ULONG mDispose( struct IClass *cl,
+STATIC IPTR mDispose( struct IClass *cl,
                        Object *obj,
                        Msg msg )
 {
@@ -166,7 +166,7 @@ STATIC ULONG mDispose( struct IClass *cl,
     return DoSuperMethodA(cl, obj, msg);
 }
 
-STATIC ULONG mSet( struct IClass *cl,
+STATIC IPTR mSet( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {

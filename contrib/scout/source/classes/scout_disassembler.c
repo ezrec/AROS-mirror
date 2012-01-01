@@ -60,7 +60,7 @@ struct DisassembleContext {
     LONG dc_Size;
 };
 
-STATIC ULONG mNew( struct IClass *cl,
+STATIC IPTR mNew( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {
@@ -102,7 +102,7 @@ STATIC ULONG mNew( struct IClass *cl,
         dwd->dwd_SourceList = (APTR)list;
         dwd->dwd_SourceFloattext = (APTR)disasmsource;
         dwd->dwd_DisasmSizeSlider = (APTR)sizeslider;
-        dwd->dwd_Address = (APTR)GetTagData(MUIA_DisassemblerWin_Address, (ULONG)NULL, msg->ops_AttrList);
+        dwd->dwd_Address = (APTR)GetTagData(MUIA_DisassemblerWin_Address, (IPTR)NULL, msg->ops_AttrList);
         dwd->dwd_Range = GetTagData(MUIA_DisassemblerWin_Range, 128, msg->ops_AttrList);
         dwd->dwd_ForceHexDump = forceHexDump;
         dwd->dwd_Buffer = tbAllocVecPooled(globalPool, 128);
@@ -118,17 +118,17 @@ STATIC ULONG mNew( struct IClass *cl,
         set(obj, MUIA_Window_DefaultObject, list);
         nnset((APTR)sizeslider, MUIA_Numeric_Value, dwd->dwd_Range);
 
-        parent = (APTR)GetTagData(MUIA_Window_ParentWindow, (ULONG)NULL, msg->ops_AttrList);
+        parent = (APTR)GetTagData(MUIA_Window_ParentWindow, (IPTR)NULL, msg->ops_AttrList);
 
         DoMethod(parent,     MUIM_Window_AddChildWindow, obj);
         DoMethod(obj,        MUIM_Notify,              MUIA_Window_CloseRequest, TRUE,  MUIV_Notify_Application, 5, MUIM_Application_PushMethod, parent, 2, MUIM_Window_RemChildWindow, obj);
         DoMethod((APTR)sizeslider, MUIM_Notify,              MUIA_Numeric_Value,       MUIV_EveryTime, obj,            3, MUIM_Set, MUIA_DisassemblerWin_Range, MUIV_TriggerValue);
     }
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
-STATIC ULONG mDispose( struct IClass *cl,
+STATIC IPTR mDispose( struct IClass *cl,
                        Object *obj,
                        Msg msg )
 {
@@ -150,7 +150,7 @@ STATIC ULONG mDispose( struct IClass *cl,
     return DoSuperMethodA(cl, obj, msg);
 }
 
-STATIC ULONG mSet( struct IClass *cl,
+STATIC IPTR mSet( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {
@@ -184,7 +184,7 @@ STATIC ULONG mSet( struct IClass *cl,
     return DoSuperMethodA(cl, obj, (Msg)msg);
 }
 
-STATIC ULONG mGet( struct IClass *cl,
+STATIC IPTR mGet( struct IClass *cl,
                    Object *obj,
                    struct opGet *msg )
 {
@@ -193,7 +193,7 @@ STATIC ULONG mGet( struct IClass *cl,
 
     switch (msg->opg_AttrID) {
         case MUIA_DisassemblerWin_Address:
-            *store = (ULONG)dwd->dwd_Address; return TRUE;
+            *store = (IPTR)dwd->dwd_Address; return TRUE;
             break;
 
         case MUIA_DisassemblerWin_Range:
@@ -231,7 +231,7 @@ STATIC void ASM _putchar( REG(d0, UBYTE c),
     }
 }
 
-STATIC ULONG mDisassemble( struct IClass *cl,
+STATIC IPTR mDisassemble( struct IClass *cl,
                            Object *obj,
                            UNUSED Msg msg )
 {
@@ -418,7 +418,7 @@ STATIC ULONG mDisassemble( struct IClass *cl,
 
             memset(&ds, 0x00, sizeof(ds));
             ds.ds_From = dwd->dwd_Address;
-            ds.ds_UpTo = (APTR)((ULONG)dwd->dwd_Address + dwd->dwd_Range);
+            ds.ds_UpTo = (APTR)((IPTR)dwd->dwd_Address + dwd->dwd_Range);
             ds.ds_PC = NULL;
             ds.ds_PutProc = (void *)&_putchar;
             ds.ds_UserData = &dc;
@@ -487,7 +487,7 @@ STATIC ULONG mDisassemble( struct IClass *cl,
 
         dwd->dwd_Buffer[strlen(dwd->dwd_Buffer) - 1] = 0x00;
 
-        _snprintf(buffer, sizeof(buffer), "$%08lx -> $%08lx", dwd->dwd_Address, (ULONG)dwd->dwd_Address + dwd->dwd_Range - 1);
+        _snprintf(buffer, sizeof(buffer), "$%08lx -> $%08lx", dwd->dwd_Address, (ULONG)(IPTR)(dwd->dwd_Address + dwd->dwd_Range - 1));
         set(obj, MUIA_Window_Title, MyGetChildWindowTitle((dwd->dwd_ForceHexDump) ? txtHexdumpTitle : txtDisassemblyTitle, buffer, dwd->dwd_Title, sizeof(dwd->dwd_Title)));
     }
 

@@ -23,7 +23,7 @@ static void UpdateButton( struct IClass *cl,
     set(obj, MUIA_Disabled, disabled);
 }
 
-static ULONG mNew( struct IClass *cl,
+static IPTR mNew( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {
@@ -34,16 +34,16 @@ static ULONG mNew( struct IClass *cl,
     }
 
     mbd = INST_DATA(cl, obj);
-    mbd->mbd_Monitor = (struct MonitorSpec *)GetTagData(MUIA_MonitorButton_MonitorSpec, (ULONG)NULL, msg->ops_AttrList);
+    mbd->mbd_Monitor = (struct MonitorSpec *)GetTagData(MUIA_MonitorButton_MonitorSpec, (IPTR)NULL, msg->ops_AttrList);
 
     UpdateButton(cl, obj);
 
     DoMethod(obj, MUIM_Notify, MUIA_Pressed, FALSE, MUIV_Notify_Self, 1, MUIM_MonitorButton_ShowMonitorSpec);
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
-static ULONG mSet( struct IClass *cl,
+static IPTR mSet( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {
@@ -67,7 +67,7 @@ static ULONG mSet( struct IClass *cl,
 }
 
 
-static ULONG mGet( struct IClass *cl,
+static IPTR mGet( struct IClass *cl,
                    Object *obj,
                    struct opGet *msg )
 {
@@ -83,7 +83,7 @@ static ULONG mGet( struct IClass *cl,
     return DoSuperMethodA(cl, obj, (Msg)msg);
 }
 
-static ULONG mAskMinMax( struct IClass *cl,
+static IPTR mAskMinMax( struct IClass *cl,
                          Object *obj,
                          struct MUIP_AskMinMax *msg )
 {
@@ -95,7 +95,7 @@ static ULONG mAskMinMax( struct IClass *cl,
     return 0;
 }
 
-static ULONG mShowMonitorSpec( struct IClass *cl,
+static IPTR mShowMonitorSpec( struct IClass *cl,
                                Object *obj,
                                UNUSED Msg msg )
 {

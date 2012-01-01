@@ -149,7 +149,7 @@ STATIC void SetDetails( struct IClass *cl,
 
     if (FLAG_IS_SET(cd->cd_Rom.er_Type, ERTF_DIAGVALID)) {
         APTR subgroup, texts[7];
-        struct DiagArea *da = (struct DiagArea *)((ULONG)cd->cd_BoardAddr + cd->cd_Rom.er_InitDiagVec);
+        struct DiagArea *da = (struct DiagArea *)((IPTR)cd->cd_BoardAddr + cd->cd_Rom.er_InitDiagVec);
 
         subgroup = (Object *)VGroup,
             GroupFrameT(txtExpansionDiagAreaTitle),
@@ -197,7 +197,7 @@ STATIC void SetDetails( struct IClass *cl,
     set(obj, MUIA_Window_Title, MyGetChildWindowTitle(txtExpansionsDetailTitle, ee->ee_ProdName, edwd->edwd_Title, sizeof(edwd->edwd_Title)));
 }
 
-STATIC ULONG mNew( struct IClass *cl,
+STATIC IPTR mNew( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {
@@ -289,7 +289,7 @@ STATIC ULONG mNew( struct IClass *cl,
         CopyMemQuick(texts, edwd->edwd_Texts, sizeof(edwd->edwd_Texts));
         edwd->edwd_MainGroup = mainGroup;
 
-        parent = (APTR)GetTagData(MUIA_Window_ParentWindow, (ULONG)NULL, msg->ops_AttrList);
+        parent = (APTR)GetTagData(MUIA_Window_ParentWindow, (IPTR)NULL, msg->ops_AttrList);
 
         set(obj, MUIA_Window_DefaultObject, group);
 
@@ -298,10 +298,10 @@ STATIC ULONG mNew( struct IClass *cl,
         DoMethod(exitButton, MUIM_Notify, MUIA_Pressed,             FALSE, obj,                     3, MUIM_Set, MUIA_Window_CloseRequest, TRUE);
     }
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
-STATIC ULONG mDispose( struct IClass *cl,
+STATIC IPTR mDispose( struct IClass *cl,
                        Object *obj,
                        Msg msg )
 {
@@ -310,7 +310,7 @@ STATIC ULONG mDispose( struct IClass *cl,
     return (DoSuperMethodA(cl, obj, msg));
 }
 
-STATIC ULONG mSet( struct IClass *cl,
+STATIC IPTR mSet( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {

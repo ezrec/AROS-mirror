@@ -46,7 +46,7 @@ struct FlagsEntry {
     TEXT fe_Value[32];
 };
 
-HOOKPROTONHNO(flaglist_con2func, LONG, struct NList_ConstructMessage *msg)
+HOOKPROTONHNO(flaglist_con2func, IPTR, struct NList_ConstructMessage *msg)
 {
     return AllocListEntry(msg->pool, msg->entry, sizeof(struct FlagsEntry));
 }
@@ -85,7 +85,7 @@ HOOKPROTONHNO(flaglist_cmp2func, LONG, struct NList_CompareMessage *msg)
 }
 MakeStaticHook(flaglist_cmp2hook, flaglist_cmp2func);
 
-STATIC ULONG mNew( struct IClass *cl,
+STATIC IPTR mNew( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {
@@ -111,16 +111,16 @@ STATIC ULONG mNew( struct IClass *cl,
 
         set(obj, MUIA_Window_DefaultObject, flaglist);
 
-        parent = (APTR)GetTagData(MUIA_Window_ParentWindow, (ULONG)NULL, msg->ops_AttrList);
+        parent = (APTR)GetTagData(MUIA_Window_ParentWindow, (IPTR)NULL, msg->ops_AttrList);
 
         DoMethod(parent,   MUIM_Window_AddChildWindow, obj);
         DoMethod(obj,      MUIM_Notify,              MUIA_Window_CloseRequest, TRUE, MUIV_Notify_Application, 5, MUIM_Application_PushMethod, parent, 2, MUIM_Window_RemChildWindow, obj);
     }
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
-STATIC ULONG mDispose( struct IClass *cl,
+STATIC IPTR mDispose( struct IClass *cl,
                        Object *obj,
                        Msg msg )
 {
@@ -132,7 +132,7 @@ STATIC ULONG mDispose( struct IClass *cl,
     return (DoSuperMethodA(cl, obj, msg));
 }
 
-STATIC ULONG mShowFlags( struct IClass *cl,
+STATIC IPTR mShowFlags( struct IClass *cl,
                          Object *obj,
                          Msg msg )
 {

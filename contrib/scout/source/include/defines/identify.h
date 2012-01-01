@@ -80,7 +80,7 @@
 #endif /* !NO_INLINE_STDARG */
 
 #define IdHardwareNum(___Type, ___TagList) \
-	AROS_LC2(ULONG, IdHardwareNum, \
+	AROS_LC2(IPTR, IdHardwareNum, \
 	AROS_LCA(ULONG, (___Type), D0), \
 	AROS_LCA(struct TagItem *, (___TagList), A0), \
 	struct Library *, IDENTIFY_BASE_NAME, 9, /* s */)

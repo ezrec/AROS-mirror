@@ -38,7 +38,7 @@ struct ResidentsCallbackUserData {
     ULONG ud_Count;
 };
 
-HOOKPROTONHNO(resilist_con2func, LONG, struct NList_ConstructMessage *msg)
+HOOKPROTONHNO(resilist_con2func, IPTR, struct NList_ConstructMessage *msg)
 {
     return AllocListEntry(msg->pool, msg->entry, sizeof(struct ResidentEntry));
 }
@@ -157,18 +157,18 @@ STATIC void IterateList( void (* callback)( struct ResidentEntry *re, void *user
 {
     struct MinList tmplist;
     struct ResidentEntry *re;
-    LONG *resip, resi;
+    IPTR *resip, resi;
 
     NewList((struct List *)&tmplist);
 
     Forbid();
 
-    if ((resip = (LONG *)SysBase->KickTagPtr) != NULL) {
+    if ((resip = (IPTR *)SysBase->KickTagPtr) != NULL) {
         while ((resi = *resip) != 0) {
             // HSMOD: must handle the case that has directly jump after each other
 #if !defined(__AROS__) || (AROS_FLAVOUR & AROS_FLAVOUR_BINCOMPAT)
             while (resi & 0x80000000) {
-                resip = (LONG *)(resi & 0x7fffffff);
+                resip = (IPTR *)(resi & 0x7fffffff);
                 resi = *resip;
             }
 #endif
@@ -193,12 +193,12 @@ STATIC void IterateList( void (* callback)( struct ResidentEntry *re, void *user
         }
     }
 
-    if ((resip = (LONG *)SysBase->ResModules) != NULL) {
+    if ((resip = (IPTR *)SysBase->ResModules) != NULL) {
         while ((resi = *resip) != 0) {
             // HSMOD: must handle the case that has directly jump after each other
 #if !defined(__AROS__) || (AROS_FLAVOUR & AROS_FLAVOUR_BINCOMPAT)
             while (resi & 0x80000000) {
-                resip = (LONG *)(resi & 0x7fffffff);
+                resip = (IPTR *)(resi & 0x7fffffff);
                 resi = *resip;
             }
 #endif
@@ -254,7 +254,7 @@ STATIC void SendCallback( struct ResidentEntry *re,
     SendEncodedEntry(re, sizeof(struct ResidentEntry));
 }
 
-STATIC ULONG mNew( struct IClass *cl,
+STATIC IPTR mNew( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {
@@ -287,7 +287,7 @@ STATIC ULONG mNew( struct IClass *cl,
         rwd->rwd_ResidentCount = resicount;
         rwd->rwd_MoreButton = moreButton;
 
-        parent = (APTR)GetTagData(MUIA_Window_ParentWindow, (ULONG)NULL, msg->ops_AttrList);
+        parent = (APTR)GetTagData(MUIA_Window_ParentWindow, (IPTR)NULL, msg->ops_AttrList);
 
         set(obj, MUIA_Window_Title, MyGetWindowTitle(txtResidentsTitle, rwd->rwd_Title, sizeof(rwd->rwd_Title)));
         set(obj, MUIA_Window_DefaultObject, resilist);
@@ -304,10 +304,10 @@ STATIC ULONG mNew( struct IClass *cl,
         DoMethod(resilist,     MUIM_NList_Sort3, MUIV_NList_Sort3_SortType_2, MUIV_NList_SortTypeAdd_None, MUIV_NList_Sort3_SortType_Both);
     }
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
-STATIC ULONG mDispose( struct IClass *cl,
+STATIC IPTR mDispose( struct IClass *cl,
                        Object *obj,
                        Msg msg )
 {
@@ -319,7 +319,7 @@ STATIC ULONG mDispose( struct IClass *cl,
     return DoSuperMethodA(cl, obj, msg);
 }
 
-STATIC ULONG mUpdate( struct IClass *cl,
+STATIC IPTR mUpdate( struct IClass *cl,
                       Object *obj,
                       UNUSED Msg msg )
 {
@@ -349,7 +349,7 @@ STATIC ULONG mUpdate( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mPrint( UNUSED struct IClass *cl,
+STATIC IPTR mPrint( UNUSED struct IClass *cl,
                      UNUSED Object *obj,
                      UNUSED Msg msg )
 {
@@ -358,7 +358,7 @@ STATIC ULONG mPrint( UNUSED struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mMore( struct IClass *cl,
+STATIC IPTR mMore( struct IClass *cl,
                     Object *obj,
                     UNUSED Msg msg )
 {
@@ -384,7 +384,7 @@ STATIC ULONG mMore( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mListChange( struct IClass *cl,
+STATIC IPTR mListChange( struct IClass *cl,
                           Object *obj,
                           UNUSED Msg msg )
 {

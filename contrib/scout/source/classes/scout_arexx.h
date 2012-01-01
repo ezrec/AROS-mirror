@@ -32,7 +32,7 @@ extern const struct MUI_Command arexx_list[56];
 
 STRPTR FindMyARexxPort( CONST_STRPTR );
 
-ULONG SafePutToPort( struct Message * , CONST_STRPTR );
+IPTR SafePutToPort( struct Message * , CONST_STRPTR );
 
 short SendStartupMsg( CONST_STRPTR, CONST_STRPTR, BOOL );
 

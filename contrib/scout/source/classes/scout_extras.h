@@ -118,9 +118,9 @@ BOOL points2ram( APTR addr );
 STRPTR StripMUIFormatting( STRPTR str );
 
 BOOL IsReal( CONST_STRPTR );
-BOOL IsHex( CONST_STRPTR , LONG * );
-BOOL IsUHex( CONST_STRPTR , ULONG * );
-BOOL IsDec( CONST_STRPTR , LONG * );
+BOOL IsHex( CONST_STRPTR , SIPTR * );
+BOOL IsUHex( CONST_STRPTR , IPTR * );
+BOOL IsDec( CONST_STRPTR , SIPTR * );
 
 LONG HexCompare( CONST_STRPTR hex1str, CONST_STRPTR hex2str );
 LONG IntegerCompare( CONST_STRPTR int1str, CONST_STRPTR int2str );
@@ -134,7 +134,7 @@ void GetRamPointerCount( struct Library *lib, LONG *count, LONG *total );
 
 struct List *FindListOfNode( struct Node *ln );
 
-LONG AllocListEntry( APTR, APTR, ULONG );
+IPTR AllocListEntry( APTR, APTR, ULONG );
 
 void FreeListEntry( APTR, APTR * );
 

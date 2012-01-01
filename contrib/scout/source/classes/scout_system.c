@@ -42,7 +42,7 @@ STATIC CONST_STRPTR MyIdHardware( ULONG num )
     return (STRPTR)txtNoIdentifyLibrary;
 }
 
-STATIC ULONG MyIdHardwareNum( ULONG num )
+STATIC IPTR MyIdHardwareNum( ULONG num )
 {
     if (IdentifyBase) {
         return IdHardwareNum(num, NULL);
@@ -54,7 +54,7 @@ STATIC ULONG MyIdHardwareNum( ULONG num )
 STATIC int MyIdCheck( ULONG num )
 {
     if (IdentifyBase) {
-        return (int)IdHardwareTags(num, IDTAG_NULL4NA, TRUE, TAG_DONE);
+        return (IdHardwareTags(num, IDTAG_NULL4NA, TRUE, TAG_DONE) != NULL);
     } else {
         return 0;
     }
@@ -129,7 +129,7 @@ STATIC void IterateList( void (* callback)( struct SystemEntry *se, void *userDa
         UWORD attn;
         ULONG cacr, pcr;
         ULONG lastalert = 0;
-        ULONG lastalerttask = 0;
+        IPTR  lastalerttask = 0;
         BOOL fblit;
     #if defined(__amigaos4__)
         struct MsgPort *mp;
@@ -707,7 +707,7 @@ STATIC void SendCallback( struct SystemEntry *se,
     SendEncodedEntry(se, sizeof(struct SystemEntry));
 }
 
-STATIC ULONG mNew( struct IClass *cl,
+STATIC IPTR mNew( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {
@@ -931,7 +931,7 @@ STATIC ULONG mNew( struct IClass *cl,
 
         CopyMemQuick(systemTexts, swd->swd_Texts, sizeof(swd->swd_Texts));
 
-        parent = (APTR)GetTagData(MUIA_Window_ParentWindow, (ULONG)NULL, msg->ops_AttrList);
+        parent = (APTR)GetTagData(MUIA_Window_ParentWindow, (IPTR)NULL, msg->ops_AttrList);
 
         set(obj, MUIA_Window_Title, MyGetWindowTitle(txtSystemTitle, swd->swd_Title, sizeof(swd->swd_Title)));
         set(obj, MUIA_Window_ActiveObject, pages);
@@ -943,10 +943,10 @@ STATIC ULONG mNew( struct IClass *cl,
         DoMethod(exitButton,   MUIM_Notify, MUIA_Pressed,             FALSE, obj,                     3, MUIM_Set, MUIA_Window_CloseRequest, TRUE);
     }
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
-STATIC ULONG mDispose( struct IClass *cl,
+STATIC IPTR mDispose( struct IClass *cl,
                        Object *obj,
                        Msg msg )
 {
@@ -955,7 +955,7 @@ STATIC ULONG mDispose( struct IClass *cl,
     return (DoSuperMethodA(cl, obj, msg));
 }
 
-STATIC ULONG mUpdate( struct IClass *cl,
+STATIC IPTR mUpdate( struct IClass *cl,
                       Object *obj,
                       UNUSED Msg msg )
 {
@@ -977,7 +977,7 @@ STATIC ULONG mUpdate( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mPrint( UNUSED struct IClass *cl,
+STATIC IPTR mPrint( UNUSED struct IClass *cl,
                      UNUSED Object *obj,
                      UNUSED Msg msg )
 {

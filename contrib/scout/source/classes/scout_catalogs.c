@@ -37,7 +37,7 @@ struct CatalogsCallbackUserData {
     ULONG ud_Count;
 };
 
-HOOKPROTONHNO(catlist_con2func, LONG, struct NList_ConstructMessage *msg)
+HOOKPROTONHNO(catlist_con2func, IPTR, struct NList_ConstructMessage *msg)
 {
     return AllocListEntry(msg->pool, msg->entry, sizeof(struct CatalogEntry));
 }
@@ -216,7 +216,7 @@ STATIC void SendCallback( struct CatalogEntry *ce,
     SendEncodedEntry(ce, sizeof(struct CatalogEntry));
 }
 
-STATIC ULONG mNew( struct IClass *cl,
+STATIC IPTR mNew( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {
@@ -247,7 +247,7 @@ STATIC ULONG mNew( struct IClass *cl,
         cwd->cwd_CatalogText = cattext;
         cwd->cwd_CatalogCount = catcount;
 
-        parent = (APTR)GetTagData(MUIA_Window_ParentWindow, (ULONG)NULL, msg->ops_AttrList);
+        parent = (APTR)GetTagData(MUIA_Window_ParentWindow, (IPTR)NULL, msg->ops_AttrList);
 
         set(obj, MUIA_Window_Title, MyGetWindowTitle(txtCatalogsTitle, cwd->cwd_Title, sizeof(cwd->cwd_Title)));
         set(obj, MUIA_Window_DefaultObject, catlist);
@@ -261,10 +261,10 @@ STATIC ULONG mNew( struct IClass *cl,
         DoMethod(catlist,         MUIM_NList_Sort3, MUIV_NList_Sort3_SortType_1, MUIV_NList_SortTypeAdd_None, MUIV_NList_Sort3_SortType_Both);
     }
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
-STATIC ULONG mDispose( struct IClass *cl,
+STATIC IPTR mDispose( struct IClass *cl,
                        Object *obj,
                        Msg msg )
 {
@@ -276,7 +276,7 @@ STATIC ULONG mDispose( struct IClass *cl,
     return (DoSuperMethodA(cl, obj, msg));
 }
 
-STATIC ULONG mUpdate( struct IClass *cl,
+STATIC IPTR mUpdate( struct IClass *cl,
                       Object *obj,
                       UNUSED Msg msg )
 {
@@ -305,7 +305,7 @@ STATIC ULONG mUpdate( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mPrint( UNUSED struct IClass *cl,
+STATIC IPTR mPrint( UNUSED struct IClass *cl,
                      UNUSED Object *obj,
                      UNUSED Msg msg )
 {
@@ -314,7 +314,7 @@ STATIC ULONG mPrint( UNUSED struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mListChange( struct IClass *cl,
+STATIC IPTR mListChange( struct IClass *cl,
                           Object *obj,
                           UNUSED Msg msg )
 {

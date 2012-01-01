@@ -9,7 +9,7 @@ struct FontDisplayData
 
 #define LayersBase      fdd->fdd_LayersBase
 
-STATIC ULONG mNew( struct IClass *cl,
+STATIC IPTR mNew( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {
@@ -21,18 +21,18 @@ STATIC ULONG mNew( struct IClass *cl,
     fdd = INST_DATA(cl, obj);
 
     /* parse initial taglist */
-    fdd->fdd_Font = (struct TextFont *)GetTagData(MUIA_FontDisplay_Font, (ULONG)NULL, msg->ops_AttrList);
-    fdd->fdd_Text = _strdup_pool((STRPTR)GetTagData(MUIA_FontDisplay_Text, (ULONG)NULL, msg->ops_AttrList), globalPool);
+    fdd->fdd_Font = (struct TextFont *)GetTagData(MUIA_FontDisplay_Font, (IPTR)NULL, msg->ops_AttrList);
+    fdd->fdd_Text = _strdup_pool((STRPTR)GetTagData(MUIA_FontDisplay_Text, (IPTR)NULL, msg->ops_AttrList), globalPool);
 
     if (!(fdd->fdd_LayersBase = OpenLibrary("layers.library", 37))) {
         CoerceMethod(cl, obj, OM_DISPOSE);
         obj = NULL;
     }
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
-STATIC ULONG mDispose( struct IClass *cl,
+STATIC IPTR mDispose( struct IClass *cl,
                        Object *obj,
                        Msg msg )
 {
@@ -44,7 +44,7 @@ STATIC ULONG mDispose( struct IClass *cl,
     return DoSuperMethodA(cl, obj, msg);
 }
 
-STATIC ULONG mSet( struct IClass *cl,
+STATIC IPTR mSet( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {
@@ -79,7 +79,7 @@ STATIC ULONG mSet( struct IClass *cl,
 }
 
 
-STATIC ULONG mGet( struct IClass *cl,
+STATIC IPTR mGet( struct IClass *cl,
                    Object *obj,
                    struct opGet *msg )
 {
@@ -88,18 +88,18 @@ STATIC ULONG mGet( struct IClass *cl,
 
     switch (msg->opg_AttrID) {
         case MUIA_FontDisplay_Font:
-            *store = (ULONG)fdd->fdd_Font; return (TRUE);
+            *store = (IPTR)fdd->fdd_Font; return (TRUE);
             break;
 
         case MUIA_FontDisplay_Text:
-            *store = (ULONG)fdd->fdd_Text; return (TRUE);
+            *store = (IPTR)fdd->fdd_Text; return (TRUE);
             break;
     }
 
     return DoSuperMethodA(cl, obj, (Msg)msg);
 }
 
-STATIC ULONG mAskMinMax( struct IClass *cl,
+STATIC IPTR mAskMinMax( struct IClass *cl,
                          Object *obj,
                          struct MUIP_AskMinMax *msg )
 {
@@ -116,7 +116,7 @@ STATIC ULONG mAskMinMax( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mDraw( struct IClass *cl,
+STATIC IPTR mDraw( struct IClass *cl,
                     Object *obj,
                     struct MUIP_Draw *msg )
 {

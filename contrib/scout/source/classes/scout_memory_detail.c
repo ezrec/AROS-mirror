@@ -160,10 +160,10 @@ STATIC void SetDetails( struct IClass *cl,
     struct MemoryDetailWinData *mdwd = INST_DATA(cl, obj);
     struct MemoryEntry *me = mdwd->mdwd_Memory;
     struct MemHeader *mh = me->me_Header;
-    ULONG total, inuse;
+    IPTR total, inuse;
 
-    total = (ULONG)mh->mh_Upper - (ULONG)mh->mh_Lower;
-    inuse = total - (ULONG)mh->mh_Free;
+    total = (IPTR)mh->mh_Upper - (IPTR)mh->mh_Lower;
+    inuse = total - (IPTR)mh->mh_Free;
 
     MySetContents(mdwd->mdwd_Texts[ 0], "%s", me->me_Name);
     MySetContents(mdwd->mdwd_Texts[ 1], "$%08lx", mh);
@@ -183,7 +183,7 @@ STATIC void SetDetails( struct IClass *cl,
     if (me->me_Header->mh_First) {
         struct MemChunk *mc;
         struct MemoryFreeEntry *mfel;
-        ULONG mccnt;
+        IPTR mccnt;
 
         mc = me->me_Header->mh_First;
         mccnt = 0;
@@ -201,7 +201,7 @@ STATIC void SetDetails( struct IClass *cl,
             mfe = mfel;
             while (mc != NULL && mccnt > 0) {
                 _snprintf(mfe->mfe_Lower, sizeof(mfe->mfe_Lower), "$%08lx", mc);
-                _snprintf(mfe->mfe_Upper, sizeof(mfe->mfe_Upper), "$%08lx", (ULONG)mc + mc->mc_Bytes);
+                _snprintf(mfe->mfe_Upper, sizeof(mfe->mfe_Upper), "$%08lx", (IPTR)mc + mc->mc_Bytes);
                 _snprintf(mfe->mfe_Size, sizeof(mfe->mfe_Size), "%12lD", mc->mc_Bytes);
 
                 InsertBottomEntry(mdwd->mdwd_ChunkList, mfe);
@@ -219,7 +219,7 @@ STATIC void SetDetails( struct IClass *cl,
     set(obj, MUIA_Window_Title, MyGetChildWindowTitle(txtMemoryDetailTitle, me->me_Name, mdwd->mdwd_Title, sizeof(mdwd->mdwd_Title)));
 }
 
-STATIC ULONG mNew( struct IClass *cl,
+STATIC IPTR mNew( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {
@@ -287,7 +287,7 @@ STATIC ULONG mNew( struct IClass *cl,
         mdwd->mdwd_ChunkList = chunklist;
         mdwd->mdwd_MemoryPool = tbCreatePool(MEMF_CLEAR, 4096, 4096);
 
-        parent = (APTR)GetTagData(MUIA_Window_ParentWindow, (ULONG)NULL, msg->ops_AttrList);
+        parent = (APTR)GetTagData(MUIA_Window_ParentWindow, (IPTR)NULL, msg->ops_AttrList);
 
         set(obj, MUIA_Window_DefaultObject, group);
 
@@ -296,10 +296,10 @@ STATIC ULONG mNew( struct IClass *cl,
         DoMethod(exitButton,     MUIM_Notify, MUIA_Pressed,             FALSE, obj,                     3, MUIM_Set, MUIA_Window_CloseRequest, TRUE);
     }
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
-STATIC ULONG mDispose( struct IClass *cl,
+STATIC IPTR mDispose( struct IClass *cl,
                        Object *obj,
                        Msg msg )
 {
@@ -313,7 +313,7 @@ STATIC ULONG mDispose( struct IClass *cl,
     return DoSuperMethodA(cl, obj, msg);
 }
 
-STATIC ULONG mSet( struct IClass *cl,
+STATIC IPTR mSet( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {

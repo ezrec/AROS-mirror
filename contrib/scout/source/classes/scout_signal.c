@@ -40,7 +40,7 @@ struct MUIP_SigBitChanged { ULONG whichbit; ULONG state; };
 
 struct MUIP_SigStrChanged { UBYTE str; };
 
-HOOKPROTONH(hex_editfunc, ULONG, struct SGWork *sgw, ULONG *msg)
+HOOKPROTONH(hex_editfunc, ULONG, struct SGWork *sgw, IPTR *msg)
 {
     ULONG return_code;
 
@@ -49,7 +49,7 @@ HOOKPROTONH(hex_editfunc, ULONG, struct SGWork *sgw, ULONG *msg)
     if (*msg == SGH_KEY) {
         BOOL isHex;
         BOOL ok = FALSE;
-        ULONG tmplong;
+        IPTR tmplong;
 
         isHex = IsUHex(sgw->WorkBuffer, &tmplong);
 
@@ -87,7 +87,7 @@ HOOKPROTONH(sigbitchanged_func, void, Object *obj, struct MUIP_SigBitChanged *ms
 {
     struct SignalWinData *swd = INST_DATA(OCLASS(obj), obj);
     STRPTR sigstr;
-    ULONG sigs;
+    IPTR sigs;
 
     sigstr = (STRPTR)xget(swd->swd_SignalString, MUIA_String_Contents);
     IsUHex(sigstr, &sigs);
@@ -104,7 +104,8 @@ HOOKPROTONHNP(sigstrchanged_func, void, Object *obj)
 {
     struct SignalWinData *swd = INST_DATA(OCLASS(obj), obj);
     STRPTR sigstr;
-    ULONG sigs, bit;
+    IPTR sigs;
+    ULONG bit;
 
     sigstr = (STRPTR)xget(swd->swd_SignalString, MUIA_String_Contents);
     IsUHex(sigstr, &sigs);
@@ -114,7 +115,7 @@ HOOKPROTONHNP(sigstrchanged_func, void, Object *obj)
 }
 MakeStaticHook(sigstrchanged_hook, sigstrchanged_func);
 
-STATIC ULONG mNew( struct IClass *cl,
+STATIC IPTR mNew( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {
@@ -197,7 +198,7 @@ STATIC ULONG mNew( struct IClass *cl,
         CopyMemQuick(sigchecks, swd->swd_SignalCheckmarks, sizeof(swd->swd_SignalCheckmarks));
         swd->swd_OkButton = okButton;
 
-        parent = (APTR)GetTagData(MUIA_Window_ParentWindow, (ULONG)NULL, msg->ops_AttrList);
+        parent = (APTR)GetTagData(MUIA_Window_ParentWindow, (IPTR)NULL, msg->ops_AttrList);
 
         set(obj, MUIA_Window_Title, MyGetWindowTitle(txtSignalWinTitle, swd->swd_Title, sizeof(swd->swd_Title)));
         set(obj, MUIA_Window_ActiveObject, sigtext2);
@@ -211,10 +212,10 @@ STATIC ULONG mNew( struct IClass *cl,
         for (sig = 0; sig < 32; sig++) DoMethod(sigchecks[sig], MUIM_Notify, MUIA_Selected, MUIV_EveryTime, obj, 4, MUIM_CallHook, &sigbitchanged_hook, sig, MUIV_TriggerValue);
     }
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
-STATIC ULONG mDispose( struct IClass *cl,
+STATIC IPTR mDispose( struct IClass *cl,
                        Object *obj,
                        Msg msg )
 {
@@ -223,15 +224,15 @@ STATIC ULONG mDispose( struct IClass *cl,
     return DoSuperMethodA(cl, obj, msg);
 }
 
-STATIC ULONG mGetSignals( struct IClass *cl,
+STATIC IPTR mGetSignals( struct IClass *cl,
                           Object *obj,
                           struct MUIP_SignalWin_GetSignals *msg )
 {
     struct SignalWinData *swd = INST_DATA(cl, obj);
-    ULONG sig;
+    IPTR sig;
     APTR app;
     BOOL done = FALSE;
-    ULONG result = 0;
+    IPTR result = 0;
 
     MySetContents(swd->swd_SignalText[0], msgSelectNewSignal, msg->objname);
     MySetContents(swd->swd_SignalText[1], MUIX_C "$%08lx", *msg->signals);
@@ -271,9 +272,11 @@ STATIC ULONG mGetSignals( struct IClass *cl,
 
     if (result) {
         STRPTR str;
+        IPTR sig = 0;
 
         str = (STRPTR)xget(swd->swd_SignalString, MUIA_String_Contents);
-        IsUHex(str, msg->signals);
+        IsUHex(str, &sig);
+        *msg->signals = sig;
     }
 
     return result;

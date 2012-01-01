@@ -116,7 +116,7 @@ STATIC void CloseSuperflousChildWindows( struct IClass *cl,
     }
 }
 
-STATIC ULONG mNew( struct IClass *cl,
+STATIC IPTR mNew( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {
@@ -126,7 +126,7 @@ STATIC ULONG mNew( struct IClass *cl,
         NewList((struct List *)&pwd->pwd_ChildWindowList);
         InitSemaphore(&pwd->pwd_ChildWindowListSema);
 
-        pwd->pwd_ParentWindow = (APTR)GetTagData(MUIA_Window_ParentWindow, (ULONG)NULL, msg->ops_AttrList);
+        pwd->pwd_ParentWindow = (APTR)GetTagData(MUIA_Window_ParentWindow, (IPTR)NULL, msg->ops_AttrList);
         pwd->pwd_MaxChildWindowCount = GetTagData(MUIA_Window_MaxChildWindowCount, 0, msg->ops_AttrList);
 
         if ((pwd->pwd_MemoryPool = tbCreatePool(MEMF_CLEAR, 4096, 4096)) != NULL) {
@@ -137,10 +137,10 @@ STATIC ULONG mNew( struct IClass *cl,
         }
     }
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
-STATIC ULONG mSet( struct IClass *cl,
+STATIC IPTR mSet( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {
@@ -164,7 +164,7 @@ STATIC ULONG mSet( struct IClass *cl,
     return DoSuperMethodA(cl, obj, (Msg)msg);
 }
 
-STATIC ULONG mGet( struct IClass *cl,
+STATIC IPTR mGet( struct IClass *cl,
                    Object *obj,
                    struct opGet *msg )
 {
@@ -172,7 +172,7 @@ STATIC ULONG mGet( struct IClass *cl,
 
     switch (msg->opg_AttrID) {
         case MUIA_Window_ParentWindow:
-            *msg->opg_Storage = (ULONG)pwd->pwd_ParentWindow;
+            *msg->opg_Storage = (IPTR)pwd->pwd_ParentWindow;
             return TRUE;
             break;
 
@@ -185,7 +185,7 @@ STATIC ULONG mGet( struct IClass *cl,
     return DoSuperMethodA(cl, obj, (Msg)msg);
 }
 
-STATIC ULONG mDispose( struct IClass *cl,
+STATIC IPTR mDispose( struct IClass *cl,
                        Object *obj,
                        Msg msg )
 {
@@ -199,11 +199,11 @@ STATIC ULONG mDispose( struct IClass *cl,
     return DoSuperMethodA(cl, obj, msg);
 }
 
-STATIC ULONG mAddChildWindow( struct IClass *cl,
+STATIC IPTR mAddChildWindow( struct IClass *cl,
                               Object *obj,
                               struct MUIP_AddChildWindowMessage *msg )
 {
-    ULONG result = 0;
+    IPTR result = 0;
     struct ParentWinData *pwd = INST_DATA(cl, obj);
     struct ChildWindowNode *cwn;
 
@@ -227,11 +227,11 @@ STATIC ULONG mAddChildWindow( struct IClass *cl,
     return result;
 }
 
-STATIC ULONG mRemChildWindow( struct IClass *cl,
+STATIC IPTR mRemChildWindow( struct IClass *cl,
                               Object *obj,
                               struct MUIP_RemChildWindowMessage *msg )
 {
-    ULONG result = 0;
+    IPTR result = 0;
     struct ParentWinData *pwd = INST_DATA(cl, obj);
     struct ChildWindowNode *cwn;
 
@@ -254,7 +254,7 @@ STATIC ULONG mRemChildWindow( struct IClass *cl,
     return result;
 }
 
-STATIC ULONG mCloseChildWindows( struct IClass *cl,
+STATIC IPTR mCloseChildWindows( struct IClass *cl,
                                  Object *obj,
                                  UNUSED Msg msg )
 {

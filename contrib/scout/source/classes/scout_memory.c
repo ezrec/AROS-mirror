@@ -38,7 +38,7 @@ struct MemoryCallbackUserData {
     ULONG ud_Count;
 };
 
-HOOKPROTONHNO(memlist_con2func, LONG, struct NList_ConstructMessage *msg)
+HOOKPROTONHNO(memlist_con2func, IPTR, struct NList_ConstructMessage *msg)
 {
     return AllocListEntry(msg->pool, msg->entry, sizeof(struct MemoryEntry));
 }
@@ -199,7 +199,7 @@ STATIC void SendCallback( struct MemoryEntry *me,
     SendEncodedEntry(me, sizeof(struct MemoryEntry));
 }
 
-STATIC ULONG mNew( struct IClass *cl,
+STATIC IPTR mNew( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {
@@ -233,7 +233,7 @@ STATIC ULONG mNew( struct IClass *cl,
         mwd->mwd_PriorityButton = priorityButton;
         mwd->mwd_MoreButton = moreButton;
 
-        parent = (APTR)GetTagData(MUIA_Window_ParentWindow, (ULONG)NULL, msg->ops_AttrList);
+        parent = (APTR)GetTagData(MUIA_Window_ParentWindow, (IPTR)NULL, msg->ops_AttrList);
 
         set(obj, MUIA_Window_Title, MyGetWindowTitle(txtMemoryTitle, mwd->mwd_Title, sizeof(mwd->mwd_Title)));
         set(obj, MUIA_Window_DefaultObject, memlist);
@@ -252,10 +252,10 @@ STATIC ULONG mNew( struct IClass *cl,
         DoMethod(exitButton,     MUIM_Notify, MUIA_Pressed,             FALSE,          obj,                     3, MUIM_Set, MUIA_Window_CloseRequest, TRUE);
     }
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
-STATIC ULONG mDispose( struct IClass *cl,
+STATIC IPTR mDispose( struct IClass *cl,
                        Object *obj,
                        Msg msg )
 {
@@ -267,7 +267,7 @@ STATIC ULONG mDispose( struct IClass *cl,
     return DoSuperMethodA(cl, obj, msg);
 }
 
-STATIC ULONG mUpdate( struct IClass *cl,
+STATIC IPTR mUpdate( struct IClass *cl,
                       Object *obj,
                       UNUSED Msg msg )
 {
@@ -298,7 +298,7 @@ STATIC ULONG mUpdate( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mPrint( UNUSED struct IClass *cl,
+STATIC IPTR mPrint( UNUSED struct IClass *cl,
                      UNUSED Object *obj,
                      UNUSED Msg msg )
 {
@@ -307,7 +307,7 @@ STATIC ULONG mPrint( UNUSED struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mPriority( struct IClass *cl,
+STATIC IPTR mPriority( struct IClass *cl,
                         Object *obj,
                         UNUSED Msg msg )
 {
@@ -329,7 +329,7 @@ STATIC ULONG mPriority( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mMore( struct IClass *cl,
+STATIC IPTR mMore( struct IClass *cl,
                     Object *obj,
                     UNUSED Msg msg )
 {
@@ -354,7 +354,7 @@ STATIC ULONG mMore( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mListChange( struct IClass *cl,
+STATIC IPTR mListChange( struct IClass *cl,
                           Object *obj,
                           UNUSED Msg msg )
 {

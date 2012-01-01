@@ -33,7 +33,7 @@ struct IdentifyIFace
 	LONG APICALL (*IdAlertTags)(struct IdentifyIFace *Self, ULONG ID, ...);
 	LONG APICALL (*IdFunction)(struct IdentifyIFace *Self, STRPTR LibName, LONG Offset, struct TagItem * TagList);
 	LONG APICALL (*IdFunctionTags)(struct IdentifyIFace *Self, STRPTR LibName, LONG Offset, ...);
-	ULONG APICALL (*IdHardwareNum)(struct IdentifyIFace *Self, ULONG Type, struct TagItem * TagList);
+	IPTR APICALL (*IdHardwareNum)(struct IdentifyIFace *Self, ULONG Type, struct TagItem * TagList);
 	ULONG APICALL (*IdHardwareNumTags)(struct IdentifyIFace *Self, ULONG Type, ...);
 	void APICALL (*IdHardwareUpdate)(struct IdentifyIFace *Self);
 	ULONG APICALL (*IdFormatString)(struct IdentifyIFace *Self, STRPTR String, STRPTR Buffer, ULONG Length, struct TagItem * Tags);

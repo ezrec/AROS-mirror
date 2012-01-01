@@ -173,7 +173,7 @@ STATIC void SendCallback( struct AllocationEntry *ae,
     SendEncodedEntry(ae, sizeof(struct AllocationEntry));
 }
 
-STATIC ULONG mNew( struct IClass *cl,
+STATIC IPTR mNew( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {
@@ -263,7 +263,7 @@ STATIC ULONG mNew( struct IClass *cl,
         CopyMemQuick(ciabText, awd->awd_CIABText, sizeof(awd->awd_CIABText));
         CopyMemQuick(portsText, awd->awd_PortsText, sizeof(awd->awd_PortsText));
 
-        parent = (APTR)GetTagData(MUIA_Window_ParentWindow, (ULONG)NULL, msg->ops_AttrList);
+        parent = (APTR)GetTagData(MUIA_Window_ParentWindow, (IPTR)NULL, msg->ops_AttrList);
 
         set(obj, MUIA_Window_Title, MyGetWindowTitle(txtAllocationsTitle, awd->awd_Title, sizeof(awd->awd_Title)));
         set(obj, MUIA_Window_ActiveObject, pages);
@@ -276,10 +276,10 @@ STATIC ULONG mNew( struct IClass *cl,
         DoMethod(exitButton,   MUIM_Notify, MUIA_Pressed,             FALSE, obj,                     3, MUIM_Set, MUIA_Window_CloseRequest, TRUE);
     }
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
-STATIC ULONG mDispose( struct IClass *cl,
+STATIC IPTR mDispose( struct IClass *cl,
                        Object *obj,
                        Msg msg )
 {
@@ -288,7 +288,7 @@ STATIC ULONG mDispose( struct IClass *cl,
     return (DoSuperMethodA(cl, obj, msg));
 }
 
-STATIC ULONG mUpdate( struct IClass *cl,
+STATIC IPTR mUpdate( struct IClass *cl,
                       Object *obj,
                       UNUSED Msg msg )
 {
@@ -308,7 +308,7 @@ STATIC ULONG mUpdate( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mPrint( UNUSED struct IClass *cl,
+STATIC IPTR mPrint( UNUSED struct IClass *cl,
                      UNUSED Object *obj,
                      UNUSED Msg msg )
 {

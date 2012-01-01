@@ -33,7 +33,7 @@ static void UpdateButton( struct IClass *cl,
     set(obj, MUIA_Text_Contents, tmp);
 }
 
-static ULONG mNew( struct IClass *cl,
+static IPTR mNew( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {
@@ -44,21 +44,21 @@ static ULONG mNew( struct IClass *cl,
     }
 
     fbd = INST_DATA(cl, obj);
-    fbd->fbd_Title = (STRPTR)GetTagData(MUIA_FlagsButton_Title, (ULONG)NULL, msg->ops_AttrList);
+    fbd->fbd_Title = (STRPTR)GetTagData(MUIA_FlagsButton_Title, (IPTR)NULL, msg->ops_AttrList);
     fbd->fbd_Flags = GetTagData(MUIA_FlagsButton_Flags, 0, msg->ops_AttrList);
-    fbd->fbd_BitArray = (APTR)GetTagData(MUIA_FlagsButton_BitArray, (ULONG)NULL, msg->ops_AttrList);
-    fbd->fbd_MaskArray = (APTR)GetTagData(MUIA_FlagsButton_MaskArray, (ULONG)NULL, msg->ops_AttrList);
+    fbd->fbd_BitArray = (APTR)GetTagData(MUIA_FlagsButton_BitArray, (IPTR)NULL, msg->ops_AttrList);
+    fbd->fbd_MaskArray = (APTR)GetTagData(MUIA_FlagsButton_MaskArray, (IPTR)NULL, msg->ops_AttrList);
     fbd->fbd_Type = GetTagData(MUIA_FlagsButton_Type, MUIV_FlagsButton_Type_Byte, msg->ops_AttrList);
-    fbd->fbd_WindowTitle = (STRPTR)GetTagData(MUIA_FlagsButton_WindowTitle, (ULONG)NULL, msg->ops_AttrList);
+    fbd->fbd_WindowTitle = (STRPTR)GetTagData(MUIA_FlagsButton_WindowTitle, (IPTR)NULL, msg->ops_AttrList);
 
     UpdateButton(cl, obj);
 
     DoMethod(obj, MUIM_Notify, MUIA_Pressed, FALSE, MUIV_Notify_Self, 1, MUIM_FlagsButton_ShowFlags);
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
-static ULONG mSet( struct IClass *cl,
+static IPTR mSet( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {
@@ -105,7 +105,7 @@ static ULONG mSet( struct IClass *cl,
 }
 
 
-static ULONG mGet( struct IClass *cl,
+static IPTR mGet( struct IClass *cl,
                    Object *obj,
                    struct opGet *msg )
 {
@@ -125,7 +125,7 @@ static ULONG mGet( struct IClass *cl,
     return DoSuperMethodA(cl, obj, (Msg)msg);
 }
 
-static ULONG mAskMinMax( struct IClass *cl,
+static IPTR mAskMinMax( struct IClass *cl,
                          Object *obj,
                          struct MUIP_AskMinMax *msg )
 {
@@ -137,7 +137,7 @@ static ULONG mAskMinMax( struct IClass *cl,
     return 0;
 }
 
-static ULONG mShowFlags( struct IClass *cl,
+static IPTR mShowFlags( struct IClass *cl,
                          Object *obj,
                          UNUSED Msg msg )
 {

@@ -26,7 +26,7 @@
 #include <workbench/startup.h>
 #endif
 
-#if !defined(AROS) && !defined(IPTR)
+#if !defined(__AROS__) && !defined(IPTR)
 #define IPTR  ULONG
 #endif
 

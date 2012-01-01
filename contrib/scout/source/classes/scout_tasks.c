@@ -77,7 +77,7 @@ STATIC LONG totalmicros;
 #endif
 TEXT updatetimetext[8];
 
-HOOKPROTONHNO(taskslist_con2func, LONG, struct NList_ConstructMessage *msg)
+HOOKPROTONHNO(taskslist_con2func, IPTR, struct NList_ConstructMessage *msg)
 {
     return AllocListEntry(msg->pool, msg->entry, sizeof(struct TaskEntry));
 }
@@ -238,7 +238,7 @@ HOOKPROTONH(cpuinterval_callfunc, void, Object *obj, STRPTR *contents )
 }
 MakeStaticHook(cpuinterval_callhook, cpuinterval_callfunc);
 
-HOOKPROTONH(realstring_editfunc, ULONG, struct SGWork *sgw, ULONG *msg)
+HOOKPROTONH(realstring_editfunc, ULONG, struct SGWork *sgw, IPTR *msg)
 {
     ULONG return_code;
     ULONG i = 0, punkte = 0, notzeros = 0;
@@ -532,11 +532,11 @@ STATIC void UpdateTaskEntry( UNUSED struct Task *task,
     stccpy(te->te_State, GetTaskState((UBYTE)task->tc_State, task->tc_SigWait), sizeof(te->te_State));
     _snprintf(te->te_SigWait, sizeof(te->te_SigWait), "$%08lx", task->tc_SigWait);
 
-    if ((ULONG)task->tc_SPUpper >= (ULONG)task->tc_SPReg &&
-        (ULONG)task->tc_SPReg   >= (ULONG)task->tc_SPLower) {
-        LONG stackFree;
+    if ((IPTR)task->tc_SPUpper >= (IPTR)task->tc_SPReg &&
+        (IPTR)task->tc_SPReg   >= (IPTR)task->tc_SPLower) {
+        SIPTR stackFree;
 
-        stackFree = (ULONG)task->tc_SPReg - (ULONG)task->tc_SPLower;
+        stackFree = (IPTR)task->tc_SPReg - (IPTR)task->tc_SPLower;
         if (stackFree >= 512) {
             _snprintf(te->te_FreeStack, sizeof(te->te_FreeStack), "%8lD", stackFree);
         } else {
@@ -650,7 +650,7 @@ STATIC void SendCallback( struct TaskEntry *te,
     SendEncodedEntry(te, sizeof(struct TaskEntry));
 }
 
-STATIC ULONG mNew( struct IClass *cl,
+STATIC IPTR mNew( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {
@@ -663,7 +663,7 @@ STATIC ULONG mNew( struct IClass *cl,
     CYA_CpuUsageText[2] = txtCPUPercent;
 
     if ((obj = (Object *)DoSuperNew(cl, obj,
-        MUIA_HelpNode, "Tasks",
+        MUIA_HelpNode, (IPTR)"Tasks",
         MUIA_Window_ID, MakeID('T','A','S','K'),
         WindowContents, VGroup,
 
@@ -747,7 +747,7 @@ STATIC ULONG mNew( struct IClass *cl,
         twd->twd_TimerHandler.ihn_Method = MUIM_TasksWin_CPUCheckQuick;
         twd->twd_TimerHandlerAdded = FALSE;
 
-        parent = (APTR)GetTagData(MUIA_Window_ParentWindow, (ULONG)NULL, msg->ops_AttrList);
+        parent = (APTR)GetTagData(MUIA_Window_ParentWindow, (IPTR)NULL, msg->ops_AttrList);
         get(parent, MUIA_ApplicationObject, &twd->twd_Application);
 
         set(obj, MUIA_Window_Title, MyGetWindowTitle(txtTasksTitle, twd->twd_Title, sizeof(twd->twd_Title)));
@@ -804,10 +804,10 @@ STATIC ULONG mNew( struct IClass *cl,
         }
     }
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
-STATIC ULONG mDispose( struct IClass *cl,
+STATIC IPTR mDispose( struct IClass *cl,
                        Object *obj,
                        Msg msg )
 {
@@ -843,7 +843,7 @@ STATIC ULONG mDispose( struct IClass *cl,
     return (DoSuperMethodA(cl, obj, msg));
 }
 
-STATIC ULONG mUpdate( struct IClass *cl,
+STATIC IPTR mUpdate( struct IClass *cl,
                       Object *obj,
                       UNUSED Msg msg )
 {
@@ -884,7 +884,7 @@ STATIC ULONG mUpdate( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mPrint( UNUSED struct IClass *cl,
+STATIC IPTR mPrint( UNUSED struct IClass *cl,
                      UNUSED Object *obj,
                      UNUSED Msg msg )
 {
@@ -893,7 +893,7 @@ STATIC ULONG mPrint( UNUSED struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mRemove( struct IClass *cl,
+STATIC IPTR mRemove( struct IClass *cl,
                       Object *obj,
                       UNUSED Msg msg )
 {
@@ -915,7 +915,7 @@ STATIC ULONG mRemove( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mPriority( struct IClass *cl,
+STATIC IPTR mPriority( struct IClass *cl,
                         Object *obj,
                         UNUSED Msg msg )
 {
@@ -937,7 +937,7 @@ STATIC ULONG mPriority( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mMore( struct IClass *cl,
+STATIC IPTR mMore( struct IClass *cl,
                     Object *obj,
                     UNUSED Msg msg )
 {
@@ -970,7 +970,7 @@ STATIC ULONG mMore( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mListChange( struct IClass *cl,
+STATIC IPTR mListChange( struct IClass *cl,
                           Object *obj,
                           UNUSED Msg msg )
 {
@@ -993,7 +993,7 @@ STATIC ULONG mListChange( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mFreeze( struct IClass *cl,
+STATIC IPTR mFreeze( struct IClass *cl,
                       Object *obj,
                       UNUSED Msg msg )
 {
@@ -1010,7 +1010,7 @@ STATIC ULONG mFreeze( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mActivate( struct IClass *cl,
+STATIC IPTR mActivate( struct IClass *cl,
                         Object *obj,
                         UNUSED Msg msg )
 {
@@ -1027,7 +1027,7 @@ STATIC ULONG mActivate( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mSignal( struct IClass *cl,
+STATIC IPTR mSignal( struct IClass *cl,
                       Object *obj,
                       UNUSED Msg msg )
 {
@@ -1035,7 +1035,7 @@ STATIC ULONG mSignal( struct IClass *cl,
     struct TaskEntry *te;
 
     if ((te = (struct TaskEntry *)GetActiveEntry(twd->twd_TaskList)) != NULL) {
-        ULONG sigs;
+        IPTR sigs;
         APTR sigwin;
 
         IsUHex(te->te_SigWait, &sigs);
@@ -1054,7 +1054,7 @@ STATIC ULONG mSignal( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mBreak( struct IClass *cl,
+STATIC IPTR mBreak( struct IClass *cl,
                      Object *obj,
                      UNUSED Msg msg )
 {
@@ -1071,7 +1071,7 @@ STATIC ULONG mBreak( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mCPUCheckChange( struct IClass *cl,
+STATIC IPTR mCPUCheckChange( struct IClass *cl,
                               Object *obj,
                               UNUSED Msg msg )
 {
@@ -1123,7 +1123,7 @@ STATIC ULONG mCPUCheckChange( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mCPUCheck( struct IClass *cl,
+STATIC IPTR mCPUCheck( struct IClass *cl,
                         Object *obj,
                         UNUSED Msg msg )
 {
@@ -1131,7 +1131,7 @@ STATIC ULONG mCPUCheck( struct IClass *cl,
     struct TasksCallbackUserData ud;
     struct Task *task;
     BOOL changed;
-    ULONG i, oldTaskCnt = 0, sortCol = 0;
+    IPTR i, oldTaskCnt = 0, sortCol = 0;
 
     get(twd->twd_TaskList, MUIA_NList_Entries, &oldTaskCnt);
     get(twd->twd_TaskList, MUIA_NList_SortType, &sortCol);
@@ -1180,7 +1180,7 @@ STATIC ULONG mCPUCheck( struct IClass *cl,
     if (twd->twd_CPUCheck == 2) {
     #if !defined(__amigaos4__)
         if (totalmicros) {
-            ULONG cheatcpu = GetTaskData(twd->twd_CheatTask);
+            IPTR cheatcpu = GetTaskData(twd->twd_CheatTask);
 
             set(twd->twd_CPUGauge, MUIA_Gauge_Current, UDivMod32(UMult32(totalmicros - cheatcpu, 100), totalmicros));
             set(twd->twd_CPUGauge, MUIA_Gauge_InfoText, "%ld%%");
@@ -1191,7 +1191,7 @@ STATIC ULONG mCPUCheck( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mCPUCheckQuick( UNUSED struct IClass *cl,
+STATIC IPTR mCPUCheckQuick( UNUSED struct IClass *cl,
                              Object *obj,
                              UNUSED Msg msg )
 {

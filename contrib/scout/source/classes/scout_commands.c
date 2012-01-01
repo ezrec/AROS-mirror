@@ -38,7 +38,7 @@ struct CommandsCallbackUserData {
     ULONG ud_Count;
 };
 
-HOOKPROTONHNO(comtree_confunc, LONG, struct MUIP_NListtree_ConstructMessage *msg)
+HOOKPROTONHNO(comtree_confunc, IPTR, struct MUIP_NListtree_ConstructMessage *msg)
 {
     return AllocListEntry(msg->MemPool, msg->UserData, sizeof(struct CommandEntry));
 }
@@ -203,7 +203,7 @@ STATIC void ScanSegments( struct List *list,
 
                 AddTail(list, (struct Node *)ce);
              } else {
-                LONG *_seg;
+                IPTR *_seg;
                 BOOL first = TRUE;
                 ULONG segNum;
 
@@ -213,7 +213,7 @@ STATIC void ScanSegments( struct List *list,
                 ce->ce_SegmentNum = segNum;
                 _snprintf(ce->ce_SegmentNumStr, sizeof(ce->ce_SegmentNumStr), "%lD", ce->ce_SegmentNum);
 
-                _seg = BADDR(seg->seg_Seg);
+                _seg = (IPTR *)BADDR(seg->seg_Seg);
                 do {
                     struct CommandEntry *_ce;
 
@@ -324,7 +324,7 @@ STATIC void SendCallback( struct CommandEntry *ce,
     SendEncodedEntry(ce, sizeof(struct CommandEntry));
 }
 
-STATIC ULONG mNew( struct IClass *cl,
+STATIC IPTR mNew( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {
@@ -357,7 +357,7 @@ STATIC ULONG mNew( struct IClass *cl,
         cwd->cwd_CommandCount = comcount;
         cwd->cwd_RemoveButton = removeButton;
 
-        parent = (APTR)GetTagData(MUIA_Window_ParentWindow, (ULONG)NULL, msg->ops_AttrList);
+        parent = (APTR)GetTagData(MUIA_Window_ParentWindow, (IPTR)NULL, msg->ops_AttrList);
 
         set(obj, MUIA_Window_Title, MyGetWindowTitle(txtCommandsTitle, cwd->cwd_Title, sizeof(cwd->cwd_Title)));
         set(obj, MUIA_Window_DefaultObject, comtree);
@@ -372,10 +372,10 @@ STATIC ULONG mNew( struct IClass *cl,
         DoMethod(exitButton,   MUIM_Notify, MUIA_Pressed,             FALSE,          obj,                     3, MUIM_Set, MUIA_Window_CloseRequest, TRUE);
     }
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
-STATIC ULONG mDispose( struct IClass *cl,
+STATIC IPTR mDispose( struct IClass *cl,
                        Object *obj,
                        Msg msg )
 {
@@ -387,7 +387,7 @@ STATIC ULONG mDispose( struct IClass *cl,
     return (DoSuperMethodA(cl, obj, msg));
 }
 
-STATIC ULONG mUpdate( struct IClass *cl,
+STATIC IPTR mUpdate( struct IClass *cl,
                       Object *obj,
                       UNUSED Msg msg )
 {
@@ -417,7 +417,7 @@ STATIC ULONG mUpdate( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mPrint( UNUSED struct IClass *cl,
+STATIC IPTR mPrint( UNUSED struct IClass *cl,
                      UNUSED Object *obj,
                      UNUSED Msg msg )
 {
@@ -426,7 +426,7 @@ STATIC ULONG mPrint( UNUSED struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mRemove( struct IClass *cl,
+STATIC IPTR mRemove( struct IClass *cl,
                       Object *obj,
                       UNUSED Msg msg )
 {
@@ -454,7 +454,7 @@ STATIC ULONG mRemove( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mListChange( struct IClass *cl,
+STATIC IPTR mListChange( struct IClass *cl,
                           Object *obj,
                           UNUSED Msg msg )
 {

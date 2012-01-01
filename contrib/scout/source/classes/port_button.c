@@ -22,7 +22,7 @@ STATIC void UpdateButton( struct IClass *cl,
     set(obj, MUIA_Disabled, (pbd->pbd_Port == NULL) ? TRUE : FALSE);
 }
 
-STATIC ULONG mNew( struct IClass *cl,
+STATIC IPTR mNew( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {
@@ -33,16 +33,16 @@ STATIC ULONG mNew( struct IClass *cl,
     }
 
     pbd = INST_DATA(cl, obj);
-    pbd->pbd_Port = (struct MsgPort *)GetTagData(MUIA_PortButton_Port, (ULONG)NULL, msg->ops_AttrList);
+    pbd->pbd_Port = (struct MsgPort *)GetTagData(MUIA_PortButton_Port, (IPTR)NULL, msg->ops_AttrList);
 
     UpdateButton(cl, obj);
 
     DoMethod(obj, MUIM_Notify, MUIA_Pressed, FALSE, MUIV_Notify_Self, 1, MUIM_PortButton_ShowPort);
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
-STATIC ULONG mSet( struct IClass *cl,
+STATIC IPTR mSet( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {
@@ -66,7 +66,7 @@ STATIC ULONG mSet( struct IClass *cl,
 }
 
 
-STATIC ULONG mGet( struct IClass *cl,
+STATIC IPTR mGet( struct IClass *cl,
                    Object *obj,
                    struct opGet *msg )
 {
@@ -75,14 +75,14 @@ STATIC ULONG mGet( struct IClass *cl,
 
     switch (msg->opg_AttrID) {
         case MUIA_PortButton_Port:
-            *store = (ULONG)pbd->pbd_Port; return (TRUE);
+            *store = (IPTR)pbd->pbd_Port; return (TRUE);
             break;
     }
 
     return DoSuperMethodA(cl, obj, (Msg)msg);
 }
 
-STATIC ULONG mAskMinMax( struct IClass *cl,
+STATIC IPTR mAskMinMax( struct IClass *cl,
                          Object *obj,
                          struct MUIP_AskMinMax *msg )
 {
@@ -94,7 +94,7 @@ STATIC ULONG mAskMinMax( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mShowPort( struct IClass *cl,
+STATIC IPTR mShowPort( struct IClass *cl,
                         Object *obj,
                         UNUSED Msg msg )
 {

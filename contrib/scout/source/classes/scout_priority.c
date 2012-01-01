@@ -38,12 +38,12 @@ HOOKPROTONHNP(pri_callfunc, LONG, Object *obj)
 {
     struct PriorityWinData *pwd = INST_DATA(OCLASS(obj), obj);
     STRPTR pristring;
-    LONG pri = 0;
+    long pri = 0;
     LONG length;
 
     pristring = (STRPTR)xget(pwd->pwd_PriorityString, MUIA_String_Contents);
 
-    length = stcd_l(pristring, (LONG *)&pri);
+    length = stcd_l(pristring, &pri);
     if (length == (LONG)strlen(pristring) && pri >= -128 && pri <= 127) {
         set(pwd->pwd_PrioritySlider, MUIA_Slider_Level, pri);
         set(obj, MUIA_Window_ActiveObject, pwd->pwd_OkButton);
@@ -55,7 +55,7 @@ HOOKPROTONHNP(pri_callfunc, LONG, Object *obj)
 }
 MakeStaticHook(pri_callhook, pri_callfunc);
 
-STATIC ULONG mNew( struct IClass *cl,
+STATIC IPTR mNew( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {
@@ -129,10 +129,10 @@ STATIC ULONG mNew( struct IClass *cl,
         DoMethod(cancelButton, MUIM_Notify,  MUIA_Pressed,             FALSE,          MUIV_Notify_Application, 2, MUIM_Application_ReturnID, 1);
     }
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
-STATIC ULONG mDispose( struct IClass *cl,
+STATIC IPTR mDispose( struct IClass *cl,
                        Object *obj,
                        Msg msg )
 {
@@ -143,7 +143,7 @@ STATIC ULONG mDispose( struct IClass *cl,
     return (DoSuperMethodA(cl, obj, msg));
 }
 
-STATIC ULONG mSet( struct IClass *cl,
+STATIC IPTR mSet( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {
@@ -168,7 +168,7 @@ STATIC ULONG mSet( struct IClass *cl,
     return DoSuperMethodA(cl, obj, (Msg)msg);
 }
 
-STATIC ULONG mGet( struct IClass *cl,
+STATIC IPTR mGet( struct IClass *cl,
                    Object *obj,
                    struct opGet *msg )
 {
@@ -184,12 +184,12 @@ STATIC ULONG mGet( struct IClass *cl,
     return DoSuperMethodA(cl, obj, (Msg)msg);
 }
 
-STATIC ULONG mGetPriority( UNUSED struct IClass *cl,
+STATIC IPTR mGetPriority( UNUSED struct IClass *cl,
                            Object *obj,
                            UNUSED Msg msg )
 {
     BOOL done = FALSE;
-    ULONG result = 0;
+    IPTR result = 0;
 
     set(_app(obj), MUIA_Application_Sleep, TRUE);
     set(obj, MUIA_Window_Open, TRUE);

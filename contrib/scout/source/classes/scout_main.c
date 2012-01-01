@@ -36,7 +36,7 @@ struct MainWinData {
     #define MUIA_Dtpic_Name 0x80423d72
 #endif
 
-HOOKPROTONH(close_callfunc, void, Object *obj, ULONG *index)
+HOOKPROTONH(close_callfunc, void, Object *obj, IPTR *index)
 {
     struct MainWinData *mwd = INST_DATA(OCLASS(obj), obj);
 
@@ -104,7 +104,7 @@ STATIC void CreateSubWindow( struct IClass *cl,
     }
 }
 
-STATIC ULONG mNew( struct IClass *cl,
+STATIC IPTR mNew( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {
@@ -117,7 +117,7 @@ STATIC ULONG mNew( struct IClass *cl,
             MUIA_Group_SameHeight, TRUE,
             Child, (IPTR)VGroup,                  /* This is the SCOUT logo */
                 MUIA_Weight    , 0,
-                MUIA_Frame     , MUIV_Frame_Text,
+                MUIA_Frame     , (IPTR)MUIV_Frame_Text,
                 MUIA_Background, MUII_SHADOW,
                 Child, (IPTR)VSpace(0),
                 Child, (IPTR)LogoObject(),
@@ -234,10 +234,10 @@ STATIC ULONG mNew( struct IClass *cl,
     set(button[31], MUIA_Disabled, !(morphOS || arOS));
     }
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
-STATIC ULONG mDispose( struct IClass *cl,
+STATIC IPTR mDispose( struct IClass *cl,
                        Object *obj,
                        Msg msg )
 {
@@ -246,7 +246,7 @@ STATIC ULONG mDispose( struct IClass *cl,
     return DoSuperMethodA(cl, obj, msg);
 }
 
-STATIC ULONG mAbout( UNUSED struct IClass *cl,
+STATIC IPTR mAbout( UNUSED struct IClass *cl,
                      Object *obj,
                      UNUSED Msg msg )
 {
@@ -271,7 +271,7 @@ STATIC ULONG mAbout( UNUSED struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mShowAllocations( struct IClass *cl,
+STATIC IPTR mShowAllocations( struct IClass *cl,
                                Object *obj,
                                UNUSED Msg msg )
 {
@@ -280,7 +280,7 @@ STATIC ULONG mShowAllocations( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mShowAssigns( struct IClass *cl,
+STATIC IPTR mShowAssigns( struct IClass *cl,
                            Object *obj,
                            UNUSED Msg msg )
 {
@@ -289,7 +289,7 @@ STATIC ULONG mShowAssigns( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mShowClasses( struct IClass *cl,
+STATIC IPTR mShowClasses( struct IClass *cl,
                            Object *obj,
                            UNUSED Msg msg )
 {
@@ -298,7 +298,7 @@ STATIC ULONG mShowClasses( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mShowOOPClasses( struct IClass *cl,
+STATIC IPTR mShowOOPClasses( struct IClass *cl,
                            Object *obj,
                            UNUSED Msg msg )
 {
@@ -307,7 +307,7 @@ STATIC ULONG mShowOOPClasses( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mShowCommodities( struct IClass *cl,
+STATIC IPTR mShowCommodities( struct IClass *cl,
                                Object *obj,
                                UNUSED Msg msg )
 {
@@ -316,7 +316,7 @@ STATIC ULONG mShowCommodities( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mShowDevices( struct IClass *cl,
+STATIC IPTR mShowDevices( struct IClass *cl,
                            Object *obj,
                            UNUSED Msg msg )
 {
@@ -325,7 +325,7 @@ STATIC ULONG mShowDevices( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mShowExpansions( struct IClass *cl,
+STATIC IPTR mShowExpansions( struct IClass *cl,
                               Object *obj,
                               UNUSED Msg msg )
 {
@@ -334,7 +334,7 @@ STATIC ULONG mShowExpansions( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mShowFonts( struct IClass *cl,
+STATIC IPTR mShowFonts( struct IClass *cl,
                          Object *obj,
                          UNUSED Msg msg )
 {
@@ -343,7 +343,7 @@ STATIC ULONG mShowFonts( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mShowInputHandlers( struct IClass *cl,
+STATIC IPTR mShowInputHandlers( struct IClass *cl,
                                  Object *obj,
                                  UNUSED Msg msg )
 {
@@ -352,7 +352,7 @@ STATIC ULONG mShowInputHandlers( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mShowInterrupts( struct IClass *cl,
+STATIC IPTR mShowInterrupts( struct IClass *cl,
                               Object *obj,
                               UNUSED Msg msg )
 {
@@ -361,7 +361,7 @@ STATIC ULONG mShowInterrupts( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mShowLibraries( struct IClass *cl,
+STATIC IPTR mShowLibraries( struct IClass *cl,
                              Object *obj,
                              UNUSED Msg msg )
 {
@@ -370,7 +370,7 @@ STATIC ULONG mShowLibraries( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mShowLocks( struct IClass *cl,
+STATIC IPTR mShowLocks( struct IClass *cl,
                          Object *obj,
                          UNUSED Msg msg )
 {
@@ -379,7 +379,7 @@ STATIC ULONG mShowLocks( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mShowLowMemory( struct IClass *cl,
+STATIC IPTR mShowLowMemory( struct IClass *cl,
                              Object *obj,
                              UNUSED Msg msg )
 {
@@ -388,7 +388,7 @@ STATIC ULONG mShowLowMemory( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mShowMemory( struct IClass *cl,
+STATIC IPTR mShowMemory( struct IClass *cl,
                           Object *obj,
                           UNUSED Msg msg )
 {
@@ -397,7 +397,7 @@ STATIC ULONG mShowMemory( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mShowMounts( struct IClass *cl,
+STATIC IPTR mShowMounts( struct IClass *cl,
                           Object *obj,
                           UNUSED Msg msg )
 {
@@ -406,7 +406,7 @@ STATIC ULONG mShowMounts( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mShowPorts( struct IClass *cl,
+STATIC IPTR mShowPorts( struct IClass *cl,
                          Object *obj,
                          UNUSED Msg msg )
 {
@@ -415,7 +415,7 @@ STATIC ULONG mShowPorts( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mShowResidents( struct IClass *cl,
+STATIC IPTR mShowResidents( struct IClass *cl,
                              Object *obj,
                              UNUSED Msg msg )
 {
@@ -424,7 +424,7 @@ STATIC ULONG mShowResidents( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mShowCommands( struct IClass *cl,
+STATIC IPTR mShowCommands( struct IClass *cl,
                             Object *obj,
                             UNUSED Msg msg )
 {
@@ -433,7 +433,7 @@ STATIC ULONG mShowCommands( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mShowResources( struct IClass *cl,
+STATIC IPTR mShowResources( struct IClass *cl,
                              Object *obj,
                              UNUSED Msg msg )
 {
@@ -442,7 +442,7 @@ STATIC ULONG mShowResources( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mShowScreenModes( struct IClass *cl,
+STATIC IPTR mShowScreenModes( struct IClass *cl,
                                Object *obj,
                                UNUSED Msg msg )
 {
@@ -451,7 +451,7 @@ STATIC ULONG mShowScreenModes( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mShowSemaphores( struct IClass *cl,
+STATIC IPTR mShowSemaphores( struct IClass *cl,
                               Object *obj,
                               UNUSED Msg msg )
 {
@@ -460,7 +460,7 @@ STATIC ULONG mShowSemaphores( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mShowSystem( struct IClass *cl,
+STATIC IPTR mShowSystem( struct IClass *cl,
                           Object *obj,
                           UNUSED Msg msg )
 {
@@ -469,7 +469,7 @@ STATIC ULONG mShowSystem( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mShowTasks( struct IClass *cl,
+STATIC IPTR mShowTasks( struct IClass *cl,
                          Object *obj,
                          UNUSED Msg msg )
 {
@@ -478,7 +478,7 @@ STATIC ULONG mShowTasks( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mShowTimers( struct IClass *cl,
+STATIC IPTR mShowTimers( struct IClass *cl,
                           Object *obj,
                           UNUSED Msg msg )
 {
@@ -487,7 +487,7 @@ STATIC ULONG mShowTimers( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mShowVectors( struct IClass *cl,
+STATIC IPTR mShowVectors( struct IClass *cl,
                            Object *obj,
                            UNUSED Msg msg )
 {
@@ -496,7 +496,7 @@ STATIC ULONG mShowVectors( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mShowWindows( struct IClass *cl,
+STATIC IPTR mShowWindows( struct IClass *cl,
                            Object *obj,
                            UNUSED Msg msg )
 {
@@ -505,7 +505,7 @@ STATIC ULONG mShowWindows( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mShowPatches( struct IClass *cl,
+STATIC IPTR mShowPatches( struct IClass *cl,
                            Object *obj,
                            UNUSED Msg msg )
 {
@@ -514,7 +514,7 @@ STATIC ULONG mShowPatches( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mShowCatalogs( struct IClass *cl,
+STATIC IPTR mShowCatalogs( struct IClass *cl,
                            Object *obj,
                            UNUSED Msg msg )
 {
@@ -523,7 +523,7 @@ STATIC ULONG mShowCatalogs( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mShowAudioModes( struct IClass *cl,
+STATIC IPTR mShowAudioModes( struct IClass *cl,
                               Object *obj,
                               UNUSED Msg msg )
 {
@@ -532,7 +532,7 @@ STATIC ULONG mShowAudioModes( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mShowResetHandlers( struct IClass *cl,
+STATIC IPTR mShowResetHandlers( struct IClass *cl,
                                  Object *obj,
                                  UNUSED Msg msg )
 {
@@ -541,7 +541,7 @@ STATIC ULONG mShowResetHandlers( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mShowMonitors( struct IClass *cl,
+STATIC IPTR mShowMonitors( struct IClass *cl,
                                  Object *obj,
                                  UNUSED Msg msg )
 {
@@ -550,7 +550,7 @@ STATIC ULONG mShowMonitors( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mShowMonitorClass( struct IClass *cl,
+STATIC IPTR mShowMonitorClass( struct IClass *cl,
                                  Object *obj,
                                  UNUSED Msg msg )
 {
@@ -559,7 +559,7 @@ STATIC ULONG mShowMonitorClass( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mFlushDevices( UNUSED struct IClass *cl,
+STATIC IPTR mFlushDevices( UNUSED struct IClass *cl,
                             UNUSED Object *obj,
                             UNUSED Msg msg )
 {
@@ -568,7 +568,7 @@ STATIC ULONG mFlushDevices( UNUSED struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mFlushFonts( UNUSED struct IClass *cl,
+STATIC IPTR mFlushFonts( UNUSED struct IClass *cl,
                           UNUSED Object *obj,
                           UNUSED Msg msg )
 {
@@ -577,7 +577,7 @@ STATIC ULONG mFlushFonts( UNUSED struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mFlushLibraries( UNUSED struct IClass *cl,
+STATIC IPTR mFlushLibraries( UNUSED struct IClass *cl,
                               UNUSED Object *obj,
                               UNUSED Msg msg )
 {
@@ -586,7 +586,7 @@ STATIC ULONG mFlushLibraries( UNUSED struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mFlushAll( UNUSED struct IClass *cl,
+STATIC IPTR mFlushAll( UNUSED struct IClass *cl,
                         UNUSED Object *obj,
                         UNUSED Msg msg )
 {
@@ -595,7 +595,7 @@ STATIC ULONG mFlushAll( UNUSED struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mUpdateAll( struct IClass *cl,
+STATIC IPTR mUpdateAll( struct IClass *cl,
                          Object *obj,
                          UNUSED Msg msg )
 {

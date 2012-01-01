@@ -18,7 +18,7 @@ static void UpdateButton( struct IClass *cl,
                   TAG_DONE);
 }
 
-static ULONG mNew( struct IClass *cl,
+static IPTR mNew( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {
@@ -36,10 +36,10 @@ static ULONG mNew( struct IClass *cl,
 
     DoMethod(obj, MUIM_Notify, MUIA_Pressed, FALSE, MUIV_Notify_Self, 1, MUIM_DisassemblerButton_Disassemble);
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
-static ULONG mSet( struct IClass *cl,
+static IPTR mSet( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {
@@ -64,7 +64,7 @@ static ULONG mSet( struct IClass *cl,
 }
 
 
-static ULONG mGet( struct IClass *cl,
+static IPTR mGet( struct IClass *cl,
                    Object *obj,
                    struct opGet *msg )
 {
@@ -73,7 +73,7 @@ static ULONG mGet( struct IClass *cl,
 
     switch (msg->opg_AttrID) {
         case MUIA_DisassemblerButton_Address:
-            *store = (ULONG)dbd->dbd_Address;
+            *store = (IPTR)dbd->dbd_Address;
             return TRUE;
             break;
     }
@@ -81,7 +81,7 @@ static ULONG mGet( struct IClass *cl,
     return DoSuperMethodA(cl, obj, (Msg)msg);
 }
 
-static ULONG mAskMinMax( struct IClass *cl,
+static IPTR mAskMinMax( struct IClass *cl,
                          Object *obj,
                          struct MUIP_AskMinMax *msg )
 {
@@ -93,7 +93,7 @@ static ULONG mAskMinMax( struct IClass *cl,
     return 0;
 }
 
-static ULONG mDisassemble( struct IClass *cl,
+static IPTR mDisassemble( struct IClass *cl,
                            Object *obj,
                            UNUSED Msg msg )
 {

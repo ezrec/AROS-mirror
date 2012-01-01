@@ -119,7 +119,8 @@ STATIC void UpdateCallback( struct VectorEntry *ve,
                             void *userData )
 {
     struct VectorsCallbackUserData *ud = (struct VectorsCallbackUserData *)userData;
-    ULONG vec, code;
+    ULONG vec;
+    IPTR code;
 
     for (vec = 0; vec < 3; vec++) {
         IsUHex(ve->ve_ResetVectors[vec], &code);
@@ -170,7 +171,7 @@ STATIC void SendCallback( struct VectorEntry *ve,
     SendEncodedEntry(ve, sizeof(struct VectorEntry));
 }
 
-STATIC ULONG mNew( struct IClass *cl,
+STATIC IPTR mNew( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {
@@ -292,7 +293,7 @@ STATIC ULONG mNew( struct IClass *cl,
         CopyMemQuick(autoVectButton, vwd->vwd_AutoVectButton, sizeof(vwd->vwd_AutoVectButton));
         CopyMemQuick(intVectButton, vwd->vwd_IntVectButton, sizeof(vwd->vwd_IntVectButton));
 
-        parent = (APTR)GetTagData(MUIA_Window_ParentWindow, (ULONG)NULL, msg->ops_AttrList);
+        parent = (APTR)GetTagData(MUIA_Window_ParentWindow, (IPTR)NULL, msg->ops_AttrList);
 
         set(obj, MUIA_Window_Title, MyGetWindowTitle(txtVectorsTitle, vwd->vwd_Title, sizeof(vwd->vwd_Title)));
         set(obj, MUIA_Window_ActiveObject, pages);
@@ -304,10 +305,10 @@ STATIC ULONG mNew( struct IClass *cl,
         DoMethod(exitButton,   MUIM_Notify, MUIA_Pressed,             FALSE, obj,                     3, MUIM_Set, MUIA_Window_CloseRequest, TRUE);
     }
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
-STATIC ULONG mDispose( struct IClass *cl,
+STATIC IPTR mDispose( struct IClass *cl,
                        Object *obj,
                        Msg msg )
 {
@@ -316,7 +317,7 @@ STATIC ULONG mDispose( struct IClass *cl,
     return DoSuperMethodA(cl, obj, msg);
 }
 
-STATIC ULONG mUpdate( struct IClass *cl,
+STATIC IPTR mUpdate( struct IClass *cl,
                       Object *obj,
                       UNUSED Msg msg )
 {
@@ -336,7 +337,7 @@ STATIC ULONG mUpdate( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mPrint( UNUSED struct IClass *cl,
+STATIC IPTR mPrint( UNUSED struct IClass *cl,
                      UNUSED Object *obj,
                      UNUSED Msg msg )
 {

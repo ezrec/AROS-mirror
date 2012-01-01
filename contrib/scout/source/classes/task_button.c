@@ -45,7 +45,7 @@ static void UpdateButton( struct IClass *cl,
     TEXT tmp[FILENAME_LENGTH];
 
     if (tbd->tbd_IsProcessPointer && tbd->tbd_Task != NULL) {
-        tbd->tbd_ExecTask = (struct Task *)((ULONG)tbd->tbd_Task - sizeof(struct Task));
+        tbd->tbd_ExecTask = (struct Task *)((IPTR)tbd->tbd_Task - sizeof(struct Task));
     } else {
         tbd->tbd_ExecTask = tbd->tbd_Task;
     }
@@ -69,7 +69,7 @@ static void UpdateButton( struct IClass *cl,
     set(obj, MUIA_Disabled, (tbd->tbd_Task == NULL) ? TRUE : FALSE);
 }
 
-static ULONG mNew( struct IClass *cl,
+static IPTR mNew( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {
@@ -80,17 +80,17 @@ static ULONG mNew( struct IClass *cl,
     }
 
     tbd = INST_DATA(cl, obj);
-    tbd->tbd_Task = (struct Task *)GetTagData(MUIA_TaskButton_Task, (ULONG)NULL, msg->ops_AttrList);
+    tbd->tbd_Task = (struct Task *)GetTagData(MUIA_TaskButton_Task, (IPTR)NULL, msg->ops_AttrList);
     tbd->tbd_IsProcessPointer = GetTagData(MUIA_TaskButton_IsProcessPointer, FALSE, msg->ops_AttrList);
 
     UpdateButton(cl, obj);
 
     DoMethod(obj, MUIM_Notify, MUIA_Pressed, FALSE, MUIV_Notify_Self, 1, MUIM_TaskButton_ShowTask);
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
-static ULONG mSet( struct IClass *cl,
+static IPTR mSet( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {
@@ -119,7 +119,7 @@ static ULONG mSet( struct IClass *cl,
 }
 
 
-static ULONG mGet( struct IClass *cl,
+static IPTR mGet( struct IClass *cl,
                    Object *obj,
                    struct opGet *msg )
 {
@@ -128,14 +128,14 @@ static ULONG mGet( struct IClass *cl,
 
     switch (msg->opg_AttrID) {
         case MUIA_TaskButton_Task:
-            *store = (ULONG)tbd->tbd_Task; return (TRUE);
+            *store = (IPTR)tbd->tbd_Task; return (TRUE);
             break;
     }
 
     return DoSuperMethodA(cl, obj, (Msg)msg);
 }
 
-static ULONG mAskMinMax( struct IClass *cl,
+static IPTR mAskMinMax( struct IClass *cl,
                          Object *obj,
                          struct MUIP_AskMinMax *msg )
 {
@@ -147,7 +147,7 @@ static ULONG mAskMinMax( struct IClass *cl,
     return 0;
 }
 
-static ULONG mShowTask( struct IClass *cl,
+static IPTR mShowTask( struct IClass *cl,
                         Object *obj,
                         UNUSED Msg msg )
 {

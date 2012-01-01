@@ -484,7 +484,7 @@ APTR MyCheckmarkImage( void )
 BOOL isValidPointer( APTR ptr )
 {
     // anything below a certain address is considered invalid
-    if ((ULONG)ptr <= 0x200 || (ULONG)ptr == 0xffffffff) {
+    if ((IPTR)ptr <= 0x200 || (IPTR)ptr == ~0) {
         return FALSE;
     }
 
@@ -565,7 +565,7 @@ CONST_STRPTR nonetest( CONST_STRPTR s )
     TEXT c;
 
     // very simple test for sensible names, may cause Enforcer-Hits for wrong >pointers
-    if ((ULONG)s <= 0x200 || (s != NULL && s[0] == 0)) {
+    if ((IPTR)s <= 0x200 || (s != NULL && s[0] == 0)) {
         return txtNone;
     }
 
@@ -644,11 +644,9 @@ BOOL IsReal( CONST_STRPTR text )
 }
 
 BOOL IsHex( CONST_STRPTR text,
-            LONG *result )
+            SIPTR *result )
 {
-    // FIXME: 64 bit AROS?
-
-    ULONG i;
+    int i;
 
     *result = 0;
 
@@ -670,7 +668,7 @@ BOOL IsHex( CONST_STRPTR text,
 }
 
 BOOL IsUHex( CONST_STRPTR text,
-             ULONG *result)
+             IPTR *result)
 {
     ULONG i;
 
@@ -694,7 +692,7 @@ BOOL IsUHex( CONST_STRPTR text,
 }
 
 BOOL IsDec( CONST_STRPTR text,
-            LONG *result)
+            SIPTR *result)
 {
     while (*text != '\0' && isspace(*text)) {
         text++;
@@ -706,7 +704,7 @@ BOOL IsDec( CONST_STRPTR text,
 LONG HexCompare( CONST_STRPTR hex1str,
                  CONST_STRPTR hex2str )
 {
-    LONG hex1, hex2;
+    SIPTR hex1, hex2;
 
     IsHex(hex1str, &hex1);
     IsHex(hex2str, &hex2);
@@ -717,7 +715,7 @@ LONG HexCompare( CONST_STRPTR hex1str,
 LONG IntegerCompare( CONST_STRPTR int1str,
                      CONST_STRPTR int2str )
 {
-    LONG int1, int2;
+    SIPTR int1, int2;
 
     IsDec(int1str, &int1);
     IsDec(int2str, &int2);
@@ -729,7 +727,7 @@ LONG VersionCompare( CONST_STRPTR ver1str,
                      CONST_STRPTR ver2str )
 {
     STRPTR copy1, copy2;
-    LONG ver1, ver2, rev1, rev2;
+    SIPTR ver1, ver2, rev1, rev2;
     LONG result = 0;
 
     copy1 = _strdup_pool(ver1str, globalPool);
@@ -760,7 +758,7 @@ LONG VersionCompare( CONST_STRPTR ver1str,
 LONG PriorityCompare( CONST_STRPTR pri1str,
                       CONST_STRPTR pri2str )
 {
-    LONG pri1, pri2;
+    SIPTR pri1, pri2;
 
     IsDec(pri1str, &pri1);
     IsDec(pri2str, &pri2);
@@ -902,7 +900,7 @@ struct List *FindListOfNode( struct Node *ln )
     return lh;
 }
 
-LONG AllocListEntry( APTR pool,
+IPTR AllocListEntry( APTR pool,
                      APTR source,
                      ULONG size )
 {
@@ -912,7 +910,7 @@ LONG AllocListEntry( APTR pool,
         CopyMemQuick(source, result, size);
     }
 
-    return (LONG)result;
+    return (IPTR)result;
 }
 
 void FreeListEntry( APTR pool,
