@@ -2,6 +2,7 @@
 include $(TOP)/config/make.cfg
 
 USER_CFLAGS	:= -Iinclude
+USER_CFLAGS     += -Wno-parentheses -Wno-unused-variable
 
 CFLAGS := $(subst -O2,,$(CFLAGS))
 
