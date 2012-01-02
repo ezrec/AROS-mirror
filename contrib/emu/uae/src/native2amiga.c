@@ -86,7 +86,7 @@ uaecptr uae_AllocMem (uae_u32 size, uae_u32 flags)
     return CallLib (get_long (4), -198); /* AllocMem */
 }
 
-void uae_FreeMem (uaecptr memory, uae_u32 size)
+static void uae_FreeMem (uaecptr memory, uae_u32 size)
 {
     m68k_dreg (regs, 0) = size;
     m68k_areg (regs, 1) = memory;

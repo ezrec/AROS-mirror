@@ -128,7 +128,7 @@ extern void save_options (FILE *, struct uae_prefs *);
 extern void default_prefs (struct uae_prefs *);
 extern void discard_prefs (struct uae_prefs *);
 
-extern int parse_cmdline_option (char, char *);
+extern int parse_cmdline_option (char, const char *);
 
 extern int cfgfile_yesno (char *option, char *value, char *name, int *location);
 extern int cfgfile_intval (char *option, char *value, char *name, int *location, int scale);

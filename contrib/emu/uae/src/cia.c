@@ -278,7 +278,7 @@ void CIA_handler (void)
     CIA_calctimers ();
 }
 
-void cia_diskindex (void)
+void CIA_diskindex (void)
 {
     ciabicr |= 0x10;
     RethinkICRB();

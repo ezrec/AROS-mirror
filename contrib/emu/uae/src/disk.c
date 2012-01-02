@@ -22,6 +22,7 @@
 #include "memory.h"
 #include "events.h"
 #include "custom.h"
+#include "cia.h"
 #include "ersatz.h"
 #include "disk.h"
 #include "gui.h"
@@ -894,7 +895,7 @@ void DISK_handler (void)
     if (disk_sync[disk_sync_cycle] & DISK_WORDSYNC)
 	INTREQ (0x9000);
     if (disk_sync[disk_sync_cycle] & DISK_INDEXSYNC)
-	cia_diskindex ();
+	CIA_diskindex ();
     disk_sync[disk_sync_cycle] = 0;
     disk_events (disk_sync_cycle);
 }

@@ -3110,7 +3110,7 @@ void filesys_reset (void)
 static void free_all_ainos (Unit *u, a_inode *parent)
 {
   a_inode *a;
-  while (a = parent->child)
+  while ((a = parent->child))
     {
       free_all_ainos (u, a);
       dispose_aino (u, &parent->child, a);

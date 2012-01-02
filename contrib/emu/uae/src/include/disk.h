@@ -18,6 +18,8 @@ extern void DISK_handler (void);
 extern void DISK_update (void);
 extern void DISK_reset (void);
 
+extern void dumpdisk (void);
+
 extern void DSKLEN (uae_u16 v, int hpos);
 extern uae_u16 DSKDATR (int hpos);
 extern uae_u16 DSKBYTR (int hpos);

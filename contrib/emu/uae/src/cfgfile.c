@@ -651,7 +651,7 @@ void cfgfile_show_usage (void)
    because the new way of doing things is painful for me (it requires me
    to type a couple hundred characters when invoking UAE).  The following
    is far less annoying to use.  */
-static void parse_gfx_specs (char *spec)
+static void parse_gfx_specs (const char *spec)
 {
     char *x0 = my_strdup (spec);
     char *x1, *x2;
@@ -689,7 +689,7 @@ static void parse_gfx_specs (char *spec)
     free (x0);
 }
 
-static void parse_sound_spec (char *spec)
+static void parse_sound_spec (const char *spec)
 {
     char *x0 = my_strdup (spec);
     char *x1, *x2 = NULL, *x3 = NULL, *x4 = NULL, *x5 = NULL;
@@ -734,7 +734,7 @@ static void parse_sound_spec (char *spec)
 }
 
 
-static void parse_joy_spec (char *spec)
+static void parse_joy_spec (const char *spec)
 {
     int v0 = 2, v1 = 0;
     if (strlen(spec) != 2)
@@ -772,7 +772,7 @@ bad:
     currprefs.jport1 = v1;
 }
 
-static void parse_filesys_spec (int readonly, char *spec)
+static void parse_filesys_spec (int readonly, const char *spec)
 {
     char buf[256];
     char *s2;
@@ -797,7 +797,7 @@ static void parse_filesys_spec (int readonly, char *spec)
     }
 }
 
-static void parse_hardfile_spec (char *spec)
+static void parse_hardfile_spec (const char *spec)
 {
     char *x0 = my_strdup (spec);
     char *x1, *x2, *x3, *x4;
@@ -831,7 +831,7 @@ static void parse_hardfile_spec (char *spec)
     return;
 }
 
-static void parse_cpu_specs (char *spec)
+static void parse_cpu_specs (const char *spec)
 {
     if (*spec < '0' || *spec > '4') {
 	fprintf (stderr, "CPU parameter string must begin with '0', '1', '2', '3' or '4'.\n");
@@ -867,7 +867,7 @@ static void parse_cpu_specs (char *spec)
 }
 
 /* Returns the number of args used up (0 or 1).  */
-int parse_cmdline_option (char c, char *arg)
+int parse_cmdline_option (char c, const char *arg)
 {
     const char arg_required[] = "0123rKpImWSAJwNCZUFcblOdHRv";
 

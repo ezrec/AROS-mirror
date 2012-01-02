@@ -245,6 +245,7 @@ void restore_state (char *filename)
     savestate_state = STATE_RESTORE;
     for (;;) {
 	chunk = restore_chunk (f, name, &len, &filepos);
+        end = chunk;
 	write_log ("Chunk '%s' size %d\n", name, len);
 	if (!strcmp (name, "END "))
 	    break;

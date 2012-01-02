@@ -60,7 +60,7 @@ FILES := \
 EXEDIR := $(CONTRIBDIR)/Emu/UAE
 
 USER_CFLAGS := -O2 -fomit-frame-pointer -Wall -Wno-unused\
-               -Wno-format -W -Wmissing-prototypes\
+               -Wno-format -W -Wmissing-prototypes -Wno-sign-compare \
                -Wstrict-prototypes   -DGCCCONSTFUNC='__attribute__((const))'\
                -D_REENTRANT \
 	       -fno-exceptions -DUNALIGNED_PROFITABLE\

@@ -31,9 +31,7 @@
    TOSIZE must be positive.  Return -1 if FROMSIZE is not positive.  */
 
 static long
-adjust_blocks (blocks, fromsize, tosize)
-     long blocks;
-     int fromsize, tosize;
+adjust_blocks (long blocks, int fromsize, int tosize)
 {
   if (tosize <= 0)
     abort ();
