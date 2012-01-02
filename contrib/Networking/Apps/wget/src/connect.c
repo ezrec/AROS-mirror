@@ -236,7 +236,7 @@ static void
 connect_with_timeout_callback (void *arg)
 {
   struct cwt_context *ctx = (struct cwt_context *)arg;
-  ctx->result = connect (ctx->fd, ctx->addr, ctx->addrlen);
+  ctx->result = connect (ctx->fd, (struct sockaddr *)ctx->addr, ctx->addrlen);
 }
 
 /* Like connect, but specifies a timeout.  If connecting takes longer
@@ -810,7 +810,7 @@ fd_register_transport (int fd, fd_reader_t reader, fd_writer_t writer,
   info->ctx = ctx;
   if (!transport_map)
     transport_map = hash_table_new (0, NULL, NULL);
-  hash_table_put (transport_map, (void *) fd, info);
+  hash_table_put (transport_map, (void *) (long) fd, info);
   ++transport_map_modified_tick;
 }
 
@@ -821,7 +821,7 @@ fd_register_transport (int fd, fd_reader_t reader, fd_writer_t writer,
 void *
 fd_transport_context (int fd)
 {
-  struct transport_info *info = hash_table_get (transport_map, (void *) fd);
+  struct transport_info *info = hash_table_get (transport_map, (void *) (long) fd);
   return info->ctx;
 }
 
@@ -843,7 +843,7 @@ fd_transport_context (int fd)
     info = last_info;							\
   else									\
     {									\
-      info = hash_table_get (transport_map, (void *) fd);		\
+      info = hash_table_get (transport_map, (void *) (long) fd);	\
       last_fd = fd;							\
       last_info = info;							\
       last_tick = transport_map_modified_tick;				\
@@ -957,7 +957,7 @@ fd_close (int fd)
      per socket, so that particular optimization wouldn't work.  */
   info = NULL;
   if (transport_map)
-    info = hash_table_get (transport_map, (void *) fd);
+    info = hash_table_get (transport_map, (void *) (long) fd);
 
   if (info && info->closer)
     info->closer (fd, info->ctx);
@@ -966,7 +966,7 @@ fd_close (int fd)
 
   if (info)
     {
-      hash_table_remove (transport_map, (void *) fd);
+      hash_table_remove (transport_map, (void *) (long) fd);
       xfree (info);
       ++transport_map_modified_tick;
     }
