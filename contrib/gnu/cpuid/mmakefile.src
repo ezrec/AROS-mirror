@@ -3,6 +3,8 @@ include $(SRCDIR)/$(CURDIR)/../make.cfg
 EXEDIR := $(GNUDIR)/cpuid/bin
 FILES  := cpuid
 
+USER_CFLAGS += -Wno-unused-but-set-variable
+
 #MM- contrib-gnu-cpuid : cpuid-$(AROS_TARGET_CPU)
 #MM- contrib-gnu      : cpuid-$(AROS_TARGET_CPU)
 
