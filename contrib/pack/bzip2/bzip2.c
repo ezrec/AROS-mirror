@@ -578,6 +578,7 @@ Bool testStream ( FILE *zStream )
 
       while (bzerr == BZ_OK) {
          nread = BZ2_bzRead ( &bzerr, bzf, obuf, 5000 );
+         (void)nread; // FIXME: Shouldn't this be checked?
          if (bzerr == BZ_DATA_ERROR_MAGIC) goto errhandler;
       }
       if (bzerr != BZ_STREAM_END) goto errhandler;
