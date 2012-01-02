@@ -285,8 +285,9 @@ typedef struct mobj_s
     
 } mobj_t;
 
-
+#ifndef __GNUC__
 #pragma options align=power
+#endif
 
 
 #endif

@@ -29,7 +29,9 @@
 #pragma interface
 #endif
 
+#ifndef __GNUC__
 #pragma options align=mac68k
+#endif
 
 // The data sampled per tick (single player)
 // and transmitted to other peers (multiplayer).
@@ -45,8 +47,10 @@ typedef struct
     byte	buttons;
 } ticcmd_t;
 
-#pragma options align=power
 
+#ifndef __GNUC__
+#pragma options align=power
+#endif
 
 
 #endif

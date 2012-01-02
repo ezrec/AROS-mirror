@@ -5,6 +5,7 @@ EXEDIR := $(CONTRIBDIR)/Games/Doom
 
 USER_CFLAGS = -DAROS -DNORMALUNIX -DUNROLL -O3 -ffast-math -funroll-loops \
               -fomit-frame-pointer -fexpensive-optimizations
+USER_CFLAGS += -Wno-strict-aliasing -Wno-unused-but-set-variable
 
 FILES :=             \
 	doomdef          \

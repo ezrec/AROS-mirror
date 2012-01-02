@@ -44,9 +44,9 @@
 #pragma interface
 #endif
 
-
+#ifndef __GNUC__
 #pragma options align=mac68k
-
+#endif
 
 //
 // Player states.
@@ -212,8 +212,9 @@ typedef struct
 } wbstartstruct_t;
 
 
+#ifndef __GNUC__
 #pragma options align=power
-
+#endif
 
 #endif
 //-----------------------------------------------------------------------------

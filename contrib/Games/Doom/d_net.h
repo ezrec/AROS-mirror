@@ -55,8 +55,12 @@ typedef enum
 
 } command_t;
 
-
+#ifdef __GNUC__
+#define PACKED __attribute__((packed))
+#else
 #pragma options align=mac68k
+#define PACKED
+#endif
 
 //
 // Network packet data.
@@ -73,7 +77,7 @@ typedef struct
     byte		numtics;
     ticcmd_t		cmds[BACKUPTICS];
 
-} doomdata_t;
+} PACKED doomdata_t;
 
 
 
@@ -128,8 +132,9 @@ typedef struct
     
 } doomcom_t;
 
+#ifndef __GNUC__
 #pragma options align=power
-
+#endif
 
 
 // Create any new ticcmds and broadcast to other players.

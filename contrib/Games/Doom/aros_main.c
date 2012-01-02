@@ -68,6 +68,7 @@ extern char **_WBArgv;
 int main (int argc, char* argv[])
 { 
   int i, p;
+#if 0
   double pll;
 
   /* these command line arguments are flags */
@@ -139,6 +140,7 @@ int main (int argc, char* argv[])
     "-config",
     "-turbo"
   };
+#endif
 
   printf ("%s\n", &arosversion[6]);
 

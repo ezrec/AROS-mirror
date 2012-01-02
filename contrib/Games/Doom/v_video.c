@@ -670,7 +670,7 @@ void V_Init (void)
     vid_mem = PPCAllocVec(vid_size + 100, vid_flags);
     if (vid_mem == NULL)
       I_Error ("Couldn't allocate memory for screens\n");
-    printf ("Screen memory located at $%08x\n", vid_mem);
+    printf ("Screen memory located at $%08lx\n", (long)vid_mem);
 
     for (i=0 ; i<4 ; i++)
 	screens[i] = vid_mem + 100 + i*SCREENWIDTH*SCREENHEIGHT;

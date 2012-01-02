@@ -689,7 +689,7 @@ DE_AddDeh(char * name)
 
   printf("DE_AddDeh: Adding %s\n", name);
 
-  if(fp = fopen(name,"r"))
+  if((fp = fopen(name,"r")))
   {
     int i;
 
@@ -711,7 +711,7 @@ DE_AddDeh(char * name)
         if(text[0] == '\n') continue;
 
         /* Check for text or hack */
-        if(sscanf(text, "Text %d %d", &len1, len2) == 2)
+        if(sscanf(text, "Text %d %d", &len1, &len2) == 2)
           DE_Text(fp, len1, len2);
         else
           DE_Hack(text);

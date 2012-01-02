@@ -655,7 +655,7 @@ S_ChangeMusic
 ( int			musicnum,
   int			looping )
 {
-    musicinfo_t*	music;
+    musicinfo_t*	music = NULL;
     char		namebuf[9];
 
     if ( (musicnum <= mus_None)
@@ -671,6 +671,9 @@ S_ChangeMusic
 
     // shutdown old music
     S_StopMusic();
+
+    if (!music)
+        return;
 
     // get lumpnum if neccessary
     if (!music->lumpnum)

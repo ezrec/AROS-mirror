@@ -117,7 +117,9 @@ unsigned NetbufferChecksum (void)
 #ifdef AROS
     int		l;
 #endif
+#ifdef __BIG_ENDIAN__
     ticcmd_t *t;
+#endif
 
     c = 0x1234567;
 
@@ -263,11 +265,11 @@ boolean HGetPacket (void)
                  NetbufferChecksum(),
                  netbuffer->checksum&NCMD_CHECKSUM);
         fprintf (stderr, "%08x",
-                 ((unsigned long *)&netbuffer->retransmitfrom)[0]);
+                 ((int *)&netbuffer->retransmitfrom)[0]);
         for (i = 0; i < netbuffer->numtics; i++)
           fprintf (stderr, " %08x %08x",
-                   ((unsigned long *)&netbuffer->cmds[0])[2*i],
-                   ((unsigned long *)&netbuffer->cmds[0])[2*i+1]);
+                   ((int *)&netbuffer->cmds[0])[2*i],
+                   ((int *)&netbuffer->cmds[0])[2*i+1]);
         fprintf (stderr, "\n");
 	return false;
     }
@@ -508,7 +510,7 @@ void CheckAbort (void)
 	
     I_StartTic ();
     for ( ; eventtail != eventhead 
-	      ; eventtail = (++eventtail)&(MAXEVENTS-1) ) 
+	      ; eventtail++, eventtail = (eventtail)&(MAXEVENTS-1) ) 
     { 
 	ev = &events[eventtail]; 
 	if (ev->type == ev_keydown && ev->data1 == KEY_ESCAPE)

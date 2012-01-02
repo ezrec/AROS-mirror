@@ -694,8 +694,6 @@ void R_DrawSpan (void)
     
     unsigned	count;
     unsigned	spot; 
-    unsigned	value;
-    unsigned	temp;
     unsigned	xtemp;
     unsigned	ytemp;
 		

@@ -63,19 +63,11 @@ static struct ScreenModeRequester *video_smr = NULL;
 static struct Screen *video_screen = NULL;
 static struct Window *video_window = NULL;
 
-static struct ScreenBuffer *SBuffer[3] = {NULL, NULL, NULL};
-static struct ScreenBuffer *NextSBuffer = NULL;
-
-static int video_mod = 320;
-static ULONG video_pixfmt = PIXFMT_LUT8;
-static ULONG *video_buffer = NULL;
-
 static int video_depth = 8;
 
 static FAR ULONG video_colourtable[NUMPALETTES][1 + 3*256 + 1];
 static FAR ULONG cgfx_coltab[NUMPALETTES][256];
 static int video_palette_index = 0;
-static int video_pending_palette_index = 0;
 static volatile WORD video_palette_changed = 0;
 
 static BOOL video_is_cyber_mode = FALSE;
@@ -100,7 +92,9 @@ static struct MsgPort *gameport_mp = NULL;
 static struct IOStdReq *gameport_io = NULL;
 static BOOL gameport_is_open = FALSE;
 static BOOL gameport_io_in_progress = FALSE;
+#ifndef AROS
 static struct InputEvent gameport_ie;
+#endif
 static BYTE gameport_ct;		/* controller type */
 struct GamePortTrigger gameport_gpt = {
   GPTF_UPKEYS | GPTF_DOWNKEYS,	/* gpt_Keys */
@@ -110,9 +104,11 @@ struct GamePortTrigger gameport_gpt = {
 };
 
 /* SEGA variables */
+#ifndef AROS
 static ULONG prevSega;
 static BOOL sega3_selected = FALSE;
 static BOOL sega6_selected = FALSE;
+#endif
 
 #ifdef PROFILE
 unsigned int profile[32][4];
@@ -213,11 +209,14 @@ void I_InitGraphics (void)
 {
   ULONG propertymask, idcmp, wflags, width, pixfmt;
   struct Rectangle rect;
+#ifndef AROS 
   char reqtitle[32];
-  int mode, depth, nbytes, p;
+  int nbytes, p;
   DisplayInfoHandle handle;
   struct DisplayInfo dispinfo;
   struct DimensionInfo dimsinfo;
+#endif
+  int mode, depth;
   static struct TextAttr topaz8 = {
     "topaz.font", 8, FS_NORMAL, FPF_ROMFONT
   };
@@ -378,7 +377,7 @@ kprintf("--- Asl Requester done\n");
   idcmp = IDCMP_RAWKEY;
   wflags = WFLG_ACTIVATE | WFLG_BORDERLESS | WFLG_RMBTRAP | WFLG_NOCAREREFRESH |
            WFLG_SIMPLE_REFRESH;
-  if (M_CheckParm("-mouse") != NULL) {
+  if (M_CheckParm("-mouse") != 0) {
     idcmp |= IDCMP_MOUSEMOVE | IDCMP_DELTAMOVE | IDCMP_MOUSEBUTTONS;
     wflags |= WFLG_REPORTMOUSE;
   }
@@ -465,13 +464,15 @@ kprintf("--- Asl Requester done\n");
 
   video_is_rawkey = M_CheckParm ("-rawkey");
 
-  if (M_CheckParm ("-sega3") != NULL)
+#ifndef AROS
+  if (M_CheckParm ("-sega3") != 0)
     sega3_selected = TRUE;
 
-  if (M_CheckParm ("-sega6") != NULL)
+  if (M_CheckParm ("-sega6") != 0)
     sega6_selected = TRUE;
+#endif
 
-  if (M_CheckParm ("-joypad") != NULL) {
+  if (M_CheckParm ("-joypad") != 0) {
 
     if ((LowLevelBase = OpenLibrary ("lowlevel.library", 0)) == NULL)
       I_Error ("-joypad option specified and can't open lowlevel.library");
@@ -664,8 +665,10 @@ void I_FinishUpdate (void)
    especially if the user has shrunk the playscreen. */
 {
   int top, left, width, height;
+#ifndef AROS  
   int stat, i, j;
   UBYTE *base_address;
+#endif
 
   total_frames++;
 
@@ -815,7 +818,7 @@ int xlate_key (UWORD rawkey, UWORD qualifier, APTR *eventptr)
       return xlate[rawkey];
     else
       return 0;
-  else
+  else {
     if (rawkey > 0x00 && rawkey < 0x0a) // '1'..'9', no SHIFT French keyboards
       return '0' + rawkey;
     else if (rawkey == 0x0a)            // '0'
@@ -876,8 +879,8 @@ int xlate_key (UWORD rawkey, UWORD qualifier, APTR *eventptr)
         return 0;
     } else if (rawkey < 0x68)
       return xlate[rawkey];
-    else
-      return 0;
+  }
+  return 0;
 }
 
 /**********************************************************************/
@@ -888,9 +891,12 @@ void amiga_getevents (void)
   UWORD code;
   WORD mousex, mousey;
   struct IntuiMessage *msg;
+#ifndef __AROS__
   static ULONG previous = 0;
-  static event_t joyevent = {0}, mouseevent = {0};
+  static event_t joyevent = {0};
   ULONG currSega;
+#endif
+  static event_t mouseevent = {0};
   int doomkey;
 
   if (video_window != NULL) {

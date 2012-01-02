@@ -114,8 +114,8 @@ P_BoxOnLineSide
 ( fixed_t*	tmbox,
   line_t*	ld )
 {
-    int		p1;
-    int		p2;
+    int		p1 = 0;
+    int		p2 = 0;
 	
     switch (ld->slopetype)
     {

@@ -463,8 +463,8 @@ void G_DoLoadLevel (void)
     // DOOM determines the sky texture to be used
     // depending on the current episode, and the game version.
     if ( (gamemode == commercial)
-         || ( gamemode == pack_tnt )
-         || ( gamemode == pack_plut ) )
+         || ( gamemission == pack_tnt )
+         || ( gamemission == pack_plut ) )
     {
         skytexture = R_TextureNumForName ("SKY3");
         if (gamemap < 12)
@@ -769,11 +769,6 @@ void G_Ticker (void)
 //
 void G_InitPlayer (int player) 
 { 
-    player_t*   p; 
- 
-    // set up the saved info         
-    p = &players[player]; 
-         
     // clear everything else to defaults 
     G_PlayerReborn (player); 
          

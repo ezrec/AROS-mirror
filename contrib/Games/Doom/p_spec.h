@@ -26,9 +26,9 @@
 #ifndef __P_SPEC__
 #define __P_SPEC__
 
-
+#ifndef __GNUC__
 #pragma options align=mac68k
-
+#endif
 
 //
 // End-level timer (-TIMER option)
@@ -640,8 +640,9 @@ EV_Teleport
   int		side,
   mobj_t*	thing );
 
-
+#ifndef __GNUC__
 #pragma options align=power
+#endif
 
 #endif
 //-----------------------------------------------------------------------------
