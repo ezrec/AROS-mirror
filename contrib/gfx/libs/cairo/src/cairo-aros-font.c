@@ -367,13 +367,13 @@ cairo_aros_font_face_create (const char          *wanted_family,
     D(bug("[cairo:cairo_aros_font_face_create] family %s slant %d weight %d\n", wanted_family, wanted_slant, wanted_weight));
     BPTR fontdir;
     struct FileInfoBlock *fib;
-    cairo_aros_font_face_t *face = NULL, best, new;
+    cairo_aros_font_face_t *face = NULL, best = {}, new;
 
     best.otag = NULL;
 
     /* XXX Fonts: may be a multidirectory assign, so this needs to be a
      * GetDeviceProc() loop */
-    if ((fontdir = Lock ((STRPTR) "Fonts:", SHARED_LOCK)) == NULL)
+    if ((fontdir = Lock ((STRPTR) "Fonts:", SHARED_LOCK)) == BNULL)
         goto _face_create_finish;
 
     fib = AllocDosObject (DOS_FIB, NULL);
@@ -399,7 +399,7 @@ cairo_aros_font_face_create (const char          *wanted_family,
         size = fib->fib_Size;
 
         snprintf (filename, sizeof (filename), "Fonts:%s", fib->fib_FileName);
-        if ((fh = Open ((STRPTR) filename, MODE_OLDFILE)) == NULL)
+        if ((fh = Open ((STRPTR) filename, MODE_OLDFILE)) == BNULL)
             continue;
 
         otag = malloc (size);

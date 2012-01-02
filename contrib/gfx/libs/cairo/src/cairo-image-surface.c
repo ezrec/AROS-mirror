@@ -3803,7 +3803,7 @@ _composite_glyphs_via_mask (void			*closure,
     pixman_image_t *src;
     pixman_image_t *white;
     pixman_format_code_t mask_format = 0; /* silence gcc */
-    cairo_status_t status;
+    cairo_status_t status = 0;
     int src_x, src_y;
     int i;
 

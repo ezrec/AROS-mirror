@@ -2153,7 +2153,7 @@ _cairo_pdf_surface_emit_padded_image_surface (cairo_pdf_surface_t     *surface,
     cairo_surface_pattern_t *pattern = (cairo_surface_pattern_t *) pdf_pattern->pattern;
     int x = 0;
     int y = 0;
-    cairo_bool_t interpolate;
+    cairo_bool_t interpolate = FALSE;
 
     status = _cairo_surface_acquire_source_image (pattern->surface, &image, &image_extra);
     if (unlikely (status))

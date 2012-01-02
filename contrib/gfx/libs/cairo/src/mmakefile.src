@@ -94,6 +94,7 @@ FILES := \
 
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../aros -I$(GENINCDIR)/pixman-1
 USER_CFLAGS := -DHAVE_CONFIG_H -DCAIRO_NO_MUTEX
+USER_CFLAGS += -Wno-enum-compare -Wno-unused-but-set-variable
 
 #MM- contrib : contrib-gfx-libs-cairo
 

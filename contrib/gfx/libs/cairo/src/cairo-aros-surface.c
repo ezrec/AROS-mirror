@@ -99,6 +99,7 @@ _cairo_aros_surface_create_similar (void            *abstract_src,
         /* XXX implement alpha-only formats */
         case CAIRO_FORMAT_A8:
         case CAIRO_FORMAT_A1:
+        default:
             return _cairo_surface_create_in_error (_cairo_error (CAIRO_STATUS_INVALID_FORMAT));
     }
 
@@ -306,7 +307,7 @@ _cairo_aros_surface_release_dest_image (void                  *abstract_surface,
     cairo_surface_destroy (&image->base);
 }
 
-static cairo_int_status_t
+static cairo_bool_t
 _cairo_aros_surface_get_extents (void                  *abstract_surface,
                                  cairo_rectangle_int_t *rectangle)
 {
