@@ -1725,6 +1725,7 @@ EXPORT_C APIRET APIENTRY RexxCreateQueue( PSZ Buffer,
                                  ULONG* DupFlag)
 {
    int code;
+   unsigned long dupflag = *DupFlag;
    tsd_t *TSD = getGlobalTSD();
 
    if ( TSD == NULL )
@@ -1732,7 +1733,8 @@ EXPORT_C APIRET APIENTRY RexxCreateQueue( PSZ Buffer,
    StartupInterface(TSD);
 
    TSD->called_from_saa = 1;
-   code = IfcCreateQueue( TSD, RequestedName, (RequestedName) ? strlen( RequestedName): 0, Buffer, DupFlag, BuffLen );
+   code = IfcCreateQueue( TSD, RequestedName, (RequestedName) ? strlen( RequestedName): 0, Buffer, &dupflag, BuffLen );
+   *DupFlag = (ULONG)dupflag;
    TSD->called_from_saa = 0;
    return code;
 }
@@ -1759,6 +1761,7 @@ EXPORT_C APIRET APIENTRY RexxQueryQueue( PSZ QueueName,
                                 ULONG* Count)
 {
    int code;
+   unsigned long count = *Count;
    tsd_t *TSD = getGlobalTSD();
 
    if ( TSD == NULL )
@@ -1769,7 +1772,8 @@ EXPORT_C APIRET APIENTRY RexxQueryQueue( PSZ QueueName,
    if (!QueueName || !strlen(QueueName))
       code = RXQUEUE_BADQNAME;
    else
-      code = IfcQueryQueue( TSD, QueueName, strlen( QueueName ), Count );
+      code = IfcQueryQueue( TSD, QueueName, strlen( QueueName ), &count );
+   *Count = (ULONG)count;
    TSD->called_from_saa = 0;
    return code;
 }
@@ -1817,10 +1821,12 @@ EXPORT_C APIRET APIENTRY RexxPullQueue( PSZ QueueName,
       code = RXQUEUE_BADQNAME;
    else
    {
+      unsigned long strlength = 0;
       code = IfcPullQueue( TSD,
                            QueueName, strlen( QueueName ),
-                           &DataBuf->strptr, &DataBuf->strlength,
+                           &DataBuf->strptr, &strlength,
                            WaitFlag==RXQUEUE_WAIT );
+      DataBuf->strlength = strlength;
       if ( code == 0 )
       {
          if ( TimeStamp )

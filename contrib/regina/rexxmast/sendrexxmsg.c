@@ -38,7 +38,7 @@ int main(void)
    msg->rm_Args[0] = (IPTR)CreateArgstring((STRPTR)command, strlen(command));
    PutMsg(port, (struct Message *)msg);
    reply = (struct RexxMsg *)WaitPort(replyport);
-   printf("Result1: %ld\n", reply->rm_Result1);
+   printf("Result1: %ld\n", (long)reply->rm_Result1);
    if ((reply->rm_Result1==0) && (reply->rm_Result2!=0))
    {
       printf("Result2: %s\n", (STRPTR)reply->rm_Result2);

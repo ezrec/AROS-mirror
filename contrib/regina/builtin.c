@@ -1044,7 +1044,7 @@ streng *std_time( tsd_t *TSD, cparamboxptr parms )
 
       case 'L':
          sprintf(answer->value, "%02d:%02d:%02d.%06ld", tmdata.tm_hour,
-                  tmdata.tm_min, tmdata.tm_sec, unow ) ;
+                  tmdata.tm_min, tmdata.tm_sec, (long)unow ) ;
          answer->len = strlen(answer->value);
          break ;
 
@@ -1081,7 +1081,7 @@ streng *std_time( tsd_t *TSD, cparamboxptr parms )
 
       case 'T':
          rnow = mktime( &tmdata );
-         sprintf(answer->value, "%ld", rnow );
+         sprintf(answer->value, "%ld", (long)rnow );
          answer->len = strlen(answer->value);
          break ;
 
@@ -1233,7 +1233,7 @@ streng *std_date( tsd_t *TSD, cparamboxptr parms )
       case 'T':
          tmdata.tm_year -= 1900;
          rnow = mktime( &tmdata );
-         answer->len = sprintf(answer->value, "%ld", rnow );
+         answer->len = sprintf(answer->value, "%ld", (long)rnow );
          break ;
 
       case 'U':

@@ -31,7 +31,7 @@ int main(void)
    else
    {
       puts("Received RexxMsg");
-      printf("%08lx\n", msg->rm_Action);
+      printf("%08lx\n", (long)msg->rm_Action);
       Write(msg->rm_Stdin, "Hello\n", 6);
       puts((STRPTR)msg->rm_Args[0]);
    }

@@ -2205,6 +2205,9 @@ YY_DECL
         register int yy_act;
 
 #line 290 "./lexsrc.l"
+#ifndef lint
+	(void)RCSid; // Unused
+#endif
 
 
    {
