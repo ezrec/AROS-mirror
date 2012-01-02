@@ -64,8 +64,8 @@ aros-tcpip-apps-owb-webview-setup :
 	-DSQLITE3_LIBRARIES=$(AROS_DEVELOPMENT)/lib/libsqlite3.a \
 	-DSQLITE3_LDFLAGS=-lsqlite3 \
 	-DCMAKE_LIBRARY_PATH_FLAG=$(AROS_DEVELOPMENT)/lib \
-	-DCMAKE_C_FLAGS="$(CFLAGS)" \
-	-DCMAKE_CXX_FLAGS="$(CFLAGS)" \
+	-DCMAKE_C_FLAGS="$(CFLAGS) -Wno-error" \
+	-DCMAKE_CXX_FLAGS="$(CFLAGS) -Wno-error" \
 	-DAROS_NETINCLUDE=$(AROS_DEVELOPMENT)/netinclude \
 	-DICU_LIBRARY="-licui18n -licuuc -licudata" \
 	-DICU_INCLUDE="$(AROS_DEVELOPMENT)/include" \
