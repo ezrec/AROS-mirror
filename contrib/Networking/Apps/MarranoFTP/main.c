@@ -3254,7 +3254,7 @@ BOOL RefreshLocalView(Connection *cn)
                     if (fib->fib_DirEntryType == ST_USERDIR) {
                         vc.size = BufferAddStr(&lv->ListBuffer, "<DIR>");
                     } else {
-                        snprintf(temp, 511, "%ld", fib->fib_Size);
+                        snprintf(temp, 511, "%ld", (long)fib->fib_Size);
                         vc.size = BufferAddStr(&lv->ListBuffer, temp);
                     }
     
