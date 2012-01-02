@@ -40,7 +40,6 @@ void pt_donote2( pt_mod_s *mod)
 	pt_pattern_s *p;
 	pt_patterndata_s *ptd;
 	pt_channel_s *c;
-	pt_sample_s *s;
 	int newsp;
 	 
 	if (mod->patdelay)
@@ -61,7 +60,6 @@ void pt_donote2( pt_mod_s *mod)
 		ptd = p->data[ppos];							/* patterndata */
 		for (i = 0; i < 4; ++i)
 		{
-			s=0;
 			newsp = c->sp;
 
     		/* interprete effect command */

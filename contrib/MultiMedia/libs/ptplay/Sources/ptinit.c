@@ -929,31 +929,31 @@ VOID NATDECLFUNC_3(PtSetAttrs, a0, pt_mod_s *, mod, a1, struct TagItem *, taglis
 AROS_LH3(ULONG, PtGetAttr,
 	AROS_LHA(pt_mod_s *, mod, A0),
 	AROS_LHA(ULONG, tagitem, D0),
-	AROS_LHA(ULONG *, StoragePtr, A1),
+	AROS_LHA(IPTR *, StoragePtr, A1),
 	struct PtPlayLibrary *, LibBase, 10, Ptplay)
 {
 	AROS_LIBFUNC_INIT
 #else
 ULONG NATDECLFUNC_3(PtGetAttr, a0, pt_mod_s *, mod, d0, ULONG, tagitem, a1, ULONG *, StoragePtr)
 {
-	DECLARG_3(a0, pt_mod_s *, mod, d0, ULONG, tagitem, a1, ULONG *, StoragePtr)
+	DECLARG_3(a0, pt_mod_s *, mod, d0, ULONG, tagitem, a1, IPTR *, StoragePtr)
 #endif
 
-	ULONG	store, result	= FALSE;
+	IPTR	store, result	= FALSE;
 
 	switch (tagitem)
 	{
 		case	PTPLAY_CIAspeed			: store	= mod->ciaspeed; break;
 		case	PTPLAY_Flags				: store	= mod->flags; break;
 		case	PTPLAY_MasterVolume		: store	= mod->mastervolume; break;
-		case	PTPLAY_PatternData		: store	= (ULONG)mod->pattern; break;
+		case	PTPLAY_PatternData		: store	= (IPTR)mod->pattern; break;
 		case	PTPLAY_PatternPosition	: store	= mod->ppos; break;
-		case	PTPLAY_Patterns			: store	= (ULONG)mod->numpat; break;
-		case	PTPLAY_Positions			: store	= (ULONG)&mod->pos[0];
+		case	PTPLAY_Patterns			: store	= (IPTR)mod->numpat; break;
+		case	PTPLAY_Positions			: store	= (IPTR)&mod->pos[0];
 		case	PTPLAY_SongLength			: store	= mod->length; break;
 		case	PTPLAY_SongLoopCount		: store	= mod->songloopcount; break;
 		case	PTPLAY_SongPosition		: store	= mod->spos; break;
-		case	PTPLAY_SongTitle			: store	= (ULONG)mod->name; break;
+		case	PTPLAY_SongTitle			: store	= (IPTR)mod->name; break;
 		case	PTPLAY_TotalTime			: store	= mod->PlayLength; break;
 
 		default	: goto pois;
