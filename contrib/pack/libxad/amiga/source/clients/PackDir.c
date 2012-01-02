@@ -167,9 +167,9 @@ LONG PackDir_readname(ULONG *offset, UBYTE *name, struct xadArchiveInfo *ai,
 }
 
 #if !defined(__AROS__)
-ASM(LONG) PackDir_GetInfo(REG(a0, struct xadArchiveInfo *ai), XADBASE) {
+ASM(xadERROR) PackDir_GetInfo(REG(a0, struct xadArchiveInfo *ai), XADBASE) {
 #else
-LONG PackDir_GetInfo(struct xadArchiveInfo *ai, XADBASE) {
+xadERROR PackDir_GetInfo(struct xadArchiveInfo *ai, XADBASE) {
 #endif
   ULONG offset, depth, load, exec, attr, i;
   struct PackDir_state *state;
@@ -204,7 +204,7 @@ LONG PackDir_GetInfo(struct xadArchiveInfo *ai, XADBASE) {
   /* read the file header */
   if ((err = xadHookAccess(XADAC_READ, 9, buf, ai))) return err;
   /* get compression mode */
-  ai->xai_PrivateClient = (APTR) EndGetI32(&buf[5]); /* LZW MAXBITS - 12 */
+  ai->xai_PrivateClient = (APTR) (IPTR) EndGetI32(&buf[5]); /* LZW MAXBITS - 12 */
 
   /* read the root directory object */
   offset = 9;
@@ -298,7 +298,7 @@ LONG PackDir_GetInfo(struct xadArchiveInfo *ai, XADBASE) {
             datetags[0].ti_Tag  = XAD_DATECURRENTTIME;
             datetags[0].ti_Data = 1;
           }
-          datetags[1].ti_Data = (ULONG) &fi->xfi_Date;
+          datetags[1].ti_Data = (IPTR) &fi->xfi_Date;
           xadConvertDatesA(datetags);
 
           /* convert protection flags (via Amiga protections, as XAD
@@ -311,13 +311,13 @@ LONG PackDir_GetInfo(struct xadArchiveInfo *ai, XADBASE) {
           if (attr & 0x08) prottags[0].ti_Data |= 0x1100; /* delete protect */
           if (attr & 0x10) prottags[0].ti_Data |= 0x8800; /* all read */
           if (attr & 0x10) prottags[0].ti_Data |= 0x4400; /* all write */
-          prottags[1].ti_Data = (ULONG) fi;
+          prottags[1].ti_Data = (IPTR) fi;
           xadConvertProtectionA(prottags);
           
           /* create the filename */
           for (i = 0; i <= depth; i++) {
             state->tags[i].ti_Tag  = XAD_CSTRING;
-            state->tags[i].ti_Data = (ULONG) &state->names[i][0];
+            state->tags[i].ti_Data = (IPTR) &state->names[i][0];
           }
           state->tags[i].ti_Tag = TAG_DONE;
 
@@ -386,9 +386,9 @@ exit_handler:
 } while (0)
 
 #if !defined(__AROS__)
-ASM(LONG) PackDir_UnArchive(REG(a0, struct xadArchiveInfo *ai), XADBASE) {
+ASM(xadERROR) PackDir_UnArchive(REG(a0, struct xadArchiveInfo *ai), XADBASE) {
 #else
-LONG PackDir_UnArchive(struct xadArchiveInfo *ai, XADBASE) {
+xadERROR PackDir_UnArchive(struct xadArchiveInfo *ai, XADBASE) {
 #endif
   ULONG code, oldcode, clearcode, firstchar, incode, *prefix, maxcodes;
   UBYTE ibuf[LZW_INSZ], obuf[LZW_OUTSZ], *iptr, *optr, *iend, *oend;
@@ -424,7 +424,7 @@ LONG PackDir_UnArchive(struct xadArchiveInfo *ai, XADBASE) {
   bitbuf  = 0;
 
   /* allocate LZW tables */
-  maxcodes = 1 << (((ULONG) ai->xai_PrivateClient) + 12); /* LZW MAXBITS */
+  maxcodes = 1 << (((IPTR) ai->xai_PrivateClient) + 12); /* LZW MAXBITS */
   prefix = xadAllocVec(sizeof(ULONG) * (maxcodes+1), 0);
   suffix = xadAllocVec(sizeof(UBYTE) * (maxcodes+1), 0);
   stack  = xadAllocVec(sizeof(UBYTE) * (maxcodes+1), 0);
@@ -566,7 +566,7 @@ const struct xadClient PackDir_Client = {
 
   /* client functions */
   (BOOL (*)()) PackDir_RecogData,
-  (LONG (*)()) PackDir_GetInfo,
-  (LONG (*)()) PackDir_UnArchive,
+  (xadERROR (*)()) PackDir_GetInfo,
+  (xadERROR (*)()) PackDir_UnArchive,
   NULL
 };

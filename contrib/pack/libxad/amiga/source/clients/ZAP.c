@@ -158,9 +158,9 @@ BOOL ZAP_RecogData(ULONG size, STRPTR data, XADBASE) {
 }
 
 #if !defined(__AROS__)
-ASM(LONG) ZAP_GetInfo(REG(a0, struct xadArchiveInfo *ai), XADBASE) {
+ASM(xadERROR) ZAP_GetInfo(REG(a0, struct xadArchiveInfo *ai), XADBASE) {
 #else
-LONG ZAP_GetInfo(struct xadArchiveInfo *ai, XADBASE) {
+xadERROR ZAP_GetInfo(struct xadArchiveInfo *ai, XADBASE) {
 #endif
   UBYTE buffer[4], *textin = NULL;
   struct xadDiskInfo *xdi = NULL;
@@ -223,9 +223,9 @@ struct ZAPstate {
 };
 
 #if !defined(__AROS__)
-ASM(LONG) ZAP_UnArchive(REG(a0, struct xadArchiveInfo *ai), XADBASE) {
+ASM(xadERROR) ZAP_UnArchive(REG(a0, struct xadArchiveInfo *ai), XADBASE) {
 #else
-LONG ZAP_UnArchive(struct xadArchiveInfo *ai, XADBASE) {
+xadERROR ZAP_UnArchive(struct xadArchiveInfo *ai, XADBASE) {
 #endif
   struct ZAPstate *zs;
   UBYTE buffer[4], cyl, block;
@@ -291,7 +291,7 @@ const struct xadClient ZAP_Client = {
       XADCF_FREETEXTINFO | XADCF_FREETEXTINFOTEXT,
   0, "ZAP",
   (BOOL (*)()) ZAP_RecogData,
-  (LONG (*)()) ZAP_GetInfo,
-  (LONG (*)()) ZAP_UnArchive,
+  (xadERROR (*)()) ZAP_GetInfo,
+  (xadERROR (*)()) ZAP_UnArchive,
   (void (*)()) ZAP_Free
 };

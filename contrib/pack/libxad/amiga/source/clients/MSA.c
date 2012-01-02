@@ -69,9 +69,9 @@ BOOL MSA_RecogData(ULONG size, STRPTR d, XADBASE) {
 }
 
 #if !defined(__AROS__)
-ASM(LONG) MSA_GetInfo(REG(a0, struct xadArchiveInfo *ai), XADBASE) {
+ASM(xadERROR) MSA_GetInfo(REG(a0, struct xadArchiveInfo *ai), XADBASE) {
 #else
-LONG MSA_GetInfo(struct xadArchiveInfo *ai, XADBASE) {
+xadERROR MSA_GetInfo(struct xadArchiveInfo *ai, XADBASE) {
 #endif
   struct xadDiskInfo *xdi;
   UBYTE buffer[10];
@@ -97,9 +97,9 @@ LONG MSA_GetInfo(struct xadArchiveInfo *ai, XADBASE) {
 }
 
 #if !defined(__AROS__)
-ASM(LONG) MSA_UnArchive(REG(a0, struct xadArchiveInfo *ai), XADBASE) {
+ASM(xadERROR) MSA_UnArchive(REG(a0, struct xadArchiveInfo *ai), XADBASE) {
 #else
-LONG MSA_UnArchive(struct xadArchiveInfo *ai, XADBASE) {
+xadERROR MSA_UnArchive(struct xadArchiveInfo *ai, XADBASE) {
 #endif
   UBYTE buffer[2], *in = NULL, *out, *i, *o, *end, code;
   struct xadDiskInfo *di = ai->xai_CurDisk;
@@ -157,7 +157,7 @@ const struct xadClient MSA_Client = {
   10, XADCF_DISKARCHIVER|XADCF_FREEDISKINFO,
   0, "MSA",
   (BOOL (*)()) MSA_RecogData,
-  (LONG (*)()) MSA_GetInfo,
-  (LONG (*)()) MSA_UnArchive,
+  (xadERROR (*)()) MSA_GetInfo,
+  (xadERROR (*)()) MSA_UnArchive,
   NULL
 };

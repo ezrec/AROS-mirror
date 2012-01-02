@@ -62,9 +62,9 @@ BOOL bzip_RecogData(ULONG size, STRPTR data, XADBASE) {
 
 /* there's only one file in a bzip archive - the uncompressed data */
 #if !defined(__AROS__)
-ASM(LONG) bzip_GetInfo(REG(a0, struct xadArchiveInfo *ai), XADBASE) {
+ASM(xadERROR) bzip_GetInfo(REG(a0, struct xadArchiveInfo *ai), XADBASE) {
 #else
-LONG bzip_GetInfo(struct xadArchiveInfo *ai, XADBASE) {
+xadERROR bzip_GetInfo(struct xadArchiveInfo *ai, XADBASE) {
 #endif
   struct TagItem tags[]  = {
     { XAD_OBJNAMESIZE, 0 },
@@ -94,7 +94,7 @@ LONG bzip_GetInfo(struct xadArchiveInfo *ai, XADBASE) {
   fi->xfi_Flags = XADFIF_NODATE | XADFIF_NOUNCRUNCHSIZE | XADFIF_SEEKDATAPOS;
 
   /* fill in today's date */
-  datetags[1].ti_Data = (ULONG) &fi->xfi_Date;
+  datetags[1].ti_Data = (IPTR) &fi->xfi_Date;
   xadConvertDatesA(datetags);
 
   if (name) {
@@ -591,9 +591,9 @@ static void bzip_MakeCRC32R(ULONG *buf, ULONG ID) {
 #define FREE(x) xadFreeObjectA((x), NULL)
 
 #if !defined(__AROS__)
-ASM(LONG) bzip_UnArchive(REG(a0, struct xadArchiveInfo *ai), XADBASE) {
+ASM(xadERROR) bzip_UnArchive(REG(a0, struct xadArchiveInfo *ai), XADBASE) {
 #else
-LONG bzip_UnArchive(struct xadArchiveInfo *ai, XADBASE) {
+xadERROR bzip_UnArchive(struct xadArchiveInfo *ai, XADBASE) {
 #endif
   struct BZIPstate *bzs;
   UBYTE sizechar;
@@ -659,7 +659,7 @@ const struct xadClient bzip_Client = {
   NEXTCLIENT, XADCLIENT_VERSION, 7, BZIP_VERSION, BZIP_REVISION,
   4, XADCF_FILEARCHIVER | XADCF_FREEFILEINFO, 0, "BZip",
   (BOOL (*)()) bzip_RecogData,
-  (LONG (*)()) bzip_GetInfo,
-  (LONG (*)()) bzip_UnArchive,
+  (xadERROR (*)()) bzip_GetInfo,
+  (xadERROR (*)()) bzip_UnArchive,
   NULL
 };

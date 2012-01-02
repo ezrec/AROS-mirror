@@ -204,9 +204,9 @@ BOOL DImp_RecogData(ULONG size, STRPTR d, XADBASE) {
 }
 
 #if !defined(__AROS__)
-ASM(LONG) DImp_GetInfo(REG(a0, struct xadArchiveInfo *ai), XADBASE) {
+ASM(xadERROR) DImp_GetInfo(REG(a0, struct xadArchiveInfo *ai), XADBASE) {
 #else
-LONG DImp_GetInfo(struct xadArchiveInfo *ai, XADBASE) {
+xadERROR DImp_GetInfo(struct xadArchiveInfo *ai, XADBASE) {
 #endif
   UBYTE buffer[8], *info, *text;
   ULONG infolen, textplen, textulen;
@@ -279,9 +279,9 @@ exit_handler:
 }
 
 #if !defined(__AROS__)
-ASM(LONG) SAVEDS DImp_UnArchive(REG(a0, struct xadArchiveInfo *ai), XADBASE) {
+ASM(xadERROR) SAVEDS DImp_UnArchive(REG(a0, struct xadArchiveInfo *ai), XADBASE) {
 #else
-LONG DImp_UnArchive(struct xadArchiveInfo *ai, XADBASE) {
+xadERROR DImp_UnArchive(struct xadArchiveInfo *ai, XADBASE) {
 #endif
   UBYTE *buf = NULL, *info = (UBYTE *) ai->xai_PrivateClient, *p;
   struct xadDiskInfo *di = ai->xai_CurDisk;
@@ -367,9 +367,9 @@ LONG DImpSFX_RecogData(ULONG size, UBYTE *d, XADBASE) {
 }
 
 #if !defined(__AROS__)
-ASM(LONG) DImpSFX_GetInfo(REG(a0, struct xadArchiveInfo *ai), XADBASE) {
+ASM(xadERROR) DImpSFX_GetInfo(REG(a0, struct xadArchiveInfo *ai), XADBASE) {
 #else
-LONG DImpSFX_GetInfo(struct xadArchiveInfo *ai, XADBASE) {
+xadERROR DImpSFX_GetInfo(struct xadArchiveInfo *ai, XADBASE) {
 #endif
   ULONG readlen, offset = 0, i;
   UBYTE *buf;
@@ -405,8 +405,8 @@ const struct xadClient DImpSFX_Client = {
         XADCF_FREETEXTINFO | XADCF_FREETEXTINFOTEXT | XADCF_NOCHECKSIZE,
   0, "DImp SFX",
   (BOOL (*)()) DImpSFX_RecogData,
-  (LONG (*)()) DImpSFX_GetInfo,
-  (LONG (*)()) DImp_UnArchive,
+  (xadERROR (*)()) DImpSFX_GetInfo,
+  (xadERROR (*)()) DImp_UnArchive,
   (void (*)()) DImp_Free
 };
 
@@ -417,7 +417,7 @@ const struct xadClient DImp_Client = {
       XADCF_FREETEXTINFO | XADCF_FREETEXTINFOTEXT,
   0, "DImp",
   (BOOL (*)()) DImp_RecogData,
-  (LONG (*)()) DImp_GetInfo,
-  (LONG (*)()) DImp_UnArchive,
+  (xadERROR (*)()) DImp_GetInfo,
+  (xadERROR (*)()) DImp_UnArchive,
   (void (*)()) DImp_Free
 };
