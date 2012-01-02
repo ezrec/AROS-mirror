@@ -259,7 +259,7 @@ int main(void)
 		FreeArgs(args);
 	}
 
-	if (rc = RETURN_FAIL)
+	if (rc == RETURN_FAIL)
 		PrintFault(IoErr(), NULL);
 	return rc;
 }
