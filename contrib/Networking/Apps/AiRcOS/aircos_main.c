@@ -195,8 +195,8 @@ D(bug("[AiRcOS] TextEditor_Dispatcher: OM_NEW\n"));
     {
       struct CustomTEInstData *data = INST_DATA(CLASS, self);
 
-      data->cte_ChanPriv = (struct IRC_Channel_Priv *)GetTagData (MUIA_CustTextEditor_ChannelPrivate, (ULONG) NULL, ((struct opSet *)message)->ops_AttrList);;
-      data->cte_ServPriv = (struct IRC_Server_Priv *)GetTagData (MUIA_CustTextEditor_ServerPrivate, (ULONG) NULL, ((struct opSet *)message)->ops_AttrList);;
+      data->cte_ChanPriv = (struct IRC_Channel_Priv *)GetTagData (MUIA_CustTextEditor_ChannelPrivate, (IPTR) NULL, ((struct opSet *)message)->ops_AttrList);;
+      data->cte_ServPriv = (struct IRC_Server_Priv *)GetTagData (MUIA_CustTextEditor_ServerPrivate, (IPTR) NULL, ((struct opSet *)message)->ops_AttrList);;
       return (IPTR)self;
     }
     return FALSE;
