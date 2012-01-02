@@ -168,11 +168,12 @@ int caf_istrstrl(char *substr, char *str )
 	int len_str, len_substr, i, j, curfind = -1;
 	
 	len_substr	= caf_strlen(substr);
+	len_str         = caf_strlen(str);
 	if (len_substr == 0)
 		// No substring or string, blah
 		return -1;
 	
-	for (i = 0; i < str[i] != 0; i++) {
+	for (i = 0; str[i] != 0; i++) {
 		for (j = 0; j < len_substr && i+j < len_str; j++)
 			if (str[i+j] != substr[j])
 				break;
@@ -192,6 +193,7 @@ int caf_istrstrf(char *substr, char *str)
 	int len_str, len_substr, i, j;
 	
 	len_substr	= caf_strlen(substr);
+	len_str         = caf_strlen(str);
 	if (len_substr == 0)
 		// No substring or string, blah
 		return -1;
