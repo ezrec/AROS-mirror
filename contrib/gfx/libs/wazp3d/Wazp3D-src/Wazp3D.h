@@ -393,7 +393,7 @@ ULONG ASLminX,ASLmaxX,ASLminY,ASLmaxY;
 #define   WTAG(val,doc) if(tag == val) if(Wazp3D->DebugVal.ON){Libprintf(" " #val); if(Wazp3D->DebugDoc.ON) Libprintf(", " #doc); Libprintf(",%ld,\n",((ULONG)data));}
 #define  SINFO(var,val) if(var == val) if(Wazp3D->DebugSOFT3D.ON){Libprintf(" " #val "\n");}
 #define WINFOB(var,val,doc) if(Wazp3D->DebugVal.ON) if((var&val)!=0) {Libprintf(" " #val); if(Wazp3D->DebugDoc.ON) Libprintf(", " #doc); Libprintf("\n");}
-#define   VAR(var) if(Wazp3D->DebugVal.ON)  {if(Wazp3D->DebugVar.ON) Libprintf(" " #var "="); Libprintf("%ld\n",((ULONG)var));}
+#define   VAR(var) if(Wazp3D->DebugVal.ON)  {if(Wazp3D->DebugVar.ON) Libprintf(" " #var "="); Libprintf("%ld\n",((ULONG)(IPTR)var));}
 #define  VARF(var) if(Wazp3D->DebugVal.ON)  {if(Wazp3D->DebugVar.ON) Libprintf(" " #var "="); pf(var); Libprintf("\n"); }
 #define   VAL(var) {if(Wazp3D->DebugVal.ON) Libprintf(" [%ld]",((ULONG)var));}
 #define ZZ  LibAlert("ZZ stepping...");
@@ -706,7 +706,7 @@ void DumpMem(UBYTE *pt,LONG nb)
 LONG n;
 NLOOP(nb/4)
 	{
-	Libprintf("[%ld\t][%ld\t] %ld\t%ld\t%ld\t%ld\n",(ULONG)pt,(ULONG)4*n,(ULONG)pt[0],(ULONG)pt[1],(ULONG)pt[2],(ULONG)pt[3]);
+	Libprintf("[%ld\t][%ld\t] %ld\t%ld\t%ld\t%ld\n",(ULONG)(IPTR)pt,(ULONG)4*n,(ULONG)pt[0],(ULONG)pt[1],(ULONG)pt[2],(ULONG)pt[3]);
 	pt=&(pt[4]);
 	}
 #endif

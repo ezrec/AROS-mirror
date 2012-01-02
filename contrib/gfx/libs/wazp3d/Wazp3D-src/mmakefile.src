@@ -6,7 +6,9 @@ include $(TOP)/config/make.cfg
 
 #MM contrib-wazp3d-prefs : includes linklibs contrib-wazp3d-lib
 
-USER_CFLAGS := -Wno-implicit-function-declaration
+USER_CFLAGS := -Wno-implicit-function-declaration \
+	       -Wno-unused-variable \
+	       -Wno-unused-but-set-variable
 
 
 FILES := Wazp3D soft3d_opengl

@@ -483,7 +483,7 @@ ULONG i;
 		PatchW3D_ReadZPixel(context,0,0,&dz);		/* try to re-read the zbuffer with this format */
 		if((TESTZ-0.001) < dz )					/* is it aproximately the same value  ? */
 		if(dz < (TESTZ+0.001) )
-			{printf("found z format %ld\n",zformat); return;}
+			{printf("found z format %ld\n",(long)zformat); return;}
 		}
 	zformat=-1;
 	printf("cant find z format\n");

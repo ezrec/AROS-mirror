@@ -20,10 +20,12 @@ W3D_Driver **drivers;
 int main(int argc, char **argv)
 {
 	Warp3DBase = OpenLibrary("Warp3D.library", 4L);
-	if (Warp3DBase==NULL)	exit(0);
+	if (Warp3DBase==NULL)
+		return 0;
 
 	drivers = W3D_GetDrivers();
-	if (*drivers == NULL) 	exit(0);
+	if (*drivers == NULL)
+		return 0;
 
 /* The W3D_Q_SETTINGS call CANT works with a real Warp3D but only with Wazp3D */
 	if(drivers[0]->name[0]=='W')
@@ -35,7 +37,7 @@ int main(int argc, char **argv)
 		W3D_QueryDriver(drivers[0],W3D_Q_SETTINGS,0);	
 
 	CloseLibrary(Warp3DBase);
-	exit(0);
+	return 0;
 }
 
 

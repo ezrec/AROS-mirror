@@ -354,7 +354,7 @@ BOOL GenTexture(W3D_Context* context, char* name, LONG repeat)
 	texmap = where;
 
 	tex = W3D_AllocTexObjTags(context, &error,
-		W3D_ATO_IMAGE,      (ULONG)where,   // The image data
+		W3D_ATO_IMAGE,      (IPTR)where,    // The image data
 		W3D_ATO_FORMAT,     W3D_A8R8G8B8,   // This is a 32 bit image
 		W3D_ATO_WIDTH,      w,              // Length of one side
 		W3D_ATO_HEIGHT,     h,
@@ -438,7 +438,7 @@ BOOL GenLightmap(W3D_Context* context, char* name, LONG repeat)
 	lightmap = where;
 
 	lighttex = W3D_AllocTexObjTags(context, &error,
-		W3D_ATO_IMAGE,      (ULONG)where,   // The image data
+		W3D_ATO_IMAGE,      (IPTR)where,    // The image data
 		W3D_ATO_FORMAT,     W3D_A8R8G8B8,   // This is a 32 bit image
 		W3D_ATO_WIDTH,      w,              // Length of one side
 		W3D_ATO_HEIGHT,     h,
@@ -951,7 +951,7 @@ void PrintDriverInfo(void)
 	printf("Available drivers:\n");
 	while (*drivers) {
 		printf("%s\n\tSupports format 0x%X\n\t",
-			drivers[0]->name, drivers[0]->formats);
+			drivers[0]->name, (unsigned int)drivers[0]->formats);
 		if (drivers[0]->swdriver) printf("CPU Driver\n");
 		else                      printf("Hardware Driver\n");
 
@@ -990,7 +990,6 @@ int main(int argc, char **argv)
 	BOOL running=TRUE, clip = FALSE;
 	struct IntuiMessage *imsg;
 	ULONG flags;
-	int update;
 	UBYTE *newm;
 	int si;
 	LONG repeat = 1;
@@ -1065,13 +1064,13 @@ int main(int argc, char **argv)
 		//SA_Height,    640,
 		SA_DisplayID, ModeID,
 		SA_Depth,     8,
-		SA_ErrorCode, (ULONG)&OpenErr,
+		SA_ErrorCode, (IPTR)&OpenErr,
 		SA_ShowTitle, FALSE,
 		SA_Draggable, FALSE,
 	TAG_DONE);
 
 	if (!screen) {
-		printf("Unable to open screen. Reason: Error code %d\n", OpenErr);
+		printf("Unable to open screen. Reason: Error code %d\n", (unsigned int)OpenErr);
 		goto panic;
 	}
 
@@ -1080,7 +1079,7 @@ int main(int argc, char **argv)
 	// we want to get IDCMP messages. You can also use the screen's
 	// bitmap to render
 	window = OpenWindowTags(NULL,
-		WA_CustomScreen,    (ULONG)screen,
+		WA_CustomScreen,    (IPTR)screen,
 		WA_Activate,        TRUE,
 		WA_Width,           screen->Width,
 		WA_Height,          screen->Height,
@@ -1130,7 +1129,7 @@ int main(int argc, char **argv)
 
 	context = W3D_CreateContextTags(&CError,
 		W3D_CC_MODEID,      ModeID,             // Mandatory for non-pubscreen
-		W3D_CC_BITMAP,      (ULONG)buffer,      // The bitmap we'll use
+		W3D_CC_BITMAP,      (IPTR)buffer,       // The bitmap we'll use
 		W3D_CC_YOFFSET,     0,                  // We don't do dbuffering
 		W3D_CC_DRIVERTYPE,  W3D_DRIVER_BEST,    // Let Warp3D decide
 // I had the change the following to FALSE to make it work with AROS		
@@ -1264,13 +1263,11 @@ int main(int argc, char **argv)
 					if (Pos.z < Front+1.f) Pos.z = Front+1.f;
 					if (Pos.z > Back-1.f) Pos.z = Back-1.f;
 				}
-				update = 1;
 				break;
 			case IDCMP_CLOSEWINDOW:
 				running=FALSE;
 				break;
 			case IDCMP_RAWKEY:
-				update=1;
 				if (cflag == 0) {
 					switch(imsg->Code) {
 					case 0x4F:
@@ -1324,7 +1321,6 @@ int main(int argc, char **argv)
 				}
 				break;
 			case IDCMP_VANILLAKEY:
-				update = 1;
 				switch(imsg->Code) {
 				case '|':
 					newm = LoadTextureFromPPM((APTR)NULL, (char *)"smallugly.ppm", 30, &si, &si);

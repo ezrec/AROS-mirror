@@ -124,6 +124,7 @@ struct point3D{
 #define SWAPW(a) (unsigned short int )(((unsigned short int )a>>8)+((((unsigned short int )a&0xff)<<8)))
 #define SWAPL(a) (unsigned long  int )(((unsigned long int )a>>24)+(((unsigned long int )a&0xff0000)>>8)+(((unsigned long int )a&0xff00)<<8)+(((unsigned long int )a&0xff)<<24))
 void LibAlert(unsigned char *text);
+void *Libmalloc(ULONG size );
 void Libprintf(const unsigned char *string, ...);
 void Libsprintf(unsigned char *buffer,const unsigned char *string, ...);
 void PrintP(struct point3D *P);
@@ -475,7 +476,7 @@ ULONG IDCMPs=IDCMP_CLOSEWINDOW | IDCMP_VANILLAKEY | IDCMP_RAWKEY | IDCMP_MOUSEMO
 	WA_InnerHeight,	high,
 	WA_Left,		awin->LeftEdge,
 	WA_Top,		awin->TopEdge,
-	WA_Title,		(ULONG)overwinname,
+	WA_Title,		(IPTR)overwinname,
 	WA_DragBar,		FALSE,
 	WA_CloseGadget,	FALSE,
 	WA_GimmeZeroZero,	TRUE,

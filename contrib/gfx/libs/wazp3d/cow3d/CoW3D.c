@@ -105,8 +105,8 @@ UWORD off_v,off_w;
 	VertexPointer=	(void *)&(P->x);
 	TexCoordPointer=(void *)&(P->u);
 	ColorPointer=	(void *)&(P->RGBA);
-	off_v=(UWORD)( (ULONG)&(P->v) - (ULONG)&(P->u));
-	off_w=(UWORD)( (ULONG)&(P->w) - (ULONG)&(P->u));
+	off_v=(UWORD)( (IPTR)&(P->v) - (IPTR)&(P->u));
+	off_w=(UWORD)( (IPTR)&(P->w) - (IPTR)&(P->u));
 	result=W3D_VertexPointer(context,VertexPointer,stride,W3D_VERTEX_F_F_F, 0);
 	result=W3D_TexCoordPointer(context,TexCoordPointer,stride,0, off_v, off_w,W3D_TEXCOORD_NORMALIZED);
 	result=W3D_ColorPointer(context,ColorPointer,stride,W3D_COLOR_UBYTE ,W3D_CMODE_RGBA,0);
@@ -257,7 +257,7 @@ LONG n;
 
 NLOOP(nb/4)
 	{
-	printf("[%ld\t][%ld\t] %d\t%d\t%d\t%d\n",(ULONG)pt,4*n,pt[0],pt[1],pt[2],pt[3]);
+	printf("[%ld\t][%ld\t] %d\t%d\t%d\t%d\n",(long)pt,(long)4*n,pt[0],pt[1],pt[2],pt[3]);
 	pt=&(pt[4]);
 	}
 }
@@ -578,7 +578,7 @@ ULONG mode;
 	if(LoadFile(O->picture,name,textureSize)==FALSE)
 		return;
 	if (bits==32) mode=W3D_R8G8B8A8; else mode=W3D_R8G8B8;
-	O->tex=W3D_AllocTexObjTags(context,&result,W3D_ATO_IMAGE,(ULONG)O->picture,W3D_ATO_FORMAT,mode,W3D_ATO_WIDTH,size,W3D_ATO_HEIGHT,size,TAG_DONE);
+	O->tex=W3D_AllocTexObjTags(context,&result,W3D_ATO_IMAGE,(IPTR)O->picture,W3D_ATO_FORMAT,mode,W3D_ATO_WIDTH,size,W3D_ATO_HEIGHT,size,TAG_DONE);
 
 	if(result!=W3D_SUCCESS)
 		{printf("Cant create tex! \n");return;}
@@ -628,7 +628,7 @@ UBYTE drawname[10];
 	if(zmode==W3D_Z_NOTEQUAL) strcpy(zname,"ZNOTEQUAL");
 	if(zmode==W3D_Z_EQUAL) strcpy(zname,"ZEQUAL");
 	if(zmode==W3D_Z_ALWAYS) strcpy(zname,"ZALWAYS");
-	sprintf(FpsText,"%s: %ld Fps(Object: %ldtris %ldpoints)(zbuffer%d/zupdate%d(%s) optirot%d buffered%d) as %s(big%d)",progname,FPS,CowObj->PInb/3,CowObj->Pnb,zbuffer,zupdate,zname,optimroty,buffered,drawname,bigpoint);
+	sprintf(FpsText,"%s: %ld Fps(Object: %ldtris %ldpoints)(zbuffer%d/zupdate%d(%s) optirot%d buffered%d) as %s(big%d)",progname,(long)FPS,(long)CowObj->PInb/3,(long)CowObj->Pnb,zbuffer,zupdate,zname,optimroty,buffered,drawname,bigpoint);
 
 	if (++FramesCounted >= (FRAMESCOUNT*2)) 			/* ie after the object turned two times  */
 	{
@@ -873,13 +873,13 @@ ULONG texfmt,destfmt,state,query,w,h,wp,hp,m,n;
 	while (drivers[0])
 	{
 	driver=drivers[0];
-	printf("========= W3D_Driver <%s> soft:%d ChipID:%ld formats:%ld =======\n",driver->name,driver->swdriver,driver->ChipID,driver->formats);
+	printf("========= W3D_Driver <%s> soft:%d ChipID:%ld formats:%ld =======\n",driver->name,driver->swdriver,(long)driver->ChipID,(long)driver->formats);
 
 	MLOOP(15)
 	{
 	destfmt=1<<m;
 	printf("------------------------------\n");
-	printf("destformat:%ld\n",destfmt);
+	printf("destformat:%ld\n",(long)destfmt);
 	MyQueryDriver(driver,W3D_Q_DRAW_POINT,destfmt);
 	MyQueryDriver(driver,W3D_Q_DRAW_LINE,destfmt);
 	MyQueryDriver(driver,W3D_Q_DRAW_TRIANGLE,destfmt);
@@ -887,7 +887,7 @@ ULONG texfmt,destfmt,state,query,w,h,wp,hp,m,n;
 	h =W3D_QueryDriver(driver,W3D_Q_MAXTEXHEIGHT  ,destfmt);
 	wp=W3D_QueryDriver(driver,W3D_Q_MAXTEXWIDTH_P ,destfmt);
 	hp=W3D_QueryDriver(driver,W3D_Q_MAXTEXHEIGHT_P,destfmt);
-	printf("Max texture size %ld X %ld (perspective %ld X %ld )\n",w,h,wp,hp);
+	printf("Max texture size %ld X %ld (perspective %ld X %ld )\n",(long)w,(long)h,(long)wp,(long)hp);
 	}
 
 	drivers++;
@@ -910,7 +910,7 @@ ULONG texfmt,destfmt,state,query,w,h,wp,hp,m,n;
 	if(destfmt==PIXFMT_BGRA32)	destfmt=W3D_FMT_B8G8R8A8;
 	if(destfmt==PIXFMT_RGBA32)	destfmt=W3D_FMT_R8G8B8A8;
 	printf("==============================\n");
-	printf("Current bitmap's destformat is %ld\n",destfmt);
+	printf("Current bitmap's destformat is %ld\n",(long)destfmt);
 
 	printf("==============================\n");
 	printf("Query for the current bitmap's destformat:\n");
@@ -950,14 +950,14 @@ ULONG texfmt,destfmt,state,query,w,h,wp,hp,m,n;
 	MLOOP(15)
 	{
 	srcfunc=m+1; 	/* src/dstfunc go 1 to 15 */
-	if(srcfunc<10) printf("BlendMode Src%ld :",srcfunc); else printf("BlendMode Src%ld:",srcfunc);
+	if(srcfunc<10) printf("BlendMode Src%ld :",(long)srcfunc); else printf("BlendMode Src%ld:",(long)srcfunc);
 	NLOOP(15)
 	{
 	dstfunc=n+1;
 
 	result=SetBlendMode();
 	if(result==W3D_SUCCESS)
-		{if(dstfunc<10) printf(" Dst%ld ",dstfunc); else printf(" Dst%ld",dstfunc);}
+		{if(dstfunc<10) printf(" Dst%ld ",(long)dstfunc); else printf(" Dst%ld",(long)dstfunc);}
 	else
 		{if(dstfunc<10) printf(" ---- "); else printf(" -----");}
 	}
@@ -973,7 +973,9 @@ BOOL StartWarp3D(void)
 UWORD screenlarge,screenhigh;
 ULONG Flags =WFLG_ACTIVATE | WFLG_REPORTMOUSE | WFLG_RMBTRAP | WFLG_SIMPLE_REFRESH | WFLG_GIMMEZEROZERO ;
 ULONG IDCMPs=IDCMP_CLOSEWINDOW | IDCMP_VANILLAKEY | IDCMP_RAWKEY | IDCMP_MOUSEMOVE | IDCMP_MOUSEBUTTONS ;
+#ifdef STATWAZP3D
 W3D_Driver **drivers;
+#endif
 
 	CyberGfxBase = OpenLibrary("cybergraphics.library", 0L);
 	if (CyberGfxBase==NULL)
@@ -998,7 +1000,7 @@ W3D_Driver **drivers;
 	WA_InnerHeight,	HIGH,
 	WA_Left,		(screenlarge - LARGE)/2,
 	WA_Top,		(screenhigh  -  HIGH)/2,
-	WA_Title,		(ULONG)progname,
+	WA_Title,		(IPTR)progname,
 	WA_DragBar,		TRUE,
 	WA_CloseGadget,	TRUE,
 	WA_GimmeZeroZero,	TRUE,
@@ -1029,7 +1031,7 @@ W3D_Driver **drivers;
 #endif
 	context = W3D_CreateContextTags(&result,
 		W3D_CC_MODEID,      ModeID,             // Mandatory for non-pubscreen
-		W3D_CC_BITMAP,      (ULONG)bm,          // The bitmap we'll use
+		W3D_CC_BITMAP,      (IPTR)bm,           // The bitmap we'll use
 		W3D_CC_YOFFSET,     0,                  // We don't do dbuffering
 		W3D_CC_DRIVERTYPE,  W3D_DRIVER_BEST,    // Let Warp3D decide
 		W3D_CC_DOUBLEHEIGHT,FALSE,               // Double height screen
@@ -1037,11 +1039,11 @@ W3D_Driver **drivers;
 	TAG_DONE);
 
 	if (!context || result != W3D_SUCCESS)
-		{printf("Cant create Warp3D context! (error %ld)\n",result);return(FALSE);}
+		{printf("Cant create Warp3D context! (error %ld)\n",(long)result);return(FALSE);}
 
 	result=W3D_AllocZBuffer(context);
 	if(result!=W3D_SUCCESS)
-		{printf("Cant create zbuffer! (error %ld)\n",result);return(FALSE);}
+		{printf("Cant create zbuffer! (error %ld)\n",(long)result);return(FALSE);}
 	return(TRUE);
 }
 /*=================================================================*/
@@ -1118,7 +1120,7 @@ void ShowSrcDst(void)
 {
 #define  WINFO(var,val,doc) if(var == val) printf(" " #var "=" #val ", " #doc "\n");
 
-	printf("Blending src%ld/dst%ld\n",srcfunc,dstfunc);
+	printf("Blending src%ld/dst%ld\n",(long)srcfunc,(long)dstfunc);
 
 	WINFO(srcfunc,W3D_ZERO,"source + dest ")
 	WINFO(srcfunc,W3D_ONE,"source + dest ")
@@ -1155,7 +1157,7 @@ void ShowSrcDst(void)
 /* check if this blend mode works ? */
 	result=SetBlendMode();
 	if(result!=W3D_SUCCESS)
-		printf("Cant SetBlendMode!(src %ld dst %ld)\n",srcfunc,dstfunc);
+		printf("Cant SetBlendMode!(src %ld dst %ld)\n",(long)srcfunc,(long)dstfunc);
 }
 /*================================================================================*/
 void WindowEvents(void)
@@ -1231,7 +1233,7 @@ struct IntuiMessage *imsg;
 			case 'm':
 			case 'M':
 				texenvmode++;	if(texenvmode>W3D_BLEND)	texenvmode=W3D_REPLACE;
-				printf("Texenvmode %ld\n",texenvmode);
+				printf("Texenvmode %ld\n",(long)texenvmode);
 				WINFO(texenvmode,W3D_REPLACE,"unlit texturing ")
 				WINFO(texenvmode,W3D_DECAL,"same as W3D_REPLACE use alpha to blend texture with primitive =lit-texturing")
 				WINFO(texenvmode,W3D_MODULATE,"lit-texturing by modulation ")
@@ -1285,7 +1287,7 @@ BOOL framebuffered;
 		if(buffered)
 		if(BufferedP==NULL)
 			{
-			printf("Will allocate buffer %ld bytes\n",FRAMESCOUNT*CowObj->Pnb*sizeof(struct point3D));
+			printf("Will allocate buffer %ld bytes\n",(long)(FRAMESCOUNT*CowObj->Pnb*sizeof(struct point3D)));
 			BufferedP = malloc(FRAMESCOUNT*CowObj->Pnb*sizeof(struct point3D));
 			if(!BufferedP) printf("no memory for buffer!\n");
 			NLOOP(FRAMESCOUNT) Pdone[n]=FALSE;

@@ -400,7 +400,7 @@ void PrintST(struct SOFT3D_texture *ST)
 {
 #ifdef WAZP3DDEBUG
 	if (!Wazp3D->DebugST.ON) return;
-	Libprintf("SOFT3D_texture(%ld) %s  pt %ld NextST(%ld) TexMode %ld \n",(ULONG)ST,ST->name,(ULONG)ST->pt,(ULONG)ST->nextST,(ULONG)ST->TexMode);
+	Libprintf("SOFT3D_texture(%ld) %s  pt %ld NextST(%ld) TexMode %ld \n",(ULONG)(IPTR)ST,ST->name,(ULONG)(IPTR)ST->pt,(ULONG)(IPTR)ST->nextST,(ULONG)ST->TexMode);
 #else
 	return;
 #endif
@@ -4445,7 +4445,7 @@ register union pixel3D *P2=SC->P2;
 register LONG high=SC->PolyHigh;
 register LONG n;
 register WORD large,maxlarge,maxn;
-union pixel3D DeltaX;
+union pixel3D DeltaX = {};
 
 SFUNCTION(Poly_Persp0_Tex)
 	maxn=maxlarge=0;
@@ -4502,7 +4502,7 @@ register union pixel3D *P2=SC->P2;
 register LONG high=SC->PolyHigh;
 register LONG n;
 register WORD large,maxlarge,maxn;
-union pixel3D DeltaX;
+union pixel3D DeltaX = {};
 
 SFUNCTION(Poly_Persp0_Gouraud)
 	maxn=maxlarge=0;
@@ -4577,7 +4577,7 @@ register union pixel3D *P2=SC->P2;
 register LONG high=SC->PolyHigh;
 register LONG n;
 register WORD large,maxlarge,maxn;
-union pixel3D DeltaX;
+union pixel3D DeltaX = {};
 
 SFUNCTION(Poly_Persp0_Tex_Gouraud_Fog)
 	maxn=maxlarge=0;
@@ -6015,7 +6015,7 @@ LONG ratio2;
 LONG offset;
 
 #ifdef WAZP3DDEBUG
-	if(Wazp3D->DebugSOFT3D.ON) Libprintf("ReduceBitmap/%ld %ldX%ld %ldbits >from %ld to %ld\n",(ULONG)ratio,(ULONG)large,(ULONG)high,(ULONG)bits,(ULONG)pt,(ULONG)pt2);
+	if(Wazp3D->DebugSOFT3D.ON) Libprintf("ReduceBitmap/%ld %ldX%ld %ldbits >from %ld to %ld\n",(ULONG)ratio,(ULONG)large,(ULONG)high,(ULONG)bits,(ULONG)(IPTR)pt,(ULONG)(IPTR)pt2);
 #endif
 	if(pt ==NULL) return;
 	if(pt2==NULL) return;
@@ -6081,7 +6081,7 @@ ULONG size;
 	reduction=2;
 next_mipmap:
 #ifdef WAZP3DDEBUG
-	if(Wazp3D->DebugSOFT3D.ON) Libprintf("MipMap %ldX%ld = %ld (%ld)\n",(ULONG)large,(ULONG)high,(ULONG)size,(ULONG)ptmm);
+	if(Wazp3D->DebugSOFT3D.ON) Libprintf("MipMap %ldX%ld = %ld (%ld)\n",(ULONG)large,(ULONG)high,(ULONG)size,(ULONG)(IPTR)ptmm);
 #endif
 	ReduceBitmap(ST->pt,ptmm,ST->large,ST->high,ST->bits,reduction);
 	level++;
@@ -6278,7 +6278,7 @@ UWORD W,B0,B1;
 ULONG n;
 BOOL PcOrder,ChangeOrder;
 ULONG temp;
-WORD bits;
+WORD bits = 0;
 BOOL started;
 
 
@@ -6604,7 +6604,7 @@ UBYTE *Image8;					/* = bitmap memory  */
 	if(SC->ImageBuffer32!=NULL)		/* So we dont write to a bitmap but to an RGBA buffer called "ImageBuffer32" */
 		return(TRUE);
 
-	SC->bmHandle=LockBitMapTags((APTR)SC->bm,LBMI_BASEADDRESS,(ULONG)&Image8, TAG_DONE);
+	SC->bmHandle=LockBitMapTags((APTR)SC->bm,LBMI_BASEADDRESS,(IPTR)&Image8, TAG_DONE);
 	return(SC->bmHandle!=NULL);
 #else
 	return(TRUE);
