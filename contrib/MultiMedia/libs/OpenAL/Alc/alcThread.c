@@ -82,12 +82,12 @@ ALuint StopThread(ALvoid *thread)
 
 #include <aros/debug.h>
 
-#warning IMPLEMENT StartThread/StarterFunc/StopThread - used in wave.c
+// FIXME: IMPLEMENT StartThread/StarterFunc/StopThread - used in wave.c
 
 typedef struct {
 } ThreadInfo;
 
-static void *StarterFunc(void *ptr)
+void *StarterFunc(void *ptr)
 {
     bug("Implement: OpenAL - StarterFunc\n");
     return NULL;

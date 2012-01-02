@@ -31,7 +31,9 @@ OPENAL_FILES = \
         
 USER_INCLUDES := \
         -I$(SRCDIR)/$(CURDIR)/Include \
-        -I$(SRCDIR)/$(CURDIR)/../ \
+        -I$(SRCDIR)/$(CURDIR)/../
+
+USER_CFLAGS += -Wno-unused-but-set-variable
 
 %build_linklib mmake=contrib-openal-linklib libname=openal \
     files="$(OPENAL_FILES)"
