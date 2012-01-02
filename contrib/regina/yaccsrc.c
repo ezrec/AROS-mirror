@@ -3715,7 +3715,7 @@ yyreduce:
 #line 778 "./yaccsrc.y"
     { (yyval) = (yyvsp[(1) - (4)]) ;
                                          (yyval)->type = X_PARSE ;
-                                         (yyval)->u.parseflags = (int) (yyvsp[(2) - (4)]) ;
+                                         (yyval)->u.parseflags = (long) (yyvsp[(2) - (4)]) ;
                                          (yyval)->p[0] = (yyvsp[(3) - (4)]) ;
                                          (yyval)->p[1] = (yyvsp[(4) - (4)]) ; ;}
     break;
@@ -4767,13 +4767,13 @@ yyreduce:
   case 412:
 #line 1182 "./yaccsrc.y"
     { /* ugly fake preservs parendepth */
-                                         (yyval) = (YYSTYPE) parendepth;
+                                         (yyval) = (YYSTYPE) (long) parendepth;
                                          parendepth = 0; ;}
     break;
 
   case 413:
 #line 1185 "./yaccsrc.y"
-    { parendepth = (int) (yyval);
+    { parendepth = (long) (yyval);
                                          (yyval) = (yyvsp[(2) - (2)]); ;}
     break;
 

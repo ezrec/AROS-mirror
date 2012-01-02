@@ -1027,7 +1027,7 @@ streng *amiga_pragma( tsd_t *TSD, cparamboxptr parm1 )
    case 'I':
       {
          char s[10];
-         sprintf(s, "%8x", (unsigned int)FindTask( NULL ) );
+         sprintf(s, "%8lx", (unsigned long)FindTask( NULL ) );
          if ( parm2 != NULL && parm2->value != NULL )
             exiterror( ERR_INCORRECT_CALL, 4, "PRAGMA", 1 );
          retval = Str_cre_TSD( TSD, s );

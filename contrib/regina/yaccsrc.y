@@ -777,7 +777,7 @@ options_stat : options nexpr           { ($$=$1)->p[0]=$2 ; }
 parse_stat   : parse parse_flags parse_param templs
                                        { $$ = $1 ;
                                          $$->type = X_PARSE ;
-                                         $$->u.parseflags = (int) $2 ;
+                                         $$->u.parseflags = (long) $2 ;
                                          $$->p[0] = $3 ;
                                          $$->p[1] = $4 ; }
              | parse parse_param templs
@@ -1180,9 +1180,9 @@ function    : extfunc func_args        { $$ = makenode(X_EX_FUNC,1,$2) ;
             ;
 
 func_args   :                          { /* ugly fake preservs parendepth */
-                                         $$ = (YYSTYPE) parendepth;
+                                         $$ = (YYSTYPE) (long) parendepth;
                                          parendepth = 0; }
-              exprs_sub                { parendepth = (int) $$;
+              exprs_sub                { parendepth = (long) $$;
                                          $$ = $2; }
             ;
 
