@@ -3873,7 +3873,7 @@ void *AlignPtr(void *ptr, int align_size, int *align_amount)
     char *ret_ptr = ptr;
     int pad = 0;
 
-    pad = ((int)ret_ptr) & (align_size-1);
+    pad = ((long)ret_ptr) & (align_size-1);
     if (pad) {
         ret_ptr += align_size-pad;
         pad = align_size-pad;
