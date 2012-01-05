@@ -54,14 +54,14 @@ Example
 ::
 
 
-     Identify s:startup-sequenceS:startup-sequence        
-     > Text/Ascii    
-     
+     Identify S:Startup-Sequence
+     > Text/Ascii
+
      (This will identify the startup-sequence as a text file.)
-     
+
 
 See also
 ~~~~~~~~
 
-`AddDatatypes <adddatatypes>`_   
+`AddDatatypes <adddatatypes>`_ 
 

@@ -49,6 +49,6 @@ Inputs
      NOLINE -- no newline at end of string
      FIRST  -- first displayed character
      LEN    -- number of characters to display
-     TO     -- file or device to output to 
+     TO     -- file or device to output to
 
 

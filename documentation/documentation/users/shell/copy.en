@@ -75,7 +75,7 @@ Inputs
      FOLNK     --  also makes links to directories
      FODEL     --  delete protected files also
      FOOVR     --  also overwrite protected files
-     DONTOVR   --  do never overwrite destination
+     DONTOVR   --  never overwrite destination
      FORCE     --  DO NOT USE. Call compatibility only.
      NEWER     --  compare version strings and only overwrites older files.
 

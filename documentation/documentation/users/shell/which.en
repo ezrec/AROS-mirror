@@ -39,7 +39,7 @@ Function
 
      Find and print the location of a specific program or directory.
      Resident programs are marked as RESIDENT if they are not
-     interal resident in which case they are marked as INTERNAL.
+     internal resident in which case they are marked as INTERNAL.
 
      Which searches the resident list, the current directory,
      the command paths and the C: assign. If the item was not
