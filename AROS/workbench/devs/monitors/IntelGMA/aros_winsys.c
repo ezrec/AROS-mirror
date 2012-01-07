@@ -237,7 +237,6 @@ void batchbuffer_flush(struct i915_winsys_batchbuffer *batch,
 #ifndef GALLIUM_SIMULATION
 
     LOCK_BB
-
         // wait until previous batchbuffer is ready.
         while( get_status( temp_index ) ){
           //  bug("wait...\n");
@@ -252,8 +251,8 @@ void batchbuffer_flush(struct i915_winsys_batchbuffer *batch,
         LOCK_HW
 
             //run
-            START_RING(7);
-    
+            START_RING(6);
+
                 // start batchbuffer
                 OUT_RING( MI_BATCH_BUFFER_START | (2 << 6) );
                 OUT_RING( BASEADDRESS( bb_map ) | MI_BATCH_NON_SECURE);
@@ -435,8 +434,11 @@ void buffer_destroy(struct i915_winsys *iws,
                           struct i915_winsys_buffer *buffer)
 {
     D(bug("[GMA winsys] buffer_destroy %p\n", buffer));
+
     // wait until batchbuffer is ready.
     while( get_status( temp_index )){}
+    DO_FLUSH();
+
     FreeGfxMem(aros_buffer(buffer)->allocated_map,aros_buffer(buffer)->allocated_size);
     FREE(buffer);
 }
