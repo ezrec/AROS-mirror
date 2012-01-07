@@ -5,6 +5,9 @@
     Desc:
     Lang: english
 */
+
+#include <aros/debug.h>
+
 #include <workbench/icon.h>
 #include <graphics/gfx.h>
 #include <proto/arossupport.h>
@@ -12,34 +15,26 @@
 
 /*#define OUTPUT_DATA*/
 
-struct OldDrawerData
-{
-    struct NewWindow dd_NewWindow;
-    LONG             dd_CurrentX;
-    LONG             dd_CurrentY;
-};
-
-
-STATIC STRPTR StrDupPooled(APTR pool, STRPTR str)
+STATIC STRPTR StrDupIcon(struct DiskObject *dobj, STRPTR str, APTR IconBase)
 {
     char *newstr;
     if (!str) return NULL;
-    newstr = AllocPooled(pool,strlen(str)+1);
+    newstr = AllocMemIcon(dobj, strlen(str)+1, MEMF_PUBLIC);
     if (newstr) strcpy(newstr,str);
     return newstr;
 }
 
-STATIC UBYTE *MemDupPooled(APTR pool, UBYTE *src, ULONG size)
+STATIC APTR MemDupIcon(struct DiskObject *dobj, CONST_APTR src, ULONG size, APTR IconBase)
 {
     UBYTE *newmem;
     
-    newmem = AllocPooled(pool, size);
-    if (newmem) memcpy(newmem, src, size);
+    newmem = AllocMemIcon(dobj, size, MEMF_PUBLIC);
+    if (newmem) CopyMem(src, newmem, size);
     
     return newmem;
 }
 
-STATIC struct Image *ImageDupPooled(APTR pool, struct Image *src, BOOL dupImage, BOOL dupImageData)
+STATIC struct Image *ImageDupIcon(struct DiskObject *dobj, struct Image *src, BOOL dupImage, BOOL dupImageData, APTR IconBase)
 {
     struct Image *dest;
 
@@ -51,7 +46,7 @@ STATIC struct Image *ImageDupPooled(APTR pool, struct Image *src, BOOL dupImage,
     if (!dupImage)
     	return src;
 
-    dest = (struct Image*)AllocPooled(pool,sizeof(struct Image));
+    dest = (struct Image*)AllocMemIcon(dobj, sizeof(struct Image), MEMF_PUBLIC);
     if (dest)
     {
 	int data_size = 0;
@@ -84,7 +79,7 @@ STATIC struct Image *ImageDupPooled(APTR pool, struct Image *src, BOOL dupImage,
 	if (!dupImageData)
 	    return dest;
 	
-	if ((dest->ImageData = AllocPooled(pool,data_size)))
+	if ((dest->ImageData = AllocMemIcon(dobj, data_size, MEMF_PUBLIC | MEMF_CHIP)))
 	{
 	    memcpy(dest->ImageData,src->ImageData,data_size);
 #ifdef OUTPUT_DATA
@@ -101,9 +96,6 @@ STATIC struct Image *ImageDupPooled(APTR pool, struct Image *src, BOOL dupImage,
 #endif
 	    return dest;
 	}
-
-	/* Something failed so we fail also */
-	FreePooled(pool,dest,sizeof(struct Image));
     }
     return NULL;
 }
@@ -144,126 +136,77 @@ STATIC struct Image *ImageDupPooled(APTR pool, struct Image *src, BOOL dupImage,
 {
     AROS_LIBFUNC_INIT
 
-    APTR pool;
     struct NativeIcon *mem;
     struct DiskObject *dobj;
+    struct NativeIcon *srcnativeicon;
 
     if (!icon) return NULL;
 
-    pool = CreatePool(0,1024,1024);
-    if (!pool) return NULL;
+    dobj = NewDiskObject(icon->do_Type);
+    if (dobj == NULL)
+        return NULL;
 
-    /* AROS doesn't need the gfx to be placed in chip memory, so we can use pools */
-    mem = (struct NativeIcon *)AllocPooled(pool, sizeof(struct NativeIcon));
-    if (!mem) goto fail;
-
-    memset(mem, 0, sizeof(*mem));
-    
-    mem->pool = pool;
-    dobj = &mem->dobj;
+    mem = NATIVEICON(dobj);
+    /* We can't cast this, since it could be a hand-build one */
+    srcnativeicon = GetNativeIcon(icon, IconBase);
 
     /* copy the contents */
     *dobj = *icon;
 
-    if (GetTagData(ICONDUPA_JustLoadedFromDisk, FALSE, tags) != FALSE)
+    if (srcnativeicon && GetTagData(ICONDUPA_DuplicateImageData, TRUE, tags) == TRUE)
     {
-    	struct NativeIcon *srcnativeicon;
+    	int i;
 	
-	srcnativeicon = NATIVEICON(icon);
- 
-    	mem->icon35 = srcnativeicon->icon35;
-	
-	/* Clone image data */
-	
-	if (srcnativeicon->icon35.img1.imagedata)
-	{
-	    mem->icon35.img1.imagedata = MemDupPooled(pool,
-	    	    	    	    	    	      srcnativeicon->icon35.img1.imagedata,
-	    	    	    	    	    	      srcnativeicon->icon35.width * srcnativeicon->icon35.height);
-						      
-    	    if (!mem->icon35.img1.imagedata) goto fail;
-	}
+        mem->ni_IsDefault = srcnativeicon->ni_IsDefault;
+        mem->ni_Frameless = srcnativeicon->ni_Frameless;
+        mem->ni_Aspect    = srcnativeicon->ni_Aspect;
+        mem->ni_Width     = srcnativeicon->ni_Width;
+        mem->ni_Height    = srcnativeicon->ni_Height;
 
-	if (srcnativeicon->icon35.img2.imagedata)
-	{
-	    mem->icon35.img2.imagedata = MemDupPooled(pool,
-	    	    	    	    	    	      srcnativeicon->icon35.img2.imagedata,
-	    	    	    	    	    	      srcnativeicon->icon35.width * srcnativeicon->icon35.height);
-						      
-    	    if (!mem->icon35.img2.imagedata) goto fail;
-	}
+        /* The duplicate will *not* be laid out to a specific screen */
+        mem->ni_Screen = NULL;
 
-    	/* Clone Image Mask */
-	
-	if (srcnativeicon->icon35.img1.mask)
-	{
-	    mem->icon35.img1.mask = MemDupPooled(pool,
-	    	    	    	    	    	 srcnativeicon->icon35.img1.mask,
-						 RASSIZE(srcnativeicon->icon35.width, srcnativeicon->icon35.height));
-	}
+        /* Duplicate any extra data */
+        if (srcnativeicon->ni_Extra.Data) {
+            mem->ni_Extra = srcnativeicon->ni_Extra;
+            mem->ni_Extra.Data = MemDupIcon(dobj, srcnativeicon->ni_Extra.Data, srcnativeicon->ni_Extra.Size,IconBase);
+            if (!mem->ni_Extra.Data) goto fail;
+        }
 
-	if (srcnativeicon->icon35.img2.mask)
-	{
-	    mem->icon35.img2.mask = MemDupPooled(pool,
-	    	    	    	    	    	 srcnativeicon->icon35.img2.mask,
-						 RASSIZE(srcnativeicon->icon35.width, srcnativeicon->icon35.height));
-	}
+        for (i = 0; i < 2; i++)
+        {
+            struct NativeIconImage *src, *dst;
 
-    	/* Clone Palette */
-		
-	if (srcnativeicon->icon35.img1.palette)
-	{
-	    mem->icon35.img1.palette = MemDupPooled(pool,
-	    	    	    	    	    	    srcnativeicon->icon35.img1.palette,
-						    srcnativeicon->icon35.img1.numcolors * sizeof(struct ColorRegister));
-	    if (!mem->icon35.img1.palette) goto fail;
-	}
-		
-	if (srcnativeicon->icon35.img2.palette && (srcnativeicon->icon35.img2.flags & IMAGE35F_HASPALETTE))
-	{
-	    mem->icon35.img2.palette = MemDupPooled(pool,
-	    	    	    	    	    	    srcnativeicon->icon35.img2.palette,
-						    srcnativeicon->icon35.img2.numcolors * sizeof(struct ColorRegister));
-	    if (!mem->icon35.img2.palette) goto fail;
-	}
-	else if (srcnativeicon->icon35.img1.palette)
-	{
-	    /* Both images use same palette which is kept in memory only once */
-	    mem->icon35.img2.palette = mem->icon35.img1.palette;
-	}
-	
-	/* Clone PNGIcon data */
-	
-	mem->iconPNG = srcnativeicon->iconPNG;
-	
-	if (srcnativeicon->iconPNG.filebuffer)
-	{
-	    mem->iconPNG.filebuffer = MemDupPooled(pool,
-	    	    	    	    	     	   srcnativeicon->iconPNG.filebuffer,
-					     	   srcnativeicon->iconPNG.filebuffersize);
-					     
-    	    if (!mem->iconPNG.filebuffer) goto fail;
-	}
-	
-	if (srcnativeicon->iconPNG.img1)
-	{
-	    mem->iconPNG.img1 = MemDupPooled(pool,
-	    	    	    	    	     srcnativeicon->iconPNG.img1,
-					     srcnativeicon->iconPNG.width * srcnativeicon->iconPNG.height * sizeof(ULONG));
-					     
-    	    if (!mem->iconPNG.img1) goto fail;
-	}
-	
-	if (srcnativeicon->iconPNG.img2)
-	{
-	    mem->iconPNG.img2 = MemDupPooled(pool,
-	    	    	    	    	     srcnativeicon->iconPNG.img2,
-					     srcnativeicon->iconPNG.width * srcnativeicon->iconPNG.height * sizeof(ULONG));
-					     
-    	    if (!mem->iconPNG.img2) goto fail;
-	}
-	
-    } /* if (GetTagData(ICONDUPA_JustLoadedFromDisk, FALSE, tags) != FALSE) */
+            src = &srcnativeicon->ni_Image[i];
+            dst = &mem->ni_Image[i];
+
+            if (src->ARGB) {
+                dst->ARGB = MemDupIcon(dobj, src->ARGB, srcnativeicon->ni_Width * srcnativeicon->ni_Height * 4, IconBase);
+                if (!dst->ARGB)
+                    goto fail;
+            }
+
+            dst->Pens = src->Pens;
+            dst->TransparentColor = src->TransparentColor;
+
+            /* Clone Palette, if we have pens allocated */
+            if (src->Palette && src->Pens)
+            {
+                dst->Palette = MemDupIcon(dobj, src->Palette, src->Pens * sizeof(struct ColorRegister),IconBase);
+                if (!dst->Palette) goto fail;
+            }
+
+            if (src->ImageData) {
+                dst->ImageData = MemDupIcon(dobj, src->ImageData, srcnativeicon->ni_Width * srcnativeicon->ni_Height * sizeof(UBYTE), IconBase);
+                if (!dst->ImageData) goto fail;
+            }
+
+            /* Do *not* clone the screen specific layout */
+            dst->BitMap = NULL;
+            dst->BitMask = NULL;
+            dst->Pen = NULL;
+        }
+    } /* if (srcnativeicon && GetTagData(ICONDUPA_DuplicateImageData, TRUE, tags) == TRUE) */
    
 #ifdef OUTPUT_DATA
     kprintf("gadgetwidth = %ld\ngadgetheight = %ld\n",dobj->do_Gadget.Width,dobj->do_Gadget.Height);
@@ -275,14 +218,14 @@ STATIC struct Image *ImageDupPooled(APTR pool, struct Image *src, BOOL dupImage,
     if (GetTagData(ICONDUPA_DuplicateDefaultTool, TRUE, tags) &&
         dobj->do_DefaultTool)
     {
-    	dobj->do_DefaultTool = StrDupPooled(pool,icon->do_DefaultTool);
+    	dobj->do_DefaultTool = StrDupIcon(dobj,icon->do_DefaultTool,IconBase);
 	if (!dobj->do_DefaultTool) goto fail;
     }
     
     if (GetTagData(ICONDUPA_DuplicateToolWindow, TRUE, tags) &&
         dobj->do_ToolWindow)
     {
-    	dobj->do_ToolWindow = StrDupPooled(pool,icon->do_ToolWindow);
+    	dobj->do_ToolWindow = StrDupIcon(dobj,icon->do_ToolWindow,IconBase);
     	if (!dobj->do_ToolWindow) goto fail;
     }
    
@@ -291,7 +234,7 @@ STATIC struct Image *ImageDupPooled(APTR pool, struct Image *src, BOOL dupImage,
     {
     	LONG size;
 	
-	dobj->do_DrawerData = AllocPooled(pool, sizeof(struct DrawerData));
+	dobj->do_DrawerData = AllocMemIcon(dobj, sizeof(struct DrawerData), MEMF_PUBLIC);
     	if (!dobj->do_DrawerData) goto fail;
 	
  	if (((SIPTR)icon->do_Gadget.UserData > 0) &&
@@ -312,17 +255,17 @@ STATIC struct Image *ImageDupPooled(APTR pool, struct Image *src, BOOL dupImage,
     
     if (icon->do_Gadget.GadgetRender)
     {
-    	dobj->do_Gadget.GadgetRender = ImageDupPooled(pool, (struct Image*)icon->do_Gadget.GadgetRender,
+    	dobj->do_Gadget.GadgetRender = ImageDupIcon(dobj, (struct Image*)icon->do_Gadget.GadgetRender,
     		GetTagData(ICONDUPA_DuplicateImages, TRUE, tags),
-    		GetTagData(ICONDUPA_DuplicateImageData, TRUE, tags));
+    		GetTagData(ICONDUPA_DuplicateImageData, TRUE, tags),IconBase);
 	if (!dobj->do_Gadget.GadgetRender) goto fail;
     }
     
     if (icon->do_Gadget.SelectRender)
     {	    
-    	dobj->do_Gadget.SelectRender = ImageDupPooled(pool, (struct Image*)icon->do_Gadget.SelectRender,
+    	dobj->do_Gadget.SelectRender = ImageDupIcon(dobj, (struct Image*)icon->do_Gadget.SelectRender,
     		GetTagData(ICONDUPA_DuplicateImages, TRUE, tags),
-    		GetTagData(ICONDUPA_DuplicateImageData, TRUE, tags));
+    		GetTagData(ICONDUPA_DuplicateImageData, TRUE, tags),IconBase);
 	if (!dobj->do_Gadget.SelectRender) goto fail;
     }
 
@@ -334,12 +277,12 @@ STATIC struct Image *ImageDupPooled(APTR pool, struct Image *src, BOOL dupImage,
 	/* Get number of tool types */
 	for (num_tts = 0;icon->do_ToolTypes[num_tts];num_tts++);
 
-	if ((dobj->do_ToolTypes = (STRPTR *)AllocPooled(pool,sizeof(char*)*(num_tts+1))))
+	if ((dobj->do_ToolTypes = (STRPTR *)AllocMemIcon(dobj,sizeof(char*)*(num_tts+1), MEMF_PUBLIC)))
 	{
 	    int i;
 	    for (i=0;i<num_tts;i++)
 	    {
-		dobj->do_ToolTypes[i] = StrDupPooled(pool,icon->do_ToolTypes[i]);
+		dobj->do_ToolTypes[i] = StrDupIcon(dobj,icon->do_ToolTypes[i],IconBase);
 		if (!dobj->do_ToolTypes[i]) goto fail;
 	    }
 	    dobj->do_ToolTypes[i] = NULL;
@@ -350,12 +293,15 @@ STATIC struct Image *ImageDupPooled(APTR pool, struct Image *src, BOOL dupImage,
 	}
     }
 
-    AddIconToList(mem, LB(IconBase));
+    if (GetTagData(ICONDUPA_ActivateImageData, FALSE, tags))
+        LayoutIconA(dobj, LB(IconBase)->ib_Screen, NULL);
+
+    D(bug("%s: Icon %p => %p\n", __func__, icon, dobj));
     
     return dobj;
 
 fail:
-    DeletePool(pool);
+    FreeDiskObject(dobj);
     return NULL;
     
     AROS_LIBFUNC_EXIT

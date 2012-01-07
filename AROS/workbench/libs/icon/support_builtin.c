@@ -179,7 +179,6 @@ static const UBYTE tool_data_2[] =
 struct DiskObject *__GetBuiltinIcon_WB(LONG type, struct IconBase *IconBase)
 {
     struct DiskObject  temp = { 0 };
-    struct DrawerData  dd   = { { 0 }, 0 };
     struct Image       img1 = { 0 };
     struct Image       img2 = { 0 };
     struct Image      *gad,*sel;
@@ -198,6 +197,7 @@ struct DiskObject *__GetBuiltinIcon_WB(LONG type, struct IconBase *IconBase)
     temp.do_Gadget.Width         = ICON_HEIGHT;
     temp.do_Gadget.Height        = ICON_HEIGHT;
     temp.do_Gadget.Flags        |= GFLG_GADGIMAGE;
+    temp.do_DefaultTool          = (type == WBDISK) ? "SYS:System/DiskCopy" : "";
     // FIXME: probably need to setup some more fields 
    
     img1.Depth     = ICON_DEPTH;
@@ -210,28 +210,11 @@ struct DiskObject *__GetBuiltinIcon_WB(LONG type, struct IconBase *IconBase)
     img2.Height    = ICON_HEIGHT;
     img2.PlanePick  = (1 << ICON_DEPTH) - 1;
     img2.PlaneOnOff = (1 << ICON_DEPTH) - 1;
-            
-    switch (type)
-    {
-        case WBDISK:
-            temp.do_DrawerData =           &dd;
-            break;
-        
-        case WBDRAWER:
-            temp.do_DrawerData =           &dd;
-            break;
-    }
 
-    dobj = DupDiskObject(&temp,
-    	    ICONDUPA_DuplicateImages, TRUE,
-    	    ICONDUPA_DuplicateImageData, FALSE,
-    	    TAG_END);
+    /* Default drawer data will be filled in by PrepareIcon() */
 
-    if (dobj == NULL)
-    	return NULL;
-
-    gad = dobj->do_Gadget.GadgetRender;
-    sel = dobj->do_Gadget.SelectRender;
+    gad = temp.do_Gadget.GadgetRender;
+    sel = temp.do_Gadget.SelectRender;
 
     switch (type)
     {
@@ -255,6 +238,11 @@ struct DiskObject *__GetBuiltinIcon_WB(LONG type, struct IconBase *IconBase)
             sel->ImageData     = (UWORD *) tool_data_2;
             break;
     }
+
+    dobj = DupDiskObject(&temp,
+    	    ICONDUPA_DuplicateImages, TRUE,
+    	    ICONDUPA_DuplicateImageData, TRUE,
+    	    TAG_END);
 
     return dobj;
 }

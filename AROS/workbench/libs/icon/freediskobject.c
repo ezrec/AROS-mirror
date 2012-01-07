@@ -56,11 +56,16 @@ extern const IPTR IconDesc[];
     struct NativeIcon *nativeicon;
     
     nativeicon = NATIVEICON(diskobj);
-    
+   
+    /* Remove all layout specific data
+     * (ie displayable bitmaps, pen allocations, etc)
+     */
+    LayoutIconA(diskobj, NULL, NULL);
+
     RemoveIconFromList(nativeicon, LB(IconBase));
-    
-    /* It's enough to free our pool */
-    DeletePool(nativeicon->pool);
+
+    /* It's enough to free our FreeList */
+    FreeFreeList(&nativeicon->ni_FreeList);
 
     AROS_LIBFUNC_EXIT
     

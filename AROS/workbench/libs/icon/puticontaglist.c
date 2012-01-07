@@ -3,8 +3,11 @@
     $Id$
 */
 
+#include <aros/debug.h>
+
 #include <utility/tagitem.h>
 #include <proto/icon.h>
+#include <proto/workbench.h>
 
 #include "icon_intern.h"
 
@@ -50,19 +53,14 @@
     STRPTR  defaultName           = NULL;
     LONG   *errorCode             = NULL;
     
-    BOOL    onlyUpdatePosition    = FALSE; // FIXME: not implemented
-    BOOL    notifyWorkbench       = FALSE; // FIXME: not implemented
-    BOOL    dropPlanarIconImage   = FALSE; // FIXME: not implemented
-    BOOL    dropChunkyIconImage   = FALSE; // FIXME: not implemented
-    BOOL    dropNewIconToolTypes  = FALSE; // FIXME: not implemented
-    BOOL    optimizeImageSpace    = FALSE; // FIXME: not implemented
-    BOOL    preserveOldIconImages = TRUE;  // FIXME: not implemented
+    BOOL    notifyWorkbench       = FALSE;
+    BOOL    onlyUpdatePosition    = FALSE;
     
 #   define SET_ERRORCODE(value) (errorCode != NULL ? *errorCode = (value) : (value))
 
     /* Check input parameters ----------------------------------------------*/
     if (icon == NULL) return FALSE;
-    
+
     /* Parse taglist -------------------------------------------------------*/
     while ((tag = NextTagItem(&tstate)) != NULL)
     {
@@ -84,37 +82,15 @@
                 SET_ERRORCODE(0);
                 break;
             
-            case ICONPUTA_OnlyUpdatePosition:
-                onlyUpdatePosition = tag->ti_Data;
-                break;
-                
             case ICONPUTA_NotifyWorkbench:
                 notifyWorkbench = tag->ti_Data;
                 break;
-            
-            case ICONPUTA_DropPlanarIconImage:
-                dropPlanarIconImage = tag->ti_Data;
+            case ICONPUTA_OnlyUpdatePosition:
+                onlyUpdatePosition = tag->ti_Data;
                 break;
-                
-            case ICONPUTA_DropChunkyIconImage:
-                dropChunkyIconImage = tag->ti_Data;
-                break;
-                
-            case ICONPUTA_DropNewIconToolTypes:
-                dropNewIconToolTypes = tag->ti_Data;
-                break;
-                
-            case ICONPUTA_OptimizeImageSpace:
-                optimizeImageSpace = tag->ti_Data;
-                break;
-                
-            case ICONPUTA_PreserveOldIconImages:
-                preserveOldIconImages = tag->ti_Data;
-                break;
-                
         }
     }
-    
+
     if (defaultType != -1)
     {
         CONST_STRPTR defaultIconName = GetDefaultIconName(defaultType);
@@ -135,21 +111,35 @@
         
         if (file != BNULL)
         {
-            success = WriteIcon(file, icon);
+            success = WriteIcon(file, icon, tags);
             CloseDefaultIcon(file);
         }
     }
     else if (name != NULL)
     {
-        BPTR file = OpenIcon(name, MODE_NEWFILE);
-        
+        BPTR file = OpenIcon(name, onlyUpdatePosition ? MODE_OLDFILE : MODE_NEWFILE);
         if (file != BNULL)
         {
-            success = WriteIcon(file, icon);
+            success = WriteIcon(file, icon, tags);
             CloseIcon(file);
         }
     }
-        
+
+    /* Notify workbench if we added/changed the icon */
+    if (success && name && notifyWorkbench && WorkbenchBase) {
+        BPTR lock, parent;
+
+        lock = Lock(name, SHARED_LOCK);
+        if (lock) {
+            parent = ParentDir(lock);
+            if (parent) {
+                UpdateWorkbench(FilePart(name), parent, UPDATEWB_ObjectAdded);
+                UnLock(parent);
+            }
+            UnLock(lock);
+        }
+    }
+
     return success;
 
 #   undef SET_ERRORCODE

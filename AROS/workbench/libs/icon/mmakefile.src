@@ -42,17 +42,19 @@ FUNCS := \
 #MM     kernel-utility-includes \
 #MM     kernel-cfgx-includes \
 #MM     workbench-libs-iffparse-includes \
+#MM	workbench-datatypes-png-includes \
 #MM     includes-copy
 #MM workbench-libs-icon-module : \
 #MM     workbench-libs-datatypes-includes \
 #MM	workbench-datatypes-png-includes \
 #MM- workbench-libs-icon : linklibs
+#MM- core-linklibs: linklibs-icon
 
-USER_CFLAGS := -D__NOLIBBASE__ $(PARANOIA_CFLAGS)
+USER_CFLAGS := -D__NOLIBBASE__
 
 %build_module mmake=workbench-libs-icon \
     modname=icon modtype=library \
     files="icon_init $(FUNCS) $(FILES)" \
-    uselibs="arossupport amiga rom m"
+    uselibs="z arossupport amiga rom m"
 
 %common
