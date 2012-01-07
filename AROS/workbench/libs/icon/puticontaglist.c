@@ -117,7 +117,8 @@
     }
     else if (name != NULL)
     {
-        BPTR file = OpenIcon(name, onlyUpdatePosition ? MODE_OLDFILE : MODE_NEWFILE);
+        (void)onlyUpdatePosition;
+        BPTR file = OpenIcon(name, MODE_NEWFILE);
         if (file != BNULL)
         {
             success = WriteIcon(file, icon, tags);
