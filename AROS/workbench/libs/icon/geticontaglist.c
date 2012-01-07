@@ -133,18 +133,18 @@
     if (defaultType != -1 || defaultName != NULL)
     {
         if (defaultName != NULL)
-	{
+        {
             BPTR file = OpenDefaultIcon(defaultName, MODE_OLDFILE);
             
             D(bug("[%s] Find default icon '%s'\n", __func__, defaultName));
             if (file != BNULL)
-	    {
-	        D(bug("[%s] Found default icon '%s'\n", __func__, defaultName));
-	    	icon = ReadIcon(file);
-		CloseDefaultIcon(file);
-		SET_ISDEFAULTICON(TRUE);
-	    }
-	}
+            {
+                D(bug("[%s] Found default icon '%s'\n", __func__, defaultName));
+                icon = ReadIcon(file);
+                CloseDefaultIcon(file);
+                SET_ISDEFAULTICON(TRUE);
+            }
+        }
 
 	if (icon == NULL && defaultType != -1 && defaultName == NULL)
 	{
