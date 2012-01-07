@@ -62,9 +62,9 @@ struct WorkbenchBase
 
 #define LB(lb)          ((struct WorkbenchBase *) (lb))
 
-#define LockWorkbench()   ObtainSemaphore(&(WorkbenchBase->wb_BaseSemaphore))
-#define LockWorkbenchShared()   ObtainSemaphoreShared(&(WorkbenchBase->wb_BaseSemaphore))
-#define UnlockWorkbench() ReleaseSemaphore(&(WorkbenchBase->wb_BaseSemaphore))
+#define LockWorkbench()   ObtainSemaphore(&(LB(WorkbenchBase)->wb_BaseSemaphore))
+#define LockWorkbenchShared()   ObtainSemaphoreShared(&(LB(WorkbenchBase)->wb_BaseSemaphore))
+#define UnlockWorkbench() ReleaseSemaphore(&(LB(WorkbenchBase)->wb_BaseSemaphore))
 
 /*
  * Defintion of internal structures.
