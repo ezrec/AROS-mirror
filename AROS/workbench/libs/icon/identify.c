@@ -33,7 +33,7 @@
 #endif
 
 /*** Prototypes *************************************************************/
-BOOL __FindDeviceName_WB(STRPTR buffer, LONG length, BPTR lock, APTR *theDOSBase);
+BOOL __FindDeviceName_WB(STRPTR buffer, LONG length, CONST_STRPTR volume, APTR *theDOSBase);
 struct DiskObject *__GetDefaultIconFromName_WB(CONST_STRPTR name, const struct TagItem *tags, struct IconBase *IconBase);
 struct DiskObject *__GetDefaultIconFromType_WB(LONG type, const struct TagItem *tags, struct IconBase *IconBase);
 LONG __FindDiskType_WB(STRPTR volname, BPTR lock, struct IconBase *IconBase);
@@ -134,13 +134,13 @@ struct DiskObject *__FindDefaultIcon_WB
     {
         /* It's a disk/volume/root -------------------------------------*/
         TEXT device[MAXFILENAMELENGTH];
-        
+
         if
         (
             FindDeviceName
             (
                 device, MAXFILENAMELENGTH, 
-                iim->iim_FileLock
+                iim->iim_FIB->fib_FileName
             )
         )
         {
@@ -425,7 +425,7 @@ LONG __FindDiskType_WB(STRPTR volname, BPTR lock, struct IconBase *IconBase)
 
 BOOL __FindDeviceName_WB
 (
-    STRPTR device, LONG length, BPTR lock,
+    STRPTR buffer, LONG length, CONST_STRPTR volume,
     APTR *theDOSBase
 )
 {
@@ -437,20 +437,39 @@ BOOL __FindDeviceName_WB
     if (dl != NULL)
     {
         struct DosList *dol = dl;
-        struct MsgPort *port = ((struct FileLock *) BADDR(lock))->fl_Task;
         
         while ((dol = NextDosEntry(dol, LDF_DEVICES | LDF_READ)) != NULL)
         {
-            STRPTR devname = AROS_BSTR_ADDR(dol->dol_Name);
-            ULONG len = AROS_BSTR_strlen(dol->dol_Name);
+            TEXT device[MAXFILENAMELENGTH];
 
-            if (dol->dol_Task == port) {
-                CopyMem(devname, device, len);
-                device[len++] = ':';
-                device[len] = 0;
+            strlcpy(device, AROS_DOSDEVNAME(dol), MAXFILENAMELENGTH);
 
-                success = TRUE;
-                break;
+            if (strlcat(device, ":", MAXFILENAMELENGTH) < MAXFILENAMELENGTH)
+            {
+                BPTR lock;
+
+                if
+                (
+                       IsFileSystem(device)
+                    && (lock = Lock(device, ACCESS_READ)) != BNULL
+                )
+                {
+                    if (NameFromLock(lock, buffer, length))
+                    {
+                        buffer[strlen(buffer) - 1] = '\0'; /* Remove trailing ':' */
+                        if (strcasecmp(volume, buffer) == 0)
+                        {
+                            if (strlcpy(buffer, device, length) < length)
+                            {
+                                success = TRUE;
+                            }
+                            UnLock(lock);
+                            break;
+                        }
+                    }
+
+                    UnLock(lock);
+                }
             }
         }
         
