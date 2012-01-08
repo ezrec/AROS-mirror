@@ -74,7 +74,7 @@ FILES = aros     \
 
 #MM povray : includes linklibs linklibs-png
 
-USER_CFLAGS := -Wno-array-bounds
+USER_CFLAGS := $(ARRAY_BOUNDS_CFLAGS)
 
 %build_prog mmake=povray \
     progname=povray targetdir=$(EXEDIR) \
