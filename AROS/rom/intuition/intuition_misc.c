@@ -68,24 +68,24 @@ void LoadDefaultPreferences(struct IntuitionBase * IntuitionBase)
         AllocMem(sizeof(struct Preferences), MEMF_CLEAR);
 
     GetPrivIBase(IntuitionBase)->ScreenModePrefs.smp_DisplayID  = INVALID_ID;
-    GetPrivIBase(IntuitionBase)->ScreenModePrefs.smp_Width  	= AROS_DEFAULT_WBWIDTH;
+    GetPrivIBase(IntuitionBase)->ScreenModePrefs.smp_Width          = AROS_DEFAULT_WBWIDTH;
 #ifdef __mc68000
-    GetPrivIBase(IntuitionBase)->ScreenModePrefs.smp_Height 	= (GfxBase->DisplayFlags & NTSC) ? 200 : 256;
+    GetPrivIBase(IntuitionBase)->ScreenModePrefs.smp_Height         = (GfxBase->DisplayFlags & NTSC) ? 200 : 256;
 #else
-    GetPrivIBase(IntuitionBase)->ScreenModePrefs.smp_Height 	= AROS_DEFAULT_WBHEIGHT;
+    GetPrivIBase(IntuitionBase)->ScreenModePrefs.smp_Height         = AROS_DEFAULT_WBHEIGHT;
 #endif
-    GetPrivIBase(IntuitionBase)->ScreenModePrefs.smp_Depth  	= AROS_DEFAULT_WBDEPTH;
-    GetPrivIBase(IntuitionBase)->ScreenModePrefs.smp_Control 	= 0;
+    GetPrivIBase(IntuitionBase)->ScreenModePrefs.smp_Depth          = AROS_DEFAULT_WBDEPTH;
+    GetPrivIBase(IntuitionBase)->ScreenModePrefs.smp_Control         = 0;
 
     GetPrivIBase(IntuitionBase)->IControlPrefs.ic_TimeOut  = 50;
     GetPrivIBase(IntuitionBase)->IControlPrefs.ic_MetaDrag = IEQUALIFIER_LCOMMAND;    
     GetPrivIBase(IntuitionBase)->IControlPrefs.ic_Flags    = ICF_3DMENUS |
-    	    	    	    	    	    	    	     ICF_OFFSCREENLAYERS |
-							     ICF_AVOIDWINBORDERERASE |
-    	    	    					     ICF_MODEPROMOTE | 
-    	    	    					     ICF_MENUSNAP |
-							     ICF_STRGAD_FILTER |
-							     ICF_COERCE_LACE;
+                                                                                         ICF_OFFSCREENLAYERS |
+                                                             ICF_AVOIDWINBORDERERASE |
+                                                                         ICF_MODEPROMOTE | 
+                                                                         ICF_MENUSNAP |
+                                                             ICF_STRGAD_FILTER |
+                                                             ICF_COERCE_LACE;
     GetPrivIBase(IntuitionBase)->IControlPrefs.ic_WBtoFront   = 'N';
     GetPrivIBase(IntuitionBase)->IControlPrefs.ic_FrontToBack = 'M';
     GetPrivIBase(IntuitionBase)->IControlPrefs.ic_ReqTrue     = 'V';
@@ -173,37 +173,37 @@ void CheckRectFill(struct RastPort *rp, WORD x1, WORD y1, WORD x2, WORD y2,
 #define TITLEBAR_HEIGHT (w->BorderTop)
 
 Object* CreateStdSysImage(WORD which, WORD preferred_height, struct Screen *scr, APTR buffer,
-    	    	    	  struct DrawInfo *dri, struct IntuitionBase *IntuitionBase)
+                                      struct DrawInfo *dri, struct IntuitionBase *IntuitionBase)
 {
     Object *im;
     
     struct TagItem image_tags[] =
     {
-	{SYSIA_Which    , which        	    	    	    },
-	{SYSIA_DrawInfo , (IPTR)dri         	    	    },
-	{SYSIA_Size 	, scr->Flags & SCREENHIRES ?
-                	  SYSISIZE_MEDRES : SYSISIZE_LOWRES },
+        {SYSIA_Which    , which                                            },
+        {SYSIA_DrawInfo , (IPTR)dri                                 },
+        {SYSIA_Size         , scr->Flags & SCREENHIRES ?
+                          SYSISIZE_MEDRES : SYSISIZE_LOWRES },
     {SYSIA_UserBuffer , (IPTR)buffer                    },
-	{TAG_DONE                   	    	    	    }
+        {TAG_DONE                                                       }
     };
 
     im = NewObjectA(NULL, SYSICLASS, image_tags);
     if (im)
     {
-    	struct TagItem size_tags[] =
-	{
-	    {IA_Width	, 0 	    	    },
-	    {IA_Height	, preferred_height  },
-	    {TAG_DONE	    	    	    }
-	};	
-    	IPTR width, height;
-	
-	GetAttr(IA_Width, im, &width);
-	GetAttr(IA_Height, im, &height);
-		
-	size_tags[0].ti_Data = preferred_height * width / height;
-	
-	SetAttrsA(im, size_tags);
+            struct TagItem size_tags[] =
+        {
+            {IA_Width        , 0                         },
+            {IA_Height        , preferred_height  },
+            {TAG_DONE                                    }
+        };        
+            IPTR width, height;
+        
+        GetAttr(IA_Width, im, &width);
+        GetAttr(IA_Height, im, &height);
+                
+        size_tags[0].ti_Data = preferred_height * width / height;
+        
+        SetAttrsA(im, size_tags);
     }
     
     return im;
@@ -215,7 +215,7 @@ BOOL CreateWinSysGadgets(struct Window *w, struct IntuitionBase *IntuitionBase)
 {
 
     struct DrawInfo *dri;
-    BOOL    	     is_gzz;
+    BOOL                 is_gzz;
 
     EnterFunc(bug("CreateWinSysGadgets(w=%p)\n", w));
 
@@ -246,28 +246,28 @@ BOOL CreateWinSysGadgets(struct Window *w, struct IntuitionBase *IntuitionBase)
 
             struct TagItem size_tags[] =
             {
-                {GA_Image   	, 0             },
+                {GA_Image           , 0             },
                 {GA_RelRight    , -width  + 1   },
                 {GA_RelBottom   , -height + 1   },
-                {GA_Width   	, width     	},
-                {GA_Height  	, height    	},
-                {GA_SysGadget   , TRUE      	},
+                {GA_Width           , width             },
+                {GA_Height          , height            },
+                {GA_SysGadget   , TRUE              },
                 {GA_SysGType    , GTYP_SIZING   },
-                {GA_BottomBorder, TRUE      	},
-                {GA_RightBorder , TRUE      	},
-                {GA_GZZGadget   , is_gzz    	},
-                {TAG_DONE           	    	}
+                {GA_BottomBorder, TRUE              },
+                {GA_RightBorder , TRUE              },
+                {GA_GZZGadget   , is_gzz            },
+                {TAG_DONE                               }
             };
 
             struct TagItem image_tags[] =
             {
-                {IA_Width   	, width     	    	    	    	    	    	    	     },
-                {IA_Height  	, height    	    	    	    	    	    	    	     },
-                {SYSIA_Which    , SIZEIMAGE 	    	    	    	    	    	    	     },
-                {SYSIA_DrawInfo , (IPTR)dri 	    	    	    	    	    	    	     },
+                {IA_Width           , width                                                                                          },
+                {IA_Height          , height                                                                                         },
+                {SYSIA_Which    , SIZEIMAGE                                                                                      },
+                {SYSIA_DrawInfo , (IPTR)dri                                                                                      },
                 {SYSIA_UserBuffer, ((struct IntWindow *)(w))->DecorUserBuffer                        },
-                {SYSIA_Size 	, w->WScreen->Flags & SCREENHIRES ? SYSISIZE_MEDRES : SYSISIZE_LOWRES},
-                {TAG_DONE           	    	    	    	    	    	    	    	     }
+                {SYSIA_Size         , w->WScreen->Flags & SCREENHIRES ? SYSISIZE_MEDRES : SYSISIZE_LOWRES},
+                {TAG_DONE                                                                                                            }
             };
             Object *im;
 
@@ -294,19 +294,19 @@ BOOL CreateWinSysGadgets(struct Window *w, struct IntuitionBase *IntuitionBase)
         {
             struct TagItem depth_tags[] =
             {
-                {GA_Image   	, 0                 },
-              //{GA_RelRight  	, relright          },
-                {GA_Top     	, 0                 },
-	    #if SQUARE_WIN_GADGETS
-                {GA_Width   	, TITLEBAR_HEIGHT   },
-	    #endif
-                {GA_Height  	, TITLEBAR_HEIGHT   },
+                {GA_Image           , 0                 },
+              //{GA_RelRight          , relright          },
+                {GA_Top             , 0                 },
+            #if SQUARE_WIN_GADGETS
+                {GA_Width           , TITLEBAR_HEIGHT   },
+            #endif
+                {GA_Height          , TITLEBAR_HEIGHT   },
                 {GA_SysGadget   , TRUE              },
                 {GA_SysGType    , GTYP_WDEPTH       },
                 {GA_TopBorder   , TRUE              },
                 {GA_GZZGadget   , is_gzz            },
                 {GA_RelVerify   , TRUE              },
-                {TAG_DONE                   	    }
+                {TAG_DONE                               }
             };
             Object *im;
 
@@ -351,27 +351,27 @@ BOOL CreateWinSysGadgets(struct Window *w, struct IntuitionBase *IntuitionBase)
 
         }
 
-    	/* RKRMs: window gets zoom gadget if WA_Zoom tag was used,
-	   or if window has both a sizegadget and a depthgadget */
-	
+            /* RKRMs: window gets zoom gadget if WA_Zoom tag was used,
+           or if window has both a sizegadget and a depthgadget */
+        
         if ((w->Flags & WFLG_HASZOOM) ||
-	    ((w->Flags & WFLG_SIZEGADGET) && (w->Flags & WFLG_DEPTHGADGET)))
+            ((w->Flags & WFLG_SIZEGADGET) && (w->Flags & WFLG_DEPTHGADGET)))
         {
             struct TagItem zoom_tags[] =
             {
-                {GA_Image   	, 0                 },
+                {GA_Image           , 0                 },
                 //{GA_RelRight  , relright          },
-                {GA_Top     	, 0                 },
-	    #if SQUARE_WIN_GADGETS
-                {GA_Width   	, TITLEBAR_HEIGHT   },
-	    #endif
-                {GA_Height  	, TITLEBAR_HEIGHT   },
+                {GA_Top             , 0                 },
+            #if SQUARE_WIN_GADGETS
+                {GA_Width           , TITLEBAR_HEIGHT   },
+            #endif
+                {GA_Height          , TITLEBAR_HEIGHT   },
                 {GA_SysGadget   , TRUE              },
                 {GA_SysGType    , GTYP_WZOOM        },
                 {GA_TopBorder   , TRUE              },
                 {GA_GZZGadget   , is_gzz            },
                 {GA_RelVerify   , TRUE              },
-                {TAG_DONE                   	    }
+                {TAG_DONE                               }
             };
 
             Object *im;
@@ -460,19 +460,19 @@ BOOL CreateWinSysGadgets(struct Window *w, struct IntuitionBase *IntuitionBase)
         {
             struct TagItem close_tags[] =
             {
-                {GA_Image   	, 0         	    },
-                {GA_Left    	, 0         	    },
-                {GA_Top     	, 0         	    },
-	    #if SQUARE_WIN_GADGETS
-                {GA_Width   	, TITLEBAR_HEIGHT   },
-	    #endif
-                {GA_Height  	, TITLEBAR_HEIGHT   },
+                {GA_Image           , 0                     },
+                {GA_Left            , 0                     },
+                {GA_Top             , 0                     },
+            #if SQUARE_WIN_GADGETS
+                {GA_Width           , TITLEBAR_HEIGHT   },
+            #endif
+                {GA_Height          , TITLEBAR_HEIGHT   },
                 {GA_SysGadget   , TRUE              },
                 {GA_SysGType    , GTYP_CLOSE        },
                 {GA_TopBorder   , TRUE              },
                 {GA_GZZGadget   , is_gzz            },
                 {GA_RelVerify   , TRUE              },
-                {TAG_DONE                   	    }
+                {TAG_DONE                               }
             };
             Object *im;
 
@@ -508,15 +508,15 @@ BOOL CreateWinSysGadgets(struct Window *w, struct IntuitionBase *IntuitionBase)
 
             struct TagItem dragbar_tags[] =
             {
-        	{GA_Left    	, 0/*db_left*/	    },
-        	{GA_Top     	, 0         	    },
-        	{GA_RelWidth    , 0/*db_width*/     },
-        	{GA_Height  	, TITLEBAR_HEIGHT   },
-        	{GA_SysGadget   , TRUE              },
-        	{GA_SysGType    , GTYP_WDRAGGING    },
-        	{GA_TopBorder   , TRUE              },
-        	{GA_GZZGadget   , is_gzz            },
-        	{TAG_DONE                   	     }
+                {GA_Left            , 0/*db_left*/            },
+                {GA_Top             , 0                     },
+                {GA_RelWidth    , 0/*db_width*/     },
+                {GA_Height          , TITLEBAR_HEIGHT   },
+                {GA_SysGadget   , TRUE              },
+                {GA_SysGType    , GTYP_WDRAGGING    },
+                {GA_TopBorder   , TRUE              },
+                {GA_GZZGadget   , is_gzz            },
+                {TAG_DONE                                }
             };
             SYSGAD(w, DRAGBAR) = NewObjectA(NULL, BUTTONGCLASS, dragbar_tags);
 
@@ -544,23 +544,23 @@ BOOL CreateWinSysGadgets(struct Window *w, struct IntuitionBase *IntuitionBase)
             for (i = NUM_SYSGADS; --i >= 0; )
             {
                 if (SYSGAD(w, i))
-		{
-    		    struct wdpLayoutBorderGadgets  msg;
+                {
+                        struct wdpLayoutBorderGadgets  msg;
 
-		    msg.MethodID    = WDM_LAYOUT_BORDERGADGETS;
-		    msg.wdp_Window  = w;
-		    msg.wdp_Gadgets = (struct Gadget *)SYSGAD(w, i);
-		    msg.wdp_Flags   = WDF_LBG_SYSTEMGADGET | WDF_LBG_INITIAL;
+                    msg.MethodID    = WDM_LAYOUT_BORDERGADGETS;
+                    msg.wdp_Window  = w;
+                    msg.wdp_Gadgets = (struct Gadget *)SYSGAD(w, i);
+                    msg.wdp_Flags   = WDF_LBG_SYSTEMGADGET | WDF_LBG_INITIAL;
             msg.wdp_UserBuffer  = ((struct IntWindow *)(w))->DecorUserBuffer;
             msg.wdp_ExtraButtons = ((struct IntWindow *)w)->extrabuttons;
 
-		    msg.wdp_TrueColor = (((struct IntScreen *)w->WScreen)->DInfo.dri.dri_Flags & DRIF_DIRECTCOLOR);
-		    msg.wdp_Dri = dri;
+                    msg.wdp_TrueColor = (((struct IntScreen *)w->WScreen)->DInfo.dri.dri_Flags & DRIF_DIRECTCOLOR);
+                    msg.wdp_Dri = dri;
 
-		    DoMethodA(((struct IntScreen *)(w->WScreen))->WinDecorObj, (Msg)&msg);	
+                    DoMethodA(((struct IntScreen *)(w->WScreen))->WinDecorObj, (Msg)&msg);        
 
                     AddGadget(w, (struct Gadget *)SYSGAD(w, i), 0);
-		}
+                }
             }
 
             ReturnBool("CreateWinSysGadgets", TRUE);
@@ -631,8 +631,8 @@ void CreateScreenBar(struct Screen *scr, struct IntuitionBase *IntuitionBase)
                                                    LAYERS_NOBACKFILL,
                                                    NULL);
         }
-	else
-	{
+        else
+        {
             scr->BarLayer = CreateBehindHookLayer(&scr->LayerInfo,
                                                    scr->RastPort.BitMap,
                                                    0,
@@ -649,10 +649,10 @@ void CreateScreenBar(struct Screen *scr, struct IntuitionBase *IntuitionBase)
             D(bug("[intuition] CreateScreenBar: Adding BarLayer @ %p\n", scr->BarLayer));
             D(bug("[intuition] CreateScreenBar: Rastport @ %p, Font @ %p\n", scr->BarLayer->rp, ((struct IntScreen *)scr)->DInfo.dri.dri_Font));
             SetFont(scr->BarLayer->rp, ((struct IntScreen *)scr)->DInfo.dri.dri_Font);
-	    if (!(scr->Flags & SCREENQUIET)) {
-		D(bug("[intuition] CreateScreenBar: Rendering Bar  ...\n"));
-		RenderScreenBar(scr, FALSE, IntuitionBase);
-	    }
+            if (!(scr->Flags & SCREENQUIET)) {
+                D(bug("[intuition] CreateScreenBar: Rendering Bar  ...\n"));
+                RenderScreenBar(scr, FALSE, IntuitionBase);
+            }
             D(bug("[intuition] CreateScreenBar:    ... done\n"));
         }
         else
@@ -721,17 +721,17 @@ void RenderScreenBar(struct Screen *scr, BOOL refresh, struct IntuitionBase *Int
         if (refresh) BeginUpdate(scr->BarLayer);
 
         {
-    	    struct sdpDrawScreenBar  msg;
+                struct sdpDrawScreenBar  msg;
 
             D(bug("[intuition] RenderScreenBar: Begin Refresh .. \n"));
 
-	    msg.MethodID	= SDM_DRAW_SCREENBAR;
-	    msg.sdp_Layer	= scr->BarLayer;
-	    msg.sdp_RPort	= rp;
-    	    msg.sdp_Flags	= 0;
-	    msg.sdp_Screen	= scr;
-	    msg.sdp_Dri		= dri;
-	    msg.sdp_UserBuffer = ((struct IntScreen *)(scr))->DecorUserBuffer;
+            msg.MethodID        = SDM_DRAW_SCREENBAR;
+            msg.sdp_Layer        = scr->BarLayer;
+            msg.sdp_RPort        = rp;
+                msg.sdp_Flags        = 0;
+            msg.sdp_Screen        = scr;
+            msg.sdp_Dri                = dri;
+            msg.sdp_UserBuffer = ((struct IntScreen *)(scr))->DecorUserBuffer;
             msg.sdp_TrueColor   = (((struct IntScreen *)(scr))->DInfo.dri.dri_Flags & DRIF_DIRECTCOLOR);
 
             D(bug("[intuition] RenderScreenBar: ScrDecorObj @ %p, DecorUserBuffer @ %p\n", ((struct IntScreen *)(scr))->ScrDecorObj, ((struct IntScreen *)(scr))->DecorUserBuffer));
@@ -799,8 +799,8 @@ void UpdateMouseCoords(struct Window *win)
 WORD SubtractRectFromRect(struct Rectangle *a, struct Rectangle *b, struct Rectangle *destrectarray)
 {
     struct Rectangle    intersect;
-    BOOL            	intersecting = FALSE;
-    WORD            	numrects = 0;
+    BOOL                    intersecting = FALSE;
+    WORD                    numrects = 0;
 
     /* calc. intersection between a and b */
 
@@ -884,31 +884,31 @@ ULONG addextragadget(struct Window *w,BOOL is_gzz,struct DrawInfo *dri,LONG relr
 {
     struct TagItem gadget_tags[] =
     {
-        {GA_Image   	, 0                 },
+        {GA_Image           , 0                 },
         {GA_ToggleSelect, FALSE             },
-        {GA_Top     	, 0                 },
-        {GA_Height  	, TITLEBAR_HEIGHT   },
+        {GA_Top             , 0                 },
+        {GA_Height          , TITLEBAR_HEIGHT   },
         {GA_TopBorder   , TRUE              },
         {GA_GZZGadget   , is_gzz            },
-        {GA_ID      	, gadgetid          },
-        {GA_RelVerify	, TRUE              },
+        {GA_ID              , gadgetid          },
+        {GA_RelVerify        , TRUE              },
         {TAG_DONE                           }
     };
     struct TagItem image_tags[] =
     {
     #ifdef SKINS
-        {TAG_IGNORE 	, 0             	    	    },
+        {TAG_IGNORE         , 0                                     },
     #else
-        {IA_Left    	, -1            	    	    },
+        {IA_Left            , -1                                    },
     #endif
-        {IA_Height  	, TITLEBAR_HEIGHT       	    },
-        {SYSIA_Which    , imagetype         	    	    },
-        {SYSIA_DrawInfo , (IPTR)dri         	    	    },
-        {SYSIA_Size 	, w->WScreen->Flags & SCREENHIRES ?
-            	      SYSISIZE_MEDRES : SYSISIZE_LOWRES     },
+        {IA_Height          , TITLEBAR_HEIGHT                   },
+        {SYSIA_Which    , imagetype                                 },
+        {SYSIA_DrawInfo , (IPTR)dri                                 },
+        {SYSIA_Size         , w->WScreen->Flags & SCREENHIRES ?
+                          SYSISIZE_MEDRES : SYSISIZE_LOWRES     },
         {SYSIA_UserBuffer, ((struct IntWindow *)(w))->DecorUserBuffer                        },
 
-        {TAG_DONE                   	    	    	    }
+        {TAG_DONE                                                       }
     };
     Object *im;
 
@@ -937,7 +937,7 @@ ULONG addextragadget(struct Window *w,BOOL is_gzz,struct DrawInfo *dri,LONG relr
                 struct TagItem gadtags[] =
                 {
                     {GA_RelRight, relright - width  },
-                    {TAG_DONE               	    }
+                    {TAG_DONE                           }
                 };
 
                 SetAttrsA(SYSGAD(w, gadgettype), gadtags);
@@ -973,9 +973,9 @@ LONG CalcResourceHash(APTR resource)
    
     hash = (l1 + l2 + l3 + l4
 #if __WORDSIZE == 64
-	    + l5 + l6 + l7 + l8
+            + l5 + l6 + l7 + l8
 #endif
-	    ) % RESOURCELIST_HASHSIZE;
+            ) % RESOURCELIST_HASHSIZE;
 
     return hash;
 }
@@ -984,30 +984,30 @@ LONG CalcResourceHash(APTR resource)
 void AddResourceToList(APTR resource, UWORD resourcetype, struct IntuitionBase *IntuitionBase)
 {
     struct HashNode *hn = NULL;
-    LONG    	     hash;
-    ULONG   	     ilock;
+    LONG                 hash;
+    ULONG                ilock;
         
     switch(resourcetype)
     {
-    	case RESOURCE_WINDOW:
-	    hn = &((struct IntWindow *)resource)->hashnode;
-	    hn->type = RESOURCE_WINDOW;
-	    break;
+            case RESOURCE_WINDOW:
+            hn = &((struct IntWindow *)resource)->hashnode;
+            hn->type = RESOURCE_WINDOW;
+            break;
 
-    	case RESOURCE_SCREEN:
-	    hn = &((struct IntScreen *)resource)->hashnode;
-	    hn->type = RESOURCE_SCREEN;
-	    break;
-	    
-	default:
-	    D(bug("AddResourceToList: Unknown resource type!!!\n"));
-	    return;
+            case RESOURCE_SCREEN:
+            hn = &((struct IntScreen *)resource)->hashnode;
+            hn->type = RESOURCE_SCREEN;
+            break;
+            
+        default:
+            D(bug("AddResourceToList: Unknown resource type!!!\n"));
+            return;
     }  
 
     hash = CalcResourceHash(resource);
 
     hn->resource = resource;
-	    
+            
     ilock = LockIBase(0);
     AddTail((struct List *)&GetPrivIBase(IntuitionBase)->ResourceList[hash], (struct Node *)hn);
     UnlockIBase(ilock);
@@ -1018,26 +1018,26 @@ void AddResourceToList(APTR resource, UWORD resourcetype, struct IntuitionBase *
 void RemoveResourceFromList(APTR resource, UWORD resourcetype, struct IntuitionBase *IntuitionBase)
 {
     struct HashNode *hn = NULL;
-    ULONG   	     ilock;
+    ULONG                ilock;
     
     switch(resourcetype)
-    {	
-    	case RESOURCE_WINDOW:
-	    hn = &((struct IntWindow *)resource)->hashnode;
-	    break;
+    {        
+            case RESOURCE_WINDOW:
+            hn = &((struct IntWindow *)resource)->hashnode;
+            break;
 
-    	case RESOURCE_SCREEN:
-	    hn = &((struct IntScreen *)resource)->hashnode;
-	    break;
-	    
-	default:
-	    D(bug("RemoveResourceFromList: Unknown resource type!!!\n"));
-	    return;
+            case RESOURCE_SCREEN:
+            hn = &((struct IntScreen *)resource)->hashnode;
+            break;
+            
+        default:
+            D(bug("RemoveResourceFromList: Unknown resource type!!!\n"));
+            return;
     }
     
     if (hn->type != resourcetype)
     {
-    	D(bug("RemoveResourceFromList: Panic. Resource Type mismatch!!!\n"));
+            D(bug("RemoveResourceFromList: Panic. Resource Type mismatch!!!\n"));
     }
     
     ilock = LockIBase(0);
@@ -1050,20 +1050,20 @@ void RemoveResourceFromList(APTR resource, UWORD resourcetype, struct IntuitionB
 BOOL ResourceExisting(APTR resource, UWORD resourcetype, struct IntuitionBase *IntuitionBase)
 {
     struct HashNode *hn = NULL;
-    LONG    	     hash;
-    ULONG   	     ilock;
-    BOOL    	     exists = FALSE;
+    LONG                 hash;
+    ULONG                ilock;
+    BOOL                 exists = FALSE;
     
     hash = CalcResourceHash(resource);
     
     ilock = LockIBase(0);
     ForeachNode((struct List *)&GetPrivIBase(IntuitionBase)->ResourceList[hash], hn)
     {
-    	if ((hn->resource == resource) && (hn->type == resourcetype))
-	{
-	    exists = TRUE;
-	    break;
-	}
+            if ((hn->resource == resource) && (hn->type == resourcetype))
+        {
+            exists = TRUE;
+            break;
+        }
     }
     UnlockIBase(ilock);
     
@@ -1083,7 +1083,7 @@ void FireScreenNotifyMessageCode(IPTR data, ULONG flag, ULONG code, struct Intui
     if (!IsListEmpty(&GetPrivIBase(IntuitionBase)->ScreenNotificationList))
     {
         node = GetPrivIBase(IntuitionBase)->ScreenNotificationList.lh_Head;
-	for (; node->ln_Succ; node = node->ln_Succ)
+        for (; node->ln_Succ; node = node->ln_Succ)
         {
             sn = (struct IntScreenNotify *) node;
             BOOL leavescreen = FALSE;
@@ -1144,7 +1144,7 @@ void FireScreenNotifyMessageCode(IPTR data, ULONG flag, ULONG code, struct Intui
                     CallHook(sn->hook, NULL, (Msg) &msg);
                 }
             }
-        }	
+        }        
     }
     ReleaseSemaphore(&GetPrivIBase(IntuitionBase)->ScreenNotificationListLock);
 }
@@ -1164,13 +1164,13 @@ AROS_UFH3(struct Region *, DefaultWindowShapeFunc,
     AROS_USERFUNC_INIT
 
     struct IntuitionBase    *IntuitionBase = (struct IntuitionBase *)hook->h_Data;
-    struct Window   	    *win = (struct Window *)hook->h_SubEntry;
-    struct Region   	    *shape;
+    struct Window               *win = (struct Window *)hook->h_SubEntry;
+    struct Region               *shape;
     struct wdpWindowShape    shapemsg;
     
-    shapemsg.MethodID	    = WDM_WINDOWSHAPE;
+    shapemsg.MethodID            = WDM_WINDOWSHAPE;
     shapemsg.wdp_TrueColor  = (GetPrivScreen(win->WScreen)->DInfo.dri.dri_Flags & DRIF_DIRECTCOLOR) ? TRUE : FALSE;
-    shapemsg.wdp_Width 	    = msg->NewBounds.MaxX - msg->NewBounds.MinX + 1;
+    shapemsg.wdp_Width             = msg->NewBounds.MaxX - msg->NewBounds.MinX + 1;
     shapemsg.wdp_Height     = msg->NewBounds.MaxY - msg->NewBounds.MinY + 1;
     shapemsg.wdp_Window = win;
     shapemsg.wdp_UserBuffer = IW(win)->DecorUserBuffer;
