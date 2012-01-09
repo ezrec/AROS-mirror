@@ -1725,37 +1725,37 @@ static IPTR windecor_getdefsizes(Class *cl, Object *obj, struct wdpGetDefSizeSys
 
         case CLOSEIMAGE:
             n = data->img_close;
-            isset = TRUE;
+            if(n) isset = TRUE;
             titlegadget = TRUE;
             break;
 
         case MUIIMAGE:
             n = data->img_mui;
-            isset = TRUE;
+            if(n) isset = TRUE;
             titlegadget = TRUE;
             break;
 
         case POPUPIMAGE:
             n = data->img_popup;
-            isset = TRUE;
+            if(n) isset = TRUE;
             titlegadget = TRUE;
             break;
 
         case SNAPSHOTIMAGE:
             n = data->img_snapshot;
-            isset = TRUE;
+            if(n) isset = TRUE;
             titlegadget = TRUE;
             break;
 
         case ICONIFYIMAGE:
             n = data->img_iconify;
-            isset = TRUE;
+            if(n) isset = TRUE;
             titlegadget = TRUE;
             break;
 
         case LOCKIMAGE:
             n = data->img_lock;
-            isset = TRUE;
+            if(n) isset = TRUE;
             titlegadget = TRUE;
             break;
 
@@ -1791,13 +1791,13 @@ static IPTR windecor_getdefsizes(Class *cl, Object *obj, struct wdpGetDefSizeSys
 
         case DEPTHIMAGE:
             n = data->img_depth;
-            isset = TRUE;
+            if(n) isset = TRUE;
             titlegadget = TRUE;
             break;
 
         case ZOOMIMAGE:
             n = data->img_zoom;
-            isset = TRUE;
+            if(n) isset = TRUE;
             titlegadget = TRUE;
             break;
 
