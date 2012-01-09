@@ -199,7 +199,10 @@
     /* something broke, clean up */
     if (iofs.io_DosError != 0) {
         if (notify->nr_FullName != notify->nr_Name)
+        {
             FreeVec(notify->nr_FullName);
+            notify->nr_FullName = NULL;
+        }
         return DOSFALSE;
     }
 
