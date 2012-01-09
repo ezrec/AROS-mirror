@@ -141,7 +141,7 @@ char *argv[];
     cli=BADDR(myproc->pr_CLI);
     if (cont=GetConsoleTask()) {
         struct InfoData __aligned ind;
-        ULONG arg=MKBADDR(&ind);
+        IPTR arg=(IPTR)MKBADDR(&ind);
 
         if (SendPacket(cont,ACTION_DISK_INFO,&arg,1))
             win=(struct Window *)ind.id_VolumeNode;
@@ -335,7 +335,7 @@ char **argv;
           else
            {
             if (cli = BADDR(ourtask->pr_CLI))
-              stacksize = cli->cli_DefaultStack*4;
+              stacksize = cli->cli_DefaultStack*sizeof(IPTR);
             else stacksize = 4096;
            }
 

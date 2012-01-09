@@ -498,7 +498,7 @@ char *name;
 		BADDR(((struct FileSysStartupMsg *)BADDR(devnode->dn_Startup))->fssm_Environ);
 
 	tracks=dosenvec->de_HighCyl-dosenvec->de_LowCyl+1;
-	tracksize=(dosenvec->de_BlocksPerTrack*dosenvec->de_Surfaces)*(dosenvec->de_SizeBlock*4);
+	tracksize=(dosenvec->de_BlocksPerTrack*dosenvec->de_Surfaces)*(dosenvec->de_SizeBlock*sizeof(ULONG));
 	size=tracks*tracksize;
 
 	getsizestring(sizebuf,size);

@@ -365,7 +365,7 @@ void rexx_return(struct RexxMsg *,long long);
 
 /* main18.c */
 
-int recursedir(char *,char *,int,int);
+int recursedir(char *,char *,int,SIPTR);
 int addrecurse(struct DOpusRemember **,char *,char *,int,APTR,APTR,BPTR,struct FileInfoBlock *,struct Directory *,struct DirectoryWindow *);
 int getdircontentsinfo(char *, unsigned long long *, ULONG *);
 

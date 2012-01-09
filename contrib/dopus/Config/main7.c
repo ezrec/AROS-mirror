@@ -242,7 +242,7 @@ tryload:
                     b++;
                     ftype=ftype->next;
                 }
-                if (!(ftypelist=LAllocRemember(&fkey,(b+1)*4,MEMF_CLEAR)) ||
+                if (!(ftypelist=LAllocRemember(&fkey,(b+1)*sizeof(ftypelist[0]),MEMF_CLEAR)) ||
                     !(typearray=LAllocRemember(&fkey,b+1,MEMF_CLEAR))) break;
                 ftype=newcstuff->firsttype;
                 for (a=0;a<b;a++) {
@@ -282,7 +282,7 @@ tryload:
                     b++;
                     fhotkey=fhotkey->next;
                 }
-                if (!(ftypelist=LAllocRemember(&fkey,(b+1)*4,MEMF_CLEAR)) ||
+                if (!(ftypelist=LAllocRemember(&fkey,(b+1)*sizeof(ftypelist[0]),MEMF_CLEAR)) ||
                     !(typearray=LAllocRemember(&fkey,b+1,MEMF_CLEAR))) break;
                 fhotkey=newcstuff->firsthotkey;
                 for (a=0;a<b;a++) {
@@ -329,7 +329,7 @@ tryload:
                 CopyMem((char *)newcstuff->config->scrollborders,
                     (char *)config->scrollborders,sizeof(struct Rectangle)*2);
                 CopyMem((char *)newcstuff->config->new_palette,
-                    (char *)config->new_palette,sizeof(ULONG)*48);
+                    (char *)config->new_palette,sizeof(config->new_palette[0])*48);
                 strcpy(config->pubscreen_name,newcstuff->config->pubscreen_name);
                 config->slider_pos=newcstuff->config->slider_pos;
                 freecon=3;
@@ -520,7 +520,7 @@ char **funclist,*functype,**displist,*flagsel;
     int a,b,ret=0;
 
     if (!clipcount) return(0);
-    if (!(cliplist=LAllocRemember(&key,(clipcount+1)*4,MEMF_CLEAR))) return(0);
+    if (!(cliplist=LAllocRemember(&key,(clipcount+1)*sizeof(cliplist[0]),MEMF_CLEAR))) return(0);
     busy();
     clip=firstclip;
     for (a=0;a<clipcount;a++) {

@@ -163,11 +163,11 @@ D(bug("send_rexx_command(%s)\n",command?command:"NULL"));
 
     if ((RexxMsg=(struct RexxMsg *)
         CreateRexxMsg(arexx_port,"dopus",str_arexx_portname)) &&
-        (RexxMsg->rm_Args[0]=(STRPTR)CreateArgstring(command,(long)strlen(command)))) {
+        (RexxMsg->rm_Args[0]=(IPTR)CreateArgstring(command,(long)strlen(command)))) {
 
         RexxMsg->rm_Action=RXCOMM;
-        RexxMsg->rm_Args[1]=(STRPTR)replyfunc;
-        RexxMsg->rm_Args[2]=(STRPTR)msg;
+        RexxMsg->rm_Args[1]=(IPTR)replyfunc;
+        RexxMsg->rm_Args[2]=(IPTR)msg;
         RexxMsg->rm_Node.mn_Node.ln_Name="REXX";
 
         Forbid();
@@ -178,7 +178,7 @@ D(bug("send_rexx_command(%s)\n",command?command:"NULL"));
             ++replies_pending;
             return(RexxMsg);
         }
-        else DeleteArgstring(RexxMsg->rm_Args[0]);
+        else DeleteArgstring((STRPTR)RexxMsg->rm_Args[0]);
     }
     if (RexxMsg) DeleteRexxMsg(RexxMsg);
     return(NULL);

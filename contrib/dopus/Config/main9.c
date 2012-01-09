@@ -143,7 +143,7 @@ D(bug("dohelpmsg: %s\n",text));
         }
         else buf[a]=text[a];
     }
-    if (!(helpbuf=LAllocRemember(&key,(lines+2)*4,MEMF_CLEAR))) {
+    if (!(helpbuf=LAllocRemember(&key,(lines+2)*sizeof(helpbuf[0]),MEMF_CLEAR))) {
         LFreeRemember(&key);
         return;
     }
@@ -318,8 +318,8 @@ void load_clips()
         if ((Read(file,(char *)&clip,sizeof(struct Clip)))<sizeof(struct Clip))
             break;
         if (clip.func.function &&
-            (funcbuf=LAllocRemember(&clipkey,(int)clip.func.function,0))) {
-            if ((Read(file,funcbuf,(int)clip.func.function))<(int)clip.func.function)
+            (funcbuf=LAllocRemember(&clipkey,(IPTR)clip.func.function,0))) {
+            if ((Read(file,funcbuf,(IPTR)clip.func.function))<(IPTR)clip.func.function)
                 break;
         }
         else funcbuf=NULL;
@@ -351,7 +351,7 @@ void save_clips()
         if ((Write(file,(char *)clip,sizeof(struct Clip)))<sizeof(struct Clip))
             break;
         if (function &&
-            ((Write(file,(char *)function,(int)clip->func.function))<(int)clip->func.function))
+            ((Write(file,(char *)function,(IPTR)clip->func.function))<(IPTR)clip->func.function))
             break;
         clip=clip->next;
     }

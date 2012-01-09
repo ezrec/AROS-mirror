@@ -665,7 +665,7 @@ int flag,flag2;
     if (!num) return;
 
     if (!(tickgad=LAllocRemember(&tickkey,sizeof(struct Gadget)*num,MEMF_CLEAR)) ||
-        !(namearray=LAllocRemember(&tickkey,num*4,MEMF_CLEAR))) return;
+        !(namearray=LAllocRemember(&tickkey,num*sizeof(namearray[0]),MEMF_CLEAR))) return;
 
     y=y_off+46;
     lasty=y;
@@ -1213,7 +1213,7 @@ int len,num;
     req.strbuf=buf;
     req.strlen=len;
     req.flags=num|SRF_BORDERS|SRF_RECESSHI|SRF_EXTEND;
-    req.value=(int)&stringex;
+    req.value=(IPTR)&stringex;
     req.font=NULL;
     req.title="ConfigOpus";
     busy();

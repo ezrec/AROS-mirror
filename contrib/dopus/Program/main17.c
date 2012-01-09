@@ -738,7 +738,7 @@ doentryselection:
             if ((b=atoi(rexx_args[2]))==0) d=0;
             else {
                 if (status_iconified) strcpy(rexx_args[7],"0");
-                d=(int)addfile(dopus_curwin[data_active_window],data_active_window,
+                a=(IPTR)addfile(dopus_curwin[data_active_window],data_active_window,
                     rexx_args[0],
                     atoi(rexx_args[1]),
                     b,
@@ -811,7 +811,7 @@ doentryselection:
                         else entry=(struct Directory *)-1;
                     }
                 }
-                if ((a=(int)addfile(dopus_curwin[data_active_window],
+                if ((a=(IPTR)addfile(dopus_curwin[data_active_window],
                     data_active_window,buf2,c,ENTRY_CUSTOM,
                     &ds,rexx_args[0],d,CUSTOMENTRY_USER,
                     (rexx_argcount>5)?atoi(rexx_args[5]):0,NULL,entry,0,0))) {

@@ -302,17 +302,14 @@ void inhibit_drive(device,state)
 char *device;
 ULONG state;
 {
-#if 0
 	struct MsgPort *handler;
+	IPTR args[] = { state };
 
 	if (DOSBase->dl_lib.lib_Version<36) {
 		if (handler=(struct MsgPort *)DeviceProc(device))
-			SendPacket(handler,ACTION_INHIBIT,&state,1);
+			SendPacket(handler,ACTION_INHIBIT,args,1);
 	}
 	else Inhibit(device,state);
-#else
-	Inhibit(device,state);
-#endif
 }
 
 void border_text(reqbase,border,infobuf)
@@ -415,7 +412,7 @@ char *alike;
 //        devnode=(struct DeviceNode *) BADDR(devnode->dn_Next);
     }
           
-    if ((listtable=LAllocRemember(key,count*4,MEMF_CLEAR))) {
+    if ((listtable=LAllocRemember(key,count*sizeof(listtable[0]),MEMF_CLEAR))) {
         devnode = (struct DeviceNode *)LockDosList(LDF_READ | LDF_DEVICES);
 //        devnode=(struct DeviceNode *) BADDR(dosinfo->di_DevInfo);
         count=0;

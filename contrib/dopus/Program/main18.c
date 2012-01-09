@@ -38,7 +38,7 @@ struct makedirlist {
 struct recurse {
     struct recurse *last;
     char *dir,*dest;
-    int data;
+    SIPTR data;
     APTR data2;
     APTR data3;
     BPTR lock;
@@ -53,7 +53,8 @@ struct recurse *current_recurse;
 
 int recursedir(fdir,fdest,dowhat,fdata)
 char *fdir,*fdest;
-int dowhat,fdata;
+int dowhat;
+SIPTR fdata;
 {
     struct FileInfoBlock __aligned myfinfo;
     struct FileInfoBlock __aligned enfinfo;
@@ -76,9 +77,9 @@ int dowhat,fdata;
         depth=0,
         b,
         rtry,
-        data=fdata,
         *pstuff,
         blocks;
+    SIPTR data=fdata;
     struct recpath *crec=NULL,*trec;
     struct RecursiveDirectory *cur_recurse,
                               *addparent_recurse,

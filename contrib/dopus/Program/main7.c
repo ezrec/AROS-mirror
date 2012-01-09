@@ -792,12 +792,12 @@ UWORD data;
 APTR buffer;
 {
     struct MsgPort *handler;
-    ULONG args[2];
+    IPTR args[2];
 
     if (!(handler=(struct MsgPort *)DeviceProc(device))) return(-1);
 
     args[0]=data;
-    args[1]=(ULONG)buffer;
+    args[1]=(IPTR)buffer;
     if (!(SendPacket(handler,action,args,2))) {
         if (action2) return(!(SendPacket(handler,action2,args,2)));
         return(1);

@@ -277,7 +277,7 @@ struct Window *window;
     else request->flags&=~SRF_BORDERS;
 
     request->flags|=SRF_RECESSHI|SRF_EXTEND;
-    request->value=(int)&requester_stringex;
+    request->value=(IPTR)&requester_stringex;
     fix_stringex(&requester_stringex);
 
     a=DoSimpleRequest(win,request);
@@ -326,7 +326,7 @@ int ftype,funconly;
         if (status_haveaborted) break;
         if (ftype==-2) {
             if (type->iconpath && type->recognition &&
-                (dochecktype(type,fullname,(IPTR)file,&info))) {
+                (dochecktype(type,fullname,file,&info))) {
                 Close(file);
                 return(type);
             }
@@ -376,7 +376,7 @@ struct FileInfoBlock *info;
             switch (operation) {
                 case FTYC_MATCH:
                 case FTYC_MATCHI:
-                    if (!(checktypechars((IPTR)file,buf,(operation == FTYC_MATCHI) ? 1 : 0))) fail=1;
+                    if (!(checktypechars(file,buf,(operation == FTYC_MATCHI) ? 1 : 0))) fail=1;
                     D(bug("checktypechars(): %ld\n",!fail));
                     break;
                 case FTYC_MATCHNAME:
@@ -440,7 +440,7 @@ struct FileInfoBlock *info;
                     break;
                 case FTYC_SEARCHFOR:
                     oldpos=Seek(file,0,OFFSET_CURRENT);
-                    if ((val=typesearch((IPTR)file,buf,SEARCH_NOCASE|SEARCH_WILDCARD,NULL,0))==-1) {
+                    if ((val=typesearch(file,buf,SEARCH_NOCASE|SEARCH_WILDCARD,NULL,0))==-1) {
                         fail=1;
                         Seek(file,oldpos,OFFSET_BEGINNING);
                     }
@@ -574,7 +574,7 @@ int bufsize;
             oldpos=Seek(file,0,OFFSET_CURRENT);
             if ((size=Read(file,findbuf,32000))<1) break;
             if ((searchbuffer(findbuf,size,matchbuf,matchsize,flags))==1) {
-                oldpos+=((int)search_found_position-(int)findbuf);
+                oldpos+=((SIPTR)search_found_position-(SIPTR)findbuf);
                 FreeMem(findbuf,32004);
                 return(oldpos);
             }
