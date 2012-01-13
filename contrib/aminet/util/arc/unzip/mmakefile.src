@@ -26,7 +26,7 @@ EXEDIR := $(AROS_C)
 
 #MM- aminet-util-arc-unzip: includes linklibs unzip-unzip unzip-unzipsfx unzip-funzip
 
-USER_WARNINGS := -Wno-strict-overflow -Wno-format-security
+USER_WARNINGS := $(STRICT_OVERFLOW_CFLAGS) $(FORMAT_SECURITY_CFLAGS)
 
 USER_CFLAGS := -DUNDER='"$(OS)"' $(USER_WARNINGS)
 

@@ -35,7 +35,7 @@ EXEDIR := $(AROS_C)
 
 #MM- aminet-util-arc-zip: includes linklibs zip-zip zip-zipnote zip-zipcloak zip-zipsplit
 
-USER_WARNINGS := -Wno-strict-overflow -Wno-format-security
+USER_WARNINGS := $(STRICT_OVERFLOW_CFLAGS) $(FORMAT_SECURITY_CFLAGS)
 
 USER_CFLAGS := $(CUSEMEM) -DUNDER='"$(OS)"' $(USER_WARNINGS)
 

@@ -8,7 +8,7 @@ FILES   := amigaos alloc c_ksh c_sh c_test environ eval exec expr history io job
 DESTDIR := $(AROS_DEVELOPMENT)/bin
 
 USER_CFLAGS  := -DAMIGA -DPOSIXLY_CORRECT -DHISTORY -DAUTOINIT -D__USE_RUNCOMMAND__ -DUSE_TEMPFILES
-USER_CFLAGS  += -Wno-format-security
+USER_CFLAGS  += $(FORMAT_SECURITY_CFLAGS)
 USER_LDFLAGS := -nix
 
 #MM- contrib-gnu    : contrib-gnu-sh
