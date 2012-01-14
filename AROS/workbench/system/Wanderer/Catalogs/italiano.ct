@@ -52,7 +52,7 @@ E
 ; E
 ;
 MSG_MEN_SHELL
-Shell...
+Shell
 ; Shell
 ;
 MSG_MEN_SC_SHELL
@@ -172,7 +172,7 @@ Per tipo
 ; By type
 ;
 MSG_MEN_REVERSE
-Inverso
+Inverti
 ; Reverse
 ;
 MSG_MEN_DRWFRST
@@ -215,6 +215,15 @@ MSG_MEN_TOOLS
 Strumenti
 ; Tools
 ;
+MSG_MEN_ICONSORTING
+Abilita ordinamento automatico
+;
+MSG_MEN_GROUPICONS
+Raggruppa icone
+;
+MSG_MEN_ICONSCLOSE
+Chiudi
+;
 MSG_REALLYQUIT
 Vuoi davvero chiudere Wanderer?
 ; Do you really want to quit Wanderer?
@@ -227,6 +236,7 @@ MSG_DUMMY
 DUMMY
 ; DUMMY
 ; DUMMY :)
+;
 MSG_USERSCREENTITLE
 Wanderer %pc memoria grafica %pf altra memoria
 ; Wanderer %pc graphics mem %pf other mem
@@ -264,15 +274,15 @@ Svuota cestino
 ; Empty trash
 ;
 MSG_MEN_PUT_AWAY
-Put Away
+Sul desktop
 ; Put away
 ;
 MSG_MEN_LEAVE_OUT
-Leave Out
+Riponi
 ; Leave out
 ;
 MSG_MEN_UNSNAPSHOT
-Rimuovi fissaggio
+Libera
 ; Unsnapshot
 ;
 MSG_MEN_SNAPSHOT
@@ -312,7 +322,7 @@ Sovrascrivi file ...
 ; Overwrite file...
 ;
 MSG_REQU_OVERWRITE_S
-Intendi sovrascrivere il file
+Sovrascrivere davvero il file
 ; Really overwrite file
 ;
 MSG_REQU_OVERWRITE_M
@@ -332,76 +342,50 @@ _Salta|_Annulla
 ; _Skip|_Abort
 ;
 MSG_REQU_PROTECTION
-
+Protezione file
 ; File Protection
 ;
-; ***NEW***
-;
 MSG_REQU_PROTECTION_UNPROTECT
-
+_Libera|Libera _tutti|_No|No _per tutti
 ; _Unprotect|Unprotect _All|_No|No _to ALL
 ;
-; ***NEW***
-;
 MSG_REQU_PROTECTION_UNPROTECTDRAWER_S
-
+Liberare il cassetto
 ; Do you wish to unprotect drawer
 ;
-; ***NEW***
-;
 MSG_REQU_PROTECTION_UNPROTECTDRAWER_E
-
+?
 ; ?
 ;
-; ***NEW***
-;
 MSG_NOFILEACCESS_S
-
+Impossibile accedere al file
 ; Can't access file
 ;
-; ***NEW***
-;
 MSG_NOFILEACCESS_M
-
+presente in
 ; located in
-;
-; ***NEW***
 ;
 MSG_NOFILEACCESS_E
 
 ;  
-;
-; ***NEW***
-;
 MSG_NODRAWERACCESS_S
-
+Impossibile accedere al cassetto
 ; Can't access drawer
-;
-; ***NEW***
 ;
 MSG_NODRAWERACCESS_E
 
 ;  
-;
-; ***NEW***
-;
 MSG_REQU_FILEUNPROTECT_S
-
+Vuoi liberare il file
 ; Do you wish to unprotect file
 ;
-; ***NEW***
-;
 MSG_REQU_FILEUNPROTECT_M
-
+presente in
 ; located in
 ;
-; ***NEW***
-;
 MSG_REQU_FILEUNPROTECT_E
-
+?
 ; ?
-;
-; ***NEW***
 ;
 MSG_WANDERER_FILEACCESS
 Accesso al file
