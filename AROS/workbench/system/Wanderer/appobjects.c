@@ -39,6 +39,20 @@ STATIC struct AppIcon * FindAppIconByPtr(struct AppIcon * appicon)
 
 BOOL SendAppIconMessage(struct AppIcon * appicon, LONG numargs, STRPTR args)
 {
+    BOOL success = FALSE;
+
+    if (!appicon)
+        return success;
+
+    if ((numargs == 0) && (args == NULL))
+        return SendAppIconMenuMessage(appicon, AMCLASSICON_Open);
+
+    /* TODO: Handle the case when icons are dropped on appicon */
+    return success;
+}
+
+BOOL SendAppIconMenuMessage(struct AppIcon * appicon, UWORD class)
+{
     struct AppMessage * msg = NULL;
     BOOL success = FALSE;
     struct AppIcon * entry = NULL;
@@ -53,7 +67,6 @@ BOOL SendAppIconMessage(struct AppIcon * appicon, LONG numargs, STRPTR args)
     {
         struct MsgPort *port = entry->ai_MsgPort;
 
-        /* TODO: Handle the case when icons are dropped on appicon */
         msg = AllocVec(sizeof(struct AppMessage), MEMF_CLEAR);
 
         if (msg)
@@ -64,6 +77,7 @@ BOOL SendAppIconMessage(struct AppIcon * appicon, LONG numargs, STRPTR args)
             msg->am_ID = entry->ai_ID;
             msg->am_UserData = entry->ai_UserData;
             msg->am_Version = AM_VERSION;
+            msg->am_Class = class;
 
             msg->am_Message.mn_ReplyPort = replyport;
             PutMsg(port, (struct Message *) msg);
