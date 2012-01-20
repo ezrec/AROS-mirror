@@ -243,6 +243,7 @@ void refresh () {
   blur += 2*W;
   
   for (i=0; i<W*(H-3); i++)
+  {
     * (blur) =
         ( * (blur-W-1)     +
           * (blur-W)       +
@@ -255,7 +256,7 @@ void refresh () {
           * (blur+W) ) >> 3;
 
      blur++;
-
+  }
     if (truecolor)
     {
 	WriteLUTPixelArray(buffy256,
