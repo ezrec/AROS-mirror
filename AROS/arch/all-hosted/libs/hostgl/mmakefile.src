@@ -5,7 +5,13 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- workbench-libs-hostgl : workbench-libs-hostgl-module
+#MM- workbench-libs-complete : workbench-libs-hostgl-$(AROS_TARGET_ARCH)-$(AROS_TARGET_CPU)
+
+#MM- workbench-libs-hostgl-linux-i386 : workbench-libs-hostgl
+
+#MM- workbench-libs-hostgl : workbench-libs-hostgl-module workbench-libs-hostgl-postbuild
+
+#MM workbench-libs-hostgl-postbuild : workbench-libs-hostgl-module
 
 #MM workbench-libs-hostgl-module : includes
 
@@ -42,6 +48,8 @@ USER_CFLAGS := -DHOST_OS_$(ARCH) -DAROSMESA_TYPES='"hostgl_types.h"'
 
 %build_module mmake=workbench-libs-hostgl-module \
     modname=mesa modtype=library linklibname=GL conffile=arosmesa.conf \
-    files="$(LIBRARY_SOURCES)" moduledir=Storage linklibfiles="$(LINKLIB_SOURCES)"
+    files="$(LIBRARY_SOURCES)" moduledir=Storage/Libs linklibfiles="$(LINKLIB_SOURCES)"
+
+%copy_files_q mmake=workbench-libs-hostgl-postbuild files="hostgl.readme" dst="$(AROSDIR)/Storage/Libs"
 
 %common

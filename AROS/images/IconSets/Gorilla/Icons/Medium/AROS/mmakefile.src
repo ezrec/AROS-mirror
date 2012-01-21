@@ -3,8 +3,9 @@
 
 include $(TOP)/config/make.cfg
 
-ICONS := Demos Development Devs Fonts \
-         Libs Locale Prefs Storage System \
+STORAGEICONS := Libs
+ICONS := $(STORAGEICONS) Demos Development Devs Fonts \
+         Locale Prefs Storage System \
          Tests Tools Utilities WBStartup \
          Rexxc
 
@@ -14,6 +15,8 @@ ICONS := Demos Development Devs Fonts \
 
 %build_icons mmake=iconset-Gorilla-icons-aros icons=$(ICONS) dir=$(AROSDIR)
 
+%build_icons mmake=iconset-Gorilla-icons-aros-storage icons=$(STORAGEICONS) \
+             dir=$(AROSDIR)/Storage
 #MM
 iconset-Gorilla-icons-aros-livecd :  
 	@$(ILBMTOICON) $(SRCDIR)/$(CURDIR)/LiveCD.info.src $(SRCDIR)/$(CURDIR)/LiveCD.png $(AROSDIR)/disk.info

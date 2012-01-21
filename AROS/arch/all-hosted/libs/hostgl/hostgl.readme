@@ -1,0 +1,42 @@
+HostGL Readme
+=============
+
+Introduction
+------------
+
+The mesa.library present in Storage/Libs on i386 linux hosted AROS can be
+used to replace the main mesa.library found in Libs. The
+Storage/Libs/mesa.library (called HostGL in this document) provides the
+same API/ABI as the Libs/mesa.library (called Mesa in this document)
+but instead of using Gallium3D drivers it uses direct calls to host's
+GL implementation. This means it can provide full hardware accelerated
+3D graphics on AROS running under Linux as long as the Linux host has
+HW accelerated GL drivers
+
+Installation
+------------
+
+Copy the Storage/Libs/mesa.library to Libs/ overwritting exiting file
+
+Features
+--------
+
+OpenGL via AROSMesa interface - full implementation compatible with Mesa
+OpenGL via EGL interface - no implementation, applications will crash
+OpenVG - no implementation, applications will fallback to original openvg.library
+
+Known problems
+--------------
+
+a) Wrong hosts libGL.so is used
+
+If the host has several implementation of GL available, it might happen that
+a different implementation will be used by the host and different implementation
+will be loaded into AROS. HostGL uses dynamin .so file loading and the user
+needs to make sure that his host Linux system is configured in a way that it
+provides the "correct" libGL.so. In most cases this can be achieved by making
+a link to the "correct" libGL.so in main /lib directory on host.
+
+Detection: you can run 3D games on your Linux host with acceptable performance,
+but after installing HostGL under AROS, AROS 3D games don't start, start and
+crash AROS immediatelly or are terribly slow.
