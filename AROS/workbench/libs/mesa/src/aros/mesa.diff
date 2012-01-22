@@ -40,7 +40,7 @@ diff -ur '--exclude-from=./mesa/src/aros/mesa.diff.excluded' -I '^.*\bRevision.*
     typedef unsigned __int8    uint8_t;
 diff -ur '--exclude-from=./mesa/src/aros/mesa.diff.excluded' -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.11-staging/src/egl/main/eglconfig.c ./mesa/src/egl/main/eglconfig.c
 --- /data/deadwood/source/Mesa-7.11-staging/src/egl/main/eglconfig.c	2011-07-09 03:37:09.000000000 +0200
-+++ ./mesa/src/egl/main/eglconfig.c	2011-09-05 20:03:01.000000000 +0200
++++ ./mesa/src/egl/main/eglconfig.c	2012-01-21 18:22:14.000000000 +0100
 @@ -263,7 +263,7 @@
  
     /* check attributes by their types */
@@ -160,7 +160,7 @@ diff -ur '--exclude-from=./mesa/src/aros/mesa.diff.excluded' -I '^.*\bRevision.*
     _EGL_INVALID_PLATFORM = -1
 diff -ur '--exclude-from=./mesa/src/aros/mesa.diff.excluded' -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.11-staging/src/egl/main/egldriver.c ./mesa/src/egl/main/egldriver.c
 --- /data/deadwood/source/Mesa-7.11-staging/src/egl/main/egldriver.c	2011-07-09 03:37:09.000000000 +0200
-+++ ./mesa/src/egl/main/egldriver.c	2011-09-05 20:03:01.000000000 +0200
++++ ./mesa/src/egl/main/egldriver.c	2012-01-22 09:08:51.000000000 +0100
 @@ -32,7 +32,6 @@
   * Functions for choosing and opening/loading device drivers.
   */
@@ -261,6 +261,20 @@ diff -ur '--exclude-from=./mesa/src/aros/mesa.diff.excluded' -I '^.*\bRevision.*
     _eglPreloadForEach(search_path, callback, callback_data);
  }
 +#endif
+diff -ur '--exclude-from=./mesa/src/aros/mesa.diff.excluded' -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.11-staging/src/egl/main/egldriver.h ./mesa/src/egl/main/egldriver.h
+--- /data/deadwood/source/Mesa-7.11-staging/src/egl/main/egldriver.h	2011-07-09 03:37:09.000000000 +0200
++++ ./mesa/src/egl/main/egldriver.h	2012-01-21 16:25:55.000000000 +0100
+@@ -95,6 +95,10 @@
+ extern _EGLDriver *
+ _eglBuiltInDriverGLX(const char *args);
+ 
++#if defined(_EGL_OS_AROS)
++extern _EGLDriver *
++_eglBuiltInDriverAROSMesa(const char *args);
++#endif
+ 
+ PUBLIC _EGLDriver *
+ _eglMain(const char *args);
 diff -ur '--exclude-from=./mesa/src/aros/mesa.diff.excluded' -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.11-staging/src/egl/main/egllog.c ./mesa/src/egl/main/egllog.c
 --- /data/deadwood/source/Mesa-7.11-staging/src/egl/main/egllog.c	2011-07-09 03:37:09.000000000 +0200
 +++ ./mesa/src/egl/main/egllog.c	2011-09-05 20:03:01.000000000 +0200
@@ -493,7 +507,7 @@ diff -ur '--exclude-from=./mesa/src/aros/mesa.diff.excluded' -I '^.*\bRevision.*
  void
 diff -ur '--exclude-from=./mesa/src/aros/mesa.diff.excluded' -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.11-staging/src/gallium/auxiliary/util/u_atomic.h ./mesa/src/gallium/auxiliary/util/u_atomic.h
 --- /data/deadwood/source/Mesa-7.11-staging/src/gallium/auxiliary/util/u_atomic.h	2010-10-19 19:58:28.000000000 +0200
-+++ ./mesa/src/gallium/auxiliary/util/u_atomic.h	2011-08-31 12:37:34.000000000 +0200
++++ ./mesa/src/gallium/auxiliary/util/u_atomic.h	2011-12-17 11:25:59.000000000 +0100
 @@ -29,8 +29,12 @@
  #define PIPE_ATOMIC_ASM_MSVC_X86                
  #elif (defined(PIPE_CC_GCC) && defined(PIPE_ARCH_X86))
@@ -607,7 +621,7 @@ diff -ur '--exclude-from=./mesa/src/aros/mesa.diff.excluded' -I '^.*\bRevision.*
 +   /* FIXME: AROS needs an atomic decrement and return... */
 +   Disable();
 +   AROS_ATOMIC_DEC(*(LONG *)v);
-+   n = (*v != 0) ? TRUE : FALSE;
++   n = (*v == 0) ? TRUE : FALSE;
 +   Enable();
 +
 +   return n;
@@ -687,6 +701,20 @@ diff -ur '--exclude-from=./mesa/src/aros/mesa.diff.excluded' -I '^.*\bRevision.*
  #else
     /* K&R classic bitcount.
      *
+diff -ur '--exclude-from=./mesa/src/aros/mesa.diff.excluded' -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.11-staging/src/gallium/drivers/i915/i915_prim_vbuf.c ./mesa/src/gallium/drivers/i915/i915_prim_vbuf.c
+--- /data/deadwood/source/Mesa-7.11-staging/src/gallium/drivers/i915/i915_prim_vbuf.c	2011-07-09 03:37:09.000000000 +0200
++++ ./mesa/src/gallium/drivers/i915/i915_prim_vbuf.c	2011-12-17 11:25:59.000000000 +0100
+@@ -400,8 +400,8 @@
+    case PIPE_PRIM_LINE_LOOP:
+       if (nr >= 2) {
+          for (i = start + 1; i < end; i++)
+-            OUT_BATCH((i-0) | (i+0) << 16);
+-         OUT_BATCH((i-0) | ( start) << 16);
++            OUT_BATCH((i-1) | (i+0) << 16);
++         OUT_BATCH((i-1) | ( start) << 16);
+       }
+       break;
+    case PIPE_PRIM_QUADS:
 diff -ur '--exclude-from=./mesa/src/aros/mesa.diff.excluded' -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.11-staging/src/gallium/drivers/nouveau/nouveau_fence.c ./mesa/src/gallium/drivers/nouveau/nouveau_fence.c
 --- /data/deadwood/source/Mesa-7.11-staging/src/gallium/drivers/nouveau/nouveau_fence.c	2011-07-09 03:37:09.000000000 +0200
 +++ ./mesa/src/gallium/drivers/nouveau/nouveau_fence.c	2011-10-01 18:30:20.000000000 +0200
@@ -860,7 +888,7 @@ diff -ur '--exclude-from=./mesa/src/aros/mesa.diff.excluded' -I '^.*\bRevision.*
   * 
 diff -ur '--exclude-from=./mesa/src/aros/mesa.diff.excluded' -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.11-staging/src/gallium/state_trackers/egl/common/egl_g3d_api.c ./mesa/src/gallium/state_trackers/egl/common/egl_g3d_api.c
 --- /data/deadwood/source/Mesa-7.11-staging/src/gallium/state_trackers/egl/common/egl_g3d_api.c	2011-07-09 03:37:09.000000000 +0200
-+++ ./mesa/src/gallium/state_trackers/egl/common/egl_g3d_api.c	2011-09-05 20:03:01.000000000 +0200
++++ ./mesa/src/gallium/state_trackers/egl/common/egl_g3d_api.c	2012-01-22 09:28:44.000000000 +0100
 @@ -86,7 +86,7 @@
     return stapi;
  }
@@ -870,7 +898,36 @@ diff -ur '--exclude-from=./mesa/src/aros/mesa.diff.excluded' -I '^.*\bRevision.*
  egl_g3d_compare_config(const _EGLConfig *conf1, const _EGLConfig *conf2,
                         void *priv_data)
  {
-@@ -247,6 +247,7 @@
+@@ -125,6 +125,28 @@
+ 
+    if (!num_configs)
+       return _eglError(EGL_BAD_PARAMETER, "eglChooseConfigs");
++#if defined(_EGL_OS_AROS)
++    /* This is the earliest place where client indicates which API is it interested in. Due to fact that
++     * HostGL is not providing Gallium st_api, we detected if we are capable of continuing with Gallium EGL
++     * driver and if not we "chain load" the display into AROSMesa EGL driver
++     */
++   int j = -1;
++   while (attribs[++j] != EGL_NONE)
++   {
++       if (attribs[j] == EGL_RENDERABLE_TYPE)
++       {
++           if (attribs[++j] == EGL_OPENGL_BIT)
++           {
++               if (egl_g3d_get_st_api(drv, EGL_OPENGL_BIT) == NULL)
++               {
++                   dpy->Driver = _eglBuiltInDriverAROSMesa(NULL);
++                   dpy->Driver->API.Initialize(dpy->Driver, dpy);
++                   return dpy->Driver->API.ChooseConfig(dpy->Driver, dpy,attribs, configs, size, num_configs);
++               }
++           }
++       }
++   }
++#endif
+ 
+    if (!_eglParseConfigAttribList(&criteria, dpy, attribs))
+       return _eglError(EGL_BAD_ATTRIBUTE, "eglChooseConfig");
+@@ -247,6 +269,7 @@
     struct egl_g3d_surface *gsurf;
     struct native_surface *nsurf;
     const char *err;
@@ -878,7 +935,7 @@ diff -ur '--exclude-from=./mesa/src/aros/mesa.diff.excluded' -I '^.*\bRevision.*
  
     switch (arg->type) {
     case EGL_WINDOW_BIT:
-@@ -304,8 +305,9 @@
+@@ -304,8 +327,9 @@
        return NULL;
     }
     /* initialize the geometry */
@@ -1123,8 +1180,8 @@ diff -ur '--exclude-from=./mesa/src/aros/mesa.diff.excluded' -I '^.*\bRevision.*
  }
 diff -ur '--exclude-from=./mesa/src/aros/mesa.diff.excluded' -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.11-staging/src/gallium/targets/egl-static/st_GL.c ./mesa/src/gallium/targets/egl-static/st_GL.c
 --- /data/deadwood/source/Mesa-7.11-staging/src/gallium/targets/egl-static/st_GL.c	2011-07-09 03:37:09.000000000 +0200
-+++ ./mesa/src/gallium/targets/egl-static/st_GL.c	2011-09-05 20:03:01.000000000 +0200
-@@ -1,38 +1,30 @@
++++ ./mesa/src/gallium/targets/egl-static/st_GL.c	2012-01-21 20:54:03.000000000 +0100
+@@ -1,38 +1,33 @@
 -/*
 - * Mesa 3-D graphics library
 - * Version:  7.10
@@ -1185,7 +1242,10 @@ diff -ur '--exclude-from=./mesa/src/aros/mesa.diff.excluded' -I '^.*\bRevision.*
  {
 -   return st_gl_api_create();
 +    if (MesaBase)
++    {
 +        CloseLibrary(MesaBase);
++        MesaBase = NULL;
++    }
  }
 +
 +ADD2EXPUNGELIB(CloseMesa, 5)
@@ -1471,7 +1531,7 @@ diff -ur '--exclude-from=./mesa/src/aros/mesa.diff.excluded' -I '^.*\bRevision.*
  _GLAPI_EXPORT extern struct _glapi_table *_glapi_Dispatch;
 diff -ur '--exclude-from=./mesa/src/aros/mesa.diff.excluded' -I '^.*\bRevision.*Date.*\b.*$' /data/deadwood/source/Mesa-7.11-staging/src/mapi/mapi/u_current.c ./mesa/src/mapi/mapi/u_current.c
 --- /data/deadwood/source/Mesa-7.11-staging/src/mapi/mapi/u_current.c	2011-07-09 03:37:10.000000000 +0200
-+++ ./mesa/src/mapi/mapi/u_current.c	2011-09-05 20:03:01.000000000 +0200
++++ ./mesa/src/mapi/mapi/u_current.c	2011-12-17 11:25:59.000000000 +0100
 @@ -108,9 +108,17 @@
  
  #else
@@ -1517,12 +1577,16 @@ diff -ur '--exclude-from=./mesa/src/aros/mesa.diff.excluded' -I '^.*\bRevision.*
  #else
     u_current_table = (struct mapi_table *) tbl;
  #endif
-@@ -260,6 +274,8 @@
+@@ -260,6 +274,12 @@
  #elif defined(THREADS)
     return (struct mapi_table *) ((ThreadSafe) ?
           u_tsd_get(&u_current_table_tsd) : (void *) u_current_table);
 +#elif defined(__AROS__)
-+   return (struct mapi_table *)GetFromTLS(u_current_table);
++   struct mapi_table *tbl;
++   tbl = (struct mapi_table *)GetFromTLS(u_current_table);
++   if (tbl == NULL)
++       tbl = (struct mapi_table *) table_noop_array;
++   return tbl;
  #else
     return u_current_table;
  #endif
