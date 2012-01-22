@@ -22,7 +22,7 @@ Features
 --------
 
 OpenGL via AROSMesa interface - full implementation compatible with Mesa
-OpenGL via EGL interface - no implementation, applications will crash
+OpenGL via EGL interface - full implementation compatible with Mesa
 OpenVG - no implementation, applications will fallback to original openvg.library
 
 Known problems
