@@ -91,10 +91,10 @@ static void load_gl_functions(const char **names, void **funcptr)
         {
             if (funcptr[i] == NULL)
             {
-                char dupname[128];
-                strcpy(dupname, (char *)name);
+                char dupname[128] = {0};
+                CopyMem(name, dupname, strlen((char *)name) + 1);
                 char * lastptr = strstr(dupname, "NV");
-                strcpy(lastptr, "ARB");
+                CopyMem("ARB\0", lastptr, 4);
 
                 funcptr[i] = GLXCALL(glXGetProcAddress, dupname); /* NULLS are allowed */
             }
