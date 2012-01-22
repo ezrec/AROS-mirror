@@ -80,6 +80,25 @@ static void load_gl_functions(const char **names, void **funcptr)
     while ((name = names[i]) != NULL)
     {
         funcptr[i] = GLXCALL(glXGetProcAddress, name); /* NULLS are allowed */
+
+        /*
+         * AROSMesa's linklib prior to version 18 was invalidly redirecting standard GL calls
+         * to their NV equivalents. HostGL tries to provide those NV functions by remaping them
+         * only ARB function in order for old applications to run correclty.
+         */
+        if (strstr((char *)name, "NV") != NULL)
+        {
+            if (funcptr[i] == NULL)
+            {
+                char dupname[128];
+                strcpy(dupname, (char *)name);
+                char * lastptr = strstr(dupname, "NV");
+                strcpy(lastptr, "ARB");
+
+                funcptr[i] = GLXCALL(glXGetProcAddress, dupname); /* NULLS are allowed */
+            }
+        }
+
         D(if (funcptr[i] == NULL) bug("[HostGL] Not found: %s\n", name));
         i++;
     }
