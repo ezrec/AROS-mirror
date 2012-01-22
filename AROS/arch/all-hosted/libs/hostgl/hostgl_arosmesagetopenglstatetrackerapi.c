@@ -1,5 +1,5 @@
 /*
-    Copyright 2011, The AROS Development Team. All rights reserved.
+    Copyright 2011-2012, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -34,7 +34,7 @@
 {
     AROS_LIBFUNC_INIT
 
-    /* TODO: IMPLEMENT */
+    /* This function cannot be implemented in HostGL as it is Gallium specific */
     return NULL;
 
     AROS_LIBFUNC_EXIT
