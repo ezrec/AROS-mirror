@@ -141,8 +141,15 @@ struct x11clbase
 
 static struct SignalSemaphore * GetX11SemaphoreFromBitmap(struct BitMap * bm)
 {
-    OOP_Object * hiddbm = HIDD_BM_OBJ(bm);
-    struct fakefb_data * fakefb = (struct fakefb_data *)OOP_INST_DATA(OOP_OCLASS(hiddbm), hiddbm);
-    return (&XSD(OOP_OCLASS(fakefb->framebuffer))->x11sema);
+    static struct SignalSemaphore * x11sem = NULL;
+
+    if (x11sem == NULL)
+    {
+        OOP_Object * hiddbm = HIDD_BM_OBJ(bm);
+        struct fakefb_data * fakefb = (struct fakefb_data *)OOP_INST_DATA(OOP_OCLASS(hiddbm), hiddbm);
+        x11sem = (&XSD(OOP_OCLASS(fakefb->framebuffer))->x11sema);
+    }
+
+    return x11sem;
 }
 #endif
