@@ -13,6 +13,7 @@ struct glx_func
     void * (*glXGetProcAddress) (const GLubyte *procname);     /* glXGetProcAddress is only to be used internally */
     Bool (*glXMakeContextCurrent) (Display *dpy, GLXDrawable draw, GLXDrawable read, GLXContext ctx);
     void (*glXSwapBuffers) (Display *dpy, GLXDrawable drawable);
+    int (*glXGetFBConfigAttrib) (Display *dpy, GLXFBConfig config, int attribute, int * value);
 #if defined(RENDERER_SEPARATE_X_WINDOW)
     XVisualInfo * (*glXGetVisualFromFBConfig) (Display *dpy, GLXFBConfig config);
     GLXWindow (*glXCreateWindow) (Display *dpy, GLXFBConfig config, Window win, const int *attribList);

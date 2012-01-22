@@ -23,9 +23,9 @@
 
 static struct SignalSemaphore global_glx_context_sem;
 static volatile GLXContext global_glx_context;
-static Display * global_x11_display;
+static Display * global_x11_display = NULL;
 
-static struct TaskLocalStorage * ctxtls;
+static struct TaskLocalStorage * ctxtls = NULL;
 
 
 /* Note: only one AROS task at a time may send commands via the display. Code
@@ -99,8 +99,8 @@ static int HostGL_Ctx_Manager_Init(LIBBASETYPEPTR LIBBASE)
 
 static int HostGL_Ctx_Manager_Expunge(LIBBASETYPEPTR LIBBASE)
 {
-    DestroyTLS(ctxtls);
-    XCALL(XCloseDisplay, global_x11_display);
+    if (ctxtls) DestroyTLS(ctxtls);
+    if (global_x11_display) XCALL(XCloseDisplay, global_x11_display);
 //TODO: destroy global glx context if not null
     return 1;
 }

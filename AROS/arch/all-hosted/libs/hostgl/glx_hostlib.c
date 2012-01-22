@@ -23,6 +23,7 @@ static const char *glx_func_names[] =
     "glXGetProcAddress",
     "glXMakeContextCurrent",
     "glXSwapBuffers",
+    "glXGetFBConfigAttrib",
 #if defined(RENDERER_SEPARATE_X_WINDOW)
     "glXGetVisualFromFBConfig",
     "glXCreateWindow",
