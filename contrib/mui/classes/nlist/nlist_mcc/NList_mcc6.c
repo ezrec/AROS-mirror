@@ -40,6 +40,21 @@
 
 #include "NList_func.h"
 
+void DrawBackground(Object *obj, LONG left, LONG top, LONG width, LONG height, LONG xoff, LONG yoff)
+{
+  // MUI 3.9 of AmigaOS 4.1 update #3 and MUI4 treat the offsets as real offsets relative to the given
+  // coordinates and not as absolute corrdinates.
+  // Since all offsets are relative now these must be adapted for older versions of MUI.
+  #if !defined(__MORPHOS__) && !defined(__AROS__)
+  if(MUIMasterBase->lib_Version < 20 || (MUIMasterBase->lib_Version == 20 && MUIMasterBase->lib_Revision < 2326))
+  #endif
+  {
+    xoff += left;
+    yoff += top;
+  }
+  DoMethod(obj, MUIM_DrawBackground, left, top, width, height, xoff, yoff, 0);
+}
+
 WORD DrawTitle(struct NLData *data,LONG minx,LONG maxx,WORD hfirst)
 {
   Object *obj = data->this;
@@ -63,9 +78,7 @@ WORD DrawTitle(struct NLData *data,LONG minx,LONG maxx,WORD hfirst)
     return(0);
 
   SetBackGround(data->NList_TitleBackGround)
-  DoMethod(obj,MUIM_DrawBackground,(LONG) minx,(LONG) data->vdtitlepos,
-                                   (LONG) maxx-minx,(LONG) data->vdtitleheight,
-                                   (LONG) minx + hfirst + data->vdx,(LONG) data->vdtitlepos + data->vdy,(LONG) 0);
+  DrawBackground(obj, minx, data->vdtitlepos, maxx-minx, data->vdtitleheight, hfirst + data->vdx, data->vdy);
   if (data->NList_TitleSeparator)
   {
     SetAPen(data->rp,data->pens[MPEN_SHADOW]);
@@ -133,7 +146,7 @@ void DrawOldLine(struct NLData *data,LONG ent,LONG minx,LONG maxx,WORD hfirst)
   if ((ent < 0) || (ent >= data->NList_Entries))
   {
     SetBackGround(data->NList_ListBackGround); mypen = data->NList_ListPen;
-    DoMethod(obj,MUIM_DrawBackground,(LONG) minx,vert1,(LONG) maxx-minx,vertd,(LONG) minx+hfirst+data->vdx,vert2+data->vdy,(LONG) 0);
+    DrawBackground(obj, minx, vert1, maxx-minx, vertd, hfirst+data->vdx, vert2-vert1+data->vdy);
   }
   else
   {
@@ -153,7 +166,7 @@ void DrawOldLine(struct NLData *data,LONG ent,LONG minx,LONG maxx,WORD hfirst)
       }
     }
 
-    DoMethod(obj,MUIM_DrawBackground,(LONG) minx,vert1,(LONG) maxx-minx,vertd,(LONG) minx+hfirst+data->vdx,vert2+data->vdy,(LONG) 0);
+    DrawBackground(obj, minx, vert1, maxx-minx, vertd, hfirst+data->vdx, vert2-vert1+data->vdy);
     if (drawtxt)
       DrawText(data,ent,data->hpos-hfirst,vert1+data->voff,minx,maxx-1,MUIPEN(mypen),data->hinc,forcepen);
   }
@@ -350,7 +363,7 @@ WORD DrawLines(struct NLData *data,LONG e1,LONG e2,LONG minx,LONG maxx,WORD hfir
         { vert3 -= data->NList_First_Incr;
         }
       }
-      DoMethod(obj,MUIM_DrawBackground,(LONG) minx,vert3,(LONG) maxx-minx,vertd,(LONG) minx + hfirst+data->vdx,vert2+data->vdy,(LONG) 0);
+      DrawBackground(obj, minx, vert3, maxx-minx, vertd, hfirst+data->vdx, vert2-vert3+data->vdy);
       while (ent < ent3)
       {
 #ifndef DO_CLIPPING
@@ -407,7 +420,7 @@ WORD DrawLines(struct NLData *data,LONG e1,LONG e2,LONG minx,LONG maxx,WORD hfir
       if(x1 < x2)
       {
         SetBackGround(data->NList_ListBackGround);
-        DoMethod(obj,MUIM_DrawBackground,(LONG) x1,vert3,(LONG) x2-x1,vertd,(LONG) x1+hfirst+data->vdx,vert2+data->vdy,(LONG) 0);
+        DrawBackground(obj, x1, vert3, x2-x1, vertd, hfirst+data->vdx, vert2-vert3+data->vdy);
       }
       if (x2 < x3)
       {
@@ -420,12 +433,12 @@ WORD DrawLines(struct NLData *data,LONG e1,LONG e2,LONG minx,LONG maxx,WORD hfir
           SetBackGround(MUII_myListCursor);
         }
 
-        DoMethod(obj,MUIM_DrawBackground,(LONG) x2,vert3,(LONG) x3-x2,vertd,(LONG) x2+hfirst+data->vdx,vert2+data->vdy,(LONG) 0);
+        DrawBackground(obj, x2, vert3, x3-x2, vertd, hfirst+data->vdx, vert2-vert3+data->vdy);
       }
       if (x3 < x4)
       {
         SetBackGround(data->NList_ListBackGround);
-        DoMethod(obj,MUIM_DrawBackground,(LONG) x3,vert3,(LONG) x4-x3,vertd,(LONG) x3+hfirst+data->vdx,vert2+data->vdy,(LONG) 0);
+        DrawBackground(obj, x3, vert3, x4-x3, vertd, hfirst+data->vdx, vert2-vert3-data->vdy);
       }
 
       // FIXME: This isn't perfect, but it is the fastest 'solution'
@@ -492,7 +505,7 @@ WORD DrawLines(struct NLData *data,LONG e1,LONG e2,LONG minx,LONG maxx,WORD hfir
       { vert3 -= data->NList_First_Incr;
       }
     }
-    DoMethod(obj,MUIM_DrawBackground,(LONG) minx,vert3,(LONG) maxx-minx,vertd,(LONG) minx+hfirst+data->vdx,vert2+data->vdy,(LONG) 0);
+    DrawBackground(obj, minx, vert3, maxx-minx, vertd, hfirst+data->vdx, vert2-vert3+data->vdy);
 
     { struct colinfo *cinfo;
       WORD column,xbar,maxx2;
@@ -734,7 +747,7 @@ LONG DrawText(struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,LONG maxx,ULO
   struct affinfo *afinfo;
   LONG linelen, next_x=0, x2, x2s, x2e, minx2, maxx2, minx3, maxx3, cmaxx;
   WORD xbar,xbar2,ybar,ybar2;
-  STRPTR ptr1;
+  char *ptr1;
   struct TextExtent te;
   WORD column, curclen, dcurclen, ni;
 
@@ -1197,52 +1210,95 @@ D(bug( "<====================================\n" ));
       }
       else
       {
+        // we are having normal text in afinfo->strptr now, so lets
+        // go and figure out if all of it fits in the current column or
+        // if we have to strip it.
+
+        // set foreground pen
         if (forcepen)
           SetAPen(data->rp,mypen);
         else
           SetAPen(data->rp,afinfo->pen);
+
+        // set any softstyle in case the user text contains it
         SetSoftStyle(data->rp, GET_STYLE(afinfo->style), STYLE_MASK);
 
         if (afinfo->addchar > 0)
           data->rp->TxSpacing = afinfo->addchar;
 
+        // figure out the pixel constraints the current text would require
         curclen = afinfo->len;
         ptr1 = afinfo->strptr;
-
         TextExtent(data->rp, ptr1, curclen, &te);
         if ((ni == 0) && (te.te_Extent.MinX < 0))
           x2 -= te.te_Extent.MinX;
+        
+        // save the coordinate of the next column start
         next_x = x2 + te.te_Width + afinfo->addinfo;
+        D(DBF_DRAW, "next_x: %ld cmaxx: %ld");
+
+        // save the coordinate where the current column ends in x2e
         x2e = x2 + te.te_Width;
 
-        if ((x2 < maxx2) && (x2 + te.te_Extent.MaxX > minx2))
+        //////////////
+        // from now on we try to figure out from where to where we are going
+        // to strip the text in case it doesn't completely fit into the
+        // current column
+
+        // continue only if the start of the column (x2) does not exceed
+        // the maximum field of view in x direction
+        if((x2 < maxx2) && (x2 + te.te_Extent.MaxX > minx2))
         {
-          /* skip most of unwanted chars on the right */
-          if ((curclen > 0) && (x2e > maxx3))
-          { dcurclen = te.te_Extent.MaxX - te.te_Width - te.te_Extent.MinX  +2;
-            curclen = TextFit(data->rp, ptr1, curclen, &te, NULL,1,maxx3 - x2 + dcurclen,32000);
-            if (curclen > 0)
-            { TextExtent(data->rp, ptr1, curclen, &te);
-              x2e = x2 + te.te_Width;
-            }
-          }
-          /* skip most of unwanted chars on the left */
-          if ((curclen > 0) && (x2 < minx3))
-          {
-            dcurclen = TextFit(data->rp, ptr1, curclen, &te, NULL,1,minx3 - x2,32000);
-            curclen -= dcurclen;
-            if (curclen > 0)
-            {
-              ptr1 += dcurclen;
-              x2 += te.te_Width;
+          int x2diff = 0;
+
+          D(DBF_DRAW, "curclen: %ld ptr1: '%4.4s'", curclen, ptr1);
+          D(DBF_DRAW, "x2: %ld x2e: %ld maxx: %ld maxx2: %ld maxx3: %ld minx: %ld minx2: %ld minx3: %ld", x2, x2e, maxx, maxx2, maxx3, minx, minx2, minx3);
+
+          // check if the coordinate of the END of the string (x2e) does
+          // not fit into the available regions (maximum x = maxx3). And
+          // if so we go and calculate a new curclen
+          if((curclen > 0) && (x2e > maxx3))
+          { 
+            curclen = TextFit(data->rp, ptr1, curclen, &te, NULL, 1, maxx3 - x2, 32767);
+            if(curclen > 0)
+            { 
+              // find out the new end position of the string (x2e)
               TextExtent(data->rp, ptr1, curclen, &te);
               x2e = x2 + te.te_Width;
+
+              D(DBF_DRAW, "RIGHT: x2: %ld x2e: %ld", x2, x2e);
             }
           }
+
+          // check if the coordinate of the START of the string (x2) does
+          // not fit into the available minimal x position (minx3). And if so,
+          // we go and calculate a new curclen
+          if((curclen > 0) && (x2 < minx3))
+          {
+            dcurclen = TextFit(data->rp, ptr1, curclen, &te, NULL, 1, minx3 - x2, 32767);
+            curclen -= dcurclen;
+
+            if(curclen > 0)
+            {
+              // move the start of the string by the number of characters
+              // we had to reduce the amount of characters displayed
+              ptr1 += dcurclen;
+              x2 += te.te_Width;
+              x2diff += te.te_Width;
+
+              // find out the new end position of the string (x2e)
+              TextExtent(data->rp, ptr1, curclen, &te);
+              x2e = x2 + te.te_Width;
+
+              D(DBF_DRAW, "LEFT: x2: %ld x2e: %ld", x2, x2e);
+            }
+          }
+
           if (curclen > 0)
           {
             TextExtent(data->rp, &ptr1[curclen-1], 1, &te);
             x2e -= te.te_Width;
+
             /* throw away chars on the right that souldn't be draw because out of list */
             while ((curclen > 0) && ((x2e + te.te_Extent.MaxX) > maxx2))
             {
@@ -1253,6 +1309,7 @@ D(bug( "<====================================\n" ));
                 x2e -= te.te_Width;
               }
             }
+
             /* throw away chars on the right that i don't want to draw because out of maxx */
             if (dxpermit)
             {
@@ -1283,20 +1340,24 @@ D(bug( "<====================================\n" ));
           if (curclen > 0)
           {
             TextExtent(data->rp, ptr1, 1, &te);
+
             /* throw away chars on the left that souldn't be draw because out of list */
             while ((curclen > 0) && ((x2 + te.te_Extent.MinX) < minx2))
             {
               x2 += te.te_Width;
+              x2diff += te.te_Width;
               ptr1++;
               curclen--;
               TextExtent(data->rp, ptr1, 1, &te);
             }
+
             /* throw away chars on the left that i don't want to draw because out of minx */
             if (dxpermit)
             {
               while ((curclen > 0) && ((x2 + te.te_Extent.MaxX) < minx))
               {
                 x2 += te.te_Width;
+                x2diff += te.te_Width;
                 ptr1++;
                 curclen--;
                 TextExtent(data->rp, ptr1, 1, &te);
@@ -1307,16 +1368,136 @@ D(bug( "<====================================\n" ));
               while ((curclen > 0) && ((x2+te.te_Width) <= minx))
               {
                 x2 += te.te_Width;
+                x2diff += te.te_Width;
                 ptr1++;
                 curclen--;
                 TextExtent(data->rp, ptr1, 1, &te);
               }
             }
           }
-          if (curclen > 0)
+
+          D(DBF_DRAW, "x2: %ld x2e: %ld cmaxx: %ld next_x: %ld cinfo->minx: %ld cinfo->maxx: %ld ", x2, x2e, cmaxx, next_x, cinfo->minx, cinfo->maxx);
+
+          if(curclen > 0)
           {
             Move(data->rp, x2, y);
-            Text(data->rp, ptr1, curclen);
+
+            // before we draw the text we check if it was clipped and if so
+            // we add "..." at the right position in case the PartialCol
+            // feature is turned on at all
+            if(data->NList_PartialCol && cinfo->partcolsubst != PCS_DISABLED &&
+               next_x > cmaxx && (xbar-1 >= data->mleft) && (xbar-1 <= data->mright))
+            {
+              int txtlen;
+              int clen; // number of pixels the current text has for positioning it
+              char *txt;
+
+              // first we get the extent of the "..." text we are going to add
+              TextExtent(data->rp, "...", 3, &te);
+
+              // if this is only a refresh of one/two chars because the user
+              // is resizing the column we need to use a different clen
+              clen = cmaxx - (x2 - x2diff);
+
+              // only continue of the column fits the minimum of the three dots
+              // at all
+              if(clen >= te.te_Width)
+              {
+                int cstart = 0;
+
+                D(DBF_DRAW, "c1: %ld, c2: %ld x2: %ld x2e: %ld cmaxx: %ld minx3: %ld x2diff: %ld | %ld'%s'", cinfo->maxx-cinfo->minx, cmaxx-(x2-x2diff), x2, x2e, cmaxx, minx3, x2diff, next_x, afinfo->strptr);
+
+                D(DBF_DRAW, "clen: %ld afinfo->len: %ld str: %08lx ('%s')", clen, afinfo->len, afinfo->strptr, afinfo->strptr);
+
+                // now that we add "..." at the right, left or center of the string we have to calculate the
+                // TextExtent() in a kind of iterative process so that we identify at which point we need to
+                // add our substitution "..." text.
+                txtlen = strlen(afinfo->strptr);
+                txt = AllocVecPooled(data->Pool, txtlen+3+1);
+                txt[0] = '\0'; // NUL terminate string to always use strlcat
+
+                if(cinfo->partcolsubst == PCS_LEFT)
+                {
+                  snprintf(txt, afinfo->len+3+1, "...%s", afinfo->strptr);
+                }
+                else if(cinfo->partcolsubst == PCS_RIGHT)
+                {
+                  snprintf(txt, afinfo->len+3+1, "%s...", afinfo->strptr);
+                }
+                else if(cinfo->partcolsubst == PCS_CENTER)
+                {
+                  strlcpy(txt, afinfo->strptr, txtlen/2);
+                  strlcat(txt, "...", txtlen/2+3);
+                  strlcat(txt, &afinfo->strptr[txtlen/2], txtlen+3+1);
+
+                  cstart = txtlen/2-1;
+                }
+
+                // get the new string length
+                txtlen = strlen(txt);
+
+                do
+                {
+                  TextExtent(data->rp, txt, txtlen, &te);
+
+                  D(DBF_DRAW, "te: %ld %ld: '%s'", te.te_Width, clen, txt);
+                  if(te.te_Width <= clen)
+                    break;
+
+                  if(cinfo->partcolsubst == PCS_LEFT)
+                  {
+                    // move the text after the first "..." one to the left
+                    // thus, actually moving the text start
+                    memmove(&txt[3], &txt[4], txtlen+1);
+                  }
+                  else if(cinfo->partcolsubst == PCS_RIGHT)
+                  {
+                    // move the "..." text one char to the left
+                    txt[txtlen-1] = '\0';
+                    txt[txtlen-4] = '.';
+                  }
+                  else if(cinfo->partcolsubst == PCS_CENTER)
+                  {
+                    // we strip text from the center but alternating
+                    // from the left portion and the from the right
+                    // portion around the "..." text
+                    if(txtlen % 2 == 0)
+                    {
+                      // move all text starting AT "..." one char to the left
+                      D(DBF_DRAW, "cstart: '%s'", &txt[cstart]);
+                      memmove(&txt[cstart-1], &txt[cstart], strlen(&txt[cstart])+1);
+                      cstart--;
+                    }
+                    else
+                    {
+                      // move all text starting AFTER "..." one char to the left
+                      memmove(&txt[cstart+3], &txt[cstart+3+1], strlen(&txt[cstart+3+1])+1);
+                    }
+                  }
+
+                  txtlen--;
+                }
+                while(TRUE);
+
+                D(DBF_DRAW, "curclen: %ld txtlen: %ld, %ld: '%s' '%s'", curclen, txtlen, ptr1-afinfo->strptr, ptr1, txt);
+
+                // calculate the len diff between afinfo->strptr and txt so that resizing
+                // a column does redraw the right thing.
+                if((ptr1-afinfo->strptr) > 0)
+                {
+                  Text(data->rp, &txt[ptr1-afinfo->strptr], curclen);
+                  D(DBF_DRAW, "argh: %ld %ld '%s'", x2, curclen, &txt[ptr1-afinfo->strptr]);
+                }
+                else
+                  Text(data->rp, txt, txtlen);
+
+                FreeVecPooled(data->Pool, txt);
+              }
+            }
+            else
+              Text(data->rp, ptr1, curclen);
+
+            D(DBF_DRAW, "draw text4: %ld %ld %ld %ld %ld - %ld>%ld  '%s'", curclen, x2, next_x, maxx2, cmaxx, ni+1, cinfo->ninfo, ptr1);
 
 /*
 {
@@ -1339,14 +1520,18 @@ D(bug( txt, ptr1 ));
 */
           }
         }
+
         if (afinfo->addchar > 0)
           data->rp->TxSpacing = 0;
       }
+
       x2 = next_x;
       ni++;
       afinfo = &data->aff_infos[ni];
     }
-    if (data->NList_PartialCol && (x2 > cmaxx) && (xbar-1 >= data->mleft) && (xbar-1 <= data->mright))
+
+    if(data->NList_PartialCol && cinfo->partcolsubst == PCS_DISABLED &&
+       (x2 > cmaxx) && (xbar-1 >= data->mleft) && (xbar-1 <= data->mright))
     {
       WORD yb;
 
@@ -1437,7 +1622,7 @@ static LONG DrawEntryTextOnly(struct NLData *data,struct RastPort *rp,LONG ent,L
         { /* skip most of unwanted chars on the right */
           if ((curclen > 0) && (x2e > maxx))
           { dcurclen = te.te_Extent.MaxX - te.te_Width - te.te_Extent.MinX  +2;
-            curclen = TextFit(rp, ptr1, curclen, &te, NULL,1,maxx - x2 + dcurclen,32000);
+            curclen = TextFit(rp, ptr1, curclen, &te, NULL,1,maxx - x2 + dcurclen,32767);
             if (curclen > 0)
             { TextExtent(rp, ptr1, curclen, &te);
               x2e = x2 + te.te_Width;
@@ -1511,7 +1696,7 @@ LONG DrawDragText(struct NLData *data,BOOL draw)
     }
     SetSoftStyle(rp, 0, STYLE_MASK);
     curclen = strlen(text);
-    curclen = TextFit(rp, text, curclen, &te, NULL,1,data->DragWidth,32000);
+    curclen = TextFit(rp, text, curclen, &te, NULL,1,data->DragWidth,32767);
     if (te.te_Extent.MinX < 0)
       x -= te.te_Extent.MinX;
     w = te.te_Extent.MaxX - te.te_Extent.MinX;

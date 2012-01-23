@@ -24,6 +24,7 @@
 ***************************************************************************/
 
 #include <string.h>
+#include <ctype.h>
 
 #include <dos/dos.h>
 #include <exec/memory.h>
@@ -186,26 +187,11 @@ static char *stpncpy_noesc(char *to,char *from,int len)
   return (to2);
 }
 
-/*
- * #define FORMAT_TEMPLATE "DELTA=D/N,PREPARSE=P/K,WEIGHT=W/N,MINWIDTH=MIW/N,MAXWIDTH=MAW/N,COL=C/N,BAR/S\n"
- *
- * struct parse_format
- * {
- *   LONG *delta;
- *   LONG *preparse;
- *   LONG *weight;
- *   LONG *minwidth;
- *   LONG *maxwidth;
- *   LONG *col;
- *   LONG bar;
- * };
- */
-
-
 #define FORMAT_TEMPLATE "DELTA=D/N,PREPARSE=P/K,COL=C/N,BAR/S,TBAR/S,NOBAR=NB/S,SIMPLEBAR=SBAR/S,"\
                         "NOTITLEBUTTON=NOTB/S,WEIGHT=W/N,MINWIDTH=MIW/N,MAXWIDTH=MAW/N,"\
                         "COLWIDTH=CW/N,MINCOLWIDTH=MICW/N,MAXCOLWIDTH=MACW/N,"\
-                        "PIXWIDTH=PW/N,MINPIXWIDTH=MIPW/N,MAXPIXWIDTH=MAPW/N\n"
+                        "PIXWIDTH=PW/N,MINPIXWIDTH=MIPW/N,MAXPIXWIDTH=MAPW/N,"\
+                        "PARTCOLSUBST=PCS/K\n"
 
 struct parse_format
 {
@@ -226,6 +212,7 @@ struct parse_format
   LONG *pixwidth;
   LONG *minpixwidth;
   LONG *maxpixwidth;
+  LONG *partcolsubst;
 };
 
 
@@ -237,6 +224,7 @@ void NL_Free_Format(struct NLData *data)
     {
       if(data->cols[column].preparse != NULL)
         FreeVecPooled(data->Pool, data->cols[column].preparse);
+
       column++;
     }
     FreeVecPooled(data->Pool, data->cols);
@@ -267,12 +255,14 @@ BOOL NL_Read_Format(struct NLData *data,char *strformat,BOOL oldlist)
         pos2++;
       }
       if ((colmax > 0) && (colmax < DISPLAY_ARRAY_MAX) && (tmpcols = AllocVecPooled(data->Pool, (colmax+1)*sizeof(struct colinfo))) != NULL)
-      { NL_Free_Format(data);
+      { 
+        NL_Free_Format(data);
         data->cols = tmpcols;
         data->numcols = data->numcols2 = colmax;
         column = 0;
         while (column < colmax)
-        { data->cols[column].c = &(data->cols[column]);
+        { 
+          data->cols[column].c = &(data->cols[column]);
           data->cols[column].preparse = NULL;
           data->cols[column].colwidthmax = (WORD) -1;
           data->cols[column].colwidthbiggest = (WORD) -1;
@@ -293,6 +283,7 @@ BOOL NL_Read_Format(struct NLData *data,char *strformat,BOOL oldlist)
           data->cols[column].maxpixwidth = (WORD) 0;
           data->cols[column].bar = (BYTE) 2;
           data->cols[column].width_type = (BYTE) CI_PERCENT;
+          data->cols[column].partcolsubst = PCS_DISABLED;
           column++;
         }
         column = 0;
@@ -316,23 +307,8 @@ BOOL NL_Read_Format(struct NLData *data,char *strformat,BOOL oldlist)
           ptr->RDA_ExtHelp = NULL;
           ptr->RDA_Flags = 0L;
 
-          Line.delta = NULL;
-          Line.preparse = NULL;
-          Line.col = NULL;
-          Line.bar = 0;
-          Line.tbar = 0;
-          Line.nobar = 0;
-          Line.sbar = 0;
-          Line.notb = 0;
-          Line.weight = NULL;
-          Line.minwidth = NULL;
-          Line.maxwidth = NULL;
-          Line.colwidth = NULL;
-          Line.mincolwidth = NULL;
-          Line.maxcolwidth = NULL;
-          Line.pixwidth = NULL;
-          Line.minpixwidth = NULL;
-          Line.maxpixwidth = NULL;
+          // clear the Line structure
+          memset(&Line, 0, sizeof(Line));
 
           if((rdargs = ReadArgs(FORMAT_TEMPLATE, (APTR)&Line, ptr)))
           {
@@ -386,6 +362,30 @@ BOOL NL_Read_Format(struct NLData *data,char *strformat,BOOL oldlist)
               data->cols[column].minpixwidth = (WORD) *Line.minpixwidth;
             if (Line.maxpixwidth)
               data->cols[column].maxpixwidth = (WORD) *Line.maxpixwidth;
+
+            if(Line.partcolsubst)
+            {
+              char c = toupper(((char *)Line.partcolsubst)[0]);
+
+              switch(c)
+              {
+                case 'D':
+                  data->cols[column].partcolsubst = PCS_DISABLED;
+                break;
+
+                case 'R':
+                  data->cols[column].partcolsubst = PCS_RIGHT;
+                break;
+
+                case 'L':
+                  data->cols[column].partcolsubst = PCS_LEFT;
+                break;
+
+                case 'C':
+                  data->cols[column].partcolsubst = PCS_CENTER;
+                break;
+              }
+            }
 
             data->cols[column].minx = (WORD) -1;
             data->cols[column].maxx = (WORD) -1;

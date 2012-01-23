@@ -585,13 +585,9 @@ static ULONG DrawRefresh(struct NLData *data)
         ReSetFont;
         SetBackGround(data->NList_ListBackGround)
         if ((data->vdt > 0) && !data->NList_Title && (ly1 < 0))
-          DoMethod(obj,MUIM_DrawBackground,mleft,(LONG) data->vdtpos,
-                                           mwidth,(LONG) data->vdt,
-                                           mleft+data->vdx,(LONG) data->vdtpos+data->vdy,(LONG) 0);
+          DrawBackground(obj, mleft, data->vdtpos, mwidth, data->vdt, data->vdx, data->vdy);
         if (data->vdb > 0)
-          DoMethod(obj,MUIM_DrawBackground,mleft,(LONG) data->vdbpos,
-                                           mwidth,(LONG) data->vdb,
-                                           mleft+data->vdx,(LONG) data->vdbpos+data->vdy,(LONG) 0);
+          DrawBackground(obj, mleft, data->vdbpos, mwidth, data->vdb, data->vdx, data->vdy);
         if (data->NList_Title && (ly1 < 0))
           DrawTitle(data,mleft,mright,hfirst);
 
@@ -695,11 +691,7 @@ IPTR mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
     /* Avoid Superclass to draw anything *in* the object */
     if (muiRenderInfo(obj)->mri_Flags & MUIMRI_REFRESHMODE)
     {
-#ifndef __AROS__
       muiAreaData(obj)->mad_Flags &= ~0x00000001;
-#else
-      /* "AROS: FIXME: No frame drawn if doing: muiAreaData(obj)->mad_Flags &= ~0x00000001;" This is still valid 16.01.2012 */
-#endif
       DoSuperMethodA(cl,obj,(Msg) msg);
     }
     DrawRefresh(data);
@@ -735,11 +727,7 @@ IPTR mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 
 
   /* Avoid Superclass to draw anything *in* the object */
-#ifndef __AROS__
   muiAreaData(obj)->mad_Flags &= ~0x00000001;
-#else
-  /* "AROS: FIXME: No frame drawn if doing: muiAreaData(obj)->mad_Flags &= ~0x00000001;" This is still valid 16.01.2012 */
-#endif
   DoSuperMethodA(cl,obj,(Msg) msg);
 
 /*D(bug("%lx|Draw %lx %lx\n",obj,msg->flags,muiAreaData(obj)->mad_Flags));*/
@@ -990,13 +978,9 @@ IPTR mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
         SetBackGround(data->NList_ListBackGround)
 
         if((data->vdt > 0) && !data->NList_Title)
-          DoMethod(obj,MUIM_DrawBackground,(LONG) data->mleft,(LONG) data->vdtpos,
-                                           (LONG) data->mwidth,(LONG) data->vdt,
-                                           (LONG) data->mleft+data->vdx,(LONG) data->vdtpos+data->vdy,(LONG) 0);
+          DrawBackground(obj, data->mleft, data->vdtpos, data->mwidth, data->vdt, data->vdx, data->vdy);
         if(data->vdb > 0)
-          DoMethod(obj,MUIM_DrawBackground,(LONG) data->mleft,(LONG) data->vdbpos,
-                                           (LONG) data->mwidth,(LONG) data->vdb,
-                                           (LONG) data->mleft+data->vdx,(LONG) data->vdbpos+data->vdy,(LONG) 0);
+          DrawBackground(obj, data->mleft, data->vdbpos, data->mwidth, data->vdb, data->vdx, data->vdy);
 
         if(!data->dropping && !draw_all_force &&
            ((abs(data->NList_First - data->NList_AffFirst) > (120 / data->vinc)) ||

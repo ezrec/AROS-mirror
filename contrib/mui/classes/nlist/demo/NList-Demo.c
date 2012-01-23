@@ -537,6 +537,11 @@ int main(UNUSED int argc, UNUSED char *argv[])
 {
   LONG win_opened = 0;
   LONG result;
+  static const char *const UsedClasses[] = { 
+    "NList.mcc",
+    "NListviews.mcc",
+    NULL
+  };
 
   init();
 
@@ -547,6 +552,7 @@ int main(UNUSED int argc, UNUSED char *argv[])
     MUIA_Application_Author     , "NList Open Source Team",
     MUIA_Application_Description, "NList-Demo",
     MUIA_Application_Base       , "NList-Demo",
+    MUIA_Application_UsedClasses, UsedClasses,
 
     SubWindow, WIN_Main = WindowObject,
       MUIA_Window_Title, "NList-Demo 1996-2006",

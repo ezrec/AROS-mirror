@@ -41,15 +41,27 @@ struct NListtreeP_Data
   Object *GR_Prefs;
 	Object *PI_ImageClosed;
 	Object *PI_ImageOpen;
-  Object *PI_ImageSpecial;
+  Object *PI_ImageFolder;
   Object *PP_LinePen;
   Object *PP_ShadowPen;
-  Object *PP_DrawPen;
-  Object *PP_Draw2Pen;
-  Object *CY_Style;
-  Object *SL_Space;
+  Object *PP_GlowPen;
+  Object *CY_LineType;
+  Object *SL_IndentWidth;
   Object *CH_RememberStatus;
   Object *CH_OpenAutoScroll;
+  Object *CH_UseFolderImage;
 };
+
+/// xget()
+//  Gets an attribute value from a MUI object
+IPTR xget(Object *obj, const IPTR attr);
+#if defined(__GNUC__)
+  // please note that we do not evaluate the return value of GetAttr()
+  // as some attributes (e.g. MUIA_Selected) always return FALSE, even
+  // when they are supported by the object. But setting b=0 right before
+  // the GetAttr() should catch the case when attr doesn't exist at all
+  #define xget(OBJ, ATTR) ({IPTR b=0; GetAttr(ATTR, OBJ, &b); b;})
+#endif
+///
 
 #endif /* MUI_NLISTTREE_priv_MCP_H */

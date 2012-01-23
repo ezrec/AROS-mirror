@@ -3,7 +3,103 @@ MUI NList MCC classes - ChangeLog
 ---------------------------------
 
 $Id$
-$URL: https://nlist-classes.svn.sourceforge.net/svnroot/nlist-classes/releases/0.110/ChangeLog $
+$URL: https://nlist-classes.svn.sourceforge.net/svnroot/nlist-classes/releases/0.111/ChangeLog $
+
+#### v0.111 RELEASE ###########################################################
+
+2011-12-17 Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: final v0.111 release preparations
+
+2011-12-15 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlistree_mcc/NListtree.c: fixed a NULL pointer access when invoking the
+    MUIM_NListtree_CopyToClip method when no tree entry is selected.
+
+2011-12-15 Jens Langner <Jens.Langner@light-speed.de>
+
+  * nlist_mcc/NList_mcc6.c: reimplemented the new PartialColumn text substitution
+    feature where "..." is showing in a column rather than showing some dotted line
+    at the end of the column if text doesn't fit. Now the text substitution area can
+    be specified in MUIA_NList_Format via PCS_LEFT/PCS_RIGHT/PCS_CENTER/PCS_DISABLED.
+    So application developers can now specify the text alignment by using these
+    format specs. NList will then replace not fitting text with "..." characters
+    to signal that text was stripped. Please note, however, that this feature is
+    still not being perfect and there might be situation where the "..." text might
+    be added at the wrong position (e.g. if different font styles/objects are using
+    in one column).
+
+2011-08-03 Thore Böckelmann <tboeckel@gmx.de>
+
+  * Makefile: added definition of __amigaos3__ for all classes for the OS3
+    build to make OS3 specific stuff easier to implement.
+  * nlist_mcc/NList_mcc3.c, nlist_mcc/NList_mcc6.c: fixed offsets when drawing
+    the background image for the upcoming MUI 3.9 of AmigaOS 4.1 update #3.
+
+2011-07-14 Mariusz Danilewicz <mandi@interia.pl>
+
+  * nlisttree_mcp/locale/polish.ct: update to the latest changes.
+
+2011-07-12 Jens Langner <Jens.Langner@light-speed.de>
+
+  * nlisttree_mcc/nlisttree_mcp: now that NList allows to define zero sized
+    objects we could remove the IndentWidth > 3 enforcement and make NListtree
+    allow IndentWidths down till 0. However, we do have to enforce that the correct
+    NList version is installed or the NListtree layout is screwed up. Furthermore,
+    renamed the "Indent width" to "Additional indent width" as that better
+    describes what this is all about. In addition, the new default for the
+    indent width is zero as that ensures a small NListtree object.
+  * nlist_mcc/NList_mcc4.c: now objects defined with \033O and \033I can have a
+    minimal width of 0. Previously NList always enforced a minimum of 2 which
+    caused some pixel alignment problems with e.g. NListtree.
+
+2011-07-11 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlisttree_mcp/locale: updated german and english-british translations.
+  * nlisttree_mc[cp]: renamed the "dashed" mode to "dotted", as this is more 
+    appropriate.
+
+2011-07-10 Jens Langner <Jens.Langner@light-speed.de>
+
+  * nlisttree_mcp: forgot to add the new LineType and UseFolderImage config items
+    to the dataspace. Thus they were never queried by applications using NListtree.mcc.
+  * nlisttree_mcc, nlisttree_mcp: completly reworked the preferences setup and got
+    rid of the way NListtree allows to use different "Styles". This was not only
+    partly nonsense, but was also not completely consistently implemented. Now every
+    parameter of the previously allowed style parameters can be configured
+    separately in the MCP. In addition, tree display and how the different parameters
+    are use should be way more consistent. Also drawing the tree should be more
+    pixel accurate than before and produce the same layout no matter which line
+    type is selected in the preferences. In addition, new sensible default parameters
+    are now in place which should give everyone a nice lookin default tree with
+    the possibility to tune everything on their own will. Some fine tuning might
+    still be required to get everything more smoothly implemented, but the whole
+    tree display and management should be way more consistent and intuitive.
+
+2011-07-06 Thore Böckelmann <tboeckel@gmx.de>
+
+  * demo/NList-Demo.c, demo/NListtree-Demo.c: added list of used classes.
+
+2011-07-03 Jens Langner <Jens.Langner@light-speed.de>
+
+  * nlisttree_mcp/NListtree.c: changed default imagespec settings to use 6:XXX rather
+    than 1:XXX. This should automatically chose the right image per default based on
+    the global settings.
+  * nlist_mcc/NList_mcc6.c: we now add "..." to the end of a string if it doesn't
+    fit in a column and was stripped accordingly. This should make it more obvious
+    for the user that there is more to read if he is going to enlarge the column.
+
+2011-05-04 Thore Böckelmann <tboeckel@gmx.de>
+
+  * include/libraries/mui.h: removed the AROS-only STACKED keywords which are
+    not needed at all, since AROS has its own header file.
+  * include/mui/NList_mcc.h: added definition of SIPTR for non-AROS systems.
+  * misc: fixed various (S)IPTR related warnings due to the latest AROS specific
+    changes.
+
+2011-04-19 Matthias Rustler <mrustler@gmx.de>
+
+  * misc: backport of AROS fixes.
 
 #### v0.110 RELEASE ###########################################################
 

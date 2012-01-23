@@ -549,7 +549,7 @@ void ParseColumn(struct NLData *data,WORD column,IPTR mypen)
           if (ptr1[0] == '[')
           {
             LONG dx = -1, dy = -1;
-            LONG minx = 2, button = -1;
+            LONG minx = -1, button = -1;
             ULONG tag=0L, tagval=0L;
             size_t np = 1;
 
@@ -572,7 +572,7 @@ void ParseColumn(struct NLData *data,WORD column,IPTR mypen)
               afinfo->style = STYLE_IMAGE;
               strlcpy(data->imagebuf, &ptr1[1], MIN(np, sizeof(data->imagebuf)));
               afinfo->pos = (WORD) (ptro - ptrs);
-              D(DBF_ALWAYS, "image spec '%s' tag %ld, tagval %ld, button %08lx, dx %ld, dy %ld, minx %ld", data->imagebuf, tag, tagval, button, dx, dy, minx);
+              D(DBF_DRAW, "image spec '%s' tag %ld, tagval %ld, button %08lx, dx %ld, dy %ld, minx %ld", data->imagebuf, tag, tagval, button, dx, dy, minx);
               if (data->imagebuf[0] == '\0')
                 afinfo->strptr = NULL;
               else
@@ -583,15 +583,12 @@ void ParseColumn(struct NLData *data,WORD column,IPTR mypen)
                 if (dy < 0)
                   dy = ((struct NImgList *) afinfo->strptr)->height;
               }
-              if (dx <= 0)
-                dx = 1;
+              if (dx < 0)
+                dx = 0;
               if (dy <= 0)
                 dy = data->vinc;
-              minx -= 2;
               if (minx < dx)
                 minx = dx;
-              if (minx < 2)
-                minx = 2;
               afinfo->len = minx;
               afinfo->pen = ((dy & 0x0000FFFF) << 16) + (dx & 0x0000FFFF);
 
@@ -613,7 +610,7 @@ void ParseColumn(struct NLData *data,WORD column,IPTR mypen)
           if (ptr1[0] == '[')
           {
             LONG dy,dy2 = -2;
-            LONG minx = 2,minx2 = -1,button = -1;
+            LONG minx = -1,minx2 = -1,button = -1;
             ULONG tag=0L,tagval=0L;
             long np = 1;
 
@@ -702,21 +699,18 @@ void ParseColumn(struct NLData *data,WORD column,IPTR mypen)
                   if (dy < 0)
                     dy = ((struct NImgList *) afinfo->strptr)->height;
                 }
-                if (dx <= 0)
-                  dx = 1;
+                if (dx < 0)
+                  dx = 0;
                 if ((dy2 != -1) && ((dy <= 0) || ((minx2 >= 0) && (dx2 == -1))))
                   dy = data->vinc;
-                minx -= 2;
                 if (minx < dx)
                   minx = dx;
                 if ((dx < minx) && (minx2 >= 0) && (dx2 == -1))
                   dx = minx;
-                if (minx < 2)
-                  minx = 2;
                 afinfo->len = minx;
                 afinfo->pen = ((dy & 0x0000FFFF) << 16) + (dx & 0x0000FFFF);
 
-                //D(bug( "%ld - Setting aff info %ld: %15.15s - pos: %ld, len: %ld, style: %ld.\n", __LINE__, ni, afinfo->strptr, afinfo->pos, afinfo->len, afinfo->style ));
+                D(DBF_DRAW, "Setting aff info %ld: %15.15s - pos: %ld, len: %ld, style: %ld", ni, afinfo->strptr, afinfo->pos, afinfo->len, afinfo->style);
 
                 ptr1 = &ptr1[np+1];
 
@@ -727,7 +721,7 @@ void ParseColumn(struct NLData *data,WORD column,IPTR mypen)
               {
                 if (bitmapimage == NULL || (bitmapimage->control != MUIM_NList_CreateImage))
                   bitmapimage = NULL;
-                minx -= 2;
+
                 if (bitmapimage != NULL || (minx > 0))
                 {
                   if (afinfo->len > 0)
@@ -1131,13 +1125,13 @@ void WidthColumn(struct NLData *data,WORD column,WORD updinfo)
       }
       else if ((colwidth > cinfo->colwidthbiggest2) && (cinfo->colwidthbiggest2 >= -1))
       { cinfo->colwidthbiggest2 = colwidth;
-        cinfo->colwidthbiggestptr2 = (IPTR) data->display_ptr;
+        cinfo->colwidthbiggestptr2 = (SIPTR) data->display_ptr;
       }
     }
     else
     {
       if (((colwidth > cinfo->colwidthbiggest) && (cinfo->colwidthbiggest >= -1)) ||
-          (cinfo->colwidthbiggestptr == (IPTR) data->display_ptr))
+          (cinfo->colwidthbiggestptr == (SIPTR) data->display_ptr))
       {
         cinfo->colwidthbiggestptr = cinfo->colwidthbiggestptr2;
         cinfo->colwidthbiggest = cinfo->colwidthbiggest2;
@@ -1151,7 +1145,7 @@ void WidthColumn(struct NLData *data,WORD column,WORD updinfo)
           data->do_setcols = TRUE;
         }
       }
-      else if (cinfo->colwidthbiggestptr2 == (IPTR) data->display_ptr)
+      else if ((IPTR)cinfo->colwidthbiggestptr2 == (IPTR) data->display_ptr)
       {
         cinfo->colwidthbiggest2 = -2;
         cinfo->colwidthbiggestptr2 = -2;

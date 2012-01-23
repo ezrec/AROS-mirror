@@ -5,6 +5,7 @@ include $(TOP)/config/make.cfg
 
 USER_INCLUDES := -idirafter $(SRCDIR)/$(CURDIR)/../include -idirafter $(SRCDIR)/$(CURDIR)/../include/mui -I$(SRCDIR)/$(CURDIR)/../nlistviews_mcp
 USER_CFLAGS := $(PARANOIA_CFLAGS)
+USER_CFLAGS += $(PARANOIA_CFLAGS)
 
 FILES := library \
          NListview \

@@ -986,7 +986,8 @@ NList.mcc/MUIM_NList_UseImage
         SIMPLEBAR=SBAR/S,NOTITLEBUTTON=NOTB/S,
         WEIGHT=W/N,MINWIDTH=MIW/N,MAXWIDTH=MAW/N,
         COLWIDTH=CW/N,MINCOLWIDTH=MICW/N,MAXCOLWIDTH=MACW/N,
-        PIXWIDTH=PW/N,MINPIXWIDTH=MIPW/N,MAXPIXWIDTH=MAPW/N
+        PIXWIDTH=PW/N,MINPIXWIDTH=MIPW/N,MAXPIXWIDTH=MAPW/N,
+        PARTCOLSUBST=PCS/K
 
     First ones are like (or nearly) MUIA_List_Format ones :
 
@@ -1014,8 +1015,6 @@ NList.mcc/MUIM_NList_UseImage
 
         MAXWIDTH
            Maximum percentage of the list width for the current column.
-
-    These are new ones :
 
         TBAR
            Will draw a vertical bar between this and the next column
@@ -1055,6 +1054,33 @@ NList.mcc/MUIM_NList_UseImage
         MAXPIXWIDTH
            Maximum number of chars for the current column.
 
+        PARTCOLSUBST
+           If the partial column feature is turned on by the
+           user (in his configuration) and the application
+           developer has specified this option for a particular
+           column, then a "..." text is displayed at the
+           defined position if not all text fits into the
+           column rather than showing a dotted vertical line
+           at the end of the column. Possible values for
+           this option are:
+
+              DISABLED
+                explicitly disables this feature for this
+                column
+
+              LEFT
+                put "..." on the left side and strip text
+                left aligned.
+
+              CENTER
+                put "..." at the center of the column and
+                strip text on both sides around it.
+
+              RIGHT
+                put "..." on the right side and strip text
+                right aligned.
+
+
         Note: You will have as many columns in your list as
               entries in the format string (i.e. number of
               commas + 1). Empty entries, e.g. with a format
@@ -1070,7 +1096,7 @@ NList.mcc/MUIM_NList_UseImage
         Smallest of MAXPIXWIDTH, MAXCOLWIDTH and MAXWIDTH.
         If the min is bigger than the max the min will be used.
 
-        You shoul used PIX ones only for columns with images,
+        You should used PIX ones only for columns with images,
         and COL ones when you want to be sure to get as many
         chars you want.
 

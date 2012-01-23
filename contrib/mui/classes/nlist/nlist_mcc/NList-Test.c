@@ -303,7 +303,7 @@ const UBYTE list2_body[156] = {
 
 const char MainTextString2[] =
 {
-  "This new list/listview custom class has its own backgrounds" NL2
+  "This new list/listview custom class \033bhas its\033n own backgrounds" NL2
   "and pens setables from mui prefs with NListviews.mcp !" NL2
   "It doesn't use the same way to handle multiselection" NL2
   "with mouse and keys than standard List/Listview." NL
@@ -312,7 +312,7 @@ const char MainTextString2[] =
   "or going on the right and left of the list" NL2
   "while selecting with the mouse." NL2
   "(When there is no immediate draggin stuff active...)" NL2
-  "Try just clicking on the left/right borders !" NL
+  "\033iTry just clicking on the left/right borders !\033n" NL
   "\033C" NL
   "\033r\033uGive some feedback about it ! :-)" NL
   "\033r\033bhttp://www.sf.net/projects/nlist-classes/"
@@ -334,7 +334,7 @@ const char MainTextString[] =
   "\033cor going on the right and left of the list" NL
   "\033cwhile selecting with the mouse." NL
   "\033c(When there is no immediate draggin stuff active...)" NL
-  "\033cTry just clicking on the left/right borders !" NL
+  "\033c\033iTry just clicking on the left/right borders !\033n" NL
   "" NL
   "\033r\033uGive some feedback about it ! :-)" NL
   "\033r\033bhttp://www.sf.net/projects/nlist-classes/"
@@ -344,7 +344,7 @@ const char MainTextString[] =
 
 const char *MainTextArray[] =
 {
-  "\033c\033nThis new list/listview custom class has its own backgrounds",
+  "\033c\033nThis new list/listview custom class \033bhas its\033n own backgrounds",
   "\033cand pens setables from mui prefs with NListviews.mcp !",
   " ",
   "\033cIt doesn't use the same way to handle multiselection",
@@ -354,7 +354,7 @@ const char *MainTextArray[] =
   "\033cor going on the right and left of the list",
   "\033cwhile selecting with the mouse.",
   "\033c(When there is no draggin stuff active...)",
-  "\033cTry just clicking on the left/right borders !",
+  "\033c\033iTry just clicking on the left/right borders !\033n",
   "",
   "\033r\033uGive some feedback about it ! :-)",
   "\033r\033bhttp://www.sf.net/projects/nlist-classes/"
@@ -532,7 +532,7 @@ const char *MainTextArray[] =
 
 struct LITD {
   LONG num;
-  char str1[4];
+  char str1[7];
   char *str2;
 };
 
@@ -547,7 +547,7 @@ HOOKPROTONHNO(ConstructLI_TextFunc, APTR, struct NList_ConstructMessage *ncm)
     int i = 0, j = 0;
     new_entry->num = -1;
     new_entry->str2 = (char *) ncm->entry;
-    while ((j < 3) && new_entry->str2[i])
+    while ((j < 6) && new_entry->str2[i])
     {
       if ((new_entry->str2[i] > 'A') && (new_entry->str2[i] < 'z'))
         new_entry->str1[j++] = new_entry->str2[i];
@@ -876,7 +876,7 @@ int main(UNUSED int argc, UNUSED char *argv[])
             MUIA_NList_CompareHook2, &CompareLI_TextHook,
             MUIA_NList_ConstructHook2, &ConstructLI_TextHook,
             MUIA_NList_DestructHook2, &DestructLI_TextHook,
-            MUIA_NList_Format, "BAR W=-1,BAR W=-1,BAR",
+            MUIA_NList_Format, "BAR W=-1,BAR W=-1 PCS=L,BAR PCS=C",
             MUIA_NList_SourceArray, MainTextArray,
             MUIA_NList_AutoVisible, TRUE,
             //MUIA_NList_AutoClip, FALSE,

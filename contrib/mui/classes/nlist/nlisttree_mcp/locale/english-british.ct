@@ -1,4 +1,5 @@
-## version $VER: NListtree_mcp.catalog 2.1 (7.12.2007)
+## chunk AUTH Thore Böckelmann, Jens Langner
+## version $VER: NListtree_mcp.catalog 2.2 (11.7.2011)
 ## language english-british
 ## codeset 4
 ;
@@ -33,4 +34,18 @@ with the lines colour.
 MSG_WIN_TITLE_DRAW_COLOR
 Adjust draw colour
 ; Adjust draw color
+;
+MSG_BUTTON_LABEL_GLOW
+Glow colour
+; Glow color
+;
+MSG_WIN_TITLE_GLOW_COLOR
+Set glow line colour
+; Set glow line color
+;
+MSG_HELP_GLOW_COLOR
+Allows to set the colour for the glow\n\
+line type
+; Allows to set the color for the glow\n\
+; line type
 ;

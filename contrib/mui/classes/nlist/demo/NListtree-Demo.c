@@ -853,7 +853,7 @@ MakeStaticHook(numselhook, numselfunc);
 */
 HOOKPROTONHNP(testfunc, LONG, Object *obj)
 {
-	IPTR id;
+	SIPTR id;
 	ULONG num;
 
 	id = MUIV_NListtree_NextSelected_Start;
@@ -862,7 +862,7 @@ HOOKPROTONHNP(testfunc, LONG, Object *obj)
 	{
 		DoMethod( obj, MUIM_NListtree_NextSelected, &id );
 
-		if((LONG)id == MUIV_NListtree_NextSelected_End )
+		if(id == (SIPTR)MUIV_NListtree_NextSelected_End )
 			break;
 
 		//GetAttr( MUIA_List_Entries, obj, &num );
@@ -895,25 +895,32 @@ MakeStaticHook(testhook, testfunc);
 int main(UNUSED int argc, UNUSED char *argv[])
 {
 	ULONG signals;
+	static const char *const UsedClasses[] = { 
+		"NList.mcc",
+		"NListtree.mcc",
+		"NListviews.mcc",
+		NULL
+	};
 
 	/*
 	**	Is MUI V19 available?
 	*/
-  if((IntuitionBase = (APTR)OpenLibrary("intuition.library", 36)) &&
-     GETINTERFACE(IIntuition, IntuitionBase))
-  if((MUIMasterBase = OpenLibrary("muimaster.library", 19)) &&
-     GETINTERFACE(IMUIMaster, MUIMasterBase))
+	if((IntuitionBase = (APTR)OpenLibrary("intuition.library", 36)) &&
+		GETINTERFACE(IIntuition, IntuitionBase))
+	if((MUIMasterBase = OpenLibrary("muimaster.library", 19)) &&
+		GETINTERFACE(IMUIMaster, MUIMasterBase))
 	{
 		/*
 		**	Create application object.
 		*/
 		app = ApplicationObject,
-			MUIA_Application_Title,			  "NListtree-Demo",
-      MUIA_Application_Version    , "$VER: NListtree-Demo 1.0 (" __DATE__ ")",
-			MUIA_Application_Copyright,		"Copyright (C) 2001-2006 by NList Open Source Team",
-			MUIA_Application_Author,		  "NList Open Source Team",
-			MUIA_Application_Description,	"Demonstration program for MUI class NListtree.mcc",
-			MUIA_Application_Base,			  "NLISTTREEDEMO",
+			MUIA_Application_Title,       "NListtree-Demo",
+			MUIA_Application_Version,     "$VER: NListtree-Demo 1.0 (" __DATE__ ")",
+			MUIA_Application_Copyright,   "Copyright (C) 2001-2006 by NList Open Source Team",
+			MUIA_Application_Author,      "NList Open Source Team",
+			MUIA_Application_Description, "Demonstration program for MUI class NListtree.mcc",
+			MUIA_Application_Base,        "NLISTTREEDEMO",
+			MUIA_Application_UsedClasses, UsedClasses,
 
 			/*
 			**	Build the window.

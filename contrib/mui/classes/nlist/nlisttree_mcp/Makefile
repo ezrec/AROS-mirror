@@ -158,7 +158,7 @@ DESTDIR  = MUI:Libs/MUI
 
 # target definition
 TARGET    = $(BINDIR)/NListtree.mcp
-TESTTARGET= $(BINDIR)/NListtree-Test
+TESTTARGET= $(BINDIR)/NListtree-Prefs
 
 # Common compiler/linker flags
 WARN     = -W -Wall -Wwrite-strings -Wpointer-arith -Wsign-compare
@@ -181,7 +181,7 @@ COBJS = locale.o \
         Debug.o \
         icon.o
 
-TOBJS = #NListtree-Test.o
+TOBJS = NListtree-Prefs.o
 
 # available catalog translations
 CATALOGS = \
@@ -236,7 +236,7 @@ ifeq ($(OS), os3)
 
   # Compiler/Linker flags
   CPU     = -m68020-60 -msoft-float
-  CFLAGS  += -noixemul -DNO_INLINE_STDARG
+  CFLAGS  += -noixemul -DNO_INLINE_STDARG -D__amigaos3__
   LDFLAGS += -noixemul
   LDLIBS  += -ldebug -lmui
 
@@ -324,7 +324,7 @@ endif
 .PHONY: all
 ifeq ($(wildcard $(DEPFILE)),$(DEPFILE))
 # great, we have a dependecies file, let's make our target
-all: $(BINDIR) $(OBJDIR) $(M68KSTUBS) locale.c $(TARGET) #$(TESTTARGET)
+all: $(BINDIR) $(OBJDIR) $(M68KSTUBS) locale.c $(TARGET) $(TESTTARGET)
 else
 # no dependecies, create it and then call make again
 all: depend

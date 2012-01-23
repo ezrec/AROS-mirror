@@ -94,6 +94,7 @@ void SetupDebug(void)
       { "select",    DBF_SELECT    },
       { "input",     DBF_INPUT     },
       { "clipboard", DBF_CLIPBOARD },
+      { "draw",      DBF_DRAW      },
       { "all",       DBF_ALL       },
       { NULL,        0             }
     };

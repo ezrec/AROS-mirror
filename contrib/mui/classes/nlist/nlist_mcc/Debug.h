@@ -82,6 +82,7 @@ void kprintf(const char *formatString,...);
 #define DBF_SELECT    (1<<2)
 #define DBF_INPUT     (1<<3)
 #define DBF_CLIPBOARD (1<<4)
+#define DBF_DRAW      (1<<5)
 #define DBF_ALL       0xffffffff
 
 void SetupDebug(void);

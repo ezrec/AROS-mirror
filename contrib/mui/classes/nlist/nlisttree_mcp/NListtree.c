@@ -75,12 +75,16 @@ struct SampleArray
 */
 static const struct SampleArray sa[] =
 {
+  { "root1", 0                            },
+
   { "comp", TNF_LIST | TNF_OPEN           },
   {    "sys", TNF_LIST | TNF_OPEN         },
   {       "amiga", TNF_LIST | TNF_OPEN    },
   {         "misc", 0x8000                },
   {       "mac", TNF_LIST                 },
   {         "system", 0x8000              },
+
+  { "root2", 0                            },
 
   { "de", TNF_LIST | TNF_OPEN             },
   {    "comm", TNF_LIST                   },
@@ -127,11 +131,15 @@ static VOID DrawSampleTree( Object *ltobj )
   WORD i = 0;
 
   tn1 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, &sa[i], MUIV_NListtree_Insert_ListNode_Root, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
+
+  tn1 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, &sa[i], MUIV_NListtree_Insert_ListNode_Root, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
   tn2 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, &sa[i], tn1, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
   tn1 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, &sa[i], tn2, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
   tn1 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, &sa[i], tn1, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
   tn1 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, &sa[i], tn2, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
   tn1 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, &sa[i], tn1, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
+
+  tn1 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, &sa[i], MUIV_NListtree_Insert_ListNode_Root, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
 
   tn1 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, &sa[i], MUIV_NListtree_Insert_ListNode_Root, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
   tn2 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, &sa[i], tn1, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
@@ -163,50 +171,24 @@ static VOID DrawSampleTree( Object *ltobj )
 }
 
 
-VOID TransferValues(struct NListtreeP_Data *data)
+STATIC VOID TransferValues(struct NListtreeP_Data *data)
 {
-  IPTR v0=0, v1=0, v2=0, v3=0, v4=0, v5=0, v6=0, v7=0, v8=0, v9=0;
+  nnset(data->NLT_Sample, MUIA_NListtree_Quiet, TRUE);
 
-  /*
-  **  Style
-  */
-  get( data->CY_Style,           MUIA_Cycle_Active,  &v0 );
-  get( data->SL_Space,           MUIA_Slider_Level,  &v1 );
-  get( data->CH_RememberStatus,  MUIA_Selected,      &v2 );
-  get( data->CH_OpenAutoScroll,  MUIA_Selected,      &v3 );
+  SetAttrs(data->NLT_Sample,  MUICFG_NListtree_ImageSpecClosed,  xget(data->PI_ImageClosed, MUIA_Imagedisplay_Spec),
+                              MUICFG_NListtree_ImageSpecOpen,    xget(data->PI_ImageOpen, MUIA_Imagedisplay_Spec),
+                              MUICFG_NListtree_ImageSpecFolder,  xget(data->PI_ImageFolder, MUIA_Imagedisplay_Spec),
+                              MUICFG_NListtree_PenSpecLines,     xget(data->PP_LinePen, MUIA_Pendisplay_Spec),
+                              MUICFG_NListtree_PenSpecShadow,    xget(data->PP_ShadowPen, MUIA_Pendisplay_Spec),
+                              MUICFG_NListtree_PenSpecGlow,      xget(data->PP_GlowPen, MUIA_Pendisplay_Spec),
+                              MUICFG_NListtree_RememberStatus,   xget(data->CH_RememberStatus, MUIA_Selected),
+                              MUICFG_NListtree_IndentWidth,      xget(data->SL_IndentWidth, MUIA_Slider_Level),
+                              MUICFG_NListtree_OpenAutoScroll,   xget(data->CH_OpenAutoScroll, MUIA_Selected),
+                              MUICFG_NListtree_LineType,         xget(data->CY_LineType, MUIA_Cycle_Active),
+                              MUICFG_NListtree_UseFolderImage,   xget(data->CH_UseFolderImage, MUIA_Selected),
+                              TAG_DONE);
 
-
-  /*
-  **  Images
-  */
-  get( data->PI_ImageClosed,   MUIA_Imagedisplay_Spec,  &v4 );
-  get( data->PI_ImageOpen,     MUIA_Imagedisplay_Spec,  &v5 );
-  get( data->PI_ImageSpecial,  MUIA_Imagedisplay_Spec,  &v6 );
-
-
-  /*
-  **  Colors
-  */
-  get( data->PP_LinePen,    MUIA_Pendisplay_Spec,  &v7 );
-  get( data->PP_ShadowPen,  MUIA_Pendisplay_Spec,  &v8 );
-  get( data->PP_DrawPen,    MUIA_Pendisplay_Spec,  &v9 );
-
-
-  nnset( data->NLT_Sample, MUIA_NListtree_Quiet, TRUE );
-
-  SetAttrs( data->NLT_Sample,  MUICFG_NListtree_Style,            v0,
-                               MUICFG_NListtree_Space,            v1,
-                               MUICFG_NListtree_RememberStatus,   v2,
-                               MUICFG_NListtree_OpenAutoScroll,   v3,
-                               MUICFG_NListtree_ImageSpecClosed,  v4,
-                               MUICFG_NListtree_ImageSpecOpen,    v5,
-                               MUICFG_NListtree_ImageSpecSpecial, v6,
-                               MUICFG_NListtree_PenSpecLines,     v7,
-                               MUICFG_NListtree_PenSpecShadow,    v8,
-                               MUICFG_NListtree_PenSpecDraw,      v9,
-    TAG_DONE );
-
-  nnset( data->NLT_Sample, MUIA_NListtree_Quiet, FALSE );
+  nnset(data->NLT_Sample, MUIA_NListtree_Quiet, FALSE);
 
   return;
 }
@@ -254,65 +236,27 @@ HOOKPROTONHNO(dspfunc, LONG, struct MUIP_NListtree_DisplayMessage *msg)
 }
 MakeStaticHook(dsphook, dspfunc);
 
-static VOID StyleChanged( struct NListtreeP_Data *data, ULONG style )
+static VOID ValuesChanged(struct NListtreeP_Data *data)
 {
-  BOOL bp1=FALSE, bp2=FALSE, bp3=FALSE, bi1=FALSE, bi2=FALSE, bi3=FALSE;
+  nnset(data->PP_LinePen, MUIA_Disabled, xget(data->CY_LineType, MUIA_Cycle_Active) == MUICFGV_NListtree_LineType_Disabled);
+  nnset(data->PP_ShadowPen, MUIA_Disabled, xget(data->CY_LineType, MUIA_Cycle_Active) != MUICFGV_NListtree_LineType_Shadow && xget(data->CY_LineType, MUIA_Cycle_Active) != MUICFGV_NListtree_LineType_Glow);
+  nnset(data->PP_GlowPen, MUIA_Disabled, xget(data->CY_LineType, MUIA_Cycle_Active) != MUICFGV_NListtree_LineType_Glow);
 
-  switch( style )
-  {
-    case MUICFGV_NListtree_Style_Normal:
-    case MUICFGV_NListtree_Style_Inserted:
-    case MUICFGV_NListtree_Style_Mac:
-
-      bp1 = TRUE; bp2 = TRUE; bp3 = TRUE; bi1 = FALSE; bi2 = FALSE; bi3 = TRUE;
-      break;
-
-
-    case MUICFGV_NListtree_Style_Lines:
-    case MUICFGV_NListtree_Style_Win98:
-
-      bp1 = FALSE; bp2 = TRUE; bp3 = TRUE; bi1 = FALSE; bi2 = FALSE; bi3 = TRUE;
-      break;
-
-
-    case MUICFGV_NListtree_Style_Lines3D:
-
-      bp1 = FALSE; bp2 = FALSE; bp3 = TRUE; bi1 = FALSE; bi2 = FALSE; bi3 = TRUE;
-      break;
-
-    case MUICFGV_NListtree_Style_Win98Plus:
-
-      bp1 = FALSE; bp2 = TRUE; bp3 = TRUE; bi1 = FALSE; bi2 = FALSE; bi3 = FALSE;
-      break;
-
-    case MUICFGV_NListtree_Style_Glow:
-
-      bp1 = FALSE; bp2 = FALSE; bp3 = FALSE; bi1 = FALSE; bi2 = FALSE; bi3 = TRUE;
-      break;
-  }
-
-  nnset( data->PP_LinePen,    MUIA_Disabled, bp1 );
-  nnset( data->PP_ShadowPen,  MUIA_Disabled, bp2 );
-  nnset( data->PP_DrawPen,    MUIA_Disabled, bp3 );
-
-  nnset( data->PI_ImageClosed,   MUIA_Disabled, bi1 );
-  nnset( data->PI_ImageOpen,     MUIA_Disabled, bi2 );
-  nnset( data->PI_ImageSpecial,  MUIA_Disabled, bi3 );
+  nnset(data->PI_ImageFolder, MUIA_Disabled, xget(data->CH_UseFolderImage, MUIA_Selected) == FALSE);
 
   return;
 }
 
-HOOKPROTONHNO(StyleChangedFunc, VOID, IPTR *para)
+HOOKPROTONHNO(ValuesChangedFunc, VOID, IPTR *para)
 {
-  StyleChanged( (struct NListtreeP_Data *)para[1], (ULONG)para[0] );
+  ValuesChanged((struct NListtreeP_Data *)para[0]);
 }
-MakeStaticHook(StyleChangedHook, StyleChangedFunc);
+MakeStaticHook(ValuesChangedHook, ValuesChangedFunc);
 
 static IPTR _NewP( struct IClass *cl, Object *obj, Msg msg )
 {
   struct NListtreeP_Data *data;
-  static const char *CY_Style_Entries[9];
-  static const char *STR_GR_Prefs[3];
+  static const char *CY_LineTypes_Entries[6];
   static const char infotext[] = "\033bNListtree.mcp " LIB_REV_STRING "\033n (" LIB_DATE ")\n"
                                  "Copyright (c) 1999-2001 Carsten Scholling\n"
                                  LIB_COPYRIGHT "\n\n"
@@ -322,16 +266,17 @@ static IPTR _NewP( struct IClass *cl, Object *obj, Msg msg )
 
   static unsigned char msg_closed_key;
   static unsigned char msg_open_key;
-  static unsigned char msg_special_key;
   static unsigned char msg_lines_key;
   static unsigned char msg_shadow_key;
-  static unsigned char msg_draw_key;
-  static unsigned char msg_style_key;
-  static unsigned char msg_space_key;
+  static unsigned char msg_glow_key;
+  static unsigned char msg_linetypes_key;
+  static unsigned char msg_indentwidth_key;
   static unsigned char msg_remember_status_key;
   static unsigned char msg_open_autoscroll_key;
   static unsigned char msg_bt_expand_key;
   static unsigned char msg_bt_collapse_key;
+  static unsigned char msg_folder_key;
+  static unsigned char msg_folderimage_key;
 
   ENTER();
 
@@ -346,32 +291,26 @@ static IPTR _NewP( struct IClass *cl, Object *obj, Msg msg )
   */
   data = INST_DATA( cl, obj );
 
-  CY_Style_Entries[0] = tr(MSG_CYCLE_ITEM_STYLE_NORMAL);
-  CY_Style_Entries[1] = tr(MSG_CYCLE_ITEM_STYLE_INSERTED);
-  CY_Style_Entries[2] = tr(MSG_CYCLE_ITEM_STYLE_LINES);
-  CY_Style_Entries[3] = tr(MSG_CYCLE_ITEM_STYLE_WIN98);
-  CY_Style_Entries[4] = tr(MSG_CYCLE_ITEM_STYLE_MAC);
-  CY_Style_Entries[5] = tr(MSG_CYCLE_ITEM_STYLE_LINES3D);
-  CY_Style_Entries[6] = tr(MSG_CYCLE_ITEM_STYLE_WIN98PLUS);
-  CY_Style_Entries[7] = tr(MSG_CYCLE_ITEM_STYLE_GLOW);
-  CY_Style_Entries[8] = NULL;
-
-  STR_GR_Prefs[0] = tr(MSG_TAB_LAYOUT);
-  STR_GR_Prefs[1] = tr(MSG_TAB_EXAMPLE);
-  STR_GR_Prefs[2] = NULL;
+  CY_LineTypes_Entries[0] = tr(MSG_LINETYPE_DISABLED);
+  CY_LineTypes_Entries[1] = tr(MSG_LINETYPE_NORMAL);
+  CY_LineTypes_Entries[2] = tr(MSG_LINETYPE_DOTTED);
+  CY_LineTypes_Entries[3] = tr(MSG_LINETYPE_SHADOW);
+  CY_LineTypes_Entries[4] = tr(MSG_LINETYPE_GLOW);
+  CY_LineTypes_Entries[5] = NULL;
 
   msg_closed_key          = tr(MSG_BUTTON_SHORTCUT_CLOSED)[0];
   msg_open_key            = tr(MSG_BUTTON_SHORTCUT_OPEN)[0];
-  msg_special_key         = tr(MSG_BUTTON_SHORTCUT_SPECIAL)[0];
   msg_lines_key           = tr(MSG_BUTTON_SHORTCUT_LINES)[0];
   msg_shadow_key          = tr(MSG_BUTTON_SHORTCUT_SHADOW)[0];
-  msg_draw_key            = tr(MSG_BUTTON_SHORTCUT_DRAW)[0];
-  msg_style_key           = tr(MSG_CYCLE_SHORTCUT_STYLE)[0];
-  msg_space_key           = tr(MSG_BUTTON_SHORTCUT_SPACE)[0];
+  msg_glow_key            = tr(MSG_BUTTON_SHORTCUT_GLOW)[0];
+  msg_linetypes_key       = tr(MSG_BUTTON_SHORTCUT_LINETYPES)[0];
+  msg_indentwidth_key     = tr(MSG_BUTTON_SHORTCUT_INDENTWIDTH)[0];
   msg_remember_status_key = tr(MSG_BUTTON_SHORTCUT_REMEMBER)[0];
   msg_open_autoscroll_key = tr(MSG_BUTTON_SHORTCUT_AUTOSCROLL)[0];
   msg_bt_expand_key       = tr(MSG_BUTTON_SHORTCUT_EXPAND)[0];
   msg_bt_collapse_key     = tr(MSG_BUTTON_SHORTCUT_COLLAPSE)[0];
+  msg_folder_key          = tr(MSG_BUTTON_SHORTCUT_FOLDER)[0];
+  msg_folderimage_key     = tr(MSG_BUTTON_SHORTCUT_FOLDERIMAGE)[0];
 
   /*
   **  Preferences group.
@@ -379,9 +318,7 @@ static IPTR _NewP( struct IClass *cl, Object *obj, Msg msg )
   data->GR_Prefs = VGroup,
     MUIA_Group_VertSpacing, 5,
 
-    Child, RegisterObject,
-      MUIA_CycleChain,      TRUE,
-      MUIA_Register_Titles, STR_GR_Prefs,
+    Child, HGroup,
 
       /*
       **  Images and Lines
@@ -389,13 +326,14 @@ static IPTR _NewP( struct IClass *cl, Object *obj, Msg msg )
       Child, VGroup,
 
         Child, HGroup, GroupFrameT(tr(MSG_GROUP_IMAGES_COLORS)),
+          MUIA_HorizWeight, 1,
 
           Child, VGroup,
 
             Child, FreeKeyCLabel(tr(MSG_BUTTON_LABEL_CLOSED), msg_closed_key),
             Child, data->PI_ImageClosed     = PopimageObject,
               MUIA_Imagedisplay_UseDefSize,   TRUE,
-              MUIA_Imageadjust_Type,          MUIV_Imageadjust_Type_All,
+              MUIA_Imageadjust_Type,          MUIV_Imageadjust_Type_Image,
               MUIA_ControlChar,               msg_closed_key,
               MUIA_CycleChain,                TRUE,
               MUIA_Draggable,                 TRUE,
@@ -407,7 +345,7 @@ static IPTR _NewP( struct IClass *cl, Object *obj, Msg msg )
             Child, FreeKeyCLabel(tr(MSG_BUTTON_LABEL_OPEN), msg_open_key),
             Child, data->PI_ImageOpen       = PopimageObject,
               MUIA_Imagedisplay_UseDefSize,   TRUE,
-              MUIA_Imageadjust_Type,          MUIV_Imageadjust_Type_All,
+              MUIA_Imageadjust_Type,          MUIV_Imageadjust_Type_Image,
               MUIA_ControlChar,               msg_open_key,
               MUIA_CycleChain,                TRUE,
               MUIA_Draggable,                 TRUE,
@@ -415,15 +353,16 @@ static IPTR _NewP( struct IClass *cl, Object *obj, Msg msg )
               MUIA_ShortHelp,                 tr(MSG_HELP_OPEN_IMAGE),
             End,
 
-            Child, FreeKeyCLabel(tr(MSG_BUTTON_LABEL_SPECIAL), msg_special_key),
-            Child, data->PI_ImageSpecial    = PopimageObject,
+            Child, FreeKeyCLabel(tr(MSG_BUTTON_LABEL_FOLDER), msg_folder_key),
+            Child, data->PI_ImageFolder     = PopimageObject,
               MUIA_Imagedisplay_UseDefSize,   TRUE,
-              MUIA_Imageadjust_Type,          MUIV_Imageadjust_Type_All,
-              MUIA_ControlChar,               msg_special_key,
+              MUIA_Imageadjust_Type,          MUIV_Imageadjust_Type_Image,
+              MUIA_ControlChar,               msg_folder_key,
               MUIA_CycleChain,                TRUE,
               MUIA_Draggable,                 TRUE,
-              MUIA_Window_Title,              tr(MSG_WIN_TITLE_SPECIAL_IMAGE),
-              MUIA_ShortHelp,                 tr(MSG_HELP_SPECIAL_IMAGE),
+              MUIA_Disabled,                  MUICFGV_NListtree_UseFolderImage_Default == FALSE,
+              MUIA_Window_Title,              tr(MSG_WIN_TITLE_FOLDER_IMAGE),
+              MUIA_ShortHelp,                 tr(MSG_HELP_FOLDER_IMAGE),
             End,
 
           End,
@@ -433,6 +372,7 @@ static IPTR _NewP( struct IClass *cl, Object *obj, Msg msg )
 
             Child, FreeKeyCLabel(tr(MSG_BUTTON_LABEL_LINES), msg_lines_key),
             Child, data->PP_LinePen = PoppenObject,
+              MUIA_Disabled,      MUICFGV_NListtree_LineType_Default == MUICFGV_NListtree_LineType_Disabled,
               MUIA_ControlChar,   msg_lines_key,
               MUIA_CycleChain,    TRUE,
               MUIA_Window_Title,  tr(MSG_WIN_TITLE_LINES_COLOR),
@@ -441,19 +381,20 @@ static IPTR _NewP( struct IClass *cl, Object *obj, Msg msg )
 
             Child, FreeKeyCLabel(tr(MSG_BUTTON_LABEL_SHADOW), msg_shadow_key),
             Child, data->PP_ShadowPen = PoppenObject,
+              MUIA_Disabled,      MUICFGV_NListtree_LineType_Default != MUICFGV_NListtree_LineType_Shadow,
               MUIA_ControlChar,   msg_shadow_key,
               MUIA_CycleChain,    TRUE,
               MUIA_Window_Title,  tr(MSG_WIN_TITLE_SHADOW_COLOR),
               MUIA_ShortHelp,     tr(MSG_HELP_SHADOW_COLOR),
             End,
 
-            Child, FreeKeyCLabel(tr(MSG_BUTTON_LABEL_DRAW), msg_draw_key),
-            Child, data->PP_DrawPen = MUI_NewObject( MUIC_Poppen,
-              MUIA_Disabled,          TRUE,
-              MUIA_ControlChar,       msg_draw_key,
+            Child, FreeKeyCLabel(tr(MSG_BUTTON_LABEL_GLOW), msg_glow_key),
+            Child, data->PP_GlowPen = MUI_NewObject( MUIC_Poppen,
+              MUIA_Disabled,          MUICFGV_NListtree_LineType_Default != MUICFGV_NListtree_LineType_Glow,
+              MUIA_ControlChar,       msg_glow_key,
               MUIA_CycleChain,        TRUE,
-              MUIA_Window_Title,      tr(MSG_WIN_TITLE_DRAW_COLOR),
-              MUIA_ShortHelp,         tr(MSG_HELP_DRAW_COLOR),
+              MUIA_Window_Title,      tr(MSG_WIN_TITLE_GLOW_COLOR),
+              MUIA_ShortHelp,         tr(MSG_HELP_GLOW_COLOR),
             End,
 
           End,
@@ -464,56 +405,73 @@ static IPTR _NewP( struct IClass *cl, Object *obj, Msg msg )
 
           Child, ColGroup( 2 ),
 
-            Child, KeyLabel(tr(MSG_CYCLE_LABEL_STYLE), msg_style_key),
-            Child, data->CY_Style = CycleObject,
-              MUIA_Cycle_Entries,  CY_Style_Entries,
-              MUIA_Cycle_Active,   0,
+            Child, KeyLabel(tr(MSG_BUTTON_LABEL_LINETYPES), msg_linetypes_key),
+            Child, data->CY_LineType = CycleObject,
+              MUIA_Cycle_Entries,  CY_LineTypes_Entries,
+              MUIA_Cycle_Active,   MUICFGV_NListtree_LineType_Default,
               MUIA_CycleChain,     TRUE,
-              MUIA_ControlChar,    msg_style_key,
-              MUIA_ShortHelp,      tr(MSG_HELP_STYLE),
+              MUIA_ControlChar,    msg_linetypes_key,
+              MUIA_ShortHelp,      tr(MSG_HELP_LINETYPES),
             End,
 
-            Child, KeyLabel(tr(MSG_BUTTON_LABEL_SPACE), msg_space_key),
-            Child, data->SL_Space = SliderObject,
+            Child, KeyLabel(tr(MSG_BUTTON_LABEL_FOLDERIMAGE), msg_folderimage_key),
+            Child, HGroup,
+              Child, data->CH_UseFolderImage = ImageObject,
+                ImageButtonFrame,
+                MUIA_Image_Spec,    MUII_CheckMark,
+                MUIA_InputMode,     MUIV_InputMode_Toggle,
+                MUIA_Selected,      MUICFGV_NListtree_UseFolderImage_Default,
+                MUIA_ShowSelState,  FALSE,
+                MUIA_ControlChar,   msg_folderimage_key,
+                MUIA_Background,    MUII_ButtonBack,
+                MUIA_CycleChain,    TRUE,
+                MUIA_ShortHelp,     tr(MSG_HELP_FOLDERIMAGE),
+              End,
+              Child, HVSpace,
+            End,
+
+            Child, KeyLabel(tr(MSG_BUTTON_LABEL_INDENTWIDTH), msg_indentwidth_key),
+            Child, data->SL_IndentWidth = SliderObject,
               MUIA_Group_Horiz,     TRUE,
               MUIA_Slider_Min,      0,
               MUIA_Slider_Max,      16,
-              MUIA_Slider_Level,    0,
+              MUIA_Slider_Level,    MUICFGV_NListtree_IndentWidth_Default,
               MUIA_Numeric_Format,  "%ldpx",
               MUIA_CycleChain,      TRUE,
-              MUIA_ControlChar,     msg_space_key,
-              MUIA_ShortHelp,       tr(MSG_HELP_SPACE),
+              MUIA_ControlChar,     msg_indentwidth_key,
+              MUIA_ShortHelp,       tr(MSG_HELP_INDENTWIDTH),
             End,
 
-          End,
-
-
-          Child, ColGroup( 2 ),
-
             Child, KeyLabel(tr(MSG_BUTTON_LABEL_REMEMBER), msg_remember_status_key),
-            Child, data->CH_RememberStatus = ImageObject,
-              ImageButtonFrame,
-              MUIA_Image_Spec,    MUII_CheckMark,
-              MUIA_InputMode,     MUIV_InputMode_Toggle,
-              MUIA_Selected,      FALSE,
-              MUIA_ShowSelState,  FALSE,
-              MUIA_ControlChar,   msg_remember_status_key,
-              MUIA_Background,    MUII_ButtonBack,
-              MUIA_CycleChain,    TRUE,
-              MUIA_ShortHelp,     tr(MSG_HELP_REMEMBER),
+            Child, HGroup,
+              Child, data->CH_RememberStatus = ImageObject,
+                ImageButtonFrame,
+                MUIA_Image_Spec,    MUII_CheckMark,
+                MUIA_InputMode,     MUIV_InputMode_Toggle,
+                MUIA_Selected,      MUICFGV_NListtree_RememberStatus_Default,
+                MUIA_ShowSelState,  FALSE,
+                MUIA_ControlChar,   msg_remember_status_key,
+                MUIA_Background,    MUII_ButtonBack,
+                MUIA_CycleChain,    TRUE,
+                MUIA_ShortHelp,     tr(MSG_HELP_REMEMBER),
+              End,
+              Child, HVSpace,
             End,
 
             Child, KeyLabel(tr(MSG_BUTTON_LABEL_AUTOSCROLL), msg_open_autoscroll_key),
-            Child, data->CH_OpenAutoScroll = ImageObject,
-              ImageButtonFrame,
-              MUIA_Image_Spec,    MUII_CheckMark,
-              MUIA_InputMode,     MUIV_InputMode_Toggle,
-              MUIA_Selected,      FALSE,
-              MUIA_ShowSelState,  FALSE,
-              MUIA_ControlChar,   msg_open_autoscroll_key,
-              MUIA_Background,    MUII_ButtonBack,
-              MUIA_CycleChain,    TRUE,
-              MUIA_ShortHelp,     tr(MSG_HELP_AUTOSCROLL),
+            Child, HGroup,
+              Child, data->CH_OpenAutoScroll = ImageObject,
+                ImageButtonFrame,
+                MUIA_Image_Spec,    MUII_CheckMark,
+                MUIA_InputMode,     MUIV_InputMode_Toggle,
+                MUIA_Selected,      MUICFGV_NListtree_OpenAutoScroll_Default,
+                MUIA_ShowSelState,  FALSE,
+                MUIA_ControlChar,   msg_open_autoscroll_key,
+                MUIA_Background,    MUII_ButtonBack,
+                MUIA_CycleChain,    TRUE,
+                MUIA_ShortHelp,     tr(MSG_HELP_AUTOSCROLL),
+              End,
+              Child, HVSpace,
             End,
 
           End,
@@ -526,7 +484,8 @@ static IPTR _NewP( struct IClass *cl, Object *obj, Msg msg )
       /*
       **  Example
       */
-      Child, VGroup,
+      Child, VGroup, GroupFrameT(tr(MSG_TAB_EXAMPLE)),
+        MUIA_HorizWeight, 99,
 
         Child, NListviewObject,
           MUIA_ShortHelp,                tr(MSG_HELP_LISTVIEW_EXAMPLE),
@@ -601,8 +560,8 @@ static IPTR _NewP( struct IClass *cl, Object *obj, Msg msg )
   DoMethod( data->PI_ImageOpen, MUIM_Notify, MUIA_Imagedisplay_Spec, MUIV_EveryTime,
     data->NLT_Sample, 3, MUIM_Set, MUICFG_NListtree_ImageSpecOpen, MUIV_TriggerValue );
 
-  DoMethod( data->PI_ImageSpecial, MUIM_Notify, MUIA_Imagedisplay_Spec, MUIV_EveryTime,
-    data->NLT_Sample, 3, MUIM_Set, MUICFG_NListtree_ImageSpecSpecial, MUIV_TriggerValue );
+  DoMethod( data->PI_ImageFolder, MUIM_Notify, MUIA_Imagedisplay_Spec, MUIV_EveryTime,
+    data->NLT_Sample, 3, MUIM_Set, MUICFG_NListtree_ImageSpecFolder, MUIV_TriggerValue );
 
   /*
   **  Colors
@@ -614,27 +573,33 @@ static IPTR _NewP( struct IClass *cl, Object *obj, Msg msg )
   DoMethod( data->PP_ShadowPen, MUIM_Notify, MUIA_Pendisplay_Spec, MUIV_EveryTime,
     data->NLT_Sample, 3, MUIM_Set, MUICFG_NListtree_PenSpecShadow, MUIV_TriggerValue );
 
-  DoMethod( data->PP_DrawPen, MUIM_Notify, MUIA_Pendisplay_Spec, MUIV_EveryTime,
-    data->NLT_Sample, 3, MUIM_Set, MUICFG_NListtree_PenSpecDraw, MUIV_TriggerValue );
+  DoMethod( data->PP_GlowPen, MUIM_Notify, MUIA_Pendisplay_Spec, MUIV_EveryTime,
+    data->NLT_Sample, 3, MUIM_Set, MUICFG_NListtree_PenSpecGlow, MUIV_TriggerValue );
 
   /*
   **  Values
   */
-  DoMethod( data->CY_Style, MUIM_Notify, MUIA_Cycle_Active, MUIV_EveryTime,
-    data->NLT_Sample, 3, MUIM_Set, MUICFG_NListtree_Style, MUIV_TriggerValue );
-
-  DoMethod( data->CY_Style, MUIM_Notify, MUIA_Cycle_Active, MUIV_EveryTime,
-    data->NLT_Sample, 4, MUIM_CallHook, &StyleChangedHook, MUIV_TriggerValue, data );
-
-  DoMethod( data->SL_Space, MUIM_Notify, MUIA_Slider_Level, MUIV_EveryTime,
-    data->NLT_Sample, 3, MUIM_Set, MUICFG_NListtree_Space, MUIV_TriggerValue );
-
   DoMethod( data->CH_RememberStatus, MUIM_Notify, MUIA_Selected, MUIV_EveryTime,
     data->NLT_Sample, 3, MUIM_Set, MUICFG_NListtree_RememberStatus, MUIV_TriggerValue );
+
+  DoMethod( data->SL_IndentWidth, MUIM_Notify, MUIA_Slider_Level, MUIV_EveryTime,
+    data->NLT_Sample, 3, MUIM_Set, MUICFG_NListtree_IndentWidth, MUIV_TriggerValue );
 
   DoMethod( data->CH_OpenAutoScroll, MUIM_Notify, MUIA_Selected, MUIV_EveryTime,
     data->NLT_Sample, 3, MUIM_Set, MUICFG_NListtree_OpenAutoScroll, MUIV_TriggerValue );
 
+  DoMethod( data->CY_LineType, MUIM_Notify, MUIA_Cycle_Active, MUIV_EveryTime,
+    data->NLT_Sample, 3, MUIM_Set, MUICFG_NListtree_LineType, MUIV_TriggerValue );
+
+  DoMethod( data->CH_UseFolderImage, MUIM_Notify, MUIA_Selected, MUIV_EveryTime,
+    data->NLT_Sample, 3, MUIM_Set, MUICFG_NListtree_UseFolderImage, MUIV_TriggerValue );
+
+  // connect some values to the changedhook so that disabled status things
+  // get updated
+  DoMethod(data->CH_UseFolderImage, MUIM_Notify, MUIA_Selected, MUIV_EveryTime,
+    data->NLT_Sample, 4, MUIM_CallHook, &ValuesChangedHook, data);
+  DoMethod( data->CY_LineType, MUIM_Notify, MUIA_Cycle_Active, MUIV_EveryTime,
+    data->NLT_Sample, 4, MUIM_CallHook, &ValuesChangedHook, data);
 
   // in case we are running for a newer MUI version we can register
   // our mcc gadgets accordingly
@@ -642,14 +607,15 @@ static IPTR _NewP( struct IClass *cl, Object *obj, Msg msg )
   {
     DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->PI_ImageClosed,   MUICFG_NListtree_ImageSpecClosed, 1, "");
     DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->PI_ImageOpen,     MUICFG_NListtree_ImageSpecOpen, 1, "");
-    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->PI_ImageSpecial,  MUICFG_NListtree_ImageSpecSpecial, 1, "");
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->PI_ImageFolder,   MUICFG_NListtree_ImageSpecFolder, 1, "");
     DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->PP_LinePen,       MUICFG_NListtree_PenSpecLines, 1, "");
     DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->PP_ShadowPen,     MUICFG_NListtree_PenSpecShadow, 1, "");
-    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->PP_DrawPen,       MUICFG_NListtree_PenSpecDraw, 1, "");
-    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->CY_Style,         MUICFG_NListtree_Style, 1, "");
-    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->SL_Space,         MUICFG_NListtree_Space, 1, "");
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->PP_GlowPen,       MUICFG_NListtree_PenSpecGlow, 1, "");
     DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->CH_RememberStatus,MUICFG_NListtree_RememberStatus, 1, "");
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->SL_IndentWidth,   MUICFG_NListtree_IndentWidth, 1, "");
     DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->CH_OpenAutoScroll,MUICFG_NListtree_OpenAutoScroll, 1, "");
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->CY_LineType,      MUICFG_NListtree_LineType, 1, "");
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->CH_UseFolderImage,MUICFG_NListtree_UseFolderImage, 1, "");
   }
 
   return((IPTR)obj);
@@ -730,7 +696,7 @@ static IPTR _ConfigToGadgets( struct IClass *cl, Object *obj, struct MUIP_Settin
   {
     if ( idobj )
     {
-      DoMethod( idobj, MUIM_Set, MUIA_Imagedisplay_Spec, "1:17" );
+      DoMethod( idobj, MUIM_Set, MUIA_Imagedisplay_Spec, MUICFGV_NListtree_ImageSpecClosed_Default );
 
       get( idobj, MUIA_Imagedisplay_Spec, &is );
       set( data->PI_ImageClosed, MUIA_Imagedisplay_Spec, is );
@@ -750,7 +716,7 @@ static IPTR _ConfigToGadgets( struct IClass *cl, Object *obj, struct MUIP_Settin
   {
     if ( idobj )
     {
-      DoMethod( idobj, MUIM_Set, MUIA_Imagedisplay_Spec, "1:23" );
+      DoMethod( idobj, MUIM_Set, MUIA_Imagedisplay_Spec, MUICFGV_NListtree_ImageSpecOpen_Default );
 
       get( idobj, MUIA_Imagedisplay_Spec, &is );
       set( data->PI_ImageOpen, MUIA_Imagedisplay_Spec, is );
@@ -760,22 +726,22 @@ static IPTR _ConfigToGadgets( struct IClass *cl, Object *obj, struct MUIP_Settin
   }
 
 
-  if((is = (struct MUI_ImageSpec *)DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NListtree_ImageSpecSpecial)))
+  if((is = (struct MUI_ImageSpec *)DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NListtree_ImageSpecFolder)))
   {
-    set( data->PI_ImageSpecial, MUIA_Imagedisplay_Spec, is );
+    set( data->PI_ImageFolder, MUIA_Imagedisplay_Spec, is );
 
-    D(DBF_ALWAYS, "Special node image: '%s'", (STRPTR)is);
+    D(DBF_ALWAYS, "folder node image: '%s'", (STRPTR)is);
   }
   else
   {
     if ( idobj )
     {
-      DoMethod( idobj, MUIM_Set, MUIA_Imagedisplay_Spec, "1:9" );
+      DoMethod( idobj, MUIM_Set, MUIA_Imagedisplay_Spec, MUICFGV_NListtree_ImageSpecFolder_Default );
 
       get( idobj, MUIA_Imagedisplay_Spec, &is );
-      set( data->PI_ImageSpecial, MUIA_Imagedisplay_Spec, is );
+      set( data->PI_ImageFolder, MUIA_Imagedisplay_Spec, is );
 
-      D(DBF_ALWAYS, "Special node image: '%s'", (STRPTR)is);
+      D(DBF_ALWAYS, "folder node image: '%s'", (STRPTR)is);
     }
   }
 
@@ -793,7 +759,7 @@ static IPTR _ConfigToGadgets( struct IClass *cl, Object *obj, struct MUIP_Settin
   {
     if( pdobj )
     {
-      DoMethod( pdobj, MUIM_Pendisplay_SetMUIPen, DEFAULT_PEN_LINES );
+      DoMethod( pdobj, MUIM_Pendisplay_SetMUIPen, MUICFGV_NListtree_PenSpecLines_Default );
 
       get( pdobj, MUIA_Pendisplay_Spec, &pen );
       set( data->PP_LinePen, MUIA_Pendisplay_Spec, pen );
@@ -812,7 +778,7 @@ static IPTR _ConfigToGadgets( struct IClass *cl, Object *obj, struct MUIP_Settin
   {
     if( pdobj )
     {
-      DoMethod( pdobj, MUIM_Pendisplay_SetMUIPen, DEFAULT_PEN_SHADOW );
+      DoMethod( pdobj, MUIM_Pendisplay_SetMUIPen, MUICFGV_NListtree_PenSpecShadow_Default );
 
       get( pdobj, MUIA_Pendisplay_Spec, &pen );
       set( data->PP_ShadowPen, MUIA_Pendisplay_Spec, pen );
@@ -821,56 +787,55 @@ static IPTR _ConfigToGadgets( struct IClass *cl, Object *obj, struct MUIP_Settin
     }
   }
 
-  if((d = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NListtree_PenSpecDraw)))
+  if((d = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NListtree_PenSpecGlow)))
   {
-    set( data->PP_DrawPen, MUIA_Pendisplay_Spec, d );
+    set( data->PP_GlowPen, MUIA_Pendisplay_Spec, d );
 
-    D(DBF_ALWAYS, "Draw color: '%s'", (STRPTR)d);
+    D(DBF_ALWAYS, "Glow color: '%s'", (STRPTR)d);
   }
   else
   {
     if( pdobj )
     {
-      DoMethod( pdobj, MUIM_Pendisplay_SetMUIPen, DEFAULT_PEN_DRAW );
+      DoMethod( pdobj, MUIM_Pendisplay_SetMUIPen, MUICFGV_NListtree_PenSpecGlow_Default );
 
       get( pdobj, MUIA_Pendisplay_Spec, &pen );
-      set( data->PP_DrawPen, MUIA_Pendisplay_Spec, pen );
+      set( data->PP_GlowPen, MUIA_Pendisplay_Spec, pen );
 
-      D(DBF_ALWAYS, "Draw color: '%s'", pen);
+      D(DBF_ALWAYS, "Glow color: '%s'", pen);
     }
   }
 
   /*
   **  Set values
   */
-  if((d = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NListtree_Style)))
+  if((d = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NListtree_LineType)))
   {
-    set( data->CY_Style, MUIA_Cycle_Active, atoi( (STRPTR)d ) );
-    StyleChanged( data, atoi( (STRPTR)d ) );
+    set( data->CY_LineType, MUIA_Cycle_Active, atoi( (STRPTR)d ) );
+    ValuesChanged(data);
 
-    D(DBF_ALWAYS, "Style: %ld", atoi( (STRPTR)d ));
+    D(DBF_ALWAYS, "LineType: %ld", atoi( (STRPTR)d ));
   }
   else
   {
-    set( data->CY_Style, MUIA_Cycle_Active, MUICFGV_NListtree_Style_Lines3D );
-    StyleChanged( data, MUICFGV_NListtree_Style_Lines3D );
+    set( data->CY_LineType, MUIA_Cycle_Active, MUICFGV_NListtree_LineType_Default );
+    ValuesChanged(data);
 
     D(DBF_ALWAYS, "Style: %ld", 0);
   }
 
-  if((d = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NListtree_Space)))
+  if((d = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NListtree_IndentWidth)))
   {
-    set( data->SL_Space, MUIA_Slider_Level, atoi( (STRPTR)d ) );
+    set( data->SL_IndentWidth, MUIA_Slider_Level, atoi( (STRPTR)d ) );
 
-    D(DBF_ALWAYS, "Space: %ld", atoi( (STRPTR)d ));
+    D(DBF_ALWAYS, "IndentWidth: %ld", atoi( (STRPTR)d ));
   }
   else
   {
-    set( data->SL_Space, MUIA_Slider_Level, MUICFGV_NListtree_Space_Default );
+    set( data->SL_IndentWidth, MUIA_Slider_Level, MUICFGV_NListtree_IndentWidth_Default );
 
-    D(DBF_ALWAYS, "Space: %ld", MUICFGV_NListtree_Space_Default);
+    D(DBF_ALWAYS, "IndentWidth: %ld", MUICFGV_NListtree_IndentWidth_Default);
   }
-
 
   if((d = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NListtree_RememberStatus)))
   {
@@ -880,11 +845,10 @@ static IPTR _ConfigToGadgets( struct IClass *cl, Object *obj, struct MUIP_Settin
   }
   else
   {
-    set( data->CH_RememberStatus, MUIA_Selected, TRUE );
+    set( data->CH_RememberStatus, MUIA_Selected, MUICFGV_NListtree_RememberStatus_Default );
 
-    D(DBF_ALWAYS, "RememberStatus: 1");
+    D(DBF_ALWAYS, "RememberStatus: %ld", MUICFGV_NListtree_RememberStatus_Default);
   }
-
 
   if((d = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NListtree_OpenAutoScroll)))
   {
@@ -894,9 +858,22 @@ static IPTR _ConfigToGadgets( struct IClass *cl, Object *obj, struct MUIP_Settin
   }
   else
   {
-    set( data->CH_OpenAutoScroll, MUIA_Selected, TRUE );
+    set( data->CH_OpenAutoScroll, MUIA_Selected, MUICFGV_NListtree_OpenAutoScroll_Default );
 
-    D(DBF_ALWAYS, "OpenAutoScroll: 1");
+    D(DBF_ALWAYS, "OpenAutoScroll: %ld", MUICFGV_NListtree_OpenAutoScroll_Default);
+  }
+
+  if((d = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NListtree_UseFolderImage)))
+  {
+    set( data->CH_UseFolderImage, MUIA_Selected, atoi( (STRPTR)d ) );
+
+    D(DBF_ALWAYS, "UseFolderImage: %ld", atoi( (STRPTR)d ));
+  }
+  else
+  {
+    set( data->CH_UseFolderImage, MUIA_Selected, MUICFGV_NListtree_UseFolderImage_Default );
+
+    D(DBF_ALWAYS, "UseFolderImage: %ld", MUICFGV_NListtree_UseFolderImage_Default);
   }
 
   /*
@@ -937,11 +914,11 @@ static IPTR _GadgetsToConfig( struct IClass *cl, Object *obj, struct MUIP_Settin
   D(DBF_ALWAYS, "Image open: '%s'", (STRPTR)d);
 
 
-  get( data->PI_ImageSpecial,  MUIA_Imagedisplay_Spec,  &d );
+  get( data->PI_ImageFolder,  MUIA_Imagedisplay_Spec,  &d );
   if(d != 0)
-    DoMethod( msg->configdata, MUIM_Dataspace_Add, d, sizeof( struct MUI_ImageSpec ), MUICFG_NListtree_ImageSpecSpecial );
+    DoMethod( msg->configdata, MUIM_Dataspace_Add, d, sizeof( struct MUI_ImageSpec ), MUICFG_NListtree_ImageSpecFolder );
 
-  D(DBF_ALWAYS, "Image special: '%s'", (STRPTR)d);
+  D(DBF_ALWAYS, "Image folder: '%s'", (STRPTR)d);
 
 
   /*
@@ -961,27 +938,15 @@ static IPTR _GadgetsToConfig( struct IClass *cl, Object *obj, struct MUIP_Settin
   D(DBF_ALWAYS, "Shadow color: '%s'", (STRPTR)d);
 
 
-  get( data->PP_DrawPen, MUIA_Pendisplay_Spec, &d );
+  get( data->PP_GlowPen, MUIA_Pendisplay_Spec, &d );
   if(d != 0)
-    DoMethod( msg->configdata, MUIM_Dataspace_Add, d, sizeof( struct MUI_PenSpec ), MUICFG_NListtree_PenSpecDraw );
+    DoMethod( msg->configdata, MUIM_Dataspace_Add, d, sizeof( struct MUI_PenSpec ), MUICFG_NListtree_PenSpecGlow );
 
-  D(DBF_ALWAYS, "Draw color: '%s'", (STRPTR)d);
+  D(DBF_ALWAYS, "Glow color: '%s'", (STRPTR)d);
 
   /*
   **  Values
   */
-  get( data->CY_Style, MUIA_Cycle_Active, &d );
-  snprintf(buf, sizeof(buf), "%d", (int)d);
-  DoMethod( msg->configdata, MUIM_Dataspace_Add, buf, 5, MUICFG_NListtree_Style );
-
-  D(DBF_ALWAYS, "Style: %ld", d);
-
-
-  get( data->SL_Space, MUIA_Slider_Level, &d );
-  snprintf(buf, sizeof(buf), "%d", (int)d);
-  DoMethod( msg->configdata, MUIM_Dataspace_Add, buf, 5, MUICFG_NListtree_Space );
-
-  D(DBF_ALWAYS, "Space: %ld", d);
 
 
   get( data->CH_RememberStatus, MUIA_Selected, &d );
@@ -991,11 +956,29 @@ static IPTR _GadgetsToConfig( struct IClass *cl, Object *obj, struct MUIP_Settin
   D(DBF_ALWAYS, "RememberStatus: %ld", d);
 
 
+  get( data->SL_IndentWidth, MUIA_Slider_Level, &d );
+  snprintf(buf, sizeof(buf), "%d", (int)d);
+  DoMethod( msg->configdata, MUIM_Dataspace_Add, buf, 5, MUICFG_NListtree_IndentWidth );
+
+  D(DBF_ALWAYS, "IndentWidth: %ld", d);
+
   get( data->CH_OpenAutoScroll, MUIA_Selected, &d );
   snprintf(buf, sizeof(buf), "%d", (int)d);
   DoMethod( msg->configdata, MUIM_Dataspace_Add, buf, 5, MUICFG_NListtree_OpenAutoScroll );
 
   D(DBF_ALWAYS, "OpenAutoScroll: %ld", d);
+
+  get( data->CY_LineType, MUIA_Cycle_Active, &d );    
+  snprintf(buf, sizeof(buf), "%d", (int)d);   
+  DoMethod( msg->configdata, MUIM_Dataspace_Add, buf, 5, MUICFG_NListtree_LineType );    
+               
+  D(DBF_ALWAYS, "LineType: %ld", d);
+
+  get( data->CH_UseFolderImage, MUIA_Selected, &d );
+  snprintf(buf, sizeof(buf), "%d", (int)d);
+  DoMethod( msg->configdata, MUIM_Dataspace_Add, buf, 5, MUICFG_NListtree_UseFolderImage );
+
+  D(DBF_ALWAYS, "UseFolderImage: %ld", d);
 
   RETURN(0);
   return( 0 );
