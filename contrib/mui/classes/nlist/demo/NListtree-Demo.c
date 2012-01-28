@@ -61,7 +61,7 @@
 #define MAKE_ID(a,b,c,d) ((ULONG) (a)<<24 | (ULONG) (b)<<16 | (ULONG) (c)<<8 | (ULONG) (d))
 #endif
 
-#include <SDI/SDI_hook.h>
+#include "SDI_hook.h"
 
 #ifndef MUIA_Slider_Level
 #define MUIA_Slider_Level                   0x8042ae3a /* V4  isg LONG              */

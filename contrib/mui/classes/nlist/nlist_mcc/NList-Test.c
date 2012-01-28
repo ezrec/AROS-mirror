@@ -106,7 +106,7 @@ struct TimerIFace *ITimer = NULL;
 
 #include "Debug.h"
 
-#include <SDI/SDI_compiler.h>
+#include "SDI_compiler.h"
 
 DISPATCHERPROTO(_Dispatcher);
 

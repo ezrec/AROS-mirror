@@ -59,7 +59,7 @@ extern struct Library *MUIMasterBase;
 
 #include <proto/muimaster.h>
 
-#include <SDI/SDI_hook.h>
+#include "SDI_hook.h"
 
 /* *********************************************** */
 
