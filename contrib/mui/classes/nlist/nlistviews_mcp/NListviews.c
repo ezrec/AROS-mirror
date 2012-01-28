@@ -108,15 +108,16 @@ static struct QualifierDef QualTab[] =
 
 Object *MakeCheck(STRPTR label, STRPTR help, ULONG check)
 {
-	Object *obj = MUI_MakeObject(MUIO_Checkmark, label);
-	if (obj)
-	{
-		SetAttrs(obj, MUIA_CycleChain, 1,
-		              MUIA_Selected, check,
-		              MUIA_ShortHelp, help,
-					  TAG_DONE);
-	}
-	return (obj);
+  Object *obj = MUI_MakeObject(MUIO_Checkmark, label);
+  if (obj)
+  {
+    SetAttrs(obj, MUIA_CycleChain, 1,
+                  MUIA_Selected, check,
+                  MUIA_ShortHelp, help,
+                  TAG_DONE);
+  }
+
+  return (obj);
 }
 
 #define String2(contents,maxlen)\
@@ -520,10 +521,10 @@ HOOKPROTONH(AckFunc, VOID, Object *list, long *val)
   get(stringkey,MUIA_String_Contents, &ackstr);
   DoMethod(list,MUIM_NList_GetEntry,MUIV_NList_GetEntry_Active, &key);
   if (ackstr && key)
-  { LONG res;
+  { 
     IX ix;
     ix.ix_Version = IX_VERSION;
-    res = ParseIX(ackstr,&ix);
+    ParseIX(ackstr,&ix);
     key->kb_Qualifier = (ix.ix_Qualifier & KBQUAL_MASK) | ((ix.ix_QualSame << 12) & KBSYM_MASK);
     key->kb_Code = ix.ix_Code;
     DoMethod(list,MUIM_NList_Redraw,MUIV_NList_Redraw_Active);
@@ -1556,9 +1557,9 @@ static IPTR mNL_MCP_Dispose(struct IClass *cl, Object *obj, Msg msg)
 
   if(data->exampleText != NULL)
   {
-  	LONG i = 0;
+    LONG i = 0;
 
-  	while(data->exampleText[i] != NULL)
+    while(data->exampleText[i] != NULL)
     {
       FreeVec(data->exampleText[i]);
       i++;

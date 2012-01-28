@@ -103,13 +103,19 @@
 #define CI_COL     1
 #define CI_PIX     2
 
+// defines for the different particalcol substitution types
+#define PCS_DISABLED 0
+#define PCS_RIGHT    1
+#define PCS_LEFT     2
+#define PCS_CENTER   3
+
 struct colinfo
 {
   struct colinfo *c;
 
   char *preparse;
-  IPTR  colwidthbiggestptr;
-  IPTR  colwidthbiggestptr2;
+  SIPTR colwidthbiggestptr;
+  SIPTR colwidthbiggestptr2;
   WORD  colwidthbiggest;
   WORD  colwidthbiggest2;
   WORD  minx;
@@ -137,6 +143,7 @@ struct colinfo
   WORD  maxpixwidth;
   BYTE  bar;
   BYTE  width_type;
+  WORD  partcolsubst;
 };
 
 

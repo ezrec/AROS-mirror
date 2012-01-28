@@ -84,12 +84,12 @@ for os in os3 os4 mos aros-i386 aros-ppc aros-x86_64; do
 done
 
 make -C nlisttree_mcp catalogs
-for language in czech english-british french german polish swedish; do
+for language in czech english-british french german polish swedish turkish; do
 	mkdir -p "release/MCC_NList/Locale/Catalogs/$language"
 	cp -a nlisttree_mcp/locale/$language.catalog "release/MCC_NList/Locale/Catalogs/$language/NListtree_mcp.catalog"
 done
 make -C nlistviews_mcp catalogs
-for language in czech french german swedish polish; do
+for language in czech french german swedish polish turkish; do
 	mkdir -p "release/MCC_NList/Locale/Catalogs/$language"
 	cp -a nlistviews_mcp/locale/$language.catalog "release/MCC_NList/Locale/Catalogs/$language/NListviews_mcp.catalog"
 done
@@ -112,4 +112,4 @@ cp -a nlistviews_mcp/locale/NListviews_mcp.cd "release/MCC_NList/Locale/"
 echo "  MK MCC_NList-0.$1.lha"
 find release -nowarn -name ".svn" -exec rm -rf {} \; 2>/dev/null
 cd release
-lha -aq ../MCC_NList-0.$1.lha *
+lha -ao5q ../MCC_NList-0.$1.lha *

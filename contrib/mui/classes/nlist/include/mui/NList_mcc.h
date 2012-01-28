@@ -48,6 +48,9 @@ extern "C" {
 #if !defined(__AROS__) && !defined(STACKED)
 #define STACKED
 #endif
+#if !defined(__AROS__) && !defined(SIPTR)
+#define SIPTR LONG
+#endif
 
 /***********************************************************************/
 

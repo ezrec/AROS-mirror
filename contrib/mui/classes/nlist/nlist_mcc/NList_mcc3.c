@@ -124,7 +124,6 @@ void NL_SetObjInfos(struct NLData *data,BOOL setall)
 
     if (data->VirtGroup)
     {
-      LONG virtleft,virttop,virtwidth,virtheight,vl,vt,vw,vh;
       Object *o = data->VirtGroup;
       struct IClass *ocl;
 
@@ -132,16 +131,6 @@ void NL_SetObjInfos(struct NLData *data,BOOL setall)
       data->vright = _mright(o);
       data->vtop = _mtop(o);
       data->vbottom = _mbottom(o);
-
-      vl = xget(o, MUIA_Virtgroup_Left);
-      vt = xget(o, MUIA_Virtgroup_Top);
-      vw = xget(o, MUIA_Virtgroup_Width);
-      vh = xget(o, MUIA_Virtgroup_Height);
-
-      virtleft = vl;
-      virttop = vt;
-      virtwidth = vw;
-      virtheight = vh;
 
       data->vdx = -data->mleft;
       data->vdy = -data->mtop;
@@ -210,9 +199,11 @@ void NL_SetObjInfos(struct NLData *data,BOOL setall)
     data->lvisible = data->mheight / data->vinc;
     vdheight = (data->mheight - data->lvisible * data->vinc);
 
-	/* Set vertical delta top, if text should be centered vertically */
-	if (data->NList_VerticalCenteredText) data->vdt = vdheight / 2;
-	else data->vdt = 0;
+    /* Set vertical delta top, if text should be centered vertically */
+    if (data->NList_VerticalCenteredText)
+      data->vdt = vdheight / 2;
+    else
+      data->vdt = 0;
 
     data->vdb = vdheight - data->vdt;
     data->vdtpos = data->mtop;
@@ -594,13 +585,9 @@ static ULONG DrawRefresh(struct NLData *data)
         ReSetFont;
         SetBackGround(data->NList_ListBackGround)
         if ((data->vdt > 0) && !data->NList_Title && (ly1 < 0))
-          DoMethod(obj,MUIM_DrawBackground,mleft,(LONG) data->vdtpos,
-                                           mwidth,(LONG) data->vdt,
-                                           mleft+data->vdx,(LONG) data->vdtpos+data->vdy,(LONG) 0);
+          DrawBackground(obj, mleft, data->vdtpos, mwidth, data->vdt, data->vdx, data->vdy);
         if (data->vdb > 0)
-          DoMethod(obj,MUIM_DrawBackground,mleft,(LONG) data->vdbpos,
-                                           mwidth,(LONG) data->vdb,
-                                           mleft+data->vdx,(LONG) data->vdbpos+data->vdy,(LONG) 0);
+          DrawBackground(obj, mleft, data->vdbpos, mwidth, data->vdb, data->vdx, data->vdy);
         if (data->NList_Title && (ly1 < 0))
           DrawTitle(data,mleft,mright,hfirst);
 
@@ -760,7 +747,9 @@ IPTR mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
     WORD hmax,linelen,hfirst;
     LONG LPFirst,LPVisible,LPEntries;
     LONG one_more = 0;
-    LONG vfyl,vlyl;
+/*
+ *  LONG vfyl,vlyl;
+ */
     BOOL need_refresh = FALSE;
     BOOL draw_all_force;
     BOOL fullclipped = FALSE;
@@ -964,8 +953,10 @@ IPTR mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
         data->NList_Horiz_Entries = hmax;
     }
 
-    vfyl = (data->vtop - data->vpos) / data->vinc;
-    vlyl = ((data->vbottom - data->vpos) / data->vinc) + 1;
+/*
+ *  vfyl = (data->vtop - data->vpos) / data->vinc;
+ *  vlyl = ((data->vbottom - data->vpos) / data->vinc) + 1;
+ */
 
     if (data->do_draw_all && data->do_draw_title && data->NList_Title/* && (vfyl <= 0)*/)
     {
@@ -995,13 +986,9 @@ IPTR mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
         SetBackGround(data->NList_ListBackGround)
 
         if((data->vdt > 0) && !data->NList_Title)
-          DoMethod(obj,MUIM_DrawBackground,(LONG) data->mleft,(LONG) data->vdtpos,
-                                           (LONG) data->mwidth,(LONG) data->vdt,
-                                           (LONG) data->mleft+data->vdx,(LONG) data->vdtpos+data->vdy,(LONG) 0);
+          DrawBackground(obj, data->mleft, data->vdtpos, data->mwidth, data->vdt, data->vdx, data->vdy);
         if(data->vdb > 0)
-          DoMethod(obj,MUIM_DrawBackground,(LONG) data->mleft,(LONG) data->vdbpos,
-                                           (LONG) data->mwidth,(LONG) data->vdb,
-                                           (LONG) data->mleft+data->vdx,(LONG) data->vdbpos+data->vdy,(LONG) 0);
+          DrawBackground(obj, data->mleft, data->vdbpos, data->mwidth, data->vdb, data->vdx, data->vdy);
 
         if(!data->dropping && !draw_all_force &&
            ((abs(data->NList_First - data->NList_AffFirst) > (120 / data->vinc)) ||

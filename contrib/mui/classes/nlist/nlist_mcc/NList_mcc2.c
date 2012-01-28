@@ -547,9 +547,10 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
             {
               if (data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
               {
-              	LONG newactsel = MUIV_NList_Select_On;
-              	if (data->NList_Active >= 0 && data->EntriesArray[data->NList_Active]->Select == TE_Select_None)
-              		newactsel = MUIV_NList_Select_Off;
+                LONG newactsel = MUIV_NList_Select_On;
+
+                if (data->NList_Active >= 0 && data->EntriesArray[data->NList_Active]->Select == TE_Select_None)
+                  newactsel = MUIV_NList_Select_Off;
                 NL_List_Active(data,MUIV_NList_Active_UntilTop,NULL,newactsel,FALSE,0);
               }
               retval = MUI_EventHandlerRC_Eat;
@@ -558,9 +559,10 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
             {
               if (data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
               {
-              	LONG newactsel = MUIV_NList_Select_On;
-              	if (data->NList_Active >= 0 && data->EntriesArray[data->NList_Active]->Select == TE_Select_None)
-              		newactsel = MUIV_NList_Select_Off;
+                LONG newactsel = MUIV_NList_Select_On;
+
+                if (data->NList_Active >= 0 && data->EntriesArray[data->NList_Active]->Select == TE_Select_None)
+                  newactsel = MUIV_NList_Select_Off;
                 NL_List_Active(data,MUIV_NList_Active_UntilBottom,NULL,newactsel,FALSE,0);
               }
               retval = MUI_EventHandlerRC_Eat;
@@ -570,48 +572,50 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
               /* Page up key pressed */
               if (data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
               {
-              	LONG newactsel = MUIV_NList_Select_On;
-              	if (data->NList_Active >= 0 && data->EntriesArray[data->NList_Active]->Select == TE_Select_None)
-              		newactsel = MUIV_NList_Select_Off;
+                LONG newactsel = MUIV_NList_Select_On;
+
+                if (data->NList_Active >= 0 && data->EntriesArray[data->NList_Active]->Select == TE_Select_None)
+                  newactsel = MUIV_NList_Select_Off;
                 NL_List_Active(data,MUIV_NList_Active_UntilPageUp,NULL,newactsel,FALSE,0);
               }
               retval = MUI_EventHandlerRC_Eat;
             }
             else if (NL_TestKey(data,KEYTAG_SELECT_TO_PAGE_DOWN,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
             {
-            	/* Page down key pressed */
+              /* Page down key pressed */
               if (data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
               {
-              	LONG newactsel = MUIV_NList_Select_On;
-              	if (data->NList_Active >= 0 && data->EntriesArray[data->NList_Active]->Select == TE_Select_None)
-              		newactsel = MUIV_NList_Select_Off;
+                LONG newactsel = MUIV_NList_Select_On;
+
+                if (data->NList_Active >= 0 && data->EntriesArray[data->NList_Active]->Select == TE_Select_None)
+                  newactsel = MUIV_NList_Select_Off;
                 NL_List_Active(data,MUIV_NList_Active_UntilPageDown,NULL,newactsel,FALSE,0);
               }
               retval = MUI_EventHandlerRC_Eat;
             }
             else if (NL_TestKey(data,KEYTAG_SELECT_UP,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
             {
-            	/* Up key pressed */
+              /* Up key pressed */
               if (data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
               {
                 LONG newactsel = MUIV_NList_Select_On;
 
                 if (data->NList_Active >= 0 && data->EntriesArray[data->NList_Active]->Select == TE_Select_None)
-              		newactsel = MUIV_NList_Select_Off;
-               	NL_List_Active(data,MUIV_NList_Active_Up,NULL,newactsel,FALSE,0);
+                  newactsel = MUIV_NList_Select_Off;
+                NL_List_Active(data,MUIV_NList_Active_Up,NULL,newactsel,FALSE,0);
               }
               retval = MUI_EventHandlerRC_Eat;
             }
             else if (NL_TestKey(data,KEYTAG_SELECT_DOWN,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
             {
-            	/* Down key pressed */
+              /* Down key pressed */
               if (data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
               {
                 LONG newactsel = MUIV_NList_Select_On;
 
                 if (data->NList_Active >= 0 && data->EntriesArray[data->NList_Active]->Select == TE_Select_None)
-              		newactsel = MUIV_NList_Select_Off;
-               	NL_List_Active(data,MUIV_NList_Active_Down,NULL,newactsel,FALSE,0);
+                  newactsel = MUIV_NList_Select_Off;
+                NL_List_Active(data,MUIV_NList_Active_Down,NULL,newactsel,FALSE,0);
               }
               retval = MUI_EventHandlerRC_Eat;
             }
@@ -685,7 +689,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
         if(msg->imsg->Code & IMSGCODE_INTUIWHEELDATA &&
            _isinobject(msg->imsg->MouseX, msg->imsg->MouseY))
         {
-      		struct IntuiWheelData *iwd = (struct IntuiWheelData *)msg->imsg->IAddress;
+          struct IntuiWheelData *iwd = (struct IntuiWheelData *)msg->imsg->IAddress;
 
           if(iwd->WheelY < 0) // WHEEL_UP
           {

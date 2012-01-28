@@ -98,6 +98,7 @@ extern IPTR mNL_ContextMenuChoice(struct IClass *cl,Object *obj,struct MUIP_Cont
 
 /* NList_mcc6.c */
 
+extern void DrawBackground(Object *obj, LONG left, LONG top, LONG width, LONG height, LONG xoff, LONG yoff);
 extern WORD DrawTitle(struct NLData *data,LONG minx,LONG maxx,WORD hfirst);
 extern void DrawOldLine(struct NLData *data,LONG ent,LONG minx,LONG maxx,WORD hfirst);
 extern WORD DrawLines(struct NLData *data,LONG e1,LONG e2,LONG minx,LONG maxx,WORD hfirst,WORD hmax,WORD small,BOOL do_extrems,WORD not_all);

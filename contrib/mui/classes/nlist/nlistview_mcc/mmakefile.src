@@ -3,8 +3,8 @@ include $(TOP)/config/make.cfg
 
 #MM contrib-zune-classes-nlistview-class : includes linklibs
 
-USER_INCLUDES := -idirafter $(SRCDIR)/$(CURDIR)/../include -I$(SRCDIR)/$(CURDIR)/../include/mui -I$(SRCDIR)/$(CURDIR)/../nlistviews_mcp
-USER_CFLAGS := -DNO_INLINE_STDARG
+USER_INCLUDES := -idirafter $(SRCDIR)/$(CURDIR)/../include -idirafter $(SRCDIR)/$(CURDIR)/../include/mui -I$(SRCDIR)/$(CURDIR)/../nlistviews_mcp
+USER_CFLAGS := $(PARANOIA_CFLAGS)
 USER_CFLAGS += $(PARANOIA_CFLAGS)
 
 FILES := library \

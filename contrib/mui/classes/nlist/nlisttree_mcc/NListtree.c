@@ -234,7 +234,7 @@ INLINE VOID DrawLine( struct RastPort *rp, WORD l, WORD t, WORD r, WORD b )
 **  Draw windows line l/t to r/b. All
 **  lines are pure horiz. or vert.!
 */
-INLINE VOID DrawLineWin( struct RastPort *rp, WORD l, WORD t, WORD r, WORD b )
+INLINE VOID DrawLineDotted( struct RastPort *rp, WORD l, WORD t, WORD r, WORD b )
 {
   if ( l == r )
   {
@@ -266,54 +266,48 @@ INLINE VOID DrawTreeVertBar( struct TreeImage_Data *data, struct MyImage *im, WO
 
   ENTER();
 
-  switch( im->nltdata->Style )
+  switch(im->nltdata->LineType)
   {
-    case MUICFGV_NListtree_Style_Normal:
-    case MUICFGV_NListtree_Style_Inserted:
-    case MUICFGV_NListtree_Style_Mac:
-      break;
+    case MUICFGV_NListtree_LineType_Disabled:
+      // nothing
+    break;
 
-    case MUICFGV_NListtree_Style_Lines3D:
+    case MUICFGV_NListtree_LineType_Normal:
+    {
+      SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Line] ) );
+      DrawLine( rp, m, t, m, b );
+    }
+    break;
 
+    case MUICFGV_NListtree_LineType_Dotted:
+    {
+      SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Line] ) );
+      DrawLineDotted( rp, m, t, m, b );
+    }
+    break;
+
+    case MUICFGV_NListtree_LineType_Shadow:
+    {
       SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Shadow] ) );
+      DrawLine( rp, m+1, t, m+1, b );
+      SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Line] ) );
+      DrawLine( rp, m, t, m, b );
+    }
+    break;
+
+    case MUICFGV_NListtree_LineType_Glow:
+    {
+      SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Shadow] ) );
+      DrawLine( rp, m + 2, t, m + 2, b );
+
+      SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Line] ) );
       DrawLine( rp, m, t, m, b );
 
-
-    case MUICFGV_NListtree_Style_Lines:
-
-      SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Line] ) );
+      SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Glow] ) );
       DrawLine( rp, m - 1, t, m - 1, b );
-
-      break;
-
-
-    case MUICFGV_NListtree_Style_Win98:
-    case MUICFGV_NListtree_Style_Win98Plus:
-
-      SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Line] ) );
-      DrawLineWin( rp, m, t, m, b );
-
-      break;
-
-
-    case MUICFGV_NListtree_Style_Glow:
-
-      SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Shadow] ) );
-      DrawLine( rp, m + 1, t, m + 1, b );
-
-      SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Line] ) );
-      DrawLine( rp, m - 1, t, m - 1, b );
-
-      SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Draw] ) );
-      DrawLine( rp, m - 2, t, m - 2, b );
-      DrawLine( rp, m, t, m, b );
-
-      /*
-      SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Draw2] ) );
-      DrawLine( rp, m - 3, t, m - 3, b );
-      DrawLine( rp, m + 1, t, m + 1, b );
-      */
-      break;
+      DrawLine( rp, m+1, t, m+1, b );
+    }
+    break;
   }
 
   LEAVE();
@@ -326,72 +320,63 @@ INLINE VOID DrawTreeVertBar( struct TreeImage_Data *data, struct MyImage *im, WO
 INLINE VOID DrawTreeVertBarT( struct TreeImage_Data *data, struct MyImage *im, WORD l, WORD t, WORD r, WORD b )
 {
   struct RastPort *rp = (struct RastPort *)_rp( data->obj );
-  UWORD m = l + ( im->nltdata->MaxImageWidth - 1 ) / 2, h = t + ( b - t ) / 2;
+  UWORD m = l + ( im->nltdata->MaxImageWidth - 1 ) / 2;
+  UWORD h = t + ( b - t ) / 2;
 
   ENTER();
 
-  switch( im->nltdata->Style )
+  switch(im->nltdata->LineType)
   {
-    case MUICFGV_NListtree_Style_Normal:
-    case MUICFGV_NListtree_Style_Inserted:
-    case MUICFGV_NListtree_Style_Mac:
-      break;
+    case MUICFGV_NListtree_LineType_Disabled:
+      // nothing
+    break;
 
-    case MUICFGV_NListtree_Style_Lines3D:
-
-      SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Shadow] ) );
-      DrawLine( rp, m, t,   m,  b );
-      DrawLine( rp, m, h + 1, r,  h + 1 );
-
-
-    case MUICFGV_NListtree_Style_Lines:
-
+    case MUICFGV_NListtree_LineType_Normal:
+    {
       SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Line] ) );
-      DrawLine( rp, m - 1, t, m - 1,  b );
-      DrawLine( rp, m - 1, h, r,    h );
-
-      break;
-
-
-    case MUICFGV_NListtree_Style_Win98:
-    case MUICFGV_NListtree_Style_Win98Plus:
-
-      SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Line] ) );
-      DrawLineWin( rp, m, t, m, b );
-
-      DrawLineWin( rp, m, t, m, b );
-      DrawLineWin( rp, m, h, m + im->nltdata->Space, h );
-
-      break;
-
-
-    case MUICFGV_NListtree_Style_Glow:
-
-      SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Shadow] ) );
-      DrawLine( rp, m + 1, t,   m + 1,  b );
-      DrawLine( rp, m + 2, h + 2, r,  h + 2 );
-
-      /*
-      SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Draw2] ) );
-      DrawLine( rp, m - 3, t, m - 3, b );
-      DrawLine( rp, m + 1, t, m + 1, b );
-
-      DrawLine( rp, m + 2, h - 2, r, h - 2 );
-      DrawLine( rp, m + 2, h + 2, r, h + 2 );
-      */
-
-      SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Draw] ) );
-      DrawLine( rp, m - 2, t, m - 2, b );
       DrawLine( rp, m, t, m, b );
+      DrawLine( rp, m, h, r, h );
+    }
+    break;
 
-      DrawLine( rp, m, h - 1, r, h - 1 );
-      DrawLine( rp, m, h + 1, r, h + 1 );
+    case MUICFGV_NListtree_LineType_Dotted:
+    {
+      SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Line] ) );
+      DrawLineDotted( rp, m, t, m, b );
+      DrawLineDotted( rp, m, h, m + (im->nltdata->MaxImageWidth-1)/2 + im->nltdata->IndentWidth, h );
+    }
+    break;
+
+    case MUICFGV_NListtree_LineType_Shadow:
+    {
+      SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Shadow] ) );
+      DrawLine( rp, m+1, t, m+1, b );
+      DrawLine( rp, m+1, h + 1, r, h + 1 );
 
       SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Line] ) );
-      DrawLine( rp, m - 1, t, m - 1,  b );
-      DrawLine( rp, m - 1, h, r,    h );
+      DrawLine( rp, m, t, m, b );
+      DrawLine( rp, m, h, r, h );
+    }
+    break;
 
-      break;
+    case MUICFGV_NListtree_LineType_Glow:
+    {
+      SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Shadow] ) );
+      DrawLine( rp, m + 2, t,   m + 2,  b );
+      DrawLine( rp, m + 3, h + 2, r,  h + 2 );
+
+      SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Glow] ) );
+      DrawLine( rp, m - 1, t, m - 1, b );
+      DrawLine( rp, m+1, t, m+1, b );
+
+      DrawLine( rp, m+1, h - 1, r, h - 1 );
+      DrawLine( rp, m+1, h + 1, r, h + 1 );
+
+      SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Line] ) );
+      DrawLine( rp, m, t, m, b );
+      DrawLine( rp, m, h, r, h );
+    }
+    break;
   }
 
   LEAVE();
@@ -405,72 +390,63 @@ INLINE VOID DrawTreeVertBarT( struct TreeImage_Data *data, struct MyImage *im, W
 INLINE VOID DrawTreeVertBarEnd( struct TreeImage_Data *data, struct MyImage *im, WORD l, WORD t, WORD r, WORD b )
 {
   struct RastPort *rp = (struct RastPort *)_rp( data->obj );
-  UWORD m = l + ( im->nltdata->MaxImageWidth - 1 ) / 2, h = t + ( b - t ) / 2;
+  UWORD m = l + ( im->nltdata->MaxImageWidth - 1 ) / 2;
+  UWORD h = t + ( b - t ) / 2;
 
   ENTER();
 
-  switch( im->nltdata->Style )
+  switch(im->nltdata->LineType)
   {
-    case MUICFGV_NListtree_Style_Normal:
-    case MUICFGV_NListtree_Style_Inserted:
-    case MUICFGV_NListtree_Style_Mac:
-      break;
+    case MUICFGV_NListtree_LineType_Disabled:
+      // nothing
+    break;
 
-    case MUICFGV_NListtree_Style_Lines3D:
+    case MUICFGV_NListtree_LineType_Normal:
+    {
+      SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Line] ) );
+      DrawLine( rp, m, t, m, h );
+      DrawLine( rp, m, h, r, h );
+    }
+    break;
 
+    case MUICFGV_NListtree_LineType_Dotted:
+    {
+      SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Line] ) );
+      DrawLineDotted( rp, m, t, m, h );
+      DrawLineDotted( rp, m, h, m + (im->nltdata->MaxImageWidth-1)/2 + im->nltdata->IndentWidth, h );
+    }
+    break;
+
+    case MUICFGV_NListtree_LineType_Shadow:
+    {
       SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Shadow] ) );
-      DrawLine( rp, m, t,   m,  h );
-      DrawLine( rp, m, h + 1, r,  h + 1 );
-
-
-    case MUICFGV_NListtree_Style_Lines:
+      DrawLine( rp, m+1, t,   m+1,  h );
+      DrawLine( rp, m+1, h + 1, r,  h + 1 );
 
       SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Line] ) );
-      DrawLine( rp, m - 1, t, m - 1,  h );
-      DrawLine( rp, m - 1, h, r,    h );
-
-      break;
-
-
-    case MUICFGV_NListtree_Style_Win98:
-    case MUICFGV_NListtree_Style_Win98Plus:
-
-      SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Line] ) );
-      DrawLineWin( rp, m, t, m, h );
-
-      DrawLineWin( rp, m, t, m, h );
-      DrawLineWin( rp, m, h, m + im->nltdata->Space, h );
-
-      break;
-
-
-    case MUICFGV_NListtree_Style_Glow:
-
-      SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Shadow] ) );
-      DrawLine( rp, m + 1, t, m + 1,  h - 2 );
-      DrawLine( rp, m - 2, h + 2, r,  h + 2 );
-
-      /*
-      SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Draw2] ) );
-      DrawLine( rp, m - 3, t, m - 3,  h + 1 );
-      DrawLine( rp, m + 1, h - 2, r, h - 2 );
-
-      DrawLine( rp, m + 1, t, m + 1,  h - 2 );
-      DrawLine( rp, m - 3, h + 2, r, h + 2 );
-      */
-
-      SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Draw] ) );
-      DrawLine( rp, m - 2, t, m - 2,  h );
-      DrawLine( rp, m, h - 1, r, h - 1 );
-
       DrawLine( rp, m, t, m,  h );
-      DrawLine( rp, m - 2, h + 1, r, h + 1 );
+      DrawLine( rp, m, h, r,    h );
+    }
+    break;
+
+    case MUICFGV_NListtree_LineType_Glow:
+    {
+      SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Shadow] ) );
+      DrawLine( rp, m + 2, t, m + 2,  h - 2 );
+      DrawLine( rp, m, h + 2, r,  h + 2 );
+
+      SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Glow] ) );
+      DrawLine( rp, m - 1, t, m - 1,  h );
+      DrawLine( rp, m+1, h - 1, r, h - 1 );
+
+      DrawLine( rp, m+1, t, m+1,  h );
+      DrawLine( rp, m - 1, h + 1, r, h + 1 );
 
       SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Line] ) );
-      DrawLine( rp, m - 1, t, m - 1,  h );
-      DrawLine( rp, m - 1, h, r,    h );
-
-      break;
+      DrawLine( rp, m , t, m, h );
+      DrawLine( rp, m, h, r, h );
+    }
+    break;
   }
 
   LEAVE();
@@ -487,23 +463,49 @@ INLINE VOID DrawTreeHorBar( struct TreeImage_Data *data, struct MyImage *im, WOR
 
   ENTER();
 
-  switch( im->nltdata->Style )
+  switch(im->nltdata->LineType)
   {
-    case MUICFGV_NListtree_Style_Normal:
-    case MUICFGV_NListtree_Style_Inserted:
-    case MUICFGV_NListtree_Style_Mac:
-    case MUICFGV_NListtree_Style_Lines3D:
-    case MUICFGV_NListtree_Style_Lines:
-    case MUICFGV_NListtree_Style_Glow:
-      break;
+    case MUICFGV_NListtree_LineType_Disabled:
+      // nothing
+    break;
 
-    case MUICFGV_NListtree_Style_Win98:
-    case MUICFGV_NListtree_Style_Win98Plus:
+    case MUICFGV_NListtree_LineType_Normal:
+    {
+      SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Line] ) );
+      DrawLine( rp, l-1, h, r+1, h );
+    }
+    break;
+
+    case MUICFGV_NListtree_LineType_Dotted:
+    {
+      SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Line] ) );
+      DrawLineDotted( rp, l-1, h, r+1, h );
+    }
+    break;
+ 
+    case MUICFGV_NListtree_LineType_Shadow:
+    {
+      SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Shadow] ) );
+      DrawLine( rp, l-1, h + 1, r+1, h + 1 );
 
       SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Line] ) );
-      DrawLineWin( rp, l, h, r, h );
+      DrawLine( rp, l-1, h, r+1, h );
+    }
+    break;
 
-      break;
+    case MUICFGV_NListtree_LineType_Glow:
+    {
+      SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Shadow] ) );
+      DrawLine( rp, l-1, h + 2, r, h + 2 );
+
+      SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Glow] ) );
+      DrawLine( rp, l-1, h - 1, r, h - 1 );
+      DrawLine( rp, l-1, h + 1, r, h + 1 );
+
+      SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Line] ) );
+      DrawLine( rp, l-1, h, r, h );
+    }
+    break;
   }
 
   LEAVE();
@@ -533,7 +535,8 @@ IPTR TreeImage_Draw(struct IClass *cl, Object *obj, struct MUIP_Draw *msg)
     struct MyImage *im;
     WORD l, t, r, b;
 
-    D(DBF_DRAW, "DRAW SPEC: %ld", data->spec);
+    D(DBF_DRAW, "DRAW SPEC: %ld - %ld/%ld/%ld/%ld", data->spec, _defwidth(obj), _defheight(obj), _minwidth(obj), _minheight(obj));
+    D(DBF_DRAW, "%ld/%ld/%ld/%ld", _left(obj), _top(obj), _right(obj), _bottom(obj));
 
     im = (struct MyImage *)xget( obj, MUIA_UserData );
 
@@ -651,8 +654,8 @@ DISPATCHER(NodeImage_Dispatcher)
     w = _defwidth( obj );
     h = _defheight( obj );
 
-    if ( im->nltdata->MaxImageWidth < ( w + 2 ) )
-      im->nltdata->MaxImageWidth = w + 2;
+    if ( im->nltdata->MaxImageWidth < w )
+      im->nltdata->MaxImageWidth = w;
 
     if ( im->nltdata->MaxImageHeight < h )
     {
@@ -866,13 +869,20 @@ VOID SetupImage( struct NListtree_Data *data, struct MUI_ImageSpec *is, ULONG nr
     data->MaxImageWidth = 0;
     data->MaxImageHeight = 0;
 
-    if ( nr == IMAGE_Special )
+    if ( nr == IMAGE_Folder )
     {
       rim = MUI_NewObject( MUIC_Image, MUIA_Image_Spec, is, MUIA_UserData, &data->Image[nr], TAG_DONE );
     }
     else
     {
-      rim = NewObject( data->CL_NodeImage->mcc_Class, NULL, MUIA_Image_Spec, is, MUIA_UserData, &data->Image[nr], TAG_DONE );
+      rim = NewObject( data->CL_NodeImage->mcc_Class, NULL, MUIA_Image_Spec, is,
+                                                            MUIA_Frame,       MUIV_Frame_None,
+                                                            MUIA_InnerBottom, 0,
+                                                            MUIA_InnerLeft,   0,
+                                                            MUIA_InnerRight,  0,
+                                                            MUIA_InnerTop,    0,
+                                                            MUIA_Weight,      0,
+                                                            MUIA_UserData,    &data->Image[nr], TAG_DONE );
     }
 
     if ( rim )
@@ -1991,9 +2001,9 @@ VOID OpenTreeNode( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *t
 
 VOID OpenTreeNodeExpand( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *tn )
 {
-  LONG entries, pos, spos;
+  LONG entries, pos;
 
-  spos = pos = GetVisualPos( data, tn );
+  pos = GetVisualPos( data, tn );
   entries = xget( data->Obj, MUIA_NList_Entries );
 
   pos++;
@@ -2757,160 +2767,78 @@ static void InsertTreeImages( struct NListtree_Data *data, struct MUI_NListtree_
   {
     LONG x1 = -1, x2 = 0;
 
+    // we do a recursive call in case we find a
+    // parent node for the current one.
     if((gp = GetParent(tn)))
-    {
       InsertTreeImages( data, gp, otn, cnt + 1 );
-    }
 
+    x2 = data->MaxImageWidth;
 
-    switch ( data->Style )
+    if ( GetSucc( (struct Node *)&tn->tn_Node ) )
     {
-      case MUICFGV_NListtree_Style_Lines:
-      case MUICFGV_NListtree_Style_Lines3D:
-      case MUICFGV_NListtree_Style_Glow:
+      if(cnt == 0)
       {
-        x2 = data->MaxImageWidth;
-
-        if ( GetSucc( (struct Node *)&tn->tn_Node ) )
-        {
-          if(cnt == 0)
-          {
-            x1 = SPEC_VertT;
-          }
-          else
-          {
-            x1 = SPEC_Vert;
-          }
-        }
-        else
-        {
-          if(cnt == 0)
-          {
-            x1 = SPEC_VertEnd;
-          }
-          else if ( gp )
-          {
-            x1 = SPEC_Space;
-          }
-        }
-      }
-      break;
-
-
-      case MUICFGV_NListtree_Style_Normal:
-      {
-        if ( GetParentNotRoot( tn ) )
-        {
-          x1 = SPEC_Space;
-          x2 = data->MaxImageWidth;
-        }
-      }
-      break;
-
-      case MUICFGV_NListtree_Style_Inserted:
-      {
-        if ( GetParentNotRoot( tn ) )
-        {
-          x1 = SPEC_Space;
-          x2 = data->MaxImageWidth;
-        }
-
         if ( !( tn->tn_Flags & TNF_LIST ) )
-          x2 += data->MaxImageWidth;
+        {
+          x1 = SPEC_VertT;
+        }
       }
-      break;
-
-      case MUICFGV_NListtree_Style_Mac:
+      else
       {
-        if ( GetParentNotRoot( tn ) )
-        {
-          x1 = SPEC_Space;
-          x2 = data->MaxImageWidth;
-        }
-
-        if ( !( tn->tn_Flags & TNF_LIST ) )
-          x2 += data->MaxImageWidth;
+        x1 = SPEC_Vert;
       }
-      break;
-
-
-      case MUICFGV_NListtree_Style_Win98:
-      case MUICFGV_NListtree_Style_Win98Plus:
-      {
-        x2 = data->MaxImageWidth;
-
-        if ( GetSucc( (struct Node *)&tn->tn_Node ) )
-        {
-          if(cnt == 0)
-          {
-            if ( !( tn->tn_Flags & TNF_LIST ) )
-            {
-              x1 = SPEC_VertT;
-            }
-          }
-          else
-          {
-            x1 = SPEC_Vert;
-          }
-        }
-        else
-        {
-          if(cnt == 0)
-          {
-            if ( !( tn->tn_Flags & TNF_LIST ) )
-            {
-              x1 = SPEC_VertEnd;
-            }
-          }
-          else if ( gp )
-          {
-            x1 = SPEC_Space;
-          }
-        }
-      }
-      break;
     }
-
+    else
+    {
+      if(cnt == 0)
+      {
+        if ( !( tn->tn_Flags & TNF_LIST ) )
+        {
+          x1 = SPEC_VertEnd;
+        }
+      }
+      else if ( gp )
+      {
+        x1 = SPEC_Space;
+      }
+    }
 
     if ( ( x1 != -1 ) && x2 )
     {
       if ( x1 == SPEC_Space )
+        otn->tn_Space += x2 + data->IndentWidth;
+
+      if ( otn->tn_Space > 0 )
       {
-        otn->tn_Space += x2 + data->Space;
+        snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%lx;%x;%d,%d]", data->buf, (unsigned long)data->Image[IMAGE_Tree].ListImage, (unsigned int)MUIA_TI_Spec, (int)SPEC_Space, (int)otn->tn_Space );
+
+        otn->tn_ImagePos += otn->tn_Space;
+        otn->tn_Space = 0;
       }
 
-      if ( ( x1 != SPEC_Space ) || cnt == 0 || ( data->Style == MUICFGV_NListtree_Style_Win98 ) || ( data->Style == MUICFGV_NListtree_Style_Win98Plus ) )
+      if ( x1 != SPEC_Space )
       {
-        if ( otn->tn_Space > 0 )
+        x2 += data->IndentWidth;
+
+        /*
+        **  Should we draw the root tree? No? Just use space.
+        */
+        if ( ( data->Flags & NLTF_NO_ROOT_TREE ) && !gp->tn_Parent )
         {
-          snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%lx;%x;%d,%d]", data->buf, (unsigned long)data->Image[IMAGE_Tree].ListImage, (unsigned int)MUIA_TI_Spec, (int)SPEC_Space, (int)otn->tn_Space );
-
-          otn->tn_ImagePos += otn->tn_Space;
-          otn->tn_Space = 0;
-        }
-
-        if ( x1 != SPEC_Space )
-        {
-          x2 += data->Space;
-
-          /*
-          **  Should we draw the root tree? No? Just use space.
-          */
-          if ( ( data->Flags & NLTF_NO_ROOT_TREE ) && !gp->tn_Parent )
-          {
-            if ( ( data->Style == MUICFGV_NListtree_Style_Win98 ) || ( data->Style == MUICFGV_NListtree_Style_Win98Plus ) )
-            {
-              snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%lx;%x;%d,%d]", data->buf, (unsigned long)data->Image[IMAGE_Tree].ListImage, (unsigned int)MUIA_TI_Spec, (int)SPEC_Space, (int)x2 );
-
-              otn->tn_ImagePos += x2;
-            }
-          }
-          else
-          {
-            snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%lx;%x;%d,%d]", data->buf, (unsigned long)data->Image[IMAGE_Tree].ListImage, (unsigned int)MUIA_TI_Spec, (int)x1, (int)x2 );
+            snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%lx;%x;%d,%d]", data->buf, (unsigned long)data->Image[IMAGE_Tree].ListImage, (unsigned int)MUIA_TI_Spec, (int)SPEC_Space, (int)x2 );
 
             otn->tn_ImagePos += x2;
-          }
+        }
+        else
+        {
+          // ensures proper text alignment with subnodes in
+          // case the user selected an additional indentwidth
+          if(data->IndentWidth > 0)
+            x2 += 2;
+
+          snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%lx;%x;%d,%d]", data->buf, (unsigned long)data->Image[IMAGE_Tree].ListImage, (unsigned int)MUIA_TI_Spec, (int)x1, (int)x2 );
+
+          otn->tn_ImagePos += x2;
         }
       }
     }
@@ -2921,8 +2849,7 @@ static void InsertImage( struct NListtree_Data *data, struct MUI_NListtree_TreeN
 {
   LONG x1 = -1;
 
-  if ( data->Style != MUICFGV_NListtree_Style_Mac )
-    InsertTreeImages( data, otn, otn, 0 );
+  InsertTreeImages( data, otn, otn, 0 );
 
   if ( ( ( otn->tn_Flags & TNF_LIST ) && !( otn->tn_Flags & TNF_NOSIGN ) ) && ( !IsListEmpty( (struct List *)&(CLN( otn ))->ln_List ) || !( data->Flags & NLTF_EMPTYNODES ) ) )
   {
@@ -2937,26 +2864,16 @@ static void InsertImage( struct NListtree_Data *data, struct MUI_NListtree_TreeN
 
     snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%lx]", data->buf, (unsigned long)data->Image[x1].ListImage );
 
-    if ( ( data->Style == MUICFGV_NListtree_Style_Win98 ) || ( data->Style == MUICFGV_NListtree_Style_Win98Plus ) )
-      x1 = SPEC_Hor;
-    else
-      x1 = SPEC_Space;
+    x1 = SPEC_Hor;
 
-    if ( data->Space > 0 )
+    // add some indent width
+    if(data->IndentWidth > 0)
+      snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%lx;%x;%d,%d]", data->buf, (unsigned long)data->Image[IMAGE_Tree].ListImage, (unsigned int)MUIA_TI_Spec, (int)x1, (unsigned int)data->IndentWidth);
+
+    if(data->UseFolderImage == TRUE)
     {
-      snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%lx;%x;%d,%d]", data->buf, (unsigned long)data->Image[IMAGE_Tree].ListImage, (unsigned int)MUIA_TI_Spec, (int)x1, (unsigned int)data->Space );
+      snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%lx]\033O[%lx;%x;%d,%d]", data->buf, (unsigned long)data->Image[IMAGE_Folder].ListImage, (unsigned long)data->Image[IMAGE_Tree].ListImage, (unsigned int)MUIA_TI_Spec, (unsigned int)SPEC_Space, 3);
     }
-
-    if ( data->Style == MUICFGV_NListtree_Style_Win98Plus )
-    {
-      snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%lx]\033O[%lx;%x;%d,%d]", data->buf, (unsigned long)data->Image[IMAGE_Special].ListImage, (unsigned long)data->Image[IMAGE_Tree].ListImage, (unsigned int)MUIA_TI_Spec, (unsigned int)SPEC_Space, 3);
-    }
-  }
-
-  if ( data->Style == MUICFGV_NListtree_Style_Mac )
-  {
-    InsertTreeImages( data, otn, otn, 0 );
-    otn->tn_ImagePos = 0;
   }
 }
 
@@ -2968,24 +2885,10 @@ static void DrawImages( struct MUI_NListtree_TreeNode *otn, struct MUI_NListtree
     struct MUI_NListtree_TreeNode *gp;
 
     if((gp = GetParent(tn)))
-    {
       DrawImages( otn, gp, data, cnt + 1 );
-    }
 
-    if ( data->Style == MUICFGV_NListtree_Style_Mac )
-    {
-      if ( !gp )
-      {
-        InsertImage( data, otn );
-      }
-    }
-    else
-    {
-      if(cnt == 0)
-      {
-        InsertImage( data, otn );
-      }
-    }
+    if(cnt == 0)
+      InsertImage( data, otn );
   }
 }
 
@@ -3276,186 +3179,6 @@ MakeStaticHook(_FindUserDataHook_PointerCompare, _FindUserDataFunc_PointerCompar
 **
 *******************************************************************************
 \*****************************************************************************/
-
-/****i* NListtree.mcc/MUICFG_NListtree_ImageSpecClosed ***********************
-*
-*   NAME
-*
-* MUICFG_NListtree_ImageSpecClosed -- [IS.],
-*
-*
-*   SPECIAL VALUES
-*
-*   FUNCTION
-*
-*   NOTIFICATION
-*
-*   SEE ALSO
-*
-*
-******************************************************************************
-*
-*/
-
-/****i* NListtree.mcc/MUICFG_NListtree_ImageSpecOpen *************************
-*
-*   NAME
-*
-* MUICFG_NListtree_ImageSpecOpen -- [IS.],
-*
-*
-*   SPECIAL VALUES
-*
-*   FUNCTION
-*
-*   NOTIFICATION
-*
-*   SEE ALSO
-*
-*
-******************************************************************************
-*
-*/
-
-/****i* NListtree.mcc/MUICFG_NListtree_ImageSpecSpecial **********************
-*
-*   NAME
-*
-* MUICFG_NListtree_ImageSpecSpecial -- [IS.],
-*
-*
-*   SPECIAL VALUES
-*
-*   FUNCTION
-*
-*   NOTIFICATION
-*
-*   SEE ALSO
-*
-*
-******************************************************************************
-*
-*/
-
-/****i* NListtree.mcc/MUICFG_NListtree_PenSpecLines **************************
-*
-*   NAME
-*
-* MUICFG_NListtree_PenSpecLines -- [IS.],
-*
-*
-*   SPECIAL VALUES
-*
-*   FUNCTION
-*
-*   NOTIFICATION
-*
-*   SEE ALSO
-*
-*
-******************************************************************************
-*
-*/
-
-/****i* NListtree.mcc/MUICFG_NListtree_PenSpecShadow *************************
-*
-*   NAME
-*
-* MUICFG_NListtree_PenSpecShadow -- [IS.],
-*
-*
-*   SPECIAL VALUES
-*
-*   FUNCTION
-*
-*   NOTIFICATION
-*
-*   SEE ALSO
-*
-*
-******************************************************************************
-*
-*/
-
-/****i* NListtree.mcc/MUICFG_NListtree_PenSpecDraw ***************************
-*
-*   NAME
-*
-* MUICFG_NListtree_PenSpecDraw -- [IS.],
-*
-*
-*   SPECIAL VALUES
-*
-*   FUNCTION
-*
-*   NOTIFICATION
-*
-*   SEE ALSO
-*
-*
-******************************************************************************
-*
-*/
-
-/****i* NListtree.mcc/MUICFG_NListtree_Space *********************************
-*
-*   NAME
-*
-* MUICFG_NListtree_Space -- [IS.],
-*
-*
-*   SPECIAL VALUES
-*
-*   FUNCTION
-*
-*   NOTIFICATION
-*
-*   SEE ALSO
-*
-*
-******************************************************************************
-*
-*/
-
-/****i* NListtree.mcc/MUICFG_NListtree_Style *********************************
-*
-*   NAME
-*
-* MUICFG_NListtree_Style -- [IS.],
-*
-*
-*   SPECIAL VALUES
-*
-*   FUNCTION
-*
-*   NOTIFICATION
-*
-*   SEE ALSO
-*
-*
-******************************************************************************
-*
-*/
-
-/****i* NListtree.mcc/MUICFG_NListtree_OpenAutoScroll ************************
-*
-*   NAME
-*
-* MUICFG_NListtree_OpenAutoScroll -- [IS.],
-*
-*
-*   SPECIAL VALUES
-*
-*   FUNCTION
-*
-*   NOTIFICATION
-*
-*   SEE ALSO
-*
-*
-******************************************************************************
-*
-*/
 
 /****** NListtree.mcc/MUIA_NListtree_Active **********************************
 *
@@ -4511,37 +4234,40 @@ static VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL 
       */
       case MUIA_NListtree_IsMCP:
         data->Flags |= NLTF_ISMCP;
-        break;
+      break;
 
       case MUICFG_NListtree_ImageSpecClosed:
-
+      {
         DisposeImage( data, IMAGE_Closed );
         SetupImage( data, (struct MUI_ImageSpec *)tag->ti_Data, IMAGE_Closed );
         DoRefresh( data );
 
         D(DBF_GETSET, "SET MUICFG_NListtree_ImageSpecClosed: '%s'", (STRPTR)tag->ti_Data);
-        break;
+      }
+      break;
 
       case MUICFG_NListtree_ImageSpecOpen:
-
+      {
         DisposeImage( data, IMAGE_Open );
         SetupImage( data, (struct MUI_ImageSpec *)tag->ti_Data, IMAGE_Open );
         DoRefresh( data );
 
         D(DBF_GETSET, "SET MUICFG_NListtree_ImageSpecOpen: '%s'", (STRPTR)tag->ti_Data);
-        break;
+      }
+      break;
 
-      case MUICFG_NListtree_ImageSpecSpecial:
-
-        DisposeImage( data, IMAGE_Special );
-        SetupImage( data, (struct MUI_ImageSpec *)tag->ti_Data, IMAGE_Special );
+      case MUICFG_NListtree_ImageSpecFolder:
+      {
+        DisposeImage( data, IMAGE_Folder );
+        SetupImage( data, (struct MUI_ImageSpec *)tag->ti_Data, IMAGE_Folder );
         DoRefresh( data );
 
-        D(DBF_GETSET, "SET MUICFG_NListtree_ImageSpecSpecial: '%s'", (STRPTR)tag->ti_Data);
-        break;
+        D(DBF_GETSET, "SET MUICFG_NListtree_ImageSpecFolder: '%s'", (STRPTR)tag->ti_Data);
+      }
+      break;
 
       case MUICFG_NListtree_PenSpecLines:
-
+      {
         if( data->MRI )
         {
           ObtPen( data->MRI, &data->Pen[PEN_Line], (struct MUI_PenSpec *)tag->ti_Data );
@@ -4549,10 +4275,11 @@ static VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL 
 
           D(DBF_GETSET, "SET MUICFG_NListtree_PenSpecLines: %s", (STRPTR)tag->ti_Data);
         }
-        break;
+      }
+      break;
 
       case MUICFG_NListtree_PenSpecShadow:
-
+      {
         if( data->MRI )
         {
           ObtPen( data->MRI, &data->Pen[PEN_Shadow], (struct MUI_PenSpec *)tag->ti_Data );
@@ -4560,69 +4287,77 @@ static VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL 
 
           D(DBF_GETSET, "SET MUICFG_NListtree_PenSpecShadow: %s", (STRPTR)tag->ti_Data);
         }
-        break;
+      }
+      break;
 
-      case MUICFG_NListtree_PenSpecDraw:
-
+      case MUICFG_NListtree_PenSpecGlow:
+      {
         if( data->MRI )
         {
-          ObtPen( data->MRI, &data->Pen[PEN_Draw], (struct MUI_PenSpec *)tag->ti_Data );
+          ObtPen( data->MRI, &data->Pen[PEN_Glow], (struct MUI_PenSpec *)tag->ti_Data );
           DoRefresh( data );
 
-          D(DBF_GETSET, "SET MUICFG_NListtree_PenSpecDraw: %s", (STRPTR)tag->ti_Data);
+          D(DBF_GETSET, "SET MUICFG_NListtree_PenSpecGlow: %s", (STRPTR)tag->ti_Data);
         }
-        break;
+      }
+      break;
 
-      case MUICFG_NListtree_PenSpecDraw2:
-
-        if( data->MRI )
-        {
-          ObtPen( data->MRI, &data->Pen[PEN_Draw2], (struct MUI_PenSpec *)tag->ti_Data );
-          DoRefresh( data );
-
-          D(DBF_GETSET, "SET MUICFG_NListtree_PenSpecDraw2: %s", (STRPTR)tag->ti_Data);
-        }
-        break;
-
-      case MUICFG_NListtree_Space:
-
-        data->Space = (BYTE)tag->ti_Data;
+      case MUICFG_NListtree_IndentWidth:
+      {
+        data->IndentWidth = (BYTE)tag->ti_Data;
         DoRefresh( data );
 
-        D(DBF_GETSET, "SET MUICFG_NListtree_Space: %ld", tag->ti_Data);
-        break;
+        D(DBF_GETSET, "SET MUICFG_NListtree_IndentWidth: %ld", tag->ti_Data);
+      }
+      break;
 
-      case MUICFG_NListtree_Style:
-
-        data->Style = (BYTE)tag->ti_Data;
+      case MUICFG_NListtree_LineType:
+      {
+        data->LineType = (ULONG)tag->ti_Data;
         DoRefresh( data );
 
-        D(DBF_GETSET, "SET MUICFG_NListtree_Style: %ld", tag->ti_Data);
-        break;
+        D(DBF_GETSET, "SET MUICFG_NListtree_LineType: %ld", tag->ti_Data);
+      }
+      break;
+
+      case MUICFG_NListtree_UseFolderImage:
+      {
+        data->UseFolderImage = (BOOL)tag->ti_Data;
+        DoRefresh(data);
+
+        D(DBF_GETSET, "SET MUICFG_NListtree_UseFolderImage: %ld", tag->ti_Data);
+      }
+      break;
 
       case MUICFG_NListtree_OpenAutoScroll:
-
+      {
         if ( (BOOL)tag->ti_Data )
           data->Flags |= NLTF_OPENAUTOSCROLL;
         else
           data->Flags &= ~NLTF_OPENAUTOSCROLL;
 
         D(DBF_GETSET, "SET MUICFG_NListtree_OpenAutoScroll: %ld", tag->ti_Data);
-        break;
+      }
+      break;
 
       /*
       **  General part.
       */
       case MUIA_NListtree_OnlyTrigger:
+      {
         onlytrigger = TRUE;
         D(DBF_GETSET, "SET MUIA_NListtree_OnlyTrigger");
-        break;
+      }
+      break;
 
       case MUIA_NList_Active:
+      {
         D(DBF_GETSET, "SET MUIA_NList_Active  %ld%s",tag->ti_Data,(data->Flags & NLTF_ACTIVENOTIFY)?" notify activation set":"no notify set");
-        break;
+      }
+      break;
 
       case MUIA_NListtree_Active:
+      {
         D(DBF_GETSET, "SET MUIA_NListtree_Active");
         if((tag->ti_Data == (ULONG)MUIV_NListtree_Active_Off) ||
            (tag->ti_Data == (IPTR)&data->RootList) ||
@@ -4721,32 +4456,34 @@ static VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL 
         {
           D(DBF_GETSET, "SET MUIA_NListtree_Active: TRIGGER: %s - 0x%08lx", actnode ? actnode->tn_Name : (STRPTR)"NULL", actnode);
         }
-        break;
-
+      }
+      break;
 
       /*
       **  Dummy for notification.
       */
       case MUIA_NListtree_ActiveList:
         D(DBF_GETSET, "SET MUIA_NListtree_ActiveList (dummy)");
-        break;
+      break;
 
       case MUIA_NListtree_AutoVisible:
-
+      {
         data->AutoVisible = (IPTR)tag->ti_Data;
 
         D(DBF_GETSET, "SET MUIA_NListtree_AutoVisible: %ld", tag->ti_Data);
-        break;
+      }
+      break;
 
       case MUIA_NListtree_CloseHook:
-
+      {
         data->CloseHook       = (struct Hook *)tag->ti_Data;
 
         D(DBF_GETSET, "SET MUIA_NListtree_CloseHook: 0x%08lx", tag->ti_Data);
-        break;
+      }
+      break;
 
       case MUIA_NListtree_CompareHook:
-
+      {
         switch( tag->ti_Data )
         {
           case MUIV_NListtree_CompareHook_Head:
@@ -4803,11 +4540,11 @@ static VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL 
           data->CompareHook = &data->IntCompareHook;
         }
         else data->Flags &= ~NLTF_INT_COMPAREHOOK;
-
-        break;
+      }
+      break;
 
       case MUIA_NListtree_ConstructHook:
-
+      {
         /*
         **  If old hook is internal, remove complete
         **  hook with all memory allocated.
@@ -4839,10 +4576,11 @@ static VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL 
 
           D(DBF_GETSET, "SET MUIA_NListtree_ConstructHook: 0x%08lx", tag->ti_Data);
         }
-        break;
+      }
+      break;
 
       case MUIA_NListtree_DestructHook:
-
+      {
         /*
         **  If old hook is internal, remove complete
         **  hook with all memory allocated.
@@ -4874,10 +4612,11 @@ static VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL 
 
           D(DBF_GETSET, "SET MUIA_NListtree_DestructHook: 0x%08lx", tag->ti_Data);
         }
-        break;
+      }
+      break;
 
       case MUIA_NListtree_DisplayHook:
-
+      {
         if(tag->ti_Data != (ULONG)MUIV_NListtree_DisplayHook_Default)
         {
           data->DisplayHook     = (struct Hook *)tag->ti_Data;
@@ -4886,10 +4625,11 @@ static VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL 
           data->DisplayHook = NULL;
 
         D(DBF_GETSET, "SET MUIA_NListtree_DisplayHook: 0x%08lx", tag->ti_Data);
-        break;
+      }
+      break;
 
       case MUIA_NListtree_CopyToClipHook:
-
+      {
         if ( tag->ti_Data == MUIV_NListtree_CopyToClipHook_Default )
         {
           D(DBF_GETSET, "SET MUIA_NListtree_CopyToClipHook: MUIV_NListtree_CopyToClipHook_Default");
@@ -4902,39 +4642,43 @@ static VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL 
 
           D(DBF_GETSET, "SET MUIA_NListtree_CopyToClipHook: 0x%08lx", tag->ti_Data);
         }
-        break;
+      }
+      break;
 
       case MUIA_NListtree_DoubleClick:
-
+      {
         if ( !onlytrigger )
         {
           data->DoubleClick = (BYTE)tag->ti_Data;
           D(DBF_GETSET, "SET MUIA_NListtree_DoubleClick: 0x%08lx", tag->ti_Data);
         }
-        break;
+      }
+      break;
 
       case MUIA_NListtree_DragDropSort:
-
+      {
         if ( (BOOL)tag->ti_Data )
           data->Flags |= NLTF_DRAGDROPSORT;
         else
           data->Flags &= ~NLTF_DRAGDROPSORT;
 
         D(DBF_GETSET, "SET MUIA_NListtree_DragDropSort: %ld", tag->ti_Data);
-        break;
+      }
+      break;
 
       case MUIA_NListtree_DupNodeName:
-
+      {
         if ( (BOOL)tag->ti_Data )
           data->Flags |= NLTF_DUPNODENAMES;
         else
           data->Flags &= ~NLTF_DUPNODENAMES;
 
         D(DBF_GETSET, "SET MUIA_NListtree_DupNodeName: %ld", tag->ti_Data);
-        break;
+      }
+      break;
 
       case MUIA_NListtree_EmptyNodes:
-
+      {
         if ( (BOOL)tag->ti_Data )
           data->Flags |= NLTF_EMPTYNODES;
         else
@@ -4944,10 +4688,11 @@ static VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL 
           DoRefresh( data );
 
         D(DBF_GETSET, "SET MUIA_NListtree_EmptyNodes: %ld", tag->ti_Data);
-        break;
+      }
+      break;
 
       case MUIA_NListtree_FindNameHook:
-
+      {
         /*
         **  If old hook is internal, remove complete
         **  hook with all memory allocated.
@@ -5012,11 +4757,11 @@ static VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL 
         {
           InitHook(data->FindNameHook, *orgHook, data);
         }
-
-        break;
+      }
+      break;
 
       case MUIA_NListtree_FindUserDataHook:
-
+      {
         /*
         **  If old hook is internal, remove complete
         **  hook with all memory allocated.
@@ -5081,8 +4826,8 @@ static VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL 
         {
           InitHook(data->FindUserDataHook, *orgHook, data);
         }
-
-        break;
+      }
+      break;
 
       case MUIA_NListtree_Format:
       {
@@ -5115,7 +4860,7 @@ static VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL 
       break;
 
       case MUIA_NListtree_MultiSelect:
-
+      {
         data->MultiSelect = (UBYTE)( tag->ti_Data & 0x00ff );
 
         /*
@@ -5124,24 +4869,27 @@ static VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL 
         */
 
         D(DBF_GETSET, "SET MUIA_NListtree_MultiSelect: 0x%08lx", tag->ti_Data);
-        break;
+      }
+      break;
 
       case MUIA_NListtree_MultiTestHook:
-
+      {
         data->MultiTestHook     = (struct Hook *)tag->ti_Data;
 
         D(DBF_GETSET, "SET MUIA_NListtree_MultiTestHook: 0x%08lx", tag->ti_Data);
-        break;
+      }
+      break;
 
       case MUIA_NListtree_OpenHook:
-
+      {
         data->OpenHook        = (struct Hook *)tag->ti_Data;
 
         D(DBF_GETSET, "SET MUIA_NListtree_OpenHook: 0x%08lx", tag->ti_Data);
-        break;
+      }
+      break;
 
       case MUIA_NListtree_Quiet:
-
+      {
         if ( !DoQuiet( data, (BOOL)tag->ti_Data ) )
         {
           if ( data->Flags & NLTF_REFRESH )
@@ -5154,20 +4902,22 @@ static VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL 
         }
 
         D(DBF_GETSET, "SET MUIA_NListtree_Quiet: %ld - Counter = %ld", tag->ti_Data, data->QuietCounter);
-        break;
+      }
+      break;
 
       case MUICFG_NListtree_RememberStatus:
-
+      {
         if ( (BOOL)tag->ti_Data )
           data->Flags |= NLTF_REMEMBER_STATUS;
         else
           data->Flags &= ~NLTF_REMEMBER_STATUS;
 
         D(DBF_GETSET, "SET MUICFG_NListtree_RememberStatus: %ld", tag->ti_Data);
-        break;
+      }
+      break;
 
       case MUIA_NListtree_Title:
-
+      {
         if ( tag->ti_Data )
           data->Flags |= NLTF_TITLE;
         else
@@ -5177,21 +4927,22 @@ static VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL 
           nnset( data->Obj, MUIA_NList_Title, tag->ti_Data );
 
         D(DBF_GETSET, "SET MUIA_NListtree_Title: %ld", tag->ti_Data);
-        break;
+      }
+      break;
 
       case MUIA_NListtree_TreeColumn:
-
+      {
         data->TreeColumn = (UWORD)( tag->ti_Data & 0x00ff );
 
         if ( !initial )
           DoRefresh( data );
 
         D(DBF_GETSET, "SET MUIA_NListtree_TreeColumn: 0x%08lx", tag->ti_Data);
-        break;
-
+      }
+      break;
 
       case MUIA_NListtree_ShowTree:
-
+      {
         if(tag->ti_Data == (ULONG)MUIV_NListtree_ShowTree_Toggle)
         {
           if ( data->Flags & NLTF_NO_TREE )
@@ -5208,10 +4959,11 @@ static VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL 
           DoRefresh( data );
 
         D(DBF_GETSET, "SET MUIA_NListtree_ShowTree: 0x%08lx", tag->ti_Data);
-        break;
+      }
+      break;
 
       case MUIA_NListtree_NoRootTree:
-
+      {
         /*
         **  data->MRI is set in _Setup(). This makes sure, this tag is only
         **  used in the initial configuration.
@@ -5220,11 +4972,12 @@ static VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL 
         {
           data->Flags |= NLTF_NO_ROOT_TREE;
         }
-        break;
+      }
+      break;
 
       default:
         D(DBF_GETSET, "SET attribute 0x%08lx to 0x%08lx", tag->ti_Tag, tag->ti_Data);
-        break;
+      break;
     }
   }
 }
@@ -5444,7 +5197,7 @@ IPTR _New(struct IClass *cl, Object *obj, struct opSet *msg)
         else
           taskname = "MUI Application";
 
-        if ( ( ver < 20 ) || ( ( ver == 20 ) && ( rev < 127 ) ) )
+        if ( ( ver < 20 ) || ( ( ver == 20 ) && ( rev < 130 ) ) )
         {
           struct EasyStruct es;
 
@@ -5454,7 +5207,7 @@ IPTR _New(struct IClass *cl, Object *obj, struct opSet *msg)
           es.es_TextFormat = (STRPTR)"NListtree.mcc has detected that your version of\n"
                                      "NList.mcc which is used by task `%s'\n"
                                      "is outdated (V%ld.%ld). Please update at least to\n"
-                                     "version 20.127, which is available at\n\n"
+                                     "version 20.130, which is available at\n\n"
                                      "http://www.sf.net/projects/nlist-classes\n\n"
                                      "NListtree will terminate now to avoid problems...\n";
           es.es_GadgetFormat = (STRPTR)"Terminate";
@@ -5634,7 +5387,15 @@ IPTR _Setup(struct IClass *cl, Object *obj, struct MUIP_Setup *msg)
   **  These values are used for drawing the lines.
   */
   data->Image[IMAGE_Tree].nltdata = data;
-  data->Image[IMAGE_Tree].Image = NewObject( data->CL_TreeImage->mcc_Class, NULL, MUIA_FillArea, FALSE, NoFrame, MUIA_UserData, &data->Image[IMAGE_Tree], TAG_DONE);
+  data->Image[IMAGE_Tree].Image = NewObject( data->CL_TreeImage->mcc_Class, NULL, MUIA_FillArea,    FALSE, 
+                                                                                  MUIA_Frame,       MUIV_Frame_None,
+                                                                                  MUIA_UserData,    &data->Image[IMAGE_Tree],
+                                                                                  MUIA_InnerBottom, 0,
+                                                                                  MUIA_InnerLeft,   0,
+                                                                                  MUIA_InnerRight,  0,
+                                                                                  MUIA_InnerTop,    0,
+                                                                                  MUIA_Weight,      0,
+                                                                                  TAG_DONE);
   data->Image[IMAGE_Tree].ListImage = (Object *)DoMethod( obj, MUIM_NList_CreateImage, data->Image[IMAGE_Tree].Image, 0L );
 
   data->compositingActive = 0;
@@ -5663,7 +5424,7 @@ IPTR _Setup(struct IClass *cl, Object *obj, struct MUIP_Setup *msg)
     }
     else if ( idobj )
     {
-      set( idobj, MUIA_Imagedisplay_Spec, "1:17" );
+      set( idobj, MUIA_Imagedisplay_Spec, MUICFGV_NListtree_ImageSpecClosed_Default );
       d = xget( idobj, MUIA_Imagedisplay_Spec );
 
       SetupImage( data, (struct MUI_ImageSpec *)d, IMAGE_Closed );
@@ -5680,7 +5441,7 @@ IPTR _Setup(struct IClass *cl, Object *obj, struct MUIP_Setup *msg)
     }
     else if ( idobj )
     {
-      set( idobj, MUIA_Imagedisplay_Spec, "1:23" );
+      set( idobj, MUIA_Imagedisplay_Spec, MUICFGV_NListtree_ImageSpecOpen_Default );
       d = xget( idobj, MUIA_Imagedisplay_Spec );
 
       SetupImage( data, (struct MUI_ImageSpec *)d, IMAGE_Open );
@@ -5689,97 +5450,70 @@ IPTR _Setup(struct IClass *cl, Object *obj, struct MUIP_Setup *msg)
     }
 
 
-    if ( DoMethod( obj, MUIM_GetConfigItem, MUICFG_NListtree_ImageSpecSpecial, &d ) )
+    if ( DoMethod( obj, MUIM_GetConfigItem, MUICFG_NListtree_ImageSpecFolder, &d ) )
     {
-      SetupImage( data, (struct MUI_ImageSpec *)d, IMAGE_Special );
+      SetupImage( data, (struct MUI_ImageSpec *)d, IMAGE_Folder );
 
-      D(DBF_SETUP, "C-Special image: '%s'", (STRPTR)d);
+      D(DBF_SETUP, "C-Folder image: '%s'", (STRPTR)d);
     }
     else if ( idobj )
     {
-      set( idobj, MUIA_Imagedisplay_Spec, "1:9" );
+      set( idobj, MUIA_Imagedisplay_Spec, MUICFGV_NListtree_ImageSpecFolder_Default );
       d = xget( idobj, MUIA_Imagedisplay_Spec );
 
-      SetupImage( data, (struct MUI_ImageSpec *)d, IMAGE_Special );
+      SetupImage( data, (struct MUI_ImageSpec *)d, IMAGE_Folder );
 
-      D(DBF_SETUP, "Special image: '%s'", (STRPTR)d);
+      D(DBF_SETUP, "Folder image: '%s'", (STRPTR)d);
     }
-
 
     /*
     **  Get and set line, shadow and draw pens
     */
     if ( DoMethod( obj, MUIM_GetConfigItem, MUICFG_NListtree_PenSpecLines, &d ) )
       ObtPen( data->MRI, &data->Pen[PEN_Line], (struct MUI_PenSpec *)d );
-
     else if( pdobj )
     {
-      DoMethod( pdobj, MUIM_Pendisplay_SetMUIPen, DEFAULT_PEN_LINES );
+      DoMethod( pdobj, MUIM_Pendisplay_SetMUIPen, MUICFGV_NListtree_PenSpecLines_Default );
       ObtPen( data->MRI, &data->Pen[PEN_Line], (struct MUI_PenSpec *)xget( pdobj, MUIA_Pendisplay_Spec ) );
     }
 
 
     if ( DoMethod( obj, MUIM_GetConfigItem, MUICFG_NListtree_PenSpecShadow, &d ) )
       ObtPen( data->MRI, &data->Pen[PEN_Shadow], (struct MUI_PenSpec *)d );
-
     else if( pdobj )
     {
-      DoMethod( pdobj, MUIM_Pendisplay_SetMUIPen, DEFAULT_PEN_SHADOW );
+      DoMethod( pdobj, MUIM_Pendisplay_SetMUIPen, MUICFGV_NListtree_PenSpecShadow_Default );
       ObtPen( data->MRI, &data->Pen[PEN_Shadow], (struct MUI_PenSpec *)xget( pdobj, MUIA_Pendisplay_Spec ) );
     }
 
 
-    if ( DoMethod( obj, MUIM_GetConfigItem, MUICFG_NListtree_PenSpecDraw, &d ) )
-      ObtPen( data->MRI, &data->Pen[PEN_Draw], (struct MUI_PenSpec *)d );
-
+    if ( DoMethod( obj, MUIM_GetConfigItem, MUICFG_NListtree_PenSpecGlow, &d ) )
+      ObtPen( data->MRI, &data->Pen[PEN_Glow], (struct MUI_PenSpec *)d );
     else if( pdobj )
     {
-      DoMethod( pdobj, MUIM_Pendisplay_SetMUIPen, DEFAULT_PEN_DRAW );
-      ObtPen( data->MRI, &data->Pen[PEN_Draw], (struct MUI_PenSpec *)xget( pdobj, MUIA_Pendisplay_Spec ) );
-    }
-
-
-    if ( DoMethod( obj, MUIM_GetConfigItem, MUICFG_NListtree_PenSpecDraw2, &d ) )
-      ObtPen( data->MRI, &data->Pen[PEN_Draw2], (struct MUI_PenSpec *)d );
-
-    else if( pdobj )
-    {
-      DoMethod( pdobj, MUIM_Pendisplay_SetMUIPen, DEFAULT_PEN_DRAW );
-      ObtPen( data->MRI, &data->Pen[PEN_Draw2], (struct MUI_PenSpec *)xget( pdobj, MUIA_Pendisplay_Spec ) );
+      DoMethod( pdobj, MUIM_Pendisplay_SetMUIPen, MUICFGV_NListtree_PenSpecGlow_Default );
+      ObtPen( data->MRI, &data->Pen[PEN_Glow], (struct MUI_PenSpec *)xget( pdobj, MUIA_Pendisplay_Spec ) );
     }
 
 
     /*
     **  Set values
     */
-    if ( DoMethod( obj, MUIM_GetConfigItem, MUICFG_NListtree_Style, &d ) )
-    {
-      data->Style = atoi( (STRPTR)d );
-    }
+    if ( DoMethod( obj, MUIM_GetConfigItem, MUICFG_NListtree_LineType, &d ) )
+      data->LineType = atoi( (STRPTR)d );
     else
-    {
-      data->Style = MUICFGV_NListtree_Style_Lines3D;
-    }
+      data->LineType = MUICFGV_NListtree_LineType_Default;
 
 
-    if ( DoMethod( obj, MUIM_GetConfigItem, MUICFG_NListtree_Space, &d ) )
-    {
-      data->Space = atoi( (STRPTR)d );
-    }
+    if ( DoMethod( obj, MUIM_GetConfigItem, MUICFG_NListtree_IndentWidth, &d ) )
+      data->IndentWidth = atoi( (STRPTR)d );
     else
-    {
-      data->Space = MUICFGV_NListtree_Space_Default;
-    }
-
+      data->IndentWidth = MUICFGV_NListtree_IndentWidth_Default;
 
     if ( DoMethod( obj, MUIM_GetConfigItem, MUICFG_NListtree_RememberStatus, &d ) )
-    {
       x = atoi( (STRPTR)d );
-    }
     else
-    {
-      x = TRUE;
-    }
+      x = MUICFGV_NListtree_RememberStatus_Default;
 
     if ( x )
       data->Flags |= NLTF_REMEMBER_STATUS;
@@ -5788,19 +5522,19 @@ IPTR _Setup(struct IClass *cl, Object *obj, struct MUIP_Setup *msg)
 
 
     if ( DoMethod( obj, MUIM_GetConfigItem, MUICFG_NListtree_OpenAutoScroll, &d ) )
-    {
       x = atoi( (STRPTR)d );
-    }
     else
-    {
-      x = TRUE;
-    }
+      x = MUICFGV_NListtree_OpenAutoScroll_Default;
 
     if ( x )
       data->Flags |= NLTF_OPENAUTOSCROLL;
     else
       data->Flags &= ~NLTF_OPENAUTOSCROLL;
 
+    if ( DoMethod( obj, MUIM_GetConfigItem, MUICFG_NListtree_UseFolderImage, &d ) )
+      data->UseFolderImage = atoi( (STRPTR)d );
+    else
+      data->UseFolderImage = MUICFGV_NListtree_UseFolderImage_Default;
 
 
     /*
@@ -5836,12 +5570,9 @@ IPTR _Cleanup(struct IClass *cl, Object *obj, Msg msg)
   for( i = 0; i < 4; i++ )
     DisposeImage( data, i );
 
-
   RelPen( data->MRI, &data->Pen[PEN_Line] );
   RelPen( data->MRI, &data->Pen[PEN_Shadow] );
-  RelPen( data->MRI, &data->Pen[PEN_Draw] );
-  RelPen( data->MRI, &data->Pen[PEN_Draw2] );
-
+  RelPen( data->MRI, &data->Pen[PEN_Glow] );
 
   data->MRI = NULL;
 
@@ -6394,7 +6125,6 @@ IPTR _DragNDrop_DropType(struct IClass *cl, Object *obj, struct MUIP_NList_DropT
         ULONG secs;
         ULONG micros;
         ULONG diffSecs;
-        ULONG diffMicros;
 
         // get the current system time
         CurrentTime(&secs, &micros);
@@ -6402,11 +6132,8 @@ IPTR _DragNDrop_DropType(struct IClass *cl, Object *obj, struct MUIP_NList_DropT
         diffSecs = secs - data->OpenDropListSecs;
         if(micros < data->OpenDropListMicros)
         {
-          diffMicros = micros + 1000000L - data->OpenDropListMicros;
           diffSecs--;
         }
-        else
-          diffMicros = micros - data->OpenDropListMicros;
 
         // open the node if the user held the mouse for at least one second
         // over the closed node
@@ -10240,52 +9967,61 @@ IPTR _NListtree_PrevSelected(struct IClass *cl, Object *obj, struct MUIP_NListtr
 IPTR _NListtree_CopyToClip(struct IClass *cl, Object *obj, struct MUIP_NListtree_CopyToClip *msg)
 {
   struct NListtree_Data *data = INST_DATA(cl, obj);
-  STRPTR string, str;
-  BOOL alloc = FALSE;
 
-  if ( data->CopyToClipHook )
+  // make sure anything is selected at all or calling CopyToClip doesn't make
+  // much sense
+  if(msg->TreeNode != NULL && msg->TreeNode->tn_Name != NULL)
   {
-    if ( (SIPTR)( string = (STRPTR)MyCallHook( data->CopyToClipHook, data, MUIA_NListtree_CopyToClipHook, msg->TreeNode, msg->Pos, msg->Unit ) ) == MUIV_NListtree_CopyToClip_Active )
-      string = msg->TreeNode->tn_Name;
-  }
-  else
-  {
-    string = msg->TreeNode->tn_Name;
+    STRPTR string = NULL;
+    BOOL alloc = FALSE;
 
-    if((str = AllocVecPooled(data->MemoryPool, strlen(string) + 1)))
+    if(data->CopyToClipHook != NULL)
     {
-      STRPTR s = string;
+      if((SIPTR)(string = (STRPTR)MyCallHook(data->CopyToClipHook, data, MUIA_NListtree_CopyToClipHook, msg->TreeNode, msg->Pos, msg->Unit)) == (SIPTR)MUIV_NListtree_CopyToClip_Active)
+        string = msg->TreeNode->tn_Name;
+    }
+    else
+    {
+      STRPTR str;
 
-      alloc = TRUE;
-      string = str;
-
-      while( *s )
+      string = msg->TreeNode->tn_Name;
+      if((str = AllocVecPooled(data->MemoryPool, strlen(string) + 1)) != NULL)
       {
-        if ( *s == 0x1b )
+        STRPTR s = string;
+
+        alloc = TRUE;
+        string = str;
+
+        // copy the string and remove all escape sequences
+        while(*s != '\0')
         {
-          s += 2;
+          if(*s == 0x1b)
+          {
+            s += 2;
 
-          if ( *s == '[' )
-            while( ++*s != ']' );
+            if(*s == '[')
+              while(++*s != ']');
 
-          s++;
+            s++;
+          }
+
+          *str++ = *s++;
         }
-
-        *str++ = *s++;
       }
+    }
+
+    if(string != NULL)
+    {
+      //D(bug( "String: %s, Unit: %ld, pos: %ld\n", string, msg->Unit, msg->Pos ) );
+
+      StringToClipboard(msg->Unit, string);
+
+      if(alloc == TRUE)
+        FreeVecPooled(data->MemoryPool, string);
     }
   }
 
-
-  //D(bug( "String: %s, Unit: %ld, pos: %ld\n", string, msg->Unit, msg->Pos ) );
-
-
-  StringToClipboard(msg->Unit, string);
-
-  if ( alloc )
-    FreeVecPooled( data->MemoryPool, string );
-
-  return( 0 );
+  return(0);
 }
 
 

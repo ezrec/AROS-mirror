@@ -461,27 +461,22 @@ static IPTR mNL_Export(struct IClass *cl,Object *obj,struct MUIP_Export *msg)
 //$$$Sensei
 static IPTR mNL_List_Construct( struct IClass *cl, Object *obj, struct MUIP_NList_Construct *msg )
 {
-
     APTR entry = msg->entry;
 
     if( entry )
     {
-
         struct NLData   *data   = INST_DATA( cl, obj );
         struct Hook     *hook   = data->NList_ConstructHook;
 
         if( hook )
         {
+          APTR pool = msg->pool;
 
-				APTR	pool	= msg->pool;
-
-				if( data->NList_ConstructHook2 )
-					 entry = (APTR) MyCallHookPktA(obj,hook,entry,pool);
-            else
-					 entry = (APTR) MyCallHookPkt(obj,TRUE,hook,pool,entry);
-
+          if( data->NList_ConstructHook2 )
+            entry = (APTR) MyCallHookPktA(obj,hook,entry,pool);
+          else
+            entry = (APTR) MyCallHookPkt(obj,TRUE,hook,pool,entry);
         }
-
     }
 
     return( (IPTR) entry );
@@ -522,39 +517,41 @@ static IPTR mNL_List_Destruct( struct IClass *cl, Object *obj, struct MUIP_NList
 // Function directly stolen from original NList_Compare().
 static IPTR mNL_List_Compare( struct IClass *cl, Object *obj, struct MUIP_NList_Compare *msg )
 {
-	struct NLData *data = INST_DATA(cl, obj);
+  struct NLData *data = INST_DATA(cl, obj);
 
-	if(data->NList_CompareHook != NULL)
-	{
-		if(data->NList_CompareHook2)
-			return (IPTR)MyCallHookPktA(obj, data->NList_CompareHook, msg->entry1, msg->entry2, msg->sort_type1, msg->sort_type2);
-		else
-			return (IPTR)MyCallHookPkt(obj, TRUE, data->NList_CompareHook, msg->entry2, msg->entry1);
-	}
-	else
-		return (IPTR)Stricmp(msg->entry1, msg->entry2);
+  if(data->NList_CompareHook != NULL)
+  {
+    if(data->NList_CompareHook2)
+      return (IPTR)MyCallHookPktA(obj, data->NList_CompareHook, msg->entry1, msg->entry2, msg->sort_type1, msg->sort_type2);
+    else
+      return (IPTR)MyCallHookPkt(obj, TRUE, data->NList_CompareHook, msg->entry2, msg->entry1);
+  }
+  else
+    return (IPTR)Stricmp(msg->entry1, msg->entry2);
 }
 
 //$$$Sensei
 static IPTR mNL_List_Display( struct IClass *cl, Object *obj, UNUSED struct MUIP_NList_Display *msg )
 {
-	struct NLData *data = INST_DATA( cl, obj );
+  struct NLData *data = INST_DATA( cl, obj );
 
-	if( data->NList_DisplayHook )
-	{
-		if( data->NList_DisplayHook2 )
-		{
-			// data->DisplayArray[0] = (char *) useptr;
-			return MyCallHookPkt(obj,FALSE,data->NList_DisplayHook,obj,data->DisplayArray);
-		}
-		else
-		{
-			APTR useptr = data->DisplayArray[ 0 ];
-			data->DisplayArray[0] = (char *) data->NList_PrivateData;
-			return MyCallHookPkt(obj,TRUE,data->NList_DisplayHook,&data->DisplayArray[2],useptr);
-		}
-	}
-	return( 0 );
+  if( data->NList_DisplayHook )
+  {
+    if( data->NList_DisplayHook2 )
+    {
+      // data->DisplayArray[0] = (char *) useptr;
+      return MyCallHookPkt(obj,FALSE,data->NList_DisplayHook,obj,data->DisplayArray);
+    }
+    else
+    {
+      APTR useptr = data->DisplayArray[ 0 ];
+
+      data->DisplayArray[0] = (char *) data->NList_PrivateData;
+      return MyCallHookPkt(obj,TRUE,data->NList_DisplayHook,&data->DisplayArray[2],useptr);
+    }
+  }
+
+  return( 0 );
 }
 
 static IPTR mNL_GoActive(struct IClass *cl, Object *obj, UNUSED struct MUIP_NList_GoActive *msg)

@@ -1,10 +1,7 @@
 /***************************************************************************
 
- NListviews.mcp - New Listview MUI Custom Class Preferences
- Registered MUI class, Serial Number: 1d51 (0x9d510001 to 0x9d51001F
-                                            and 0x9d510101 to 0x9d51013F)
-
- Copyright (C) 1996-2001 by Gilles Masson
+ NListtree.mcc - New Listtree MUI Custom Class
+ Copyright (C) 1999-2001 by Carsten Scholling
  Copyright (C) 2001-2007 by NList Open Source Team
 
  This library is free software; you can redistribute it and/or
@@ -37,7 +34,7 @@
 #include "locale.h"
 #include "private.h"
 
-#include <SDI/SDI_hook.h>
+#include "SDI_hook.h"
 
 #if defined(__amigaos4__)
 struct Library *IntuitionBase = NULL;
@@ -102,20 +99,20 @@ int main(void)
         Object *window = NULL;
         struct MUI_CustomClass *mcc = NULL;
 
-        mcc = MUI_CreateCustomClass(NULL, (STRPTR)"Group.mui", NULL, sizeof(struct NListviews_MCP_Data), ENTRY(_DispatcherP));
+        mcc = MUI_CreateCustomClass(NULL, (STRPTR)"Group.mui", NULL, sizeof(struct NListtreeP_Data), ENTRY(_DispatcherP));
         if(mcc)
         {
           app = MUI_NewObject("Application.mui",
               MUIA_Application_Author,      "NList Open Source Team",
-              MUIA_Application_Base,        "NListviews-Prefs",
-              MUIA_Application_Copyright,   "(c) 2001-2007 NList Open Source Team",
-              MUIA_Application_Description, "Preference for NList classes",
-              MUIA_Application_Title,       "NListviews-Prefs",
-              MUIA_Application_Version,     "$VER: NListviews-Prefs V1.0 (15.09.2007)",
+              MUIA_Application_Base,        "NListtree-Prefs",
+              MUIA_Application_Copyright,   "(c) 2001-2011 NList Open Source Team",
+              MUIA_Application_Description, "Preference for NListtree classes",
+              MUIA_Application_Title,       "NListtree-Prefs",
+              MUIA_Application_Version,     "$VER: NListtree-Prefs V1.0 (05.07.2011)",
 
               MUIA_Application_Window,
                 window = MUI_NewObject("Window.mui",
-                MUIA_Window_Title,    "NListviews-Prefs",
+                MUIA_Window_Title,    "NListtree-Prefs",
                 MUIA_Window_RootObject,
                   MUI_NewObject("Group.mui",
                   MUIA_Background, MUII_PageBack,

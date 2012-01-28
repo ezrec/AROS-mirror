@@ -81,6 +81,19 @@ struct ConsoleIFace *IConsole = NULL;
 
 static struct IOStdReq ioreq;
 
+#if defined(DEBUG)
+#include "timeval.h"
+static struct TimeRequest timereq;
+#if defined(__MORPHOS__)
+struct Library *TimerBase = NULL;
+#else
+struct Device *TimerBase = NULL;
+#endif
+#if defined(__amigaos4__)
+struct TimerIFace *ITimer = NULL;
+#endif
+#endif // DEBUG
+
 /******************************************************************************/
 /* define the functions used by the startup code ahead of including mccinit.c */
 /******************************************************************************/
@@ -103,19 +116,35 @@ static BOOL ClassInit(UNUSED struct Library *base)
     if((DiskfontBase = OpenLibrary("diskfont.library", 39L)) &&
        GETINTERFACE(IDiskfont, struct DiskfontIFace *, DiskfontBase))
     {
+      memset(&ioreq, 0, sizeof(ioreq));
       ioreq.io_Message.mn_Length = sizeof(ioreq);
-      if(!OpenDevice("console.device", -1L, (struct IORequest *)&ioreq, 0L))
+      if(OpenDevice("console.device", -1L, (struct IORequest *)&ioreq, 0L) == 0)
       {
         ConsoleDevice = (APTR)ioreq.io_Device;
         if(GETINTERFACE(IConsole, struct ConsoleIFace *, ConsoleDevice))
         {
-          if(NGR_Create())
+          #if defined(DEBUG)
+          memset(&timereq, 0, sizeof(timereq));
+          timereq.Request.io_Message.mn_Length = sizeof(timereq);
+          if(OpenDevice("timer.device", 0, (struct IORequest *)&timereq, 0L) == 0)
           {
-            if(StartClipboardServer() == TRUE)
+            TimerBase = timereq.Request.io_Device;
+            if(GETINTERFACE(ITimer, struct TimerIFace *, TimerBase))
             {
-              return(TRUE);
+          #endif // DEBUG
+              if(NGR_Create())
+              {
+                if(StartClipboardServer() == TRUE)
+                {
+                  return(TRUE);
+                }
+              }
+
+          #if defined(DEBUG)
+              DROPINTERFACE(ITimer);
             }
           }
+          #endif // DEBUG
 
           DROPINTERFACE(IConsole);
         }
@@ -143,6 +172,15 @@ static VOID ClassExpunge(UNUSED struct Library *base)
   ShutdownClipboardServer();
 
   NGR_Delete();
+
+  #if defined(DEBUG)
+  if(TimerBase)
+  {
+    DROPINTERFACE(ITimer);
+    CloseDevice((struct IORequest *)&timereq);
+    TimerBase = NULL;
+  }
+  #endif // DEBUG
 
   if(ConsoleDevice)
   {

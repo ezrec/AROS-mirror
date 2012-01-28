@@ -104,14 +104,15 @@ struct NListtree_Data
   /*
   **  Pen specific stuff.
   */
-  LONG              Pen[4];         // ***  Obtained pen for lines/shadow/draw/draw2 drawing.
+  LONG              Pen[3];         // ***  Obtained pen for lines/shadow/glow drawing.
 
 
   /*
   **  Other configuration stuff.
   */
-  UBYTE             Style,          // ***  The style the list tree should appear
-                    Space;          // ***  Number of space pixels between image and entry
+  ULONG             LineType;       // *** The line type used (see private.h)
+  ULONG             IndentWidth;    // *** The width of the indent
+  BOOL              UseFolderImage; // *** boolean for selecting if the folder image should be shown or not
 
   UBYTE             MultiSelect;      // ***  Multi selection kind and flags.
   UWORD             MultiSelectFlags;
@@ -237,7 +238,7 @@ struct NListtree_Data
 
 #define IMAGE_Closed                      0L
 #define IMAGE_Open                        1L
-#define IMAGE_Special                     2L
+#define IMAGE_Folder                      2L
 #define IMAGE_Tree                        3L
 
 #define SPEC_Vert                         1L
@@ -248,8 +249,7 @@ struct NListtree_Data
 
 #define PEN_Shadow                        0L
 #define PEN_Line                          1L
-#define PEN_Draw                          2L
-#define PEN_Draw2                         3L
+#define PEN_Glow                          2L
 
 /// xget()
 //  Gets an attribute value from a MUI object
