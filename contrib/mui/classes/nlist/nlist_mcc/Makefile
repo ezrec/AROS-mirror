@@ -281,7 +281,7 @@ ifeq ($(OS), aros-i386)
 
   # Compiler/Linker flags
   OPTFLAGS = -O2 -fomit-frame-pointer -funroll-loops
-  CFLAGS += -Wno-pointer-sign -DNO_INLINE_STDARG
+  CFLAGS += -Wno-pointer-sign
   LDLIBS += -larossupport -lrom -lmui
 
 else
