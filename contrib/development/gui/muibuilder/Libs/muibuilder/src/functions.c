@@ -129,7 +129,7 @@ LIBFUNC BOOL MB_Open(void)
     }
 
     /* File with options */
-    if ((TMPfile = Open("T:MUIBuilder1.tmp", MODE_OLDFILE)) != NULL)
+    if ((TMPfile = Open("T:MUIBuilder1.tmp", MODE_OLDFILE)) != BNULL)
     {
         ExamineFH(TMPfile, Info);
         length = Info->fib_Size;
@@ -157,7 +157,7 @@ LIBFUNC BOOL MB_Open(void)
         success = FALSE;
 
     /* File with declarations of variables */
-    if ((TMPfile = Open("T:MUIBuilder2.tmp", MODE_OLDFILE)) != NULL)
+    if ((TMPfile = Open("T:MUIBuilder2.tmp", MODE_OLDFILE)) != BNULL)
     {
         ExamineFH(TMPfile, Info);
         length = Info->fib_Size;
@@ -178,7 +178,7 @@ LIBFUNC BOOL MB_Open(void)
         success = FALSE;
 
     /* File with initializations of variables */
-    if ((TMPfile = Open("T:MUIBuilder3.tmp", MODE_OLDFILE)) != NULL)
+    if ((TMPfile = Open("T:MUIBuilder3.tmp", MODE_OLDFILE)) != BNULL)
     {
         ExamineFH(TMPfile, Info);
         length = Info->fib_Size;
@@ -227,7 +227,7 @@ LIBFUNC BOOL MB_Open(void)
     }
 
     /* File with MUI code */
-    if ((TMPfile = Open("T:MUIBuilder4.tmp", MODE_OLDFILE)) != NULL)
+    if ((TMPfile = Open("T:MUIBuilder4.tmp", MODE_OLDFILE)) != BNULL)
     {
         ExamineFH(TMPfile, Info);
         length = Info->fib_Size;
@@ -245,7 +245,7 @@ LIBFUNC BOOL MB_Open(void)
         success = FALSE;
 
     /* File with notifications */
-    if ((TMPfile = Open("T:MUIBuilder5.tmp", MODE_OLDFILE)) != NULL)
+    if ((TMPfile = Open("T:MUIBuilder5.tmp", MODE_OLDFILE)) != BNULL)
     {
         ExamineFH(TMPfile, Info);
         length = Info->fib_Size;

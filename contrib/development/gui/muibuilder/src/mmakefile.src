@@ -56,7 +56,9 @@ FILES := \
 EXEDIR := $(AROSDIR)/Extras/Development/MUIBuilder
 
 USER_CFLAGS += -I$(AROS_INCLUDES)/SDI -DMUI_OBSOLETE
-USER_CFLAGS += -Wno-parentheses $(FORMAT_SECURITY_CFLAGS)
+USER_CFLAGS += -Wno-parentheses \
+	       -Wno-uninitialized \
+	       $(FORMAT_SECURITY_CFLAGS)
 
 %build_prog mmake=contrib-development-gui-muibuilder-src \
     progname=MUIBuilder targetdir=$(EXEDIR) \

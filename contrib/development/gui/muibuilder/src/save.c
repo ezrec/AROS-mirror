@@ -329,9 +329,9 @@ void SaveObject(APTR obj, FILE *fichier)
             fprintf(fichier, "%d\n", field_aux->fixwidth);
             fprintf(fichier, "%d\n", field_aux->height);
             fprintf(fichier, "%d\n", field_aux->width);
-            fprintf(fichier, "%u\n", field_aux->red);
-            fprintf(fichier, "%u\n", field_aux->green);
-            fprintf(fichier, "%u\n", field_aux->blue);
+            fprintf(fichier, "%u\n", (unsigned int)field_aux->red);
+            fprintf(fichier, "%u\n", (unsigned int)field_aux->green);
+            fprintf(fichier, "%u\n", (unsigned int)field_aux->blue);
             break;
         case TY_POPASL:
             SavePopAsl(fichier, obj);

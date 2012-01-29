@@ -151,7 +151,7 @@ static void WriteDeclarations(int vartype)
                 case TYPEVAR_TABSTRING:
                     fprintf
                         (file,
-                         "\t%s\t%s[%u];\n", typename, varname, size + 1);
+                         "\t%s\t%s[%u];\n", typename, varname, (unsigned int)size + 1);
                     break;
                 case TYPEVAR_IDENT:
                     fprintf(file, "#define %s %d\n", varname, nb_ident++);
@@ -259,8 +259,8 @@ static void WriteCode(void)
     char *code;
     BOOL InFunction = FALSE;
     BOOL IndentFunction = TRUE;
-    BOOL obj_function;
-    BOOL InObj;
+    BOOL obj_function = FALSE;
+    BOOL InObj = FALSE;
     int nb_indent = 1;
     int nb_function = 0;
     int name;
@@ -529,7 +529,7 @@ static void WriteCode(void)
                 }
                 break;
             default:
-                printf("Type = %u\n", type);
+                printf("Type = %u\n", (unsigned int)type);
                 printf
                     ("ERROR !!!!! THERE IS A PROBLEM WITH THIS FILE !!!\n");
                 End();
@@ -698,7 +698,7 @@ static void WriteNotify(void)
                     fprintf(file, "\n");
                 break;
             default:
-                printf("Type = %u\n", type);
+                printf("Type = %u\n", (unsigned int)type);
                 printf
                     ("ERROR !!!!! THERE IS A PROBLEM WITH THIS FILE !!!\n");
                 End();

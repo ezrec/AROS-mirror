@@ -571,7 +571,7 @@ void CreateCatalog(void)
     {
         UnLock(lock);
         sprintf(command, "copy \"%s\" T:MB.tmp", catfile);
-        Execute(command, NULL, NULL);
+        Execute(command, BNULL, BNULL);
         DeleteFile(catfile);
         tmp = fopen("T:MB.tmp", "r");
     }
