@@ -5,7 +5,7 @@ include $(TOP)/config/make.cfg
 
 #MM- iconset-Gorilla-contrib-icons-extras : iconset-Gorilla-contrib-icons-extras-development
 
-ICONS := Build False Lua nasm
+ICONS := Build False Lua nasm MUIBuilder
 
 #MM- iconset-Gorilla-contrib-icons-extras-clean : iconset-Gorilla-contrib-icons-extras-development-clean
 %build_icons mmake=iconset-Gorilla-contrib-icons-extras-development icons=$(ICONS) dir=$(CONTRIBDIR)/Development
