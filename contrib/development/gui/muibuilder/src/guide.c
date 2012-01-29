@@ -317,7 +317,7 @@ void EditNode(APTR obj)
             AllocVec(Info.fib_Size + 1, MEMF_PUBLIC | MEMF_CLEAR);
         Read(alloc, obj_aux->Help.content, obj_aux->Help.nb_char);
         aux =
-            (char *) ((ULONG) obj_aux->Help.content +
+            (char *) ((IPTR) obj_aux->Help.content +
                       obj_aux->Help.nb_char);
         *aux = '\0';
         Close(alloc);
@@ -364,7 +364,7 @@ void EditAppNode(void)
             AllocVec(Info.fib_Size + 1, MEMF_PUBLIC | MEMF_CLEAR);
         Read(alloc, application.Help.content, application.Help.nb_char);
         aux =
-            (char *) ((ULONG) application.Help.content +
+            (char *) ((IPTR) application.Help.content +
                       application.Help.nb_char);
         *aux = '\0';
         Close(alloc);

@@ -357,7 +357,8 @@ LIBFUNC void MB_GetVarInfoA(REG(d0, ULONG varnb),
                             REG(a1, struct TagItem *TagList))
 {
     char **TagString;
-    ULONG *TagInt;
+    LONG *TagInt;
+    IPTR *TagPtr;
 
     if (!rights)
         return;
@@ -406,16 +407,16 @@ LIBFUNC void MB_GetVarInfoA(REG(d0, ULONG varnb),
         }
     }
 
-    TagInt = (ULONG *) GetTagData(MUIB_VarInitPtr, 0, TagList);
-    if (TagInt)
+    TagPtr = (IPTR *) GetTagData(MUIB_VarInitPtr, 0, TagList);
+    if (TagPtr)
     {
         if (varnb < varnum)
         {
-            *TagInt = (ULONG) Vars[varnb].Init;
+            *TagPtr = (IPTR) Vars[varnb].Init;
         }
         else
         {
-            *TagInt = 0;
+            *TagPtr = 0;
         }
     }
 }

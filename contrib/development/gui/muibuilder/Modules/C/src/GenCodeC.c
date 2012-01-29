@@ -904,7 +904,7 @@ static BOOL WriteExternalFile(void)
     }
 
     /* If the file already exists, we load it in memory */
-    if ((TMPfile = Open(Externals, MODE_OLDFILE)) != NULL)
+    if ((TMPfile = Open(Externals, MODE_OLDFILE)) != BNULL)
     {
         ExamineFH(TMPfile, Info);
         length = Info->fib_Size;
@@ -944,7 +944,7 @@ static BOOL WriteExternalFile(void)
         FreeVec(adr_file);
     
     /* if the file is 0 bytes long we remove it */
-    if ((TMPfile = Open(Externals, MODE_OLDFILE)) != NULL)
+    if ((TMPfile = Open(Externals, MODE_OLDFILE)) != BNULL)
     {
         ExamineFH(TMPfile, Info);
         Close(TMPfile);

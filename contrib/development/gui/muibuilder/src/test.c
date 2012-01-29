@@ -92,26 +92,26 @@ void TestChain(window *win)
 {
     int i;
     object *obj_aux;
-    ULONG *chain;
+    struct MUIP_Window_SetCycleChain *chain;
     chainon *chainon_aux;
 
     if (!win)
         return;
 
     chain =
-        AllocVec(win->chain->nb_elements * 4 + 8,
+        AllocVec(win->chain->nb_elements * sizeof(Object *) + sizeof(*chain),
                  MEMF_PUBLIC | MEMF_CLEAR);
     if (chain)
     {
-        chain[0] = (ULONG) MUIM_Window_SetCycleChain;
+        chain->MethodID = MUIM_Window_SetCycleChain;
         chainon_aux = win->chain->head;
         for (i = 0; i < win->chain->nb_elements; i++)
         {
             obj_aux = chainon_aux->element;
-            chain[1 + i] = (ULONG) obj_aux->muiobj;
+            chain->obj[i] = obj_aux->muiobj;
             chainon_aux = chainon_aux->next;
         }
-        chain[1 + i] = 0;
+        chain->obj[i] = NULL;
         win->muichain = chain;
         DoMethodA(win->muiobj, (Msg) chain);
         FreeVec(chain);
