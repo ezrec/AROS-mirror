@@ -1,0 +1,66 @@
+#   $Id$
+#
+#   Makefile to make MUIBuilder
+
+include $(TOP)/config/make.cfg
+
+FILES := \
+    argnotify \
+    asl \
+    builder \
+    button \
+    check \
+    child \
+    code \
+    codenotifydefs \
+    colorfield \
+    copy \
+    cycle \
+    delete \
+    dir \
+    dirlist \
+    error \
+    file \
+    gauge \
+    grouparea \
+    group \
+    guide \
+    image \
+    initnotify \
+    label \
+    listview \
+    load \
+    locale \
+    menu \
+    notify \
+    popasl \
+    popobject \
+    prop \
+    queue \
+    radio \
+    rectangle \
+    save \
+    scale \
+    slider \
+    space \
+    string \
+    test \
+    testnotify \
+    testnotifydefs \
+    text \
+    window \
+    MUIBuilder_cat
+
+#MM contrib-development-gui-muibuilder-src : includes linklib contrib-development-gui-muibuilder-locale
+
+EXEDIR := $(AROSDIR)/Extras/Development/MUIBuilder
+
+USER_CFLAGS += -I$(AROS_INCLUDES)/SDI -DMUI_OBSOLETE
+USER_CFLAGS += -Wno-parentheses $(FORMAT_SECURITY_CFLAGS)
+
+%build_prog mmake=contrib-development-gui-muibuilder-src \
+    progname=MUIBuilder targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs="mui arossupport amiga arosc m"
+
+
+%common

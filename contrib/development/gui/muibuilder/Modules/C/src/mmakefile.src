@@ -1,0 +1,23 @@
+#   $Id$
+#
+#   Makefile to make MUIBuilder
+
+include $(TOP)/config/make.cfg
+
+FILES := \
+    GenCodeC \
+    file
+
+#MM- contrib-development-gui-muibuilder-modules: contrib-development-gui-muibuilder-modules-c
+#MM contrib-development-gui-muibuilder-modules-c: includes linklib
+
+EXEDIR := $(AROSDIR)/Extras/Development/MUIBuilder/Modules
+
+USER_CFLAGS += -I$(SRCDIR)/contrib/development/gui/muibuilder/include
+
+%build_prog mmake=contrib-development-gui-muibuilder-modules-c \
+    progname=GenCodeC targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs="arossupport amiga rom m"
+
+
+%common

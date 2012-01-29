@@ -1,0 +1,17 @@
+#   $Id$
+#
+#   Makefile to make MUIBuilder
+
+include $(TOP)/config/make.cfg
+
+FILES := \
+    C-Header \
+    H-Header
+
+EXEDIR := $(AROSDIR)/Extras/Development/MUIBuilder/Modules
+
+%copy_files_q mmake=contrib-development-gui-muibuilder-modules \
+    files=$(FILES) dst=$(EXEDIR)
+
+
+%common

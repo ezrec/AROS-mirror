@@ -1,0 +1,36 @@
+#   $Id$
+#
+#   Makefile to make MUIBuilder
+
+include $(TOP)/config/make.cfg
+
+#MM- contrib-development-gui: contrib-development-gui-muibuilder
+
+#MM- contrib-development-gui-muibuilder: \
+#MM		contrib-development-gui-muibuilder-modules \
+#MM		contrib-development-gui-muibuilder-libs \
+#MM		contrib-development-gui-muibuilder-images \
+#MM		contrib-development-gui-muibuilder-docs \
+#MM		contrib-development-gui-muibuilder-demos \
+#MM		contrib-development-gui-muibuilder-src
+
+RELEASEDIR := $(AROSDIR)/Extras/Development/MUIBuilder
+
+%copy_dir_recursive mmake=contrib-development-gui-muibuilder-images \
+        src=Images dst=$(RELEASEDIR)/Images
+
+%copy_dir_recursive mmake=contrib-development-gui-muibuilder-docs \
+        src=Documentations dst=$(RELEASEDIR)/Documentations
+
+%copy_dir_recursive mmake=contrib-development-gui-muibuilder-demos \
+        src=BuilderSave dst=$(RELEASEDIR)/BuilderSave
+
+FILES := COPYING COPYING.LIB ChangeLog History.info MUIBuilder.info \
+	 BuilderSave.info Documentations.info History ReadMe ReadMe.info \
+	 TODO
+
+
+%copy_files_q mmake=contrib-development-gui-muibuilder \
+        files=$(FILES) dst=$(RELEASEDIR)
+
+%common

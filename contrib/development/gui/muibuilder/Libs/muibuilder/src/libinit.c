@@ -109,9 +109,9 @@ static LONG                   LIBFUNC LibNull   (void);
 
 #include <aros/libcall.h>
 
-#define MUIBuilder_LibOpen LibOpen
-#define MUIBuilder_LibClose LibClose
-#define MUIBuilder_LibExpunge LibExpunge
+#define MUIBuilder_1_LibOpen LibOpen
+#define MUIBuilder_2_LibClose LibClose
+#define MUIBuilder_3_LibExpunge LibExpunge
 
 static AROS_UFP3 (struct LibraryHeader *, LibInit,
                   AROS_UFPA(struct LibraryHeader *, base, D0),
