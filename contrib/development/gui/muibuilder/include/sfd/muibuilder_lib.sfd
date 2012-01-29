@@ -1,0 +1,21 @@
+==id $Id: muibuilder_lib.sfd 22 2011-01-03 16:47:14Z marust $
+==copyright MUIBuilder Open Source Team
+* "muibuilder.library"
+==base _MUIBBase
+==basetype struct Library *
+==libname muibuilder.library
+==bias 30
+==public
+==include <exec/types.h>
+==include <utility/tagitem.h>
+BOOL MB_Open() ()
+void MB_Close() ()
+void MB_GetA(struct TagItem * TagList) (a1)
+==varargs
+void MB_Get(Tag tag1, ...) (a1)
+void MB_GetVarInfoA(ULONG varnb, struct TagItem * TagList) (d0,a1)
+==varargs
+void MB_GetVarInfo(ULONG varnb, Tag tag1, ...) (d0,a1)
+void MB_GetNextCode(ULONG * type, char ** code) (a0,a1)
+void MB_GetNextNotify(ULONG * type, char ** code) (a0,a1)
+==end

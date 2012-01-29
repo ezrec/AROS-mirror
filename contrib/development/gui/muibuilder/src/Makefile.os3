@@ -1,0 +1,134 @@
+CC      = m68k-amigaos-gcc
+CFLAGS  = -g -Wall -noixemul -Wno-parentheses \
+          -DMUI_OBSOLETE -DNO_INLINE_STDARG -I../include
+LDFLAGS = -g -noixemul
+EXE     = ../MUIBuilder
+RM      = rm -f
+FLEXCAT = FlexCat
+LOCDIR  = ../locale
+
+OBJS= argnotify.o asl.o builder.o button.o check.o child.o code.o \
+      codenotifydefs.o colorfield.o copy.o cycle.o delete.o dir.o dirlist.o \
+      error.o file.o gauge.o group.o grouparea.o guide.o image.o initnotify.o \
+      label.o listview.o load.o locale.o menu.o MUIBuilder_cat.o notify.o \
+      popasl.o popobject.o prop.o queue.o radio.o rectangle.o save.o scale.o \
+      slider.o space.o string.o test.o testnotify.o testnotifydefs.o text.o \
+      window.o
+
+SRCS= $(patsubst %.o,%.c,$(OBJS))
+
+.PHONY: all
+all: $(EXE)
+
+$(EXE): $(OBJS)
+	$(CC) -o $@ $^ $(LDFLAGS)
+
+.PHONY: clean
+clean:
+	$(RM) $(EXE) *.o
+
+.PHONY: distclean
+distclean:
+	$(RM) $(EXE) *.o
+	$(RM) MUIBuilder_cat.c MUIBuilder_cat.h
+
+.PHONY: deps
+deps: MUIBuilder_cat.o
+	$(CC) -MM $(CFLAGS) $(SRCS)
+
+
+MUIBuilder_cat.c : $(LOCDIR)/MUIBuilder.cd $(LOCDIR)/C_c.sd
+	$(FLEXCAT) $< $@=$(LOCDIR)/C_c.sd
+
+MUIBuilder_cat.h : $(LOCDIR)/MUIBuilder.cd $(LOCDIR)/C_h.sd
+	$(FLEXCAT) $< $@=$(LOCDIR)/C_h.sd
+
+
+argnotify.o: argnotify.c notify.h builder.h MUIBuilder_cat.h \
+  ../include/SDI_compiler.h queue.h file.h grouparea.h notifyconstants.h
+asl.o: asl.c builder.h MUIBuilder_cat.h ../include/SDI_compiler.h queue.h \
+  file.h grouparea.h
+builder.o: builder.c builder.h MUIBuilder_cat.h ../include/SDI_compiler.h \
+  queue.h file.h grouparea.h muibuilder_rev.h
+button.o: button.c builder.h MUIBuilder_cat.h ../include/SDI_compiler.h \
+  queue.h file.h grouparea.h
+check.o: check.c builder.h MUIBuilder_cat.h ../include/SDI_compiler.h \
+  queue.h file.h grouparea.h
+child.o: child.c builder.h MUIBuilder_cat.h ../include/SDI_compiler.h \
+  queue.h file.h grouparea.h
+code.o: code.c builder.h MUIBuilder_cat.h ../include/SDI_compiler.h \
+  queue.h file.h grouparea.h muib_file.h codenotify.h notifyconstants.h
+codenotifydefs.o: codenotifydefs.c builder.h MUIBuilder_cat.h \
+  ../include/SDI_compiler.h queue.h file.h grouparea.h codenotify.h \
+  notifyconstants.h muib_file.h
+colorfield.o: colorfield.c builder.h MUIBuilder_cat.h \
+  ../include/SDI_compiler.h queue.h file.h grouparea.h
+copy.o: copy.c builder.h MUIBuilder_cat.h ../include/SDI_compiler.h \
+  queue.h file.h grouparea.h
+cycle.o: cycle.c builder.h MUIBuilder_cat.h ../include/SDI_compiler.h \
+  queue.h file.h grouparea.h
+delete.o: delete.c builder.h MUIBuilder_cat.h ../include/SDI_compiler.h \
+  queue.h file.h grouparea.h
+dir.o: dir.c builder.h MUIBuilder_cat.h ../include/SDI_compiler.h queue.h \
+  file.h grouparea.h
+dirlist.o: dirlist.c builder.h MUIBuilder_cat.h ../include/SDI_compiler.h \
+  queue.h file.h grouparea.h
+error.o: error.c builder.h MUIBuilder_cat.h ../include/SDI_compiler.h \
+  queue.h file.h grouparea.h
+file.o: file.c
+gauge.o: gauge.c builder.h MUIBuilder_cat.h ../include/SDI_compiler.h \
+  queue.h file.h grouparea.h
+group.o: group.c builder.h MUIBuilder_cat.h ../include/SDI_compiler.h \
+  queue.h file.h grouparea.h
+grouparea.o: grouparea.c builder.h MUIBuilder_cat.h \
+  ../include/SDI_compiler.h queue.h file.h grouparea.h
+guide.o: guide.c builder.h MUIBuilder_cat.h ../include/SDI_compiler.h \
+  queue.h file.h grouparea.h
+image.o: image.c builder.h MUIBuilder_cat.h ../include/SDI_compiler.h \
+  queue.h file.h grouparea.h
+initnotify.o: initnotify.c notify.h builder.h MUIBuilder_cat.h \
+  ../include/SDI_compiler.h queue.h file.h grouparea.h notifyconstants.h
+label.o: label.c builder.h MUIBuilder_cat.h ../include/SDI_compiler.h \
+  queue.h file.h grouparea.h
+listview.o: listview.c builder.h MUIBuilder_cat.h \
+  ../include/SDI_compiler.h queue.h file.h grouparea.h
+load.o: load.c MUIBuilder_cat.h ../include/SDI_compiler.h \
+  queue.h file.h grouparea.h
+locale.o: locale.c notify.h builder.h MUIBuilder_cat.h \
+  ../include/SDI_compiler.h queue.h file.h grouparea.h notifyconstants.h
+menu.o: menu.c builder.h MUIBuilder_cat.h ../include/SDI_compiler.h \
+  queue.h file.h grouparea.h
+MUIBuilder_cat.o: MUIBuilder_cat.c MUIBuilder_cat.h
+notify.o: notify.c notify.h builder.h MUIBuilder_cat.h \
+  ../include/SDI_compiler.h queue.h file.h grouparea.h notifyconstants.h
+popasl.o: popasl.c builder.h MUIBuilder_cat.h ../include/SDI_compiler.h \
+  queue.h file.h grouparea.h
+popobject.o: popobject.c builder.h MUIBuilder_cat.h \
+  ../include/SDI_compiler.h queue.h file.h grouparea.h
+prop.o: prop.c builder.h MUIBuilder_cat.h ../include/SDI_compiler.h \
+  queue.h file.h grouparea.h
+queue.o: queue.c queue.h
+radio.o: radio.c builder.h MUIBuilder_cat.h ../include/SDI_compiler.h \
+  queue.h file.h grouparea.h
+rectangle.o: rectangle.c builder.h MUIBuilder_cat.h \
+  ../include/SDI_compiler.h queue.h file.h grouparea.h
+save.o: save.c builder.h MUIBuilder_cat.h ../include/SDI_compiler.h \
+  queue.h file.h grouparea.h
+scale.o: scale.c builder.h MUIBuilder_cat.h ../include/SDI_compiler.h \
+  queue.h file.h grouparea.h
+slider.o: slider.c builder.h MUIBuilder_cat.h ../include/SDI_compiler.h \
+  queue.h file.h grouparea.h
+space.o: space.c builder.h MUIBuilder_cat.h ../include/SDI_compiler.h \
+  queue.h file.h grouparea.h
+string.o: string.c builder.h MUIBuilder_cat.h ../include/SDI_compiler.h \
+  queue.h file.h grouparea.h
+test.o: test.c builder.h MUIBuilder_cat.h ../include/SDI_compiler.h \
+  queue.h file.h grouparea.h
+testnotify.o: testnotify.c testnotify.h builder.h MUIBuilder_cat.h \
+  ../include/SDI_compiler.h queue.h file.h grouparea.h notifyconstants.h
+testnotifydefs.o: testnotifydefs.c builder.h MUIBuilder_cat.h \
+  ../include/SDI_compiler.h queue.h file.h grouparea.h
+text.o: text.c builder.h MUIBuilder_cat.h ../include/SDI_compiler.h \
+  queue.h file.h grouparea.h
+window.o: window.c builder.h MUIBuilder_cat.h ../include/SDI_compiler.h \
+  queue.h file.h grouparea.h muibuilder_rev.h

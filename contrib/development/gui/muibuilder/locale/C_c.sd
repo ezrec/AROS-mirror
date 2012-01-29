@@ -1,0 +1,74 @@
+/****************************************************************
+   This file was created automatically by `%fv'
+   Do NOT edit by hand!
+****************************************************************/
+
+#include <proto/locale.h>
+#include <libraries/locale.h>
+
+#include "%b_cat.h"
+
+#include <string.h>
+
+#include <exec/memory.h>
+#include <libraries/iffparse.h>
+
+#include <proto/iffparse.h>
+#include <proto/locale.h>
+#include <proto/dos.h>
+#include <proto/exec.h>
+#include <proto/utility.h>
+
+static LONG MUIBuilder_Version = 3;
+static const STRPTR MUIBuilder_BuiltInLanguage = (STRPTR) "english";
+
+struct FC_Type
+{   LONG    ID;
+    STRPTR  Str;
+};
+
+static const struct FC_Type %b_Array [] =
+{
+    {%d, (STRPTR) %s},
+};
+
+static struct Catalog *%b_Catalog = NULL;
+
+void Open%bCatalog(struct Locale *loc)
+{ 
+  if (LocaleBase != NULL  &&  MUIBuilder_Catalog == NULL)
+  { 
+    MUIBuilder_Catalog = OpenCatalog(
+        loc, (STRPTR) "%b.catalog",
+        OC_BuiltInLanguage, %b_BuiltInLanguage,
+        OC_Version, MUIBuilder_Version,
+        TAG_DONE);
+  }
+}
+
+
+void Close%bCatalog(void)
+{
+  if (LocaleBase != NULL)
+  {
+    CloseCatalog(%b_Catalog);
+  }
+  %b_Catalog = NULL;
+}
+
+
+CONST_STRPTR Get%bString(LONG strnum)
+{ 
+  STRPTR defaultstr = NULL;
+  ULONG i;
+
+  for (i = 0;  i < sizeof(%b_Array)/sizeof(struct FC_Type);  i++)
+  {
+    if (%b_Array[i].ID == strnum)
+    {
+      defaultstr = %b_Array[i].Str;
+      break;
+    }
+  }
+  return(GetCatalogStr(%b_Catalog, strnum, defaultstr));
+}

@@ -1,0 +1,87 @@
+/*************************/
+/*     MUIBuilder 1.0    */
+/*************************/
+
+First Release
+
+/*************************/
+/*     MUIBuilder 1.1    */
+/*************************/
+
+- generation source code errors corrected
+- 'Config' window modified:
+        possibility to chose the GetString function name
+        and the code generation module name
+- Added the automatic localization
+- possibility to create the catalog description file
+- the refreshes in the 'Window attributes' window work well now
+- No more Enforcer hits ( I hope !!! :-( ... I can't run Enforcer on my A1200 )
+- a few MUI2.0 features added ( RegisterGroup, and some attributes )
+- MUIBuilder scans the 'Modules' directory to see which languages are available
+  ( 'GenCodeXXXX' )
+- MUIBuilder is now translated in :
+        - Français ( catalog + documentation )
+        - Deutsch  ( catalog + documentation ) [ thanks to Christian Brandel ] 
+        - Czech    ( catalog )                 [ thanks to Michal Kara       ]
+- new generator for the C language
+- new generator for the E language ( by Lionel Vintenat )
+- a generator made for the Assembly language by Michal Kara
+- possibility to see the the result of your work at real time !
+
+/*************************/
+/*     MUIBuilder 2.0    */
+/*************************/
+
+This is a major release. A lot of new features appear, and most
+of the existing ones have changed.
+
+- Hierarchic tree display
+- new objects supported
+- notifications support for every object
+- possibility to test the notifications directly from MUIBuilder
+- menu objects
+- function hooks
+
+/*************************/
+/*     MUIBuilder 2.1    */
+/*************************/
+
+bug fixes release.
+
+- No more code generation problem
+        for E users : only the needed identifiers are generated !
+        some hooks were not correctly generated : fixed !
+- fixed the enforcer hit at code generation
+- no more problems when saving some hooks
+- register group : there were some problems if titles were not given
+  to all groups
+- the code generator is now running synchronously, so that we know when
+  it is finished.
+- Menu generation fixed
+- We added some images to show the GUI objects.
+
+/*************************/
+/*     MUIBuilder 2.2    */
+/*************************/
+
+bug fixes release.
+
+- A bug appeared with the 2.1 release : sometimes, MB didn't generate
+  the function hooks definitions. fixed.
+- The small problems with code generation (buttons and lists) seems
+  to be solved.
+- fixed the slider notifications bug.
+- rewrote the guide generation
+- some attributes disappeared when saving a file. fixed !
+- improvement of the objects presentation window (add prefs)
+- the installer script now copies the images directory ! :)
+- The code generation is improved : all references to ungenerated
+  objects are supported.
+- There is an improved catalog genererator : it keeps all the strings
+  you add yourself directly in the text file.
+- The project icon is no more overwriten if it exists (so you'll keep
+  its position !)
+- some procedures of the muibuilder.library were rewritten : consequently,
+  the source generation is up to 15 times quicker than before.
+- Application Menus now appear during tests.
+- New Window attribute : NoMenus.

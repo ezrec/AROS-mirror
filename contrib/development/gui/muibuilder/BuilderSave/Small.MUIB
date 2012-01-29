@@ -1,0 +1,188 @@
+BUILDER_SAVE_FILE1.03
+Ram Disk:Small_Example
+Ram Disk:SmallStrings.cd
+4
+8
+12
+8
+0
+0
+0
+0
+0
+0
+0
+0
+0
+SMALL
+Eric Totel
+Small_Example
+$VER : Small 1.0
+(c) 1993 Eric Totel
+Here is a small example of MUI-Builder
+ExamplesDoc/small.guide
+140
+
+
+   Here is the first example of MUI-Builder ( only one window ).
+
+   Change all you want to test the soft !
+
+
+   The window is called :
+
+
+1
+WI_smallexample
+1
+Small example
+100
+
+
+   This is an example, created with MUI-Builder.
+
+   There is only two groups in this window :
+
+
+
+Small example
+0
+0
+0
+1
+1
+1
+1
+2
+GROUP_ROOT_0
+1
+ROOT_TITLE
+0
+ROOT_TITLE
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+2
+100
+0
+0
+//END_ENTRIES//
+2
+GR_lists
+1
+two lists
+40
+
+   The two lists in this group are :
+
+
+two lists
+0
+1
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+2
+100
+0
+0
+//END_ENTRIES//
+17
+LV_label_0
+1
+Directory List
+33
+
+
+   Here is a directory list !!
+100
+0
+0
+0
+0
+0
+0
+0
+progdir:
+5
+LV_label_1
+1
+List Gadget
+50
+
+
+   Here is a volume list ( Volumes + Assigns ).
+100
+2
+1
+1
+-1
+2
+GR_grp_1
+1
+Buttons Group
+30
+
+
+   Here are two buttons :
+
+
+grp_title
+0
+0
+1
+0
+0
+0
+1
+0
+0
+0
+0
+0
+2
+100
+0
+0
+//END_ENTRIES//
+3
+BT_ok
+1
+OK
+60
+
+
+   This is the button you should click on if all is Ok !!
+OK
+o
+100
+3
+BT_cancel
+1
+Cancel
+45
+
+
+   Click this one to cancel your actions .
+Cancel
+c
+100
+-1
+-1
+-1

@@ -1,0 +1,1859 @@
+@database MUIBuilder_English.guide
+
+@Master MUIBuilder_English.texi
+
+@Width 72
+
+
+@Node Main "MUIBuilder_English.guide"
+@Next "Introduction"
+
+   @{b}MUIBuilder documentation
+@{ub}
+
+   This document describes what it is necessary to know to use
+MUIBuilder in the best conditions.
+
+
+ @{" Introduction " Link "Introduction"}             
+ @{" Principles " Link "Principles"}                   What notions does this program use ?
+ @{" Disclaimer " Link "Disclaimer"}                   No Warranty !!
+
+ @{" Tutorial " Link "Tutorial"}                     An example for beginners.
+ @{" Use of MUIBuilder " Link "Use"}            How to use MUIBuilder?
+ @{" Objects " Link "Objects"}                      GUI objects.
+ @{" Notification " Link "Notification"}                 Events notifications.
+
+ @{" Future Improvements " Link "Future"}          What i hope to make in a near future.
+ @{" Greetings " Link "Greetings"}                    Thanks to all of you, guys !!
+ @{" Index " Link "Index"}                        What do you want to know about ??
+
+
+@EndNode
+
+@Node "Introduction" "MUIBuilder_English.guide/Introduction"
+@Next "Principles"
+@Prev "Main"
+@Toc "Main"
+
+Introduction
+************
+
+   Thanks for trying MUI-Builder !!!
+
+   MUI-Builder is a tool that I hope you find to be user-friendly.  It
+is, however, far from perfection.
+
+   Please feel free to send me all your ideas and opinions about this
+software so it may evolve in the way you'd like.
+
+   With MUI-Builder, you'll be able to write @{b}MUI@{ub} applications without
+writing lines of source code nor knowing anything about @{b}MUI@{ub} functions'
+syntax (even though MUI is simple in itself).
+
+   MUI-Builder's aim is to let you create a graphic interface without
+technical problems, and with no more effort than thinking about your
+final goal.
+
+   At the beginnning, I wrote this program only for my own needs and
+for learning how to use MUI.  MUI is a wonderful tool written by Stefan
+Stuntz
+
+   I hope you find this program as useful as I've already found it.
+
+
+ @{" Advantages " Link "Advantages"}            Why should you use this program ?
+
+
+@EndNode
+
+@Node "Advantages" "MUIBuilder_English.guide/Advantages"
+@Toc "Introduction"
+
+Advantages of MUIBuilder
+========================
+
+   Many people will wonder about the usefulness of this program, as MUI
+is simple to program in the first place.
+
+   The advantages that I and all the beta-testers have found in using
+MUI-Builder follow:
+
+  1. MUI-Builder is a simple way to quickly learn the principles of MUI
+     programing by reading the generated source code.
+
+  2. MUI-Builder is a sort of MUI interpreter. You are able to test the
+     look of your application's GUI and see how the result will appear
+     in real time.
+
+  3. MUI-Builder offers the user a great flexibility in source code
+     generation. You will be able to select precisely which object code
+     you want to generate, with or without the declarations,
+     initializations, localization ...
+
+  4. You can finally build the online help of your application directly
+     from the application builder.
+
+  5. It is the very first builder that provides for easy localization !
+
+  6. In this new version appear fantastic :) new functions, that you
+     have never seen before in similar tools on Amiga. It is now
+     possible to build the events notifications directly from the
+     interface builder AND TO TEST THEM.
+
+
+@EndNode
+
+@Node "Principles" "MUIBuilder_English.guide/Principles"
+@Next "Disclaimer"
+@Prev "Introduction"
+@Toc "Main"
+
+Principles
+**********
+
+   MUI-Builder works on the same principles as MUI, and the two
+programs are intricately interwoven. My first advice is to read MUI
+documentation to better understand how it works.
+
+   MUI-Builder allows you to create the complete interface of an
+application.  For example, all the windows of this application were
+created with MUI-Builder.
+
+   Each application is made up of a hierarchy of interface objects.  As
+an example, the following diagram depicts a possible application.
+
+                                     Application
+                                         |
+                                         |
+                                        / \
+                                       /   \
+                                      /     \
+                                     /       \
+                               window 1     window 2
+                                |               |
+                                |               |
+                               / \             / \
+                              /   \           /   \
+                             /     \         /     \
+                         objet1   objet2  objet3  objet4
+
+   MUI-Builder is aimed at letting you create this tree simply by using
+a simple user-friendly graphic interface (at least, I hope so).
+
+
+@EndNode
+
+@Node "Disclaimer" "MUIBuilder_English.guide/Disclaimer"
+@Next "Tutorial"
+@Prev "Principles"
+@Toc "Main"
+
+Disclaimer
+**********
+
+   MUIBuilder - MUI Interface Builder
+
+   Copyright (C) 1990-2009 Eric Totel
+   Copyright (C) 2010-2011 MUIBuilder Open Source Team
+
+   This program comes with ABSOLUTELY NO WARRANTY.
+   This is free software, and you are welcome to redistribute it
+   under certain conditions; see file 'COPYING' for details.
+
+@EndNode
+
+@Node "Tutorial" "MUIBuilder_English.guide/Tutorial"
+@Next "Use"
+@Prev "Disclaimer"
+@Toc "Main"
+
+Tutorial
+********
+
+   To help beginners to understand quickly how this program must be
+used, i've included a little tutorial example.
+
+   We will build step by step a little GUI, whose goal will be to
+display a simple text when we click on some buttons.
+
+   @{b}*@{ub} First of all we have to create a window (@{b}New Window@{ub} button in the
+     main window).
+
+   @{b}*@{ub} Select the only group in the list containing the GUI objects, and
+     click on the @{b}Add Object@{ub} button.
+
+   @{b}*@{ub} Choose a Text object, define its parameters (you don't need to
+     modify anything at this time) and click on @{b}Ok@{ub}.
+
+   @{b}*@{ub} Your Text object is now inserted in your GUI tree.
+
+   @{b}*@{ub} Now add a group (choose an horizontal group by checking the
+     @{b}Horizontal@{ub} attribute to TRUE).
+
+   @{b}*@{ub} If everything goes well, you'll see the group name just under the
+     text object : select this group, and add three buttons in it. Just
+     define their titles '1st button', '2nd button' and '3rd button'
+     and their shorcuts '1', '2' and '3'.
+
+   @{b}*@{ub} Your GUI is now completed ! Now we will define the notifications
+     on these objects.
+
+   @{b}*@{ub} Select the first button, and click on the @{b}Notify@{ub} button.
+
+   @{b}*@{ub} In the window which appears, choose the @{b}Release button@{ub} event, then
+     the text object you previously created, and at last the @{b}Put a
+     constant value@{ub} action.  Add this notification simply by
+     double-clicking on the action name, or click on the @{b}Add notify@{ub}.
+     MUIBuilder will ask for a string for you to enter. Enter '1st
+     button selected'. Once added, quit the notification window.
+
+   @{b}*@{ub} Repeat the previous operation on the two other buttons : enter
+     '2nd button selected' and '3rd button selected' as constant
+     strings.
+
+   @{b}*@{ub} Once you've returned to the creation window, just press the @{b}Test@{ub}
+     button, and click on the buttons of your GUI.
+
+   This is of course a really litlle GUI, but i hope it will always be
+as easy to do bigger ones !!  MUIBuilder should be able to help to
+build some tricky interfaces now ... or at least i hope so !!! :-)
+
+
+@EndNode
+
+@Node "Use" "MUIBuilder_English.guide/Use"
+@Next "Objects"
+@Prev "Tutorial"
+@Toc "Main"
+
+Use of MUIBuilder
+*****************
+
+   The principles on which MUI-Builder is used can be classified in the
+following headings.
+
+
+ @{" Configuration " Link "Prefs"}                    Preferences choices.
+ @{" Saving " Link "Save"}                           How to save an application ?
+ @{" Code " Link "Code"}                             Code generation.
+ @{" Localization " Link "Locale"}                     Locale support.
+ @{" Amigaguide " Link "Amigaguide"}                       OnLine Help generation
+ @{" Comments " Link "Remarks"}                         useful comments !
+
+
+@EndNode
+
+@Node "Prefs" "MUIBuilder_English.guide/Prefs"
+@Next "Save"
+@Toc "Use"
+
+MUIBuilder Preferences
+======================
+
+   This configuration Panel offers many choices for parameters for the
+program. All choices will be saved in an environment variable
+(@{b}ENV:MUIBuider.env@{ub}) which is creating when you are installing MUIB.
+
+   There are the following choices :
+
+  1. Ghost windows : to see ONLY one window of MUIBuilder at a time.  (
+     very useful for slow computers, and for people who dislike having
+     too many windows on the screen ! )
+
+  2. Icons : select it if you want an icon created with the save file
+
+  3. Requests : select it if you want all the warning requesters
+
+  4. Test : if you select this option, you will see the result for your
+     work during the building you your GUI.
+
+  5. Code : chose your generator module
+
+  6. Editor : You must specify here the name of your favorite editor.
+     This editor should be run in a synchronous way !  ( i.e. not as a
+     background task ). the following editors should work without any
+     problems :
+
+        @{b}*@{ub} Vim (v2.0 and latter) : with the '-x' option
+
+        @{b}*@{ub} CygnusEd   : with the '-keepio' option
+
+        @{b}*@{ub} GoldEd     : with the 'STICKY' option
+
+        @{b}*@{ub} TurboText  : with the 'WAIT' option
+
+        @{b}*@{ub} Ed         : default editor
+
+  7. GetString : If you enter a string here, it will be the default
+     name of the 'GetString' function which is used to localize your
+     program. If this String is EMPTY, then MUIBuilder will create a
+     name using the application name ( 'GetApplicationNameString' ).
+
+  8. Depth : allows you to define the minimal depth used when
+     displaying the tree hierarchy in the creation window.
+
+  9. Character : this character is inserted in the tree display to make
+     hierarchy more readable.
+
+ 10. Label : if you set this option, the names of the objects will
+     appear to make the hotkay visible.
+
+ 11. Columns : number of columns used to display the image objects.
+
+ 12. Images Location : The directory where you can find the objects
+     images.
+
+   Once you have selected these options, you can save them by selecting
+the corresponding button. When you save the preferences, it saves your
+working directory too (in the environnment variable of course).
+
+
+@EndNode
+
+@Node "Save" "MUIBuilder_English.guide/Save"
+@Next "Code"
+@Prev "Prefs"
+@Toc "Use"
+
+Application save file
+=====================
+
+   The SAVE and LOAD buttons will respectively save to and load from a
+file the interface of the application you're creating.  The Asl
+requester will open on your working directory (defined in the
+@{b}MUIBuilder.env@{ub} variable).  Using these buttons, you can continue with a
+previously unfinished application, or modify an already existing
+application.
+
+   Note that the MUIBuilder main window is an AppWindow.  You can
+therefore load an MUIBuilder save file by dropping its respective icon
+on the window.
+
+   Moreover, most of you will see that the save files is an ascii file.
+So it is easy to edit it using a text editor. Please don't modify them
+in this way : there are a lot of chances that you corrupt the file ...
+
+
+@EndNode
+
+@Node "Code" "MUIBuilder_English.guide/Code"
+@Next "Locale"
+@Prev "Save"
+@Toc "Use"
+
+Code generation
+===============
+
+   	When you click on the 'Code' button of the MUI-Builder main window,
+you start the generation of the source code.
+
+   	MUI-Builder will verify that you haven't used the same 	label
+for two different objects twice.
+
+   	If everything goes well, you'll see two lists :
+
+   		- one containing the names of all objects in you application 		- one
+containing the names of all labels that will be 		  generated in your
+source code.
+
+   	You will be able to control very precisely the way MUI-Builder 	will
+generate the labels in your code. If you don't care about 	this
+option, MUI-Builder will do everything automatically for you!
+
+   	Before generating the source code, you'll have to define the options.
+(see @{"Options" Link "Options"}).
+
+   	Then you will see the following buttons :
+
+
+ @{" Options " Link "Options"}                             		Generation options.
+ @{" Application Code " Link "code-application"}                        	Code generation for the whole application
+ @{" Object Code " Link "code-object"}                             	Code generation for a stand-alone object
+ @{" Remove Label " Link "remove-label"}                             	Delete of a label generation.
+ @{" Add Label " Link "add-label"}                             	Add of a label generation.
+
+   The software actually creates generic code, which is more a
+description of the program than a real compilable source.
+
+   After this generic code is created ( temporary file in 'T:' ),
+MUIBuilder executes one of the code-generation modules ( located in the
+'modules' directory ) which uses the temporary file.  Actually most
+languages are available.
+
+   If you feel good enough (!!!) to program a module for you favorite
+language : feel free to contact me !!! I'll explain to you how to use
+the generic code to create the source of the alien language !!!  The
+muibuilder.library provides some functions to help you to create the
+code in your language.
+
+
+@EndNode
+
+@Node "Options" "MUIBuilder_English.guide/Options"
+@Next "code-application"
+@Toc "Code"
+
+Code generation : Options
+-------------------------
+
+   Five options are available :
+
+   @{b}*@{ub}     @{b}Declarations@{ub}: to obtain the declarations and initializations
+     in your source
+
+   @{b}*@{ub}     @{b}Environnement@{ub}:select it if you want to generate code for
+     includes, event loop, procedure declaration ...
+
+   @{b}*@{ub}     @{b}Code@{ub}:select it if you want to generate the MUI code.
+
+   @{b}*@{ub}     @{b}Locale@{ub}:to generate localize code (see @{"Locale" Link "Locale"}).
+
+   @{b}*@{ub}     @{b}Notifications@{ub}:to generate notifications source code.
+
+   Note that each option may be selected independently from the others.
+You can also create exactly the part of the code you desire ...
+
+   Example:
+
+   You've created a window and you want to add a button in your code.
+Select only the 'Code' option and create it will create the button code!
+After inserting this text in the program, you'll need the declaration
+of the object button in your source.  Select 'Declaration' ... and
+insert the generated text directly where you want in your source !
+
+
+@EndNode
+
+@Node "code-application" "MUIBuilder_English.guide/code-application"
+@Next "code-object"
+@Prev "Options"
+@Toc "Code"
+
+Application code
+----------------
+
+   This button enables you to generate the source code for the whole
+application. The generated source will depend on the options you
+previously choose.
+
+
+@EndNode
+
+@Node "code-object" "MUIBuilder_English.guide/code-object"
+@Next "remove-label"
+@Prev "code-application"
+@Toc "Code"
+
+Object code
+-----------
+
+   This button enables you to generate the source code of an object you
+previously chose in the 'Objects labels' list. This operation can
+really be of interest, if you want to be able to create stand-alone MUI
+objects : for example, you could be able to generate each window
+independantly, or include an object in more than one window by calling
+the function creating this object.
+
+
+@EndNode
+
+@Node "remove-label" "MUIBuilder_English.guide/remove-label"
+@Next "add-label"
+@Prev "code-object"
+@Toc "Code"
+
+Remove a label
+--------------
+
+   By selecting this button, you can deactivate the code generation for
+the object selected in the 'Generated Labels' list.
+
+   MUI-Builder automatically knows if it has to generate the label of
+each object. For example it is often useless to keep a pointer variable
+to a MUI-Group, unless you want to dynamically add objects to this
+group during the execution of the program.
+
+   This button, and the 'Add label' button (see @{"Add a label" Link "add-label"}) allow you
+to change MUI-Builder standard definitions on objects.
+
+
+@EndNode
+
+@Node "add-label" "MUIBuilder_English.guide/add-label"
+@Prev "remove-label"
+@Toc "Code"
+
+Ajouter un label
+----------------
+
+   By clicking on this button, you tell MUI-Builder to generate the
+label of the selected object (see @{"Remove a label" Link "remove-label"}).
+
+
+@EndNode
+
+@Node "Locale" "MUIBuilder_English.guide/Locale"
+@Next "Amigaguide"
+@Prev "Code"
+@Toc "Use"
+
+Localisation
+============
+
+   When you select the 'Locale' Option in the code-generation window,
+you chose to generate localized source code.  In fact, all strings and
+shortcuts will be replaced by a call to a 'GetString' function ( which
+should return a locale string from your catalog file ).
+
+   A lot of program are able to generate this function for you (
+Catcomp and Flexcat for examples ).
+
+   The name of the 'GetString' function can be chosen either in the
+preferences window, or in the code-generation window.
+
+   If you don't know how to use these features, please take a look at
+the examples included in the MUIBuilder archive.
+
+
+ @{" Catalog " Link "Catalog"}                           Catalog description file.
+
+
+@EndNode
+
+@Node "Catalog" "MUIBuilder_English.guide/Catalog"
+@Toc "Locale"
+
+Catalog
+-------
+
+   The name of the '.cd' file must be given before generating
+the Catalog.
+
+   	Here is a summarize of what is necessary to know about 	the
+catalog description file ( 'xxxx.cd' file )
+
+   	You'll find in this file all the strings of your program 	in
+the default language.
+
+   	Thanks to that file, you will be able to create automatically 	( with
+Catcomp or Flexcat ) :
+   @{b}*@{ub} the translation file ( 'xxxxx.ct' file ) in which you'll find the
+     strings in a foreign language.
+
+   @{b}*@{ub} the program source file corresponding to your favorite language.
+
+   To all beginners who still don't know how to localize a program, i
+suggest to use the now well-known Flexcat program (by Jochen Wiedmann)
+which will provide you the possibiliy to generate code in most
+languages.
+
+
+@EndNode
+
+@Node "Amigaguide" "MUIBuilder_English.guide/Amigaguide"
+@Next "Remarks"
+@Prev "Locale"
+@Toc "Use"
+
+In line help generation
+=======================
+
+   You will be able to make your online help directly from your
+favorite interface builder ( MUI-Builder of course!!! ).
+
+   You are able to attach a help text to each MUI-object created by
+MUI-Builder.
+
+   Then MUI-Builder will automatically create a hypertext documentation
+in AmigaGuide Format ( that you will be able to view by clicking the
+'View' button ).
+
+   As with code generation, you create only one part of the
+documentation for insertion directly into  your previously written
+documentation.
+
+   You can edit the text of the documentation :
+
+   @{b}*@{ub} the main text with the @{b}App Node@{ub} button
+
+   @{b}*@{ub} a window text with the @{b}Window Node@{ub} button
+
+   @{b}*@{ub} an object text with the @{b}Object Node@{ub} button
+
+   You are able to create the documentation :
+
+   @{b}*@{ub} for the application with the @{b}Generate whole Doc@{ub} Button
+
+   @{b}*@{ub} for a window with @{b}Generate win Doc@{ub}
+
+   @{b}*@{ub} for an object with @{b}Generate obj Doc@{ub}
+
+   By double-clicking on an object or a window name, you can edit the
+title of the associated help-text, and view it.  ( same as the @{b}Edit@{ub}
+buttons ).
+
+   When you create the source code, MUIBuilder will generated a
+MUIA_Help_Node attribute to each object whose text is non-empty and
+which you declared as generated. The generated file is designed to be
+an online-help ... not really a real documentation ...
+
+
+@EndNode
+
+@Node "Remarks" "MUIBuilder_English.guide/Remarks"
+@Prev "Amigaguide"
+@Toc "Use"
+
+Some details to know about
+==========================
+
+   There are a lot of details (tips and hints !!) that you will find in
+this section, and could be (in my humble opinion) really useful ...
+
+
+ @{" Special Chars " Link "Special Chars"}              
+ @{" Objects Line " Link "Objects Line"}             
+ @{" Resizable Interface " Link "Resizable Interface"} 
+
+
+@EndNode
+
+@Node "Special Chars" "MUIBuilder_English.guide/Special Chars"
+@Next "Objects Line"
+@Toc "Remarks"
+
+Special Chars
+-------------
+
+   In EVERY text of your interface, you can insert the following
+special characters :
+
+@{b}\n@{ub}
+     newline
+
+@{b}\r@{ub}
+     carriage return
+
+@{b}\t@{ub}
+     tabulation
+
+@{b}\e@{ub}
+     escape
+
+@{b}\\ @{ub}
+     backslash character \
+
+@{b}\"@{ub}
+     a double quote
+
+@{b}\xNN@{ub}
+     the character of ascii code NN  ( in hexadecimal )
+
+@{b}\nnn@{ub}
+     the character of ascii code nnn ( in octal )
+
+@{b}\c@{ub}
+     c if c is any other caractere          Here are some examples :
+
+@{b}\033b@{ub}
+     to print a bold text
+
+@{b}\033n@{ub}
+     to come back to normal text
+
+@{b}\0338@{ub}
+     to display a white text
+
+@{b}\033c@{ub}
+     to center the text
+
+@{b}\033l@{ub}
+     to justify left
+
+@{b}\033r@{ub}
+     to justify right          Note that you have to type '\"' instead
+of '"' when you want double-quote. Otherwise, you'll get errors when
+compiling.  Moreover '\033' is the same as '\e'. Don't forget to enter
+'\033' instead of '\33' !!!
+
+
+@EndNode
+
+@Node "Objects Line" "MUIBuilder_English.guide/Objects Line"
+@Next "Resizable Interface"
+@Prev "Special Chars"
+@Toc "Remarks"
+
+Objects lines
+-------------
+
+   To line up some objects, you just have to include them in a multi
+column (vertical lining) or a multi-lines (horizontal lining)  group
+(most of the time multi column)
+
+   Some objects (Slider, CheckMark, String) have a title proposed by
+MUIBuilder.  These titles don't exist in MUI: to give you this
+possibility, MUIBuilder include the object and its title in an
+horizontal group. So you won't be able to line up these objects, if you
+use this feature : just use some labels + objects without title in some
+multicolumn groups.
+
+
+@EndNode
+
+@Node "Resizable Interface" "MUIBuilder_English.guide/Resizable Interface"
+@Prev "Objects Line"
+@Toc "Remarks"
+
+Resizable interface
+-------------------
+
+   One of the frequently asked questions is : "after i added some
+objects in my window, the GUI is no longer resizable" : only one answer
+to give : use @{b}Space@{ub} objects and add them in your GUI !
+
+
+@EndNode
+
+@Node "Objects" "MUIBuilder_English.guide/Objects"
+@Next "Notification"
+@Prev "Use"
+@Toc "Main"
+
+Objects
+*******
+
+   MUIBuilder enables you to create every MUI objects that you would
+like to include in you application. These objects can be created or
+modified in the main creation window (after you pressed the @{b}New Window@{ub}
+button in the main window).
+
+   MUI-Builder's objects are the followings :
+
+
+ @{" Area " Link "Area"}     
+ @{" Application " Link "Application"}            
+ @{" Window " Link "Window"}       
+ @{" Group " Link "Group"}      
+ @{" List " Link "List"}     
+ @{" DirList " Link "Dirlist"}        
+ @{" String " Link "String"}       
+ @{" Button " Link "Button"}       
+ @{" Label " Link "Label"}      
+ @{" Cycle " Link "Cycle"}      
+ @{" Radio " Link "Radio"}      
+ @{" CheckMark " Link "CheckMark"}          
+ @{" Image " Link "Image"}      
+ @{" Slider " Link "Slider"}       
+ @{" Gauge " Link "Gauge"}      
+ @{" Text " Link "Text"}     
+ @{" Scale " Link "Scale"}      
+ @{" Proportional gadget " Link "Prop"}     
+ @{" Space " Link "Space"}      
+ @{" PopAsl " Link "PopAsl"}       
+ @{" Pop Object " Link "PopObject"}          
+ @{" Rectangle " Link "Rectangle"}          
+ @{" Color Field " Link "Colorfield"}           
+ @{" Menus " Link "Menus"} 
+
+
+@EndNode
+
+@Node "Area" "MUIBuilder_English.guide/Area"
+@Next "Application"
+@Toc "Objects"
+
+Area Object
+===========
+
+   Every MUI objects that inherits from the Area object include in their
+GUI a register group. The second page contains some attributes of the
+Area object that could be set at initialization.
+
+   @{b}*@{ub}     @{b}Hide@{ub} : The object won't appear in the GUI, except if it is
+     alone in the window.
+
+   @{b}*@{ub}     @{b}Disable@{ub} : the object gets a ghost pattern and doesn't respond
+     to user input.
+
+   @{b}*@{ub}     @{b}Input Mode@{ub} : enable to turn an object to a button.
+
+   @{b}*@{ub}     @{b}Phantom Frame@{ub} : The frame will not appear.
+
+   @{b}*@{ub}     @{b}Frame@{ub} : Defines a frame for the current object.
+
+   @{b}*@{ub}     @{b}Background@{ub} : Defines the background you want in your object.
+
+   @{b}*@{ub}     @{b}Control char@{ub} : the character needed to activate a given object.
+
+   @{b}*@{ub}     @{b}Title Frame@{ub} : a title added in the top of the frame of the
+     object
+
+   Some attributes are not provided for some object : this is not a bug
+... it's a feature !!! I don't want the user to be able to do something
+wrong in his GUI (such as making a button with a String frame !!!!).
+
+
+@EndNode
+
+@Node "Application" "MUIBuilder_English.guide/Application"
+@Next "Window"
+@Prev "Area"
+@Toc "Objects"
+
+Application
+===========
+
+   Your application is the root node of the dependency tree representing
+your complete graphic interface.  By clicking the 'Appli' button in the
+main window of MUI-Builder, you can set:
+
+   @{b}*@{ub} The 'Base' of the application i.e. the name of the AREXX server of
+     your application
+
+   @{b}*@{ub} the author's name
+
+   @{b}*@{ub} the application's name
+
+   @{b}*@{ub} the version
+
+   @{b}*@{ub} the copyright text
+
+   @{b}*@{ub} a description of your application
+
+   Moreover, you'll find in this window :
+   @{b}*@{ub} A menu button, that will open the menu creation window, that will
+     enable you to create the application Menu (see @{"Menus" Link "Menus"}).  This menu
+     can't be tested from MUIBuilder, since it must be attached to an
+     application ! And i can't create a new application in the
+     MUIBuilder application itself !!!!
+
+   @{b}*@{ub} The possibility to add notifications on the application (see
+     @{"Notification" Link "Notification"}).
+
+   It can have only one sort of child object: the Window (see @{"Window" Link "Window"}).
+
+
+@EndNode
+
+@Node "Window" "MUIBuilder_English.guide/Window"
+@Next "Group"
+@Prev "Application"
+@Toc "Objects"
+
+Window
+======
+
+   You all already know what a window is! But the problem is learning
+how to make one with MUI-Builder...
+
+   The MUI-Builder 'Window attributes' window has two distinct pages,
+one named 'Creation' and the other called 'Attributes'.
+
+  1. The @{b}Creation@{ub} page contains 2 lists:
+          In the fist one, you build your GUI itself. The display
+          offers a hierarchical tree. To fold or unfold a node of the
+          tree, you just have to double-click on the little arrow at
+          the left of the object.  Thanks to the buttons between the
+          two lists, you can edit/copy/move the objects of your GUI.
+          Moreover, the menus offer two items @{b}Fold@{ub} and @{b}Unfold@{ub} which
+          will enable you to fold or unfold completely the whole tree.
+          In the two most left columns appear two letters : @{b}H@{ub} (for
+          Help) and @{b}G@{ub} (for generated) : they enable the control
+          respectively from the node generation in the guide
+          documenation, and for the label generation in the source
+          code. If you double-click on one of this letter, it toggles
+          the generation either of the AmigaGuide node, or of the label
+          in the source.
+
+        @{b}*@{ub} The goal of the right-most list is to store temporarily some
+          objects.  (see @{"Liste temporaire" Link "tmp-list"}).
+
+     Groups (see @{"Group" Link "Group"}) are the basics elements to which all other
+     objects (see @{"Objects" Link "Objects"}) will be placed. Every time you create an
+     object you will have to declare it as a child of a specific group.
+     You may specify this group by selecting it in the list gadget.
+
+  2. In the 'Attributes' page, you can find :
+        @{b}*@{ub} Window label and title.
+
+        @{b}*@{ub} The window attributes themself :
+             -     @{b}AppWindow@{ub}: if you want your window to be a appwindow
+
+             -     @{b}Borderless@{ub}: if you don't want a border
+
+             -     @{b}Depth gagdet@{ub}: if you want a depth gadget
+
+             -     @{b}Size gadget@{ub}: if you want a size gadget
+
+             -     @{b}BackDrop@{ub}: to have a window in the background
+
+             -     @{b}Close gadget@{ub}: to put a close gadget in the window
+
+             -     @{b}Dragbar@{ub}: enables the window to be dragged 	
+
+             -     @{b}Open at Init@{ub}: (IMPORTANT) this specify if you want
+               your window to be opened when your application will be
+               created.
+
+
+
+ @{" List temporaire " Link "tmp-list"} 
+
+
+@EndNode
+
+@Node "tmp-list" "MUIBuilder_English.guide/tmp-list"
+@Toc "Window"
+
+Temporary List
+--------------
+
+   In this list you can put objects you want to move from a group to
+another one, or from a window to another one. The list content won't be
+deleted when you delete your application, or when you load a new one.
+In this way, you will be able to transfer an object from an application
+to another one ...
+
+
+@EndNode
+
+@Node "Group" "MUIBuilder_English.guide/Group"
+@Next "List"
+@Prev "Window"
+@Toc "Objects"
+
+Group
+=====
+
+   When you create a new window, it already has a group default child.
+This child object is the root group.  You define a window by attaching
+children (see @{"Objects" Link "Objects"}) to this root group.  Note that other groups may
+also be children to the root group.  You must define the attributes for
+each group:
+
+   @{b}*@{ub}     @{b}Horizontal@{ub}: The objects of the group will be
+     placed	horizontally.
+
+   @{b}*@{ub}     @{b}Register@{ub}: The group will show only one of its children at a
+     time.  After selecting this attribute, you must go to the
+     'Register' entries page to chose the names of the pages of the
+     register.
+
+   @{b}*@{ub}     @{b}Same Height@{ub}: The all chidlren of the group will have the same
+     height.
+
+   @{b}*@{ub}     @{b}Same Width@{ub}: The all children of the group will have the same
+     width.
+
+   @{b}*@{ub}     @{b}Same Size@{ub}: The all children of the group will have the same
+     size.
+
+   @{b}*@{ub}     @{b}Virtual@{ub}: The group will be virtual.
+
+   @{b}*@{ub}     @{b}Columns@{ub}: Format the group in columns. Enter the number of
+     columns in the string gadget.
+
+   @{b}*@{ub}     @{b}Lines@{ub}: Format the group in rows. Enter the number of rows in
+     the string gadget.
+
+   @{b}*@{ub}     @{b}Spacing@{ub}
+        - Horizontal : enables you to control horizontal spacing
+          between the objects.
+
+        - Vertical : enables you to control vertical spacing between
+          the objects.           This object inherits from the Area
+object (see @{"Area Object" Link "Area"}).
+
+
+@EndNode
+
+@Node "List" "MUIBuilder_English.guide/List"
+@Next "Dirlist"
+@Prev "Group"
+@Toc "Objects"
+
+List
+====
+
+   To completely define a list, you must specify :
+   @{b}*@{ub} its label
+
+   @{b}*@{ub} if 'double click' is enable or not
+
+   @{b}*@{ub} if the multiselection is enable
+
+   @{b}*@{ub} If the list is in input mode or not
+
+   @{b}*@{ub} If the vertical size must be adjusted at creation or not
+
+   @{b}*@{ub} If the horizontal size must be adjusted at creation or not
+
+   @{b}*@{ub} The part of the list you want to show to user (activate):
+        - No special positionning
+
+        - Show the first entry
+
+        - Show the last entry
+
+   @{b}*@{ub} the type of the list
+        - a standard list
+
+        - a floattext list, that allows to show texts. You can enter a
+          text in the corresponding string gadget @{b}Float Text@{ub})
+
+        - a list of volumes ( volumes + assigns )
+
+   @{b}*@{ub} The function hooks can be defined too, but they are not absolutely
+     necessary to make the list usable (see MUI-Autodocs!) :
+        - Construction : called when you insert an object in the list
+
+        - Destruction : called when you delete an object in the list
+
+        - Compare : called when you sort the list
+
+        - Display : called when you display an object
+
+        - Multitest : called when you perform multiselection
+
+   @{b}*@{ub} The format of the list enables to define multicolumn lists (not
+     tested directly in MUIBuilder).
+
+   @{b}*@{ub} The list title.  Note that there is an other type of list called a
+DirList (see @{"DirList" Link "Dirlist"}) This type of list can be created by clicking on
+its button in the 'Object Choice' window.
+
+   This object inherits from the Area object (see @{"Area Object" Link "Area"}).
+
+
+@EndNode
+
+@Node "Dirlist" "MUIBuilder_English.guide/Dirlist"
+@Next "String"
+@Prev "List"
+@Toc "Objects"
+
+DirList
+=======
+
+   The Directory list shows the files and directories in the selected
+directory.  The possible options are :
+
+   @{b}*@{ub}     @{b}Drawers onlyt@{ub}: shows ONLY directories
+
+   @{b}*@{ub}     @{b}File Only@{ub}: shows ONLY files
+
+   @{b}*@{ub}     @{b}MultiSelection@{ub}: enables a multiselection of the files in the
+     list
+
+   @{b}*@{ub}     @{b}Reject Icons@{ub}: don't show the '.info' files
+
+   @{b}*@{ub}     @{b}Sort High-Low@{ub}: reverse sorting order
+
+   @{b}*@{ub}     @{b}Sort Type@{ub}: choice of the sort key ( Name, Date, Size )
+
+   @{b}*@{ub}     @{b}Sort Dirs@{ub} : Three possibilities :
+        - Directories appear at the head of the list
+
+        - Directories appear at the tail of the list
+
+        - Directories are mixed with file (following @{b}Sort Type@{ub} option)
+
+   @{b}*@{ub} The directory to read
+
+   @{b}*@{ub} The pattern to accept
+
+   @{b}*@{ub} The pattern to reject
+
+   This object inherits from the Area object (see @{"Area Object" Link "Area"}).
+
+
+@EndNode
+
+@Node "String" "MUIBuilder_English.guide/String"
+@Next "Button"
+@Prev "Dirlist"
+@Toc "Objects"
+
+String
+======
+
+   To completely define a string gadget, you must specify :
+
+   @{b}*@{ub} Its title ( that you can replace with your own )
+
+   @{b}*@{ub} its label
+
+   @{b}*@{ub} the initial content of the string gadget
+
+   @{b}*@{ub} a string containing all the letters accepted by the gadget
+
+   @{b}*@{ub} a string containing all the letters refused by the gadget
+
+   @{b}*@{ub} the maximal length of the string
+
+   This object inherits from the Area object (see @{"Area Object" Link "Area"}).
+
+
+@EndNode
+
+@Node "Button" "MUIBuilder_English.guide/Button"
+@Next "Label"
+@Prev "String"
+@Toc "Objects"
+
+Button
+======
+
+   To completely define a button, you must specify:
+
+   @{b}*@{ub} its label
+
+   @{b}*@{ub} The text that will appear in it
+
+   This object inherits from the Area object (see @{"Area Object" Link "Area"}).
+
+
+@EndNode
+
+@Node "Label" "MUIBuilder_English.guide/Label"
+@Next "Cycle"
+@Prev "Button"
+@Toc "Objects"
+
+Label
+=====
+
+   To completely define a label gadget, you must specify :
+
+   @{b}*@{ub} its label
+
+   @{b}*@{ub} the text that appears on screen
+
+   This object inherits from the Area object (see @{"Area Object" Link "Area"}).
+
+
+@EndNode
+
+@Node "Cycle" "MUIBuilder_English.guide/Cycle"
+@Next "Radio"
+@Prev "Label"
+@Toc "Objects"
+
+Cycle Gadget
+============
+
+   To completely define a cycle gadget, you must specify :
+
+   @{b}*@{ub} the list of its entries
+
+   @{b}*@{ub} its label
+
+   If you specify a control char for a cycle gadget, please add a label
+with the same control char, so that the user could see which character
+he has to use !
+
+   This object inherits from the Area object (see @{"Area Object" Link "Area"}).
+
+
+@EndNode
+
+@Node "Radio" "MUIBuilder_English.guide/Radio"
+@Next "CheckMark"
+@Prev "Cycle"
+@Toc "Objects"
+
+Radio Buttons
+=============
+
+   To completely define a radio gadget, you must specify :
+
+   @{b}*@{ub} the buttons' list : to add, delete, rename the entries of this
+     list, just use the buttons at the right of the list.
+
+   @{b}*@{ub} its label
+
+   This object inherits from the Area object (see @{"Area Object" Link "Area"}).
+
+
+@EndNode
+
+@Node "CheckMark" "MUIBuilder_English.guide/CheckMark"
+@Next "Image"
+@Prev "Radio"
+@Toc "Objects"
+
+CheckMark
+=========
+
+   You can specify wether you want a Title or not (like the strings and
+sliders) before the CheckMark.  If you want a title, you can specify it
+in the 'title' string gadget Don't forget to specify a label.
+
+   This object inherits from the Area object (see @{"Area Object" Link "Area"}).
+
+
+@EndNode
+
+@Node "Image" "MUIBuilder_English.guide/Image"
+@Next "Slider"
+@Prev "CheckMark"
+@Toc "Objects"
+
+Image
+=====
+
+   To define an image for this gadget, you must select the image that
+you wish to be displayed.
+
+   Possible choices are :
+
+   @{b}*@{ub}     @{b}Free Vertical@{ub}: the image will resize vertically.
+
+   @{b}*@{ub}     @{b}Free Horizontal@{ub}: the image will resize horizontally.
+
+   @{b}*@{ub}     @{b}Input Mode@{ub}: the user will be able to select the image.
+
+   @{b}*@{ub}     @{b}Fix Height@{ub}: set the image height to a constant specified in
+     the associated string gadget.  This makes @{b}Free horizontal@{ub} useless.
+
+   @{b}*@{ub}     @{b}Fix Width@{ub}: set the image width to a constant specified in the
+     associated string gadget.  This makes @{b}Free vertical@{ub} useless.
+
+   @{b}*@{ub} As with other objects, you must specify the label.
+
+   Two notes about the image support in this version 2.2 :
+
+   @{b}*@{ub} the popasl gadget provide the ability to enter an image file
+     (which will be displayed using datatypes)
+
+   @{b}*@{ub} It seems there is a problem with dynamically added images in MUI :
+     they seem to not be displayed right. So, when you'll test your
+     application, sometimes the image won't appear. Despite of this,
+     the code should be correctly generated.
+
+   This object inherits from the Area object (see @{"Area Object" Link "Area"}).
+
+
+@EndNode
+
+@Node "Slider" "MUIBuilder_English.guide/Slider"
+@Next "Gauge"
+@Prev "Image"
+@Toc "Objects"
+
+Slider
+======
+
+   You can specify:
+
+   @{b}*@{ub} if the current level must be displayed ( 'Slider Quiet' )
+
+   @{b}*@{ub} if the slider must be displayed in the reverse mode
+
+   @{b}*@{ub} if the slider must have a title or not
+
+   Then you must specify:
+
+   @{b}*@{ub} the maximum value
+
+   @{b}*@{ub} the minimum value
+
+   @{b}*@{ub} the initial value
+
+   You can also set:
+
+   @{b}*@{ub} the title of the object
+
+   @{b}*@{ub} ... and its label !
+
+   This object inherits from the Area object (see @{"Area Object" Link "Area"}).
+
+
+@EndNode
+
+@Node "Gauge" "MUIBuilder_English.guide/Gauge"
+@Next "Text"
+@Prev "Slider"
+@Toc "Objects"
+
+Gauge
+=====
+
+   To define a gauge, you must set:
+
+   @{b}*@{ub} its orientation ( horizontal or vertical)
+
+   @{b}*@{ub} if you want to set the height of the gauge to a constant value it
+     must be specified in the associated String Gadget.  This is
+     especially useful with horizontal gauges.
+
+   @{b}*@{ub} if you want to set the width of the gauge to a constant value it
+     must be specified in the associated String Gadget.  This is
+     especially used with vertical gauges.
+
+   @{b}*@{ub} if its value must be 'divided' (then give the associated value)
+
+   @{b}*@{ub} its maximum value
+
+   @{b}*@{ub} the info test of the gauge : this little text will be displayed
+     inside the gauge itself.  To include in this text the current
+     level of the gauge, just put a @{b}%ld@{ub} in the info text.
+
+   @{b}*@{ub} its label
+
+   This object inherits from the Area object (see @{"Area Object" Link "Area"}).
+
+
+@EndNode
+
+@Node "Text" "MUIBuilder_English.guide/Text"
+@Next "Scale"
+@Prev "Gauge"
+@Toc "Objects"
+
+Text
+====
+
+   To define a Text Gadget, you must specify :
+
+   @{b}*@{ub}     @{b}Text_SetMax@{ub}: the maximum size of the gadget will be its
+     initial size.
+
+   @{b}*@{ub}     @{b}Text_SetMin@{ub}: the minimum size of the gadget will be its
+     initial size.
+
+   @{b}*@{ub}     @{b}Label@{ub} : Its label in the generated source code
+
+   The text must be written in the associated string gadget and can
+contain every Special character (see @{"Caract_res sp_ciaux" Link "Special Chars"}) you can find
+in a C source code.
+
+   This object inherits from the Area object (see @{"Area Object" Link "Area"}).
+
+
+@EndNode
+
+@Node "Scale" "MUIBuilder_English.guide/Scale"
+@Next "Prop"
+@Prev "Text"
+@Toc "Objects"
+
+Scale
+=====
+
+   A scale gadget must be used with a Gauge gadget to display a
+graduation beside it.
+
+   You only have to specify its orientation. Note that only the
+horizontal orientation is available at this time in MUI.
+
+   This object inherits from the Area object (see @{"Area Object" Link "Area"}).
+
+
+@EndNode
+
+@Node "Prop" "MUIBuilder_English.guide/Prop"
+@Next "Space"
+@Prev "Scale"
+@Toc "Objects"
+
+Proportionnal Gadget
+====================
+
+   Set the following options :
+
+   @{b}*@{ub}     @{b}Horizontal@{ub}: the gadget must be horizontal
+
+   @{b}*@{ub}     @{b}Fix Width@{ub}: set the width to a constant specified in the
+     associated string gadget.
+
+   @{b}*@{ub}     @{b}Fix Height@{ub}: set the height to a constant specified in the
+     associated string gadget.
+
+   Then you should specify :
+
+   @{b}*@{ub} the number of entries
+
+   @{b}*@{ub} the number of the first entry
+
+   @{b}*@{ub} the number of visible entries
+
+   As always : don't forget the label !
+
+   This object inherits from the Area object (see @{"Area Object" Link "Area"}).
+
+
+@EndNode
+
+@Node "Space" "MUIBuilder_English.guide/Space"
+@Next "PopAsl"
+@Prev "Prop"
+@Toc "Objects"
+
+Space
+=====
+
+   This object allows you to insert a space between two other objects
+so the window can be resized. It can be horizontal, vertical or
+vertical and horizontal. You can enter the spacing value for both the
+horizontal and vertical space.
+
+
+@EndNode
+
+@Node "PopAsl" "MUIBuilder_English.guide/PopAsl"
+@Next "PopObject"
+@Prev "Space"
+@Toc "Objects"
+
+PopAsl
+======
+
+   This object enables the inclusion of standard ASL requesters in your
+GUI.  The attributes you can set are:
+   @{b}*@{ub} The image you prefer
+
+   @{b}*@{ub} The type of the requester which could be :
+        - File requester
+
+        - Font requester
+
+        - Screen Mode requester
+
+   @{b}*@{ub} There are some hooks you can set:
+        - Start hook : called at the requester creation
+
+        - Stop hook  : called when you close the requester
+
+   @{b}*@{ub} the label of the requester
+
+   This object inherits from the Area object (see @{"Area Object" Link "Area"}).
+
+
+@EndNode
+
+@Node "PopObject" "MUIBuilder_English.guide/PopObject"
+@Next "Rectangle"
+@Prev "PopAsl"
+@Toc "Objects"
+
+PopObject
+=========
+
+   The Popobject provides a list and an image associated with any of
+the MUI object you can create with MUIBuilder. This object will pop up
+when you'll click on the popup image. It will appear in the tree
+hierarchy display as any other object of the GUI, and can be edited in
+the usual way ... even if it is a group which contains many other
+objects.
+
+   To define this object, MUIBuilder provides :
+
+   @{b}*@{ub} A list with the possible images
+
+   @{b}*@{ub} Some attributes :
+        -     @{b}Follow@{ub} : The Pop object follows the window
+
+        -     @{b}Light@{ub} : The Pop Object is displayed in a borderless window
+
+        -     @{b}Volatile@{ub} : The object disappear when you click on the pop
+          image
+
+   @{b}*@{ub} The hooks provided here are :
+        - Open Hook  : called at the opening of the pop window
+
+        - Close Hook : called at the close of the pop window
+
+   @{b}*@{ub} The label of the object
+
+   This object inherits from the Area object (see @{"Area Object" Link "Area"}).
+
+
+@EndNode
+
+@Node "Rectangle" "MUIBuilder_English.guide/Rectangle"
+@Next "Colorfield"
+@Prev "PopObject"
+@Toc "Objects"
+
+Rectangle
+=========
+
+   This object is little bit complex, because he offers in fact more
+than only one object. It enables the creation of :
+
+   - A rectangle area in a window
+
+   - A horizontal bar, with or without a title to separate objects in a
+     GUI
+
+   - A vertical bar to separate objects in a GUI
+
+   You can define the height and width of these objects too.
+
+   This object inherits from the Area object (see @{"Area Object" Link "Area"}).
+
+
+@EndNode
+
+@Node "Colorfield" "MUIBuilder_English.guide/Colorfield"
+@Next "Menus"
+@Prev "Rectangle"
+@Toc "Objects"
+
+Color Field
+===========
+
+   This simple object is designed to show a colour on screen. You just
+have to define :
+
+   @{b}*@{ub} If you want to fix its height or not
+
+   @{b}*@{ub} If you want to fix its width or not
+
+   @{b}*@{ub} the colour of the field
+
+   This object inherits from the Area object (see @{"Area Object" Link "Area"}).
+
+
+@EndNode
+
+@Node "Menus" "MUIBuilder_English.guide/Menus"
+@Prev "Colorfield"
+@Toc "Objects"
+
+Menus
+=====
+
+   A menu can be attached to a window or the application object.  It is
+made of several titles, sub menus and items. When built, it is similar
+to a tree hierarchy, and is displayed in this way in the menu creation
+window.
+
+   The only limitation is the depth of the tree which is limited to 2.
+(In fact : a sub menu can't have a sub menu)
+
+   Moreover:
+
+   @{b}*@{ub} The titles, submenus  and items can be activated or not using the
+     @{b}Enable@{ub} checkmark
+
+   @{b}*@{ub} The items have acces to some more attributes :
+        - It can be Checkable
+
+        - If checkable, you can set its initial state
+
+        - You can define a shortcut for any menu item
+
+
+@EndNode
+
+@Node "Notification" "MUIBuilder_English.guide/Notification"
+@Next "Future"
+@Prev "Objects"
+@Toc "Main"
+
+Notifications
+*************
+
+   The events notifications is to my mind the best new feature provided
+in MUIBuilder 2.0.  It's the first time in the amiga history :-) that
+such a feature is included in an interface builder.
+
+   The goal is to provide the possibility to define links between
+events and actions. The events come from MUI Object : you will define
+for a given event the action that will be performed, and on which
+object it will be performed.
+
+   Once a link event-action is builded, it can be tested directly by
+MUIBuilder, by clicking on the @{b}Test@{ub} button on the creation window.
+Every action which don't use the application object or/and external
+program variables can be tested without any problem in MUIBuilder.
+
+   The notification window offers :
+   @{b}*@{ub} The list of the possible events generated by the object whose name
+     appears at the top of the window
+
+   @{b}*@{ub} The list of the objects on which an action can be performed. To
+     help you to find a given object, the list entries are organized in
+     a hierarchical order.  The window containing the object you are
+     editing appears at first position in this list, then comes the
+     application object, and at least all other windows in the
+     application.
+
+   @{b}*@{ub} Once you have selected a destination object, the third list
+     contains all actions which can be performed on this object. Some
+     of these actions need some arguments ... MUIBuilder will ask for
+     them if needed.
+
+   To add a notification on an object you are currently editing, you
+need either to double-click on an element of the actions list, or to
+select the @{b}Add Notify@{ub} button.
+
+   The application object collects all actions to make on your program
+itself (for example external variables modifications, functions call
+...)
+
+   When you validate an action, it is possible that it needs a
+parameter : if so the program will open a request window. The parameter
+can be of the following types :
+
+
+ @{" Functions " Link "Functions"}                             Choice of a function name.
+ @{" Variables " Link "Variables"}                             Choice of a variable name.
+ @{" Constants " Link "Constants"}                             Give a constant.
+
+   The choice of an object to which you want to add a notification can
+be performed in two different ways :
+
+   - For a window : by clicking on the @{b}Notify@{ub} button of the @{b}Attributes@{ub}
+     page
+
+   - For an object: by selecting the given object in the creation
+     window and clicking on the @{b}Notify@{ub} button.
+
+
+@EndNode
+
+@Node "Functions" "MUIBuilder_English.guide/Functions"
+@Next "Variables"
+@Toc "Notification"
+
+Functions
+=========
+
+   If an action parameter is a function @{b}Hook@{ub}, MUIBuilder ask you for
+the function name. It opens a window where all the existing functions
+appear.  You can either chose one of the existing functions or create a
+new one.  When you generate the source code, MUIBuilder will generate
+what is needed to reference these functions.
+
+
+@EndNode
+
+@Node "Variables" "MUIBuilder_English.guide/Variables"
+@Next "Constants"
+@Prev "Functions"
+@Toc "Notification"
+
+Variables
+=========
+
+   Some actions need a variable as parameter. To get this variable name,
+MUIBuilder opens a window, in which you can find the list of existing
+variables. You can either chose one of the existing function or create
+a new one.
+
+
+@EndNode
+
+@Node "Constants" "MUIBuilder_English.guide/Constants"
+@Prev "Variables"
+@Toc "Notification"
+
+Constants
+=========
+
+   A constant can have several types:
+
+   @{b}*@{ub} A boolean : 2 possibles values True/False
+
+   @{b}*@{ub} A string
+
+   @{b}*@{ub} An integer
+
+   @{b}*@{ub} A character
+
+   Depending on the type of the constant, one of the gadgets of the
+request window will be activated. You'll have to enter the needed value
+in this gadget.
+
+
+@EndNode
+
+@Node "Future" "MUIBuilder_English.guide/Future"
+@Next "Greetings"
+@Prev "Notification"
+@Toc "Main"
+
+Future improvements
+*******************
+
+   Many features need to be implemented later to make of this program
+of the best ever seen !!! :-)))) Most of them should have been included
+in this version !  But unfortunately i had no more time to improve it
+:-( ... And as i'm not sure to find enough time to add these features
+in the next months : I'll release it now !
+
+   Here are the enhancements i'd like to be able to see in the future
+versions :
+
+   @{b}*@{ub} Some objects to improve (such as Space, PopAsl, Image ...)
+
+   @{b}*@{ub} Some objects to add (such as palette)
+
+   @{b}*@{ub} Arexx support (with some functions to have access to MUIBuilder
+     internals)
+
+   @{b}*@{ub} Probably a support for MUI custom objects, if nobody releases
+     something similar
+
+   @{b}*@{ub} I want to improve the notification support, to be able to build
+     more complex notifications, keeping the same GUI ...
+
+   @{b}*@{ub} Improvement of the external code generators : add a GUI and many
+     many options !
+
+   @{b}*@{ub} Add preferences (local and global) to generators
+
+   @{b}*@{ub} To have an interface between MUIBuilder and text editors would be
+     great
+
+   @{b}*@{ub} I'm waiting for Drag&Drop in MUI to improve the GUI construction
+
+   @{b}*@{ub} The object buttons will probably become images
+
+   @{b}*@{ub} The save files will be improved to enable to edit them easily
+
+   @{b}*@{ub} The catalog generation will be improved : the strings added by
+     hand won't be deleted anymore
+
+   As you can see, i have some more months of work before i can begin a
+new project !!!  I'm always waiting for some suggestions !!! :-)
+
+
+@EndNode
+
+@Node "Greetings" "MUIBuilder_English.guide/Greetings"
+@Next "Index"
+@Prev "Future"
+@Toc "Main"
+
+Greetings
+*********
+
+   MUIBuilder is @{i}dedicated to the memory of Pierre Carrette@{ui}, one of the
+best amiga programmers I knew ...
+
+   I'd like to thank here every people who helped me and contributed to
+MUIBuilder (no special order) :
+
+   @{b}*@{ub}     @{i}Lionel Vintenat@{ui} for the idea of the generic code and the
+     implementation  of the 'E language' module.
+
+   @{b}*@{ub}     @{i}Albert Weinert@{ui} for the implementation  of the OberonII module.
+
+   @{b}*@{ub}     @{i}Stefan Schulz@{ui} for the Modula2 module.
+
+   @{b}*@{ub}     @{i}Stefan Sommerfeld@{ui} for the assembly generator.
+
+   @{b}*@{ub}     @{i}Dirk-Michael Brosig@{ui} for his GCC-only module.
+
+   @{b}*@{ub}     @{i}Bernd Noll@{ui} for his great help when debugging MUIBuilder, and
+     his really BIG :-) bug reports !!
+
+   @{b}*@{ub}     @{i}Andreas Jung@{ui} for his fantastic help and bug reports !
+
+   @{b}*@{ub}     @{i}Pierre Carrette@{ui} for all his ideas :-) (and BrowserII !!!!)
+
+   @{b}*@{ub}     @{i}Gael Marziou@{ui}, @{i}Pascal Pensa@{ui}, @{i}Christian Brandel@{ui}, @{i}Daniel Murrel@{ui}
+     for their carefull tests and suggestions.
+
+   @{b}*@{ub}     @{i}Christian Brandel@{ui} for the german documentation, and the german
+     catalog.
+
+   @{b}*@{ub}     @{i}Pascal Rabier@{ui}, @{i}Mike Manzaro@{ui}, @{i}Daniel Murrell@{ui} for their
+     corrections on the english documentation !
+
+   @{b}*@{ub}     @{i}Tobias Ferber@{ui} for his superb MagicWB icon and the objects
+     images.
+
+   @{b}*@{ub}     @{i}Jérôme Chesnot@{ui} for his objects images.
+
+   @{b}*@{ub}     @{i}Marco Musso@{ui} for the italian translation of the catalog.
+
+   @{b}*@{ub}     @{i}Marcin Orlowski@{ui} (Mr Soft/W.F.M.H.) for the polish catalog.
+
+   @{b}*@{ub}     @{i}Stanislav Kneifl@{ui} for the Czech catalog.
+
+   @{b}*@{ub}     @{i}Soeren Berg Glasius@{ui} for the Danish catalog.
+
+   I have to thank every people who sent me some bug reports and ideas
+: without all of you, this program would not be what it is ...
+
+
+@EndNode
+
+@Node "Index" "MUIBuilder_English.guide/Index"
+@Prev "Greetings"
+@Toc "Main"
+
+Index
+*****
+
+@Index "Index"
+
+
+
+ @{" Application Object " Link "Application"}                   Application
+ @{" AppWindow " Link "Save"}                            Save
+ @{" Button Object " Link "Button"}                        Button
+ @{" Catalog " Link "Catalog"}                              Catalog
+ @{" Catalog " Link "Locale"}                              Locale
+ @{" CheckMark Object " Link "CheckMark"}                     CheckMark
+ @{" Code generation " Link "Prefs"}                      Prefs
+ @{" Code generation " Link "Code"}                      Code
+ @{" Colord Field Object " Link "Colorfield"}                  Colorfield
+ @{" Configuration " Link "Prefs"}                        Prefs
+ @{" Constants " Link "Constants"}                            Constants
+ @{" Cycle Object " Link "Cycle"}                         Cycle
+ @{" DirList object " Link "Dirlist"}                       Dirlist
+ @{" Distribution " Link "Distribution"}                         Distribution
+ @{" Events " Link "Notification"}                               Notification
+ @{" External generator " Link "Code"}                   Code
+ @{" Flexcat " Link "Locale"}                              Locale
+ @{" Flexcat " Link "Catalog"}                              Catalog
+ @{" Function Hooks " Link "Functions"}                       Functions
+ @{" Gauge Object " Link "Gauge"}                         Gauge
+ @{" General Principles " Link "Principles"}                   Principles
+ @{" Group Object " Link "Group"}                         Group
+ @{" Icons " Link "Prefs"}                                Prefs
+ @{" Image Object " Link "Image"}                         Image
+ @{" Label Object " Link "Label"}                         Label
+ @{" Labels " Link "remove-label"}                               remove-label
+ @{" Labels " Link "add-label"}                               add-label
+ @{" List Object " Link "List"}                          List
+ @{" Locale " Link "Prefs"}                               Prefs
+ @{" Menus " Link "Menus"}                                Menus
+ @{" Notifications " Link "Notification"}                        Notification
+ @{" Objects " Link "Objects"}                              Objects
+ @{" Objects lines " Link "Objects Line"}                        Objects Line
+ @{" Objet PopAsl " Link "PopAsl"}                         PopAsl
+ @{" On line help " Link "Amigaguide"}                         Amigaguide
+ @{" Options (code generation) " Link "Options"}            Options
+ @{" PopObject " Link "PopObject"}                            PopObject
+ @{" Proportionnal Object " Link "Prop"}                 Prop
+ @{" Radio Object " Link "Radio"}                         Radio
+ @{" Rectangle Object " Link "Rectangle"}                     Rectangle
+ @{" Requests " Link "Prefs"}                             Prefs
+ @{" Resizable interface " Link "Resizable Interface"}                  Resizable Interface
+ @{" Save " Link "Save"}                                 Save
+ @{" Scale Object " Link "Scale"}                         Scale
+ @{" Slider Object " Link "Slider"}                        Slider
+ @{" Space Object " Link "Space"}                         Space
+ @{" Special Chars " Link "Special Chars"}                        Special Chars
+ @{" String Object " Link "String"}                        String
+ @{" Temporary files " Link "Code"}                      Code
+ @{" Temporary List " Link "tmp-list"}                       tmp-list
+ @{" Test Window " Link "Notification"}                          Notification
+ @{" Text editors " Link "Prefs"}                         Prefs
+ @{" Text Object " Link "Text"}                          Text
+ @{" Tree display " Link "Prefs"}                         Prefs
+ @{" Variables " Link "Variables"}                            Variables
+ @{" Window Configuration " Link "Prefs"}                 Prefs
+ @{" Window object " Link "Window"}                        Window
+
+@EndNode
+

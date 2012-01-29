@@ -1,0 +1,32 @@
+CC      = m68k-amigaos-gcc
+CFLAGS = -g -Wall -noixemul -I../../../include
+LDFLAGS = -g -noixemul
+EXE = ../../GenCodeC
+OBJS = GenCodeC.o file.o
+RM = rm -f
+
+SRCS = $(patsubst %.o,%.c,$(OBJS))
+
+.PHONY: all
+all: $(EXE)
+
+$(EXE): $(OBJS)
+	$(CC) -o $@ $^ $(LDFLAGS)
+
+.PHONY: clean
+clean:
+	$(RM) $(EXE) *.o
+
+.PHONY: distclean
+distclean:
+	$(RM) $(EXE) *.o
+
+.PHONY: deps
+deps: $(SRCS)
+	$(CC) -MM $(CFLAGS) $^
+
+GenCodeC.o: GenCodeC.c ../../../include/proto/muibuilder.h \
+  ../../../include/defines/muibuilder.h \
+  ../../../include/libraries/muibuilder.h file.h \
+  ../../../include/SDI_compiler.h
+file.o: file.c file.h

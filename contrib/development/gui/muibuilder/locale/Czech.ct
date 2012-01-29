@@ -1,0 +1,1966 @@
+## version $VER: MUIBuilder.catalog 2.1 (04.01.2011)
+## language czech
+## codeset 0
+;
+;
+; 	MUIBuilder 2.3 translation file
+;
+; This file needs updating
+;
+; Strings for the 'Application Window'
+;
+MSG_Application
+Aplikace
+; Application
+;
+MSG_Base
+BÁze
+; Base
+;
+MSG_Author
+Autor
+; Author
+;
+MSG_Title
+Titulek
+; Title
+;
+MSG_Version
+Verze
+; Version
+;
+MSG_Copyright
+Copyright
+; Copyright
+;
+MSG_Description
+Popis
+; Description
+;
+;
+;
+; Strings for requesters ( Error requesters and others )
+;
+;
+MSG_Cancel
+_ZruÓit
+; _Cancel
+;
+MSG_Ok
+_OK
+; _OK
+;
+MSG_ChoseFunction
+Vyberte funkci
+; Choose a function
+;
+MSG_MergeFile
+PÒidat soubor
+; Merge File
+;
+MSG_ComeBack
+Pro nahrÁvÁnÉ se vraÔte do hlavnÉho okna !
+; Go back to the main window to load!
+;
+MSG_ApplicationLost
+Budete-li pokraÃovat,\n  pÒijdete o svoji aplikaci.
+; You will lose all your application\n           if you continue.
+;
+; Note : If you translate this file, please don't forget to insert your name
+; in the following string.
+; Please, insert something like :
+;     \nThe French Translation was written by\n\033bEric Totel\033n\n
+;
+MSG_AboutText
+\033c\n%s\nautor:\n\n\033bEric TOTEL\033n\n\ndatum: %s\n\nTento program je Giftware\nVÓechna prÁva vyhrazena\n
+; \n%s - MUI Interface Builder\n\n\
+; Copyright (C) 1990-2009 Eric Totel\n\
+; Copyright (C) 2010-2011 MUIBuilder Open Source Team\n\n\
+; This program comes with ABSOLUTELY NO WARRANTY.\n\
+; This is free software, and you are welcome to redistribute it\n\
+; under certain conditions, see the file 'COPYING' for details.\n
+;
+MSG_Failed
+Nemohu vytvoÒit aplikaci !
+; Failed to create application!
+;
+MSG_Arguments
+PonechÁvÁm jen prvnÉ argument !
+; I keep only the first argument!
+;
+MSG_NeedWindows
+Ve vaÓÉ aplikaci musÉ bÙt alespoÎ jedno okno !
+; You need windows in your application!
+;
+MSG_NotEnoughMemory
+Nedostatek pamÅti !
+; Not Enough Memory Error!
+;
+MSG_SelectWindow
+NejdÒÉve musÉte zvolit okno !
+; You must select a window first!
+;
+MSG_Confirm
+Jste si jistÙ Úe chcete pokraÃovat ?
+; Are you sure you want to do that ?
+;
+MSG_ConfirmExit
+úertujete !\n\Opravdu chcete opustit tento program ?
+; Do you really want to quit?
+;
+MSG_SelectObject
+NejdÒÉve musÉte zvolit objekt !
+; You must select an object first!
+;
+MSG_SelectTmpObject
+NejdÒÉve musÉte zvolit objekt z okna DoÃasn× !
+; You need to select an object in tmp!
+;
+MSG_RemoveRootGroup
+NemÊÚete odstranit skupinu kterÁ je potomkem okna !
+; You can't remove the group child!
+;
+MSG_QuitWindowAttributes
+MusÉte zadat titulek, jm×no a skupiny !
+; You need a title, a label and groups!
+;
+MSG_NoChild
+Skupina, kterÁ je potomkem okna, musÉ mÉt potomky !
+; The Root group must have childs!
+;
+MSG_NothingToUndelete
+NenÉ nic k vrÁcenÉ !
+; There is nothing to undelete!
+;
+MSG_CantMoveRoot
+NemÊÚete pÒesunout skupinu kterÁ je potomkem okna !
+; You can't move root group!
+;
+MSG_NeedLabel
+MusÉte zadat jm×no !
+; You need a label!
+;
+MSG_NeedLabelTitle
+MusÉte zadat jm×no a titulek !
+; You need a label and a title!
+;
+MSG_NeedImageLabel
+MusÉte zadat obrÁzek a jm×no !
+; You need to select an image and a label!
+;
+MSG_NeedBase
+MusÉte vyplnit pole 'BÁze' pro aplilkaci !
+; You need to fill in the application 'BASE' argument!
+;
+MSG_NotBuilderSaveFile
+Toto nenÉ soubor MUIBuilderu !
+; It's not a MUIBuilder save file!
+;
+MSG_WrongVersion
+NeznÁmÁ verze MUIBulder souboru !
+; Unknown MUIBuilder save file : probably wrong version!
+;
+MSG_SelectEntry
+MusÉte vybrat poloÚku seznamu !
+; You must select a list entry!
+;
+MSG_NeedLabelEntries
+MusÉte zadat nÁzev a poloÚky seznamu !
+; You need a label and list entries!
+;
+MSG_SeletNotifyLink
+Vyberte notify spojenÉ !
+; Select a notify link!
+;
+MSG_NotifyExists
+Notifikace jiÚ existuje !
+; Notification already exists!
+;
+MSG_SelectAction
+Vyberte si Ãinnost !
+; Select an action please!
+;
+MSG_SelectEvent
+Vyberte si udÁlost !
+; Select an event please!
+;
+MSG_SelectNotifyLink
+Vyberte si notify spojenÉ !
+; Select a notify link!
+;
+MSG_CantMovePopObjectChild
+NemÊÚete pÒesouvat potomka PopObjectu !
+; You can't move a PopObject child!
+;
+MSG_CantDeletePopObjectChild
+NemÊÚete smazat potomka PopObjectu !
+; You can't delete a PopObject child!
+;
+MSG_CopyNotImplemented
+InternÉ chyba\nKopie tohoto objektu nenÉ implementovÁna
+; Internal Error\nThe copy of this object is not implemented
+;
+MSG_ErrorReading
+Chyba pÒi ÃtenÉ adresÁÒe Modules
+; Error occured while reading Modules directory
+;
+MSG_GroupError
+Pozor !\nSkupina %s\nmÁ mÉt %d potomkÊ\na mÁ jich %d.\nNezapomeÎte opravit tuto chybu !\n
+; Warning!\nThe group called\n%s\nshould have %d children\nand has %d.\nDon't forget to correct this error!\n
+;
+MSG_SelectMenuTitle
+NejdÒÉve si vyberte tutulek menu !
+; Select a menu title first!
+;
+MSG_SelectSubMenu
+NejdÒÉve si vyberte submenu !
+; Select a submenu first!
+;
+MSG_GiveObjectAndLabel
+NejdÒÉve nastavte objekt a jm×no !
+; Give an object and a label first!
+;
+MSG_AlreadyGenerated
+Toto jm×no je uÚ vygenerovÁno v kÏdu !
+; This label is already generated in the code!
+;
+MSG_SelectLabel
+NejdÒÉve vyberte generovan× jm×no !
+; You must select a generated label first!
+;
+;
+; Rectangle Window
+;
+;
+MSG_RectangleChoices
+Parametry pro obd×lnÉk
+; Rectangle Choices
+;
+MSG_Rectangle
+Obd×lnÉk
+; Rectangle
+;
+MSG_HorizontalBar
+VodorovnÁ linka
+; Horizontal Bar
+;
+MSG_VerticalBar
+SvislÁ linka
+; Vertical Bar
+;
+;
+; Prefs Window
+;
+;
+MSG_Configuration
+Preference
+; Preferences
+;
+MSG_ConfigChoices
+Volby konfigurace
+; Config Choices
+;
+MSG_GhostWindows
+MizejÉci okna
+; Ghost Windows
+;
+MSG_Icons
+Ikony
+; Icons
+;
+MSG_Requests
+PotvrzovÁnÉ
+; Requests
+;
+MSG_Editor
+Editor
+; Editor
+;
+MSG_Save
+_UloÚit
+; _Save
+;
+MSG_EditorChoice
+Volba editoru
+; Editor Choice
+;
+MSG_TestLabel
+Testovat
+; Test
+;
+MSG_Depth
+Hloubka
+; Depth
+;
+MSG_TreeChar
+StromovÙ znak
+; Tree Char
+;
+; Main window strings
+;
+;
+MSG_WrittenBy
+Autor: Eric Totel
+; Written by Eric Totel
+;
+MSG_Windows
+Okna
+; Windows
+;
+MSG_Creation
+Tvorba okna
+; Creation Control
+;
+MSG_Appli
+_Aplikace
+; _Application
+;
+MSG_NewWindow
+_Nov× okno
+; New _Window
+;
+MSG_EditWindow
+_Editace okna
+; _Edit Window
+;
+MSG_Delete
+_Smazat
+; _Delete
+;
+MSG_View
+_UkÁzat
+; _View
+;
+MSG_Code
+_KÏd
+; _Code
+;
+MSG_Guide
+_Guide
+; _Guide
+;
+;
+MSG_Quit
+_Konec
+; _Quit
+;
+;
+; 'Window attributes' Window
+;
+;
+MSG_WindowAttributes
+Atributy okna
+; Window Attributes
+;
+MSG_WindowIdentification
+Identifikace okna
+; Window Identification
+;
+MSG_Label
+Jm×no
+; Label
+;
+MSG_AddChild
+_PÒidat potomka
+; _Add Child
+;
+MSG_RemoveChild
+_Odstranit
+; _Remove
+;
+MSG_Up
+Nahor_u
+; _Up
+;
+MSG_Down
+_DolÊ
+; _Down
+;
+MSG_Tmp
+DoÃasn×
+; Tmp
+;
+MSG_ToTmp
+-_>PÒesunout
+; -_>Move
+;
+MSG_ToChild
+_<-PÒesunout
+; _<-Move
+;
+MSG_RemoveTmp
+Odst_ranit
+; Remo_ve
+;
+MSG_Test
+_VyzkouÓet
+; _Test
+;
+MSG_EditObject
+_Editovat
+; _Edit
+;
+MSG_Notify
+_Notify
+; _Notify
+;
+MSG_Menu
+_Menu
+; _Menu
+;
+MSG_Copy
+->_Kopie
+; ->_Copy
+;
+MSG_CopyTmp
+<-Ko_pie
+; <-Co_py
+;
+MSG_OpenAtInit
+OtevÒÉt pÒi vytvoÒenÉ
+; Open at Init
+;
+MSG_AppWindow
+AppWindow
+; AppWindow
+;
+MSG_Backdrop
+BackDrop
+; BackDrop
+;
+MSG_Borderless
+Borderless
+; Borderless
+;
+MSG_CloseGadget
+Close Gadget
+; Close Gadget
+;
+MSG_DepthGadget
+Depth Gadget
+; Depth Gadget
+;
+MSG_DragBar
+Dragbar
+; Dragbar
+;
+MSG_SizeGadget
+Size Gadget
+; Size Gadget
+;
+;
+; Group creation window
+;
+;
+MSG_GroupWindow
+Parametry pro skupinu
+; Group Choices
+;
+MSG_GroupAttributes
+Atributy skupiny
+; Group Attributes
+;
+MSG_HorizGroup
+HorizontÁlnÉ skupina
+; Horizontal Group
+;
+MSG_PageMode
+Registr
+; Register Mode
+;
+MSG_SameHeight
+StejnÁ vÙÓka
+; Same Height
+;
+MSG_SameWidth
+StejnÁ ÓÉÒka
+; Same Width
+;
+MSG_SameSize
+StejnÁ velikost
+; Same Size
+;
+MSG_VirtualGroup
+VirtuÁlnÉ skupina
+; Virtual Group
+;
+MSG_Columns
+SloupcÊ
+; Columns
+;
+MSG_Rows
+òÁdek
+; Rows
+;
+MSG_HorizSpacing
+HorizontÁlnÉ mezerovÁnÉ
+; Horizontal Spacing
+;
+MSG_VertSpacing
+VertikÁlnÉ mezerovÁnÉ
+; Vertical Spacing
+;
+MSG_Register
+Registr
+; Register
+;
+MSG_RegisterEntries
+PoloÚky
+; Register Entries
+;
+MSG_RowsColumns
+òÁdek/sloupcÊ
+; Rows/Columns
+;
+MSG_Number
+PoÃet
+; Number
+;
+MSG_Spacing
+MezerovÁnÉ
+; Spacing
+;
+MSG_Horizontal
+HorizontÁlnÉ
+; Horizontal
+;
+MSG_Vertical
+VertikÁlnÉ
+; Vertical
+;
+MSG_GroupIdent
+Identifikace skupiny
+; Group Identification
+;
+;
+; Child window
+;
+;
+MSG_ObjectChoice
+VÙbÅr objektu
+; Object Choice
+;
+MSG_Group
+_Skupina
+; _Group
+;
+MSG_KeyButton
+_KeyButton
+; _KeyButton
+;
+MSG_ListView
+ListVie_w
+; ListVie_w
+;
+MSG_DirList
+_DirList
+; _DirList
+;
+MSG_String
+Strin_g
+; _String
+;
+MSG_LabelObj
+Lab_el
+; Lab_el
+;
+MSG_Cycle
+C_ycle
+; C_ycle
+;
+MSG_Radio
+Radi_o
+; Radi_o
+;
+MSG_Image
+I_mage
+; I_mage
+;
+MSG_Space
+Mezer_a
+; Sp_ace
+;
+MSG_CheckMark
+C_heckMark
+; C_heckMark
+;
+MSG_Slider
+Sl_ider
+; Sl_ider
+;
+MSG_Gauge
+Ga_uge
+; Ga_uge
+;
+MSG_Scale
+Sca_le
+; Sca_le
+;
+MSG_Text
+_Text
+; _Text
+;
+MSG_Prop
+P_rop
+; P_rop
+;
+MSG_Bar
+Recta_ngle
+; Recta_ngle
+;
+MSG_Colorfield
+Color_field
+; Color_field
+;
+MSG_PopAsl
+_PopAsl
+; _PopAsl
+;
+MSG_PopObject
+PopOb_ject
+; PopOb_ject
+;
+; Label Window
+;
+;
+MSG_LabelIdent
+Identifikace
+; Label Identification
+;
+MSG_LabelChoice
+Parametry pro Label
+; Label Choice
+;
+;
+; String window
+;
+MSG_Left
+Doleva
+; Left
+;
+MSG_Right
+Doprava
+; Right
+;
+MSG_Center
+Centrovat
+; Center
+;
+MSG_StringChoice
+Parametry pro String
+; String Choice
+;
+MSG_UseTitle
+PouÚÉt titulek
+; Use a title
+;
+MSG_SecretString
+SkrytÙ obsah
+; Secret String
+;
+MSG_IntegerString
+CeloÃÉselnÙ obsah
+; Integer String
+;
+MSG_StringIdent
+Identifikace
+; String Identification
+;
+MSG_Content
+Obsah
+; Content
+;
+MSG_Accept
+PÒijmout
+; Accept
+;
+MSG_Reject
+OdmÉtnout
+; Reject
+;
+MSG_MaxLen
+Max. d×lka
+; MaxLength
+;
+;
+; Buttons window
+;
+;
+MSG_ButtonChoices
+Parametry pro Button
+; Button Choices
+;
+MSG_ButtonIdent
+Identifikace
+; Button Identification
+;
+MSG_ShortKey
+Hot Key
+; Hot Key
+;
+;
+; CheckMark Window
+;
+;
+MSG_CheckMarkChoice
+Parametry pro CheckMark
+; CheckMark Choice
+;
+MSG_CheckMarkIdent
+Identifikace
+; CheckMark Identification
+;
+MSG_InitialState
+Stav na poÃÁtku
+; Initial State
+;
+; Cycle Window
+;
+;
+MSG_CycleChoice
+Parametry pro Cycle
+; Cycle Choices
+;
+MSG_CycleEntries
+PoloÚky Cycle
+; Cycle Entries
+;
+MSG_New
+_NovÁ
+; _New
+;
+MSG_Remove
+Odst_ranit
+; _Remove
+;
+MSG_Entry
+Vstup
+; Entry
+;
+;
+;
+; Radio Window
+;
+;
+MSG_RadioChoices
+Parametry pro Radio
+; Radio Choices
+;
+MSG_RadioEntries
+PoloÚky Radio
+; Radio Entries
+;
+;
+; DirList Window
+;
+;
+MSG_SortbyName
+TÒÉdit podle jm×na
+; Sort by Name
+;
+MSG_SortbyDate
+TÒÉdit podle data
+; Sort by Date
+;
+MSG_SortbySize
+TÒÉdit podle velikosti
+; Sort by Size
+;
+MSG_ListDirChoices
+Parametry pro  ListDir
+; ListDir Choices
+;
+MSG_Attributes
+Atributy
+; Attributes
+;
+MSG_DrawersOnly
+Jen adresÁÒe
+; Drawers Only
+;
+MSG_FilesOnly
+Jen soubory
+; Files Only
+;
+MSG_FilterDrawers
+Filtrovat adresÁÒe
+; Filter Drawers
+;
+MSG_MultiSelection
+VÉcenÁsobnÙ vÙbÅr
+; Multi Selection
+;
+MSG_RejectIcons
+Nezobrazovat ikony
+; Reject Icons
+;
+MSG_SortHighLow
+TÒÉdit od nejvÅtÓÉho
+; Sort High-Low
+;
+MSG_SortType
+ZpÊsob tÒÉdÅnÉ
+; Sort Type
+;
+MSG_Dir
+AdresÁÒ
+; Dir
+;
+MSG_SortDirs
+TÒÉdit adresÁÒe
+; Sort Dirs
+;
+MSG_DirsFirst
+AdresÁÒe prvnÉ
+; Dirs First
+;
+MSG_DirsLast
+AdresÁÒe poslednÉ
+; Dirs Last
+;
+MSG_DirsMixed
+MÉchat adresÁÒe
+; Dirs Mixed
+;
+;
+; Gauge Window
+;
+;
+MSG_GaugeChoices
+Parametry pro  Gauge
+; Gauge Choices
+;
+MSG_Choices
+Parametry
+; Choices
+;
+MSG_HorizGauge
+HorizontÁlnÉ Gauge
+; Horizontal Gauge
+;
+MSG_FixHeight
+PevnÁ vÙÓka
+; Fix Height
+;
+MSG_FixWidth
+PevnÁ ÓÉÒka
+; Fix Width
+;
+MSG_Divide
+DÅlenÉ
+; Divide
+;
+MSG_Maximum
+Maximum
+; Maximum
+;
+MSG_Height
+VÙÓka
+; Height
+;
+MSG_Width
+óÉÒka
+; Width
+;
+MSG_Infotext
+InformaÃnÉ text
+; Info Text
+;
+;
+; Code Generation part
+;
+;
+MSG_MultiplyDefinedLabel
+\033c\0338POZOR\nNÁsledujÉcÉ jm×na jsou\ndefinovÁna vÉcekrÁt
+; \033c\0338BEWARE\nThe following Labels are\nmultiply defined
+;
+MSG_MultiDefinitions
+NÁsobn× definice
+; MultiDefinitions
+;
+MSG_CodeFileName
+VÙstupnÉ soubor
+; Code File Name
+;
+MSG_ObjectsLabels
+Jm×na objektÊ
+; Objects Labels
+;
+MSG_GeneratedLabels
+GenerovanÁ jm×na
+; Generated Labels
+;
+MSG_AppCode
+KÏd _aplikace
+; App _Code
+;
+MSG_ObjectCode
+KÏd _objektu
+; _Object Code
+;
+MSG_RemoveLabel
+Odst_ranit jm×no
+; _Remove Label
+;
+MSG_AddLabel
+_PÒidat jm×no
+; _Add Label
+;
+MSG_Options
+Parametry
+; Options
+;
+MSG_Declarations
+Deklarace
+; Declarations
+;
+MSG_Environment
+ProstÒedÉ
+; Environment
+;
+MSG_CodeOption
+KÏd
+; Code
+;
+MSG_NotificationsOption
+Notifikace
+; Notifications
+;
+MSG_CatalogButton
+Katalo_g
+; Catalo_g
+;
+MSG_Catalog
+Katalog
+; Catalog
+;
+MSG_Locale
+Lokalizovat
+; Locale
+;
+MSG_GetString
+GetString
+; GetString
+;
+;
+; 
+; Guide building part
+;
+MSG_TextLength
+\0338 CelkovÁ d×lka textu
+; \0338 Actually Text Length
+;
+MSG_NodeTitle
+Jm×no uzlu
+; Node Title
+;
+MSG_EditNodeText
+õpravy _uzlu
+; _Edit Node Text
+;
+MSG_CantOpen
+Nemohu otevÒÉt doÃasnÙ soubor !
+; Can't open temporary file!
+;
+MSG_AmigaGuide
+AmigaGuide
+; AmigaGuide
+;
+MSG_Objects
+Objekty
+; Objects
+;
+MSG_Edit
+_Edit
+; _Edit
+;
+MSG_Edit2
+E_dit
+; E_dit
+;
+MSG_Operations
+Operace
+; Operations
+;
+MSG_AppNode
+Uzel _aplikace
+; _App Node
+;
+MSG_WindowNode
+Uzel _okna
+; Wind_ow Node
+;
+MSG_ObjectNode
+Uzel o_bjektu
+; O_bject Node
+;
+MSG_GenerateWholeDoc
+_VytvoÒit celÙ dokument
+; Generate _Whole Doc
+;
+MSG_GenerateWinDoc
+V_ytvoÒit dokument okna
+; Generate W_in Doc
+;
+MSG_GenerateObjDoc
+VytvoÒit dokument ob_jektu
+; Generate Ob_j Doc
+;
+MSG_ViewDoc
+_UkÁzat dokument
+; _View Doc
+;
+MSG_AmigaguideDocName
+Jm×no vÙstupnÉho souboru
+; AmigaGuide Doc Name
+;
+MSG_CantOpenAmigaGuide
+Nemohu otevÒÉt vÙstupnÉ soubor !
+; Can't open AmigaGuide file!
+;
+; 
+; Image window
+;
+;
+MSG_ImageChoice
+Parametry pro Image
+; Image Choice
+;
+MSG_FreeVertical
+VolnÁ vÙÓka
+; Free Vertical
+;
+MSG_FreeHorizontal
+VolnÁ ÓÉÒka
+; Free Horizontal
+;
+MSG_InputMode
+VstupnÉ mÏd
+; Input Mode
+;
+MSG_Frame
+RÁmeÃek
+; Frame
+;
+MSG_Size
+Velikost
+; Size
+;
+MSG_ImageIdent
+Identifikace
+; Image Identification
+;
+MSG_Images
+Images
+; Images
+;
+;
+;
+; Listview Window
+;
+;    
+MSG_ListChoice
+Parametry pro List
+; List Choice
+;
+MSG_ListType
+Typ Listu
+; List Type
+;
+MSG_ListIdent
+Identifikace
+; List Identification
+;
+MSG_StandardList
+StandardnÉ List
+; Standard List
+;
+MSG_FloattextList
+Floattext List
+; Floattext List
+;
+MSG_VolumeList
+Volume List
+; Volume List
+;
+MSG_NoEntry
+Nic
+; No Entry
+;
+MSG_FirstEntry
+PrvnÉ poloÚku
+; First Entry
+;
+MSG_LastEntry
+PoslednÉ poloÚku
+; Last Entry
+; 
+MSG_Strings
+RetÅzce
+; Strings
+;
+MSG_AdjustHeight
+Nastavit vÙÓku
+; Adjust Height
+;
+MSG_AdjustWidth
+Nastavit ÓÉÒku
+; Adjust Width
+;
+MSG_Activate
+Aktivovat
+; Activate
+;
+MSG_DisplayHook
+Display Hook
+; Display Hook
+;
+MSG_ConstructHook
+Construct Hook
+; Construct Hook
+;
+MSG_DestructHook
+Destruct Hook
+; Destruct Hook
+;
+MSG_CompareHook
+Compare Hook
+; Compare Hook
+;
+MSG_MultiTestHook
+Multitest Hook
+; Multitest Hook
+;
+MSG_Format
+FormÁt
+; Format
+;
+MSG_FloatText
+PlovoucÉ text
+; Float Text
+;
+MSG_FileName
+Jm×no souboru
+; File Name
+;
+MSG_DoubleClick
+Dvojklik
+; Double Click
+;
+;
+; Prop Window
+;
+;
+MSG_PropChoices
+Parametry pro Prop
+; Prop Choices
+;
+MSG_HorizontalProp
+HorizontÁlnÉ Prop
+; Horizontal Prop
+;
+MSG_EntriesNumber
+PoÃet hodnot
+; Entries Number
+;
+MSG_FirstNumber
+PrvnÉ hodnota
+; First Number
+;
+MSG_VisibleNumber
+ViditelnÁ ÃÁst
+; Visible Number
+;
+; Scale Window
+;
+;
+MSG_ScaleTitle
+Scale
+; Scale
+;
+MSG_Orientation
+Orientace
+; Orientation
+;
+;
+; Slider Window
+;
+;
+MSG_SliderChoice
+Parametry pro Slider
+; Slider Choice
+;
+MSG_Reverse
+ObrÁcenÙ
+; Reverse
+;
+MSG_SliderQuiet
+Bez hodnoty
+; Slider Quiet
+;
+MSG_UseTitleSlider
+PouÚÉt titulek
+; Use a title for slider
+;
+MSG_Minimum
+Minimum
+; Minimum
+;
+MSG_Init
+Inicializace
+; Initialisation
+;
+MSG_SliderIdent
+Identifikace
+; Slider Identification
+;
+;
+; Text window
+;
+;
+MSG_TextAttributes
+Atributy textu
+; Text Attributes
+;
+MSG_TextSetMax
+Text SetMax
+; Text SetMax
+;
+MSG_TextSetMin
+Text SetMin
+; Text SetMin
+;
+MSG_Backgrounds
+PozadÉ
+; Backgrounds
+;
+MSG_TextContent
+Obsah
+; Text Content
+;
+MSG_Preparse
+Preparse
+; Preparse
+;
+;
+; Test Window
+;
+MSG_TestWindow
+TestovacÉ okno
+; Test Window
+;
+MSG_TestClick
+_Klikni sem
+; _Click Here
+;
+MSG_FirstLine
+PrvnÉ ÒÁdka
+; First Line
+;
+MSG_SecondLine
+DruhÁ ÒÁdka
+; Second Line
+;
+MSG_ThirdLine
+TÒetÉ ÒÁdka
+; Third Line
+;
+;
+; Notify Window
+;
+;
+MSG_NotifyTitle
+Notify
+; Notify
+;
+MSG_InternalError
+InternÉ chyba
+; Internal Error
+;
+MSG_ChoseIdent
+Zvolte identifikÁtor
+; Choose an indentifier
+;
+MSG_ChoseVariable
+Zvolte promÅnnou
+; Choose a variable
+;
+MSG_Editing
+\033cEditace : 
+; \033cEditing :
+;
+MSG_Events
+UdÁlosti
+; Events
+;
+MSG_Actions
+Akce
+; Actions
+;
+MSG_AddNotify
+_PÒidat notify
+; _Add Notify
+;
+MSG_RemoveNotify
+Odst_ranit notify
+; _Remove Notify
+;
+;
+; Get MUI argument window
+;
+;
+MSG_AddToList
+PÒidat
+; Add
+;
+MSG_RemoveFromList
+Odst_ranit
+; _Remove
+;
+MSG_SelectIdentifier
+NejdÒÉve zvolte identifikÁtor !
+; Select an identifier first!
+;
+MSG_IdentifierExists
+IdentifikÁtor jiÚ existuje !
+; Identifier already exists!
+;
+;
+; Get Constant value window
+;
+;
+MSG_GetConstant
+Constant
+; Get Constant Value
+;
+MSG_IntegerConstant
+Integer
+; Integer
+;
+MSG_BooleanConstant
+Boolean
+; Boolean
+;
+MSG_StringConstant
+String
+; String
+;
+MSG_CharConstant
+Char
+; Char
+;
+;
+; Area Strings
+;
+; Area Name
+MSG_Area
+Area
+; Area
+;
+MSG_Hide
+UkrÙt
+; Hide
+;
+MSG_Disable
+ZakÁzat
+; Disable
+;
+MSG_PhantomFrame
+Phantom Frame
+; Phantom Frame
+;
+MSG_Weight
+VÁha
+; Weight
+;
+MSG_Background
+PozadÉ
+; Background
+;
+MSG_ControlChar
+Hot key
+; Control Char
+;
+MSG_TitleFrame
+Titulek rÁmeÃku
+; Title Frame
+;
+;
+; PopAsl Window
+;
+MSG_PopUpImage
+PopUp Image
+; PopUp Image
+;
+MSG_PopFileImage
+PopFile Image
+; PopFile Image
+;
+MSG_PopDrawerImage
+PopDrawer Image
+; PopDrawer Image
+;
+MSG_FileRequester
+File Requester
+; File Requester
+;
+MSG_FontRequester
+Font Requester
+; Font Requester
+;
+MSG_ScreenModeRequester
+Screen Mode Requester
+; Screen Mode Requester
+;
+MSG_PopAslChoices
+Parametry PopAsl
+; PopAsl Choices
+;
+MSG_RequesterType
+Typ requesteru
+; Requester Type
+;
+MSG_CallHook
+VolÁnÉ hookÊ
+; Call Hooks
+;
+MSG_StartHook
+Start Hook
+; Start Hook
+;
+MSG_StopHook
+Stop Hook
+; Stop Hook
+;
+;
+; PopObject Window
+;
+;
+MSG_PopObjectChoices
+Parametry pro PopObject
+; PopObject Choices
+;
+MSG_Follow
+Sledovat okno
+; Follow
+;
+MSG_Light
+LehkÙ
+; Light
+;
+MSG_Volatile
+NestÁlÙ
+; Volatile
+;
+MSG_Object
+Objekt
+; Object
+;
+MSG_OpenHook
+OtevÉracÉ hook
+; Open Hook
+;
+MSG_CloseHook
+ZavÉracÉ hook
+; Close Hook
+;
+;
+; ColorField Window
+;
+;
+MSG_ColorfieldChoices
+Parametry pro Colorfield
+; Colorfield Choices
+;
+MSG_Indentification
+Identifikace
+; Identification
+;
+;
+; Menu Creation
+;
+MSG_MenuCreation
+Tvorba menu
+; Menu Creation
+;
+MSG_EnableCheck
+ZatrÚÉtko
+; Enable Check
+;
+MSG_CheckState
+Stav zatrÚÉtka
+; Check State
+;
+MSG_Toggle
+StÒÉdat
+; Toggle
+;
+MSG_ShortCut
+Hot key
+; Short Cut
+;
+MSG_Enable
+Povolen×
+; Enable
+;
+MSG_NewTitle
+NovÙ _titulek
+; New _Title
+;
+MSG_SubMenu
+_Submenu
+; _SubMenu
+;
+MSG_MenuItem
+_PoloÚka menu
+; Menu_Item
+;
+MSG_DeleteMenu
+Odst_ranit
+; _Delete
+;
+;
+; Menus
+;
+MSG_Project
+Projekt
+; Project
+;
+MSG_Merge
+M\0Spojit
+; M\00Merge
+;
+MSG_SaveMenu
+S\0UloÚit
+; S\00Save
+;
+MSG_QuitMenu
+Q\0Konec
+; Q\00Quit
+;
+MSG_Fold
+F\0SloÚit
+; F\00Fold
+;
+MSG_Unfold
+D\0RozloÚit
+; D\00Unfold
+;
+MSG_About
+?\0Informace
+; ?\00About
+;
+MSG_Config
+P\0Konfigurace
+; P\00Prefs
+;
+MSG_Undo
+U\0VrÁtit smazan×
+; U\00Undelete
+;
+MSG_Load
+O\0NaÃÉst
+; O\00Open
+;
+MSG_NewMenu
+N\0Nov×
+; N\00New
+;
+MSG_SaveAs
+A\0UloÚit jako
+; A\00SaveAs
+;
+MSG_EditMenu
+Edit
+; Edit
+;
+MSG_Tree
+Strom
+; Tree
+;
+;
+; 25.08.94
+;
+;
+MSG_CatalogPrepend
+PÒedpona
+; Prepend
+;
+MSG_HelpGenerated
+Gonerovan×
+; Generated
+;
+;
+; Notifications
+;
+;
+MSG_NotifyHide
+SkrÙt
+; Hide
+;
+MSG_NotifyShow
+UkÁzat
+; Show
+;
+MSG_NotifyDisable
+ZakÁzat
+; Disable
+;
+MSG_NotifyEnable
+Povolit
+; Enable
+;
+MSG_NotifyActivate
+Aktivovat
+; Activate
+;
+MSG_ReturnID
+VrÁtit ID
+; Return ID
+;
+MSG_ReturnQuit
+VrÁtit Quit
+; Return Quit
+;
+MSG_ApplicationSleep
+Uspat aplikaci
+; Application Sleep
+;
+MSG_ApplicationWake
+Vzbudit aplikaci
+; Application Wake
+;
+MSG_CallFunction
+Zavolat funkci
+; Call function
+;
+MSG_Iconify
+Ikonifikovat
+; Iconify
+;
+MSG_UnIconify
+Odikonifikovat
+; Uniconify
+;
+MSG_Unactivate
+Deaktivovat
+; Unactivate
+;
+MSG_OpenWindow
+OtevÒÉt okno
+; Open Window
+;
+MSG_CloseWindow
+ZavÒÉt okno
+; Close Window
+;
+MSG_Active
+Aktivovat
+; Active
+;
+MSG_CloseRequest
+PoÚadavek na zavÒenÉ
+; Close Request
+;
+MSG_Deactivate
+Deaktivace
+; Deactivate
+;
+MSG_PutTriggerValue
+VloÚit trigger hodnotu
+; Put Trigger Value
+;
+MSG_PutConstantValue
+VloÚit konstantu
+; Put Constant Value
+;
+MSG_PutVariableValue
+VloÚit promÅnnou
+; Put Variable Value
+;
+MSG_PressButton
+Stisk tlaÃÉtka
+; Press Button
+;
+MSG_ReleaseButton
+UvolnÅnÉ tlaÃÉtka
+; Release Button
+;
+MSG_NotifyDisabled
+ZakÁzÁno
+; Disabled
+;
+MSG_NotifyEnabled
+Povoleno
+; Enabled
+;
+MSG_TimerAction
+ãasovÁ udÁlost
+; Timer Action
+;
+MSG_ChangePage
+ZmÅnit strÁnku
+; Change Page
+;
+MSG_Acknowlede
+PotvrzenÉ
+; Acknowledge
+;
+MSG_ChangePosition
+Posun kurzoru
+; Change Position
+;
+MSG_ChangeContent
+ZmÅna obsahu
+; Change Content
+;
+MSG_ClearList
+Smazat obsah
+; Clear List
+;
+MSG_JumpToPosition
+Skok na poloÚku
+; JumpToPosition
+;
+MSG_RedrawAll
+PÒekreslit vÓe
+; Redraw All
+;
+MSG_RedrawActive
+PÒekreslit aktivnÉ
+; Redraw Active
+;
+MSG_RemoveActive
+Odstranit aktivnÉ
+; Remove Active
+;
+MSG_SortList
+SetÒÉdit
+; Sort List
+;
+MSG_NotifyDoubleClick
+Dvojklik
+; Double Click
+;
+MSG_ChangeActive
+VÙbÅr poloÚky
+; Change Active
+;
+MSG_ChangeValue
+ZmÅna hodnoty
+; Change Value
+;
+MSG_ActiveModified
+ZmÅna stavu
+; Active Modified
+;
+MSG_Select
+VÙbÅr
+; Select
+;
+MSG_Unselect
+ZruÓenÉ vÙbÅru
+; Unselect
+;
+MSG_SelectOn
+VÙbÅr zapnut
+; Select ON
+;
+MSG_SelectOff
+VÙbÅr vypnut
+; Select OFF
+;
+MSG_SelectChange
+ZmÅna vÙbÅru
+; Select Change
+;
+MSG_PressImage
+Stisk Image
+; Press Image
+;
+MSG_ReleaseImage
+UvolnÅnÉ Image
+; Release Image
+;
+MSG_ChangedPosition
+ZmÅnÅnÁ poloha
+; Changed Position
+;
+MSG_NotifyReverse
+ObrÁcenÉ
+; Reverse
+;
+MSG_ChangedText
+ZmÅnÅnÙ text
+; Changed Text
+;
+MSG_ChangedEntriesNumber
+ZmÅna poÃtu poloÚek
+; Changed Entries Number
+;
+MSG_ChangedVisibleEntries
+ZmÅna viditelnÙch poloÚek
+; Changed Visible Entries
+;
+MSG_PutTriggerRed
+Nastavit Ãervenou (hodnota trigger)
+; Put Red Value (Trigger Value)
+;
+MSG_PutTriggerBlue
+Nastavit modrou (hodnota trigger)
+; Put Blue Value (Trigger Value)
+;
+MSG_PutTriggerGreen
+Nastavit zelenou (hodnota trigger)
+; Put Green Value (Trigger Value)
+;
+MSG_PutConstantRed
+Nastavit Ãervenou (konstanta)
+; Put Red Value (Constant Value)
+;
+MSG_PutConstantGreen
+Nastavit zelenou (konstanta)
+; Put Green Value (Constant Value)
+;
+MSG_PutConstantBlue
+Nastavit modrou (konstanta)
+; Put Blue Value (Constant Value)
+;
+MSG_PutVariableRed
+Nastavit Ãervenou (promÅnnÁ)
+; Put Red Value (Variable Value)
+;
+MSG_PutVariableGreen
+Nastavit zelenou (promÅnnÁ)
+; Put Green Value (Variable Value)
+;
+MSG_PutVariableBlue
+Nastavit modrou (promÅnnÁ)
+; Put Blue Value (Variable Value)
+;
+MSG_ChangedRed
+ZmÅna Ãernven× sloÚky
+; Changed Red Value
+;
+MSG_ChangedGreen
+ZmÅna zelen× sloÚky
+; Changed Green Value
+;
+MSG_ChangedBlue
+ZmÅna modr× sloÚky
+; Changed Blue Value
+;
+MSG_ChangeTitleTrigger
+ZmÅna titulku (trigger)
+; Change Title (Trigger Value)
+;
+MSG_ChangeTitleVariable
+ZmÅna titulku (promÅnnÁ)
+; Change Title (Variable Value)
+;
+MSG_ChangeTitleConstant
+ZmÅna titulku (konstanta)
+; Change Title (Constant Value)
+;
+MSG_CheckMenuON
+ZatrÚeno
+; Check ON
+;
+MSG_CheckMenuOFF
+NezatrÚeno
+; Check OFF
+;
+MSG_CheckableON
+ZatrÚiteln×
+; Checkable ON
+;
+MSG_CheckableOFF
+NezatrÚiteln×
+; Checkable OFF
+;
+MSG_ChangeShortTrigger
+ZmÅna hot key (trigger)
+; Change Shortcut (Trigger Value)
+;
+MSG_ChangeShortVariable
+ZmÅna hot key (promÅnnÁ)
+; Change Shortcut (Variable Value)
+;
+MSG_ChangeShortConstant
+ZmÅna hot key (konstanta)
+; Change Shortcut (Constant Value)
+;
+MSG_ToggleFlagON
+PÒepnout flag ON
+; Toggle Flag ON
+;
+MSG_ToggleFlagOFF
+PÒepnout flag OFF
+; Toggle Flag OFF
+;
+MSG_MenuTriggered
+Menu Triggered
+; Menu Triggered
+;
+; Space Window
+;
+MSG_SpaceChoice
+Parametry Space
+; Space Choices
+;
+MSG_HorizontalVertical
+HorizontÁlnÉ a vertikÁlnÉ
+; Horizontal and Vertical
+;
+;
+; MUIBuilder 2.1 additionnal strings
+; Updated on 1st december 1994
+;
+MSG_ActiveNoObj
+
+; Activate No Object
+;
+MSG_ActiveNextObj
+
+; Activate Next Object
+;
+MSG_ActivePrevObj
+
+; Activate Previous Object
+;
+MSG_CantFindImages
+
+; Unable to find images!
+;
+MSG_GenerateSource
+
+; Generating Source
+;
+MSG_CodeGeneration
+
+; Generating Temporary files
+;
+; MUIBuilder 2.2
+; Updated on June, 7th, 1995
+;
+MSG_Misc
+
+; Misc
+;
+MSG_ImageDrawer
+
+; Image Drawer
+;
+MSG_GenerateAllIDs
+
+; Generate All IDs
+;
+MSG_NoMenu
+
+; No Menu
+;
+; ID was missing, Dez, 30th, 2010
+;
+MSG_NeedMouse
+
+; Needs Mouse

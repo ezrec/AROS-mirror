@@ -1,0 +1,287 @@
+@database GenCodeC_Deutsch.guide
+
+@Master GenCodeC_Deutsch.texi
+
+@Width 76
+
+
+This is the AmigaGuide® file GenCodeC_Deutsch.guide, produced by Makeinfo-1.55 from 
+the input file GenCodeC_Deutsch.texi.
+
+
+@Node Main "GenCodeC_Deutsch.guide"
+@Next "Introduction"
+
+   @{b}GenCodeC@{ub} geschrieben von @{i}Eric Totel@{ui}
+... ins Deutsche übertragen von Christian Brandel
+
+
+ @{" Einführung " Link "Introduction"}                       Wat is' denn @{b}GenCodeC@{ub}?
+ @{" GenCodeC " Link "How"}                         Wie schreibe ich einen externen Quellcodegenerator?
+ @{" Die Verwendung von GenCodeC " Link "Use"}      Wie benutze ich @{b}GenCodeC@{ub}?
+ @{" Codegeneration " Link "Code"}                   Was erzeugt @{b}GenCodeC@{ub} eigentlich?
+
+
+@EndNode
+
+@Node "Introduction" "GenCodeC_Deutsch.guide/Introduction"
+@Next "How"
+@Prev "Main"
+@Toc "Main"
+
+Einführung
+**********
+
+   @{i}MUIBuilder@{ui} selbst produziert eigentlich keinen Quellcode, sondern eine
+Art Beschreibung der erstellten Oberfläche, die schießlich in einen
+Quellcode nahezu jeder (zumindest in solche, die MUI unterstützen)
+gewünschten Sprache umgewandelt werden kann (was allerdings mit etwas
+Aufwand verbunden ist!!).
+
+   Um diesen Oberflächenbeschreibungscode in irgendeiner Form von einem
+Compiler weiterverarbeiten zu lassen, muß dieser erst mit einem externen
+Quellcodegenerator bearbeitet werden. GenCodeC tut dies für die Sprache C.
+
+   GenCodeC ist @{i}FREEWARE@{ui}. Aber das Copyright bleibt bei Eric Totel.  Sie
+können das GenCodeC verändern (Source liegt bei) und dann weiterverbreiten,
+wenn
+
+  1. dem Programm der Vermerk beiliegt, daß ich der Autor des Originals bin
+
+  2. mir @{i}vor@{ui} der Weiterverbreitung eine Version zuschicken
+
+  3. diese Dokumentation (mit meinem Namen) mit dem Programm verbreitet wird
+     (Diese darf ansonsten auch verändert werden)
+
+
+@EndNode
+
+@Node "How" "GenCodeC_Deutsch.guide/How"
+@Next "Use"
+@Prev "Introduction"
+@Toc "Main"
+
+GenCodeC ?
+**********
+
+   Im Archiv MUIBuilder/MB/Developer/C/Sources_GenCodeC finden Sie den
+Quellcode zu GenCodeC. Haben Sie keine Hemmungen, ihn zu verändern,
+verbessern ...  oder was Ihnen sonst einfällt!
+
+   Das Ziel dieses Programms ist es, aus den temporären Dateien in T:, die
+@{i}MUIBuilder@{ui} erzeugt hat, C-Code zu machen. Dazu bedient es sich der
+Funktionen der muibuilder.library.  Diese wiederum sind in den autodocs
+beschrieben.
+
+
+@EndNode
+
+@Node "Use" "GenCodeC_Deutsch.guide/Use"
+@Next "Code"
+@Prev "How"
+@Toc "Main"
+
+Die Verwendung von GenCodeC
+***************************
+
+   Dazu müssen Sie zwei Dinge wissen: Wie GenCodeC bedient wird, und wie
+der, von ihm erzeugte Quellcode zu verwenden ist. Beides wird im Folgenden
+erklärt:
+
+
+ @{" Bedienung von GenCodeC " Link "GenCodeC-Use"}             
+ @{" Der erzeugte Quellcode " Link "Code-Use"}         
+ @{" Beispiel " Link "Example"}        
+ @{" GUI-Objekte später hinzufügen " Link "Others"} 
+
+
+@EndNode
+
+@Node "GenCodeC-Use" "GenCodeC_Deutsch.guide/GenCodeC-Use"
+@Next "Code-Use"
+@Toc "Use"
+
+Bedienung von GenCodeC
+----------------------
+
+   @{b}GenCodeC@{ub} ist ein Programm, daß nur aus dem CLI gestartet werden kann.
+Es wird von @{i}MUIBuilder@{ui} (mit einem @{b}SystemTags@{ub}-Call) aufgerufen, wenn
+Quellcode erzeugt werden soll und Sie im "Quellcode" Feld in den
+Voreinstelunge "C" angegeben haben.
+
+   Wenn Sie es aus einer Shell aufrufen, ohne daß @{i}MUIBuilder@{ui} läuft, und
+es deshalb möglicherweise keine temporären Dateien in T: gibt, wird es
+wohl garnichts erzeugen.  GenCodeC verlangt keine Parameter, da alles
+nötige in den temporären Dateien von @{i}MUIBuilder@{ui} angegeben wird.
+
+
+@EndNode
+
+@Node "Code-Use" "GenCodeC_Deutsch.guide/Code-Use"
+@Next "Example"
+@Prev "GenCodeC-Use"
+@Toc "Use"
+
+Der erzeugte Quellcode
+----------------------
+
+   @{b}GenCodeC@{ub} erzeugt folgendes (für das Objekt @{b}xy@{ub} der applikation @{b}App@{ub}) :
+
+   @{b}*@{ub} Eine .h Datei, in der die Definition von @{b}xy@{ub} steht
+
+   @{b}*@{ub} eine .c Datei (deren Name in @{i}MUIBuilder@{ui} definiert wird), (1) in der
+     die Funktion @{b}Createxy@{ub} steht, die das Objekt @{b}xy@{ub} (in .h definiert, s.o.)
+     zurückgibt.
+
+   @{b}*@{ub} eine Datei @{b}xyExtern.h@{ub}, die alle externen Referenzen auf von Ihnen
+     spezifizierte Variablen oder Funktionen aus Ihrem Programm enthält
+
+   Mittels zweier Konfigurations Dateien, @{b}H-Header@{ub} und @{b}C-Header@{ub}, können
+Sie den erzeugten Quellcode anpassen: GenCodeC kopiert Sie an den Anfang
+der erzeugten Quellcodes.
+
+   GenCodeC erzeugt sowohl Objekte, als auch Notificationen und das Öffnen
+der Fenster.  Das Beispiel in dieser Anleitung ist also normalerweise
+brauchbar, um die Oberfläche einer Applikation zu testen.
+
+   ---------- Footnotes ----------
+
+   (1)  Wenn Sie die .c Endung nicht angeben, wird sie von @{b}GenCodeC@{ub}
+automatisch angehängt
+
+
+@EndNode
+
+@Node "Example" "GenCodeC_Deutsch.guide/Example"
+@Next "Others"
+@Prev "Code-Use"
+@Toc "Use"
+
+Beispiel
+--------
+
+#include <libraries/mui.h>
+
+/* protos */
+#include <clib/muimaster_protos.h>
+#include <clib/alib_protos.h>
+#include <clib/dos_protos.h>
+#include <clib/exec_protos.h>
+
+/*  Pragmas  */
+#include <pragmas/muimaster_pragmas.h>
+#include <pragmas/exec_pragmas.h>
+
+/*  Ansi  */
+#include <stdlib.h>
+#include <stdio.h>
+
+/* @{i}MUIBuilder@{ui} */
+#include "NONE.h"
+
+struct Library * MUIMasterBase;
+
+/* Init function */
+static void init( void )
+{
+    if (!(MUIMasterBase = OpenLibrary(MUIMASTER_NAME,MUIMASTER_VMIN)))
+    {
+        printf("Can't Open MUIMaster Library");
+        exit(20);
+    }
+}
+
+/* main function */
+main()
+{
+    struct ObjApp * App = NULL; /* Application object */
+    BOOL    running = TRUE;
+    ULONG   signal;
+
+    /* Programm initialisierung ( müssen Sie selbst schreiben ) */
+    init();
+
+    /* Create Application : von @{i}MUIBuilder@{ui} erzeugt */
+    App = CreateApp();
+
+    while (running)
+        {
+                switch (DoMethod(App->App,MUIM_Application_Input,&signal))
+                {
+                case MUIV_Application_ReturnID_Quit:
+                        running = FALSE;
+                        break;
+                }
+    if (running && signal) Wait(signal);
+        }
+    DisposeApp(App);
+    CloseLibrary(MUIMasterBase);
+    exit(0);
+}
+
+
+@EndNode
+
+@Node "Others" "GenCodeC_Deutsch.guide/Others"
+@Prev "Example"
+@Toc "Use"
+
+GUI-Objekte später hinzufügen
+-----------------------------
+
+   Ich bin sicher, daß einige Leute frustriert sein werden, weil
+MUIBuilder nicht alle Objekte von MUI unterstützt. Aber das ist eigentlich
+kein Problem.
+
+   Unter MUI kann man dynamisch (d.h. zur Laufzeit) Objekte in der
+Oberfläche verändern, hinzufügen, entfernen. Halten Sie in Ihrer
+Oberfläche einen Platz für das Objekt frei (ein Zwischenraum-Objekt
+genügt vollkommen) und nutzen Sie die Möglichkeiten, die MUI Ihnen bietet.
+
+   Schreiben Sie eine Funktion, die Ihr Objekt erzeugt (hier:
+@{b}CreateMyObject@{ub}) und benutzen Sie sie folgendermaßen:
+
+        extern APTR CreateMyObject();
+
+        /* Die Oberfläche aus MUIBuilder */
+        App = CreateApp();
+
+        /* Fügen Sie Ihr Objekt hinzu */
+        DoMethod(App->EmptyGroup, OM_ADDMEMBER, CreateMyObject());
+
+   @{b}EmptyGroup@{ub} ist der Name des von Ihnen vorgesehenen Platzes für das neue
+Objekt.
+
+
+@EndNode
+
+@Node "Code" "GenCodeC_Deutsch.guide/Code"
+@Prev "Use"
+@Toc "Main"
+
+Was erzeugt GenCodeC eigentlich?
+********************************
+
+   Einige Details im Bezug auf den erzeugten Quellcode sind möglicherweise
+von Interesse:
+
+  1. Die struktur in der .h Datei enthält nur die Kennungen der Ogjekte,
+     die Sie @{i}MUIBuilder@{ui} als zu generierend angeben (also die, die im
+     Fensterbaukasten mit einem 'G' vorneweg erscheinen).
+
+  2. Die Datei @{b}xyExtern.h@{ub} enthält externe Referenzen auf Variablen oder
+     Funktionen aus Ihrem Programm in einem Standard-Format. Nachdem eine
+     solche Referenz zum erstenmal in dieser Datei auftauchet, verändert
+     @{b}GenCodeC@{ub} sie nicht mehr; Sie können sie dann also Ihren Wünschen
+     anpassen, ohne daß sie das nächste Mal überschrieben wird.
+
+  3. Die .h Datei, das für die Locale gebraucht wird (z.B. von FlexCat
+     erzeugt) muß xy_cat.h heißen.
+
+  4. Jetzt sollten Sie die Dateien @{b}H-Header@{ub} und @{b}C-Header@{ub} nahc Ihren
+     Wünschen anpassen.  Meiner Meinung nahc sind sie wirklich wichtig,
+     denn hier können Sie den Code, den GenCodeC erzeugt, nach Ihren
+     Berdürfnissen anpassen.
+
+@EndNode
+

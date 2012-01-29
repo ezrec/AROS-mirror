@@ -1,0 +1,120 @@
+BUILDER_SAVE_FILE1.03
+Ram:Click
+Ram:Click.cd
+3
+0
+5
+9
+0
+0
+0
+0
+0
+0
+0
+3
+0
+CLICK
+Eric Totel
+Click
+$VER : Click 1.0
+Eric Totel 1994
+just a demo !!!
+
+0
+1
+WI_try
+1
+Click !!!
+0
+Click !!!
+0
+0
+0
+1
+1
+1
+1
+2
+GROUP_ROOT_0
+0
+ROOT_TITLE
+0
+ROOT_TITLE
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+2
+100
+0
+0
+//END_ENTRIES//
+15
+TX_label_0
+1
+Text
+0
+131
+9
+0
+1
+\0338\033cClick on buttons
+2
+GR_grp_0
+0
+Group
+0
+grp_title
+0
+0
+1
+0
+0
+0
+1
+0
+0
+0
+0
+0
+2
+100
+0
+0
+//END_ENTRIES//
+3
+BT_1stbutton
+1
+Button 1
+0
+Button 1
+1
+100
+3
+BT_2ndbutton
+1
+Button 2
+0
+Button 2
+2
+100
+3
+BT_3rdbutton
+1
+Button 3
+0
+Button 3
+3
+100
+-1
+-1
+-1

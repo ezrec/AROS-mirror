@@ -1,0 +1,383 @@
+@DATABASE "MUIBuilder.guide"
+@INDEX "Autodoc.guide/Main"
+@REMARK created by ADtoHT 1.4 © 1993/94 by Christian Sieber/Dirk Nehring
+
+@NODE Main "MUIBuilder.library"
+    @{" MUIBuilder.library/--background-- " LINK "--background--"}
+    @{" MUIBuilder.library/MB_Open() " LINK "MB_Open"}
+    @{" MUIBuilder.library/MB_Close() " LINK "MB_Close"}
+    @{" MUIBuilder.library/MB_GetA() " LINK "MB_GetA"}
+    @{" MUIBuilder.library/MB_GetVarInfoA() " LINK "MB_GetVarInfoA"}
+    @{" MUIBuilder.library/MB_GetNextCode() " LINK "MB_GetNextCode"}
+    @{" MUIBuilder.library/MB_GetNextNotify() " LINK "MB_GetNextNotify"}
+@ENDNODE
+
+@NODE "--background--" "MUIBuilder.library/--background--"
+	The goal of the muibuilder library is, at this time, to provide some
+	functions to help the writing of MUIBuilder external generators.
+
+	These functions are described in the following documentation.
+
+@ENDNODE
+
+@NODE "MB_Open" "MUIBuilder.library/MB_Open()"
+
+   @{b}NAME@{ub}
+	MB_Open
+
+  @{b}SYNOPSIS@{ub}
+	bool = MB_Open();
+
+	@{"BOOL" LINK "exec/types.h/MAIN" 68} MB_Open( void );
+
+  @{b}FUNCTION@{ub}
+	Opens the MUIBuilder temporary files, and initializes global
+	variables.
+
+  @{b}RESULT@{ub}
+	bool : a boolean : the function returns TRUE ( 1 ) if all
+	       file openings and memory allocations have succeeded
+
+  @{b}WARNING@{ub}
+	none of the other functions will work if this one is not successful
+
+  @{b}SEE@{ub} @{b}ALSO@{ub}
+	@{"MB_Close()" LINK "MB_Close" 0}
+
+@ENDNODE
+
+@NODE "MB_Close" "MUIBuilder.library/MB_Close()"
+
+   @{b}NAME@{ub}
+	MB_Close
+
+  @{b}SYNOPSIS@{ub}
+	MB_Close();
+
+	void MB_Close( void );
+
+  @{b}FUNCTION@{ub}
+	Closes the temporary files and deallocates memory
+
+  @{b}WARNING@{ub}
+	don't forget to call this function before exiting your generator,
+	even if @{"MB_Open()" LINK "MB_Open" 0} call failed.
+
+  @{b}SEE@{ub} @{b}ALSO@{ub}
+	@{"MB_Open()" LINK "MB_Open" 0}
+
+@ENDNODE
+
+@NODE "MB_GetA" "MUIBuilder.library/MB_GetA()"
+
+  @{b}NAME@{ub}
+	MB_GetA	
+	MB_Get
+
+  SYNOPSYS
+	MB_GetA( Tags );
+		  A1
+
+	MB_GetA( struct @{"TagItem" LINK "utility/tagitem.h/MAIN" 31} * );
+
+	MB_Get ( Tag Tag1, ... );
+
+  @{b}FUNCTION@{ub}
+	This function enables you to get the initialization values
+	for the generator ( such as the file name of the file you
+	have to create ... )
+	These values are here to give you some informations, such as
+	the name of the file to generate, the name of the catalog file,
+	the number of variables needed in the program the generator must
+	create ... and so on ...
+
+  @{b}INPUTS@{ub}
+	tags - pointer to a tag list
+
+  @{"TAGS" LINK "utility/tagitem.h/MAIN" 31}
+	tags for use with this function:
+
+	MUIB_FileName ( @{"STRPTR" LINK "exec/types.h/MAIN" 51}* ) 	- returns the name of the file to generate.
+
+	MUIB_CatalogName( @{"STRPTR" LINK "exec/types.h/MAIN" 51}* ) 	- same as above for MUIB_FileName
+				      	returns the name of the .cd file.
+
+	MUIB_GetStringName( @{"STRPTR" LINK "exec/types.h/MAIN" 51}* ) 	- same as above for MUIB_FileName
+				        returns the name of the GetString function.
+
+	MUIB_Code( @{"BOOL" LINK "exec/types.h/MAIN" 68}* ) 		- return in the variable if the user wants
+			     		the code to be generated.
+
+	MUIB_Environment ( @{"BOOL" LINK "exec/types.h/MAIN" 68}* ) 	- will return TRUE in the variable
+				     	if the user wants an environment
+				     	You must interpret this value in the generator.
+				    	(please try GenCodeC to see the consequence)
+
+	MUIB_Locale ( @{"BOOL" LINK "exec/types.h/MAIN" 68}* ) 		- will return TRUE if the user wants
+					a localised code
+
+	MUIB_Declarations ( @{"BOOL" LINK "exec/types.h/MAIN" 68}* ) 	- will return TRUE if the user wants
+				      	the declarations
+
+	MUIB_VarNumber ( @{"ULONG" LINK "exec/types.h/MAIN" 36}* )	 - will return in the variable the number
+				    	 of variables declared in the generated code
+
+	MUIB_Application ( @{"BOOL" LINK "exec/types.h/MAIN" 68}* )	- will return TRUE in the given variable if
+					the user generates the whole application
+
+  @{b}EXAMPLE@{ub}
+	@{"ULONG" LINK "exec/types.h/MAIN" 36}	varnb;
+	@{"BOOL" LINK "exec/types.h/MAIN" 68}	Code, Env, Locale, Declarations;
+	char	*FileName, *CatalogName, *GetString;
+
+	MB_Get	(
+		MUIB_VarNumber		, &varnb,
+		MUIB_Code		, &Code,
+		MUIB_Environment	, &Env,
+		MUIB_Locale		, &Locale,
+		MUIB_Declarations	, &Declarations,
+		MUIB_FileName		, &FileName,
+		MUIB_CatalogName	, &CatalogName,
+		MUIB_GetStringName	, &GetString,
+		TAG_END
+		);
+
+	After this call :
+		- varnb contains the number of variables to be generated
+		- Code  contains TRUE or FALSE (depending on the user choice)
+		- Env   contains TRUE or FALSE
+		- Declarations contains TRUE or FALSE
+		- FileName is a pointer on the File name
+		- CatalogName is a pointer on the Catalog name
+		- GetString is a pointer on the GetString function name
+
+  @{b}WARNING@{ub}
+	this function will do NOTHING if @{"MB_Open()" LINK "MB_Open" 0} was not successful, or
+	was not called.
+
+  @{b}SEE@{ub} @{b}ALSO@{ub}
+	@{"MB_GetVarInfoA" LINK "MB_GetVarInfoA" 0}, @{"MB_GetNextCode" LINK "MB_GetNextCode" 0}, @{"MB_GetNextNotify" LINK "MB_GetNextNotify" 0}.
+@ENDNODE
+
+@NODE "MB_GetVarInfoA" "MUIBuilder.library/MB_GetVarInfoA()"
+
+  @{b}NAME@{ub}
+	MB_GetVarInfoA	
+	MB_GetVarInfo
+
+  SYNOPSYS
+	MB_GetVarInfoA( variable_number, Tags );
+		  	      D0	  A1
+
+	MB_GetVarInfoA( @{"ULONG" LINK "exec/types.h/MAIN" 36}, struct @{"TagItem" LINK "utility/tagitem.h/MAIN" 31} * );
+
+	MB_GetVarInfo ( @{"ULONG" LINK "exec/types.h/MAIN" 36}, Tag Tag1, ... );
+
+  @{b}FUNCTION@{ub}
+	get infos on the variable number 'variable_number'. This info
+	can be its name, its size, its type or how you have to initialise
+	the variable.
+
+  @{b}INPUTS@{ub}
+	variable_number	- number of the variable for which you want to
+			  get info
+
+	Tags		- pointer to a list of tags giving the information
+			  you want to get
+
+  @{"TAGS" LINK "utility/tagitem.h/MAIN" 31}
+	MUIB_VarSize ( @{"ULONG" LINK "exec/types.h/MAIN" 36}* )	- get the size of the variable
+			this size is :
+			- for a string array  : its size
+			- for a string	      : its length
+			- for all other types : 0
+
+	MUIB_VarName ( @{"STRPTR" LINK "exec/types.h/MAIN" 51}* ) - get the name of the variable
+
+	MUIB_VarType ( @{"ULONG" LINK "exec/types.h/MAIN" 36}* ) - get the type of the variable
+			this type could be :
+			- TYPEVAR_BOOL	    (1)	Boolean
+			- TYPEVAR_INT	    (2) Integer ( 4 bytes long )
+			- TYPEVAR_STRING    (3) String Pointer
+			- TYPEVAR_TABSTRING (4) Strings Array
+			- TYPEVAR_PTR	    (5) Pointer
+
+	MUIB_VarInitPtr ( @{"ULONG" LINK "exec/types.h/MAIN" 36}* ) - get the pointer to the init zone
+			of the specified variable
+			This 'init zone' could be :
+			- a string ending with '\0' ( for a string )
+			- the list of the strings   ( for a strings array )
+			- just a '\0' for all other types
+			
+  @{b}EXAMPLE@{ub}
+	@{"ULONG" LINK "exec/types.h/MAIN" 36}	i, type, size;
+	char	*name, *inits;
+
+	MB_GetVarInfo( i,
+		       MUIB_VarType	, &type,
+		       MUIB_VarName	, &name,
+		       MUIB_VarSize	, &size,
+		       MUIB_VarInitPtr	, &inits,
+		       TAG_END
+		     );
+  @{b}WARNING@{ub}
+	this function will do NOTHING if @{"MB_Open()" LINK "MB_Open" 0} was not successful, or
+	was not called.
+
+  @{b}SEE@{ub} @{b}ALSO@{ub}
+	@{"MB_GetA()" LINK "MB_GetA" 0}, @{"MB_GetNextCode()" LINK "MB_GetNextCode" 0}, @{"MB_GetNextNotify()" LINK "MB_GetNextNotify" 0}
+@ENDNODE
+
+@NODE "MB_GetNextCode" "MUIBuilder.library/MB_GetNextCode()"
+
+  @{b}NAME@{ub}
+	MB_GetNextCode
+
+  @{b}SYNOPSIS@{ub}
+	MB_GetNextCode( type, code );
+			 A0    A1
+
+	void MB_GetNextCode( @{"ULONG" LINK "exec/types.h/MAIN" 36}*, char** );
+
+  @{b}FUNCTION@{ub}
+	get the next code element. You just have to read every code element.
+	Then you react depending on the code element type you receive.
+
+  @{b}RESULT@{ub}
+	type 	- will contain the type of the code element to write
+		  this type could be :
+
+			TC_CREATEOBJ		: creation of a MUI object
+			TC_ATTRIBUT		: name of an object attribute
+			TC_END			: end of an object creation
+			TC_FUNCTION		: opening of a function
+			TC_STRING		: a string
+			TC_INTEGER		: an integer
+			TC_CHAR			: a character
+			TC_VAR_AFFECT		: affectation of a variable
+			TC_VAR_ARG		: variable as argument
+			TC_END_FUNCTION 	: end of a function call
+			TC_BOOL			: boolean
+			TC_MUIARG		: a mui argument
+			TC_OBJFUNCTION		: function creating an object
+			TC_LOCALESTRING 	: a locale string reference
+			TC_EXTERNAL_CONSTANT	: reference to an external constant
+						  (i.e. not created by MUIBuilder)
+			TC_EXTERNAL_FUNCTION	: reference to an external function
+						  (i.e. not created by MUIBuilder)
+			TC_MUIARG_ATTRIBUT	: a MUI attribute as argument
+			TC_MUIARG_FUNCTION	: a function as argument
+			TC_MUIARG_OBJ		: an object as argument of a MUI attribute
+			TC_BEGIN_NOTIFICATION	: the beginning of a notification
+			TC_END_NOTIFICATION	: the end of a notification
+			TC_EXTERNAL_VARIABLE	: reference to an external variable
+						  (ie not generated by MUIBuilder)
+			TC_MUIARG_OBJFUNCTION	: an object function as argument
+			TC_OBJ_ARG		: an object take as argument
+			TC_LOCALECHAR		: a locale char
+
+	code	- is a pointer, and will contain the pointer to the
+		  code you have to write. This code is ALWAYS a string.
+		  to obtain a number or a boolean, you have to convert this string !
+
+				type	/    code
+
+			TC_CREATEOBJ		: the number of the object
+			TC_ATTRIBUT		: the number of the attribute
+			TC_END			: the number of 'End'
+			TC_FUNCTION		: the number of the function
+			TC_STRING		: the string ( ending with '\0' )
+			TC_INTEGER		: the value of the integer
+			TC_CHAR			: the character
+			TC_VAR_AFFECT		: the number of the variable
+						( you can get infos with @{"MB_GetVarInfo" LINK "MB_GetVarInfoA" 0} )
+			TC_VAR_ARG		: the number of the variable
+			TC_END_FUNCTION 	: the number of 'End'
+			TC_BOOL			: '0' [ FALSE ] or '1' [ TRUE ]
+			TC_MUIARG		: the number of the MUI string
+			TC_OBJFUNCTION		: the number of the MUI function
+			TC_LOCALESTRING 	: the string MSG_xxxxx ( ending with '\0' )
+			TC_LOCALECHAR		: the string MSG_xxxxx ( ending with '\0' )
+			TC_EXTERNAL_CONSTANT	: name of the constant
+			TC_EXTERNAL_FUNCTION	: name of the function
+			TC_MUIARG_ATTRIBUT	: number of the attribute
+			TC_MUIARG_FUNCTION	: Number of the function
+			TC_MUIARG_OBJ		: Number of the object
+			TC_BEGIN_NOTIFICATION	: Number of the variable taken as argument of the
+						  notification
+			TC_END_NOTIFICATION	: end of the notification (no special return)
+			TC_EXTERNAL_VARIABLE	: name of the variable
+			TC_MUIARG_OBJFUNCTION	: number of the object
+			TC_OBJ_ARG		: number of the object taken as argument
+
+		When you read a TC_LOCALE_STRING, you will generate a call to a GetMBString
+		function. There is then two case depending on the string in the catalog
+		file :
+			1. A\00A try : In this case your function must return "A Try"
+			2. A Try     : In this case your function must return "A Try"
+		This function MUST use the user-defined GetString function.
+
+		When you read TC_LOCALE_CHAR, you must return the first char of the
+		String you get after the call to the user-defined GetString Function
+
+  @{b}EXAMPLE@{ub}
+	@{"ULONG" LINK "exec/types.h/MAIN" 36}	type;
+	char	*code;
+
+	MB_GetNextCode( &type, &code );
+
+	switch ( type )
+	{
+			.
+			.
+			.
+		case TC_FUNCTION:
+			...
+			break;
+			.
+			.
+		case TC_VAR_ARG:
+			...
+			break;
+			.
+			.
+			.
+		default:
+			ErrorMessage("There is a problem with this file !");
+			return;
+			break;
+	}
+
+  @{b}WARNING@{ub}
+	this function will do NOTHING if @{"MB_Open()" LINK "MB_Open" 0} was not successful, or
+	was not called.
+
+  @{b}SEE@{ub} @{b}ALSO@{ub}
+	@{"MB_GetA()" LINK "MB_GetA" 0}, @{"MB_GetVarInfoA()" LINK "MB_GetVarInfoA" 0}, @{"MB_GetNextNotify()" LINK "MB_GetNextNotify" 0}.
+@ENDNODE
+
+@NODE "MB_GetNextNotify" "MUIBuilder.library/MB_GetNextNotify()"
+
+  @{b}NAME@{ub}
+	MB_GetNextNotify
+
+  @{b}SYNOPSIS@{ub}
+	MB_GetNextNotify( type, code );
+			   A0    A1
+
+	void MB_GetNextNotify( @{"ULONG" LINK "exec/types.h/MAIN" 36}*, char** );
+
+  @{b}FUNCTION@{ub}
+	get the next notify element.
+
+	ALL specifications are exactly the same as GetNextCode. The only
+	difference is that this function gets the notify elements.
+
+  @{b}WARNING@{ub}
+	this function will do NOTHING if @{"MB_Open()" LINK "MB_Open" 0} was not successful, or
+	was not called.
+
+  @{b}SEE@{ub} @{b}ALSO@{ub}
+	@{"MB_GetA()" LINK "MB_GetA" 0}, @{"MB_GetVarInfoA()" LINK "MB_GetVarInfoA" 0}, @{"MB_GetNextCode()" LINK "MB_GetNextCode" 0}.
+@ENDNODE
+

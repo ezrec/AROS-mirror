@@ -1,0 +1,293 @@
+@database GenCodeC_Français.guide
+
+@Master GenCodeC_Français.texi
+
+@Width 72
+
+
+This is the AmigaGuide® file GenCodeC_Français.guide, produced by Makeinfo-1.55 from 
+the input file GenCodeC_Français.texi.
+
+
+@Node Main "GenCodeC_Français.guide"
+@Next "Introduction"
+
+   @{b}GenCodeC@{ub} a été écrit par @{i}Eric Totel@{ui}
+
+ @{" Introduction " Link "Introduction"}                            Qu'est-ce que @{b}GenCodeC@{ub} ?
+ @{" Ecrire GenCodeC " Link "How"}                         Comment écrire un générateur de code ?
+ @{" Utilisation " Link "Use"}                             Comment utiliser @{b}GenCodeC@{ub}
+ @{" Code Généré " Link "Code"}                             Que génère @{b}GenCodeC@{ub} ?
+
+
+@EndNode
+
+@Node "Introduction" "GenCodeC_Français.guide/Introduction"
+@Next "How"
+@Prev "Main"
+@Toc "Main"
+
+Introduction
+************
+
+   @{i}MUIBuilder@{ui} produit non pas un code directement compilable, mais une
+description du source final qui peut être adaptée (au prix d'un petit
+effort il est vrai) dans n'importe quel langage cible (tout du moins
+ceux qui existent sur l'Amiga et qui sont supportés par MUI !).
+
+   Pour que le code générique produit par @{i}MUIBuilder@{ui} soit utilisable,
+il doit être traité par le générateur de code externe correspondant
+au langage cible choisi par l'utilisateur. @{b}GenCodeC@{ub} est le module
+externe permettant la génération du langage C.
+
+   GenCodeC est @{i}FREEWARE@{ui}. Toutefois je conserve le copyright sur mon
+travail.  Vous pouvez modifier ce programme (les sources sont incluses)
+et en redistribuer votre propre version tant que :
+
+  1. Vous specifiez que je suis l'auteur originel de ce programme.
+
+  2. Vous m'envoyez une version de votre programme AVANT de le
+     distribuer.
+
+  3. Cette documentation (contenant mon nom) est distribuée avec votre
+     programme.  (Vous pouvez y ajouter ce que vous voulez)
+
+
+@EndNode
+
+@Node "How" "GenCodeC_Français.guide/How"
+@Next "Use"
+@Prev "Introduction"
+@Toc "Main"
+
+Comment est écrit GenCodeC ?
+****************************
+
+   De manière à ce que chacun puisse réaliser un générateur de
+code qui correspond à ses besoins, vous trouverez inclus dans cette
+archive les sources du générateur de code pour le langage C.
+
+   Le rôle de ce programme est de traiter les fichiers temporaires
+générés par @{i}MUIBuilder@{ui} dans T:. Dans ce but il utilise les fonctions
+qui sont mises à sa disposition dans la @{b}MUIBuilder.library@{ub}. Ces
+fonctions sont commentées dans les autodocs.
+
+
+@EndNode
+
+@Node "Use" "GenCodeC_Français.guide/Use"
+@Next "Code"
+@Prev "How"
+@Toc "Main"
+
+Utilisation
+***********
+
+   Deux problèmes se posent au niveau de l'utilisation du générateur
+de code : d'une part celle du programme lui-même, et d'autre part du
+source qu'il crée. Ce sont ces deux points que nous allons aborder ici.
+
+
+ @{" Utilisation de GenCodeC " Link "GenCodeC-Use"}             
+ @{" code généré " Link "Code-Use"}         
+ @{" Utilisation du code généré " Link "Example"}        
+ @{" Objets non disponibles " Link "Others"} 
+
+
+@EndNode
+
+@Node "GenCodeC-Use" "GenCodeC_Français.guide/GenCodeC-Use"
+@Next "Code-Use"
+@Toc "Use"
+
+Utilisation de GenCodeC
+-----------------------
+
+   @{b}GenCodeC@{ub} est un programme prévu pour être lancé depuis un shell.
+Il est normalement exécuté par @{i}MUIBuilder@{ui} lorsque vous demandez la
+génération d'un source, pour peu que vous ayez effectivement
+sélectionné le langage C dans le panneau de configuration de
+@{i}MUIBuilder@{ui} !
+
+   Si vous le lancez depuis un shell sans que @{i}MUIBuilder@{ui} soit actif, il
+n'y aura probablement aucun fichier temporaire de @{i}MUIBuilder@{ui} dans T:,
+donc @{b}GenCodeC@{ub} ne générera absolument rien.  Aucun paramètre n'est
+nécessaire à son exécution, tous les paramètres étant passés par
+@{i}MUIBuilder@{ui} dans ses fichiers temporaires.
+
+
+@EndNode
+
+@Node "Code-Use" "GenCodeC_Français.guide/Code-Use"
+@Next "Example"
+@Prev "GenCodeC-Use"
+@Toc "Use"
+
+Code généré
+-----------
+
+   @{b}GenCodeC@{ub} génère, pour un objet @{b}foo@{ub} donné, appartenant à une
+application @{b}App@{ub}
+
+   @{b}*@{ub} un fichier .h contenant la définition de l'objet foo
+
+   @{b}*@{ub} un fichier .c (dont vous aurez défini le nom dans @{i}MUIBuilder@{ui}) (1)
+     contenant une fonction @{b}Createfoo@{ub} et retournant l'objet défini
+     dans le fichier .h
+
+   @{b}*@{ub} un fichier fooExtern.h contenant la définition des références
+     externes vers des variables ou des fonctions de votre programme.
+
+   Deux fichiers de configuration nommés @{b}H-Header@{ub} et @{b}@{b}C-Header@{ub}@{ub}
+permettent de configurer le code généré par @{i}MUIBuilder@{ui} : en effet,
+ils sont copiés en entête respectivement des fichiers .h et .c dont
+il est question dans les lignes ci-dessus.  Ainsi vous pouvez avoir les
+includes que vous désirez dans les sources générées par @{i}MUIBuilder@{ui}.
+
+   La procédure de création se charge non seulement de la création
+de l'interface, mais également des notifications et de l'ouverture des
+fenêtres. L'exemple que vous trouverez dans cette documentation est
+donc tout à fait utilisable directement pour tester votre interface
+graphique.
+
+   ---------- Footnotes ----------
+
+   (1)  si vous ne mettez pas une extension .c à votre nom de fichier,
+elle sera automatiquement ajoutée
+
+
+@EndNode
+
+@Node "Example" "GenCodeC_Français.guide/Example"
+@Next "Others"
+@Prev "Code-Use"
+@Toc "Use"
+
+Exemple d'utilisation
+---------------------
+
+#include <libraries/mui.h>
+
+/* protos */
+#include <clib/muimaster_protos.h>
+#include <clib/alib_protos.h>
+#include <clib/dos_protos.h>
+#include <clib/exec_protos.h>
+
+/*  Pragmas  */
+#include <pragmas/muimaster_pragmas.h>
+#include <pragmas/exec_pragmas.h>
+
+/*  Ansi  */
+#include <stdlib.h>
+#include <stdio.h>
+
+/* @{i}MUIBuilder@{ui} */
+#include "NONE.h"
+
+struct Library * MUIMasterBase;
+
+/* Init function */
+static void init( void )
+{
+	if (!(MUIMasterBase = OpenLibrary(MUIMASTER_NAME,MUIMASTER_VMIN)))
+	{
+		printf("Can't Open MUIMaster Library");
+		exit(20);
+	}
+}
+
+/* main function */
+main()
+{
+	struct ObjApp * App = NULL;	/* Application object */
+	BOOL	running = TRUE;
+	ULONG	signal;
+
+	/* Program initialisation ( you need to write it yourself) */
+	init();
+
+	/* Create Application : generated by @{i}MUIBuilder@{ui} */
+	App = CreateApp();
+
+	while (running)
+        {
+                switch (DoMethod(App->App,MUIM_Application_Input,&signal))
+                {
+                case MUIV_Application_ReturnID_Quit:
+                        running = FALSE;
+                        break;
+                }
+	if (running && signal) Wait(signal);
+        }
+	DisposeApp(App);
+	CloseLibrary(MUIMasterBase);
+	exit(0);
+}
+
+
+@EndNode
+
+@Node "Others" "GenCodeC_Français.guide/Others"
+@Prev "Example"
+@Toc "Use"
+
+Objets non disponibles.
+-----------------------
+
+   Je suis certain que je vais encore recevoir un nombre important de
+messages de personnes qui se sentent frustrées par le manque de
+certains objets MUI au niveau de MUIBuilder !!! Je vais donc prendre
+les devants des maintenant pour expliquer que ce n'est EN AUCUN CAS un
+problème. En effet MUI offre la possibilité d'ajouter dynamiquement
+des objets à une interface : Prévoyez un emplacement dans votre
+interface (un groupe vide fera parfaitement l'affaire) lorsque vous la
+créez sous MUIBuilder, et utilisez les possibilités qui vous sont
+offertes par MUI.
+
+   Ainsi, vous allez créer votre propre fonction de création d'objet
+(appelons la @{b}CreateMyObject@{ub}), et l'utiliser de cette manière :
+
+        extern APTR CreateMyObject();
+
+        /* Utilisation du code de MUIBuilder */
+        App = CreateApp();
+
+        /* Ajout dynamique de l'objet que vous désirez */
+        DoMethod(App->GroupeVide, OM_ADDMEMBER, CreateMyObject());
+
+
+@EndNode
+
+@Node "Code" "GenCodeC_Français.guide/Code"
+@Prev "Use"
+@Toc "Main"
+
+Détails à propos du code généré
+*******************************
+
+   Certains détails à propos du code généré peuvent être
+intéressants à connaitre.
+
+  1. La structure générée dans le fichier header contient uniquement
+     les labels des objets que vous avez définis comme générés au
+     niveau de @{i}MUIBuilder@{ui} (c'est-à-dire qu'ils apparaissent avec la
+     lettre 'G' dans la fenêtre de création principale).
+
+  2. Le fichier fooExtern.h contenant les références externes vers
+     des variables ou fonctions de votre programme va contenir des
+     variables ou fonctions d'un type standard qu'il vous faudra
+     modifier. Une fois cette modification faite, elle ne sera PAS
+     effacée lors de la prochaine génération de code : @{b}GenCodeC@{ub} ne
+     génère que les extern qui n'existent pas déjà dans ce fichier.
+
+  3. Le fichier header utilisé pour la localisation DOIT s'appeler
+     foo_cat.h.
+
+  4. Je vous conseille d'adapter dès maintenant les fichiers @{b}C-Header@{ub}
+     et @{b}H-Header@{ub} à vos besoins : ce sont à mon avis d'importants
+     fichiers de configuration, qui vous permettront d'adapter le
+     source de @{i}MUIBuilder@{ui} à vos options de configuration habituelles.
+
+@EndNode
+

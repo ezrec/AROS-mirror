@@ -1,0 +1,147 @@
+-----------------
+--   A faire   --
+-----------------
+
+- nouveaux objets ( palettes )
+- dans delete : effacer aussi la file 'entries' des groupes
+- cycle et radio : autoriser une liste d'entrées vide
+- images : trouver un moyen de savoir quelle est l'image sélectionnée
+- ajouter un label dans la fenetre application
+- MakeID à revoir
+- generation du .cd : trouver un moyen pour gerer l'ajout de chaines
+- suggestion pour les fenetres : titre de l'ecran et verrouillage horizontal et vertical de la taille
+- implementer la gestion du cycle chain
+- finir les notifications ( code lisible )
+- objet Image :
+	- avoir toutes les possibilités, c'est possible ?
+	  ( y compris les images externes )
+- Inserer les objets dans les listes à l'emplacement du curseur
+- Permettre l'édition des objets de la liste temporaire (=> structure d'arbre dans cette liste)
+- copie des notifications en meme temps que l'objet : faire gaffe aux problemes
+de references d'objets, d'une part inclus dans l'objet copié, et d'autre part
+completement exterieurs à cet objet.
+
+--------------------
+- Bugs Version 2.0 -
+--------------------
+
+1.Pour l'initialisation des chaines vides, verifier que l'initialisation est
+correcte dans le cas d'un code localisé.
+
+2.-------
+Another problem I found was with the localized code of the
+generated GUI. You use a function named GetMBString which
+is declared as
+char *GetMBString(int)
+The problem is now, that FlexCat V1.4 doesn't work with
+ID-Numbers for the strings. It works with pointers to
+a self-defined structure. The compiler then gives a lot
+of errors, because of the invalid ptr to int conversion.
+
+3.------
+Rajouter L'appel d'une fonction dans TOUS les objets et PAS SEULEMENT
+l'objet application.
+
+4.------
+Menus : ajouter l'objet 'Barlabel' + Mutual exclude.
+
+5.------
+Pour l'objet PopAsl, comme pour un popobject traiter le gadget string
+qui lui est attaché. C'est plus qu'utile pour les évènements.
+
+
+----------------------------------------------------------------------------
+Objets a ajouter:
+-----------------
+	- Palettes
+	- ...
+-------------------------------------------------------------------------
+attributs a rajouter:
+---------------------
+
+- Application -
+_______________
+
+Attributs:
+----------
+	MUIA_Application_Broker
+	MUIA_Application_BrokerHook
+	MUIA_Application_BrokerPri
+	MUIA_Application_Commands
+	MUIA_Application_DiskObject
+	MUIA_Application_DropObject
+	MUIA_Application_RexxHook
+	MUIA_Application_SingleTask
+	
+Notifications:
+--------------
+	MUIM_Application_Load
+	MUIM_Application_Save
+	MUIA_Application_ForceQuit
+-------------------------------------------------------
+- Area -
+________
+
+Attributs:
+----------
+	MUIA_ExportID
+-------------------------------------------------------
+- List -
+--------
+Attributs:
+----------
+
+Notifications:
+--------------
+	MUIM_List_Clear
+	MUIM_List_Exchange
+	MUIM_List_Insert
+	MUIM_List_InsertSingle
+	MUIM_List_Jump
+	MUIM_List_Redraw
+	MUIM_List_Remove
+	MUIM_List_Select
+	MUIM_List_Sort
+	MUIA_Listview_SelectChange
+-------------------------------------------------------
+DirList:
+--------
+
+Notifications:
+--------------
+	MUIM_Dirlist_ReRead
+	MUIA_Dirlist_Status
+		MUIV_Dirlist_Status_Invalid
+		MUIV_Dirlist_Status_Reading
+		MUIV_Dirlist_Status_Valid
+--------------------------------------------------------
+PopAsl
+------
+Attributs:
+----------
+	File Requester
+	--------------
+	ASLFR_SleepWindow (BOOL)
+	ASLFR_TitleText (STRPTR)
+	ASLFR_InitialFile  (STRPTR)
+	ASLFR_InitialDrawer(STRPTR)
+	ASLFR_InitialPattern(STRPTR)
+	ASLFR_DoSaveMode (BOOL)
+	ASLFR_DoMultiSelect (BOOL)
+	ASLFR_DoPatterns (BOOL)
+	ASLFR_DrawersOnly (BOOL)
+	ASLFR_RejectIcons (BOOL)
+
+	Font Requester
+	--------------
+	ASLFO_SleepWindow (BOOL)
+	ASLFO_TitleText (STRPTR)
+	ASLFO_InitialName (STRPTR)
+	ASLFO_InitialSize (UWORD)
+	ASLFO_InitialStyle (UBYTE)
+
+	Screen Mode Requester
+	---------------------
+	ASLSM_SleepWindow (BOOL)
+	ASLSM_TitleText (STRPTR)
+	ASLSM_InitialInfoOpened (BOOL)

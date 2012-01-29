@@ -1,0 +1,20 @@
+----------------------
+MUIBuilder - ChangeLog
+----------------------
+
+$Id: ChangeLog 80 2011-01-16 16:22:49Z marust $
+
+#### v2.3 RELEASE #############################################################
+
+2011-01-16 Matthias Rustler <mrustler@gmx.de>
+
+  * start as Open Source project on Sourceforge.
+  * source cleanup
+  * AROS port
+  * OS3 port
+  * made output of GenCodeC portable for all Amiga-like OSs
+  * fixes for 2 segfaults
+
+#### v2.2 RELEASE #############################################################
+
+  * see file "History" about details for former releases.

@@ -1,0 +1,20 @@
+/****************************************************************
+   This file was created automatically by `%fv'
+   Do NOT edit by hand!
+****************************************************************/
+
+#ifndef %b_CAT_H
+#define %b_CAT_H
+
+#include <exec/types.h>
+#include <libraries/locale.h>
+
+/*  Prototypes	*/
+extern void Open%bCatalog(struct Locale *);
+extern void Close%bCatalog(void);
+extern CONST_STRPTR Get%bString(LONG);
+
+/*  Definitions */
+#define %i %d
+
+#endif /*   !%b_CAT_H  */
