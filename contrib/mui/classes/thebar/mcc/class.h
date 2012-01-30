@@ -187,7 +187,7 @@ struct  MUIP_Backfill        { STACKED ULONG MethodID; STACKED LONG left; STACKE
 #define MUIA_CustomBackfill  0x80420a63UL
 #endif
 
-#ifndef MUIM_CustomBackfill  
+#ifndef MUIM_CustomBackfill
 #define MUIM_CustomBackfill  MUIM_Backfill
 #endif
 
@@ -201,15 +201,15 @@ struct  MUIP_CreateDragImage { STACKED ULONG MethodID; STACKED LONG touchx; STAC
 struct MUI_DragImage
 {
     struct BitMap *bm;
-    WORD width;  
+    WORD width;
     WORD height;
-    WORD touchx; 
+    WORD touchx;
     WORD touchy;
     ULONG flags;
 };
 #endif
 
-#ifndef MUIM_DeleteDragImage 
+#ifndef MUIM_DeleteDragImage
 #define MUIM_DeleteDragImage 0x80423037UL
 struct MUIP_DeleteDragImage {ULONG MethodID; struct MUI_DragImage *di;};
 #endif

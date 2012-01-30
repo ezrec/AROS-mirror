@@ -521,7 +521,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct InstData *data = INST_DATA(cl,obj);
     struct TagItem  *tag, *vmt, *rat, *sct, *sut, *lpt, *ekt, *ract;
-    const struct TagItem *tstate;
+    struct TagItem *tstate;
     BOOL redraw, setidcmp, back, sel, pressed, over;
     IPTR res;
 
@@ -848,7 +848,7 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
                                    MUIA_Frame, (IPTR)ptr,
                                    TAG_DONE);
 
-            // modify MUIA_FrameDynamic/Visible only for MUI3 as MUI3.x doesn't know
+            // modify MUIA_FrameDynamic/Visible only for MUI4 as MUI3.x doesn't know
             // these attributes at all
 
             if(isFlagSet(data->flags, FLG_Borderless))

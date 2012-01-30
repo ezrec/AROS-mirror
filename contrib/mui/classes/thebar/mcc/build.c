@@ -22,6 +22,7 @@
 
 #include "class.h"
 #include "private.h"
+#include "SetPatch.h"
 #include <clib/macros.h>
 
 /***********************************************************************/
@@ -1164,6 +1165,37 @@ buildBitMapsCyber(struct InstData *data)
 
 /***********************************************************************/
 
+#if defined(__amigaos4__) || defined(__MORPHOS__) || defined(__AROS__)
+#define WCP(rp, xstart, ystart, xstop, ystop, array, bpr) WriteChunkyPixels(rp, xstart, ystart, xstop, ystop, array, bpr)
+#else // __amigaos4 || __MORPHOS__ || __AROS__
+static void _WriteChunkyPixels(struct RastPort *rp, UWORD xstart, UWORD ystart, UWORD xstop, UWORD ystop, const UBYTE *array, LONG bytesPerRow)
+{
+  UWORD y;
+  const UBYTE *cptr = &array[ystart*bytesPerRow];
+
+  for(y = ystart; y <= ystop; y++)
+  {
+    UWORD x;
+
+    for(x = xstart; x <= xstop; x++)
+    {
+      SetAPen(rp, cptr[x]);
+      WritePixel(rp, x, y);
+    }
+
+    cptr += bytesPerRow;
+  }
+}
+
+#define WCP(rp, xstart, ystart, xstop, ystop, array, bpr) \
+{ \
+  if(setPatchVersion >= ((43UL << 16) | 0UL)) \
+    WriteChunkyPixels(rp, xstart, ystart, xstop, ystop, array, bpr); \
+  else \
+    _WriteChunkyPixels(rp, xstart, ystart, xstop, ystop, array, bpr); \
+}
+#endif // __amigaos4 || __MORPHOS__ || __AROS__
+
 static struct BitMap *
 LUT8ToBitMap(struct InstData *data,
              UBYTE *src,
@@ -1233,7 +1265,7 @@ LUT8ToBitMap(struct InstData *data,
         if (isFlagSet(data->flags, FLG_CyberMap))
             WritePixelArray(src,0,0,width,&rport,0,0,width,height,RECTFMT_LUT8);
         else
-            WriteChunkyPixels(&rport,0,0,width-1,height-1,src,width);
+            WCP(&rport,0,0,width-1,height-1,src,width);
     }
 
     RETURN(dest);
@@ -1583,7 +1615,8 @@ freeBitMaps(struct InstData *data)
         }
     }
 
-    memset(strip,0,sizeof(struct MUIS_TheBar_Strip));
+    memset(strip,0,sizeof(*strip));
+
     LEAVE();
 }
 
