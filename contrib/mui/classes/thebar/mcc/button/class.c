@@ -848,7 +848,7 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
                                    MUIA_Frame, (IPTR)ptr,
                                    TAG_DONE);
 
-            // modify MUIA_FrameDynamic/Visible only for MUI3 as MUI3.x doesn't know
+            // modify MUIA_FrameDynamic/Visible only for MUI4 as MUI3.x doesn't know
             // these attributes at all
 
             if(isFlagSet(data->flags, FLG_Borderless))

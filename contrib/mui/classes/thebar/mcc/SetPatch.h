@@ -20,27 +20,15 @@
 
 ***************************************************************************/
 
-/* utils.c */
-#if !defined(__MORPHOS__)
-#if defined(__AROS__)
-Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, Tag tag1, ...);
+#ifndef SETPATCH_H
+#define SETPATCH_H 1
+
+#if !defined(__amigaos4__) && !defined(__MORPHOS__) && !defined(__AROS__)
+extern ULONG setPatchVersion;
+
+void GetSetPatchVersion(void);
 #else
-Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...);
+#define GetSetPatchVersion() ((void)0)
 #endif
-#endif
 
-BOOL CreateSharedPool(void);
-void DeleteSharedPool(void);
-APTR SharedAlloc(ULONG size);
-void SharedFree(APTR mem);
-void stripUnderscore(STRPTR dest , STRPTR from, ULONG mode);
-struct TextFont *openFont(STRPTR name);
-ULONG peekQualifier(void);
-
-/* brc1.c */
-int BRCUnpack(APTR pSource, APTR pDest, LONG srcBytes0, LONG dstBytes0);
-
-/* scale.c */
-void scale(struct scale *sce , UBYTE *src , UBYTE *dst);
-void scaleRGB(struct scale *sce , ULONG *src , ULONG *dst);
-
+#endif /* SETPATCH_H */

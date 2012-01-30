@@ -2,8 +2,44 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
-$Id: ChangeLog 390 2010-09-23 20:30:31Z damato $
-$URL: https://thebar.svn.sourceforge.net/svnroot/thebar/releases/26.7/ChangeLog $
+$Id: ChangeLog 401 2011-11-26 15:58:09Z damato $
+$URL: https://thebar.svn.sourceforge.net/svnroot/thebar/releases/26.8/ChangeLog $
+
+#### v26.8 RELEASE ############################################################
+
+2011-11-26 Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: final 26.8 release preparations
+
+2011-01-04 Thore Böckelmann <tboeckel@gmx.de>
+
+  * all/Makefile: fixed the dependency generation to respect the system specific
+    object file path.
+
+2011-01-21 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/locale/turkish.ct: added turkish translation kindly provided by Alper
+    Sönmez.
+
+2010-11-16 Thore Böckelmann <tboeckel@gmx.de>
+
+  * build.c, SetPatch.c: replaced the version check of graphics.library by a
+    more appropriate check of the installed SetPatch command.
+
+2010-11-15 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/build.c, mcc/class.c, mcc/button/build.c: implemented very simple
+    replacements for WriteChunkyPixels() and ReadPixelLine8() in the OS3 build.
+    This fixes the graphic corruption on pure classic machines running OS3.1.
+    This closes #2849043.
+
+2010-10-05 Thore Böckelmann <tboeckel@gmx.de>
+
+  * include/mccinit.c: make sure that removing the library during LibClose()
+    really operates on the correct base. Calling LibExpunge() on MorphOS is
+    wrong, since that takes no parameter but expects the base to be in A6. We
+    work around this by using an additional function which gets called from
+    LibClose() and LibExpunge() with the correct base pointer.
 
 #### v26.7 RELEASE ############################################################
 

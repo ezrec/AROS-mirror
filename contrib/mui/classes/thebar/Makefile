@@ -16,7 +16,7 @@
 #
 # TheBar class Support Site:  http://www.sf.net/projects/thebar
 #
-# $Id: Makefile 354 2010-05-19 08:10:43Z thboeckel $
+# $Id$
 #
 #***************************************************************************/
 

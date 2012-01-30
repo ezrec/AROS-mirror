@@ -18,7 +18,7 @@
 #
 # TheBar class Support Site:  http://www.sf.net/projects/thebar
 #
-# $Id: mkrelease.sh 382 2010-09-01 20:31:06Z damato $
+# $Id$
 #
 ############################################################################
 
@@ -76,7 +76,7 @@ for os in os3 os4 mos aros-i386 aros-ppc aros-x86_64; do
 done
 
 make -C mcp catalogs
-for language in czech french german italian swedish polish; do
+for language in czech french german italian polish swedish turkish; do
 	mkdir -p "release/MCC_TheBar/Locale/Catalogs/$language"
 	cp -a mcp/locale/$language.catalog "release/MCC_TheBar/Locale/Catalogs/$language/TheBar_mcp.catalog"
 done
@@ -103,4 +103,4 @@ echo "  MK MCC_TheBar-$releasever.$releaserev.lha"
 find release -nowarn -name ".svn" -exec rm -rf {} \; 2>/dev/null
 cd release
 rm -f ../MCC_TheBar-$releasever.$releaserev.lha
-lha -aq ../MCC_TheBar-$releasever.$releaserev.lha *
+lha -ao5q ../MCC_TheBar-$releasever.$releaserev.lha *

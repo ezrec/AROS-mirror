@@ -20,27 +20,29 @@
 
 ***************************************************************************/
 
-/* utils.c */
-#if !defined(__MORPHOS__)
-#if defined(__AROS__)
-Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, Tag tag1, ...);
-#else
-Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...);
+#if !defined(__amigaos4__) && !defined(__MORPHOS__) && !defined(__AROS__)
+#include <proto/exec.h>
+#include <exec/types.h>
+#include <exec/lists.h>
+#include <exec/semaphores.h>
+
+ULONG setPatchVersion;
+
+void GetSetPatchVersion(void)
+{
+  struct SetPatchSemaphore
+  {
+    struct SignalSemaphore semaphore;
+    struct MinList private;
+    UWORD version;
+    UWORD revision;
+  } *sem;
+
+  Forbid();
+  if((sem = (struct SetPatchSemaphore *)FindSemaphore((STRPTR)"« SetPatch »")) != NULL)
+  {
+    setPatchVersion = ((ULONG)sem->version << 16) | sem->revision;
+  }
+  Permit();
+}
 #endif
-#endif
-
-BOOL CreateSharedPool(void);
-void DeleteSharedPool(void);
-APTR SharedAlloc(ULONG size);
-void SharedFree(APTR mem);
-void stripUnderscore(STRPTR dest , STRPTR from, ULONG mode);
-struct TextFont *openFont(STRPTR name);
-ULONG peekQualifier(void);
-
-/* brc1.c */
-int BRCUnpack(APTR pSource, APTR pDest, LONG srcBytes0, LONG dstBytes0);
-
-/* scale.c */
-void scale(struct scale *sce , UBYTE *src , UBYTE *dst);
-void scaleRGB(struct scale *sce , ULONG *src , ULONG *dst);
-

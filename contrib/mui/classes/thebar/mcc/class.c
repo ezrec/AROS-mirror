@@ -20,6 +20,7 @@
 
 ***************************************************************************/
 
+#include <graphics/gfxbase.h>
 #include "class.h"
 #include "private.h"
 #include "version.h"
@@ -1147,6 +1148,31 @@ MakeStaticHook(LayoutHook, LayoutFunc);
 
 /***********************************************************************/
 
+#if defined(__amigaos4__) || defined(__MORPHOS__) || defined(__AROS__)
+#define RPL8(rp, xstart, ystart, width, array, temprp) ReadPixelLine8(rp, xstart, ystart, width, array, temprp)
+#else // __amigaos4 || __MORPHOS__ || __AROS__
+static LONG _ReadPixelLine8(struct RastPort *rp, UWORD xstart, UWORD ystart, UWORD width, UBYTE *array, UNUSED struct RastPort *temprp)
+{
+  UWORD x;
+  UBYTE *a = array;
+
+  for(x = 0; x < width; x++)
+  {
+    *a++ = ReadPixel(rp, x+xstart, ystart);
+  }
+
+  return (LONG)(a-array);
+}
+
+#define RPL8(rp, xstart, ystart, width, array, temprp) \
+{ \
+  if(GfxBase->LibNode.lib_Version > 40) \
+    ReadPixelLine8(rp, xstart, ystart, width, array, temprp); \
+  else \
+    _ReadPixelLine8(rp, xstart, ystart, width, array, temprp); \
+}
+#endif // __amigaos4 || __MORPHOS__ || __AROS__
+
 static BOOL
 loadDTBrush(struct MUIS_TheBar_Brush *brush,STRPTR file)
 {
@@ -1241,7 +1267,7 @@ loadDTBrush(struct MUIS_TheBar_Brush *brush,STRPTR file)
 
                                 for (y = 0; y<height; y++)
                                 {
-                                    ReadPixelLine8(&rp,0,y,tw,dest,&trp);
+                                    RPL8(&rp,0,y,width,dest,&trp);
                                     dest += tw;
                                 }
 

@@ -22,6 +22,7 @@
 
 #include "class.h"
 #include "private.h"
+#include "SetPatch.h"
 #include "version.h"
 
 /******************************************************************************/
@@ -126,6 +127,8 @@ static BOOL ClassInit(UNUSED struct Library *base)
             if (MUIMasterBase->lib_Version>20 || MUIMasterBase->lib_Revision>=5341)
                 setFlag(lib_flags, BASEFLG_MUI4);
         }
+
+        GetSetPatchVersion();
 
         setFlag(lib_flags,BASEFLG_Init);
         lib_thisClass = ThisClass;
