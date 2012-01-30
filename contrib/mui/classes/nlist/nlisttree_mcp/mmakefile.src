@@ -26,7 +26,8 @@ contrib-zune-classes-nlisttree-mcp-catalogs : locale.c locale.h \
     $(TARGETDIR)/svenska/NListtree_mcp.catalog \
     $(TARGETDIR)/français/NListtree_mcp.catalog \
     $(TARGETDIR)/deutsch/NListtree_mcp.catalog \
-    $(TARGETDIR)/polish/NListtree_mcp.catalog
+    $(TARGETDIR)/polish/NListtree_mcp.catalog \
+    $(TARGETDIR)/türkçe/NListtree_mcp.catalog
 
 
 locale.h: locale/NListtree_mcp.cd C_h.sd
@@ -62,6 +63,10 @@ $(TARGETDIR)/russian/NListtree_mcp.catalog: locale/russian.ct
 
 $(TARGETDIR)/polish/NListtree_mcp.catalog: locale/polish.ct
 	@$(MKDIR) $(TARGETDIR)/polish
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/NListtree_mcp.cd $< CATALOG $@
+
+$(TARGETDIR)/türkçe/NListtree_mcp.catalog: locale/turkish.ct
+	@$(MKDIR) $(TARGETDIR)/türkçe
 	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/NListtree_mcp.cd $< CATALOG $@
 
 %common
