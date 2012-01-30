@@ -34,7 +34,8 @@ contrib-zune-classes-nlistviews-mcp-catalogs : locale.h locale.c \
     $(TARGETDIR)/svenska/NListviews_mcp.catalog \
     $(TARGETDIR)/français/NListviews_mcp.catalog \
     $(TARGETDIR)/deutsch/NListviews_mcp.catalog \
-    $(TARGETDIR)/polish/NListviews_mcp.catalog
+    $(TARGETDIR)/polish/NListviews_mcp.catalog \
+    $(TARGETDIR)/türkçe/NListviews_mcp.catalog
 
 locale.h : locale/NListviews_mcp.cd $(SRCDIR)/$(CURDIR)/C_h.sd
 	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/NListviews_mcp.cd locale.h=$(SRCDIR)/$(CURDIR)/C_h.sd
@@ -60,6 +61,10 @@ $(TARGETDIR)/deutsch/NListviews_mcp.catalog: locale/german.ct
 
 $(TARGETDIR)/polish/NListviews_mcp.catalog: locale/polish.ct
 	@$(MKDIR) $(TARGETDIR)/polish
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/NListviews_mcp.cd $< CATALOG $@
+
+$(TARGETDIR)/türkçe/NListviews_mcp.catalog: locale/turkish.ct
+	@$(MKDIR) $(TARGETDIR)/türkçe
 	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/NListviews_mcp.cd $< CATALOG $@
 
 %common
