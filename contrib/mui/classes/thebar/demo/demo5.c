@@ -8,7 +8,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <SDI/SDI_compiler.h>
+#include "SDI_compiler.h"
 #include "Disc.h"
 
 /***********************************************************************/

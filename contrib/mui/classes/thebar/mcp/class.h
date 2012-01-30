@@ -50,9 +50,9 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include <SDI/SDI_compiler.h>
-#include <SDI/SDI_stdarg.h>
-#include <SDI/SDI_hook.h>
+#include <SDI_compiler.h>
+#include <SDI_stdarg.h>
+#include <SDI_hook.h>
 
 #include "debug.h"
 #define CATCOMP_NUMBERS

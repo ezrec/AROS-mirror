@@ -7,7 +7,7 @@
 #include <mui/TheBar_mcc.h>
 #include <string.h>
 #include <stdio.h>
-#include <SDI/SDI_compiler.h>
+#include "SDI_compiler.h"
 #include "Symbols.h"
 
 /***********************************************************************/

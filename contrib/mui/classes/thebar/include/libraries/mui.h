@@ -1,6 +1,7 @@
 #ifdef __AROS__
-#error AROS requires that you include the system libraries
-#endif
+#include "libraries/muiaros.h"
+#else
+
 /***************************************************************************
 **
 ** MUI - MagicUserInterface
@@ -3556,3 +3557,5 @@ struct MUI_CustomClass
 #endif
 
 #endif /* MUI_H */
+
+#endif /* __AROS__ */

@@ -6,9 +6,9 @@
 #include <mui/TheBar_mcc.h>
 #include <string.h>
 #include <stdio.h>
-#include <SDI/SDI_compiler.h>
-#include <SDI/SDI_stdarg.h>
-#include <SDI/SDI_hook.h>
+#include "SDI_compiler.h"
+#include "SDI_stdarg.h"
+#include "SDI_hook.h"
 
 #if !defined(__amigaos4__)
 #include <clib/alib_protos.h>
