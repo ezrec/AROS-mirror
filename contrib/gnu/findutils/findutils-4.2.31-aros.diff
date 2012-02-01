@@ -59,50 +59,6 @@ diff -Naur findutils-4.2.31-org/find/pred.c findutils-4.2.31-aros/find/pred.c
    if (child_pid == -1)
      error (1, errno, _("cannot fork"));
    if (child_pid == 0)
-diff -Naur findutils-4.2.31-org/lib/buildcmd.c findutils-4.2.31-aros/lib/buildcmd.c
---- findutils-4.2.31-org/lib/buildcmd.c	2007-02-27 11:23:17.000000000 +0100
-+++ findutils-4.2.31-aros/lib/buildcmd.c	2009-07-06 14:53:05.000000000 +0200
-@@ -92,8 +92,8 @@
- 
- #include "buildcmd.h"
- 
-+#include <sys/arosc.h>
- 
--extern char **environ;
- 
- 
- static char *mbstrstr PARAMS ((const char *haystack, const char *needle));
-@@ -411,10 +411,27 @@
- bc_size_of_environment (void)
- {
-   size_t len = 0u;
--  char **envp = environ;
-+  char **envp;
-+  int i;
- 
--  while (*envp)
--    len += strlen (*envp++) + 1;
-+  int size = __env_get_environ(NULL, 0);
-+  envp = (char **) malloc(size);
-+  if (envp)
-+    {
-+      if ((size = __env_get_environ(envp, size)) != -1)
-+	{
-+	  for (i = 0; envp[i]; i++)
-+            len += strlen (envp[i]) + 1;
-+	}
-+      else
-+        {
-+	  free (envp);
-+	  return size;
-+	}
-+      free (envp);
-+    }
-+  else
-+    return size;
- 
-   return len;
- }
 diff -Naur findutils-4.2.31-org/xargs/xargs.c findutils-4.2.31-aros/xargs/xargs.c
 --- findutils-4.2.31-org/xargs/xargs.c	2007-03-02 01:14:25.000000000 +0100
 +++ findutils-4.2.31-aros/xargs/xargs.c	2009-07-06 14:53:05.000000000 +0200

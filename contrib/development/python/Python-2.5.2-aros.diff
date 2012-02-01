@@ -31,44 +31,7 @@ diff -ruN Python-2.5.2/Makefile.pre.in Python-2.5.2.new/Makefile.pre.in
 diff -ruN Python-2.5.2/Modules/posixmodule.c Python-2.5.2.new/Modules/posixmodule.c
 --- Python-2.5.2/Modules/posixmodule.c	2008-02-03 08:20:39.000000000 +0100
 +++ Python-2.5.2.new/Modules/posixmodule.c	2008-09-30 01:54:34.000000000 +0200
-@@ -34,6 +34,10 @@
- #    include <unixio.h>
- #endif /* defined(__VMS) */
- 
-+#if defined(__AROS__)
-+#    include <sys/arosc.h>
-+#endif
-+
- #ifdef __cplusplus
- extern "C" {
- #endif
-@@ -361,6 +365,25 @@
- 	if (environ == NULL)
- 		environ = *_NSGetEnviron();
- #endif
-+#ifdef __AROS__
-+	int size = __env_get_environ (NULL, 0);
-+	char **envp = (char **) malloc(size);
-+	if (envp)
-+	{
-+		if (__env_get_environ(envp, size) != -1)
-+		{
-+			environ = envp;
-+		}
-+		else
-+		{
-+			free (envp);
-+			return d;
-+		}
-+	}
-+	else
-+		return d;
-+#endif
-+
- 	if (environ == NULL)
- 		return d;
- 	/* This part ignores errors */
-@@ -3467,7 +3490,7 @@
+@@ -3467,7 +3467,7 @@
  static PyObject *
  posix_fork(PyObject *self, PyObject *noargs)
  {

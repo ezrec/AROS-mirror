@@ -1645,32 +1645,6 @@ diff -urN pdksh-5.2.14/configure.in pdksh-5.2.14-aros-wrk/configure.in
  dnl sh.h sets INT32 to int or long as appropriate.  Some burnt systems, such
  dnl as NeXT's, clock_t is in sys/time.h (in non-posix mode).
  KSH_CHECK_H_TYPE(clock_t, [[for clock_t in any of <sys/types.h>, <sys/times.h> and <sys/time.h>]],
-diff -urN pdksh-5.2.14/env.h pdksh-5.2.14-aros-wrk/env.h
---- pdksh-5.2.14/env.h	1970-01-01 01:00:00.000000000 +0100
-+++ pdksh-5.2.14-aros-wrk/env.h	2004-06-30 20:49:24.000000000 +0200
-@@ -0,0 +1,22 @@
-+/* struct env_var
-+#{
-+#    char                *ev_name;
-+#    int                 ev_flags;
-+#    void                *ev_value;
-+#    ev_sethook_t        *ev_sethook;
-+#    ev_unsethook_t      *ev_unsethook;
-+#    struct env_var      *ev_next, *ev_prev;
-+#};
-+*/
-+/* extern struct env_var   **environ; */
-+/*
-+#extern struct env_var   *env_getenv(const char *name);
-+#extern int              env_setenv(const char *name, int flags,
-+#                                   const void *value, ev_sethook_t sethook,
-+#                                   ev_unsethook_t unsethook);
-+#extern char             *getenv(const char *name); 
-+#extern int              setenv(const char *name, const char *value,
-+#                               int overwrite);
-+#extern int              putenv(const char *string);  
-+#extern int              unsetenv(const char *name);
-+*/
 diff -urN pdksh-5.2.14/ioctl.h pdksh-5.2.14-aros-wrk/ioctl.h
 --- pdksh-5.2.14/ioctl.h	1970-01-01 01:00:00.000000000 +0100
 +++ pdksh-5.2.14-aros-wrk/ioctl.h	2004-06-30 20:49:24.000000000 +0200
@@ -1828,30 +1802,6 @@ diff -urN pdksh-5.2.14/lex.c pdksh-5.2.14-aros-wrk/lex.c
  #endif /* KSH */
  	s->start = s->str = Xstring(s->xs, xp);
  	strip_nuls(Xstring(s->xs, xp), Xlength(s->xs, xp));
-diff -urN pdksh-5.2.14/main.c pdksh-5.2.14-aros-wrk/main.c
---- pdksh-5.2.14/main.c	1999-05-11 15:59:52.000000000 +0200
-+++ pdksh-5.2.14-aros-wrk/main.c	2004-06-30 20:49:24.000000000 +0200
-@@ -3,13 +3,17 @@
-  */
- 
- #define	EXTERN				/* define EXTERNs in sh.h */
--
-+/* AROS */
-+#include "env.h"
-+/* End AROS */
- #include "sh.h"
- #include "ksh_stat.h"
- #include "ksh_time.h"
- 
--extern char **environ;
--
-+/* extern char **environ; */
-+/* AROS */
-+char *environ;
-+/* End AROS */
- /*
-  * global data
-  */
 diff -urN pdksh-5.2.14/proto.h pdksh-5.2.14-aros-wrk/proto.h
 --- pdksh-5.2.14/proto.h	1999-07-13 18:54:51.000000000 +0200
 +++ pdksh-5.2.14-aros-wrk/proto.h	2004-06-30 01:57:17.000000000 +0200
