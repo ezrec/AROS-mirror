@@ -1,0 +1,49 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+FILES := \
+ initmem \
+ malloc \
+ realloc \
+ free \
+ virtual \
+ strcpy \
+ strncpy \
+ strcat \
+ strncat \
+ strcmp \
+ stricmp \
+ strncmp \
+ strnicmp \
+ strchr \
+ strlen \
+ bzero \
+ memset \
+ memcpy \
+ memmove \
+ memcmp \
+ bcopy \
+ DoMethod \
+ DoSuperMethod \
+ udiv6432 \
+ div6432 \
+ udiv64 \
+ div64 \
+ abort \
+ umod64 \
+ mod64 \
+ shl64 \
+ shr64 \
+ slab \
+ request
+
+CXXFILES := \
+ delete \
+ new \
+ StartCode
+
+USER_CFLAGS := -isystem $(SRCDIR)/$(CURDIR)/..
+
+%build_linklib mmake=contrib-fryingpan-framework-libc libname="C" \
+ files="$(FILES)" cxxfiles="$(CXXFILES)"

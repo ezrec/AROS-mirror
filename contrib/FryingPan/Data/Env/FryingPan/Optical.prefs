@@ -1,0 +1,660 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<Optical>
+
+<Drivers>
+<Driver Harmful="1" Name="ahi.device" />
+<Driver Harmful="1" Name="asimcdfs.device" />
+<Driver Harmful="1" Name="audio.device" />
+<Driver Harmful="1" Name="carddisk.device" />
+<Driver Harmful="1" Name="cdromemu.device" />
+<Driver Harmful="1" Name="clipboard.device" />
+<Driver Harmful="1" Name="console.device" />
+<Driver Harmful="1" Name="diskimage.device" />
+<Driver Harmful="1" Name="diskspare.device" />
+<Driver Harmful="1" Name="fd.device" />
+<Driver Harmful="1" Name="filedisk.device" />
+<Driver Harmful="1" Name="floppy.device" />
+<Driver Harmful="1" Name="fmsdisk.device" />
+<Driver Harmful="1" Name="gameport.device" />
+<Driver Harmful="1" Name="hackdisk.device" />
+<Driver Harmful="1" Name="hardfile.device" />
+<Driver Harmful="1" Name="input.device" />
+<Driver Harmful="1" Name="keyboard.device" />
+<Driver Harmful="1" Name="messydisk.device" />
+<Driver Harmful="1" Name="mfm.device" />
+<Driver Harmful="1" Name="parallel.device" />
+<Driver Harmful="1" Name="paulaaudio.device" />
+<Driver Harmful="1" Name="powerpar.device" />
+<Driver Harmful="1" Name="powercom.device" />
+<Driver Harmful="1" Name="printer.device" />
+<Driver Harmful="1" Name="printtofile.device" />
+<Driver Harmful="1" Name="ps2.device" />
+<Driver Harmful="1" Name="ramdisk.device" />
+<Driver Harmful="1" Name="ramdrive.device" />
+<Driver Harmful="1" Name="timer.device" />
+<Driver Harmful="1" Name="trackdisk.device" />
+<Driver Harmful="1" Name="uaehf.device" />
+<Driver Harmful="0" Name="ide.device" />
+<Driver Harmful="0" Name="cybppc.device" />
+<Driver Harmful="0" Name="scsi.device" />
+<Driver Harmful="0" Name="atapi.device" />
+<Driver Harmful="0" Name="cdrom.device" />
+<Driver Harmful="0" Name="amithlon.device" />
+<Driver Harmful="0" Name="2nd.scsi.device" />
+<Driver Harmful="0" Name="gvpscsi.device" />
+<Driver Harmful="0" Name="1230scsi.device" />
+<Driver Harmful="0" Name="1233scsi.device" />
+<Driver Harmful="0" Name="1234scsi.device" />
+<Driver Harmful="0" Name="1260scsi.device" />
+<Driver Harmful="0" Name="2060scsi.device" />
+<Driver Harmful="0" Name="cybscsi.device" />
+<Driver Harmful="0" Name="z3scsi.device" />
+<Driver Harmful="0" Name="dracoscsi.device" />
+<Driver Harmful="0" Name="squirrelscsi.device" />
+<Driver Harmful="0" Name="wildfirescsi.device" />
+<Driver Harmful="0" Name="oktagon.device" />
+<Driver Harmful="0" Name="csascsi.device" />
+<Driver Harmful="0" Name="tekscsi2.device" />
+<Driver Harmful="0" Name="uaescsi.device" />
+<Driver Harmful="0" Name="a1ide.device" />
+<Driver Harmful="0" Name="sii0680ide.device" />
+<Driver Harmful="0" Name="sii3112ide.device" />
+<Driver Harmful="0" Name="sii3114ide.device" />
+<Driver Harmful="0" Name="sii3512ide.device" />
+<Driver Harmful="0" Name="ata.device" />
+<Driver Harmful="0" Name="ahci.device" />
+</Drivers>
+
+<Vendors>
+<CDVendor Min="97" Sec="28" Frm="40" Valid="1" Name="King Pro Mediatek Inc." />
+<CDVendor Min="97" Sec="49" Frm="20" Valid="1" Name="King Pro Mediatek Inc." />
+<CDVendor Min="97" Sec="23" Frm="60" Valid="1" Name="Customer Pressing Oosterhout" />
+<CDVendor Min="97" Sec="29" Frm="00" Valid="1" Name="Taeil Media Co.,Ltd" />
+<CDVendor Min="97" Sec="23" Frm="10" Valid="1" Name="Doremi Media Co., Ltd" />
+<CDVendor Min="97" Sec="25" Frm="60" Valid="1" Name="Xcitec Inc." />
+<CDVendor Min="97" Sec="45" Frm="60" Valid="1" Name="Xcitec Inc." />
+<CDVendor Min="97" Sec="26" Frm="50" Valid="1" Name="Lead Data Inc." />
+<CDVendor Min="97" Sec="48" Frm="60" Valid="1" Name="Lead Data Inc." />
+<CDVendor Min="97" Sec="26" Frm="40" Valid="1" Name="FUJI Photo Film Co., Ltd" />
+<CDVendor Min="97" Sec="46" Frm="40" Valid="1" Name="FUJI Photo Film Co., Ltd" />
+<CDVendor Min="97" Sec="25" Frm="20" Valid="1" Name="Hitachi Maxell, Ltd" />
+<CDVendor Min="97" Sec="47" Frm="10" Valid="1" Name="Hitachi Maxell, Ltd" />
+<CDVendor Min="97" Sec="27" Frm="40" Valid="1" Name="Kodak Japan Ltd" />
+<CDVendor Min="97" Sec="48" Frm="10" Valid="1" Name="Kodak Japan Ltd" />
+<CDVendor Min="97" Sec="27" Frm="50" Valid="1" Name="Mitsui Chemicals, Inc." />
+<CDVendor Min="97" Sec="48" Frm="50" Valid="1" Name="Mitsui Chemicals, Inc." />
+<CDVendor Min="97" Sec="27" Frm="30" Valid="1" Name="Pioneer Video Corporation" />
+<CDVendor Min="97" Sec="48" Frm="30" Valid="1" Name="Pioneer Video Corporation" />
+<CDVendor Min="97" Sec="27" Frm="10" Valid="1" Name="Plasmon Data systems Ltd" />
+<CDVendor Min="97" Sec="48" Frm="20" Valid="1" Name="Plasmon Data systems Ltd" />
+<CDVendor Min="97" Sec="27" Frm="20" Valid="1" Name="Princo Corporation" />
+<CDVendor Min="97" Sec="47" Frm="20" Valid="1" Name="Princo Corporation" />
+<CDVendor Min="97" Sec="27" Frm="60" Valid="1" Name="Ricoh Company Ltd" />
+<CDVendor Min="97" Sec="48" Frm="00" Valid="1" Name="Ricoh Company Ltd" />
+<CDVendor Min="97" Sec="26" Frm="20" Valid="1" Name="SKC Co., Ltd." />
+<CDVendor Min="97" Sec="24" Frm="00" Valid="1" Name="Taiyo Yuden Company Ltd" />
+<CDVendor Min="97" Sec="46" Frm="00" Valid="1" Name="Taiyo Yuden Company Ltd" />
+<CDVendor Min="97" Sec="32" Frm="00" Valid="1" Name="TDK Corporation" />
+<CDVendor Min="97" Sec="49" Frm="00" Valid="1" Name="TDK Corporation" />
+<CDVendor Min="97" Sec="15" Frm="00" Valid="1" Name="TDK Corporation" />
+<CDVendor Min="97" Sec="34" Frm="20" Valid="1" Name="Mitsubishi Chemical Corporation" />
+<CDVendor Min="97" Sec="50" Frm="20" Valid="1" Name="Mitsubishi Chemical Corporation" />
+<CDVendor Min="97" Sec="15" Frm="20" Valid="1" Name="Mitsubishi Chemical Corporation" />
+<CDVendor Min="97" Sec="28" Frm="30" Valid="1" Name="Auvistar Industry Co.,Ltd" />
+<CDVendor Min="97" Sec="46" Frm="50" Valid="1" Name="Auvistar Industry Co.,Ltd" />
+<CDVendor Min="97" Sec="28" Frm="10" Valid="1" Name="Gigastore Co." />
+<CDVendor Min="97" Sec="49" Frm="10" Valid="1" Name="Gigastore Co." />
+<CDVendor Min="97" Sec="26" Frm="00" Valid="1" Name="Fornet International PTE Ltd" />
+<CDVendor Min="97" Sec="45" Frm="00" Valid="1" Name="Fornet International PTE Ltd" />
+<CDVendor Min="97" Sec="26" Frm="60" Valid="1" Name="CMC Magnetics Corporation" />
+<CDVendor Min="97" Sec="46" Frm="60" Valid="1" Name="CMC Magnetics Corporation" />
+<CDVendor Min="97" Sec="21" Frm="40" Valid="1" Name="Optical Disc Manufacturing Equipment" />
+<CDVendor Min="97" Sec="31" Frm="00" Valid="1" Name="Ritek Co." />
+<CDVendor Min="97" Sec="47" Frm="50" Valid="1" Name="Ritek Co." />
+<CDVendor Min="97" Sec="15" Frm="10" Valid="1" Name="Ritek Co." />
+<CDVendor Min="97" Sec="16" Frm="30" Valid="1" Name="Grand Advance Technology Ltd" />
+<CDVendor Min="97" Sec="31" Frm="30" Valid="1" Name="Grand Advance Technology Ltd" />
+<CDVendor Min="97" Sec="51" Frm="10" Valid="1" Name="Grand Advance Technology Ltd" />
+<CDVendor Min="97" Sec="21" Frm="30" Valid="1" Name="Bestdisc Technology Corporation" />
+<CDVendor Min="97" Sec="18" Frm="10" Valid="1" Name="Wealth Fair Investment Ltd" />
+<CDVendor Min="97" Sec="29" Frm="50" Valid="1" Name="General Magnetics Ltd" />
+<CDVendor Min="97" Sec="25" Frm="00" Valid="1" Name="MPO" />
+<CDVendor Min="97" Sec="49" Frm="40" Valid="1" Name="JVC Victor Company OF Japan, Ltd" />
+<CDVendor Min="97" Sec="23" Frm="40" Valid="1" Name="JVC Victor Company of Japan, Ltd" />
+<CDVendor Min="97" Sec="25" Frm="40" Valid="1" Name="Vivastar AG" />
+<CDVendor Min="97" Sec="18" Frm="60" Valid="1" Name="Taroko International Co., Ltd" />
+<CDVendor Min="97" Sec="29" Frm="20" Valid="1" Name="Unidisc Technology Co., Ltd" />
+<CDVendor Min="97" Sec="46" Frm="10" Valid="1" Name="Hong Kong Digital Technology Co., Ltd" />
+<CDVendor Min="97" Sec="22" Frm="50" Valid="1" Name="Hong Kong Digital Technology Co., Ltd" />
+<CDVendor Min="97" Sec="29" Frm="40" Valid="1" Name="Viva Magnetics Ltd" />
+<CDVendor Min="97" Sec="29" Frm="30" Valid="1" Name="Hile Optical Disc Technology Co." />
+<CDVendor Min="97" Sec="51" Frm="50" Valid="1" Name="Hile Optical Disc Technology Co." />
+<CDVendor Min="97" Sec="28" Frm="60" Valid="1" Name="Friendly CD-Tek Co." />
+<CDVendor Min="97" Sec="21" Frm="50" Valid="1" Name="Sound Sound Multi-Media Development Ltd" />
+<CDVendor Min="97" Sec="24" Frm="40" Valid="1" Name="KDG Mediatech AG" />
+<CDVendor Min="97" Sec="22" Frm="30" Valid="1" Name="Eximpo" />
+<CDVendor Min="97" Sec="28" Frm="50" Valid="1" Name="Delphi Technologies Inc." />
+<CDVendor Min="97" Sec="29" Frm="00" Valid="1" Name="Harmonic Hall Optical Disc Ltd" />
+<CDVendor Min="97" Sec="45" Frm="50" Valid="1" Name="Guann Yinn Co., Ltd" />
+<CDVendor Min="97" Sec="24" Frm="50" Valid="1" Name="Guann Yinn Co., Ltd" />
+<CDVendor Min="97" Sec="49" Frm="30" Valid="1" Name="Opti.Me.S. S.p.A." />
+<CDVendor Min="97" Sec="28" Frm="00" Valid="1" Name="Opti.Me.S. S.p.A." />
+<CDVendor Min="97" Sec="23" Frm="20" Valid="1" Name="Nacar Media s.r.l." />
+<CDVendor Min="97" Sec="23" Frm="50" Valid="1" Name="Optrom Inc." />
+<CDVendor Min="97" Sec="23" Frm="30" Valid="1" Name="Audio Distributors Co., Ltd" />
+<CDVendor Min="97" Sec="22" Frm="60" Valid="1" Name="Acer Media Technology, Inc." />
+<CDVendor Min="97" Sec="45" Frm="20" Valid="1" Name="Acer Media Technology, Inc." />
+<CDVendor Min="97" Sec="22" Frm="00" Valid="1" Name="Woongjin Media Co." />
+<CDVendor Min="97" Sec="25" Frm="30" Valid="1" Name="INFODISC Technology Co., Ltd" />
+<CDVendor Min="97" Sec="51" Frm="20" Valid="1" Name="INFODISC Technology Co., Ltd" />
+<CDVendor Min="97" Sec="24" Frm="30" Valid="1" Name="Unitech Japan Inc." />
+<CDVendor Min="97" Sec="25" Frm="50" Valid="1" Name="AMS Technology Inc." />
+<CDVendor Min="97" Sec="29" Frm="10" Valid="1" Name="Vanguard Disc Inc." />
+<CDVendor Min="97" Sec="50" Frm="10" Valid="1" Name="Vanguard Disc Inc." />
+<CDVendor Min="97" Sec="27" Frm="00" Valid="1" Name="Digital Storage Technology Co., Ltd" />
+<CDVendor Min="97" Sec="48" Frm="40" Valid="1" Name="Digital Storage Technology Co., Ltd" />
+<CDVendor Min="97" Sec="23" Frm="00" Valid="1" Name="Matsushita Electric Industrial Co., Ltd" />
+<CDVendor Min="97" Sec="49" Frm="60" Valid="1" Name="Matsushita Electric Industrial Co., Ltd" />
+<CDVendor Min="97" Sec="30" Frm="10" Valid="1" Name="CDA Datentrager Albrechts GmbH." />
+<CDVendor Min="97" Sec="50" Frm="30" Valid="1" Name="CDA Datentrager Albrechts GmbH." />
+<CDVendor Min="97" Sec="32" Frm="10" Valid="1" Name="Prodisc Technology Inc." />
+<CDVendor Min="97" Sec="47" Frm="60" Valid="1" Name="Prodisc Technology Inc." />
+<CDVendor Min="97" Sec="26" Frm="10" Valid="1" Name="Postech Co." />
+<CDVendor Min="97" Sec="47" Frm="40" Valid="1" Name="Postech Co." />
+<CDVendor Min="97" Sec="30" Frm="10" Valid="1" Name="Nippon Columbia Co., Ltd" />
+<CDVendor Min="97" Sec="48" Frm="40" Valid="1" Name="Nippon Columbia Co., Ltd" />
+<CDVendor Min="97" Sec="26" Frm="30" Valid="1" Name="Optical Disc Corporation" />
+<CDVendor Min="97" Sec="24" Frm="10" Valid="1" Name="Sony Corporation" />
+<CDVendor Min="97" Sec="46" Frm="10" Valid="1" Name="Sony Corporation" />
+<CDVendor Min="97" Sec="22" Frm="40" Valid="1" Name="CIS Technology Inc." />
+<CDVendor Min="97" Sec="45" Frm="40" Valid="1" Name="CIS Technology Inc." />
+<CDVendor Min="97" Sec="24" Frm="20" Valid="1" Name="Computer Support Italy s.r.l." />
+<CDVendor Min="97" Sec="46" Frm="30" Valid="1" Name="Computer Support Italy s.r.l." />
+<CDVendor Min="97" Sec="22" Frm="10" Valid="1" Name="Seantram Technology Inc." />
+<CDVendor Min="97" Sec="28" Frm="20" Valid="1" Name="Multi Media Masters &amp; Machinary SA" />
+<CDVendor Min="97" Sec="46" Frm="20" Valid="1" Name="Multi Media Masters &amp; Machinary SA" />
+</Vendors>
+
+<IOCodes>
+<IOCode Code="0x00" Qualifier="0x00" Message="No Additional Sense Information" />
+<IOCode Code="0x00" Qualifier="0x01" Message="Filemark Detected" />
+<IOCode Code="0x00" Qualifier="0x02" Message="End-Of-Partition/Medium Detected" />
+<IOCode Code="0x00" Qualifier="0x03" Message="Setmark Detected" />
+<IOCode Code="0x00" Qualifier="0x04" Message="Beginning-Of-Partition/Medium Detected" />
+<IOCode Code="0x00" Qualifier="0x05" Message="End-Of-Data Detected" />
+<IOCode Code="0x00" Qualifier="0x06" Message="I/O Process Terminated" />
+<IOCode Code="0x00" Qualifier="0x11" Message="Audio Play Operation In Progress" />
+<IOCode Code="0x00" Qualifier="0x12" Message="Audio Play Operation Paused" />
+<IOCode Code="0x00" Qualifier="0x13" Message="Audio Play Operation Successfully Completed" />
+<IOCode Code="0x00" Qualifier="0x14" Message="Audio Play Operation Stopped Due To Error" />
+<IOCode Code="0x00" Qualifier="0x15" Message="No Current Audio Status To Return" />
+<IOCode Code="0x00" Qualifier="0x16" Message="Operation In Progress" />
+<IOCode Code="0x00" Qualifier="0x17" Message="Cleaning Requested" />
+<IOCode Code="0x00" Qualifier="0x18" Message="Erase Operation In Progress" />
+<IOCode Code="0x00" Qualifier="0x19" Message="Locate Operation In Progress" />
+<IOCode Code="0x00" Qualifier="0x1A" Message="Rewind Operation In Progress" />
+<IOCode Code="0x00" Qualifier="0x1B" Message="Set Capacity Operation In Progress" />
+<IOCode Code="0x00" Qualifier="0x1C" Message="Verify Operation In Progress" />
+<IOCode Code="0x01" Qualifier="0x00" Message="No Index/Sector Signal" />
+<IOCode Code="0x02" Qualifier="0x00" Message="No Seek Complete" />
+<IOCode Code="0x03" Qualifier="0x00" Message="Peripheral Device Write Fault" />
+<IOCode Code="0x03" Qualifier="0x01" Message="No Write Current" />
+<IOCode Code="0x03" Qualifier="0x02" Message="Excessive Write Errors" />
+<IOCode Code="0x04" Qualifier="0x00" Message="Logical Unit Not Ready, Cause Not Reportable" />
+<IOCode Code="0x04" Qualifier="0x01" Message="Logical Unit Is In Process Of Becoming Ready" />
+<IOCode Code="0x04" Qualifier="0x02" Message="Logical Unit Not Ready, Initializing Cmd Required" />
+<IOCode Code="0x04" Qualifier="0x03" Message="Logical Unit Not Ready, Manual Intervention Required" />
+<IOCode Code="0x04" Qualifier="0x04" Message="Logical Unit Not Ready, Format In Progress" />
+<IOCode Code="0x04" Qualifier="0x05" Message="Logical Unit Not Ready, Rebuild In Progress" />
+<IOCode Code="0x04" Qualifier="0x06" Message="Logical Unit Not Ready, Recalculation In Progress" />
+<IOCode Code="0x04" Qualifier="0x07" Message="Logical Unit Not Ready, Operation In Progress" />
+<IOCode Code="0x04" Qualifier="0x08" Message="Logical Unit Not Ready, Long Write In Progress" />
+<IOCode Code="0x04" Qualifier="0x09" Message="Logical Unit Not Ready, Self-TEST In Progress" />
+<IOCode Code="0x05" Qualifier="0x00" Message="Logical Unit Does Not Respond To Selection" />
+<IOCode Code="0x06" Qualifier="0x00" Message="No Reference Position Found" />
+<IOCode Code="0x07" Qualifier="0x00" Message="Multiple Peripheral Devices Selected" />
+<IOCode Code="0x08" Qualifier="0x00" Message="Logical Unit Communication Failure" />
+<IOCode Code="0x08" Qualifier="0x01" Message="Logical Unit Communication Time-OUT" />
+<IOCode Code="0x08" Qualifier="0x02" Message="Logical Unit Communication Parity Error" />
+<IOCode Code="0x08" Qualifier="0x03" Message="Logical Unit Communication CRC Error (Ultra-DMA/32)" />
+<IOCode Code="0x08" Qualifier="0x04" Message="Unreachable Copy Target" />
+<IOCode Code="0x09" Qualifier="0x00" Message="Track Following Error" />
+<IOCode Code="0x09" Qualifier="0x01" Message="Tracking Servo Failure" />
+<IOCode Code="0x09" Qualifier="0x02" Message="Focus Servo Failure" />
+<IOCode Code="0x09" Qualifier="0x03" Message="Spindle Servo Failure" />
+<IOCode Code="0x09" Qualifier="0x04" Message="Head Select Fault" />
+<IOCode Code="0x0a" Qualifier="0x00" Message="Error Log Overflow" />
+<IOCode Code="0x0b" Qualifier="0x00" Message="Warning" />
+<IOCode Code="0x0b" Qualifier="0x01" Message="Warning - Specified Temperature Exceeded" />
+<IOCode Code="0x0b" Qualifier="0x02" Message="Warning - Enclosure Degraded" />
+<IOCode Code="0x0c" Qualifier="0x00" Message="Write Error" />
+<IOCode Code="0x0c" Qualifier="0x01" Message="Write Error - Recovered With Auto Reallocation" />
+<IOCode Code="0x0c" Qualifier="0x02" Message="Write Error - Auto Reallocation Failed" />
+<IOCode Code="0x0c" Qualifier="0x03" Message="Write Error - Recommend Reassignment" />
+<IOCode Code="0x0c" Qualifier="0x04" Message="Compression Check Miscompare Error" />
+<IOCode Code="0x0c" Qualifier="0x05" Message="Data Expansion Occurred During Compression" />
+<IOCode Code="0x0c" Qualifier="0x06" Message="Block Not Compressible" />
+<IOCode Code="0x0c" Qualifier="0x07" Message="Write Error - Recovery Needed" />
+<IOCode Code="0x0c" Qualifier="0x08" Message="Write Error - Recovery Failed" />
+<IOCode Code="0x0c" Qualifier="0x09" Message="Write Error - Loss Of Streaming" />
+<IOCode Code="0x0c" Qualifier="0x0a" Message="Write Error - Padding Blocks Added" />
+<IOCode Code="0x0c" Qualifier="0x0c" Message="Write Error - Unexpected Unsolicited Data" />
+<IOCode Code="0x0c" Qualifier="0x0d" Message="Write Error - Not Enough Unsolicited Data" />
+<IOCode Code="0x0d" Qualifier="0x00" Message="Error Detected By Third Party Temporary Initiator" />
+<IOCode Code="0x0d" Qualifier="0x01" Message="Third Party Device Failure" />
+<IOCode Code="0x0d" Qualifier="0x02" Message="Copy Target Device Not Reachable" />
+<IOCode Code="0x0d" Qualifier="0x03" Message="Incorrect Copy Target Device Type" />
+<IOCode Code="0x0d" Qualifier="0x04" Message="Copy Target Device Data Underrun" />
+<IOCode Code="0x0d" Qualifier="0x05" Message="Copy Target Device Data Overrun" />
+<IOCode Code="0x10" Qualifier="0x00" Message="ID CRC Or ECC Error" />
+<IOCode Code="0x11" Qualifier="0x00" Message="Unrecovered Read Error" />
+<IOCode Code="0x11" Qualifier="0x01" Message="Read Retries Exhausted" />
+<IOCode Code="0x11" Qualifier="0x02" Message="Error Too Long To Correct" />
+<IOCode Code="0x11" Qualifier="0x03" Message="Multiple Read Errors" />
+<IOCode Code="0x11" Qualifier="0x04" Message="Unrecovered Read Error - Auto Reallocate Failed" />
+<IOCode Code="0x11" Qualifier="0x05" Message="L-Ec Uncorrectable Error" />
+<IOCode Code="0x11" Qualifier="0x06" Message="Circ Unrecovered Error" />
+<IOCode Code="0x11" Qualifier="0x07" Message="Data Re-Synchronization Error" />
+<IOCode Code="0x11" Qualifier="0x08" Message="Incomplete Block Read" />
+<IOCode Code="0x11" Qualifier="0x09" Message="No Gap Found" />
+<IOCode Code="0x11" Qualifier="0x0a" Message="Miscorrected Error" />
+<IOCode Code="0x11" Qualifier="0x0b" Message="Unrecovered Read Error - Recommend Reassignment" />
+<IOCode Code="0x11" Qualifier="0x0c" Message="Unrecovered Read Error - Recommend Rewrite The Data" />
+<IOCode Code="0x11" Qualifier="0x0d" Message="De-Compression Crc Error" />
+<IOCode Code="0x11" Qualifier="0x0e" Message="Cannot Decompress Using Declared Algorithm" />
+<IOCode Code="0x11" Qualifier="0x0f" Message="Error Reading Upc/EAN Number" />
+<IOCode Code="0x11" Qualifier="0x10" Message="Error Reading Isrc Number" />
+<IOCode Code="0x11" Qualifier="0x11" Message="Read Error - Loss Of Streaming" />
+<IOCode Code="0x11" Qualifier="0x13" Message="Read Error - Failed Retransmission Request" />
+<IOCode Code="0x12" Qualifier="0x00" Message="Address Mark Not Found For Id Field" />
+<IOCode Code="0x13" Qualifier="0x00" Message="Address Mark Not Found For Data Field" />
+<IOCode Code="0x14" Qualifier="0x00" Message="Recorded Entity Not Found" />
+<IOCode Code="0x14" Qualifier="0x01" Message="Record Not Found" />
+<IOCode Code="0x14" Qualifier="0x02" Message="Filemark Or Setmark Not Found" />
+<IOCode Code="0x14" Qualifier="0x03" Message="End-Of-Data Not Found" />
+<IOCode Code="0x14" Qualifier="0x04" Message="Block Sequence Error" />
+<IOCode Code="0x14" Qualifier="0x05" Message="Record Not Found - Recommend Reassignment" />
+<IOCode Code="0x14" Qualifier="0x06" Message="Record Not Found - Data Auto-Reallocated" />
+<IOCode Code="0x15" Qualifier="0x00" Message="Random Positioning Error" />
+<IOCode Code="0x15" Qualifier="0x01" Message="Mechanical Positioning Error" />
+<IOCode Code="0x15" Qualifier="0x02" Message="Positioning Error Detected By Read Of Medium" />
+<IOCode Code="0x16" Qualifier="0x00" Message="Data Synchronization Mark Error" />
+<IOCode Code="0x16" Qualifier="0x01" Message="Data Sync Error - Data Rewritten" />
+<IOCode Code="0x16" Qualifier="0x02" Message="Data Sync Error - Recommend Rewrite" />
+<IOCode Code="0x16" Qualifier="0x03" Message="Data Sync Error - Data Auto-Reallocated" />
+<IOCode Code="0x16" Qualifier="0x04" Message="Data Sync Error - Recommend Reassignment" />
+<IOCode Code="0x17" Qualifier="0x00" Message="Recovered Data With No Error Correction Applied" />
+<IOCode Code="0x17" Qualifier="0x01" Message="Recovered Data With Retries" />
+<IOCode Code="0x17" Qualifier="0x02" Message="Recovered Data With Positive Head Offset" />
+<IOCode Code="0x17" Qualifier="0x03" Message="Recovered Data With Negative Head Offset" />
+<IOCode Code="0x17" Qualifier="0x04" Message="Recovered Data With Retries And/OR Circ Applied" />
+<IOCode Code="0x17" Qualifier="0x05" Message="Recovered Data Using Previous Sector Id" />
+<IOCode Code="0x17" Qualifier="0x06" Message="Recovered Data Without Ecc - Data Auto-Reallocated" />
+<IOCode Code="0x17" Qualifier="0x07" Message="Recovered Data Without Ecc - Recommend Reassignment" />
+<IOCode Code="0x17" Qualifier="0x08" Message="Recovered Data Without Ecc - Recommend Rewrite" />
+<IOCode Code="0x17" Qualifier="0x09" Message="Recovered Data Without Ecc - Data Rewritten" />
+<IOCode Code="0x18" Qualifier="0x00" Message="Recovered Data With Error Correction Applied" />
+<IOCode Code="0x18" Qualifier="0x01" Message="Recovered Data With Error Correction &amp; Retries Applied" />
+<IOCode Code="0x18" Qualifier="0x02" Message="Recovered Data - Data Auto-Reallocated" />
+<IOCode Code="0x18" Qualifier="0x03" Message="Recovered Data With CIRC" />
+<IOCode Code="0x18" Qualifier="0x04" Message="Recovered Data With L-EC" />
+<IOCode Code="0x18" Qualifier="0x05" Message="Recovered Data - Recommend Reassignment" />
+<IOCode Code="0x18" Qualifier="0x06" Message="Recovered Data - Recommend Rewrite" />
+<IOCode Code="0x18" Qualifier="0x07" Message="Recovered Data With Ecc - Data Rewritten" />
+<IOCode Code="0x18" Qualifier="0x08" Message="Recovered Data With Linking" />
+<IOCode Code="0x19" Qualifier="0x00" Message="Defect List Error" />
+<IOCode Code="0x19" Qualifier="0x01" Message="Defect List Not Available" />
+<IOCode Code="0x19" Qualifier="0x02" Message="Defect List Error In Primary List" />
+<IOCode Code="0x19" Qualifier="0x03" Message="Defect List Error In Grown List" />
+<IOCode Code="0x1a" Qualifier="0x00" Message="Parameter List Length Error" />
+<IOCode Code="0x1b" Qualifier="0x00" Message="Synchronous Data Transfer Error" />
+<IOCode Code="0x1c" Qualifier="0x00" Message="Defect List Not Found" />
+<IOCode Code="0x1c" Qualifier="0x01" Message="Primary Defect List Not Found" />
+<IOCode Code="0x1c" Qualifier="0x02" Message="Grown Defect List Not Found" />
+<IOCode Code="0x1d" Qualifier="0x00" Message="Miscompare During Verify Operation" />
+<IOCode Code="0x1e" Qualifier="0x00" Message="Recovered ID With ECC Correction" />
+<IOCode Code="0x1f" Qualifier="0x00" Message="Partial Defect List Transfer" />
+<IOCode Code="0x20" Qualifier="0x00" Message="Invalid Command Operation Code" />
+<IOCode Code="0x20" Qualifier="0x04" Message="Illegal Command While In Write Capable State" />
+<IOCode Code="0x20" Qualifier="0x06" Message="Illegal Command While In Explicit Address Mode" />
+<IOCode Code="0x20" Qualifier="0x07" Message="Illegal Command While In Implicit Address Mode" />
+<IOCode Code="0x21" Qualifier="0x00" Message="Logical Block Address Out Of Range" />
+<IOCode Code="0x21" Qualifier="0x01" Message="Invalid Element Address" />
+<IOCode Code="0x21" Qualifier="0x02" Message="Invalid Address For Write" />
+<IOCode Code="0x22" Qualifier="0x00" Message="Illegal Function" />
+<IOCode Code="0x24" Qualifier="0x00" Message="Invalid Field In CDB" />
+<IOCode Code="0x24" Qualifier="0x01" Message="Cdb Decryption Error" />
+<IOCode Code="0x25" Qualifier="0x00" Message="Logical Unit Not Supported" />
+<IOCode Code="0x26" Qualifier="0x00" Message="Invalid Field In Parameter List" />
+<IOCode Code="0x26" Qualifier="0x01" Message="Parameter Not Supported" />
+<IOCode Code="0x26" Qualifier="0x02" Message="Parameter Value Invalid" />
+<IOCode Code="0x26" Qualifier="0x03" Message="Threshold Parameters Not Supported" />
+<IOCode Code="0x26" Qualifier="0x04" Message="Invalid Release Of Persistent Reservation" />
+<IOCode Code="0x26" Qualifier="0x05" Message="Data Decryption Error" />
+<IOCode Code="0x26" Qualifier="0x06" Message="Too Many Target Descriptors" />
+<IOCode Code="0x26" Qualifier="0x07" Message="Unsupported Target Descriptor Type Code" />
+<IOCode Code="0x26" Qualifier="0x08" Message="Too Many Segment Descriptors" />
+<IOCode Code="0x26" Qualifier="0x09" Message="Unsupported Segment Descriptor Type Code" />
+<IOCode Code="0x26" Qualifier="0x0a" Message="Unexpected Inexact Segment" />
+<IOCode Code="0x26" Qualifier="0x0b" Message="Inline Data Length Exceeded" />
+<IOCode Code="0x26" Qualifier="0x0c" Message="Invalid Operation For Copy Source Or Destination" />
+<IOCode Code="0x26" Qualifier="0x0d" Message="Copy Segment Granularity Violation" />
+<IOCode Code="0x27" Qualifier="0x00" Message="Write Protected" />
+<IOCode Code="0x27" Qualifier="0x01" Message="Hardware Write Protected" />
+<IOCode Code="0x27" Qualifier="0x02" Message="Logical Unit Software Write Protected" />
+<IOCode Code="0x27" Qualifier="0x03" Message="Associated Write Protect" />
+<IOCode Code="0x27" Qualifier="0x04" Message="Persistent Write Protect" />
+<IOCode Code="0x27" Qualifier="0x05" Message="Permanent Write Protect" />
+<IOCode Code="0x27" Qualifier="0x06" Message="Conditional Write Protect" />
+<IOCode Code="0x28" Qualifier="0x00" Message="Not Ready To Ready Change, Medium May Have Changed" />
+<IOCode Code="0x28" Qualifier="0x01" Message="Import Or Export Element Accessed" />
+<IOCode Code="0x29" Qualifier="0x00" Message="Power On, Reset, Or Bus Device Reset Occurred" />
+<IOCode Code="0x29" Qualifier="0x01" Message="Power On Occurred" />
+<IOCode Code="0x29" Qualifier="0x02" Message="Scsi Bus Reset Occurred" />
+<IOCode Code="0x29" Qualifier="0x03" Message="Bus Device Reset Function Occurred" />
+<IOCode Code="0x29" Qualifier="0x04" Message="Device Internal Reset" />
+<IOCode Code="0x29" Qualifier="0x05" Message="Transceiver Mode Changed To Single-Ended" />
+<IOCode Code="0x29" Qualifier="0x06" Message="Transceiver Mode Changed To Lvd" />
+<IOCode Code="0x2a" Qualifier="0x00" Message="Parameters Changed" />
+<IOCode Code="0x2a" Qualifier="0x01" Message="Mode Parameters Changed" />
+<IOCode Code="0x2a" Qualifier="0x02" Message="Log Parameters Changed" />
+<IOCode Code="0x2a" Qualifier="0x03" Message="Reservations Preempted" />
+<IOCode Code="0x2a" Qualifier="0x04" Message="Reservations Released" />
+<IOCode Code="0x2a" Qualifier="0x05" Message="Registrations Preempted" />
+<IOCode Code="0x2b" Qualifier="0x00" Message="Copy Cannot Execute Since Host Cannot Disconnect" />
+<IOCode Code="0x2c" Qualifier="0x00" Message="Command Sequence Error" />
+<IOCode Code="0x2c" Qualifier="0x01" Message="Too Many Windows Specified" />
+<IOCode Code="0x2c" Qualifier="0x02" Message="Invalid Combination Of Windows Specified" />
+<IOCode Code="0x2c" Qualifier="0x03" Message="Current Program Area Is Not Empty" />
+<IOCode Code="0x2c" Qualifier="0x04" Message="Current Program Area Is Empty" />
+<IOCode Code="0x2c" Qualifier="0x05" Message="Illegal Power Condition Request" />
+<IOCode Code="0x2c" Qualifier="0x06" Message="Persistent Prevent Conflict" />
+<IOCode Code="0x2c" Qualifier="0x07" Message="Previous Busy Status" />
+<IOCode Code="0x2c" Qualifier="0x08" Message="Previous Task Set Full Status" />
+<IOCode Code="0x2c" Qualifier="0x09" Message="Previous Reservation Conflict Status" />
+<IOCode Code="0x2d" Qualifier="0x00" Message="Overwrite Error On Update In Place" />
+<IOCode Code="0x2e" Qualifier="0x00" Message="Insufficient Time For Operation" />
+<IOCode Code="0x2f" Qualifier="0x00" Message="Commands Cleared By Another Initiator" />
+<IOCode Code="0x30" Qualifier="0x00" Message="Incompatible Medium Installed" />
+<IOCode Code="0x30" Qualifier="0x01" Message="Cannot Read Medium - Unknown Format" />
+<IOCode Code="0x30" Qualifier="0x02" Message="Cannot Read Medium - Incompatible Format" />
+<IOCode Code="0x30" Qualifier="0x03" Message="Cleaning Cartridge Installed" />
+<IOCode Code="0x30" Qualifier="0x04" Message="Cannot Write Medium - Unknown Format" />
+<IOCode Code="0x30" Qualifier="0x05" Message="Cannot Write Medium - Incompatible Format" />
+<IOCode Code="0x30" Qualifier="0x06" Message="Cannot Format Medium - Incompatible Medium" />
+<IOCode Code="0x30" Qualifier="0x07" Message="Cleaning Failure" />
+<IOCode Code="0x30" Qualifier="0x08" Message="Cannot Write - Application Code Mismatch" />
+<IOCode Code="0x30" Qualifier="0x09" Message="Current Session Not Fixated For Append" />
+<IOCode Code="0x30" Qualifier="0x10" Message="Medium Not Formatted" />
+<IOCode Code="0x31" Qualifier="0x00" Message="Medium Format Corrupted" />
+<IOCode Code="0x31" Qualifier="0x01" Message="Format Command Failed" />
+<IOCode Code="0x31" Qualifier="0x02" Message="Zoned Formatting Failed Due To Spare Linking" />
+<IOCode Code="0x32" Qualifier="0x00" Message="No Defect Spare Location Available" />
+<IOCode Code="0x32" Qualifier="0x01" Message="Defect List Update Failure" />
+<IOCode Code="0x33" Qualifier="0x00" Message="Tape Length Error" />
+<IOCode Code="0x34" Qualifier="0x00" Message="Enclosure Failure" />
+<IOCode Code="0x35" Qualifier="0x00" Message="Enclosure Services Failure" />
+<IOCode Code="0x35" Qualifier="0x01" Message="Unsupported Enclosure Function" />
+<IOCode Code="0x35" Qualifier="0x02" Message="Enclosure Services Unavailable" />
+<IOCode Code="0x35" Qualifier="0x03" Message="Enclosure Services Transfer Failure" />
+<IOCode Code="0x35" Qualifier="0x04" Message="Enclosure Services Transfer Refused" />
+<IOCode Code="0x36" Qualifier="0x00" Message="Ribbon, Ink, Or Toner Failure" />
+<IOCode Code="0x37" Qualifier="0x00" Message="Rounded Parameter" />
+<IOCode Code="0x38" Qualifier="0x00" Message="Event Status Notification" />
+<IOCode Code="0x38" Qualifier="0x02" Message="Esn - Power Management Class Event" />
+<IOCode Code="0x38" Qualifier="0x04" Message="Esn - Media Class Event" />
+<IOCode Code="0x38" Qualifier="0x06" Message="Esn - Device Busy Class Event" />
+<IOCode Code="0x39" Qualifier="0x00" Message="Saving Parameters Not Supported" />
+<IOCode Code="0x3a" Qualifier="0x00" Message="Medium Not Present" />
+<IOCode Code="0x3a" Qualifier="0x01" Message="Medium Not Present - Tray Closed" />
+<IOCode Code="0x3a" Qualifier="0x02" Message="Medium Not Present - Tray Open" />
+<IOCode Code="0x3a" Qualifier="0x03" Message="Medium Not Present - Loadable" />
+<IOCode Code="0x3a" Qualifier="0x04" Message="Medium Not Present - Medium Auxiliary Memory Accessible" />
+<IOCode Code="0x3b" Qualifier="0x00" Message="Sequential Positioning Error" />
+<IOCode Code="0x3b" Qualifier="0x01" Message="Tape Position Error At Beginning-Of-Medium" />
+<IOCode Code="0x3b" Qualifier="0x02" Message="Tape Position Error At End-Of-Medium" />
+<IOCode Code="0x3b" Qualifier="0x03" Message="Tape Or Electronic Vertical Forms Unit Not Ready" />
+<IOCode Code="0x3b" Qualifier="0x04" Message="Slew Failure" />
+<IOCode Code="0x3b" Qualifier="0x05" Message="Paper Jam" />
+<IOCode Code="0x3b" Qualifier="0x06" Message="Failed To Sense Top-Of-Form" />
+<IOCode Code="0x3b" Qualifier="0x07" Message="Failed To Sense Bottom-Of-Form" />
+<IOCode Code="0x3b" Qualifier="0x08" Message="Reposition Error" />
+<IOCode Code="0x3b" Qualifier="0x09" Message="Read Past End Of Medium" />
+<IOCode Code="0x3b" Qualifier="0x0a" Message="Read Past Beginning Of Medium" />
+<IOCode Code="0x3b" Qualifier="0x0b" Message="Position Past End Of Medium" />
+<IOCode Code="0x3b" Qualifier="0x0c" Message="Position Past Beginning Of Medium" />
+<IOCode Code="0x3b" Qualifier="0x0d" Message="Medium Destination Element Full" />
+<IOCode Code="0x3b" Qualifier="0x0e" Message="Medium Source Element Empty" />
+<IOCode Code="0x3b" Qualifier="0x0f" Message="End Of Medium Reached" />
+<IOCode Code="0x3b" Qualifier="0x11" Message="Medium Magazine Not Accessible" />
+<IOCode Code="0x3b" Qualifier="0x12" Message="Medium Magazine Removed" />
+<IOCode Code="0x3b" Qualifier="0x13" Message="Medium Magazine Inserted" />
+<IOCode Code="0x3b" Qualifier="0x14" Message="Medium Magazine Locked" />
+<IOCode Code="0x3b" Qualifier="0x15" Message="Medium Magazine Unlocked" />
+<IOCode Code="0x3b" Qualifier="0x16" Message="Mechanical Positioning Or Changer Error" />
+<IOCode Code="0x3d" Qualifier="0x00" Message="Invalid Bits In Identify Message" />
+<IOCode Code="0x3e" Qualifier="0x00" Message="Logical Unit Has Not Self-Configured Yet" />
+<IOCode Code="0x3e" Qualifier="0x01" Message="Logical Unit Failure" />
+<IOCode Code="0x3e" Qualifier="0x02" Message="Timeout On Logical Unit" />
+<IOCode Code="0x3e" Qualifier="0x03" Message="Logical Unit Failed Self-Test" />
+<IOCode Code="0x3e" Qualifier="0x04" Message="Logical Unit Unable To Update Self-Test Log" />
+<IOCode Code="0x3f" Qualifier="0x00" Message="Target Operating Conditions Have Changed" />
+<IOCode Code="0x3f" Qualifier="0x01" Message="Microcode Has Been Changed" />
+<IOCode Code="0x3f" Qualifier="0x02" Message="Changed Operating Definition" />
+<IOCode Code="0x3f" Qualifier="0x03" Message="Inquiry Data Has Changed" />
+<IOCode Code="0x3f" Qualifier="0x04" Message="Component Device Attached" />
+<IOCode Code="0x3f" Qualifier="0x05" Message="Device Identifier Changed" />
+<IOCode Code="0x3f" Qualifier="0x06" Message="Redundancy Group Created Or Modified" />
+<IOCode Code="0x3f" Qualifier="0x07" Message="Redundancy Group Deleted" />
+<IOCode Code="0x3f" Qualifier="0x08" Message="Spare Created Or Modified" />
+<IOCode Code="0x3f" Qualifier="0x09" Message="Spare Deleted" />
+<IOCode Code="0x3f" Qualifier="0x0a" Message="Volume Set Created Or Modified" />
+<IOCode Code="0x3f" Qualifier="0x0b" Message="Volume Set Deleted" />
+<IOCode Code="0x3f" Qualifier="0x0c" Message="Volume Set Deassigned" />
+<IOCode Code="0x3f" Qualifier="0x0d" Message="Volume Set Reassigned" />
+<IOCode Code="0x3f" Qualifier="0x0e" Message="Reported Luns Data Has Changed" />
+<IOCode Code="0x3f" Qualifier="0x0f" Message="Echo Buffer Overwritten" />
+<IOCode Code="0x3f" Qualifier="0x10" Message="Medium Loadable" />
+<IOCode Code="0x3f" Qualifier="0x11" Message="Medium Auxiliary Memory Accessible" />
+<IOCode Code="0x40" Qualifier="0x00" Message="RAM Failure" />
+<IOCode Code="0x41" Qualifier="0x00" Message="Data Path Failure" />
+<IOCode Code="0x42" Qualifier="0x00" Message="Power-On Or Self-Test Failure" />
+<IOCode Code="0x43" Qualifier="0x00" Message="Message Error" />
+<IOCode Code="0x44" Qualifier="0x00" Message="Internal Target Failure" />
+<IOCode Code="0x45" Qualifier="0x00" Message="Select Or Reselect Failure" />
+<IOCode Code="0x46" Qualifier="0x00" Message="Unsuccessful Soft Reset" />
+<IOCode Code="0x47" Qualifier="0x00" Message="Scsi Parity Error" />
+<IOCode Code="0x47" Qualifier="0x01" Message="Data Phase Crc Error Detected" />
+<IOCode Code="0x47" Qualifier="0x02" Message="Scsi Parity Error Detected During St Data Phase" />
+<IOCode Code="0x47" Qualifier="0x03" Message="Information Unit Iucrc Error Detected" />
+<IOCode Code="0x47" Qualifier="0x04" Message="Asynchronous Information Protection Error Detected" />
+<IOCode Code="0x47" Qualifier="0x05" Message="Protocol Service Crc Error" />
+<IOCode Code="0x48" Qualifier="0x00" Message="Initiator Detected Error Message Received" />
+<IOCode Code="0x49" Qualifier="0x00" Message="Invalid Message Error" />
+<IOCode Code="0x4a" Qualifier="0x00" Message="Command Phase Error" />
+<IOCode Code="0x4b" Qualifier="0x00" Message="Data Phase Error" />
+<IOCode Code="0x4c" Qualifier="0x00" Message="Logical Unit Failed Self-Configuration" />
+<IOCode Code="0x4e" Qualifier="0x00" Message="Overlapped Commands Attempted" />
+<IOCode Code="0x50" Qualifier="0x00" Message="Write Append Error" />
+<IOCode Code="0x50" Qualifier="0x01" Message="Write Append Position Error" />
+<IOCode Code="0x50" Qualifier="0x02" Message="Position Error Related To Timing" />
+<IOCode Code="0x51" Qualifier="0x00" Message="Erase Failure" />
+<IOCode Code="0x51" Qualifier="0x01" Message="Erase Failure - Incomplete Erase Operation Detected" />
+<IOCode Code="0x52" Qualifier="0x00" Message="Cartridge Fault" />
+<IOCode Code="0x53" Qualifier="0x00" Message="Media Load Or Eject Failed" />
+<IOCode Code="0x53" Qualifier="0x01" Message="Unload Tape Failure" />
+<IOCode Code="0x53" Qualifier="0x02" Message="Medium Removal Prevented" />
+<IOCode Code="0x54" Qualifier="0x00" Message="Scsi To Host System Interface Failure" />
+<IOCode Code="0x55" Qualifier="0x00" Message="System Resource Failure" />
+<IOCode Code="0x55" Qualifier="0x01" Message="System Buffer Full" />
+<IOCode Code="0x55" Qualifier="0x02" Message="Insufficient Reservation Resources" />
+<IOCode Code="0x55" Qualifier="0x03" Message="Insufficient Resources" />
+<IOCode Code="0x55" Qualifier="0x04" Message="Insufficient Registration Resources" />
+<IOCode Code="0x57" Qualifier="0x00" Message="Unable To Recover Table-Of-Contents" />
+<IOCode Code="0x58" Qualifier="0x00" Message="Generation Does Not Exist" />
+<IOCode Code="0x59" Qualifier="0x00" Message="Updated Block Read" />
+<IOCode Code="0x5a" Qualifier="0x00" Message="Operator Request Or State Change Input" />
+<IOCode Code="0x5a" Qualifier="0x01" Message="Operator Medium Removal Request" />
+<IOCode Code="0x5a" Qualifier="0x02" Message="Operator Selected Write Protect" />
+<IOCode Code="0x5a" Qualifier="0x03" Message="Operator Selected Write Permit" />
+<IOCode Code="0x5b" Qualifier="0x00" Message="Log Exception" />
+<IOCode Code="0x5b" Qualifier="0x01" Message="Threshold Condition Met" />
+<IOCode Code="0x5b" Qualifier="0x02" Message="Log Counter At Maximum" />
+<IOCode Code="0x5b" Qualifier="0x03" Message="Log List Codes Exhausted" />
+<IOCode Code="0x5c" Qualifier="0x00" Message="Rpl Status Change" />
+<IOCode Code="0x5c" Qualifier="0x01" Message="Spindles Synchronized" />
+<IOCode Code="0x5c" Qualifier="0x02" Message="Spindles Not Synchronized" />
+<IOCode Code="0x5d" Qualifier="0x00" Message="Failure Prediction Threshold Exceeded" />
+<IOCode Code="0x5d" Qualifier="0x01" Message="Media Failure Prediction Threshold Exceeded" />
+<IOCode Code="0x5d" Qualifier="0x02" Message="Logical Unit Failure Prediction Threshold Exceeded" />
+<IOCode Code="0x5d" Qualifier="0x03" Message="Spare Area Exhaustion Prediction Threshold Exceeded" />
+<IOCode Code="0x5d" Qualifier="0x10" Message="Hardware Impending Failure General Hard Drive Failure" />
+<IOCode Code="0x5d" Qualifier="0x11" Message="Hardware Impending Failure Drive Error Rate Too High" />
+<IOCode Code="0x5d" Qualifier="0x12" Message="Hardware Impending Failure Data Error Rate Too High" />
+<IOCode Code="0x5d" Qualifier="0x13" Message="Hardware Impending Failure Seek Error Rate Too High" />
+<IOCode Code="0x5d" Qualifier="0x14" Message="Hardware Impending Failure Too Many Block Reassigns" />
+<IOCode Code="0x5d" Qualifier="0x15" Message="Hardware Impending Failure Access Times Too High" />
+<IOCode Code="0x5d" Qualifier="0x16" Message="Hardware Impending Failure Start Unit Times Too High" />
+<IOCode Code="0x5d" Qualifier="0x17" Message="Hardware Impending Failure Channel Parametrics" />
+<IOCode Code="0x5d" Qualifier="0x18" Message="Hardware Impending Failure Controller Detected" />
+<IOCode Code="0x5d" Qualifier="0x19" Message="Hardware Impending Failure Throughput Performance" />
+<IOCode Code="0x5d" Qualifier="0x1a" Message="Hardware Impending Failure Seek Time Performance" />
+<IOCode Code="0x5d" Qualifier="0x1b" Message="Hardware Impending Failure Spin-UP Retry Count" />
+<IOCode Code="0x5d" Qualifier="0x1c" Message="Hardware Impending Failure Drive Calibration Retry Count" />
+<IOCode Code="0x5d" Qualifier="0x20" Message="Controller Impending Failure General Hard Drive Failure" />
+<IOCode Code="0x5d" Qualifier="0x21" Message="Controller Impending Failure Drive Error Rate Too High" />
+<IOCode Code="0x5d" Qualifier="0x22" Message="Controller Impending Failure Data Error Rate Too High" />
+<IOCode Code="0x5d" Qualifier="0x23" Message="Controller Impending Failure Seek Error Rate Too High" />
+<IOCode Code="0x5d" Qualifier="0x24" Message="Controller Impending Failure Too Many Block Reassigns" />
+<IOCode Code="0x5d" Qualifier="0x25" Message="Controller Impending Failure Access Times Too High" />
+<IOCode Code="0x5d" Qualifier="0x26" Message="Controller Impending Failure Start Unit Times Too High" />
+<IOCode Code="0x5d" Qualifier="0x27" Message="Controller Impending Failure Channel Parametrics" />
+<IOCode Code="0x5d" Qualifier="0x28" Message="Controller Impending Failure Controller Detected" />
+<IOCode Code="0x5d" Qualifier="0x29" Message="Controller Impending Failure Throughput Performance" />
+<IOCode Code="0x5d" Qualifier="0x2a" Message="Controller Impending Failure Seek Time Performance" />
+<IOCode Code="0x5d" Qualifier="0x2b" Message="Controller Impending Failure Spin-UP Retry Count" />
+<IOCode Code="0x5d" Qualifier="0x2c" Message="Controller Impending Failure Drive Calibration Retry Count" />
+<IOCode Code="0x5d" Qualifier="0x30" Message="Data Channel Impending Failure General Hard Drive Failure" />
+<IOCode Code="0x5d" Qualifier="0x31" Message="Data Channel Impending Failure Drive Error Rate Too High" />
+<IOCode Code="0x5d" Qualifier="0x32" Message="Data Channel Impending Failure Data Error Rate Too High" />
+<IOCode Code="0x5d" Qualifier="0x33" Message="Data Channel Impending Failure Seek Error Rate Too High" />
+<IOCode Code="0x5d" Qualifier="0x34" Message="Data Channel Impending Failure Too Many Block Reassigns" />
+<IOCode Code="0x5d" Qualifier="0x35" Message="Data Channel Impending Failure Access Times Too High" />
+<IOCode Code="0x5d" Qualifier="0x36" Message="Data Channel Impending Failure Start Unit Times Too High" />
+<IOCode Code="0x5d" Qualifier="0x37" Message="Data Channel Impending Failure Channel Parametrics" />
+<IOCode Code="0x5d" Qualifier="0x38" Message="Data Channel Impending Failure Controller Detected" />
+<IOCode Code="0x5d" Qualifier="0x39" Message="Data Channel Impending Failure Throughput Performance" />
+<IOCode Code="0x5d" Qualifier="0x3a" Message="Data Channel Impending Failure Seek Time Performance" />
+<IOCode Code="0x5d" Qualifier="0x3b" Message="Data Channel Impending Failure Spin-UP Retry Count" />
+<IOCode Code="0x5d" Qualifier="0x3c" Message="Data Channel Impending Failure Drive Calibration Retry Count" />
+<IOCode Code="0x5d" Qualifier="0x40" Message="Servo Impending Failure General Hard Drive Failure" />
+<IOCode Code="0x5d" Qualifier="0x41" Message="Servo Impending Failure Drive Error Rate Too High" />
+<IOCode Code="0x5d" Qualifier="0x42" Message="Servo Impending Failure Data Error Rate Too High" />
+<IOCode Code="0x5d" Qualifier="0x43" Message="Servo Impending Failure Seek Error Rate Too High" />
+<IOCode Code="0x5d" Qualifier="0x44" Message="Servo Impending Failure Too Many Block Reassigns" />
+<IOCode Code="0x5d" Qualifier="0x45" Message="Servo Impending Failure Access Times Too High" />
+<IOCode Code="0x5d" Qualifier="0x46" Message="Servo Impending Failure Start Unit Times Too High" />
+<IOCode Code="0x5d" Qualifier="0x47" Message="Servo Impending Failure Channel Parametrics" />
+<IOCode Code="0x5d" Qualifier="0x48" Message="Servo Impending Failure Controller Detected" />
+<IOCode Code="0x5d" Qualifier="0x49" Message="Servo Impending Failure Throughput Performance" />
+<IOCode Code="0x5d" Qualifier="0x4a" Message="Servo Impending Failure Seek Time Performance" />
+<IOCode Code="0x5d" Qualifier="0x4b" Message="Servo Impending Failure Spin-UP Retry Count" />
+<IOCode Code="0x5d" Qualifier="0x4c" Message="Servo Impending Failure Drive Calibration Retry Count" />
+<IOCode Code="0x5d" Qualifier="0x50" Message="Spindle Impending Failure General Hard Drive Failure" />
+<IOCode Code="0x5d" Qualifier="0x51" Message="Spindle Impending Failure Drive Error Rate Too High" />
+<IOCode Code="0x5d" Qualifier="0x52" Message="Spindle Impending Failure Data Error Rate Too High" />
+<IOCode Code="0x5d" Qualifier="0x53" Message="Spindle Impending Failure Seek Error Rate Too High" />
+<IOCode Code="0x5d" Qualifier="0x54" Message="Spindle Impending Failure Too Many Block Reassigns" />
+<IOCode Code="0x5d" Qualifier="0x55" Message="Spindle Impending Failure Access Times Too High" />
+<IOCode Code="0x5d" Qualifier="0x56" Message="Spindle Impending Failure Start Unit Times Too High" />
+<IOCode Code="0x5d" Qualifier="0x57" Message="Spindle Impending Failure Channel Parametrics" />
+<IOCode Code="0x5d" Qualifier="0x58" Message="Spindle Impending Failure Controller Detected" />
+<IOCode Code="0x5d" Qualifier="0x59" Message="Spindle Impending Failure Throughput Performance" />
+<IOCode Code="0x5d" Qualifier="0x5a" Message="Spindle Impending Failure Seek Time Performance" />
+<IOCode Code="0x5d" Qualifier="0x5b" Message="Spindle Impending Failure Spin-Up Retry Count" />
+<IOCode Code="0x5d" Qualifier="0x5c" Message="Spindle Impending Failure Drive Calibration Retry Count" />
+<IOCode Code="0x5d" Qualifier="0x60" Message="Firmware Impending Failure General Hard Drive Failure" />
+<IOCode Code="0x5d" Qualifier="0x61" Message="Firmware Impending Failure Drive Error Rate Too High" />
+<IOCode Code="0x5d" Qualifier="0x62" Message="Firmware Impending Failure Data Error Rate Too High" />
+<IOCode Code="0x5d" Qualifier="0x63" Message="Firmware Impending Failure Seek Error Rate Too High" />
+<IOCode Code="0x5d" Qualifier="0x64" Message="Firmware Impending Failure Too Many Block Reassigns" />
+<IOCode Code="0x5d" Qualifier="0x65" Message="Firmware Impending Failure Access Times Too High" />
+<IOCode Code="0x5d" Qualifier="0x66" Message="Firmware Impending Failure Start Unit Times Too High" />
+<IOCode Code="0x5d" Qualifier="0x67" Message="Firmware Impending Failure Channel Parametrics" />
+<IOCode Code="0x5d" Qualifier="0x68" Message="Firmware Impending Failure Controller Detected" />
+<IOCode Code="0x5d" Qualifier="0x69" Message="Firmware Impending Failure Throughput Performance" />
+<IOCode Code="0x5d" Qualifier="0x6a" Message="Firmware Impending Failure Seek Time Performance" />
+<IOCode Code="0x5d" Qualifier="0x6b" Message="Firmware Impending Failure Spin-UP Retry Count" />
+<IOCode Code="0x5d" Qualifier="0x6c" Message="Firmware Impending Failure Drive Calibration Retry Count" />
+<IOCode Code="0x5d" Qualifier="0xFf" Message="Failure Prediction Threshold Exceeded (False)" />
+<IOCode Code="0x5e" Qualifier="0x00" Message="Low Power Condition On" />
+<IOCode Code="0x5e" Qualifier="0x01" Message="Idle Condition Activated By Timer" />
+<IOCode Code="0x5e" Qualifier="0x02" Message="Standby Condition Activated By Timer" />
+<IOCode Code="0x5e" Qualifier="0x03" Message="Idle Condition Activated By Command" />
+<IOCode Code="0x5e" Qualifier="0x04" Message="Standby Condition Activated By Command" />
+<IOCode Code="0x5e" Qualifier="0x41" Message="Power State Change To Active" />
+<IOCode Code="0x5e" Qualifier="0x42" Message="Power State Change To Idle" />
+<IOCode Code="0x5e" Qualifier="0x43" Message="Power State Change To Standby" />
+<IOCode Code="0x5e" Qualifier="0x45" Message="Power State Change To Sleep" />
+<IOCode Code="0x5e" Qualifier="0x47" Message="Power State Change To Device Control" />
+<IOCode Code="0x60" Qualifier="0x00" Message="Lamp Failure" />
+<IOCode Code="0x61" Qualifier="0x00" Message="Video Acquisition Error" />
+<IOCode Code="0x61" Qualifier="0x01" Message="Unable To Acquire Video" />
+<IOCode Code="0x61" Qualifier="0x02" Message="Out Of Focus" />
+<IOCode Code="0x62" Qualifier="0x00" Message="Scan Head Positioning Error" />
+<IOCode Code="0x63" Qualifier="0x00" Message="End Of User Area Encountered On This Track" />
+<IOCode Code="0x63" Qualifier="0x01" Message="Packet Does Not Fit In Available Space" />
+<IOCode Code="0x64" Qualifier="0x00" Message="Illegal Mode For This Track" />
+<IOCode Code="0x64" Qualifier="0x01" Message="Invalid Packet Size" />
+<IOCode Code="0x65" Qualifier="0x00" Message="Voltage Fault" />
+<IOCode Code="0x66" Qualifier="0x00" Message="Automatic Document Feeder Cover Up" />
+<IOCode Code="0x66" Qualifier="0x01" Message="Automatic Document Feeder Lift Up" />
+<IOCode Code="0x66" Qualifier="0x02" Message="Document Jam In Automatic Document Feeder" />
+<IOCode Code="0x66" Qualifier="0x03" Message="Document Miss Feed Automatic In Document Feeder" />
+<IOCode Code="0x67" Qualifier="0x00" Message="Configuration Failure" />
+<IOCode Code="0x67" Qualifier="0x01" Message="Configuration Of Incapable Logical Units Failed" />
+<IOCode Code="0x67" Qualifier="0x02" Message="Add Logical Unit Failed" />
+<IOCode Code="0x67" Qualifier="0x03" Message="Modification Of Logical Unit Failed" />
+<IOCode Code="0x67" Qualifier="0x04" Message="Exchange Of Logical Unit Failed" />
+<IOCode Code="0x67" Qualifier="0x05" Message="Remove Of Logical Unit Failed" />
+<IOCode Code="0x67" Qualifier="0x06" Message="Attachment Of Logical Unit Failed" />
+<IOCode Code="0x67" Qualifier="0x07" Message="Creation Of Logical Unit Failed" />
+<IOCode Code="0x67" Qualifier="0x08" Message="Assign Failure Occurred" />
+<IOCode Code="0x67" Qualifier="0x09" Message="Multiply Assigned Logical Unit" />
+<IOCode Code="0x68" Qualifier="0x00" Message="Logical Unit Not Configured" />
+<IOCode Code="0x69" Qualifier="0x00" Message="Data Loss On Logical Unit" />
+<IOCode Code="0x69" Qualifier="0x01" Message="Multiple Logical Unit Failures" />
+<IOCode Code="0x69" Qualifier="0x02" Message="Parity/DATA Mismatch" />
+<IOCode Code="0x6a" Qualifier="0x00" Message="Informational, Refer To Log" />
+<IOCode Code="0x6b" Qualifier="0x00" Message="State Change Has Occurred" />
+<IOCode Code="0x6b" Qualifier="0x01" Message="Redundancy Level Got Better" />
+<IOCode Code="0x6b" Qualifier="0x02" Message="Redundancy Level Got Worse" />
+<IOCode Code="0x6c" Qualifier="0x00" Message="Rebuild Failure Occurred" />
+<IOCode Code="0x6d" Qualifier="0x00" Message="Recalculate Failure Occurred" />
+<IOCode Code="0x6e" Qualifier="0x00" Message="Command To Logical Unit Failed" />
+<IOCode Code="0x6f" Qualifier="0x00" Message="Copy Protection Key Exchange Failure - Authentication Failure" />
+<IOCode Code="0x6f" Qualifier="0x01" Message="Copy Protection Key Exchange Failure - Key Not Present" />
+<IOCode Code="0x6f" Qualifier="0x02" Message="Copy Protection Key Exchange Failure - Key Not Established" />
+<IOCode Code="0x6f" Qualifier="0x03" Message="Read Of Scrambled Sector Without Authentication" />
+<IOCode Code="0x6f" Qualifier="0x04" Message="Media Region Code Is Mismatched To Logical Unit Region" />
+<IOCode Code="0x6f" Qualifier="0x05" Message="Drive Region Must Be Permanent/Region Reset Count Error" />
+<IOCode Code="0x71" Qualifier="0x00" Message="Decompression Exception Long Algorithm Id" />
+<IOCode Code="0x72" Qualifier="0x00" Message="Session Fixation Error" />
+<IOCode Code="0x72" Qualifier="0x01" Message="Session Fixation Error Writing Lead-IN" />
+<IOCode Code="0x72" Qualifier="0x02" Message="Session Fixation Error Writing Lead-OUT" />
+<IOCode Code="0x72" Qualifier="0x03" Message="Session Fixation Error - Incomplete Track In Session" />
+<IOCode Code="0x72" Qualifier="0x04" Message="Empty Or Partially Written Reserved Track" />
+<IOCode Code="0x72" Qualifier="0x05" Message="No More Track Reservations Allowed" />
+<IOCode Code="0x73" Qualifier="0x00" Message="CD Control Error" />
+<IOCode Code="0x73" Qualifier="0x01" Message="Power Calibration Area Almost Full" />
+<IOCode Code="0x73" Qualifier="0x02" Message="Power Calibration Area Is Full" />
+<IOCode Code="0x73" Qualifier="0x03" Message="Power Calibration Area Error" />
+<IOCode Code="0x73" Qualifier="0x04" Message="Program Memory Area Update Failure" />
+<IOCode Code="0x73" Qualifier="0x05" Message="Program Memory Area Is Full" />
+<IOCode Code="0x73" Qualifier="0x06" Message="RMA/PMA Is Almost Full" />
+</IOCodes>
+
+
+</Optical>
+

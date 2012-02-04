@@ -1,0 +1,37 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM contrib-fryingpan-dtlib: \
+#MM     contrib-fryingpan-framework-generic \
+#MM     contrib-fryingpan-framework-genericlib \
+#MM     contrib-fryingpan-framework-libc \
+#MM     contrib-libs-mpega-includes
+
+DESTDIR := $(CONTRIBDIR)/FryingPan/Libs
+
+CXXFILES := \
+ Main \
+ FileReader \
+ FileWriter \
+ ReaderHook \
+ WriterHook \
+ rAIFFAudio \
+ rRAWAudio \
+ rSplitISOData \
+ rISOData \
+ rMP3Audio \
+ rWAVAudio \
+ wRAWAudioData \
+ wSplitISOData \
+ wAIFFAudio \
+ wWAVAudio \
+ wCUESession \
+ rCUESession \
+ rNRGSession
+
+USER_CFLAGS := -isystem $(SRCDIR)/$(CURDIR)/.. \
+ -isystem $(SRCDIR)/$(CURDIR)/../framework
+
+%build_prog mmake=contrib-fryingpan-dtlib progname="dtlibio.module" \
+ targetdir=$(DESTDIR) files= cxxfiles="$(CXXFILES)" uselibs="Generic Library C"

@@ -1,0 +1,7 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+DESTDIR := $(CONTRIBDIR)/FryingPan
+
+%copy_dir_recursive mmake=contrib-fryingpan-data dst=$(DESTDIR)

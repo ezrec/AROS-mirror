@@ -1,0 +1,25 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM contrib-fryingpan-expat: \
+#MM     contrib-fryingpan-framework-generic \
+#MM     contrib-fryingpan-framework-genericlib \
+#MM     contrib-fryingpan-framework-libc
+
+DESTDIR := $(CONTRIBDIR)/FryingPan/Libs
+
+FILES := \
+ xmlrole \
+ xmlparse \
+ xmltok
+
+CXXFILES := \
+ LibWrapper
+
+USER_CFLAGS := -isystem $(SRCDIR)/$(CURDIR)/../framework \
+ -isystem $(SRCDIR)/$(CURDIR)/..
+
+%build_prog mmake=contrib-fryingpan-expat \
+ progname="expat2.library" targetdir=$(DESTDIR) files="$(FILES)" \
+ cxxfiles="$(CXXFILES)" uselibs="Generic Library C"
