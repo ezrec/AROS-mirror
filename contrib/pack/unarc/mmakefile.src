@@ -5,9 +5,9 @@ include $(TOP)/config/make.cfg
 
 FILES := main locale unarcwindow_class
 
-EXEDIR := $(AROS_CONTRIB)/Utilities/Archive
+EXEDIR := $(AROS_CONTRIB)/Utilities/Archive/Unarc
 
-#MM contrib-pack-unarc : includes linklibs contrib-pack-unarc-catalogs
+#MM contrib-pack-unarc : includes linklibs contrib-pack-unarc-catalogs contrib-pack-xadmaster
 
 %build_prog mmake=contrib-pack-unarc \
     progname=Unarc targetdir=$(EXEDIR) \

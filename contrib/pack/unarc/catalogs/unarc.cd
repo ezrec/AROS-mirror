@@ -1,20 +1,59 @@
 MSG_AppDescription (//)
 Unarchiver
+;
 MSG_AppCopyright (//)
-2012 The AROS Development Team
+Copyright © 2012 The AROS Development Team
+;
 MSG_WI_TITLE (//)
 Unarc
+;
 MSG_LA_ARCHIVE (//)
 Archive
+;
 MSG_LA_TARGETDIR (//)
 Target Directory
+;
 MSG_BT_ALL (//)
-All
+_All
+;
 MSG_BT_NONE (//)
-None
+_None
+;
 MSG_BT_INVERT (//)
-Invert
+_Invert
+;
 MSG_BT_START (//)
-Start
+_Start
+;
 MSG_BT_CANCEL (//)
-Cancel
+_Cancel
+;
+MSG_OK (//)
+_OK
+;
+MSG_SKIP_CANCEL (//)
+_Skip|_Cancel
+;
+; Error messages
+;
+MSG_ERR (//)
+Error
+;
+MSG_ERR_NO_APPLICATION (//)
+Can't create application
+;
+MSG_ERR_READARGS (//)
+Can't read commandline arguments
+;
+MSG_ERR_NO_MEM (//)
+Out of memory
+;
+MSG_ERR_NO_ARC (//)
+Can't read archive
+;
+MSG_ERR_CANT_UNPACK (//)
+Unpacking of\n%s\nreturned error:\n%s
+;
+MSG_ERR_ADDPART (//)
+Can't create target file name
+;
