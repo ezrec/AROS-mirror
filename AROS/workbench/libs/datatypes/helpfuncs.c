@@ -1,5 +1,5 @@
 /*
-    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2012, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -341,7 +341,7 @@ struct CompoundDatatype *FindDtInList(struct Library *DataTypesBase,
 
 		for(count = cur->DTH.dth_MaskLen; count--; msk++, cmp++)
 		{
-		    if(*msk>0)
+		    if(*msk >= 0)
 		    {
 			if(cur->DTH.dth_Flags & DTF_CASE)
 			{
