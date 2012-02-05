@@ -1,0 +1,11 @@
+# Copyright © 2012, The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- iconset-Gorilla-contrib-icons-extras-utilities : iconset-Gorilla-contrib-icons-extras-utilities-archive
+
+ICONS := Unarc
+
+#MM- iconset-Gorilla-contrib-icons-extras-utilities-clean : iconset-Gorilla-contrib-icons-extras-utilities-archive-clean
+%build_icons mmake=iconset-Gorilla-contrib-icons-extras-utilities-archive icons=$(ICONS) dir=$(AROS_CONTRIB)/Utilities/Archive
