@@ -1,0 +1,20 @@
+MSG_AppDescription (//)
+Unarchiver
+MSG_AppCopyright (//)
+2012 The AROS Development Team
+MSG_WI_TITLE (//)
+Unarc
+MSG_LA_ARCHIVE (//)
+Archive
+MSG_LA_TARGETDIR (//)
+Target Directory
+MSG_BT_ALL (//)
+All
+MSG_BT_NONE (//)
+None
+MSG_BT_INVERT (//)
+Invert
+MSG_BT_START (//)
+Start
+MSG_BT_CANCEL (//)
+Cancel

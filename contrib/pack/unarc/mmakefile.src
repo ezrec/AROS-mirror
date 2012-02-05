@@ -1,0 +1,16 @@
+# $Id$
+# Makefile to make Unarc tool.
+
+include $(TOP)/config/make.cfg
+
+FILES := main locale unarcwindow_class
+
+EXEDIR := $(AROS_CONTRIB)/Utilities/Archive
+
+#MM contrib-pack-unarc : includes linklibs contrib-pack-unarc-catalogs
+
+%build_prog mmake=contrib-pack-unarc \
+    progname=Unarc targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs="mui xadmaster amiga arosc"
+
+%common
