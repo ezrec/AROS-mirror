@@ -11,7 +11,7 @@ include $(TOP)/config/make.cfg
 #MM- contrib-complete : contrib-misc
 #MM- contrib-complete : contrib-demos
 #MM- contrib-complete : contrib-dopus
-#MM- contrib-complete : contrib-fryingpan
+#DISABLE MM- contrib-complete : contrib-fryingpan
 #MM- contrib-complete : contrib-bgui
 #MM- contrib-complete : contrib-gfx
 #MM- contrib-complete : contrib-radium
