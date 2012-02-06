@@ -108,7 +108,7 @@ USER_CFLAGS += $(ENUM_COMPARE_CFLAGS) $(UNUSED_BUT_SET_VARIABLE_CFLAGS)
 #    uselibs="freetype2 amiga rom m pixman png z "
 
 %build_linklib mmake=contrib-gfx-libs-cairo \
-    libname=cairo files="$(FILES)"
+    libname=cairo files="$(FILES)" cxxfiles=""
 
 INCLUDE_FILES := cairo-deprecated.h cairo-ft.h cairo.h cairo-pdf.h cairo-ps.h cairo-svg.h cairo-version.h cairo-aros.h
 %copy_includes mmake=includes-copy path=cairo
