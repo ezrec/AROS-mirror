@@ -1280,6 +1280,7 @@ struct function_data *funcdata;
         if (flags&FLAG_OUTFILE && (tnil=Open(funcdata->tempfile,MODE_NEWFILE))) otemp=1;
         if (!tnil) tnil=Open("NIL:",MODE_NEWFILE);
 
+D(bug("closescriptfile(): buf2 = %s tnil = %p asynch = %d\n",buf2,tnil,(flags&FLAG_ASYNC)?TRUE:FALSE));
 //        Execute(buf2,0,(BPTR)tnil);
         SystemTags(buf2,SYS_Input,Open("NIL:",MODE_OLDFILE),SYS_Output,tnil,SYS_Asynch,flags&FLAG_ASYNC,TAG_END);
 
