@@ -3,38 +3,21 @@
 
 -include $(TOP)/config/make.cfg
 
-ifeq ($(AROS_TARGET_CPU),m68k)
-# Don't build gcc for m68k.. yet.
-development-gcc--fetch:
-	@$(ECHO) -n
-
-development-gcc--configure:
-	@$(ECHO) -n
-
-development-gcc--build_and_install-quick:
-	@$(ECHO) -n
-
-postinstall-gcc-delete-la-files:
-	@$(ECHO) -n
-
-contrib-gnu-gcc-deletefixed:
-	@$(ECHO) -n
-
-development-gcc--make-package:
-	@#(ECHO) -n
-
-else
-
 # Override faked target compiler with real cross compiler.
 TARGET_CC := $(CROSSTOOLSDIR)/$(AROS_TARGET_CPU)-aros-gcc
-
-GCC_VERSION := 4.2.4
 
 #MM- contrib-gnu : contrib-gnu-gcc
 #MM- contrib-gnu-gcc : tools-crosstools development-collect-aros development-gcc
 
+ifeq ($(AROS_TARGET_CPU),m68k)
+GCC_VERSION := 4.6.2
+#MM- development-gcc : development-gmp development-mpfr development-mpc
+else
+GCC_VERSION := 4.2.4
+endif
+
 EXTRAOPTS := \
-    --enable-languages=c,c++ --enable-longlong --enable-sjlj-exceptions \
+    --enable-languages=c,c++,objc --enable-longlong --enable-sjlj-exceptions \
     --enable-version-specific-runtime-libs --disable-libssp --disable-libstdcxx-pch \
     --with-sysroot=/Development --with-build-sysroot=$(AROS_DEVELOPMENT)
 
@@ -52,4 +35,3 @@ contrib-gnu-gcc-deletefixed:
 	$(ECHO) "No fixed includes to remove."; \
 	fi; \
 	unset FIXED_INCLUDES;
-endif

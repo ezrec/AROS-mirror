@@ -1,0 +1,11 @@
+# Copyright © 2004, The AROS Development Team. All rights reserved.
+# $Id$
+
+-include $(TOP)/config/make.cfg
+
+#MM- contrib-gnu-mpfr : development-mpfr
+#MM- development-mpfr : development-gmp
+
+%fetch_and_build_gnu_development package=mpfr version=3.0.1 patch=no
+
+%common
