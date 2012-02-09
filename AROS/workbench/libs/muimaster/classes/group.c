@@ -290,7 +290,7 @@ IPTR Group__OM_NEW(struct IClass *cl, Object *obj, struct opSet *msg)
     get(obj, MUIA_Frame, &frame);
 
     /* parse initial taglist */
-    for (tags = msg->ops_AttrList; (tag = NextTagItem(&tags)); )
+    for (tags = msg->ops_AttrList; (tag = NextTagItem((const struct TagItem **)&tags)); )
     {
         switch (tag->ti_Tag)
         {
@@ -441,7 +441,7 @@ IPTR Group__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
     ** active page
     */
        
-    while ((tag = NextTagItem(&tags)) != NULL)
+    while ((tag = NextTagItem((const struct TagItem **)&tags)) != NULL)
     {
         switch (tag->ti_Tag)
         {
@@ -510,7 +510,7 @@ IPTR Group__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
            when OM_SET is passed to group's children */
 
         tags = msg->ops_AttrList;   
-        while ((tag = NextTagItem(&tags)) != NULL)
+        while ((tag = NextTagItem((const struct TagItem **)&tags)) != NULL)
         {
             switch (tag->ti_Tag)
             {    
