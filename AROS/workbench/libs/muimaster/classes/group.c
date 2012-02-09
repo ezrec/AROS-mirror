@@ -290,7 +290,7 @@ IPTR Group__OM_NEW(struct IClass *cl, Object *obj, struct opSet *msg)
     get(obj, MUIA_Frame, &frame);
 
     /* parse initial taglist */
-    for (tags = msg->ops_AttrList; (tag = NextTagItem((const struct TagItem **)&tags)); )
+    for (tags = msg->ops_AttrList; (tag = NextTagItem(&tags)); )
     {
         switch (tag->ti_Tag)
         {
@@ -441,7 +441,7 @@ IPTR Group__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
     ** active page
     */
        
-    while ((tag = NextTagItem((const struct TagItem **)&tags)) != NULL)
+    while ((tag = NextTagItem(&tags)) != NULL)
     {
         switch (tag->ti_Tag)
         {
@@ -497,7 +497,7 @@ IPTR Group__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
         
     }
     
-    if (need_recalc)
+    if (muiRenderInfo(obj) && need_recalc)
         DoMethod(_win(obj), MUIM_Window_RecalcDisplay, (IPTR)obj);
 
     retval = DoSuperMethodA(cl, obj, (Msg)msg);
@@ -510,7 +510,7 @@ IPTR Group__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
            when OM_SET is passed to group's children */
 
         tags = msg->ops_AttrList;   
-        while ((tag = NextTagItem((const struct TagItem **)&tags)) != NULL)
+        while ((tag = NextTagItem(&tags)) != NULL)
         {
             switch (tag->ti_Tag)
             {    
@@ -599,7 +599,7 @@ IPTR Group__OM_GET(struct IClass *cl, Object *obj, struct opGet *msg)
     if (DoSuperMethodA(cl, obj, (Msg) msg)) return 1;
 
     /* seems to be the documented behaviour, however it should be slow! */
-//    if (!data->dont_forward_get)
+    if (!data->dont_forward_get && !data->dont_forward_methods)
     {
         Object               *cstate;
         Object               *child;
@@ -1859,14 +1859,14 @@ static void Layout1D_minmax_constraints_and_redistrib (
         cstate = (Object *)children->mlh_Head;
         while ((child = NextObject(&cstate)))
         {
-            WORD old_size;
+            /* WORD old_size; */
 
             if (IS_HIDDEN(child))
                 continue;
 
             if (group_horiz)
             {
-                old_size = _width(child);
+                /* old_size = _width(child); */
 
                 Layout1D_minmax_constraint(
                 &_width(child), _minwidth(child), _maxwidth(child),
@@ -1883,7 +1883,7 @@ static void Layout1D_minmax_constraints_and_redistrib (
             }
             else // ! group_horiz
             {
-                old_size = _height(child);
+/*                old_size = _height(child); */
 
                 Layout1D_minmax_constraint(
                 &_height(child), _minheight(child), _maxheight(child),
@@ -1912,14 +1912,14 @@ static void Layout1D_minmax_constraints_and_redistrib (
         cstate = (Object *)children->mlh_Head;
         while (((child = NextObject(&cstate)) != NULL) && (remainder != 0))
         {
-            WORD old_size;
+/*            WORD old_size; */
 
             if (IS_HIDDEN(child))
                 continue;
 
             if (group_horiz)
             {
-                old_size = _width(child);
+/*                old_size = _width(child); */
 
                 Layout1D_redistribution(
                     &_width(child), _minwidth(child), _maxwidth(child),
@@ -1935,7 +1935,7 @@ static void Layout1D_minmax_constraints_and_redistrib (
             }
             else // ! group_horiz
             {
-                old_size = _height(child);
+/*                old_size = _height(child); */
 
                 Layout1D_redistribution(
                     &_height(child), _minheight(child), _maxheight(child),
@@ -2252,13 +2252,13 @@ static void Layout2D_minmax_constraints_and_redistrib (
         WORD size_shrinkables = total_size;
         ULONG weight_growables = 0;
         ULONG weight_shrinkables = 0;
-        WORD old_size;
+/*        WORD old_size; */
         int i;
 
         // minmax constraints
         for (i = 0; i < nitems; i++)
         {
-            old_size = infos[i].dim;
+/*                old_size = infos[i].dim; */
 
 /*              D(bug("bef loop1 on %d : size=%d, rem=%d, A=%d, " */
 /*                        "sizegrow=%d, sizeshrink=%d w=%d min=%d max=%d\n", */
@@ -2287,7 +2287,7 @@ static void Layout2D_minmax_constraints_and_redistrib (
 
         for (i = 0; i < nitems; i++)
         {
-            old_size = infos[i].dim;
+/*            old_size = infos[i].dim; */
 
 /*              D(bug("bef loop2 on %d : size=%d, rem=%d, A=%d, " */
 /*                        "size_grow=%d, size_shrink=%d\n", i, */
@@ -2931,9 +2931,12 @@ static IPTR Group__MUIM_Export(struct IClass *cl, Object *obj, struct MUIP_Expor
     struct MUI_GroupData *data = INST_DATA(cl, obj);
     Object               *cstate;
     Object               *child;
-    struct MinList       *ChildList;
+    struct MinList       *ChildList = NULL;
 
     get(data->family, MUIA_Family_List, &(ChildList));
+    if (!ChildList)
+            return 0;
+
     cstate = (Object *)ChildList->mlh_Head;
     while ((child = NextObject(&cstate)))
     {
@@ -2952,9 +2955,12 @@ static IPTR Group__MUIM_Import(struct IClass *cl, Object *obj, struct MUIP_Impor
     struct MUI_GroupData *data = INST_DATA(cl, obj);
     Object               *cstate;
     Object               *child;
-    struct MinList       *ChildList;
+    struct MinList       *ChildList = NULL;
 
     get(data->family, MUIA_Family_List, &(ChildList));
+    if (!ChildList)
+            return 0;
+
     cstate = (Object *)ChildList->mlh_Head;
     while ((child = NextObject(&cstate)))
     {
@@ -3027,18 +3033,30 @@ STATIC IPTR Group_Notify(struct IClass *cl, Object *obj, struct MUIP_Notify *msg
     struct MUI_GroupData *data = INST_DATA(cl, obj);
     Object               *cstate;
     Object               *child;
-    struct MinList       *ChildList;
+    struct MinList       *ChildList = NULL;
+    IPTR attr[30];
 
-    DoSuperMethodA(cl,obj,(Msg)msg);
+    data->dont_forward_get = 1;
+
+    if (GetAttr(msg->TrigAttr, obj, attr))
+    {
+        data->dont_forward_get = 0;
+        return DoSuperMethodA(cl,obj,(Msg)msg);
+    }
+    data->dont_forward_get = 0;
+    
     get(data->family, MUIA_Family_List, &(ChildList));
+    if (!ChildList)
+            return TRUE;
+
     cstate = (Object *)ChildList->mlh_Head;
     while ((child = NextObject(&cstate)))
     {
-       IPTR attr[30];
 
        if (GetAttr(msg->TrigAttr, child, attr))
        {
            DoMethodA(child, (Msg)msg);
+           /* No return here! */
        }
     }
     return TRUE;
