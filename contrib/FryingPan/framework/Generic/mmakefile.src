@@ -2,6 +2,8 @@
 
 include $(TOP)/config/make.cfg
 
+#MM- contrib-fryingpan-framework-generic : $(CROSSTOOLS_CXX_TARGET)
+
 FILES := \
  DynList \
  GenericOOP \

@@ -3,5 +3,4 @@
 #MM- contrib-fryingpan-framework: \
 #MM      contrib-fryingpan-framework-generic \
 #MM      contrib-fryingpan-framework-genericlib \
-#MM      contrib-fryingpan-framework-libc \
-#MM
+#MM      contrib-fryingpan-framework-libc

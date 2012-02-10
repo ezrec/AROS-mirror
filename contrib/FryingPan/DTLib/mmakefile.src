@@ -2,6 +2,8 @@
 
 include $(TOP)/config/make.cfg
 
+#MM- contrib-fryingpan-dtlib: $(CROSSTOOLS_CXX_TARGET)
+
 #MM contrib-fryingpan-dtlib: \
 #MM     contrib-fryingpan-framework-generic \
 #MM     contrib-fryingpan-framework-genericlib \

@@ -2,6 +2,8 @@
 
 include $(TOP)/config/make.cfg
 
+#MM- contrib-fryingpan-isobuilder: $(CROSSTOOLS_CXX_TARGET)
+
 #MM contrib-fryingpan-isobuilder: \
 #MM     contrib-fryingpan-framework-generic \
 #MM     contrib-fryingpan-framework-genericlib \

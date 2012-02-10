@@ -2,6 +2,8 @@
 
 include $(TOP)/config/make.cfg
 
+#MM- contrib-fryingpan-optical: $(CROSSTOOLS_CXX_TARGET)
+
 #MM contrib-fryingpan-optical: \
 #MM     contrib-fryingpan-framework-generic \
 #MM     contrib-fryingpan-framework-genericlib \
