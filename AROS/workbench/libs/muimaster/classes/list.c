@@ -573,7 +573,7 @@ IPTR List__OM_NEW(struct IClass *cl, Object *obj, struct opSet *msg)
 {
     struct MUI_ListData   *data;
     struct TagItem        *tag;
-    const struct TagItem  *tags;
+    struct TagItem        *tags;
     APTR *array = NULL;
     LONG new_entries_active = MUIV_List_Active_Off;
 
@@ -780,7 +780,7 @@ IPTR List__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
 {
     struct MUI_ListData   *data = INST_DATA(cl, obj);
     struct TagItem        *tag;
-    const struct TagItem  *tags;
+    struct TagItem  *tags;
 
     /* parse initial taglist */
     for (tags = msg->ops_AttrList; (tag = NextTagItem(&tags)); )
@@ -1647,7 +1647,7 @@ IPTR List__MUIM_Exchange(struct IClass *cl, Object *obj, struct MUIP_List_Exchan
         default:                          pos2 = msg->pos2;
     }
 
-    if (pos1 >= 0 && pos1 < data->entries_num && pos2 >= 0 && pos2 <= data->entries_num && pos1 != pos2)
+    if (pos1 >= 0 && pos1 < data->entries_num && pos2 >= 0 && pos2 < data->entries_num && pos1 != pos2)
     {
             struct ListEntry *save = data->entries[pos1];
             data->entries[pos1] = data->entries[pos2];
