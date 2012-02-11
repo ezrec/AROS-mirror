@@ -40,7 +40,8 @@ USER_LIBS   := amiga rom m mui
 #MM	workbench-classes-zune-knob \
 #MM	workbench-classes-zune-dtpic \
 #MM	workbench-classes-zune-palette \
-#MM	workbench-classes-zune-title
+#MM	workbench-classes-zune-title \
+#MM	workbench-classes-zune-process
 
 
 #MM- workbench-libs-muimaster-clean : \
@@ -75,7 +76,8 @@ USER_LIBS   := amiga rom m mui
 #MM	workbench-classes-zune-knob-clean \
 #MM	workbench-classes-zune-dtpic-clean \
 #MM	workbench-classes-zune-palette-clean \
-#MM	workbench-classes-zune-title-clean
+#MM	workbench-classes-zune-title-clean \
+#MM	workbench-classes-zune-process-clean
 
 #MM workbench-classes-zune-aboutmui : includes
 %build_module \
@@ -340,6 +342,14 @@ USER_LIBS   := amiga rom m mui
     modname=Title modtype=mui files=title \
     conffile=title.conf \
     cflags="$(CFLAGS) -DZUNE_BUILTIN_TITLE=0" \
+    uselibs=$(USER_LIBS)
+
+#MM workbench-classes-zune-process : includes
+%build_module \
+    mmake=workbench-classes-zune-process \
+    modname=Process modtype=mui files=process \
+    conffile=process.conf \
+    cflags="$(CFLAGS) -DZUNE_BUILTIN_PROCESS=0" \
     uselibs=$(USER_LIBS)
 
 %common
