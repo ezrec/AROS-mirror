@@ -1,0 +1,17 @@
+#   $Id$
+
+include $(TOP)/config/make.cfg
+
+FILES := Package-Startup
+
+#MM- contrib-pack-unarc : contrib-pack-unarc-startup
+
+#MM- contrib-pack-unarc-startup : workbench-prefs-envarc contrib-pack-unarc-startupfiles \
+#MM  contrib-pack-unarc-envpackage
+
+#MM
+contrib-pack-unarc-envpackage :
+	$(ECHO) "Extras:Utilities/Archive/Unarc" >$(AROS_PACKAGES)/Unarc
+
+
+%copy_files_q mmake=contrib-pack-unarc-startupfiles dst=$(AROS_CONTRIB)/Utilities/Archive/Unarc/S

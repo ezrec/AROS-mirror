@@ -10,8 +10,8 @@ Unarc
 MSG_LA_ARCHIVE (//)
 Archive
 ;
-MSG_LA_TARGETDIR (//)
-Target Directory
+MSG_LA_DESTINATION (//)
+Destination
 ;
 MSG_BT_ALL (//)
 _All
@@ -27,6 +27,12 @@ _Start
 ;
 MSG_BT_CANCEL (//)
 _Cancel
+;
+MSG_FREQ_ARCHIVE_TITLE (//)
+Select Archive
+;
+MSG_FREQ_DESTINATION_TITLE (//)
+Select Destination
 ;
 MSG_OK (//)
 _OK

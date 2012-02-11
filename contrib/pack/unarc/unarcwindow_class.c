@@ -51,6 +51,38 @@ enum
 };
 
 
+static BOOL is_file(CONST_STRPTR filename)
+{
+    if (filename == NULL)
+    {
+        return FALSE;
+    }
+
+    BOOL retval = FALSE;
+
+    BPTR lock = Lock(filename, ACCESS_READ);
+    if (lock)
+    {
+        struct FileInfoBlock *fib = AllocDosObject(DOS_FIB, NULL);
+        if (fib)
+        {
+            BOOL ex = Examine(lock, fib);
+            if (ex)
+            {
+                D(bug("[is_file] file %s direntry_type %d\n", filename, fib->fib_DirEntryType));
+                if (fib->fib_DirEntryType < 0) // File
+                {
+                    retval = TRUE;
+                }
+            }
+            FreeDosObject(DOS_FIB, fib);
+        }
+        UnLock(lock);
+    }
+    return retval;
+}
+
+
 AROS_UFH3(APTR, list_constr_func,
     AROS_UFHA(struct Hook *, h, A0),
     AROS_UFHA(APTR, pool, A2),
@@ -82,7 +114,7 @@ AROS_UFH3(void, list_destr_func,
 }
 
 
-AROS_UFH3(LONG, list_display_func,
+AROS_UFH3S(LONG, list_display_func,
     AROS_UFHA(struct Hook *, h, A0),
     AROS_UFHA(char **, array, A2),
     AROS_UFHA(struct Listentry *, li, A1))
@@ -91,7 +123,7 @@ AROS_UFH3(LONG, list_display_func,
 
     if (li->selected)
     {
-        *array++ = "*"; //"\033I[6:15]"; // FIXME: that should be a checkmark image
+        *array++ = "\033I[6:16]"; // FIXME: that should be a checkmark image
     }
     else
     {
@@ -105,88 +137,90 @@ AROS_UFH3(LONG, list_display_func,
 }
 
 
-AROS_UFH3(void, change_selection_func,
+AROS_UFH3S(void, change_selection_func,
     AROS_UFHA(struct Hook *, h, A0),
     AROS_UFHA(Object *, obj, A2),
     AROS_UFHA(APTR, msg, A1))
 {
     AROS_USERFUNC_INIT
 
-    D(bug("[change_selection_func] called\n"));
-
+    struct UnarcWindow_DATA *data = h->h_Data;
     ULONG status = *(ULONG *)msg;
     struct Listentry *oldentry, newentry;
     LONG i;
 
     D(bug("[change_selection_func] status %u\n", status));
 
-    SET(obj, MUIA_List_Quiet, TRUE);
+    SET(data->lst_content, MUIA_List_Quiet, TRUE);
 
     switch(status)
     {
         case SETALL:
+            NNSET(data->lst_content, MUIA_List_Active, MUIV_List_Active_Off);
             for (i = 0; ; i++)
             {
-                DoMethod(obj, MUIM_List_GetEntry, i, &oldentry);
+                DoMethod(data->lst_content, MUIM_List_GetEntry, i, &oldentry);
                 if (!oldentry)
                     break;
                 if (!oldentry->selected)
                 {
                     newentry.selected = TRUE;
                     newentry.fi = oldentry->fi;
-                    DoMethod(obj, MUIM_List_Remove, i);
-                    DoMethod(obj, MUIM_List_InsertSingle, &newentry, i);
+                    DoMethod(data->lst_content, MUIM_List_Remove, i);
+                    DoMethod(data->lst_content, MUIM_List_InsertSingle, &newentry, i);
                 }
             }
             break;
         case CLEARALL:
+            NNSET(data->lst_content, MUIA_List_Active, MUIV_List_Active_Off);
             for (i = 0; ; i++)
             {
-                DoMethod(obj, MUIM_List_GetEntry, i, &oldentry);
+                DoMethod(data->lst_content, MUIM_List_GetEntry, i, &oldentry);
                 if (!oldentry)
                     break;
                 if (oldentry->selected)
                 {
                     newentry.selected = FALSE;
                     newentry.fi = oldentry->fi;
-                    DoMethod(obj, MUIM_List_Remove, i);
-                    DoMethod(obj, MUIM_List_InsertSingle, &newentry, i);
+                    DoMethod(data->lst_content, MUIM_List_Remove, i);
+                    DoMethod(data->lst_content, MUIM_List_InsertSingle, &newentry, i);
                 }
             }
             break;
         case INVERTALL:
+            NNSET(data->lst_content, MUIA_List_Active, MUIV_List_Active_Off);
             for (i = 0; ; i++)
             {
-                DoMethod(obj, MUIM_List_GetEntry, i, &oldentry);
+                DoMethod(data->lst_content, MUIM_List_GetEntry, i, &oldentry);
                 if (!oldentry)
                     break;
                 newentry.selected = oldentry->selected ? FALSE : TRUE;
                 newentry.fi = oldentry->fi;
-                DoMethod(obj, MUIM_List_Remove, i);
-                DoMethod(obj, MUIM_List_InsertSingle, &newentry, i);
+                DoMethod(data->lst_content, MUIM_List_Remove, i);
+                DoMethod(data->lst_content, MUIM_List_InsertSingle, &newentry, i);
             }
             break;
         case INVERTSINGLE:
-            i = XGET(obj, MUIA_List_Active);
+            i = XGET(data->lst_content, MUIA_List_Active);
             if (i != -1)
             {
-                DoMethod(obj, MUIM_List_GetEntry, i, &oldentry);
+                NNSET(data->lst_content, MUIA_List_Active, MUIV_List_Active_Off);
+                DoMethod(data->lst_content, MUIM_List_GetEntry, i, &oldentry);
                 newentry.selected = oldentry->selected ? FALSE : TRUE;
                 newentry.fi = oldentry->fi;
-                DoMethod(obj, MUIM_List_Remove, i);
-                DoMethod(obj, MUIM_List_InsertSingle, &newentry, i);
+                DoMethod(data->lst_content, MUIM_List_Remove, i);
+                DoMethod(data->lst_content, MUIM_List_InsertSingle, &newentry, i);
             }
             break;
     }
 
-    SET(obj, MUIA_List_Quiet, FALSE);
-    //DoMethod(obj, MUIM_List_Redraw, MUIV_List_Redraw_All);
+    SET(data->lst_content, MUIA_List_Quiet, FALSE);
 
     AROS_USERFUNC_EXIT
 }
 
 
-AROS_UFH3(void, start_func,
+AROS_UFH3S(void, start_func,
     AROS_UFHA(struct Hook *, h, A0),
     AROS_UFHA(Object *, obj, A2),
     AROS_UFHA(APTR, msg, A1))
@@ -250,7 +284,7 @@ AROS_UFH3(void, start_func,
 }
 
 
-AROS_UFH3(void, read_file_func,
+AROS_UFH3S(void, read_file_func,
     AROS_UFHA(struct Hook *, h, A0),
     AROS_UFHA(Object *, obj, A2),
     AROS_UFHA(APTR, msg, A1))
@@ -269,6 +303,10 @@ AROS_UFH3(void, read_file_func,
     xadFreeInfo(data->ai);
     data->entry_cnt = 0;
     SET(data->ga_progress, MUIA_Gauge_Current, 0);
+    SET(data->btn_all, MUIA_Disabled, TRUE);
+    SET(data->btn_none, MUIA_Disabled, TRUE);
+    SET(data->btn_invert, MUIA_Disabled, TRUE);
+    SET(data->btn_start, MUIA_Disabled, TRUE);
 
     result = xadGetInfo(data->ai, XAD_INFILENAME, filename, TAG_DONE);
     if (!result)
@@ -284,12 +322,16 @@ AROS_UFH3(void, read_file_func,
             fi = fi->xfi_Next;
         }
         SET(data->ga_progress, MUIA_Gauge_Max, data->entry_cnt - 1);
+        SET(data->btn_all, MUIA_Disabled, FALSE);
+        SET(data->btn_none, MUIA_Disabled, FALSE);
+        SET(data->btn_invert, MUIA_Disabled, FALSE);
+        SET(data->btn_start, MUIA_Disabled, FALSE);
     }
     else
     {
         MUI_RequestA
         (
-            _app(obj), _win(obj), 0, _(MSG_ERR),
+            NULL, NULL, 0, _(MSG_ERR),
             _(MSG_OK), _(MSG_ERR_NO_ARC), NULL
         );
     }
@@ -349,6 +391,7 @@ Object *UnarcWindow__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
                 Child, Label(_(MSG_LA_ARCHIVE)),
                 Child, PopaslObject,
                     MUIA_Popasl_Type , ASL_FileRequest,
+                    ASLFR_TitleText, _(MSG_FREQ_ARCHIVE_TITLE),
                     ASLFR_RejectIcons, TRUE,
                     MUIA_Popstring_String, str_file = StringObject,
                         StringFrame,
@@ -356,9 +399,10 @@ Object *UnarcWindow__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
                     End,
                     MUIA_Popstring_Button, PopButton(MUII_PopFile),
                 End,
-                Child, Label(_(MSG_LA_TARGETDIR)),
+                Child, Label(_(MSG_LA_DESTINATION)),
                 Child, PopaslObject,
                     MUIA_Popasl_Type , ASL_FileRequest,
+                    ASLFR_TitleText, _(MSG_FREQ_DESTINATION_TITLE),
                     ASLFR_DrawersOnly, TRUE,
                     MUIA_Popstring_String, str_targetdir = StringObject,
                         StringFrame,
@@ -387,6 +431,10 @@ Object *UnarcWindow__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
                 Child, btn_all = SimpleButton(_(MSG_BT_ALL)),
                 Child, btn_none = SimpleButton(_(MSG_BT_NONE)),
                 Child, btn_invert = SimpleButton(_(MSG_BT_INVERT)),
+            End,
+            Child, (IPTR) RectangleObject, 
+                MUIA_Rectangle_HBar, TRUE, 
+                MUIA_FixHeight,      2, 
             End,
             Child, HGroup,
                 Child, btn_start = SimpleButton(_(MSG_BT_START)),
@@ -417,8 +465,14 @@ Object *UnarcWindow__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
         data->read_file_hook.h_Entry = (HOOKFUNC)read_file_func;
         data->read_file_hook.h_Data = data;
         data->change_selection_hook.h_Entry = (HOOKFUNC)change_selection_func;
+        data->change_selection_hook.h_Data = data;
 
         data->targetpathname = targetpathname;
+
+        SET(data->btn_all, MUIA_Disabled, TRUE);
+        SET(data->btn_none, MUIA_Disabled, TRUE);
+        SET(data->btn_invert, MUIA_Disabled, TRUE);
+        SET(data->btn_start, MUIA_Disabled, TRUE);
 
         DoMethod
         (
@@ -450,7 +504,6 @@ Object *UnarcWindow__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
             data->lst_content, 3, MUIM_CallHook, &data->change_selection_hook, INVERTALL
         );
 
-        // FIXME: clicking on already selected entry isn't recognized
         DoMethod
         (
             data->lst_content, MUIM_Notify, MUIA_List_Active, MUIV_EveryTime,
@@ -468,6 +521,15 @@ Object *UnarcWindow__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
             data->str_file, MUIM_Notify, MUIA_String_Acknowledge, MUIV_EveryTime,
             data->lst_content, 2, MUIM_CallHook, &data->read_file_hook
         );
+
+        if (is_file(archive))
+        {
+            // fill the list if we have an existing file
+            DoMethod
+            (
+                data->lst_content, MUIM_CallHook, &data->read_file_hook
+            );
+        }
     }
     return self;
 }
