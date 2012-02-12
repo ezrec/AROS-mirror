@@ -4,13 +4,14 @@
 /*** Instance data **********************************************************/
 struct Process_DATA
 {
-    ULONG autolaunch;
-    ULONG name;
-    ULONG priority;
-    ULONG sourceclass;
-    ULONG sourceobject;
+    BOOL autolaunch;
+    STRPTR name;
+    LONG priority;
+    struct IClass *sourceclass;
+    Object *sourceobject;
     ULONG stacksize;
-    ULONG task;
+    struct Process *task;
+    ULONG kill;
 };
 
 #endif /* _PROCESS_PRIVATE_H_ */

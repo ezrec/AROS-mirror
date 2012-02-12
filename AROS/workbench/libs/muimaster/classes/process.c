@@ -8,8 +8,8 @@
 #include <clib/alib_protos.h>
 #include <proto/intuition.h>
 #include <proto/muimaster.h>
-#include <proto/graphics.h>
 #include <proto/utility.h>
+#include <proto/dos.h>
 
 #include "mui.h"
 #include "muimaster_intern.h"
@@ -17,10 +17,25 @@
 #include "support_classes.h"
 #include "process_private.h"
 
-/*  #define MYDEBUG 1 */
+#define MYDEBUG 1
 #include "debug.h"
 
 extern struct Library *MUIMasterBase;
+
+
+static void my_process(void)
+{
+    // invokes MUIM_Process_Process  for the the class/object specified by
+    // MUIA_Process_SourceClass/Object (source class may be NULL)
+
+    D(bug("[Process.mui] my_process called\n"));
+
+    struct Task *thistask = FindTask(NULL);
+    struct Process_DATA *data = thistask->tc_UserData;
+    DoMethod(data->sourceobject, MUIM_Process_Process, &data->kill, NULL);
+
+    D(bug("[Process.mui] my_process terminated\n"));
+}
 
 
 IPTR Process__OM_NEW(struct IClass *cl, Object *obj, struct opSet *msg)
@@ -28,12 +43,19 @@ IPTR Process__OM_NEW(struct IClass *cl, Object *obj, struct opSet *msg)
     struct Process_DATA *data;
     struct TagItem *tags;
     struct TagItem *tag;
+    struct Task *thistask;
 
     obj = (Object *)DoSuperMethodA(cl, obj, (Msg)msg);
     if (!obj)
         return FALSE;
 
     data = INST_DATA(cl, obj);
+
+    // defaults
+    data->autolaunch = TRUE;
+    data->stacksize = 40000;
+    thistask = FindTask(NULL);
+    data->priority = thistask->tc_Node.ln_Pri;
 
     for (tags = msg->ops_AttrList; (tag = NextTagItem(&tags)); )
     {
@@ -44,7 +66,7 @@ IPTR Process__OM_NEW(struct IClass *cl, Object *obj, struct opSet *msg)
                 break;
 
             case MUIA_Process_Name:
-                data->name = tag->ti_Data;
+                data->name = (STRPTR)tag->ti_Data;
                 break;
 
             case MUIA_Process_Priority:
@@ -52,11 +74,11 @@ IPTR Process__OM_NEW(struct IClass *cl, Object *obj, struct opSet *msg)
                 break;
 
             case MUIA_Process_SourceClass:
-                data->sourceclass = tag->ti_Data;
+                data->sourceclass = (struct IClass *)tag->ti_Data;
                 break;
 
             case MUIA_Process_SourceObject:
-                data->sourceobject = tag->ti_Data;
+                data->sourceobject = (Object *)tag->ti_Data;
                 break;
 
             case MUIA_Process_StackSize:
@@ -66,6 +88,11 @@ IPTR Process__OM_NEW(struct IClass *cl, Object *obj, struct opSet *msg)
     }
 
     D(bug("muimaster.library/process.c: Process Object created at 0x%lx\n",obj));
+
+    if (data->autolaunch)
+    {
+        DoMethod(obj, MUIM_Process_Launch);
+    }
 
     return (IPTR)obj;
 }
@@ -77,12 +104,12 @@ IPTR Process__OM_GET(struct IClass *cl, Object *obj, struct opGet *msg)
 
     struct Process_DATA *data = INST_DATA(cl, obj);
 
-    STORE = (IPTR)0;
+    STORE = 0;
 
     switch(msg->opg_AttrID)
     {
         case MUIA_Process_Task:
-            STORE = data->task;
+            STORE = (IPTR)data->task;
             return TRUE;
     }
 
@@ -93,7 +120,11 @@ IPTR Process__OM_GET(struct IClass *cl, Object *obj, struct opGet *msg)
 
 IPTR Process__OM_DISPOSE(struct IClass *cl, Object *obj, Msg msg)
 {
+    D(bug("[Process.mui/OM_DISPOSE]\n"));
+
     struct Process_DATA *data = INST_DATA(cl, obj);
+
+    DoMethod(obj, MUIM_Process_Kill, 0);
 
     return DoSuperMethodA(cl, obj, msg);
 }
@@ -101,7 +132,22 @@ IPTR Process__OM_DISPOSE(struct IClass *cl, Object *obj, Msg msg)
 
 IPTR Process__MUIM_Process_Kill(struct IClass *cl, Object *obj, struct MUIP_Process_Kill *msg)
 {
+    D(bug("[MUIM_Process_Kill] maxdelay %d\n", msg->maxdelay));
+
     struct Process_DATA *data = INST_DATA(cl, obj);
+
+    // send SIGBREAKF_CTRL_C
+    // wait until  it has terminated
+
+    // Stops process' loop (MUIM_Process_Process). If the loop
+    // is not running does nothing.
+
+    if (data->task)
+    {
+        Signal((struct Task *)data->task, SIGBREAKF_CTRL_C);
+        data->kill = 1;
+        data->task = NULL;
+    }
 
     return 0;
 }
@@ -109,7 +155,28 @@ IPTR Process__MUIM_Process_Kill(struct IClass *cl, Object *obj, struct MUIP_Proc
 
 IPTR Process__MUIM_Process_Launch(struct IClass *cl, Object *obj, struct MUIP_Process_Launch *msg)
 {
+    D(bug("[MUIM_Process_Launch]\n"));
+
     struct Process_DATA *data = INST_DATA(cl, obj);
+
+    // Starts process' loop (MUIM_Process_Process). If the loop
+    // is already running does nothing.
+
+    if (data->task == NULL)
+    {
+        struct TagItem tags[] =
+        {
+            {NP_Entry,      (IPTR)my_process},
+            {NP_StackSize,  data->stacksize},
+            {data->name ? NP_Name : TAG_IGNORE,
+                            (IPTR)data->name},
+            {NP_Priority,   data->priority},
+            {NP_UserData,   (IPTR)data},
+            {TAG_DONE}
+        };
+
+        data->task = CreateNewProc(tags);
+    }
 
     return 0;
 }
@@ -117,7 +184,12 @@ IPTR Process__MUIM_Process_Launch(struct IClass *cl, Object *obj, struct MUIP_Pr
 
 IPTR Process__MUIM_Process_Process(struct IClass *cl, Object *obj, struct MUIP_Process_Process *msg)
 {
+    D(bug("[MUIM_Process_Process] kill %p proc %p\n", msg->kill, msg->proc));
+
     struct Process_DATA *data = INST_DATA(cl, obj);
+
+    // Main process method. Terminating condition is passed in message struct.
+    // Proper implementation should wait for a signal to not use 100% cpu.
 
     return 0;
 }
@@ -125,7 +197,16 @@ IPTR Process__MUIM_Process_Process(struct IClass *cl, Object *obj, struct MUIP_P
 
 IPTR Process__MUIM_Process_Signal(struct IClass *cl, Object *obj, struct MUIP_Process_Signal *msg)
 {
+    D(bug("[MUIM_Process_Signal] sigs %u\n", msg->sigs));
+
     struct Process_DATA *data = INST_DATA(cl, obj);
+
+    // MUIM_Process_Signal just sends an arbitrary signal to the spawned process.
+
+    if (data->task)
+    {
+        Signal((struct Task *)data->task, msg->sigs);
+    }
 
     return 0;
 }
