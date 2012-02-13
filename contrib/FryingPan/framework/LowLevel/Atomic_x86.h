@@ -20,6 +20,10 @@
 #ifndef ATOMIC_X86_H
 #define ATOMIC_X86_H
 
+#ifdef __AROS__
+#include <aros/atomic.h>
+#endif
+
 
 static inline void _atomic_stack_push(struct _atomic_stack* list, struct _atomic_item* item)
 {
@@ -56,18 +60,26 @@ static inline struct _atomic_item* _atomic_stack_pop(struct _atomic_stack* list)
 
 static inline void _atomic_cnt_inc(struct _atomic_cnt* cnt)
 {
+#ifdef __AROS__
+   AROS_ATOMIC_INC(cnt->counter);
+#else
    asm volatile("   lock incl (%0)\n"
          :
          : "g"(cnt)
          : "cc", "memory");
+#endif
 }
 
 static inline void _atomic_cnt_dec(struct _atomic_cnt* cnt)
 {
+#ifdef __AROS__
+   AROS_ATOMIC_DEC(cnt->counter);
+#else
    asm volatile("   lock decl (%0)\n"
          :
          : "g"(cnt)
          : "cc", "memory");
+#endif
 }
 
 static inline int32 _atomic_slock_trywrite(struct _atomic_slock* lock)
