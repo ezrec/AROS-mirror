@@ -20,6 +20,9 @@
 #define MYDEBUG 1
 #include "debug.h"
 
+#define DELAYTICKS (10)
+
+
 extern struct Library *MUIMasterBase;
 
 
@@ -32,7 +35,17 @@ static void my_process(void)
 
     struct Task *thistask = FindTask(NULL);
     struct Process_DATA *data = thistask->tc_UserData;
-    DoMethod(data->sourceobject, MUIM_Process_Process, &data->kill, NULL);
+
+    if (data->sourceclass)
+    {   
+        CoerceMethod(data->sourceclass, data->sourceobject, MUIM_Process_Process, &data->kill, data->self);
+    }
+    else
+    {
+        DoMethod(data->sourceobject, MUIM_Process_Process, &data->kill, data->self);
+    }
+
+    data->task = NULL; // show MUIM_Process_Kill that we're done
 
     D(bug("[Process.mui] my_process terminated\n"));
 }
@@ -50,6 +63,8 @@ IPTR Process__OM_NEW(struct IClass *cl, Object *obj, struct opSet *msg)
         return FALSE;
 
     data = INST_DATA(cl, obj);
+
+    data->self = obj;
 
     // defaults
     data->autolaunch = TRUE;
@@ -122,7 +137,7 @@ IPTR Process__OM_DISPOSE(struct IClass *cl, Object *obj, Msg msg)
 {
     D(bug("[Process.mui/OM_DISPOSE]\n"));
 
-    struct Process_DATA *data = INST_DATA(cl, obj);
+    // struct Process_DATA *data = INST_DATA(cl, obj);
 
     DoMethod(obj, MUIM_Process_Kill, 0);
 
@@ -135,6 +150,8 @@ IPTR Process__MUIM_Process_Kill(struct IClass *cl, Object *obj, struct MUIP_Proc
     D(bug("[MUIM_Process_Kill] maxdelay %d\n", msg->maxdelay));
 
     struct Process_DATA *data = INST_DATA(cl, obj);
+    ULONG delay = 0;
+    BOOL retval = TRUE;
 
     // send SIGBREAKF_CTRL_C
     // wait until  it has terminated
@@ -142,14 +159,28 @@ IPTR Process__MUIM_Process_Kill(struct IClass *cl, Object *obj, struct MUIP_Proc
     // Stops process' loop (MUIM_Process_Process). If the loop
     // is not running does nothing.
 
-    if (data->task)
+    // msg->maxdelay == 0 means "wait forever"
+
+    data->kill = 1; // stops the loop in Class4.c demo
+
+    // the spawned task sets data->task to NULL on exit
+    while (data->task != NULL)
     {
         Signal((struct Task *)data->task, SIGBREAKF_CTRL_C);
-        data->kill = 1;
-        data->task = NULL;
+        Delay(DELAYTICKS);
+        delay += DELAYTICKS;
+        D(bug("[MUIM_Process_Kill] delay %d maxdelay %d\n", delay, msg->maxdelay));
+        if ((msg->maxdelay != 0) && (delay > msg->maxdelay))
+        {
+            D(bug("[MUIM_Process_Kill] timeout\n"));
+            retval = FALSE;
+            break;
+        }
     }
 
-    return 0;
+    D(bug("[MUIM_Process_Kill] retval %d\n", retval));
+
+    return retval;
 }
 
 
@@ -186,12 +217,14 @@ IPTR Process__MUIM_Process_Process(struct IClass *cl, Object *obj, struct MUIP_P
 {
     D(bug("[MUIM_Process_Process] kill %p proc %p\n", msg->kill, msg->proc));
 
-    struct Process_DATA *data = INST_DATA(cl, obj);
+    // struct Process_DATA *data = INST_DATA(cl, obj);
 
     // Main process method. Terminating condition is passed in message struct.
     // Proper implementation should wait for a signal to not use 100% cpu.
+    // This is some kind of a virtual function. Sub-class implementators
+    // must overwrite it.
 
-    return 0;
+    return DoSuperMethodA(cl, obj, (Msg)msg);
 }
 
 

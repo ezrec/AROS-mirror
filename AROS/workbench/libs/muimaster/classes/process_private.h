@@ -4,6 +4,7 @@
 /*** Instance data **********************************************************/
 struct Process_DATA
 {
+    Object *self;
     BOOL autolaunch;
     STRPTR name;
     LONG priority;
