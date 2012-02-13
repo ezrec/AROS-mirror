@@ -2,11 +2,10 @@
 #define ABOUTBOX_MCC_H
 
 /*
- *  Aboutbox.mcc
- *
- *  Copyright © 2007 Christian Rosentreter <tokai@binaryriot.org>
- *  All rights reserved.
- */
+    Copyright © 2011, Thore Böckelmann. All rights reserved.
+    Copyright © 2012, The AROS Development Team. All rights reserved.
+    $Id$
+*/
 
 #ifndef EXEC_TYPES_H
 #include <exec/types.h>

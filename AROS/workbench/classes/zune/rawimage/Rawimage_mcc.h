@@ -2,11 +2,11 @@
 #define RAWIMAGE_MCC_H
 
 /*
- *  Rawimage.mcc
- *
- *  Copyright © 2008-2010 Christian Rosentreter <tokai@binaryriot.org>
- *  All rights reserved.
- */
+    Copyright © 2011, Thore Böckelmann. All rights reserved.
+    Copyright © 2012, The AROS Development Team. All rights reserved.
+    $Id$
+*/
+
 
 #ifndef LIBRARIES_IFFPARSE_H
   #include <libraries/iffparse.h> /* for MAKE_ID */
@@ -31,11 +31,11 @@ extern "C" {
 
 struct MUI_RawimageData
 {
-	ULONG ri_Width;
-	ULONG ri_Height;
-	ULONG ri_Format;
-	ULONG ri_Size;
-	ULONG ri_Data[0];
+    ULONG ri_Width;
+    ULONG ri_Height;
+    ULONG ri_Format;
+    ULONG ri_Size;
+    ULONG ri_Data[0];
 };
 
 #define RAWIMAGE_PIXELFORMAT_ARGB    0
