@@ -8,15 +8,18 @@
 
 ifeq ($(AROS_TARGET_CPU),m68k)
 GCC_VERSION := 4.6.2
+GCC_LANGUAGES=c
 #MM- development-gcc : development-gmp development-mpfr development-mpc
 else
 GCC_VERSION := 4.2.4
+GCC_LANGUAGES=c,c++,objc
 endif
 
 EXTRAOPTS := \
-    --enable-languages=c,c++,objc --enable-longlong --enable-sjlj-exceptions \
+    --enable-languages=$(GCC_LANGUAGES) --enable-longlong --enable-sjlj-exceptions \
     --enable-version-specific-runtime-libs --disable-libssp --disable-libstdcxx-pch \
-    --with-sysroot=/Development --with-build-sysroot=$(AROS_DEVELOPMENT)
+    --with-sysroot=/Development --with-build-sysroot=$(AROS_DEVELOPMENT) \
+    CFLAGS=-I$(AROS_DEVELOPMENT)/include
 
 %fetch_and_build_gnu_development package=gcc version=$(GCC_VERSION) patch=yes \
     extraoptions=$(EXTRAOPTS) \
