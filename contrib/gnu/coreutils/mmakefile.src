@@ -3,11 +3,7 @@
 
 -include $(TOP)/config/make.cfg
 
-# Override faked target compiler with real cross compiler.
-TARGET_CC := $(CROSSTOOLSDIR)/$(AROS_TARGET_CPU)-aros-gcc
-
 #MM- contrib-gnu : contrib-gnu-coreutils
 #MM- contrib-gnu-coreutils : tools-crosstools development-coreutils
 
-%fetch_and_build_gnu_development package=coreutils version=6.9 patch=yes \
-    extracflags="-D__BSD_VISIBLE=1"
+%fetch_and_build_gnu_development package=coreutils version=6.9 patch=yes
