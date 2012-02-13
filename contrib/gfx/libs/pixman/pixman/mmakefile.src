@@ -31,10 +31,6 @@ FILES :=			\
 	pixman-general		\
 	../aros/emul_arosc
 
-# Override faked target compiler with real cross compiler.
-AROS_CC := $(CROSSTOOLSDIR)/$(AROS_TARGET_CPU)-aros-gcc
-TARGET_CC := $(CROSSTOOLSDIR)/$(AROS_TARGET_CPU)-aros-gcc
-
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR) -I$(SRCDIR)/$(CURDIR)/../aros
 USER_CFLAGS := -DHAVE_CONFIG_H -DPIXMAN_NO_TLS
 
