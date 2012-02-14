@@ -4,105 +4,65 @@
     $Id$
 */
 
-#include "symbols.h"
+
+#include <proto/exec.h>
+#include <proto/dos.h>
+#include <proto/intuition.h>
+#include <proto/muimaster.h>
+#include <proto/icon.h>
+#include <proto/utility.h>
+
+#include <libraries/mui.h>
+#include <mui/Rawimage_mcc.h>
+#include <workbench/icon.h>
 
 #include "Aboutbox_mcc.h"
-#include "Rawimage_mcc.h"
+#include "Aboutbox_private.h"
 
-#define CLASS       MUIC_Aboutbox
-#define SUPERCLASS  MUIC_Window
-
-#define INSTDATA        Data
-
-#define USEDCLASSESP used_mcps
-static const char *used_mcps[] = { NULL };
-
-struct ExpandString
-{
-    char *string;
-    ULONG size;
-};
-
-struct Data
-{
-    Object *logoGroup;
-    Object *logo;
-    Object *appInfoText;
-    Object *creditsText;
-
-    ULONG fallbackMode;
-    CONST_STRPTR logoFile;
-    CONST_APTR logoData;
-    CONST_STRPTR credits;
-    CONST_STRPTR build;
-
-    struct ExpandString parsedCredits;
-    struct ExpandString appInfo;
-
-    char progName[256];
-    char title[128];
-};
-
-/******************************************************************************/
-/* define the functions used by the startup code ahead of including mccinit.c */
-/******************************************************************************/
-static BOOL ClassInit(UNUSED struct Library *base);
-static VOID ClassExpunge(UNUSED struct Library *base);
-
-#define COPYRIGHT "(c) 2011 Thore Böckelmann"
-#include "copyright.h"
-
-#define VERSION   20
-#define REVISION 29
-#define LIBDATE  "09.11.2011"
-#define USERLIBID CLASS " " STR(VERSION)"."STR(REVISION) " (" LIBDATE ")" FULLVERS
-
-#define CLASSINIT
-#define CLASSEXPUNGE
-
-#define libfunc(x)  Aboutbox_Lib ## x
-#define reqfunc     muilink_use_Aboutbox
-#define addname(x)  Aboutbox_ ## x
-
-#define USE_DOSBASE
-#define USE_INTUITIONBASE
-
-#include "mccinit.c"
-
-#if !defined(__amigaos4__) && !defined(__MORPHOS__)
-#include "vastubs.c"
-#endif
-
-struct Library *IconBase = NULL;
-#ifdef __amigaos4__
-struct IconIFace *IIcon = NULL;
-#endif
-
-static struct MUI_CustomClass *icon_mcc;
-
-#include <workbench/icon.h>
+#include <strings.h>
+#include <stdio.h>
 
 #ifndef ICONDRAWA_Transparency
 #define ICONDRAWA_Transparency TAG_IGNORE
 #endif
 
-/* ------------------------------------------------------------------------- */
+#define MAX(a,b) ((a)>(b)?(a):(b))
 
-#if !defined(__MORPHOS__) // MorphOS has it`s own DoSuperNew Method in amiga.lib
-static Object * STDARGS VARARGS68K DoSuperNew(struct IClass *cl, Object * obj, ...)
-{
-    Object *rc;
-    VA_LIST args;
-
-    VA_START(args, obj);
-    rc = (Object *)DoSuperMethod(cl, obj, OM_NEW, VA_ARG(args, ULONG), NULL);
-    VA_END(args);
-
-    return rc;
-}
+#ifndef DtpicObject
+#define DtpicObject         MUIOBJMACRO_START(MUIC_Dtpic)
 #endif
 
 /* ------------------------------------------------------------------------- */
+
+static BOOL FileExists(CONST_STRPTR filename)
+{
+    if (filename == NULL)
+    {
+        return FALSE;
+    }
+
+    BOOL retval = FALSE;
+
+    BPTR lock = Lock(filename, ACCESS_READ);
+    if (lock)
+    {
+        struct FileInfoBlock *fib = AllocDosObject(DOS_FIB, NULL);
+        if (fib)
+        {
+            BOOL ex = Examine(lock, fib);
+            if (ex)
+            {
+                if (fib->fib_DirEntryType < 0) // File
+                {
+                    retval = TRUE;
+                }
+            }
+            FreeDosObject(DOS_FIB, fib);
+        }
+        UnLock(lock);
+    }
+    return retval;
+}
 
 static void clearExpandStr(struct ExpandString *es)
 {
@@ -161,18 +121,18 @@ static char *BuildAppInfo(struct IClass *cl, Object *obj)
 
     clearExpandStr(&data->appInfo);
 
-    if((info = (char *)xget(_app(obj), MUIA_Application_Title)) != NULL)
+    if((info = (char *)XGET(_app(obj), MUIA_Application_Title)) != NULL)
     {
         appendExpandStr(&data->appInfo, "\033b");
         appendExpandStr(&data->appInfo, info);
         appendExpandStr(&data->appInfo, "\033n\n");
     }
-    if((info = (char *)xget(_app(obj), MUIA_Application_Description)) != NULL)
+    if((info = (char *)XGET(_app(obj), MUIA_Application_Description)) != NULL)
     {
         appendExpandStr(&data->appInfo, info);
         appendExpandStr(&data->appInfo, "\n");
     }
-    if((info = (char *)xget(_app(obj), MUIA_Application_Version)) != NULL)
+    if((info = (char *)XGET(_app(obj), MUIA_Application_Version)) != NULL)
     {
         // skip the version cookie
         if(strncmp(info, "$VER: ", 6) == 0)
@@ -181,7 +141,7 @@ static char *BuildAppInfo(struct IClass *cl, Object *obj)
         appendExpandStr(&data->appInfo, info);
         appendExpandStr(&data->appInfo, "\n");
     }
-    if((info = (char *)xget(_app(obj), MUIA_Application_Copyright)) != NULL)
+    if((info = (char *)XGET(_app(obj), MUIA_Application_Copyright)) != NULL)
     {
         appendExpandStr(&data->appInfo, "\nCopyright ");
         appendExpandStr(&data->appInfo, info);
@@ -320,12 +280,22 @@ static char *ParseCredits(struct IClass *cl, Object *obj)
 #if !defined(__AROS__) && (defined(__VBCC__) || defined(NO_INLINE_STDARG))
 #if defined(_M68000) || defined(__M68000) || defined(__mc68000)
 
+// FIXME: is this good for AROS?
+
 struct DiskObject *GetIconTags(MY_CONST_STRPTR name, ... )
-{ return GetIconTagList(name, (struct TagItem *)(&name+1)); }
+{
+    return GetIconTagList(name, (struct TagItem *)(&name+1));
+}
+
 BOOL GetIconRectangle(struct RastPort *rp, CONST struct DiskObject *icon, CONST STRPTR label, struct Rectangle *rectangle, ...)
-{ return GetIconRectangleA(rp, icon, label, rectangle, (struct TagItem *)(&rectangle+1)); }
+{
+    return GetIconRectangleA(rp, icon, label, rectangle, (struct TagItem *)(&rectangle+1));
+}
+
 VOID DrawIconState(struct RastPort *rp,CONST struct DiskObject *icon,CONST STRPTR label,LONG leftEdge,LONG topEdge,ULONG state,...)
-{ DrawIconStateA(rp, icon, label, leftEdge, topEdge, state, (struct TagItem *)(&state+1)); }
+{
+    DrawIconStateA(rp, icon, label, leftEdge, topEdge, state, (struct TagItem *)(&state+1));
+}
 
 #endif
 #endif
@@ -339,18 +309,15 @@ VOID DrawIconState(struct RastPort *rp,CONST struct DiskObject *icon,CONST STRPT
 #define MUIA_Icon_File             (MUIB_Icon | 0x00000001) /* I-- CONST_STRPTR        */
 #define MUIA_Icon_Screen           (MUIB_Icon | 0x00000002) /* I-- struct Screen *     */
 
-struct Icon_Data
-{
-    struct DiskObject *icon;
-};
-
-static ULONG ASM Icon_New(REG(a0, struct IClass *cl), REG(a2, Object *obj), REG(a1, struct opSet *msg))
+static IPTR Icon__OM_NEW(struct IClass *cl, Object *obj, struct opSet *msg)
 {
     struct DiskObject *icon = NULL;
     STRPTR file = NULL;
     struct Screen *screen = NULL;
+    const struct TagItem *tstate = msg->ops_AttrList;
+    struct TagItem *tag;
 
-    ForTagItems(inittags(msg))
+    while ((tag = NextTagItem(&tstate)) != NULL)
     {
         switch(tag->ti_Tag)
         {
@@ -367,7 +334,6 @@ static ULONG ASM Icon_New(REG(a0, struct IClass *cl), REG(a2, Object *obj), REG(
                 break;
         }
     }
-    NextTagItems
 
     if(icon == NULL && file == NULL)
         goto error; /* Must specify one */
@@ -381,7 +347,7 @@ static ULONG ASM Icon_New(REG(a0, struct IClass *cl), REG(a2, Object *obj), REG(
             goto error;
     }
 
-    if((obj = DoSuperNew(cl, obj,
+    if((obj = DoSuperNewTags(cl, obj, NULL,
         MUIA_FillArea, TRUE,
         TAG_MORE, msg->ops_AttrList)) != NULL)
     {
@@ -395,23 +361,23 @@ static ULONG ASM Icon_New(REG(a0, struct IClass *cl), REG(a2, Object *obj), REG(
         goto error;
     }
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 
 error:
-    return (ULONG)NULL;
+    return (IPTR)NULL;
 }
 
-static ULONG ASM Icon_Dispose(REG(a0, struct IClass *cl), REG(a2, Object *obj), REG(a1, Msg msg))
+static IPTR Icon__OM_DISPOSE(struct IClass *cl, Object *obj, Msg msg)
 {
     struct Icon_Data *data = INST_DATA(cl, obj);
 
     if(data->icon != NULL)
         FreeDiskObject(data->icon);
 
-    return(DoSuperMethodA(cl,obj,msg));
+    return DoSuperMethodA(cl,obj,msg);
 }
 
-static ULONG ASM Icon_AskMinMax(REG(a0, struct IClass *cl), REG(a2, Object *obj), REG(a1, struct MUIP_AskMinMax *msg))
+static IPTR Icon__MUIM_AskMinMax(struct IClass *cl, Object *obj, struct MUIP_AskMinMax *msg)
 {
     struct Icon_Data *data = INST_DATA(cl, obj);
     struct Rectangle rect;
@@ -439,7 +405,7 @@ static ULONG ASM Icon_AskMinMax(REG(a0, struct IClass *cl), REG(a2, Object *obj)
     return ret;
 }
 
-static ULONG ASM Icon_Draw(REG(a0, struct IClass *cl), REG(a2, Object *obj), REG(a1, struct MUIP_Draw *msg))
+static IPTR Icon__MUIM_Draw(struct IClass *cl, Object *obj, struct MUIP_Draw *msg)
 {
     struct Icon_Data *data = INST_DATA(cl, obj);
     ULONG ret;
@@ -458,29 +424,19 @@ static ULONG ASM Icon_Draw(REG(a0, struct IClass *cl), REG(a2, Object *obj), REG
     return ret;
 }
 
-DISPATCHER(Icon_Dispatcher)
-{
-    switch (msg->MethodID)
-    {
-        case OM_NEW           : return(Icon_New        (cl,obj,(APTR)msg));
-        case OM_DISPOSE       : return(Icon_Dispose    (cl,obj,(APTR)msg));
-        case MUIM_AskMinMax   : return(Icon_AskMinMax  (cl,obj,(APTR)msg));
-        case MUIM_Draw        : return(Icon_Draw       (cl,obj,(APTR)msg));
-    }
-
-    return(DoSuperMethodA(cl,obj,msg));
-}
-
 /* ------------------------------------------------------------------------- */
 
-static ULONG ASM Aboutbox_New(REG(a0, struct IClass *cl), REG(a2, Object *obj), REG(a1, struct opSet *msg))
+static IPTR Aboutbox__OM_NEW(struct IClass *cl, Object *obj, struct opSet *msg)
 {
+    const struct TagItem *tstate = msg->ops_AttrList;
+    struct TagItem *tag;
+
     Object *logoGroup;
     Object *appInfoText;
     Object *creditsText;
     Object *okButton;
 
-    if((obj = (Object *)DoSuperNew(cl, obj,
+    if((obj = (Object *)DoSuperNewTags(cl, obj, NULL,
         MUIA_Window_ID       , MAKE_ID('A','B','O','X'),
         MUIA_Window_LeftEdge , MUIV_Window_LeftEdge_Centered,
         MUIA_Window_TopEdge  , MUIV_Window_TopEdge_Centered,
@@ -488,12 +444,15 @@ static ULONG ASM Aboutbox_New(REG(a0, struct IClass *cl), REG(a2, Object *obj), 
 //      MUIA_Window_Height   , MUIV_Window_Height_MinMax(0),
         MUIA_Window_Title    , "Aboutbox",
         MUIA_Window_NoMenus  , TRUE,
+#if 0
+        // FIXME: following don't exist in AROS
         MUIA_Window_ShowAbout, FALSE,
         MUIA_Window_ShowIconify, FALSE,
         MUIA_Window_ShowJump, FALSE,
         MUIA_Window_ShowPopup, FALSE,
         MUIA_Window_ShowPrefs, FALSE,
         MUIA_Window_ShowSnapshot, FALSE,
+#endif
         MUIA_Window_UseRightBorderScroller, TRUE,
         MUIA_Window_CloseGadget, FALSE,
         MUIA_Window_SizeRight, TRUE,
@@ -529,7 +488,7 @@ static ULONG ASM Aboutbox_New(REG(a0, struct IClass *cl), REG(a2, Object *obj), 
         data->creditsText = creditsText;
         data->fallbackMode = MUIV_Aboutbox_LogoFallbackMode_Auto;
 
-        ForTagItems(msg->ops_AttrList)
+        while ((tag = NextTagItem(&tstate)) != NULL)
         {
             switch(tag->ti_Tag)
             {
@@ -554,24 +513,23 @@ static ULONG ASM Aboutbox_New(REG(a0, struct IClass *cl), REG(a2, Object *obj), 
                     break;
             }
         }
-        NextTagItems;
 
         DoMethod(obj, MUIM_Notify, MUIA_Window_CloseRequest, TRUE, MUIV_Notify_Application, 6, MUIM_Application_PushMethod, obj, 3, MUIM_Set, MUIA_Window_Open, FALSE);
         DoMethod(okButton, MUIM_Notify, MUIA_Pressed, FALSE, MUIV_Notify_Application, 6, MUIM_Application_PushMethod, obj, 3, MUIM_Set, MUIA_Window_Open, FALSE);
     }
 
-    return((ULONG)obj);
+    return (IPTR)obj;
 }
 
 
-static ULONG ASM Aboutbox_Dispose(REG(a0, struct IClass *cl), REG(a2, Object *obj), REG(a1, Msg msg))
+static IPTR Aboutbox__OM_DISPOSE(struct IClass *cl, Object *obj, Msg msg)
 {
     struct Data *data = INST_DATA(cl, obj);
 
     freeExpandString(&data->appInfo);
     freeExpandString(&data->parsedCredits);
 
-    return(DoSuperMethodA(cl,obj,msg));
+    return DoSuperMethodA(cl,obj,msg);
 }
 
 
@@ -612,7 +570,7 @@ static Object *BuildLogo(struct IClass *cl, Object *obj)
                     }
 
                     logo = NewObject(icon_mcc->mcc_Class, NULL, MUIA_Icon_File, data->progName,
-                                                                MUIA_Icon_Screen, xget(obj, MUIA_Window_Screen),
+                                                                MUIA_Icon_Screen, XGET(obj, MUIA_Window_Screen),
                                                                 TAG_DONE);
                 }
                 break;
@@ -648,7 +606,7 @@ static Object *BuildLogo(struct IClass *cl, Object *obj)
     return logo;
 }
 
-static ULONG ASM Aboutbox_Setup(REG(a0, struct IClass *cl), REG(a2, Object *obj), REG(a1, UNUSED Msg msg))
+static IPTR Aboutbox__MUIM_Window_Setup(struct IClass *cl, Object *obj, Msg msg)
 {
     ULONG ret;
 
@@ -662,15 +620,14 @@ static ULONG ASM Aboutbox_Setup(REG(a0, struct IClass *cl), REG(a2, Object *obj)
         set(data->appInfoText, MUIA_Text_Contents, BuildAppInfo(cl, obj));
         set(data->creditsText, MUIA_Text_Contents, ParseCredits(cl, obj));
 
-        snprintf(data->title, sizeof(data->title), "About %s", (char *)xget(_app(obj), MUIA_Application_Title));
+        snprintf(data->title, sizeof(data->title), "About %s", (char *)XGET(_app(obj), MUIA_Application_Title));
         set(obj, MUIA_Window_Title, data->title);
     }
 
     return ret;
 }
 
-
-static ULONG ASM Aboutbox_Cleanup(REG(a0, struct IClass *cl), REG(a2, Object *obj), REG(a1, UNUSED Msg msg))
+static IPTR Aboutbox__MUIM_Window_Cleanup(struct IClass *cl, Object *obj, Msg msg)
 {
     struct Data *data = INST_DATA(cl, obj);
 
@@ -686,47 +643,3 @@ static ULONG ASM Aboutbox_Cleanup(REG(a0, struct IClass *cl), REG(a2, Object *ob
 
     return DoSuperMethodA(cl, obj, (Msg)msg);
 }
-
-DISPATCHER(_Dispatcher)
-{
-    switch (msg->MethodID)
-    {
-        case OM_NEW             : return(Aboutbox_New        (cl,obj,(APTR)msg));
-        case OM_DISPOSE         : return(Aboutbox_Dispose    (cl,obj,(APTR)msg));
-        case MUIM_Window_Setup  : return(Aboutbox_Setup      (cl,obj,(APTR)msg));
-        case MUIM_Window_Cleanup: return(Aboutbox_Cleanup    (cl,obj,(APTR)msg));
-    }
-
-    return(DoSuperMethodA(cl,obj,msg));
-}
-
-/* ------------------------------------------------------------------------- */
-
-static BOOL ClassInit(UNUSED struct Library *base)
-{
-    if((IconBase = OpenLibrary("icon.library",39)) != NULL && GETINTERFACE(IIcon, struct IconIFace *, IconBase))
-    {
-        if((icon_mcc = MUI_CreateCustomClass(NULL, MUIC_Area, NULL, sizeof(struct Icon_Data), ENTRY(Icon_Dispatcher))) != NULL)
-        {
-            return TRUE;
-        }
-
-        DROPINTERFACE(IIcon);
-        CloseLibrary(IconBase);
-    }
-
-    return FALSE;
-}
-
-static void ClassExpunge(UNUSED struct Library *base)
-{
-    if(icon_mcc != NULL)
-        MUI_DeleteCustomClass(icon_mcc);
-
-    if(IconBase != NULL)
-    {
-        DROPINTERFACE(IIcon);
-        CloseLibrary(IconBase);
-    }
-}
-

@@ -7,35 +7,24 @@
     $Id$
 */
 
-#ifndef EXEC_TYPES_H
 #include <exec/types.h>
-#endif
-
-#ifndef LIBRARIES_IFFPARSE_H
 #include <libraries/iffparse.h>
-#endif
 
-
+/*** Name *******************************************************************/
 #define MUIC_Aboutbox  "Aboutbox.mcc"
-#define AboutboxObject MUI_NewObject(MUIC_Aboutbox
+
+/*** Protected Attributes ***************************************************/
+#define MUIA_Aboutbox_Credits            0xFED10001ul    /* [I..] STRPTR  v20.1  */
+#define MUIA_Aboutbox_LogoData           0xFED10002ul    /* [I..] APTR    v20.2  */
+#define MUIA_Aboutbox_LogoFallbackMode   0xFED10003ul    /* [I..] ULONG   v20.2  */
+#define MUIA_Aboutbox_LogoFile           0xFED10004ul    /* [I..] STRPTR  v20.2  */
+#define MUIA_Aboutbox_Build              0xFED1001Eul    /* [I..] STRPTR  v20.12 */
+
+/*** Macros *****************************************************************/
+#define AboutboxObject MUIOBJMACRO_START(MUIC_Aboutbox)
 
 
-/*   attributes
- */
-#define MUIA_Aboutbox_Credits            0xFED10001    /* [I..] STRPTR  v20.1  */
-#define MUIA_Aboutbox_LogoData           0xFED10002    /* [I..] APTR    v20.2  */
-#define MUIA_Aboutbox_LogoFallbackMode   0xFED10003    /* [I..] ULONG   v20.2  */
-#define MUIA_Aboutbox_LogoFile           0xFED10004    /* [I..] STRPTR  v20.2  */
-#define MUIA_Aboutbox_Build              0xFED1001E    /* [I..] STRPTR  v20.12 */
-
-
-/*   methods
- */
-
-
-
-/*   special values
- */
+/*** Special Values *********************************************************/
 
 /*
  *   the fallback mode defines in which order Aboutbox.mcc tries to get valid image
@@ -48,10 +37,4 @@
 #define MUIV_Aboutbox_LogoFallbackMode_NoLogo     0
 #define MUIV_Aboutbox_LogoFallbackMode_Auto       MAKE_ID('D' , 'E' , 'I' , '\0')
 
-
-/*   messages
- */
-
-
 #endif /* ABOUTBOX_MCC_H */
-
