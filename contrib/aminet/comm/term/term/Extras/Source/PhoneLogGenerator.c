@@ -304,6 +304,18 @@
 extern struct ExecBase		*SysBase;
 extern struct DosLibrary	*DOSBase;
 
+#ifdef __AROS__
+#define LogPrintf(h,f,...) \
+	do { IPTR args[] = { AROS_PP_VARIADIC_CAST2IPTR(__VA_ARGS__) }; \
+	_LogPrintf(h,f,args); } while (0)
+STATIC void
+_LogPrintf(PhoneLogHandle *handle,char *format,IPTR *args)
+{
+	if(handle->error == 0)
+		if(VFPrintf(handle->file,format,(APTR)args) == -1)
+			handle->error = IoErr();
+}
+#else
 STATIC void
 LogPrintf(PhoneLogHandle *handle,char *format,...)
 {
@@ -319,6 +331,7 @@ LogPrintf(PhoneLogHandle *handle,char *format,...)
 		va_end(args);
 	}
 }
+#endif
 
 /*
 ******* PhoneLogGenerator/OpenPhoneLog **************************************

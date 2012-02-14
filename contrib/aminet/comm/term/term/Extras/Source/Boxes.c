@@ -352,9 +352,13 @@ SZ_BoxHeight(LONG Lines)
 	 */
 
 struct TextBox *
-SZ_CreateTextBox(struct TextBox **FirstBox,...)
+SZ_CreateTextBox(struct TextBox **FirstBox, IPTR Tag1, ...)
 {
-	va_list			 VarArgs;
+#ifdef __AROS__
+	AROS_SLOWSTACKTAGS_PRE_AS(Tag1, struct TextBox *)
+#else
+	struct TextBox *retval;
+#endif
 	struct TagItem	*TagList,
 					*ThisTag;
 	LONG			 Chars,Lines,
@@ -369,9 +373,11 @@ SZ_CreateTextBox(struct TextBox **FirstBox,...)
 	struct TextBox	*Box;
 	LONG			 i;
 
-	va_start(VarArgs,FirstBox);
-
-	TagList = (struct TagItem *)VarArgs;
+#ifdef __AROS__
+	TagList = AROS_SLOWSTACKTAGS_ARG(Tag1);
+#else
+	TagList = (struct TagItem *)&Tag1;
+#endif
 
 	if(ThisTag = FindTagItem(SZ_Lines,TagList))
 		Lines = (LONG)ThisTag->ti_Data;
@@ -383,13 +389,16 @@ SZ_CreateTextBox(struct TextBox **FirstBox,...)
 	if(ThisTag = FindTagItem(SZ_AutoWidth,TagList))
 		AutoWidth = ThisTag->ti_Data;
 
-	if(!AutoWidth)
-		return(NULL);
-	else
+	if(!AutoWidth) {
+		retval = NULL;
+		goto end;
+	} else
 		Chars = (SZ_CurrentWidth - 8) / SZ_AverageGlyphWidth;
 
-	if(!(Box = (struct TextBox *)AllocVecPooled(sizeof(struct TextBox),MEMF_ANY | MEMF_CLEAR)))
-		return(NULL);
+	if(!(Box = (struct TextBox *)AllocVecPooled(sizeof(struct TextBox),MEMF_ANY | MEMF_CLEAR))) {
+		retval = NULL;
+		goto end;
+	}
 
 	if(ThisTag = FindTagItem(SZ_NewColumn,TagList))
 	{
@@ -429,14 +438,16 @@ SZ_CreateTextBox(struct TextBox **FirstBox,...)
 	{
 		SZ_FreeBox(Box);
 
-		return(NULL);
+		retval = NULL;
+		goto end;
 	}
 
 	if(!(Box->Text = (STRPTR *)AllocVecPooled(sizeof(STRPTR) * Lines,MEMF_ANY | MEMF_CLEAR)))
 	{
 		SZ_FreeBox(Box);
 
-		return(NULL);
+		retval = NULL;
+		goto end;
 	}
 
 	for(i = 0 ; i < Lines ; i++)
@@ -445,7 +456,8 @@ SZ_CreateTextBox(struct TextBox **FirstBox,...)
 		{
 			SZ_FreeBox(Box);
 
-			return(NULL);
+			retval = NULL;
+			goto end;
 		}
 	}
 
@@ -475,7 +487,14 @@ SZ_CreateTextBox(struct TextBox **FirstBox,...)
 		CurrentBox->NextBox = Box;
 	}
 
-	return(Box);
+	retval = Box;
+
+end:
+#ifdef __AROS__
+	AROS_SLOWSTACKTAGS_POST
+#else
+	return retval;
+#endif
 }
 
 	/* SZ_SetBoxTitles(struct TextBox *Box,STRPTR Array,...):

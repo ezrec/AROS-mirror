@@ -150,11 +150,15 @@ GetFormatLength(CONST_STRPTR FormatString,va_list VarArgs)
 
 	Count = 0;
 
+#ifdef __AROS__
+	VNewRawDoFmt(FormatString,(PUTCHAR)CountChar,(APTR)&Count,VarArgs);
+#else
 #ifdef USE_GLUE
 	RawDoFmt(FormatString,(APTR)VarArgs,(PUTCHAR)CountCharGlue,(APTR)&Count);
 #else
 	RawDoFmt(FormatString,(APTR)VarArgs,(PUTCHAR)CountChar,(APTR)&Count);
 #endif	/* USE_GLUE */
+#endif
 
 	return(Count);
 }

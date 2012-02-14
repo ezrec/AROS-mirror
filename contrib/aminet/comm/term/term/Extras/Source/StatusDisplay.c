@@ -291,18 +291,16 @@ UpdateInfo(APTR Object,UBYTE Mode,UBYTE Type,...)
 	if(Object)
 	{
 		UBYTE	 MiniBuffer[50];
-		STRPTR	*String;
-		LONG	*Numeral;
+		STRPTR	String[1];
+		LONG	Numeral[3];
 		va_list	 VarArgs;
 
 		va_start(VarArgs,Type);
 
-		String	= (STRPTR *)VarArgs;
-		Numeral	= (LONG *)VarArgs;
-
 		switch(Type)
 		{
 			case INFO_STATUS:
+				Numeral[0] = va_arg(VarArgs, LONG);
 
 				LimitedStrcpy(sizeof(MiniBuffer),MiniBuffer,LocaleString(ConfigStatusIDs[Numeral[0]]));
 				LimitedStrcat(sizeof(MiniBuffer),MiniBuffer,"         ");
@@ -312,6 +310,7 @@ UpdateInfo(APTR Object,UBYTE Mode,UBYTE Type,...)
 				break;
 
 			case INFO_BUFFER:
+				Numeral[0] = va_arg(VarArgs, LONG);
 
 				if(Mode == MODE_SCREEN_NORMAL)
 					DoInfo(Object,Mode,Type,ConfigBufferState[Numeral[0]]);
@@ -321,6 +320,7 @@ UpdateInfo(APTR Object,UBYTE Mode,UBYTE Type,...)
 				return;
 
 			case INFO_UNITTIME:
+				Numeral[0] = va_arg(VarArgs, LONG);
 
 				LimitedSPrintf(sizeof(MiniBuffer) - 1,&MiniBuffer[1],"%2ld:%02ld",Numeral[0] / 60,Numeral[0] % 60);
 
@@ -334,6 +334,7 @@ UpdateInfo(APTR Object,UBYTE Mode,UBYTE Type,...)
 				break;
 
 			case INFO_ONLINECOST:
+				String[0] = va_arg(VarArgs, STRPTR);
 
 				CopyMem(String[0],MiniBuffer,8);
 				LimitedStrcat(sizeof(MiniBuffer),MiniBuffer,"          ");
@@ -345,16 +346,23 @@ UpdateInfo(APTR Object,UBYTE Mode,UBYTE Type,...)
 				break;
 
 			case INFO_CURRENTTIME:
+				Numeral[0] = va_arg(VarArgs, LONG);
+				Numeral[1] = va_arg(VarArgs, LONG);
+				Numeral[2] = va_arg(VarArgs, LONG);
 
 				FormatTime(MiniBuffer,sizeof(MiniBuffer),Numeral[0],Numeral[1],Numeral[2]);
 				break;
 
 			case INFO_ONLINETIME:
+				Numeral[0] = va_arg(VarArgs, LONG);
+				Numeral[1] = va_arg(VarArgs, LONG);
+				Numeral[2] = va_arg(VarArgs, LONG);
 
 				LimitedSPrintf(sizeof(MiniBuffer),MiniBuffer,"%02ld:%02ld:%02ld",Numeral[0],Numeral[1],Numeral[2]);
 				break;
 
 			case INFO_BAUDRATE:
+				Numeral[0] = va_arg(VarArgs, LONG);
 
 				if(LocaleBase)
 					LimitedSPrintf(sizeof(MiniBuffer),MiniBuffer,"%lD        ",Numeral[0]);
@@ -367,6 +375,7 @@ UpdateInfo(APTR Object,UBYTE Mode,UBYTE Type,...)
 
 			case INFO_PROTOCOL:
 			case INFO_EMULATION:
+				String[0] = va_arg(VarArgs, STRPTR);
 
 				CopyMem(String[0],MiniBuffer,12);
 				LimitedStrcat(sizeof(MiniBuffer),MiniBuffer,"           ");
@@ -376,6 +385,9 @@ UpdateInfo(APTR Object,UBYTE Mode,UBYTE Type,...)
 				break;
 
 			case INFO_PARAMETERS:
+				Numeral[0] = va_arg(VarArgs, LONG);
+				Numeral[1] = va_arg(VarArgs, LONG);
+				Numeral[2] = va_arg(VarArgs, LONG);
 
 				if(Mode == MODE_SCREEN_COMPRESSED)
 				{

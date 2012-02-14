@@ -1922,11 +1922,18 @@ GetDimensionTags(struct Window *Reference,struct TagItem *Tags)
 	 *	EasyRequest requester.
 	 */
 
+#ifdef __AROS__
+LONG
+_ShowRequest(struct Window *Window,CONST_STRPTR Text,CONST_STRPTR Gadgets,IPTR *Args)
+#else
 LONG
 ShowRequest(struct Window *Window,CONST_STRPTR Text,CONST_STRPTR Gadgets,...)
+#endif
 {
 	struct EasyStruct Easy;
+#ifndef __AROS__
 	va_list VarArgs;
+#endif
 	LONG i,GadgetCount;
 
 	for(i = GadgetCount = 0 ; i < strlen(Gadgets) ; i++)
@@ -1953,10 +1960,13 @@ ShowRequest(struct Window *Window,CONST_STRPTR Text,CONST_STRPTR Gadgets,...)
 			/* Use the argument array to build the
 			 * requester and display it.
 			 */
-
+#ifdef __AROS__
+		Result = EasyRequestArgs(Window,&Easy,NULL,Args);
+#else
 		va_start(VarArgs,Gadgets);
 		Result = EasyRequestArgs(Window,&Easy,NULL,(APTR)VarArgs);
 		va_end(VarArgs);
+#endif
 
 		if(GTLayoutBase)
 			LT_UnlockWindow(Window);
@@ -1970,9 +1980,13 @@ ShowRequest(struct Window *Window,CONST_STRPTR Text,CONST_STRPTR Gadgets,...)
 		if(GTLayoutBase)
 			LT_LockWindow(Window);
 
+#ifdef __AROS__
+		if(ReqWindow = BuildEasyRequestArgs(Window,&Easy,IDCMP_RAWKEY,(APTR)Args))
+#else
 		va_start(VarArgs,Gadgets);
 
 		if(ReqWindow = BuildEasyRequestArgs(Window,&Easy,IDCMP_RAWKEY,(APTR)VarArgs))
+#endif
 		{
 			ULONG	IDCMP;
 			LONG	Result;
@@ -1992,7 +2006,9 @@ ShowRequest(struct Window *Window,CONST_STRPTR Text,CONST_STRPTR Gadgets,...)
 			FreeSysRequest(ReqWindow);
 		}
 
+#ifndef __AROS__
 		va_end(VarArgs);
+#endif
 
 		if(GTLayoutBase)
 			LT_UnlockWindow(Window);
@@ -3773,26 +3789,31 @@ MoveListViewNode(LayoutHandle *Handle,struct List *List,LONG ListID,struct Node 
 	 */
 
 struct Process *
-StartProcessWaitForHandshake(STRPTR Name,TASKENTRY Entry,...)
+StartProcessWaitForHandshake(STRPTR Name,TASKENTRY Entry,IPTR Tag1,...)
 {
-	struct Process *Process;
-	va_list Args;
-
-	va_start(Args,Entry);
+#ifdef __AROS__
+	AROS_SLOWSTACKTAGS_PRE_AS(Tag1, struct Process *)
+        struct TagItem *Args = AROS_SLOWSTACKTAGS_ARG(Tag1);
+#else
+	struct Process *retval;
+	struct TagItem *Args = &Tag1;
+#endif
 
 	Forbid();
 
-	if(Process = CreateNewProcTags(
+	if(retval = CreateNewProcTags(
 		NP_Name,	Name,
 		NP_Entry,	Entry,
-	TAG_MORE,Args))
+		TAG_MORE,Args))
 		WaitForHandshake();
 
 	Permit();
 
-	va_end(Args);
-
-	return(Process);
+#ifdef __AROS__
+	AROS_SLOWSTACKTAGS_POST
+#else
+	return(retval);
+#endif
 }
 
 	/* LocalGetCurrentDirName(STRPTR Buffer,LONG BufferSize):
@@ -3950,9 +3971,13 @@ LocalCreateTask(STRPTR Name,LONG Priority,TASKENTRY Entry,ULONG StackSize,LONG N
 			if(NumArgs > 0)
 			{
 				va_list VarArgs;
+				int i;
+				IPTR *argptr = (IPTR *)Task->tc_SPReg;
 
 				va_start(VarArgs,NumArgs);
-				CopyMem(VarArgs,Task->tc_SPReg,NumArgs * sizeof(IPTR));
+				for (i = 0; i < NumArgs; i++) {
+				    *(argptr++) = va_arg(VarArgs, IPTR);
+				}
 				va_end(VarArgs);
 			}
 

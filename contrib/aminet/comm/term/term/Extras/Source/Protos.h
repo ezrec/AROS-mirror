@@ -255,7 +255,7 @@ ULONG SZ_GetLen(STRPTR String);
 VOID SZ_FreeBoxes(struct TextBox *FirstBox);
 LONG SZ_BoxWidth(LONG Chars);
 LONG SZ_BoxHeight(LONG Lines);
-struct TextBox *SZ_CreateTextBox(struct TextBox **FirstBox, ...);
+struct TextBox *SZ_CreateTextBox(struct TextBox **FirstBox, IPTR Tag1, ...);
 VOID SZ_SetBoxTitles(struct TextBox *Box, CONST_STRPTR Array, ...);
 VOID SZ_SetLine(struct RastPort *RPort, struct TextBox *Box, LONG Line, STRPTR String);
 VOID SZ_PrintLine(struct RastPort *RPort, struct TextBox *Box, LONG Line, STRPTR String, ...);
@@ -1132,7 +1132,14 @@ LONG GetBaudRate(STRPTR Buffer);
 LONG GetFileSize(CONST_STRPTR Name);
 VOID PutDimensionTags(struct Window *Reference, LONG Left, LONG Top, LONG Width, LONG Height);
 struct TagItem *GetDimensionTags(struct Window *Reference, struct TagItem *Tags);
+#ifdef __AROS__
+#define ShowRequest(w,t,g,...) ({ \
+	IPTR args[] = { AROS_PP_VARIADIC_CAST2IPTR(__VA_ARGS__) }; \
+	_ShowRequest(w,t,g,args); })
+LONG _ShowRequest(struct Window *Window, CONST_STRPTR Text, CONST_STRPTR Gadgets, IPTR *Args);
+#else
 LONG ShowRequest(struct Window *Window, CONST_STRPTR Text, CONST_STRPTR Gadgets, ...);
+#endif
 VOID CloseWindowSafely(struct Window *Window);
 VOID DelayTime(LONG Secs, LONG Micros);
 VOID WaitTime(VOID);
@@ -1190,7 +1197,7 @@ BOOL Get_xOFF(VOID);
 VOID Lock_xOFF(VOID);
 VOID Unlock_xOFF(VOID);
 VOID MoveListViewNode(LayoutHandle *Handle, struct List *List, LONG ListID, struct Node *Node, LONG *Offset, LONG How);
-struct Process *StartProcessWaitForHandshake(STRPTR Name, TASKENTRY Entry, ...);
+struct Process *StartProcessWaitForHandshake(STRPTR Name, TASKENTRY Entry, IPTR Tag1, ...);
 BOOL LocalGetCurrentDirName(STRPTR Buffer, LONG BufferSize);
 VOID SafeObtainSemaphoreShared(struct SignalSemaphore *Semaphore);
 struct Task *LocalCreateTask(STRPTR Name, LONG Priority, TASKENTRY Entry, ULONG StackSize, LONG NumArgs, ...);

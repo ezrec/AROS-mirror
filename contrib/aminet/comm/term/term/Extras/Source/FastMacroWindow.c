@@ -440,13 +440,19 @@ NotifyGrid(Class *class,Object *object,struct GadgetInfo *GInfo,struct opUpdate 
 }
 
 STATIC VOID
-SetGrid(Class *class,struct Gadget *gadget,struct opSet *msg,...)
+SetGrid(Class *class,struct Gadget *gadget,struct opSet *msg, IPTR Tag1, ...)
 {
+#ifdef __AROS__
+	AROS_NR_SLOWSTACKTAGS_PRE(Tag1)
+	CoerceMethod(class,(Object *)gadget,OM_SET,AROS_SLOWSTACKTAGS_ARG(Tag1),msg->ops_GInfo);
+	AROS_NR_SLOWSTACKTAGS_POST
+#else
 	va_list Args;
 
 	va_start(Args,msg);
 	CoerceMethod(class,(Object *)gadget,OM_SET,Args,msg->ops_GInfo);
 	va_end(Args);
+#endif
 }
 
 STATIC ULONG

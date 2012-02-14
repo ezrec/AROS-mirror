@@ -179,11 +179,15 @@ BuildITextTable(CONST_STRPTR FormatString,va_list VarArgs,UBYTE Terminator,IPTR 
 	Information[0] = Information[1] = 0;
 	Information[2] = Terminator;
 
+#ifdef __AROS__
+	VNewRawDoFmt(FormatString,(PUTCHAR)CustomCountChar,(APTR)Information, VarArgs);
+#else
 	#ifdef USE_GLUE
 		RawDoFmt(FormatString,(APTR)VarArgs,(PUTCHAR)CustomCountCharGlue,(APTR)Information);
 	#else
 		RawDoFmt(FormatString,(APTR)VarArgs,(PUTCHAR)CustomCountChar,(APTR)Information);
 	#endif
+#endif
 
 	if(Primitive = (struct IntuiText *)AllocVec(Information[1] * sizeof(struct IntuiText) + Information[0],MEMF_ANY))
 	{
@@ -285,9 +289,9 @@ ShowInfo(struct Window *Parent,CONST_STRPTR Title,CONST_STRPTR Continue,CONST_ST
 
 			va_start(VarArgs,FormatString);
 			BodyText = BuildITextTable(FormatString,VarArgs,'\n',Information,MoreData);
-			va_end(VarArgs);
 
-			GadgetText = BuildITextTable(Continue,NULL,'|',GadgetInformation,GadgetData);
+			GadgetText = BuildITextTable(Continue,VarArgs,'|',GadgetInformation,GadgetData);
+			va_end(VarArgs);
 
 			GadgetTable = (struct Gadget **)AllocVec(sizeof(struct Gadget *) * GadgetInformation[1],MEMF_ANY|MEMF_CLEAR);
 
@@ -433,11 +437,15 @@ ShowInfo(struct Window *Parent,CONST_STRPTR Title,CONST_STRPTR Continue,CONST_ST
 
 				va_start(VarArgs,FormatString);
 
+#ifdef __AROS__
+				VNewRawDoFmt(FormatString,(PUTCHAR)CustomStuffText,(APTR)MoreData,VarArgs);
+#else
 				#ifdef USE_GLUE
 					RawDoFmt(FormatString,(APTR)VarArgs,(PUTCHAR)CustomStuffTextGlue,(APTR)MoreData);
 				#else
 					RawDoFmt(FormatString,(APTR)VarArgs,(PUTCHAR)CustomStuffText,(APTR)MoreData);
 				#endif	/* USE_GLUE */
+#endif
 
 				va_end(VarArgs);
 
