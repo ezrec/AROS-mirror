@@ -8,7 +8,9 @@ USER_CFLAGS := $(PARANOIA_CFLAGS)
 FILES         := lamp
 INCLUDE_FILES := Lamp_mcc.h
 
-#MM workbench-classes-zune-lamp : includes
+#MM- workbench-classes-zune : workbench-classes-zune-lamp 
+
+#MM  workbench-classes-zune-lamp : includes
 
 %build_module \
     mmake=workbench-classes-zune-lamp \

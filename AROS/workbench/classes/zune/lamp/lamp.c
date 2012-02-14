@@ -5,6 +5,7 @@
 
 #define MUIMASTER_YES_INLINE_STDARG
 
+#include <proto/alib.h>
 #include <proto/muimaster.h>
 #include <proto/intuition.h>
 #include <proto/utility.h>
@@ -200,7 +201,18 @@ IPTR Lamp__OM_GET(struct IClass *cl, Object *obj, struct opGet *msg)
             return TRUE;
 
         case MUIA_Lamp_Color:
-            *store = (IPTR)data->lmp_Color;
+            if (data->lmp_ColorType == MUIV_Lamp_ColorType_UserDefined)
+            {
+                *store = (IPTR)data->lmp_ColorSpec;
+            }
+            else if (data->lmp_ColorType == MUIV_Lamp_ColorType_Color)
+            {
+                *store = (IPTR)data->lmp_Color;
+            }
+            else // MUIV_Lamp_ColorType_PenSpec
+            {
+                *store = 0;
+            }
             return TRUE;
 
         case MUIA_Lamp_ColorType:
