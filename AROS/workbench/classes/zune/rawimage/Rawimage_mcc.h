@@ -8,35 +8,18 @@
 */
 
 
-#ifndef LIBRARIES_IFFPARSE_H
-  #include <libraries/iffparse.h> /* for MAKE_ID */
-#endif
+#include <libraries/mui.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#if defined(__PPC__)
-  #if defined(__GNUC__)
-    #pragma pack(2)
-  #elif defined(__VBCC__)
-    #pragma amiga-align
-  #endif
-#endif
-
-
+/*** Name *******************************************************************/
 #define MUIC_Rawimage  "Rawimage.mcc"
-#define RawimageObject MUI_NewObject(MUIC_Rawimage
 
+/*** Identifier base ********************************************************/
 
-struct MUI_RawimageData
-{
-    ULONG ri_Width;
-    ULONG ri_Height;
-    ULONG ri_Format;
-    ULONG ri_Size;
-    ULONG ri_Data[0];
-};
+/*** Protected Attributes ***************************************************/
+#define MUIA_Rawimage_Data  0xFED10014ul   /* [IS.]  struct MUI_RawimageData *   v20.1 (06.01.2007)   */
+
+/*** Macros *****************************************************************/
+#define RawimageObject MUIOBJMACRO_START(MUIC_Rawimage)
 
 #define RAWIMAGE_PIXELFORMAT_ARGB    0
 #define RAWIMAGE_PIXELFORMAT_RGB     1
@@ -52,23 +35,14 @@ struct MUI_RawimageData
 #define RAWIMAGE_FORMAT_LZMA_ARGB_ID MAKE_ID('L', 'Z', 'M', RAWIMAGE_PIXELFORMAT_ARGB)
 #define RAWIMAGE_FORMAT_LZMA_RGB_ID  MAKE_ID('L', 'Z', 'M', RAWIMAGE_PIXELFORMAT_RGB )
 
-
-/*  attributes
- */
-#define MUIA_Rawimage_Data  0xFED10014   /* [IS.]  struct MUI_RawimageData *   v20.1 (06.01.2007)   */
-
-
-#if defined(__PPC__)
-  #if defined(__GNUC__)
-    #pragma pack()
-  #elif defined(__VBCC__)
-    #pragma default-align
-  #endif
-#endif
-
-#ifdef __cplusplus
-}
-#endif
+/*** Structs ****************************************************************/
+struct MUI_RawimageData
+{
+    ULONG ri_Width;
+    ULONG ri_Height;
+    ULONG ri_Format;
+    ULONG ri_Size;
+    ULONG ri_Data[0];
+};
 
 #endif /* RAWIMAGE_MCC_H */
-

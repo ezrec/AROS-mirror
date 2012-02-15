@@ -4,58 +4,11 @@
     $Id$
 */
 
-#include "symbols.h"
+#include <proto/intuition.h>
+#include <proto/utility.h>
 
 #include "Rawimage_mcc.h"
 
-#define CLASS       MUIC_Rawimage
-#define SUPERCLASS  MUIC_Pixmap
-
-#define INSTDATA        Data
-
-#define USEDCLASSESP used_mcps
-static const char *used_mcps[] = { NULL };
-
-struct Data
-{
-    int dummy;
-};
-
-/******************************************************************************/
-/* define the functions used by the startup code ahead of including mccinit.c */
-/******************************************************************************/
-
-#define COPYRIGHT "(c) 2011 Thore Böckelmann"
-#include "copyright.h"
-
-#define VERSION   20
-#define REVISION 18
-#define LIBDATE  "09.11.2011"
-#define USERLIBID CLASS " " STR(VERSION)"."STR(REVISION) " (" LIBDATE ")" FULLVERS
-
-#define libfunc(x)  Rawimage_Lib ## x
-#define reqfunc     muilink_use_Rawimage
-#define addname(x)  Rawimage_ ## x
-
-#define USE_INTUITIONBASE
-
-#include "mccinit.c"
-
-/* ------------------------------------------------------------------------- */
-
-#if !defined(__MORPHOS__) // MorphOS has it`s own DoSuperNew Method in amiga.lib
-static Object * STDARGS VARARGS68K DoSuperNew(struct IClass *cl, Object * obj, ...)
-{
-    Object *rc;
-    VA_LIST args;
-
-    VA_START(args, obj);
-    rc = (Object *)DoSuperMethod(cl, obj, OM_NEW, VA_ARG(args, ULONG), NULL);
-    VA_END(args);
-
-    return rc;
-}
-#endif
 
 /* ------------------------------------------------------------------------- */
 
@@ -120,14 +73,14 @@ static BOOL setRawimage(struct IClass *cl, Object *obj, struct MUI_RawimageData 
     return success;
 }
 
-static ULONG ASM Rawimage_New(REG(a0, struct IClass *cl), REG(a2, Object *obj), REG(a1, struct opSet *msg))
+static IPTR Rawimage__OM_NEW(struct IClass *cl, Object *obj, struct opSet *msg)
 {
-    if((obj = (Object *)DoSuperNew(cl, obj,
+    if((obj = (Object *)DoSuperNewTags(cl, obj, NULL,
         TAG_MORE, msg->ops_AttrList)) != NULL)
     {
         struct MUI_RawimageData *rdata;
 
-        if((rdata = (struct MUI_RawimageData *)GetTagData(MUIA_Rawimage_Data, (ULONG)NULL, msg->ops_AttrList)) != NULL)
+        if((rdata = (struct MUI_RawimageData *)GetTagData(MUIA_Rawimage_Data, 0, msg->ops_AttrList)) != NULL)
         {
             if(setRawimage(cl, obj, rdata) == FALSE)
             {
@@ -141,27 +94,14 @@ static ULONG ASM Rawimage_New(REG(a0, struct IClass *cl), REG(a2, Object *obj), 
 }
 
 
-static ULONG ASM Rawimage_Set(REG(a0, struct IClass *cl), REG(a2, Object *obj), REG(a1, struct opSet *msg))
+static IPTR Rawimage__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
 {
     struct MUI_RawimageData *rdata;
 
-    if((rdata = (struct MUI_RawimageData *)GetTagData(MUIA_Rawimage_Data, (ULONG)NULL, msg->ops_AttrList)) != NULL)
+    if((rdata = (struct MUI_RawimageData *)GetTagData(MUIA_Rawimage_Data, 0, msg->ops_AttrList)) != NULL)
     {
         setRawimage(cl, obj, rdata);
     }
 
     return DoSuperMethodA(cl, obj, (Msg)msg);
 }
-
-
-DISPATCHER(_Dispatcher)
-{
-    switch (msg->MethodID)
-    {
-        case OM_NEW             : return(Rawimage_New        (cl,obj,(APTR)msg));
-        case OM_SET             : return(Rawimage_Set        (cl,obj,(APTR)msg));
-    }
-
-    return(DoSuperMethodA(cl,obj,msg));
-}
-
