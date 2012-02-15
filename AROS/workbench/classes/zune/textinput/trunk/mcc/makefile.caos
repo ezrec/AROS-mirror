@@ -1,0 +1,38 @@
+#
+# $Id: makefile.caos 3 2010-03-18 07:59:14Z damato $
+#
+SHELL = /bin/bash
+include $(SRCDIR)makefile.config
+
+ifeq ($(COMPILER),gnuc)
+CFLAGS += -DMBX=1 -DDEBUG -DMYDEBUG=1 -I$(SRCDIR)include/modules/mui -I$(SRCDIR)include/modules/mui/private
+else
+CFLAGS += -DMBX=1 -DDEBUG -DMYDEBUG=1 -I$(SRCDIRH)include/modules/mui -I$(SRCDIRH)include/modules/mui/private
+endif
+
+OFILES = string.o misc.o buffers.o render.o scroll.o
+OUTPUT = libtextinput.a
+
+all: $(OUTPUT) $(SRCDIR)include/modules/mui/textinput_mcc.h
+
+$(OUTPUT): $(OFILES)
+	$(AR) $(AR_ADD) $(OUTPUT) $(OFILES) ; \
+	$(AR) $(AR_IDX) $(OUTPUT)
+
+$(SRCDIR)include/modules/mui/textinput_mcc.h : textinput_mcc.h
+	cp textinput_mcc.h $(SRCDIR)include/modules/mui/textinput_mcc.h
+
+
+scroll.o: scroll.c textinput_cfg.h textinput_mcc.h
+
+string.o: string.c mystring.h structs.h misc.h render.h buffers.h textinput_cfg.h textinput_mcc.h
+
+misc.o: misc.c structs.h misc.h
+
+buffers.o: buffers.c structs.h misc.h
+
+render.o: render.c structs.h misc.h render.h textinput_mcc.h
+
+clean:
+	$(CLEANUP)
+	-@rm -f *.o *.a $(SRCDIR)include/modules/mui/textinput_mcc.h

@@ -1,0 +1,193 @@
+;******************************************************************************
+;    ______                 __   ______                       __
+;   /_  __/               _/ /_ /_  __/    MUI Classes      _/ /_
+;    / /  ______ __  __  /  __/  / /  ______ ______ __  __ /  __/
+;   / /  / ____/ \ \/ /  / /    / /  / __  // __  // / / / / /
+;  / /  / __/_   /   /  / /_ __/ /_ / / / // /_/ // /_/ / / /_
+; /_/  /_____/  /_/\_\ /___//_____//_/ /_// ____//_____/ /___/
+;                                        / /           
+; $VER: 0.40 (23-July-1999)             /_/  
+; TextInput ©1997, 1998, 1999 by Oliver Wagner
+; TextInput Installer by Robert C. Reiswig ©1997, 1998, 1999 
+;
+; If you wish to use any part of this installer you must ask. May not be 
+; integrated/placed into any other package. You may NOT change this in an way!
+; Changes, suggestions or problems: ti@vgr.com or rob@vapor.com
+;******************************************************************************
+
+;*** System Stuff ***
+(set cpu (database "cpu"))  (set vblank (database "vblank"))
+(set graphmem (database "graphics-mem")) (set totmem (database "total-mem"))
+(set osver (/ (getversion "LIBS:version.library") 65536))
+(if (= vblank "60") ((set blank "NTSC")) ((set blank "PAL")))
+(set fastmem (- totmem graphmem))
+
+(if (= osver 37) (set workbench "2.0")) (if (= osver 38) (set workbench "2.1"))
+(if (= osver 39) (set workbench "3.0")) (if (= osver 40) (set workbench "3.1"))
+(if (= osver 41) (set workbench "3.5")) 
+
+(set cpu (database "cpu"))
+(if (= cpu 68000) (set #cpu 0)) (if (= cpu 68010) (set #cpu 1))
+(if (= cpu 68020) (set #cpu 2)) (if (= cpu 68030) (set #cpu 3))
+(if (= cpu 68040) (set #cpu 4)) (if (> (exists ("sys:libs/68060.library")) 0) (set #cpu 5) )
+
+;Check for MUI stuff in 'Libs' or 'MUI/Libs'
+ (if (exists "Libs/MUI") (set mui_localdir "Libs/MUI"))
+ (if (exists "MUI") (set mui_localdir "MUI"))
+
+(set vernum1 (getversion (tackon mui_localdir "Textinput.mcc")))
+(set ver1 (/ vernum1 65536)) (set rev1 (- vernum1 (* ver1 65536) ) )
+(set TextInputver (cat ver1 "." rev1))
+
+;********************************************************************
+; English Strings
+;********************************************************************
+(set #about (cat "\n\n\n\nWelcome to TextInput " TextInputver "\n\nCopyright ©1997-1999 by\n\nOliver Wagner\n<owagner@vapor.com>\n") )
+(set #whattodo "\n\n\n\n\nThis installer will copy or update the TextInput classes in MUI:Libs/MUI if needed.")
+(set #nomui (cat "\n\nTextInput uses Magic User Interface (MUI).\n\nThe installer has not found MUI: to be assigned, "
+                 "therefore you TextInput will not work correctly.  You will need to install "
+                 "MUI before running TextInput."
+            )
+)
+(set #updateinstaller "\nJust to let you know ESCOM AG has released a new version of the installer program.\n\n\nVersion 43.3 can be found on Aminet in:\n\n/util/misc/Installer-43_3.lha\n\n\nYou might want to upgrade soon, if you can. The TextInput installer will need it. Older installers might fail.")
+(set #updatingmuic "\nUpdating the MUI Classes if needed.\n\n(#?.mcc & #?.mcp)")
+(set #newermui "\nTextInput needs version 3.8 or higher of MUI installed to work correctly.\n\nNow would be a good time to Upgrade!\n\nYou can find the new MUI on Aminet in util/libs\n\nIt looks like you have: \n\n")
+(set #nompc "\nThe .MCC files for TextInput can not be installed to 'mui:libs/mui'")
+(set #byebye (cat "\nTextInput Install Complete!\n\n" ))
+(set #cpuver "\nWhat version of TextInput would you like to be installed?\n")
+
+(set #updatedlibs "\nInstall/Update the Vapor Libraries?\n* = Must be installed to work correctly\n(Click 'Help' for more info on the libs.)\n")
+(set #lib1 " Update library")
+(set #lib2 " Toolkit library (*)")
+(set #lib3 " Registration library")
+(set #libhelp1 "\n\nvapor_update.library:\nIf installed every Vapor app will automagically check for updates by querying the Vapor server via Internet. You will be informed and offered automatic downloading if there is an update.")
+(set #libhelp2 "\n\nvapor_toolkit.library:\nContains support functions which are used by most Vapor applications and thus can be shared to reduce individual application code size. ie: Async I/O library, crytographically strong random number generator, math support.")
+(set #libhelp3 "\n\nvapor_registration.library:\nContains the core code for the registration utility\n")
+(set #wherelibs "Where do you wish to place the Vapor lib(s), 'Libs:' is default.")
+(set #flushing "\n\nRunning:\n\n'avail flush >NIL:'\n\n to try to flush old Vapor libraries from memory.")
+
+;********************************************************************
+; Hello
+;********************************************************************
+(message #about)
+(welcome) 
+(message #whattodo)
+
+;********************************************************************
+; MUI installed?
+;********************************************************************
+(if (< (exists "mui:") 2)  (message #nomui) )
+
+;********************************************************************
+; Check on New installer 
+;********************************************************************
+(set InstallerVer 0) (set current_installer "43.3")
+(set vernum1 @installer-version) (set ver1 (/ vernum1 65536)) 
+(set rev1 (- vernum1 (* ver1 65536) ) ) (set InstallerVer (cat ver1 "." rev1))
+(if (< InstallerVer current_installer) (message #updateinstaller) )
+ 
+;********************************************************************
+; Copy over #?.mpc|#?.mcc (Need to be in mui:libs/mui)
+;********************************************************************
+(if (> #cpu 1) (set guesscpu 1) (set guesscpu 0)) 
+
+(if (<> (getassign "mui") "")
+(
+  (if (> (exists "mui:libs/mui") 0) 
+   (
+
+    (if (> (exists (tackon mui_localdir "Textinput.mcc.020")) 0)
+      (set whatver (askchoice (choices  "68000" "68020")
+                      (prompt #cpuver)
+	              (help   #cpuver)
+                      (default guesscpu)
+	           )
+      )
+    )
+
+    (working #updatingmuic)
+    (foreach mui_localdir "#?.mcp"
+      (if (AND (= whatver 1) (exists (cat (tackon mui_localdir @each-name) ".020") ) )
+        (copylib (source (cat (tackon mui_localdir @each-name) ".020")) (dest "mui:libs/mui") (newname @each-name) (optional "nofail") ) 
+        (copylib (source (tackon mui_localdir @each-name)) (dest "mui:libs/mui") (optional "nofail") ) 
+      )
+    )
+
+    (foreach mui_localdir "#?.mcc"
+       (if (AND (= whatver 1) (exists (cat (tackon mui_localdir @each-name) ".020") ) )
+        (copylib (source (cat (tackon mui_localdir @each-name) ".020")) (dest "mui:libs/mui") (newname @each-name) (optional "nofail") ) 
+        (copylib (source (tackon mui_localdir @each-name)) (dest "mui:libs/mui") (optional "nofail") ) 
+       )  
+    )
+   )
+
+   (message (cat #newermui muiver #nompc)) 
+  )
+)
+)
+
+;********************************************************************
+; Copy update Lib if wanted 
+;********************************************************************
+(set deflibs 7)
+(if (> (exists "libs") 0)
+ (
+  (set deflibs 0)
+  (if (> (exists (tackon "libs" "vapor_update.library")) 0)       (set deflibs (+ deflibs 1)))
+  (if (> (exists (tackon "libs" "vapor_toolkit.library")) 0)      (set deflibs (+ deflibs 2)))
+  (if (> (exists (tackon "libs" "vapor_registration.library")) 0) (set deflibs (+ deflibs 4)))
+
+  (set libPick (askoptions (choices #lib1 #lib2 #lib3)
+			  (prompt #updatedlibs)
+	                  (help   (cat #libhelp1 #libhelp2 #libhelp3))
+          		  (default deflibs)
+	       )
+  )
+
+  (if (> libPick 0)
+   (
+    (set wherelibs (askdir (prompt #wherelibs)
+		          (help   #wherelibs)
+     		          (default "LIBS:")
+                   )  
+    )
+    
+   (if (IN libPick 0)
+     (if (> (exists (tackon "Libs" "vapor_update.library")) 0)
+      (copylib (source (tackon "Libs" "vapor_update.library")) (dest wherelibs) (optional "nofail"))  
+     )
+    )
+
+    (if (IN libPick 1)
+     (if (> (exists (tackon "Libs" "vapor_toolkit.library")) 0)
+      (copylib (source (tackon "Libs" "vapor_toolkit.library")) (dest wherelibs) (optional "nofail"))  
+     )
+    )
+ 
+    (if (IN libPick 2)
+     (if (> (exists (tackon "Libs" "vapor_registration.library")) 0)
+      (copylib (source (tackon "Libs" "vapor_registration.library")) (dest wherelibs) (optional "nofail"))  
+     )
+    )
+
+   (working #flushing)
+   (run "avail flush > NIL:")
+   (run "avail flush > NIL:")
+   (run "avail flush > NIL:")
+
+   )
+
+  )
+ )
+)
+
+;********************************************************************
+; End Bye 
+;********************************************************************
+(if (> (exists ("c:multiview")) 0) (set #mpath "c:") )
+(if (> (exists ("sys:Utilities/multiview")) 0) (set #mpath "sys:Utilities") )
+(run (cat "run " #mpath "/multiview textinput.readme") )
+
+(set @default-dest "MUI:Libs/mui")
+
+(exit #byebye)

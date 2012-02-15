@@ -1,0 +1,10 @@
+-----------------------------------
+MUI TextInput MCC class - ChangeLog
+-----------------------------------
+
+$Id: ChangeLog 2 2010-03-18 07:54:56Z damato $
+$URL: https://textinput-mcc.svn.sourceforge.net/svnroot/textinput-mcc/trunk/ChangeLog $
+
+2010-03-18 Jens Langner <Jens.Langner@light-speed.de>
+
+  * initial checkin of open sourced sources. happy coding ;)

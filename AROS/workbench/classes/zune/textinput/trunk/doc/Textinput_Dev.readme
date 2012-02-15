@@ -1,0 +1,50 @@
+This file is intended to provide information for developers working on
+Textinput through the cvs at water.vapor.com. Feel free to add guidelines,
+information, suggestions, etc. which you feel would be relevant to the other
+programmers.
+
+SAS/C is the recommended compiler for this project, and it is unlikely that it
+will work with any other without changes.
+
+Don't forget to add all appropriate changes to Textinput.readme (which is
+formatted to 79 columns), postfixed with your nick in brackets.
+
+
+Notes
+-----
+
+- Version 22.0 (first upload to the cvs) has a fair amount of code commented
+  out. This is to eliminate relatively untested features from an imminent
+  public release.
+- Values for most prefs options which are set by the app are overridden in the
+  next MUIM_Setup.
+
+
+Todo
+----
+
+- Optionally wordwrap on every operation, not just character entry.
+- Fix bold characters and those with negative kerning being clipped during
+  cursor movement.
+- Fully localise.
+- Fix rendering text in JAM2 mode over a pattern background (the writemask may
+  not cover all pens of the pattern).
+- Make setting MUIA_Textinput_Contents and MUIM_Textinput_LoadFromFile
+  undoable.
+- Make wordwrap work better with undo/redo.
+- Add volume/assign/path completion.
+- Add image support in MUI styles.
+- Add separator bar support (a la NList).
+- Optionally hide cursor when marking.
+- Optionally show cursor (ghosted/outlined) when inactive.
+- Add user-definable tab, EOL and EOF (NULL) character rendering.
+- Make email styles more intelligent.
+- Individual design/colour prefs for single/multiline input/noinput gadgets.
+- Add AlphaSpell support.
+- Add spelling suggestions in a popup list (I'm working on this -KingGuppy).
+- Add spell-checker prefs (e.g. language) to Textinput.mcp.
+- Add optional beep (or other events?) on misspelling.
+- Add dynamic wordwrap, based on object width.
+- Add dynamic scrollbar hide/show (like NList).
+- Add smooth scrolling.
+- Allow user-definable pattern backgrounds in input gadgets.

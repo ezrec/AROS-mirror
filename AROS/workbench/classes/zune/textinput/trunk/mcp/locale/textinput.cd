@@ -1,0 +1,42 @@
+;
+; $VER: Textinput.cd 1.0
+;
+; ----------------------
+;
+; Strings for .mcp prefs module
+;
+MSG_PREFS_COLORS (//)
+Colors
+MSG_PREFS_FOREGROUND (//)
+Foreground
+MSG_PREFS_BACKGROUND (//)
+Background
+MSG_PREFS_INACTIVE (//)
+Inactive:
+MSG_PREFS_ACTIVE (//)
+Active:
+MSG_PREFS_MARKED (//)
+Marked:
+MSG_PREFS_CURSOR (//)
+Cursor:
+MSG_PREFS_STYLE (//)
+Style:
+MSG_PREFS_GRAB_GAD (//)
+_Grab old string gadget colours
+MSG_PREFS_ADD (//)
+Add
+MSG_PREFS_DEL (//)
+Del
+MSG_PREFS_L1 (//)
+\033uKey
+MSG_PREFS_L2 (//)
+\033uAction
+MSG_PREFS_SYNC (//)
+Call editor synchronously?
+MSG_PREFS_EDITCALL (//)
+Call:
+;
+; Strings for class
+;
+MSG_MINVER (//)
+Application requests version %ld\nof Textinput.mcc, but you only\nhave version %ld installed!

@@ -1,0 +1,929 @@
+Textinput MUI Custom Class
+==========================
+
+This is a combined single/multi line editor gadget. Key features:
+
+· only one compact class for single line/multi line mode,
+  efficient due to code sharing
+· same prefs for single line/multi line mode
+· optional external editing in sync/async mode for multi line
+  mode
+· fully configurable key bindings
+· supports cut & paste
+· supports many style configuration options including
+  blinking and bar cursor
+· includes numeric mode with upper/lower bounds check
+· support old stringclass tags/methods for easy "drop in"
+  replacement in existing code
+· works nicely in virtgroups (unlike the gadgetclass based
+  stringclass)
+
+The class is still somewhat in "beta" and doesn't yet have
+proper documentation. Include file and demo program source
+are included, though.
+
+History
+-------
+
+11.10
+-----
+(first public release included in MD-2 0.182beta)
+
+11.11
+-----
+- paste from clipboard now works
+- fixed all kind of problems with internal
+  status loss during certain operations
+- SHIFT-DEL and SHIFT_BS now delete to beginning/to
+  end of line
+
+11.12
+-----
+- fixed problems with marking/cursor pointer
+  pointing to freed mem on a buffer expand
+- major speedup in text output
+- cut & copy into clipboard now works
+
+11.13
+-----
+- setting MUIA_(Textinput|String)_Contents with NULL
+  caused enforcer orgy
+
+11.14
+-----
+- prefs now have a "Samples" page of their own to
+  make the group fit on 640x200 screen
+- gadget didn't go inactive upon a cleanup
+- DoCopy will now copy the whole contents to clipboard
+  if no block is marked
+
+12.0
+----
+- totally changed key control settings; keys are now
+  a list of key/action pairs (up to 32). It's now
+  possible to specify more than one key for an action.
+- added a key action for calling external editor
+  (defaults to "ramiga e")
+- added MUIA_Textinput_MinVersion attribute; object
+  refuses to create itself if the required version is
+  less than current version
+
+12.1
+----
+- fixed another problem with buffer expanding
+- fixed another problem with active state loss
+
+12.2
+----
+- added asynchronous external editor mode. If set, editor
+  is called asynchronously, object remains enabled and
+  a notification is made on the temp file. If changes to
+  the file are made, it is reread.
+- added default popup menu (defaults to on for multi,
+  off for single line objects)
+- speed up pasting of text from clipboard
+- text input is generally faster now
+- no longer craps out when trying to past multi line strings
+  into a single line gadget
+
+12.3
+----
+- "Mark all" would place the cursor pointer past the end of
+  the buffer, thus creating all kind of not so neat side effects
+- copying all text to clipboard caused to add a 0 byte at the
+  end of the data
+- Added optional wordwrap.
+
+12.4
+----
+- pressing lamiga/ramiga command keys no longer activates any
+  window menu shortcuts
+
+12.5
+----
+- shortended popup menu title size
+- wordwrap now defaults to "ON" for multi line gadgets
+  (70 chars)
+- "Cut line" now works as advertized
+- fixed problem with cutting text loosing cursor pointer focus
+
+12.6
+----
+- wordwrap defaults can now be specified in the prefs
+- external editor can now be started multiple times in
+  async mode
+
+12.7
+----
+- fixed resetting of drawmode to JAM1 (fixes artefacts)
+- setting/getting of MUIA_Textinput_Integer (and
+  _String_Integer/_Numeric_Value) now works
+- added MUIA_Textinput_Changed attribute
+
+12.8
+----
+- fixed problems with D&D (Mousebutton events weren't eaten
+  up, thus triggering D&D during mark)
+- now handles attached popup and attached lists correctly
+- pressing return in a single line gadget while text is marked
+  no longer replaces that text
+
+12.9
+----
+- fixed a problem with blinking cursor trashing the rastport
+  drawmode
+
+13.0
+----
+- now all keys are configurable independant of MUI navigation
+  prefs
+- added MUIA_Textinput_RemainActive attribute. Object will
+  remain active even after pressing RETURN in a single line
+  gadget.
+- added MUIM_Textinput_Acknowledge method which is sent on
+  pressing RETURN. Default handling is set() of MUIA_Textinput_Acknowledge
+  and MUIA_String_Acknowledge to rootclass for backward
+  compatibility.
+- AcceptChars/RejectChars now work
+- IsNumeric now works, including range checking
+- notification on MUIA_Textinput_Changed is now possible
+- added MUIM_Textinput_TranslateEvent hook method which allows
+  to hook into textinput's inputevent->string translation.
+  MapRawKey() has already been called at this place so the
+  subclass can directly modify the translated buffer.
+- MUIM_HandleEvent is now called on the real class, instead of
+  being coerced on the textinput class directly, to allow to
+  totally hook the input handling
+- added MUIM_Textinput_InsertText method to insert text at
+  the current cursor position
+- pasting of multi line text into single line gadget is now
+  possible; the application must be careful to process all
+  text during the MUIM_Textinput_Acknowledge method (or
+  notification triggered on MUIA_Textinput_Acknowledge),
+  because the method is called for every line in the
+  clipboard data
+- added support for MUIA_Textinput_Secret/MUIA_String_Secret.
+  Will not allow cutting/copying from such strings to avoid
+  easy revelation of the password in question
+- setting MUIA_Textinput_Contents now causes the cursor to
+  be at the end of the text, not at the beginning
+- multi line textinputs with scroller no longer send a 
+  scroller inform when the scroller positions haven't changed.
+  Speeds up general option esspecially during text input.
+- added word left/right functionality
+
+13.1
+----
+- moved DEL/BS and TAB functionality to configurable keys, too
+- changed key config ID to avoid clashes with previous
+  (incomplete) key bindings
+- fixed duplicate IDs for wordwrap on and wordwrap column
+- HELP key no longer causes CSI trash to be inserted into strings
+
+13.2
+----
+- various operations which modified contents didn't actually
+  trigger notification on MUIA_Textinput_Contents/Changed.
+- RemainActive now disables the automatic deactivation of
+  the gadget when clicking outside of the container bounds
+- fixed the "Last line" bug
+- fixed bogus xoffset not resetting to 0 on set() of
+  string contents
+
+13.3
+----
+- fixed popup menu "Word wrap" toggling
+- fixed string insertion to not always trigger a string
+  acknowledge when inserting strings without \n
+- fixed excess scrollbar refreshes
+
+13.4
+----
+- added MUIA_Textinput_Lines attribute (notificable)
+- fixed problems with cursor not being made properly 
+  visible when a left scroll is required
+- fixed TAB to not do a double jump
+- now holds a class global cache of translated input
+  expressions; reduces object setup time drastically
+  and reduces per-object memory requirements
+- fixed a few more potential problems with the scroll bars
+  not being updated correctly
+- textinputscroll.mcc now properly forwards MUIM_Notify to
+  the textinput object only
+
+13.5
+----
+- no longer disables menu shortcuts when active
+
+13.6
+----
+- added MUIA_Textinput_Editable
+- works around a nasty problem with IEQUALIFIER_MIDBUTTON
+  being set on every and all input events on some systems,
+  thus making the input handling not match anything.
+  Now strips down matched Qualifiers to keyboard only
+  (without CAPSLOCK)
+
+13.7
+----
+- unmapped special keys no longer cause bogus CSI sequences
+  to be inserted
+- now handles menu shortcuts again (textinput key defs
+  take precedence, though)
+- external edit button is now properly disabled in noedit
+  mode
+- "external edit" popup entry is now properly disabled in noedit
+  mode
+- secret mode no longer shows a bogus char at the end of line
+- "cut line" no longer copies to clipboard (and therefore now
+  works in secret mode, too)
+- "cut line" didn't check whether the cursor was still visible
+- revert changes now works
+- pasting of multi line text into single line gadgets was
+  hosed
+
+13.8
+----
+- now raises task priority for more smooth input handling when
+  active
+- changed default key binding for "cut line" to "ramiga y"
+  and for "cut marked" to "ramiga x"
+- "Cut marked" now behaves differently in single line mode;
+  if nothing is marked, the gadget is erased completely (to
+  match standard amiga string gadget behavior)
+- added double click mark handling; double click selects word,
+  triple click line, quad click everything and more clicks
+  deselects again
+- added "backspace to start of word" and "delete till end of word"
+  functionality, default mappings to control-bs/del
+- menu shortcuts no longer trigger gadget shortcuts
+
+13.9
+----
+- no longer inserts a bogus blank when tabbing out of the gadget
+- added MUIM_Textinput_InsertFromFile functionality
+- added "Insert file" UI functionality; default key binding "ramiga shift o"
+
+13.10
+-----
+- added MUIA_Textinputscroll_UseWinBorder
+- priority will now be set to normal if the window containing the
+  gadget is deactivated
+
+13.11
+-----
+- now using highly optimized TextFit/TextLength replacement for
+  better output speed
+
+13.12
+-----
+- improved overall speed with various internal optimizations
+- fixed cursor size to be calculated from the font's blank width,
+  not tf_XSize, which could cause problems with some font sets
+
+13.13
+-----
+- Prefs: Label for cursor colors accidentally read "marked", too
+- fixed a problem with characters not part of the current font
+  messing up the size calculations
+- now compiled with SAS/C 6.58
+
+13.14
+-----
+- notify events are now directly CoerceMethod()ed on the notify class
+  to avoid going through the areaclass dispatcher/OM_SET method
+
+13.15
+-----
+- now sets writemask/maxpen on planar display for much better rendering
+  speed on AGA systems
+
+13.16
+-----
+- fixed a problem with the font not being set on initial redraws
+- fixed a problem with planemasks not being reset when rendering
+  the cursor, thus causing all kinds of artifacts
+
+13.17
+-----
+- fixed a problem with the gadget not setting up properly when text
+  was set()ed before receiving a MUIM_Setup
+
+13.18
+-----
+- fixed enforcer flood when a object was MUIM_Setup'ed when containing
+  text
+- no longer does wordwrap in single line gadgets
+- no longer wordwraps lines starting with ">" (to avoid messup of
+  quoted text)
+- reenabled double click functionality
+
+13.19
+-----
+- modified default color scheme to use the BOOPSI stringclass
+  alike color inversions for rendering the cursor
+- fixed problems with the gadget remaining visually "active"
+  even when the window containing the gadget was deactivated
+- fixed task priority screwing
+
+13.20
+-----
+- fixed disabling of Wordwrap/Insert file popup menu items
+  for "NoEdit" mode gadgets
+- fixed screwup with non-proportional fonts
+
+13.21
+-----
+- default cursor color is now the complement of the active
+  string color, not the standard string color (this matches
+  stringclass behavior)
+
+13.22
+-----
+- now recognizes some language specific chars as parts of
+  words when jumping
+- fixed a longstanding bug in the font width calculation
+  which went berzerk upon hitting a non-printable character
+  (control codes, for example)
+
+13.23
+-----
+- fixed a bug with textinput going mad if the char kerning
+  table had a negative value (xhelvetica, for example)
+- "cut" didn't update some internal cursor state variables
+  thus causing some messup
+
+13.24
+-----
+- fixed another bug related to characters below tf_LoChar
+  being in the font set
+- fixed a race condition with MUIM_GoActive ariving before
+  MUIM_Show/MUIM_Setup
+- fixed a problem with wordwrap not stopping on a line
+  which had other whitespaces before the trailing \n
+- fixed a race condition in mccheader.c which could
+  cause a big nuke during libopen
+- fixed word jump not working with upper case letters
+
+13.25
+-----
+- fixed another wordwrap related problem
+- external editor is now called with 16k stack size
+- fixed a long standing bug with asynchronous external
+  editor calls only working once
+- added MUIA_Textinput_MarkStart | _MarkEnd attributes
+  which return the byte offset of the marked area
+  start/end or MUIV_Textinput_NoMark
+
+13.26
+-----
+- fixed another problem with the activation state
+  being lost under certain circumstances
+
+13.27
+-----
+- fixed serious bug with DoubleClick moving the
+  internal mark start pointer before the actual buffer,
+  causing all kinds of neat side effects including
+  Major Crash®
+- fixed cursor refresh problem when cursor was
+  on a char with negative kerning values
+
+13.28/29 (internal only)
+------------------------
+
+13.30
+-----
+- added hyper textfit/textlen code from V/MUI 4.0,
+  improving output speed and esspecially input response 
+  times
+
+13.31
+-----
+- fixed the just reimplemented "unknown char" offset bug
+  again
+
+13.32
+-----
+- MUIA_Textinput_MarkStart/End are now both settable.
+- MUIA_Textinput_CursorPos is now settable.
+- added new overridable method MUIM_Textinput_HandleChar
+  which encapsulates the "single printable char"
+  handler.
+
+13.33
+-----
+- modified the activate/inactivate handling a bit
+
+13.34
+-----
+- fixed handling of menu shortcut selection while TI
+  is active
+- fixed window activation sometimes not causing a proper
+  redraw of the currently active TI object
+- fixed some longword boundary alignments in TI's
+  data structure which could cause uneccessary slowdowns
+  on 68020+
+- fixed button up events to no longer trigger a whining
+  "Hey, this is a readonly-gadget!" beep in readonly
+  mode
+- did some general optimizations speeding up normal
+  input
+
+13.35
+-----
+- now strips \r when OM_SETting the complete buffer
+- fixed another instance of the bogus "Hey, I'm readonly"
+  DisplayBeep()-whining
+- fixed broken cursor offset calculation in secret mode
+- optimized calculation of current line length
+
+13.36
+-----
+- fixed a serious bug in the drawline code which could cause
+  a RectFill() call with min/max exchanged, thus causing a nuke
+  on AGA
+- removed all calls to OldOpenLibrary() to make Richard
+  Körber happy
+
+13.37
+-----
+- fixed a serious internal state screwup which occured
+  when ramiga b ("mark start") was pressed and no
+  cursor movement followed up before an actual key
+  was entered -- basically ended up in a strcpy( -1, -1 );
+
+13.38
+-----
+- fixed a potential race condition when creating menu events
+  from hotkeys which caused a MUIM_Cleanup operation (most
+  notably direct notifications to MUIA_Application_Iconified)
+
+13.39
+-----
+- added support for Contact Manager direct insertion
+
+13.40
+-----
+- textinput.mcp didn't save wordwrap settings
+
+13.41
+-----
+- fixed MUIA_ControlChar handling (thanks Zapek)
+
+13.42
+-----
+- fixed the task priority screwing which only caused
+  trouble anyway. Also fixes the infamous AmIRC
+  "scroller going deaf" bug
+
+13.43
+-----
+- added workaround for obscure conditions where
+  the window rastport suddenly is devoid of a layer...
+
+13.44
+-----
+- added "Popup" checkboxes for single and multiline gadgets
+  in prefs
+
+13.45
+-----
+- fixed division by zero bug in Textinputscroll.mcc
+
+13.46
+-----
+- fixed bogus framing of Textinputscroll objects
+  when setting them active
+
+13.47
+-----
+- fixed GoActive in scroller class to actually activate
+  the contained textinput object (KingGuppy)
+- fixed setting MUIA_String_Contents not triggering
+  notification on MUIA_Text_Contents and vice versa
+  (KingGuppy)
+- fixed setting MUIA_*_Integer/Numeric_Value not
+  triggering notification on MUIA_*_Contents and
+  MUIA_Textinput_Changed
+- fixed DoTop/DoBottom/DoPageUp/DoPageDown
+  not checking cursor x position for validity,
+  thus potentially wrecking havoc (KingGuppy)
+
+13.48
+-----
+- when selecting an area and pasting from clipboard,
+  the selected area is now replaced
+- when CManager wasn't installed, the menu item
+  was disabled, but would still generate
+  ContextMenuChoice events, thus crashing
+- added a hopefully working workaround against
+  hacks moving window positions to negative coordinates
+
+13.49
+-----
+- change of behavior: When pasting text into a
+  single line gadget which hasn't got
+  MUIA_TextInput_RemainActive set, the pasting will
+  now stop as soon as the data stream hits an
+  \r or \n. This should fix the rather annoying
+  behavior when pasting a line with trailing crlf
+  into a single line gadget to visually only
+  erase the contents (for example, in MD2
+  To:/Cc:/Post: fields)
+
+14.0
+----
+- added MUIA_Textinputscroll_VertScrollerOnly
+
+15.0
+----
+- added MUIA_Textinput_NoInput which makes TI
+  behave like a plain textfield with no input.
+  Still allows marking/copying text with the mouse.
+- updated Demo to reflect the textfield mode
+- updated MCP class to have a noinput sample
+- added a 68020++ compile of the main class to
+  the archive
+
+15.1
+----
+- NoInput mode gadgets no longer set
+  ActiveObject to NULL when a mouse click occurs
+  outside the object
+
+16.0
+----
+- several internal optimisations (KingGuppy)
+- NoInput gadgets now render the defined MUI background (KingGuppy)
+- NoInput gadgets now default to MUIA_Textinput_AutoExpand mode (KingGuppy)
+- added clickable URLs (KingGuppy)
+- now accepts MUIA_Text_Contents as an alias for MUIA_Textinput_Contents
+  (KingGuppy)
+- now requires vapor_toolkit.library (KingGuppy)
+
+16.1
+----
+- all attributes listed as gettable now are (KingGuppy)
+- fixed selection of URLs at the end of the line when clicking past the end
+  (KingGuppy)
+
+16.2
+----
+- added MUIA_Textinput_SetMin, MUIA_Textinput_SetMax and MUIA_Textinput_SetVMax
+  (KingGuppy)
+- added IRC styles support (KingGuppy)
+- optimised and improved delete and backspace functions (KingGuppy)
+- added acceleration to scrolling based on pointer distance from gadget
+  (KingGuppy)
+
+17.0
+----
+- fixed background offsets (KingGuppy)
+- Textinputscroll objects are now framed when active in NoInput mode
+  (KingGuppy)
+- NoInput objects now use TextPen rather than the Textinput configured inactive
+  pen (KingGuppy)
+- fixed potential crash with non-editable, VertScrollerOnly Textinputscroll
+  objects (KingGuppy)
+- disabled external edit gadget for NoInput Textinputscroll objects (KingGuppy)
+- styles are now displayed in input gadgets (KingGuppy)
+
+17.2
+----
+- temporarily disabled WriteMask
+- fixed two pens never being freed
+- removed stale debugging information
+
+17.3
+----
+- MUIA_Textinput_SetMin now defaults to FALSE for all Textinputscroll objects
+  (KingGuppy)
+- reenabled WriteMask and hoping for the best (KingGuppy)
+- NoInput Textinputscroll objects are now scrollable via the keyboard
+  (KingGuppy)
+- now adds the "external edit" button to the cyclechain when appropriate
+  (KingGuppy)
+- fixed Enforcer hits with backspace/delete when using fixed-width fonts
+  (KingGuppy)
+- input objects no longer have their marked area cleared when going inactive
+  (KingGuppy)
+- style codes used while marking will add or remove the codes from the marked
+  area (KingGuppy)
+
+18.0
+----
+- added MUIA_Textinput_PreParse (KingGuppy)
+- MUI styles now work, and are the default for NoInput gadgets (KingGuppy)
+- partial line rendering is now disabled for proportional fonts and styled text
+  (KingGuppy)
+
+18.1
+----
+- fixed MUIA_Text(input)_PreParse
+- fixed resetting of SoftStyles after rendering
+
+18.2
+----
+- fixed style tokens being shown during word marking in NoInput objects
+  (KingGuppy)
+
+18.3
+----
+- the background pen is now restored to 0 after rendering to eliminate some
+  messups (KingGuppy)
+- writemasks are now handled better under OS 3.0+ and when rendering
+  backgrounds of NoInput objects (KingGuppy)
+- disabled spellchecking test code which was slowing down editing (KingGuppy)
+
+19.0
+----
+- implemented pen selection MUI styles (KingGuppy)
+- implemented "disable style parsing" (ESC -) MUI code (KingGuppy)
+- added MUIA_Textinput_Format (same as MUIA_String_Format) (KingGuppy)
+- disabling popup menus in preferences now works properly (KingGuppy)
+
+19.1
+----
+- improved entering styles whilst marking (KingGuppy)
+- added basic styles to popup menu (KingGuppy)
+- changing popup menu prefs now *really* works properly (KingGuppy)
+- pressing RMB while marking or selecting a URL now aborts (KingGuppy)
+
+20.0
+----
+- aborting URL selection with RMB now redraws properly (KingGuppy)
+- implemented MUI formatting styles (KingGuppy)
+- setting the contents of a NoInput object to a string with newline characters
+  will now set MUIA_Textinput_Multiline if it isn't already (KingGuppy)
+- added MUIA_Textinput_SetVMin (KingGuppy)
+
+20.1
+----
+- fixed buffer miscalculation in MUIM_Textinput_LoadFromFile
+
+21.0
+----
+- MUIA_String_BufferPos is now a synonym for MUIA_Textinput_CursorPos
+  (KingGuppy)
+- added email styles (KingGuppy)
+- added primitive auto-spellchecking (requires util/gnu/ispell31p4bin.lha)
+  (KingGuppy)
+- added MUIM_Textinput_DoToggleCase and key control (KingGuppy)
+- marking can be resumed by holding shift when clicking (KingGuppy)
+- word and line marking behaviour has changed again (KingGuppy)
+- IsNumeric gadgets now have more protection against invalid characters being
+  inserted (KingGuppy)
+- added MUIM_Textinput_(In|De)crementDec and key control (KingGuppy)
+- added button in prefs to reset key bindings to default (KingGuppy)
+- added HTML styles (KingGuppy)
+- fixed rendering of characters with negative kerning at the start of lines
+  (KingGuppy)
+- added undo/redo (KingGuppy)
+- improved writemask calculation and fixed background artifacts (KingGuppy)
+- fixed two small errors in marked area rendering which resulted in one
+  character in a marked area possibly being displayed unselected (KingGuppy)
+
+22.0
+----
+- added MUIA_Textinput_HandleURLHook (KingGuppy)
+- getting MUIA_Textinput_Integer is now guaranteed to always return a number
+  between MinVal and MaxVal (KingGuppy)
+- fixed some characters being partially cut off at the beginning of a line
+  (KingGuppy)
+- fixed more lame kerning-related bugs (KingGuppy, thanks Olli)
+- fixed clicking in secret gadgets not moving the cursor (KingGuppy)
+- fixed Textinputscroll objects accidentally rendering the cursor outside the
+  appropriate area (KingGuppy)
+- improved redraw and fixed some bugs which occassionally resulted in
+  artifacts (KingGuppy)
+- added bookmarks (KingGuppy)
+- renamed old "Cut line", which didn't cut to clipboard, to "Del line", and
+  added a true "Cut line" action (KingGuppy)
+- allowed variable cursor size (KingGuppy)
+- URL and misspelling underline colours are now configurable (KingGuppy)
+- undo limits are now configurable (KingGuppy)
+- disabled spell-checking for this public release (KingGuppy)
+
+22.1
+----
+- fixed marking not being reset when deleting/cutting a line (Troels)
+- fixed mcc header to work with GCC (Zapek)
+
+22.2
+----
+- added newmouse mouse wheel support (Olli)
+
+22.3
+----
+- changed HTML syntax highlighting to use colours and distinctly mark tags,
+  quoted values, comments and entities (KingGuppy)
+
+22.4
+----
+- fixed a few crashes with Textinputscroll.mcc in NoInput mode (Olli)
+- now all allocated pens are freed (Olli)
+- scrollbars for multiline noinput gadgets are now dynamically added and
+  removed (KingGuppy)
+
+22.5
+----
+- now closes vapor_toolkit.library on exit (Troels)
+
+23.0
+----
+- added a configurable fixed-width font and MUIA_Textinput_Font (KingGuppy)
+
+24.0
+----
+- added MUIA_Textinput_[Suggest|Prohibit]Parse (KingGuppy)
+- added non-standard ESC 0 MUI style code to revert to default pen (KingGuppy)
+- AppendText now properly notifies and rescans URLs (KingGuppy)
+
+24.1
+----
+- properly bumped version string (KingGuppy)
+- removed writemask when using a custom background to fix graphical glitches
+  under some circumstances (KingGuppy)
+- now exports and imports its contents like string class during
+  MUIM_Application_(Load|Save) (KingGuppy)
+
+25.0
+----
+- fixed a potential crash with illegal input expression
+  specifications (Olli)
+
+26.0
+----
+- added MUIA_Textinput_NoCopy, which disables selecting or copying text
+  (KingGuppy)
+- preferences for the external editor button image are now properly used
+  (KingGuppy)
+
+26.1
+----
+- hopefully fixed a problem with the editor popup gadget image (Olli)
+
+26.2
+----
+- added option to turn off email style highliting (Olli)
+
+26.3
+----
+- MUIA_Textinput_Numeric was incorrectly documented in the header as get-only.
+  It is in fact isg. Fixed (KingGuppy)
+
+26.4
+----
+- hopefully fixed background rendering in virtgroups (KingGuppy)
+- finished adding smooth scrolling, and hopefully fixed a few glitches -
+  without adding too many - in the process (KingGuppy)
+- should now always stop blinking the cursor when disabled (KingGuppy)
+- fixed disabling of email quote highlighting, and also improved the colour
+  scheme slightly. You can now enable it without having to use protective
+  eyewear (KingGuppy)
+
+26.5
+----
+- clips with multiple CHRS chunks will now be pasted fully (KingGuppy)
+- changed wheel to actually scroll lines regardless of cursor position
+  (Olli)
+
+26.6
+----
+- the editor button prefs gadget will now scale with the size of the window
+  (KingGuppy)
+- setting the external editor to run synchronously should now work properly
+  (KingGuppy)
+
+26.7
+----
+- corrected mirc color emulation (MUIV_Textinput_Styles_IRC) palette map and
+  colorcode parsing (Entity)
+
+26.8
+----
+- removed some task priority changes which were affecting MUI scrollbars
+  (Zapek)
+
+26.9
+----
+- fixed eating of all rawkeys in eventhandler (Olli)
+- AttachedList forwarding now uses MUIM_HandleEvent instead
+  of HandleInput, for MUI4 (Olli)
+
+26.10
+-----
+- "blank" cursor is now rendered with "n" width, instead of space,
+  to conform to the old-style Intuition gadget (Olli)
+- major speed improvement in "blank" cursor rendering (Olli)
+- event handler now uses MUI_EHN_GUIMODE for MUI4 (Olli)
+- now sets cl_ID if running with MUIMaster >= 20, for better
+  debugging (Olli)
+
+26.11
+-----
+- recompiled to work with MUI3 (oops)
+
+27.0
+----
+- fixed menu shortcut emulation to properly deal with CHECKIT
+  and MENUTOGGLE (Olli)
+
+27.1
+----
+- some rendering speedups, esspecially with block (default)
+  cursor mode (Olli)
+
+27.2
+----
+- fixed another potential problem in menu item emulation (Olli)
+
+27.3
+----
+- fixed AskMinMax to return proper DefWidth/Height (Olli)
+
+28.0
+----
+- no longer relies on valid _window(obj) during draw.
+  Should also fix print problems with older V versions. (Olli)
+
+28.1
+----
+- minor optimization in rendering engine (Olli)
+- hopefully fixed menu issues (Olli)
+
+28.2
+----
+- some more minor optimizations in the rendering engine (Olli)
+
+28.3
+----
+- no longer draws an edit button when the scrollbars are attached to the
+  window's border (Zapek)
+
+28.4
+----
+- some general optimizations (Olli)
+- fixed prop step offset for scroll class (Olli)
+- fixed quote mark highlighting problem (Olli)
+
+28.5
+----
+- Cursor should no longer appear outside the gadget when it's scrolled out
+  horizontally (KingGuppy)
+- fixed prop step offset for scroll class, really (KingGuppy)
+
+28.6
+----
+- Textinput wouldn't eat keyup events properly, thus sometimes causing
+  strange "side-activation" effects e.g. in Voyager (Olli)
+- Fixed a bug in marking code regarding styles (Olli)
+- Hopefully, finally, once and for all fixed the menu checkmark
+  toggle bug (Olli)
+
+28.7
+----
+- keyup eating fixed -- really, this time (Olli)
+- reduced per-instance minimum memory footprint to 1/8 (Olli)
+
+28.8
+----
+- changed again to not eat "meaningless" events (should fix AmIRC
+  alt-scroll bug) (Olli)
+
+28.9
+----
+- fixed Cut (RAmiga-X) without marked area not copying the contents of the
+  gadget to clipboard (Entity)
+
+29.0
+----
+- reverted "Cut" to old behaviour and added "Copy & Cut" instead (Entity)
+
+29.1
+----
+- added new attribute MUIA_Textinput_ResetMarkOnCursor; removes text
+  mark when a cursor movement is executed (Olli)
+
+29.2
+----
+- fixed rendering for OS 2.x (Olli)
+- setting MUIA_Textinput_MarkStart/End to -1 not only did not work, but
+  also had a good chance of trashing the object instance (Olli)
+- when replacing a marked area, the first new char wasn't necessarily
+  made visible (Olli)
+
+29.3
+----
+- MUIA_(Textinput|String)_MaxLen now settable (Olli)
+
+29.4
+----
+- fixed "Copy" not copying last char at end of line (Olli)
+
+29.5
+----
+- marking reverted to previous (pre 29.x) behavior (Olli)
+- when clearing the font name in the prefs, TI will now properly fall
+  back to the MUI font (Laursen)
