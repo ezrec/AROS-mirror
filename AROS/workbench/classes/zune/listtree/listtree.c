@@ -129,6 +129,19 @@ IPTR Listtree__MUIM_Listtree_GetEntry(struct IClass *cl, Object *obj, struct MUI
         }
     }
 
+    /* This probably has different "stop" condition than the one with SameLevel flag if in real tree. Since
+     * this is a list, the code is the same
+     */
+    if ((msg->Node == MUIV_Listtree_GetEntry_ListNode_Root) && (msg->Flags == 0))
+    {
+        ForeachNode(&data->nodes, node)
+        {
+            if (counter == msg->Position)
+                return (IPTR)node;
+            counter++;
+        }
+    }
+
     return (IPTR)NULL;
 }
 
