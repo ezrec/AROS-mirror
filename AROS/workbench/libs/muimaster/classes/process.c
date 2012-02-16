@@ -54,7 +54,7 @@ static void my_process(void)
 IPTR Process__OM_NEW(struct IClass *cl, Object *obj, struct opSet *msg)
 {
     struct Process_DATA *data;
-    struct TagItem *tags;
+    const struct TagItem *tags;
     struct TagItem *tag;
     struct Task *thistask;
 
@@ -209,7 +209,7 @@ IPTR Process__MUIM_Process_Launch(struct IClass *cl, Object *obj, struct MUIP_Pr
         data->task = CreateNewProc(tags);
     }
 
-    return 0;
+    return (IPTR)TRUE;
 }
 
 
