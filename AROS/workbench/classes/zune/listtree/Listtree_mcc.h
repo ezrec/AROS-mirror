@@ -88,7 +88,8 @@ struct MUIS_Listtree_TestPos_Result
 };
 
 struct MUIP_Listtree_Insert {STACKED ULONG MethodID;STACKED STRPTR Name;STACKED APTR User;STACKED APTR ListNode;STACKED APTR PrevNode;STACKED ULONG Flags;};
-struct MUIP_Listtree_GetEntry {STACKED ULONG MethodID; STACKED APTR Node;STACKED LONG Position;STACKED ULONG Flags; };
-struct MUIP_Listtree_GetNr {STACKED ULONG MethodID;STACKED APTR TreeNode;STACKED ULONG Flags; };
+struct MUIP_Listtree_GetEntry {STACKED ULONG MethodID; STACKED APTR Node;STACKED LONG Position;STACKED ULONG Flags;};
+struct MUIP_Listtree_GetNr {STACKED ULONG MethodID;STACKED APTR TreeNode;STACKED ULONG Flags;};
+struct MUIP_Listtree_Remove {STACKED ULONG MethodID;STACKED APTR  ListNode;STACKED APTR  TreeNode;STACKED ULONG Flags;};
 
 #endif /* ZUNE_LISTTREE_MCC_H */

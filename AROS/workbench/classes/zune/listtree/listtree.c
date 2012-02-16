@@ -16,6 +16,20 @@
 
 #include <aros/debug.h>
 
+/* TEMP CODE */
+ULONG Listtree_Active_HookFunc(struct Hook * h, APTR obj, void **msg)
+{
+    APTR active = NULL;
+
+    active = (APTR)DoMethod(obj, MUIM_Listtree_GetEntry, NULL, MUIV_Listtree_GetEntry_Position_Active, 0);
+    set(obj, MUIA_Listtree_Active, active);
+
+    return 0;
+}
+
+static struct Hook _Listtree_Active_Hook;
+/* TEMP CODE */
+
 /*** Methods ****************************************************************/
 Object *Listtree__OM_NEW(struct IClass *cl, Object *obj, struct opSet *msg)
 {
@@ -39,8 +53,20 @@ Object *Listtree__OM_NEW(struct IClass *cl, Object *obj, struct opSet *msg)
         case(MUIA_Listtree_ConstructHook):
             data->constrhook = (struct Hook *)tag->ti_Data;
             break;
+        case(MUIA_Listtree_DestructHook):
+            data->destrhook = (struct Hook *)tag->ti_Data;
+            break;
         }
     }
+
+    /* TEMP CODE */
+    _Listtree_Active_Hook.h_Entry = HookEntry;
+    _Listtree_Active_Hook.h_SubEntry = (HOOKFUNC)Listtree_Active_HookFunc;
+    _Listtree_Active_Hook.h_Data = NULL;
+
+    DoMethod(obj, MUIM_Notify, MUIA_List_Active, MUIV_EveryTime, obj, 2, MUIM_CallHook, (IPTR)&_Listtree_Active_Hook);
+
+    /* TEMP CODE */
 
     return obj;
 }
@@ -106,7 +132,7 @@ IPTR Listtree__MUIM_Listtree_GetEntry(struct IClass *cl, Object *obj, struct MUI
     return (IPTR)NULL;
 }
 
-IPTR Listtree__MUIM_Listtree_GetNr(struct IClass *cl, Object *obj,struct MUIP_Listtree_GetNr *msg)
+IPTR Listtree__MUIM_Listtree_GetNr(struct IClass *cl, Object *obj, struct MUIP_Listtree_GetNr *msg)
 {
     struct Listtree_DATA *data = INST_DATA(cl, obj);
     struct Node * node = NULL;
@@ -120,4 +146,44 @@ IPTR Listtree__MUIM_Listtree_GetNr(struct IClass *cl, Object *obj,struct MUIP_Li
     }
 
     return (IPTR)0;
+}
+
+IPTR Listtree__MUIM_Listtree_Remove(struct IClass *cl, Object *obj, struct MUIP_Listtree_Remove *msg)
+{
+    struct Listtree_DATA *data = INST_DATA(cl, obj);
+    ULONG counter = 0;
+    struct Node *todelete = NULL;
+
+    if (msg->TreeNode == (APTR)MUIV_Listtree_Remove_TreeNode_Active)
+    {
+        IPTR active = 0;
+        struct Node *node;
+
+        get(obj, MUIA_List_Active, &active);
+
+        ForeachNode(&data->nodes, node)
+        {
+            if (counter == active)
+            {
+                todelete = node;
+                break;
+            }
+            counter++;
+        }
+
+        if (todelete)
+        {
+            Remove(todelete);
+            DoMethod(obj, MUIM_List_Remove, MUIV_List_Remove_Active);
+        }
+    }
+
+    if (todelete)
+    {
+        if (data->destrhook)
+            CallHookPkt(data->destrhook, data->pool, ((struct MUIS_Listtree_TreeNode *)todelete)->tn_User);
+        FreePooled(data->pool, todelete, sizeof(struct MUIS_Listtree_TreeNode));
+    }
+
+    return (IPTR)FALSE;
 }
