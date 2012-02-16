@@ -561,6 +561,10 @@ struct MUI_RGBcolor
 #include "classes/process.h"
 #endif
 
+#ifndef _MUI_CLASSES_PIXMAP_H
+#include "classes/pixmap.h"
+#endif
+
 /**************************************************************************
  Zune/MUI Image and Background definition
 **************************************************************************/
