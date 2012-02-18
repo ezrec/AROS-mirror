@@ -20,8 +20,47 @@
 #include "pixmap.h"
 #include "pixmap_private.h"
 
+#include <aros/debug.h>
+
+#ifndef MEMF_SHARED
 #define MEMF_SHARED MEMF_ANY
+#endif
+
+#ifndef MIN
 #define MIN(a,b) ((a)<(b)?(a):(b))
+#endif
+
+// woraround for missing Zune functionality
+static BOOL _isfloating(Object *obj)
+{
+    return FALSE;
+}
+
+static BOOL _isdisabled(Object *obj)
+{
+    return FALSE;
+}
+
+static void MUIP_DrawDisablePattern(struct MUI_RenderInfo *mri, LONG left, LONG top, LONG width, LONG height)
+{
+}
+
+
+// libbz2_nostdio needs this
+void  free(void *memory)
+{
+    FreeVec(memory);
+}
+
+void *malloc(size_t size)
+{
+    return AllocVec(size, MEMF_ANY);
+}
+
+void bz_internal_error(int errcode)
+{
+    bug("[Pixmap.mui/bz_internal_error] errcode %d\n", errcode);
+}
 
 /* ------------------------------------------------------------------------- */
 
@@ -48,7 +87,7 @@ const ULONG defaultColorMap[256] =
 
 ///
 
-static IPTR Pixmap__OM_NEW(struct IClass *cl, Object *obj, struct opSet *msg)
+IPTR Pixmap__OM_NEW(struct IClass *cl, Object *obj, struct opSet *msg)
 {
     const struct TagItem *tags;
     struct TagItem *tag;
@@ -94,7 +133,7 @@ static void FreeImage(struct IClass *cl, Object *obj)
     }
 }
 
-static IPTR Pixmap__OM_DISPOSE(struct IClass *cl, Object *obj, Msg msg)
+IPTR Pixmap__OM_DISPOSE(struct IClass *cl, Object *obj, Msg msg)
 {
     FreeImage(cl, obj);
     return DoSuperMethodA(cl, obj, msg);
@@ -394,7 +433,7 @@ static BOOL DecompressImage(struct IClass *cl, Object *obj)
 }
 
 
-static IPTR Pixmap_MUIM_Setup(struct IClass *cl, Object *obj, struct MUIP_Setup *msg)
+IPTR Pixmap__MUIM_Setup(struct IClass *cl, Object *obj, struct MUIP_Setup *msg)
 {
     struct Pixmap_DATA *data = INST_DATA(cl, obj);
 
@@ -455,7 +494,7 @@ static IPTR Pixmap_MUIM_Setup(struct IClass *cl, Object *obj, struct MUIP_Setup 
 }
 
 
-static IPTR Pixmap__MUIM_Cleanup(struct IClass *cl, Object *obj, Msg msg)
+IPTR Pixmap__MUIM_Cleanup(struct IClass *cl, Object *obj, Msg msg)
 {
     struct Pixmap_DATA *data = INST_DATA(cl, obj);
 
@@ -492,7 +531,7 @@ static IPTR Pixmap__MUIM_Cleanup(struct IClass *cl, Object *obj, Msg msg)
 }
 
 
-static IPTR Pixmap__MUIM_AskMinMax(struct IClass *cl, Object *obj, struct MUIP_AskMinMax *msg)
+IPTR Pixmap__MUIM_AskMinMax(struct IClass *cl, Object *obj, struct MUIP_AskMinMax *msg)
 {
     struct Pixmap_DATA *data = INST_DATA(cl, obj);
 
@@ -555,7 +594,7 @@ static void DrawPixmapSection(struct IClass *cl, Object *obj, LONG sx, LONG sy, 
     }
 }
 
-static IPTR Pixmap__MUIM_Draw(struct IClass *cl, Object *obj, struct MUIP_Draw *msg)
+IPTR Pixmap__MUIM_Draw(struct IClass *cl, Object *obj, struct MUIP_Draw *msg)
 {
     struct Pixmap_DATA *data = INST_DATA(cl, obj);
 
@@ -580,7 +619,7 @@ static IPTR Pixmap__MUIM_Draw(struct IClass *cl, Object *obj, struct MUIP_Draw *
 }
 
 
-static IPTR Pixmap__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
+IPTR Pixmap__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
 {
     struct Pixmap_DATA *data = INST_DATA(cl, obj);
     BOOL decompress = FALSE;
@@ -623,10 +662,10 @@ static IPTR Pixmap__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
 }
 
 
-static ULONG Pixmap__OM_GET(struct IClass *cl, Object *obj, struct opGet *msg)
+IPTR Pixmap__OM_GET(struct IClass *cl, Object *obj, struct opGet *msg)
 {
     struct Pixmap_DATA *data = INST_DATA(cl, obj);
-    ULONG *store = msg->opg_Storage;
+    IPTR *store = msg->opg_Storage;
 
     switch (((struct opGet *)msg)->opg_AttrID)
     {
@@ -672,7 +711,7 @@ static ULONG Pixmap__OM_GET(struct IClass *cl, Object *obj, struct opGet *msg)
 }
 
 
-static IPTR Pixmap__MUIM_Layout(struct IClass *cl, Object *obj,Msg msg)
+IPTR Pixmap__MUIM_Layout(struct IClass *cl, Object *obj,Msg msg)
 {
     struct Pixmap_DATA *data = INST_DATA(cl, obj);
     ULONG rc = DoSuperMethodA(cl, obj, (Msg)msg);
@@ -691,7 +730,7 @@ static IPTR Pixmap__MUIM_Layout(struct IClass *cl, Object *obj,Msg msg)
 }
 
 
-static IPTR Pixmap__MUIM_DrawSection(struct IClass *cl, Object *obj, struct MUIP_Pixmap_DrawSection *msg)
+IPTR Pixmap__MUIM_Pixmap_DrawSection(struct IClass *cl, Object *obj, struct MUIP_Pixmap_DrawSection *msg)
 {
     BOOL success;
 
