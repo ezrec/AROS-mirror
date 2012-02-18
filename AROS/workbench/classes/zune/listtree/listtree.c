@@ -230,14 +230,11 @@ IPTR Listtree__MUIM_Listtree_Remove(struct IClass *cl, Object *obj, struct MUIP_
     struct Listtree_DATA *data = INST_DATA(cl, obj);
     ULONG counter = 0;
     struct Node *todelete = NULL;
-    BOOL supported = FALSE;
 
     if (msg->TreeNode == (APTR)MUIV_Listtree_Remove_TreeNode_Active)
     {
         IPTR active = 0;
         struct Node *node;
-
-        supported = TRUE;
 
         get(obj, MUIA_List_Active, &active);
 
@@ -254,19 +251,33 @@ IPTR Listtree__MUIM_Listtree_Remove(struct IClass *cl, Object *obj, struct MUIP_
         if (todelete)
         {
             Remove(todelete);
+            if (data->destrhook)
+                       CallHookPkt(data->destrhook, data->pool, ((struct MUIS_Listtree_TreeNode *)todelete)->tn_User);
+            FreePooled(data->pool, todelete, sizeof(struct MUIS_Listtree_TreeNode));
             DoMethod(obj, MUIM_List_Remove, MUIV_List_Remove_Active);
         }
+
+        return (IPTR)TRUE;
     }
 
-    if (!supported)
-        bug("[Listtree] MUIM_Listtree_Remove unsupported code path Listnode: %x, Treenode: %x, Flags: %d\n", msg->ListNode, msg->TreeNode, msg->Flags);
-
-    if (todelete)
+    if (msg->TreeNode == (APTR)MUIV_Listtree_Remove_TreeNode_All)
     {
-        if (data->destrhook)
-            CallHookPkt(data->destrhook, data->pool, ((struct MUIS_Listtree_TreeNode *)todelete)->tn_User);
-        FreePooled(data->pool, todelete, sizeof(struct MUIS_Listtree_TreeNode));
+        struct Node *node, *node2;
+
+        ForeachNodeSafe(&data->nodes, node, node2)
+        {
+            Remove(node);
+            if (data->destrhook)
+                CallHookPkt(data->destrhook, data->pool, ((struct MUIS_Listtree_TreeNode *)node)->tn_User);
+            FreePooled(data->pool, node, sizeof(struct MUIS_Listtree_TreeNode));
+        }
+
+        DoMethod(obj, MUIM_List_Clear);
+
+        return (IPTR)TRUE;
     }
+
+    bug("[Listtree] MUIM_Listtree_Remove unsupported code path Listnode: %x, Treenode: %x, Flags: %d\n", msg->ListNode, msg->TreeNode, msg->Flags);
 
     return (IPTR)FALSE;
 }
