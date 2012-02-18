@@ -26,11 +26,15 @@
 #define ICONDRAWA_Transparency TAG_IGNORE
 #endif
 
+#ifndef MAX
 #define MAX(a,b) ((a)>(b)?(a):(b))
+#endif
 
 #ifndef DtpicObject
 #define DtpicObject         MUIOBJMACRO_START(MUIC_Dtpic)
 #endif
+
+struct MUI_CustomClass *icon_mcc;
 
 /* ------------------------------------------------------------------------- */
 
@@ -309,7 +313,7 @@ VOID DrawIconState(struct RastPort *rp,CONST struct DiskObject *icon,CONST STRPT
 #define MUIA_Icon_File             (MUIB_Icon | 0x00000001) /* I-- CONST_STRPTR        */
 #define MUIA_Icon_Screen           (MUIB_Icon | 0x00000002) /* I-- struct Screen *     */
 
-static IPTR Icon__OM_NEW(struct IClass *cl, Object *obj, struct opSet *msg)
+IPTR Icon__OM_NEW(struct IClass *cl, Object *obj, struct opSet *msg)
 {
     struct DiskObject *icon = NULL;
     STRPTR file = NULL;
@@ -347,7 +351,7 @@ static IPTR Icon__OM_NEW(struct IClass *cl, Object *obj, struct opSet *msg)
             goto error;
     }
 
-    if((obj = DoSuperNewTags(cl, obj, NULL,
+    if((obj = (Object *)DoSuperNewTags(cl, obj, NULL,
         MUIA_FillArea, TRUE,
         TAG_MORE, msg->ops_AttrList)) != NULL)
     {
@@ -367,7 +371,7 @@ error:
     return (IPTR)NULL;
 }
 
-static IPTR Icon__OM_DISPOSE(struct IClass *cl, Object *obj, Msg msg)
+IPTR Icon__OM_DISPOSE(struct IClass *cl, Object *obj, Msg msg)
 {
     struct Icon_Data *data = INST_DATA(cl, obj);
 
@@ -377,7 +381,7 @@ static IPTR Icon__OM_DISPOSE(struct IClass *cl, Object *obj, Msg msg)
     return DoSuperMethodA(cl,obj,msg);
 }
 
-static IPTR Icon__MUIM_AskMinMax(struct IClass *cl, Object *obj, struct MUIP_AskMinMax *msg)
+IPTR Icon__MUIM_AskMinMax(struct IClass *cl, Object *obj, struct MUIP_AskMinMax *msg)
 {
     struct Icon_Data *data = INST_DATA(cl, obj);
     struct Rectangle rect;
@@ -405,7 +409,7 @@ static IPTR Icon__MUIM_AskMinMax(struct IClass *cl, Object *obj, struct MUIP_Ask
     return ret;
 }
 
-static IPTR Icon__MUIM_Draw(struct IClass *cl, Object *obj, struct MUIP_Draw *msg)
+IPTR Icon__MUIM_Draw(struct IClass *cl, Object *obj, struct MUIP_Draw *msg)
 {
     struct Icon_Data *data = INST_DATA(cl, obj);
     ULONG ret;
@@ -426,7 +430,7 @@ static IPTR Icon__MUIM_Draw(struct IClass *cl, Object *obj, struct MUIP_Draw *ms
 
 /* ------------------------------------------------------------------------- */
 
-static IPTR Aboutbox__OM_NEW(struct IClass *cl, Object *obj, struct opSet *msg)
+IPTR Aboutbox__OM_NEW(struct IClass *cl, Object *obj, struct opSet *msg)
 {
     const struct TagItem *tstate = msg->ops_AttrList;
     struct TagItem *tag;
@@ -522,7 +526,7 @@ static IPTR Aboutbox__OM_NEW(struct IClass *cl, Object *obj, struct opSet *msg)
 }
 
 
-static IPTR Aboutbox__OM_DISPOSE(struct IClass *cl, Object *obj, Msg msg)
+IPTR Aboutbox__OM_DISPOSE(struct IClass *cl, Object *obj, Msg msg)
 {
     struct Data *data = INST_DATA(cl, obj);
 
@@ -606,7 +610,7 @@ static Object *BuildLogo(struct IClass *cl, Object *obj)
     return logo;
 }
 
-static IPTR Aboutbox__MUIM_Window_Setup(struct IClass *cl, Object *obj, Msg msg)
+IPTR Aboutbox__MUIM_Window_Setup(struct IClass *cl, Object *obj, Msg msg)
 {
     ULONG ret;
 
@@ -627,7 +631,7 @@ static IPTR Aboutbox__MUIM_Window_Setup(struct IClass *cl, Object *obj, Msg msg)
     return ret;
 }
 
-static IPTR Aboutbox__MUIM_Window_Cleanup(struct IClass *cl, Object *obj, Msg msg)
+IPTR Aboutbox__MUIM_Window_Cleanup(struct IClass *cl, Object *obj, Msg msg)
 {
     struct Data *data = INST_DATA(cl, obj);
 

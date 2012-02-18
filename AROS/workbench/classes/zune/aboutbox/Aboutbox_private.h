@@ -40,4 +40,6 @@ struct Icon_Data
     struct DiskObject *icon;
 };
 
+extern struct MUI_CustomClass *icon_mcc;
+
 #endif /* _ABOUTBOX_PRIVATE_H_ */

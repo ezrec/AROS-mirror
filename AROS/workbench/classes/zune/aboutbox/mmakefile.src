@@ -8,7 +8,7 @@ USER_CFLAGS := $(PARANOIA_CFLAGS)
 FILES         := Aboutbox
 INCLUDE_FILES := Aboutbox_mcc.h
 
-##MM- workbench-classes-zune : workbench-classes-zune-aboutbox 
+#MM- workbench-classes-zune : workbench-classes-zune-aboutbox 
 
 #MM workbench-classes-zune-aboutbox : includes
 
@@ -16,7 +16,7 @@ INCLUDE_FILES := Aboutbox_mcc.h
     mmake=workbench-classes-zune-aboutbox \
     modname=Aboutbox modtype=mcc \
     conffile=Aboutbox.conf \
-    uselibs="amiga rom"
+    uselibs="amiga rom mui"
 
 %copy_includes path=mui
 
