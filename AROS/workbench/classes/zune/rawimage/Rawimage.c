@@ -18,12 +18,12 @@ static BOOL setRawimage(struct IClass *cl, Object *obj, struct MUI_RawimageData 
     LONG format;
     LONG compression;
 
-    rdata->ri_Width  = AROS_BE2LONG(rdata->ri_Width);
-    rdata->ri_Height = AROS_BE2LONG(rdata->ri_Height);
-    rdata->ri_Format = AROS_BE2LONG(rdata->ri_Format);
-    rdata->ri_Size   = AROS_BE2LONG(rdata->ri_Size);
+    ULONG cwidth  = AROS_BE2LONG(rdata->ri_Width);
+    ULONG cheight = AROS_BE2LONG(rdata->ri_Height);
+    ULONG cformat = AROS_BE2LONG(rdata->ri_Format);
+    ULONG csize   = AROS_BE2LONG(rdata->ri_Size);
 
-    switch(rdata->ri_Format)
+    switch(cformat)
     {
         case RAWIMAGE_FORMAT_RAW_ARGB_ID:
             format = MUIV_Pixmap_Format_ARGB32;
@@ -64,14 +64,14 @@ static BOOL setRawimage(struct IClass *cl, Object *obj, struct MUI_RawimageData 
     if(format != -1)
     {
         // Pixmap.mui will return failure in case the compression is not supported
-        success = SetSuperAttrs(cl, obj, MUIA_FixWidth, rdata->ri_Width,
-                                         MUIA_FixHeight, rdata->ri_Height,
-                                         MUIA_Pixmap_Width, rdata->ri_Width,
-                                         MUIA_Pixmap_Height, rdata->ri_Height,
+        success = SetSuperAttrs(cl, obj, MUIA_FixWidth, cwidth,
+                                         MUIA_FixHeight, cheight,
+                                         MUIA_Pixmap_Width, cwidth,
+                                         MUIA_Pixmap_Height, cheight,
                                          MUIA_Pixmap_Format, format,
                                          MUIA_Pixmap_Data, rdata->ri_Data,
                                          MUIA_Pixmap_Compression, compression,
-                                         MUIA_Pixmap_CompressedSize, rdata->ri_Size,
+                                         MUIA_Pixmap_CompressedSize, csize,
                                          TAG_DONE);
     }
 
