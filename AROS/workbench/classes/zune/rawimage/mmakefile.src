@@ -8,7 +8,7 @@ USER_CFLAGS := $(PARANOIA_CFLAGS)
 FILES         := Rawimage
 INCLUDE_FILES := Rawimage_mcc.h
 
-##MM- workbench-classes-zune : workbench-classes-zune-rawimage 
+#MM- workbench-classes-zune : workbench-classes-zune-rawimage 
 
 #MM workbench-classes-zune-rawimage : includes
 

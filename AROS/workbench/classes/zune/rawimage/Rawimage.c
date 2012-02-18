@@ -73,7 +73,7 @@ static BOOL setRawimage(struct IClass *cl, Object *obj, struct MUI_RawimageData 
     return success;
 }
 
-static IPTR Rawimage__OM_NEW(struct IClass *cl, Object *obj, struct opSet *msg)
+IPTR Rawimage__OM_NEW(struct IClass *cl, Object *obj, struct opSet *msg)
 {
     if((obj = (Object *)DoSuperNewTags(cl, obj, NULL,
         TAG_MORE, msg->ops_AttrList)) != NULL)
@@ -94,7 +94,7 @@ static IPTR Rawimage__OM_NEW(struct IClass *cl, Object *obj, struct opSet *msg)
 }
 
 
-static IPTR Rawimage__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
+IPTR Rawimage__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
 {
     struct MUI_RawimageData *rdata;
 
