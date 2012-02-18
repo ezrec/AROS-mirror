@@ -18,6 +18,11 @@ static BOOL setRawimage(struct IClass *cl, Object *obj, struct MUI_RawimageData 
     LONG format;
     LONG compression;
 
+    rdata->ri_Width  = AROS_BE2LONG(rdata->ri_Width);
+    rdata->ri_Height = AROS_BE2LONG(rdata->ri_Height);
+    rdata->ri_Format = AROS_BE2LONG(rdata->ri_Format);
+    rdata->ri_Size   = AROS_BE2LONG(rdata->ri_Size);
+
     switch(rdata->ri_Format)
     {
         case RAWIMAGE_FORMAT_RAW_ARGB_ID:
@@ -90,7 +95,7 @@ IPTR Rawimage__OM_NEW(struct IClass *cl, Object *obj, struct opSet *msg)
         }
     }
 
-    return((ULONG)obj);
+    return (IPTR)obj;
 }
 
 
