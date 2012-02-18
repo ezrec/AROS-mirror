@@ -444,7 +444,7 @@ IPTR Aboutbox__OM_NEW(struct IClass *cl, Object *obj, struct opSet *msg)
         MUIA_Window_ID       , MAKE_ID('A','B','O','X'),
         MUIA_Window_LeftEdge , MUIV_Window_LeftEdge_Centered,
         MUIA_Window_TopEdge  , MUIV_Window_TopEdge_Centered,
-        MUIA_Window_Width    , MUIV_Window_Width_MinMax(0),
+//      MUIA_Window_Width    , MUIV_Window_Width_MinMax(0),
 //      MUIA_Window_Height   , MUIV_Window_Height_MinMax(0),
         MUIA_Window_Title    , "Aboutbox",
         MUIA_Window_NoMenus  , TRUE,
