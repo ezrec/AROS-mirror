@@ -50,6 +50,7 @@
 #endif
 
 #include <signal.h>
+#include <time.h>
 #endif
 
 #include <config.h>
