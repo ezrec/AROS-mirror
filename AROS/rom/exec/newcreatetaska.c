@@ -24,7 +24,7 @@ struct newMemList
 static const struct newMemList MemTemplate =
 {
     { 0, },
-    2,
+    3,
     {
 	{{MEMF_CLEAR|MEMF_PUBLIC}, sizeof(struct Task)}, /* Task descriptor itself */
 	{{MEMF_CLEAR		}, AROS_STACKSIZE     }, /* Task's stack	   */
