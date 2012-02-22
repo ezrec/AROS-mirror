@@ -1,0 +1,16 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+FILES := library wrap_mpega support filter resample tag crc fixed bit \
+ timer stream frame synth layer12 layer3 huffman
+
+USER_CFLAGS := -DFPM_INTEL -DOPT_ACCURACY -DBUILD_AROS -DNDEBUG -Wno-parentheses
+
+%build_module mmake=contrib-libs-mpega \
+ modname="mpega" modtype=library files="$(FILES)" uselibs="rom"
+
+#MM includes-copy
+INCLUDE_FILES := $(call WILDCARD, include/*.h)
+%copy_includes path=libraries dir=include
+
