@@ -1327,7 +1327,7 @@ static void HandleAll(void)
 				    break;
 
 				case MSG_MEN_PROJECT_PRINT:
-				    OutputMessage(not_supported);
+				    DoPrintMethod();
 				    break;
 
 				case MSG_MEN_PROJECT_ABOUT:
