@@ -6,6 +6,7 @@
  */
 
 #include <aros/debug.h>
+#include <aros/symbolsets.h>
 
 #include <exec/errors.h>
 
