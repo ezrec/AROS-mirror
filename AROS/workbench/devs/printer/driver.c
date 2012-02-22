@@ -709,12 +709,12 @@ struct PrinterUnit *Printer_Unit(struct PrinterBase *PrinterBase, LONG unitnum)
             D(bug("%s: magic 0x%08x, expect 0x%08x\n", __func__, prtseg->ps_runAlert, AROS_PRINTER_MAGIC));
             if (prtseg->ps_runAlert == AROS_PRINTER_MAGIC) {
                 APTR funcs[] = {
-                    AROS_SLIB_ENTRY(OpenDevice,PrinterUnit,1),
-                    AROS_SLIB_ENTRY(CloseDevice,PrinterUnit,2),
-                    AROS_SLIB_ENTRY(Expunge,PrinterUnit,3),
+                    AROS_SLIB_ENTRY(OpenDevice,PrinterUnit),
+                    AROS_SLIB_ENTRY(CloseDevice,PrinterUnit),
+                    AROS_SLIB_ENTRY(Expunge,PrinterUnit),
                     NULL,
-                    AROS_SLIB_ENTRY(BeginIO,PrinterUnit,5),
-                    AROS_SLIB_ENTRY(AbortIO,PrinterUnit,6),
+                    AROS_SLIB_ENTRY(BeginIO,PrinterUnit),
+                    AROS_SLIB_ENTRY(AbortIO,PrinterUnit),
                     (APTR)-1,
                 };
 
