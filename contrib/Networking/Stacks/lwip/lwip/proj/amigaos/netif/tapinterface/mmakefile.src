@@ -9,7 +9,7 @@ FUNCS	:= \
 
 #MM- lwip-tapinterface-kobj : includes linklibs
 
-USER_CFLAGS := -I$(SYS_INCLUDES) -I$(GENINCDIR)
+USER_CFLAGS := -I$(GENINCDIR)
 
 %build_module mmake=lwip-tapinterface \
     modname=tapinterface modtype=library \
