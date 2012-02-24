@@ -48,7 +48,7 @@ typedef uint*              iptr;       /**< @brief type returned by #ARRAY to di
 
 /* platform specific includes */
 #if defined(__AROS__)
-typedef unsigned int size_t;
+#include <stddef.h>
 #elif defined(__mc68000)
 typedef long unsigned int size_t;
 typedef long IPTR;

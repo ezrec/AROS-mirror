@@ -468,13 +468,13 @@ uint32 cmd_GetConfiguration::GetMediaReadSupport(void)
 {
    uint32             supp=0;
    int32               total;
-   feat_ProfileList::feat_ProfileList *prof;
+   feat_ProfileList *prof;
 
 
    if (read_media)      return read_media;
    if (!feature_data)   return 0;
 
-   prof  = (feat_ProfileList::feat_ProfileList*)GetFeature(cmd_GetConfiguration::Feature_ProfileList);     // get profiles
+   prof  = (feat_ProfileList*)GetFeature(cmd_GetConfiguration::Feature_ProfileList);     // get profiles
    if (!prof) return supp;    // no profiles, no support.
 
    total = (prof->GetLength()-1)>>2;   // get length...
