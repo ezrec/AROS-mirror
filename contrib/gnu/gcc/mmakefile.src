@@ -5,16 +5,17 @@
 
 #MM- contrib-gnu : contrib-gnu-gcc
 #MM- contrib-gnu-gcc : tools-crosstools development-collect-aros development-gcc
+#MM- development-gcc : development-gmp development-mpfr development-mpc
 
-ifeq ($(AROS_TARGET_CPU),m68k)
+ifeq ($(AROS_TARGET_CPU),ppc)
+    GCC_VERSION := 4.2.4
+    GCC_LANGUAGES=c,c++,objc
+    GCC_EXTRAOPTS := 
+    TARGET_CFLAGS += -I$(AROS_DEVELOPMENT)/include
+else
     GCC_VERSION := 4.6.2
     GCC_LANGUAGES=c
     GCC_EXTRAOPTS := CFLAGS=-I$(AROS_DEVELOPMENT)/include
-#MM- development-gcc : development-gmp development-mpfr development-mpc
-else
-    GCC_VERSION := 4.2.4
-    GCC_LANGUAGES=c,c++,objc
-    GCC_EXTRAOPTS :=
 endif
 
 EXTRAOPTS := \
