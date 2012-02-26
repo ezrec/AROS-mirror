@@ -1,0 +1,54 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- contrib-fryingpan-fp-guimui: $(CROSSTOOLS_CXX_TARGET)
+
+#MM contrib-fryingpan-fp-guimui: \
+#MM     contrib-zune-classes-nlist \
+#MM     contrib-fryingpan-framework-generic \
+#MM     contrib-fryingpan-framework-libc \
+#MM     contrib-fryingpan-framework-genericlib
+
+DESTDIR := $(CONTRIBDIR)/FryingPan/Libs
+
+CXXFILES := \
+ Wrapper \
+ Globals \
+ GUI \
+ MUITracks \
+ MUIPageSelect \
+ MUITracksISOBuilder \
+ MUITracksDataAudio \
+ MUITracksSession \
+ MUIMedia \
+ MUIContents \
+ MUIDrive \
+ MUISettings \
+ MUIRecord \
+ MUIDriveSelect \
+ MUISpeedSelect \
+ MUIPopDevice \
+ MUIPopDOSDevice \
+ MUIPopUnit \
+ MUICommon \
+ MUIPopISOElement \
+ MUIPopAction \
+ Components/MUIToolBar \
+ Components/MUIWindowMenu \
+ Components/MUI \
+ Components/MUIList \
+ Components/MUITree \
+ Components/MUIPopup \
+ Components/MUIPopString \
+ Components/MUIPopText \
+ Components/MUIPopAsl \
+ Components/FileReq \
+ Components/MUIPictureClass \
+
+USER_CFLAGS := -isystem $(SRCDIR)/$(CURDIR)/../../framework \
+ -isystem $(SRCDIR)/$(CURDIR)/../..
+
+%build_prog mmake=contrib-fryingpan-fp-guimui \
+ progname="mui.interface" targetdir=$(DESTDIR) files= cxxfiles="$(CXXFILES)" \
+ uselibs="Generic C Library" usestartup=no

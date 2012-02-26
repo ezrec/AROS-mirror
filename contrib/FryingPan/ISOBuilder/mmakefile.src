@@ -1,0 +1,38 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- contrib-fryingpan-isobuilder: $(CROSSTOOLS_CXX_TARGET)
+
+#MM contrib-fryingpan-isobuilder: \
+#MM     contrib-fryingpan-framework-generic \
+#MM     contrib-fryingpan-framework-genericlib \
+#MM     contrib-fryingpan-framework-libc
+
+DESTDIR := $(CONTRIBDIR)/FryingPan/Libs
+
+CXXFILES := \
+ Calls \
+ Main \
+ Xlate \
+ ISOStructures \
+ RRStructures \
+ ClISO \
+ Structure/ClElement \
+ Structure/ClRoot \
+ Structure/ClDirectory \
+ Structure/ClFile \
+ Structure/ClImportedFile \
+ Structure/ClName \
+ Xlators/Translator \
+ Xlators/TransDChars \
+ Xlators/TransAChars \
+ Xlators/TransQChars \
+ Xlators/TransRChars
+
+USER_CFLAGS := -isystem $(SRCDIR)/$(CURDIR)/../framework \
+ -isystem $(SRCDIR)/$(CURDIR)/..
+
+%build_prog mmake=contrib-fryingpan-isobuilder \
+ progname="isobuilder.module" targetdir=$(DESTDIR) files= \
+ cxxfiles="$(CXXFILES)" uselibs="Generic Library C"

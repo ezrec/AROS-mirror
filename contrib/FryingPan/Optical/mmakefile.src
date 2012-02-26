@@ -1,0 +1,51 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- contrib-fryingpan-optical: $(CROSSTOOLS_CXX_TARGET)
+
+#MM contrib-fryingpan-optical: \
+#MM     contrib-fryingpan-framework-generic \
+#MM     contrib-fryingpan-framework-genericlib \
+#MM     contrib-fryingpan-framework-libc
+
+DESTDIR := $(CONTRIBDIR)/FryingPan/Libs
+
+CXXFILES := \
+ LibWrapper \
+ Main \
+ Various \
+ Drive \
+ Commands \
+ Pages \
+ Disc_CD_ROM \
+ Disc_CD_R \
+ Disc_CD_RW \
+ Disc_DVD_ROM \
+ Disc_DVD_PlusR \
+ Disc_DVD_PlusRW \
+ Disc_DVD_MinusR \
+ Disc_DVD_MinusRW \
+ Disc_DVD_RAM \
+ Disc_Generic \
+ TOC_Elements \
+ Humming \
+ Config \
+ CfgVendors \
+ CfgIOCodes \
+ CfgDrivers \
+ CfgHardware \
+ CfgCDInfo \
+ CfgIOMeas \
+ OptItem \
+ OptSession \
+ OptDisc \
+ OptTrack \
+ OptIndex \
+ CDText
+
+USER_CFLAGS := -isystem $(SRCDIR)/$(CURDIR)/../framework
+
+%build_prog mmake=contrib-fryingpan-optical progname="Optical" \
+ targetdir=$(DESTDIR) files= cxxfiles="$(CXXFILES)" \
+ uselibs="Generic Library C"

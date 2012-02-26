@@ -1,0 +1,12 @@
+# $Id$
+
+#MM- contrib-fryingpan-i386: contrib-fryingpan
+
+#MM- contrib-fryingpan: \
+#MM      contrib-fryingpan-fp \
+#MM      contrib-fryingpan-data \
+#MM      contrib-fryingpan-framework \
+#MM      contrib-fryingpan-dtlib \
+#MM      contrib-fryingpan-expat \
+#MM      contrib-fryingpan-isobuilder \
+#MM      contrib-fryingpan-optical

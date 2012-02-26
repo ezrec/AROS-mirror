@@ -1,0 +1,41 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- contrib-fryingpan-framework-generic : $(CROSSTOOLS_CXX_TARGET)
+
+FILES := \
+ DynList \
+ GenericOOP \
+ GenericMUI \
+ MUICustomClass \
+ LibrarySpool \
+ String \
+ HookAttrT \
+ Thread \
+ Timer \
+ Port \
+ Msg \
+ Synchronizer \
+ RWSync \
+ RWSyncT \
+ NetSocket \
+ Vector \
+ VectorT \
+ IHook \
+ HookT \
+ Debug \
+ XMLDocument \
+ DistributorT \
+ AHI \
+ Configuration \
+ ConfigParser \
+ Set \
+ SumMD5 \
+ SumCRC \
+ Locale
+
+USER_CFLAGS := -isystem $(SRCDIR)/$(CURDIR)/..
+
+%build_linklib mmake=contrib-fryingpan-framework-generic \
+ libname="Generic" cxxfiles="$(FILES)"

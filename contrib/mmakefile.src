@@ -11,6 +11,7 @@ include $(TOP)/config/make.cfg
 #MM- contrib-complete : contrib-misc
 #MM- contrib-complete : contrib-demos
 #MM- contrib-complete : contrib-dopus
+#MM- contrib-complete : contrib-fryingpan-$(AROS_TARGET_CPU)
 #MM- contrib-complete : contrib-bgui
 #MM- contrib-complete : contrib-gfx
 #MM- contrib-complete : contrib-radium
@@ -21,6 +22,7 @@ include $(TOP)/config/make.cfg
 #MM- contrib-complete : contrib-pack
 #MM- contrib-complete : contrib-scout
 #MM- contrib-complete : contrib-multimedia
+#MM- contrib-complete : contrib-regina
 
 CONTRIB_SRC_DIR := $(AROSDIR)/contrib
 
