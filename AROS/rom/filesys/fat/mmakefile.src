@@ -5,6 +5,10 @@ include $(TOP)/config/make.cfg
 FILES := cache charset direntry disk fat file lock main names packet\
  ops support notify timer
 
+USER_CFLAGS := -D__DOS_NOLIBBASE__ \
+               -D__INTUITION_NOLIBBASE__ \
+               -D__UTILITY_NOLIBBASE__
+
 #MM- kernel-fs-fat : includes linklibs
 
 %build_module mmake=kernel-fs-fat \

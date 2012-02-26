@@ -28,7 +28,7 @@
 #define DEBUG DEBUG_PACKETS
 #include "debug.h"
 
-void ProcessPackets(void) {
+void ProcessPackets(struct Globals *glob) {
     struct Message *msg;
     struct DosPacket *pkt;
 
@@ -166,7 +166,7 @@ void ProcessPackets(void) {
                     break;
                 }
 
-                if ((err = LockFile(fl->ioh.first_cluster, dh.cur_index, SHARED_LOCK, &lock)) != 0) {
+                if ((err = LockFile(glob, fl->ioh.first_cluster, dh.cur_index, SHARED_LOCK, &lock)) != 0) {
                     ReleaseDirHandle(&dh);
                     break;
                 }
@@ -387,7 +387,7 @@ void ProcessPackets(void) {
                     id = BADDR(pkt->dp_Arg1);
                 }
 
-                FillDiskInfo(id);
+                FillDiskInfo(glob, id);
 
                 res = DOSTRUE;
                 break;
@@ -402,12 +402,12 @@ void ProcessPackets(void) {
                 if (inhibit == DOSTRUE) {
                     glob->disk_inhibited++;
                     if (glob->disk_inhibited == 1)
-                        DoDiskRemove();
+                        DoDiskRemove(glob);
                 }
                 else if (glob->disk_inhibited) {
                     glob->disk_inhibited--;
                     if (glob->disk_inhibited == 0)
-                       ProcessDiskChange();
+                       ProcessDiskChange(glob);
                 }
 
                 res = DOSTRUE;
@@ -441,7 +441,7 @@ void ProcessPackets(void) {
 
                 D(bug("\tNothing pending. Shutting down the handler\n"));
 
-                DoDiskRemove(); /* risky, because of async. volume remove, but works */
+                DoDiskRemove(glob); /* risky, because of async. volume remove, but works */
 
                 glob->quit = TRUE;
                 glob->death_packet = pkt;
@@ -470,6 +470,7 @@ void ProcessPackets(void) {
             }
 #endif
 
+#if 0
             case ACTION_DISK_CHANGE: { /* internal */
                 struct DosList *vol = (struct DosList *)pkt->dp_Arg2;
                 struct VolumeInfo *vol_info =
@@ -519,9 +520,11 @@ void ProcessPackets(void) {
 
                 break;
             }
+#endif
 
             case ACTION_RENAME_DISK: {
                 UBYTE *name = BADDR(pkt->dp_Arg1);
+                struct Library *DOSBase;
                 
 		D(bug("[FAT] RENAME_DISK: name '"); RawPutChars(AROS_BSTR_ADDR(name), AROS_BSTR_strlen(name)); bug("'\n"));
 
@@ -530,11 +533,15 @@ void ProcessPackets(void) {
                     break;
                 }
 
-                while (! AttemptLockDosList(LDF_VOLUMES | LDF_WRITE))
-                    ProcessPackets();
+                if ((DOSBase = OpenLibrary("dos.library", 0))) {
+                    while (! AttemptLockDosList(LDF_VOLUMES | LDF_WRITE))
+                        ProcessPackets(glob);
 
-                err = SetVolumeName(glob->sb, name);
-                UnLockDosList(LDF_VOLUMES | LDF_WRITE);
+                    err = SetVolumeName(glob->sb, name);
+                    UnLockDosList(LDF_VOLUMES | LDF_WRITE);
+                    CloseLibrary(DOSBase);
+                }
+
                 if (err != 0)
                     break;
 
@@ -664,7 +671,7 @@ void ProcessPackets(void) {
 
                 D(bug("[FAT] ADD_NOTIFY: nr 0x%08x name '%s'\n", nr, nr->nr_FullName));
 
-                err = OpAddNotify(nr);
+                err = OpAddNotify(glob, nr);
 
                 break;
             }
@@ -674,7 +681,7 @@ void ProcessPackets(void) {
 
                 D(bug("[FAT] REMOVE_NOTIFY: nr 0x%08x name '%s'\n", nr, nr->nr_FullName));
 
-                err = OpRemoveNotify(nr);
+                err = OpRemoveNotify(glob, nr);
                 
                 break;
             }
@@ -695,17 +702,18 @@ void ProcessPackets(void) {
             }
         }
 
-        RestartTimer();
+        RestartTimer(glob);
     }
 }
 
-void ReplyPacket(struct DosPacket *pkt) {
-    struct MsgPort *rp;
-
-            rp = pkt->dp_Port;
-
-            pkt->dp_Port = glob->ourport;
-
-            PutMsg(rp, pkt->dp_Link);
+void ReplyPacket(struct DosPacket *dp) {
+    struct MsgPort *mp;
+    struct Message *mn;
+    
+    mp = dp->dp_Port;
+    mn = dp->dp_Link;
+    mn->mn_Node.ln_Name = (char*)dp;
+    dp->dp_Port = &((struct Process*)FindTask(NULL))->pr_MsgPort;
+    PutMsg(mp, mn);
 }
 

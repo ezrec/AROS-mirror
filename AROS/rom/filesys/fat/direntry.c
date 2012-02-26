@@ -14,7 +14,7 @@
 #include <exec/types.h>
 #include <dos/dos.h>
 #include <proto/exec.h>
-#include <proto/dos.h>
+#include <proto/timer.h>
 
 #include <string.h>
 
@@ -329,6 +329,7 @@ LONG GetDirEntryByPath(struct DirHandle *dh, STRPTR path, ULONG pathlen, struct 
 
 LONG UpdateDirEntry(struct DirEntry *de) {
     struct DirHandle dh;
+    struct Globals *glob = de->sb->glob;
     LONG err = 0;
     ULONG nwritten;
 
@@ -429,9 +430,10 @@ LONG AllocDirEntry(struct DirHandle *dh, ULONG gap, struct DirEntry *de) {
 
 LONG CreateDirEntry(struct DirHandle *dh, STRPTR name, ULONG namelen,
     UBYTE attr, ULONG cluster, struct DirEntry *de) {
+    struct Globals *glob = de->sb->glob;
     ULONG gap;
     LONG err;
-    struct DateStamp ds;
+    struct timeval tv;
 
     D(bug("[fat] creating dir entry (name '"); RawPutChars(name, namelen);
       bug("' attr 0x%02x cluster %ld)\n", attr, cluster));
@@ -448,13 +450,12 @@ LONG CreateDirEntry(struct DirHandle *dh, STRPTR name, ULONG namelen,
     de->e.entry.attr = attr;
     de->e.entry.nt_res = 0;
 
-    DateStamp(&ds);
-    ConvertAROSDate(&ds, &(de->e.entry.create_date), &(de->e.entry.create_time));
+    GetSysTime(&tv);
+    ConvertAROSDate(glob, &tv, &(de->e.entry.create_date), &(de->e.entry.create_time));
     de->e.entry.write_date = de->e.entry.create_date;
     de->e.entry.write_time = de->e.entry.create_time;
     de->e.entry.last_access_date = de->e.entry.create_date;
-    de->e.entry.create_time_tenth = ds.ds_Tick % (TICKS_PER_SECOND * 2)
-        / (TICKS_PER_SECOND / 10);
+    de->e.entry.create_time_tenth = tv.tv_micro / 100;
 
     de->e.entry.first_cluster_lo = cluster & 0xffff;
     de->e.entry.first_cluster_hi = cluster >> 16;
@@ -474,6 +475,7 @@ LONG CreateDirEntry(struct DirHandle *dh, STRPTR name, ULONG namelen,
 }
 
 LONG DeleteDirEntry(struct DirEntry *de) {
+    struct Globals *glob = de->sb->glob;
     struct DirHandle dh;
     UBYTE checksum;
     ULONG order;
@@ -518,11 +520,10 @@ LONG DeleteDirEntry(struct DirEntry *de) {
     return err;
 }
 
-
-
 #define sb glob->sb
 
 LONG FillFIB (struct ExtFileLock *fl, struct FileInfoBlock *fib) {
+    struct Globals *glob = fl->glob;
     struct GlobalLock *gl = (fl != NULL ? fl->gl : &sb->info->root_lock);
     struct DirHandle dh;
     struct DirEntry de;
@@ -556,7 +557,7 @@ LONG FillFIB (struct ExtFileLock *fl, struct FileInfoBlock *fib) {
     else {
 	InitDirHandle(sb, gl->dir_cluster, &dh, FALSE);
         GetDirEntry(&dh, gl->dir_entry, &de);
-        ConvertFATDate(de.e.entry.write_date, de.e.entry.write_time, &fib->fib_Date);
+        ConvertFATDate(glob, de.e.entry.write_date, de.e.entry.write_time, &fib->fib_Date);
         ReleaseDirHandle(&dh);
     }
 

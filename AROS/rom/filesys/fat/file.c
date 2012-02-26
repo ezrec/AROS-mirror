@@ -157,6 +157,7 @@ LONG ReadFileChunk(struct IOHandle *ioh, ULONG file_pos, ULONG nwant,
         /* if we don't have the wanted block kicking around, we need to bring it
          * in from the cache */
         if (ioh->block == NULL || ioh->cur_sector != old_sector) {
+            ULONG error;
             if (ioh->block != NULL) {
                 Cache_FreeBlock(ioh->sb->cache, ioh->block);
                 ioh->block = NULL;
@@ -165,14 +166,13 @@ LONG ReadFileChunk(struct IOHandle *ioh, ULONG file_pos, ULONG nwant,
             D(bug("[fat] requesting sector %ld from cache\n", ioh->cur_sector));
 
             b = Cache_GetBlock(ioh->sb->cache,
-                ioh->sb->first_device_sector + ioh->cur_sector, &p);
+                ioh->sb->first_device_sector + ioh->cur_sector, &p, &error);
             if (b == NULL) {
                 RESET_HANDLE(ioh);
 
-                D(bug("[fat] couldn't load sector, returning error %ld\n",
-                    IoErr()));
+                D(bug("[fat] couldn't load sector, returning error %ld\n", error));
 
-                return IoErr();
+                return error;
             }
 
             ioh->block = b;
@@ -329,6 +329,8 @@ LONG WriteFileChunk(struct IOHandle *ioh, ULONG file_pos, ULONG nwant,
         /* if we don't have the wanted block kicking around, we need to bring it
          * in from the cache */
         if (ioh->block == NULL || ioh->cur_sector != old_sector) {
+            ULONG error;
+
             if (ioh->block != NULL) {
                 Cache_FreeBlock(ioh->sb->cache, ioh->block);
                 ioh->block = NULL;
@@ -337,13 +339,13 @@ LONG WriteFileChunk(struct IOHandle *ioh, ULONG file_pos, ULONG nwant,
             D(bug("[fat] requesting sector %ld from cache\n", ioh->cur_sector));
 
             b = Cache_GetBlock(ioh->sb->cache, ioh->sb->first_device_sector
-                + ioh->cur_sector, &p);
+                + ioh->cur_sector, &p, &error);
             if (b == NULL) {
                 RESET_HANDLE(ioh);
 
-                D(bug("[fat] couldn't load sector, returning error %ld\n", err));
+                D(bug("[fat] couldn't load sector, returning error %ld\n", error));
 
-                return IoErr();
+                return error;
             }
 
             ioh->block = b;

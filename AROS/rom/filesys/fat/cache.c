@@ -67,7 +67,7 @@
    (((BYTE *)(A)) - (IPTR)&((struct BlockRange *)NULL)->node2) : NULL))
 
 
-APTR Cache_CreateCache(ULONG hash_size, ULONG block_count, ULONG block_size)
+APTR Cache_CreateCache(struct Globals *glob, ULONG hash_size, ULONG block_count, ULONG block_size)
 {
     struct Cache *c;
     ULONG i;
@@ -81,6 +81,7 @@ APTR Cache_CreateCache(ULONG hash_size, ULONG block_count, ULONG block_size)
 
     if(success)
     {
+        c->glob = glob;
         c->block_size = block_size;
         c->block_count = block_count;
         c->hash_size = hash_size;
@@ -139,9 +140,9 @@ APTR Cache_CreateCache(ULONG hash_size, ULONG block_count, ULONG block_size)
 VOID Cache_DestroyCache(APTR cache)
 {
     struct Cache *c = cache;
-    ULONG i;
+    ULONG i, error;
 
-    Cache_Flush(c);
+    Cache_Flush(c, &error);
 
     for(i = 0; i < c->block_count; i++)
         FreeVec(c->blocks[i]);
@@ -151,7 +152,7 @@ VOID Cache_DestroyCache(APTR cache)
 }
 
 
-APTR Cache_GetBlock(APTR cache, ULONG blockNum, UBYTE **data)
+APTR Cache_GetBlock(APTR cache, ULONG blockNum, UBYTE **data, ULONG *perr)
 {
     struct Cache *c = cache;
     struct BlockRange *b = NULL, *b2;
@@ -195,7 +196,7 @@ APTR Cache_GetBlock(APTR cache, ULONG blockNum, UBYTE **data)
             /* No free blocks, so flush dirty list to try and free up some
              * more blocks, then try again */
 
-            Cache_Flush(c);
+            Cache_Flush(c, perr);
             n = (struct MinNode *)RemHead((struct List *)&c->free_list);
         }
 
@@ -205,7 +206,7 @@ APTR Cache_GetBlock(APTR cache, ULONG blockNum, UBYTE **data)
 
             /* Read the block from disk */
 
-            if((error = AccessDisk(FALSE, blockNum, RANGE_SIZE,
+            if((error = AccessDisk(c->glob, FALSE, blockNum, RANGE_SIZE,
                 c->block_size, b->data)) == 0)
             {
                 /* Remove block from its old position in the hash */
@@ -237,7 +238,7 @@ APTR Cache_GetBlock(APTR cache, ULONG blockNum, UBYTE **data)
     /* Set data pointer and error, and return cache block handle */
 
     *data = b->data + data_offset;
-    SetIoErr(error);
+    *perr = error;
 
     return b;
 }
@@ -276,7 +277,7 @@ VOID Cache_MarkBlockDirty(APTR cache, APTR block)
 }
 
 
-BOOL Cache_Flush(APTR cache)
+BOOL Cache_Flush(APTR cache, ULONG *perr)
 {
     struct Cache *c = cache;
     ULONG error = 0;
@@ -289,7 +290,7 @@ BOOL Cache_Flush(APTR cache)
         /* Write dirty block range to disk */
 
         b = NODE2(n);
-        error = AccessDisk(TRUE, b->num, RANGE_SIZE, c->block_size, b->data);
+        error = AccessDisk(c->glob, TRUE, b->num, RANGE_SIZE, c->block_size, b->data);
 
         /* Transfer block range to free list if unused, or put back on dirty
          * list upon an error */
@@ -304,7 +305,7 @@ BOOL Cache_Flush(APTR cache)
             AddHead((struct List *)&c->dirty_list, (struct Node *)&b->node2);
     }
 
-    SetIoErr(error);
+    *perr = error;
     return error == 0;
 }
 

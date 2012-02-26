@@ -42,8 +42,6 @@
 #define ACTION_VOLUME_ADD 16000
 #define ACTION_VOLUME_REMOVE 16001
 
-extern struct Globals *glob;
-
 #define DEF_POOL_SIZE 65536
 #define DEF_POOL_THRESHOLD DEF_POOL_SIZE
 #define DEF_BUFF_LINES 128
@@ -113,6 +111,7 @@ struct ExtFileLock {
     ULONG               pos;            /* current seek position within the file */
 
     BOOL                do_notify;      /* if set, send notification on file close (ACTION_END) */
+    struct Globals      *glob;          /* pointer to the globals for this handle */
     struct FSSuper      *sb;            /* pointer to sb, for unlocking when volume is removed */
 };
 
@@ -159,6 +158,7 @@ struct VolumeIdentity {
 
 struct FSSuper {
     struct Node node;
+    struct Globals *glob;
     struct DosList *doslist;
 
     struct VolumeInfo *info;
@@ -251,7 +251,20 @@ struct Globals {
     /* Character sets translation */
     UBYTE from_unicode[65536];
     UWORD to_unicode[256];
+
+    struct IntData {
+        struct Interrupt Interrupt;
+        struct ExecBase *SysBase;
+        struct Task *task;
+        ULONG signal;
+    } DiskChangeIntData;
+
+    struct Library *fat_UtilityBase;
+    struct Device  *fat_TimerBase;
 };
+
+#define UtilityBase     (glob->fat_UtilityBase)
+#define TimerBase       (glob->fat_TimerBase)
 
 #include "support.h"
 

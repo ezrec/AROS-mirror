@@ -23,6 +23,7 @@ struct BlockRange
 
 struct Cache
 {
+    struct Globals *glob;
     ULONG block_count;    /* number of blocks allocated */
     ULONG block_size;    /* size of a disk block */
     ULONG hash_size;    /* size of hash table */
@@ -40,11 +41,11 @@ struct Cache
 
 /* Prototypes */
 
-APTR Cache_CreateCache(ULONG hash_size, ULONG block_count, ULONG block_size);
+APTR Cache_CreateCache(struct Globals *glob, ULONG hash_size, ULONG block_count, ULONG block_size);
 VOID Cache_DestroyCache(APTR cache);
-APTR Cache_GetBlock(APTR cache, ULONG blockNum, UBYTE **data);
+APTR Cache_GetBlock(APTR cache, ULONG blockNum, UBYTE **data, ULONG *perr);
 VOID Cache_FreeBlock(APTR cache, APTR block);
 VOID Cache_MarkBlockDirty(APTR cache, APTR block);
-BOOL Cache_Flush(APTR cache);
+BOOL Cache_Flush(APTR cache, ULONG *perr);
 
 #endif

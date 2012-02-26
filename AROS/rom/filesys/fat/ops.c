@@ -84,6 +84,7 @@ static LONG MoveToSubdir(struct DirHandle *dh, UBYTE **pname, ULONG *pnamelen) {
 }
 
 LONG OpLockFile(struct ExtFileLock *dirlock, UBYTE *name, ULONG namelen, LONG access, struct ExtFileLock **filelock) {
+    struct Globals *glob = dirlock->glob;
     /* if they passed in a name, go searching for it */
     if (namelen != 0)
         return LockFileByName(dirlock, name, namelen, access, filelock);
@@ -94,7 +95,7 @@ LONG OpLockFile(struct ExtFileLock *dirlock, UBYTE *name, ULONG namelen, LONG ac
 
     /* null dir lock means they want the root */
     else
-        return LockRoot(access, filelock);
+        return LockRoot(glob, access, filelock);
 }
 
 void OpUnlockFile(struct ExtFileLock *lock) {
@@ -103,13 +104,15 @@ void OpUnlockFile(struct ExtFileLock *lock) {
 }
 
 LONG OpCopyLock(struct ExtFileLock *lock, struct ExtFileLock **copy) {
+    struct Globals *glob = lock->glob;
     if (lock != NULL)
         return CopyLock(lock, copy);
     else
-        return LockRoot(SHARED_LOCK, copy);
+        return LockRoot(glob, SHARED_LOCK, copy);
 }
 
 LONG OpLockParent(struct ExtFileLock *lock, struct ExtFileLock **parent) {
+    struct Globals *glob = lock->glob;
     LONG err;
     struct DirHandle dh;
     struct DirEntry de;
@@ -124,7 +127,7 @@ LONG OpLockParent(struct ExtFileLock *lock, struct ExtFileLock **parent) {
 
     /* if we're in the root directory, then the root is our parent */
     if (lock->gl->dir_cluster == glob->sb->rootdir_cluster)
-        return LockRoot(SHARED_LOCK, parent);
+        return LockRoot(glob, SHARED_LOCK, parent);
 
     /* get the parent dir */
     InitDirHandle(glob->sb, lock->gl->dir_cluster, &dh, FALSE);
@@ -154,7 +157,7 @@ LONG OpLockParent(struct ExtFileLock *lock, struct ExtFileLock **parent) {
             de.e.entry.attr & ATTR_DIRECTORY &&
             FIRST_FILE_CLUSTER(&de) == lock->gl->dir_cluster) {
             
-            err = LockFile(parent_cluster, dh.cur_index, SHARED_LOCK, parent);
+            err = LockFile(glob, parent_cluster, dh.cur_index, SHARED_LOCK, parent);
             break;
         }
     }
@@ -169,6 +172,7 @@ LONG OpLockParent(struct ExtFileLock *lock, struct ExtFileLock **parent) {
  * only return a lock on a file, never on a dir.
  */
 LONG OpOpenFile(struct ExtFileLock *dirlock, UBYTE *name, ULONG namelen, LONG action, struct ExtFileLock **filelock) {
+    struct Globals *glob = dirlock->glob;
     LONG err;
     struct ExtFileLock *lock;
     struct DirHandle dh;
@@ -299,7 +303,7 @@ LONG OpOpenFile(struct ExtFileLock *dirlock, UBYTE *name, ULONG namelen, LONG ac
     }
 
     /* lock the new file */
-    err = LockFile(de.cluster, de.index, EXCLUSIVE_LOCK, filelock);
+    err = LockFile(glob, de.cluster, de.index, EXCLUSIVE_LOCK, filelock);
 
     /* done */
     ReleaseDirHandle(&dh);
@@ -414,6 +418,7 @@ LONG OpDeleteFile(struct ExtFileLock *dirlock, UBYTE *name, ULONG namelen) {
 }
 
 LONG OpRenameFile(struct ExtFileLock *sdirlock, UBYTE *sname, ULONG snamelen, struct ExtFileLock *ddirlock, UBYTE *dname, ULONG dnamelen) {
+    struct Globals *glob = sdirlock->glob;
     struct DirHandle sdh, ddh;
     struct DirEntry sde, dde;
     struct GlobalLock *gl;
@@ -526,6 +531,7 @@ LONG OpRenameFile(struct ExtFileLock *sdirlock, UBYTE *sname, ULONG snamelen, st
 }
 
 LONG OpCreateDir(struct ExtFileLock *dirlock, UBYTE *name, ULONG namelen, struct ExtFileLock **newdirlock) {
+    struct Globals *glob = dirlock->glob;
     LONG err, i;
     ULONG cluster;
     struct DirHandle dh, sdh;
@@ -616,7 +622,7 @@ LONG OpCreateDir(struct ExtFileLock *dirlock, UBYTE *name, ULONG namelen, struct
     ReleaseDirHandle(&sdh);
 
     /* now obtain a lock on the new dir */
-    err = LockFile(de.cluster, de.index, SHARED_LOCK, newdirlock);
+    err = LockFile(glob, de.cluster, de.index, SHARED_LOCK, newdirlock);
 
     /* done */
     ReleaseDirHandle(&dh);
@@ -729,6 +735,7 @@ LONG OpWrite(struct ExtFileLock *lock, UBYTE *data, ULONG want, ULONG *written) 
 }
 
 LONG OpSetFileSize(struct ExtFileLock *lock, LONG offset, LONG whence, LONG *newsize) {
+    struct Globals *glob = lock->glob;
     LONG err;
     LONG size;
     struct DirHandle dh;
@@ -883,6 +890,7 @@ LONG OpSetFileSize(struct ExtFileLock *lock, LONG offset, LONG whence, LONG *new
 }
 
 LONG OpSetProtect(struct ExtFileLock *dirlock, UBYTE *name, ULONG namelen, ULONG prot) {
+    struct Globals *glob = dirlock->glob;
     LONG err;
     struct DirHandle dh;
     struct DirEntry de;
@@ -942,9 +950,11 @@ LONG OpSetProtect(struct ExtFileLock *dirlock, UBYTE *name, ULONG namelen, ULONG
 }
 
 LONG OpSetDate(struct ExtFileLock *dirlock, UBYTE *name, ULONG namelen, struct DateStamp *ds) {
+    struct Globals *glob = dirlock->glob;
     LONG err;
     struct DirHandle dh;
     struct DirEntry de;
+    struct timeval tv;
 
     /* get the dir handle */
     if ((err = InitDirHandle(glob->sb, dirlock != NULL ? dirlock->ioh.first_cluster : 0, &dh, FALSE)) != 0)
@@ -970,7 +980,12 @@ LONG OpSetDate(struct ExtFileLock *dirlock, UBYTE *name, ULONG namelen, struct D
     }
 
     /* set and update the date */
-    ConvertAROSDate(ds, &de.e.entry.write_date, &de.e.entry.write_time);
+    tv.tv_secs = (ULONG)ds->ds_Days*(24*60*60) +
+                 (ULONG)ds->ds_Minute*60 +
+                 (ULONG)ds->ds_Tick / 50 +
+                 252460800UL;   /* seconds from Jan 1, 1970 to Jan 1, 1978 */
+    tv.tv_micro = (ds->ds_Tick % 50) * (1000000 / 50);
+    ConvertAROSDate(glob, &tv, &de.e.entry.write_date, &de.e.entry.write_time);
     de.e.entry.last_access_date = de.e.entry.write_date;
     UpdateDirEntry(&de);
 
@@ -981,7 +996,7 @@ LONG OpSetDate(struct ExtFileLock *dirlock, UBYTE *name, ULONG namelen, struct D
     return 0;
 }
 
-LONG OpAddNotify(struct NotifyRequest *nr) {
+LONG OpAddNotify(struct Globals *glob, struct NotifyRequest *nr) {
     LONG err;
     struct DirHandle dh;
     struct DirEntry de;
@@ -1046,14 +1061,14 @@ LONG OpAddNotify(struct NotifyRequest *nr) {
 
     /* tell them that the file exists if they wanted to know */
     if (exists && nr->nr_Flags & NRF_NOTIFY_INITIAL)
-        SendNotify(nr);
+        SendNotify(glob, nr);
 
     D(bug("[fat] now reporting activity on '%s'\n", nr->nr_FullName));
 
     return 0;
 }
 
-LONG OpRemoveNotify(struct NotifyRequest *nr) {
+LONG OpRemoveNotify(struct Globals *glob, struct NotifyRequest *nr) {
     struct FSSuper *sb;
     struct NotifyNode *nn, *nn2;
 

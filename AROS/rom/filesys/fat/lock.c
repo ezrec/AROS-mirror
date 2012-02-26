@@ -52,6 +52,7 @@ void DumpLocks(struct FSSuper *sb) {
 #endif
 
 LONG TestLock(struct ExtFileLock *fl) {
+    struct Globals *glob = fl->glob;
     if (fl == 0 && glob->sb == NULL) {
         if (glob->disk_inserted == FALSE)
             return ERROR_NO_DISK;
@@ -70,6 +71,7 @@ LONG TestLock(struct ExtFileLock *fl) {
 
 LONG LockFileByName(struct ExtFileLock *fl, UBYTE *name, LONG namelen, LONG access, struct ExtFileLock **lock) {
     LONG err = ERROR_OBJECT_NOT_FOUND;
+    struct Globals *glob = fl->glob;
     struct DirHandle dh;
     struct DirEntry de;
     ULONG dir_cluster;
@@ -123,16 +125,16 @@ LONG LockFileByName(struct ExtFileLock *fl, UBYTE *name, LONG namelen, LONG acce
     /* found it, do the locking proper */
     if (de.e.entry.attr & ATTR_DIRECTORY && FIRST_FILE_CLUSTER(&de)
         <= glob->sb->rootdir_cluster)
-        err = LockRoot(access, lock);
+        err = LockRoot(glob, access, lock);
     else
-        err = LockFile(dh.ioh.first_cluster, de.index, access, lock);
+        err = LockFile(glob, dh.ioh.first_cluster, de.index, access, lock);
 
     ReleaseDirHandle(&dh);
 
     return err;
 }
 
-LONG LockFile(ULONG dir_cluster, ULONG dir_entry, LONG access, struct ExtFileLock **lock) {
+LONG LockFile(struct Globals *glob, ULONG dir_cluster, ULONG dir_entry, LONG access, struct ExtFileLock **lock) {
     struct GlobalLock *node, *gl;
     struct ExtFileLock *fl;
     struct DirHandle dh;
@@ -239,6 +241,8 @@ LONG LockFile(ULONG dir_cluster, ULONG dir_entry, LONG access, struct ExtFileLoc
 
     fl->gl = gl;
     fl->sb = glob->sb;
+    fl->glob = glob;
+
     ADDTAIL(&gl->locks, &fl->node);
 
     D(bug("[fat] created file lock 0x%08x\n", fl));
@@ -249,7 +253,7 @@ LONG LockFile(ULONG dir_cluster, ULONG dir_entry, LONG access, struct ExtFileLoc
     return 0;
 }
 
-LONG LockRoot(LONG access, struct ExtFileLock **lock) {
+LONG LockRoot(struct Globals *glob, LONG access, struct ExtFileLock **lock) {
     struct ExtFileLock *fl;
 
     D(bug("[fat] locking root\n"));
@@ -284,6 +288,7 @@ LONG LockRoot(LONG access, struct ExtFileLock **lock) {
         ADDTAIL(&glob->sb->info->locks, &glob->sb->info->root_lock);
     fl->gl = &glob->sb->info->root_lock;
     fl->sb = glob->sb;
+    fl->glob = glob;
     ADDTAIL(&glob->sb->info->root_lock.locks, &fl->node);
 
     D(bug("[fat] created root lock 0x%08x\n", fl));
@@ -295,20 +300,22 @@ LONG LockRoot(LONG access, struct ExtFileLock **lock) {
 }
 
 LONG CopyLock(struct ExtFileLock *fl, struct ExtFileLock **lock) {
+    struct Globals *glob = fl->glob;
     D(bug("[fat] copying lock\n"));
 
     if (fl == NULL || fl->gl == &glob->sb->info->root_lock)
-        return LockRoot(SHARED_LOCK, lock);
+        return LockRoot(glob, SHARED_LOCK, lock);
 
     if (fl->fl_Access == EXCLUSIVE_LOCK) {
         D(bug("[fat] can't copy exclusive lock\n"));
         return ERROR_OBJECT_IN_USE;
     }
 
-    return LockFile(fl->gl->dir_cluster, fl->gl->dir_entry, SHARED_LOCK, lock);
+    return LockFile(glob, fl->gl->dir_cluster, fl->gl->dir_entry, SHARED_LOCK, lock);
 }
 
 void FreeLock(struct ExtFileLock *fl) {
+    struct Globals *glob = fl->glob;
     struct NotifyNode *nn;
 
     if (fl == NULL)

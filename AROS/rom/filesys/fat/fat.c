@@ -37,7 +37,7 @@
 static UBYTE *GetFatEntryPtr(struct FSSuper *sb, ULONG offset, APTR *rb) {
     ULONG entry_cache_block = offset >> sb->fat_cachesize_bits;
     ULONG entry_cache_offset = offset & (sb->fat_cachesize - 1);
-    ULONG num;
+    ULONG num, error;
     UWORD i;
 
     /* if the target cluster is not within the currently loaded chunk of fat,
@@ -55,7 +55,7 @@ static UBYTE *GetFatEntryPtr(struct FSSuper *sb, ULONG offset, APTR *rb) {
             << (sb->fat_cachesize_bits - sb->sectorsize_bits));
         for (i = 0; i < sb->fat_blocks_count; i++)
             sb->fat_blocks[i] =
-                Cache_GetBlock(sb->cache, num + i, &sb->fat_buffers[i]);
+                Cache_GetBlock(sb->cache, num + i, &sb->fat_buffers[i], &error);
 
         /* remember where we are for next time */
         sb->fat_cache_block = entry_cache_block;
@@ -184,6 +184,7 @@ static void SetFat32Entry(struct FSSuper *sb, ULONG n, ULONG val) {
 }
 
 LONG ReadFATSuper(struct FSSuper *sb ) {
+    struct Globals *glob = sb->glob;
     struct DosEnvec *de = BADDR(glob->fssm->fssm_Environ);
     LONG err;
     ULONG bsize = de->de_SizeBlock * 4;
@@ -209,7 +210,7 @@ LONG ReadFATSuper(struct FSSuper *sb ) {
 
     D(bug("[fat] boot sector at sector %ld\n", sb->first_device_sector));
 
-    if ((err = AccessDisk(FALSE, sb->first_device_sector, 1, bsize, (UBYTE *)boot)) != 0) {
+    if ((err = AccessDisk(glob, FALSE, sb->first_device_sector, 1, bsize, (UBYTE *)boot)) != 0) {
         D(bug("[fat] couldn't read boot block (%ld)\n", err));
 	FreeMem(boot, bsize);
         return err;
@@ -303,7 +304,7 @@ LONG ReadFATSuper(struct FSSuper *sb ) {
 	return IOERR_BADADDRESS;
     }
 
-    sb->cache = Cache_CreateCache(64, 64, sb->sectorsize);
+    sb->cache = Cache_CreateCache(glob, 64, 64, sb->sectorsize);
 
     if (sb->clusters_count < 4085) {
         D(bug("\tFAT12 filesystem detected\n"));
@@ -383,8 +384,10 @@ LONG ReadFATSuper(struct FSSuper *sb ) {
     /* get initial number of free clusters */
     sb->free_clusters = -1;
     if (sb->type == 32) {
+        ULONG error;
+
         sb->fsinfo_block = Cache_GetBlock(sb->cache, sb->first_device_sector
-            + AROS_LE2WORD(boot->type.fat32.bpb_fs_info), (UBYTE **)&fsinfo);
+            + AROS_LE2WORD(boot->type.fat32.bpb_fs_info), (UBYTE **)&fsinfo, &error);
         if (sb->fsinfo_block != NULL) {
             if (fsinfo->lead_sig == AROS_LONG2LE(FSI_LEAD_SIG)
                 && fsinfo->struct_sig == AROS_LONG2LE(FSI_STRUCT_SIG)
@@ -408,6 +411,7 @@ LONG ReadFATSuper(struct FSSuper *sb ) {
 }
 
 LONG GetVolumeIdentity(struct FSSuper *sb, struct VolumeIdentity *volume) {
+    struct Globals *glob = sb->glob;
     struct DirHandle dh;
     struct DirEntry de;
     LONG err;
@@ -443,7 +447,7 @@ LONG GetVolumeIdentity(struct FSSuper *sb, struct VolumeIdentity *volume) {
             volume->name[0] = strlen(&(volume->name[1]));
 
             /* get the volume creation date too */
-            ConvertFATDate(de.e.entry.create_date, de.e.entry.create_time, &volume->create_time);
+            ConvertFATDate(glob, de.e.entry.create_date, de.e.entry.create_time, &volume->create_time);
 
             D(bug("[fat] volume name is '%s'\n", &(volume->name[1])));
 
@@ -463,6 +467,7 @@ LONG GetVolumeIdentity(struct FSSuper *sb, struct VolumeIdentity *volume) {
 }
 
 LONG SetVolumeName(struct FSSuper *sb, UBYTE *name) {
+    struct Globals *glob = sb->glob;
     struct DirHandle dh;
     struct DirEntry de;
     LONG err;
@@ -476,7 +481,7 @@ LONG SetVolumeName(struct FSSuper *sb, UBYTE *name) {
     if (!boot)
 	return ERROR_NO_FREE_STORE;
 
-    if ((err = AccessDisk(FALSE, sb->first_device_sector, 1, bsize, (UBYTE *)boot)) != 0) {
+    if ((err = AccessDisk(glob, FALSE, sb->first_device_sector, 1, bsize, (UBYTE *)boot)) != 0) {
         D(bug("[fat] couldn't read boot block (%ld)\n", err));
 	FreeMem(boot, bsize);
         return err;
@@ -537,7 +542,7 @@ LONG SetVolumeName(struct FSSuper *sb, UBYTE *name) {
     else
         CopyMem(de.e.entry.name, boot->type.fat16.bs_vollab, 11);
 
-    if ((err = AccessDisk(TRUE, sb->first_device_sector, 1, bsize,
+    if ((err = AccessDisk(glob, TRUE, sb->first_device_sector, 1, bsize,
         (UBYTE *)boot)) != 0)
         D(bug("[fat] couldn't write boot block (%ld)\n", err));
     FreeMem(boot, bsize);
@@ -584,6 +589,7 @@ LONG FindFreeCluster(struct FSSuper *sb, ULONG *rcluster) {
 }
 
 void FreeFATSuper(struct FSSuper *sb) {
+    struct Globals *glob = sb->glob;
     D(bug("\tRemoving Super Block from memory\n"));
     Cache_DestroyCache(sb->cache);
     FreeVecPooled(glob->mempool, sb->fat_buffers);
@@ -628,7 +634,7 @@ void FreeCluster(struct FSSuper *sb, ULONG cluster) {
     }
 }
 
-void ConvertFATDate(UWORD date, UWORD time, struct DateStamp *ds) {
+void ConvertFATDate(struct Globals *glob, UWORD date, UWORD time, struct DateStamp *ds) {
     ULONG year, month, day, hours, mins, secs;
     struct ClockData clock_data;
 
@@ -664,13 +670,12 @@ void ConvertFATDate(UWORD date, UWORD time, struct DateStamp *ds) {
     D(bug("[fat] converted fat date: days %ld minutes %ld ticks %ld\n", ds->ds_Days, ds->ds_Minute, ds->ds_Tick));
 }
 
-void ConvertAROSDate(struct DateStamp *ds, UWORD *date, UWORD *time) {
+void ConvertAROSDate(struct Globals *glob, struct timeval *tv, UWORD *date, UWORD *time) {
     ULONG year, month, day, hours, mins, secs;
     struct ClockData clock_data;
 
-    /* convert datestamp to seconds since 1978 */
-    secs = ds->ds_Days * 60 * 60 * 24 + ds->ds_Minute * 60
-        + ds->ds_Tick / TICKS_PER_SECOND;
+    /* convert seconds to seconds since 1978 */
+    secs = tv->tv_secs - 252460800UL;   /* seconds from Jan 1, 1970 to Jan 1, 1978 */
 
     /* convert seconds since 1978 to calendar/time data */
     Amiga2Date(secs, &clock_data);
