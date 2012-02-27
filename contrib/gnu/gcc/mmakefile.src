@@ -5,17 +5,11 @@
 
 #MM- contrib-gnu : contrib-gnu-gcc
 #MM- contrib-gnu-gcc : tools-crosstools development-collect-aros development-gcc
-
-ifeq ($(AROS_TARGET_CPU),m68k)
-    GCC_VERSION := 4.6.2
-    GCC_LANGUAGES=c
-    GCC_EXTRAOPTS := CFLAGS=-I$(AROS_DEVELOPMENT)/include
 #MM- development-gcc : development-gmp development-mpfr development-mpc
-else
-    GCC_VERSION := 4.2.4
-    GCC_LANGUAGES=c,c++,objc
-    GCC_EXTRAOPTS :=
-endif
+
+GCC_VERSION := 4.6.2
+GCC_LANGUAGES=c,c++,objc
+GCC_EXTRAOPTS := CFLAGS=-I$(AROS_DEVELOPMENT)/include
 
 EXTRAOPTS := \
     --enable-languages=$(GCC_LANGUAGES) --enable-longlong --enable-sjlj-exceptions \
