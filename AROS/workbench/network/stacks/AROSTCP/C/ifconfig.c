@@ -265,6 +265,20 @@ struct afswtch *afp;	/*the address family being set or asked about*/
 
 struct afswtch *lookup_af __P((const char *));
 
+static void __close_bsdsocket()
+{
+	if (MiamiBase != NULL)
+	{
+		CloseLibrary(MiamiBase);
+		MiamiBase = NULL;
+	}
+	if (SocketBase != NULL)
+	{
+		CloseLibrary(SocketBase);
+		SocketBase = NULL;
+	}
+}
+
 int
 main(argc, argv)
 	int argc;
@@ -275,12 +289,13 @@ main(argc, argv)
 #if defined(__AROS__)
    if (!(SocketBase = OpenLibrary(socket_name, SOCKET_VERSION)))
    {
-      return RETURN_FAIL;   
+      return RETURN_FAIL;
    }
    if (!(MiamiBase = OpenLibrary("miami.library", 0)))
    {
-      return RETURN_FAIL;   
+      return RETURN_FAIL;
    }
+	atexit(__close_bsdsocket);
 #endif
 
 	/* Parse command-line options */
@@ -505,7 +520,7 @@ printall()
 	getsock(af);
 	if (s < 0)
 		err(1, "socket");
-	if (IoctlSocket(s, SIOCGIFCONF, &ifc) < 0)
+	if (IoctlSocket(s, SIOCGIFCONF, (char *)&ifc) < 0)
 		err(1, "SIOCGIFCONF");
 	ifr = ifc.ifc_req;
 	ifreq.ifr_name[0] = '\0';
@@ -1133,8 +1148,8 @@ status(ap, alen)
 	}
 
 	free(media_list);
-#endif
  proto_status:
+#endif
 	if ((p = afp) != NULL) {
 		(*p->af_status)(1);
 	} else for (p = afs; p->af_name; p++) {
@@ -1188,7 +1203,7 @@ in_status(force)
 		sin = (struct sockaddr_in *)&ifr.ifr_dstaddr;
 		printf("--> %s ", inet_ntoa(sin->sin_addr));
 	}
-	printf("netmask 0x%x ", ntohl(netmask.sin_addr.s_addr));
+	printf("netmask 0x%x ", (unsigned int)ntohl(netmask.sin_addr.s_addr));
 	if (flags & IFF_BROADCAST) {
 		if (IoctlSocket(s, SIOCGIFBRDADDR, (caddr_t)&ifr) < 0) {
 			if (errno == EADDRNOTAVAIL)
@@ -1568,7 +1583,7 @@ adjust_nsellength()
 void
 usage()
 {
-#warning "TODO: NicJA - AROS Should also display usage instructions"
+/* TODO: NicJA - AROS Should also display usage instructions */
 #if !defined(__AROS__)
 	fprintf(stderr,
 	    "usage: ifconfig [ -m ] interface\n%s%s%s%s%s%s%s%s%s%s%s",
