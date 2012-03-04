@@ -682,7 +682,10 @@ static IPTR Area__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
                 }
                 else
                 {
+#if 0
+                    /* This breaks compatibility with gtk-mui under ABI V0 */
                     tag->ti_Tag = TAG_IGNORE;
+#endif
                 }
         /*  		if (data->mad_Flags & MADF_SHOWSELSTATE) */
         /*            MUI_Redraw(obj, MADF_DRAWOBJECT); */
