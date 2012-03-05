@@ -415,6 +415,137 @@ document loadseg
 Loads the module that contains the given address
 end
 
+define loadkick
+    set $_kicknode = Debug_KickList
+
+    while ($_kicknode != 0)
+        set $_eh = $_kicknode->eh
+        set $_sh = $_kicknode->sh
+        set $_shnum = $_eh->shnum
+
+        set $_i = 0
+        while ($_i < $_shnum)
+            if ($_i == 1) && ($_sh->addr != 0) && ($_sh->size != 0)
+                loadseg $_sh->addr
+            end
+            set $_sh = $_sh + 1
+            set $_i = $_i + 1
+        end
+        set $_kicknode = $_kicknode->Next
+    end
+end
+document loadkick
+Loads the Kickstart (symbols)
+end
+
+define loadmods    
+    if Debug_ModList
+        set $_segnode = (struct segment *)Debug_ModList->mlh_Head
+
+        while ($_segnode->s_node.mln_Succ != 0)
+            if $_segnode->s_num == 1
+                loadseg $_segnode->s_lowest
+            end
+            set $_segnode = (struct segment *)$_segnode->s_node.mln_Succ
+        end
+    end
+end
+document loadmods
+Loads all the modules (symbols)
+end
+
+define loadall
+    loadkick
+    loadmods
+end
+document loadall
+Loads the symbols of the Kickstart and all modules
+end
+
+define loadframe
+    log_to_file frameinfo.tmp on
+    info frame $arg0
+    end_log
+    
+    shell grep "eip =" frameinfo.tmp >loadseg.tmp
+    shell sed -e 's/eip = \(0x[0-9,a-f]*\).*/loadseg \1/' loadseg.tmp >frameinfo.tmp
+    
+    source frameinfo.tmp
+end
+document loadframe
+Loads the symbols for the given stack frame number
+end
+
+define loadframes
+    set $_again = 1
+    printf "\n\n"
+    
+    while ($_again == 1)
+        bt
+        printf "\nEnter stack frame number to resolve or RETURN to stop: \n\n"
+
+        set $_answer = 1000
+
+        shell read _gdb_answer && echo $_gdb_answer | grep -E "[0-9]+" | sed "s/\(.*\)/set \$_answer=\1/" >frameinfo.tmp
+
+        source frameinfo.tmp
+        printf "\n\n"
+
+        if $_answer == 1000
+            set $_again = 0
+        else
+            loadframe $_answer
+        end
+    end
+end
+document loadframes
+Interactive multiple loading of symbols for given stack frame numbers
+end
+
+define loadbt
+    set $_frame_counter = 0
+
+    set $_again = 1
+    while ($_again == 1)
+        printf "Checking frame #%d\n", $_frame_counter
+        
+        set $_again = 0
+        
+        log_to_file loadseg.tmp on
+        bt
+        end_log
+
+        # Check if frame exists
+        
+        log_to_file frameinfo.tmp on
+        printf "shell grep \"#%d .*\" loadseg.tmp | sed \"s/#.*/set \\$_again = 1/\" >loadbt.tmp\n", $_frame_counter
+        end_log
+        
+        source frameinfo.tmp
+        source loadbt.tmp
+
+        if $_again == 1
+        
+            # If frame is unresolved ("in ??") transform to "loadseg address"
+            
+            log_to_file frameinfo.tmp on
+            printf "shell grep \"#%d .* in ??\" loadseg.tmp | sed \"s/#.*\\(0x[0-9,a-f]*\\) .*/loadseg \\1/\" >loadbt.tmp\n", $_frame_counter
+            end_log
+
+            source frameinfo.tmp
+            source loadbt.tmp
+
+            set $_frame_counter = $_frame_counter + 1        
+            if ($_frame_counter == 1000)
+                set $_again = 0
+            end
+        end
+    end        
+end
+document loadbt
+Tries to automatically load the symbols for all unresolved stack frames
+end
+
 define seglistdump
     set $nextseg = $arg0
     set $count   = 1
