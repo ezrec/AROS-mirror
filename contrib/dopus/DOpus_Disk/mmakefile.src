@@ -9,6 +9,9 @@ USER_CFLAGS := -I$(DOPUSDIR)/Development/include \
     -D__UTILITY_STDLIBBASE__ \
     -D__LOCALE_STDLIBBASE__
 
+# TODO: Remove and clean the compiler warnings!
+USER_CFLAGS += -Wno-error
+
 %build_prog mmake=DOpus_Disk \
     progname=DOpus_Disk targetdir=$(DOPUSDIR)/Modules \
     files="diskop data format strings diskcopy install" \

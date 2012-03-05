@@ -11,6 +11,9 @@ FILES := main main1 main2 main3 main4 main5 \
 
 USER_CFLAGS := -I$(DOPUSDIR)/Development/include
 
+# TODO: Remove and clean the compiler warnings!
+USER_CFLAGS += -Wno-error
+
 %build_prog mmake=ConfigOpus \
     progname=ConfigOpus targetdir=$(DOPUSDIR)/Modules \
     files=$(FILES) uselibs="amiga arosc m"

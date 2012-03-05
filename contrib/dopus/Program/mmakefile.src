@@ -22,6 +22,9 @@ USER_CFLAGS := -I$(DOPUSDIR)/Development/include \
     -D__LOCALE_STDLIBBASE__ \
     -DDEBUG=1
 
+# TODO: Remove and clean the compiler warnings!
+USER_CFLAGS += -Wno-error
+
 %build_prog mmake=DirOpus \
     progname=DirectoryOpus targetdir=$(EXEDIR) \
     files=$(FILES) uselibs="rexxsyslib amiga arosc m"

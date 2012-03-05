@@ -11,6 +11,9 @@ USER_CFLAGS := -I$(DOPUSDIR)/Development/include \
     -D__UTILITY_STDLIBBASE__ \
     -D__LOCALE_STDLIBBASE__
 
+# TODO: Remove and clean the compiler warnings!
+USER_CFLAGS += -Wno-error
+
 %build_prog mmake=DOpusRT \
     progname=DOpusRT targetdir=$(EXEDIR) \
     files=DOpusRT uselibs="amiga arosc"

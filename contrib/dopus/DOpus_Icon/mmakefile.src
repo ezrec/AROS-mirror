@@ -9,6 +9,9 @@ USER_CFLAGS := -I$(DOPUSDIR)/Development/include \
     -D__UTILITY_STDLIBBASE__ \
     -D__LOCALE_STDLIBBASE__
 
+# TODO: Remove and clean the compiler warnings!
+USER_CFLAGS += -Wno-error
+
 %build_prog mmake=DOpus_Icon \
     progname=DOpus_Icon targetdir=$(DOPUSDIR)/Modules \
     files="data main doiconinfo strings" \
