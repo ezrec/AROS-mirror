@@ -167,7 +167,7 @@ Ltime( const PLstr timestr, char option )
 			gettimeofday(&tv,&tz);
 			sprintf(LSTR(*timestr), "%02d:%02d:%02d.%06ld",
 				tmdata->tm_hour, tmdata->tm_min,
-				tmdata->tm_sec, tv.tv_usec) ;
+				tmdata->tm_sec, (long)tv.tv_usec) ;
 #endif
 			break;
 

@@ -534,7 +534,7 @@ void
 R_read( )
 {
 	int	i;
-	long	l;
+	long	l=0;
 
 	if (!IN_RANGE(0,ARGN,2))
 		Lerror(ERR_INCORRECT_CALL, 0);
@@ -585,7 +585,7 @@ void
 R_seek( )
 {
 	int	i;
-	long	l;
+	long	l=0;
 	int	SEEK=SEEK_SET;
 
 	if (!IN_RANGE(1,ARGN,3))

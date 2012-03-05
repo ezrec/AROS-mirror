@@ -33,7 +33,7 @@
 void
 R_SoSoC( const int func )
 {
-	char	pad;
+	char	pad=0;
 	bool	usepad;
 	PLstr	a2;
 	Lstr	nullstr;

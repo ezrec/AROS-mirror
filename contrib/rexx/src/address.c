@@ -166,13 +166,7 @@ RxRedirectCmd(PLstr cmd, int in, int out, PLstr resultstr)
 #if defined(__BORLANDC__) && !defined(__WIN32__)
 	RxReturnCode = systemx(LSTR(*cmd));
 #else
-
-#ifdef AROS
-#warning: AROS does not have a system function
-#else
 	RxReturnCode = system(LSTR(*cmd));
-#endif
-
 #endif
 
 	/* --- restore input --- */

@@ -293,7 +293,7 @@ R_SoSoS( int func )
 		char	opt='D';
 		PBinLeaf leaf;
 		Lstr	str;
-		void	*ptr;
+		void	*ptr=NULL;
 		long	addr;
 
 		/* translate to uppercase */
@@ -777,7 +777,7 @@ R_random( )
 /* -------------------------------------------------------------- */
 void R_storage( )
 {
-	void	*ptr;
+	void	*ptr=NULL;
 	long	adr;
 #if defined(__BORLANDC__) && !defined(__WIN32__) && !defined(WCE)
 	unsigned	seg,ofs;

@@ -19,7 +19,7 @@
 int
 Lbool( const PLstr num )
 {
-	long	i;
+	long	i = 0;
 
 	switch (LTYPE(*num)) {
 		case LSTRING_TY:

@@ -46,9 +46,9 @@ BinLeaf *
 BinAdd( BinTree *tree, PLstr name, void *dat )
 {
 	BinLeaf	*ThisEntry;
-	BinLeaf	*LastEntry;
+	BinLeaf	*LastEntry=NULL;
 	BinLeaf	*leaf;
-	bool	LeftTaken;
+	bool	LeftTaken=0;
 	int	cmp, dep=0;
 
 	/* If tree is NULL then it will produce an error */
@@ -181,8 +181,8 @@ BinDisposeTree( BinTree *tree, void (BinFreeData)(void *) )
 void
 BinDel( BinTree *tree, PLstr name, void (BinFreeData)(void *dat) )
 {
-	BinLeaf	*thisid, *previous, *par_newid, *newid;
-	bool	lefttaken;
+	BinLeaf	*thisid, *previous=NULL, *par_newid, *newid;
+	bool	lefttaken=0;
 	int	cmp;
 
 	thisid = tree->parent;

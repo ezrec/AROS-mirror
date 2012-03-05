@@ -22,7 +22,7 @@ Lhashvalue( const PLstr str )
 #	error "Lhashvalue is not used!"
 #endif
 	word	value = 0;
-	size_t	i,l;
+	size_t	i,l = 0;
 
 	if (LISNULL(*str)) return 0;
 

@@ -99,7 +99,7 @@ mem_realloc(void *ptr, size_t size)
 
 	/* check if the memory is valid */
 	if (mem->magic != MAGIC) {
-		fprintf(STDERR,"mem_realloc: object is not allocated size=%d!\n",size);
+		fprintf(STDERR,"mem_realloc: object is not allocated size=%d!\n",(int)size);
 		mem_list();
 		exit(99);
 	}
@@ -190,7 +190,7 @@ mem_list(void)
 		fputs((mem->magic==MAGIC)?"  ":"??",STDERR);
 
 		fprintf(STDERR,"%3d %6d  %s\t\"",
-			++count, mem->size, mem->desc);
+			++count, (int)mem->size, mem->desc);
 		for (i=0; i<10; i++)
 			fprintf(STDERR,"%c",mem->data[i]);
 		fprintf(STDERR,"\"  ");

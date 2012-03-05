@@ -109,7 +109,7 @@ TraceCurline( RxFile **rxf, int print )
 	if (print) {
 		int	i;
 
-		fprintf(STDERR,"%6d *-* ",line);
+		fprintf(STDERR,"%6d *-* ",(int)line);
 		for (i=1; i<_nesting; i++) fputc(' ',STDERR);
 
 		while (*ch && ch<chend) {

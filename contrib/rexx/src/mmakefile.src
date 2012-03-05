@@ -30,7 +30,7 @@ FILES := \
 
 EXEDIR := $(CONTRIBDIR)/Rexx
 
-USER_CFLAGS := -DAROS -I$(SRCDIR)/$(CURDIR)../inc -DALIGNED -Dwchar_t=int
+USER_CFLAGS := -DAROS -I$(SRCDIR)/$(CURDIR)/../inc -DALIGNED
 
 #MM contrib-rexx-program : includes linklibs linklibs-rexxlstring
 

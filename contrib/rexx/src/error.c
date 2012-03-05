@@ -41,7 +41,7 @@ RxSignalCondition( int cnd )
 {
 	PBinLeaf	leaf;
 	RxFunc	*func;
-	PLstr	cndstr;
+	PLstr	cndstr=NULL;
 
 /*///////// first we need to terminate all the interpret strings */
 	switch (cnd) {

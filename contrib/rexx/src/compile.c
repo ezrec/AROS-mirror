@@ -692,9 +692,9 @@ C_do(void)
 	enum stat_type old_statement = symbolstat;
 	LoopCtrl	*lc;
 	PLstr	CtrlVar=NULL;
-	void	*cv_ptr;
-	size_t	body_p, iterate_p, fix_iterate, leave_p, fix_leave;
-	size_t	untilexpr, overuntil, untilend;
+	void	*cv_ptr=NULL;
+	size_t	body_p, iterate_p, fix_iterate=0, leave_p, fix_leave;
+	size_t	untilexpr=0, overuntil, untilend=0;
 	size_t	pat,tmp;
 	word	idx=0, idxTO=0, idxBY=0, idxFOR=0;
 	int	dotype=0;
@@ -1016,7 +1016,7 @@ C_interpret(void)
 static void
 C_iterate(void)
 {
-	LoopCtrl	*lc;
+	LoopCtrl	*lc = NULL;
 	DQueueElem	*elem;
 	word	pop=0;
 
@@ -1057,7 +1057,7 @@ C_iterate(void)
 static void
 C_leave(void)
 {
-	LoopCtrl *lc;
+	LoopCtrl *lc = NULL;
 	DQueueElem *elem;
 	word	pop=0;
 
@@ -1528,8 +1528,8 @@ static void
 C_signal( void)
 {
 	int	value;
-	int	cnd;
-	void	*ptr;
+	int	cnd=0;
+	void	*ptr=NULL;
 
 	if (symbol==ident_sy) {
 		if (!CMP("OFF") || (!CMP("ON"))) {

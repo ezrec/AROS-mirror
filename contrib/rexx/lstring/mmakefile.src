@@ -84,7 +84,7 @@ FILES := \
 	x2d \
 	xrange
 	
-USER_CFLAGS := -DAROS -I$(SRCDIR)/$(CURDIR)../inc -O2 -DALIGN -DINLINE -Dwchar_t=int -DMAXLONG=0x7FFFFFFF
+USER_CFLAGS := -DAROS -I$(SRCDIR)/$(CURDIR)/../inc -O2 -DALIGN -DINLINE -DMAXLONG=0x7FFFFFFF
 
 %build_linklib mmake=linklibs-rexxlstring libname=rexxlstring files=$(FILES)
 

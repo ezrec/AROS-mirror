@@ -745,7 +745,7 @@ RxDoneInterpret( void )
 int
 RxInterpret( void )
 {
-	PLstr	a;
+	PLstr	a=NULL;
 	IdentInfo	*inf;
 	byte	na,nf;
 	CTYPE	w;
@@ -1790,7 +1790,7 @@ outofcmd:
 			DEBUGDISPLAY0("error, unknown mnemonic");
 			Rxcip--;
 #ifndef WIN
-			fprintf(STDERR,"Opcode found=%ld (0x%02lX)\n",*Rxcip,*Rxcip);
+			fprintf(STDERR,"Opcode found=%ld (0x%02lX)\n",(long)*Rxcip,(unsigned long)*Rxcip);
 #else
 			PUTS("Opcode found=0x"); PUTINT(*Rxcip,0,16);
 #endif

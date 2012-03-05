@@ -761,7 +761,7 @@ RxVarSet( Scope scope, PBinLeaf varleaf, PLstr value )
 void
 RxSetSpecialVar( int rcsigl, long num )
 {
-	PBinLeaf	varleaf;
+	PBinLeaf	varleaf=NULL;
 	Lstr		value;
 
 	switch (rcsigl) {
