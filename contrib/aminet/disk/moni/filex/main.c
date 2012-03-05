@@ -86,22 +86,16 @@ struct DisplayData *AktuDD;
 struct DisplayInhalt *AktuDI;
 
 static struct List OldFileList = {
-	( struct Node * )&OldFileList.lh_Tail,
-	0,
-	( struct Node * )&OldFileList.lh_Head,
-	0,0
+	.lh_Head = ( struct Node * )&OldFileList.lh_Tail,
+	.lh_TailPred = ( struct Node * )&OldFileList.lh_Head,
 };
 struct List FileList = {
-	( struct Node * )&FileList.lh_Tail,
-	0,
-	( struct Node * )&FileList.lh_Head,
-	0,0
+	.lh_Head = ( struct Node * )&FileList.lh_Tail,
+	.lh_TailPred = ( struct Node * )&FileList.lh_Head,
 };
 struct List DisplayInhaltList = {
-	( struct Node * )&DisplayInhaltList.lh_Tail,
-	0,
-	( struct Node * )&DisplayInhaltList.lh_Head,
-	0,0
+	.lh_Head = ( struct Node * )&DisplayInhaltList.lh_Tail,
+	.lh_TailPred = ( struct Node * )&DisplayInhaltList.lh_Head,
 };
 
 /*void Gibs( void )

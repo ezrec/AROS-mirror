@@ -35,17 +35,13 @@ static struct Speicher ReplaceSpeicher;
 static LONG delta[256];
 
 static struct List SHList = {
-	( struct Node * )&SHList.lh_Tail,
-	0,
-	( struct Node * )&SHList.lh_Head,
-	0,0
+	.lh_Head = (struct Node *)&SHList.lh_Tail,
+	.lh_TailPred = ( struct Node * )&SHList.lh_Head,
 };
 
 static struct List RHList = {
-	( struct Node * )&RHList.lh_Tail,
-	0,
-	( struct Node * )&RHList.lh_Head,
-	0,0
+	.lh_Head = ( struct Node * )&RHList.lh_Tail,
+	.lh_TailPred = ( struct Node * )&RHList.lh_Head,
 };
 
 static struct Node *SHAktu;
