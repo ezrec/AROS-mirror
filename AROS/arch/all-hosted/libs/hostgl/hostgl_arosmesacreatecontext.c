@@ -225,6 +225,16 @@
     amesa->glXctx = GLXCALL(glXCreateNewContext, dsp, amesa->framebuffer->fbconfigs[0], GLX_RGBA_TYPE, NULL, True);
 #endif
     
+#if defined(RENDERER_PIXMAP_BLIT)
+    amesa->visinfo = GLXCALL(glXGetVisualFromFBConfig, dsp, amesa->framebuffer->fbconfigs[0]);
+
+    /* Create GLX Pixmap */
+    HostGL_AllocatePixmap(amesa);
+
+    /* Create GL context */
+    amesa->glXctx = GLXCALL(glXCreateNewContext, dsp, amesa->framebuffer->fbconfigs[0], GLX_RGBA_TYPE, NULL, True);    
+#endif
+
     if (!amesa->glXctx)
     {
         D(bug("[HostGL] AROSMesaCreateContext: ERROR -  failed to create GLX context\n"));
@@ -245,6 +255,10 @@ error_out:
 #if defined(RENDERER_PBUFFER_WPA)
     if (amesa) HostGL_DeAllocatePBuffer(amesa);
 #endif
+#if defined(RENDERER_PIXMAP_BLIT)
+    if (amesa) HostGL_DeAllocatePixmap(amesa);
+#endif
+
     if (amesa && amesa->framebuffer->fbconfigs) XCALL(XFree, amesa->framebuffer->fbconfigs);
     if (amesa && amesa->framebuffer) FreeVec(amesa->framebuffer);
     if (amesa) AROSMesaDestroyContext(amesa);

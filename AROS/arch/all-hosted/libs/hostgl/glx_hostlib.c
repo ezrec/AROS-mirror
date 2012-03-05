@@ -33,6 +33,12 @@ static const char *glx_func_names[] =
     "glXCreatePbuffer",
     "glXDestroyPbuffer",
 #endif
+#if defined(RENDERER_PIXMAP_BLIT)
+    "glXGetVisualFromFBConfig",
+    "glXCreateGLXPixmap",
+    "glXDestroyGLXPixmap",
+    "glXWaitGL",
+#endif
     NULL
 };
 

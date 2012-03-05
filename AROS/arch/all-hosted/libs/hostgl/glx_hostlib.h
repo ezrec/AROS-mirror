@@ -23,6 +23,12 @@ struct glx_func
     GLXPbuffer (*glXCreatePbuffer) (Display *dpy, GLXFBConfig config, const int *attribList);
     void (*glXDestroyPbuffer) (Display *dpy, GLXPbuffer pbuf);
 #endif
+#if defined(RENDERER_PIXMAP_BLIT)
+    XVisualInfo * (*glXGetVisualFromFBConfig) (Display *dpy, GLXFBConfig config);
+    GLXPixmap (*glXCreateGLXPixmap) (Display *dpy, XVisualInfo *vis, Pixmap pixmap);
+    void (*glXDestroyGLXPixmap) (Display *dpy, GLXPixmap pix);
+    void (*glXWaitGL) (void);
+#endif
 };
 
 extern void *glx_handle;

@@ -14,5 +14,9 @@ VOID HostGL_CheckAndUpdateBufferSize(AROSMesaContext amesa);
 VOID HostGL_AllocatePBuffer(AROSMesaContext amesa);
 VOID HostGL_DeAllocatePBuffer(AROSMesaContext amesa);
 #endif
+#if defined(RENDERER_PIXMAP_BLIT)
+VOID HostGL_AllocatePixmap(AROSMesaContext amesa);
+VOID HostGL_DeAllocatePixmap(AROSMesaContext amesa);
+#endif
 
 #endif /* HOSTGL_FUNCS_H */

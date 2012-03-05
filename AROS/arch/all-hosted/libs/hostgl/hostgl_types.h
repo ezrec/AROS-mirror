@@ -33,6 +33,11 @@ struct arosmesa_context
     ULONG       *swapbuffer;
     ULONG       *swapbufferline;
 #endif
+#if defined(RENDERER_PIXMAP_BLIT)
+    XVisualInfo     *visinfo;
+    struct BitMap   *glXPixmapBM;
+    GLXPixmap       glXPixmap;
+#endif
     GLXContext  glXctx;
 
     struct arosmesa_framebuffer *framebuffer;

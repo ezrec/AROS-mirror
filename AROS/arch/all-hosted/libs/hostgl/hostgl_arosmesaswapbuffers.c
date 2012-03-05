@@ -13,7 +13,9 @@
 #include <cybergraphx/cybergraphics.h>
 static struct SignalSemaphore * GetX11SemaphoreFromBitmap(struct BitMap * bm);
 #endif
-
+#if defined(RENDERER_PIXMAP_BLIT)
+#include <proto/graphics.h>
+#endif
 /*****************************************************************************
 
     NAME */
@@ -84,6 +86,17 @@ static struct SignalSemaphore * GetX11SemaphoreFromBitmap(struct BitMap * bm);
 
         WritePixelArray(amesa->swapbuffer, 0, 0, width * SWAPBUFFER_BPP, amesa->visible_rp, amesa->left, amesa->top, 
             width, height, RECTFMT_BGRA32);
+#endif
+#if defined(RENDERER_PIXMAP_BLIT)
+        HostGL_Lock();
+        HostGL_UpdateGlobalGLXContext();
+        GLXCALL(glXWaitGL);
+        HostGL_UnLock();
+
+        BltBitMapRastPort(amesa->glXPixmapBM, 0, 0,
+                          amesa->visible_rp, amesa->left, amesa->top,
+                          amesa->framebuffer->width, amesa->framebuffer->height,
+                          192);
 #endif
         HostGL_CheckAndUpdateBufferSize(amesa);
     }

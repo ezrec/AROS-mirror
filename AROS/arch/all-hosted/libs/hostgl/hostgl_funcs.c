@@ -5,6 +5,8 @@
 
 #include <proto/exec.h>
 #include <proto/utility.h>
+#include <proto/graphics.h>
+#include <proto/oop.h>
 #include "hostgl_ctx_manager.h"
 #include "hostgl_funcs.h"
 #include "arosmesa_funcs.h"
@@ -30,6 +32,11 @@ BOOL HostGL_FillFBAttributes(LONG * fbattributes, LONG size, struct TagItem *tag
 
 #if defined(RENDERER_PBUFFER_WPA)
     SETFBATTR(GLX_DRAWABLE_TYPE, GLX_PBUFFER_BIT)
+    SETFBATTR(GLX_DOUBLEBUFFER, False);
+#endif
+
+#if defined(RENDERER_PIXMAP_BLIT)
+    SETFBATTR(GLX_DRAWABLE_TYPE, GLX_PIXMAP_BIT)
     SETFBATTR(GLX_DOUBLEBUFFER, False);
 #endif
 
@@ -125,6 +132,61 @@ static VOID HostGL_ResizePBuffer(AROSMesaContext amesa) /* Must be called with l
 }
 #endif
 
+#if defined(RENDERER_PIXMAP_BLIT)
+/* This function assumes all storages are NULL and/or have been freed */
+VOID HostGL_AllocatePixmap(AROSMesaContext amesa)
+{
+    Display     *dsp = HostGL_GetGlobalX11Display();
+    OOP_Object  *hiddbm;
+    Pixmap       pixmap;
+    
+    amesa->glXPixmapBM = AllocBitMap(amesa->framebuffer->width, amesa->framebuffer->height, 0, BMF_MINPLANES, amesa->visible_rp->BitMap);
+
+#define HIDD_BM_OBJ(bitmap)     (*(OOP_Object **)&((bitmap)->Planes[0]))
+#warning "HACK: Get X pixmap handle which is first field in X11 bitmap hidd inst data"
+    
+    if(amesa->glXPixmapBM)
+    {
+        hiddbm = HIDD_BM_OBJ(amesa->glXPixmapBM);    
+        pixmap = *(Pixmap *)(OOP_INST_DATA(OOP_OCLASS(hiddbm), hiddbm));
+        
+        amesa->glXPixmap = GLXCALL(glXCreateGLXPixmap, dsp, amesa->visinfo, pixmap);
+    }
+}
+
+VOID HostGL_DeAllocatePixmap(AROSMesaContext amesa)
+{
+    Display * dsp = HostGL_GetGlobalX11Display();
+
+    if (amesa->glXPixmap) GLXCALL(glXDestroyGLXPixmap, dsp, amesa->glXPixmap);
+    if (amesa->glXPixmapBM) FreeBitMap(amesa->glXPixmapBM);
+    
+    amesa->glXPixmap = None;
+    amesa->glXPixmapBM = NULL;
+}
+
+static VOID HostGL_ResizePixmap(AROSMesaContext amesa) /* Must be called with lock held */
+{
+    AROSMesaContext cur_ctx = HostGL_GetCurrentContext();
+    BOOL isCurrent = (cur_ctx == amesa);
+    Display * dsp = HostGL_GetGlobalX11Display();
+
+    /* If current, detach */
+    if (isCurrent)
+        GLXCALL(glXMakeContextCurrent, dsp, None, None, NULL);
+
+    /* Destroy and recreate (using new size) */
+    HostGL_DeAllocatePixmap(amesa);
+    HostGL_AllocatePixmap(amesa);
+
+    /* If current, attach */
+    if (isCurrent)
+        GLXCALL(glXMakeContextCurrent, dsp, cur_ctx->glXPixmap, cur_ctx->glXPixmap, cur_ctx->glXctx);
+
+    amesa->framebuffer->resized = FALSE;
+}
+#endif
+
 VOID HostGL_CheckAndUpdateBufferSize(AROSMesaContext amesa)
 {
     AROSMesaRecalculateBufferWidthHeight(amesa);
@@ -134,6 +196,15 @@ VOID HostGL_CheckAndUpdateBufferSize(AROSMesaContext amesa)
         HostGL_Lock();
         HostGL_UpdateGlobalGLXContext();
         HostGL_ResizePBuffer(amesa);
+        HostGL_UnLock();
+    }
+#endif
+#if defined(RENDERER_PIXMAP_BLIT)
+    if (amesa->framebuffer->resized)
+    {
+        HostGL_Lock();
+        HostGL_UpdateGlobalGLXContext();
+        HostGL_ResizePixmap(amesa);
         HostGL_UnLock();
     }
 #endif
