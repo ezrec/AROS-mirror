@@ -90,9 +90,6 @@ bool NetSocket::FResolve(char* AHost, int APort, sockaddr_in *AAddr)
 {
    if (AHost)
    {
-      uint32 addr;
-
-      addr = bsock->inet_addr(AHost);
       hostent *pHost = bsock->gethostbyname(AHost);
 
       if (0 != pHost)
@@ -286,7 +283,8 @@ bool NetSocket::FTryAccept(NetSocket::SocketID *s)
    sockaddr    saddr;
    int32       laddr = sizeof(sockaddr);
 
-#warning very very very basic stuff. need to allow other types too? not sure - dgram is connectionless.
+/* FIXME: very very very basic stuff. need to allow other types too? not sure - dgram is connectionless.
+ */
    s->id     = bsock->ReleaseSocket(bsock->accept(lSocket, &saddr, &laddr), 65536 + Utility->GetUniqueID());
    s->domain = AF_INET;
    s->type   = SOCK_STREAM;

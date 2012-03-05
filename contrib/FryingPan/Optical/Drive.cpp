@@ -153,7 +153,6 @@ bool Drive::ProcInit()
 
 unsigned long Drive::ProcMsgs(Thread *pThis, void*)
 {
-   int               last_status;
    int               period = 0;
    bool              bReported = false;
 
@@ -173,7 +172,6 @@ unsigned long Drive::ProcMsgs(Thread *pThis, void*)
          if (!bLockInterOperations)
          {
             tur->Go();
-            last_status = drive_status;
             switch (tur->SCSIError() & 0xffff00) 
             {
 

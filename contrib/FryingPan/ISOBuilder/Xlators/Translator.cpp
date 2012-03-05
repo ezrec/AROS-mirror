@@ -39,7 +39,7 @@ String Translator::translate(String& pSource)
    
       for (i=0; pSource[i] != 0; i++)
       {
-         s[i] = ttable[pSource[i]];
+         s[i] = ttable[(unsigned char)pSource[i]];
       }
       s[i] = 0;
    }

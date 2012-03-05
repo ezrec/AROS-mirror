@@ -72,7 +72,7 @@ namespace GenNS
       void           AllocBuf(unsigned int lSize);
       void           ReallocBuf(unsigned int lSize);
 
-      unsigned long  TrimChars(char* sChars);
+      unsigned long  TrimChars(const char* sChars);
       int32          ToLong();
       int64          ToQuad();
       String         SubString(int lFirst, int lLen);

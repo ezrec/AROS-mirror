@@ -293,7 +293,7 @@ bool Disc_CD_RW::IsFormatted()
 {
    if (0 == readfmtcaps)
       return false;
-   #warning Zwracamy false poki nie naprawimy IsFormatted()!!!
+// FIXME: Zwracamy false poki nie naprawimy IsFormatted()!!!
 //   if (readfmtcaps->IsFormatted())
 //      return true;
    return false;  

@@ -73,7 +73,8 @@ bool                       FileWriter::writeData(void* buffer, int len)
       k = len * sectorSize;
       while (k) 
       {
-         *b++ = ((*b&0xff00)>>8)|((*b&0xff)<<8);
+         *b = ((*b&0xff00)>>8)|((*b&0xff)<<8);
+         b++;
          k-=2;
       }
    }

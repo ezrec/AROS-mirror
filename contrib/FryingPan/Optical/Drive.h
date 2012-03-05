@@ -32,7 +32,10 @@
 using namespace GenNS;
 
 extern   class DriveSpool    *Spool;
-class GenNS::Thread;
+
+namespace GenNS {
+class Thread;
+};
 
 
 struct DriveMsg

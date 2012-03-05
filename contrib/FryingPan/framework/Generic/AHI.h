@@ -38,7 +38,7 @@ namespace GenNS
       struct AudioID
       {
          unsigned long  id;
-         const char     name[64];
+         char     name[64];
       };
 
       enum AHISampleType

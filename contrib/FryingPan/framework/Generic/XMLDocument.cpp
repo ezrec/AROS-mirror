@@ -449,7 +449,7 @@ bool XMLDocument::WriteXML(const char *sName)
    return false;
 }
 
-#warning polaczyc w jedno
+/* FIXME: polaczyc w jedno */
 
 bool XMLDocument::ReadXML(BPTR fh)
 {

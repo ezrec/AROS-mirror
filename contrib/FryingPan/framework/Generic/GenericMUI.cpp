@@ -46,7 +46,7 @@ Object *GenericMUI::MUI_MakeObjectX(long Name, ...)
    return (Object*)pos;
 }
    
-Object *GenericMUI::MUI_NewObject(char* Name, unsigned long FirstTag, ...)          // me hates mos for that.
+Object *GenericMUI::MUI_NewObject(const char* Name, unsigned long FirstTag, ...)          // me hates mos for that.
 {
    va_list ap;
    unsigned long *params = new unsigned long [128];

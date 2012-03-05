@@ -301,7 +301,7 @@ String &String::operator += (const char cChar)
    return *this;
 }
 
-unsigned long String::TrimChars(char* sChars)
+unsigned long String::TrimChars(const char* sChars)
 {
    int lNewStart = 0;
    int lNewEnd   = Length();

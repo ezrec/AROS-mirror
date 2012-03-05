@@ -102,7 +102,7 @@ uint32 *MUITracksDataAudio::getObject()
       return all;
 
    tracks = new MUIList("BAR,BAR,", true);
-#warning nlist still does not support MUIA_DragDropSort notification.
+// FIXME: nlist still does not support MUIA_DragDropSort notification.
    //tracks->setDragSortable(true);
    tracks->setConstructHook(hConstruct.GetHook());
    tracks->setDestructHook(hDestruct.GetHook());

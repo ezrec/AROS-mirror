@@ -227,7 +227,7 @@ int Disc_CD_ROM::probeDataType()
    /*
     * disabled for now
     */
-#warning data probing disabled
+// FIXME: data probing disabled
    return 1;
 
    cmd_ReadHeader      *rh = new cmd_ReadHeader(dio);

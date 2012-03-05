@@ -446,7 +446,7 @@ int Disc_CD_R::CheckItemData(const IOptItem *pDI)
          _D(Lvl_Error, "Indices allowed only in DAO / SAO mode");
          return ODE_BadLayout;
       }
-#warning INDICES NOT IMPLEMENTED
+// FIXME: INDICES NOT IMPLEMENTED
       _D(Lvl_Error, "Indices are not implemented yet");
       return ODE_BadLayout;
    }
@@ -503,7 +503,7 @@ int Disc_CD_R::BeginTrackWrite(const IOptItem*pDI)
 
          delete [] buff;
          delete builder;
-#warning are we leaking memory here if no cdtext is wanted????
+// FIXME: are we leaking memory here if no cdtext is wanted????
          cdText = false;
          builder = 0;
       }
@@ -619,7 +619,7 @@ int Disc_CD_R::UploadLayout(const IOptItem *pDI)
          }
       }
 
-      #warning nie mam pewnosci czy CD-MRW czasem tu nie wlezie...
+      // FIXME: nie mam pewnosci czy CD-MRW czasem tu nie wlezie...
       // we have to create a CUE SHEET out of this data
       // since everything is almost ready - we just fill up the rest.
       lCueElements = 0;

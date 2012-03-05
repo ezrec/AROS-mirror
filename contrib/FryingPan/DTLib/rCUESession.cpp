@@ -448,7 +448,7 @@ public:
       }
       item->setDataBlockCount(len);
 
-#warning no postgap
+// FIXME: no postgap
                   
       // uint16            postgap;       // in sectors
       // String            isrc;          // ISRC number

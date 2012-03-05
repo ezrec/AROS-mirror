@@ -65,7 +65,7 @@ namespace GenNS
    protected:
 
       Object                 *MUI_MakeObjectX(long Name, ...);
-      Object                 *MUI_NewObject(char* Name, unsigned long FirstTag, ...);
+      Object                 *MUI_NewObject(const char* Name, unsigned long FirstTag, ...);
    };
 };
 

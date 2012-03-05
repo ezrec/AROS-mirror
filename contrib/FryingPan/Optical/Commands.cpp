@@ -1017,7 +1017,7 @@ int32 cmd_ReadFormatCapacities::IsFormatted(void)
     * this is actually sad because there is no way of telling...
     */
 
-   #warning IsFormatted() will never work good - MMC5 says that drive could be formatted for either random or sequential write.
+   // FIXME: IsFormatted() will never work good - MMC5 says that drive could be formatted for either random or sequential write.
    return (caps->capacities[0].conf.getType2() & 2) ? 1 : 0;     
 }
 

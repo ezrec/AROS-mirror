@@ -32,7 +32,9 @@
 class ClName;
 class ClRoot;
 class ClDirectory;
-class GenNS::DbgHandler;
+namespace GenNS {
+  class DbgHandler;
+};
 
 class ClElement 
 {

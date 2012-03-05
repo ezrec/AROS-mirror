@@ -121,7 +121,7 @@ bool Disc_DVD_PlusR::IsWritable()
 
 int Disc_DVD_PlusR::CheckItemData(const IOptItem *pDI)
 {
-#warning INCREMENTAL TRACKS PASSED ON
+// FIXME: INCREMENTAL TRACKS PASSED ON
 
    const_cast<IOptItem*>(pDI)->setIncremental(true);
 

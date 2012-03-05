@@ -150,9 +150,9 @@ unsigned long MUITree::doDisplay(void*, MUIP_NListtree_DisplayMessage* m)
        * we need to pass the UserData as the name here :)
        */
       if (m->EntryPos >= 0)
-         m->Array[0] = (char*)m->TreeNode->tn_User;
+         m->Array[0] = (char *)m->TreeNode->tn_User;
       else
-         m->Array[0] = "Tree";
+         m->Array[0] = (char *)"Tree";
       return 0;
    }
 }
@@ -223,6 +223,7 @@ void MUITree::showObject(void* data, bool expand)
                                                    MUIV_NListtree_FindUserData_ListNode_Root, 
                                                    (uint32)data, 
                                                    MUIV_NListtree_FindUserData_Flag_Activate));
+   (void)tn; // Unused
    if (expand)
    {
       DoMtd((Object *)list, ARRAY(MUIM_NListtree_Open, 

@@ -212,7 +212,7 @@ bool                       FileReader::fillOptItem(IOptItem *item)
    item->setDataBlockCount(getBlockCount());
 
    return true;
-#warning malo tu wypelniamy
+// FIXME: malo tu wypelniamy
 }
 
 void                       FileReader::setDataOffset(uint64 lOffset)

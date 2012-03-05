@@ -1421,7 +1421,7 @@ class SCSICommand : public SCSICmd
    unsigned       need_probe:1;
    unsigned       dump_data:1;
 
-   char          *cmdname;
+   const char     *cmdname;
 
    public:
 
@@ -1455,7 +1455,7 @@ class SCSICommand : public SCSICmd
    inline   uint32  CmdLength(void)
       {  return scsi_CmdLength;                       };
 
-   inline   char*  CmdName()
+   inline   const char*  CmdName()
    {
       return cmdname;
    };

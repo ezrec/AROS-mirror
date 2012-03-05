@@ -23,6 +23,12 @@
 #include <Optical/IOptItem.h>
 #include "Main.h"
 
+#ifndef MAKE_ID
+#define MAKE_ID(a,b,c,d)  ((((ULONG)(a)) << 24) | \
+		           (((ULONG)(b)) << 16) | \
+		           (((ULONG)(c)) <<  8) | \
+		           (((ULONG)(d)) <<  0))
+#endif
 
 class file
 {
@@ -577,29 +583,29 @@ bool                 rNRGSession::analyse(const char* name, EDtError &rc)
       DOS->Read(fh, &size, 4);
       data = L2BE(data);
       size = L2BE(size);
-      if (data == 'CDTX')
+      if (data == MAKE_ID('C','D','T','X'))
       {
          _d(Lvl_Info, "%s: CDTX Tag", (int)__PRETTY_FUNCTION__);
          DOS->Seek(fh, size, OFFSET_CURRENT);
       }
-      else if (data == 'CUEX')
+      else if (data == MAKE_ID('C','U','E','X'))
       {
          _d(Lvl_Info, "%s: CUEX Tag", (int)__PRETTY_FUNCTION__);
          cue1 = (nrg_cuex*)new char[size];
          DOS->Read(fh, cue1, size);
       }
-      else if (data == 'CUES')
+      else if (data == MAKE_ID('C','U','E','S'))
       {
          _d(Lvl_Info, "%s: CUES Tag", (int)__PRETTY_FUNCTION__);
          DOS->Seek(fh, size, OFFSET_CURRENT);
       }
-      else if (data == 'DAOX')
+      else if (data == MAKE_ID('D','A','O','X'))
       {
          _d(Lvl_Info, "%s: DAOX Tag", (int)__PRETTY_FUNCTION__);
          dao2 = (nrg_daox*)new char[size];
          DOS->Read(fh, dao2, size);
       }
-      else if (data == 'DAOI')
+      else if (data == MAKE_ID('D','A','O','I'))
       {
          _d(Lvl_Info, "%s: DAOI Tag", (int)__PRETTY_FUNCTION__);
          dao1 = (nrg_daoi*)new char[size];
@@ -621,7 +627,7 @@ bool                 rNRGSession::analyse(const char* name, EDtError &rc)
                   dao1->track[i].end);
          }
       }
-      else if (data == 'ETNF')
+      else if (data == MAKE_ID('E','T','N','F'))
       {
          _d(Lvl_Info, "%s: ETNF Tag", (int)__PRETTY_FUNCTION__);
          int32 num = (size / sizeof(nrg_etnf));
@@ -635,7 +641,7 @@ bool                 rNRGSession::analyse(const char* name, EDtError &rc)
          
          delete etnf;
       }
-      else if (data == 'ETN2')
+      else if (data == MAKE_ID('E','T','N','2'))
       {
          _d(Lvl_Info, "%s: ETN2 Tag", (int)__PRETTY_FUNCTION__);
          int32 num = (size / sizeof(nrg_etn2));
@@ -649,27 +655,27 @@ bool                 rNRGSession::analyse(const char* name, EDtError &rc)
 
          delete etnf;
       }
-      else if (data == 'NERO')
+      else if (data == MAKE_ID('N','E','R','O'))
       {
          _d(Lvl_Info, "%s: NERO Tag", (int)__PRETTY_FUNCTION__);
          DOS->Seek(fh, size, OFFSET_CURRENT);
       }
-      else if (data == 'NER5')
+      else if (data == MAKE_ID('N','E','R','5'))
       {
          _d(Lvl_Info, "%s: NER5 Tag", (int)__PRETTY_FUNCTION__);
          DOS->Seek(fh, size, OFFSET_CURRENT);
       }
-      else if (data == 'SINF')
+      else if (data == MAKE_ID('S','I','N','F'))
       {
          _d(Lvl_Info, "%s: SINF Tag", (int)__PRETTY_FUNCTION__);
          DOS->Seek(fh, size, OFFSET_CURRENT);
       }
-      else if (data == 'MTYP')
+      else if (data == MAKE_ID('M','T','Y','P'))
       {
          _d(Lvl_Info, "%s: MTYP Tag", (int)__PRETTY_FUNCTION__);
          DOS->Seek(fh, size, OFFSET_CURRENT);
       }
-      else if (data == 'END!')
+      else if (data == MAKE_ID('E','N','D','!'))
       {
          _d(Lvl_Info, "%s: END! Tag", (int)__PRETTY_FUNCTION__);
          break;
@@ -1005,23 +1011,23 @@ bool                 rNRGSession::checkFile(const char* file, EDtError &rc)
    {
       DOS->Read(fh, &data, 4);
       data = L2BE(data);
-      if ((data == 'CDTX') ||
-          (data == 'CUEX') ||
-          (data == 'CUES') ||
-          (data == 'DAOX') ||
-          (data == 'DAOI') ||
-          (data == 'ETNF') ||
-          (data == 'ETN2') ||
-          (data == 'NERO') ||
-          (data == 'NER5') ||
-          (data == 'SINF') ||
-          (data == 'MTYP'))
+      if ((data == MAKE_ID('C','D','T','X')) ||
+          (data == MAKE_ID('C','U','E','X')) ||
+          (data == MAKE_ID('C','U','E','S')) ||
+          (data == MAKE_ID('D','A','O','X')) ||
+          (data == MAKE_ID('D','A','O','I')) ||
+          (data == MAKE_ID('E','T','N','F')) ||
+          (data == MAKE_ID('E','T','N','2')) ||
+          (data == MAKE_ID('N','E','R','O')) ||
+          (data == MAKE_ID('N','E','R','5')) ||
+          (data == MAKE_ID('S','I','N','F')) ||
+          (data == MAKE_ID('M','T','Y','P')))
       {
          DOS->Read(fh, &data, 4);
          data = L2BE(data);
          DOS->Seek(fh, data, OFFSET_CURRENT);
       }
-      else if (data == 'END!')
+      else if (data == MAKE_ID('E','N','D','!'))
       {
          break;
       }

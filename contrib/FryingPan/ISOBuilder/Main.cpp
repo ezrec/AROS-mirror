@@ -52,7 +52,7 @@ struct Args
 {
    char       *dir;
 
-   static char* Template()
+   static const char* Template()
    {
       return "DIR/A";
    }

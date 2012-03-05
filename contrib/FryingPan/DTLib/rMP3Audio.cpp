@@ -424,6 +424,7 @@ bool                 rMP3Audio::setUp()
    lErrors    = 0;
 
    err = pMPEGA->MPEGA_seek(pStream, 1);
+   (void)err; // Unused if not debugging
    _D(Lvl_Info, "%s: Initialized MPEGA stream (%08lx): error code %ld",
          (int)__PRETTY_FUNCTION__,
          (int)pStream,
