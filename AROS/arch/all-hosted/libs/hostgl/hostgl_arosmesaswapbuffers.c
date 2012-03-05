@@ -97,6 +97,11 @@ static struct SignalSemaphore * GetX11SemaphoreFromBitmap(struct BitMap * bm);
                           amesa->visible_rp, amesa->left, amesa->top,
                           amesa->framebuffer->width, amesa->framebuffer->height,
                           192);
+
+        HostGL_Lock();
+        HostGL_UpdateGlobalGLXContext();
+        GLXCALL(glXWaitX);
+        HostGL_UnLock();
 #endif
         HostGL_CheckAndUpdateBufferSize(amesa);
     }

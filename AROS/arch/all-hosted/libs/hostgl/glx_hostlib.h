@@ -28,6 +28,7 @@ struct glx_func
     GLXPixmap (*glXCreateGLXPixmap) (Display *dpy, XVisualInfo *vis, Pixmap pixmap);
     void (*glXDestroyGLXPixmap) (Display *dpy, GLXPixmap pix);
     void (*glXWaitGL) (void);
+    void (*glXWaitX) (void);
 #endif
 };
 

@@ -38,6 +38,7 @@ static const char *glx_func_names[] =
     "glXCreateGLXPixmap",
     "glXDestroyGLXPixmap",
     "glXWaitGL",
+    "glXWaitX",
 #endif
     NULL
 };
