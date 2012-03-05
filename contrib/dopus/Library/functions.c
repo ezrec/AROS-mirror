@@ -35,7 +35,7 @@ void __saveds GetWBScreen(register struct Screen *screen __asm("a0"))
     struct Screen *scr;
 
 D(bug("GetWBScreen()\n");/*Delay(50);*/)
-    if (scr = LockPubScreen(NULL/*"Workbench"*/))
+    if ((scr = LockPubScreen(NULL/*"Workbench"*/)))
      {
       CopyMem(scr,screen,sizeof(struct Screen));
       UnlockPubScreen(NULL,scr);
@@ -91,19 +91,7 @@ void SwapMem(register char *src __asm("a0"), register char *dst __asm("a1"), reg
      }
 }
 
-#ifdef __AROS__
-AROS_UFH2 (void, stuffChar,
-        AROS_UFHA(char, c, D0),
-        AROS_UFHA(char **, buf, A3)
-)
-{
-    AROS_USERFUNC_INIT
-
-    *(*buf) ++ = c;
-
-    AROS_USERFUNC_EXIT
-}
-#else
+#ifndef __AROS__
 void stuffChar(register char c __asm("d0"), register char **buf __asm("a3"))
 {
 //asm("moveb %d0,%a3@+");
@@ -112,14 +100,15 @@ void stuffChar(register char c __asm("d0"), register char **buf __asm("a3"))
 #endif
 
 #include <stdarg.h>
-#ifndef __AROS__
+#ifdef __AROS__
+#include <exec/rawfmt.h>
+#else
 #include <clib/alib_stdio_protos.h>
 #endif
 
 void __saveds __stdargs LSprintf(char *buf, char *fmt, ...)
  {
   va_list args;
-  char *buf2 = buf;
 
 //D(bug("LSprintf()\n");/*Delay(50);*/)
   va_start(args,fmt);
@@ -131,7 +120,7 @@ void __saveds __stdargs LSprintf(char *buf, char *fmt, ...)
 //    move.l 4,a6
 //    jsr _LVORawDoFmt(a6)
 #ifdef __AROS__
-  VNewRawDoFmt(fmt,(VOID_FUNC)stuffChar,&buf2,args);
+  VNewRawDoFmt(fmt,RAWFMTFUNC_STRING,buf,args);
 #else
   RawDoFmt(fmt,args,stuffChar,&buf2);
 #endif
