@@ -52,14 +52,7 @@
 #define pu(x) push(x,NUM)
 #define po(x) pop(x,NUM)
 #define op(o) {po(b)po(d);pu((X)((int)d o (int)b));}
-
-#if defined(__GNUC__) && (__GNUC__ >= 4)
-#warning "GCC 4 Fix. CHECKME. Not tested!"
-#define cm(o,tt) {pa(b,(tt))pop(d,(X)tt);pu((X)(-(int)((int)d o (int)b)));}
-#else
-#define cm(o,tt) {pa(b,((X)tt))pop(d,(X)tt);pu((X)(-(int)((int)d o (int)b)));}
-#endif
-
+#define cm(o,tt) {pa(b,tt)pop(d,tt);pu((X)(-(int)((int)d o (int)b)));}
 #define un(o) {po(b)pu((X)(o (int)b));}
 #define ne (p<ent)
 #define W while
@@ -69,7 +62,8 @@ typedef char* X;
 typedef char** XP;
 X ST[MS],RST[MS],var[52],b,d,e,f,t1,t2,t3;
 XP sbeg=ST+12,se=ST+MS-12,S,ts,rbeg=RST+12,rend=RST+MS-12,rp,vp;
-int ernum=0,t,tt,db=0,ex,ge,qq,ac=1,ic=0,it;
+int ernum=0,t,db=0,ex,ge,qq,ac=1,ic=0,it;
+X tt;
 FILE* fh;
 char *fn=0,src[MZ+5],a,c=0,*s,*ent,*beg,*p=0,
 *erstr[]={"no args","could not open source file","source too large",
@@ -116,13 +110,13 @@ int main(int narg,char*args[]) {
       l('O')po(b)if(S+((t=(int)b*2)+2)>se)x(5)b= *(S+t);d= *(S+t+1);push(d,b)
       l(':')pop(b,VADR)pa(d,e)*((XP)b)=d;*(((XP)b)+1)=e;
       l(';')pop(b,VADR)push(*((XP)b),*(((XP)b)+1));
-      l('.')po(b)P("%d",(int)b);
-      l(',')po(b)P("%c",(char)b);
+      l('.')po(b)P("%d",(int)(long)b);
+      l(',')po(b)P("%c",(char)(long)b);
       l('^')pu((X)fgetc(stdin));
       l('B')fflush(stdout);fflush(stdin);
       l('\"')W((*p!='\"')&&ne){fputc(*p,stdout);p++;};p++;if(!ne)x(11);
       l('{')ec;
-      l('\'')pu((X)*p++);
+      l('\'')pu((X)(long)(*p++));
       l('`')x(9);
       l('D')db=!db;
       l('[')push((X)p,FUNC)t=1;W(t>0&&ne){a= *p++;if(a=='['){t++;}else

@@ -8,8 +8,15 @@ FILES  := false_int
 
 EXEDIR := $(CONTRIBDIR)/Development/False
 
-#MM- contrib-development : contrib-development-false
-#MM contrib-development-false : setup-contrib-development-false 
+#MM- contrib-development : contrib-development-false-$(CPU)
+
+# This component is only supported on 32-bit CPUs
+#MM- contrib-development-false-m68k: contrib-development-false
+#MM- contrib-development-false-i386: contrib-development-false
+#MM- contrib-development-false-ppc: contrib-development-false
+#MM- contrib-development-false-arm: contrib-development-false
+
+#MM contrib-development-false: setup-contrib-development-false 
 
 %build_prog mmake=contrib-development-false \
     progname=False targetdir=$(EXEDIR) \
