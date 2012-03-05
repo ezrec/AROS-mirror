@@ -3,6 +3,8 @@
     $Id$
 */
 
+#define AROS_TAGRETURNTYPE  AROSMesaContext
+
 #include "hostgl_ctx_manager.h"
 #include "arosmesa_funcs.h"
 #include "hostgl_funcs.h"
@@ -43,7 +45,7 @@
 *****************************************************************************/
 {
   AROS_SLOWSTACKTAGS_PRE(Tag1)
-  retval = (IPTR)AROSMesaCreateContext(AROS_SLOWSTACKTAGS_ARG(Tag1));
+  retval = AROSMesaCreateContext(AROS_SLOWSTACKTAGS_ARG(Tag1));
   AROS_SLOWSTACKTAGS_POST
 }
 
