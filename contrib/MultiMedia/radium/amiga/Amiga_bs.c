@@ -59,14 +59,18 @@ extern struct MinList BS_from0List;
 struct Node BS_from0Nodes[1];
 
 struct MinList BS_from0List = {
-	( struct MinNode * )&BS_from0Nodes[0], ( struct MinNode * )NULL, ( struct MinNode * )&BS_from0Nodes[0] };
+	.mlh_Head =( struct MinNode * )&BS_from0Nodes[0],
+	.mlh_Tail =( struct MinNode * )NULL,
+	.mlh_TailPred =( struct MinNode * )&BS_from0Nodes[0] };
 
 extern struct MinList BS_to0List;
 
 struct Node BS_to0Nodes[1];
 
 struct MinList BS_to0List = {
-	( struct MinNode * )&BS_to0Nodes[0], ( struct MinNode * )NULL, ( struct MinNode * )&BS_to0Nodes[0] };
+	.mlh_Head =( struct MinNode * )&BS_to0Nodes[0],
+	.mlh_Tail =( struct MinNode * )NULL,
+	.mlh_TailPred =( struct MinNode * )&BS_to0Nodes[0] };
 
 extern struct TextAttr topaz8;
 
