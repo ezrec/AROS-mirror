@@ -130,7 +130,11 @@ void __saveds __stdargs LSprintf(char *buf, char *fmt, ...)
 //    lea.l stuffChar(pc),a2
 //    move.l 4,a6
 //    jsr _LVORawDoFmt(a6)
+#ifdef __AROS__
+  VNewRawDoFmt(fmt,(VOID_FUNC)stuffChar,&buf2,args);
+#else
   RawDoFmt(fmt,args,stuffChar,&buf2);
+#endif
 //  sprintf(buf,fmt,args);
   va_end(args);
 //    movem.l (sp)+,a2/a3/a6

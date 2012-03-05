@@ -983,7 +983,7 @@ AROS_LH3(int, GetSliderPos,
 {
     AROS_LIBFUNC_INIT
 
-    DoGetSliderPos(gad, count, lines);
+    return DoGetSliderPos(gad, count, lines);
 
     AROS_LIBFUNC_EXIT
 }
