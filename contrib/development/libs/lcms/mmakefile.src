@@ -1,0 +1,16 @@
+# Copyright © 2004, The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- contrib-lcms : development-lcms
+
+#MM- development-lcms: development-lcms2
+
+VERSION    := 2.3
+REPOSITORY  =  http://downloads.sourceforge.net/project/lcms/lcms/$(VERISON)
+
+%fetch_and_build_gnu_development package=lcms2 version=$(VERSION) patch=no \
+    package_repo=$(REPOSITORY) suffixes="tar.gz"
+
+%common

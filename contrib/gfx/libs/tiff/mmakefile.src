@@ -3,9 +3,9 @@
 
 -include $(TOP)/config/make.cfg
 
-##MM- contrib-gfx-libs : contrib-gfx-libs-tiff
+#MM- contrib-gfx-libs : contrib-gfx-libs-tiff
 #MM- contrib-gfx-libs-tiff : development-tiff
 
 %fetch_and_build_gnu_development package=tiff version=3.8.2 patch=yes \
     package_repo="ftp://ftp.remotesensing.org/pub/libtiff/" \
-    extraoptions="--disable-shared --disable-cxx --with-zlib-include-dir=$(AROS_INCLUDES) --with-zlib-lib-dir=$(AROS_LIBS) --with-jpeg-include-dir=$(AROS_INCLUDES) --with-jpeg-lib-dir=$(AROS_LIBS)"
+    extraoptions="--disable-shared --disable-cxx"

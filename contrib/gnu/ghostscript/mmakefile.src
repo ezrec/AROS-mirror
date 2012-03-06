@@ -1,0 +1,30 @@
+# Copyright © 2004-2010, The AROS Development Team. All rights reserved.
+# $Id$
+
+-include $(TOP)/config/make.cfg
+
+# Ghostscript is perrty evil, in that its build must be
+# performed in its source directory.
+# That's why we are not using %fetch_and_build_gnu
+
+VERSION=9.04.1
+
+#MM- contrib-gnu : contrib-gnu-ghostscript
+#MM- contrib-gnu-ghostscript : development-lcms development-tiff \
+#MM                            contrib-gnu-ghostscript-build
+
+%fetch mmake=contrib-gnu-ghostscript-fetch \
+	archive_origins=$(GNU_REPOSITORY)/ghostscript \
+	archive=gnu-ghostscript-$(VERSION) \
+	suffixes="tar.bz2" \
+	location=$(PORTSSOURCEDIR) \
+	destination=$(GENDIR)/$(CURDIR)
+
+#MM- contrib-gnu-ghostscript-build: contrib-gnu-ghostscript-fetch
+
+BUILD_ENV += CCAUX="$(HOST_CC)"
+
+%build_with_configure mmake=contrib-gnu-ghostscript-build package=gnu-ghostscript-$(VERSION) \
+	nix=yes srcdir=$(GENDIR)/$(CURDIR)/gnu-ghostscript-$(VERSION) \
+	extraoptions="--without-libiconv --without-jbig2dec --without-jasper --host=$(AROS_TARGET_CPU)-aros --disable-fontconfig --without-ijs"
+
