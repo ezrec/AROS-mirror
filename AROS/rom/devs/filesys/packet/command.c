@@ -1,7 +1,7 @@
 /*
  * packet.handler - Proxy filesystem for DOS packet handlers
  *
- * Copyright © 2007-2010 The AROS Development Team
+ * Copyright © 2007-2012 The AROS Development Team
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the same terms as AROS itself.
@@ -768,6 +768,8 @@ void packet_handle_request(struct IOFileSys *iofs, struct PacketBase *PacketBase
     iofs->IOFS.io_Flags &= ~IOF_QUICK;
 
     /* send the packet */
+    D(bug("[packet] sending packet to port %p\n",
+        handle->mount->root_handle.msgport));
     PutMsg(handle->mount->root_handle.msgport, dp->dp_Link);
 
     return;
@@ -811,7 +813,7 @@ static BOOL packet_doreply(struct ph_mount *mount)
     if (dp->dp_Res1 == DOSFALSE) {
         iofs->io_DosError = dp->dp_Res2;
 
-        /* do any cleanup from the request (eg freeing memory) */
+        /* do any cleanup from the request (e.g. freeing memory) */
         switch (dp->dp_Type) {
             case ACTION_FINDINPUT:
             case ACTION_FINDOUTPUT:
@@ -878,6 +880,7 @@ static BOOL packet_doreply(struct ph_mount *mount)
             }
 
             /* we'll need the lock they gave us for future operations */
+            D(bug("[packet] new handle %p\n", handle));
             handle->actual = (void *) dp->dp_Res1;
             handle->is_lock = TRUE;
             handle->mount = mount;

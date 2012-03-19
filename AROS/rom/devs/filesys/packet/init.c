@@ -1,7 +1,7 @@
 /*
  * packet.handler - Proxy filesystem for DOS packet handlers
  *
- * Copyright © 2007-2011 The AROS Development Team
+ * Copyright © 2007-2012 The AROS Development Team
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the same terms as AROS itself.
@@ -270,7 +270,7 @@ void packet_handle_request(struct IOFileSys *, struct PacketBase *);
 AROS_LH1(void, beginio, AROS_LHA(struct IOFileSys *, iofs, A1), struct PacketBase *, pb, 5, Packet) {
     AROS_LIBFUNC_INIT
 
-    D(bug("[packet] in begin_io\n"));
+    D(bug("[packet] in begin_io: io_Unit=%p\n", iofs->IOFS.io_Unit));
 
     packet_handle_request(iofs, pb);
 
