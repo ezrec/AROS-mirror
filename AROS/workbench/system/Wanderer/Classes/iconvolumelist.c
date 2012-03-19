@@ -225,7 +225,7 @@ static struct DOSVolumeList *IconVolumeList__CreateDOSList(void)
                 D(bug("[IconVolumeList] %s: Checking Device '%s' @ %p (Device ", __PRETTY_FUNCTION__, dosname, dl));
 #if defined(__AROS__) && !defined(AROS_DOS_PACKETS)
                 D(if (dl->dol_Ext.dol_AROS.dol_Device) bug("'%s' ", dl->dol_Ext.dol_AROS.dol_Device->dd_Library.lib_Node.ln_Name));
-                D(bug("@ 0x%p, Unit @ 0x%p) Type: %d\n", dl->dol_Ext.dol_AROS.dol_Device, __DL_UNIT, dl->dol_Type));
+                D(bug("@ 0x%p, Unit @ 0x%p) Type: %d\n", dl->dol_Ext.dol_AROS.dol_Device, dl->dol_Ext.dol_AROS.dol_Unit, dl->dol_Type));
 #endif
 
 #if defined(__AROS__) && !defined(AROS_DOS_PACKETS)
