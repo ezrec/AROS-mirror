@@ -256,7 +256,7 @@ VOID METHOD(i915Gallium, Hidd_Gallium, DisplayResource)
             OUT_RING(br11);
             OUT_RING(br12);
         ADVANCE_RING();
-        DO_FLUSH();
+        //DO_FLUSH();
     UNLOCK_HW
 
     UNLOCK_BITMAP_BM(bm_dst)

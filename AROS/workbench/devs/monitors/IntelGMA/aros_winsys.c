@@ -94,8 +94,9 @@ APTR AllocGfxMem(ULONG size)
 #ifdef GALLIUM_SIMULATION
     return malloc(size);
 #endif
-
+    Forbid();
     result = Allocate(&sd->CardMem, size );
+    Permit();
     //D(bug("[GMA winsys] AllocGfxMem(%d) = %p\n",size,result));
     return result;
 }
@@ -105,7 +106,9 @@ VOID FreeGfxMem(APTR ptr, ULONG size)
 #ifdef GALLIUM_SIMULATION
     free(ptr);return;
 #endif
-     Deallocate(&sd->CardMem, ptr,  size );
+    Forbid();
+    Deallocate(&sd->CardMem, ptr,  size );
+    Permit();
 }
 
 VOID init_aros_winsys()
@@ -437,8 +440,9 @@ void buffer_destroy(struct i915_winsys *iws,
 
     // wait until batchbuffer is ready.
     while( get_status( temp_index )){}
+    LOCK_HW;
     DO_FLUSH();
-
+    UNLOCK_HW;
     FreeGfxMem(aros_buffer(buffer)->allocated_map,aros_buffer(buffer)->allocated_size);
     FREE(buffer);
 }
