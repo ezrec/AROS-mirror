@@ -935,7 +935,7 @@ void ReadWirelessPrefs(CONST_STRPTR directory)
 
     while (!tok.fend && (networkCount < MAXNETWORKS))
     {
-        GetNextToken(&tok, " \n\t");
+        GetNextToken(&tok, "\n\t");
         if (tok.token)
         {
             if (tok.newline) comment = FALSE;
