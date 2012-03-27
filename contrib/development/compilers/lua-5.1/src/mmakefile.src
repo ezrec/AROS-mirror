@@ -49,14 +49,17 @@ USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../luafilesystem/src
 %build_prog mmake=contrib-development-lua-lua progname=Lua files=$(LUAFILES) \
     targetdir=$(EXEDIR) uselibs="arosc m lua"
 
-#MM contrib-development-lua-amilua : includes linklibs contrib-development-luasiamiga-lib \
-#MM contrib-development-luamui-lib contrib-development-lualfs-lib
-%build_prog mmake=contrib-development-lua-amilua progname=AmiLua files=$(AMILUAFILES) \
-    targetdir=$(EXEDIR) uselibs="arosc m lua luasiamiga luamui lualfs mui"
-
 #MM contrib-development-lua-luac : includes linklibs contrib-development-lua-lib
 %build_prog mmake=contrib-development-lua-luac progname=Luac files=$(LUACFILES) \
     targetdir=$(EXEDIR) uselibs="arosc m lua"
+
+# This is needed as otherwise -lsqlite3 missese _GLOBAL_OFFSET_TABLE_
+TARGET_CC := $(CROSSTOOLSDIR)/$(AROS_TARGET_CPU)-aros-gcc
+
+#MM contrib-development-lua-amilua : includes linklibs contrib-development-luasiamiga-lib \
+#MM contrib-development-luamui-lib contrib-development-lualfs-lib contrib-development-lsqlite3-lib
+%build_prog mmake=contrib-development-lua-amilua progname=AmiLua files=$(AMILUAFILES) \
+    targetdir=$(EXEDIR) uselibs="arosc m lua luasiamiga luamui lualfs mui lsqlite3 sqlite3"
 
 #MM
 includes-copy :
