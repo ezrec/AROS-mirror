@@ -2379,13 +2379,13 @@ LONG executeLine(STRPTR command, STRPTR commandArgs, struct Redirection *rd,
 		if ((sig_before & sigmask) && !(sig_after & sigmask))
 		{
 		    /* Command has deleted signal => set it */
-		    Printf("*** Command returned with freed signal 0x%lx\n", sigmask);
+		    Printf("*** '%s' returned with freed signal 0x%lx\n", command, sigmask);
 		    AllocSignal(sigbit);
 		}
 		else if ( !(sig_before & sigmask) && (sig_after & sigmask))
 		{
 		    /* Command has set signal => free it */
-		    Printf("*** Command returned with unfreed signal 0x%lx\n", sigmask);
+		    Printf("*** '%s' returned with unfreed signal 0x%lx\n", command, sigmask);
 		    FreeSignal(sigbit);
 		}
 	    }
