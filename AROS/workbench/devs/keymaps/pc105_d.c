@@ -65,7 +65,7 @@ CONST struct KeyMapNode km =
 
 STATIC CONST UBYTE lokeymaptypes[] =
 {
-    D|V,        /* 00 */
+    S,          /* 00 */
     S|A,        /* 01 */
     S|A,        /* 02 */
     S|A,        /* 03 */
@@ -428,6 +428,11 @@ STATIC CONST UBYTE k_descr[] =
     0, 0x8B,
 };
 
+#if 0
+// Making key 0 a dead key would require a fix
+// because prev. key is initialized with 0.
+// Keymap.library treads that as if dead key 0 has
+// been pressed before.
 STATIC CONST UBYTE key00_descr[] =
 {
     DPF_DEAD, 3,
@@ -439,6 +444,7 @@ STATIC CONST UBYTE key00_descr[] =
     0, 0,
     0, 0
 };
+#endif
 
 STATIC CONST UBYTE key0c_descr[] =
 {
@@ -450,7 +456,7 @@ STATIC CONST UBYTE key0c_descr[] =
 
 STATIC CONST IPTR lokeymap[] =
 {
-    DEAD(key00_descr),                  /* 00 Left of 1 Key */
+    BYTES('°', '^', '°', '^'),          /* 00 Left of 1 Key */
     BYTES('!', '¹', '!', '1'),          /* 01 1 */
     BYTES('@', '²', '"', '2'),          /* 02 2 */
     BYTES('#', '³', '§', '3'),          /* 03 3 */
