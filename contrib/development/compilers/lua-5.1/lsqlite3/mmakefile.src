@@ -1,0 +1,25 @@
+#   $Id$
+
+include $(TOP)/config/make.cfg
+
+# files to build the linker lib 'lsqlite3'
+LSQLITE3LIBFILES := lsqlite3
+
+EXEDIR := $(CONTRIBDIR)/Development/Lua
+
+#MM- contrib-development : \
+#MM  contrib-development-lua-lsqlite3-doc \
+#MM  contrib-development-lua-lsqlite3-examples
+
+%copy_dir_recursive mmake=contrib-development-lua-lsqlite3-doc \
+    src=doc dst=$(EXEDIR)/lsqlite3/doc
+
+%copy_dir_recursive mmake=contrib-development-lua-lsqlite3-examples \
+    src=examples dst=$(EXEDIR)/lsqlite3/examples
+
+USER_INCLUDES := -I$(AROS_DEVELOPMENT)/include/lua
+
+#MM contrib-development-lsqlite3-lib : contrib-sqlite
+%build_linklib mmake=contrib-development-lsqlite3-lib libname=lsqlite3 files=$(LSQLITE3LIBFILES)
+
+%common
