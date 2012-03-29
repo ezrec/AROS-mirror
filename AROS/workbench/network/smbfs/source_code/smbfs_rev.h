@@ -1,6 +1,6 @@
-#define VERSION		1
-#define REVISION	74
-#define DATE		"31.8.2009"
-#define VERS		"smbfs 1.74"
-#define VSTRING		"smbfs 1.74 (31.8.2009)\r\n"
-#define VERSTAG		"\0$VER: smbfs 1.74 (31.8.2009)"
+#define VERSION		2
+#define REVISION	1
+#define DATE		"29.3.2012"
+#define VERS		"smb.handler 2.1"
+#define VSTRING		"smb.handler 2.1 (29.3.2012)\r\n"
+#define VERSTAG		"\0$VER: smb.handler 2.1 (29.3.2012)"
