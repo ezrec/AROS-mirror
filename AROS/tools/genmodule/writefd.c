@@ -63,7 +63,7 @@ void writefd(struct config *cfg)
 			if (funclistit->lvo == lvo + 2)
 			    fprintf(out, "private()()\n");
 			else
-			    fprintf(out, "##bias %u\n", (funclistit->lvo - 1) * 6);
+			    fprintf(out, "##bias %u\n", funclistit->lvo * 6);
 		    }
 		
 		    fprintf(out, "%s(", funclistit->name);
