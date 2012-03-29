@@ -15,7 +15,7 @@
 #include "netpeditor.h"
 #include "prefsdata.h"
 
-#define VERSION "$VER: Network 1.15 (26.3.2012) AROS Dev Team"
+#define VERSION "$VER: Network 1.16 (29.3.2012) AROS Dev Team"
 
 int main(int argc, char **argv)
 {

@@ -12,6 +12,114 @@
 
 #include <aros/debug.h>
 
+#define EX_BUF_SIZE 256
+
+enum
+{
+    ARG_HANDLER,
+    ARG_EHANDLER,
+    ARG_FILESYSTEM,
+    ARG_DEVICE,
+    ARG_UNIT,
+    ARG_FLAGS,
+    ARG_BLOCKSIZE,
+    ARG_SURFACES,
+    ARG_BLOCKSPERTRACK,
+    ARG_SECTORSPERBLOCK,
+    ARG_RESERVED,
+    ARG_PREALLOC,
+    ARG_INTERLEAVE,
+    ARG_LOWCYL,
+    ARG_HIGHCYL,
+    ARG_BUFFERS,
+    ARG_BUFMEMTYPE,
+    ARG_MAXTRANSFER,
+    ARG_MASK,
+    ARG_BOOTPRI,
+    ARG_DOSTYPE,
+    ARG_BAUD,
+    ARG_CONTROL,
+    ARG_STACKSIZE,
+    ARG_PRIORITY,
+    ARG_GLOBVEC,
+    ARG_STARTUP,
+    ARG_ACTIVATE,
+    ARG_FORCELOAD,
+    NUM_MOUNTARGS
+};
+
+static const TEXT mount_template[] =
+    "HANDLER/K,"
+    "EHANDLER/K,"
+    "FILESYSTEM/K,"
+    "DEVICE/K,"
+    "UNIT/K,"
+    "FLAGS/K,"
+    "SECTORSIZE=BLOCKSIZE/K,"
+    "SURFACES/K,"
+    "SECTORSPERTRACK=BLOCKSPERTRACK/K,"
+    "SECTORSPERBLOCK/K,"
+    "RESERVED/K,"
+    "PREALLOC/K,"
+    "INTERLEAVE/K,"
+    "LOWCYL/K,"
+    "HIGHCYL/K,"
+    "BUFFERS/K,"
+    "BUFMEMTYPE/K,"
+    "MAXTRANSFER/K,"
+    "MASK/K,"
+    "BOOTPRI/K,"
+    "DOSTYPE/K,"
+    "BAUD/K,"
+    "CONTROL/K,"
+    "STACKSIZE/K,"
+    "PRIORITY/K,"
+    "GLOBVEC/K,"
+    "STARTUP/K,"
+    "MOUNT=ACTIVATE/K,"
+    "FORCELOAD/K";
+
+enum
+{
+    ARG_WORKGROUP,
+    ARG_USERNAME,
+    ARG_PASSWORD,
+    ARG_CHANGECASE,
+    ARG_CASESENSITIVE,
+    ARG_OMITHIDDEN,
+    ARG_QUIET,
+    ARG_CLIENTNAME,
+    ARG_SERVERNAME,
+    ARG_DEVICENAME,
+    ARG_VOLUMENAME,
+    ARG_CACHESIZE,
+    ARG_DEBUGLEVEL,
+    ARG_TIMEZONEOFFSET,
+    ARG_DSTOFFSET,
+    ARG_TRANSLATIONFILE,
+    ARG_SERVICE,
+    NUM_CONTROLARGS
+};
+
+static const TEXT control_template[] =
+    "DOMAIN=WORKGROUP/K,"
+    "USER=USERNAME/K,"
+    "PASSWORD/K,"
+    "CHANGECASE/S,"
+    "CASE=CASESENSITIVE/S,"
+    "OMITHIDDEN/S,"
+    "QUIET/S,"
+    "CLIENT=CLIENTNAME/K,"
+    "SERVER=SERVERNAME/K,"
+    "DEVICE=DEVICENAME/K,"
+    "VOLUME=VOLUMENAME/K,"
+    "CACHE=CACHESIZE/N/K,"
+    "DEBUGLEVEL=DEBUG/N/K,"
+    "TZ=TIMEZONEOFFSET/N/K,"
+    "DST=DSTOFFSET/N/K,"
+    "TRANSLATE=TRANSLATIONFILE/K,"
+    "SERVICE/A";
+
 static struct TCPPrefs prefs;
 
 struct Tokenizer
@@ -25,6 +133,9 @@ struct Tokenizer
 
 /* List of devices that require NOTRACKING option */
 static STRPTR notrackingdevices[] = {"prm-rtl8029.device", NULL};
+
+static BOOL ReadServer(struct Server *server, BPTR file, LONG size);
+static CONST_STRPTR GetActiveServers();
 
 void OpenTokenFile(struct Tokenizer * tok, STRPTR FileName)
 {
@@ -90,13 +201,19 @@ void SetDefaultNetworkPrefsValues()
     }
     SetInterfaceCount(0);
     SetDomain(DEFAULTDOMAIN);
-    SetHost(DEFAULTHOST);
+    SetHostname(DEFAULTHOST);
     SetGate(DEFAULTGATE);
     SetDNS(0, DEFAULTDNS);
     SetDNS(1, DEFAULTDNS);
     SetDHCP(FALSE);
 
     SetAutostart(FALSE);
+
+    for (i = 0; i < MAXHOSTS; i++)
+    {
+        InitHost(GetHost(i));
+    }
+    SetHostCount(0);
 }
 
 void SetDefaultWirelessPrefsValues()
@@ -239,11 +356,13 @@ BOOL WriteNetworkPrefs(CONST_STRPTR  destdir)
     FILE *ConfFile;
     LONG i;
     struct Interface *iface;
+    struct Host *host;
     ULONG filenamelen = strlen(destdir) + 4 + 20;
     TEXT filename[filenamelen];
     ULONG destdbdirlen = strlen(destdir) + 3 + 1;
     TEXT destdbdir[destdbdirlen];
     LONG interfacecount = GetInterfaceCount();
+    LONG hostcount = GetHostCount();
 
     CombinePath2P(destdbdir, destdbdirlen, destdir, "db");
 
@@ -259,7 +378,7 @@ BOOL WriteNetworkPrefs(CONST_STRPTR  destdir)
     fprintf(ConfFile, "DEBUGSANA=NO\n");
     fprintf(ConfFile, "USENS=SECOND\n");
     fprintf(ConfFile, "GATEWAY=NO\n");
-    fprintf(ConfFile, "HOSTNAME=%s.%s\n", GetHost(), GetDomain());
+    fprintf(ConfFile, "HOSTNAME=%s.%s\n", GetHostname(), GetDomain());
     fprintf(ConfFile, "LOG FILTERFILE=5\n");
     fprintf(ConfFile, "GUI PANEL=MUI\n");
     fprintf(ConfFile, "OPENGUI=YES\n");
@@ -307,7 +426,7 @@ BOOL WriteNetworkPrefs(CONST_STRPTR  destdir)
             fprintf
             (
                 ConfFile, "HOST %s %s.%s %s\n",
-                GetIP(iface), GetHost(), GetDomain(), GetHost()
+                GetIP(iface), GetHostname(), GetDomain(), GetHostname()
             );
         }
     }
@@ -367,6 +486,20 @@ BOOL WriteNetworkPrefs(CONST_STRPTR  destdir)
             (long int)GetWirelessUnit());
         fclose(ConfFile);
     }
+
+    CombinePath2P(filename, filenamelen, destdbdir, "hosts");
+    ConfFile = fopen(filename, "w");
+    if (!ConfFile) return FALSE;
+    for(i = 0; i < hostcount; i++)
+    {
+        host = GetHost(i);
+        fprintf
+        (
+            ConfFile, "%s %s\n",
+            GetHostAddress(host), GetHostNames(host)
+        );
+    }
+    fclose(ConfFile);
 
     return TRUE;
 }
@@ -448,6 +581,47 @@ BOOL WriteMobilePrefs(CONST_STRPTR destdir)
     }
 
     fclose(ConfFile);
+
+    return TRUE;
+}
+
+
+BOOL WriteServers(CONST_STRPTR destdir, CONST_STRPTR envdir)
+{
+    FILE *mount_file, *env_file;
+    LONG i;
+    struct Server *server;
+    ULONG filenamelen = strlen(destdir) + 4 + 20;
+    TEXT filename[filenamelen];
+
+    CombinePath2P(filename, filenamelen, envdir, "ServerAutoMounts");
+    env_file = fopen(filename, "w");
+    if (!env_file) return FALSE;
+
+    for (i = 0; i < prefs.serverCount; i++)
+    {
+        server = &prefs.servers[i];
+        CombinePath2P(filename, filenamelen, destdir, server->device);
+        mount_file = fopen(filename, "w");
+        if (!mount_file) return FALSE;
+
+        fprintf(mount_file, "EHandler = smb.handler\nActivate = 1\n");
+        fprintf(mount_file, "Control = \"");
+        if (server->user[0] != '\0')
+            fprintf(mount_file, "USER=%s ", server->user);
+        if (server->group[0] != '\0')
+            fprintf(mount_file, "WORKGROUP=%s ", server->group);
+        if (server->pass[0] != '\0')
+            fprintf(mount_file, "PASSWORD=%s ", server->pass);
+        fprintf(mount_file, "SERVICE=//%s/%s\"\n", server->host,
+            server->service);
+        fclose(mount_file);
+
+        if (server->active)
+            fprintf(env_file, "%s: ", server->device);
+    }
+
+    fclose(env_file);
 
     return TRUE;
 }
@@ -678,6 +852,48 @@ BOOL StartMobile()
     return TRUE;
 }
 
+static CONST_STRPTR GetActiveServers()
+{
+    /* Use static variable so that it is initialized only once (and can be returned) */
+    static TEXT servers [256] = {0};
+
+    /* Load variable if needed - this will happen only once */
+    if (servers[0] == '\0')
+    {
+        GetVar(AUTOMOUNT_VARIABLE, servers, 256, LV_VAR);
+    }
+
+    return servers;
+}
+
+BOOL MountServers()
+{
+    BPTR dir;
+
+    dir = Lock(SERVER_PATH_ENV, SHARED_LOCK);
+    if (dir == BNULL)
+        return FALSE;
+
+    /* Startup */
+    if (GetServerCount() > 0)
+    {
+        struct TagItem tags[] =
+        {
+            { SYS_Input,        (IPTR)NULL          },
+            { SYS_Output,       (IPTR)NULL          },
+            { SYS_Error,        (IPTR)NULL          },
+            { SYS_Asynch,       (IPTR)TRUE          },
+            { NP_CurrentDir,    (IPTR)dir           },
+            { TAG_DONE,         0                   }
+        };
+
+        SystemTagList("C:Mount ${AROSTCP/ServerAutoMounts}\n", tags);
+    }
+
+    /* All ok */
+    return TRUE;
+}
+
 /* This is not a general use function! It assumes destinations directory exists */
 BOOL AddFileFromDefaultStackLocation(CONST_STRPTR filename, CONST_STRPTR dstdir)
 {
@@ -715,7 +931,6 @@ BOOL CopyDefaultConfiguration(CONST_STRPTR destdir)
     if (!RecursiveCreateDir(destdbdir)) return FALSE;
 
     /* Copy files */
-    if (!AddFileFromDefaultStackLocation("hosts", destdir)) return FALSE;
     if (!AddFileFromDefaultStackLocation("inet.access", destdir)) return FALSE;
     if (!AddFileFromDefaultStackLocation("netdb", destdir)) return FALSE;
     if (!AddFileFromDefaultStackLocation("networks", destdir)) return FALSE;
@@ -731,6 +946,9 @@ enum ErrorCode SaveNetworkPrefs()
     if (!WriteNetworkPrefs(PREFS_PATH_ENVARC)) return NOT_SAVED_PREFS_ENVARC;
     if (!WriteWirelessPrefs(WIRELESS_PATH_ENVARC)) return NOT_SAVED_PREFS_ENVARC;
     if (!WriteMobilePrefs(MOBILEBB_PATH_ENVARC)) return NOT_SAVED_PREFS_ENVARC;
+    if (!WriteServers(SERVER_PATH_STORAGE, PREFS_PATH_ENVARC))
+        return NOT_SAVED_PREFS_ENVARC;
+
     return UseNetworkPrefs();
 }
 
@@ -740,6 +958,10 @@ enum ErrorCode UseNetworkPrefs()
     if (!WriteNetworkPrefs(PREFS_PATH_ENV)) return NOT_SAVED_PREFS_ENV;
     if (!WriteWirelessPrefs(WIRELESS_PATH_ENV)) return NOT_SAVED_PREFS_ENV;
     if (!WriteMobilePrefs(MOBILEBB_PATH_ENV)) return NOT_SAVED_PREFS_ENV;
+    if (!RecursiveCreateDir(SERVER_PATH_ENV)) return NOT_SAVED_PREFS_ENV;
+    if (!WriteServers(SERVER_PATH_ENV, PREFS_PATH_ENV))
+        return NOT_SAVED_PREFS_ENV;
+
     if(StopWireless())
         if (GetWirelessDevice() != NULL)
             if (!StartWireless()) return NOT_RESTARTED_WIRELESS;
@@ -747,6 +969,8 @@ enum ErrorCode UseNetworkPrefs()
     if(StopMobile())
         if (GetMobile_Autostart())
             if (!StartMobile()) return NOT_RESTARTED_MOBILE;
+    MountServers();
+
     return ALL_OK;
 }
 
@@ -758,8 +982,9 @@ void ReadNetworkPrefs(CONST_STRPTR directory)
     BOOL comment = FALSE;
     STRPTR tstring;
     struct Tokenizer tok;
-    LONG interfacecount;
+    LONG interfacecount, hostcount;
     struct Interface *iface = NULL;
+    struct Host *host = NULL;
 
     /* This function will not fail. It will load as much data as possible. Rest will be default values */
 
@@ -779,7 +1004,7 @@ void ReadNetworkPrefs(CONST_STRPTR directory)
                     tstring = strchr(tok.token, '.');
                     SetDomain(tstring + 1);
                     tstring[0] = 0;
-                    SetHost(tok.token);
+                    SetHostname(tok.token);
                 }
             }
         }
@@ -910,6 +1135,38 @@ void ReadNetworkPrefs(CONST_STRPTR directory)
             {
                 SetAutostart(FALSE);
                 break;
+            }
+        }
+    }
+    CloseTokenFile(&tok);
+
+    CombinePath3P(filename, filenamelen, directory, "db", "hosts");
+    OpenTokenFile(&tok, filename);
+
+    SetHostCount(0);
+    hostcount = 0;
+
+    while (!tok.fend && (hostcount < MAXHOSTS))
+    {
+        GetNextToken(&tok, " \n");
+        if (tok.token)
+        {
+            if (tok.newline) comment = FALSE;
+            if (strncmp(tok.token, "#", 1) == 0) comment = TRUE;
+
+            if (!comment)
+            {
+                if (tok.newline)
+                {
+                    host = GetHost(hostcount);
+                    SetHostAddress(host, tok.token);
+                    hostcount++;
+                    SetHostCount(hostcount);
+                }
+                else
+                {
+                    AddHostName(host, tok.token);
+                }
             }
         }
     }
@@ -1054,6 +1311,167 @@ void ReadMobilePrefs(CONST_STRPTR directory)
 }
 
 
+BOOL ReadServers()
+{
+    BPTR dir, file;
+    APTR ex_buffer = NULL;
+    struct ExAllControl *ex_control = NULL;
+    struct ExAllData *entry;
+    BOOL success = TRUE, found = TRUE;
+    LONG i = 0;
+    struct Server *server;
+
+    dir = Lock(SERVER_PATH_ENV, SHARED_LOCK);
+    if (dir == BNULL)
+    {
+        dir = Lock(SERVER_PATH_STORAGE, SHARED_LOCK);
+        if (dir == BNULL)
+            success = FALSE;
+    }
+
+    if (success)
+    {
+        ex_buffer = AllocVec(EX_BUF_SIZE, MEMF_PUBLIC);
+        if (ex_buffer == NULL)
+            success = FALSE;
+
+        ex_control = AllocDosObject(DOS_EXALLCONTROL, NULL);
+        if (ex_control == NULL)
+            success = FALSE;
+    }
+
+    if (success)
+    {
+        while (found && i < MAXSERVERS)
+        {
+            found = ExAll(dir, ex_buffer, EX_BUF_SIZE, ED_SIZE, ex_control);
+
+            if (found || IoErr() == ERROR_NO_MORE_ENTRIES)
+            {
+                entry = ex_buffer;
+                while (entry != NULL)
+                {
+                    if (entry->ed_Type < 0)
+                    {
+                        dir = CurrentDir(dir);
+                        file = Open(entry->ed_Name, MODE_OLDFILE);
+                        if (file != BNULL)
+                        {
+                            server = &prefs.servers[i];
+                            if(ReadServer(server, file, entry->ed_Size))
+                            {
+                                i++;
+                                SetServerDevice(server, entry->ed_Name);
+                                if (strstr(GetActiveServers(), entry->ed_Name)
+                                    != NULL)
+                                    SetServerActive(server, TRUE);
+                            }
+                        }
+                        dir = CurrentDir(dir);
+                    }
+                    entry = entry->ed_Next;
+                }
+            }
+        }
+        prefs.serverCount = i;
+    }
+
+    FreeDosObject(DOS_EXALLCONTROL, ex_control);
+    FreeVec(ex_buffer);
+
+    return success;
+}
+
+
+/* Read and parse a server mount file */
+static BOOL ReadServer(struct Server *server, BPTR file, LONG size)
+{
+    BOOL success = TRUE;
+    UBYTE *mount_buffer;
+    IPTR mount_args[NUM_MOUNTARGS] = {0}, control_args[NUM_CONTROLARGS] = {0};
+    struct RDArgs *mount_rdargs, *control_rdargs;
+    LONG i;
+    STRPTR host, service;
+
+    /* Allocate buffer for entire mount file */
+    mount_buffer = AllocVec(size+100, MEMF_ANY|MEMF_CLEAR);
+    if (mount_buffer == NULL)
+        success = FALSE;
+
+    /* Read mount file into buffer */
+    if (success)
+    {
+        if (FRead(file, mount_buffer, size, 1) != 1)
+            success = FALSE;
+    }
+
+    if (success)
+    {
+        for (i = 0; i < size; i++)
+            if (mount_buffer[i] == '\n')
+                mount_buffer[i] = ' ';
+
+        mount_rdargs = AllocDosObject(DOS_RDARGS, NULL);
+        control_rdargs = AllocDosObject(DOS_RDARGS, NULL);
+        if(mount_rdargs == NULL || control_rdargs == NULL)
+            success = FALSE;
+    }
+
+    /* Parse mount parameters */
+    if (success)
+    {
+        mount_rdargs->RDA_Source.CS_Buffer = mount_buffer;
+        mount_rdargs->RDA_Source.CS_Length = size+1;
+        mount_rdargs->RDA_Flags = RDAF_NOPROMPT;
+        mount_rdargs =
+            ReadArgs(mount_template, (IPTR *)&mount_args, mount_rdargs);
+        if(mount_rdargs == NULL)
+            success = FALSE;
+    }
+
+    /* Check if this is a server mount */
+    if (success)
+    {
+        if (strcasecmp((char *)mount_args[ARG_EHANDLER], "smb.handler") != 0)
+            success = FALSE;
+    }
+
+    /* Parse control parameters */
+    if (success)
+    {
+        control_rdargs->RDA_Source.CS_Buffer = (UBYTE *)mount_args[ARG_CONTROL];
+        control_rdargs->RDA_Source.CS_Length =
+            strlen((STRPTR)mount_args[ARG_CONTROL]);
+        control_rdargs =
+            ReadArgs(control_template, (IPTR *)&control_args, control_rdargs);
+        if(control_rdargs == NULL)
+            success = FALSE;
+    }
+
+    /* Extract needed control parameters */
+    if (success)
+    {
+        service = FilePart((STRPTR)control_args[ARG_SERVICE]);
+        SetServerService(server, service);
+        service--;
+        *service = '\0';
+        host = (STRPTR)control_args[ARG_SERVICE] + 2;
+        SetServerHost(server, host);
+
+        SetServerUser(server, (STRPTR)control_args[ARG_USERNAME]);
+        SetServerGroup(server, (STRPTR)control_args[ARG_WORKGROUP]);
+        SetServerPass(server, (STRPTR)control_args[ARG_PASSWORD]);
+    }
+
+    FreeArgs(control_rdargs);
+    FreeArgs(mount_rdargs);
+    FreeDosObject(DOS_RDARGS, control_rdargs);
+    FreeDosObject(DOS_RDARGS, mount_rdargs);
+
+    return success;
+}
+
+
 void InitNetworkPrefs(CONST_STRPTR directory, BOOL use, BOOL save)
 {
     SetDefaultNetworkPrefsValues();
@@ -1063,6 +1481,7 @@ void InitNetworkPrefs(CONST_STRPTR directory, BOOL use, BOOL save)
     ReadNetworkPrefs(directory);
     ReadWirelessPrefs(WIRELESS_PATH_ENV);
     ReadMobilePrefs(MOBILEBB_PATH_ENV);
+    ReadServers();
 
     if (save)
     {
@@ -1140,7 +1559,6 @@ BOOL GetUp(struct Interface *iface)
     return iface->up;
 }
 
-
 STRPTR GetGate(void)
 {
     return prefs.gate;
@@ -1151,7 +1569,7 @@ STRPTR GetDNS(LONG m)
     return prefs.DNS[m];
 }
 
-STRPTR GetHost(void)
+STRPTR GetHostname(void)
 {
     return prefs.host;
 }
@@ -1264,7 +1682,7 @@ void SetDNS(LONG m, STRPTR w)
     strlcpy(prefs.DNS[m], w, IPBUFLEN);
 }
 
-void SetHost(STRPTR w)
+void SetHostname(STRPTR w)
 {
     if (!IsLegal(w, NAMECHARS))
     {
@@ -1297,6 +1715,12 @@ void SetDHCP(BOOL w)
     prefs.DHCP = w;
 }
 
+void InitHost(struct Host *host)
+{
+    SetHostNames(host, "");
+    SetHostAddress(host, "");
+}
+
 void InitNetwork(struct Network *net)
 {
     SetNetworkName(net, "");
@@ -1305,8 +1729,39 @@ void InitNetwork(struct Network *net)
     SetAdHoc(net, FALSE);
 }
 
+void InitServer(struct Server *server)
+{
+    SetServerDevice(server, DEFAULTSERVERDEV);
+    SetServerHost(server, "");
+    SetServerService(server, "share");
+    SetServerUser(server, "guest");
+    SetServerGroup(server, "workgroup");
+    SetServerPass(server, "");
+    SetServerActive(server, TRUE);
+}
+
 
 /* Getters */
+
+struct Host *GetHost(LONG index)
+{
+    return &prefs.hosts[index];
+}
+
+STRPTR GetHostNames(struct Host *host)
+{
+    return host->names;
+}
+
+STRPTR GetHostAddress(struct Host *host)
+{
+    return host->address;
+}
+
+LONG GetHostCount(void)
+{
+    return prefs.hostCount;
+}
 
 struct Network *GetNetwork(LONG index)
 {
@@ -1401,7 +1856,83 @@ LONG GetMobile_timeout(void)
     return prefs.mobile.timeout;
 }
 
+struct Server *GetServer(LONG index)
+{
+    return &prefs.servers[index];
+}
+
+STRPTR GetServerDevice(struct Server *server)
+{
+    return server->device;
+}
+
+STRPTR GetServerHost(struct Server *server)
+{
+    return server->host;
+}
+
+STRPTR GetServerService(struct Server *server)
+{
+    return server->service;
+}
+
+STRPTR GetServerUser(struct Server *server)
+{
+    return server->user;
+}
+
+STRPTR GetServerGroup(struct Server *server)
+{
+    return server->group;
+}
+
+STRPTR GetServerPass(struct Server *server)
+{
+    return server->pass;
+}
+
+BOOL GetServerActive(struct Server *server)
+{
+    return server->active;
+}
+
+LONG GetServerCount(void)
+{
+    return prefs.serverCount;
+}
+
 /* Setters */
+
+void SetHost
+(
+    struct Host *host, STRPTR name, STRPTR address
+)
+{
+    SetHostNames(host, name);
+    SetHostAddress(host, address);
+}
+
+void SetHostNames(struct Host *host, STRPTR w)
+{
+    strlcpy(host->names, w, NAMEBUFLEN);
+}
+
+void AddHostName(struct Host *host, STRPTR w)
+{
+    if (host->names[0] != '\0')
+        strlcat(host->names, " ", NAMEBUFLEN);
+    strlcat(host->names, w, NAMEBUFLEN);
+}
+
+void SetHostAddress(struct Host *host, STRPTR w)
+{
+    strlcpy(host->address, w, IPBUFLEN);
+}
+
+void SetHostCount(LONG w)
+{
+    prefs.hostCount = w;
+}
 
 void SetNetwork
 (
@@ -1494,7 +2025,58 @@ void SetMobile_timeout(LONG w)
     prefs.mobile.timeout = w;
 }
 
+void SetServer
+(
+    struct Server *server, STRPTR device, STRPTR host, STRPTR service,
+    STRPTR user, STRPTR group, STRPTR pass, BOOL active
+)
+{
+    SetServerDevice(server, device);
+    SetServerHost(server, host);
+    SetServerService(server, service);
+    SetServerUser(server, user);
+    SetServerGroup(server, group);
+    SetServerPass(server, pass);
+    SetServerActive(server, active);
+}
 
+void SetServerDevice(struct Server *server, STRPTR w)
+{
+    strlcpy(server->device, w, SMBBUFLEN);
+}
 
+void SetServerHost(struct Server *server, STRPTR w)
+{
+    strlcpy(server->host, w, NAMEBUFLEN);
+}
 
+void SetServerService(struct Server *server, STRPTR w)
+{
+    strlcpy(server->service, w, SMBBUFLEN);
+}
+
+void SetServerUser(struct Server *server, STRPTR w)
+{
+    strlcpy(server->user, w, SMBBUFLEN);
+}
+
+void SetServerGroup(struct Server *server, STRPTR w)
+{
+    strlcpy(server->group, w, SMBBUFLEN);
+}
+
+void SetServerPass(struct Server *server, STRPTR w)
+{
+    strlcpy(server->pass, w, SMBBUFLEN);
+}
+
+void SetServerActive(struct Server *server, BOOL w)
+{
+    server->active = w;
+}
+
+void SetServerCount(LONG w)
+{
+    prefs.serverCount = w;
+}
 
