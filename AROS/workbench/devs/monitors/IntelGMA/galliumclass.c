@@ -201,6 +201,8 @@ VOID METHOD(i915Gallium, Hidd_Gallium, DisplayResource)
     bm_dst = OOP_INST_DATA(OOP_OCLASS(bm), bm);
     struct i915_texture *tex = i915_texture(msg->resource);
 
+    IF_BAD_MAGIC(tex->buffer) return;
+
     ULONG bpp;
 
      switch(msg->resource->format)
@@ -244,7 +246,7 @@ VOID METHOD(i915Gallium, Hidd_Gallium, DisplayResource)
     br11 = tex->stride;
     br26 = msg->srcx | (msg->srcy << 16);
     br12 =  (uint32_t)tex->buffer->map;
-  
+
     LOCK_HW
         START_RING(8);
             OUT_RING(br00);

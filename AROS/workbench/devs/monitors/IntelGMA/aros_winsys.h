@@ -9,6 +9,12 @@
 #include "i915/i915_batchbuffer.h"
 #include "hidd/gallium.h"
 
+#define MAGIC 0x12345678
+#define MAGIC_WARNING(b) if(b->magic != MAGIC ) bug("[GMA winsys] %s: Bad MAGIC in buffer %p\n",__func__,b);
+#define IF_BAD_MAGIC(b) MAGIC_WARNING(b);if(b->magic != MAGIC )
+
+#define MAX_RELOCS 100
+
 struct aros_winsys
 {
     struct i915_winsys base;
@@ -22,12 +28,21 @@ aros_winsys(struct i915_winsys *iws)
    return (struct aros_winsys *)iws;
 }
 
+struct reloc
+{
+    struct i915_winsys_buffer *buf;
+    enum i915_winsys_buffer_usage usage;
+    ULONG offset;
+    uint32_t *ptr;
+};
+
 struct aros_batchbuffer
 {
    struct i915_winsys_batchbuffer base;
    size_t actual_size;
    APTR allocated_map;
    ULONG allocated_size;
+   struct reloc relocs[MAX_RELOCS];
 };
 
 static INLINE struct aros_batchbuffer *
@@ -37,14 +52,11 @@ aros_batchbuffer(struct i915_winsys_batchbuffer *batch)
 };
 
 struct i915_winsys_buffer {
-   unsigned magic;
+   ULONG magic;
    APTR map;
    ULONG size;
    void *ptr;
    ULONG stride;
-  // unsigned map_count;
-  // boolean flinked;
-  // unsigned flink;
    APTR allocated_map;
    ULONG allocated_size;
 };

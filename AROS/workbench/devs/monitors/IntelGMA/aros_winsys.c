@@ -38,7 +38,6 @@
 
 #define IMPLEMENT() bug("[GMA winsys]------IMPLEMENT(%s)\n", __func__)
 
-
 static APTR hw_status[1024];
 static APTR *bb_map;
 static ULONG temp_index;
@@ -181,14 +180,14 @@ boolean batchbuffer_validate_buffers(struct i915_winsys_batchbuffer *batch,
                    struct i915_winsys_buffer **buffers,
                    int num_of_buffers)
 {
-     D(
-        bug("[GMA winsys] batchbuffer_validate_buffers\n");
-        int i;
-        for(i=0;i<num_of_buffers;i++)
-        {
-            bug("    buffer %p\n",buffers[i]);
-        }
-     );
+    D(bug("[GMA winsys] batchbuffer_validate_buffers\n"));
+    int i;
+    for(i=0;i<num_of_buffers;i++)
+    {
+        D(bug("    buffer %p\n",buffers[i]));
+        MAGIC_WARNING(buffers[i]);
+    }
+
    //  IMPLEMENT();
      return TRUE;
 }
@@ -209,10 +208,26 @@ int batchbuffer_reloc(struct i915_winsys_batchbuffer *batch,
                         enum i915_winsys_buffer_usage usage,
                         unsigned offset, boolean fenced)
 {
-    *(uint32_t *)(batch->ptr) = BASEADDRESS( reloc->map ) + offset ;
+    IF_BAD_MAGIC(reloc) return -1;
+
+    if( batch->relocs >= MAX_RELOCS-1 )
+    {
+        bug("[GMA winsys] MAX_RELOCS ERROR\n");
+        return -1;
+    }
+
+    struct reloc *rl = &aros_batchbuffer(batch)->relocs[ batch->relocs ];
+
+    rl->buf = reloc;
+    rl->usage = usage;
+    rl->offset = offset;
+    rl->ptr = (uint32_t *)batch->ptr;
+    batch->relocs++;
+
+    *(uint32_t *)(batch->ptr) = 0;
+    //*(uint32_t *)(batch->ptr) = BASEADDRESS( reloc->map ) + offset ;
     D(bug("[GMA winsys] batchbuffer_reloc reloc %p offset %d fenced %s base=%p \n",reloc,offset,fenced ? "true" : "false",*(uint32_t *)(batch->ptr)));
     batch->ptr += 4;
-    batch->relocs++;
     return 0;
 }
 
@@ -227,11 +242,10 @@ void batchbuffer_flush(struct i915_winsys_batchbuffer *batch,
 {
     D(bug("[GMA winsys] batchbuffer_flush size=%d\n",batch->ptr - batch->map));
 
-#if 0
-    batch->ptr = batch->map;
-    *(uint32_t *)(batch->ptr) = MI_NOOP;
-    batch->ptr += 4;
-#endif
+    if( (batch->ptr - batch->map) & 4) {
+        *(uint32_t *)(batch->ptr) = 0; /* MI_NOOP */
+        batch->ptr += 4;
+    }
 
     *(uint32_t *)(batch->ptr) = MI_BATCH_BUFFER_END;
     batch->ptr += 4;
@@ -243,9 +257,26 @@ void batchbuffer_flush(struct i915_winsys_batchbuffer *batch,
 #endif
 
     LOCK_BB
+
+        // relocations
+        int i;
+        for(i=0;i<batch->relocs;i++)
+        {
+            struct reloc *rl = &aros_batchbuffer(batch)->relocs[ i ];
+            D(bug("[GMA winsys] batchbuffer_flush reloc %p\n",rl->buf));
+            IF_BAD_MAGIC(rl->buf)
+            {
+                batchbuffer_reset( aros_batchbuffer(batch) );
+                UNLOCK_BB
+                return;
+            }
+            *(uint32_t *)(rl->ptr) = BASEADDRESS( rl->buf->map ) + rl->offset;
+        }
+
         // wait until previous batchbuffer is ready.
-        while( get_status( temp_index ) ){
-          //  bug("wait...\n");
+        while( get_status( temp_index ) )
+        {
+            delay_ms(sd,1);
         };
 
         // copy to gfxmem
@@ -272,9 +303,9 @@ void batchbuffer_flush(struct i915_winsys_batchbuffer *batch,
             ADVANCE_RING();
 
         UNLOCK_HW
-        
+
         batchbuffer_reset( aros_batchbuffer(batch) );
-        
+
     UNLOCK_BB
 
 }
@@ -324,10 +355,11 @@ struct i915_winsys_buffer *
     return NULL;
 
     // allocate page aligned gfx memory
-    buf->allocated_size = size + 4095;
+    buf->allocated_size = size + 4096;
     if( !(buf->allocated_map = AllocGfxMem(buf->allocated_size) ) ) return NULL;
     buf->map = (APTR)(((uint32_t)buf->allocated_map + 4095)& ~4095);
     buf->size = size;
+    buf->magic = MAGIC;
     D(bug("[GMA winsys] buffer_create size %d type %s = %p map %p\n",size,i915_type_to_name(type),buf,buf->map));
 
     return buf;
@@ -396,11 +428,12 @@ void *buffer_map(struct i915_winsys *iws,
                        struct i915_winsys_buffer *buffer,
                        boolean write)
 {
+    IF_BAD_MAGIC(buffer) return 0;
     D(bug("[GMA winsys] buffer_map %p\n",buffer));
-
-    // wait until batchbuffer is ready. optimization: check if buffer is used in current batchbuffer.?
-    while( get_status( temp_index )){}
-
+    LOCK_BB;
+        // wait until batchbuffer is ready. optimization: check if buffer is used in current batchbuffer.?
+        while( get_status( temp_index )){delay_ms(sd,1);}
+    UNLOCK_BB;
     return buffer->map;
 }
 
@@ -411,6 +444,7 @@ void *buffer_map(struct i915_winsys *iws,
 void buffer_unmap(struct i915_winsys *iws,
                         struct i915_winsys_buffer *buffer)
 {
+    MAGIC_WARNING(buffer);
     D(bug("[GMA winsys] buffer_unmap %p\n",buffer));
    // IMPLEMENT();
 }
@@ -436,15 +470,19 @@ int buffer_write(struct i915_winsys *iws,
 void buffer_destroy(struct i915_winsys *iws,
                           struct i915_winsys_buffer *buffer)
 {
-    D(bug("[GMA winsys] buffer_destroy %p\n", buffer));
+    IF_BAD_MAGIC(buffer) return;
 
-    // wait until batchbuffer is ready.
-    while( get_status( temp_index )){}
-    LOCK_HW;
-    DO_FLUSH();
-    UNLOCK_HW;
-    FreeGfxMem( buffer->allocated_map, buffer->allocated_size);
-    FREE(buffer);
+    D(bug("[GMA winsys] buffer_destroy %p\n", buffer));
+    LOCK_BB;
+        // wait until batchbuffer is ready.
+        while( get_status( temp_index )){delay_ms(sd,1);}
+        LOCK_HW;
+            DO_FLUSH();
+        UNLOCK_HW;
+        buffer->magic = 0;
+        FreeGfxMem( buffer->allocated_map, buffer->allocated_size);
+        FREE(buffer);
+    UNLOCK_BB;
 }
 
 
@@ -454,6 +492,7 @@ void buffer_destroy(struct i915_winsys *iws,
 boolean buffer_is_busy(struct i915_winsys *iws,
                              struct i915_winsys_buffer *buffer)
 {
+    MAGIC_WARNING(buffer);
     D(bug("[GMA winsys] buffer_is_busy %p =%d\n",buffer,get_status( temp_index )));
     // optimization: check if buffer is used in current batchbuffer.?
     if( get_status( temp_index )) return TRUE;
