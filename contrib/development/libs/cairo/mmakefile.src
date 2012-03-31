@@ -1,0 +1,9 @@
+# Copyright © 2012, The AROS Development Team. All rights reserved.
+# $Id$
+
+-include $(TOP)/config/make.cfg
+
+%fetch_and_build_gnu_development package=cairo version=1.12.0 patch=yes \
+    package_repo=http://cairographics.org/releases/ \
+    suffixes="tar.gz" extraoptions="--disable-shared --disable-xlib --disable-xcb"
+

@@ -40,9 +40,9 @@ test_composite (int      testnum,
     int                w, h;
     pixman_fixed_t     scale_x = 65536, scale_y = 65536;
     pixman_fixed_t     translate_x = 0, translate_y = 0;
-    int                op;
-    int                repeat = 0;
-    int                src_fmt, dst_fmt;
+    pixman_op_t        op;
+    pixman_repeat_t    repeat = PIXMAN_REPEAT_NONE;
+    pixman_format_code_t src_fmt, dst_fmt;
     uint32_t *         srcbuf;
     uint32_t *         dstbuf;
     uint32_t           crc32;
@@ -95,31 +95,81 @@ test_composite (int      testnum,
     dst_img = pixman_image_create_bits (
         dst_fmt, dst_width, dst_height, dstbuf, dst_stride);
 
-    image_endian_swap (src_img, src_bpp * 8);
-    image_endian_swap (dst_img, dst_bpp * 8);
+    image_endian_swap (src_img);
+    image_endian_swap (dst_img);
 
     pixman_transform_init_identity (&transform);
-    
-    if (lcg_rand_n (8) > 0)
+
+    if (lcg_rand_n (3) > 0)
     {
-	scale_x = -32768 * 3 + lcg_rand_N (65536 * 5);
-	scale_y = -32768 * 3 + lcg_rand_N (65536 * 5);
-	translate_x = lcg_rand_N (65536);
-	translate_y = lcg_rand_N (65536);
+	scale_x = -65536 * 3 + lcg_rand_N (65536 * 6);
+	if (lcg_rand_n (2))
+	    scale_y = -65536 * 3 + lcg_rand_N (65536 * 6);
+	else
+	    scale_y = scale_x;
 	pixman_transform_init_scale (&transform, scale_x, scale_y);
+    }
+    if (lcg_rand_n (3) > 0)
+    {
+	translate_x = -65536 * 3 + lcg_rand_N (6 * 65536);
+	if (lcg_rand_n (2))
+	    translate_y = -65536 * 3 + lcg_rand_N (6 * 65536);
+	else
+	    translate_y = translate_x;
 	pixman_transform_translate (&transform, NULL, translate_x, translate_y);
     }
 
     if (lcg_rand_n (4) > 0)
     {
-	int c = lcg_rand_N (2 * 65536) - 65536;
-	int s = lcg_rand_N (2 * 65536) - 65536;
-	
+	int c, s, tx = 0, ty = 0;
+	switch (lcg_rand_n (4))
+	{
+	case 0:
+	    /* 90 degrees */
+	    c = 0;
+	    s = pixman_fixed_1;
+	    tx = pixman_int_to_fixed (MAX_SRC_HEIGHT);
+	    break;
+	case 1:
+	    /* 180 degrees */
+	    c = -pixman_fixed_1;
+	    s = 0;
+	    tx = pixman_int_to_fixed (MAX_SRC_WIDTH);
+	    ty = pixman_int_to_fixed (MAX_SRC_HEIGHT);
+	    break;
+	case 2:
+	    /* 270 degrees */
+	    c = 0;
+	    s = -pixman_fixed_1;
+	    ty = pixman_int_to_fixed (MAX_SRC_WIDTH);
+	    break;
+	default:
+	    /* arbitrary rotation */
+	    c = lcg_rand_N (2 * 65536) - 65536;
+	    s = lcg_rand_N (2 * 65536) - 65536;
+	    break;
+	}
 	pixman_transform_rotate (&transform, NULL, c, s);
+	pixman_transform_translate (&transform, NULL, tx, ty);
+    }
+
+    if (lcg_rand_n (8) == 0)
+    {
+	/* Flip random bits */
+	int maxflipcount = 8;
+	while (maxflipcount--)
+	{
+	    int i = lcg_rand_n (2);
+	    int j = lcg_rand_n (3);
+	    int bitnum = lcg_rand_n (32);
+	    transform.matrix[i][j] ^= 1 << bitnum;
+	    if (lcg_rand_n (2))
+		break;
+	}
     }
 
     pixman_image_set_transform (src_img, &transform);
-    
+
     switch (lcg_rand_n (4))
     {
     case 0:
@@ -225,7 +275,7 @@ test_composite (int      testnum,
 	    dstbuf[i] &= 0xFFFFFF;
     }
 
-    image_endian_swap (dst_img, dst_bpp * 8);
+    image_endian_swap (dst_img);
 
     if (verbose)
     {
@@ -256,6 +306,6 @@ main (int argc, const char *argv[])
 {
     pixman_disable_out_of_bounds_workaround ();
 
-    return fuzzer_test_main ("affine", 8000000, 0x46EC3C6A,
+    return fuzzer_test_main ("affine", 8000000, 0x1EF2175A,
 			     test_composite, argc, argv);
 }
