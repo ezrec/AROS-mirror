@@ -243,7 +243,7 @@ VOID METHOD(i915Gallium, Hidd_Gallium, DisplayResource)
 
     br11 = tex->stride;
     br26 = msg->srcx | (msg->srcy << 16);
-    br12 =  (uint32_t)aros_buffer(tex->buffer)->map;
+    br12 =  (uint32_t)tex->buffer->map;
   
     LOCK_HW
         START_RING(8);

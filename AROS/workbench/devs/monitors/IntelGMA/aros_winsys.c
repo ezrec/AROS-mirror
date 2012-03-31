@@ -209,7 +209,7 @@ int batchbuffer_reloc(struct i915_winsys_batchbuffer *batch,
                         enum i915_winsys_buffer_usage usage,
                         unsigned offset, boolean fenced)
 {
-    *(uint32_t *)(batch->ptr) = BASEADDRESS( aros_buffer(reloc)->map ) + offset ;
+    *(uint32_t *)(batch->ptr) = BASEADDRESS( reloc->map ) + offset ;
     D(bug("[GMA winsys] batchbuffer_reloc reloc %p offset %d fenced %s base=%p \n",reloc,offset,fenced ? "true" : "false",*(uint32_t *)(batch->ptr)));
     batch->ptr += 4;
     batch->relocs++;
@@ -237,7 +237,10 @@ void batchbuffer_flush(struct i915_winsys_batchbuffer *batch,
     batch->ptr += 4;
 //  i915_dump_batchbuffer( batch );
 
-#ifndef GALLIUM_SIMULATION
+#ifdef GALLIUM_SIMULATION
+    batchbuffer_reset( aros_batchbuffer(batch) );
+    return;
+#endif
 
     LOCK_BB
         // wait until previous batchbuffer is ready.
@@ -269,14 +272,11 @@ void batchbuffer_flush(struct i915_winsys_batchbuffer *batch,
             ADVANCE_RING();
 
         UNLOCK_HW
-
+        
+        batchbuffer_reset( aros_batchbuffer(batch) );
+        
     UNLOCK_BB
 
-    // wait...
-   // while( get_status( temp_index ) ){};
-
-#endif
-    batchbuffer_reset( aros_batchbuffer(batch) );
 }
 
 
@@ -319,7 +319,7 @@ struct i915_winsys_buffer *
                        unsigned size,
                        enum i915_winsys_buffer_type type)
 {
-    struct aros_buffer *buf = CALLOC_STRUCT(aros_buffer);
+    struct i915_winsys_buffer *buf = CALLOC_STRUCT(i915_winsys_buffer);
     if (!buf)
     return NULL;
 
@@ -330,7 +330,7 @@ struct i915_winsys_buffer *
     buf->size = size;
     D(bug("[GMA winsys] buffer_create size %d type %s = %p map %p\n",size,i915_type_to_name(type),buf,buf->map));
 
-    return (struct i915_winsys_buffer *)buf;
+    return buf;
 
 }
 
@@ -401,7 +401,7 @@ void *buffer_map(struct i915_winsys *iws,
     // wait until batchbuffer is ready. optimization: check if buffer is used in current batchbuffer.?
     while( get_status( temp_index )){}
 
-    return aros_buffer(buffer)->map;
+    return buffer->map;
 }
 
 
@@ -443,7 +443,7 @@ void buffer_destroy(struct i915_winsys *iws,
     LOCK_HW;
     DO_FLUSH();
     UNLOCK_HW;
-    FreeGfxMem(aros_buffer(buffer)->allocated_map,aros_buffer(buffer)->allocated_size);
+    FreeGfxMem( buffer->allocated_map, buffer->allocated_size);
     FREE(buffer);
 }
 

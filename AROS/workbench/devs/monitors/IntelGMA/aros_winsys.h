@@ -34,9 +34,9 @@ static INLINE struct aros_batchbuffer *
 aros_batchbuffer(struct i915_winsys_batchbuffer *batch)
 {
    return (struct aros_batchbuffer *)batch;
-}
+};
 
-struct aros_buffer {
+struct i915_winsys_buffer {
    unsigned magic;
    APTR map;
    ULONG size;
@@ -48,12 +48,6 @@ struct aros_buffer {
    APTR allocated_map;
    ULONG allocated_size;
 };
-
-static INLINE struct aros_buffer *
-aros_buffer(struct i915_winsys_buffer *buffer)
-{
-   return (struct aros_buffer *)buffer;
-}
 
 struct aros_winsys *winsys_create();
 
