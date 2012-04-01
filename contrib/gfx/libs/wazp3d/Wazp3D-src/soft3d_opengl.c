@@ -1,4 +1,4 @@
-/* Wazp3D Beta 50 : Alain THELLIER - Paris - FRANCE - (November 2006 to 2011) 	*/
+/* Wazp3D Beta 52 : Alain THELLIER - Paris - FRANCE - (November 2006 to 2012) 	*/
 /* Adaptation to AROS from Matthias Rustler							*/
 /* Code clean-up and library enhancements from Gunther Nikl					*/
 /* LICENSE: GNU General Public License (GNU GPL) for this file				*/
@@ -71,6 +71,17 @@ UBYTE  overwinname[]={"Wazp3D overlay"};
 #define W3D_PRIMITIVE_LINES             4
 #define W3D_PRIMITIVE_LINELOOP          5
 #define W3D_PRIMITIVE_LINESTRIP         6
+#define W3D_CHUNKY              1
+#define W3D_A1R5G5B5            2
+#define W3D_R5G6B5              3
+#define W3D_R8G8B8              4
+#define W3D_A4R4G4B4            5
+#define W3D_A8R8G8B8            6
+#define W3D_A8                  7
+#define W3D_L8                  8
+#define W3D_L8A8                9
+#define W3D_I8                 10
+#define W3D_R8G8B8A8           11
 /*=============================================================*/
 #define W3D_NOW	 255				/* NO W-inding : for Gallium/GL wrapping	*/
 #define W3D_PRIMITIVE_POLYGON	9999		/* True polygon: for Gallium/GL wrapping	*/
@@ -78,6 +89,7 @@ UBYTE  overwinname[]={"Wazp3D overlay"};
 #define BLENDALPHA   (W3D_SRC_ALPHA*16 + W3D_ONE_MINUS_SRC_ALPHA)
 #define BLENDFASTALPHA  187			/* 187 is an unused BlendMode			*/
 #define BLENDNOALPHA    59			/* 59  is an unused BlendMode			*/
+#define BLENDCHROMA    (W3D_SRC_COLOR*16 + W3D_DST_COLOR)       /* This is an unused BlendMode		*/
 /*=============================================================*/
 /* For PC's OpenGL overlay: we define how is maded an Amiga's window 	*/
 /* So we know the Warp3D's window so the position & size 			*/
@@ -100,6 +112,37 @@ struct Amigawindow
 	char BorderLeft, BorderTop, BorderRight, BorderBottom;
 /*  [...] 					 		more Amiga stuff here not used from OpenGL side */
 };
+/*==================================================================*/
+struct state3D	/* v52: now all is described in a drawing state */
+{
+	unsigned char Changed;
+	unsigned char ZMode;
+	unsigned char BlendMode;
+	unsigned char TexEnvMode;
+
+	unsigned char PerspMode;
+	unsigned char CullingMode;
+	unsigned char FogMode;
+	unsigned char UseGouraud;
+
+	unsigned char UseTex;
+	unsigned char UseFog;
+	unsigned char pad3;
+	unsigned char pad4;
+
+	unsigned char CurrentRGBA[4];
+	unsigned char EnvRGBA[4];
+	unsigned char FogRGBA[4];
+	unsigned char BackRGBA[4];
+
+	unsigned long PointSize;
+	unsigned long LineSize;
+	float FogZmin;
+	float FogZmax;
+	float FogDensity;
+	void* ST;
+	unsigned long gltex;	/* GL texture */
+};
 /*=============================================================*/
 struct point3D{
 	float x,y,z;
@@ -107,12 +150,13 @@ struct point3D{
 	float w;
 	unsigned char RGBA[4];
 };
+/*=============================================================*/
+struct TexCoord4f{
+    float s,t,r,q;
+};
 /*==================================================================*/
 #include "soft3d_opengl.h"
 /*==================================================================*/
-#define MAXPRIM (3*1000)			/* Maximum points per primitive		*/
-#define MAXSCREEN  1024				/* Maximum screen size 1024x1024		*/
-
 #define PSIZE sizeof(struct point3D)
 #define XLOOP(nbre) for(x=0;x<nbre;x++)
 #define YLOOP(nbre) for(y=0;y<nbre;y++)
@@ -120,19 +164,17 @@ struct point3D{
 #define REMP        if(HC->DebugHard) Libprintf
 #define HFUNC(name) REMP(#name"\n");
 #define REM(name)   REMP(#name"\n");
-#define VAR(var)    REMP(#var "=%d\n",var);
+#define VAR(var)    REMP(#var "=%ld\n",var);
 #define SWAPW(a) (unsigned short int )(((unsigned short int )a>>8)+((((unsigned short int )a&0xff)<<8)))
 #define SWAPL(a) (unsigned long  int )(((unsigned long int )a>>24)+(((unsigned long int )a&0xff0000)>>8)+(((unsigned long int )a&0xff00)<<8)+(((unsigned long int )a&0xff)<<24))
 void LibAlert(unsigned char *text);
-void *Libmalloc(ULONG size );
 void Libprintf(const unsigned char *string, ...);
 void Libsprintf(unsigned char *buffer,const unsigned char *string, ...);
 void PrintP(struct point3D *P);
 void ReorderBitmap(unsigned char  *rgba,unsigned short large,unsigned short high);
 /*==================================================================*/
 void *currenthc=NULL;			/* to detect if need to change context */
-float    fzspan[MAXSCREEN];		/* for read/write zspan */
-float texcoords[4*MAXPRIM];		/* for perspectived texture-coordinates */
+void *currentP =NULL;			/* to detect if need to VertexPointer  */
 /*==================================================================*/
 #if defined(_WIN32)
 extern void *winuaewnd;				/* global UAE window */
@@ -246,7 +288,7 @@ unsigned char name[50];
 	if(p.iPixelType = PFD_TYPE_COLORINDEX)
 		sprintf(name,"LUT8");
 	if(p.iPixelType = PFD_TYPE_RGBA )
-		sprintf(name,"R%d<<%d+G%d<<%d+B%d<<%d+A%d<<%d",p.cRedBits,p.cRedShift,p.cGreenBits,p.cGreenShift,p.cBlueBits,p.cBlueShift,p.cAlphaBits,p.cAlphaShift);
+		sprintf(name,"R%ld<<%ld+G%ld<<%ld+B%ld<<%ld+A%ld<<%ld",p.cRedBits,p.cRedShift,p.cGreenBits,p.cGreenShift,p.cBlueBits,p.cBlueShift,p.cAlphaBits,p.cAlphaShift);
 	REMP("Pixel format: %s\n",name);
 
 	if (!SetPixelFormat(HC->hdc, format, &p)) { REMP("Warning: Could not set pixel format\n"); return 0; }
@@ -254,7 +296,7 @@ unsigned char name[50];
 	if (!(HC->hglrc = wglCreateContext(HC->hdc))) { REMP("Warning: Could not create rendering context\n"); return 0; }
 	if (!(wglMakeCurrent(HC->hdc, HC->hglrc))) { REMP("Warning: Could not activate the rendering context\n"); return 0; }
 
-	REMP("hc %d winuaewnd %d HC->hdc %d HC->hglrc %d format%d\n",hc,winuaewnd,HC->hdc,HC->hglrc,format);
+	REMP("hc %ld winuaewnd %ld HC->hdc %ld HC->hglrc %ld format%ld\n",hc,winuaewnd,HC->hdc,HC->hglrc,format);
 	return 1;
 }
 
@@ -304,12 +346,12 @@ unsigned char name[50];
 	if(p.iPixelType = PFD_TYPE_COLORINDEX)
 		sprintf(name,"LUT8");
 	if(p.iPixelType = PFD_TYPE_RGBA )
-		sprintf(name,"R%d<<%d+G%d<<%d+B%d<<%d+A%d<<%d",p.cRedBits,p.cRedShift,p.cGreenBits,p.cGreenShift,p.cBlueBits,p.cBlueShift,p.cAlphaBits,p.cAlphaShift);
+		sprintf(name,"R%ld<<%ld+G%ld<<%ld+B%ld<<%ld+A%ld<<%ld",p.cRedBits,p.cRedShift,p.cGreenBits,p.cGreenShift,p.cBlueBits,p.cBlueShift,p.cAlphaBits,p.cAlphaShift);
 	REMP("Pixel format: %s\n",name);
 
 	if (!SetPixelFormat (HC->hdc, format, &p))
 		{
-		REMP("OPENGL: can't set pixelformat %d\n", format);
+		REMP("OPENGL: can't set pixelformat %ld\n", format);
 		return 0;
 		}
 
@@ -323,7 +365,7 @@ unsigned char name[50];
 	if (!wglMakeCurrent (HC->hdc, HC->hglrc))
 		return 0;
 
-	REMP("hc %d winuaewnd %d HC->hdc %d HC->hglrc %d format%d\n",hc,winuaewnd,HC->hdc,HC->hglrc,format);
+	REMP("hc %ld winuaewnd %ld HC->hdc %ld HC->hglrc %ld format%ld\n",hc,winuaewnd,HC->hdc,HC->hglrc,format);
 	return 1;
 }
 /*==================================================================*/
@@ -380,20 +422,30 @@ void HARD3D_DoUpdate(void *hc)
 {
 /* WIN32: Update the window. The SwapBuffers() part come from QuarkTex */
 struct HARD3D_context *HC=hc;
+ULONG *Image32;
+#define TESTBGRA ((200<<24)+(100<<16)+(10<<8)+0)
 
 	HFUNC(HARD3D_DoUpdate)
 	OS_CurrentContext(hc);
 
-	if(HC->UseOverlay)		
+	if(HC->UseOverlay)
 	{
-		glReadBuffer(GL_BACK);
 		SwapBuffers(HC->hdc);
 	}
 	else					/* in this case we draw y-flipped in the back buffer */
 	{
+
 		glReadBuffer(GL_BACK);
+		Image32=HC->Image8;
+		Image32[0]=TESTBGRA;
+
+		glReadPixels(0,0,HC->large,HC->high,GL_BGRA_EXT,GL_UNSIGNED_BYTE,HC->Image8);	/* read the back buffer in the bitmap */
+
+		if(Image32[0]==TESTBGRA)		/* bitmap unchanged so GL_BGRA_EXT was not supported */
+		{
 		glReadPixels(0,0,HC->large,HC->high,GL_RGBA,GL_UNSIGNED_BYTE,HC->Image8);	/* read the back buffer in the bitmap */
 		ReorderBitmap(HC->Image8,HC->large,HC->high);						/* WinUAE use BGRA mode */
+		}
 	}
 
 }
@@ -442,7 +494,7 @@ int x,y,large,high;
 	large	=awin->Width  - awin->BorderLeft - awin->BorderRight ;
 	high	=awin->Height - awin->BorderTop  - awin->BorderBottom;
 
-	REMP("AROS: overwin <%s> at %d %d size %dX%d\n",overwin->Title,x,y,large,high);
+	REMP("AROS: overwin <%s> at %ld %ld size %ldX%ld\n",overwin->Title,x,y,large,high);
 	ChangeWindowBox(overwin,x,y,large,high);
 	}
 }
@@ -459,7 +511,7 @@ ULONG Flags =WFLG_ACTIVATE | WFLG_REPORTMOUSE | WFLG_RMBTRAP | WFLG_SIMPLE_REFRE
 ULONG IDCMPs=IDCMP_CLOSEWINDOW | IDCMP_VANILLAKEY | IDCMP_RAWKEY | IDCMP_MOUSEMOVE | IDCMP_MOUSEBUTTONS ;
 
 	HFUNC(OS_StartGLoverlay)
-	REMP("AROS: HC %d \n",HC);
+	REMP("AROS: HC %ld \n",HC);
 
 	if(!MesaBase)
 		MesaBase = OpenLibrary("mesa.library", 0L);
@@ -476,7 +528,7 @@ ULONG IDCMPs=IDCMP_CLOSEWINDOW | IDCMP_VANILLAKEY | IDCMP_RAWKEY | IDCMP_MOUSEMO
 	WA_InnerHeight,	high,
 	WA_Left,		awin->LeftEdge,
 	WA_Top,		awin->TopEdge,
-	WA_Title,		(IPTR)overwinname,
+	WA_Title,		(ULONG)overwinname,
 	WA_DragBar,		FALSE,
 	WA_CloseGadget,	FALSE,
 	WA_GimmeZeroZero,	TRUE,
@@ -492,9 +544,9 @@ ULONG IDCMPs=IDCMP_CLOSEWINDOW | IDCMP_VANILLAKEY | IDCMP_RAWKEY | IDCMP_MOUSEMO
 /* mesa will use overwin */
 	mesawin=HC->overwin;
 
-	REMP("AROS: HC->awin %d \n",HC->awin);
-	REMP("AROS: mesawin <%s> at %d %d size %dX%d\n",mesawin->Title,mesawin->LeftEdge,mesawin->TopEdge,mesawin->Width,mesawin->Height);
-	REMP("AROS: mesawin (borders %d %d %d %d )\n"  ,mesawin->BorderLeft,mesawin->BorderTop,mesawin->BorderRight,mesawin->BorderBottom);
+	REMP("AROS: HC->awin %ld \n",HC->awin);
+	REMP("AROS: mesawin <%s> at %ld %ld size %ldX%ld\n",mesawin->Title,mesawin->LeftEdge,mesawin->TopEdge,mesawin->Width,mesawin->Height);
+	REMP("AROS: mesawin (borders %ld %ld %ld %ld )\n"  ,mesawin->BorderLeft,mesawin->BorderTop,mesawin->BorderRight,mesawin->BorderBottom);
 
 	attributes[i].ti_Tag = AMA_Window;		attributes[i++].ti_Data = (IPTR)mesawin;
 	attributes[i].ti_Tag = AMA_Left;		attributes[i++].ti_Data = x;
@@ -514,7 +566,7 @@ ULONG IDCMPs=IDCMP_CLOSEWINDOW | IDCMP_VANILLAKEY | IDCMP_RAWKEY | IDCMP_MOUSEMO
 		{ REMP("AROS: Cant create Mesa context\n"); return 0; }
 
 	AROSMesaMakeCurrent(HC->hglrc);
-	REMP("AROS: HC->awin %d HC->hglrc %d HC->overwin %d\n",HC->awin,HC->hglrc,HC->overwin);
+	REMP("AROS: HC->awin %ld HC->hglrc %ld HC->overwin %ld\n",HC->awin,HC->hglrc,HC->overwin);
 	return 1;
 }
 /*==================================================================*/
@@ -533,7 +585,7 @@ int i=0;
 		return( OS_StartGLoverlay(hc,x,y,large,high) );
 
 	HFUNC(OS_StartGL)
-	REMP("AROS: HC %d \n",HC);
+	REMP("AROS: HC %ld \n",HC);
 
 	if(!MesaBase)
 		MesaBase = OpenLibrary("mesa.library", 0L);
@@ -544,9 +596,9 @@ int i=0;
 /* Current Amiga window : certainly the one we want */
 	mesawin=HC->awin;
 
-	REMP("AROS: HC->awin %d \n",HC->awin);
-	REMP("AROS: mesawin <%s> at %d %d size %dX%d\n",mesawin->Title,mesawin->LeftEdge,mesawin->TopEdge,mesawin->Width,mesawin->Height);
-	REMP("AROS: mesawin (borders %d %d %d %d )\n"  ,mesawin->BorderLeft,mesawin->BorderTop,mesawin->BorderRight,mesawin->BorderBottom);
+	REMP("AROS: HC->awin %ld \n",HC->awin);
+	REMP("AROS: mesawin <%s> at %ld %ld size %ldX%ld\n",mesawin->Title,mesawin->LeftEdge,mesawin->TopEdge,mesawin->Width,mesawin->Height);
+	REMP("AROS: mesawin (borders %ld %ld %ld %ld )\n"  ,mesawin->BorderLeft,mesawin->BorderTop,mesawin->BorderRight,mesawin->BorderBottom);
 
 	attributes[i].ti_Tag = AMA_Window;		attributes[i++].ti_Data = (IPTR)mesawin;
 	attributes[i].ti_Tag = AMA_Left;		attributes[i++].ti_Data = x;
@@ -593,7 +645,7 @@ int i=0;
 
 	AROSMesaMakeCurrent(HC->hglrc);
 	HC->overwin=0;
-	REMP("AROS: HC->awin %d HC->hglrc %d HC->overwin %d\n",HC->awin,HC->hglrc,HC->overwin);
+	REMP("AROS: HC->awin %ld HC->hglrc %ld HC->overwin %ld\n",HC->awin,HC->hglrc,HC->overwin);
 	return 1;
 }
 /*==================================================================*/
@@ -627,25 +679,41 @@ void HARD3D_DoUpdate(void *hc)
 struct HARD3D_context *HC=hc;
 struct RastPort *oldrastport;
 struct Window   *mesawin;
+short int  oldLeftEdge, oldTopEdge;
 
 	HFUNC(HARD3D_DoUpdate)
 	OS_CurrentContext(hc);
 
-	if(HC->UseOverlay)					/* in this case we draw in overwin */
+	if(HC->UseOverlay)					/* in this case we drawn in overwin */
 		{
-		glReadBuffer(GL_BACK);
+	HFUNC(AROSMesaSwapBuffers)
 		AROSMesaSwapBuffers(HC->hglrc);
+	HFUNC(AROSMesaSwapBuffersOK)
 		}
 	else
-		{							/* else we draw in back buffer */
+		{							/* else we drawn in back buffer	*/
 		mesawin=HC->awin;
-		oldrastport=mesawin->RPort;			/* save original window structure */
 
+		oldrastport=mesawin->RPort;		/* save original window's rastport	*/
+		oldLeftEdge=mesawin->LeftEdge;		/* save original window's position	*/
+		oldTopEdge =mesawin->TopEdge;
+
+#ifdef WINHACK
+		mesawin->LeftEdge=0;					/* so will write at 0 0 in our bitmap */
+		mesawin->TopEdge =0;
+		MoveWindow(mesawin,-oldLeftEdge,-oldTopEdge);
+#endif
 		mesawin->RPort=(struct RastPort *)HC->hackrastport;	/* use our rastport and bitmap */
+		AROSMesaSwapBuffers(HC->hglrc);				/* On Aros this will copy the back buffer to the current window */
 
-		AROSMesaSwapBuffers(HC->hglrc);		/* On Aros this will copy the back buffer to the current window */
+#ifdef WINHACK
+		mesawin->LeftEdge=oldLeftEdge;		/* restore window */
+		mesawin->TopEdge =oldTopEdge;
+		MoveWindow(mesawin,oldLeftEdge,oldTopEdge);
+#endif
 
-		mesawin->RPort=oldrastport;
+		mesawin->RPort   =oldrastport;
+
 		}
 }
 /*==================================================================*/
@@ -658,11 +726,25 @@ struct HARD3D_context *HC=hc;
 	return;
 }
 /*==================================================================*/
+void HARD3D_ClearImageBuffer(void *hc,unsigned short x,unsigned short y,unsigned short large,unsigned short high,void *rgba)
+{
+struct HARD3D_context *HC=hc;
+unsigned char *RGBA=rgba;
+
+	HFUNC(HARD3D_ClearImageBuffer);
+	OS_CurrentContext(hc);
+	glClearColor( (float)RGBA[0]/255.0,(float)RGBA[1]/255.0,(float)RGBA[2]/255.0,(float)RGBA[3]/255.0);
+	glClear(GL_COLOR_BUFFER_BIT);
+}
+/*==================================================================*/
 void startgl(void *hc,void *bm,int x, int y,int large, int high)
 {
 struct HARD3D_context *HC=hc;
+unsigned char  RGBA[4]={0,0,0,255};
 
 	HFUNC(startgl);
+	REMP("pos: %ld %ld size: %ldX%ld\n",x,y,large,high);
+
 	HC->UseDoubleBuffer=TRUE;
 	HC->glstarted=OS_StartGL(hc,bm,x,y,large,high);
 	if(!HC->glstarted)
@@ -697,17 +779,8 @@ struct HARD3D_context *HC=hc;
 	glDisable(GL_LINE_SMOOTH);
 	}
 
-	HARD3D_ClearImageBuffer(HC,0,0,large,high);
+	HARD3D_ClearImageBuffer(HC,0,0,large,high,RGBA);
 
-}
-/*==================================================================*/
-void HARD3D_ClearImageBuffer(void *hc,unsigned short x,unsigned short y,unsigned short large,unsigned short high)
-{
-struct HARD3D_context *HC=hc;
-
-	HFUNC(HARD3D_ClearImageBuffer);
-	OS_CurrentContext(hc);
-	glClear(GL_COLOR_BUFFER_BIT);
 }
 /*==================================================================*/
 void HARD3D_ClearZBuffer(void *hc,float fz)
@@ -722,19 +795,22 @@ GLclampd depth=fz;
 	glClear(GL_DEPTH_BUFFER_BIT);
 }
 /*==================================================================*/
-void HARD3D_CreateTexture(void *hc,void *ht,unsigned char *pt,unsigned short large,unsigned short high,unsigned short bits,unsigned char UseMip,unsigned char UseFiltering)
+void HARD3D_CreateTexture(void *hc,void *ht,unsigned char *pt,unsigned short large,unsigned short high,unsigned short format,unsigned char TexFlags)
 {
+#define AND &
 struct HARD3D_context *HC=hc;
 struct HARD3D_texture *HT=ht;
-unsigned long size,level,format;
+unsigned long size,level,glformat,bits;
+unsigned char UseMip=TexFlags AND 1;
+unsigned char UseFiltering=TexFlags AND 2;
 unsigned char *pt2;
-GLuint tex;
+GLuint gltex;
 
 	HFUNC(HARD3D_CreateTexture);
 	OS_CurrentContext(hc);
-	glGenTextures(1,&tex);
-	glBindTexture(GL_TEXTURE_2D,tex);
-	HT->gltex=tex;
+	glGenTextures(1,&gltex);
+	glBindTexture(GL_TEXTURE_2D,gltex);
+	HT->gltex=gltex;
 VAR(hc)
 VAR(ht)
 VAR(pt)
@@ -743,7 +819,7 @@ VAR(high)
 VAR(bits)
 VAR(UseMip)
 VAR(UseFiltering)
-VAR(tex)
+VAR(gltex)
 
 	if(UseFiltering)
 	{
@@ -761,10 +837,10 @@ VAR(tex)
 	else
 		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 	}
+	if(format==W3D_R8G8B8)   {bits=24;glformat=GL_RGB; }
+	if(format==W3D_R8G8B8A8) {bits=32;glformat=GL_RGBA;}
 
-	if (bits==32)
-		format=GL_RGBA; else format=GL_RGB;
-	VAR(format)
+	VAR(glformat)
 	UseMip=0;
 if(UseMip)
 	{
@@ -772,13 +848,13 @@ if(UseMip)
 	pt2=pt;
 	size=large * high * bits / 8;
 next_mipmap:
-	glTexImage2D(GL_TEXTURE_2D,level,bits/8,large,high, 0, format, GL_UNSIGNED_BYTE,pt2);
+	glTexImage2D(GL_TEXTURE_2D,level,bits/8,large,high, 0, glformat, GL_UNSIGNED_BYTE,pt2);
 	pt2=&(pt2[size]);
 	level++;large=large/2;high=high/2;size=size/4;
 	if (high>0) goto next_mipmap;
 	}
 else
-	glTexImage2D(GL_TEXTURE_2D, 0,bits/8,large,high, 0, format, GL_UNSIGNED_BYTE,pt);
+	glTexImage2D(GL_TEXTURE_2D, 0,bits/8,large,high, 0, glformat, GL_UNSIGNED_BYTE,pt);
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D,0);
 }
@@ -806,17 +882,20 @@ register unsigned long n;
 			}
 }
 /*==================================================================*/
-void HARD3D_DrawPrimitive(void *hc,struct point3D *P,unsigned long Pnb,unsigned long primitive,unsigned char UsePersp)
+void HARD3D_DrawPrimitive(void *hc,void *p,unsigned long Pnb,unsigned long primitive)
 {
+struct point3D *P=p;
 struct HARD3D_context *HC=hc;
-void *VertexPointer;
-void *TexCoordPointer;
-void *ColorPointer;
+unsigned char UsePersp =(HC->state->PerspMode!=0);
+unsigned char UseColors=(HC->state->UseGouraud!=0);
+struct TexCoord4f *V=(void*)HC->V;
 unsigned int mode;
 long int n;
 
 	HFUNC(HARD3D_DrawPrimitive);
 	OS_CurrentContext(hc);
+VAR(P)
+VAR(Pnb)
 
 	if(Pnb>MAXPRIM)
 		return;
@@ -824,54 +903,57 @@ long int n;
 	if(UsePersp)
 	NLOOP(Pnb)
 		{
-		texcoords[4*n+0] =P[n].w*P[n].u / 256.0 ; 		/* set u & v in the range 0.0 to 1.0 */
-		texcoords[4*n+1] =P[n].w*P[n].v / 256.0 ;
-		texcoords[4*n+2] =0.0;
-		texcoords[4*n+3] =P[n].w;
-		if(1.0<P[n].z) P[n].z=1.0; 		if(P[n].z<0.0) P[n].z=0.0;	/* force Z to the range 0.0 to 1.0 (GlExcess) */
-		}
 
-	if(!UsePersp)
+		V[n].s=P[n].w*P[n].u ;
+		V[n].t=P[n].w*P[n].v ;
+		V[n].r=0.0;
+		V[n].q=P[n].w;
+		if(1.0<P[n].z) P[n].z=1.0;		/* force Z to the range 0.0 to 1.0 (GlExcess) */
+ 		if(P[n].z<0.0) P[n].z=0.0;
+		}
+	else
 	NLOOP(Pnb)
 		{
-		P[n].u = P[n].u / 256.0 ; 		/* set u & v in the range 0.0 to 1.0 */
-		P[n].v = P[n].v / 256.0 ; 		/* set u & v in the range 0.0 to 1.0 */
-		if(1.0<P[n].z) P[n].z=1.0; 		if(P[n].z<0.0) P[n].z=0.0;	/* force Z to the range 0.0 to 1.0 (GlExcess) */
+		if(1.0<P[n].z) P[n].z=1.0;		/* force Z to the range 0.0 to 1.0 (GlExcess) */
+ 		if(P[n].z<0.0) P[n].z=0.0;
 		}
-
 
 	NLOOP(Pnb)
 		PrintP(&P[n]);
 
-	VertexPointer	=(void *)&(P->x);
-	ColorPointer	=(void *)&(P->RGBA);
-	TexCoordPointer	=(void *)&(P->u);
-
-	glEnableClientState(GL_VERTEX_ARRAY);
-
-	glVertexPointer(3, GL_FLOAT, PSIZE,VertexPointer);
-	glColorPointer(4,GL_UNSIGNED_BYTE,PSIZE,ColorPointer);
-	if(UsePersp)
-		glTexCoordPointer(4, GL_FLOAT, 4*4,texcoords);
-	else
-		glTexCoordPointer(2, GL_FLOAT,PSIZE,TexCoordPointer);
-
-VAR(P)
-VAR(Pnb)
-VAR(primitive)
-
-	if(primitive==W3D_PRIMITIVE_POINTS)		{mode=GL_POINTS;		goto olddraw;}
-	if(primitive==W3D_PRIMITIVE_LINESTRIP)	{mode=GL_LINE_STRIP;	goto olddraw;}
-	if(primitive==W3D_PRIMITIVE_LINELOOP)	{mode=GL_LINE_LOOP;	goto olddraw;}
-	if(primitive==W3D_PRIMITIVE_LINES)		{mode=GL_LINES;		goto olddraw;}
+	if(primitive==W3D_PRIMITIVE_POINTS)		{mode=GL_POINTS;			goto olddraw;}
+	if(primitive==W3D_PRIMITIVE_LINESTRIP)	{mode=GL_LINE_STRIP;		goto olddraw;}
+	if(primitive==W3D_PRIMITIVE_LINELOOP)	{mode=GL_LINE_LOOP;		goto olddraw;}
+	if(primitive==W3D_PRIMITIVE_LINES)		{mode=GL_LINES;			goto olddraw;}
 	if(primitive==W3D_PRIMITIVE_TRISTRIP)	{primitive=GL_TRIANGLE_STRIP;	goto newdraw;}
 	if(primitive==W3D_PRIMITIVE_TRIFAN)		{primitive=GL_TRIANGLE_FAN;	goto newdraw;}
 	if(primitive==W3D_PRIMITIVE_TRIANGLES)	{primitive=GL_TRIANGLES;	goto newdraw;}
 	if(primitive==W3D_PRIMITIVE_POLYGON)	{primitive=GL_POLYGON;		goto newdraw;}
 
+
 newdraw:
 REM(newdraw)
 VAR(primitive)
+
+	if(currentP!=P)
+	{
+	REM(P changed)
+	currentP=P;
+	glVertexPointer(3, GL_FLOAT, PSIZE,(void *)&(P->x));
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glColorPointer(4,GL_UNSIGNED_BYTE,PSIZE,(void *)&(P->RGBA));
+	}
+
+	if(UseColors)
+		glEnableClientState(GL_COLOR_ARRAY);
+	else
+		glDisableClientState(GL_COLOR_ARRAY);
+
+	if(UsePersp)
+		glTexCoordPointer(4, GL_FLOAT, 4*4,HC->V);
+	else
+		glTexCoordPointer(2, GL_FLOAT,PSIZE,(void *)&(P->u));
+
 	glDrawArrays(primitive,0,Pnb);
 	return;
 
@@ -882,12 +964,17 @@ VAR(mode)
 	NLOOP(Pnb)
 		{
 		glVertex3f(P[n].x,P[n].y,P[n].z);
-		if(!UsePersp)
-			glTexCoord2f(P[n].u,P[n].v);
+
+		if(UsePersp)
+			glTexCoord4f(V[n].s,V[n].t,V[n].r,V[n].q);
 		else
-			glTexCoord4f(texcoords[4*n+0],texcoords[4*n+1],texcoords[4*n+2],texcoords[4*n+3]);
-/* patch: I removed this part . Because should use vertex-color only if not already using a flat-color */
-/*		glColor4f((float)P[n].RGBA[0]/255.0,(float)P[n].RGBA[1]/255.0,(float)P[n].RGBA[2]/255.0,(float)P[n].RGBA[3]/255.0); */
+			glTexCoord2f(P[n].u,P[n].v);
+
+		if(UseColors)
+			glColor4f((float)P[n].RGBA[0]/255.0,(float)P[n].RGBA[1]/255.0,(float)P[n].RGBA[2]/255.0,(float)P[n].RGBA[3]/255.0);
+		else
+			glColor4f( (float)HC->state->CurrentRGBA[0]/255.0,(float)HC->state->CurrentRGBA[1]/255.0,(float)HC->state->CurrentRGBA[2]/255.0,(float)HC->state->CurrentRGBA[3]/255.0);
+
 		}
 	glEnd();
 }
@@ -917,7 +1004,7 @@ struct HARD3D_context *HC=hc;
 */
 }
 /*==================================================================*/
-void HARD3D_Fog(void *hc,unsigned char FogMode,float FogZmin,float FogZmax,float FogDensity,unsigned char *FogRGBA)
+void ChangeHardFog(void *hc,unsigned char FogMode,float FogZmin,float FogZmax,float FogDensity,unsigned char *FogRGBA)
 {
 struct HARD3D_context *HC=hc;
 float FogColor[4];
@@ -952,21 +1039,22 @@ void HARD3D_FreeTexture(void *hc,void *ht)
 {
 struct HARD3D_context *HC=hc;
 struct HARD3D_texture *HT=ht;
-GLuint tex;
+GLuint gltex;
 
 	HFUNC(HARD3D_FreeTexture);
 	OS_CurrentContext(hc);
-	tex=HT->gltex;
-	glDeleteTextures(1,&tex);
+	gltex=HT->gltex;
+	glDeleteTextures(1,&gltex);
 }
 /*==================================================================*/
 void HARD3D_ReadZSpan(void *hc, unsigned short x, unsigned short y,unsigned long n, double *dz)
 {
 struct HARD3D_context *HC=hc;
-float *fz=fzspan;
+float *fz=HC->fzspan;
 
 	HFUNC(HARD3D_ReadZSpan);
 	OS_CurrentContext(hc);
+	glReadBuffer(GL_BACK);
 	glReadPixels(x,y,n,1, GL_DEPTH_COMPONENT, GL_FLOAT,fz);
 	XLOOP(n)
 		dz[x]=fz[x];
@@ -975,10 +1063,11 @@ float *fz=fzspan;
 void HARD3D_WriteZSpan(void *hc, unsigned short x, unsigned short y,unsigned long n, double *dz, unsigned char *mask)
 {
 struct HARD3D_context *HC=hc;
-float *fz=fzspan;
+float *fz=HC->fzspan;
 
 	HFUNC(HARD3D_WriteZSpan);
 	OS_CurrentContext(hc);
+	glReadBuffer(GL_BACK);
 	glReadPixels(x,y,n,1, GL_DEPTH_COMPONENT, GL_FLOAT,fz);	/* read existing depth values */
 	glRasterPos2i(x,y);
 	XLOOP(n)
@@ -992,14 +1081,6 @@ void HARD3D_AllocImageBuffer(void *hc,unsigned short large,unsigned short high)
 struct HARD3D_context *HC=hc;
 	HFUNC(HARD3D_AllocImageBuffer);
 	return;		/* Writing to an ImageBuffer32 is not possible in hardware mode */
-}
-/*==================================================================*/
-void HARD3D_SetBackColor(void *hc,unsigned char  *RGBA)
-{
-struct HARD3D_context *HC=hc;
-	HFUNC(HARD3D_SetBackColor);
-	OS_CurrentContext(hc);
-	glClearColor( (float)RGBA[0]/255.0,(float)RGBA[1]/255.0,(float)RGBA[2]/255.0,(float)RGBA[3]/255.0);
 }
 /*==================================================================*/
 void HARD3D_SetBitmap(void *hc,void *bm,unsigned char *Image8,unsigned long format,unsigned short x,unsigned short y,unsigned short large,unsigned short high)
@@ -1018,6 +1099,7 @@ VAR(high)
 		startgl(hc,bm,x,y,large,high);
 	OS_CurrentContext(hc);
 
+VAR(Image8)
 
 	HC->Image8	=Image8;
 	HC->large	=large;
@@ -1069,80 +1151,75 @@ int x,y,high,large;
 	glEnable(GL_SCISSOR_TEST);
 }
 /*==================================================================*/
-void HARD3D_SetCulling(void *hc,unsigned char CullingMode)
+void HARD3D_SetDrawFunctions(void *hc)
 {
 struct HARD3D_context *HC=hc;
-
-	HFUNC(HARD3D_SetCulling);
-	OS_CurrentContext(hc);
-	if(CullingMode==W3D_NOW)			/* NO W-inding 	*/
-		{glDisable(GL_CULL_FACE); return;}
-	if(CullingMode==W3D_CW)
-		glFrontFace(GL_CW);
-	if(CullingMode==W3D_CCW)
-		glFrontFace(GL_CCW);
-
-#if defined(_WIN32)
-	if(!HC->UseOverlay)	/* then we draw y-flipped so backfaces are now frontfaces */
-	{
-	if(CullingMode==W3D_CW)
-		glFrontFace(GL_CCW);
-	if(CullingMode==W3D_CCW)
-		glFrontFace(GL_CW);
-	}
-#endif
-
-	glEnable(GL_CULL_FACE);
-}
-/*==================================================================*/
-void HARD3D_SetCurrentColor(void *hc,unsigned char  *RGBA)
-{
-struct HARD3D_context *HC=hc;
-	HFUNC(HARD3D_SetCurrentColor);
-	OS_CurrentContext(hc);
-	glColor4f( (float)RGBA[0]/255.0,(float)RGBA[1]/255.0,(float)RGBA[2]/255.0,(float)RGBA[3]/255.0);
-}
-/*==================================================================*/
-void HARD3D_SetDrawFunctions(void *hc,void *ht,unsigned char ZMode,unsigned char BlendMode,unsigned char TexEnvMode,unsigned char UseGouraud,unsigned char UseFog,unsigned char PerspMode,unsigned char *EnvRGBA)
-{
-struct HARD3D_context *HC=hc;
-struct HARD3D_texture *HT=ht;
-unsigned long zupdate,zfunc,SrcFunc,DstFunc,TexEnvMode32;
+struct state3D *state=HC->state;
+unsigned long ZUpdate,ZCompareMode,SrcFunc,DstFunc,TexEnvMode32;
 float envcolor[4];
-GLuint tex;
+unsigned char BlendMode;
+#define ZMODE(ZUpdate,ZCompareMode) (ZUpdate*8 + (ZCompareMode-1))
 
 REM(---------)
 	HFUNC(HARD3D_SetDrawFunctions);
 	OS_CurrentContext(hc);
 VAR(hc)
-VAR(ht)
-VAR(ZMode)
-VAR(BlendMode)
-VAR(TexEnvMode)
-VAR(UseGouraud)
-VAR(UseFog)
-VAR(PerspMode)
-VAR(EnvRGBA)
+VAR(state->UseTex)
+VAR(state->ST)
+VAR(state->gltex)
+VAR(state->TexEnvMode)
+VAR(state->ZMode)
+VAR(state->BlendMode)
+VAR(state->UseGouraud)
+VAR(state->UseFog)
+VAR(state->PerspMode)
 
-	if(TexEnvMode==0) HT=NULL;
 
 /* --- UseGouraud -------------*/
-	if(UseGouraud)
+	if(state->UseGouraud)
 		{
-		REM(Gouraud ON);
+		REM(Gouraud  ON);
 		glShadeModel(GL_SMOOTH);
-		glEnableClientState(GL_COLOR_ARRAY);
 		}
 	else
 		{
 		REM(Gouraud OFF);
 		glShadeModel(GL_FLAT);
-		glDisableClientState(GL_COLOR_ARRAY);
+		glColor4f( (float)state->CurrentRGBA[0]/255.0,(float)state->CurrentRGBA[1]/255.0,(float)state->CurrentRGBA[2]/255.0,(float)state->CurrentRGBA[3]/255.0);
 		}
+
+/* state->CullingMode=W3D_NOW; */
+
+/* --- CullingMode -----------------*/
+	if(state->CullingMode==W3D_NOW)			/* NO W-inding 	*/
+		{glDisable(GL_CULL_FACE);}
+	if(state->CullingMode==W3D_CW)
+		{glEnable(GL_CULL_FACE); glFrontFace(GL_CW); }
+	if(state->CullingMode==W3D_CCW)
+		{glEnable(GL_CULL_FACE); glFrontFace(GL_CCW);}
+
+#if defined(_WIN32)
+	if(!HC->UseOverlay)	/* then we draw y-flipped so backfaces are now frontfaces */
+	{
+	if(state->CullingMode==W3D_CW)
+		glFrontFace(GL_CCW);
+	if(state->CullingMode==W3D_CCW)
+		glFrontFace(GL_CW);
+	}
+#endif
+
+/* --- PointSize -----------------*/
+	glPointSize((float)state->PointSize);
+
+/* --- FogMode -----------------*/
+	if(state->UseFog)
+		ChangeHardFog(hc,state->FogMode,state->FogZmin,state->FogZmax,state->FogDensity,state->FogRGBA);
+	else
+		glDisable(GL_FOG);
 
 /* --- ZMode -----------------*/
 
-	if(ZMode==(W3D_Z_ALWAYS-1))	/* default no z buffer = no test ==> always draw & dont update a zbuffer */
+	if(state->ZMode == ZMODE(0,W3D_Z_ALWAYS) )	/* default no z buffer = no test ==> always draw & dont update a zbuffer */
 	{
 	REM(depth OFF);
 	glDisable(GL_DEPTH_TEST);	/* no test   */
@@ -1151,43 +1228,41 @@ VAR(EnvRGBA)
 	else					/* else test and/or update the z buffer */
 	{
 	REM(depth ON);
-	zupdate=(ZMode>=8);
-   	zfunc  =ZMode - zupdate*8 + 1;
+	ZUpdate	=(state->ZMode >>  3);
+   	ZCompareMode=(state->ZMode AND 7) + 1;
 	glEnable(GL_DEPTH_TEST);
 
-	VAR(ZMode)
-	VAR(zupdate)
-	VAR(zfunc)
-	if(zfunc==W3D_Z_NEVER)			zfunc=GL_NEVER;
-	if(zfunc==W3D_Z_LESS)			zfunc=GL_LESS;
-	if(zfunc==W3D_Z_EQUAL)			zfunc=GL_EQUAL;
-	if(zfunc==W3D_Z_LEQUAL)			zfunc=GL_LEQUAL;
-	if(zfunc==W3D_Z_GREATER)		zfunc=GL_GREATER;
-	if(zfunc==W3D_Z_NOTEQUAL)		zfunc=GL_NOTEQUAL;
-	if(zfunc==W3D_Z_GEQUAL)			zfunc=GL_GEQUAL;
-	if(zfunc==W3D_Z_ALWAYS)			zfunc=GL_ALWAYS;
-	VAR(zfunc)
-	glDepthFunc(zfunc);
-	glDepthMask(zupdate);
+	VAR(state->ZMode)
+	VAR(ZUpdate)
+	VAR(ZCompareMode)
+	if(ZCompareMode==W3D_Z_NEVER)			ZCompareMode=GL_NEVER;
+	if(ZCompareMode==W3D_Z_LESS)			ZCompareMode=GL_LESS;
+	if(ZCompareMode==W3D_Z_EQUAL)			ZCompareMode=GL_EQUAL;
+	if(ZCompareMode==W3D_Z_LEQUAL)		ZCompareMode=GL_LEQUAL;
+	if(ZCompareMode==W3D_Z_GREATER)		ZCompareMode=GL_GREATER;
+	if(ZCompareMode==W3D_Z_NOTEQUAL)		ZCompareMode=GL_NOTEQUAL;
+	if(ZCompareMode==W3D_Z_GEQUAL)		ZCompareMode=GL_GEQUAL;
+	if(ZCompareMode==W3D_Z_ALWAYS)		ZCompareMode=GL_ALWAYS;
+	VAR(ZCompareMode)
+	glDepthFunc(ZCompareMode);
+	glDepthMask(ZUpdate);
 	}
 
 
 /* --- UseTex -----------------*/
 
-	if(HT!=NULL)
+	if(state->UseTex)
 		{
-	REM(HT != NULL);
-	VAR(HT)
-		tex=HT->gltex;
-	VAR(tex)
-		glBindTexture(GL_TEXTURE_2D,tex);
+	REM(UseTex);
+	VAR(state->gltex)
+		glBindTexture(GL_TEXTURE_2D,state->gltex);
 		glEnable(GL_TEXTURE_2D);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 		glDisable(GL_BLEND);
 		}
 	else
 		{
-	REM(HT == NULL);
+	REM(Not UseTex);
 		glBindTexture(GL_TEXTURE_2D,0);
 		glDisable(GL_TEXTURE_2D);
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -1195,10 +1270,13 @@ VAR(EnvRGBA)
 		}
 
 /* --- BlendMode -----------------*/
+	BlendMode=state->BlendMode;
 	if(BlendMode==BLENDFASTALPHA)
 		BlendMode=BLENDALPHA ;
 	if(BlendMode==BLENDNOALPHA)
 		BlendMode=BLENDREPLACE;
+	if(BlendMode==BLENDCHROMA)
+		BlendMode=(W3D_ONE*16 + W3D_ONE);		/* v51:this is not a chromatest but looks nice too */
 
 	if(BlendMode==BLENDREPLACE)				/* default : simply write the color (even if color=tex+color) */
 	{
@@ -1242,22 +1320,22 @@ VAR(DstFunc)
 /* --- TexEnvMode -----------------*/
 #define GL_REPLACE 0x1E01
 #define GL_BLEND   0x0BE2
-	if(HT!=NULL)
+	if(state->UseTex)
 	{
 
-	REM(TexEnvModes);
+	REM(state->TexEnvModes);
 	TexEnvMode32=GL_REPLACE;		/* default */
-	if(TexEnvMode==W3D_REPLACE)		TexEnvMode32=GL_REPLACE;
-	if(TexEnvMode==W3D_MODULATE)		TexEnvMode32=GL_MODULATE;
-	if(TexEnvMode==W3D_DECAL)		TexEnvMode32=GL_DECAL;
-	if(TexEnvMode==W3D_BLEND)		TexEnvMode32=GL_BLEND;
+	if(state->TexEnvMode==W3D_REPLACE)		TexEnvMode32=GL_REPLACE;
+	if(state->TexEnvMode==W3D_MODULATE)		TexEnvMode32=GL_MODULATE;
+	if(state->TexEnvMode==W3D_DECAL)		TexEnvMode32=GL_DECAL;
+	if(state->TexEnvMode==W3D_BLEND)		TexEnvMode32=GL_BLEND;
 
-	if(TexEnvMode==W3D_BLEND)		/* also need the envcolor */
+	if(state->TexEnvMode==W3D_BLEND)		/* also need the envcolor */
 	{
-	envcolor[0]=(float)EnvRGBA[0]/255.0;
-	envcolor[1]=(float)EnvRGBA[1]/255.0;
-	envcolor[2]=(float)EnvRGBA[2]/255.0;
-	envcolor[3]=(float)EnvRGBA[3]/255.0;
+	envcolor[0]=(float)state->EnvRGBA[0]/255.0;
+	envcolor[1]=(float)state->EnvRGBA[1]/255.0;
+	envcolor[2]=(float)state->EnvRGBA[2]/255.0;
+	envcolor[3]=(float)state->EnvRGBA[3]/255.0;
 	glTexEnvfv(GL_TEXTURE_ENV,GL_TEXTURE_ENV_COLOR,envcolor);
 	}
 
@@ -1266,41 +1344,12 @@ VAR(DstFunc)
 	}
 
 /* --- PerspMode -----------------*/
-	if(PerspMode==0)
+	if(state->PerspMode==0)
 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
 	else
 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
 REM(----------------------)
-}
-/*==================================================================*/
-void HARD3D_SetDrawStates(void *hc,void *ht,unsigned char ZMode,unsigned char BlendMode,unsigned char TexEnvMode,unsigned char UseGouraud,unsigned char UseFog,unsigned char PerspMode)
-{
-struct HARD3D_context *HC=hc;
-	HFUNC(HARD3D_SetDrawStates);
-	return;		/* SOFT3D_SetDrawStates only set states flags and dont call an hardware function */
-}
-/*==================================================================*/
-void HARD3D_SetEnvColor(void *hc,unsigned char  *RGBA)
-{
-struct HARD3D_context *HC=hc;
-GLfloat color[4] ;
-
-	HFUNC(HARD3D_SetEnvColor);
-	OS_CurrentContext(hc);
-	color[0]=(float)RGBA[0]/255.0;
-	color[1]=(float)RGBA[1]/255.0;
-	color[2]=(float)RGBA[2]/255.0;
-	color[3]=(float)RGBA[3]/255.0;
-	glTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, color);
-}
-/*==================================================================*/
-void HARD3D_SetPointSize(void *hc,unsigned short PointSize)
-{
-struct HARD3D_context *HC=hc;
-	HFUNC(HARD3D_SetPointSize);
-	OS_CurrentContext(hc);
-	glPointSize((float)PointSize);
 }
 /*==================================================================*/
 void HARD3D_AllocZbuffer(void *hc,unsigned short large,unsigned short high)
@@ -1324,13 +1373,13 @@ void HARD3D_UpdateTexture(void *hc,void *ht,unsigned char *pt,unsigned short lar
 struct HARD3D_context *HC=hc;
 struct HARD3D_texture *HT=ht;
 unsigned long format,x,y,level;
-GLuint tex;
+GLuint gltex;
 
 	HFUNC(HARD3D_UpdateTexture);
 	OS_CurrentContext(hc);
-	tex=HT->gltex;
-	glBindTexture(GL_TEXTURE_2D,tex);
-	VAR(tex)
+	gltex=HT->gltex;
+	glBindTexture(GL_TEXTURE_2D,gltex);
+	VAR(gltex)
 	x=y=level=0;
 	if(bits==32)
 		format=GL_RGBA; else format=GL_RGB;

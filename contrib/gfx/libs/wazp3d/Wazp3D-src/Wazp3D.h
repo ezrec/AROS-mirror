@@ -1,4 +1,4 @@
-/* Wazp3D Beta 50 : Alain THELLIER - Paris - FRANCE - (November 2006 to 2011) 	*/
+/* Wazp3D Beta 52 : Alain THELLIER - Paris - FRANCE - (November 2006 to 2012) 	*/
 /* Adaptation to AROS from Matthias Rustler							*/
 /* Code clean-up and library enhancements from Gunther Nikl					*/
 /* LICENSE: GNU General Public License (GNU GPL) for this file				*/
@@ -14,8 +14,8 @@
 #endif
 
 /*==================================================================================*/
-#define DRIVERNAME "Wazp3D soft renderer - Alain Thellier - Paris France 2011 - Beta 50"
-#define PREFSNAME  "Wazp3D Prefs.Beta 50.Alain Thellier 2011"
+#define DRIVERNAME "Wazp3D - Alain Thellier - Paris France 2012 - Beta 52"
+#define PREFSNAME  "Wazp3D-Prefs Beta 52 Alain Thellier 2012"
 /*==================================================================================*/
 #if defined(_WIN32)
 
@@ -72,16 +72,16 @@
 
 #endif
 /*==================================================================================*/
-#ifdef AMIGA
+#ifdef AMIGA 
 
 #ifdef  __AROS__
 #include <aros/symbolsets.h>
 #include <proto/arossupport.h>
 #endif
 
-#include <math.h>
 #include <string.h>
 #include <stdarg.h>
+#include <math.h>
 
 #include <dos/dos.h>
 #include <graphics/gfx.h>
@@ -123,6 +123,10 @@
 typedef ULONG IPTR;
 #endif
 /*======================================================================================*/
+#ifdef SOFT3DLIB 
+struct Library *		Soft3DBase			=NULL;
+#endif
+
 #if !defined(__AROS__) 
 
 struct ExecBase*		SysBase			=NULL;
@@ -145,6 +149,8 @@ ULONG  StartTime=0;
 struct Library*				NewlibBase			=NULL;
 struct Interface*				INewlib			=NULL;
 
+struct Library* 				P96Base 			=NULL;
+
 struct ExecIFace*				IExec				=NULL;
 struct DOSIFace*				IDOS				=NULL;
 struct GraphicsIFace*			IGraphics			=NULL;
@@ -153,12 +159,15 @@ struct GadToolsIFace*			IGadTools			=NULL;
 struct CyberGfxIFace*			ICyberGfx			=NULL;
 struct TimerIFace*			ITimer			=NULL;
 struct UtilityIFace*			IUtility			=NULL;
+struct P96IFace* 				IP96 				=NULL;
 
 #endif
 /*======================================================================================*/
-#else				/* For the DLL we include nothing but we still need AmigaOS definitions  */
+#else				
+#include <math.h>				/* For the DLL we include nothing */
 #include <string.h>
-#include "soft3d_amiga_defines.h"
+#include <stdarg.h>
+#include "soft3d_amiga_defines.h"	/* but we still need AmigaOS definitions  */
 #endif
 /*==================================================================================*/
 struct memory3D{
@@ -173,10 +182,10 @@ struct memory3D{
 #define MAXPOLY	32				/* Maximum points per polygon			*/
 #define MAXPOLYHACK 5				/* Maximum points per polygon in PolyHack */
 #define MAXPOLYHACK2 7				/* Maximum points per polygon in PolyHack2*/
-#define MAXSCREEN  1024				/* Maximum screen size 1024x1024		*/
+#define MAXSCREEN  2048				/* Maximum screen size 2048x2048		*/
 #define MAXTEXTURE 2048				/* Maximum tex size 2048x2048 (fast=256)  */
 #define MAXSTAGE 2				/* V5: multitexturing blending stages (up to 16)	*/
-#define FOGSIZE 1000				/* Size for Fog values array			*/
+#define FOGSIZE 4096				/* Size for Fog values array			*/
 #define MINZ 0.00000				/* min Zbuffer value				*/
 #define MAXZ 0.99999				/* max Zbuffer value				*/
 #define MINALPHA 8				/* Alpha range : A < MINALPHA ==> transp. */
@@ -195,16 +204,19 @@ struct memory3D{
 #define FRAGBUFFERSIZE (256*256)		/* Assume AROS on PC got very big cache	*/
 #endif
 
-/* else AMIGA */
-#else								/* Make it use less memory on AmigaOS	*/
-#define FRAGBUFFERSIZE (256*256)		/* Assume PC is fast enough to draw in		*/
-#endif								/* one call a big square 256x256 pixels		*/
+/* if not AMIGA */
+#else							/* Make it use less memory on AmigaOS	*/
+#define FRAGBUFFERSIZE (256*256)		/* Assume PC is fast enough to draw in	*/
+#endif						/* one call a big square 256x256 pixels	*/
 
 #define PSIZE sizeof(struct point3D)		/* Size for copying a point				*/
 #define BLENDREPLACE (W3D_ONE	*16 + W3D_ZERO)
 #define BLENDALPHA      (W3D_SRC_ALPHA*16 + W3D_ONE_MINUS_SRC_ALPHA)
 #define BLENDFASTALPHA  187			/* 187 is an unused BlendMode			*/
 #define BLENDNOALPHA    59			/* 59  is an unused BlendMode			*/
+
+#define BLENDCHROMA    (W3D_SRC_COLOR*16 + W3D_DST_COLOR)       /* This is an unused BlendMode		*/
+
 
 #define W3D_NOW	 255					/* NO W-inding : for Gallium/GL wrapping	*/
 #define W3D_PRIMITIVE_POLYGON	9999			/* True polygon: for Gallium/GL wrapping	*/
@@ -223,7 +235,7 @@ struct memory3D{
 
 #define ZBUFF UWORD				 /* Zbuffer's format				*/
 #define ZVALUE Pix->L.z				/* Z value is stored here			*/
-#define ZCONVERSION Pix->L.z=floor((P->z * (float)ZRESIZE));
+#define ZCONVERSION Pix->L.z=FFLOOR((P->z * (float)ZRESIZE));
 #define ZRESIZE 60000.0
 
 #endif
@@ -235,6 +247,38 @@ struct memory3D{
 #define ALLCOLORFORMATS  (W3D_FMT_R5G5B5|W3D_FMT_B5G5R5|W3D_FMT_R5G5B5PC|W3D_FMT_B5G5R5PC|W3D_FMT_R5G6B5|W3D_FMT_B5G6R5|W3D_FMT_R5G6B5PC|W3D_FMT_B5G6R5PC|W3D_FMT_R8G8B8|W3D_FMT_B8G8R8|W3D_FMT_A8R8G8B8|W3D_FMT_A8B8G8R8|W3D_FMT_R8G8B8A8|W3D_FMT_B8G8R8A8|W3D_FMT_CLUT)
 #define ALLSTENCILMODES 0xFFFF
 typedef void (*HOOKEDFUNCTION)(void *c);
+#define ZMODE(ZUpdate,ZCompareMode) (ZUpdate*8 + (ZCompareMode-1))
+/*==================================================================*/
+struct state3D	/* v52: now all is described in a drawing state */
+{
+	unsigned char Changed;
+	unsigned char ZMode;
+	unsigned char BlendMode;
+	unsigned char TexEnvMode;
+
+	unsigned char PerspMode;
+	unsigned char CullingMode;
+	unsigned char FogMode;
+	unsigned char UseGouraud;
+
+	unsigned char UseTex;
+	unsigned char UseFog;
+	unsigned char pad3;
+	unsigned char pad4;
+
+	unsigned char CurrentRGBA[4];
+	unsigned char EnvRGBA[4];
+	unsigned char FogRGBA[4];
+	unsigned char BackRGBA[4];
+
+	unsigned long PointSize;
+	unsigned long LineSize;
+	float FogZmin;
+	float FogZmax;
+	float FogDensity;
+	void* ST;
+	unsigned long gltex;	/* GL texture */
+};
 /*==================================================================================*/
 struct vertex3D{
 	float x,y,z;
@@ -256,7 +300,7 @@ struct face3D{
 struct button3D{
 	UBYTE CycleNb,ON,padding1,padding2;
 	char name[100];
-	char *cyclenames[5];
+	char *cyclenames[8];
 	};
 /*==================================================================================*/
 union rgba3D {
@@ -335,7 +379,6 @@ struct button3D DebugBlendFunction;	/* v46: track the slow BlendFunctionAll() */
 struct button3D DebugSepiaImage;	/* Colorize Wazp3D's RGBA buffer */
 struct button3D DumpTextures;
 struct button3D DumpObject;
-struct button3D ResizeDumpedObject;
 struct button3D StepFunction;		/* Step a Warp3D function call */
 struct button3D StepSOFT3D;		/* Step a SOFT3D function call */
 struct button3D StepUpdate;		/* Step at update (Wazp3D's RGBA buffer-->screen) */
@@ -371,6 +414,7 @@ ULONG ASLminX,ASLmaxX,ASLminY,ASLmaxY;
 #define OR  |
 #define FLOOP(nbre) for(f=0;f<nbre;f++)
 #define ILOOP(nbre) for(i=0;i<nbre;i++)
+#define JLOOP(nbre) for(j=0;j<nbre;j++)
 #define PLOOP(nbre) for(p=0;p<nbre;p++)
 #define MLOOP(nbre) for(m=0;m<nbre;m++)
 #define NLOOP(nbre) for(n=0;n<nbre;n++)
@@ -379,10 +423,12 @@ ULONG ASLminX,ASLmaxX,ASLminY,ASLmaxY;
 #define SWAP(x,y) {temp=x;x=y;y=temp;}
 #define COPYRGBA(x,y)	*((ULONG *)(x))=*((ULONG *)(y));
 #define NOTSAMERGBA(x,y)	(*((ULONG *)(x))!=*((ULONG *)(y)))
-#define SAMERGBA(x,y)	(*((ULONG *)(x))==*((ULONG *)(y)))
+#define    SAMERGBA(x,y)	(*((ULONG *)(x))==*((ULONG *)(y)))
 /* simpler W3D_GetState used internally */
 #define StateON(s) ((context->state & s)!=0)
 #define FREEPTR(ptr) {MYfree(ptr);ptr=NULL;}
+#define FEXP(x)   ( (float)  exp( (double)(x) ));
+#define FFLOOR(x) ( (float)floor( (double)(x) ));
 /*==================================================================================*/
 #ifdef WAZP3DDEBUG
 #define REM(message) if(Wazp3D->DebugVal.ON) Libprintf(#message"\n");
@@ -393,8 +439,10 @@ ULONG ASLminX,ASLmaxX,ASLminY,ASLmaxY;
 #define   WTAG(val,doc) if(tag == val) if(Wazp3D->DebugVal.ON){Libprintf(" " #val); if(Wazp3D->DebugDoc.ON) Libprintf(", " #doc); Libprintf(",%ld,\n",((ULONG)data));}
 #define  SINFO(var,val) if(var == val) if(Wazp3D->DebugSOFT3D.ON){Libprintf(" " #val "\n");}
 #define WINFOB(var,val,doc) if(Wazp3D->DebugVal.ON) if((var&val)!=0) {Libprintf(" " #val); if(Wazp3D->DebugDoc.ON) Libprintf(", " #doc); Libprintf("\n");}
-#define   VAR(var) if(Wazp3D->DebugVal.ON)  {if(Wazp3D->DebugVar.ON) Libprintf(" " #var "="); Libprintf("%ld\n",((ULONG)(IPTR)var));}
+#define   VAR(var) if(Wazp3D->DebugVal.ON)  {if(Wazp3D->DebugVar.ON) Libprintf(" " #var "="); Libprintf("%ld\n",((ULONG)var));}
+#define  SVAR(var) if(Wazp3D->DebugSOFT3D.ON) if(Wazp3D->DebugVal.ON)  {if(Wazp3D->DebugVar.ON) Libprintf(" " #var "="); Libprintf("%ld\n",((ULONG)var));}
 #define  VARF(var) if(Wazp3D->DebugVal.ON)  {if(Wazp3D->DebugVar.ON) Libprintf(" " #var "="); pf(var); Libprintf("\n"); }
+#define  SVARF(var) if(Wazp3D->DebugSOFT3D.ON) if(Wazp3D->DebugVal.ON)  {if(Wazp3D->DebugVar.ON) Libprintf(" " #var "="); pf(var); Libprintf("\n"); }
 #define   VAL(var) {if(Wazp3D->DebugVal.ON) Libprintf(" [%ld]",((ULONG)var));}
 #define ZZ  LibAlert("ZZ stepping...");
 #define XX Libprintf("XX stepping...\n");
@@ -402,6 +450,8 @@ ULONG ASLminX,ASLmaxX,ASLminY,ASLmaxY;
 #define   WRETURN(error) return(PrintError(error));
 #define QUERY(q,doc,s) if(query==q) if(Wazp3D->DebugVal.ON) {sup=s;  Libprintf(" " #q); if(Wazp3D->DebugDoc.ON) Libprintf(", " #doc); Libprintf("\n");}
 #define WAZP3DFUNCTION(n) WAZP3D_Function(n);
+#define YYY Wazp3D->DebugWazp3D.ON=	Wazp3D->DisplayFPS.ON= Wazp3D->DebugFunction.ON= Wazp3D->DebugCalls.ON= Wazp3D->DebugState.ON= Wazp3D->DebugVar.ON= Wazp3D->DebugVal.ON= Wazp3D->DebugSOFT3D.ON= Wazp3D->DebugError.ON=	Wazp3D->DebugPoint.ON=TRUE;
+#define NNN Wazp3D->DebugWazp3D.ON=	Wazp3D->DisplayFPS.ON= Wazp3D->DebugFunction.ON= Wazp3D->DebugCalls.ON= Wazp3D->DebugState.ON= Wazp3D->DebugVar.ON= Wazp3D->DebugVal.ON= Wazp3D->DebugSOFT3D.ON= Wazp3D->DebugError.ON=	Wazp3D->DebugPoint.ON=FALSE;
 /*==================================================================================*/
 #else
 #define REM(message) ;
@@ -536,6 +586,15 @@ va_list args;
 	va_start(args, string);
 	RawDoFmt(string, args, PUTCHARFUNC, buffer);
 	va_end(args);
+
+/* for redirecting debugger's output to PC side */
+/*
+#ifdef SOFT3DDLL
+	buffer[Libstrlen(buffer)]=0;
+	SOFT3D_Debug(buffer);
+	return;
+#endif
+*/
 	Write(Output(), buffer, Libstrlen(buffer));
 }
 #endif
@@ -678,6 +737,10 @@ void CloseAmigaLibraries()
 	LIBCLOSE4(ITimer)
 #endif
 
+#ifdef SOFT3DLIB
+	LIBCLOSE(Soft3DBase)
+#endif
+
 #if !defined(__AROS__) 
 	LIBCLOSE(DOSBase)
 	LIBCLOSE(GfxBase)
@@ -691,12 +754,7 @@ void CloseAmigaLibraries()
 }
 #endif
 /*==================================================================================*/
-#ifdef AMIGA
-#define Libexp exp
-#define Libfloor floor
-#else /* if is a PC */
-float  Libexp(float x);
-float  Libfloor(float x);
+#if !defined(AMIGA) /* if is a PC */
 void Libprintf(void *string,...);
 #endif
 /*==================================================================================*/
@@ -706,7 +764,7 @@ void DumpMem(UBYTE *pt,LONG nb)
 LONG n;
 NLOOP(nb/4)
 	{
-	Libprintf("[%ld\t][%ld\t] %ld\t%ld\t%ld\t%ld\n",(ULONG)(IPTR)pt,(ULONG)4*n,(ULONG)pt[0],(ULONG)pt[1],(ULONG)pt[2],(ULONG)pt[3]);
+	Libprintf("[%ld\t][%ld\t] %ld\t%ld\t%ld\t%ld\n",(ULONG)pt,(ULONG)4*n,(ULONG)pt[0],(ULONG)pt[1],(ULONG)pt[2],(ULONG)pt[3]);
 	pt=&(pt[4]);
 	}
 #endif
