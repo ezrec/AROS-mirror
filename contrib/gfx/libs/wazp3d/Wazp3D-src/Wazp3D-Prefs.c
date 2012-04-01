@@ -5,6 +5,12 @@
 
 /* This file contain the Wazp3d3D Prefs call							*/
 
+#ifdef __amigaos4__
+#define __USE_INLINE__
+#define __USE_BASETYPE__
+#define __USE_OLD_TIMEVAL__
+#endif
+
 #include <string.h>
 #include <stdarg.h>
 #include <dos/dos.h>
@@ -17,10 +23,19 @@ struct Library *Warp3DBase;
 W3D_Driver **drivers;
 #define W3D_Q_SETTINGS 9999
 
+#ifdef __amigaos4__
+struct Warp3DIFace*			IWarp3D		=NULL;
+#endif
+
 int main(int argc, char **argv)
 {
 	Warp3DBase = OpenLibrary("Warp3D.library", 4L);
 	if (Warp3DBase==NULL)	exit(0);
+
+#ifdef __amigaos4__
+	IWarp3D = (struct Warp3DIFace*)GetInterface((struct Library *)Warp3DBase, "main", 1, NULL);
+	if (IWarp3D==NULL)	return(FALSE);
+#endif
 
 	drivers = W3D_GetDrivers();
 	if (*drivers == NULL) 	exit(0);

@@ -1,9 +1,9 @@
-/* Wazp3D Beta 50 : Alain THELLIER - Paris - FRANCE - (November 2006 to 2011)		*/
-/* Adaptation to AROS from Matthias Rustler							*/
-/* Code clean-up and library enhancements from Gunther Nikl					*/
-/* LICENSE: GNU General Public License (GNU GPL) for this file				*/
+/* Wazp3D Beta 52 : Alain THELLIER - Paris - FRANCE - (November 2006 to 2012)		*/
+/* Adaptation to AROS from Matthias Rustler 						   */
+/* Code clean-up and library enhancements from Gunther Nikl 				   */
+/* LICENSE: GNU General Public License (GNU GPL) for this file 			   */
 
-/* This file contain the Warp3D -> Wazp3D wrapper						*/
+/* This file contain the Warp3D -> Wazp3D wrapper 					   */
 
 /*==========================================================================*/
 #include "Wazp3D.h"
@@ -11,15 +11,15 @@
 struct WAZP3D_parameters parameters;
 struct WAZP3D_parameters *Wazp3D=&parameters;
 
-UBYTE Wazp3DPrefsName[]  ={PREFSNAME}; 
+UBYTE Wazp3DPrefsName[]  ={PREFSNAME};
 IPTR  Wazp3DPrefsNameTag =(IPTR) Wazp3DPrefsName;
-struct memory3D *firstME=NULL;		/* Tracked memory-allocation			*/
+struct memory3D *firstME=NULL;		/* Tracked memory-allocation 		   */
+
+struct WAZP3D_texture *DebugWT=NULL;
 
 #ifdef SOFT3DLIB
 
-
 /* then soft3d functions are compiled as a separate library */
-struct Library *Soft3DBase=NULL;
 #include "soft3d_protos.h"
 #include "soft3d.h"
 
@@ -32,7 +32,7 @@ struct Library *Soft3DBase=NULL;
 /*==================================================================================*/
 struct WAZP3D_texture{
 UBYTE *pt;
-UWORD large,high,bits;
+UWORD large,high,bits,format;
 UBYTE name[40];
 UBYTE BlendMode;
 UWORD Tnum;
@@ -65,17 +65,18 @@ float uresize,vresize;			/* for binded tex */
 struct WAZP3D_texture *firstWT;	/* list of all textures */
 struct WAZP3D_blendstage Stage[MAXSTAGE];	/* V5: multitexturing blending stages */
 BOOL blendstagesready;
+void *texture;
 
 BOOL CallFlushFrame;			/* then DoUpdate inside bitmap*/
 BOOL CallSetDrawRegion;
 BOOL CallClearZBuffer;
 BOOL CallSetBlending;
 struct point3D P[MAXPRIM];
-ULONG primitive;
 ULONG Pnb;
 
 struct  face3D *DumpF;						/* to dump object */
 struct point3D *DumpP;
+struct state3D state;
 struct point3D PolyP[MAXPOLY];
 WORD PolyPnb;
 UWORD Tnb,DumpStage;
@@ -90,13 +91,11 @@ UBYTE *bmdata;							/*  bitmap memory  */
 ULONG  bmformat;							/*  bitmap format  */
 ULONG  yoffset;							/*  bitmap offset  */
 
-HOOKEDFUNCTION SetBitmapFunction;
-HOOKEDFUNCTION SetDrawStatesFunction;
+HOOKEDFUNCTION SOFT3D_SetBitmap_SetClippingHook;
 
 UWORD large,high,bits;
 WORD Xmin,Ymin,Xmax,Ymax;					/* screen scissor */
 
-float PointSize,LineWidth;
 UBYTE hints[32];
 
 ULONG AlphaMode,AlphaRef;
@@ -104,37 +103,24 @@ ULONG SrcFunc,DstFunc;
 ULONG LogicOp;
 ULONG PenMask;
 
-UBYTE FogMode;
-float FogZmin,FogZmax,FogDensity;
 float FogWmin,FogWmax,FogDensityW;
-UBYTE FogRGBA[4];
 
 ULONG	StippleLine,StippleLineFactor,StipplePolygon;
 ULONG	StencilFunc,StencilRef,StencilMask,StencilSfail,StencilZfail,StencilZpass,StencilWriteMask;
 ULONG ZCompareMode;
 
-UBYTE CurrentRGBA[4];
+UBYTE	EnvRGBA[4];			/* global one */
 UBYTE	MaskRGBA[4];
-UBYTE	BackRGBA[4];
-
-UWORD Fps;
-UWORD TimePerFrame;
-ULONG LastMilliTime;
-
-UBYTE CullingMode;
-UBYTE ZMode;
-UBYTE TexEnvMode;
-UBYTE BlendMode;
-UBYTE UseFog;
-UBYTE UseGouraud;
-UBYTE UseTex;
-UBYTE PerspMode;
-
 void *ILpointer;			/* current interleaved-array settings */
 ULONG ILvertexFormat;
 ULONG ILflags;
 int   ILstride;
 
+struct WAZP3D_texture *DebuggedWT;
+UWORD Fps;
+UWORD TimePerFrame;
+ULONG LastMilliTime;
+ULONG PrimitivesDrawn;
 void *SC;
 W3D_Context context;					/* The Warp3D's context is inside the Wazp3D's context WC */
 };
@@ -160,10 +146,9 @@ void DumpObject(struct WAZP3D_context *WC);
 /* semi-public Wazp3D function */
 void  WAZP3D_Settings();
 /*==========================================================================*/
-void pf(float x)		/* emulate printf() from a float %f */
+void spf(UBYTE *name,float x)		/* emulate sprintf() from a float %f */
 {
 LONG high,low,n,size;
-UBYTE name[40];
 
 	high=(LONG)(x);
 	x=(x-(float)high);
@@ -173,10 +158,28 @@ UBYTE name[40];
 	size=Libstrlen(name)-1;
 	NLOOP(size)
 		if(name[n]==' ') name[n]='0';
+
+	name[size+1]=' ';
+	name[size+2]=0;
+}
+/*==========================================================================*/
+void pf(float x)				/* emulate printf() from a float %f */
+{
+UBYTE name[40];
+
+	spf(name,x);
 	Libprintf((void*)name);
 }
 /*==========================================================================*/
-void ph(ULONG x)		/* emulate printf() as hexa */
+void fpf(BPTR file,float x)		/* emulate fprintf() from a float %f */
+{
+UBYTE name[40];
+
+	spf(name,x);
+	Write(file,name,Libstrlen(name));
+}
+/*==========================================================================*/
+void ph(ULONG x)				/* emulate printf() as hexa */
 {
 LONG high,low;
 WORD n;
@@ -394,18 +397,18 @@ NLOOP(Bnb)
 		ng.ng_VisualInfo	= vi;
 		ng.ng_LeftEdge	= x;
 		ng.ng_TopEdge	= y;
-		ng.ng_Width		= 24;
+		ng.ng_Width 	   = 24;
 		ng.ng_Height	= 12;
 		ng.ng_GadgetText	= B[n].name;
 		ng.ng_GadgetID	= n;
-		ng.ng_Flags		= 0;
+		ng.ng_Flags 	   = 0;
 
 	if(B[n].CycleNb!=0)
 		{
-		ng.ng_Width		= 24+120;
+		ng.ng_Width 	   = 24+120;
 		ng.ng_LeftEdge	=  x-120;
-		value			= B[n].ON;
-		gad = CreateGadget(CYCLE_KIND	  , gad, &ng, GTCY_Labels,(ULONG)B[n].cyclenames,GTCY_Active,value, TAG_DONE);
+		value 		   = B[n].ON;
+		gad = CreateGadget(CYCLE_KIND 	 , gad, &ng, GTCY_Labels,(ULONG)B[n].cyclenames,GTCY_Active,value, TAG_DONE);
 		}
 	else
 		{
@@ -462,7 +465,7 @@ void WAZP3D_Function(UBYTE n)
 		Libprintf("%s\n" ,Wazp3D->FunctionName[n]);
 	if(Wazp3D->DebugAsJSR.ON)
 		{
-		Libprintf("					JSR			-$");
+		Libprintf("					JSR 		   -$");
 		ph(30+6*n);
 		Libprintf("(A6)\n");
 		}
@@ -561,18 +564,8 @@ WORD Ntexture;
 	return;
 #endif
 }
-/*=============================================================*/
-void SetDrawStates(struct WAZP3D_context *WC)
-{
-void *ST=NULL;
-/* calling SOFT3D in an hook avoid GCC's inlining that cause error "fixed or forbidden register was spilled" */
-
-	if(WC->WT!=NULL)
-		ST=WC->WT->ST;
-	SOFT3D_SetDrawStates(WC->SC,ST,WC->ZMode,WC->BlendMode,WC->TexEnvMode,WC->UseGouraud,WC->UseFog,WC->PerspMode);
-}
 /*==========================================================================*/
-void SetBitmap(struct WAZP3D_context *WC)
+void SOFT3D_SetBitmap_SetClippingStack(struct WAZP3D_context *WC)
 {
 /* calling SOFT3D in an hook avoid GCC's inlining that cause error "fixed or forbidden register was spilled" */
 
@@ -584,105 +577,149 @@ void SetTexStates(W3D_Context* context,W3D_Texture *texture)
 {
 struct WAZP3D_context *WC=context->driver;
 struct WAZP3D_texture *WT=NULL;
-BOOL UseBlending;
-ULONG TexEnv;
-UBYTE EnvRGBA[4];
 
-SREM(SetTexStates)
+REM(SetTexStates)
+	if(!Wazp3D->UseStateTracker.ON)
+		WC->state.Changed=TRUE;		/* then force state changing */
+
+	if(Wazp3D->DebugVar.ON)
+		{
+		Libprintf(" WC->state:Changed%ld UseTex%ld ST%ld ZMode%ld TexEnvMode%ld BlendMode%ld UseGouraud%ld UseFog%ld\n",WC->state.Changed,WC->state.UseTex,WC->state.ST,WC->state.ZMode,WC->state.TexEnvMode,WC->state.BlendMode,WC->state.UseGouraud,WC->state.UseFog);
+		Libprintf(" texture %ld was %ld \n",texture,WC->texture);
+		}
+
+	if(!StateON(W3D_TEXMAPPING))		/* same  as BindTexture(NULL); */
+		texture=NULL;
+
+	if(WC->texture!=texture)
+	{
+/* define texture */
+	REM( changing texture...)
 	if(texture==NULL)
 		{
-SREM(TEXTURE_NULL)
+		WC->state.UseTex=FALSE;
 		WT=NULL;
 		WC->WT=WT;
+		WC->state.ST=NULL;
 		WC->uresize=1.0;
 		WC->vresize=1.0;
-		TexEnv=0;			/* no texture = no texture-env-mode  */
+		WC->state.TexEnvMode=0;				/* default = no tex ==> no TexEnv effect */
 		}
 	else
 		{
-SREM(TEXTURE_NOT_NULL)
+		WC->state.UseTex= (StateON(W3D_TEXMAPPING));
 		WT=texture->driver;
 		WC->WT=WT;
-		WC->uresize=256.0/(float)(WT->large);
-		WC->vresize=256.0/(float)(WT->high );
-
-		TexEnv=context->globaltexenvmode;	  /* global texture-env-mode  */
-		ColorToRGBA(EnvRGBA,context->globaltexenvcolor[0],context->globaltexenvcolor[1],context->globaltexenvcolor[2],context->globaltexenvcolor[3]); /* global texture-env-color */
-
-		if(!StateON(W3D_GLOBALTEXENV))
-		{
-		TexEnv=WT->TexEnv;			/* texture's texture-env-mode  */
-		COPYRGBA(EnvRGBA,WT->EnvRGBA);	/* texture's texture-env-color */
-		}
-
+		WC->state.ST=WT->ST;
+		WC->uresize=1.0/(float)(WT->large);
+		WC->vresize=1.0/(float)(WT->high );
+		WC->state.TexEnvMode=WT->TexEnv;				/* texture's texture-env-mode  */
+		COPYRGBA(WC->state.EnvRGBA,WT->EnvRGBA);			/* texture's texture-env-color */
+		if(StateON(W3D_GLOBALTEXENV))
+			{
+			WC->state.TexEnvMode=context->globaltexenvmode;		/* global texture-env-mode  */
+			COPYRGBA(WC->state.EnvRGBA,WC->EnvRGBA);			/* global texture-env-color */
+			}
 		PrintWT(WT);
 		}
-
-	if(Wazp3D->DebugTexNumber.ON)			/* disable multi-pass texturing = more readable*/
-	{
-	if(WC->ZMode==W3D_Z_GEQUAL)	WC->ZMode=W3D_Z_GREATER;
-	if(WC->ZMode==W3D_Z_LEQUAL)	WC->ZMode=W3D_Z_LESS;
-	if(WC->ZMode==W3D_Z_EQUAL)	WC->ZMode=W3D_Z_NEVER;
+	WC->texture=texture;	
+	WC->state.Changed=TRUE;				/* because texture has changed */
 	}
 
-	WC->ZMode	= W3D_Z_ALWAYS-1;		/* default no z buffer = no test ==> always draw & dont update a zbuffer */
+/* check state */
+	if(Wazp3D->PrefsIsOpened)
+		WC->state.Changed=TRUE;			/* because user may change something */
+
+	if(WC->state.Changed==FALSE)
+		{REM(  WC->state not changed); return;}
+	else
+		{REM(  Adjusting WC->state ....);}
+
+	if(texture!=NULL)
+		WT=texture->driver;			/* needed for WT->BlendMode,WT->ChromaTestMode etc... */
+
+/* define Zmode */
+	if(Wazp3D->DebugTexNumber.ON)			/* disable multi-pass texturing = more readable*/
+	{
+	if(WC->ZCompareMode==W3D_Z_GEQUAL)	WC->ZCompareMode=W3D_Z_GREATER;
+	if(WC->ZCompareMode==W3D_Z_LEQUAL)	WC->ZCompareMode=W3D_Z_LESS;
+	if(WC->ZCompareMode==W3D_Z_EQUAL)	WC->ZCompareMode=W3D_Z_NEVER;
+	}
+
+	WC->state.ZMode=ZMODE(0,W3D_Z_ALWAYS);		/* default no z buffer = no test ==> always draw & dont update a zbuffer */
 	if(context->zbufferalloc)
 	if(StateON(W3D_ZBUFFER))
-		WC->ZMode   =8*(StateON(W3D_ZBUFFERUPDATE)) + (WC->ZCompareMode - 1); /* ZCompareMode is from 1 to 8 */
+		WC->state.ZMode   =ZMODE(StateON(W3D_ZBUFFERUPDATE),WC->ZCompareMode); 
 
-	WC->UseGouraud	= (StateON(W3D_GOURAUD));
-	UseBlending		= (StateON(W3D_BLENDING));
-	WC->UseTex	  = (StateON(W3D_TEXMAPPING)) et (texture!=NULL);
-	WC->UseFog	  = (StateON(W3D_FOGGING)) et (WC->FogMode!=0);
+/* define UseGouraud UseTex UseFog */
+	WC->state.UseTex		= (StateON(W3D_TEXMAPPING)) et (texture!=NULL);
+	WC->state.UseGouraud	= (StateON(W3D_GOURAUD));
+	WC->state.UseFog		= (StateON(W3D_FOGGING)) et (WC->state.FogMode!=0) et (Wazp3D->UseFog.ON==TRUE);
+	if(!WC->state.UseTex)
+		WC->state.TexEnvMode=0;				/* no tex ==> no TexEnv effect */
 
-/* step 1: define the TexEnvMode  */
-	WC->TexEnvMode=0;				/* default = no tex ==> no TexEnv effect */
-	if(WC->UseTex)
-		{
-		if(Wazp3D->TexMode.ON!=1)		/* If  dont use coloring for lighting*/
-			TexEnv=W3D_REPLACE;		/* then default to W3D_REPLACE  : simply R-eplace the color with tex = copy tex */
-		if(Wazp3D->TexMode.ON==0)		/* If  texture but no coloring then gouraud is useless */
-			WC->UseGouraud=FALSE;
-		WC->TexEnvMode=TexEnv;
-		}
+/* define PerspMode */
+		WC->state.PerspMode=Wazp3D->PerspMode.ON;		/* default: do perspective for edges only */
+	if(!StateON(W3D_PERSPECTIVE))					/* if perspective not enabled in Warp3D */
+		WC->state.PerspMode=0;
+VAR(WC->state.BlendMode)
+/* define BlendMode */
+	WC->state.BlendMode=BLENDREPLACE;				/* default : simply write the color (even if color=tex+color) */
+	if(Wazp3D->TexMode.ON!=4)					/* If not set to "No blending" */
+	if(StateON(W3D_BLENDING))
+		WC->state.BlendMode=(WC->SrcFunc*16 + WC->DstFunc);
 
-/* step 2: define BlendMode */
-	WC->BlendMode=BLENDREPLACE;				/* default : simply write the color (even if color=tex+color) */
+VAR(WC->DstFunc)
+VAR(WC->SrcFunc)
+VAR(WC->state.BlendMode)
 
-	if(Wazp3D->TexMode.ON!=4)				/* If not set to "No blending" */
-	if(UseBlending)
-		WC->BlendMode=(WC->SrcFunc*16 + WC->DstFunc);
 
-	if(WC->UseTex)
-	if(WC->BlendMode==BLENDALPHA)				/* if want the classic alpha blending */
-	if(WT->BlendMode!=BLENDREPLACE)
-		{
-		SREM(BLENDALPHA then use WT->BlendMode)
-		WC->BlendMode=WT->BlendMode;			/* then use best BlendMode for THIS tex (BLENDNOALPHA or BLENDALPHA or BLENDFASTALPHA) */
-		}
-
-	if(WC->TexEnvMode==W3D_REPLACE)			/* if tex and no coloring function */
-	if(WC->BlendMode ==BLENDREPLACE)			/* and write flat */
+/* specials BlendMode */
+	if(WC->state.UseTex)
 	if(Wazp3D->QuakeMatrixPatch.ON)
+	if(WC->state.BlendMode ==BLENDREPLACE)			/* if write flat */
+	if(WT->ChromaTestMode > W3D_CHROMATEST_NONE)		/* if chroma (but wipeout do the bad test W3D_CHROMATEST_EXCLUSIVE) */
+	{
+/* patch: v51 for WipeOut2097 that use the chroma test for the shadow and on-screen display */
+		SREM(Wipeout chroma )
+		WC->state.BlendMode=BLENDCHROMA;			 /* v51: fast simple chromatest : color not black */
+	}
+	else									/* if no chroma */
+	{
+/* patch: for Quake use current tex BlendMode (BLENDNOALPHA or BLENDALPHA or BLENDFASTALPHA) */
+	if(WC->state.TexEnvMode==W3D_REPLACE)			/* if tex and no coloring function */
 		{
 		SREM(Quake use own BlendMode )
-		WC->BlendMode=WT->BlendMode;	/* then use current tex BlendMode (BLENDNOALPHA or BLENDALPHA or BLENDFASTALPHA) */
+		WC->state.BlendMode=WT->BlendMode;	
+		}
+	}
+
+/* patch: v51 for FPSE that use W3D_SetAlphaMode() with the test Alpha > 0.5 */
+	if(StateON(W3D_ALPHATEST))
+	if(WC->AlphaMode==W3D_A_GREATER)
+	if(WC->AlphaRef<=128)
+	if(WC->state.BlendMode==BLENDREPLACE)
+		{
+		SREM(FPSE use simple alpha )
+		WC->state.BlendMode=BLENDFASTALPHA;
 		}
 
-/* step 3: define PerspMode */
-		WC->PerspMode=Wazp3D->PerspMode.ON;	/* default: do perspective for edges only */
-	if(!StateON(W3D_PERSPECTIVE))			/* if perspective not enabled in Warp3D */
-		WC->PerspMode=0;
-		VAR(WC->PerspMode)
+/* change some states if user want an hacked TexMode */
+	if(WC->state.UseTex)
+	{
+		if(Wazp3D->TexMode.ON==0)				/* If  texture but no coloring then gouraud is useless */
+			WC->state.UseGouraud=FALSE;
+		if(Wazp3D->TexMode.ON!=1)				/* If  dont use coloring for lighting*/
+			WC->state.TexEnvMode=W3D_REPLACE;		/* then default to W3D_REPLACE  : simply R-eplace the color with tex = copy tex */
+		if(Wazp3D->TexMode.ON==2)
+			{WC->state.TexEnvMode=0;	WC->state.BlendMode=BLENDREPLACE; WC->state.UseFog=FALSE;	WC->state.UseGouraud=TRUE; }
+		if(Wazp3D->TexMode.ON==3)
+			{WC->state.TexEnvMode=0;	WC->state.BlendMode=BLENDREPLACE; WC->state.UseFog=FALSE;	WC->state.UseGouraud=FALSE;}
+	}
+	if(Wazp3D->DebugVar.ON)
+		Libprintf(" WC->state:Changed%ld UseTex%ld ST%ld ZMode%ld TexEnvMode%ld BlendMode%ld UseGouraud%ld UseFog%ld\n",WC->state.Changed,WC->state.UseTex,WC->state.ST,WC->state.ZMode,WC->state.TexEnvMode,WC->state.BlendMode,WC->state.UseGouraud,WC->state.UseFog);
 
-#ifdef WAZP3DDEBUG
-	if(Wazp3D->DebugVar.ON) Libprintf(" WC: ZMode%ld TexEnvMode%ld BlendMode%ld UseFog%ld UseTex%ld Blended%ld UseGouraud%ld\n",(ULONG)WC->ZMode,(ULONG)WC->TexEnvMode,(ULONG)WC->BlendMode,(ULONG)WC->UseFog,(ULONG)WC->UseTex,(ULONG)UseBlending,(ULONG)WC->UseGouraud);
-#endif
-
-	if(WC->TexEnvMode==W3D_BLEND)				/* dont call soft3d if not necessary */
-		SOFT3D_SetEnvColor(WC->SC,EnvRGBA);
-/* SOFT3D: change states */
-	WC->SetDrawStatesFunction(WC);
+	SOFT3D_SetDrawState(WC->SC,&WC->state);
 }
 #ifdef WAZP3DDEBUG
 /*=================================================================*/
@@ -907,7 +944,7 @@ ULONG formats;
 	if(Wazp3D->Renderer.ON==0)		/* use Soft to Image */
 		formats=HIGHCOLORFORMATS;
 	if(Wazp3D->Renderer.ON==1)		/* use Soft to bitmap */
-		formats=ALLCOLORFORMATS; 	/* v46: now support 8/15/16/24/32 bits */
+		formats=ALLCOLORFORMATS;	 /* v46: now support 8/15/16/24/32 bits */
 	if(Wazp3D->Renderer.ON==2)		/* use Hard */
 		formats=W3D_FMT_B8G8R8A8;
 	if(Wazp3D->Renderer.ON==3)		/* use Hard(Overlay)*/
@@ -1038,7 +1075,7 @@ WORD Bnb,n,x,large;
 
 	Libstrcpy(Wazp3D->HardwareLie.name,"+HardwareDriver Lie");
 	Libstrcpy(Wazp3D->TexFmtLie.name,"+TexFmt Lie");
-	Libstrcpy(Wazp3D->HackTexs.name,"+Hack RGB/RGBA/ARGB texs");
+	Libstrcpy(Wazp3D->HackTexs.name,"+Hack Texs|No (safe)|RGBA (fast)|RGBA/RGB|RGBA/RGB/ARGB");
 	Libstrcpy(Wazp3D->UseRatioAlpha.name,"+Use RatioAlpha(20%)");
 	Libstrcpy(Wazp3D->UseAlphaMinMax.name,"+Use AlphaMin&Max");
 	Libstrcpy(Wazp3D->OnlyTrueColor.name,"+Only TrueColor 24&32");
@@ -1049,7 +1086,7 @@ WORD Bnb,n,x,large;
 #else
 
 #ifdef __amigaos4__
-	Libstrcpy(Wazp3D->Renderer.name,"+Renderer|SoftPPC to Image|SoftPPC to bitmap");
+	Libstrcpy(Wazp3D->Renderer.name,"+Renderer|SoftPPC to Image|SoftPPC to bitmap|Compositing2D");
 #else
 	Libstrcpy(Wazp3D->Renderer.name,"+Renderer|Soft68k to Image|Soft68k to bitmap");
 #endif
@@ -1063,7 +1100,7 @@ WORD Bnb,n,x,large;
 
 	Libstrcpy(Wazp3D->PolyMode.name,"PolyHack|No (normal)|Hack:up to 5|More:up to 7");
 	Libstrcpy(Wazp3D->PerspMode.name,"Perspective|No (fast)  |Edges only|Simulated");
-	Libstrcpy(Wazp3D->TexMode.name,"Texture|No Coloring|GL Coloring|Hacked: Gouraud|Hacked: Flat|No blending ");
+	Libstrcpy(Wazp3D->TexMode.name,"Texture|No Coloring|GL Coloring|Hacked: Gouraud|Hacked: Flat|No blending");
 
 	Libstrcpy(Wazp3D->UseFog.name,"Use Fog");
 	Libstrcpy(Wazp3D->UseColorHack.name,"Use BGcolor Hack");
@@ -1108,8 +1145,7 @@ WORD Bnb,n,x,large;
 	Libstrcpy(Wazp3D->DebugSepiaImage.name,"Debug Sepia Image");
 	Libstrcpy(Wazp3D->DebugClipper.name,"Debug Clipper");
 	Libstrcpy(Wazp3D->DumpTextures.name,"Dump Textures");
-	Libstrcpy(Wazp3D->DumpObject.name,"Dump Object");
-	Libstrcpy(Wazp3D->ResizeDumpedObject.name,"Resize Dumped Object");
+	Libstrcpy(Wazp3D->DumpObject.name,"Dump .OBJ(scaled)");
 	Libstrcpy(Wazp3D->DebugMemList.name,"Debug MemList");
 	Libstrcpy(Wazp3D->DebugMemUsage.name,"Debug MemUsage");
 
@@ -1131,7 +1167,7 @@ WORD Bnb,n,x,large;
 /* default values for checkbox-gadgets */
 	Wazp3D->HardwareLie.ON=TRUE;
 	Wazp3D->TexFmtLie.ON=TRUE;
-	Wazp3D->HackTexs.ON=TRUE;
+	Wazp3D->HackTexs.ON=3;		/* reuse RGBA/RGB/ARGB tex data*/
 	Wazp3D->UseColorHack.ON=TRUE;
 	Wazp3D->UseClearDrawRegion.ON=TRUE;
 	Wazp3D->UseClearImage.ON=TRUE;
@@ -1140,7 +1176,7 @@ WORD Bnb,n,x,large;
 	Wazp3D->UseAlphaMinMax.ON=TRUE;
 	Wazp3D->UseStateTracker.ON=TRUE;
 	Wazp3D->UseDLL=FALSE;
-	Wazp3D->IndirectMode.ON=TRUE;		/* default = force to (faster) indirect mode */	
+	Wazp3D->IndirectMode.ON=TRUE;		/* default = force to (faster) indirect mode */
 
 /* default values for cycle-gadgets */
 	Wazp3D->Renderer.ON=1;		/* use Soft to bitmap */
@@ -1156,7 +1192,7 @@ WORD Bnb,n,x,large;
 #ifdef __amigaos4__
 	Wazp3D->TexMode.ON=1;			/* we assume AmigaOS4's cpu is fast enough to enable nice features */
 	Wazp3D->PerspMode.ON=1;			/* but sam440 is too slow to emulate perspective... */
-	Wazp3D->IndirectMode.ON=FALSE;	/* direct mode only on OS4 */	
+	Wazp3D->IndirectMode.ON=FALSE;	/* direct mode only on OS4 */
 #endif
 
 	Wazp3D->smode=(W3D_ScreenMode *)&Wazp3D->smodelist;
@@ -1200,6 +1236,11 @@ WORD n;
 	if(Wazp3D->DebugAdresses.ON)
 		 PrintAllFunctionsAdresses();
 #endif
+}
+/*==================================================================================*/
+void WAZP3D_Expunge()
+{
+	SREM(WAZP3D_Expunge)
 	CloseAmigaLibraries();
 }
 /*==================================================================================*/
@@ -1230,6 +1271,10 @@ ULONG bpp2;
 	if(format==W3D_R8G8B8)	bpp2=24/8;
 	if(format==W3D_R5G6B5)	bpp2=24/8;
 	if(format==W3D_L8)	bpp2=24/8;
+
+	if(Wazp3D->HackTexs.ON==1)		/* only reuse RGBA tex data*/
+		bpp2=32/8;
+
 	return(bpp2);
 }
 /*==========================================================================*/
@@ -1281,12 +1326,12 @@ struct pixels9 R;
 	if (large>MAXSCREEN) return;
 
 	linedone=AliasedLines;
-	line	  =AliasedLines+py;
+	line 	 =AliasedLines+py;
 
 	YLOOP(high)
 	{
 	linedone=AliasedLines;
-	line	  =AliasedLines+py;
+	line 	 =AliasedLines+py;
 	if(y&1)
 		SWAP(line,linedone)
 
@@ -1399,6 +1444,7 @@ if(format==W3D_A1R5G5B5)
 	RGBA   +=offset2;
 	}
 
+if(Wazp3D->HackTexs.ON!=1)		/* only reuse RGBA tex data*/
 if(format==W3D_R5G6B5)
 	YLOOP(high)
 	{
@@ -1417,6 +1463,28 @@ if(format==W3D_R5G6B5)
 	RGBA16+=offset1;
 	RGBA   +=offset2;
 	}
+
+if(Wazp3D->HackTexs.ON==1)		/* only reuse RGBA tex data*/
+if(format==W3D_R5G6B5)
+	YLOOP(high)
+	{
+		XLOOP(large)
+		{
+		RGBA16=color8[0]*256+color8[1];
+		r=(RGBA16 >> 11) << (8-5);
+		g=(RGBA16 >>  5) << (8-6);
+		b=(RGBA16 >>  0) << (8-5);
+		RGBA[0]=r;
+		RGBA[1]=g;
+		RGBA[2]=b;
+		RGBA[3]=255;
+		RGBA+=4;
+		color8+=2;
+		}
+	RGBA16+=offset1;
+	RGBA   +=offset2;
+	}
+
 
 if(format==W3D_A4R4G4B4)
 	YLOOP(high)
@@ -1439,6 +1507,7 @@ if(format==W3D_A4R4G4B4)
 	RGBA   +=offset2;
 	}
 
+if(Wazp3D->HackTexs.ON!=1)		/* only reuse RGBA tex data*/
 if(format==W3D_R8G8B8)
 	YLOOP(high)
 	{
@@ -1453,6 +1522,23 @@ if(format==W3D_R8G8B8)
 	color8+=offset1;
 	RGBA  +=offset2;
 	}
+if(Wazp3D->HackTexs.ON==1)		/* only reuse RGBA tex data*/
+if(format==W3D_R8G8B8)
+	YLOOP(high)
+	{
+		XLOOP(large)
+		{
+		RGBA[0]=color8[0];
+		RGBA[1]=color8[1];
+		RGBA[2]=color8[2];
+		RGBA[3]=255;
+		RGBA+=4;
+		color8+=3;
+		}
+	color8+=offset1;
+	RGBA  +=offset2;
+	}
+
 
 if(format==W3D_A8R8G8B8)
 	YLOOP(high)
@@ -1500,6 +1586,7 @@ if(format==W3D_A8)
 	RGBA  +=offset2;
 	}
 
+if(Wazp3D->HackTexs.ON!=1)		/* only reuse RGBA tex data*/
 if(format==W3D_L8)
 	YLOOP(high)
 	{
@@ -1507,6 +1594,20 @@ if(format==W3D_L8)
 		{
 		RGBA[0]=RGBA[1]=RGBA[2]=color8[0];
 		RGBA+=3;
+		color8+=1;
+		}
+	color8+=offset1;
+	RGBA  +=offset2;
+	}
+if(Wazp3D->HackTexs.ON==1)		/* only reuse RGBA tex data*/
+if(format==W3D_L8)
+	YLOOP(high)
+	{
+		XLOOP(large)
+		{
+		RGBA[0]=RGBA[1]=RGBA[2]=color8[0];
+		RGBA[3]=255;
+		RGBA+=4;
 		color8+=1;
 		}
 	color8+=offset1;
@@ -1660,18 +1761,18 @@ void GetPoint(W3D_Context *context,ULONG i)
 {
 /* MiniGL bug = it dont use W3D_VertexPointer & W3D_TexCoordPointer & W3D_ColorPointer  */
 struct WAZP3D_context *WC=context->driver;
-UBYTE *V		=context->VertexPointer;
+UBYTE *V 	   =context->VertexPointer;
 ULONG  Vformat	=context->VPMode;
 ULONG  Vstride	=context->VPStride;
 
-WORD   unit		=0;
-UBYTE *UV		=context->TexCoordPointer[unit];
+WORD   unit 	   =0;
+UBYTE *UV 	   =context->TexCoordPointer[unit];
 ULONG  UVformat	=context->TPFlags[unit];
 ULONG  UVstride	=context->TPStride[unit];
 ULONG  UVoffsetv	=context->TPVOffs[unit];
 ULONG  UVoffsetw	=context->TPWOffs[unit];
 
-UBYTE *C		=context->ColorPointer;
+UBYTE *C 	   =context->ColorPointer;
 ULONG  Cformat	=context->CPMode;
 ULONG  Cstride	=context->CPStride;
 
@@ -1690,7 +1791,7 @@ struct point3D *P;
 	if(MAXPRIM<WC->Pnb) return;
 	P=&(WC->P[WC->Pnb]);
 	P->x=P->y=P->z=P->u=P->v=0.0;
-	COPYRGBA(P->RGBA,WC->CurrentRGBA);	/* default: if a point dont have a color value then it use CurrentColor */
+	COPYRGBA(P->RGBA,WC->state.CurrentRGBA);	/* default: if a point dont have a color value then it use CurrentColor */
 	WC->Pnb++;
 
 /* recover XYZ values */
@@ -1727,7 +1828,7 @@ struct point3D *P;
 
 
 /* recover UV values */
-	if(V!=NULL)
+	if(UV!=NULL)
 	{
 	pt=&(UV[i*UVstride]);
 	u=(float *)pt;
@@ -1736,8 +1837,8 @@ struct point3D *P;
 
 	if(UVformat==W3D_TEXCOORD_NORMALIZED)
 	{
-	P->u=u[0] * 256.0;
-	P->v=v[0] * 256.0;
+	P->u=u[0] ;
+	P->v=v[0] ;
 	P->w=w[0] ;
 	}
 	else
@@ -1801,45 +1902,164 @@ SREM(DrawText)
 	SetAPen(rp, 1);
 }
 /*==========================================================================*/
+void DebugTextureOnScreen(W3D_Context *context)
+{
+/* v51: use mouse to grab/show texture parameters */
+#ifdef WAZP3DDEBUG
+struct WAZP3D_context *WC=context->driver;
+UBYTE name[256];
+UBYTE *ARGB;
+UBYTE RGBA[4];
+ULONG argb32;
+ULONG TexEnvMode,Tnum,BlendMode,x,y;
+ULONG SrcFunc,DstFunc;
+UBYTE env[5][256];
+UBYTE func[16][256];
+struct WAZP3D_texture *WT;
+struct point3D QuadP[4];
+struct state3D flatstate;
+
+
+		x=WC->window->MouseX;
+		y=WC->window->MouseY;
+		argb32=ReadRGBPixel(&WC->rastport,WC->window->MouseX,WC->window->MouseY);
+		ARGB=(UBYTE *)&argb32;
+		RGBA[0]=ARGB[1]; RGBA[1]=ARGB[2]; RGBA[2]=ARGB[3]; RGBA[3]=ARGB[1];
+		Tnum=RGBA[0]; TexEnvMode=RGBA[1]; BlendMode=RGBA[2];
+
+		WT=WC->firstWT;
+		while(WT!=NULL)
+		 {
+			if(WT->Tnum==Tnum) break;
+			WT=WT->nextWT;
+		}
+
+		WC->DebuggedWT=WT;
+		if(WT==NULL)
+			return;
+
+		strcpy(env[0],"NONE");
+		strcpy(env[W3D_REPLACE],"REPLACE");
+		strcpy(env[W3D_DECAL],"DECAL");
+		strcpy(env[W3D_MODULATE],"MODULATE");
+		strcpy(env[W3D_BLEND],"BLEND");
+
+		strcpy(func[0],"NONE");
+		strcpy(func[W3D_ZERO],"ZERO");
+		strcpy(func[W3D_ONE],"ONE");
+		strcpy(func[W3D_SRC_COLOR],"SRC_COLOR");
+		strcpy(func[W3D_DST_COLOR],"DST_COLOR");
+		strcpy(func[W3D_ONE_MINUS_SRC_COLOR],"ONE_MINUS_SRC_COLOR");
+		strcpy(func[W3D_ONE_MINUS_DST_COLOR],"ONE_MINUS_DST_COLOR");
+		strcpy(func[W3D_SRC_ALPHA],"SRC_ALPHA");
+		strcpy(func[W3D_ONE_MINUS_SRC_ALPHA],"ONE_MINUS_SRC_ALPHA");
+		strcpy(func[W3D_DST_ALPHA],"DST_ALPHA");
+		strcpy(func[W3D_ONE_MINUS_DST_ALPHA],"ONE_MINUS_DST_ALPHA");
+		strcpy(func[W3D_SRC_ALPHA_SATURATE],"SRC_ALPHA_SATURATE");
+		strcpy(func[W3D_CONSTANT_COLOR],"CONSTANT_COLOR");
+		strcpy(func[W3D_ONE_MINUS_CONSTANT_COLOR],"ONE_MINUS_CONSTANT_COLOR");
+		strcpy(func[W3D_CONSTANT_ALPHA],"CONSTANT_ALPHA");
+		strcpy(func[W3D_ONE_MINUS_CONSTANT_ALPHA],"ONE_MINUS_CONSTANT_ALPHA");
+
+
+		if(TexEnvMode>W3D_BLEND) TexEnvMode=0;
+		SrcFunc=BlendMode/16; DstFunc=BlendMode%16;
+		Libsprintf((char*)name,(char*)"Pos(%ld %ld) Tnum %ld TexEnvMode %ld [%s]",x,y,Tnum,TexEnvMode,env[TexEnvMode]);
+		DrawText(context,4,20,name);
+		Libsprintf((char*)name,(char*)"BlendMode %ld [%s + %s]",BlendMode,func[SrcFunc],func[DstFunc]);
+		if(BlendMode==BLENDFASTALPHA)
+			Libsprintf((char*)name,(char*)"BlendMode %ld [BLENDFASTALPHA]",BlendMode);
+		if(BlendMode==BLENDCHROMA)
+			Libsprintf((char*)name,(char*)"BlendMode %ld [BLENDCHROMA]",BlendMode);
+		DrawText(context,4,30,name);
+
+		Libsprintf((char*)name,(char*)"Chroma On%ld Mode%ld Min[%ld %ld %ld %ld] Max[%ld %ld %ld %ld]",StateON(W3D_CHROMATEST),WT->ChromaTestMode,WT->ChromaTestMinRGBA[0],WT->ChromaTestMinRGBA[1],WT->ChromaTestMinRGBA[2],WT->ChromaTestMinRGBA[3],WT->ChromaTestMaxRGBA[0],WT->ChromaTestMaxRGBA[1],WT->ChromaTestMaxRGBA[2],WT->ChromaTestMaxRGBA[3]);
+		DrawText(context,4,40,name);
+
+		Libsprintf((char*)name,(char*)"Alpha On%ld Mode%ld Ref[%ld]",StateON(W3D_ALPHATEST),WC->AlphaMode,WC->AlphaRef);
+		DrawText(context,4,50,name);
+
+		QuadP[0].x=10;		QuadP[0].y=60;	QuadP[0].z=0; QuadP[0].w=0; QuadP[0].u=0;   QuadP[0].v=0;
+		QuadP[1].x=10+128;	QuadP[1].y=60;	QuadP[1].z=0; QuadP[1].w=0; QuadP[1].u=255; QuadP[1].v=0;
+		QuadP[2].x=10+128;	QuadP[2].y=60+128;QuadP[2].z=0; QuadP[2].w=0; QuadP[2].u=255; QuadP[2].v=255;
+		QuadP[3].x=10;		 QuadP[3].y=60+128;QuadP[3].z=0; QuadP[3].w=0; QuadP[3].u=0;   QuadP[3].v=255;
+		QuadP[0].RGBA[0]=QuadP[1].RGBA[0]=QuadP[2].RGBA[0]=QuadP[3].RGBA[0]=255;
+		QuadP[0].RGBA[1]=QuadP[1].RGBA[1]=QuadP[2].RGBA[1]=QuadP[3].RGBA[1]=255;
+		QuadP[0].RGBA[2]=QuadP[1].RGBA[2]=QuadP[2].RGBA[2]=QuadP[3].RGBA[2]=255;
+		QuadP[0].RGBA[3]=QuadP[1].RGBA[3]=QuadP[2].RGBA[3]=QuadP[3].RGBA[3]=255;
+
+		Wazp3D->DebugTexColor.ON=FALSE;
+
+		flatstate.ZMode=ZMODE(0,W3D_Z_ALWAYS);
+		flatstate.BlendMode=BLENDREPLACE;
+		flatstate.TexEnvMode=W3D_REPLACE;
+		flatstate.PerspMode=0;
+		flatstate.CullingMode=W3D_NOW;
+		flatstate.UseGouraud=FALSE;
+		flatstate.UseTex=TRUE;
+		flatstate.UseFog=FALSE;
+		flatstate.ST=WT->ST;
+		flatstate.Changed=TRUE;
+
+		SOFT3D_SetDrawState(WC->SC,&flatstate);
+		SOFT3D_DrawPrimitive(WC->SC,QuadP,4,W3D_PRIMITIVE_POLYGON);
+		SOFT3D_Flush(WC->SC);
+		Wazp3D->DebugTexColor.ON=TRUE;
+#endif
+}
+/*==========================================================================*/
 void DoUpdate(W3D_Context *context)
 {
 struct WAZP3D_context *WC=context->driver;
 UBYTE name[256];
-ULONG *rgba32;
+UBYTE *ARGB;
+ULONG argb32;
 ULONG MilliTime;
 
 REM(DoUpdate)
+	if(WC->PrimitivesDrawn==0)
+		return;
+
 	if(Wazp3D->Renderer.ON<2)	/* = use soft */
 	if(Wazp3D->UseColorHack.ON)
 		{
-		rgba32=(ULONG *)WC->BackRGBA;
-		rgba32[0]=ReadRGBPixel(&WC->rastport,0,0);
-		SOFT3D_SetBackColor(WC->SC,WC->BackRGBA);
+		argb32=ReadRGBPixel(&WC->rastport,0,0);
+		ARGB=(UBYTE *)&argb32;
+		WC->state.BackRGBA[0]=ARGB[1];
+		WC->state.BackRGBA[1]=ARGB[2];
+		WC->state.BackRGBA[2]=ARGB[3];
+		WC->state.BackRGBA[3]=ARGB[0];
 		}
 
+	WC->PrimitivesDrawn=0;
 	if(!SOFT3D_DoUpdate(WC->SC))
 		return;
 #ifdef WAZP3DDEBUG
 	if(Wazp3D->DebugWazp3D.ON)
-	if(Wazp3D->DumpObject.ON)
-		DumpObject(WC->SC);
+	if(Wazp3D->DumpObject.ON!=0)
+		DumpObject(WC);
+
+	MilliTime=LibMilliTimer();
+	WC->TimePerFrame= MilliTime - WC->LastMilliTime;
+	WC->LastMilliTime=MilliTime;
 
 	if(Wazp3D->DebugWazp3D.ON)
 	if(Wazp3D->DisplayFPS.ON)
 	{
 SREM(DisplayFPS)
-	MilliTime=LibMilliTimer();
-	WC->TimePerFrame= MilliTime - WC->LastMilliTime;
-	WC->LastMilliTime=MilliTime;
 	if(WC->TimePerFrame!=0)
 		WC->Fps=(((ULONG)1000)/WC->TimePerFrame);
 	if(WC->Fps!=0)
 		Libsprintf((char*)name,(char*)"Wazp3D FPS:%ld  ",(ULONG)WC->Fps);
 	else
 		Libsprintf((char*)name,(char*)"Wazp3D %ld ms per frame :-(  ",(ULONG)WC->TimePerFrame);
-
 	DrawText(context,4,10,name);
+	DrawText(context,4,10,name);
+
+	if(Wazp3D->DebugTexColor.ON)
+		DebugTextureOnScreen(context);
 	}
+
 SREM(DoUpdate OK)
 #endif
 }
@@ -1849,22 +2069,13 @@ BOOL OpenSoft3DLib()
 #ifdef SOFT3DLIB
 BOOL DebugState=LibDebug;
 
-	Soft3DBase=OpenLibrary("soft3d.library",48);
+	Soft3DBase=OpenLibrary("soft3d.library",52);
 	if(Soft3DBase == NULL)
-		{LibDebug=TRUE;LibAlert("Cant open LIBS:soft3d.library"); LibDebug=DebugState; return(FALSE);} 
+		{LibDebug=TRUE;LibAlert("Cant open LIBS:soft3d.library"); LibDebug=DebugState; return(FALSE);}
 
 	Libprintf("soft3d.library opened :-) \n");
 #endif
 	return(TRUE);	/* Then soft3d is compiled inside Wazp3D so OpenSoft3DLib is allways TRUE */
-}
-/*==========================================================================*/
-void CloseSoft3DLib()
-{
-#ifdef SOFT3DLIB
-	if(Soft3DBase!=NULL)    
-		{CloseLibrary( ((struct Library *)Soft3DBase) );Soft3DBase=NULL;}
-#endif
-	return;
 }
 /*==========================================================================*/
 W3D_Context	*W3D_CreateContext(ULONG *error, struct TagItem *taglist)
@@ -1880,9 +2091,11 @@ ULONG	envsupmask=W3D_REPLACE | W3D_DECAL | W3D_MODULATE  | W3D_BLEND;	/* v40: fu
 BOOL stateOK=TRUE;
 ULONG noerror;
 
-struct TextAttr attr = { "topaz.font", 8 };		 /* For text like the FPS counter		  */
+struct TextAttr attr = { "topaz.font", 8 };		 /* For text like the FPS counter 		 */
 struct IntuitionBase *ibase;
-struct Window *win;					
+struct Window *win;
+UBYTE WhiteRGBA[4]={255,255,255,255};
+UBYTE BlackRGBA[4]={0,0,0,255};
 
 
 #if defined(__AROS__)
@@ -1912,9 +2125,7 @@ struct Window *win;
 	context=&WC->context;
 
 /* calling SOFT3D in an hook avoid GCC's inlining that cause error "fixed or forbidden register was spilled" */
-/* TODO: change SOFT3D_SetDrawStates & SOFT3D_SetBitmap to avoid those hooks */
-	WC->SetBitmapFunction=(HOOKEDFUNCTION)SetBitmap;
-	WC->SetDrawStatesFunction=(HOOKEDFUNCTION)SetDrawStates;
+	WC->SOFT3D_SetBitmap_SetClippingHook=(HOOKEDFUNCTION)SOFT3D_SetBitmap_SetClippingStack;
 
 	DisableMask=AllStates;
 	if(Wazp3D->HardwareLie.ON)
@@ -1922,6 +2133,7 @@ struct Window *win;
 	else
 		EnableMask=AllStates & (~UnsupportedStates) ;
 
+	WC->DumpStage=0;
 	WC->ModeID=INVALID_ID;
 
 	context->driver=WC;				 /* insert driver specific data here */
@@ -1964,8 +2176,8 @@ struct Window *win;
 	context->fog.fog_color.r	=1.0;
 	context->fog.fog_color.g	=1.0;
 	context->fog.fog_color.b	=1.0;
-	context->fog.fog_start		=MINZ;
-	context->fog.fog_end		=MAXZ;
+	context->fog.fog_start 	   =MINZ;
+	context->fog.fog_end 	   =MAXZ;
 	context->fog.fog_density	=0.1;
 
 	context->envsupmask=envsupmask;	 /* Mask of supported envmodes */
@@ -1978,6 +2190,10 @@ struct Window *win;
 	context->globaltexenvcolor[1]=1.0;
 	context->globaltexenvcolor[2]=1.0;
 	context->globaltexenvcolor[3]=1.0;
+	WC->EnvRGBA[0]=255;
+	WC->EnvRGBA[1]=255;
+	WC->EnvRGBA[2]=255;
+	WC->EnvRGBA[3]=255;
 
 	context->DriverBase=NULL;		/* Library base of the active driver */
 
@@ -2046,16 +2262,16 @@ struct Window *win;
 	VAR(tag)
 	VAR(data)
 
-	if(tag==W3D_CC_MODEID )		WC->ModeID			=data;
+	if(tag==W3D_CC_MODEID )		WC->ModeID 		   =data;
 	if(tag==W3D_CC_BITMAP )		context->drawregion	=(struct BitMap *)data;
-	if(tag==W3D_CC_YOFFSET)		context->yoffset		=data;
+	if(tag==W3D_CC_YOFFSET)		context->yoffset 	   =data;
 	if(tag==W3D_CC_DRIVERTYPE)	context->drivertype	=data;
 	if(tag==W3D_CC_W3DBM)		context->w3dbitmap	=data;	/* flag */
 
 	if(tag==W3D_CC_INDIRECT)		stateOK=SetState(context,W3D_INDIRECT	,data);
 	if(tag==W3D_CC_GLOBALTEXENV )		stateOK=SetState(context,W3D_GLOBALTEXENV	,data);
 	if(tag==W3D_CC_DOUBLEHEIGHT )		stateOK=SetState(context,W3D_DOUBLEHEIGHT	,data);
-	if(tag==W3D_CC_FAST )			stateOK=SetState(context,W3D_FAST		,data);
+	if(tag==W3D_CC_FAST )			stateOK=SetState(context,W3D_FAST 	   ,data);
 
 	if(!stateOK)
 		*error=W3D_UNSUPPORTEDSTATE;
@@ -2096,20 +2312,20 @@ struct Window *win;
 		}
 
 /* For OpenGL: to know the Warp3D's window so the position & size */
-#if !defined(__AROS__) 
+#if !defined(__AROS__)
 	ibase = (struct IntuitionBase*)OpenLibrary("intuition.library",0L);
 #else
 	ibase = (struct IntuitionBase*)IntuitionBase;
 #endif
 	if(ibase)
 	{
-	win=ibase->ActiveWindow; 
+	win=ibase->ActiveWindow;
 	Wazp3D->window=WC->window=win;	/* default: use active window */
 
 	win=win->WScreen->FirstWindow;
 	while(win)
 		{
-		if(win->RPort->BitMap==context->drawregion) 
+		if(win->RPort->BitMap==context->drawregion)
 				Wazp3D->window=WC->window=win;	/* or better use bitmap's window */
 		win=win->NextWindow;
 		}
@@ -2126,9 +2342,14 @@ struct Window *win;
 	VAR(WC->window->Height)
 	}
 
+VAR(sizeof(struct WAZP3D_context))
+VAR(sizeof(struct WAZP3D_texture))
+VAR(sizeof(struct WAZP3D_blendstage))
+VAR(sizeof(struct state3D))
+
 /* SetDrawRegion will also do WC->SC=SOFT3D_Start(Wazp3D); so will define SC*/
 	SetDrawRegion(context,context->drawregion,context->yoffset,NULL);
-	if(WC->SC==NULL) 
+	if(WC->SC==NULL)
 		{FREEPTR(WC); return(NULL);}
 
 /* If Aros cant do LockBitmapTags then we did a fallback to "soft to Image" so we need to set again context->supportedfmt now */
@@ -2147,14 +2368,37 @@ VAR(context->drawregion->pad)
 
 	WC->firstWT=NULL;
 	WC->CallFlushFrame=WC->CallSetDrawRegion=WC->CallClearZBuffer=FALSE;
-	WC->PointSize=1.0;
 	WC->CallSetBlending=FALSE;
-	WC->ZCompareMode=W3D_Z_LESS;
+	WC->ZCompareMode=W3D_Z_ALWAYS;
 	WC->SrcFunc=W3D_SRC_ALPHA;
 	WC->DstFunc=W3D_ONE_MINUS_SRC_ALPHA;		/* Seems to be the OpenGL default */
 	WC->Tnb=0;			/* texture number */
-	WC->DumpStage=0;
-	Wazp3D->UseAntiImage.ON=StateON(W3D_ANTI_FULLSCREEN);
+
+/* Set draw state default values : notex nofog nozbuffer just white color */
+	WC->state.ZMode	=ZMODE(0,W3D_Z_ALWAYS);		/* default no z buffer = no test ==> always draw & dont update a zbuffer */
+	WC->state.BlendMode=BLENDREPLACE;
+	WC->state.UseGouraud=FALSE;
+	WC->state.TexEnvMode=0;
+	WC->state.PerspMode=0;
+	WC->state.CullingMode=W3D_CCW;
+
+	COPYRGBA(WC->state.FogRGBA,WhiteRGBA);		/* default white fog 		*/
+	COPYRGBA(WC->state.CurrentRGBA,WhiteRGBA);	/* default white color 		*/
+	COPYRGBA(WC->state.EnvRGBA,WhiteRGBA);		/* default white env-color 	*/
+	COPYRGBA(WC->state.BackRGBA,BlackRGBA);		/* default black background	*/
+
+	WC->state.PointSize=1;
+	WC->state.LineSize =1;
+
+	WC->state.UseFog=FALSE;
+	WC->state.FogMode=0;
+	WC->state.FogZmin=MINZ;
+	WC->state.FogZmax=MAXZ;
+	WC->state.FogDensity=0.0;
+
+	WC->state.UseTex=FALSE;
+	WC->state.ST=NULL;
+	WC->state.Changed=TRUE;
 
 	if(Wazp3D->IndirectMode.ON)
 		SetState(context,W3D_INDIRECT,TRUE);	/*v50: can force to use (faster) indirect mode */
@@ -2177,7 +2421,7 @@ WORD n=0;
 	tag[n] = tag1;
 	VAR(tag[n])
 	va_start (va, tag1);
-	do	 {
+	do 	{
 		n++;	tag[n]= va_arg(va, ULONG);	VAR(tag[n])
 		if(n&2) if (tag[n] == TAG_DONE) break;
 		}
@@ -2196,7 +2440,6 @@ struct WAZP3D_context *WC=context->driver;
 	W3D_FreeAllTexObj(context);
 
 	SOFT3D_End(WC->SC);
-	CloseSoft3DLib();				/* close soft3d.library & soft3d.dll if they exists */
 	VAR(WC->CallFlushFrame)
 	VAR(WC->CallSetDrawRegion)
 	VAR(WC->CallClearZBuffer)
@@ -2305,6 +2548,7 @@ struct WAZP3D_context *WC=context->driver;
 	if(state==W3D_CULLFACE)
 		W3D_SetFrontFace(context,context->FrontFaceOrder);
 
+	WC->state.Changed=TRUE;
 	WRETURN(W3D_SUCCESS);
 }
 /*==========================================================================*/
@@ -2370,7 +2614,7 @@ struct WAZP3D_context *WC=context->driver;
 	if(!WC->CallFlushFrame)
 	if(!WC->CallSetDrawRegion)
 	if(!WC->CallClearZBuffer)
-		DoUpdate(context);	/* draw the image if the usual update-functions are never called  */
+		DoUpdate(context);	/* patch: for Quake = draw the image if the usual update-functions are never called  */
 
 	context->HWlocked=FALSE;
 }
@@ -2656,7 +2900,7 @@ AROS_UFHA(APTR ,message, A1))
 #ifdef __amigaos4__
 
 BOOL ScreenModeFilterASM(void)			 /* unused */
-{	return(1);  	}
+{	return(1);	  }
 
 #else
 
@@ -2677,7 +2921,7 @@ ULONG size,format,drivertype,ModeID=INVALID_ID;
 #ifndef __AROS__
 struct Library *AslBase;
 #endif
-struct AslIFace*	IAsl	=NULL;	 
+struct AslIFace*	IAsl	=NULL;
 struct ScreenModeRequester *requester;
 struct Hook filter;
 
@@ -2707,10 +2951,10 @@ struct Hook filter;
 	}
 	tag =taglist->ti_Tag  ;	data=taglist->ti_Data ; taglist++;
 	if(tag==W3D_SMR_SIZEFILTER)	Wazp3D->ASLsize	=TRUE;
-	if(tag==W3D_SMR_DRIVER )	driver		=(W3D_Driver *)data;
+	if(tag==W3D_SMR_DRIVER )	driver 	   =(W3D_Driver *)data;
 
-	if(tag==W3D_SMR_DESTFMT)	format		=data;
-	if(tag==W3D_SMR_TYPE)		drivertype		=data;
+	if(tag==W3D_SMR_DESTFMT)	format 	   =data;
+	if(tag==W3D_SMR_TYPE)		drivertype 	   =data;
 
 	if(tag==ASLSM_MinWidth)		Wazp3D->ASLminX	=data;
 	if(tag==ASLSM_MaxWidth)		Wazp3D->ASLmaxX	=data;
@@ -2729,13 +2973,13 @@ struct Hook filter;
 	WTAG(ASLSM_MaxHeight," ")
 	}
 
-#if !defined(__AROS__) 
+#if !defined(__AROS__)
 	if ((AslBase = OpenLibrary("asl.library", 39L)))
 #endif
 	{
 #ifdef __amigaos4__
 	IAsl = (struct AslIFace*)GetInterface((struct Library *)AslBase, "main", 1, NULL);
-#endif 	
+#endif
 	if((requester = (struct ScreenModeRequester *)AllocAslRequestTags(
 	ASL_ScreenModeRequest,
 	ASLSM_TitleText,(ULONG) "Wazp3D Screen Modes ",
@@ -2747,7 +2991,7 @@ struct Hook filter;
 			ModeID =requester->sm_DisplayID;
 		FreeAslRequest(requester);
 		}
-#if !defined(__AROS__) 
+#if !defined(__AROS__)
 	CloseLibrary(AslBase);
 #endif
 	}
@@ -2757,7 +3001,7 @@ struct Hook filter;
 }
 /*==========================================================================*/
 #if PROVIDE_VARARG_FUNCTIONS
-ULONG		 W3D_RequestModeTags(Tag tag1, ...)
+ULONG 		W3D_RequestModeTags(Tag tag1, ...)
 {
 static ULONG tag[100];
 va_list va;
@@ -2767,7 +3011,7 @@ WORD n=0;
 	tag[n] = tag1;
 	VAR(tag[n])
 	va_start (va, tag1);
-	do	 {
+	do 	{
 		n++;	tag[n]= va_arg(va, ULONG);	VAR(tag[n])
 		if(n&2) if (tag[n] == TAG_DONE) break;
 		}
@@ -2792,8 +3036,8 @@ W3D_Driver *driver;
 	if(!IsCyberModeID(ModeID ))
 		driver=NULL;
 
-	format		=GetCyberIDAttr(CYBRIDATTR_PIXFMT,ModeID);
-	bits			=GetCyberIDAttr(CYBRIDATTR_DEPTH ,ModeID);
+	format 	   =GetCyberIDAttr(CYBRIDATTR_PIXFMT,ModeID);
+	bits 		   =GetCyberIDAttr(CYBRIDATTR_DEPTH ,ModeID);
 	bytesperpixel	=GetCyberIDAttr(CYBRIDATTR_BPPIX ,ModeID);
 
 	if(Wazp3D->Renderer.ON==0)		/* use Soft to Image */
@@ -2812,6 +3056,7 @@ W3D_Driver *driver;
 		driver=NULL;
 	}
 
+#if !defined(__amigaos4__)
 	if(Wazp3D->Renderer.ON==2)		/* use Hard */
 	{
 	if(bits!=32)
@@ -2827,6 +3072,7 @@ W3D_Driver *driver;
 	if(bytesperpixel<1)
 		driver=NULL;
 	}
+#endif
 
 	if(Wazp3D->OnlyTrueColor.ON)
 	if(bytesperpixel<3)
@@ -2868,6 +3114,7 @@ ULONG size;
 UWORD bits=0;
 ULONG mask=1;
 ULONG noerror;
+UBYTE TexFlags;
 
 	WAZP3DFUNCTION(22);
 	if(error==NULL) error=&noerror; /* patch: StormMesa send error as NULL cause it don`t want an error code returned */
@@ -2895,7 +3142,7 @@ ULONG noerror;
 						texture->mipmap=TRUE;			 /* TRUE, if mipmaps are supported */
 						texture->mipmapmask=data;		 /* which mipmaps have to be generated */
 				}
-	if(tag==W3D_ATO_MIPMAPPTRS)	MipPt		   =(void *)data;
+	if(tag==W3D_ATO_MIPMAPPTRS)	MipPt 		  =(void *)data;
 	if(tag==W3D_ATO_PALETTE)	texture->palette   =(void *)data;	   /* texture palette for chunky textures */
 
 	WTAG(W3D_ATO_IMAGE,"texture image ")
@@ -2920,7 +3167,7 @@ ULONG noerror;
 
 	if(Wazp3D->TexFmtLie.ON)
 	if(texture->texfmtsrc==W3D_A8R8G8B8)
-	if(Wazp3D->HackTexs.ON)
+	if(Wazp3D->HackTexs.ON==3)		/* reuse ARGB tex data*/
 		{
 /*directly convert original texture data to RGBA (texsource) */
 		ARGBtoRGBA(texture->texsource,texture->texheight*texture->texwidth);
@@ -2930,11 +3177,13 @@ ULONG noerror;
 	texture->matchfmt=FALSE;		/* TRUE, if srcfmt = destfmt */
 	if(texture->texfmtsrc==W3D_R8G8B8)
 		{bits=24;texture->matchfmt=TRUE;}
+
+	if(Wazp3D->HackTexs.ON>=2)		/* if reuse RGB tex data*/
 	if(texture->texfmtsrc==W3D_R8G8B8A8)
 		{bits=32;texture->matchfmt=TRUE;}
 
 	/* patch: for "I have no tomatoes" game => allways MakeNewTexdata(). Because in this game the original tex-picture is freed (so lost)  */
-	if(!Wazp3D->HackTexs.ON)	
+	if(Wazp3D->HackTexs.ON==0)		/* if never reuse tex data*/
 		texture->matchfmt=FALSE;
 
 	if(Wazp3D->TexFmtLie.ON)
@@ -2986,11 +3235,13 @@ ULONG noerror;
 	if(texture->matchfmt)
 		WT->pt	=texture->texsource;
 	else
-		WT->pt	 =texture->texdata;
+		WT->pt	=texture->texdata;
 
-	WT->large	 =texture->texwidth ;
-	WT->high	 =texture->texheight;
-	WT->bits	 =bits;
+	WT->large 	=texture->texwidth ;
+	WT->high 	=texture->texheight;
+	WT->bits 	=bits;
+	if(bits==24) WT->format=W3D_R8G8B8;
+	if(bits==32) WT->format=W3D_R8G8B8A8;
 
 	WT->TexEnv=W3D_MODULATE;		/* default texture's env mode (OpenGL) */
 
@@ -3020,13 +3271,14 @@ ULONG noerror;
 		Libsavefile(WT->name,WT->pt,WT->large*WT->high*WT->bits/8);
 
 	if(Wazp3D->ReloadTextures.ON)
-		Libloadfile(WT->name,WT->pt,WT->large*WT->high*WT->bits/8);
+		Libloadfile(&WT->name[2],WT->pt,WT->large*WT->high*WT->bits/8);	/* remove "T:" from WT->name */
 
 	if(Wazp3D->SmoothTextures.ON)
 		SmoothBitmap(WT->pt,WT->large,WT->high,WT->bits);
 
 	TextureAlphaUsage(WT);		/* analyze if the tex really got transparent pixels */
-	WT->ST=SOFT3D_CreateTexture(WC->SC,WT->pt,WT->large,WT->high,WT->bits,Wazp3D->DoMipMaps.ON);
+	TexFlags=(Wazp3D->UseFiltering.ON*2+Wazp3D->DoMipMaps.ON*1);
+	WT->ST=SOFT3D_CreateTexture(WC->SC,WT->pt,WT->large,WT->high,WT->format,TexFlags);
 
 	PrintWT(WT);
 
@@ -3046,7 +3298,7 @@ WORD n=0;
 	tag[n] = tag1;
 	VAR(tag[n])
 	va_start (va, tag1);
-	do	 {
+	do 	{
 		n++;	tag[n]= va_arg(va, ULONG);	VAR(tag[n])
 		if(n&2) if (tag[n] == TAG_DONE) break;
 		}
@@ -3071,10 +3323,9 @@ WORD Ntexture=0,n;
 	WT=texture->driver;
 	PrintWT(WT);
 
-
-	SOFT3D_Flush(WC->SC); 		/* patch: v50 just in case it remains pixels using this tex */
-	NLOOP(W3D_MAX_TMU)		
-		if(context->CurrentTex[n]==texture)	 	/* patch: v50 for Blender/MiniGL/OS4 : avoid to use again a freed texture */
+	SOFT3D_Flush(WC->SC);		 /* patch: v50 just in case it remains pixels using this tex */
+	NLOOP(W3D_MAX_TMU)
+		if(context->CurrentTex[n]==texture)		 /* patch: v50 for Blender/MiniGL/OS4 : avoid to use again a freed texture */
 			W3D_BindTexture(context,n,NULL);
 
 	thisWT->nextWT=WC->firstWT;
@@ -3160,6 +3411,7 @@ struct WAZP3D_texture *WT=texture->driver;
 /*==========================================================================*/
 ULONG W3D_SetTexEnv(W3D_Context *context, W3D_Texture *texture,ULONG envparam, W3D_Color *envcolor)
 {
+struct WAZP3D_context *WC=context->driver;
 struct WAZP3D_texture *WT;
 BOOL globaltexenv;
 
@@ -3187,6 +3439,8 @@ BOOL globaltexenv;
 		context->globaltexenvcolor[1]=envcolor->g;
 		context->globaltexenvcolor[2]=envcolor->b;
 		context->globaltexenvcolor[3]=envcolor->a;
+		ColorToRGBA(WC->EnvRGBA,context->globaltexenvcolor[0],context->globaltexenvcolor[1],context->globaltexenvcolor[2],context->globaltexenvcolor[3]);
+		PrintRGBA((UBYTE *)&WC->EnvRGBA);
 		}
 	}
 	else
@@ -3200,6 +3454,8 @@ BOOL globaltexenv;
 		}
 	}
 
+	WC->texture=NULL;			/* so will force SetTexStates() to re-read texture parameters */
+	WC->state.Changed=TRUE;
 	WRETURN(W3D_SUCCESS);
 }
 /*==========================================================================*/
@@ -3251,6 +3507,7 @@ UWORD x,y,high,large,Tlarge,bpp1,bpp2;
 ULONG format,sizelarge;
 
 	WAZP3DFUNCTION(31);
+
 VAR(level)
 	if(level!=0)
 		WRETURN(W3D_SUCCESS);	/* 0 is the tex !=0 are the mipmaps */
@@ -3366,6 +3623,7 @@ PrintWT(WT);
 /*==========================================================================*/
 ULONG W3D_SetChromaTestBounds(W3D_Context *context, W3D_Texture *texture,ULONG rgba_lower, ULONG rgba_upper, ULONG mode)
 {
+struct WAZP3D_context *WC=context->driver;
 struct WAZP3D_texture *WT=texture->driver;
 ULONG *color32;
 
@@ -3380,6 +3638,7 @@ ULONG *color32;
 	WINFO(mode,W3D_CHROMATEST_INCLUSIVE,"texels in the range pass the test ");
 	WINFO(mode,W3D_CHROMATEST_EXCLUSIVE,"texels in the range are rejected ");
 
+	WC->state.Changed=TRUE;
 	WRETURN(W3D_SUCCESS);
 }
 /*==========================================================================*/
@@ -3388,6 +3647,15 @@ ULONG W3D_DrawLine(W3D_Context *context, W3D_Line *line)
 struct WAZP3D_context *WC=context->driver;
 
 	WAZP3DFUNCTION(35);
+	if(WC->state.LineSize!=line->linewidth)
+	{
+	WC->state.Changed=TRUE;
+	WC->state.LineSize=line->linewidth;
+	if(WC->state.LineSize<1)
+
+		WC->state.LineSize=1;
+	}
+
 	WC->Pnb=0;
 	SetTexStates(context,line->tex);
 	GetVertex(WC,&line->v1);
@@ -3402,13 +3670,17 @@ ULONG W3D_DrawPoint(W3D_Context *context, W3D_Point *point)
 struct WAZP3D_context *WC=context->driver;
 
 	WAZP3DFUNCTION(36);
-	WC->PointSize=point->pointsize;
-	 if(WC->PointSize<1.0)	WC->PointSize=1.0;	/* patch: skulpt dont set pointsize*/
+	if(WC->state.PointSize!=point->pointsize)
+	{
+	WC->state.Changed=TRUE;
+	WC->state.PointSize=point->pointsize;
+	if(WC->state.PointSize<1)
+		WC->state.PointSize=1;	/* patch: skulpt dont set pointsize*/
+	}
+
 	WC->Pnb=0;
 	SetTexStates(context,point->tex);		/* ??? tex not used */
 	GetVertex(WC,&point->v1);
-
-	SOFT3D_SetPointSize(WC->SC,(UWORD)WC->PointSize);
 
 	DrawPrimitive(context,W3D_PRIMITIVE_POINTS);
 	WRETURN(W3D_SUCCESS);
@@ -3479,6 +3751,14 @@ W3D_Vertex *v;
 LONG n;;
 
 	WAZP3DFUNCTION(41);
+	if(WC->state.LineSize!=lines->linewidth)
+	{
+	WC->state.Changed=TRUE;
+	WC->state.LineSize=lines->linewidth;
+	if(WC->state.LineSize<1)
+		WC->state.LineSize=1;
+	}
+
 	v=lines->v;
 	WC->Pnb=0;
 	SetTexStates(context,lines->tex);
@@ -3496,6 +3776,14 @@ W3D_Vertex *v;
 LONG n;;
 
 	WAZP3DFUNCTION(42);
+	if(WC->state.LineSize!=lines->linewidth)
+	{
+	WC->state.Changed=TRUE;
+	WC->state.LineSize=lines->linewidth;
+	if(WC->state.LineSize<1)
+		WC->state.LineSize=1;
+	}
+
 	v=lines->v;
 	WC->Pnb=0;
 	SetTexStates(context,lines->tex);
@@ -3514,11 +3802,11 @@ UBYTE *ARGB=(UBYTE *)&ARGB32;
 ULONG x,y,large,high;
 
 	WAZP3DFUNCTION(43);
-	WC->BackRGBA[0]=ARGB[1];
-	WC->BackRGBA[1]=ARGB[2];
-	WC->BackRGBA[2]=ARGB[3];
-	WC->BackRGBA[3]=ARGB[0];
-	SOFT3D_SetBackColor(WC->SC,WC->BackRGBA);
+
+	WC->state.BackRGBA[0]=ARGB[1];
+	WC->state.BackRGBA[1]=ARGB[2];
+	WC->state.BackRGBA[2]=ARGB[3];
+	WC->state.BackRGBA[3]=ARGB[0];
 
 	if(context->state & W3D_SCISSOR)
 	{
@@ -3530,7 +3818,7 @@ ULONG x,y,large,high;
 	else
 	{
 	x	=0;
-	y	=0;
+	y	=0 + context->yoffset;
 	high	=context->height;
 	large	=context->width;
 	}
@@ -3543,6 +3831,7 @@ ULONG x,y,large,high;
 ULONG W3D_SetAlphaMode(W3D_Context *context, ULONG mode, W3D_Float *refval)
 {
 struct WAZP3D_context *WC=context->driver;
+
 
 	WAZP3DFUNCTION(44);
 	WC->AlphaMode=mode;
@@ -3559,16 +3848,18 @@ struct WAZP3D_context *WC=context->driver;
 	WINFO(mode,W3D_A_EQUAL,"draw,if A == refvalue ")
 	WINFO(mode,W3D_A_ALWAYS,"always draw ")
 	VARF(*refval)
+
+	WC->state.Changed=TRUE;
 	WRETURN(W3D_SUCCESS);
 }
 /*==========================================================================*/
 ULONG W3D_SetBlendMode(W3D_Context *context, ULONG srcfunc, ULONG dstfunc)
 {
 struct WAZP3D_context *WC=context->driver;
-#define GL_CONSTANT_COLOR               0x8001
-#define GL_ONE_MINUS_CONSTANT_COLOR     0x8002
-#define GL_CONSTANT_ALPHA               0x8003
-#define GL_ONE_MINUS_CONSTANT_ALPHA     0x8004
+#define GL_CONSTANT_COLOR 			  0x8001
+#define GL_ONE_MINUS_CONSTANT_COLOR	 0x8002
+#define GL_CONSTANT_ALPHA 			  0x8003
+#define GL_ONE_MINUS_CONSTANT_ALPHA	 0x8004
 
 	WAZP3DFUNCTION(45);
 
@@ -3627,7 +3918,7 @@ struct WAZP3D_context *WC=context->driver;
 	if(dstfunc==W3D_ONE_MINUS_DST_COLOR) WRETURN(W3D_ILLEGALINPUT);
 	if(dstfunc==W3D_SRC_ALPHA_SATURATE) WRETURN(W3D_ILLEGALINPUT);
 
-	WC->SrcFunc=srcfunc; 
+	WC->SrcFunc=srcfunc;
 	WC->DstFunc=dstfunc;
 
 /* patch: BlitzQuake/MiniGL use SetBlendMode but forget to activate with SetState() the blending */
@@ -3643,6 +3934,7 @@ struct WAZP3D_context *WC=context->driver;
 		Wazp3D->PerspMode.ON=0;				/* 2D drawings dont need perspective  */
 		}
 
+	WC->state.Changed=TRUE;
 	WRETURN(W3D_SUCCESS);
 }
 /*==========================================================================*/
@@ -3653,17 +3945,25 @@ struct WAZP3D_texture *WT;
 struct  face3D *F=WC->DumpF;
 LONG Fnb=WC->DumpFnum;
 BOOL ThisTextureIsUsed;
+BPTR file;
 ULONG f;
 WORD t;
+UBYTE name[256];
+#define FWRITE Write(file,name,Libstrlen(name));
 
 	if(WC->firstWT==NULL) return;
 	SREM(SaveMTL)
-	Libprintf("%s ====================\n",filenameMTL);
+	Libprintf("Saving... <%s>\n",filenameMTL);
+	file = Open(filenameMTL,MODE_NEWFILE);
+	if(file == 0)
+		{Libprintf("Cant open file! <%s>\n",filenameMTL);return;}
+
+	Libsprintf(name,"# Dumped with Wazp3D\n\n"); FWRITE
 
 /* mat for untextured faces */
-	Libprintf("newmtl MatFlat\n");
-	Libprintf("illum 4\n");
-	Libprintf("Ni 1.00\nKd 0.00 0.00 0.00\nKa 0.00 0.00 0.00\nTf 1.00 1.00 1.00\n");
+	Libsprintf(name,"\nnewmtl MatFlat\n"); FWRITE
+	Libsprintf(name,"illum 4\n"); FWRITE
+	Libsprintf(name,"Ni 1.00\nKd 0.00 0.00 0.00\nKa 0.00 0.00 0.00\nTf 1.00 1.00 1.00\n"); FWRITE
 
 /* mats for textured faces */
 	t=0;
@@ -3677,14 +3977,18 @@ WORD t;
 
 		if(ThisTextureIsUsed==TRUE)
 		{
-		Libprintf("newmtl MatTex%ld\n",(ULONG)t);
-		Libprintf("illum 4\n");
-		Libprintf("map_Kd %s\n",WT->name);
-		Libprintf("Ni 1.00\nKd 0.00 0.00 0.00\nKa 0.00 0.00 0.00\nTf 1.00 1.00 1.00\n");
+		Libsprintf(name,"\nnewmtl MatTex%ld\n",(ULONG)t); FWRITE
+		Libsprintf(name,"illum 4\n"); FWRITE
+		Libsprintf(name,"map_Kd %s\n",&WT->name[2]); FWRITE
+		Libsprintf(name,"Ni 1.00\n"); FWRITE
+		Libsprintf(name,"Kd 0.66 0.66 1.00\n"); FWRITE
+		Libsprintf(name,"Ka 0.20 0.20 0.20\n"); FWRITE
+		Libsprintf(name,"Tf 1.00 1.00 1.00\n"); FWRITE
 		}
 	t++;
 	WT=WT->nextWT;
 	}
+	Close(file);
 LibAlert("Dump .MTL done :-)");
 #endif
 }
@@ -3700,9 +4004,13 @@ LONG Pnb=WC->DumpPnum;
 LONG Fnb=WC->DumpFnum;
 UBYTE filenameOBJ[256];
 UBYTE filenameMTL[256];
-UBYTE name[40];
 BOOL ThisTextureIsUsed;
 ULONG f,p,t,n,i;
+BOOL ScaleObject=TRUE;
+BOOL UseZ=FALSE;
+BPTR file;
+UBYTE name[256];
+float flarge,fhigh;
 
 	SREM(SaveOBJ)
 	VAR(WC->DumpP)
@@ -3712,49 +4020,85 @@ ULONG f,p,t,n,i;
 	VAR(WC->DumpFnb)
 	VAR(WC->DumpFnum)
 
-	n=Libstrlen(filename);
+	Libstrcpy(filenameOBJ,filename);
+
 	Libstrcpy(filenameMTL,filename);
+	n=Libstrlen(filenameMTL);
 	filenameMTL[n-4]=0;
 	Libstrcat(filenameMTL,".mtl");
 	SaveMTL(WC,filenameMTL);
 
+	Libprintf("Saving... <%s>\n",filenameOBJ);
 
-	Libstrcpy(filenameOBJ,filename);
-	filenameOBJ[n-4]=0;
-	Libstrcat(filenameOBJ,".obj");
+	file = Open(filenameOBJ,MODE_NEWFILE);
+	if(file == 0)
+		{Libprintf("Cant open file! <%s>\n",filenameOBJ);return;}
 
-	Libprintf("%s ====================\n",filenameOBJ);
+	Libsprintf(name,"# Dumped with Wazp3D\n\n"); FWRITE
 
 	if(WC->firstWT!=NULL)
-	Libprintf("mtllib %s\n",filenameMTL);
+		{ Libsprintf(name,"mtllib %s\n",&filenameMTL[2]); FWRITE }
 
-	Libprintf("g default\n");
+	Libsprintf(name,"\ng default\n"); FWRITE
 
-	if(Wazp3D->ResizeDumpedObject.ON)
+	if(ScaleObject)		/* then x y are scaled to 0.0 to 1.0*/
+	{
+	flarge=WC->large;
+	fhigh =WC->high;
+	}
+	else
+	{
+	flarge=1.0;
+	fhigh =1.0;
+	}
+
 	PLOOP(Pnb)
-		{ P[p].x=(2.0*P[p].x/WC->large)-1.0; P[p].y=(2.0*P[p].y/WC->high)-1.0; P[p].z=(2.0*P[p].z)-1.0; }
+		{
+		if(P[p].z!=0.0) UseZ=TRUE;
+		P[p].x=P[p].x/flarge;
+		P[p].y=P[p].y/fhigh ;
+		}
 
 	PLOOP(Pnb)
-		{ Libprintf("v  ");  pf(P[p].x); pf(P[p].y); pf(P[p].z); Libprintf("\n"); }
+		{
+		Libsprintf(name,"v  "); FWRITE
+		fpf(file,P[p].x);
+		fpf(file,P[p].y);
+		if(UseZ) 
+			fpf(file,P[p].z); 
+		else 
+			fpf(file,1.0/(P[p].w+0.001));
+		Libsprintf(name,"\n");  FWRITE
+		}
+
 	PLOOP(Pnb)
-		{ Libprintf("vt  "); pf(P[p].u); pf(P[p].v); Libprintf("\n"); }
+		{
+		Libsprintf(name,"vt  ");  FWRITE
+		fpf(file,P[p].u); fpf(file,P[p].v);
+		Libsprintf(name,"\n");  FWRITE
+		}
 
 
-	Libstrcpy(name,"DumpWazp3D");
-	Libprintf("g %s\n",name);
 
 /* 1: untextured faces */
-	Libprintf("usemtl MatFlat\n");
 	FLOOP(Fnb)
 		if(F[f].tex==NULL)
 		{
-		Libprintf("f");
+		Libsprintf(name,"\ng groupflat\n"); FWRITE
+		Libsprintf(name,"usemtl MatFlat\n"); FWRITE
+		break;
+		}
+
+	FLOOP(Fnb)
+		if(F[f].tex==NULL)
+		{
+		Libsprintf(name,"f"); FWRITE
 		PLOOP(F[f].Pnb)
 			{
-			i=F[f].Pnum+p+1;				/* The numbering start with 1 */
-			Libprintf(" %ld/%ld",i,i);		/* use same indice for Vi UVi */
+			i=F[f].Pnum+p+1;					/* The numbering start with 1 */
+			Libsprintf(name," %ld/%ld",i,i);FWRITE 	/* use same indice for Vi UVi */
 			}
-		Libprintf("\n");
+		Libsprintf(name,"\n"); FWRITE
 		}
 
 /* 2: textured faces */
@@ -3769,24 +4113,36 @@ ULONG f,p,t,n,i;
 
 		if(ThisTextureIsUsed==TRUE)
 		{
-		Libprintf("usemtl MatTex%ld\n",t);
+		Libsprintf(name,"\ng group%ld\n",t); FWRITE
+		Libsprintf(name,"usemtl MatTex%ld\n",t); FWRITE
 		FLOOP(Fnb)
 			if(F[f].tex==WT)
 			{
-			Libprintf("f");
+			Libsprintf(name,"f"); FWRITE
 			PLOOP(F[f].Pnb)
 				{
-				i=F[f].Pnum+p+1;				/* The numbering start with 1 */
-				Libprintf(" %ld/%ld",i,i);		/* use same indice for Vi UVi */
+				i=F[f].Pnum+p+1;					/* The numbering start with 1 */
+				Libsprintf(name," %ld/%ld",i,i); FWRITE	/* use same indice for Vi UVi */
 				}
-			Libprintf("\n");
+			Libsprintf(name,"\n"); FWRITE
 			}
 		}
 	t++;
 	WT=WT->nextWT;
 	}
-
+	Close(file);
 LibAlert("Dump .OBJ done :-)");
+
+	WT=WC->firstWT;
+	if(Wazp3D->DumpTextures.ON)
+	while(WT!=NULL)
+	{
+		Libsavefile(WT->name,WT->pt,WT->large*WT->high*WT->bits/8);
+		WT=WT->nextWT;
+	}
+	Wazp3D->DumpTextures.ON=FALSE;
+
+LibAlert("Dump .RAW textures done :-)");
 
 #endif
 }
@@ -3796,7 +4152,7 @@ void DumpPoly(struct WAZP3D_context *WC)
 #ifdef WAZP3DDEBUG
 struct face3D *F;
 
-SREM(DumpPoly)
+
 	if(WC->DumpStage==1)		/* 1: count faces & points */
 	{
 	WC->DumpFnb+=1;
@@ -3826,6 +4182,9 @@ SREM(DumpPoly)
 #ifdef WAZP3DDEBUG
 void DumpTriP(struct WAZP3D_context *WC,register struct point3D *A,register struct point3D *B,register struct point3D *C)
 {
+
+SREM(DumpTriP)
+
 	COPYP(&(WC->PolyP[0]),A);
 	COPYP(&(WC->PolyP[1]),B);
 	COPYP(&(WC->PolyP[2]),C);
@@ -3834,19 +4193,20 @@ void DumpTriP(struct WAZP3D_context *WC,register struct point3D *A,register stru
 }
 #endif
 /*================================================================*/
-void DumpPrimitive(struct WAZP3D_context *WC,ULONG primitive)
+void DumpPrimitive(struct WAZP3D_context *WC,struct point3D *P,ULONG Pnb,ULONG primitive)
 {
 #ifdef WAZP3DDEBUG
-struct point3D *P=WC->PolyP;
-ULONG Pnb=WC->PolyPnb;
 WORD n,nb;
 WORD MaxPolyHack;
 
 SREM(DumpPrimitive)
+VAR(primitive)
+VAR(Pnb)
 
 	if(primitive==W3D_PRIMITIVE_TRIANGLES)
 	{
 	nb=Pnb/3;
+VAR(nb)
 	NLOOP(nb)
 		DumpTriP(WC,&P[3*n+0],&P[3*n+1],&P[3*n+2]);
 	}
@@ -3936,10 +4296,7 @@ SREM(DumpPrimitive)
 	if(primitive==W3D_PRIMITIVE_POINTS)
 	NLOOP(Pnb)
 		{
-		COPYP(&(WC->PolyP[0]),&P[n]);
-		WC->PolyPnb=1;
-		DumpPoly(WC);
-		return;
+		DumpTriP(WC,&P[n],&P[n+1],&P[n]);
 		}
 
 
@@ -3948,10 +4305,7 @@ SREM(DumpPrimitive)
 	nb=Pnb/2;
 	NLOOP(nb)
 		{
-		COPYP(&(WC->PolyP[0]),&P[2*n]);
-		COPYP(&(WC->PolyP[1]),&P[2*n+1]);
-		WC->PolyPnb=2;
-		DumpPoly(WC);
+		DumpTriP(WC,&P[2*n],&P[2*n+1],&P[2*n+1]);
 		}
 	return;
 	}
@@ -3961,16 +4315,10 @@ SREM(DumpPrimitive)
 	nb=Pnb-1;
 	NLOOP(nb)
 		{
-		COPYP(&(WC->PolyP[0]),&P[n]);
-		COPYP(&(WC->PolyP[1]),&P[n+1]);
-		WC->PolyPnb=2;
-		DumpPoly(WC);
+		DumpTriP(WC,&P[n],&P[n+1],&P[n+1]);
 		}
 
-	COPYP(&(WC->PolyP[0]),&P[nb]);
-	COPYP(&(WC->PolyP[1]),&P[0 ]);
-	WC->PolyPnb=2;
-	DumpPoly(WC);
+	DumpTriP(WC,&P[nb],&P[0],&P[0]);
 	return;
 	}
 
@@ -3979,10 +4327,7 @@ SREM(DumpPrimitive)
 	nb=Pnb-1;
 	NLOOP(nb)
 		{
-		COPYP(&(WC->PolyP[0]),&P[n]);
-		COPYP(&(WC->PolyP[1]),&P[n+1]);
-		WC->PolyPnb=2;
-		DumpPoly(WC);
+		DumpTriP(WC,&P[n],&P[n+1],&P[n+1]);
 		}
 	return;
 	}
@@ -4005,43 +4350,51 @@ void DumpObject(struct WAZP3D_context *WC)
 
 	if(WC->DumpStage==0)
 		{
-		Libprintf("DumpObject(0/3): reset\n");
+		if(Wazp3D->DebugVar.ON) Libprintf("DumpObject(0/3): reset\n");
 		WC->DumpFnum=WC->DumpPnum=WC->DumpFnb=WC->DumpPnb=0;
 		WC->DumpF=NULL;
 		WC->DumpP=NULL;
-		WC->DumpStage=1;return;
+		WC->DumpStage=1;
+		return;
 		}
 
 	if(WC->DumpStage==1)
 		{
-		Libprintf("DumpObject(1/3): count&alloc\n");
-		VAR(WC->DumpFnb)
-		VAR(WC->DumpPnb)
-		if(WC->DumpFnb==0) {WC->DumpStage=0;return;}		/* wait a frame that drawn something */
+		if(Wazp3D->DebugVar.ON) Libprintf("DumpObject(1/3): count&alloc Fnb:%ld Pnb:%ld\n",WC->DumpFnb,WC->DumpPnb);
+		if(WC->DumpFnb==0)
+			{WC->DumpStage=0;return;}				/* wait a frame that drawn something */
 		WC->DumpPnb=WC->DumpPnb+WC->DumpPnb/2;			/* alloc 150% the previous size */
 		WC->DumpFnb=WC->DumpFnb+WC->DumpFnb/2;
 		WC->DumpP=MYmalloc(WC->DumpPnb*PSIZE,"DumpP");
 		WC->DumpF=MYmalloc(WC->DumpFnb*sizeof(struct  face3D),"DumpF");
+
 		if(WC->DumpP!=NULL)
-		if(WC->DumpF!=NULL)
-			{WC->DumpStage=2; return;}	/* buffers ok ? then continue */
+		if(WC->DumpF!=NULL)	/* buffers ok ? then continue */
+			{
+			if(Wazp3D->DebugVar.ON) Libprintf("DumpObject: allocated\n");
+			WC->DumpStage=2; return;
+			}
+		if(Wazp3D->DebugVar.ON) Libprintf("DumpObject: malloc fail\n");
 		WC->DumpStage=3;				/* else free all */
 		}
 
 	if(WC->DumpStage==2)
 		{
-		if(WC->DumpFnb==0) {WC->DumpStage=2;return;}		/* wait a frame that drawn something */
-		Libprintf("DumpObject(2/3): dump&save\n");
-		SaveOBJ(WC,"DumpWazp3D->obj");
+		if(Wazp3D->DebugVar.ON) Libprintf("DumpObject(2/3): dump&save Fnb:%ld\n",WC->DumpFnb);
+		if(WC->DumpFnb==0)		 /* wait a frame that drawn something */
+			{
+			WC->DumpStage=2;return;
+			}
+		SaveOBJ(WC,"T:DumpWazp3D.obj");
 		WC->DumpStage=3; return;
 		}
 
 	if(WC->DumpStage==3)
 		{
-		Libprintf("DumpObject(3/3): free all\n");
+		if(Wazp3D->DebugVar.ON) Libprintf("DumpObject(3/3): free all\n");
 		FREEPTR(WC->DumpP);
 		FREEPTR(WC->DumpF);
-		Wazp3D->DumpObject.ON=FALSE;
+		Wazp3D->DumpObject.ON=0;
 		WC->DumpStage=0; return;
 		}
 #endif
@@ -4068,10 +4421,18 @@ struct WAZP3D_context *WC=context->driver;
 SREM(DrawPrimitive)
 	ZbufferCheck(context);
 
-	if(Wazp3D->DebugWazp3D.ON)
-	if(Wazp3D->DumpObject.ON)
-		DumpPrimitive(WC,primitive);
+	if(WC->DebuggedWT!=NULL)
+	{
+	if(WC->DebuggedWT==WC->WT)
+		YYY
+	else
+		NNN
+	}
 
+	if(WC->DumpStage!=0)
+		DumpPrimitive(WC,WC->P,WC->Pnb,primitive);
+
+	WC->PrimitivesDrawn++;
 	SOFT3D_DrawPrimitive(WC->SC,WC->P,WC->Pnb,primitive);
 
 	if(!StateON(W3D_INDIRECT))		/*v50: If direct mode do a flush after each poly (else bufferize fragments)*/
@@ -4116,6 +4477,9 @@ SREM(setting the bitmap)
 	context->depth  = GetBitMapAttr( bm, BMA_DEPTH  );	/* bitmap depth  */
 	context->bprow  = bm->BytesPerRow;
 	if(context->depth==24)	 context->format=W3D_FMT_R8G8B8;	/* is it allways correct ??? */
+
+
+
 	if(context->depth==32)	 context->format=W3D_FMT_A8R8G8B8;
 	context->format = 0;
 	context->drawmem=NULL;
@@ -4147,6 +4511,9 @@ SREM(setting the bitmap)
 		context->height=context->height/2;	/* if doubleheight use only the half height for the Wazp3D RGBA buffer*/
 	else
 		yoffset=0;					/* if cant do double-height (ie AROS) then let this to 0 */
+
+VAR(StateON(W3D_DOUBLEHEIGHT))
+VAR(yoffset)
 	WC->yoffset=context->yoffset=yoffset;
 
 /* store new (?) size */
@@ -4211,7 +4578,7 @@ SREM(with scissor )
 	}
 
 /* SOFT3D: change bitmap  & scissor */
-	WC->SetBitmapFunction(WC);
+	WC->SOFT3D_SetBitmap_SetClippingHook(WC);
 }
 /*==========================================================================*/
 ULONG W3D_SetDrawRegion(W3D_Context *context, struct BitMap *bm,int yoffset, W3D_Scissor *scissor)
@@ -4232,14 +4599,14 @@ struct WAZP3D_context *WC=context->driver;
 		DoUpdate(context);
 
 /* do nothing if the prog always call this function with same parameters */
-	if(context->drawregion		==bm			)
-	if(context->yoffset		==yoffset		)
+	if(context->drawregion 	   ==bm 		   )
+	if(context->yoffset 	   ==yoffset 	   )
 	if(context->scissor.left	==scissor->left	)
-	if(context->scissor.top		==scissor->top	)
+	if(context->scissor.top 	   ==scissor->top	)
 	if(context->scissor.width	==scissor->width	)
 	if(context->scissor.height	==scissor->height	)
-	if(WC->windowX			==WC->window->LeftEdge)
-	if(WC->windowY			==WC->window->TopEdge)
+	if(WC->windowX 		   ==WC->window->LeftEdge)
+	if(WC->windowY 		   ==WC->window->TopEdge)
 		WRETURN(W3D_SUCCESS);		/* nothing to do ===> return */
 
 	SetDrawRegion(context,bm,yoffset,scissor);
@@ -4268,43 +4635,45 @@ struct WAZP3D_context *WC=context->driver;
 
 
 	WAZP3DFUNCTION(48);
-	WC->FogMode=0;
-	if(fogmode==W3D_FOG_LINEAR)	WC->FogMode=1;
-	if(fogmode==W3D_FOG_EXP)	WC->FogMode=2;
-	if(fogmode==W3D_FOG_EXP_2)	WC->FogMode=3;
+	WC->state.FogMode=0;
+	if(fogmode==W3D_FOG_LINEAR)	WC->state.FogMode=1;
+	if(fogmode==W3D_FOG_EXP)	WC->state.FogMode=2;
+	if(fogmode==W3D_FOG_EXP_2)	WC->state.FogMode=3;
 
-	ColorToRGBA(WC->FogRGBA,fogparams->fog_color.r,fogparams->fog_color.g,fogparams->fog_color.b,1.0);
+	ColorToRGBA(WC->state.FogRGBA,fogparams->fog_color.r,fogparams->fog_color.g,fogparams->fog_color.b,1.0);
 
-	if(0.0!=fogparams->fog_start)
-	WC->FogZmin		=1.0/fogparams->fog_start;
+	if(fogparams->fog_start==0.0)
+		fogparams->fog_start=0.0001;
+	if(fogparams->fog_end==0.0)
+		fogparams->fog_end=0.0001;
 
-	if(0.0!=fogparams->fog_end)
-	WC->FogZmax		=1.0/fogparams->fog_end;
+/* The fields fog_start and fog_end must be given if linear fog is used. These values are in 'w-space', meaning 1.0 is the front plane, and 0.0 is the back plane */
+	WC->state.FogZmin 	   =1.0 - fogparams->fog_start;
+	WC->state.FogZmax 	   =1.0 - fogparams->fog_end;
 
-	if(fogparams->fog_start==1.0)
-		WC->FogZmin=MINZ;
-	if(fogparams->fog_end  ==0.0)
-		WC->FogZmax=MAXZ;
+	if(WC->state.FogZmin<MINZ)
+		WC->state.FogZmin=MINZ;
+	if(MAXZ<WC->state.FogZmax)
+		WC->state.FogZmax=MAXZ;
 
-	if(WC->FogZmin<MINZ)
-		WC->FogZmin=MINZ;
-	if(MAXZ<WC->FogZmax)
-		WC->FogZmax=MAXZ;
+	if(fogmode==W3D_FOG_INTERPOLATED)
+		fogmode=W3D_FOG_EXP;
 
-	WC->FogDensity	=fogparams->fog_density;
+	WC->state.FogDensity	=fogparams->fog_density;
 	Libmemcpy(&context->fog,fogparams,sizeof(W3D_Fog));
 
 	WINFO(fogmode,W3D_FOG_LINEAR,"linear fogging ")
 	WINFO(fogmode,W3D_FOG_EXP,"exponential fogging ")
 	WINFO(fogmode,W3D_FOG_EXP_2,"square exponential fogging ")
 	WINFO(fogmode,W3D_FOG_INTERPOLATED,"interpolated fogging ")
-	PrintRGBA((UBYTE *)&WC->FogRGBA);
+	PrintRGBA((UBYTE *)&WC->state.FogRGBA);
 	VARF(fogparams->fog_start)
 	VARF(fogparams->fog_end)
 	VARF(fogparams->fog_density)
+	VARF(WC->state.FogZmin)
+	VARF(WC->state.FogZmax)
 
-	SOFT3D_Fog(WC->SC,WC->FogMode,WC->FogZmin,WC->FogZmax,WC->FogDensity,WC->FogRGBA);
-
+	WC->state.Changed=TRUE;
 	WRETURN(W3D_SUCCESS);
 }
 /*==========================================================================*/
@@ -4362,12 +4731,17 @@ struct WAZP3D_context *WC=context->driver;
 ULONG W3D_SetCurrentColor(W3D_Context *context, W3D_Color *color)
 {
 struct WAZP3D_context *WC=context->driver;
+UBYTE RGBA[4];
 
 	WAZP3DFUNCTION(52);
-	if(color!=NULL)
-		ColorToRGBA(WC->CurrentRGBA,color->r,color->g,color->b,color->a);
+	if(color==NULL)
+		WRETURN(W3D_ILLEGALINPUT);
+	ColorToRGBA(RGBA,color->r,color->g,color->b,color->a);
 
-	SOFT3D_SetCurrentColor(WC->SC,WC->CurrentRGBA);
+	if(NOTSAMERGBA(WC->state.CurrentRGBA,RGBA))
+		WC->state.Changed=TRUE;
+	COPYRGBA(WC->state.CurrentRGBA,RGBA);
+	PrintRGBA(RGBA);
 	WRETURN(W3D_SUCCESS);
 }
 /*==========================================================================*/
@@ -4375,25 +4749,28 @@ ULONG W3D_SetCurrentPen(W3D_Context *context, ULONG pen)
 {
 struct WAZP3D_context *WC=context->driver;
 UBYTE RGBA[4];
-ULONG *rgba32;
+ULONG *rgba32=(ULONG *)RGBA;
 
 	WAZP3DFUNCTION(53);
 /* horrible hack to recover the pen as RGB TODO: find a better method*/
 	SetAPen (&WC->rastport,pen);
 	RectFill(&WC->rastport,0,0,1,1);
-	rgba32=(ULONG *)WC->CurrentRGBA;
 	rgba32[0]=ReadRGBPixel(&WC->rastport,0,0);
 
-	COPYRGBA(WC->CurrentRGBA,RGBA);
-	SOFT3D_SetCurrentColor(WC->SC,WC->CurrentRGBA);
+	if(NOTSAMERGBA(WC->state.CurrentRGBA,RGBA))
+		WC->state.Changed=TRUE;
+	COPYRGBA(WC->state.CurrentRGBA,RGBA);
+	PrintRGBA(RGBA);
 	WRETURN(W3D_SUCCESS);
 }
 /*==========================================================================*/
 void W3D_SetScissor(W3D_Context *context, W3D_Scissor *scissor)
 {
+struct WAZP3D_context *WC=context->driver;
+
 	WAZP3DFUNCTION(54);
 	if(context->scissor.left	==scissor->left	)
-	if(context->scissor.top		==scissor->top	)
+	if(context->scissor.top 	   ==scissor->top	)
 	if(context->scissor.width	==scissor->width	)
 	if(context->scissor.height	==scissor->height	)
 		return;			/* nothing to do ===> return */
@@ -4431,6 +4808,7 @@ struct WAZP3D_context *WC=context->driver;
 
 	SOFT3D_ClearZBuffer(WC->SC,1.0);
 
+	WC->state.Changed=TRUE;		/* now we have a zbuffer */
 	WRETURN(W3D_SUCCESS);
 }
 /*==========================================================================*/
@@ -4442,8 +4820,8 @@ struct WAZP3D_context *WC=context->driver;
 	if(!context->zbufferalloc) WRETURN(W3D_NOZBUFFER);
 	context->zbufferalloc=FALSE;
 	context->zbufferlost =TRUE;	 /* Is it TRUE if just freed ?!? */
-	FREEPTR(context->zbuffer);
-	SOFT3D_AllocZbuffer(WC->SC,0,0);
+	SOFT3D_AllocZbuffer(WC->SC,0,0);	/* will free() zbuffer */
+	context->zbuffer=NULL;
 	WRETURN(W3D_SUCCESS);
 }
 /*==========================================================================*/
@@ -4460,6 +4838,7 @@ float z=1.0;
 	VARF(z);
 	if(!context->zbufferalloc) WRETURN(W3D_NOZBUFFER);
 	SOFT3D_ClearZBuffer(WC->SC,z);
+
 	if(!WC->CallFlushFrame)
 	if(!WC->CallSetDrawRegion)
 		DoUpdate(context);			/*draw the image if any */
@@ -4505,10 +4884,11 @@ struct WAZP3D_context *WC=context->driver;
 		WRETURN(W3D_ILLEGALINPUT);
 	if(W3D_Z_ALWAYS<mode)
 		WRETURN(W3D_ILLEGALINPUT);
+
 	WC->ZCompareMode=mode;
 
 	if(mode!=W3D_Z_ALWAYS)	/* if truly need a z testing ? then need the zbuffer*/
-	if(mode!=W3D_Z_NEVER)	
+	if(mode!=W3D_Z_NEVER)
 		SetState(context,W3D_ZBUFFER,W3D_ENABLE);	/*patch: for MiniGL/OS4 that forgot to enable zbuffer*/
 
 	WINFO(mode,W3D_Z_NEVER,"discard incoming pixel ")
@@ -4519,6 +4899,8 @@ struct WAZP3D_context *WC=context->driver;
 	WINFO(mode,W3D_Z_NOTEQUAL,"draw,if Z != Zbuffer ")
 	WINFO(mode,W3D_Z_EQUAL,"draw,if Z == Zbuffer ")
 	WINFO(mode,W3D_Z_ALWAYS,"always draw ")
+
+	WC->state.Changed=TRUE;
 	WRETURN(W3D_SUCCESS);
 }
 /*==========================================================================*/
@@ -4843,7 +5225,7 @@ WORD n=0;
 			smode->Depth	=cmode->Depth;
 			Libstrcpy(smode->DisplayName,cmode->ModeText);
 			smode->Driver	=W3D_TestMode(smode->ModeID);
-			smode->Next		=&(smode[1]);
+			smode->Next 	   =&(smode[1]);
 			smode++;
 			n++;
 		}
@@ -4863,7 +5245,7 @@ void W3D_FreeScreenmodeList(W3D_ScreenMode *list)
 	/* list is included in WC so cant be freed */
 }
 /*==========================================================================*/
-ULONG		 W3D_BestModeID(struct TagItem *taglist)
+ULONG 		W3D_BestModeID(struct TagItem *taglist)
 {
 ULONG tag,data;
 ULONG driver,ModeID;
@@ -4896,7 +5278,7 @@ ULONG large,high,bits;
 		bits=24;
 
 	ModeID = BestCModeIDTags(
-		CYBRBIDTG_Depth		,bits,
+		CYBRBIDTG_Depth 	   ,bits,
 		CYBRBIDTG_NominalWidth	,large,
 		CYBRBIDTG_NominalHeight	,high,
 		TAG_DONE);
@@ -4908,7 +5290,7 @@ ULONG large,high,bits;
 }
 /*==========================================================================*/
 #if PROVIDE_VARARG_FUNCTIONS
-ULONG		 W3D_BestModeIDTags(Tag tag1, ...)
+ULONG 		W3D_BestModeIDTags(Tag tag1, ...)
 {
 static ULONG tag[100];
 va_list va;
@@ -4918,7 +5300,7 @@ WORD n=0;
 	tag[n] = tag1;
 	VAR(tag[n])
 	va_start (va, tag1);
-	do	 {
+	do 	{
 		n++;	tag[n]= va_arg(va, ULONG);	VAR(tag[n])
 		if(n&2) if (tag[n] == TAG_DONE) break;
 		}
@@ -4995,6 +5377,7 @@ ULONG W3D_ColorPointer(W3D_Context* context, void *pointer, int stride,ULONG for
 /*==========================================================================*/
 ULONG W3D_BindTexture(W3D_Context* context, ULONG tmu, W3D_Texture *texture)
 {
+struct WAZP3D_context *WC=context->driver;
 
 	WAZP3DFUNCTION(85);
 	VAR(tmu)
@@ -5003,7 +5386,9 @@ ULONG W3D_BindTexture(W3D_Context* context, ULONG tmu, W3D_Texture *texture)
 
 	if(W3D_MAX_TMU <= tmu)
 		WRETURN(W3D_ILLEGALINPUT);
+
 	context->CurrentTex[tmu]=texture;
+	WC->state.Changed=TRUE;
 
 	if(tmu==0)
 		SetTexStates(context,texture);
@@ -5018,7 +5403,6 @@ ULONG i=base;
 ULONG n;
 
 	WAZP3DFUNCTION(86);
-	WC->primitive=primitive;
 	WC->Pnb=0;
 
 /* Warning: MiniGL/OS4 can change context->CurrentTex without using W3D_BindTexture */
@@ -5036,9 +5420,22 @@ ULONG n;
 	WINFO(primitive,W3D_PRIMITIVE_LINESTRIP," ")
 	VAR(base)
 	VAR(count)
-	if(primitive==W3D_PRIMITIVE_POINTS) SOFT3D_SetPointSize(WC->SC,1);
 
-	DrawPrimitive(context,WC->primitive);
+	if(WC->state.PointSize!=1)
+	if(primitive==W3D_PRIMITIVE_POINTS)
+			{WC->state.PointSize=1;WC->state.Changed=TRUE;}
+
+	if(WC->state.LineSize!=1)
+	{
+	if(primitive==W3D_PRIMITIVE_LINES)
+			{WC->state.LineSize=1;WC->state.Changed=TRUE;}
+	if(primitive==W3D_PRIMITIVE_LINELOOP)
+			{WC->state.LineSize=1;WC->state.Changed=TRUE;}
+	if(primitive==W3D_PRIMITIVE_LINESTRIP)
+			{WC->state.LineSize=1;WC->state.Changed=TRUE;}
+	}
+
+	DrawPrimitive(context,primitive);
 	WRETURN(W3D_SUCCESS);
 }
 /*==========================================================================*/
@@ -5051,7 +5448,6 @@ ULONG *I32=indices;
 ULONG n;
 
 	WAZP3DFUNCTION(87);
-	WC->primitive=primitive;
 	WC->Pnb=0;
 
 /* Warning: MiniGL/OS4 can change context->CurrentTex without using W3D_BindTexture */
@@ -5082,24 +5478,37 @@ ULONG n;
 	VAR(count)
 	VAR(indices)
 
-	if(primitive==W3D_PRIMITIVE_POINTS) SOFT3D_SetPointSize(WC->SC,1);
+	if(WC->state.PointSize!=1)
+	if(primitive==W3D_PRIMITIVE_POINTS)
+			{WC->state.PointSize=1;WC->state.Changed=TRUE;}
 
-	DrawPrimitive(context,WC->primitive);
+	if(WC->state.LineSize!=1)
+	{
+	if(primitive==W3D_PRIMITIVE_LINES)
+			{WC->state.LineSize=1;WC->state.Changed=TRUE;}
+	if(primitive==W3D_PRIMITIVE_LINELOOP)
+			{WC->state.LineSize=1;WC->state.Changed=TRUE;}
+	if(primitive==W3D_PRIMITIVE_LINESTRIP)
+			{WC->state.LineSize=1;WC->state.Changed=TRUE;}
+	}
+
+	DrawPrimitive(context,primitive);
 
 	WRETURN(W3D_SUCCESS);
 }
 /*==========================================================================*/
-void		 W3D_SetFrontFace(W3D_Context* context, ULONG direction)
+void 		W3D_SetFrontFace(W3D_Context* context, ULONG direction)
 {
 struct WAZP3D_context *WC=context->driver;
 
 	WAZP3DFUNCTION(88);
 	WINFO(direction,W3D_CW ,"Front face is clockwise");
 	WINFO(direction,W3D_CCW,"Front face is counter clockwise");
-	WC->CullingMode=context->FrontFaceOrder=direction;
+	WC->state.CullingMode=context->FrontFaceOrder=direction;
 
-	if(!StateON(W3D_CULLFACE))			WC->CullingMode=W3D_NOW;
-	SOFT3D_SetCulling(WC->SC,WC->CullingMode);
+	if(!StateON(W3D_CULLFACE))
+			WC->state.CullingMode=W3D_NOW;
+	WC->state.Changed=TRUE;
 }
 /*==========================================================================*/
 #ifdef WARP3DV5
@@ -5140,17 +5549,17 @@ BOOL Combine,Input,EnvMode;
 		}
 
 	tag =taglist->ti_Tag  ;	data=taglist->ti_Data ; taglist++;
-/* 	VAR(tag)		VAR(data) */
+/*	 VAR(tag)		VAR(data) */
 
-	if(tag==W3D_BLEND_STAGE	)		
+	if(tag==W3D_BLEND_STAGE	)
 					{
-					stage=data; 
+					stage=data;
 					if(MAXSTAGE<=stage)
 						{WC->blendstagesready=FALSE; WRETURN(W3D_SUCCESS);}
-					S=&WC->Stage[stage]; 
+					S=&WC->Stage[stage];
 					}
 
-	if(W3D_COLOR_ARG_A <= tag)		
+	if(W3D_COLOR_ARG_A <= tag)
 	if(  tag <= W3D_ALPHA_ARG_C)
 	if(W3D_ARG_TEXTURE_COLOR <= data)		/* then use current S texture */
 	if( data <= W3D_ARG_TEXTURE)
@@ -5171,7 +5580,7 @@ BOOL Combine,Input,EnvMode;
 		{ color=(W3D_Color *)data; ColorToRGBA(S->FactorRGBA,color->r,color->g,color->b,1.0); }
 
 #ifdef WAZP3DDEBUG
-if(Wazp3D->DebugVal.ON)  
+if(Wazp3D->DebugVal.ON)
 {
 
 	if(tag==W3D_COLOR_ARG_A) {Libprintf(" W3D_COLOR_ARG_A,"); Input=TRUE;}
@@ -5184,7 +5593,7 @@ if(Wazp3D->DebugVal.ON)
 	if(Input)
 	switch(data)
 	{
- 	case W3D_ARG_COMPLEMENT:		Libprintf("W3D_ARG_COMPLEMENT\n");break;
+	 case W3D_ARG_COMPLEMENT:		Libprintf("W3D_ARG_COMPLEMENT\n");break;
 	case W3D_ARG_DIFFUSE:			Libprintf("W3D_ARG_DIFFUSE\n");break;
 	case W3D_ARG_DIFFUSE_ALPHA:		Libprintf("W3D_ARG_DIFFUSE_ALPHA\n");break;
 	case W3D_ARG_DIFFUSE_COLOR:		Libprintf("W3D_ARG_DIFFUSE_COLOR\n");break;
@@ -5258,7 +5667,7 @@ if(Wazp3D->DebugVal.ON)
 	if(Combine)
 	switch(data)
 	{
- 	case W3D_COMBINE_DISABLED:		Libprintf("W3D_COMBINE_DISABLED\n");break;
+	 case W3D_COMBINE_DISABLED:		Libprintf("W3D_COMBINE_DISABLED\n");break;
 	case W3D_COMBINE_SELECT_A:		Libprintf("W3D_COMBINE_SELECT_A\n");break;
 	case W3D_COMBINE_SELECT_B:		Libprintf("W3D_COMBINE_SELECT_B\n");break;
 	case W3D_COMBINE_SELECT_C:		Libprintf("W3D_COMBINE_SELECT_C\n");break;
@@ -5294,7 +5703,7 @@ if(Wazp3D->DebugVal.ON)
 	WTAG(W3D_BLEND_FACTOR	," W3D_BLEND_FACTOR")
 	WTAG(W3D_BLEND_FACTOR	," W3D_BLEND_FACTOR")
 
- 	}
+	 }
 #endif
 
 	if(stage==0)
@@ -5303,8 +5712,9 @@ if(Wazp3D->DebugVal.ON)
 	if(S->TexEnvMode	<= W3D_SUB	)
 			W3D_SetTexEnv(context,context->CurrentTex[stage],S->TexEnvMode,(W3D_Color *)context->globaltexenvcolor);
 
- 	}
-	WC->blendstagesready=TRUE; 
+	 }
+	WC->blendstagesready=TRUE;
+	WC->state.Changed=TRUE;
 	WRETURN(W3D_SUCCESS);
 }
 /*==========================================================================*/
@@ -5319,7 +5729,7 @@ WORD n=0;
 	tag[n] = tag1;
 	VAR(tag[n])
 	va_start (va, tag1);
-	do	 {
+	do 	{
 		n++;	tag[n]= va_arg(va, ULONG);	VAR(tag[n])
 		if(n&2) if (tag[n] == TAG_DONE) break;
 		}
@@ -5381,16 +5791,16 @@ UBYTE *pt=pointer;
 ULONG size,TexFlags,error,n;
 
 	WAZP3DFUNCTION(93);
-	if(WC->ILpointer		==pointer)
-	if(WC->ILstride		==stride)
+	if(WC->ILpointer 	   ==pointer)
+	if(WC->ILstride 	   ==stride)
 	if(WC->ILvertexFormat	==vertexFormat)
-	if(WC->ILflags		==flags)
+	if(WC->ILflags 	   ==flags)
 	WRETURN(W3D_SUCCESS);				/* nothing changed => so do nothing */
 
-	WC->ILpointer		=pointer;
-	WC->ILstride		=stride;
+	WC->ILpointer 	   =pointer;
+	WC->ILstride 	   =stride;
 	WC->ILvertexFormat	=vertexFormat;
-	WC->ILflags			=flags;
+	WC->ILflags 		   =flags;
 
 	VAR(pt)
 	size=3*sizeof(float);
@@ -5506,22 +5916,21 @@ float  *f=pattern;
 	VAR(target)
 	VARF(*f)
 	VAR(*ul)
-	if(target==W3D_STIPPLE_LINE)		WC->StippleLine=*ul;
-	if(target==W3D_STIPPLE_LINE_FACTOR)	WC->StippleLineFactor=*ul;
-	if(target==W3D_STIPPLE_POLYGON)	WC->StipplePolygon=*ul;
-	if(target==W3D_POINT_SIZE)		WC->PointSize=*f;
-	if(target==W3D_LINE_WIDTH)		WC->LineWidth=*f;
-	if(target==W3D_ZFOG_START)		WC->FogZmin=*f;
-	if(target==W3D_ZFOG_END)		WC->FogZmax=*f;
-	if(target==W3D_ZFOG_DENSITY)		WC->FogDensity=*f;
-	if(target==W3D_FOG_MODE)		WC->FogMode=*ul;
-	if(target==W3D_WFOG_START)		WC->FogWmin=*f;
-	if(target==W3D_WFOG_END)		WC->FogWmax=*f;
-	if(target==W3D_WFOG_DENSITY)		WC->FogDensityW=*f;
-	if(target==W3D_FOG_COLOR)		ColorToRGBA(WC->FogRGBA,fogcolor->r,fogcolor->g,fogcolor->b,1.0);
+	if(target==W3D_STIPPLE_LINE)		WC->StippleLine 	   	=*ul;
+	if(target==W3D_STIPPLE_LINE_FACTOR)	WC->StippleLineFactor	=*ul;
+	if(target==W3D_STIPPLE_POLYGON)	WC->StipplePolygon	=*ul;
+	if(target==W3D_POINT_SIZE)		WC->state.PointSize	=*f;
+	if(target==W3D_LINE_WIDTH)		WC->state.LineSize	=*f;
+	if(target==W3D_ZFOG_START)		WC->state.FogZmin 	=*f;
+	if(target==W3D_ZFOG_END)		WC->state.FogZmax 	=*f;
+	if(target==W3D_ZFOG_DENSITY)		WC->state.FogDensity	=*f;
+	if(target==W3D_FOG_MODE)		WC->state.FogMode 	=*ul;
+	if(target==W3D_WFOG_START)		WC->state.FogZmin 	=*f;
+	if(target==W3D_WFOG_END)		WC->state.FogZmax 	=*f;
+	if(target==W3D_WFOG_DENSITY)		WC->state.FogDensity=*f;
+	if(target==W3D_FOG_COLOR)		ColorToRGBA(WC->state.FogRGBA,fogcolor->r,fogcolor->g,fogcolor->b,1.0);
 
-	SOFT3D_SetPointSize(WC->SC,WC->PointSize);
-	SOFT3D_Fog(WC->SC,WC->FogMode,WC->FogZmin,WC->FogZmax,WC->FogDensity,WC->FogRGBA);
+	WC->state.Changed=TRUE;
 	WRETURN(W3D_SUCCESS);
 }
 /*==========================================================================*/
@@ -5561,12 +5970,12 @@ ULONG format=texture->texfmtsrc;
 
 /* Backup for draw region pointers */
 	context->orig_drawregion	=context->drawregion;
-	context->orig_zbuffer		=context->zbuffer;
+	context->orig_zbuffer 	   =context->zbuffer;
 	context->orig_stencilbuffer	=context->stencilbuffer;
-	context->orig_width		=context->width;
-	context->orig_height		=context->height;
-	context->orig_yoffset		=context->yoffset;
-	context->orig_bprow		=context->bprow;
+	context->orig_width 	   =context->width;
+	context->orig_height 	   =context->height;
+	context->orig_yoffset 	   =context->yoffset;
+	context->orig_bprow 	   =context->bprow;
 	Libmemcpy(&context->orig_scissor,&context->scissor,sizeof(W3D_Scissor));
 
 /* then use the W3D_Bitmap as DrawRegion */
@@ -5575,7 +5984,7 @@ ULONG format=texture->texfmtsrc;
 /*==========================================================================*/
 #endif
 /*==========================================================================*/
-void		 PrintAllFunctionsAdresses(void)
+void 		PrintAllFunctionsAdresses(void)
 {
 #ifdef WAZP3DDEBUG
 #define  VARH(var) { Libprintf(" " #var " Adresse="); ph((ULONG)var); Libprintf("\n"); }
@@ -5680,7 +6089,7 @@ void		 PrintAllFunctionsAdresses(void)
 #endif
 }
 /*==========================================================================*/
-#if !defined(STATWAZP3D) 
+#if !defined(STATWAZP3D)
 
 #ifdef  __AROS__
 ADD2INITLIB(WAZP3D_Init, 0);
