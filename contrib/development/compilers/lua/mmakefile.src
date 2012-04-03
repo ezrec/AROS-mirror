@@ -4,13 +4,13 @@ include $(TOP)/config/make.cfg
 
 EXEDIR := $(CONTRIBDIR)/Development/Lua
 
-#MM- contrib-development : contrib-development-lua \
-#MM contrib-development-lua-icons \
-#MM contrib-development-lua-lualibs \
-#MM contrib-development-lua-doc \
-#MM contrib-development-lua-test \
-#MM contrib-development-lua-test-amilua \
-#MM contrib-development-lua-test-mui
+# #MM- contrib-development : contrib-development-lua \
+# #MM contrib-development-lua-icons \
+# #MM contrib-development-lua-lualibs \
+# #MM contrib-development-lua-doc \
+# #MM contrib-development-lua-test \
+# #MM contrib-development-lua-test-amilua \
+# #MM contrib-development-lua-test-mui
 
 %copy_dir_recursive mmake=contrib-development-lua-lualibs \
     src=lualibs dst=$(EXEDIR)/lualibs

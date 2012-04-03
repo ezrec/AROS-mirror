@@ -2,13 +2,13 @@
 
 include $(TOP)/config/make.cfg
 
-COREFILES :=	lapi lcode ldebug ldo ldump lfunc lgc llex lmem \
-		lobject lopcodes lparser lstate lstring ltable ltm  \
-		lundump lvm lzio
+COREFILES :=	lapi lcode lctype ldebug ldo ldump lfunc lgc llex \
+		lmem lobject lopcodes lparser lstate lstring ltable \
+		ltm lundump lvm lzio
 
 # files to build the linker lib 'lua'
-LIBFILES :=	lauxlib lbaselib ldblib liolib lmathlib loslib ltablib \
-		lstrlib loadlib linit $(COREFILES)
+LIBFILES :=	lauxlib lbaselib lbitlib lcorolib ldblib liolib \
+		lmathlib loslib lstrlib ltablib loadlib linit $(COREFILES)
 
 # files to build the linker lib 'luasiamiga'
 SIAMLIBFILES := lsiamigalib
@@ -33,10 +33,10 @@ USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../luafilesystem/src
 
 USER_CFLAGS   += -Wno-uninitialized
 
-#MM- contrib-development-lua : contrib-development-lua-lua \
-#MM  contrib-development-lua-amilua \
-#MM  contrib-development-lua-luac \
-#MM  includes-copy
+# #MM- contrib-development-lua : contrib-development-lua-lua \
+# #MM  contrib-development-lua-amilua \
+# #MM  contrib-development-lua-luac \
+# #MM  includes-copy
 
 #MM contrib-development-lua-lib :
 %build_linklib mmake=contrib-development-lua-lib libname=lua files=$(LIBFILES)
