@@ -858,6 +858,15 @@ static int siamiga_addgadget(lua_State *L)
     return 1;
 }
 
+static int siamiga_delay(lua_State *L)
+{
+    int delay = lua_tonumber(L, 1) * 50.0;
+
+    if (delay > 0) Delay(delay);
+
+    return 1;
+}
+
 static const luaL_Reg siamiga_methods[] =
 {
     {"createwindow",siamiga_createwindow},
@@ -880,6 +889,7 @@ static const luaL_Reg siamiga_methods[] =
     {"queryscreen", siamiga_queryscreen},
     {"addmenu",     siamiga_addmenu},
     {"addgadget",   siamiga_addgadget},
+    {"delay",       siamiga_delay},
     {NULL, NULL}
 };
 

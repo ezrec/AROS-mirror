@@ -5,8 +5,7 @@
 tilesize = 10
 
 function delay() -- NOTE: SYSTEM-DEPENDENT, adjust as necessary
-  local i=os.clock()+0.2
-  while(os.clock()<i) do end
+  Siamiga.delay(0.2)
 end
 
 function ARRAY2D(w,h)

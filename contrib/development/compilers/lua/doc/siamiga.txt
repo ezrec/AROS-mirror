@@ -175,6 +175,11 @@ Example: g1 = win1:addgadget(10, "button", 10, 20, 50, 15, "Cancel")
          g7 = win1:addgadget(16, "radio", 10, 20, 50, 15, "Label1", "Label2", ...)
 
 ------------------------------------------------------------------------------------------
+Siamiga.delay(time)
+Pauses program execution in a multi-tasking friendly way. Time argument is in seconds.
+Example: Siamiga.delay(0.2)
+
+------------------------------------------------------------------------------------------
 Siamiga.__gc
 The garbage collector closes the window and frees the resources of gadgets and menus.
 
