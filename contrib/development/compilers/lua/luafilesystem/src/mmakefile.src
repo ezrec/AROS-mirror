@@ -6,6 +6,7 @@ include $(TOP)/config/make.cfg
 LFSLIBFILES := lfs
 HEADERS := lfs.h
 
+USER_CFLAGS := -DLUA_COMPAT_ALL
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../../src
 
 #MM contrib-development-lualfs-lib :

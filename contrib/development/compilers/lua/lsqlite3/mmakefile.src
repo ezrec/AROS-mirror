@@ -17,6 +17,7 @@ EXEDIR := $(CONTRIBDIR)/Development/Lua
 %copy_dir_recursive mmake=contrib-development-lua-lsqlite3-examples \
     src=examples dst=$(EXEDIR)/lsqlite3/examples
 
+USER_CFLAGS := -DLUA_COMPAT_ALL
 USER_INCLUDES := -I$(AROS_DEVELOPMENT)/include/lua
 
 #MM contrib-development-lsqlite3-lib : contrib-sqlite

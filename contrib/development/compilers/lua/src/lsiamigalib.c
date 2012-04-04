@@ -68,7 +68,7 @@ typedef struct Siamiga
 static Siamiga *toSiamiga(lua_State *L, int index)
 {
     Siamiga *siam = lua_touserdata(L, index);
-    if (siam == NULL) luaL_typerror(L, index, SIAMIGA);
+    if (siam == NULL) luaL_error(L, "siamiga/toSiamiga: wrong type for argument %d", index);
     return siam;
 }
 
@@ -77,7 +77,7 @@ static Siamiga *checkSiamiga(lua_State *L, int index)
     Siamiga *siam;
     luaL_checktype(L, index, LUA_TUSERDATA);
     siam = luaL_checkudata(L, index, SIAMIGA);
-    if (siam == NULL) luaL_typerror(L, index, SIAMIGA);
+    if (siam == NULL) luaL_error(L, "siamiga/checkSiamiga: wrong type for argument %d", index);
     return siam;
 }
 
@@ -94,7 +94,7 @@ static Siamiga *pushSiamiga(lua_State *L)
 static Sigadget *toSigadget(lua_State *L, int index)
 {
     Sigadget **psg = (Sigadget **)lua_touserdata(L, index);
-    if (psg == NULL) luaL_typerror(L, index, SIGADGET);
+    if (psg == NULL) luaL_error(L, "siamiga/toSigadget: wrong type for argument %d", index);
     return *psg;
 }
 #endif
@@ -104,7 +104,7 @@ static Sigadget *checkSigadget(lua_State *L, int index)
     Sigadget **psg, *sg;
     luaL_checktype(L, index, LUA_TUSERDATA);
     psg = (Sigadget **)luaL_checkudata(L, index, SIGADGET);
-    if (psg == NULL) luaL_typerror(L, index, SIGADGET);
+    if (psg == NULL) luaL_error(L, "siamiga/checkSigadget: wrong type for argument %d", index);
     sg = *psg;
     return sg;
 }
@@ -858,7 +858,7 @@ static int siamiga_addgadget(lua_State *L)
     return 1;
 }
 
-static const luaL_reg siamiga_methods[] =
+static const luaL_Reg siamiga_methods[] =
 {
     {"createwindow",siamiga_createwindow},
     {"openwindow",  siamiga_openwindow},
@@ -921,7 +921,7 @@ static int siamiga_gc(lua_State *L)
     return 0;
 }
 
-static const luaL_reg siamiga_meta[] = {
+static const luaL_Reg siamiga_meta[] = {
     {"__gc",    siamiga_gc},
     {NULL, NULL}
 };
@@ -1019,14 +1019,14 @@ static int sigadget_get(lua_State *L)
     return 1;
 }
 
-static const luaL_reg sigadget_methods[] =
+static const luaL_Reg sigadget_methods[] =
 {
     {"set",     sigadget_set},
     {"get",     sigadget_get},
     {NULL, NULL}
 };
 
-static const luaL_reg sigadget_meta[] = {
+static const luaL_Reg sigadget_meta[] = {
     {NULL, NULL}
 };
 
@@ -1050,7 +1050,7 @@ typedef struct Picture
 static Picture *toPicture(lua_State *L, int index)
 {
     Picture *pi = (Picture *)lua_touserdata(L, index);
-    if (pi == NULL) luaL_typerror(L, index, SIPICTURE);
+    if (pi == NULL) luaL_error(L, "sipicture/toPicture: wrong type for argument %d", index);
     return pi;
 }
 #endif
@@ -1060,7 +1060,7 @@ static Picture *checkPicture(lua_State *L, int index)
     Picture *pi;
     luaL_checktype(L, index, LUA_TUSERDATA);
     pi = (Picture *)luaL_checkudata(L, index, SIPICTURE);
-    if (pi == NULL) luaL_typerror(L, index, SIPICTURE);
+    if (pi == NULL) luaL_error(L, "sipicture/checkPicture: wrong type for argument %d", index);
     return pi;
 }
 
@@ -1322,7 +1322,7 @@ static int sipicture_free(lua_State *L)
     return 0;
 }
 
-static const luaL_reg sipicture_methods[] =
+static const luaL_Reg sipicture_methods[] =
 {
     {"load",    sipicture_load},
     // {"save",    sipicture_save},
@@ -1340,7 +1340,7 @@ static int sipicture_gc(lua_State *L)
     return 0;
 }
 
-static const luaL_reg sipicture_meta[] = {
+static const luaL_Reg sipicture_meta[] = {
     {"__gc",    sipicture_gc},
     {NULL, NULL}
 };

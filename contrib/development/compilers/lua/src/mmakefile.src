@@ -20,7 +20,7 @@ MUILIBFILES := lmuilib
 LUAFILES :=	lua $(COREFILES)
 
 # files to build the precompiler 'luac'
-LUACFILES :=	luac print $(COREFILES)
+LUACFILES :=	luac $(COREFILES)
 
 # files to build the interpreter 'amilua'
 AMILUAFILES :=	amilua $(COREFILES)
@@ -31,12 +31,12 @@ EXEDIR :=	$(CONTRIBDIR)/Development/Lua
 
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../luafilesystem/src
 
-USER_CFLAGS   += -Wno-uninitialized
+USER_CFLAGS   += -Wno-uninitialized -DLUA_COMPAT_ALL
 
-# #MM- contrib-development-lua : contrib-development-lua-lua \
-# #MM  contrib-development-lua-amilua \
-# #MM  contrib-development-lua-luac \
-# #MM  includes-copy
+#MM- contrib-development-lua : contrib-development-lua-lua \
+#MM  contrib-development-lua-amilua \
+#MM  contrib-development-lua-luac \
+#MM  includes-copy
 
 #MM contrib-development-lua-lib :
 %build_linklib mmake=contrib-development-lua-lib libname=lua files=$(LIBFILES)

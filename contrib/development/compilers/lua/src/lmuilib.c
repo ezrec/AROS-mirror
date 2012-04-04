@@ -28,9 +28,10 @@
 #include <string.h>
 
 #define MUIMASTER_YES_INLINE_STDARG
-#define DEBUG 1
 
+//#define DEBUG 1
 #include <aros/debug.h>
+
 #include <libraries/mui.h>
 #include <libraries/asl.h>
 #include <proto/muimaster.h>
@@ -57,7 +58,7 @@ typedef STRPTR * Strarray;
 static Strarray toStrarray (lua_State *L, int index)
 {
   Strarray *ps = (Strarray *)lua_touserdata(L, index);
-  if (ps == NULL) luaL_typerror(L, index, STRARRAY);
+  if (ps == NULL) luaL_error(L, "strarray/toStrarray: wrong type for argument %d", index);
   return *ps;
 }
 
@@ -68,7 +69,7 @@ static Strarray checkStrarray (lua_State *L, int index)
   Strarray *ps, sa;
   luaL_checktype(L, index, LUA_TUSERDATA);
   ps = (Strarray*)luaL_checkudata(L, index, STRARRAY);
-  if (ps == NULL) luaL_typerror(L, index, STRARRAY);
+  if (ps == NULL) luaL_error(L, "strarray/checkStrarray: wrong type for argument %d", index);
   sa = *ps;
   if (!sa)
     luaL_error(L, "checkStrarray: Strarray is null");
@@ -157,7 +158,7 @@ static int Strarray_get (lua_State *L)
 
 //------------------------------------------------------------------------------
 
-static const luaL_reg Strarray_methods[] = {
+static const luaL_Reg Strarray_methods[] = {
   {"new", Strarray_new},
   {"dispose", Strarray_dispose},
   {"get", Strarray_get},
@@ -166,7 +167,7 @@ static const luaL_reg Strarray_methods[] = {
 
 //------------------------------------------------------------------------------
 
-static const luaL_reg Strarray_meta[] = {
+static const luaL_Reg Strarray_meta[] = {
   //{"__gc", Strarray_gc},
   {0, 0}
 };
@@ -182,7 +183,7 @@ typedef APTR Muiobj;
 static Muiobj toMui (lua_State *L, int index)
 {
   Muiobj *pm = (Muiobj *)lua_touserdata(L, index);
-  if (pm == NULL) luaL_typerror(L, index, MUI);
+  if (pm == NULL) luaL_error(L, "mui/toMui: wrong type for argument %d", index);
   return *pm;
 }
 
@@ -193,7 +194,7 @@ static Muiobj checkMui (lua_State *L, int index)
   Muiobj *pm, mo;
   luaL_checktype(L, index, LUA_TUSERDATA);
   pm = (Muiobj*)luaL_checkudata(L, index, MUI);
-  if (pm == NULL) luaL_typerror(L, index, MUI);
+  if (pm == NULL) luaL_error(L, "mui/checkMui: wrong type for argument %d", index);
   mo = *pm;
   if (!mo)
     luaL_error(L, "checkMui: Muiobject is null");
@@ -592,7 +593,7 @@ static int Muiobj_filerequest(lua_State *L)
 
 //------------------------------------------------------------------------------
 
-static const luaL_reg Mui_methods[] = {
+static const luaL_Reg Mui_methods[] = {
   {"new",         Muiobj_new},
   {"make",        Muiobj_make},
   {"doint",       Muiobj_domethod_integer},
@@ -624,7 +625,7 @@ static int Mui_gc (lua_State *L)
 
 //------------------------------------------------------------------------------
 
-static const luaL_reg Mui_meta[] = {
+static const luaL_Reg Mui_meta[] = {
   {"__gc",       Mui_gc},
   {0, 0}
 };
