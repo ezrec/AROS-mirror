@@ -17,13 +17,13 @@
 #include <libraries/mui.h>
 #include <zune/customclasses.h>
 
-#include "unarcwindow_class.h"
+#include "unarcgroup_class.h"
 #include "locale.h"
 
 #define PATHNAMESIZE (1024)
 
 
-struct UnarcWindow_DATA
+struct UnarcGroup_DATA
 {
     Object *btn_all, *btn_none, *btn_invert, *btn_start, *btn_cancel;
     Object *str_file, *str_targetdir, *lst_content, *ga_progress;
@@ -144,7 +144,7 @@ AROS_UFH3S(void, change_selection_func,
 {
     AROS_USERFUNC_INIT
 
-    struct UnarcWindow_DATA *data = h->h_Data;
+    struct UnarcGroup_DATA *data = h->h_Data;
     ULONG status = *(ULONG *)msg;
     struct Listentry *oldentry, newentry;
     LONG i;
@@ -229,7 +229,7 @@ AROS_UFH3S(void, start_func,
 
     D(bug("[start_func] called\n"));
 
-    struct UnarcWindow_DATA *data = h->h_Data;
+    struct UnarcGroup_DATA *data = h->h_Data;
     struct Listentry *entry;
     LONG i, result;
 
@@ -293,7 +293,7 @@ AROS_UFH3S(void, read_file_func,
 
     D(bug("[read_file_func] called\n"));
 
-    struct UnarcWindow_DATA *data = h->h_Data;
+    struct UnarcGroup_DATA *data = h->h_Data;
     LONG result;
 
     STRPTR filename = (STRPTR)XGET(data->str_file, MUIA_String_Contents);
@@ -335,12 +335,16 @@ AROS_UFH3S(void, read_file_func,
             _(MSG_OK), _(MSG_ERR_NO_ARC), NULL
         );
     }
+    SET(data->btn_all, MUIA_Disabled, FALSE);
+    SET(data->btn_none, MUIA_Disabled, FALSE);
+    SET(data->btn_invert, MUIA_Disabled, FALSE);
+    SET(data->btn_start, MUIA_Disabled, FALSE);
 
     AROS_USERFUNC_EXIT
 }
 
 
-Object *UnarcWindow__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
+Object *UnarcGroup__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
 {
     Object *btn_all, *btn_none, *btn_invert, *btn_start, *btn_cancel;
     Object *str_file, *str_targetdir, *lst_content, *ga_progress;
@@ -367,11 +371,11 @@ Object *UnarcWindow__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
     {
         switch (tag->ti_Tag)
         {
-            case MUIA_UnarcWindow_Archive:
+            case MUIA_UnarcGroup_Archive:
                 archive = (STRPTR)tag->ti_Data;
                 break;
 
-            case MUIA_UnarcWindow_Destination:
+            case MUIA_UnarcGroup_Destination:
                 destination = (STRPTR)tag->ti_Data;
                 break;
         }
@@ -384,70 +388,66 @@ Object *UnarcWindow__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
     self = (Object *) DoSuperNewTags
     (
         CLASS, self, NULL,
-        MUIA_Window_Title, _(MSG_WI_TITLE),
-        MUIA_Window_ID, MAKE_ID('U', 'N', 'W', 'I'),
-        WindowContents, VGroup,
-            Child, ColGroup(2),
-                Child, Label(_(MSG_LA_ARCHIVE)),
-                Child, PopaslObject,
-                    MUIA_Popasl_Type , ASL_FileRequest,
-                    ASLFR_TitleText, _(MSG_FREQ_ARCHIVE_TITLE),
-                    ASLFR_RejectIcons, TRUE,
-                    MUIA_Popstring_String, str_file = StringObject,
-                        StringFrame,
-                        MUIA_String_Contents, archive,
-                    End,
-                    MUIA_Popstring_Button, PopButton(MUII_PopFile),
+        Child, ColGroup(2),
+            Child, Label(_(MSG_LA_ARCHIVE)),
+            Child, PopaslObject,
+                MUIA_Popasl_Type , ASL_FileRequest,
+                ASLFR_TitleText, _(MSG_FREQ_ARCHIVE_TITLE),
+                ASLFR_RejectIcons, TRUE,
+                MUIA_Popstring_String, str_file = StringObject,
+                    StringFrame,
+                    MUIA_String_Contents, archive,
                 End,
-                Child, Label(_(MSG_LA_DESTINATION)),
-                Child, PopaslObject,
-                    MUIA_Popasl_Type , ASL_FileRequest,
-                    ASLFR_TitleText, _(MSG_FREQ_DESTINATION_TITLE),
-                    ASLFR_DrawersOnly, TRUE,
-                    MUIA_Popstring_String, str_targetdir = StringObject,
-                        StringFrame,
-                        MUIA_String_Contents, destination,
-                    End,
-                    MUIA_Popstring_Button, PopButton(MUII_PopDrawer),
+                MUIA_Popstring_Button, PopButton(MUII_PopFile),
+            End,
+            Child, Label(_(MSG_LA_DESTINATION)),
+            Child, PopaslObject,
+                MUIA_Popasl_Type , ASL_FileRequest,
+                ASLFR_TitleText, _(MSG_FREQ_DESTINATION_TITLE),
+                ASLFR_DrawersOnly, TRUE,
+                MUIA_Popstring_String, str_targetdir = StringObject,
+                    StringFrame,
+                    MUIA_String_Contents, destination,
                 End,
+                MUIA_Popstring_Button, PopButton(MUII_PopDrawer),
             End,
-            Child, ga_progress = GaugeObject,
-                GaugeFrame,
-                MUIA_FixHeight, 15,
-                MUIA_Gauge_Horiz, TRUE,
-                MUIA_Gauge_Max, 100,
+        End,
+        Child, ga_progress = GaugeObject,
+            GaugeFrame,
+            MUIA_FixHeight, 15,
+            MUIA_Gauge_Horiz, TRUE,
+            MUIA_Gauge_Max, 100,
+        End,
+        Child, ListviewObject,
+            MUIA_Listview_Input, FALSE,
+            MUIA_Listview_List, lst_content = ListObject,
+                MUIA_Frame, MUIV_Frame_InputList,
+                MUIA_List_Format, ",",
+                MUIA_List_DisplayHook, &list_display_hook,
+                MUIA_List_ConstructHook, &list_constr_hook,
+                MUIA_List_DestructHook, &list_destr_hook,
             End,
-            Child, ListviewObject,
-                MUIA_Listview_Input, FALSE,
-                MUIA_Listview_List, lst_content = ListObject,
-                    MUIA_Frame, MUIV_Frame_InputList,
-                    MUIA_List_Format, ",",
-                    MUIA_List_DisplayHook, &list_display_hook,
-                    MUIA_List_ConstructHook, &list_constr_hook,
-                    MUIA_List_DestructHook, &list_destr_hook,
-                End,
-            End,
-            Child, HGroup,
-                Child, btn_all = SimpleButton(_(MSG_BT_ALL)),
-                Child, btn_none = SimpleButton(_(MSG_BT_NONE)),
-                Child, btn_invert = SimpleButton(_(MSG_BT_INVERT)),
-            End,
-            Child, (IPTR) RectangleObject, 
-                MUIA_Rectangle_HBar, TRUE, 
-                MUIA_FixHeight,      2, 
-            End,
-            Child, HGroup,
-                Child, btn_start = SimpleButton(_(MSG_BT_START)),
-                Child, HVSpace,
-                Child, btn_cancel = SimpleButton(_(MSG_BT_CANCEL)),
-            End,
+        End,
+        Child, HGroup,
+            Child, btn_all = SimpleButton(_(MSG_BT_ALL)),
+            Child, btn_none = SimpleButton(_(MSG_BT_NONE)),
+            Child, btn_invert = SimpleButton(_(MSG_BT_INVERT)),
+        End,
+        Child, (IPTR) RectangleObject, 
+            MUIA_Rectangle_HBar, TRUE, 
+            MUIA_FixHeight,      2, 
+        End,
+        Child, HGroup,
+            Child, btn_start = SimpleButton(_(MSG_BT_START)),
+            Child, HVSpace,
+            Child, btn_cancel = SimpleButton(_(MSG_BT_CANCEL)),
         End,
         TAG_DONE
     );
 
     if (self)
     {
-        struct UnarcWindow_DATA *data = INST_DATA(CLASS, self);
+        struct UnarcGroup_DATA *data = INST_DATA(CLASS, self);
 
         data->btn_all           = btn_all;
         data->btn_none          = btn_none;
@@ -473,12 +473,6 @@ Object *UnarcWindow__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
         SET(data->btn_none, MUIA_Disabled, TRUE);
         SET(data->btn_invert, MUIA_Disabled, TRUE);
         SET(data->btn_start, MUIA_Disabled, TRUE);
-
-        DoMethod
-        (
-            self, MUIM_Notify, MUIA_Window_CloseRequest, TRUE,
-            MUIV_Notify_Application, 2, MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit
-        );
 
         DoMethod
         (
@@ -535,9 +529,9 @@ Object *UnarcWindow__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
 }
 
 
-IPTR UnarcWindow__OM_DISPOSE(Class *CLASS, Object *self, Msg message)
+IPTR UnarcGroup__OM_DISPOSE(Class *CLASS, Object *self, Msg message)
 {
-    struct UnarcWindow_DATA *data = INST_DATA(CLASS, self);
+    struct UnarcGroup_DATA *data = INST_DATA(CLASS, self);
 
     if (data->ai)
         xadFreeObjectA(data->ai, 0);
@@ -549,7 +543,7 @@ IPTR UnarcWindow__OM_DISPOSE(Class *CLASS, Object *self, Msg message)
 
 ZUNE_CUSTOMCLASS_2
 (
-    UnarcWindow, NULL, MUIC_Window, NULL,
+    UnarcGroup, NULL, MUIC_Group, NULL,
     OM_NEW,             struct opSet *,
     OM_DISPOSE,         Msg
 );

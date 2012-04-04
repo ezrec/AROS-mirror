@@ -1,5 +1,5 @@
-#ifndef UNARCWINDOW_CLASS_H
-#define UNARCWINDOW_CLASS_H
+#ifndef UNARCGROUP_CLASS_H
+#define UNARCGROUP_CLASS_H
 
 /*
     Copyright © 2012, The AROS Development Team. All rights reserved.
@@ -10,17 +10,17 @@
 #include <libraries/mui.h>
 
 /*** Identifier base ********************************************************/
-#define MUIB_UnarcWindow                (TAG_USER | 0x10000000)
+#define MUIB_UnarcGroup                 (TAG_USER | 0x10000000)
 
 /*** Attributes *************************************************************/
-#define MUIA_UnarcWindow_Archive        (MUIB_UnarcWindow | 0)
-#define MUIA_UnarcWindow_Destination    (MUIB_UnarcWindow | 1)
+#define MUIA_UnarcGroup_Archive         (MUIB_UnarcGroup | 0)
+#define MUIA_UnarcGroup_Destination     (MUIB_UnarcGroup | 1)
 
 /*** Variables **************************************************************/
-extern struct MUI_CustomClass *UnarcWindow_CLASS;
+extern struct MUI_CustomClass *UnarcGroup_CLASS;
 
 /*** Macros *****************************************************************/
-#define UnarcWindowObject BOOPSIOBJMACRO_START(UnarcWindow_CLASS->mcc_Class)
+#define UnarcGroupObject BOOPSIOBJMACRO_START(UnarcGroup_CLASS->mcc_Class)
 
 
-#endif /* UNARCWINDOW_CLASS_H */
+#endif /* UNARCGROUP_CLASS_H */

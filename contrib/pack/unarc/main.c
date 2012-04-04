@@ -15,7 +15,7 @@
 #include <libraries/mui.h>
 #include <workbench/startup.h>
 
-#include "unarcwindow_class.h"
+#include "unarcgroup_class.h"
 #include "locale.h"
 
 #define ARGTEMPLATE "ARCHIVE,DESTINATION,PUBSCREEN/K"
@@ -84,15 +84,25 @@ int main(int argc, char **argv)
         MUIA_Application_Version, (IPTR)"$VER: Unarc 1.1 (11.02.2012)",
         MUIA_Application_Copyright, __(MSG_AppCopyright),
         MUIA_Application_Description, __(MSG_AppDescription),
-        SubWindow, (IPTR)(win = UnarcWindowObject,
-            MUIA_UnarcWindow_Archive, (IPTR)archive,
-            MUIA_UnarcWindow_Destination, (IPTR)destination,
+        SubWindow, (IPTR)(win = WindowObject,
+            MUIA_Window_Title, __(MSG_WI_TITLE),
+            MUIA_Window_ID, MAKE_ID('U', 'N', 'W', 'I'),
             pubscreen ? MUIA_Window_PublicScreen : TAG_IGNORE, (IPTR)pubscreen,
+            WindowContents, (IPTR)(UnarcGroupObject,
+                MUIA_UnarcGroup_Archive, (IPTR)archive,
+                MUIA_UnarcGroup_Destination, (IPTR)destination,
+            End),
         End),
     End;
 
     if (!app)
         cleanup_exit(_(MSG_ERR_NO_APPLICATION));
+
+    DoMethod
+    (
+        win, MUIM_Notify, MUIA_Window_CloseRequest, TRUE,
+        app, 2, MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit
+    );
 
     SET(win, MUIA_Window_Open, TRUE);
     DoMethod(app, MUIM_Application_Execute);

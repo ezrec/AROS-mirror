@@ -3,7 +3,7 @@
 
 include $(TOP)/config/make.cfg
 
-FILES := main locale unarcwindow_class
+FILES := main locale unarcgroup_class
 
 EXEDIR := $(AROS_CONTRIB)/Utilities/Archive/Unarc
 
