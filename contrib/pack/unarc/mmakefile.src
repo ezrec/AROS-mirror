@@ -3,14 +3,19 @@
 
 include $(TOP)/config/make.cfg
 
-FILES := main locale unarcgroup_class
-
+FILES  := main locale unarcgroup_class
 EXEDIR := $(AROS_CONTRIB)/Utilities/Archive/Unarc
+IMAGES := selected unselected
 
-#MM contrib-pack-unarc : includes linklibs contrib-pack-unarc-catalogs contrib-pack-xadmaster
+#MM- contrib-pack : contrib-pack-unarc
+
+#MM contrib-pack-unarc : includes linklibs contrib-pack-unarc-catalogs \
+#MM contrib-pack-unarc-images contrib-pack-xadmaster
 
 %build_prog mmake=contrib-pack-unarc \
     progname=Unarc targetdir=$(EXEDIR) \
     files=$(FILES) uselibs="mui xadmaster amiga arosc"
+
+%copy_files_q mmake=contrib-pack-unarc-images files=$(IMAGES) src=images dst=$(EXEDIR)/Images
 
 %common

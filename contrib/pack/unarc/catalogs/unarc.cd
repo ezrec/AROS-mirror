@@ -40,6 +40,30 @@ _OK
 MSG_SKIP_CANCEL (//)
 _Skip|_Cancel
 ;
+;
+; List labels
+MSG_LBL_NAME (//)
+Name
+;
+MSG_LBL_PROTECTION (//)
+Protection
+;
+MSG_LBL_SIZE (//)
+Size
+;
+MSG_LBL_PACKSIZE (//)
+Packsize
+;
+MSG_LBL_RATE (//)
+Rate
+;
+MSG_LBL_DATE (//)
+Date
+;
+MSG_LBL_TIME (//)
+Time
+;
+;
 ; Error messages
 ;
 MSG_ERR (//)
@@ -62,4 +86,7 @@ Unpacking of\n%s\nreturned error:\n%s
 ;
 MSG_ERR_ADDPART (//)
 Can't create target file name
+;
+MSG_ERR_NODEST (//)
+Please, select a destination
 ;

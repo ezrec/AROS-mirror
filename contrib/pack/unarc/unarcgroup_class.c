@@ -15,7 +15,11 @@
 #include <aros/debug.h>
 
 #include <libraries/mui.h>
+#include <mui/NList_mcc.h>
+#include <mui/NListview_mcc.h>
 #include <zune/customclasses.h>
+
+#include <stdio.h>
 
 #include "unarcgroup_class.h"
 #include "locale.h"
@@ -121,15 +125,76 @@ AROS_UFH3S(LONG, list_display_func,
 {
     AROS_USERFUNC_INIT
 
-    if (li->selected)
+    if (li)
     {
-        *array++ = "\033I[6:16]"; // FIXME: that should be a checkmark image
+        static TEXT protbuf[8], sizebuf[20], crsizebuf[20], percentbuf[8];
+        static TEXT datebuf[10], timebuf[10];
+        struct DateTime dt;
+
+        // Protection bits
+        protbuf[0] = li->fi->xfi_Protection & FIBF_SCRIPT  ? 's' : '-';
+        protbuf[1] = li->fi->xfi_Protection & FIBF_PURE    ? 'p' : '-';
+        protbuf[2] = li->fi->xfi_Protection & FIBF_ARCHIVE ? 'a' : '-';
+
+        // The following bits are high-active!
+        protbuf[3] = li->fi->xfi_Protection & FIBF_READ    ? '-' : 'r';
+        protbuf[4] = li->fi->xfi_Protection & FIBF_WRITE   ? '-' : 'w';
+        protbuf[5] = li->fi->xfi_Protection & FIBF_EXECUTE ? '-' : 'e';
+        protbuf[6] = li->fi->xfi_Protection & FIBF_DELETE  ? '-' : 'd';
+        protbuf[7] = '\0';
+
+        // Sizes
+        sprintf(sizebuf, "%lu", (long unsigned int)li->fi->xfi_Size);
+        sprintf(crsizebuf, "%lu", (long unsigned int)li->fi->xfi_CrunchSize);
+        if (li->fi->xfi_Size)
+        {
+            sprintf(percentbuf, "%u %%", (unsigned int)(100 - li->fi->xfi_CrunchSize * 100 / li->fi->xfi_Size));
+        }
+        else
+        {
+            strcpy(percentbuf, "100 %");
+        }
+
+        // Date
+        datebuf[0] = '\0';
+        timebuf[0] = '\0';
+        dt.dat_Format = FORMAT_DEF;
+        dt.dat_Flags = 0;
+        dt.dat_StrDay = NULL;
+        dt.dat_StrDate = datebuf;
+        dt.dat_StrTime = timebuf;
+        if (xadConvertDates(XAD_DATEXADDATE, &li->fi->xfi_Date, XAD_GETDATEDATESTAMP, &dt, TAG_DONE) == 0)
+        {
+            DateToStr(&dt);
+        }
+
+        if (li->selected)
+        {
+            *array++ = "\033I[5:PROGDIR:Images/selected]";
+        }
+        else
+        {
+            *array++ = "\033I[5:PROGDIR:Images/unselected]";
+        }
+        *array++ = li->fi->xfi_FileName;
+        *array++ = protbuf;
+        *array++ = sizebuf;
+        *array++ = crsizebuf;
+        *array++ = percentbuf;
+        *array++ = datebuf;
+        *array++ = timebuf;
     }
     else
     {
-        *array++ = " ";
+        *array++ = "";
+        *array++ = (STRPTR)_(MSG_LBL_NAME);
+        *array++ = (STRPTR)_(MSG_LBL_PROTECTION);
+        *array++ = (STRPTR)_(MSG_LBL_SIZE);
+        *array++ = (STRPTR)_(MSG_LBL_PACKSIZE);
+        *array++ = (STRPTR)_(MSG_LBL_RATE);
+        *array++ = (STRPTR)_(MSG_LBL_DATE);
+        *array++ = (STRPTR)_(MSG_LBL_TIME);
     }
-    *array = li->fi->xfi_FileName;
 
     return 0;
 
@@ -156,60 +221,56 @@ AROS_UFH3S(void, change_selection_func,
     switch(status)
     {
         case SETALL:
-            NNSET(data->lst_content, MUIA_List_Active, MUIV_List_Active_Off);
             for (i = 0; ; i++)
             {
-                DoMethod(data->lst_content, MUIM_List_GetEntry, i, &oldentry);
+                DoMethod(data->lst_content, MUIM_NList_GetEntry, i, &oldentry);
                 if (!oldentry)
                     break;
                 if (!oldentry->selected)
                 {
                     newentry.selected = TRUE;
                     newentry.fi = oldentry->fi;
-                    DoMethod(data->lst_content, MUIM_List_Remove, i);
-                    DoMethod(data->lst_content, MUIM_List_InsertSingle, &newentry, i);
+                    DoMethod(data->lst_content, MUIM_NList_Remove, i);
+                    DoMethod(data->lst_content, MUIM_NList_InsertSingle, &newentry, i);
                 }
             }
             break;
         case CLEARALL:
-            NNSET(data->lst_content, MUIA_List_Active, MUIV_List_Active_Off);
             for (i = 0; ; i++)
             {
-                DoMethod(data->lst_content, MUIM_List_GetEntry, i, &oldentry);
+                DoMethod(data->lst_content, MUIM_NList_GetEntry, i, &oldentry);
                 if (!oldentry)
                     break;
                 if (oldentry->selected)
                 {
                     newentry.selected = FALSE;
                     newentry.fi = oldentry->fi;
-                    DoMethod(data->lst_content, MUIM_List_Remove, i);
-                    DoMethod(data->lst_content, MUIM_List_InsertSingle, &newentry, i);
+                    DoMethod(data->lst_content, MUIM_NList_Remove, i);
+                    DoMethod(data->lst_content, MUIM_NList_InsertSingle, &newentry, i);
                 }
             }
             break;
         case INVERTALL:
-            NNSET(data->lst_content, MUIA_List_Active, MUIV_List_Active_Off);
             for (i = 0; ; i++)
             {
-                DoMethod(data->lst_content, MUIM_List_GetEntry, i, &oldentry);
+                DoMethod(data->lst_content, MUIM_NList_GetEntry, i, &oldentry);
                 if (!oldentry)
                     break;
                 newentry.selected = oldentry->selected ? FALSE : TRUE;
                 newentry.fi = oldentry->fi;
-                DoMethod(data->lst_content, MUIM_List_Remove, i);
-                DoMethod(data->lst_content, MUIM_List_InsertSingle, &newentry, i);
+                DoMethod(data->lst_content, MUIM_NList_Remove, i);
+                DoMethod(data->lst_content, MUIM_NList_InsertSingle, &newentry, i);
             }
             break;
         case INVERTSINGLE:
-            i = XGET(data->lst_content, MUIA_List_Active);
-            if (i != -1)
+            i = XGET(data->lst_content, MUIA_NList_EntryClick);
+            if (i >= 0)
             {
-                NNSET(data->lst_content, MUIA_List_Active, MUIV_List_Active_Off);
-                DoMethod(data->lst_content, MUIM_List_GetEntry, i, &oldentry);
+                DoMethod(data->lst_content, MUIM_NList_GetEntry, i, &oldentry);
                 newentry.selected = oldentry->selected ? FALSE : TRUE;
                 newentry.fi = oldentry->fi;
-                DoMethod(data->lst_content, MUIM_List_Remove, i);
-                DoMethod(data->lst_content, MUIM_List_InsertSingle, &newentry, i);
+                DoMethod(data->lst_content, MUIM_NList_Remove, i);
+                DoMethod(data->lst_content, MUIM_NList_InsertSingle, &newentry, i);
             }
             break;
     }
@@ -234,9 +295,20 @@ AROS_UFH3S(void, start_func,
     LONG i, result;
 
     STRPTR destination = (STRPTR)XGET(data->str_targetdir, MUIA_String_Contents);
+    if (destination[0] == '\0')
+    {
+        // FIXME: what if user selects "" as destination when starting from CLI?
+        MUI_Request
+        (
+            _app(obj), _win(obj), 0, _(MSG_ERR),
+            _(MSG_OK), _(MSG_ERR_NODEST)
+        );
+        return;
+    }
+
     for (i = 0; ; i++)
     {
-        DoMethod(obj, MUIM_List_GetEntry, i, &entry);
+        DoMethod(obj, MUIM_NList_GetEntry, i, &entry);
         if (!entry)
             break;
         if (entry->selected)
@@ -262,7 +334,8 @@ AROS_UFH3S(void, start_func,
                 XAD_OVERWRITE, TRUE,
                 TAG_DONE
             );
-            if (result)
+            D(bug("[start_func] xadFileUnArc result %d\n", result));
+            if (result !=0 && result != XADERR_BADPARAMS) // FIXME: why do I have to catch that error?
             {
                 if
                 (
@@ -298,7 +371,7 @@ AROS_UFH3S(void, read_file_func,
 
     STRPTR filename = (STRPTR)XGET(data->str_file, MUIA_String_Contents);
 
-    DoMethod(data->lst_content, MUIM_List_Clear);
+    DoMethod(data->lst_content, MUIM_NList_Clear);
 
     xadFreeInfo(data->ai);
     data->entry_cnt = 0;
@@ -317,7 +390,7 @@ AROS_UFH3S(void, read_file_func,
             struct Listentry newentry;
             newentry.selected = TRUE;
             newentry.fi = fi;
-            DoMethod(data->lst_content, MUIM_List_InsertSingle, &newentry, MUIV_List_Insert_Bottom);
+            DoMethod(data->lst_content, MUIM_NList_InsertSingle, &newentry, MUIV_List_Insert_Bottom);
             data->entry_cnt++;
             fi = fi->xfi_Next;
         }
@@ -335,10 +408,6 @@ AROS_UFH3S(void, read_file_func,
             _(MSG_OK), _(MSG_ERR_NO_ARC), NULL
         );
     }
-    SET(data->btn_all, MUIA_Disabled, FALSE);
-    SET(data->btn_none, MUIA_Disabled, FALSE);
-    SET(data->btn_invert, MUIA_Disabled, FALSE);
-    SET(data->btn_start, MUIA_Disabled, FALSE);
 
     AROS_USERFUNC_EXIT
 }
@@ -381,6 +450,9 @@ Object *UnarcGroup__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
         }
     }
 
+    if (archive == NULL) archive = "SYS:";
+    if (destination == NULL) destination = "RAM:";
+
     list_constr_hook.h_Entry = (HOOKFUNC)list_constr_func;
     list_destr_hook.h_Entry = (HOOKFUNC)list_destr_func;
     list_display_hook.h_Entry = (HOOKFUNC)list_display_func;
@@ -418,14 +490,15 @@ Object *UnarcGroup__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
             MUIA_Gauge_Horiz, TRUE,
             MUIA_Gauge_Max, 100,
         End,
-        Child, ListviewObject,
-            MUIA_Listview_Input, FALSE,
-            MUIA_Listview_List, lst_content = ListObject,
+        Child, NListviewObject,
+            MUIA_NListview_NList, lst_content = NListObject,
                 MUIA_Frame, MUIV_Frame_InputList,
-                MUIA_List_Format, ",",
-                MUIA_List_DisplayHook, &list_display_hook,
-                MUIA_List_ConstructHook, &list_constr_hook,
-                MUIA_List_DestructHook, &list_destr_hook,
+                MUIA_NList_Input, FALSE,
+                MUIA_NList_Format, "BAR,BAR,P=\33r BAR,P=\33r BAR,P=\33r BAR,P=\33r BAR,BAR,",
+                MUIA_NList_Title, TRUE,
+                MUIA_NList_DisplayHook, &list_display_hook,
+                MUIA_NList_ConstructHook, &list_constr_hook,
+                MUIA_NList_DestructHook, &list_destr_hook,
             End,
         End,
         Child, HGroup,
@@ -500,7 +573,7 @@ Object *UnarcGroup__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
 
         DoMethod
         (
-            data->lst_content, MUIM_Notify, MUIA_List_Active, MUIV_EveryTime,
+            data->lst_content, MUIM_Notify, MUIA_NList_EntryClick, MUIV_EveryTime,
             data->lst_content, 3, MUIM_CallHook, &data->change_selection_hook, INVERTSINGLE
         );
 
