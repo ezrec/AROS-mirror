@@ -325,7 +325,7 @@ AROS_UFH3S(void, change_selection_func,
     }
 
     SET(data->lst_content, MUIA_List_Quiet, FALSE);
-    snprintf(buffer, sizeof buffer, "%u bytes in %u selected files", data->select_size, data->select_entry_cnt);
+    snprintf(buffer, sizeof buffer, _(MSG_TXT_STATUS_SEL), data->select_size, data->select_entry_cnt);
     SET(data->txt_status_select, MUIA_Text_Contents, buffer);
 
     AROS_USERFUNC_EXIT
