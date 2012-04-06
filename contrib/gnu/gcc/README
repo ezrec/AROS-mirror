@@ -5,7 +5,8 @@ INDEX
 2. Required knowledges
 3. What is and how to build a cross compiler for AROS?
 4. What is and how to build a native compiler for AROS?
-5. Contact
+5. Supported version
+6. Contact
 
 ------------------------------------------------------------------------
 
@@ -172,8 +173,18 @@ INDEX
               backend, and the "spawn" version of docommand, and then
 	      link with libiberty.a and libbfd.a.
 
-5. Contact
+5. Supported version(s)
 
-If you need to blame someone for how crappy this gcc port is, then by
-any means blame Fabio Alemagna <falemagn@studenti.unina.it>. Feel free
-to also ask normal questions, though :-)
+Currently only a patch for version 4.6.2 of gcc is maintained.
+Out-of-date patches for older versions of gcc are available in the
+history of the AROS subversion repository.
+If one wants to patch another version of gcc it probably is better
+to port a maintained patch than trying to bring an out-of-date patch
+up-to-date.
+
+6. Contact
+
+For more information about AROS and using this compiler you can post a
+mail on the developers maillist (aros_dev@aros.org) or on the aros-exec
+forum (http://www.aros-exec.org).
+
