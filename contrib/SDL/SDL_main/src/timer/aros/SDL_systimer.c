@@ -105,20 +105,19 @@ static BOOL open_timer(void)
   TimerBase = TimerIO->tr_node.io_Device;
   D(bug("Timer resource allocated.\n"));
 
+  GetSysTime(&basetime);
+  D(bug("Basetime: %lusecs %lumicro\n", basetime.tv_secs, basetime.tv_micro));
+
+#ifndef SHARED_LIB
+  atexit(close_timer);
+#endif
+
   return TRUE;
 }
 
 void SDL_StartTicks(void)
 {
-
-  if (open_timer()) {
-    GetSysTime(&basetime);
-    D(bug("Basetime: %lusecs %lumicro\n", basetime.tv_secs, basetime.tv_micro));
-
-#ifndef SHARED_LIB
-    atexit(close_timer);
-#endif
-  }
+  open_timer();  
 }
 
 Uint32 SDL_GetTicks (void)
