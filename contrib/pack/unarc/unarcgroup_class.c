@@ -237,7 +237,7 @@ AROS_UFH3S(void, change_selection_func,
     ULONG status = *(ULONG *)msg;
     struct Listentry *oldentry, newentry;
     LONG i;
-    TEXT buffer[40];
+    TEXT buffer[50];
 
     D(bug("[change_selection_func] status %u\n", status));
 
@@ -419,7 +419,7 @@ AROS_UFH3S(void, read_file_func,
 
     struct UnarcGroup_DATA *data = h->h_Data;
     LONG result;
-    TEXT buffer[40];
+    TEXT buffer[50];
 
     STRPTR filename = (STRPTR)XGET(data->str_file, MUIA_String_Contents);
     STRPTR newfilename = alloc_name_from_lock(filename); // expand to full path
