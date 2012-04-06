@@ -1,0 +1,98 @@
+MSG_AppDescription (//)
+Unarchiver
+;
+MSG_AppCopyright (//)
+Copyright © 2012 The AROS Development Team
+;
+MSG_WI_TITLE (//)
+Unarc
+;
+MSG_LA_ARCHIVE (//)
+Archive
+;
+MSG_LA_DESTINATION (//)
+Destination
+;
+MSG_BT_ALL (//)
+_All
+;
+MSG_BT_NONE (//)
+_None
+;
+MSG_BT_INVERT (//)
+_Invert
+;
+MSG_BT_START (//)
+_Start
+;
+MSG_BT_CANCEL (//)
+_Cancel
+;
+MSG_TXT_STATUS_ALL (//)
+%u bytes in %u files
+;
+MSG_TXT_STATUS_SEL (//)
+%u bytes in %u selected files
+;
+MSG_FREQ_ARCHIVE_TITLE (//)
+Select Archive
+;
+MSG_FREQ_DESTINATION_TITLE (//)
+Select Destination
+;
+MSG_OK (//)
+_OK
+;
+MSG_SKIP_CANCEL (//)
+_Skip|_Cancel
+;
+;
+; List labels
+MSG_LBL_NAME (//)
+Name
+;
+MSG_LBL_PROTECTION (//)
+Protection
+;
+MSG_LBL_SIZE (//)
+Size
+;
+MSG_LBL_PACKSIZE (//)
+Packsize
+;
+MSG_LBL_RATE (//)
+Rate
+;
+MSG_LBL_DATE (//)
+Date
+;
+MSG_LBL_TIME (//)
+Time
+;
+;
+; Error messages
+;
+MSG_ERR (//)
+Error
+;
+MSG_ERR_NO_APPLICATION (//)
+Can't create application
+;
+MSG_ERR_READARGS (//)
+Can't read commandline arguments
+;
+MSG_ERR_NO_MEM (//)
+Out of memory
+;
+MSG_ERR_NO_ARC (//)
+Can't read archive
+;
+MSG_ERR_CANT_UNPACK (//)
+Unpacking of\n%s\nreturned error:\n%s
+;
+MSG_ERR_ADDPART (//)
+Can't create target file name
+;
+MSG_ERR_NODEST (//)
+Please, select a destination
+;
