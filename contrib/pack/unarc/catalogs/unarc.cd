@@ -28,6 +28,12 @@ _Start
 MSG_BT_CANCEL (//)
 _Cancel
 ;
+MSG_TXT_STATUS_ALL (//)
+%u bytes in %u files
+;
+MSG_TXT_STATUS_SEL (//)
+%u bytes in %u selected files
+;
 MSG_FREQ_ARCHIVE_TITLE (//)
 Select Archive
 ;

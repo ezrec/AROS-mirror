@@ -82,7 +82,7 @@ int main(int argc, char **argv)
         MUIA_Application_Author, (IPTR)"The AROS Development Team",
         MUIA_Application_Base, (IPTR)"UNARC",
         MUIA_Application_Title, (IPTR)"Unarc",
-        MUIA_Application_Version, (IPTR)"$VER: Unarc 1.2 (05.04.2012)",
+        MUIA_Application_Version, (IPTR)"$VER: Unarc 1.3 (06.04.2012)",
         MUIA_Application_Copyright, __(MSG_AppCopyright),
         MUIA_Application_Description, __(MSG_AppDescription),
         MUIA_Application_DiskObject, (IPTR)dobj,

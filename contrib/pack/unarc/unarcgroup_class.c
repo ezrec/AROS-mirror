@@ -11,7 +11,7 @@
 #include <proto/xadmaster.h>
 #include <proto/alib.h>
 
-#define DEBUG 1
+//#define DEBUG 1
 #include <aros/debug.h>
 
 #include <libraries/mui.h>
@@ -31,9 +31,13 @@ struct UnarcGroup_DATA
 {
     Object *btn_all, *btn_none, *btn_invert, *btn_start, *btn_cancel;
     Object *str_file, *str_targetdir, *lst_content, *ga_progress;
-    struct Hook start_hook, change_selection_hook, read_file_hook;
+    Object *txt_status_total, *txt_status_select;
+    struct Hook start_hook, change_selection_hook, read_file_hook, expand_dest_hook;
     struct xadArchiveInfo *ai;
-    ULONG entry_cnt;
+    ULONG total_entry_cnt;
+    ULONG total_size;
+    ULONG select_entry_cnt;
+    ULONG select_size;
     STRPTR targetpathname;
 };
 
@@ -53,6 +57,26 @@ enum
     CLEARALL,
     SETALL
 };
+
+
+static STRPTR alloc_name_from_lock(CONST_STRPTR filename)
+{
+    STRPTR result = NULL;
+    STRPTR buffer = AllocVec(PATHNAMESIZE, MEMF_ANY);
+    if (buffer)
+    {
+        BPTR lock = Lock(filename, ACCESS_READ);
+        if (lock)
+        {
+            if (NameFromLock(lock, buffer, PATHNAMESIZE))
+            {
+                result = buffer;
+            }
+            UnLock(lock);
+        }
+    }
+    return result;
+}
 
 
 static BOOL is_file(CONST_STRPTR filename)
@@ -144,15 +168,15 @@ AROS_UFH3S(LONG, list_display_func,
         protbuf[7] = '\0';
 
         // Sizes
-        sprintf(sizebuf, "%lu", (long unsigned int)li->fi->xfi_Size);
-        sprintf(crsizebuf, "%lu", (long unsigned int)li->fi->xfi_CrunchSize);
+        snprintf(sizebuf, sizeof sizebuf, "%lu", (long unsigned int)li->fi->xfi_Size);
+        snprintf(crsizebuf, sizeof crsizebuf, "%lu", (long unsigned int)li->fi->xfi_CrunchSize);
         if (li->fi->xfi_Size)
         {
-            sprintf(percentbuf, "%u %%", (unsigned int)(100 - li->fi->xfi_CrunchSize * 100 / li->fi->xfi_Size));
+            snprintf(percentbuf, sizeof percentbuf, "%u %%", (unsigned int)(100 - li->fi->xfi_CrunchSize * 100 / li->fi->xfi_Size));
         }
         else
         {
-            strcpy(percentbuf, "100 %");
+            strlcpy(percentbuf, "100 %", sizeof percentbuf);
         }
 
         // Date
@@ -213,6 +237,7 @@ AROS_UFH3S(void, change_selection_func,
     ULONG status = *(ULONG *)msg;
     struct Listentry *oldentry, newentry;
     LONG i;
+    TEXT buffer[40];
 
     D(bug("[change_selection_func] status %u\n", status));
 
@@ -221,6 +246,8 @@ AROS_UFH3S(void, change_selection_func,
     switch(status)
     {
         case SETALL:
+            data->select_size = data->total_size;
+            data->select_entry_cnt = data->total_entry_cnt;
             for (i = 0; ; i++)
             {
                 DoMethod(data->lst_content, MUIM_NList_GetEntry, i, &oldentry);
@@ -235,7 +262,10 @@ AROS_UFH3S(void, change_selection_func,
                 }
             }
             break;
+
         case CLEARALL:
+            data->select_size = 0;
+            data->select_entry_cnt = 0;
             for (i = 0; ; i++)
             {
                 DoMethod(data->lst_content, MUIM_NList_GetEntry, i, &oldentry);
@@ -250,7 +280,10 @@ AROS_UFH3S(void, change_selection_func,
                 }
             }
             break;
+
         case INVERTALL:
+            data->select_size = 0;
+            data->select_entry_cnt = 0;
             for (i = 0; ; i++)
             {
                 DoMethod(data->lst_content, MUIM_NList_GetEntry, i, &oldentry);
@@ -260,8 +293,14 @@ AROS_UFH3S(void, change_selection_func,
                 newentry.fi = oldentry->fi;
                 DoMethod(data->lst_content, MUIM_NList_Remove, i);
                 DoMethod(data->lst_content, MUIM_NList_InsertSingle, &newentry, i);
+                if (newentry.selected)
+                {
+                    data->select_size += newentry.fi->xfi_Size;
+                    data->select_entry_cnt++;            
+                }
             }
             break;
+
         case INVERTSINGLE:
             i = XGET(data->lst_content, MUIA_NList_EntryClick);
             if (i >= 0)
@@ -271,11 +310,23 @@ AROS_UFH3S(void, change_selection_func,
                 newentry.fi = oldentry->fi;
                 DoMethod(data->lst_content, MUIM_NList_Remove, i);
                 DoMethod(data->lst_content, MUIM_NList_InsertSingle, &newentry, i);
+                if (newentry.selected)
+                {
+                    data->select_size += newentry.fi->xfi_Size;
+                    data->select_entry_cnt++;            
+                }
+                else
+                {
+                    data->select_size -= newentry.fi->xfi_Size;
+                    data->select_entry_cnt--;            
+                }
             }
             break;
     }
 
     SET(data->lst_content, MUIA_List_Quiet, FALSE);
+    snprintf(buffer, sizeof buffer, "%u bytes in %u selected files", data->select_size, data->select_entry_cnt);
+    SET(data->txt_status_select, MUIA_Text_Contents, buffer);
 
     AROS_USERFUNC_EXIT
 }
@@ -368,13 +419,22 @@ AROS_UFH3S(void, read_file_func,
 
     struct UnarcGroup_DATA *data = h->h_Data;
     LONG result;
+    TEXT buffer[40];
 
     STRPTR filename = (STRPTR)XGET(data->str_file, MUIA_String_Contents);
+    STRPTR newfilename = alloc_name_from_lock(filename); // expand to full path
+    if (newfilename)
+    {
+        NNSET(data->str_file, MUIA_String_Contents, newfilename);
+        filename = (STRPTR)XGET(data->str_file, MUIA_String_Contents);
+        FreeVec(newfilename);
+    }
 
     DoMethod(data->lst_content, MUIM_NList_Clear);
 
     xadFreeInfo(data->ai);
-    data->entry_cnt = 0;
+    data->total_entry_cnt = 0;
+    data->total_size = 0;
     SET(data->ga_progress, MUIA_Gauge_Current, 0);
     SET(data->btn_all, MUIA_Disabled, TRUE);
     SET(data->btn_none, MUIA_Disabled, TRUE);
@@ -391,10 +451,11 @@ AROS_UFH3S(void, read_file_func,
             newentry.selected = TRUE;
             newentry.fi = fi;
             DoMethod(data->lst_content, MUIM_NList_InsertSingle, &newentry, MUIV_List_Insert_Bottom);
-            data->entry_cnt++;
+            data->total_entry_cnt++;
+            data->total_size += fi->xfi_Size;
             fi = fi->xfi_Next;
         }
-        SET(data->ga_progress, MUIA_Gauge_Max, data->entry_cnt - 1);
+        SET(data->ga_progress, MUIA_Gauge_Max, data->total_entry_cnt - 1);
         SET(data->btn_all, MUIA_Disabled, FALSE);
         SET(data->btn_none, MUIA_Disabled, FALSE);
         SET(data->btn_invert, MUIA_Disabled, FALSE);
@@ -408,6 +469,36 @@ AROS_UFH3S(void, read_file_func,
             _(MSG_OK), _(MSG_ERR_NO_ARC), NULL
         );
     }
+    snprintf(buffer, sizeof buffer, _(MSG_TXT_STATUS_ALL), data->total_size, data->total_entry_cnt);
+    SET(data->txt_status_total, MUIA_Text_Contents, buffer);
+
+    data->select_entry_cnt = data->total_entry_cnt;
+    data->select_size = data->total_size;
+    snprintf(buffer, sizeof buffer, _(MSG_TXT_STATUS_SEL), data->select_size, data->select_entry_cnt);
+    SET(data->txt_status_select, MUIA_Text_Contents, buffer);
+
+    AROS_USERFUNC_EXIT
+}
+
+
+AROS_UFH3S(void, expand_dest_func,
+    AROS_UFHA(struct Hook *, h, A0),
+    AROS_UFHA(Object *, obj, A2),
+    AROS_UFHA(APTR, msg, A1))
+{
+    AROS_USERFUNC_INIT
+
+    D(bug("[expand_dest_func] called\n"));
+
+    struct UnarcGroup_DATA *data = h->h_Data;
+
+    STRPTR targetdir = (STRPTR)XGET(data->str_targetdir, MUIA_String_Contents);
+    STRPTR newtargetdir = alloc_name_from_lock(targetdir); // expand to full path
+    if (newtargetdir)
+    {
+        NNSET(data->str_targetdir, MUIA_String_Contents, newtargetdir);
+        FreeVec(newtargetdir);
+    }
 
     AROS_USERFUNC_EXIT
 }
@@ -417,6 +508,7 @@ Object *UnarcGroup__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
 {
     Object *btn_all, *btn_none, *btn_invert, *btn_start, *btn_cancel;
     Object *str_file, *str_targetdir, *lst_content, *ga_progress;
+    Object *txt_status_total, *txt_status_select;
     STRPTR archive = NULL, destination = NULL;
 
     struct xadArchiveInfo *ai = xadAllocObjectA(XADOBJ_ARCHIVEINFO, 0);
@@ -502,6 +594,14 @@ Object *UnarcGroup__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
             End,
         End,
         Child, HGroup,
+            Child, txt_status_total = TextObject,
+                TextFrame,
+            End,
+            Child, txt_status_select = TextObject,
+                TextFrame,
+            End,
+        End,
+        Child, HGroup,
             Child, btn_all = SimpleButton(_(MSG_BT_ALL)),
             Child, btn_none = SimpleButton(_(MSG_BT_NONE)),
             Child, btn_invert = SimpleButton(_(MSG_BT_INVERT)),
@@ -515,6 +615,7 @@ Object *UnarcGroup__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
             Child, HVSpace,
             Child, btn_cancel = SimpleButton(_(MSG_BT_CANCEL)),
         End,
+        TAG_MORE, (IPTR)message->ops_AttrList,
         TAG_DONE
     );
 
@@ -531,6 +632,8 @@ Object *UnarcGroup__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
         data->str_targetdir     = str_targetdir;
         data->lst_content       = lst_content;
         data->ga_progress       = ga_progress;
+        data->txt_status_total  = txt_status_total;
+        data->txt_status_select = txt_status_select;
         data->ai                = ai;
 
         data->start_hook.h_Entry = (HOOKFUNC)start_func;
@@ -539,6 +642,8 @@ Object *UnarcGroup__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
         data->read_file_hook.h_Data = data;
         data->change_selection_hook.h_Entry = (HOOKFUNC)change_selection_func;
         data->change_selection_hook.h_Data = data;
+        data->expand_dest_hook.h_Entry = (HOOKFUNC)expand_dest_func;
+        data->expand_dest_hook.h_Data = data;
 
         data->targetpathname = targetpathname;
 
@@ -587,6 +692,12 @@ Object *UnarcGroup__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
         (
             data->str_file, MUIM_Notify, MUIA_String_Acknowledge, MUIV_EveryTime,
             data->lst_content, 2, MUIM_CallHook, &data->read_file_hook
+        );
+
+        DoMethod
+        (
+            data->str_targetdir, MUIM_Notify, MUIA_String_Acknowledge, MUIV_EveryTime,
+            data->str_targetdir, 2, MUIM_CallHook, &data->expand_dest_hook
         );
 
         if (is_file(archive))
