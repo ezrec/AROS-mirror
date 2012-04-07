@@ -26,7 +26,7 @@ INTL_FILES = \
     dgettext \
     dngettext \
 
-USER_CFLAGS := -DHAVE_ICONV=1 -D'LOCALEDIR="PROGDIR:i18n"' -DIN_LIBINTL -DHAVE_UNISTD_H=1 -DHAVE_STPCPY=1 -DHAVE_GETCWD=1
+USER_CFLAGS := -DHAVE_ICONV=1 -D'LOCALEDIR="PROGDIR:i18n"' -DIN_LIBINTL -DHAVE_UNISTD_H=1 -DHAVE_STPCPY=1 -DHAVE_GETCWD=1 -DHAVE_INTTYPES_H=1
 
 %build_linklib mmake=contrib-development-libs-libintl libname=intl \
     files="$(INTL_FILES)"
