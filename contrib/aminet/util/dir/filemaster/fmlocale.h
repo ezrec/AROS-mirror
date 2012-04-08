@@ -23,6 +23,14 @@ UBYTE scanus(UBYTE*);
 UBYTE *getstring(WORD);
 UBYTE scanusmsg(WORD);
 
+#ifdef __AROS__
+struct LocaleInfo
+{
+  APTR li_LocaleBase;
+  APTR li_Catalog;
+};
+#endif
+
 #ifndef CATCOMP_NUMBERS
 #define CATCOMP_NUMBERS
 #include "filemaster_strings.h"
