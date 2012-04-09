@@ -1,4 +1,4 @@
 # $Id$
 
-#MM- aminet-util : aminet-util-moni aminet-util-arc aminet-util-dir
-#MM- aminet-util : aminet-util-pack aminet-util-wb
+#MM- aminet-util :  aminet-util-app aminet-util-arc aminet-util-dir
+#MM- aminet-util :  aminet-util-moni aminet-util-pack aminet-util-wb
