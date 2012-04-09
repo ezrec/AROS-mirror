@@ -38,10 +38,19 @@
 
 #define IMPLEMENT() bug("[GMA winsys]------IMPLEMENT(%s)\n", __func__)
 
-static APTR hw_status[1024];
-static APTR *bb_map;
-static ULONG temp_index;
+struct status
+{
+    BOOL reserved;
+    ULONG flush_num;
+};
+
+static struct status hw_status[1024];
+//static APTR *bb_map;
+static ULONG flush_num;
+ULONG allocated_mem=0;
 static struct SignalSemaphore BatchBufferLock;
+static struct SignalSemaphore UnusedBuffersListLock;
+struct List unusedbuffers;
 
 extern struct g45staticdata sd;
 #define sd ((struct g45staticdata*)&(sd))
@@ -51,24 +60,30 @@ extern struct g45staticdata sd;
 #define BASEADDRESS(p) ((uint32_t)(p) - (intptr_t)sd->Card.Framebuffer)
 struct i915_winsys_batchbuffer *batchbuffer_create(struct i915_winsys *iws);
 
-ULONG reserve_status_index(APTR p)
+ULONG reserve_status_index()
 {
-    int i;
-    for(i=0;i<1024;i++)
-    {
-        if( hw_status[i] == 0 )
+    for(;;){
+        int i;
+        for(i=100;i<1024;i++)
         {
-            hw_status[i] = p;
-            D(bug("[GMA winsys] reserve_status_index(%p)=%d\n",p,i));
-            return i;
+            if( ! hw_status[i].reserved )
+            {
+                hw_status[i].reserved = TRUE;
+                hw_status[i].flush_num = flush_num;
+                D(bug("[GMA winsys] reserve_status_index=%d flush_num %d\n",i,flush_num));
+                return i;
+            }
         }
+        (bug("[GMA winsys] reserve_status_index: not free index,wait a moment...\n"));
+        delay_ms(sd,1);
     }
     return 0;
 }
 
 VOID free_status_index(ULONG i)
 {
-    hw_status[i] = 0;
+    hw_status[i].reserved = FALSE;
+    hw_status[i].flush_num = 0; 
     D(bug("[GMA winsys] free_status_index(%d)\n",i));
 }
 
@@ -77,13 +92,16 @@ BOOL get_status(ULONG i)
 #ifdef GALLIUM_SIMULATION
  return 0;
 #endif
+    if( ! hw_status[i].reserved ) bug("[GMA winsys] get_status ERROR,index not reserved %d\n",i);
     return readl( &sd->HardwareStatusPage[ i ]);
 }
 
 VOID set_status(ULONG i,ULONG v)
 {
 #ifndef GALLIUM_SIMULATION
+    if( ! hw_status[i].reserved ) bug("[GMA winsys] set_status ERROR,index not reserved %d\n",i);
     writel( v, &sd->HardwareStatusPage[ i ] );
+    readl( &sd->HardwareStatusPage[ i ] );
 #endif
 }
 
@@ -93,10 +111,25 @@ APTR AllocGfxMem(ULONG size)
 #ifdef GALLIUM_SIMULATION
     return malloc(size);
 #endif
+
     Forbid();
-    result = Allocate(&sd->CardMem, size );
+        result = Allocate(&sd->CardMem, size );
     Permit();
-    //D(bug("[GMA winsys] AllocGfxMem(%d) = %p\n",size,result));
+
+    if( result == 0 )
+    {
+        LOCK_HW
+            DO_FLUSH();
+            WAIT_IDLE();
+        UNLOCK_HW
+        destroy_unused_buffers();
+        
+        Forbid();
+            result = Allocate(&sd->CardMem, size );
+        Permit();       
+    }
+    if(result) allocated_mem+=size;
+    //bug("[GMA winsys] AllocGfxMem(%d) = %p allocated_mem %d\n",size,result,allocated_mem);
     return result;
 }
 
@@ -106,26 +139,23 @@ VOID FreeGfxMem(APTR ptr, ULONG size)
     free(ptr);return;
 #endif
     Forbid();
-    Deallocate(&sd->CardMem, ptr,  size );
+        Deallocate(&sd->CardMem, ptr,  size );
+        allocated_mem-=size;
     Permit();
 }
 
 VOID init_aros_winsys()
 {
-
     // clean hw_status table,reserve first 100,( 0-15 is reserved,and bitmapclass uses at least 16-20)
     int i;
-    for(i=0;i<1024;i++)
+    for(i=100;i<1024;i++)
     {
-        if(i<100) hw_status[i]=(APTR)1;
-        else hw_status[i]=0;
+        hw_status[i].reserved = FALSE;
     }
 
-    // allocate batchbuffer
-    bb_map = (APTR)((IPTR)AllocGfxMem( 16*4096 + 4096) & ~4095);
-    temp_index = reserve_status_index( bb_map );
-
+    NEWLIST(&unusedbuffers);
     InitSemaphore(&BatchBufferLock);
+    InitSemaphore(&UnusedBuffersListLock);
 }
 
 /*******************************************************************
@@ -142,7 +172,6 @@ static void batchbuffer_reset(struct aros_batchbuffer *batch)
     batch->base.ptr = batch->base.map;
     batch->base.size = batch->actual_size - BATCH_RESERVED;
     batch->base.relocs = 0;
-
 }
 
 /**
@@ -156,7 +185,11 @@ struct i915_winsys_batchbuffer *batchbuffer_create(struct i915_winsys *iws)
 
     batch->actual_size = idws->max_batch_size;
     batch->base.map = MALLOC(batch->actual_size);
-
+    
+    batch->allocated_size = batch->actual_size + 4096;
+    if( !(batch->allocated_map = AllocGfxMem(batch->allocated_size) ) ) return NULL;
+    batch->gfxmap = (APTR)(((uint32_t)batch->allocated_map + 4095)& ~4095);
+    
     batch->base.ptr = NULL;
     batch->base.size = 0;
 
@@ -241,6 +274,7 @@ void batchbuffer_flush(struct i915_winsys_batchbuffer *batch,
                              struct pipe_fence_handle **fence)
 {
     D(bug("[GMA winsys] batchbuffer_flush size=%d\n",batch->ptr - batch->map));
+    struct aros_batchbuffer *abatch = aros_batchbuffer(batch);
 
     if( (batch->ptr - batch->map) & 4) {
         *(uint32_t *)(batch->ptr) = 0; /* MI_NOOP */
@@ -252,62 +286,82 @@ void batchbuffer_flush(struct i915_winsys_batchbuffer *batch,
 //  i915_dump_batchbuffer( batch );
 
 #ifdef GALLIUM_SIMULATION
-    batchbuffer_reset( aros_batchbuffer(batch) );
+    batchbuffer_reset( abatch );
     return;
 #endif
 
     LOCK_BB
+    
+        flush_num++;if(flush_num==0)flush_num=1;
+        ULONG index = reserve_status_index();
 
         // relocations
-        int i;
-        for(i=0;i<batch->relocs;i++)
-        {
-            struct reloc *rl = &aros_batchbuffer(batch)->relocs[ i ];
-            D(bug("[GMA winsys] batchbuffer_flush reloc %p\n",rl->buf));
-            IF_BAD_MAGIC(rl->buf)
+        ObtainSemaphore(&UnusedBuffersListLock);
+            int i;
+            for(i=0;i<batch->relocs;i++)
             {
-                batchbuffer_reset( aros_batchbuffer(batch) );
-                UNLOCK_BB
-                return;
+                struct reloc *rl = &abatch->relocs[ i ];
+                D(bug("[GMA winsys] batchbuffer_flush reloc %p\n",rl->buf));
+                
+                if(rl->buf->magic != MAGIC)
+                {
+                    batchbuffer_reset( abatch );
+                    UNLOCK_BB
+                    ReleaseSemaphore(&UnusedBuffersListLock);
+                    return;
+                }
+                
+                if( rl->buf->flush_num != flush_num )
+                {
+                    while( buffer_is_busy(0, rl->buf) ){}
+                }
+            
+                rl->buf->flush_num = flush_num;
+                rl->buf->status_index = index;           
+                
+                *(uint32_t *)(rl->ptr) = BASEADDRESS( rl->buf->map ) + rl->offset;
             }
-            *(uint32_t *)(rl->ptr) = BASEADDRESS( rl->buf->map ) + rl->offset;
-        }
-
-        // wait until previous batchbuffer is ready.
-        while( get_status( temp_index ) )
-        {
-            delay_ms(sd,1);
-        };
-
+        ReleaseSemaphore(&UnusedBuffersListLock);
+        
         // copy to gfxmem
-        memcpy(bb_map, batch->map, batch->ptr - batch->map );
-
-        // set status
-        set_status( temp_index , 1 );
-
+        memcpy(abatch->gfxmap, batch->map, batch->ptr - batch->map );
+        
         LOCK_HW
+        
+            // set status
+            set_status( index , 1 );
 
             //run
             START_RING(6);
-
+            
+                // flush
+                ULONG cmd = MI_FLUSH | MI_NO_WRITE_FLUSH;
+                cmd &= ~MI_NO_WRITE_FLUSH;
+                cmd |= MI_READ_FLUSH;
+                cmd |= MI_EXE_FLUSH;
+                //OUT_RING(cmd);
+                //OUT_RING(0);
+ 
                 // start batchbuffer
                 OUT_RING( MI_BATCH_BUFFER_START | (2 << 6) );
-                OUT_RING( BASEADDRESS( bb_map ) | MI_BATCH_NON_SECURE);
+                OUT_RING( BASEADDRESS( abatch->gfxmap ) | MI_BATCH_NON_SECURE);
 
+             //   OUT_RING(cmd);
+              //  OUT_RING(0);
+                
                 // clean status
                 OUT_RING((0x21 << 23) | 1);
-                OUT_RING( temp_index << 2 );
+                OUT_RING( index << 2 );
                 OUT_RING(0);
                 OUT_RING(0);
-
+                
             ADVANCE_RING();
-
+            
         UNLOCK_HW
 
-        batchbuffer_reset( aros_batchbuffer(batch) );
+        batchbuffer_reset( abatch );
 
     UNLOCK_BB
-
 }
 
 
@@ -316,10 +370,19 @@ void batchbuffer_flush(struct i915_winsys_batchbuffer *batch,
 */
 void batchbuffer_destroy(struct i915_winsys_batchbuffer *ibatch)
 {
-    D(bug("[GMA winsys] batchbuffer_destroy %p\n",ibatch));
+    (bug("[GMA winsys] batchbuffer_destroy %p\n",ibatch));
     struct aros_batchbuffer *batch = aros_batchbuffer(ibatch);
     FREE(ibatch->map);
     FREE(batch);
+    FreeGfxMem( batch->allocated_map, batch->allocated_size);
+
+    LOCK_HW
+        DO_FLUSH();
+        WAIT_IDLE();
+        ObtainSemaphore(&UnusedBuffersListLock);
+            destroy_unused_buffers();
+        ReleaseSemaphore(&UnusedBuffersListLock);
+    UNLOCK_HW
 }
 
 /*******************************************************************
@@ -342,6 +405,37 @@ D(
     }
 )
 
+void destroy_unused_buffers()
+{
+    
+    D(bug("[GMA winsys] destroy_unused_buffers allocated_mem %d unused_num %d\n",allocated_mem,unused_num));
+    if( AttemptSemaphore(&UnusedBuffersListLock) )
+    {
+        struct Node *node,*next;
+        struct i915_winsys_buffer *buf;
+        int i=0;
+        ForeachNodeSafe(&unusedbuffers,node,next)
+        {
+            i++;
+            buf = (struct i915_winsys_buffer *)node;
+            
+            if( ! buffer_is_busy(0, buf ) )
+            {
+                i--;
+                D(bug("[GMA winsys]     destroy %p\n",buf));
+                Remove(node);
+                buf->magic = 0;
+                FreeGfxMem( buf->allocated_map, buf->allocated_size);
+                FREE(buf);
+            }
+            
+        }
+        D(if(i) bug("[GMA winsys] unused_buffers left:%d\n",i));
+        ReleaseSemaphore(&UnusedBuffersListLock);
+    }
+}
+
+
 /**
 * Create a buffer.
 */
@@ -350,7 +444,30 @@ struct i915_winsys_buffer *
                        unsigned size,
                        enum i915_winsys_buffer_type type)
 {
-    struct i915_winsys_buffer *buf = CALLOC_STRUCT(i915_winsys_buffer);
+    
+    struct i915_winsys_buffer *buf;
+
+    /*
+    if( AttemptSemaphore(&UnusedBuffersListLock) )
+    {
+        if( (buf = (struct i915_winsys_buffer *)GetTail(&unusedbuffers)) )
+        {
+            if( buf->size == size )
+            {
+                if( ! buffer_is_busy(0, buf ) )
+                {
+                    D(bug("[GMA winsys] buffer_create: cheap seconhand buffer found:%p\n",buf);)
+                    Remove((struct Node *)buf);
+                    ReleaseSemaphore(&UnusedBuffersListLock);
+                    return buf;
+                }
+            }
+        }
+        ReleaseSemaphore(&UnusedBuffersListLock);
+    }
+    */
+    
+    buf = CALLOC_STRUCT(i915_winsys_buffer);
     if (!buf)
     return NULL;
 
@@ -428,12 +545,13 @@ void *buffer_map(struct i915_winsys *iws,
                        struct i915_winsys_buffer *buffer,
                        boolean write)
 {
-    IF_BAD_MAGIC(buffer) return 0;
+    IF_BAD_MAGIC(buffer)
+    {
+        //for(;;);
+        return 0;
+    }
     D(bug("[GMA winsys] buffer_map %p\n",buffer));
-    LOCK_BB;
-        // wait until batchbuffer is ready. optimization: check if buffer is used in current batchbuffer.?
-        while( get_status( temp_index )){delay_ms(sd,1);}
-    UNLOCK_BB;
+    while( buffer_is_busy(iws, buffer )){};
     return buffer->map;
 }
 
@@ -468,21 +586,24 @@ int buffer_write(struct i915_winsys *iws,
 
 
 void buffer_destroy(struct i915_winsys *iws,
-                          struct i915_winsys_buffer *buffer)
+                          struct i915_winsys_buffer *buf)
 {
-    IF_BAD_MAGIC(buffer) return;
+    IF_BAD_MAGIC(buf) return;
+    D(bug("[GMA winsys] buffer_destroy %p\n", buf));
 
-    D(bug("[GMA winsys] buffer_destroy %p\n", buffer));
-    LOCK_BB;
-        // wait until batchbuffer is ready.
-        while( get_status( temp_index )){delay_ms(sd,1);}
-        LOCK_HW;
-            DO_FLUSH();
-        UNLOCK_HW;
-        buffer->magic = 0;
-        FreeGfxMem( buffer->allocated_map, buffer->allocated_size);
-        FREE(buffer);
-    UNLOCK_BB;
+    if(0)
+    {
+        while( buffer_is_busy(0, buf ) ){};
+        buf->magic = 0;
+        FreeGfxMem( buf->allocated_map, buf->allocated_size);
+        FREE(buf);
+    }
+    else
+    {
+        ObtainSemaphore(&UnusedBuffersListLock);
+            AddTail( &unusedbuffers, (struct Node *)buf );
+        ReleaseSemaphore(&UnusedBuffersListLock);
+    }
 }
 
 
@@ -490,12 +611,28 @@ void buffer_destroy(struct i915_winsys *iws,
 * Check if a buffer is busy.
 */
 boolean buffer_is_busy(struct i915_winsys *iws,
-                             struct i915_winsys_buffer *buffer)
+                             struct i915_winsys_buffer *buf)
 {
-    MAGIC_WARNING(buffer);
-    D(bug("[GMA winsys] buffer_is_busy %p =%d\n",buffer,get_status( temp_index )));
-    // optimization: check if buffer is used in current batchbuffer.?
-    if( get_status( temp_index )) return TRUE;
+    MAGIC_WARNING(buf);
+
+    int i=buf->status_index;
+    D(bug("[GMA winsys] buffer_is_busy %p index %d flush_num %d\n",buf,i,buf->flush_num));
+    if(i)
+    {
+        if( hw_status[i].reserved &&
+            hw_status[i].flush_num == buf->flush_num )
+        {
+            if( get_status(i) )
+            {
+                return TRUE;
+            }
+            else
+            {
+                buf->status_index = 0;
+                free_status_index(i);
+            }
+        }
+    }
     return FALSE;
 }
 

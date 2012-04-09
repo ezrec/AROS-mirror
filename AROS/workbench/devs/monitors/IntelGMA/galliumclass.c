@@ -31,6 +31,15 @@
 #include "i915/i915_winsys.h"
 #include "i915/i915_debug.h"
 
+const struct OOP_InterfaceDescr Gallium_ifdescr[];
+extern OOP_AttrBase MetaAttrBase;
+OOP_AttrBase HiddGalliumAttrBase;
+APTR i915MemPool;
+
+extern ULONG allocated_mem;
+extern struct g45staticdata sd;
+#define sd ((struct g45staticdata*)&(sd))
+
 struct Hidd915WinSys
 {
     struct HIDDT_WinSys base;
@@ -58,14 +67,6 @@ HIDD915FlushFrontBuffer( struct pipe_screen *screen,
 {
     /* No Op */
 }
-
-const struct OOP_InterfaceDescr Gallium_ifdescr[];
-extern OOP_AttrBase MetaAttrBase;
-OOP_AttrBase HiddGalliumAttrBase;
-APTR i915MemPool;
-
-extern struct g45staticdata sd;
-#define sd ((struct g45staticdata*)&(sd))
 
 BOOL InitGalliumClass()
 {
@@ -154,7 +155,7 @@ VOID METHOD(i915Gallium, Root, Get)
 APTR METHOD(i915Gallium, Hidd_Gallium, CreatePipeScreen)
 {
 
-    bug("[i915gallium] CreatePipeScreen\n");
+    bug("[i915gallium] CreatePipeScreen currently allocated_mem %d\n",allocated_mem);
 
     struct Hidd915WinSys *hiddws;
     struct aros_winsys *aws;
@@ -192,6 +193,7 @@ APTR METHOD(i915Gallium, Hidd_Gallium, CreatePipeScreen)
 VOID METHOD(i915Gallium, Hidd_Gallium, DisplayResource)
 {
    //  bug("[i915gallium] DisplayResource\n");
+
 #ifndef GALLIUM_SIMULATION
     OOP_Object *bm = HIDD_BM_OBJ(msg->bitmap);
     GMABitMap_t *bm_dst;
@@ -247,6 +249,8 @@ VOID METHOD(i915Gallium, Hidd_Gallium, DisplayResource)
     br26 = msg->srcx | (msg->srcy << 16);
     br12 =  (uint32_t)tex->buffer->map;
 
+    while(buffer_is_busy(0,tex->buffer)){};
+    
     LOCK_HW
         START_RING(8);
             OUT_RING(br00);
@@ -260,9 +264,9 @@ VOID METHOD(i915Gallium, Hidd_Gallium, DisplayResource)
         ADVANCE_RING();
         //DO_FLUSH();
     UNLOCK_HW
-
     UNLOCK_BITMAP_BM(bm_dst)
 #endif
+    destroy_unused_buffers();
 }
 
 

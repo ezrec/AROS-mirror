@@ -6,11 +6,17 @@
 #ifndef INTEL_AROS_WINSYS_H
 #define INTEL_AROS_WINSYS_H
 
+#include <proto/alib.h>
+#include <proto/exec.h>
+#include <exec/types.h>
+#include <exec/lists.h>
+#include <exec/nodes.h>
+
 #include "i915/i915_batchbuffer.h"
 #include "hidd/gallium.h"
 
 #define MAGIC 0x12345678
-#define MAGIC_WARNING(b) if(b->magic != MAGIC ) bug("[GMA winsys] %s: Bad MAGIC in buffer %p\n",__func__,b);
+#define MAGIC_WARNING(b) if(b->magic != MAGIC ){ bug("[GMA winsys] %s: Bad MAGIC in buffer %p\n",__func__,b);};
 #define IF_BAD_MAGIC(b) MAGIC_WARNING(b);if(b->magic != MAGIC )
 
 #define MAX_RELOCS 100
@@ -43,6 +49,7 @@ struct aros_batchbuffer
    APTR allocated_map;
    ULONG allocated_size;
    struct reloc relocs[MAX_RELOCS];
+   APTR gfxmap;
 };
 
 static INLINE struct aros_batchbuffer *
@@ -52,6 +59,7 @@ aros_batchbuffer(struct i915_winsys_batchbuffer *batch)
 };
 
 struct i915_winsys_buffer {
+   struct Node bnode;
    ULONG magic;
    APTR map;
    ULONG size;
@@ -59,8 +67,11 @@ struct i915_winsys_buffer {
    ULONG stride;
    APTR allocated_map;
    ULONG allocated_size;
+   ULONG status_index;
+   ULONG flush_num;
 };
 
 struct aros_winsys *winsys_create();
-
+boolean buffer_is_busy(struct i915_winsys *iws,struct i915_winsys_buffer *buf);
+void destroy_unused_buffers();
 #endif
