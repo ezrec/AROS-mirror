@@ -1,5 +1,5 @@
 /*
-    Copyright  1995-2011, The AROS Development Team.
+    Copyright  1995-2012, The AROS Development Team.
     $Id$
 */
 
@@ -35,12 +35,16 @@
 
 ******************************************************************************/
 
+#define DEBUG 0
+#include <aros/debug.h>
+
+#include <clib/alib_protos.h>
+
 #include <proto/exec.h>
 #include <proto/dos.h>
 #include <proto/intuition.h>
 
 #include <aros/detach.h>
-
 
 #include "windowdecorclass.h"
 #include "screendecorclass.h"
@@ -48,11 +52,14 @@
 #include "newimage.h"
 #include "config.h"
 
+const TEXT version_string[] = "$VER: Decoration 1.2 (12.4.2012)";
+
 struct IClass *wndcl, *scrcl, *menucl;
 
-STRPTR __detached_name = "Decoration";
+STRPTR __detached_name = "Decorator";
 
-#define MAGIC_PRIVATE_SKIN      0x0001
+#define MAGIC_PRIVATE_SKIN		0x0001
+#define MAGIC_PRIVATE_TITLECHILD 	0x0F0F
 
 struct DefaultNewDecorator
 {
@@ -84,17 +91,22 @@ struct NewDecorator *GetDecorator(STRPTR path)
     struct NewDecorator *nd = NULL;
     struct DefaultNewDecorator * dnd = NULL;
 
+    D(bug("GetDecorator: Entering\n"));
+
     STRPTR newpath;
 
     if (path != NULL) newpath = path; else newpath = "Theme:";
 
     dnd = AllocVec(sizeof(struct DefaultNewDecorator), MEMF_CLEAR | MEMF_ANY);
     
+    D(bug("GetDecorator: dnd=%p\n", dnd));
+
     if (dnd)
     {
         nd = (struct NewDecorator *)dnd;
 
         dnd->dc = LoadConfig(newpath);
+        D(bug("GetDecorator: dnd->dc=%p\n", dnd->dc));
         if (!dnd->dc)
         {
             DeleteDecorator(nd);
@@ -102,7 +114,7 @@ struct NewDecorator *GetDecorator(STRPTR path)
         }
         
         dnd->di = LoadImages(dnd->dc);
-        
+        D(bug("GetDecorator: dnd->di=%p\n", dnd->di));
         if (!dnd->di)
         {
             DeleteDecorator(nd);
@@ -120,6 +132,7 @@ struct NewDecorator *GetDecorator(STRPTR path)
             nd->nd_Screen = NewObjectA(scrcl, NULL, ScreenTags);
         }
         
+        D(bug("GetDecorator: nd->nd_Screen=%p\n", nd->nd_Screen));
         if (nd->nd_Screen)
         {
             struct TagItem WindowTags[] = 
@@ -141,6 +154,7 @@ struct NewDecorator *GetDecorator(STRPTR path)
 
             nd->nd_Window = NewObjectA(wndcl, NULL, WindowTags);
             nd->nd_Menu = NewObjectA(menucl, NULL, MenuTags);
+            D(bug("GetDecorator: nd->nd_Window=%p, nd->nd_Menu=%p\n", nd->nd_Window, nd->nd_Menu));
             if ((nd->nd_Menu == NULL ) || (nd->nd_Window == NULL) || (nd->nd_Screen == NULL))
             {
                 DeleteDecorator(nd);
@@ -170,7 +184,7 @@ int main(void)
     struct RDArgs *args, *newargs;
 
     /* the 1M $$ Question why "Decoration ?" does not work in the shell? */
-    
+
     newargs = (struct RDArgs*) AllocDosObject(DOS_RDARGS, NULL);
 
     if (newargs == NULL) return 0;
@@ -186,7 +200,7 @@ int main(void)
     }
 
     Forbid();
-    if (FindPort("DECORATIONS")) {
+    if (FindPort(__detached_name)) {
         struct MsgPort *port = CreateMsgPort();
         if (port) {
             struct SkinMessage msg;
@@ -195,7 +209,7 @@ int main(void)
             msg.class = 0;
             msg.path = (STRPTR) rd_Args[0];
             msg.id = (STRPTR) rd_Args[1];
-            PutMsg(FindPort("DECORATIONS"), (struct Message *) &msg);
+            PutMsg(FindPort(__detached_name), (struct Message *) &msg);
             WaitPort(port);
             GetMsg(port);
             Permit();
@@ -206,6 +220,8 @@ int main(void)
     }
     Permit();
 
+    D(bug("Decoration: making classes...\n"));
+
     wndcl = MakeWindowDecorClass();
     if (wndcl)
     {
@@ -214,19 +230,24 @@ int main(void)
         if (scrcl)
         {
 
-		
             menucl = MakeMenuDecorClass();
             if (menucl)
             {
+                D(bug("Decoration: Classes made\n"));
+
                 struct MsgPort *port = CreateMsgPort();
                 ULONG  skinSignal;
                 if (port)
                 {
                     skinSignal = 1 << port->mp_SigBit;
-                    port->mp_Node.ln_Name="DECORATIONS";
+                    port->mp_Node.ln_Name=__detached_name;
                     AddPort(port);
 
+                    D(bug("Decoration: Port created and added\n"));
+
                     struct  NewDecorator *decor = GetDecorator((STRPTR) rd_Args[0]);
+
+                    D(bug("Decoration: Got decorator\n"));
 
                     if (decor != NULL)
                     {
@@ -235,7 +256,11 @@ int main(void)
                         ChangeDecoration(DECORATION_SET, decor);
                     }
 
+                    D(bug("Before Detach()\n"));
+
                     Detach();
+
+                    D(bug("After Detach()\n"));
 
                     BOOL running = TRUE;
 
@@ -254,6 +279,14 @@ int main(void)
                             {
                                 switch(msg->msg.mn_Magic)
                                 {
+                                    case MAGIC_PRIVATE_TITLECHILD:
+                                        dmsg = (struct DecoratorMessage *) msg;
+                                        if (decor)
+                                        {
+                                            bug("[decoration] got MAGIC_PRIVATE_TITLECHILD with 0x%p\n", dmsg->dm_Object);
+                                            SetAttrs(decor->nd_Screen, SDA_TitleChild, dmsg->dm_Object, TAG_DONE);
+                                        }
+                                        break;
                                     case MAGIC_PRIVATE_SKIN:
                                         decor = GetDecorator(msg->path);
                                         if (decor != NULL)

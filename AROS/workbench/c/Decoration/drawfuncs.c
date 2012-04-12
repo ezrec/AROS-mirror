@@ -1,16 +1,18 @@
 /*
-    Copyright  2011, The AROS Development Team.
+    Copyright © 2011, The AROS Development Team.
     $Id$
 */
 
 #include <intuition/imageclass.h>
 #include <graphics/rpattr.h>
 #include <libraries/cybergraphics.h>
+#include <proto/arossupport.h>
 #include <proto/graphics.h>
 #include <proto/cybergraphics.h>
 #include <proto/exec.h>
-#include <math.h>
 #include <aros/debug.h>
+
+#include <math.h>
 
 #include "drawfuncs.h"
 
@@ -64,17 +66,17 @@ static void BltScaleNewImageSubImageRastPort(struct NewImage * ni, ULONG subimag
     /* If source and destination sizes do not match, scale */
     if ((widthSrc != widthDest) || (heightSrc != heightDest))
     {
-        /* FIXME: The scalled blitting needs similar optimized code paths as non-scalled */
+        /* FIXME: The scaled blitting needs similar optimized code paths as non-scaled */
         ULONG * srcptr = (ni->data) + (((subimageheight * subimageRow) + ySrc) * ni->w) +
                 ((subimagewidth * subimageCol) + xSrc); /* Go to (0,0) of source rect */
 
-        ULONG * scalleddata = ScaleBuffer(srcptr, ni->w, widthSrc, heightSrc, widthDest, heightDest);
+        ULONG * scaleddata = ScaleBuffer(srcptr, ni->w, widthSrc, heightSrc, widthDest, heightDest);
 
-        D(bug("[Decoration] SCALLED %d,%d -> %d,%d!\n", widthSrc, heightSrc, widthDest, heightDest));
+        D(bug("[Decoration] SCALED %d,%d -> %d,%d!\n", widthSrc, heightSrc, widthDest, heightDest));
 
-        WritePixelArrayAlpha(scalleddata, 0, 0, widthDest * 4, destRP, xDest, yDest, widthDest, heightDest, 0xffffffff);
+        WritePixelArrayAlpha(scaleddata, 0, 0, widthDest * 4, destRP, xDest, yDest, widthDest, heightDest, 0xffffffff);
 
-        FreeVec(scalleddata);
+        FreeVec(scaleddata);
     }
     else /* ((widthSrc != widthDest) || (heightSrc != heightDest)) */
     {
@@ -561,7 +563,7 @@ void RenderMenuBarBackground(struct NewImage *pic, struct NewImage *texture, str
                 texture->w - textureti->TileLeft - textureti->TileRight, texture->h - textureti->TileBottom - textureti->TileTop,
                 0, 0, pic->w, pic->h);
 
-        RenderBackgroundTiled(pic, texture, textureti, ratio, TileImageToImageMenuBar);
+//        RenderBackgroundTiled(pic, texture, textureti, ratio, TileImageToImageMenuBar);
     }
 }
 
@@ -676,7 +678,7 @@ void HorizVertRepeatNewImage(struct NewImage *ni, ULONG color, UWORD offx, UWORD
 
 /* NOTE: fill parameter is ignored, previously it was forcing a no-alpha blit, but
    this is already handled in BltNewImageSubImageRastPort */
-/* dh - destination height to which subimage will be scalled to */
+/* dh - destination height to which subimage will be scaled to */
 LONG WriteTiledImageTitle(BOOL fill, struct Window *win,
     struct RastPort *rp, struct NewImage *ni, LONG sx, LONG sy, LONG sw,
     LONG sh, LONG xp, LONG yp, LONG dw, LONG dh)
@@ -711,7 +713,7 @@ LONG WriteTiledImageTitle(BOOL fill, struct Window *win,
 /*
  * dh - destination height to scale to, -1 to use subimage height
  */
-LONG WriteVerticalScalledTiledImageHorizontal(struct RastPort *rp, struct NewImage *ni, ULONG subimage,
+LONG WriteVerticalScaledTiledImageHorizontal(struct RastPort *rp, struct NewImage *ni, ULONG subimage,
         LONG sx, LONG sw, LONG xp, LONG yp, LONG sh, LONG dw, LONG dh)
 {
     LONG w = dw;
@@ -738,7 +740,7 @@ LONG WriteVerticalScalledTiledImageHorizontal(struct RastPort *rp, struct NewIma
 
 LONG WriteTiledImageHorizontal(struct RastPort *rp, struct NewImage *ni, ULONG subimage, LONG sx, LONG sw, LONG xp, LONG yp, LONG dw)
 {
-    return WriteVerticalScalledTiledImageHorizontal(rp, ni, subimage, sx, sw, xp, yp, -1, dw, -1);
+    return WriteVerticalScaledTiledImageHorizontal(rp, ni, subimage, sx, sw, xp, yp, -1, dw, -1);
 }
 
 LONG WriteTiledImageVertical(struct RastPort *rp, struct NewImage *ni, ULONG subimage, LONG sy, LONG sh, LONG xp, LONG yp, LONG dh)
@@ -1067,7 +1069,7 @@ void ShadeLine(LONG pen, BOOL tc, BOOL usegradients, struct RastPort *rp, struct
         if (c2 > 255) c2 = 255;
         if (c3 > 255) c3 = 255;
         c = (c3 << 24) | (c2 << 16) | (c1 << 8) | c0;
-        SetRPAttrs(rp, RPTAG_FgColor, c, TAG_DONE);
+        SetRPAttrs(rp, RPTAG_PenMode, FALSE, RPTAG_FgColor, c, TAG_DONE);
         Move(rp, x0, y0);
         Draw(rp, x1, y1);
     }
@@ -1132,8 +1134,8 @@ void ShadeLine(LONG pen, BOOL tc, BOOL usegradients, struct RastPort *rp, struct
     }
 }
 
-void DrawScalledStatefulGadgetImageToRP(struct RastPort *rp, struct NewImage *ni, ULONG state, UWORD xp, UWORD yp,
-        WORD scalledwidth, WORD scalledheight)
+void DrawScaledStatefulGadgetImageToRP(struct RastPort *rp, struct NewImage *ni, ULONG state, UWORD xp, UWORD yp,
+        WORD scaledwidth, WORD scaledheight)
 {
 
     UWORD subimagecol = 0;
@@ -1153,11 +1155,11 @@ void DrawScalledStatefulGadgetImageToRP(struct RastPort *rp, struct NewImage *ni
                 break;
         }
 
-        BltScaleNewImageSubImageRastPortSimple(ni, subimagecol, subimagerow, rp, xp, yp, scalledwidth, scalledheight);
+        BltScaleNewImageSubImageRastPortSimple(ni, subimagecol, subimagerow, rp, xp, yp, scaledwidth, scaledheight);
     }
 }
 
 void DrawStatefulGadgetImageToRP(struct RastPort *rp, struct NewImage *ni, ULONG state, UWORD xp, UWORD yp)
 {
-    DrawScalledStatefulGadgetImageToRP(rp, ni, state, xp, yp, -1, -1);
+    DrawScaledStatefulGadgetImageToRP(rp, ni, state, xp, yp, -1, -1);
 }

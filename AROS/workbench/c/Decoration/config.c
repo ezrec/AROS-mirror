@@ -1,5 +1,5 @@
 /*
-    Copyright  2011, The AROS Development Team.
+    Copyright  2011-2012, The AROS Development Team.
     $Id$
 */
 
@@ -13,6 +13,8 @@
 #include "newimage.h"
 #include "config.h"
 
+#define DEBUG 0
+#include <aros/debug.h>
 
 static STRPTR SkipChars(STRPTR v)
 {
@@ -33,10 +35,13 @@ static void GetIntegers(STRPTR v, LONG *v1, LONG *v2)
     STRPTR c;
     TEXT va1[32], va2[32];
     LONG cnt;
+    D(bug("Decoration/GetIntegers: v='%s', v1=%p, v2=%p\n", v, v1, v2));
     c = SkipChars(v);
+    D(bug("Decoration/GetIntegers: c='%s'\n", c));
     if (c)
     {
-        cnt = sscanf(c, "%s %s", va1, va2);
+        cnt = sscanf(c, "%31s %31s", va1, va2);
+	D(bug("Decoration/GetIntegers: va1='%s', va2='%s'\n", va1, va2));
         if (cnt == 1)
         {
             *v1 = -1;
@@ -53,7 +58,8 @@ static void GetIntegers(STRPTR v, LONG *v1, LONG *v2)
 static void GetTripleIntegers(STRPTR v, LONG *v1, LONG *v2, LONG *v3)
 {
     STRPTR ch;
-    LONG a, b, c;
+    unsigned int a, b;
+    int c;
     LONG cnt;
     ch = SkipChars(v);
     if (ch)
@@ -71,7 +77,7 @@ static void GetTripleIntegers(STRPTR v, LONG *v1, LONG *v2, LONG *v3)
 static void GetColors(STRPTR v, LONG *v1, LONG *v2)
 {
     STRPTR ch;
-    LONG a, b;
+    unsigned int a, b;
     LONG cnt;
     ch = SkipChars(v);
     if (ch)
@@ -80,11 +86,13 @@ static void GetColors(STRPTR v, LONG *v1, LONG *v2)
         if (cnt == 2)
         {
             *v1 = a;
-            *v2 = b;
+            if (v2 != NULL)
+                *v2 = b;
         }
+        else if (cnt == 1)
+            *v1 = a;
     }
 }
-
 
 static BOOL GetBool(STRPTR v, STRPTR id)
 {
@@ -108,6 +116,7 @@ static void LoadMenuConfig(STRPTR path, struct DecorConfig * dc)
     dc->MenuInnerTop = 0;
     dc->MenuInnerRight = 0;
     dc->MenuInnerBottom = 0;
+    dc->MenuHighlightTint = 0x770044dd;
 
     lock = Lock(path, ACCESS_READ);
     if (lock)
@@ -158,6 +167,10 @@ static void LoadMenuConfig(STRPTR path, struct DecorConfig * dc)
                 else  if ((v = strstr(line, "InnerBottom ")) == line)
                 {
                     dc->MenuInnerBottom = GetInt(v);
+                }
+                else if ((v = strstr(line, "HighlightTint ")) == line)
+                {
+                    GetColors(v, &dc->MenuHighlightTint, NULL);
                 }
             }
         }
@@ -283,7 +296,7 @@ static void LoadSystemConfig(STRPTR path, struct DecorConfig * dc)
     dc->STitleColorText = 0x00CCCCCC;
     dc->STitleColorShadow = 0x00444444;
     
-    
+    D(bug("Decoration/LoadSystemConfig: dc initialized\n"));
     
     lock = Lock(path, ACCESS_READ);
     if (lock)
@@ -292,7 +305,10 @@ static void LoadSystemConfig(STRPTR path, struct DecorConfig * dc)
     }
     else return;
 
+    D(bug("Decoration/LoadSystemConfig: directory locked\n"));
+
     file = Open("System/Config", MODE_OLDFILE);
+    D(bug("Decoration/LoadSystemConfig: file=%p\n", (void *)file));
     if (file)
     {
         do
@@ -300,6 +316,7 @@ static void LoadSystemConfig(STRPTR path, struct DecorConfig * dc)
             line = FGets(file, buffer, 256);
             if (line)
             {
+		D(bug("Decoration/ReadSystemConfig: Parsing line '%s'\n", line));
                 if ((v = strstr(line, "NoInactiveSelected ")) == line) {
                     dc->GadgetsThreeState = GetBool(v, "Yes");
                 } else if ((v = strstr(line, "BarRounded ")) == line) {
@@ -428,24 +445,35 @@ static void LoadSystemConfig(STRPTR path, struct DecorConfig * dc)
             }
         }
         while(line);
+	D(bug("Decoration/LoadSystemConfig: file has beenb read\n"));
         Close(file);
     }
 
     if (olddir) CurrentDir(olddir);
     UnLock(lock);
+
+    D(bug("Decoration/LoadSystemConfig: directory unlocked\n"));
 }
 
 struct DecorConfig * LoadConfig(STRPTR path)
 {
     struct DecorConfig * dc = AllocVec(sizeof(struct DecorConfig), MEMF_ANY | MEMF_CLEAR);
 
+    D(bug("LoadConfig: dc=%p\n", dc));
+
     dc->ThemePath = AllocVec(strlen(path) + 1, MEMF_ANY | MEMF_CLEAR);
     strcpy(dc->ThemePath, path);
 
+    D(bug("Decoration/LoadConfig: dc->ThemePath=%p('%s')\n", dc->ThemePath, dc->ThemePath));
+
     LoadMenuConfig(path, dc);
-    
+
+    D(bug("Decoration/LoadConfig: menu config loaded\n"));
+
     LoadSystemConfig(path, dc);
-    
+
+    D(bug("Decoration/LoadConfig: system config loaded\n"));
+
     return dc;
 };
 

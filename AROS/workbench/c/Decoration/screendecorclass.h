@@ -1,5 +1,5 @@
 /*
-    Copyright  2011, The AROS Development Team.
+    Copyright  2011-2012, The AROS Development Team.
     $Id$
 */
 
@@ -39,6 +39,7 @@ struct ScreenData
 
 #define SDA_DecorImages     0x20003
 #define SDA_DecorConfig     0x20004
+#define SDA_TitleChild     0x20005
 
 struct IClass * MakeScreenDecorClass();
 #endif

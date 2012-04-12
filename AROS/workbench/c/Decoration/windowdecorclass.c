@@ -1,5 +1,5 @@
 /*
-    Copyright  2011-2012, The AROS Development Team.
+    Copyright © 2011-2012, The AROS Development Team.
     $Id$
 */
 
@@ -9,6 +9,7 @@
 #include <intuition/extensions.h>
 #include <intuition/gadgetclass.h>
 #include <graphics/rpattr.h>
+#include <proto/arossupport.h>
 #include <proto/intuition.h>
 #include <proto/utility.h>
 #include <proto/graphics.h>
@@ -226,12 +227,12 @@ static int WriteTiledImageShape(BOOL fill, struct Window *win, struct NewLUT8Ima
     return x;
 }
 
-static void getrightgadgetsdimensions(struct windecor_data *data, struct Window *win, int *xs, int *xe)
+static void getrightgadgetsdimensions(struct windecor_data *data, struct Window *win, LONG *xs, LONG *xe)
 {
     struct Gadget *g;
 
-    int     x0 = 1000000;
-    int     x1 = 0;
+    LONG    x0 = 1000000;
+    LONG    x1 = 0;
     UWORD   type;
 
     for (g = win->FirstGadget; g; g = g->NextGadget)
@@ -268,13 +269,13 @@ static void getrightgadgetsdimensions(struct windecor_data *data, struct Window 
     *xe = x1;
 }
 
-static void getleftgadgetsdimensions(struct windecor_data *data, struct Window *win, int *xs, int *xe)
+static void getleftgadgetsdimensions(struct windecor_data *data, struct Window *win, LONG *xs, LONG *xe)
 {
     struct Gadget *g;
 
-    int w = 0;
-    int x0 = 1000000;
-    int x1 = 0;
+    LONG w = 0;
+    LONG x0 = 1000000;
+    LONG x1 = 0;
     for (g = win->FirstGadget; g; g = g->NextGadget)
     {
         w++;
@@ -408,6 +409,7 @@ static VOID DrawPartialTitleBar(struct WindowData *wd, struct windecor_data *dat
     struct TextExtent   te;
     struct RastPort    *rp;
     struct NewImage    *ni = NULL;
+
     BOOL                hastitle;
     BOOL                hastitlebar;
     UWORD               textstart = 0;
@@ -436,13 +438,6 @@ static VOID DrawPartialTitleBar(struct WindowData *wd, struct windecor_data *dat
     rp = CreateRastPort();
     if (rp)
     {
-    	struct Rectangle cliprect = {0, 0, window->Width - 1, window->BorderTop - 1};
-    	struct TagItem rptags[] =
-        {
-            {RPTAG_ClipRectangle, (IPTR)&cliprect},
-            {TAG_DONE	    	    	    	 }
-        };
-
         /* Reuse the bitmap if there was no size change (ie. only change of state) */        
         if (changetype == CHANGE_NO_SIZE_CHANGE)
             rp->BitMap = cachedtitlebarbitmap;
@@ -456,7 +451,6 @@ static VOID DrawPartialTitleBar(struct WindowData *wd, struct windecor_data *dat
         }
 
         SetFont(rp, dri->dri_Font);
-    	SetRPAttrsA(rp, rptags);
     }
     else
         return;
@@ -871,7 +865,7 @@ static IPTR windecor_draw_sysimage(Class *cl, Object *obj, struct wdpDrawSysImag
     if (ni)
     {
         if (titlegadget)
-            DrawScalledStatefulGadgetImageToRP(rp, ni, state, left + addx, top + addy, -1, height);
+            DrawScaledStatefulGadgetImageToRP(rp, ni, state, left + addx, top + addy, -1, height);
         else
             DrawStatefulGadgetImageToRP(rp, ni, state, left + addx, top + addy);
     }
@@ -1536,13 +1530,6 @@ static IPTR windecor_draw_borderpropknob(Class *cl, Object *obj, struct wdpDrawB
     rp = CreateRastPort();
     if (rp)
     {
-    	struct Rectangle cliprect = {0, 0, bx1 - bx0, by1 - by0};
-    	struct TagItem rptags[] =
-        {
-            {RPTAG_ClipRectangle, (IPTR)&cliprect},
-            {TAG_DONE	    	    	    	 }
-        };
-
         /* Reuse the bitmap if there was no size change (ie. only move of knob) */        
         if (changetype == CHANGE_NO_SIZE_CHANGE)
             rp->BitMap = cachedgadgetbitmap;
@@ -1554,8 +1541,6 @@ static IPTR windecor_draw_borderpropknob(Class *cl, Object *obj, struct wdpDrawB
             FreeRastPort(rp);
             return FALSE;
         }
-
-    	SetRPAttrsA(rp, rptags);
     }
     else
         return FALSE;

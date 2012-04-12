@@ -3,6 +3,9 @@
     $Id$
 */
 
+#define DEBUG 0
+#include <aros/debug.h>
+
 #include <clib/alib_protos.h>
 
 #include <graphics/rpattr.h>
@@ -12,17 +15,22 @@
 #include <proto/exec.h>
 #include <string.h>
 
+#include <intuition/cghooks.h>
+
 #include "screendecorclass.h"
 #include "drawfuncs.h"
 #include "config.h"
 
 #define SETIMAGE_SCR(id) sd->di->img_##id = CreateNewImageContainerMatchingScreen(data->di->img_##id, truecolor, screen)
 
+#define CHILDPADDING 1
+
 struct scrdecor_data
 {
     /* These are original images loaded from disk */
     struct DecorImages * di;
     struct DecorConfig * dc;
+    Object *FirstChild;
 };
 
 static void DisposeScreenSkinning(struct scrdecor_data *data)
@@ -57,8 +65,11 @@ static IPTR scrdecor_new(Class *cl, Object *obj, struct opSet *msg)
     if (obj)
     {
         data = INST_DATA(cl, obj);
+
         struct DecorConfig * dc = (struct DecorConfig *) GetTagData(SDA_DecorConfig, (IPTR) NULL, msg->ops_AttrList);
         struct DecorImages * di = (struct DecorImages *) GetTagData(SDA_DecorImages, (IPTR) NULL, msg->ops_AttrList);
+
+        data->FirstChild = NULL;
 
         if (!InitScreenSkinning(data, di, dc))
         {
@@ -101,6 +112,42 @@ static IPTR scrdecor_get(Class *cl, Object *obj, struct opGet *msg)
     return 1;
 }
 
+static IPTR scrdecor_set(Class *cl, Object *obj, struct opSet *msg)
+{
+    struct scrdecor_data *data = INST_DATA(cl, obj);
+    struct TagItem *tags = msg->ops_AttrList;
+    struct TagItem *tstate;
+    struct TagItem *tag;
+
+    tstate = tags;
+    while ((tag = NextTagItem(&tstate)))
+    {
+        switch (tag->ti_Tag)
+        {
+            case SDA_TitleChild: 
+                if (tag->ti_Data)
+                {
+                    if (!(data->FirstChild))
+                    {
+                        struct gpLayout childlayoutmsg;
+                        bug("[screendecor] setting titlechild  0x%p\n", tag->ti_Data);
+                        data->FirstChild = (Object *)tag->ti_Data;
+
+                        childlayoutmsg.MethodID = GM_LAYOUT;
+                        childlayoutmsg.gpl_GInfo = NULL;
+                        childlayoutmsg.gpl_Initial = 0;
+
+                        DoMethodA(data->FirstChild, &childlayoutmsg);
+                    }
+                }
+                break;
+            default:
+                return DoSuperMethodA(cl, obj, (Msg)msg);
+        }
+    }
+    return 1;
+}
+
 /**************************************************************************************************/
 
 static void scr_findtitlearea(struct Screen *scr, LONG *left, LONG *right)
@@ -130,9 +177,9 @@ static IPTR scrdecor_draw_screenbar(Class *cl, Object *obj, struct sdpDrawScreen
     struct TextExtent       te;
     struct RastPort        *rp = msg->sdp_RPort;
     struct Screen          *scr = msg->sdp_Screen;
-    UWORD                  *pens = msg->sdp_Dri->dri_Pens;
     struct DrawInfo        *dri = msg->sdp_Dri;
-    LONG                    left, right, titlelen = 0;
+    UWORD                  *pens = dri->dri_Pens;
+    LONG                    left, right = 0, titlelen = 0;
     BOOL                    hastitle = TRUE;
     BOOL		    beeping = scr->Flags & BEEPING;
 
@@ -141,8 +188,8 @@ static IPTR scrdecor_draw_screenbar(Class *cl, Object *obj, struct sdpDrawScreen
         RectFill(rp, 0, 0, scr->Width, sd->img_stitlebar->h);
     } else {
         if (sd->img_stitlebar->ok)
-	        WriteVerticalScalledTiledImageHorizontal(rp, sd->img_stitlebar, 0, 0,
-	        sd->img_stitlebar->w, 0, 0, data->dc->SBarHeight, scr->Width, scr->BarHeight + 1);
+            WriteVerticalScaledTiledImageHorizontal(rp, sd->img_stitlebar, 0, 0,
+                sd->img_stitlebar->w, 0, 0, data->dc->SBarHeight, scr->Width, scr->BarHeight + 1);
     }
     if (sd->img_sbarlogo->ok)
         WriteTiledImageHorizontal(rp, sd->img_sbarlogo, 0, 0, 
@@ -156,6 +203,13 @@ static IPTR scrdecor_draw_screenbar(Class *cl, Object *obj, struct sdpDrawScreen
     {
         scr_findtitlearea(scr, &left, &right);
         titlelen = strlen(scr->Title);
+        if (data->FirstChild)
+        {
+            if (((struct Gadget *)(data->FirstChild))->Width > 2) {
+                bug("[screendecor] draw_screenbar: titlechild width = %d\n", ((struct Gadget *)(data->FirstChild))->Width);
+                right = right - ((struct Gadget *)(data->FirstChild))->Width + 1; 
+            }
+        }
         titlelen = TextFit(rp, scr->Title, titlelen, &te, NULL, 1, right - data->dc->STitleOffset, scr->BarHeight);
         if (titlelen == 0) hastitle = 0;
     }
@@ -174,41 +228,63 @@ static IPTR scrdecor_draw_screenbar(Class *cl, Object *obj, struct sdpDrawScreen
 
         if (!sd->truecolor || ((data->dc->STitleOutline == FALSE) && (data->dc->STitleShadow == FALSE)))
         {
-	    SetAPen(rp, pens[beeping ? BARBLOCKPEN : BARDETAILPEN]);
+            SetAPen(rp, pens[beeping ? BARBLOCKPEN : BARDETAILPEN]);
             Move(rp, tx, ty);
             Text(rp, scr->Title, titlelen);
         }
         else if (data->dc->STitleOutline)
         {
+            SetSoftStyle(rp, FSF_BOLD, AskSoftStyle(rp));
+            SetRPAttrs(rp, RPTAG_PenMode, FALSE, RPTAG_FgColor, data->dc->STitleColorShadow, TAG_DONE);
 
-                SetSoftStyle(rp, FSF_BOLD, AskSoftStyle(rp));
-                SetRPAttrs(rp, RPTAG_PenMode, FALSE, RPTAG_FgColor, data->dc->STitleColorShadow, TAG_DONE);
+            Move(rp, tx + 1, ty ); Text(rp, scr->Title, titlelen);
+            Move(rp, tx + 2, ty ); Text(rp, scr->Title, titlelen);
+            Move(rp, tx , ty ); Text(rp, scr->Title, titlelen);
+            Move(rp, tx, ty + 1);  Text(rp, scr->Title, titlelen);
+            Move(rp, tx, ty + 2);  Text(rp, scr->Title, titlelen);
+            Move(rp, tx + 1, ty + 2);  Text(rp, scr->Title, titlelen);
+            Move(rp, tx + 2, ty + 1);  Text(rp, scr->Title, titlelen);
+            Move(rp, tx + 2, ty + 2);  Text(rp, scr->Title, titlelen);
 
-                Move(rp, tx + 1, ty ); Text(rp, scr->Title, titlelen);
-                Move(rp, tx + 2, ty ); Text(rp, scr->Title, titlelen);
-                Move(rp, tx , ty ); Text(rp, scr->Title, titlelen);
-                Move(rp, tx, ty + 1);  Text(rp, scr->Title, titlelen);
-                Move(rp, tx, ty + 2);  Text(rp, scr->Title, titlelen);
-                Move(rp, tx + 1, ty + 2);  Text(rp, scr->Title, titlelen);
-                Move(rp, tx + 2, ty + 1);  Text(rp, scr->Title, titlelen);
-                Move(rp, tx + 2, ty + 2);  Text(rp, scr->Title, titlelen);
-
-                SetRPAttrs(rp, RPTAG_PenMode, FALSE, RPTAG_FgColor, data->dc->STitleColorText, TAG_DONE);
-                Move(rp, tx + 1, ty + 1);
-                Text(rp, scr->Title, titlelen);
-                SetSoftStyle(rp, FS_NORMAL, AskSoftStyle(rp));
+            SetRPAttrs(rp, RPTAG_PenMode, FALSE, RPTAG_FgColor, data->dc->STitleColorText, TAG_DONE);
+            Move(rp, tx + 1, ty + 1);
+            Text(rp, scr->Title, titlelen);
+            SetSoftStyle(rp, FS_NORMAL, AskSoftStyle(rp));
         }
         else
         {
-                SetRPAttrs(rp, RPTAG_PenMode, FALSE, RPTAG_FgColor, data->dc->STitleColorShadow, TAG_DONE);
-                Move(rp, tx + 1, ty + 1 );
-                Text(rp, scr->Title, titlelen);
+            SetRPAttrs(rp, RPTAG_PenMode, FALSE, RPTAG_FgColor, data->dc->STitleColorShadow, TAG_DONE);
+            Move(rp, tx + 1, ty + 1 );
+            Text(rp, scr->Title, titlelen);
 
-                SetRPAttrs(rp, RPTAG_PenMode, FALSE, RPTAG_FgColor, data->dc->STitleColorText, TAG_DONE);
-                Move(rp, tx, ty);
-                Text(rp, scr->Title, titlelen);
-
+            SetRPAttrs(rp, RPTAG_PenMode, FALSE, RPTAG_FgColor, data->dc->STitleColorText, TAG_DONE);
+            Move(rp, tx, ty);
+            Text(rp, scr->Title, titlelen);
         }
+    }
+
+    if (data->FirstChild && (((struct Gadget *)(data->FirstChild))->Width > 0)) {
+        struct GadgetInfo childgadinf;
+        struct gpRender childrendermsg =
+        {
+            GM_RENDER,
+            &childgadinf,
+            rp,
+            GREDRAW_REDRAW
+        };
+
+        childgadinf.gi_Screen = scr;
+        childgadinf.gi_RastPort = rp;
+        childgadinf.gi_Pens.DetailPen = pens[DETAILPEN];
+        childgadinf.gi_Pens.BlockPen = pens[BLOCKPEN];
+        childgadinf.gi_DrInfo = dri;
+        childgadinf.gi_Domain.Left = right;
+        childgadinf.gi_Domain.Top = 0 + CHILDPADDING;
+        childgadinf.gi_Domain.Width = ((struct Gadget *)(data->FirstChild))->Width;
+        childgadinf.gi_Domain.Height = sd->img_stitlebar->h - (CHILDPADDING << 1);
+        bug("[screendecor] draw_screenbar: rendering titlechild @ 0x%p, msg @ 0x%p, info @ 0x%p\n", data->FirstChild, &childrendermsg, &childgadinf);
+        DoMethodA(data->FirstChild, &childrendermsg);
+
     }
     return TRUE;
 }
@@ -246,7 +322,7 @@ static IPTR scrdecor_draw_sysimage(Class *cl, Object *obj, struct sdpDrawSysImag
     {
         if (&sd->img_sdepth)
         {
-            DrawScalledStatefulGadgetImageToRP(rp, sd->img_sdepth, state, left, top, width, height);
+            DrawScaledStatefulGadgetImageToRP(rp, sd->img_sdepth, state, left, top, width, height);
         }
         else return DoSuperMethodA(cl, obj, (Msg) msg);
     }
@@ -306,7 +382,7 @@ static IPTR scrdecor_initscreen(Class *cl, Object *obj, struct sdpInitScreen *ms
     else
         msg->sdp_WBorTop = data->dc->BarHeight - 1 - msg->sdp_FontHeight;
 
-    /* Allow scalling title bar above decoration defined height */
+    /* Allow scaling title bar above decoration defined height */
     msg->sdp_BarHeight = msg->sdp_FontHeight > (data->dc->SBarHeight - 1) ? msg->sdp_FontHeight : (data->dc->SBarHeight - 1);
 
     msg->sdp_BarHBorder = 1;
@@ -398,6 +474,10 @@ static IPTR scrdecor_dispatcher(struct IClass *cl, Object *obj, Msg msg)
 
         case OM_GET:
             retval = scrdecor_get(cl, obj, (struct opGet *)msg);
+            break;
+
+        case OM_SET:
+            retval = scrdecor_set(cl, obj, (struct opSet *)msg);
             break;
 
         case SDM_GETDEFSIZE_SYSIMAGE:
