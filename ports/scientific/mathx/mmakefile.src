@@ -2,20 +2,18 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- ports-scientific : ports-scientific-$(AROS_TARGET_CPU)
+# #MM- ports-scientific : ports-scientific-$(AROS_TARGET_CPU)
 
 #MM- ports-scientific-i386 : ports-scientific-mathx
 
 #MM  ports-scientific-mathx : includes linklibs ports-scientific-mathx-catalogs \
-#MM  ports-scientific-mathx-cpp ports-scientific-mathx-drawericon \
+#MM  ports-scientific-mathx-drawericon \
 #MM  ports-scientific-mathx-data ports-scientific-mathx-docs \
 #MM  ports-scientific-mathx-icons ports-scientific-mathx-images \
 #MM  ports-scientific-mathx-rexx ports-scientific-mathx-cpy \
 #MM  ports-scientific-mathx-fetch
 
 #MM  ports-scientific-mathx-catalogs : ports-scientific-mathx-fetch
-
-#MM  ports-scientific-mathx-cpp : ports-scientific-mathx-fetch tools-crosstools
 
 #MM  ports-scientific-mathx-drawericon : ports-scientific-mathx-fetch
 
@@ -36,7 +34,6 @@ include $(TOP)/config/make.cfg
 REPOSITORIES := http://archives.aros-exec.org/share/utility/scientific
 ARCHBASE     := muimathx-src-svn40
 TARGETDIR    := $(AROS_CONTRIB)/Utilities/Scientific/MathX
-TARGET_CXX   := $(CROSSTOOLSDIR)/$(AROS_TARGET_CPU)-aros-g++
 USER_CFLAGS  := -D__MATHX_VERDATE=\"`date +%d.%m.%Y`\" \
                 -D__MATHX_VERDAYS="`expr \`date +%s\` / 86400 - 2922`" \
                 -D__MATHX_BUILDID=\"$(BUILDID)\" \
@@ -46,11 +43,7 @@ USER_CFLAGS  := -D__MATHX_VERDATE=\"`date +%d.%m.%Y`\" \
                 -Wno-write-strings -funroll-loops -fno-strict-aliasing -DDEBUG
 USER_INCLUDES:= -I$(PORTSDIR)/mathx/$(ARCHBASE) -I$(PORTSDIR)/mathx/$(ARCHBASE)/extrasrc
 
-# Remove C-only flags
-CXX_FLAGS    := $(subst -Wno-pointer-sign,, $(subst -Werror-implicit-function-declaration,, $(CFLAGS)))
-
-
-CXX_SOURCES := \
+CXX_FILES := \
 	About \
 	AGraphics \
 	AGraphicsIO \
@@ -102,21 +95,8 @@ CXX_SOURCES := \
 	Window3D \
 	WindowSIRDS
 
-
-OBJS  := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CXX_SOURCES))))
-
-
-#MM 
-ports-scientific-mathx-cpp : $(CXX_SOURCES)
-
-$(CXX_SOURCES) : ports-scientific-mathx-makeimages | $(GENDIR)/$(CURDIR)
-%compile_q cmd=$(TARGET_CXX) opt=$(CXX_FLAGS) from=$(PORTSDIR)/mathx/$(ARCHBASE)/$@.cpp to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
-
-
-#MM
-ports-scientific-mathx :
-%link_q cmd=$(TARGET_CXX) from="$(OBJS)" to=$(TARGETDIR)/MathX libs="-lmui"
-
+%build_prog mmake=ports-scientific-mathx progname=MathX files="" cxxfiles=$(CXX_FILES) \
+    targetdir=$(TARGETDIR) uselibs="mui" srcdir=$(PORTSDIR)/mathx/$(ARCHBASE)/
 
 %fetch mmake=ports-scientific-mathx-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/mathx \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.bz2"
@@ -160,9 +140,6 @@ CPYFILES := AUTHORS COPYING
 
 images :
 %mkdir_q dir="images"
-
-$(GENDIR)/$(CURDIR) :
-%mkdir_q dir="$(GENDIR)/$(CURDIR)"
 
 ##### localisation #####
 
