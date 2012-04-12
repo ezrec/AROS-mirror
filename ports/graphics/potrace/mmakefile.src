@@ -7,7 +7,7 @@ include $(TOP)/config/make.cfg
 #MM- ports-graphics-potrace : ports-graphics-potrace-drawericon
 
 PACKAGE      := potrace
-VERSION      := 1.9
+VERSION      := 1.10
 TARGETDIR    := $(AROS_CONTRIB)/MultiMedia/Gfx/Potrace
 REPOSITORIES := sf://potrace
 
