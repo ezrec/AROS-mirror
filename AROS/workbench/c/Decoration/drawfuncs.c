@@ -1,5 +1,5 @@
 /*
-    Copyright © 2011, The AROS Development Team.
+    Copyright © 2011-2012, The AROS Development Team.
     $Id$
 */
 
@@ -563,7 +563,7 @@ void RenderMenuBarBackground(struct NewImage *pic, struct NewImage *texture, str
                 texture->w - textureti->TileLeft - textureti->TileRight, texture->h - textureti->TileBottom - textureti->TileTop,
                 0, 0, pic->w, pic->h);
 
-//        RenderBackgroundTiled(pic, texture, textureti, ratio, TileImageToImageMenuBar);
+        RenderBackgroundTiled(pic, texture, textureti, ratio, TileImageToImageMenuBar);
     }
 }
 
@@ -783,6 +783,9 @@ void FillMemoryBufferRGBGradient(UBYTE * buf, LONG pen, LONG xt, LONG yt, LONG x
     *       Remove the use of floating point variables
     */
     double rad = angle*M_PI/180;
+
+    if (isnan(rad)) rad=0; /* TODO: Sometimes rad ends up as nan. Figure out why */
+
     double cosarc = cos(rad);
     double sinarc = sin(rad);
 
