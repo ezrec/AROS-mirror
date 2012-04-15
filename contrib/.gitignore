@@ -121,6 +121,39 @@
 # /DiskSpeed/icons/
 /DiskSpeed/icons/mmakefile
 
+# /FryingPan/DTLib/
+/FryingPan/DTLib/mmakefile
+
+# /FryingPan/Data/
+/FryingPan/Data/mmakefile
+
+# /FryingPan/Expat/
+/FryingPan/Expat/mmakefile
+
+# /FryingPan/FP/
+/FryingPan/FP/mmakefile
+
+# /FryingPan/FP/Engine/
+/FryingPan/FP/Engine/mmakefile
+
+# /FryingPan/FP/GUI-MUI/
+/FryingPan/FP/GUI-MUI/mmakefile
+
+# /FryingPan/ISOBuilder/
+/FryingPan/ISOBuilder/mmakefile
+
+# /FryingPan/Optical/
+/FryingPan/Optical/mmakefile
+
+# /FryingPan/framework/Generic/
+/FryingPan/framework/Generic/mmakefile
+
+# /FryingPan/framework/GenericLib/
+/FryingPan/framework/GenericLib/mmakefile
+
+# /FryingPan/framework/LibC/
+/FryingPan/framework/LibC/mmakefile
+
 # /Games/Bomber/
 /Games/Bomber/mmakefile
 
@@ -970,23 +1003,20 @@
 # /development/compilers/lcc/lib/liblcc/
 /development/compilers/lcc/lib/liblcc/mmakefile
 
-# /development/compilers/lua-5.1/
-/development/compilers/lua-5.1/mmakefile
+# /development/compilers/lua/
+/development/compilers/lua/mmakefile
 
-# /development/compilers/lua-5.1/S/
-/development/compilers/lua-5.1/S/mmakefile
+# /development/compilers/lua/S/
+/development/compilers/lua/S/mmakefile
 
-# /development/compilers/lua-5.1/icons/
-/development/compilers/lua-5.1/icons/mmakefile
+# /development/compilers/lua/luafilesystem/
+/development/compilers/lua/luafilesystem/mmakefile
 
-# /development/compilers/lua-5.1/luafilesystem/
-/development/compilers/lua-5.1/luafilesystem/mmakefile
+# /development/compilers/lua/luafilesystem/src/
+/development/compilers/lua/luafilesystem/src/mmakefile
 
-# /development/compilers/lua-5.1/luafilesystem/src/
-/development/compilers/lua-5.1/luafilesystem/src/mmakefile
-
-# /development/compilers/lua-5.1/src/
-/development/compilers/lua-5.1/src/mmakefile
+# /development/compilers/lua/src/
+/development/compilers/lua/src/mmakefile
 
 # /development/compilers/nasm/
 /development/compilers/nasm/mmakefile
@@ -1737,11 +1767,26 @@
 # /images/IconSets/Gorilla/Icons/Medium/AROS/Extras/Networking/Apps/OWB/
 /images/IconSets/Gorilla/Icons/Medium/AROS/Extras/Networking/Apps/OWB/mmakefile
 
+# /images/IconSets/Gorilla/Icons/Medium/AROS/Extras/Office/
+/images/IconSets/Gorilla/Icons/Medium/AROS/Extras/Office/mmakefile
+
+# /images/IconSets/Gorilla/Icons/Medium/AROS/Extras/Office/MUIbase/
+/images/IconSets/Gorilla/Icons/Medium/AROS/Extras/Office/MUIbase/mmakefile
+
+# /images/IconSets/Gorilla/Icons/Medium/AROS/Extras/Office/MUIbase/Icons/
+/images/IconSets/Gorilla/Icons/Medium/AROS/Extras/Office/MUIbase/Icons/mmakefile
+
 # /images/IconSets/Gorilla/Icons/Medium/AROS/Extras/System/
 /images/IconSets/Gorilla/Icons/Medium/AROS/Extras/System/mmakefile
 
 # /images/IconSets/Gorilla/Icons/Medium/AROS/Extras/Utilities/
 /images/IconSets/Gorilla/Icons/Medium/AROS/Extras/Utilities/mmakefile
+
+# /images/IconSets/Gorilla/Icons/Medium/AROS/Extras/Utilities/Archive/
+/images/IconSets/Gorilla/Icons/Medium/AROS/Extras/Utilities/Archive/mmakefile
+
+# /images/IconSets/Gorilla/Icons/Medium/AROS/Extras/Utilities/Archive/Unarc/
+/images/IconSets/Gorilla/Icons/Medium/AROS/Extras/Utilities/Archive/Unarc/mmakefile
 
 # /libiconv/
 /libiconv/mmakefile
@@ -1752,6 +1797,9 @@
 # /libs/desktop/
 /libs/desktop/mmakefile
 /libs/desktop/libdefs.h
+
+# /libs/mpega/
+/libs/mpega/mmakefile
 
 # /libs/security/
 /libs/security/mmakefile
@@ -1927,6 +1975,16 @@
 
 # /pack/lzo/
 /pack/lzo/mmakefile
+
+# /pack/unarc/
+/pack/unarc/mmakefile
+/pack/unarc/strings.h
+
+# /pack/unarc/catalogs/
+/pack/unarc/catalogs/mmakefile
+
+# /pack/unarc/s/
+/pack/unarc/s/mmakefile
 
 # /regina/
 /regina/mmakefile
