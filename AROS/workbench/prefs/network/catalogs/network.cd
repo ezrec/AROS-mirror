@@ -181,3 +181,9 @@ Domain/Workgroup
 MSG_SERVICE (//)
 Share Name
 ;
+MSG_SERVICE_TYPES (//)
+Service Type
+;
+MSG_SERVICETYPE_CIFS (//)
+CIFS/SMB
+;

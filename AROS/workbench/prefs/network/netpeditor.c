@@ -36,6 +36,7 @@ static CONST_STRPTR NetworkTabs[] = { NULL, NULL, NULL, NULL, NULL, NULL};
 static CONST_STRPTR DHCPCycle[] = { NULL, NULL, NULL };
 static CONST_STRPTR EncCycle[] = { NULL, NULL, NULL, NULL };
 static CONST_STRPTR KeyCycle[] = { NULL, NULL, NULL };
+static CONST_STRPTR ServiceTypeCycle[] = { NULL, NULL };
 static const TEXT max_ip_str[] = "255.255.255.255 ";
 
 static struct Hook  netpeditor_displayHook,
@@ -116,6 +117,7 @@ struct NetPEditor_DATA
 
     // File-server window
     Object  *netped_serverWindow,
+            *netped_serverServiceType,
             *netped_serverDevice,
             *netped_serverActive,
             *netped_serverHost,
@@ -701,7 +703,7 @@ Object * NetPEditor__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
             *adHocState, *netWindow, *netApplyButton, *netCloseButton;
 
     // file-server window
-    Object  *serverWindow, *serverDevice, *serverActive, *serverHost,
+    Object  *serverWindow, *serverServiceType, *serverDevice, *serverActive, *serverHost,
             *serverService, *serverUser, *serverGroup, *serverPass,
             *serverApplyButton, *serverCloseButton;
 
@@ -714,6 +716,8 @@ Object * NetPEditor__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
 
     KeyCycle[0] = _(MSG_KEY_TEXT);
     KeyCycle[1] = _(MSG_KEY_HEX);
+
+    ServiceTypeCycle[0] = _(MSG_SERVICETYPE_CIFS);
 
     NetworkTabs[0] = _(MSG_TAB_IP_CONFIGURATION);
     NetworkTabs[1] = _(MSG_TAB_COMPUTER_NAMES);
@@ -1136,7 +1140,7 @@ Object * NetPEditor__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
 
     serverWindow = (Object *)WindowObject,
         MUIA_Window_Title, __(MSG_SERVERWINDOW_TITLE),
-        MUIA_Window_ID, MAKE_ID('S', 'M', 'B', 'A'),
+        MUIA_Window_ID, MAKE_ID('S', 'H', 'R', 'E'),
         MUIA_Window_CloseGadget, FALSE,
         MUIA_Window_SizeGadget, TRUE,
         WindowContents, (IPTR)VGroup,
@@ -1152,6 +1156,10 @@ Object * NetPEditor__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
             End,
             Child, (IPTR)ColGroup(2),
                 GroupFrame,
+                Child, (IPTR)Label2(_(MSG_SERVICE_TYPES)),
+                Child, (IPTR)(serverServiceType = (Object *)CycleObject,
+                    MUIA_Cycle_Entries, (IPTR)ServiceTypeCycle,
+                End),
                 Child, (IPTR)Label2(_(MSG_DEVICE)),
                 Child, (IPTR)(serverDevice = (Object *)StringObject,
                     StringFrame,
@@ -1270,6 +1278,7 @@ Object * NetPEditor__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
 
         // file-server window
         data->netped_serverWindow = serverWindow;
+        data->netped_serverServiceType = serverServiceType;
         data->netped_serverDevice = serverDevice;
         data->netped_serverActive = serverActive;
         data->netped_serverHost = serverHost;
