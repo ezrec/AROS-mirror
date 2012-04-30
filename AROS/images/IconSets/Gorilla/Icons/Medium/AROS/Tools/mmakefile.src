@@ -3,7 +3,9 @@
 
 include $(TOP)/config/make.cfg
 
-ICONS := Calculator HDToolBox PCITool InstallAROS Editor Commodities Debug WiMP \
+ICONS :=  \
+         BoingIconBar Calculator Commodities Debug \
+         Editor HDToolBox InstallAROS PCITool WiMP \
          ScreenGrabber ShowConfig
 
 #MM- iconset-Gorilla-icons-aros-clean : iconset-Gorilla-icons-aros-tools-clean
