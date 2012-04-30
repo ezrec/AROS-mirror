@@ -176,7 +176,7 @@ void SetAutostart(BOOL w);
 
 void InitHost(struct Host *host);
 void InitNetwork(struct Network *net);
-void InitServer(struct Server *server);
+void InitServer(struct Server *server, char *workgroup);
 
 struct Host *GetHost(LONG index);
 STRPTR GetHostNames(struct Host *host);

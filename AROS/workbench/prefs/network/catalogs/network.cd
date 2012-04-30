@@ -38,10 +38,10 @@ MSG_HOST_NAME (//)
 Host Name
 ;
 MSG_HOST_NAMES (//)
-Host Names
+Host Name and Aliases
 ;
 MSG_DOMAIN_NAME (//)
-Domain Name
+Domain/Workgroup
 ;
 MSG_SERIAL_DEVICE (//)
 Serial Device
@@ -92,7 +92,7 @@ MSG_TAB_IP_CONFIGURATION (//)
 IPv4 Configuration
 ;
 MSG_TAB_COMPUTER_NAMES (//)
-Computer Names
+Local Host Entries
 ;
 MSG_TAB_WIRELESS (//)
 Wireless Networks
@@ -101,7 +101,7 @@ MSG_TAB_MOBILE (//)
 Mobile Broadband
 ;
 MSG_TAB_SERVERS (//)
-File Servers
+Mounted Shares
 ;
 MSG_AUTOSTART_STACK (//)
 Start networking during system boot
@@ -161,13 +161,13 @@ MSG_IFWINDOW_TITLE (//)
 Interface
 ;
 MSG_HOSTWINDOW_TITLE (//)
-Host
+Host Name(s)
 ;
 MSG_NETWINDOW_TITLE (//)
 Wireless Network
 ;
 MSG_SERVERWINDOW_TITLE (//)
-File Server
+Mount Share
 ;
 MSG_USERNAME (//)
 Username
@@ -176,8 +176,8 @@ MSG_PASSWORD (//)
 Password
 ;
 MSG_WORKGROUP (//)
-Workgroup
+Domain/Workgroup
 ;
 MSG_SERVICE (//)
-Service
+Share Name
 ;

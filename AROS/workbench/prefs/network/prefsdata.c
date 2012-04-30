@@ -1729,13 +1729,16 @@ void InitNetwork(struct Network *net)
     SetAdHoc(net, FALSE);
 }
 
-void InitServer(struct Server *server)
+void InitServer(struct Server *server, char *workgroup)
 {
+    if((workgroup == NULL) && ((workgroup = GetDomain()) == NULL))
+        workgroup = "workgroup";
+
     SetServerDevice(server, DEFAULTSERVERDEV);
     SetServerHost(server, "");
+    SetServerGroup(server, workgroup);
     SetServerService(server, "share");
     SetServerUser(server, "guest");
-    SetServerGroup(server, "workgroup");
     SetServerPass(server, "");
     SetServerActive(server, TRUE);
 }

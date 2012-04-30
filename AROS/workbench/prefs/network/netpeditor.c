@@ -346,18 +346,18 @@ AROS_UFHA(struct Server *, entry, A1))
         *array++ = entry->device;
         *array++ = entry->active ? "*" : "";
         *array++ = entry->host;
+        *array++ = entry->group;
         *array++ = entry->service;
         *array++ = entry->user;
-        *array++ = entry->group;
     }
     else
     {
         *array++ = (STRPTR)_(MSG_DEVICE);
         *array++ = (STRPTR)_(MSG_UP);
         *array++ = (STRPTR)_(MSG_HOST_NAME);
+        *array++ = (STRPTR)_(MSG_WORKGROUP);
         *array++ = (STRPTR)_(MSG_SERVICE);
         *array++ = (STRPTR)_(MSG_USERNAME);
-        *array++ = (STRPTR)_(MSG_WORKGROUP);
     }
 
     return 0;
@@ -1042,7 +1042,7 @@ Object * NetPEditor__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
     End;
 
     hostWindow = (Object *)WindowObject,
-        MUIA_Window_Title, __(MSG_HOSTWINDOW_TITLE),
+        MUIA_Window_Title, __(MSG_HOST_NAMES),
         MUIA_Window_ID, MAKE_ID('H', 'O', 'S', 'T'),
         MUIA_Window_CloseGadget, FALSE,
         MUIA_Window_SizeGadget, TRUE,
@@ -1064,7 +1064,7 @@ Object * NetPEditor__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
                     StringFrame,
                     MUIA_CycleChain, 1,
                 End),
-                Child, (IPTR)Label2(_(MSG_HOST_NAMES)),
+                Child, (IPTR)Label2(_(MSG_HOSTWINDOW_TITLE)),
                 Child, (IPTR)(hostNamesString = (Object *)StringObject,
                     StringFrame,
                     MUIA_CycleChain, 1,
@@ -1166,6 +1166,11 @@ Object * NetPEditor__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
                     StringFrame,
                     MUIA_CycleChain, 1,
                 End),
+                Child, (IPTR)Label2(__(MSG_WORKGROUP)),
+                Child, (IPTR)(serverGroup = (Object *)StringObject,
+                    StringFrame,
+                    MUIA_CycleChain, 1,
+                End),
                 Child, (IPTR)Label2(__(MSG_SERVICE)),
                 Child, (IPTR)(serverService = (Object *)StringObject,
                     StringFrame,
@@ -1173,11 +1178,6 @@ Object * NetPEditor__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
                 End),
                 Child, (IPTR)Label2(__(MSG_USERNAME)),
                 Child, (IPTR)(serverUser = (Object *)StringObject,
-                    StringFrame,
-                    MUIA_CycleChain, 1,
-                End),
-                Child, (IPTR)Label2(__(MSG_WORKGROUP)),
-                Child, (IPTR)(serverGroup = (Object *)StringObject,
                     StringFrame,
                     MUIA_CycleChain, 1,
                 End),
@@ -2140,7 +2140,7 @@ IPTR NetPEditor__MUIM_NetPEditor_EditServerEntry
         if (entries < MAXSERVERS)
         {
             struct Server server;
-            InitServer(&server);
+            InitServer(&server, XGET(data->netped_domainString, MUIA_String_Contents));
             server.device[strlen(server.device) - 1] += entries;
             DoMethod
             (
