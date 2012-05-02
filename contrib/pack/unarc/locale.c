@@ -6,6 +6,8 @@
 #include <exec/types.h>
 #include <proto/locale.h>
 
+#include <aros/symbolsets.h>
+
 #define CATCOMP_ARRAY
 #include "strings.h"
 

@@ -718,7 +718,10 @@ IPTR UnarcGroup__OM_DISPOSE(Class *CLASS, Object *self, Msg message)
     struct UnarcGroup_DATA *data = INST_DATA(CLASS, self);
 
     if (data->ai)
+    {
+        xadFreeInfo(data->ai);
         xadFreeObjectA(data->ai, 0);
+    }
     FreeVec(data->targetpathname);
 
     return DoSuperMethodA(CLASS, self, message);
