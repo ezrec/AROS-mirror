@@ -2,12 +2,18 @@
 #define _SUPPORT_H_
 
 /*
-    Copyright © 2003, The AROS Development Team. All rights reserved.
+    Copyright © 2003-2012, The AROS Development Team. All rights reserved.
     $Id$
 */
 
 #include <exec/types.h>
 #include <libraries/mui.h>
+
+struct PCIListview_DATA
+{
+    Object *list;
+   struct MUI_EventHandlerNode   ehn;
+};
 
 /*** Prototypes *************************************************************/
 STRPTR GetENV(CONST_STRPTR name);

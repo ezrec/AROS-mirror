@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2003-2010, The AROS Development Team.
+    Copyright (C) 2003-2012, The AROS Development Team.
     $Id$
 */
 
@@ -31,6 +31,9 @@
 #define IDB_SAVE 10001
 #define IDB_SAVEALL 10002
 const char version[] = "$VER: " VERSION "\n";
+
+extern IPTR PCIListview_Dispatcher();
+struct MUI_CustomClass *PCIListview_CLASS;
 
 struct Library *OOPBase = NULL;
 struct Library *MUIMasterBase = NULL;
@@ -478,7 +481,7 @@ BOOL GUIinit()
     app = ApplicationObject,
 	    MUIA_Application_Title,	    (IPTR)APPNAME,
 	    MUIA_Application_Version,	    (IPTR)VERSION,
-	    MUIA_Application_Copyright,	    (IPTR)"(C) 2004-2010, The AROS Development Team",
+	    MUIA_Application_Copyright,	    (IPTR)"(C) 2004-2012, The AROS Development Team",
 	    MUIA_Application_Author,	    (IPTR)"Michal Schulz",
 	    MUIA_Application_Base,	    (IPTR)APPNAME,
 	    MUIA_Application_Description,   __(MSG_DESCRIPTION),
@@ -491,19 +494,21 @@ BOOL GUIinit()
 		WindowContents, HGroup,
 		    MUIA_Group_SameWidth, FALSE,
 		    
-		    Child, ListviewObject,
-			MUIA_Listview_List, DriverList = ListObject,
+		    Child, (NewObject(PCIListview_CLASS->mcc_Class, NULL,
+                        MUIA_CycleChain, 1,
+			MUIA_Listview_List, (IPTR)(DriverList = ListObject,
 			    ReadListFrame,
 			    MUIA_List_AdjustWidth, TRUE,
 			    MUIA_List_DisplayHook, &display_hook,
-			End, // List
-		    End, // ListView
+                        End), // List
+		    TAG_DONE)), // ListView
 		    Child, VGroup,
 			Child, VGroup, GroupFrameT(_(MSG_DRIVER_INFO)),
 			    Child, ColGroup(2),
 				Child, Label(_(MSG_DRIVER_NAME)),
 				Child, HGroup,
 				    Child, StrDriverName = TextObject,
+                                        MUIA_CycleChain, 1,
 					TextFrame,
 					MUIA_Background, MUII_TextBack,
 					MUIA_Text_SetMax, FALSE,
@@ -511,6 +516,7 @@ BOOL GUIinit()
 				    End,
 				    Child, Label(_(MSG_DIRECT_BUS)),
 				    Child, StrDriverDirect = TextObject,
+                                        MUIA_CycleChain, 1,
 					TextFrame,
 					MUIA_Background, MUII_TextBack,
 					MUIA_Text_SetMax, FALSE,
@@ -519,6 +525,7 @@ BOOL GUIinit()
 				End,
 				Child, Label(_(MSG_HARDWARE_INFO)),
 				Child, StrDriverHWName = TextObject,
+                                    MUIA_CycleChain, 1,
 				    TextFrame,
 				    MUIA_Background, MUII_TextBack,
 				    MUIA_Text_SetMax, FALSE,
@@ -530,6 +537,7 @@ BOOL GUIinit()
 			    Child, ColGroup(2),
 				Child, Label(_(MSG_DEVICE_DESCRIPTION)),
 				Child, StrDescription = TextObject,
+                                    MUIA_CycleChain, 1,
 				    TextFrame,
 				    MUIA_Background, MUII_TextBack,
 				    MUIA_Text_SetMax, FALSE,
@@ -537,6 +545,7 @@ BOOL GUIinit()
 				End,
 				Child, Label(_(MSG_VENDORNAME)),
 				Child, VendorName = TextObject,
+                                    MUIA_CycleChain, 1,
 				    TextFrame,
 				    MUIA_Background, MUII_TextBack,
 				    MUIA_Text_SetMax, FALSE,
@@ -544,6 +553,7 @@ BOOL GUIinit()
 				End,
 				Child, Label(_(MSG_PRODUCTNAME)),
 				Child, ProductName = TextObject,
+                                    MUIA_CycleChain, 1,
 				    TextFrame,
 				    MUIA_Background, MUII_TextBack,
 				    MUIA_Text_SetMax, FALSE,
@@ -551,6 +561,7 @@ BOOL GUIinit()
 				End,
 				Child, Label(_(MSG_SUBSYSTEM)),
 				Child, SubsystemName = TextObject,
+                                    MUIA_CycleChain, 1,
 				    TextFrame,
 				    MUIA_Background, MUII_TextBack,
 				    MUIA_Text_SetMax, FALSE,
@@ -560,6 +571,7 @@ BOOL GUIinit()
 			    Child, ColGroup(6),
 				Child, Label(_(MSG_VENDORID)),
 				Child, VendorID = TextObject,
+                                    MUIA_CycleChain, 1,
 				    TextFrame,
 				    MUIA_Background, MUII_TextBack,
 				    MUIA_Text_SetMax, FALSE,
@@ -567,6 +579,7 @@ BOOL GUIinit()
 				End,
 				Child, Label(_(MSG_PRODUCTID)),
 				Child, ProductID = TextObject,
+                                    MUIA_CycleChain, 1,
 				    TextFrame,
 				    MUIA_Background, MUII_TextBack,
 				    MUIA_Text_SetMax, FALSE,
@@ -574,6 +587,7 @@ BOOL GUIinit()
 				End,
 				Child, Label(_(MSG_REVISIONID)),
 				Child, RevisionID = TextObject,
+                                    MUIA_CycleChain, 1,
 				    TextFrame,
 				    MUIA_Background, MUII_TextBack,
 				    MUIA_Text_SetMax, FALSE,
@@ -581,6 +595,7 @@ BOOL GUIinit()
 				End,
 				Child, Label(_(MSG_CLASS)),
 				Child, _Class = TextObject,
+                                    MUIA_CycleChain, 1,
 				    TextFrame,
 				    MUIA_Background, MUII_TextBack,
 				    MUIA_Text_SetMax, FALSE,
@@ -588,6 +603,7 @@ BOOL GUIinit()
 				End,
 				Child, Label(_(MSG_SUBCLASS)),
 				Child, SubClass = TextObject,
+                                    MUIA_CycleChain, 1,
 				    TextFrame,
 				    MUIA_Background, MUII_TextBack,
 				    MUIA_Text_SetMax, FALSE,
@@ -595,6 +611,7 @@ BOOL GUIinit()
 				End,
 				Child, Label(_(MSG_INTERFACE)),
 				Child, Interface = TextObject,
+                                    MUIA_CycleChain, 1,
 				    TextFrame,
 				    MUIA_Background, MUII_TextBack,
 				    MUIA_Text_SetMax, FALSE,
@@ -602,6 +619,7 @@ BOOL GUIinit()
 				End,
 				Child, Label(_(MSG_ROM_BASE)),
 				Child, ROMBase = TextObject,
+                                    MUIA_CycleChain, 1,
 				    TextFrame,
 				    MUIA_Background, MUII_TextBack,
 				    MUIA_Text_SetMax, FALSE,
@@ -609,6 +627,7 @@ BOOL GUIinit()
 				End,
 				Child, Label(_(MSG_ROM_SIZE)),
 				Child, ROMSize = TextObject,
+                                    MUIA_CycleChain, 1,
 				    TextFrame,
 				    MUIA_Background, MUII_TextBack,
 				    MUIA_Text_SetMax, FALSE,
@@ -616,6 +635,7 @@ BOOL GUIinit()
 				End,
 				Child, Label(_(MSG_IRQ)),
 				Child, IRQLine = TextObject,
+                                    MUIA_CycleChain, 1,
 				    TextFrame,
 				    MUIA_Background, MUII_TextBack,
 				    MUIA_Text_SetMax, FALSE,
@@ -623,14 +643,16 @@ BOOL GUIinit()
 				End,
 			    End,
 			    Child, HGroup,
-				Child, RangeList =  ListviewObject,
-				    MUIA_Listview_List, ListObject,
-				    ReadListFrame,
-				    MUIA_List_AdjustWidth, FALSE,
-				    End, // List
-				End, // ListView
+                                Child, (RangeList =  NewObject(PCIListview_CLASS->mcc_Class, NULL,
+                                    MUIA_CycleChain, 1,
+                                    MUIA_Listview_List, (IPTR)(ListObject,
+                                        ReadListFrame,
+                                        MUIA_List_AdjustWidth, FALSE,
+                                    End), // List
+                                TAG_DONE)), // ListView
 			    End,
 			    Child, Status = TextObject,
+                                MUIA_CycleChain, 1,
 				TextFrame,
 				MUIA_Background, MUII_TextBack,
 				MUIA_Text_SetMax, FALSE,
@@ -682,6 +704,8 @@ int main(void)
 
     if(openLibs())
     {
+        PCIListview_CLASS = MUI_CreateCustomClass(NULL, MUIC_Listview, NULL, sizeof(struct PCIListview_DATA), PCIListview_Dispatcher);
+
 	if(GUIinit())
 	{
 	    pci = OOP_NewObject(NULL, CLID_Hidd_PCI, NULL);
