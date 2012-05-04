@@ -128,7 +128,8 @@ IPTR Listview__OM_NEW(struct IClass *cl, Object *obj, struct opSet *msg)
     struct TagItem *tag, *tags;
     struct Hook *layout_hook;
     Object *group, *vert;
-    Object *list = (Object*)GetTagData(MUIA_Listview_List, NULL, msg->ops_AttrList);
+    Object *list = (Object*)GetTagData(MUIA_Listview_List, (IPTR)NULL, msg->ops_AttrList);
+    IPTR  cyclechain = (IPTR)GetTagData(MUIA_CycleChain, (IPTR)0, msg->ops_AttrList);
     LONG entries = 0,first = 0,visible = 0;
     if (!list) return NULL;
 
@@ -140,6 +141,7 @@ IPTR Listview__OM_NEW(struct IClass *cl, Object *obj, struct opSet *msg)
 
     obj = (Object *)DoSuperNewTags(cl, obj, NULL,
         MUIA_Group_Horiz, FALSE,
+        MUIA_CycleChain, cyclechain,
         MUIA_InnerLeft, 0,
         MUIA_InnerRight, 0,
         Child, (IPTR) (group = GroupObject,
