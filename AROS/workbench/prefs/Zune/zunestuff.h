@@ -2,7 +2,7 @@
 #define _ZUNE_ZUNESTUFF_H
 
 /*
-    Copyright  2002-2006, The AROS Development Team. All rights reserved.
+    Copyright  2002-2012, The AROS Development Team. All rights reserved.
     $Id$
 */
 
