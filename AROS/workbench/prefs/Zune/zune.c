@@ -142,6 +142,7 @@ static Object *main_page_space; /* a space object */
 
 void close_classes(void)
 {
+    MUI_DeleteCustomClass(ClassListview_CLASS);
 }
 
 int open_classes(void)
