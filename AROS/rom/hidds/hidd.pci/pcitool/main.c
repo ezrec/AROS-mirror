@@ -725,7 +725,9 @@ int main(void)
 	    DisposeObject(app);
 
 	}
-	
+
+        MUI_DeleteCustomClass(PCIListview_CLASS);
+
 	closeLibs();
     }
     cleanup(NULL);
