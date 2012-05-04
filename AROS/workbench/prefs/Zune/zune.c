@@ -57,6 +57,9 @@ struct MUI_CustomClass *MCC_Query(ULONG d0);
 #endif
 #endif
 
+extern IPTR ClassListview_Dispatcher();
+struct MUI_CustomClass *ClassListview_CLASS;
+
 #define ZUNEVERSION "$VER: Zune 0.2 (22.02.2006) AROS Dev Team"
 
 APTR *appaddr;
@@ -145,6 +148,7 @@ int open_classes(void)
 {
      if (1)
      {
+         ClassListview_CLASS = MUI_CreateCustomClass(NULL, MUIC_Listview, NULL, sizeof(struct ClassListview_DATA), ClassListview_Dispatcher);
 	 return 1;
      }
      else
@@ -504,14 +508,14 @@ int init_gui(void)
 	        MUIA_Group_VertSpacing, 10,
     	    	Child, HGroup,
 	          Child, VGroup,
-		    Child, ListviewObject,
+		    Child, (NewObject(ClassListview_CLASS->mcc_Class, NULL,
 	                MUIA_CycleChain, 1,
 			MUIA_Listview_List, main_page_list = ListObject,
 			    InputListFrame,
 	                    MUIA_List_AdjustWidth, TRUE,
 			    MUIA_List_DisplayHook, &page_display_hook,
 			    End,
-			End,
+			TAG_DONE)),
 		    Child, HGroup,
 	                Child, MUI_NewObject(MUIC_Popframe,
 					     MUIA_FixHeight, 20,
