@@ -1,0 +1,16 @@
+# Copyright © 2012, The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+FILES := main display
+EXEDIR := $(AROS_TOOLS)
+
+##MM- workbench-tools : workbench-tools-calculator
+#MM workbench-tools-calculator : includes linklibs
+
+%build_prog mmake=workbench-tools-calculator \
+    progname=Calculator targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs="mui arossupport amiga arosc m"
+
+%common
