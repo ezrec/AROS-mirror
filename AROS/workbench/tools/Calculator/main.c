@@ -115,6 +115,8 @@ int main(int argc, char *argv[])
         MUIM_Set, MUIA_CalcDisplay_Input, (IPTR)-1); // CA
     DoMethod(ButCEObj, MUIM_Notify, MUIA_Pressed, TRUE, CalcDisplayObj, 3,
         MUIM_Set, MUIA_CalcDisplay_Input, (IPTR)-2); // CE
+    DoMethod(ButCEObj, MUIM_Notify, MUIA_Pressed, TRUE, ButCEObj, 3,
+        MUIM_Set, MUIA_Disabled, TRUE);
 
     DoMethod(CalcDisplayObj, MUIM_Notify, MUIA_CalcDisplay_Calculated, MUIV_EveryTime, ButCAObj, 3,
         MUIM_Set, MUIA_Disabled, MUIV_TriggerValue);

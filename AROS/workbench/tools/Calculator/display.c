@@ -18,7 +18,52 @@
 #include <devices/rawkeycodes.h>
 #include <zune/customclasses.h>
 
+#include <stdlib.h>
+#include <stdio.h>
+
 #include "display.h"
+
+IPTR CalcDisplay__MUIM_CalcDisplay_DoCurrentStep(struct IClass *cl, Object *obj, Msg msg)
+{
+    struct CalcDisplay_DATA *data = INST_DATA(cl, obj);
+
+    char outbuf[256];
+
+    double op_A, op_B, op_Res = 0.0;
+
+    if (data->displ_operator == 0)
+        return TRUE;
+
+    op_A = atof(data->disp_buff);
+    op_B = atof(data->disp_prev);
+
+    if (data->displ_operator == CALCDISPOP_ADD)
+    {
+        op_Res = op_B + op_A;
+    }
+    else if (data->displ_operator == CALCDISPOP_SUB)
+    {
+        op_Res = op_B - op_A;
+    }
+    else if (data->displ_operator == CALCDISPOP_MUL)
+    {
+        op_Res = op_B * op_A;
+    }
+    else if (data->displ_operator == CALCDISPOP_DIV)
+    {
+        op_Res = op_B / op_A;
+    }
+
+    sprintf(outbuf, "%f", op_Res);
+
+    if (data->disp_buff)
+        FreeVec(data->disp_buff);
+
+    data->disp_buff = AllocVec(strlen(outbuf) + 1, MEMF_CLEAR);
+    CopyMem(outbuf, data->disp_buff, strlen(outbuf));
+
+    return TRUE;
+}
 
 IPTR CalcDisplay__MUIM_AskMinMax(struct IClass *cl, Object *obj, struct MUIP_AskMinMax *msg)
 {
@@ -83,11 +128,11 @@ IPTR CalcDisplay__OM_DISPOSE(struct IClass *cl, Object *obj, Msg msg)
 IPTR CalcDisplay__MUIM_Draw(struct IClass *cl, Object *obj, struct MUIP_Draw *msg)
 {
     struct CalcDisplay_DATA *data = INST_DATA(cl, obj);
-
+    APTR clip = NULL;
     char *dispstr = data->disp_buff;
-    ULONG dispstrlen, dispstroff;
+    ULONG dispstrlen, dispstroff, opwidth = 0;
 
-bug("[Calculator] MUIM_Draw()\n");
+    D(bug("[Calculator] MUIM_Draw()\n"));
 
     DoSuperMethodA(cl, obj, (Msg)msg);
 
@@ -112,25 +157,31 @@ bug("[Calculator] MUIM_Draw()\n");
     {
         Move(_rp(obj), _mleft(obj) + 2, (_mbottom(obj) - _rp(obj)->Font->tf_YSize) + _rp(obj)->Font->tf_Baseline);
         Text(_rp(obj), "+", 1);
+        opwidth = TextLength(_rp(obj), "+", 1) + 4;
     }
     else if (data->displ_operator == CALCDISPOP_SUB)
     {
         Move(_rp(obj), _mleft(obj) + 2, (_mbottom(obj) - _rp(obj)->Font->tf_YSize) + _rp(obj)->Font->tf_Baseline);
         Text(_rp(obj), "-", 1);
+        opwidth = TextLength(_rp(obj), "-", 1) + 4;
     }
     else if (data->displ_operator == CALCDISPOP_MUL)
     {
         Move(_rp(obj), _mleft(obj) + 2, (_mbottom(obj) - _rp(obj)->Font->tf_YSize) + _rp(obj)->Font->tf_Baseline);
         Text(_rp(obj), "x", 1);
+        opwidth = TextLength(_rp(obj), "x", 1) + 4;
     }
     else if (data->displ_operator == CALCDISPOP_DIV)
     {
         Move(_rp(obj), _mleft(obj) + 2, (_mbottom(obj) - _rp(obj)->Font->tf_YSize) + _rp(obj)->Font->tf_Baseline);
         Text(_rp(obj), "/", 1);
+        opwidth = TextLength(_rp(obj), "/", 1) + 4;
     }
-    
+
+    clip = MUI_AddClipping(muiRenderInfo(obj), _mleft(obj) + opwidth, (_mbottom(obj) - _rp(obj)->Font->tf_YSize), (_mright(obj) - (_mleft(obj) + opwidth) + 1), _rp(obj)->Font->tf_YSize);
     Move(_rp(obj), (_mright(obj) - dispstroff) + 2, (_mbottom(obj) - _rp(obj)->Font->tf_YSize) + _rp(obj)->Font->tf_Baseline);
     Text(_rp(obj), dispstr, dispstrlen);
+    MUI_RemoveClipping(muiRenderInfo(obj), clip);
 
     return TRUE;
 }
@@ -155,7 +206,7 @@ IPTR CalcDisplay__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
                     data->displ_flags &= ~CALCDISPFLAG_CALCULATED;
                 }
                 break;
-            data->displ_flags |= CALCDISPFLAG_CALCULATED;
+
 	    case MUIA_CalcDisplay_Input:
                 if ((tag->ti_Data >= (IPTR)'0') && (tag->ti_Data <= (IPTR)'9'))
                 {
@@ -232,6 +283,7 @@ IPTR CalcDisplay__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
                 {
                     if (data->disp_prev)
                     {
+                        DoMethod(obj, MUIM_CalcDisplay_DoCurrentStep);
                     }
                     data->displ_operator = CALCDISPOP_ADD;
                     data->disp_prev = data->disp_buff;
@@ -242,6 +294,7 @@ IPTR CalcDisplay__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
                 {
                     if (data->disp_prev)
                     {
+                        DoMethod(obj, MUIM_CalcDisplay_DoCurrentStep);
                     }
                     data->displ_operator = CALCDISPOP_SUB;
                     data->disp_prev = data->disp_buff;
@@ -252,6 +305,7 @@ IPTR CalcDisplay__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
                 {
                     if (data->disp_prev)
                     {
+                        DoMethod(obj, MUIM_CalcDisplay_DoCurrentStep);
                     }
                     data->displ_operator = CALCDISPOP_MUL;
                     data->disp_prev = data->disp_buff;
@@ -262,6 +316,7 @@ IPTR CalcDisplay__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
                 {
                     if (data->disp_prev)
                     {
+                        DoMethod(obj, MUIM_CalcDisplay_DoCurrentStep);
                     }
                     data->displ_operator = CALCDISPOP_DIV;
                     data->disp_prev = data->disp_buff;
@@ -290,11 +345,11 @@ IPTR CalcDisplay__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
                 }
                 else if (tag->ti_Data == (IPTR)'=')
                 {
-                    data->displ_operator = CALCDISPOP_NONE;
                     if (data->disp_prev)
                     {
-
+                        DoMethod(obj, MUIM_CalcDisplay_DoCurrentStep);
                     }
+                    data->displ_operator = CALCDISPOP_NONE;
                     data->displ_flags &= ~CALCDISPFLAG_HASPERIOD;
                     SET(obj, MUIA_CalcDisplay_Calculated, TRUE);
                 }
@@ -315,6 +370,9 @@ BOOPSI_DISPATCHER(IPTR, CalcDisplay_Dispatcher, CLASS, self, message)
 
     case OM_SET:
         return CalcDisplay__OM_SET(CLASS, self, (struct opSet *)message);
+
+    case MUIM_CalcDisplay_DoCurrentStep:
+        return CalcDisplay__MUIM_CalcDisplay_DoCurrentStep(CLASS, self, message);
 
     case MUIM_AskMinMax:
         return CalcDisplay__MUIM_AskMinMax(CLASS, self, (struct MUIP_AskMinMax *)message);
