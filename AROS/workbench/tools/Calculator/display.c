@@ -53,7 +53,8 @@ IPTR CalcDisplay__OM_NEW(struct IClass *CLASS, Object *obj, struct opSet *messag
     data->disp_buff = NULL;
     data->disp_prev = NULL;
 
-    data->displ_operator = 0;
+    data->displ_operator = CALCDISPOP_NONE;
+    data->displ_flags = CALCDISPFLAG_CALCULATED;
 
     return (IPTR)obj;
 }
@@ -133,8 +134,9 @@ IPTR CalcDisplay__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
 	    case MUIA_CalcDisplay_Input:
                 if ((tag->ti_Data >= (IPTR)'0') && (tag->ti_Data <= (IPTR)'9'))
                 {
-                    if (!data->disp_buff)
+                    if ((!data->disp_buff) || (data->displ_flags & CALCDISPFLAG_CALCULATED))
                     {
+                        FreeVec(data->disp_buff);
                         data->disp_buff = AllocVec(2, MEMF_CLEAR);
                         data->disp_buff[0]= (UBYTE)tag->ti_Data;
                     }
@@ -150,11 +152,13 @@ IPTR CalcDisplay__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
                             FreeVec(oldbuff);
                         }
                     }
+                    data->displ_flags &= ~CALCDISPFLAG_CALCULATED;
                 }
                 if (((tag->ti_Data >= (IPTR)'A') && (tag->ti_Data <= (IPTR)'F')) || ((tag->ti_Data >= (IPTR)'a') && (tag->ti_Data <= (IPTR)'f')))
                 {
-                    if (!data->disp_buff)
+                    if ((!data->disp_buff) || (data->displ_flags & CALCDISPFLAG_CALCULATED))
                     {
+                        FreeVec(data->disp_buff);
                         data->disp_buff = AllocVec(2, MEMF_CLEAR);
                         data->disp_buff[0]= (UBYTE)tag->ti_Data;
                     }
@@ -170,26 +174,33 @@ IPTR CalcDisplay__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
                             FreeVec(oldbuff);
                         }
                     }
+                    data->displ_flags &= ~CALCDISPFLAG_CALCULATED;
                 }
                 else if (tag->ti_Data == (IPTR)'.')
                 {
-                    if (!data->disp_buff)
+                    if (!(data->displ_flags & CALCDISPFLAG_HASPERIOD))
                     {
-                        data->disp_buff = AllocVec(3, MEMF_CLEAR);
-                        data->disp_buff[0]= '0';
-                        data->disp_buff[1]= (UBYTE)tag->ti_Data;
-                    }
-                    else
-                    {
-                        char *oldbuff = data->disp_buff;
-                        ULONG oldlen = strlen(oldbuff);
-                        if (oldlen < 32)
+                        if ((!data->disp_buff) || (data->displ_flags & CALCDISPFLAG_CALCULATED))
                         {
-                            data->disp_buff = AllocVec(oldlen + 2, MEMF_CLEAR);
-                            CopyMem(oldbuff, data->disp_buff, oldlen);
-                            data->disp_buff[oldlen] = (UBYTE)tag->ti_Data;
-                            FreeVec(oldbuff);
+                            FreeVec(data->disp_buff);
+                            data->disp_buff = AllocVec(3, MEMF_CLEAR);
+                            data->disp_buff[0]= '0';
+                            data->disp_buff[1]= (UBYTE)tag->ti_Data;
                         }
+                        else
+                        {
+                            char *oldbuff = data->disp_buff;
+                            ULONG oldlen = strlen(oldbuff);
+                            if (oldlen < 32)
+                            {
+                                data->disp_buff = AllocVec(oldlen + 2, MEMF_CLEAR);
+                                CopyMem(oldbuff, data->disp_buff, oldlen);
+                                data->disp_buff[oldlen] = (UBYTE)tag->ti_Data;
+                                FreeVec(oldbuff);
+                            }
+                        }
+                        data->displ_flags &= ~CALCDISPFLAG_CALCULATED;
+                        data->displ_flags |= CALCDISPFLAG_HASPERIOD;
                     }
                 }
                 else if (tag->ti_Data == (IPTR)'+')
@@ -199,7 +210,8 @@ IPTR CalcDisplay__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
                     {
                     }
                     data->disp_prev = data->disp_buff;
-                    data->disp_buff = NULL;
+                    data->displ_flags &= ~CALCDISPFLAG_HASPERIOD;
+                    data->displ_flags |= CALCDISPFLAG_CALCULATED;
                 }
                 else if (tag->ti_Data == (IPTR)'-')
                 {
@@ -208,7 +220,8 @@ IPTR CalcDisplay__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
                     {
                     }
                     data->disp_prev = data->disp_buff;
-                    data->disp_buff = NULL;
+                    data->displ_flags &= ~CALCDISPFLAG_HASPERIOD;
+                    data->displ_flags |= CALCDISPFLAG_CALCULATED;
                 }
                 else if (tag->ti_Data == (IPTR)'*')
                 {
@@ -217,7 +230,8 @@ IPTR CalcDisplay__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
                     {
                     }
                     data->disp_prev = data->disp_buff;
-                    data->disp_buff = NULL;
+                    data->displ_flags &= ~CALCDISPFLAG_HASPERIOD;
+                    data->displ_flags |= CALCDISPFLAG_CALCULATED;
                 }
                 else if (tag->ti_Data == (IPTR)'/')
                 {
@@ -226,15 +240,18 @@ IPTR CalcDisplay__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
                     {
                     }
                     data->disp_prev = data->disp_buff;
-                    data->disp_buff = NULL;
+                    data->displ_flags &= ~CALCDISPFLAG_HASPERIOD;
+                    data->displ_flags |= CALCDISPFLAG_CALCULATED;
                 }
                 else if (tag->ti_Data == (IPTR)'=')
                 {
-                    data->displ_operator = 0;
+                    data->displ_operator = CALCDISPOP_NONE;
                     if (data->disp_prev)
                     {
 
                     }
+                    data->displ_flags &= ~CALCDISPFLAG_HASPERIOD;
+                    data->displ_flags |= CALCDISPFLAG_CALCULATED;
                 }
 		MUI_Redraw(obj, MADF_DRAWOBJECT);
 		break;

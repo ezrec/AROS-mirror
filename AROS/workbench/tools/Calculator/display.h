@@ -5,8 +5,11 @@
 
 #include <libraries/mui.h>
 
-#define CALCDISPFLAG_HEXMODE    (1 << 0)
+#define CALCDISPFLAG_HEXMODE (1 << 0)
+#define CALCDISPFLAG_HASPERIOD (1 << 5)
+#define CALCDISPFLAG_CALCULATED (1 << 31)
 
+#define CALCDISPOP_NONE   0
 #define CALCDISPOP_ADD    1
 #define CALCDISPOP_SUB    2
 #define CALCDISPOP_MUL    3
