@@ -117,7 +117,8 @@ IPTR CalcDisplay__OM_DISPOSE(struct IClass *cl, Object *obj, Msg msg)
 {
     struct CalcDisplay_DATA *data = INST_DATA(cl, obj);
 
-    FreeVec(data->disp_buff);
+    if (data->disp_prev != data->disp_buff)
+        FreeVec(data->disp_buff);
     data->disp_buff = NULL;
     FreeVec(data->disp_prev);
     data->disp_prev = NULL;
@@ -327,7 +328,8 @@ IPTR CalcDisplay__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
                 {
                     // CA
                     data->displ_operator = CALCDISPOP_NONE;
-                    FreeVec(data->disp_buff);
+                    if (data->disp_prev != data->disp_buff)
+                        FreeVec(data->disp_buff);
                     data->disp_buff = NULL;
                     FreeVec(data->disp_prev);
                     data->disp_prev = NULL;
@@ -336,8 +338,11 @@ IPTR CalcDisplay__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
                 else if (tag->ti_Data == (IPTR)-2)
                 {
                     // CE
-                    FreeVec(data->disp_buff);
+                    if (data->disp_prev != data->disp_buff)
+                        FreeVec(data->disp_buff);
+
                     data->disp_buff = NULL;
+
                     if (!(data->disp_prev))
                     {
                         SET(obj, MUIA_CalcDisplay_Calculated, TRUE);
