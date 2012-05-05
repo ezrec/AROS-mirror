@@ -23,7 +23,7 @@ struct MUI_CustomClass *CalcDisplay_CLASS;
 int main(int argc, char *argv[])
 {
     Object *CalcAppObj, *CalcWindObj, *CalcWContentsObj, *CalcDisplayObj;
-    Object *ButAObj, *ButTmp1Obj, *ButTmp2Obj, *ButTmp3Obj, *ButTmp4Obj;
+    Object *ButAObj, *ButTmp1Obj, *ButTmp2Obj, *ButCAObj, *ButCEObj;
     Object *ButBObj, *ButTmp5Obj, *ButTmp6Obj, *ButTmp7Obj, *ButTmp8Obj;
     Object *ButCObj, *But7Obj, *But8Obj, *But9Obj, *ButDIVObj;
     Object *ButDObj, *But4Obj, *But5Obj, *But6Obj, *ButMULTObj;
@@ -53,8 +53,8 @@ int main(int argc, char *argv[])
                         Child, ButAObj = SimpleButton("_A"),
                         Child, ButTmp1Obj = SimpleButton(" "),
                         Child, ButTmp2Obj = SimpleButton(" "),
-                        Child, ButTmp3Obj = SimpleButton("CA"),
-                        Child, ButTmp4Obj = SimpleButton("CE"),
+                        Child, ButCAObj = SimpleButton("CA"),
+                        Child, ButCEObj = SimpleButton("CE"),
                         Child, ButBObj = SimpleButton("_B"),
                         Child, ButTmp5Obj = SimpleButton(" "),
                         Child, ButTmp6Obj = SimpleButton(" "),
@@ -101,8 +101,8 @@ int main(int argc, char *argv[])
     SET(ButFObj, MUIA_Disabled, TRUE);
     SET(ButTmp1Obj, MUIA_Disabled, TRUE);
     SET(ButTmp2Obj, MUIA_Disabled, TRUE);
-    SET(ButTmp3Obj, MUIA_Disabled, TRUE);
-    SET(ButTmp4Obj, MUIA_Disabled, TRUE);
+    SET(ButCAObj, MUIA_Disabled, TRUE);
+    SET(ButCEObj, MUIA_Disabled, TRUE);
     SET(ButTmp5Obj, MUIA_Disabled, TRUE);
     SET(ButTmp6Obj, MUIA_Disabled, TRUE);
     SET(ButTmp7Obj, MUIA_Disabled, TRUE);
@@ -111,10 +111,15 @@ int main(int argc, char *argv[])
     DoMethod(CalcWindObj, MUIM_Notify, MUIA_Window_CloseRequest, TRUE, CalcAppObj, 2,
         MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit);
 
-    DoMethod(ButTmp3Obj, MUIM_Notify, MUIA_Pressed, TRUE, CalcDisplayObj, 3,
+    DoMethod(ButCAObj, MUIM_Notify, MUIA_Pressed, TRUE, CalcDisplayObj, 3,
         MUIM_Set, MUIA_CalcDisplay_Input, (IPTR)-1); // CA
-    DoMethod(ButTmp4Obj, MUIM_Notify, MUIA_Pressed, TRUE, CalcDisplayObj, 3,
+    DoMethod(ButCEObj, MUIM_Notify, MUIA_Pressed, TRUE, CalcDisplayObj, 3,
         MUIM_Set, MUIA_CalcDisplay_Input, (IPTR)-2); // CE
+
+    DoMethod(CalcDisplayObj, MUIM_Notify, MUIA_CalcDisplay_Calculated, MUIV_EveryTime, ButCAObj, 3,
+        MUIM_Set, MUIA_Disabled, MUIV_TriggerValue);
+    DoMethod(CalcDisplayObj, MUIM_Notify, MUIA_CalcDisplay_Calculated, MUIV_EveryTime, ButCEObj, 3,
+        MUIM_Set, MUIA_Disabled, MUIV_TriggerValue);
 
     DoMethod(ButAObj, MUIM_Notify, MUIA_Pressed, TRUE, CalcDisplayObj, 3,
         MUIM_Set, MUIA_CalcDisplay_Input, (IPTR)'A');

@@ -15,12 +15,15 @@
 #define CALCDISPOP_MUL    3
 #define CALCDISPOP_DIV    4
 
-#define MUIA_CalcDisplay_Input 0x80088008
+#define MUIA_CalcDisplay_Input          0x80088008
+#define MUIA_CalcDisplay_Calculated     0x80088009
 
 struct CalcDisplay_DATA
 {
     char *disp_buff;
     char *disp_prev;
+    struct TextFont   *disp_font;
+    struct TextAttr   disp_textattr;
     ULONG displ_operator;
     ULONG displ_flags;
 };

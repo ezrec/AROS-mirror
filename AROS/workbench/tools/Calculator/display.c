@@ -8,11 +8,13 @@
 
 #include <clib/alib_protos.h>
 
+#include <proto/diskfont.h>
 #include <proto/graphics.h>
 #include <proto/intuition.h>
 #include <proto/utility.h>
 #include <proto/muimaster.h>
 #include <libraries/mui.h>
+#include <diskfont/diskfont.h>
 #include <devices/rawkeycodes.h>
 #include <zune/customclasses.h>
 
@@ -50,6 +52,13 @@ IPTR CalcDisplay__OM_NEW(struct IClass *CLASS, Object *obj, struct opSet *messag
    
     data = INST_DATA(CLASS, obj);
 
+    data->disp_textattr.ta_Name = "aroscalculatorregular.font";
+    data->disp_textattr.ta_YSize = 22;
+    data->disp_textattr.ta_Style = 0;
+    data->disp_textattr.ta_Flags = NULL;
+
+    data->disp_font = OpenDiskFont(&data->disp_textattr);
+    
     data->disp_buff = NULL;
     data->disp_prev = NULL;
 
@@ -64,7 +73,9 @@ IPTR CalcDisplay__OM_DISPOSE(struct IClass *cl, Object *obj, Msg msg)
     struct CalcDisplay_DATA *data = INST_DATA(cl, obj);
 
     FreeVec(data->disp_buff);
+    data->disp_buff = NULL;
     FreeVec(data->disp_prev);
+    data->disp_prev = NULL;
 
     return DoSuperMethodA(cl, obj, msg);
 }
@@ -85,7 +96,10 @@ bug("[Calculator] MUIM_Draw()\n");
 
     dispstrlen = strlen(dispstr);
 
-    SetFont(_rp(obj), _font(obj));
+    if (data->disp_font)
+        SetFont(_rp(obj), data->disp_font);
+    else
+        SetFont(_rp(obj), _font(obj));
 
     dispstroff = TextLength(_rp(obj), dispstr, dispstrlen);
 
@@ -131,6 +145,17 @@ IPTR CalcDisplay__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
     {
 	switch (tag->ti_Tag)
 	{
+            case MUIA_CalcDisplay_Calculated:
+                if (tag->ti_Data)
+                {
+                    data->displ_flags |= CALCDISPFLAG_CALCULATED;
+                }
+                else
+                {
+                    data->displ_flags &= ~CALCDISPFLAG_CALCULATED;
+                }
+                break;
+            data->displ_flags |= CALCDISPFLAG_CALCULATED;
 	    case MUIA_CalcDisplay_Input:
                 if ((tag->ti_Data >= (IPTR)'0') && (tag->ti_Data <= (IPTR)'9'))
                 {
@@ -152,7 +177,7 @@ IPTR CalcDisplay__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
                             FreeVec(oldbuff);
                         }
                     }
-                    data->displ_flags &= ~CALCDISPFLAG_CALCULATED;
+                    SET(obj, MUIA_CalcDisplay_Calculated, FALSE);
                 }
                 if (((tag->ti_Data >= (IPTR)'A') && (tag->ti_Data <= (IPTR)'F')) || ((tag->ti_Data >= (IPTR)'a') && (tag->ti_Data <= (IPTR)'f')))
                 {
@@ -174,7 +199,7 @@ IPTR CalcDisplay__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
                             FreeVec(oldbuff);
                         }
                     }
-                    data->displ_flags &= ~CALCDISPFLAG_CALCULATED;
+                    SET(obj, MUIA_CalcDisplay_Calculated, FALSE);
                 }
                 else if (tag->ti_Data == (IPTR)'.')
                 {
@@ -199,49 +224,69 @@ IPTR CalcDisplay__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
                                 FreeVec(oldbuff);
                             }
                         }
-                        data->displ_flags &= ~CALCDISPFLAG_CALCULATED;
+                        SET(obj, MUIA_CalcDisplay_Calculated, FALSE);
                         data->displ_flags |= CALCDISPFLAG_HASPERIOD;
                     }
                 }
                 else if (tag->ti_Data == (IPTR)'+')
                 {
-                    data->displ_operator = CALCDISPOP_ADD;
                     if (data->disp_prev)
                     {
                     }
+                    data->displ_operator = CALCDISPOP_ADD;
                     data->disp_prev = data->disp_buff;
                     data->displ_flags &= ~CALCDISPFLAG_HASPERIOD;
-                    data->displ_flags |= CALCDISPFLAG_CALCULATED;
+                    SET(obj, MUIA_CalcDisplay_Calculated, TRUE);
                 }
                 else if (tag->ti_Data == (IPTR)'-')
                 {
-                    data->displ_operator = CALCDISPOP_SUB;
                     if (data->disp_prev)
                     {
                     }
+                    data->displ_operator = CALCDISPOP_SUB;
                     data->disp_prev = data->disp_buff;
                     data->displ_flags &= ~CALCDISPFLAG_HASPERIOD;
-                    data->displ_flags |= CALCDISPFLAG_CALCULATED;
+                    SET(obj, MUIA_CalcDisplay_Calculated, TRUE);
                 }
                 else if (tag->ti_Data == (IPTR)'*')
                 {
-                    data->displ_operator = CALCDISPOP_MUL;
                     if (data->disp_prev)
                     {
                     }
+                    data->displ_operator = CALCDISPOP_MUL;
                     data->disp_prev = data->disp_buff;
                     data->displ_flags &= ~CALCDISPFLAG_HASPERIOD;
-                    data->displ_flags |= CALCDISPFLAG_CALCULATED;
+                    SET(obj, MUIA_CalcDisplay_Calculated, TRUE);
                 }
                 else if (tag->ti_Data == (IPTR)'/')
                 {
-                    data->displ_operator = CALCDISPOP_DIV;
                     if (data->disp_prev)
                     {
                     }
+                    data->displ_operator = CALCDISPOP_DIV;
                     data->disp_prev = data->disp_buff;
                     data->displ_flags &= ~CALCDISPFLAG_HASPERIOD;
-                    data->displ_flags |= CALCDISPFLAG_CALCULATED;
+                    SET(obj, MUIA_CalcDisplay_Calculated, TRUE);
+                }
+                else if (tag->ti_Data == (IPTR)-1)
+                {
+                    // CA
+                    data->displ_operator = CALCDISPOP_NONE;
+                    FreeVec(data->disp_buff);
+                    data->disp_buff = NULL;
+                    FreeVec(data->disp_prev);
+                    data->disp_prev = NULL;
+                    SET(obj, MUIA_CalcDisplay_Calculated, TRUE);
+                }
+                else if (tag->ti_Data == (IPTR)-2)
+                {
+                    // CE
+                    FreeVec(data->disp_buff);
+                    data->disp_buff = NULL;
+                    if (!(data->disp_prev))
+                    {
+                        SET(obj, MUIA_CalcDisplay_Calculated, TRUE);
+                    }
                 }
                 else if (tag->ti_Data == (IPTR)'=')
                 {
@@ -251,7 +296,7 @@ IPTR CalcDisplay__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
 
                     }
                     data->displ_flags &= ~CALCDISPFLAG_HASPERIOD;
-                    data->displ_flags |= CALCDISPFLAG_CALCULATED;
+                    SET(obj, MUIA_CalcDisplay_Calculated, TRUE);
                 }
 		MUI_Redraw(obj, MADF_DRAWOBJECT);
 		break;
