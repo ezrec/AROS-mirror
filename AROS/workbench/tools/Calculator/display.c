@@ -40,22 +40,18 @@ IPTR CalcDisplay__MUIM_CalcDisplay_DoCurrentStep(struct IClass *cl, Object *obj,
     if (data->displ_operator == CALCDISPOP_ADD)
     {
         op_Res = op_B + op_A;
-        bug("[calculator] %f + %f = %f\n", op_B, op_A, op_Res);
     }
     else if (data->displ_operator == CALCDISPOP_SUB)
     {
         op_Res = op_B - op_A;
-        bug("[calculator] %f - %f = %f\n", op_B, op_A, op_Res);
     }
     else if (data->displ_operator == CALCDISPOP_MUL)
     {
         op_Res = op_B * op_A;
-        bug("[calculator] %f * %f = %f\n", op_B, op_A, op_Res);
     }
     else if (data->displ_operator == CALCDISPOP_DIV)
     {
         op_Res = op_B / op_A;
-        bug("[calculator] %f / %f = %f\n", op_B, op_A, op_Res);
     }
 
     sprintf(outbuf, "%f", op_Res);
@@ -137,12 +133,12 @@ IPTR CalcDisplay__MUIM_Draw(struct IClass *cl, Object *obj, struct MUIP_Draw *ms
     char *dispstr = data->disp_buff;
     ULONG dispstrlen, dispstroff, opwidth = 0;
 
-    D(bug("[Calculator] MUIM_Draw()\n"));
-
     DoSuperMethodA(cl, obj, (Msg)msg);
 
     if (dispstr == NULL)
         dispstr ="0";
+
+    D(bug("[Calculator] MUIM_Draw('%s',%d)\n", dispstr, data->displ_operator));
 
     dispstrlen = strlen(dispstr);
 
@@ -234,9 +230,10 @@ IPTR CalcDisplay__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
 	    case MUIA_CalcDisplay_Input:
                 if ((tag->ti_Data >= (IPTR)'0') && (tag->ti_Data <= (IPTR)'9'))
                 {
-                    if ((!data->disp_buff) || (data->displ_flags & CALCDISPFLAG_CALCULATED))
+                    if ((data->disp_buff == NULL) || (data->displ_flags & CALCDISPFLAG_CALCULATED))
                     {
-                        FreeVec(data->disp_buff);
+                        if (data->disp_buff != data->disp_prev)
+                            FreeVec(data->disp_buff);
                         data->disp_buff = AllocVec(2, MEMF_CLEAR);
                         data->disp_buff[0]= (UBYTE)tag->ti_Data;
                     }
@@ -256,9 +253,10 @@ IPTR CalcDisplay__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
                 }
                 if (((tag->ti_Data >= (IPTR)'A') && (tag->ti_Data <= (IPTR)'F')) || ((tag->ti_Data >= (IPTR)'a') && (tag->ti_Data <= (IPTR)'f')))
                 {
-                    if ((!data->disp_buff) || (data->displ_flags & CALCDISPFLAG_CALCULATED))
+                    if ((data->disp_buff == NULL) || (data->displ_flags & CALCDISPFLAG_CALCULATED))
                     {
-                        FreeVec(data->disp_buff);
+                        if (data->disp_buff != data->disp_prev)
+                            FreeVec(data->disp_buff);
                         data->disp_buff = AllocVec(2, MEMF_CLEAR);
                         data->disp_buff[0]= (UBYTE)tag->ti_Data;
                     }
@@ -280,7 +278,7 @@ IPTR CalcDisplay__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
                 {
                     if (!(data->displ_flags & CALCDISPFLAG_HASPERIOD))
                     {
-                        if ((!data->disp_buff) || (data->displ_flags & CALCDISPFLAG_CALCULATED))
+                        if ((data->disp_buff == NULL) || (data->displ_flags & CALCDISPFLAG_CALCULATED))
                         {
                             FreeVec(data->disp_buff);
                             data->disp_buff = AllocVec(3, MEMF_CLEAR);
