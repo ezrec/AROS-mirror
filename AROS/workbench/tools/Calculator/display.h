@@ -17,6 +17,7 @@
 
 #define MUIA_CalcDisplay_Input          0x80088008
 #define MUIA_CalcDisplay_Calculated     0x80088009
+#define MUIA_CalcDisplay_Base          0x8008800A
 
 #define MUIM_CalcDisplay_DoCurrentStep 0x80088008
 

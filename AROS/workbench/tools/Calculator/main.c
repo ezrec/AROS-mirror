@@ -12,25 +12,132 @@
 #include <proto/muimaster.h>
 #include <proto/graphics.h>
 #include <proto/utility.h>
+#include <proto/iffparse.h>
 
+#include <intuition/intuition.h>
 #include <libraries/mui.h>
+#include <libraries/gadtools.h>
 
 #include "display.h"
 
 extern IPTR CalcDisplay_Dispatcher();
 struct MUI_CustomClass *CalcDisplay_CLASS;
+Object *CalcDisplayObj;
+struct Hook BuffToClipHook, ClipToBuffHook;
+
+enum
+{
+    ID_ABOUT,
+    ID_QUIT,
+
+    ID_DEC,
+    ID_HEX,
+    ID_OCT,
+    ID_BIN,
+
+    ID_COPY,
+    ID_PASTE
+};
+
+#define ID_FTXT	MAKE_ID('F','T','X','T')
+#define ID_CHRS	MAKE_ID('C','H','R','S')
+
+static struct NewMenu CalcMenu[] =
+{
+    { NM_TITLE, "Project", NULL, 0, NULL, NULL },
+    { NM_ITEM, "Base", NULL, 0, NULL, NULL },
+    { NM_SUB, "Hexadecimal (16)", NULL, CHECKIT|MENUTOGGLE, 13, (APTR)ID_HEX },
+    { NM_SUB, "Decimal (10)", NULL, CHECKIT|CHECKED|MENUTOGGLE, 14, (APTR)ID_DEC },
+    { NM_SUB, "Octal (8)", NULL, CHECKIT|MENUTOGGLE, 11, (APTR)ID_OCT },
+    { NM_SUB, "Binary (2)", NULL, CHECKIT|MENUTOGGLE, 7, (APTR)ID_BIN },
+
+    { NM_ITEM, "About...", "?", 0, NULL, (APTR)ID_ABOUT },
+    { NM_ITEM, NM_BARLABEL, NULL, 0, NULL, NULL },
+    { NM_ITEM, "Quit", "Q", 0, NULL, (APTR)ID_QUIT },
+
+    { NM_TITLE, "Edit", NULL, 0, NULL, NULL },
+    { NM_ITEM, "Copy", "C", 0, NULL, (APTR)ID_COPY },
+    { NM_ITEM, "Paste", "V", 0, NULL, (APTR)ID_PASTE },
+
+    { NM_END }
+};
+
+AROS_UFH3
+(
+    void, BuffToClipFunc,
+    AROS_UFHA(struct Hook *, hook, A0),
+    AROS_UFHA(void *, dummy, A2),
+    AROS_UFHA(void **, dummy2, A1)
+)
+{
+    AROS_USERFUNC_INIT
+
+    struct	IFFHandle	*IFFHandle;
+    BOOL	written = FALSE;
+    IPTR        valueStr = 0;
+
+    GET(CalcDisplayObj, MUIA_CalcDisplay_Input, &valueStr);
+
+    if ((valueStr) && (strlen(valueStr) > 0))
+    {
+        if((IFFHandle = AllocIFF()))
+        {
+            if((IFFHandle->iff_Stream = (ULONG)OpenClipboard(0)))
+            {
+                InitIFFasClip(IFFHandle);
+
+                if(!OpenIFF(IFFHandle, IFFF_WRITE))
+                {
+                    if(!PushChunk(IFFHandle, ID_FTXT, ID_FORM, IFFSIZE_UNKNOWN))
+                    {
+                        if(!PushChunk(IFFHandle, 0, ID_CHRS, IFFSIZE_UNKNOWN))
+                        {
+                            if(WriteChunkBytes(IFFHandle, valueStr, strlen(valueStr)) == strlen(valueStr))
+                            {
+                                if(!PopChunk(IFFHandle))
+                                    written = TRUE;
+                            }
+                        }
+                        if(written)
+                            PopChunk(IFFHandle);
+                    }
+                    CloseIFF(IFFHandle);
+                }
+                CloseClipboard((struct ClipboardHandle *)IFFHandle->iff_Stream);
+            }
+            FreeIFF(IFFHandle);
+        }
+    }
+    AROS_USERFUNC_EXIT
+}
+
+AROS_UFH3
+(
+    void, ClipToBuffFunc,
+    AROS_UFHA(struct Hook *, hook, A0),
+    AROS_UFHA(void *, dummy, A2),
+    AROS_UFHA(void **, dummy2, A1)
+)
+{
+    AROS_USERFUNC_INIT
+
+    AROS_USERFUNC_EXIT
+}
 
 int main(int argc, char *argv[])
 {
-    Object *CalcAppObj, *CalcWindObj, *CalcWContentsObj, *CalcDisplayObj;
+    Object *CalcAppObj, *CalcWindObj, *CalcWContentsObj;
     Object *ButAObj, *ButTmp1Obj, *ButTmp2Obj, *ButCAObj, *ButCEObj;
     Object *ButBObj, *ButTmp5Obj, *ButTmp6Obj, *ButTmp7Obj, *ButTmp8Obj;
     Object *ButCObj, *But7Obj, *But8Obj, *But9Obj, *ButDIVObj;
     Object *ButDObj, *But4Obj, *But5Obj, *But6Obj, *ButMULTObj;
     Object *ButEObj, *But1Obj, *But2Obj, *But3Obj, *ButMINUSObj;
     Object *ButFObj, *But0Obj, *ButPeriodObj, *ButPLUSObj, *ButEQUALObj;
+    Object *CalcMenuObj, *MenuEntry;
 
     CalcDisplay_CLASS = MUI_CreateCustomClass(NULL, MUIC_Area, NULL, sizeof(struct CalcDisplay_DATA), CalcDisplay_Dispatcher);
+
+    CalcMenuObj = MUI_MakeObject(MUIO_MenustripNM, CalcMenu, (IPTR) NULL);
 
     CalcAppObj = ApplicationObject,
         MUIA_Application_Title,       (IPTR) "AROS Calculator",
@@ -43,6 +150,7 @@ int main(int argc, char *argv[])
         SubWindow, (IPTR) (CalcWindObj = WindowObject,
             MUIA_Window_Title, (IPTR) "Calculator",
             MUIA_Window_ID, MAKE_ID('C','A','L','C'),
+            MUIA_Window_Menustrip, (IPTR) CalcMenuObj,
             MUIA_Window_SizeGadget, TRUE,
             WindowContents, (IPTR) (CalcWContentsObj = VGroup,
 
@@ -107,6 +215,40 @@ int main(int argc, char *argv[])
     SET(ButTmp6Obj, MUIA_Disabled, TRUE);
     SET(ButTmp7Obj, MUIA_Disabled, TRUE);
     SET(ButTmp8Obj, MUIA_Disabled, TRUE);
+
+    if ((MenuEntry = DoMethod(CalcMenuObj, MUIM_FindUData, ID_COPY)) != NULL)
+    {
+        BuffToClipHook.h_Entry = (HOOKFUNC) BuffToClipFunc;
+        DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,
+                 CalcWindObj, 3, MUIM_CallHook, (IPTR)&BuffToClipHook, MenuEntry);
+    }
+    if ((MenuEntry = DoMethod(CalcMenuObj, MUIM_FindUData, ID_PASTE)) != NULL)
+    {
+        ClipToBuffHook.h_Entry = (HOOKFUNC) ClipToBuffFunc;
+        DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,
+                 CalcWindObj, 3, MUIM_CallHook, (IPTR)&ClipToBuffHook, MenuEntry);
+    }
+
+    if ((MenuEntry = DoMethod(CalcMenuObj, MUIM_FindUData, ID_HEX)) != NULL)
+    {
+        DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,
+                 CalcDisplayObj, 3, MUIM_Set, MUIA_CalcDisplay_Base, 16);
+    }
+    if ((MenuEntry = DoMethod(CalcMenuObj, MUIM_FindUData, ID_DEC)) != NULL)
+    {
+        DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,
+                 CalcDisplayObj, 3, MUIM_Set, MUIA_CalcDisplay_Base, 10);
+    }
+    if ((MenuEntry = DoMethod(CalcMenuObj, MUIM_FindUData, ID_OCT)) != NULL)
+    {
+        DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,
+                 CalcDisplayObj, 3, MUIM_Set, MUIA_CalcDisplay_Base, 8);
+    }
+    if ((MenuEntry = DoMethod(CalcMenuObj, MUIM_FindUData, ID_BIN)) != NULL)
+    {
+        DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,
+                 CalcDisplayObj, 3, MUIM_Set, MUIA_CalcDisplay_Base, 2);
+    }
 
     DoMethod(CalcWindObj, MUIM_Notify, MUIA_Window_CloseRequest, TRUE, CalcAppObj, 2,
         MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit);

@@ -40,18 +40,22 @@ IPTR CalcDisplay__MUIM_CalcDisplay_DoCurrentStep(struct IClass *cl, Object *obj,
     if (data->displ_operator == CALCDISPOP_ADD)
     {
         op_Res = op_B + op_A;
+        bug("[calculator] %f + %f = %f\n", op_B, op_A, op_Res);
     }
     else if (data->displ_operator == CALCDISPOP_SUB)
     {
         op_Res = op_B - op_A;
+        bug("[calculator] %f - %f = %f\n", op_B, op_A, op_Res);
     }
     else if (data->displ_operator == CALCDISPOP_MUL)
     {
         op_Res = op_B * op_A;
+        bug("[calculator] %f * %f = %f\n", op_B, op_A, op_Res);
     }
     else if (data->displ_operator == CALCDISPOP_DIV)
     {
         op_Res = op_B / op_A;
+        bug("[calculator] %f / %f = %f\n", op_B, op_A, op_Res);
     }
 
     sprintf(outbuf, "%f", op_Res);
@@ -185,6 +189,25 @@ IPTR CalcDisplay__MUIM_Draw(struct IClass *cl, Object *obj, struct MUIP_Draw *ms
     MUI_RemoveClipping(muiRenderInfo(obj), clip);
 
     return TRUE;
+}
+
+IPTR CalcDisplay__OM_GET(struct IClass *cl, Object *obj, struct opGet *msg)
+{
+    struct CalcDisplay_DATA *data = INST_DATA(cl, obj);
+    IPTR *store = msg->opg_Storage;
+    IPTR  rv    = TRUE;
+
+    switch (msg->opg_AttrID)
+    {
+        case MUIA_CalcDisplay_Input:
+            *store = (IPTR)data->disp_buff;
+            break;
+
+        default:
+            rv = DoSuperMethodA(cl, obj, (Msg)msg);
+    }
+    
+    return rv;
 }
 
 IPTR CalcDisplay__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
@@ -378,6 +401,9 @@ BOOPSI_DISPATCHER(IPTR, CalcDisplay_Dispatcher, CLASS, self, message)
 
     case MUIM_CalcDisplay_DoCurrentStep:
         return CalcDisplay__MUIM_CalcDisplay_DoCurrentStep(CLASS, self, message);
+
+    case OM_GET:
+        return CalcDisplay__OM_GET(CLASS, self, (struct opGet *)message);
 
     case MUIM_AskMinMax:
         return CalcDisplay__MUIM_AskMinMax(CLASS, self, (struct MUIP_AskMinMax *)message);
