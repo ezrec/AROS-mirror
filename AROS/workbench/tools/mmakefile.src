@@ -4,9 +4,9 @@
 
 include $(TOP)/config/make.cfg
 
-FILES := calculator \
-	 ShowConfig \
-	 WiMP
+FILES := ShowConfig \
+	 WiMP \
+         oldcalc
 
 #MM- workbench : workbench-tools
 #MM workbench-tools : includes linklibs
