@@ -46,10 +46,10 @@ static struct NewMenu CalcMenu[] =
 {
     { NM_TITLE, "Project", NULL, 0, NULL, NULL },
     { NM_ITEM, "Base", NULL, 0, NULL, NULL },
-    { NM_SUB, "Hexadecimal (16)", NULL, CHECKIT|MENUTOGGLE, 13, (APTR)ID_HEX },
-    { NM_SUB, "Decimal (10)", NULL, CHECKIT|CHECKED|MENUTOGGLE, 14, (APTR)ID_DEC },
-    { NM_SUB, "Octal (8)", NULL, CHECKIT|MENUTOGGLE, 11, (APTR)ID_OCT },
-    { NM_SUB, "Binary (2)", NULL, CHECKIT|MENUTOGGLE, 7, (APTR)ID_BIN },
+    { NM_SUB, "Hexadecimal (16)", NULL, CHECKIT|MENUTOGGLE, ~(1 << 0), (APTR)ID_HEX },
+    { NM_SUB, "Decimal (10)", NULL, CHECKIT|CHECKED|MENUTOGGLE, ~(1 << 1), (APTR)ID_DEC },
+    { NM_SUB, "Octal (8)", NULL, CHECKIT|MENUTOGGLE, ~(1 << 2), (APTR)ID_OCT },
+    { NM_SUB, "Binary (2)", NULL, CHECKIT|MENUTOGGLE, ~(1 << 3), (APTR)ID_BIN },
 
     { NM_ITEM, "About...", "?", 0, NULL, (APTR)ID_ABOUT },
     { NM_ITEM, NM_BARLABEL, NULL, 0, NULL, NULL },
@@ -121,6 +121,47 @@ AROS_UFH3
 {
     AROS_USERFUNC_INIT
 
+    UBYTE chunk_buffer[MUIV_CalcDisplay_MaxInputLen];
+    struct IFFHandle *IFFHandle;
+    struct ContextNode  *cn;
+    ULONG error, read = 0;
+
+    if ((IFFHandle = AllocIFF()))
+    {
+        if ((IFFHandle->iff_Stream = (ULONG)OpenClipboard(0)))
+        {
+            InitIFFasClip(IFFHandle);
+
+            if (!OpenIFF(IFFHandle, IFFF_READ))
+            {
+                if (!StopChunk(IFFHandle, ID_FTXT, ID_CHRS))
+                {
+                    if (!(error = ParseIFF(IFFHandle, IFFPARSE_SCAN)))
+                    {
+                        cn = CurrentChunk(IFFHandle);
+
+                        if (cn && (cn->cn_Type == ID_FTXT) && (cn->cn_ID == ID_CHRS))
+                        {
+                            read = ReadChunkBytes(IFFHandle, chunk_buffer, MUIV_CalcDisplay_MaxInputLen);
+                        }
+                    }
+                }
+                CloseIFF(IFFHandle);
+            }
+            CloseClipboard((struct ClipboardHandle *)IFFHandle->iff_Stream);
+        }
+        FreeIFF(IFFHandle);
+    }
+
+    if (read > 0)
+    {   
+        char *clipend = (chunk_buffer + read);
+        for (;read > 0; read--)
+        {
+            IPTR inputval = (IPTR)*(char *)(clipend - read);
+            SET(CalcDisplayObj, MUIA_CalcDisplay_Input, inputval);
+        }
+    }
     AROS_USERFUNC_EXIT
 }
 
@@ -141,9 +182,9 @@ int main(int argc, char *argv[])
 
     CalcAppObj = ApplicationObject,
         MUIA_Application_Title,       (IPTR) "AROS Calculator",
-        MUIA_Application_Version,     (IPTR) "$VER: Calc 1.0 (04.05.2012)",
+        MUIA_Application_Version,     (IPTR) "$VER: Calculator 1.4 (08.05.2012)",
         MUIA_Application_Copyright,   (IPTR) "Copyright © 2012, The AROS Development Team. All rights reserved.",
-        MUIA_Application_Author,      (IPTR) "Nick Andrews",
+        MUIA_Application_Author,      (IPTR) "Nick 'Kalamatee' Andrews",
         MUIA_Application_Description, (IPTR) "Calculates stuff(tm).",
         MUIA_Application_Base,        (IPTR) "CALCULATOR",
 
@@ -233,6 +274,19 @@ int main(int argc, char *argv[])
     {
         DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,
                  CalcDisplayObj, 3, MUIM_Set, MUIA_CalcDisplay_Base, 16);
+
+        DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, MUIV_EveryTime,
+                 ButAObj, 3, MUIM_Set, MUIA_Disabled, MUIV_NotTriggerValue);
+        DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, MUIV_EveryTime,
+                 ButBObj, 3, MUIM_Set, MUIA_Disabled, MUIV_NotTriggerValue);
+        DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, MUIV_EveryTime,
+                 ButCObj, 3, MUIM_Set, MUIA_Disabled, MUIV_NotTriggerValue);
+        DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, MUIV_EveryTime,
+                 ButDObj, 3, MUIM_Set, MUIA_Disabled, MUIV_NotTriggerValue);
+        DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, MUIV_EveryTime,
+                 ButEObj, 3, MUIM_Set, MUIA_Disabled, MUIV_NotTriggerValue);
+        DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, MUIV_EveryTime,
+                 ButFObj, 3, MUIM_Set, MUIA_Disabled, MUIV_NotTriggerValue);
     }
     if ((MenuEntry = DoMethod(CalcMenuObj, MUIM_FindUData, ID_DEC)) != NULL)
     {

@@ -3,7 +3,7 @@
     $Id$
 */
 
-#define DEBUG 1
+#define DEBUG 0
 #include <aros/debug.h>
 
 #include <clib/alib_protos.h>
@@ -232,6 +232,12 @@ IPTR CalcDisplay__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
                 {
                     if ((data->disp_buff == NULL) || (data->displ_flags & CALCDISPFLAG_CALCULATED))
                     {
+                        if (data->displ_flags & CALCDISPFLAG_CLEAROP)
+                        {
+                            data->displ_flags &= ~CALCDISPFLAG_CLEAROP;
+                            data->displ_operator = CALCDISPOP_NONE;
+                        }
+                        data->displ_flags &= ~CALCDISPFLAG_HASPERIOD;
                         if (data->disp_buff != data->disp_prev)
                             FreeVec(data->disp_buff);
                         data->disp_buff = AllocVec(2, MEMF_CLEAR);
@@ -241,7 +247,7 @@ IPTR CalcDisplay__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
                     {
                         char *oldbuff = data->disp_buff;
                         ULONG oldlen = strlen(oldbuff);
-                        if (oldlen < 32)
+                        if (oldlen < MUIV_CalcDisplay_MaxInputLen)
                         {
                             data->disp_buff = AllocVec(oldlen + 2, MEMF_CLEAR);
                             CopyMem(oldbuff, data->disp_buff, oldlen);
@@ -255,6 +261,12 @@ IPTR CalcDisplay__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
                 {
                     if ((data->disp_buff == NULL) || (data->displ_flags & CALCDISPFLAG_CALCULATED))
                     {
+                        if (data->displ_flags & CALCDISPFLAG_CLEAROP)
+                        {
+                            data->displ_flags &= ~CALCDISPFLAG_CLEAROP;
+                            data->displ_operator = CALCDISPOP_NONE;
+                        }
+                        data->displ_flags &= ~CALCDISPFLAG_HASPERIOD;
                         if (data->disp_buff != data->disp_prev)
                             FreeVec(data->disp_buff);
                         data->disp_buff = AllocVec(2, MEMF_CLEAR);
@@ -264,7 +276,7 @@ IPTR CalcDisplay__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
                     {
                         char *oldbuff = data->disp_buff;
                         ULONG oldlen = strlen(oldbuff);
-                        if (oldlen < 32)
+                        if (oldlen < MUIV_CalcDisplay_MaxInputLen)
                         {
                             data->disp_buff = AllocVec(oldlen + 2, MEMF_CLEAR);
                             CopyMem(oldbuff, data->disp_buff, oldlen);
@@ -280,7 +292,15 @@ IPTR CalcDisplay__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
                     {
                         if ((data->disp_buff == NULL) || (data->displ_flags & CALCDISPFLAG_CALCULATED))
                         {
-                            FreeVec(data->disp_buff);
+                            if (data->displ_flags & CALCDISPFLAG_CLEAROP)
+                            {
+                                data->displ_flags &= ~CALCDISPFLAG_CLEAROP;
+                                data->displ_operator = CALCDISPOP_NONE;
+                            }
+
+                            if (data->disp_buff != data->disp_prev)
+                                FreeVec(data->disp_buff);
+
                             data->disp_buff = AllocVec(3, MEMF_CLEAR);
                             data->disp_buff[0]= '0';
                             data->disp_buff[1]= (UBYTE)tag->ti_Data;
@@ -289,7 +309,7 @@ IPTR CalcDisplay__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
                         {
                             char *oldbuff = data->disp_buff;
                             ULONG oldlen = strlen(oldbuff);
-                            if (oldlen < 32)
+                            if (oldlen < MUIV_CalcDisplay_MaxInputLen)
                             {
                                 data->disp_buff = AllocVec(oldlen + 2, MEMF_CLEAR);
                                 CopyMem(oldbuff, data->disp_buff, oldlen);
@@ -309,7 +329,6 @@ IPTR CalcDisplay__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
                     }
                     data->displ_operator = CALCDISPOP_ADD;
                     data->disp_prev = data->disp_buff;
-                    data->displ_flags &= ~CALCDISPFLAG_HASPERIOD;
                     SET(obj, MUIA_CalcDisplay_Calculated, TRUE);
                 }
                 else if (tag->ti_Data == (IPTR)'-')
@@ -320,7 +339,6 @@ IPTR CalcDisplay__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
                     }
                     data->displ_operator = CALCDISPOP_SUB;
                     data->disp_prev = data->disp_buff;
-                    data->displ_flags &= ~CALCDISPFLAG_HASPERIOD;
                     SET(obj, MUIA_CalcDisplay_Calculated, TRUE);
                 }
                 else if (tag->ti_Data == (IPTR)'*')
@@ -331,7 +349,6 @@ IPTR CalcDisplay__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
                     }
                     data->displ_operator = CALCDISPOP_MUL;
                     data->disp_prev = data->disp_buff;
-                    data->displ_flags &= ~CALCDISPFLAG_HASPERIOD;
                     SET(obj, MUIA_CalcDisplay_Calculated, TRUE);
                 }
                 else if (tag->ti_Data == (IPTR)'/')
@@ -342,7 +359,6 @@ IPTR CalcDisplay__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
                     }
                     data->displ_operator = CALCDISPOP_DIV;
                     data->disp_prev = data->disp_buff;
-                    data->displ_flags &= ~CALCDISPFLAG_HASPERIOD;
                     SET(obj, MUIA_CalcDisplay_Calculated, TRUE);
                 }
                 else if (tag->ti_Data == (IPTR)-1)
@@ -375,8 +391,7 @@ IPTR CalcDisplay__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
                     {
                         DoMethod(obj, MUIM_CalcDisplay_DoCurrentStep);
                     }
-                    data->displ_operator = CALCDISPOP_NONE;
-                    data->displ_flags &= ~CALCDISPFLAG_HASPERIOD;
+                    data->displ_flags |= CALCDISPFLAG_CLEAROP;
                     SET(obj, MUIA_CalcDisplay_Calculated, TRUE);
                 }
 		MUI_Redraw(obj, MADF_DRAWOBJECT);

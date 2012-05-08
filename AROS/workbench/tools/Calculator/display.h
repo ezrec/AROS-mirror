@@ -7,6 +7,7 @@
 
 #define CALCDISPFLAG_HEXMODE (1 << 0)
 #define CALCDISPFLAG_HASPERIOD (1 << 5)
+#define CALCDISPFLAG_CLEAROP (1 << 30)
 #define CALCDISPFLAG_CALCULATED (1 << 31)
 
 #define CALCDISPOP_NONE   0
@@ -20,6 +21,8 @@
 #define MUIA_CalcDisplay_Base          0x8008800A
 
 #define MUIM_CalcDisplay_DoCurrentStep 0x80088008
+
+#define MUIV_CalcDisplay_MaxInputLen 32
 
 struct CalcDisplay_DATA
 {
