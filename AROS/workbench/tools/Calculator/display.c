@@ -114,13 +114,13 @@ IPTR CalcDisplay__OM_NEW(struct IClass *CLASS, Object *obj, struct opSet *messag
 
     data->disp_textattr.ta_Name = "aroscalculatorregular.font";
     data->disp_textattr.ta_YSize = 22;
-    data->disp_textattr.ta_Style = 0;
-    data->disp_textattr.ta_Flags = NULL;
+    data->disp_textattr.ta_Style = FS_NORMAL;
+    data->disp_textattr.ta_Flags = 0;
 
     data->disp_smalltextattr.ta_Name = "aroscalculatorregular.font";
     data->disp_smalltextattr.ta_YSize = 8;
-    data->disp_smalltextattr.ta_Style = 0;
-    data->disp_smalltextattr.ta_Flags = NULL;
+    data->disp_smalltextattr.ta_Style = FS_NORMAL;
+    data->disp_smalltextattr.ta_Flags = 0;
 
     data->disp_font = OpenDiskFont(&data->disp_textattr);
     data->disp_fontsmall = OpenDiskFont(&data->disp_smalltextattr);
@@ -446,7 +446,7 @@ BOOPSI_DISPATCHER(IPTR, CalcDisplay_Dispatcher, CLASS, self, message)
         return CalcDisplay__OM_NEW(CLASS, self, (struct opSet *)message);
 
     case OM_DISPOSE:
-        return CalcDisplay__OM_DISPOSE(CLASS, self, Msg message);
+        return CalcDisplay__OM_DISPOSE(CLASS, self, message);
 
     default:
         return DoSuperMethodA(CLASS, self, message);
