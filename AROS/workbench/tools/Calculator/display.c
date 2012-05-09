@@ -68,15 +68,30 @@ IPTR CalcDisplay__MUIM_CalcDisplay_DoCurrentStep(struct IClass *cl, Object *obj,
 IPTR CalcDisplay__MUIM_AskMinMax(struct IClass *cl, Object *obj, struct MUIP_AskMinMax *msg)
 {
     struct CalcDisplay_DATA *data = INST_DATA(cl, obj);
+    IPTR height = 3; // spacing
 
     DoSuperMethodA(cl, obj, (Msg)msg);
 
-    msg->MinMaxInfo->MinWidth += 200;
+    msg->MinMaxInfo->MinWidth += 100;
     msg->MinMaxInfo->DefWidth += 200;
     msg->MinMaxInfo->MaxWidth = MUI_MAXMAX;
 
-    msg->MinMaxInfo->MinHeight += 30;
-    msg->MinMaxInfo->DefHeight += 30;
+    if (data->disp_font)
+        height += data->disp_font->tf_YSize;
+    else if ((_rp(obj)) && (_rp(obj)->Font))
+        height += _rp(obj)->Font->tf_YSize;
+    else
+        height += 10;
+
+    if (data->disp_fontsmall)
+        height += data->disp_fontsmall->tf_YSize;
+    else if ((_rp(obj)) && (_rp(obj)->Font))
+        height += _rp(obj)->Font->tf_YSize;
+    else
+        height += 8;
+
+    msg->MinMaxInfo->MinHeight += height;
+    msg->MinMaxInfo->DefHeight += height;
     msg->MinMaxInfo->MaxHeight += MUI_MAXMAX;
 
     return TRUE;
@@ -102,8 +117,14 @@ IPTR CalcDisplay__OM_NEW(struct IClass *CLASS, Object *obj, struct opSet *messag
     data->disp_textattr.ta_Style = 0;
     data->disp_textattr.ta_Flags = NULL;
 
+    data->disp_smalltextattr.ta_Name = "aroscalculatorregular.font";
+    data->disp_smalltextattr.ta_YSize = 8;
+    data->disp_smalltextattr.ta_Style = 0;
+    data->disp_smalltextattr.ta_Flags = NULL;
+
     data->disp_font = OpenDiskFont(&data->disp_textattr);
-    
+    data->disp_fontsmall = OpenDiskFont(&data->disp_smalltextattr);
+
     data->disp_buff = NULL;
     data->disp_prev = NULL;
 

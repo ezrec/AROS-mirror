@@ -29,7 +29,9 @@ struct CalcDisplay_DATA
     char *disp_buff;
     char *disp_prev;
     struct TextFont   *disp_font;
+    struct TextFont   *disp_fontsmall;
     struct TextAttr   disp_textattr;
+    struct TextAttr   disp_smalltextattr;
     ULONG displ_operator;
     ULONG displ_flags;
 };
