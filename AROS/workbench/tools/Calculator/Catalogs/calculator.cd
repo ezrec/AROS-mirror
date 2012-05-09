@@ -40,3 +40,15 @@ Copy
 MSG_MENU_PASTE (//)
 Paste
 ;
+MSG_MENU_MODE (//)
+Mode
+;
+MSG_MENU_BASIC (//)
+Basic
+;
+MSG_MENU_PROGRAMMER (//)
+Programmer
+;
+MSG_MENU_SCIENTIFIC (//)
+Scientific
+;

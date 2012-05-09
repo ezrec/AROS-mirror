@@ -45,3 +45,15 @@ Copier
 MSG_MENU_PASTE
 Coller
 ;
+MSG_MENU_MODE
+Mode
+;
+MSG_MENU_BASIC
+Basique
+;
+MSG_MENU_PROGRAMMER
+Programmeur
+;
+MSG_MENU_SCIENTIFIC
+Scientifique
+;
