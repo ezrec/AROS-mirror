@@ -426,6 +426,8 @@ int main(int argc, char **argv)
                 ButEObj, 3, MUIM_Set, MUIA_Disabled, MUIV_NotTriggerValue);
             DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, MUIV_EveryTime,
                 ButFObj, 3, MUIM_Set, MUIA_Disabled, MUIV_NotTriggerValue);
+
+            SET(MenuEntry, MUIA_Disabled, TRUE);
         }
         if ((MenuEntry = (Object *)DoMethod(CalcMenuObj, MUIM_FindUData, ID_DEC)) != NULL)
         {
@@ -436,11 +438,15 @@ int main(int argc, char **argv)
         {
             DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,
                 CalcDisplayObj, 3, MUIM_Set, MUIA_CalcDisplay_Base, 8);
+
+            SET(MenuEntry, MUIA_Disabled, TRUE);
         }
         if ((MenuEntry = (Object *)DoMethod(CalcMenuObj, MUIM_FindUData, ID_BIN)) != NULL)
         {
             DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,
                 CalcDisplayObj, 3, MUIM_Set, MUIA_CalcDisplay_Base, 2);
+
+            SET(MenuEntry, MUIA_Disabled, TRUE);
         }
 
         DoMethod(CalcWindObj, MUIM_Notify, MUIA_Window_CloseRequest, TRUE, CalcAppObj, 2,
