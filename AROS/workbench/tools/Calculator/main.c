@@ -21,6 +21,8 @@
 #include <libraries/gadtools.h>
 #include <workbench/startup.h>
 
+#include <zune/iconimage.h>
+
 #include "display.h"
 #include "locale.h"
 
@@ -29,10 +31,16 @@ struct MUI_CustomClass *CalcDisplay_CLASS;
 Object *CalcDisplayObj;
 struct Hook BuffToClipHook, ClipToBuffHook;
 
+const UBYTE CalcCopyrStr[] = "Copyright © 2012, The AROS Development Team. All rights reserved.";
+
 enum
 {
     ID_ABOUT,
     ID_QUIT,
+
+    ID_BASIC,
+    ID_PROGRAMMER,
+    ID_SCIENTIFIC,
 
     ID_DEC,
     ID_HEX,
@@ -151,7 +159,7 @@ AROS_UFH3
 
 int main(int argc, char **argv)
 {
-    Object *CalcAppObj, *CalcWindObj, *CalcWContentsObj;
+    Object *CalcAppObj, *CalcWindObj, *CalcAboutWinObj, *CalcWContentsObj;
     Object *ButAObj, *ButTmp1Obj, *ButTmp2Obj, *ButCAObj, *ButCEObj;
     Object *ButBObj, *ButTmp5Obj, *ButTmp6Obj, *ButTmp7Obj, *ButTmp8Obj;
     Object *ButCObj, *But7Obj, *But8Obj, *But9Obj, *ButDIVObj;
@@ -163,12 +171,18 @@ int main(int argc, char **argv)
     struct NewMenu CalcMenu[] =
     {
         { NM_TITLE, _(MSG_MENU_PROJECT), NULL, 0, 0, NULL },
+        { NM_ITEM, "Mode", NULL, 0, 0, NULL },
+        { NM_SUB, "Basic", NULL, CHECKIT|CHECKED|MENUTOGGLE, ~(1 << 0), (APTR)ID_BASIC },
+        { NM_SUB, "Programmer", NULL, CHECKIT|MENUTOGGLE, ~(1 << 1), (APTR)ID_PROGRAMMER },
+        { NM_SUB, "Scientific", NULL, CHECKIT|MENUTOGGLE, ~(1 << 2), (APTR)ID_SCIENTIFIC },
+
         { NM_ITEM, _(MSG_MENU_BASE), NULL, 0, 0, NULL },
         { NM_SUB, _(MSG_MENU_HEXADECIMAL), NULL, CHECKIT|MENUTOGGLE, ~(1 << 0), (APTR)ID_HEX },
         { NM_SUB, _(MSG_MENU_DECIMAL), NULL, CHECKIT|CHECKED|MENUTOGGLE, ~(1 << 1), (APTR)ID_DEC },
         { NM_SUB, _(MSG_MENU_OCTAL), NULL, CHECKIT|MENUTOGGLE, ~(1 << 2), (APTR)ID_OCT },
         { NM_SUB, _(MSG_MENU_BINARY), NULL, CHECKIT|MENUTOGGLE, ~(1 << 3), (APTR)ID_BIN },
 
+        { NM_ITEM, NM_BARLABEL, NULL, 0, 0, NULL },
         { NM_ITEM, _(MSG_MENU_ABOUT), "?", 0, 0, (APTR)ID_ABOUT },
         { NM_ITEM, NM_BARLABEL, NULL, 0, 0, NULL },
         { NM_ITEM, _(MSG_MENU_QUIT), "Q", 0, 0, (APTR)ID_QUIT },
@@ -202,7 +216,7 @@ int main(int argc, char **argv)
     CalcAppObj = ApplicationObject,
         MUIA_Application_Title,       _(MSG_APP_TITLE),
         MUIA_Application_Version,     (IPTR) "$VER: Calculator 1.4 (08.05.2012)",
-        MUIA_Application_Copyright,   (IPTR) "Copyright © 2012, The AROS Development Team. All rights reserved.",
+        MUIA_Application_Copyright,   (IPTR)CalcCopyrStr,
         MUIA_Application_Author,      (IPTR) "Nick 'Kalamatee' Andrews",
         MUIA_Application_Description, _(MSG_APP_DESCRIPTION),
         MUIA_Application_Base,        (IPTR) "CALCULATOR",
@@ -253,7 +267,28 @@ int main(int argc, char **argv)
                 End,
             End),
         End),
-
+        SubWindow, (IPTR) (CalcAboutWinObj = WindowObject,
+            MUIA_Window_Title, _(MSG_MENU_ABOUT),
+            MUIA_Window_SizeGadget, TRUE,
+            WindowContents, (IPTR) (VGroup,
+                Child, HGroup,
+                    Child, IconImageObject,
+                        MUIA_InputMode,             MUIV_InputMode_Toggle,
+                        MUIA_IconImage_File,        (IPTR)"PROGDIR:Calculator",
+                    End,
+                    Child, VGroup,
+                        Child, TextObject,
+                            MUIA_Text_PreParse, "\33c\33b", 
+                            MUIA_Text_Contents, (IPTR)_(MSG_APP_TITLE),
+                        End,
+                        Child, TextObject,
+                            MUIA_Text_PreParse, "\33c", 
+                            MUIA_Text_Contents, (IPTR)CalcCopyrStr,
+                        End,
+                    End,
+                End,
+            End),
+        End),
     End;
 
     if (!CalcAppObj)
@@ -277,51 +312,136 @@ int main(int argc, char **argv)
     SET(ButTmp7Obj, MUIA_Disabled, TRUE);
     SET(ButTmp8Obj, MUIA_Disabled, TRUE);
 
+    if ((MenuEntry = (Object *)DoMethod(CalcMenuObj, MUIM_FindUData, ID_QUIT)) != NULL)
+    {
+        DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,
+            CalcAppObj, 2, MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit);
+    }
+    if ((MenuEntry = (Object *)DoMethod(CalcMenuObj, MUIM_FindUData, ID_ABOUT)) != NULL)
+    {
+        DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,
+            CalcAboutWinObj, 3, MUIM_Set, MUIA_Window_Open, TRUE);
+    }
+
     if ((MenuEntry = (Object *)DoMethod(CalcMenuObj, MUIM_FindUData, ID_COPY)) != NULL)
     {
         BuffToClipHook.h_Entry = (HOOKFUNC) BuffToClipFunc;
         DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,
-                 CalcWindObj, 3, MUIM_CallHook, (IPTR)&BuffToClipHook, MenuEntry);
+            CalcWindObj, 3, MUIM_CallHook, (IPTR)&BuffToClipHook, MenuEntry);
     }
     if ((MenuEntry = (Object *)DoMethod(CalcMenuObj, MUIM_FindUData, ID_PASTE)) != NULL)
     {
         ClipToBuffHook.h_Entry = (HOOKFUNC) ClipToBuffFunc;
         DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,
-                 CalcWindObj, 3, MUIM_CallHook, (IPTR)&ClipToBuffHook, MenuEntry);
+            CalcWindObj, 3, MUIM_CallHook, (IPTR)&ClipToBuffHook, MenuEntry);
+    }
+
+    if ((MenuEntry = (Object *)DoMethod(CalcMenuObj, MUIM_FindUData, ID_BASIC)) != NULL)
+    {
+        Object *TargetMenuEntry;
+        DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, TRUE,
+            ButPeriodObj, 3, MUIM_Set, MUIA_Disabled, FALSE);
+        if ((TargetMenuEntry = (Object *)DoMethod(CalcMenuObj, MUIM_FindUData, ID_DEC)) != NULL)
+        {
+            DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, TRUE,
+                TargetMenuEntry, 3, MUIM_Set, MUIA_Menuitem_Checked, TRUE);
+        }
+        if ((TargetMenuEntry = (Object *)DoMethod(CalcMenuObj, MUIM_FindUData, ID_HEX)) != NULL)
+        {
+            DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, TRUE,
+                TargetMenuEntry, 3, MUIM_Set, MUIA_Disabled, TRUE);
+        }
+        if ((TargetMenuEntry = (Object *)DoMethod(CalcMenuObj, MUIM_FindUData, ID_OCT)) != NULL)
+        {
+            DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, TRUE,
+                TargetMenuEntry, 3, MUIM_Set, MUIA_Disabled, TRUE);
+        }
+        if ((TargetMenuEntry = (Object *)DoMethod(CalcMenuObj, MUIM_FindUData, ID_BIN)) != NULL)
+        {
+            DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, TRUE,
+                TargetMenuEntry, 3, MUIM_Set, MUIA_Disabled, TRUE);
+        }
+    }
+    if ((MenuEntry = (Object *)DoMethod(CalcMenuObj, MUIM_FindUData, ID_PROGRAMMER)) != NULL)
+    {
+        Object *TargetMenuEntry;
+        DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, TRUE,
+            ButPeriodObj, 3, MUIM_Set, MUIA_Disabled, TRUE);
+        if ((TargetMenuEntry = (Object *)DoMethod(CalcMenuObj, MUIM_FindUData, ID_HEX)) != NULL)
+        {
+            DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, TRUE,
+                TargetMenuEntry, 3, MUIM_Set, MUIA_Disabled, FALSE);
+        }
+        if ((TargetMenuEntry = (Object *)DoMethod(CalcMenuObj, MUIM_FindUData, ID_OCT)) != NULL)
+        {
+            DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, TRUE,
+                TargetMenuEntry, 3, MUIM_Set, MUIA_Disabled, FALSE);
+        }
+        if ((TargetMenuEntry = (Object *)DoMethod(CalcMenuObj, MUIM_FindUData, ID_BIN)) != NULL)
+        {
+            DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, TRUE,
+                TargetMenuEntry, 3, MUIM_Set, MUIA_Disabled, FALSE);
+        }
+    }
+    if ((MenuEntry = (Object *)DoMethod(CalcMenuObj, MUIM_FindUData, ID_SCIENTIFIC)) != NULL)
+    {
+        Object *TargetMenuEntry;
+        DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, TRUE,
+            ButPeriodObj, 3, MUIM_Set, MUIA_Disabled, FALSE);
+        if ((TargetMenuEntry = (Object *)DoMethod(CalcMenuObj, MUIM_FindUData, ID_DEC)) != NULL)
+        {
+            DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, TRUE,
+                TargetMenuEntry, 3, MUIM_Set, MUIA_Menuitem_Checked, TRUE);
+        }
+        if ((TargetMenuEntry = (Object *)DoMethod(CalcMenuObj, MUIM_FindUData, ID_HEX)) != NULL)
+        {
+            DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, TRUE,
+                TargetMenuEntry, 3, MUIM_Set, MUIA_Disabled, TRUE);
+        }
+        if ((TargetMenuEntry = (Object *)DoMethod(CalcMenuObj, MUIM_FindUData, ID_OCT)) != NULL)
+        {
+            DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, TRUE,
+                TargetMenuEntry, 3, MUIM_Set, MUIA_Disabled, TRUE);
+        }
+        if ((TargetMenuEntry = (Object *)DoMethod(CalcMenuObj, MUIM_FindUData, ID_BIN)) != NULL)
+        {
+            DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, TRUE,
+                TargetMenuEntry, 3, MUIM_Set, MUIA_Disabled, TRUE);
+        }
     }
 
     if ((MenuEntry = (Object *)DoMethod(CalcMenuObj, MUIM_FindUData, ID_HEX)) != NULL)
     {
         DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,
-                 CalcDisplayObj, 3, MUIM_Set, MUIA_CalcDisplay_Base, 16);
+            CalcDisplayObj, 3, MUIM_Set, MUIA_CalcDisplay_Base, 16);
 
         DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, MUIV_EveryTime,
-                 ButAObj, 3, MUIM_Set, MUIA_Disabled, MUIV_NotTriggerValue);
+            ButAObj, 3, MUIM_Set, MUIA_Disabled, MUIV_NotTriggerValue);
         DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, MUIV_EveryTime,
-                 ButBObj, 3, MUIM_Set, MUIA_Disabled, MUIV_NotTriggerValue);
+            ButBObj, 3, MUIM_Set, MUIA_Disabled, MUIV_NotTriggerValue);
         DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, MUIV_EveryTime,
-                 ButCObj, 3, MUIM_Set, MUIA_Disabled, MUIV_NotTriggerValue);
+            ButCObj, 3, MUIM_Set, MUIA_Disabled, MUIV_NotTriggerValue);
         DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, MUIV_EveryTime,
-                 ButDObj, 3, MUIM_Set, MUIA_Disabled, MUIV_NotTriggerValue);
+            ButDObj, 3, MUIM_Set, MUIA_Disabled, MUIV_NotTriggerValue);
         DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, MUIV_EveryTime,
-                 ButEObj, 3, MUIM_Set, MUIA_Disabled, MUIV_NotTriggerValue);
+            ButEObj, 3, MUIM_Set, MUIA_Disabled, MUIV_NotTriggerValue);
         DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, MUIV_EveryTime,
-                 ButFObj, 3, MUIM_Set, MUIA_Disabled, MUIV_NotTriggerValue);
+            ButFObj, 3, MUIM_Set, MUIA_Disabled, MUIV_NotTriggerValue);
     }
     if ((MenuEntry = (Object *)DoMethod(CalcMenuObj, MUIM_FindUData, ID_DEC)) != NULL)
     {
         DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,
-                 CalcDisplayObj, 3, MUIM_Set, MUIA_CalcDisplay_Base, 10);
+            CalcDisplayObj, 3, MUIM_Set, MUIA_CalcDisplay_Base, 10);
     }
     if ((MenuEntry = (Object *)DoMethod(CalcMenuObj, MUIM_FindUData, ID_OCT)) != NULL)
     {
         DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,
-                 CalcDisplayObj, 3, MUIM_Set, MUIA_CalcDisplay_Base, 8);
+            CalcDisplayObj, 3, MUIM_Set, MUIA_CalcDisplay_Base, 8);
     }
     if ((MenuEntry = (Object *)DoMethod(CalcMenuObj, MUIM_FindUData, ID_BIN)) != NULL)
     {
         DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,
-                 CalcDisplayObj, 3, MUIM_Set, MUIA_CalcDisplay_Base, 2);
+            CalcDisplayObj, 3, MUIM_Set, MUIA_CalcDisplay_Base, 2);
     }
 
     DoMethod(CalcWindObj, MUIM_Notify, MUIA_Window_CloseRequest, TRUE, CalcAppObj, 2,
@@ -386,6 +506,9 @@ int main(int argc, char **argv)
         MUIM_Set, MUIA_CalcDisplay_Input, (IPTR)'+');
     DoMethod(ButEQUALObj, MUIM_Notify, MUIA_Pressed, TRUE, CalcDisplayObj, 3,
         MUIM_Set, MUIA_CalcDisplay_Input, (IPTR)'=');
+
+    DoMethod(CalcAboutWinObj, MUIM_Notify, MUIA_Window_CloseRequest, TRUE,
+        CalcAboutWinObj, 3, MUIM_Set, MUIA_Window_Open, TRUE);
 
     SET(CalcWindObj, MUIA_Window_Open, TRUE);
     {
