@@ -8,17 +8,21 @@
 #define DEBUG 0
 #include <aros/debug.h>
 
+#include <proto/alib.h>
 #include <proto/intuition.h>
 #include <proto/muimaster.h>
 #include <proto/graphics.h>
 #include <proto/utility.h>
 #include <proto/iffparse.h>
+#include <proto/icon.h>
 
 #include <intuition/intuition.h>
 #include <libraries/mui.h>
 #include <libraries/gadtools.h>
+#include <workbench/startup.h>
 
 #include "display.h"
+#include "locale.h"
 
 extern IPTR CalcDisplay_Dispatcher();
 struct MUI_CustomClass *CalcDisplay_CLASS;
@@ -42,26 +46,6 @@ enum
 #define ID_FTXT	MAKE_ID('F','T','X','T')
 #define ID_CHRS	MAKE_ID('C','H','R','S')
 
-static struct NewMenu CalcMenu[] =
-{
-    { NM_TITLE, "Project", NULL, 0, NULL, NULL },
-    { NM_ITEM, "Base", NULL, 0, NULL, NULL },
-    { NM_SUB, "Hexadecimal (16)", NULL, CHECKIT|MENUTOGGLE, ~(1 << 0), (APTR)ID_HEX },
-    { NM_SUB, "Decimal (10)", NULL, CHECKIT|CHECKED|MENUTOGGLE, ~(1 << 1), (APTR)ID_DEC },
-    { NM_SUB, "Octal (8)", NULL, CHECKIT|MENUTOGGLE, ~(1 << 2), (APTR)ID_OCT },
-    { NM_SUB, "Binary (2)", NULL, CHECKIT|MENUTOGGLE, ~(1 << 3), (APTR)ID_BIN },
-
-    { NM_ITEM, "About...", "?", 0, NULL, (APTR)ID_ABOUT },
-    { NM_ITEM, NM_BARLABEL, NULL, 0, NULL, NULL },
-    { NM_ITEM, "Quit", "Q", 0, NULL, (APTR)ID_QUIT },
-
-    { NM_TITLE, "Edit", NULL, 0, NULL, NULL },
-    { NM_ITEM, "Copy", "C", 0, NULL, (APTR)ID_COPY },
-    { NM_ITEM, "Paste", "V", 0, NULL, (APTR)ID_PASTE },
-
-    { NM_END }
-};
-
 AROS_UFH3
 (
     void, BuffToClipFunc,
@@ -74,7 +58,7 @@ AROS_UFH3
 
     struct	IFFHandle	*IFFHandle;
     BOOL	written = FALSE;
-    IPTR        valueStr = 0;
+    STRPTR        valueStr = 0;
 
     GET(CalcDisplayObj, MUIA_CalcDisplay_Input, &valueStr);
 
@@ -165,7 +149,7 @@ AROS_UFH3
     AROS_USERFUNC_EXIT
 }
 
-int main(int argc, char *argv[])
+int main(int argc, char **argv)
 {
     Object *CalcAppObj, *CalcWindObj, *CalcWContentsObj;
     Object *ButAObj, *ButTmp1Obj, *ButTmp2Obj, *ButCAObj, *ButCEObj;
@@ -176,20 +160,56 @@ int main(int argc, char *argv[])
     Object *ButFObj, *But0Obj, *ButPeriodObj, *ButPLUSObj, *ButEQUALObj;
     Object *CalcMenuObj, *MenuEntry;
 
+    struct NewMenu CalcMenu[] =
+    {
+        { NM_TITLE, _(MSG_MENU_PROJECT), NULL, 0, 0, NULL },
+        { NM_ITEM, _(MSG_MENU_BASE), NULL, 0, 0, NULL },
+        { NM_SUB, _(MSG_MENU_HEXADECIMAL), NULL, CHECKIT|MENUTOGGLE, ~(1 << 0), (APTR)ID_HEX },
+        { NM_SUB, _(MSG_MENU_DECIMAL), NULL, CHECKIT|CHECKED|MENUTOGGLE, ~(1 << 1), (APTR)ID_DEC },
+        { NM_SUB, _(MSG_MENU_OCTAL), NULL, CHECKIT|MENUTOGGLE, ~(1 << 2), (APTR)ID_OCT },
+        { NM_SUB, _(MSG_MENU_BINARY), NULL, CHECKIT|MENUTOGGLE, ~(1 << 3), (APTR)ID_BIN },
+
+        { NM_ITEM, _(MSG_MENU_ABOUT), "?", 0, 0, (APTR)ID_ABOUT },
+        { NM_ITEM, NM_BARLABEL, NULL, 0, 0, NULL },
+        { NM_ITEM, _(MSG_MENU_QUIT), "Q", 0, 0, (APTR)ID_QUIT },
+
+        { NM_TITLE, _(MSG_MENU_EDIT), NULL, 0, 0, NULL },
+        { NM_ITEM, _(MSG_MENU_COPY), "C", 0, 0, (APTR)ID_COPY },
+        { NM_ITEM, _(MSG_MENU_PASTE), "V", 0, 0, (APTR)ID_PASTE },
+
+        { NM_END }
+    };
+
+    static struct DiskObject *disko; 
+    static struct WBStartup *argmsg;
+    static struct WBArg *wb_arg;
+    static STRPTR cxname;
+
+    if (argc)
+    {
+        cxname = argv[0];
+    } else {
+        argmsg = (struct WBStartup *)argv;
+        wb_arg = argmsg->sm_ArgList;
+        cxname = wb_arg->wa_Name;
+    }
+    disko = GetDiskObject(cxname);
+
     CalcDisplay_CLASS = MUI_CreateCustomClass(NULL, MUIC_Area, NULL, sizeof(struct CalcDisplay_DATA), CalcDisplay_Dispatcher);
 
     CalcMenuObj = MUI_MakeObject(MUIO_MenustripNM, CalcMenu, (IPTR) NULL);
 
     CalcAppObj = ApplicationObject,
-        MUIA_Application_Title,       (IPTR) "AROS Calculator",
+        MUIA_Application_Title,       _(MSG_APP_TITLE),
         MUIA_Application_Version,     (IPTR) "$VER: Calculator 1.4 (08.05.2012)",
         MUIA_Application_Copyright,   (IPTR) "Copyright © 2012, The AROS Development Team. All rights reserved.",
         MUIA_Application_Author,      (IPTR) "Nick 'Kalamatee' Andrews",
-        MUIA_Application_Description, (IPTR) "Calculates stuff(tm).",
+        MUIA_Application_Description, _(MSG_APP_DESCRIPTION),
         MUIA_Application_Base,        (IPTR) "CALCULATOR",
+        MUIA_Application_DiskObject, (IPTR)disko,
 
         SubWindow, (IPTR) (CalcWindObj = WindowObject,
-            MUIA_Window_Title, (IPTR) "Calculator",
+            MUIA_Window_Title, _(MSG_WIN_TITLE),
             MUIA_Window_ID, MAKE_ID('C','A','L','C'),
             MUIA_Window_Menustrip, (IPTR) CalcMenuObj,
             MUIA_Window_SizeGadget, TRUE,
@@ -257,20 +277,20 @@ int main(int argc, char *argv[])
     SET(ButTmp7Obj, MUIA_Disabled, TRUE);
     SET(ButTmp8Obj, MUIA_Disabled, TRUE);
 
-    if ((MenuEntry = DoMethod(CalcMenuObj, MUIM_FindUData, ID_COPY)) != NULL)
+    if ((MenuEntry = (Object *)DoMethod(CalcMenuObj, MUIM_FindUData, ID_COPY)) != NULL)
     {
         BuffToClipHook.h_Entry = (HOOKFUNC) BuffToClipFunc;
         DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,
                  CalcWindObj, 3, MUIM_CallHook, (IPTR)&BuffToClipHook, MenuEntry);
     }
-    if ((MenuEntry = DoMethod(CalcMenuObj, MUIM_FindUData, ID_PASTE)) != NULL)
+    if ((MenuEntry = (Object *)DoMethod(CalcMenuObj, MUIM_FindUData, ID_PASTE)) != NULL)
     {
         ClipToBuffHook.h_Entry = (HOOKFUNC) ClipToBuffFunc;
         DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,
                  CalcWindObj, 3, MUIM_CallHook, (IPTR)&ClipToBuffHook, MenuEntry);
     }
 
-    if ((MenuEntry = DoMethod(CalcMenuObj, MUIM_FindUData, ID_HEX)) != NULL)
+    if ((MenuEntry = (Object *)DoMethod(CalcMenuObj, MUIM_FindUData, ID_HEX)) != NULL)
     {
         DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,
                  CalcDisplayObj, 3, MUIM_Set, MUIA_CalcDisplay_Base, 16);
@@ -288,17 +308,17 @@ int main(int argc, char *argv[])
         DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, MUIV_EveryTime,
                  ButFObj, 3, MUIM_Set, MUIA_Disabled, MUIV_NotTriggerValue);
     }
-    if ((MenuEntry = DoMethod(CalcMenuObj, MUIM_FindUData, ID_DEC)) != NULL)
+    if ((MenuEntry = (Object *)DoMethod(CalcMenuObj, MUIM_FindUData, ID_DEC)) != NULL)
     {
         DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,
                  CalcDisplayObj, 3, MUIM_Set, MUIA_CalcDisplay_Base, 10);
     }
-    if ((MenuEntry = DoMethod(CalcMenuObj, MUIM_FindUData, ID_OCT)) != NULL)
+    if ((MenuEntry = (Object *)DoMethod(CalcMenuObj, MUIM_FindUData, ID_OCT)) != NULL)
     {
         DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,
                  CalcDisplayObj, 3, MUIM_Set, MUIA_CalcDisplay_Base, 8);
     }
-    if ((MenuEntry = DoMethod(CalcMenuObj, MUIM_FindUData, ID_BIN)) != NULL)
+    if ((MenuEntry = (Object *)DoMethod(CalcMenuObj, MUIM_FindUData, ID_BIN)) != NULL)
     {
         DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,
                  CalcDisplayObj, 3, MUIM_Set, MUIA_CalcDisplay_Base, 2);
@@ -389,6 +409,8 @@ int main(int argc, char *argv[])
 
     MUI_DeleteCustomClass(CalcDisplay_CLASS);
 
-main_error:
+    if (disko)
+        FreeDiskObject(disko);
+//main_error:
     return 0;
 }

@@ -3,11 +3,12 @@
 
 include $(TOP)/config/make.cfg
 
-FILES := main display
+FILES := locale main display
 EXEDIR := $(AROS_TOOLS)
 
 #MM- workbench-tools : workbench-tools-calculator
-#MM workbench-tools-calculator : includes linklibs
+#MM workbench-tools-calculator : includes linklibs \
+#MM workbench-tools-calculator-catalogs
 
 %build_prog mmake=workbench-tools-calculator \
     progname=Calculator targetdir=$(EXEDIR) \
