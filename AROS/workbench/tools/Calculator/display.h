@@ -23,6 +23,8 @@
 #define MUIM_CalcDisplay_DoCurrentStep 0x80088008
 
 #define MUIV_CalcDisplay_MaxInputLen 32
+#define MUIV_CalcDisplay_InputCA -1
+#define MUIV_CalcDisplay_InputCE -2
 
 struct CalcDisplay_DATA
 {

@@ -162,8 +162,8 @@ int main(int argc, char **argv)
 {
     int result = RETURN_OK;
     Object *CalcAppObj, *CalcWindObj, *CalcAboutWinObj, *CalcWContentsObj;
-    Object *ButAObj, *ButTmp1Obj, *ButTmp2Obj, *ButCAObj, *ButCEObj;
-    Object *ButBObj, *ButTmp5Obj, *ButTmp6Obj, *ButTmp7Obj, *ButTmp8Obj;
+    Object *ButAObj, *ButSciSinObj, *ButSciTanObj, *ButCAObj, *ButCEObj;
+    Object *ButBObj, *ButSciCosObj, *ButSciLogObj, *ButTmp7Obj, *ButTmp8Obj;
     Object *ButCObj, *But7Obj, *But8Obj, *But9Obj, *ButDIVObj;
     Object *ButDObj, *But4Obj, *But5Obj, *But6Obj, *ButMULTObj;
     Object *ButEObj, *But1Obj, *But2Obj, *But3Obj, *ButMINUSObj;
@@ -236,13 +236,13 @@ int main(int argc, char **argv)
                 Child, (IPTR)VGroup,
                     Child, (IPTR) ColGroup(5),
                         Child, ButAObj = SimpleButton("_A"),
-                        Child, ButTmp1Obj = SimpleButton(" "),
-                        Child, ButTmp2Obj = SimpleButton(" "),
+                        Child, ButSciSinObj = SimpleButton("sin"),
+                        Child, ButSciTanObj = SimpleButton("tan"),
                         Child, ButCAObj = SimpleButton("CA"),
                         Child, ButCEObj = SimpleButton("CE"),
                         Child, ButBObj = SimpleButton("_B"),
-                        Child, ButTmp5Obj = SimpleButton(" "),
-                        Child, ButTmp6Obj = SimpleButton(" "),
+                        Child, ButSciCosObj = SimpleButton("cos"),
+                        Child, ButSciLogObj = SimpleButton("log"),
                         Child, ButTmp7Obj = SimpleButton(" "),
                         Child, ButTmp8Obj = SimpleButton(" "),
                         Child, ButCObj = SimpleButton("_C"),
@@ -302,12 +302,12 @@ int main(int argc, char **argv)
         SET(ButDObj, MUIA_Disabled, TRUE);
         SET(ButEObj, MUIA_Disabled, TRUE);
         SET(ButFObj, MUIA_Disabled, TRUE);
-        SET(ButTmp1Obj, MUIA_Disabled, TRUE);
-        SET(ButTmp2Obj, MUIA_Disabled, TRUE);
+        SET(ButSciSinObj, MUIA_Disabled, TRUE);
+        SET(ButSciTanObj, MUIA_Disabled, TRUE);
         SET(ButCAObj, MUIA_Disabled, TRUE);
         SET(ButCEObj, MUIA_Disabled, TRUE);
-        SET(ButTmp5Obj, MUIA_Disabled, TRUE);
-        SET(ButTmp6Obj, MUIA_Disabled, TRUE);
+        SET(ButSciCosObj, MUIA_Disabled, TRUE);
+        SET(ButSciLogObj, MUIA_Disabled, TRUE);
         SET(ButTmp7Obj, MUIA_Disabled, TRUE);
         SET(ButTmp8Obj, MUIA_Disabled, TRUE);
 
@@ -340,6 +340,14 @@ int main(int argc, char **argv)
             Object *TargetMenuEntry;
             DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, TRUE,
                 ButPeriodObj, 3, MUIM_Set, MUIA_Disabled, FALSE);
+            DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, TRUE,
+                ButSciSinObj, 3, MUIM_Set, MUIA_Disabled, TRUE);
+            DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, TRUE,
+                ButSciTanObj, 3, MUIM_Set, MUIA_Disabled, TRUE);
+            DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, TRUE,
+                ButSciCosObj, 3, MUIM_Set, MUIA_Disabled, TRUE);
+            DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, TRUE,
+                ButSciLogObj, 3, MUIM_Set, MUIA_Disabled, TRUE);
             if ((TargetMenuEntry = (Object *)DoMethod(CalcMenuObj, MUIM_FindUData, ID_DEC)) != NULL)
             {
                 DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, TRUE,
@@ -366,6 +374,14 @@ int main(int argc, char **argv)
             Object *TargetMenuEntry;
             DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, TRUE,
                 ButPeriodObj, 3, MUIM_Set, MUIA_Disabled, TRUE);
+            DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, TRUE,
+                ButSciSinObj, 3, MUIM_Set, MUIA_Disabled, TRUE);
+            DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, TRUE,
+                ButSciTanObj, 3, MUIM_Set, MUIA_Disabled, TRUE);
+            DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, TRUE,
+                ButSciCosObj, 3, MUIM_Set, MUIA_Disabled, TRUE);
+            DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, TRUE,
+                ButSciLogObj, 3, MUIM_Set, MUIA_Disabled, TRUE);
             if ((TargetMenuEntry = (Object *)DoMethod(CalcMenuObj, MUIM_FindUData, ID_HEX)) != NULL)
             {
                 DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, TRUE,
@@ -387,6 +403,14 @@ int main(int argc, char **argv)
             Object *TargetMenuEntry;
             DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, TRUE,
                 ButPeriodObj, 3, MUIM_Set, MUIA_Disabled, FALSE);
+            DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, TRUE,
+                ButSciSinObj, 3, MUIM_Set, MUIA_Disabled, FALSE);
+            DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, TRUE,
+                ButSciTanObj, 3, MUIM_Set, MUIA_Disabled, FALSE);
+            DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, TRUE,
+                ButSciCosObj, 3, MUIM_Set, MUIA_Disabled, FALSE);
+            DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, TRUE,
+                ButSciLogObj, 3, MUIM_Set, MUIA_Disabled, FALSE);
             if ((TargetMenuEntry = (Object *)DoMethod(CalcMenuObj, MUIM_FindUData, ID_DEC)) != NULL)
             {
                 DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, TRUE,
@@ -453,9 +477,9 @@ int main(int argc, char **argv)
             MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit);
 
         DoMethod(ButCAObj, MUIM_Notify, MUIA_Pressed, TRUE, CalcDisplayObj, 3,
-            MUIM_Set, MUIA_CalcDisplay_Input, (IPTR)-1); // CA
+            MUIM_Set, MUIA_CalcDisplay_Input, (IPTR)MUIV_CalcDisplay_InputCA);
         DoMethod(ButCEObj, MUIM_Notify, MUIA_Pressed, TRUE, CalcDisplayObj, 3,
-            MUIM_Set, MUIA_CalcDisplay_Input, (IPTR)-2); // CE
+            MUIM_Set, MUIA_CalcDisplay_Input, (IPTR)MUIV_CalcDisplay_InputCE);
         DoMethod(ButCEObj, MUIM_Notify, MUIA_Pressed, TRUE, ButCEObj, 3,
             MUIM_Set, MUIA_Disabled, TRUE);
 
