@@ -1,0 +1,42 @@
+MSG_APP_TITLE (//)
+AROS Calculator
+;
+MSG_APP_DESCRIPTION (//)
+Calculates stuff(tm).
+;
+MSG_WIN_TITLE (//)
+Calculator
+;
+MSG_MENU_PROJECT (//)
+Project
+;
+MSG_MENU_BASE (//)
+Base
+;
+MSG_MENU_HEXADECIMAL (//)
+Hexadecimal (16)
+;
+MSG_MENU_DECIMAL (//)
+Decimal (10)
+;
+MSG_MENU_OCTAL (//)
+Octal (8)
+;
+MSG_MENU_BINARY (//)
+Binary (2)
+;
+MSG_MENU_ABOUT (//)
+About...
+;
+MSG_MENU_QUIT (//)
+Quit
+;
+MSG_MENU_EDIT (//)
+Edit
+;
+MSG_MENU_COPY (//)
+Copy
+;
+MSG_MENU_PASTE (//)
+Paste
+;

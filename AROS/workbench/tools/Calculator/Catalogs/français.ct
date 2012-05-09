@@ -1,0 +1,47 @@
+## version $VER: Calculator.catalog 1.0 (09.06.2012)
+## language français
+## codeset 0
+;
+;
+MSG_APP_TITLE
+Calculatrice
+;
+MSG_APP_DESCRIPTION
+Calcule des trucs(tm).
+;
+MSG_WIN_TITLE
+Calculatrice
+;
+MSG_MENU_PROJECT
+Projet
+;
+MSG_MENU_BASE
+Base
+;
+MSG_MENU_HEXADECIMAL
+Hexadécimal (16)
+;
+MSG_MENU_DECIMAL
+Décimal (10)
+;
+MSG_MENU_OCTAL
+Octal (8)
+;
+MSG_MENU_BINARY
+Binaire (2)
+;
+MSG_MENU_ABOUT
+A propos...
+;
+MSG_MENU_QUIT
+Quitter
+;
+MSG_MENU_EDIT
+Editer
+;
+MSG_MENU_COPY
+Copier
+;
+MSG_MENU_PASTE
+Coller
+;
