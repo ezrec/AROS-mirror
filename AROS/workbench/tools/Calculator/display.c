@@ -446,7 +446,7 @@ BOOPSI_DISPATCHER(IPTR, CalcDisplay_Dispatcher, CLASS, self, message)
         return CalcDisplay__OM_NEW(CLASS, self, (struct opSet *)message);
 
     case OM_DISPOSE:
-        return CalcDisplay__OM_DISPOSE(CLASS, self, (struct opSet *)message);
+        return CalcDisplay__OM_DISPOSE(CLASS, self, Msg message);
 
     default:
         return DoSuperMethodA(CLASS, self, message);
