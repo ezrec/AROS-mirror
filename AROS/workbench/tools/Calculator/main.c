@@ -356,17 +356,17 @@ int main(int argc, char **argv)
             if ((TargetMenuEntry = (Object *)DoMethod(CalcMenuObj, MUIM_FindUData, ID_HEX)) != NULL)
             {
                 DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, TRUE,
-                    TargetMenuEntry, 3, MUIM_Set, MUIA_Disabled, TRUE);
+                    TargetMenuEntry, 3, MUIM_Set, MUIA_Menuitem_Enabled, FALSE);
             }
             if ((TargetMenuEntry = (Object *)DoMethod(CalcMenuObj, MUIM_FindUData, ID_OCT)) != NULL)
             {
                 DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, TRUE,
-                    TargetMenuEntry, 3, MUIM_Set, MUIA_Disabled, TRUE);
+                    TargetMenuEntry, 3, MUIM_Set, MUIA_Menuitem_Enabled, FALSE);
             }
             if ((TargetMenuEntry = (Object *)DoMethod(CalcMenuObj, MUIM_FindUData, ID_BIN)) != NULL)
             {
                 DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, TRUE,
-                    TargetMenuEntry, 3, MUIM_Set, MUIA_Disabled, TRUE);
+                    TargetMenuEntry, 3, MUIM_Set, MUIA_Menuitem_Enabled, FALSE);
             }
         }
         if ((MenuEntry = (Object *)DoMethod(CalcMenuObj, MUIM_FindUData, ID_PROGRAMMER)) != NULL)
@@ -385,17 +385,17 @@ int main(int argc, char **argv)
             if ((TargetMenuEntry = (Object *)DoMethod(CalcMenuObj, MUIM_FindUData, ID_HEX)) != NULL)
             {
                 DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, TRUE,
-                    TargetMenuEntry, 3, MUIM_Set, MUIA_Disabled, FALSE);
+                    TargetMenuEntry, 3, MUIM_Set, MUIA_Menuitem_Enabled, TRUE);
             }
             if ((TargetMenuEntry = (Object *)DoMethod(CalcMenuObj, MUIM_FindUData, ID_OCT)) != NULL)
             {
                 DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, TRUE,
-                    TargetMenuEntry, 3, MUIM_Set, MUIA_Disabled, FALSE);
+                    TargetMenuEntry, 3, MUIM_Set, MUIA_Menuitem_Enabled, TRUE);
             }
             if ((TargetMenuEntry = (Object *)DoMethod(CalcMenuObj, MUIM_FindUData, ID_BIN)) != NULL)
             {
                 DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, TRUE,
-                    TargetMenuEntry, 3, MUIM_Set, MUIA_Disabled, FALSE);
+                    TargetMenuEntry, 3, MUIM_Set, MUIA_Menuitem_Enabled, TRUE);
             }
         }
         if ((MenuEntry = (Object *)DoMethod(CalcMenuObj, MUIM_FindUData, ID_SCIENTIFIC)) != NULL)
@@ -419,17 +419,17 @@ int main(int argc, char **argv)
             if ((TargetMenuEntry = (Object *)DoMethod(CalcMenuObj, MUIM_FindUData, ID_HEX)) != NULL)
             {
                 DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, TRUE,
-                    TargetMenuEntry, 3, MUIM_Set, MUIA_Disabled, TRUE);
+                    TargetMenuEntry, 3, MUIM_Set, MUIA_Menuitem_Enabled, FALSE);
             }
             if ((TargetMenuEntry = (Object *)DoMethod(CalcMenuObj, MUIM_FindUData, ID_OCT)) != NULL)
             {
                 DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, TRUE,
-                    TargetMenuEntry, 3, MUIM_Set, MUIA_Disabled, TRUE);
+                    TargetMenuEntry, 3, MUIM_Set, MUIA_Menuitem_Enabled, FALSE);
             }
             if ((TargetMenuEntry = (Object *)DoMethod(CalcMenuObj, MUIM_FindUData, ID_BIN)) != NULL)
             {
                 DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, TRUE,
-                    TargetMenuEntry, 3, MUIM_Set, MUIA_Disabled, TRUE);
+                    TargetMenuEntry, 3, MUIM_Set, MUIA_Menuitem_Enabled, FALSE);
             }
         }
 
@@ -451,7 +451,7 @@ int main(int argc, char **argv)
             DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Checked, MUIV_EveryTime,
                 ButFObj, 3, MUIM_Set, MUIA_Disabled, MUIV_NotTriggerValue);
 
-            SET(MenuEntry, MUIA_Disabled, TRUE);
+            SET(MenuEntry, MUIA_Menuitem_Enabled, FALSE);
         }
         if ((MenuEntry = (Object *)DoMethod(CalcMenuObj, MUIM_FindUData, ID_DEC)) != NULL)
         {
@@ -463,14 +463,14 @@ int main(int argc, char **argv)
             DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,
                 CalcDisplayObj, 3, MUIM_Set, MUIA_CalcDisplay_Base, 8);
 
-            SET(MenuEntry, MUIA_Disabled, TRUE);
+            SET(MenuEntry, MUIA_Menuitem_Enabled, FALSE);
         }
         if ((MenuEntry = (Object *)DoMethod(CalcMenuObj, MUIM_FindUData, ID_BIN)) != NULL)
         {
             DoMethod(MenuEntry, MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,
                 CalcDisplayObj, 3, MUIM_Set, MUIA_CalcDisplay_Base, 2);
 
-            SET(MenuEntry, MUIA_Disabled, TRUE);
+            SET(MenuEntry, MUIA_Menuitem_Enabled, FALSE);
         }
 
         DoMethod(CalcWindObj, MUIM_Notify, MUIA_Window_CloseRequest, TRUE, CalcAppObj, 2,
