@@ -1,0 +1,69 @@
+# $Id$
+include $(TOP)/config/make.cfg
+
+CAM_FILES = md5 \
+        bus/cam/cam \
+        bus/cam/cam_extend \
+        bus/cam/cam_periph \
+        bus/cam/cam_queue \
+        bus/cam/cam_sim \
+        bus/cam/cam_xpt \
+        bus/cam/scsi/scsi_all \
+        bus/cam/scsi/scsi_cd \
+        bus/cam/scsi/scsi_ch \
+        bus/cam/scsi/scsi_da \
+        bus/cam/scsi/scsi_low \
+        bus/cam/scsi/scsi_pass \
+        bus/cam/scsi/scsi_pt \
+        bus/cam/scsi/scsi_sa \
+        bus/cam/scsi/scsi_ses
+
+SILI_FILES = \
+        sili/sili_attach \
+        sili/sili \
+        sili/sili_cam \
+        sili/sili_dragonfly \
+        sili/sili_pm
+
+AHCI_FILES = \
+        ahci/ahci_attach \
+        ahci/ahci \
+        ahci/ahci_cam \
+        ahci/ahci_dragonfly \
+        ahci/ahci_pm
+
+KERN_FILES = \
+        kern/subr_sbuf \
+        kern/subr_prf \
+        kern/subr_kobj \
+        kern/kern_lock \
+        kern/kern_physio \
+        kern/subr_bus \
+        kern/subr_disk \
+        kern/busdma \
+        kern/bus_if \
+        kern/device_if \
+        kern/pci_if
+
+FILES=$(KERN_FILES) $(CAM_FILES) $(SILI_FILES) $(AHCI_FILES)
+
+USER_CFLAGS += -Wno-unused-but-set-variable \
+               -Wno-unused-function
+USER_CFLAGS += -D_KERNEL -D__DragonFly__
+
+# u_int8_t and friends...
+USER_CFLAGS += -D__BSD_VISIBLE
+
+USER_CFLAGS += -I$(SRCDIR)/$(CURDIR)/sili
+USER_CFLAGS += -I$(SRCDIR)/$(CURDIR)/ahci
+
+USER_CFLAGS += -I$(SRCDIR)/$(CURDIR)/bus/cam \
+               -I$(SRCDIR)/$(CURDIR) \
+               -I$(SRCDIR)/$(CURDIR)/include
+
+%build_module mmake=kernel-scsi \
+  modname=scsi modtype=device \
+  files="$(FILES)" \
+  uselibs="rom oop hiddstubs"
+
+%common

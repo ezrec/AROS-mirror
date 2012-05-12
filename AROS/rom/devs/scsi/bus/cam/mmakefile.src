@@ -1,0 +1,16 @@
+# $Id$
+include $(TOP)/config/make.cfg
+
+FILES = cam.c \
+        cam_extend.c \
+        cam_periph.c \
+        cam_queue.c \
+        cam_sim.c \
+        cam_xpt.c
+
+# Contains code from openbsd.org
+#USER_CFLAGS := -D__BSD_VISIBLE
+
+%build_linklib mmake=linklibs-scsicam libname=scsicam files=$(FILES)
+
+%common
