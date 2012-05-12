@@ -1,9 +1,11 @@
-# Copyright © 2009, The AROS Development Team. All rights reserved.
+# Copyright © 2009-2012, The AROS Development Team. All rights reserved.
 # $Id$
 
 -include $(TOP)/config/make.cfg
 
-FILES     := bzip2recover bzip2
+FILES     := \
+	     blocksort huffman crctable randtable  \
+             compress decompress bzlib
 SH_FILES  := bzdiff bzgrep bzmore
 MAN_FILES := bzdiff.1 bzgrep.1 bzip2.1 bzmore.1
 
@@ -14,8 +16,8 @@ MAN_DIR := $(AROS_DEVELOPMENT)/man/man1
 
 #MM- contrib-pack       : contrib-pack-bzip2
 #MM- contrib-pack-bzip2 : \
-#MM-    linklibs-bz2 \
 #MM     pack-bzip2 \
+#MM     pack-bzip2recover \
 #MM     pack-bzip2-install-sh \
 #MM     pack-bzip2-install-aliases \
 #MM     pack-bzip2-install-man \
@@ -23,7 +25,11 @@ MAN_DIR := $(AROS_DEVELOPMENT)/man/man1
 
 #MM  pack-bzip2-install-man-cpy : pack-bzip2-install-man
 
-%build_progs mmake=pack-bzip2 targetdir=$(BIN_DIR) files=$(FILES) uselibs=bz2 nix=yes
+%build_prog mmake=pack-bzip2 progname=bzip2 \
+targetdir=$(BIN_DIR) files="bzip2 $(FILES)" nix=yes
+
+%build_prog mmake=pack-bzip2recover progname=bzip2recover \
+targetdir=$(BIN_DIR) files="bzip2recover $(FILES)" nix=yes
 
 %copy_files_q mmake=pack-bzip2-install-sh files=$(SH_FILES) dst=$(BIN_DIR)
 
