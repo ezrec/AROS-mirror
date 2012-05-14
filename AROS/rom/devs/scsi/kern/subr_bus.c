@@ -52,7 +52,9 @@
 #include <sys/thread2.h>
 #include <sys/mplock2.h>
 
+#ifdef SYSCTL_NODE
 SYSCTL_NODE(_hw, OID_AUTO, bus, CTLFLAG_RW, NULL, NULL);
+#endif
 
 MALLOC_DEFINE(M_BUS, "bus", "Bus data structures");
 
@@ -1360,6 +1362,7 @@ device_set_unit(device_t dev, int unit)
  * Access functions for device resources.
  */
 
+#if 0
 /* Supplied by config(8) in ioconf.c */
 extern struct config_device config_devtab[];
 extern int devtab_count;
@@ -1585,7 +1588,6 @@ resource_query_unit(int i)
 	return(devtab[i].unit);
 }
 
-#if 0
 static int
 resource_create(const char *name, int unit, const char *resname,
 		resource_type type, struct config_resource **result)

@@ -430,6 +430,7 @@ MALLOC_DEFINE(M_SCSIDA, "scsi_da", "scsi_da buffers");
 static int
 daioctl(struct dev_ioctl_args *ap)
 {	
+#ifdef CONFIG_TRIM
 	int unit;
 	int error = 0;	
 	struct buf *bp;		
@@ -449,7 +450,7 @@ daioctl(struct dev_ioctl_args *ap)
 	if (periph == NULL)
 		return(ENXIO);
 	softc = (struct da_softc *)periph->softc;
-	
+
 	switch (ap->a_cmd) {
 	case IOCTLTRIM:
 	{
@@ -504,6 +505,9 @@ daioctl(struct dev_ioctl_args *ap)
 	}	
 	
 	return(error);
+#else
+        return EINVAL;
+#endif
 }
 
 static int
@@ -1092,6 +1096,7 @@ dasysctlinit(void *context, int pending)
 	rel_mplock();
 }
 
+#ifdef CONFIG_SYSCTL
 static int
 dacmdsizesysctl(SYSCTL_HANDLER_ARGS)
 {
@@ -1123,6 +1128,7 @@ dacmdsizesysctl(SYSCTL_HANDLER_ARGS)
 
 	return (0);
 }
+#endif
 
 static cam_status
 daregister(struct cam_periph *periph, void *arg)

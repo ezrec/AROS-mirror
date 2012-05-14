@@ -33,19 +33,22 @@ AHCI_FILES = \
         ahci/ahci_pm
 
 KERN_FILES = \
-        kern/subr_sbuf \
-        kern/subr_prf \
-        kern/subr_kobj \
         kern/kern_lock \
         kern/kern_physio \
         kern/subr_bus \
         kern/subr_disk \
-        kern/busdma \
+        kern/subr_kobj \
+        kern/subr_prf \
+        kern/subr_sbuf \
+        kern/vfs_bio \
+        kern/busdma
+
+IF_FILES = \
         kern/bus_if \
         kern/device_if \
         kern/pci_if
 
-FILES=$(KERN_FILES) $(CAM_FILES) $(SILI_FILES) $(AHCI_FILES)
+FILES=$(KERN_FILES) $(IF_FILES) $(CAM_FILES) $(SILI_FILES) $(AHCI_FILES)
 
 USER_CFLAGS += -Wno-unused-but-set-variable \
                -Wno-unused-function

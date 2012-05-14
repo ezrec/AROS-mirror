@@ -236,7 +236,9 @@ static	periph_start_t	cdstart;
 static	periph_oninv_t	cdoninvalidate;
 static	void		cdasync(void *callback_arg, u_int32_t code,
 				struct cam_path *path, void *arg);
+#ifdef CONFIG_SYSCTL
 static	int		cdcmdsizesysctl(SYSCTL_HANDLER_ARGS);
+#endif
 static	void		cdshorttimeout(void *arg);
 static	void		cdschedule(struct cam_periph *periph, int priority);
 static	void		cdrunchangerqueue(void *arg);
@@ -579,6 +581,7 @@ cdasync(void *callback_arg, u_int32_t code,
 	}
 }
 
+#ifdef CONFIG_SYSCTL
 static void
 cdsysctlinit(void *context, int pending)
 {
@@ -658,7 +661,7 @@ cdcmdsizesysctl(SYSCTL_HANDLER_ARGS)
 
 	return (0);
 }
-
+#endif
 
 static cam_status
 cdregister(struct cam_periph *periph, void *arg)

@@ -221,10 +221,13 @@ struct xpt_quirk_entry {
 
 static int cam_srch_hi = 0;
 TUNABLE_INT("kern.cam.cam_srch_hi", &cam_srch_hi);
+
+#ifdef SYSCTL_PROC
 static int sysctl_cam_search_luns(SYSCTL_HANDLER_ARGS);
 SYSCTL_PROC(_kern_cam, OID_AUTO, cam_srch_hi, CTLTYPE_INT|CTLFLAG_RW, 0, 0,
     sysctl_cam_search_luns, "I",
     "allow search above LUN 7 for SCSI3 and greater devices");
+#endif
 
 #define	CAM_SCSI2_MAXLUN	8
 /*
@@ -6411,6 +6414,7 @@ xpt_find_quirk(struct cam_ed *device)
 	device->quirk = (struct xpt_quirk_entry *)match;
 }
 
+#ifdef CONFIG_SYSCTL
 static int
 sysctl_cam_search_luns(SYSCTL_HANDLER_ARGS)
 {
@@ -6427,6 +6431,7 @@ sysctl_cam_search_luns(SYSCTL_HANDLER_ARGS)
 		return (EINVAL);
 	}
 }
+#endif
 
 static void
 xpt_devise_transport(struct cam_path *path)

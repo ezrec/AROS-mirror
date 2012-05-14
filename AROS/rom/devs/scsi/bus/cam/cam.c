@@ -104,7 +104,9 @@ const struct cam_status_entry cam_status_table[] = {
 const int num_cam_status_entries = NELEM(cam_status_table);
 
 #ifdef _KERNEL
+#ifdef CONFIG_SYSCTL
 SYSCTL_NODE(_kern, OID_AUTO, cam, CTLFLAG_RD, 0, "CAM Subsystem");
+#endif
 #endif
 
 void

@@ -222,7 +222,9 @@ __END_DECLS
 
 #ifdef _KERNEL
 
+#ifdef CONFIG_SYSCTL
 SYSCTL_DECL(_kern_cam);
+#endif
 
 static __inline void cam_init_pinfo(cam_pinfo *pinfo);
 

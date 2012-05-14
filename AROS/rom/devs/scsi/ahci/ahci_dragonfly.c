@@ -161,6 +161,7 @@ ahci_detach (device_t dev)
 	return(error);
 }
 
+#ifdef CONFIG_SYSCTL
 static int
 ahci_sysctl_link_pwr_mgmt (SYSCTL_HANDLER_ARGS)
 {
@@ -191,6 +192,7 @@ ahci_sysctl_link_pwr_state (SYSCTL_HANDLER_ARGS)
 	ksnprintf(buf, sizeof(buf), "%s", state_names[state]);
 	return sysctl_handle_string(oidp, buf, sizeof(buf), req);
 }
+#endif
 
 #if 0
 

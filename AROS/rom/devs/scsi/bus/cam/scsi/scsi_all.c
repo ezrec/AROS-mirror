@@ -103,7 +103,9 @@ static void	fetchtableentries(int sense_key, int asc, int ascq,
 				  const struct asc_table_entry **);
 #ifdef _KERNEL
 static void	init_scsi_delay(void);
+#ifdef SYSCTL_HANDLER_ARGS
 static int	sysctl_scsi_delay(SYSCTL_HANDLER_ARGS);
+#endif
 static int	set_scsi_delay(int delay);
 #endif
 
@@ -4154,6 +4156,7 @@ init_scsi_delay(void)
 }
 SYSINIT(scsi_delay, SI_BOOT1_TUNABLES, SI_ORDER_ANY, init_scsi_delay, NULL);
 
+#ifdef SYSCTL_HANDLER_ARGS
 static int
 sysctl_scsi_delay(SYSCTL_HANDLER_ARGS)
 {
@@ -4168,6 +4171,7 @@ sysctl_scsi_delay(SYSCTL_HANDLER_ARGS)
 SYSCTL_PROC(_kern_cam, OID_AUTO, scsi_delay, CTLTYPE_INT|CTLFLAG_RW,
     0, 0, sysctl_scsi_delay, "I",
     "Delay to allow devices to settle after a SCSI bus reset (ms)");
+#endif
 
 static int
 set_scsi_delay(int delay)

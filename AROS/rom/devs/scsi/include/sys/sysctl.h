@@ -9,7 +9,10 @@
 #ifndef SYS_SYSCTL_H
 #define SYS_SYSCTL_H
 
+#ifdef CONFIG_SYSCTL
+
 #define SYSCTL_DECL(x)
+#define SYSCTL_NODE(parent, nbr, name, access, handler, descr)
 
 struct sysctl_oid;
 struct sysctl_req {
@@ -30,5 +33,6 @@ int sysctl_handle_int(SYSCTL_HANDLER_ARGS);
 int sysctl_handle_string(SYSCTL_HANDLER_ARGS);
 int     sysctl_ctx_init(struct sysctl_ctx_list *clist);
 int     sysctl_ctx_free(struct sysctl_ctx_list *clist);
+#endif
 
 #endif /* SYS_SYSCTL_H */
