@@ -52,15 +52,15 @@ CardInterrupt( struct CMI8738_DATA* card )
   ULONG intreq;
   LONG  handled = 0;
 
-    bug("[CMI8738]: %s(card @ 0x%p)\n", __PRETTY_FUNCTION__, card);
-    bug("[CMI8738] %s: AHIAudioCtrlDrv @ 0x%p\n", __PRETTY_FUNCTION__, AudioCtrl);
+    D(bug("[CMI8738]: %s(card @ 0x%p)\n", __PRETTY_FUNCTION__, card));
+    D(bug("[CMI8738] %s: AHIAudioCtrlDrv @ 0x%p\n", __PRETTY_FUNCTION__, AudioCtrl));
 
     for (;;)
 //  while (((intreq = pci_inl(CMPCI_REG_INTR_STATUS, card)) & CMPCI_REG_ANY_INTR) != 0)
   {
     intreq = pci_inl(CMPCI_REG_INTR_STATUS, card);
 
-    bug("[CMI8738] %s: INTR_STATUS = %08x\n", __PRETTY_FUNCTION__, intreq);
+    D(bug("[CMI8738] %s: INTR_STATUS = %08x\n", __PRETTY_FUNCTION__, intreq));
 
       if (((intreq & CMPCI_REG_ANY_INTR) == 0) || (AudioCtrl == NULL))
 	  break;
@@ -164,7 +164,7 @@ PlaybackInterrupt( struct CMI8738_DATA* card )
   struct DriverBase*  AHIsubBase = (struct DriverBase*) card->ahisubbase;
   struct PCIDevice *dev = (struct PCIDevice * ) card->pci_dev;
 
-    bug("[CMI8738]: %s()\n", __PRETTY_FUNCTION__);
+    D(bug("[CMI8738]: %s()\n", __PRETTY_FUNCTION__));
 
   if( card->mix_buffer != NULL && card->current_buffer != NULL )
   {
@@ -233,7 +233,7 @@ RecordInterrupt( struct CMI8738_DATA* card )
   struct DriverBase*  AHIsubBase = (struct DriverBase*) card->ahisubbase;
   struct PCIDevice *dev = (struct PCIDevice * ) card->pci_dev;
 
-    bug("[CMI8738]: %s()\n", __PRETTY_FUNCTION__);
+    D(bug("[CMI8738]: %s()\n", __PRETTY_FUNCTION__));
 
   struct AHIRecordMessage rm =
   {

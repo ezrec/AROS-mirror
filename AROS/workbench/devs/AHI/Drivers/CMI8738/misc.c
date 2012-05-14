@@ -59,7 +59,7 @@ void micro_delay(unsigned int val)
     replymp = (struct MsgPort *) CreateMsgPort();
     if (!replymp)
     {
-      bug("Could not create the reply port!\n");
+      D(bug("Could not create the reply port!\n"));
       return;
     }
     
@@ -160,7 +160,7 @@ AllocDriverData( struct PCIDevice *dev,
     int i, v;
     unsigned char byte;
 
-    bug("[CMI8738]: %s()\n", __PRETTY_FUNCTION__);
+    D(bug("[CMI8738]: %s()\n", __PRETTY_FUNCTION__));
 
     // FIXME: This should be non-cachable, DMA-able memory
     card = AllocVec( sizeof( *card ), MEMF_PUBLIC | MEMF_CLEAR );
@@ -223,7 +223,7 @@ AllocDriverData( struct PCIDevice *dev,
     card->chiprev = inb_config(PCI_REVISION_ID, dev);
     card->model   = inw_config(PCI_SUBSYSTEM_ID, dev);
 
-    bug("[CMI8738]: %s: iobase = 0x%p, len = %d\n", __PRETTY_FUNCTION__, card->iobase, card->length);
+    D(bug("[CMI8738]: %s: iobase = 0x%p, len = %d\n", __PRETTY_FUNCTION__, card->iobase, card->length));
 
     chipvers = pci_inl(CMPCI_REG_INTR_CTRL, card) & CMPCI_REG_VERSION_MASK;
     if (chipvers)
@@ -268,12 +268,12 @@ AllocDriverData( struct PCIDevice *dev,
   /*DebugPrintF("---> chiprev = %u, model = %x, Vendor = %x\n", dev->ReadConfigByte( PCI_REVISION_ID), dev->ReadConfigWord( PCI_SUBSYSTEM_ID),
                      dev->ReadConfigWord( PCI_SUBSYSTEM_VENDOR_ID));*/
 
-    bug("[CMI8738]: %s: chipvers = %u, chiprev = %u, model = %x, Vendor = %x\n", __PRETTY_FUNCTION__,
+    D(bug("[CMI8738]: %s: chipvers = %u, chiprev = %u, model = %x, Vendor = %x\n", __PRETTY_FUNCTION__,
      card->chipvers, card->chiprev,
      card->model,
-     inw_config( PCI_SUBSYSTEM_VENDOR_ID, dev));
+     inw_config( PCI_SUBSYSTEM_VENDOR_ID, dev)));
 
-    bug("[CMI8738]: %s: max channels = %d\n", __PRETTY_FUNCTION__, card->channels);
+    D(bug("[CMI8738]: %s: max channels = %d\n", __PRETTY_FUNCTION__, card->channels));
   
     /* Initialize chip */
     if( card_init( card ) < 0 )
@@ -343,7 +343,7 @@ FreeDriverData( struct CMI8738_DATA* card,
 		struct DriverBase*  AHIsubBase )
 {
 
-    bug("[CMI8738]: %s()\n", __PRETTY_FUNCTION__);
+    D(bug("[CMI8738]: %s()\n", __PRETTY_FUNCTION__));
 
   if( card != NULL )
   {
@@ -380,7 +380,7 @@ int card_init(struct CMI8738_DATA *card)
     unsigned short cod;
     unsigned long val;
 
-    bug("[CMI8738]: %s()\n", __PRETTY_FUNCTION__);
+    D(bug("[CMI8738]: %s()\n", __PRETTY_FUNCTION__));
 
     ClearMask(dev, card, CMPCI_REG_MISC, CMPCI_REG_POWER_DOWN); // power up
     
@@ -430,7 +430,7 @@ void card_cleanup(struct CMI8738_DATA *card)
 void
 SaveMixerState( struct CMI8738_DATA* card )
 {
-    bug("[CMI8738]: %s()\n", __PRETTY_FUNCTION__);
+    D(bug("[CMI8738]: %s()\n", __PRETTY_FUNCTION__));
 
 #if 0
   card->ac97_mic    = codec_read( card, AC97_MIC_VOL );
@@ -446,7 +446,7 @@ SaveMixerState( struct CMI8738_DATA* card )
 void
 RestoreMixerState( struct CMI8738_DATA* card )
 {
-    bug("[CMI8738]: %s()\n", __PRETTY_FUNCTION__);
+    D(bug("[CMI8738]: %s()\n", __PRETTY_FUNCTION__));
 
 #if 0
   codec_write(card, AC97_MIC_VOL,    card->ac97_mic );
@@ -461,7 +461,7 @@ RestoreMixerState( struct CMI8738_DATA* card )
 void
 UpdateMonitorMixer( struct CMI8738_DATA* card )
 {
-    bug("[CMI8738]: %s()\n", __PRETTY_FUNCTION__);
+    D(bug("[CMI8738]: %s()\n", __PRETTY_FUNCTION__));
 
 #if 0
   int   i  = InputBits[ card->input ];
@@ -622,7 +622,7 @@ void *pci_alloc_consistent(size_t size, APTR *NonAlignedAddress, unsigned int bo
     void* address;
     unsigned long a;
 
-    bug("[CMI8738]: %s()\n", __PRETTY_FUNCTION__);
+    D(bug("[CMI8738]: %s()\n", __PRETTY_FUNCTION__));
 
     address = (void *) AllocVec(size + boundary, MEMF_PUBLIC | MEMF_CLEAR);
 
@@ -644,7 +644,7 @@ void *pci_alloc_consistent(size_t size, APTR *NonAlignedAddress, unsigned int bo
 
 void pci_free_consistent(void* addr)
 {
-    bug("[CMI8738]: %s()\n", __PRETTY_FUNCTION__);
+    D(bug("[CMI8738]: %s()\n", __PRETTY_FUNCTION__));
 
     FreeVec(addr);
 }
@@ -653,7 +653,7 @@ static ULONG ResetHandler(struct ExceptionContext *ctx, struct ExecBase *pExecBa
 {
     struct PCIDevice *dev = card->pci_dev;
 
-    bug("[CMI8738]: %s()\n", __PRETTY_FUNCTION__);
+    D(bug("[CMI8738]: %s()\n", __PRETTY_FUNCTION__));
 
     ClearMask(dev, card, CMPCI_REG_INTR_CTRL, CMPCI_REG_CH0_INTR_ENABLE);
     ClearMask(dev, card, CMPCI_REG_FUNC_0, CMPCI_REG_CH0_ENABLE);
@@ -666,7 +666,7 @@ void AddResetHandler(struct CMI8738_DATA *card)
 {
     static struct Interrupt interrupt;
 
-    bug("[CMI8738]: %s()\n", __PRETTY_FUNCTION__);
+    D(bug("[CMI8738]: %s()\n", __PRETTY_FUNCTION__));
 
     interrupt.is_Code = (void (*)())ResetHandler;
     interrupt.is_Data = (APTR) card;
