@@ -60,7 +60,7 @@ DriverInit( struct DriverBase* ahisubbase )
     struct List		foundCards;
     struct Node         *devTmp;
 
-    bug("[SB128]: %s()\n", __PRETTY_FUNCTION__);
+    D(bug("[SB128]: %s()\n", __PRETTY_FUNCTION__));
 
   SB128Base->cards_found = 0;
   SB128Base->driverdatas = 0;
@@ -110,7 +110,7 @@ DriverInit( struct DriverBase* ahisubbase )
     vendor_device_list[3].device = 0x8938;
     vendor_device_list_size++;
 
-    bug("vendor_device_list_size = %ld\n", vendor_device_list_size);    
+    D(bug("vendor_device_list_size = %ld\n", vendor_device_list_size));
 
     SB128Base->cards_found = 0;
     dev = NULL;
@@ -121,7 +121,7 @@ DriverInit( struct DriverBase* ahisubbase )
         
         if (dev != NULL)
         {
-            bug("[SB128] %s: Found SB128 #%d [%4x:%4x] pci obj @ 0x%p\n", __PRETTY_FUNCTION__, i, vendor_device_list[i].vendor, vendor_device_list[i].device, dev);
+            D(bug("[SB128] %s: Found SB128 #%d [%4x:%4x] pci obj @ 0x%p\n", __PRETTY_FUNCTION__, i, vendor_device_list[i].vendor, vendor_device_list[i].device, dev));
             ++SB128Base->cards_found;
 
             devTmp = AllocVec(sizeof(struct Node), MEMF_CLEAR);
@@ -189,14 +189,14 @@ DriverInit( struct DriverBase* ahisubbase )
         Remove(devTmp);
 
         dev = devTmp->ln_Name;
-        bug("[SB128] %s: Prepairing card #%d pci obj @ 0x%p\n", __PRETTY_FUNCTION__, card_no, dev);
+        D(bug("[SB128] %s: Prepairing card #%d pci obj @ 0x%p\n", __PRETTY_FUNCTION__, card_no, dev));
         SB128Base->driverdatas[ card_no ] = AllocDriverData( dev, AHIsubBase );
         
         FreeVec(devTmp);
         ++card_no;
     }
 
-    bug("[SB128] %s: Done.\n", __PRETTY_FUNCTION__);
+    D(bug("[SB128] %s: Done.\n", __PRETTY_FUNCTION__));
 
 
   return TRUE;

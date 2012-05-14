@@ -709,7 +709,7 @@ AllocDriverData( struct PCIDevice *    dev,
   UWORD command_word;
   int i;
 
-    bug("[SB128]: %s()\n", __PRETTY_FUNCTION__);
+    D(bug("[SB128]: %s()\n", __PRETTY_FUNCTION__));
 
   // FIXME: This should be non-cachable, DMA-able memory
   card = AllocVec( sizeof( *card ), MEMF_PUBLIC | MEMF_CLEAR );
@@ -766,7 +766,7 @@ AllocDriverData( struct PCIDevice *    dev,
   card->chiprev = inb_config(PCI_REVISION_ID, dev);
   card->model   = inw_config(PCI_SUBSYSTEM_ID, dev);
 
-    bug("[CMI8738]: %s: iobase = 0x%p, len = %d\n", __PRETTY_FUNCTION__, card->iobase, card->length);
+    D(bug("[CMI8738]: %s: iobase = 0x%p, len = %d\n", __PRETTY_FUNCTION__, card->iobase, card->length));
 
   /* Initialise hardware access Semaphore */
   InitSemaphore(&card->sb128_semaphore);
@@ -1206,7 +1206,7 @@ void *pci_alloc_consistent(size_t size, APTR *NonAlignedAddress, unsigned int bo
     void* address;
     unsigned long a;
 
-    bug("[CMI8738]: %s()\n", __PRETTY_FUNCTION__);
+    D(bug("[CMI8738]: %s()\n", __PRETTY_FUNCTION__));
 
     address = (void *) AllocVec(size + boundary, MEMF_PUBLIC | MEMF_CLEAR);
 
@@ -1228,7 +1228,7 @@ void *pci_alloc_consistent(size_t size, APTR *NonAlignedAddress, unsigned int bo
 
 void pci_free_consistent(void* addr)
 {
-    bug("[CMI8738]: %s()\n", __PRETTY_FUNCTION__);
+    D(bug("[CMI8738]: %s()\n", __PRETTY_FUNCTION__));
 
     FreeVec(addr);
 }
