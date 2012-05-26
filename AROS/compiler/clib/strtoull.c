@@ -146,7 +146,7 @@
             if (isdigit(digit))
                 digit -= '0';
             else if (isalpha(digit))
-                digit -= isupper(c) ? 'A' - 10 : 'a' - 10;
+                digit -= isupper(digit) ? 'A' - 10 : 'a' - 10;
             else
                 break;
 
