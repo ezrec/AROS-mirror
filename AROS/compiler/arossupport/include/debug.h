@@ -5,6 +5,8 @@
     Debugging macros.
     This include file can be included several times!
 */
+#ifndef AROS_DEBUG_H
+#define AROS_DEBUG_H
 
 #ifndef CLIB_AROSSUPPORT_PROTOS_H
 #   include <proto/arossupport.h>
@@ -356,9 +358,6 @@
 #else
 #define CHECK_STACK
 #endif
-
-#ifndef AROS_DEBUG_H
-#define AROS_DEBUG_H
 
 #define bug	kprintf
 #define rbug(main,sub,lvl,fmt,args...) \
