@@ -265,7 +265,7 @@ GLOB_MKDIRS += %(dirs)
 #   the same value as cflags will be used
 # - targetdir: the directory to put the .o file and the .d file. By default
 #   it is put in the same directory as the .c file
-%define rule_compile basename=/A cflags=$(CFLAGS) dflags= srcdir=. targetdir= compiler=target nix=no
+%define rule_compile basename=/A cflags=$(CFLAGS) dflags= targetdir= compiler=target nix=no
 
 ifeq (%(targetdir),)
   TMP_TARGETBASE := %(basename)
@@ -306,7 +306,7 @@ ifeq (%(nix),yes)
 else
   $(TMP_TARGETBASE).o : CFLAGS := %(cflags)
 endif
-$(TMP_TARGETBASE).o : %(srcdir)/%(basename).c
+$(TMP_TARGETBASE).o : %(basename).c
 	%compile_q cmd=$(TMP_CMD) iquote=$(TMP_IQUOTE) iquote_end=$(TMP_IQUOTE_END)
 
 ifeq (%(dflags),)
@@ -1134,7 +1134,7 @@ GLOB_MKDIRS += $(BD_OBJDIR) $(BD_TARGETDIR)
 # Build programs, for every C file an executable will be built with the same
 # name as the C file
 %define build_progs mmake=/A files=/A nix=no \
-    objdir=$(GENDIR)/$(CURDIR) srcdir=. targetdir=$(AROSDIR)/$(CURDIR) \
+    objdir=$(GENDIR)/$(CURDIR) targetdir=$(AROSDIR)/$(CURDIR) \
     cflags=$(CFLAGS) dflags=$(BD_CFLAGS) ldflags=$(LDFLAGS) \
     uselibs= usehostlibs= usestartup=yes detach=no
 
@@ -1159,7 +1159,7 @@ BD_LDFLAGS   := %(ldflags)
 %(mmake) : $(BD_EXES)
 
 ifneq ($(filter $(TARGET),%(mmake) %(mmake)-quick),)
-%rule_compile basename=% srcdir=%(srcdir) targetdir=$(BD_OBJDIR) nix=%(nix) \
+%rule_compile basename=% targetdir=$(BD_OBJDIR) nix=%(nix) \
     cflags=$(BD_CFLAGS) dflags=$(BD_DFLAGS)
 
 %rule_link_progs progs=$(BD_FILES) nix=%(nix) \
