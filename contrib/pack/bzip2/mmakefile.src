@@ -1,4 +1,4 @@
-# Copyright © 2009, The AROS Development Team. All rights reserved.
+# Copyright © 2009, 2012, The AROS Development Team. All rights reserved.
 # $Id$
 
 -include $(TOP)/config/make.cfg
@@ -14,7 +14,7 @@ MAN_DIR := $(AROS_DEVELOPMENT)/man/man1
 
 #MM- contrib-pack       : contrib-pack-bzip2
 #MM- contrib-pack-bzip2 : \
-#MM-    linklibs-bz2 \
+#MM-    workbench-libs-bz2 \
 #MM     pack-bzip2 \
 #MM     pack-bzip2-install-sh \
 #MM     pack-bzip2-install-aliases \
