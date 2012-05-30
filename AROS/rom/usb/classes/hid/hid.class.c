@@ -145,6 +145,7 @@ struct NepClassHid * GM_UNIQUENAME(usbAttemptInterfaceBinding)(struct NepHidBase
                     //IFA_SubClass, &subclass,
                     //IFA_Protocol, &proto,
                     TAG_DONE);
+
         CloseLibrary(ps);
 
         if(ifclass == HID_CLASSCODE)
@@ -1173,6 +1174,7 @@ struct NepClassHid * GM_UNIQUENAME(nAllocHid)(void)
                                 }
                             }
 #endif
+                            nQuirkPS3Controller(nch);
 
                             if(nReadReports(nch))
                             {
@@ -1206,6 +1208,7 @@ struct NepClassHid * GM_UNIQUENAME(nAllocHid)(void)
                             } else {
                                 psdAddErrorMsg(RETURN_FAIL, (STRPTR) GM_UNIQUENAME(libname), "Error parsing report descriptors!");
                             }
+
                             psdFreePipe(nch->nch_EPInPipe);
                             psdFreePipe(nch->nch_EP0Pipe);
                         }
@@ -1942,6 +1945,32 @@ BOOL nDetectWacom(struct NepClassHid *nch)
     }
 
     return(FALSE);
+}
+/* \\\ */
+
+/* /// "nQuirkPS3Controller()" */
+void nQuirkPS3Controller(struct NepClassHid *nch)
+{
+    LONG ioerr;
+    UBYTE buf[18];
+
+    IPTR vendid;
+    IPTR prodid;
+
+    psdGetAttrs(PGA_DEVICE, nch->nch_Device,
+                DA_VendorID, &vendid,
+                DA_ProductID, &prodid,
+                TAG_END);
+
+    if(vendid == 0x054c && prodid == 0x0268) {
+        psdPipeSetup(nch->nch_EP0Pipe, URTF_IN|URTF_CLASS|URTF_INTERFACE, UHR_GET_REPORT, 0x03f2, nch->nch_IfNum);
+        ioerr = psdDoPipe(nch->nch_EP0Pipe, buf, sizeof(buf));
+        if(ioerr) {
+            psdAddErrorMsg(RETURN_FAIL, (STRPTR) GM_UNIQUENAME(libname), "Unable to add PS3 controller support!");
+        }else{
+            psdAddErrorMsg(RETURN_OK, GM_UNIQUENAME(libname), "Adding PS3 controller support.");
+        }
+    }
 }
 /* \\\ */
 
