@@ -1463,10 +1463,17 @@ static BOOL ReadServer(struct Server *server, BPTR file, LONG size)
         SetServerPass(server, (STRPTR)control_args[ARG_PASSWORD]);
     }
 
-    FreeArgs(control_rdargs);
-    FreeArgs(mount_rdargs);
-    FreeDosObject(DOS_RDARGS, control_rdargs);
-    FreeDosObject(DOS_RDARGS, mount_rdargs);
+    if (control_rdargs)
+    {
+        FreeArgs(control_rdargs);
+        FreeDosObject(DOS_RDARGS, control_rdargs);
+    }
+
+    if (mount_rdargs)
+    {
+        FreeArgs(mount_rdargs);
+        FreeDosObject(DOS_RDARGS, mount_rdargs);
+    }
 
     return success;
 }
