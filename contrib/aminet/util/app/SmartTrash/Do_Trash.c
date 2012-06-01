@@ -76,7 +76,7 @@ BPTR FigureTrash(char *dest) {
     if (lk=AttemptND(dest)) return lk;
   }
 
-  return NULL;
+  return BNULL;
 } // FigureTrash
 
 
@@ -88,13 +88,13 @@ BPTR AttemptCD(char *dir) {
   if (lk=Lock(dir,SHARED_LOCK)) {
     Examine(lk,&fib);
     if (fib.fib_DirEntryType>=0) {
-      DEBUGMSG("AttemptCD '%s' OK\n",(ULONG)dir);
+      DEBUGMSG("AttemptCD '%s' OK\n",(APTR)dir);
       return lk;
     }
     UnLock(lk);
   }
-  DEBUGMSG("AttemptCD '%s' FAIL\n",(ULONG)dir);
-  return NULL;
+  DEBUGMSG("AttemptCD '%s' FAIL\n",(APTR)dir);
+  return BNULL;
 } // AttemptCD
 
 
@@ -108,11 +108,11 @@ BPTR AttemptND(char *dir) {
       PutDiskObject( dir, dobj );
       FreeDiskObject( dobj );
     }
-    DEBUGMSG("AttemptND '%s' OK\n",(ULONG)dir);
+    DEBUGMSG("AttemptND '%s' OK\n",(APTR)dir);
     return lk;
   } // if CreateDir
-  DEBUGMSG("AttemptND '%s' FAIL\n",(ULONG)dir);
-  return NULL;
+  DEBUGMSG("AttemptND '%s' FAIL\n",(APTR)dir);
+  return BNULL;
 } // AttemptND
 
 

@@ -103,13 +103,13 @@ char AppMenuItem[BUFSIZE];
 ULONG apps=0;
 
 #ifdef DEBUG
-BPTR DebugIO=NULL;
+BPTR DebugIO=BNULL;
 #endif
 
 
 //************************ MAIN
 
-void main(int argc, char **argv) {
+int main(int argc, char **argv) {
   struct DiskObject   *dobj;
   struct MsgPort      *myport;
   struct AppMessage   *appmsg;
@@ -119,18 +119,20 @@ void main(int argc, char **argv) {
   BOOL quit;
   ULONG x;
 
+  // unused
+  (void)VersTag;
 
   // Get the right version of the icon library, initialise IconBase
   if (IconBase = OpenLibrary("icon.library",37)) {
     // Get the right version of the Workbench library
     if (WorkbenchBase=OpenLibrary("workbench.library",37)) {
-      if (IntuitionBase=OpenLibrary("intuition.library", 37)) {
+      if (IntuitionBase=(APTR)OpenLibrary("intuition.library", 37)) {
 
         if (dobj=GetAppIcon(argc, argv)) {
           // The CreateMsgPort function is v37 and later
           if (myport=CreateMsgPort()) {
             // Put the appicon and menu up on the Workbench window
-            if (apps<2) (appicon=AddAppIconA(0L,0L,AppIconName,myport,NULL,dobj,NULL));
+            if (apps<2) (appicon=AddAppIconA(0L,0L,AppIconName,myport,BNULL,dobj,NULL));
             if (apps>0) (appmenu=AddAppMenuItemA(0L,0L,AppMenuItem,myport,NULL));
 
             if ( (appicon) || (appmenu) ) {
@@ -162,7 +164,7 @@ void main(int argc, char **argv) {
           } // if CreateMsgPort
           FreeDiskObject(dobj);
         } // if GetAppIcon
-        CloseLibrary(IntuitionBase);
+        CloseLibrary((struct Library *)IntuitionBase);
       } // if Open Intuition Library
       CloseLibrary(WorkbenchBase);
     } // if Open Workbench Library
@@ -171,6 +173,8 @@ void main(int argc, char **argv) {
 #ifdef DEBUG
   if (DebugIO) Close(DebugIO);
 #endif
+
+  return 0;
 } // main
 
 
@@ -178,11 +182,11 @@ void main(int argc, char **argv) {
 
 
 struct DiskObject *GetAppIcon(int argc, char **argv) {
-  BPTR oldp;
+  BPTR oldp=BNULL;
   char AppIconFile[BUFSIZE];
   LONG AppIconXPos=NO_ICON_POSITION;
   LONG AppIconYPos=NO_ICON_POSITION;
-  struct DiskObject   *dobj;
+  struct DiskObject   *dobj=NULL;
 
   strcpy(TrashPath  ,DEFPATH);
   strcpy(AppIconName,DEFICON);
@@ -192,7 +196,7 @@ struct DiskObject *GetAppIcon(int argc, char **argv) {
 
   if (argc==0) { // from Workbench
     struct WBStartup *wbs=(struct WBStartup *)argv;
-    char **toolArray;
+    UBYTE **toolArray;
     char *value;
 
     // move to program dir, and try to get the icon
@@ -219,18 +223,18 @@ struct DiskObject *GetAppIcon(int argc, char **argv) {
 
        if (value=FindToolType(toolArray,"ICONNAME")) {
          strncpy(AppIconName,value,BUFSIZE);
-         DEBUGMSG("ToolType ICONNAME=%s\n",(ULONG)&AppIconName);
+         DEBUGMSG("ToolType ICONNAME=%s\n",(APTR)&AppIconName);
        } // if find NAME
 
        if (value=FindToolType(toolArray,"ICONFILE")) {
          strncpy(AppIconFile,value,BUFSIZE);
-         DEBUGMSG("ToolType ICONFILE=%s\n",(ULONG)&AppIconFile);
+         DEBUGMSG("ToolType ICONFILE=%s\n",(APTR)&AppIconFile);
        } // if find ICON
 
        if (value=FindToolType(toolArray,"MENUITEM")) {
          strncpy(AppMenuItem,value,BUFSIZE);
          if (apps==0) apps=1;
-         DEBUGMSG("ToolType MENUITEM=%s\n",(ULONG)&AppMenuItem);
+         DEBUGMSG("ToolType MENUITEM=%s\n",(APTR)&AppMenuItem);
        } // if find MENUITEM
 
        if (value=FindToolType(toolArray,"MENUONLY")) {
@@ -244,7 +248,7 @@ struct DiskObject *GetAppIcon(int argc, char **argv) {
 
        if (value=FindToolType(toolArray,"TRASHPATH")) {
          strncpy(TrashPath,value,BUFSIZE);
-         DEBUGMSG("ToolType TRASHPATH=%s\n",(ULONG)&TrashPath);
+         DEBUGMSG("ToolType TRASHPATH=%s\n",(APTR)&TrashPath);
        } // if find TRASHPATH
     } // if GetDiskObject
   } // if from workbench
@@ -298,33 +302,33 @@ BOOL Do_Trash(struct WBArg *WBArg) {
   BPTR oldp, parent, trash;
   BOOL retVal=FALSE;
 
-  if (NULL==WBArg->wa_Lock) {
+  if (BNULL==WBArg->wa_Lock) {
     DEBUGMSG("No lock - an appicon?\n",NULL);
     return FALSE;
   }
 
   name=WBArg->wa_Name;
   if (0==name[0]) {
-    if (NULL==Examine(WBArg->wa_Lock,&fib)) {
+    if (0==Examine(WBArg->wa_Lock,&fib)) {
       DEBUGMSG("Hmmm... a LOCK, but no name, and cant EXAMINE()it?\n",NULL);
       return FALSE;
     }
     parent=ParentDir(WBArg->wa_Lock);
-    if (NULL==parent) {
-      DEBUGMSG("Object is a Disk named '%s' - cannot move.\n",(ULONG)&fib.fib_FileName);
+    if (BNULL==parent) {
+      DEBUGMSG("Object is a Disk named '%s' - cannot move.\n",(APTR)&fib.fib_FileName);
       return FALSE;
     }
     name=(char *)&fib.fib_FileName;
-    DEBUGMSG("Name of DIR  is '%s'.\n",(ULONG)name);
+    DEBUGMSG("Name of DIR  is '%s'.\n",(APTR)name);
   } else {
     parent=DupLock(WBArg->wa_Lock);
-    DEBUGMSG("Name of FILE is '%s'.\n",(ULONG)name);
+    DEBUGMSG("Name of FILE is '%s'.\n",(APTR)name);
   }
 
   oldp=CurrentDir(parent);
 
   trash=FigureTrash(buffer); // this must come AFTER the CurrentDir
-  if (NULL==trash) {
+  if (BNULL==trash) {
     DEBUGMSG("Eeek!  Cant access any named trashcans - aborting!\n",NULL);
     UnLock(parent);
     CurrentDir(oldp);
@@ -332,10 +336,10 @@ BOOL Do_Trash(struct WBArg *WBArg) {
   }
 
   FindSlot(buffer, name, trash);
-  DEBUGMSG("Target name of Object is '%s'.\n",(ULONG)&buffer);
+  DEBUGMSG("Target name of Object is '%s'.\n",(APTR)&buffer);
 
   if (dobj=GetDiskObject(name)) {
-    if (NULL==DeleteDiskObject(name)) {
+    if (0==DeleteDiskObject(name)) {
       DEBUGMSG("Eeek!  Cant delete icon file.\n",NULL);
     } else {
       if ( (FALSE==ExistsFile(name)) || (Rename(name,buffer)) ) {
