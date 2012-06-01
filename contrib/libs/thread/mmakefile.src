@@ -27,7 +27,6 @@ FUNCS := \
 
 %build_module mmake=workbench-libs-thread \
     modname=thread modtype=library \
-    files="$(FILES) $(FUNCS)" \
-    uselibs="rom"
+    files="$(FILES) $(FUNCS)"
 
 %common

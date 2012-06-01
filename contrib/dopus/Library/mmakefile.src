@@ -30,5 +30,4 @@ USER_CFLAGS += -Wno-error
 
 %build_module mmake=dopus-library \
     modname=dopus modtype=library prefix=$(DOPUSDIR) \
-    files="dopus_init $(FILES)" \
-    uselibs=rom
+    files="dopus_init $(FILES)"

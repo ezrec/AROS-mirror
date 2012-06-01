@@ -99,7 +99,7 @@ FILES := \
 
 %build_prog mmake=contrib-scout-bin \
 	progname=$(EXE) targetdir=$(EXEDIR) \
-	files=$(FILES) uselibs="arossupport amiga m mui tblib rom" usestartup=no
+	files=$(FILES) uselibs="arossupport mui tblib" usestartup=no
 
 
 #MM

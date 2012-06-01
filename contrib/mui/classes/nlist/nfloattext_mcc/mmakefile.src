@@ -11,7 +11,7 @@ FILES := NFloattext Debug
 
 %build_module_simple mmake=contrib-zune-classes-nfloattext-class \
   modname=NFloattext modtype=mcc moduledir=$(CONTRIBDIR)/Zune/MCC_NList/Classes/Zune \
-  files="library $(FILES)" uselibs="amiga mui rom m"
+  files="library $(FILES)" uselibs="mui"
 
 
 #MM includes-copy

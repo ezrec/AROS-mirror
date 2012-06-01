@@ -11,7 +11,7 @@ FILES := library NListtree icon locale
 
 %build_module_simple mmake=contrib-zune-classes-nlisttree-mcp \
   modname=NListtree modtype=mcp moduledir=$(CONTRIBDIR)/Zune/MCC_NList/Classes/Zune \
-  files=$(FILES) uselibs="amiga mui rom m"
+  files=$(FILES) uselibs="mui"
 
 TARGETDIR := $(AROS_CONTRIB)/Zune/MCC_NList/Locale/Catalogs
 

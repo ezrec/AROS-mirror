@@ -216,6 +216,6 @@ FILES := libtag \
 %build_module_simple mmake=bgui-library \
 	modname=bgui modtype=library \
 	moduledir=$(CONTRIBDIR)/BGUI/Libs \
-	files="$(FILES)" uselibs="amiga rom m"
+	files="$(FILES)"
 
 %common

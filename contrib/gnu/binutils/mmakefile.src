@@ -4,7 +4,7 @@
 -include $(TOP)/config/make.cfg
 
 #MM- contrib-gnu : contrib-gnu-binutils
-#MM- contrib-gnu-binutils : tools-crosstools development-binutils
+#MM- contrib-gnu-binutils : crosstools development-binutils
 
 EXTRAOPTS := --with-sysroot=/Development --with-build-sysroot=$(AROS_DEVELOPMENT)
 

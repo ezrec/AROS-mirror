@@ -47,4 +47,4 @@ USER_CFLAGS += -Wno-uninitialized -Wno-parentheses $(ARRAY_BOUNDS_CFLAGS)
 
 %build_module mmake=xadmaster-library \
   modname=xadmaster modtype=library \
-  files="xadmaster_init $(FILES) clients" uselibs=rom
+  files="xadmaster_init $(FILES) clients"

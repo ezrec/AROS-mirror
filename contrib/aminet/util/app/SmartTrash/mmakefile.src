@@ -6,6 +6,8 @@ include $(TOP)/config/make.cfg
 FILES   := SmartTrash
 EXEDIR  := $(AROSDIR)/WBStartup
 
+USER_CFLAGS := -Wno-parentheses
+
 #MM  aminet-util-app-smarttrash : aminet-util-app-smarttrash-icon includes linklibs \
 #MM  aminet-util-app-smarttrash-catalogs
 
@@ -13,7 +15,7 @@ EXEDIR  := $(AROSDIR)/WBStartup
 
 %build_prog mmake=aminet-util-app-smarttrash \
     progname=SmartTrash targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="mui arossupport amiga arosc"
+    files=$(FILES) uselibs="mui arossupport"
 
 #MM
 aminet-util-app-smarttrash-icon : $(EXEDIR)/SmartTrash.info

@@ -15,7 +15,7 @@ FILES := library \
 
 %build_module_simple mmake=contrib-zune-classes-nlisttree-class \
   modname=NListtree modtype=mcc moduledir=$(CONTRIBDIR)/Zune/MCC_NList/Classes/Zune \
-  files=$(FILES) uselibs="amiga mui rom m"
+  files=$(FILES) uselibs="mui"
 
 
 #MM includes-copy

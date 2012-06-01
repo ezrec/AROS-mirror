@@ -47,6 +47,6 @@ USER_LDFLAGS := -noarosc
 %build_prog mmake=aminet-disk-moni-filex \
     progname=FileX targetdir=$(EXEDIR) \
     usestartup=no \
-    files=$(FILES) uselibs="reqtoolsstubs rom"
+    files=$(FILES) uselibs="reqtoolsstubs"
 
 %common

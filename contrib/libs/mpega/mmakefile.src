@@ -8,7 +8,7 @@ FILES := library wrap_mpega support filter resample tag crc fixed bit \
 USER_CFLAGS := -DFPM_INTEL -DOPT_ACCURACY -DBUILD_AROS -DNDEBUG -Wno-parentheses
 
 %build_module mmake=contrib-libs-mpega \
- modname="mpega" modtype=library files="$(FILES)" uselibs="rom"
+ modname="mpega" modtype=library files="$(FILES)"
 
 #MM includes-copy
 INCLUDE_FILES := $(call WILDCARD, include/*.h)

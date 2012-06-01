@@ -105,7 +105,7 @@ USER_CFLAGS += $(ENUM_COMPARE_CFLAGS) $(UNUSED_BUT_SET_VARIABLE_CFLAGS)
 #%build_module mmake=contrib-gfx-libs-cairo \
 #    modname=cairo modtype=library \
 #    files="$(FILES)" \
-#    uselibs="freetype2 amiga rom m pixman png z "
+#    uselibs="freetype2 pixman png z "
 
 %build_linklib mmake=contrib-gfx-libs-cairo \
     libname=cairo files="$(FILES)" cxxfiles=""

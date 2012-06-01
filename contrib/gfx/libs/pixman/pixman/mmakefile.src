@@ -41,7 +41,7 @@ USER_CFLAGS := -DHAVE_CONFIG_H -DPIXMAN_NO_TLS
 
 %build_module mmake=contrib-gfx-libs-pixman \
     modname=pixman modtype=library \
-    files="$(FILES)" uselibs="amiga rom m"
+    files="$(FILES)"
 
 INCLUDE_FILES := pixman.h pixman-version.h
 %copy_includes mmake=includes-copy path=pixman-1

@@ -14,5 +14,5 @@ FILES := library \
 %build_module_simple mmake=contrib-zune-classes-toolbar-mcp \
   modname=Toolbar modtype=mcp moduledir=$(CONTRIBDIR)/Zune/MCC_Toolbar/Classes/Zune \
   files="$(FILES)" \
-  uselibs="amiga mui rom m"
+  uselibs="mui"
 
