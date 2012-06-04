@@ -1,5 +1,5 @@
 /*
-    Copyright  2010, The AROS Development Team. All rights reserved.
+    Copyright © 2010-2011, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -123,11 +123,11 @@ Object *PTEditor__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
             Child, (IPTR)(previewImage = (Object *)PPreviewObject,
                 GroupFrame,
             End),
-            Child, ColGroup(2),
+            Child, (IPTR)ColGroup(2),
                 GroupFrame,
                 Child, (IPTR)Label2(__(MSG_TYPE)),
                 Child, (IPTR)(typeCycle = (Object *)CycleObject,
-                    MUIA_Cycle_Entries, type_entries,
+                    MUIA_Cycle_Entries, (IPTR)type_entries,
                     MUIA_CycleChain, 1,
                 End),
                 Child, (IPTR)Label2(__(MSG_FILENAME)),
@@ -138,7 +138,7 @@ Object *PTEditor__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
                         StringFrame,
                         MUIA_CycleChain, 1,
                     End),
-                    MUIA_Popstring_Button, (IPTR)PopButton(MUII_PopUp),
+                    MUIA_Popstring_Button, (IPTR)PopButton(MUII_PopFile),
                 End,
                 Child, (IPTR)Label2(__(MSG_ALPHA)),
                 Child, (IPTR)(alphaSlider = (Object *)SliderObject,
@@ -150,8 +150,8 @@ Object *PTEditor__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
                 Child, (IPTR)(hotspotButton = MUI_NewObject(MUIC_Text,
                     ButtonFrame,
                     MUIA_Font, MUIV_Font_Button,
-                    MUIA_Text_Contents, __(MSG_SETVIEW),
-                    MUIA_Text_PreParse, "\33c",
+                    MUIA_Text_Contents, (IPTR)__(MSG_SETVIEW),
+                    MUIA_Text_PreParse, (IPTR)"\33c",
                     MUIA_InputMode    , MUIV_InputMode_Toggle,
                     MUIA_Background   , MUII_ButtonBack,
                     MUIA_CycleChain   , 1,
