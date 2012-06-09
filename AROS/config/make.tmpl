@@ -1134,7 +1134,7 @@ GLOB_MKDIRS += $(BD_OBJDIR) $(BD_TARGETDIR)
 # Build programs, for every C file an executable will be built with the same
 # name as the C file
 %define build_progs mmake=/A files=/A nix=no \
-    objdir=$(GENDIR)/$(CURDIR) targetdir=$(AROSDIR)/$(CURDIR) \
+    objdir=$(GENDIR)/$(CURDIR) srcdir= targetdir=$(AROSDIR)/$(CURDIR) \
     cflags=$(CFLAGS) dflags=$(BD_CFLAGS) ldflags=$(LDFLAGS) \
     uselibs= usehostlibs= usestartup=yes detach=no
 
@@ -1144,9 +1144,10 @@ BD_OBJDIR    := %(objdir)
 BD_TARGETDIR := %(targetdir)
 
 BD_FILES     := %(files)
-BD_OBJS      := $(addsuffix .o,$(addprefix $(BD_OBJDIR)/,$(BD_FILES)))
-BD_DEPS      := $(addsuffix .d,$(addprefix $(BD_OBJDIR)/,$(BD_FILES)))
-BD_EXES      := $(addprefix $(BD_TARGETDIR)/,$(BD_FILES))
+BD_SRCDIRS := $(SRCDIR)/$(CURDIR) $(dir %(files))
+BD_OBJS      := $(addsuffix .o,$(addprefix $(BD_OBJDIR)/,$(notdir $(BD_FILES))))
+BD_DEPS      := $(addsuffix .d,$(addprefix $(BD_OBJDIR)/,$(notdir $(BD_FILES))))
+BD_EXES      := $(addprefix $(BD_TARGETDIR)/,$(notdir $(BD_FILES)))
 
 BD_CFLAGS    := %(cflags)
 BD_DFLAGS    := %(dflags)
@@ -1159,10 +1160,15 @@ BD_LDFLAGS   := %(ldflags)
 %(mmake) : $(BD_EXES)
 
 ifneq ($(filter $(TARGET),%(mmake) %(mmake)-quick),)
-%rule_compile basename=% targetdir=$(BD_OBJDIR) nix=%(nix) \
+BD_ARCHOBJS   := $(wildcard %(objdir)/arch/*.o)
+BD_ARCHFILES  := $(basename $(notdir $(BD_ARCHOBJS)))
+BD_NARCHFILES := $(filter-out $(BD_ARCHFILES),%(files))
+
+%rule_compile_multi \
+    basenames="$(BD_NARCHFILES)" targetdir="$(BD_OBJDIR)" \
     cflags=$(BD_CFLAGS) dflags=$(BD_DFLAGS)
 
-%rule_link_progs progs=$(BD_FILES) nix=%(nix) \
+%rule_link_progs progs="$(notdir $(BD_EXES))" nix=%(nix) \
     targetdir=$(BD_TARGETDIR) objdir=$(BD_OBJDIR) \
     ldflags=$(BD_LDFLAGS) \
     uselibs="%(uselibs)" usehostlibs="%(usehostlibs)" \
@@ -1172,7 +1178,7 @@ endif
 
 %include_deps depstargets="%(mmake) %(mmake)-quick" deps=$(BD_DEPS)
 
-$(addprefix $(BD_TARGETDIR)/,$(BD_FILES)) : | $(BD_TARGETDIR)
+$(BD_EXES) : | $(BD_TARGETDIR)
 $(BD_DEPS) $(BD_OBJS) : | $(BD_OBJDIR)
 GLOB_MKDIRS += $(BD_TARGETDIR) $(BD_OBJDIR)
 
