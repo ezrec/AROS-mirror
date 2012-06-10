@@ -1,0 +1,11 @@
+# Copyright 2009-2010, The AROS Development Team. All rights reserved.
+# $Id: mmakefile.src 32720 2010-02-23 18:23:08Z neil $
+
+-include $(TOP)/config/make.cfg
+
+#MM- contrib-multimedia : development-libmikmod
+
+%fetch_and_build_gnu_development package=libmikmod version=3.2.0 patch=yes \
+    package_repo=http://mikmod.shlomifish.org/files/ suffixes="tar.gz"
+
+%create_patch mmake=libmikmod-patch archive=libmikmod-3.2.0 suffixes="tar.gz" destination=$(SRCDIR)/$(CURDIR)
