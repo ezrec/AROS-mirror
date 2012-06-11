@@ -1,0 +1,14 @@
+#   $Id$
+#
+#   Makefile for AROS Test of Objective-C
+
+include $(TOP)/config/make.cfg
+
+# #MM- test: test-objc
+#MM- test-objc: test-objc-simple
+
+%build_prog progname=simple mmake=test-objc-simple \
+        files="simple food" uselibs=objc \
+        targetdir=$(AROS_TESTS)/objc
+
+%common

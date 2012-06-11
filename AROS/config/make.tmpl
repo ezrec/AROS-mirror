@@ -309,6 +309,8 @@ else
 endif
 $(TMP_TARGETBASE).o : %(basename).c
 	%compile_q cmd=$(TMP_CMD) iquote=$(TMP_IQUOTE) iquote_end=$(TMP_IQUOTE_END)
+$(TMP_TARGETBASE).o : %(basename).m
+	%compile_q cmd=$(TMP_CMD) iquote=$(TMP_IQUOTE) iquote_end=$(TMP_IQUOTE_END)
 
 ifeq (%(dflags),)
   ifeq (%(nix),yes)
@@ -324,6 +326,8 @@ else
   endif
 endif
 $(TMP_TARGETBASE).d : %(basename).c
+	%mkdepend_q cc=$(TMP_CMD) flags=$(TMP_DFLAGS)
+$(TMP_TARGETBASE).d : %(basename).m
 	%mkdepend_q cc=$(TMP_CMD) flags=$(TMP_DFLAGS)
 %end
 #------------------------------------------------------------------------------
