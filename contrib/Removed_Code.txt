@@ -6,6 +6,10 @@ removal if you want.
 
 ----------------------------------------------------------------------------
 
+6 Jun 2012: contrib/pack/bzip2
+
+  Removed because we build it from workbench/libs/bz2.
+
 15 Jan 2011: contrib/aminet/dev/c
 
   Deleted because building it was disabled about a year ago. There was only
