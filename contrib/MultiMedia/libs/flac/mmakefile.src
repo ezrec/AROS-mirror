@@ -1,0 +1,15 @@
+# Copyright 2009-2010, The AROS Development Team. All rights reserved.
+# $Id: mmakefile.src 45000 2012-06-10 23:44:03Z NicJA $
+
+-include $(TOP)/config/make.cfg
+
+#MM- contrib-multimedia : development-flac
+#MM- development-flac : tools-crosstools
+
+TARGET_CC := $(CROSSTOOLSDIR)/$(AROS_TARGET_CPU)-aros-gcc
+
+EXTRAOPTS := --disable-doxygen-docs --disable-xmms-plugin --disable-valgrind-testing --disable-exhaustive-tests --disable-thorough-tests 
+
+%fetch_and_build_gnu_development package=flac version=1.2.1 patch=yes \
+    package_repo=http://downloads.xiph.org/releases/flac/ suffixes="tar.gz" \
+    extraoptions=$(EXTRAOPTS)
