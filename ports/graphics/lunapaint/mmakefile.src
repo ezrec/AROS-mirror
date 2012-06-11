@@ -6,7 +6,7 @@ include $(TOP)/config/make.cfg
 
 #MM- ports-graphics-i386 : ports-graphics-lunapaint
 
-#MM  ports-graphics-lunapaint : includes linklibs workbench-libs-freetype-linklib ports-graphics-lunapaint-fetch \
+#MM  ports-graphics-lunapaint : includes linklibs workbench-libs-freetype-linklib tools-crosstools ports-graphics-lunapaint-fetch \
 #MM  ports-graphics-lunapaint-data ports-graphics-lunapaint-drawericon \
 #MM  ports-graphics-lunapaint-cpy \
 #MM  ports-graphics-lunapaint-catalogs \
@@ -48,6 +48,8 @@ FILES := \
 	src/core/drawtools \
 	src/core/canvas \
 	src/core/tools
+
+TARGET_CC := $(CROSSTOOLSDIR)/$(AROS_TARGET_CPU)-aros-g++
 
 %build_prog mmake=ports-graphics-lunapaint progname=Lunapaint \
     srcdir=$(PORTSDIR)/lunapaint/$(ARCHBASE)/ \
