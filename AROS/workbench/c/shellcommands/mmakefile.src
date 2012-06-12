@@ -23,7 +23,6 @@ FILES	:= \
     Getenv \
     If \
     Lab \
-    NewCLI \
     NewShell \
     Path \
     PathPart \
@@ -50,17 +49,17 @@ USER_CFLAGS += $(PARANOIA_CFLAGS)
 
 #MM- workbench-c : workbench-c-shellcommands
 #MM- workbench-c-quick : workbench-c-shellcommands-quick
-#MM- workbench-c-shellcommands : includes linklibs workbench-libs-dos-catalogs
+#MM- workbench-c-shellcommands : includes linklibs workbench-libs-dos-catalogs workbench-c-shellcommands-newcli
 
 %build_progs mmake=workbench-c-shellcommands \
     files=$(FILES) targetdir=$(AROS_C) \
     uselibs="arossupport amiga rom m" \
     usestartup=no
 
-$(OBJDIR)/NewCLI.o : $(OBJDIR)/NewShell.o
-	@$(ECHO) Copying $< to $@
-	@$(CP) $< $@
-
+%build_prog mmake=workbench-c-shellcommands-newcli progname=NewCLI \
+    files="NewShell" targetdir=$(AROS_C) \
+    uselibs="arossupport amiga rom m" \
+    usestartup=no
 
 # Embedded side of the world
 
