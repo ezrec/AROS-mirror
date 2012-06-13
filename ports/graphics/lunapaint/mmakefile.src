@@ -49,12 +49,12 @@ FILES := \
 	src/core/canvas \
 	src/core/tools
 
-TARGET_CC := $(CROSSTOOLSDIR)/$(AROS_TARGET_CPU)-aros-g++
+TARGET_CC := $(CROSSTOOLSDIR)/$(AROS_TARGET_CPU)-aros-gcc
 
 %build_prog mmake=ports-graphics-lunapaint progname=Lunapaint \
     srcdir=$(PORTSDIR)/lunapaint/$(ARCHBASE)/ \
     files=$(FILES) targetdir=$(TARGETDIR) \
-    uselibs="arosc m mui png z freetype2"
+    uselibs="mui png z freetype2 m arosc"
 
 
 %fetch mmake=ports-graphics-lunapaint-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/lunapaint \
