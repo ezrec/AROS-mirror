@@ -58,10 +58,6 @@ FILES := \
     Which \
     Delay
 
-DISFILE := \
-    Eval \
-    Load
-
 PURE_FILES := \
     Assign \
     Beep \
