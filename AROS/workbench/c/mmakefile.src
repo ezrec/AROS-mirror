@@ -19,7 +19,6 @@ FILES := \
     DevList \
     DiskChange \
     Eject \
-    Eval \
     Filenote \
     IconX \
     Info \
@@ -30,7 +29,6 @@ FILES := \
     LeakWatch \
     LibList \
     List \
-    Load \
     Lock \
     MakeDir \
     MakeLink \
@@ -60,6 +58,10 @@ FILES := \
     Which \
     Delay
 
+DISFILE := \
+    Eval \
+    Load
+
 PURE_FILES := \
     Assign \
     Beep \
@@ -79,8 +81,9 @@ USER_CFLAGS     += $(PARANOIA_CFLAGS)
 #MM- workbench : workbench-c
 #MM- workbench-quick : workbench-c-quick
 
-#MM workbench-c : includes linklibs workbench-c-pure workbench-c-requeststring workbench-devs-cdvdfs-checkcd workbench-libs-uuid
+#MM workbench-c : includes linklibs workbench-c-pure workbench-c-load workbench-c-eval workbench-c-requeststring workbench-devs-cdvdfs-checkcd workbench-libs-uuid 
 #MM workbench-c-quick : workbench-c-pure-quick workbench-c-requeststring-quick
+#MM workbench-c-eval : workbench-c-evalparser
 
 %build_progs mmake=workbench-c \
     files=$(FILES) targetdir=$(AROS_C) \
@@ -90,19 +93,23 @@ USER_CFLAGS     += $(PARANOIA_CFLAGS)
     files=$(PURE_FILES) targetdir=$(AROS_C) \
     uselibs="arossupport amiga rom m" usestartup=no
 
+%build_prog mmake=workbench-c-load progname=Load \
+    files=Eject targetdir=$(AROS_C) \
+    uselibs="arossupport amiga rom mui"
+
 %build_prog mmake=workbench-c-requeststring progname=RequestString \
     files=RequestString targetdir=$(AROS_C) \
     uselibs="arossupport amiga rom mui"
 
-$(OBJDIR)/evalParser.tab.c : evalParser.y
-	@$(ECHO) Generating $(notdir $@) from $<...
-	@$(BISON) -o $@ $<
+USER_CFLAGS     += -I$(OBJDIR)
 
-$(OBJDIR)/Eval.o : $(OBJDIR)/evalParser.tab.c $(SRCDIR)/$(CURDIR)/Eval.c
-	%compile_q from=$(SRCDIR)/$(CURDIR)/Eval.c opt="$(CFLAGS) -I$(OBJDIR)"
+%build_prog mmake=workbench-c-eval progname=Eval \
+    files="Eval" targetdir=$(AROS_C) \
+    uselibs="arossupport amiga rom mui"
 
-$(OBJDIR)/Load.o : $(OBJDIR)/Eject.o
-	@$(ECHO) Copying $< to $@
-	@$(CP) $< $@
+#MM
+workbench-c-evalparser:
+	@$(ECHO) Generating evalParser.tab.c
+	@$(BISON) -o $(OBJDIR)/evalParser.tab.c $(SRCDIR)/$(CURDIR)/evalParser.y
 
 %common
