@@ -17,6 +17,7 @@
 
 #define opreg_readl(opreg) READREG32_LE(hc->xhc_opregbase, opreg)
 #define opreg_writel(opreg, value) WRITEREG32_LE(hc->xhc_opregbase, opreg, value)
+#define opreg_writeq(opreg, value) WRITEREG64_LE(hc->xhc_opregbase, opreg, value)
 
 #define capreg_readl(capreg) READREG32_LE(hc->xhc_capregbase, capreg)
 #define capreg_readw(capreg) READREG16_LE(hc->xhc_capregbase, capreg)
@@ -57,8 +58,10 @@
 #define	XHCM_IST        (((1UL<<4)-1)<<XHCB_IST)
 #define	XHCM_ERST_Max   ((1UL<<4)-1)<<XHCB_ERST_Max)
 #define	XHCF_SPR        (1UL<<XHCB_SPR)
-#define	XHCM_SPB_Max    (((1UL<<4)-1)<<XHCB_SPB_Max)
+#define	XHCM_SPB_Max    (((1UL<<5)-1)<<XHCB_SPB_Max)
 #define	XHCV_SPB_Max(p) (((p)&XHCM_SPB_Max)>>XHCB_SPB_Max)
+
+#define XHCI_MAX_SCRATCHPADS    31
 
 /* XHCI_HCSPARAMS3 defines */
 #define	XHCB_U1DEV_LAT  0
@@ -156,6 +159,37 @@
 #define XHCF_SMI_BAR            (1UL<<XHCB_SMI_BAR)
 
 
+/* These are for XHCI_EXT_CAPS_PROTOCOL */
+/* xHCI Supported Protocol Capability Field Definitions */
+#define XHCI_SPFD               0x00
+#define XHCB_SPFD_RMINOR        16
+#define XHCB_SPFD_RMAJOR        24
+
+#define	XHCM_SPFD_RMINOR        (((1UL<<8)-1)<<XHCB_SPFD_RMINOR)
+#define	XHCM_SPFD_RMAJOR        (((1UL<<8)-1)<<XHCB_SPFD_RMAJOR)
+
+#define XHCV_SPFD_RMINOR(p)    (((p)&XHCM_SPFD_RMINOR)>>XHCB_SPFD_RMINOR)
+#define XHCV_SPFD_RMAJOR(p)    (((p)&XHCM_SPFD_RMAJOR)>>XHCB_SPFD_RMAJOR)
+
+#define XHCI_SPNAMESTRING       0x04
+
+#define XHCI_SPPORT             0x08
+#define XHCB_SPPORT_CPO         0       /* Compatible Port Offset */
+#define XHCB_SPPORT_CPCNT       8       /* Compatible Port Count */
+#define XHCB_SPPORT_PD          16      /* Protocol Defined */
+#define XHCB_SPPORT_PSIC        28      /* Protocol Speed ID Count */
+
+#define XHCM_SPPORT_CPO         (((1UL<<8)-1)<<XHCB_SPPORT_CPO)
+#define XHCM_SPPORT_CPCNT       (((1UL<<8)-1)<<XHCB_SPPORT_CPCNT)
+#define XHCM_SPPORT_PD          (((1UL<<12)-1)<<XHCB_SPPORT_PD)
+#define XHCM_SPPORT_PSIC        (((1UL<<4)-1)<<XHCB_SPPORT_PSIC)
+
+#define XHCV_SPPORT_CPO(p)      (((p)&XHCM_SPPORT_CPO)>>XHCB_SPPORT_CPO)
+#define XHCV_SPPORT_CPCNT(p)    (((p)&XHCM_SPPORT_CPCNT)>>XHCB_SPPORT_CPCNT)
+#define XHCV_SPPORT_PD(p)       (((p)&XHCM_SPPORT_PD)>>XHCB_SPPORT_PD)
+#define XHCV_SPPORT_PSIC(p)     (((p)&XHCM_SPPORT_PSIC)>>XHCB_SPPORT_PSIC)
+
+#define XHCI_SPPSI(psic) ((psic *4) + 0x10 )
 /* XHCI operational register defines */
 /* USB Command Register (USBCMD) */
 #define	XHCI_USBCMD     0x00
@@ -267,5 +301,6 @@
 #define	XHCF_PS_WOE     (1UL<<XHCB_PS_WOE)
 #define	XHCF_PS_DR      (1UL<<XHCB_PS_DR)
 #define	XHCF_PS_WPR     (1UL<<XHCB_PS_WPR)
+#define XHCV_PS_SPEED(p)    (((p)&XHCM_PS_SPEED)>>XHCB_PS_SPEED)
 
 #endif /* XHCICHIP_H */

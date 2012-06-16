@@ -3,6 +3,7 @@
     $Id$
 */
 
+#include <proto/exec.h>
 #include <proto/oop.h>
 #include <hidd/pci.h>
 
@@ -10,15 +11,12 @@
 
 #include "uhwcmd.h"
 
-#if defined(USB3)
-
-void *AllocVecAlignedOnPage(ULONG bytesize, ULONG flags, ULONG alignment);
+#ifdef AROS_USB30_CODE
 
 #undef HiddPCIDeviceAttrBase
 #define HiddPCIDeviceAttrBase (hd->hd_HiddPCIDeviceAB)
 #undef HiddAttrBase
 #define HiddAttrBase (hd->hd_HiddAB)
-
 
 static
 AROS_UFH3(void, xhciResetHandler,
@@ -31,7 +29,7 @@ AROS_UFH3(void, xhciResetHandler,
 	/* Halt controller */
     #ifdef DEBUG
     if(!xhciHaltHC(hc))
-        KPRINTF(1000, ("XHCI Halting HC failed, reset may result in undefined behavior!\n"));
+        KPRINTF(1000, ("Halting HC failed, reset may result in undefined behavior!\n"));
     #else
     xhciHaltHC(hc);
     #endif
@@ -78,7 +76,7 @@ void xhciIntCode(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
                         Port Link State Change (PLC)
                         Port Config Error Change (CEC)
                 */
-                for (portn = 1; portn <= hc->hc_NumPorts; portn++) {
+                for (portn = 1; portn <= hc->xhc_NumPorts; portn++) {
                     if (opreg_readl(XHCI_PORTSC(portn)) & (XHCF_PS_CSC|XHCF_PS_PEC|XHCF_PS_OCC|XHCF_PS_WRC|XHCF_PS_PRC|XHCF_PS_PLC|XHCF_PS_CEC)) {
                             KPRINTF(1000,("port %d changed\n", portn));
                     }
@@ -93,7 +91,7 @@ void xhciIntCode(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
     }
 }
 
-IPTR xhciExtCap(struct PCIController *hc, ULONG id, IPTR extcap) {
+IPTR xhciSearchExtCap(struct PCIController *hc, ULONG id, IPTR extcap) {
 
     IPTR extcapoff = (IPTR) 0;
     ULONG cnt = XHCI_EXT_CAPS_MAX;
@@ -166,13 +164,13 @@ BOOL xhciResetHC(struct PCIController *hc) {
     opreg_writel(XHCI_USBCMD, (temp | XHCF_CMD_HCRST));
 
     /*
-        Controller clears HCRST bit when reset is done, wait for it and for CNR-bit to be cleared
+        Controller clears HCRST bit when reset is done, wait for it and the CNR-bit to be cleared
     */
     timeout = 250;  //FIXME: arbitrary value of 2500ms
     do {
         temp = opreg_readl(XHCI_USBCMD);
         if( !(temp & XHCF_CMD_HCRST) ) {
-            /* Wait for CNR-bit to be 0 */
+            /* Wait for CNR-bit to clear */
             timeout = 250;  //FIXME: arbitrary value of 2500ms
             do {
                 temp = opreg_readl(XHCI_USBSTS);
@@ -197,7 +195,8 @@ BOOL xhciInit(struct PCIController *hc, struct PCIUnit *hu) {
 
     ULONG cnt, timeout, temp;
     IPTR extcap;
-    APTR memptr;
+    APTR memptr = NULL;
+
     volatile APTR pciregbase;
 
     struct TagItem pciActivateMemAndBusmaster[] =
@@ -207,6 +206,10 @@ BOOL xhciInit(struct PCIController *hc, struct PCIUnit *hu) {
             { aHidd_PCIDevice_isMaster, TRUE },
             { TAG_DONE, 0UL },
     };
+
+    memptr = AllocVecAligned(2000, 0x100);
+    KPRINTF(1000,("AllocVedAligned %p\n", memptr));
+    FreeVecAligned(memptr);
 
     /* Activate Mem and Busmaster as pciFreeUnit will disable them! (along with IO, but we don't have that...) */
     OOP_SetAttrs(hc->hc_PCIDeviceObject, (struct TagItem *) pciActivateMemAndBusmaster);
@@ -219,7 +222,7 @@ BOOL xhciInit(struct PCIController *hc, struct PCIUnit *hu) {
     KPRINTF(1000, ("xhc_capregbase (%p)\n",hc->xhc_capregbase));
 
     // Store opregbase in xhc_opregbase
-    hc->xhc_opregbase = (APTR) ((ULONG) pciregbase + capreg_readb(XHCI_CAPLENGTH));
+    hc->xhc_opregbase = (APTR) (pciregbase + capreg_readb(XHCI_CAPLENGTH));
     KPRINTF(1000, ("xhc_opregbase (%p)\n",hc->xhc_opregbase));
 
 //    KPRINTF(1000, ("XHCI CAPLENGTH (%02x)\n",   capreg_readb(XHCI_CAPLENGTH)));
@@ -230,22 +233,9 @@ BOOL xhciInit(struct PCIController *hc, struct PCIUnit *hu) {
 //    KPRINTF(1000, ("XHCI HCCPARAMS (%08x)\n",   capreg_readl(XHCI_HCCPARAMS)));
 
     /*
-        Chapter 4.20
-        System software shall allocate the Scratchpad Buffer(s) before placing the xHC in Run mode (Run/Stop(R/S) = ‘1’).
-
-        The following operations take place to allocate Scratchpad Buffers to the xHC:
-        1) Software examines the Max Scratchpad Buffers field in the HCSPARAMS2 register.
-        2) Software allocates a Scratchpad Buffer Array with Max Scratchpad Buffers entries.
-        3) Software writes the base address of the Scratchpad Buffer Array to the DCBAA (Slot 0) entry.
-        4) For each entry in the Scratchpad Buffer Array:
-            a. Software allocates a PAGESIZE Scratchpad Buffer.
-            b. Software writes the base address of the allocated Scratchpad Buffer to associated entry in the Scratchpad Buffer Array.
-    */
-
-    /*
         This field defines the page size supported by the xHC implementation.
         This xHC supports a page size of 2^(n+12) if bit n is Set. For example,
-        if bit 0 is Set, the xHC supports 4k byte page sizes.
+        if bit 0 is set, the xHC supports 4k byte page sizes.
     */
     cnt = 12;
     temp = opreg_readl(XHCI_PAGESIZE)&0xffff;
@@ -254,20 +244,34 @@ BOOL xhciInit(struct PCIController *hc, struct PCIUnit *hu) {
         cnt++;
     }
     hc->xhc_pagesize = 1<<(cnt);
-    KPRINTF(1000, ("Pagesize 2^(n+12) = %lx\n", hc->xhc_pagesize));
+    KPRINTF(1000, ("Pagesize 2^(n+12) = 0x%lx\n", hc->xhc_pagesize));
 
-    hc->xhc_scratchbufs = XHCV_SPB_Max(capreg_readl(XHCI_HCSPARAMS2));
-    KPRINTF(1000, ("Max Scratchpad Buffers %lx\n",hc->xhc_scratchbufs));
+    /* Testing scratchpad allocations */
+    hc->xhc_scratchpads = 4;
+//    hc->xhc_scratchpads = XHCV_SPB_Max(capreg_readl(XHCI_HCSPARAMS2));
+    KPRINTF(1000, ("Max Scratchpad Buffers %lx\n",hc->xhc_scratchpads));
 
-    hc->hc_NumPorts = XHCV_MaxPorts(capreg_readl(XHCI_HCSPARAMS1));
-    KPRINTF(1000, ("MaxPorts %lx\n",hc->hc_NumPorts));
+    hc->xhc_NumPorts = XHCV_MaxPorts(capreg_readl(XHCI_HCSPARAMS1));
+    KPRINTF(1000, ("MaxPorts %lx\n",hc->xhc_NumPorts));
+
+    /*
+        We don't yeat know how many we have each of them, xhciParseSupProtocol takes care of that
+    */
+    hc->xhc_NumPorts20 = 0;
+    hc->xhc_NumPorts30 = 0;
 
     /*
         Number of Device Slots (MaxSlots). This field specifies the maximum number of Device
         Context Structures and Doorbell Array entries this host controller can support. Valid values are
-        in the range of 1 to 255. The value of ‘0’ is reserved.
+        in the range of 1 to 255. The value of ‘0’ is reserved, fail gracefully on it
     */
-    hc->xhc_maxslots = XHCV_MaxSlots(capreg_readl(XHCI_HCSPARAMS1));
+    hc->xhc_maxslots = (XHCV_MaxSlots(capreg_readl(XHCI_HCSPARAMS1)) & XHCM_CONFIG_MaxSlotsEn);
+
+    if(hc->xhc_maxslots == 0){
+        KPRINTF(1000, ("MaxSlots count is 0, failing!\n"));
+        return FALSE;
+    }
+
     KPRINTF(1000, ("MaxSlots %lx\n",hc->xhc_maxslots));
 
     KPRINTF(1000, ("MaxIntrs %lx\n",XHCV_MaxIntrs(capreg_readl(XHCI_HCSPARAMS1))));
@@ -278,7 +282,7 @@ BOOL xhciInit(struct PCIController *hc, struct PCIUnit *hu) {
     }
 
     /* xHCI Extended Capabilities, search for USB Legacy Support */
-    extcap = xhciExtCap(hc, XHCI_EXT_CAPS_LEGACY, 0);
+    extcap = xhciSearchExtCap(hc, XHCI_EXT_CAPS_LEGACY, 0);
     if(extcap) {
 
         temp = READMEM32_LE(extcap);
@@ -305,34 +309,58 @@ BOOL xhciInit(struct PCIController *hc, struct PCIUnit *hu) {
         }
     }
 
-    /* xHCI Extended Capabilities, search for Supported Protocol */
-    extcap = 0;
-    do {
-        extcap = xhciExtCap(hc, XHCI_EXT_CAPS_PROTOCOL, extcap);
-        if(extcap) {
-            ;
-        }
-    } while (extcap);
+    /* XHCI spec says that there is at least one "Supported Protocol" capability, fail if none is found as this is used for port logic */
+    extcap = xhciSearchExtCap(hc, XHCI_EXT_CAPS_PROTOCOL, 0);
+    if(extcap) {
+        KPRINTF(1000, ("Supported Protocol found!\n"));
+        xhciParseSupProtocol(hc, extcap);
 
+        /* Parse rest, if any...*/
+        do {
+            extcap = xhciSearchExtCap(hc, XHCI_EXT_CAPS_PROTOCOL, extcap);
+            if(extcap) {
+                KPRINTF(1000, ("More Supported Protocols found!\n"));
+                xhciParseSupProtocol(hc, extcap);
+            }
+        } while (extcap);
+    }else{
+        KPRINTF(1000, ("No Supported Protocol found, failing!\n"));
+        return FALSE;
+    }
+
+    /*
+        If no USB2.0 ports were found but max port count is greater than USB3.0 count assume the overhead to be USB2.0
+    */
+    if( (hc->xhc_NumPorts < (hc->xhc_NumPorts20 + hc->xhc_NumPorts30)) ) {
+        KPRINTF(1000, ("Too many ports in Supported Protocol!\n"));
+        return FALSE;
+    }else if ( (hc->xhc_NumPorts > (hc->xhc_NumPorts20 + hc->xhc_NumPorts30)) ) {
+        hc->xhc_NumPorts20 = (hc->xhc_NumPorts - hc->xhc_NumPorts30);
+    }
+
+    KPRINTF(1000, ("Number of USB2.0 ports %ld\n", hc->xhc_NumPorts20 ));
+    KPRINTF(1000, ("Number of USB3.0 ports %ld\n", hc->xhc_NumPorts30 ));
     if(xhciHaltHC(hc)) {
         if(xhciResetHC(hc)) {
 
-            for(cnt = 1; cnt <=hc->hc_NumPorts; cnt++) {
-                temp = opreg_readl(XHCI_PORTSC(cnt));
-                KPRINTF(1000, ("Port #%d speed is %d\n",cnt, (temp&XHCM_PS_SPEED)>>XHCB_PS_SPEED ));
-            }
+//            for(cnt = 1; cnt <=hc->xhc_NumPorts; cnt++) {
+//                temp = opreg_readl(XHCI_PORTSC(cnt));
+//                KPRINTF(1000, ("Attached device's speed on port #%d is %d (PORTSC %lx)\n",cnt, XHCV_PS_SPEED(temp), temp ));
+//            }
 
             hc->hc_PCIMemSize = 1024;   //Arbitrary number
-            hc->hc_PCIMemSize += ((hc->xhc_scratchbufs) * (hc->xhc_pagesize));
 
-            memptr = HIDD_PCIDriver_AllocPCIMem(hc->hc_PCIDriverObject, hc->hc_PCIMemSize);
-            hc->hc_PCIMem = (APTR) memptr;
+            /* CHECKME: Removed this memory allocation as it was not used in any way (at least for now) */
+//            memptr = HIDD_PCIDriver_AllocPCIMem(hc->hc_PCIDriverObject, hc->hc_PCIMemSize);
+//            hc->hc_PCIMem = (APTR) memptr;
+            hc->hc_PCIMem = NULL;
 
-            if(memptr) {
+//            if(memptr) {
+            {
                 // PhysicalAddress - VirtualAdjust = VirtualAddress
                 // VirtualAddress  + VirtualAdjust = PhysicalAddress
-                hc->hc_PCIVirtualAdjust = ((ULONG) pciGetPhysical(hc, memptr)) - ((ULONG) memptr);
-                KPRINTF(10, ("VirtualAdjust 0x%08lx\n", hc->hc_PCIVirtualAdjust));
+//                hc->hc_PCIVirtualAdjust = pciGetPhysical(hc, memptr) - (APTR)memptr;
+//                KPRINTF(10, ("VirtualAdjust 0x%08lx\n", hc->hc_PCIVirtualAdjust));
 
                 hc->hc_CompleteInt.is_Node.ln_Type = NT_INTERRUPT;
                 hc->hc_CompleteInt.is_Node.ln_Name = "XHCI CompleteInt";
@@ -360,34 +388,79 @@ BOOL xhciInit(struct PCIController *hc, struct PCIUnit *hu) {
                 opreg_writel(XHCI_DNCTRL, 0);
 
                 /* Program the Max Device Slots Enabled (MaxSlotsEn) field */
-                opreg_writel(XHCI_CONFIG, ((opreg_readl(XHCI_CONFIG)&~XHCM_CONFIG_MaxSlotsEn) | XHCV_MaxSlots(capreg_readl(XHCI_HCSPARAMS1))) );
-
                 /*
-                    Program the Device Context Base Address Array Pointer (DCBAAP) register (5.4.6) with a 64-bit
-                    address pointing to where the Device Context Base Address Array is located.
-
-                    - The Device Context Base Address Array shall be indexed by the Device Slot ID.
-                    - The Device Context Base Address Array shall be aligned to a 64 byte boundary.
-                    - The Device Context Base Address Array shall be physically contiguous within a page.
-                    - The Device Context Base Address Array shall contain MaxSlotsEn + 1 entries. The maximum size of the
-                    - Device Context Base Address Array is 256 64-bit entries, or 2K Bytes.
-                    - Software shall set Device Context Base Address Array entries for unallocated Device Slots to ‘0’.
-                    - Software shall set Device Context Base Address Array entries for allocated Device Slots to point to the
-                      Device Context data structure associated with the device.
+                    Max Device Slots Enabled (MaxSlotsEn) – RW. Default = ‘0’. This field specifies the maximum
+                    number of enabled Device Slots. Valid values are in the range of 0 to MaxSlots. Enabled Devices
+                    Slots are allocated contiguously. e.g. A value of 16 specifies that Device Slots 1 to 16 are active.
+                    A value of ‘0’ disables all Device Slots. A disabled Device Slot shall not respond to Doorbell
+                    Register references.
+                    This field shall not be modified by software if the xHC is running (Run/Stop (R/S) = ‘1’).
                 */
+                opreg_writel(XHCI_CONFIG, ((opreg_readl(XHCI_CONFIG) & ~XHCM_CONFIG_MaxSlotsEn) | hc->xhc_maxslots));
 
-                /* Allocate 256 entries of 64bit pointer array aligned on 64 byte cache line not crossing 4K page border */
-                hc->xhc_dcbaa = AllocVecAlignedOnPage( (256*8), MEMF_CLEAR, 64);
+                if(hc->xhc_scratchpads) {
 
-                /*
-                    If the Max Scratchpad Buffers field of the HCSPARAMS2 register is > ‘0’, then the first entry (entry_0) in
-                    the DCBAA shall contain a pointer to the Scratchpad Buffer Array. If the Max Scratchpad Buffers field of
-                    the HCSPARAMS2 register is = ‘0’, then the first entry (entry_0) in the DCBAA is reserved and shall be
-                    cleared to ‘0’ by software.
-                */
-                if(!hc->xhc_scratchbufs) {
+                    /*
+                        Scratchpad array is 64 byte aligned as is Device Context Base array, neither can cross page boundary
+                    */
+                    hc->xhc_scratchpadarray = AllocVecAligned( (hc->xhc_scratchpads*sizeof(UQUAD) ), hc->xhc_pagesize);
+                    if( !(hc->xhc_scratchpadarray) ){
+                        KPRINTF(1000, ("Unable to allocate scratchpad array, failing!\n"));
+                        return FALSE;
+                    }
+
+                    hc->xhc_dcbaa = AllocVecAligned( ((hc->xhc_maxslots + 1)*sizeof(UQUAD)) , hc->xhc_pagesize);
+                    if( !(hc->xhc_scratchpadarray) ){
+                        FreeVecAligned(hc->xhc_scratchpadarray);
+                        KPRINTF(1000, ("Unable to allocate device context base array, failing!\n"));
+                        return FALSE;
+                    }
+
+                    hc->xhc_dcbaa[0] = (UQUAD) hc->xhc_scratchpadarray;
+
+                    KPRINTF(1000, ("Allocated scratchpad buffer array at %p\n", hc->xhc_scratchpadarray));
+
+                    for(temp = 0; temp<hc->xhc_scratchpads; temp++){
+
+                        /*
+                            We are making a bold assumption that pagesize returned by host controller is the same as system pagesize...
+                        */
+                        memptr = AllocVecAligned(hc->xhc_pagesize, hc->xhc_pagesize);
+                        if(memptr){
+                            hc->xhc_scratchpadarray[temp] = (UQUAD) (0xDEADBEEF00000000 | (UQUAD) memptr);
+                            /* CHECKME: Not really sure if the 32(or 64) bit address is stored correctly in the QUAD pointer list */
+                            KPRINTF(1000, ("hc->xhc_scratchpadarray[%d] = %0lx:%0lx\n", temp, (IPTR) ((UQUAD)(hc->xhc_scratchpadarray[temp])>>32), (IPTR) hc->xhc_scratchpadarray[temp]));
+                        }else{
+                            for(temp = 0; temp<hc->xhc_scratchpads; temp++){
+                                if(hc->xhc_scratchpadarray[temp]){
+                                    FreeVecAligned( (APTR) hc->xhc_scratchpadarray[temp] );
+                                }
+                            }
+                            return FALSE;
+                        }
+                    }
+
+                }else{
+                    /*
+                        Host controller does not use scratchpads (This is the case OnMyHW™)
+                    */
+                    hc->xhc_scratchpadarray = NULL;
+
+                    /*
+                        DCBAA can't cross page boundary, make sure it doesn't. This all adds memory usage.
+                    */
+                    hc->xhc_dcbaa = AllocVecAligned( ((hc->xhc_maxslots + 1)*sizeof(UQUAD)), hc->xhc_pagesize);
+                    if( !(hc->xhc_dcbaa) ){
+                        KPRINTF(1000, ("Unable to allocate device context base array, failing!\n"));
+                        return FALSE;
+                    }
                 }
 
+                KPRINTF(1000, ("Device context base array at %p\n", hc->xhc_dcbaa));
+
+                opreg_writeq(XHCI_DCBAAP, (IPTR)hc->xhc_dcbaa );
+
+                /* FIXME: Allocate device context data structures and fill rest of the DCBAA array*/
                 /* Define the Command Ring Dequeue Pointer by programming the Command Ring Control Register */
 
                 /* Set Run/Stop(R/S), Interrupter Enable(INTE) and Host System Error Enable(HSEE) */
@@ -412,8 +485,8 @@ void xhciFree(struct PCIController *hc, struct PCIUnit *hu) {
         {
             case HCITYPE_XHCI:
             {
-                xhciHaltHC(hc);
                 KPRINTF(1000, ("Shutting down XHCI %08lx\n", hc));
+                xhciHaltHC(hc);
                 uhwDelayMS(50, hu);
                 SYNC;
                 KPRINTF(1000, ("Shutting down XHCI done.\n"));
@@ -425,54 +498,74 @@ void xhciFree(struct PCIController *hc, struct PCIUnit *hu) {
     }
 }
 
+void xhciParseSupProtocol(struct PCIController *hc, IPTR extcap) {
+
+    ULONG temp1, temp2;
+
+    temp1 = READMEM32_LE(extcap);
+    KPRINTF(1000, ("Version %l.%l\n", XHCV_SPFD_RMAJOR(temp1), XHCV_SPFD_RMINOR(temp1) ));
+
+    temp2 = READMEM32_LE(extcap + XHCI_SPPORT);
+//    KPRINTF(1000, ("CPO %ld\n", XHCV_SPPORT_CPO(temp2) ));
+//    KPRINTF(1000, ("CPCNT %ld\n", XHCV_SPPORT_CPCNT(temp2) ));
+//    KPRINTF(1000, ("PD %ld\n", XHCV_SPPORT_PD(temp2) ));
+//    KPRINTF(1000, ("PSIC %ld\n", XHCV_SPPORT_PSIC(temp2) ));
+
+    /*
+        FIXME:
+            -We might not get at all "USB2 Supported Protocol", in that case make a wild assumption on # USB2.0 ports
+            -Check if the name string is "USB " (=0x20425355)
+            -Map USB specifications to their respective ports (USB2.0/USB3.0) 
+    */
+
+    if(XHCV_SPFD_RMAJOR(temp1) == 2) {
+        hc->xhc_NumPorts20 = ((XHCV_SPPORT_CPCNT(temp2) - XHCV_SPPORT_CPO(temp2) + 1));
+    }
+    if(XHCV_SPFD_RMAJOR(temp1) == 3) {
+        hc->xhc_NumPorts30 = ((XHCV_SPPORT_CPCNT(temp2) - XHCV_SPPORT_CPO(temp2) + 1));
+    }
+}
 
 /*
-    Allocate aligned memory that does not cross 4K page boundaries
+    Allocate aligned memory (call with ALIGNMENT = PAGESIZE for onpage memory, will result in PAGESIZE overhead memory usage)
 */
-void *AllocVecAlignedOnPage(ULONG bytesize, ULONG flags, ULONG alignment) {
+APTR AllocVecAligned(ULONG bytesize, ULONG alignment) {
+//    KPRINTF(1000, ("AllocVecAligned %ld, %ld\n", bytesize, alignment ));
 
-#define PAGE_SHIFT          12
-#define PAGE_SIZE           (1 << PAGE_SHIFT)
-#define PAGE_MASK           (~(PAGE_SIZE-1))
+    IPTR temp, *ret;
 
-#define ALIGN_MASK          (~(alignment-1))
-
-#define PAGE_ALIGN(addr)    (((addr)+PAGE_SIZE-1)&PAGE_MASK)
-
-    APTR res = NULL;
-    IPTR pageaddr;
-    ULONG requirements = flags & MEMF_PHYSICAL_MASK;
-
-    struct MemHeader *mh;
-
-    /* can not fulfill requirement for not crossing page boundaries */
-    if(!(bytesize>PAGE_SIZE)) {
-
-        Forbid();
-
-        ForeachNode(&SysBase->MemList, mh) {
-
-            /* type matches and enough free space */
-            if ((requirements & ~mh->mh_Attributes) || mh->mh_Free < bytesize) {
-
-                pageaddr = (IPTR) mh->mh_Lower;
-                /**/
-                do {
-                    pageaddr += (PAGE_SIZE)-1;
-                    if( ((IPTR)mh->mh_Lower <= ((pageaddr&PAGE_MASK) - AROS_ALIGN(sizeof(ULONG)))) ){
-                        if(((IPTR)mh->mh_Upper >= (pageaddr&PAGE_MASK) + bytesize)){
-                            /* there is memory for us in this memheader, now go and claim it... */
-                            /* implement private nommu_AllocAbs in here */
-                            Permit();
-                            return res;
-                        }
-                    }
-                }while(1);
-            }
-        }
-        Permit();
+    /*
+        Allocate aligned memory by ourself as OS doesn't seem to give us any support for aligned allocations (ONPAGE,ALIGNMENT)
+        -We only support alignment of sizeof(IPTR) and up since we store the original ptr, sizeof(IPTR) is platform dependant
+    */
+    if(alignment<sizeof(IPTR)) {
+        alignment = sizeof(IPTR);
     }
-    return res;
+
+    temp = (IPTR)AllocVec( bytesize+alignment, (MEMF_PUBLIC | MEMF_CLEAR) );
+    if(temp) {
+//        KPRINTF(1000, ("got memory @ %p with alignment %ld\n", temp, alignment ));
+
+        /*
+            If by coincidence we get aligned memory, we still add the alignment size to the pointer and align it to the next possible aligned address
+            as we need memory below our allocation.
+        */
+        ret = (APTR)((IPTR)(temp+alignment) & ~(alignment-1));
+//        KPRINTF(1000, ("final memory @ %p\n", ret ));
+
+        /*
+            Store our original memory pointer below our aligned memory (we have allocated memory there)
+        */
+        ret[-1] = temp;
+        return ret;
+    }
+    return NULL;
+}
+
+void FreeVecAligned(APTR memory) {
+    IPTR *ptr = memory;
+//    KPRINTF(1000, ("FreeVecAligned @ %p\n", ptr[-1] ));
+    FreeVec((APTR)ptr[-1]);
 }
 
 #endif

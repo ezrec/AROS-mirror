@@ -51,17 +51,20 @@ AROS_UFH3(void, pciEnumerator,
     struct PCIDevice *hd = (struct PCIDevice *) hook->h_Data;
     struct PCIController *hc;
     IPTR hcitype;
-    IPTR dev;
     IPTR bus;
+    IPTR dev;
+    IPTR sub;
     IPTR intline;
     ULONG devid;
 
     OOP_GetAttr(pciDevice, aHidd_PCIDevice_Interface, &hcitype);
     OOP_GetAttr(pciDevice, aHidd_PCIDevice_Bus, &bus);
     OOP_GetAttr(pciDevice, aHidd_PCIDevice_Dev, &dev);
+    OOP_GetAttr(pciDevice, aHidd_PCIDevice_Dev, &sub);
     OOP_GetAttr(pciDevice, aHidd_PCIDevice_INTLine, &intline);
 
     devid = (bus<<16)|dev;
+    KPRINTF(10, ("Found PCI device 0x%lx of type %ld, Intline=%ld\n", devid, hcitype, intline));
 
     if(intline == 255)
     {
@@ -69,36 +72,45 @@ AROS_UFH3(void, pciEnumerator,
         // BIOS needs plug & play os option disabled. Alternatively AROS must support APIC reconfiguration
         KPRINTF(200, ("ERROR: PCI card has no interrupt line assigned by BIOS, disable Plug & Play OS!\n"));
     }
-
-#if defined(__powerpc__)
-    else if((hcitype == HCITYPE_OHCI))
-#elif defined(USB3) 
-    else if((hcitype == HCITYPE_UHCI) || (hcitype == HCITYPE_OHCI) || (hcitype == HCITYPE_EHCI) || (hcitype == HCITYPE_XHCI))
-#else
-    else if((hcitype == HCITYPE_UHCI) || (hcitype == HCITYPE_OHCI) || (hcitype == HCITYPE_EHCI))
-#endif
+    else
     {
-        KPRINTF(10, ("Found PCI device 0x%lx of type %ld, Intline=%ld\n", devid, hcitype, intline));
+    	switch (hcitype)
+    	{
+    	case HCITYPE_OHCI:
+#ifndef __powerpc__	/* It was not from me. Perhaps on PPC these drivers suffer from CPU cache problems? (sonic) */
+    	case HCITYPE_EHCI:
+    	case HCITYPE_UHCI:
+#endif
+#ifdef AROS_USB30_CODE
+    	case HCITYPE_XHCI:
+#endif
+        KPRINTF(10, ("Setting up device...\n"));
 
-        hc = AllocPooled(hd->hd_MemPool, sizeof(struct PCIController));
-        if(hc)
-        {
-            hc->hc_Device = hd;
-            hc->hc_DevID = devid;
-            hc->hc_HCIType = hcitype;
-            hc->hc_PCIDeviceObject = pciDevice;
-            hc->hc_PCIIntLine = intline;
+            hc = AllocPooled(hd->hd_MemPool, sizeof(struct PCIController));
+            if(hc)
+            {
+                hc->hc_Device = hd;
+                hc->hc_DevID = devid;
+            	hc->hc_FunctionNum = sub;
+                hc->hc_HCIType = hcitype;
+                hc->hc_PCIDeviceObject = pciDevice;
+                hc->hc_PCIIntLine = intline;
 
-            OOP_GetAttr(pciDevice, aHidd_PCIDevice_Driver, (IPTR *) &hc->hc_PCIDriverObject);
+                OOP_GetAttr(pciDevice, aHidd_PCIDevice_Driver, (IPTR *) &hc->hc_PCIDriverObject);
 
-            NewList(&hc->hc_CtrlXFerQueue);
-            NewList(&hc->hc_IntXFerQueue);
-            NewList(&hc->hc_IsoXFerQueue);
-            NewList(&hc->hc_BulkXFerQueue);
-            NewList(&hc->hc_TDQueue);
-            NewList(&hc->hc_PeriodicTDQueue);
-            NewList(&hc->hc_OhciRetireQueue);
-            AddTail(&hd->hd_TempHCIList, &hc->hc_Node);
+                NewList(&hc->hc_CtrlXFerQueue);
+                NewList(&hc->hc_IntXFerQueue);
+                NewList(&hc->hc_IsoXFerQueue);
+                NewList(&hc->hc_BulkXFerQueue);
+                NewList(&hc->hc_TDQueue);
+                NewList(&hc->hc_PeriodicTDQueue);
+                NewList(&hc->hc_OhciRetireQueue);
+                AddTail(&hd->hd_TempHCIList, &hc->hc_Node);
+            }
+            break;
+
+        default:
+            KPRINTF(10, ("Unsupported HCI type %ld\n", hcitype));
         }
     }
 
@@ -112,8 +124,6 @@ BOOL pciInit(struct PCIDevice *hd)
     struct PCIController *nexthc;
     struct PCIUnit *hu;
     ULONG unitno = 0;
-    UWORD ohcicnt;
-    UWORD uhcicnt;
 
     KPRINTF(10, ("*** pciInit(%08lx) ***\n", hd));
     if(sizeof(IPTR) > 4)
@@ -143,9 +153,6 @@ BOOL pciInit(struct PCIDevice *hd)
         {
             { (STRPTR) IID_Hidd,            &hd->hd_HiddAB },
             { (STRPTR) IID_Hidd_PCIDevice,  &hd->hd_HiddPCIDeviceAB },
-//            { (STRPTR) IID_Hidd_USBDevice,  &hd->hd_HiddUSBDeviceAB },
-//            { (STRPTR) IID_Hidd_USBHub,     &hd->hd_HiddUSBHubAB },
-//            { (STRPTR) IID_Hidd_USBDrv,     &hd->hd_HiddUSBDrvAB },
             { NULL, NULL }
         };
 
@@ -157,13 +164,7 @@ BOOL pciInit(struct PCIDevice *hd)
 
         OOP_ObtainAttrBases(attrbases);
 
-#if defined(__powerpc__)
-        KPRINTF(20, ("Searching for OHCI devices...\n"));
-#elif defined(USB3)
-        KPRINTF(20, ("Searching for (U/O/E/X)HCI devices...\n"));
-#else
-        KPRINTF(20, ("Searching for (U/O/E)HCI devices...\n"));
-#endif
+        KPRINTF(20, ("Searching for devices...\n"));
 
         HIDD_PCI_EnumDevices(hd->hd_PCIHidd, &findHook, (struct TagItem *) &tags);
     } else {
@@ -172,6 +173,7 @@ BOOL pciInit(struct PCIDevice *hd)
         return FALSE;
     }
 
+    // Create units with a list of host controllers having the same bus and device number.
     while(hd->hd_TempHCIList.lh_Head->ln_Succ)
     {
         hu = AllocPooled(hd->hd_MemPool, sizeof(struct PCIUnit));
@@ -186,9 +188,7 @@ BOOL pciInit(struct PCIDevice *hd)
 
         NewList(&hu->hu_Controllers);
         NewList(&hu->hu_RHIOQueue);
-        ohcicnt = 0;
-        uhcicnt = 0;
-        // find all belonging host controllers
+
         hc = (struct PCIController *) hd->hd_TempHCIList.lh_Head;
         while((nexthc = (struct PCIController *) hc->hc_Node.ln_Succ))
         {
@@ -196,16 +196,6 @@ BOOL pciInit(struct PCIDevice *hd)
             {
                 Remove(&hc->hc_Node);
                 hc->hc_Unit = hu;
-                if(hc->hc_HCIType == HCITYPE_UHCI)
-                {
-                    hc->hc_FunctionNum = uhcicnt++;
-                }
-                else if(hc->hc_HCIType == HCITYPE_OHCI)
-                {
-                    hc->hc_FunctionNum = ohcicnt++;
-                } else {
-                    hc->hc_FunctionNum = 0;
-                }
                 AddTail(&hu->hu_Controllers, &hc->hc_Node);
             }
             hc = nexthc;
@@ -303,30 +293,33 @@ void pciStrcat(STRPTR d, STRPTR s)
 /* /// "pciAllocUnit()" */
 BOOL pciAllocUnit(struct PCIUnit *hu)
 {
+#if 0
     struct PCIDevice *hd = hu->hu_Device;
+#endif
     struct PCIController *hc;
 
     BOOL allocgood = TRUE;
-    ULONG usb11ports;
-    ULONG usb20ports;
-#if defined(USB3)
-    ULONG usb30ports;
+    ULONG usb11ports = 0;
+    ULONG usb20ports = 0;
+#ifdef AROS_USB30_CODE
+    ULONG usb30ports = 0;
 #endif
     ULONG cnt;
 
     ULONG ohcicnt = 0;
     ULONG uhcicnt = 0;
     ULONG ehcicnt = 0;
-#if defined(USB3)
+#ifdef AROS_USB30_CODE
     ULONG xhcicnt = 0;
 #endif
     STRPTR prodname;
 
-    KPRINTF(10, ("*** pciAllocUnit(%08lx) ***\n", hu));
+    KPRINTF(10, ("*** pciAllocUnit(%p) ***\n", hu));
+
+#if 0 // FIXME this needs to be replaced by something AROS supports
     hc = (struct PCIController *) hu->hu_Controllers.lh_Head;
     while(hc->hc_Node.ln_Succ)
     {
-#if 0 // FIXME this needs to be replaced by something AROS supports
         PCIXObtainBoard(hc->hc_BoardObject);
         hc->hc_BoardAllocated = PCIXSetBoardAttr(hc->hc_BoardObject, PCIXTAG_OWNER, (ULONG) hd->hd_Library.lib_Node.ln_Name);
         allocgood &= hc->hc_BoardAllocated;
@@ -335,13 +328,13 @@ BOOL pciAllocUnit(struct PCIUnit *hu)
             KPRINTF(20, ("Couldn't allocate board, already allocated by %s\n", PCIXGetBoardAttr(hc->hc_BoardObject, PCIXTAG_OWNER)));
         }
         PCIXReleaseBoard(hc->hc_BoardObject);
-#endif
 
         hc = (struct PCIController *) hc->hc_Node.ln_Succ;
     }
 
     if(allocgood)
     {
+#endif
         // allocate necessary memory
         hc = (struct PCIController *) hu->hu_Controllers.lh_Head;
         while(hc->hc_Node.ln_Succ)
@@ -351,30 +344,57 @@ BOOL pciAllocUnit(struct PCIUnit *hu)
                 case HCITYPE_UHCI:
                 {
                     allocgood = uhciInit(hc,hu);
+                    if(allocgood) {
+                        uhcicnt++;
+                    }
                     break;
                 }
 
                 case HCITYPE_OHCI:
                 {
                     allocgood = ohciInit(hc,hu);
+                    if(allocgood) {
+                        ohcicnt++;
+                    }
                     break;
                 }
 
                 case HCITYPE_EHCI:
                 {
                     allocgood = ehciInit(hc,hu);
+                    if(allocgood) {
+                        ehcicnt++;
+                        if(usb20ports) {
+                            KPRINTF(200, ("WARNING: More than one EHCI controller per board?!?\n"));
+                        }
+                        usb20ports = hc->hc_NumPorts;
+
+                        for(cnt = 0; cnt < usb20ports; cnt++) {
+                            hu->hu_PortMap20[cnt] = hc;
+                            hc->hc_PortNum20[cnt] = cnt;
+                        }
+                    }
                     break;
                 }
-#if defined(USB3)
+#ifdef AROS_USB30_CODE
                 case HCITYPE_XHCI:
                 {
                     allocgood = xhciInit(hc,hu);
+                    if(allocgood) {
+                        xhcicnt++;
+                        if(usb30ports) {
+                            KPRINTF(200, ("WARNING: More than one XHCI controller per board?!?\n"));
+                        }
+                        usb20ports = hc->xhc_NumPorts20;
+                        usb30ports = hc->xhc_NumPorts30;
+                    }
                     break;
                 }
 #endif
             }
             hc = (struct PCIController *) hc->hc_Node.ln_Succ;
         }
+#if 0 // FIXME this needs to be replaced by something AROS supports
     }
 
     if(!allocgood)
@@ -383,7 +403,6 @@ BOOL pciAllocUnit(struct PCIUnit *hu)
         hc = (struct PCIController *) hu->hu_Controllers.lh_Head;
         while(hc->hc_Node.ln_Succ)
         {
-#if 0
             PCIXObtainBoard(hc->hc_BoardObject);
             if(hc->hc_BoardAllocated)
             {
@@ -391,58 +410,15 @@ BOOL pciAllocUnit(struct PCIUnit *hu)
                 PCIXSetBoardAttr(hc->hc_BoardObject, PCIXTAG_OWNER, 0);
             }
             PCIXReleaseBoard(hc->hc_BoardObject);
-#endif
+
             hc = (struct PCIController *) hc->hc_Node.ln_Succ;
         }
-        return FALSE;
-    }
 
-    // find all belonging host controllers
-    usb11ports = 0;
-    usb20ports = 0;
-#if defined(USB3)
-    usb30ports = 0;
-#endif
-
-    hc = (struct PCIController *) hu->hu_Controllers.lh_Head;
-    while(hc->hc_Node.ln_Succ)
-    {
-#if defined(USB3)
-        if(hc->hc_HCIType == HCITYPE_XHCI)
-        {
-            xhcicnt++;
-            if(usb30ports)
-            {
-                KPRINTF(200, ("WARNING: Two XHCI controllers per Board?!?\n"));
-            }
-            usb30ports = hc->hc_NumPorts;
-        }
-        else if(hc->hc_HCIType == HCITYPE_EHCI)
 #else
-        if(hc->hc_HCIType == HCITYPE_EHCI)
+    if(!allocgood)
+    {
 #endif
-        {
-            ehcicnt++;
-            if(usb20ports)
-            {
-                KPRINTF(200, ("WARNING: Two EHCI controllers per Board?!?\n"));
-            }
-            usb20ports = hc->hc_NumPorts;
-            for(cnt = 0; cnt < usb20ports; cnt++)
-            {
-                hu->hu_PortMap20[cnt] = hc;
-                hc->hc_PortNum20[cnt] = cnt;
-            }
-        }
-        else if(hc->hc_HCIType == HCITYPE_UHCI)
-        {
-            uhcicnt++;
-        }
-        else if(hc->hc_HCIType == HCITYPE_OHCI)
-        {
-            ohcicnt++;
-        }
-        hc = (struct PCIController *) hc->hc_Node.ln_Succ;
+        return FALSE;
     }
 
     hc = (struct PCIController *) hu->hu_Controllers.lh_Head;
@@ -483,7 +459,8 @@ BOOL pciAllocUnit(struct PCIUnit *hu)
 
     hu->hu_RootHub11Ports = usb11ports;
     hu->hu_RootHub20Ports = usb20ports;
-#if defined(USB3)
+#ifdef AROS_USB30_CODE
+// FIXME: This is probably wrong as well... 
     hu->hu_RootHub30Ports = usb30ports;
     hu->hu_RootHubPorts = (usb11ports > usb20ports) ? ((usb11ports > usb30ports) ? usb11ports : usb30ports) : ((usb30ports > usb20ports) ? usb30ports : usb20ports);
 #else
@@ -494,7 +471,7 @@ BOOL pciAllocUnit(struct PCIUnit *hu)
         hu->hu_EhciOwned[cnt] = hu->hu_PortMap20[cnt] ? TRUE : FALSE;
     }
 
-#if defined(USB3)
+#ifdef AROS_USB30_CODE
     KPRINTF(1000, ("Unit %ld: USB Board %08lx has %ld USB1.1, %ld USB2.0 and %ld USB3.0 ports!\n", hu->hu_UnitNo, hu->hu_DevID, hu->hu_RootHub11Ports, hu->hu_RootHub20Ports, hu->hu_RootHub30Ports));
 #else
     KPRINTF(10, ("Unit %ld: USB Board %08lx has %ld USB1.1 and %ld USB2.0 ports!\n", hu->hu_UnitNo, hu->hu_DevID, hu->hu_RootHub11Ports, hu->hu_RootHub20Ports));
@@ -535,7 +512,7 @@ BOOL pciAllocUnit(struct PCIUnit *hu)
     {
         pciStrcat(prodname, " EHCI USB 2.0");
     }
-#if defined(USB3)
+#ifdef AROS_USB30_CODE
     if(xhcicnt)
     {
         if(xhcicnt >1)
@@ -558,7 +535,7 @@ BOOL pciAllocUnit(struct PCIUnit *hu)
 #else
     pciStrcat(prodname, " Host Controller");
 #endif
-    KPRINTF(10, ("Unit allocated!\n", hd));
+    KPRINTF(10, ("Unit allocated!\n"));
 
     return TRUE;
 }
@@ -578,7 +555,7 @@ void pciFreeUnit(struct PCIUnit *hu)
             { TAG_DONE, 0UL },
     };
 
-    KPRINTF(10, ("*** pciFreeUnit(%08lx) ***\n", hu));
+    KPRINTF(10, ("*** pciFreeUnit(%p) ***\n", hu));
 
     // put em offline
     hc = (struct PCIController *) hu->hu_Controllers.lh_Head;
@@ -588,7 +565,7 @@ void pciFreeUnit(struct PCIUnit *hu)
         hc = (struct PCIController *) hc->hc_Node.ln_Succ;
     }
 
-#if defined(USB3)
+#ifdef AROS_USB30_CODE
     xhciFree(hc, hu);
 #endif
     // doing this in three steps to avoid these damn host errors
@@ -634,7 +611,7 @@ void pciExpunge(struct PCIDevice *hd)
     struct PCIController *hc;
     struct PCIUnit *hu;
 
-    KPRINTF(10, ("*** pciExpunge(%08lx) ***\n", hd));
+    KPRINTF(10, ("*** pciExpunge(%p) ***\n", hd));
 
     hu = (struct PCIUnit *) hd->hd_Units.lh_Head;
     while(((struct Node *) hu)->ln_Succ)
@@ -656,9 +633,6 @@ void pciExpunge(struct PCIDevice *hd)
         {
             { (STRPTR) IID_Hidd,            &hd->hd_HiddAB },
             { (STRPTR) IID_Hidd_PCIDevice,  &hd->hd_HiddPCIDeviceAB },
-//            { (STRPTR) IID_Hidd_USBDevice,  &hd->hd_HiddUSBDeviceAB },
-//            { (STRPTR) IID_Hidd_USBHub,     &hd->hd_HiddUSBHubAB },
-//            { (STRPTR) IID_Hidd_USBDrv,     &hd->hd_HiddUSBDrvAB },
             { NULL, NULL }
         };
 

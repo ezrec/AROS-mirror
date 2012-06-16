@@ -2936,7 +2936,7 @@ AROS_LH1(struct PsdDevice *, psdEnumerateDevice,
                     {
                         pd->pd_Flags |= PDFF_HIGHSPEED;
                     }
-                    #if defined(USB3)
+                    #ifdef AROS_USB30_CODE
                     if((!pd->pd_Hub) && (pd->pd_USBVers >= 0x300))
                     {
                         pd->pd_Flags |= PDFF_SUPERSPEED;
@@ -3895,6 +3895,12 @@ AROS_LH3(struct PsdPipe *, psdAllocPipe,
                 pp->pp_IOReq.iouh_Flags |= UHFF_MULTI_1;
             }
         }
+        #ifdef AROS_USB30_CODE
+        if(pd->pd_Flags & PDFF_SUPERSPEED)
+        {
+            pp->pp_IOReq.iouh_Flags |= UHFF_SUPERSPEED;
+        }
+        #endif
         if(pd->pd_Flags & PDFF_NEEDSSPLIT)
         {
             /* USB1.1 device connected to a USB2.0 hub */
@@ -9190,7 +9196,7 @@ static const ULONG PsdDevicePT[] =
     PACK_WORDBIT(DA_Dummy, DA_HasAppBinding, PsdDevice, pd_Flags, PKCTRL_BIT|PKCTRL_UNPACKONLY, PDFF_APPBINDING),
     PACK_WORDBIT(DA_Dummy, DA_NeedsSplitTrans, PsdDevice, pd_Flags, PKCTRL_BIT|PKCTRL_PACKUNPACK, PDFF_NEEDSSPLIT),
     PACK_WORDBIT(DA_Dummy, DA_LowPower, PsdDevice, pd_Flags, PKCTRL_BIT|PKCTRL_UNPACKONLY, PDFF_LOWPOWER),
-#if defined (USB3)
+#ifdef AROS_USB30_CODE
     PACK_WORDBIT(DA_Dummy, DA_IsSuperspeed, PsdDevice, pd_Flags, PKCTRL_BIT|PKCTRL_PACKUNPACK, PDFF_SUPERSPEED),
 #endif
     PACK_ENDTABLE
