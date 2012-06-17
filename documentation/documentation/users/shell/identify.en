@@ -45,8 +45,8 @@ Inputs
 ::
 
 
-     FILE    -- file to be recognized
-     VERBOSE   -- activates verbose output
+     FILE     --  file to be recognized
+     VERBOSE  --  activates verbose output
 
 
 Example
@@ -54,8 +54,8 @@ Example
 ::
 
 
-     Identify S:Startup-Sequence
-     > Text/Ascii
+     > Identify S:Startup-Sequence
+     S:Startup-Sequence:     Text/ascii
 
      (This will identify the startup-sequence as a text file.)
 

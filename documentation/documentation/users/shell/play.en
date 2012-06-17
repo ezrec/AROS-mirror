@@ -1,0 +1,58 @@
+====
+Play
+====
+
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <pipe>`_ `Next <prompt>`_ 
+
+---------------
+
+Name
+~~~~
+::
+
+
+     Play
+
+
+Synopsis
+~~~~~~~~
+::
+
+
+     FILE/S
+
+
+Location
+~~~~~~~~
+::
+
+
+     C:
+
+
+Function
+~~~~~~~~
+::
+
+
+     Play a sound file, using datatypes.library
+
+
+Inputs
+~~~~~~
+::
+
+
+     FILE f   --  Filename to play
+
+
+Result
+~~~~~~
+::
+
+
+     Sound should play to the default audio device
+
+

@@ -1,0 +1,65 @@
+===========
+BindDrivers
+===========
+
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <beep>`_ `Next <cd>`_ 
+
+---------------
+
+Name
+~~~~
+::
+
+
+     BindDrivers
+
+
+Synopsis
+~~~~~~~~
+::
+
+
+     DEVICES/S,DRIVERS/S,DIR/K/A
+
+
+Location
+~~~~~~~~
+::
+
+
+     C:
+
+
+Function
+~~~~~~~~
+::
+
+
+     For all device drivers with a .info file in SYS:Expansion, load
+     the device driver via Exec/InitResident() if its PRODUCT=
+     tooltype matches a device that is in the system, and not yet
+     configured.
+
+
+Inputs
+~~~~~~
+::
+
+
+     DEVICES           -- List all devices, and their bindings
+
+     DRIVERS           -- List all drivers, and their supported products
+
+     DIR <directory>   -- Directory to search, instead of SYS:Expansion/
+
+
+Example
+~~~~~~~
+::
+
+
+     C:BindDrivers
+
+

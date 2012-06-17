@@ -15,6 +15,7 @@ Shell Commands
     + `assign <assign>`_
     + `avail <avail>`_
     + `beep <beep>`_
+    + `binddrivers <binddrivers>`_
     + `break <break>`_
     + `cd <cd>`_
     + `changetaskpri <changetaskpri>`_
@@ -65,6 +66,8 @@ Shell Commands
     + `partition <partition>`_
     + `path <path>`_
     + `pathpart <pathpart>`_
+    + `pipe <pipe>`_
+    + `play <play>`_
     + `prompt <prompt>`_
     + `protect <protect>`_
     + `quit <quit>`_
