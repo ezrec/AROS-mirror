@@ -125,6 +125,8 @@ struct PCIController
     #ifdef AROS_USB30_CODE
     volatile APTR         xhc_capregbase;
     volatile APTR         xhc_opregbase;
+    volatile APTR         xhc_doorbellbase;
+    volatile APTR         xhc_runtimebase;
 
     ULONG                 xhc_pagesize;
 

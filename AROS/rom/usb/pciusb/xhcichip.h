@@ -12,7 +12,7 @@
     XHCB_xxx's are bitnumbers
     XHCF_xxx's are flags
     XHCM_xxx's are bitmasks
-    XHCV_xxx(p)'s return shifted values from p
+    XHCV_xxx(p)'s return adjusted bitfield from p with mask
 */
 
 #define opreg_readl(opreg) READREG32_LE(hc->xhc_opregbase, opreg)
@@ -21,7 +21,20 @@
 
 #define capreg_readl(capreg) READREG32_LE(hc->xhc_capregbase, capreg)
 #define capreg_readw(capreg) READREG16_LE(hc->xhc_capregbase, capreg)
-#define capreg_readb(capreg) (*((volatile UBYTE *) (((UBYTE *) (hc->xhc_capregbase)) + ((ULONG) (capreg))))) 
+#define capreg_readb(capreg) (*((volatile UBYTE *) (((UBYTE *) (hc->xhc_capregbase)) + ((ULONG) (capreg)))))
+
+#define doorbell_readl(slot) READREG32_LE(hc->xhc_doorbellbase, slot)
+#define doorbell_writel(slot, value) WRITEREG32_LE(hc->xhc_doorbellbase, slot, value)
+
+#define runtime_readl(reg) READREG32_LE(hc->xhc_runtimebase, reg)
+#define runtime_writel(reg, value) WRITEREG32_LE(hc->xhc_runtimebase, reg, value)
+#define runtime_readq(reg) READREG64_LE(hc->xhc_runtimebase, reg)
+#define runtime_writeq(reg, value) WRITEREG64_LE(hc->xhc_runtimebase, reg, value)
+
+#define IRS_readl(intr, reg) runtime_readl((XHCI_IRS + (32 * (intr)) + reg))
+#define IRS_writel(intr, reg, value) runtime_writel((XHCI_IRS + (32 * (intr)) + reg), value)
+#define IRS_readq(intr, reg) runtime_readq((XHCI_IRS + (32 * (intr)) + reg))
+#define IRS_writeq(intr, reg, value) runtime_writeq((XHCI_IRS + (32 * (intr)) + reg), value)
 
 
 /* XHCI capability register defines */
@@ -302,5 +315,14 @@
 #define	XHCF_PS_DR      (1UL<<XHCB_PS_DR)
 #define	XHCF_PS_WPR     (1UL<<XHCB_PS_WPR)
 #define XHCV_PS_SPEED(p)    (((p)&XHCM_PS_SPEED)>>XHCB_PS_SPEED)
+
+/* Runtime Registers */
+#define XHCI_MFINDEX    0x00
+#define XHCI_IRS        0x20
+#define XHCI_IMAN       0x00
+#define XHCI_IMOD       0x04
+#define XHCI_ERSTSZ     0x08
+#define XHCI_ERSTBA     0x10
+#define XHCI_ERDP       0x18
 
 #endif /* XHCICHIP_H */
