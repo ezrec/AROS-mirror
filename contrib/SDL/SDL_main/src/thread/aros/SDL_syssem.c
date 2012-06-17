@@ -106,8 +106,9 @@ int mywaitinit(struct mywaitdata *data, Uint32 timeout)
 {
 	data->extramask = 0;
 	data->pending   = FALSE;
+	data->port.mp_SigBit = -1;
 
-	if ((BYTE) (data->port.mp_SigBit = AllocSignal(-1)) != -1)
+	if (TimerIO && ((BYTE) (data->port.mp_SigBit = AllocSignal(-1)) != -1))
 	{
 		struct timerequest *req = TimerIO;
 
