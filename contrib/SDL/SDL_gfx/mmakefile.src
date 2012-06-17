@@ -5,7 +5,11 @@
 
 #MM- contrib-sdl-sdl-gfx : development-SDL_gfx
 
-##MM- development-SDL_gfx : linklibs-SDL
+#MM- development-SDL_gfx : \
+#MM    linklibs-SDL \
+#MM    workbench-libs-z \
+#MM    workbench-libs-png \
+#MM    workbench-libs-jpg
 
 ifneq ($(AROS_TARGET_CPU), i386)
 DISABLE_MMX := "--disable-mmx"
