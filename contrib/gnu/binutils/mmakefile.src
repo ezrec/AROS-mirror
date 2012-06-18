@@ -5,7 +5,7 @@
 
 #MM- contrib-gnu : contrib-gnu-binutils
 #MM- contrib-gnu-binutils : crosstools development-binutils
-#MM  development-binutils : workbench-libs-z
+#MM- development-binutils : workbench-libs-z
 
 EXTRAOPTS := --with-sysroot=/Development --with-build-sysroot=$(AROS_DEVELOPMENT)
 
