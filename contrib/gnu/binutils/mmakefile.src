@@ -1,10 +1,11 @@
-# Copyright © 2004, 2008, 2010, 2011, The AROS Development Team. All rights reserved.
+# Copyright © 2004, 2008, 2010-2012, The AROS Development Team. All rights reserved.
 # $Id$
 
 -include $(TOP)/config/make.cfg
 
 #MM- contrib-gnu : contrib-gnu-binutils
 #MM- contrib-gnu-binutils : crosstools development-binutils
+#MM  development-binutils : workbench-libs-z
 
 EXTRAOPTS := --with-sysroot=/Development --with-build-sysroot=$(AROS_DEVELOPMENT)
 
