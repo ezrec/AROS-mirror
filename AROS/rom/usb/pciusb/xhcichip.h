@@ -37,7 +37,6 @@
 #define IRS_writeq(intr, reg, value) runtime_writeq((XHCI_IRS + (32 * (intr)) + reg), value)
 
 
-
 enum {
     TRBTYPE_NORMAL = 1,
     TRBTYPE_SETUPSTAGE,
@@ -248,6 +247,7 @@ enum {
 #define XHCV_SPPORT_PSIC(p)     (((p)&XHCM_SPPORT_PSIC)>>XHCB_SPPORT_PSIC)
 
 #define XHCI_SPPSI(psic) ((psic *4) + 0x10 )
+
 /* XHCI operational register defines */
 /* USB Command Register (USBCMD) */
 #define	XHCI_USBCMD     0x00
@@ -365,9 +365,11 @@ enum {
 
 /* Runtime Registers */
 #define XHCI_MFINDEX    0x00
+/* Interrupter Register Set */
 #define XHCI_IRS        0x20
 #define XHCI_IMAN       0x00
 #define XHCI_IMOD       0x04
+/* Event Ring Register Set */
 #define XHCI_ERSTSZ     0x08
 #define XHCI_ERSTBA     0x10
 #define XHCI_ERDP       0x18

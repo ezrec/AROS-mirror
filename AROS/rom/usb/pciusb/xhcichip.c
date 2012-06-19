@@ -94,7 +94,9 @@ void xhciIntCode(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
     }
 }
 
+/* FIXME: Redefine these quick calls and the main function */
 #define xhciCreateNormalTRB() xhciCreateTRB(hc, TRBTYPE_NORMAL)
+#define xhciCreateIsoChTRB() xhciCreateTRB(hc, TRBTYPE_ISOCH)
 
 APTR xhciCreateTRB(struct PCIController *hc, ULONG trb_type) {
 
@@ -303,7 +305,7 @@ BOOL xhciInit(struct PCIController *hc, struct PCIUnit *hu) {
 
     /*
         If the Number of Interrupters (MaxIntrs) field is greater than 1, then Interrupter Mapping shall be supported
-        If Interrupt Pin support is enabled, then only Interrupter 0 is enabled and any other Interrupters are disabled
+        If Interrupt Pin support is enabled, then only Interrupter 0 is enabled and any other Interrupters are disabled (This is the case with Aros)
     */
     KPRINTF(1000, ("MaxIntrs %ld\n",XHCV_MaxIntrs(capreg_readl(XHCI_HCSPARAMS1))));
 
@@ -454,8 +456,9 @@ BOOL xhciInit(struct PCIController *hc, struct PCIUnit *hu) {
                             memptr = AllocVecAligned(hc->xhc_pagesize, hc->xhc_pagesize);
                             if(memptr){
                                 hc->xhc_scratchpadarray[temp] = (UQUAD) ((IPTR) memptr);
-                                KPRINTF(1000, ("hc->xhc_scratchpadarray[%d] = %0lx:%0lx\n", temp, (IPTR) ((UQUAD)(hc->xhc_scratchpadarray[temp])>>32), (IPTR) hc->xhc_scratchpadarray[temp]));
+                                KPRINTF(1000, ("hc->xhc_scratchpadarray[%d] = %0lx:%0lx\n", temp, (ULONG) ((UQUAD)(hc->xhc_scratchpadarray[temp])>>32), (ULONG) hc->xhc_scratchpadarray[temp]));
                             }else{
+                                FreeVecAligned( (APTR) hc->xhc_dcbaa );
                                 for(temp = 0; temp<hc->xhc_scratchpads; temp++){
                                     if( ((UQUAD) hc->xhc_scratchpadarray[temp]) ){
                                         FreeVecAligned( (APTR) ((UQUAD) hc->xhc_scratchpadarray[temp]) );
@@ -475,13 +478,22 @@ BOOL xhciInit(struct PCIController *hc, struct PCIUnit *hu) {
                     }
                     opreg_writeq(XHCI_DCBAAP, (UQUAD) ((IPTR)hc->xhc_dcbaa) );
 
-                    /* FIXME: Allocate device context data structures and fill rest of the DCBAA array */
+                    /*
+                        Event Ring Segment Table Size – RW. Default = ‘0’. This field identifies the number of valid
+                        Event Ring Segment Table entries in the Event Ring Segment Table pointed to by the Event
+                        Ring Segment Table Base Address register. The maximum value supported by an xHC
+                        implementation for this register is defined by the ERST Max field in the HCSPARAMS2 register
+                    */
+                    KPRINTF(1000, ("ERSTSZ %lx\n", IRS_readl(0, XHCI_ERSTSZ)));     //16bit
+                    KPRINTF(1000, ("ERSTBA %lx:%lx\n", (ULONG) ((UQUAD) (IRS_readq(0, XHCI_ERSTBA))>>32), (ULONG) IRS_readq(0, XHCI_ERSTBA)));
+                    KPRINTF(1000, ("ERDP %lx:%lx\n", (ULONG) ((UQUAD) (IRS_readq(0, XHCI_ERDP))>>32), (ULONG) IRS_readq(0, XHCI_ERDP)));
+
                     /* Define the Command Ring Dequeue Pointer by programming the Command Ring Control Register */
 
                     /* Set interrupt enable(IE) bit for interrupter 0 */
-                    KPRINTF(1000, ("IMAN %lx\n", IRS_readl(0,XHCI_IMAN)));
+                    KPRINTF(1000, ("IMAN[0] %lx\n", IRS_readl(0,XHCI_IMAN)));
                     IRS_writel(0, XHCI_IMAN, ((IRS_readl(0,XHCI_IMAN)) | XHCF_IE) );
-                    KPRINTF(1000, ("IMAN %lx\n", IRS_readl(0,XHCI_IMAN)));
+                    KPRINTF(1000, ("IMAN[0] %lx\n", IRS_readl(0,XHCI_IMAN)));
 
                     /* Set Run/Stop(R/S), Interrupter Enable(INTE) and Host System Error Enable(HSEE) */
                     KPRINTF(1000, ("USBCMD %lx\n", opreg_readl(XHCI_USBCMD)));
@@ -566,7 +578,7 @@ APTR AllocVecAligned(ULONG bytesize, ULONG alignment) {
         alignment = sizeof(IPTR);
     }
 
-    temp = (IPTR)AllocVec( bytesize+alignment, (MEMF_PUBLIC | MEMF_CLEAR) );
+    temp = (IPTR) AllocVec( bytesize+alignment, (MEMF_PUBLIC | MEMF_CLEAR) );
     if(temp) {
 //        KPRINTF(1000, ("got memory @ %p with alignment %ld\n", temp, alignment ));
 
