@@ -94,6 +94,21 @@ void xhciIntCode(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
     }
 }
 
+#define xhciCreateNormalTRB() xhciCreateTRB(hc, TRBTYPE_NORMAL)
+
+APTR xhciCreateTRB(struct PCIController *hc, ULONG trb_type) {
+
+    IPTR *TRB;
+
+    TRB = AllocVecAligned(TRB_TEMPLATE_SIZE, 16);
+
+    if(TRB) {
+        return (APTR) TRB;
+    }
+
+    return NULLPTR;
+}
+
 IPTR xhciSearchExtCap(struct PCIController *hc, ULONG id, IPTR extcap) {
 
     IPTR extcapoff = (IPTR) 0;
@@ -258,8 +273,8 @@ BOOL xhciInit(struct PCIController *hc, struct PCIUnit *hu) {
     KPRINTF(1000, ("Pagesize 2^(n+12) = 0x%lx\n", hc->xhc_pagesize));
 
     /* Testing scratchpad allocations */
-    hc->xhc_scratchpads = 4;
-//    hc->xhc_scratchpads = XHCV_SPB_Max(capreg_readl(XHCI_HCSPARAMS2));
+//    hc->xhc_scratchpads = 4;
+    hc->xhc_scratchpads = XHCV_SPB_Max(capreg_readl(XHCI_HCSPARAMS2));
     KPRINTF(1000, ("Max Scratchpad Buffers %ld\n",hc->xhc_scratchpads));
 
     hc->xhc_NumPorts = XHCV_MaxPorts(capreg_readl(XHCI_HCSPARAMS1));
@@ -285,6 +300,11 @@ BOOL xhciInit(struct PCIController *hc, struct PCIUnit *hu) {
 
     KPRINTF(1000, ("MaxSlots %ld\n",hc->xhc_maxslots));
 
+
+    /*
+        If the Number of Interrupters (MaxIntrs) field is greater than 1, then Interrupter Mapping shall be supported
+        If Interrupt Pin support is enabled, then only Interrupter 0 is enabled and any other Interrupters are disabled
+    */
     KPRINTF(1000, ("MaxIntrs %ld\n",XHCV_MaxIntrs(capreg_readl(XHCI_HCSPARAMS1))));
 
     /* 64 byte or 32 byte context data structures? */
@@ -348,9 +368,9 @@ BOOL xhciInit(struct PCIController *hc, struct PCIUnit *hu) {
     }else if ( (hc->xhc_NumPorts > (hc->xhc_NumPorts20 + hc->xhc_NumPorts30)) ) {
         hc->xhc_NumPorts20 = (hc->xhc_NumPorts - hc->xhc_NumPorts30);
     }
-
     KPRINTF(1000, ("Number of USB2.0 ports %ld\n", hc->xhc_NumPorts20 ));
     KPRINTF(1000, ("Number of USB3.0 ports %ld\n", hc->xhc_NumPorts30 ));
+
     if(xhciHaltHC(hc)) {
         if(xhciResetHC(hc)) {
 
@@ -368,8 +388,8 @@ BOOL xhciInit(struct PCIController *hc, struct PCIUnit *hu) {
 
 //            if(memptr) {
             {
-                // PhysicalAddress - VirtualAdjust = VirtualAddress
-                // VirtualAddress  + VirtualAdjust = PhysicalAddress
+//                PhysicalAddress - VirtualAdjust = VirtualAddress
+//                VirtualAddress  + VirtualAdjust = PhysicalAddress
 //                hc->hc_PCIVirtualAdjust = pciGetPhysical(hc, memptr) - (APTR)memptr;
 //                KPRINTF(10, ("VirtualAdjust 0x%08lx\n", hc->hc_PCIVirtualAdjust));
 
@@ -379,12 +399,12 @@ BOOL xhciInit(struct PCIController *hc, struct PCIUnit *hu) {
                 hc->hc_CompleteInt.is_Data = hc;
                 hc->hc_CompleteInt.is_Code = (void (*)(void)) &xhciCompleteInt;
 
-                // add reset handler
+                /* add reset handler */
                 hc->hc_ResetInt.is_Code = xhciResetHandler;
                 hc->hc_ResetInt.is_Data = hc;
                 AddResetCallback(&hc->hc_ResetInt);
 
-                // add interrupt handler
+                /* add interrupt handler */
                 hc->hc_PCIIntHandler.h_Node.ln_Name = "XHCI PCI (pciusb.device)";
                 hc->hc_PCIIntHandler.h_Node.ln_Pri = 5;
                 hc->hc_PCIIntHandler.h_Code = xhciIntCode;
@@ -395,10 +415,10 @@ BOOL xhciInit(struct PCIController *hc, struct PCIUnit *hu) {
                 temp = opreg_readl(XHCI_USBSTS);
                 opreg_writel(XHCI_USBSTS, temp);
 
-                /* After reset all notifications should be automatically disabled but ensure anyway */
-                opreg_writel(XHCI_DNCTRL, 0);
+                /* After reset all notifications should be automatically disabled but ensure anyway, preserve reserved bits */
+                opreg_writel(XHCI_DNCTRL, ( (opreg_readl(XHCI_DNCTRL) & ~XHCM_DNCTRL) | 0) );
 
-                /* Program the Max Device Slots Enabled (MaxSlotsEn) field */
+                /* Program the Max Device Slots Enabled (MaxSlotsEn) field, preserve reserved bits */
                 /*
                     Max Device Slots Enabled (MaxSlotsEn) – RW. Default = ‘0’. This field specifies the maximum
                     number of enabled Device Slots. Valid values are in the range of 0 to MaxSlots. Enabled Devices
@@ -458,8 +478,15 @@ BOOL xhciInit(struct PCIController *hc, struct PCIUnit *hu) {
                     /* FIXME: Allocate device context data structures and fill rest of the DCBAA array */
                     /* Define the Command Ring Dequeue Pointer by programming the Command Ring Control Register */
 
+                    /* Set interrupt enable(IE) bit for interrupter 0 */
+                    KPRINTF(1000, ("IMAN %lx\n", IRS_readl(0,XHCI_IMAN)));
+                    IRS_writel(0, XHCI_IMAN, ((IRS_readl(0,XHCI_IMAN)) | XHCF_IE) );
+                    KPRINTF(1000, ("IMAN %lx\n", IRS_readl(0,XHCI_IMAN)));
+
                     /* Set Run/Stop(R/S), Interrupter Enable(INTE) and Host System Error Enable(HSEE) */
+                    KPRINTF(1000, ("USBCMD %lx\n", opreg_readl(XHCI_USBCMD)));
                     opreg_writel(XHCI_USBCMD, (XHCF_CMD_RS | XHCF_CMD_INTE | XHCF_CMD_HSEE) );
+                    KPRINTF(1000, ("USBCMD %lx\n", opreg_readl(XHCI_USBCMD)));
 
                     KPRINTF(1000, ("xhciInit returns TRUE...\n"));
                     return TRUE;

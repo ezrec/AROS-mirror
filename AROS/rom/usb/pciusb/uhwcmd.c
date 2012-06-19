@@ -998,12 +998,27 @@ WORD cmdControlXFerRootHub(struct IOUsbHWReq *ioreq,
                         /* (URTF_CLASS|URTF_OTHER) USR_SET_FEATURE */
                         case HCITYPE_XHCI:
                         {
+                            switch(val)
+                            {
+                                case UFS_PORT_ENABLE:
+                                case UFS_PORT_SUSPEND:
+                                case UFS_PORT_RESET:
+                                case UFS_PORT_POWER:
+                                case UFS_PORT_LOW_SPEED:
+                                case UFS_C_PORT_CONNECTION:
+                                case UFS_C_PORT_ENABLE:
+                                case UFS_C_PORT_SUSPEND:
+                                case UFS_C_PORT_OVER_CURRENT:
+                                case UFS_C_PORT_RESET:
+                                    break;
+                            }
+
                             cmdgood = TRUE;
                             if(cmdgood)
                             {
                                 KPRINTF(1000, ("XHCI (URTF_CLASS|URTF_OTHER) USR_SET_FEATURE\n"));
                                 return(0);
-                    }
+                            }
                     break;
                         }
                         #endif
@@ -1234,6 +1249,21 @@ WORD cmdControlXFerRootHub(struct IOUsbHWReq *ioreq,
                         /* (URTF_CLASS|URTF_OTHER) USR_CLEAR_FEATURE */
                         case HCITYPE_XHCI:
                         {
+                            switch(val)
+                            {
+                                case UFS_PORT_ENABLE:
+                                case UFS_PORT_SUSPEND:
+                                case UFS_PORT_RESET:
+                                case UFS_PORT_POWER:
+                                case UFS_PORT_LOW_SPEED:
+                                case UFS_C_PORT_CONNECTION:
+                                case UFS_C_PORT_ENABLE:
+                                case UFS_C_PORT_SUSPEND:
+                                case UFS_C_PORT_OVER_CURRENT:
+                                case UFS_C_PORT_RESET:
+                                    break;
+                            }
+
                             cmdgood = TRUE;
                             if(cmdgood)
                             {
@@ -1444,8 +1474,8 @@ WORD cmdControlXFerRootHub(struct IOUsbHWReq *ioreq,
                             {
                                 uhd->bLength = hubdesclen;
                             }
-
-                            uhd->bNbrPorts = unit->hu_RootHubPorts;
+//CHECKME: Should we always return SSHUB even for the USB2.0 roothubs?
+                            uhd->bNbrPorts = unit->hu_RootHub30Ports;
 
                             return(0);
                         }

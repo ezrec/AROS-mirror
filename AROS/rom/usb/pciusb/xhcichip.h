@@ -37,6 +37,51 @@
 #define IRS_writeq(intr, reg, value) runtime_writeq((XHCI_IRS + (32 * (intr)) + reg), value)
 
 
+
+enum {
+    TRBTYPE_NORMAL = 1,
+    TRBTYPE_SETUPSTAGE,
+    TRBTYPE_DATASTAGE,
+    TRBTYPE_STATUSSTAGE,
+    TRBTYPE_ISOCH,
+    TRBTYPE_LINK,
+    TRBTYPE_EVENTDATA,
+    TRBTYPE_NOOP,
+    TRBTYPE_ENABLESLOTCMD,
+    TRBTYPE_DISABLESLOTCMD,
+    TRBTYPE_ADDRESSDEVICECMD,
+    TRBTYPE_CONFIGUREENDPOINTCMD,
+    TRBTYPE_EVALUATECONTEXTCMD,
+    TRBTYPE_RESETENDPOINTCMD,
+    TRBTYPE_STOPENDPOINTCMD,
+    TRBTYPE_SETTRDEQUEPOINTERCMD,
+    TRBTYPE_RESETDEVICECMD,
+    TRBTYPE_FORCEEVENTCMD,
+    TRBTYPE_NEGOTIATEBANDWITHCMD,
+    TRBTYPE_SETLATENCYTOLERANCEVALUECMD,
+    TRBTYPE_FORCEHEADERCMD,
+    TRBTYPE_NOOPCMD,
+    TRBTYPE_TRANSFEREVENT = 32
+};
+
+#define TRB_TEMPLATE_SIZE 16
+
+/* For NORMAL/ISOCH */
+#define TRBI_DATABUFFER 0           // UQUAD
+
+/* For EVENT */
+#define TRBI_TRBPOINTER 0           // UQUAD
+
+/* For LINK */
+#define TRBI_RINGSEGMENTPOINTER 0   // UQUAD
+
+/* For CONTROLL */
+#define TRBI_SETUPSTAGE 0           // UQUAD
+
+/* For NORMAL/ISOCH/EVENT/LINK/CONTROLL */
+#define TRBI_FIELD      8           // UQUAD
+
+
 /* XHCI capability register defines */
 #define XHCI_CAPLENGTH  0x00
 #define XHCI_HCIVERSION 0x02 
@@ -254,6 +299,8 @@
 
 /* Device Notification Control Register (DNCTRL) */
 #define	XHCI_DNCTRL     0x14
+#define	XHCB_DNCTRL     0
+#define XHCM_DNCTRL     (((1UL<<16)-1)<<XHCB_DNCTRL)
 
 /* Command Ring Control Register (CRCR) */
 #define XHCI_CRCR       0x18
@@ -324,5 +371,10 @@
 #define XHCI_ERSTSZ     0x08
 #define XHCI_ERSTBA     0x10
 #define XHCI_ERDP       0x18
+
+#define XHCB_IP         0
+#define XHCB_IE         1
+#define XHCF_IP         (1UL<<XHCB_IP)
+#define XHCF_IE         (1UL<<XHCB_IE)
 
 #endif /* XHCICHIP_H */
