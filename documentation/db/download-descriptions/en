@@ -91,6 +91,11 @@ linux-arm-system:
     The hosted version for Linux/ARM. This archive
     contains AROS core system binaries compiled from the Subversion
     tree. Please note this version requires at least ARMv6 CPU with VFP unit.
+linux-arm-contrib:
+    This archive contains all the contributed programs
+    compiled for the ARM architecture, for use with the
+    Linux/ARM port. Please note this version requires at least ARMv6 CPU 
+    with VFP unit.
 android-arm-system:
     The hosted version for Android/ARM. This archive
     contains AROS core system binaries compiled from the Subversion
