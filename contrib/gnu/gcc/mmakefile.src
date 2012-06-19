@@ -8,11 +8,17 @@
 #MM- development-gcc : development-gmp development-mpfr development-mpc
 
 GCC_VERSION := 4.6.2
-GCC_LANGUAGES=c,c++,objc
+# gcc 4.6.2 can't build arm Objective C support without
+# a compiler error.
+ifneq (,$(findstring $(AROS_TARGET_CPU),arm))
+GCC_LANGUAGES = c,c++
+else
+GCC_LANGUAGES = c,c++,objc
+endif
 GCC_EXTRAOPTS := CFLAGS=-I$(AROS_DEVELOPMENT)/include
 
 EXTRAOPTS := \
-    --enable-languages=$(GCC_LANGUAGES) --enable-longlong --enable-sjlj-exceptions \
+    --enable-languages=$(GCC_LANGUAGES) --enable-longlong --disable-sjlj-exceptions \
     --enable-version-specific-runtime-libs --disable-libssp --disable-libstdcxx-pch \
     --with-sysroot=/Development --with-build-sysroot=$(AROS_DEVELOPMENT) \
     $(GCC_EXTRAOPTS)
