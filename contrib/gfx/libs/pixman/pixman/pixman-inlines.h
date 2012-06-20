@@ -378,7 +378,7 @@ fast_composite_scaled_nearest  ## scale_func_name (pixman_implementation_t *imp,
     pixman_fixed_t max_vx = INT32_MAX; /* suppress uninitialized variable warning */		\
     pixman_fixed_t max_vy;									\
     pixman_vector_t v;										\
-    pixman_fixed_t vx, vy;									\
+    int            vx, vy;									\
     pixman_fixed_t unit_x, unit_y;								\
     int32_t left_pad, right_pad;								\
 												\
@@ -709,8 +709,8 @@ bilinear_pad_repeat_get_scanline_bounds (int32_t         source_image_width,
 					 int32_t *       right_tz,
 					 int32_t *       right_pad)
 {
-	int width1 = *width, left_pad1, right_pad1;
-	int width2 = *width, left_pad2, right_pad2;
+	int32_t width1 = *width, left_pad1, right_pad1;
+	int32_t width2 = *width, left_pad2, right_pad2;
 
 	pad_repeat_get_scanline_bounds (source_image_width, vx, unit_x,
 					&width1, &left_pad1, &right_pad1);

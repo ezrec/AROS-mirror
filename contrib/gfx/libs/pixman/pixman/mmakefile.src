@@ -33,7 +33,7 @@ FILES :=			\
 	../aros/emul_arosc
 
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR) -I$(SRCDIR)/$(CURDIR)/../aros
-USER_CFLAGS := -DHAVE_CONFIG_H -DPIXMAN_NO_TLS
+USER_CFLAGS := -DHAVE_CONFIG_H -DPIXMAN_NO_TLS -Wno-format -Wno-uninitialized
 
 #MM contrib-gfx-libs-pixman-includes : includes-copy
 
