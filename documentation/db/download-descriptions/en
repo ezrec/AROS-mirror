@@ -140,10 +140,6 @@ sam440-ppc-contrib:
     This archive contains all the contributed programs
     compiled for the PowerPC architecture, for use with the
     Sam440EP port.
-linux-arm-contrib:
-    This archive contains all the contributed programs
-    compiled for the ARM architecture, for use with the
-    Linux/ARM port.
 pc-i386-sdk:
     Set of files and tools to build your own AROS programs
     on your preferred machine. You'll need also gcc and the
