@@ -192,7 +192,7 @@ sed "s,@strip@,$strip,g" scripts/aros-strip.in > $aros_sdk_path/${cc_cpu}-aros/b
 chmod a+x $aros_sdk_path/${cc_cpu}-aros/bin/strip
 
 cat <<EOF > AROS-SDK-Uninstall
-#!/bin/sh
+#!/bin/bash
 echo -e "${R}ATTENTION!${N} The AROS SDK is about to be uninstalled."
 
 while true; do
