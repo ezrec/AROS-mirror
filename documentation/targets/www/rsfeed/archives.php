@@ -1,5 +1,13 @@
-<?php 
-	//include("http://trilabs.no-ip.org/ad98/ad97/ole3.php");
+<?php
+
+$feed = file_get_contents('http://archives.aros-exec.org/modules/rssfeed.php');
+$rss = new SimpleXmlElement($feed);
+
+foreach($rss->channel->item as $entry) {
+echo "
+
+link' title='$entry->title'>" . $entry->title . "
+";
+}
+
 ?>
-<div id="now"><object height="100%" width="95%" 
-data="http://www.indiansummer.no/ad98/ad97/ole3.php" type="text/html"></object></div>
