@@ -74,7 +74,7 @@
 #undef LT_OBJDIR
 
 /* Name of package */
-#define PACKAGE
+#define PACKAGE pixman
 
 /* Define to the address where bug reports for this package should be sent. */
 #undef PACKAGE_BUGREPORT
@@ -98,7 +98,11 @@
 #undef PIXMAN_TIMERS
 
 /* The size of `long', as computed by sizeof. */
-#undef SIZEOF_LONG
+#if defined(__x86_64__)
+#  define SIZEOF_LONG 8
+#else
+#  define SIZEOF_LONG 4
+#endif
 
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS 1
@@ -135,10 +139,14 @@
 
 /* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most
    significant byte first (like Motorola and SPARC, unlike Intel). */
-#if AROS_BIG_ENDIAN
+#if defined AC_APPLE_UNIVERSAL_BUILD
+# if defined __BIG_ENDIAN__
 #  define WORDS_BIGENDIAN 1
+# endif
 #else
+# ifndef WORDS_BIGENDIAN
 #  undef WORDS_BIGENDIAN
+# endif
 #endif
 
 /* Define to `__inline__' or `__inline' if that's what the C compiler

@@ -145,62 +145,10 @@ char *getenv (const char *name)
         return buff;
 }
 
-struct timezone;
-int gettimeofday (struct timeval * tv,struct timezone * tz)
-{
-    IMPLEMENT();
-    return 0;
-}
-
-int usleep (useconds_t usec)
-{
-    IMPLEMENT();
-    return 0;
-}
-
-void abort (void)
-{
-    IMPLEMENT();
-    for (;;);
-}
-
-void exit (int code)
-{
-    IMPLEMENT();
-    for (;;);
-}
-	
-int puts (const char * str)
-{
-    bug("%s\n", str);
-    return 1;
-}
-
-int putchar(int c)
-{
-    bug("%c", c);
-    return c;
-}
-
-char * strdup (const char * orig)
-{
-    char * copy;
-    char * ptr;
-
-    if ((copy = malloc (strlen (orig)+1)))
-    {
-	ptr = copy;
-
-	while ((*ptr ++ = *orig ++));
-    }
-
-    return copy;
-}
-	
 int printf (const char * format, ...)
 {
     IMPLEMENT();
-    return EOF;
+    return 0;
 }
 
 #undef getc
@@ -211,66 +159,10 @@ int getc (FILE * stream)
 }
 
 /* File operations */
-FILE * fopen (const char * pathname, const char * mode)
-{
-    IMPLEMENT();
-    return NULL;
-}
-
-int fclose (FILE * stream)
-{
-    IMPLEMENT();
-    return EOF;
-}
-
 int fputc (int c, FILE * stream)
 {
     IMPLEMENT();
     return EOF;
-}
-
-int fputs (const char * str, FILE * stream)
-{
-    IMPLEMENT();
-    return EOF;
-}
-
-int fgetc (FILE * stream)
-{
-    IMPLEMENT();;
-    return EOF;
-}
-
-size_t fwrite (const void * restrict buf, size_t size, size_t nblocks, FILE * restrict stream)
-{
-    ULONG i;
-    for (i = 0; i < size * nblocks; i++)
-        bug("%c", ((char*)buf)[i]);
-
-    return 0;
-}
-
-int fflush (FILE * stream)
-{
-    IMPLEMENT();
-    return EOF;
-}
-
-size_t fread (void * buf, size_t size, size_t nblocks, FILE * stream)
-{
-    IMPLEMENT();
-    return 0;
-}
-
-int ferror (FILE * stream)
-{
-    IMPLEMENT();
-    return TRUE;
-}
-
-void clearerr (FILE * stream)
-{
-    IMPLEMENT();
 }
 
 int fprintf (FILE * fh, const char * format, ...)
@@ -279,155 +171,6 @@ int fprintf (FILE * fh, const char * format, ...)
     return 0;
 }
 
-
-double strtod (const char * str,char ** endptr)
-{
-    /* Unit tests available in : tests/clib/strtod.c */
-    /* FIXME: implement NAN handling */
-    double  val = 0, precision;
-    int     exp = 0;
-    char    c = 0, c2 = 0;
-    int     digits = 0;      
-
-    /* skip all leading spaces */
-    while (isspace (*str))
-        str ++;
-
-    /* start with scanning the floting point number */
-    if (*str)
-    {
-        /* Is there a sign? */
-        if (*str == '+' || *str == '-')
-            c = *str ++;
-
-        /* scan numbers before the dot */
-        while (isdigit(*str))
-        {
-            digits++;
-            val = val * 10 + (*str - '0');
-            str ++;
-        }
-
-        /* see if there is the dot and there were digits before it or there is 
-            at least one digit after it */
-        if ((*str == '.') && ((digits > 0) || (isdigit(*(str + 1)))))
-        {
-            str++;
-            /* scan the numbers behind the dot */
-            precision = 0.1;
-            while (isdigit (*str))
-            {
-                digits++;
-                val += ((*str - '0') * precision) ;
-                str ++;
-                precision = precision * 0.1;
-            }
-        }
-
-        /* look for a sequence like "E+10" or "e-22" if there were any digits up to now */
-        if ((digits > 0) && (tolower(*str) == 'e'))
-        {
-            int edigits = 0;
-            str++;
-
-            if (*str == '+' || *str == '-')
-                c2 = *str ++;
-
-            while (isdigit (*str))
-            {
-                edigits++;
-                exp = exp * 10 + (*str - '0');
-                str ++;
-            }
-            
-            if (c2 == '-')
-                exp = -exp;
-            
-            if (edigits == 0) 
-            {
-                /* there were no digits after 'e' - rollback pointer */
-                str--; if (c2 != 0) str--;
-            }
-            
-            val *= pow (10, exp);
-        }
-
-        if (c == '-')
-            val = -val;
-
-        if ((digits == 0) && (c != 0))
-        {
-            /* there were no digits but there was sign - rollback pointer */
-            str--;
-        }
-    }
-
-    if (endptr)
-        *endptr = (char *)str;
-
-    return val;
-} /* strtod */
-
-char * strchr (const char * str, int	     c)
-{
-    do
-    {
-        /* those casts are needed to compare chars > 127 */
-	if ((unsigned char)*str == (unsigned char)c)
-	    return ((char *)str);
-    } while (*(str++));
-
-    return NULL;
-} /* strchr */
-
-size_t strcspn (const char * str, const char * reject)
-{
-    size_t n = 0; /* Must set this to zero */
-
-    while (*str && !strchr (reject, *str))
-    {
-	str ++;
-	n ++;
-    }
-
-    return n;
-} /* strcspn */
-
-char * strtok (char	   * str, const char * sep)
-{
-    static char * t;
-
-    if (str != NULL)
-	t = str;
-    else
-	str = t;
-
-    str += strspn (str, sep);
-
-    if (*str == '\0')
-	return NULL;
-
-    t = str;
-
-    t += strcspn (str, sep);
-
-    if (*t != '\0')
-	*t ++ = '\0';
-
-    return str;
-} /* strtok */
-
-double atof (const char * str)
-{
-    return strtod (str, (char **)NULL);
-} /* atof */
-
-int fscanf (FILE * fh,const char * format, ...)
-{
-    IMPLEMENT();
-    return 0;
-}
-	
 int __init_emul(void)
 {
     /* malloc/calloc/realloc/free */

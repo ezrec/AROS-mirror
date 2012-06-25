@@ -1,0 +1,87 @@
+#   $Id$
+
+include $(TOP)/config/make.cfg
+
+USER_CFLAGS := -DPIXMAN_NO_TLS -DHAVE_CONFIG_H
+USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../aros -I$(SRCDIR)/$(CURDIR)/../pixman
+TARGETDIR := $(AROS_TESTS)/pixman
+
+#MM- contrib-gfx-libs-pixman-demos : \
+#MM     contrib-gfx-libs-pixman-demos-alpha \
+#MM     contrib-gfx-libs-pixman-demos-clip-in \
+#MM     contrib-gfx-libs-pixman-demos-clip \
+#MM     contrib-gfx-libs-pixman-demos-convolution \
+#MM     contrib-gfx-libs-pixman-demos-gradient \
+#MM     contrib-gfx-libs-pixman-demos-radial \
+#MM     contrib-gfx-libs-pixman-demos-screen \
+#MM     contrib-gfx-libs-pixman-demos-trap \
+#MM     contrib-gfx-libs-pixman-demos-tri
+
+# needs GTK
+# #MM     contrib-gfx-libs-pixman-demos-composite
+
+#MM- contrib-gfx-libs-pixman-demos-quick : \
+#MM     contrib-gfx-libs-pixman-demos-alpha-quick \
+#MM     contrib-gfx-libs-pixman-demos-clip-in-quick \
+#MM     contrib-gfx-libs-pixman-demos-clip-quick \
+#MM     contrib-gfx-libs-pixman-demos-convolution-quick \
+#MM     contrib-gfx-libs-pixman-demos-gradient-quick \
+#MM     contrib-gfx-libs-pixman-demos-radial-quick \
+#MM     contrib-gfx-libs-pixman-demos-screen-quick \
+#MM     contrib-gfx-libs-pixman-demos-trap-quick \
+#MM     contrib-gfx-libs-pixman-demos-tri-quick
+
+#MM- contrib-gfx-libs-pixman-demos-clean : \
+#MM     contrib-gfx-libs-pixman-demos-alpha-clean \
+#MM     contrib-gfx-libs-pixman-demos-clip-in-clean \
+#MM     contrib-gfx-libs-pixman-demos-clip-clean \
+#MM     contrib-gfx-libs-pixman-demos-composite-clean \
+#MM     contrib-gfx-libs-pixman-demos-convolution-clean \
+#MM     contrib-gfx-libs-pixman-demos-gradient-clean \
+#MM     contrib-gfx-libs-pixman-demos-radial-clean \
+#MM     contrib-gfx-libs-pixman-demos-screen-clean \
+#MM     contrib-gfx-libs-pixman-demos-trap-clean \
+#MM     contrib-gfx-libs-pixman-demos-tri-clean
+
+#MM contrib-gfx-libs-pixman-demos-alpha : includes linklibs contrib-gfx-libs-pixman
+#MM contrib-gfx-libs-pixman-demos-clip-in : includes linklibs contrib-gfx-libs-pixman
+#MM contrib-gfx-libs-pixman-demos-clip : includes linklibs contrib-gfx-libs-pixman
+#MM contrib-gfx-libs-pixman-demos-composite : includes linklibs contrib-gfx-libs-pixman
+#MM contrib-gfx-libs-pixman-demos-convolution : includes linklibs contrib-gfx-libs-pixman
+#MM contrib-gfx-libs-pixman-demos-gradient : includes linklibs contrib-gfx-libs-pixman
+#MM contrib-gfx-libs-pixman-demos-radial : includes linklibs contrib-gfx-libs-pixman
+#MM contrib-gfx-libs-pixman-demos-screen : includes linklibs contrib-gfx-libs-pixman
+#MM contrib-gfx-libs-pixman-demos-trap : includes linklibs contrib-gfx-libs-pixman
+#MM contrib-gfx-libs-pixman-demos-tri : includes linklibs contrib-gfx-libs-pixman
+
+%build_prog mmake=contrib-gfx-libs-pixman-demos-alpha progname=alpha \
+    files="alpha-test aros-utils" targetdir=$(TARGETDIR) uselibs="pixman"
+
+%build_prog mmake=contrib-gfx-libs-pixman-demos-clip-in progname=clip-in \
+    files="clip-in aros-utils" targetdir=$(TARGETDIR) uselibs="pixman"
+
+%build_prog mmake=contrib-gfx-libs-pixman-demos-clip progname=clip \
+    files="clip-test aros-utils" targetdir=$(TARGETDIR) uselibs="pixman"
+
+%build_prog mmake=contrib-gfx-libs-pixman-demos-composite progname=composite \
+    files="composite-test aros-utils" targetdir=$(TARGETDIR) uselibs="pixman"
+
+%build_prog mmake=contrib-gfx-libs-pixman-demos-convolution progname=convolution \
+    files="convolution-test aros-utils" targetdir=$(TARGETDIR) uselibs="pixman"
+
+%build_prog mmake=contrib-gfx-libs-pixman-demos-gradient progname=gradient \
+    files="gradient-test aros-utils" targetdir=$(TARGETDIR) uselibs="pixman"
+
+%build_prog mmake=contrib-gfx-libs-pixman-demos-radial progname=radial \
+    files="radial-test ../test/utils aros-utils" targetdir=$(TARGETDIR) uselibs="pixman"
+
+%build_prog mmake=contrib-gfx-libs-pixman-demos-screen progname=screen \
+    files="screen-test aros-utils" targetdir=$(TARGETDIR) uselibs="pixman"
+
+%build_prog mmake=contrib-gfx-libs-pixman-demos-trap progname=trap \
+    files="trap-test aros-utils" targetdir=$(TARGETDIR) uselibs="pixman"
+
+%build_prog mmake=contrib-gfx-libs-pixman-demos-tri progname=tri \
+    files="tri-test aros-utils" targetdir=$(TARGETDIR) uselibs="pixman"
+
+%common
