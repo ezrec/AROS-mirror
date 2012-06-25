@@ -53,8 +53,8 @@ AC_PREREQ([2.57])
 #
 
 m4_define([pixman_major], 0)
-m4_define([pixman_minor], 24)
-m4_define([pixman_micro], 4)
+m4_define([pixman_minor], 26)
+m4_define([pixman_micro], 0)
 
 m4_define([pixman_version],[pixman_major.pixman_minor.pixman_micro])
 
@@ -259,16 +259,69 @@ PIXMAN_CHECK_CFLAG([-fvisibility=hidden], [dnl
 #error Have -fvisibility but it is ignored and generates a warning
 #endif
 #else
-error Need GCC 4.0 for visibility
+#error Need GCC 4.0 for visibility
 #endif
 ])
 
 PIXMAN_CHECK_CFLAG([-xldscope=hidden], [dnl
 #if defined(__SUNPRO_C) && (__SUNPRO_C >= 0x550)
 #else
-error Need Sun Studio 8 for visibility
+#error Need Sun Studio 8 for visibility
 #endif
 ])
+
+dnl ===========================================================================
+dnl Check for Loongson Multimedia Instructions
+
+if test "x$LS_CFLAGS" = "x" ; then
+    LS_CFLAGS="-march=loongson2f"
+fi
+
+have_loongson_mmi=no
+AC_MSG_CHECKING(whether to use Loongson MMI assembler)
+
+xserver_save_CFLAGS=$CFLAGS
+CFLAGS=" $LS_CFLAGS $CFLAGS -I$srcdir"
+AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
+#ifndef __mips_loongson_vector_rev
+#error "Loongson Multimedia Instructions are only available on Loongson"
+#endif
+#if defined(__GNUC__) && (__GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ < 4))
+#error "Need GCC >= 4.4 for Loongson MMI compilation"
+#endif
+#include "pixman/loongson-mmintrin.h"
+int main () {
+    union {
+        __m64 v;
+        char c[8];
+    } a = { .c = {1, 2, 3, 4, 5, 6, 7, 8} };
+    int b = 4;
+    __m64 c = _mm_srli_pi16 (a.v, b);
+    return 0;
+}]])], have_loongson_mmi=yes)
+CFLAGS=$xserver_save_CFLAGS
+
+AC_ARG_ENABLE(loongson-mmi,
+   [AC_HELP_STRING([--disable-loongson-mmi],
+                   [disable Loongson MMI fast paths])],
+   [enable_loongson_mmi=$enableval], [enable_loongson_mmi=auto])
+
+if test $enable_loongson_mmi = no ; then
+   have_loongson_mmi=disabled
+fi
+
+if test $have_loongson_mmi = yes ; then
+   AC_DEFINE(USE_LOONGSON_MMI, 1, [use Loongson Multimedia Instructions])
+else
+   LS_CFLAGS=
+fi
+
+AC_MSG_RESULT($have_loongson_mmi)
+if test $enable_loongson_mmi = yes && test $have_loongson_mmi = no ; then
+   AC_MSG_ERROR([Loongson MMI not detected])
+fi
+
+AM_CONDITIONAL(USE_LOONGSON_MMI, test $have_loongson_mmi = yes)
 
 dnl ===========================================================================
 dnl Check for MMX
@@ -292,11 +345,20 @@ xserver_save_CFLAGS=$CFLAGS
 CFLAGS="$MMX_CFLAGS $CFLAGS"
 AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
 #if defined(__GNUC__) && (__GNUC__ < 3 || (__GNUC__ == 3 && __GNUC_MINOR__ < 4))
-error "Need GCC >= 3.4 for MMX intrinsics"
+#error "Need GCC >= 3.4 for MMX intrinsics"
 #endif
 #include <mmintrin.h>
 int main () {
     __m64 v = _mm_cvtsi32_si64 (1);
+    __m64 w;
+    signed char x = 0;
+
+    /* Some versions of clang will choke on K */
+    asm ("pshufw %2, %1, %0\n\t"
+        : "=y" (w)
+        : "y" (v), "K" (x)
+    );
+
     return _mm_cvtsi64_si32 (v);
 }]])], have_mmx_intrinsics=yes)
 CFLAGS=$xserver_save_CFLAGS
@@ -407,6 +469,8 @@ case $host_os in
       ;;
 esac
 
+AC_SUBST(LS_CFLAGS)
+AC_SUBST(IWMMXT_CFLAGS)
 AC_SUBST(MMX_CFLAGS)
 AC_SUBST(MMX_LDFLAGS)
 AC_SUBST(SSE2_CFLAGS)
@@ -426,7 +490,7 @@ xserver_save_CFLAGS=$CFLAGS
 CFLAGS="$VMX_CFLAGS $CFLAGS"
 AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
 #if defined(__GNUC__) && (__GNUC__ < 3 || (__GNUC__ == 3 && __GNUC_MINOR__ < 4))
-error "Need GCC >= 3.4 for sane altivec support"
+#error "Need GCC >= 3.4 for sane altivec support"
 #endif
 #include <altivec.h>
 int main () {
@@ -551,22 +615,25 @@ have_iwmmxt_intrinsics=no
 AC_MSG_CHECKING(whether to use ARM IWMMXT intrinsics)
 xserver_save_CFLAGS=$CFLAGS
 CFLAGS="$IWMMXT_CFLAGS $CFLAGS"
-AC_COMPILE_IFELSE([
+AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
 #ifndef __arm__
 #error "IWMMXT is only available on ARM"
 #endif
-#if defined(__GNUC__) && (__GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ < 6))
-#error "Need GCC >= 4.6 for IWMMXT intrinsics"
+#ifndef __IWMMXT__
+#error "IWMMXT not enabled (with -march=iwmmxt)"
+#endif
+#if defined(__GNUC__) && (__GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ < 5))
+#error "Need GCC >= 4.5 for IWMMXT intrinsics"
 #endif
 #include <mmintrin.h>
 int main () {
 	union {
 		__m64 v;
-		[char c[8];]
+		char c[8];
 	} a = { .c = {1, 2, 3, 4, 5, 6, 7, 8} };
 	int b = 4;
 	__m64 c = _mm_srli_si64 (a.v, b);
-}], have_iwmmxt_intrinsics=yes)
+}]])], have_iwmmxt_intrinsics=yes)
 CFLAGS=$xserver_save_CFLAGS
 
 AC_ARG_ENABLE(arm-iwmmxt,
@@ -590,6 +657,51 @@ if test $enable_iwmmxt = yes && test $have_iwmmxt_intrinsics = no ; then
 fi
 
 AM_CONDITIONAL(USE_ARM_IWMMXT, test $have_iwmmxt_intrinsics = yes)
+
+dnl ==========================================================================
+dnl Check if assembler is gas compatible and supports MIPS DSPr2 instructions
+
+have_mips_dspr2=no
+AC_MSG_CHECKING(whether to use MIPS DSPr2 assembler)
+xserver_save_CFLAGS=$CFLAGS
+CFLAGS="-mdspr2 $CFLAGS"
+
+AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
+#if !(defined(__mips__) &&  __mips_isa_rev >= 2)
+#error MIPS DSPr2 is currently only available on MIPS32r2 platforms.
+#endif
+int
+main ()
+{
+    int c = 0, a = 0, b = 0;
+    __asm__ __volatile__ (
+        "precr.qb.ph %[c], %[a], %[b]          \n\t"
+        : [c] "=r" (c)
+        : [a] "r" (a), [b] "r" (b)
+    );
+    return c;
+}]])], have_mips_dspr2=yes)
+CFLAGS=$xserver_save_CFLAGS
+
+AC_ARG_ENABLE(mips-dspr2,
+   [AC_HELP_STRING([--disable-mips-dspr2],
+                   [disable MIPS DSPr2 fast paths])],
+   [enable_mips_dspr2=$enableval], [enable_mips_dspr2=auto])
+
+if test $enable_mips_dspr2 = no ; then
+   have_mips_dspr2=disabled
+fi
+
+if test $have_mips_dspr2 = yes ; then
+   AC_DEFINE(USE_MIPS_DSPR2, 1, [use MIPS DSPr2 assembly optimizations])
+fi
+
+AM_CONDITIONAL(USE_MIPS_DSPR2, test $have_mips_dspr2 = yes)
+
+AC_MSG_RESULT($have_mips_dspr2)
+if test $enable_mips_dspr2 = yes && test $have_mips_dspr2 = no ; then
+   AC_MSG_ERROR([MIPS DSPr2 instructions not detected])
+fi
 
 dnl =========================================================================================
 dnl Check for GNU-style inline assembly support
@@ -733,25 +845,27 @@ fi
 dnl =====================================
 dnl Thread local storage
 
-support_for__thread=no
-
-AC_MSG_CHECKING(for __thread)
-AC_LINK_IFELSE([AC_LANG_SOURCE([[
+AC_MSG_CHECKING(for thread local storage (TLS) support)
+AC_CACHE_VAL(ac_cv_tls, [
+    ac_cv_tls=none
+    keywords="__thread __declspec(thread)"
+    for kw in $keywords ; do
+        AC_TRY_COMPILE([
 #if defined(__MINGW32__) && !(__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 5))
 #error This MinGW version has broken __thread support
 #endif
 #ifdef __OpenBSD__
 #error OpenBSD has broken __thread support
 #endif
-static __thread int x ;
-int main () { x = 123; return x; }
-]])], support_for__thread=yes)
 
-if test $support_for__thread = yes; then 
-   AC_DEFINE([TOOLCHAIN_SUPPORTS__THREAD],[],[Whether the tool chain supports __thread])
+int $kw test;], [], ac_cv_tls=$kw)
+    done
+])
+AC_MSG_RESULT($ac_cv_tls)
+
+if test "$ac_cv_tls" != "none"; then
+    AC_DEFINE_UNQUOTED([TLS], $ac_cv_tls, [The compiler supported TLS storage class])
 fi
-
-AC_MSG_RESULT($support_for__thread)
 
 dnl
 dnl posix tls
@@ -803,7 +917,7 @@ AC_DEFUN([PIXMAN_CHECK_PTHREAD],[dnl
     fi
 ])
 
-if test $support_for__thread = no; then
+if test $ac_cv_tls = none ; then
     support_for_pthread_setspecific=no
 
     AC_MSG_CHECKING(for pthread_setspecific)
@@ -855,7 +969,14 @@ AC_SUBST(TOOLCHAIN_SUPPORTS_ATTRIBUTE_CONSTRUCTOR)
 dnl ==================
 dnl libpng
 
-PKG_CHECK_MODULES(PNG, [libpng], have_libpng=yes, have_libpng=no)
+AC_ARG_ENABLE(libpng, AS_HELP_STRING([--enable-libpng], [Build support for libpng (default: auto)]),
+                      [have_libpng=$enableval], [have_libpng=auto])
+
+case x$have_libpng in
+	xyes) PKG_CHECK_MODULES(PNG, [libpng]) ;;
+	xno) ;;
+	*) PKG_CHECK_MODULES(PNG, [libpng], have_libpng=yes, have_libpng=no) ;;
+esac
 
 if test x$have_libpng = xyes; then
     AC_DEFINE([HAVE_LIBPNG], [1], [Whether we have libpng])

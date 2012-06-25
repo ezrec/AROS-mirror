@@ -102,11 +102,14 @@
 /* Define to 1 if you have the ANSI C header files. */
 #undef STDC_HEADERS
 
+/* The compiler supported TLS storage class */
+#undef TLS
+
 /* Whether the tool chain supports __attribute__((constructor)) */
 #undef TOOLCHAIN_SUPPORTS_ATTRIBUTE_CONSTRUCTOR
 
-/* Whether the tool chain supports __thread */
-#undef TOOLCHAIN_SUPPORTS__THREAD
+/* use ARM IWMMXT compiler intrinsics */
+#undef USE_ARM_IWMMXT
 
 /* use ARM IWMMXT compiler intrinsics */
 #undef USE_ARM_IWMMXT
@@ -119,6 +122,12 @@
 
 /* use GNU-style inline assembler */
 #undef USE_GCC_INLINE_ASM
+
+/* use Loongson Multimedia Instructions */
+#undef USE_LOONGSON_MMI
+
+/* use MIPS DSPr2 assembly optimizations */
+#undef USE_MIPS_DSPR2
 
 /* use OpenMP in the test suite */
 #undef USE_OPENMP
