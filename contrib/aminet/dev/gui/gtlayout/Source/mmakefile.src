@@ -123,7 +123,7 @@ LINKLIB_FILES = \
     modname=gtlayout modtype=library \
     files="$(FILES) $(OTHERS) $(UFC_SOURCE) $(API_SOURCE) $(LINKLIB_FILES)" \
     linklibobjs=$(GENDIR)/$(CURDIR)/$(LINKLIB_FILES).o uselibs=rom \
-    conffile=lib.conf
+    conffile=$(SRCDIR)/$(CURDIR)/lib.conf
 
 #MM linklibs-aminet-dev-gui-gtlayout-includes : gtlayout-includes-copy
 #MM
