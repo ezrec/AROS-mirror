@@ -13,7 +13,7 @@ INCLUDE_FILES := calendar.h
 %build_module \
     mmake=workbench-classes-zune-calendar \
     modname=Calendar modtype=mcc \
-    conffile=calendar.conf \
+    conffile=$(SRCDIR)/$(CURDIR)/calendar.conf \
     uselibs="amiga rom m"
     
 %copy_includes path=zune

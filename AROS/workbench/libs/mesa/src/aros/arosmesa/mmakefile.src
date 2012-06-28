@@ -193,7 +193,7 @@ LIBRARY_SOURCES = \
 ##MM- workbench-libs-mesa-module-quick : workbench-libs-mesa-module-cpp-quick
 
 %build_module mmake=workbench-libs-mesa-module \
-    modname=mesa modtype=library linklibname=GL conffile=arosmesa.conf linklibfiles="arosmesa_getprocaddress" \
+    modname=mesa modtype=library linklibname=GL conffile=$(SRCDIR)/$(CURDIR)/arosmesa.conf linklibfiles="arosmesa_getprocaddress" \
     files="$(LIBRARY_SOURCES)" \
     uselibs="galliumauxiliary rom gallium arosm amiga"
 

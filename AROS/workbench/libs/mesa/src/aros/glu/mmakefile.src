@@ -180,7 +180,7 @@ workbench-libs-glu-module-cpp-quick : $(CC_SOURCES) $(CPP_SOURCES)
 LDFLAGS += $(CXX_OBJECTS)
 
 %build_module mmake=workbench-libs-glu-module \
-    modname=glu modtype=library linklibname=GLU conffile=glu.conf \
+    modname=glu modtype=library linklibname=GLU \
     files="$(LIBRARY_SOURCES)" \
     uselibs="rom arosm amiga GL"
 

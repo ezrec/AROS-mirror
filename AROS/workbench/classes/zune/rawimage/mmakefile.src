@@ -15,7 +15,6 @@ INCLUDE_FILES := Rawimage_mcc.h
 %build_module \
     mmake=workbench-classes-zune-rawimage \
     modname=Rawimage modtype=mcc \
-    conffile=Rawimage.conf \
     uselibs="amiga rom"
 
 %copy_includes path=mui

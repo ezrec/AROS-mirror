@@ -413,9 +413,9 @@ FILES         := $(FILES) $(CLASSFILES)
 #MM- workbench-libs-muimaster : includes linklibs workbench-libs-coolimages
 
 ifneq ($(AROS_TARGET_CPU),i386)
-CONFFILE := muimaster_bincompat.conf
+CONFFILE := $(SRCDIR)/$(CURDIR)/muimaster_bincompat.conf
 else
-CONFFILE := muimaster.conf
+CONFFILE := $(SRCDIR)/$(CURDIR)/muimaster.conf
 endif
 
 %build_module mmake=workbench-libs-muimaster \

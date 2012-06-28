@@ -12,7 +12,7 @@ INCLUDE_FILES := Busy_mcc.h
 %build_module \
     mmake=workbench-classes-zune-busy \
     modname=Busy modtype=mcc \
-    conffile=busy.conf \
+    conffile=$(SRCDIR)/$(CURDIR)/busy.conf \
     uselibs="amiga m rom"
     
 %copy_includes path=mui

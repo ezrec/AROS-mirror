@@ -12,7 +12,7 @@ INCLUDE_FILES := loginwindow.h
 %build_module \
     mmake=workbench-classes-zune-loginwindow \
     modname=LoginWindow modtype=mcc \
-    conffile=loginwindow.conf \
+    conffile=$(SRCDIR)/$(CURDIR)/loginwindow.conf \
     uselibs="amiga rom"
     
 %copy_includes path=zune

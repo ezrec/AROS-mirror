@@ -15,7 +15,7 @@ INCLUDE_FILES := Aboutbox_mcc.h
 %build_module \
     mmake=workbench-classes-zune-aboutbox \
     modname=Aboutbox modtype=mcc \
-    conffile=Aboutbox.conf \
+    conffile=$(SRCDIR)/$(CURDIR)/Aboutbox.conf \
     uselibs="amiga rom mui"
 
 %copy_includes path=mui
