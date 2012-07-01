@@ -99,7 +99,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
             ( [
                 A( _N['contribute'], href=makeURL( 'documentation/developers/contribute', lang ) ),
                 A( _N['roadmap'], href=makeURL( 'documentation/developers/roadmap', lang ) ),
-                A( _N['bug-tracker'], href='http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse' ),
+                A( _N['bug-tracker'], href='http://sourceforge.net/tracker/?atid=439463&amp;group_id=43586&amp;func=browse' ),
                 A( _N['working-with-subversion'], href=makeURL( 'documentation/developers/svn', lang ) ),
                 A( _N['compiling'],  href=makeURL( 'documentation/developers/compiling', lang ) ),
                 A( _N['application-development-manual'], href=makeURL( 'documentation/developers/app-dev/index', lang ) ),
@@ -155,7 +155,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
     ] )
 
     counter = Img( 
-    src = 'http://www.hepe.com/cgi-bin/wwwcount.cgi?df=aros.dat&dd=E&ft=0', alt = 'www.hepe.com' 
+    src = 'http://www.hepe.com/cgi-bin/wwwcount.cgi?df=aros.dat&amp;dd=E&amp;ft=0', alt = 'www.hepe.com' 
     )
     
     sponsors = Table\
@@ -193,7 +193,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
                     (
                         Img \
                         (
-                            src = 'http://sflogo.sourceforge.net/sflogo.php?group_id=43586&type=10', 
+                            src = 'http://sflogo.sourceforge.net/sflogo.php?group_id=43586&amp;type=10', 
                             width = 88, height = 16, border = 0, alt = 'Get AROS Research Operating System at SourceForge.net. '
                                 'Fast, secure and Free Open Source software downloads'
                         ),
@@ -318,7 +318,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
                     width = '100%%', contents = [
                         TR( [
                             TD( 
-                                halign = 'top', width = '100%%', height = 109, background='%(ROOT)simages/backgroundtop.png' ,rowspan = 4,
+                                valign = 'top', width = '100%%', height = 109, background='%(ROOT)simages/backgroundtop.png' ,rowspan = 4,
                                 contents = statsPHP5)
 
 #                Map(name = 'map')[,
@@ -335,10 +335,10 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
                                 width = '100%%', contents = [
                                     TR( contents = [
                                         TD(
-                                            width = 171, border= 0, cellpadding="2",
+                                            width = 171, cellpadding="2",
                                             cellspacing="2", contents = [ bar ]
                                         ),
-                                        TD( border= 0, width="100%%", cellpadding="1", cellspacing="1",
+                                        TD( width="100%%", cellpadding="1", cellspacing="1",
                                             contents =  '%(CONTENT)s'
                                         ),
                                     ]),
