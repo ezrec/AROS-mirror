@@ -69,6 +69,32 @@ class Standard( Container ):
 
         return result
 
+# for entries which don't have a closing tag like <img> where
+# </img> would be illegal
+class StandardNoClose( Container ):
+    def __init__( self, name, attributes, contents=None, defaults=None ):
+        Container.__init__( self, contents )
+
+        self.name       = name
+        self.attributes = attributes
+
+        if self.attributes.has_key( 'CLASS' ):
+            self.attributes['class'] = self.attributes['CLASS']
+            del self.attributes['CLASS']
+            
+        if defaults:
+            for key in defaults.keys():
+                if key not in self.attributes: 
+                    self.attributes[key] = defaults[key]
+
+    def __str__( self ):
+        result  = '<' + self.name
+        for name in self.attributes.keys():
+            result += ' ' + name + '="' + str( self.attributes[name] ) + '"'
+        result += '>\n'
+
+        return result
+
 class StandardEmpty( Node ):
     def __init__( self, name, attributes, defaults=None ):
         Node.__init__( self )
@@ -199,9 +225,9 @@ class A( Standard ):
     def __init__( self, contents=None, **attributes ):
         Standard.__init__( self, 'a', attributes, contents )
 
-class Img( Standard ):
+class Img( StandardNoClose ):
     def __init__( self, contents=None, **attributes ):
-        Standard.__init__( self, 'img', attributes, contents )
+        StandardNoClose.__init__( self, 'img', attributes, contents )
 
 class P( Standard ):
     def __init__( self, contents=None, **attributes ):

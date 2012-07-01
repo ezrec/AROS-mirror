@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-1 -*-
-# Copyright (C) 2002-2009, The AROS Development Team. All rights reserved.
+# Copyright (C) 2002-2012, The AROS Development Team. All rights reserved.
 # $Id$
 
 import os
@@ -11,59 +11,59 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
     navigation = Tree \
     ( [    
     P ( contents = [
-    Img( src = '%(ROOT)simages/pointer.png' ),
+    Img( src = '%(ROOT)simages/pointer.png', alt = 'pointer'),
     A( _N['home'], href=makeURL( '.', lang ))]
     ),
         Tree \
         ( [
         P ( contents = [
-            Img( src = '%(ROOT)simages/englishlogo.png', width = 16, height = 10),
+            Img( src = '%(ROOT)simages/englishlogo.png', width = 16, height = 10, alt = 'english logo'),
             A( 'English', href='%(BASE)s.' )]),
         P ( contents = [
-            Img( src = '%(ROOT)simages/czechlogo.png', width = 16, height = 10),
+            Img( src = '%(ROOT)simages/czechlogo.png', width = 16, height = 10, alt = 'czech logo'),
             A( '&#268;esky', href='%(BASE)scs/' )]),
         P ( contents = [
-            Img( src = '%(ROOT)simages/germanylogo.png', width = 16, height = 10),
+            Img( src = '%(ROOT)simages/germanylogo.png', width = 16, height = 10, alt = 'germany logo'),
             A( 'Deutsch', href='%(BASE)sde/' )]),
             P ( contents = [
-            Img( src = '%(ROOT)simages/greecelogo.png', width = 16, height = 10),
+            Img( src = '%(ROOT)simages/greecelogo.png', width = 16, height = 10, alt = 'greece logo'),
             A( '&#917;&#955;&#955;&#951;&#965;&#953;&#954;&#940;', href='%(BASE)sel/' )]),
             P ( contents = [
-            Img( src = '%(ROOT)simages/francelogo.png', width = 16, height = 10),
+            Img( src = '%(ROOT)simages/francelogo.png', width = 16, height = 10, alt = 'france logo'),
             A( 'Fran&#231;ais', href='%(BASE)sfr/' )]),
             P ( contents = [
-            Img( src = '%(ROOT)simages/italylogo.png', width = 16, height = 10),
+            Img( src = '%(ROOT)simages/italylogo.png', width = 16, height = 10, alt = 'italy logo'),
             A( 'Italiano', href='%(BASE)sit/' )]),
             P ( contents = [
-            Img( src = '%(ROOT)simages/netherlandslogo.png', width = 16, height = 10),
+            Img( src = '%(ROOT)simages/netherlandslogo.png', width = 16, height = 10, alt = 'netherlands logo'),
             A( 'Nederlands', href='%(BASE)snl/' )]),
         P ( contents = [
-            Img( src = '%(ROOT)simages/polandlogo.png', width = 16, height = 10),
+            Img( src = '%(ROOT)simages/polandlogo.png', width = 16, height = 10, alt = 'poland logo'),
             A( 'Polski', href='%(BASE)spl/' )]),
             P ( contents = [
-            Img( src = '%(ROOT)simages/portugallogo.png', width = 16, height = 10),
+            Img( src = '%(ROOT)simages/portugallogo.png', width = 16, height = 10, alt = 'portugal logo'),
             A( 'Portugu&#234;s', href='%(BASE)spt/' )]),
             P ( contents = [
-            Img( src = '%(ROOT)simages/russialogo.png', width = 16, height = 10),
+            Img( src = '%(ROOT)simages/russialogo.png', width = 16, height = 10, alt = 'russian logo'),
             A( '&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;', href='%(BASE)sru/' )]),
         P ( contents = [
-            Img( src = '%(ROOT)simages/spanishlogo.png', width = 16, height = 10),
+            Img( src = '%(ROOT)simages/spanishlogo.png', width = 16, height = 10, alt = 'spanish logo'),
             A( 'Espa&#241ol', href='%(BASE)ses/' )]),
         P ( contents = [
-            Img( src = '%(ROOT)simages/finlandlogo.png', width = 16, height = 10),
+            Img( src = '%(ROOT)simages/finlandlogo.png', width = 16, height = 10, alt = 'finland logo'),
             A( 'Suomi', href='%(BASE)sfi/' )]),
         P ( contents = [
-            Img( src = '%(ROOT)simages/swedenlogo.png', width = 16, height = 10),
+            Img( src = '%(ROOT)simages/swedenlogo.png', width = 16, height = 10, alt = 'sweden logo'),
             A( 'Svenska', href='%(BASE)ssv/' )])
         ] ),
         BR(),
     P ( contents = [
-        Img( src = '%(ROOT)simages/pointer.png' ),    
+        Img( src = '%(ROOT)simages/pointer.png', alt = 'pointer' ),    
         A( _N['news'], href=makeURL( 'news/', lang ) )]),
         Tree ( A( _N['archive'], href=makeURL( 'news/archive/', lang ) ) ),
         BR(),
     P ( contents = [
-        Img( src = '%(ROOT)simages/pointer.png' ),
+        Img( src = '%(ROOT)simages/pointer.png', alt = 'pointer' ),
         A( _N['introduction'], href=makeURL( 'introduction/', lang ) ) ]),
     
         Tree \
@@ -75,11 +75,11 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
         ] ),
         BR(),
     P ( contents = [
-        Img( src = '%(ROOT)simages/pointer.png' ),
+        Img( src = '%(ROOT)simages/pointer.png', alt = 'pointer' ),
         A(  _N['download'], href=makeURL( 'download', lang ) )]),
         BR(),
     P ( contents = [
-        Img( src = '%(ROOT)simages/pointer.png' ),
+        Img( src = '%(ROOT)simages/pointer.png', alt = 'pointer' ),
         _N['documentation'] ]),
         Tree \
         ( [
@@ -118,7 +118,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
         ] ),
         BR(),
     P ( contents = [
-        Img( src = '%(ROOT)simages/pointer.png' ),
+        Img( src = '%(ROOT)simages/pointer.png', alt = 'pointer' ),
         A( _N['contact'], href=makeURL( 'contact', lang ) )]),
         Tree \
         ( [
@@ -128,14 +128,14 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
         ] ),
         BR(),
     P ( contents = [
-        Img( src = '%(ROOT)simages/pointer.png' ),
+        Img( src = '%(ROOT)simages/pointer.png', alt = 'pointer' ),
         A(  _N['credits'], href=makeURL( 'credits', lang ) )]),
      P ( contents = [
-        Img( src = '%(ROOT)simages/pointer.png' ),
+        Img( src = '%(ROOT)simages/pointer.png', alt = 'pointer' ),
         A( _N['acknowledgements'], href=makeURL( 'acknowledgements', lang ) )]),
         BR(),
     P ( contents = [
-        Img( src = '%(ROOT)simages/pointer.png' ),
+        Img( src = '%(ROOT)simages/pointer.png', alt = 'pointer' ),
         _N['pictures']]),
         Tree \
         ( [
@@ -144,18 +144,18 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
         ] ),
         BR(),
     P ( contents = [
-        Img( src = '%(ROOT)simages/pointer.png' ),
+        Img( src = '%(ROOT)simages/pointer.png', alt = 'pointer' ),
         A( _N['sponsors'], href=makeURL( 'sponsors', lang ) )]),
     P ( contents = [
-        Img( src = '%(ROOT)simages/pointer.png' ),
+        Img( src = '%(ROOT)simages/pointer.png', alt = 'pointer' ),
         A( _N['linking'], href=makeURL( 'linking', lang ) )]),
     P ( contents = [
-        Img( src = '%(ROOT)simages/pointer.png' ),
+        Img( src = '%(ROOT)simages/pointer.png', alt = 'pointer' ),
         A( _N['links'], href=makeURL( 'links', lang ) )])
     ] )
 
     counter = Img( 
-    src = 'http://www.hepe.com/cgi-bin/wwwcount.cgi?df=aros.dat&dd=E&ft=0' 
+    src = 'http://www.hepe.com/cgi-bin/wwwcount.cgi?df=aros.dat&dd=E&ft=0', alt = 'www.hepe.com' 
     )
     
     sponsors = Table\
@@ -169,7 +169,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
                 ( 
                     A
                     ( 
-                        Img( src = '%(ROOT)simages/trustec-small.png', border = 0 ),
+                        Img( src = '%(ROOT)simages/trustec-small.png', border = 0, alt = 'Trustsec' ),
                         href = 'http://www.trustsec.de/' 
                     )
                 )
@@ -180,7 +180,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
                 (
                     A
                     ( 
-                        Img( src = '%(ROOT)simages/genesi-small.gif', border = 0 ), 
+                        Img( src = '%(ROOT)simages/genesi-small.gif', border = 0, alt = 'Genesi USA' ), 
                         href = 'http://www.genesi-usa.com/' 
                     )
                 )
@@ -227,7 +227,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
                     (
                         Img \
                         (
-                            src = '%(ROOT)simages/noeupatents-small.png', 
+                            src = '%(ROOT)simages/noeupatents-small.png', alt = 'No EU patents',
                             border = 0
                         ),
                         href = 'http://stopsoftwarepatents.eu/'
@@ -282,17 +282,21 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
                 (browser_detection('number') < 7  );
     if ($win_ie56) { 
 
-    echo \"<img src=\\"/images/kittymascot.gif\\"  
-        style=\\"float:right\\" border=\\"0\\"></img><img 
+    echo \"<img src=\\"/images/kittymascot.gif\\"
+        alt=\\"kitty mascot\\"
+        style=\\"float:right\\" border=\\"0\\"><img 
         src=\\"/images/toplogomenu.gif\\" border=\\"0\\" 
-        usemap=\\"#map\\"></img>";
+        alt=\\"top logo menu\\"
+        usemap=\\"#map\\">";
 
         }
         else {
         echo \"<img src=\\"/images/kittymascot.png\\"  
+        alt=\\"kitty mascot\\"
         style=\\"float:right\\" 
-        border=\\"0\\"></img><img src=\\"/images/toplogomenu.png\\" 
-        border=\\"0\\" usemap=\\"#map\\"></img>";
+        border=\\"0\\"><img src=\\"/images/toplogomenu.png\\" 
+        alt=\\"top logo menu\\"
+        border=\\"0\\" usemap=\\"#map\\">";
         } ?>
     '''
     page = HTML( [

@@ -36,7 +36,7 @@ class Tree( Container ):
                     #tr.append( TD( '+', width=Tree.INDENT ) )
                     tr.append( 
                         TD( 
-                            Img( src='%(ROOT)simages/bullet.gif', width=5, height=11 ), 
+                            Img( src='%(ROOT)simages/bullet.gif', width=5, height=11, alt='bullet' ), 
                             align = 'right', valign = 'middle', width=Tree.INDENT 
                         ) 
                     )
