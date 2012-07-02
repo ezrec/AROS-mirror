@@ -542,7 +542,7 @@ class HTMLTranslator(nodes.NodeVisitor):
         self.body.append(self.starttag(node, 'table',
                                        CLASS='docutils citation',
                                        frame="void", rules="none"))
-        self.body.append('<colgroup><col class="label" /><col /></colgroup>\n'
+        self.body.append('<colgroup><col class="label"><col></colgroup>\n'
                          '<tbody valign="top">\n'
                          '<tr>')
         self.footnote_backrefs(node)
@@ -670,8 +670,8 @@ class HTMLTranslator(nodes.NodeVisitor):
         self.body.append(self.starttag(node, 'table',
                                        CLASS='docinfo',
                                        frame="void", rules="none"))
-        self.body.append('<col class="docinfo-name" />\n'
-                         '<col class="docinfo-content" />\n'
+        self.body.append('<col class="docinfo-name">\n'
+                         '<col class="docinfo-content">\n'
                          '<tbody valign="top">\n')
         self.in_docinfo = 1
 
@@ -827,8 +827,8 @@ class HTMLTranslator(nodes.NodeVisitor):
         self.body.append(self.starttag(node, 'table', frame='void',
                                        rules='none',
                                        CLASS='docutils field-list'))
-        self.body.append('<col class="field-name" />\n'
-                         '<col class="field-body" />\n'
+        self.body.append('<col class="field-name">\n'
+                         '<col class="field-body">\n'
                          '<tbody valign="top">\n')
 
     def depart_field_list(self, node):
@@ -881,7 +881,7 @@ class HTMLTranslator(nodes.NodeVisitor):
         self.body.append(self.starttag(node, 'table',
                                        CLASS='docutils footnote',
                                        frame="void", rules="none"))
-        self.body.append('<colgroup><col class="label" /><col /></colgroup>\n'
+        self.body.append('<colgroup><col class="label"><col></colgroup>\n'
                          '<tbody valign="top">\n'
                          '<tr>')
         self.footnote_backrefs(node)
@@ -1150,8 +1150,8 @@ class HTMLTranslator(nodes.NodeVisitor):
         self.body.append(
               self.starttag(node, 'table', CLASS='docutils option-list',
                             frame="void", rules="none"))
-        self.body.append('<col class="option" />\n'
-                         '<col class="description" />\n'
+        self.body.append('<col class="option">\n'
+                         '<col class="description">\n'
                          '<tbody valign="top">\n')
 
     def depart_option_list(self, node):

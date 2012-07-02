@@ -205,7 +205,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
     )
     
     bar = Table(
-        border = 0, cellpadding = 2, cellspacing = 2, width = 171, valign = 'top',
+        border = 0, cellpadding = 2, cellspacing = 2, width = 171,
         contents = [
             TR( 
                 valign = 'top', contents = [
@@ -214,11 +214,11 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
                 ]
             ),
             TR( valign = 'top', contents = TD( navigation ) ),
-            TR( TD(), height=15 ),
+            TR( TD() ),
             TR( valign = 'top', contents = TD( align = 'center', contents = counter ) ),
-            TR( TD(), height=15 ),
+            TR( TD() ),
             TR( valign = 'top', contents = TD( align = 'center', contents = sponsors ) ),
-            TR( TD(), height=30 ),
+            TR( TD()),
             TR \
             (
                 valign = 'top', contents = TD \
@@ -269,7 +269,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
     statsPHP6 = '''
     <?php
         echo "</font></div>";
-        echo "</p></tr></td></table>";
+        echo "</td></tr></table>";
     ?>
     '''
     statsPHP5= '''
@@ -315,10 +315,11 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
                 statsPHP3,
                 Table(
                     border = 0, cellspacing = 0, cellpadding = 0, 
+                    background='%(ROOT)simages/backgroundtop.png',
                     width = '100%%', contents = [
                         TR( [
                             TD( 
-                                valign = 'top', width = '100%%', height = 109, background='%(ROOT)simages/backgroundtop.png' ,rowspan = 4,
+                                valign = 'top', width = '100%%', height = 109, rowspan = 4,
                                 contents = statsPHP5)
 
 #                Map(name = 'map')[,
@@ -335,10 +336,9 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
                                 width = '100%%', contents = [
                                     TR( contents = [
                                         TD(
-                                            width = 171, cellpadding="2",
-                                            cellspacing="2", contents = [ bar ]
+                                            width = 171, contents = [ bar ]
                                         ),
-                                        TD( width="100%%", cellpadding="1", cellspacing="1",
+                                        TD( width="100%%",
                                             contents =  '%(CONTENT)s'
                                         ),
                                     ]),
