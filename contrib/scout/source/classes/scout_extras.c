@@ -907,7 +907,7 @@ IPTR AllocListEntry( APTR pool,
     void *result;
 
     if ((result = tbAllocVecPooled(pool, size)) != NULL) {
-        CopyMemQuick(source, result, size);
+        CopyMem(source, result, size);
     }
 
     return (IPTR)result;
