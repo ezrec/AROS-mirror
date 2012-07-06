@@ -274,6 +274,12 @@ i915_is_format_supported(struct pipe_screen *screen,
       PIPE_FORMAT_YUYV,
       /* XXX why not?
       PIPE_FORMAT_Z16_UNORM, */
+      
+      // AROS Quoke1 fix,seems to work,but probably better to fix SDL so
+      // that some other format is used.
+      // Sami
+      PIPE_FORMAT_Z16_UNORM,
+      
       PIPE_FORMAT_DXT1_RGB,
       PIPE_FORMAT_DXT1_RGBA,
       PIPE_FORMAT_DXT3_RGBA,
@@ -294,6 +300,7 @@ i915_is_format_supported(struct pipe_screen *screen,
    static const enum pipe_format depth_supported[] = {
       /* XXX why not?
       PIPE_FORMAT_Z16_UNORM, */
+      PIPE_FORMAT_Z16_UNORM, // AROS quake1 fix
       PIPE_FORMAT_Z24X8_UNORM,
       PIPE_FORMAT_Z24_UNORM_S8_USCALED,
       PIPE_FORMAT_NONE  /* list terminator */
