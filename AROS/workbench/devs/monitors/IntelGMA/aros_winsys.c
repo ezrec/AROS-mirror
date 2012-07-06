@@ -57,7 +57,7 @@ extern struct g45staticdata sd;
 #define LOCK_BB          { ObtainSemaphore(&BatchBufferLock); }
 #define UNLOCK_BB        { ReleaseSemaphore(&BatchBufferLock); }
 
-#define BASEADDRESS(p) ((uint32_t)(p) - (intptr_t)sd->Card.Framebuffer)
+#define BASEADDRESS(p) ((uint32_t)(p) - (uint32_t)sd->Card.Framebuffer)
 struct i915_winsys_batchbuffer *batchbuffer_create(struct i915_winsys *iws);
 
 ULONG reserve_status_index()

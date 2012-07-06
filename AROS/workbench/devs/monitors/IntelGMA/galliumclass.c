@@ -247,7 +247,7 @@ VOID METHOD(i915Gallium, Hidd_Gallium, DisplayResource)
 
     br11 = tex->stride;
     br26 = msg->srcx | (msg->srcy << 16);
-    br12 =  (uint32_t)tex->buffer->map;
+    br12 = (uint32_t)tex->buffer->map - (uint32_t)sd->Card.Framebuffer;
 
     while(buffer_is_busy(0,tex->buffer)){};
     
