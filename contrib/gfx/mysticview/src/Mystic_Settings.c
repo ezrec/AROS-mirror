@@ -139,22 +139,14 @@ char * STDARGS GetKeyWord(int value, char *def, ...)
 {
 	char *s = def;
 	va_list va;
-	ULONG *args;
 	char *string;
 	int keyvalue;
 
 	va_start(va, def);
-#ifdef __MORPHOS__
-	args = (ULONG *) va->overflow_arg_area;
-#else
-	args = (ULONG *) va;
-#endif
 
-	while ((string = *((char **) args)))
+	while ((string = va_arg(va, char *)))
 	{
-		args++;
-		keyvalue = *((int *) args);
-		args++;
+		keyvalue = va_arg(va, int);
 
 		if (keyvalue == value)
 		{
@@ -162,6 +154,8 @@ char * STDARGS GetKeyWord(int value, char *def, ...)
 			break;
 		}
 	}
+
+	va_end(va);
 
 	return s;
 }
