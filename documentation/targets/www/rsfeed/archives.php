@@ -1,4 +1,4 @@
-	<?php
-	require_once("rsslibar.php");
-	echo RSS_Display("http://archives.aros-exec.org/modules/rssfeed.php", 25);
-	?>
+<?php 
+?>
+<div id="now"><object height="100%" width="95%" 
+data="http://www.ide.arixfoundation.com/aros/rsfeed/archives-feed.php" type="text/html"></object></div>
