@@ -242,25 +242,26 @@ int batchbuffer_reloc(struct i915_winsys_batchbuffer *batch,
                         unsigned offset, boolean fenced)
 {
     IF_BAD_MAGIC(reloc) return -1;
-
-    if( batch->relocs >= MAX_RELOCS-1 )
+    
+    struct reloc *rl = &aros_batchbuffer(batch)->relocs[ batch->relocs ];
+    batch->relocs++;
+    
+    if( batch->relocs >= MAX_RELOCS )
     {
         bug("[GMA winsys] MAX_RELOCS ERROR\n");
+        *(uint32_t *)(batch->ptr) = 0;
+        batch->ptr += 4;
         return -1;
     }
-
-    struct reloc *rl = &aros_batchbuffer(batch)->relocs[ batch->relocs ];
 
     rl->buf = reloc;
     rl->usage = usage;
     rl->offset = offset;
     rl->ptr = (uint32_t *)batch->ptr;
-    batch->relocs++;
-
-    *(uint32_t *)(batch->ptr) = 0;
-    //*(uint32_t *)(batch->ptr) = BASEADDRESS( reloc->map ) + offset ;
-    D(bug("[GMA winsys] batchbuffer_reloc reloc %p offset %d fenced %s base=%p \n",reloc,offset,fenced ? "true" : "false",*(uint32_t *)(batch->ptr)));
+    *(uint32_t *)(batch->ptr) = RELOC_MAGIC;
     batch->ptr += 4;
+    D(bug("[GMA winsys] batchbuffer_reloc reloc %p offset %d fenced %s base=%p \n",reloc,offset,fenced ? "true" : "false",*(uint32_t *)(batch->ptr)));
+
     return 0;
 }
 
@@ -303,11 +304,16 @@ void batchbuffer_flush(struct i915_winsys_batchbuffer *batch,
                 struct reloc *rl = &abatch->relocs[ i ];
                 D(bug("[GMA winsys] batchbuffer_flush reloc %p\n",rl->buf));
                 
-                if(rl->buf->magic != MAGIC)
+                if( i >= MAX_RELOCS || 
+                    rl->buf->map == 0 || 
+                    rl->buf->magic != MAGIC ||
+                    *(uint32_t *)(rl->ptr) != RELOC_MAGIC 
+                  )
                 {
                     batchbuffer_reset( abatch );
                     UNLOCK_BB
                     ReleaseSemaphore(&UnusedBuffersListLock);
+                    bug("[GMA winsys] batchbuffer_flush ERROR:Rotten reloc, num %d buf %p map %p\n",i,rl->buf,rl->buf->map);
                     return;
                 }
                 

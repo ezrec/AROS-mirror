@@ -16,10 +16,11 @@
 #include "hidd/gallium.h"
 
 #define MAGIC 0x12345678
+#define RELOC_MAGIC 0x87654321
 #define MAGIC_WARNING(b) if(b->magic != MAGIC ){ bug("[GMA winsys] %s: Bad MAGIC in buffer %p\n",__func__,b);};
 #define IF_BAD_MAGIC(b) MAGIC_WARNING(b);if(b->magic != MAGIC )
 
-#define MAX_RELOCS 100
+#define MAX_RELOCS 1024
 
 struct aros_winsys
 {
