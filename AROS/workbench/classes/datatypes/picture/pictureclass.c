@@ -1,5 +1,5 @@
 /*
-    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2012, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -599,12 +599,12 @@ static void render_on_rastport(struct Picture_Data *pd, struct Gadget *g, LONG S
             pa.pbpa_PixelData = (UBYTE *) img;
             pa.pbpa_PixelFormat = PBPAFMT_ARGB;
             pa.pbpa_PixelArrayMod = SizeX * 4;
-            pa.pbpa_Left = 0;
-            pa.pbpa_Top = 0;
+            pa.pbpa_Left = SrcX;
+            pa.pbpa_Top = SrcY;
             pa.pbpa_Width = SizeX;
             pa.pbpa_Height = SizeY;
             if(DoMethodA((Object *) g, (Msg) &pa))
-                WritePixelArrayAlpha(img, SrcX, SrcY, SizeX * 4, destRP, DestX, DestY, SizeX, SizeY, 0xffffffff);
+                WritePixelArrayAlpha(img, 0, 0, SizeX * 4, destRP, DestX, DestY, SizeX, SizeY, 0xffffffff);
             FreeVec((APTR) img);
         }
     }
