@@ -678,6 +678,7 @@ VAR(WC->state.BlendMode)
 	if(WC->state.UseTex)
 	if(Wazp3D->QuakeMatrixPatch.ON)
 	if(WC->state.BlendMode ==BLENDREPLACE)			/* if write flat */
+	{
 	if(WT->ChromaTestMode > W3D_CHROMATEST_NONE)		/* if chroma (but wipeout do the bad test W3D_CHROMATEST_EXCLUSIVE) */
 	{
 /* patch: v51 for WipeOut2097 that use the chroma test for the shadow and on-screen display */
@@ -692,6 +693,7 @@ VAR(WC->state.BlendMode)
 		SREM(Quake use own BlendMode )
 		WC->state.BlendMode=WT->BlendMode;	
 		}
+	}
 	}
 
 /* patch: v51 for FPSE that use W3D_SetAlphaMode() with the test Alpha > 0.5 */
@@ -2893,7 +2895,7 @@ AROS_UFHA(APTR ,object , A2),
 AROS_UFHA(APTR ,message, A1))
 {
 	AROS_USERFUNC_INIT
-	ScreenModeFilterC(hook,object,message);
+	return ScreenModeFilterC(hook,object,message);
 	AROS_USERFUNC_EXIT
 }
 #else

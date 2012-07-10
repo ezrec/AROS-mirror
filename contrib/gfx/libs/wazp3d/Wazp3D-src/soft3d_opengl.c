@@ -800,7 +800,7 @@ void HARD3D_CreateTexture(void *hc,void *ht,unsigned char *pt,unsigned short lar
 #define AND &
 struct HARD3D_context *HC=hc;
 struct HARD3D_texture *HT=ht;
-unsigned long size,level,glformat,bits;
+unsigned long size,level,glformat,bits = 0;
 unsigned char UseMip=TexFlags AND 1;
 unsigned char UseFiltering=TexFlags AND 2;
 unsigned char *pt2;

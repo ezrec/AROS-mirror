@@ -4693,7 +4693,7 @@ register union pixel3D *P2=SC->P2;
 register LONG high=SC->PolyHigh;
 register LONG n;
 register WORD large,maxlarge,maxn;
-union pixel3D DeltaX;
+union pixel3D DeltaX = {};
 
 SFUNCTION(Poly_Persp0_Gouraud)
 	maxn=maxlarge=0;
@@ -4766,7 +4766,7 @@ register union pixel3D *P2=SC->P2;
 register LONG high=SC->PolyHigh;
 register LONG n;
 register WORD large,maxlarge,maxn;
-union pixel3D DeltaX;
+union pixel3D DeltaX = {};
 
 SFUNCTION(Poly_Persp0_Tex_Gouraud_Fog)
 	maxn=maxlarge=0;
