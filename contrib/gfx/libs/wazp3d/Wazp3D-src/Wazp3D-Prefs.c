@@ -13,6 +13,7 @@
 
 #include <string.h>
 #include <stdarg.h>
+#include <stdlib.h>
 #include <dos/dos.h>
 #include <exec/types.h>
 #include <exec/memory.h>
