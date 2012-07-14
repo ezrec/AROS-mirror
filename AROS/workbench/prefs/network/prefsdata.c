@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include "prefsdata.h"
 
+//#define DEBUG 1
 #include <aros/debug.h>
 
 #define EX_BUF_SIZE 256
@@ -1317,7 +1318,7 @@ BOOL ReadServers()
     APTR ex_buffer = NULL;
     struct ExAllControl *ex_control = NULL;
     struct ExAllData *entry;
-    BOOL success = TRUE, found = TRUE;
+    BOOL success = TRUE, more = TRUE;
     LONG i = 0;
     struct Server *server;
 
@@ -1327,6 +1328,14 @@ BOOL ReadServers()
         dir = Lock(SERVER_PATH_STORAGE, SHARED_LOCK);
         if (dir == BNULL)
             success = FALSE;
+        else
+        {
+            D(bug("[Network Prefs/ReadServers] scan directory " SERVER_PATH_STORAGE "\n"));
+        }
+    }
+    else
+    {
+        D(bug("[Network Prefs/ReadServers] scan directory " SERVER_PATH_ENV "\n"));
     }
 
     if (success)
@@ -1342,41 +1351,49 @@ BOOL ReadServers()
 
     if (success)
     {
-        while (found && i < MAXSERVERS)
+        ex_control->eac_LastKey = 0;
+        while (more && i < MAXSERVERS)
         {
-            found = ExAll(dir, ex_buffer, EX_BUF_SIZE, ED_SIZE, ex_control);
+            more = ExAll(dir, ex_buffer, EX_BUF_SIZE, ED_SIZE, ex_control);
 
-            if (found || IoErr() == ERROR_NO_MORE_ENTRIES)
+            if (!more && (IoErr() != ERROR_NO_MORE_ENTRIES))
+                break;
+            if(ex_control->eac_Entries == 0)
+                continue;
+
+            entry = ex_buffer;
+            while (entry != NULL)
             {
-                entry = ex_buffer;
-                while (entry != NULL)
+                if (entry->ed_Type < 0)
                 {
-                    if (entry->ed_Type < 0)
+                    dir = CurrentDir(dir);
+                    D(bug("[Network Prefs/ReadServers] filename %s\n", entry->ed_Name));
+                    file = Open(entry->ed_Name, MODE_OLDFILE);
+                    if (file != BNULL)
                     {
-                        dir = CurrentDir(dir);
-                        file = Open(entry->ed_Name, MODE_OLDFILE);
-                        if (file != BNULL)
+                        server = &prefs.servers[i];
+                        if(ReadServer(server, file, entry->ed_Size))
                         {
-                            server = &prefs.servers[i];
-                            if(ReadServer(server, file, entry->ed_Size))
-                            {
-                                i++;
-                                SetServerDevice(server, entry->ed_Name);
-                                if (strstr(GetActiveServers(), entry->ed_Name)
-                                    != NULL)
-                                    SetServerActive(server, TRUE);
-                            }
+                            i++;
+                            SetServerDevice(server, entry->ed_Name);
+                            if (strstr(GetActiveServers(), entry->ed_Name)
+                                != NULL)
+                                SetServerActive(server, TRUE);
                         }
-                        dir = CurrentDir(dir);
                     }
-                    entry = entry->ed_Next;
+                    dir = CurrentDir(dir);
                 }
+                entry = entry->ed_Next;
             }
         }
         prefs.serverCount = i;
     }
 
-    FreeDosObject(DOS_EXALLCONTROL, ex_control);
+    if (ex_control)
+    {
+        FreeDosObject(DOS_EXALLCONTROL, ex_control);
+    }
+
     FreeVec(ex_buffer);
 
     return success;
