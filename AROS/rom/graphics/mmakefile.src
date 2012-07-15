@@ -14,7 +14,6 @@ FILES	  := \
 	default_font \
 	compositing_driver \
 	graphics_driver \
-	fakegfxhidd \
 	dispinfo \
 	gfxfuncsupport \
 	cgx_support

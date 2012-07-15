@@ -83,14 +83,11 @@ struct monitor_driverdata
     struct monitor_driverdata *next;		/* Next driver data in chain			  */
     ULONG		       id;		/* Card ID (part of display mode ID)		  */
     ULONG		       mask;		/* Mask of mode ID				  */
-    OOP_Object      	      *gfxhidd;		/* Graphics driver to use (can be fakegfx object) */
+    OOP_Object      	      *gfxhidd;		/* Graphics driver to use                         */
     UWORD		       flags;		/* Flags, see below				  */
 
     APTR		       userdata;	/* Associated data from notification callback	  */
     struct HIDD_ViewPortData  *display;		/* What is currently displayed			  */
-
-    /* FakeGfx-related */
-    OOP_Object      	      *gfxhidd_orig;	/* Real graphics driver object			  */
 
     /* Composer-related */
     OOP_Object		      *composer;	/* composition HIDD object			  */
@@ -108,7 +105,7 @@ struct monitor_driverdata
 
 /* Driver flags */
 #define DF_BootMode    0x0001	/* Boot mode driver				*/
-#define DF_UseFakeGfx  0x0002	/* Software mouse sprite is in use		*/
+#define DF_SoftCursor  0x0002	/* Software mouse sprite is in use		*/
 #define DF_SoftCompose 0x0004	/* Software screen composition requested	*/
 #define DF_DirectFB    0x0008	/* Driver uses a direct-mode framebuffer	*/
 
@@ -131,8 +128,6 @@ struct common_driverdata
     ObjectCache     	      *planarbm_cache;		/* Planar bitmaps cache		   */
 
     /* HIDD classes */
-    OOP_Class		      *fakegfxclass;		/* Fakegfx (SW sprite) classes	   */
-    OOP_Class		      *fakefbclass;
     OOP_Class		      *composerClass;		/* Composer class		   */
     OOP_Class		      *gcClass;			/* GC class			   */
 
@@ -143,8 +138,6 @@ struct common_driverdata
     OOP_AttrBase    	     hiddPixFmtAttrBase;
     OOP_AttrBase    	     hiddPlanarBMAttrBase;
     OOP_AttrBase    	     hiddGfxAttrBase;
-    OOP_AttrBase    	     hiddFakeGfxHiddAttrBase;
-    OOP_AttrBase	     hiddFakeFBAttrBase;
     OOP_AttrBase	     hiddCompositingAttrBase;
 };
 
@@ -156,8 +149,6 @@ struct common_driverdata
 #define __IHidd_PixFmt      	CDD(GfxBase)->hiddPixFmtAttrBase
 #define __IHidd_PlanarBM    	CDD(GfxBase)->hiddPlanarBMAttrBase
 #define __IHidd_Gfx         	CDD(GfxBase)->hiddGfxAttrBase
-#define __IHidd_FakeGfxHidd 	CDD(GfxBase)->hiddFakeGfxHiddAttrBase
-#define __IHidd_FakeFB	    	CDD(GfxBase)->hiddFakeFBAttrBase
 #define HiddCompositingAttrBase CDD(GfxBase)->hiddCompositingAttrBase
 
 /* Hashtable sizes. Must be powers of two */

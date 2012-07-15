@@ -43,7 +43,6 @@
 
 #include "graphics_intern.h"
 #include "compositing_driver.h"
-#include "fakegfxhidd.h"
 #include "intregions.h"
 #include "dispinfo.h"
 #include "gfxfuncsupport.h"
@@ -107,15 +106,13 @@ int driver_init(struct GfxBase * GfxBase)
     __IHidd_PixFmt  	= OOP_ObtainAttrBase(IID_Hidd_PixFmt);
     __IHidd_PlanarBM 	= OOP_ObtainAttrBase(IID_Hidd_PlanarBM);
     __IHidd_Gfx     	= OOP_ObtainAttrBase(IID_Hidd_Gfx);
-    __IHidd_FakeGfxHidd = OOP_ObtainAttrBase(IID_Hidd_FakeGfxHidd);
 
     if (__IHidd_BitMap   &&
         __IHidd_GC       &&
 	__IHidd_Sync     &&
 	__IHidd_PixFmt   &&
 	__IHidd_PlanarBM &&
-	__IHidd_Gfx      &&
-	__IHidd_FakeGfxHidd)
+	__IHidd_Gfx      )
     {
         CDD(GfxBase)->gcClass = OOP_FindClass(CLID_Hidd_GC);
     	if (!CDD(GfxBase)->gcClass)
@@ -223,7 +220,7 @@ struct monitor_driverdata *driver_Setup(OOP_Object *gfxhidd, struct GfxBase *Gfx
         return NULL;
     }
 
-    mdd->gfxhidd_orig = gfxhidd;
+    mdd->gfxhidd = gfxhidd;
 
     /*
      * 1. Fill in ModeID database in the driverdata.
@@ -272,20 +269,11 @@ struct monitor_driverdata *driver_Setup(OOP_Object *gfxhidd, struct GfxBase *Gfx
 #endif
     OOP_GetAttr(gfxhidd, aHidd_Gfx_NoFrameBuffer, &noframebuffer);
 
-    if (hwcursor)
+    if (!hwcursor)
     {
-        mdd->gfxhidd = gfxhidd;
+	mdd->flags |= DF_SoftCursor;
     }
-    else
-    {
-	D(bug("[driver_Setup] Hardware mouse cursor is not supported, using fakegfx.hidd\n"));
-
-	mdd->gfxhidd = init_fakegfxhidd(gfxhidd, GfxBase);
-	if (mdd->gfxhidd)
-	    mdd->flags |= DF_UseFakeGfx;
-	else
-	    ok = FALSE;
-    }
+    mdd->gfxhidd = gfxhidd;
 
     if (ok)
     {
@@ -295,8 +283,6 @@ struct monitor_driverdata *driver_Setup(OOP_Object *gfxhidd, struct GfxBase *Gfx
 	{
 	    /*
 	     * Instantiate framebuffer if needed.
-	     * Note that we perform this operation on fakegfx.hidd if it was plugged in.
-	     * This enables software mouse sprite on a framebuffer.
 	     */
 	    mdd->framebuffer = create_framebuffer(mdd, GfxBase);
 	    mdd->flags |= DF_DirectFB;
@@ -320,9 +306,6 @@ struct monitor_driverdata *driver_Setup(OOP_Object *gfxhidd, struct GfxBase *Gfx
 	if (mdd->framebuffer)
 	    OOP_DisposeObject(mdd->framebuffer);
     } /* if (fake gfx stuff ok) */
-
-    if (mdd->flags & DF_UseFakeGfx)
-	OOP_DisposeObject(mdd->gfxhidd);
 
     FreeVec(mdd);
 
@@ -350,11 +333,8 @@ void driver_Expunge(struct monitor_driverdata *mdd, struct GfxBase *GfxBase)
     OOP_DisposeObject(mdd->composer);
     OOP_DisposeObject(mdd->framebuffer);
 
-    if (mdd->flags & DF_UseFakeGfx)
-        OOP_DisposeObject(mdd->gfxhidd);
-
     /* Dispose driver object. This will take care about syncs etc */
-    OOP_DisposeObject(mdd->gfxhidd_orig );
+    OOP_DisposeObject(mdd->gfxhidd );
 
     FreeVec(mdd);
 }

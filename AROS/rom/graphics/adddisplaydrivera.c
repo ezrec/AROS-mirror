@@ -271,7 +271,7 @@
 
 		if (CDD(GfxBase)->DriverNotify)
 		{
-		    /* Use mdd->gfxhidd here because it can be substituted by fakegfx object */
+		    /* Use mdd->gfxhidd here */
 		    mdd->userdata = CDD(GfxBase)->DriverNotify(mdd, TRUE, CDD(GfxBase)->notify_data);
 		}
 
@@ -367,7 +367,7 @@
 	     * It needs to be researched what exactly this mode ID is. Implementing this concept would
 	     * improve AmigaOS(tm) compatibility.
 	     */
-    	    OOP_Object *sync = HIDD_Gfx_GetSync(mdd->gfxhidd_orig, 0);
+    	    OOP_Object *sync = HIDD_Gfx_GetSync(mdd->gfxhidd, 0);
 
 	    OOP_GetAttr(sync, aHidd_Sync_MonitorSpec, (IPTR *)&GfxBase->default_monitor);
 	}

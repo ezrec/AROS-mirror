@@ -18,7 +18,6 @@
 #include "graphics_intern.h"
 #include "gfxfuncsupport.h"
 #include "dispinfo.h"
-#include "fakegfxhidd.h"
 
 #define SET_TAG(tags, idx, tag, val)	\
     tags[idx].ti_Tag = tag ; tags[idx].ti_Data = (IPTR)val;
@@ -265,18 +264,6 @@ static HIDDT_StdPixFmt const cyber2hidd_pixfmt[] =
 	    OOP_Object *friend_obj = HIDD_BM_OBJ(friend_bitmap);
 
 	    D(bug("[AllocBitMap] Setting friend bitmap 0x%p, object 0x%p\n", friend_bitmap, friend_obj));
-
-	    /*
-	     * Friend bitmap may hold a fakegfx bitmap object.
-	     * fakegfx is our proxy layer on top of graphics drivers, providing
-	     * software mouse pointer implementation. Graphics drivers do (and must)
-	     * not know about fakegfx, so we need to de-masquerade such objects.
-	     */
-	    if (OOP_OCLASS(friend_obj) == CDD(GfxBase)->fakefbclass)
-	    {
-	    	OOP_GetAttr(friend_obj, aHidd_FakeFB_RealBitMap, (IPTR *)&friend_obj);
-	    	D(bug("[AllocBitMap] Fakefb friend de-masqueraded to 0x%p\n", friend_obj));
-	    }
 
 	    SET_BM_TAG(bm_tags, 3, Friend, friend_obj);
 

@@ -160,7 +160,7 @@
 
         if (success && colmaps_ok)
         {
-            struct monitor_driverdata *driver, *dst_driver;
+            struct monitor_driverdata *driver;
             OOP_Object *bm_obj;
             HIDDT_DrawMode old_drmd;
 	    struct TagItem cbtags[] = {
@@ -184,11 +184,8 @@
 	     * bitmap object instead of driver object.
 	     */
 	    driver     = GET_BM_DRIVERDATA(bitScaleArgs->bsa_SrcBitMap);
-	    dst_driver = GET_BM_DRIVERDATA(bitScaleArgs->bsa_DestBitMap);
 
 	    if (driver == (struct monitor_driverdata *)CDD(GfxBase))
-	    	bm_obj = dstbm_obj;
-	    else if (dst_driver->flags & DF_UseFakeGfx)
 	    	bm_obj = dstbm_obj;
 	    else
 	    	bm_obj = srcbm_obj;

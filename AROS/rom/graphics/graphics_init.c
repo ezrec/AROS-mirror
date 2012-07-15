@@ -27,7 +27,6 @@
 
 #include "graphics_intern.h"
 #include "default_font.h"
-#include "fakegfxhidd.h"
 
 #include LC_LIBDEFS_FILE
 
