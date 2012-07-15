@@ -265,10 +265,10 @@ method called in your main loop::
 Some MUI conventions
 --------------------
 
-+ All method names start with MUIM_ (except for setting, getting, instantiation)
-+ All attribute names start with MUIA_
-+ All magic attribute values start with MUIV_
-+ All class names start with MUIC_
++ All method names start with MUIM\_ (except for setting, getting, instantiation)
++ All attribute names start with MUIA\_
++ All magic attribute values start with MUIV\_
++ All class names start with MUIC\_
 
 -----------
 Hello world
