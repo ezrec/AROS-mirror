@@ -56,8 +56,9 @@ to Zune. In particular, the latest available MUI developer kit can be
 found here__. In this LHA archive, 2 documents are warmly recommended:
 
 + `MUIdev.guide`, the MUI programmer documentation.
-+ `PSI.c`, the sourcecode of an application demonstrating  all the modern
-  MUI practices like object-oriented design and dynamic object creation.
++ `PSI.c`, the well-documented sourcecode of an application demonstrating
+  all the modern MUI practices like object-oriented design and dynamic
+  object creation.
 
 __ http://main.aminet.net/dev/mui/mui38dev.lha
 
@@ -71,6 +72,33 @@ BOOPSI Primer
 
 Concepts
 ========
+
+Tag List
+--------
+
+A Tag List is a way to pass a variable number of arguments to a C
+function. It's like using an associative array in a scripting language.
+
+It's implemented as C varargs containing a list of TagItems and ending
+with the special TAG_DONE value:
+
+    TagItem1, TagItem2, ..., TAG_DONE
+
+In turn, a TagItem is a struct containing 2 fields:
+
++ a key, ``ti_Tag``. It's an identifier (unsigned integer) commonly called
+  the ``Tag``
++ a value, ``ti_Data``. It's able to contain either an integer or a pointer.
+
+So finally, in a C source code, using a Tag List looks like:
+
+    function(some, args, Tag1, value1, Tag2, value2, Tag3, value3, TAG_DONE);
+
+You will find Tag Lists in many places of AROS, especially those related to
+the windowed environment. BOOPSI (and thus MUI/Zune) is built upon them:
+
++ all the method calls are done with the same function: the method and its arguments are passed as a Tag List
++ class instantiations, attribute setters and getters all use Tag Lists
 
 Class
 -----
@@ -88,7 +116,7 @@ A class is defined by its name, its parent class and a dispatcher.
 
 + dispatcher: it gives access to all operations (called methods) provided
   by this class, ensuring that each operation is handled by the proper
-  code or passed to its super class.
+  code or, if it is not known to the current class, passed to its super class.
 
 BOOPSI type for a class is ``Class *`` also known as ``IClass``.
 
@@ -96,7 +124,8 @@ Object
 ------
 
 An object is an instance of class: each object has its specific data, but all
-objects of the same class share the same behavior.
+objects of the same class share the same behavior (through a pointer to their
+IClass).
 An object has several classes if we count the parents of its true class
 (the most derived one) up to the rootclass.
 
@@ -121,6 +150,10 @@ Attributes can be one or more of the following:
   You can set this attribute at any time (or at least, not only creation).
 + Gettable (``G``) :
   You can get the value of this attribute.
++ Private (``P``) :
+  Your application shouldn't use this attribute, because its behaviour is
+  not guaranteed outside of a certain context, not guaranteed in future
+  release, may break the framework or some other reason.
 
 Method
 ------
@@ -137,7 +170,30 @@ To send a message to an object, use ``DoMethod()``. It will use the true
 class first. If the class implements this method, it will handle it.
 Else it will try its parent class, until the message is handled or
 the rootclass is reached (in this case, the unknown message is silently
-discarded).
+discarded). If a method is documented as private, you shouldn't call it
+in your own application, unless you want to risk portability and/or
+fiability :)
+
+Identifiers
+-----------
+
+In this object-oriented framework, each attribute or method is identified
+by a Tag (see above)
+Attribute access and method dispatch is based on those identifiers
+(more commonly through a C switch statement).
+
+As you won't use both attributes and methods in the same switch, both have
+their own identifier space: you can use the same identifier for a method
+and an attribute without fear of conflict.
+
+You only have to care about creating identifiers when creating your own
+classes.
+If you intend to do a public class, you should allocate some space in
+the Zune identifier space__. Else you have to make sure you use a range
+not reserved for Zune, MUI legacy or AROS classes.
+
+__ http://aros.sourceforge.net/documentation/developers/zune-dev/identifiers.php
+
 
 Examples
 ========
@@ -205,6 +261,15 @@ method called in your main loop::
 + Parameters are not a taglist, and thus don't end with ``TAG_DONE``.
 + You have to cast pointers to ``IPTR`` to avoid warnings.
 
+--------------------
+Some MUI conventions
+--------------------
+
++ All method names start with MUIM_ (except for setting, getting, instantiation)
++ All attribute names start with MUIA_
++ All magic attribute values start with MUIV_
++ All class names start with MUIC_
+
 -----------
 Hello world
 -----------
@@ -266,16 +331,16 @@ Let's study our first real life example::
             if (XGET(wnd, MUIA_Window_Open))
             {
                 // Main loop
-            while((LONG)DoMethod(app, MUIM_Application_NewInput, (IPTR)&sigs)
-                  != MUIV_Application_ReturnID_Quit)
-            {
-                if (sigs)
+                while((LONG)DoMethod(app, MUIM_Application_NewInput, (IPTR)&sigs)
+                      != MUIV_Application_ReturnID_Quit)
                 {
-                sigs = Wait(sigs | SIGBREAKF_CTRL_C);
-                if (sigs & SIGBREAKF_CTRL_C)
-                    break;
+                    if (sigs)
+                    {
+                        sigs = Wait(sigs | SIGBREAKF_CTRL_C);
+                        if (sigs & SIGBREAKF_CTRL_C)
+                            break;
+                    }
                 }
-            }
             }
         // Destroy our application and all its objects
             MUI_DisposeObject(app);
@@ -478,3 +543,46 @@ one of these schemes:
   best solution as it supports object-oriented design in applications.
   It needs you to create custom classes so it may not be the easiest for
   beginners or people in a hurry.
+
+--------------------------------
+Developping a larger application
+--------------------------------
+
+As stated in the prerequisites above (PSI.c and other MUI documentation
+materials), the MUI author recommends to divide your application in
+subclasses, then divide those subclasses into smaller subclasses.
+Those application-specific (custom) classes will most often be private
+to your application.
+
+You will have roughly a class for each big UI "feature" (panel, group or
+complex gadget), along the following lose rules:
+
++ a class should be self-contained, do as few things as possible and
+  communicate with other UI parts only through method calls (setting/getting
+  custom attributes, or calling custom classes)
++ if possible, a class should help factor common UI features (eg. a complex
+  color selector used in several parts ofthe UI)
+
+Most of your private class will probably be subclasses of the Group class,
+and most often you won't have to redefine an existing method, but rather
+define your own private methods (see the paragraph about BOOPSI identifiers
+above)
+
+All in all, you should start by drawing a sketch of your app and think about
+the classes (UI features) boundaries and sudivide as much as possible.
+
+Then you should study the MUI class hierarchy to find where each of your
+subclass should fit and what MUI methods you should redefine (if any).
+
+It would be a large duplication of efforts to document further: now you
+have to go read MUIdev guide and PSI source from the mui38dev.lha cited in
+prerequisites (it would be nice to have the right to reproduce it here, though).
+There you will find a huge amount of informations
+about the fundamentals of MUI, macros, class hierarchy, layout, dynamic object
+creation, custom class creation, methods to redefine ...
+
+And don't forget that AROS and Zune source code are available: don't hesitate
+to take a look!
+
+Have fun!
+
