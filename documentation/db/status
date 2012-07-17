@@ -2513,7 +2513,7 @@ application;MUIA_Application_SingleTask;1;1;2
 application;MUIA_Application_Sleep;1;1;0
 application;MUIA_Application_Title;1;1;2
 application;MUIA_Application_UseCommodities;1;1;2
-application;MUIA_Application_UsedClasses;1;1;0
+application;MUIA_Application_UsedClasses;1;2;0
 application;MUIA_Application_UseRexx;1;1;2
 application;MUIA_Application_Version;1;1;2
 application;MUIA_Application_Window;1;1;2
@@ -2665,7 +2665,8 @@ area;MUIA_CycleChain;1;1;2
 rectangle;MUIA_Rectangle_BarTitle;1;1;2
 rectangle;MUIA_Rectangle_HBar;1;1;2
 rectangle;MUIA_Rectangle_VBar;1;1;2
-balance;MUIA_Balance_Quiet;1;1;0
+balance;MUIA_Balance_Quiet;1;2;0
+balance;OM_NEW;1;1;2
 image;MUIA_Image_FontMatch;1;1;2
 image;MUIA_Image_FontMatchHeight;1;1;2
 image;MUIA_Image_FontMatchWidth;1;1;2
@@ -2688,8 +2689,8 @@ bodychunk;MUIA_Bodychunk_Compression;1;1;2
 bodychunk;MUIA_Bodychunk_Depth;1;1;2
 bodychunk;MUIA_Bodychunk_Masking;1;1;2
 text;MUIA_Text_Contents;1;1;2
-text;MUIA_Text_ControlChar;1;1;0
-text;MUIA_Text_Copy;1;1;0
+text;MUIA_Text_ControlChar;1;2;0
+text;MUIA_Text_Copy;1;2;0
 text;MUIA_Text_HiChar;1;1;2
 text;MUIA_Text_HiCharIdx;1;2;2
 text;MUIA_Text_PreParse;1;1;2
@@ -2790,7 +2791,8 @@ floattext;MUIA_Floattext_Justify;1;1;2
 floattext;MUIA_Floattext_SkipChars;1;1;2
 floattext;MUIA_Floattext_TabSize;1;1;2
 floattext;MUIA_Floattext_Text;1;1;2
-volumelist;MUIA_Volumelist_ExampleMode;1;1;0
+volumelist;MUIA_Volumelist_ExampleMode;1;2;0
+volumelist;OM_NEW;1;1;2
 dirlist;MUIA_Dirlist_AcceptPattern;1;1;2
 dirlist;MUIA_Dirlist_Directory;1;1;2
 dirlist;MUIA_Dirlist_DrawersOnly;1;1;2
