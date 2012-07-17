@@ -9,7 +9,7 @@
 #MM    linklibs-SDL \
 #MM    workbench-libs-z \
 #MM    workbench-libs-png \
-#MM    workbench-libs-jpg
+#MM    workbench-libs-jpeg
 
 %fetch_and_build_gnu_development package=SDL_image version=1.2.3 patch=yes \
     package_repo=http://www.libsdl.org/projects/SDL_image/release/ \
