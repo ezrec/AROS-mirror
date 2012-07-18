@@ -82,14 +82,14 @@
                 screen->ViewPort.Modes |= VP_HIDE;
         }
 	*/
-        /* Build the list of viewports in the view */
-	DEBUG_RETHINKDISPLAY(dprintf("RethinkDisplay: Building viewports list\n"));
+            /* Build the list of viewports in the view */
+        DEBUG_RETHINKDISPLAY(dprintf("RethinkDisplay: Building viewports list\n"));
         viewportptr = &IntuitionBase->ViewLord.ViewPort;
         for (screen = IntuitionBase->FirstScreen; screen; screen = screen->NextScreen)
         {
             if ((screen->ViewPort.Modes & VP_HIDE) == 0)
             {
-		DEBUG_RETHINKDISPLAY(bug("RethinkDisplay: Adding ViewPort 0x%p for screen 0x%p\n", &screen->ViewPort, screen));
+                DEBUG_RETHINKDISPLAY(bug("RethinkDisplay: Adding ViewPort 0x%p for screen 0x%p\n", &screen->ViewPort, screen));
                 *viewportptr = &screen->ViewPort;
                 viewportptr = &screen->ViewPort.Next;
             }
@@ -186,7 +186,17 @@
 
     /* Ensure that empty displays get normal pointer */
     if (!failure)
-	ResetPointer(IntuitionBase);
+    {
+        /* validate screen positions, scrolling limits are not necessarily same anymore. */
+        for (screen = IntuitionBase->FirstScreen; screen; screen = screen->NextScreen)
+        {
+            if ((screen->ViewPort.Modes & VP_HIDE) == 0)
+            {
+                ScreenPosition( screen, SPOS_RELATIVE, 0,0,0,0  );
+            }
+        }
+        ResetPointer(IntuitionBase);
+    }
 
     UnlockIBase(ilock);
 
