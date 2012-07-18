@@ -269,6 +269,10 @@ void SetCursorPosition(struct g45staticdata *sd,LONG x,LONG y);
 
 BOOL HIDD_INTELG45_SetFramebuffer(OOP_Object * bm);
 BOOL HIDD_INTELG45_SwitchToVideoMode(OOP_Object * bm);
-//#define GALLIUM_SIMULATION
+BOOL copybox3d_supported();
+BOOL copybox3d( GMABitMap_t *bm_dst, GMABitMap_t *bm_src,
+               ULONG dst_x,ULONG dst_y,ULONG dst_width, ULONG dst_height,
+               ULONG src_x,ULONG src_y,ULONG src_width, ULONG src_height );
 
+//#define GALLIUM_SIMULATION             
 #endif /* INTELG45_INTERN_H_ */
