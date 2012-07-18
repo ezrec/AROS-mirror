@@ -57,22 +57,38 @@ static inline uint32_t pack_float(float f)
     return u.dw;
 }
 
+#define IS_915G(Id) ((Id) == 0x2582 || \
+                     (Id) == 0x258a)
+                      
+#define IS_915GM(Id) ((Id) == 0x2592)
+#define IS_945G(Id)  ((Id) == 0x2772)
+#define IS_945GM(Id) ((Id) == 0x27A2 || \
+                      (Id) == 0x27AE)
+
+#define IS_915(Id) (IS_915G(Id) || \
+                    IS_915GM(Id))
+
+#define IS_945(Id) (IS_945G(Id) ||  \
+                    IS_945GM(Id) || \
+                    IS_G33(Id) ||   \
+                    IS_PINEVIEW(Id))
+
+#define IS_G33(Id) ((Id) == 0x29C2 || \
+                    (Id) == 0x29B2 || \
+                    (Id) == 0x29D2)
+
+#define IS_PINEVIEW(Id) ((Id) == 0xa001 || \
+                         (Id) == 0xa011)
+
+#define IS_GEN3(Id) (IS_915(Id) || \
+                     IS_945(Id) || \
+                     IS_G33(Id) || \
+                     IS_PINEVIEW(Id))
+              
 BOOL copybox3d_supported()
 {
-    // supported chipsets ,gen3 ?
-    if(    sd->ProductID == 0x2582 // GMA 900
-        || sd->ProductID == 0x2782
-        || sd->ProductID == 0x2592
-        || sd->ProductID == 0x2792
-        || sd->ProductID == 0x2772 // GMA 950
-        || sd->ProductID == 0x2776
-        || sd->ProductID == 0x27A2
-        || sd->ProductID == 0x27A6
-        || sd->ProductID == 0x27AE
-        || sd->ProductID == 0x2972 // GMA 3000 
-        || sd->ProductID == 0x2973
-        || sd->ProductID == 0x2992
-        || sd->ProductID == 0x2993 )
+    // supported chipsets
+    if( IS_GEN3( sd->ProductID ) )
     {
         return TRUE;
     } 
