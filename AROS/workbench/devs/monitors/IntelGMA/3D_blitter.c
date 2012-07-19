@@ -59,14 +59,14 @@ static inline uint32_t pack_float(float f)
 
 #define IS_915G(Id) ((Id) == 0x2582 || \
                      (Id) == 0x258a)
-                      
 #define IS_915GM(Id) ((Id) == 0x2592)
-#define IS_945G(Id)  ((Id) == 0x2772)
-#define IS_945GM(Id) ((Id) == 0x27A2 || \
-                      (Id) == 0x27AE)
 
 #define IS_915(Id) (IS_915G(Id) || \
                     IS_915GM(Id))
+
+#define IS_945G(Id)  ((Id) == 0x2772)
+#define IS_945GM(Id) ((Id) == 0x27A2 || \
+                      (Id) == 0x27AE)
 
 #define IS_945(Id) (IS_945G(Id) ||  \
                     IS_945GM(Id) || \
@@ -120,7 +120,7 @@ BOOL copybox3d( GMABitMap_t *bm_dst, GMABitMap_t *bm_src,
     }
     
     // src pitch must be long aligmented.
-    if( bm_src->pitch & 0xf )
+    if( bm_src->pitch & 0x3 )
     {
         bug("[GMA] copybox3d: ERROR bm_src->pitch=%d/n",bm_src->pitch);
         return FALSE;
