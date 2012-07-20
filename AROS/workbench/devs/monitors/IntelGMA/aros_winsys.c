@@ -414,7 +414,7 @@ D(
 void destroy_unused_buffers()
 {
     
-    D(bug("[GMA winsys] destroy_unused_buffers allocated_mem %d unused_num %d\n",allocated_mem,unused_num));
+    D(bug("[GMA winsys] destroy_unused_buffers allocated_mem %d\n",allocated_mem));
     if( AttemptSemaphore(&UnusedBuffersListLock) )
     {
         struct Node *node,*next;

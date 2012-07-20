@@ -82,7 +82,7 @@ static struct StackBitMapNode * HIDDCompositingCanUseFramebuffer(struct HIDDComp
 
 static VOID HIDDCompositingRecalculateVisibleRects(struct HIDDCompositingData * compdata)
 {
-    ULONG lastscreenvisibleline = compdata->screenrect.MaxY;
+    ULONG lastscreenvisibleline = compdata->screenrect.MaxY + 1;
     struct StackBitMapNode * n = NULL;
 	
     ForeachNode(&compdata->bitmapstack, n)
@@ -97,22 +97,15 @@ static VOID HIDDCompositingRecalculateVisibleRects(struct HIDDCompositingData * 
         tmprect = compdata->screenrect;
         /* Set bottom and top values */
         tmprect.MinY = topedge;
-        tmprect.MaxY = lastscreenvisibleline;
+        tmprect.MaxY = lastscreenvisibleline - 1;
         /* Intersect both to make sure values are withint screen limit */
         if (AndRectRect(&tmprect, &compdata->screenrect, &n->screenvisiblerect))
         {
             lastscreenvisibleline = n->screenvisiblerect.MinY;
-            n->isscreenvisible = TRUE;			
+            n->isscreenvisible = TRUE;
         }
         else
             n->isscreenvisible = FALSE;
-
-        /* if visible size is 0 ,bitmap is invisible */
-        if(n->screenvisiblerect.MinX == n->screenvisiblerect.MaxX ||
-           n->screenvisiblerect.MinY == n->screenvisiblerect.MaxY )
-        {
-            n->isscreenvisible = FALSE;
-        }
 
         D(bug("[Compositing] Bitmap %x, visible %d, (%d, %d) , (%d, %d)\n", 
             n->bm, n->isscreenvisible, 
@@ -397,12 +390,12 @@ static VOID HIDDCompositingRedrawVisibleScreen(struct HIDDCompositingData * comp
     /* Clean up area revealed by drag */
     /* TODO: Find all areas which might have been releaved, not only top - 
        This will happen when there are bitmaps of different sizes composited */
-    if (lastscreenvisibleline > 1)
+    if (lastscreenvisibleline > 0)
     {
         IPTR viswidth;
 
         OOP_GetAttr(compdata->screenbitmap, aHidd_BitMap_Width, &viswidth); 
-
+        D(bug("[Compositing] Clean upper area %d,%d-%d,%d\n",0, 0, viswidth - 1, lastscreenvisibleline - 1));
         HIDD_BM_FillRect(compdata->screenbitmap, 
             compdata->gc, 0, 0, viswidth - 1, lastscreenvisibleline - 1);
     }
