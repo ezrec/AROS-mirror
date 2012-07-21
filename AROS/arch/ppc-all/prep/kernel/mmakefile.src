@@ -10,7 +10,7 @@ USER_CFLAGS := -D__KERNEL__ -D__ROM__
 %build_module_macro mmake=kernel-resource-prep-ppc \
     modname=kernel modtype=resource \
     funcs=io files="functable functions" \
-    conffile=lib.conf \
+    conffile=$(SRCDIR)/$(CURDIR)/lib.conf \
     genfunctable=no genincludes=yes
 
 %common

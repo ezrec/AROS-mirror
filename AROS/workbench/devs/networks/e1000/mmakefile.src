@@ -22,5 +22,5 @@ CFLAGSDEBUG = $(CFLAGS) -DDEBUG=1
 
 %build_module mmake=networking-drivers-e1000-debug \
     modname=e1000_debug modtype=device \
-    files="e1000_init $(FILES) $(INTELCOREFILES) $(INTELMACFILES)" conffile=e1000.conf cflags=$(CFLAGSDEBUG) \
+    files="e1000_init $(FILES) $(INTELCOREFILES) $(INTELMACFILES)" conffile=$(SRCDIR)/$(CURDIR)/e1000.conf cflags=$(CFLAGSDEBUG) \
     objdir=$(OBJDIR)/debug moduledir=Storage/Networks uselibs="oop rom amiga hiddstubs"

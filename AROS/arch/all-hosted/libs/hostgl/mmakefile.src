@@ -47,7 +47,7 @@ USER_INCLUDES := -I$(MESA_AROS_DIRECTORY) -I$(MESA_API_DIRECTORY) -I$(MESA_ST_DI
 USER_CFLAGS := -DHOST_OS_$(ARCH) -DAROSMESA_TYPES='"hostgl_types.h"'
 
 %build_module mmake=workbench-libs-hostgl-module \
-    modname=mesa modtype=library linklibname=GL conffile=arosmesa.conf \
+    modname=mesa modtype=library linklibname=GL conffile=$(SRCDIR)/$(CURDIR)/arosmesa.conf \
     files="$(LIBRARY_SOURCES)" moduledir=Storage/Libs linklibfiles="$(LINKLIB_SOURCES)" uselibs="rom"
 
 %copy_files_q mmake=workbench-libs-hostgl-postbuild files="hostgl.readme" dst="$(AROSDIR)/Storage/Libs"
