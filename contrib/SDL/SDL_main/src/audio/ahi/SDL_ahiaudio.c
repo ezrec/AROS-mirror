@@ -116,7 +116,7 @@ static SDL_AudioDevice *Audio_CreateDevice(int devindex)
 
 AudioBootStrap AHI_bootstrap = {
 	"AHI",
-	"MorphOS ahi.device SDL audio",
+	"AROS ahi.device SDL audio",
 	Audio_Available,
 	Audio_CreateDevice
 };
