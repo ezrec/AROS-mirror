@@ -1,6 +1,6 @@
 diff -Naur serialecho-50.5-source-orig/serialecho.c serialecho-50.5-source/serialecho.c
---- serialecho-50.5-source-orig/serialecho.c	2010-07-25 10:44:39.952432666 +0200
-+++ serialecho-50.5-source/serialecho.c	2010-07-25 10:45:33.922553047 +0200
+--- serialecho-50.5-source-orig/serialecho.c	2008-03-09 15:43:31.000000000 +0100
++++ serialecho-50.5-source/serialecho.c	2012-07-22 23:36:51.008652542 +0200
 @@ -52,6 +52,8 @@
  
  	#define ENTRYPOINT ULONG serialecho(struct ExecBase *SysBase)
@@ -10,3 +10,12 @@ diff -Naur serialecho-50.5-source-orig/serialecho.c serialecho-50.5-source/seria
  	AROS_UFH3(__startup static int, Start,
  	  AROS_UFHA(char *, argstr, A0),
  	  AROS_UFHA(ULONG, argsize, D0),
+@@ -114,7 +116,7 @@
+ 	}
+ #endif
+ 	
+-	if ( (rda = ReadArgs(TEMPLATE,(LONG *)(argv),NULL)) )
++	if ( (rda = ReadArgs(TEMPLATE,(IPTR *)(argv),NULL)) )
+ 	{
+ 		ULONG  noline = argv[ARG_NOLINE];
+ 		STRPTR *s     = (STRPTR *)argv[ARG_TOECHO];
