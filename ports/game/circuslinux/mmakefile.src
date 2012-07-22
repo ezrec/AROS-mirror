@@ -17,14 +17,16 @@ ARCHBASE     := circuslinux-1.0.3
 TARGETDIR    := $(AROS_CONTRIB)/Games/CircusLinux
 SDL_PREFIX   := $(AROS_DEVELOPMENT)
 USER_CFLAGS  := $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags) \
-                -DDATA_PREFIX=\"PROGDIR:data/\" -DJOY_YES -D__SOUND -DVERSION=\"1.0.3\"
+                -DDATA_PREFIX=\"PROGDIR:data/\" -DJOY_YES -DNOSOUND -DVERSION=\"1.0.3\"
+
+# sound disabled because it crashes
 
 FILES := circuslinux
 
 %build_prog mmake=ports-game-circuslinux progname=CircusLinux \
     srcdir=$(PORTSDIR)/circuslinux/$(ARCHBASE)/ \
     files=$(FILES) targetdir=$(TARGETDIR) \
-    uselibs="arosc SDL_image png jpeg SDL_mixer vorbisfile vorbis ogg SDL GL z"
+    uselibs="arosc SDL_image png jpeg SDL GL z"
 
 
 %fetch mmake=ports-game-circuslinux-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/circuslinux \
