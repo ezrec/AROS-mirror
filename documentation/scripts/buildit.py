@@ -403,7 +403,8 @@ def copyImages():
             os.path.join( srcpath, 'sourceforge.png' ),
             os.path.join( srcpath, 'phoenix.jpeg' ),
             os.path.join( srcpath, 'bttr.jpeg' ),
-            os.path.join( srcpath, 'icaroslive_logo.png' )
+            os.path.join( srcpath, 'icaroslive_logo.png' ),
+            os.path.join( srcpath, 'aspireos_logo.png' )
         ],
         dstpath
     )

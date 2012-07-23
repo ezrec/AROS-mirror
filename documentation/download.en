@@ -1,9 +1,10 @@
 ========
 Download
 ========
+
 .. Note::
 
-   **If you are a user** willing to try AROS, please use the links in the
+   **If you are a user** wanting to try AROS, please use the links in the
    **Distributions** section to download a fully featured AROS distribution.
    The nightly builds you will find at the bottom of the page are only meant
    for developers and testers. The nightly builds are not configured to be
@@ -31,26 +32,51 @@ reference guide and some AROS PDF manuals are included.
 __ http://live.icarosdesktop.org/
 __ http://virtualbox.org/
 
+AspireOS
+--------
+
+.. image:: /images/aspireos_logo.png
+   :align: left
+
+`AspireOS`__ is a lightweight distribution, originally designed for 
+netbooks such as the Acer Aspire One. It tries to keep things as simple 
+as possible. The programs included are well tested.
+
+__ http://www.aspireos.com/
+
+AROS Broadway
+-------------
+
+`AROS Broadway`__ is the native AROS distribution made for the
+ARES Computer but also working on every AROS compatible PC.
+
+__ http://www.aros-broadway.de/index.html
+
+
+AROS Vision
+-----------
+
+`AROS Vision`__ is a distribution for M68k Amigas. To run well, it requires
+a powerful Amiga or an emulator such as WinUAE.
+
+__ http://www.natami-news.de/html/distribution_download.html
+
 Snapshots
 =========
 
-Snapshots are non-periodic, non-automated builds of AROS. They are done
-by developers who can't set up a nightly build for some technical or
-political reason.
+`Snapshots`__ are non-periodic, non-automated builds of AROS. They are done
+by developers who can't set up a nightly build for some reason.
 
 These ports are not unmaintained, so please use the `bug tracker`__ to report
 bugs.
 
-.. raw:: html
-
-   <?php virtual( "/cgi-bin/files?type=snapshots&lang=en" ); ?>
-
+__ snapshots
 __ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
 
-Nightly builds
+Nightly Builds
 ==============
 
-Nightly builds are done, as the name implies, automatically every night 
+`Nightly builds`__ are done, as the name implies, automatically every night 
 directly from the Subversion tree and contain the latest code. However, 
 they have not been tested in any way and may contain bugs. Most of the 
 time though, they work just fine.
@@ -59,21 +85,11 @@ Please report bugs you may discover while using these builds through the
 `bug tracker`__. For any other necessity, please feel free to contact us
 through the `AROS-Exec`__ forums.
 
-.. Note::
-
-   When downloading nightly builds or snapshots, you must use a download manager
-   that can continue an interrupted download, or a command line utility such
-   as wget (you can use "wget -c" to get the rest of a file partially
-   downloaded by another program).
-
-.. raw:: html
-
-   <?php virtual( "/cgi-bin/files?type=nightly&lang=en" ); ?>
-
+__ nightly
 __ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
 __ http://aros-exec.org/
 
-Nightly builds (ABIv1)
+Nightly Builds (ABIv1)
 ======================
 
 AROS is currently transitioning to a new `ABI`__. An extra set of nightly 
@@ -85,4 +101,4 @@ Users wishing to try new features or bug fixes that are not yet
 available in distributions should only use the normal nightly builds.
 
 __ http://en.wikipedia.org/wiki/Application_binary_interface
-__ download2
+__ nightly1

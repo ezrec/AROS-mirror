@@ -1,0 +1,15 @@
+=======================
+Download Nightly Builds
+=======================
+
+.. Note::
+
+   These builds are only provided for developers and testers, and for users
+   of architectures for which distributions have not been created.
+
+Nightly Builds
+==============
+
+.. raw:: html
+
+   <?php virtual( "/cgi-bin/files?type=nightly&lang=en" ); ?>
