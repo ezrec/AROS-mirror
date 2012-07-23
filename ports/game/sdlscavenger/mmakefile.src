@@ -26,7 +26,7 @@ FILES := scav gfx sound edit anim
     uselibs="arosc SDL GL"
 
 
-%fetch mmake=ports-game-sdlscavenger-fetch archive=$(ARCHBASE)_2008_06_11 destination=$(PORTSDIR)/sdlscavenger \
+%fetch mmake=ports-game-sdlscavenger-fetch archive=$(ARCHBASE).1_2010_11_5 destination=$(PORTSDIR)/sdlscavenger \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tgz" \
     patches_specs=sdlscavenger-145-aros.diff:$(ARCHBASE):-p1
 

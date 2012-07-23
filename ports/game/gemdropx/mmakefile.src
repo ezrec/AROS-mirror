@@ -17,14 +17,14 @@ ARCHBASE     := gemdropx-0.9
 TARGETDIR    := $(AROS_CONTRIB)/Games/GemDropX
 SDL_PREFIX   := $(AROS_DEVELOPMENT)
 USER_CFLAGS  := $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags) \
-                -DDATA_PREFIX=\"PROGDIR:data\" -DJOYSTICK -DSOUND -DNOT_EMBEDDED
+                -DDATA_PREFIX=\"PROGDIR:data\" -DJOYSTICK -DNOSOUND -DNOT_EMBEDDED
 
 FILES := gemdropx
 
 %build_prog mmake=ports-game-gemdropx progname=GemDropX \
     srcdir=$(PORTSDIR)/gemdropx/$(ARCHBASE)/ \
     files=$(FILES) targetdir=$(TARGETDIR) \
-    uselibs="arosc SDL_mixer vorbisfile vorbis ogg SDL GL"
+    uselibs="arosc SDL GL"
 
 
 %fetch mmake=ports-game-gemdropx-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/gemdropx \

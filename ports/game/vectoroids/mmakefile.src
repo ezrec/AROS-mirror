@@ -17,14 +17,16 @@ ARCHBASE     := vectoroids-1.1.0
 TARGETDIR    := $(AROS_CONTRIB)/Games/Vectoroids
 SDL_PREFIX   := $(AROS_DEVELOPMENT)
 USER_CFLAGS  := $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags) \
-                -DDATA_PREFIX=\"PROGDIR:data/\" -DJOY_YES -D__SOUND
+                -DDATA_PREFIX=\"PROGDIR:data/\" -DJOY_YES -DNOSOUND
+
+# sound disabled because it crashes
 
 FILES := vectoroids
 
 %build_prog mmake=ports-game-vectoroids progname=Vectoroids \
     srcdir=$(PORTSDIR)/vectoroids/$(ARCHBASE)/ \
     files=$(FILES) targetdir=$(TARGETDIR) \
-    uselibs="arosc SDL_image png jpeg SDL_mixer vorbisfile vorbis ogg SDL GL z"
+    uselibs="arosc SDL_image png jpeg SDL GL z"
 
 
 %fetch mmake=ports-game-vectoroids-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/vectoroids \

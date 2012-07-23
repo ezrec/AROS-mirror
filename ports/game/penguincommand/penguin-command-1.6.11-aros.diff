@@ -834,7 +834,7 @@ diff -Naur penguin-command-1.6.11-orig/src/Makefile.in penguin-command-1.6.11/sr
  penguin-command$(EXEEXT): $(penguin_command_OBJECTS) $(penguin_command_DEPENDENCIES) 
  	@rm -f penguin-command$(EXEEXT)
 -	$(LINK) $(penguin_command_LDFLAGS) $(penguin_command_OBJECTS) $(penguin_command_LDADD) $(LIBS)
-+	$(LINK) $(penguin_command_LDFLAGS) $(penguin_command_OBJECTS) $(penguin_command_LDADD) -lSDL_image -lpng -ljpeg -lz -lSDL_mixer -lvorbisfile -lvorbis -logg -lSDL
++	$(LINK) $(penguin_command_LDFLAGS) $(penguin_command_OBJECTS) $(penguin_command_LDADD) -lSDL_image -lpng -ljpeg -lz -lSDL_mixer -lvorbisfile -lvorbis -logg -lSDL -lGL
  
  mostlyclean-compile:
  	-rm -f *.$(OBJEXT)
