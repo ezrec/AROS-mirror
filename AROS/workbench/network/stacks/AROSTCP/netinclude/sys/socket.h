@@ -5,6 +5,7 @@
 #include <sys/types.h>
 #endif
 
+typedef u_char		sa_family_t;
 
 /*
  * AmiTCP asynchronous event definitions
@@ -118,6 +119,24 @@ struct sockaddr {
 	u_char	sa_len;			/* total length */
 	u_char	sa_family;		/* address family */
 	char	sa_data[14];		/* actually longer; address value */
+};
+
+/*
+ * RFC 2553: protocol-independent address holding structure.
+ */
+#define	_SS_MAXSIZE	128
+#define	_SS_ALIGNSIZE	(sizeof(int64_t))
+#define	_SS_PAD1SIZE	(_SS_ALIGNSIZE - sizeof(u_char) - sizeof(sa_family_t))
+#define	_SS_PAD2SIZE	(_SS_MAXSIZE - sizeof(u_char) - sizeof(sa_family_t) - \
+				_SS_PAD1SIZE - _SS_ALIGNSIZE)
+
+struct sockaddr_storage {
+    sa_family_t  ss_family;     // address family
+
+    // all this is padding, implementation specific, ignore it:
+    char      __ss_pad1[_SS_PAD1SIZE];
+    int64_t   __ss_align;
+    char      __ss_pad2[_SS_PAD2SIZE];
 };
 
 /*
