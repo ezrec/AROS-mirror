@@ -40,7 +40,7 @@ struct Library *CodesetsBase = NULL;
 struct Globals global_data;
 struct Globals *glob = &global_data;
 
-const TEXT version_string[] = "$VER: ntfs.handler 41.53 (11.02.2012)";
+const TEXT version_string[] = "$VER: ntfs.handler 41.54 (24.07.2012)";
 
 void handler(void)
 {
