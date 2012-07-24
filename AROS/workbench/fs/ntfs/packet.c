@@ -27,6 +27,17 @@
 
 #include "debug.h"
 
+
+#if 0
+// AROS ABI v1
+#define BSTR_Str AROS_BSTR_ADDR
+#define BSTR_Len AROS_BSTR_strlen
+#else
+// AROS ABI v0
+#define BSTR_Str(bstrptr) &bstrptr[1]
+#define BSTR_Len(bstrptr) bstrptr[0]
+#endif
+
 void ProcessPackets(void) {
     struct Message *msg;
     struct DosPacket *pkt;
@@ -47,13 +58,13 @@ void ProcessPackets(void) {
 
 		D(bug("[NTFS] %s: ** LOCATE_OBJECT: lock 0x%08x (dir %ld/%d) name '", __PRETTY_FUNCTION__, pkt->dp_Arg1,
                       (fl != NULL && fl->dir != NULL) ? fl->dir->ioh.mft.mftrec_no : FILE_ROOT, (fl != NULL && fl->entry != NULL) ? fl->entry->no : -1);
-		RawPutChars(AROS_BSTR_ADDR(path), AROS_BSTR_strlen(path)); bug("' type %s\n",
+		RawPutChars(BSTR_Str(path), BSTR_Len(path)); bug("' type %s\n",
                       pkt->dp_Arg3 == EXCLUSIVE_LOCK ? "EXCLUSIVE" : "SHARED"));
 
                 if ((err = TestLock(fl)))
                     break;
 
-                if ((err = OpLockFile(fl, AROS_BSTR_ADDR(path), AROS_BSTR_strlen(path), access, &lock)) == 0)
+                if ((err = OpLockFile(fl, BSTR_Str(path), BSTR_Len(path), access, &lock)) == 0)
                     res = (IPTR)MKBADDR(lock);
 
                 break;
@@ -222,12 +233,12 @@ void ProcessPackets(void) {
 							  "FINDUPDATE",
 		      pkt->dp_Arg2,
 		      (fl != NULL && fl->dir != NULL) ? fl->dir->ioh.mft.mftrec_no : FILE_ROOT, (fl != NULL && fl->entry != NULL) ? fl->entry->no : -1);
-		  RawPutChars(AROS_BSTR_ADDR(path), AROS_BSTR_strlen(path)); bug("'\n"));
+		  RawPutChars(BSTR_Str(path), BSTR_Len(path)); bug("'\n"));
 
                 if ((err = TestLock(fl)))
                     break;
 
-		if ((err = OpOpenFile(fl, AROS_BSTR_ADDR(path), AROS_BSTR_strlen(path), pkt->dp_Type, &lock)) != 0)
+		if ((err = OpOpenFile(fl, BSTR_Str(path), BSTR_Len(path), pkt->dp_Type, &lock)) != 0)
                     break;
 
                 fh->fh_Arg1 = (IPTR)MKBADDR(lock);
@@ -643,7 +654,7 @@ void ProcessPackets(void) {
             case ACTION_RENAME_DISK: {
                 UBYTE *name = BADDR(pkt->dp_Arg1);
                 
-		D(bug("[NTFS] %s: ** RENAME_DISK: name '", __PRETTY_FUNCTION__); RawPutChars(AROS_BSTR_ADDR(name), AROS_BSTR_strlen(name)); bug("'\n"));
+		D(bug("[NTFS] %s: ** RENAME_DISK: name '", __PRETTY_FUNCTION__); RawPutChars(BSTR_Str(name), BSTR_Len(name)); bug("'\n"));
 
 #if defined(NTFS_READONLY)
 		res = ERROR_DISK_WRITE_PROTECTED;
@@ -686,7 +697,7 @@ void ProcessPackets(void) {
 	        D(bug("[NTFS] %s: ** DELETE_OBJECT: lock 0x%08x (dir %ld/%d) path '", __PRETTY_FUNCTION__,
 		      pkt->dp_Arg1,
 		      (fl != NULL && fl->dir != NULL) ? fl->dir->ioh.mft.mftrec_no : FILE_ROOT, (fl != NULL && fl->entry != NULL) ? fl->entry->no : -1);
-		  RawPutChars(AROS_BSTR_ADDR(name), AROS_BSTR_strlen(name)); bug("'\n"));
+		  RawPutChars(BSTR_Str(name), BSTR_Len(name)); bug("'\n"));
 
 #if defined(NTFS_READONLY)
 		res = ERROR_DISK_WRITE_PROTECTED;
@@ -696,7 +707,7 @@ void ProcessPackets(void) {
                 if ((err = TestLock(fl)))
                     break;
 
-                err = OpDeleteFile(fl, AROS_BSTR_ADDR(name), AROS_BSTR_strlen(name));
+                err = OpDeleteFile(fl, BSTR_Str(name), BSTR_Len(name));
 #endif
                 break;
             }
@@ -708,10 +719,10 @@ void ProcessPackets(void) {
 	        D(bug("[NTFS] %s: ** RENAME_OBJECT: srclock 0x%08x (dir %ld/%d) name '", __PRETTY_FUNCTION__,
 		      pkt->dp_Arg1,
 		      sfl != NULL ? sfl->dir->ioh.mft.mftrec_no : 0, sfl != NULL ? sfl->dir->cur_no : -1);
-		  RawPutChars(AROS_BSTR_ADDR(sname), AROS_BSTR_strlen(sname)); bug("' destlock 0x%08x (dir %ld/%d) name '",
+		  RawPutChars(BSTR_Str(sname), BSTR_Len(sname)); bug("' destlock 0x%08x (dir %ld/%d) name '",
 		      pkt->dp_Arg3,
 		      dfl != NULL ? dfl->dir->ioh.mft.mftrec_no : 0, dfl != NULL ? dfl->dir->cur_no : -1);
-		  RawPutChars(AROS_BSTR_ADDR(dname), AROS_BSTR_strlen(dname)); bug("'\n"));
+		  RawPutChars(BSTR_Str(dname), BSTR_Len(dname)); bug("'\n"));
 
 #if defined(NTFS_READONLY)
 		res = ERROR_DISK_WRITE_PROTECTED;
@@ -723,7 +734,7 @@ void ProcessPackets(void) {
                 if ((err = TestLock(sfl)) != 0 || (err = TestLock(dfl)) != 0)
                     break;
 
-                err = OpRenameFile(sfl, AROS_BSTR_ADDR(sname), AROS_BSTR_strlen(sname), dfl, AROS_BSTR_ADDR(dname), AROS_BSTR_strlen(dname));
+                err = OpRenameFile(sfl, BSTR_Str(sname), BSTR_Len(sname), dfl, BSTR_Str(dname), BSTR_Len(dname));
 #endif
                 break;
             }
@@ -737,7 +748,7 @@ void ProcessPackets(void) {
 	        D(bug("[NTFS] %s: ** CREATE_DIR: lock 0x%08x (dir %ld/%d) name '", __PRETTY_FUNCTION__,
 		      pkt->dp_Arg1,
 		      (fl != NULL && fl->dir != NULL) ? fl->dir->ioh.mft.mftrec_no : FILE_ROOT, (fl != NULL && fl->entry != NULL) ? fl->entry->no : -1);
-		  RawPutChars(AROS_BSTR_ADDR(name), AROS_BSTR_strlen(name)); bug("'\n"));
+		  RawPutChars(BSTR_Str(name), BSTR_Len(name)); bug("'\n"));
 
 #if defined(NTFS_READONLY)
 		res = ERROR_DISK_WRITE_PROTECTED;
@@ -747,7 +758,7 @@ void ProcessPackets(void) {
                 if ((err = TestLock(fl)))
                     break;
 
-                if ((err = OpCreateDir(fl, AROS_BSTR_ADDR(name), AROS_BSTR_strlen(name), &nl)) == 0)
+                if ((err = OpCreateDir(fl, BSTR_Str(name), BSTR_Len(name), &nl)) == 0)
                     res = (IPTR)MKBADDR(nl);
 #endif
                 break;
@@ -760,7 +771,7 @@ void ProcessPackets(void) {
 
 	        D(bug("[NTFS] %s: ** SET_PROTECT: lock 0x%08x (dir %ld/%d) name '", __PRETTY_FUNCTION__, pkt->dp_Arg2,
 		      (fl != NULL && fl->dir != NULL) ? fl->dir->ioh.mft.mftrec_no : FILE_ROOT, (fl != NULL && fl->entry != NULL) ? fl->entry->no : -1);
-		  RawPutChars(AROS_BSTR_ADDR(name), AROS_BSTR_strlen(name)); bug("' prot 0x%08x\n", prot));
+		  RawPutChars(BSTR_Str(name), BSTR_Len(name)); bug("' prot 0x%08x\n", prot));
 
 #if defined(NTFS_READONLY)
 		res = ERROR_DISK_WRITE_PROTECTED;
@@ -771,7 +782,7 @@ void ProcessPackets(void) {
                 if ((err = TestLock(fl)))
                     break;
 
-                err = OpSetProtect(fl, AROS_BSTR_ADDR(name), AROS_BSTR_strlen(name), prot);
+                err = OpSetProtect(fl, BSTR_Str(name), BSTR_Len(name), prot);
 #endif
                 break;
             }
@@ -797,7 +808,7 @@ void ProcessPackets(void) {
 		    D(bug("[NTFS] %s: ** SET_DATE: lock 0x%08x (dir %ld/%d) name '", __PRETTY_FUNCTION__,
 			  pkt->dp_Arg2,
 			  (fl != NULL && fl->dir != NULL) ? fl->dir->ioh.mft.mftrec_no : FILE_ROOT, (fl != NULL && fl->entry != NULL) ? fl->entry->no : -1);
-		      RawPutChars(AROS_BSTR_ADDR(name), AROS_BSTR_strlen(name)); bug("' ds '%s'\n", datestr));
+		      RawPutChars(BSTR_Str(name), BSTR_Len(name)); bug("' ds '%s'\n", datestr));
                 }
 #endif
 
@@ -810,7 +821,7 @@ void ProcessPackets(void) {
                 if ((err = TestLock(fl)))
                     break;
 
-                err = OpSetDate(fl, AROS_BSTR_ADDR(name), AROS_BSTR_strlen(name), ds);
+                err = OpSetDate(fl, BSTR_Str(name), BSTR_Len(name), ds);
 #endif
                 break;
             }

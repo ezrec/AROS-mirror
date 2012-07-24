@@ -48,6 +48,7 @@ LONG InitDirHandle(struct FSData *fs_data, struct DirHandle *dh, BOOL reuse)
         dh->ioh.data = fs_data;
         dh->ioh.mft.cblock = NULL;
     }
+    dh->parent_mft = 0;
 
     RESET_DIRHANDLE(dh);
 
@@ -357,7 +358,7 @@ LONG GetParentDir(struct DirHandle *dh, struct DirEntry *de)
     D(bug("[NTFS]: %s(dh @ 0x%p)\n", __PRETTY_FUNCTION__, dh));
 
     // if we're already at the root, then we can't go any further
-    if (dh->ioh.first_cluster == (dh->ioh.data->mft_start  * dh->ioh.data->mft_size))
+    if (dh->ioh.mft.mftrec_no == 5)
     {
         D(bug("[NTFS] %s: trying to go up past the root, so entry not found\n", __PRETTY_FUNCTION__));
         return ERROR_OBJECT_NOT_FOUND;
