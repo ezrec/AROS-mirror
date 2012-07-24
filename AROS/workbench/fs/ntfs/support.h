@@ -15,6 +15,16 @@
 #include <exec/types.h>
 #include <dos/dosextens.h>
 
+#if 0
+// AROS ABI v1
+#define BSTR_Str AROS_BSTR_ADDR
+#define BSTR_Len AROS_BSTR_strlen
+#else
+// AROS ABI v0
+#define BSTR_Str(bstrptr) &bstrptr[1]
+#define BSTR_Len(bstrptr) bstrptr[0]
+#endif
+
 void SendEvent(LONG event);
 void ErrorMessageArgs(char *fmt, IPTR *args);
 APTR _AllocVecPooled(APTR mem_pool, ULONG size);

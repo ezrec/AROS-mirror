@@ -27,17 +27,6 @@
 
 #include "debug.h"
 
-
-#if 0
-// AROS ABI v1
-#define BSTR_Str AROS_BSTR_ADDR
-#define BSTR_Len AROS_BSTR_strlen
-#else
-// AROS ABI v0
-#define BSTR_Str(bstrptr) &bstrptr[1]
-#define BSTR_Len(bstrptr) bstrptr[0]
-#endif
-
 void ProcessPackets(void) {
     struct Message *msg;
     struct DosPacket *pkt;
