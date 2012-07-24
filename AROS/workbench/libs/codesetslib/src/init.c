@@ -199,11 +199,19 @@ static void getSystemCodeset(struct LibraryHeader *lib)
     char codepage[40];
 
     codepage[0] = '\0';
+      
+    struct Process *me = (struct Process*)FindTask(NULL);
+    BPTR oldwin = me->pr_WindowPtr;
+
+    me->pr_WindowPtr = (BPTR)-1;
+
     if(GetVar("CODEPAGE", codepage, sizeof(codepage), 0) > 0)
     {
       D(DBF_STARTUP, "trying ENV:CODEPAGE '%s'", codepage);
       foundCodeset = codesetsFind(&lib->codesets, codepage);
     }
+
+    me->pr_WindowPtr = oldwin;
 
     D(DBF_STARTUP, "%s system default codeset: '%s' (ENV:CODEPAGE)", foundCodeset ? "found" : "did not find",
                                                                      foundCodeset ? foundCodeset->name : "?");
@@ -252,11 +260,19 @@ static void getSystemCodeset(struct LibraryHeader *lib)
     char charset[80];
 
     charset[0] = '\0';
+
+    struct Process *me = (struct Process*)FindTask(NULL);
+    BPTR oldwin = me->pr_WindowPtr;
+
+    me->pr_WindowPtr = (BPTR)-1;
+
     if(GetVar("CHARSET", charset, sizeof(charset), 0) > 0)
     {
       D(DBF_STARTUP, "trying ENV:CHARSET '%s'", charset);
       foundCodeset = codesetsFind(&lib->codesets, charset);
     }
+
+    me->pr_WindowPtr = oldwin;
 
     D(DBF_STARTUP, "%s system default codeset: '%s' (ENV:CHARSET)", foundCodeset ? "found" : "did not find",
                                                                     foundCodeset ? foundCodeset->name : "?");
@@ -305,6 +321,12 @@ static void getSystemCodeset(struct LibraryHeader *lib)
     char language[80];
 
     language[0] = '\0';
+
+    struct Process *me = (struct Process*)FindTask(NULL);
+    BPTR oldwin = me->pr_WindowPtr;
+
+    me->pr_WindowPtr = (BPTR)-1;
+
     if(GetVar("LANGUAGE", language, sizeof(language), 0) > 0)
     {
       int i;
@@ -328,6 +350,8 @@ static void getSystemCodeset(struct LibraryHeader *lib)
       if(found == TRUE)
         foundCodeset = codesetsFind(&lib->codesets, curLoc->codesetName);
     }
+
+    me->pr_WindowPtr = oldwin;
 
     D(DBF_STARTUP, "%s system default codeset: '%s' (ENV:LANGUAGE)", foundCodeset ? "found" : "did not find",
                                                                      foundCodeset ? foundCodeset->name : "?");
