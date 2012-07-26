@@ -20,9 +20,8 @@ include $(TOP)/config/make.cfg
 
 
 REPOSITORIES := http://archives.aros-exec.org/share/game/action/
-ARCHBASE     := koules-src-1.15
+ARCHBASE     := koules-src-1.16
 TARGETDIR    := $(AROS_CONTRIB)/Games/Koules
-USER_CFLAGS  := -DNOSOUND
 
 FILES := source/framebuffer source/koules source/menu source/amiga source/gameplan
 
@@ -42,8 +41,8 @@ ICONS := Koules
 	icons=$(ICONS) dir=$(TARGETDIR)/..
 
 
-# %copy_dir_recursive mmake=ports-game-koules-data src=$(PORTSDIR)/koules/$(ARCHBASE)/sounds \
-# dst=$(TARGETDIR)/sounds
+%copy_dir_recursive mmake=ports-game-koules-data src=$(PORTSDIR)/koules/$(ARCHBASE)/sounds \
+    dst=$(TARGETDIR)/sounds
 
 
 CPYFILES := Koules.guide Koules.guide.info Koules.info
