@@ -10,9 +10,9 @@ include $(TOP)/config/make.cfg
 #MM- ports-game-i386 : ports-game-koules
 
 #MM  ports-game-koules : includes linklibs workbench-libs-lowlevel ports-game-koules-cpy \
-#MM  ports-game-koules-drawericon ports-game-koules-fetch
+#MM  ports-game-koules-drawericon ports-game-koules-data ports-game-koules-fetch
 
-# #MM  ports-game-koules-data : ports-game-koules-fetch
+#MM  ports-game-koules-data : ports-game-koules-fetch
 
 #MM  ports-game-koules-cpy : ports-game-koules-fetch
 
