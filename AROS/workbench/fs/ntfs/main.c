@@ -35,7 +35,9 @@ struct DosLibrary *DOSBase;
 struct Library *UtilityBase;
 struct Library *IntuitionBase;
 struct Library *UUIDBase;
+#if 0
 struct Library *CodesetsBase = NULL;
+#endif
  
 struct Globals global_data;
 struct Globals *glob = &global_data;
@@ -68,7 +70,9 @@ void handler(void)
     if ((DOSBase = (struct DosLibrary*)OpenLibrary("dos.library", 37))) {
         if ((IntuitionBase = OpenLibrary("intuition.library", 37))) {
             if ((UtilityBase = OpenLibrary("utility.library", 37))) {
+#if 0
 		if ((CodesetsBase = OpenLibrary("codesets.library", 0))) {
+#endif
 		    if ((UUIDBase = OpenLibrary("uuid.library", 0))) {
 			glob->fssm = BADDR(startuppacket->dp_Arg2);
 
@@ -128,8 +132,10 @@ void handler(void)
 			else
 			    error = ERROR_NO_FREE_STORE;
 		    }
+#if 0
 		    CloseLibrary(CodesetsBase);
 		}
+#endif
                 CloseLibrary(UtilityBase);
             }
             CloseLibrary(IntuitionBase);
