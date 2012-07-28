@@ -4,12 +4,14 @@ include $(TOP)/config/make.cfg
 
 #MM- ports-text : ports-text-gocr
 
-#MM  ports-text-gocr : includes linklibs ports-text-gocr-fetch \
+#MM  ports-text-gocr : includes linklibs ports-text-gocr-fetch ports-text-gocr-cpy \
 #MM  ports-text-gocr-docs ports-text-gocr-examples ports-text-gocr-drawericon
 
 #MM  ports-text-gocr-docs : ports-text-gocr-fetch
 
 #MM  ports-text-gocr-examples : ports-text-gocr-fetch
+
+#MM  ports-text-gocr-cpy : ports-text-gocr-fetch
 
 REPOSITORIES := http://www-e.uni-magdeburg.de/jschulen/ocr/
 ARCHBASE     := gocr-0.49
@@ -61,6 +63,12 @@ ICONS := Gocr
 
 %copy_dir_recursive mmake=ports-text-gocr-examples src=$(PORTSDIR)/gocr/$(ARCHBASE)/examples \
     dst=$(TARGETDIR)/examples
+
+
+FILES := AUTHORS BUGS CREDITS gpl.html HISTORY \
+    README READMEde.txt REMARK.txt REVIEW TODO
+
+%copy_files_q mmake=ports-text-gocr-cpy files=$(FILES) src=$(PORTSDIR)/gocr/$(ARCHBASE) dst=$(TARGETDIR)
 
 
 %common
