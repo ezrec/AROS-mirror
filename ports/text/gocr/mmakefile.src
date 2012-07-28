@@ -1,0 +1,66 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-text : ports-text-gocr
+
+#MM  ports-text-gocr : includes linklibs ports-text-gocr-fetch \
+#MM  ports-text-gocr-docs ports-text-gocr-examples ports-text-gocr-drawericon
+
+#MM  ports-text-gocr-docs : ports-text-gocr-fetch
+
+#MM  ports-text-gocr-examples : ports-text-gocr-fetch
+
+REPOSITORIES := http://www-e.uni-magdeburg.de/jschulen/ocr/
+ARCHBASE     := gocr-0.49
+TARGETDIR    := $(AROS_CONTRIB)/Utilities/Text/Gocr
+USER_CFLAGS  := -Wno-unused-but-set-variable
+USER_INCLUDES:= -I $(PORTSDIR)/gocr/$(ARCHBASE)/include
+
+FILES := \
+	pgm2asc \
+	box \
+	database \
+	detect \
+	barcode \
+	lines \
+	list \
+	ocr0 \
+	ocr0n \
+	ocr1 \
+	otsu \
+	output \
+	pixel \
+	unicode \
+	remove \
+	pnm \
+	pcx \
+	progress \
+	job \
+	gocr
+
+%build_prog mmake=ports-text-gocr progname=gocr \
+    srcdir=$(PORTSDIR)/gocr/$(ARCHBASE)/src/ \
+    files=$(FILES) targetdir=$(TARGETDIR) \
+    uselibs="arosc"
+
+
+%fetch mmake=ports-text-gocr-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/gocr \
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
+    patches_specs=$(ARCHBASE)-aros.diff:$(ARCHBASE):-p1
+
+
+ICONS := Gocr
+
+%build_icons mmake=ports-text-gocr-drawericon \
+	icons=$(ICONS) dir=$(TARGETDIR)/..
+
+
+%copy_dir_recursive mmake=ports-text-gocr-docs src=$(PORTSDIR)/gocr/$(ARCHBASE)/doc \
+    dst=$(TARGETDIR)/doc
+
+%copy_dir_recursive mmake=ports-text-gocr-examples src=$(PORTSDIR)/gocr/$(ARCHBASE)/examples \
+    dst=$(TARGETDIR)/examples
+
+
+%common
