@@ -1,0 +1,96 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-graphics : ports-graphics-grafx2
+
+#MM  ports-graphics-grafx2 : includes linklibs contrib-sdl ports-graphics-grafx2-fetch \
+#MM  ports-graphics-grafx2-docs ports-graphics-grafx2-data ports-graphics-grafx2-drawericon
+
+#MM  ports-graphics-grafx2-docs : ports-graphics-grafx2-fetch
+
+#MM  ports-graphics-grafx2-data : ports-graphics-grafx2-fetch
+
+#MM  ports-graphics-grafx2-quick : ports-graphics-grafx2-fetch
+
+REPOSITORIES := http://grafx2.googlecode.com/files
+ARCHBASE     := grafx2
+TARGETDIR    := $(AROS_CONTRIB)/MultiMedia/Gfx/GrafX2
+SDL_PREFIX   := $(AROS_DEVELOPMENT)
+USER_CFLAGS  := -g $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags) -Wno-unused-but-set-variable
+
+FILES := \
+	main \
+	init \
+	graph \
+	sdlscreen \
+	misc \
+	special \
+	buttons \
+	palette \
+	help \
+	operatio \
+	pages \
+	loadsave \
+	readline \
+	engine \
+	filesel \
+	op_c \
+	readini \
+	saveini \
+	shade \
+	keyboard \
+	io \
+	version \
+	text \
+	SFont \
+	setup \
+	pxsimple \
+	pxtall \
+	pxwide \
+	pxdouble \
+	pxtriple \
+	pxtall2 \
+	pxwide2 \
+	pxquad \
+	windows \
+	brush \
+	realpath \
+	mountlist \
+	input \
+	hotkeys \
+	transform \
+	pversion \
+	factory \
+	fileformats \
+	miscfileformats \
+	libraw2crtc \
+	brush_ops \
+	buttons_effects \
+	layers
+
+%build_prog mmake=ports-graphics-grafx2 progname=GrafX2 \
+    srcdir=$(PORTSDIR)/grafx2/$(ARCHBASE)/src/ \
+    files=$(FILES) targetdir=$(TARGETDIR) \
+    uselibs="SDL_ttf SDL_image SDL GL jpeg png z freetype2shared"
+
+
+%fetch mmake=ports-graphics-grafx2-fetch archive=$(ARCHBASE)-2.3.1781-src destination=$(PORTSDIR)/grafx2 \
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tgz" \
+    patches_specs=grafx2-aros.diff:grafx2:-p1
+
+
+ICONS := GrafX2
+
+%build_icons mmake=ports-graphics-grafx2-drawericon \
+	icons=$(ICONS) dir=$(TARGETDIR)/..
+
+
+%copy_dir_recursive mmake=ports-graphics-grafx2-docs src=$(PORTSDIR)/grafx2/grafx2/doc \
+    dst=$(TARGETDIR)/doc
+
+%copy_dir_recursive mmake=ports-graphics-grafx2-data src=$(PORTSDIR)/grafx2/grafx2/share \
+    dst=$(TARGETDIR)/share
+
+
+%common
