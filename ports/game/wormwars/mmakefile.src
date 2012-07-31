@@ -1,0 +1,66 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+
+#MM- ports-game : ports-game-$(AROS_TARGET_CPU)
+
+#MM- ports-game-i386 : ports-game-wormwars
+
+#MM  ports-game-wormwars : includes linklibs ports-game-wormwars-cpy \
+#MM  ports-game-wormwars-drawericon ports-game-wormwars-fx ports-game-wormwars-fonts \
+#MM  ports-game-wormwars-catalogs ports-game-wormwars-fetch
+
+#MM  ports-game-wormwars-fx : ports-game-wormwars-fetch
+
+#MM  ports-game-wormwars-fonts : ports-game-wormwars-fetch
+
+#MM  ports-game-wormwars-catalogs : ports-game-wormwars-fetch
+
+#MM  ports-game-wormwars-cpy : ports-game-wormwars-fetch
+
+#MM  ports-game-wormwars-quick : ports-game-wormwars-fetch
+
+
+REPOSITORIES := http://archives.aros-exec.org/share/game/misc/
+ARCHBASE     := wormwars-src-8.78
+TARGETDIR    := $(AROS_CONTRIB)/Games/WormWars
+USER_CFLAGS  := -DNO_PRAGMAS -D__STORM__ -D__chip= -DAMIGA \
+                -Wno-implicit-function-declaration -Wno-unknown-pragmas -Wno-parentheses
+
+FILES := source/amiga source/engine1 source/engine2 source/extras \
+         source/gfx source/heads source/le source/squares source/tails
+
+%build_prog mmake=ports-game-wormwars progname=WormWars \
+    srcdir=$(PORTSDIR)/wormwars/$(ARCHBASE)/ \
+    files=$(FILES) targetdir=$(TARGETDIR) \
+    uselibs="arosc"
+
+
+%fetch mmake=ports-game-wormwars-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/wormwars \
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.bz2"
+
+
+ICONS := WormWars
+
+%build_icons mmake=ports-game-wormwars-drawericon \
+	icons=$(ICONS) dir=$(TARGETDIR)/..
+
+
+%copy_dir_recursive mmake=ports-game-wormwars-fx src=$(PORTSDIR)/wormwars/$(ARCHBASE)/fx \
+    dst=$(TARGETDIR)/fx
+
+%copy_dir_recursive mmake=ports-game-wormwars-fonts src=$(PORTSDIR)/wormwars/$(ARCHBASE)/fonts \
+    dst=$(TARGETDIR)/fonts
+
+%copy_dir_recursive mmake=ports-game-wormwars-catalogs src=$(PORTSDIR)/wormwars/$(ARCHBASE)/Catalogs \
+    dst=$(TARGETDIR)/Catalogs
+
+
+CPYFILES := WormWars.info WormWars.guide WormWars.guide.info WormWars.lset WormWars.lset.info Nibbles.lset Nibbles.lset.info
+
+%copy_files_q mmake=ports-game-wormwars-cpy files=$(CPYFILES) src=$(PORTSDIR)/wormwars/$(ARCHBASE) \
+    dst=$(TARGETDIR)
+
+
+%common
