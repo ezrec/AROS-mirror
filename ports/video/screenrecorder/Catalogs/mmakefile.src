@@ -1,0 +1,11 @@
+# Copyright © 2003, The AROS Development Team. All rights reserved.
+# $Id: mmakefile.src
+
+include $(TOP)/config/make.cfg
+
+ARCHBASE     := screenrecorder-src-svn17
+TARGETDIR    := $(AROS_CONTRIB)/MultiMedia/Video/ScreenRecorder
+
+%build_catalogs mmake=ports-video-screenrecorder-catalogs name=ScreenRecorder subdir= \
+				source="../locale.h" dir=$(TARGETDIR)/Catalogs \
+				description=$(PORTSDIR)/screenrecorder/$(ARCHBASE)/locale/screenrecorder

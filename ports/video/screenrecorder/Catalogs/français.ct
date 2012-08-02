@@ -1,0 +1,267 @@
+## version $VER: ScreenRecoder.catalog 1.0 (02.08.2012)
+## language français
+;
+MSG_OK_REQ_GAD
+*_OK
+; *_OK
+;
+MSG_OK_GAD
+_OK
+; _OK
+;
+MSG_START_RECORDING_KEYDEF_GAD
+Enregi_strer :
+; _Start recording:
+;
+MSG_STOP_RECORDING_KEYDEF_GAD
+Cesser d'en_registrer :
+; Stop _recording:
+;
+MSG_MATCH_PATTERN_GAD
+_Titre de la fenêtre :
+; _Match window title:
+;
+MSG_IGNORE_RECORDER_WINDOWS_GAD
+_Ignorer les fenêtres de ScreenRecorder
+; _Ignore recorder windows
+;
+MSG_RECORD_ONLY_WHEN_SCREEN_VISIBLE_GAD
+N'enregistrer que lorsque l'écran est _visible
+; Record only when screen is _visible
+;
+MSG_RECORD_MOUSE_GAD
+Enregistrer autour du _pointeur
+; Record around _mouse
+;
+MSG_ACTIVE_RECORDING_GAD
+N'enregistrer que depuis l'écran _actif
+; Record always from an _active screen
+;
+MSG_RECORDING_FORMAT_GAD
+_Format d'enregistrement :
+; Recording _format:
+;
+MSG_FRAMERATE_GAD
+Tram_es :
+; Fram_erate:
+;
+MSG_SCALING_GAD
+Echelle_s :
+; _Scaling:
+;
+MSG_PRIORITY_GAD
+_Priorité :
+; _Priority:
+;
+MSG_QUALITY_GAD
+_Quality :
+; _Quality:
+;
+MSG_MOUSE_CAPTURE_ZONE_GAD
+_Zone de capture du pointeur :
+; Mouse capture _zone:
+;
+MSG_RECORDING_DIR_GAD
+Répertoire _d'enregistrement
+; Record _dir
+;
+MSG_START_RECORDING_GAD
+Enregistre
+; _Record
+;
+MSG_STOP_RECORDING_GAD
+Stop
+; _Stop
+;
+MSG_MOUSE_CAPTURE_ZONE_FORMAT
+%ld pix
+; %ld pix
+;
+MSG_SCREEN_NAME
+Nom
+; Name
+;
+MSG_SCREEN_FRAMERATE
+T/S
+; FPS
+;
+MSG_SCREEN_DISPLAY_ENGINE
+Moteur de rendu
+; Display Engine
+;
+MSG_SCREEN_STATUS
+Status
+; Status
+;
+MSG_RECORDING
+enregistre
+; recording
+;
+MSG_STANDARD_DISPLAY_ENGINE
+standard
+; Standard
+;
+MSG_ENHANCED_DISPLAY_ENGINE
+amélioré
+; Enhanced
+;
+MSG_DEFAULT_SCREEN_TITLE
+[sans nom]
+; [no name]
+;
+MSG_DEFAULT_FRAMERATE
+50.00 Hz
+; 50.00 Hz
+;
+MSG_SCREEN_FRAMERATE_FORMAT
+%3d.%02d Hz
+; %3d.%02d Hz
+;
+MSG_DESCRIPTION
+Enregistre des vidéos
+; Record videos
+;
+MSG_TITLE
+Screen Recorder
+; Screen Recorder
+;
+MSG_SETTINGS_GLOBAL_KEYDEFS
+Raccourcis clavier globaux
+; Global key shortcuts
+;
+MSG_FPS_NORMAL
+Normal
+; Normal
+;
+MSG_FPS_HALF
+moitié
+; Halve
+;
+MSG_FPS_QUARTER
+Quart
+; Quarter
+;
+MSG_FPS_10
+10 FPS
+; 10 FPS
+;
+MSG_FPS_5
+5 FPS
+; 5 FPS
+;
+MSG_FPS_1
+1 FPS
+; 1 FPS
+;
+MSG_SCALING_NONE
+Pas d'échelle
+; No scaling
+;
+MSG_SCALING_HALF
+Moitié de taille
+; Half size
+;
+MSG_SCALING_QUARTER
+Quart de taille
+; Quarter size
+;
+MSG_SCALING_1024X768
+1024x768
+; 1024x768
+;
+MSG_SCALING_800X600
+800x600
+; 800x600
+;
+MSG_SCALING_640X480
+640x480
+; 640x480
+;
+MSG_SCALING_320X240
+320x240
+; 320x240
+;
+MSG_SCALING_160X120
+160x120
+; 160x120
+;
+MSG_VIDEO_FORMAT_MJPEG
+MJPEG
+; MJPEG
+;
+MSG_VIDEO_FORMAT_MNG
+MNG
+; MNG
+;
+MSG_PRIORITY_NORMAL
+Normale
+; Normal
+;
+MSG_PRIORITY_HIGH
+Haute
+; High
+;
+MSG_PRIORITY_LOW
+Basse
+; Low
+;
+MSG_VIDEO_QUALITY_BEST
+Meilleure
+; Best
+;
+MSG_VIDEO_QUALITY_EXCELLENT
+Excellente
+; Excellent
+;
+MSG_VIDEO_QUALITY_GOOD
+Bonne
+; Good
+;
+MSG_VIDEO_QUALITY_POOR
+Médiocre
+; Poor
+;
+MSG_VIDEO_QUALITY_BAD
+Mauvaise
+; Bad
+;
+MSG_MENU_PROJECT_TITLE
+Projet
+; Project
+;
+MSG_MENU_PROJECT_ABOUT
+?\0A propos
+; ?\0About
+;
+MSG_MENU_PROJECT_QUIT
+Q\0Quitter
+; Q\0Quit
+;
+MSG_MENU_SETTINGS_TITLE
+Paramètres
+; Settings
+;
+MSG_MENU_SETTINGS_APP
+S\0Application...
+; S\0Application...
+;
+MSG_MENU_SETTINGS_MUI
+MUI...
+; MUI...
+;
+MSG_DIR_NOT_ACCESSIBLE
+Impossible de démarrer l'enregistrement car \n%s\n n'est pas accessible.
+; Can not start recording because directory\n%s\nis not accessible.
+;
+MSG_ABOUT
+\033c%s\n\nEcrit par %s\n%s\n\nIcône par %s
+; \033c%s\n\nWritten by %s\n%s\n\nIcon by %s
+;
+MSG_MINIMUM_REQUIREMENTS
+Ce programme requiert un Amiga et un 68020 avec un coprocesseur ou mieux.
+; This program requires an AMIGA with 68020 and FPU or better.
+;
+MSG_WINDOW_TITLE_SETTINGS
+Paramètres
+; Settings
+;
