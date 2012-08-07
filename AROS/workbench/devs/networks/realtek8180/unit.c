@@ -1,6 +1,6 @@
 /*
 
-Copyright (C) 2001-2011 Neil Cafferkey
+Copyright (C) 2001-2012 Neil Cafferkey
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -1017,6 +1017,10 @@ BOOL SetOptions(struct DevUnit *unit, const struct TagItem *tag_list,
    {
       switch(tag_item->ti_Tag)
       {
+      case S2INFO_SSID:
+         ReportEvents(unit, S2EVENT_CONNECT, base);
+         break;
+
       case S2INFO_BSSID:
          CopyMem((APTR)tag_item->ti_Data, unit->bssid, ETH_ADDRESSSIZE);
          break;
