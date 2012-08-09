@@ -36,7 +36,7 @@ AROS_UFH2(static void, dsPutCh,
 	}
     }
 
-    AROS_UFC3(void, ds->ds_PutProc,
+    AROS_UFC3NR(void, ds->ds_PutProc,
 	      AROS_UFCA(UBYTE, c, D0),
 	      AROS_UFCA(APTR, ds->ds_UserData, A3),
 	      AROS_UFCA(APTR, ds->ds_UserBase, A4));
