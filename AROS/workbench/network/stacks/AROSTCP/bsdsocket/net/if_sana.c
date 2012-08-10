@@ -2,7 +2,7 @@
  * Copyright (C) 1993 AmiTCP/IP Group, <amitcp-group@hut.fi>
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
- * Copyright (C) 2005 - 2007 The AROS Dev Team
+ * Copyright (C) 2005 - 2012 The AROS Dev Team
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -101,6 +101,7 @@ sana_read(struct sana_softc *ssc, struct IOIPReq *req,
 static void sana_ip_read(struct sana_softc *ssc, struct IOIPReq *req);
 static void sana_arp_read(struct sana_softc *ssc, struct IOIPReq *req);
 static void sana_online(struct sana_softc *ssc, struct IOIPReq *req);
+static void sana_connect(struct sana_softc *ssc, struct IOIPReq *req);
 static void free_written_packet(struct sana_softc *ssc, struct IOIPReq *req);
 static long sana_query(struct sana_softc *ssc, struct TagItem *tag);
 
@@ -538,6 +539,24 @@ sana_run(struct sana_softc *ssc, int requests, struct ifaddr *ifa)
       next = req;
     }
     ssc->ss_reqs = next;
+
+    /* Order a notify when driver connects to a (wireless) network */
+    if (ssc->ss_if.if_data.ifi_aros_usedhcp == 1) {
+      if ((req = CreateIORequest(SanaPort, sizeof(*req))) != NULL) {
+        ssc->ss_eventsent++;
+        req->ioip_s2.ios2_Req.io_Device    = ssc->ss_dev;    
+        req->ioip_s2.ios2_Req.io_Unit      = ssc->ss_unit;   
+        req->ioip_s2.ios2_BufferManagement = ssc->ss_bufmgnt;
+        req->ioip_s2.ios2_Req.io_Message.mn_Node.ln_Type = NT_REPLYMSG;
+        req->ioip_if = ssc;
+        req->ioip_next = NULL;
+        req->ioip_s2.ios2_Req.io_Command = S2_ONEVENT;
+        req->ioip_s2.ios2_WireError = S2EVENT_OFFLINE | S2EVENT_CONNECT;
+        req->ioip_dispatch = sana_connect;
+        BeginIO((struct IORequest *)req);
+        ssc->ss_connectreq = req;
+      }
+    }
   }
   splx(s);
 }
@@ -558,6 +577,9 @@ sana_unrun(struct sana_softc *ssc)
   }
   ssc->ss_reqs = next;
   
+  WaitIO((struct IORequest *)ssc->ss_connectreq);
+  DeleteIORequest((struct IORequest *)ssc->ss_connectreq);
+
   ssc->ss_if.if_flags &= ~IFF_RUNNING;
 }
 
@@ -755,7 +777,7 @@ D(bug("[ATCP-SANA] sana_up('%s%d')\n", ssc->ss_if.if_name, ssc->ss_if.if_unit));
 
     if ((req->ios2_Req.io_Error) && (req->ios2_WireError != S2WERR_UNIT_ONLINE)) {
       sana2perror("S2_ONLINE", req);
-      gui_set_interface_state,(&ssc->ss_if, MIAMIPANELV_AddInterface_State_Offline);
+      gui_set_interface_state(&ssc->ss_if, MIAMIPANELV_AddInterface_State_Offline);
     } else {
       __log(LOG_NOTICE, "%s%d is now online.", ssc->ss_name, ssc->ss_if.if_unit);
       sana_restore(ssc);
@@ -991,6 +1013,32 @@ sana_online(struct sana_softc *ssc, struct IOIPReq *req)
     ssc->ss_eventsent--;
     req->ioip_dispatch = NULL;
     AddHead((struct List*)&ssc->ss_freereq, (struct Node*)req);
+  }
+}
+
+/*
+ * sana_online(): process a CONNECT event
+ */
+static void
+sana_connect(struct sana_softc *ssc, struct IOIPReq *req)
+{
+  LONG events = req->ioip_s2.ios2_WireError;
+
+  if (req->ioip_s2.ios2_Req.io_Error == 0 &&
+      events == S2EVENT_CONNECT) {
+
+    /* New network -> new address */
+    kill_dhclient((struct ifnet *) ssc);
+    run_dhclient((struct ifnet *) ssc);
+  }
+
+  /* Send request back for next event */
+  if (!(events & S2EVENT_OFFLINE)) {
+    req->ioip_s2.ios2_Req.io_Command = S2_ONEVENT;
+    req->ioip_s2.ios2_WireError =  S2EVENT_OFFLINE | S2EVENT_CONNECT;
+    BeginIO(req);
+  } else {
+    ssc->ss_eventsent--;
   }
 }
 
