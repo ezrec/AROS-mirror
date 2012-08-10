@@ -174,11 +174,24 @@ void writeinclibdefs(struct config *cfg)
                     "#define GM_ROOTBASE_FIELD(lh) (((LIBBASETYPEPTR)lh)->%s)\n",
                     cfg->rootbase_field
             );
+    }
+    if (cfg->options & OPTION_TASKSLOT)
+    {
         fprintf(out,
                 "\n"
-                "extern LONG __GM_BaseSlot;\n"
                 "void *__GM_GetBase(void);\n"
         );
+    }
+
+    if (cfg->relbases) {
+        fprintf(out,
+                "\n");
+        struct stringlist *s;
+        for (s = cfg->relbases; s; s = s->next)
+            fprintf(out,
+                    "extern const IPTR __GM_%s_offset;\n", s->s);
+        fprintf(out,
+                "\n");
     }
 
     if (cfg->options & OPTION_PERTASKBASE)

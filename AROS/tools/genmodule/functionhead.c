@@ -369,6 +369,65 @@ void writefuncprotos(FILE *out, struct config *cfg, struct functionhead *funclis
     }
 }
 
+void writefuncinternalstubs(FILE *out, struct config *cfg, struct functionhead *funclist)
+{
+    struct functionhead *funclistit;
+    struct functionarg *arglistit;
+    char *type, *name;
+    int first;
+
+    for(funclistit = funclist; funclistit != NULL; funclistit = funclistit->next)
+    {
+	switch (funclistit->libcall)
+	{
+	case STACK:
+	    fprintf(out, "%s %s(", funclistit->type, funclistit->name);
+        
+	    for(arglistit = funclistit->arguments, first = 1;
+		arglistit != NULL;
+		arglistit = arglistit->next, first = 0
+	    )
+	    {
+		if (!first)
+		    fprintf(out, ", ");
+            
+		fprintf(out, "%s", arglistit->arg);
+	    }
+	    fprintf(out, ");\n");
+	    if ((cfg->options & OPTION_DUPBASE) &&
+	        !(cfg->options & OPTION_PERTASKBASE))
+	    {
+	        fprintf(out,
+		        "AROS_GM_STACKCALL(%s,%s,%d);\n"
+		        , funclistit->name
+		        , cfg->basename
+		        , funclistit->lvo
+		);
+	    }
+	    else
+	    {
+	        fprintf(out,
+		        "AROS_GM_STACKALIAS(%s,%s,%d);\n"
+		        , funclistit->name
+		        , cfg->basename
+		        , funclistit->lvo
+		);
+	    }
+	    break;
+	    
+	case REGISTER:
+	case REGISTERMACRO:
+            /* NOP */
+	    break;
+
+	default:
+	    fprintf(stderr, "Internal error: unhandled libcall in writefuncdefs\n");
+	    exit(20);
+	    break;
+	}
+    }
+}
+    
 char *getargtype(const struct functionarg *funcarg)
 {
     char *s, *begin, *end;

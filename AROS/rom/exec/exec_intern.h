@@ -54,7 +54,7 @@ struct IntExecBase
 #define TS_SERVICE 128
 
 /* Puddle size, in slots. Must be at least 1 */
-#define TASKSTORAGEPUDDLE 16
+#define TASKSTORAGEPUDDLE 64
 
 #if UseLVOs
 extern void __AROS_InitExecBase (void);

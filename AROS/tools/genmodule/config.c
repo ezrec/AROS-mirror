@@ -300,6 +300,22 @@ struct config *initconfig(int argc, char **argv)
 	exit(20);
     }
 
+    /* Mark when we need to use a TASKSLOT */
+    if (cfg->options & (OPTION_DUPBASE | OPTION_PERTASKBASE))
+   	    cfg->options |= OPTION_TASKSLOT;
+    else
+    {
+    	struct functionhead *funclistit;
+        for (funclistit = cfg->funclist; funclistit; funclistit = funclistit->next)
+        {
+            if (funclistit->libcall == STACK)
+            {
+                cfg->options |= OPTION_TASKSLOT;
+                break;
+            }
+        }
+    }
+
     return cfg;
 }
 

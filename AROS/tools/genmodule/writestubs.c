@@ -62,7 +62,7 @@ void writestubs(struct config *cfg, int is_rel)
     {
         fprintf(out, "#include <proto/%s.h>\n", cfg->modulename);
         if (is_rel)
-            fprintf(out, "extern IPTR %s_offset;\n", cfg->libbase);
+            fprintf(out, "extern IPTR __GM_%s_offset;\n", cfg->libbase);
     }
     
     fprintf
@@ -115,7 +115,7 @@ void writestubs(struct config *cfg, int is_rel)
                 );
                 if (is_rel) {
                     fprintf(out,
-                        "    %s %s = __GM_GetBase() + %s_offset;\n",
+                        "    %s %s = __GM_GetBase() + __GM_%s_offset;\n",
                         cfg->libbasetypeptrextern, cfg->libbase,
                         cfg->libbase
                     );
@@ -201,7 +201,7 @@ void writestubs(struct config *cfg, int is_rel)
             }
             else /* libcall==STACK */
             {
-                fprintf(out, "AROS_%sLIBFUNCSTUB(%s, %s, %d)\n",
+                fprintf(out, "AROS_GM_%sLIBFUNCSTUB(%s, %s, %d)\n",
                         is_rel ? "REL" : "",
                         funclistit->name, cfg->libbase, funclistit->lvo
                 );
@@ -212,7 +212,7 @@ void writestubs(struct config *cfg, int is_rel)
                  aliasesit = aliasesit->next
             )
             {
-                fprintf(out, "AROS_FUNCALIAS(%s, %s)\n",
+                fprintf(out, "AROS_GM_LIBFUNCALIAS(%s, %s)\n",
                         funclistit->name, aliasesit->s
                 );
             }

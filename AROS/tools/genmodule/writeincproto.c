@@ -61,12 +61,12 @@ void writeincproto(struct config *cfg, int is_rel)
     {
         fprintf(out,
                 "#if !defined(%s) && !defined(__NOLIBBASE__) && !defined(__%s_NOLIBBASE__)\n"
-                " extern IPTR %s_offset;\n"
+                " extern IPTR __GM_%s_offset;\n"
                 " void *__GM_GetBase(void);\n"
                 " #ifdef __%s_STDLIBBASE__\n"
-                "  #define %s (*(struct Library **)((char *)__GM_GetBase()+%s_offset))\n"
+                "  #define %s (*(struct Library **)((char *)__GM_GetBase()+__GM_%s_offset))\n"
                 " #else\n"
-                "  #define %s (*(%s*)((char *)__GM_GetBase()+%s_offset))\n"
+                "  #define %s (*(%s*)((char *)__GM_GetBase()+__GM_%s_offset))\n"
                 " #endif\n"
                 "#endif\n"
                 "\n",

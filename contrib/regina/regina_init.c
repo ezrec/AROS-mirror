@@ -22,39 +22,15 @@
 
 struct MinList *__regina_tsdlist = NULL;
 
-IPTR aroscbase_offset;
-
 static int InitLib(LIBBASETYPEPTR LIBBASE)
 {
    D(bug("Inside Init func of regina.library\n"));
 
-   aroscbase_offset = offsetof(LIBBASETYPE, _aroscbase);
- 
    __regina_semaphorepool = CreatePool(MEMF_PUBLIC, 1024, 256);
   
    __regina_tsdlist = (struct MinList *)AllocPooled (__regina_semaphorepool, sizeof(struct MinList));
    NewList((struct List *)__regina_tsdlist);
     
-   return TRUE;
-}
-
-static int OpenLib(LIBBASETYPEPTR LIBBASE)
-{
-   D(bug("Opening regina.library\n"));
-
-   LIBBASE->_aroscbase = OpenLibrary("arosc.library", 0);
-
-   D(bug("[regina.library::OpenLib] aroscbase=%p\n", LIBBASE->_aroscbase));
-
-   return LIBBASE->_aroscbase != NULL;
-}
-
-static int CloseLib(LIBBASETYPEPTR LIBBASE)
-{
-   D(bug("Closing regina.library\n"));
-
-   CloseLibrary(LIBBASE->_aroscbase);
-
    return TRUE;
 }
 
@@ -68,6 +44,4 @@ static int ExpungeLib(LIBBASETYPEPTR LIBBASE)
 }
 
 ADD2INITLIB(InitLib, 0);
-ADD2OPENLIB(OpenLib, 0);
-ADD2CLOSELIB(CloseLib, 0);
 ADD2EXPUNGELIB(ExpungeLib, 0);

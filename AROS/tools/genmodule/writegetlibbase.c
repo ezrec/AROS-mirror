@@ -32,12 +32,12 @@ void writegetlibbase(struct config *cfg, int is_rel)
         fprintf(out,
                 "extern void *%s;\n"
                 "\n"
-                "void *%s_GetLibbase(void)\n"
+                "void *__GM_GetBase_%s(void)\n"
                 "{\n"
                 "    return %s;\n"
                 "}\n",
                 cfg->libbase,
-                cfg->basename,
+                cfg->libbase,
                 cfg->libbase
         );
     }
@@ -46,14 +46,14 @@ void writegetlibbase(struct config *cfg, int is_rel)
         fprintf(out,
                 "#include <exec/types.h>\n"
                 "void *__GM_GetBase(void);\n"
-                "extern IPTR %s_offset;\n"
+                "extern IPTR __GM_%s_offset;\n"
                 "\n"
-                "void *%s_GetLibbase(void)\n"
+                "void *__GM_GetBase_%s(void)\n"
                 "{\n"
-                "    return *((void **)((char *)__GM_GetBase()+%s_offset));\n"
+                "    return *((void **)((char *)__GM_GetBase()+__GM_%s_offset));\n"
                 "}\n",
                 cfg->libbase,
-                cfg->basename,
+                cfg->libbase,
                 cfg->libbase
          );
     }

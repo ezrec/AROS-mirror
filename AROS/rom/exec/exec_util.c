@@ -111,6 +111,14 @@ Exec_InitETask(struct Task *task, struct ExecBase *SysBase)
                 et->et_TaskStorage = ts;
             }
         }
+    } else {
+        IPTR *ts = AllocMem(TASKSTORAGEPUDDLE * sizeof(ts[0]), MEMF_ANY | MEMF_CLEAR);
+        if (!ts) {
+            FreeMem(iet, sizeof(*iet));
+            return FALSE;
+        }
+        ts[__TS_FIRSTSLOT] = TASKSTORAGEPUDDLE;
+        et->et_TaskStorage = ts;
     }
 
     et->et_Parent = thistask;

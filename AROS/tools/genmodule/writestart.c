@@ -173,6 +173,7 @@ static void writedecl(FILE *out, struct config *cfg)
 	    "#include <aros/libcall.h>\n"
 	    "#include <aros/asmcall.h>\n"
 	    "#include <aros/symbolsets.h>\n"
+	    "#include <aros/genmodule.h>\n"
 	    "#include <dos/dos.h>\n"
 	    "\n"
 	    "#include \"%s_libdefs.h\"\n"
@@ -209,37 +210,27 @@ static void writedecl(FILE *out, struct config *cfg)
 		"#endif\n"
 	);
     }
-    if (cfg->options & OPTION_DUPBASE)
+    if (cfg->options & OPTION_TASKSLOT)
     {
         fprintf(out,
-		"#ifndef GM_ROOTBASE_FIELD\n"
-		"static LIBBASETYPEPTR GM_UNIQUENAME(rootbase);\n"
-		"#define GM_ROOTBASE_FIELD(lh) (GM_UNIQUENAME(rootbase))\n"
-		"#endif\n"
-                "LONG __GM_BaseSlot;\n"
-                /* If AROS_GM_GETBASE is defined, then it is a 
-                 * macro that generates the __GM_GetBase() function
-                 * in assembly. See include/aros/x86_64/cpu.h for
-                 * an example implementation.
-                 */
-                "#ifdef AROS_GM_GETBASE\n"
-                "extern void *__GM_GetBase(void);\n"
-                "AROS_GM_GETBASE()\n"
-                "static inline void *__GM_GetBase_Safe(void)\n"
+                "IPTR __GM_BaseSlot;\n"
+                "void *__GM_GetBase(void)\n"
                 "{\n"
                 "    return (LIBBASETYPEPTR)GetTaskStorageSlot(__GM_BaseSlot);\n"
                 "}\n"
-                "#else\n"
-                "void *__GM_GetBase(void)\n"
-                "{\n"
-                "    return (void *)GetTaskStorageSlot(__GM_BaseSlot);\n"
-                "}\n"
-                "#define __GM_GetBase_Safe() __GM_GetBase()\n"
-                "#endif\n"
-                "static inline BOOL __GM_SetBase_Safe(LIBBASETYPEPTR base)\n"
+                "static inline BOOL __GM_SetBase(LIBBASETYPEPTR base)\n"
                 "{\n"
                 "    return SetTaskStorageSlot(__GM_BaseSlot, (IPTR)base);\n"
                 "}\n"
+        );
+    }
+    if (cfg->options & OPTION_DUPBASE)
+    {
+        fprintf(out,
+                "#ifndef GM_ROOTBASE_FIELD\n"
+                "static LIBBASETYPEPTR GM_UNIQUENAME(rootbase);\n"
+                "#define GM_ROOTBASE_FIELD(lh) (GM_UNIQUENAME(rootbase))\n"
+                "#endif\n"
                 "struct __GM_DupBase {\n"
                 "    LIBBASETYPE base;\n"
                 "    LIBBASETYPEPTR oldbase;\n"
@@ -271,7 +262,7 @@ static void writedecl(FILE *out, struct config *cfg)
 
             for (sl=cfg->relbases, i = 0; sl; sl=sl->next, i++) {
                 fprintf(out,
-                        "const IPTR %s_offset = offsetof(struct __GM_DupBase, relbase[%d]);\n"
+                        "const IPTR __GM_%s_offset = offsetof(struct __GM_DupBase, relbase[%d]);\n"
                         , sl->s
                         , i
                 );
@@ -383,6 +374,8 @@ static void writedecl(FILE *out, struct config *cfg)
     
     /* Write out the defines for the functions of the function table */
     writefuncdefs(out, cfg, cfg->funclist);
+    /* Write internal stubs */
+    writefuncinternalstubs(out, cfg, cfg->funclist);
     fprintf(out, "\n");
 
 
@@ -862,10 +855,10 @@ static void writeinitlib(FILE *out, struct config *cfg)
     	}
     }
 
-    if (cfg->options & OPTION_DUPBASE)
+    if (cfg->options & OPTION_TASKSLOT)
         fprintf(out,
                 "    __GM_BaseSlot = AllocTaskStorageSlot();\n"
-                "    if (!__GM_SetBase_Safe(lh)) {\n"
+                "    if (!__GM_SetBase(lh)) {\n"
                 "        FreeTaskStorageSlot(__GM_BaseSlot);\n"
                 "        return NULL;\n"
                 "    }\n"
@@ -882,6 +875,8 @@ static void writeinitlib(FILE *out, struct config *cfg)
     fprintf(out, "    if (");
     if (!(cfg->options & OPTION_NOAUTOLIB))
 	fprintf(out, "set_open_libraries() && ");
+    if ((cfg->options & OPTION_DUPBASE))
+	fprintf(out, "set_open_rellibraries(lh) && ");
     if (cfg->classlist != NULL)
 	fprintf(out, "set_call_libfuncs(SETNAME(CLASSESINIT), 1, 1, lh) && ");
     fprintf(out,
@@ -918,6 +913,8 @@ static void writeinitlib(FILE *out, struct config *cfg)
     );
     if (cfg->classlist != NULL)
 	fprintf(out, "        set_call_libfuncs(SETNAME(CLASSESEXPUNGE), -1, 0, lh);\n");
+    if ((cfg->options & OPTION_DUPBASE))
+	fprintf(out, "        set_close_rellibraries(lh);\n");
     if (!(cfg->options & OPTION_NOAUTOLIB))
 	fprintf(out, "        set_close_libraries();\n");
 
@@ -1069,6 +1066,12 @@ static void writeopenlib(FILE *out, struct config *cfg)
 		    "        ((struct Library *)lh)->lib_OpenCnt++;\n"
 		    "        ((struct Library *)lh)->lib_Flags &= ~LIBF_DELEXP;\n"
 		    "\n"
+	    );
+            if (cfg->options & OPTION_TASKSLOT)
+                fprintf(out,
+		    "        __GM_SetBase(lh);\n"
+		);
+	    fprintf(out,
 		    "        return lh;\n"
 		    "    }\n"
 		    "\n"
@@ -1084,7 +1087,7 @@ static void writeopenlib(FILE *out, struct config *cfg)
 	    fprintf(out,
 		    "    struct Library *newlib = NULL;\n"
 		    "    UWORD possize = ((struct Library *)lh)->lib_PosSize;\n"
-                    "    LIBBASETYPEPTR oldbase = __GM_GetBase_Safe();\n"
+                    "    LIBBASETYPEPTR oldbase = __GM_GetBase();\n"
             );
             if (cfg->options & OPTION_PERTASKBASE)
                 fprintf(out,
@@ -1119,9 +1122,9 @@ static void writeopenlib(FILE *out, struct config *cfg)
 		    "            return NULL;\n"
 		    "\n"
 		    "        CopyMem(lh, newlib, possize);\n"
-                    "        __GM_SetBase_Safe((LIBBASETYPEPTR)newlib);\n"
                     "        struct __GM_DupBase *dupbase = (struct __GM_DupBase *)newlib;\n"
                     "        dupbase->oldbase = oldbase;\n"
+		    "        __GM_SetBase((LIBBASETYPEPTR)newlib);\n"
             );
             if (cfg->options & OPTION_PERTASKBASE)
                 fprintf(out,
@@ -1234,7 +1237,7 @@ static void writecloselib(FILE *out, struct config *cfg)
                 "\n"
 		"    set_call_libfuncs(SETNAME(CLOSELIB), -1, 0, lh);\n"
                 "    set_close_rellibraries(lh);\n"
-                "    __GM_SetBase_Safe(dupbase->oldbase);\n"
+                "    __GM_SetBase(dupbase->oldbase);\n"
         );
         if (cfg->options & OPTION_PERTASKBASE)
             fprintf(out,
@@ -1315,6 +1318,8 @@ static void writeexpungelib(FILE *out, struct config *cfg)
 	);
 	if (cfg->classlist != NULL)
 	    fprintf(out, "        set_call_libfuncs(SETNAME(CLASSESEXPUNGE), -1, 0, lh);\n");
+	if (cfg->options & OPTION_DUPBASE)
+	    fprintf(out, "        set_close_rellibraries(lh);\n");
 	if (!(cfg->options & OPTION_NOAUTOLIB))
 	    fprintf(out, "        set_close_libraries();\n"
 	                 "#ifdef GM_OOPBASE_FIELD\n"
@@ -1515,10 +1520,6 @@ writefunctable(FILE *out,
 	switch (funclistit->libcall)
 	{
 	case STACK:
-	    fprintf(out, "    &%s,\n", funclistit->internalname
-            );
-	    break;
-	    
 	case REGISTER:
 	case REGISTERMACRO:
 	    if (funclistit->version != lastversion) {
