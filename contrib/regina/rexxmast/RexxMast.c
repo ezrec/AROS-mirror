@@ -191,7 +191,7 @@ static LONG StartFile(struct RexxMsg *msg)
 static void StartFileSlave(struct RexxMsg *msg)
 {
    UBYTE *comm = (UBYTE *)msg->rm_Args[0];
-   BPTR lock, oldlock;
+   BPTR lock, oldlock = BNULL;
    unsigned int len=0, extlen, commlen = LengthArgstring(comm);
    BPTR input = BNULL, output = BNULL, error = BNULL;
    struct Process *process = (struct Process *)msg->rm_Node.mn_ReplyPort->mp_SigTask;
