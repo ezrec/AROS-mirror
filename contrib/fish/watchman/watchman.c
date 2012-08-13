@@ -375,7 +375,7 @@ int main (int argc, char **argv)
     int Mx, My,			/* Mouse's current relative offset */ 
     	LastL = 0, LastR = 0, 	/* Last index for left&right Eye */
     	NewL, NewR;		/* New index    --   ""   --     */
-    ULONG PrevSecs, PrevMics;	/* Time of last click */
+    ULONG PrevSecs = 0, PrevMics = 0;	/* Time of last click */
 
     /* Init */
     OpenStuff ();
