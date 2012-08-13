@@ -1489,7 +1489,7 @@ struct FMConfig *fmc;
 Object *obj;
 ULONG ds[2],dm[2],last = 0;
 IPTR clicked;
-Class *ddlistclass;
+Class *ddlistclass = NULL;
 struct GUIBase *gb = NULL;
 struct GUISlot *gs[4];
 WORD ret = 0,cnt1;

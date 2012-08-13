@@ -83,7 +83,7 @@ struct DrawInfo *di;
 struct Screen *scr=0;
 struct Window *win=0;
 struct RastPort *rp;
-struct VisualInfo *vi;
+struct VisualInfo *vi=NULL;
 struct FMList *list;
 UBYTE name[PATH];
 UBYTE name2[PATH];

@@ -61,7 +61,7 @@ void MyPrint(UBYTE *start, long laenge, long DisplayTyp, struct Window *Wnd )
 				
 						/* Intuitionrequesterdaten */
 				
-					struct Window *ReqWnd;
+					struct Window *ReqWnd = NULL;
 					struct EasyStruct Easy;
 		
 						/* Requester öffnen */

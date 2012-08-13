@@ -442,7 +442,7 @@ FindProgram(struct Window *Parent,STRPTR Program,LONG *Error)
 		{
 			struct CommandLineInterface	*CLI;
 			BOOL InitialCD,GotIt;
-			BPTR StartCD,Drawer;
+			BPTR StartCD = BNULL,Drawer;
 			struct Path *Path;
 
 			CLI			= BADDR(ThisProcess->pr_CLI);

@@ -447,7 +447,7 @@ ShowAbout(LONG Ticks)
 	TAG_DONE))
 	{
 		struct Window		*PanelWindow;
-		struct Region		*Clip = NULL,*Old;
+		struct Region		*Clip = NULL,*Old = NULL;
 		struct Rectangle	 ClipRect;
 		LONG				 ClipWidth = 0,
 							 ClipHeight = 0;
