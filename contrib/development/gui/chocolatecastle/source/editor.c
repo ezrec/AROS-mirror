@@ -6,6 +6,8 @@
 
 /* EditorClass code. */
 
+#include <libraries/mui.h>
+
 #include "support.h"
 #include "editor.h"
 #include "locale.h"
@@ -16,34 +18,41 @@ struct MUI_CustomClass *EditorClass;
 
 /* INTERNAL OBJECT IDENTIFIERS */
 
-#define EDLIST_ADD       0x6EDA2911
-#define EDLIST_EDIT      0x6EDA8E13
-#define EDLIST_DELETE    0x6EDAB229
-#define EDWIN_OK         0x6EDA6FA3
+#define EDLIST_ADD       0x6EDA2911ul
+#define EDLIST_EDIT      0x6EDA8E13ul
+#define EDLIST_DELETE    0x6EDAB229ul
+#define EDWIN_OK         0x6EDA6FA3ul
 
 /* INTERNAL METHODS */
 
-#define EDLM_Finalize    0x6EDAA722
-#define EDLM_Buttons     0x6EDA7E36
+#define EDLM_Finalize    0x6EDAA722ul
+#define EDLM_Buttons     0x6EDA7E36ul
 
 struct EDLP_Finalize
 {
-	ULONG MethodID;
-	IPTR  Accept;
+	STACKED ULONG MethodID;
+	STACKED IPTR  Accept;
 };
 
 struct EDLP_Buttons
 {
-	ULONG MethodID;
-	IPTR  ActEntry;
+	STACKED ULONG MethodID;
+	STACKED IPTR  ActEntry;
 };
 
 
 ///
 /// dispatcher prototype
 
+#ifdef __AROS__
+AROS_UFP3(IPTR, EditorDispatcher,
+AROS_UFPA(Class  *, cl,  A0),
+AROS_UFPA(Object *, obj, A2),
+AROS_UFPA(Msg     , msg, A1));
+#else
 intptr_t EditorDispatcher(void);
 const struct EmulLibEntry EditorGate = {TRAP_LIB, 0, (void(*)(void))EditorDispatcher};
+#endif
 
 ///
 /// EditorData
@@ -405,11 +414,16 @@ IPTR EditorBuildEditor(UNUSED Class *cl, UNUSED Object *obj)
 ///
 /// EditorDispatcher()
 
+#ifdef __AROS__
+BOOPSI_DISPATCHER(IPTR, EditorDispatcher, cl, obj, msg)
+{
+#else
 intptr_t EditorDispatcher(void)
 {
 	Class *cl = (Class*)REG_A0;
 	Object *obj = (Object*)REG_A2;
 	Msg msg = (Msg)REG_A1;
+#endif
 
 	switch (msg->MethodID)
 	{
@@ -422,5 +436,8 @@ intptr_t EditorDispatcher(void)
 		default:                 return (DoSuperMethodA(cl, obj, msg));
 	}
 }
+#ifdef __AROS__
+BOOPSI_DISPATCHER_END
+#endif
 
 ///

@@ -51,91 +51,91 @@ void DeleteGeneratorClass(void);
 
 struct GENP_InsertRemark
 {
-	ULONG   MethodID;
-	STRPTR  Text;
+	STACKED ULONG   MethodID;
+	STACKED STRPTR  Text;
 };
 
 
 struct GENP_Setup
 {
-	ULONG   MethodID;
-	STRPTR  NamePattern;
+	STACKED ULONG   MethodID;
+	STACKED STRPTR  NamePattern;
 };
 
 
 struct GENP_Text
 {
-	ULONG   MethodID;
-	STRPTR  Text;
+	STACKED ULONG   MethodID;
+	STACKED STRPTR  Text;
 };
 
 
 struct GENP_TextParam
 {
-	ULONG   MethodID;
-	STRPTR  Text;
-	IPTR    Param;
+	STACKED ULONG   MethodID;
+	STACKED STRPTR  Text;
+	STACKED IPTR    Param;
 };
 
 struct GENP_Save
 {
-	ULONG   MethodID;
-	IPTR    Handle;
+	STACKED ULONG   MethodID;
+	STACKED IPTR    Handle;
 };
 
 struct GENP_Load
 {
-	ULONG   MethodID;
-	IPTR    Handle;
-	struct Parser *Parser;
-	STRPTR  LineBuf;
+	STACKED ULONG   MethodID;
+	STACKED IPTR    Handle;
+	STACKED struct Parser *Parser;
+	STACKED STRPTR  LineBuf;
 };
 
 struct GENP_MethodHeader
 {
-	ULONG   MethodID;
-	STRPTR  MethodName;
-	STRPTR  FuncName;
-	STRPTR  StructName;
-	STRPTR  Identifier;
-	IPTR    Instance;       // only generate INST_DATA if TRUE
-	IPTR    ExtClass;       // TRUE if external class, lib name in autodoc header
+	STACKED ULONG   MethodID;
+	STACKED STRPTR  MethodName;
+	STACKED STRPTR  FuncName;
+	STACKED STRPTR  StructName;
+	STACKED STRPTR  Identifier;
+	STACKED IPTR    Instance;       // only generate INST_DATA if TRUE
+	STACKED IPTR    ExtClass;       // TRUE if external class, lib name in autodoc header
 };
 
 struct GENP_MethodFooter
 {
-	ULONG   MethodID;
-	IPTR    ReturnZero;     // output "return 0;" statement if TRUE
+	STACKED ULONG   MethodID;
+	STACKED IPTR    ReturnZero;     // output "return 0;" statement if TRUE
 };
 
 struct GENP_DisableLibGroup
 {
-	ULONG   MethodID;
-	IPTR    Disabled;
+	STACKED ULONG   MethodID;
+	STACKED IPTR    Disabled;
 };
 
 struct GENP_LibVersionH
 {
-	ULONG   MethodID;
-	STRPTR  FileName;
+	STACKED ULONG   MethodID;
+	STACKED STRPTR  FileName;
 };
 
 struct GENP_LibraryC
 {
-	ULONG   MethodID;
-	IPTR    ProjectType;
+	STACKED ULONG   MethodID;
+	STACKED IPTR    ProjectType;
 };
 
 struct GENP_LeadingComment
 {
-	ULONG   MethodID;
-	STRPTR  VarText;
+	STACKED ULONG   MethodID;
+	STACKED STRPTR  VarText;
 };
 
 struct GENP_TrailingComment
 {
-	ULONG   MethodID;
-	STRPTR  VarText;
+	STACKED ULONG   MethodID;
+	STACKED STRPTR  VarText;
 };
 
 #define PARAM_CLASSNAME    0

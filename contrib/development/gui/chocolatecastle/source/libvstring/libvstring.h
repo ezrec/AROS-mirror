@@ -26,3 +26,9 @@ ULONG StrArrayLen(STRPTR *array);
 #define StrFree(s) FreeVecTaskPooled(s)
 
 
+#ifdef __AROS__
+extern APTR MPool;
+#include <proto/exec.h>
+#define  AllocVecTaskPooled(size) AllocVecPooled(MPool, size)
+#define FreeVecTaskPooled(ptr) FreeVecPooled(MPool, ptr)
+#endif

@@ -15,19 +15,19 @@ struct CastleAppData
 };
 
 
-#define CAAM_Generate           0x6EDA9475
-#define CAAM_RemoveGenerator    0x6EDA9476
+#define CAAM_Generate           0x6EDA9475ul
+#define CAAM_RemoveGenerator    0x6EDA9476ul
 
 
 struct opCAA_Generate
 {
-	ULONG MethodID;
-	ULONG ProjectType;
+	STACKED ULONG MethodID;
+	STACKED ULONG ProjectType;
 };
 
 struct CAAP_RemoveGenerator
 {
-	ULONG MethodID;
-	Object *Generator;
+	STACKED ULONG MethodID;
+	STACKED Object *Generator;
 };
 

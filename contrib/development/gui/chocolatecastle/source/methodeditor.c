@@ -7,6 +7,7 @@
 /* MethodEditorClass code. The class generates a group of gadgets for editing */
 /* a BOOPSI method. */
 
+#include <libraries/mui.h>
 #include <libvstring.h>
 
 #include "methodeditor.h"
@@ -20,8 +21,15 @@ struct MUI_CustomClass *MethodEditorClass;
 
 /// dispatcher prototype
 
+#ifdef __AROS__
+AROS_UFP3(IPTR, MethodEditorGate,
+AROS_UFPA(Class  *, cl,  A0),
+AROS_UFPA(Object *, obj, A2),
+AROS_UFPA(Msg     , msg, A1));
+#else
 IPTR MethodEditorDispatcher(void);
 const struct EmulLibEntry MethodEditorGate = {TRAP_LIB, 0, (void(*)(void))MethodEditorDispatcher};
+#endif
 
 ///
 /// MethodEditorData
@@ -369,11 +377,17 @@ IPTR MethodEditorClear(Class *cl, Object *obj, UNUSED Msg msg)
 ///
 /// MethodEditorDispatcher()
 
+#ifdef __AROS__
+BOOPSI_DISPATCHER(IPTR, MethodEditorGate, cl, obj, msg)
+{
+#else
 IPTR MethodEditorDispatcher(void)
 {
 	Class *cl = (Class*)REG_A0;
 	Object *obj = (Object*)REG_A2;
 	Msg msg = (Msg)REG_A1;
+#endif
+
 	switch (msg->MethodID)
 	{
 		case OM_NEW:              return MethodEditorNew(cl, obj, (struct opSet*)msg);
@@ -385,5 +399,8 @@ IPTR MethodEditorDispatcher(void)
 		default:                  return DoSuperMethodA(cl, obj, msg);
 	}
 }
+#ifdef __AROS__
+BOOPSI_DISPATCHER_END
+#endif
 
 ///

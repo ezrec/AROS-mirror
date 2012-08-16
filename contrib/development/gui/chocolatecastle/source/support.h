@@ -74,7 +74,7 @@ void error(STRPTR msg, ...);
 void generate_emullibentry(Object *obj);
 void generate_dispatcher(Object *obj, Object *method_list);
 void wait_loop(void);
-Object *labelled_checkmark(STRPTR label, IPTR id);
+Object *labelled_checkmark(CONST_STRPTR label, IPTR id);
 
 #define MAXPARAMS 8
 #define MUIV_Application_ReturnID_RemGen   0x6EDA9938
@@ -100,7 +100,7 @@ Object* NewObjectM(Class *cl, char *classname, ...);
 /*############################################################################*/
 /*############################################################################*/
 
-inline extern IPTR strln(STRPTR s)
+static inline IPTR strln(STRPTR s)
 {
 	STRPTR v = s;
 
@@ -111,7 +111,7 @@ inline extern IPTR strln(STRPTR s)
 /*############################################################################*/
 /*############################################################################*/
 
-inline extern void newlist(struct MinList *list)
+static inline void newlist(struct MinList *list)
 {
 	list->mlh_Head = (struct MinNode*)&list->mlh_Tail;
 	list->mlh_Tail = NULL;

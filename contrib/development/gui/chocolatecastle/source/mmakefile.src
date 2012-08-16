@@ -1,0 +1,27 @@
+#   $Id$
+#
+#   Makefile to make ChocolateCastle
+
+include $(TOP)/config/make.cfg
+
+FILES := \
+    main generator castleapp support muigenerator methodlist \
+    editor reggenerator methodeditor logo locale \
+    libvstring/fmtlen libvstring/fmtnew libvstring/fmtput \
+    libvstring/freestrarray libvstring/strarraylen \
+    libvstring/strcopy libvstring/strlen libvstring/strnew \
+    libvstring/vfmtnew libvstring/strncopy libvstring/fmtnput
+ 
+#MM contrib-development-gui-chocolatecastle-source : includes linklib
+
+EXEDIR := $(AROS_CONTRIB)/Development/ChocolateCastle
+
+USER_CFLAGS := -D__NOLIBBASE__ -DUSE_INLINE_STDARG -Wno-parentheses
+USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/libvstring
+
+%build_prog mmake=contrib-development-gui-chocolatecastle-source \
+    progname=ChocolateCastle targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs="mui"
+
+
+%common

@@ -8,9 +8,9 @@ extern struct Catalog *Cat;
 
 #define LS(id, txt) GetCatalogStr(Cat, id, (STRPTR)txt)
 
-extern STRPTR TodoRadioEntries[3];
-extern STRPTR SuperclassRadioEntries[3];
-extern STRPTR ReggaeClassTypeEntries[9];
+extern CONST_STRPTR TodoRadioEntries[3];
+extern CONST_STRPTR SuperclassRadioEntries[3];
+extern CONST_STRPTR ReggaeClassTypeEntries[9];
 
 void InitializeStrings(void);
 

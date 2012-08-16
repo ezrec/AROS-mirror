@@ -10,6 +10,7 @@
 #include <proto/muimaster.h>
 #include <clib/alib_protos.h>
 #include <libraries/asl.h>
+#include <libraries/mui.h>
 #include <string.h>
 
 #include "reggenerator.h"
@@ -31,13 +32,20 @@ struct RegGeneratorData
 
 struct MUI_CustomClass *RegGeneratorClass;
 
+#ifdef __AROS__
+AROS_UFP3(IPTR, g_RegGenerator,
+AROS_UFPA(Class  *, cl,  A0),
+AROS_UFPA(Object *, obj, A2),
+AROS_UFPA(Msg     , msg, A1));
+#else
 IPTR d_RegGenerator(void);
 
 static struct EmulLibEntry g_RegGenerator = {TRAP_LIB, 0, (void(*)(void))d_RegGenerator};
+#endif
 
-#define OBJ_EXTCHECK     0x6EDA6F36   // external class checkmark
-#define OBJ_LIBSETTINGS  0x6EDA6F37   // library settings button
-#define OBJ_CLASSTYPE    0x6EDA6F38   // class type cycle
+#define OBJ_EXTCHECK     0x6EDA6F36ul   // external class checkmark
+#define OBJ_LIBSETTINGS  0x6EDA6F37ul   // library settings button
+#define OBJ_CLASSTYPE    0x6EDA6F38ul   // class type cycle
 
 // table of Reggae class type constants
 
@@ -143,7 +151,7 @@ static BOOL load_method(Class *cl, Object *obj, struct GENP_Load *msg)
 	BOOL result = FALSE;
 	struct RegGeneratorData *d = INST_DATA(cl, obj);
 
-	if (FGets(msg->Handle, msg->LineBuf, INPUT_LINE_MAX_LEN))
+	if (FGets((BPTR)msg->Handle, msg->LineBuf, INPUT_LINE_MAX_LEN))
 	{
 		msg->Parser->line++;
 
@@ -173,7 +181,7 @@ static BOOL load_externity(Class *cl, Object *obj, struct GENP_Load *msg)
 	BOOL result = FALSE;
 	struct RegGeneratorData *d = INST_DATA(cl, obj);
 
-	if (FGets(msg->Handle, msg->LineBuf, INPUT_LINE_MAX_LEN))
+	if (FGets((BPTR)msg->Handle, msg->LineBuf, INPUT_LINE_MAX_LEN))
 	{
 		msg->Parser->line++;
 
@@ -195,7 +203,7 @@ static BOOL load_lib_settings(UNUSED Class *cl, Object *obj, struct GENP_Load *m
 {
 	BOOL result = FALSE;
 
-	if (FGets(msg->Handle, msg->LineBuf, INPUT_LINE_MAX_LEN))
+	if (FGets((BPTR)msg->Handle, msg->LineBuf, INPUT_LINE_MAX_LEN))
 	{
 		msg->Parser->line++;
 
@@ -439,7 +447,7 @@ IPTR RegGeneratorNew(Class *cl, Object *obj, struct opSet *msg)
 		{
 			Object *parent;
 
-			GetAttr(GENA_SubclassSpace, obj, (ULONG*)&parent);
+			GetAttr(GENA_SubclassSpace, obj, (IPTR*)&parent);
 
 			if (parent)
 			{
@@ -636,11 +644,11 @@ IPTR RegGeneratorSave(Class *cl, Object *obj, struct GENP_Save *msg)
 		LONG external;
 
 		external = xget(d->ExtClassCheck, MUIA_Selected);
-		FPrintf(msg->Handle, (STRPTR)"EXTERNAL=%ld\n", external);
+		FPrintf((BPTR)msg->Handle, (STRPTR)"EXTERNAL=%ld\n", external);
 
 		if (external)
 		{
-			FPrintf(msg->Handle, (STRPTR)"LIBNAME=%s VERSION=%ld REVISION=%ld COPYRIGHT=\"%s\"\n",
+			FPrintf((BPTR)msg->Handle, (STRPTR)"LIBNAME=%s VERSION=%ld REVISION=%ld COPYRIGHT=\"%s\"\n",
 			 xget(findobj(obj, OBJ_LIBG_NAME), MUIA_String_Contents),
 			 xget(findobj(obj, OBJ_LIBG_VERSION), MUIA_String_Integer),
 			 xget(findobj(obj, OBJ_LIBG_REVISION), MUIA_String_Integer),
@@ -656,7 +664,7 @@ IPTR RegGeneratorSave(Class *cl, Object *obj, struct GENP_Save *msg)
 			if (!me) break;
 			if (*me->Structure == 0x00) s = (STRPTR)"\"\"";
 			else s = me->Structure;
-			FPrintf(msg->Handle, (STRPTR)"METHOD=%s FUNCTION=%s STRUCTURE=%s ID=%s STD=%ld\n",
+			FPrintf((BPTR)msg->Handle, (STRPTR)"METHOD=%s FUNCTION=%s STRUCTURE=%s ID=%s STD=%ld\n",
 			 (IPTR)me->Name, (IPTR)me->Function, (IPTR)s, (IPTR)me->Identifier, me->Standard);
 		}
 	}
@@ -694,11 +702,16 @@ IPTR RegGeneratorLoad(Class *cl, Object *obj, struct GENP_Load *msg)
 ///
 /// d_RegGenerator()
 
+#ifdef __AROS__
+BOOPSI_DISPATCHER(IPTR, g_RegGenerator, cl, obj, msg)
+{
+#else
 IPTR d_RegGenerator(void)
 {
 	Class *cl = (Class*)REG_A0;
 	Object *obj = (Object*)REG_A2;
 	Msg msg = (Msg)REG_A1;
+#endif
 
 	switch (msg->MethodID)
 	{
@@ -711,7 +724,9 @@ IPTR d_RegGenerator(void)
 		default:  return (DoSuperMethodA(cl, obj, msg));
 	}
 }
-
+#ifdef __AROS__
+BOOPSI_DISPATCHER_END
+#endif
 
 ///
 

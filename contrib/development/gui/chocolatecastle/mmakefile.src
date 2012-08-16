@@ -1,0 +1,20 @@
+#   $Id$
+#
+#   Makefile to make ChocolateCastle
+
+include $(TOP)/config/make.cfg
+
+FILES := changelog.txt changelog.txt.info ChocolateCastleEN.guide \
+ChocolateCastleEN.guide.info ChocolateCastle.info LEGAL
+
+#MM- contrib-development : contrib-development-gui-chocolatecastle
+ 
+#MM- contrib-development-gui-chocolatecastle : \
+#MM    contrib-development-gui-chocolatecastle-source \
+#MM    contrib-development-gui-chocolatecastle-cpy
+
+EXEDIR := $(AROS_CONTRIB)/Development/ChocolateCastle
+
+%copy_files_q mmake=contrib-development-gui-chocolatecastle-cpy files=$(FILES) dst=$(EXEDIR)
+
+%common

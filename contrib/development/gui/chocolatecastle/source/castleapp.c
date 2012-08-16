@@ -7,6 +7,7 @@
 #include <proto/utility.h>
 #include <clib/alib_protos.h>
 #include <proto/muimaster.h>
+#include <libraries/mui.h>
 
 #include "support.h"
 #include "castleapp.h"
@@ -16,8 +17,16 @@
 #include "locale.h"
 
 struct MUI_CustomClass *CastleAppClass;
+
+#ifdef __AROS__
+AROS_UFP3(IPTR, g_CastleApp,
+AROS_UFPA(Class  *, cl,  A0),
+AROS_UFPA(Object *, obj, A2),
+AROS_UFPA(Msg     , msg, A1));
+#else
 LONG d_CastleApp(void);
 static struct EmulLibEntry g_CastleApp = {TRAP_LIB, 0, (void(*)(void))d_CastleApp};
+#endif
 
 
 struct MUI_CustomClass *CreateCastleAppClass(void)
@@ -111,11 +120,16 @@ intptr_t CastleAppRemoveGenerator(UNUSED Class *cl, Object *obj, struct CAAP_Rem
 }
 
 
+#ifdef __AROS__
+BOOPSI_DISPATCHER(IPTR, g_CastleApp, cl, obj, msg)
+{
+#else
 intptr_t d_CastleApp(void)
 {
 	Class *cl = (Class*)REG_A0;
 	Object *obj = (Object*)REG_A2;
 	Msg msg = (Msg)REG_A1;
+#endif
 
 	switch (msg->MethodID)
 	{
@@ -125,4 +139,7 @@ intptr_t d_CastleApp(void)
 		default:                    return (DoSuperMethodA(cl, obj, msg));
 	}
 }
+#ifdef __AROS__
+BOOPSI_DISPATCHER_END
+#endif
 

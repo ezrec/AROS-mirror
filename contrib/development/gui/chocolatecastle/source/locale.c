@@ -2,9 +2,9 @@
 
 #include "locale.h"
 
-STRPTR TodoRadioEntries[3];
-STRPTR SuperclassRadioEntries[3];
-STRPTR ReggaeClassTypeEntries[9];
+CONST_STRPTR TodoRadioEntries[3];
+CONST_STRPTR SuperclassRadioEntries[3];
+CONST_STRPTR ReggaeClassTypeEntries[9];
 
 void InitializeStrings(void)
 {

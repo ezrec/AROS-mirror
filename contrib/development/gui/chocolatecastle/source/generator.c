@@ -13,20 +13,21 @@
 #include <clib/debug_protos.h>
 #include <clib/alib_protos.h>
 #include <libraries/asl.h>
+#include <libraries/mui.h>
 #include <libvstring.h>
 
 #include "generator.h"
 #include "support.h"
 #include "locale.h"
 
-#define OBJ_DIR             0x6EDA4894   // directory string gadget
-#define OBJ_CLASS           0x6EDA9373   // class name string gadget
-#define OBJ_GENBUT          0x6EDA9002   // generate text button
-#define OBJ_EGROUP          0x6EDA9483   // space for subclasses
-#define OBJ_REMARKS         0x6EDA839A   // radio button for remarks
-#define OBJ_SAVBUT          0x6EDA839D   // save text button
-#define OBJ_LODBUT          0x6EDA839E   // load text button
-#define OBJ_DOCCHECK        0x6EDA839F   // autodoc template generation checkmark
+#define OBJ_DIR             0x6EDA4894ul   // directory string gadget
+#define OBJ_CLASS           0x6EDA9373ul   // class name string gadget
+#define OBJ_GENBUT          0x6EDA9002ul   // generate text button
+#define OBJ_EGROUP          0x6EDA9483ul   // space for subclasses
+#define OBJ_REMARKS         0x6EDA839Aul   // radio button for remarks
+#define OBJ_SAVBUT          0x6EDA839Dul   // save text button
+#define OBJ_LODBUT          0x6EDA839Eul   // load text button
+#define OBJ_DOCCHECK        0x6EDA839Ful   // autodoc template generation checkmark
 
 #define REMARKS_WARNINGS    0
 #define REMARKS_COMMENTS    1
@@ -59,9 +60,16 @@ struct GeneratorData
 
 struct MUI_CustomClass *GeneratorClass;
 
+#ifdef __AROS__
+AROS_UFP3(IPTR, g_Generator,
+AROS_UFPA(Class  *, cl,  A0),
+AROS_UFPA(Object *, obj, A2),
+AROS_UFPA(Msg     , msg, A1));
+#else
 IPTR d_Generator(void);
 
 static struct EmulLibEntry g_Generator = {TRAP_LIB, 0, (void(*)(void))d_Generator};
+#endif
 
 /// CreateGeneratorClass()
 
@@ -371,8 +379,8 @@ int GeneratorSetup(Class *cl, Object *obj, struct GENP_Setup *msg)
 	int rv = FALSE;
 	STRPTR filename, lowercase_name, dest_dir;
 
-	GetAttr(MUIA_String_Contents, d->DestDir, (ULONG*)&dest_dir);
-	GetAttr(MUIA_String_Contents, d->ModuleName, (ULONG*)&filename);
+	GetAttr(MUIA_String_Contents, d->DestDir, (IPTR *)&dest_dir);
+	GetAttr(MUIA_String_Contents, d->ModuleName, (IPTR *)&filename);
 
 	if (lowercase_name = FmtNew(msg->NamePattern, filename))
 	{
@@ -444,7 +452,7 @@ IPTR GeneratorSignature(Class *cl, Object *obj, Msg msg)
 IPTR GeneratorInsertRemark(Class *cl, Object *obj, struct GENP_InsertRemark *msg)
 {
 	struct GeneratorData *d = INST_DATA(cl, obj);
-	ULONG remark_mode;
+	IPTR remark_mode;
 
 	msg = msg;
 	DoMethod(obj, GENM_DoIndent);
@@ -606,7 +614,7 @@ IPTR GeneratorSaveAction(Class *cl, Object *obj, UNUSED Msg msg)
 						struct GENP_Save genps;
 
 						genps.MethodID = GENM_Save;
-						genps.Handle = handle;
+						genps.Handle = (IPTR)handle;
 						success = DoMethodA(obj, &genps);
 						Close(handle);
 					}
@@ -670,7 +678,7 @@ IPTR GeneratorLoadAction(Class *cl, Object *obj, Msg msg)
 					{
 						parser.line = 1;
 						genpl.MethodID = GENM_Load;
-						genpl.Handle = handle;
+						genpl.Handle = (IPTR)handle;
 						genpl.Parser = &parser;
 						genpl.LineBuf = d->LineBuf;
 						DoMethodA(obj, &genpl);
@@ -703,7 +711,7 @@ IPTR GeneratorSave(Class *cl, Object *obj, struct GENP_Save *msg)
 	struct GeneratorData *d = INST_DATA(cl, obj);
 	BOOL rv = FALSE;
 
-	FPrintf(msg->Handle, (STRPTR)"TYPE=\"%s\"\nMODULE=%s DRAWER=\"%s\" AUTODOCS=%ld TODO=%ld\n",
+	FPrintf((BPTR)msg->Handle, (STRPTR)"TYPE=\"%s\"\nMODULE=%s DRAWER=\"%s\" AUTODOCS=%ld TODO=%ld\n",
 	 xget(obj, GENA_ProjectType), xget(d->ModuleName, MUIA_String_Contents),
 	 xget(d->DestDir, MUIA_String_Contents), xget(d->DocCheck, MUIA_Selected),
 	 xget(d->TodoRemarksRadio, MUIA_Radio_Active));
@@ -728,10 +736,10 @@ IPTR GeneratorLoad(Class *cl, Object *obj, struct GENP_Load *msg)
 
 	#warning SKIPS FOR NOW UNUSED PROJECT TYPE
 
-	FGets(msg->Handle, msg->LineBuf, INPUT_LINE_MAX_LEN);
+	FGets((BPTR)msg->Handle, msg->LineBuf, INPUT_LINE_MAX_LEN);
 
 
-	if (FGets(msg->Handle, msg->LineBuf, INPUT_LINE_MAX_LEN))
+	if (FGets((BPTR)msg->Handle, msg->LineBuf, INPUT_LINE_MAX_LEN))
 	{
 		msg->Parser->line++;
 
@@ -879,7 +887,7 @@ IPTR GeneratorMakefileSignature(Class *cl, Object *obj)
 ///
 /// GeneratorCreateLibGroup()
 
-static Object* create_lib_group_label(STRPTR label)
+static Object* create_lib_group_label(CONST_STRPTR label)
 {
 	Object *obj;
 
@@ -1008,7 +1016,7 @@ IPTR GeneratorLibVersionH(Class *cl, Object *obj, struct GENP_LibVersionH *msg)
 
 IPTR GeneratorLibraryC(Class *cl, Object *obj, struct GENP_LibraryC *msg)
 {
-	struct GeneratorData *d = INST_DATA(cl, obj);
+	// struct GeneratorData *d = INST_DATA(cl, obj);
 
 	if (DoMethod(obj, GENM_Setup, (IPTR)"dummy.c"))
 	{
@@ -1027,10 +1035,10 @@ IPTR GeneratorLibraryC(Class *cl, Object *obj, struct GENP_LibraryC *msg)
 
 	if (DoMethod(obj, GENM_Setup, (IPTR)"library.c"))
 	{
-		LONG v, r;
+		// LONG v, r; // unused
 
-		v = xget(findobj(d->LibGroup, OBJ_LIBG_VERSION), MUIA_String_Integer);
-		r = xget(findobj(d->LibGroup, OBJ_LIBG_REVISION), MUIA_String_Integer);
+		// v = xget(findobj(d->LibGroup, OBJ_LIBG_VERSION), MUIA_String_Integer);
+		// r = xget(findobj(d->LibGroup, OBJ_LIBG_REVISION), MUIA_String_Integer);
 		DoMethod(obj, GENM_Signature);
 		
         LEAD("includes");
@@ -1250,11 +1258,16 @@ IPTR GeneratorTrailingComment(Class *cl, Object *obj, UNUSED struct GENP_Trailin
 
 /// d_Generator()
 
+#ifdef __AROS__
+BOOPSI_DISPATCHER(IPTR, g_Generator, cl, obj, msg)
+{
+#else
 IPTR d_Generator(void)
 {
 	Class *cl = (Class*)REG_A0;
 	Object *obj = (Object*)REG_A2;
 	Msg msg = (Msg)REG_A1;
+#endif
 
 	switch (msg->MethodID)
 	{
@@ -1288,5 +1301,8 @@ IPTR d_Generator(void)
 		default:                      return DoSuperMethodA(cl, obj, msg);
 	}
 }
+#ifdef __AROS__
+BOOPSI_DISPATCHER_END
+#endif
 
 ///

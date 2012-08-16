@@ -1,5 +1,7 @@
 /* support functions */
 
+#include <libraries/mui.h>
+
 #include "support.h"
 #include "generator.h"
 #include "locale.h"
@@ -128,7 +130,7 @@ void wait_loop(void)
 ///
 /// labelled_checkmark
 
-Object *labelled_checkmark(STRPTR label, IPTR id)
+Object *labelled_checkmark(CONST_STRPTR label, IPTR id)
 {
 	Object *o;
 
@@ -198,7 +200,7 @@ Object* DoSuperNewM(Class *cl, Object *obj, ...)
 	va_list args, args2;
 	int argc = 0;
 	uint32_t tag;
-	intptr_t val;
+	UNUSED intptr_t val;
 	Object *result = NULL;
 
 	__va_copy(args2, args);
@@ -243,7 +245,7 @@ Object* MUI_NewObjectM(char *classname, ...)
 	va_list args, args2;
 	int argc = 0;
 	uint32_t tag;
-	intptr_t val;
+	UNUSED intptr_t val;
 	Object *result = NULL;
 
 	__va_copy(args2, args);
@@ -289,7 +291,7 @@ Object* NewObjectM(Class *cl, char *classname, ...)
 	va_list args, args2;
 	int argc = 0;
 	uint32_t tag;
-	intptr_t val;
+	UNUSED intptr_t val;
 	Object *result = NULL;
 
 	__va_copy(args2, args);

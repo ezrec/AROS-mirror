@@ -13,7 +13,7 @@ STRPTR VFmtNew(STRPTR fmt, va_list args)
 	va_list copy;
 
 	__va_copy(copy, args);
-	VNewRawDoFmt(fmt, (APTR(*)(APTR, UBYTE))RAWFMTFUNC_COUNT, (STRPTR)&l, args);
+	VNewRawDoFmt(fmt, (VOID_FUNC)RAWFMTFUNC_COUNT, (STRPTR)&l, args);
 
 	if (s = AllocVecTaskPooled(l + 1))
 	{

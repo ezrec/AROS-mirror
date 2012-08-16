@@ -7,6 +7,7 @@
 
 /* MethodListClass code. */
 
+#include <libraries/mui.h>
 #include <libvstring.h>
 
 #include "methodlist.h"
@@ -16,8 +17,15 @@
 struct MUI_CustomClass *MethodListClass;
 
 
+#ifdef __AROS__
+AROS_UFP3(IPTR, MethodListGate,
+AROS_UFPA(Class  *, cl,  A0),
+AROS_UFPA(Object *, obj, A2),
+AROS_UFPA(Msg     , msg, A1));
+#else
 LONG MethodListDispatcher(void);
 const struct EmulLibEntry MethodListGate = {TRAP_LIB, 0, (void(*)(void))MethodListDispatcher};
+#endif
 
 /// MethodListData
 
@@ -170,11 +178,16 @@ IPTR MethodListInsertMethodTable(UNUSED Class *cl, Object *obj, struct MTLP_Inse
 ///
 /// MethodListDispatcher()
 
+#ifdef __AROS__
+BOOPSI_DISPATCHER(IPTR, MethodListGate, cl, obj, msg)
+{
+#else
 LONG MethodListDispatcher(void)
 {
 	Class *cl = (Class*)REG_A0;
 	Object *obj = (Object*)REG_A2;
 	Msg msg = (Msg)REG_A1;
+#endif
 
 	switch (msg->MethodID)
 	{
@@ -186,7 +199,9 @@ LONG MethodListDispatcher(void)
 		default:                      return (DoSuperMethodA(cl, obj, msg));
 	}
 }
-
+#ifdef __AROS__
+BOOPSI_DISPATCHER_END
+#endif
 
 ///
 

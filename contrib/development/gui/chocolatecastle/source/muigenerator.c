@@ -10,6 +10,7 @@
 #include <proto/muimaster.h>
 #include <clib/alib_protos.h>
 #include <libraries/asl.h>
+#include <libraries/mui.h>
 #include <string.h>
 
 #include "muigenerator.h"
@@ -83,9 +84,16 @@ const struct MethodEntry DefaultMethods[] = {
 
 struct MUI_CustomClass *MuiGeneratorClass;
 
+#ifdef __AROS__
+AROS_UFP3(IPTR, g_MuiGenerator,
+AROS_UFPA(Class  *, cl,  A0),
+AROS_UFPA(Object *, obj, A2),
+AROS_UFPA(Msg     , msg, A1));
+#else
 IPTR d_MuiGenerator(void);
 
 static struct EmulLibEntry g_MuiGenerator = {TRAP_LIB, 0, (void(*)(void))d_MuiGenerator};
+#endif
 
 
 ///
@@ -211,7 +219,7 @@ int load_super_data(Class *cl, Object *obj, struct GENP_Load *msg)
 	int result = FALSE;
 	struct MuiGeneratorData *d = INST_DATA(cl, obj);
 
-	if (FGets(msg->Handle, (STRPTR)line, 512))
+	if (FGets((BPTR)msg->Handle, (STRPTR)line, 512))
 	{
 		msg->Parser->line++;
 
@@ -253,7 +261,7 @@ static BOOL load_method(Class *cl, Object *obj, struct GENP_Load *msg)
 	int result = FALSE;
 	struct MuiGeneratorData *d = INST_DATA(cl, obj);
 
-	if (FGets(msg->Handle, (STRPTR)line, 512))
+	if (FGets((BPTR)msg->Handle, (STRPTR)line, 512))
 	{
 		msg->Parser->line++;
 
@@ -320,7 +328,7 @@ IPTR MuiGeneratorNew(Class *cl, Object *obj, struct opSet *msg)
 		{
 			Object *parent;
 
-			GetAttr(GENA_SubclassSpace, obj, (ULONG*)&parent);
+			GetAttr(GENA_SubclassSpace, obj, (IPTR*)&parent);
 
 			if (parent)
 			{
@@ -515,8 +523,8 @@ IPTR MuiGeneratorSave(Class *cl, Object *obj, struct GENP_Save *msg)
 
 		supertype = xget(d->SuperclassTypeRadio, MUIA_Radio_Active);
 
-		if (supertype == 0) FPrintf(msg->Handle, (STRPTR)"SUPERTYPE=0 SUPERNAME=%s\n", xget(d->SuperclassPointerString, MUIA_String_Contents));
-		else FPrintf(msg->Handle, (STRPTR)"SUPERTYPE=1 SUPERNAME=%s\n", xget(d->SuperclassNameString, MUIA_String_Contents));
+		if (supertype == 0) FPrintf((BPTR)msg->Handle, (STRPTR)"SUPERTYPE=0 SUPERNAME=%s\n", xget(d->SuperclassPointerString, MUIA_String_Contents));
+		else FPrintf((BPTR)msg->Handle, (STRPTR)"SUPERTYPE=1 SUPERNAME=%s\n", xget(d->SuperclassNameString, MUIA_String_Contents));
 
 		// dumping methods
 
@@ -529,7 +537,7 @@ IPTR MuiGeneratorSave(Class *cl, Object *obj, struct GENP_Save *msg)
 			if (!me) break;
 			if (*me->Structure == 0x00) s = (STRPTR)"\"\"";
 			else s = me->Structure;
-			FPrintf(msg->Handle, (STRPTR)"METHOD=%s FUNCTION=%s STRUCTURE=%s ID=%s STD=%ld\n", (intptr_t)me->Name,
+			FPrintf((BPTR)msg->Handle, (STRPTR)"METHOD=%s FUNCTION=%s STRUCTURE=%s ID=%s STD=%ld\n", (intptr_t)me->Name,
 			 (intptr_t)me->Function, (intptr_t)s, (intptr_t)me->Identifier, me->Standard);
 		}
 	}
@@ -563,11 +571,16 @@ IPTR MuiGeneratorLoad(Class *cl, Object *obj, struct GENP_Load *msg)
 ///
 /// d_MuiGenerator()
 
+#ifdef __AROS__
+BOOPSI_DISPATCHER(IPTR, g_MuiGenerator, cl, obj, msg)
+{
+#else
 IPTR d_MuiGenerator(void)
 {
 	Class *cl = (Class*)REG_A0;
 	Object *obj = (Object*)REG_A2;
 	Msg msg = (Msg)REG_A1;
+#endif
 
 	switch (msg->MethodID)
 	{
@@ -580,7 +593,9 @@ IPTR d_MuiGenerator(void)
 		default:  return (DoSuperMethodA(cl, obj, msg));
 	}
 }
-
+#ifdef __AROS__
+BOOPSI_DISPATCHER_END
+#endif
 
 ///
 

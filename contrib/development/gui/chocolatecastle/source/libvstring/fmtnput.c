@@ -45,7 +45,7 @@ LONG FmtNPut(STRPTR dest, STRPTR fmt, LONG maxlen, ...)
 	mx7.ctr = 0;
 	mx7.max = maxlen - 1;
 	va_start(args, maxlen);
-	VNewRawDoFmt(fmt, putchproc, (STRPTR)&mx7, args);
+	VNewRawDoFmt(fmt, (VOID_FUNC)putchproc, (STRPTR)&mx7, args);
 	va_end(args);
 	return mx7.ctr;
 }
