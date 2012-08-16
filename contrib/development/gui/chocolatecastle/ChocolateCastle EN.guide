@@ -1,0 +1,192 @@
+@DATABASE ChocolateCastle (English)
+@$VER: ChocolateCastle EN.guide 0.6 (3.9.2010)
+@(C) 2010 Grzegorz Kraszewski
+@AUTHOR Grzegorz Kraszewski
+
+@NODE Main "Table of Contents"
+@{B}ChocolateCastle 0.7@{UB}
+
+@{B}ChocolateCastle@{UB} generates C source code templates for different MorphOS
+components. Currently following kinds of components are supported:
+
+@{" Private MUI classes " LINK N2}
+@{" Private Reggae classes " LINK N3}
+@{" Public Reggae classes " LINK N6}
+
+Skeletons are out of a box compilable but of course require the class
+implementation to be filled in places (mostly) pointed by comments in code.
+ChocolateCastle can also save class definitions for later use. Definitions are
+saved in easily readable text format.
+
+Additional information:
+
+@{" Author " LINK N4}
+@{" License " LINK N5}
+
+@ENDNODE
+
+@NODE N2 "Genrating MUI internal classes"
+@{B}Generating MUI private classes@{UB}
+
+ChocolateCastle can generate a skeleton of private MUI class. The skeleton
+consists of two files: a code file and a header file. They contain following
+elements:
+
+* Class base pointer declaration (in a header file) and definition (in a code
+  file).
+* Declarations and definitions for class creation and disposition functions.
+* Complete class dispatcher.
+* Empty skeletons for OM_NEW and OM_DISPOSE.
+* Partially filled skeleton for OM_SET containing taglist iteration loop.
+* Partially filled skeleton for OM_GET containing tag value switch statement.
+* Defines of custom methods identifiers in the header file.
+
+To define a class one starts from the class name (will be used in the names of
+base pointer, all functions and, after lowercasing, for output files). Of course
+destination directory for files should be specified as well. The next step is
+selection of parent class. It may be either private or public one. For private
+superclass, just the class base pointer name has to be entered. For public
+superclass, the name of it (without "MUIC_" prefix) is either entered to the
+string gadget or choosen from a popup list.
+
+The list of methods contains four basic ones initially. Custom methods may be
+added by entering method name, hexadecimal value of identifier, function name in
+the code and the name of method message structure. Name of structure may be left
+empty, if message structure is not used. Empty skeletons for custom methods are
+generated, methods are included in the dispatcher. Identifiers of custom methods
+are #defined in the header file.
+
+Note that overloaded MUI methods are treated as custom ones in the current
+ChocolateCastle version. Then #defines for them will be unnecessarily generated
+into the header file, where they have to be deleted manually.
+@ENDNODE
+@NODE N3 "Generating Reggae internal classes"
+@{B}Generating Reggae private classes@{UB}
+
+ChocolateCastle can generate a skeleton of internal Reggae class (usually a
+filter class, as internal demuxers and decoders will need additional work to
+make them available for the automatic processing tree builder). The skeleton
+consists of two files: a code file and a header file. They contain following
+elements:
+
+* Class base pointer declaration (in a header file) and definition (in a code
+  file).
+* Declarations and definitions for class creation and disposition functions.
+* Complete class dispatcher.
+* Skeleton for OM_NEW with superclass call, obtaining instance data and coercing
+  OM_DISPOSE on failure.
+* Skeleton for OM_DISPOSE with object locking and superclass call.
+* Skeleton for OM_SET with taglist iteration loop.
+* Skeleton for OM_GET containing tag value switch statement.
+* Complete skeleton for MMM_Pull with MMM_PrePull and MMM_PostPull calls.
+* Complete skeleton for MMM_Seek with MMM_PreSeek and MMM_PostSeek calls.
+* Partial skeletons for MMM_GetPort, MMM_SetPort and MMM_Setup (object locking).
+* Defines of custom methods identifiers (if any defined) in the header file.
+
+Reggae class generation is almost automatic in the current version of
+ChocolateCastle. The superclass is always "multimedia.class". Adding custom
+methods to Reggae classes is rarely needed, so the only thing to be specified is
+the class name.
+@ENDNODE
+@NODE N4 "Author"
+@{B}Author@{UB}
+
+ChocolateCastle has been written and is maintained by
+Grzegorz Kraszewski <krashan@teleinfo.pb.edu.pl>.
+
+It is distributed with source code on @{"two clause BSD license" LINK N5}.
+@ENDNODE
+@NODE N5 "License"
+@{B}License@{UB}
+
+Copyright © 2010, Grzegorz Kraszewski.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:
+
+Redistributions of source code must retain the above copyright notice, this
+list of conditions and the following disclaimer.
+
+Redistributions in binary form must reproduce the above copyright notice, this
+list of conditions and the following disclaimer in the documentation and/or
+other materials provided with the distribution.
+
+This software is provided by the copyright holders and contributors "as is" and
+any express or implied warranties, including, but not limited to, the implied
+warranties of merchantability and fitness for a particular purpose are
+disclaimed. In no event shall the copyright holder or contributors be liable for
+any direct, indirect, icidental, special, exemplary or consequential damages
+(including, but not limited to, procurement of substitute goods or services;
+loss of use, data or profits; or business interruption) however caused and on
+any theory of liability, whether in contract, strict liability, or tort,
+(including negligence or otherwise) arising in any way out of the use of this
+software, even if advised of the possibility of such damage.
+
+@ENDNODE
+
+@NODE N6 "Reggae public classes"}
+@{B}Reggae public classes@{UB}
+
+A public Reggae class is a separate disk-based component which is loaded and
+called by application at runtime. It uses MorphOS shared library framework, so
+every Reggae public class @{B}is@{UB} a shared library. Reggae public classes are stored
+in "MOSSYS:Classes/multimedia" (system core classes) and "SYS:Classes/
+multimedia" (third party extensions).
+
+When a public Reggae class is opened by application, it creates a named BOOPSI
+class and adds it to the system list of classes. Then any application can create
+class instances referencing the class by its name (private classes are
+referenced by pointer). The rest of operations uses the same BOOPSI interface
+as used by private classes, so there is no difference in usage.
+
+ChocolateCastle creates a set of files making a complete project. Following
+files are created:
+
+@{I}[classname].c@{UI}
+
+This file contains code of class methods, dispatcher and class creation and
+disposition functions. The actual name of the file is the class name lowercased.
+
+@{I}[classname].h@{UI}
+
+This header file contains definitions of methods identifiers, and prototypes for
+class creation and disposition functions.
+
+@{I}library.c@{UI}
+
+This is a shared library skeleton with additions for Reggae class. Contains code
+of standard library open, close and expunge vectors, code for library
+initialization, and Resident structure.
+
+@{I}lib_version.h@{UI}
+
+This header file contains definitions of the class name, version, revision,
+version string, build date and copyright notice.
+
+@{I}dummy.c@{UI}
+
+This file contains source of a dummy function returning -1. This must be the
+first function in the code, so the class does not crash, when someone tries to
+run it as an executable. It is achieved by passing "dummy.o" object as the first
+to the linker, so GCC4 function reordering optimizations cannot move it away.
+The file also contains version string, with forced placement in the code ELF
+section. As a result, version string is placed very early in the binary file,
+making identification faster.
+
+@{I}data.c@{UI}
+
+This file contains the class descriptor. The descriptor consists of a table of
+the class attributes, and a function returning a pointer to this table. Some
+classes may store additional code here, for example demultiplexers have their
+format recognition routines. Descriptor is compiled to a separate executable,
+then this executable is embedded into the class binary as a custom ELF section.
+
+@{I}makefile@{UI}
+
+Just a GCC makefile. "all" target (which is the default one) builds the class.
+"clean" target deletes all executable and object files. "debug" target builds the
+class with full symbol table for debugging.
+
+@ENDNODE
+

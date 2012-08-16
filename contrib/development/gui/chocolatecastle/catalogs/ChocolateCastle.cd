@@ -1,0 +1,283 @@
+MSG_ERROR_REQUESTER_OK_BUTTON (//)
+*_OK
+;
+MSG_INFO_REQUESTER_OK_BUTTON (//)
+*_OK
+;
+MSG_MAIN_WINDOW_TITLE (//)
+ChocolateCastle - Project Type Selection
+;
+MSG_PROJECT_SELECTOR_BUTTON_MUI_CLASS (//)
+MUI Class
+;
+MSG_PROJECT_SELECTOR_BUTTON_REGGAE_CLASS (//)
+Reggae Class
+;
+MSG_APPLICATION_DESCRIPTION (//40)
+Code template generator
+;
+MSG_EDITOR_BUTTON_ADD (//)
+Add
+;
+MSG_EDITOR_BUTTON_ADD_HOTKEY (//)
+a
+;
+MSG_EDITOR_BUTTON_EDIT (//)
+Edit
+;
+MSG_EDITOR_BUTTON_EDIT_HOTKEY (//)
+e
+;
+MSG_EDITOR_BUTTON_DELETE (//)
+Delete
+;
+MSG_EDITOR_BUTTON_DELETE_HOTKEY (//)
+d
+;
+MSG_EDITOR_BUTTON_OK_HOTKEY (//)
+o
+;
+MSG_EDITOR_BUTTON_OK (//)
+OK
+;
+MSG_PROJECT_SOURCE_DIR_LABEL (//)
+Source Drawer:
+;
+MSG_PROJECT_SOURCE_DIR_REQUEST_TITLE (//)
+Select Source Drawer
+;
+MSG_PROJECT_MODULE_NAME_LABEL (//)
+Module Name:
+;
+MSG_PROJECT_TODO_REMARKS_GROUP_TITLE (//)
+TODO Remarks
+;
+MSG_PROJECT_GENERATE_BUTTON (//)
+Generate
+;
+MSG_PROJECT_GENERATE_BUTTON_HOTKEY (//)
+g
+;
+MSG_PROJECT_SAVE_BUTTON (//)
+Save
+;
+MSG_PROJECT_SAVE_BUTTON_HOTKEY (//)
+s
+;
+MSG_PROJECT_LOAD_BUTTON (//)
+Load
+;
+MSG_PROJECT_LOAD_BUTTON_HOTKEY (//)
+l
+;
+MSG_PROJECT_SAVE_REQUESTER_TITLE (//)
+Save Project
+;
+MSG_PROJECT_SAVE_REQUESTER_BUTTON (//)
+Save
+;
+MSG_PROJECT_SAVE_OPEN_ERROR (//)
+Can't open file \"%s\", DOS error %ld.
+;
+MSG_PROJECT_SAVE_DIRLOCK_ERROR (//)
+Problem with directory \"%s\", DOS error %ld.
+;
+MSG_PROJECT_INFO_PROJECT_SAVED (//)
+Project description has been saved in \"%s\".
+;
+MSG_PROJECT_LOAD_REQUESTER_TITLE (//)
+Load Project
+;
+MSG_PROJECT_LOAD_REQUESTER_BUTTON (//)
+Load
+;
+MSG_PROJECT_LOAD_OPEN_ERROR (//)
+Can't open file \"%s\", DOS error %ld.
+;
+MSG_PROJECT_LOAD_DIRLOCK_ERROR (//)
+Problem with directory \"%s\", DOS error %ld.
+;
+MSG_PROJECT_INFO_CODE_GENERATED (//)
+Code has been generated to \"%s\".
+;
+MSG_METHOD_EDITOR_METHOD_NAME_LABEL (//)
+Method Name:
+;
+MSG_METHOD_EDITOR_METHOD_FUNCTION_LABEL (//)
+Function Name:
+;
+MSG_METHOD_EDITOR_METHOD_STRUCTURE_LABEL (//)
+Message Structure Type:
+;
+MSG_METHOD_EDITOR_METHOD_IDENTIFIER_LABEL (//)
+Method Identifier:
+;
+MSG_METHOD_EDITOR_ERROR_MISSING_NAME (//)
+Missing name for this method.
+;
+MSG_METHOD_EDITOR_ERROR_NAME_DIGIT (//)
+Method name can't start from a digit.
+;
+MSG_METHOD_EDITOR_ERROR_MISSING_FUNCTION (//)
+Method %s() has no function name.
+;
+MSG_METHOD_EDITOR_ERROR_FUNCTION_DIGIT (//)
+Function name for method %s() can't start from a digit.
+;
+MSG_METHOD_EDITOR_ERROR_STRUCTURE_DIGIT (//)
+Structure name for method %s() can't start from a digit.
+;
+MSG_METHOD_EDITOR_ERROR_MISSING_IDENTIFIER (//)
+Method %s() has no identifier value.
+;
+MSG_METHOD_EDITOR_WINDOW_TITLE_NEW_METHOD (//)
+new method
+;
+MSG_METHOD_LIST_HEADER_NAME (//)
+Method Name
+;
+MSG_METHOD_LIST_HEADER_IDENTIFIER (//)
+Identifier
+;
+MSG_METHOD_LIST_HEADER_FUNCTION (//)
+Function
+;
+MSG_METHOD_LIST_HEADER_STRUCTURE (//)
+Message Structure
+;
+MSG_MUI_GENERATOR_SUPERCLASS_LABEL (//)
+Superclass
+;
+MSG_MUI_GENERATOR_SUPERCLASS_PTRNAME_LABEL (//)
+Pointer Name:
+;
+MSG_MUI_GENERATOR_SUPERCLASS_CNAME_LABEL (//)
+Superclass Name:
+;
+MSG_MUI_GENERATOR_METHODS_FRAME_TITLE (//)
+Methods
+;
+MSG_MUI_GENERATOR_WINDOW_TITLE (//)
+MUI Custom Class
+;
+MSG_REGGAE_EDITOR_METHODS_FRAME_TITLE (//)
+Methods
+;
+MSG_REGGAE_GENERATOR_WINDOW_TITLE (//)
+Reggae Custom Class
+;
+MSG_ERROR_REQUESTER_UNEXPECTED_EOF (//)
+Unexpected end of file in line %lu.
+;
+MSG_ERROR_REQUESTER_SYNTAX_ERROR (//)
+Syntax error in line %lu.
+;
+MSG_TODO_REMARKS_RADIO_WARNINGS (//)
+remarks as compiler warnings
+;
+MSG_TODO_REMARKS_RADIO_COMMENTS (//)
+remarks as plain comments
+;
+MSG_SUPERCLASS_RADIO_PRIVATE (//)
+private superclass
+;
+MSG_SUPERCLASS_RADIO_PUBLIC (//)
+public superclass
+;
+MSG_BUTTON_REGGAE_CLASS_HOTKEY (//1)
+r
+;
+MSG_BUTTON_MUI_CLASS_HOTKEY (//1)
+m
+;
+MSG_REGGAE_GENERATOR_EXTERNAL_CLASS (//)
+Generate external class (shared library).
+;
+MSG_GENERATE_ERROR_NO_MODULE_NAME (//)
+Module name is missing.
+;
+MSG_GENERATE_ERROR_MODULE_NAME_DIGIT (//)
+Module name can't start from a digit.
+;
+MSG_GENERATOR_AUTODOC_CHECKMARK_LABEL (//)
+Generate autodoc templates.
+;
+MSG_MODULE_UNNAMED (//)
+Unnamed
+;
+MSG_LIBRARY_GROUP_NAME_LABEL (//)
+Library Name:
+;
+MSG_LIBRARY_GROUP_VERSION_LABEL (//)
+Version:
+;
+MSG_LIBRARY_GROUP_REVISION_LABEL (//)
+Revision:
+;
+MSG_LIBRARY_GROUP_COPYRIGHT_LABEL (//)
+Copyright String:
+;
+MSG_REGGAE_GENERATOR_CLASS_TYPE_LABEL (//)
+Class Type:
+;
+MSG_REGGAE_CLASS_TYPE_STREAM (//)
+stream
+;
+MSG_REGGAE_CLASS_TYPE_DEMUXER (//)
+demultiplexer
+;
+MSG_REGGAE_CLASS_TYPE_DECODER (//)
+decoder
+;
+MSG_REGGAE_CLASS_TYPE_FILTER (//)
+filter
+;
+MSG_REGGAE_CLASS_TYPE_ENCODER (//)
+encoder
+;
+MSG_REGGAE_CLASS_TYPE_MULTIPLEXER (//)
+multiplexer
+;
+MSG_REGGAE_CLASS_TYPE_OUTPUT (//)
+output
+;
+MSG_REGGAE_CLASS_TYPE_NO_TYPE (//)
+no type
+;
+MSG_PROJECT_SOURCE_DIR_HELP (//)
+Path to a drawer where generated files will be stored. A subdirectory \33bwill \
+not\33n be created.
+;
+MSG_PROJECT_MODULE_NAME_HELP (//)
+This name is used in functions or methods names, class pointer or library base \
+name and, after lowercasing, in file names.
+;
+MSG_GENERATOR_AUTODOC_CHECKMARK_HELP (//)
+Generates partially filled autodoc template for every library function or \
+class method.
+;
+MSG_PROJECT_TODO_REMARKS_HELP (//)
+ChocolateCastle inserts remarks in places of code, which must be completed \
+manually. These remarks may be just plain comments, or compiler warnings \
+generated with #warning preprocessor command. The later will be printed out \
+during compilation.
+;
+MSG_REGGAE_GENERATOR_EXTERNAL_CLASS_HELP (//)
+Generates public Reggae class as a shared library. Complete skeleton is \
+generated, including class descriptor and makefile. When unchecked, statically \
+linked private class is generated.
+;
+MSG_LIBRARY_GROUP_NAME_HELP (//)
+This name is used as a name of library executable file and library \
+identificator in the system.
+;
+MSG_LIBRARY_GROUP_VERSION_HELP (//)
+Major part of library version number.
+;
+MSG_LIBRARY_GROUP_COPYRIGHT_HELP (//)
+The last part of library identification string. Used for copyright notice \
+usually.
+;
+MSG_LIBRARY_GROUP_REVISION_HELP (//)
+Minor part of library version number (note that it is not a decimal fraction).
+;

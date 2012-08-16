@@ -1,0 +1,17 @@
+Changes in ChocolateCastle 0.7
+
+Major changes:
+- Added generator for public Reggae classes.
+- Program is localized now (Polish translation included).
+- Added many bubble help texts.
+- Added optional generation of autodoc templates for methods.
+- Added leading and trailing comments for methods, functions and other code
+  blocks. They will be configurable in the future.
+
+Minor changes:
+- Documentation updated.
+- Method editor window title is updated when a new method is added.
+- Fixed project saving, filename change in the file requester is not ignored
+  anymore.
+- Main class parameters are verified before code generation.
+- Program logo is embedded into the executable file.
