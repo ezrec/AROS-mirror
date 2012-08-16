@@ -11,6 +11,7 @@
 #include <clib/alib_protos.h>
 #include <libraries/asl.h>
 #include <libraries/mui.h>
+#include <libvstring.h>
 #include <string.h>
 
 #include "muigenerator.h"
@@ -67,6 +68,15 @@ const char* PopularMuiSuperclasses[] =
 	NULL
 };
 
+#ifdef __AROS__
+const struct MethodEntry DefaultMethods[] = {
+	{ (STRPTR)"OM_NEW", (STRPTR)"OM_NEW", (STRPTR)"opSet", (STRPTR)"00000101", TRUE },
+	{ (STRPTR)"OM_DISPOSE", (STRPTR)"OM_DISPOSE", (STRPTR)"", (STRPTR)"00000102", TRUE },
+	{ (STRPTR)"OM_SET", (STRPTR)"OM_SET", (STRPTR)"opSet", (STRPTR)"00000103", TRUE },
+	{ (STRPTR)"OM_GET", (STRPTR)"OM_GET", (STRPTR)"opGet", (STRPTR)"00000104", TRUE },
+	{ NULL, NULL, NULL, NULL, 0 }
+};
+#else
 const struct MethodEntry DefaultMethods[] = {
 	{ (STRPTR)"OM_NEW", (STRPTR)"New", (STRPTR)"opSet", (STRPTR)"00000101", TRUE },
 	{ (STRPTR)"OM_DISPOSE", (STRPTR)"Dispose", (STRPTR)"", (STRPTR)"00000102", TRUE },
@@ -74,6 +84,7 @@ const struct MethodEntry DefaultMethods[] = {
 	{ (STRPTR)"OM_GET", (STRPTR)"Get", (STRPTR)"opGet", (STRPTR)"00000104", TRUE },
 	{ NULL, NULL, NULL, NULL, 0 }
 };
+#endif
 
 #define SUPERCLASS_TYPE_PRIVATE  0
 #define SUPERCLASS_TYPE_PUBLIC   1
@@ -313,6 +324,70 @@ static void generate_get_contents(Object *obj)
 
 ///
 
+#ifdef __AROS__
+static void generate_aros_dispatcher(Object *obj, Object *method_list, struct MuiGeneratorData *d)
+{
+	char *s;
+	int32_t superclass_type;
+	ULONG method_count, method_number;
+	char buffer[10];
+
+	method_count = xget(method_list, MUIA_List_Entries);
+	FmtNPut(buffer, "%u", sizeof buffer, method_count);
+
+	T("/*** Setup ************************************************************************/\n");
+	T("ZUNE_CUSTOMCLASS_");
+	T(buffer);
+	T("\n(\n");
+	II; I;
+	TC("%s, NULL, ");
+
+	superclass_type = xget(d->SuperclassTypeRadio, MUIA_Radio_Active);
+
+	if (superclass_type == SUPERCLASS_TYPE_PRIVATE)
+	{
+		s = (char*)xget(d->SuperclassPointerString, MUIA_String_Contents);
+		T("NULL, "); T(s); T(",");
+	}
+	else
+	{
+		s = (char*)xget(d->SuperclassNameString, MUIA_String_Contents);
+		T("MUIC_"); T(s); T(", NULL,");
+	}
+
+	T("\n");
+
+	for (method_number = 0;; method_number++)
+	{
+		struct MethodEntry *me;
+
+		DoMethod(method_list, MUIM_List_GetEntry, method_number, (intptr_t)&me);
+		if (!me) break;
+
+		I; T(me->Name); T(",     ");
+
+		if (*me->Structure)
+		{
+			T("struct "); T(me->Structure); T(" *");
+		}
+		else
+		{
+			T("Msg");
+		}
+
+		if (method_number < method_count - 1)
+		{
+			T(",");
+		}
+
+		T("\n");
+	}
+
+	IO; T(");\n\n");
+}
+#endif
+
+
 /// MuiGeneratorNew()
 
 IPTR MuiGeneratorNew(Class *cl, Object *obj, struct opSet *msg)
@@ -388,6 +463,50 @@ intptr_t MuiGeneratorGenerate(Class *cl, Object *obj, Msg msg)
 
 	if (DoMethod(obj, GENM_Setup, (intptr_t)"%s.c"))
 	{
+
+#ifdef __AROS__
+		T("/*\n");
+		T("    Copyright © 2012, The AROS Development Team. All rights reserved.\n");
+		T("    $Id$\n");
+		T("*/\n\n");
+		TCS("#include \"%s.h\"\n\n");
+
+		TC("/// %s_DATA\n\n");
+		TC("struct %s_DATA\n{\n"); II; I; T("// Insert object instance data here.\n"); IO; T("};\n\n\n");
+		T("///\n");
+
+		/*------------------------------------------------------------------------*/
+		/* methods                                                                */
+		/*------------------------------------------------------------------------*/
+
+		for (entry_number = 0;; entry_number++)
+		{
+			struct MethodEntry *me;
+			BOOL return_zero = TRUE;
+
+			DoMethod(d->MethodList, MUIM_List_GetEntry, entry_number, (intptr_t)&me);
+			if (!me) break;
+			DoMethod(obj, GENM_MethodHeader, (IPTR)me->Name, (IPTR)me->Function,
+			 (IPTR)me->Structure, (IPTR)me->Identifier, TRUE, FALSE);
+
+			if (strcmp((char*)me->Name, "OM_GET") == 0)
+			{
+				generate_get_contents(obj);
+				return_zero = FALSE;
+			}
+			else if (strcmp((char*)me->Name, "OM_SET") == 0)
+			{
+				generate_set_contents(obj);
+				return_zero = FALSE;
+			}
+
+			DoMethod(obj, GENM_MethodFooter, return_zero);
+		}
+
+		generate_aros_dispatcher(obj, d->MethodList, d);
+
+#else
+
 		char *s;
 		int32_t superclass_type;
 
@@ -470,6 +589,9 @@ intptr_t MuiGeneratorGenerate(Class *cl, Object *obj, Msg msg)
 		}
 
 		generate_dispatcher(obj, d->MethodList);
+
+#endif
+
 	}
 	DoMethod(obj, GENM_Cleanup);
 
@@ -477,6 +599,47 @@ intptr_t MuiGeneratorGenerate(Class *cl, Object *obj, Msg msg)
 
 	if (DoMethod(obj, GENM_Setup, (intptr_t)"%s.h"))
 	{
+
+#ifdef __AROS__
+
+		TC("#ifndef %s_H\n");
+		TC("#define %s_H\n\n");
+		T("/*\n");
+		T("    Copyright © 2012, The AROS Development Team. All rights reserved.\n");
+		T("    $Id$\n");
+		T("*/\n\n");
+		T("#include <exec/types.h>\n");
+		T("#include <libraries/mui.h>\n\n");
+		T("/*** Identifier base ********************************************************/\n");
+		TC("#define MUIB_%s           (TAG_USER|0x00000000)\n\n");
+
+		/*----------------*/
+		/* custom methods */
+		/*----------------*/
+
+		T("/*** Attributes *************************************************************/\n");
+		for (entry_number = 0;; entry_number++)
+		{
+			struct MethodEntry *me;
+
+			DoMethod(d->MethodList, MUIM_List_GetEntry, entry_number, (intptr_t)&me);
+			if (!me) break;
+
+			if (!me->Standard)
+			{
+				T("#define "); T(me->Name); TC("       (MUIB_%s | 0x"); T(me->Identifier); T(")\n");
+			}
+		}
+		T("\n/*** Variables **************************************************************/\n");
+		TC("extern struct MUI_CustomClass *%s_CLASS;\n\n");
+
+		T("/*** Macros *****************************************************************/\n");
+		TC("#define %sObject ");
+		TC("BOOPSIOBJMACRO_START(%s_CLASS->mcc_Class)\n\n");
+		T("#endif\n");
+
+#else
+
 		DoMethod(obj, GENM_Signature);
 		TC("/* %sClass header. */\n\n");
 		T("#include <proto/intuition.h>\n");
@@ -503,6 +666,9 @@ intptr_t MuiGeneratorGenerate(Class *cl, Object *obj, Msg msg)
 				T("#define "); T(me->Name); T(" 0x"); T(me->Identifier); T("\n");
 			}
 		}
+
+#endif
+
 	}
 	DoMethod(obj, GENM_Cleanup);
 	DoSuperMethodA(cl, obj, msg);   // displays info requester

@@ -781,6 +781,41 @@ IPTR GeneratorMethodHeader(UNUSED Class *cl, Object *obj, struct GENP_MethodHead
 {
 	struct GeneratorData *d = INST_DATA(cl, obj);
 
+#ifdef __AROS__
+
+	TC("/// %s__"); T(msg->FuncName); T("()\n\n");
+
+	if (xget(d->DocCheck, MUIA_Selected))
+	{
+		UBYTE line[79];
+		STRPTR unit_name;
+
+		unit_name = (STRPTR)xget(obj, GENA_UnitName);
+		if (msg->ExtClass) unit_name = (STRPTR)xget(findobj(d->LibGroup, OBJ_LIBG_NAME), MUIA_String_Contents);
+
+		T("/************************************************************************************");
+		T("\n    NAME\n");
+		FmtNPut(line, (STRPTR)"        %s\n", 79, msg->MethodName);
+		T(line);
+		FmtNPut(line, "\n    LOCATION\n\n        %s\n\n    FUNCTION\n\n\n    NOTES\n\n\n    SEE ALSO\n\n",
+		79, unit_name);
+		T(line);
+		T("\n******************************************************************************/\n\n\n");
+	}
+
+	TC("IPTR %s__"); T(msg->FuncName); T("(Class *cl, Object *obj, ");
+	if (!(*msg->StructName)) T("Msg msg");
+	else { T("struct "); T(msg->StructName); T(" *msg"); }
+	T(")\n{\n");
+	II;
+
+	if (msg->Instance)
+	{
+		I; TC("struct %s_DATA *d = INST_DATA(cl, obj);\n");
+	}
+
+#else
+
 	TC("/// %s"); T(msg->FuncName); T("()\n\n");
 
 	if (xget(d->DocCheck, MUIA_Selected))
@@ -811,6 +846,8 @@ IPTR GeneratorMethodHeader(UNUSED Class *cl, Object *obj, struct GENP_MethodHead
 	{
 		I; TC("struct %sData *d = INST_DATA(cl, obj);\n");
 	}
+
+#endif
 
 	return 0;
 }
