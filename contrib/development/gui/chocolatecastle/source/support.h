@@ -66,7 +66,7 @@ extern Object *App, *GenWin, *InWin;
 #define IO DoMethod(obj, GENM_IndentOut);
 #define TODO(x) DoMethod(obj, GENM_InsertRemark, (IPTR)x)
 
-#define SUBWINDOW_CLOSE 0x6EDA888A
+#define SUBWINDOW_CLOSE 0x6EDA888Aul
 
 void strlow(STRPTR string);
 void error(STRPTR msg, ...);
@@ -77,7 +77,7 @@ void wait_loop(void);
 Object *labelled_checkmark(CONST_STRPTR label, IPTR id);
 
 #define MAXPARAMS 8
-#define MUIV_Application_ReturnID_RemGen   0x6EDA9938
+#define MUIV_Application_ReturnID_RemGen   0x6EDA9938ul
 
 struct Parser
 {

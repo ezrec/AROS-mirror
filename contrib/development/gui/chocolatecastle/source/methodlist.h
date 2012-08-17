@@ -34,12 +34,12 @@ struct MethodEntry
 // This method inserts a null-terminated table of MethodEntry structures into
 // the list.
 
-#define MTLM_InsertMethodTable         0x6EDA3466
+#define MTLM_InsertMethodTable         0x6EDA3466ul
 
 struct MTLP_InsertMethodTable
 {
-	ULONG MethodID;
-	struct MethodEntry *Table;
+	STACKED ULONG MethodID;
+	STACKED struct MethodEntry *Table;
 };
 
 #endif

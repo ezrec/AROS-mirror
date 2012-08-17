@@ -70,10 +70,18 @@ const char* PopularMuiSuperclasses[] =
 
 #ifdef __AROS__
 const struct MethodEntry DefaultMethods[] = {
-	{ (STRPTR)"OM_NEW", (STRPTR)"OM_NEW", (STRPTR)"opSet", (STRPTR)"00000101", TRUE },
-	{ (STRPTR)"OM_DISPOSE", (STRPTR)"OM_DISPOSE", (STRPTR)"", (STRPTR)"00000102", TRUE },
-	{ (STRPTR)"OM_SET", (STRPTR)"OM_SET", (STRPTR)"opSet", (STRPTR)"00000103", TRUE },
-	{ (STRPTR)"OM_GET", (STRPTR)"OM_GET", (STRPTR)"opGet", (STRPTR)"00000104", TRUE },
+	{ (STRPTR)"OM_NEW", (STRPTR)"OM_NEW", (STRPTR)"opSet", (STRPTR)"00000000", TRUE },
+	{ (STRPTR)"OM_DISPOSE", (STRPTR)"OM_DISPOSE", (STRPTR)"", (STRPTR)"00000000", TRUE },
+	{ (STRPTR)"OM_SET", (STRPTR)"OM_SET", (STRPTR)"opSet", (STRPTR)"00000000", TRUE },
+	{ (STRPTR)"OM_GET", (STRPTR)"OM_GET", (STRPTR)"opGet", (STRPTR)"00000000", TRUE },
+	{ (STRPTR)"MUIM_Setup", (STRPTR)"MUIM_Setup", (STRPTR)"MUIP_Setup", (STRPTR)"00000000", TRUE },
+	{ (STRPTR)"MUIM_Cleanup", (STRPTR)"MUIM_Cleanup", (STRPTR)"MUIP_Cleanup", (STRPTR)"00000000", TRUE },
+	{ (STRPTR)"MUIM_Show", (STRPTR)"MUIM_Show", (STRPTR)"MUIP_Show", (STRPTR)"00000000", TRUE },
+	{ (STRPTR)"MUIM_Hide", (STRPTR)"MUIM_Hide", (STRPTR)"MUIP_Hide", (STRPTR)"00000000", TRUE },
+	{ (STRPTR)"MUIM_HandleEvent", (STRPTR)"MUIM_HandleEvent", (STRPTR)"MUIP_HandleEvent", (STRPTR)"00000000", TRUE },
+	{ (STRPTR)"MUIM_HandleInput", (STRPTR)"MUIM_HandleInput", (STRPTR)"MUIP_HandleInput", (STRPTR)"00000000", TRUE },
+	{ (STRPTR)"MUIM_Draw", (STRPTR)"MUIM_Draw", (STRPTR)"MUIP_Draw", (STRPTR)"00000000", TRUE },
+	{ (STRPTR)"MUIM_AskMinMax", (STRPTR)"MUIM_AskMinMax", (STRPTR)"MUIP_AskMinMax", (STRPTR)"00000000", TRUE },
 	{ NULL, NULL, NULL, NULL, 0 }
 };
 #else
@@ -335,7 +343,7 @@ static void generate_aros_dispatcher(Object *obj, Object *method_list, struct Mu
 	method_count = xget(method_list, MUIA_List_Entries);
 	FmtNPut(buffer, "%u", sizeof buffer, method_count);
 
-	T("/*** Setup ************************************************************************/\n");
+	T("/*** Setup *******************************************************************/\n");
 	T("ZUNE_CUSTOMCLASS_");
 	T(buffer);
 	T("\n(\n");
@@ -465,19 +473,21 @@ intptr_t MuiGeneratorGenerate(Class *cl, Object *obj, Msg msg)
 	{
 
 #ifdef __AROS__
-		T("/*\n");
-		T("    Copyright © 2012, The AROS Development Team. All rights reserved.\n");
-		T("    $Id$\n");
-		T("*/\n\n");
+
+		DoMethod(obj, GENM_Signature);
+
+		TC("#include <proto/alib.h>\n\n");
+		TC("#include <zune/customclasses.h>\n\n");
 		TCS("#include \"%s.h\"\n\n");
 
-		TC("/// %s_DATA\n\n");
+		TC("/*** Class Data **************************************************************/\n");
 		TC("struct %s_DATA\n{\n"); II; I; T("// Insert object instance data here.\n"); IO; T("};\n\n\n");
-		T("///\n");
 
 		/*------------------------------------------------------------------------*/
 		/* methods                                                                */
 		/*------------------------------------------------------------------------*/
+
+		TC("/*** Methods *****************************************************************/\n\n");
 
 		for (entry_number = 0;; entry_number++)
 		{
@@ -604,10 +614,9 @@ intptr_t MuiGeneratorGenerate(Class *cl, Object *obj, Msg msg)
 
 		TC("#ifndef %s_H\n");
 		TC("#define %s_H\n\n");
-		T("/*\n");
-		T("    Copyright © 2012, The AROS Development Team. All rights reserved.\n");
-		T("    $Id$\n");
-		T("*/\n\n");
+
+		DoMethod(obj, GENM_Signature);
+
 		T("#include <exec/types.h>\n");
 		T("#include <libraries/mui.h>\n\n");
 		T("/*** Identifier base ********************************************************/\n");

@@ -15,38 +15,38 @@ void DeleteGeneratorClass(void);
 #define INPUT_LINE_MAX_LEN     512   // in project file
 
 
-#define GENM_Generate          0x6EDA8367
-#define GENM_InsertRemark      0x6EDA8368
-#define GENM_IndentIn          0x6EDA8369
-#define GENM_IndentOut         0x6EDA836A
-#define GENM_DoIndent          0x6EDA836B
-#define GENM_Setup             0x6EDA836C
-#define GENM_Cleanup           0x6EDA836D
-#define GENM_Signature         0x6EDA836E
-#define GENM_Text              0x6EDA836F
-#define GENM_TextParam         0x6EDA8370
-#define GENM_Conditional       0x6EDA8371
-#define GENM_Save              0x6EDA8372   // save the class to a project file
-#define GENM_SaveAction        0x6EDA8373
-#define GENM_LoadAction        0x6EDA8374
-#define GENM_Load              0x6EDA8375   // load a class from a project file
-#define GENM_MethodHeader      0x6EDA8376
-#define GENM_MethodFooter      0x6EDA8377
-#define GENM_Verify            0x6EDA8378   // verify general module settings
-#define GENM_GenerateAction    0x6EDA8379
-#define GENM_MakefileSignature 0x6EDA837A   // signature for makefiles
-#define GENM_CreateLibGroup    0x6EDA837B   // MUI group for library parameters
-#define GENM_DisableLibGroup   0x6EDA837C   // change disabled state of library group
-#define GENM_LibVersionH       0x6EDA837D   // generates library/class version header
-#define GENM_LibraryC          0x6EDA837E   // generates shared library body
-#define GENM_LibraryH          0x6EDA837F   // generates shared library body header
-#define GENM_LeadingComment    0x6EDA8380   // generates leading comment before function
-#define GENM_TrailingComment   0x6EDA8381   // generates trailing comment after function
+#define GENM_Generate          0x6EDA8367ul
+#define GENM_InsertRemark      0x6EDA8368ul
+#define GENM_IndentIn          0x6EDA8369ul
+#define GENM_IndentOut         0x6EDA836Aul
+#define GENM_DoIndent          0x6EDA836Bul
+#define GENM_Setup             0x6EDA836Cul
+#define GENM_Cleanup           0x6EDA836Dul
+#define GENM_Signature         0x6EDA836Eul
+#define GENM_Text              0x6EDA836Ful
+#define GENM_TextParam         0x6EDA8370ul
+#define GENM_Conditional       0x6EDA8371ul
+#define GENM_Save              0x6EDA8372ul   // save the class to a project file
+#define GENM_SaveAction        0x6EDA8373ul
+#define GENM_LoadAction        0x6EDA8374ul
+#define GENM_Load              0x6EDA8375ul   // load a class from a project file
+#define GENM_MethodHeader      0x6EDA8376ul
+#define GENM_MethodFooter      0x6EDA8377ul
+#define GENM_Verify            0x6EDA8378ul   // verify general module settings
+#define GENM_GenerateAction    0x6EDA8379ul
+#define GENM_MakefileSignature 0x6EDA837Aul   // signature for makefiles
+#define GENM_CreateLibGroup    0x6EDA837Bul   // MUI group for library parameters
+#define GENM_DisableLibGroup   0x6EDA837Cul   // change disabled state of library group
+#define GENM_LibVersionH       0x6EDA837Dul   // generates library/class version header
+#define GENM_LibraryC          0x6EDA837Eul   // generates shared library body
+#define GENM_LibraryH          0x6EDA837Ful   // generates shared library body header
+#define GENM_LeadingComment    0x6EDA8380ul   // generates leading comment before function
+#define GENM_TrailingComment   0x6EDA8381ul   // generates trailing comment after function
 
 
-#define GENA_SubclassSpace     0x6EDA9983
-#define GENA_UnitName          0x6EDA9984
-#define GENA_ProjectType       0x6EDA9985  // [..G]
+#define GENA_SubclassSpace     0x6EDA9983ul
+#define GENA_UnitName          0x6EDA9984ul
+#define GENA_ProjectType       0x6EDA9985ul  // [..G]
 
 
 struct GENP_InsertRemark
@@ -145,10 +145,10 @@ struct GENP_TrailingComment
 #define PARAM_REVISION     4
 #define PARAM_COPYRIGHT    5
 
-#define OBJ_LIBG_NAME       0x6EDA83A0   // shared library name
-#define OBJ_LIBG_VERSION    0x6EDA83A1   // shared library version
-#define OBJ_LIBG_REVISION   0x6EDA83A2   // shared library revision
-#define OBJ_LIBG_COPYRIGHT  0x6EDA83A3   // shared library copyrigth
+#define OBJ_LIBG_NAME       0x6EDA83A0ul   // shared library name
+#define OBJ_LIBG_VERSION    0x6EDA83A1ul   // shared library version
+#define OBJ_LIBG_REVISION   0x6EDA83A2ul   // shared library revision
+#define OBJ_LIBG_COPYRIGHT  0x6EDA83A3ul   // shared library copyrigth
 
 
 #endif

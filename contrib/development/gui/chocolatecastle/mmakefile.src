@@ -11,10 +11,14 @@ ChocolateCastleEN.guide.info ChocolateCastle.info LEGAL
  
 #MM- contrib-development-gui-chocolatecastle : \
 #MM    contrib-development-gui-chocolatecastle-source \
-#MM    contrib-development-gui-chocolatecastle-cpy
+#MM    contrib-development-gui-chocolatecastle-cpy \
+#MM    contrib-development-gui-chocolatecastle-example
 
 EXEDIR := $(AROS_CONTRIB)/Development/ChocolateCastle
 
 %copy_files_q mmake=contrib-development-gui-chocolatecastle-cpy files=$(FILES) dst=$(EXEDIR)
+
+%copy_dir_recursive mmake=contrib-development-gui-chocolatecastle-example \
+    src=example dst=$(EXEDIR)/example
 
 %common

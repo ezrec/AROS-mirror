@@ -438,11 +438,24 @@ IPTR GeneratorSignature(Class *cl, Object *obj, Msg msg)
 	struct GeneratorData *d = INST_DATA(cl, obj);
 
 	msg = msg;
+
+#ifdef __AROS__
+
+	FPuts(d->FileHandle, (STRPTR)"/*\n");
+	FPuts(d->FileHandle, (STRPTR)"    Copyright © 2012, The AROS Development Team. All rights reserved.\n");
+	FPuts(d->FileHandle, (STRPTR)"    $Id");
+	FPuts(d->FileHandle, (STRPTR)"$\n*/\n\n");
+
+#else
+
 	FPuts(d->FileHandle, (STRPTR)"/*------------------------------------------*/\n");
 	FPuts(d->FileHandle, (STRPTR)"/* Code generated with ChocolateCastle " CHC_VERSION "  */\n");
 	FPuts(d->FileHandle, (STRPTR)"/* written by Grzegorz \"Krashan\" Kraszewski */\n");
 	FPuts(d->FileHandle, (STRPTR)"/* <krashan@teleinfo.pb.edu.pl>             */\n");
 	FPuts(d->FileHandle, (STRPTR)"/*------------------------------------------*/\n\n");
+
+#endif
+
 	return 0;
 }
 
@@ -505,7 +518,12 @@ IPTR GeneratorDoIndent(Class *cl, Object *obj, Msg msg)
 	ULONG i = d->Indent;
 
 	msg = msg;
+
+#ifdef __AROS__
+	while (i--) FPuts(d->FileHandle, "    ");
+#else
 	while (i--) FPutC(d->FileHandle, '\t');
+#endif
 
 	return 0;
 }
@@ -783,7 +801,7 @@ IPTR GeneratorMethodHeader(UNUSED Class *cl, Object *obj, struct GENP_MethodHead
 
 #ifdef __AROS__
 
-	TC("/// %s__"); T(msg->FuncName); T("()\n\n");
+	TC("/*** %s__"); T(msg->FuncName); T(" ***/\n\n");
 
 	if (xget(d->DocCheck, MUIA_Selected))
 	{
@@ -793,7 +811,7 @@ IPTR GeneratorMethodHeader(UNUSED Class *cl, Object *obj, struct GENP_MethodHead
 		unit_name = (STRPTR)xget(obj, GENA_UnitName);
 		if (msg->ExtClass) unit_name = (STRPTR)xget(findobj(d->LibGroup, OBJ_LIBG_NAME), MUIA_String_Contents);
 
-		T("/************************************************************************************");
+		T("/*****************************************************************************");
 		T("\n    NAME\n");
 		FmtNPut(line, (STRPTR)"        %s\n", 79, msg->MethodName);
 		T(line);
@@ -811,7 +829,7 @@ IPTR GeneratorMethodHeader(UNUSED Class *cl, Object *obj, struct GENP_MethodHead
 
 	if (msg->Instance)
 	{
-		I; TC("struct %s_DATA *d = INST_DATA(cl, obj);\n");
+		I; TC("struct %s_DATA *data = INST_DATA(cl, obj);\n");
 	}
 
 #else
@@ -859,7 +877,13 @@ IPTR GeneratorMethodFooter(UNUSED Class *cl, Object *obj, UNUSED struct GENP_Met
 {
 	if (msg->ReturnZero) { I; T("return 0;\n"); }
 	IO;
+
+#ifdef __AROS__
+	T("}\n\n\n");
+#else
 	T("}\n\n\n///\n");
+#endif
+
 	return 0;
 }
 
