@@ -25,7 +25,6 @@
 struct ReginaBase
 {
    struct Library _lib;
-   struct Library *_aroscbase;
 };
 
 #endif /* _AMILIB_H */
