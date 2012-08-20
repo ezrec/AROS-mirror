@@ -1,4 +1,4 @@
-# Copyright © 2004-2011, The AROS Development Team. All rights reserved.
+# Copyright © 2004-2012, The AROS Development Team. All rights reserved.
 # $Id$
 
 -include $(TOP)/config/make.cfg
@@ -6,7 +6,7 @@
 #MM- contrib-gnu : contrib-gnu-diffutils
 #MM- contrib-gnu-diffutils : development-diffutils
 
-REPOSITORIES := http://ftp.uk.i-scream.org/sites/alpha.gnu.org/gnu/diffutils
+REPOSITORIES := http://mirrors.ibiblio.org/gnu/alpha/gnu/diffutils
 
 %fetch_and_build_gnu_development package=diffutils version=2.8.4 patch=yes \
     package_repo=$(REPOSITORIES) suffixes="tar.gz"
