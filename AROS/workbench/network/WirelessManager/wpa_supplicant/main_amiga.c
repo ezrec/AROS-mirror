@@ -1,7 +1,7 @@
 /*
  * WPA Supplicant / main() function for Amiga-like OSes
  * Copyright (c) 2003-2007, Jouni Malinen <j@w1.fi>
- * Copyright (c) 2010-2011, Neil Cafferkey
+ * Copyright (c) 2010-2012, Neil Cafferkey
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -23,6 +23,16 @@
 
 #include <proto/dos.h>
 
+#ifdef MUI_GUI
+#include <proto/exec.h>
+int start_gui(struct wpa_global *global);
+void stop_gui(void);
+VOID MUIGUI(VOID);
+
+struct Process *gui_proc;
+extern struct wpa_global *gui_global;
+extern struct Task *main_task;
+#endif
 
 #ifndef UPINT
 #ifdef __AROS__
@@ -35,7 +45,7 @@ typedef LONG PINT;
 #endif
 
 static const TEXT template[] = "DEVICE/A,UNIT/K/N,CONFIG/K,VERBOSE/S";
-const TEXT version_string[] = "$VER: WirelessManager 1.1 (24.9.2011)";
+const TEXT version_string[] = "$VER: WirelessManager 1.2 (1.8.2012)";
 static const TEXT config_file_name[] = "ENV:Wireless.prefs";
 
 
@@ -70,8 +80,8 @@ int main(int argc, char *argv[])
 	iface_count = 1;
 
 	/* Parse arguments */
-	read_args = ReadArgs(template, (UPINT *)&args, NULL);
-	if(read_args == NULL)
+	read_args = ReadArgs(template, (PINT *)&args, NULL);
+	if (read_args == NULL)
 	{
 		error = IoErr();
 		goto out;
@@ -115,6 +125,11 @@ int main(int argc, char *argv[])
 			exitcode = RETURN_FAIL;
 	}
 
+#ifdef MUI_GUI
+	if (exitcode == 0)
+		exitcode = start_gui(global);
+#endif
+
 	if (exitcode == 0)
 		exitcode = wpa_supplicant_run(global);
 
@@ -124,6 +139,9 @@ out:
 	os_free(ifaces);
 
 //	os_program_deinit();
+#ifdef MUI_GUI
+	stop_gui();
+#endif
 
 	FreeArgs(read_args);
 
@@ -131,10 +149,26 @@ out:
 	SetIoErr(error);
 	PrintFault(error, NULL);
 
-	if(error != 0)
+	if (error != 0)
 		exitcode = RETURN_FAIL;
-
-
 
 	return exitcode;
 }
+
+#ifdef MUI_GUI
+int start_gui(struct wpa_global *global)
+{
+	gui_global = global;
+	main_task = FindTask(NULL);
+	gui_proc = CreateNewProcTags(NP_Entry, MUIGUI,
+		NP_Name, "WirelessManager GUI", TAG_END);
+
+	return 0;
+}
+
+void stop_gui(void)
+{
+	Signal((struct Task *) gui_proc, SIGBREAKF_CTRL_C);
+	Wait(SIGF_SINGLE);
+}
+#endif

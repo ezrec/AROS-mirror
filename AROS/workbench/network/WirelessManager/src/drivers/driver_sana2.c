@@ -1,3 +1,4 @@
+
 /*
  * WPA Supplicant - AmigaOS/MorphOS/AROS SANA-II driver interface
  * Copyright (c) 2010-2011, Neil Cafferkey
