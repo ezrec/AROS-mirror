@@ -9,9 +9,9 @@ include $(TOP)/config/make.cfg
 #MM  contrib-games-bugsquish-game contrib-games-bugsquish-drawericon
 
 #MM  contrib-games-bugsquish-game : contrib-game-bugsquish-fetch
-#MM-  contrib-games-bugsquish-data : contrib-game-bugsquish-fetch contrib-game-bugsquish-dirs
-#MM-  contrib-games-bugsquish-cpy : contrib-game-bugsquish-fetch
-#MM - contrib-games-bugsquish-drawericon : contrib-game-bugsquish-fetch
+#MM- contrib-games-bugsquish-data : contrib-game-bugsquish-fetch contrib-game-bugsquish-dirs
+#MM- contrib-games-bugsquish-cpy : contrib-game-bugsquish-fetch
+#MM- contrib-games-bugsquish-drawericon : contrib-game-bugsquish-fetch
 
 REPOSITORIES := ftp://ftp.tuxpaint.org/unix/x/bugsquish/src
 ARCHBASE     := bugsquish-0.0.6
