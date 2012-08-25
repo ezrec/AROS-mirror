@@ -72,7 +72,7 @@ FILES := \
 %build_prog mmake=ports-graphics-grafx2 progname=GrafX2 \
     srcdir=$(PORTSDIR)/grafx2/$(ARCHBASE)/src/ \
     files=$(FILES) targetdir=$(TARGETDIR) \
-    uselibs="SDL_ttf SDL_image SDL GL jpeg png z freetype2shared"
+    uselibs="SDL_ttf SDL_image SDL GL jpeg png z freetype2"
 
 
 %fetch mmake=ports-graphics-grafx2-fetch archive=$(ARCHBASE)-2.3.1781-src destination=$(PORTSDIR)/grafx2 \
