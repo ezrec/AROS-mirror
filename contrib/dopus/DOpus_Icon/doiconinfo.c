@@ -825,6 +825,9 @@ struct Rectangle *rect;
 	if (reg=NewRegion()) {
 		OrRectRegion(reg,rect);
 		oldreg=InstallClipRegion(window->WLayer,reg);
+
+		LayoutIcon(dobj, window->WScreen, TAG_END);
+
 		DrawIconState
 		(
 			window->RPort, dobj, NULL, 
