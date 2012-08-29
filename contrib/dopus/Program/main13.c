@@ -382,7 +382,11 @@ struct DateStamp *ds;
     for (a=0;a<FILEBUF_SIZE;a++) name[a]=0;
     dl=(struct DeviceList *)BADDR(lock2->fl_Volume);
     p=(char *) BADDR(dl->dl_Name);
+#ifdef __AROS__
+    if (p) LStrnCpy(name,AROS_BSTR_ADDR(p),AROS_BSTR_strlen(p));
+#else
     if (p) LStrnCpy(name,p+1,*p);
+#endif
     if (ds) CopyMem((char *)&dl->dl_VolumeDate,(char *)ds,sizeof(struct DateStamp));
     Info(lock1,&info);
     UnLock(lock1);
