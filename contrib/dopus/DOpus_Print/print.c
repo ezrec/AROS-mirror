@@ -30,7 +30,7 @@ the existing commercial status of Directory Opus 5.
 
 #include "print.h"
 
-void main(argc,argv)
+int main(argc,argv)
 int argc;
 char *argv[];
 {
@@ -108,11 +108,8 @@ char *argv[];
 	}
 	LFreeRemember(&memkey);
 	CloseLibrary((struct Library *)DOpusBase);
-#ifdef __SASC_60
-	__exit(0);
-#else
-	_exit(0);
-#endif
+
+	return 0;
 }
 
 void get_vis_info(vis,portname)
@@ -146,7 +143,7 @@ char *portname;
 	}
 }
 
-dopus_message(cmd,data,portname)
+int dopus_message(cmd,data,portname)
 int cmd;
 APTR data;
 char *portname;
@@ -244,7 +241,7 @@ char *infobuf;
 void set_print_env(printdata)
 PrintData *printdata;
 {
-	int file;
+	BPTR file;
 
 	if (!(file=Open("env:DOpus_print.prefs",MODE_NEWFILE))) return;
 	Write(file,(char *)printdata,sizeof(PrintData));
@@ -254,7 +251,7 @@ PrintData *printdata;
 void get_print_env(printdata)
 PrintData *printdata;
 {
-	int file;
+	BPTR file;
 
 	if (!(file=Open("env:DOpus_print.prefs",MODE_OLDFILE))) return;
 	Read(file,(char *)printdata,sizeof(PrintData));
@@ -281,7 +278,7 @@ struct Window *window;
 	}
 }
 
-get_file_byrequest(gadget,window,save)
+int get_file_byrequest(gadget,window,save)
 struct Gadget *gadget;
 struct Window *window;
 int save;
@@ -323,7 +320,7 @@ int save;
 
 int error_rets[2]={1,0};
 
-check_error(reqbase,str,abort)
+int check_error(reqbase,str,abort)
 struct RequesterBase *reqbase;
 char *str;
 int abort;

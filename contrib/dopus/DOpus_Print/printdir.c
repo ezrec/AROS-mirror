@@ -227,7 +227,7 @@ struct TagItem
 		printdir_exit_gadget,
 		NULL};
 
-printdir_string(struct RequesterBase *,int,char *);
+int printdir_string(struct RequesterBase *,BPTR,char *);
 
 void do_printdir(vis,portname,wind)
 struct VisInfo *vis;
@@ -408,7 +408,8 @@ int wind;
 {
 	struct PrintDirData pddata;
 	char buf[256],pbuf[128];
-	int out=0,abort=0;
+	BPTR out=0;
+	int abort=0;
 
 	pddata.win=wind;
 	if (!(dopus_message(DOPUSMSG_GETPRINTDIR,(APTR)&pddata,portname)))
@@ -483,15 +484,16 @@ int wind;
 	Close(out);
 }
 
-printdir_string(reqbase,file,string)
+int printdir_string(reqbase,file,string)
 struct RequesterBase *reqbase;
-int file;
+BPTR file;
 char *string;
 {
 	int len;
 
 	FOREVER {
-		if ((Write(file,string,(len=strlen(string))))==len) {
+		len=strlen(string);
+		if ((Write(file,string,len))==len) {
 			Write(file,"\n",1);
 			return(1);
 		}
@@ -504,7 +506,7 @@ void save_printdir_env(flags,printer,filename)
 int flags,printer;
 char *filename;
 {
-	int file;
+	BPTR file;
 
 	if (file=Open("env:DOpus_printdir.prefs",MODE_NEWFILE)) {
 		Write(file,(char *)&flags,sizeof(int));
@@ -518,7 +520,7 @@ void read_printdir_env(flags,printer,filename)
 int *flags,*printer;
 char *filename;
 {
-	int file;
+	BPTR file;
 
 	if (file=Open("env:DOpus_printdir.prefs",MODE_OLDFILE)) {
 		Read(file,(char *)flags,sizeof(int));

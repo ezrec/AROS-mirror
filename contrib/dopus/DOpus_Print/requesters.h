@@ -195,26 +195,26 @@ typedef struct RequesterObject_ListView {
 
 /* Requester opening routine */
 
-struct Window *OpenRequester(struct RequesterBase *Requester);
+// struct Window *OpenRequester(struct RequesterBase *Requester);
 
 /* Requester closing routine */
 
-void CloseRequester(struct RequesterBase *Requester);
+// void CloseRequester(struct RequesterBase *Requester);
 
 /* Object adding routine */
 
-APTR AddRequesterObject(struct RequesterBase *Requester,
-	struct TagItem *ObjectTags);
+//APTR AddRequesterObject(struct RequesterBase *Requester, struct TagItem *ObjectTags);
 
 /* Requester refreshing routine */
 
-void RefreshRequesterObject(struct RequesterBase *Requester,
-	struct RequesterObject *FirstObject);
+// void RefreshRequesterObject(struct RequesterBase *Requester, struct RequesterObject *FirstObject);
 
 /* Routine to render text within an area */
 
+/*
 void ObjectText(struct RequesterBase *Requester,
 	short Left,short Top,
 	short Width,short Height,
 	char *Text,
 	short TextPos);
+*/

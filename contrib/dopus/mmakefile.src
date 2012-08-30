@@ -5,7 +5,7 @@ include $(SRCDIR)/$(CURDIR)/make.cfg
 
 SFILES := Package-Startup ConfigOpus.HLP DirectoryOpus.HLP DirectoryOpus.CFG DirectoryOpus.CLA
 
-#MM contrib-dopus : dopus-library DirOpus ConfigOpus DOpusRT DOpus_Disk DOpus_Icon
+#MM contrib-dopus : dopus-library DirOpus ConfigOpus DOpusRT DOpus_Disk DOpus_Icon DOpus_Print
 contrib-dopus : $(SFILES:%=$(DOPUSDIR)/S/%)
 
 $(DOPUSDIR)/S/% : S/%

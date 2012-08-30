@@ -32,7 +32,7 @@ the existing commercial status of Directory Opus 5.
 #include "ppdata.h"
 
 struct PrintHandle {
-	int filehandle;
+	BPTR filehandle;
 	struct MsgPort *port;
 	struct IOStdReq *ioreq;
 	char *filename;
@@ -52,11 +52,11 @@ struct PrintHandle {
 	int req_width;
 };
 
-do_header_footer(struct PrintHandle *,PrintData *,int);
-do_printstyle(struct PrintHandle *,int,int);
-print_str(struct PrintHandle *,char *,int);
-printer_command(struct RequesterBase *,struct PrintHandle *,char *);
-check_print_abort(struct RequesterBase *);
+int do_header_footer(struct PrintHandle *,PrintData *,int);
+int do_printstyle(struct PrintHandle *,int,int);
+int print_str(struct PrintHandle *,char *,int);
+int printer_command(struct RequesterBase *,struct PrintHandle *,char *);
+int check_print_abort(struct RequesterBase *);
 void show_progress(struct PrintHandle *);
 
 char
@@ -68,13 +68,14 @@ char
 		"\x1b[4\"z",       /* STYLE_DOUBLESTRIKE */
 		"\x1b[6\"z"};      /* STYLE_SHADOW       */
 
-printfile(reqbase,filename,printdata,requester)
+int printfile(reqbase,filename,printdata,requester)
 struct RequesterBase *reqbase;
 char *filename;
 PrintData *printdata;
 struct Requester *requester;
 {
-	int fileh=0,a,lastspace=-1,margin,filesize,ret=0;
+	BPTR fileh=0;
+	int a,lastspace=-1,margin,filesize,ret=0;
 	int buffersize,size,pos=0,bufpos=0;
 	char *buffer=NULL,*linebuffer,*marginbuf;
 	struct PrintHandle *handle;
@@ -179,6 +180,7 @@ struct Requester *requester;
 		print_status(handle,string_table[STR_LOADING_FILE],handle->progress_y);
 	}
 
+#ifndef __AROS__
 	if (PPBase) {
 		FOREVER {
 			if ((a=ppLoadData(filename,
@@ -195,6 +197,7 @@ struct Requester *requester;
 		size=buffersize;
 		filesize=buffersize;
 	}
+#endif
 
 	if (!buffer) {
 		buffersize=filesize;
@@ -382,7 +385,7 @@ ENDPRINT:
 	return(ret);
 }
 
-do_header_footer(handle,printdata,type)
+int do_header_footer(handle,printdata,type)
 struct PrintHandle *handle;
 PrintData *printdata;
 int type;
@@ -446,7 +449,7 @@ int type;
 	return(1);
 }
 
-do_printstyle(handle,style,turnon)
+int do_printstyle(handle,style,turnon)
 struct PrintHandle *handle;
 int style,turnon;
 {
@@ -466,7 +469,7 @@ int style,turnon;
 	return(a);
 }
 
-print_str(handle,string,stlen)
+int print_str(handle,string,stlen)
 struct PrintHandle *handle;
 char *string;
 int stlen;
@@ -498,7 +501,7 @@ int stlen;
 	}
 }
 
-printer_command(reqbase,handle,command)
+int printer_command(reqbase,handle,command)
 struct RequesterBase *reqbase;
 struct PrintHandle *handle;
 char *command;
@@ -515,7 +518,7 @@ char *command;
 	return(1);
 }
 
-check_print_abort(reqbase)
+int check_print_abort(reqbase)
 struct RequesterBase *reqbase;
 {
 	struct IntuiMessage *msg;

@@ -42,4 +42,4 @@ the existing commercial status of Directory Opus 5.
 
 ULONG ppLoadData(char *,ULONG,ULONG,char **,int *,BOOL(*)());
 
-#pragma libcall PPBase ppLoadData 1E BA910806
+// #pragma libcall PPBase ppLoadData 1E BA910806

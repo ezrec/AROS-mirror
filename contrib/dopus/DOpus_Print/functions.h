@@ -28,11 +28,15 @@ the existing commercial status of Directory Opus 5.
 
 */
 
-void lsprintf __ARGS((char *,char *,...));
+struct PrintHandle;
 
-void main(int,char **);
+#if defined(__AROS__)
+#define lsprintf sprintf
+#endif
+//void lsprintf __ARGS((char *,char *,...));
+
 void get_vis_info(struct VisInfo *,char *);
-dopus_message(int,APTR,char *);
+int dopus_message(int,APTR,char *);
 void fill_out_req(struct RequesterBase *,struct VisInfo *);
 struct Gadget *addreqgadgets(struct RequesterBase *,struct TagItem **,struct Gadget **);
 void fix_req_gadgets(void);
@@ -42,8 +46,8 @@ void set_print_env(PrintData *);
 void get_print_env(PrintData *);
 
 void activate_next_gadget(struct Gadget *,struct Window *);
-get_file_byrequest(struct Gadget *,struct Window *,int);
-check_error(struct RequesterBase *,char *,int);
+int get_file_byrequest(struct Gadget *,struct Window *,int);
+int check_error(struct RequesterBase *,char *,int);
 
 void do_print(struct VisInfo *,char *,struct DOpusArgsList *,int,char **);
 void get_print_default(PrintData *);
@@ -51,10 +55,10 @@ void show_headerfooter_gadgets(struct Gadget **,struct Window *,PrintData *,int)
 void read_headerfooter_gadgets(struct Gadget **,struct Window *,PrintData *,int);
 void print_status(struct PrintHandle *,char *,int);
 
-printfile(struct RequesterBase *,char *,PrintData *,struct Requester *);
-check_print_abort(struct RequesterBase *);
+int printfile(struct RequesterBase *,char *,PrintData *,struct Requester *);
+int check_print_abort(struct RequesterBase *);
 
-check_print_gadget(struct Window *,struct Gadget *,int,int,UWORD);
+int check_print_gadget(struct Window *,struct Gadget *,int,int,UWORD);
 
 void do_printdir(struct VisInfo *,char *,int);
 void printdirectory(struct RequesterBase *,char *,int,char *,int);

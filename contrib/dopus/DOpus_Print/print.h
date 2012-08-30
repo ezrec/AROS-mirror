@@ -28,7 +28,7 @@ the existing commercial status of Directory Opus 5.
 
 */
 
-#include <fctype.h>
+//#include <fctype.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdarg.h>
@@ -42,10 +42,16 @@ the existing commercial status of Directory Opus 5.
 #include <devices/printer.h>
 #include <devices/prtbase.h>
 #include <datatypes/datatypesclass.h>
-#include <proto/all.h>
 
-#include "dopusbase.h"
-#include "dopuspragmas.h"
+#include <proto/exec.h>
+#include <proto/dos.h>
+#include <proto/intuition.h>
+#include <proto/graphics.h>
+#include <proto/dopus.h>
+
+//#include "dopusbase.h"
+#include <dopus/dopusbase.h>
+//#include "dopuspragmas.h"
 #include "requesters.h"
 #include "dopusmessage.h"
 #include "stringdata.h"

@@ -564,7 +564,7 @@ char *argv[];
 	FOREVER {
 		if (appwindow) {
 			while (appmsg=(struct AppMessage *)GetMsg(appport)) {
-				if (appmsg->am_Type==MTYPE_APPWINDOW) {
+				if (appmsg->am_Type==AMTYPE_APPWINDOW) {
 					if (appmsg->am_NumArgs>0 && appmsg->am_ArgList[0].wa_Lock) {
 						char buf[256];
 
@@ -855,7 +855,7 @@ int headerfooter;
 	else printdata->headfoot[headerfooter].headfoot_flags&=~HEADFOOTFLAG_PAGE;
 }
 
-check_print_gadget(window,gad,min,max,code)
+int check_print_gadget(window,gad,min,max,code)
 struct Window *window;
 struct Gadget *gad;
 int min,max;
