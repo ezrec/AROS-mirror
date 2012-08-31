@@ -1,0 +1,11 @@
+prefix=PREFIX
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: libsvgtiny
+Description: SVG Tiny 1.1 rendering library
+Version: VERSION
+Requires: libxml-2.0
+Libs: -L${libdir} -lsvgtiny
+Cflags: -I${includedir}
