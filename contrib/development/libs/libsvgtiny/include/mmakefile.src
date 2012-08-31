@@ -1,0 +1,12 @@
+# 
+#  Copyright (C) 2012, The AROS Development Team
+#  All right reserved.
+#  Author: Jason S. McMullan <jason.mcmullan@gmail.com>
+# 
+#  Licensed under the AROS PUBLIC LICENSE (APL) Version 1.1
+# 
+include $(TOP)/config/make.cfg
+
+%copy_includes includes=svgtiny.h
+
+%common

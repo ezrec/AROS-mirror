@@ -1,0 +1,17 @@
+# 
+#  Copyright (C) 2012, The AROS Development Team
+#  All right reserved.
+#  Author: Jason S. McMullan <jason.mcmullan@gmail.com>
+# 
+#  Licensed under the AROS PUBLIC LICENSE (APL) Version 1.1
+# 
+include $(TOP)/config/make.cfg
+
+FILES=svgtiny svgtiny_list svgtiny_gradient src_colors
+
+USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../include -I$(AROS_INCLUDES)/libxml2
+
+%build_linklib mmake=linklibs-svgtiny libname=svgtiny \
+               files=$(FILES)
+
+%common
