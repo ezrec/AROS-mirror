@@ -1,0 +1,14 @@
+#   $Id$
+include $(TOP)/config/make.cfg
+
+USER_CFLAGS   := -DMYDEBUG=1
+
+FILES := svgclass stubs memory
+
+#MM- contrib-datatypes-complete: contrib-datatypes-svg
+
+USER_INCLUDES := -I$(AROS_INCLUDES)/libxml2
+
+%build_module mmake=contrib-datatypes-svg \
+    modname=svg modtype=datatype \
+    files=$(FILES) uselibs="svgtiny cairo xml2 pixman freetype2.static fontconfig z.static"
