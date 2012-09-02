@@ -43,19 +43,16 @@ extern LONG start(void);
 #include <aros/debug.h>
 
 #ifdef __AROS__
-__startup static AROS_ENTRY(int, Start,
-		AROS_UFHA(char *, argstr, A0),
-		AROS_UFHA(ULONG, argsize, D0),
-		struct ExecBase *, AbsExecBase)
+__startup static AROS_PROCH(Start, argstr, argsize, AbsExecBase)
 #else
 #define AbsExecBase (*(struct ExecBase **)4)
-#define AROS_USERFUNC_INIT
-#define AROS_USERFUNC_EXIT
+#define AROS_PROCFUNC_INIT
+#define AROS_PROCFUNC_EXIT
 
 LONG __saveds Start(void)
 #endif
 {
-	AROS_USERFUNC_INIT
+	AROS_PROCFUNC_INIT
 
 	static const unsigned char versionstring[] =
 		"\0$VER:FileX "VSTRING" ("DATE") © 1993-1994 by Klaas Hermanns.";
@@ -141,5 +138,5 @@ LONG __saveds Start(void)
 	
 	return 0; /* stegerg: there was no return at all */
 
-	AROS_USERFUNC_EXIT
+	AROS_PROCFUNC_EXIT
 }
