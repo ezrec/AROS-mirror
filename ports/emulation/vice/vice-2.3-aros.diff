@@ -1,0 +1,39 @@
+diff -Naur vice-2.3-orig/configure vice-2.3/configure
+--- vice-2.3-orig/configure	2011-02-26 19:07:06.000000000 +0100
++++ vice-2.3/configure	2012-09-01 18:45:09.735038441 +0200
+@@ -3380,9 +3380,6 @@
+       done
+       ;;
+   esac
+-  if test x"$argvalid" = "xno"; then
+-    as_fn_error $? "invalid option: $argcheck" "$LINENO" 5
+-  fi
+ done
+ 
+ 
+diff -Naur vice-2.3-orig/src/arch/amigaos/Makefile.in vice-2.3/src/arch/amigaos/Makefile.in
+--- vice-2.3-orig/src/arch/amigaos/Makefile.in	2011-02-26 19:07:35.000000000 +0100
++++ vice-2.3/src/arch/amigaos/Makefile.in	2012-09-01 18:45:09.735038441 +0200
+@@ -1814,7 +1814,7 @@
+ 
+ intl.h: $(srcdir)/intl.txt
+ 	echo "generating intl.h..."
+-	$(SHELL) $(srcdir)/genintl_h.sh <$(srcdir)/intl.txt >intl.h
++	$(SHELL) genintl_h.sh <$(srcdir)/intl.txt >intl.h
+ 
+ intl_table.h: $(srcdir)/intl.txt
+ 	echo "generating intl_table.h..."
+diff -Naur vice-2.3-orig/src/arch/amigaos/timer.h vice-2.3/src/arch/amigaos/timer.h
+--- vice-2.3-orig/src/arch/amigaos/timer.h	2010-12-31 02:41:42.000000000 +0100
++++ vice-2.3/src/arch/amigaos/timer.h	2012-09-01 18:45:09.735038441 +0200
+@@ -31,10 +31,6 @@
+ 
+ #include <proto/timer.h>
+ 
+-#ifdef AMIGA_AROS
+-#include <aros/_timeval.h>
+-#endif
+-
+ #ifndef AMIGA_OS4
+ 
+ extern void *timer_init(void);
