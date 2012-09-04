@@ -21,7 +21,7 @@
 */
 #include "SDL_config.h"
 
-/* BeOS thread management routines for SDL */
+/* AROS thread management routines for SDL */
 
 #include "SDL_mutex.h"
 #include "SDL_thread.h"
@@ -47,6 +47,7 @@ Uint32 RunThread(char *args)
 
 	SDL_RunThread(data);
 
+	data->info->handle = NULL;
 	Signal(Father,SIGBREAKF_CTRL_F);
 	D(bug("Thread with data %lx ended\n",data));
 	return(0);
@@ -94,8 +95,13 @@ Uint32 SDL_ThreadID(void)
 
 void SDL_SYS_WaitThread(SDL_Thread *thread)
 {
-	SetSignal(0L,SIGBREAKF_CTRL_F|SIGBREAKF_CTRL_C);
-	Wait(SIGBREAKF_CTRL_F|SIGBREAKF_CTRL_C);
+	Forbid();
+	if(thread->handle != NULL)
+	{
+		SetSignal(0L,SIGBREAKF_CTRL_F);
+		Wait(SIGBREAKF_CTRL_F|SIGBREAKF_CTRL_C);
+	}
+	Permit();
 }
 
 void SDL_SYS_KillThread(SDL_Thread *thread)
