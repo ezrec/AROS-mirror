@@ -237,7 +237,7 @@ static BOOL cairo_render(struct svgtiny_diagram *diagram, float scale, struct Ra
             return FALSE;
     }
 
-    cairo_set_source_rgb(cr, 1, 1, 1);
+    cairo_set_source_rgb(cr, 0.7, 0.7, 0.7);
     cairo_paint(cr);
 
     D(bug("svg.datatype/Processing %d shapes\n", diagram->shape_count));

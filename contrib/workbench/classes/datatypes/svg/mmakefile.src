@@ -1,7 +1,7 @@
 #   $Id$
 include $(TOP)/config/make.cfg
 
-USER_CFLAGS   := -DMYDEBUG=1
+#USER_CFLAGS   := -DMYDEBUG=1
 
 FILES := svgclass stubs memory
 
