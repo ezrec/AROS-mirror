@@ -7,7 +7,8 @@
 
 #MM- development-SDL_sound : linklibs-SDL
 
-REPOSITORIES := http://icculus.org/SDL_sound/downloads/ http://ftp.de.netbsd.org/pub/NetBSD/packages/distfiles/
+REPOSITORIES := http://icculus.org/SDL_sound/downloads/ \
+ http://downloads.openwrt.org/sources/
 
 %fetch_and_build_gnu_development package=SDL_sound version=1.0.3 patch=no \
-    suffixes="tar.gz" package_repo=$(REPOSITORIES)
+    suffixes="tar.gz" package_repo="$(REPOSITORIES)"
