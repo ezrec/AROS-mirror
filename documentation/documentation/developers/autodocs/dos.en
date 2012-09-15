@@ -1162,40 +1162,40 @@ Inputs
      DateTime - a pointer to an initialized DateTime structure. The
                 DateTime structure should be initialized as follows:
 
-             dat_Stamp: The datestamp to convert to ascii
+     dat_Stamp: The datestamp to convert to ascii
 
-             dat_Format: How to convert the datestamp into
-                     dat_StrDate. Can be any of the following:
+     dat_Format: How to convert the datestamp into
+             dat_StrDate. Can be any of the following:
 
-                 FORMAT_DOS: AmigaDOS format (dd-mmm-yy). This
-                     is the default if you specify something other
-                     than any entry in this list.
+         FORMAT_DOS: AmigaDOS format (dd-mmm-yy). This
+             is the default if you specify something other
+             than any entry in this list.
 
-                 FORMAT_INT: International format (yy-mmm-dd).
+         FORMAT_INT: International format (yy-mmm-dd).
 
-                 FORMAT_USA: American format (mm-dd-yy).
+         FORMAT_USA: American format (mm-dd-yy).
 
-                 FORMAT_CDN: Canadian format (dd-mm-yy).
+         FORMAT_CDN: Canadian format (dd-mm-yy).
 
-                 FORMAT_DEF default format for locale.
+         FORMAT_DEF default format for locale.
 
 
-             dat_Flags: Modifies dat_Format. The only flag
-                     used by this function is DTF_SUBST. If set, then
-                     a string like "Today" or "Monday" is generated
-                     instead of the normal format if possible.
+     dat_Flags: Modifies dat_Format. The only flag
+             used by this function is DTF_SUBST. If set, then
+             a string like "Today" or "Monday" is generated
+             instead of the normal format if possible.
 
-             dat_StrDay: Pointer to a buffer to receive the day of
-                     the week string. (Monday, Tuesday, etc.). If null,
-                     this string will not be generated.
+     dat_StrDay: Pointer to a buffer to receive the day of
+             the week string. (Monday, Tuesday, etc.). If null,
+             this string will not be generated.
 
-             dat_StrDate: Pointer to a buffer to receive the date
-                     string, in the format requested by dat_Format,
-                     subject to possible modifications by DTF_SUBST. If
-                     null, this string will not be generated.
+     dat_StrDate: Pointer to a buffer to receive the date
+             string, in the format requested by dat_Format,
+             subject to possible modifications by DTF_SUBST. If
+             null, this string will not be generated.
 
-             dat_StrTime: Pointer to a buffer to receive the time
-                     of day string. If NULL, this will not be generated.
+     dat_StrTime: Pointer to a buffer to receive the time
+             of day string. If NULL, this will not be generated.
 
 
 
@@ -1635,7 +1635,7 @@ Inputs
               which is filled with (partial) ExAllData structures
               (see NOTES)
  size     --  size of 'buffer' in bytes
- type     --  type of the data to be returned
+ data     --  type of the data to be returned
  control  --  a control structure allocated by AllocDosObject()
 
 
@@ -1658,7 +1658,7 @@ Notes
  The following information is essential information on the ExAllData
  structure:
 
- ead_type :
+ ed_Type:
 
  ED_NAME        --  filename
  ED_TYPE        --  type
@@ -1676,8 +1676,8 @@ Notes
  If a filesystem doesn't support a particular type, ERROR_BAD_NUMBER must
  be returned.
 
- ead_Next : pointer to the next entry in the buffer. The last entry
-            has a NULL value for ead_Next.
+ ed_Next : pointer to the next entry in the buffer. The last entry
+            has a NULL value for ed_Next.
 
 
  The control structure have the following fields.
@@ -2559,7 +2559,7 @@ Result
 ::
 
      The number of blocks read from the file or 0 on EOF.
-     This function may return less than the requested number of blocks
+     This function may return fewer than the requested number of blocks.
      IoErr() gives additional information in case of an error.
 
 
@@ -3267,7 +3267,7 @@ Inputs
 
 
  name   --  Name of the device to inhibit (including a ':')
- onoff  --  Specify whether to inhinit (DOSTRUE) or uninhibit (DOSFALSE)
+ onoff  --  Specify whether to inhibit (DOSTRUE) or uninhibit (DOSFALSE)
             the device
 
 
@@ -4197,8 +4197,7 @@ Function
 
      Get the full path name associated with a lock to a file or
      directory into a user supplied buffer.
-     If the lock is zero the buffer will be filled with the volume name
-     for the assignment "SYS:".
+     If the lock is zero the buffer will be filled with "SYS:".
 
 
 Inputs
@@ -4815,10 +4814,10 @@ Inputs
                    template.
                 /F Eats the rest of the line even if there are option
                    keywords in it.
-     array    - Array to be filled with the result values. The array must
+     array         - Array to be filled with the result values. The array must
                 be intialized to the default values before calling
                 ReadArgs().
-     rdargs   - An optional RDArgs structure determinating the type of
+     rdargs         - An optional RDArgs structure determining the type of
                 input to process.
 
 

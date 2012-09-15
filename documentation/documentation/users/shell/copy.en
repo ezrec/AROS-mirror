@@ -195,9 +195,9 @@ Inputs
  DONTOVR=DONTOVERWRITE:
  This option prevents overwriting of destination files.
 
-     NEWER:
-     This option scans the version strings of the source and destination files and
-     only overwrites if the source file is newer than the destination file.
+ NEWER:
+ This option scans the version strings of the source and destination files and
+ only overwrites if the source file is newer than the destination file.
 
 
 See also

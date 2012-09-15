@@ -217,7 +217,7 @@ Inputs
 ~~~~~~
 ::
 
-     obj - pointer to MUI object created with MUI_NewObject. Maybe NULL,
+     obj - pointer to MUI object created with MUI_NewObject. May be NULL,
            in which case this function has no effect.
      
 
@@ -642,28 +642,32 @@ Function
 ~~~~~~~~
 ::
 
-
- For custom class implementors. Valid between MUIM_Setup/MUIM_Cleanup.
- Indicates that this object wants to receive some events. MUIM_HandleInput
- will then be called on this object whenever there's a matching event.
+     For custom class implementors. Valid between MUIM_Setup/MUIM_Cleanup.
+     Indicates that this object wants to receive some events. MUIM_HandleInput
+     will then be called on this object whenever there's a matching event.
 
 
 Inputs
 ~~~~~~
 ::
 
+     obj   - an object whose class is derived from Area
+     flags - IDCMP flags
 
- obj   -- an object whose class is derived from Area
- flags -- IDCMP flags
+
+Result
+~~~~~~
+::
+
+     None.
 
 
 Notes
 ~~~~~
 ::
 
-
- Deprecated in favor of MUIM_Window_AddEventHandler and MUIM_HandleEvent
- event handling model (introduced in MUI V16).
+     Deprecated in favor of MUIM_Window_AddEventHandler and MUIM_HandleEvent
+     event handling model (introduced in MUI V16).
 
 
 

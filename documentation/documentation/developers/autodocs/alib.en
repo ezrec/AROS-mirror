@@ -26,19 +26,20 @@ alib
 `FreeParamsFromStack()`_                `FreeTagsFromStack()`_                  `GetDTAttrs()`_                         `GetExtSprite()`_                       
 `GetMsgFromStack()`_                    `GetParamsFromStack()`_                 `GetRexxVar()`_                         `GetRPAttrs()`_                         
 `GetTagsFromStack()`_                   `GetVisualInfo()`_                      `GT_GetGadgetAttrs()`_                  `GT_SetGadgetAttrs()`_                  
-`HookEntry()`_                          `HotKey()`_                             `InvertString()`_                       `LayoutMenuItems()`_                    
-`LayoutMenus()`_                        `LibAllocPooled()`_                     `LibCreatePool()`_                      `LibDeletePool()`_                      
-`LibFreePooled()`_                      `LockBitMapTags()`_                     `MakeWorkbenchObjectVisible()`_         `MergeSortList()`_                      
-`NewDTObject()`_                        `NewList()`_                            `NewLoadSegTags()`_                     `NewObject()`_                          
-`NewRawDoFmt()`_                        `NewRectRegion()`_                      `ObtainBestPen()`_                      `ObtainInfo()`_                         
-`OpenAmigaGuide()`_                     `OpenAmigaGuideAsync()`_                `OpenCatalog()`_                        `OpenScreenTags()`_                     
-`OpenWindowTags()`_                     `OpenWorkbenchObject()`_                `RangeRand()`_                          `ReAllocVec()`_                         
-`RefreshDTObject()`_                    `RefreshDTObjects()`_                   `ReleaseInfo()`_                        `RemoveAmigaGuideHost()`_               
-`SelectErrorOutput()`_                  `SendAmigaGuideCmd()`_                  `SendAmigaGuideContext()`_              `SetAmigaGuideAttrs()`_                 
-`SetAmigaGuideContext()`_               `SetAttrs()`_                           `SetDTAttrs()`_                         `SetGadgetAttrs()`_                     
-`SetInfo()`_                            `SetRexxVar()`_                         `SetRPAttrs()`_                         `SetSuperAttrs()`_                      
-`SetWindowPointer()`_                   `StrDup()`_                             `SystemTags()`_                         `TimeDelay()`_                          
-`UnLockBitMapTags()`_                   `VideoControlTags()`_                   `WorkbenchControl()`_                   
+`HookEntry()`_                          `HotKey()`_                             `InvertString()`_                       `InvertStringForwd()`_                  
+`LayoutMenuItems()`_                    `LayoutMenus()`_                        `LibAllocPooled()`_                     `LibCreatePool()`_                      
+`LibDeletePool()`_                      `LibFreePooled()`_                      `LockBitMapTags()`_                     `MakeWorkbenchObjectVisible()`_         
+`MergeSortList()`_                      `NewDTObject()`_                        `NewList()`_                            `NewLoadSegTags()`_                     
+`NewObject()`_                          `NewRawDoFmt()`_                        `NewRectRegion()`_                      `ObtainBestPen()`_                      
+`ObtainInfo()`_                         `OpenAmigaGuide()`_                     `OpenAmigaGuideAsync()`_                `OpenCatalog()`_                        
+`OpenScreenTags()`_                     `OpenWindowTags()`_                     `OpenWorkbenchObject()`_                `RangeRand()`_                          
+`ReAllocVec()`_                         `RefreshDTObject()`_                    `RefreshDTObjects()`_                   `ReleaseInfo()`_                        
+`RemoveAmigaGuideHost()`_               `SelectErrorOutput()`_                  `SendAmigaGuideCmd()`_                  `SendAmigaGuideContext()`_              
+`SetAmigaGuideAttrs()`_                 `SetAmigaGuideContext()`_               `SetAttrs()`_                           `SetDTAttrs()`_                         
+`SetGadgetAttrs()`_                     `SetInfo()`_                            `SetRexxVar()`_                         `SetRPAttrs()`_                         
+`SetSuperAttrs()`_                      `SetWindowPointer()`_                   `StrDup()`_                             `SystemTags()`_                         
+`TimeDelay()`_                          `UnLockBitMapTags()`_                   `VideoControlTags()`_                   `WorkbenchControl()`_                   
+
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -116,9 +117,9 @@ Synopsis
 ::
 
   struct AppIcon * AddAppIcon(
-     ULONG id,
-     ULONG userdata,
-     STRPTR text,
+     IPTR id,
+     IPTR  userdata,
+     CONST_STRPTR text,
      struct MsgPort * msgport,
      BPTR lock,
      struct DiskObject * diskobj,
@@ -150,8 +151,8 @@ Synopsis
 ::
 
   struct AppMenuItem * AddAppMenuItem(
-     ULONG id,
-     ULONG userdata,
+     IPTR id,
+     IPTR  userdata,
      STRPTR text,
      struct MsgPort * msgport,
      Tag tag1,
@@ -182,8 +183,8 @@ Synopsis
 ::
 
   struct AppWindow * AddAppWindow(
-     ULONG id,
-     ULONG userdata,
+     IPTR id,
+     IPTR  userdata,
      struct Window * window,
      struct MsgPort * msgport,
      Tag tag1,
@@ -215,8 +216,8 @@ Synopsis
 
   struct AppWindowDropZone * AddAppWindowDropZone(
      struct AppWindow * aw,
-     ULONG              id,
-     ULONG              userdata,
+     IPTR               id,
+     IPTR               userdata,
      Tag                tag1,
      ...)
 
@@ -1956,7 +1957,7 @@ Function
 ::
 
 
- Frees a chain of input events allocated by InvertString().
+ Frees a chain of input events allocated by InvertString() or InvertStringForwd().
 
 
 Inputs
@@ -1971,7 +1972,7 @@ Inputs
 See also
 ~~~~~~~~
 
-`commodities.library/InvertString() <./commodities#invertstring>`_ 
+`InvertString()`_ `InvertStringForwd()`_ 
 
 ----------
 
@@ -2271,7 +2272,7 @@ Synopsis
 
   LONG GetRexxVar(
      struct RexxMsg *msg,
-     char *varname,
+     CONST_STRPTR varname,
      char **value)
 
 
@@ -2612,6 +2613,70 @@ Function
 ::
 
      Return a linked list of input events which would produce the string
+     'str' in the reverse order, with the keymap 'km'. To get a list of
+     events in the right order, just use InvertStringForwd(). InverString()
+     is only there to provide compatibility with the original function,
+     which indeed reversed the order of the supplied string.
+
+
+Inputs
+~~~~~~
+::
+
+     str  --  pointer to a (NULL-terminated) string that may contain
+              * ANSI character codes
+              * backslash-escaped characters:
+                \n    --  carriage return
+                \r    --  carriage return
+                \t    --  tab
+                \\    --  backslash
+              * a description of an input event a la ParseIX() surrounded
+                by angle brackets
+
+     km   --  keymap to use for the conversion or NULL to use the default
+              keymap
+
+
+Result
+~~~~~~
+::
+
+     A linked list of input events or NULL if something went wrong.
+
+
+Example
+~~~~~~~
+::
+
+     An example string: "\n<shift alt a> olleH"
+
+
+
+See also
+~~~~~~~~
+
+`commodities.library/ParseIX() <./commodities#parseix>`_ `InvertStringForwd()`_ `FreeIEvents()`_ 
+
+----------
+
+InvertStringForwd()
+===================
+
+Synopsis
+~~~~~~~~
+::
+
+  struct InputEvent *InvertStringForwd(
+
+     STRPTR str,
+     struct KeyMap *km
+                  )
+
+Function
+~~~~~~~~
+::
+
+     Return a linked list of input events which would produce the string
      'str' with the keymap 'km'.
 
 
@@ -2651,7 +2716,7 @@ Example
 See also
 ~~~~~~~~
 
-`commodities.library/ParseIX() <./commodities#parseix>`_ `FreeIEvents()`_ 
+`commodities.library/ParseIX() <./commodities#parseix>`_ `InvertString()`_ `FreeIEvents()`_ 
 
 ----------
 
@@ -3958,8 +4023,8 @@ Synopsis
 
   LONG SetRexxVar(
      struct RexxMsg *msg,
-     char *varname,
-     char * value,
+     CONST_STRPTR varname,
+     char *value,
      ULONG length)
 
 

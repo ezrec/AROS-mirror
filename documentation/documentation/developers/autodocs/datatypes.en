@@ -868,7 +868,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct DTMethods * GetDTTriggerMethods(
+ struct DTMethod * GetDTTriggerMethods(
           Object * object );
 
 Function

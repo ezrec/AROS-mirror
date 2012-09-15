@@ -9,31 +9,33 @@ clib
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`__get_default_file()`_                 `__path_a2u()`_                         `__path_u2a()`_                         `__spawnv()`_                           
-`__vcformat()`_                         `_exit()`_                              `abort()`_                              `abs()`_                                
-`access()`_                             `asctime()`_                            `asctime_r()`_                          `assert()`_                             
-`atexit()`_                             `atof()`_                               `atoi()`_                               `atol()`_                               
-`basename()`_                           `bcmp()`_                               `bsearch()`_                            `bzero()`_                              
-`calloc()`_                             `chdir()`_                              `chmod()`_                              `chown()`_                              
-`clearerr()`_                           `clock()`_                              `close()`_                              `closedir()`_                           
-`creat()`_                              `ctime()`_                              `ctime_r()`_                            `difftime()`_                           
-`dirfd()`_                              `dirname()`_                            `div()`_                                `dup()`_                                
-`dup2()`_                               `endgrent()`_                           `endpwent()`_                           `execl()`_                              
-`execlp()`_                             `execv()`_                              `execve()`_                             `execvp()`_                             
-`exit()`_                               `fchdir()`_                             `fchmod()`_                             `fchown()`_                             
-`fclose()`_                             `fcntl()`_                              `fdopen()`_                             `feof()`_                               
-`ferror()`_                             `fflush()`_                             `fgetc()`_                              `fgetpos()`_                            
-`fgets()`_                              `fileno()`_                             `flock()`_                              `fopen()`_                              
-`fprintf()`_                            `fputc()`_                              `fputs()`_                              `fread()`_                              
-`free()`_                               `freopen()`_                            `fscanf()`_                             `fseek()`_                              
-`fseeko()`_                             `fsetpos()`_                            `fstat()`_                              `fsync()`_                              
-`ftell()`_                              `ftime()`_                              `ftruncate()`_                          `fwrite()`_                             
-`gcvt()`_                               `getc()`_                               `getchar()`_                            `getcwd()`_                             
-`getegid()`_                            `getenv()`_                             `geteuid()`_                            `getfsstat()`_                          
-`getgid()`_                             `getgrent()`_                           `getgrgid()`_                           `getgrnam()`_                           
-`getgroups()`_                          `getloadavg()`_                         `getlogin()`_                           `getopt()`_                             
-`getopt_long()`_                        `getopt_long_only()`_                   `getpgrp()`_                            `getpid()`_                             
-`getppid()`_                            `getpwent()`_                           `getpwnam()`_                           `getpwuid()`_                           
+`__arosc_gmtoffset()`_                  `__arosc_jmp2exit()`_                   `__arosc_program_end()`_                `__arosc_program_startup()`_            
+`__arosc_set_environptr()`_             `__arosc_set_errorptr()`_               `__arosc_set_exitjmp()`_                `__get_default_file()`_                 
+`__path_a2u()`_                         `__path_u2a()`_                         `__spawnv()`_                           `__vcformat()`_                         
+`_exit()`_                              `abort()`_                              `abs()`_                                `access()`_                             
+`asctime()`_                            `asctime_r()`_                          `assert()`_                             `atexit()`_                             
+`atof()`_                               `atoi()`_                               `atol()`_                               `basename()`_                           
+`bcmp()`_                               `bsearch()`_                            `bzero()`_                              `calloc()`_                             
+`chdir()`_                              `chmod()`_                              `chown()`_                              `clearerr()`_                           
+`clock()`_                              `close()`_                              `closedir()`_                           `creat()`_                              
+`ctime()`_                              `ctime_r()`_                            `difftime()`_                           `dirfd()`_                              
+`dirname()`_                            `div()`_                                `dup()`_                                `dup2()`_                               
+`endgrent()`_                           `endpwent()`_                           `execl()`_                              `execlp()`_                             
+`execv()`_                              `execve()`_                             `execvp()`_                             `exit()`_                               
+`fchdir()`_                             `fchmod()`_                             `fchown()`_                             `fclose()`_                             
+`fcntl()`_                              `fdopen()`_                             `feof()`_                               `ferror()`_                             
+`fflush()`_                             `fgetc()`_                              `fgetpos()`_                            `fgets()`_                              
+`fileno()`_                             `flock()`_                              `fopen()`_                              `fprintf()`_                            
+`fputc()`_                              `fputs()`_                              `fread()`_                              `free()`_                               
+`freopen()`_                            `fscanf()`_                             `fseek()`_                              `fseeko()`_                             
+`fsetpos()`_                            `fstat()`_                              `fsync()`_                              `ftell()`_                              
+`ftime()`_                              `ftruncate()`_                          `fwrite()`_                             `gcvt()`_                               
+`getc()`_                               `getchar()`_                            `getcwd()`_                             `getegid()`_                            
+`getenv()`_                             `geteuid()`_                            `getfsstat()`_                          `getgid()`_                             
+`getgrent()`_                           `getgrgid()`_                           `getgrnam()`_                           `getgroups()`_                          
+`getloadavg()`_                         `getlogin()`_                           `getopt()`_                             `getopt_long()`_                        
+`getopt_long_only()`_                   `getpgrp()`_                            `getpid()`_                             `getppid()`_                            
+`getpwent()`_                           `getpwnam()`_                           `getpwuid()`_                           `getrlimit()`_                          
 `gets()`_                               `gettimeofday()`_                       `getuid()`_                             `getw()`_                               
 `gmtime()`_                             `gmtime_r()`_                           `ioctl()`_                              `isalnum()`_                            
 `isalpha()`_                            `isascii()`_                            `isatty()`_                             `isblank()`_                            
@@ -54,36 +56,337 @@ clib
 `realloc_nocopy()`_                     `remove()`_                             `rename()`_                             `rewind()`_                             
 `rewinddir()`_                          `rmdir()`_                              `scanf()`_                              `seed48()`_                             
 `seekdir()`_                            `setbuf()`_                             `setenv()`_                             `setgid()`_                             
-`setgrent()`_                           `setlinebuf()`_                         `setpwent()`_                           `setuid()`_                             
-`setvbuf()`_                            `sharecontextwithchild()`_              `sigaction()`_                          `sigaddset()`_                          
-`sigdelset()`_                          `sigemptyset()`_                        `sigfillset()`_                         `sigismember()`_                        
-`signal()`_                             `sigpending()`_                         `sigprocmask()`_                        `sigsuspend()`_                         
-`sleep()`_                              `snprintf()`_                           `spawnv()`_                             `spawnvp()`_                            
-`sprintf()`_                            `srand()`_                              `srand48()`_                            `sscanf()`_                             
-`stat()`_                               `statfs()`_                             `stccpy()`_                             `stcd_l()`_                             
-`stch_l()`_                             `stcl_d()`_                             `stcl_h()`_                             `stcl_o()`_                             
-`stco_l()`_                             `stcu_d()`_                             `stpblk()`_                             `stpcpy()`_                             
-`stpsym()`_                             `strcasecmp()`_                         `strcasestr()`_                         `strcat()`_                             
-`strchr()`_                             `strcmp()`_                             `strcoll()`_                            `strcpy()`_                             
-`strcspn()`_                            `strdup()`_                             `strerror()`_                           `strftime()`_                           
-`strlcat()`_                            `strlcpy()`_                            `strlen()`_                             `strlwr()`_                             
-`strncasecmp()`_                        `strncat()`_                            `strncmp()`_                            `strncpy()`_                            
-`strpbrk()`_                            `strrchr()`_                            `strrev()`_                             `strsep()`_                             
-`strspn()`_                             `strstr()`_                             `strtod()`_                             `strtoimax()`_                          
-`strtok()`_                             `strtol()`_                             `strtoll()`_                            `strtoul()`_                            
-`strtoull()`_                           `strtoumax()`_                          `strupr()`_                             `strxfrm()`_                            
-`swab()`_                               `symlink()`_                            `sysconf()`_                            `system()`_                             
-`telldir()`_                            `tempnam()`_                            `time()`_                               `times()`_                              
-`tmpfile()`_                            `tmpnam()`_                             `truncate()`_                           `ttyname()`_                            
-`umask()`_                              `uname()`_                              `ungetc()`_                             `unlink()`_                             
-`unsetenv()`_                           `updatestdio()`_                        `usleep()`_                             `utime()`_                              
-`utimes()`_                             `vfprintf()`_                           `vfscanf()`_                            `vprintf()`_                            
-`vscanf()`_                             `vsnprintf()`_                          `vsprintf()`_                           `vsscanf()`_                            
-`wait()`_                               `waitpid()`_                            `wcstombs()`_                           `wctomb()`_                             
-`write()`_                              
+`setgrent()`_                           `setlinebuf()`_                         `setpwent()`_                           `setrlimit()`_                          
+`setuid()`_                             `setvbuf()`_                            `sharecontextwithchild()`_              `sigaction()`_                          
+`sigaddset()`_                          `sigdelset()`_                          `sigemptyset()`_                        `sigfillset()`_                         
+`sigismember()`_                        `signal()`_                             `sigpending()`_                         `sigprocmask()`_                        
+`sigsuspend()`_                         `sleep()`_                              `snprintf()`_                           `spawnv()`_                             
+`spawnvp()`_                            `sprintf()`_                            `srand()`_                              `srand48()`_                            
+`sscanf()`_                             `stat()`_                               `statfs()`_                             `stccpy()`_                             
+`stcd_l()`_                             `stch_l()`_                             `stcl_d()`_                             `stcl_h()`_                             
+`stcl_o()`_                             `stco_l()`_                             `stcu_d()`_                             `stpblk()`_                             
+`stpcpy()`_                             `stpsym()`_                             `strcasecmp()`_                         `strcasestr()`_                         
+`strcat()`_                             `strchr()`_                             `strcmp()`_                             `strcoll()`_                            
+`strcpy()`_                             `strcspn()`_                            `strdup()`_                             `strerror()`_                           
+`strftime()`_                           `strlcat()`_                            `strlcpy()`_                            `strlen()`_                             
+`strlwr()`_                             `strncasecmp()`_                        `strncat()`_                            `strncmp()`_                            
+`strncpy()`_                            `strndup()`_                            `strpbrk()`_                            `strrchr()`_                            
+`strrev()`_                             `strsep()`_                             `strspn()`_                             `strstr()`_                             
+`strtod()`_                             `strtoimax()`_                          `strtok()`_                             `strtol()`_                             
+`strtoll()`_                            `strtoul()`_                            `strtoull()`_                           `strtoumax()`_                          
+`strupr()`_                             `strxfrm()`_                            `swab()`_                               `symlink()`_                            
+`sysconf()`_                            `system()`_                             `telldir()`_                            `tempnam()`_                            
+`time()`_                               `times()`_                              `tmpfile()`_                            `tmpnam()`_                             
+`truncate()`_                           `ttyname()`_                            `umask()`_                              `uname()`_                              
+`ungetc()`_                             `unlink()`_                             `unsetenv()`_                           `updatestdio()`_                        
+`usleep()`_                             `utime()`_                              `utimes()`_                             `vfprintf()`_                           
+`vfscanf()`_                            `vprintf()`_                            `vscanf()`_                             `vsnprintf()`_                          
+`vsprintf()`_                           `vsscanf()`_                            `wait()`_                               `waitpid()`_                            
+`wcstombs()`_                           `wctomb()`_                             `write()`_                              
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
+
+__arosc_gmtoffset()
+===================
+
+Synopsis
+~~~~~~~~
+::
+
+  int __arosc_gmtoffset(
+     void)
+
+
+Result
+~~~~~~
+::
+
+     The offset to GMT in minutes
+
+
+Notes
+~~~~~
+::
+
+     Will return 0 when locale.library is not loaded into memory yet.
+
+
+
+----------
+
+__arosc_jmp2exit()
+==================
+
+Synopsis
+~~~~~~~~
+::
+
+  void __arosc_jmp2exit(
+     int normal,
+     int retcode)
+
+
+Function
+~~~~~~~~
+::
+
+     This function directly jumps to the exit of a program.
+
+
+Inputs
+~~~~~~
+::
+
+     normal - Indicates if exit is normal or not. When it is abnormal no
+              atexit functions will be called.
+     retcode - the return code for the program.
+
+
+Result
+~~~~~~
+::
+
+     -
+
+
+Notes
+~~~~~
+::
+
+     In normal operation this function does not return.
+     If this function returns it means that this function was called in a
+     context where jmp_buf for exit was not initialized. Likely cause is
+     a module that opened arosstdc.library.
+     Be sure to capture this situation.
+
+
+
+----------
+
+__arosc_program_end()
+=====================
+
+Synopsis
+~~~~~~~~
+::
+
+  void __arosc_program_end(
+     void)
+
+
+Function
+~~~~~~~~
+::
+
+     This function is to be called when main() has returned or after
+     program has exited. This allows to arosc.library to do some
+     cleanup that can't be done during closing of the library.
+
+
+Inputs
+~~~~~~
+::
+
+     -
+
+
+Result
+~~~~~~
+::
+
+     -
+
+
+Notes
+~~~~~
+::
+
+     This function is normally called by the startup code so one
+     should not need to do it oneself.
+
+
+
+----------
+
+__arosc_program_startup()
+=========================
+
+Synopsis
+~~~~~~~~
+::
+
+  void __arosc_program_startup(
+     jmp_buf exitjmp,
+     int *errorptr)
+
+
+Function
+~~~~~~~~
+::
+
+     This is called during program startup and before calling main.
+     This is to allow arosc.library to do some initialization that couldn't
+     be done when opening the library.
+
+
+Inputs
+~~~~~~
+::
+
+     exitjmp - jmp_buf to jump to to exit the program
+     errorptr - pointer to store return value of program
+
+
+Result
+~~~~~~
+::
+
+     -
+
+
+Notes
+~~~~~
+::
+
+     This function is normally called by the startup code so one
+     should not need to do it oneself.
+
+
+
+----------
+
+__arosc_set_environptr()
+========================
+
+Synopsis
+~~~~~~~~
+::
+
+  void __arosc_set_environptr(
+     char ***environptr)
+
+
+Function
+~~~~~~~~
+::
+
+     This function is called to enable environ emulation mode.
+
+
+Inputs
+~~~~~~
+::
+
+     environptr - ptr to the child environ variable (== &environ).
+
+
+Result
+~~~~~~
+::
+
+     -
+
+
+Notes
+~~~~~
+::
+
+     This function will enable environ emulation. This means that
+     all current DOS local variables are converted to the 'var=value'
+     format and be accessible through char **environ.
+
+
+Bugs
+~~~~
+::
+
+     At the moment only a static list is supported. getenv() and setenv()
+     don't use this yet so changes done with these functions are not
+     reflected in environ.
+     This is still TODO.
+
+
+
+See also
+~~~~~~~~
+
+`getenv()`_ `setenv()`_ 
+
+----------
+
+__arosc_set_errorptr()
+======================
+
+Synopsis
+~~~~~~~~
+::
+
+  int *__arosc_set_errorptr(
+     int *errorptr)
+
+
+Function
+~~~~~~~~
+::
+
+     This function sets the pointer to store error return value for
+     program exit.
+
+
+Inputs
+~~~~~~
+::
+
+     errorptr - new pointer to return value
+
+
+Result
+~~~~~~
+::
+
+     old pointer to return value
+
+
+
+----------
+
+__arosc_set_exitjmp()
+=====================
+
+Synopsis
+~~~~~~~~
+::
+
+  void __arosc_set_exitjmp(
+     jmp_buf exitjmp,
+     jmp_buf previousjmp)
+
+
+Function
+~~~~~~~~
+::
+
+     This function set the jmp_buf to use for directly exiting current
+     program.
+
+
+Inputs
+~~~~~~
+::
+
+     exitjmp - new jmp_buf for exiting
+
+
+Result
+~~~~~~
+::
+
+     previous jmp_buf for exiting
+
+
+
+----------
 
 __get_default_file()
 ====================
@@ -428,7 +731,7 @@ Function
 
      Causes abnormal program termination. If there is a signal handler
      for SIGABORT, then the handler will be called. If the handler
-     returns, then the program is continued.
+     returns, then the program is aborted anyway.
 
 
 Inputs
@@ -2344,7 +2647,7 @@ Result
 ~~~~~~
 ::
 
-     If the current directory was changed successfully, zero is returned.    
+     If the current directory was changed successfully, zero is returned.
      Otherwise, -1 is returned and errno set apropriately.
      
 
@@ -4231,6 +4534,13 @@ Synopsis
      int n)
 
 
+Notes
+~~~~~
+::
+
+     Not implemented.
+
+
 
 ----------
 
@@ -4244,6 +4554,13 @@ Synopsis
   char * getlogin(
      )
      
+
+Notes
+~~~~~
+::
+
+     Not implemented.
+
 
 
 ----------
@@ -4516,6 +4833,55 @@ Synopsis
      uid_t uid)
 
 
+Notes
+~~~~~
+::
+
+     Not implemented.
+
+
+
+----------
+
+getrlimit()
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+  int getrlimit(
+     int resource,
+     struct rlimit *rlp)
+
+
+Function
+~~~~~~~~
+::
+
+     Get the limits of certain system resources
+
+
+Inputs
+~~~~~~
+::
+
+     resource - the resource type to get
+     rlp      - returned resource information
+
+
+Result
+~~~~~~
+::
+
+     On success, returns 0. -1 and errno on error.
+
+
+
+See also
+~~~~~~~~
+
+`setrlimit()`_ `getdtablesize()`_ 
 
 ----------
 
@@ -4680,6 +5046,13 @@ Synopsis
 
   uid_t getuid(
      void)
+
+
+Notes
+~~~~~
+::
+
+     Always 0 is returned.
 
 
 
@@ -5671,6 +6044,13 @@ Synopsis
      const char *newpath)
 
 
+Notes
+~~~~~
+::
+
+     Not implemented.
+
+
 
 ----------
 
@@ -6049,16 +6429,44 @@ Synopsis
 ~~~~~~~~
 ::
 
-  size_t mblen(
+  int mblen(
      const char *s,
      size_t n)
+
+
+Function
+~~~~~~~~
+::
+
+     This function returns the number of bytes of the next multi-byte
+     character.
+
+
+Inputs
+~~~~~~
+::
+
+     s: string pointer to look at next multi-byte character.
+     n: The maximum number of bytes to look at.
+
+
+Result
+~~~~~~
+::
+
+     if s is not NULL will return the length in bytes of the next
+     multi-byte character in s; 0 is return when it is a NULL
+     byte character; -1 if it is not a valid multi-byte character.
+     If s is NULL zero or non-zero is returned when multi-byte encodings
+     resp. don't or do have state-dependent encodings.
 
 
 Notes
 ~~~~~
 ::
 
-     Not implemented.
+     arosc.library currently only implements the "C" locale
+     This means that either 0 or 1 is returned when s is not NULL.
 
 
 
@@ -6072,9 +6480,23 @@ Synopsis
 ::
 
   size_t mbstowcs(
-     wchar_t *pwcs,
-     const char *s,
+     wchar_t * restrict pwcs,
+     const char * restrict s,
      size_t n)
+
+
+Function
+~~~~~~~~
+::
+
+     C99 function mbstowcs.
+
+
+Notes
+~~~~~
+::
+
+     arosc.library currenlty only implements "C" locale.
 
 
 
@@ -6088,18 +6510,55 @@ Synopsis
 ::
 
   int mbtowc(
-     wchar_t *pwc,
-     const char *s,
+     wchar_t * restrict pwc,
+     const char * restrict s,
      size_t n)
+
+
+Function
+~~~~~~~~
+::
+
+     C99 mbtowc function; a function to convert one multi-byte character
+     to a wchar_t character and/or to determine the number of bytes for the
+     next multi-byte char.
+
+
+Inputs
+~~~~~~
+::
+
+     pwc: pointer wide char string to put converted char in. When NULL
+          no char will be converted.
+     s: pointer to multi-byte char as input
+     n: maximum of bytes to look at for the multi-byte char.
+     
+
+Result
+~~~~~~
+::
+
+     If s is not NULL the function returns the number of bytes the next
+     multi-byte character is made of; 0 if the char pointed to is NULL or
+     -1 if it is not a valid multi-byte char.
+     If s is NULL the function return zero or non-zero when multi-byte chars
+     resp. don't or do have state-dependent encodings.
 
 
 Notes
 ~~~~~
 ::
 
-     Not implemented.
+     arosc.library currenlty only supports "C" locale
+     This means that the function returns 0 when s is NULL and only 0, 1 or -1
+     when s is not NULL.
 
 
+
+See also
+~~~~~~~~
+
+`wctomb()`_ 
 
 ----------
 
@@ -6296,6 +6755,13 @@ Synopsis
      dev_t dev)
 
 
+Notes
+~~~~~
+::
+
+     Not implemented.
+
+
 
 ----------
 
@@ -6349,7 +6815,7 @@ Inputs
 ~~~~~~
 ::
 
-     template- Name of the environment variable.
+     template - template to change into unique filename
 
 
 Result
@@ -6365,14 +6831,14 @@ Notes
 
      Template must end in "XXXXXX" (i.e at least 6 X's).
      
-             Prior to this paragraph being created, mktemp() sometimes produced filenames
-             with '/' in them. AROS doesn't like that at all. Fortunately, the bug in this
-             function which produced it has been fixed. -- blippy
+     Prior to this paragraph being created, mktemp() sometimes produced filenames
+     with '/' in them. AROS doesn't like that at all. Fortunately, the bug in this
+     function which produced it has been fixed. -- blippy
              
-             For clarity, define the HEAD of the template to be the part before the tail,
-             and the TAIL to be the succession of X's. So in, T:temp.XXXXXX , the head is
-             T:temp. and the tail is XXXXXX .
-             
+     For clarity, define the HEAD of the template to be the part before the tail,
+     and the TAIL to be the succession of X's. So in, T:temp.XXXXXX , the head is
+     T:temp. and the tail is XXXXXX .
+     
 
 Bugs
 ~~~~
@@ -6669,6 +7135,13 @@ Synopsis
 
   int pclose(
      FILE * stream)
+
+
+Notes
+~~~~~
+::
+
+     Not implemented.
 
 
 
@@ -7153,6 +7626,11 @@ Result
 
 
 
+See also
+~~~~~~~~
+
+`fputc()`_ 
+
 ----------
 
 putchar()
@@ -7366,7 +7844,41 @@ Synopsis
 ::
 
   int raise(
-     int signal)
+     int signum)
+
+
+Function
+~~~~~~~~
+::
+
+     Calls the handler of a signal
+
+
+Inputs
+~~~~~~
+::
+
+     Signal handler to be called.
+
+
+Result
+~~~~~~
+::
+
+     0: OK
+     -1: error calling handler, errno will be set.
+
+
+Notes
+~~~~~
+::
+
+     The behaviour of raise() follows the BSD semantics.
+     For each signal the system keeps track of a signal handler is already
+     being called.
+     If not, the signal handler is called; when yes this will logged and the
+     handler will be recalled when the first handler returns. If the a new
+     handler is registered that one will be used then.
 
 
 
@@ -7404,14 +7916,11 @@ Result
      A pseudo-random integer between 0 and RAND_MAX.
 
 
-Notes
-~~~~~
-::
 
-     This function must not be used in a shared library or
-     in a threaded application.
+See also
+~~~~~~~~
 
-
+`srand()`_ 
 
 ----------
 
@@ -7940,6 +8449,13 @@ Synopsis
      gid_t gid)
 
 
+Notes
+~~~~~
+::
+
+     Not implemented.
+
+
 
 ----------
 
@@ -8006,6 +8522,48 @@ Notes
 
 ----------
 
+setrlimit()
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+  int setrlimit(
+     int resource,
+     const struct rlimit *rlp)
+
+
+Function
+~~~~~~~~
+::
+
+     Get the limits of certain system resources
+
+
+Inputs
+~~~~~~
+::
+
+     resource - the resource type to get
+     rlp      - resource information to update
+
+
+Result
+~~~~~~
+::
+
+     On success, returns 0. -1 and errno on error.
+
+
+
+See also
+~~~~~~~~
+
+`getrlimit()`_ 
+
+----------
+
 setuid()
 ========
 
@@ -8015,6 +8573,13 @@ Synopsis
 
   int setuid(
      uid_t uid)
+
+
+Notes
+~~~~~
+::
+
+     Not implemented.
 
 
 
@@ -8107,6 +8672,13 @@ Synopsis
      struct sigaction *oldact)
 
 
+Notes
+~~~~~
+::
+
+     Not implemented.
+
+
 
 ----------
 
@@ -8191,15 +8763,40 @@ Synopsis
 ::
 
   __sighandler_t *signal(
-     int sig,
+     int signum,
      __sighandler_t *handler)
+
+
+Function
+~~~~~~~~
+::
+
+     Set signal handler for a signal.
+
+
+Inputs
+~~~~~~
+::
+
+     signum - the signal number to register a handler for
+     handler - the signal handler; can be SIG_IGN, SIG_DFL or a function
+               pointer that will handle the signal
+
+
+Result
+~~~~~~
+::
+
+     The old handler that was replaced by the new handler.
 
 
 Notes
 ~~~~~
 ::
 
-     Not implemented.
+     Implemented but no interrupts will be generated like when pressing
+     Ctrl-C; signal handlers can for now only be called by raise() in the
+     program itself.
 
 
 
@@ -8214,6 +8811,13 @@ Synopsis
 
   int sigpending(
      sigset_t *set)
+
+
+Notes
+~~~~~
+::
+
+     Not implemented.
 
 
 
@@ -8232,6 +8836,13 @@ Synopsis
      sigset_t *oldset)
 
 
+Notes
+~~~~~
+::
+
+     Not implemented.
+
+
 
 ----------
 
@@ -8244,6 +8855,13 @@ Synopsis
 
   int sigsuspend(
      const sigset_t *mask)
+
+
+Notes
+~~~~~
+::
+
+     Not implemented.
 
 
 
@@ -8314,47 +8932,47 @@ Synopsis
 ::
 
   int snprintf(
- char       * str,
- size_t       n,
- const char * format,
- ...)
+     char       * str,
+     size_t       n,
+     const char * format,
+     ...)
 
 
 Function
 ~~~~~~~~
 ::
 
- C99 says:The snprintf function is equivalent to fprintf, except that the output is
- written into an array (specified by argument s) rather than to a stream. If
- n is zero, nothing is written, and s may be a null pointer. Otherwise,
- output characters beyond the n-1st are discarded rather than being written
- to the array, and a null character is written at the end of the characters
- actually written into the array. If copying takes place between objects
- that overlap, the behavior is undefined.
+     C99 says:The snprintf function is equivalent to fprintf, except that the output is
+     written into an array (specified by argument s) rather than to a stream. If
+     n is zero, nothing is written, and s may be a null pointer. Otherwise,
+     output characters beyond the n-1st are discarded rather than being written
+     to the array, and a null character is written at the end of the characters
+     actually written into the array. If copying takes place between objects
+     that overlap, the behavior is undefined.
 
 
 Inputs
 ~~~~~~
 ::
 
- str - The formatted string is written into this variable. You
-       must make sure that it is large enough to contain the
-       result.
- n -   At most n characters are written into the string. This
-       includes the final 0.
- format - Format string as described above
- ... - Arguments for the format string
+     str - The formatted string is written into this variable. You
+           must make sure that it is large enough to contain the
+           result.
+     n -   At most n characters are written into the string. This
+           includes the final 0.
+     format - Format string as described above
+     ... - Arguments for the format string
 
 
 Result
 ~~~~~~
 ::
 
- The snprintf function returns the number of characters that would have been
- written had n been sufficiently large, not counting the terminating null
- character, or a negative value if an encoding error occurred. Thus, the
- null-terminated output has been completely written if and only if the
- returned value is nonnegative and less than n.
+     The snprintf function returns the number of characters that would have been
+     written had n been sufficiently large, not counting the terminating null
+     character, or a negative value if an encoding error occurred. Thus, the
+     null-terminated output has been completely written if and only if the
+     returned value is nonnegative and less than n.
 
 
 
@@ -8590,6 +9208,8 @@ Function
 ::
 
      Set the starting value for the random number generator rand()
+     If a seed value is set to a value the same stream of pseudo-random
+     numbers will be generated by rand() for the same seed value.
 
 
 Inputs
@@ -8610,10 +9230,15 @@ Notes
 ~~~~~
 ::
 
-     This function must not be used in a shared library or
-     in a threaded application.
+     One seed value per arosc.library is kept which normally corresponds
+     with per task.
 
 
+
+See also
+~~~~~~~~
+
+`rand()`_ 
 
 ----------
 
@@ -8824,7 +9449,8 @@ Notes
 ~~~~~
 ::
 
-     No check is beeing made that dest is large enough for src.
+     No check is made that dest is large enough for src.
+     SAS/C specific.
 
 
 
@@ -8873,7 +9499,7 @@ Notes
 ~~~~~
 ::
 
-     SAS C specific
+     SAS/C specific
      
 
 
@@ -8917,7 +9543,7 @@ Notes
 ~~~~~
 ::
 
-     SAS C specific
+     SAS/C specific
      
 
 
@@ -8961,7 +9587,7 @@ Notes
 ~~~~~
 ::
 
-     SAS C specific
+     SAS/C specific
      
 
 
@@ -9005,7 +9631,7 @@ Notes
 ~~~~~
 ::
 
-     SAS C specific
+     SAS/C specific
      
 
 
@@ -9049,7 +9675,7 @@ Notes
 ~~~~~
 ::
 
-     SAS C specific
+     SAS/C specific
      
 
 
@@ -9093,7 +9719,7 @@ Notes
 ~~~~~
 ::
 
-     SAS C specific
+     SAS/C specific
      
 
 
@@ -9255,7 +9881,7 @@ Notes
 ~~~~~
 ::
 
-     No check is beeing made that dest is large enough for src.
+     No check is made that dest is large enough for src.
 
 
 
@@ -9623,7 +10249,7 @@ Function
 ::
 
      Calculate str1 - str2. The operation is based on strings interpreted
-     as appropriate for the program's current locale  for  category  LC_COLLATE.
+     as appropriate for the program's current locale for category LC_COLLATE.
 
 
 Inputs
@@ -9640,6 +10266,14 @@ Result
      The difference of the strings. The difference is 0, if both are
      equal, < 0 if str1 < str2 and > 0 if str1 > str2. Note that
      it may be greater then 1 or less than -1.
+
+
+Notes
+~~~~~
+::
+
+     arosc.library only implements "C" locale so strcoll() is equivalent
+     to strcmp()
 
 
 
@@ -9684,7 +10318,7 @@ Notes
 ~~~~~
 ::
 
-     No check is beeing made that dest is large enough for src.
+     No check is made that dest is large enough for src.
 
 
 
@@ -9765,7 +10399,7 @@ Function
 ::
 
      Create a copy of a string. The copy can be freed with free() or will
-     be freed when then program ends.
+     be freed when the program ends.
 
 
 Inputs
@@ -9832,6 +10466,13 @@ Synopsis
      size_t maxsize,
      const char *format,
      const struct tm *timeptr)
+
+
+Notes
+~~~~~
+::
+
+     Function does not take localization into account at the moment
 
 
 
@@ -10140,7 +10781,7 @@ Notes
 ~~~~~
 ::
 
-     No check is beeing made that dest is large enough for src.
+     No check is made that dest is large enough for src.
 
 
 
@@ -10148,6 +10789,44 @@ See also
 ~~~~~~~~
 
 `strncpy()`_ `memcpy()`_ `memmove()`_ 
+
+----------
+
+strndup()
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+  char * strndup(
+     const char *s, size_t n)
+
+
+Function
+~~~~~~~~
+::
+
+     Create a copy of a string. The copy can be freed with free() or will
+     be freed when then program ends. The copy will be at most n character
+     long, excluding the trailing \000
+
+
+Inputs
+~~~~~~
+::
+
+     s - String to duplicate
+     n - Maximum length
+
+
+Result
+~~~~~~
+::
+
+     A copy of the string which can be freed with free().
+
+
 
 ----------
 
@@ -10608,6 +11287,13 @@ Result
      returned.
 
 
+Bugs
+~~~~
+::
+
+     errno is not set as required by C99 standard
+
+
 
 See also
 ~~~~~~~~
@@ -11039,6 +11725,13 @@ Result
      returned.
 
 
+Bugs
+~~~~
+::
+
+     errno is not set as required by C99 standard
+
+
 
 See also
 ~~~~~~~~
@@ -11130,6 +11823,14 @@ Result
      value is n or more, the contents of dst are indeterminate.
 
 
+Notes
+~~~~~
+::
+
+     arosc.library only support "C" locale so strxfrm is equivalent to
+     strncpy.
+
+
 
 ----------
 
@@ -11173,6 +11874,13 @@ Synopsis
 
   long sysconf(
      int name)
+
+
+Bugs
+~~~~
+::
+
+     Currently only _SC_ARG_MAX handling is implemented
 
 
 
@@ -11293,6 +12001,13 @@ Synopsis
 
   clock_t times(
      struct tms *tms)
+
+
+Notes
+~~~~~
+::
+
+     Not implemented.
 
 
 
@@ -11462,6 +12177,13 @@ Synopsis
      int fd)
      
 
+Notes
+~~~~~
+::
+
+     Not implemented.
+
+
 
 ----------
 
@@ -11474,6 +12196,13 @@ Synopsis
 
   mode_t umask(
      mode_t numask)
+
+
+Notes
+~~~~~
+::
+
+     umask is currently remembered but not used in any function
 
 
 
@@ -11721,7 +12450,7 @@ Synopsis
 
   int utime(
      const char *filename,
-     struct utimbuf *buf)
+     const struct utimbuf *buf)
 
 
 Function
@@ -11788,7 +12517,7 @@ Synopsis
   int utimes(
 
      const char *file,
-     struct timeval tvp[2])
+     const struct timeval tvp[2])
 
 
 Function
@@ -12004,45 +12733,45 @@ Synopsis
 ::
 
   int vsnprintf(
- char        * str,
- size_t      n,
- const char * format,
- va_list      args)
+     char        * str,
+     size_t      n,
+     const char * format,
+     va_list      args)
 
 
 Function
 ~~~~~~~~
 ::
 
- Format a list of arguments and put them into the string str.
- The function makes sure that no more than n characters (including
- the terminal 0 byte) are written into str.
- If n is zero, nothing is written, and s may be a null pointer. Otherwise,
- output characters beyond the n-1st are discarded rather than being written
- to the array, and a null character is written at the end of the characters
- actually written into the array. If copying takes place between objects
- that overlap, the behavior is undefined.
+     Format a list of arguments and put them into the string str.
+     The function makes sure that no more than n characters (including
+     the terminal 0 byte) are written into str.
+     If n is zero, nothing is written, and s may be a null pointer. Otherwise,
+     output characters beyond the n-1st are discarded rather than being written
+     to the array, and a null character is written at the end of the characters
+     actually written into the array. If copying takes place between objects
+     that overlap, the behavior is undefined.
  
 
 Inputs
 ~~~~~~
 ::
 
- str - The formatted result is stored here
- n - The size of str
- format - A printf() format string.
- args - A list of arguments for the format string.
+     str - The formatted result is stored here
+     n - The size of str
+     format - A printf() format string.
+     args - A list of arguments for the format string.
 
 
 Result
 ~~~~~~
 ::
 
- Function returns the number of characters that would have been
- written had n been sufficiently large, not counting the terminating null
- character, or a negative value if an encoding error occurred. Thus, the
- null-terminated output has been completely written if and only if the
- returned value is nonnegative and less than n.
+     Function returns the number of characters that would have been
+     written had n been sufficiently large, not counting the terminating null
+     character, or a negative value if an encoding error occurred. Thus, the
+     null-terminated output has been completely written if and only if the
+     returned value is nonnegative and less than n.
 
 
 
@@ -12093,8 +12822,7 @@ Notes
 ~~~~~
 ::
 
-     No check is beeing made that str is large enough to contain
-     the result.
+     No check is made that str is large enough to contain the result.
 
 
 
@@ -12319,9 +13047,23 @@ Synopsis
 ::
 
   size_t wcstombs(
-     char *s,
-     const wchar_t *pwcs,
+     char * restrict s,
+     const wchar_t * restrict pwcs,
      size_t n)
+
+
+Function
+~~~~~~~~
+::
+
+     C99 function wcstombs
+
+
+Notes
+~~~~~
+::
+
+     arosc.library currently only implements "C" locale
 
 
 
@@ -12339,11 +13081,39 @@ Synopsis
      wchar_t wchar)
 
 
+Function
+~~~~~~~~
+::
+
+     Converts one wide char to a multi-byte char.
+
+
+Inputs
+~~~~~~
+::
+
+     wchar: wide char to convert
+     s: string pointer to put the converted char into.
+
+
+Result
+~~~~~~
+::
+
+     If s is not NULL it returns the number of chars written into s;
+     zero is returned when wchar is a NULL character; -1 when the character
+     is not valid.
+     If s is NULL the function returns zero or non-zero when multi-byte
+     string resp don't or do have state-dependent encodings.
+
+
 Notes
 ~~~~~
 ::
 
-     Not implemented.
+     arosc.library currently only implements "C" locale.
+     This means that 0 is returned when s is NULL and 0, 1 or -1 when s is
+     not NULL.
 
 
 

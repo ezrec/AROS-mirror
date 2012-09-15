@@ -24,27 +24,29 @@ exec
 `CloseLibrary()`_                       `ColdReboot()`_                         `CopyMem()`_                            `CopyMemQuick()`_                       
 `CreateIORequest()`_                    `CreateMsgPort()`_                      `CreatePool()`_                         `Deallocate()`_                         
 `Debug()`_                              `DeleteIORequest()`_                    `DeleteMsgPort()`_                      `DeletePool()`_                         
-`Disable()`_                            `DoIO()`_                               `Enable()`_                             `Enqueue()`_                            
-`FindName()`_                           `FindPort()`_                           `FindResident()`_                       `FindSemaphore()`_                      
-`FindTask()`_                           `FindTaskByPID()`_                      `Forbid()`_                             `FreeEntry()`_                          
-`FreeMem()`_                            `FreePooled()`_                         `FreeSignal()`_                         `FreeTaskStorageSlot()`_                
-`FreeTrap()`_                           `FreeVec()`_                            `GetCC()`_                              `GetMsg()`_                             
-`InitCode()`_                           `InitResident()`_                       `InitSemaphore()`_                      `InitStruct()`_                         
-`Insert()`_                             `MakeFunctions()`_                      `MakeLibrary()`_                        `NewAddTask()`_                         
-`NewAllocEntry()`_                      `NewCreateTaskA()`_                     `NewMinList()`_                         `NewStackSwap()`_                       
-`ObtainQuickVector()`_                  `ObtainSemaphoreList()`_                `ObtainSemaphoreShared()`_              `OldOpenLibrary()`_                     
-`OpenDevice()`_                         `OpenLibrary()`_                        `OpenResource()`_                       `Permit()`_                             
-`Procure()`_                            `PutMsg()`_                             `RawDoFmt()`_                           `ReadGayle()`_                          
-`ReleaseSemaphore()`_                   `ReleaseSemaphoreList()`_               `RemDevice()`_                          `RemHead()`_                            
-`RemIntServer()`_                       `RemLibrary()`_                         `RemMemHandler()`_                      `Remove()`_                             
-`RemPort()`_                            `RemResetCallback()`_                   `RemResource()`_                        `RemSemaphore()`_                       
-`RemTail()`_                            `RemTask()`_                            `ReplyMsg()`_                           `SendIO()`_                             
-`SetExcept()`_                          `SetFunction()`_                        `SetIntVector()`_                       `SetSignal()`_                          
-`SetSR()`_                              `SetTaskPri()`_                         `ShutdownA()`_                          `Signal()`_                             
+`Disable()`_                            `Dispatch()`_                           `DoIO()`_                               `Enable()`_                             
+`Enqueue()`_                            `ExitIntr()`_                           `FindName()`_                           `FindPort()`_                           
+`FindResident()`_                       `FindSemaphore()`_                      `FindTask()`_                           `FindTaskByPID()`_                      
+`Forbid()`_                             `FreeEntry()`_                          `FreeMem()`_                            `FreePooled()`_                         
+`FreeSignal()`_                         `FreeTaskStorageSlot()`_                `FreeTrap()`_                           `FreeVec()`_                            
+`GetCC()`_                              `GetMsg()`_                             `GetTaskStorageSlot()`_                 `InitCode()`_                           
+`InitResident()`_                       `InitSemaphore()`_                      `InitStruct()`_                         `Insert()`_                             
+`MakeFunctions()`_                      `MakeLibrary()`_                        `NewAddTask()`_                         `NewAllocEntry()`_                      
+`NewCreateTaskA()`_                     `NewMinList()`_                         `NewStackSwap()`_                       `ObtainQuickVector()`_                  
+`ObtainSemaphoreList()`_                `ObtainSemaphoreShared()`_              `OldOpenLibrary()`_                     `OpenDevice()`_                         
+`OpenLibrary()`_                        `OpenResource()`_                       `Permit()`_                             `Procure()`_                            
+`PutMsg()`_                             `RawDoFmt()`_                           `ReadGayle()`_                          `ReleaseSemaphore()`_                   
+`ReleaseSemaphoreList()`_               `RemDevice()`_                          `RemHead()`_                            `RemIntServer()`_                       
+`RemLibrary()`_                         `RemMemHandler()`_                      `Remove()`_                             `RemPort()`_                            
+`RemResetCallback()`_                   `RemResource()`_                        `RemSemaphore()`_                       `RemTail()`_                            
+`RemTask()`_                            `ReplyMsg()`_                           `Reschedule()`_                         `RestoreTaskStorage()`_                 
+`SaveTaskStorage()`_                    `Schedule()`_                           `SendIO()`_                             `SetExcept()`_                          
+`SetFunction()`_                        `SetIntVector()`_                       `SetSignal()`_                          `SetSR()`_                              
+`SetTaskPri()`_                         `SetTaskStorageSlot()`_                 `ShutdownA()`_                          `Signal()`_                             
 `StackSwap()`_                          `SumKickData()`_                        `SumLibrary()`_                         `SuperState()`_                         
-`Supervisor()`_                         `TypeOfMem()`_                          `UserState()`_                          `Vacate()`_                             
-`VNewRawDoFmt()`_                       `Wait()`_                               `WaitIO()`_                             `WaitPort()`_                           
-
+`Supervisor()`_                         `Switch()`_                             `TypeOfMem()`_                          `UserState()`_                          
+`Vacate()`_                             `VNewRawDoFmt()`_                       `Wait()`_                               `WaitIO()`_                             
+`WaitPort()`_                           
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -949,13 +951,13 @@ Synopsis
 ~~~~~~~~
 ::
 
- int AllocTaskStorageSlot();
+ LONG AllocTaskStorageSlot();
 
 Function
 ~~~~~~~~
 ::
 
-     This function will allocate a slot in the taskstorage 
+     This function will allocate a slot in the taskstorage.
 
 
 Inputs
@@ -969,24 +971,24 @@ Result
 ~~~~~~
 ::
 
-     The allocated slot, 0 if no slot could be allocated.
+     slot - The allocated slot, or 0 if no slot could be allocated.
 
 
 Notes
 ~~~~~
 ::
 
-     After this function FindTask(NULL)->tc_UnionETask.tc_TaskStorage[slot]
-     may be used to store values with each slot. Data stored in a slot
-     will be duplicated when a Task creates another Task. It is left up to the
-     to implement a mechanism to check if this copied value is invalid.
+     After this function SetTaskStorageSlot(slot) may be used to store
+     values with each slot. Data stored in a slot will be duplicated when
+     a Task creates another Task. It is left up to the caller to implement
+     a mechanism to check if this copied value is invalid.
 
 
 
 See also
 ~~~~~~~~
 
-`FreeTaskStorageSlot()`_ 
+`FreeTaskStorageSlot()`_ `GetTaskStorageSlot()`_ `SetTaskStorageSlot()`_ 
 
 ----------
 
@@ -2215,15 +2217,9 @@ Function
 
      The software interrupt is called with the following prototype:
 
-     AROS_UFH3(void, YourIntCode,
-         AROS_UFHA(APTR, interruptData, A1),
-         AROS_UFHA(APTR, interruptCode, A5),
-         AROS_UFHA(struct ExecBase *, SysBase, A6))
+ AROS_INTC1(YourIntCode, APTR, interruptData)
 
-     The interruptData is the value of the is_Data field, interruptCode
-     is the value of the is_Code field - it is included for historical
-     and compatibility reasons. You can ignore the value of interruptCode,
-     but you must declare it.
+     The interruptData is the value of the is_Data field.
 
 
 Inputs
@@ -3085,6 +3081,47 @@ See also
 
 ----------
 
+Dispatch()
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ void Dispatch();
+
+Function
+~~~~~~~~
+::
+
+     PRIVATE function to dispatch next available task
+
+
+Inputs
+~~~~~~
+::
+
+     None
+
+
+Result
+~~~~~~
+::
+
+     None
+
+
+Notes
+~~~~~
+::
+
+     This function was private in AmigaOS(tm) up to v3.1.
+     There's no guarantee that it will continue to exist in other systems.
+
+
+
+----------
+
 DoIO()
 ======
 
@@ -3267,6 +3304,47 @@ Notes
 
 ----------
 
+ExitIntr()
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ void ExitIntr();
+
+Function
+~~~~~~~~
+::
+
+     PRIVATE architecture specific routine for exiting interrupts.
+
+
+Inputs
+~~~~~~
+::
+
+     None
+
+
+Result
+~~~~~~
+::
+
+     None
+
+
+Notes
+~~~~~
+::
+
+     This function was private in AmigaOS(tm) up to v3.1.
+     There's no guarantee that it will exist in other systems.
+
+
+
+----------
+
 FindName()
 ==========
 
@@ -3398,7 +3476,7 @@ Synopsis
 ::
 
  struct SignalSemaphore * FindSemaphore(
-          STRPTR name );
+          CONST_STRPTR name );
 
 Function
 ~~~~~~~~
@@ -3434,7 +3512,7 @@ Synopsis
 ::
 
  struct Task * FindTask(
-          STRPTR name );
+          CONST_STRPTR name );
 
 Function
 ~~~~~~~~
@@ -3735,21 +3813,21 @@ Inputs
 ~~~~~~
 ::
 
-     The slot to free.
+     slot - The slot to free.
 
 
 Result
 ~~~~~~
 ::
 
-     None
+     None.
 
 
 Notes
 ~~~~~
 ::
 
-     Currently no checks are performed if one is owner of the slot.
+     Currently no checks are performed if one is the owner of the slot.
      This may be added in the future so one should deallocate a slot
      from the same task that allocated the slot.
 
@@ -3895,6 +3973,45 @@ See also
 ~~~~~~~~
 
 `WaitPort()`_ `PutMsg()`_ 
+
+----------
+
+GetTaskStorageSlot()
+====================
+
+Synopsis
+~~~~~~~~
+::
+
+ IPTR GetTaskStorageSlot();
+
+Function
+~~~~~~~~
+::
+
+     Get a value for a task storage slot.
+
+
+Inputs
+~~~~~~
+::
+
+     id - slot ID returned from AllocTaskStorageSlot().
+
+
+Result
+~~~~~~
+::
+
+     Value stored by SetTaskStorage(), or (IPTR)NULL if the slot was
+     never used.
+
+
+
+See also
+~~~~~~~~
+
+`AllocTaskStorage()`_ `FreeTaskStorage()`_ `SetTaskStorageSlot()`_ 
 
 ----------
 
@@ -5585,8 +5702,9 @@ Function
 ::
 
      Remove a task from the task lists. All memory in the tc_MemEntry list
-     is freed and a rescedule is done. It's safe to call RemTask() out
-     of Forbid() or Disable().
+     is freed and a reschedule is done. It's safe to call RemTask() outside
+     Forbid() or Disable().
+
      This function is one way to get rid of the current task. The other way
      is to fall through the end of the entry point.
 
@@ -5636,6 +5754,167 @@ See also
 ~~~~~~~~
 
 `WaitPort()`_ `GetMsg()`_ `PutMsg()`_ 
+
+----------
+
+Reschedule()
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ void Reschedule();
+
+Function
+~~~~~~~~
+::
+
+     Give up the CPU time to other tasks (if there are any).
+
+
+Inputs
+~~~~~~
+::
+
+     None
+
+
+Result
+~~~~~~
+::
+
+     None
+
+
+Notes
+~~~~~
+::
+
+     This function was private in AmigaOS(tm) up to v3.1. There's no guarantee
+     that it will continue to exist in other systems.
+
+
+
+----------
+
+RestoreTaskStorage()
+====================
+
+Synopsis
+~~~~~~~~
+::
+
+ void RestoreTaskStorage();
+
+Function
+~~~~~~~~
+::
+
+     This function restores the current state of the task storage slots.
+
+
+Inputs
+~~~~~~
+::
+
+     id - ID returned from SaveTaskStorage() referring to the state.
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+
+See also
+~~~~~~~~
+
+`SaveTaskStorage()`_ 
+
+----------
+
+SaveTaskStorage()
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+ APTR SaveTaskStorage();
+
+Function
+~~~~~~~~
+::
+
+     This function remembers the current state of the task storage slots.
+     An ID will be returned with which the current state can be restored
+     using RestoreTaskStorageSlots(). NULL is returned when not enough
+     memory is available.
+
+
+Inputs
+~~~~~~
+::
+
+     None.
+
+
+Result
+~~~~~~
+::
+
+     id - ID for use with RestoreTaskStorageSlots(), or NULL.
+
+
+
+See also
+~~~~~~~~
+
+`RestoreTaskStorage()`_ 
+
+----------
+
+Schedule()
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ void Schedule();
+
+Function
+~~~~~~~~
+::
+
+     PRIVATE architecture specific routine for relinquishing CPU time
+
+
+Inputs
+~~~~~~
+::
+
+     None
+
+
+Result
+~~~~~~
+::
+
+     None
+
+
+Notes
+~~~~~
+::
+
+     This function was private in AmigaOS(tm) up to v3.1. There's no guarantee
+     that it will continue to exist in other systems.
+
+
 
 ----------
 
@@ -5943,6 +6222,46 @@ Result
 
 ----------
 
+SetTaskStorageSlot()
+====================
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL SetTaskStorageSlot();
+
+Function
+~~~~~~~~
+::
+
+     Puts a new value in a task storage slot. If necessary, the number of
+     task storage slots will be increased.
+
+
+Inputs
+~~~~~~
+::
+
+     id - slot ID returned from AllocTaskStorageSlot().
+     value - value to store in the slot.
+
+
+Result
+~~~~~~
+::
+
+     success - TRUE if the value was successfully stored.
+
+
+
+See also
+~~~~~~~~
+
+`AllocTaskStorageSlot()`_ `FreeTaskStorageSlot()`_ `GetTaskStorageSlot()`_ 
+
+----------
+
 ShutdownA()
 ===========
 
@@ -6096,10 +6415,10 @@ Notes
      be used instead. StackSwap() is only retained to provide backwards
      compatibility. On some hosted versions with strict stack checking use
      of StackSwap() may cause problems.
-
-     No proper initialization for alternative stack is done so alternative
-     stack can't be used after using StackSwap(). This means that on
-     some archs no shared library functions can be called.
+     By default StackSwap() will not be defined and you have to
+     #define __AROS_GIMME_DEPRECATED_STACKSWAP__ before including
+     <proto/exec.h>. As said above it is highly advised to change code
+     to use NewStackSwap() and not define __AROS_GIMME_DEPRECATED_STACKSWAP__
 
 
 
@@ -6227,7 +6546,7 @@ Function
 ~~~~~~~~
 ::
 
-     Supervisor will allow a short priviledged instruction sequence to
+     Supervisor will allow a short privileged instruction sequence to
      be called from user mode. This has very few uses, and it is probably
      better to use any system supplied method to do anything.
 
@@ -6278,6 +6597,47 @@ See also
 ~~~~~~~~
 
 `SuperState()`_ `UserState()`_ 
+
+----------
+
+Switch()
+========
+
+Synopsis
+~~~~~~~~
+::
+
+ void Switch();
+
+Function
+~~~~~~~~
+::
+
+     PRIVATE function to force a task switch to the next runnable task
+
+
+Inputs
+~~~~~~
+::
+
+     None
+
+
+Result
+~~~~~~
+::
+
+     None
+
+
+Notes
+~~~~~
+::
+
+     This function was private in AmigaOS(tm) up to v3.1.
+     There's no guarantee that it will continue to exist in other systems.
+
+
 
 ----------
 

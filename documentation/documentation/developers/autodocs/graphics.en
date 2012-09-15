@@ -333,8 +333,8 @@ Synopsis
 ::
 
  struct BitMap * AllocBitMap(
-          ULONG sizex,
-          ULONG sizey,
+          UWORD sizex,
+          UWORD sizey,
           ULONG depth,
           ULONG flags,
           struct BitMap * friend_bitmap );
@@ -516,8 +516,8 @@ Synopsis
 ::
 
  PLANEPTR AllocRaster(
-          ULONG width,
-          ULONG height );
+          UWORD width,
+          UWORD height );
 
 Function
 ~~~~~~~~
@@ -1359,10 +1359,10 @@ Inputs
        bsa_DestWidth, bsa_DestHeight - this function will set these
              values. Use the bsa_???Factor for scaling
        bsa_XSrcFactor:bsa_XDestFactor - Set these to get approximately
-             the same ratio as bsa_XSrcWidth:bsa_XDestWidth, but
+             the same ratio as bsa_SrcWidth:bsa_DestWidth, but
              usually not exactly the same number.
        bsa_YSrcFactor:bsa_YDestFactor - Set these to get approximately
-             the same ratio as bsa_YSrcWidth:YDestWidth, but
+             the same ratio as bsa_SrcHeight:DestHeight, but
              usually not exactly the same number.
        bsa_SrcBitMap - pointer to source bitmap to be scaled
        bsa_DestBitMap - pointer to destination bitmap which will
@@ -1507,13 +1507,13 @@ Synopsis
 
  void BltBitMapRastPort(
           struct BitMap   * srcBitMap,
-          LONG xSrc,
-          LONG ySrc,
+          WORD xSrc,
+          WORD ySrc,
           struct RastPort * destRP,
-          LONG xDest,
-          LONG yDest,
-          LONG xSize,
-          LONG ySize,
+          WORD xDest,
+          WORD yDest,
+          WORD xSize,
+          WORD ySize,
           ULONG minterm );
 
 Function
@@ -1597,13 +1597,13 @@ Synopsis
 
  void BltMaskBitMapRastPort(
           struct BitMap   * srcBitMap,
-          LONG xSrc,
-          LONG ySrc,
+          WORD xSrc,
+          WORD ySrc,
           struct RastPort * destRP,
-          LONG xDest,
-          LONG yDest,
-          LONG xSize,
-          LONG ySize,
+          WORD xDest,
+          WORD yDest,
+          WORD xSize,
+          WORD ySize,
           ULONG minterm,
           PLANEPTR bltMask );
 
@@ -1632,10 +1632,10 @@ Synopsis
  void BltPattern(
           struct RastPort * rp,
           PLANEPTR mask,
-          LONG xMin,
-          LONG yMin,
-          LONG xMax,
-          LONG yMax,
+          WORD xMin,
+          WORD yMin,
+          WORD xMax,
+          WORD yMax,
           ULONG byteCnt );
 
 Function
@@ -1668,13 +1668,13 @@ Synopsis
 
  void BltTemplate(
           PLANEPTR source,
-          LONG xSrc,
-          LONG srcMod,
+          WORD xSrc,
+          WORD srcMod,
           struct RastPort * destRP,
-          LONG xDest,
-          LONG yDest,
-          LONG xSize,
-          LONG ySize );
+          WORD xDest,
+          WORD yDest,
+          WORD xSize,
+          WORD ySize );
 
 Function
 ~~~~~~~~
@@ -2192,13 +2192,13 @@ Synopsis
 
  void ClipBlit(
           struct RastPort * srcRP,
-          LONG xSrc,
-          LONG ySrc,
+          WORD xSrc,
+          WORD ySrc,
           struct RastPort * destRP,
-          LONG xDest,
-          LONG yDest,
-          LONG xSize,
-          LONG ySize,
+          WORD xDest,
+          WORD yDest,
+          WORD xSize,
+          WORD ySize,
           UBYTE minterm );
 
 Function
@@ -2596,8 +2596,8 @@ Synopsis
 
  void Draw(
           struct RastPort * rp,
-          LONG x,
-          LONG y );
+          WORD x,
+          WORD y );
 
 Function
 ~~~~~~~~
@@ -2639,10 +2639,10 @@ Synopsis
 
  void DrawEllipse(
           struct RastPort * rp,
-          LONG xCenter,
-          LONG yCenter,
-          LONG a,
-          LONG b );
+          WORD xCenter,
+          WORD yCenter,
+          WORD a,
+          WORD b );
 
 Function
 ~~~~~~~~
@@ -3199,8 +3199,8 @@ Synopsis
 
  void FreeRaster(
           PLANEPTR p,
-          ULONG width,
-          ULONG height );
+          UWORD width,
+          UWORD height );
 
 Function
 ~~~~~~~~
@@ -4618,7 +4618,7 @@ Synopsis
  void LoadRGB4(
           struct ViewPort * vp,
           UWORD           * colors,
-          LONG count );
+          WORD count );
 
 Function
 ~~~~~~~~
@@ -5153,7 +5153,7 @@ Synopsis
 ::
 
  struct TextFont * OpenFont(
-          struct TextAttr * textAttr );
+          const struct TextAttr * textAttr );
 
 Function
 ~~~~~~~~
@@ -5589,8 +5589,8 @@ Synopsis
 
  LONG ReadPixel(
           struct RastPort * rp,
-          LONG x,
-          LONG y );
+          WORD x,
+          WORD y );
 
 Function
 ~~~~~~~~
@@ -5619,10 +5619,10 @@ Synopsis
 
  LONG ReadPixelArray8(
           struct RastPort * rp,
-          LONG xstart,
-          LONG ystart,
-          LONG xstop,
-          LONG ystop,
+          WORD xstart,
+          WORD ystart,
+          WORD xstop,
+          WORD ystop,
           UBYTE * array,
           struct RastPort * temprp );
 
@@ -7513,8 +7513,8 @@ Synopsis
 ::
 
  WORD WeighTAMatch(
-          struct TextAttr * reqTextAttr,
-          struct TextAttr * targetTextAttr,
+          const struct TextAttr * reqTextAttr,
+          const struct TextAttr * targetTextAttr,
           struct TagItem  * targetTags );
 
 Function
@@ -7600,8 +7600,8 @@ Synopsis
 
  LONG WritePixel(
           struct RastPort * rp,
-          LONG x,
-          LONG y );
+          WORD x,
+          WORD y );
 
 Function
 ~~~~~~~~

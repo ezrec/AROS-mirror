@@ -40,7 +40,7 @@ Inputs
 ~~~~~~
 ::
 
-     catalog -       the message catalog to close, note that NULL is
+     catalog        -        the message catalog to close, note that NULL is
                      a valid catalog.
 
 
@@ -294,7 +294,7 @@ Synopsis
           const struct Locale * locale,
           CONST_STRPTR fmtTemplate,
           CONST_APTR dataStream,
-          const struct Hook   * putCharFunc );
+          const struct Hook * putCharFunc );
 
 
 ----------
@@ -327,8 +327,8 @@ Inputs
 ~~~~~~
 ::
 
-     catalog -       Message catalog to search. May be NULL.
-     stringNum -     ID of the string to find.
+     catalog -        Message catalog to search. May be NULL.
+     stringNum -        ID of the string to find.
      defaultString - String to return in case catalog is NULL or
                      string could not be found.
 
@@ -572,7 +572,7 @@ Inputs
                      A2 - locale pointer
                      A1 - NULL
 
-                     BTW: The AmigaOS autodocs which state that A1
+                                 BTW: The AmigaOS autodocs which state that A1
                      gets locale pointer and A2 NULL are wrong!!
 
                      The read character should be returned in D0. Note

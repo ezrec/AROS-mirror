@@ -27,18 +27,18 @@ Synopsis
 ::
 
  struct AppIcon * AddAppIconA(
-          ULONG id,
-          ULONG userdata,
-          char * text,
+          IPTR id,
+          IPTR userdata,
+          const char * text,
           struct MsgPort * msgport,
           BPTR lock,
           struct DiskObject * diskobj,
           struct TagItem * taglist );
  
  struct AppIcon * AddAppIcon(
-          ULONG id,
-          ULONG userdata,
-          char * text,
+          IPTR id,
+          IPTR userdata,
+          const char * text,
           struct MsgPort * msgport,
           BPTR lock,
           struct DiskObject * diskobj,
@@ -237,15 +237,15 @@ Synopsis
 ::
 
  struct AppMenuItem * AddAppMenuItemA(
-          ULONG id,
-          ULONG userdata,
+          IPTR id,
+          IPTR userdata,
           APTR text,
           struct MsgPort * msgport,
           struct TagItem * taglist );
  
  struct AppMenuItem * AddAppMenuItem(
-          ULONG id,
-          ULONG userdata,
+          IPTR id,
+          IPTR userdata,
           APTR text,
           struct MsgPort * msgport,
           TAG tag, ... );
@@ -322,15 +322,15 @@ Synopsis
 ::
 
  struct AppWindow * AddAppWindowA(
-          ULONG id,
-          ULONG userdata,
+          IPTR id,
+          IPTR userdata,
           struct Window * window,
           struct MsgPort * msgport,
           struct TagItem * taglist );
  
  struct AppWindow * AddAppWindow(
-          ULONG id,
-          ULONG userdata,
+          IPTR id,
+          IPTR userdata,
           struct Window * window,
           struct MsgPort * msgport,
           TAG tag, ... );
@@ -340,10 +340,10 @@ Function
 ::
 
 
- Try to add an AppWindow to workbench.library's list of AppWindow:s.
+ Try to add an AppWindow to workbench.library's list of AppWindows.
  The supplied message port will be used to send notification messages
  whenever an icon is dropped on the window. The message will be of
- type 'MTYPE_APPWINDOW' and am_ArgList will point to the list of icons
+ type 'AMTYPE_APPWINDOW' and am_ArgList will point to the list of icons
  that were dropped in the window.
 
 
@@ -367,8 +367,8 @@ Result
 
 
  A pointer to an AppWindow structure to use with RemoveAppWindow() when
- you want to remove the window from the list of AppWindow:s, or NULL
- if it was not possible to add the 'window' to the AppWindow list.
+ you want to remove the window from the list of AppWindows, or NULL
+ if it was not possible to add the window to the AppWindow list.
 
 
 Notes
@@ -399,14 +399,14 @@ Synopsis
 
  struct AppWindowDropZone * AddAppWindowDropZoneA(
           struct AppWindow * aw,
-          ULONG id,
-          ULONG userdata,
+          IPTR id,
+          IPTR userdata,
           struct TagItem * tags );
  
  struct AppWindowDropZone * AddAppWindowDropZone(
           struct AppWindow * aw,
-          ULONG id,
-          ULONG userdata,
+          IPTR id,
+          IPTR userdata,
           TAG tag, ... );
 
 Function
@@ -682,8 +682,8 @@ Function
 ::
 
      The workbench application uses this function to register itself with
-     the library. When it has done this, the library send messages to this 
-     port about actions the application is supposed to carry out.
+     the library. When it has done this, the library sends messages to the
+     specified port about actions the application is supposed to carry out.
      
      All messages sent to the message port are of struct WBHandlerMessage,
      which is specified in <workbench/handler.h>. The wbhm_Type field 
@@ -707,7 +707,7 @@ Function
      WBHM_TYPE_UPDATE
          The state of the specified disk object has changed, and this 
          message serves as a notification and suggestion that you should
-         update it's visual representation to the user. For example, it
+         update its visual representation to the user. For example, it
          might have been deleted or renamed.
 
 

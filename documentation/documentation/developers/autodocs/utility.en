@@ -1077,7 +1077,7 @@ Synopsis
 ::
 
  struct TagItem * NextTagItem(
-          const struct TagItem ** tagListPtr );
+          struct TagItem ** tagListPtr );
 
 Function
 ~~~~~~~~

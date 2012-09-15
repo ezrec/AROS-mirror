@@ -425,7 +425,7 @@ Synopsis
 ~~~~~~~~
 ::
 
-     [ISG], ULONG
+     [ISG], UWORD
 
 
 Function
@@ -753,7 +753,7 @@ Synopsis
 ~~~~~~~~
 ::
 
-     [ISG], ULONG
+     [ISG], UWORD
 
 
 Function
@@ -869,7 +869,7 @@ Synopsis
 
      ULONG OOP_DoMethod(OOP_Object *obj, struct pHidd_BitMap_BytesPerLine *msg);
 
-     ULONG HIDD_BM_BytesPerLine(OOP_Object *obj, HIDDT_StdPixFmt pixFmt, ULONG width);
+     ULONG HIDD_BM_BytesPerLine(OOP_Object *obj, HIDDT_StdPixFmt pixFmt, UWORD width);
 
 
 Function
@@ -1575,17 +1575,41 @@ Synopsis
                                  WORD x, WORD y, WORD width, WORD height);
 
 
+Function
+~~~~~~~~
+::
+
+     Perform an alpha-blending operation between a bitmap and ARGB pixel array.
+
+
 Inputs
 ~~~~~~
 ::
 
-     obj    -
-     gc     -
-     pixels -
-     modulo -
-     x, y   -
-     width  -
-     height -
+     obj    - A bitmap to operate on
+     gc     - A GC object, internally needed to perform the operation. All its attributes
+              are ignored.
+     pixels - A pointer to an array of pixels
+     modulo - Number of bytes per row in pixel array
+     x, y   - Top-left corner of affected bitmap's region
+     width  - Width of the modified rectangle.
+     height - Height of the modified rectangle.
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+Notes
+~~~~~
+::
+
+     Do not rely on 'gc' parameter being valid when implementing this method in own
+     display driver. This parameter is actually obsolete, and will be set to NULL in
+     future AROS versions. Current base class implementation ignores it.
 
 
 
@@ -1604,18 +1628,40 @@ Synopsis
                                     WORD x, WORD y, WORD width, WORD height, BOOL invertalpha);
 
 
+Function
+~~~~~~~~
+::
+
+     Perform a drawing with current foreground color, using 8-bit alpha channel mask. The following
+     GC attributes are considered:
+         Foreground     - a foreground color
+         Background     - a background color
+         DrawMode       - if set to Invert, foreground and background colors will be ignored. Instead,
+                          pixels, for which alpha channel value is greater than 127, will be inverted.
+                          Other pixels will be left unchanged.
+         ColorExpansion - if set to Opaque, alpha blending will happen between foreground and background
+                          colors, instead of between foreground color and old bitmap contents.
+
+
 Inputs
 ~~~~~~
 ::
 
-     obj         -
-     gc          -
-     alpha       -
-     modulo      -
-     x, y        -
-     width       -
-     height      -
-     invertalpha -
+     obj         - A bitmap to draw on
+     gc          - A GC object specifying drawing parameters
+     alpha       - A pointer to a 8-bit per pixel alpha channel mask
+     modulo      - Number of bytes per line in the mask
+     x, y        - Top-left corner of the affected bitmap's region
+     width       - Width of the affected bitmap's region
+     height      - Height of the affected bitmap's region
+     invertalpha - If set to TRUE, alpha mask values will be treated in inverted form
+
+
+Result
+~~~~~~
+::
+
+     None
 
 
 
@@ -1737,23 +1783,46 @@ Synopsis
 
      VOID OOP_DoMethod(OOP_Object *obj, struct pHidd_BitMap_PutTemplate *msg);
 
-     VOID HIDD_BM_PutTemplate (OOP_Object *obj, OOP_Object *gc, UBYTE *template, ULONG modulo,
+     VOID HIDD_BM_PutTemplate (OOP_Object *obj, OOP_Object *gc, UBYTE *masktemplate, ULONG modulo,
                                WORD srcx, WORD x, WORD y, WORD width, WORD height, BOOL inverttemplate);
+
+
+Function
+~~~~~~~~
+::
+
+     Apply a single-bit mask to the given portion of the bitmap. Pixels set to 1 in the mask will be filled
+     by foreground color. Pixels set to 0 in the mask will be filled by background color or left unchanged,
+     according to the following GC attributes:
+         Foreground     - a foreground color
+         Background     - a background color
+         DrawMode       - if set to Invert, foreground and background colors will be ignored. Instead,
+                          pixels which are set to 1 in the mask, will be inverted. Other pixels will be
+                          left unchanged.
+         ColorExpansion - if set to Transparent, only pixels which are set to 1 in the mask, will be modified.
+                          Other pixels will not be changed (background color will be ignored).
 
 
 Inputs
 ~~~~~~
 ::
 
-     obj            -
-     gc             -
-     template       -
-     modulo         -
-     srcx           -
-     x, y           -
-     width          -
-     height         -
-     inverttemplate -
+     obj            - A bitmap to draw on
+     gc             - A GC object, holding operation parameters
+     masktemplate       - A pointer to a bit mask
+     modulo         - Number of bytes per line in the mask
+     srcx           - Horizontal offset of the mask
+     x, y           - Top-left corner of the bitmap's region to affect
+     width          - Width of the affected region
+     height         - Height of the affected region
+     inverttemplate - If set to TRUE, bit mask will be interpreted in inverted form
+
+
+Result
+~~~~~~
+::
+
+     None
 
 
 
@@ -1868,7 +1937,7 @@ Synopsis
      BOOL OOP_DoMethod(OOP_Object *obj, struct pHidd_BitMap_SetColors *msg);
 
      BOOL HIDD_BM_SetColors (OOP_Object *obj, HIDDT_Color *colors,
-                             ULONG firstColor, ULONG numColors);
+                             UWORD firstColor, UWORD numColors);
 
 
 Function
@@ -2013,17 +2082,17 @@ hidd.graphics.graphics
 
 ========================================== ========================================== ========================================== ========================================== 
 `--background_graphics--`_                 `--display_modes--`_                       `aoHidd_Gfx_ActiveCallBack`_               `aoHidd_Gfx_ActiveCallBackData`_           
-`aoHidd_Gfx_DMPSLevel`_                    `aoHidd_Gfx_DriverName`_                   `aoHidd_Gfx_HWSpriteTypes`_                `aoHidd_Gfx_IsWindowed`_                   
-`aoHidd_Gfx_MemoryClock`_                  `aoHidd_Gfx_MemorySize`_                   `aoHidd_Gfx_ModeTags`_                     `aoHidd_Gfx_NoFrameBuffer`_                
-`aoHidd_Gfx_NumSyncs`_                     `aoHidd_Gfx_SupportsHWCursor`_             `moHidd_Gfx_CheckMode`_                    `moHidd_Gfx_CleanViewPort`_                
-`moHidd_Gfx_CopyBox`_                      `moHidd_Gfx_CopyBoxMasked`_                `moHidd_Gfx_DisposeBitMap`_                `moHidd_Gfx_DisposeGC`_                    
-`moHidd_Gfx_DisposeOverlay`_               `moHidd_Gfx_GetGamma`_                     `moHidd_Gfx_GetMaxSpriteSize`_             `moHidd_Gfx_GetMode`_                      
-`moHidd_Gfx_GetPixFmt`_                    `moHidd_Gfx_GetSync`_                      `moHidd_Gfx_MakeViewPort`_                 `moHidd_Gfx_ModeProperties`_               
-`moHidd_Gfx_NewBitMap`_                    `moHidd_Gfx_NewGC`_                        `moHidd_Gfx_NewOverlay`_                   `moHidd_Gfx_NextModeID`_                   
-`moHidd_Gfx_PrepareViewPorts`_             `moHidd_Gfx_QueryHardware3D`_              `moHidd_Gfx_QueryModeIDs`_                 `moHidd_Gfx_ReleaseModeIDs`_               
-`moHidd_Gfx_SetCursorPos`_                 `moHidd_Gfx_SetCursorShape`_               `moHidd_Gfx_SetCursorVisible`_             `moHidd_Gfx_SetGamma`_                     
-`moHidd_Gfx_SetMode`_                      `moHidd_Gfx_Show`_                         `moHidd_Gfx_ShowImminentReset`_            `moHidd_Gfx_ShowViewPorts`_                
-
+`aoHidd_Gfx_DefaultGC`_                    `aoHidd_Gfx_DMPSLevel`_                    `aoHidd_Gfx_DriverName`_                   `aoHidd_Gfx_HWSpriteTypes`_                
+`aoHidd_Gfx_IsWindowed`_                   `aoHidd_Gfx_MemoryClock`_                  `aoHidd_Gfx_MemorySize`_                   `aoHidd_Gfx_ModeTags`_                     
+`aoHidd_Gfx_NoFrameBuffer`_                `aoHidd_Gfx_NumSyncs`_                     `aoHidd_Gfx_SupportsHWCursor`_             `moHidd_Gfx_CheckMode`_                    
+`moHidd_Gfx_CleanViewPort`_                `moHidd_Gfx_CopyBox`_                      `moHidd_Gfx_CopyBoxMasked`_                `moHidd_Gfx_DisposeBitMap`_                
+`moHidd_Gfx_DisposeGC`_                    `moHidd_Gfx_DisposeOverlay`_               `moHidd_Gfx_GetGamma`_                     `moHidd_Gfx_GetMaxSpriteSize`_             
+`moHidd_Gfx_GetMode`_                      `moHidd_Gfx_GetPixFmt`_                    `moHidd_Gfx_GetSync`_                      `moHidd_Gfx_MakeViewPort`_                 
+`moHidd_Gfx_ModeProperties`_               `moHidd_Gfx_NewBitMap`_                    `moHidd_Gfx_NewGC`_                        `moHidd_Gfx_NewOverlay`_                   
+`moHidd_Gfx_NextModeID`_                   `moHidd_Gfx_PrepareViewPorts`_             `moHidd_Gfx_QueryHardware3D`_              `moHidd_Gfx_QueryModeIDs`_                 
+`moHidd_Gfx_ReleaseModeIDs`_               `moHidd_Gfx_SetCursorPos`_                 `moHidd_Gfx_SetCursorShape`_               `moHidd_Gfx_SetCursorVisible`_             
+`moHidd_Gfx_SetGamma`_                     `moHidd_Gfx_SetMode`_                      `moHidd_Gfx_Show`_                         `moHidd_Gfx_ShowImminentReset`_            
+`moHidd_Gfx_ShowViewPorts`_                
 ========================================== ========================================== ========================================== ========================================== 
 
 -----------
@@ -2175,6 +2244,49 @@ Function
 ::
 
      Set user-defined data pointer for display activation handler.
+
+
+
+See also
+~~~~~~~~
+
+`aoHidd_Gfx_ActiveCallBack`_ 
+
+----------
+
+aoHidd_Gfx_DefaultGC
+====================
+
+Synopsis
+~~~~~~~~
+::
+
+     [..G], OOP_Object *
+
+
+Function
+~~~~~~~~
+::
+
+     Get a pointer to shared default GC object.
+
+
+Notes
+~~~~~
+::
+
+     The returned GC is preset to the following:
+
+       DrawMode = Copy
+       FG       = 0
+       BG       = 0
+       LinePat  = ~0
+       ColMask  = ~0
+
+     You must not alter these settings even temporarily, because this GC is shared between
+     bitmaps and between different tasks which may perform the rendering into different
+     regions of the same bitmap (two windows on one screen, for example). This GC is intended
+     to be used for internal copying operations.
 
 
 
@@ -3088,7 +3200,7 @@ Synopsis
 
      BOOL OOP_DoMethod(OOP_Object *obj, struct pHidd_Gfx_GetMaxSpriteSize *msg);
 
-     BOOL HIDD_Gfx_GetMaxSpriteSize(OOP_Object *gfxHidd, ULONG Type, ULONG *Width, ULONG *Height);
+     BOOL HIDD_Gfx_GetMaxSpriteSize(OOP_Object *gfxHidd, ULONG Type, UWORD *Width, UWORD *Height);
 
 
 Function
@@ -3104,8 +3216,8 @@ Inputs
 
      gfxHidd - A display driver object
      Type    - Type of the sprite image (one of vHidd_SpriteType_... values)
-     Width   - A pointer to ULONG where width will be placed.
-     Height  - A pointer to ULONG where height will be placed.
+     Width   - A pointer to UWORD where width will be placed.
+     Height  - A pointer to UWORD where height will be placed.
 
 
 Result
@@ -3832,7 +3944,7 @@ Synopsis
 
      BOOL OOP_DoMethod(OOP_Object *obj, struct pHidd_Gfx_SetCursorPos *msg);
 
-     BOOL HIDD_Gfx_SetCursorPos(OOP_Object *gfxHidd, LONG x, LONG y);
+     BOOL HIDD_Gfx_SetCursorPos(OOP_Object *gfxHidd, WORD x, WORD y);
 
 
 Function
@@ -3892,7 +4004,7 @@ Synopsis
      BOOL OOP_DoMethod(OOP_Object *obj, struct pHidd_Gfx_SetCursorShape *msg);
 
      BOOL HIDD_Gfx_SetCursorShape(OOP_Object *gfxHidd, OOP_Object *shape,
-                                  LONG xoffset, LONG yoffset);
+                                  WORD xoffset, WORD yoffset);
 
 
 Function

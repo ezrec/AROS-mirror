@@ -14,11 +14,10 @@ kernel
 `KrnDispatch()`_                        `KrnDisplayAlert()`_                    `KrnFormatStr()`_                       `KrnFreePages()`_                       
 `KrnGetBootInfo()`_                     `KrnGetCPUCount()`_                     `KrnGetCPUNumber()`_                    `KrnGetScheduler()`_                    
 `KrnGetSystemAttr()`_                   `KrnInitMemory()`_                      `KrnIsSuper()`_                         `KrnMapGlobal()`_                       
-`KrnMayGetChar()`_                      `KrnObtainInput()`_                     `KrnOldStackSwap()`_                    `KrnPutChar()`_                         
-`KrnReleaseInput()`_                    `KrnRemExceptionHandler()`_             `KrnRemIRQHandler()`_                   `KrnSchedule()`_                        
-`KrnSetProtection()`_                   `KrnSetScheduler()`_                    `KrnStackSwap()`_                       `KrnStatMemoryA()`_                     
-`KrnSti()`_                             `KrnSwitch()`_                          `KrnUnmapGlobal()`_                     `KrnVirtualToPhysical()`_               
-
+`KrnMayGetChar()`_                      `KrnObtainInput()`_                     `KrnPutChar()`_                         `KrnReleaseInput()`_                    
+`KrnRemExceptionHandler()`_             `KrnRemIRQHandler()`_                   `KrnSchedule()`_                        `KrnSetProtection()`_                   
+`KrnSetScheduler()`_                    `KrnStatMemoryA()`_                     `KrnSti()`_                             `KrnSwitch()`_                          
+`KrnUnmapGlobal()`_                     `KrnVirtualToPhysical()`_               
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -256,6 +255,40 @@ Synopsis
 
  void KrnCause();
 
+Function
+~~~~~~~~
+::
+
+     Run software interrupt processing sequence
+
+
+Inputs
+~~~~~~
+::
+
+     None
+
+
+Result
+~~~~~~
+::
+
+     None
+
+
+Notes
+~~~~~
+::
+
+     This entry point directly calls interrupt processing routine
+     in supervisor mode. It neither performs any checks of caller status
+     nor obeys interrupt enable state.
+
+     This function is safe to call only from within user mode.
+     This function is considered internal, and not meant to be called
+     by user's software.
+
+
 
 ----------
 
@@ -400,6 +433,41 @@ Synopsis
 ::
 
  void KrnDispatch();
+
+Function
+~~~~~~~~
+::
+
+     Run the next available task
+
+
+Inputs
+~~~~~~
+::
+
+     None
+
+
+Result
+~~~~~~
+::
+
+     None
+
+
+Notes
+~~~~~
+::
+
+     This entry point directly calls task dispatch routine in supervisor mode.
+     It neither performs any checks of caller status nor obeys interrupt enable
+     state. After calling this function, caller's task will be replaced by
+     another one, and caller's state will be lost.
+
+     This function is safe to call only from within user mode.
+     This function is considered internal, and not meant to be called
+     by user's software.
+
 
 
 ----------
@@ -825,40 +893,6 @@ Result
 
 ----------
 
-KrnOldStackSwap()
-=================
-
-Synopsis
-~~~~~~~~
-::
-
- void KrnOldStackSwap(
-          struct StackSwapStruct * sss );
-
-Function
-~~~~~~~~
-::
-
-     Release low-level debug input hardware and hand it back to the operating system
-
-
-Inputs
-~~~~~~
-::
-
-     None
-
-
-Result
-~~~~~~
-::
-
-     None
-
-
-
-----------
-
 KrnPutChar()
 ============
 
@@ -1005,6 +1039,40 @@ Synopsis
 
  void KrnSchedule();
 
+Function
+~~~~~~~~
+::
+
+     Run task scheduling sequence
+
+
+Inputs
+~~~~~~
+::
+
+     None
+
+
+Result
+~~~~~~
+::
+
+     None
+
+
+Notes
+~~~~~
+::
+
+     This entry point directly calls task scheduling routine
+     in supervisor mode. It neither performs any checks of caller status
+     nor obeys interrupt enable state.
+
+     This function is safe to call only from within user mode.
+     This function is considered internal, and not meant to be called
+     by user's software.
+
+
 
 ----------
 
@@ -1032,42 +1100,6 @@ Synopsis
 
  void KrnSetScheduler(
           KRN_SchedType sched );
-
-
-----------
-
-KrnStackSwap()
-==============
-
-Synopsis
-~~~~~~~~
-::
-
- void KrnStackSwap(
-          struct StackSwapStruct * sss,
-          LONG_FUNC entry,
-          struct StackSwapArgs args );
-
-Function
-~~~~~~~~
-::
-
-     Release low-level debug input hardware and hand it back to the operating system
-
-
-Inputs
-~~~~~~
-::
-
-     None
-
-
-Result
-~~~~~~
-::
-
-     None
-
 
 
 ----------
@@ -1191,6 +1223,42 @@ Synopsis
 ::
 
  void KrnSwitch();
+
+Function
+~~~~~~~~
+::
+
+     Save context of caller's task and dispatch the next available task
+
+
+Inputs
+~~~~~~
+::
+
+     None
+
+
+Result
+~~~~~~
+::
+
+     None
+
+
+Notes
+~~~~~
+::
+
+     This entry point directly calls task switch routine
+     in supervisor mode. It neither performs any checks of caller status
+     nor obeys interrupt enable state. After calling this function, caller's
+     task will be replaced by another one, and it's caller's responsibility
+     to do anything to prevent task loss.
+
+     This function is safe to call only from within user mode.
+     This function is considered internal, and not meant to be called
+     by user's software.
+
 
 
 ----------

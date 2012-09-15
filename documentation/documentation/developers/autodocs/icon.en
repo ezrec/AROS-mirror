@@ -539,9 +539,9 @@ Tags
 
      ICONA_ErrorCode (LONG *)
      ICONGETA_GetDefaultType (LONG) - Default icon type to get. This
-             overrides the "name" paramter.
+             overrides the "name" parameter.
      ICONGETA_GetDefaultName (STRPTR) - Name of default icon to get. This
-             overrides the "name" paramter.
+             overrides the "name" parameter.
      ICONGETA_FailIfUnavailable (BOOL)
      ICONGETA_GetPaletteMappedIcon (BOOL)
      ICONGETA_IsDefaultIcon (LONG *) - Upon completion of this function, the

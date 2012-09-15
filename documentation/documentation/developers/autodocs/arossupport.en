@@ -9,7 +9,7 @@ arossupport
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`CalcChecksum()`_                       `CloneRastPort()`_                      `CreateRastPort()`_                     `CreateSegList()`_                      
+`__CreateSegList()`_                    `CalcChecksum()`_                       `CloneRastPort()`_                      `CreateRastPort()`_                     
 `debugmem()`_                           `DeinitRastPort()`_                     `FindNextNodes()`_                      `FindNode()`_                           
 `FreeRastPort()`_                       `FreeStruct()`_                         `hexdump()`_                            `IsDosEntryA()`_                        
 `kprintf()`_                            `NastyFreeMem()`_                       `Purify_AddMemory()`_                   `Purify_CheckAccess()`_                 
@@ -25,6 +25,48 @@ arossupport
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
+
+__CreateSegList()
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+  BPTR __CreateSegList(
+     APTR function, struct ExecBase *SysBase )
+
+
+Function
+~~~~~~~~
+::
+
+     Create a SegList, which contains a call to 'function'
+
+
+Inputs
+~~~~~~
+::
+
+     function - Function to call when the SegList is executed
+
+
+Result
+~~~~~~
+::
+
+     BPTR to the SegList that was allocated. This SegList can
+          be freed by DOS/UnloadSeg. If not enough memory,
+          BNULL will be returned.
+
+
+
+See also
+~~~~~~~~
+
+`dos.library/UnloadSeg() <./dos#unloadseg>`_ 
+
+----------
 
 CalcChecksum()
 ==============
@@ -172,48 +214,6 @@ Result
 
 ----------
 
-CreateSegList()
-===============
-
-Synopsis
-~~~~~~~~
-::
-
-  BPTR CreateSegList(
-     APTR function )
-
-
-Function
-~~~~~~~~
-::
-
-     Create a SegList, which contains a call to 'function'
-
-
-Inputs
-~~~~~~
-::
-
-     function - Function to call when the SegList is executed
-
-
-Result
-~~~~~~
-::
-
-     BPTR to the SegList that was allocated. This SegList can
-          be freed by DOS/UnloadSeg. If not enough memory,
-          BNULL will be returned.
-
-
-
-See also
-~~~~~~~~
-
-`UnloadSeg()`_ 
-
-----------
-
 debugmem()
 ==========
 
@@ -272,6 +272,7 @@ Function
 ~~~~~~~~
 ::
 
+
      Frees the extra contents associated with a RastPort structure.
      The structure itself is not freed.
 
@@ -280,12 +281,14 @@ Inputs
 ~~~~~~
 ::
 
+
      rp - The RastPort which contents are to be freed.
 
 
 Result
 ~~~~~~
 ::
+
 
      None.
 
@@ -294,7 +297,7 @@ Result
 See also
 ~~~~~~~~
 
-`InitRastPort()`_ 
+`graphics.library/InitRastPort() <./graphics#initrastport>`_ 
 
 ----------
 
@@ -624,7 +627,7 @@ Synopsis
 ::
 
   int kprintf(
-     const UBYTE * fmt,
+     const char * fmt,
      ...)
 
 
