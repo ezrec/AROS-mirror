@@ -493,6 +493,7 @@ static int handle_wb_script (lua_State *L, char **argv)
 
 
 int luaopen_lsqlite3 (lua_State *L);
+int luaopen_xmlreader (lua_State *L);
 
 static int pmain (lua_State *L) {
   int argc = (int)lua_tointeger(L, 1);

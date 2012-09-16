@@ -1,0 +1,13 @@
+include $(TOP)/config/make.cfg
+
+EXEDIR := $(CONTRIBDIR)/Development/Lua
+
+# files to build the linker lib 'luaxmlreader'
+XMLLIBFILES := error xmlreader
+HEADERS := error.h
+
+USER_INCLUDES := -I$(AROS_DEVELOPMENT)/include/lua -I$(AROS_DEVELOPMENT)/include/libxml2
+
+#MM- contrib-development-luaxmlreader-lib : development-libxml2
+
+%build_linklib mmake=contrib-development-luaxmlreader-lib libname=luaxmlreader files=$(XMLLIBFILES)

@@ -1,0 +1,20 @@
+Package: lua-xmlreader
+Version: 0.1
+Author: A.S. Bradbury
+Website: http://asbradbury.org/projects/lua-xmlreader/
+License: MIT/X11
+Description:
+  Provides the XmlReader API[1] to Lua applications, using LibXML2[2].  
+  XmlReader is an API introduced in C# that is arguably easier to use than 
+  SAX. It is a "pull" interface where you control the reader, which is a 
+  cursor moving along the document. Call methods such as reader:name() to get
+  information about the current node and reader:read() to advance to the next.  
+  This has the advantage versus a tree model such as DOM that the whole 
+  document does not need to be loaded into memory at once. The many articles 
+  and tutorials available online referring to XmlReader/XmlTextReader in C#, 
+  Java or other languages should all be useful if you want to better 
+  understand this method of handling XML. You will require the libxml2 
+  library.
+
+  [1] = http://dotgnu.org/pnetlib-doc/System/Xml/XmlReader.html
+  [2] = http://xmlsoft.org/
