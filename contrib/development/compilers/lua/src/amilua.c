@@ -405,6 +405,7 @@ struct Smain {
 };
 
 int luaopen_lsqlite3 (lua_State *L);
+int luaopen_xmlreader (lua_State *L);
 
 static int pmain (lua_State *L) {
   struct Smain *s = (struct Smain *)lua_touserdata(L, 1);
@@ -419,6 +420,7 @@ static int pmain (lua_State *L) {
   luaopen_muilib(L);
   luaopen_lfs(L);
   luaopen_lsqlite3(L);
+  luaopen_xmlreader(L);
   lua_gc(L, LUA_GCRESTART, 0);
   s->status = handle_luainit(L);
   if (s->status != 0) return 0;

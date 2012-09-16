@@ -29,7 +29,7 @@ HEADERS :=	lua.h luaconf.h lualib.h lauxlib.h lsiamigalib.h lmuilib.h
 
 EXEDIR :=	$(CONTRIBDIR)/Development/Lua
 
-USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../luafilesystem/src
+USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../luafilesystem/src -I$(SRCDIR)/$(CURDIR)/../lua-xmlreader-0.1
 
 #MM- contrib-development-lua : contrib-development-lua-lua \
 #MM  contrib-development-lua-amilua \
@@ -57,9 +57,13 @@ USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../luafilesystem/src
 TARGET_CC := $(CROSSTOOLSDIR)/$(AROS_TARGET_CPU)-aros-gcc
 
 #MM contrib-development-lua-amilua : includes linklibs contrib-development-luasiamiga-lib \
-#MM contrib-development-luamui-lib contrib-development-lualfs-lib contrib-development-lsqlite3-lib
+#MM contrib-development-luamui-lib contrib-development-lualfs-lib contrib-development-lsqlite3-lib contrib-development-luaxmlreader-lib
+
+
 %build_prog mmake=contrib-development-lua-amilua progname=AmiLua files=$(AMILUAFILES) \
-    targetdir=$(EXEDIR) uselibs="arosc m lua luasiamiga luamui lualfs mui lsqlite3 sqlite3"
+    targetdir=$(EXEDIR) uselibs="arosc m lua luasiamiga luamui lualfs mui lsqlite3 sqlite3 luaxmlreader xml2 z"
+
+
 
 #MM
 includes-copy :
