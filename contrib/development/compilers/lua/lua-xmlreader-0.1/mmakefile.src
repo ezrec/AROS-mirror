@@ -6,6 +6,7 @@ EXEDIR := $(CONTRIBDIR)/Development/Lua
 XMLLIBFILES := error xmlreader
 HEADERS := error.h
 
+USER_CFLAGS := -Wno-implicit-function-declaration
 USER_INCLUDES := -I$(AROS_DEVELOPMENT)/include/lua -I$(AROS_DEVELOPMENT)/include/libxml2
 
 #MM- contrib-development-luaxmlreader-lib : development-libxml2
