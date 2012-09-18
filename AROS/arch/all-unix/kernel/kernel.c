@@ -139,7 +139,7 @@ static const char *kernel_functions[] =
     "fcntl",
     "mmap",
     "munmap",
-#ifdef HOST_OS_linux
+#if defined(HOST_OS_linux) || defined(HOST_OS_arix)
     "__errno_location",
 #else
 #ifdef HOST_OS_android
