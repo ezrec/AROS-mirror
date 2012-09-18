@@ -20,7 +20,7 @@ struct SignalTranslation const sigs[] = {
     {SIGBUS   ,  2,  1},
     {SIGFPE   , 11,  1},
     {SIGSEGV  ,  2,  1},
-#ifdef HOST_OS_linux
+#if defined(HOST_OS_linux) || defined(HOST_OS_arix)
     {SIGSTKFLT, 14,  1},
 #endif
     {-1       , -1, -1}

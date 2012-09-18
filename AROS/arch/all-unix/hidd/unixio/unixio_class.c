@@ -1102,7 +1102,7 @@ static const char *libc_symbols[] =
     "read",
     "write",
     "getpid",
-#ifdef HOST_OS_linux
+#if defined(HOST_OS_linux) || defined(HOST_OS_arix)
     "__errno_location",
 #else
 #ifdef HOST_OS_android

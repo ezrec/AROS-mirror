@@ -22,7 +22,7 @@ typedef int file_t;
 #undef HOST_OS_linux
 #endif
 
-#ifdef HOST_OS_linux
+#if defined(HOST_OS_linux) || defined(HOST_OS_arix)
 #define LIBC_NAME "libc.so.6"
 #else
 #endif
@@ -58,7 +58,7 @@ struct HostInterface
     off_t          (*lseek)(int fildes, off_t offset, int whence);
 #endif
     int           *(*__error)(void);
-#ifdef HOST_OS_linux
+#if defined(HOST_OS_linux) || defined(HOST_OS_arix)
     int            (*__fxstat64)(int ver, int fd, struct stat64 *buf);
     #define fstat64(fd, buf) __fxstat64(_STAT_VER, fd, buf)
 #else

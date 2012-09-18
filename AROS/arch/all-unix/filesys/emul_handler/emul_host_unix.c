@@ -76,7 +76,7 @@ static const char *libcSymbols[] =
     "getcwd",
     "getenv",
     "poll",
-#ifdef HOST_OS_linux
+#if defined(HOST_OS_linux) || defined(HOST_OS_arix)
     "__xstat",
     "__lxstat",
 #else
