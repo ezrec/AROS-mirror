@@ -1,0 +1,8 @@
+# $Id$
+include $(TOP)/config/make.cfg
+
+#MM- kernel-kernel-arix-i386 : kernel-kernel-linux-i386
+
+%common
+
+
