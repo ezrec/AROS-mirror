@@ -7817,6 +7817,7 @@ case "$target_os" in
 	arix)
         aros_target_arch="arix"
         aros_target_family="unix"
+        target_bootloader="grub2"
         case "$target_cpu" in
             *i?86*)
                 aros_target_cpu="i386"
