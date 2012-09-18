@@ -28,7 +28,7 @@
 #undef HOST_OS_linux
 #endif
 
-#ifdef HOST_OS_linux
+#if defined(HOST_OS_linux) || defined(HOST_OS_arix)
 #define LIBC_NAME "libc.so.6"
 #endif
 
