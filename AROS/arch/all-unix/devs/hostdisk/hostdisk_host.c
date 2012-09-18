@@ -289,7 +289,7 @@ static const char *libcSymbols[] =
     "write",
     "ioctl",
     "lseek",
-#ifdef HOST_OS_linux
+#if defined(HOST_OS_linux) || defined(HOST_OS_arix)
     "__errno_location",
     "__fxstat64",
     "__xstat64",

@@ -149,7 +149,7 @@ extern struct x11_func x11_func;
 extern void *libc_handle;
 extern struct libc_func libc_func;
 
-#ifdef HOST_OS_linux
+#if defined(HOST_OS_linux) || defined(HOST_OS_arix)
 #define X11_SOFILE    "libX11.so.6"
 #define LIBC_SOFILE   "libc.so.6"
 #define XF86VM_SOFILE "libXxf86vm.so.1"
