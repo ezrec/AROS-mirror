@@ -15,7 +15,7 @@
 #include <time.h>
 #include <utime.h>
 
-#ifdef HOST_OS_linux
+#if defined(HOST_OS_linux) || defined(HOST_OS_arix)
 #include <sys/vfs.h>
 #else
 #include <sys/mount.h>
@@ -61,7 +61,7 @@ struct LibCInterface
     char	  *(*getcwd)(char *buf, size_t size);
     char	  *(*getenv)(const char *name);
     int     	   (*poll)(struct pollfd *fds, nfds_t nfds, int timeout);
-#ifdef HOST_OS_linux
+#if defined(HOST_OS_linux) || defined(HOST_OS_arix)
     int		   (*__xstat)(int ver, char *path, struct stat *buf);
     int		   (*__lxstat)(int ver, const char *path, struct stat *buf);
     int		   (*__fxstat)(int ver, const int fd, struct stat *buf);
