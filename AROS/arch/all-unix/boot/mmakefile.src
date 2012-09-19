@@ -1,5 +1,11 @@
 include $(TOP)/config/make.cfg
 
+ifeq ($(ARCH),arix)
+    UNIX := unix
+else
+    UNIX :=
+endif
+
 ifeq ($(AROS_TARGET_VARIANT),)
     BSP := $(ARCH)
 else
@@ -8,10 +14,10 @@ endif
 
 # -------- Bootstrap part --------
 
-#MM boot-unix: kernel-bootstrap-hosted
+#MM boot-$(UNIX): kernel-bootstrap-hosted
 
 #MM
-boot-unix: $(BINDIR)/boot/AROSBootstrap.conf
+boot-$(UNIX): $(BINDIR)/boot/AROSBootstrap.conf
 
 $(BINDIR)/boot/AROSBootstrap.conf: mkbootconf.sh $(BINDIR)/boot AROSBootstrap.conf
 	@$(ECHO) "Writing    $@..."
@@ -23,9 +29,9 @@ $(BINDIR)/boot:
 
 # -------- Kickstart part --------
 
-#MM- kernel-unix: kernel-link-base
+#MM- kernel-$(UNIX): kernel-link-base
 
-#MM- kernel-link-unix : \
+#MM- kernel-link-$(UNIX) : \
 #MM	kernel-kernel-kobj			\
 #MM     kernel-hostlib-kobj			\
 #MM	kernel-battclock-kobj			\
@@ -56,7 +62,7 @@ ifeq ("$(X11_HIDD_TARGET)", "kernel-hidd-androidgfx-kobj")
     KHIDDS += androidgfx
 endif
 
-%link_kickstart mmake=kernel-link-unix file=$(BINDIR)/boot/aros-bsp-$(BSP) \
+%link_kickstart mmake=kernel-link-$(UNIX) file=$(BINDIR)/boot/aros-bsp-$(BSP) \
 	devs=$(KDEVS) handlers=$(KHNDLRS) hidds=$(KHIDDS) libs=$(KLIBS) res=$(KRSRCS) startup=$(KOBJSDIR)/kernel_resource.o \
 	uselibs="arossupport hiddstubs amiga autoinit arosc.static libinit m"
 
