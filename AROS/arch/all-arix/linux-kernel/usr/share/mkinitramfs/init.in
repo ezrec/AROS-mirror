@@ -101,5 +101,5 @@ do_mount_root
 
 # exec switch_root /.root "$init" "$@"
 
-cd /aros
-./boot/AROSBootstrap &> /dev/null
+sh /aros/boot/aros-init
+
