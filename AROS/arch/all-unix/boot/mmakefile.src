@@ -1,19 +1,18 @@
 include $(TOP)/config/make.cfg
 
 ifeq ($(ARCH),arix)
-    UNIX := unix
-else
-    UNIX :=
+    FAMILY := 
 endif
 
 # -------- Bootstrap part --------
 
-#MM boot-$(UNIX): kernel-bootstrap-hosted
+#MM- boot-unix : boot-unix-$(FAMILY)
+#MM boot-unix-unix : kernel-bootstrap-hosted
 
 BOOTSTRAPCONF := $(AROSARCHDIR)/AROSBootstrap.conf
 
 #MM
-boot-$(UNIX): $(BOOTSTRAPCONF)
+boot-unix-unix: $(BOOTSTRAPCONF)
 
 ifeq ($(AROS_TARGET_VARIANT),android)
 $(BOOTSTRAPCONF): INPUT_FILE := $(SRCDIR)/$(CURDIR)/AROSBootstrap_android.conf
@@ -35,9 +34,12 @@ $(AROSARCHDIR):
 
 # -------- Kickstart part --------
 
-#MM- kernel-$(UNIX): kernel-objs
+#MM- kernel-unix : kernel-unix-$(FAMILY) 
+#MM- kernel-unix-unix : kernel-objs
 
-#MM- kernel-link-$(UNIX) : \
+#MM- kernel-link-unix : kernel-link-unix-$(FAMILY)
+
+#MM- kernel-link-unix-unix : \
 #MM     kernel-$(ARCH)-$(AROS_TARGET_VARIANT)   \
 #MM	kernel-kernel-kobj			\
 #MM     kernel-hostlib     			\
@@ -59,7 +61,7 @@ KHNDLRS :=
 KHIDDS  := 
 KRSRCS  := 
 
-%link_kickstart mmake=kernel-link-$(UNIX) file=$(AROSARCHDIR)/kernel \
+%link_kickstart mmake=kernel-link-unix-unix file=$(AROSARCHDIR)/kernel \
 	devs=$(KDEVS) handlers=$(KHNDLRS) hidds=$(KHIDDS) libs=$(KLIBS) res=$(KRSRCS) startup=$(KOBJSDIR)/kernel_resource.o \
 	uselibs="hiddstubs"
 
