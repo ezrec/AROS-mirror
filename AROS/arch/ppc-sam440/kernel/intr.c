@@ -1,4 +1,4 @@
-
+#define DEBUG 1
 #include <aros/debug.h>
 #include <aros/kernel.h>
 #include <aros/libcall.h>
@@ -351,7 +351,7 @@ void generic_handler(context_t *ctx, uint8_t exception)
 
 void  mmu_handler(context_t *ctx, uint8_t exception)
 {
-    if (!!krnRunExceptionHandlers(KernelBase, exception, ctx))
+//    if (!!krnRunExceptionHandlers(KernelBase, exception, ctx))
     {
         /* Any unhandled MMU activity is fatal for now. */
         dumpregs(ctx, exception);
@@ -516,7 +516,6 @@ void alignment_handler(context_t *ctx, uint8_t exception)
 
     D(bug("[KRN] Alignment handler. Context @ %p. srr1=%08x\n", ctx, ctx->cpu.srr1));
 
-
     switch (insn >> 26)
     {
     case 50: 	// lfd
@@ -596,6 +595,7 @@ void alignment_handler(context_t *ctx, uint8_t exception)
     else
     {
         D(bug("[KRN] Alignment exception handler failed to help... INSN=%08x, DEAR=%08x\n", insn, dear));
+    	D(dumpregs(ctx, exception));
     	generic_handler(ctx, exception);
     }
 }

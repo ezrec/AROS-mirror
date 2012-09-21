@@ -14,6 +14,11 @@
 #include <asm/io.h>
 #include <strings.h>
 
+#if DEBUG
+#include <hardware/uart.h>
+#include <exec/interrupts.h>
+#endif
+
 #include <proto/exec.h>
 
 #include LC_LIBDEFS_FILE
@@ -213,6 +218,20 @@ void exec_main(struct TagItem *msg, void *entry)
 
     D(bug("[exec] InitCode(RTF_SINGLETASK)\n"));
     InitCode(RTF_SINGLETASK, 0);
+
+#if DEBUG
+    do {
+        AROS_INTH0(dummy) { AROS_INTFUNC_INIT return FALSE; AROS_INTFUNC_EXIT };
+        static struct Interrupt dummyint = {};
+        volatile UBYTE *uart = (APTR)UART0_RBR;
+
+        dummyint.is_Code = (VOID_FUNC)dummy;
+
+        AddIntServer(INTB_KERNEL + INTR_UIC1_UART0, &dummyint);
+        uart[UART_IER] = UART_IER_RDI;
+        (void)uart[UART_RX];
+    } while (0);
+#endif
 
     D(bug("[exec] InitCode(RTF_COLDSTART)\n"));
     InitCode(RTF_COLDSTART, 0);

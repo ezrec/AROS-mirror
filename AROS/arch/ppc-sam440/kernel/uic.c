@@ -148,6 +148,10 @@ void uic_handler(context_t *ctx, uint8_t exception)
 
                 if (mask & uic_sr[i])
                 {
+                    if (irq == INTR_UIC1_UART0) {
+                        bug("=========== KEYPRESS INTERRUPT ===========\n");
+                        dumpregs(ctx,exception);
+                    }
                     krnRunIRQHandlers(KernelBase, irq);
                 }
             }
