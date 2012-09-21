@@ -1102,7 +1102,7 @@ static AROS_INTH1(ohciIntCode, struct PCIController *, hc)
     ULONG intr = 0;
     ULONG donehead;
 
-    CacheClearE(&hc->hc_OhciHCCA->oha_DoneHead, sizeof(hc->hc_OhciHCCA->oha_DoneHead), CACRF_InvalidateD);
+    CacheClearE(hc->hc_OhciHCCA, sizeof(struct OhciHCCA), CACRF_InvalidateD);
 
     donehead = READMEM32_LE(&hc->hc_OhciHCCA->oha_DoneHead);
 

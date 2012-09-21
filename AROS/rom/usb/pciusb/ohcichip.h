@@ -202,6 +202,7 @@ struct OhciHCCA
     UWORD           oha_FrameCount; /* LE Framecounter */
     UWORD           oha_FrmCntChg;  /* Set 0 when framecounter was updated */
     ULONG           oha_DoneHead;   /* LE PHYSICAL pointer to Head of ED finished + unmasked Int */
+    ULONG           reserved[30];    /* Cache alignment */
 };
 
 
@@ -217,6 +218,13 @@ struct OhciHCCA
 
 struct OhciED
 {
+    /* HC data, aligned to 16 bytes */
+    ULONG           oed_EPCaps;     /* LE MaxPacketSize and other stuff */
+    ULONG           oed_TailPtr;    /* LE PHYSICAL TD Queue Tail Pointer */
+    ULONG           oed_HeadPtr;    /* LE PHYSICAL TD Queue Head Pointer */
+    ULONG           oed_NextED;     /* LE PHYSICAL Next Endpoint Descriptor */
+    ULONG           oed_Align[4];
+
     struct OhciED  *oed_Succ;
     struct OhciED  *oed_Pred;
     ULONG           oed_Self;       /* LE PHYSICAL pointer to self */
@@ -227,27 +235,23 @@ struct OhciED
     IPTR            oed_Continue;   /* Flag for fragmented bulk transfer */
     APTR	    oed_Buffer;	    /* Mirror buffer for data outside of DMA-accessible area */
     struct UsbSetupData *oed_SetupData; /* Mirror buffer for setup packet */
-
-    /* HC data, aligned to 16 bytes */
-    ULONG           oed_EPCaps;     /* LE MaxPacketSize and other stuff */
-    ULONG           oed_TailPtr;    /* LE PHYSICAL TD Queue Tail Pointer */
-    ULONG           oed_HeadPtr;    /* LE PHYSICAL TD Queue Head Pointer */
-    ULONG           oed_NextED;     /* LE PHYSICAL Next Endpoint Descriptor */
 };
 
 struct OhciTD
 {
-    struct OhciTD  *otd_Succ;
-    IPTR            otd_Length;     /* Length of transfer */
-    ULONG           otd_Self;       /* LE PHYSICAL pointer to self */
-    /* On 64 bits a padding will be inserted here */
-    struct OhciED  *otd_ED;         /* Pointer to parent ED this TD belongs to */
-
     /* HC data, aligned to 16 bytes */
     ULONG           otd_Ctrl;       /* LE Ctrl stuff */
     ULONG           otd_BufferPtr;  /* LE PHYSICAL Current Buffer Pointer */
     ULONG           otd_NextTD;     /* LE PHYSICAL Next TD */
     ULONG           otd_BufferEnd;  /* LE PHYSICAL End of buffer */
+    ULONG           oed_Align[4];
+
+    struct OhciTD  *otd_Succ;
+    IPTR            otd_Length;     /* Length of transfer */
+    ULONG           otd_Self;       /* LE PHYSICAL pointer to self */
+    /* On 64 bits a padding will be inserted here */
+    struct OhciED  *otd_ED;         /* Pointer to parent ED this TD belongs to */
+    ULONG           oed_Align2[4];
 };
 
 /* pointer defines */

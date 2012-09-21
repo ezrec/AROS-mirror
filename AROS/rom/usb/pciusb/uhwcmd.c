@@ -825,7 +825,7 @@ WORD cmdControlXFerRootHub(struct IOUsbHWReq *ioreq,
                                     KPRINTF(10, ("EHCI: Reset=%s\n", newval & EHPF_PORTRESET ? "BAD!" : "GOOD"));
                                     KPRINTF(10, ("EHCI: Highspeed=%s\n", newval & EHPF_PORTENABLE ? "YES!" : "NO"));
                                     KPRINTF(10, ("EHCI: Port status=%08lx\n", newval));
-                                    if(!(newval & EHPF_PORTENABLE))
+                                    if(!(newval & EHPF_PORTENABLE) && unit->hu_PortMap11[idx - 1] != NULL)
                                     {
                                         // if not highspeed, release ownership
                                         KPRINTF(20, ("EHCI: Transferring ownership to UHCI/OHCI port %ld\n", unit->hu_PortNum11[idx - 1]));
@@ -967,7 +967,7 @@ WORD cmdControlXFerRootHub(struct IOUsbHWReq *ioreq,
                                         {
                                             KPRINTF(10, ("EHCI: Enabled after %ld ticks\n", 100-cnt));
                                         } else {
-                                            KPRINTF(20, ("EHCI: Port refuses to be enabled!\n"));
+                                            KPRINTF(20, ("EHCI: Port @%p refuses to be enabled!\n", hc->hc_RegBase + portreg));
                                             return(UHIOERR_HOSTERROR);
                                         }
                                         // make enumeration possible
@@ -1608,7 +1608,7 @@ WORD cmdControlXFer(struct IOUsbHWReq *ioreq,
     Enable();
     SureCause(base, &hc->hc_CompleteInt);
 
-    KPRINTF(10, ("UHCMD_CONTROLXFER processed ioreq: 0x%p\n", ioreq));
+    KPRINTF(5, ("UHCMD_CONTROLXFER processed ioreq: 0x%p\n", ioreq));
     return(RC_DONTREPLY);
 }
 /* \\\ */

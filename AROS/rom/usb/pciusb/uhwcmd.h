@@ -21,8 +21,16 @@ void usbReleaseBuffer(APTR buffer, APTR data, ULONG len, UWORD dir);
 
 /* On 32-bit systems we don't need mirroring */
 
-#define usbGetBuffer(data, len, dir) ({ (void)(len); (void)(dir); (data);})
-#define usbReleaseBuffer(buffer, data, len, dir) do { (void)(buffer); (void)(data); (void)(len); (void)(dir); } while (0)
+#define usbGetBuffer(data, len, dir) ({ \
+        ULONG _len = len; \
+        APTR _data = data; \
+        if (0) CachePreDMA(_data, &_len, ((dir) == UHDIR_OUT) ? DMA_ReadFromRAM : 0); \
+        _data; })
+#define usbReleaseBuffer(buffer, data, len, dir) do { \
+        ULONG _len = len; \
+        APTR _data = data; \
+        if (0) CachePostDMA(_data, &_len, ((dir) == UHDIR_OUT) ? DMA_ReadFromRAM : 0); \
+    } while (0)
 
 #endif
 

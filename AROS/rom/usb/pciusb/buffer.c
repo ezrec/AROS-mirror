@@ -12,20 +12,22 @@ APTR usbGetBuffer(APTR data, ULONG len, UWORD dir)
     {
     	ret = AllocVec(len, MEMF_31BIT|MEMF_PUBLIC);
 
-	if (ret && (dir == UHDIR_OUT))
+	if (ret && (dir == UHDIR_OUT)) {
 	    CopyMem(data, ret, len);
+	}
     }
+    CachePreDMA(ret, &len, (dir == UHDIR_OUT) ? DMA_ReadFromRAM : 0);
 
     return ret;
 }
 
 void usbReleaseBuffer(APTR buffer, APTR data, ULONG len, UWORD dir)
 {
+    CachePostDMA(buffer, &len, (dir == UHDIR_OUT) ? DMA_ReadFromRAM : 0);
     if (buffer && (buffer != data))
     {
     	if (len && (dir == UHDIR_IN))
     	    CopyMem(buffer, data, len);
-
     	FreeVec(buffer);
     }
 }
