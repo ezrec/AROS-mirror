@@ -1,13 +1,10 @@
 include $(TOP)/config/make.cfg
 
-ifeq ($(ARCH),arix)
-    FAMILY := 
-endif
 
 # -------- Bootstrap part --------
 
-#MM- boot-unix : boot-unix-$(FAMILY)
-#MM boot-unix-unix : kernel-bootstrap-hosted
+#MM- boot-unix : boot-unix-$(ARCH)
+#MM boot-unix-linux : kernel-bootstrap-hosted
 
 BOOTSTRAPCONF := $(AROSARCHDIR)/AROSBootstrap.conf
 
@@ -34,10 +31,11 @@ $(AROSARCHDIR):
 
 # -------- Kickstart part --------
 
-#MM- kernel-unix : kernel-unix-$(FAMILY) 
-#MM- kernel-unix-unix : kernel-objs
+#MM- kernel-unix : kernel-unix-$(ARCH) 
+#MM- kernel-unix-linux : kernel-objs
 
-#MM- kernel-link-unix : kernel-link-unix-$(FAMILY)
+#MM- kernel-link-unix : kernel-link-unix-$(ARCH)
+#MM- kernel-link-unix-linux : kernel-link-unix-unix
 
 #MM- kernel-link-unix-unix : \
 #MM     kernel-$(ARCH)-$(AROS_TARGET_VARIANT)   \
