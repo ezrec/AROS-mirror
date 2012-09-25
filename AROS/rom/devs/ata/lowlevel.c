@@ -643,6 +643,7 @@ static BYTE ata_exec_cmd(struct ata_Unit* unit, ata_CommandBlock *block)
 
     switch (block->type)
     {
+        case CT_CHS:
         case CT_LBA28:
             if (block->sectors > 256)
             {
@@ -687,6 +688,22 @@ static BYTE ata_exec_cmd(struct ata_Unit* unit, ata_CommandBlock *block)
      */
     switch (block->type)
     {
+        case CT_CHS:
+            DATA(bug("[ATA%02ld] ata_exec_cmd: Command uses CHS addressing (OLD)\n", unit->au_UnitNum));
+            {
+                ULONG cyl, head, sector;
+                ULONG tmp = unit->au_Heads * unit->au_Sectors;
+                cyl = block->blk / tmp;
+                head = (block->blk % tmp) / unit->au_Sectors;
+                sector = (block->blk % unit->au_Sectors) + 1;
+
+                ATA_OUT(((head) & 0x0f) | unit->au_DevMask, ata_DevHead, port);
+                ATA_OUT(sector, ata_Sector, port);
+                ATA_OUT(cyl & 0xff, ata_CylinderLow, port);
+                ATA_OUT((cyl >> 8) & 0xff, ata_CylinderHigh, port);
+                ATA_OUT(block->sectors, ata_Count, port);
+            }
+            break;
         case CT_LBA28:
             DATA(bug("[ATA%02ld] ata_exec_cmd: Command uses 28bit LBA addressing (OLD)\n", unit->au_UnitNum));
 
@@ -1370,6 +1387,7 @@ void common_DetectXferModes(struct ata_Unit* unit)
     else
     {
         DINIT(bug("[ATA%02ld] common_DetectXferModes: - DEVICE DOES NOT SUPPORT LBA ADDRESSING >> THIS IS A POTENTIAL PROBLEM <<\n", unit->au_UnitNum));
+        unit->au_Flags |= AF_CHSOnly;
     }
 
     if (unit->au_Drive->id_RWMultipleSize & 0xff)
@@ -1602,7 +1620,7 @@ BYTE ata_Identify(struct ata_Unit* unit)
 
     unit->au_Capacity   = unit->au_Drive->id_LBASectors;
     unit->au_Capacity48 = unit->au_Drive->id_LBA48Sectors;
-    bug("[ATA%02ld] ata_Identify: Unit info: %07lx 28bit / %04lx:%08lx 48bit addressable blocks\n", unit->au_UnitNum, unit->au_Capacity, (ULONG)(unit->au_Capacity48 >> 32), (ULONG)(unit->au_Capacity48 & 0xfffffffful));
+    DINIT(bug("[ATA%02ld] ata_Identify: Unit LBA: %07lx 28bit / %04lx:%08lx 48bit addressable blocks\n", unit->au_UnitNum, unit->au_Capacity, (ULONG)(unit->au_Capacity48 >> 32), (ULONG)(unit->au_Capacity48 & 0xfffffffful)));
 
     if (atapi)
     {
@@ -1696,8 +1714,11 @@ BYTE ata_Identify(struct ata_Unit* unit)
             unit->au_Cylinders  = unit->au_Drive->id_OldLCylinders;
             unit->au_Heads      = unit->au_Drive->id_OldLHeads;
             unit->au_Sectors    = unit->au_Drive->id_OldLSectors;
+            unit->au_Capacity   = unit->au_Cylinders * unit->au_Heads * unit->au_Sectors;
         }
     }
+
+    DINIT(bug("[ATA%02ld] ata_Identify: Unit CHS: %d/%d/%d\n", unit->au_UnitNum, unit->au_Cylinders, unit->au_Heads, unit->au_Sectors));
 
     return 0;
 }
@@ -1720,7 +1741,7 @@ static BYTE ata_ReadSector32(struct ata_Unit *unit, ULONG block,
         count << unit->au_SectorShift,
         0,
         CM_PIORead,
-        CT_LBA28
+        (unit->au_Flags & AF_CHSOnly) ? CT_CHS : CT_LBA28,
     };
     BYTE err;
 
@@ -1749,7 +1770,7 @@ static BYTE ata_ReadMultiple32(struct ata_Unit *unit, ULONG block,
         count << unit->au_SectorShift,
         0,
         CM_PIORead,
-        CT_LBA28
+        (unit->au_Flags & AF_CHSOnly) ? CT_CHS : CT_LBA28,
     };
     BYTE err;
 
@@ -1779,7 +1800,7 @@ static BYTE ata_ReadDMA32(struct ata_Unit *unit, ULONG block,
         count << unit->au_SectorShift,
         0,
         CM_DMARead,
-        CT_LBA28
+        (unit->au_Flags & AF_CHSOnly) ? CT_CHS : CT_LBA28,
     };
 
     D(bug("[ATA%02ld] ata_ReadDMA32()\n", unit->au_UnitNum));
@@ -1900,7 +1921,7 @@ static BYTE ata_WriteSector32(struct ata_Unit *unit, ULONG block,
         count << unit->au_SectorShift,
         0,
         CM_PIOWrite,
-        CT_LBA28
+        (unit->au_Flags & AF_CHSOnly) ? CT_CHS : CT_LBA28,
     };
     BYTE err;
 
@@ -1929,7 +1950,7 @@ static BYTE ata_WriteMultiple32(struct ata_Unit *unit, ULONG block,
         count << unit->au_SectorShift,
         0,
         CM_PIOWrite,
-        CT_LBA28
+        (unit->au_Flags & AF_CHSOnly) ? CT_CHS : CT_LBA28,
     };
     BYTE err;
 
@@ -1958,7 +1979,7 @@ static BYTE ata_WriteDMA32(struct ata_Unit *unit, ULONG block,
         count << unit->au_SectorShift,
         0,
         CM_DMAWrite,
-        CT_LBA28
+        (unit->au_Flags & AF_CHSOnly) ? CT_CHS : CT_LBA28,
     };
     BYTE err;
 
