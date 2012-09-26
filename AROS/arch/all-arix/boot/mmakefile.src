@@ -39,6 +39,7 @@ $(BINDIR)/boot:
 #MM     kernel-fs-emul-kobj         \
 #MM     kernel-unixio-kobj          \
 #MM     kernel-hidd-linuxfb-kobj    \
+#MM     kernel-hidd-linuxinput-kobj \
 #MM     linklibs
 
 # ---- ARIX board support package ----
@@ -46,7 +47,7 @@ $(BINDIR)/boot:
 KDEVS   := timer
 KLIBS   := exec expansion
 KHNDLRS := emul
-KHIDDS  := unixio linuxfb
+KHIDDS  := unixio linuxfb linuxinput
 KRSRCS  := battclock hostlib processor
 
 %link_kickstart mmake=kernel-link-arix file=$(BINDIR)/boot/aros-bsp-$(BSP) \
