@@ -29,22 +29,23 @@ $(BINDIR)/boot:
 #MM- kernel-arix: kernel-link-base
 
 #MM- kernel-link-arix : \
-#MM     kernel-kernel-kobj          \
-#MM     kernel-hostlib-kobj         \
-#MM     kernel-battclock-kobj       \
-#MM     kernel-processor-kobj       \
-#MM     kernel-timer-kobj           \
-#MM     kernel-expansion-kobj       \
-#MM     kernel-exec-kobj            \
-#MM     kernel-fs-emul-kobj         \
-#MM     kernel-unixio-kobj          \
-#MM     kernel-hidd-linuxfb-kobj    \
-#MM     kernel-hidd-linuxinput-kobj \
+#MM     kernel-kernel-kobj              \
+#MM     kernel-hostlib-kobj             \
+#MM     kernel-battclock-kobj           \
+#MM     kernel-processor-kobj           \
+#MM     kernel-timer-kobj               \
+#MM     kernel-expansion-kobj           \
+#MM     kernel-exec-kobj                \
+#MM     kernel-fs-emul-kobj             \
+#MM     kernel-unixio-kobj              \
+#MM     kernel-hidd-linuxfb-kobj        \
+#MM     kernel-hidd-linuxinput-kobj     \
+#MM     workbench-devs-hostdisk-kobj    \
 #MM     linklibs
 
 # ---- ARIX board support package ----
 
-KDEVS   := timer
+KDEVS   := timer hostdisk
 KLIBS   := exec expansion
 KHNDLRS := emul
 KHIDDS  := unixio linuxfb linuxinput
