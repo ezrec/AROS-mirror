@@ -6,8 +6,6 @@
     Lang: English.
 */
 
-#define DEBUG 0
-
 #define __OOP_NOATTRBASES__
 
 #include <exec/rawfmt.h>
