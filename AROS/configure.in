@@ -849,6 +849,16 @@ case "$target_os" in
         aros_target_family="unix"
         target_bootloader="grub2"
         case "$target_cpu" in
+            *arm*)
+                aros_target_cpu="arm"
+                aros_object_format="armelf_linux_eabi"
+                aros_flavour="emulation"
+                aros_target_mkdep="$aros_target_mkdep -D__GNUC__ -Darm -D__linux__"
+                gcc_target_cpu="arm"
+                aros_config_cflags="$aros_config_cflags -fno-strict-aliasing -fno-omit-frame-pointer"
+                aros_config_aflags="$aros_config_aflags -fno-strict-aliasing"
+                aros_arch_libs="-laeabi"
+                kernel_tool_prefix="arm-linux-gnueabi-"
             *i?86*)
                 aros_target_cpu="i386"
                 aros_object_format="elf_i386"
@@ -2062,8 +2072,8 @@ if test "$aros_kernel_includes" != "" ; then
                 aros_kernel_cc_includes+=" -isystem $aros_kernel_cc_includes"-fixed
             fi
             # Check for specific includes directory. Neede for Ubuntu 11.10
-            if test -d "/usr/include/i386-linux-gnu"; then
-                aros_kernel_cc_includes+=" -isystem /usr/include/i386-linux-gnu"
+            if test -d "/usr/include/${aros_target_cpu}-linux-gnu"; then
+                aros_kernel_cc_includes+=" -isystem /usr/include/${aros_target_cpu}-linux-gnu"
             fi
         else
             # The directory doesn't exist, we need to do some more work.
