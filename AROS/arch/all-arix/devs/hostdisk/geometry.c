@@ -24,11 +24,18 @@ ULONG Host_DeviceGeometry(int file, struct DriveGeometry *dg, struct HostDiskBas
     size_t blksize;
     unsigned long devsize;
 
-    D(bug("hostdisk: Host_DeviceGeometry(%s)\n", Unit->filename));
+    D(bug("hostdisk: Host_DeviceGeometry(%d)\n", file));
 
     HostLib_Lock();
- 
+
+#if 1 /* HACK TO BOOT FROM CDROM */
+    geo.heads = 34;
+    geo.sectors = 13;
+    geo.cylinders = 8;
+    ret = 0;
+#else
     ret = hdskBase->iface->ioctl(file, HDIO_GETGEO, &geo);
+#endif
 
     if (ret != -1)
         ret = hdskBase->iface->ioctl(file, BLKSSZGET, &blksize);
@@ -82,6 +89,12 @@ static int deviceProbe(struct HostDiskBase *hdskBase)
 {
     struct stat64 st;
     int res;
+
+#if 1 /* HACK TO BOOT FROM CDROM */
+    hdskBase->DiskDevice = "/dev/sr%ld";
+    hdskBase->unitBase = 0;
+    return TRUE;
+#endif
 
     HostLib_Lock();
     res = hdskBase->iface->stat64("/dev/hda", &st);

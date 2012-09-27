@@ -72,7 +72,11 @@ static int Automount(struct HostDiskBase *hdskBase)
             pp[DE_MAXTRANSFER  + 4] = 0x00200000;
             pp[DE_MASK         + 4] = -2; /* On Windows Host_Read() fails with ERROR_INVALID_PARAMETER on odd addresses */
             pp[DE_BOOTPRI      + 4] = 0;
+#if 1 /* HACK TO BOOT FROM CDROM */
+            pp[DE_DOSTYPE      + 4] = AROS_MAKE_ID('C','D','V','D');
+#else
             pp[DE_DOSTYPE      + 4] = AROS_MAKE_ID('D','O','S','\001');
+#endif
             pp[DE_CONTROL      + 4] = 0;
             pp[DE_BOOTBLOCKS   + 4] = 2;
 
