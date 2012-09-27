@@ -18,7 +18,6 @@
 #include <hidd/mouse.h>
 #include <hidd/unixio.h>
 
-#define DEBUG 0
 #include <aros/debug.h>
 
 #include "linuxinput_intern.h"
@@ -129,8 +128,7 @@ static VOID inputtask_entry()
     D(bug("INSIDE INPUT TASK\n"));
     itp = *((struct inputtask_params *)FindTask(NULL)->tc_UserData);
     eh = itp.eh;
-    D(bug("in inputtask: lsd = %p\n", lsd));
-    D(bug("FDS: %d\n", lsd->mousedev));
+    D(bug("in inputtask: eh = %p\n", eh));
 
     buff = AllocMem(BUFF_SIZE, MEMF_PUBLIC);
     if (!buff)
@@ -228,7 +226,7 @@ VOID Init_LinuxInput_inputtask(struct EventHandler * eh)
     p.eh = eh;
     p.creator = FindTask(NULL);
 
-    D(bug("init_input_task: p.lsd = %p, p.creator = %p\n", p.lsd, p.creator));
+    D(bug("init_input_task: p.eh = %p, p.creator = %p\n", p.eh , p.creator));
     
     D(bug("SIGNALS ALLOCATED\n"));
     
