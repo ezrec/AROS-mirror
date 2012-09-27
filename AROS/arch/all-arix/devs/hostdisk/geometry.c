@@ -1,11 +1,3 @@
-/*
- * Define struct stat64 on Linux.
- * Define this before anything, since AROS includes
- * may include POSIX includes (for example aros/debug.h
- * includes string.h)
- */
-#define _LARGEFILE64_SOURCE
-
 #include <aros/debug.h>
 #include <aros/symbolsets.h>
 #include <devices/trackdisk.h>
@@ -79,32 +71,3 @@ ULONG Host_DeviceGeometry(int file, struct DriveGeometry *dg, struct HostDiskBas
 
     return 0;
 }
-
-/*
- * This checks if the system has /dev/hd* entries at all
- * and uses /dev/sd* if not.
- * It is assumed that we have at least /dev/hda.
- */
-static int deviceProbe(struct HostDiskBase *hdskBase)
-{
-    struct stat64 st;
-    int res;
-
-#if 1 /* HACK TO BOOT FROM CDROM */
-    hdskBase->DiskDevice = "/dev/sr%ld";
-    hdskBase->unitBase = 0;
-    return TRUE;
-#endif
-
-    HostLib_Lock();
-    res = hdskBase->iface->stat64("/dev/hda", &st);
-    HostLib_Unlock();
-
-    D(bug("hostdisk: /dev/hda check result: %d\n", res));
-    if (res == -1)
-        hdskBase->DiskDevice = "/dev/sd%lc";
-
-    return TRUE;
-}
-
-ADD2INITLIB(deviceProbe, 10);
