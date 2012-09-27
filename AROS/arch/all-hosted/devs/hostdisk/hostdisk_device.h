@@ -57,4 +57,7 @@ ULONG Host_Seek64(struct unit *Unit, ULONG pos, ULONG pos_hi);
 ULONG Host_GetGeometry(struct unit *Unit, struct DriveGeometry *dg);
 int Host_ProbeGeometry(struct HostDiskBase *hdskBase, char *name, struct DriveGeometry *dg);
 
+void UnitEntry(struct IOExtTD *iotd);
+void FreeUnit(struct unit *Unit);
+
 #endif
