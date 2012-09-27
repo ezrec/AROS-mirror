@@ -15,7 +15,7 @@ Compiling AROS
 :Status:    Done.
 :Abstract:  
     This document will explain how to compile AROS. Development of AROS is 
-    possible in two ways. First, you can use Linux, FreeBSD or Max OS X system
+    possible in two ways. First, you can use Linux, FreeBSD or Mac OS X system
     to cross compile AROS. The other option is to perform the compilation
     directly under AROS, which is also explained in this document.
 
@@ -44,6 +44,7 @@ If you want to compile the hosted i386-linux or i386-freebsd ports, the
 following is also required:
 
 + X11 development headers and libraries
++ OpenGL development headers and libraries
 
 If you want to build the ISO image of i386-pc or x86-64-pc ports with
 the GRUB 2 bootloader (the default), the following is also required:
@@ -53,7 +54,7 @@ the GRUB 2 bootloader (the default), the following is also required:
 Mac OS X
 --------
 
-Although there is currently no OS-X-hosted version of AROS, PC-native
+OS-X-hosted and PC-native versions of
 AROS can be cross compiled under OS X. There are several additional
 requirements for compiling AROS on this platform. Firstly, these
 software packages must be installed:
@@ -66,7 +67,7 @@ set of required software listed earlier:
 
 + i386-elf-gcc
 + netpbm
-+ cdrtools
++ cdrtools (not needed for hosted AROS)
 + gawk
 + py-pil
 + wget
