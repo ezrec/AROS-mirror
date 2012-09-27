@@ -25,6 +25,7 @@ ULONG Host_DeviceGeometry(int file, struct DriveGeometry *dg, struct HostDiskBas
     geo.sectors = 13;
     geo.cylinders = 8;
     ret = 0;
+    dg->dg_DeviceType = DG_CDROM;
 #else
     ret = hdskBase->iface->ioctl(file, HDIO_GETGEO, &geo);
 #endif

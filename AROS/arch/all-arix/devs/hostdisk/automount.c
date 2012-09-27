@@ -21,6 +21,84 @@
 
 extern const char GM_UNIQUENAME(LibName)[];
 
+struct unitExt
+{
+    struct unit     base;
+    LONG            ue_UnitNum;
+};
+
+/* Add a bootnode using expansion.library */
+static BOOL hd_RegisterVolume(struct DriveGeometry * dg, struct unitExt * unit)
+{
+    struct ExpansionBase *ExpansionBase;
+    struct DeviceNode *devnode;
+    TEXT dosdevname[4] = "HD0";
+    const ULONG IdDOS = AROS_MAKE_ID('D','O','S','\001');
+    const ULONG IdCDVD = AROS_MAKE_ID('C','D','V','D');
+
+    ExpansionBase = (struct ExpansionBase *)OpenLibrary("expansion.library",
+                                                        40L);
+
+    if (ExpansionBase)
+    {
+        IPTR pp[24];
+
+        /* This should be dealt with using some sort of volume manager or such. */
+        switch (dg->dg_DeviceType)
+        {
+            case DG_DIRECT_ACCESS:
+                break;
+            case DG_CDROM:
+                dosdevname[0] = 'C';
+                break;
+            default:
+                D(bug("[ATA>>]:-ata_RegisterVolume called on unknown devicetype\n"));
+        }
+
+        if (unit->ue_UnitNum < 10)
+            dosdevname[2] += unit->ue_UnitNum % 10;
+        else
+            dosdevname[2] = 'A' - 10 + unit->ue_UnitNum;
+
+        pp[0]                   = (IPTR)dosdevname;
+        pp[1]                   = (IPTR)MOD_NAME_STRING;
+        pp[2]                   = unit->ue_UnitNum;
+        pp[DE_TABLESIZE    + 4] = DE_BOOTBLOCKS;
+        pp[DE_SIZEBLOCK    + 4] = dg->dg_SectorSize >> 2;
+        pp[DE_NUMHEADS     + 4] = dg->dg_Heads;
+        pp[DE_SECSPERBLOCK + 4] = 1;
+        pp[DE_BLKSPERTRACK + 4] = dg->dg_TrackSectors;
+        pp[DE_RESERVEDBLKS + 4] = 2;
+        pp[DE_LOWCYL       + 4] = 0;
+        pp[DE_HIGHCYL      + 4] = dg->dg_Cylinders - 1;
+        pp[DE_NUMBUFFERS   + 4] = 10;
+        pp[DE_BUFMEMTYPE   + 4] = MEMF_PUBLIC | MEMF_31BIT;
+        pp[DE_MAXTRANSFER  + 4] = 0x00200000;
+        pp[DE_MASK         + 4] = 0x7FFFFFFE;
+        pp[DE_BOOTPRI      + 4] = ((dg->dg_DeviceType == DG_DIRECT_ACCESS) ? 0 : 10);
+        pp[DE_DOSTYPE      + 4] = ((dg->dg_DeviceType == DG_DIRECT_ACCESS) ? IdDOS : IdCDVD);
+        pp[DE_CONTROL      + 4] = 0;
+        pp[DE_BOOTBLOCKS   + 4] = 2;
+
+        devnode = MakeDosNode(pp);
+
+        if (devnode)
+        {
+            D(bug("[HostDisk]:hd_RegisterVolume: '%b', type=0x%08lx with StartCyl=%d, EndCyl=%d .. ",
+                  devnode->dn_Name, pp[DE_DOSTYPE + 4], pp[DE_LOWCYL + 4], pp[DE_HIGHCYL + 4]));
+
+            AddBootNode(pp[DE_BOOTPRI + 4], ADNF_STARTPROC, devnode, NULL);
+            D(bug("done\n"));
+
+            return TRUE;
+        }
+
+        CloseLibrary((struct Library *)ExpansionBase);
+    }
+
+    return FALSE;
+}
+
 static int Automount(struct HostDiskBase *hdskBase)
 {
     struct ExpansionBase *ExpansionBase = NULL;
@@ -41,65 +119,14 @@ static int Automount(struct HostDiskBase *hdskBase)
 
     for (u = 0; u < 30; u++)
     {
-        IPTR pp[24];
+        struct unitExt unitext;
+        unitext.ue_UnitNum = u;
 
         NewRawDoFmt(hdskBase->DiskDevice, (VOID_FUNC)RAWFMTFUNC_STRING, unit, u + hdskBase->unitBase);
 
         if (Host_ProbeGeometry(hdskBase, unit, &dg) == 0)
         {
-            struct DeviceNode *devnode;
-            TEXT dosdevname[4] = "HD0";
-
-            if (!ExpansionBase)
-            {
-                ExpansionBase = (struct ExpansionBase *)OpenLibrary("expansion.library", 40);
-                if (!ExpansionBase)
-                {
-                    FreeMem(unit, len);
-                    return FALSE;
-                }
-            }
-
-            if (u < 10)
-                dosdevname[2] += u % 10;
-            else
-                dosdevname[2] = 'A' - 10 + u;
-
-            D(bug("hostdisk: Automounting %s as %s\n", unit, dosdevname));
-
-            pp[0]               = (IPTR)dosdevname;
-            pp[1]               = (IPTR)GM_UNIQUENAME(LibName);
-            pp[2]               = u;
-            pp[DE_TABLESIZE    + 4] = DE_BOOTBLOCKS;
-            pp[DE_SIZEBLOCK    + 4] = dg.dg_SectorSize >> 2;
-            pp[DE_NUMHEADS     + 4] = dg.dg_Heads;
-            pp[DE_SECSPERBLOCK + 4] = 1;
-            pp[DE_BLKSPERTRACK + 4] = dg.dg_TrackSectors;
-            pp[DE_RESERVEDBLKS + 4] = 2;
-            pp[DE_LOWCYL       + 4] = 0;
-            pp[DE_HIGHCYL      + 4] = dg.dg_Cylinders - 1;
-            pp[DE_NUMBUFFERS   + 4] = 10;
-            pp[DE_BUFMEMTYPE   + 4] = MEMF_PUBLIC;
-            pp[DE_MAXTRANSFER  + 4] = 0x00200000;
-            pp[DE_MASK         + 4] = -2; /* On Windows Host_Read() fails with ERROR_INVALID_PARAMETER on odd addresses */
-            pp[DE_BOOTPRI      + 4] = 0;
-#if 1 /* HACK TO BOOT FROM CDROM */
-            pp[DE_DOSTYPE      + 4] = AROS_MAKE_ID('C','D','V','D');
-#else
-            pp[DE_DOSTYPE      + 4] = AROS_MAKE_ID('D','O','S','\001');
-#endif
-            pp[DE_CONTROL      + 4] = 0;
-            pp[DE_BOOTBLOCKS   + 4] = 2;
-
-            devnode = MakeDosNode(pp);
-            if (!devnode)
-            {
-                CloseLibrary(&ExpansionBase->LibNode);
-                FreeMem(unit, len);
-                return FALSE;
-            }
-
-            AddBootNode(pp[DE_BOOTPRI + 4], ADNF_STARTPROC, devnode, NULL);
+            hd_RegisterVolume(&dg, &unitext);
         }
     }
 
