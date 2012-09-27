@@ -8145,6 +8145,16 @@ case "$target_os" in
         aros_target_family="unix"
         target_bootloader="grub2"
         case "$target_cpu" in
+            *arm*)
+                aros_target_cpu="arm"
+                aros_object_format="armelf_linux_eabi"
+                aros_flavour="emulation"
+                aros_target_mkdep="$aros_target_mkdep -D__GNUC__ -Darm -D__linux__"
+                gcc_target_cpu="arm"
+                aros_config_cflags="$aros_config_cflags -fno-strict-aliasing -fno-omit-frame-pointer"
+                aros_config_aflags="$aros_config_aflags -fno-strict-aliasing"
+                aros_arch_libs="-laeabi"
+                kernel_tool_prefix="arm-linux-gnueabi-"
             *i?86*)
                 aros_target_cpu="i386"
                 aros_object_format="elf_i386"
