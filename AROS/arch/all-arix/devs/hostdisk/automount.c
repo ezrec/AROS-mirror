@@ -99,19 +99,79 @@ static BOOL hd_RegisterVolume(struct DriveGeometry * dg, struct unitExt * unit)
     return FALSE;
 }
 
-struct unitExt * CreateUnitTask(STRPTR nodename, LONG unitnum)
+struct unitExt * CreateUnitTask(STRPTR nodename, LONG unitnum, struct HostDiskBase *hdskBase)
 {
-    /* Dummy implementation */
     struct unitExt * unit = (struct unitExt *)AllocMem(sizeof(struct unitExt), MEMF_PUBLIC | MEMF_CLEAR);
-    unit->ue_UnitNum = unitnum;
+
+    ObtainSemaphore(&hdskBase->sigsem);
+
+    if (unit != NULL)
+    {
+        struct IOExtTD iotd; /* Just a dummy to match the UnitEntry signature */
+        LONG libnamelen = strlen((char *)GM_UNIQUENAME(LibName));
+        LONG nodenamelen = strlen(nodename);
+        TEXT taskName[libnamelen + nodenamelen + 2];
+        struct Task *unitTask;
+        STRPTR unitname = AllocVec(nodenamelen + 1, MEMF_ANY);
+
+        D(bug("hostdisk: in CreateUnitTask func. Allocation of unit memory okay. Setting up unit and calling CreateNewProc ...\n"));
+
+        strcpy(unitname, nodename);
+        CopyMem(GM_UNIQUENAME(LibName), taskName, libnamelen);
+        taskName[libnamelen] = ' ';
+        strcpy(&taskName[libnamelen + 1], unitname);
+
+        unit->ue_UnitNum        = unitnum;
+        unit->base.n.ln_Name    = unitname;
+        unit->base.usecount     = 1;
+        unit->base.hdskBase     = hdskBase;
+        unit->base.flags        = UNIT_FREENAME;
+        NEWLIST((struct List *)&unit->base.changeints);
+
+        iotd.iotd_Req.io_Unit = (struct Unit *)unit;
+        SetSignal(0, SIGF_SINGLE);
+        unitTask = NewCreateTask(TASKTAG_PC  , UnitEntry,
+                                 TASKTAG_NAME, taskName,
+                                 TASKTAG_ARG1, &iotd,
+                                 TAG_DONE);
+
+        D(bug("hostdisk: in CreateUnitTask func. NewCreateTask() called. Task = 0x%p\n", unitTask));
+
+        if (unitTask)
+        {
+            D(bug("hostdisk: in CreateUnitTask func. Waiting for signal from unit task...\n"));
+            Wait(SIGF_SINGLE);
+
+            D(bug("hostdisk: in CreateUnitTask func. Unit error %u, flags 0x%02X\n", iotd->iotd_Req.io_Error, unit->flags));
+            if (!iotd.iotd_Req.io_Error)
+            {
+                AddTail((struct List *)&hdskBase->units, &unit->base.n);
+                ReleaseSemaphore(&hdskBase->sigsem);
+                return unit;
+            }
+        }
+
+        FreeUnit((struct unit *)unit);
+    }
+
+    ReleaseSemaphore(&hdskBase->sigsem);
+
     return unit;
 }
 
-VOID HandlerDeviceNode(STRPTR nodename, struct HostDiskBase *hdskBase)
+void FreeUnit(struct unit *Unit)
+{
+    if (Unit->flags & UNIT_FREENAME)
+        FreeVec(Unit->n.ln_Name);
+
+    FreeMem(Unit, sizeof(struct unitExt));
+}
+
+VOID HandleDeviceNode(STRPTR nodename, struct HostDiskBase *hdskBase)
 {
     struct unitExt * unitext = NULL;
 
-    if ((unitext = CreateUnitTask(nodename, 0)) != NULL)
+    if ((unitext = CreateUnitTask(nodename, 0 /* FIXME: number should increase */, hdskBase)) != NULL)
     {
         struct DriveGeometry dg;
         if (Host_ProbeGeometry(hdskBase, nodename, &dg) == 0)
@@ -134,7 +194,7 @@ static int deviceProbe(struct HostDiskBase *hdskBase)
 #if 1 /* HACK TO BOOT FROM CDROM */
     hdskBase->DiskDevice = "/dev/sr%ld";
     hdskBase->unitBase = 0;
-    HandlerDeviceNode("/dev/sr0", hdskBase);
+    HandleDeviceNode("/dev/sr0", hdskBase);
     return TRUE;
 #endif
 
