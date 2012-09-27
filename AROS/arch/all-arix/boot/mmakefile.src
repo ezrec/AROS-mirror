@@ -36,7 +36,6 @@ $(BINDIR)/boot:
 #MM     kernel-timer-kobj               \
 #MM     kernel-expansion-kobj           \
 #MM     kernel-exec-kobj                \
-#MM     kernel-fs-emul-kobj             \
 #MM     kernel-unixio-kobj              \
 #MM     kernel-hidd-linuxfb-kobj        \
 #MM     kernel-hidd-linuxinput-kobj     \
@@ -47,7 +46,7 @@ $(BINDIR)/boot:
 
 KDEVS   := timer hostdisk
 KLIBS   := exec expansion
-KHNDLRS := emul
+KHNDLRS :=
 KHIDDS  := unixio linuxfb linuxinput
 KRSRCS  := battclock hostlib processor
 
