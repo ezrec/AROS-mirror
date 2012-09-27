@@ -20,7 +20,6 @@
 
 #include LC_LIBDEFS_FILE
 
-#define DEBUG 0
 #include <aros/debug.h>
 
 OOP_Object *LinuxMouse__Root__New(OOP_Class *cl, OOP_Object *o, struct pRoot_New *msg)

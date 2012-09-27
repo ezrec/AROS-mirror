@@ -26,7 +26,6 @@
 
 #include LC_LIBDEFS_FILE
 
-#define DEBUG 0
 #include <aros/debug.h>
 
 static UBYTE scancode2rawkey[256];
