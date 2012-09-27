@@ -61,7 +61,7 @@ static BOOL hd_RegisterVolume(struct DriveGeometry * dg, struct unitExt * unit)
             dosdevname[2] = 'A' - 10 + unit->ue_UnitNum;
 
         pp[0]                   = (IPTR)dosdevname;
-        pp[1]                   = (IPTR)MOD_NAME_STRING;
+        pp[1]                   = (IPTR)GM_UNIQUENAME(LibName);
         pp[2]                   = unit->ue_UnitNum;
         pp[DE_TABLESIZE    + 4] = DE_BOOTBLOCKS;
         pp[DE_SIZEBLOCK    + 4] = dg->dg_SectorSize >> 2;
@@ -99,46 +99,27 @@ static BOOL hd_RegisterVolume(struct DriveGeometry * dg, struct unitExt * unit)
     return FALSE;
 }
 
-static int Automount(struct HostDiskBase *hdskBase)
+struct unitExt * CreateUnitTask(STRPTR nodename, LONG unitnum)
 {
-    struct ExpansionBase *ExpansionBase = NULL;
-    char *unit;
-    struct DriveGeometry dg;
-    ULONG u, len;
-
-    if (hdskBase->segList)
-    {
-        D(bug("hostdisk: Loaded from disk, skipping automount.\n"));
-        return TRUE;
-    }
-
-    len = strlen(hdskBase->DiskDevice) + 5;
-    unit = AllocMem(len, MEMF_ANY);
-    if (!unit)
-        return FALSE;
-
-    for (u = 0; u < 30; u++)
-    {
-        struct unitExt unitext;
-        unitext.ue_UnitNum = u;
-
-        NewRawDoFmt(hdskBase->DiskDevice, (VOID_FUNC)RAWFMTFUNC_STRING, unit, u + hdskBase->unitBase);
-
-        if (Host_ProbeGeometry(hdskBase, unit, &dg) == 0)
-        {
-            hd_RegisterVolume(&dg, &unitext);
-        }
-    }
-
-    if (ExpansionBase)
-        CloseLibrary(&ExpansionBase->LibNode);
-        
-    FreeMem(unit, len);
-    return TRUE;
+    /* Dummy implementation */
+    struct unitExt * unit = (struct unitExt *)AllocMem(sizeof(struct unitExt), MEMF_PUBLIC | MEMF_CLEAR);
+    unit->ue_UnitNum = unitnum;
+    return unit;
 }
 
-ADD2INITLIB(Automount, 20);
+VOID HandlerDeviceNode(STRPTR nodename, struct HostDiskBase *hdskBase)
+{
+    struct unitExt * unitext = NULL;
 
+    if ((unitext = CreateUnitTask(nodename, 0)) != NULL)
+    {
+        struct DriveGeometry dg;
+        if (Host_ProbeGeometry(hdskBase, nodename, &dg) == 0)
+        {
+            hd_RegisterVolume(&dg, unitext);
+        }
+    }
+}
 
 /*
  * This checks if the system has /dev/hd* entries at all
@@ -153,6 +134,7 @@ static int deviceProbe(struct HostDiskBase *hdskBase)
 #if 1 /* HACK TO BOOT FROM CDROM */
     hdskBase->DiskDevice = "/dev/sr%ld";
     hdskBase->unitBase = 0;
+    HandlerDeviceNode("/dev/sr0", hdskBase);
     return TRUE;
 #endif
 
