@@ -1,10 +1,4 @@
-/*
- * Define struct stat64 on Linux.
- * Define this before anything, since AROS includes
- * may include POSIX includes (for example aros/debug.h
- * includes string.h)
- */
-#define _LARGEFILE64_SOURCE
+#include <fcntl.h>
 
 #include <aros/debug.h>
 #include <dos/filehandler.h>
@@ -14,8 +8,6 @@
 #include <proto/exec.h>
 #include <proto/expansion.h>
 #include <proto/hostlib.h>
-
-#include <linux/fs.h>
 
 #include LC_LIBDEFS_FILE
 
@@ -99,7 +91,7 @@ static BOOL hd_RegisterVolume(struct DriveGeometry * dg, struct unitExt * unit)
     return FALSE;
 }
 
-struct unitExt * CreateUnitTask(STRPTR nodename, LONG unitnum, struct HostDiskBase *hdskBase)
+static struct unitExt * CreateUnitTask(STRPTR nodename, LONG unitnum, struct HostDiskBase *hdskBase)
 {
     struct unitExt * unit = (struct unitExt *)AllocMem(sizeof(struct unitExt), MEMF_PUBLIC | MEMF_CLEAR);
 
@@ -167,44 +159,54 @@ void FreeUnit(struct unit *Unit)
     FreeMem(Unit, sizeof(struct unitExt));
 }
 
-VOID HandleDeviceNode(STRPTR nodename, struct HostDiskBase *hdskBase)
+static VOID HandleDeviceNode(STRPTR nodename, struct HostDiskBase *hdskBase)
 {
     struct unitExt * unitext = NULL;
 
-    if ((unitext = CreateUnitTask(nodename, 0 /* FIXME: number should increase */, hdskBase)) != NULL)
+    if ((unitext = CreateUnitTask(nodename, hdskBase->unitBase, hdskBase)) != NULL)
     {
         struct DriveGeometry dg;
         if (Host_ProbeGeometry(hdskBase, nodename, &dg) == 0)
         {
             hd_RegisterVolume(&dg, unitext);
         }
+
+        hdskBase->unitBase++;
     }
 }
 
-/*
- * This checks if the system has /dev/hd* entries at all
- * and uses /dev/sd* if not.
- * It is assumed that we have at least /dev/hda.
- */
+static VOID ScanDeviceNodes(STRPTR nodenametemplate, LONG startchar, LONG range, struct HostDiskBase *hdskBase)
+{
+    TEXT nodename[64];
+    LONG i, file;
+
+    for (i = 0; i < range; i++)
+    {
+        NewRawDoFmt(nodenametemplate, (VOID_FUNC)RAWFMTFUNC_STRING, nodename, i + startchar);
+
+        HostLib_Lock();
+        file = hdskBase->iface->open(nodename, O_RDONLY, 0755);
+        AROS_HOST_BARRIER
+        HostLib_Unlock();
+
+        if (file != -1)
+        {
+            HostLib_Lock();
+            hdskBase->iface->close(file);
+            AROS_HOST_BARRIER
+            HostLib_Unlock();
+
+            HandleDeviceNode(nodename, hdskBase);
+        }
+    }
+
+}
+
 static int deviceProbe(struct HostDiskBase *hdskBase)
 {
-    struct stat64 st;
-    int res;
+    hdskBase->unitBase = 0; /* Reuse the unitBase field as our "next unit num" */
 
-#if 1 /* HACK TO BOOT FROM CDROM */
-    hdskBase->DiskDevice = "/dev/sr%ld";
-    hdskBase->unitBase = 0;
-    HandleDeviceNode("/dev/sr0", hdskBase);
-    return TRUE;
-#endif
-
-    HostLib_Lock();
-    res = hdskBase->iface->stat64("/dev/hda", &st);
-    HostLib_Unlock();
-
-    D(bug("hostdisk: /dev/hda check result: %d\n", res));
-    if (res == -1)
-        hdskBase->DiskDevice = "/dev/sd%lc";
+    ScanDeviceNodes("/dev/sr%ld", 0, 30, hdskBase);
 
     return TRUE;
 }
