@@ -1,0 +1,9 @@
+# $Id$
+include $(TOP)/config/make.cfg
+
+#MM
+bootiso-arix-arm-linux-kernel: $(BINDIR)/boot/aros-init
+
+$(BINDIR)/boot/aros-init: aros-init
+		$(CP) $< $(BINDIR)/boot/
+
