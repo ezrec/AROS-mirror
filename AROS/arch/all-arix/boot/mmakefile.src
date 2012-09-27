@@ -6,8 +6,8 @@ else
     BSP := $(AROS_TARGET_VARIANT)
 endif
 
-#MM- kernel-arix-i386 : kernel-arix
-#MM- kernel-link-arix-i386 : kernel-link-arix
+#MM- kernel-arix-$(AROS_TARGET_CPU) : kernel-arix
+#MM- kernel-link-arix-$(AROS_TARGET_CPU) : kernel-link-arix
 
 # -------- Bootstrap part --------
 
