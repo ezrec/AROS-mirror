@@ -6,7 +6,7 @@
     Lang: english
 */
 
-#define DATTR(x)
+#define DATTR(x) D(x)
 
 #include <aros/asmcall.h>
 #include <aros/debug.h>
