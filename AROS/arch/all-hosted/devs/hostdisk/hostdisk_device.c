@@ -57,16 +57,6 @@ static int HostDisk_Cleanup(struct HostDiskBase *hdskBase)
 
 /****************************************************************************************/
 
-void FreeUnit(struct unit *Unit)
-{
-    if (Unit->flags & UNIT_FREENAME)
-        FreeVec(Unit->n.ln_Name);
-    
-    FreeMem(Unit, sizeof(struct unit));
-}
-
-/****************************************************************************************/
-
 extern const char GM_UNIQUENAME(LibName)[];
 
 static int GM_UNIQUENAME(Close)(LIBBASETYPEPTR hdskBase, struct IOExtTD *iotd)
