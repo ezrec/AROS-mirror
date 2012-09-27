@@ -15,19 +15,21 @@ ULONG Host_DeviceGeometry(int file, struct DriveGeometry *dg, struct HostDiskBas
     struct hd_geometry geo;
     size_t blksize;
     unsigned long devsize;
+    BOOL uselba = FALSE;
 
     D(bug("hostdisk: Host_DeviceGeometry(%d)\n", file));
 
     HostLib_Lock();
 
-#if 1 /* HACK TO BOOT FROM CDROM */
-    geo.heads = 34;
-    geo.sectors = 13;
-    geo.cylinders = 8;
-    ret = 0;
-#else
     ret = hdskBase->iface->ioctl(file, HDIO_GETGEO, &geo);
-#endif
+
+    if (ret == -1)
+    {
+        /* This fails for example for /dev/srX nodes */
+        uselba = TRUE;
+        geo.heads = geo.sectors = geo.cylinders = 1;
+        ret = 0;
+    }
 
     if (ret != -1)
         ret = hdskBase->iface->ioctl(file, BLKSSZGET, &blksize);
@@ -54,6 +56,9 @@ ULONG Host_DeviceGeometry(int file, struct DriveGeometry *dg, struct HostDiskBas
     dg->dg_CylSectors   = geo.heads * geo.sectors;
 
     if (dg->dg_TotalSectors % dg->dg_CylSectors)
+        uselba = TRUE;
+
+    if (uselba)
     {
         dg->dg_CylSectors = 1;
         dg->dg_Cylinders  = dg->dg_TotalSectors;
