@@ -8,6 +8,7 @@
 #include <proto/exec.h>
 #include <proto/expansion.h>
 #include <proto/hostlib.h>
+#include <devices/trackdisk.h>
 
 #include LC_LIBDEFS_FILE
 
@@ -17,6 +18,7 @@ struct unitExt
 {
     struct unit     base;
     LONG            ue_UnitNum;
+    LONG            ue_DeviceType;
 };
 
 /* Add a bootnode using expansion.library */
@@ -36,7 +38,7 @@ static BOOL hd_RegisterVolume(struct DriveGeometry * dg, struct unitExt * unit)
         IPTR pp[24];
 
         /* This should be dealt with using some sort of volume manager or such. */
-        switch (dg->dg_DeviceType)
+        switch (unit->ue_DeviceType)
         {
             case DG_DIRECT_ACCESS:
                 break;
@@ -67,8 +69,8 @@ static BOOL hd_RegisterVolume(struct DriveGeometry * dg, struct unitExt * unit)
         pp[DE_BUFMEMTYPE   + 4] = MEMF_PUBLIC | MEMF_31BIT;
         pp[DE_MAXTRANSFER  + 4] = 0x00200000;
         pp[DE_MASK         + 4] = 0x7FFFFFFE;
-        pp[DE_BOOTPRI      + 4] = ((dg->dg_DeviceType == DG_DIRECT_ACCESS) ? 0 : 10);
-        pp[DE_DOSTYPE      + 4] = ((dg->dg_DeviceType == DG_DIRECT_ACCESS) ? IdDOS : IdCDVD);
+        pp[DE_BOOTPRI      + 4] = ((unit->ue_DeviceType == DG_DIRECT_ACCESS) ? 0 : 10);
+        pp[DE_DOSTYPE      + 4] = ((unit->ue_DeviceType == DG_DIRECT_ACCESS) ? IdDOS : IdCDVD);
         pp[DE_CONTROL      + 4] = 0;
         pp[DE_BOOTBLOCKS   + 4] = 2;
 
@@ -159,7 +161,7 @@ void FreeUnit(struct unit *Unit)
     FreeMem(Unit, sizeof(struct unitExt));
 }
 
-static VOID HandleDeviceNode(STRPTR nodename, struct HostDiskBase *hdskBase)
+static VOID HandleDeviceNode(STRPTR nodename, LONG devicetype, struct HostDiskBase *hdskBase)
 {
     struct unitExt * unitext = NULL;
 
@@ -168,6 +170,7 @@ static VOID HandleDeviceNode(STRPTR nodename, struct HostDiskBase *hdskBase)
         struct DriveGeometry dg;
         if (Host_ProbeGeometry(hdskBase, nodename, &dg) == 0)
         {
+            unitext->ue_DeviceType = devicetype;
             hd_RegisterVolume(&dg, unitext);
         }
 
@@ -175,7 +178,8 @@ static VOID HandleDeviceNode(STRPTR nodename, struct HostDiskBase *hdskBase)
     }
 }
 
-static VOID ScanDeviceNodes(STRPTR nodenametemplate, LONG startchar, LONG range, struct HostDiskBase *hdskBase)
+static VOID ScanDeviceNodes(STRPTR nodenametemplate, LONG startchar, LONG range, LONG devicetype,
+        struct HostDiskBase *hdskBase)
 {
     TEXT nodename[64];
     LONG i, file;
@@ -196,7 +200,7 @@ static VOID ScanDeviceNodes(STRPTR nodenametemplate, LONG startchar, LONG range,
             AROS_HOST_BARRIER
             HostLib_Unlock();
 
-            HandleDeviceNode(nodename, hdskBase);
+            HandleDeviceNode(nodename, devicetype, hdskBase);
         }
     }
 
@@ -206,7 +210,11 @@ static int deviceProbe(struct HostDiskBase *hdskBase)
 {
     hdskBase->unitBase = 0; /* Reuse the unitBase field as our "next unit num" */
 
-    ScanDeviceNodes("/dev/sr%ld", 0, 30, hdskBase);
+    ScanDeviceNodes("/dev/hd%lc", 'a', 12, DG_DIRECT_ACCESS, hdskBase);
+
+    ScanDeviceNodes("/dev/sd%lc", 'a', 12, DG_DIRECT_ACCESS, hdskBase);
+
+    ScanDeviceNodes("/dev/sr%ld", 0, 12, DG_CDROM, hdskBase);
 
     return TRUE;
 }

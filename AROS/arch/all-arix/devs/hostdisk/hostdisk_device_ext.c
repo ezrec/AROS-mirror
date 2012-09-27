@@ -18,6 +18,7 @@ struct unitExt
 {
     struct unit     base;
     LONG            ue_UnitNum;
+    LONG            ue_DeviceType;
 };
 
 /* Functions located here are extracted from common implementation so that they can be overriden in arch-specific */
