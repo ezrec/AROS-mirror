@@ -121,3 +121,13 @@ static int GM_UNIQUENAME(Open)(LIBBASETYPEPTR hdskBase, struct IOExtTD *iotd, IP
 }
 
 ADD2OPENDEV(GM_UNIQUENAME(Open), 0)
+
+/****************************************************************************************/
+
+void FreeUnit(struct unit *Unit)
+{
+    if (Unit->flags & UNIT_FREENAME)
+        FreeVec(Unit->n.ln_Name);
+
+    FreeMem(Unit, sizeof(struct unit));
+}
