@@ -3123,3 +3123,8 @@ workbench/tools/BoingIconBar/mmakefile
 workbench/tools/BoingIconBar/strings.h
 workbench/tools/HDToolBox/icons/mmakefile
 
+arch/all-arix/devs/hostdisk/mmakefile
+arch/all-linux/hidd/linuxinput/mmakefile
+arch/arm-arix/iso/mmakefile
+arch/arm-arix/linux-kernel/mmakefile
+arch/arm-arix/processor/mmakefile
