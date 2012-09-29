@@ -140,7 +140,7 @@ ULONG Host_Open(struct unit *Unit)
 
     HostLib_Lock();
 
-    Unit->file = hdskBase->iface->open(Unit->filename, O_RDWR, 0755, &err);
+    Unit->file = hdskBase->iface->open(Unit->filename, O_RDWR | O_SYNC, 0755, &err);
     AROS_HOST_BARRIER
     err = *hdskBase->errnoPtr;
 
