@@ -12,6 +12,7 @@
 
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <signal.h>
 
 #undef timeval
 
@@ -69,6 +70,18 @@ struct HostInterface
     int            (*fstat64)(int fd, struct stat64 *buf);
 #endif
     int            (*stat64)(const char *path, struct stat64 *buf);
+
+    /* For the AMP async IO we need some more clib functions here */
+    int            (*sigprocmask)(int how, const sigset_t *set, sigset_t *oldset);
+    int            (*sigsuspend)(const sigset_t *mask);
+    int            (*sigaction)(int signum, const struct sigaction *act, struct sigaction *oldact);
+    int            (*sigemptyset)(sigset_t *set);
+    int            (*sigfillset)(sigset_t *set);
+    int            (*sigaddset)(sigset_t *set, int signum);
+    int            (*sigdelset)(sigset_t *set, int signum);
+    int            (*clone)(int (*fn)(void *), void *child_stack, int flags, void *arg, ...);
+    int            (*kill)(int pid, int sig);
+    int            (*getppid)();
 };
 
 #ifdef HOST_LONG_ALIGNED
