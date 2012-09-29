@@ -2,7 +2,7 @@
 #define FDSK_DEVICE_H
 
 /*
-    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
+    Copyright ï¿½ 1995-2011, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -39,6 +39,7 @@ struct unit
     UBYTE                       flags;
     ULONG                       changecount;
     struct MinList              changeints;
+    APTR						reserved;
 };
 
 #define filename n.ln_Name
