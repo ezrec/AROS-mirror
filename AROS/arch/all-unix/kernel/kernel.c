@@ -1,11 +1,11 @@
 /*
-    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
+    Copyright ï¿½ 1995-2011, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: Initialize the interface to the "hardware".
     Lang: english
 */
-
+#include <aros/debug.h>
 #include <exec/interrupts.h>
 #include <exec/execbase.h>
 #include <aros/asmcall.h>
@@ -155,6 +155,8 @@ static const char *kernel_functions[] =
     "sigfillset",
     "sigaddset",
     "sigdelset",
+    "getpid",
+    "kill",
 #endif
     NULL
 };
@@ -292,10 +294,32 @@ int core_Start(void *libc)
  * OS (e. g. Linux). We need host OS includes in order to get the proper definition, and
  * we include them only in arch-specific code.
  */
+
+#include <syscall.h>
+
+/*
+ * Due to cloning of the main process we cannot use raise() function anymore, since
+ * it uses cached value of PID. Since all cloned processes use the same TLS as the
+ * main AROS process, they happen to overwrite this cached PID with their own ones.
+ *
+ * The correct solution would be to synthetize the TLS for each cloned child, and I
+ * will most likely do it like that soon. For now, call getpid() as early as possible
+ * and raise exceptions using kill().
+ */
 void unix_SysCall(unsigned char n, struct KernelBase *KernelBase)
 {
-    DSC(bug("[KRN] SysCall %d\n", n));
+	static int pid = 0;
 
-    KernelBase->kb_PlatformData->iface->raise(SIGUSR1);
+	DSC(bug("[KRN] SysCall %d\n", n));
+
+	if (!pid || pid==-1)
+		pid = KernelBase->kb_PlatformData->iface->getpid();
+
+	DSC(bug("[KRN] sending SIGUSR1 to %d\n", pid));
+
+	if (pid==-1)
+		KernelBase->kb_PlatformData->iface->raise(SIGUSR1);
+	else
+		KernelBase->kb_PlatformData->iface->kill(pid, SIGUSR1);
     AROS_HOST_BARRIER
 }
