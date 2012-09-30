@@ -856,6 +856,7 @@ case "$target_os" in
                 aros_config_aflags="$aros_config_aflags -fno-strict-aliasing"
                 aros_arch_libs="-laeabi"
                 kernel_tool_prefix="arm-linux-gnueabi-"
+                ;;
             *i?86*)
                 aros_target_cpu="i386"
                 aros_object_format="elf_i386"
@@ -869,7 +870,7 @@ case "$target_os" in
                 aros_default_wbdepth=8
                 gcc_target_cpu="i386"
                 pci_hidd_target="hidd-pci-linux"
-				kernel_tool_prefix=""
+                kernel_tool_prefix=""
                 ;;
             *)
                 AC_MSG_ERROR("Unknown CPU for Arix -- $target_cpu")
