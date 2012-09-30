@@ -99,14 +99,14 @@ void irqHandler(struct ThreadData *td, struct unit *u)
 	/* Do we have IRQ from child process pending? */
 	if (td->td_mmio->mmio_IRQ == 1)
 	{
-		/* "Clear" IRQ */
-		td->td_mmio->mmio_IRQ = 0;
-
 		__sync_synchronize();
 
 		/* If there is any task waiting for signal, let it know :) */
 		if (td->td_mmio->mmio_Task)
 			Signal((struct Task *)td->td_mmio->mmio_Task, 1 << td->td_mmio->mmio_Signal);
+
+		/* "Clear" IRQ */
+		td->td_mmio->mmio_IRQ = 0;
 	}
 }
 
@@ -175,6 +175,7 @@ ULONG Host_Open(struct unit *Unit)
     	td->td_stacksize = 64*1024;
     	td->td_stack = AllocVec(td->td_stacksize, MEMF_CLEAR);
     	td->td_mmio = AllocVec(sizeof(struct HostMMIO), MEMF_CLEAR);
+
     	/*
     	 * We install an IRQ handler at SIGUSR2 (signal 12). It is shared with
     	 * software interrupts but that shouldn't be an issue - there are not so
@@ -198,7 +199,8 @@ ULONG Host_Open(struct unit *Unit)
     	Disable();
 
     	td->td_pid = hdskBase->iface->clone((int (*)(void*))host_thread, td->td_stack + td->td_stacksize,
-    			CLONE_FS | CLONE_SYSVSEM | CLONE_IO | CLONE_FILES | CLONE_VM, (void *)td);
+    			CLONE_FS | CLONE_SYSVSEM | CLONE_IO | CLONE_FILES | CLONE_VM,
+    			(void *)td);
 
     	AROS_HOST_BARRIER
 
