@@ -111,6 +111,17 @@ int host_thread(struct ThreadData *td)
 	    	AROS_HOST_BARRIER
 	    	break;
 
+		case CMD_FLUSH:
+			/* Do flush */
+			mmio->mmio_Ret = iface->fsync(mmio->mmio_File);
+	    	AROS_HOST_BARRIER
+	    	mmio->mmio_IRQ = 1;			// Set IRQ pending flag
+			mmio->mmio_Command = 0;		// Not really needed
+			__sync_synchronize();
+			iface->kill(parent_pid, 12);// Kill AROS
+	    	AROS_HOST_BARRIER
+	    	break;
+
 		default:
 			break;
 		}

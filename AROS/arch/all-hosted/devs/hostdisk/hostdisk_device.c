@@ -1,5 +1,5 @@
 /*
-    Copyright © 1995-2012, The AROS Development Team. All rights reserved.
+    Copyright ï¿½ 1995-2012, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -135,7 +135,6 @@ AROS_LH1(void, beginio,
     {
         case CMD_UPDATE:
         case CMD_CLEAR:
-        case CMD_FLUSH:
         case TD_MOTOR:
             /* Ignore but don't fail */
             iotd->iotd_Req.io_Error = 0;
@@ -143,6 +142,7 @@ AROS_LH1(void, beginio,
 
         case CMD_READ:
         case CMD_WRITE:
+        case CMD_FLUSH:
         case TD_SEEK:
         case TD_FORMAT:
         case TD_READ64:
@@ -430,6 +430,11 @@ void UnitEntry(struct IOExtTD *iotd)
                     err = Host_Seek64(unit, iotd->iotd_Req.io_Offset, iotd->iotd_Req.io_Actual);
                     break;
  
+                case CMD_FLUSH:
+                	DCMD(bug("%s: received CMD_FLUSH.\n", me->tc_Node.ln_Name));
+                	err = Host_Flush(unit);
+                	break;
+
                 case CMD_READ:
                     DCMD(bug("%s: received CMD_READ.\n", me->tc_Node.ln_Name));
                     DREAD(bug("hostdisk/CMD_READ: offset = %u (0x%08X)  size = %d\n", iotd->iotd_Req.io_Offset, iotd->iotd_Req.io_Offset, iotd->iotd_Req.io_Length));

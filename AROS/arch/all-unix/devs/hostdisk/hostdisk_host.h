@@ -53,6 +53,7 @@ struct HostInterface
     ssize_t        (*read)(int fildes, void *buf, size_t nbyte);
     ssize_t        (*write)(int fildes, const void *buf, size_t nbyte);
     int            (*ioctl)(int d, int request, ...);
+    int            (*fsync)(int filedes);
 #ifdef HOST_LONG_ALIGNED
     off_t          (*lseek)(int fildes, unsigned long offset_l, unsigned long offset_h, int whence);
 #else
