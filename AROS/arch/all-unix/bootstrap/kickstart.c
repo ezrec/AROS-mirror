@@ -3,6 +3,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/stat.h>
+#include <sys/ioctl.h>
+#include <linux/kd.h>
+#include <fcntl.h>
 
 /* These macros are defined in both UNIX and AROS headers. Get rid of warnings. */
 #undef __pure
@@ -40,6 +44,7 @@
 int kick(int (*addr)(), struct TagItem *msg)
 {
     int i;
+    int fd;
     
     do
     {
@@ -80,6 +85,19 @@ int kick(int (*addr)(), struct TagItem *msg)
 	 */
     	Host_FreeMem();
     	Host_ColdBoot();
+    }
+
+    /*
+     * AROS exited. Now switch the console back to text mode and clear the screen
+     */
+    fd = open("/dev/tty0", O_RDWR);
+    if (fd != -1)
+    {
+        /* The console was most likely text with keys translated */
+        ioctl(fd, KDSETMODE, KD_TEXT, 0);
+        ioctl(fd, KDSKBMODE, K_XLATE, 0);
+
+        close(fd);
     }
 
     return WEXITSTATUS(i);
