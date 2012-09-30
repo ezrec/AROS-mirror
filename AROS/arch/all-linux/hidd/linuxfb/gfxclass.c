@@ -341,9 +341,9 @@ static BOOL get_pixfmt(struct TagItem *pftags, struct fb_fix_screeninfo *fsi, st
         break;
     
     case FB_VISUAL_PSEUDOCOLOR:
-#warning "also pseudocolor pixelformats need red/green/blue masks now. Is the calc. correct here!?"
+        // FIXME: also pseudocolor pixelformats need red/green/blue masks now. Is the calc. correct here!?
         /* stegerg: apps when using GetDisplayInfoData(DTA_DISP) even on 8 bit palettized
-                    screens expect DisplayInfo->redbits/greenbits/bluebits to have
+            screens expect DisplayInfo->redbits/greenbits/bluebits to have
             correct values (they are calculated based on the red/green/blue masks)
             which reflect the "size" of the palette (16M, 4096, 262144) */
         
@@ -357,9 +357,9 @@ static BOOL get_pixfmt(struct TagItem *pftags, struct fb_fix_screeninfo *fsi, st
         break;
     
      case FB_VISUAL_STATIC_PSEUDOCOLOR:
-#warning "also pseudocolor pixelformats need red/green/blue masks now. Is the calc. correct here!?"
+        // FIXME: also pseudocolor pixelformats need red/green/blue masks now. Is the calc. correct here!?"
         /* stegerg: apps when using GetDisplayInfoData(DTA_DISP) even on 8 bit palettized
-                    screens expect DisplayInfo->redbits/greenbits/bluebits to have
+            screens expect DisplayInfo->redbits/greenbits/bluebits to have
             correct values (they are calculated based on the red/green/blue masks)
             which reflect the "size" of the palette (16M, 4096, 262144) */
         
