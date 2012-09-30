@@ -1,0 +1,13 @@
+# $Id$
+#
+include $(TOP)/config/make.cfg
+
+USER_CFLAGS := -I$(SRCDIR)/rom/processor
+
+FILES := \
+    processor_init 
+
+%build_archspecific mainmmake=kernel-processor maindir=rom/processor \
+    arch=arix-i386 files="$(FILES)"
+
+%common
