@@ -99,6 +99,8 @@ void irqHandler(struct ThreadData *td, struct unit *u)
 	/* Do we have IRQ from child process pending? */
 	if (td->td_mmio->mmio_IRQ == 1)
 	{
+		Disable();
+
 		__sync_synchronize();
 
 		/* If there is any task waiting for signal, let it know :) */
@@ -107,6 +109,9 @@ void irqHandler(struct ThreadData *td, struct unit *u)
 
 		/* "Clear" IRQ */
 		td->td_mmio->mmio_IRQ = 0;
+		__sync_synchronize();
+
+		Enable();
 	}
 }
 
@@ -343,6 +348,50 @@ LONG Host_Write(struct unit *Unit, APTR buf, ULONG size, ULONG *ioerr)
     return ret;
 }
 
+LONG Host_Flush(struct unit *Unit)
+{
+    struct HostDiskBase *hdskBase = Unit->hdskBase;
+    struct ThreadData *td = (struct ThreadData *)Unit->reserved;
+    int ret, err = 0;
+
+    /* Thread data available - postpone the request to child process */
+    if (td)
+    {
+    	/* We're waiting for completion */
+    	td->td_mmio->mmio_Task = FindTask(NULL);
+    	td->td_mmio->mmio_Signal = SIGB_SINGLE;
+
+    	/* Pinpoint the location... */
+    	td->td_mmio->mmio_File = Unit->file;
+    	td->td_mmio->mmio_Command = CMD_FLUSH;
+
+    	__sync_synchronize();
+
+    	/* ... and initiate the process */
+    	hdskBase->iface->kill(td->td_pid, 12);
+    	AROS_HOST_BARRIER
+
+    	/* Wait for completion */
+    	Wait(1 << td->td_mmio->mmio_Signal);
+    	ret = td->td_mmio->mmio_Ret;
+    }
+    else
+    {
+    	HostLib_Lock();
+
+        ret = hdskBase->iface->fsync(Unit->file);
+
+        AROS_HOST_BARRIER
+
+        HostLib_Unlock();
+    }
+
+//    if (ret == -1)
+//        *ioerr = error(err);
+
+    return ret;
+}
+
 ULONG Host_Seek(struct unit *Unit, ULONG pos)
 {
     return Host_Seek64(Unit, pos, 0);
@@ -450,6 +499,7 @@ static const char *libcSymbols[] =
     "read",
     "write",
     "ioctl",
+    "fsync",
     "lseek",
 #if defined(HOST_OS_linux) || defined(HOST_OS_arix)
     "__errno_location",

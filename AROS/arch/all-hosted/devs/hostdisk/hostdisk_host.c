@@ -19,6 +19,11 @@ void Host_Close(struct unit *Unit)
 
 }
 
+LONG Host_Flush(struct unit *Unit)
+{
+	return 0;
+}
+
 LONG Host_Read(struct unit *Unit, APTR buf, ULONG size, ULONG *ioerr)
 {
     *ioerr = IOERR_NOCMD;
