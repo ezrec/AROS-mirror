@@ -79,6 +79,7 @@ struct HostInterface
     int            (*clone)(int (*fn)(void *), void *child_stack, int flags, void *arg, ...);
     int            (*kill)(int pid, int sig);
     int            (*getppid)();
+    int            (*prctl)(int option, unsigned long arg2, unsigned long arg3, unsigned long arg4, unsigned long arg5);
 };
 
 #ifdef HOST_LONG_ALIGNED
