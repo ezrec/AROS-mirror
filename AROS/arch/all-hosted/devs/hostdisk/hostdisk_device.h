@@ -39,7 +39,7 @@ struct unit
     UBYTE                       flags;
     ULONG                       changecount;
     struct MinList              changeints;
-    APTR						reserved;
+    APTR                        reserved;
 };
 
 #define filename n.ln_Name
