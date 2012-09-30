@@ -352,7 +352,7 @@ LONG Host_Flush(struct unit *Unit)
 {
     struct HostDiskBase *hdskBase = Unit->hdskBase;
     struct ThreadData *td = (struct ThreadData *)Unit->reserved;
-    int ret, err = 0;
+    int ret;
 
     /* Thread data available - postpone the request to child process */
     if (td)
