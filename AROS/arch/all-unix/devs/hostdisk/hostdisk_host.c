@@ -95,24 +95,24 @@ static ULONG error(int unixerr)
 /* IRQ Handler is trigerred with every SIGUSR2 signal. */
 void irqHandler(struct ThreadData *td, struct unit *u)
 {
-	__sync_synchronize();
-	/* Do we have IRQ from child process pending? */
-	if (td->td_mmio->mmio_IRQ == 1)
-	{
-		Disable();
+    __sync_synchronize();
+    /* Do we have IRQ from child process pending? */
+    if (td->td_mmio->mmio_IRQ == 1)
+    {
+        Disable();
 
-		__sync_synchronize();
+        __sync_synchronize();
 
-		/* If there is any task waiting for signal, let it know :) */
-		if (td->td_mmio->mmio_Task)
-			Signal((struct Task *)td->td_mmio->mmio_Task, 1 << td->td_mmio->mmio_Signal);
+        /* If there is any task waiting for signal, let it know :) */
+        if (td->td_mmio->mmio_Task)
+            Signal((struct Task *)td->td_mmio->mmio_Task, 1 << td->td_mmio->mmio_Signal);
 
-		/* "Clear" IRQ */
-		td->td_mmio->mmio_IRQ = 0;
-		__sync_synchronize();
+        /* "Clear" IRQ */
+        td->td_mmio->mmio_IRQ = 0;
+        __sync_synchronize();
 
-		Enable();
-	}
+        Enable();
+    }
 }
 
 /*
@@ -165,61 +165,61 @@ ULONG Host_Open(struct unit *Unit)
     }
     else
     {
-    	/*
-    	 * Everything went fine so far - time for AMP part :)
-    	 *
-    	 * Here we create new child process which shares everything with AROS:
-    	 * it's VM, it's all files and their handles and so on. Then, we will
-    	 * postpone all reads and writes to that process and will wait here using
-    	 * exec.library functions. The advantage of this solution is, AROS can continue
-    	 * to work as before (including multitasking), whereas the tasks reading
-    	 * or writing to slow media will be waiting for the completion.
-    	 */
-    	struct ThreadData * td = (struct ThreadData *)AllocVec(sizeof(struct ThreadData), MEMF_CLEAR);
-    	td->td_iface = hdskBase->iface;
-    	td->td_stacksize = 64*1024;
-    	td->td_stack = AllocVec(td->td_stacksize, MEMF_CLEAR);
-    	td->td_mmio = AllocVec(sizeof(struct HostMMIO), MEMF_CLEAR);
+        /*
+         * Everything went fine so far - time for AMP part :)
+         *
+         * Here we create new child process which shares everything with AROS:
+         * it's VM, it's all files and their handles and so on. Then, we will
+         * postpone all reads and writes to that process and will wait here using
+         * exec.library functions. The advantage of this solution is, AROS can continue
+         * to work as before (including multitasking), whereas the tasks reading
+         * or writing to slow media will be waiting for the completion.
+         */
+        struct ThreadData * td = (struct ThreadData *)AllocVec(sizeof(struct ThreadData), MEMF_CLEAR);
+        td->td_iface = hdskBase->iface;
+        td->td_stacksize = 64*1024;
+        td->td_stack = AllocVec(td->td_stacksize, MEMF_CLEAR);
+        td->td_mmio = AllocVec(sizeof(struct HostMMIO), MEMF_CLEAR);
 
-    	/*
-    	 * We install an IRQ handler at SIGUSR2 (signal 12). It is shared with
-    	 * software interrupts but that shouldn't be an issue - there are not so
-    	 * many of them anyway.
-    	 */
-    	td->td_irqHandler = KrnAddIRQHandler(12, irqHandler, td, Unit);
+        /*
+         * We install an IRQ handler at SIGUSR2 (signal 12). It is shared with
+         * software interrupts but that shouldn't be an issue - there are not so
+         * many of them anyway.
+         */
+        td->td_irqHandler = KrnAddIRQHandler(12, irqHandler, td, Unit);
 
-    	/*
-    	 * Ping me when you're awake!
-    	 */
-    	td->td_mmio->mmio_Task = FindTask(NULL);
-    	td->td_mmio->mmio_Signal = SIGB_SINGLE;
+        /*
+         * Ping me when you're awake!
+         */
+        td->td_mmio->mmio_Task = FindTask(NULL);
+        td->td_mmio->mmio_Signal = SIGB_SINGLE;
 
-    	HostLib_Lock();
+        HostLib_Lock();
 
-    	/*
-    	 * Disabled state is important. Cloning AROS process will let both processes
-    	 * share the sigprocmask initially as well as share the signal handlers. We
-    	 * really do not want to let AROS scheduler run on the child...
-    	 */
-    	Disable();
+        /*
+         * Disabled state is important. Cloning AROS process will let both processes
+         * share the sigprocmask initially as well as share the signal handlers. We
+         * really do not want to let AROS scheduler run on the child...
+         */
+        Disable();
 
-    	td->td_pid = hdskBase->iface->clone((int (*)(void*))host_thread, td->td_stack + td->td_stacksize,
-    			CLONE_FS | CLONE_SYSVSEM | CLONE_IO | CLONE_FILES | CLONE_VM,
-    			(void *)td);
+        td->td_pid = hdskBase->iface->clone((int (*)(void*))host_thread, td->td_stack + td->td_stacksize,
+                CLONE_FS | CLONE_SYSVSEM | CLONE_IO | CLONE_FILES | CLONE_VM,
+                (void *)td);
 
-    	AROS_HOST_BARRIER
+        AROS_HOST_BARRIER
 
-    	Enable();
+        Enable();
 
-    	HostLib_Unlock();
+        HostLib_Unlock();
 
-    	/*
-    	 * Our clone is running. Wait for it a while.
-    	 */
-    	Wait(1 << SIGB_SINGLE);
+        /*
+         * Our clone is running. Wait for it a while.
+         */
+        Wait(1 << SIGB_SINGLE);
 
-    	/* All done! */
-    	Unit->reserved = td;
+        /* All done! */
+        Unit->reserved = td;
     }
 
     return 0;
@@ -237,10 +237,10 @@ void Host_Close(struct unit *Unit)
 
     if (td)
     {
-    	td->td_mmio->mmio_Command = -1;
-    	hdskBase->iface->kill(td->td_pid, 12);
+        td->td_mmio->mmio_Command = -1;
+        hdskBase->iface->kill(td->td_pid, 12);
 
-    	AROS_HOST_BARRIER
+        AROS_HOST_BARRIER
     }
     hdskBase->iface->close(Unit->file);
 
@@ -260,30 +260,30 @@ LONG Host_Read(struct unit *Unit, APTR buf, ULONG size, ULONG *ioerr)
     /* Thread data available - postpone the request to child process */
     if (td)
     {
-    	/* We're waiting for completion */
-    	td->td_mmio->mmio_Task = FindTask(NULL);
-    	td->td_mmio->mmio_Signal = SIGB_SINGLE;
+        /* We're waiting for completion */
+        td->td_mmio->mmio_Task = FindTask(NULL);
+        td->td_mmio->mmio_Signal = SIGB_SINGLE;
 
-    	/* Pinpoint the location... */
-    	td->td_mmio->mmio_File = Unit->file;
-    	td->td_mmio->mmio_Command = CMD_READ;
-    	td->td_mmio->mmio_Buffer = buf;
-    	td->td_mmio->mmio_Size = size;
+        /* Pinpoint the location... */
+        td->td_mmio->mmio_File = Unit->file;
+        td->td_mmio->mmio_Command = CMD_READ;
+        td->td_mmio->mmio_Buffer = buf;
+        td->td_mmio->mmio_Size = size;
 
-    	__sync_synchronize();
+        __sync_synchronize();
 
-    	/* ... and initiate the process */
-    	hdskBase->iface->kill(td->td_pid, 12);
-    	AROS_HOST_BARRIER
+        /* ... and initiate the process */
+        hdskBase->iface->kill(td->td_pid, 12);
+        AROS_HOST_BARRIER
 
-    	/* Wait for completion */
-    	Wait(1 << td->td_mmio->mmio_Signal);
-    	ret = td->td_mmio->mmio_Ret;
-    	err = *hdskBase->errnoPtr;
+        /* Wait for completion */
+        Wait(1 << td->td_mmio->mmio_Signal);
+        ret = td->td_mmio->mmio_Ret;
+        err = *hdskBase->errnoPtr;
     }
     else
     {
-    	HostLib_Lock();
+        HostLib_Lock();
 
         ret = hdskBase->iface->read(Unit->file, buf, size);
 
@@ -310,36 +310,36 @@ LONG Host_Write(struct unit *Unit, APTR buf, ULONG size, ULONG *ioerr)
     /* Thread data available - postpone the request to child process */
     if (td)
     {
-    	/* We're waiting for completion */
-    	td->td_mmio->mmio_Task = FindTask(NULL);
-    	td->td_mmio->mmio_Signal = SIGB_SINGLE;
+        /* We're waiting for completion */
+        td->td_mmio->mmio_Task = FindTask(NULL);
+        td->td_mmio->mmio_Signal = SIGB_SINGLE;
 
-    	/* Pinpoint the location... */
-    	td->td_mmio->mmio_File = Unit->file;
-    	td->td_mmio->mmio_Command = CMD_WRITE;
-    	td->td_mmio->mmio_Buffer = buf;
-    	td->td_mmio->mmio_Size = size;
+        /* Pinpoint the location... */
+        td->td_mmio->mmio_File = Unit->file;
+        td->td_mmio->mmio_Command = CMD_WRITE;
+        td->td_mmio->mmio_Buffer = buf;
+        td->td_mmio->mmio_Size = size;
 
-    	__sync_synchronize();
+        __sync_synchronize();
 
-    	/* ... and initiate the process */
-    	hdskBase->iface->kill(td->td_pid, 12);
-    	AROS_HOST_BARRIER
+        /* ... and initiate the process */
+        hdskBase->iface->kill(td->td_pid, 12);
+        AROS_HOST_BARRIER
 
-    	/* Wait for completion */
-    	Wait(1 << td->td_mmio->mmio_Signal);
-    	ret = td->td_mmio->mmio_Ret;
-    	err = *hdskBase->errnoPtr;
+        /* Wait for completion */
+        Wait(1 << td->td_mmio->mmio_Signal);
+        ret = td->td_mmio->mmio_Ret;
+        err = *hdskBase->errnoPtr;
     }
     else
     {
-    	HostLib_Lock();
+        HostLib_Lock();
 
-    	ret = hdskBase->iface->write(Unit->file, buf, size);
-    	AROS_HOST_BARRIER
-    	err = *hdskBase->errnoPtr;
+        ret = hdskBase->iface->write(Unit->file, buf, size);
+        AROS_HOST_BARRIER
+        err = *hdskBase->errnoPtr;
 
-    	HostLib_Unlock();
+        HostLib_Unlock();
     }
 
     if (ret == -1)
@@ -357,27 +357,27 @@ LONG Host_Flush(struct unit *Unit)
     /* Thread data available - postpone the request to child process */
     if (td)
     {
-    	/* We're waiting for completion */
-    	td->td_mmio->mmio_Task = FindTask(NULL);
-    	td->td_mmio->mmio_Signal = SIGB_SINGLE;
+        /* We're waiting for completion */
+        td->td_mmio->mmio_Task = FindTask(NULL);
+        td->td_mmio->mmio_Signal = SIGB_SINGLE;
 
-    	/* Pinpoint the location... */
-    	td->td_mmio->mmio_File = Unit->file;
-    	td->td_mmio->mmio_Command = CMD_FLUSH;
+        /* Pinpoint the location... */
+        td->td_mmio->mmio_File = Unit->file;
+        td->td_mmio->mmio_Command = CMD_FLUSH;
 
-    	__sync_synchronize();
+        __sync_synchronize();
 
-    	/* ... and initiate the process */
-    	hdskBase->iface->kill(td->td_pid, 12);
-    	AROS_HOST_BARRIER
+        /* ... and initiate the process */
+        hdskBase->iface->kill(td->td_pid, 12);
+        AROS_HOST_BARRIER
 
-    	/* Wait for completion */
-    	Wait(1 << td->td_mmio->mmio_Signal);
-    	ret = td->td_mmio->mmio_Ret;
+        /* Wait for completion */
+        Wait(1 << td->td_mmio->mmio_Signal);
+        ret = td->td_mmio->mmio_Ret;
     }
     else
     {
-    	HostLib_Lock();
+        HostLib_Lock();
 
         ret = hdskBase->iface->fsync(Unit->file);
 

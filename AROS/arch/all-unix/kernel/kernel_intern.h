@@ -31,7 +31,7 @@ struct KernelInterface
     int     (*sigaction)(int signum, const struct sigaction *act, struct sigaction *oldact);
     int     (*mprotect)(const void *addr, size_t len, int prot);
     ssize_t (*read)(int fd, void *buf, size_t count);
-    int	    (*fcntl)(int fd, int cmd, ...);
+    int     (*fcntl)(int fd, int cmd, ...);
     void *  (*mmap)(void *addr, size_t length, int prot, int flags, int fd, off_t offset);
     int     (*munmap)(void *addr, size_t length);
     int    *(*__error)(void);
@@ -42,7 +42,7 @@ struct KernelInterface
     int     (*SigFillSet)(sigset_t *set);
     int     (*SigAddSet)(sigset_t *set, int signum);
     int     (*SigDelSet)(sigset_t *set, int signum);
-    int		(*getpid)();
+    int     (*getpid)();
     int     (*kill)(int pid, int sig);
 #endif
 };
@@ -65,8 +65,8 @@ struct KernelInterface
 
 struct PlatformData
 {
-    sigset_t		    sig_int_mask;   /* Mask of signals that Disable() block */
-    int			   *errnoPtr;
+    sigset_t            sig_int_mask;   /* Mask of signals that Disable() block */
+    int               *errnoPtr;
     struct KernelInterface *iface;
 };
 
