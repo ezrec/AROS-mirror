@@ -473,8 +473,8 @@ void UnitEntry(struct IOExtTD *iotd)
                     SetSignal(0, flushsig);
 
                     DCMD(bug("%s: received CMD_FLUSH.\n", me->tc_Node.ln_Name));
-                	err = Host_Flush(unit);
-                	break;
+                    err = Host_Flush(unit);
+                    break;
 
                 case CMD_READ:
                     DCMD(bug("%s: received CMD_READ.\n", me->tc_Node.ln_Name));
