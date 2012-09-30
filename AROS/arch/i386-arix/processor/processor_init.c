@@ -1,5 +1,5 @@
 /*
-    Copyright © 2010-2011, The AROS Development Team. All rights reserved.
+    Copyright ï¿½ 2010-2011, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -28,7 +28,8 @@ LONG Processor_Init(struct ProcessorBase * ProcessorBase)
         sysprocs[i] = AllocMem(sizeof(struct X86ProcessorInformation), MEMF_CLEAR);
         if (!sysprocs[i])
             return FALSE;
-        ReadProcessorInformation(sysprocs[0]);
+
+        ReadProcessorInformation(sysprocs[i]);
     }
 
     ProcessorBase->Private1 = sysprocs;
