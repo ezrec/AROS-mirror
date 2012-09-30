@@ -524,6 +524,7 @@ static const char *libcSymbols[] =
     "clone",
     "kill",
     "getppid",
+    "prctl",
     NULL
 };
 

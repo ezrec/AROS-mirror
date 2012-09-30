@@ -3,6 +3,7 @@
 #include <exec/types.h>
 #include <string.h>
 #include <signal.h>
+#include <sys/prctl.h>
 
 #include "hostdisk_host.h"
 #include "host_thread.h"
@@ -37,6 +38,9 @@ int host_thread(struct ThreadData *td)
 	int i;
 
 	struct sigaction sa;
+
+	/* Suicide, when AROS dies */
+	iface->prctl(PR_SET_PDEATHSIG, SIGKILL, 0, 0, 0);
 
 	/*
 	 * The AROS process is cloned in disabled state. Nevertheless, mask all
