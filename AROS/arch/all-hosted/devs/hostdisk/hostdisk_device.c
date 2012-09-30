@@ -15,6 +15,7 @@
 #include <aros/symbolsets.h>
 #include <devices/trackdisk.h>
 #include <devices/newstyle.h>
+#include <devices/timer.h>
 #include <exec/errors.h>
 #include <exec/rawfmt.h>
 #include <proto/dos.h>
@@ -374,6 +375,8 @@ void UnitEntry(struct IOExtTD *iotd)
     struct Task *me = FindTask(NULL);
     struct Task *parent = me->tc_UnionETask.tc_ETask->et_Parent;
     struct unit *unit = (struct unit *)iotd->iotd_Req.io_Unit;
+    struct MsgPort *flushport;
+    struct timerequest *flushreq;
 
     D(bug("%s: just started\n", me->tc_Node.ln_Name));
 
@@ -383,6 +386,25 @@ void UnitEntry(struct IOExtTD *iotd)
         Signal(parent, SIGF_SINGLE);
         return;
     }
+
+    flushport = CreateMsgPort();
+    if (!flushport)
+    {
+        DeleteMsgPort(unit->port);
+        Signal(parent, SIGF_SINGLE);
+        return;
+    }
+
+    flushreq = CreateIORequest(flushport, sizeof(struct timerequest));
+    if (!flushreq)
+    {
+        DeleteMsgPort(unit->port);
+        DeleteMsgPort(flushport);
+        Signal(parent, SIGF_SINGLE);
+        return;
+    }
+
+    OpenDevice("timer.device", UNIT_VBLANK, (struct IORequest *)flushreq, 0);
 
     D(bug("%s: Trying to open \"%s\" ...\n", me->tc_Node.ln_Name, unit->n.ln_Name));
 
@@ -407,8 +429,21 @@ void UnitEntry(struct IOExtTD *iotd)
     for(;;)
     {
         ULONG portsig = 1 << unit->port->mp_SigBit;
-        ULONG sigs = Wait(portsig | SIGBREAKF_CTRL_C);
+        ULONG flushsig = 1 << flushport->mp_SigBit;
 
+        ULONG sigs = Wait(portsig | flushsig | SIGBREAKF_CTRL_C);
+
+        /* Got flush signal! */
+        if (sigs & flushsig)
+        {
+            /* Remove the message from port */
+            GetMsg(flushport);
+            if (flushreq->tr_node.io_Error != IOERR_ABORTED)
+            {
+                /* Flush data if the request wasn't cancelled */
+                Host_Flush(unit);
+            }
+        }
         if (sigs & portsig)
         {
             while((iotd = (struct IOExtTD *)GetMsg(unit->port)) != NULL)
@@ -431,7 +466,13 @@ void UnitEntry(struct IOExtTD *iotd)
                     break;
  
                 case CMD_FLUSH:
-                	DCMD(bug("%s: received CMD_FLUSH.\n", me->tc_Node.ln_Name));
+                    /* Cancel the delayed flush request */
+                    if (!CheckIO((struct IORequest *)flushreq))
+                        AbortIO((struct IORequest *)flushreq);
+                    GetMsg(flushport);
+                    SetSignal(0, flushsig);
+
+                    DCMD(bug("%s: received CMD_FLUSH.\n", me->tc_Node.ln_Name));
                 	err = Host_Flush(unit);
                 	break;
 
@@ -458,18 +499,36 @@ void UnitEntry(struct IOExtTD *iotd)
 
                 case CMD_WRITE:
                 case TD_FORMAT:
+                    /* Cancel the flush request */
+                    if (!CheckIO((struct IORequest *)flushreq))
+                        AbortIO((struct IORequest *)flushreq);
+                    GetMsg(flushport);
+                    SetSignal(0, flushsig);
+
                     DCMD(bug("%s: received %s\n", me->tc_Node.ln_Name, (iotd->iotd_Req.io_Command == CMD_WRITE) ? "CMD_WRITE" : "TD_FORMAT"));
                     DWRITE(bug("hostdisk/CMD_WRITE: offset = %u (0x%08X)  size = %d\n", iotd->iotd_Req.io_Offset, iotd->iotd_Req.io_Offset, iotd->iotd_Req.io_Length));
 
                     err = Host_Seek(unit, iotd->iotd_Req.io_Offset);
                     if (!err)
                         err = write(unit, iotd);
+
+                    /* Now set the flush request again */
+                    flushreq->tr_node.io_Command = TR_ADDREQUEST;
+                    flushreq->tr_time.tv_secs = 1;
+                    flushreq->tr_time.tv_micro = 0;
+                    SendIO((struct IORequest *)flushreq);
                     break;
 
                 case TD_WRITE64:
                 case TD_FORMAT64:
                 case NSCMD_TD_WRITE64:
                 case NSCMD_TD_FORMAT64:
+                    /* Cancel the flush request */
+                    if (!CheckIO((struct IORequest *)flushreq))
+                        AbortIO((struct IORequest *)flushreq);
+                    GetMsg(flushport);
+                    SetSignal(0, flushsig);
+
                     DCMD(bug("%s: received TD_WRITE64\n", me->tc_Node.ln_Name));
                     DWRITE(bug("hostdisk/TD_WRITE64: offset = 0x%08X%08X  size = %d\n",
                                iotd->iotd_Req.io_Actual, iotd->iotd_Req.io_Offset, iotd->iotd_Req.io_Length));
@@ -477,6 +536,12 @@ void UnitEntry(struct IOExtTD *iotd)
                     err = Host_Seek64(unit, iotd->iotd_Req.io_Offset, iotd->iotd_Req.io_Actual);
                     if (!err)
                         err = write(unit, iotd);
+
+                    /* Now set the flush request again */
+                    flushreq->tr_node.io_Command = TR_ADDREQUEST;
+                    flushreq->tr_time.tv_secs = 1;
+                    flushreq->tr_time.tv_micro = 0;
+                    SendIO((struct IORequest *)flushreq);
                     break;
 
                 case TD_CHANGENUM:
