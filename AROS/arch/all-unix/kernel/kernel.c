@@ -35,7 +35,6 @@
 
 #undef timeval
 
-#define D(x)
 #define DSC(x)
 
 #ifdef SIGCORE_NEED_SA_SIGINFO
