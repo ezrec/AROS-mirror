@@ -93,6 +93,7 @@ struct HostInterface
 #endif
 
 struct HostDiskBase;
+struct DriveGeometry;
 
 /* This routine is specific to a particular UNIX variant */
 ULONG Host_DeviceGeometry(int file, struct DriveGeometry *dg, struct HostDiskBase *hdskBase);

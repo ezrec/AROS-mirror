@@ -8,10 +8,15 @@
 #include "host_thread.h"
 
 /* Empty signal handler which does pretty nothing */
-void handler(int foo)
+#ifdef SA_SIGINFO
+#undef sa_handler
+void sa_handler(int sig, siginfo_t *si, void *data)
+#else
+void handler(int sig)
+#endif
 {
-	(void)foo;
 }
+
 
 /* I *do not* want to use any AROS library in this piece of code! */
 void clear(void *addr, int size)
@@ -47,8 +52,11 @@ int host_thread(struct ThreadData *td)
 	 * might kill the init (pid=1) :)
 	 */
 	clear(&sa, sizeof(sa));
+#ifdef SA_SIGINFO
+	sa.sa_sigaction = sa_handler;
+#else
 	sa.sa_handler = handler;
-	sa.sa_sigaction = handler;
+#endif
 
 	for (i=0; i < 32; i++)
 		iface->sigaction(i, &sa, NULL);
