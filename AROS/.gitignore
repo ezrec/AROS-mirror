@@ -3128,3 +3128,4 @@ arch/all-linux/hidd/linuxinput/mmakefile
 arch/arm-arix/iso/mmakefile
 arch/arm-arix/linux-kernel/mmakefile
 arch/arm-arix/processor/mmakefile
+arch/i386-arix/processor/mmakefile
