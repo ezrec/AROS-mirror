@@ -65,6 +65,7 @@ void cpumeter_task(struct X86ProcessorInformation **sysproc, int ncpu)
     char tmpbuf[10];
     int fd;
     int *errno_loc;
+    int nob;
 
     struct statistics oldstats[ncpu];
     struct statistics newstats[ncpu];
@@ -87,18 +88,18 @@ void cpumeter_task(struct X86ProcessorInformation **sysproc, int ncpu)
     treq = (struct timerequest *)CreateIORequest(tport, sizeof(struct timerequest));
 
     HostLib_Lock();
-    Forbid();
+    Disable();
     errno_loc = hi->error();
     fd = hi->open("/proc/stat", 0, 0);
     if (fd != -1)
     {
-        hi->read(fd, buffer, 4095);
+        nob = hi->read(fd, buffer, 4095);
         hi->close(fd);
     }
-    Permit();
+    Enable();
     HostLib_Unlock();
 
-    if (fd != -1)
+    if (nob > 0)
     {
         int i;
         for (i=0; i < ncpu; i++)
@@ -125,20 +126,23 @@ void cpumeter_task(struct X86ProcessorInformation **sysproc, int ncpu)
 
         DoIO((struct IORequest *)treq);
 
+        bzero(buffer, 4096);
+
         HostLib_Lock();
-        Forbid();
+        Disable();
         fd = hi->open("/proc/stat", 0, 0);
         if (fd != -1)
         {
-            hi->read(fd, buffer, 4095);
+            nob = hi->read(fd, buffer, 4095);
             hi->close(fd);
         }
-        Permit();
+        Enable();
         HostLib_Unlock();
 
-        if (fd != -1)
+        if (nob > 0)
         {
             int i;
+            bug("%s\n", buffer);
             D(bug("CPUStat: "));
             for (i=0; i < ncpu; i++)
             {
@@ -160,11 +164,15 @@ void cpumeter_task(struct X86ProcessorInformation **sysproc, int ncpu)
                     idle = newstats[i].idle - oldstats[i].idle;
                     system = newstats[i].system - oldstats[i].system;
 
+                    bug("%d %d %d %d\n", (ULONG)user, (ULONG)nice, (ULONG)system, (ULONG)idle);
                     CopyMem(newstats, oldstats, sizeof(newstats));
 
-                    total = user+nice+idle+system;
-                    usage = ((total - idle) * 1000 + 5) / total;
-                    sysproc[i]->CpuUsage = (ULONG)usage;
+                    total = user+nice+system;
+                    if ((total + idle) != 0)
+                    {
+                        usage = (total * 1000) / (total+idle);
+                        sysproc[i]->CpuUsage = (ULONG)usage;
+                    }
 
                     D(bug("cpu%d: %d   ", i, sysproc[i]->CpuUsage));
                 }
