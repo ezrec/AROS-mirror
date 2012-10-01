@@ -1,5 +1,5 @@
 /*
-    Copyright © 2010-2011, The AROS Development Team. All rights reserved.
+    Copyright ï¿½ 2010-2011, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -39,6 +39,9 @@ struct X86ProcessorInformation
     /* Frequency information */
     UQUAD   MaxCPUFrequency;
     UQUAD   MaxFSBFrequency;
+
+    /* CPU usage stats */
+    ULONG   CpuUsage;       /* 0..1000 */
 };
 
 #define cpuid(num) \
