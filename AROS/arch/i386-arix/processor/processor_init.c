@@ -12,6 +12,8 @@
 #include "processor_intern.h"
 #include "processor_arch_intern.h"
 
+void cpumeter_task(struct X86ProcessorInformation **sysproc, int ncpu);
+
 LONG Processor_Init(struct ProcessorBase * ProcessorBase)
 {
     struct X86ProcessorInformation **sysprocs;
@@ -33,6 +35,12 @@ LONG Processor_Init(struct ProcessorBase * ProcessorBase)
     }
 
     ProcessorBase->Private1 = sysprocs;
+
+    NewCreateTask(TASKTAG_PC, cpumeter_task,
+                  TASKTAG_NAME, "CPU Meter Task",
+                  TASKTAG_ARG1, sysprocs,
+                  TASKTAG_ARG2, ProcessorBase->cpucount,
+                  TAG_DONE);
 
     return TRUE;
 }
