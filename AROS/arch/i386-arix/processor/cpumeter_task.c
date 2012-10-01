@@ -92,7 +92,6 @@ void cpumeter_task(struct X86ProcessorInformation **sysproc, int ncpu)
     fd = hi->open("/proc/stat", 0, 0);
     if (fd != -1)
     {
-        int i;
         hi->read(fd, buffer, 4095);
         hi->close(fd);
     }
@@ -101,6 +100,7 @@ void cpumeter_task(struct X86ProcessorInformation **sysproc, int ncpu)
 
     if (fd != -1)
     {
+        int i;
         for (i=0; i < ncpu; i++)
         {
             snprintf(tmpbuf, 9, "cpu%d", i);
