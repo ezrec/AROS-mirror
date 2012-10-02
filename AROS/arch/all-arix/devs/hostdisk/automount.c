@@ -127,6 +127,7 @@ static struct unitExt * CreateUnitTask(STRPTR nodename, LONG unitnum, struct Hos
         unitTask = NewCreateTask(TASKTAG_PC  , UnitEntry,
                                  TASKTAG_NAME, taskName,
                                  TASKTAG_ARG1, &iotd,
+                                 TASKTAG_PRI, 10,
                                  TAG_DONE);
 
         D(bug("hostdisk: in CreateUnitTask func. NewCreateTask() called. Task = 0x%p\n", unitTask));
