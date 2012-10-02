@@ -1,5 +1,5 @@
 /*
-    Copyright © 1995-2012, The AROS Development Team. All rights reserved.
+    Copyright ï¿½ 1995-2012, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: Task used for wainting on events from linux
@@ -143,14 +143,17 @@ static VOID inputtask_entry()
 
         Hidd_UnixIO_Wait(eh->unixio, eh->eventdev, vHidd_UnixIO_Read);
         bytesread = Hidd_UnixIO_ReadFile(eh->unixio, eh->eventdev, buff, BUFF_SIZE, &ioerr);
-        items = bytesread / sizeof(struct input_event);
-
-        ptr = buff;
-
-        for (i = 0; i < items; i++)
+        if (bytesread > 0)
         {
-            process_input_event((struct input_event *)ptr, eh);
-            ptr += sizeof(struct input_event);
+            items = bytesread / sizeof(struct input_event);
+
+            ptr = buff;
+
+            for (i = 0; i < items; i++)
+            {
+                process_input_event((struct input_event *)ptr, eh);
+                ptr += sizeof(struct input_event);
+            }
         }
     }
 
