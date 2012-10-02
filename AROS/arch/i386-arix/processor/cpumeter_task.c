@@ -142,7 +142,6 @@ void cpumeter_task(struct X86ProcessorInformation **sysproc, int ncpu)
         if (nob > 0)
         {
             int i;
-            bug("%s\n", buffer);
             D(bug("CPUStat: "));
             for (i=0; i < ncpu; i++)
             {
@@ -164,7 +163,6 @@ void cpumeter_task(struct X86ProcessorInformation **sysproc, int ncpu)
                     idle = newstats[i].idle - oldstats[i].idle;
                     system = newstats[i].system - oldstats[i].system;
 
-                    bug("%d %d %d %d\n", (ULONG)user, (ULONG)nice, (ULONG)system, (ULONG)idle);
                     CopyMem(newstats, oldstats, sizeof(newstats));
 
                     total = user+nice+system;
