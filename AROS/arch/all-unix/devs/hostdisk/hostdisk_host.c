@@ -86,17 +86,17 @@ static ULONG error(int unixerr)
 
     switch (unixerr)
     {
-    case 0:
-        return 0;
+        case 0:
+            return 0;
 
-    case EBUSY:
-        return TDERR_DriveInUse;
+        case EBUSY:
+            return TDERR_DriveInUse;
 
-    case EPERM:
-        return TDERR_WriteProt;
+        case EPERM:
+            return TDERR_WriteProt;
 
-    default:
-        return TDERR_NotSpecified;
+        default:
+            return TDERR_NotSpecified;
     }
 }
 
@@ -138,6 +138,7 @@ void irqHandler(struct ThreadData *td, struct unit *u)
  * You have been warned...
  */
 
+#if 0
 int do_clone(void (*fn)(void *), void **stack, long flags, void *data)
 {
     long retval;
@@ -153,17 +154,18 @@ int do_clone(void (*fn)(void *), void **stack, long flags, void *data)
             "int $0x80\n"       /* exit system call: exit subthread */
             "1:\t"
             :"=a" (retval)
-            :"0" (120),"i" (__NR_exit),
-             "r" (fn),
-             "b" (flags),
-             "c" (stack));
+             :"0" (120),"i" (__NR_exit),
+              "r" (fn),
+              "b" (flags),
+              "c" (stack));
 
-        if (retval < 0) {
-            //errno = -retval;
-            retval = -1;
-        }
-        return retval;
+    if (retval < 0) {
+        //errno = -retval;
+        retval = -1;
+    }
+    return retval;
 }
+#endif
 
 ULONG Host_Open(struct unit *Unit)
 {
@@ -387,6 +389,7 @@ LONG Host_Write(struct unit *Unit, APTR buf, ULONG size, ULONG *ioerr)
 
         /* Wait for completion */
         Wait(1 << td->td_mmio->mmio_Signal);
+
         ret = td->td_mmio->mmio_Ret;
         if (ret < 0)
         {
@@ -450,8 +453,8 @@ LONG Host_Flush(struct unit *Unit)
         HostLib_Unlock();
     }
 
-//    if (ret == -1)
-//        *ioerr = error(err);
+    //    if (ret == -1)
+    //        *ioerr = error(err);
 
     return ret;
 }
@@ -504,9 +507,9 @@ static ULONG InternalGetGeometry(int file, struct DriveGeometry *dg, struct Host
              */
             err = Host_DeviceGeometry(file, dg, hdskBase);
 
-           /* If this routine is not implemented, use fstat() (worst case) */
-           if (err != ENOSYS)
-               return error(err);
+            /* If this routine is not implemented, use fstat() (worst case) */
+            if (err != ENOSYS)
+                return error(err);
         }
 
         D(bug("hostdisk: Image file length: %ld\n", st.st_size));
@@ -524,7 +527,7 @@ static ULONG InternalGetGeometry(int file, struct DriveGeometry *dg, struct Host
 ULONG Host_GetGeometry(struct unit *Unit, struct DriveGeometry *dg)
 {
     int err = InternalGetGeometry(Unit->file, dg, Unit->hdskBase);
-    
+
     return error(err);
 }
 
@@ -545,52 +548,52 @@ int Host_ProbeGeometry(struct HostDiskBase *hdskBase, char *name, struct DriveGe
     res = InternalGetGeometry(file, dg, hdskBase);
 
     HostLib_Lock();
-    
+
     hdskBase->iface->close(file);
     AROS_HOST_BARRIER
 
     HostLib_Unlock();
-    
+
     return res;
-}    
+}
 
 extern const char Hostdisk_LibName[];
 
 static const char *libcSymbols[] =
 {
-    "open",
-    "close",
-    "read",
-    "write",
-    "ioctl",
-    "fsync",
-    "lseek64",
+        "open",
+        "close",
+        "read",
+        "write",
+        "ioctl",
+        "fsync",
+        "lseek64",
 #if defined(HOST_OS_linux) || defined(HOST_OS_arix)
-    "__errno_location",
-    "__fxstat64",
-    "__xstat64",
+        "__errno_location",
+        "__fxstat64",
+        "__xstat64",
 #else
 #ifdef HOST_OS_android
-    "__errno",
+        "__errno",
 #else
-    "__error",
+        "__error",
 #endif
-    "fstat64" INODE64_SUFFIX,
-    "stat64" INODE64_SUFFIX,
+        "fstat64" INODE64_SUFFIX,
+        "stat64" INODE64_SUFFIX,
 #endif
-    "sigprocmask",
-    "sigsuspend",
-    "sigaction",
-    "sigemptyset",
-    "sigfillset",
-    "sigaddset",
-    "sigdelset",
-    "clone",
-    "kill",
-    "getppid",
-    "prctl",
-    "syscall",
-    NULL
+        "sigprocmask",
+        "sigsuspend",
+        "sigaction",
+        "sigemptyset",
+        "sigfillset",
+        "sigaddset",
+        "sigdelset",
+        "clone",
+        "kill",
+        "getppid",
+        "prctl",
+        "syscall",
+        NULL
 };
 
 static BOOL CheckArch(const char *Component, const char *MyArch, const char *SystemArch)
@@ -608,13 +611,13 @@ static BOOL CheckArch(const char *Component, const char *MyArch, const char *Sys
         {
             struct EasyStruct es =
             {
-                sizeof (struct EasyStruct),
-                0,
-                "Incompatible architecture",
-                "Used version of %s is built for use\n"
-                "with %s architecture, but your\n"
-                "system architecture is %s.",
-                "Ok",
+                    sizeof (struct EasyStruct),
+                    0,
+                    "Incompatible architecture",
+                    "Used version of %s is built for use\n"
+                    "with %s architecture, but your\n"
+                    "system architecture is %s.",
+                    "Ok",
             };
 
             EasyRequestArgs(NULL, &es, NULL, (IPTR *)arg);
