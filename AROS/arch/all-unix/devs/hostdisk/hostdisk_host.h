@@ -58,11 +58,7 @@ struct HostInterface
     ssize_t        (*write)(int fildes, const void *buf, size_t nbyte);
     int            (*ioctl)(int d, int request, ...);
     int            (*fsync)(int filedes);
-#ifdef HOST_LONG_ALIGNED
-    off_t          (*lseek)(int fildes, unsigned long offset_l, unsigned long offset_h, int whence);
-#else
-    off_t          (*lseek)(int fildes, off_t offset, int whence);
-#endif
+    signed long long (*lseek)(int fildes, signed long long offset, int whence);
     int           *(*__error)(void);
 #if defined(HOST_OS_linux) || defined(HOST_OS_arix)
     int            (*__fxstat64)(int ver, int fd, struct stat64 *buf);
@@ -84,18 +80,8 @@ struct HostInterface
     int            (*kill)(int pid, int sig);
     int            (*getppid)();
     int            (*prctl)(int option, unsigned long arg2, unsigned long arg3, unsigned long arg4, unsigned long arg5);
+    int            (*syscall)(int number, ...);
 };
-
-#ifdef HOST_LONG_ALIGNED
-/*
- * Somewhat dirty hack to adjust data packing to iOS ARM ABI.
- * Perhaps this can be done in a cleaner and more CPU-abstract way.
- * FIXME: Always assuming little-endian CPU
- */
-#define LSeek(fildes, offset, offset_high, whence) hdskBase->iface->lseek(fildes, offset, offset_high, whence)
-#else
-#define LSeek(fildes, offset, offset_high, whence) hdskBase->iface->lseek(fildes, (UQUAD)offset | (UQUAD)offset_high << 32, whence)
-#endif
 
 struct HostDiskBase;
 struct DriveGeometry;

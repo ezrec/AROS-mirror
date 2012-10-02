@@ -48,6 +48,7 @@
 #include <string.h>
 #include <signal.h>
 #include <sys/stat.h>
+#include <sys/syscall.h>
 
 #ifdef __linux__
 #define stat64 stat
@@ -77,6 +78,13 @@
 #define _GNU_SOURCE
 #include <linux/sched.h>
 
+/* Required to build with proper syscal numbers! Why!?? */
+#if defined __i386__
+#include <i386-linux-gnu/asm/unistd.h>
+#elif defined __arm__
+#include <arm-linux-gnueabihf/asm/unistd.h>
+#endif
+
 static ULONG error(int unixerr)
 {
     D(bug("hostdisk: UNIX error %d\n", unixerr));
@@ -102,7 +110,7 @@ void irqHandler(struct ThreadData *td, struct unit *u)
 {
     __sync_synchronize();
     /* Do we have IRQ from child process pending? */
-    if (td->td_mmio->mmio_IRQ == 1)
+    if (td->td_mmio->mmio_IRQ)
     {
         Disable();
 
@@ -114,6 +122,7 @@ void irqHandler(struct ThreadData *td, struct unit *u)
 
         /* "Clear" IRQ */
         td->td_mmio->mmio_IRQ = 0;
+
         __sync_synchronize();
 
         Enable();
@@ -133,6 +142,33 @@ void irqHandler(struct ThreadData *td, struct unit *u)
  *
  * You have been warned...
  */
+
+int do_clone(void (*fn)(void *), void **stack, long flags, void *data)
+{
+    long retval;
+
+    *--stack = data;
+
+    __asm__ __volatile__(
+            "int $0x80\n\t"     /* Linux/i386 system call */
+            "testl %0,%0\n\t"   /* check return value */
+            "jne 1f\n\t"        /* jump if parent */
+            "call *%3\n\t"      /* start subthread function */
+            "movl %2,%0\n\t"
+            "int $0x80\n"       /* exit system call: exit subthread */
+            "1:\t"
+            :"=a" (retval)
+            :"0" (120),"i" (__NR_exit),
+             "r" (fn),
+             "b" (flags),
+             "c" (stack));
+
+        if (retval < 0) {
+            //errno = -retval;
+            retval = -1;
+        }
+        return retval;
+}
 
 ULONG Host_Open(struct unit *Unit)
 {
@@ -180,6 +216,8 @@ ULONG Host_Open(struct unit *Unit)
          * to work as before (including multitasking), whereas the tasks reading
          * or writing to slow media will be waiting for the completion.
          */
+//      int __pid;
+
         struct ThreadData * td = (struct ThreadData *)AllocVec(sizeof(struct ThreadData), MEMF_CLEAR);
         td->td_iface = hdskBase->iface;
         td->td_stacksize = 64*1024;
@@ -191,7 +229,7 @@ ULONG Host_Open(struct unit *Unit)
          * software interrupts but that shouldn't be an issue - there are not so
          * many of them anyway.
          */
-        td->td_irqHandler = KrnAddIRQHandler(12, irqHandler, td, Unit);
+        td->td_irqHandler = KrnAddIRQHandler(28, irqHandler, td, Unit);
 
         /*
          * Ping me when you're awake!
@@ -209,8 +247,24 @@ ULONG Host_Open(struct unit *Unit)
         Disable();
 
         td->td_pid = hdskBase->iface->clone((int (*)(void*))host_thread, td->td_stack + td->td_stacksize,
-                CLONE_FS | CLONE_SYSVSEM | CLONE_IO | CLONE_FILES | CLONE_VM,
-                (void *)td);
+                        CLONE_FS | CLONE_SYSVSEM /*| CLONE_IO */| CLONE_FILES | CLONE_VM,
+                        (void *)td);
+
+//      __pid = hdskBase->iface->syscall(SYS_clone, CLONE_FS | CLONE_SYSVSEM /*| CLONE_IO */| CLONE_FILES | CLONE_VM, td->td_stack + td->td_stacksize);
+//
+//      if (__pid == 0)
+//      {
+//          int retval = host_thread(td);
+//          hdskBase->iface->syscall(SYS_exit, retval);
+//      }
+//      else
+//      {
+//          td->td_pid = __pid;
+//      }
+//
+//      td->td_pid = do_clone((int (*)(void*))host_thread, td->td_stack + td->td_stacksize,
+//                CLONE_FS | CLONE_SYSVSEM /*| CLONE_IO */| CLONE_FILES | CLONE_VM,
+//                (void *)td);
 
         AROS_HOST_BARRIER
 
@@ -283,8 +337,13 @@ LONG Host_Read(struct unit *Unit, APTR buf, ULONG size, ULONG *ioerr)
 
         /* Wait for completion */
         Wait(1 << td->td_mmio->mmio_Signal);
+
         ret = td->td_mmio->mmio_Ret;
-        err = *hdskBase->errnoPtr;
+        if (ret < 0)
+        {
+            err = -ret;
+            ret = -1;
+        }
     }
     else
     {
@@ -334,7 +393,11 @@ LONG Host_Write(struct unit *Unit, APTR buf, ULONG size, ULONG *ioerr)
         /* Wait for completion */
         Wait(1 << td->td_mmio->mmio_Signal);
         ret = td->td_mmio->mmio_Ret;
-        err = *hdskBase->errnoPtr;
+        if (ret < 0)
+        {
+            err = -ret;
+            ret = -1;
+        }
     }
     else
     {
@@ -378,6 +441,7 @@ LONG Host_Flush(struct unit *Unit)
 
         /* Wait for completion */
         Wait(1 << td->td_mmio->mmio_Signal);
+
         ret = td->td_mmio->mmio_Ret;
     }
     else
@@ -406,16 +470,16 @@ ULONG Host_Seek64(struct unit *Unit, ULONG pos, ULONG pos_hi)
 {
     struct HostDiskBase *hdskBase = Unit->hdskBase;
     int res;
+    UQUAD pos64 = (((UQUAD)pos_hi) << 32) + (UQUAD)pos;
 
-    D(bug("hostdisk: Seek to block 0x%08X%08X (%llu)\n", pos_hi, pos, (((UQUAD)pos_hi) << 32) + pos));
+    D(bug("hostdisk: Seek to block 0x%08X%08X (%llu)\n", pos_hi, pos, pos64));
 
     /*
      * Host OS is usually not reentrant.
      * All host OS calls should be protected by global lock (since hostlib.resource v3).
      */
     HostLib_Lock();
-
-    res = LSeek(Unit->file, pos, pos_hi, SEEK_SET);
+    res = hdskBase->iface->lseek(Unit->file, pos64, SEEK_SET);
     AROS_HOST_BARRIER
 
     HostLib_Unlock();
@@ -505,7 +569,7 @@ static const char *libcSymbols[] =
     "write",
     "ioctl",
     "fsync",
-    "lseek",
+    "lseek64",
 #if defined(HOST_OS_linux) || defined(HOST_OS_arix)
     "__errno_location",
     "__fxstat64",
@@ -530,6 +594,7 @@ static const char *libcSymbols[] =
     "kill",
     "getppid",
     "prctl",
+    "syscall",
     NULL
 };
 
