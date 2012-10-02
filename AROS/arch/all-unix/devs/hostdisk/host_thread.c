@@ -117,92 +117,92 @@ int host_thread(struct ThreadData *td)
     sa.sa_handler = handler;
 #endif
 
-	for (i=0; i < 32; i++)
-		iface->sigaction(i, &sa, NULL);
+    for (i=0; i < 32; i++)
+        iface->sigaction(i, &sa, NULL);
 
-	/*
-	 * Enable SIGUSR2 only
-	 */
-	iface->sigfillset(&sigs);
-	iface->sigdelset(&sigs, 12);
+    /*
+     * Enable SIGUSR2 only
+     */
+    iface->sigfillset(&sigs);
+    iface->sigdelset(&sigs, 12);
 
-	AROS_HOST_BARRIER
+    AROS_HOST_BARRIER
 
-	/*
-	 * Find out the PID of parent (that is, AROS process)
-	 */
-	parent_pid = iface->syscall(SYS_getppid); //do_getppid(); //iface->getppid();
+    /*
+     * Find out the PID of parent (that is, AROS process)
+     */
+    parent_pid = iface->syscall(SYS_getppid); //do_getppid(); //iface->getppid();
 
-	/*
-	 * Kill'em! AROS' handler installed by hostdisk will know the child
-	 * up and awaiting commands
-	 */
-	mmio->mmio_IRQ = 1;				// Yup! That's me!
-	iface->syscall(SYS_kill, parent_pid, 28);
+    /*
+     * Kill'em! AROS' handler installed by hostdisk will know the child
+     * up and awaiting commands
+     */
+    mmio->mmio_IRQ = 1;				// Yup! That's me!
+    iface->syscall(SYS_kill, parent_pid, 28);
 
-	/* Endless loop starts here */
-	do {
-		/*
-		 * If there is any work to do, AROS will set up virtual MMIO range
-		 * and will kill the child process. Therefore, in order to save the
-		 * cpu cycles we will wait here a while.
-		 */
-	    iface->syscall(SYS_rt_sigsuspend, &sigs, _NSIG/8);
+    /* Endless loop starts here */
+    do {
+        /*
+         * If there is any work to do, AROS will set up virtual MMIO range
+         * and will kill the child process. Therefore, in order to save the
+         * cpu cycles we will wait here a while.
+         */
+        iface->syscall(SYS_rt_sigsuspend, &sigs, _NSIG/8);
 
-		AROS_HOST_BARRIER
+        AROS_HOST_BARRIER
 
-    	__sync_synchronize();
+        __sync_synchronize();
 
-		/* Handle two probably "slow" commands */
-		switch(mmio->mmio_Command)
-		{
-		case CMD_READ:
-			/* Do the read */
-            mmio->mmio_Ret = iface->syscall(SYS_read, mmio->mmio_File, mmio->mmio_Buffer, mmio->mmio_Size);
-	    	AROS_HOST_BARRIER
-	    	mmio->mmio_IRQ = 1;			// Set IRQ pending flag
-			mmio->mmio_Command = 0;		// Not really needed
-			__sync_synchronize();
+        /* Handle two probably "slow" commands */
+        switch(mmio->mmio_Command)
+        {
+            case CMD_READ:
+                /* Do the read */
+                mmio->mmio_Ret = iface->syscall(SYS_read, mmio->mmio_File, mmio->mmio_Buffer, mmio->mmio_Size);
+                AROS_HOST_BARRIER
+                mmio->mmio_IRQ = 1;			// Set IRQ pending flag
+                mmio->mmio_Command = 0;		// Not really needed
+                __sync_synchronize();
 
-			iface->syscall(SYS_kill, parent_pid, 28);// Kill AROS
-	    	AROS_HOST_BARRIER
-	    	break;
+                iface->syscall(SYS_kill, parent_pid, 28);// Kill AROS
+                AROS_HOST_BARRIER
+                break;
 
-		case CMD_WRITE:
-			/* Do the write */
-            mmio->mmio_Ret = iface->syscall(SYS_write, mmio->mmio_File, mmio->mmio_Buffer, mmio->mmio_Size);
-	    	AROS_HOST_BARRIER
-	    	mmio->mmio_IRQ = 1;			// Set IRQ pending flag
-			mmio->mmio_Command = 0;		// Not really needed
-			__sync_synchronize();
+            case CMD_WRITE:
+                /* Do the write */
+                mmio->mmio_Ret = iface->syscall(SYS_write, mmio->mmio_File, mmio->mmio_Buffer, mmio->mmio_Size);
+                AROS_HOST_BARRIER
+                mmio->mmio_IRQ = 1;			// Set IRQ pending flag
+                mmio->mmio_Command = 0;		// Not really needed
+                __sync_synchronize();
 
-			iface->syscall(SYS_kill, parent_pid, 28);// Kill AROS
-	    	AROS_HOST_BARRIER
-	    	break;
+                iface->syscall(SYS_kill, parent_pid, 28);// Kill AROS
+                AROS_HOST_BARRIER
+                break;
 
-		case CMD_FLUSH:
-			/* Do flush */
-            mmio->mmio_Ret = iface->syscall(SYS_fsync, mmio->mmio_File);
-	    	AROS_HOST_BARRIER
-	    	mmio->mmio_IRQ = 1;			// Set IRQ pending flag
-			mmio->mmio_Command = 0;		// Not really needed
-			__sync_synchronize();
+            case CMD_FLUSH:
+                /* Do flush */
+                mmio->mmio_Ret = iface->syscall(SYS_fsync, mmio->mmio_File);
+                AROS_HOST_BARRIER
+                mmio->mmio_IRQ = 1;			// Set IRQ pending flag
+                mmio->mmio_Command = 0;		// Not really needed
+                __sync_synchronize();
 
-			iface->syscall(SYS_kill, parent_pid, 28);// Kill AROS
-	    	AROS_HOST_BARRIER
-	    	break;
+                iface->syscall(SYS_kill, parent_pid, 28);// Kill AROS
+                AROS_HOST_BARRIER
+                break;
 
-		default:
-			break;
-		}
+            default:
+                break;
+        }
 
-	} while(mmio->mmio_Command != -1);	// command = -1 means, get out of here!
+    } while(mmio->mmio_Command != -1);	// command = -1 means, get out of here!
 
-	mmio->mmio_IRQ = 1;
-	__sync_synchronize();
+    mmio->mmio_IRQ = 1;
+    __sync_synchronize();
 
     iface->syscall(SYS_kill, parent_pid, 28);
-	AROS_HOST_BARRIER
+    AROS_HOST_BARRIER
 
-	return 0;
+    return 0;
 }
