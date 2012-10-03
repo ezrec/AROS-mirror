@@ -55,7 +55,7 @@ AROS_PROCP(EmulHandlerMain);
 
 /* File name manipulation functions (filenames.c) */
 BOOL shrink(char *filename);
-ULONG validate(const char *filename);
+ULONG _validate(const char *filename);
 char *append(char *c, const char *filename);
 long startpos(char *name, long i);
 void copyname(char *result, char *name, long i);
