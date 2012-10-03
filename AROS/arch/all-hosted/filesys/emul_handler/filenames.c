@@ -49,7 +49,7 @@ BOOL shrink(char *filename)
 }
 
 /* Validate file name */
-ULONG validate(char *filename)
+ULONG _validate(char *filename)
 {
     char *s = filename;
 
