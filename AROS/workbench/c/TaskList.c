@@ -1,5 +1,5 @@
 /*
-    Copyright © 1995-2009, The AROS Development Team. All rights reserved.
+    Copyright ï¿½ 1995-2009, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc:
@@ -69,7 +69,7 @@ struct task
     IPTR stacksize;
     IPTR stackused;
     WORD pri;
-    UQUAD cputime;
+    struct timeval cputime;
 };
 
 static int addtask(struct Task *task, struct task **t, STRPTR *e)
@@ -152,18 +152,6 @@ int main(void)
     IPTR size;
     struct task *buffer,*tasks,*tasks2;
 
-    /* Is all this code really needed to read the EClock frequency? sigh... */
-    struct TimerBase *TimerBase = NULL;
-    struct EClockVal ec;
-    struct MsgPort *port = CreateMsgPort();
-    struct timerequest *io = (struct timerequest *)CreateIORequest(port, sizeof(struct timerequest));
-    OpenDevice("timer.device", UNIT_VBLANK, (struct IORequest *)io, 0);
-    TimerBase = (struct TimerBase *)io->tr_node.io_Device;
-    eclock = ReadEClock(&ec);
-    CloseDevice((struct IORequest *)io);
-    DeleteIORequest((struct IORequest *)io);
-    DeleteMsgPort(port);
-
     for(size=2048;;size+=2048)
     {
         buffer=AllocVec(size,MEMF_ANY);
@@ -178,13 +166,11 @@ int main(void)
             FPuts(Output(),"Address\t\tType\tPri\tState\tCPU Time\tStack\tUsed\tName\n");
             for(tasks2=buffer;tasks2<tasks;tasks2++)
             {
-            	ULONG time;
+                ULONG time;
 
-            	/* If eclock was not null, use it */
-            	if (eclock)
-					time = tasks2->cputime / eclock;
-            	else /* Otherwise we cannot calculate the cpu time :/ */
-            		time = 0;
+                time = tasks2->cputime.tv_secs;
+                if (tasks2->cputime.tv_micro > 500000)
+                    time++;
 
                 IPTR args[10];
                 args[0]=(IPTR)tasks2->address;
