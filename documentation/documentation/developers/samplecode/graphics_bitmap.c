@@ -80,8 +80,8 @@ static void draw_bitmap(void)
     UWORD depth = GetBitMapAttr(win_rp->BitMap, BMA_DEPTH);
 
     /*
-        Create new bitmap. With BMF_MINPLANES and the bitmap pointer we are saying
-        that we want a bitmap which is similar than the target bitmap.
+        Create new bitmap. With BMF_MINPLANES and the bitmap pointer we indicate
+        we want a bitmap which is similar to the target bitmap.
     */
     bm = AllocBitMap(BMWIDTH , BMHEIGHT, depth, BMF_MINPLANES, win_rp->BitMap);
     if (!bm) clean_exit("Can't allocate bitmap\n");

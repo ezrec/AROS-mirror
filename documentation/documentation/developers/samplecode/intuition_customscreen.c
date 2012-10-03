@@ -1,7 +1,7 @@
 /*
-    Example for custom screen
+    Example of a custom screen
     
-    This time we are setting the colors directly.
+    In this example we're setting the colors directly.
 */
 
 #include <proto/exec.h>
@@ -82,14 +82,13 @@ static void draw_stuff(void)
     
     /*
         We can change single colors with SetRGB32() or a range of
-        colors with LoadRGB32(). In contrast to the color table above
-        we need 32 bit values for the color components.
+        colors with LoadRGB32(). In contrast to the color table above,
+        we need 32-bit values for the color components.
     */
     SetRGB32(&screen->ViewPort, 2, 0, 0xFFFFFFFF, 0);
     
     /*
-        Even when we use the same pen number as before we have to
-        set it again.
+        Even when we use the same pen number as before, we have to set it again.
     */
     SetAPen(rp, 2);
     Move(rp, 100, 300);

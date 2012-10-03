@@ -1,6 +1,6 @@
-=================
-AROS, Localize it
-=================
+======================================================
+AROS Application Development Manual -- Localizing AROS
+======================================================
 
 :Authors:   Olivier Adam, Matthias Rustler
 :Copyright: Copyright (C) 1995-2008, The AROS Development Team
@@ -14,27 +14,31 @@ AROS, Localize it
 Introduction
 ''''''''''''
 
-The *locale.library* provides us tools to localize applications. Localized strings are stored
-in separate language catalog files. A user can enable one ore more languages in the preferences
-editor "Locale". When a localized application is started, it first tries to open a catalog for the
-selected languages. If this fails it falls back to the application's build-in language, which
-is usually English.
+The *locale.library* provides us with tools to localize applications.
+Localized strings are stored in separate language catalog files. A user can
+enable one or more languages in the preferences editor "Locale". When a
+localized application is started, it first tries to open a catalog for one of
+the selected languages. If this fails it falls back on the application's
+built-in language, which is usually English.
 
-An important support tool for localization is *FlexCat*. It performs the following tasks:
+An important support tool for localization is *FlexCat*. It performs the
+following tasks:
 
 + Create new catalog translation files
 + Update catalog translation files
 + Create catalog files
 
-The AROS build system has a macro which translates all catalog translation files in a
-particular directory into catalog files.
+The AROS build system has a macro which translates all catalog translation
+files in a particular directory into catalog files.
 
-Currently, AROS supports only the ISO-8859-1 character set, which means you are limited to
-western european languages. (Well, there is a workaround, but this requires that you
-additionally select a font with a fitting encoding.)
+Currently, AROS supports only the ISO-8859-1 character set, which means you
+are limited to Western European languages. (Well, there is a workaround, but
+this requires that you additionally select a font with a fitting encoding.)
 
-This document gives you a work-flow to localize applications or localize existing applications
-or create catalogs files for existing localized applications.
+This document gives you a work-flow for localizing applications, adding
+localization to existing applications, or creating catalog files for existing
+localized applications.
+
 
 
 Prepare your application for localization
@@ -43,15 +47,18 @@ Prepare your application for localization
 Locale.library
 ~~~~~~~~~~~~~~
 
-The most important functions of locale.library for localizing are `OpenCatalog()`_, `GetCatalogStr()`_
-and `CloseCatalog()`_. AROS applications often have the files `locale.c` and `locale.h` with some
-wrapper functions: "_" (yes, the underline is the function name) returns the
-string for a given message ID. It is written in such a way that it falls back to the build-in
-language when a catalog can't be opened. "__" additionally casts the string to an IPTR. This is
-useful for many Zune applications.
+The most important functions of locale.library for localizing are
+`OpenCatalog()`_, `GetCatalogStr()`_, and `CloseCatalog()`_. AROS
+applications often have the files `locale.c` and `locale.h` with some wrapper
+functions. The function "_" (yes, the underline is the function name) returns
+the string for a given message ID. It is written in such a way that it falls
+back to the built-in language when a catalog can't be opened. The function
+"__" additionally casts the string to an IPTR. This is useful for many Zune
+applications.
 
-Note that a version number of 0 means that any version of the catalog can be openend, while
-any positive number means: open the catalog with the given version number.
+Note that a version number of 0 means that any version of the catalog can be
+opened, while any positive number means: open the catalog with the given
+version number.
 
 locale.c::
 
@@ -72,8 +79,8 @@ locale.c::
         if (LocaleBase != NULL && catalog != NULL)
         {
             return GetCatalogStr(catalog, id, CatCompArray[id].cca_Str);
-        } 
-        else 
+        }
+        else
         {
             return CatCompArray[id].cca_Str;
         }
@@ -119,35 +126,38 @@ locale.h::
 Modify the code of you application
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Replace all strings which should be translate-able by a call of the "_" function with
-a message identifier as parameter.
+Replace all strings which should be translate-able by a call of the "_"
+function with a message identifier as the parameter.
 
-e.g. ``puts("Hello world");`` becomes ``puts(_(MSG_HelloWorld));``
+E.g. ``puts("Hello world");`` becomes ``puts(_(MSG_HelloWorld));``
 
-This IDs must be unique and should give the translator a hint how they are used.
+These IDs must be unique and should give the translator a hint about the usage
+of the strings.
 
-e.g.: MSG_ERR_Application, MSG_MEN_Open, MSG_GAD_Cancel
+E.g.: MSG_ERR_Application, MSG_MEN_Open, MSG_GAD_Cancel
 
-Include `locale.h` with ``#include "locale.h"`` in all source files which contain
-translated strings.
+Include `locale.h` with ``#include "locale.h"`` in all source files which now
+contain message identifiers.
 
-Call the functions `Locale_Initialize` and `Locale_Deinitialize` in the init/cleanup area
-of your application.
+Call the functions `Locale_Initialize` at the init stage of your application,
+and call `Locale_Deinitialize` during its clean-up.
 
 
 Catalog description file
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-The next step is to create a catalog description file. Create a subdirectory with the
-name `catalogs`. Put in this directory a file with the name `myapp`.cd.
+The next step, is to create a catalog description file. Create a subdirectory
+with the name `catalogs`. Put a file with the name `myapp`.cd in this
+directory.
 
 The format of this file is::
 
     message ID (ID number/min. string length/max. string length)
     native string
 
-In most cases, you don't need the attributes within the round brackets and can simply
-write `(//)`. No empty lines are allowed and comments start with ";".
+In most cases, you won't need the attributes within the round brackets and
+will simply write `(//)`. No empty lines are allowed in the file, and comments
+start with ";".
 
 Example::
 
@@ -159,19 +169,22 @@ Example::
     ;
     MSG_GAD_Cancel (//)
     Cancel
-    
-If you want to split a string over several lines you have to append ``\`` to the lines.
+
+If you want to split a string over several lines you have to append ``\`` to
+the lines.
+
 
 Build system
 ~~~~~~~~~~~~
 
-The *locale.library* searches the catalogs in two places: `PROGDIR:Catalogs` and
-`LOCALE:Catalogs`. We must make a decission where our catalogs should be placed
-and then we have to create a metamake file (mmakefile.src) in the `catalogs`
-directory with the right path.
+The *locale.library* searches for the catalogs in two places:
+`PROGDIR:Catalogs` and `LOCALE:Catalogs`, of which the latter should be used
+for AROS system applications only. A location should be decided upon, and
+a MetaMake file (mmakefile.src) should be created in the appropriate
+`catalogs` directory.
 
-Example for catalogs in `LOCALE:Catalogs`. This should only be used for AROS
-system applications::
+An example of a MetaMake file for catalogs in `LOCALE:Catalogs`, when you're
+localising an AROS system application::
 
     include $(TOP)/config/make.cfg
 
@@ -179,8 +192,8 @@ system applications::
                 name=myapp subdir=System/Utilities
 
 
-Example for catalogs in `PROGDIR:Catalogs`. The directory must be a subdirectory
-of you applicaton::
+An example of a MetaMake file for catalogs in `PROGDIR:Catalogs`. The
+directory should be a subdirectory of your application's directory::
 
     include $(TOP)/config/make.cfg
 
@@ -192,15 +205,16 @@ of you applicaton::
                 name=myapp subdir= dir=$(CATDIR)
 
 
-The metamake file for the application has to take the metamake target
+The MetaMake file for the application has to take the MetaMake target
 for the catalogs as prerequisite. This ensures that the header with
 the strings is rebuild when the catalog description has changed.
 
-It is now a good idea to test if the application builds. Call `make` in the AROS
-directory.
+If you have followed the instruction above, it would be a good idea to test
+whether the application still builds. Call `make` in the AROS directory.
 
-If everything works well you should now have the file ``strings.h`` in the directory
-with the source code of your application.
+If everything works well you should now have the file ``strings.h`` in the
+directory with the source code of your application.
+
 
 
 Localizing
@@ -209,13 +223,14 @@ Localizing
 Catalog translation file
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Bevor we can start translation we have to check if our language is already
-supported by AROS. Look in *LOCALE:Languages/*. 
+Before starting a translation, *LOCALE:Languages/* should be checked to see
+whether the intended language is indeed supported by AROS.
 
-Now we can finally translate our application into another languages. Enter the
-`catalogs` subdirectory and create a language translation file with the *FlexCat*
-tool. *FlexCat* must be in the search path. The file name must be same name as in
-`LOCALE:Languages` without the `language` suffix.  
+Once confirmed the application can finally be translated into another
+language. Enter the `catalogs` subdirectory and create a language translation
+file with the *FlexCat* tool. *FlexCat* must be in the search path. The file
+name must be same name as in `LOCALE:Languages`, but with a `ct` suffix,
+rather than `language`.
 
 e.g.::
 
@@ -230,24 +245,26 @@ The result file will look like this::
     ;
     ;
     MSG_HelloWorld
-    
+
     ; Hello World
     ;
     MSG_ERR_Application
-    
+
     ; Can't open application
     ;
     MSG_GAD_Cancel
-    
+
     ; Cancel
 
-Replace the 'X' with valid information and fill the empty lines with the translated strings.
+Replace the 'X' with valid information and fill the empty lines with the
+translated strings.
 
-Sometimes the strings to be translated contain placeholders like %d, %s etc. It's
-important that you keep this placeholders in the translated strings in the same order.
+Sometimes the strings to be translated contain placeholders, like %d, %s, etc.
+It's important that you keep these placeholders in the translated strings in
+the same order.
 
-*FlexCat* allows some control sequences like \\n (newline), \\f (formfeed). See the
-*Flexcat* documentation for more possibilities.
+*FlexCat* allows some control sequences, like \\n (newline) and \\f
+(formfeed). See the *FlexCat* documentation for more possibilities.
 
 Complete translation file::
 
@@ -268,25 +285,26 @@ Complete translation file::
     Abbrechen
     ; Cancel
 
-Note that the version number (in our case "3") must be synchronal with
-the version number used in `OpenCatalog()`_.
+Note that the version number (in this case "3"), should match the version
+number used in `OpenCatalog()`_.
 
-Now you can call again `make` to test if the catalogs are created.
+Now you can call `make` again to test if the catalogs are created.
 
 
 Updating
 ~~~~~~~~
 
-One of the strengths of *FlexCat* is that it can update catalogs without deleting
-existing strings::
+One of the strengths of *FlexCat* is that it can update catalogs without
+deleting existing strings::
 
     FlexCat myapp.cd deutsch.ct NEWCTFILE=deutsch.ct
+
 
 
 Directories
 '''''''''''
 
-Usual source layout of a localized application::
+Typical source layout of a localized application::
 
     myapp
         mmakefile.src
@@ -314,26 +332,28 @@ Resulting binary layout::
         ...
 
 
+
 Localization for non-developers
 '''''''''''''''''''''''''''''''
 
 You don't need to be a developer to create or update catalogs for
-applications which are already localized. You need the AROS source
-code. Preferred method to get it is by the Subversion archive. This
-way you can commit your changes by yourself. Alternatively you can get
-the source from the download page. But then you need someone who puts
-your work back in the source.
+applications that have already been localized. You do need the AROS source
+code, and the preferred method to get that is from the Subversion archive.
+Using subversion will allow you to commit your changes yourself.
+Alternatively you could get the source from the download page. In that case,
+however, you would then need someone else to commit your work in the archive.
 
-You can then create or update the catalog translation files as shown
-above. A Windows port of the tool *FlexCat* is available at
-http://archives.aros-exec.org.
+After obtaining the catalog translation files, you can update them or create
+additional catalog translations as described above. A Windows port of the tool
+*FlexCat* is available at http://archives.aros-exec.org.
 
 Some applications and Zune classes are maintained outside of AROS
 (e.g. MUIbase, toolbar.mcc are available at http://sourceforge.net).
 You can indirectly support localized AROS versions if you do the
-translation in that repositories.
+translation in those repositories.
 
 
 .. _OpenCatalog():   ../autodocs/locale#opencataloga
 .. _GetCatalogStr(): ../autodocs/locale#getcatalogstr
 .. _CloseCatalog():  ../autodocs/locale#closecatalog
+

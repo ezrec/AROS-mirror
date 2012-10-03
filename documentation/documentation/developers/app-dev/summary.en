@@ -1,62 +1,62 @@
-===================================
-AROS Application Development Manual
-===================================
+==============================================
+AROS Application Development Manual -- Summary
+==============================================
 
 :Authors:   AROS Developer Mailing List
 :Copyright: Copyright (C) 2008-2010, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Big mess
-:ToDo:      
+:ToDo:
 
 `Index <index>`__
 
 Introduction
 ============
 
-This is an unordered summary of discussions of the AROS Deloper Mailing List,
-mainly about the build system, problems with shared libraries and Zune classes.
-This document needs a major overhaul, either turning it into a proper FAQ
-or moving some parts in other documents.
+This is an unordered summary of discussions of the AROS Developer Mailing
+List, mainly about the build system, problems with shared libraries and Zune
+classes. This document needs a major overhaul, either turning it into a proper
+FAQ or moving some parts in other documents.
 
 ::
 
     > The doc says, global variables are no problem. But not long ago, someone
-    > wrote that turning a linklib into a shared library is difficult because
-    > of some sections (.bbs?).
+    > wrote that turning a link library into a shared library is difficult
+    > because of some sections (.bbs?).
 
     The existence of these sections is not a problem. The meaning of these
     sections will be different between a static link lib and a shared
-    library though. When a .bbs section is available in a static link
-    library it will generate a .bbs section in each of the code it is linked
-    with, e.g. every program using this link library will have this global
+    library, though. When a .bbs section is available in a static link
+    library, it will generate a .bbs section in each binary it is linked for,
+    e.g. every program using this link library will have this global
     variable.
-    The .bbs section in an amiga shared library will contain global
-    variables for internal use in the library. These global vars are not
-    accessible in the programs using these libraries. The only way to pass
-    vars at the moment to programs using a shared library is through the
+    The .bbs section in an Amiga shared library will contain global
+    variables for internal use in the library. These global variables are not
+    accessible in the programs using these libraries. At the moment, the only
+    way to pass variables to programs using a shared library is through the
     libbase.
-    On UNIX first there were only static link libraries and later on dynamic
+    On Unix, first there were only static link libraries and later on dynamic
     shared libraries were introduced. This was done is such a way that
     global variables still behaved the same, e.g. if a library exports
     global variables it will generate a set of these global variables for
     every program using them. An additional complexity is that other shared
     libraries may be linked with the same shared library and then the global
     variable will be the same for the whole program. Take for example the
-    standard C variable errno. On UNIX this is a global variable defined by
+    standard C variable errno. On Unix this is a global variable defined by
     the C library and every program using the C library will have it's own
     global errno variable. If now also other shared libraries in the same
     program access errno they will all access the same variable.
     What Fabio now said is that shared libraries depending on this behaviour
-    can at the moment not be ported into an AROS shared library. He also
+    can, at the moment, not be ported into an AROS shared library. He also
     said he is working on a solution for that.
-    I do plan to rewrite the section that explains amiga shared libraries to
+    I do plan to rewrite the section that explains Amiga shared libraries to
     indicate these differences.
 
     > How can I check if I have "forbidden" sections?
 
-    There are no forbidden sections so no need to check. The only problem is
-    if you want to have your modules also romable on classic 68k machines.
+    There are no forbidden sections, so no need to check. The only problem is
+    if you want to have your modules also ROMable on classic 68k machines.
 
     > Am I allowed to use floating point arguments/return values for library
     > functions?
@@ -67,44 +67,44 @@ or moving some parts in other documents.
 
     > If I want to use other libraries in my library, can I just do "#include
     > <proto/graphics.h>" or do I need to open the library manually? If
-    > latter, how do I define the library base? (global or within extented
+    > latter, how do I define the library base? (global or within extended
     > type).
 
-    If the library does not have a per opener base you can use the automatic
+    If the library does not have a per-opener base you can use the automatic
     opening of libraries.
-    If you use another library with a per opener base in your library, you
-    have to make your library also generate a libbase per opener and put the
-    other libraries libbase in the extended section of your library.
-    Additionally you have to then manually open/close the other library
+    If you use another library with a per-opener base in your library, you
+    have to make your library also generate a libbase per-opener and put the
+    other library's libbase in the extended section of your library.
+    Additionally, you then have to manually open/close the other library
     every time your library is opened/closed. Another problem is that you
-    also have to acces the other library then through the base in your
-    extended section. As you can see this is not easy and I hope that what
+    also have to access the other library through the base in your extended
+    section, then. As you can see, this is not easy, and I hope that what
     Fabio is working on will make this more automatic.
 
     > Are there limits for linker libraries which can used with the 'uselibs'
     > attribute?
 
-    I don't think so but I may not fully understand what you are getting at.
+    I don't think so, but I may not fully understand what you are getting at.
     Could you elaborate a little bit?
 
     > How can I write a varargs function?
 
     For functions with C argument passing you can use the ANSI standard
     stdarg.h convention; again the ABI has to define the behavior.
-    For amiga vararg functions vararg version are generated automagically if
+    For Amiga vararg functions, vararg version are generated automagically if
     one of the following conditions are met:
     - The last letter of the function name is A; the vararg function name is
     the name without this letter A
     - The function name ends in TagList; the vararg function name is TagList
     replaced with Tags
-    - The function name end in Args and the name of the last argument to the
+    - The function name ends in Args and the name of the last argument to the
     function is args or arglist or a variation with other capitalization
     (Args, Arglist, ArgList, ...); the vararg function name is the name
     without the ending Args
     - the type of the last argument is "struct TagItem *"; the vararg
     function name is the name with Tags appended.
 
-    This feature is still implement in a hackiss way and it is on my todo
+    This feature is still implement in a hackish way and it is on my to-do
     list to investigate if and how this feature needs to be improved. (At
     the moment only a #define will be generated for the vararg version of
     the function).
@@ -112,7 +112,7 @@ or moving some parts in other documents.
     > How do I write a library function which takes a pointer to a function as
     > argument (callback)? Do I need struct Hook?
 
-    Again normal function pointers can be passed and it is the task of the
+    Again, normal function pointers can be passed and it is the task of the
     ABI to have compatibility. Of course nobody forbids you to use Hooks and
     this may be better if you plan to port to OS3/OS4/MorphOS.
 
@@ -124,13 +124,13 @@ or moving some parts in other documents.
 
     ---
 
-    > The makro for generating libraries has the uselibs attribute. Are there
-    > limits what linker libraries I can use here (I'm thinking about the
-    > rom/arosc issue)
+    > The macro for generating libraries has the uselibs attribute. Are there
+    > limits to what linker libraries I can use here (I'm thinking about the
+    > ROM/arosc issue)
 
     It's difficult to put a general statement here. It should be documented
     per library. I think most of these problems are solved now and you can
-    link also rom files with arosc. The only problem remaining with arosc is
+    link also ROM files with arosc. The only problem remaining with arosc is
     that if you have a library that uses arosc, the program using that
     library also has to open arosc.
     I did plan to reorganize the C library but Fabio wanted to do his work
@@ -148,16 +148,16 @@ or moving some parts in other documents.
     If you really want to use your own functions you can put the following
     in the config section of the .conf file:
     options noresident
-    with this option no struct Resident will be generated and no
-    startup/expunge code and you have to implement everything yourself. 
+    With this option, no struct Resident will be generated and no
+    startup/expunge code; you have to implement everything yourself.
     This will not be covered in the tutorial as you only need it for very
     special occasions; currently only exec.library uses this option.
 
     ----
 
     > also... is there a comprehensive list of the "default" metatargets
-    > used during compiling aros ( in particular the ones performed for the
-    > main "Make" target) .. im finding it hard to work out exactly what
+    > used during AROS compilation ( in particular the ones performed for the
+    > main "Make" target) .. I'm finding it hard to work out exactly what
     > goes where at the moment.
 
     From Makefile::
@@ -178,17 +178,17 @@ or moving some parts in other documents.
 
     ----------
 
-    > Now it's availible in the main tree. Two notes on it:
-    > 1. I'd like to know how to fetch SysBase correctly if i link the
+    > Now it's available in the main tree. Two notes on it:
+    > 1. I'd like to know how to fetch SysBase correctly if I link the
     > binary without startup code. Using startup code currently breaks one
     > nice feature of this command - it's pure and can be made resident. I
     > remember my first attempt in trackdisk prefs failed.
 
-    All the commands under C/ShellCommands are pure and can be made resident 
+    All the commands under C/ShellCommands are pure and can be made resident
     too. They too, don't use startup code.
 
-    You just have to declare an "external struct ExecBase *SysBase" and 
-    compile and link. The loader will take care of replacing the references 
+    You just have to declare an "external struct ExecBase *SysBase" and
+    compile and link. The loader will take care of replacing the references
     to SysBase with the correct address.
 
     ---------
@@ -212,23 +212,23 @@ or moving some parts in other documents.
 
     ------------
 
-    I have been fighting with some errors caused by variadic DoMethod and 
-    DoSuperMethod calls and the method messages itself. The errors are pretty 
-    nasty and very hard to detect, since they mostly cause crash at some 
+    I have been fighting with some errors caused by variadic DoMethod and
+    DoSuperMethod calls and the method messages itself. The errors are pretty
+    nasty and very hard to detect, since they mostly cause a crash at some
     completely different place :) Let me show you what I'm talking about.
 
-    On the x86_64 only the first 6 function arguments are passed in registers. All 
-    further parameters are passed through and have to be aligned on the 8-byte 
-    boundary, even if they are 8-bit in size. In order to overcome this issue, we 
-    have introduced long time ago STACK* types, eg. on x86_64 a STACKBYTE is 
-    expanded to a signed 64-bit variable.
+    On the x86_64, only the first 6 function arguments are passed in
+    registers. All further parameters are passed through and have to be
+    aligned on the 8-byte boundary, even if they are 8-bit in size. Long ago,
+    in order to overcome this issue, we introduced STACK* types, e.g. on
+    x86_64 a STACKBYTE is expanded to a signed 64-bit variable.
 
     So far so good....
 
-    The problem arises when the compiler pushes arguments on the stack for 
-    variadic functions. If it pushes a ULONG or UBYTE variable, it will not 
-    expand it automatically to 64-bits (why should it at all???) but only align 
-    it properly. So, for example, you will have in the code:
+    The problem arises when the compiler pushes arguments on the stack for
+    variadic functions. If it pushes a ULONG or UBYTE variable, it will not
+    expand it automatically to 64-bits (why should it at all???) but only
+    align it properly. So, for example, you will have in the code:
 
     movb %al, some_offset(%rip)     // Send UBYTE as a variadic parameter
 
@@ -236,24 +236,24 @@ or moving some parts in other documents.
 
     movl %eax, some_offset(%rip)
 
-    However, it happens (in 99.999% cases) that the stack contains some old junk 
-    there which will be not zeroed at all.... And since the affected method 
-    expects somewhere a STACKBYTE or STACKLONG argument, it will fetch whole 
-    64-bits, including the junk...
+    However, it happens (in 99.999% cases) that the stack contains some old
+    junk there which will be not zeroed at all.... And since the affected
+    method expects somewhere a STACKBYTE or STACKLONG argument, it will fetch
+    the whole 64-bits, including the junk...
 
-    Such thing happend yesterday night in png.datatype, which called 
-    PDTM_WRITEPIXELARRAY method with number of lines equal 1. The gcc pushed 
-    ULONG value 1 on the stack (there were more than 6 arguments for the 
-    DoMethod* call), but the method in the picture superclass fetched whole 
-    64-bit, which happend to be something like 0x1237f78000000001 (you may see 
-    the LONG 1 value there ;)) and crashed badly.
+    Such a thing happened yesterday night in png.datatype, which called
+    PDTM_WRITEPIXELARRAY method with number of lines equal 1. The gcc pushed
+    ULONG value 1 on the stack (there were more than 6 arguments for the
+    DoMethod* call), but the method in the picture superclass fetched whole
+    64-bit, which happened to be something like 0x1237f78000000001 (you can
+    see the LONG 1 value there ;)) and crashed badly.
 
-    What I would suggest instead of STACK* types, would be STACKARG parameter, 
+    What I would suggest instead of STACK* types, would be STACKARG parameter,
     with the following define on x86_64:
 
     #define STACKARG __attribute__((aligned(8)))
 
-    On other architectures, it could be just empty. Then, the method messages 
+    On other architectures, it could be just empty. Then, the method messages
     could be defined as following:
 
     struct SomeMethod {
@@ -262,47 +262,47 @@ or moving some parts in other documents.
             ....
     };
 
-    this way both the variadic call and the method handler would parse the 
+    This way both the variadic call and the method handler would parse the
     arguments in proper way....
 
     ------
 
-    > Provided that programs need to be recompiled anyway, with a little 
+    > Provided that programs need to be recompiled anyway, with a little
     > modification of the existing source code things can work smoothly.
-    > 
-    > Given that arguments are read by means of a structure... they just need 
-    > to be passed by means of a structure too. This would also provide with 
+    >
+    > Given that arguments are read by means of a structure... they just need
+    > to be passed by means of a structure too. This would also provide with
     > arguments type checking, something the current system is lacking.
-    > 
+    >
     > Example:
-    > 
+    >
     >     DoMethod(obj, M_FOO, arg1, arg2, arg3)
-    > 
+    >
     > would be handled by these:
-    > 
+    >
     >     #define M_FOO_args M_FOO_whatever_is_the_structure_name
     >     typedef struct
     >     {
     >         ULONG methodid;
-    > 
+    >
     >         TYPE1 arg1;
     >         TYPE2 arg2;
     >         TYPE3 arg3;
     >     } M_FOO_whatever_is_the_structure_name;
-    > 
+    >
     > And then the generic DoMethod defined this way:
-    > 
+    >
     >     #define DoMethod(obj, mname, args...)                 \
     >      ({                                                   \
     >          M_FOO ## args __args = { mname, # __VA_ARGS__ }) \
     >          DoMethodA(obj, &__args);                         \
     >      })
 
-    Let me clarify what is that would need to be modified in existing source 
-    codes: one would only have to had the M_FOO_args #definition, if the 
-    arguments structure is publicly available (as it happens in most cases), 
-    or one would also have to define the arguments structure, something 
-    which would be easily derivable by the known arguments that are passes 
+    Let me clarify what is that would need to be modified in existing source
+    codes: one would only have to had the M_FOO_args #definition, if the
+    arguments structure is publicly available (as it happens in most cases),
+    or one would also have to define the arguments structure, something
+    which would be easily derivable by the known arguments that are passes
     to the methods.
 
     -------------
@@ -313,7 +313,7 @@ or moving some parts in other documents.
 
     ----
 
-    The expression ~0UL/2 is platform specific!!! On x86_64 it does
+    The expression ~0UL/2 is platform-specific!!! On x86_64 it does
     not fit into ULONG!!!
     -       dir->usecount = ~0ul/2 + 1;
     +       dir->usecount = ((ULONG)~0)/2 + 1;
@@ -325,17 +325,17 @@ or moving some parts in other documents.
 
     Are you including <proto/codesets.h> in the codesets library source
     code ?
-    If so be sure to define the global variable somewhere in the source
-    without an extern statement in the source code otherwise he will try to
-    open intself in the init code causing recursion. (And as always this is
-    one of the points in my todo list to improve).
+    If so, be sure to define the global variable somewhere in the source
+    without an extern statement in the source code otherwise it will try to
+    open itself in the init code causing recursion. (And as always this is
+    one of the points in my to-do list to improve).
 
     -------
     > This helped a bit, but now I'm getting an error on another place:
 
-    Mem trashes aren't detected in realtime, so you can get error anywhere (or
-    even never). But you can use C:CheckMem or AvailMem(MEMF_CLEAR) in code
-    to track it down.
+    Memory trashes aren't detected in real-time, so you can get error anywhere
+    (or even never). But you can use C:CheckMem or AvailMem(MEMF_CLEAR) in
+    code to track it down.
 
     My guess is that the library allocates a too small librarybase, because
     in codesets.conf I see:
@@ -346,26 +346,27 @@ or moving some parts in other documents.
 
       libbasetype struct LibraryHeader
 
-    Sometimes it helps to look at autogenerated files:
+    Sometimes it helps to look at auto-generated files:
 
       bin/linux-i386/gen/[...]/[...]/<libname>_start.c
       bin/linux-i386/gen/[...]/[...]/<libname>_libdefs.h
 
     and possibly modify them (add debug output). Of course if some
-    files which those autogenerated files depend on are changed,
+    files which those auto-generated files depend on are changed,
     they will be regenerated and your changes (debug output) will
     get lost.
 
     --------
 
-    > Another doubt is the purpose of "o" argument of AROS_LHx() macros. It seems
-    > to mean the index of function in the vector table. But if I've guessed it
-    > right, then "dummylibraryexample.i386.src.tar.gz" assigns offsets wrong, as
-    > library init function is not placed in the vector table, so Open() should
-    > have 0, Close() 1 and so on. On the other hand it seems that parameter "o"
+    > Another doubt is the purpose of "o" argument of AROS_LHx() macros. It
+    > seems to mean the index of function in the vector table. But if I've
+    > guessed it right, then "dummylibraryexample.i386.src.tar.gz" assigns
+    > offsets wrong, as library init function is not placed in the vector
+    > table, so Open() should have 0, Close() 1 and so on. On the other hand
+    > it seems that parameter "o"
 
-    Since the vector table is below the library base (grows downwards) the first
-    index is 1:
+    Since the vector table is below the library base (grows downwards) the
+    first index is 1:
 
     #define LIB_VECTSIZE                    (sizeof (struct JumpVec))
     #define __AROS_GETJUMPVEC(lib,n)        (&((struct JumpVec *)lib)[-(n)])
@@ -373,13 +374,13 @@ or moving some parts in other documents.
     > is not used at all and is probably left as some historical artefact.
 
     One never knows if for some obscure target it will be needed, but once
-    upon time autogenerated library headers were built from the source code,
+    upon time auto-generated library headers were built from the source code,
     which looked at the AROS_LH#? and the offset in there. The library call
     macros in <defines/[libname].h> (AROS_LC#?) of course need that offset.
 
     > Can I have some explanation on the subject? Also knowing what parameters
-    > (and which way) really are passed to LibInit(), LibOpen(), LibClose() and
-    > LibExpunge() will help me.
+    > (and which way) really are passed to LibInit(), LibOpen(), LibClose()
+    > and LibExpunge() will help me.
 
     Looking at some generated file it should be like this:
 
@@ -432,9 +433,10 @@ or moving some parts in other documents.
          AROS_LIBFUNC_EXIT
     }
 
-    On some targets params are not passed in registers but in stacks. Like on x86. Therefore
-    one needs to be careful not to use different param order or leave out some of the first
-    ones. (like version in OpenLib).
+    On some targets parameters are not passed in registers but in stacks,
+    for example on x86. Therefore, one needs to be careful not to use a
+    different parameter order or to leave out some of the first parameters
+    (like version in OpenLib).
 
     ------
 
@@ -446,14 +448,15 @@ or moving some parts in other documents.
       objdump -d -S bin/[...]/readbattclock.o     /* C source intermixed with asm code */
 
     ----
+
     > I'm stuck with the "TheBar" MCC port. Problem is that I need at some
     > point the class pointer (the return value of MUI_CreatCustomClass).
-    > 
+    >
     > The build system creates file TheBar_start.c with the line:
-    > 
+    >
     > TheBar_CLASSPTR_FIELD(LIBBASE) = MUI_CreateCustomClass((struct Library
     > *)LIBBASE, MUIC_Group, NULL, TheBar_DATA_SIZE, _Dispatcher);
-    > 
+    >
     > But how can I get this value?
 
     If you don't specify a variable to put the classptr in it will be stored
@@ -468,59 +471,60 @@ or moving some parts in other documents.
 
     -----
 
-    > I'm not quite sure I understand what is happening with clib.  It 
-    > looks like it builds both libarosc and arosc.library.  But will this 
-    > technique cover both types of library?  If it matters, I am using 
+    > I'm not quite sure I understand what is happening with clib.  It
+    > looks like it builds both libarosc and arosc.library.  But will this
+    > technique cover both types of library?  If it matters, I am using
     > libarosc right now.
 
-    For every libname.library made with %build_module also a liblibname.a
-    file is generated. This liblibname.a file contains code for autoopening
+    For every libname.library made with %build_module, also a liblibname.a
+    file is generated. This liblibname.a file contains code for auto-opening
     the library and stub functions for calling the functions of the library.
     This means that to use a shared library you only have to include the
     library proto include (e.g #include <proto/libname.h>) and link with the
-    static linklib (e.g. -llibname).
+    static link library (e.g. -llibname).
     arosc does not use %build_module (yet) but it has the same principle. So
     if you link with -larosc you are actually using arosc.library and the
-    opening and initialization is done by the linked in code.
+    opening and initialization is done by the linked-in code.
 
     -------------
 
-    If something is causing too much trouble and it's getting too annoying try
-    to disable it's build for now by adding "ignoredir contrib/necessary/AHI"
-    lines and similar to mmake.config. If something (like sound.datatype) depends
-    on AHI you'll have to disable that, too.
+    If something is causing too much trouble and it's getting too annoying,
+    try to disable its build for now by adding
+    "ignoredir contrib/necessary/AHI" lines and similar to mmake.config.
+    If something (like sound.datatype) depends on AHI you'll have to disable
+    that, too.
 
     ---------
 
-    By using nm on the .o files you can see which library bases are used in
-    the files. Extern variables start with an U.
+    By using nm on the .o files, you can see which library bases are used in
+    the files. External variables start with a U.
 
     ------
 
     > +struct ExecBase *SysBase=NULL;
-    > 
-    > Dont think this will help ..
+    >
+    > Don't think this will help ..
 
     This helped very much.
 
     -------------
 
     > Do we actually have a common definition what AROS_HOST_CC,
-    > AROS_KERNEL_CC and AROS_TARGET_CC needs to actually do ?
+    > AROS_KERNEL_CC and AROS_TARGET_CC need to actually do ?
     > Especially I get a feeling AROS_KERNEL_CC currently has different
     > meanings for different ports and host configurations. Can somebody make
     > this clear as then it would be easier to get a bug free configure.in
     > file.
 
-    In brief, HOST_CC compiles the build tools, KERNEL_CC compiles AROS 
-    kernel components, GRUB etc., and TARGET_CC compiles code that runs 
+    In brief, HOST_CC compiles the build tools, KERNEL_CC compiles AROS
+    kernel components, GRUB etc., and TARGET_CC compiles code that runs
     within AROS.
 
     -------------
 
     > What does 'kernel component' actually mean ?
 
-    I probably should have said just 'kernel'. I'm not sure which compiler 
+    I probably should have said just 'kernel'. I'm not sure which compiler
     is used for i386 kobjs for example.
 
     > Why is KERNEL_CC different from TARGET_CC ?
@@ -532,8 +536,9 @@ or moving some parts in other documents.
     > Actually there should not be a difference because in theory you should
     > be able to choose between kobj or normal module at will. One port should
     > be able to have something in the kernel and another port should be able
-    > to have it as a disk based module.
+    > to have it as a disk-based module.
 
-    That's true for some ports, but for i386, the files linked into the kernel 
-    are different from the disk-based files. As I said though, I'm not sure if 
+    That's true for some ports, but for i386, the files linked into the kernel
+    are different from the disk-based files. As I said though, I'm not sure if
     different compilers are used.
+

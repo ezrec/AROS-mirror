@@ -1,6 +1,6 @@
-===================================
-AROS Application Development Manual
-===================================
+==============================================================
+AROS Application Development Manual -- The Multitasking Kernel
+==============================================================
 
 :Authors:   Staf Verhaegen, Sebastian Rittau, Stefan Rieken, Matt Parsons,
             Adam Chodorowski, Fabio Alemagna, Matthias Rustler
@@ -15,24 +15,22 @@ AROS Application Development Manual
 .. Warning::
 
    This document is not finished! It is highly likely that many parts are
-   out-of-date, contain incorrect information or are simply missing
+   out-of-date, contain incorrect information, or are simply missing
    altogether. If you want to help rectify this, please contact us.
 
 .. Contents::
 
 
------------------------
-The Multitasking Kernel
------------------------
-
 Background
 ==========
 
-There are two kinds of multitasking: Preemptive and Non-preemptive (also known
-as cooperative). Preemptive means that you get a certain amount of CPU time
-and then another task gets the CPU. Non-preemptive means that a task has to
-call a function which allows another task to run. Preemptive multitasking
-(PMT) has these advantages:
+There are two kinds of multitasking: Preemptive and Cooperative (sometimes
+indicated as: Non-preemptive). In Preemptive multitasking, a task will get
+a certain amount of CPU time and then another task gets the CPU. In
+Cooperative multitasking, a task has to release the CPU, which will then
+allow another task to run.
+
+Preemptive multitasking (PMT) has these advantages:
 
 + It's simple to understand
 + There is no need to make sure that your task doesn't keep the CPU forever.
@@ -56,29 +54,29 @@ and these disadvantages:
   if it keeps the CPU forever, all you can do is turn the computer off).
 + It's hard to make sure that every task gets the CPU now and then
 
-It seems obvious that CMT is better than PMT but that's not true. CMT is
-better when you have only a few tasks and a single user. Powerful OSes
-like Unix and AmigaOS have PMT because it's more simple to use.
+Though it would seem, from the counts of advantages and disadvantages, that
+CMT is better than PMT, that's not exactly true. CMT is better when you
+have only a few tasks and a single user. Powerful OSes, like Unix and AmigaOS,
+have PMT because it's simpler to use. The same holds for AROS.
 
 
-How does it work?
-=================
+How does preemptive multitasking work?
+======================================
 
-The idea is pretty simple. Every computer has a clock and this clock can
+The idea is pretty simple: Every computer has a clock. This clock can
 generate interrupts. An interrupt means that the CPU saves its current
 state on the stack of the current task and starts a special routine
 called the interrupt handler. Basically this handler now checks for
 other tasks which might want to run, selects one of them and switches
 the stack to the one of the newly chosen task. It then finishes and
 tells the CPU to continue where it was before the interrupt. Since the
-CPU is quite dumb, it will just load it's state from the new stack (ie.
-the one of the new task) and so the new task will run and
+CPU knows nothing about all this, it will just load its state from the new
+stack (i.e. the one of the new task) and so the new task will run, while
 the old one will be sleeping.
 
-Now let's have a look at the details. The life of a task looks like this:
-birth, waiting, running and dying. In computer terms, the task is
-created, then waits that it gets the CPU, does its work while it has
-the CPU (this might happen more than once) and at some stage, it
-terminates (or is terminated). It's more easy to understand how it
-all works when we begin with the time when one task loses the CPU
-and another one gets it.
+Looking at it from the perspective of the life of a task: A tasks's life
+consists of birth, waiting, running, and death. In computer terms, the task
+is created, then waits until it gets the CPU, does its work while it has
+the CPU (these two states may switch back and forth several times), and at
+some point it terminates (or is terminated).
+

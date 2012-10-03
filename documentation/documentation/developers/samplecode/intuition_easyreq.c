@@ -1,5 +1,5 @@
 /*
-    Example for Easyrequester
+    Example of an Easyrequester
 */
 
 #include <proto/exec.h>
@@ -24,8 +24,8 @@ int main(void)
     };
 
     /*
-        The return value is the number of the clicked button. Note that the numbering
-        has a strange order: 1,2,3,...,N,0. (Reason is compatibility with AutoRequest()).
+        The return value is the number of the clicked button. Note to order:
+        1,2,3,...,N,0. (This was done for compatibility with AutoRequest().)
     */
     result = EasyRequest(NULL, &es_simple, NULL);
     printf("Result of EasyRequest %d\n", result);
@@ -52,8 +52,8 @@ int main(void)
     };
 
     /*
-        The arguments beginning with the 4th are used for the placeholders. First for es_TextFormat
-        then es_GadgetFormat.
+        The arguments beginning with the 4th are used for the placeholders. First
+        for es_TextFormat then es_GadgetFormat.
     */
     EasyRequest(NULL, &es_rawdofmt, NULL, string, (LONG)wordnumber, longnumber, (LONG)wordnumber);
     

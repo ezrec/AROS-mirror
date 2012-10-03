@@ -1,9 +1,8 @@
 /*
-    Example for custom screen
+    Example of a custom screen
     
-    This shows how a screen for an application could be created.
-    It uses the standard 3D look. An additional pen for drawing
-    will be requested.
+    This shows how to create a screen for an application.
+    It uses the standard 3D look. An additional pen for drawing will be requested.
 */
 
 #include <proto/exec.h>
@@ -56,7 +55,7 @@ int main(void)
         WA_DragBar,       TRUE,
         WA_DepthGadget,   TRUE,
         WA_IDCMP,         IDCMP_CLOSEWINDOW,
-        WA_SmartRefresh,  TRUE,   // Let's Intuition handle exposed regions
+        WA_SmartRefresh,  TRUE,   // Lets Intuition handle exposed regions
         WA_NoCareRefresh, TRUE,   // We don't want to listen to refresh messages
         WA_CustomScreen,  screen, // Link to screen
         TAG_END);

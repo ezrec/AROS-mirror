@@ -40,8 +40,8 @@ docs-html:
     on the website, but adapted for offline reading.
 amiga-m68k-system:
     The native version for m68k Amigas or WinUAE. This version is binary
-    compatible with AmigaOS. This archive contains rom images and all AROS
-    system binaries compiled from the Subversion tree.
+    compatible with AmigaOS. This archive contains ROM images and all AROS
+    system binaries, compiled from the Subversion tree.
 amiga-m68k-boot:
     The native version for m68k Amigas or WinUAE. This version is binary
     compatible with AmigaOS. This archive contains ROM images and a boot
@@ -51,20 +51,20 @@ amiga-m68k-bootiso:
     compatible with AmigaOS. This is the CD-ROM ISO image, which
     contains all AROS system files.
 amiga-m68k-contrib:
-    This archive contains all the contributed programs
+    This archive contains all the contributed programs,
     compiled for the m68k architecture, for use with the
     Amiga port.
 darwin-i386-system:
-    The hosted version for Darwin and MacOS X on i386 platform.
-    Should work on all Intel MacOS X versions starting from 10.4. It requires
-    X11 server for the display.
+    The hosted version for Darwin and MacOS X on the i386 platform. This
+    should work on all Intel MacOS X versions starting from 10.4. It requires
+    an X11 server for the display.
 darwin-ppc-system:
-    The hosted version for Darwin and MacOS X on PowerPC platform.
-    Should work on all MacOS X versions. It requires
-    X11 server for the display.
+    The hosted version for Darwin and MacOS X on the PowerPC platform. This
+    should work on all MacOS X versions. It requires
+    an X11 server for the display.
 darwin-x86_64-system:
-    The hosted version for Darwin and MacOS X on x86-64 platform.
-    Should work on all Intel MacOS X versions starting from 10.6.  It requires
+    The hosted version for Darwin and MacOS X on the x86-64 platform. This
+    should work on all Intel MacOS X versions starting from 10.6.  It requires
     X11 server for the display.
 freebsd5-i386-system:
     The hosted version for FreeBSD/i386 5.x. Note that it
@@ -74,7 +74,7 @@ freebsd-i386-system:
     will not work on FreeBSD 4.x systems.
 linux-i386-system:
     The hosted version for Linux/i386. This archive
-    contains all AROS system binaries compiled from the Subversion
+    contains all AROS system binaries, compiled from the Subversion
     tree.
 mingw32-i386-system:
     The hosted version for Microsoft Windows on i386 platform. Developed
@@ -82,81 +82,81 @@ mingw32-i386-system:
     versions starting from Windows 98.
 linux-x86_64-system:
     The hosted version for Linux/x86_64. This archive
-    contains all AROS system binaries compiled from the Subversion
+    contains all AROS system binaries, compiled from the Subversion
     tree.
 linux-ppc-system:
     The hosted version for Linux/PowerPC. This archive contains all AROS
-    system binaries compiled from the Subversion tree.
+    system binaries, compiled from the Subversion tree.
 linux-arm-system:
-    The hosted version for Linux/ARM. This archive
-    contains AROS core system binaries compiled from the Subversion
-    tree. Please note this version requires at least ARMv6 CPU with VFP unit.
+    The hosted version for Linux/ARM. This archive contains the AROS core
+    system binaries, compiled from the Subversion tree. Please note that
+    this version requires at least an ARMv6 CPU with VFP unit.
 linux-arm-contrib:
-    This archive contains all the contributed programs
+    This archive contains all the contributed programs,
     compiled for the ARM architecture, for use with the
-    Linux/ARM port. Please note this version requires at least ARMv6 CPU 
-    with VFP unit.
+    Linux/ARM port. Please note that this version requires at least
+    an ARMv6 CPU with VFP unit.
 android-arm-system:
     The hosted version for Android/ARM. This archive
-    contains AROS core system binaries compiled from the Subversion
+    contains the AROS core system binaries, compiled from the Subversion
     tree. This version also requires ARMv6 with VFP (all Android devices seem
-    to meet this requirement). No Android modifications (like rooting etc) are
-    required to run this version.
+    to meet this requirement). No Android modifications (like rooting etc.)
+    are required to run this version.
 pc-i386-boot-floppy:
     The native version for i386-based PC AT computers and
     compatibles. This archive contains the boot
     disk floppy image which you can quickly write to a disk
-    and boot AROS with.
+    to boot AROS with.
 pc-i386-boot-iso:
     The native version for i386-based PC AT computers and
-    compatibles. This is the bootable CDROM ISO image, which
+    compatibles. This is the bootable CD-ROM ISO image, which
     contains all AROS system and contributed programs.
 pc-x86_64-boot-iso:
     The native version for 64-bit (x86_64, amd64) PC computers.
-    This is the bootable CDROM ISO image, which
+    This is the bootable CD-ROM ISO image, which
     contains all AROS system and contributed programs.
 sam440-ppc-boot-iso:
-    The native version for Sam440EP and Sam440EP Flex computers. 
-    This is the bootable CDROM ISO image including ub2lb (Parthenope) 
+    The native version for Sam440EP and Sam440EP Flex computers.
+    This is the bootable CD-ROM ISO image including ub2lb (Parthenope)
     SLB. It contains all AROS system and contributed programs.
 efika-chrp-ppc-boot-iso:
     The native version for PowerPC Efika computers. This is the
-    bootable CDROM ISO image including ub2lb for open firmware. It
+    bootable CD-ROM ISO image including ub2lb for open firmware. It
     contains all AROS system and contributed programs.
 pc-i386-contrib:
-    This archive contains all the contributed programs
+    This archive contains all the contributed programs,
     compiled for the i386 architecture. They will work in
-    both the appropriate hosted (eg. i386-linux) and native
+    both the appropriate hosted (e.g. i386-linux) and native
     (i386-pc) version.
 pc-x86_64-contrib:
-    This archive contains all the contributed programs
+    This archive contains all the contributed programs,
     compiled for the x86_64 architecture, for use with the
     x86_64 native version.
 linux-ppc-contrib:
-    This archive contains all the contributed programs
+    This archive contains all the contributed programs,
     compiled for the PowerPC architecture, for use with the
     Linux/PowerPC port.
 sam440-ppc-contrib:
-    This archive contains all the contributed programs
+    This archive contains all the contributed programs,
     compiled for the PowerPC architecture, for use with the
     Sam440EP port.
 pc-i386-sdk:
-    Set of files and tools to build your own AROS programs
+    A set of files and tools to build your own AROS programs
     on your preferred machine. You'll need also gcc and the
     binutils configured to produce i386-elf executables.
 linux-ppc-sdk:
-    Set of files and tools to build your own AROS programs
+    A set of files and tools to build your own AROS programs
     on your preferred machine. You'll need also gcc and the
     binutils configured to produce ppc-elf executables.
 linux-arm-sdk:
-    Set of files and tools to build your own AROS programs
+    A set of files and tools to build your own AROS programs
     on your preferred machine. You'll need also gcc and the
     binutils configured to produce arm-elf executables.
 sam440-ppc-sdk:
-    Set of files and tools to build your own AROS programs
+    A set of files and tools to build your own AROS programs
     on your preferred machine. You'll need also gcc and the
     binutils configured to produce ppc-elf executables.
 pc-x86_64-sdk:
-    Set of files and tools to build your own AROS programs
+    A set of files and tools to build your own AROS programs
     on your preferred machine. You'll need also gcc and the
     binutils configured to produce x86_64-elf executables.

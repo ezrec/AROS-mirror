@@ -1,6 +1,6 @@
-===================================
-AROS Application Development Manual
-===================================
+===========================================================
+AROS Application Development Manual -- The Graphics Library
+===========================================================
 
 :Authors:   Matthias Rustler
 :Copyright: Copyright (C) 2007-2008, The AROS Development Team
@@ -14,21 +14,18 @@ AROS Application Development Manual
 .. Warning::
 
    This document is not finished! It is highly likely that many parts are
-   out-of-date, contain incorrect information or are simply missing
+   out-of-date, contain incorrect information, or are simply missing
    altogether. If you want to help rectify this, please contact us.
 
-   
-----------------
-graphics.library
-----------------
 
 .. Contents::
 
 
 Bitmaps
 -------
-Bitmaps are the drawing sheets of AROS. They are coordinate systems with the zero point in
-the upper left corner. The X axis goes from left to right, y axis from top to bottom.
+Bitmaps are the drawing sheets of AROS. Their coordinate systems have the
+zero point in the upper left corner. The x-axis goes from left to right, the
+y-axis from top to bottom.
 The number of possible colors depends on the depth of the bitmap:
 
 ===== ==========
@@ -47,18 +44,19 @@ Depth Colors
 24    16,777,216
 ===== ==========
 
-The depths from 1 to 8 are LUT (look-up-table) modes. This means the red, green and blue (RGB) value for each
-color is stored in a table. The index will then be stored as pen number in the bitmap.
+The depths from 1 to 8 are LUT (look-up-table) modes. This means the red,
+green, and blue (RGB) value for each color is stored in a table. The index
+will then be stored as pen number in the bitmap.
 
-The depths 15 and 16 are called high color, 24 is called true color. Unlike LUT mode the RGB value
-is stored directly in the bitmap.
+The depths 15 and 16 are called high color, 24 is called true color. Unlike
+LUT mode the RGB value is stored directly in the bitmap.
 
-The graphics library has only a limited support for high-/true color modes. Some of the drawing functions work
-only with LUT modes. For a full access you need the functions from the
-`cybergraphics library <../autodocs/cgfx>`__.
+The graphics library has only a limited support for high/true color modes.
+Some of the drawing functions work only with LUT modes. For full access you
+need the functions from the `cybergraphics library <../autodocs/cgfx>`__.
 
-======================== ===========================================================================
-`GetBitMapAttr()`_       Query bitmap attributes. Use this instead of peeking in bitmap structure
+======================== =====================================================
+`GetBitMapAttr()`_       Query bitmap attributes. (Don't peek at bitmap.)
 `AllocBitMap()`_         Allocate and initialize bitmap
 `InitBitMap()`_          Initialize bitmap
 `FreeBitMap()`_          Free resources allocated by a bitmap
@@ -66,19 +64,22 @@ only with LUT modes. For a full access you need the functions from the
 `FreeRaster()`_          Free a single bitplane
 `CopySBitMap()`_         Syncronize super-bitmap (see Intuition)
 `SyncSBitMap()`_         Syncronize super-bitmap
-======================== ===========================================================================
+======================== =====================================================
+
 
 
 RastPort
 --------
-The connection between the bitmaps and most drawing functions is done by a rastport. The rastport contains information
-about drawing pens, line and area patterns, drawing mode and text font.
+The connection between the bitmaps and most drawing functions is done by a
+rastport. The rastport contains information about drawing pens, line and
+area patterns, drawing mode and text font.
 
-You can connect more than one rastport to a bitmap. This allows a fast switch between different drawing
-configurations. But in AROS you aren't allowed to just copy a rastport, you have to use the function `CloneRastPort()`_.
+You can connect more than one rastport to a bitmap. This allows a fast switch
+between different drawing configurations. Just copying a rastport is not
+possible in AROS, however; you have to use the function `CloneRastPort()`_.
 
-Some Intuition elements like screens and windows already have a RastPort element. You can immediately use
-it for your drawing operations.
+Some Intuition elements, like screens and windows, already have a RastPort
+element. You can immediately use that for your drawing operations.
 
 ====== ============= ========
 Object Structure     RastPort
@@ -87,8 +88,9 @@ screen struct Screen RastPort
 window struct Window \*RPort
 ====== ============= ========
 
-If you create a bitmap and want to draw into it you have to create the rastport by yourself. Warning: this
-example is simplified and lacks checks of return values::
+If you create a bitmap and want to draw into it you have to create the
+rastport by yourself. Warning: this example is simplified and lacks checks
+of return values::
 
     struct BitMap *bm = AllocBitMap(400, 300, 8, BMF_CLEAR, NULL);
     struct RastPort *rp = CreateRastPort();
@@ -99,25 +101,30 @@ example is simplified and lacks checks of return values::
     FreeRastPort(rp);
     FreeBitMap(bm);
 
+
 Pens
 ~~~~
-A rastport contains 3 pens. The A (foreground, primary) pen, B (background, secondary) pen and the O (area
-outline) pen. The latter is used by the area fill and flood fill functions.
+A rastport contains 3 pens. The A (foreground, primary) pen, B (background,
+secondary) pen and the O (area outline) pen. The latter is used by the area
+fill and flood fill functions.
+
 
 Drawing modes
 ~~~~~~~~~~~~~
 - JAM1: draw only with A pen.
 - JAM2: draw bit 1 in a pattern with A pen, bit 0 with B pen
-- COMPLEMENT: for each set bit the state in the target is reversed
+- COMPLEMENT: for each set bit, the state in the target is reversed
 - INVERSVID: is used for text rendering
-    - JAM1|INVERSVID: text appears as transparent letter surrounded by foreground color
-    - JAM2|INVERSVID: like previous, but letter is drawn with background color.
+    - JAM1|INVERSVID: transparent letters outlined in foreground color
+    - JAM2|INVERSVID: like previous, but letter in background color.
 
 TODO: check whether the drawing modes are really available.
 
+
 Pattern
 ~~~~~~~
-The line pattern can be set with the macro `SetDrPt()`.  The second paramter is a 16 bit pattern::
+The line pattern can be set with the macro `SetDrPt()`.  The second
+parameter is a 16 bit pattern::
 
     SetDrPt(&rastPort, 0xCCCC);
 
@@ -125,8 +132,9 @@ The pattern can be reset with::
 
     SetDrPt(&rastPort, ~0);
 
-For area patterns exists the macro `SetAfPt()`. The width is 16 bit, the height a power of two
-(2, 4, 8, 16, ...). The third parameter is the n in 2^n=height::
+For area patterns a macro `SetAfPt()` exists. The width is 16 bit, the
+height a power of two (2, 4, 8, 16, ...). 
+The third parameter is the n in 2^n=height::
 
     UWORD areaPattern[] =
     {
@@ -134,14 +142,14 @@ For area patterns exists the macro `SetAfPt()`. The width is 16 bit, the height 
     };
     SetAfPt(&rastPort, areaPattern, 1);
 
-Colored patterns are possible with a negative value for the height. There must be the same number
-of bitplanes in the pattern as in the target bitmap.
+Colored patterns are possible with a negative value for the height. The
+number of bitplanes in the pattern must be the same as in the target bitmap.
 
 Reset of area pattern::
 
     SetAfPt(&rastPort, NULL, 0);
 
-===================== ======================================================================
+===================== ========================================================
 `CloneRastPort()`_    Copy rastport
 `CreateRastPort()`_   Create rastport
 `InitRastPort()`_     Initialize rastport
@@ -151,70 +159,77 @@ Reset of area pattern::
 `GetAPen()`_          Get primary pen
 `SetBPen()`_          Set secondary pen
 `GetBPen()`_          Get secondary pen
-SetOPen()             Set area outline pen and switch on outline mode (macro in `graphics/gfxmacros.h`_)
+SetOPen()             Set area outline pen and switch outline mode on \*
 `SetOutlinePen()`_    Get area outline pen
 `GetOutlinePen()`_    Get area outline pen
-BNDRYOFF()            Switch off area outline mode (macro in `graphics/gfxmacros.h`_)
+BNDRYOFF()            Switch off area outline mode \*
 `SetDrMd()`_          Set drawing mode
 `GetDrMd()`_          Get drawing mode
-SetDrPt()             Set line pattern (macro in `graphics/gfxmacros.h`_)
-SetAfPt()             Set area pattern (macro in `graphics/gfxmacros.h`_)
-`SetABPenDrMd()`_     Set primary pen, secondary pen and drawing mode in one step
+SetDrPt()             Set line pattern \*
+SetAfPt()             Set area pattern \*
+`SetABPenDrMd()`_     Set primary & secondary pen and drawing mode in one step
 `SetRPAttrsA()`_      Set misc. drawing attributes
 `GetRPAttrsA()`_      Get misc. drawing attributes
 `InitTmpRas()`_       Initialize a TmpRas structure.
 `SetWriteMask()`_     Set write mask
-===================== ======================================================================
+===================== ========================================================
+
+\* Macro in `graphics/gfxmacros.h`_
+
 
 
 Drawing functions
 -----------------
 
-A line is drawn by setting the pen position with `Move()`_ to the start and with `Draw()`_ to the end
-position.
+A line is drawn by setting the pen position with `Move()`_ to the start
+position and with `Draw()`_ to the end position.
 
 For the `Flood()`_ function you have to attach a TmpRas to the rastport as
-explained unter `Area operations`_.
+explained under `Area operations`_.
 
-======================= =============================================================================
+======================= ======================================================
 `Move()`_               Change pen position
-`Draw()`_               Draw a line from current pen position to given coordinate
+`Draw()`_               Draw line from pen position to given coordinates
 `DrawEllipse()`_        Draw an ellipse
 DrawCircle()            Draw a circle (macro in `graphics/gfxmacros.h`_)
 `PolyDraw()`_           Draw connected lines from an array of points
 `WritePixel()`_         Write a single pixel
 `ReadPixel()`_          Read the pen value of a pixel
-`EraseRect()`_          Fill rectangular area with current backfill hook (TODO: what's this?)
+`EraseRect()`_          Fill rectangular area with current backfill hook
+                        (TODO: what's this?)
 `SetRast()`_            Fill entire drawing area with given pen
-`RectFill()`_           Fill a rectangular area with the current rastport settings
+`RectFill()`_           Fill rectangular area with current rastport settings
 `Flood()`_              Flood fill an arbitrary shape
-======================= =============================================================================
+======================= ======================================================
+
 
 
 Data moving
 -----------
 
-========================== ===========================================================================
+========================== ===================================================
 `BltBitMap()`_             Copy rectangular area
 `BltBitMapRastPort()`_     Copy rectangular area
 `BltRastPortBitMap()`_     Copy rectangular area (AROS extension)
-`ClipBlit()`_              Copy rectangular area with layers and clip rects. Use this if you want
-                           to blit into a window
-`BltClear()`_              Set a memory block to zero. On classic Amigas this block must be in
-                           chip ram.
+`ClipBlit()`_              Copy rectangular area with layers and clip rects.
+                           Use this if you want to blit into a window
+`BltClear()`_              Set a memory block to zero. On classic Amigas this
+                           block has to be in chip ram.
 `BltMaskBitMapRastPort()`_ Copy rectangular area with using a mask
 `BltPattern()`_            Draw a rectangular pattern into a bitmap
 `BltTemplate()`_           Draw a rectangular pattern into a bitmap
 `BitMapScale()`_           Copy a rectangular area and change its size
 `ScalerDiv()`_             Helper function for `BitMapScale()`_
 `ScrollRaster()`_          Move rectangular area within a bitmap
-`ScrollRasterBF()`_        Move rectangular area, fill free space with `EraseRect()`_
-`WriteChunkyPixels()`_     Write rectangular area from an array with pen values
-`WritePixelArray8()`_      Write rectangular area from an array with pen values
+`ScrollRasterBF()`_        Move rectangular area, the vacated space is filled
+                           with `EraseRect()`_
+`WriteChunkyPixels()`_     Write rectangular area from array with pen values
+`WritePixelArray8()`_      Write rectangular area from array with pen values
 `ReadPixelArray8()`_       Read rectangular area into memory
 `WritePixelLine8()`_       Write horiz. line from an array with pen values
 `ReadPixelLine8()`_        Read horiz. line from an array into memory
-========================== ===========================================================================
+========================== ===================================================
+
 
 
 Area operations
@@ -223,7 +238,8 @@ Area operations
 The area functions allow a fast drawing of filled polygons and ellipses.
 
 In order to use this functions you need a struct AreaInfo which must be
-connected to the rastport. The area buffer must be WORD-aligned (it must have an even address).
+connected to the rastport. The area buffer must be WORD-aligned (it must have
+an even address).
 You need five bytes per vertex::
 
     #define AREA_SIZE 200
@@ -233,8 +249,8 @@ You need five bytes per vertex::
     InitArea(&areaInfo, areaBuffer, sizeof(areaBuffer)/5);
     rastPort->AreaInfo = &areaInfo;
 
-Additionally, you need a TmpRas structure. It should have the same width and height as the bitmap
-you want to draw into::
+Additionally, you need a TmpRas structure. It should have the same width and
+height as the bitmap you want to draw into::
 
     #define WIDTH 400
     #define HEIGHT 300
@@ -243,25 +259,26 @@ you want to draw into::
     InitTmpRas(&tmpRas, rasPlane, WIDTH * HEIGHT);
     rastPort->TmpRas = &tmpRas;
 
-================== =============================================================================
-`InitArea()`_      Initalizes the AreaInfo
-`AreaMove()`_      Closes open polygon and sets start point for a new polygon. You don't have to
-                   connect the end point to the start point.
+================== ===========================================================
+`InitArea()`_      Initializes the AreaInfo
+`AreaMove()`_      Closes open polygon and sets start point for a new one.
+                   You don't have to connect the end point to the start point.
 `AreaDraw()`_      Add point to vector buffer
 `AreaEllipse()`_   Add filled ellipse to vector buffer
 `AreaEnd()`_       Start filling operation
-================== =============================================================================
+================== ===========================================================
+
 
 
 Text
 ----
 
-==================  =============================================================================
-`OpenFont()`_       Open a font which is in the system font list. Better use `OpenDiskFont()`_
-                    from the diskfont library.
-`CloseFont()`_      Close font, which had been opened by `OpenFont()`_ or `OpenDiskFont()`_
+==================  ==========================================================
+`OpenFont()`_       Open a font which is in the system font list.
+                    Better use `OpenDiskFont()`_ from the diskfont library.
+`CloseFont()`_      Close font opened by `OpenFont()`_ or `OpenDiskFont()`_
 `AddFont()`_        Add font to the system list
-`RemFont()`_        Remove font from system list
+`RemFont()`_        Remove font from the system list
 `SetFont()`_        Set current font of rastport
 `AskFont()`_        Get TextAttr for current rastport font
 `SetSoftStyle()`_   Set soft style bits of current font
@@ -271,21 +288,23 @@ Text
 `ClearScreen()`_    Clear from current position to end of rastport
 `ExtendFont()`_     Extend struct TextFont by a struct ExtendFont
 `StripFont()`_      Remove tf_Extension from a font
-`TextLength()`_     Calculate the width of a string in pixels. You can use `TextExtent()`_
-                    if you need more detailed information
-`TextExtent()`_     Fill TextExtend structure with information about current font
-`FontExtent()`_     Fill TextExtend structure with information about given font
-`TextFit()`_        Count the number of characters which will fit into given bounds
+`TextLength()`_     Calculate the width of a string in pixels. You can use
+                    `TextExtent()`_ if you need more detailed information
+`TextExtent()`_     Fill TextExtend structure with information on current font
+`FontExtent()`_     Fill TextExtend structure with information on given font
+`TextFit()`_        Give number of characters that will fit into given bounds
 `WeighTAMatch()`_   Checks how well two different fonts match
-==================  =============================================================================
+==================  ==========================================================
+
 
 
 Clipping
 --------
 
-Bitmaps which you have created with `AllocBitMap()`_ don't have a clipping rectangle. This means that
-you trash memory when you draw outside the bitmap. You can either take care about your drawing operations
-or you can install a clipping rectangle. There are two possibilities:
+Bitmaps you've created with `AllocBitMap()`_ don't have a clipping rectangle.
+This means that you trash memory when you draw outside the bitmap. You can
+either take care about your drawing operations or you can install a clipping
+rectangle. There are two possibilities:
 
 - Using the tag RPTAG_ClipRectangle in `SetRPAttrsA()`_::
 
@@ -305,30 +324,32 @@ or you can install a clipping rectangle. There are two possibilities:
 The latter is compatible with AmigaOS.
 
 
+
 Color
 -----
 
-So far we have only used the SetXPen() functions to select the drawing pens. Now we look how we
-can change the red, green blue values of the pens.
+So far, only the SetXPen() functions have been used to select the drawing
+pens. Described here is changing the red, green blue values of the pens.
 
-We have to differ two cases:
-  The colormap belongs us.
-    We can change the colors as we like with the LoadRGB..., SetRGB... functions. We'll get a
-    private colormap when we open a private screen.
+We have to distinguish between two cases:
 
-  We want draw into a window on a public Screen.
-    We have to query a shared pen with the `ObtainBestPenA()`_ function. Otherwise we would change
-    the colors used by other applications.
++ The colormap belongs to you.
+  You can change the colors as you like with the LoadRGB... and SetRGB...
+  functions. You'll get a private colormap when we open a private screen.
+
++ You want to draw in a window on a public Screen.
+  You have to query a shared pen with the `ObtainBestPenA()`_ function.
+  Otherwise you might change the colors used by other applications.
 
 
-=================== =============================================================================
+=================== ==========================================================
 `GetColorMap()`_    Allocate and initialize colormap
 `FreeColorMap()`_   Free colormap
-`AttachPalExtra()`_ Allocate and attach palette sharing structure to a colormap
+`AttachPalExtra()`_ Allocate and attach palette sharing structure to colormap
 `FindColor()`_      Find closest matching color
 `ObtainBestPenA()`_ Search for closest color match or allocate a new pen
 `ObtainPen()`_      Obtain a free palette entry
-`ReleasePen()`_     Frees a pen created with `ObtainPen()`_ or `ObtainBestPenA()`_
+`ReleasePen()`_     Frees pen created with `ObtainPen()`_/`ObtainBestPenA()`_
 `GetRGB32()`_       Read a series of RGB values from a colormap
 `GetRGB4()`_        Reads RGB value of a single color register (deprecated)
 `LoadRGB32()`_      Set a series of RGB values for this viewport
@@ -338,20 +359,21 @@ We have to differ two cases:
 `SetRGB32CM()`_     Set one color register for a colormap
 `SetRGB4()`_        Set one color register for a viewport (deprecated)
 `SetRGB4CM()`_      Set one color register for a colormap (deprecated)
-=================== =============================================================================
+=================== ==========================================================
+
 
 
 Animation
 ---------
 
-======================== ===========================================================================
+======================== =====================================================
 `AddAnimOb()`_           Add AnimObject to linked list
 `AddBob()`_              Add Bob to GEL list
 `AddVSprite()`_          Add VSprite to GEL list
 `AllocSpriteDataA()`_    Allocate sprite data and convert from a bitmap
 `FreeSpriteData()`_      Free data allocated by AllocSpriteDataA()
 `Animate()`_             Processes all AnimObs in the current animation list
-`ChangeExtSpriteA()`_    Change extented sprite
+`ChangeExtSpriteA()`_    Change extended sprite
 `ChangeSprite()`_        Change simple sprite
 `DoCollision()`_         Test all GEL for collisions
 `DrawGList()`_           Draw all GEL
@@ -363,22 +385,23 @@ Animation
 `GetExtSpriteA()`_       Attempt to allocate one of the 8 sprites
 `InitGMasks()`_          Initialize all masks of an AnimOb
 `InitGels()`_            Initialize GEL list
-`InitMasks()`_           Initialize BoderLine and CollMaks of a VSprite
+`InitMasks()`_           Initialize BorderLine and CollMask of a VSprite
 `MoveSprite()`_          Move sprite relative to viewport
 RemBob()                 Remove a Bob from GEL list (macro)
 `RemIBob()`_             Remove a Bob from GEL list and RastPort
 `RemVSprite()`_          Remove VSprite from GEL list
 `SetCollision()`_        Set which is called at collisions
-`AllocDBufInfo()`_       Alloc structure for multi-buffered animation
+`AllocDBufInfo()`_       Allocate structure for multi-buffered animation
 `FreeDBufInfo()`_        Free multi-buffer information
 `ChangeVPBitMap()`_      Change buffer
-======================== ===========================================================================
+======================== =====================================================
+
 
 
 Layers
 ------
 
-======================== ===========================================================================
+======================== =====================================================
 `AndRectRect()`_
 `AndRectRegion()`_
 `AndRectRegionND()`_
@@ -407,75 +430,80 @@ Layers
 `XorRectRegionND()`_
 `XorRegionRegion()`_
 `XorRegionRegionND()`_
-======================== ===========================================================================
+======================== =====================================================
+
 
 
 Display database
 ----------------
 
-======================== ===========================================================================
-`BestModeIDA()`_         Search a mode for the given properties
+======================== =====================================================
+`BestModeIDA()`_         Find a mode for the given properties
 `OpenMonitor()`_         Open named monitor specification
 `CloseMonitor()`_        Close monitor specification
-`CoerceMode()`_          ViewPort mode coercion
+`CoerceMode()`_          Viewport mode coercion
 `FindDisplayInfo()`_     Get display information from the database
 `NextDisplayInfo()`_     Iterate displayinfo
 `ModeNotAvailable()`_    Check availability of a display ID
-`GetVPModeID()`_         Get display ID from ViewPort
+`GetVPModeID()`_         Get display ID from viewport
 `GfxNew()`_              Allocate a graphics extended data structure
 `GfxFree()`_             Free structure allocated by GfxNew()_
 `GfxAssociate()`_        Associate a graphics extended node with a pointer
 `GfxLookUp()`_           Find a graphics extended node by pointer
-======================== ===========================================================================
+======================== =====================================================
+
 
 
 Blitter
 -------
 
-======================== ===========================================================================
-`DisownBlitter()`_       Release the bitter from private usage
-`OwnBlitter()`_          Try to own the blitter for private usage
-`QBSBlit()`_             Queue a beam-synchronized Blit
+======================== =====================================================
+`DisownBlitter()`_       Release the bitter from private use
+`OwnBlitter()`_          Try to own the blitter for private use
+`QBSBlit()`_             Queue a beam-synchronized blit
 `QBlit()`_               Queue a blit
 `WaitBlit()`_            Wait for the blitter to finish
-======================== ===========================================================================
+======================== =====================================================
+
 
 
 Copper
 ------
 
-======================== ===========================================================================
+======================== =====================================================
 `CBump()`_               Increment user copper list pointer
-`CMove()`_               Add a copper move instruction to the given user copper list
-`CWait()`_               Add a copper wait instruction to the given user copper list
-`FreeCopList()`_         Deallocate all memory associated with this copper list
-`FreeCprList()`_         Deallocate all memory associated with this cprlist structure
+`CMove()`_               Add a copper move instruction to user copper list
+`CWait()`_               Add a copper wait instruction to user copper list
+`FreeCopList()`_         Deallocate all memory associated with copper list
+`FreeCprList()`_         Deallocate all memory associated of cprlist structure
 `FreeVPortCopLists()`_   Deallocate copperlist from viewport
 `MrgCop()`_              Merge together copper instructions
-`UCopperListInit()`_     Allocates and initializes copperlist structures and buffers
-======================== ===========================================================================
+`UCopperListInit()`_     Allocate & initialize copperlist structures & buffers
+======================== =====================================================
 
 
-Misc
-----
 
-============================== ======================================================================
+Miscellaneous
+-------------
+
+============================== ===============================================
 `SetRGBConversionFunctionA()`_ Replace pixel conversion routine
 `ConvertPixelsA()`_            Convert pixels from one pixfmt to another
 `InitVPort()`_                 Initialize ViewPort structure
 `InitView()`_                  Initialize View structure
-`LoadView()`_                  Create current display from coprocessor instruction list
+`LoadView()`_                  Create current display from coprocessor
+                               instruction list
 `LockLayerRom()`_              Lock layer structure
 `UnlockLayerRom()`_            Unlock layer structure
 `MakeVPort()`_                 Create copper list for viewport
 `ScrollVPort()`_               Scroll viewport
-`SetChipRev()`_                Switch on chipset features
+`SetChipRev()`_                Switch on chip-set features
 `VBeamPos()`_                  Get vertical beam position
 `VideoControl()`_              Modify viewport's colormap
-`WaitBOVP()`_                  Wait till vertical beam reached bottom of viewport
+`WaitBOVP()`_                  Wait till vertical beam reaches bottom viewport
 `WaitTOF()`_                   Wait for vertical blank
-`CalcIVG()`_                   Calculate the number of blank lines above a ViewPort
-============================== ======================================================================
+`CalcIVG()`_                   Calculate number of blank lines above viewport
+============================== ===============================================
 
 
 .. Hyperlinks to graphics.library autodocs

@@ -2,15 +2,17 @@
 Scripts
 =======
 
-:Authors:   Matthias Rustler 
+:Authors:   Matthias Rustler
 :Copyright: Copyright (C) 2009, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Draft
 
+
 -------------
 
 `Index <index>`_
+
 
 -------------
 
@@ -19,7 +21,7 @@ Scripts
 
 Introduction
 ------------
-Scripts are programs which are build of commands. Those commands can
+Scripts are programs which are built of commands. Those commands can
 be Shell commands which you can find in the ``C:`` directory or any
 other AROS application which can be started from Shell. Example::
 
@@ -30,7 +32,7 @@ other AROS application which can be started from Shell. Example::
 You can create the scripts with any text editor,
 e.g. ``sys:tools/Editor``.
 
-The default storage place for scripts is ``S:``, but you can use any
+The default storage location for scripts is ``S:``, but you can use any
 directory. The search path of the Shell is used to find the script.
 
 
@@ -54,7 +56,7 @@ Special script characters
 -------------------------
 ``;``
     Comments; anything following the ``;`` is ignored, e.g.::
-    
+
         ASSIGN foo: sys:c ; Create an assign
 
 ``$``
@@ -68,13 +70,12 @@ Special script characters
 
         <param$default>
 
-    The ``$`` can be changed with the .DOLLAR command
+    The ``$`` can be changed with the .DOLLAR command.
+    To specify parameters, there must be a .KEY command in the script.
+
 
 ``$$``
-    ``<$$>`` is replaced by the current process number. There must
-    be a .KEY command in the script. The angle brackets can be
-    changed with .BRA and .KET commands. You can change the ``$``
-    with the .DOLLAR command.
+    ``<$$>`` is replaced by the current process number.
 
 
 Dot commands
@@ -134,15 +135,15 @@ parameters the script must start with a dot command (preferable .KEY)::
 .. Note::
     Because of a bug in the Shell you always have to
     overwrite the angle brackets ``<``, ``>`` with .BRA and .KEY
-    (preferable with curly brackets ``{``, ``}``).
+    (a good choice would be curly brackets ``{``, ``}``).
 
 Another reason for always overwriting the angle brackets is to
 avoid confusion with input/output redirection.
 
 .. Hint::
     Enclose parameters in double quotes to avoid troubles
-    when the parameter contains white-space as white-space is used
-    for parameter separation, e.g.: better use ``TYPE "{FILE}"``
+    when the parameter contains white-space, as white-space is used
+    for parameter separation, e.g.: use ``TYPE "{FILE}"`` rather
     than ``TYPE {FILE}``.
 
 
@@ -163,14 +164,15 @@ execution.
 ``20...``
     Failure.
 
-Shell commands return only the values 0, 5, 10 and 20. You can
-set the limit where execution of the script is stopped with the
-FailAt_ command.
+Shell commands return only the values 0, 5, 10 and 20. In the Shell
+a limit indicates for what returned value a script should stop
+executing. By default this limit is 10, but it can be changed with
+the FailAt_ command.
 
 Some query commands use the flag to tell about the result, e.g.::
 
     ASK "Continue?"
-    IF WARN
+    IF WARN              ; A WARN means a Yes.
         COPY a.dat b.dat
     ENDIF
 
@@ -178,7 +180,7 @@ Some query commands use the flag to tell about the result, e.g.::
 Conditional blocks
 ------------------
 The If_ command allows to define blocks which are only executed
-if the given condition is met, e.g.::
+if the given conditions are met. Some examples::
 
     IF WARN
     IF ERROR
@@ -188,7 +190,7 @@ if the given condition is met, e.g.::
         ...
     ENDIF
 
-Example with alternative Else_ block::
+Example with Else_ specifying an alternative block::
 
     IF EXISTS "ram:file.txt"
         TYPE "ram:file.txt"
@@ -199,7 +201,8 @@ Example with alternative Else_ block::
 
 Skipping
 --------
-You can jump with Skip_ to labels which you have defined with Lab_::
+With the Skip_ command, you can jump to labels which you have defined
+with Lab_::
 
     IF EXISTS "ram:file.txt"
         SKIP message
@@ -219,14 +222,14 @@ given some input.
 The Ask_ commands prints a message and sets the condition flag to
 WARN if the input was "y(es)".
 
-RequestChoice_, RequestFile_ and RequestString_ are printing the
-result to the standard output. To be able to use it you have
-to redirect the output to a file, e.g.::
+RequestChoice_, RequestFile_ and RequestString_ print their
+results to the standard output. To be able to process it you have
+to redirect their output to a file, e.g.::
 
     REQUESTSTRING >ENV:reqstrres "Enter a string"
 
-Storing in ENV: has the advantage that it can be handled as
-an environment variable as explained below.
+Storing in ENV: has the advantage that the file can be handled as
+an environment variable, as explained below.
 
 
 Environment variables
@@ -236,9 +239,9 @@ Variables can be set with Set_ and SetEnv_.
 Set_ creates local variables which exist only in the current Shell
 and all Shells created from the current Shell.
 
-SetEnv_ creates global variables which are available in all Shells.
+SetEnv_ creates global variables that are available in all Shells.
 The content is stored in files in the ENV: directory with the
-variable name as file name.
+variable name as filename.
 
 To use the variable's contend you have to prefix it with a
 ``$`` sign, e.g.::
@@ -250,15 +253,15 @@ directly in the Shell.
 
 .. Hint::
     Enclose expanded variables in double quotes to avoid troubles
-    when the variable contains white-space as white-space is used
-    for parameter separation, e.g.: better use ``TYPE "$FILE"``
+    when the variable may contain white-space, as white-space is
+    used for parameter separation, e.g.: better use ``TYPE "$FILE"``
     than ``TYPE $FILE``.
 
 Some variables are handled by the Shell:
 
 ``ECHO``
     Setting it to ``ON`` (``SET ECHO ON``) enables command echoing,
-    i.e. all commands are print before they are executed. This
+    i.e. all commands are printed before they are executed. This
     can be used for debugging.
 
 
@@ -271,8 +274,8 @@ it has reached the last line.
 Automatic script creation
 -------------------------
 
-The LFORMAT option of the List_ command makes it possible to create
-the output in such a way that it can be executed as script::
+The LFORMAT option of the List_ command makes it possible to format
+the output in such a way that it can be executed as a script::
 
     LIST #? TO T:typeall LFORMAT="TYPE *"%P%N*""
     EXECUTE T:typeall
@@ -283,9 +286,9 @@ are enclosed in double quotes.
 
 Special scripts
 ---------------
-During booting AROS executes the script ``s:startup-sequence``.
+During booting, AROS executes the script ``s:startup-sequence``.
 That file is supposed to be read-only. If you have your own commands
-you want to be called during start-up add them to the file
+that you want to be called during start-up, add them to the file
 ``s:user-startup``. The script ``s:shell-startup`` is executed
 every time you open a new Shell.
 

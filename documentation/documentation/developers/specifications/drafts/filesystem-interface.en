@@ -1,76 +1,81 @@
-=============================
-The AROS Filesystem Interface
-=============================
+==============================
+The AROS File System Interface
+==============================
 
 :Author:    Aaron Digulla
 :Copyright: Copyright © 2001, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 
-.. Note:: 
+.. Note::
 
-   This document is currently only a draft and will most likely change before 
-   it is accepted as an official specification. It might also be deprecated if
-   a better aproach has been found and might not correspond precisely with the 
-   current implementation.
+   This document is currently only a draft and as such will most likely change
+   before it is accepted as an official specification. It might also be
+   deprecated if a better approach has been found in the mean time, and
+   doesn't necessarily correspond precisely with the current implementations.
 
-.. Contents:: 
+.. Contents::
    :depth: 2
 
 
 Introduction
 ============
 
-Normally, as an application programmer, you don't have to worry about the
-filesystem interface -- you can do everything you want via simple calls
-to DOS. However you may need to know how to interface with a filesystem 
+As an application programmer you don't have to worry about the
+file system interface -- you can do everything you want via simple calls
+to DOS. However you may need to know how to interface with a file system
 if you:
 
-+ Need to write your own filesystem,
-+ Wish to asynchronous I/O,
++ Need to write your own file system,
++ Wish to do asynchronous I/O,
 + Are writing a console driver,
 + Don't trust DOS.
 
-Of the above the most useful of these would be doing asynchronous I/O, although
-it is in many cases better to use one of the publically available libraries
-to do this, as it will hide from you the implementation of the filesystems.
+Of the above the most useful of these would be doing asynchronous I/O,
+although it is in many cases better to use one of the publicly available
+libraries to do this, as that will hide from you the file systems'
+implementation details.
+
+
 
 
 It's completely different
 =========================
 
-The interface to filesystems is different under AROS compared to AmigaOS in
-many ways:
+The interface to the file systems under AROS differs from that under AmigaOS
+in many ways:
 
-+ Filesystems are exec devices not process's message ports. This gives
++ File systems are exec devices, not process' message ports. This gives
   two main benefits -- it is possible to do some work on the callers
-  schedule, which for simple requests can save on two context switches;
-  and it gives us a way to abort a request, which is an important 
-  feature for a network filesystem.
-+ There is no difference between locks and filehandles anymore. This
+  schedule, which for simple requests can save two context switches;
+  and it gives us a way to abort a request, which is an important
+  feature for a network file system.
++ There is no difference between locks and file handles any more. This
   avoids requiring redundant methods such as `ACTION_FH_FROM_LOCK`.
 + No BCPL -- everything is a C data type or a string. A side effect
   of this is that there is no limit on string size which translates
   to no limit on filename size either.
 
-Obviously this change renders the filesystem incompatible to the current
-AmigaOS filesystems and DOS implementation. However it should be possible
-to build a bridge between the filesystems if necessary.
+Obviously this change renders the file system incompatible to the current
+AmigaOS file systems and DOS implementation. However it should be possible
+to build a bridge between the file systems if necessary.
 
 
-Filesystem devices
-==================
 
-The major API change with filesystems is that they now use the Exec Device
-API. You can use the normal device functions (`DoIO()`, `AbortIO()`, etc).
-The I/O Request structure is defined in `dos/filesystems.h`::
+
+File system devices
+===================
+
+The major API-change of file systems is that they now use the Exec Device
+API. You can use the normal device functions (`DoIO()`, `AbortIO()`, etc.).
+The I/O Request structure is defined in `dos/file systems.h`::
 
     /* IORequest from <exec/io.h> */
-    struct IORequest 
+    struct IORequest
     {
         struct Message  io_Message;
-        struct Device  *io_Device;  /* filesystem base pointer */
-        struct Unit	   *io_Unit;    /* file or directory handle */
+        struct Device  *io_Device;  /* file system base pointer */
+        struct Unit    *io_Unit;    /* file or directory handle */
         UWORD           io_Command; /* the command */
         UBYTE           io_Flags;   /* normal device flags (IOF_QUICK) */
         BYTE            io_Error;   /* error code from device functions */
@@ -80,19 +85,22 @@ The I/O Request structure is defined in `dos/filesystems.h`::
     {
         struct IORequest IOFS;
         LONG             io_DosError; /* secondary error code (IoErr()) */
-        union {}         io_Union;    /* arguments - command dependant */
+        union {}         io_Union;    /* arguments - command dependent */
     };
 
 The `io_DosError` field is used to return the secondary error
 code to the caller. This is the code that is returned by the
-`dos.library` function `IoErr()`. The `io_Error`field of `struct IORequest` 
-should only be used to return a simple failure/success for filesystem 
-commands, and should have the normal effect for the device open/close commands.
+`dos.library` function `IoErr()`. The `io_Error`field of `struct IORequest`
+should only be used to return a simple failure/success for file system
+commands, and should have the normal effect for the device open/close
+commands.
 
-The `io_Union` field is an union containing different structures for each of the
-commands. This field has a variable length depending upon the command. The 
-fields listed in the "Input" sections of the autodocs below refer to a specific
-member of this union.
+The `io_Union` field is an union containing different structures for each of
+the commands. This field has a variable length depending upon the command. The
+fields listed in the "Input" sections of the autodocs below refer to a
+specific member of this union.
+
+
 
 
 Command documentation
@@ -110,16 +118,16 @@ Name
 Function
 """"""""
 
-Mount a new filesystem. The `IOFileSys` structure passed in `iofs` to the
+Mount a new file system. The `IOFileSys` structure passed in `iofs` to the
 handler should contain enough information for the handler to mount the
-filesystem.
+file system.
 
-If there is a volume mounted in this device, it is the responsibility of the
-handler to add the required volume nodes to the DOS device list before returning
-to the caller. Note here that the DOS device list is already locked, so you do
+If a volume is mounted in this device, it's the responsibility of the handler
+to add the required volume nodes to the DOS device list before returning to
+the caller. Note here, that the DOS device list is already locked, so you do
 not need to lock it yourself.
 
-The filesystem must return a handle to the device in the `io_Unit` pointer of
+The file system must return a handle to the device in the `io_Unit` pointer of
 the `struct IOFileSys`. The `io_Error` and `io_DosError` fields should be set
 appropriately for success or failure.
 
@@ -131,10 +139,10 @@ Input
     The union field `io_OpenDevice` is being used. Fill it with these values:
 
     `io_DeviceName`
-        Name of the exec device to mount the filesystem upon. This device is the
-        underlying hardware of the device. Note that this field may not be valid
-        for some special types of handlers (for example network filesystems or
-        special devices ``AUX:``, ``SER:``).
+        Name of the exec device to mount the file system upon. This device is
+        the underlying hardware of the device. Note that this field may not be
+        valid for some special types of handlers (for example network
+        file systems or special devices ``AUX:``, ``SER:``).
 
     `io_Unit`
         Unit number for the exec device. Note this is the
@@ -149,7 +157,7 @@ Result
 
 `io_Device`
     device base pointer.
-    
+
 `io_Unit`
     logical device handle.
 
@@ -166,6 +174,7 @@ See also
 + `CloseDevice()`_
 
 
+
 CloseDevice()
 -------------
 
@@ -177,14 +186,14 @@ Name
 
 Function
 """"""""
-	
-Try and dismount a DOS device. If there are any mounted volumes in the device,
-the filesystem should remove them from the DOS device list. Note that the DOS
-device list will have already been locked by the caller, so you will not have to
-do this yourself.
 
-You should not dismount the device if there are still open files or outstanding
-locks.
+Try to dismount a DOS device. If there are any mounted volumes in the device,
+the file system should remove them from the DOS device list. Note that the DOS
+device list will have already been locked by the caller, so you will not have
+to do this yourself.
+
+You should not dismount the device if there are open files or outstanding
+locks remaining.
 
 
 Input
@@ -192,7 +201,7 @@ Input
 
 `io_Unit`
     logical device handle.
-    
+
 
 Result
 """"""
@@ -201,12 +210,13 @@ The DOS device shall be dismounted if possible.
 
 `io_DosError`
     DOS error code or ``0`` for no error.
-    
+
 
 See also
 """"""""
 
 + `OpenDevice()`_
+
 
 
 FSA_OPEN
@@ -238,7 +248,7 @@ Input
 """""
 
 `io_Unit`
-    Handle to current directory.
+    Handle to the current directory.
 
 `io_Filename`
     Relative file or directory name.
@@ -248,13 +258,13 @@ Input
 
     `FMF_LOCK`
         lock exclusively
-        
+
     `FMF_READ`
         open for reading
-        
+
     `FMF_WRITE`
         open for writing
-        
+
     `FMF_EXECUTE`
         open to execute
 
@@ -276,6 +286,7 @@ See also
 + FSA_CLOSE_
 
 
+
 FSA_CLOSE
 ---------
 
@@ -289,7 +300,7 @@ Function
 """"""""
 
 Close a file or directory handle. You should write out any buffered
-data before returning. It is the responsibility of the filesystem
+data before returning. It is the responsibility of the file system
 to free the data pointed to by `io_Unit`.
 
 
@@ -297,7 +308,7 @@ Input
 """""
 
 `io_Unit`
-    Handle to file or directory.
+    Handle to a file or directory.
 
 
 Result
@@ -305,13 +316,14 @@ Result
 
 `io_DosError`
     DOS error code or ``0`` for no error.
-    
+
 
 See also
 """"""""
 
-+ FSA_OPEN_ 
++ FSA_OPEN_
 + FSA_OPEN_FILE_
+
 
 
 FSA_READ
@@ -326,8 +338,8 @@ Name
 Function
 """"""""
 
-Try and read the requested number of bytes from the filehandle.
-A handler will normally try and fulfill the request completely,
+Try and read the requested number of bytes from the file handle.
+A handler will normally try and fulfil the request completely,
 but special handlers (such as the console) may return less than
 the requested number of bytes.
 
@@ -343,11 +355,11 @@ Input
 """""
 
 `io_Unit`
-    Filehandle.
+    File handle.
 
 `io_Buffer`
     Pointer to byte buffer.
-    
+
 `io_Length`
     Number of bytes to read from the file.
 
@@ -360,15 +372,16 @@ possible to read any.
 
 `io_Length`
     Number of bytes read.
-    
+
 `io_DosError`
     DOS error code or ``0`` for no error.
-    
-    
+
+
 See also
 """"""""
 
 + FSA_WRITE_
+
 
 
 FSA_WRITE
@@ -383,8 +396,8 @@ Name
 Function
 """"""""
 
-Try to write the requested number of bytes to the filehandle.
-A handler should try and fulfill the request completely, but
+Try to write the requested number of bytes to the file handle.
+A handler should try and fulfil the request completely, but
 special handlers may write less than the requested number of
 bytes.
 
@@ -396,7 +409,7 @@ Input
 """""
 
 `io_Unit`
-    Filehandle.
+    File handle.
 
 `io_Buffer`
     Byte buffer containing data to write.
@@ -408,7 +421,7 @@ Input
 Result
 """"""
 
-The contents of the buffer should have been written to the 
+The contents of the buffer should have been written to the
 stream.
 
 `io_Length`
@@ -422,6 +435,7 @@ See also
 """"""""
 
 + FSA_READ_
+
 
 
 FSA_SEEK
@@ -439,38 +453,39 @@ Function
 This command shall change the position of the next read or write in the file.
 The command will also return the old position in the file.
 
-FIXME: Error condition for seeking before the start, and after the end of file.
+FIXME: Error condition for seeking before the start, or after the end of file.
 
 This command uses the ``io_Union.io_SEEK`` member.
 
 
 Notes
 """""
-	
+
 A command with ``io_Offset == 0``, and ``io_SeekMode == OFFSET_CURRENT`` is
-a NOP in terms of seeking	and will simply return the current file position.
+a NOP in terms of seeking and will simply return the current file position.
 
 
 Input
 """""
 
 io_Unit
-    filehandle
-    
+    file handle
+
 io_Offset
     offset
-    
+
 io_SeekMode
     mode
-	
+
     OFFSET_BEGINNING
         offset is relative to the beginning of the file
 
-	OFFSET_CURRENT
+    OFFSET_CURRENT
         offset is relative to the current position
 
-	OFFSET_END
+    OFFSET_END
         offset is relative to the end of the file
+
 
 Result
 """"""
@@ -480,6 +495,7 @@ io_Offset
 
 io_DosError
     DOS error code or ``0`` for no error.
+
 
 
 FSA_SET_FILE_SIZE
@@ -507,20 +523,20 @@ Input
 """""
 
 io_Unit
-    filehandle
-	
+    file handle
+
 io_Offset
     offset
-	
+
 io_SeekMode
     mode
 
     OFFSET_BEGINNING
         offset is relative to the beginning of the file
-    
+
     OFFSET_CURRENT
-        offset is relative to the current position 
-    
+        offset is relative to the current position
+
     OFFSET_END
         offset is relative to the end of the file
 
@@ -540,6 +556,7 @@ Notes
 Not all handlers will support this command.
 
 
+
 FSA_WAIT_CHAR
 -------------
 
@@ -552,9 +569,9 @@ Name
 Function
 """"""""
 
-This command will wait for a character to be ready for reading. You should only
-wait for a maximum of ``io_Timeout`` microseconds. If ``io_Timeout`` is 0, then
-you should wait indefinately.
+This command will wait for a character to be ready for reading. You should
+only wait for a maximum of ``io_Timeout`` microseconds. If ``io_Timeout`` is
+0, then you should wait indefinitely.
 
 This command can be used on both plain files and interactive files. For plain
 files it should return immediately, unless for some reason there is no data
@@ -567,7 +584,7 @@ Input
 """""
 
 io_Unit
-    Filehandle to wait on
+    File handle to wait on
 
 io_Timeout
     number of microseconds to wait for input
@@ -578,7 +595,7 @@ Result
 
 io_Success
     set to TRUE if a character arrived in time.
-    	
+
 io_DosError
     set to the DOS error code, or 0 for no error
 
@@ -589,6 +606,7 @@ See also
 + `FSA_IS_INTERACTIVE`_
 
 
+
 FSA_FILE_MODE
 -------------
 
@@ -596,11 +614,11 @@ Name
 """"
 
 ``FSA_FILE_MODE`` - set the mode of a file
-    	
+
 
 Function
 """"""""
-    	
+
 Apply a new mode to the file. This command uses a mask to define which of the
 modes should be changed. Supplying a mask of 0 will return the current set of
 modes.
@@ -612,26 +630,27 @@ Input
 """""
 
 io_Unit
-    Filehandle to change mode on
+    File handle to change mode on
 
 io_FileMode
     new modes to apply to the file
 
 io_Mask
     mask of modes which are to be changed.
-    
+
 
 Result
 """"""
 
 The modes should be set to those described by the mask and mode flags.
-    	
+
 io_FileMode
-    the new set of filemodes
-    	
+    the new set of file modes
+
 io_DosError
     the DOS error code on failure, or 0 for success
-    	
+
+
 
 FSA_IS_INTERACTIVE
 ------------------
@@ -645,8 +664,8 @@ Name
 Function
 """"""""
 
-Query the filesystem as to whether this file is a interactive terminal.
-    	
+Query the file system as to whether this file is a interactive terminal.
+
 This function uses the ``io_Union.io_IS_INTERACTIVE`` member.
 
 
@@ -654,8 +673,8 @@ Input
 """""
 
 io_Unit
-    Filehandle to query
- 
+    File handle to query
+
 
 Result
 """"""
@@ -669,8 +688,9 @@ io_DosError
 
 See also
 """"""""
-    	
+
 + `FSA_WAIT_CHAR`_
+
 
 
 FSA_SAME_LOCK
@@ -686,8 +706,8 @@ Function
 """"""""
 
 This function will compare two locks, and return whether the refer to the same
-object in the filesystem.
-    	
+object in the file system.
+
 This command uses the ``io_Union.io_SAME_LOCK`` member.
 
 
@@ -699,23 +719,24 @@ Input
 
 ``io_Lock[1]``
     lock 2
-    	
+
 
 Result
 """"""
 
 io_Same
-    set to LOCK_DIFFERENT or LOCK_SAME depending upon the result of the 
+    set to LOCK_DIFFERENT or LOCK_SAME depending upon the result of the
     comparison.
-    	
+
 io_DosError
     DOS error code, or 0 for success.
 
 
 See also
 """"""""
-    	
+
 + `FSA_OPEN`_
+
 
 
 FSA_EXAMINE
@@ -723,8 +744,8 @@ FSA_EXAMINE
 
 Name
 """"
-	
-``FSA_EXAMINE`` - example a file or directory
+
+``FSA_EXAMINE`` - examine a file or directory
 
 
 Function
@@ -733,25 +754,25 @@ Function
 This command will obtain information about the current file or directory and
 return it in the ExAllData structure passed in.
 
-We do not support passing filesystems the FileInfoBlock structure as that has
-limits upon the size of paths. The AROS dos.library will handle the translation
-between the two structures.
+Passing file systems the FileInfoBlock structure is not supported, as that has
+limits upon the size of paths. The AROS dos.library will handle the
+translation between the two structures.
 
-You need only return the information requested, which is determined by the value
-in ``io_Mode``.
+You need only return the information requested, which is determined by the
+value in ``io_Mode``.
 
 This command uses the ``io_Union.io_EXAMINE``.
 
 
 Input
 """""
-	
+
 io_Unit
-    Handle of file or directory
+    Handle of a file or directory
 
 io_ead
     struct ExAllData to be filled.
-	
+
 io_Size
     size of the buffer in bytes.
 
@@ -761,7 +782,7 @@ io_Mode
 
 Result
 """"""
-	
+
 io_DosError
     one of the DOS error codes, or 0 for success.
 
@@ -770,6 +791,7 @@ See also
 """"""""
 
 + `FSA_EXAMINE_ALL`_
+
 
 
 FSA_EXAMINE_ALL
@@ -790,19 +812,19 @@ need only fill in the information requested by the caller.
 
 You should continue filling in information in the buffer until you run out of
 space. The ed_Next fields of the ExAllData structure are used to link the
-entries together. The last entry should have ``ed_Next = NULL``. Entries should be
-aligned to the size of the system pointer datatype.
+entries together. The last entry should have ``ed_Next = NULL``. Entries
+should be aligned to the size of the system pointer datatype.
 
 If ``io_DosError != 0``, then the contents of the buffer is undefined.
-If you need space to store filenames, comments strings, etc these
+If you need space to store filenames, comments strings, etc. these
 should be placed at the end of the buffer.
 
 
 Input
 """""
-	
+
 io_Unit
-    Handle of file or directory
+    Handle of a file or directory
 
 io_ead
     struct ExAllData[] buffer to be filled
@@ -810,13 +832,13 @@ io_ead
 io_Size
     size of the buffer in bytes
 
-io_Mode 
+io_Mode
     type of information to get
 
 
 Result
 """"""
-	
+
 io_DosError
     dos error code or 0 for success.
 
@@ -826,6 +848,7 @@ See also
 
 + `FSA_EXAMINE`_
 + `FSA_EXAMINE_ALL_END`_
+
 
 
 FSA_EXAMINE_ALL_END
@@ -840,8 +863,8 @@ Name
 Function
 """"""""
 
-Finish examining a number of objects in the filesystem. This is used to reset
-the filesystems internal state if required.
+Finish examining a number of objects in the file system. This is used to reset
+the file systems internal state if required.
 
 This command does not use the ``io_Union`` field.
 
@@ -850,7 +873,7 @@ Input
 """""
 
 io_Unit
-    Filehandle
+    File handle
 
 
 Result
@@ -858,14 +881,15 @@ Result
 
 io_DosError
     DOS error code, or 0 for success.
-    	
+
 
 See also
 """"""""
 
 + `FSA_EXAMINE`_
 + `FSA_EXAMINE_ALL`_
-    	
+
+
 
 FSA_OPEN_FILE
 -------------
@@ -879,14 +903,14 @@ Name
 Function
 """"""""
 
-Open a handle onto a file, creating the file if necessary. This command only
+Open a handle for a file, creating the file if necessary. This command only
 works on files, not directories.
 
 
 Function
 """"""""
 
-Open a handle onto a file, creating the file if necessary. This command one
+Open a handle for a file, creating the file if necessary. Thee
 ``io_Filename`` field gives the name of the file, which is relative to the
 handle passed in ``io_Unit``. If the ``io_Unit`` handle is NULL, then the file
 is relative to the root of the directory tree.
@@ -898,32 +922,32 @@ Input
 """""
 
 io_Unit
-    Handle of current directory.
-    
+    Handle of the current directory.
+
 io_Filename
     filename relative to ``io_Unit``.
 
 io_FileMode
     mode to open with:
-    
+
     FMF_LOCK
         lock exclusively
-    
+
     FMF_READ
         open for reading
-    
+
     FMF_WRITE
         open for writing
-    
+
     FMF_EXECUTE
         open to execute
-    
+
     FMF_CREATE
-        create file if it doesn't exist
-    
+        create the file if it doesn't exist
+
     FMF_CLEAR
-        delete file before opening
-    
+        delete the file before opening
+
     FMF_RAW
         open cooked console in raw mode (and vice versa).
 
@@ -935,7 +959,7 @@ Result
 """"""
 
 io_Unit
-    pointer to newly created handle.
+    pointer to the newly created handle.
 
 io_DosError
     dos error code or 0 for success.
@@ -946,6 +970,7 @@ See also
 
 + `FSA_OPEN`_
 + `FSA_CLOSE`_
+
 
 
 FSA_CREATE_DIR
@@ -960,9 +985,9 @@ Name
 Function
 """"""""
 
-This command tells the filesystem to create a new directory, lock it, and return
-a handle to the lock. The directory should be created with the modes given in
-``io_Args[1]``.
+This command tells the file system to create a new directory, lock it, and
+return a handle to the lock. The directory should be created with the modes
+given in ``io_Args[1]``.
 
 FIXME: Is the lock read or write?
 
@@ -972,13 +997,13 @@ directory if ``io_Unit == NULL``.
 
 Input
 """""
-	
+
 io_Unit
-    Handle of current directory or ``NULL``.
+    Handle of the current directory or ``NULL``.
 
 io_Filename
     relative name of directory to create
-	
+
 io_Protection
     protection flags for the new directory
 
@@ -986,19 +1011,20 @@ io_Protection
 Result
 """"""
 
-The directory requested exists if it could be created.
+The requested directory exists, if it could be created.
 
 io_Unit
-    handle to new directory
+    handle to the new directory
 
 io_DosError
-    dos error code or 0 for sucess
+    dos error code or 0 for success
 
 
 See also
 """"""""
 
 + `FSA_OPEN`_
+
 
 
 FSA_CREATE_HARDLINK
@@ -1012,9 +1038,9 @@ Name
 
 Function
 """"""""
-    	
-Create a hard link to a file. There is no difference between a hard link and its
-original file. If the original file is deleted, the data will still exist
+
+Create a hard link to a file. There is no difference between a hard link and
+its original file. If the original file is deleted, the data will still exist
 because of the link.
 
 Hard links can not point across devices.
@@ -1026,7 +1052,7 @@ Input
 """""
 
 io_Unit
-    Handle of current directory or ``NULL``.
+    Handle of the current directory or ``NULL``.
 
 io_Filename
     filename of the hard link.
@@ -1038,7 +1064,7 @@ io_OldFile
 Result
 """"""
 
-A hard link will have been created if possible.
+A hard link will have been created, if possible.
 
 io_DosError
     DOS error code, or 0 for success.
@@ -1046,10 +1072,11 @@ io_DosError
 
 See also
 """"""""
-    	
+
 + `FSA_CREATE_SOFTLINK`_
 
-    	
+
+
 FSA_CREATE_SOFTLINK
 -------------------
 
@@ -1062,9 +1089,9 @@ Name
 Function
 """"""""
 
-Create a soft link to a file. There is a difference between a soft link and its
-original file. If the original file is deleted, the soft link will no longer be
-valid (but it will not be deleted).
+Create a soft link to a file. There is a difference between a soft link and
+its original file. If the original file is deleted, the soft link will no
+longer be valid (but it will not be deleted).
 
 As soft links are stored as the filename of the link to file, they can be used
 across devices. This means that the filename stored **must** be an absolute
@@ -1077,7 +1104,7 @@ Input
 """""
 
 io_Unit
-    Handle of current directory or ``NULL``.
+    Handle of the current directory or ``NULL``.
 
 io_Filename
     filename of the soft link to create.
@@ -1101,20 +1128,21 @@ See also
 + `FSA_CREATE_HARDLINK`_
 
 
+
 FSA_RENAME
 ----------
 
 Name
 """"
 
-``FSA_RENAME`` - Rename an object in the filesystem
+``FSA_RENAME`` - Rename an object in the file system
 
 
 Function
 """"""""
 
-Rename an object in the filesystem. This function may be called on a file which
-doesn't exist. The filenames specified should be considered relative to
+Rename an object in the file system. This function may be called on a file
+which doesn't exist. The filenames specified should be considered relative to
 ``io_Unit`` which specifies the current directory (or NULL for the root
 directory).
 
@@ -1128,13 +1156,13 @@ Input
 """""
 
 io_Unit
-    Handle of current directory or ``NULL``.
+    Handle of the current directory or ``NULL``.
 
 io_Filename
     old filename
 
 io_NewName
-    new filename    	
+    new filename
 
 
 Result
@@ -1144,20 +1172,21 @@ io_DosError
     DOS error code, or 0 for success.
 
 
+
 FSA_READ_SOFTLINK
 -----------------
 
 Name
 """"
 
-``FSA_READ_SOFTLINK`` - Read the name of a softlinked file.
+``FSA_READ_SOFTLINK`` - Read the name of a soft-linked file.
 
 
 Function
 """"""""
 
-This command will read the name of the file referenced by file ``io_Unit``. The
-filename returned is an absolute filename.
+This command will read the name of the file referenced by file ``io_Unit``.
+The filename returned is an absolute filename.
 
 This command uses the ``io_Union.io_READ_SOFTLINK`` member.
 
@@ -1166,13 +1195,13 @@ Input
 """""
 
 io_Unit
-    Handle of file to resolve the softlink from.
+    Handle of the file to resolve the soft link from.
 
 io_Buffer
     buffer to fill with the pathname
 
 io_Size
-    size of the buffer. Return ``ERROR_LINE_TOO_LONG`` if the buffer is not 
+    size of the buffer. Return ``ERROR_LINE_TOO_LONG`` if the buffer is not
     large enough.
 
 
@@ -1191,14 +1220,15 @@ See also
 
 + `FSA_CREATE_SOFTLINK`_
 
-    	
+
+
 FSA_DELETE_OBJECT
 -----------------
 
 Name
 """"
-	
-``FSA_DELETE_OBJECT`` - Delete an object from the filesystem
+
+``FSA_DELETE_OBJECT`` - Delete an object from the file system
 
 
 Function
@@ -1211,14 +1241,14 @@ attempt is made.
 Files with outstanding handles cannot be deleted.
 
 If the ``io_Unit`` handle is ``NULL``, the file to delete is relative to the
-root of the filesystem.
+root of the file system.
 
 
 Input
 """""
 
 io_Unit
-    Handle of current directory or ``NULL``.
+    Handle of the current directory or ``NULL``.
 
 io_Filename
     relative filename
@@ -1229,6 +1259,7 @@ Result
 
 io_DosError
     dos error code or 0
+
 
 
 FSA_SET_COMMENT
@@ -1252,11 +1283,11 @@ Input
 """""
 
 io_Unit
-    Handle of current directory.
+    Handle of the current directory.
 
 io_Filename
     relative filename
-	
+
 io_Comment
     pointer to a C string (STRPTR)
 
@@ -1266,8 +1297,9 @@ Result
 
 The object will have a new comment.
 
-io_DosError 
+io_DosError
     dos error code or 0 for success
+
 
 
 FSA_SET_PROTECT
@@ -1282,8 +1314,8 @@ Name
 Function
 """"""""
 
-Set the protection bits on a file or directory. Note that there are four groups
-of protection bits:
+Set the protection bits on a file or directory. Note that there are four
+groups of protection bits:
 
 + Owner read, write, execute, delete
 + Group read, write, execute, delete
@@ -1291,17 +1323,18 @@ of protection bits:
 + Pure, Script, Archived
 
 You should note that the owner bits are handled a bit strangely
-as they are active low (ie 0 means enabled/set).
+as they are active low (i.e. 0 means enabled/set).
 
-Note that if ``io_Unit`` is valid (ie non-NULL), and ``io_Args[0]`` is NULL then
-you should change the mode of the object described by the ``io_Unit`` handle.
+Note that if ``io_Unit`` is valid (i.e. non-NULL) and ``io_Args[0]`` is NULL,
+then you should change the mode of the object described by the ``io_Unit``
+handle.
 
 
 Input
 """""
 
 io_Unit
-    Handle of current directory.
+    Handle of the current directory.
 
 io_Filename
     relative filename
@@ -1317,6 +1350,7 @@ The object will have new protection bits.
 
 io_DosError
     dos error code or 0 for success.
+
 
 
 FSA_SET_OWNER
@@ -1336,7 +1370,7 @@ changed to reflect the new owner of the directory.
 
 The owner and group fields in the arguments are interpreted as 32-bit values,
 however in general, they will only be 16-bit values. If the values are outside
-the 16-bit range, and you are unabled to handle the values then you can return
+the 16-bit range, and you are unable to handle the values then you can return
 an error. The ``ERROR_BAD_NUMBER`` appears to be the most appropriate error
 number.
 
@@ -1344,7 +1378,7 @@ Special User ID's:
 
 ===  ===================================
   0  root/Supervisor
- -1	 No owner (0x0000FFFF or 0xFFFFFFFF)
+ -1  No owner (0x0000FFFF or 0xFFFFFFFF)
 ===  ===================================
 
 Special Group ID's:
@@ -1354,17 +1388,17 @@ Special Group ID's:
  -1  No group (0x0000FFFF or 0xFFFFFFFF)
 ===  ===================================
 
-Typically AmigaOS filesystems have had little multiuser support, and it should
-be expected that few filesystems will actually support this command. For
-security reasons, only the superuser or the owner of a file should be allowed to
-change the ownership.
+Typically AmigaOS file systems have had little multi-user support, and it
+should be expected that few file systems will actually support this command.
+For security reasons, only the superuser or the owner of a file should be
+allowed to change the ownership.
 
 
 Input
 """""
 
 io_Unit
-    Handle of current directory.
+    Handle of the current directory.
 
 io_Filename
     relative filename
@@ -1385,20 +1419,21 @@ io_DosError
     dos error code or 0 or success.
 
 
+
 FSA_SET_DATE
 ------------
 
 Name
 """"
-	
+
 ``FSA_SET_DATE`` - Set the date of a file/directory
 
 
 Function
 """"""""
 
-Set the modification date of a file or directory. If the filesystem does not
-support the date, for example it is too old, then you should return
+Set the modification date of a file or directory. If the file system does not
+support the date, for example if it's too old, then you should return
 ``ERROR_BAD_NUMBER``. It should not be possible to set the creation date of an
 object (except by creating it).
 
@@ -1407,7 +1442,7 @@ Input
 """""
 
 io_Unit
-    Handle of current directory
+    Handle of the current directory
 
 io_Filename
     relative filename
@@ -1425,20 +1460,21 @@ io_DosError
     dos error code or 0 for success.
 
 
+
 FSA_IS_FILESYSTEM
 -----------------
 
 Name
 """""
 
-``FSA_IS_FILESYSTEM`` - Ask the filesystem handler if it is a filesystem
+``FSA_IS_FILESYSTEM`` - Ask the file system handler whether it's a file system
 
 
 Function
 """"""""
 
-Query the filesystem as to whether it is a proper filesystem. An example of
-something that is not a filesystem is a device handler like PAR:.
+Query the file system as to whether it is a proper file system. An example of
+something that is not a file system is a device handler, like PAR:.
 
 This command uses the ``io_Union.io_IS_FILESYSTEM`` member.
 
@@ -1453,10 +1489,11 @@ Result
 """"""
 
 io_IsFilesystem
-    TRUE if this is a filesystem, FALSE otherwise.
+    TRUE if this is a file system, FALSE otherwise.
 
 io_DosError
-    DOS error code, or 0 for sucecss.
+    DOS error code, or 0 for success.
+
 
 
 FSA_MORE_CACHE
@@ -1465,17 +1502,17 @@ FSA_MORE_CACHE
 Name
 """"
 
-``FSA_MORE_CACHE`` - Add more cache buffers to the filesystem.
+``FSA_MORE_CACHE`` - Add more cache buffers to the file system.
 
 
 Function
 """"""""
 
-Add the number io_NumBuffers of cache buffers to the filesystem. The size of the
-buffer should have been given during the initial filesystem open.
+Add the number io_NumBuffers of cache buffers to the file system. The size of
+the buffer should have been given during the initial file system open.
 
-If the number of buffers is negative, then the result will be to remove buffers
-from the device. You can not have less than 0 buffers.
+If the number of buffers is negative, then the result will be to remove
+buffers from the device. You can not have less than 0 buffers.
 
 This command uses the ``io_Union.io_MORE_CACHE`` member.
 
@@ -1493,11 +1530,12 @@ Result
 The number of buffers will have been altered if possible.
 
 io_NumBuffers
-    The new number of buffers in the filesystem. This should be returned, even 
-    on failure.
+    The new number of buffers in the file system. This should be returned,
+    even on failure.
 
 io_DosError
     DOS error code, or 0 for success.
+
 
 
 FSA_FORMAT
@@ -1506,15 +1544,15 @@ FSA_FORMAT
 Name
 """"
 
-``FSA_FORMAT`` - Initialise a filesystem
+``FSA_FORMAT`` - Initialise a file system
 
 
 Function
 """"""""
 
-Initialise a device to be used by this filesystem. The device media  should have
-already been initialised, and this command simply gets the filesystem to write
-its own data.
+Initialise a device to be used by this file system. The device media should
+have already been initialised, and this command simply gets the file system
+to write its own data.
 
 This command uses the ``io_Union.io_FORMAT`` member.
 
@@ -1525,17 +1563,18 @@ Input
 io_VolumeName
     the new name for the volume.
 
-io_DosType 
-    the new type of the volume. This is filesystem specific.
+io_DosType
+    the new type of the volume. This is file system-specific.
 
 
 Result
 """"""
 
-The filesystem will have been initialised, and is ready for mounting.
+The file system will have been initialised, and is ready for mounting.
 
 io_DosError
     DOS error code, or 0 for success.
+
 
 
 FSA_MOUNT_MODE
@@ -1560,7 +1599,7 @@ Input
 """""
 
 io_MountMode
-    The new mount mode of the filesystem.
+    The new mount mode of the file system.
 
 io_Mask
     The mask of flags to change in the mount mode.
@@ -1574,5 +1613,5 @@ Result
 """"""
 
 io_MountMode
-    The new mount modes of the filesystem.
+    The new mount modes of the file system.
 

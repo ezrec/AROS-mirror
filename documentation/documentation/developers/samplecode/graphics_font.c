@@ -88,12 +88,12 @@ static void draw_font(void)
     
     
     /*
-        In the TextAttr above we've queried a font with the styles italic and bold.
-        OpenDiskFont() tries to open a font with this styles. If this fails
-        the styles have to be generated algorithmically. To avoid that a
-        style will be added to a font which has already the style intrinsically,
-        we've first to ask. AskSoftStyle() returns a mask where all bits for styles
-        which have to be added algorithmically are set.
+        In the TextAttr above we've queried a font with the styles italic and
+        bold. OpenDiskFont() tries to open a font with these styles. If this
+        fails the styles have to be generated algorithmically. To avoid adding a
+        style to a font that already has that style intrinsically, we first have
+        to ask. AskSoftStyle() returns a mask where all bits for styles which have
+        to be added algorithmically are set.
     */
     style = AskSoftStyle(rp);
     

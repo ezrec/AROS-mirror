@@ -14,9 +14,9 @@ Summary: Getting more help
 Abstract
 ========
 
-This is a summary of the "getting more help" discussion on the aros-dev mailing
-list during January 2002. It covers some pints and ideas of what must to do 
-next and how should this be done.
+This is a summary of the "getting more help" discussion on the aros-dev
+mailing list during January 2002. It covers some points and ideas of what
+should be done next and how this should be done.
 
 This summary contains comments from:
 
@@ -28,96 +28,99 @@ This summary contains comments from:
 + Johan Alfredsson <d95duvan@dtek.chalmers.se>
 
 
-How motivate people to write for AROS?
-======================================
 
-+ People thinking that all areas are covered by someone.
-+ So they have the impression that things are being handled fine and no help 
-  is necessary.
-+ This is probably the reason why they do not offering their time for AROS.
-+ At the moment there aren't any informations on the AROS website about what 
+How to motivate people to write for AROS?
+=========================================
+
++ People think that all areas are covered by someone.
++ This gives them the impression that things are being handled fine and no
+  help is necessary.
++ This is probably the reason why they do not offer their time for AROS.
++ At the moment there isn't any information on the AROS website about what
   YOU can do for AROS.
-+ List of free jobs is in CVS at docs/src/jobs.dat. 
++ List of free jobs is in CVS at docs/src/jobs.dat.
 + Solution: create direct requests about things which could be
-  done for AROS and spread them.   
+  done for AROS and spread them.
 
-I was just sitting at work today thinking about AROS and its current 
-developement. 
+I was just sitting at work today thinking about AROS and its current
+development.
 
-Currently there's rather a few active developers involved and I see people 
-wanting help with their part in AROS just about every time I visit #aros. 
-I came to wonder why there are so few helping out. In my opinion that's mainly 
-because most people that know of AROS thinks that things are going very smooth, 
-with all areas covered by someone already involved and that things are being 
-handled just fine. Atleast that's the picture that most public statements from 
-us would (and does IMHO) give. 
+Currently there are rather few active developers involved and I see people
+wanting help with their part in AROS just about every time I visit #aros.
+I came to wonder why there are so few helping out. In my opinion that's mainly
+because most people that know of AROS thinks that things are going very
+smoothly, with all areas covered by someone already involved and that things
+are being handled just fine. At least that's the picture that most public
+statements from us would (and do IMHO) give.
 
-In such a light people might not think twice about offering their time. I 
-brough the matter up in #aros and people agreed with me, and we though that 
-something should be done. So my suggestion is that a more direct request for 
-help is made, describing in what areas we need help and what those areas are. 
-I would be happy to assemble such a request and then we (including myself :) 
-can post it on popular forums, like ann, comp.sys.amiga.*, moobunny, chech 
-amiga news and whatnot.
+In such a light people might not think about offering their time. I
+brought the matter up in #aros and people agreed with me, and we though that
+something should be done. So my suggestion is that a more direct request for
+help is made, describing in what areas we need help and what those areas are.
+I would be happy to assemble such a request and then we (including myself :)
+can post it on popular forums, like ann, comp.sys.amiga.*, moobunny, chech
+Amiga News and whatnot.
 
-I would basically write a message saying "Want to help? This is what we need: 
+I would basically write a message saying "Want to help? This is what we need:
 1,2,3 and this is what would help is you were experienced in: a,b,c"
+
 
 
 Request
 =======
 
-+ In what areas help is needed?
++ In what areas is help needed?
 + What experience might be needed?
 + Description of what the different areas (meaning of areas).
 
-To sum up, the request should include in what areas help is needed, what 
-experience might be needed and a description of what the different areas would 
-mean. Just stating "bus.hidd" would not interest anyone unless it is specified 
+To sum up, the request should include in what areas help is needed, what
+experience might be needed and a description of what the different areas would
+mean. Just stating "bus.hidd" would not interest anyone unless it is specified
 what it means.
+
 
 
 Request list
 ============
 
-I made a quick list of the different areas that might come up. I don't have the 
-knowledge about what they would mean, or what experience would be needed, but 
-that's what I would want you guys on the list to help me with before I send 
-something out to the public.
+I made a quick list of the different areas that might come up. I don't have
+the knowledge about what they would mean, or what experience would be needed,
+but that's what I would want you guys on the list to help me with before I
+send something out to the public.
 
-I think it is important that such tasks (that we can get "outside" help with) 
-is quite small and independent. For instance, sending out a message asking for 
+I think it is important that such tasks (that we can get "outside" help with)
+is quite small and independent. For instance, sending out a message asking for
 help with:
 
 + TCP/IP stack
 + bus.hidd
 + New workbench
 
-Won't get anyone helping at all (my guess at least). These tasks are either too 
-big or you really need special expertise. Rather, I think it would be better to 
-focus on small things, although leaving in *some* bigger things might be good 
-also. Examples:
+Won't get anyone helping at all (my guess at least). These tasks are either
+too big or you really need special expertise. Rather, I think it would be
+better to focus on small things, although leaving in *some* bigger things
+might be good as well. Examples:
 
 + Preferences programs
 + Datatypes
 + Icon.library enhancements
 + BOOPSI itexticlass
 
-Yes, its a good idea to start with smaller request. So the people could 
-estimate how much time they will need and the chance that they could finish 
+Yes, its a good idea to start with smaller request. So the people could
+estimate how much time they will need and the chance that they could finish
 their work is bigger.
 
-Its propably better to start with stuff known by amiga developers than with 
+Its probably better to start with stuff known by Amiga developers than with
 things which are special for AROS like the HIDD system.
 
-If the first type of requests works (and AROS has better docs for building, 
-oop-lib, hidd, porting) then the requests could be become bigger and more 
-AROS specific.
+If the first type of requests works (and AROS has better docs for building,
+oop-lib, hidd, porting) then the requests could be become bigger and more
+AROS-specific.
 
 The message would go something like this::
- 
+
     "There's still a lot of work to do for AROS. So AROS can need your
-    help! 
+    help!
 
     [description of the AROS project and the goal]
 
@@ -126,9 +129,9 @@ The message would go something like this::
     - ...
     - ...
 
-    These should be implemented using bgui and?or gaddtools.library and
-    the iffparse.library in plain ANSI-C. All these libraries are working 
-    on AROS. The developement is done in ANSI-C (instead of C++)
+    These should be implemented using bgui and/or gadtools.library and
+    the iffparse.library in plain ANSI-C. All these libraries are working
+    on AROS. The development is done in ANSI-C (instead of C++)
     to make it easier to port AROS to different systems (the AROS
     project started 7 years ago).
 
@@ -138,101 +141,103 @@ The message would go something like this::
 
     Some preference are implemented so you can use the existing sources
     to start writing a missing prefs. You will also getting help from
-    the people of the aros-dev mailinglist.
+    the people of the aros-dev mailing list.
 
-    For developing its recommended to use a Linux/x86 system. Because
-    AROS is portable its also possible to do developement on ...
-    but at the moment the linux branch is the easiest to handle.
+    For developing it's recommended to use a Linux/x86 system. Because
+    AROS is portable its also possible to do development on ...
+    but at the moment the Linux branch is the easiest to handle.
 
     You need on this system:
-     - gcc 2.9x+ (2.96 from redhat does not work)
+     - GCC 2.9x+ (2.96 from Redhat does not work)
      - make, autoconf, automake,...
      - CVS
 
-    In the FAQ on www.aros.org you can find a few informations about
-    the AROS project and the developement for AROS. 
+    In the FAQ on www.aros.org you can find a a bit of information about
+    the AROS project and the development for AROS.
 
     Please write to ... if you are interested in doing some work
     for AROS or if you have any questions and suggestions. You
-    could also join the aros user mailinglist: see ...
+    could also join the aros user mailing list: see ...
 
     contact:
 
-    [maybe its good to describe also the idea and the intention of this request]
-    " 
-      
-      
+    [maybe its good to describe also the idea and the intention of this
+     request]
+    "
+
+
 The tasks
 ---------
 
 + Implementing missing library functions (see docs/src/jobs.dat)
 
-+ HIDD's of different kinds, NET.HIDD, BUS.HIDD, PCI.HIDD etc etc.
++ HIDD's of different kinds, NET.HIDD, BUS.HIDD, PCI.HIDD, etc.
 + Specific drivers for gfx-cards, VESA support
-+ Audio implementation 
++ Audio implementation
 
 + TCP/IP stack
 
 + Datatypes
 + Printer support
-+ translator.library (sources can be downloaded from aminet)
++ translator.library (sources can be downloaded from Aminet)
 
 + A functional workbench
 + Prefs programs
 
-+ Coordinating gui design for AROS programs, such as prefs program,
++ Coordinating GUI design for AROS programs, such as prefs program,
   tools and utilities.
 + Porting MUI
 
-+ Text editors, vim, emacs ..
++ Text editors, vim, Emacs ..
 + Port of GCC and the whole development tool chain (gcc, make,
   binutils...)
 
-+ Improving the C linklib (porting ixemul from geekgagdets.org)
++ Improving the C link library (porting ixemul from geekgagdets.org)
 
-  Implementing missing ANSI (and some POSIX) functions in the clib, to make 
-  it easier to port GNU software (eg. GCC, make and binutils). 
-  
-  The most biggest  thing missing is support for POSIX style signaling, 
-  but there's probably a lot of other functions too. 
+  Implementing missing ANSI (and some POSIX) functions in the clib, to make
+  it easier to port GNU software (e.g.. GCC, make and binutils).
+
+  The most biggest thing missing is support for POSIX style signalling,
+  but there probably are a lot of other functions missing as well.
 
 + Porting to more hardware platforms
 
-  A first step might be to make a hosted flavour for an OS on the intended 
-  platform, of which some UNIX flavor is probably easiest (since most UNIX 
+  A first step might be to make a hosted flavour for an OS on the intended
+  platform, of which some Unix flavor is probably easiest (since most Unix
   code is the same for different operating systems).
- 
+
   Some ideas for possible ports which AFAIK haven't been started yet:
 
-  - Amiga 
+  - Amiga
   - Atari ;-)
-  - HP 300 series (m68k based)
+  - HP 300 series (m68k-based)
   - SUN Sparc
   - iPaq
   - ...
 
 + Improving existing native ports
 
-  As always, more drivers. Just some examples AFAIK nobody is working on:
- 
+  As always, more drivers. Just some examples that, AFAIK, nobody is working
+  on:
+
   - AROS/palm-native:
-    
+
     + Graphics
     + Input (touchscreen, buttons)
     + Sound
- 
+
   - AROS/i386-native:
-    
+
     + Specific graphic card drivers (we only have general, not very well
       accelerated ones). A short wishlist:
-      
+
       - nVidia TNT/TNT2/GeForce
       - S3 Virge
-      - Matrox Millenium
-    
+      - Matrox Millennium
+
     + USB
     + SCSI
-    + Specific IDE chipsets (eg. Promise UltraATA)
+    + Specific IDE chipsets (e.g. Promise UltraATA)
     + ...a lot more.
 
 
@@ -240,11 +245,11 @@ Porting MUI
 ===========
 
 + Problem MUI is closed source, commercial software
-+ Convince Stefan Stuntz to release the source 
++ Convince Stefan Stuntz to release the source
 + Convince Stefan Stuntz to release a binary for AROS
-+ Reimplement MUI starting with Zune (GPL:ed MUI clone for X11) 
-   
++ Reimplement MUI starting with Zune (GPL-ed MUI clone for X11)
+
   :Name:  Flavio Stanchina
-  :URL:   http://spazioweb.inwind.it/fstanchina/ 
+  :URL:   http://spazioweb.inwind.it/fstanchina/
   :email: flavio.stanchina@tin.it
 

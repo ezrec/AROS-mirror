@@ -1,13 +1,13 @@
-This is *not* a complete TODO list (which would be far to long and depressing),
-but what I think is a minimal set of features that *must* be done before the new
-site goes public.
-   
+This is *not* a complete TODO list (which would be far too long and
+depressing), but what I think is a minimal set of features that *must* be
+done before the new site goes public.
+
 + Finish the following scripts:
 
   - Status (jobs and size)
 
 + Generated HTML that does not require CSS support to be displayed correctly.
-  
+
   Currently, the default docutils HTML writer is used which requires HTML
   4 (actually XHTML 1, but it should be compatible) and CSS. The surrounding
   template doesn't require CSS, but the actual document contents do. Requiring
@@ -21,16 +21,18 @@ site goes public.
   don't add any more dependencies (ie. a XSLT processing tool). Hard to say
   which would be fastest to implement...
 
-+ Write an explanation of the license and what it entails. Integrate the 
++ Write an explanation of the license and what it entails. Integrate the
   license page better with the rest of the site.
 
 The following are some random bits that would be *nice* to have when the site
 goes public, but are IMHO not *necessary*:
 
 + Document the documentation system in documentation/developers/documenting.en
-+ Atleast a demonstration of the multilingual support. For exampla translated
++ At least a demonstration of the multilingual support. For exampla translated
   introduction/index to a couple of languages.
 + Better build system (not the ad-hoc thing it is now)
 + Support for different languages.
-+ Some files/scripts have to be manually updated when a new year begins => automation
++ Some files/scripts have to be manually updated when a new year
+  begins => automation
 + The script buildit.py has hardcoded paths to pictures => use pattern
+

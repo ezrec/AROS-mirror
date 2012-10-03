@@ -14,7 +14,7 @@ Summary: Preferences
 Abstract
 ========
 
-Summary of the "preferences" thread on the aros-dev mailinglist during 
+Summary of the "preferences" thread on the aros-dev mailinglist during
 Februari 2001.
 
 
@@ -27,7 +27,7 @@ One prefs editor for each iff format.
 Framework
 =========
 
-A common framework for preferences editors to maximize code reuse across 
+A common framework for preferences editors to maximize code reuse across
 several small programs.
 
 
@@ -39,12 +39,12 @@ Single preference program with many preference modules? Like MUI Prefs.
 + Model for data with an OOP class.
 + GUI handler to support different GUI systems (BGUI, MUI, Gadtools, GTK...)
 + Description of GUI in text form (programming language, html, xml like).
-  
+
   - XML
-    
+
     + Mozilla as bad example.
     + Overkill?
-    
+
 
 IPrefs
 ======
@@ -60,32 +60,32 @@ GUI
 Which (default) GUI(s) should the system support?
 
 + Gadtools
-  
+
   - Not font sensitive
-    
+
 + BGUI
 
   - Font sensitive
   - Part of AROS
   - Useful to finding bugs in BGUI
-  
+
 + MUI
-  
+
   - Not open source
   - Font senstive
   - Popular
   - Many classes of third parties
   - Zune (open source) with implementation of MUI parts.
-  
+
 + Reaction
   - Official GUI of AmigaOS V3.5+
-  - Font sensitiv
-  
+  - Font sensitive
+
 
 Formats
 =======
 
-+ First of all, we want to be compatible. When we understand what is going in, 
++ First of all, we want to be compatible. When we understand what is going in,
   then we can improve.
 + Converter for the different formats.
 + If you change the prefs file format you won't break any compatibility.
@@ -95,27 +95,27 @@ Formats
 
 
 + IFF
-  
+
   - Amiga standard
   - Flexible
   - Binary format
-  
+
 + Text
-  
+
   - No real standard
-  - Could be use without a frontend(prefs app).
+  - Could be use without a frontend (prefs application).
   - Easy to read and write with ascii editor.
-  - Easy to destroy/hack with ascii editor.  
-  
+  - Easy to destroy/hack with ascii editor.
+
 + XML
-  
+
   - Standard
   - Offers the flexibility of IFF in ascii form.
-  - Could be use without a frontend(prefs app). 
+  - Could be use without a frontend (prefs application).
   - Readable and writable with ascii editor.
   - Easy to destroy/hack with ascii editor.
   - XML support needs
-    
+
     + We need a working XML parser
     + We must port it to AROS
     + We must define DTDs
@@ -123,30 +123,30 @@ Formats
     + We must have additional code which can distinguish between
       XML and IFF and load/save both formats.
 
-One of the many strengths of AmigaOS has - from day one back in 1985 - 
-been its superior 'end user experience'. If you know how to handle a 
-computer mouse and a keyboard, you pretty much grasp the AmigaOS GUI 
+One of the many strengths of AmigaOS has - from day one back in 1985 -
+been its superior 'end user experience'. If you know how to handle a
+computer mouse and a keyboard, you pretty much grasp the AmigaOS GUI
 components in just a few minutes.
 
-Sure, you could easily have all of the configuration files stored as 
-plain ASCII allowing for users to fire up 'C:Ed' and do whatever you 
-wanna do. However, this is not the AmigaOS tradition. 
+Sure, you could easily have all of the configuration files stored as
+plain ASCII allowing for users to fire up 'C:Ed' and do whatever you
+wanna do. However, this is not the AmigaOS tradition.
 
-   
+
 New and extended prefs formats
 ==============================
 
 + Coordination with H&P and Amiga.
-+ Extension of the current prefs formats with aros specific chunks.
++ Extension of the current prefs formats with AROS-specific chunks.
 + New formats in iff or a new format.
 + Still storing prefs in IFF format but providing an interface
   so that they could be edit as text or XML.
-  
-You mean an additional built in iffparse stream hook in iffparse.library?
-As of now there is a clip stream hook (InitIFFasClip() - for reading from 
-clipboard) and a dos stream hook (InitIFFasDOS() for reading normal files). 
 
-So one could have an ascii stream hook (InitIFFasAscii()) which reads/writes 
+You mean an additional built in iffparse stream hook in iffparse.library?
+As of now there is a clip stream hook (InitIFFasClip() - for reading from
+clipboard) and a dos stream hook (InitIFFasDOS() for reading normal files).
+
+So one could have an ascii stream hook (InitIFFasAscii()) which reads/writes
 files which look like this::
 
   <FORM type=ILBM>
@@ -162,10 +162,10 @@ Or something similiar. But it looks ugly as the stream hook does not know
 what the user is going to write/read. What kind of data (string/integer). So
 it can only generate hex strings.
 
-So one would have to add some new functions/parameters to iffparse.library with 
-which you tell it informations about the chunky you are going to write/read.
+So, one would have to add some new functions/parameters to iffparse.library
+with which to tell it about the chunky you are going to write/read.
 
-For example Input Prefs which uses INPT chunk as defined in 
+For example Input Prefs which uses INPT chunk as defined in
 compiler/include/prefs/input.h::
 
     struct InputPrefs {
@@ -181,12 +181,12 @@ compiler/include/prefs/input.h::
     {
       UWORD type;
       UWORD size;
-      STRPTR name;    
+      STRPTR name;
     } [] cdi =
     {
       {CDTYPE_STRING, 16, "Keymap"},
       {CDTYPE_UINT, 16, "PointerTicks"},
-      {CDTYPE_UINT, 4, "DoubleClickSeconds"}, 
+      {CDTYPE_UINT, 4, "DoubleClickSeconds"},
       {CDTYPE_UINT, 4, "DoubleClikcMicros"},
       {CDTYPE_UINT, 4, "KeyRptDelaySeconds"},
       {CDTYPE_UINT, 4, "KeyRptDelayMicros"},
@@ -203,16 +203,16 @@ compiler/include/prefs/input.h::
     );
 
     -->
-    
+
     <INPT>
      <Keymap type=string value="usa">
      <PointerTicks type=uint value="10">
      ...
     </INPT>
 
-Unfortunately there are also prefs chunks with variable look/length (WBPattern),
-so one might have to generate this tables above during runtime (in the prefs
-program) in certain cases.   
+Unfortunately there are also prefs chunks with variable look/length
+(WBPattern), so one might have to generate this tables above during runtime
+(in the prefs program) in certain cases.
 
 
 Misc
@@ -224,5 +224,6 @@ Misc
 Conclusion
 ==========
 
-+ Current prefs apps must use the IFF formats of AmigaOS 3.0.
-+ BGUI would be a good choice for the GUI(avaible in AROS, font sensitive).
++ Current prefs applications must use the IFF formats of AmigaOS 3.0.
++ BGUI would be a good choice for the GUI (avaible in AROS, font sensitive).
+

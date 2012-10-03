@@ -1,6 +1,6 @@
-===================================
-Zune Application Development Manual
-===================================
+===================================================
+Zune Application Development Manual -- Introduction
+===================================================
 
 :Authors:   David Le Corfec
 :Copyright: Copyright (C) 2004, The AROS Development Team
@@ -22,48 +22,51 @@ What is Zune?
 
 Zune is an object-oriented GUI toolkit. It is nearly a clone (at both API
 and Look&Feel level) of MUI, a well-known Amiga shareware product
-by Stefan Stuntz. So MUI developers will feel at home here; others will discover
+by Stefan Stuntz. MUI developers will feel at home here; others will discover
 the concepts and qualities that Zune shares with MUI.
 
-+ The programmer has a much easier time to design its GUI:
++ The programmer has a much easier time to design the program's GUI:
   no need for hardcoded values, Zune is font-sensitive,
   and adapts to any window size due to its layout system.
   He has mostly to give only the semantic of its GUI to Zune, which will
   arrange the low-level details for him automatically.
 
 + As a side-effect, the user has more control on the Look&Feel of the GUI:
-  it's him who decides the particular settings that Zune will use to
+  he is the one who decides the particular settings that Zune will use to
   present the GUI that the programmer designed.
 
 Zune is based on the BOOPSI system, the framework inherited from AmigaOS
 for object-oriented programming in C. Zune classes don't derive from existing
-BOOPSI gadget classes; instead, the Notify class (base class of the Zune
-hierarchy) derives from the BOOPSI root class.
+BOOPSI gadget classes, however; instead, the Notify class (base class of the
+Zune hierarchy) derives from the BOOPSI root class.
+
 
 
 Prerequisites
 =============
 
-Some knowledge of OO (object-oriented) programming is more than welcome.
-If not, Google may help you find good introductory papers on this classic
-subject.
+Some knowledge of OO (object-oriented) programming is definitely advantageous.
+For readers without such knowledge, it might be wise to use a web search
+engine to find a good introductory paper treating this topic.
 
 Knowing AROS (or AmigaOS) APIs and concepts like taglists and BOOPSI
-is essential. Having the Amiga Reference Manuals (aka RKM) is very handy.
+is essential. Having the Amiga Reference Manuals (RKM) is very handy.
 
 As Zune is a MUI clone, all the documentation pertaining to MUI is applicable
 to Zune. In particular, the latest available MUI developer kit can be
-found here__. In this LHA archive, 2 documents are warmly recommended:
+found here__. In this LHA archive, 2 documents are recommended:
 
 + `MUIdev.guide`, the MUI programmer documentation.
-+ `PSI.c`, the well-documented sourcecode of an application demonstrating
-  all the modern MUI practices like object-oriented design and dynamic
++ `PSI.c`, the well-documented source-code of an application demonstrating
+  all the modern MUI practices, like object-oriented design and dynamic
   object creation.
 
 __ http://main.aminet.net/dev/mui/mui38dev.lha
 
-Additionally, this archive contains MUI autodocs, which are the reference
-documentations for all Zune classes.
+Additionally, this archive contains MUI autodocs, which form the reference
+documentation for all Zune classes.
+
+
 
 
 -------------
@@ -86,39 +89,42 @@ with the special TAG_DONE value:
 
 In turn, a TagItem is a struct containing 2 fields:
 
-+ a key, ``ti_Tag``. It's an identifier (unsigned integer) commonly called
-  the ``Tag``
-+ a value, ``ti_Data``. It's able to contain either an integer or a pointer.
++ a key, ``ti_Tag``, an identifier (unsigned integer), commonly called
+  the ``Tag``;
++ a value, ``ti_Data``, able to contain either an integer or a pointer.
 
-So finally, in a C source code, using a Tag List looks like:
+Finally, in a C source code, using a Tag List looks like:
 
     function(some, args, Tag1, value1, Tag2, value2, Tag3, value3, TAG_DONE);
 
-You will find Tag Lists in many places of AROS, especially those related to
+Tag Lists are used in many places in AROS, especially in functions related to
 the windowed environment. BOOPSI (and thus MUI/Zune) is built upon them:
 
-+ all the method calls are done with the same function: the method and its arguments are passed as a Tag List
-+ class instantiations, attribute setters and getters all use Tag Lists
++ all the method calls are done with the same function: the method and its
+  arguments are passed as a Tag List;
++ class instantiations, attribute setters and getters all use Tag Lists.
+
 
 Class
 -----
 
 A class is defined by its name, its parent class and a dispatcher.
 
-+ name: either a string for the public classes, so that they may be used by
-  any program in the system, or none if its a private class used only by
-  a single application.
++ Name: this is either a string for the public classes, so that they may be
+  used by any program in the system, or none if its a private class used only
+  by a single application.
 
-+ parent class: all BOOPSI classes are forming a hierarchy rooted at the
++ Parent class: all BOOPSI classes are part of a hierarchy rooted in the
   class aptly named rootclass. It allows each subclass to implement its own
-  version of specific parent operation, or to fall back on the one provided
-  by its parent. Also known as base class or super class.
+  version of a specific parent operation, or to fall back on the one provided
+  by its parent. A parent class is also called a base class or super class.
 
-+ dispatcher: it gives access to all operations (called methods) provided
++ Dispatcher: this gives access to all operations (called methods) provided
   by this class, ensuring that each operation is handled by the proper
-  code or, if it is not known to the current class, passed to its super class.
+  code or, if it is unknown to the current class, passed to its super class.
 
-BOOPSI type for a class is ``Class *`` also known as ``IClass``.
+The BOOPSI type for a class is ``Class *``, also known as ``IClass``.
+
 
 Object
 ------
@@ -129,8 +135,9 @@ IClass).
 An object has several classes if we count the parents of its true class
 (the most derived one) up to the rootclass.
 
-BOOPSI type for an object is ``Object *``. It has no field you can directly
-access.
+The BOOPSI type for an object is ``Object *``. It has no fields tthat can be
+accessed directly.
+
 
 Attribute
 ---------
@@ -155,6 +162,7 @@ Attributes can be one or more of the following:
   not guaranteed outside of a certain context, not guaranteed in future
   release, may break the framework or some other reason.
 
+
 Method
 ------
 
@@ -172,22 +180,22 @@ Else it will try its parent class, until the message is handled or
 the rootclass is reached (in this case, the unknown message is silently
 discarded). If a method is documented as private, you shouldn't call it
 in your own application, unless you want to risk portability and/or
-fiability :)
+reliablity.
+
 
 Identifiers
 -----------
 
-In this object-oriented framework, each attribute or method is identified
-by a Tag (see above)
-Attribute access and method dispatch is based on those identifiers
-(more commonly through a C switch statement).
+In this object-oriented framework, both attributes and methods are identified
+by a Tag (see above).
+Attribute access and method dispatch are based on those identifiers
+(usually by comparison in a C switch statement).
 
-As you won't use both attributes and methods in the same switch, both have
-their own identifier space: you can use the same identifier for a method
-and an attribute without fear of conflict.
+As you won't use both attributes and methods in the same context, both have
+their own identifier space: identifier for a method can be the same as that
+for an attribute without fear of conflict.
 
-You only have to care about creating identifiers when creating your own
-classes.
+Creating identifiers is only a concern when creating your own classes.
 If you intend to do a public class, you should allocate some space in
 the Zune identifier space__. Else you have to make sure you use a range
 not reserved for Zune, MUI legacy or AROS classes.
@@ -195,20 +203,21 @@ not reserved for Zune, MUI legacy or AROS classes.
 __ http://aros.sourceforge.net/documentation/developers/zune-dev/identifiers.php
 
 
+
 Examples
 ========
 
-Let's see basic examples of this OOP framework:
+Some basic examples of this OOP framework:
 
 Getting an attribute
 --------------------
 
-We'll query a MUI String object for its content::
+Querying a MUI String object for its content::
 
     void f(Object *string)
     {
         IPTR result;
-        
+
         GetAttr(string, MUIA_String_Contents, &result);
         printf("String content is: %s\n", (STRPTR)result);
     }
@@ -216,29 +225,30 @@ We'll query a MUI String object for its content::
 + ``Object *`` is the type of BOOPSI objects.
 + ``IPTR`` must be used for the type of the result, which can be an integer
   or a pointer. An IPTR is always written in memory, so using a smaller
-  type would lead to memory corruption!
-+ Here we query a MUI String object for its content: ``MUIA_String_Contents``,
-  as any other attribute, is a ``ULONG`` (it's a Tag)
+  type could lead to memory corruption!
++ This is to query a MUI String object for its content:
+  ``MUIA_String_Contents``, as any other attribute, is a ``ULONG``
+  (it's a Tag).
 
-Zune applications use more often the ``get()`` and ``XGET()`` macros instead::
+Most Zune applications use the ``get()`` and ``XGET()`` macros instead::
 
     get(string, MUIA_String_Contents, &result);
-    
+
     result = XGET(string, MUIA_String_Contents);
 
 
 Setting an attribute
 --------------------
 
-Let's change the content of our string::
+Changing the content of the string::
 
     SetAttrs(string, MUIA_String_Contents, (IPTR)"hello", TAG_DONE);
 
-+ Pointers parameters must be casted to `IPTR` to avoid warnings.
-+ After the object parameter, a taglist is passed to `SetAttrs` and
-  thus must end with `TAG_DONE`.
++ Pointer parameters must be cast to `IPTR` to avoid warnings.
++ After the object parameter, a taglist is passed to `SetAttrs`; the list
+  ends with `TAG_DONE`.
 
-You'll find the ``set()`` macro useful::
+Again, there's a macro - ``set()``::
 
     set(string, MUIA_String_Contents, (IPTR)"hello");
 
@@ -253,7 +263,7 @@ But it's only with SetAttrs() that you can set several attributes at once::
 Calling a method
 ----------------
 
-Let's see the most called method in a Zune program, the event processing
+Here's the most called method in a Zune program, the event processing
 method called in your main loop::
 
     result = DoMethod(obj, MUIM_Application_NewInput, (IPTR)&sigs);
@@ -261,14 +271,21 @@ method called in your main loop::
 + Parameters are not a taglist, and thus don't end with ``TAG_DONE``.
 + You have to cast pointers to ``IPTR`` to avoid warnings.
 
+
+
+
 --------------------
 Some MUI conventions
 --------------------
 
-+ All method names start with MUIM\_ (except for setting, getting, instantiation)
++ All method names start with MUIM\_
+  (except for setting, getting, instantiation)
 + All attribute names start with MUIA\_
 + All magic attribute values start with MUIV\_
 + All class names start with MUIC\_
+
+
+
 
 -----------
 Hello world
@@ -276,27 +293,28 @@ Hello world
 
 .. Figure:: zune/images/hello.png
 
-    First things first! I knew you would be all excited.
+    First things first!
+
 
 
 Source
 ======
 
-Let's study our first real life example::
+The source for the first real life example::
 
     // gcc hello.c -lmui
     #include <exec/types.h>
     #include <libraries/mui.h>
-    
+
     #include <proto/exec.h>
     #include <proto/intuition.h>
     #include <proto/muimaster.h>
     #include <clib/alib_protos.h>
-    
+
     int main(void)
     {
         Object *wnd, *app, *but;
-    
+
         // GUI creation
         app = ApplicationObject,
             SubWindow, wnd = WindowObject,
@@ -309,21 +327,21 @@ Let's study our first real life example::
                 End,
             End,
             End;
-    
+
         if (app != NULL)
         {
             ULONG sigs = 0;
-    
+
             // Click Close gadget or hit Escape to quit
             DoMethod(wnd, MUIM_Notify, MUIA_Window_CloseRequest, TRUE,
                      (IPTR)app, 2,
                      MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit);
-    
+
             // Click the button to quit
             DoMethod(but, MUIM_Notify, MUIA_Pressed, FALSE,
                      (IPTR)app, 2,
                      MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit);
-    
+
             // Open the window
             set(wnd, MUIA_Window_Open, TRUE);
 
@@ -345,9 +363,10 @@ Let's study our first real life example::
         // Destroy our application and all its objects
             MUI_DisposeObject(app);
         }
-        
+
         return 0;
     }
+
 
 
 Remarks
@@ -356,7 +375,8 @@ Remarks
 General
 -------
 
-We don't manually open libraries, it's done automatically for us.
+We don't manually open libraries; it's done automatically for us.
+
 
 GUI creation
 ------------
@@ -391,7 +411,7 @@ An ``End`` macro must match every ``xxxObject`` macro (here, TextObject)::
 
     :            End,
 
-Let's add a second child to our group, a button! With a keyboard shortcut ``o``
+As a second child of the group, a button! With a keyboard shortcut ``o``
 indicated by an underscore::
 
     :            Child, but = SimpleButton("_Ok"),
@@ -408,7 +428,7 @@ Finish the application::
 
     :        End;
 
-So, who still needs a GUI builder? :-)
+All done, without a GUI builder.
 
 
 Error handling
@@ -440,23 +460,25 @@ is set to a certain value::
 
     :        DoMethod(wnd, MUIM_Notify, MUIA_Window_CloseRequest, TRUE,
 
-Here we'll listen to the ``MUIA_Window_CloseRequest`` of our Window object
-and be notified whenever this attribute is set to ``TRUE``.
+This listens to the ``MUIA_Window_CloseRequest`` of the Window object
+and get notified whenever this attribute is set to ``TRUE``.
 So what happens when a notification is triggered? A message is sent to
-an object, here we tell our Application to return
+an object; in this case the Application is told to return
 ``MUIV_Application_ReturnID_Quit`` on the next event loop iteration::
 
     :                 (IPTR)app, 2,
     :                 MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit);
 
-As we can specify anything we want here, we have to tell the number of
-extra parameters we are supplying to MUIM_Notify: here, 2 parameters.
+As anything could be specified here, the number of extra parameters we are
+supplying to MUIM_Notify has to be specified first; in this case:
+2 parameters.
 
-For the button, we listen to its ``MUIA_Pressed`` attribute: it's set to ``FALSE``
-whenever the button is being *released* (reacting when it's pressed is bad
-practice, you may want to release the mouse outside of the button to cancel
-your action - plus we want to see how it looks when it's pressed). The action
-is the same as the previous, send a message to the application::
+For the button, the program listens to the ``MUIA_Pressed`` attribute: it's
+set to ``FALSE`` whenever the button is being *released* (reacting when it's
+pressed is bad practice, you may want to release the mouse outside of the
+button to cancel your action - plus the user would want to see how it looks
+when it's pressed). The action is the same as the previous, send a message to
+the application::
 
     :        DoMethod(but, MUIM_Notify, MUIA_Pressed, FALSE,
     :                 (IPTR)app, 2,
@@ -471,7 +493,8 @@ Windows aren't open until you ask them to::
     :        set(wnd, MUIA_Window_Open, TRUE);
 
 If all goes well, your window should be displayed at this point. But it can
-fail! So don't forget to check by querying the attribute, which should be TRUE::
+fail! So don't forget to check by querying the attribute, which should be
+TRUE::
 
     :        if (XGET(wnd, MUIA_Window_Open))
 
@@ -479,7 +502,7 @@ fail! So don't forget to check by querying the attribute, which should be TRUE::
 Main loop
 ---------
 
-Let me introduce you my lil' friend, the ideal Zune event loop::
+Introducing - the ideal Zune event loop::
 
     :        ULONG sigs = 0;
 
@@ -490,12 +513,11 @@ is the MUIM_Application_NewInput method::
     :        while((LONG) DoMethod(app, MUIM_Application_NewInput, (IPTR)&sigs)
     :              != MUIV_Application_ReturnID_Quit)
 
-It takes as input the signals
-of the events it has to process (result from ``Wait()``, or 0),
-will modify this value to place the signals Zune is waiting for (for the
-next ``Wait()``) and will return a value. This return value mechanism
-was historically the only way to react on events, but it was ugly and
-has been deprecated in favor of custom classes and object-oriented design.
+It takes as input the signals of the events it has to process (result from
+``Wait()``, or 0), will modify this value to place the signals Zune is waiting
+for (for the next ``Wait()``) and will return a value. This return value
+mechanism was historically the only way to react on events, but it was ugly
+and has been deprecated in favor of custom classes and object-oriented design.
 
 The body of the loop is quite empty, we only wait for signals and handle
 Ctrl-C to break out of the loop::
@@ -514,39 +536,44 @@ Conclusion
 ----------
 
 This program gets you started with Zune, and allows you to toy with
-GUI design, but not more.  
+GUI design, but not more.
+
 
 Compiling
 ---------
 
-To compile this simple program with i386-aros-gcc cross-compiler please use 
+To compile this simple program with i386-aros-gcc cross-compiler please use
 this command::
 
     i386-aros-gcc -o hello -D__AROS__ hello.c -lmui
+
+
 
 
 --------------------
 Notification actions
 --------------------
 
-As seen in hello.c, you use MUIM_Notify to call a method if a certain condition
-happens.
-If you want your application to react in a specific way to events, you can use
-one of these schemes:
+As seen in hello.c, you use MUIM_Notify to set a method to call if a certain
+condition is fulfilled. If you want your application to react in a specific
+way to events, you can use one of these schemes:
 
-+ MUIM_Application_ReturnID: you can ask your application to return an
++ MUIM_Application_ReturnID: You can tell your application to return an
   arbitrary ID on the next loop iteration, and check for the value in
-  the loop. This is the dirty old way of doing things.
+  the loop. This is the old, deprecated way of doing things.
 + MUIM_CallHook, to call a standard Amiga callback hook: this is an average
   choice, not object-oriented but not that ugly either.
-+ custom method: the method belongs to one of your custom class. It is the
-  best solution as it supports object-oriented design in applications.
-  It needs you to create custom classes so it may not be the easiest for
++ custom method: the method belongs to one of your custom classes. This
+  solution supports object-oriented design in applications. It requires you
+  to create a custom class, though, so it may not be the easiest scheme for
   beginners or people in a hurry.
 
---------------------------------
-Developping a larger application
---------------------------------
+
+
+
+-------------------------------
+Developing a larger application
+-------------------------------
 
 As stated in the prerequisites above (PSI.c and other MUI documentation
 materials), the MUI author recommends to divide your application in
@@ -555,34 +582,37 @@ Those application-specific (custom) classes will most often be private
 to your application.
 
 You will have roughly a class for each big UI "feature" (panel, group or
-complex gadget), along the following lose rules:
+complex gadget), along the following loose rules:
 
 + a class should be self-contained, do as few things as possible and
   communicate with other UI parts only through method calls (setting/getting
   custom attributes, or calling custom classes)
-+ if possible, a class should help factor common UI features (eg. a complex
-  color selector used in several parts ofthe UI)
++ if possible, a class should help factor common UI features (e.g. a complex
+  color selector used in several parts of the UI)
 
-Most of your private class will probably be subclasses of the Group class,
+Most of your private classes will probably be subclasses of the Group class,
 and most often you won't have to redefine an existing method, but rather
 define your own private methods (see the paragraph about BOOPSI identifiers
 above)
 
 All in all, you should start by drawing a sketch of your app and think about
-the classes (UI features) boundaries and sudivide as much as possible.
+the class (UI feature) boundaries and subdivide as much as possible.
 
-Then you should study the MUI class hierarchy to find where each of your
-subclass should fit and what MUI methods you should redefine (if any).
+Then you should look at the MUI class hierarchy to find where each of your
+subclasses would fit and what MUI methods you would have to redefine (if any).
 
-It would be a large duplication of efforts to document further: now you
-have to go read MUIdev guide and PSI source from the mui38dev.lha cited in
-prerequisites (it would be nice to have the right to reproduce it here, though).
-There you will find a huge amount of informations
-about the fundamentals of MUI, macros, class hierarchy, layout, dynamic object
-creation, custom class creation, methods to redefine ...
 
-And don't forget that AROS and Zune source code are available: don't hesitate
-to take a look!
+Further reading
+===============
 
-Have fun!
+It would be duplication of efforts to document development of applications
+further: Additional information is already presented in the MUIdev guide and
+in the PSI source from the mui38dev.lha archive listed in the prerequisites.
+(FIXME: It would be nice to have the right to reproduce those here.)
+There you will find more of information on the fundamentals of MUI, macros,
+class hierarchy, layout, dynamic object creation, custom class creation,
+methods to redefine, etc.
+
+And also, AROS and Zune source code are available: looking at those may also
+demonstrate points of Zune usage.
 

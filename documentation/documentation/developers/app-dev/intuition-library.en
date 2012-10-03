@@ -1,6 +1,6 @@
-===================================
-AROS Application Development Manual
-===================================
+============================================================
+AROS Application Development Manual -- The Intuition Library
+============================================================
 
 :Authors:   Staf Verhaegen, Sebastian Rittau, Stefan Rieken, Matt Parsons,
             Adam Chodorowski, Fabio Alemagna, Matthias Rustler
@@ -15,19 +15,16 @@ AROS Application Development Manual
 .. Warning::
 
    This document is not finished! It is highly likely that many parts are
-   out-of-date, contain incorrect information or are simply missing
+   out-of-date, contain incorrect information, or are simply missing
    altogether. If you want to help rectify this, please contact us.
 
 .. Contents::
 
------------------
-Intuition.library
------------------
 
 Windows
 -------
 
-============================= =======================================================
+============================= ================================================
 `OpenWindowTagList()`_        Open a window
 `OpenWindow()`_               Open a window (deprecated)
 `CloseWindow()`_              Close a window
@@ -45,11 +42,12 @@ Windows
 `ZipWindow()`_                Change window to alternative size and position
 `SetWindowTitles()`_          Set title string of a window
 `SetWindowPointerA()`_        Change pointer state
-`ShowWindow()`_               Make a hidden window visiable
+`ShowWindow()`_               Make a hidden window visible
 `HideWindow()`_               Make a window invisible
 `IsWindowVisible()`_          Check if window is visible
-`ScrollWindowRaster()`_       Scrolls the content of a rectangle within a window
-============================= =======================================================
+`ScrollWindowRaster()`_       Scrolls the content of rectangle within a window
+============================= ================================================
+
 
 
 Requesters
@@ -57,35 +55,37 @@ Requesters
 
 Requesters are a special kind of windows_. They either confront the user with
 some information or request some information. Requesters always interrupt the
-user's normal workflow, so they should only be used either to inform him of some
-important event or to request an information, without which the application
-can't continue to work. This kind of requester is called modal requester.
+user's normal work flow, so they should only be used either to inform him of
+some important event or to request information without which the application
+can't continue. This kind of requester is called a modal requester.
 
 Examples of informational requesters are requesters that report errors (like
-failing to open a file) or about requesters, which show information about the
+failing to open a file) or about requesters which show information about the
 program, when requested by the user.
 
-Like the name indicates, requesters can also request information from the user,
-like a file name (using file-requesters), his name or a simple yes/no decision
-("Really quit application?").
+Like the name indicates, requesters can also request information from the
+user, like a filename (using file-requesters), his name or a simple yes/no
+decision ("Really quit application?").
 
-Requesters should only pop-up, if an application can't go on without knowing
-that the user learned about a certain fact or without getting a certain kind of
-information. Therefore, most requesters will block the application. That means
-that they will not listen to any input, except that in the requester. An
-exception are requesters that are explicitly requested by the user, like most
-file-requesters or about-requesters. Normally, these should not block the
-application.
+Requesters should only be used if an application can't go on without the
+intended interaction with the user, be it acknowledgement that the user has
+learned a certain fact, be it that the user provides a necessary piece of
+information, or be it that displaying the requester is the current task the
+user selected for the program. Therefore, most requesters will block the
+application. That is to say: An application usually will not accept any input,
+except that in the requester. An exception are requesters that are explicitly
+requested by the user, like most file-requesters or about-requesters.
+Normally, these do not block the application.
 
 
 Easy Requesters
 """""""""""""""
 
-The so-called easy requesters are simple requesters. They can be used to either
-provide an information or to ask for a choice. The number of choices is limited
-to 256, but it is generally a bad idea to have more than about five different
-choices. You also have to take into account that the width of the screen is
-limited.
+The so-called easy requesters are simple requesters. They can be used to
+either provide information or to ask for a choice. The number of choices is
+limited to 256, but it is generally a bad idea to have more than about five
+different choices. You also have to take into account that the width of the
+screen is limited.
 
 FIXME: EasyRequestArgs(), BuildEasyRequest()
 
@@ -95,27 +95,28 @@ Complex Requesters
 
 FIXME
 
-============================= =======================================================
-`Request()`_                  Add a requester to specified window and display it
+============================= ================================================
+`Request()`_                  Add requester to specified window and display it
 `EndRequest()`_               Remove a requester from the specified window
-`EasyRequestArgs()`_          Open and handles a requester with one or more choices
-`BuildEasyRequestArgs()`_     Open a requester with one or more choices
+`EasyRequestArgs()`_          Open and handle requester
+`BuildEasyRequestArgs()`_     Open a requester
 `SysReqHandler()`_            Handle EasyRequests
 `AutoRequest()`_              Build and handle simple requesters
 `BuildSysRequest()`_          Build and display a system requester
 `FreeSysRequest()`_           Free a requester.
-`SetDMRequest()`_             Setup a requester which is shown on double menu button click
+`SetDMRequest()`_             Set up requester for menu button double click
 `ClearDMRequest()`_           Detach the DMRequest from the window
 `DisplayAlert()`_             Bring up an alert with the given message
 `TimedDisplayAlert()`_        Display an alert with automatic time-out
 `DisplayBeep()`_              Flashes background of screen as signal
-============================= =======================================================
+============================= ================================================
+
 
 
 Screens
 -------
 
-============================= =======================================================
+============================= ================================================
 `OpenScreenTagList()`_        Open a screen
 `OpenScreen()`_               Open a screen (obsolete)
 `CloseScreen()`_              Close a screen
@@ -125,143 +126,149 @@ Screens
 `ScreenToFront()`_            Move a screen in front of all other screens
 `ScreenDepth()`_              Move the specified screen to the front or back
 `ShowTitle()`_                Show screen title in front of backdrop windows
-`GetScreenDrawInfo()`_        Returns a pointer to struct DrawInfo of the passed screen
+`GetScreenDrawInfo()`_        Return pointer to a screens struct DrawInfo
 `FreeScreenDrawInfo()`_       Free data obtained with `GetScreenDrawInfo()`_
 `GetScreenData()`_            Obsolete method of getting info about a screen
 `QueryOverscan()`_            Query overscan dimensions
 `LockPubScreen()`_            Lock a public screen
 `UnlockPubScreen()`_          Release public screen
 `NextPubScreen()`_            Get the next public screen in the system
-`PubScreenStatus()`_          Change the status flags for a given public screen
-`LockPubScreenList()`_        Arbitrates access to the system public screen list
+`PubScreenStatus()`_          Change the status flags for a public screen
+`LockPubScreenList()`_        Arbitrates access to system public screen list
 `UnlockPubScreenList()`_      Release lock made by `LockPubScreenList()`_
 `SetDefaultPubScreen()`_      Specifies the default public screen
 `SetPubScreenModes()`_        Specify global intuition public screen handling
-`GetDefaultPubScreen()`_      Returns the name of the current default public screen
+`GetDefaultPubScreen()`_      Returns name of current default public screen
 `StartScreenNotifyTagList()`_ Add Notifications to Intuition
 `EndScreenNotify()`_          Remove a Screen Notifications from Intuition
 `OpenWorkBench()`_            Attempt to open the Workbench screen
 `CloseWorkBench()`_           Attempt to close the Workbench screen
 `WBenchToBack()`_             Bring the WorkBench behind all other screens
 `WBenchToFront()`_            Make the WorkBench screen the frontmost
-`ViewAddress()`_              Return the address of the Intuition View structure
-`ViewPortAddress()`_          Return the address of the viewport of a given window
+`ViewAddress()`_              Return address of the Intuition View structure
+`ViewPortAddress()`_          Return the address of the viewport of a window
 `MakeScreen()`_               Create viewport of the screen
 `RethinkDisplay()`_           Redisplay the whole Intuition display
 `RemakeDisplay()`_            Remake the entire Intuition display
 `AllocScreenBuffer()`_        Allocate a ScreenBuffer multiple buffering
 `ChangeScreenBuffer()`_       Change current buffer
-`FreeScreenBuffer()`_         Frees a ScreenBuffer allocated by `AllocScreenBuffer()`_
-============================= =======================================================
+`FreeScreenBuffer()`_         Free ScreenBuffer from `AllocScreenBuffer()`_
+============================= ================================================
 
 
 
 Gadgets
 -------
 
-============================= =======================================================
+============================= ================================================
 `AddGadget()`_                Add a single gadget to a window
 `AddGList()`_                 Add some gadgets to a window
-`RemoveGadget()`_             Remove a gadget from the list of gadgets in a window
+`RemoveGadget()`_             Remove gadget from a window's list of gadgets
 `RemoveGList()`_              Remove sublist of gadgets from a window
-`RefreshGList()`_             Refresh (draw anew) the specified number of gadgets
-`RefreshGadgets()`_           Refresh all gadgets starting at the specified gadget
+`RefreshGList()`_             Refresh (draw anew) specified number of gadgets
+`RefreshGadgets()`_           Refresh all gadgets starting at specified gadget
 `ModifyProp()`_               Change the values of a proportional gadget
 `NewModifyProp()`_            Change the values of a proportional gadget
 `OffGadget()`_                Disable a gadget
 `OnGadget()`_                 Enable a gadget
 `ActivateGadget()`_           Activate the specified gadget
 `SetEditHook()`_              Set the string editing hook of string gadgets
-`GadgetMouse()`_              Determines the current mouse position relative to the upper-left
-                              corner of a custom gadget
-`HelpControl()`_              Turn on or off Gadget-Help for your window
-============================= =======================================================
+`GadgetMouse()`_              Determine current mouse position relative to
+                              the upper-left corner of a custom gadget
+`HelpControl()`_              Turn Gadget-Help on or off for a window
+============================= ================================================
+
 
 
 Menus
 -----
 
-============================= =======================================================
-`SetMenuStrip()`_             This function adds a MenuStrip to the Window
-`ClearMenuStrip()`_           Detach menu stript from a window
-`ResetMenuStrip()`_           Refresh menu stript after some status changes
-`ItemAddress()`_              Return the address of the menuitem
-`OffMenu()`_                  Disable a whole menu, an item or a sub-item
-`OnMenu()`_                   Enable a whole menu, an item or a sub-item
+============================= ================================================
+`SetMenuStrip()`_             Add a menu strip to the Window
+`ClearMenuStrip()`_           Detach menu strip from a window
+`ResetMenuStrip()`_           Refresh menu strip, after status changes
+`ItemAddress()`_              Return the address of the menu item
+`OffMenu()`_                  Disable a whole menu, an item, or a sub-item
+`OnMenu()`_                   Enable a whole menu, an item, or a sub-item
 `LendMenus()`_                Lend the menus of one window to another
-============================= =======================================================
+============================= ================================================
+
 
 
 Images/Line Drawing
 -------------------
 
-============================= =======================================================
-`DrawBorder()`_               Draw one or more borders in the specified RastPort
+============================= ================================================
+`DrawBorder()`_               Draw one or more borders in a specified RastPort
 `DrawImage()`_                Draw an image
 `DrawImageState()`_           Render an image in a certain state
 `EraseImage()`_               Erase an image on the screen
 `PrintIText()`_               Render an IntuiText in the specified RastPort
-`IntuiTextLength()`_          Measure the length of the IntuiText passed to the function
-`GetScreenDrawInfo()`_        Return a pointer to struct DrawInfo of the passed screen
+`IntuiTextLength()`_          Measure the length of an IntuiText
+`GetScreenDrawInfo()`_        Return a pointer to struct DrawInfo of a screen
 `FreeScreenDrawInfo()`_       Release data from `GetScreenDrawInfo()`_
 `PointInImage()`_             Check whether a point is inside an image
-============================= =======================================================
+============================= ================================================
+
 
 
 Input/Output
 ------------
 
-============================= =======================================================
+============================= ================================================
 `ModifyIDCMP()`_              Modify the state of your window's IDCMP port
-============================= =======================================================
+============================= ================================================
+
 
 
 Mouse/Keyboard
 --------------
 
-============================= =======================================================
-`DoubleClick()`_              Check if two times are within the doubleclick intervall
-`SetPointer()`_               Change the shape of the mouse pointer for a given window
+============================= ================================================
+`DoubleClick()`_              Check if two times are in double-click interval
+`SetPointer()`_               Change shape of the mouse pointer for a window
 `ClearPointer()`_
 `SetMouseQueue()`_
 `ReportMouse()`_
-============================= =======================================================
+============================= ================================================
+
 
 
 BOOPSI
 ------
 
-============================= =======================================================
+============================= ================================================
 `NewObjectA()`_               Create BOOPSI object
-`DisposeObject()`_            Delete BOOPSI object created with `NewObjectA()`_
+`DisposeObject()`_            Delete BOOPSI object from `NewObjectA()`_
 `SetAttrsA()`_                Change several attributes of an object
 `SetGadgetAttrsA()`_          Change several attributes of a gadget
-`GetAttr()`_                  Ask the specified object for the value of an attribute
+`GetAttr()`_                  Ask an object for the value of an attribute
 `MakeClass()`_                Create a new public BOOPSI class
-`FreeClass()`_                Free a class which has been created by `MakeClass()`_
-`AddClass()`_                 Make a class publically available
+`FreeClass()`_                Free a class from `MakeClass()`_
+`AddClass()`_                 Make a class publicly available
 `RemoveClass()`_              Make a public class inaccessible
 `ObtainGIRPort()`_            Get a rastport for gadget imagery
-`ReleaseGIRPort()`_           Release a RastPort previously obtained by `ObtainGIRPort()`_
+`ReleaseGIRPort()`_           Release a RastPort from `ObtainGIRPort()`_
 `DoGadgetMethodA()`_          Invoke a BOOPSI method on an object
 `NextObject()`_               Iterate through a list of BOOPSI objects
-============================= =======================================================
+============================= ================================================
 
 
-Misc.
------
 
-============================= =======================================================
-`AllocRemember()`_            Allocate some memory and remeber it in the Remember-List
+Miscellaneous
+-------------
+
+============================= ================================================
+`AllocRemember()`_            Allocate memory and remember it in Remember-List
 `FreeRemember()`_             Free memory allocated by `AllocRemember()`_
 `LockIBase()`_                Lock Intuition
 `UnlockIBase()`_              Release a lock obtained with `LockIBase()`_
-`CurrentTime()`_              Copies the current time into the argument pointers
-`ChangeDecoration()`_         Setup a new decorator for intuition windows, screens or menus
+`CurrentTime()`_              Copy the current time into the argument pointers
+`ChangeDecoration()`_         Set up a new screen, window, or menu decorator
 `SetPrefs()`_                 Set the current Preferences structure
 `GetPrefs()`_                 Get a copy of the current Preferences structure
-`GetDefPrefs()`_              Get a copy of the Intuition default Preferences structure
-============================= =======================================================
+`GetDefPrefs()`_              Get a copy of the default Preferences structure
+============================= ================================================
 
 
 .. _ActivateGadget(): ../autodocs/intuition#activategadget

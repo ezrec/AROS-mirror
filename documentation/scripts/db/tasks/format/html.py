@@ -253,7 +253,7 @@ def format( root, directory, template, lang, extension, parent = None ):
        content_Comments += '<li>' + item.comment + '</li>'
     content_Comments += '</ul>'
 
-    contentstr = '<h2 align="center" style="font-size:large">Status of AROS implementation</h2>'
+    contentstr = '<h2 align="center" style="font-size:large">AROS implementation status</h2>'
 
     if parent is not None:
         contentstr += str( formatReturnLink( parent, extension ) )

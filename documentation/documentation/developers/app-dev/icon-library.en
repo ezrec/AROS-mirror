@@ -1,6 +1,6 @@
-===================================
-AROS Application Development Manual
-===================================
+=======================================================
+AROS Application Development Manual -- The Icon Library
+=======================================================
 
 :Authors:   Matthias Rustler
 :Copyright: Copyright (C) 2008, The AROS Development Team
@@ -14,13 +14,9 @@ AROS Application Development Manual
 .. Warning::
 
    This document is not finished! It is highly likely that many parts are
-   out-of-date, contain incorrect information or are simply missing
+   out-of-date, contain incorrect information, or are simply missing
    altogether. If you want to help rectify this, please contact us.
 
-   
-------------
-icon.library
-------------
 
 .. Contents::
 
@@ -28,43 +24,43 @@ icon.library
 DiskObject
 ----------
 
-=============================== ==========================================================
-`NewDiskObject()`_              Create empty diskobject structure
+=============================== ==============================================
+`NewDiskObject()`_              Create empty DiskObject structure
 `GetDiskObject()`_              Open an icon from disk
-`GetDiskObjectNew()`_           Open an icon from disk, use default icon if not found
+`GetDiskObjectNew()`_           Open icon from disk, use default if not found
 `PutDiskObject()`_              Write icon to disk
-`GetIconTagList()`_             Open icon from disk, use default icon if not found
+`GetIconTagList()`_             Open icon from disk, use default if not found
 `PutIconTagList()`_             Write icon to disk
-`GetDefDiskObject()`_           Get the default icon for the supplied type of icon
+`GetDefDiskObject()`_           Get default icon for the supplied type of icon
 `PutDefDiskObject()`_           Write icon as default icon
 `DupDiskObjectA()`_             Duplicate icon
-`DeleteDiskObject()`_           Deletes .info file from disk
-`FreeDiskObject()`_             Free the DiskObject created by GetDiskObject()_
+`DeleteDiskObject()`_           Delete .info file from disk
+`FreeDiskObject()`_             Free DiskObject created by GetDiskObject()_
 `GetIconRectangleA()`_          Query size of icon
 `IconControlA()`_               Set and get icon and icon.library options
 `LayoutIconA()`_                Adapt a palette-mapped icon for display
 `DrawIconStateA()`_             Draw an icon like an image
-`ChangeToSelectedIconColor()`_  Change a color register for selected icon state
-`BumpRevision()`_               Compute the right copy revision for a file name
-=============================== ==========================================================
+`ChangeToSelectedIconColor()`_  Change color register for selected icon state
+`BumpRevision()`_               Compute right copy revision for a filename
+=============================== ==============================================
 
 
 Tooltypes
 ---------
 
-=============================== ==========================================================
+=============================== ==============================================
 `FindToolType()`_               Search for an entry in the tooltype array
 `MatchToolValue()`_             Search in an entry for a value
-=============================== ==========================================================
+=============================== ==============================================
 
 
 Misc.
 -----
 
-=============================== ==========================================================
-`AddFreeList()`_                Add supplied memory chunk to the supplied freelist
-`FreeFreeList()`_               Free all memory chunks in the freelist inserted by `AddFreeList()`_
-=============================== ==========================================================
+=============================== ==============================================
+`AddFreeList()`_                Add supplied memory chunk to supplied freelist
+`FreeFreeList()`_               Free all `AddFreeList()`_ chunks from freelist
+=============================== ==============================================
 
 
 

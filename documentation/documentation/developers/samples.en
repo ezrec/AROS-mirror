@@ -21,7 +21,7 @@ Graphics
 
 =================== =====================================================
 simple.c__          Some simple drawing functions
-bitmap.c__          Creates a bitmap, draws in it and blit its content
+bitmap.c__          Creates a bitmap, draws in it and blits its content
                     to a window.
 area.c__            Renders some shapes with the area functions
 font.c__            Opens a font and writes some text

@@ -1,6 +1,6 @@
-===================================
-AROS Application Development Manual
-===================================
+============================================================
+AROS Application Development Manual -- The AROS Build System
+============================================================
 
 :Authors:   Staf Verhaegen, Sebastian Rittau, Stefan Rieken, Matt Parsons,
             Adam Chodorowski, Fabio Alemagna, Matthias Rustler
@@ -16,12 +16,9 @@ AROS Application Development Manual
 
 .. Warning::
 
-   This guide has it's last major revision begin November 2006. Changes
-   to the build system after this date will not be reflected in this guide.
+    This guide has its last major revision begin November 2006. Changes
+    to the build system after this date will not be reflected in this guide.
 
----------------------
-The AROS build system
----------------------
 
 Introduction
 ============
@@ -34,49 +31,52 @@ simplifies the building of more complex binaries and takes away a lot of the
 manual work otherwise needed to compile, link and copy the files.
 Additionally this system builds a dependency tree over a big source code
 tree and will build the binaries in the right order so that all dependencies
-are fulfilled when a certain binary is built. This system also makes the
+are fulfilled when a certain binary is built. The build system also makes the
 source code tree modular: you can add or remove certain directories and the
-build system will take up these changes (of course one always has to take
-care one does not delete code other parts are still depending on).
+build system will adapt to these changes. (Of course, one always has to take
+care not to delete code other parts still depend upon).
+
+
+
 
 Components of the build system
 ------------------------------
 
-AROS uses several development tools in it's build system. A short list of
+AROS uses several development tools in its build system. A short list of
 the most important components is:
 
 + *GNU make*: the GNU version of the make program.
   The task of this program is to regenerate an output file from its
-  dependencies using a user defined program like a compiler, a text processor,
-  etc. The main advantage over a normal list of commands is that it will check
-  if anything has changed in the source files and save time by not redoing the
-  command not necessary.
-  
-  Familiarity with GNU make and it's input file syntax is not strictly necessary
-  when a developer's need is covered by the high level macros discussed further
-  in this paragraph.
-  If this is not the case one can use GNU's makefile syntax directly. The usage of the
-  GNU make program won't be discussed in these pages but the GNU info pages
-  about the `make` program are a good source for documentation.
+  dependencies using a user-defined program, like a compiler, a text
+  processor, etc. The main advantage over a normal list of commands is that
+  it will check if anything has changed in the source files and save time by
+  not redoing the command if it's not necessary.
+
+  Familiarity with GNU make and it's input file syntax is not strictly
+  necessary where a developer's need is covered by the high level macros
+  discussed later in this paragraph.
+  Where this is not the case, one can use GNU's makefile syntax directly.
+  The usage of the GNU make program won't be discussed in these pages but
+  the GNU info pages about the `make` program are a good source of
+  documentation.
 + *MetaMake*: A make supervisor program. It can keep an overview of all
   makefiles which exist in subdirectories of a certain root directory.
-  A more in depth explanation is given below.
+  A more in-depth explanation is given below.
 + *genmf*: (generate makefile) A macro language for makefiles. It simplifies
   the writing of the makefiles by providing high level macros for easy
   building of binary files for AROS.
 + Several other tools will be used by the build instructions. These contain
-  AROS and non-AROS specific tools. More explanation of these tools will be
+  AROS- and non-AROS-specific tools. More explanation of these tools will be
   given when appropriate.
 
 To illustrate how these tools interact which each other we will explain what
-happens under the hood when you compile the HelloWorld program given in the 
+happens under the hood when you compile the HelloWorld program given in the
 `previous chapter`__.
 
-If you followed the tutorial for the building the program with the build
-system you first added the `local/helloworld` directory with some source
-files; afterwards you called ``make local-helloworld`` in the top make
-directory. During the execution of this command the following steps were
-taken:
+If you followed the tutorial for building the program with the build system
+you first added the `local/helloworld` directory with some source files;
+afterwards you called ``make local/helloworld`` in the top make directory.
+During the execution of this command the following steps were taken:
 
 + The make program calls the MetaMake program with the following command
   ``mmake AROS.local-helloworld``. This instructs the MetaMake program to
@@ -84,7 +84,7 @@ taken:
   from the regular AROS source tree, AROS is the one and only project known
   to MetaMake.
 
-+ The first thing MetaMake does when it is started, is go over the source
++ The first thing MetaMake does when it is started, is to go over the source
   tree to see if there are directories added or deleted.
 
 + During the scanning of the directory tree MetaMake will also see if there
@@ -93,29 +93,32 @@ taken:
   implement high level macros. In the helloworld example the ``%build_prog``
   macro was used. If you have followed the helloworld example you can have a
   look at the resulting build instructions in `local/helloworld/mmakefile`.
-  MetaMake also detects it if a mmakefile.src is newer then the existing mmakefile
-  and will regenerate it.
+  MetaMake also detects whether a mmakefile.src is newer then the existing
+  mmakefile and will regenerate it.
 
 + A last thing MetaMake does when scanning the source tree is collect the
-  metamake targets from all available `mmakefile` files and the dependency
-  between the metamake targets. In the helloworld example the
-  meta-target was defined as ``local-helloworld`` by passing the argument
+  MetaMake targets from all available `mmakefile` files and the dependency
+  between the MetaMake targets. In the helloworld example the
+  meta-target was defined as ``local-helloworld``, by passing the argument
   ``mmake=local-helloworld`` to the ``%build_prog`` macro.
   If you look in the mmakefile you can see several lines starting with
   ``#MM``; these are the lines defining the meta-targets and the dependency
-  between them. It is not necessary to understand the exact meaning of 
+  between them. It is not necessary to understand the exact meaning of
   these statements to be able to use the high level build macros provided
   by AROS.
-  
+
 + When MetaMake has gone through the source tree and collected all the
   information about the meta-targets it will (try to) build the specified
-  meta-target. In the previous step the program has built a dependency tree of
-  the meta-targets. Before building the specified meta-target it will first
-  build the meta-targets it depends on. In our example there is not a
-  dependency and it will directly build the program from `local/helloworld`
+  meta-target. In the previous step the program has built a dependency tree
+  of the meta-targets. Before building the specified meta-target it will
+  first build the meta-targets it depends on. In our example there are no
+  dependencies and it will directly build the program from `local/helloworld`
   by calling the GNU make program in that directory.
-  
+
 __ introduction#the-hello-world-program
+
+
+
 
 
 Build system tutorial
@@ -127,29 +130,33 @@ but enough information to be able to perform most of the application
 development needs. An in-depth discussion of the build tools is given in the
 reference section in this manual.
 
-Basic file syntax and setup
----------------------------
 
-As was seen in the helloworld example above you use the build system by putting
-a `mmakefile.src` file in the directory containing your source files. For the
-AROS build system to notice your file the directory containing it has to be
-below the AROS main source directory (the name of this top directory is most
-likely `AROS`). So for the moment you need to get hold
-of the AROS source code to be able to use the build system which is
-discussed in `another chapter`__. A good place to put your own source code is below
-the `AROS/local` directory as was done for the helloworld example.
+
+
+Basic file syntax and set-up
+----------------------------
+
+As was seen in the helloworld example above you use the build system by
+putting a `mmakefile.src` file in the directory containing your source
+files. For the AROS build system to notice your file the directory
+containing it has to be within the AROS main source directory (the name of
+this top directory is most likely `AROS`). So for the moment you need to get
+hold of the AROS source code to be able to use the build system which is
+discussed in `another chapter`__. A good place to put your own source code
+is in the `AROS/local` directory, as was done for the helloworld example.
+
 An AROS `mmakefile` has to start with the following line::
 
   include $(TOP)/config/make.cfg
-  
-  ...
-  
-The start line will set the environment in the makefile for AROS
-compilation. It has to be included because this environment is used by the metamake
-macros.
 
-After this first line most of the time one or more calls to a ``genmf`` macro
-will follow. Such a macro has the following syntax::
+  ...
+
+The start line will set the environment in the makefile for AROS
+compilation. It has to be included because this environment is used by the
+MetaMake macros.
+
+After this first line, most of the time one or more calls to a ``genmf``
+macro will follow. Such a macro has the following syntax::
 
   %macro param1=... param2=... ...
 
@@ -157,9 +164,9 @@ When the `mmakefile.src` file is translated into a `mmakefile` file  the line
 above will be replaced with make commands defined by the macro. A macro is
 called by it's name followed by zero or more parameters with an optional
 value assigned to the parameter. The order of the parameters is not important
-and not all parameters defined by a macro have to get values; a default value will
-be used when a parameter is not provided. Some parameters may be mandatory
-and an error message will be generated when it is left out.
+and not all parameters defined by a macro have to get values; a default value
+will be used when a parameter is not provided. Some parameters may be
+mandatory and an error message will be generated when it is left out.
 
 One macro call can be spread over several lines by ending a line with a
 backslash and continue the macro on the next line. So the example macro call
@@ -173,12 +180,15 @@ could have been written also as::
 Normally no spaces are allowed in the values given to a parameter, if that
 is needed one has to enclose the list by double quotes (").
 
-In the following chapters the most important high level commands will be discussed.
-Only the most important parameters for the macros will be discussed, a list
-and description of all parameters of a macro will be given in the reference
-section.
+The following chapters will discuss the more important high level commands.
+Only the most important parameters for the macros will be treated there; a
+list and description of all parameters of a macro will be given in the
+reference section.
 
 __ ../compiling
+
+
+
 
 Building an AROS program
 ------------------------
@@ -187,59 +197,63 @@ You can build a program by using the following macro in your mmakefile.src
 file::
 
   %build_prog mmake=MetaTarget progname=Prog files=SourceFiles
-  
+
 This will build a program named `Prog` from the list of `SourceFiles`. By
-giving the ``mmake`` argument the `MetaMake` program will see that this program
-can be built by `MetaTarget`; e.g. doing ``make MetaTarget`` in the top AROS
-source directory will build the program. When typing this command also the
-dependencies will be built every time you want to recompile this module.
+giving the ``mmake`` argument the `MetaMake` program will see that this
+program can be built by `MetaTarget`; e.g. doing ``make MetaTarget`` in the
+top AROS source directory will build the program. When typing this command
+also the dependencies will be built every time you want to recompile this
+module.
 Additionally a `MetaTarget-quick` meta-target will be defined that allows to
-build the program without that the dependencies will be rebuilt, this can
-save time when you are changing the source code of a program and want to
-rebuild it often.
+build the program without the dependencies being rebuilt. This can save time
+when you are changing the source code of a program and want to rebuild it
+often.
 
 The list of files `SourceFiles` are the name of the C input files without the
-.c suffix. As explained above this list has to be enclosed by double quotes if
-it contains more then one file.
+.c suffix. As explained above this list has to be enclosed by double quotes
+if it contains more than one file.
 
-By default the program will be put in the AROS binary tree in the same
-subdirectory from the top directory as the subdirectory relative where the
-source files are put into the source code tree. You can change this
-directory by specifying the ``targetdir=...`` argument. The latter
-argument has to contain a full path so most of the time it will start with
-``$(AROSDIR)/`` to put the program somewhere in the binary AROS tree. So if
-you want to put the program in the Extras directory you can do it this way::
+By default, the program will have the same file path in the AROS binary tree
+as its source files had in the source tree. This can be changed by specifying
+the ``targetdir=...`` argument. The latter argument has to contain a full
+path, so most of the time it will start with ``$(AROSDIR)/``, to put the
+program somewhere in the binary AROS tree.
+
+So, to put the program in the Extras directory you use this::
 
   %build_prog ... targetdir=$(AROSDIR)/Extras
-  
-As explained above the argument to a macro has to be enclosed by quotation
+
+As explained above the argument to a macro has to be enclosed in quotation
 marks if it contains more then one file. Currently the list can't be
 split over more then one line and often make variables are used to pass the
 list of files to build. The next three examples do the same only with
-different syntax. First the in-line list version::
+different syntax. First: the in-line list version::
 
   %build_prog \
       mmake=myprog progname=MyProg \
       files="file1 file2 file3"
 
-Now with using a make variable::
+Second: Using a make variable::
 
   FILES := file1 file2 file3
-  
+
   %build_prog \
       mmake=myprog progname=MyProg \
       files=$(FILES)
 
-Or with using the make line continuation::
+Third: Using the make line continuation::
 
   FILES := \
       file1 \
       file2 \
       file3
-  
+
   %build_prog \
       mmake=myprog progname=MyProg \
       files=$(FILES)
+
+
+
 
 
 Build system reference
@@ -252,17 +266,23 @@ Build system reference
    current implementation.
    If you want to help updating this section, please contact us.
 
+
+
+
 MetaMake
 --------
 
 Introduction
 """"""""""""
 
-`MetaMake` is a version of `make` which allows to recursively build targets in the
-various directories of a project or even another project. It searches
-a directory tree for makefiles and all makefiles it finds for "metatargets". Then
-it tries to build all metatargets. You can also specify a program which
-converts "source" makefiles into makefiles before `MetaMake` will invoke `make`.
+`MetaMake` is a version of `make` which allows to recursively build targets
+in the various directories of a project or even another project. It searches
+a directory tree for makefiles and all makefiles it finds for "metatargets".
+Then it tries to build all metatargets. You can also specify a program which
+converts "source" makefiles into makefiles before `MetaMake` will invoke
+`make`.
+
+
 
 Syntax of the makefile
 """"""""""""""""""""""
@@ -274,11 +294,11 @@ config file that is discussed in one of the following sections.
 
 There exist three ways of defining a metatarget in a makefile:
 
-+ This defines a metatarget with its metaprerequisites::
++ This defines a metatarget with its meta-prerequisites::
 
-      #MM metatarget : metaprerequisites
+      #MM metatarget : meta-prerequisites
 
-  When a user asks to build this metatarget, first the metaprerequisites will
+  When a user asks to build this metatarget, first the meta-prerequisites will
   be build as metatargets and afterwards the given metatarget.
 
   This form also indicates that in this makefile also a makefile target is
@@ -289,10 +309,10 @@ There exist three ways of defining a metatarget in a makefile:
   metatarget. Using this 'virtual' metatargets speeds up the build because
   `make` isn't called with this target::
 
-      #MM- metatarget : metaprerequisites
+      #MM- metatarget : meta-prerequisites
 
 + This form defines both a metatarget and a `make` target with the same name.
-  The prerequisites are no metaprerequisites::
+  The prerequisites are no meta-prerequisites::
 
       #MM
       metatarget : prerequisites
@@ -301,65 +321,74 @@ The line for the definition of a metatarget can be spread over several lines
 if you end every line with the \\ character and start the next line with
 ``#MM``.
 
-You can define a metatarget with the same name in several files. The metaprerequisites
-are then collected.
+You can define a metatarget with the same name in several files. The
+meta-prerequisites are then gathered as if they were in a single entry.
 
-If a metatarget is defined both with ``#MM`` and ``#MM-`` the ``#MM`` has priority. 
+If a metatarget is defined both with ``#MM`` and ``#MM-`` the ``#MM`` has
+priority.
+
 
 
 How MetaMake works
 """"""""""""""""""
 
-`MetaMake` is run by calling ``make`` in the root directory of the AROS source tree.
+`MetaMake` is run by calling ``make`` in the root directory of the AROS source
+tree.
 
 At first `MetaMake` will build up a tree of all the makefiles present in
 a root directory and all subdirectories. At the same time it will also build
 a tree of all the metatargets and their dependencies.
 
-Next it will build all the metaprerequisites needed for this metatarget and
-then finally the metatarget itself. Actually someone can look at it that every
-metaprerequisite becomes a metatarget when it needs to be build. For each of
-these metatargets a walk through of all the directories is done. In every
-makefile where the metatarget is defined by the first or third way from the
-previous section `make` is called with the name of the target as a `make`
-target.
+Next it will build all the meta-prerequisites needed for this metatarget and
+then finally the metatarget itself. Or viewed differently: every
+meta-prerequisite is handled as a metatarget when it needs to be build. For
+each of these metatargets a walk through of all the directories is done. In
+every makefile where the metatarget is defined by the first or third way
+from the previous section `make` is called with the name of the target as a
+`make` target.
 
-When `MetaMake` calls normal `make` also two variables are defined. $(TOP) has
-the value of the root directory and $(CURDIR) the path relative to this root
-directory.
+When `MetaMake` calls normal `make` also two variables are defined. $(TOP)
+has the value of the root directory and $(CURDIR) the path relative to this
+root directory.
 
-Metatargets which aren't a prerequisite of another target aren't build by default.
-If you want to build such a metatarget you have to type ``make`` `metatarget`
-in the root directory of the AROS source tree.
+Metatargets which aren't a prerequisite of another target aren't build by
+default. If you want to build such a metatarget you have to type ``make``
+`metatarget` in the root directory of the AROS source tree.
 
-Autogenerated makefiles
-"""""""""""""""""""""""
 
-Another feature of `MetaMake` is automatic generating a makefile from a source
-makefile. When the directory tree is scanned for all the makefiles in every
-directory it is checked if a makefile is present with a .src suffix added.
-If it is there and is newer than the makefile present in that directory a
-script will be called to regenerate the makefile from the source makefile.
-What script has to be called is defined in the configuration file.
+
+Auto-generated makefiles
+""""""""""""""""""""""""
+
+Another feature of `MetaMake` is automatic generating a makefile from a
+source makefile. When the directory tree is scanned for all the makefiles in
+every directory it is checked if a makefile is present with a .src suffix
+added. If it is there and is newer than the makefile present in that
+directory a script will be called to regenerate the makefile from the source
+makefile. What script has to be called is defined in the configuration file.
+
+
 
 Examples
 """"""""
 
 The next few examples are taken from the AROS project.
 
-Example 1: normal dependencies
+
+Example 1: Normal dependencies
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
 
     #MM contrib-regina-module : setup linklibs includes contrib-regina-includes
 
-This example says that in this makefile a `contrib-regina-module` is present
-that has to be build. Before building this metatarget first the
-metatargets `setup`, `linklibs`, ... have to be build; this ensures that the includes,
-linklibs etc. have to be present before this module can be build.
+This example says that in this makefile a `contrib-regina-module` is exists
+that has to be built. Before building this metatarget first the
+metatargets `setup`, `linklibs`, ... have to be built; this ensures that the
+includes, linklibs etc. will be present before this module will be built.
 
-Example 2: metatarget consisting of submetatargets
+
+Example 2: Metatarget consisting of submetatargets
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -369,14 +398,15 @@ Example 2: metatarget consisting of submetatargets
    #MM      contrib-freetype-fonts \
    #MM      contrib-freetype-demos
 
-Here actually is said that the `contrib-freetype` metatarget requires building of
-`linklib`, `graph`, `fonts` and `demos` of `freetype`. If some extra work
-needs to be done in the makefile where this metatarget is, the definition can
-start with ``#MM`` and a normal `make` target `contrib-freetype` has to be
-present in the makefile.
+Here, it actually says that the `contrib-freetype` metatarget requires the
+building of `linklib`, `graph`, `fonts` and `demos` of `freetype`. If some
+extra work needs to be done in the makefile where this metatarget is, the
+definition can start with ``#MM`` and then a normal `make` target
+`contrib-freetype` should be present in the makefile.
 
-Also the use of the line continuation for the metatarget definition is shown
-here.
+Also, the use of the line continuation for the metatarget definition is
+demonstrated here.
+
 
 Example 3: Quick building of a target
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -387,23 +417,24 @@ Example 3: Quick building of a target
     #MM
     workbench-utilities-quick : workbench-utilities
 
-When a user executes `MetaMake` with as argument `workbench-utilities` `make` will
-be called in all the directories where the metaprerequisites are present in
-the makefile. This can become quite annoying when debugging programs. When
-now the second metatarget `workbench-utilities-quick` is defined as shown
-above only that target will be build in this directory. Of course the user
-has then to be sure that the metatargets on which `workbench-utilities` depend
-are up-to-date.
+Normally, when a user executes `MetaMake` with as its argument
+`workbench-utilities`, `make` will be called in every the directories where
+the meta-prerequisites are included in the makefile. This can become quite
+annoying when debugging programs. If the second metatarget
+`workbench-utilities-quick` is defined as shown above, only that target will
+be build in this directory. Of course, the user has then to be sure that the
+metatargets on which `workbench-utilities` depend are up-to-date.
+
 
 
 Configuration file
 """"""""""""""""""
 
-The `MetaMake` configuration file has the path $(TOP)/mmake.config. A short
-explanation of its content:
+The `MetaMake` configuration file should have the path $(TOP)/mmake.config.
+A short explanation of its content:
 
 ``[AROS]``
-    Begins a config section for the project `AROS`
+    Begins a config section for the project `AROS`.
 
 ``maketool $(HOST_MAKE) $(MKARGS) TOP=$(TOP) CURDIR=$(CURDIR) TARGET=$(TARGET)``
     Specifies the name of the tool to build a target. This is usually `make`.
@@ -419,7 +450,8 @@ explanation of its content:
     `defaultmakefilename` and ".src"
 
 ``genmakefiledeps $(GENMF) $(TOP)/config/make.tmpl``
-    If this file is newer than the makefile, the given script will be executed.
+    If this file is newer than the makefile, the given script will be
+    executed.
 
 ``globalvarfile $(TOP)/bin/$(AROS_HOST_ARCH)-$(AROS_HOST_CPU)/gen/config/host.cfg``
     `MetaMake` will read this file and every variable in this file will
@@ -432,15 +464,20 @@ explanation of its content:
     This tells `MetaMake` to ignore these directories.
 
 
+
+
 Genmf
 -----
 
 Introduction
 """"""""""""
 
-`Genmf` uses two files for generating a makefile. First is the macro definition
-file and finally the source makefile (mmakefile.src) where these macros can be used.
-The macros for AROS are in the file $(TOP)/config/make.tmpl.
+`Genmf` uses two files for generating a makefile. The first one is the macro
+definition file and the second the source makefile (mmakefile.src) where
+these macros can be used. The macros for AROS are in the file
+$(TOP)/config/make.tmpl.
+
+
 
 Syntax
 """"""
@@ -458,26 +495,26 @@ A macro definition has the following syntax::
     ...
     %end
 
-`macroname` is the name of the macro. `option1`, `option2`, ... are the arguments
-for the macro. These options can be used in the body of this template by
-typing %(option1). This will be replaced be the value of option1.
+`macroname` is the name of the macro. `option1`, `option2`, ... are the
+arguments for the macro. These options can be used in the body of this
+template by typing %(option1). This will be replaced be the value of option1.
 
 The argument can be followed by a default value. If no default value is
 specified an empty string is taken. Normally no spaces are allowed in the
 default value of an argument. If this is needed this can be done by
 surrounding the value with double quotes (``"``).
 
-Also two switches can be given:
+Also two switches can be added:
 
     ``\A``
-        Is the switch to always need a value for this. When the macro is
-        instantiated always a value needs to be assigned to this argument.
+        Is the switch to always require a value for this. When the macro is
+        instantiated, it always needs a value to be assigned to this
+        argument.
 
     ``\M``
-        Is the switch to turn on multi words. This means that all the words
-        following this argument will be assigned to this argument. This also
-        means that after the use of such an argument no other argument can be
-        present because it will become part of this argument.
+        Is the switch to turn on multi-words. This also means that this has
+        to be the final argument, as any argument specified after this would
+        be swallowed by the multi-word.
 
 
 Macro instantiation
@@ -491,23 +528,27 @@ by the name of the macro to instantiate (without round brackets around it)::
 Two ways are possible to specify value for arguments to a macro:
 
     ``value``
-        This will assign the first value to the first argument, the second value
-	to the second argument and so on.
+        This will assign the first value to the first argument, the second
+        value to the second argument, and so on.
 
     ``option1=value``
         This will assign the given value to the option with the specified
         name.
 
-When giving values to arguments also double quotes need to be used if someone
-wants to include spaces in the values of the arguments.
+When giving values to arguments, again double quotes are required to include
+spaces in the values of the arguments.
 
 Macro instantiation may be used inside the body of a macro, even macros
 that will only be defined later on in the macro definition file.
 
-.. Note:: In the definition of the genmf rules sometimes `MetaMake` variables are
-          used as default variables for an argument (e.g. ``dflags=%(cflags)``).
+.. Note:: In the definition of the genmf rules sometimes `MetaMake`
+          variables are used as default variables for an argument (e.g.
+          ``dflags=%(cflags)``).
           This is not really possible in the definition file but is done by
           using text that has the same effect.
+
+
+
 
 
 AROS application development macros reference
@@ -516,7 +557,7 @@ AROS application development macros reference
 High level mmakefile.src macros
 -------------------------------
 
-AROS standard metamake targets
+AROS standard MetaMake targets
 """"""""""""""""""""""""""""""
 
 The following metatargets are often used as prerequisite:
@@ -527,15 +568,17 @@ The following metatargets are often used as prerequisite:
 FIXME: complete
 
 .. Note::
-   
-   These mega metamake targets were introduced in the beginning of the
+
+   These mega MetaMake targets were introduced in the beginning of the
    project. The usage of these metatargets is now considered as deprecated
    and should be avoided.
-   
+
    One should try to use more specific targets for dependencies, e.g. if a
    certain program uses a certain library one should specify this library as
-   a dependency of this program not all the linklibs by using the ``linklibs``
-   metatarget.
+   a dependency of this program not all the linklibs by using the
+   ``linklibs`` metatarget.
+
+
 
 Building programs
 """""""""""""""""
@@ -545,25 +588,26 @@ that will compile every input file to a separate executable and one macro
 ``%build_prog`` that will compile and link all the input files into one
 executable.
 
-%build_progs
-^^^^^^^^^^^^
 
-This macro will compile and link every input file to a separate executable
+Macro %build_progs
+^^^^^^^^^^^^^^^^^^
+
+This macro will compile and link every input file into a separate executable
 and has the following definition::
 
     %define build_progs mmake=/A files=/A \
         objdir=$(GENDIR)/$(CURDIR) targetdir=$(AROSDIR)/$(CURDIR) \
-    	cflags=$(CFLAGS) dflags=$(BD_CFLAGS$(BDID)) ldflags=$(LDFLAGS) \
-    	uselibs= usehostlibs= usestartup=yes detach=no
+        cflags=$(CFLAGS) dflags=$(BD_CFLAGS$(BDID)) ldflags=$(LDFLAGS) \
+        uselibs= usehostlibs= usestartup=yes detach=no
 
 With the following arguments:
 
     ``mmake=/A``
-        This is the name of the metatarget that will build the programs. Also a
-        ``%(mmake)-quick`` metatarget will be defined.
+        This is the name of the metatarget that will build the programs.
+        Also a ``%(mmake)-quick`` metatarget will be defined.
 
     ``files=/A``
-        The basenames of the C source files that will be compiled and linked
+        The base-names of the C source files that will be compiled and linked
         to executables. For every name present in this list an executable
         with the same name will be generated.
 
@@ -588,32 +632,34 @@ With the following arguments:
         standard AROS link flags will be used.
 
     ``uselibs=``
-        A list of static libraries to add when linking the executables. This is
-        the name of the library without the `lib` prefix or the `.a` suffix and
-        without the `-l` prefix for the use in the flags for the C compiler.
+        A list of static libraries to add when linking the executables. This
+        is the name of the library without the `lib` prefix or the `.a`
+        suffix and without the `-l` prefix for the use in the flags for the
+        C compiler.
 
         By default no libraries are used when linking the executables.
 
     ``usehostlibs=``
         A list of static libraries of the host to add when linking the
-        executables. This is the name of the library without the `lib` prefix or
-        the `.a` suffix and without the `-l` prefix for the use in the flags for
-        the C compiler.
+        executables. This is the name of the library without the `lib`
+        prefix or the `.a` suffix and without the `-l` prefix for the use in
+        the flags for the C compiler.
 
         By default no libraries are used when linking the executables.
 
     ``usestartup=yes``
-        Use the standard startup code for the executables. By default this
-        is yes and this is also what someone wants most of the time. Only disable
-        this if you know what you are doing.
+        Use the standard start-up code for the executables. By default this
+        is yes and this is also what someone wants most of the time. Only
+        disable this if you know what you are doing.
 
     ``detach=no``
         Whether the executables will run detached. Defaults to no.
 
-%build_prog
-^^^^^^^^^^^
 
-This macro will compile and link the input files to an executable
+Macro %build_prog
+^^^^^^^^^^^^^^^^^
+
+This macro will compile and link the input files into an single executable
 and has the following definition::
 
     %define build_prog mmake=/A progname=/A files=%(progname) asmfiles= \
@@ -624,14 +670,14 @@ and has the following definition::
 With the following arguments:
 
     ``mmake=/A``
-        This is the name of the metatarget that will build the program. Also a
-        ``%(mmake)-quick`` metatarget will be defined.
+        This is the name of the metatarget that will build the program. Also
+        a ``%(mmake)-quick`` metatarget will be defined.
 
     ``progname=/A``
         The name of the executable.
 
     ``files=``
-        The basenames of the C source files that will be compiled and linked
+        The base-names of the C source files that will be compiled and linked
         into the executable. By default just the name of the executable is
         taken.
 
@@ -656,8 +702,8 @@ With the following arguments:
         as the ``cflags``.
 
     ``aflags=$(AFLAGS)``
-        The flags to add when compiling the asm files. By default the standard
-        AROS aflags (e.g. ``$(AFLAGS)``) are taken. This also
+        The flags to add when compiling the asm files. By default the
+        standard AROS aflags (e.g. ``$(AFLAGS)``) are taken. This also
         means that some flags can be added by assigning these to the
         SPECIAL_AFLAGS make variable before using this macro.
 
@@ -666,27 +712,29 @@ With the following arguments:
         standard AROS link flags will be used.
 
     ``uselibs=``
-        A list of static libraries to add when linking the executable. This is
-        the name of the library without the `lib` prefix or the `.a` suffix and
-        without the `-l` prefix for the use in the flags for the C compiler.
+        A list of static libraries to add when linking the executable. This
+        is the name of the library without the `lib` prefix or the `.a`
+        suffix and without the `-l` prefix for the use in the flags for the
+        C compiler.
 
         By default no libraries are used when linking the executable.
 
     ``usehostlibs=``
         A list of static libraries of the host to add when linking the
-        executable. This is the name of the library without the `lib` prefix or
-        the `.a` suffix and without the `-l` prefix for the use in the flags for
-        the C compiler.
+        executable. This is the name of the library without the `lib` prefix
+        or the `.a` suffix and without the `-l` prefix for the use in the
+        flags for the C compiler.
 
         By default no libraries are used when linking the executable.
 
     ``usestartup=yes``
-        Use the standard startup code for the executables. By default this
-        is yes and this is also what someone wants most of the time. Only disable
-        this if you know what you are doing.
+        Use the standard start-up code for the executables. By default this
+        is yes and this is also what someone wants most of the time. Only
+        disable this if you know what you are doing.
 
     ``detach=no``
         Whether the executable will run detached. Defaults to no.
+
 
 
 Common
@@ -694,10 +742,11 @@ Common
 
     %define common
 
-This adds some common stuff like a `clean` target to the makefile. The `clean`
-target only deletes generated makefiles.
+This adds some common stuff to the makefile, like a `clean` target. The
+`clean` target only deletes generated makefiles.
 
- 
+
+
 Building catalogs
 """""""""""""""""
 
@@ -711,12 +760,12 @@ The definition of the macro is as follows::
 With the meaning of the arguments as follows:
 
     ``mmake=/A``
-        This is the name of the metatarget that will build the catalogs. Also a
-        ``%(mmake)-clean`` metatarget will be defined.
-
+        This is the name of the metatarget that will build the catalogs.
+        Also a ``%(mmake)-clean`` metatarget will be defined.
 
     ``name=/A``
-        This is the name of the destination catalog, without the .catalog suffix.
+        This is the name of the destination catalog, without the .catalog
+        suffix.
 
     ``subdir=A``
         This is the destination subdir of the catalogs.
@@ -736,7 +785,8 @@ With the meaning of the arguments as follows:
         This is the base destination directory (default $(AROS_CATALOGS)).
 
     ``sourcedescription``
-        This is the path to the FlexCat's source description file, without the .sd suffix.
+        This is the path to the FlexCat's source description file, without
+        the .sd suffix.
 
 Example::
 
@@ -744,12 +794,14 @@ Example::
     name=Info subdir=System/System/Wanderer/Tools
 
 
+
 Building icons
 """"""""""""""
 
-Creates icons. The images must be in `PNG` or `ILBM` format. The icon is configured from
-an additional text file with the name %(iconname).info.src. You can find the documentation
-of this file in $(TOP)/tools/ilbmtoicon/README
+Creates icons. The images must be in `PNG` or `ILBM` format. The icon is
+configured from an additional text file with the name %(iconname).info.src.
+You can find the documentation of this file in
+$(TOP)/tools/ilbmtoicon/README
 
 The definition of the macro is as follows::
 
@@ -775,11 +827,12 @@ Example::
 The definition file has the name newdrawer.info.src.
 
 
-Building static linklibraries
-"""""""""""""""""""""""""""""
 
-Building link libraries is straight forward. A list of files will be
-compiled or assembled and collected in a link library into a specified
+Building static link-libraries
+""""""""""""""""""""""""""""""
+
+Building link-libraries is straight-forward. A list of files will be
+compiled or assembled and collected into a link library in a specified
 target directory.
 
 The definition of the macro is as follows::
@@ -804,9 +857,11 @@ With the meaning of the arguments as follows:
     ``asmfiles=``
         The assembler files to assemble and include in the library. By
         default no asm files are included in the library.
+
     ``objs=``
         Additional objects to link into the linklib. The objects have to be
         given with full absolute path and the .o suffix.
+
     ``cflags=$(CFLAGS)``
         The flags to use when compiling the .c files. By default the standard
         AROS cflags (e.g. ``$(CFLAGS)``) are taken. This also
@@ -818,8 +873,8 @@ With the meaning of the arguments as follows:
         as the ``cflags``.
 
     ``aflags=$(AFLAGS)``
-        The flags to add when compiling the asm files. By default the standard
-        AROS aflags (e.g. ``$(AFLAGS)``) are taken. This also
+        The flags to add when compiling the asm files. By default the
+        standard AROS aflags (e.g. ``$(AFLAGS)``) are taken. This also
         means that some flags can be added by assigning these to the
         SPECIAL_AFLAGS make variable before using this macro.
 
@@ -833,46 +888,50 @@ With the meaning of the arguments as follows:
         directory ``$(LIBDIR)`` will be used.
 
 
-Compiling arch and/or CPU specific files
-""""""""""""""""""""""""""""""""""""""""
 
-In the previous paragraph the method was explained how a module can be build
-with the AROS genmf macros. Sometimes someone wants to replace certain files in
-a module with an implementation only valid for a certain arch or a certain
+Compiling arch- and/or CPU-specific files
+"""""""""""""""""""""""""""""""""""""""""
+
+In the previous paragraph the method was explained how a module can be built
+with the AROS genmf macros. Sometimes someone wants to replace certain files
+in a module with an implementation only valid for a certain arch or a certain
 CPU.
+
 
 The macro definition
 ^^^^^^^^^^^^^^^^^^^^
 
-Arch specific files are handled by the macro called %build_archspecific and it
-has the following header::
+Arch-specific files are handled by the macro called %build_archspecific and
+it has the following header::
 
     %define build_archspecific mainmmake=/A maindir=/A arch=/A files= asmfiles= \
     cflags=$(CFLAGS) dflags=%(cflags) aflags=$(AFLAGS) compiler=target
 
-And the explanation of the argument to this macro:
+The explanation of the argument to this macro:
 
     ``mainmmake=/A``
-        The mmake of the module from which someone wants to replace files or to
-        which to add additional files.
+        The mmake of the module from which someone wants to replace files or
+        to which to add additional files.
 
     ``maindir=/A``
         The directory where the object files of the main module are stored.
-        The is only the path relative to $(GENDIR). Most of the time this is the
-        directory where the source files of the module are stored.
+        The is only the path relative to $(GENDIR). Most of the time this is
+        the directory where the source files of the module are stored.
 
     ``arch=/A``
-        The architecture for which these files needs to be build. It can
-        have three different forms ARCH-CPU, ARCH or CPU. For example when
-        linux-i386 is specified these files will only be build for the linux
-        port on i386. With ppc it will be build for all ppc processors and
-        with linux it will be build for all linux ports.
+        The architecture for which these files have to be build. It can
+        have three different forms: ARCH-CPU, ARCH or CPU. For example, when
+        linux-i386 is specified, these files will only be built for the linux
+        port on i386. With ppc it will be build for all PowerPC processors and
+        with linux it will be build for all Linux ports.
 
     ``files=``
-        The basenames of the C source files to replace add to the module.
+        The base-names of the C source files to replace or to add to the
+        module.
 
     ``asmfiles=``
-        The basenames of the asm source files to replace or add to the module.
+        The base-names of the asm source files to replace or to add to the
+        module.
 
     ``cflags=$(CFLAGS)``
         The flags to add when compiling the .c files. By default the standard
@@ -885,22 +944,23 @@ And the explanation of the argument to this macro:
         as the ``cflags``.
 
     ``aflags=$(AFLAGS)``
-        The flags to add when assembling the asm files. By default the standard
-        AROS cflags (the ``$(AFLAGS)`` make variable) are taken. This also
-        means that some flags can be added by assigning these to the
-        SPECIAL_AFLAGS make variable before using this macro.
+        The flags to add when assembling the asm files. By default the
+        standard AROS cflags (the ``$(AFLAGS)`` make variable) are taken.
+        This also means that some flags can be added by assigning these to
+        the SPECIAL_AFLAGS make variable before using this macro.
 
     ``compiler=target``
-        Indicates which compiler to use during compiling C source files.
+        Indicates which compiler to use when compiling C source files.
         Can be either target or host to use the target compiler or the
         host compiler. By default the target compiler is used.
+
 
 Code shared by different ports
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 A second macro called %rule_archalias allows to create a virtual
-architecture. And code for that virtual architecture is shared between
-several architectures. Most likely this is used for code that uses an
+architecture. Any code for that virtual architecture can be shared between
+several other architectures. Most likely this is used for code that uses an
 API that is shared between several architecture but not all of them.
 
 The macro has the following header::
@@ -910,14 +970,15 @@ The macro has the following header::
 With the following arguments
 
     ``mainmmake=/A``
-        The mmake of the module from which someone wants to replace files or to
-        which to add additional files.
+        The mmake of the module from which someone wants to replace files or
+        to which to add additional files.
 
     ``arch=/A``
         The arch someone wants to make alias from.
 
     ``alias=/A``
         The arch someone wants to alias to.
+
 
 Examples
 ^^^^^^^^
@@ -929,8 +990,8 @@ Examples
          mainmmake=kernel-exec maindir=rom/exec arch=linux \
          files=init compiler=host
 
-2. For the dos.library some arch specific files are grouped together in the
-   unix arch. The following lines are present in the several mmakefiles to
+2. For the dos.library some arch-specific files are grouped together in the
+   Unix arch. The following lines are present in the several mmakefiles to
    make this possible
 
    In config/linux/mmakefile.src::
@@ -949,23 +1010,30 @@ Examples
          files=boot \
          compiler=host
 
-The file $(TOP)/config/make.tmpl contains more macros. See the comments in that file
-for usage.
+The file $(TOP)/config/make.tmpl contains more macros. See the comments in
+that file for their usage.
+
+
+
 
 Lower level mmakefile.src macros
 ---------------------------------
 
 FIXME
 
+
+
+
 AROS portable makefile variables
 --------------------------------
 
-The file $(TOP)/config/make.cfg is usually included in all makefiles. It contains
-a lot of variables which are often used in this makefiles. The most important are
-the absolute paths for standard directories (e.g. `AROS_C`) and names for tools
-(e.g. `MMAKE`, `GENMF`).
+The file $(TOP)/config/make.cfg is usually included in all makefiles. It
+contains a lot of variables which are often used in these makefiles. The most
+important are the absolute paths for standard directories (e.g. `AROS_C`)
+and names for tools (e.g. `MMAKE`, `GENMF`).
 
-Platform depending definitions can be found in:
+Platform-dependent definitions can be found in:
 
 + $(TOP)/bin/$(AROS_HOST_ARCH)-$(AROS_HOST_CPU)/gen/config/host.cfg
 + $(TOP)/bin/$(AROS_HOST_ARCH)-$(AROS_HOST_CPU)/gen/config/target.cfg
+

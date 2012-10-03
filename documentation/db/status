@@ -2936,9 +2936,9 @@ dataspace;MUIM_Dataspace_WriteIFF;1;1;2
 #COMMENTS_BEGIN (category, comment)
 gameport;Gameport.device supports only mouse
 bullet;Bullet.library interface is implemented in freetype.library
-everything;AROS section does not contain all subsections
-everything;3rd Party section does not contain all subsections
-everything;Extensions section contains all items that are extensions to modules from AmigaOS, AROS or 3rd Party sections
+everything;The AROS section does not contain all subsections
+everything;The 3rd Party section does not contain all subsections
+everything;The Extensions section contains all items that are extensions to modules from the AmigaOS, AROS, and 3rd Party sections
 trackdisk;Supports only PC-compatible 1.44 MB disk drives
 scsi;Scsi.device interface is implemented in AROS ata.device
 cardres;Card.resource is tied to the Amiga GAYLE chip

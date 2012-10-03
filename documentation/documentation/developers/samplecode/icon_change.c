@@ -1,5 +1,5 @@
 /*
-    Example for change of icon tooltypes.
+    Example for changing icon tooltypes.
 */
 
 #include <proto/exec.h>
@@ -38,7 +38,7 @@ int main(int argc, char **argv)
         
         /*
             An application started from Wanderer doesn't have a console window
-            for output. We must open our own con: window or all output would
+            for output. We have to open our own con: window or all output will
             go to Nirwana.
         */
         conwin = fopen(conwinname, "w");
@@ -58,8 +58,7 @@ int main(int argc, char **argv)
             if (dobj)
             {
                 /*
-                    Remember old toolarray so that we can
-                    set it back later.
+                    Remember the old toolarray, so that we can put it back later.
                 */
                 oldtoolarray = dobj->do_ToolTypes;
             
@@ -132,7 +131,7 @@ static void clean_exit(CONST_STRPTR s)
     if (conwin) fclose(conwin);
 
     /*
-        Free DiskObject. We must set back the pointer to the toolarray or
+        Free DiskObject. We have to set back the pointer to the toolarray or
         we'll get memory corruption.
     */
     if (dobj)

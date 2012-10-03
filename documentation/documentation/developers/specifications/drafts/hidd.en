@@ -1,5 +1,5 @@
 ===================================
-Hardware Independant Device Drivers
+Hardware Independent Device Drivers
 ===================================
 
 :Author:    Aaron Digulla
@@ -7,12 +7,12 @@ Hardware Independant Device Drivers
 :Version:   $Revision$
 :Date:      $Date$
 
-.. Note:: 
+.. Note::
 
-   This document is currently only a draft and will most likely change before 
-   it is accepted as an official specification. It might also be deprecated if
-   a better aproach has been found and might not correspond precisely with the 
-   current implementation.
+   This document is currently only a draft and as such will most likely change
+   before it is accepted as an official specification. It might also be
+   deprecated if a better approach has been found in the mean time, and
+   doesn't necessarily correspond precisely with the current implementations.
 
 .. Contents::
 
@@ -20,7 +20,7 @@ Hardware Independant Device Drivers
 Introduction
 ============
 
-A HIDD is a Hardware Independant Device Driver - a collection of code
+A HIDD is a Hardware Independent Device Driver - a collection of code
 that provides an interface to hardware that hides as many details of
 the hardware as practical. Most applications do not need to know all
 the details of the device they use, they simply want to get on with
@@ -34,15 +34,16 @@ that we need to also provide an interface to the `Exec style devices`.
 
 With this in mind, the design goals of the HIDD system are:
 
-Hardware independant interfaces
-    The interface that the driver presents should be independant of the
+Hardware independent interfaces
+    The interface that the driver presents should be independent of the
     underlying hardware. It should provide as much of the functionality of that
     device as possible.
 
-Compatability with AmigaOS
+Compatibility with AmigaOS
     There is a large amount of software either with source or binary only that
-    uses the Amiga style device drivers. We should provide a way of keeping this
-    software working, but without too great a speed/compatability problem.
+    uses the Amiga style device drivers. We should provide a way of keeping
+    this software working, but without too much of a speed/compatibility
+    problem.
 
 Interface reuse
     Many interfaces provide common functionality - for example SCSI, IDE and
@@ -51,56 +52,63 @@ Interface reuse
     changing the device name.
 
 Code reuse
-    Many device implementations share common facilities that allow them to reuse
-    code. There are a number of ethernet cards available that whilst they may
-    work on PCI, ISA or Zorro busses - they share the same chipset but differ in
-    access methods. We should attempt to provide the ability to use the same
-    driver code. This has benefits in terms of code testing and reliability, and
-    also the reduced number of drivers that need to be written.
+    Many device implementations share common facilities that allow them to
+    reuse code. There are a number of Ethernet cards available that, whilst
+    they may work on PCI, ISA or Zorro buses, share the same chip set but
+    differ in access methods. We should attempt to provide the ability to use
+    the same driver code. This has benefits in terms of code testing and
+    reliability, and also the reduced number of drivers that need to be
+    written.
 
 Dynamic Properties
-    Device drivers should be dynamically loadable and unloadable from the system
-    - this helps with systems with low memory, removable hardware and most
-    importantly, works well with the AmigaOS philosophy.
+    Device drivers should be dynamically loadable and unloadable from the
+    system - this helps with systems with low memory, removable hardware and
+    most importantly, works well with the AmigaOS philosophy.
 
-Language Independance
-    Whilst true language independance is quite difficult, the interface design
-    has been constructed so that it is relatively simple to add calling methods
-    for different languages. To help with this the interfaces shall be described
-    in some kind of interface description language (such as OMG IDL), and this
-    will be processed to generate the required header files, and class glue
-    files. The language used for most drivers will be C.
+Language Independence
+    Whilst true language independence is quite difficult, the interface design
+    has been constructed so that it is relatively simple to add calling
+    methods for different languages. To help with this the interfaces shall be
+    described in some kind of interface description language
+    (such as OMG IDL), and this will be processed to generate the required
+    header files, and class glue files. The language used for most drivers
+    will be C.
 
 To implement the code and interface reuse design goal we have implemented
-our drivers in an object oriented fashion, providing single
+our drivers in an object-oriented fashion, providing single
 inheritance but multiple interfaces (similar to the Java language).
 The inheritance hierarchy allows us to start with a basic driver, and
-enhance this by adding more levels of device dependance until we come
+enhance this by adding more levels of device dependence until we come
 to a driver for a specific device.
 
-To provide a method of dynamic driver functionality the driver objects are
-arranged in a tree that shows their connection mechanism. For example a PCI
-based ethernet card is connected to a PCI bus, so the ethernet card driver is
-a child of the PCI bus. Similar an IDE harddisk is normally connected to an IDE
-controller - so the disk will be a child of the IDE controller.
+To provide a method of dynamic driver-functionality the driver objects
+are arranged in a tree that shows their connection mechanism. For example,
+a PCI-based Ethernet card is connected to a PCI bus, so the Ethernet card
+driver is a child of the PCI bus. Similar an IDE hard disk is normally
+connected to an IDE controller - so the disk will be a child of the
+IDE controller.
 
-.. Note:: This does not mean that the ethernet card driver is a subclass of the
-          bus driver. Only the dynamic behaviour of the drivers is subject to
-          the connection-oriented approach.
+.. Note:: This does not mean that the Ethernet card driver is a subclass of
+          the bus driver. Only the dynamic behaviour of the drivers is subject
+          to the connection-oriented approach.
+
+
+
+
 
 
 A Few Concepts
 ==============
 
-There are a few concepts hidden in all the above. Firstly a
-knowledge of object-oriented programming is assumed for this document,
+A few concepts are hidden in all the above. To begin with, knowledge
+of object-oriented programming is assumed for this document,
 as is a basic understand of device drivers. This manual is not
-designed to teach either object oriented programming or device driver
+designed to teach either object-oriented programming or device driver
 programming - both of these come only from experience. I hope that
 this manual will help however - I am learning as I write it.
 
 Throughout this manual a few terms will be used frequently and often
-interchangably, hopefully for the few times that I miss these in
+interchangeably, hopefully for the few times that I miss these in
 editing I shall try and clarify them here.
 
 The first two are class and device. The device is the physical
@@ -115,6 +123,10 @@ class and this is the driver for the device. There can be a number of
 drivers for the same device, but they must all control separate
 devices. There will be one instantiated driver for every class of
 device that exists in the system.
+
+
+
+
 
 
 The HIDD Driver Model
@@ -132,13 +144,12 @@ Static Model
     static device model.
 
 Object Model
-    describing the object structure and connection oriented approach
+    describing the object structure and connection-oriented approach
     of object linkage.
 
 Dynamic Model
-    examing the runtime behaviour of classes and objects and the
-    lifecycle of a driver.
-
+    Examining the runtime behaviour of classes and objects and the
+    life-cycle of a driver.
 
 HIDD Static Model
 -----------------
@@ -146,30 +157,30 @@ HIDD Static Model
 The HIDD system is broken up into a collection of classes with a
 strict inheritance hierarchy. A HIDD class implements a device driver
 for a single device or in rare cases a group of devices and provides
-an interface for other programs and devices to access. 
+an interface for other programs and devices to access.
 
 In order to maintain portability of interfaces across a wide range of
 hardware this interface will in general not present the raw interface
 to the underlying hardware. Instead it will present a generic
 interface that describes many different hardware implementations. This
-allows for the best reuse of both interfaces and code. 
+allows for the best reuse of both interfaces and code.
 
 HIDD Class Hierarchy
 """"""""""""""""""""
 
-This reuse is enfored by the hierarchy of classes with common device
+This reuse is enforced by the hierarchy of classes with common device
 functions restricted to a subsection of the hierarchy. An example of
 this is disk devices. There are three common disk interfaces available
 today - SCSI, IDE and floppy. All these devices provide similar
 functions such as the ability to read and write blocks, and determine
 the geometry of the disk.
 
-Whilst the implementations of these devices may change the interface
-does not. A filesystem needs to talk to a disk-like device, but it
+Whilst the implementations of these devices may change, the interface
+does not. A file system needs to talk to a disk-like device, but it
 does not care what the underlying hardware supports -- it only
 requires the interface.  This idea forms the first part of the
-hiearchy structure - and from where the name HIDD comes. These
-interfaces provide a hardware independant method of access devices.
+hierarchy structure - and from where the name HIDD comes. These
+interfaces provide a hardware independent method of access devices.
 
 <!-- img src="hidd-model-class-1.png" alt="HIDD Class Tree Structure" /-->
 
@@ -186,8 +197,8 @@ interfaces provide a hardware independant method of access devices.
     +- parallel
     +- serial
 
-If we examine the image above we can see the class tree starts with the
-`hidd` class. This is the base class that all HIDD
+If we examine the tree structure above we can see that the class tree
+starts with the `hidd` class. This is the base class that all HIDD
 classes inherit from. It provides many useful facilities dealing with
 initialisation and interaction of HIDDs. A complete discussion of this
 class is found in the HIDD Class chapter.
@@ -199,7 +210,7 @@ detailing slightly different kinds of devices. The
 `hidd.disk.virtual` is a virtual disk device which
 provides the ability to address a file as is it were a real device.
 Similarly the `hidd.disk.ram` provides access to a fixed
-size virtual RAM disk. 
+size virtual RAM disk.
 
 The `hidd.disk.floppy` provides access to the normal
 floppy disk controller. The `hidd.disk.ide` and
@@ -210,12 +221,15 @@ XXX - Where do CD-ROM's and the like fit in? They are like disk
 devices, but have some other features that make them different. The
 Amiga device structure had them as a disk device but with an extra
 interface. I think that this is probably the way to go. But then you
-have to differentiate from IDE CDROMs, SCSI CDROMs and the like. In
+have to differentiate from IDE CD-ROMs, SCSI CD-ROMs and the like. In
 which case you would use hidd.cdrom... but then you have two
 different interfaces on the same level declaring the same
 functionality? Does this mean we actually need another level? I hope
 not. An alternative would be to hidd.disk.cdrom.whatever to emphasise
 that CD-ROMs are like disk devices, but with a few extra functions?
+
+
+
 
 HIDD Device Drivers
 """""""""""""""""""
@@ -232,7 +246,7 @@ there is more specialisation of classes here.
 <!-- img src="hidd-model-class-2.png" alt="HIDD Class Tree Structure" /-->
 
 ::
-    
+
     hidd
     +- disk
     +- graphics
@@ -263,7 +277,7 @@ introduces another layer of the tree structure.
     |  +- scsi
     |  +- ...
     +- graphics
-    +- parallell
+    +- parallel
     +- scsi
     |  +- aha
     |  +- cont
@@ -292,6 +306,9 @@ interface to the ROM-based Exec device.
 .. FIXME: A conclusion to that section.
 
 
+
+
+
 The HIDD Object Model
 ---------------------
 
@@ -302,16 +319,16 @@ classes providing some degree of abstraction between types of devices
 connecting the two distinct classes.
 
 Most computer systems have some degree of flexibility about device
-connections -- you can add, remove or move devices about. This
+connections -- you can add, move, or remove devices. This
 possibility allows for device connectivity to change (from the
 operating system point of view) every time the operating system
 starts. This coupled with the dynamic nature of plug-and-play hardware
-resource allocation gives need for a dynamic connection model.
+resource allocation, requires a dynamic connection model.
 
 The HIDD system provides this by describing the connections at the
 object level. This has two advantages: you can easily reconfigure
 the connections at any time -- without having to restart the system in
-many cases, and allows classes to be reused easily to support multiple
+many cases, and it allows classes to be reused easily to support multiple
 instances of the same device.
 
 The interconnection model used could be loosely described as being a
@@ -319,7 +336,7 @@ bus model. All devices are connected to the object that could be
 considered to be their parent in the hardware of the system.
 
 Take the example of a SCSI disk again. The SCSI disk is connected to a
-(optionally one of many) SCSI controller. This SCSI controller is
+SCSI controller (optionally one of many). This SCSI controller is
 connected to some kind of bus -- for example PCI. Finally the PCI bus
 is connected to some central point of the system that is the parent of
 all available devices. This is shown more clearly in a diagram.
@@ -347,11 +364,13 @@ above does not have anything to do with class hierarchies. If we
 provide a slightly different version of the diagram showing class
 names this should become clearer.
 
-.. Image:: hidd-model-obj-2.png 
+.. Image:: hidd-model-obj-2.png
    :alt: Connection of SCSI disk classes
 
 This is arguably the most important thing to remember when discussing
 this topic.
+
+
 
 
 Benefits of the Connection Model
@@ -360,7 +379,7 @@ Benefits of the Connection Model
 The benefits of this connection model are numerous, providing:
 
 + an easy way to describe the connections described
-  between the hardware dependant and independant device classes as
+  between the hardware dependent and independent device classes as
   described in the class model
 
 + a method of allocating and maintaining the resources available on a
@@ -379,8 +398,11 @@ The benefits of this connection model are numerous, providing:
 .. FIXME: more...
 
 
-Object Lifecycle
-----------------
+
+
+
+Object Life-cycle
+-----------------
 
 A HIDD driver can exist in different states throughout the life of the
 operating system. The following section describes all the states known
@@ -400,7 +422,7 @@ Unknown
 Probed
     The probed state is entered after the driver has checked whether
     the device exists. Normally a driver will only be in this state
-    when the device exists, however kernel based drivers that cannot
+    when the device exists, however kernel-based drivers that cannot
     be unloaded will also be in this state.
 
     Note that the driver still has not allocated any resources and
@@ -412,7 +434,7 @@ Ready
     The device will enter the ready state when it has been linked into
     the system driver list and has allocated any static resources that
     it requires for its own use. It is at this point that instances of
-    the device can be created. Whilst it it is possible for the driver 
+    the device can be created. Whilst it it is possible for the driver
     to be unloaded in this state, it will only happen when there are
     drivers in the probed or earlier states.
 
@@ -439,6 +461,9 @@ Removed
 
 
 
+
+
+
 Detail
 ======
 
@@ -462,6 +487,10 @@ But we had to design something which lessens these burdens without
 becoming incompatible or loosing too much speed. So we developed the
 idea of the HIDD - the Hardware Independent Device Driver.
 
+
+
+
+
 Features
 --------
 
@@ -469,7 +498,7 @@ HIDDs offer a consistent API for everything one could want to do with
 a device. Here is a quick overview:
 
 + Query the system for all available HIDDs or only for certain types
-  (eg. all serial HIDDs or all graphics HIDDs).
+  (e.g. all serial HIDDs or all graphics HIDDs).
 + Configure a HIDD
 + Use a HIDD
 
@@ -477,7 +506,7 @@ The complete life cycle of a HIDD is like this:
 
 1. The OS boots. HIDDs on external cards and in the ROM get installed by
    the OS in the global list of all available HIDDs. Also the OS searches for
-   HIDDs installed on the harddisk.
+   HIDDs installed on the hard disk.
 
 2. The OS reads the extended romtags from all HIDDs and puts that
    information in the global list of all available HIDDs.
@@ -487,31 +516,34 @@ The complete life cycle of a HIDD is like this:
 
 4. The application loads the HIDD and the config plugin. This makes the
    HIDD initialize some internal data structures but not always the hardware
-   because a HIDD might be the driver for several kinds of different hardwares
-   which are all available. Thus it must be configured first.
+   because a HIDD might be the driver for several different kinds of hardware,
+   which might or might not be available. Thus it must be configured first.
 
 5. The application asks for the current config of the HIDD. If the
    config plugin has its own GUI, the application displays it. Otherwise,
    the application displays the information in an own window. For this,
    the application queries the config plugin for all available modes.
 
-6. The app reads the config from the config plugin, then reads the list
-   of available modes for this config (ie. what can be changed in the current
-   config) and displays this. Then the user can select some mode, the app
-   changes the config and starts over.
+6. The application reads the config from the config plugin, then reads the
+   list of available modes for this config (i.e. what can be changed in the
+   current config) and displays this. Then the user can select some mode, the
+   application changes the config and starts over.
 
-7. When the user presses ok, the application or config plugin closes
-   the window/GUI. The Ok or Apply button must be ghosted as long as
-   the HIDD says that the configuration is not ok. The application can
+7. When the user presses OK, the application or config plugin closes
+   the window/GUI. The OK or Apply button must be ghosted as long as
+   the HIDD indicates that the configuration is not OK. The application can
    now expunge the config plugin. If a HIDD supports saving its config,
    it must do so.
 
 8. When the device is explicitly activated or used for the first time
-   (eg. data is written to it), it will use the configuration to initialize
+   (e.g. data is written to it), it will use the configuration to initialize
    the hardware.
 
 9. The user can deactivate the device and change the config if the
    HIDD permits that.
+
+
+
 
 
 The HIDD Support API
@@ -523,12 +555,15 @@ The HIDD Support API
     function and not a method.
 
 ``ULONG HIDDM_Class_Get(struct TagItem * AttrList)``
-    Use this method on the class on a HIDD to get the static attributes (eg.
-    ``HIDDA_Type``, ``HIDDA_SubType``, etc).
+    Use this method on the class on a HIDD to get the static attributes (e.g.
+    ``HIDDA_Type``, ``HIDDA_SubType``, etc.).
 
 You can then use the HIDD API to query the devices for their infos. Use
 ``FreeVec()`` to dispose the array. ``HIDDV_FindHIDD_All`` as type gives
 the complete list of all known HIDDs.
+
+
+
 
 
 The HIDD API
@@ -540,32 +575,31 @@ HIDDs are BOOPSI objects which support the Exec Device API.
     Change some attributes of a HIDD.
 
     The return code is 0 in case of success or ``!= 0`` in case of an error.
-    If the return code is ``> 0``, then it's the number of the offending tag in the
-    list, if it's ``< 0``, then it's an error code.
-    You can use ``HIDDM_ValueToString()`` with the special tag ``HIDDA_ErrorCode``
-    to convert this error code into a string.
+    If the return code is ``> 0``, then it's the number of the offending tag
+    in the list, if it's ``< 0``, then it's an error code.
+    You can use ``HIDDM_ValueToString()`` with the special tag
+    ``HIDDA_ErrorCode`` to convert this error code into a string.
 
 ``LONG OM_GET (Tag AttrID, IPTR * Storage)``
-    Query a single attribute
-    from the HIDD in general (eg. its name and version) and the current status.
-    You can only query attributes which are gettable.
+    Query a single attribute from the HIDD in general (e.g. its name and
+    version) and the current status. You can only query attributes which are
+    gettable.
 
     The return code is 0 in case of success or ``< 0`` in case of an error.
-    You can use ``HIDDM_ValueToString()`` with the special tag ``HIDDA_ErrorCode``
-    to convert the error code into a string.
+    You can use ``HIDDM_ValueToString()`` with the special tag
+    ``HIDDA_ErrorCode`` to convert the error code into a string.
 
 ``LONG OM_MGET (struct TagItem * AttrList)``
-    Query one or more attributes
-    from the HIDD in general (eg. its name and version) and the current status.
-    You can only query attributes which are gettable. The ``ti_Data`` fields of
-    ``AttrList`` must be pointers of the type which is expected for the
-    respective attribute.
+    Query one or more attributes from the HIDD in general (e.g. its name and
+    version) and the current status. You can only query attributes which are
+    gettable. The ``ti_Data`` fields of ``AttrList`` must be pointers of the
+    type which is expected for the respective attribute.
 
     The return code is 0 in case of success or ``!= 0`` in case of an error.
-    If the return code is ``> 0``, then it's the number of the offending tag in the
-    list, if it's ``< 0``, then it's an error code.
-    You can use ``HIDDM_ValueToString()`` with the special tag ``HIDDA_ErrorCode``
-    to convert this error code into a string.
+    If the return code is ``> 0``, then it's the number of the offending tag
+    in the list, if it's ``< 0``, then it's an error code.
+    You can use ``HIDDM_ValueToString()`` with the special tag
+    ``HIDDA_ErrorCode`` to convert this error code into a string.
 
 ``LONG HIDDM_BeginIO (struct IORequest *)``
     Initiate a device operation.
@@ -575,9 +609,12 @@ HIDDs are BOOPSI objects which support the Exec Device API.
     Abort a running device operation. See the Exec Device API for details.
 
 ``HIDDT_Config HIDDM_LoadConfigPlugin (APTR PluginData)``
-    Tells the HIDD to load its configuration plugin. This method returns
-    a pointer to the plugin. ``PluginData`` is a pointer with plugin
-    specific data. For details, look into the manual for the HIDD.
+    Tells the HIDD to load its configuration plugin. This method
+    returns a pointer to the plugin. ``PluginData`` is a pointer with
+    plugin-specific data. For details, look into the manual for the HIDD.
+
+
+
 
 
 The HIDD Config Plugin API
@@ -587,54 +624,54 @@ The HIDD Config Plugin API
     Change some attributes of a HIDD Config Plugin (HIDD CP).
 
     The return code is 0 in case of success or ``!= 0`` in case of an error.
-    If the return code is ``> 0``, then it's the number of the offending tag in the
-    list, if it's ``< 0``, then it's an error code.
-    You can use ``HIDDM_ValueToString()`` with the special tag ``HIDDA_ErrorCode``
-    to convert this error code into a string.
+    If the return code is ``> 0``, then it's the number of the offending tag
+    in the list, if it's ``< 0``, then it's an error code.
+    You can use ``HIDDM_ValueToString()`` with the special tag
+    ``HIDDA_ErrorCode`` to convert this error code into a string.
 
     Note that changing attributes changes only the HIDD CP, never the HIDD
     itself. When the HIDD CP tells you that the current config works, then
     you can copy the config to the HIDD.
 
-``LONG OM_GET (Tag AttrID, IPTR * Storage)`` 
-    Query a single attribute
-    from the HIDD CP. You can only query attributes which are gettable.
+``LONG OM_GET (Tag AttrID, IPTR * Storage)``
+    Query a single attribute from the HIDD CP. You can only query attributes
+    which are gettable.
 
     The return code is 0 in case of success or ``< 0`` in case of an error.
-    You can use ``HIDDM_ValueToString()`` with the special tag ``HIDDA_ErrorCode``
-    to convert the error code into a string.
+    You can use ``HIDDM_ValueToString()`` with the special tag
+    ``HIDDA_ErrorCode`` to convert the error code into a string.
 
-``LONG OM_MGET (struct TagItem * AttrList)`` 
-    Query one or more attributes
-    from the HIDD CP. You can only query attributes which are gettable. The
-    ``ti_Data`` fields of ``AttrList`` must be pointers of the type which is
-    expected for the respective attribute.
+``LONG OM_MGET (struct TagItem * AttrList)``
+    Query one or more attributes from the HIDD CP. You can only query
+    attributes which are gettable. The ``ti_Data`` fields of ``AttrList`` must
+    be pointers of the type which is  expected for the respective attribute.
 
     The return code is 0 in case of success or ``!= 0`` in case of an error.
-    If the return code is ``> 0``, then it's the number of the offending tag in the
-    list, if it's ``< 0``, then it's an error code.
-    You can use ``HIDDM_ValueToString()`` with the special tag ``HIDDA_ErrorCode``
-    to convert this error code into a string.
+    If the return code is ``> 0``, then it's the number of the offending tag
+    in the list, if it's ``< 0``, then it's an error code.
+    You can use ``HIDDM_ValueToString()`` with the special tag
+    ``HIDDA_ErrorCode`` to convert this error code into a string.
 
 ``struct TagItem * AttrList HIDDM_QueryConfig (void)``
-    Ask the HIDD CP about its current configuration. The AttrList
-    should be built in such a way that one can go back to the current config by
-    loading the device for the first time and use ``OM_SET`` with this AttrList
-    or by disabling it and use ``OM_SET``. A typical use of this will be to save
-    this list to a file and load it next time when one needs to configure the
-    HIDD.
+    Ask the HIDD CP about its current configuration. The AttrList should be
+    built in such a way that one can go back to the current config by loading
+    the device for the first time and use ``OM_SET`` with this AttrList
+    or by disabling it and use ``OM_SET``. A typical use of this will be to
+    save this list to a file and load it next time when one needs to configure
+    the HIDD.
 
     The current configuration of the HIDD CP is a copy of the HIDDs current
     configuration when the HIDD CP is created. Then you can change it and the
     HIDD CP will act as if the HIDD itself had changed. When you are done, you
-    can apply the changes to the HIDD itself (aka Ok or Apply) or just forget
+    can apply the changes to the HIDD itself (aka OK or Apply) or just forget
     about them (aka Cancel).
 
     .. Tip:: If you write a HIDD, then you can use the power of BOOPSI and
-             TagItem lists to create this list. Pass this method to the superclass
-             first and then attach your local taglist with ``TAG_MORE``. Or you can filter
-             the taglist of the superclass and build your own taglist (and dispose
-             the taglist of the superclass by ``HIDDM_FreeConfig()``).
+             TagItem lists to create this list. Pass this method to the
+             superclass first and then attach your local taglist with
+             ``TAG_MORE``. Or you can filter the taglist of the superclass
+             and build your own taglist (and dispose the taglist of the
+             superclass by ``HIDDM_FreeConfig()``).
 
 ``void HIDDM_FreeConfig (struct TagItem * AttrList)``
     Dispose the list of attributes which you got by ``HIDDM_QueryConfig()``.
@@ -643,9 +680,9 @@ The HIDD Config Plugin API
     Ask the HIDD CP about the currently available modes.
 
     The taglist consists of tags which have the types ``BOOL``,
-    ``HIDDT_Limit`` (a min and max value), ``HIDDT_List`` (a list with
-    string/value pairs or one-of-many selection) or ``HIDDT_OptionList`` (same as
-    ``HIDDT_List`` but for some-of-many selection. The result is
+    ``HIDDT_Limit`` (a minimum and maximum value), ``HIDDT_List`` (a list with
+    string/value pairs or one-of-many selection) or ``HIDDT_OptionList``
+    (same as ``HIDDT_List`` but for some-of-many selection. The result is
     passed as a bitfield).
 
     HIDD CPs which supply their own GUI don't need to support this
@@ -655,165 +692,164 @@ The HIDD Config Plugin API
 ``void HIDDM_FreeModeList (struct TagItem * AttrList)``
     Dispose the list of attributes which you got by ``HIDDM_QueryModeList()``.
 
-``ULONG HIDDM_Apply (void)`` 
+``ULONG HIDDM_Apply (void)``
     Apply the current config to the HIDD.
     If you dispose the HIDD CP, then all changes will be lost.
 
-``ULONG HIDDM_SaveConfig (STRPTR filename)`` 
-    Save the current config in
-    the specified file. If ``filename`` is ``NULL`` then save the current config as
-    default. This might not result in writing a file to the harddisk if the
-    hardware has a FlashROM or EEPROM.
+``ULONG HIDDM_SaveConfig (STRPTR filename)``
+    Save the current config in the specified file. If ``filename`` is ``NULL``
+    then save the current config as default. This might need not result in
+    writing a file to the hard disk, if e.g. the hardware has a FlashROM or
+    EEPROM.
 
 ``ULONG HIDDM_LoadConfig (STRPTR filename)``
-    Load the config from the
-    specified file or the last saved defaults if ``filename`` is ``NULL``. Some
-    devices will read the defaults from an EEPROM so this will not always
-    generate disc access.
+    Load the config from the specified file, or the last saved defaults if
+    ``filename`` is ``NULL``. As some devices will read the defaults from an
+    EEPROM, this need not always generate disc access.
 
-``STRPTR HIDDM_ValueToString (Tag tag, IPTR value)`` 
-    Convert the
-    value ``value`` for the tag ``tag`` into a human readable string.
-    The string returned must not be written to or be freed.
+``STRPTR HIDDM_ValueToString (Tag tag, IPTR value)``
+    Convert the value ``value`` for the tag ``tag`` into a human readable
+    string. The string returned must not be written to or be freed.
 
-    HIDD CPs which supply their own GUI don't need to support this
-    tag (but most will because you need something like this internally
+    HIDD CPs which supply their own GUI don't need to support this tag
+    (but most will, because something like this is needed internally
     anyway).
 
     The application will use this value to generate the visual feedback
     in its GUI.
 
-``IPTR HIDDM_StringToValue (Tag tag, STRPTR string)`` 
+``IPTR HIDDM_StringToValue (Tag tag, STRPTR string)``
     Convert the string ``string`` for the tag ``tag`` back into a value.
 
-    HIDD CPs which supply their own GUI don't need to support this
-    tag (but most will because you need something like this internally
+    HIDD CPs which supply their own GUI don't need to support this tag
+    (but most will, because something like this is needed internally
     anyway).
 
     Also note that a HIDD can ask that you return exactly the string
-    which was passed to you by ``HIDDM_ValueToString()`` (ie. the
+    which was passed to you by ``HIDDM_ValueToString()`` (i.e. the
     string must have the same address).
 
-``STRPTR HIDDM_GetTagName (Tag tag)`` 
-    Return a human readble string
-    with the name for a tag. For example a serial HIDD with the
-    tag ``HIDDV_Serial_BPSRate`` might return ``"BPS rate"``. The
-    application will use this to generate its GUI.
+``STRPTR HIDDM_GetTagName (Tag tag)``
+    Return a human readable string with the name for a tag. For example, a
+    serial HIDD with the tag ``HIDDV_Serial_BPSRate`` might return
+    ``"BPS rate"``. The application will use this to generate its GUI.
 
-``ULONG HIDDM_GetTagType (Tag tag)`` 
-    Return the type of an attribute.
-    Examples are ``HIDDV_TagType_ULONG``, ``HIDDV_TagType_STRPTR``,
-    ``HIDDV_TagType_Other`` (ie. something special). This can be used to generate
-    a general GUI for a HIDD or to load and save attributess of a HIDD. Always
-    remember that a HIDD can have many more attributes than this document
-    describes. A HIDD can store private data in a taglist which it needs to
-    configure itself but which should be invisible to the user.
+``ULONG HIDDM_GetTagType (Tag tag)``
+    Return the type of an attribute. Examples are ``HIDDV_TagType_ULONG``,
+    ``HIDDV_TagType_STRPTR``, ``HIDDV_TagType_Other`` (i.e. something
+    special). This can be used to generate a general GUI for a HIDD or to load
+    and save attributes of a HIDD. Always remember that a HIDD can have many
+    more attributes than this document describes. A HIDD can store private
+    data in a taglist which it needs to configure itself but which should be
+    invisible to the user.
+
+
 
 
 Common tags for all HIDDs
 """""""""""""""""""""""""
 
-``HIDDA_Type,ULONG,G`` 
-    This is the basic type of the HIDD (eg.
-    ``HIDDV_Type_Serial`` for serial HIDDs, ``HIDDV_Type_Parallel`` for parallel
-    HIDDs or ``HIDDV_Type_Graphics`` for graphical HIDDs).
+``HIDDA_Type,ULONG,G``
+    This is the basic type of the HIDD (e.g.
+    ``HIDDV_Type_Serial`` for serial HIDDs, ``HIDDV_Type_Parallel`` for
+    parallel  HIDDs or ``HIDDV_Type_Graphics`` for graphical HIDDs).
 
-``HIDDA_SubType,ULONG,G`` 
+``HIDDA_SubType,ULONG,G``
     This is a more specific type. If ``HIDDA_Type`` is
     ``HIDDV_Type_Serial``, then this is a bitfield with one or more bits
     of ``HIDDV_Type_Serial_RS232`` or ``HIDDV_Type_Serial_RS488`` set.
 
-``HIDDA_Producer,ULONG,G`` 
+``HIDDA_Producer,ULONG,G``
     The ID of the producer as handed out by Amiga International.
 
-``HIDDA_Name,STRPTR,G`` 
-    The name of this device (eg. serial.device).
+``HIDDA_Name,STRPTR,G``
+    The name of this device (e.g. serial.device).
 
-``HIDDA_HardwareName,STRPTR,G`` 
-    The name of the hardware
-    (eg. "Builtin Serial Port", "COM1", "CyberVision/3D", etc.). Note that
-    you must initialize some HIDDs before you can query this attribute
-    because some HIDDs work with more than one type of hardware.
+``HIDDA_HardwareName,STRPTR,G``
+    The name of the hardware (e.g. "Builtin Serial Port", "COM1",
+    "CyberVision/3D", etc.). Note that some HIDDs have to be initialised
+    before you can query this attribute because some HIDDs work with more
+    than one type of hardware.
 
-``HIDDA_Active,BOOL,ISG`` 
+``HIDDA_Active,BOOL,ISG``
     Tells if the device is active or (de-)activates it when set.
 
-``HIDDA_Status,ULONG,G`` 
+``HIDDA_Status,ULONG,G``
     The current status of a HIDD. This is a
     set of bits which show if the init of the hardware was successful,
     if the device is active or if the device is ready to be activated.
 
-``HIDDA_ErrorCode,LONG,G`` 
-    In case of an error, you can ask
-    for the error code and use this code in ``HIDDM_ValueToString()``
-    to get a string with the meaning of the error. This is mostly used
-    when the HIDD tells you that it doesn't like a certain tag in a
-    taglist. When this happens, you can query this code to find out
-    what the HIDD doesn't like about the tag.
+``HIDDA_ErrorCode,LONG,G``
+    In case of an error, you can ask for the error code and use this code in
+    ``HIDDM_ValueToString()`` to get a string with the meaning of the error.
+    This is mostly used when the HIDD tells you that it doesn't like a
+    certain tag in a taglist. When this happens, you can query this code to
+    find out what the HIDD doesn't like about the tag.
 
     Note that you can supply this tag when you try to create or change
     attributes of a HIDD. If you do this, you must still pass a pointer to
-    ``LONG`` to ``NewObject()`` or ``SetAttrs()``. In case of an error, it will be
-    filled with the error code.
+    ``LONG`` to ``NewObject()`` or ``SetAttrs()``. In case of an error,
+    it will be filled with the error code.
 
-``HIDDA_Locking,ULONG,G`` 
-    Tells which kinds of locking the HIDD
-    supports. Can be read from the class and from an existing HIDD. The
-    possible values are:
+``HIDDA_Locking,ULONG,G``
+    Tells which kinds of locking the HIDD supports. Can be read from the
+    class and from an existing HIDD. The possible values are:
+
+    ``HIDDV_Lock_None``
+        No locking is supported. Note that some HIDDs have a
+        kind of hidden locking: They can't be created more than once. The
+        second attempt to create such a HIDD will just fail with the error
+        ``HIDDV_Error_UniqueObject``. Also note that this can also mean that
+        no locking is necessary.
+
+    ``HIDDV_Lock_Shared``
+        Shared and exclusive locking are supported (several tasks can access
+        the HIDD simultanously). This doesn't mean that it makes sense to have
+        several tasks access the HIDD at the same time, only that it is
+        possible.
+
+    ``HIDDV_Lock_Exclusive``
+        Only one task can access the HIDD at any one time. Note that a HIDD
+        which can't exist more than once should not use this kind of
+        locking but just fail on the second attempt to create it.
 
 
-``HIDDV_Lock_None`` 
-    No locking is supported. Note that some HIDDs have a
-    kind of hidden locking: They can't be created more than once. The second
-    attempt to create such a HIDD will just fail with the error
-    ``HIDDV_Error_UniqueObject``. Also note that this can also mean that no
-    locking is necessary.
-
-``HIDDV_Lock_Shared`` 
-    Shared and exclusive locking are supported
-    (several tasks can access the HIDD simultanously). This doesn't mean that
-    it makes sense when several tasks access the HIDD at the same time, only
-    that it is possible.
-
-``HIDDV_Lock_Exclusive`` 
-    Only one task can access the HIDD at any one
-    time. Note that a HIDD which can't exist more than once should not use this
-    kind of locking but just fail on the second attempt to create it.
 
 
 Common tags for all HIDD CPs
 """"""""""""""""""""""""""""
 
-``HIDDA_HasOwnGUI,BOOL,G`` 
+``HIDDA_HasOwnGUI,BOOL,G``
     Ask the HIDD CP if it has its own GUI for configuration.
 
-``HIDDA_ShowGUI,BOOL,ISG`` 
-    Make the GUI of the HIDD CP visible
-    or hide it or ask if it's visible right now. If you hide the GUI
-    and dispose the HIDD CP, then the changes the user made will be
-    lost.
+``HIDDA_ShowGUI,BOOL,ISG``
+    Make the GUI of the HIDD CP visible or hide it or ask if it's visible
+    right now. If you hide the GUI and dispose the HIDD CP, then the
+    changes the user made will be lost.
 
-``HIDDA_UseScreen,struct Screen *,ISG`` 
+``HIDDA_UseScreen,struct Screen *,ISG``
     Tell the HIDD CP to open the GUI on this screen.
 
-``HIDDA_AppMsgPort,struct MsgPort *,ISG`` 
-    When the HIDD CP has its own
-    GUI, this GUI runs independent of the application. You can supply a
-    message port to synchronise your application with the GUI of the HIDD CP. Some HIDD
-    CPs will also use this to talk to the application.
+``HIDDA_AppMsgPort,struct MsgPort *,ISG``
+    When the HIDD CP has its own GUI, this GUI runs independent of the
+    application. You can supply a message port to synchronise your
+    application with the GUI of the HIDD CP. Some HIDD CPs will also use
+    this to talk to the application.
+
+
 
 
 Tags and methods for some HIDDs
 """""""""""""""""""""""""""""""
 
 ``IPTR HIDDM_Lock(ULONG mode)``
-    Try to get access to the HIDD if you
-    opened it in shared mode. The values for ``mode`` are
-    ``HIDDV_Lock_Exclusive`` and ``HIDDV_Lock_Shared``. You can add the flag
-    ``HIDDV_Lock_Try``. ``HIDDV_Lock_Exclusive`` means that you want the
-    HIDD for your own. If someone else has a lock on the HIDD, this will
-    block unless ``HIDDV_Lock_Try`` is set. ``HIDDV_Lock_Shared`` will only
-    block if no exclusive locks exist and ``HIDDV_Lock_Try`` is not set.
+    Try to get access to the HIDD if you opened it in shared mode. The values
+    for ``mode`` are ``HIDDV_Lock_Exclusive`` and ``HIDDV_Lock_Shared``.
+    You can add the flag ``HIDDV_Lock_Try``. ``HIDDV_Lock_Exclusive`` means
+    that you want the HIDD for your own. If someone else has a lock on the
+    HIDD, this will block unless ``HIDDV_Lock_Try`` is set.
+    ``HIDDV_Lock_Shared`` will only block if no exclusive locks exist and
+    ``HIDDV_Lock_Try`` is not set.
 
     If ``HIDDV_Lock_Try`` is not set, this will block until the HIDD can be
     locked as you wish.
@@ -821,12 +857,16 @@ Tags and methods for some HIDDs
     The method will return ``FALSE`` if the lock could not be established. It
     will return something else if the lock could be established.
 
-    Note that some HIDDs don't support locking. Use ``HIDDM_Class_Get()`` to find
-    out which do and which don't at runtime and read the documentation for the
-    HIDDs.
+    Note that some HIDDs don't support locking. Use ``HIDDM_Class_Get()`` to
+    find out which do and which don't at runtime and read the documentation
+    for the HIDDs.
 
 ``void HIDDM_Unlock(IPTR lock)``
-    Unlock the HIDD. ``lock`` must contain what you got back from ``HIDDM_Lock()``.
+    Unlock the HIDD. ``lock`` must contain what you got back from
+    ``HIDDM_Lock()``.
+
+
+
 
 
 Sample HIDDs
@@ -838,10 +878,10 @@ Alarm HIDD
 The alarm HIDD allows to call a hook after a certain time.
 
 The type of an alarm HIDD is ``HIDDV_Type_Alarm`` and the names for
-alarm specific things is prefixed with ``HIDD?_Alarm_``.
+alarm-specific things are prefixed with ``HIDD?_Alarm_``.
 
 Subtypes of this HIDD are ``HIDDV_Type_Alarm_VB`` (vertical blank interrupt),
-``HIDDV_Type_Alarm_Real`` (real time clock).
+and ``HIDDV_Type_Alarm_Real`` (real time clock).
 
 This kind of HIDD cannot be shared. If you try to create a second alarm HIDD
 of a specific class, you will get the error ``HIDDV_Error_UniqueObject``.
@@ -850,40 +890,41 @@ If you need shared access to this HIDD, use the `timer.hidd`.
 Methods
 ^^^^^^^
 
-``HIDDM_Alarm_TicksToTime(ULONG, struct tv *)`` 
+``HIDDM_Alarm_TicksToTime(ULONG, struct tv *)``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
-Ticks are the smallest intervall an alarm HIDD can provide. This tells how long
-``n`` ticks would last in real life.
 
-``HIDDM_Alarm_TimeToTicks(struct tv *, ULONG ticks)`` 
+Ticks are the smallest interval an alarm HIDD can provide. This tells how
+long ``n`` ticks would last in real life.
+
+``HIDDM_Alarm_TimeToTicks(struct tv *, ULONG ticks)``
     How many ticks would a certain time be?
+
 
 
 Attributes
 ^^^^^^^^^^
 
-``HIDDA_Alarm_Time`` 
+``HIDDA_Alarm_Time``
 ~~~~~~~~~~~~~~~~~~~~
 
 :Type:          struct tv *
 :Applicability: ISG
 
-This is the time for the next alarm. This implies single shot mode. The hook is
-called only once. The time is specified as absolute system time.
+This is the time for the next alarm. This implies single shot mode. The hook
+is called only once. The time is specified as absolute system time.
 
 
-``HIDDA_Alarm_Intervall``
+``HIDDA_Alarm_Interval``
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 :Type:          struct tv *
 :Applicability: ISG
 
 This is the time for the next alarm.  This implies repeat mode. The hook is
-called every time after ``intervall`` has elapsed.
+called every time after ``interval`` has elapsed.
 
 
-``HIDDA_Alarm_Hook`` 
+``HIDDA_Alarm_Hook``
 ~~~~~~~~~~~~~~~~~~~~
 
 :Type:          struct Hook *
@@ -892,16 +933,17 @@ called every time after ``intervall`` has elapsed.
 Call this function when the alarm comes.
 
 
-``HIDDA_Alarm_Active`` 
+``HIDDA_Alarm_Active``
 ~~~~~~~~~~~~~~~~~~~~~~
 
 :Type:          BOOL
 :Applicability: SG
 
-(De-)Activate this alarm HIDD. When created, the alarm hidd is always inactive.
+(De-)Activate this alarm HIDD. When created, the alarm hidd is always
+inactive.
 
 
-``HIDDA_Alarm_Unit`` 
+``HIDDA_Alarm_Unit``
 ~~~~~~~~~~~~~~~~~~~~
 
 :Type:          ULONG
@@ -911,11 +953,13 @@ This is a tag of the class. It contains the unit number you must pass to the
 ``timer.hidd`` if you want to access this alarm HIDD.
 
 
+
+
 Serial HIDD
 """""""""""
 
 The type of a serial HIDD is ``HIDDV_Type_Serial`` and the names
-for serial specific things is prefixed with ``HIDD?_Serial_``.
+for serial-specific things is prefixed with ``HIDD?_Serial_``.
 
 Subtypes of serial HIDDs are ``HIDDV_Type_Serial_RS232`` and
 ``HIDDV_Type_Serial_RS488``, for example.
@@ -924,15 +968,15 @@ Subtypes of serial HIDDs are ``HIDDV_Type_Serial_RS232`` and
 Attributes
 ^^^^^^^^^^
 
-``HIDDA_Serial_BPSRate`` 
+``HIDDA_Serial_BPSRate``
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 :Type:          ULONG
 :Applicability: ISG
 
-The bits per second or a logical BPS rate (300baud, 600baud, 1200baud, 2400baud,
-4800, 9600, 19200, 31500 (MIDI), 38400, etc.) The logical BPS rates have the bit
-31 set.
+The bits per second or a logical BPS rate (300baud, 600baud, 1200,
+2400, 4800, 9600, 19200, 31500 (MIDI), 38400, etc.) The logical BPS rates
+have the bit 31 set.
 
 When you query the list of available modes, you will get an ``HIDDT_Limit``
 for this attribute. If the limits have bit 31 set, the device supports only
@@ -948,24 +992,26 @@ back to see what the HIDD can do. The HIDD should always select a BPS
 rate which is next to the one the user wants.
 
 
-``HIDDA_Serial_DataLength`` 
+``HIDDA_Serial_DataLength``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-:Type:          ULONG  
+:Type:          ULONG
 :Applicability: ISG
 
 The number of data bits. Most HIDDs support only 7 or 8 bits but you should
 expect at least anything between 5 and 8.
 
 
-``HIDDA_Serial_StopBits`` 
+``HIDDA_Serial_StopBits``
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 :Type:          ULONG
 :Applicability: ISG
 
-The number of stopbits between two data bytes multiplied by 16 (ie. one stopbit
-is 16, one and a half would be 24 and two stopbits is 32).
+The number of stopbits between two data bytes multiplied by 16 (i.e. one
+stopbit is 16, one and a half would be 24 and two stopbits is 32).
+
+
 
 
 Keyboard HIDD
@@ -974,45 +1020,45 @@ Keyboard HIDD
 Methods
 ^^^^^^^
 
-``ULONG HIDDM_QueryKeys (ULONG ** keyptr)`` 
-    Ask for all really
-    available keys on this keyboard. The method will fill in a pointer to
-    a read-only array and return the number of elements in that array.
+``ULONG HIDDM_QueryKeys (ULONG ** keyptr)``
+    Ask for all really available keys on this keyboard. The method will fill
+    in a pointer to a read-only array and return the number of elements in
+    that array.
     You must not free this array nor write to it.
 
 ``ULONG HIDDM_QueryKeyStates (ULONG ** keyptr)``
-    Ask for all currently
-    pressed keys on this keyboard. The method will fill in a pointer to
-    an array and return the number of elements in that array.
+    Ask for all currently pressed keys on this keyboard. The method will fill
+    in a pointer to an array and return the number of elements in that array.
 
-``ULONG HIDDM_FreeKeyStates (ULONG * keyptr)`` 
+``ULONG HIDDM_FreeKeyStates (ULONG * keyptr)``
     Free the result of a ``HIDDM_QueryKeyStates()``.
+
 
 
 Attributes
 ^^^^^^^^^^
 
-``HIDDA_Keyboard_Type`` 
+``HIDDA_Keyboard_Type``
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 :Type:          ULONG
 :Applicability: ISG
 
 If the Keyboard HIDD can work with more than one type of keyboard, you can
-specify the type here or if the HIDD can figure the type of keyboard itself, it
-can offer the type here. If the HIDD doesn't support this, this value is ``0``
-and can't be changed by setting it. The method ``HIDDM_QueryModes()`` should
-return a type ``HIDDT_Limit`` with min and max both 0.
+specify the type here or if the HIDD can figure the type of keyboard itself,
+it can offer the type here. If the HIDD doesn't support this, this value is
+``0`` and can't be changed by setting it. The method ``HIDDM_QueryModes()``
+should return a type ``HIDDT_Limit`` with minimum and maximum both 0.
 
 
-``HIDDA_Keyboard_MsgPort`` 
+``HIDDA_Keyboard_MsgPort``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 :Type:          ``struct MsgPort *``
 :Applicability: ISG
 
-When the user presses a key, the HIDD should report this by sending
-a ``HIDDT_Keyboard_Event`` message to this port. The message looks like this::
+When the user presses a key, the HIDD should report this by sending a
+``HIDDT_Keyboard_Event`` message to this port. The message looks like this::
 
     typedef struct
     {
@@ -1027,8 +1073,10 @@ pressed, bit 31 will be set. If the key has been released, bit 31 will be
 cleared.
 
 If the user pressed more then one key, the other keys are in ``ke_Key[1]``,
-``ke_Key[2]``, etc. The number of keys in the message is calculated by the macro
-``HIDDQ_Keyboard_GetNumKeys(msg)``.
+``ke_Key[2]``, etc. The number of keys in the message is calculated by the
+macro ``HIDDQ_Keyboard_GetNumKeys(msg)``.
+
+
 
 
 Graphics HIDD
@@ -1050,23 +1098,23 @@ Methods
     of the command (including both ``Command`` and ``Length``).
 
     The result of ``HIDDM_Graphics_QCmd()`` depends on the command
-    which is to be executed.
+    that is to be executed.
 
 ``IPTR HIDDM_Graphics_Cmd,UWORD Length,UWORD Command,...)``
     Make the HIDD execute a command. The commands executed this
-    way are checked for validity (eg. clipping is performed) and
+    way are checked for validity (e.g. clipping is performed) and
     they may take very long to execute.
 
     ``Command`` is the command to execute and ``Length`` is the size
     of the command (including both ``Command`` and ``Length``).
 
     The result of ``HIDDM_Graphics_Cmd()`` depends on the command
-    which is to be executed.
+    that is to be executed.
 
-``void HIDDM_Graphics_MCmd,UWORD length,UWORD length1, UWORD cmd1, ...)`` 
+``void HIDDM_Graphics_MCmd,UWORD length,UWORD length1, UWORD cmd1, ...)``
     This is like ``HIDDM_Graphics_Cmd()`` but executes more than one
-    command at once. ``length`` is the size of all commands plus all parameters.
-    The format of the separate commands is the same as in
+    command at once. ``length`` is the size of all commands plus all
+    parameters. The format of the separate commands is the same as in
     ``HIDDM_Graphics_Cmd()``.
 
     You can't use commands which return values with ``HIDDM_Graphics_MCmd()``.
@@ -1075,9 +1123,10 @@ Methods
 
 ``void HIDDM_Graphics_MQCmd,UWORD length,UWORD length1, UWORD cmd1, ...)``
     This is like ``HIDDM_Graphics_QCmd()`` but executes more than one
-    command at once. ``length`` is the size of all commands plus all parameters.
-    The format of the separate commands is the same as in
+    command at once. ``length`` is the size of all commands plus all
+    parameters. The format of the separate commands is the same as in
     ``HIDDM_Graphics_QCmd()``.
+
 
 
 Methods
@@ -1085,12 +1134,11 @@ Methods
 
 .. FIXME: Uh? Again?
 
-``void HIDDV_Graphics_Cmd_WaitTOF (void)`` 
-    Wait for the vertical
-    blank. This is a short time span during which updates of the screen
-    are invisible because the hardware of the monitor moves the ray
-    from the bottom right to the top left corner. This will block until
-    the next time this happens. If you use this command in
+``void HIDDV_Graphics_Cmd_WaitTOF (void)``
+    Wait for the vertical blank. This is a short time span during which
+    updates of the screen are invisible because the hardware of the monitor
+    moves the ray from the bottom right to the top left corner. This will
+    block until the next time it happens. If you use this command in
     ``HIDDM_Graphics_MCmd()`` or ``HIDDM_Graphics_MQCmd()``, the drawing
     command after the ``HIDDV_Graphics_Cmd_WaitTOF()`` will be executed
     exactly right after the system has been signalled that the vblank
@@ -1108,10 +1156,11 @@ Methods
     Create a drawing area with the specified attributes.
 
 
+
 Attributes
 ^^^^^^^^^^
 
-``HIDDA_BitMap_Width`` 
+``HIDDA_BitMap_Width``
 ~~~~~~~~~~~~~~~~~~~~~~
 
 :Type:          ULONG
@@ -1119,8 +1168,8 @@ Attributes
 
 Create a bitmap with this width or query the width. Note that most HIDD don't
 support to resize a bitmap. The width is in HIDD units. Some graphics HIDDs
-support text mode, then this is in characters. But most of the time, this will
-be in screen or printer pixels.
+support text mode, where this is in characters. But most of the time, this
+will be in screen or printer pixels.
 
 
 ``HIDDA_BitMap_Height``
@@ -1129,10 +1178,10 @@ be in screen or printer pixels.
 :Type:          ULONG
 :Applicability: ISG
 
-Create a bitmap with this height or query the height. Note that most HIDD don't
-support to resize a bitmap. The height is in HIDD units. Some graphics HIDDs
-support text mode, then this is in characters. But most of the time, this will
-be in screen or printer pixels.
+Create a bitmap with this height or query the height. Note that most HIDD
+don't support to resize a bitmap. The height is in HIDD units. Some graphics
+HIDDs support text mode, where this is in characters. But most of the time,
+this will be in screen or printer pixels.
 
 
 ``HIDDA_BitMap_Depth``
@@ -1141,9 +1190,9 @@ be in screen or printer pixels.
 :Type:          UWORD
 :Applicability: IG
 
-Create a bitmap with this depth. When the bitmap has been created, you can query
-the attribute. The number of distinct colors is ``1L << depth``. Most HIDDs will
-support depths like 1, 8, 15, 16, 24 and 32 bit.
+Create a bitmap with this depth. When the bitmap has been created, you can
+query the attribute. The number of distinct colors is ``1L << depth``. Most
+HIDDs will support depths like 1, 8, 15, 16, 24 and 32 bit.
 
 
 ``HIDDA_BitMap_Showable``
@@ -1158,7 +1207,7 @@ the bitmap when the method returns. To be safe, always call
 ``HIDDV_Graphics_Cmd_ShowBitmap()`` afterwards.
 
 
-``HIDDA_BitMap_Visible`` 
+``HIDDA_BitMap_Visible``
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 :Type:          ULONG
@@ -1179,7 +1228,7 @@ The display mode. Every HIDD defines its own list and uses its own values. Use
 the method ``HIDDM_ValueToString()`` to get the meanings of this attribute.
 
 
-``HIDDA_BitMap_BaseAddress`` 
+``HIDDA_BitMap_BaseAddress``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 :Type:          APTR
@@ -1189,9 +1238,9 @@ This is the address of the RAM of the graphics memory. Note that most HIDDs
 don't support to set this value. This can be used to access the video hardware
 directly. If you plan this, you must check if the HIDD supports this and if it
 does, then you must take the appropriate steps specified in the HIDDs' docs to
-tell the HIDD what you are doing (eg. disable the HIDD). After you did this, you
-can use ``HIDDA_Graphics_Format`` to find out the format in which the data is
-stored here.
+tell the HIDD what you are doing (e.g. disable the HIDD). After you did this,
+you can use ``HIDDA_Graphics_Format`` to find out the format in which the data
+is stored here.
 
 A HIDD which doesn't support direct memory access will return ``NULL``.
 
@@ -1234,8 +1283,8 @@ informations of several pixels, then this will be ``0``.
 :Applicability: G
 
 Query the HIDD for the best size for drawing areas or drawing commands. Most
-graphics chips have a certain blocking size, ie. it doesn't matter if you copy
-6 bits or 30 but 33 is slow. The HIDD will return 32 in this case.
+graphics chips have a certain blocking size, i.e. it doesn't matter if you
+copy 6 bits or 30 but 33 is slow. The HIDD will return 32 in this case.
 
 
 ``HIDDA_BitMap_LeftEdge``
@@ -1244,10 +1293,11 @@ graphics chips have a certain blocking size, ie. it doesn't matter if you copy
 :Type:          LONG
 :Applicability: IG
 
-Query or initialize the left edge position of a bitmap which is displayable. The
-position can be change with HIDDV_Graphics_Cmd_MoveBitMap. The value of the
-position is in HIDD units. Some graphics HIDDs support text mode, then this is
-in characters. But most of the time, this will be in screen or printer pixels.
+Query or initialize the left edge position of a bitmap which is displayable.
+The position can be change with HIDDV_Graphics_Cmd_MoveBitMap. The value of
+the position is in HIDD units. Some graphics HIDDs support text mode, where
+this is in characters. But most of the time, this will be in screen or
+printer pixels.
 
 
 ``HIDDA_BitMap_TopEdge``
@@ -1256,10 +1306,12 @@ in characters. But most of the time, this will be in screen or printer pixels.
 :Type:          LONG
 :Applicability: IG
 
-Query or initialize the top edge position of a bitmap which is displayable. The
-position can be change with HIDDV_Graphics_Cmd_MoveBitMap. The value of the
-position is in HIDD units. Some graphics HIDDs support text mode, then this is
-in characters. But most of the time, this will be in screen or printer pixels.
+Query or initialize the top edge position of a bitmap which is displayable.
+The position can be change with HIDDV_Graphics_Cmd_MoveBitMap. The value of
+the position is in HIDD units. Some graphics HIDDs support text mode, where
+this is in characters. But most of the time, this will be in screen or printer
+pixels.
+
 
 
 Class methods (????)
@@ -1268,26 +1320,27 @@ Class methods (????)
 ``ULONG HIDDV_Graphics_Cmd_ShowBitMap (HIDDT_BitMap bm, BOOL wait)``
     Make a bitmap visible. Some systems allow to show more than one bitmap at
     a time. On these systems, the specified bitmap appears before all other
-    bitmaps. If ``wait`` is ``TRUE``, then the call will block until the bitmap
-    is made visible (ie. at the next ``HIDDV_Graphics_Cmd_WaitTOF``). The call
-    return whether bitmap is visible or not if ``wait`` is ``FALSE`` or ``TRUE``
-    otherwise.
+    bitmaps. If ``wait`` is ``TRUE``, then the call will block until the
+    bitmap is made visible (i.e. at the next ``HIDDV_Graphics_Cmd_WaitTOF``).
+    The call returns whether bitmap is visible or not if ``wait`` is ``FALSE``
+    or ``TRUE`` otherwise.
 
 ``VOID HIDDV_Graphics_Cmd_MoveBitMap (HIDDT_BitMap bm, WORD horizontal, WORD vertical)``
     Move a visible bitmap around the screen. Positive values mean move to the
     left or down, negative values means right and up. If the horizontal and
-    vertical variables you specify would move the bitmap beyond any restrictions
-    then the bitmap is move only as far as possible. You can query the real
-    position to which the bitmap was move with the HIDDA_BitMap_LeftEdge and
-    HIDDA_BitMap_TopEdge attributes.
+    vertical variables you specify would move the bitmap beyond any
+    restrictions then the bitmap is moved only as far as possible. You can
+    query the real position to which the bitmap was move with the
+    HIDDA_BitMap_LeftEdge and HIDDA_BitMap_TopEdge attributes.
 
 ``ULONG HIDDV_Graphics_Cmd_DepthArrangeBitMap (HIDDT_BitMap bm, ULONG mode, HIDDT_BitMap other)``
     Move a bitmap to the front or back of all bitmaps or a specific bitmap.
-    ``mode`` can be ``HIDDV_Graphics_DepthArrange_ToFront`` and
+    The ``mode`` can be ``HIDDV_Graphics_DepthArrange_ToFront`` or
     ``HIDDV_Graphics_DepthArrange_ToBack``. If ``other`` is ``!= NULL``, then
-    the bitmap will be moved just in front or behind that bitmap. The ``other``
-    is ``NULL``, then bitmap will be moved in front or behind all other bitmaps.
-    If the bitmap was invsible, then ``HIDDV_Graphics_Cmd_ShowBitMap()`` will
+    the bitmap will be moved just in front or behind that bitmap. If the
+    ``other`` is ``NULL``, then bitmap will be moved in front or behind all
+    other bitmaps.
+    If the bitmap was invisible, then ``HIDDV_Graphics_Cmd_ShowBitMap()`` will
     implicitly be called.
 
 ``void HIDDV_Graphics_Cmd_DeleteBitMap (HIDDT_BitMap bm)``
@@ -1295,14 +1348,15 @@ Class methods (????)
     ``DisposeObject()``.
 
 ``HIDDT_GC HIDDV_Graphics_Cmd_CreateGC (HIDDT_BitMap bm)``
-    Create a graphics context. The graphics context is used to store information
-    which is needed for more than one command (for example the color or the
-    drawmode). A GC is a BOOPSI object and can be changed with the normal BOOPSI
-    API.
+    Create a graphics context. The graphics context is used to store
+    information which is needed for more than one command (for example the
+    color or the drawmode). A GC is a BOOPSI object and can be changed with
+    the normal BOOPSI API.
 
 ``void HIDDV_Graphics_Cmd_DeleteGC (HIDDT_GC gc)``
-    Return a gc for reuse. You can also dispose the GC with ``DisposeObject()``.
-    The bitmap which is connected to this graphics context will not be deleted.
+    Return a gc for reuse. You can also dispose the GC with
+    ``DisposeObject()``. The bitmap that is connected to this graphics context
+    will not be deleted.
 
 ``BOOL HIDDV_Graphics_Cmd_CopyArea (HIDDT_GC src, WORD srcX, WORD srcY, UWORD width, UWORD height, HIDDT_GC dest, WORD destX, WORD destY)``
     Copy a rectangular area from the drawing area ``src`` to the drawing area
@@ -1310,121 +1364,122 @@ Class methods (????)
     (except when both rectangles overlap). The mode of the GC ``dest``
     determines how the copy takes place.
 
-    In quick mode, the following restrictions are not checked: It's not checked
-    whether the source or destination rectangle is completely inside the valid
-    area or whether the areas overlap. If they overlap, the results are
-    unpredictable. Also drawing modes are ignored. If the two bitmaps in the GCs
-    have a different depth, copying might be slow.
+    In quick mode, the following restrictions are not checked: It's not
+    checked whether the source and destination rectangles are is completely
+    inside the valid area, nor whether the areas overlap. If they overlap, the
+    results are unpredictable. Also drawing modes are ignored. If the two
+    bitmaps in the GCs have a different depth, copying might be slow.
 
-    When copying bitmaps between two different HIDDs, the following pseudo
-    algorithm is executed: First the destination HIDD is queried whether it does
-    understand the format of the source HIDD. If it does, then the destination
-    HIDD does the copying. If it doesn't, then the source is asked whether it
-    understands the destination HIDDs' format. If it does, then the source HIDD
-    will do the copying. If it doesn't, then the default CopyArea of the
-    graphics HIDD base class will be invoked which copies the bitmaps pixel by
-    pixel with ``HIDDV_Graphics_Cmd_GetPixel()`` and
+    Copying bitmaps between two different HIDDs is executed in a way that
+    matches the following pseudo-algorithm: First the destination HIDD is
+    queried to determine whether it understands the format of the source HIDD.
+    If it does, then the destination HIDD does the copying. If it doesn't,
+    then the source is asked whether it understands the destination HIDDs'
+    format. If it does, then the source HIDD does the copying. If neither
+    supports the format of the other, then the default CopyArea of the
+    graphics HIDD base class will be invoked, which copies the bitmaps pixel
+    by pixel with ``HIDDV_Graphics_Cmd_GetPixel()`` and 
     ``HIDDV_Graphics_Cmd_SetPixel()``.
-    
-    
+
 ``BOOL HIDDV_Graphics_Cmd_WritePixelDirect (HIDDT_GC gc, WORD x, WORD y, ULONG val)``
     Set the pixel at (``x``,``y``) direct to ``val`` without making use of the
-    gc attributes like colors, drawmode, colormask etc. This command is
+    gc attributes, like colors, drawmode, colormask, etc. This command is
     available in quick and normal mode.
 
-    In quick mode, the pixel is always set, even if the coordinates are illegal,
-    and it will always return 1 (but might crash the machine if the coordinates
-    are invalid).
+    In quick mode, the pixel is always set, even if the coordinates are
+    illegal, and it will always return 1 (but it might crash the machine if
+    the coordinates are invalid).
 
 ``BOOL HIDDV_Graphics_Cmd_WritePixel (HIDDT_GC gc, WORD x, WORD y)``
     Changes the pixel at (``x``,``y``). The color of the pixel depends on the
-    attributes of ``gc``, eg. colors, drawmode, colormask etc. This command is
-    available in quick and normal mode.
+    attributes of ``gc``, e.g. colors, drawmode, colormask, etc. This command
+    is available in quick and normal mode.
 
     If the command is executed in normal mode, the coordinates are checked. If
     the pixel could be set, the command will return 1 else 0.
 
-    In quick mode, the pixel is always set, even if the coordinates are illegal,
-    and it will always return 1 (but might crash the machine if the coordinates
-    are invalid).
+    In quick mode, the pixel is always set, even if the coordinates are
+    illegal, and it will always return 1 (but it might crash the machine if
+    the coordinates are invalid).
 
 ``ULONG HIDDV_Graphics_Cmd_ReadPixel (HIDDT_GC gc, WORD x, WORD y)``
     Queries the color of the pixel at (``x``,``y``). This command is available
     in quick and normal mode. When executed in quick mode, the color will be
     returned as the physical value for that color in the format used by the
-    HIDD. If the command is executed in normal mode, the coordinates are checked
-    and the color returned is a logical color (ie. a 24bit RGB value). If the
-    pixel could be queried, the command will return its value and ~0 (ie. all
-    bits set) otherwise.
+    HIDD. If the command is executed in normal mode, the coordinates are
+    checked and the color returned is a logical color (i.e. a 24-bit RGB
+    value). If the pixel could be queried, the command will return its value
+    and ~0 (i.e. all bits set) otherwise.
 
-    Note that in quick mode, the command always returns something but if the
+    Note that in quick mode, the command always returns something, but if the
     coordinates are outside the valid coordinates, this can crash your machine
     or return random values.
 
-``BOOL HIDDV_Graphics_Cmd_DrawLine (HIDDT_GC gc, WORD x1, WORD y1, WORD x2, WORD y2)`` 
+``BOOL HIDDV_Graphics_Cmd_DrawLine (HIDDT_GC gc, WORD x1, WORD y1, WORD x2, WORD y2)``
     Draws a line from (``x1``,``y1``) to (``x2``,``y2``) in the specified gc.
-    This command is available in quick and normal mode. In normal mode, the line
-    is clipped against the drawing area.
+    This command is available in quick and normal mode. In normal mode, the
+    line is clipped against the drawing area.
 
-``BOOL HIDDV_Graphics_Cmd_DrawRect (HIDDT_GC gc, WORD x1, WORD y1, WORD x2, WORD y2)`` 
+``BOOL HIDDV_Graphics_Cmd_DrawRect (HIDDT_GC gc, WORD x1, WORD y1, WORD x2, WORD y2)``
     Draws a hollow rectangle from (``x1``,``y1``) to (``x2``,``y2``) in the
-    specified gc. This command is available in quick and normal mode. In normal
-    mode, the rectangle is clipped against the drawing area.
+    specified gc. This command is available in quick and normal mode. In
+    normal mode, the rectangle is clipped against the drawing area.
 
-``BOOL HIDDV_Graphics_Cmd_FillRect (HIDDT_GC gc, WORD x1, WORD y1, WORD x2, WORD y2)`` 
+``BOOL HIDDV_Graphics_Cmd_FillRect (HIDDT_GC gc, WORD x1, WORD y1, WORD x2, WORD y2)``
     Draws a solid rectangle from (``x1``,``y1``) to (``x2``,``y2``) in the
-    specified gc. This command is available in quick and normal mode. In normal
-    mode, the rectangle is clipped against the drawing area.
+    specified gc. This command is available in quick and normal mode. In
+    normal mode, the rectangle is clipped against the drawing area.
 
-``BOOL HIDDV_Graphics_Cmd_DrawEllipse (HIDDT_GC gc, WORD x1, WORD y1, WORD rx, WORD ry)`` 
-    Draws a hollow ellipse from (``x1``,``y1``) with the radii ``rx`` and ``ry``
-    in the specified gc. This command is available in quick and normal mode. In
-    normal mode, the ellipse is clipped against the drawing area.
+``BOOL HIDDV_Graphics_Cmd_DrawEllipse (HIDDT_GC gc, WORD x1, WORD y1, WORD rx, WORD ry)``
+    Draws a hollow ellipse from (``x1``,``y1``) with the radii ``rx`` and
+    ``ry`` in the specified gc. This command is available in quick and normal
+    mode. In normal mode, the ellipse is clipped against the drawing area.
 
-``BOOL HIDDV_Graphics_Cmd_FillEllipse (HIDDT_GC gc, WORD x1, WORD y1, WORD rx, WORD ry)`` 
-    Draws a solid ellipse from (``x1``,``y1``) with the radii ``rx`` and ``ry``
-    in the specified gc. This command is available in quick and normal mode. In
-    normal mode, the ellipse is clipped against the drawing area.
+``BOOL HIDDV_Graphics_Cmd_FillEllipse (HIDDT_GC gc, WORD x1, WORD y1, WORD rx, WORD ry)``
+    Draws a solid ellipse from (``x1``,``y1``) with the radii ``rx`` and
+    ``ry`` in the specified gc. This command is available in quick and normal
+    mode. In normal mode, the ellipse is clipped against the drawing area.
 
-``BOOL HIDDV_Graphics_Cmd_DrawPolygon (HIDDT_GC gc, UWORD n, WORD coords[2*n])`` 
+``BOOL HIDDV_Graphics_Cmd_DrawPolygon (HIDDT_GC gc, UWORD n, WORD coords[2*n])``
     Draws a hollow polygon from the list of coordinates in the specified gc.
     This command is available in quick and normal mode. In normal mode, the
     polygon is clipped against the drawing area and no point is drawn twice.
 
 ``BOOL HIDDV_Graphics_Cmd_FillPolygon (HIDDT_GC gc, UWORD n, WORD coords[2*n])``
     Draws a solid polygon from (``x1``,``y1``) to (``x2``,``y2``) in the
-    specified gc. This command is available in quick and normal mode. In normal
-    mode, the polygon is clipped against the drawing area and no point is drawn
-    twice.
+    specified gc. This command is available in quick and normal mode. In
+    normal mode, the polygon is clipped against the drawing area and no point
+    is drawn twice.
 
     In quick mode, the polygon should be convex, otherwise the results are
     unpredictable.
 
-``BOOL HIDDV_Graphics_Cmd_DrawText (HIDDT_GC gc, WORD x, WORD y, STRPTR text, UWORD length)`` 
+``BOOL HIDDV_Graphics_Cmd_DrawText (HIDDT_GC gc, WORD x, WORD y, STRPTR text, UWORD length)``
     Draws the first ``length`` characters of ``text`` at (``x``,``y``). This
     command is available in quick and normal mode. In normal mode, the text is
     clipped against the drawing area.
 
-``BOOL HIDDV_Graphics_Cmd_FillText (HIDDT_GC gc, WORD x, WORD y, STRPTR text, UWORD length)`` 
+``BOOL HIDDV_Graphics_Cmd_FillText (HIDDT_GC gc, WORD x, WORD y, STRPTR text, UWORD length)``
     Fills the area of the text with the background color and draws the first
     ``length`` characters of ``text`` at (``x``,``y``). This command is
     available in quick and normal mode. In normal mode, the text is clipped
     against the drawing area.
 
 ``BOOL HIDDV_Graphics_Cmd_FillSpan (HIDDT_GC gc, HIDDT_Span span)``
-    Draws a solid from a shape description in the specified gc. This command is
-    available in quick and normal mode. In normal mode, the spans are clipped
-    against the drawing area.
+    Draws a solid from a shape description in the specified gc. This command
+    is available in quick and normal mode. In normal mode, the spans are
+    clipped against the drawing area.
 
-``void HIDDV_Graphics_Cmd_Clear (HIDDT_GC gc)`` 
-    All pixels of the drawing area to the background color stored in ``gc``.
-    This command is available in quick and normal mode and behaves similar in
-    both modes.
+``void HIDDV_Graphics_Cmd_Clear (HIDDT_GC gc)``
+    All pixels of the drawing area are changed to the background color stored
+    in ``gc``. This command is available in quick and normal mode and behaves
+    similar in both modes.
 
-``IPTR HIDDV_Graphics_Cmd_Special (...)`` 
-    This is for HIDD specific commands. You can use this for sending commands to
-    the HIDD which are not covered by this doc. This command is available in
-    quick and normal mode. It's behaviour is HIDD specific.
+``IPTR HIDDV_Graphics_Cmd_Special (...)``
+    This is for HIDD-specific commands. You can use this for sending commands
+    to the HIDD which are not covered by this doc. This command is available
+    in quick and normal mode. It's behaviour is HIDD-specific.
+
 
 
 Attributes of a HIDD's GC
@@ -1463,7 +1518,7 @@ This is the foreground color.
 :Type:          ULONG
 :Applicability: SG
 
-This is the foreground color.
+This is the background color.
 
 
 ``HIDDA_GC_DrawMode``
@@ -1511,8 +1566,8 @@ normal mode. This can slow rendering somewhat.
 :Type:          UWORD
 :Applicability: SG
 
-Provide a simple pattern while drawing lines. This attribute is only considered
-in normal mode.
+Provide a simple pattern while drawing lines. This attribute is only
+considered in normal mode.
 
 
 ``HIDDA_GC_PlaneMask``
@@ -1522,59 +1577,65 @@ in normal mode.
 :Applicability: SG
 
 This is a shape bitmap. When drawing into the destination bitmap, only those
-bits will be changed where this bitmap has bits set. This bitmap can be smaller
-than the destination bitmap; bits outside this bitmap are considered to be 0.
+bits will be changed where this bitmap has bits set. This bitmap can be
+smaller than the destination bitmap; bits outside this bitmap are considered
+to be 0.
 
-To disable this, set the attribute to ``NULL`` (this is also the default). Note
-that enabling this slows rendering down, sometimes very much.
+To disable this, set the attribute to ``NULL`` (this is also the default).
+Note that enabling this slows rendering down, sometimes very much so.
+
+
 
 
 Sound HIDD
 """"""""""
 
-Okay, here are some examples, how a sound.hidd could be implemented on different
-hardware-bases. This is how the class would behave, if a method HIDDM_SendMIDI
-was sent (I don't know, if such a method would make sense, but it's only for
-illustration issues).
-
+Okay, here are some examples of how a sound.hidd could be implemented on
+different hardware-bases. This is how the class would behave, if a
+method HIDDM_SendMIDI was sent (I don't know, if such a method would make
+sense, but it's only for illustration issues).
 
 Amiga with internal sound (subclass of hiddclass)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-There are two possibilities of how to handle it. The first is to not handle it,
-so that the method is passed on to the hiddclass (which doesn't know this method
-either) and then on to the rootclass, which returns 0 (FALSE) on unknown
-methods. The second possibility is to implement it in soundhiddclass and return
-FALSE immediatly (because we know that the internal Amiga soundsystem can't
-handle MIDI).
+There are two possibilities of how to handle it. The first is to not handle
+it, so that the method is passed on to the hiddclass (which doesn't know this
+method either) and then on to the rootclass, which returns 0 (FALSE) on
+unknown methods. The second possibility is to implement it in soundhiddclass
+and return FALSE immediately (because we know that the internal Amiga
+soundsystem can't handle MIDI).
 
 
-Amiga with sound-card on zorro-bus (subclass of zorroclass)
+
+Amiga with sound-card on Zorro-bus (subclass of zorroclass)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The sound-card passes all methods through to its superclass, except methods for
-playing/receiving/whatever music. It can either implement them totally on its
-own or might use some features of its superclass, for example a general method
-for sending data to a zorro-card.
+The sound-card passes all methods through to its superclass, except methods
+for playing/receiving/whatever music. It can either implement them totally
+on its own or might use some features of its superclass, for example a general
+method for sending data to a Zorro-card.
+
 
 
 Amiga with internal sound or soundcard and additional MIDI-card
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-This configuration would have two HIDDs, one for MIDI only and one for sound in
-general. For the implementation of the last one see above (either Amiga with
-internal sound or Amiga with sound-card). The MIDI HIDD-class could subclass the
-general sound class (without knowing if it is capable of playing MIDI) and pass
-on all methods except MIDI relevant methods. It would fully overload these.
+This configuration would have two HIDDs, one for MIDI only and one for sound
+in general. For the implementation of the last one see above (either Amiga
+with internal sound or Amiga with sound-card). The MIDI HIDD-class could
+subclass the general sound class (without knowing if it is capable of playing
+MIDI) and pass on all methods except MIDI relevant methods. It would fully
+overload these.
 Another solution would be to subclass hiddclass directly and ignore every
-non-MIDI sound command. While the general class would be unit 0, the MIDI class
-would be unit 1, so that an application can choose between the normal
-sound-system (either the internal Amiga soundsystem or a sound-card, which might
-have MIDI capabilities on its own) or the MIDI card. If the MIDI class would
-subclass the normal soundhidd, it would feature non-MIDI sound too (by passing
-the methods on). Of course, it had to pass a query to a HIDDA_Capabilities
-attribute on to the superclass, so that the capabilities of the superclass can
-be recognized by the application for unit 1, too.
+non-MIDI sound command. While the general class would be unit 0, the MIDI
+class would be unit 1, so that an application can choose between the normal
+sound-system (either the internal Amiga soundsystem or a sound-card, which 
+might have MIDI capabilities on its own) or the MIDI card. If the MIDI class
+would subclass the normal soundhidd, it would feature non-MIDI sound too (by
+passing the methods on). Of course, it would have to pass a query for a
+HIDDA_Capabilities attribute on to the superclass, so that the capabilities
+of the superclass would be recognized by the application for unit 1, too.
+
 
 
 PC with soundblaster-super-ultra-pro-whatever
@@ -1588,67 +1649,73 @@ its own or partly overload some methods, where this specific soundblaster-card
 had advantages/different features than the other soundblaster-cards.
 
 
+
 Some thoughts about the sound.hidd
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 + An attribute HIDDA_Capabilities [..G], which could define things like:
-  
+
   + HIDDV_Sound_MIDI - sound-system is able to play MIDI sounds (possibly by
     using an external MIDI device, such as a keyboard)
-  + HIDDV_Sound_SFX - sound-system is capable of playing simple sounds (e.g. the
-    internal pc-speaker)
+  + HIDDV_Sound_SFX - sound-system is capable of playing simple sounds (e.g.
+    the internal pc-speaker)
   + HIDDV_Sound_Music
   + HIDDV_Sound_Speech
 
-+ Possible attributes HIDDA_Sound_ActivateHook, ..._InactivateHook [ISG] These
-  attributes could be used by an application to provide hooks, which are called
-  if a not-locked unit is exclusively locked by another application (or this
-  exclusive lock is freed). So these attributes makes only sense with
++ Possible attributes HIDDA_Sound_ActivateHook, ..._InactivateHook [ISG]
+  These attributes could be used by an application to provide hooks, which are
+  called if a not-locked unit is exclusively locked by another application (or
+  this exclusive lock is freed). So these attributes makes only sense with
   HIDDV_Sound_NonExclusiveNotLocked.
+
+
 
 
 IRQ HIDD
 """"""""
 
 An IRQ HIDD is a frontend for the IRQ hardware of your computer. Whenever the
-computer generates an IRQ, the IRQ HIDD will catch it and check for handlers for
-this IRQ. If any handlers are available, the IRQ HIDD will call them.
+computer generates an IRQ, the IRQ HIDD will catch it and check for handlers
+for this IRQ. If any handlers are available, the IRQ HIDD will call them.
 
-An IRQ HIDD uses IRQ IDs to do it's job. Those IDs are not related to the IRQ
+An IRQ HIDD uses IRQ IDs to do its job. Those IDs are not related to the IRQ
 numbers in the hardware.
 
-An IRQ handler is a callback hook with a priority. The handler gets a pointer
-the handler info given to ``HIDDM_IRQ_AddHandler()`` and to the hardware
-specific IRQ data. For the format of this data, see the docs of the specific IRQ
-HIDD.
+An IRQ handler is a callback hook with a priority. The handler gets a
+pointer the handler info given to ``HIDDM_IRQ_AddHandler()`` and to the
+hardware-specific IRQ data. For the format of this data, see the docs of
+the specific IRQ HIDD.
 
 
 Methods
 ^^^^^^^
 
 ``BOOL HIDDM_IRQ_AddHandler (HIDDT_IRQ_Handler * handlerInfo, ULONG id)``
-    Install an handler for the ID ``id``. If the handler could be installed,
-    then ``TRUE`` is returned else ``FALSE``. See the ``HIDDA_ErrorCode`` for
+    Install a handler for the ID ``id``. If the handler could be installed,
+    then ``TRUE`` is returned, else ``FALSE``. See the ``HIDDA_ErrorCode`` for
     details if ``FALSE`` was returned.
 
-``void HIDDM_IRQ_RemHandler (HIDDT_IRQ_Handler * handlerInfo)`` 
+``void HIDDM_IRQ_RemHandler (HIDDT_IRQ_Handler * handlerInfo)``
     Removes a handler. If the handler is running, this will block until the
     handler can be safely removed. If it is called from inside an IRQ, it will
     not block but postpone the remove.
 
-``void HIDDM_CauseIRQ (ULONG id, APTR hardwareInfo)`` 
-    Generates a pseudo IRQ with the specified ``id``. The ``hardwareInfo`` will
-    be passed to the handlers instead of the normal hardware IRQ infos.
+``void HIDDM_CauseIRQ (ULONG id, APTR hardwareInfo)``
+    Generates a pseudo IRQ with the specified ``id``. The ``hardwareInfo``
+    will be passed to the handlers instead of the normal hardware IRQ infos.
+
+
+
 
 
 Internals
 ---------
 
-A HIDD is a normal Exec Device which creates a BOOPSI class when loaded. A HIDD
-is recognised by the name in the ROMtag structure. This name must begin with the
-four letters "HIDD" (in that order). Note that the name of the HIDD is the
-string after the first four letters. Also note that a HIDD need not have
-a unique name.
+A HIDD is a normal Exec Device which creates a BOOPSI class when loaded.
+A HIDD is recognised by the name in the ROMtag structure. This name must begin
+with the four letters "HIDD" (in that order). Note that the name of the HIDD
+is the string after the first four letters. Also note that a HIDD need not
+have a unique name.
 
 Every HIDD has an extended ROMtag structure which contains the infos needed to
 find a HIDD by ``HIDD_FindHIDD()``.
@@ -1657,13 +1724,16 @@ HIDDs are BOOPSI objects but unlike other BOOPSI objects, they are not created
 by classname but by the pointer returned by ``HIDD_FindHIDD()``.
 
 
+
+
 Random unsorted ideas
 ---------------------
 
-The HIDD Tool Library (HIDDTL) must offer a way to make the process which wants
-to execute a method on the HIDD to wait if the HIDD is locked. It must also
-offer functions to lock/unlock a semaphore to allow the HIDD to block. If no
-locking is possible (eg. NetBSD), then there must be a way to query this, too.
+The HIDD Tool Library (HIDDTL) must offer a way to make the process which
+wants to execute a method on the HIDD to wait if the HIDD is locked. It must
+also offer functions to lock/unlock a semaphore to allow the HIDD to block. If
+no locking is possible (e.g. NetBSD), then there must be a way to query this,
+too.
 
 There must be a set of functions to install IRQ handlers.
 

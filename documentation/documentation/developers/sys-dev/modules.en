@@ -1,6 +1,6 @@
-===================================
-AROS Application Development Manual
-===================================
+==============================================
+AROS Application Development Manual -- Modules
+==============================================
 
 :Authors:   Matthias Rustler (some parts copied from other documents)
 :Copyright: Copyright (C) 2008-2010, The AROS Development Team
@@ -13,25 +13,26 @@ AROS Application Development Manual
 
 .. Contents::
 
--------
-Modules
--------
+
 
 Introduction
 ============
 
-Modules are shared binaries. Their main purpose is to deliver tables of functions and
-classes for object oriented access to GUI elements and multimedia data.
+Modules are shared binaries. Their main purpose is to deliver tables of
+functions and classes for object-oriented access to GUI elements and
+multimedia data.
 
 Building modules consists of two parts:
 + a macro to use in mmakefile.src files
 + a configuration file that describes the contents of the module.
 
-Metamake
+
+
+MetaMake
 ========
 
-The build system has the macro "build_module" for the task of creating modules. The
-parameters are:
+The build system has the macro "build_module" for the task of creating
+modules. The parameters are:
 
 ``mmake=/A``
     This is the name of the metatarget that will build the module. Also a
@@ -52,13 +53,13 @@ parameters are:
     The name if the configuration file. Default is <modname>.conf.
 
 ``files="$(basename $(wildcard *.c))"``
-    A list of all the C source files without the .c suffix that contain the
-    code for this module. By default all the .c files in the current
-    directory will be taken.
+    A list of all the C source files, without the .c suffixes, that make up
+    the code for this module. By default all the .c files in the current
+    directory will be used.
 
 ``linklibfiles``
-    A list of all the C source files without the .c suffix that contain the
-    code that needs to be added to the module linklib.
+    A list of all the C source files, without the .c suffixes, that contain
+    the code that needs to be added to the module linklib.
 
 ``linklibobjs``
     FIXME
@@ -88,7 +89,7 @@ parameters are:
 ``linklibname=%(modname)``
     The name to be used for the static link library that contains the
     library autoinit code and the stubs converting C stack calling
-    convention to a call off the function from the library functable with
+    convention to a call of the function from the library functable with
     the appropriate calling mechanism. These stubs are normally not needed
     when the AROS defines for module functions are not disabled.
 
@@ -110,6 +111,7 @@ parameters are:
     FIXME
 
 
+
 Module Types
 ============
 
@@ -126,36 +128,37 @@ Module Types
     MUI standard class.
 
 ``mcp``
-    MUI preferences class. This kind of Zune classes are shown in the Zune preferences
-    Editor.
+    MUI preferences class. This kind of Zune classes are shown in the Zune
+    preferences Editor.
 
 ``device``
     Device driver.
 
 ``resource``
-    Lightwight libraries.
+    Lightweight libraries.
 
 ``gadget``
-    Intuition GUI elements. These are also known as BOOPSI gadgets (Basic Object Oriented
-    Programming System for Intuition).
+    Intuition GUI elements. These are also known as BOOPSI gadgets (Basic
+    Object-Oriented Programming System for Intuition).
 
 ``datatype``
-    The datatypes system allows loading of all kind of data (graphics, music, text etc.)
-    into your application.
+    The datatypes system allows loading of all kind of data (graphics, music,
+    text etc.) into your application.
 
 ``hidd``
-    A HIDD is a Hardware Independant Device Driver - a collection of code
+    A HIDD is a Hardware Independent Device Driver - a collection of code
     that provides an interface to hardware that hides as many details of
     the hardware as practical.
+
 
 
 Configuration File
 ==================
 
-The build system calls the tool "genmodule" in order to create some additional C source
-and header files. This tool is driven be a configuration file which allows to set a lot
-of options for the fine tuning if the generated files. Configuration files contain named
-sections with definitions::
+The build system calls the tool "genmodule" in order to create some additional
+C source and header files. This tool is driven be a configuration file which
+allows to set a lot of options for the fine tuning of the generated files.
+Configuration files contain named sections with definitions::
 
     ##begin <sectionname>
     <definitions>
@@ -172,8 +175,8 @@ The lines in this section have all the same format::
 
     optionname string
 
-with the string starting from the first non white-space after optionname
-to the last non white-space character on that line.
+with the string starting from the first non-white-space after optionname
+to the last non-white-space character on that line.
 
 ``basename``
     Followed by the base name for this module. This will be used as a
@@ -181,11 +184,11 @@ to the last non white-space character on that line.
     makefile is taken with the first letter capitalized.
 
 ``libbase``
-    The name of the variable to the library base in. By default the
+    The name of the variable to put the library base in. By default the
     basename will be taken with "Base" added to the end.
 
 ``libbasetype``
-    The type to use for the libbase for use internally for the library code.
+    The type to use for the libbase for internal use by the library code.
     E.g. the sizeof operator applied to this type has to yield the real
     size of the object. Be aware that it may not be specified as a pointer.
     By default 'struct Library' is taken.
@@ -207,9 +210,9 @@ to the last non white-space character on that line.
 ``forcebase``
     This will force the use of a certain base variable in the static
     link library for auto opening the module. Thus it is only valid for
-    module that support auto opening. This option can be present more then
-    once in the config section and then all these base will be in the link
-    library. By default no base variable will be present in the link
+    modules that support auto opening. This option can be present more than
+    once in the config section and all these base variables will be in the
+    link library. By default no base variable will be present in the link
     library.
 
 ``superclass``
@@ -234,8 +237,8 @@ to the last non white-space character on that line.
         FIXME
 
     ``peropenerbase``
-        Every time the library is openend a new address is returned. This is useful
-        if you have defined ``libbasetypeextern``.
+        Every time the library is opened a new address is returned. This is
+        useful if you have defined ``libbasetypeextern``.
 
     ``peridbase``
         FIXME
@@ -344,7 +347,8 @@ in the "config" section.
 
 ``classptr_var``
     The variable which contains a pointer to the class is per default hidden.
-    If you need to have access to this pointer you have to use this option like::
+    If you need to have access to this pointer you have to use this option,
+    like::
     
         classptr_var MyClass
 
@@ -380,9 +384,10 @@ module user.
 Section "functionlist"
 ----------------------
 
-In this section are all the functions that are externally accessible by programs.
+In this section are all the functions that are externally accessible by
+programs.
     
-For stack based argument passing only a list of the functions has to be
+For stack-based argument passing, only a list of the functions has to be
 given::
 
     ##begin functionlist
@@ -390,8 +395,8 @@ given::
     int func2(char *s, ULONG a)
     ##end functionlist
 
-For register based argument passing the names of the register have
-to be given between rounded brackets::
+For register-based argument passing, the names of the register have
+to be given between parentheses::
 
     ##begin functionlist
     ULONG func5(ULONG a, STRPTR b) (D0,A0)
@@ -445,6 +450,7 @@ Section "startup"
 FIXME
 
 
+
 Defaults
 ========
 
@@ -481,3 +487,4 @@ datatype DATATYPESCLASS
 class    ROOTCLASS
 hidd     CLID_Root
 ======== =================
+

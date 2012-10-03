@@ -5,15 +5,16 @@ Download
 .. Note::
 
    **If you are a user** wanting to try AROS, please use the links in the
-   **Distributions** section to download a fully featured AROS distribution.
+   **Distributions** section to download a fully-featured AROS distribution.
    The nightly builds you will find at the bottom of the page are only meant
    for developers and testers. The nightly builds are not configured to be
-   easily used, sometimes are not stable and they are missing most of the
+   easily used, are not always stable, and they are missing most of the
    applications essential to a regular user experience.
 
 .. Contents::
 
 .. Include:: download-abstract.en
+
 
 Icaros Desktop LIVE!
 --------------------
@@ -21,16 +22,17 @@ Icaros Desktop LIVE!
 .. image:: /images/icaroslive_logo.png
    :align: left
 
-`Icaros Desktop LIVE!`__ is a complete distribution of the AROS desktop 
-operating system. It comes on a bootable live DVD-ROM or CD-ROM that 
-runs directly on your PC (its hardware components must already be 
-supported by AROS) or in a virtual machine such as VMWare or `VirtualBox`__. 
-It can be installed on the hard drive and can coexist with installed 
-OSes such as Microsoft Windows, in a dedicated partition. A quick 
+`Icaros Desktop LIVE!`__ is a complete distribution of the AROS desktop
+operating system. It comes on a bootable live DVD-ROM or CD-ROM that
+runs directly on your PC (its hardware components must already be
+supported by AROS) or in a virtual machine such as VMWare or `VirtualBox`__.
+It can be installed on the hard drive and can coexist with installed
+OSes such as Microsoft Windows, in a dedicated partition. A quick
 reference guide and some AROS PDF manuals are included.
 
 __ http://live.icarosdesktop.org/
 __ http://virtualbox.org/
+
 
 AspireOS
 --------
@@ -38,11 +40,12 @@ AspireOS
 .. image:: /images/aspireos_logo.png
    :align: left
 
-`AspireOS`__ is a lightweight distribution, originally designed for 
-netbooks such as the Acer Aspire One. It tries to keep things as simple 
+`AspireOS`__ is a lightweight distribution, originally designed for
+netbooks such as the Acer Aspire One. It tries to keep things as simple
 as possible. The programs included are well tested.
 
 __ http://www.aspireos.com/
+
 
 AROS Broadway
 -------------
@@ -61,6 +64,8 @@ a powerful Amiga or an emulator such as WinUAE.
 
 __ http://www.natami-news.de/html/distribution_download.html
 
+
+
 Snapshots
 =========
 
@@ -73,13 +78,15 @@ bugs.
 __ snapshots
 __ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
 
+
+
 Nightly Builds
 ==============
 
-`Nightly builds`__ are done, as the name implies, automatically every night 
-directly from the Subversion tree and contain the latest code. However, 
-they have not been tested in any way and may contain bugs. Most of the 
-time though, they work just fine.
+`Nightly builds`__ are done, as the name implies, every night, directly
+from the Subversion tree, and they contain the latest code. However,
+they have not been tested in any way and may contain bugs. Most of the
+time, though, they work just fine.
 
 Please report bugs you may discover while using these builds through the
 `bug tracker`__. For any other necessity, please feel free to contact us
@@ -89,16 +96,19 @@ __ nightly
 __ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
 __ http://aros-exec.org/
 
+
+
 Nightly Builds (ABIv1)
 ======================
 
-AROS is currently transitioning to a new `ABI`__. An extra set of nightly 
-builds is made based on this experimental source tree, but `these builds`__ 
-are only useful for developers who want to check the progress of the ABI 
-transition. **They are not compatible with existing AROS distributions 
-or with the AROS software available from The AROS Archives or Aminet.** 
-Users wishing to try new features or bug fixes that are not yet 
+AROS is currently transitioning to a new `ABI`__. An extra set of nightly
+builds is made based on this experimental source tree, but `these builds`__
+are only useful for developers who want to check the progress of the ABI
+transition. **They are not compatible with existing AROS distributions
+or with the AROS software available from The AROS Archives or Aminet.**
+Users wishing to try new features or bug fixes that are not yet
 available in distributions should only use the normal nightly builds.
 
 __ http://en.wikipedia.org/wiki/Application_binary_interface
 __ nightly1
+

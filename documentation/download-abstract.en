@@ -1,10 +1,10 @@
 Distributions
 =============
 
-Distributions are preconfigured and tested versions of AROS. They 
+Distributions are preconfigured and tested versions of AROS. They
 contain a lot of useful user applications that don't come with the
 main AROS.org binaries and will be of great interest to users. They may
-not have the latest core system, but their stability and user friendliness
+not have the latest core system, but their stability and user-friendliness
 is much greater than those of the nightly builds. If you are a user interested
 in checking what AROS has to offer, use the distributions to get the most
 complete AROS experience.

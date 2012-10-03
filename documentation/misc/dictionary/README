@@ -1,7 +1,7 @@
 About the AROS-dict personal dictionary file:
 
 This file contains a personal dictionary for AROS. This means that if you
-use a spell checker to check an AROS related document for spelling
+use a spell checker to check an AROS-related document for spelling
 mistakes, you can use this file to check the words that are normally not
 part of the English language, but are part of the AROS development
 vocabulary. You use it alongside an English dictionary.

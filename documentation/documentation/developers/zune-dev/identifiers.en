@@ -1,6 +1,6 @@
-==============================================================================
-Zune method and attribute identifiers
-==============================================================================
+================================================================
+AROS Zune Development Manual -- Method And Attribute Identifiers
+================================================================
 
 .. Contents::
 
@@ -10,10 +10,10 @@ Reserved ranges
 ---------------
 
 + The range 0x90400000-0x904FFFFF is reserved by AROS.
-+ The range 0x90420000-0x9042FFFF is reserved for core Zune classes, 
-  ie. internal classes in muimaster.library (Subversion:workbench/libs/muimaster).
++ The range 0x90420000-0x9042FFFF is reserved for core Zune classes, i.e.
+  internal classes in muimaster.library (Subversion:workbench/libs/muimaster).
 + The range 0x90470000-0x9047FFFF is reserved for core AROS classes,
-  ie. external classes (Subversion:workbench/classes/zune).
+  i.e. external classes (Subversion:workbench/classes/zune).
 
 For convenience, the following defines are available::
 
@@ -34,27 +34,27 @@ The identifiers are on the form ``(BASE | 0x0000ccnn)``, where:
 + ``nn`` is the method or attribute number.
 
 Class, method and attribute numbers are allocated *sequentially* to make it
-easy to find unused slots. Method and attribute identifiers are separate 
+easy to find unused slots. Method and attribute identifiers are separate
 number spaces, so a method can (and most likely will) have the same identifier
-as an attribute. 
+as an attribute.
 
-When creating a new class, first select the apropriate ``BASE`` depending on 
-the type of class. Then allocate the class number by picking the lowest 
+When creating a new class, first select the appropriate ``BASE`` depending on
+the type of class. Then allocate the class number by picking the lowest
 available number. The first method (and the first attribute) of this class
-will then have the identifier ``(BASE | 0x0000cc00 | 0x00000000)``, the 
+will then have the identifier ``(BASE | 0x0000cc00 | 0x00000000)``, the
 second ``(BASE | 0x0000cc00 | 0x00000001)`` and so on.
 
 .. Important::
 
-   **Always** make sure to update the registry in the following section when 
-   creating new classes, methods or attributes! This is required to make sure 
+   **Always** make sure to update the registry in the following section when
+   creating new classes, methods or attributes! This is required to make sure
    that there are no identifier clashes.
-   
+
 .. Note::
-   
+
    All existing MUI classes will get their own subranges within the core
    Zune range, where one will allocate identifiers for Zune extensions
-   to these classes (eg. when adding a new method to MUIC_Window).
+   to these classes (e.g. when adding a new method to MUIC_Window).
 
 
 --------
@@ -94,7 +94,7 @@ Identifier                             Name                                  P
 =========================  ===============================  =  =  =  =  ====================
 Attributes
 --------------------------------------------------------------------------------------------
-Identifier                 Name                             I  S  G  P  Type                
+Identifier                 Name                             I  S  G  P  Type
 =========================  ===============================  =  =  =  =  ====================
 (MUIB_Clock | 0x00000000)  MUIA_Clock_Hour                     X  X     UWORD
 (MUIB_Clock | 0x00000001)  MUIA_Clock_Min                      X  X     UWORD
@@ -106,13 +106,13 @@ Identifier                 Name                             I  S  G  P  Type
 =========================  ===============================  =  =  =  =  ====================
 
 
-Class: Calendar.mcc 
+Class: Calendar.mcc
 -------------------
 
 ============================  ===============================  =  =  =  =  ====================
 Attributes
 -----------------------------------------------------------------------------------------------
-Identifier                    Name                             I  S  G  P  Type                
+Identifier                    Name                             I  S  G  P  Type
 ============================  ===============================  =  =  =  =  ====================
 (MUIB_Calendar | 0x00000000)  MUIA_Calendar_Date               X  X  X     struct ClockData *
 (MUIB_Calendar | 0x00000001)  MUIA_Calendar_MonthDay              X  X     UWORD
@@ -142,7 +142,7 @@ Identifier                       Name                                  P
 ===============================  ================================  =  =  =  =  ====================
 Attributes
 ---------------------------------------------------------------------------------------------------
-Identifier                       Name                              I  S  G  P  Type                
+Identifier                       Name                              I  S  G  P  Type
 ===============================  ================================  =  =  =  =  ====================
 (MUIB_PrefsWindow | 0x00000000)  MUIM_PrefsWindow_Test_Disabled    X  X  X     BOOL
 (MUIB_PrefsWindow | 0x00000001)  MUIM_PrefsWindow_Revert_Disabled  X  X  X     BOOL
@@ -158,7 +158,7 @@ Class: IconImage.mcc
 =============================  ===============================  =  =  =  =  ====================
 Attributes
 ------------------------------------------------------------------------------------------------
-Identifier                     Name                             I  S  G  P  Type                
+Identifier                     Name                             I  S  G  P  Type
 =============================  ===============================  =  =  =  =  ====================
 (MUIB_IconImage | 0x00000000)  MUIA_IconImage_DiskObject        X           struct DiskObject *
 (MUIB_IconImage | 0x00000001)  MUIA_IconImage_File              X           CONST_STRPTR
@@ -171,7 +171,7 @@ Class: AboutWindow.mcc
 ===============================  ===============================  =  =  =  =  ====================
 Attributes
 --------------------------------------------------------------------------------------------------
-Identifier                       Name                             I  S  G  P  Type                
+Identifier                       Name                             I  S  G  P  Type
 ===============================  ===============================  =  =  =  =  ====================
 (MUIB_AboutWindow | 0x00000000)  MUIA_AboutWindow_Image           X           Object *
 (MUIB_AboutWindow | 0x00000001)  MUIA_AboutWindow_Title           X           CONST_STRPTR
@@ -222,7 +222,7 @@ Class: ChunkyImage.mui
 ===============================  ===============================  =  =  =  =  ====================
 Attributes
 --------------------------------------------------------------------------------------------------
-Identifier                       Name                             I  S  G  P  Type                
+Identifier                       Name                             I  S  G  P  Type
 ===============================  ===============================  =  =  =  =  ====================
 (MUIB_ChunkyImage | 0x00000000)  MUIA_ChunkyImage_Pixels          X  X  X     UBYTE *
 (MUIB_ChunkyImage | 0x00000001)  MUIA_ChunkyImage_Palette         X  X  X     UBYTE *
@@ -237,7 +237,7 @@ Class: Scrollbutton.mui
 ================================  ===============================  =  =  =  =  ====================
 Attributes
 ---------------------------------------------------------------------------------------------------
-Identifier                        Name                             I  S  G  P  Type                
+Identifier                        Name                             I  S  G  P  Type
 ================================  ===============================  =  =  =  =  ====================
 (MUIB_Scrollbutton | 0x00000000)  MUIA_Scrollbutton_NewPosition          X     ULONG
 (MUIB_Scrollbutton | 0x00000001)  MUIA_Scrollbutton_Horiz             X  X     WORD
@@ -265,7 +265,7 @@ Identifier                    Name                                              
 ============================  ===============================  =  =  =  =  ====================
 Attributes
 -----------------------------------------------------------------------------------------------
-Identifier                    Name                             I  S  G  P  Type                
+Identifier                    Name                             I  S  G  P  Type
 ============================  ===============================  =  =  =  =  ====================
 (MUIB_IconList | 0x00000000)  MUIA_IconList_DoubleClick              X     BOOL
 (MUIB_IconList | 0x00000001)  MUIA_IconList_Left                     X     LONG
@@ -283,7 +283,7 @@ Class: IconDrawerList.mui
 ==================================  ===============================  =  =  =  =  ====================
 Attributes
 -----------------------------------------------------------------------------------------------------
-Identifier                          Name                             I  S  G  P  Type                
+Identifier                          Name                             I  S  G  P  Type
 ==================================  ===============================  =  =  =  =  ====================
 (MUIB_IconDrawerList | 0x00000000)  MUIA_IconDrawerList_Drawer       X  X  X     LONG
 ==================================  ===============================  =  =  =  =  ====================
@@ -301,7 +301,7 @@ Class: IconListview.mui
 ================================  ===============================  =  =  =  =  ====================
 Attributes
 ---------------------------------------------------------------------------------------------------
-Identifier                        Name                             I  S  G  P  Type                
+Identifier                        Name                             I  S  G  P  Type
 ================================  ===============================  =  =  =  =  ====================
 (MUIB_IconListview | 0x00000000)  MUIA_IconListview_IconList       X     X     Object *
 (MUIB_IconListview | 0x00000001)  MUIA_IconListview_UseWinBorder   X           BOOL
@@ -393,7 +393,7 @@ Identifier                       Name                                           
 ===============================  ===============================  =  =  =  =  ====================
 Attributes
 --------------------------------------------------------------------------------------------------
-Identifier                       Name                             I  S  G  P  Type                
+Identifier                       Name                             I  S  G  P  Type
 ===============================  ===============================  =  =  =  =  ====================
 (MUIB_Application | 0x00000000)  MUIA_Application_Configdata         X        Object *
 (MUIB_Application | 0x00000001)  MUIA_Application_Version_Number  X     X     CONST_STRPTR
@@ -419,7 +419,7 @@ Identifier                Name                                                P
 ========================  ===============================  =  =  =  =  ====================
 Attributes
 -------------------------------------------------------------------------------------------
-Identifier                Name                             I  S  G  P  Type                
+Identifier                Name                             I  S  G  P  Type
 ========================  ===============================  =  =  =  =  ====================
 (MUIB_Area | 0x00000000)  MUIA_NestedDisabled              X  X  X     BOOL
 ========================  ===============================  =  =  =  =  ====================
@@ -431,7 +431,7 @@ Class: Balance.mui
 ===========================  ===============================  =  =  =  =  ====================
 Attributes
 ----------------------------------------------------------------------------------------------
-Identifier                   Name                             I  S  G  P  Type                
+Identifier                   Name                             I  S  G  P  Type
 ===========================  ===============================  =  =  =  =  ====================
 (MUIB_Balance | 0x00000000)  MUIA_Balance_Quiet               X           LONG
 ===========================  ===============================  =  =  =  =  ====================
@@ -443,7 +443,7 @@ Class: Boopsi.mui
 ==========================  ===============================  =  =  =  =  ====================
 Attributes
 ---------------------------------------------------------------------------------------------
-Identifier                  Name                             I  S  G  P  Type                
+Identifier                  Name                             I  S  G  P  Type
 ==========================  ===============================  =  =  =  =  ====================
 (MUIB_Boopsi | 0x00000000)  MUIA_Boopsi_OnlyTrigger             X     X  BOOL
 ==========================  ===============================  =  =  =  =  ====================
@@ -470,7 +470,7 @@ Identifier                      Name                                            
 ==============================  ===============================  =  =  =  =  ====================
 Attributes
 -------------------------------------------------------------------------------------------------
-Identifier                      Name                             I  S  G  P  Type                
+Identifier                      Name                             I  S  G  P  Type
 ==============================  ===============================  =  =  =  =  ====================
 (MUIB_Configdata | 0x00000000)  MUIA_Configdata_Application      X           Object *
 (MUIB_Configdata | 0x00000001)  MUIA_Configdata_ZunePrefs              X  X  struct ZunePrefsNew *
@@ -484,7 +484,7 @@ Class: Frameadjust.mui
 ===============================  ===============================  =  =  =  =  ====================
 Attributes
 --------------------------------------------------------------------------------------------------
-Identifier                       Name                             I  S  G  P  Type                
+Identifier                       Name                             I  S  G  P  Type
 ===============================  ===============================  =  =  =  =  ====================
 (MUIB_Frameadjust | 0x00000000)  MUIA_Frameadjust_Spec            X     X     CONST_STRPTR
 ===============================  ===============================  =  =  =  =  ====================
@@ -496,7 +496,7 @@ Class: Gauge.mui
 =========================  ===============================  =  =  =  =  ====================
 Attributes
 --------------------------------------------------------------------------------------------
-Identifier                 Name                             I  S  G  P  Type                
+Identifier                 Name                             I  S  G  P  Type
 =========================  ===============================  =  =  =  =  ====================
 (MUIB_Gauge | 0x00000000)  MUIA_Gauge_DupInfoText           X           BOOL
 =========================  ===============================  =  =  =  =  ====================
@@ -516,7 +516,7 @@ Identifier                 Name                                                P
 =========================  ===============================  =  =  =  =  ====================
 Attributes
 --------------------------------------------------------------------------------------------
-Identifier                 Name                             I  S  G  P  Type                
+Identifier                 Name                             I  S  G  P  Type
 =========================  ===============================  =  =  =  =  ====================
 (MUIB_Group | 0x00000000)  MUIA_Group_Virtual               X           BOOL
 =========================  ===============================  =  =  =  =  ====================
@@ -540,7 +540,7 @@ Class: Imagedisplay.mui
 ================================  ===============================  =  =  =  =  ====================
 Attributes
 ---------------------------------------------------------------------------------------------------
-Identifier                        Name                             I  S  G  P  Type                
+Identifier                        Name                             I  S  G  P  Type
 ================================  ===============================  =  =  =  =  ====================
 (MUIB_Imagedisplay | 0x00000000)  MUIA_Imagedisplay_FreeHoriz      X           BOOL
 (MUIB_Imagedisplay | 0x00000001)  MUIA_Imagedisplay_FreeVert       X           BOOL
@@ -562,7 +562,7 @@ Identifier                Name                                                P
 ========================  ===============================  =  =  =  =  ====================
 Attributes
 -------------------------------------------------------------------------------------------
-Identifier                Name                             I  S  G  P  Type                
+Identifier                Name                             I  S  G  P  Type
 ========================  ===============================  =  =  =  =  ====================
 (MUIB_List | 0x00000000)  MUIA_List_HorizProp_Entries               X  LONG
 (MUIB_List | 0x00000001)  MUIA_List_HorizProp_Visible               X  LONG
@@ -572,7 +572,7 @@ Identifier                Name                             I  S  G  P  Type
 .. Note::
 
    Additionally, the following attribute aliases are also defined:
-   
+
    ==========================  ======================
    From                        To
    ==========================  ======================
@@ -588,7 +588,7 @@ Class: Menuitem.mui
 ============================  ===============================  =  =  =  =  ====================
 Attributes
 -----------------------------------------------------------------------------------------------
-Identifier                    Name                             I  S  G  P  Type                
+Identifier                    Name                             I  S  G  P  Type
 ============================  ===============================  =  =  =  =  ====================
 (MUIB_Menuitem | 0x00000000)  MUIA_Menuitem_NewMenu                  X     struct NewMenu *
 ============================  ===============================  =  =  =  =  ====================
@@ -613,7 +613,7 @@ Class: Penadjust.mui
 =============================  ===============================  =  =  =  =  ====================
 Attributes
 ------------------------------------------------------------------------------------------------
-Identifier                     Name                             I  S  G  P  Type                
+Identifier                     Name                             I  S  G  P  Type
 =============================  ===============================  =  =  =  =  ====================
 (MUIB_Penadjust | 0x00000000)  MUIA_Penadjust_Spec              X  X  X  X  struct MUI_Penspec *
 =============================  ===============================  =  =  =  =  ====================
@@ -664,7 +664,7 @@ Class: Prop.mui
 ========================  ===============================  =  =  =  =  ====================
 Attributes
 -------------------------------------------------------------------------------------------
-Identifier                Name                             I  S  G  P  Type                
+Identifier                Name                             I  S  G  P  Type
 ========================  ===============================  =  =  =  =  ====================
 (MUIB_Prop | 0x00000000)  MUIA_Prop_OnlyTrigger               X     X  BOOL
 ========================  ===============================  =  =  =  =  ====================
@@ -676,7 +676,7 @@ Class: Text.mui
 ========================  ===============================  =  =  =  =  ====================
 Attributes
 -------------------------------------------------------------------------------------------
-Identifier                Name                             I  S  G  P  Type                
+Identifier                Name                             I  S  G  P  Type
 ========================  ===============================  =  =  =  =  ====================
 (MUIB_Text | 0x00000000)  MUIA_Text_Editable               X           BOOL
 (MUIB_Text | 0x00000001)  MUIA_Text_Multiline              X           BOOL
@@ -703,7 +703,7 @@ Identifier                  Name                                                
 ==========================  ===============================  =  =  =  =  ====================
 Attributes
 ---------------------------------------------------------------------------------------------
-Identifier                  Name                             I  S  G  P  Type                
+Identifier                  Name                             I  S  G  P  Type
 ==========================  ===============================  =  =  =  =  ====================
 (MUIB_Window | 0x00000000)  MUIA_Window_EraseArea            X           BOOL
 (MUIB_Window | 0x00000001)  MUIA_Window_WandererBackdrop        X        BOOL
@@ -719,7 +719,7 @@ Class: Aboutmui.mui
 =======================  ===============================  =  =  =  =  ====================
 Attributes
 ------------------------------------------------------------------------------------------
-Identifier               Name                             I  S  G  P  Type                
+Identifier               Name                             I  S  G  P  Type
 =======================  ===============================  =  =  =  =  ====================
 (MUIB_MUI | 0x00422523)  MUIA_Aboutmui_Application        X           Object *
 =======================  ===============================  =  =  =  =  ====================
@@ -756,7 +756,7 @@ Identifier               Name                                                P
 =======================  ===============================  =  =  =  =  ====================
 Attributes
 ------------------------------------------------------------------------------------------
-Identifier               Name                             I  S  G  P  Type                
+Identifier               Name                             I  S  G  P  Type
 =======================  ===============================  =  =  =  =  ====================
 (MUIB_MUI | 0x004260ab)  MUIA_Application_Active          X  X  X     BOOL
 (MUIB_MUI | 0x00424842)  MUIA_Application_Author          X     X     STRPTR
@@ -832,14 +832,14 @@ Identifier               Name                                                P
 =======================  ===============================  =  =  =  =  ====================
 Attributes
 ------------------------------------------------------------------------------------------
-Identifier               Name                             I  S  G  P  Type                
+Identifier               Name                             I  S  G  P  Type
 =======================  ===============================  =  =  =  =  ====================
 (MUIB_MUI | 0x0042545b)  MUIA_Background                  X  X        LONG
 (MUIB_MUI | 0x0042e552)  MUIA_BottomEdge                        X     LONG
 (MUIB_MUI | 0x0042b704)  MUIA_ContextMenu                 X  X  X     Object *
 (MUIB_MUI | 0x0042a2c1)  MUIA_ContextMenuTrigger                X     Object *
 (MUIB_MUI | 0x0042120b)  MUIA_ControlChar                 X  X  X     char
-(MUIB_MUI | 0x00420a63)  MUIA_CustomBackfill              X           
+(MUIB_MUI | 0x00420a63)  MUIA_CustomBackfill              X
 (MUIB_MUI | 0x00421ce7)  MUIA_CycleChain                  X  X  X     LONG
 (MUIB_MUI | 0x00423661)  MUIA_Disabled                    X  X  X     BOOL
 (MUIB_MUI | 0x00420b6e)  MUIA_Draggable                   X  X  X     BOOL
@@ -894,7 +894,7 @@ Class: Bitmap.mui
 =======================  ===============================  =  =  =  =  ====================
 Attributes
 ------------------------------------------------------------------------------------------
-Identifier               Name                             I  S  G  P  Type                
+Identifier               Name                             I  S  G  P  Type
 =======================  ===============================  =  =  =  =  ====================
 (MUIB_MUI | 0x004279bd)  MUIA_Bitmap_Bitmap               X  X  X     struct BitMap *
 (MUIB_MUI | 0x00421560)  MUIA_Bitmap_Height               X  X  X     LONG
@@ -914,7 +914,7 @@ Class: Bodychunk.mui
 =======================  ===============================  =  =  =  =  ====================
 Attributes
 ------------------------------------------------------------------------------------------
-Identifier               Name                             I  S  G  P  Type                
+Identifier               Name                             I  S  G  P  Type
 =======================  ===============================  =  =  =  =  ====================
 (MUIB_MUI | 0x0042ca67)  MUIA_Bodychunk_Body              X  X  X     UBYTE *
 (MUIB_MUI | 0x0042de5f)  MUIA_Bodychunk_Compression       X  X  X     UBYTE
@@ -929,7 +929,7 @@ Class: Boopsi.mui
 =======================  ===============================  =  =  =  =  ====================
 Attributes
 ------------------------------------------------------------------------------------------
-Identifier               Name                             I  S  G  P  Type                
+Identifier               Name                             I  S  G  P  Type
 =======================  ===============================  =  =  =  =  ====================
 (MUIB_MUI | 0x00426999)  MUIA_Boopsi_Class                X  X  X     struct IClass *
 (MUIB_MUI | 0x0042bfa3)  MUIA_Boopsi_ClassID              X  X  X     char *
@@ -952,11 +952,11 @@ Class: Coloradjust.mui
 =======================  ===============================  =  =  =  =  ====================
 Attributes
 ------------------------------------------------------------------------------------------
-Identifier               Name                             I  S  G  P  Type                
+Identifier               Name                             I  S  G  P  Type
 =======================  ===============================  =  =  =  =  ====================
 (MUIB_MUI | 0x00420eaa)  MUIA_Coloradjust_Red             X  X  X     ULONG
 (MUIB_MUI | 0x004285ab)  MUIA_Coloradjust_Green           X  X  X     ULONG
-(MUIB_MUI | 0x0042b8a3)  MUIA_Coloradjust_Blue            X  X  X     ULONG 
+(MUIB_MUI | 0x0042b8a3)  MUIA_Coloradjust_Blue            X  X  X     ULONG
 (MUIB_MUI | 0x0042f899)  MUIA_Coloradjust_RGB             X  X  X     ULONG
 (MUIB_MUI | 0x0042ec59)  MUIA_Coloradjust_ModeID          X  X  X     ULONG
 =======================  ===============================  =  =  =  =  ====================
@@ -968,7 +968,7 @@ Class: Colorfield.mui
 =======================  ===============================  =  =  =  =  ====================
 Attributes
 ------------------------------------------------------------------------------------------
-Identifier               Name                             I  S  G  P  Type                
+Identifier               Name                             I  S  G  P  Type
 =======================  ===============================  =  =  =  =  ====================
 (MUIB_MUI | 0x0042713a)  MUIA_Colorfield_Pen                    X     ULONG
 (MUIB_MUI | 0x004279f6)  MUIA_Colorfield_Red              X  X  X     ULONG
@@ -990,7 +990,7 @@ Class: Cycle.mui
 =======================  ===============================  =  =  =  =  ====================
 Attributes
 ------------------------------------------------------------------------------------------
-Identifier               Name                             I  S  G  P  Type                
+Identifier               Name                             I  S  G  P  Type
 =======================  ===============================  =  =  =  =  ====================
 (MUIB_MUI | 0x00421788)  MUIA_Cycle_Active                X  X  X     LONG
 (MUIB_MUI | 0x00420629)  MUIA_Cycle_Entries               X           STRPTR
@@ -1017,7 +1017,7 @@ Identifier               Name                                                P
 =======================  ===============================  =  =  =  =  ====================
 Attributes
 ------------------------------------------------------------------------------------------
-Identifier               Name                             I  S  G  P  Type                
+Identifier               Name                             I  S  G  P  Type
 =======================  ===============================  =  =  =  =  ====================
 (MUIB_MUI | 0x00424cf9)  MUIA_Dataspace_Pool              X           APTR
 =======================  ===============================  =  =  =  =  ====================
@@ -1042,7 +1042,7 @@ Identifier               Name                                                P
 =======================  ===============================  =  =  =  =  ====================
 Attributes
 ------------------------------------------------------------------------------------------
-Identifier               Name                             I  S  G  P  Type                
+Identifier               Name                             I  S  G  P  Type
 =======================  ===============================  =  =  =  =  ====================
 (MUIB_MUI | 0x0042c696)  MUIA_Family_Child                X           Object *
 (MUIB_MUI | 0x00424b9e)  MUIA_Family_List                       X     struct MinList *
@@ -1061,7 +1061,7 @@ Class: Framedisplay.mui
 =======================  ===============================  =  =  =  =  ====================
 Attributes
 ------------------------------------------------------------------------------------------
-Identifier               Name                             I  S  G  P  Type                
+Identifier               Name                             I  S  G  P  Type
 =======================  ===============================  =  =  =  =  ====================
 (MUIB_MUI | 0x00421794)  MUIA_Framedisplay_Spec           X  X  X     struct MUI_FrameSpec *
 =======================  ===============================  =  =  =  =  ====================
@@ -1073,7 +1073,7 @@ Class: Gauge.mui
 =======================  ===============================  =  =  =  =  ====================
 Attributes
 ------------------------------------------------------------------------------------------
-Identifier               Name                             I  S  G  P  Type                
+Identifier               Name                             I  S  G  P  Type
 =======================  ===============================  =  =  =  =  ====================
 (MUIB_MUI | 0x0042f0dd)  MUIA_Gauge_Current               X  X  X     LONG
 (MUIB_MUI | 0x0042d8df)  MUIA_Gauge_Divide                X  X  X     LONG
@@ -1099,7 +1099,7 @@ Identifier               Name                                                P
 =======================  ===============================  =  =  =  =  ====================
 Attributes
 ------------------------------------------------------------------------------------------
-Identifier               Name                             I  S  G  P  Type                
+Identifier               Name                             I  S  G  P  Type
 =======================  ===============================  =  =  =  =  ====================
 (MUIB_MUI | 0x00424199)  MUIA_Group_ActivePage            X  X  X     LONG
 (MUIB_MUI | 0x004226e6)  MUIA_Group_Child                 X           Object *
@@ -1125,7 +1125,7 @@ Class: Imageadjust.mui
 =======================  ===============================  =  =  =  =  ====================
 Attributes
 ------------------------------------------------------------------------------------------
-Identifier               Name                             I  S  G  P  Type                
+Identifier               Name                             I  S  G  P  Type
 =======================  ===============================  =  =  =  =  ====================
 (MUIB_MUI | 0x00422f2b)  MUIA_Imageadjust_Type            X           LONG
 (MUIB_MUI | 0x004279e1)  MUIA_Imageadjust_Spec                  X     char *
@@ -1138,7 +1138,7 @@ Class: Imagedisplay.mui
 =======================  ===============================  =  =  =  =  ====================
 Attributes
 ------------------------------------------------------------------------------------------
-Identifier               Name                             I  S  G  P  Type                
+Identifier               Name                             I  S  G  P  Type
 =======================  ===============================  =  =  =  =  ====================
 (MUIB_MUI | 0x0042a547)  MUIA_Imagedisplay_Spec           X  X  X     struct MUI_ImageSpec *
 =======================  ===============================  =  =  =  =  ====================
@@ -1150,7 +1150,7 @@ Class: Image.mui
 =======================  ===============================  =  =  =  =  ====================
 Attributes
 ------------------------------------------------------------------------------------------
-Identifier               Name                             I  S  G  P  Type                
+Identifier               Name                             I  S  G  P  Type
 =======================  ===============================  =  =  =  =  ====================
 (MUIB_MUI | 0x0042815d)  MUIA_Image_FontMatch             X           BOOL
 (MUIB_MUI | 0x00429f26)  MUIA_Image_FontMatchHeight       X           BOOL
@@ -1195,7 +1195,7 @@ Identifier               Name                                                P
 =======================  ===============================  =  =  =  =  ====================
 Attributes
 ------------------------------------------------------------------------------------------
-Identifier               Name                             I  S  G  P  Type                
+Identifier               Name                             I  S  G  P  Type
 =======================  ===============================  =  =  =  =  ====================
 (MUIB_MUI | 0x0042391c)  MUIA_List_Active                 X  X  X     LONG
 (MUIB_MUI | 0x0042850d)  MUIA_List_AdjustHeight           X           BOOL
@@ -1233,7 +1233,7 @@ Class: Floattext.mui
 =======================  ===============================  =  =  =  =  ====================
 Attributes
 ------------------------------------------------------------------------------------------
-Identifier               Name                             I  S  G  P  Type                
+Identifier               Name                             I  S  G  P  Type
 =======================  ===============================  =  =  =  =  ====================
 (MUIB_MUI | 0x0042dc03)  MUIA_Floattext_Justify           X  X  X     BOOL
 (MUIB_MUI | 0x00425c7d)  MUIA_Floattext_SkipChars         X  X        STRPTR
@@ -1268,7 +1268,7 @@ Identifier               Name                                                P
 =======================  ===============================  =  =  =  =  ====================
 Attributes
 ------------------------------------------------------------------------------------------
-Identifier               Name                             I  S  G  P  Type                
+Identifier               Name                             I  S  G  P  Type
 =======================  ===============================  =  =  =  =  ====================
 (MUIB_MUI | 0x0042760a)  MUIA_Dirlist_AcceptPattern       X  X        STRPTR
 (MUIB_MUI | 0x0042ea41)  MUIA_Dirlist_Directory           X  X  X     STRPTR
@@ -1296,7 +1296,7 @@ Class: Listview.mui
 =======================  ===============================  =  =  =  =  ====================
 Attributes
 ------------------------------------------------------------------------------------------
-Identifier               Name                             I  S  G  P  Type                
+Identifier               Name                             I  S  G  P  Type
 =======================  ===============================  =  =  =  =  ====================
 (MUIB_MUI | 0x0042d1b3)  MUIA_Listview_ClickColumn              X     LONG
 (MUIB_MUI | 0x0042b296)  MUIA_Listview_DefClickColumn     X  X  X     LONG
@@ -1316,7 +1316,7 @@ Class: Menustrip.mui
 =======================  ===============================  =  =  =  =  ====================
 Attributes
 ------------------------------------------------------------------------------------------
-Identifier               Name                             I  S  G  P  Type                
+Identifier               Name                             I  S  G  P  Type
 =======================  ===============================  =  =  =  =  ====================
 (MUIB_MUI | 0x0042815b)  MUIA_Menustrip_Enabled           X  X  X     BOOL
 =======================  ===============================  =  =  =  =  ====================
@@ -1328,7 +1328,7 @@ Class: Menu.mui
 =======================  ===============================  =  =  =  =  ====================
 Attributes
 ------------------------------------------------------------------------------------------
-Identifier               Name                             I  S  G  P  Type                
+Identifier               Name                             I  S  G  P  Type
 =======================  ===============================  =  =  =  =  ====================
 (MUIB_MUI | 0x0042ed48)  MUIA_Menu_Enabled                X  X  X     BOOL
 (MUIB_MUI | 0x0042a0e3)  MUIA_Menu_Title                  X  X  X     STRPTR
@@ -1341,7 +1341,7 @@ Class: Menuitem.mui
 =======================  ===============================  =  =  =  =  ====================
 Attributes
 ------------------------------------------------------------------------------------------
-Identifier               Name                             I  S  G  P  Type                
+Identifier               Name                             I  S  G  P  Type
 =======================  ===============================  =  =  =  =  ====================
 (MUIB_MUI | 0x0042562a)  MUIA_Menuitem_Checked            X  X  X     BOOL
 (MUIB_MUI | 0x00425ace)  MUIA_Menuitem_Checkit            X  X  X     BOOL
@@ -1385,7 +1385,7 @@ Identifier               Name                                                P
 =======================  ===============================  =  =  =  =  ====================
 Attributes
 ------------------------------------------------------------------------------------------
-Identifier               Name                             I  S  G  P  Type                
+Identifier               Name                             I  S  G  P  Type
 =======================  ===============================  =  =  =  =  ====================
 (MUIB_MUI | 0x0042d3ee)  MUIA_ApplicationObject                 X     Object *
 (MUIB_MUI | 0x00421955)  MUIA_AppMessage                        X     struct AppMessage *
@@ -1419,7 +1419,7 @@ Identifier               Name                                                P
 =======================  ===============================  =  =  =  =  ====================
 Attributes
 ------------------------------------------------------------------------------------------
-Identifier               Name                             I  S  G  P  Type                
+Identifier               Name                             I  S  G  P  Type
 =======================  ===============================  =  =  =  =  ====================
 (MUIB_MUI | 0x00421594)  MUIA_Numeric_CheckAllSizes       X  X  X     BOOL
 (MUIB_MUI | 0x004263e8)  MUIA_Numeric_Default             X  X  X     LONG
@@ -1439,7 +1439,7 @@ Class: Penadjust.mui
 =======================  ===============================  =  =  =  =  ====================
 Attributes
 ------------------------------------------------------------------------------------------
-Identifier               Name                             I  S  G  P  Type                
+Identifier               Name                             I  S  G  P  Type
 =======================  ===============================  =  =  =  =  ====================
 (MUIB_MUI | 0x00421cbb)  MUIA_Penadjust_PSIMode           X           BOOL
 =======================  ===============================  =  =  =  =  ====================
@@ -1461,7 +1461,7 @@ Identifier               Name                                                P
 =======================  ===============================  =  =  =  =  ====================
 Attributes
 ------------------------------------------------------------------------------------------
-Identifier               Name                             I  S  G  P  Type                
+Identifier               Name                             I  S  G  P  Type
 =======================  ===============================  =  =  =  =  ====================
 (MUIB_MUI | 0x0042a748)  MUIA_Pendisplay_Pen                    X     Object *
 (MUIB_MUI | 0x0042dc24)  MUIA_Pendisplay_Reference        X  X  X     Object *
@@ -1476,7 +1476,7 @@ Class: Popasl.mui
 =======================  ===============================  =  =  =  =  ====================
 Attributes
 ------------------------------------------------------------------------------------------
-Identifier               Name                             I  S  G  P  Type                
+Identifier               Name                             I  S  G  P  Type
 =======================  ===============================  =  =  =  =  ====================
 (MUIB_MUI | 0x00421b37)  MUIA_Popasl_Active                     X     BOOL
 (MUIB_MUI | 0x0042b703)  MUIA_Popasl_StartHook            X  X  X     struct Hook *
@@ -1503,7 +1503,7 @@ Class: Popobject.mui
 =======================  ===============================  =  =  =  =  ====================
 Attributes
 ------------------------------------------------------------------------------------------
-Identifier               Name                             I  S  G  P  Type                
+Identifier               Name                             I  S  G  P  Type
 =======================  ===============================  =  =  =  =  ====================
 (MUIB_MUI | 0x00424cb5)  MUIA_Popobject_Follow            X  X  X     BOOL
 (MUIB_MUI | 0x0042a5a3)  MUIA_Popobject_Light             X  X  X     BOOL
@@ -1521,7 +1521,7 @@ Class: Poplist.mui
 =======================  ===============================  =  =  =  =  ====================
 Attributes
 ------------------------------------------------------------------------------------------
-Identifier               Name                             I  S  G  P  Type                
+Identifier               Name                             I  S  G  P  Type
 =======================  ===============================  =  =  =  =  ====================
 (MUIB_MUI | 0x0042084c)  MUIA_Poplist_Array               X           char **
 =======================  ===============================  =  =  =  =  ====================
@@ -1554,7 +1554,7 @@ Identifier               Name                                                P
 =======================  ===============================  =  =  =  =  ====================
 Attributes
 ------------------------------------------------------------------------------------------
-Identifier               Name                             I  S  G  P  Type                
+Identifier               Name                             I  S  G  P  Type
 =======================  ===============================  =  =  =  =  ====================
 (MUIB_MUI | 0x0042d0b9)  MUIA_Popstring_Button            X     X     Object *
 (MUIB_MUI | 0x004256bf)  MUIA_Popstring_CloseHook         X  X  X     struct Hook *
@@ -1579,7 +1579,7 @@ Identifier               Name                                                P
 =======================  ===============================  =  =  =  =  ====================
 Attributes
 ------------------------------------------------------------------------------------------
-Identifier               Name                             I  S  G  P  Type                
+Identifier               Name                             I  S  G  P  Type
 =======================  ===============================  =  =  =  =  ====================
 (MUIB_MUI | 0x0042fbdb)  MUIA_Prop_Entries                X  X  X     LONG
 (MUIB_MUI | 0x0042d4b2)  MUIA_Prop_First                  X  X  X     LONG
@@ -1599,7 +1599,7 @@ Class: Radio.mui
 =======================  ===============================  =  =  =  =  ====================
 Attributes
 ------------------------------------------------------------------------------------------
-Identifier               Name                             I  S  G  P  Type                
+Identifier               Name                             I  S  G  P  Type
 =======================  ===============================  =  =  =  =  ====================
 (MUIB_MUI | 0x00429b41)  MUIA_Radio_Active                X  X  X     LONG
 (MUIB_MUI | 0x0042b6a1)  MUIA_Radio_Entries               X           STRPTR *
@@ -1612,7 +1612,7 @@ Class: Rectange.mui
 =======================  ===============================  =  =  =  =  ====================
 Attributes
 ------------------------------------------------------------------------------------------
-Identifier               Name                             I  S  G  P  Type                
+Identifier               Name                             I  S  G  P  Type
 =======================  ===============================  =  =  =  =  ====================
 (MUIB_MUI | 0x00426689)  MUIA_Rectangle_BarTitle          X     X     STRPTR
 (MUIB_MUI | 0x0042c943)  MUIA_Rectangle_HBar              X     X     BOOL
@@ -1626,7 +1626,7 @@ Class: Register.mui
 =======================  ===============================  =  =  =  =  ====================
 Attributes
 ------------------------------------------------------------------------------------------
-Identifier               Name                             I  S  G  P  Type                
+Identifier               Name                             I  S  G  P  Type
 =======================  ===============================  =  =  =  =  ====================
 (MUIB_MUI | 0x0042349b)  MUIA_Register_Frame              X     X     BOOL
 (MUIB_MUI | 0x004297ec)  MUIA_Register_Titles             X     X     STRPTR
@@ -1639,7 +1639,7 @@ Class: Scale.mui
 =======================  ===============================  =  =  =  =  ====================
 Attributes
 ------------------------------------------------------------------------------------------
-Identifier               Name                             I  S  G  P  Type                
+Identifier               Name                             I  S  G  P  Type
 =======================  ===============================  =  =  =  =  ====================
 (MUIB_MUI | 0x0042919a)  MUIA_Scale_Horiz                 X  X  X     BOOL
 =======================  ===============================  =  =  =  =  ====================
@@ -1651,7 +1651,7 @@ Class: Scrollbar.mui
 =======================  ===============================  =  =  =  =  ====================
 Attributes
 ------------------------------------------------------------------------------------------
-Identifier               Name                             I  S  G  P  Type                
+Identifier               Name                             I  S  G  P  Type
 =======================  ===============================  =  =  =  =  ====================
 (MUIB_MUI | 0x0042fb6b)  MUIA_Scrollbar_Type              X           LONG
 =======================  ===============================  =  =  =  =  ====================
@@ -1663,7 +1663,7 @@ Class: Scrollgroup.mui
 =======================  ===============================  =  =  =  =  ====================
 Attributes
 ------------------------------------------------------------------------------------------
-Identifier               Name                             I  S  G  P  Type                
+Identifier               Name                             I  S  G  P  Type
 =======================  ===============================  =  =  =  =  ====================
 (MUIB_MUI | 0x00421261)  MUIA_Scrollgroup_Contents        X     X     Object *
 (MUIB_MUI | 0x004292f3)  MUIA_Scrollgroup_FreeHoriz       X           BOOL
@@ -1715,7 +1715,7 @@ Class: Slider.mui
 =======================  ===============================  =  =  =  =  ====================
 Attributes
 ------------------------------------------------------------------------------------------
-Identifier               Name                             I  S  G  P  Type                
+Identifier               Name                             I  S  G  P  Type
 =======================  ===============================  =  =  =  =  ====================
 (MUIB_MUI | 0x0042fad1)  MUIA_Slider_Horiz                X  X  X     BOOL
 (MUIB_MUI | 0x00420b26)  MUIA_Slider_Quiet                X           BOOL
@@ -1732,7 +1732,7 @@ Class: String.mui
 =======================  ===============================  =  =  =  =  ====================
 Attributes
 ------------------------------------------------------------------------------------------
-Identifier               Name                             I  S  G  P  Type                
+Identifier               Name                             I  S  G  P  Type
 =======================  ===============================  =  =  =  =  ====================
 (MUIB_MUI | 0x0042e3e1)  MUIA_String_Accept               X  X  X     STRPTR
 (MUIB_MUI | 0x0042026c)  MUIA_String_Acknowledge                X     STRPTR
@@ -1757,7 +1757,7 @@ Class: Text.mui
 =======================  ===============================  =  =  =  =  ====================
 Attributes
 ------------------------------------------------------------------------------------------
-Identifier               Name                             I  S  G  P  Type                
+Identifier               Name                             I  S  G  P  Type
 =======================  ===============================  =  =  =  =  ====================
 (MUIB_MUI | 0x0042f8dc)  MUIA_Text_Contents               X  X  X     STRPTR
 (MUIB_MUI | 0x004218ff)  MUIA_Text_HiChar                 X           char
@@ -1797,7 +1797,7 @@ Identifier               Name                                                P
 =======================  ===================================  =  =  =  =  ====================
 Attributes
 ----------------------------------------------------------------------------------------------
-Identifier               Name                                 I  S  G  P  Type                
+Identifier               Name                                 I  S  G  P  Type
 =======================  ===================================  =  =  =  =  ====================
 (MUIB_MUI | 0x00428d2f)  MUIA_Window_Activate                 X  X  X     BOOL
 (MUIB_MUI | 0x00427925)  MUIA_Window_ActiveObject                X  X     Object *
@@ -1851,7 +1851,7 @@ Class: Virtgroup.mui
 =======================  ===============================  =  =  =  =  ====================
 Attributes
 ------------------------------------------------------------------------------------------
-Identifier               Name                             I  S  G  P  Type                
+Identifier               Name                             I  S  G  P  Type
 =======================  ===============================  =  =  =  =  ====================
 (MUIB_MUI | 0x00423038)  MUIA_Virtgroup_Height                  X     LONG
 (MUIB_MUI | 0x00427f7e)  MUIA_Virtgroup_Input             X           BOOL
@@ -1859,3 +1859,4 @@ Identifier               Name                             I  S  G  P  Type
 (MUIB_MUI | 0x00425200)  MUIA_Virtgroup_Top               X  X  X     LONG
 (MUIB_MUI | 0x00427c49)  MUIA_Virtgroup_Width                   X     LONG
 =======================  ===============================  =  =  =  =  ====================
+

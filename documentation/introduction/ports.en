@@ -2,8 +2,8 @@
 Ports
 =====
 
-:Authors:   Adam Chodorowski, Matthias Rustler 
-:Copyright: Copyright (C) 1995-2009, The AROS Development Team
+:Authors:   Adam Chodorowski, Matthias Rustler
+:Copyright: Copyright (C) 1995-2012, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
@@ -14,16 +14,16 @@ Ports
 Introduction
 ============
 
-Since AROS is a portable operating system, it is available for several different
-platforms. A "port" of AROS is exactly what the name implies, ie. a version of
-AROS ported to some specific platform. 
+Since AROS is a portable operating system, it is available for several
+different platforms. A "port" of AROS is exactly what the name implies, i.e. a
+version of AROS ported to some specific platform.
 
 
 Flavors
 --------
 
-Ports are divided up into two major groups, or "flavors" in AROS terminology,
-namely "native" and "hosted". 
+Ports are divided into two major groups, or "flavors" in AROS terminology,
+namely "native" and "hosted".
 
 Native ports run directly on the hardware and have total control over the
 computer. They will become the recommended way to run AROS in the future since
@@ -41,12 +41,13 @@ without wasting time on constant reboots to try out new code.
 Naming
 ------
 
-The different AROS ports are named on the form <platform>-<cpu>, where 
-<platform> is a symbolic name of the platform and <cpu> is the CPU architecture. The
-platform of a port can either be a hardware one for native ports, such as "pc"
-or "amiga", or an operating system for hosted ports, such as "linux" or
-"freebsd". In cases when it is not obvious that the topic is AROS it is common
-to prefix "AROS/" to the port name, giving you for example "AROS/pc-i386". 
+The different AROS ports have names that of the form <platform>-<cpu>, where
+<platform> is a symbolic name for the platform and <cpu> is the CPU
+architecture. For a native port, the platform refers to the hardware, such as
+"pc" or "amiga"; for a hosted port it refers to an operating system, such as
+"linux" or "freebsd". In situations where it might not be obvious that the
+topic is AROS, "AROS/" is commonly prefixed to the port name, giving you e.g.
+"AROS/pc-i386".
 
 
 Portability
@@ -57,12 +58,13 @@ CPU, which means that executables compiled for "pc-i386" will work fine on
 "linux-i386" and "freebsd-i386".
 
 
+
 Existing ports
 ==============
 
 Below is a list of all AROS ports that are in working order and/or actively
-developed. Not all of these are available for download, since they might 
-either be not complete enough or have compilation requirements that we can't 
+developed. Not all of these are available for download, since they might
+either not be complete enough or have compilation requirements that we can't
 always meet due to limited resources.
 
 
@@ -74,35 +76,38 @@ AROS/pc-i386 and x86-64
 :Maintained: Yes
 
 AROS/pc-i386 is the native port of AROS to the common IBM PC AT computers and
-compatibles using the x86 (or x86-64) family of processors. The name is actually a bit
-misleading since AROS/pc-i386 actually requires at least a 486 class CPU due to
-usage of some instructions not available on the 386. This machine also must be 
-based on PCI bus.
+compatibles using the x86 (or x86-64) family of processors. The name is
+actually a bit misleading since AROS/pc-i386 actually requires at least a 486
+class CPU due to usage of some instructions not available on the 386. This
+port also requires that the computer is PCI-based.
 
-This port works quite well, but we only have the most basic driver
-support.  One of the biggest limitations is that we currently only have
-support for accelerated graphics on nVidia and ATI graphics hardware. Other
-graphics adapters must be used with generic (non-accelerated) VGA and
-VBE graphics drivers. There are more drivers in the works, but
-development is quite slow since we only have about 2.5 hardware hackers.
+This port works quite well, but we only have the most basic driver support.
+One of the biggest limitations is that we currently only have support for
+accelerated graphics on nVidia and ATI graphics hardware. Other graphics
+adapters must be used with generic (non-accelerated) VGA and VBE graphics
+drivers. There are more drivers in the works, but development is quite slow
+since we only have about 2.5 hardware hackers.
+
 This port is available for download.
 
 
 AROS/pp-m68k
 ------------
 
-:Flavour:    Native 
+:Flavour:    Native
 :Status:     Partly working (in an emulator), incomplete driver support
 :Maintained: No
 
-AROS/pp-m68k is the native port of AROS to the Palm line of handheld computers
-and compatibles ("pp" stands for "palm pilot", which was the name of the first
-handhelds of this line). This means that you might be able to take AROS with you
-in your pocket when traveling in the future...
+AROS/pp-m68k is the native port of AROS to the Palm line of handheld
+computers and compatibles ("pp" stands for "palm pilot", which was the name of
+the first handhelds of this line). This means that you might be able to take
+AROS with you in your pocket when travelling in the future...
 
 This port is currently very raw. It does mostly work (running in an emulator,
-since nobody wants to risk trashing their expensive hardware just yet) but there
-is still a lot of work left. There is a graphics driver, but not any input ones.
+since nobody wants to risk trashing their expensive hardware just yet) but
+there is still a lot of work left. There is a graphics driver, but not any
+input ones.
+
 This port is not available for download at this time.
 
 
@@ -114,11 +119,13 @@ AROS/linux-i386 and x86-64
 :Maintained: Yes
 
 AROS/linux-i386 is the hosted port of AROS to the Linux operating system [#]_
-running on the x86 (or x86-64) family of processors. 
+running on the x86 (or x86-64) family of processors.
 
-This is the most complete port of AROS feature-wise, since most of the 
-developers currently use Linux when developing AROS, and there are far 
-fewer drivers to write. This port is available for download.
+This is the most complete port of AROS, feature-wise, since most of the
+developers currently use Linux when developing AROS, and there are far
+fewer drivers to write.
+
+This port is available for download.
 
 
 AROS/freebsd-i386
@@ -129,13 +136,14 @@ AROS/freebsd-i386
 :Maintained: No
 
 AROS/freebsd-i386 is the hosted port of AROS to the FreeBSD operating system
-running on the x86 family of processors. 
+running on the x86 family of processors.
 
-This port is relatively complete since it shares most of it's code with that of
-AROS/linux-i386, but since there aren't many developers that use FreeBSD it is
-lagging a little bit behind. We try to compile AROS/freebsd-i386 when doing
-snapshots, but it is not always possible, so it might not always be available
-for download.
+This port is relatively complete since it shares most of it's code with that
+of AROS/linux-i386, but since there aren't many developers that use FreeBSD
+it is lagging a little bit behind.
+
+We try to compile AROS/freebsd-i386 when doing snapshots, but that's not
+always possible. It's, thus, not always available for download.
 
 
 AROS/linux-ppc
@@ -146,25 +154,31 @@ AROS/linux-ppc
 :Maintained: Yes
 
 AROS/linux-ppc is the hosted port of AROS to the Linux operating system
-running on the PPC family of processors.
+running on the PowerPC family of processors.
 
-Rebuilding requires a patched gcc3.4.3. The diff file can be found in contrib/gnu/gcc.
+Rebuilding requires a patched gcc3.4.3. The diff file can be found in
+contrib/gnu/gcc.
+
 
 AROS/mingw32-i386
 ------------------
 
 This port is intended to run on Microsoft Windows (beginning from Windows 98)
-as the hosted system. The port is in it`s early days but is developed contantly.
+as the hosted system. The port is in its early days but is developed
+constantly.
+
 The port maintainer is Pavel Fedin. GDI is used to make the screen output.
 
 This port can be downloaded from our download page.
 
-Footnotes
-=========
+
+
+Footnote
+========
 
 .. [#] Yes, we know that Linux is really just a kernel and not a whole OS, but
-       it is much shorter to write that rather than "operating systems based on
-       the Linux kernel, some of the common GNU tools and the X windowing
-       system". This size optimization is of course negated by having to write
-       this explanation for the pedantic readers, but anyway...
+       it is much shorter than "operating systems based on the Linux kernel,
+       some of the common GNU tools and the X windowing system". This size
+       optimization is of course negated by having to write this explanation
+       for the pedantic readers, but anyway...
 

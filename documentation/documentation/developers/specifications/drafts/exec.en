@@ -1,5 +1,5 @@
 ====================
-The exec microkernel
+The Exec Microkernel
 ====================
 
 :Author:    Unknown
@@ -7,33 +7,33 @@ The exec microkernel
 :Version:   $Revision$
 :Date:      $Date$
 
-.. Note:: 
+.. Note::
 
-   This document is currently only a draft and will most likely change before 
-   it is accepted as an official specification. It might also be deprecated if
-   a better aproach has been found and might not correspond precisely with the 
-   current implementation.
+   This document is currently only a draft and as such will most likely change
+   before it is accepted as an official specification. It might also be
+   deprecated if a better approach has been found in the mean time, and
+   doesn't necessarily correspond precisely with the current implementations.
 
 
-This document describes the inner workings of exec.library. It's not for normal
-application programmers but for people who are interested in such a thing. Most
-of the things described herein are system private - they may or may not be true
-for future system version.
+This document describes the inner workings of exec.library. It's not intended
+for application programmers but for those who are interested the systems inner
+workings. Most of the things described herein are system private - they may or
+may not be true for future system versions.
 
-Exec is a shared library giving the ability for multitasking including
-communication between tasks, memory management, shared libraries and device I/O.
-Large parts of this library are formed by a set of functions that are called on
-the users schedule just like any normal C function is (though they do things
-you'd usually expect in a kernel). These functions make up the library part of
-exec which is built on a smaller set of functions which form the core of exec
-(you may call them the real kernel if you like). This machine dependant core
-serves things like supervisor mode, traps, interrupts, task exceptions and
-context switching routines.
+Exec is a shared library giving the ability for multitasking, including
+communication between tasks, memory management, shared libraries, and device
+I/O. Large parts of this library are formed by a set of functions that are
+called on the user's schedule just like any normal C function would be (though
+they do things you'd usually expect in a kernel). These functions make up the
+library part of exec, with this part being built on a smaller set of functions
+which form the core of exec (you may call them the real kernel if you like).
+This machine-dependent core serves things like supervisor mode, traps,
+interrupts, task exceptions, and context-switching routines.
 
 The core of exec in short:
 
 ``ULONG Supervisor(ULONG (*)());``
-    Calls a user function in supervisor mode.
+    Calls a user-function in supervisor mode.
 
 ``APTR tc_TrapData;`` and ``APTR tc_TrapCode;``
     User settable trap vector.
@@ -89,20 +89,20 @@ The core of exec in short:
 ``void Exception(void);``
     Is called to handle the task exception.
 
-The most important part are the context switching routines. The context of every
-task is stored on the task's user stack. The stackpointer is stored in the task
-structure. Context switches are raised by moving the current task to one of the
-two task lists (must be done with interrupts Disable()d) and then calling
-Switch(). However if this happens inside an interrupt (which is allowed and
-quite useful) the user context is unavailable. Therefore Switch() checks if it
-was called from user mode and sets the delayed dispatch flag if not. This flag
-tells the interrupt primitives to do a context switch (by calling Dispatch())
-before falling down to user mode. When called from user mode Switch() calls
-Dispatch() directly. Dispatch() is the function which does the real work, i.e.
-it replaces the current task with the first task in the ready list. If the
-TF_EXCEPT flag for the new task is set Dispatch() raises a task exception by
-calling the Exception() vector of exec with interrupts Disable()d. tc_Switch and
-tc_Launch are also handled by Dispatch().
+The most important part are the context switching routines. The context of
+every task is stored on the task's user stack. The stack pointer is stored in
+the task structure. Context switches are raised by moving the current task to
+one of the two task lists (must be done with interrupts Disable()d) and then
+calling Switch(). However, if this happens inside an interrupt (which is
+allowed and quite useful) the user context is unavailable. Therefore Switch()
+checks if it was called from user mode and sets the delayed dispatch flag if
+not. This flag tells the interrupt primitives to do a context switch (by
+calling Dispatch()) before falling down to user mode. When called from user
+mode Switch() calls Dispatch() directly. Dispatch() is the function which does
+the real work, i.e. it replaces the current task with the first task in the
+ready list. If the TF_EXCEPT flag for the new task is set, Dispatch() raises
+a task exception by calling the Exception() vector of exec with interrupts
+Disable()d. Also, tc_Switch and tc_Launch are both handled by Dispatch().
 
 The usual way to do a context switch is as follows::
 
@@ -110,7 +110,7 @@ The usual way to do a context switch is as follows::
     {
       /* The task lists must be protected with a Disable() */
       Disable();
-      /* check if taskswitches are allowed */
+      /* check if task switches are allowed */
       if(SysBase->TDNestCnt<0&&SysBase->IDNestCnt<=0)
       {
         /* Check if there is already a pending task switch (this check can
@@ -124,14 +124,15 @@ The usual way to do a context switch is as follows::
           Switch();
         }
       }else
-        /* Memorize taskswitch for a later Enable() or Permit(). */
+        /* Memorize task switch for a later Enable() or Permit(). */
         SysBase->AttnFlags|=0x80;
       Enable();
     }
 
 Interrupts and traps are delivered with direct function calls. The different
-interrupt levels call different interrupt vectors (stored in IntVects[i]). Traps
-are raised by calling the tc_TrapCode vector of the current task (usually this
-ends up in an Alert() - the exec equivalent of a kernel panic). Interrupts may
-be disabled completely (by calling Disable(), Enable() enables them again,
-Disable() calls may be nested) but only for a short time.
+interrupt levels call different interrupt vectors (stored in IntVects[i]).
+Traps are raised by calling the tc_TrapCode vector of the current task
+(usually this ends up in an Alert() - the exec equivalent of a kernel panic).
+Interrupts may be disabled completely (by calling Disable(), Enable() enables
+them again, Disable() calls may be nested) but only for a short time.
+

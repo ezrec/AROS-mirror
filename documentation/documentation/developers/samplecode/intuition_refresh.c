@@ -4,7 +4,7 @@
     Two windows are opened, one with simplerefresh, the other one with
     smartrefresh. You can watch what messages are sent when you move around
     or resize the windows. There is intentionally no redrawing in the
-    event handler, so that you can better see the result of your window
+    event handler, so that you can clearly see the result of your window
     manipulation.
 */
 
@@ -112,7 +112,7 @@ int main(void)
             (1L << window2->UserPort->mp_SigBit)
         );
         /*
-            Now we can check which window has reveived the signal and
+            Now we can check which window has received the signal and
             then we call the event handler for that window.
         */
         if (signals & (1L << window1->UserPort->mp_SigBit))
@@ -185,7 +185,7 @@ static BOOL handle_events(struct Window *win, BOOL terminated)
                 EndRefresh(win, TRUE);
                 break;
             case IDCMP_SIZEVERIFY:
-                // SIZEVERIFY blocks a window until message has been replied
+                // SIZEVERIFY blocks a window until the message has been replied
                 puts("IDCMP_SIZEVERIFY");
                 break;
         }

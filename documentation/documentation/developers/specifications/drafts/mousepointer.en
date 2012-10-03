@@ -2,69 +2,70 @@
 Mouse Pointer Handling
 ======================
 
-:Author:    Pavel Fedin
+:Author: Pavel Fedin
 :Copyright: Copyright © 2010, The AROS Development Team
-:Version:   $Revision$
-:Date:      $Date$
+:Version: $Revision$
+:Date: $Date$
 
 .. Contents::
 
 General information
 ===================
 
-A  new  pointer  code is verified to work with SDL driver. Also it is
+A new pointer code is verified to work with SDL driver. Also it is
 highly expected to work with VESA mode (since it uses the same generic
 software implementation in fakegfx.hidd).
 Also it is expected to work with ATI and NVidia drivers.
-It will not work with VGA driver, it still will display hardcoded red
-arrow. An overhaul of the driver is needed, i'm going to do it.
-The  default  pointer  image hardcoded in Intuition really looks like
+It will not work with VGA driver; it still will display hardcoded red
+arrow. An overhaul of the driver is needed; i'm going to do it.
+The default pointer image hardcoded in Intuition really looks like an
 almost white triangle with a shadow, it's not a bug.
 Now some technical details...
 
-The  whole  thing  works using graphics.library ExtSprite engine. Its
+The whole thing works using graphics.library ExtSprite engine. Its
 behavior is modified according to the following:
 
-1. There  is a support for only one sprite in our display HIDD API. The
-same  applies  to  graphics.library. GetExtSprite() always returns -1.
-This  means  that  we have only sprite #0 and it's always allocated by
+1. There is a support for only one sprite in our display HIDD API. The
+same applies to graphics.library. GetExtSprite() always returns -1.
+This means that we have only sprite #0 and it's always allocated by
 the system. Intuition.library never calls GetExtSprite() or FreeSprite().
 MoveSprite() on sprite #0 changes mouse pointer position. ChangeExtSprite()
-on  sprite  #0  changes  its look. Any other sprite number is ignored.
+on sprite #0 changes its look. Any other sprite number is ignored.
 Old private pointer handling functions are removed.
 
 2. Colors of the sprite are 17-19 colors of the screen's palette, the
-same  as  on  original  Amiga.  For truecolor screens these colors are
-grabbed  in  ChangeExtSpriteA()  and  attached  to the internal sprite
-bitmap.  This  means  that  setting  palette  has  no effect on actual
-pointer  colors  until  next  ChangeExtSpriteA()  (in  intuition  this
-happens  at  least  on  every  window  activation).  For  LUT  screens
-everything  will  work.  If  the  screen has less than 24 colors, it's
-impossible  to  use 17-19 colors. In this case pointer palette entries
-are  shifted  down  to be 3 colors before last 4 colors of the screen.
+same as on original Amiga. For truecolor screens these colors are
+grabbed in ChangeExtSpriteA() and attached to the internal sprite
+bitmap. This means that setting palette has no effect on actual
+pointer colors until next ChangeExtSpriteA() (in intuition this
+happens at least on every window activation). For LUT screens
+everything will work. If the screen has less than 24 colors, it's
+impossible to use 17-19 colors. In this case pointer palette entries
+are shifted down to be 3 colors before last 4 colors of the screen.
 For example these will be colors 9-11 on 16-color VGA screen. Yes, the
 pointer may look not as expected if the application specifies a custom
 palette for the whole screen, but there's no way to work around this.
 
 3. In theory the same system can support truecolor sprites. Note that
 AllocSpriteDataA() constructs sprite data from the bitmap. This means
-that  we  could pass any bitmap to it, not only planar 2-plane bitmap.
-Even  truecolor  bitmap  with  alpha  channel.  Currently  this is not
+that we could pass any bitmap to it, not only planar 2-plane bitmap.
+Even truecolor bitmap with alpha channel. Currently this is not
 supported because of two restrictions:
-* AllocSpriteData()  always  creates internal sprite bitmap in LUT8
+* AllocSpriteData() always creates internal sprite bitmap in LUT8
 format. In order to support another formats AllocSpriteData() just has
-to  be  a little smarter and determine if source bitmap is a truecolor
+to be a little smarter and determine if source bitmap is a truecolor
 HIDD bitmap.
-* Display  drivers always expect pointer shape in LUT8 format. This
-is  also  simple  to  overcome,  but there's one little problem - it's
-problematic  to  dislay  a  truecolor  sprite  on  a LUT screen. Let's
-remember  that  the  user  may  run  in VESA or even VGA mode, and the
+* Display drivers always expect pointer shape in LUT8 format. This
+is also simple to overcome, but there's one little problem - it's
+problematic to dislay a truecolor sprite on a LUT screen. Let's
+remember that the user may run in VESA or even VGA mode, and the
 user should see at least *SOME* pointer image.
+
 
 Alpha-blended mouse pointer
 ===========================
 
-This  is  done  by  adding  proper alpha channel values to the sprite
+This is done by adding proper alpha channel values to the sprite
 palette in ChangeExtSpriteA() and then obeying them in the driver. If
 we test and enable truecolor pointer support, we also could have alpha
 blending there.

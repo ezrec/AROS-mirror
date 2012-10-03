@@ -2,7 +2,7 @@
 Links
 =====
 
-:Authors:   Aaron Digulla, Adam Chodorowski 
+:Authors:   Aaron Digulla, Adam Chodorowski
 :Copyright: Copyright © 1995-2006, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
@@ -21,14 +21,16 @@ Device drivers development
 
   A quote from the site:
 
-  "Starting out new with USB can be quite daunting. With the USB 2.0 specification
-  at 650 pages one could easily be put off just by the sheer size of the standard.
-  [...] The good news is you don't even need to bother reading the entire USB standard
-  [...] Lets take a little journey through the various chapters of the USB 2.0 specification
-  and briefly introduce the key points."
+  "Starting out new with USB can be quite daunting. With the USB 2.0
+  specification at 650 pages one could easily be put off just by the sheer
+  size of the standard. [...] The good news is you don't even need to bother
+  reading the entire USB standard [...] Lets take a little journey through
+  the various chapters of the USB 2.0 specification and briefly introduce
+  the key points."
 
 __ http://www.usb.org/developers/docs/
 __ http://www.beyondlogic.org/usbnutshell/usb1.htm
+
 
 Executable file formats
 -----------------------
@@ -44,21 +46,22 @@ Executable file formats
   A research project about creating a system for portable binaries for the
   Amiga, allowing one to use a single executable binary for a multitude of
   CPU architectures. Unfortunately, the page hasn't been updated for a long
-  time; but it *does* contain some interesting ideas. Definately something
+  time; but it *does* contain some interesting ideas. Definitely something
   we would like to see in AROS.
 
 __ http://refspecs.freestandards.org/elf/elf.pdf
 __ http://greywire.8m.com/greywire/amigasde.htm
 
 
-Miscellaneous Operating System resources
+Miscellaneous operating system resources
 ----------------------------------------
 
 + `The Operating System Resource Center`__
 
-  A comprehensive set of links to various resources related to Operating Systems
-  development, like file systems, device drivers, memory management, and so on.
-  
+  A comprehensive set of links to various resources related to Operating
+  Systems development, like file systems, device drivers, memory management,
+  and so on.
+
 + `Protected Mode Basics`__
 
   An in-depth article by Robert Collins about protected mode on the x86
@@ -69,7 +72,7 @@ Miscellaneous Operating System resources
 
   Lots of useful information about the low-level bits of writing an operating
   system for the x86 architecture. Mostly about controlling the hardware, but
-  also contains some useful tidbits about filesystems, networking, executable
+  also contains some useful titbits about file systems, networking, executable
   formats and other things...
 
 + `Write your own operating system [WIKI]`__
@@ -90,38 +93,40 @@ Tools
 
 + `Object Oriented Programming For All (OOP4A)`__
 
-  Another language independant OOP framework for AmigaOS. In contrast to
-  BOOPSI, it consists of both a shared library to handle the runtime and a 
+  Another language-independent OOP framework for AmigaOS. In contrast to
+  BOOPSI, it consists of both a shared library to handle the runtime and a
   precompiler to allow for an easier syntax.
 
 + `Geek Gadgets`__
-  
-  Ports of the most common GNU tools to Amiga, giving you a complete UNIX-like
-  environment on Amiga. Includes all common GNU development tools like 
+
+  Ports of the most common GNU tools to Amiga, giving you a complete Unix-like
+  environment on Amiga. Includes all common GNU development tools, like
   binutils, GCC, grep, gawk, autoconf, automake, bison, cvs, flex, perl and
   much more.
 
-+ `Martin Blom's crosscompiler`__
-  
-  A crosscompiler suite by Martin Blom based on GCC for crosscompiling 
-  Amiga programs on Linux. 
++ `Martin Blom's cross-compiler`__
 
-+ `Jocke 'Zerohero' Birging's crosscompiler`__
+  A cross-compiler suite by Martin Blom based on GCC for cross-compiling
+  Amiga programs on Linux.
 
-  Crosscompilers for Cygwin and Linux for creating of AROS programs.
++ `Jocke 'Zerohero' Birging's cross-compiler`__
 
-+ `68k Hosted cross compiler for generating x86-AROS binaries`__
+  Cross-compilers for Cygwin and Linux for creation of AROS programs.
 
-  
++ `68k Hosted cross-compiler for generating x86-AROS binaries`__
+
+
 __ http://www.geocities.com/SiliconValley/Bridge/5737/Main/oop4a_e.html
 __ http://ftp.back2roots.org/geekgadgets/
 __ http://www.lysator.liu.se/~lcs/files/gg-cross/
 __ http://www.zerohero.se/cross/aros.html
 __ http://www.whoosh777.pwp.blueyonder.co.uk/amiga-68k-x-x86-aros-gcc.html
 
-Miscellaneous
+
+Documentation
 -------------
 
-+ `Documentation for many Amiga related libraries`__
++ `Documentation for many Amiga-related libraries`__
 
 __ http://amiga.sourceforge.net/amigadevhelp/
+

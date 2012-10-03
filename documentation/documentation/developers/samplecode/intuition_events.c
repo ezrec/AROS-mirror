@@ -26,7 +26,7 @@ int main(void)
         WA_InnerHeight,   300,
         WA_Title,         "Intuition events",
         WA_Activate,      TRUE,
-        WA_RMBTrap,       TRUE,  // handle right (menu) mouse button as normal mouse button
+        WA_RMBTrap,       TRUE, // handle right mouse button as normal mouse button
         WA_CloseGadget,   TRUE,
         WA_DragBar,       TRUE,
         WA_GimmeZeroZero, TRUE,
@@ -75,7 +75,7 @@ static void handle_events(void)
             mousey = imsg->MouseY;
             
             /*
-                After we have stored the needed values from the message
+                After we have stored the necessary values from the message
                 in variables we can immediately reply the message. Note
                 that this is only possible because we have no VERIFY events.
             */

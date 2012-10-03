@@ -1,5 +1,5 @@
 /*
-    Example for start from Wanderer with icon handling.
+    Example of starting from Wanderer with icon handling.
 */
 
 #include <proto/exec.h>
@@ -35,7 +35,7 @@ int main(int argc, char **argv)
         
         /*
             An application started from Wanderer doesn't have a console window
-            for output. We must open our own con: window or all output would
+            for output. We have to open our own con: window or all output will
             go to Nirwana.
         */
         conwin = fopen(conwinname, "w");
@@ -62,8 +62,9 @@ int main(int argc, char **argv)
                 read_icon(wbarg);
                 
                 /*
-                    Switch back to old directory. It's important that the directory which
-                    was active at program start is set when the application is quit.
+                    Switch back to old directory. It's important that the
+                    directory which was active at program start is set when the
+                    application is quit.
                 */
                 if (olddir != (BPTR)-1)
                 {
