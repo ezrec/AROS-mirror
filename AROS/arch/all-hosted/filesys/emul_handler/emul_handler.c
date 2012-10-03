@@ -108,7 +108,7 @@ static LONG makefilename(struct emulbase *emulbase, char **dest, char **part, st
     if (c)
     	filename = c + 1;
 
-    ret = validate(filename);
+    ret = _validate(filename);
     if (ret)
     	return ret;
   
