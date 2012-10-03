@@ -47,6 +47,9 @@ Priority
 MSG_TASK_TYPE (//)
 Type
 ;
+MSG_TASK_CPUTIME (//)
+CPU Time
+;
 MSG_TAB_SYSTEM (//)
 System
 ;
