@@ -1,5 +1,5 @@
 /*
-    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
+    Copyright ï¿½ 1995-2011, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -16,6 +16,11 @@
 #include "kernel_intern.h"
 #include "kernel_intr.h"
 #include "kernel_scheduler.h"
+
+#include <time.h>
+
+#include "etask.h"
+
 
 #define D(x)
 
@@ -69,8 +74,11 @@ static void cpu_Exception(void)
 void cpu_Switch(regs_t *regs)
 {
     struct KernelBase *KernelBase = getKernelBase();
+    struct PlatformData *pd = KernelBase->kb_PlatformData;
     struct Task *task = SysBase->ThisTask;
     struct AROSCPUContext *ctx = task->tc_UnionETask.tc_ETask->et_RegFrame;
+    struct timespec ts_new;
+    struct timespec ts_old;
 
     D(bug("[KRN] cpu_Switch(), task %p (%s)\n", task, task->tc_Node.ln_Name));
     D(PRINT_SC(regs));
@@ -79,6 +87,27 @@ void cpu_Switch(regs_t *regs)
     ctx->errno_backup = *KernelBase->kb_PlatformData->errnoPtr;
     task->tc_SPReg = (APTR)SP(regs);
     core_Switch();
+
+    CopyMem(&GetIntETask(task)->iet_private1, &ts_old, sizeof(ts_old));
+    pd->rt->clock_gettime(CLOCK_REALTIME, &ts_new);
+
+    ts_new.tv_sec -= ts_old.tv_sec;
+    ts_new.tv_nsec -= ts_old.tv_nsec;
+
+    if (ts_new.tv_nsec < 0)
+    {
+        ts_new.tv_nsec += 1000000000;
+        ts_new.tv_sec--;
+    }
+
+    GetIntETask(task)->iet_CpuTime.tv_sec += ts_new.tv_sec;
+    GetIntETask(task)->iet_CpuTime.tv_usec += (ts_new.tv_nsec + 500)/1000;
+
+    if (GetIntETask(task)->iet_CpuTime.tv_usec >= 1000000)
+    {
+        GetIntETask(task)->iet_CpuTime.tv_sec++;
+        GetIntETask(task)->iet_CpuTime.tv_usec -= 1000000;
+    }
 }
 
 void cpu_Dispatch(regs_t *regs)
@@ -87,6 +116,7 @@ void cpu_Dispatch(regs_t *regs)
     struct PlatformData *pd = KernelBase->kb_PlatformData;
     struct Task *task;
     sigset_t sigs;
+    struct timespec ts;
 
     /* This macro relies on 'pd' being present */
     SIGEMPTYSET(&sigs);
@@ -100,6 +130,9 @@ void cpu_Dispatch(regs_t *regs)
         if (SysBase->SysFlags & SFF_SoftInt)
             core_Cause(INTB_SOFTINT, 1L << INTB_SOFTINT);
     }
+
+    pd->rt->clock_gettime(CLOCK_REALTIME, &ts);
+    CopyMem(&ts, &GetIntETask(task)->iet_private1, sizeof(ts));
 
     D(bug("[KRN] cpu_Dispatch(), task %p (%s)\n", task, task->tc_Node.ln_Name));
     cpu_DispatchContext(task, regs, pd);
