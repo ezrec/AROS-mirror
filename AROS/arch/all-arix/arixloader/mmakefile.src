@@ -1,0 +1,54 @@
+# $Id$
+include $(TOP)/config/make.cfg
+
+# APPLY THE PATCH FIRST
+# APPLY THE PATCH FIRST
+# APPLY THE PATCH FIRST
+# APPLY THE PATCH FIRST
+# APPLY THE PATCH FIRST
+# APPLY THE PATCH FIRST
+# APPLY THE PATCH FIRST
+
+%build_module mmake=kernel-arixloader \
+  modname=arixloader modtype=resource \
+  files="arixloader"
+
+# -------- Kickstart part --------
+
+#MM- kernel-link-arixloader : \
+#MM     kernel-kernel-kobj              \
+#MM     kernel-hostlib-kobj             \
+#MM     kernel-battclock-kobj           \
+#MM     kernel-processor-kobj           \
+#MM     kernel-timer-kobj               \
+#MM     kernel-expansion-kobj           \
+#MM     kernel-exec-kobj                \
+#MM     kernel-unixio-kobj              \
+#MM     workbench-devs-hostdisk-kobj    \
+#MM     kernel-partition-kobj           \
+#MM     kernel-aros-kobj \
+#MM     kernel-bootloader-kobj \
+#MM     kernel-dos-kobj \
+#MM     kernel-debug-kobj \
+#MM     kernel-dosboot-kobj \
+#MM     kernel-filesystem-kobj \
+#MM     kernel-utility-kobj \
+#MM     kernel-hidd-kobj \
+#MM     kernel-oop-kobj \
+#MM     kernel-fs-emul-kobj \
+#MM     kernel-fs-cdvdfs-kobj \
+#MM     kernel-fs-sfs-kobj \
+#MM     kernel-fs-afs-kobj \
+#MM     linklibs
+
+KDEVS   := timer hostdisk
+KLIBS   := exec expansion utility oop aros debug dos partition
+KHNDLRS := emul cdrom afs sfs
+KHIDDS  := unixio hiddclass
+KRSRCS  := battclock hostlib processor bootloader dosboot FileSystem
+
+%link_kickstart mmake=kernel-link-arixloader file=$(BINDIR)/boot/aros-base-arixloader \
+    devs=$(KDEVS) handlers=$(KHNDLRS) hidds=$(KHIDDS) libs=$(KLIBS) res=$(KRSRCS) startup=$(KOBJSDIR)/kernel_resource.o \
+    uselibs="arossupport hiddstubs amiga autoinit arosc.static libinit m"
+
+%common
