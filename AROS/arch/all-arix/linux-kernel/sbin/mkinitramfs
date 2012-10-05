@@ -40,6 +40,8 @@ binfiles="$binfiles umount sed sleep ln rm uname"
 
 sbinfiles="udevadm modprobe blkid switch_root"
 
+arosfiles="AROSBootstrap AROSBootstrap.conf aros-base-arixloader arixloader.resource"
+
 #Optional files and locations
 for f in mdadm udevd; do
   if [ -x /sbin/$f ] ; then sbinfiles="$sbinfiles $f"; fi
@@ -54,7 +56,7 @@ INITIN=init.in
 WDIR=$(mktemp -d /tmp/initrd-work.XXXXXXXXXX)
 
 # Create base directory structure
-mkdir -p $WDIR/{bin,dev,lib/firmware,run,sbin,sys,proc}
+mkdir -p $WDIR/{bin,boot,dev,lib/firmware,run,sbin,sys,proc}
 mkdir -p $WDIR/etc/{modprobe.d,udev/rules.d}
 touch $WDIR/etc/modprobe.d/modprobe.conf
 ln -s lib $WDIR/lib64
@@ -94,6 +96,12 @@ fi
 for f in $binfiles ; do
   ldd /bin/$f | sed "s/\t//" | cut -d " " -f1 >> $unsorted
   copy $f bin
+done
+
+# Install aros binaries
+for f in $arosfiles ; do
+#  ldd /boot/$f | sed "s/\t//" | cut -d " " -f1 >> $unsorted
+  cp /boot/$f $WDIR/boot
 done
 
 # Add lvm if present
