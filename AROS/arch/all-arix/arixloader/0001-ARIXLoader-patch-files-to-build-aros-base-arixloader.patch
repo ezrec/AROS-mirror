@@ -1,0 +1,210 @@
+From 7c5c0be8f082425d795e8dc8ab39cc548fd7772f Mon Sep 17 00:00:00 2001
+From: Krzysztof Smiechowicz <deadwood@wp.pl>
+Date: Fri, 5 Oct 2012 20:40:32 +0200
+Subject: [PATCH] ARIXLoader: patch files to build aros-base-arixloader
+ kickstart
+
+---
+ AROS/arch/all-hosted/filesys/emul_handler/boot.c |    1 +
+ AROS/rom/dos/boot.c                              |    5 +-
+ AROS/rom/filesys/SFS/FS/filesystemmain.c         |  102 +++++++++++-----------
+ 3 files changed, 56 insertions(+), 52 deletions(-)
+
+diff --git a/AROS/arch/all-hosted/filesys/emul_handler/boot.c b/AROS/arch/all-hosted/filesys/emul_handler/boot.c
+index 991d94f..f943330 100644
+--- a/AROS/arch/all-hosted/filesys/emul_handler/boot.c
++++ b/AROS/arch/all-hosted/filesys/emul_handler/boot.c
+@@ -62,6 +62,7 @@ AROS_UFH3(APTR, EmulBoot,
+     struct FileHandle *fh_stdin, *fh_stdout;
+     LONG rc;
+ 
++    return NULL;
+      /*
+      * This actually checks if we have at least one display mode in the database.
+      * This means that we actually can open a display. If not, we enter emergency
+diff --git a/AROS/rom/dos/boot.c b/AROS/rom/dos/boot.c
+index 0bcd1ba..d972eb7 100644
+--- a/AROS/rom/dos/boot.c
++++ b/AROS/rom/dos/boot.c
+@@ -172,6 +172,7 @@ void __dos_Boot(struct DosLibrary *DOSBase, ULONG BootFlags, UBYTE Flags)
+             Close(cos);
+             /* NOTE: 'cas' will will already have been closed by the Shell */
+         }
+-    } else
+-        Alert(AN_NoWindow);
++    }
++//    } else
++//        Alert(AN_NoWindow);
+ }
+diff --git a/AROS/rom/filesys/SFS/FS/filesystemmain.c b/AROS/rom/filesys/SFS/FS/filesystemmain.c
+index 0996e19..16b9e28 100644
+--- a/AROS/rom/filesys/SFS/FS/filesystemmain.c
++++ b/AROS/rom/filesys/SFS/FS/filesystemmain.c
+@@ -2,8 +2,8 @@
+ 
+ #include <exec/types.h>
+ #include <clib/macros.h>          // MAX, MIN & ABS :-)
+-#include <devices/input.h>
+-#include <devices/inputevent.h>
++//#include <devices/input.h>
++//#include <devices/inputevent.h>
+ #include <devices/timer.h>
+ #include <devices/trackdisk.h>
+ #include <dos/dos.h>
+@@ -23,7 +23,7 @@
+ #include <resources/filesysres.h>
+ #include <proto/dos.h>
+ #include <proto/exec.h>
+-#include <proto/intuition.h>
++//#include <proto/intuition.h>
+ #include <proto/timer.h>
+ #include <proto/utility.h>
+ /*
+@@ -203,7 +203,7 @@ static void actionsamelock(struct DosPacket *);
+ static void actiondiskinfo(struct DosPacket *);
+ static void fillinfodata(struct InfoData *);
+ static void fillfib(struct FileInfoBlock *,struct fsObject *);
+-static void diskchangenotify(ULONG class);
++//static void diskchangenotify(ULONG class);
+ 
+ /* Prototypes of high-level filesystem functions */
+ 
+@@ -338,7 +338,8 @@ LONG mainprogram(struct ExecBase *SysBase)
+ 
+     if(initcachebuffers()==0) {
+ 
+-      if((IntuitionBase=(APTR)OpenLibrary("intuition.library",37))!=0) {
++//      if(IntuitionBase=(APTR)OpenLibrary("intuition.library",37))!=0) {
++        {
+ 
+ #ifdef STARTDEBUG
+           dreq("(1) Filesystem initializing...");
+@@ -510,7 +511,7 @@ LONG mainprogram(struct ExecBase *SysBase)
+           dreq("Filesystem failed.. exiting.");
+         #endif
+ 
+-        CloseLibrary((struct Library *)IntuitionBase);
++//        CloseLibrary((struct Library *)IntuitionBase);
+       }
+     }
+ 
+@@ -3241,15 +3242,16 @@ void request2(UBYTE *text) {
+ 
+ LONG requestArgs(UBYTE *title, UBYTE *fmt, UBYTE *gads, APTR params)
+ {
+-  struct EasyStruct es;
+-
+-  es.es_StructSize=sizeof(struct EasyStruct);
+-  es.es_Flags=0;
+-  es.es_Title=title;
+-  es.es_TextFormat=fmt;
+-  es.es_GadgetFormat=gads;
+-
+-  return EasyRequestArgs(0, &es, 0, params);
++//  struct EasyStruct es;
++//
++//  es.es_StructSize=sizeof(struct EasyStruct);
++//  es.es_Flags=0;
++//  es.es_Title=title;
++//  es.es_TextFormat=fmt;
++//  es.es_GadgetFormat=gads;
++//
++//  return EasyRequestArgs(0, &es, 0, params);
++    return 0;
+ }
+ 
+ void outputcachebuffer(struct CacheBuffer *cb) {
+@@ -3697,7 +3699,7 @@ LONG initdisk() {
+     }
+ 
+     if(errorcode==0) {
+-      diskchangenotify(IECLASS_DISKINSERTED);
++//      diskchangenotify(IECLASS_DISKINSERTED);
+     }
+ 
+     globals->disktype=newdisktype;
+@@ -3816,7 +3818,7 @@ static void deinitdisk() {
+ 
+     globals->volumenode=0;
+ 
+-    diskchangenotify(IECLASS_DISKREMOVED);
++//    diskchangenotify(IECLASS_DISKREMOVED);
+   }
+ }
+ 
+@@ -5033,39 +5035,39 @@ static LONG addblocks(UWORD blocks, BLCK newspace, NODE objectnode, BLCK *io_las
+ 
+ 
+ 
+-static void diskchangenotify(ULONG class) {
+-  struct IOStdReq *inputreq;
+-  struct MsgPort *inputport;
+-  struct InputEvent ie;
+-  struct timeval tv;
+-
+-  if((inputport=CreateMsgPort())!=0) {
+-    if((inputreq=(struct IOStdReq *)CreateIORequest(inputport,sizeof(struct IOStdReq)))!=0) {
+-      if(OpenDevice("input.device",0,(struct IORequest *)inputreq,0)==0) {
+-
+-        GetSysTime(&tv);
+-
+-        ie.ie_NextEvent=0;
+-        ie.ie_Class=class;
+-        ie.ie_SubClass=0;
+-        ie.ie_Code=0;
+-        ie.ie_Qualifier=IEQUALIFIER_MULTIBROADCAST;
+-        ie.ie_EventAddress=0;
+-        ie.ie_TimeStamp=tv;
+-
+-        inputreq->io_Command = IND_WRITEEVENT;
+-        inputreq->io_Length  = sizeof(struct InputEvent);
+-        inputreq->io_Data    = &ie;
+-
+-        DoIO((struct IORequest *)inputreq);
+-
+-        CloseDevice((struct IORequest *)inputreq);
+-      }
+-      DeleteIORequest(inputreq);
+-    }
+-    DeleteMsgPort(inputport);
+-  }
+-}
++//static void diskchangenotify(ULONG class) {
++//  struct IOStdReq *inputreq;
++//  struct MsgPort *inputport;
++//  struct InputEvent ie;
++//  struct timeval tv;
++//
++//  if((inputport=CreateMsgPort())!=0) {
++//    if((inputreq=(struct IOStdReq *)CreateIORequest(inputport,sizeof(struct IOStdReq)))!=0) {
++//      if(OpenDevice("input.device",0,(struct IORequest *)inputreq,0)==0) {
++//
++//        GetSysTime(&tv);
++//
++//        ie.ie_NextEvent=0;
++//        ie.ie_Class=class;
++//        ie.ie_SubClass=0;
++//        ie.ie_Code=0;
++//        ie.ie_Qualifier=IEQUALIFIER_MULTIBROADCAST;
++//        ie.ie_EventAddress=0;
++//        ie.ie_TimeStamp=tv;
++//
++//        inputreq->io_Command = IND_WRITEEVENT;
++//        inputreq->io_Length  = sizeof(struct InputEvent);
++//        inputreq->io_Data    = &ie;
++//
++//        DoIO((struct IORequest *)inputreq);
++//
++//        CloseDevice((struct IORequest *)inputreq);
++//      }
++//      DeleteIORequest(inputreq);
++//    }
++//    DeleteMsgPort(inputport);
++//  }
++//}
+ 
+ 
+ 
+-- 
+1.7.9.5
+
