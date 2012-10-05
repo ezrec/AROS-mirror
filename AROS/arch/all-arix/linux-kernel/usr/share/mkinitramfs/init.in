@@ -95,11 +95,12 @@ if [ -f /etc/mdadm.conf ] ; then mdadm -As                                    ; 
 if [ -x /sbin/vgchange  ] ; then /sbin/vgchange --noudevsync -a y > /dev/null ; fi
 if [ -n "$rootdelay"    ] ; then sleep "$rootdelay"                           ; fi
 
-do_mount_root
+#do_mount_root
 
 # killall -w ${UDEV_PATH}/udevd
 
 # exec switch_root /.root "$init" "$@"
 
-sh /aros/boot/aros-init
+#sh /aros/boot/aros-init
 
+sh
