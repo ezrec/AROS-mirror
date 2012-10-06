@@ -1,5 +1,5 @@
 /*
-    Copyright © 2003-2010, The AROS Development Team. All rights reserved.
+    Copyright ï¿½ 2003-2010, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -52,7 +52,7 @@ static int PCILx_Init(LIBBASETYPEPTR LIBBASE)
     /* Make sure we are running on Linux. Otherwise we will just
        crash at first syscall. */
     arch = (STRPTR)KrnGetSystemAttr(KATTR_Architecture);
-    if (strncmp(arch, "linux", 5))
+    if (strncmp(arch, "linux", 5) && strncmp(arch, "arix", 4))
     {
     	D(bug("LinuxPCI: Running on %s, not on Linux\n", arch));
     	return FALSE;
