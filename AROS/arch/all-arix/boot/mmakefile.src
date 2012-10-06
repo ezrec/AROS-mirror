@@ -39,6 +39,8 @@ $(BINDIR)/boot:
 #MM     kernel-unixio-kobj              \
 #MM     kernel-hidd-linuxfb-kobj        \
 #MM     kernel-hidd-linuxinput-kobj     \
+#MM     kernel-pci-kobj                 \
+#MM     hidd-pci-linux-kobj             \
 #MM     workbench-devs-hostdisk-kobj    \
 #MM     linklibs
 
@@ -47,7 +49,7 @@ $(BINDIR)/boot:
 KDEVS   := timer hostdisk
 KLIBS   := exec expansion
 KHNDLRS :=
-KHIDDS  := unixio linuxfb linuxinput
+KHIDDS  := unixio linuxfb linuxinput pcilinux pci
 KRSRCS  := battclock hostlib processor
 
 %link_kickstart mmake=kernel-link-arix file=$(BINDIR)/boot/aros-bsp-$(BSP) \
