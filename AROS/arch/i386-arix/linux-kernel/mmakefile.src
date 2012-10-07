@@ -2,7 +2,10 @@
 include $(TOP)/config/make.cfg
 
 #MM
-bootiso-arix-i386-linux-kernel: $(BINDIR)/boot/vmlinuz-3.2.6-lfs-7.1 $(BINDIR)/boot/initrd.img-no-kmods $(BINDIR)/boot/aros-init
+bootiso-arix-i386-linux-kernel: $(BINDIR)/boot/vmlinuz-3.2.6-lfs-7.1 $(BINDIR)/boot/initrd.img-no-kmods
+
+#MM
+bootiso-arix-i386-aros-init: $(BINDIR)/boot/aros-init
 
 $(BINDIR)/boot/vmlinuz-3.2.6-lfs-7.1: vmlinuz-3.2.6-lfs-7.1
 		$(CP) $< $(BINDIR)/boot/
