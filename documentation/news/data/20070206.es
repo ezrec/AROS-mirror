@@ -36,7 +36,7 @@ Novedades de los Archives
 
 Las recientes incorporaciones a los Archives incluyen:
 
-- ¡`Lunapaint`__ se pone mejor y mejor! Está disponible la versión 0.3.1,
+- `Lunapaint`__ se pone mejor y mejor! Está disponible la versión 0.3.1,
   con nuevas y agradables herramientas y características.
 
 - La `Server Suite de Martin`__, un puerto para AROS y otros OS de los Snug HTTP server y Yet Another FTP server.

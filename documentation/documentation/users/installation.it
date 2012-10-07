@@ -119,8 +119,8 @@ AROS/i386-pc
 
 .. Note:: 
     
-    Attualmente non forniamo supporto per installare AROS/i386-pc su un hard disk 
-    [#]_, pertanto in questo capitolo vi verrà spiegato solo come creare un supporto 
+    Attualmente non forniamo supporto per installare AROS/i386-pc su un hard disk,
+    pertanto in questo capitolo vi verrà spiegato solo come creare un supporto 
     di installazione ed avviare da esso. 
 
 
@@ -280,7 +280,7 @@ Dopo aver fatto click su ``Proceed`` ancora, installAROS creerà le partizioni e
 chiederà di riavviare. Dopo il riavvio andrà fatto avviare InstallAROS ancora.
 
 Ora si dovrebbe vedere l'opzione ``Use existing AROS partitions`` selezionata. 
-``Proceed``con questa. Si vedranno inoltre alcune opzioni extra (viste di default)
+``Proceed`` con questa. Si vedranno inoltre alcune opzioni extra (viste di default)
 in una finestra::
 
     [ ] Choose language Options
@@ -404,7 +404,7 @@ Installazione manuale
 *quasi deprecato*  E' sempre raccomandato usare InstallAROS.                                               DEPRECATED
  
 Dato che InstallAROS è utile adesso, le informazioni seguenti saranno una sorta di
-*** ma ancora potrebbero essere utili, quindi saranno mantenute per propositi informativi.
+***deprecato*** ma ancora potrebbero essere utili, quindi saranno mantenute per propositi informativi.
      
 .. Nota:: 
     Nonostante AROS possa essere installato su un Hard Disk, siete sempre avvertiti che
@@ -416,9 +416,16 @@ Dato che InstallAROS è utile adesso, le informazioni seguenti saranno una sorta 
     perdita che può avvenire. Qualunque bug trovato nel processo di installazione sarebbe 
     utile per noi.
 
-**Partizionamento **
+**Partizionamento**
 
 
 Da tradurre..........
 
 Coming soon!
+
+.. _`pagina download`:
+.. _`pagina di download`:
+.. _`download page`: ../../download
+
+.. _rawrite: http://uranus.it.swin.edu.au/~jn/linux/rawwrite.htm
+

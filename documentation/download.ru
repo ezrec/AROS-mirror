@@ -29,7 +29,7 @@ Icaros Desktop LIVE!
 Windows опробовать дистрибутив в безопасном (но медленном) окружении.
 
 __ http://live.icarosdesktop.org/
-__ http://virtualbox.org/
+                         
 
 Снимки
 ======
