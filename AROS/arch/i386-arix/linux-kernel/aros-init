@@ -1,3 +1,1 @@
-cd /aros
-echo 0 > /sys/class/graphics/fbcon/cursor_blink
-./boot/AROSBootstrap
+# This file is run from /init after specifying root=sh in grub2 linux kernel parameters
