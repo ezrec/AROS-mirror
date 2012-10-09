@@ -1,17 +1,28 @@
 # $Id$
 include $(TOP)/config/make.cfg
 
+BLOBSDIR = $(PORTSDIR)/arix-blobs-arix-blobs/i386-arix
+
 #MM
 bootiso-arix-i386-linux-kernel: $(BINDIR)/boot/vmlinuz-3.2.6-lfs-7.1 $(BINDIR)/boot/initrd.img-no-kmods
 
+$(BINDIR)/boot/vmlinuz-3.2.6-lfs-7.1: $(BLOBSDIR)/vmlinuz-3.2.6-lfs-7.1
+		$(CP) $< $(BINDIR)/boot/
+
+$(BINDIR)/boot/initrd.img-no-kmods: $(BLOBSDIR)/initrd.img-no-kmods
+		$(CP) $< $(BINDIR)/boot/
+
+
+$(BLOBSDIR)/vmlinuz-3.2.6-lfs-7.1: $(PORTSSOURCEDIR)/arix-blobs.tar.gz
+$(BLOBSDIR)/initrd.img-no-kmods: $(PORTSSOURCEDIR)/arix-blobs.tar.gz
+
+$(PORTSSOURCEDIR)/arix-blobs.tar.gz:
+		wget https://gitorious.org/arix-blobs/arix-blobs/archive-tarball/master -O $(PORTSSOURCEDIR)/arix-blobs.tar.gz
+		$(MKDIR) $(PORTSDIR)
+		tar -xf $(PORTSSOURCEDIR)/arix-blobs.tar.gz -C $(PORTSDIR)
+
 #MM
 bootiso-arix-i386-aros-init: $(BINDIR)/boot/aros-init
-
-$(BINDIR)/boot/vmlinuz-3.2.6-lfs-7.1: vmlinuz-3.2.6-lfs-7.1
-		$(CP) $< $(BINDIR)/boot/
-
-$(BINDIR)/boot/initrd.img-no-kmods: initrd.img-no-kmods
-		$(CP) $< $(BINDIR)/boot/
 
 $(BINDIR)/boot/aros-init: aros-init
 		$(CP) $< $(BINDIR)/boot/
