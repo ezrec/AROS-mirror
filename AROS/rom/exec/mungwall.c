@@ -54,7 +54,10 @@ APTR MungWall_Build(APTR res, APTR pool, IPTR origSize, ULONG requirements, stru
 	BUILD_WALL(res + origSize, 0xDB, MUNGWALL_SIZE + AROS_ROUNDUP2(origSize, MEMCHUNK_TOTAL) - origSize);
 
 	Forbid();
-    	AddHead((struct List *)&PrivExecBase(SysBase)->AllocMemList, (struct Node *)&header->mwh_node);
+	/* Don't call SysBase/AddHead, since we don't want to
+	 * call ASSERT_VALID_PTR() on this node.
+	 */
+    	ADDHEAD((struct List *)&PrivExecBase(SysBase)->AllocMemList, (struct Node *)&header->mwh_node);
 	Permit();
     }
     return res;
