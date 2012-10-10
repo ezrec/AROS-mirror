@@ -161,7 +161,7 @@ ULONG   **exec_RomTagScanner(struct ExecBase *, struct TagItem *);
 void    irqSetup(void);
 
 extern const UBYTE LIBEND __text;             /* Somewhere in library */
-extern ULONG _edata,_end;                       /* They are standard for ELF */
+extern ULONG _edata,_end,__text_start;           /* They are standard for ELF */
 extern const APTR LIBFUNCTABLE[] __text;
 
 extern struct Library * PrepareAROSSupportBase (void);
@@ -784,7 +784,7 @@ void exec_cinit(unsigned long magic, unsigned long addr, struct TagItem *tags)
     {
         ULONG base = ((ULONG)ExecBase + sizeof(struct IntExecBase) + 15) & ~15;
 
-        AddMemList(extmem - (base + 0x10000),
+        AddMemList(extmem - base,
             MEMF_FAST | MEMF_PUBLIC | MEMF_KICK | MEMF_LOCAL,
             0,
             (APTR)base,
@@ -817,13 +817,16 @@ void exec_cinit(unsigned long magic, unsigned long addr, struct TagItem *tags)
     IPTR kernel_highest =
         LibGetTagData(KRN_KernelHighest, (ULONG)&_end, tags);
     IPTR kernel_lowest =
-        LibGetTagData(KRN_KernelLowest, (ULONG)&_end - 0x000a0000, tags);
+        LibGetTagData(KRN_KernelLowest, (ULONG)&__text_start, tags);
+    rkprintf("Protect: 0x%p-0x%p (kernel)\n", kernel_lowest, kernel_highest-1);
     InternalAllocAbs((APTR)kernel_lowest, kernel_highest - kernel_lowest, ExecBase);
 
     /* Protect gap between low and high memory */
-    InternalAllocAbs(0xa0000, 0x100000 - 0xa0000, SysBase);
+    rkprintf("Protect: 0x%p-0x%p (rom hole)\n", 0xa0000, 0x100000);
+    InternalAllocAbs(0xa0000, (0x100000 - 0xa0000) - 1, SysBase);
 
     /* Protect bootup stack from being allocated */
+    rkprintf("Protect: 0x%p-0x%p (boot stack)\n", 0x90000, 0x90000 + 0x3000 - 1);
     InternalAllocAbs(0x90000, 0x3000, SysBase);
 
     /* Protect ACPI & other spaces returned by GRUB loader */
