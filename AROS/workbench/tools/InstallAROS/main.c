@@ -3264,8 +3264,9 @@ int main(int argc, char *argv[])
         MUIA_Gauge_Current, 0, End);
 
     static char *opt_drivetypes[] = {
-        "IDE/SATA",
+        "IDE",
         "USB",
+        "AHCI/SATA",
         NULL
     };
 
@@ -3780,6 +3781,9 @@ int main(int argc, char *argv[])
     DoMethod(cycle_drivetype, MUIM_Notify, (IPTR) MUIA_Cycle_Active, 1,
         (IPTR) dest_device, 3, MUIM_Set,
         MUIA_String_Contents, "usbscsi.device");
+    DoMethod(cycle_drivetype, MUIM_Notify, (IPTR) MUIA_Cycle_Active, 2,
+        (IPTR) dest_device, 3, MUIM_Set,
+        MUIA_String_Contents, "ahci.device");
     DoMethod(cycle_drivetype, MUIM_Notify, MUIA_Cycle_Active,
         MUIV_EveryTime, (IPTR) dest_unit, 3, MUIM_Set, MUIA_String_Integer,
         0);
