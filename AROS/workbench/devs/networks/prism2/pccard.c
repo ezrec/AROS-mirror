@@ -1,8 +1,6 @@
 /*
 
-File: pccard.c
-Author: Neil Cafferkey
-Copyright (C) 2000-2006 Neil Cafferkey
+Copyright (C) 2000-2010 Neil Cafferkey
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -34,6 +32,7 @@ MA 02111-1307, USA.
 #include "device.h"
 
 #include "pccard_protos.h"
+#include "device_protos.h"
 #include "unit_protos.h"
 
 #define MAX_TUPLE_SIZE 0xff
@@ -72,8 +71,8 @@ static VOID CardRemovedInt(REG(a1, struct BusContext *context),
    REG(a6, APTR int_code));
 static VOID CardInsertedInt(REG(a1, struct BusContext *context),
    REG(a6, APTR int_code));
-static UBYTE CardStatusInt(REG(d0, UBYTE mask),
-   REG(a1, struct BusContext *context), REG(a6, APTR int_code));
+static UBYTE CardStatusInt(REG(a1, struct BusContext *context),
+   REG(a6, APTR int_code), REG(d0, UBYTE mask));
 static VOID WordsInHook(struct BusContext *context,
    ULONG offset, UWORD *buffer, ULONG count);
 static VOID WordsOutHook(struct BusContext *context, ULONG offset,
@@ -207,7 +206,7 @@ struct DevUnit *GetPCCardUnit(ULONG index, struct DevBase *base)
 *	FindPCCardUnit -- Find a unit by number.
 *
 *   SYNOPSIS
-*	unit = FindPCCardUnit(unit_num)
+*	unit = FindPCCardUnit(index)
 *
 *	struct DevUnit *FindPCCardUnit(ULONG);
 *
@@ -279,6 +278,12 @@ static struct DevUnit *CreatePCCardUnit(ULONG index,
 
    if(success)
    {
+     if(!(WrapInt(&unit->status_int, base)
+         && WrapInt(&unit->rx_int, base)
+         && WrapInt(&unit->tx_int, base)
+         && WrapInt(&unit->info_int, base)))
+         success = FALSE;
+
       unit->insertion_function = (APTR)CardInsertedHook;
       unit->removal_function = (APTR)CardRemovedHook;
    }
@@ -327,6 +332,10 @@ VOID DeletePCCardUnit(struct DevUnit *unit, struct DevBase *base)
 
    if(unit != NULL)
    {
+      UnwrapInt(&unit->info_int, base);
+      UnwrapInt(&unit->tx_int, base);
+      UnwrapInt(&unit->rx_int, base);
+      UnwrapInt(&unit->status_int, base);
       context = unit->card;
       DeleteUnit(unit, base);
       FreeCard(context, base);
@@ -353,7 +362,7 @@ VOID DeletePCCardUnit(struct DevUnit *unit, struct DevBase *base)
 
 static struct BusContext *AllocCard(struct DevBase *base)
 {
-   BOOL success = TRUE, have_card = FALSE;
+   BOOL success = TRUE;
    struct BusContext *context;
    struct CardHandle *card_handle;
    struct Interrupt *card_removed_int, *card_inserted_int, *card_status_int;
@@ -409,13 +418,20 @@ static struct BusContext *AllocCard(struct DevBase *base)
       card_status_int->is_Code = (APTR)CardStatusInt;
       card_status_int->is_Data = context;
 
+      if(!(WrapCardInt(card_removed_int, base)
+         && WrapCardInt(card_inserted_int, base)
+         && WrapCardInt(card_status_int, base)))
+         success = FALSE;
+   }
+
+   if(success)
+   {
       if(OwnCard(card_handle) != 0)
          success = FALSE;
    }
 
    if(success)
    {
-      have_card = TRUE;
       if(!IsCardCompatible(context, base))
          success = FALSE;
    }
@@ -458,6 +474,9 @@ static VOID FreeCard(struct BusContext *context, struct DevBase *base)
          CardResetCard(card_handle);
       }
       ReleaseCard(card_handle, CARDF_REMOVEHANDLE);
+      UnwrapCardInt(card_handle->cah_CardStatus, base);
+      UnwrapCardInt(card_handle->cah_CardInserted, base);
+      UnwrapCardInt(card_handle->cah_CardRemoved, base);
 
       FreeVec(card_handle->cah_CardStatus);
       FreeVec(card_handle->cah_CardInserted);
@@ -597,7 +616,8 @@ static BOOL InitialiseCard(struct BusContext *context,
    {
       config_value = GetTagData(PCCARD_ModeNo, 0, tuple_tags);
 
-      io_bases = (APTR)GetTagData(PCCARD_IOWinBases, NULL, tuple_tags);
+      io_bases =
+         (APTR)GetTagData(PCCARD_IOWinBases, (UPINT)NULL, tuple_tags);
       if(io_bases == NULL)
          success = FALSE;
    }
@@ -606,7 +626,8 @@ static BOOL InitialiseCard(struct BusContext *context,
 
    if(success)
    {
-      io_lengths = (APTR)GetTagData(PCCARD_IOWinLengths, NULL, tuple_tags);
+      io_lengths =
+         (APTR)GetTagData(PCCARD_IOWinLengths, (UPINT)NULL, tuple_tags);
 
       window_count = GetTagData(PCCARD_IOWinCount, 0, tuple_tags);
 
@@ -702,9 +723,9 @@ static BOOL CardInsertedHook(struct BusContext *context,
 *	CardRemovedInt
 *
 *   SYNOPSIS
-*	CardRemovedInt(unit)
+*	CardRemovedInt(context)
 *
-*	VOID CardRemovedInt(struct DevUnit *);
+*	VOID CardRemovedInt(struct BusContext *);
 *
 ****************************************************************************
 *
@@ -719,12 +740,16 @@ static VOID CardRemovedInt(REG(a1, struct BusContext *context),
    /* Record loss of card and get our task to call ReleaseCard() */
 
    unit = context->unit;
-   base = unit->device;
-   if((unit->flags & UNITF_ONLINE) != 0)
-      unit->flags |= UNITF_WASONLINE;
-   unit->flags &= ~(UNITF_HAVEADAPTER | UNITF_ONLINE);
+   if (unit != NULL)
+   {
+      base = unit->device;
+      if((unit->flags & UNITF_ONLINE) != 0)
+         unit->flags |= UNITF_WASONLINE;
+      unit->flags &= ~(UNITF_HAVEADAPTER | UNITF_ONLINE);
+   }
    context->have_card = FALSE;
-   Signal(unit->task, unit->card_removed_signal);
+   if (unit != NULL)
+      Signal(unit->task, unit->card_removed_signal);
 
    return;
 }
@@ -737,9 +762,9 @@ static VOID CardRemovedInt(REG(a1, struct BusContext *context),
 *	CardInsertedInt
 *
 *   SYNOPSIS
-*	CardInsertedInt(unit)
+*	CardInsertedInt(context)
 *
-*	VOID CardInsertedInt(struct DevUnit *);
+*	VOID CardInsertedInt(struct BusContext *);
 *
 ****************************************************************************
 *
@@ -752,9 +777,11 @@ static VOID CardInsertedInt(REG(a1, struct BusContext *context),
    struct DevUnit *unit;
 
    unit = context->unit;
-   base = unit->device;
-   context->have_card = TRUE;
-   Signal(unit->task, unit->card_inserted_signal);
+   if (unit != NULL) {
+      base = unit->device;
+      context->have_card = TRUE;
+      Signal(unit->task, unit->card_inserted_signal);
+   }
 
    return;
 }
@@ -767,9 +794,9 @@ static VOID CardInsertedInt(REG(a1, struct BusContext *context),
 *	CardStatusInt
 *
 *   SYNOPSIS
-*	mask = CardStatusInt(mask, unit)
+*	mask = CardStatusInt(context, int_code, mask)
 *
-*	UBYTE CardStatusInt(UBYTE mask, struct DevUnit *);
+*	UBYTE CardStatusInt(struct BusContext *, APTR, UBYTE);
 *
 ****************************************************************************
 *
@@ -778,10 +805,9 @@ static VOID CardInsertedInt(REG(a1, struct BusContext *context),
 *
 */
 
-static UBYTE CardStatusInt(REG(d0, UBYTE mask),
-   REG(a1, struct BusContext *context), REG(a6, APTR int_code))
+static UBYTE CardStatusInt(REG(a1, struct BusContext *context),
+   REG(a6, APTR int_code), REG(d0, UBYTE mask))
 {
-#if 1
    if(context->resource_version < 39)
    {
       /* Work around gayle interrupt bug */
@@ -789,7 +815,6 @@ static UBYTE CardStatusInt(REG(d0, UBYTE mask),
       *((volatile UBYTE *)0xda9000) = (mask ^ 0x2c) | 0xc0;
       mask = 0;
    }
-#endif
 
    if(context->unit != NULL)
       StatusInt(context->unit, StatusInt);

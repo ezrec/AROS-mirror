@@ -1,19 +1,11 @@
 #   $Id$
 include $(TOP)/config/make.cfg
 
-#MM- devs-networks-drivers-prism2 : \
-#MM  devs-networks-drivers-prism2-cmd
-
 USER_CFLAGS := -Wno-uninitialized -Wno-parentheses
 
-%build_prog mmake=devs-networks-drivers-prism2 \
+%build_prog mmake=workbench-devs-networks-prism2 \
     progname="prism2.device" \
-    files="startup device request unit pci prometheus" \
+    files="startup device request unit encryption pci prometheus timer" \
     targetdir="$(AROSDIR)/Devs/Networks"
-
-%build_prog mmake=devs-networks-drivers-prism2-cmd \
-    progname="SetPrism2Defaults" \
-    files="startup SetPrism2Defaults" \
-    targetdir="$(CONTRIBDIR)/Networking/Utils"
 
 %common
