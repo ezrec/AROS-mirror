@@ -797,6 +797,11 @@ static int ata_init(LIBBASETYPEPTR LIBBASE)
         {
             ForeachNode(list, node)
             {
+                if (strcmp(node->ln_Name, "ahci") == 0) {
+                    /* Disable mode change is ahci support is enabled */
+                    LIBBASE->ata_ScanFlags |= ATA_NOSATA2PATA;
+                    continue;
+                }
                 if (strncmp(node->ln_Name, "ATA=", 4) == 0)
                 {
                     if (strstr(node->ln_Name, "nopci"))
