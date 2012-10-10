@@ -321,10 +321,11 @@ int loadElf(void *elf_file)
 				{
 					if (sh[i].size)
 					{
-						kprintf("[BOOT] ELF: %s section loaded at %p (Virtual addr: %p)\n",
+						kprintf("[BOOT] ELF: %s section loaded at %p (Virtual addr: %p) %s\n",
 								sh[i].flags & SHF_WRITE ? "RW":"RO",
 								sh[i].addr,
-								sh[i].addr + virtoffset);
+								sh[i].addr + virtoffset,
+								(eh->shstrndx != 0) ? (const char *)(sh[i].name + sh[eh->shstrndx].offset + (unsigned long)elf_file) : "");
 					}
 				}
 			}
