@@ -2,8 +2,9 @@
 #include <proto/alib.h>
 #include <proto/exec.h>
 #include <proto/dos.h>
+#include <proto/utility.h>
 
-#define DEBUG 1
+#define DEBUG 0
 #include <aros/debug.h>
 
 #define TARGET_DIR  "EMU:boot-stage-2/"
@@ -108,21 +109,21 @@ static BOOL copyBootFiles(STRPTR * bootfiles)
     return TRUE;
 }
 
-
+#define BUFSIZE (128)
 
 static STRPTR * findBootFiles(STRPTR volume)
 {
     STRPTR * bootfiles = NULL;
-    BPTR l;
-    TEXT n[128];
+    BPTR l; LONG i = 0;
+    TEXT buffer[BUFSIZE];
 
     /* Skip EMU */
     if (volume[0] == 'E' && volume[1] == 'M' && volume[2] == 'U')
         return NULL;
 
     /* Only if volume has AROS.boot */
-    createPath2(volume, AROS_BOOT, n, 128);
-    l = Lock(n, SHARED_LOCK);
+    createPath2(volume, AROS_BOOT, buffer, BUFSIZE);
+    l = Lock(buffer, SHARED_LOCK);
 
     if (l == BNULL)
         return NULL;
@@ -130,23 +131,43 @@ static STRPTR * findBootFiles(STRPTR volume)
     UnLock(l);
 
     /* Only if volume has AROSBootstrap.conf */
-    createPath2(volume, AROSBS_CONF, n, 128);
-    l = Open(n, MODE_OLDFILE);
+    createPath2(volume, AROSBS_CONF, buffer, BUFSIZE);
+    l = Open(buffer, MODE_OLDFILE);
 
     if (l == BNULL)
         return NULL;
 
-    /* FIXME: hardcode for now */
-    bootfiles = AllocVec(sizeof(STRPTR) * 9, MEMF_ANY);
-    bootfiles[0] = createPath(volume, "boot/AROSBootstrap");
-    bootfiles[1] = createPath(volume, "boot/AROSBootstrap.conf");
-    bootfiles[2] = createPath(volume, "boot/aros-base");
-    bootfiles[3] = createPath(volume, "boot/aros-bsp-arix");
-    bootfiles[4] = createPath(volume, "L/cdrom-handler");
-    bootfiles[5] = createPath(volume, "L/sfs-handler");
-    bootfiles[6] = createPath(volume, "L/afs-handler");
-    bootfiles[7] = createPath(volume, "Libs/partition.library");
-    bootfiles[8] = NULL;
+    bootfiles = AllocVec(sizeof(STRPTR) * 64, MEMF_ANY | MEMF_CLEAR);
+
+    bootfiles[i++] = createPath(volume, "boot/AROSBootstrap");
+    bootfiles[i++] = createPath(volume, "boot/AROSBootstrap.conf");
+
+    /* Naive parsing of configuration file in search of modules to copy */
+    while(FGets(l, buffer, BUFSIZE))
+    {
+        STRPTR p = buffer;
+
+        if (p[0] == '#') continue;
+
+        while (*p != '\n' && *p != '\r' && *p !='\0') { p++;}
+        *p = '\0';
+
+        p = buffer;
+
+        while (*p != '\0')
+        {
+            if (Strnicmp(p, "module", 6) == 0)
+            {
+                D(bug("Found module: %s\n", p + 7));
+                bootfiles[i++] = createPath(volume, p + 7);
+                break;
+            }
+            p++;
+        }
+
+    }
+
+    bootfiles[i++] = NULL;
 
     Close(l);
 
