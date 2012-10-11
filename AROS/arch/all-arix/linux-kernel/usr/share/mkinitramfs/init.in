@@ -57,7 +57,7 @@ if [ "$root" = "sh" ]; then
     sh
 else
     cd /
-    ./boot/AROSBootstrap
+    ./boot/AROSBootstrap &> /dev/null
     cd /boot-stage-2
     ./boot/AROSBootstrap
     sh
