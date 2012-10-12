@@ -1,0 +1,59 @@
+# $Id$
+include $(TOP)/config/make.cfg
+
+.PHONY: $(DISTDIR)/aros$(AROS_TARGET_SUFFIX)-arix-i386.iso
+
+TARGET_ISO := $(DISTDIR)/aros$(AROS_TARGET_SUFFIX)-arix-i386.iso
+
+#MM bootiso-arix-i386 :	AROS-complete		\
+#MM			bootloader-$(AROS_TARGET_BOOTLOADER)-arix-i386 \
+#MM			bootiso-arix-i386-linux-kernel
+
+bootiso-arix-i386: $(AROSDIR)/.backdrop $(TARGET_ISO)
+
+$(AROSDIR)/.backdrop: $(SRCDIR)/workbench/.backdrop
+		@$(CP) $< $@
+
+#MM
+bootiso-arix-i386-quick: $(TARGET_ISO)
+
+.PHONY: bootiso-arix-i386-quick
+
+ifeq ($(AROS_TARGET_BOOTLOADER),grub)
+BOOTLOADER_ELTORITO_REL := boot/grub/iso9660_stage1_5
+endif
+
+ifeq ($(AROS_TARGET_BOOTLOADER),grub2)
+BOOTLOADER_ELTORITO_REL := boot/grub/i386-pc/grub2_eltorito
+endif
+
+ifeq ($(AROS_TARGET_BOOTLOADER),grub2gfx)
+BOOTLOADER_ELTORITO_REL := boot/grub/i386-pc/grub2_eltorito
+endif
+
+BOOT_FILES := aros-base AROSBootstrap aros-bsp-arix initrd.img-no-kmods vmlinuz-3.2.6-lfs-7.1
+ISO_DEPS := $(addprefix $(BINDIR)/boot/, $(BOOT_FILES))
+
+$(warning BOOTLOADER_ELTORITO_REL = $(BOOTLOADER_ELTORITO_REL))
+$(warning LANG = $(LANG))
+
+$(TARGET_ISO): $(ISO_DEPS)
+	%mkdirs_q $(AROSDIR)/S
+	@$(CP) $(SRCDIR)/workbench/s/Startup-Sequence $(AROSDIR)/S/Startup-Sequence
+	@$(MKDIR) -p "$(DISTDIR)"
+	@mkisofs -f \
+		-o $@ \
+		-b $(BOOTLOADER_ELTORITO_REL) \
+		-c boot/boot.catalog \
+                -no-emul-boot \
+                -boot-load-size 4 \
+                -boot-info-table \
+		-allow-leading-dots \
+		-iso-level 4 \
+                -V "AROS Live CD" \
+                -publisher "The AROS Dev Team" \
+		-p "The AROS Dev Team (www.aros.org)" \
+		-sysid "AROS-$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)" \
+                -l -J -r \
+		$(AROSDIR)
+
