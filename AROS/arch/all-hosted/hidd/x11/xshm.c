@@ -74,7 +74,7 @@ static const char *xext_func_names[] = {
     "XShmAttach"
 };
 
-#ifdef HOST_OS_linux
+#if defined(HOST_OS_linux) || defined(HOST_OS_arix)
 #define XEXT_SOFILE "libXext.so.6"
 #endif
 

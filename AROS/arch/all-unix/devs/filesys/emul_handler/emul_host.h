@@ -19,7 +19,7 @@
 #include <sys/vfs.h>
 #endif
 
-#ifdef HOST_OS_linux
+#if defined(HOST_OS_linux) || defined(HOST_OS_arix)
 #include <sys/vfs.h>
 #define LIBC_NAME "libc.so.6"
 #else
@@ -79,7 +79,7 @@ struct LibCInterface
     void	   (*endpwent)(void);
 #endif
     int		  *(*__error)(void);
-#ifdef HOST_OS_linux
+#if defined(HOST_OS_linux) || defined(HOST_OS_arix)
     int		   (*__xstat)(int ver, char *path, struct stat *buf);
     int		   (*__lxstat)(int ver, const char *path, struct stat *buf);
     #define stat(path, buf)  __xstat(_STAT_VER, path, buf)

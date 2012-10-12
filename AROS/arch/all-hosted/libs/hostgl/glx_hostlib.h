@@ -37,7 +37,7 @@ extern struct glx_func glx_func;
 
 #define GLXCALL(func,...) (glx_func.func(__VA_ARGS__))
 
-#ifdef HOST_OS_linux
+#if defined(HOST_OS_linux) || defined(HOST_OS_arix)
 #define GLX_SOFILE    "libGL.so"
 #endif
 

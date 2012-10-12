@@ -79,7 +79,7 @@ AROS_LH4(BOOL, PrepareContext,
     ctx->gpr[1] = (ULONG)task->tc_SPReg;
     ctx->ip = (ULONG)entryPoint;
 
-#if defined(HOST_OS_linux)
+#if defined(HOST_OS_linux) || defined(HOST_OS_arix)
     /* On SYSVR4 or EABI systems gpr2 is reserved for TOC or SDATA2.
      * Although we do not use any of these at the moment we have to
      * store gpr2s current value because we'll need it for calls to

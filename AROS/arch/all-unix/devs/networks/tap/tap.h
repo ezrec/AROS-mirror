@@ -57,7 +57,7 @@
 /* explicitly prototype rand() so we don't have pull in stdlib.h */
 extern int rand(void);
 
-#ifdef HOST_OS_linux
+#if defined(HOST_OS_linux) || defined(HOST_OS_arix)
 #define LIBC_NAME "libc.so.6"
 #endif
 

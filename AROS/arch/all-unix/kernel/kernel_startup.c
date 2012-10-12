@@ -30,7 +30,7 @@
  * On other 64-bit unices we have no control over it.
  */
 #if (__WORDSIZE == 64)
-#ifdef HOST_OS_linux
+#if defined(HOST_OS_linux) || defined(HOST_OS_arix)
 #define ARCH_31BIT MEMF_31BIT
 #endif
 #endif

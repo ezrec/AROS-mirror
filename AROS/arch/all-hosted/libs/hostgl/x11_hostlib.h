@@ -28,7 +28,7 @@ extern struct x11_func x11_func;
 
 #define XCALL(func,...) (x11_func.func(__VA_ARGS__))
 
-#ifdef HOST_OS_linux
+#if defined(HOST_OS_linux) || defined(HOST_OS_arix)
 #define X11_SOFILE    "libX11.so.6"
 #endif
 
