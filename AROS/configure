@@ -7261,6 +7261,30 @@ esac
 #-----------------------------------------------------------------------------
 # This is the target configuration switch.
 case "$target_os" in
+	arix)
+        aros_target_arch="arix"
+        aros_target_family="unix"
+        case "$target_cpu" in
+            *i?86*)
+                aros_target_cpu="i386"
+                aros_object_format="elf_i386"
+                aros_flavour="emulation"
+                aros_target_mkdep="$aros_target_mkdep -D__GNUC__ -Di386 -D__linux__"
+                aros_config_cflags="$aros_config_cflags -m32 -march=i486"
+                aros_kernel_cflags="$aros_kernel_cflags -m32 -march=i486"
+                aros_config_aflags="$aros_config_aflags -m32 -march=i486"
+                aros_config_ldflags="-m32 -march=i486"
+                aros_kernel_ldflags="-melf_i386"
+                aros_default_wbdepth=8
+                gcc_target_cpu="i386"
+                pci_hidd_target="hidd-pci-linux"
+				kernel_tool_prefix=""
+                ;;
+            *)
+                as_fn_error $? "\"Unknown CPU for Arix -- $target_cpu\"" "$LINENO" 5
+                ;;
+		esac
+	;;
     linux*)
 	aros_target_arch="linux"
 	aros_target_family="unix"
