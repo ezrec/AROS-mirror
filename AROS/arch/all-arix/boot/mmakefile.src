@@ -6,8 +6,8 @@ else
     BSP := $(AROS_TARGET_VARIANT)
 endif
 
-#MM- kernel-arix-i386 : kernel-arix
-#MM- kernel-link-arix-i386 : kernel-link-arix
+#MM- kernel-arix-$(AROS_TARGET_CPU) : kernel-arix
+#MM- kernel-link-arix-$(AROS_TARGET_CPU) : kernel-link-arix
 
 # -------- Bootstrap part --------
 
@@ -29,24 +29,25 @@ $(BINDIR)/boot:
 #MM- kernel-arix: kernel-link-base
 
 #MM- kernel-link-arix : \
-#MM     kernel-kernel-kobj          \
-#MM     kernel-hostlib-kobj         \
-#MM     kernel-battclock-kobj       \
-#MM     kernel-processor-kobj       \
-#MM     kernel-timer-kobj           \
-#MM     kernel-expansion-kobj       \
-#MM     kernel-exec-kobj            \
-#MM     kernel-fs-emul-kobj         \
-#MM     kernel-unixio-kobj          \
-#MM     kernel-hidd-linuxfb-kobj    \
+#MM     kernel-kernel-kobj              \
+#MM     kernel-hostlib-kobj             \
+#MM     kernel-battclock-kobj           \
+#MM     kernel-processor-kobj           \
+#MM     kernel-timer-kobj               \
+#MM     kernel-expansion-kobj           \
+#MM     kernel-exec-kobj                \
+#MM     kernel-unixio-kobj              \
+#MM     kernel-hidd-linuxfb-kobj        \
+#MM     kernel-hidd-linuxinput-kobj     \
+#MM     workbench-devs-hostdisk-kobj    \
 #MM     linklibs
 
 # ---- ARIX board support package ----
 
-KDEVS   := timer
+KDEVS   := timer hostdisk
 KLIBS   := exec expansion
-KHNDLRS := emul
-KHIDDS  := unixio linuxfb
+KHNDLRS :=
+KHIDDS  := unixio linuxfb linuxinput
 KRSRCS  := battclock hostlib processor
 
 %link_kickstart mmake=kernel-link-arix file=$(BINDIR)/boot/aros-bsp-$(BSP) \
