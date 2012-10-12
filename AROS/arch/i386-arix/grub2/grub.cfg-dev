@@ -20,3 +20,11 @@ menuentry "AROS (Arix Kernel)" {
 	linux /boot/vmlinuz-3.2.6-lfs-7.1 video=vesafb:mtrr:1,ywrap logo.nologo loglevel=3
 	initrd /boot/initrd.img-no-kmods
 }
+
+menuentry "Linux InitRD Shell" {
+    insmod part_msdos
+    insmod ext2
+    set gfxpayload=1024x768
+    linux /boot/vmlinuz-3.2.6-lfs-7.1 root=sh video=vesafb:mtrr:1,ywrap logo.nologo loglevel=3
+    initrd /boot/initrd.img-no-kmods
+}
