@@ -9,7 +9,7 @@ endif
 # -------- Bootstrap part --------
 
 #MM- boot-unix : boot-unix-$(ARCH)
-#MM boot-unix-linux : kernel-bootstrap-hosted
+#MM- boot-unix-linux : kernel-bootstrap-hosted boot-unix-unix 
 
 #MM
 boot-unix-unix: $(BINDIR)/boot/AROSBootstrap.conf
@@ -25,7 +25,7 @@ $(BINDIR)/boot:
 # -------- Kickstart part --------
 
 #MM- kernel-unix : kernel-unix-$(ARCH) 
-#MM- kernel-unix-unix : kernel-link-base
+#MM- kernel-unix-linux : kernel-link-base
 
 #MM- kernel-link-unix : kernel-link-unix-$(ARCH)
 #MM- kernel-link-unix-linux : kernel-link-unix-unix
