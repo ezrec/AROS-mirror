@@ -52,6 +52,6 @@ KRSRCS  := battclock hostlib processor
 
 %link_kickstart mmake=kernel-link-arix file=$(BINDIR)/boot/aros-bsp-$(BSP) \
     devs=$(KDEVS) handlers=$(KHNDLRS) hidds=$(KHIDDS) libs=$(KLIBS) res=$(KRSRCS) startup=$(KOBJSDIR)/kernel_resource.o \
-    uselibs="arossupport hiddstubs amiga autoinit arosc.static libinit m"
+    uselibs="arossupport hiddstubs amiga autoinit rom hiddgraphicsstubs libinit m"
 
 %common
