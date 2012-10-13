@@ -149,7 +149,7 @@ char *dest_Path = NULL;         /* DOS DEVICE NAME of part used to store "aros" 
 char *work_Path = NULL;         /* DOS DEVICE NAME of part used to store "work" */
 TEXT *extras_path = NULL;       /* DOS DEVICE NAME of part used to store extras */
 
-char *boot_Device = "ata.device";
+char *boot_Device = "hostdisk.device";
 ULONG boot_Unit = 0;
 
 Object *check_copytowork = NULL;
@@ -837,7 +837,7 @@ IPTR Install__MUIM_IC_NextStep(Class * CLASS, Object * self, Msg message)
                     if (fssm != NULL)
                     {
                         boot_Device = fssm->fssm_Device;
-                        if (strcmp(fssm->fssm_Device, "ata.device") != 0)
+                        if (strcmp(fssm->fssm_Device, "hostdisk.device") != 0)
                             boot_Unit = fssm->fssm_Unit;
                     }
                     else
@@ -3779,8 +3779,11 @@ int main(int argc, char *argv[])
     /* Notifications upon selection of drive type */
     DoMethod(cycle_drivetype, MUIM_Notify, (IPTR) MUIA_Cycle_Active, 0,
         (IPTR) dest_device, 3, MUIM_Set,
-        MUIA_String_Contents, "ata.device");
+        MUIA_String_Contents, "hostdisk.device");
     DoMethod(cycle_drivetype, MUIM_Notify, (IPTR) MUIA_Cycle_Active, 1,
+        (IPTR) dest_device, 3, MUIM_Set,
+        MUIA_String_Contents, "ata.device");
+    DoMethod(cycle_drivetype, MUIM_Notify, (IPTR) MUIA_Cycle_Active, 2,
         (IPTR) dest_device, 3, MUIM_Set,
         MUIA_String_Contents, "usbscsi.device");
     DoMethod(cycle_drivetype, MUIM_Notify, (IPTR) MUIA_Cycle_Active, 2,
