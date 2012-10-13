@@ -30,6 +30,8 @@ $(BINDIR)/boot:
 
 #MM- kernel-link-arix : \
 #MM     kernel-kernel-kobj              \
+#MM     kernel-bootloader-kobj          \
+#MM     kernel-dosboot-kobj             \
 #MM     kernel-hostlib-kobj             \
 #MM     kernel-battclock-kobj           \
 #MM     kernel-processor-kobj           \
@@ -44,11 +46,11 @@ $(BINDIR)/boot:
 
 # ---- ARIX board support package ----
 
-KDEVS   := timer hostdisk
+KDEVS   := timer
 KLIBS   := exec expansion
 KHNDLRS :=
 KHIDDS  := unixio linuxfb linuxinput
-KRSRCS  := battclock hostlib processor
+KRSRCS  := battclock hostlib processor dosboot bootloader
 
 %link_kickstart mmake=kernel-link-arix file=$(BINDIR)/boot/aros-bsp-$(BSP) \
     devs=$(KDEVS) handlers=$(KHNDLRS) hidds=$(KHIDDS) libs=$(KLIBS) res=$(KRSRCS) startup=$(KOBJSDIR)/kernel_resource.o \
