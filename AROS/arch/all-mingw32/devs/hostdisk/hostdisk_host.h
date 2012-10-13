@@ -1,5 +1,5 @@
 #ifdef __x86_64__
-#define __stdcall
+#define __stdcall __attribute__((ms_abi))
 #else
 #define __stdcall __attribute__((stdcall))
 #endif
@@ -29,6 +29,7 @@
 #define ERROR_LOCK_VIOLATION		33L
 #define ERROR_HANDLE_EOF		38L
 #define ERROR_FILE_EXISTS		80L
+#define ERROR_INVALID_PARAMETER         87L
 #define ERROR_INVALID_NAME		123L
 #define ERROR_DIR_NOT_EMPTY		145L
 #define ERROR_IO_PENDING		997L
