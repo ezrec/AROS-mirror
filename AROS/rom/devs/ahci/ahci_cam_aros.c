@@ -265,11 +265,30 @@ static BOOL ahci_RegisterVolume(struct ahci_port *ap, struct ata_port *at)
         devnode = MakeDosNode(pp);
 
         if (devnode) {
-            D(bug("[AHCI>>]:-ahci_RegisterVolume: '%s' C/H/S=%d/%d/%d, %s unit %d\n",
-                        AROS_BSTR_ADDR(devnode->dn_Name), at->at_identify.ncyls, at->at_identify.nheads,  at->at_identify.nsectors, MOD_NAME_STRING, unit));
-            AddBootNode(pp[DE_BOOTPRI + 4], 0, devnode, 0);
-            D(bug("[AHCI>>]:-ahci_RegisterVolume: done\n"));
-            return TRUE;
+            CONST_STRPTR handler;
+            int len;
+
+            if(ap->ap_type == ATA_PORT_T_DISK)
+                handler = "afs.handler";
+            else
+                handler = "cdrom.handler";
+            len = strlen(handler);
+            if ((devnode->dn_Handler =
+                 MKBADDR(AllocMem(AROS_BSTR_MEMSIZE4LEN(len),
+                                  MEMF_PUBLIC | MEMF_CLEAR
+                         )
+                 )
+            ))
+            {
+                CopyMem(handler, AROS_BSTR_ADDR(devnode->dn_Handler), len);
+                AROS_BSTR_setstrlen(devnode->dn_Handler, len);
+
+                D(bug("[AHCI>>]:-ahci_RegisterVolume: '%s' C/H/S=%d/%d/%d, %s unit %d\n",
+                            AROS_BSTR_ADDR(devnode->dn_Name), at->at_identify.ncyls, at->at_identify.nheads,  at->at_identify.nsectors, MOD_NAME_STRING, unit));
+                AddBootNode(pp[DE_BOOTPRI + 4], 0, devnode, 0);
+                D(bug("[AHCI>>]:-ahci_RegisterVolume: done\n"));
+                return TRUE;
+            }
         }
 
         CloseLibrary((struct Library *)ExpansionBase);
