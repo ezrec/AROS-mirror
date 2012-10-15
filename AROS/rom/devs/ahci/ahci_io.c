@@ -213,8 +213,8 @@ AROS_LH1(void, BeginIO,
     }
 
     ObtainSemaphore(&unit->sim_Lock);
-
     AddHead(&unit->sim_IOs, &io->io_Message.mn_Node);
+    ReleaseSemaphore(&unit->sim_Lock);
 
     switch (io->io_Command) {
     case NSCMD_DEVICEQUERY:
@@ -350,12 +350,13 @@ bad_address:
     }
 
     /* The IO is finished, so no need to keep it around anymore */
-    if (done)
+    if (done) {
+        ObtainSemaphore(&unit->sim_Lock);
         Remove(&io->io_Message.mn_Node);
-    else
+        ReleaseSemaphore(&unit->sim_Lock);
+    } else
         io->io_Flags &= ~IOF_QUICK;
         
-    ReleaseSemaphore(&unit->sim_Lock);
 
     /* Need a reply now? */
     if (done && !(io->io_Flags & IOF_QUICK))
