@@ -27,7 +27,8 @@ static BOOL hd_RegisterVolume(struct DriveGeometry * dg, struct unitExt * unit)
 {
     struct ExpansionBase *ExpansionBase;
     struct DeviceNode *devnode;
-    TEXT dosdevname[4] = "HD0";
+    TEXT dosdevname[4] = "HD0", *handler;
+    UWORD len;
     const ULONG IdDOS = AROS_MAKE_ID('D','O','S','\001');
     const ULONG IdCDVD = AROS_MAKE_ID('C','D','V','D');
 
@@ -47,7 +48,7 @@ static BOOL hd_RegisterVolume(struct DriveGeometry * dg, struct unitExt * unit)
                 dosdevname[0] = 'C';
                 break;
             default:
-                D(bug("[ATA>>]:-ata_RegisterVolume called on unknown devicetype\n"));
+                D(bug("[HostDisk]:hd_RegisterVolume called on unknown devicetype\n"));
         }
 
         if (unit->ue_UnitNum < 10)
@@ -82,10 +83,24 @@ static BOOL hd_RegisterVolume(struct DriveGeometry * dg, struct unitExt * unit)
             D(bug("[HostDisk]:hd_RegisterVolume: '%b', type=0x%08lx with StartCyl=%d, EndCyl=%d .. ",
                   devnode->dn_Name, pp[DE_DOSTYPE + 4], pp[DE_LOWCYL + 4], pp[DE_HIGHCYL + 4]));
 
-            AddBootNode(pp[DE_BOOTPRI + 4], ADNF_STARTPROC, devnode, NULL);
-            D(bug("done\n"));
+            if(unit->ue_DeviceType == DG_DIRECT_ACCESS)
+                handler = "afs.handler";
+            else
+                handler = "cdrom.handler";
 
-            return TRUE;
+            len = strlen(handler);
+
+            if ((devnode->dn_Handler = MKBADDR(AllocMem(AROS_BSTR_MEMSIZE4LEN(len),
+                    MEMF_PUBLIC | MEMF_CLEAR))))
+            {
+                CopyMem(handler, AROS_BSTR_ADDR(devnode->dn_Handler), len);
+                AROS_BSTR_setstrlen(devnode->dn_Handler, len);
+
+                AddBootNode(pp[DE_BOOTPRI + 4], 0, devnode, 0);
+                D(bug("done\n"));
+
+                return TRUE;
+            }
         }
 
         CloseLibrary((struct Library *)ExpansionBase);
@@ -138,7 +153,7 @@ static struct unitExt * CreateUnitTask(STRPTR nodename, LONG unitnum, struct Hos
             D(bug("hostdisk: in CreateUnitTask func. Waiting for signal from unit task...\n"));
             Wait(SIGF_SINGLE);
 
-            D(bug("hostdisk: in CreateUnitTask func. Unit error %u, flags 0x%02X\n", iotd->iotd_Req.io_Error, unit->flags));
+            D(bug("hostdisk: in CreateUnitTask func. Unit error %u, flags 0x%02X\n", iotd.iotd_Req.io_Error, unit->base.flags));
             if (!iotd.iotd_Req.io_Error)
             {
                 AddTail((struct List *)&hdskBase->units, &unit->base.n);
