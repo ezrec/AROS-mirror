@@ -46,9 +46,9 @@ $(BINDIR)/boot:
 
 # ---- ARIX board support package ----
 
-KDEVS   := timer
+KDEVS   := timer hostdisk
 KLIBS   := exec expansion
-KHNDLRS :=
+KHNDLRS := cdrom
 KHIDDS  := unixio linuxfb linuxinput
 KRSRCS  := battclock hostlib processor dosboot bootloader
 
