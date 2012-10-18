@@ -76,10 +76,9 @@
 	{
 	    OOP_Object *gc  = GetDriverData(rp, GfxBase);
 	    struct Rectangle rr;
-	    HIDDT_Pixel oldfg;
+	    HIDDT_Pixel oldfg = GC_FG(gc);
 
 	    if (rp->DrawMode & INVERSVID) {
-	        oldfg = GC_FG(gc);
 	        GC_FG(gc) = GC_BG(gc);
 	    }
 
@@ -92,9 +91,7 @@
 
     	    do_render_with_gc(rp, NULL, &rr, fillrect_render, NULL, gc, TRUE, FALSE, GfxBase);
 
-	    if (rp->DrawMode & INVERSVID) {
-	        GC_FG(gc) = oldfg;
-	    }
+	    GC_FG(gc) = oldfg;
     	}
     } /* if ((xMax >= xMin) && (yMax >= yMin)) */
     

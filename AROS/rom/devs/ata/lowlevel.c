@@ -65,13 +65,13 @@
 
 // use #define xxx(a) D(a) to enable particular sections.
 #if DEBUG
-#define DIRQ(a) D(a)
+#define DIRQ(a)
 #define DIRQ_MORE(a)
 #define DUMP(a) D(a)
 #define DUMP_MORE(a)
-#define DATA(a) D(a)
-#define DATAPI(a) D(a)
-#define DINIT(a) (a)
+#define DATA(a)
+#define DATAPI(a)
+#define DINIT(a) D(a)
 #else
 #define DIRQ(a)      do { } while (0)
 #define DIRQ_MORE(a) do { } while (0)
@@ -2296,7 +2296,7 @@ ULONG ata_ReadSignature(struct ata_Bus *bus, int unit, BOOL *DiagExecuted)
             }
             while (0 != (ATAF_BUSY & ata_ReadStatus(bus)));
             DINIT(bug("[ATA  ] ata_ReadSignature: Further validating ATA signature: %lx & 0x7f = 1, %lx & 0x10 = unit\n", BUS_IN(ata_Error, port), BUS_IN(ata_DevHead, port)));
-
+#if 0
             if ((BUS_IN(ata_Error, port) & 0x7f) == 1)
             {
                 DINIT(bug("[ATA  ] ata_ReadSignature: Found *valid* signature for ATA device\n"));
@@ -2306,6 +2306,9 @@ ULONG ata_ReadSignature(struct ata_Bus *bus, int unit, BOOL *DiagExecuted)
             DERROR(bug("[ATA  ] ata_ReadSignature: Found signature for ATA "
                 "device, but further validation failed\n"));
             return DEV_NONE;
+#else
+            return DEV_ATA;
+#endif
     }
 }
 

@@ -15,13 +15,14 @@
 static void __arosc_startup(struct ExecBase *SysBase)
 {
     jmp_buf exitjmp;
+    int startup_error = (int)__startup_error;
 
     if (setjmp(exitjmp) == 0)
     {
         D(bug("[__arosc_startup] setjmp() called\n"));
 
         /* Tell arosc.library a program using it has started */
-        __arosc_program_startup(exitjmp, &__startup_error);
+        __arosc_program_startup(exitjmp, &startup_error);
         D(bug("[__arosc_startup] Library startup called\n"));
 
         __startup_entries_next();
@@ -33,6 +34,7 @@ static void __arosc_startup(struct ExecBase *SysBase)
 
     /* Tell arosc.library program has reached the end */
     __arosc_program_end();
+    __startup_error = startup_error;
 
     D(bug("[__arosc_startup] Leave\n"));
 }

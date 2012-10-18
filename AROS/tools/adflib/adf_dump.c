@@ -70,8 +70,8 @@ RETCODE adfInitDumpDevice(struct Device* dev, char* name, BOOL ro)
         dev->sectors = 11;
         dev->heads = 2;
     } else {
-        dev->sectors = 128;
-        dev->heads   = 4;
+        dev->sectors = 127;
+        dev->heads   = 9;
     }
     dev->cylinders = dev->size / 512 / dev->sectors / dev->heads;
 	

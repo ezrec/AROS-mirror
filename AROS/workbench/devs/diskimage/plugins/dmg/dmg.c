@@ -285,7 +285,7 @@ APTR DMG_OpenImage (struct DiskImagePlugin *Self, APTR unit, BPTR file,
 		XML_Parser parser;
 		XML_Parser_Data parser_data;
 		int xml_error;
-		struct Library *ExpatBase;
+		struct Library __unused *ExpatBase;
 
 		xml_offset = rbe64(&koly->xml_offset);
 		xml_length = rbe64(&koly->xml_length);
@@ -575,7 +575,7 @@ static void xml_start_element_handler (void *user_data,
 	const char *name, const char **attrs)
 {
 	XML_Parser_Data *data = user_data;
-	struct Library *ExpatBase = data->expatbase;
+	struct Library __unused *ExpatBase = data->expatbase;
 	if (data->error) return;
 
 	if (data->current_tag_depth == 0) {
@@ -604,7 +604,7 @@ static void xml_end_element_handler (void *user_data,
 	const char *name)
 {
 	XML_Parser_Data *data = user_data;
-	struct Library *ExpatBase = data->expatbase;
+	struct Library __unused *ExpatBase = data->expatbase;
 	if (data->error) return;
 
 	data->current_tag_depth--;
@@ -643,7 +643,7 @@ static void xml_character_data_handler (void *user_data,
 	const char *s, int len)
 {
 	XML_Parser_Data *data = user_data;
-	struct Library *ExpatBase = data->expatbase;
+	struct Library __unused *ExpatBase = data->expatbase;
 	if (data->error) return;
 
 	if (data->is_in_data_tag && len > 0) {
@@ -827,7 +827,7 @@ LONG DMG_Read (struct DiskImagePlugin *Self, APTR image_ptr, struct IOStdReq *io
 				if (!part->out_size) break;
 				if (image->part_in_buf != part) {
 					LONG status;
-					ULONG out_len;
+					unsigned int out_len;
 					image->part_in_buf = NULL;
 
 					if (!(image->in_buf = ReAllocBuf(image->in_buf, &image->in_size, part->in_size)) ||

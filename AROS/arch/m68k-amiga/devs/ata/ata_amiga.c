@@ -303,7 +303,8 @@ static void callbusirq(struct amiga_driverdata *ddata)
     status2 = 0;
     if (ddata->doubler == 2)
         status2 = port[0x1000 + ata_Status * 4];
-    ackint(ddata);
+    if (status1 != 0x80)
+        ackint(ddata);
     bug("[ATA] Spurious interrupt: %02X %02X\n", status1, status2);
 }
 
@@ -456,7 +457,7 @@ static BOOL ata_amiga_ide_init(struct ataBase *LIBBASE)
 	LIBBASE->ata_NoDMA = TRUE;
 	bdata->ddata = ddata;
 	bdata->port = ddata->gaylebase;
-	ata_RegisterBus(0, ddata->doubler ? -1 : 0x1010, 2, 0, ARBF_EarlyInterrupt, &amiga_driver0, bdata, LIBBASE);
+	ata_RegisterBus(0, (1 || ddata->doubler) ? -1 : 0x1010, 2, 0, ARBF_EarlyInterrupt, &amiga_driver0, bdata, LIBBASE);
 	if (ddata->doubler == 2) {
 	    D(bug("[ATA] Adding secondary bus\n"));
 	    bdata++;
