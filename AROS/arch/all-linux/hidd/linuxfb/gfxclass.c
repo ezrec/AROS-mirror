@@ -406,8 +406,10 @@ static BOOL get_pixfmt(struct TagItem *pftags, struct fb_fix_screeninfo *fsi, st
 }
 
 #define writel(val, addr)           (*(volatile ULONG*)(addr) = (val))
+#define writew(val, addr)           (*(volatile UWORD*)(addr) = (val))
 #define writeb(val, addr)           (*(volatile UBYTE*)(addr) = (val))
 #define readl(addr)                 (*(volatile ULONG*)(addr))
+#define readw(addr)                 (*(volatile UWORD*)(addr))
 #define readb(addr)                 (*(volatile UBYTE*)(addr))
 
 static inline int do_alpha(int a, int v)
@@ -474,6 +476,17 @@ static VOID HIDDLInuxFBPutAlphaImage32ToFBDev(APTR srcbuff, ULONG srcpitch, stru
                     * Alpha blending with source and destination pixels.
                     * Get destination.
                     */
+                    if (dstbpp == 2)
+                    {
+                        UWORD rgb565;
+                        rgb565 = readw(destaddr);
+                        dst_red = ((rgb565 >> 11) & 0x1f) << 3;
+                        dst_red |= (dst_red >> 5);
+                        dst_green = ((rgb565 >> 5) & 0x3f) << 2;
+                        dst_green |= (dst_green >> 6);
+                        dst_blue = (rgb565 & 0x1f) << 3;
+                        dst_blue |= (dst_blue >> 5);
+                    }
 
                     if (dstbpp == 3)
                     {
@@ -497,6 +510,16 @@ static VOID HIDDLInuxFBPutAlphaImage32ToFBDev(APTR srcbuff, ULONG srcpitch, stru
                 }
 
                 /* Store the new pixel */
+
+                if (dstbpp == 2)
+                {
+                    UWORD rgb565;
+
+                    rgb565 = ((dst_red >> 3) << 11) |
+                             ((dst_green >> 2) << 5) |
+                             ((dst_blue >> 3) << 0);
+                    writew(rgb565, destaddr);
+                }
 
                 if (dstbpp == 3)
                 {
