@@ -16,7 +16,7 @@
 #if defined __i386__
 #include <i386-linux-gnu/asm/unistd.h>
 #elif defined __arm__
-#include <arm-linux-gnueabihf/asm/unistd.h>
+#include <asm/unistd.h>
 #endif
 
 /* Empty signal handler which does pretty nothing */
@@ -29,6 +29,13 @@ void handler(int sig)
 {
 }
 
+#ifdef __arm__
+void __sync_synchronize(void)
+{
+    // asm volatile("dmb sy"); // ARMv7
+    asm volatile ("mcr p15,0,%0,c7,c10,5" :: "r" (0));
+}
+#endif
 
 /* I *do not* want to use any AROS library in this piece of code! */
 void clear(void *addr, int size)
