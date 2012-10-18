@@ -1,5 +1,10 @@
-Introduction
-============
+.. raw:: html
+
+   <h1>Introduction<br><img style="width: 238px; height: 2px;" alt="spacer" src="/images/sidespacer.png"></h1>
+
+.. raw:: html
+
+  <?php include('/home/groups/a/ar/aros/htdocs/rsfeed/randimg.php');  random_image("/images/thubs/","100","76"); ?>
 
 AROS est un système d'exploitation portable et libre visant à être compatible
 avec AmigaOS, tout en l'améliorant dans diverses branches.

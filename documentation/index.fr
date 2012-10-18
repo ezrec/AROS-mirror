@@ -1,10 +1,64 @@
+.. raw:: html
+
+   <table style="text-align: justify; width: 100%;" background="/images/bgcolormain.png" border="0" cellpadding="1" cellspacing="1"><tr><td style="vertical-align: top;">
 
 .. Include:: introduction/index-abstract.fr
 
 `En savoir plus... <introduction/index>`__
 
+.. raw:: html
+
+   </td></tr></tbody></table><br>
+
+
+.. raw:: html
+
+   <table style="width: 100%; text-align: justify; margin-left: auto; margin-right: auto;" background="/images/bgcolormain.png" border="0" cellpadding="1" cellspacing="1"><tr><td>
+
 .. Include:: download-abstract.en
 
 `En savoir plus... <download>`__
 
+.. raw:: html
+
+   </td></tr></table>
+
+
+.. raw:: html
+
+   <table style="width: 100%; text-align: justify; margin-left: auto; margin-right: auto;" border="0" cellpadding="1" cellspacing="1"><tr><td>
+
 .. Include:: news/index.fr
+
+.. raw:: html
+
+   </td></tr></table><br>
+
+
+.. raw:: html
+
+   <td style="width: 243px; vertical-align: top;">
+   <!-- The direct downloads block is disabled so that users go to the downloads section where they should learn about using distribution instead of nightly
+   <table style="text-align: justify; width:100%;" background="/images/bgcolorright.png" border="0" cellpadding="1" cellspacing="1"><tr><td>
+   <?php if ($win_ie56) { echo "<img alt=\"Direct download Icon\" src=\"/images/directdownloadicon.gif\" align=\"middle\">";} 
+   else { echo "<img alt=\"Direct download Icon\" src=\"/images/directdownloadicon.png\" align=\"middle\">";} ?>Direct Downloads:<br>
+   <img style="width: 238px; height: 2px;" alt="spacer" src="/images/sidespacer.png"><br>
+   Nightly builds are done automatically every night, directly from the latest source code. If you'd just like to try an AROS live CD, please grab the "boot ISO" one for your platform (i386 or PowerPC).<br><br>
+   <?php virtual("/cgi-bin/files2") ?> <br></td></tr></tbody></table>-->
+   <table style="text-align: justify; width: 100%;" background="/images/bgcolorright.png" border="0" cellpadding="1" cellspacing="1"><tr><td>
+   <?php if ($win_ie56) { echo "<img alt=\"Archive Icon\" src=\"/images/archivedownloadicon.gif\" align=\"middle\">"; } 
+   else { echo "<img alt=\"Archive Icon\" src=\"/images/archivedownloadicon.png\" align=\"middle\">"; } ?>
+   Latest ARCHIVE submissions:<br><img style="width: 238px; height: 2px;" alt="spacer" src="/images/sidespacer.png"><br>
+   <a href="http://archives.aros-exec.org">The AROS archives</a> contains the latest system content submitted by our community, and is the primary location for user applications, themes, graphics, and additional documentation.<br><br>
+   <?php include("rsfeed/archives.php"); ?><br></td></tr></table>
+   <table style="text-align: justify; width: 100%;" background="/images/bgcolorright.png" border="0" cellpadding="1" cellspacing="1"><tr><td>
+   <?php if ($win_ie56) { echo "<img alt=\"Community Icon\" src=\"/images/communityicon.gif\" align=\"middle\">"; } 
+   else { echo "<img alt=\"Community Icon\" src=\"/images/communityicon.png\" align=\"middle\">"; } ?> 
+   Latest AROS-EXEC forum posts:<br><img style="width: 238px; height: 2px;" alt="spacer" src="/images/sidespacer.png"><br>
+   <a href="http://www.aros-exec.org">AROS-EXEC</a> is the AROS primary community site. Get help with AROS, find out what is happening in the community, and post your thoughts.<br><br>
+   <?php include("rsfeed/aeforum.php"); ?><br></td></tr></tbody></table>
+   <table style="width: 100%; text-align: justify; margin-left: auto; margin-right: auto;" background="/images/bgcolorright.png" border="0" cellpadding="1" cellspacing="1"><tr><td style="vertical-align: top;">
+   <?php if ($win_ie56) { echo "<img alt=\"Syndication Icon\" src=\"/images/rssicon1.gif\" align=\"middle\">"; } else { echo "<img alt=\"Syndication Icon\" src=\"/images/rssicon1.png\" align=\"middle\">"; } ?>
+   Syndication Feeds:<br><img style="width: 177px; height: 2px;" alt="spacer" src="/images/sidespacer.png"><br>
+   <?php  include("rsfeed/synfeed.php");  ?><br></td></tr></table>
+   </td></tr></table>

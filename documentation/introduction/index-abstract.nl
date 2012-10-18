@@ -1,5 +1,10 @@
-Introductie
-===========
+.. raw:: html
+
+   <h1>Introductie<br><img style="width: 238px; height: 2px;" alt="spacer" src="/images/sidespacer.png"></h1>
+
+.. raw:: html
+
+  <?php include('/home/groups/a/ar/aros/htdocs/rsfeed/randimg.php');  random_image("/images/thubs/","100","76"); ?>
 
 Het AROS Research Operating System is een lichtgewicht, efficiënt en
 flexibel desktop besturingssysteem, ontworpen om u te helpen het meeste
