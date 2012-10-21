@@ -1,0 +1,90 @@
+=============================================
+Another (non-calendar-aligned) Year in Review
+=============================================
+
+:Author:   Neil Cafferkey
+:Date:     2012-10-21
+
+Another year gone by, another year of coding instead of news-writing, 
+another selection of highlights.
+
+New web browser
+---------------
+
+AROS's usability has made a huge leap with the porting of the modern and 
+standards-compliant Odyssey web browser. Based on the WebKit engine, Odyssey 
+includes a JIT Javascript compiler, and supports tabbed browsing, HTML5, 
+CSS, SVG and SSL. It is also highly configurable, with a GUI allowing 
+management of bookmarks, cookies, content blocking, history, passwords and 
+more.
+
+Platforms
+---------
+
+Support for the ARM architecture has continued to mature and diversify, with 
+nightly builds for Linux-hosted AROS versions now available. There is 
+particular interest among users in running AROS on the ARM-based Raspberry 
+Pi, albeit in Linux-hosted form for now.
+
+There has been further development on other AROS platforms too. The 
+Windows-hosted version has seen numerous bug-fixes, and is now a lot more 
+stable, while the compatibility of the original Amiga version with legacy 
+software continues to improve.
+
+Networking
+----------
+
+Wireless networking support has matured, with the addition of two new 
+WPA-capable drivers: one is for Realtek RTL8187B-based USB devices, and the 
+other is an updated version of the Prism-II driver that first brought 
+wireless networking to AROS in 2005. A GUI utility to dynamically scan for 
+and connect to wireless networks has also been introduced.
+
+Mobile broadband is now much easier to set up, and additional USB devices 
+and phones are also supported. And AROS can now mount SMB share drives, 
+although this capability is currently limited to older versions of Windows, 
+as well as Linux and standalone NAS devices.
+
+Other improvements
+------------------
+
+Initial printing support has been introduced to AROS. Components of the new 
+framework include a preferences GUI, a PostScript printer driver and several 
+traditional utilities such as PrintFiles and GraphicDump. Output can be 
+directed to USB, parallel or serial ports, or to a file.
+
+Our Intel GMA driver has gained 3D support for certain chip revisions. 
+Although the GMA hardware has more limited 3D capabilities than 
+recent nVidia and AMD cards, many older games (of which many have been 
+ported in recent times) still run well. We also gained an OpenGL driver for 
+Linux-hosted 3D graphics, and an updated nVidia driver.
+
+The selection of audio drivers available for AROS has improved, with new 
+drivers becoming available for ES137x and CMI8738 sound chips. The former is 
+significant in that it provides audio output under VMWare.
+Our HDAudio driver has also gained wider compatibility in both playback and 
+recording modes.
+
+There have been improvements in accessing disks from AROS. We now have an 
+AHCI driver that provides native SATA support on many modern machines. In 
+addition, standard Windows partitions can now be read using an early version 
+of an NTFS filesystem handler, and write speeds to FAT partitions have been 
+improved. The newly open-sourced version of the Frying Pan CD-writing 
+software is also now a standard AROS component.
+
+Last but not least, our Papercuts initiative led to many small but annoying 
+bugs being fixed throughout AROS.
+
+Wider developments
+------------------
+
+AROS now has its first distribution for the original (MC680x0) Amiga 
+platform, `AROS Vision <http://www.natami-news.de/html/aros_vision.html>`__. 
+As well as AROS itself, AROS Vision includes many freely distributable 
+third-party AmigaOS system components and applications.
+
+Another new AROS distribution is `AEROS <http://www.aeros-os.org/>`__, which 
+aims to combine the best features of AROS and Linux by integrating them into 
+a seamless environment. There are currently versions for x86 and ARM 
+systems.
+
