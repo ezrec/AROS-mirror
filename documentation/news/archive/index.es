@@ -6,6 +6,7 @@ Aquí puedes encontrar las noticias viejas que se han publicado en este
 sitio web durante este año y en los anteriores. Están disponibles las 
 noticias de los siguientes años:
 
++ `2012 <2012>`__
 + `2011 <2011>`__
 + `2010 <2010>`__
 + `2009 <2009>`__
