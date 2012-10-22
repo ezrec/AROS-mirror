@@ -215,7 +215,7 @@ extern struct ExecBase *SysBase;
 #include <limits.h>
 #include <stddef.h>
 
-#ifdef DEBUG
+#if DEBUG
 #define D(x) x
 #else
 #define D(x)
