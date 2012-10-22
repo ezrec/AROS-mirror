@@ -220,13 +220,20 @@ for group in groups.keys():
                 size = formatSize( os.path.getsize( path ) )
                 print '''
                 <table class="layout" border="0" cellspacing="0" cellpadding="0">
-                <tr class="layout">
-                 <td class="layout" rowspan="2"><a href="%(url)s"><img border="0" src="/images/disk.png"></a></td>
-                 <td class="layout"><b><a href="%(url)s">%(downloadLabel)s</a></b><br><a href="%(url)s.md5">%(md5Label)s</a>&nbsp;</td>
-                </tr>
-                <tr class="layout">
-                 <td class="layout">%(size)s</td></tr>
-                </tr></table>
+                 <tr class="layout"><td class="layout"></td>
+                  <td class="layout" align="center">
+                   <span style="float:left">
+                    <a href="%(url)s"><img border="0" src="/images/disk.png" alt="[floppy disk]"></a>
+                   </span>
+                   <span>
+                    <b><a href="%(url)s">%(downloadLabel)s</a></b><br>
+                    %(size)s<br>
+                    <a href="%(url)s.md5">%(md5Label)s</a>&nbsp;
+                   </span>
+                  </td>
+                  <td class="layout"></td>
+                 </tr>
+                </table>
                 ''' % vars()
             else:
                 print '''
