@@ -94,7 +94,7 @@ pc-x86_64-boot-iso:
     Dies ist das bootbare CDROM ISO-Image, welches alle
     AROS-Systemprogramme und beigesteuerte Programme enthält.
 sam440-ppc-boot-iso:
-    Die native Version für Sam440EP und Sam440EP Flex Computer. 
+    Die native Version für Sam440EP, Sam440EP Flex und Sam460ex Computer.
     Dies ist das bootfähige ROM-Speicherabbild einschließlich
     ub2lb (Parthenope) SLB. Es enthält alle AROS System- und
     beigesteuerte Programme.
