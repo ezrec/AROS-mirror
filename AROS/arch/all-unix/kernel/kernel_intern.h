@@ -42,6 +42,8 @@ struct KernelInterface
     int     (*SigFillSet)(sigset_t *set);
     int     (*SigAddSet)(sigset_t *set, int signum);
     int     (*SigDelSet)(sigset_t *set, int signum);
+    int		(*getpid)();
+    int     (*kill)(int pid, int sig);
 #endif
 };
 
