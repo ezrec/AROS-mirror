@@ -255,6 +255,7 @@ int core_Start(void *libc)
     AROS_HOST_BARRIER
 #endif
     pd->iface->sigaction(SIGIO  , &sa, NULL);
+    pd->iface->sigaction(SIGWINCH, &sa, NULL);
     AROS_HOST_BARRIER
 
     /* Software IRQs do not need to block themselves. Anyway we know when we send them. */
