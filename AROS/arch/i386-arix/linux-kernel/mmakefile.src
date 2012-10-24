@@ -17,6 +17,7 @@ $(BLOBSDIR)/vmlinuz-3.2.6-lfs-7.1: $(PORTSSOURCEDIR)/arix-blobs.tar.gz
 $(BLOBSDIR)/initrd.img-no-kmods: $(PORTSSOURCEDIR)/arix-blobs.tar.gz
 
 $(PORTSSOURCEDIR)/arix-blobs.tar.gz:
+		$(MKDIR) $(PORTSSOURCEDIR)
 		wget https://gitorious.org/arix-blobs/arix-blobs/archive-tarball/master -O $(PORTSSOURCEDIR)/arix-blobs.tar.gz
 		$(MKDIR) $(PORTSDIR)
 		tar -xf $(PORTSSOURCEDIR)/arix-blobs.tar.gz -C $(PORTSDIR)

@@ -41,6 +41,7 @@ $(BINDIR)/boot:
 #MM     kernel-unixio-kobj              \
 #MM     kernel-hidd-linuxfb-kobj        \
 #MM     kernel-hidd-linuxinput-kobj     \
+#MM     kernel-fs-cdvdfs-kobj           \
 #MM     workbench-devs-hostdisk-kobj    \
 #MM     linklibs
 
