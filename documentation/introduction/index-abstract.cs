@@ -4,7 +4,7 @@
 
 .. raw:: html
 
-  <?php include('/home/groups/a/ar/aros/htdocs/rsfeed/randimg.php');  random_image("/images/thubs/","100","76"); ?>
+  <?php include('/home/project-web/aros/htdocs/rsfeed/randimg.php');  random_image("/images/thubs/","100","76"); ?>
 
 AROS Research Operating System je velmi jednoduchý, výkonný a flexibilní
 desktopový operaèní systém urèený k tomu, abych ti pomohl vytì¾it maximum

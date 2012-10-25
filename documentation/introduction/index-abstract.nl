@@ -4,7 +4,7 @@
 
 .. raw:: html
 
-  <?php include('/home/groups/a/ar/aros/htdocs/rsfeed/randimg.php');  random_image("/images/thubs/","100","76"); ?>
+  <?php include('/home/project-web/aros/htdocs/rsfeed/randimg.php');  random_image("/images/thubs/","100","76"); ?>
 
 Het AROS Research Operating System is een lichtgewicht, efficiënt en
 flexibel desktop besturingssysteem, ontworpen om u te helpen het meeste

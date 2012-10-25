@@ -4,7 +4,7 @@
 
 .. raw:: html
 
-  <?php include('/home/groups/a/ar/aros/htdocs/rsfeed/randimg.php');  random_image("/images/thubs/","100","76"); ?>
+  <?php include('/home/project-web/aros/htdocs/rsfeed/randimg.php');  random_image("/images/thubs/","100","76"); ?>
 
 Το AROS Research Operating System είναι ένα "ελαφρύ", αποτελεσματικό 
 και ευέλικτο λειτουργικό σύστημα, σχεδιασμένο να σας βοηθήσει να εκμεταλευτείτε 

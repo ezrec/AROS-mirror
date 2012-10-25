@@ -4,7 +4,7 @@
 
 .. raw:: html
 
-  <?php include('/home/groups/a/ar/aros/htdocs/rsfeed/randimg.php');  random_image("/images/thubs/","100","76"); ?>
+  <?php include('/home/project-web/aros/htdocs/rsfeed/randimg.php');  random_image("/images/thubs/","100","76"); ?>
 
 AROS on siirrettävä ja vapaa työpöytä käyttöjärjestelmä joka tähtää olemaan
 yhteensopiva AmigaOS:n kanssa, sekä parantaen sitä monilla alueilla.
