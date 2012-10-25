@@ -29,7 +29,7 @@ http://www.domain.com/file.php?path=<bad path>
 And by doing so potentially access sensetive files.
 */
 function random_image($dir,$w,$h) {
-    $dir2 = '/home/groups/a/ar/aros/htdocs'.$dir;
+    $dir2 = '/home/project-web/aros/htdocs'.$dir;
     //echo $dir2;
     if(file_exists($dir2) AND !ereg("\.\.",$dir) AND !ereg("\.ht",$dir)) {
         $d = dir("$dir2");
