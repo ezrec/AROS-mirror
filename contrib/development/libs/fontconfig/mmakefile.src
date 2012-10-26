@@ -7,5 +7,5 @@
 
 %fetch_and_build_gnu_development package=fontconfig version=2.6.0 \
     srcdir=fontconfig-2.6.0 patch=yes suffixes="tar.gz" \
-    package_repo="http://fontconfig.org/release http://r.research.att.com/src" \
+    package_repo="http://fontconfig.org/release http://distfiles.macports.org/fontconfig http://repository.timesys.com/buildsources/f/fontconfig/fontconfig-2.6.0" \
     extraoptions="--without-expat --with-default-fonts=Fonts:TrueType --disable-shared --disable-docs --with-arch=$(AROS_TARGET_CPU)-aros --localstatedir=/var FREETYPE_CFLAGS='-I$(AROS_INCLUDES)/freetype' FREETYPE_LIBS='-L$(AROS_LIB) -lfreetype2.static' LIBXML2_CFLAGS='-I$(AROS_INCLUDES)/libxml2' LIBXML2_LIBS='-L$(AROS_LIB) -lxml2 -lz' lt_sys_lib_search_path_spec='$(AROS_DEVELOPMENT)/lib/'"
