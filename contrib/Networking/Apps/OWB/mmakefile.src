@@ -7,7 +7,7 @@ EXEDIR := $(CONTRIBDIR)/Networking/Apps/OWB
 
 %build_prog mmake=aros-tcpip-apps-startowb \
     files="startowb locale" targetdir=$(EXEDIR) \
-    progname="startowb" uselibs="fontconfig xml2 freetype2 z iconv amiga arosc m mui" \
+    progname="startowb" uselibs="fontconfig xml2 freetype2.static z iconv amiga arosc m mui" \
     cflags="$(CFLAGS) -DZUNE_BUILTIN_SCROLLGROUP=0 -DWTF_PLATFORM_AROS=1"
 
 FILES :=               \
@@ -26,6 +26,8 @@ FILES :=               \
 	browserwindow      \
 	browserapp
 	
+#MM- aros-tcpip-apps: aros-tcpip-apps-owb
+
 #MM- aros-tcpip-apps-startowb : contrib-fontconfig
 
 #MM- aros-tcpip-apps-owb : workbench-libs-thread         \
@@ -40,10 +42,10 @@ FILES :=               \
 
 #MM aros-tcpip-apps-owb-resources : aros-tcpip-apps-owb-icons iconset-$(AROS_TARGET_ICONSET)-contrib-icons-owb aros-tcpip-apps-owb-readme
 
-LDFLAGS += -Wl,-whole-archive -lwebkit-owb -lwtf -ljsc -lwebcore -Wl,-no-whole-archive \
-    -licui18n -licuuc -licudata -lcodesets -lthread -lxml2 -lfontconfig -lfreetype2 \
+OWB_LIBS := -lwebkit-owb -lwebcore -lwtf -ljsc -lwebkit-owb \
+    -licui18n -licuuc -licudata -lcodesets -lthread -lxml2 -lfontconfig -lfreetype2.static \
     -lSDL -lSDL_gfx -lGL -lpng -ljpeg -lcurl -liconv -lz -lamiga -larosc -lm -lmui -lssl \
-    -lcrypto -lsqlite3 -lxslt
+    -lcrypto -lsqlite3 -lxslt -lthread
 
 OWB_CXX := $(CROSSTOOLSDIR)/$(AROS_TARGET_CPU)-aros-g++ -specs=$(GENDIR)/config/specs
 OWB_OBJ := $(addprefix $(OBJDIR)/,$(addsuffix .o,$(FILES)))
@@ -53,7 +55,7 @@ OWB_CFLAGS := $(CFLAGS) -DZUNE_BUILTIN_SCROLLGROUP=0 -DMUIMASTER_YES_INLINE_STDA
 
 #MM
 aros-tcpip-apps-owb-quick : $(FILES)
-%link_q cmd=$(OWB_CXX) from=$(OWB_OBJ) to=$(EXEDIR)/owb
+%link_q cmd=$(OWB_CXX) from=$(OWB_OBJ) to=$(EXEDIR)/owb libs=$(OWB_LIBS)
 
 $(FILES) :
 %mkdir_q dir=$(OBJDIR)/tabs
