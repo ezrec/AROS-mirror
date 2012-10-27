@@ -4,7 +4,7 @@
 -include $(TOP)/config/make.cfg
 
 #MM- contrib-gnu : contrib-gnu-gcc
-#MM- contrib-gnu-gcc : tools-crosstools development-collect-aros development-gcc
+#MM- contrib-gnu-gcc : development-collect-aros development-gcc
 #MM- development-gcc : development-gmp development-mpfr development-mpc
 
 GCC_VERSION := 4.6.2

@@ -4,7 +4,7 @@
 -include $(TOP)/config/make.cfg
 
 #MM- contrib-gnu : contrib-gnu-tar
-#MM- contrib-gnu-tar : tools-crosstools development-tar
+#MM- contrib-gnu-tar : development-tar
 
 %fetch_and_build_gnu_development package=tar version=1.26 patch=yes \
     extracflags="-D__BSD_VISIBLE=1"

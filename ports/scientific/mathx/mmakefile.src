@@ -15,7 +15,7 @@ include $(TOP)/config/make.cfg
 
 #MM  ports-scientific-mathx-catalogs : ports-scientific-mathx-fetch
 
-#MM  ports-scientific-mathx-cpp : ports-scientific-mathx-fetch tools-crosstools
+#MM  ports-scientific-mathx-cpp : ports-scientific-mathx-fetch
 
 #MM  ports-scientific-mathx-drawericon : ports-scientific-mathx-fetch
 

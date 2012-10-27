@@ -4,6 +4,6 @@
 -include $(TOP)/config/make.cfg
 
 #MM- contrib-gnu : contrib-gnu-coreutils
-#MM- contrib-gnu-coreutils : tools-crosstools development-coreutils
+#MM- contrib-gnu-coreutils : development-coreutils
 
 %fetch_and_build_gnu_development package=coreutils version=6.9 patch=yes

@@ -1,6 +1,6 @@
 -include $(TOP)/config/make.cfg
 
-#MM- contrib-sqlite : tools-crosstools development-sqlite-amalgamation
+#MM- contrib-sqlite : development-sqlite-amalgamation
 
 # Override fake target compiler with real cross compiler.
 TARGET_CC := $(CROSSTOOLSDIR)/$(AROS_TARGET_CPU)-aros-gcc
