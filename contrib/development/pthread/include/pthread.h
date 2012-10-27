@@ -133,6 +133,8 @@ extern int pthread_mutex_destroy(pthread_mutex_t* mutex);
 
 extern int pthread_mutex_lock(pthread_mutex_t* mutex);
 
+extern int pthread_mutex_trylock(pthread_mutex_t* mutex);
+
 extern int pthread_mutex_unlock(pthread_mutex_t* mutex);
 
 extern int pthread_mutexattr_destroy(pthread_mutexattr_t* attr);
