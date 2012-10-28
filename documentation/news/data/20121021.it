@@ -1,0 +1,84 @@
+=============================================
+Un altro anno (non solare)
+=============================================
+
+:Author:   Neil Cafferkey
+:Date:     2012-10-21
+
+Un altro anno è passato, un altro anno di sviluppo anziché di pubblicazione di notizie,
+e quindi ecco un'altra selezione di punti salienti.
+
+Nuovo web browser
+-----------------
+
+L'usabilità di AROS nel quotidiano ha fatto un passo da gigante col porting di un moderno
+browser che supporti e rispetti gli standard moderni. Basato sul motore Webkit, Odyssey
+include un compilatore JIT Javascript, supporta la navigazione a schede, HTML5, CSS, SVG
+e protocollo SSL. E' anche ampiamente configurabile, con un'interfaccia utente che permette
+la gestione di segnalibri, cookies, blocco di determinati contenuti, storia del browsing dell'utente,
+gestione password e molto altro.
+
+Supporto multipiattaforma
+-------------------------
+
+Il supporto all'architettura ARM è cresciuto ed è maturato, sono disponibili infatti build notturne
+di AROS (Linux-hosted). C'e' particolare interesse per questa architettura fra gli utenti per far girare
+AROS sul RaspberryPI, anche se per il momento non è disponibile un port nativo ma è AROS gira
+Linux-hosted.
+
+Vi sono anche stati progressi sul fronte di altre piattaforme. La versione Windows-hosted è stata
+protagonista di un grande lavoro di bug-fixing ed è adesso molto più stabile, mentre la compatibilità
+con l'originale piattaforma Amiga (per quanto riguarda il software legacy) continua a migliorare.
+
+Networking
+----------
+
+Le reti wireless adesso sono supportate con l'arrivo di due nuovi driver compatibili con lo standard
+di criptazione WPA: uno per i dispositivi USB che incorporano il  chipset Realtek RTL8187B, l'altro è una
+versione aggiornata del driver Prism-II che, per primo, ha portato il wireless su AROS nel 2005. E' stata
+altresì creata un'utility con interfaccia grafica che permette la scansione dinamica e la connessione a reti
+wireless.
+
+Anche Il supporto alla banda larga via dispositivo mobile è maturato: è infatti molto più facile da
+configurare, ed è stato introdotto il supporto a ulteriori dispositivi USB e smartphone.
+Adesso AROS può montare volumi Samba (il protocollo utilizzato da Linux per utilizzare share di rete 
+Windows), anche se al momento le funzionalità sono limitate a vecchie versioni di Windows,
+a Linux e dispositivi NAS autonomi.
+
+Altri miglioramenti
+-------------------
+
+E' stato introdotto un primo supporto alle stampanti in AROS. I componenti di questo nuovo framework
+includono uno strumento di configurazione da interfaccia grafica, un driver Postscript e molte utility 
+tradizionali già presenti su AmigaOS come PrintFiles e GraphicDump. L'output può essere rediretto su 
+USB, porta seriale o parallela oppure su file.
+
+Il nostro driver per Intel GMA ha guadagnato il supporto 3D per alcune revisioni di tale chipset.
+Anche se l'hardware GMA è piuttosto limitato circa il 3D rispetto ad altre proposte di nVidia e ATI, molti 
+vecchi giochi (molti dei quali recentemente convertiti su AROS) ne guadagnano. In questo anno è stato 
+anche introdotto il supporto OpenGL per la grafica 3D per AROS Linux-hosted, con l'aggiornamento del 
+driver nVidia.
+
+La scelta dei driver audio si è espansa, con il supporto al chipset ES137x e CMI8738. Il primo è importante
+poiché fornisce il supporto audio per AROS quando eseguito in una macchina virtuale VMWare.
+Per il nostro driver HDAudio, infine, è stata migliorata la compatibilità sia nelle modalità riproduzione 
+che registrazione.
+
+Altri aspetti che hanno subito dei miglioramenti riguardano l'accesso ai dischi rigidi da parte di AROS. 
+Abbiamo un driver AHCI che porta in dote il supporto ai dischi SATA, presenti su molte moderne 
+macchine. In più, le normali partizioni Windows possono essere lette usando una versione preliminare di 
+un driver NTFS; il supporto alle partizioni FAT è stato parimenti migliorato. La nuova versione del 
+software libero Frying Pan (per masterizzare CD) è adesso parte integrante dei pacchetti standard di 
+AROS.
+
+Altri miglioramenti
+-------------------
+
+La novità principale è stata l'introduzione di una nuova distribuzione di AROS compatibile con l'hardware
+originale AMIGA (processori MC680x0); si tratta di `AROS Vision <http://www.natami-news.de/html/aros_vision.html>`__.
+Alla pari di AROS stesso, AROS Vision include una serie di applicazioni e di componenti di sistema di 
+terze parti  gratuiti e liberamente distribuibili.
+
+Un'altra nuova incarnazione di AROS si chiama `AEROS <http://www.aeros-os.org/>`__.
+L'obiettivo è quello di combinare le migliori funzionalità di AROS e di Linux integrandole in modo 
+trasparente in un unico ambiente. Al momento AEROS supporta le architetture x86 e ARM.
