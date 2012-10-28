@@ -48,17 +48,18 @@
    <table style="text-align: justify; width: 100%;" background="/images/bgcolorright.png" border="0" cellpadding="1" cellspacing="1"><tr><td>
    <?php if ($win_ie56) { echo "<img alt=\"Archive Icon\" src=\"/images/archivedownloadicon.gif\" align=\"middle\">"; } 
    else { echo "<img alt=\"Archive Icon\" src=\"/images/archivedownloadicon.png\" align=\"middle\">"; } ?>
-   Poslední pøírustky v ARCHIVu:<br><img style="width: 238px; height: 2px;" alt="spacer" src="/images/sidespacer.png"><br>
-   <a href=http://archives.aros-exec.org>AROS archívy</a> obsahují nejnovìj¹í materiály dodané na¹í komunitou a jsou hlavním sídlem pro u¾ivatelské aplikace, hry, grafiku, rùzné utility a také dal¹í dokumentaci.<br><br>
+   Nejnovìj¹í pøíspìvky v archivu:<br><img style="width: 238px; height: 2px;" alt="spacer" src="/images/sidespacer.png"><br>
+   <a href="http://archives.aros-exec.org">AROS archiv</a> obsahuje nejnovìj¹í systémový obsah poskytnutý na¹í komunitou a je primárním úlo¾i¹tìm pro u¾ivatelské aplikace, témata, grafiku a dodateènou dokumentaci.<br><br>
    <?php include("../rsfeed/archives.php"); ?><br></td></tr></table>
    <table style="text-align: justify; width: 100%;" background="/images/bgcolorright.png" border="0" cellpadding="1" cellspacing="1"><tr><td>
    <?php if ($win_ie56) { echo "<img alt=\"Community Icon\" src=\"/images/communityicon.gif\" align=\"middle\">"; } 
    else { echo "<img alt=\"Community Icon\" src=\"/images/communityicon.png\" align=\"middle\">"; } ?> 
-   Poslední pøíspìvky na fóru AROS-EXEC:<br><img style="width: 238px; height: 2px;" alt="spacer" src="/images/sidespacer.png"><br>
-   <a href=http://www.aros-exec.org>AROS-EXEC</a> je hlavní sítí AROS komunity. Tady mù¾e¹ získat pomoc, zjistit, co je v komunitì nového, èi zveøejit své my¹lenky o AROSu.<br><br>
+   Poslední pøíspìvky na AROS-EXEC fóru:<br><img style="width: 238px; height: 2px;" alt="spacer" src="/images/sidespacer.png"><br>
+   <a href=http://www.aros-exec.org>AROS-EXEC</a> je primární komunitní stránka AROSu. Mù¾ete zde vyhledat pomoc, zjistit co se dìje v rámci komunity nového a sdílet svoje my¹lenky.<br><br>
    <?php include("../rsfeed/aeforum.php"); ?><br></td></tr></tbody></table>
    <table style="width: 100%; text-align: justify; margin-left: auto; margin-right: auto;" background="/images/bgcolorright.png" border="0" cellpadding="1" cellspacing="1"><tr><td style="vertical-align: top;">
    <?php if ($win_ie56) { echo "<img alt=\"Syndication Icon\" src=\"/images/rssicon1.gif\" align=\"middle\">"; } else { echo "<img alt=\"Syndication Icon\" src=\"/images/rssicon1.png\" align=\"middle\">"; } ?>
-   Syndikaèní kanály:<br><img style="width: 177px; height: 2px;" alt="spacer" src="/images/sidespacer.png"><br>
+   Odbìr novinek:<br><img style="width: 177px; height: 2px;" alt="spacer" src="/images/sidespacer.png"><br>
    <?php  include("../rsfeed/synfeed.php");  ?><br></td></tr></table>
    </td></tr></table>
+

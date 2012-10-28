@@ -20,7 +20,7 @@ status:           Stav
 screenshots:      Snímky obrazovky
 ports:            Porty
 license:          Licence
-download:         Download
+download:         Ke sta¾ení
 documentation:    Dokumentace
 users:            U¾ivatelé
 installation:     Instalace
@@ -29,23 +29,23 @@ shell:            Pøíkazy shellu
 applications:     Aplikace
 faq:              FAQ
 howto:            HowTo
-hwcompat:         Hardware Compatibility
+hwcompat:         Kompatibilita hardware
 developers:       Vývojáøi
 contribute:       Spolupráce
-roadmap:          Roadmap
+roadmap:          Plán
 bug-tracker:      Bug tracker
 working-with-subversion: Práce s SVN
-compiling:        Kompilování
+compiling:        Kompilace
 application-development-manual: Manuál pro vývoj aplikací
 zune-application-development-manual: Manuál pro vývoj Zune aplikací
 system-development-manual: Manuál pro vývoj systému
 debugging-manual: Manuál pro ladìní
 reference:        Reference
 specifications:   Specifikace
-ui-style-guide:   Pøíruèka UI stylu
+ui-style-guide:   Popis designu UI
 documenting:      Dokumentace
-porting:          Portování
-translating:      Pøekládání
+porting:          Portace
+translating:      Pøeklad
 summaries:        Shrnutí
 links:            Odkazy
 contact:          Kontakt
@@ -57,7 +57,7 @@ acknowledgements: Podìkování
 pictures:         Fotografie
 developers-together: Vývojáøi dohromady
 sponsors:         Sponzoøi
-linking:          Odkazování
+linking:          Propagace
 
 [misc]
 
