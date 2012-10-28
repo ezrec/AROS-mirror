@@ -3,7 +3,10 @@
 
 -include $(TOP)/config/make.cfg
 
-REPOSITORIES = http://www.sand-labs.org/aros_downloads/OWB%20Source%20Snapshots
+# www.sand-labs.org now points to a .ru malware site.
+# Using www.evillabs.net (Jason McMullan's web site)
+# until we have a more permanent solution
+REPOSITORIES = http://www.evillabs.net/AROS
 ARCHBASE := OWB-r1097
 OWB_SOURCE := $(PORTSDIR)/OWB/$(ARCHBASE)
 OWB_BUILD_DIR := $(GENDIR)/$(CURDIR)
