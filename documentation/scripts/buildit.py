@@ -30,7 +30,10 @@ TEMPLATE_DATA = {}
 
 # Languages not supported by docutils yet (but that we have files written in):
 # 'no'
-LANGUAGES  = [ 'en', 'de', 'cs', 'el', 'es', 'fi', 'fr', 'it', 'nl', 'pl', 'pt', 'ru', 'sv' ]
+SUPLANGUAGES  = [ 'en', 'de', 'cs', 'el', 'es', 'fi', 'fr', 'it', 'nl', 'pl', 'pt', 'ru', 'sv' ]
+LANGUAGES= []
+TARGETS= []
+
 
 # FIXME: Move this somewhere else...
 if (not os.path.exists( 'credits.en' ) ) \
@@ -612,17 +615,26 @@ targets = {
 # languages are built.
 
 if __name__ == '__main__':
-    target = 'www' # Set default target
-    if len( sys.argv ) > 1:
-        target = sys.argv[1]
-        if len( sys.argv ) > 2:
-            if sys.argv[2] in LANGUAGES:
-                LANGUAGES = [ sys.argv[2] ]
-            else:
-                print 'Error: Unsupported language, "' + sys.argv[2] + '".'
-                LANGUAGES = []
-    if targets.has_key( target ):
-        targets[target]()
-    else:
-        print 'Error: No such target, "' + target + '".'
+    valid= 1
+
+    # Interpret arguments
+    for arg in sys.argv[ 1:]:
+        if   arg in SUPLANGUAGES:
+            LANGUAGES.append( arg)
+        elif targets.has_key( arg):
+            TARGETS.append( arg)
+        else:
+            print 'Error: Unrecognised argument, "' + arg + '".'
+            valid= 0
+
+    if valid:
+        # Fill in defaults if necessary
+        if len( LANGUAGES) == 0:
+            LANGUAGES= list( SUPLANGUAGES)
+        if len( TARGETS) == 0:
+            TARGETS.append( 'www')
+
+        # Build each target
+        for target in TARGETS:
+            targets[target]()
 
