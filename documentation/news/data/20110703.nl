@@ -2,8 +2,8 @@
 Een jaar in vogelvlucht
 =======================
 
-:Auteur:   Neil Cafferkey
-:Datum:    2011-07-03
+:Author:   Neil Cafferkey
+:Date:     2011-07-03
 
 Wederom heeft het nieuws lang op zich laten wachten, voornamelijk omdat 
 we te druk bezig zijn geweest met features en verbeteringen voor AROS. 

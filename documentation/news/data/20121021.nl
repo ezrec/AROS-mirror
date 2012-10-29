@@ -2,8 +2,8 @@
 Wederom een (niet-kalender-geliëerd) jaar in vogelvlucht
 ========================================================
 
-:Author:   Neil Cafferkey
-:Date:     2012-10-21
+:Auteur:   Neil Cafferkey
+:Datum:    2012-10-21
 
 Wederom een jaar voorbij, wederom een jaar van programmeren in plaats van
 het schrijven van nieuws, wederom een opsomming van de hoogtepunten.
@@ -89,7 +89,7 @@ Verdere ontwikkelingen
 
 AROS heeft nu zijn eerste distributie voor het oorspronkelijke (MC680x0)
 Amiga platform, `AROS Vision <http://www.natami-news.de/html/aros_vision.html>`__.
-Net zoals AROS zelf bevat AROS Vision vele vrij-verpreidbare AmigaOS 
+Net zoals AROS zelf bevat AROS Vision vele vrij-verspreidbare AmigaOS 
 systeem-componenten en applicaties van derden.
 
 Een andere nieuwe AROS distributie is `AEROS <http://www.aeros-os.org/>`__, en

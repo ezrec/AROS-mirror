@@ -16,7 +16,7 @@ Aspire One A150.
 
 Krzysztof "Deadwood" Smiechowicz has gone really far with his Gallium3D 
 port to AROS: he has now integrated 2D and 3D accelerated functions in a 
-single driver called Nuveau, which supports 2D acceleration for almost 
+single driver called Nouveau, which supports 2D acceleration for almost 
 all GeForce GPUs starting from the ancient GeForce 2 cards
 until the recent GTX 200 
 series. 3D functions, however, are available only to GeForce FX (5x00), 
@@ -26,7 +26,7 @@ instead of the old Nvidia one. This will also help
 Krzysztof fixing it, as it is still work-in-progress. Please refer to this
 `AROS-EXEC topic`__ to help him spotting and fixing bug (and please
 remember he's not directly responsible for driver quality: he's just 
-adapting and porting to AROS what has been done by Nuveau/Gallium team).
+adapting and porting to AROS what has been done by Nouveau/Gallium team).
 
 Pavel Fedin is reworking our graphics subsystem, cleaning it up and 
 making it behave like the original Amiga one: the day we won't need anymore

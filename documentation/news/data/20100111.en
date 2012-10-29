@@ -69,7 +69,7 @@ nice video showing the GLExcess demo running on AROS is here__.
 Paolo Besser has released version 1.2 of the Icaros Desktop distribution.
 The new version includes the ability to `run old Amiga games`__ straight
 from their ADF files, thanks to some new AmiBridge scripts and a old
-version of E-UAE. In the meanwhile, Oliver Bunner has improved Janus-UAE
+version of E-UAE. In the meanwhile, Oliver Brunner has improved Janus-UAE
 integration, allowing AROS to run AmigaOS 3.x applications inside AROS
 windows. To do both things, however, users must provide a working 
 installation of AmigaOS 3.x and original kickstart, maybe using Cloanto's
