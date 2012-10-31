@@ -157,6 +157,8 @@ static const char *kernel_functions[] =
     "sigdelset",
     "getpid",
     "kill",
+    "open",
+    "close",
 #endif
     NULL
 };
