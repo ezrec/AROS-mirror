@@ -42,6 +42,8 @@ $(BINDIR)/boot:
 #MM     kernel-hidd-linuxfb-kobj        \
 #MM     kernel-hidd-linuxinput-kobj     \
 #MM     kernel-fs-cdvdfs-kobj           \
+#MM     kernel-pci-kobj                 \
+#MM     hidd-pci-linux-kobj             \
 #MM     workbench-devs-hostdisk-kobj    \
 #MM     linklibs
 
@@ -50,8 +52,8 @@ $(BINDIR)/boot:
 KDEVS   := timer hostdisk
 KLIBS   := exec expansion
 KHNDLRS := cdrom
-KHIDDS  := unixio linuxfb linuxinput
-KRSRCS  := battclock hostlib processor dosboot bootloader
+KHIDDS  := unixio linuxfb linuxinput pcilinux pci
+KRSRCS  := battclock hostlib processor
 
 %link_kickstart mmake=kernel-link-arix file=$(BINDIR)/boot/aros-bsp-$(BSP) \
     devs=$(KDEVS) handlers=$(KHNDLRS) hidds=$(KHIDDS) libs=$(KLIBS) res=$(KRSRCS) startup=$(KOBJSDIR)/kernel_resource.o \
