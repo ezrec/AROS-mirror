@@ -12,6 +12,10 @@
 #include <exec/interrupts.h>
 #include <exec/tasks.h>
 
+#ifndef _TIME_H
+#include <devices/timer.h>
+#endif
+
 #include "alertextra.h"
 
 /* Known alert context types */
@@ -35,7 +39,7 @@ struct IntETask
 {
     struct ETask       iet_ETask;
     APTR                iet_RT;                 /* Structure for resource tracking         */
-    UQUAD               iet_CpuTime;
+    struct timeval      iet_CpuTime;
     UQUAD               iet_private1;
     ULONG               iet_AlertCode;          /* Alert code for crash handler            */
     UBYTE               iet_AlertType;          /* Type of the alert context               */
