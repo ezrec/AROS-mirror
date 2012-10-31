@@ -2,8 +2,11 @@
 
 #include <exec/execbase.h>
 #include <clib/alib_protos.h>
+#include <devices/timer.h>
 
 #include "locale.h"
+
+#include "etask.h"
 
 /* Task information handling*/
 struct TaskInfo
@@ -11,6 +14,7 @@ struct TaskInfo
     STRPTR Name;
     WORD Type;
     WORD Priority;
+    struct timeval cputime;
     struct TaskInfo * Next;
     UBYTE Private; /* MUST ALWAYS BE LAST. HERE NAME WILL BE COPIED */
 };
@@ -22,6 +26,7 @@ static LONG AddTaskInfo(struct Task * task, struct TaskInfo * ti)
     ti->Type = task->tc_Node.ln_Type;
     ti->Priority = (WORD)task->tc_Node.ln_Pri;
     ti->Name = (STRPTR)&ti->Private;
+    ti->cputime = GetIntETask(task)->iet_CpuTime;
     ULONG namesize = 0;
     STRPTR src = task->tc_Node.ln_Name;
     
@@ -116,19 +121,33 @@ AROS_UFH3(VOID, TasksListDisplayFunction,
     AROS_USERFUNC_INIT
 
     static TEXT bufprio[8];
+    static TEXT bufcputime[24];
 
     if (obj)
     {
-        __sprintf(bufprio, "%d", obj->Priority);
+        int h,m,s,ms;
+        long sec = obj->cputime.tv_sec;
+
+        ms = (obj->cputime.tv_micro + 5000) / 10000;
+        s = sec % 60;
+        sec /= 60;
+        m = sec % 60;
+        sec /= 60;
+        h = sec;
+
+        __sprintf(bufprio, "%ld", (LONG)obj->Priority);
+        __sprintf(bufcputime, "%03d:%02d:%02d.%02d", h, m, s, ms);
         strings[0] = obj->Name;
         strings[1] = bufprio;
         strings[2] = obj->Type == NT_TASK ? (STRPTR)_(MSG_TASK) : (STRPTR)_(MSG_PROCESS);
+        strings[3] = bufcputime;
     }
     else
     {
         strings[0] = (STRPTR)_(MSG_TASK_NAME);
         strings[1] = (STRPTR)_(MSG_TASK_PRIORITY);
         strings[2] = (STRPTR)_(MSG_TASK_TYPE);
+        strings[3] = (STRPTR)_(MSG_TASK_CPUTIME);
     }
 
     AROS_USERFUNC_EXIT

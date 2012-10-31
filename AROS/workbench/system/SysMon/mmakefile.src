@@ -10,7 +10,7 @@ EXEDIR	:= $(AROSDIR)/System
 #MM  workbench-system-sysmon : includes linklibs \
 #MM      workbench-system-sysmon-catalogs
 
-USER_CFLAGS := -DVRAM_HACK
+USER_CFLAGS := $(PRIV_EXEC_INCLUDES) -DVRAM_HACK
 
 %build_prog mmake=workbench-system-sysmon \
     files=$(FILES) targetdir=$(EXEDIR) \
