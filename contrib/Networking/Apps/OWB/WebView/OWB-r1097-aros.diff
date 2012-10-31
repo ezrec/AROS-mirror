@@ -1,6 +1,6 @@
-diff -urN OWB-r1097/BAL/Events/WebCore/AROS/BCEventHandlerAROS.cpp OWB-r1097.new/BAL/Events/WebCore/AROS/BCEventHandlerAROS.cpp
---- OWB-r1097/BAL/Events/WebCore/AROS/BCEventHandlerAROS.cpp	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Events/WebCore/AROS/BCEventHandlerAROS.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Events/WebCore/AROS/BCEventHandlerAROS.cpp OWB-r1097.aros/BAL/Events/WebCore/AROS/BCEventHandlerAROS.cpp
+--- OWB-r1097/BAL/Events/WebCore/AROS/BCEventHandlerAROS.cpp	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Events/WebCore/AROS/BCEventHandlerAROS.cpp	2012-10-31 09:26:54.914284544 +0100
 @@ -0,0 +1,131 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -133,9 +133,9 @@ diff -urN OWB-r1097/BAL/Events/WebCore/AROS/BCEventHandlerAROS.cpp OWB-r1097.new
 +}
 + 
 +}
-diff -urN OWB-r1097/BAL/Events/WebCore/AROS/BCEventLoopAROS.cpp OWB-r1097.new/BAL/Events/WebCore/AROS/BCEventLoopAROS.cpp
---- OWB-r1097/BAL/Events/WebCore/AROS/BCEventLoopAROS.cpp	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Events/WebCore/AROS/BCEventLoopAROS.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Events/WebCore/AROS/BCEventLoopAROS.cpp OWB-r1097.aros/BAL/Events/WebCore/AROS/BCEventLoopAROS.cpp
+--- OWB-r1097/BAL/Events/WebCore/AROS/BCEventLoopAROS.cpp	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Events/WebCore/AROS/BCEventLoopAROS.cpp	2012-10-31 09:26:54.930284544 +0100
 @@ -0,0 +1,32 @@
 +/*
 + * Copyright (C) 2008 Nuanti Ltd.
@@ -169,9 +169,9 @@ diff -urN OWB-r1097/BAL/Events/WebCore/AROS/BCEventLoopAROS.cpp OWB-r1097.new/BA
 +}
 +
 +} // namespace WebCore
-diff -urN OWB-r1097/BAL/Events/WebCore/AROS/BCKeyboardCodesAROS.h OWB-r1097.new/BAL/Events/WebCore/AROS/BCKeyboardCodesAROS.h
---- OWB-r1097/BAL/Events/WebCore/AROS/BCKeyboardCodesAROS.h	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Events/WebCore/AROS/BCKeyboardCodesAROS.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Events/WebCore/AROS/BCKeyboardCodesAROS.h OWB-r1097.aros/BAL/Events/WebCore/AROS/BCKeyboardCodesAROS.h
+--- OWB-r1097/BAL/Events/WebCore/AROS/BCKeyboardCodesAROS.h	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Events/WebCore/AROS/BCKeyboardCodesAROS.h	2012-10-31 09:26:54.930284544 +0100
 @@ -0,0 +1,545 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -718,9 +718,9 @@ diff -urN OWB-r1097/BAL/Events/WebCore/AROS/BCKeyboardCodesAROS.h OWB-r1097.new/
 +}
 +
 +#endif
-diff -urN OWB-r1097/BAL/Events/WebCore/AROS/BCPlatformKeyboardEventAROS.cpp OWB-r1097.new/BAL/Events/WebCore/AROS/BCPlatformKeyboardEventAROS.cpp
---- OWB-r1097/BAL/Events/WebCore/AROS/BCPlatformKeyboardEventAROS.cpp	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Events/WebCore/AROS/BCPlatformKeyboardEventAROS.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Events/WebCore/AROS/BCPlatformKeyboardEventAROS.cpp OWB-r1097.aros/BAL/Events/WebCore/AROS/BCPlatformKeyboardEventAROS.cpp
+--- OWB-r1097/BAL/Events/WebCore/AROS/BCPlatformKeyboardEventAROS.cpp	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Events/WebCore/AROS/BCPlatformKeyboardEventAROS.cpp	2012-10-31 09:26:54.934284544 +0100
 @@ -0,0 +1,300 @@
 +/*
 + * Copyright (C) 2008 Joerg Strohmayer
@@ -1022,9 +1022,9 @@ diff -urN OWB-r1097/BAL/Events/WebCore/AROS/BCPlatformKeyboardEventAROS.cpp OWB-
 +}
 +
 +}
-diff -urN OWB-r1097/BAL/Events/WebCore/AROS/BCPlatformMouseEventAROS.cpp OWB-r1097.new/BAL/Events/WebCore/AROS/BCPlatformMouseEventAROS.cpp
---- OWB-r1097/BAL/Events/WebCore/AROS/BCPlatformMouseEventAROS.cpp	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Events/WebCore/AROS/BCPlatformMouseEventAROS.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Events/WebCore/AROS/BCPlatformMouseEventAROS.cpp OWB-r1097.aros/BAL/Events/WebCore/AROS/BCPlatformMouseEventAROS.cpp
+--- OWB-r1097/BAL/Events/WebCore/AROS/BCPlatformMouseEventAROS.cpp	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Events/WebCore/AROS/BCPlatformMouseEventAROS.cpp	2012-10-31 09:26:54.934284544 +0100
 @@ -0,0 +1,84 @@
 +/*
 + * Copyright (C) 2008 Joerg Strohmayer
@@ -1110,9 +1110,9 @@ diff -urN OWB-r1097/BAL/Events/WebCore/AROS/BCPlatformMouseEventAROS.cpp OWB-r10
 +}
 +
 +}
-diff -urN OWB-r1097/BAL/Events/WebCore/AROS/BCPlatformWheelEventAROS.cpp OWB-r1097.new/BAL/Events/WebCore/AROS/BCPlatformWheelEventAROS.cpp
---- OWB-r1097/BAL/Events/WebCore/AROS/BCPlatformWheelEventAROS.cpp	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Events/WebCore/AROS/BCPlatformWheelEventAROS.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Events/WebCore/AROS/BCPlatformWheelEventAROS.cpp OWB-r1097.aros/BAL/Events/WebCore/AROS/BCPlatformWheelEventAROS.cpp
+--- OWB-r1097/BAL/Events/WebCore/AROS/BCPlatformWheelEventAROS.cpp	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Events/WebCore/AROS/BCPlatformWheelEventAROS.cpp	2012-10-31 09:26:54.942284544 +0100
 @@ -0,0 +1,109 @@
 +/*
 + * Copyright (C) 2009 Stanislaw Szymczyk
@@ -1223,9 +1223,9 @@ diff -urN OWB-r1097/BAL/Events/WebCore/AROS/BCPlatformWheelEventAROS.cpp OWB-r10
 +
 +}
 +
-diff -urN OWB-r1097/BAL/Events/WebCore/CMakeLists.txt OWB-r1097.new/BAL/Events/WebCore/CMakeLists.txt
---- OWB-r1097/BAL/Events/WebCore/CMakeLists.txt	2009-10-06 04:13:04.000000000 -0400
-+++ OWB-r1097.new/BAL/Events/WebCore/CMakeLists.txt	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Events/WebCore/CMakeLists.txt OWB-r1097.aros/BAL/Events/WebCore/CMakeLists.txt
+--- OWB-r1097/BAL/Events/WebCore/CMakeLists.txt	2009-10-06 10:13:04.000000000 +0200
++++ OWB-r1097.aros/BAL/Events/WebCore/CMakeLists.txt	2012-10-31 09:26:54.942284544 +0100
 @@ -28,3 +28,9 @@
  
      aux_source_directory(${BAL_DIR}/Events/WebCore/SDL WEBCORE_SRC)
@@ -1236,9 +1236,9 @@ diff -urN OWB-r1097/BAL/Events/WebCore/CMakeLists.txt OWB-r1097.new/BAL/Events/W
 +
 +    aux_source_directory(${BAL_DIR}/Events/WebCore/AROS WEBCORE_SRC)
 +endif(USE_GRAPHICS_AROS)
-diff -urN OWB-r1097/BAL/Events/WebCore/WK/BCPlatformKeyboardEventWK.h OWB-r1097.new/BAL/Events/WebCore/WK/BCPlatformKeyboardEventWK.h
---- OWB-r1097/BAL/Events/WebCore/WK/BCPlatformKeyboardEventWK.h	2009-08-14 11:35:00.000000000 -0400
-+++ OWB-r1097.new/BAL/Events/WebCore/WK/BCPlatformKeyboardEventWK.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Events/WebCore/WK/BCPlatformKeyboardEventWK.h OWB-r1097.aros/BAL/Events/WebCore/WK/BCPlatformKeyboardEventWK.h
+--- OWB-r1097/BAL/Events/WebCore/WK/BCPlatformKeyboardEventWK.h	2009-08-14 17:35:00.000000000 +0200
++++ OWB-r1097.aros/BAL/Events/WebCore/WK/BCPlatformKeyboardEventWK.h	2012-10-31 09:26:54.942284544 +0100
 @@ -63,6 +63,10 @@
  class BMessage;
  #endif
@@ -1272,9 +1272,9 @@ diff -urN OWB-r1097/BAL/Events/WebCore/WK/BCPlatformKeyboardEventWK.h OWB-r1097.
      };
  
  } // namespace WebCore
-diff -urN OWB-r1097/BAL/Events/WebCore/WK/BCPlatformMouseEventWK.h OWB-r1097.new/BAL/Events/WebCore/WK/BCPlatformMouseEventWK.h
---- OWB-r1097/BAL/Events/WebCore/WK/BCPlatformMouseEventWK.h	2009-09-15 02:54:14.000000000 -0400
-+++ OWB-r1097.new/BAL/Events/WebCore/WK/BCPlatformMouseEventWK.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Events/WebCore/WK/BCPlatformMouseEventWK.h OWB-r1097.aros/BAL/Events/WebCore/WK/BCPlatformMouseEventWK.h
+--- OWB-r1097/BAL/Events/WebCore/WK/BCPlatformMouseEventWK.h	2009-09-15 08:54:14.000000000 +0200
++++ OWB-r1097.aros/BAL/Events/WebCore/WK/BCPlatformMouseEventWK.h	2012-10-31 09:26:54.946284544 +0100
 @@ -36,7 +36,6 @@
  #if PLATFORM(QT)
  QT_BEGIN_NAMESPACE
@@ -1305,9 +1305,9 @@ diff -urN OWB-r1097/BAL/Events/WebCore/WK/BCPlatformMouseEventWK.h OWB-r1097.new
      protected:
          IntPoint m_position;
          IntPoint m_globalPosition;
-diff -urN OWB-r1097/BAL/Events/WebCore/WK/BCPlatformWheelEventWK.h OWB-r1097.new/BAL/Events/WebCore/WK/BCPlatformWheelEventWK.h
---- OWB-r1097/BAL/Events/WebCore/WK/BCPlatformWheelEventWK.h	2009-09-25 11:25:08.000000000 -0400
-+++ OWB-r1097.new/BAL/Events/WebCore/WK/BCPlatformWheelEventWK.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Events/WebCore/WK/BCPlatformWheelEventWK.h OWB-r1097.aros/BAL/Events/WebCore/WK/BCPlatformWheelEventWK.h
+--- OWB-r1097/BAL/Events/WebCore/WK/BCPlatformWheelEventWK.h	2009-09-25 17:25:08.000000000 +0200
++++ OWB-r1097.aros/BAL/Events/WebCore/WK/BCPlatformWheelEventWK.h	2012-10-31 09:26:54.958284545 +0100
 @@ -54,6 +54,10 @@
  class BMessage;
  #endif
@@ -1330,9 +1330,9 @@ diff -urN OWB-r1097/BAL/Events/WebCore/WK/BCPlatformWheelEventWK.h OWB-r1097.new
      protected:
          IntPoint m_position;
          IntPoint m_globalPosition;
-diff -urN OWB-r1097/BAL/Facilities/WebCore/AROS/BCFileChooserAROS.cpp OWB-r1097.new/BAL/Facilities/WebCore/AROS/BCFileChooserAROS.cpp
---- OWB-r1097/BAL/Facilities/WebCore/AROS/BCFileChooserAROS.cpp	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Facilities/WebCore/AROS/BCFileChooserAROS.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Facilities/WebCore/AROS/BCFileChooserAROS.cpp OWB-r1097.aros/BAL/Facilities/WebCore/AROS/BCFileChooserAROS.cpp
+--- OWB-r1097/BAL/Facilities/WebCore/AROS/BCFileChooserAROS.cpp	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Facilities/WebCore/AROS/BCFileChooserAROS.cpp	2012-10-31 09:26:54.974284546 +0100
 @@ -0,0 +1,53 @@
 +/*
 + * Copyright (C) 2009 Stanislaw Szymczyk
@@ -1387,9 +1387,9 @@ diff -urN OWB-r1097/BAL/Facilities/WebCore/AROS/BCFileChooserAROS.cpp OWB-r1097.
 +}
 +
 +}
-diff -urN OWB-r1097/BAL/Facilities/WebCore/AROS/BCLanguageAROS.cpp OWB-r1097.new/BAL/Facilities/WebCore/AROS/BCLanguageAROS.cpp
---- OWB-r1097/BAL/Facilities/WebCore/AROS/BCLanguageAROS.cpp	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Facilities/WebCore/AROS/BCLanguageAROS.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Facilities/WebCore/AROS/BCLanguageAROS.cpp OWB-r1097.aros/BAL/Facilities/WebCore/AROS/BCLanguageAROS.cpp
+--- OWB-r1097/BAL/Facilities/WebCore/AROS/BCLanguageAROS.cpp	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Facilities/WebCore/AROS/BCLanguageAROS.cpp	2012-10-31 09:26:55.002284547 +0100
 @@ -0,0 +1,43 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -1434,9 +1434,9 @@ diff -urN OWB-r1097/BAL/Facilities/WebCore/AROS/BCLanguageAROS.cpp OWB-r1097.new
 +}
 +
 +}
-diff -urN OWB-r1097/BAL/Facilities/WebCore/AROS/BCLanguageAROS.h OWB-r1097.new/BAL/Facilities/WebCore/AROS/BCLanguageAROS.h
---- OWB-r1097/BAL/Facilities/WebCore/AROS/BCLanguageAROS.h	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Facilities/WebCore/AROS/BCLanguageAROS.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Facilities/WebCore/AROS/BCLanguageAROS.h OWB-r1097.aros/BAL/Facilities/WebCore/AROS/BCLanguageAROS.h
+--- OWB-r1097/BAL/Facilities/WebCore/AROS/BCLanguageAROS.h	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Facilities/WebCore/AROS/BCLanguageAROS.h	2012-10-31 09:26:55.030284549 +0100
 @@ -0,0 +1,40 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -1478,9 +1478,9 @@ diff -urN OWB-r1097/BAL/Facilities/WebCore/AROS/BCLanguageAROS.h OWB-r1097.new/B
 +}
 +
 +#endif
-diff -urN OWB-r1097/BAL/Facilities/WebCore/AROS/BCLoggingAROS.cpp OWB-r1097.new/BAL/Facilities/WebCore/AROS/BCLoggingAROS.cpp
---- OWB-r1097/BAL/Facilities/WebCore/AROS/BCLoggingAROS.cpp	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Facilities/WebCore/AROS/BCLoggingAROS.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Facilities/WebCore/AROS/BCLoggingAROS.cpp OWB-r1097.aros/BAL/Facilities/WebCore/AROS/BCLoggingAROS.cpp
+--- OWB-r1097/BAL/Facilities/WebCore/AROS/BCLoggingAROS.cpp	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Facilities/WebCore/AROS/BCLoggingAROS.cpp	2012-10-31 09:26:55.106284552 +0100
 @@ -0,0 +1,41 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -1523,9 +1523,9 @@ diff -urN OWB-r1097/BAL/Facilities/WebCore/AROS/BCLoggingAROS.cpp OWB-r1097.new/
 +}
 +
 +} // namespace WebCore
-diff -urN OWB-r1097/BAL/Facilities/WebCore/AROS/BCMIMETypeRegistryAROS.cpp OWB-r1097.new/BAL/Facilities/WebCore/AROS/BCMIMETypeRegistryAROS.cpp
---- OWB-r1097/BAL/Facilities/WebCore/AROS/BCMIMETypeRegistryAROS.cpp	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Facilities/WebCore/AROS/BCMIMETypeRegistryAROS.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Facilities/WebCore/AROS/BCMIMETypeRegistryAROS.cpp OWB-r1097.aros/BAL/Facilities/WebCore/AROS/BCMIMETypeRegistryAROS.cpp
+--- OWB-r1097/BAL/Facilities/WebCore/AROS/BCMIMETypeRegistryAROS.cpp	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Facilities/WebCore/AROS/BCMIMETypeRegistryAROS.cpp	2012-10-31 09:26:55.298284561 +0100
 @@ -0,0 +1,75 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -1602,9 +1602,9 @@ diff -urN OWB-r1097/BAL/Facilities/WebCore/AROS/BCMIMETypeRegistryAROS.cpp OWB-r
 +}
 +
 +}
-diff -urN OWB-r1097/BAL/Facilities/WebCore/AROS/BCSSLKeyGeneratorAROS.cpp OWB-r1097.new/BAL/Facilities/WebCore/AROS/BCSSLKeyGeneratorAROS.cpp
---- OWB-r1097/BAL/Facilities/WebCore/AROS/BCSSLKeyGeneratorAROS.cpp	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Facilities/WebCore/AROS/BCSSLKeyGeneratorAROS.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Facilities/WebCore/AROS/BCSSLKeyGeneratorAROS.cpp OWB-r1097.aros/BAL/Facilities/WebCore/AROS/BCSSLKeyGeneratorAROS.cpp
+--- OWB-r1097/BAL/Facilities/WebCore/AROS/BCSSLKeyGeneratorAROS.cpp	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Facilities/WebCore/AROS/BCSSLKeyGeneratorAROS.cpp	2012-10-31 09:26:55.986284595 +0100
 @@ -0,0 +1,53 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -1659,9 +1659,9 @@ diff -urN OWB-r1097/BAL/Facilities/WebCore/AROS/BCSSLKeyGeneratorAROS.cpp OWB-r1
 +
 +}
 +
-diff -urN OWB-r1097/BAL/Facilities/WebCore/CMakeLists.txt OWB-r1097.new/BAL/Facilities/WebCore/CMakeLists.txt
---- OWB-r1097/BAL/Facilities/WebCore/CMakeLists.txt	2009-10-06 04:13:04.000000000 -0400
-+++ OWB-r1097.new/BAL/Facilities/WebCore/CMakeLists.txt	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Facilities/WebCore/CMakeLists.txt OWB-r1097.aros/BAL/Facilities/WebCore/CMakeLists.txt
+--- OWB-r1097/BAL/Facilities/WebCore/CMakeLists.txt	2009-10-06 10:13:04.000000000 +0200
++++ OWB-r1097.aros/BAL/Facilities/WebCore/CMakeLists.txt	2012-10-31 09:26:55.986284595 +0100
 @@ -38,3 +38,9 @@
  
      aux_source_directory(${BAL_DIR}/Facilities/WebCore/SDL WEBCORE_SRC)   
@@ -1672,9 +1672,9 @@ diff -urN OWB-r1097/BAL/Facilities/WebCore/CMakeLists.txt OWB-r1097.new/BAL/Faci
 +
 +    aux_source_directory(${BAL_DIR}/Facilities/WebCore/AROS WEBCORE_SRC)   
 +endif(USE_GRAPHICS_AROS)
-diff -urN OWB-r1097/BAL/Facilities/WebCore/WK/BCMIMETypeRegistryWK.cpp OWB-r1097.new/BAL/Facilities/WebCore/WK/BCMIMETypeRegistryWK.cpp
---- OWB-r1097/BAL/Facilities/WebCore/WK/BCMIMETypeRegistryWK.cpp	2009-09-15 02:54:14.000000000 -0400
-+++ OWB-r1097.new/BAL/Facilities/WebCore/WK/BCMIMETypeRegistryWK.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Facilities/WebCore/WK/BCMIMETypeRegistryWK.cpp OWB-r1097.aros/BAL/Facilities/WebCore/WK/BCMIMETypeRegistryWK.cpp
+--- OWB-r1097/BAL/Facilities/WebCore/WK/BCMIMETypeRegistryWK.cpp	2009-09-15 08:54:14.000000000 +0200
++++ OWB-r1097.aros/BAL/Facilities/WebCore/WK/BCMIMETypeRegistryWK.cpp	2012-10-31 09:26:55.986284595 +0100
 @@ -121,6 +121,9 @@
          "image/bmp",
          "image/vnd.microsoft.icon",    // ico
@@ -1685,9 +1685,9 @@ diff -urN OWB-r1097/BAL/Facilities/WebCore/WK/BCMIMETypeRegistryWK.cpp OWB-r1097
          "image/x-xbitmap"  // xbm
      };
      for (size_t i = 0; i < sizeof(types) / sizeof(types[0]); ++i) {
-diff -urN OWB-r1097/BAL/Filesystem/WebCore/Posix/BCFileSystemPosix.cpp OWB-r1097.new/BAL/Filesystem/WebCore/Posix/BCFileSystemPosix.cpp
---- OWB-r1097/BAL/Filesystem/WebCore/Posix/BCFileSystemPosix.cpp	2009-05-06 11:25:57.000000000 -0400
-+++ OWB-r1097.new/BAL/Filesystem/WebCore/Posix/BCFileSystemPosix.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Filesystem/WebCore/Posix/BCFileSystemPosix.cpp OWB-r1097.aros/BAL/Filesystem/WebCore/Posix/BCFileSystemPosix.cpp
+--- OWB-r1097/BAL/Filesystem/WebCore/Posix/BCFileSystemPosix.cpp	2009-05-06 17:25:57.000000000 +0200
++++ OWB-r1097.aros/BAL/Filesystem/WebCore/Posix/BCFileSystemPosix.cpp	2012-10-31 09:26:55.990284595 +0100
 @@ -128,7 +128,7 @@
  
  String pathByAppendingComponent(const String& path, const String& component)
@@ -1697,9 +1697,9 @@ diff -urN OWB-r1097/BAL/Filesystem/WebCore/Posix/BCFileSystemPosix.cpp OWB-r1097
          return path + component;
      else
          return path + "/" + component;
-diff -urN OWB-r1097/BAL/Fonts/WebCore/Freetype/BCFontCacheFreetype.cpp OWB-r1097.new/BAL/Fonts/WebCore/Freetype/BCFontCacheFreetype.cpp
---- OWB-r1097/BAL/Fonts/WebCore/Freetype/BCFontCacheFreetype.cpp	2009-06-05 09:35:11.000000000 -0400
-+++ OWB-r1097.new/BAL/Fonts/WebCore/Freetype/BCFontCacheFreetype.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Fonts/WebCore/Freetype/BCFontCacheFreetype.cpp OWB-r1097.aros/BAL/Fonts/WebCore/Freetype/BCFontCacheFreetype.cpp
+--- OWB-r1097/BAL/Fonts/WebCore/Freetype/BCFontCacheFreetype.cpp	2009-06-05 15:35:11.000000000 +0200
++++ OWB-r1097.aros/BAL/Fonts/WebCore/Freetype/BCFontCacheFreetype.cpp	2012-10-31 09:26:55.990284595 +0100
 @@ -41,8 +41,13 @@
  
  void FontCache::platformInit()
@@ -1746,9 +1746,9 @@ diff -urN OWB-r1097/BAL/Fonts/WebCore/Freetype/BCFontCacheFreetype.cpp OWB-r1097
  
          FontPlatformData alternateFont(face, font.fontDescription().computedPixelSize(), false, false);
          // FIXME: FT_Done_Face(face); we should clean the face correctly the FT_Face but we can't do that here...
-diff -urN OWB-r1097/BAL/Fonts/WebCore/Freetype/BCFontFreetype.cpp OWB-r1097.new/BAL/Fonts/WebCore/Freetype/BCFontFreetype.cpp
---- OWB-r1097/BAL/Fonts/WebCore/Freetype/BCFontFreetype.cpp	2009-06-05 09:35:11.000000000 -0400
-+++ OWB-r1097.new/BAL/Fonts/WebCore/Freetype/BCFontFreetype.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Fonts/WebCore/Freetype/BCFontFreetype.cpp OWB-r1097.aros/BAL/Fonts/WebCore/Freetype/BCFontFreetype.cpp
+--- OWB-r1097/BAL/Fonts/WebCore/Freetype/BCFontFreetype.cpp	2009-06-05 15:35:11.000000000 +0200
++++ OWB-r1097.aros/BAL/Fonts/WebCore/Freetype/BCFontFreetype.cpp	2012-10-31 09:26:55.994284595 +0100
 @@ -55,7 +55,7 @@
      Uint32 rmask, gmask, bmask, amask;
      // SDL interprets each pixel as a 32-bit number, so our masks must depend
@@ -1776,9 +1776,9 @@ diff -urN OWB-r1097/BAL/Fonts/WebCore/Freetype/BCFontFreetype.cpp OWB-r1097.new/
                                 32, rmask, gmask, bmask, amask);
      //the surface can be null if the width or the height are too big, it's a sdl limitation.
      if (!img) {
-diff -urN OWB-r1097/BAL/Fonts/WebCore/Freetype/BCFontPlatformDataFreetype.cpp OWB-r1097.new/BAL/Fonts/WebCore/Freetype/BCFontPlatformDataFreetype.cpp
---- OWB-r1097/BAL/Fonts/WebCore/Freetype/BCFontPlatformDataFreetype.cpp	2009-07-27 07:56:09.000000000 -0400
-+++ OWB-r1097.new/BAL/Fonts/WebCore/Freetype/BCFontPlatformDataFreetype.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Fonts/WebCore/Freetype/BCFontPlatformDataFreetype.cpp OWB-r1097.aros/BAL/Fonts/WebCore/Freetype/BCFontPlatformDataFreetype.cpp
+--- OWB-r1097/BAL/Fonts/WebCore/Freetype/BCFontPlatformDataFreetype.cpp	2009-07-27 13:56:09.000000000 +0200
++++ OWB-r1097.aros/BAL/Fonts/WebCore/Freetype/BCFontPlatformDataFreetype.cpp	2012-10-31 09:26:55.994284595 +0100
 @@ -34,6 +34,7 @@
  #include "FontDescription.h"
  #include <ft2build.h>
@@ -1876,9 +1876,9 @@ diff -urN OWB-r1097/BAL/Fonts/WebCore/Freetype/BCFontPlatformDataFreetype.cpp OW
  FontPlatformData::~FontPlatformData()
  {
  }
-diff -urN OWB-r1097/BAL/Fonts/WebCore/Freetype/BCFontPlatformDataFreetype.h OWB-r1097.new/BAL/Fonts/WebCore/Freetype/BCFontPlatformDataFreetype.h
---- OWB-r1097/BAL/Fonts/WebCore/Freetype/BCFontPlatformDataFreetype.h	2009-07-27 07:56:09.000000000 -0400
-+++ OWB-r1097.new/BAL/Fonts/WebCore/Freetype/BCFontPlatformDataFreetype.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Fonts/WebCore/Freetype/BCFontPlatformDataFreetype.h OWB-r1097.aros/BAL/Fonts/WebCore/Freetype/BCFontPlatformDataFreetype.h
+--- OWB-r1097/BAL/Fonts/WebCore/Freetype/BCFontPlatformDataFreetype.h	2009-07-27 13:56:09.000000000 +0200
++++ OWB-r1097.aros/BAL/Fonts/WebCore/Freetype/BCFontPlatformDataFreetype.h	2012-10-31 09:26:55.998284595 +0100
 @@ -31,6 +31,8 @@
  #include "GlyphBuffer.h"
  #include "FontDescription.h"
@@ -1907,9 +1907,9 @@ diff -urN OWB-r1097/BAL/Fonts/WebCore/Freetype/BCFontPlatformDataFreetype.h OWB-
  private:
      static BalPattern *hashTableDeletedFontValue() { return reinterpret_cast<BalPattern*>(-1); }
  };
-diff -urN OWB-r1097/BAL/Fonts/WebCore/Freetype/BCSimpleFontDataFreetype.cpp OWB-r1097.new/BAL/Fonts/WebCore/Freetype/BCSimpleFontDataFreetype.cpp
---- OWB-r1097/BAL/Fonts/WebCore/Freetype/BCSimpleFontDataFreetype.cpp	2009-06-05 09:35:11.000000000 -0400
-+++ OWB-r1097.new/BAL/Fonts/WebCore/Freetype/BCSimpleFontDataFreetype.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Fonts/WebCore/Freetype/BCSimpleFontDataFreetype.cpp OWB-r1097.aros/BAL/Fonts/WebCore/Freetype/BCSimpleFontDataFreetype.cpp
+--- OWB-r1097/BAL/Fonts/WebCore/Freetype/BCSimpleFontDataFreetype.cpp	2009-06-05 15:35:11.000000000 +0200
++++ OWB-r1097.aros/BAL/Fonts/WebCore/Freetype/BCSimpleFontDataFreetype.cpp	2012-10-31 09:26:56.002284596 +0100
 @@ -72,11 +72,13 @@
  void SimpleFontData::platformDestroy()
  {
@@ -1924,9 +1924,9 @@ diff -urN OWB-r1097/BAL/Fonts/WebCore/Freetype/BCSimpleFontDataFreetype.cpp OWB-
          FcFontSetDestroy(m_platformData.m_fallbacks);
          m_platformData.m_fallbacks = 0;
      }
-diff -urN OWB-r1097/BAL/Fonts/WebCore/WK/BCFontCacheWK.h OWB-r1097.new/BAL/Fonts/WebCore/WK/BCFontCacheWK.h
---- OWB-r1097/BAL/Fonts/WebCore/WK/BCFontCacheWK.h	2009-09-21 10:00:57.000000000 -0400
-+++ OWB-r1097.new/BAL/Fonts/WebCore/WK/BCFontCacheWK.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Fonts/WebCore/WK/BCFontCacheWK.h OWB-r1097.aros/BAL/Fonts/WebCore/WK/BCFontCacheWK.h
+--- OWB-r1097/BAL/Fonts/WebCore/WK/BCFontCacheWK.h	2009-09-21 16:00:57.000000000 +0200
++++ OWB-r1097.aros/BAL/Fonts/WebCore/WK/BCFontCacheWK.h	2012-10-31 09:26:56.006284596 +0100
 @@ -92,9 +92,10 @@
      size_t inactiveFontDataCount();
      void purgeInactiveFontData(int count = INT_MAX);
@@ -1939,9 +1939,9 @@ diff -urN OWB-r1097/BAL/Fonts/WebCore/WK/BCFontCacheWK.h OWB-r1097.new/BAL/Fonts
  
      // These methods are implemented by each platform.
      FontPlatformData* getSimilarFontPlatformData(const Font&);
-diff -urN OWB-r1097/BAL/Geolocation/WebCore/CMakeLists.txt OWB-r1097.new/BAL/Geolocation/WebCore/CMakeLists.txt
---- OWB-r1097/BAL/Geolocation/WebCore/CMakeLists.txt	2009-09-16 11:49:28.000000000 -0400
-+++ OWB-r1097.new/BAL/Geolocation/WebCore/CMakeLists.txt	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Geolocation/WebCore/CMakeLists.txt OWB-r1097.aros/BAL/Geolocation/WebCore/CMakeLists.txt
+--- OWB-r1097/BAL/Geolocation/WebCore/CMakeLists.txt	2009-09-16 17:49:28.000000000 +0200
++++ OWB-r1097.aros/BAL/Geolocation/WebCore/CMakeLists.txt	2012-10-31 09:26:56.026284598 +0100
 @@ -16,4 +16,9 @@
          create_include_link(${BAL_DIR}/Geolocation/WebCore/Mock BAL)
          aux_source_directory(${BAL_DIR}/Geolocation/WebCore/Mock WEBCORE_SRC)
@@ -1952,9 +1952,9 @@ diff -urN OWB-r1097/BAL/Geolocation/WebCore/CMakeLists.txt OWB-r1097.new/BAL/Geo
 +        aux_source_directory(${BAL_DIR}/Geolocation/WebCore/SDL WEBCORE_SRC)
 +    endif(USE_GRAPHICS_AROS)
  endif(ENABLE_GEOLOCATION)
-diff -urN OWB-r1097/BAL/Graphics/WebCore/CMakeLists.txt OWB-r1097.new/BAL/Graphics/WebCore/CMakeLists.txt
---- OWB-r1097/BAL/Graphics/WebCore/CMakeLists.txt	2009-10-14 09:25:22.000000000 -0400
-+++ OWB-r1097.new/BAL/Graphics/WebCore/CMakeLists.txt	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Graphics/WebCore/CMakeLists.txt OWB-r1097.aros/BAL/Graphics/WebCore/CMakeLists.txt
+--- OWB-r1097/BAL/Graphics/WebCore/CMakeLists.txt	2009-10-14 15:25:22.000000000 +0200
++++ OWB-r1097.aros/BAL/Graphics/WebCore/CMakeLists.txt	2012-10-31 09:26:56.030284598 +0100
 @@ -26,11 +26,11 @@
      aux_source_directory(${GRAPHICS_DIR}/Qt WEBCORE_SRC)
  endif(USE_GRAPHICS_QT)
@@ -1969,9 +1969,9 @@ diff -urN OWB-r1097/BAL/Graphics/WebCore/CMakeLists.txt OWB-r1097.new/BAL/Graphi
  
  
  if(ENABLE_FILTERS)
-diff -urN OWB-r1097/BAL/Graphics/WebCore/SDL/BCApplyTransparencySDL.h OWB-r1097.new/BAL/Graphics/WebCore/SDL/BCApplyTransparencySDL.h
---- OWB-r1097/BAL/Graphics/WebCore/SDL/BCApplyTransparencySDL.h	2009-02-11 11:41:27.000000000 -0500
-+++ OWB-r1097.new/BAL/Graphics/WebCore/SDL/BCApplyTransparencySDL.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Graphics/WebCore/SDL/BCApplyTransparencySDL.h OWB-r1097.aros/BAL/Graphics/WebCore/SDL/BCApplyTransparencySDL.h
+--- OWB-r1097/BAL/Graphics/WebCore/SDL/BCApplyTransparencySDL.h	2009-02-11 17:41:27.000000000 +0100
++++ OWB-r1097.aros/BAL/Graphics/WebCore/SDL/BCApplyTransparencySDL.h	2012-10-31 09:26:56.030284598 +0100
 @@ -39,7 +39,7 @@
      Uint32 rmask, gmask, bmask, amask;
      /* SDL interprets each pixel as a 32-bit number, so our masks must depend
@@ -1989,9 +1989,9 @@ diff -urN OWB-r1097/BAL/Graphics/WebCore/SDL/BCApplyTransparencySDL.h OWB-r1097.
      SDL_UnlockSurface(origin);
      SDL_LockSurface(final);
      uint32_t alpha = 0;
-diff -urN OWB-r1097/BAL/ImageDecoder/WebCore/CMakeLists.txt OWB-r1097.new/BAL/ImageDecoder/WebCore/CMakeLists.txt
---- OWB-r1097/BAL/ImageDecoder/WebCore/CMakeLists.txt	2009-10-06 04:13:04.000000000 -0400
-+++ OWB-r1097.new/BAL/ImageDecoder/WebCore/CMakeLists.txt	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/ImageDecoder/WebCore/CMakeLists.txt OWB-r1097.aros/BAL/ImageDecoder/WebCore/CMakeLists.txt
+--- OWB-r1097/BAL/ImageDecoder/WebCore/CMakeLists.txt	2009-10-06 10:13:04.000000000 +0200
++++ OWB-r1097.aros/BAL/ImageDecoder/WebCore/CMakeLists.txt	2012-10-31 09:26:56.030284598 +0100
 @@ -35,3 +35,10 @@
      aux_source_directory(${BAL_DIR}/ImageDecoder/WebCore/WK WEBCORE_SRC)
      aux_source_directory(${BAL_DIR}/ImageDecoder/WebCore/SDL WEBCORE_SRC)
@@ -2003,9 +2003,9 @@ diff -urN OWB-r1097/BAL/ImageDecoder/WebCore/CMakeLists.txt OWB-r1097.new/BAL/Im
 +    aux_source_directory(${BAL_DIR}/ImageDecoder/WebCore/SDL WEBCORE_SRC)
 +    aux_source_directory(${BAL_DIR}/ImageDecoder/WebCore/Datatype/WK WEBCORE_SRC)
 +endif(USE_GRAPHICS_AROS)
-diff -urN OWB-r1097/BAL/ImageDecoder/WebCore/Datatype/WK/BCDatatypeImageDecoderWK.cpp OWB-r1097.new/BAL/ImageDecoder/WebCore/Datatype/WK/BCDatatypeImageDecoderWK.cpp
---- OWB-r1097/BAL/ImageDecoder/WebCore/Datatype/WK/BCDatatypeImageDecoderWK.cpp	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/ImageDecoder/WebCore/Datatype/WK/BCDatatypeImageDecoderWK.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/ImageDecoder/WebCore/Datatype/WK/BCDatatypeImageDecoderWK.cpp OWB-r1097.aros/BAL/ImageDecoder/WebCore/Datatype/WK/BCDatatypeImageDecoderWK.cpp
+--- OWB-r1097/BAL/ImageDecoder/WebCore/Datatype/WK/BCDatatypeImageDecoderWK.cpp	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/ImageDecoder/WebCore/Datatype/WK/BCDatatypeImageDecoderWK.cpp	2012-10-31 09:26:56.042284597 +0100
 @@ -0,0 +1,161 @@
 +/*
 + * Copyright (C) 2009 Stanislaw Szymczyk.
@@ -2168,9 +2168,9 @@ diff -urN OWB-r1097/BAL/ImageDecoder/WebCore/Datatype/WK/BCDatatypeImageDecoderW
 +}
 +
 +#endif // PLATFORM(AROS)
-diff -urN OWB-r1097/BAL/ImageDecoder/WebCore/Datatype/WK/BCDatatypeImageDecoderWK.h OWB-r1097.new/BAL/ImageDecoder/WebCore/Datatype/WK/BCDatatypeImageDecoderWK.h
---- OWB-r1097/BAL/ImageDecoder/WebCore/Datatype/WK/BCDatatypeImageDecoderWK.h	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/ImageDecoder/WebCore/Datatype/WK/BCDatatypeImageDecoderWK.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/ImageDecoder/WebCore/Datatype/WK/BCDatatypeImageDecoderWK.h OWB-r1097.aros/BAL/ImageDecoder/WebCore/Datatype/WK/BCDatatypeImageDecoderWK.h
+--- OWB-r1097/BAL/ImageDecoder/WebCore/Datatype/WK/BCDatatypeImageDecoderWK.h	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/ImageDecoder/WebCore/Datatype/WK/BCDatatypeImageDecoderWK.h	2012-10-31 09:26:56.050284598 +0100
 @@ -0,0 +1,64 @@
 +/*
 + * Copyright (C) 2009 Stanislaw Szymczyk.
@@ -2236,9 +2236,9 @@ diff -urN OWB-r1097/BAL/ImageDecoder/WebCore/Datatype/WK/BCDatatypeImageDecoderW
 +}
 +
 +#endif
-diff -urN OWB-r1097/BAL/ImageDecoder/WebCore/PNG/WK/BCPNGImageDecoderWK.cpp OWB-r1097.new/BAL/ImageDecoder/WebCore/PNG/WK/BCPNGImageDecoderWK.cpp
---- OWB-r1097/BAL/ImageDecoder/WebCore/PNG/WK/BCPNGImageDecoderWK.cpp	2009-08-19 07:59:14.000000000 -0400
-+++ OWB-r1097.new/BAL/ImageDecoder/WebCore/PNG/WK/BCPNGImageDecoderWK.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/ImageDecoder/WebCore/PNG/WK/BCPNGImageDecoderWK.cpp OWB-r1097.aros/BAL/ImageDecoder/WebCore/PNG/WK/BCPNGImageDecoderWK.cpp
+--- OWB-r1097/BAL/ImageDecoder/WebCore/PNG/WK/BCPNGImageDecoderWK.cpp	2009-08-19 13:59:14.000000000 +0200
++++ OWB-r1097.aros/BAL/ImageDecoder/WebCore/PNG/WK/BCPNGImageDecoderWK.cpp	2012-10-31 09:26:56.050284598 +0100
 @@ -100,7 +100,7 @@
          m_decodingSizeOnly = sizeOnly;
  
@@ -2316,9 +2316,9 @@ diff -urN OWB-r1097/BAL/ImageDecoder/WebCore/PNG/WK/BCPNGImageDecoderWK.cpp OWB-
              reader()->createInterlaceBuffer((reader()->hasAlpha() ? 4 : 3) * size().width() * size().height());
      }
  
-diff -urN OWB-r1097/BAL/ImageDecoder/WebCore/SDL/BCImageDecoderSDL.cpp OWB-r1097.new/BAL/ImageDecoder/WebCore/SDL/BCImageDecoderSDL.cpp
---- OWB-r1097/BAL/ImageDecoder/WebCore/SDL/BCImageDecoderSDL.cpp	2009-08-31 06:33:08.000000000 -0400
-+++ OWB-r1097.new/BAL/ImageDecoder/WebCore/SDL/BCImageDecoderSDL.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/ImageDecoder/WebCore/SDL/BCImageDecoderSDL.cpp OWB-r1097.aros/BAL/ImageDecoder/WebCore/SDL/BCImageDecoderSDL.cpp
+--- OWB-r1097/BAL/ImageDecoder/WebCore/SDL/BCImageDecoderSDL.cpp	2009-08-31 12:33:08.000000000 +0200
++++ OWB-r1097.aros/BAL/ImageDecoder/WebCore/SDL/BCImageDecoderSDL.cpp	2012-10-31 09:26:56.062284598 +0100
 @@ -35,7 +35,7 @@
      Uint32 rmask, gmask, bmask, amask;
      /* SDL interprets each pixel as a 32-bit number, so our masks must depend
@@ -2328,9 +2328,9 @@ diff -urN OWB-r1097/BAL/ImageDecoder/WebCore/SDL/BCImageDecoderSDL.cpp OWB-r1097
      rmask = 0xff000000;
      gmask = 0x00ff0000;
      bmask = 0x0000ff00;
-diff -urN OWB-r1097/BAL/ImageDecoder/WebCore/WK/BCImageDecoderWK.cpp OWB-r1097.new/BAL/ImageDecoder/WebCore/WK/BCImageDecoderWK.cpp
---- OWB-r1097/BAL/ImageDecoder/WebCore/WK/BCImageDecoderWK.cpp	2009-08-31 06:33:08.000000000 -0400
-+++ OWB-r1097.new/BAL/ImageDecoder/WebCore/WK/BCImageDecoderWK.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/ImageDecoder/WebCore/WK/BCImageDecoderWK.cpp OWB-r1097.aros/BAL/ImageDecoder/WebCore/WK/BCImageDecoderWK.cpp
+--- OWB-r1097/BAL/ImageDecoder/WebCore/WK/BCImageDecoderWK.cpp	2009-08-31 12:33:08.000000000 +0200
++++ OWB-r1097.aros/BAL/ImageDecoder/WebCore/WK/BCImageDecoderWK.cpp	2012-10-31 09:26:56.066284599 +0100
 @@ -21,6 +21,7 @@
  #include "config.h"
  
@@ -2408,9 +2408,9 @@ diff -urN OWB-r1097/BAL/ImageDecoder/WebCore/WK/BCImageDecoderWK.cpp OWB-r1097.n
      // Give up. We don't know what the heck this is.
      return 0;
  }
-diff -urN OWB-r1097/BAL/Internationalization/WebCore/AROS/BCLocalizedStringsAROS.cpp OWB-r1097.new/BAL/Internationalization/WebCore/AROS/BCLocalizedStringsAROS.cpp
---- OWB-r1097/BAL/Internationalization/WebCore/AROS/BCLocalizedStringsAROS.cpp	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Internationalization/WebCore/AROS/BCLocalizedStringsAROS.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Internationalization/WebCore/AROS/BCLocalizedStringsAROS.cpp OWB-r1097.aros/BAL/Internationalization/WebCore/AROS/BCLocalizedStringsAROS.cpp
+--- OWB-r1097/BAL/Internationalization/WebCore/AROS/BCLocalizedStringsAROS.cpp	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Internationalization/WebCore/AROS/BCLocalizedStringsAROS.cpp	2012-10-31 09:26:56.066284599 +0100
 @@ -0,0 +1,420 @@
 +/*
 + * Copyright (C) 2009 Stanislaw Szymczyk
@@ -2832,9 +2832,9 @@ diff -urN OWB-r1097/BAL/Internationalization/WebCore/AROS/BCLocalizedStringsAROS
 +}
 +
 +}
-diff -urN OWB-r1097/BAL/Internationalization/WebCore/AROS/BCLocalizedStringsAROS.h OWB-r1097.new/BAL/Internationalization/WebCore/AROS/BCLocalizedStringsAROS.h
---- OWB-r1097/BAL/Internationalization/WebCore/AROS/BCLocalizedStringsAROS.h	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Internationalization/WebCore/AROS/BCLocalizedStringsAROS.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Internationalization/WebCore/AROS/BCLocalizedStringsAROS.h OWB-r1097.aros/BAL/Internationalization/WebCore/AROS/BCLocalizedStringsAROS.h
+--- OWB-r1097/BAL/Internationalization/WebCore/AROS/BCLocalizedStringsAROS.h	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Internationalization/WebCore/AROS/BCLocalizedStringsAROS.h	2012-10-31 09:26:56.070284599 +0100
 @@ -0,0 +1,115 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -2951,9 +2951,9 @@ diff -urN OWB-r1097/BAL/Internationalization/WebCore/AROS/BCLocalizedStringsAROS
 +}
 +
 +#endif
-diff -urN OWB-r1097/BAL/Internationalization/WebCore/AROS/BCTextBreakIteratorInternalICUAROS.cpp OWB-r1097.new/BAL/Internationalization/WebCore/AROS/BCTextBreakIteratorInternalICUAROS.cpp
---- OWB-r1097/BAL/Internationalization/WebCore/AROS/BCTextBreakIteratorInternalICUAROS.cpp	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Internationalization/WebCore/AROS/BCTextBreakIteratorInternalICUAROS.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Internationalization/WebCore/AROS/BCTextBreakIteratorInternalICUAROS.cpp OWB-r1097.aros/BAL/Internationalization/WebCore/AROS/BCTextBreakIteratorInternalICUAROS.cpp
+--- OWB-r1097/BAL/Internationalization/WebCore/AROS/BCTextBreakIteratorInternalICUAROS.cpp	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Internationalization/WebCore/AROS/BCTextBreakIteratorInternalICUAROS.cpp	2012-10-31 09:26:56.074284599 +0100
 @@ -0,0 +1,45 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -3000,9 +3000,9 @@ diff -urN OWB-r1097/BAL/Internationalization/WebCore/AROS/BCTextBreakIteratorInt
 +}
 +
 +}
-diff -urN OWB-r1097/BAL/Internationalization/WebCore/AROS/BCTextBreakIteratorInternalICUAROS.h OWB-r1097.new/BAL/Internationalization/WebCore/AROS/BCTextBreakIteratorInternalICUAROS.h
---- OWB-r1097/BAL/Internationalization/WebCore/AROS/BCTextBreakIteratorInternalICUAROS.h	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Internationalization/WebCore/AROS/BCTextBreakIteratorInternalICUAROS.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Internationalization/WebCore/AROS/BCTextBreakIteratorInternalICUAROS.h OWB-r1097.aros/BAL/Internationalization/WebCore/AROS/BCTextBreakIteratorInternalICUAROS.h
+--- OWB-r1097/BAL/Internationalization/WebCore/AROS/BCTextBreakIteratorInternalICUAROS.h	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Internationalization/WebCore/AROS/BCTextBreakIteratorInternalICUAROS.h	2012-10-31 09:26:56.074284599 +0100
 @@ -0,0 +1,41 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -3045,9 +3045,9 @@ diff -urN OWB-r1097/BAL/Internationalization/WebCore/AROS/BCTextBreakIteratorInt
 +}
 +
 +#endif
-diff -urN OWB-r1097/BAL/Internationalization/WebCore/AROS/strings.h OWB-r1097.new/BAL/Internationalization/WebCore/AROS/strings.h
---- OWB-r1097/BAL/Internationalization/WebCore/AROS/strings.h	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Internationalization/WebCore/AROS/strings.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Internationalization/WebCore/AROS/strings.h OWB-r1097.aros/BAL/Internationalization/WebCore/AROS/strings.h
+--- OWB-r1097/BAL/Internationalization/WebCore/AROS/strings.h	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Internationalization/WebCore/AROS/strings.h	2012-10-31 09:26:56.078284599 +0100
 @@ -0,0 +1,640 @@
 +/****************************************************************
 +   This file was created automatically by `FlexCat 2.4'
@@ -3689,9 +3689,9 @@ diff -urN OWB-r1097/BAL/Internationalization/WebCore/AROS/strings.h OWB-r1097.ne
 +
 +
 +#endif
-diff -urN OWB-r1097/BAL/Internationalization/WebCore/CMakeLists.txt OWB-r1097.new/BAL/Internationalization/WebCore/CMakeLists.txt
---- OWB-r1097/BAL/Internationalization/WebCore/CMakeLists.txt	2009-10-06 04:13:04.000000000 -0400
-+++ OWB-r1097.new/BAL/Internationalization/WebCore/CMakeLists.txt	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Internationalization/WebCore/CMakeLists.txt OWB-r1097.aros/BAL/Internationalization/WebCore/CMakeLists.txt
+--- OWB-r1097/BAL/Internationalization/WebCore/CMakeLists.txt	2009-10-06 10:13:04.000000000 +0200
++++ OWB-r1097.aros/BAL/Internationalization/WebCore/CMakeLists.txt	2012-10-31 09:26:56.082284599 +0100
 @@ -27,6 +27,12 @@
          aux_source_directory(${BAL_DIR}/Internationalization/WebCore/SDL WEBCORE_SRC)
      endif(USE_GRAPHICS_SDL)
@@ -3705,9 +3705,9 @@ diff -urN OWB-r1097/BAL/Internationalization/WebCore/CMakeLists.txt OWB-r1097.ne
  else(USE_I18N_ICU OR USE_I18N_GLIB)
      aux_source_directory(${BAL_DIR}/Internationalization/WebCore/None WEBCORE_SRC)
  endif(USE_I18N_ICU OR USE_I18N_GLIB)
-diff -urN OWB-r1097/BAL/Internationalization/WebCore/ICU/BCTextEncodingDetectorICU.cpp OWB-r1097.new/BAL/Internationalization/WebCore/ICU/BCTextEncodingDetectorICU.cpp
---- OWB-r1097/BAL/Internationalization/WebCore/ICU/BCTextEncodingDetectorICU.cpp	2009-03-27 13:37:38.000000000 -0400
-+++ OWB-r1097.new/BAL/Internationalization/WebCore/ICU/BCTextEncodingDetectorICU.cpp	2012-10-27 13:34:38.000000000 -0400
+diff -ruN OWB-r1097/BAL/Internationalization/WebCore/ICU/BCTextEncodingDetectorICU.cpp OWB-r1097.aros/BAL/Internationalization/WebCore/ICU/BCTextEncodingDetectorICU.cpp
+--- OWB-r1097/BAL/Internationalization/WebCore/ICU/BCTextEncodingDetectorICU.cpp	2009-03-27 18:37:38.000000000 +0100
++++ OWB-r1097.aros/BAL/Internationalization/WebCore/ICU/BCTextEncodingDetectorICU.cpp	2012-10-31 09:26:56.082284599 +0100
 @@ -53,7 +53,7 @@
      UNUSED_PARAM(hintEncodingName);
      return false;
@@ -3717,9 +3717,9 @@ diff -urN OWB-r1097/BAL/Internationalization/WebCore/ICU/BCTextEncodingDetectorI
      UErrorCode status = U_ZERO_ERROR;
      UCharsetDetector* detector = ucsdet_open(&status);
      if (U_FAILURE(status))
-diff -urN OWB-r1097/BAL/Media/WebCore/AROS/BCSoundAROS.cpp OWB-r1097.new/BAL/Media/WebCore/AROS/BCSoundAROS.cpp
---- OWB-r1097/BAL/Media/WebCore/AROS/BCSoundAROS.cpp	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Media/WebCore/AROS/BCSoundAROS.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Media/WebCore/AROS/BCSoundAROS.cpp OWB-r1097.aros/BAL/Media/WebCore/AROS/BCSoundAROS.cpp
+--- OWB-r1097/BAL/Media/WebCore/AROS/BCSoundAROS.cpp	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Media/WebCore/AROS/BCSoundAROS.cpp	2012-10-31 09:26:56.082284599 +0100
 @@ -0,0 +1,42 @@
 +/*
 + * Copyright (C) 2009 Stanislaw Szymczyk
@@ -3763,9 +3763,9 @@ diff -urN OWB-r1097/BAL/Media/WebCore/AROS/BCSoundAROS.cpp OWB-r1097.new/BAL/Med
 +}
 +
 +}
-diff -urN OWB-r1097/BAL/Media/WebCore/CMakeLists.txt OWB-r1097.new/BAL/Media/WebCore/CMakeLists.txt
---- OWB-r1097/BAL/Media/WebCore/CMakeLists.txt	2009-10-06 04:13:04.000000000 -0400
-+++ OWB-r1097.new/BAL/Media/WebCore/CMakeLists.txt	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Media/WebCore/CMakeLists.txt OWB-r1097.aros/BAL/Media/WebCore/CMakeLists.txt
+--- OWB-r1097/BAL/Media/WebCore/CMakeLists.txt	2009-10-06 10:13:04.000000000 +0200
++++ OWB-r1097.aros/BAL/Media/WebCore/CMakeLists.txt	2012-10-31 09:26:56.086284600 +0100
 @@ -39,3 +39,7 @@
      endif(ENABLE_VIDEO)
          aux_source_directory(${BAL_DIR}/Media/WebCore/SDL WEBCORE_SRC)
@@ -3774,9 +3774,9 @@ diff -urN OWB-r1097/BAL/Media/WebCore/CMakeLists.txt OWB-r1097.new/BAL/Media/Web
 +if(USE_GRAPHICS_AROS)
 +    aux_source_directory(${BAL_DIR}/Media/WebCore/AROS WEBCORE_SRC)
 +endif(USE_GRAPHICS_AROS)
-diff -urN OWB-r1097/BAL/Memory/WTF/BCFastMallocWTF.cpp OWB-r1097.new/BAL/Memory/WTF/BCFastMallocWTF.cpp
---- OWB-r1097/BAL/Memory/WTF/BCFastMallocWTF.cpp	2009-10-05 06:36:03.000000000 -0400
-+++ OWB-r1097.new/BAL/Memory/WTF/BCFastMallocWTF.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Memory/WTF/BCFastMallocWTF.cpp OWB-r1097.aros/BAL/Memory/WTF/BCFastMallocWTF.cpp
+--- OWB-r1097/BAL/Memory/WTF/BCFastMallocWTF.cpp	2009-10-05 12:36:03.000000000 +0200
++++ OWB-r1097.aros/BAL/Memory/WTF/BCFastMallocWTF.cpp	2012-10-31 09:26:56.094284600 +0100
 @@ -192,10 +192,11 @@
  #if FORCE_SYSTEM_MALLOC
  
@@ -3792,9 +3792,9 @@ diff -urN OWB-r1097/BAL/Memory/WTF/BCFastMallocWTF.cpp OWB-r1097.new/BAL/Memory/
  #endif
  
  namespace WTF {
-diff -urN OWB-r1097/BAL/Memory/WTF/BCTCSystemAllocWTF.cpp OWB-r1097.new/BAL/Memory/WTF/BCTCSystemAllocWTF.cpp
---- OWB-r1097/BAL/Memory/WTF/BCTCSystemAllocWTF.cpp	2009-07-29 07:38:23.000000000 -0400
-+++ OWB-r1097.new/BAL/Memory/WTF/BCTCSystemAllocWTF.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Memory/WTF/BCTCSystemAllocWTF.cpp OWB-r1097.aros/BAL/Memory/WTF/BCTCSystemAllocWTF.cpp
+--- OWB-r1097/BAL/Memory/WTF/BCTCSystemAllocWTF.cpp	2009-07-29 13:38:23.000000000 +0200
++++ OWB-r1097.aros/BAL/Memory/WTF/BCTCSystemAllocWTF.cpp	2012-10-31 09:26:56.102284600 +0100
 @@ -52,8 +52,10 @@
  #else
  #include <errno.h>
@@ -3806,9 +3806,9 @@ diff -urN OWB-r1097/BAL/Memory/WTF/BCTCSystemAllocWTF.cpp OWB-r1097.new/BAL/Memo
  
  #ifndef MAP_ANONYMOUS
  #define MAP_ANONYMOUS MAP_ANON
-diff -urN OWB-r1097/BAL/Network/WebCore/Curl/BCAuthenticationChallengeCurl.h OWB-r1097.new/BAL/Network/WebCore/Curl/BCAuthenticationChallengeCurl.h
---- OWB-r1097/BAL/Network/WebCore/Curl/BCAuthenticationChallengeCurl.h	2008-12-10 04:32:50.000000000 -0500
-+++ OWB-r1097.new/BAL/Network/WebCore/Curl/BCAuthenticationChallengeCurl.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Network/WebCore/Curl/BCAuthenticationChallengeCurl.h OWB-r1097.aros/BAL/Network/WebCore/Curl/BCAuthenticationChallengeCurl.h
+--- OWB-r1097/BAL/Network/WebCore/Curl/BCAuthenticationChallengeCurl.h	2008-12-10 10:32:50.000000000 +0100
++++ OWB-r1097.aros/BAL/Network/WebCore/Curl/BCAuthenticationChallengeCurl.h	2012-10-31 09:26:56.102284600 +0100
 @@ -39,8 +39,9 @@
      {
      }
@@ -3820,9 +3820,9 @@ diff -urN OWB-r1097/BAL/Network/WebCore/Curl/BCAuthenticationChallengeCurl.h OWB
      {
      }
  
-diff -urN OWB-r1097/BAL/Network/WebCore/Curl/BCCookieManagerCurl.cpp OWB-r1097.new/BAL/Network/WebCore/Curl/BCCookieManagerCurl.cpp
---- OWB-r1097/BAL/Network/WebCore/Curl/BCCookieManagerCurl.cpp	2009-10-16 14:40:05.000000000 -0400
-+++ OWB-r1097.new/BAL/Network/WebCore/Curl/BCCookieManagerCurl.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Network/WebCore/Curl/BCCookieManagerCurl.cpp OWB-r1097.aros/BAL/Network/WebCore/Curl/BCCookieManagerCurl.cpp
+--- OWB-r1097/BAL/Network/WebCore/Curl/BCCookieManagerCurl.cpp	2009-10-16 20:40:05.000000000 +0200
++++ OWB-r1097.aros/BAL/Network/WebCore/Curl/BCCookieManagerCurl.cpp	2012-10-31 09:26:56.114284601 +0100
 @@ -79,7 +79,7 @@
  bool CookieManager::shouldRejectForSecurityReason(const ParsedCookie* cookie, const KURL& url)
  {
@@ -3887,9 +3887,9 @@ diff -urN OWB-r1097/BAL/Network/WebCore/Curl/BCCookieManagerCurl.cpp OWB-r1097.n
              CookieMap* curMap = m_managerMap.get(newCookie->domain());
              if (!curMap) {
                  curMap = new CookieMap();
-diff -urN OWB-r1097/BAL/Network/WebCore/Curl/BCCookieParserCurl.cpp OWB-r1097.new/BAL/Network/WebCore/Curl/BCCookieParserCurl.cpp
---- OWB-r1097/BAL/Network/WebCore/Curl/BCCookieParserCurl.cpp	2009-08-14 11:35:00.000000000 -0400
-+++ OWB-r1097.new/BAL/Network/WebCore/Curl/BCCookieParserCurl.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Network/WebCore/Curl/BCCookieParserCurl.cpp OWB-r1097.aros/BAL/Network/WebCore/Curl/BCCookieParserCurl.cpp
+--- OWB-r1097/BAL/Network/WebCore/Curl/BCCookieParserCurl.cpp	2009-08-14 17:35:00.000000000 +0200
++++ OWB-r1097.aros/BAL/Network/WebCore/Curl/BCCookieParserCurl.cpp	2012-10-31 09:26:56.150284604 +0100
 @@ -316,9 +316,16 @@
      if (!res->domain() || !res->domain().length())
          res->setDomain("." + m_defaultCookieURL.host());
@@ -3910,9 +3910,9 @@ diff -urN OWB-r1097/BAL/Network/WebCore/Curl/BCCookieParserCurl.cpp OWB-r1097.ne
  
      return res;
  }
-diff -urN OWB-r1097/BAL/Network/WebCore/Curl/BCFormDataStreamCurl.cpp OWB-r1097.new/BAL/Network/WebCore/Curl/BCFormDataStreamCurl.cpp
---- OWB-r1097/BAL/Network/WebCore/Curl/BCFormDataStreamCurl.cpp	2008-12-10 04:32:50.000000000 -0500
-+++ OWB-r1097.new/BAL/Network/WebCore/Curl/BCFormDataStreamCurl.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Network/WebCore/Curl/BCFormDataStreamCurl.cpp OWB-r1097.aros/BAL/Network/WebCore/Curl/BCFormDataStreamCurl.cpp
+--- OWB-r1097/BAL/Network/WebCore/Curl/BCFormDataStreamCurl.cpp	2008-12-10 10:32:50.000000000 +0100
++++ OWB-r1097.aros/BAL/Network/WebCore/Curl/BCFormDataStreamCurl.cpp	2012-10-31 09:26:56.150284604 +0100
 @@ -110,4 +110,14 @@
      return m_formDataElementIndex < elements.size();
  }
@@ -3928,9 +3928,9 @@ diff -urN OWB-r1097/BAL/Network/WebCore/Curl/BCFormDataStreamCurl.cpp OWB-r1097.
 +}
 +
  } // namespace WebCore
-diff -urN OWB-r1097/BAL/Network/WebCore/Curl/BCFormDataStreamCurl.h OWB-r1097.new/BAL/Network/WebCore/Curl/BCFormDataStreamCurl.h
---- OWB-r1097/BAL/Network/WebCore/Curl/BCFormDataStreamCurl.h	2008-12-10 04:32:50.000000000 -0500
-+++ OWB-r1097.new/BAL/Network/WebCore/Curl/BCFormDataStreamCurl.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Network/WebCore/Curl/BCFormDataStreamCurl.h OWB-r1097.aros/BAL/Network/WebCore/Curl/BCFormDataStreamCurl.h
+--- OWB-r1097/BAL/Network/WebCore/Curl/BCFormDataStreamCurl.h	2008-12-10 10:32:50.000000000 +0100
++++ OWB-r1097.aros/BAL/Network/WebCore/Curl/BCFormDataStreamCurl.h	2012-10-31 09:26:56.158284604 +0100
 @@ -47,6 +47,7 @@
  
      size_t read(void* ptr, size_t blockSize, size_t numberOfBlocks);
@@ -3939,9 +3939,9 @@ diff -urN OWB-r1097/BAL/Network/WebCore/Curl/BCFormDataStreamCurl.h OWB-r1097.ne
  
  private:
      // We can hold a weak reference to our ResourceHandle as it holds a strong reference
-diff -urN OWB-r1097/BAL/Network/WebCore/Curl/BCResourceHandleCurl.cpp OWB-r1097.new/BAL/Network/WebCore/Curl/BCResourceHandleCurl.cpp
---- OWB-r1097/BAL/Network/WebCore/Curl/BCResourceHandleCurl.cpp	2009-10-16 14:40:05.000000000 -0400
-+++ OWB-r1097.new/BAL/Network/WebCore/Curl/BCResourceHandleCurl.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Network/WebCore/Curl/BCResourceHandleCurl.cpp OWB-r1097.aros/BAL/Network/WebCore/Curl/BCResourceHandleCurl.cpp
+--- OWB-r1097/BAL/Network/WebCore/Curl/BCResourceHandleCurl.cpp	2009-10-16 20:40:05.000000000 +0200
++++ OWB-r1097.aros/BAL/Network/WebCore/Curl/BCResourceHandleCurl.cpp	2012-10-31 09:26:56.162284603 +0100
 @@ -238,20 +238,87 @@
      response = syncLoader.resourceResponse();
  }
@@ -4037,9 +4037,9 @@ diff -urN OWB-r1097/BAL/Network/WebCore/Curl/BCResourceHandleCurl.cpp OWB-r1097.
  }
  
  void ResourceHandle::receivedCancellation(const AuthenticationChallenge&)
-diff -urN OWB-r1097/BAL/Network/WebCore/Curl/BCResourceHandleManagerCurl.cpp OWB-r1097.new/BAL/Network/WebCore/Curl/BCResourceHandleManagerCurl.cpp
---- OWB-r1097/BAL/Network/WebCore/Curl/BCResourceHandleManagerCurl.cpp	2009-10-16 14:40:05.000000000 -0400
-+++ OWB-r1097.new/BAL/Network/WebCore/Curl/BCResourceHandleManagerCurl.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Network/WebCore/Curl/BCResourceHandleManagerCurl.cpp OWB-r1097.aros/BAL/Network/WebCore/Curl/BCResourceHandleManagerCurl.cpp
+--- OWB-r1097/BAL/Network/WebCore/Curl/BCResourceHandleManagerCurl.cpp	2009-10-16 20:40:05.000000000 +0200
++++ OWB-r1097.aros/BAL/Network/WebCore/Curl/BCResourceHandleManagerCurl.cpp	2012-10-31 09:26:56.162284603 +0100
 @@ -50,13 +50,18 @@
  #include <wtf/Threading.h>
  #include <wtf/Vector.h>
@@ -4203,9 +4203,9 @@ diff -urN OWB-r1097/BAL/Network/WebCore/Curl/BCResourceHandleManagerCurl.cpp OWB
      struct curl_slist* headers = 0;
      if (job->request().httpHeaderFields().size() > 0) {
          HTTPHeaderMap customHeaders = job->request().httpHeaderFields();
-diff -urN OWB-r1097/BAL/Network/WebCore/Curl/BCResourceHandleManagerCurl.h OWB-r1097.new/BAL/Network/WebCore/Curl/BCResourceHandleManagerCurl.h
---- OWB-r1097/BAL/Network/WebCore/Curl/BCResourceHandleManagerCurl.h	2009-08-12 16:20:06.000000000 -0400
-+++ OWB-r1097.new/BAL/Network/WebCore/Curl/BCResourceHandleManagerCurl.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Network/WebCore/Curl/BCResourceHandleManagerCurl.h OWB-r1097.aros/BAL/Network/WebCore/Curl/BCResourceHandleManagerCurl.h
+--- OWB-r1097/BAL/Network/WebCore/Curl/BCResourceHandleManagerCurl.h	2009-08-12 22:20:06.000000000 +0200
++++ OWB-r1097.aros/BAL/Network/WebCore/Curl/BCResourceHandleManagerCurl.h	2012-10-31 09:26:56.162284603 +0100
 @@ -73,6 +73,7 @@
      Vector<ResourceHandle*> m_resourceHandleList;
      const CString m_certificatePath;
@@ -4214,9 +4214,9 @@ diff -urN OWB-r1097/BAL/Network/WebCore/Curl/BCResourceHandleManagerCurl.h OWB-r
  };
  
  }
-diff -urN OWB-r1097/BAL/Network/WebCore/Curl/CookieDatabaseBackingStore/BCCookieDatabaseBackingStoreCurl.cpp OWB-r1097.new/BAL/Network/WebCore/Curl/CookieDatabaseBackingStore/BCCookieDatabaseBackingStoreCurl.cpp
---- OWB-r1097/BAL/Network/WebCore/Curl/CookieDatabaseBackingStore/BCCookieDatabaseBackingStoreCurl.cpp	2009-08-14 11:35:00.000000000 -0400
-+++ OWB-r1097.new/BAL/Network/WebCore/Curl/CookieDatabaseBackingStore/BCCookieDatabaseBackingStoreCurl.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Network/WebCore/Curl/CookieDatabaseBackingStore/BCCookieDatabaseBackingStoreCurl.cpp OWB-r1097.aros/BAL/Network/WebCore/Curl/CookieDatabaseBackingStore/BCCookieDatabaseBackingStoreCurl.cpp
+--- OWB-r1097/BAL/Network/WebCore/Curl/CookieDatabaseBackingStore/BCCookieDatabaseBackingStoreCurl.cpp	2009-08-14 17:35:00.000000000 +0200
++++ OWB-r1097.aros/BAL/Network/WebCore/Curl/CookieDatabaseBackingStore/BCCookieDatabaseBackingStoreCurl.cpp	2012-10-31 09:26:56.170284604 +0100
 @@ -131,7 +131,7 @@
  
      // Binds all the values
@@ -4226,9 +4226,9 @@ diff -urN OWB-r1097/BAL/Network/WebCore/Curl/CookieDatabaseBackingStore/BCCookie
          || updateStatement.bindDouble(5, cookie->expiry()) || updateStatement.bindDouble(6, cookie->lastAccessed())
          || updateStatement.bindInt64(7, cookie->isSecure()) || updateStatement.bindInt64(8, cookie->isHttpOnly())) {
          LOG_ERROR("Cannot update cookie");
-diff -urN OWB-r1097/BAL/Network/WebCore/WK/BCResourceHandleInternalWK.h OWB-r1097.new/BAL/Network/WebCore/WK/BCResourceHandleInternalWK.h
---- OWB-r1097/BAL/Network/WebCore/WK/BCResourceHandleInternalWK.h	2009-09-16 11:49:28.000000000 -0400
-+++ OWB-r1097.new/BAL/Network/WebCore/WK/BCResourceHandleInternalWK.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Network/WebCore/WK/BCResourceHandleInternalWK.h OWB-r1097.aros/BAL/Network/WebCore/WK/BCResourceHandleInternalWK.h
+--- OWB-r1097/BAL/Network/WebCore/WK/BCResourceHandleInternalWK.h	2009-09-16 17:49:28.000000000 +0200
++++ OWB-r1097.aros/BAL/Network/WebCore/WK/BCResourceHandleInternalWK.h	2012-10-31 09:26:56.174284604 +0100
 @@ -108,6 +108,8 @@
              , m_shouldIncludeExpectHeader(true)
              , m_cancelled(false)
@@ -4247,9 +4247,9 @@ diff -urN OWB-r1097/BAL/Network/WebCore/WK/BCResourceHandleInternalWK.h OWB-r109
  #endif
  #if USE(SOUP)
          SoupMessage* m_msg;
-diff -urN OWB-r1097/BAL/Timer/WebCore/AROS/BCSharedTimerAROS.cpp OWB-r1097.new/BAL/Timer/WebCore/AROS/BCSharedTimerAROS.cpp
---- OWB-r1097/BAL/Timer/WebCore/AROS/BCSharedTimerAROS.cpp	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Timer/WebCore/AROS/BCSharedTimerAROS.cpp	2012-10-27 13:44:23.000000000 -0400
+diff -ruN OWB-r1097/BAL/Timer/WebCore/AROS/BCSharedTimerAROS.cpp OWB-r1097.aros/BAL/Timer/WebCore/AROS/BCSharedTimerAROS.cpp
+--- OWB-r1097/BAL/Timer/WebCore/AROS/BCSharedTimerAROS.cpp	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Timer/WebCore/AROS/BCSharedTimerAROS.cpp	2012-10-31 09:26:56.174284604 +0100
 @@ -0,0 +1,165 @@
 +/*
 + * Copyright (C) 2009 Stanislaw Szymczyk
@@ -4416,9 +4416,9 @@ diff -urN OWB-r1097/BAL/Timer/WebCore/AROS/BCSharedTimerAROS.cpp OWB-r1097.new/B
 +}
 +
 +}
-diff -urN OWB-r1097/BAL/Timer/WebCore/AROS/BCSharedTimerAROS.h OWB-r1097.new/BAL/Timer/WebCore/AROS/BCSharedTimerAROS.h
---- OWB-r1097/BAL/Timer/WebCore/AROS/BCSharedTimerAROS.h	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Timer/WebCore/AROS/BCSharedTimerAROS.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Timer/WebCore/AROS/BCSharedTimerAROS.h OWB-r1097.aros/BAL/Timer/WebCore/AROS/BCSharedTimerAROS.h
+--- OWB-r1097/BAL/Timer/WebCore/AROS/BCSharedTimerAROS.h	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Timer/WebCore/AROS/BCSharedTimerAROS.h	2012-10-31 09:26:56.174284604 +0100
 @@ -0,0 +1,86 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -4506,9 +4506,9 @@ diff -urN OWB-r1097/BAL/Timer/WebCore/AROS/BCSharedTimerAROS.h OWB-r1097.new/BAL
 +}
 +
 +#endif
-diff -urN OWB-r1097/BAL/Timer/WebCore/AROS/BCSystemTimeAROS.cpp OWB-r1097.new/BAL/Timer/WebCore/AROS/BCSystemTimeAROS.cpp
---- OWB-r1097/BAL/Timer/WebCore/AROS/BCSystemTimeAROS.cpp	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Timer/WebCore/AROS/BCSystemTimeAROS.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Timer/WebCore/AROS/BCSystemTimeAROS.cpp OWB-r1097.aros/BAL/Timer/WebCore/AROS/BCSystemTimeAROS.cpp
+--- OWB-r1097/BAL/Timer/WebCore/AROS/BCSystemTimeAROS.cpp	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Timer/WebCore/AROS/BCSystemTimeAROS.cpp	2012-10-31 09:26:56.182284604 +0100
 @@ -0,0 +1,41 @@
 +/*
 + * Copyright (C) 2006 Apple Computer, Inc.  All rights reserved.
@@ -4551,9 +4551,9 @@ diff -urN OWB-r1097/BAL/Timer/WebCore/AROS/BCSystemTimeAROS.cpp OWB-r1097.new/BA
 +    return FLT_MAX; 
 +}
 +}
-diff -urN OWB-r1097/BAL/Timer/WebCore/CMakeLists.txt OWB-r1097.new/BAL/Timer/WebCore/CMakeLists.txt
---- OWB-r1097/BAL/Timer/WebCore/CMakeLists.txt	2009-03-09 11:37:11.000000000 -0400
-+++ OWB-r1097.new/BAL/Timer/WebCore/CMakeLists.txt	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Timer/WebCore/CMakeLists.txt OWB-r1097.aros/BAL/Timer/WebCore/CMakeLists.txt
+--- OWB-r1097/BAL/Timer/WebCore/CMakeLists.txt	2009-03-09 16:37:11.000000000 +0100
++++ OWB-r1097.aros/BAL/Timer/WebCore/CMakeLists.txt	2012-10-31 09:26:56.186284604 +0100
 @@ -18,3 +18,7 @@
      aux_source_directory(${BAL_DIR}/Timer/WebCore/Qt WEBCORE_SRC)
  endif(USE_TIMER_QT)
@@ -4562,9 +4562,9 @@ diff -urN OWB-r1097/BAL/Timer/WebCore/CMakeLists.txt OWB-r1097.new/BAL/Timer/Web
 +    create_include_link(${BAL_DIR}/Timer/WebCore/AROS BAL)
 +    aux_source_directory(${BAL_DIR}/Timer/WebCore/AROS WEBCORE_SRC)
 +endif(USE_TIMER_AROS)
-diff -urN OWB-r1097/BAL/Types/WebCore/CMakeLists.txt OWB-r1097.new/BAL/Types/WebCore/CMakeLists.txt
---- OWB-r1097/BAL/Types/WebCore/CMakeLists.txt	2009-09-15 02:54:14.000000000 -0400
-+++ OWB-r1097.new/BAL/Types/WebCore/CMakeLists.txt	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Types/WebCore/CMakeLists.txt OWB-r1097.aros/BAL/Types/WebCore/CMakeLists.txt
+--- OWB-r1097/BAL/Types/WebCore/CMakeLists.txt	2009-09-15 08:54:14.000000000 +0200
++++ OWB-r1097.aros/BAL/Types/WebCore/CMakeLists.txt	2012-10-31 09:26:56.186284604 +0100
 @@ -25,3 +25,12 @@
          ${TYPES_DIR}/SDL/BCKURLSDL.cpp
      )
@@ -4578,9 +4578,9 @@ diff -urN OWB-r1097/BAL/Types/WebCore/CMakeLists.txt OWB-r1097.new/BAL/Types/Web
 +        ${TYPES_DIR}/SDL/BCKURLSDL.cpp
 +    )
 +endif(USE_GRAPHICS_AROS)
-diff -urN OWB-r1097/BAL/Types/WTF/BCTCSpinLockWTF.h OWB-r1097.new/BAL/Types/WTF/BCTCSpinLockWTF.h
---- OWB-r1097/BAL/Types/WTF/BCTCSpinLockWTF.h	2009-10-06 04:13:04.000000000 -0400
-+++ OWB-r1097.new/BAL/Types/WTF/BCTCSpinLockWTF.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Types/WTF/BCTCSpinLockWTF.h OWB-r1097.aros/BAL/Types/WTF/BCTCSpinLockWTF.h
+--- OWB-r1097/BAL/Types/WTF/BCTCSpinLockWTF.h	2009-10-06 10:13:04.000000000 +0200
++++ OWB-r1097.aros/BAL/Types/WTF/BCTCSpinLockWTF.h	2012-10-31 09:26:56.186284604 +0100
 @@ -33,7 +33,7 @@
  #ifndef TCMALLOC_INTERNAL_SPINLOCK_H__
  #define TCMALLOC_INTERNAL_SPINLOCK_H__
@@ -4622,9 +4622,9 @@ diff -urN OWB-r1097/BAL/Types/WTF/BCTCSpinLockWTF.h OWB-r1097.new/BAL/Types/WTF/
  #else
  
  #include <pthread.h>
-diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCAccessibilityObjectAROS.cpp OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCAccessibilityObjectAROS.cpp
---- OWB-r1097/BAL/Widgets/WebCore/AROS/BCAccessibilityObjectAROS.cpp	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCAccessibilityObjectAROS.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCAccessibilityObjectAROS.cpp OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCAccessibilityObjectAROS.cpp
+--- OWB-r1097/BAL/Widgets/WebCore/AROS/BCAccessibilityObjectAROS.cpp	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCAccessibilityObjectAROS.cpp	2012-10-31 09:26:56.186284604 +0100
 @@ -0,0 +1,40 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -4666,9 +4666,9 @@ diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCAccessibilityObjectAROS.cpp OWB-r
 +}
 +#endif
 +} // namespace WebCore
-diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCAccessibilityObjectWrapperAROS.cpp OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCAccessibilityObjectWrapperAROS.cpp
---- OWB-r1097/BAL/Widgets/WebCore/AROS/BCAccessibilityObjectWrapperAROS.cpp	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCAccessibilityObjectWrapperAROS.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCAccessibilityObjectWrapperAROS.cpp OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCAccessibilityObjectWrapperAROS.cpp
+--- OWB-r1097/BAL/Widgets/WebCore/AROS/BCAccessibilityObjectWrapperAROS.cpp	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCAccessibilityObjectWrapperAROS.cpp	2012-10-31 09:26:56.186284604 +0100
 @@ -0,0 +1,53 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -4723,9 +4723,9 @@ diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCAccessibilityObjectWrapperAROS.cp
 +
 +}
 +
-diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCAXObjectCacheAROS.cpp OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCAXObjectCacheAROS.cpp
---- OWB-r1097/BAL/Widgets/WebCore/AROS/BCAXObjectCacheAROS.cpp	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCAXObjectCacheAROS.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCAXObjectCacheAROS.cpp OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCAXObjectCacheAROS.cpp
+--- OWB-r1097/BAL/Widgets/WebCore/AROS/BCAXObjectCacheAROS.cpp	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCAXObjectCacheAROS.cpp	2012-10-31 09:26:56.194284605 +0100
 @@ -0,0 +1,57 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -4784,9 +4784,9 @@ diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCAXObjectCacheAROS.cpp OWB-r1097.n
 +}
 +#endif
 +} // namespace WebCore
-diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCClipboardAROS.cpp OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCClipboardAROS.cpp
---- OWB-r1097/BAL/Widgets/WebCore/AROS/BCClipboardAROS.cpp	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCClipboardAROS.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCClipboardAROS.cpp OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCClipboardAROS.cpp
+--- OWB-r1097/BAL/Widgets/WebCore/AROS/BCClipboardAROS.cpp	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCClipboardAROS.cpp	2012-10-31 09:26:56.218284606 +0100
 @@ -0,0 +1,147 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -4935,9 +4935,9 @@ diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCClipboardAROS.cpp OWB-r1097.new/B
 +}
 +
 +}
-diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCClipboardAROS.h OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCClipboardAROS.h
---- OWB-r1097/BAL/Widgets/WebCore/AROS/BCClipboardAROS.h	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCClipboardAROS.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCClipboardAROS.h OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCClipboardAROS.h
+--- OWB-r1097/BAL/Widgets/WebCore/AROS/BCClipboardAROS.h	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCClipboardAROS.h	2012-10-31 09:26:56.218284606 +0100
 @@ -0,0 +1,76 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -5015,9 +5015,9 @@ diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCClipboardAROS.h OWB-r1097.new/BAL
 +}
 +
 +#endif
-diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCContextMenuAROS.cpp OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCContextMenuAROS.cpp
---- OWB-r1097/BAL/Widgets/WebCore/AROS/BCContextMenuAROS.cpp	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCContextMenuAROS.cpp	2012-10-27 14:16:07.000000000 -0400
+diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCContextMenuAROS.cpp OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCContextMenuAROS.cpp
+--- OWB-r1097/BAL/Widgets/WebCore/AROS/BCContextMenuAROS.cpp	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCContextMenuAROS.cpp	2012-10-31 09:26:56.218284606 +0100
 @@ -0,0 +1,107 @@
 +/*
 + * Copyright (C) 2009 Stanislaw Szymczyk.
@@ -5126,9 +5126,9 @@ diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCContextMenuAROS.cpp OWB-r1097.new
 +}
 +
 +}
-diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCContextMenuItemAROS.cpp OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCContextMenuItemAROS.cpp
---- OWB-r1097/BAL/Widgets/WebCore/AROS/BCContextMenuItemAROS.cpp	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCContextMenuItemAROS.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCContextMenuItemAROS.cpp OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCContextMenuItemAROS.cpp
+--- OWB-r1097/BAL/Widgets/WebCore/AROS/BCContextMenuItemAROS.cpp	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCContextMenuItemAROS.cpp	2012-10-31 09:26:56.230284607 +0100
 @@ -0,0 +1,200 @@
 +/*
 + * Copyright (C) 2009 Stanislaw Szymczyk.
@@ -5330,9 +5330,9 @@ diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCContextMenuItemAROS.cpp OWB-r1097
 +}
 +
 +}
-diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCCursorAROS.cpp OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCCursorAROS.cpp
---- OWB-r1097/BAL/Widgets/WebCore/AROS/BCCursorAROS.cpp	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCCursorAROS.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCCursorAROS.cpp OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCCursorAROS.cpp
+--- OWB-r1097/BAL/Widgets/WebCore/AROS/BCCursorAROS.cpp	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCCursorAROS.cpp	2012-10-31 09:26:56.258284608 +0100
 @@ -0,0 +1,371 @@
 +/*
 + * Copyright (C) 2009 Stanislaw Szymczyk
@@ -5705,9 +5705,9 @@ diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCCursorAROS.cpp OWB-r1097.new/BAL/
 +
 +
 +}
-diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCCursorAROS.h OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCCursorAROS.h
---- OWB-r1097/BAL/Widgets/WebCore/AROS/BCCursorAROS.h	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCCursorAROS.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCCursorAROS.h OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCCursorAROS.h
+--- OWB-r1097/BAL/Widgets/WebCore/AROS/BCCursorAROS.h	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCCursorAROS.h	2012-10-31 09:26:56.258284608 +0100
 @@ -0,0 +1,104 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -5813,9 +5813,9 @@ diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCCursorAROS.h OWB-r1097.new/BAL/Wi
 +} // namespace WebCore
 +
 +#endif // Cursor_h
-diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCDragControllerAROS.cpp OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCDragControllerAROS.cpp
---- OWB-r1097/BAL/Widgets/WebCore/AROS/BCDragControllerAROS.cpp	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCDragControllerAROS.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCDragControllerAROS.cpp OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCDragControllerAROS.cpp
+--- OWB-r1097/BAL/Widgets/WebCore/AROS/BCDragControllerAROS.cpp	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCDragControllerAROS.cpp	2012-10-31 09:26:56.262284608 +0100
 @@ -0,0 +1,76 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -5893,9 +5893,9 @@ diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCDragControllerAROS.cpp OWB-r1097.
 +}
 +
 +}
-diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCFrameAROS.cpp OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCFrameAROS.cpp
---- OWB-r1097/BAL/Widgets/WebCore/AROS/BCFrameAROS.cpp	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCFrameAROS.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCFrameAROS.cpp OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCFrameAROS.cpp
+--- OWB-r1097/BAL/Widgets/WebCore/AROS/BCFrameAROS.cpp	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCFrameAROS.cpp	2012-10-31 09:26:56.262284608 +0100
 @@ -0,0 +1,42 @@
 +/*
 + * Copyright (C) 2006 Apple Computer, Inc.  All rights reserved.
@@ -5939,9 +5939,9 @@ diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCFrameAROS.cpp OWB-r1097.new/BAL/W
 +}
 +
 +}
-diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCPasteboardAROS.cpp OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCPasteboardAROS.cpp
---- OWB-r1097/BAL/Widgets/WebCore/AROS/BCPasteboardAROS.cpp	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCPasteboardAROS.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCPasteboardAROS.cpp OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCPasteboardAROS.cpp
+--- OWB-r1097/BAL/Widgets/WebCore/AROS/BCPasteboardAROS.cpp	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCPasteboardAROS.cpp	2012-10-31 09:26:56.262284608 +0100
 @@ -0,0 +1,287 @@
 +/*
 + * Copyright (C) 2009 Stanislaw Szymczyk
@@ -6230,9 +6230,9 @@ diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCPasteboardAROS.cpp OWB-r1097.new/
 +}
 +
 +}
-diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCPasteboardAROS.h OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCPasteboardAROS.h
---- OWB-r1097/BAL/Widgets/WebCore/AROS/BCPasteboardAROS.h	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCPasteboardAROS.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCPasteboardAROS.h OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCPasteboardAROS.h
+--- OWB-r1097/BAL/Widgets/WebCore/AROS/BCPasteboardAROS.h	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCPasteboardAROS.h	2012-10-31 09:26:56.274284610 +0100
 @@ -0,0 +1,79 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -6313,9 +6313,9 @@ diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCPasteboardAROS.h OWB-r1097.new/BA
 +} // namespace WebCore
 +
 +#endif // Pasteboard_h
-diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCPasteboardHelperAROS.h OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCPasteboardHelperAROS.h
---- OWB-r1097/BAL/Widgets/WebCore/AROS/BCPasteboardHelperAROS.h	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCPasteboardHelperAROS.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCPasteboardHelperAROS.h OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCPasteboardHelperAROS.h
+--- OWB-r1097/BAL/Widgets/WebCore/AROS/BCPasteboardHelperAROS.h	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCPasteboardHelperAROS.h	2012-10-31 09:26:56.274284610 +0100
 @@ -0,0 +1,54 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -6371,9 +6371,9 @@ diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCPasteboardHelperAROS.h OWB-r1097.
 +}
 +
 +#endif // PasteboardHelper_h
-diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCPlatformMenuDescriptionAROS.h OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCPlatformMenuDescriptionAROS.h
---- OWB-r1097/BAL/Widgets/WebCore/AROS/BCPlatformMenuDescriptionAROS.h	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCPlatformMenuDescriptionAROS.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCPlatformMenuDescriptionAROS.h OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCPlatformMenuDescriptionAROS.h
+--- OWB-r1097/BAL/Widgets/WebCore/AROS/BCPlatformMenuDescriptionAROS.h	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCPlatformMenuDescriptionAROS.h	2012-10-31 09:26:56.282284610 +0100
 @@ -0,0 +1,40 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -6415,9 +6415,9 @@ diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCPlatformMenuDescriptionAROS.h OWB
 +} // namespace
 +
 +#endif // PlatformMenuDescription_h
-diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCPlatformScreenAROS.cpp OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCPlatformScreenAROS.cpp
---- OWB-r1097/BAL/Widgets/WebCore/AROS/BCPlatformScreenAROS.cpp	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCPlatformScreenAROS.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCPlatformScreenAROS.cpp OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCPlatformScreenAROS.cpp
+--- OWB-r1097/BAL/Widgets/WebCore/AROS/BCPlatformScreenAROS.cpp	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCPlatformScreenAROS.cpp	2012-10-31 09:26:56.298284610 +0100
 @@ -0,0 +1,84 @@
 +/*
 + * Copyright (C) 2009 Stanislaw Szymczyk
@@ -6503,9 +6503,9 @@ diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCPlatformScreenAROS.cpp OWB-r1097.
 +}
 +
 +} // namespace WebCore
-diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCPlatformScreenAROS.h OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCPlatformScreenAROS.h
---- OWB-r1097/BAL/Widgets/WebCore/AROS/BCPlatformScreenAROS.h	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCPlatformScreenAROS.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCPlatformScreenAROS.h OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCPlatformScreenAROS.h
+--- OWB-r1097/BAL/Widgets/WebCore/AROS/BCPlatformScreenAROS.h	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCPlatformScreenAROS.h	2012-10-31 09:26:56.298284610 +0100
 @@ -0,0 +1,53 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -6560,9 +6560,9 @@ diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCPlatformScreenAROS.h OWB-r1097.ne
 +} // namespace WebCore
 +
 +#endif // PlatformScreen_h
-diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCPopupMenuAROS.cpp OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCPopupMenuAROS.cpp
---- OWB-r1097/BAL/Widgets/WebCore/AROS/BCPopupMenuAROS.cpp	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCPopupMenuAROS.cpp	2012-10-27 14:04:56.000000000 -0400
+diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCPopupMenuAROS.cpp OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCPopupMenuAROS.cpp
+--- OWB-r1097/BAL/Widgets/WebCore/AROS/BCPopupMenuAROS.cpp	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCPopupMenuAROS.cpp	2012-10-31 09:26:56.302284610 +0100
 @@ -0,0 +1,253 @@
 +/*
 + * Copyright (C) 2009 Stanislaw Szymczyk
@@ -6817,9 +6817,9 @@ diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCPopupMenuAROS.cpp OWB-r1097.new/B
 +}
 +
 +}
-diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCPopupMenuAROS.h OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCPopupMenuAROS.h
---- OWB-r1097/BAL/Widgets/WebCore/AROS/BCPopupMenuAROS.h	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCPopupMenuAROS.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCPopupMenuAROS.h OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCPopupMenuAROS.h
+--- OWB-r1097/BAL/Widgets/WebCore/AROS/BCPopupMenuAROS.h	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCPopupMenuAROS.h	2012-10-31 09:26:56.322284611 +0100
 @@ -0,0 +1,84 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -6905,9 +6905,9 @@ diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCPopupMenuAROS.h OWB-r1097.new/BAL
 +}
 +
 +#endif
-diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCRenderThemeAROS.cpp OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCRenderThemeAROS.cpp
---- OWB-r1097/BAL/Widgets/WebCore/AROS/BCRenderThemeAROS.cpp	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCRenderThemeAROS.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCRenderThemeAROS.cpp OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCRenderThemeAROS.cpp
+--- OWB-r1097/BAL/Widgets/WebCore/AROS/BCRenderThemeAROS.cpp	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCRenderThemeAROS.cpp	2012-10-31 09:26:56.378284614 +0100
 @@ -0,0 +1,510 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -7419,9 +7419,9 @@ diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCRenderThemeAROS.cpp OWB-r1097.new
 +}
 +
 +}
-diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCRenderThemeAROS.h OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCRenderThemeAROS.h
---- OWB-r1097/BAL/Widgets/WebCore/AROS/BCRenderThemeAROS.h	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCRenderThemeAROS.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCRenderThemeAROS.h OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCRenderThemeAROS.h
+--- OWB-r1097/BAL/Widgets/WebCore/AROS/BCRenderThemeAROS.h	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCRenderThemeAROS.h	2012-10-31 09:26:56.378284614 +0100
 @@ -0,0 +1,136 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -7559,9 +7559,9 @@ diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCRenderThemeAROS.h OWB-r1097.new/B
 +}
 +
 +#endif
-diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCScrollbarThemeAROS.cpp OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCScrollbarThemeAROS.cpp
---- OWB-r1097/BAL/Widgets/WebCore/AROS/BCScrollbarThemeAROS.cpp	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCScrollbarThemeAROS.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCScrollbarThemeAROS.cpp OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCScrollbarThemeAROS.cpp
+--- OWB-r1097/BAL/Widgets/WebCore/AROS/BCScrollbarThemeAROS.cpp	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCScrollbarThemeAROS.cpp	2012-10-31 09:26:56.382284614 +0100
 @@ -0,0 +1,260 @@
 +/*
 + * Copyright (C) 2008 Apple Inc. All Rights Reserved.
@@ -7823,9 +7823,9 @@ diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCScrollbarThemeAROS.cpp OWB-r1097.
 +
 +
 +}
-diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCScrollbarThemeAROS.h OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCScrollbarThemeAROS.h
---- OWB-r1097/BAL/Widgets/WebCore/AROS/BCScrollbarThemeAROS.h	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCScrollbarThemeAROS.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCScrollbarThemeAROS.h OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCScrollbarThemeAROS.h
+--- OWB-r1097/BAL/Widgets/WebCore/AROS/BCScrollbarThemeAROS.h	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCScrollbarThemeAROS.h	2012-10-31 09:26:56.382284614 +0100
 @@ -0,0 +1,61 @@
 +/*
 + * Copyright (C) 2008 Apple Inc. All Rights Reserved.
@@ -7888,9 +7888,9 @@ diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCScrollbarThemeAROS.h OWB-r1097.ne
 +
 +}
 +#endif
-diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCScrollViewAROS.cpp OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCScrollViewAROS.cpp
---- OWB-r1097/BAL/Widgets/WebCore/AROS/BCScrollViewAROS.cpp	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCScrollViewAROS.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCScrollViewAROS.cpp OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCScrollViewAROS.cpp
+--- OWB-r1097/BAL/Widgets/WebCore/AROS/BCScrollViewAROS.cpp	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCScrollViewAROS.cpp	2012-10-31 09:26:56.382284614 +0100
 @@ -0,0 +1,47 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -7939,9 +7939,9 @@ diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCScrollViewAROS.cpp OWB-r1097.new/
 +}
 +
 +} // Namespace WebCore
-diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCScrollViewAROS.h OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCScrollViewAROS.h
---- OWB-r1097/BAL/Widgets/WebCore/AROS/BCScrollViewAROS.h	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCScrollViewAROS.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCScrollViewAROS.h OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCScrollViewAROS.h
+--- OWB-r1097/BAL/Widgets/WebCore/AROS/BCScrollViewAROS.h	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCScrollViewAROS.h	2012-10-31 09:26:56.382284614 +0100
 @@ -0,0 +1,300 @@
 +/*
 + * Copyright (C) 2004, 2006, 2007, 2008 Apple Inc. All rights reserved.
@@ -8243,9 +8243,9 @@ diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCScrollViewAROS.h OWB-r1097.new/BA
 +} // namespace WebCore
 +
 +#endif // ScrollView_h
-diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCSearchPopupMenuAROS.cpp OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCSearchPopupMenuAROS.cpp
---- OWB-r1097/BAL/Widgets/WebCore/AROS/BCSearchPopupMenuAROS.cpp	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCSearchPopupMenuAROS.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCSearchPopupMenuAROS.cpp OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCSearchPopupMenuAROS.cpp
+--- OWB-r1097/BAL/Widgets/WebCore/AROS/BCSearchPopupMenuAROS.cpp	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCSearchPopupMenuAROS.cpp	2012-10-31 09:26:56.382284614 +0100
 @@ -0,0 +1,60 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -8307,9 +8307,9 @@ diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCSearchPopupMenuAROS.cpp OWB-r1097
 +}
 +
 +}
-diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCSearchPopupMenuAROS.h OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCSearchPopupMenuAROS.h
---- OWB-r1097/BAL/Widgets/WebCore/AROS/BCSearchPopupMenuAROS.h	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCSearchPopupMenuAROS.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCSearchPopupMenuAROS.h OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCSearchPopupMenuAROS.h
+--- OWB-r1097/BAL/Widgets/WebCore/AROS/BCSearchPopupMenuAROS.h	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCSearchPopupMenuAROS.h	2012-10-31 09:26:56.382284614 +0100
 @@ -0,0 +1,58 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -8369,9 +8369,9 @@ diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCSearchPopupMenuAROS.h OWB-r1097.n
 +}
 +
 +#endif
-diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCWidgetAROS.cpp OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCWidgetAROS.cpp
---- OWB-r1097/BAL/Widgets/WebCore/AROS/BCWidgetAROS.cpp	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Widgets/WebCore/AROS/BCWidgetAROS.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCWidgetAROS.cpp OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCWidgetAROS.cpp
+--- OWB-r1097/BAL/Widgets/WebCore/AROS/BCWidgetAROS.cpp	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCWidgetAROS.cpp	2012-10-31 09:26:56.382284614 +0100
 @@ -0,0 +1,129 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -8502,17 +8502,17 @@ diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/BCWidgetAROS.cpp OWB-r1097.new/BAL/
 +}
 +
 +}
-diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/exceptions.txt OWB-r1097.new/BAL/Widgets/WebCore/AROS/exceptions.txt
---- OWB-r1097/BAL/Widgets/WebCore/AROS/exceptions.txt	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Widgets/WebCore/AROS/exceptions.txt	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/exceptions.txt OWB-r1097.aros/BAL/Widgets/WebCore/AROS/exceptions.txt
+--- OWB-r1097/BAL/Widgets/WebCore/AROS/exceptions.txt	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/exceptions.txt	2012-10-31 09:26:56.382284614 +0100
 @@ -0,0 +1,4 @@
 +BCClipboardAROS.h ClipboardAROS.h
 +BCRenderThemeAROS.h RenderThemeAROS.h
 +BCScrollbarThemeAROS.h ScrollbarThemeAROS.h
 +PasteboardHelperAROS.h PasteboardHelperAROS.h
-diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/PasteboardHelperAROS.cpp OWB-r1097.new/BAL/Widgets/WebCore/AROS/PasteboardHelperAROS.cpp
---- OWB-r1097/BAL/Widgets/WebCore/AROS/PasteboardHelperAROS.cpp	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Widgets/WebCore/AROS/PasteboardHelperAROS.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/PasteboardHelperAROS.cpp OWB-r1097.aros/BAL/Widgets/WebCore/AROS/PasteboardHelperAROS.cpp
+--- OWB-r1097/BAL/Widgets/WebCore/AROS/PasteboardHelperAROS.cpp	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/PasteboardHelperAROS.cpp	2012-10-31 09:26:56.382284614 +0100
 @@ -0,0 +1,54 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -8568,9 +8568,9 @@ diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/PasteboardHelperAROS.cpp OWB-r1097.
 +}
 +
 +}
-diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/PasteboardHelperAROS.h OWB-r1097.new/BAL/Widgets/WebCore/AROS/PasteboardHelperAROS.h
---- OWB-r1097/BAL/Widgets/WebCore/AROS/PasteboardHelperAROS.h	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/BAL/Widgets/WebCore/AROS/PasteboardHelperAROS.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/PasteboardHelperAROS.h OWB-r1097.aros/BAL/Widgets/WebCore/AROS/PasteboardHelperAROS.h
+--- OWB-r1097/BAL/Widgets/WebCore/AROS/PasteboardHelperAROS.h	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/PasteboardHelperAROS.h	2012-10-31 09:26:56.386284614 +0100
 @@ -0,0 +1,57 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -8629,9 +8629,9 @@ diff -urN OWB-r1097/BAL/Widgets/WebCore/AROS/PasteboardHelperAROS.h OWB-r1097.ne
 +}
 +
 +#endif // PasteboardHelperAROS_h
-diff -urN OWB-r1097/BAL/Widgets/WebCore/CMakeLists.txt OWB-r1097.new/BAL/Widgets/WebCore/CMakeLists.txt
---- OWB-r1097/BAL/Widgets/WebCore/CMakeLists.txt	2009-10-06 04:13:04.000000000 -0400
-+++ OWB-r1097.new/BAL/Widgets/WebCore/CMakeLists.txt	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Widgets/WebCore/CMakeLists.txt OWB-r1097.aros/BAL/Widgets/WebCore/CMakeLists.txt
+--- OWB-r1097/BAL/Widgets/WebCore/CMakeLists.txt	2009-10-06 10:13:04.000000000 +0200
++++ OWB-r1097.aros/BAL/Widgets/WebCore/CMakeLists.txt	2012-10-31 09:26:56.390284614 +0100
 @@ -31,4 +31,10 @@
      aux_source_directory(${WIDGETS_DIR}/SDL WEBCORE_SRC)
  endif(USE_GRAPHICS_SDL)
@@ -8643,9 +8643,9 @@ diff -urN OWB-r1097/BAL/Widgets/WebCore/CMakeLists.txt OWB-r1097.new/BAL/Widgets
 +endif(USE_GRAPHICS_AROS)
 +
  aux_source_directory(${WIDGETS_DIR}/WK WEBCORE_SRC)
-diff -urN OWB-r1097/BAL/Widgets/WebCore/WK/BCContextMenuItemWK.h OWB-r1097.new/BAL/Widgets/WebCore/WK/BCContextMenuItemWK.h
---- OWB-r1097/BAL/Widgets/WebCore/WK/BCContextMenuItemWK.h	2009-09-18 11:34:57.000000000 -0400
-+++ OWB-r1097.new/BAL/Widgets/WebCore/WK/BCContextMenuItemWK.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Widgets/WebCore/WK/BCContextMenuItemWK.h OWB-r1097.aros/BAL/Widgets/WebCore/WK/BCContextMenuItemWK.h
+--- OWB-r1097/BAL/Widgets/WebCore/WK/BCContextMenuItemWK.h	2009-09-18 17:34:57.000000000 +0200
++++ OWB-r1097.aros/BAL/Widgets/WebCore/WK/BCContextMenuItemWK.h	2012-10-31 09:26:56.398284616 +0100
 @@ -59,12 +59,21 @@
      enum ContextMenuAction {
          ContextMenuItemTagNoAction=0, // This item is not actually in WebUIDelegate.h
@@ -8710,9 +8710,9 @@ diff -urN OWB-r1097/BAL/Widgets/WebCore/WK/BCContextMenuItemWK.h OWB-r1097.new/B
  #endif
  
      private:
-diff -urN OWB-r1097/BAL/Widgets/WebCore/WK/BCContextMenuWK.cpp OWB-r1097.new/BAL/Widgets/WebCore/WK/BCContextMenuWK.cpp
---- OWB-r1097/BAL/Widgets/WebCore/WK/BCContextMenuWK.cpp	2009-10-05 06:36:03.000000000 -0400
-+++ OWB-r1097.new/BAL/Widgets/WebCore/WK/BCContextMenuWK.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Widgets/WebCore/WK/BCContextMenuWK.cpp OWB-r1097.aros/BAL/Widgets/WebCore/WK/BCContextMenuWK.cpp
+--- OWB-r1097/BAL/Widgets/WebCore/WK/BCContextMenuWK.cpp	2009-10-05 12:36:03.000000000 +0200
++++ OWB-r1097.aros/BAL/Widgets/WebCore/WK/BCContextMenuWK.cpp	2012-10-31 09:26:56.398284616 +0100
 @@ -259,12 +259,20 @@
      ContextMenuItem OpenLinkItem(ActionType, ContextMenuItemTagOpenLink, contextMenuItemTagOpenLink());
      ContextMenuItem OpenLinkInNewWindowItem(ActionType, ContextMenuItemTagOpenLinkInNewWindow, 
@@ -8814,9 +8814,9 @@ diff -urN OWB-r1097/BAL/Widgets/WebCore/WK/BCContextMenuWK.cpp OWB-r1097.new/BAL
          case ContextMenuItemTagSpellingGuess:
          case ContextMenuItemTagOther:
          case ContextMenuItemTagSearchInSpotlight:
-diff -urN OWB-r1097/BAL/Widgets/WebCore/WK/BCContextMenuWK.h OWB-r1097.new/BAL/Widgets/WebCore/WK/BCContextMenuWK.h
---- OWB-r1097/BAL/Widgets/WebCore/WK/BCContextMenuWK.h	2009-07-15 14:00:34.000000000 -0400
-+++ OWB-r1097.new/BAL/Widgets/WebCore/WK/BCContextMenuWK.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/BAL/Widgets/WebCore/WK/BCContextMenuWK.h OWB-r1097.aros/BAL/Widgets/WebCore/WK/BCContextMenuWK.h
+--- OWB-r1097/BAL/Widgets/WebCore/WK/BCContextMenuWK.h	2009-07-15 20:00:34.000000000 +0200
++++ OWB-r1097.aros/BAL/Widgets/WebCore/WK/BCContextMenuWK.h	2012-10-31 09:26:56.418284616 +0100
 @@ -36,6 +36,10 @@
  #include <wtf/RetainPtr.h>
  #elif PLATFORM(QT)
@@ -8838,9 +8838,9 @@ diff -urN OWB-r1097/BAL/Widgets/WebCore/WK/BCContextMenuWK.h OWB-r1097.new/BAL/W
      };
  
  }
-diff -urN OWB-r1097/Base/AROS/BALTypeAROS.h OWB-r1097.new/Base/AROS/BALTypeAROS.h
---- OWB-r1097/Base/AROS/BALTypeAROS.h	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/Base/AROS/BALTypeAROS.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/Base/AROS/BALTypeAROS.h OWB-r1097.aros/Base/AROS/BALTypeAROS.h
+--- OWB-r1097/Base/AROS/BALTypeAROS.h	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/Base/AROS/BALTypeAROS.h	2012-10-31 09:26:56.418284616 +0100
 @@ -0,0 +1,82 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -8924,9 +8924,9 @@ diff -urN OWB-r1097/Base/AROS/BALTypeAROS.h OWB-r1097.new/Base/AROS/BALTypeAROS.
 +}
 +
 +#endif
-diff -urN OWB-r1097/Base/BALBase.h OWB-r1097.new/Base/BALBase.h
---- OWB-r1097/Base/BALBase.h	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/Base/BALBase.h	2012-10-26 11:01:58.000000000 -0400
+diff -ruN OWB-r1097/Base/BALBase.h OWB-r1097.aros/Base/BALBase.h
+--- OWB-r1097/Base/BALBase.h	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/Base/BALBase.h	2012-10-31 09:26:56.422284616 +0100
 @@ -0,0 +1,75 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -9003,9 +9003,9 @@ diff -urN OWB-r1097/Base/BALBase.h OWB-r1097.new/Base/BALBase.h
 +};
 +
 +#endif
-diff -urN OWB-r1097/Base/BALBase.h.in OWB-r1097.new/Base/BALBase.h.in
---- OWB-r1097/Base/BALBase.h.in	2009-03-24 10:43:00.000000000 -0400
-+++ OWB-r1097.new/Base/BALBase.h.in	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/Base/BALBase.h.in OWB-r1097.aros/Base/BALBase.h.in
+--- OWB-r1097/Base/BALBase.h.in	2009-03-24 15:43:00.000000000 +0100
++++ OWB-r1097.aros/Base/BALBase.h.in	2012-10-31 09:26:56.422284616 +0100
 @@ -57,6 +57,10 @@
  #include "SDL/BALTypeSDL.h"
  #endif
@@ -9017,9 +9017,9 @@ diff -urN OWB-r1097/Base/BALBase.h.in OWB-r1097.new/Base/BALBase.h.in
  #if PLATFORM(GTK)
  #include "Gtk/BALTypeGtk.h"
  #endif
-diff -urN OWB-r1097/Base/NotImplemented.h OWB-r1097.new/Base/NotImplemented.h
---- OWB-r1097/Base/NotImplemented.h	2009-01-16 09:33:31.000000000 -0500
-+++ OWB-r1097.new/Base/NotImplemented.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/Base/NotImplemented.h OWB-r1097.aros/Base/NotImplemented.h
+--- OWB-r1097/Base/NotImplemented.h	2009-01-16 15:33:31.000000000 +0100
++++ OWB-r1097.aros/Base/NotImplemented.h	2012-10-31 09:26:56.422284616 +0100
 @@ -29,7 +29,7 @@
  #include "Logging.h"
  #include <Assertions.h>
@@ -9029,9 +9029,9 @@ diff -urN OWB-r1097/Base/NotImplemented.h OWB-r1097.new/Base/NotImplemented.h
      #define supressNotImplementedWarning() getenv("DISABLE_NI_WARNING")
  #elif PLATFORM(QT)
      #include <QByteArray>
-diff -urN OWB-r1097/Base/owb-config.h OWB-r1097.new/Base/owb-config.h
---- OWB-r1097/Base/owb-config.h	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/Base/owb-config.h	2012-10-26 11:00:10.000000000 -0400
+diff -ruN OWB-r1097/Base/owb-config.h OWB-r1097.aros/Base/owb-config.h
+--- OWB-r1097/Base/owb-config.h	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/Base/owb-config.h	2012-10-31 09:26:56.422284616 +0100
 @@ -0,0 +1,10 @@
 +#ifndef OWB_CONFIG_H
 +#define OWB_CONFIG_H
@@ -9043,9 +9043,9 @@ diff -urN OWB-r1097/Base/owb-config.h OWB-r1097.new/Base/owb-config.h
 +
 +#endif //OWB_CONFIG_H
 +
-diff -urN OWB-r1097/Base/owb-config.h.in OWB-r1097.new/Base/owb-config.h.in
---- OWB-r1097/Base/owb-config.h.in	2008-12-08 15:05:27.000000000 -0500
-+++ OWB-r1097.new/Base/owb-config.h.in	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/Base/owb-config.h.in OWB-r1097.aros/Base/owb-config.h.in
+--- OWB-r1097/Base/owb-config.h.in	2008-12-08 21:05:27.000000000 +0100
++++ OWB-r1097.aros/Base/owb-config.h.in	2012-10-31 09:26:56.422284616 +0100
 @@ -1,10 +1,10 @@
  #ifndef OWB_CONFIG_H
  #define OWB_CONFIG_H
@@ -9061,9 +9061,9 @@ diff -urN OWB-r1097/Base/owb-config.h.in OWB-r1097.new/Base/owb-config.h.in
  
  #endif //OWB_CONFIG_H
  
-diff -urN OWB-r1097/Base/WebKitTypes.h OWB-r1097.new/Base/WebKitTypes.h
---- OWB-r1097/Base/WebKitTypes.h	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/Base/WebKitTypes.h	2012-10-26 11:01:58.000000000 -0400
+diff -ruN OWB-r1097/Base/WebKitTypes.h OWB-r1097.aros/Base/WebKitTypes.h
+--- OWB-r1097/Base/WebKitTypes.h	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/Base/WebKitTypes.h	2012-10-31 09:26:56.422284616 +0100
 @@ -0,0 +1,210 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -9275,9 +9275,9 @@ diff -urN OWB-r1097/Base/WebKitTypes.h OWB-r1097.new/Base/WebKitTypes.h
 +} WebCacheModel;
 +
 +#endif
-diff -urN OWB-r1097/Base/WebKitTypes.h.in OWB-r1097.new/Base/WebKitTypes.h.in
---- OWB-r1097/Base/WebKitTypes.h.in	2009-03-24 10:34:03.000000000 -0400
-+++ OWB-r1097.new/Base/WebKitTypes.h.in	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/Base/WebKitTypes.h.in OWB-r1097.aros/Base/WebKitTypes.h.in
+--- OWB-r1097/Base/WebKitTypes.h.in	2009-03-24 15:34:03.000000000 +0100
++++ OWB-r1097.aros/Base/WebKitTypes.h.in	2012-10-31 09:26:56.426284616 +0100
 @@ -167,6 +167,35 @@
  } BalPoint;
  typedef SDL_Rect BalRectangle;
@@ -9314,9 +9314,9 @@ diff -urN OWB-r1097/Base/WebKitTypes.h.in OWB-r1097.new/Base/WebKitTypes.h.in
  #elif PLATFORM(@CUSTOMER@)
  #include "@WEBKIT_TYPES_CUSTOMER_INCLUDE@"
  
-diff -urN OWB-r1097/Base/wtf/Platform.h OWB-r1097.new/Base/wtf/Platform.h
---- OWB-r1097/Base/wtf/Platform.h	2009-10-16 14:40:05.000000000 -0400
-+++ OWB-r1097.new/Base/wtf/Platform.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/Base/wtf/Platform.h OWB-r1097.aros/Base/wtf/Platform.h
+--- OWB-r1097/Base/wtf/Platform.h	2009-10-16 20:40:05.000000000 +0200
++++ OWB-r1097.aros/Base/wtf/Platform.h	2012-10-31 09:26:56.426284616 +0100
 @@ -47,6 +47,15 @@
  #undef  WTF_PLATFORM_MACPORT
  #endif
@@ -9366,9 +9366,9 @@ diff -urN OWB-r1097/Base/wtf/Platform.h OWB-r1097.new/Base/wtf/Platform.h
  #define WTF_USE_JSVALUE64 1
  #elif PLATFORM(ARM) || PLATFORM(PPC64)
  #define WTF_USE_JSVALUE32 1
-diff -urN OWB-r1097/cmake/AddGlobalCompilerFlags.cmake OWB-r1097.new/cmake/AddGlobalCompilerFlags.cmake
---- OWB-r1097/cmake/AddGlobalCompilerFlags.cmake	2009-10-14 09:25:22.000000000 -0400
-+++ OWB-r1097.new/cmake/AddGlobalCompilerFlags.cmake	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/cmake/AddGlobalCompilerFlags.cmake OWB-r1097.aros/cmake/AddGlobalCompilerFlags.cmake
+--- OWB-r1097/cmake/AddGlobalCompilerFlags.cmake	2009-10-14 15:25:22.000000000 +0200
++++ OWB-r1097.aros/cmake/AddGlobalCompilerFlags.cmake	2012-10-31 09:26:56.434284616 +0100
 @@ -1,6 +1,6 @@
  if(CMAKE_COMPILER_IS_GNUCXX)
 -    set(CMAKE_C_FLAGS "-Wall -W -Wcast-align -Wchar-subscripts -Wreturn-type -Wformat -Wformat-security -Wno-format-y2k -Wundef -Wmissing-format-attribute -Wpointer-arith -Wwrite-strings -Wno-unused-parameter -Wno-parentheses -fPIC")
@@ -9401,9 +9401,9 @@ diff -urN OWB-r1097/cmake/AddGlobalCompilerFlags.cmake OWB-r1097.new/cmake/AddGl
  if(USE_I18N_GENERIC)
      add_definitions(-DWTF_USE_BALI18N=1)
  endif(USE_I18N_GENERIC)
-diff -urN OWB-r1097/cmake/CheckBaseDependencies.cmake OWB-r1097.new/cmake/CheckBaseDependencies.cmake
---- OWB-r1097/cmake/CheckBaseDependencies.cmake	2009-09-15 04:59:14.000000000 -0400
-+++ OWB-r1097.new/cmake/CheckBaseDependencies.cmake	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/cmake/CheckBaseDependencies.cmake OWB-r1097.aros/cmake/CheckBaseDependencies.cmake
+--- OWB-r1097/cmake/CheckBaseDependencies.cmake	2009-09-15 10:59:14.000000000 +0200
++++ OWB-r1097.aros/cmake/CheckBaseDependencies.cmake	2012-10-31 09:26:56.438284617 +0100
 @@ -17,7 +17,7 @@
  endif(NOT GPERF_EXECUTABLE)
  
@@ -9413,9 +9413,9 @@ diff -urN OWB-r1097/cmake/CheckBaseDependencies.cmake OWB-r1097.new/cmake/CheckB
  ELSE(NOT WIN32)
      ## Pkg-config under cygwin gives to cmake .a lib and we need .lib for Visual Studio projects. 
      find_path(LIB_XML2_PATH libxml2.lib ${WINLIB_LIB_PATH})
-diff -urN OWB-r1097/cmake/CheckPlatformFonts.cmake OWB-r1097.new/cmake/CheckPlatformFonts.cmake
---- OWB-r1097/cmake/CheckPlatformFonts.cmake	2009-10-06 04:13:04.000000000 -0400
-+++ OWB-r1097.new/cmake/CheckPlatformFonts.cmake	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/cmake/CheckPlatformFonts.cmake OWB-r1097.aros/cmake/CheckPlatformFonts.cmake
+--- OWB-r1097/cmake/CheckPlatformFonts.cmake	2009-10-06 10:13:04.000000000 +0200
++++ OWB-r1097.aros/cmake/CheckPlatformFonts.cmake	2012-10-31 09:26:56.446284617 +0100
 @@ -13,8 +13,8 @@
  
  if(USE_FONTS STREQUAL "FREETYPE")
@@ -9427,9 +9427,9 @@ diff -urN OWB-r1097/cmake/CheckPlatformFonts.cmake OWB-r1097.new/cmake/CheckPlat
      ELSE(NOT WIN32)
          ## We haven't got a good pkg-config under Windows so we let cmake search libs
          find_path(FONTCONFIG_INCLUDE_DIRS fontconfig.h ${WINLIB_INC_PATH} ${WINLIB_INC_PATH}/fontconfig)
-diff -urN OWB-r1097/cmake/CheckPlatformGraphics.cmake OWB-r1097.new/cmake/CheckPlatformGraphics.cmake
---- OWB-r1097/cmake/CheckPlatformGraphics.cmake	2009-10-06 04:13:04.000000000 -0400
-+++ OWB-r1097.new/cmake/CheckPlatformGraphics.cmake	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/cmake/CheckPlatformGraphics.cmake OWB-r1097.aros/cmake/CheckPlatformGraphics.cmake
+--- OWB-r1097/cmake/CheckPlatformGraphics.cmake	2009-10-06 10:13:04.000000000 +0200
++++ OWB-r1097.aros/cmake/CheckPlatformGraphics.cmake	2012-10-31 09:26:56.450284617 +0100
 @@ -47,3 +47,15 @@
      
      set(REQUIREMENT "sdl >= 1.2.10")
@@ -9446,9 +9446,9 @@ diff -urN OWB-r1097/cmake/CheckPlatformGraphics.cmake OWB-r1097.new/cmake/CheckP
 +    
 +    set(REQUIREMENT "sdl >= 1.2.10")
 +endif(${USE_GRAPHICS} STREQUAL "AROS")
-diff -urN OWB-r1097/cmake/CheckPlatformImageDecoder.cmake OWB-r1097.new/cmake/CheckPlatformImageDecoder.cmake
---- OWB-r1097/cmake/CheckPlatformImageDecoder.cmake	2009-09-15 04:59:14.000000000 -0400
-+++ OWB-r1097.new/cmake/CheckPlatformImageDecoder.cmake	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/cmake/CheckPlatformImageDecoder.cmake OWB-r1097.aros/cmake/CheckPlatformImageDecoder.cmake
+--- OWB-r1097/cmake/CheckPlatformImageDecoder.cmake	2009-09-15 10:59:14.000000000 +0200
++++ OWB-r1097.aros/cmake/CheckPlatformImageDecoder.cmake	2012-10-31 09:26:56.454284617 +0100
 @@ -1,6 +1,6 @@
  if(NOT HAS_CUSTOMER)
      IF(NOT WIN32)
@@ -9457,9 +9457,9 @@ diff -urN OWB-r1097/cmake/CheckPlatformImageDecoder.cmake OWB-r1097.new/cmake/Ch
          find_package(JPEG QUIET REQUIRED)
      ELSE(NOT WIN32)
          ## We haven't got a good pkg-config under Windows so we let cmake search libs
-diff -urN OWB-r1097/cmake/CheckPlatformInternationalization.cmake OWB-r1097.new/cmake/CheckPlatformInternationalization.cmake
---- OWB-r1097/cmake/CheckPlatformInternationalization.cmake	2009-09-15 04:59:14.000000000 -0400
-+++ OWB-r1097.new/cmake/CheckPlatformInternationalization.cmake	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/cmake/CheckPlatformInternationalization.cmake OWB-r1097.aros/cmake/CheckPlatformInternationalization.cmake
+--- OWB-r1097/cmake/CheckPlatformInternationalization.cmake	2009-09-15 10:59:14.000000000 +0200
++++ OWB-r1097.aros/cmake/CheckPlatformInternationalization.cmake	2012-10-31 09:26:56.458284618 +0100
 @@ -22,10 +22,10 @@
  
  if(USE_I18N STREQUAL "ICU")
@@ -9475,9 +9475,9 @@ diff -urN OWB-r1097/cmake/CheckPlatformInternationalization.cmake OWB-r1097.new/
      ELSE(NOT WIN32)
          ## We haven't got a good pkg-config under Windows so we let cmake search libs
          find_path(ICU_INC pwin32.h ${WINLIB_INC_PATH} ${WINLIB_INC_PATH}/icu ${WINLIB_INC_PATH}/unicode)
-diff -urN OWB-r1097/cmake/CheckPlatformNetwork.cmake OWB-r1097.new/cmake/CheckPlatformNetwork.cmake
---- OWB-r1097/cmake/CheckPlatformNetwork.cmake	2009-09-23 09:00:11.000000000 -0400
-+++ OWB-r1097.new/cmake/CheckPlatformNetwork.cmake	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/cmake/CheckPlatformNetwork.cmake OWB-r1097.aros/cmake/CheckPlatformNetwork.cmake
+--- OWB-r1097/cmake/CheckPlatformNetwork.cmake	2009-09-23 15:00:11.000000000 +0200
++++ OWB-r1097.aros/cmake/CheckPlatformNetwork.cmake	2012-10-31 09:26:56.458284618 +0100
 @@ -1,6 +1,6 @@
  if(USE_NETWORK STREQUAL "CURL")
      IF(NOT WIN32)
@@ -9486,9 +9486,9 @@ diff -urN OWB-r1097/cmake/CheckPlatformNetwork.cmake OWB-r1097.new/cmake/CheckPl
      ELSE(NOT WIN32)
          ## We haven't got a good pkg-config under Windows so we let cmake search libs
          find_path(CURL_INCLUDE_DIRS curl.h ${WINLIB_INC_PATH} ${WINLIB_INC_PATH}/curl)    
-diff -urN OWB-r1097/cmake/CheckPlatformTimer.cmake OWB-r1097.new/cmake/CheckPlatformTimer.cmake
---- OWB-r1097/cmake/CheckPlatformTimer.cmake	2009-02-11 11:41:27.000000000 -0500
-+++ OWB-r1097.new/cmake/CheckPlatformTimer.cmake	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/cmake/CheckPlatformTimer.cmake OWB-r1097.aros/cmake/CheckPlatformTimer.cmake
+--- OWB-r1097/cmake/CheckPlatformTimer.cmake	2009-02-11 17:41:27.000000000 +0100
++++ OWB-r1097.aros/cmake/CheckPlatformTimer.cmake	2012-10-31 09:26:56.466284618 +0100
 @@ -20,3 +20,8 @@
      set(USE_TIMER_QT TRUE)
      mark_as_advanced(USE_TIMER_QT)
@@ -9498,9 +9498,9 @@ diff -urN OWB-r1097/cmake/CheckPlatformTimer.cmake OWB-r1097.new/cmake/CheckPlat
 +    set(USE_TIMER_AROS TRUE)
 +    mark_as_advanced(USE_TIMER_AROS)
 +endif(${USE_TIMER} STREQUAL "AROS")
-diff -urN OWB-r1097/cmake/CheckSqlite3.cmake OWB-r1097.new/cmake/CheckSqlite3.cmake
---- OWB-r1097/cmake/CheckSqlite3.cmake	2008-10-04 13:41:49.000000000 -0400
-+++ OWB-r1097.new/cmake/CheckSqlite3.cmake	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/cmake/CheckSqlite3.cmake OWB-r1097.aros/cmake/CheckSqlite3.cmake
+--- OWB-r1097/cmake/CheckSqlite3.cmake	2008-10-04 19:41:49.000000000 +0200
++++ OWB-r1097.aros/cmake/CheckSqlite3.cmake	2012-10-31 09:26:56.470284618 +0100
 @@ -1,5 +1,5 @@
  if(ENABLE_DATABASE)
 -    pkg_check_modules(SQLITE3 REQUIRED sqlite3>=3.0)
@@ -9508,9 +9508,9 @@ diff -urN OWB-r1097/cmake/CheckSqlite3.cmake OWB-r1097.new/cmake/CheckSqlite3.cm
      set(DATABASE_INCLUDE_DIRS ${SQLITE3_INCLUDE_DIRS})
      set(DATABASE_LIBRARIES ${SQLITE3_LIBRARIES})
  endif(ENABLE_DATABASE)
-diff -urN OWB-r1097/cmake/CheckXSLT.cmake OWB-r1097.new/cmake/CheckXSLT.cmake
---- OWB-r1097/cmake/CheckXSLT.cmake	2009-09-15 04:59:14.000000000 -0400
-+++ OWB-r1097.new/cmake/CheckXSLT.cmake	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/cmake/CheckXSLT.cmake OWB-r1097.aros/cmake/CheckXSLT.cmake
+--- OWB-r1097/cmake/CheckXSLT.cmake	2009-09-15 10:59:14.000000000 +0200
++++ OWB-r1097.aros/cmake/CheckXSLT.cmake	2012-10-31 09:26:56.470284618 +0100
 @@ -1,6 +1,6 @@
  if(ENABLE_XSLT)
      IF(NOT WIN32)
@@ -9519,9 +9519,9 @@ diff -urN OWB-r1097/cmake/CheckXSLT.cmake OWB-r1097.new/cmake/CheckXSLT.cmake
      ELSE(NOT WIN32)
          ## Pkg-config under cygwin gives to cmake .a lib and we need .lib for Visual Studio projects. 
          find_path(LIB_XSLT_PATH libxslt.lib ${WINLIB_LIB_PATH})
-diff -urN OWB-r1097/cmake/ConfigureBuildSDL.cmake OWB-r1097.new/cmake/ConfigureBuildSDL.cmake
---- OWB-r1097/cmake/ConfigureBuildSDL.cmake	2009-10-16 14:40:05.000000000 -0400
-+++ OWB-r1097.new/cmake/ConfigureBuildSDL.cmake	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/cmake/ConfigureBuildSDL.cmake OWB-r1097.aros/cmake/ConfigureBuildSDL.cmake
+--- OWB-r1097/cmake/ConfigureBuildSDL.cmake	2009-10-16 20:40:05.000000000 +0200
++++ OWB-r1097.aros/cmake/ConfigureBuildSDL.cmake	2012-10-31 09:26:56.470284618 +0100
 @@ -7,7 +7,7 @@
      set(ARCH ${PROCESSOR})
  endif(UNIX)
@@ -9531,9 +9531,9 @@ diff -urN OWB-r1097/cmake/ConfigureBuildSDL.cmake OWB-r1097.new/cmake/ConfigureB
  set(ENABLE_TESTS ON CACHE BOOLEAN "Enable tests" FORCE)
  
  set(ENABLE_3D_CANVAS ON CACHE BOOLEAN "Enable 3D canvas support" FORCE)
-diff -urN OWB-r1097/cmake/SetCMakeVars.cmake OWB-r1097.new/cmake/SetCMakeVars.cmake
---- OWB-r1097/cmake/SetCMakeVars.cmake	2009-08-12 16:20:06.000000000 -0400
-+++ OWB-r1097.new/cmake/SetCMakeVars.cmake	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/cmake/SetCMakeVars.cmake OWB-r1097.aros/cmake/SetCMakeVars.cmake
+--- OWB-r1097/cmake/SetCMakeVars.cmake	2009-08-12 22:20:06.000000000 +0200
++++ OWB-r1097.aros/cmake/SetCMakeVars.cmake	2012-10-31 09:26:56.470284618 +0100
 @@ -22,6 +22,14 @@
      )
  endif(USE_GRAPHICS_SDL)
@@ -9562,9 +9562,9 @@ diff -urN OWB-r1097/cmake/SetCMakeVars.cmake OWB-r1097.new/cmake/SetCMakeVars.cm
  )
  
  if(ENABLE_DATABASE)
-diff -urN OWB-r1097/CMakeLists.txt OWB-r1097.new/CMakeLists.txt
---- OWB-r1097/CMakeLists.txt	2009-10-14 09:25:22.000000000 -0400
-+++ OWB-r1097.new/CMakeLists.txt	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/CMakeLists.txt OWB-r1097.aros/CMakeLists.txt
+--- OWB-r1097/CMakeLists.txt	2009-10-14 15:25:22.000000000 +0200
++++ OWB-r1097.aros/CMakeLists.txt	2012-10-31 09:26:56.470284618 +0100
 @@ -72,11 +72,11 @@
  
  set(USE_FILESYSTEM_ACCESS "POSIX" CACHE STRING "Choose the filesystem access method, options are: GLIB POSIX QT")
@@ -9580,9 +9580,9 @@ diff -urN OWB-r1097/CMakeLists.txt OWB-r1097.new/CMakeLists.txt
  
  set(WITH_OWB_CONFIG_DIR "$ENV{HOME}/.owb/conf/" CACHE STRING "Set configuration directory for owb")
  
-diff -urN OWB-r1097/JavaScriptCore/CMakeLists.txt OWB-r1097.new/JavaScriptCore/CMakeLists.txt
---- OWB-r1097/JavaScriptCore/CMakeLists.txt	2009-10-09 10:58:16.000000000 -0400
-+++ OWB-r1097.new/JavaScriptCore/CMakeLists.txt	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/JavaScriptCore/CMakeLists.txt OWB-r1097.aros/JavaScriptCore/CMakeLists.txt
+--- OWB-r1097/JavaScriptCore/CMakeLists.txt	2009-10-09 16:58:16.000000000 +0200
++++ OWB-r1097.aros/JavaScriptCore/CMakeLists.txt	2012-10-31 09:26:56.474284618 +0100
 @@ -76,6 +76,8 @@
  # Tests compilation.                             #
  ##################################################
@@ -9598,9 +9598,9 @@ diff -urN OWB-r1097/JavaScriptCore/CMakeLists.txt OWB-r1097.new/JavaScriptCore/C
  add_dependencies(jsctests jshell)
 +
 +endif(ENABLE_TESTS)
-diff -urN OWB-r1097/JavaScriptCore/interpreter/Interpreter.cpp OWB-r1097.new/JavaScriptCore/interpreter/Interpreter.cpp
---- OWB-r1097/JavaScriptCore/interpreter/Interpreter.cpp	2009-10-12 06:20:21.000000000 -0400
-+++ OWB-r1097.new/JavaScriptCore/interpreter/Interpreter.cpp	2012-10-26 11:14:19.000000000 -0400
+diff -ruN OWB-r1097/JavaScriptCore/interpreter/Interpreter.cpp OWB-r1097.aros/JavaScriptCore/interpreter/Interpreter.cpp
+--- OWB-r1097/JavaScriptCore/interpreter/Interpreter.cpp	2009-10-12 12:20:21.000000000 +0200
++++ OWB-r1097.aros/JavaScriptCore/interpreter/Interpreter.cpp	2012-10-31 09:26:56.474284618 +0100
 @@ -2497,7 +2497,7 @@
                  double dValue = 0;
                  JSValue jsValue = callFrame->r(value).jsValue();
@@ -9623,9 +9623,9 @@ diff -urN OWB-r1097/JavaScriptCore/interpreter/Interpreter.cpp OWB-r1097.new/Jav
          } else if (!arguments.isUndefinedOrNull()) {
              if (!arguments.isObject()) {
                  exceptionValue = createInvalidParamError(callFrame, "Function.prototype.apply", arguments, vPC - callFrame->codeBlock()->instructions().begin(), callFrame->codeBlock());
-diff -urN OWB-r1097/JavaScriptCore/interpreter/RegisterFile.cpp OWB-r1097.new/JavaScriptCore/interpreter/RegisterFile.cpp
---- OWB-r1097/JavaScriptCore/interpreter/RegisterFile.cpp	2009-09-23 09:00:11.000000000 -0400
-+++ OWB-r1097.new/JavaScriptCore/interpreter/RegisterFile.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/JavaScriptCore/interpreter/RegisterFile.cpp OWB-r1097.aros/JavaScriptCore/interpreter/RegisterFile.cpp
+--- OWB-r1097/JavaScriptCore/interpreter/RegisterFile.cpp	2009-09-23 15:00:11.000000000 +0200
++++ OWB-r1097.aros/JavaScriptCore/interpreter/RegisterFile.cpp	2012-10-31 09:26:56.474284618 +0100
 @@ -40,7 +40,7 @@
      VirtualFree(m_buffer, DWORD(m_commitEnd) - DWORD(m_buffer), MEM_DECOMMIT);
  #endif
@@ -9635,9 +9635,9 @@ diff -urN OWB-r1097/JavaScriptCore/interpreter/RegisterFile.cpp OWB-r1097.new/Ja
      fastFree(m_buffer);
  #else
      fastFree(m_buffer);
-diff -urN OWB-r1097/JavaScriptCore/runtime/Arguments.cpp OWB-r1097.new/JavaScriptCore/runtime/Arguments.cpp
---- OWB-r1097/JavaScriptCore/runtime/Arguments.cpp	2009-08-28 08:59:49.000000000 -0400
-+++ OWB-r1097.new/JavaScriptCore/runtime/Arguments.cpp	2012-10-26 12:02:55.000000000 -0400
+diff -ruN OWB-r1097/JavaScriptCore/runtime/Arguments.cpp OWB-r1097.aros/JavaScriptCore/runtime/Arguments.cpp
+--- OWB-r1097/JavaScriptCore/runtime/Arguments.cpp	2009-08-28 14:59:49.000000000 +0200
++++ OWB-r1097.aros/JavaScriptCore/runtime/Arguments.cpp	2012-10-31 09:26:56.474284618 +0100
 @@ -71,7 +71,7 @@
      }
  
@@ -9656,9 +9656,9 @@ diff -urN OWB-r1097/JavaScriptCore/runtime/Arguments.cpp OWB-r1097.new/JavaScrip
      unsigned i = 0;
      for (; i < parametersLength; ++i) {
          if (!d->deletedArguments[i])
-diff -urN OWB-r1097/JavaScriptCore/runtime/CMakeLists.txt OWB-r1097.new/JavaScriptCore/runtime/CMakeLists.txt
---- OWB-r1097/JavaScriptCore/runtime/CMakeLists.txt	2009-10-09 10:58:16.000000000 -0400
-+++ OWB-r1097.new/JavaScriptCore/runtime/CMakeLists.txt	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/JavaScriptCore/runtime/CMakeLists.txt OWB-r1097.aros/JavaScriptCore/runtime/CMakeLists.txt
+--- OWB-r1097/JavaScriptCore/runtime/CMakeLists.txt	2009-10-09 16:58:16.000000000 +0200
++++ OWB-r1097.aros/JavaScriptCore/runtime/CMakeLists.txt	2012-10-31 09:26:56.474284618 +0100
 @@ -62,7 +62,7 @@
      runtime/Lookup.cpp
      runtime/MathObject.cpp
@@ -9668,9 +9668,9 @@ diff -urN OWB-r1097/JavaScriptCore/runtime/CMakeLists.txt OWB-r1097.new/JavaScri
      runtime/NativeErrorConstructor.cpp
      runtime/NativeErrorPrototype.cpp
      runtime/NumberConstructor.cpp
-diff -urN OWB-r1097/JavaScriptCore/runtime/Collector.cpp OWB-r1097.new/JavaScriptCore/runtime/Collector.cpp
---- OWB-r1097/JavaScriptCore/runtime/Collector.cpp	2009-10-09 10:58:16.000000000 -0400
-+++ OWB-r1097.new/JavaScriptCore/runtime/Collector.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/JavaScriptCore/runtime/Collector.cpp OWB-r1097.aros/JavaScriptCore/runtime/Collector.cpp
+--- OWB-r1097/JavaScriptCore/runtime/Collector.cpp	2009-10-09 16:58:16.000000000 +0200
++++ OWB-r1097.aros/JavaScriptCore/runtime/Collector.cpp	2012-10-31 09:26:56.482284619 +0100
 @@ -95,6 +95,10 @@
  #include <malloc.h>
  #include <proto/exec.h>
@@ -9691,9 +9691,9 @@ diff -urN OWB-r1097/JavaScriptCore/runtime/Collector.cpp OWB-r1097.new/JavaScrip
  #elif PLATFORM(UNIX)
      static void* stackBase = 0;
      static size_t stackSize = 0;
-diff -urN OWB-r1097/JavaScriptCore/runtime/JSONObject.cpp OWB-r1097.new/JavaScriptCore/runtime/JSONObject.cpp
---- OWB-r1097/JavaScriptCore/runtime/JSONObject.cpp	2009-08-28 08:59:49.000000000 -0400
-+++ OWB-r1097.new/JavaScriptCore/runtime/JSONObject.cpp	2012-10-26 12:13:40.000000000 -0400
+diff -ruN OWB-r1097/JavaScriptCore/runtime/JSONObject.cpp OWB-r1097.aros/JavaScriptCore/runtime/JSONObject.cpp
+--- OWB-r1097/JavaScriptCore/runtime/JSONObject.cpp	2009-08-28 14:59:49.000000000 +0200
++++ OWB-r1097.aros/JavaScriptCore/runtime/JSONObject.cpp	2012-10-31 09:26:56.486284619 +0100
 @@ -720,7 +720,7 @@
              }
              case ArrayEndVisitMember: {
@@ -9703,9 +9703,9 @@ diff -urN OWB-r1097/JavaScriptCore/runtime/JSONObject.cpp OWB-r1097.new/JavaScri
                  if (filteredValue.isUndefined())
                      array->deleteProperty(m_exec, indexStack.last());
                  else {
-diff -urN OWB-r1097/JavaScriptCore/runtime/JSString.h OWB-r1097.new/JavaScriptCore/runtime/JSString.h
---- OWB-r1097/JavaScriptCore/runtime/JSString.h	2009-10-16 14:40:05.000000000 -0400
-+++ OWB-r1097.new/JavaScriptCore/runtime/JSString.h	2012-10-26 11:04:56.000000000 -0400
+diff -ruN OWB-r1097/JavaScriptCore/runtime/JSString.h OWB-r1097.aros/JavaScriptCore/runtime/JSString.h
+--- OWB-r1097/JavaScriptCore/runtime/JSString.h	2009-10-16 20:40:05.000000000 +0200
++++ OWB-r1097.aros/JavaScriptCore/runtime/JSString.h	2012-10-31 09:26:56.490284619 +0100
 @@ -260,7 +260,7 @@
          if (isString())
              return static_cast<JSString*>(asCell())->value();
@@ -9715,9 +9715,9 @@ diff -urN OWB-r1097/JavaScriptCore/runtime/JSString.h OWB-r1097.new/JavaScriptCo
          if (isDouble())
              return exec->globalData().numericStrings.add(asDouble());
          if (isTrue())
-diff -urN OWB-r1097/JavaScriptCore/runtime/JSValue.h OWB-r1097.new/JavaScriptCore/runtime/JSValue.h
---- OWB-r1097/JavaScriptCore/runtime/JSValue.h	2009-10-05 06:36:03.000000000 -0400
-+++ OWB-r1097.new/JavaScriptCore/runtime/JSValue.h	2012-10-26 11:03:27.000000000 -0400
+diff -ruN OWB-r1097/JavaScriptCore/runtime/JSValue.h OWB-r1097.aros/JavaScriptCore/runtime/JSValue.h
+--- OWB-r1097/JavaScriptCore/runtime/JSValue.h	2009-10-05 12:36:03.000000000 +0200
++++ OWB-r1097.aros/JavaScriptCore/runtime/JSValue.h	2012-10-31 09:26:56.490284619 +0100
 @@ -663,7 +663,7 @@
              u.asDouble = d;
              return;
@@ -9736,9 +9736,9 @@ diff -urN OWB-r1097/JavaScriptCore/runtime/JSValue.h OWB-r1097.new/JavaScriptCor
      }
  
      inline bool JSValue::isNumber() const
-diff -urN OWB-r1097/JavaScriptCore/runtime/MarkStackAROS.cpp OWB-r1097.new/JavaScriptCore/runtime/MarkStackAROS.cpp
---- OWB-r1097/JavaScriptCore/runtime/MarkStackAROS.cpp	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/JavaScriptCore/runtime/MarkStackAROS.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/JavaScriptCore/runtime/MarkStackAROS.cpp OWB-r1097.aros/JavaScriptCore/runtime/MarkStackAROS.cpp
+--- OWB-r1097/JavaScriptCore/runtime/MarkStackAROS.cpp	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/JavaScriptCore/runtime/MarkStackAROS.cpp	2012-10-31 09:26:56.498284620 +0100
 @@ -0,0 +1,40 @@
 +/*
 +    Copyright (C) 2009 Stanislaw Szymczyk
@@ -9780,9 +9780,9 @@ diff -urN OWB-r1097/JavaScriptCore/runtime/MarkStackAROS.cpp OWB-r1097.new/JavaS
 +}
 +
 +}
-diff -urN OWB-r1097/JavaScriptCore/runtime/MarkStack.h OWB-r1097.new/JavaScriptCore/runtime/MarkStack.h
---- OWB-r1097/JavaScriptCore/runtime/MarkStack.h	2009-09-28 05:13:12.000000000 -0400
-+++ OWB-r1097.new/JavaScriptCore/runtime/MarkStack.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/JavaScriptCore/runtime/MarkStack.h OWB-r1097.aros/JavaScriptCore/runtime/MarkStack.h
+--- OWB-r1097/JavaScriptCore/runtime/MarkStack.h	2009-09-28 11:13:12.000000000 +0200
++++ OWB-r1097.aros/JavaScriptCore/runtime/MarkStack.h	2012-10-31 09:26:56.502284620 +0100
 @@ -153,7 +153,7 @@
                  ASSERT(0 == (size % MarkStack::pageSize()));
                  if (size == m_allocated)
@@ -9792,9 +9792,9 @@ diff -urN OWB-r1097/JavaScriptCore/runtime/MarkStack.h OWB-r1097.new/JavaScriptC
                  // We cannot release a part of a region with VirtualFree.  To get around this,
                  // we'll release the entire region and reallocate the size that we want.
                  releaseStack(m_data, m_allocated);
-diff -urN OWB-r1097/JavaScriptCore/runtime/Operations.h OWB-r1097.new/JavaScriptCore/runtime/Operations.h
---- OWB-r1097/JavaScriptCore/runtime/Operations.h	2009-08-21 09:44:56.000000000 -0400
-+++ OWB-r1097.new/JavaScriptCore/runtime/Operations.h	2012-10-26 11:11:10.000000000 -0400
+diff -ruN OWB-r1097/JavaScriptCore/runtime/Operations.h OWB-r1097.aros/JavaScriptCore/runtime/Operations.h
+--- OWB-r1097/JavaScriptCore/runtime/Operations.h	2009-08-21 15:44:56.000000000 +0200
++++ OWB-r1097.aros/JavaScriptCore/runtime/Operations.h	2012-10-31 09:26:56.502284620 +0100
 @@ -212,7 +212,7 @@
  
          if (rightIsNumber & leftIsString) {
@@ -9804,9 +9804,9 @@ diff -urN OWB-r1097/JavaScriptCore/runtime/Operations.h OWB-r1097.new/JavaScript
                  concatenate(asString(v1)->value().rep(), right);
  
              if (!value)
-diff -urN OWB-r1097/JavaScriptCore/wtf/TCSpinLock.h OWB-r1097.new/JavaScriptCore/wtf/TCSpinLock.h
---- OWB-r1097/JavaScriptCore/wtf/TCSpinLock.h	2009-09-25 11:25:08.000000000 -0400
-+++ OWB-r1097.new/JavaScriptCore/wtf/TCSpinLock.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/JavaScriptCore/wtf/TCSpinLock.h OWB-r1097.aros/JavaScriptCore/wtf/TCSpinLock.h
+--- OWB-r1097/JavaScriptCore/wtf/TCSpinLock.h	2009-09-25 17:25:08.000000000 +0200
++++ OWB-r1097.aros/JavaScriptCore/wtf/TCSpinLock.h	2012-10-31 09:26:56.510284620 +0100
 @@ -189,6 +189,31 @@
    }
  }
@@ -9839,9 +9839,9 @@ diff -urN OWB-r1097/JavaScriptCore/wtf/TCSpinLock.h OWB-r1097.new/JavaScriptCore
  #else
  
  #include <pthread.h>
-diff -urN OWB-r1097/WebCore/bindings/js/CMakeLists.txt OWB-r1097.new/WebCore/bindings/js/CMakeLists.txt
---- OWB-r1097/WebCore/bindings/js/CMakeLists.txt	2009-10-14 09:25:22.000000000 -0400
-+++ OWB-r1097.new/WebCore/bindings/js/CMakeLists.txt	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/WebCore/bindings/js/CMakeLists.txt OWB-r1097.aros/WebCore/bindings/js/CMakeLists.txt
+--- OWB-r1097/WebCore/bindings/js/CMakeLists.txt	2009-10-14 15:25:22.000000000 +0200
++++ OWB-r1097.aros/WebCore/bindings/js/CMakeLists.txt	2012-10-31 09:26:56.514284620 +0100
 @@ -252,5 +252,11 @@
      )
  endif(ENABLE_EVENTSOURCE)
@@ -9854,9 +9854,9 @@ diff -urN OWB-r1097/WebCore/bindings/js/CMakeLists.txt OWB-r1097.new/WebCore/bin
 +
  include(bindings/js/Customer/CMakeLists.txt OPTIONAL)
  
-diff -urN OWB-r1097/WebCore/CMakeLists.txt OWB-r1097.new/WebCore/CMakeLists.txt
---- OWB-r1097/WebCore/CMakeLists.txt	2009-10-07 11:28:50.000000000 -0400
-+++ OWB-r1097.new/WebCore/CMakeLists.txt	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/WebCore/CMakeLists.txt OWB-r1097.aros/WebCore/CMakeLists.txt
+--- OWB-r1097/WebCore/CMakeLists.txt	2009-10-07 17:28:50.000000000 +0200
++++ OWB-r1097.aros/WebCore/CMakeLists.txt	2012-10-31 09:26:56.518284621 +0100
 @@ -510,3 +510,10 @@
  )
  add_library(webcore STATIC ${WEBCORE_SRC})
@@ -9868,9 +9868,9 @@ diff -urN OWB-r1097/WebCore/CMakeLists.txt OWB-r1097.new/WebCore/CMakeLists.txt
 +    PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
 +)
 +
-diff -urN OWB-r1097/WebCore/dom/make_names.pl OWB-r1097.new/WebCore/dom/make_names.pl
---- OWB-r1097/WebCore/dom/make_names.pl	2009-08-24 07:41:30.000000000 -0400
-+++ OWB-r1097.new/WebCore/dom/make_names.pl	2012-10-26 13:07:00.000000000 -0400
+diff -ruN OWB-r1097/WebCore/dom/make_names.pl OWB-r1097.aros/WebCore/dom/make_names.pl
+--- OWB-r1097/WebCore/dom/make_names.pl	2009-08-24 13:41:30.000000000 +0200
++++ OWB-r1097.aros/WebCore/dom/make_names.pl	2012-10-31 09:26:56.518284621 +0100
 @@ -46,7 +46,7 @@
  my %attrs = ();
  my %parameters = ();
@@ -9880,9 +9880,9 @@ diff -urN OWB-r1097/WebCore/dom/make_names.pl OWB-r1097.new/WebCore/dom/make_nam
  
  GetOptions(
      'tags=s' => \$tagsFile, 
-diff -urN OWB-r1097/WebCore/dom/XMLTokenizerLibxml2.cpp OWB-r1097.new/WebCore/dom/XMLTokenizerLibxml2.cpp
---- OWB-r1097/WebCore/dom/XMLTokenizerLibxml2.cpp	2009-10-09 10:58:16.000000000 -0400
-+++ OWB-r1097.new/WebCore/dom/XMLTokenizerLibxml2.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/WebCore/dom/XMLTokenizerLibxml2.cpp OWB-r1097.aros/WebCore/dom/XMLTokenizerLibxml2.cpp
+--- OWB-r1097/WebCore/dom/XMLTokenizerLibxml2.cpp	2009-10-09 16:58:16.000000000 +0200
++++ OWB-r1097.aros/WebCore/dom/XMLTokenizerLibxml2.cpp	2012-10-31 09:26:56.518284621 +0100
 @@ -887,7 +887,7 @@
      if (m_parserStopped)
          return;
@@ -9901,9 +9901,9 @@ diff -urN OWB-r1097/WebCore/dom/XMLTokenizerLibxml2.cpp OWB-r1097.new/WebCore/do
      free(m);
  #endif
  }
-diff -urN OWB-r1097/WebCore/loader/CachedImage.cpp OWB-r1097.new/WebCore/loader/CachedImage.cpp
---- OWB-r1097/WebCore/loader/CachedImage.cpp	2009-06-19 11:17:54.000000000 -0400
-+++ OWB-r1097.new/WebCore/loader/CachedImage.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/WebCore/loader/CachedImage.cpp OWB-r1097.aros/WebCore/loader/CachedImage.cpp
+--- OWB-r1097/WebCore/loader/CachedImage.cpp	2009-06-19 17:17:54.000000000 +0200
++++ OWB-r1097.aros/WebCore/loader/CachedImage.cpp	2012-10-31 09:26:56.522284622 +0100
 @@ -113,7 +113,7 @@
  
  static Image* brokenImage()
@@ -9913,9 +9913,9 @@ diff -urN OWB-r1097/WebCore/loader/CachedImage.cpp OWB-r1097.new/WebCore/loader/
      return brokenImage.get();
  }
  
-diff -urN OWB-r1097/WebCore/loader/FrameLoader.cpp OWB-r1097.new/WebCore/loader/FrameLoader.cpp
---- OWB-r1097/WebCore/loader/FrameLoader.cpp	2009-10-16 14:40:05.000000000 -0400
-+++ OWB-r1097.new/WebCore/loader/FrameLoader.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/WebCore/loader/FrameLoader.cpp OWB-r1097.aros/WebCore/loader/FrameLoader.cpp
+--- OWB-r1097/WebCore/loader/FrameLoader.cpp	2009-10-16 20:40:05.000000000 +0200
++++ OWB-r1097.aros/WebCore/loader/FrameLoader.cpp	2012-10-31 09:26:56.522284622 +0100
 @@ -47,6 +47,7 @@
  #include "EditorClient.h"
  #include "Element.h"
@@ -9938,9 +9938,9 @@ diff -urN OWB-r1097/WebCore/loader/FrameLoader.cpp OWB-r1097.new/WebCore/loader/
      RefPtr<DocumentLoader> oldDocumentLoader = m_documentLoader;
  
      bool sameURL = shouldTreatURLAsSameAsCurrent(newURL);
-diff -urN OWB-r1097/WebCore/loader/MainResourceLoader.cpp OWB-r1097.new/WebCore/loader/MainResourceLoader.cpp
---- OWB-r1097/WebCore/loader/MainResourceLoader.cpp	2009-10-16 14:40:05.000000000 -0400
-+++ OWB-r1097.new/WebCore/loader/MainResourceLoader.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/WebCore/loader/MainResourceLoader.cpp OWB-r1097.aros/WebCore/loader/MainResourceLoader.cpp
+--- OWB-r1097/WebCore/loader/MainResourceLoader.cpp	2009-10-16 20:40:05.000000000 +0200
++++ OWB-r1097.aros/WebCore/loader/MainResourceLoader.cpp	2012-10-31 09:26:56.522284622 +0100
 @@ -77,7 +77,11 @@
  
      if (!cancelled()) {
@@ -9954,9 +9954,9 @@ diff -urN OWB-r1097/WebCore/loader/MainResourceLoader.cpp OWB-r1097.new/WebCore/
          
          releaseResources();
      }
-diff -urN OWB-r1097/WebCore/page/ChromeClient.h OWB-r1097.new/WebCore/page/ChromeClient.h
---- OWB-r1097/WebCore/page/ChromeClient.h	2009-10-07 11:28:50.000000000 -0400
-+++ OWB-r1097.new/WebCore/page/ChromeClient.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/WebCore/page/ChromeClient.h OWB-r1097.aros/WebCore/page/ChromeClient.h
+--- OWB-r1097/WebCore/page/ChromeClient.h	2009-10-07 17:28:50.000000000 +0200
++++ OWB-r1097.aros/WebCore/page/ChromeClient.h	2012-10-31 09:26:56.522284622 +0100
 @@ -88,6 +88,7 @@
          // should not be shown to the user until the ChromeClient of the newly
          // created Page has its show method called.
@@ -9965,9 +9965,9 @@ diff -urN OWB-r1097/WebCore/page/ChromeClient.h OWB-r1097.new/WebCore/page/Chrom
          virtual void show() = 0;
  
          virtual bool canRunModal() = 0;
-diff -urN OWB-r1097/WebCore/page/Chrome.cpp OWB-r1097.new/WebCore/page/Chrome.cpp
---- OWB-r1097/WebCore/page/Chrome.cpp	2009-09-21 10:00:57.000000000 -0400
-+++ OWB-r1097.new/WebCore/page/Chrome.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/WebCore/page/Chrome.cpp OWB-r1097.aros/WebCore/page/Chrome.cpp
+--- OWB-r1097/WebCore/page/Chrome.cpp	2009-09-21 16:00:57.000000000 +0200
++++ OWB-r1097.aros/WebCore/page/Chrome.cpp	2012-10-31 09:26:56.522284622 +0100
 @@ -167,6 +167,20 @@
      return newPage;
  }
@@ -9989,9 +9989,9 @@ diff -urN OWB-r1097/WebCore/page/Chrome.cpp OWB-r1097.new/WebCore/page/Chrome.cp
  void Chrome::show() const
  {
      m_client->show();
-diff -urN OWB-r1097/WebCore/page/Chrome.h OWB-r1097.new/WebCore/page/Chrome.h
---- OWB-r1097/WebCore/page/Chrome.h	2009-09-21 10:00:57.000000000 -0400
-+++ OWB-r1097.new/WebCore/page/Chrome.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/WebCore/page/Chrome.h OWB-r1097.aros/WebCore/page/Chrome.h
+--- OWB-r1097/WebCore/page/Chrome.h	2009-09-21 16:00:57.000000000 +0200
++++ OWB-r1097.aros/WebCore/page/Chrome.h	2012-10-31 09:26:56.526284622 +0100
 @@ -83,6 +83,7 @@
          void takeFocus(FocusDirection) const;
  
@@ -10000,9 +10000,9 @@ diff -urN OWB-r1097/WebCore/page/Chrome.h OWB-r1097.new/WebCore/page/Chrome.h
          void show() const;
  
          bool canRunModal() const;
-diff -urN OWB-r1097/WebCore/page/ContextMenuController.cpp OWB-r1097.new/WebCore/page/ContextMenuController.cpp
---- OWB-r1097/WebCore/page/ContextMenuController.cpp	2009-10-05 06:36:03.000000000 -0400
-+++ OWB-r1097.new/WebCore/page/ContextMenuController.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/WebCore/page/ContextMenuController.cpp OWB-r1097.aros/WebCore/page/ContextMenuController.cpp
+--- OWB-r1097/WebCore/page/ContextMenuController.cpp	2009-10-05 12:36:03.000000000 +0200
++++ OWB-r1097.aros/WebCore/page/ContextMenuController.cpp	2012-10-31 09:26:56.526284622 +0100
 @@ -120,6 +120,15 @@
      }
  }
@@ -10054,9 +10054,9 @@ diff -urN OWB-r1097/WebCore/page/ContextMenuController.cpp OWB-r1097.new/WebCore
      case ContextMenuItemTagCopy:
          frame->editor()->copy();
          break;
-diff -urN OWB-r1097/WebCore/page/EventHandler.cpp OWB-r1097.new/WebCore/page/EventHandler.cpp
---- OWB-r1097/WebCore/page/EventHandler.cpp	2009-10-02 09:41:19.000000000 -0400
-+++ OWB-r1097.new/WebCore/page/EventHandler.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/WebCore/page/EventHandler.cpp OWB-r1097.aros/WebCore/page/EventHandler.cpp
+--- OWB-r1097/WebCore/page/EventHandler.cpp	2009-10-02 15:41:19.000000000 +0200
++++ OWB-r1097.aros/WebCore/page/EventHandler.cpp	2012-10-31 09:26:56.554284622 +0100
 @@ -1876,7 +1876,7 @@
      // Context menu events shouldn't select text in GTK+ applications or in Chromium.
      // FIXME: This should probably be configurable by embedders. Consider making it a WebPreferences setting.
@@ -10066,9 +10066,9 @@ diff -urN OWB-r1097/WebCore/page/EventHandler.cpp OWB-r1097.new/WebCore/page/Eve
      if (!m_frame->selection()->contains(viewportPos) && 
          // FIXME: In the editable case, word selection sometimes selects content that isn't underneath the mouse.
          // If the selection is non-editable, we do word selection to make it easier to use the contextual menu items
-diff -urN OWB-r1097/WebCore/page/Settings.cpp OWB-r1097.new/WebCore/page/Settings.cpp
---- OWB-r1097/WebCore/page/Settings.cpp	2009-10-12 06:20:21.000000000 -0400
-+++ OWB-r1097.new/WebCore/page/Settings.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/WebCore/page/Settings.cpp OWB-r1097.aros/WebCore/page/Settings.cpp
+--- OWB-r1097/WebCore/page/Settings.cpp	2009-10-12 12:20:21.000000000 +0200
++++ OWB-r1097.aros/WebCore/page/Settings.cpp	2012-10-31 09:26:56.562284623 +0100
 @@ -52,6 +52,13 @@
  bool Settings::gShouldUseHighResolutionTimers = true;
  #endif
@@ -10112,9 +10112,9 @@ diff -urN OWB-r1097/WebCore/page/Settings.cpp OWB-r1097.new/WebCore/page/Setting
  void Settings::setUsesEncodingDetector(bool usesEncodingDetector)
  {
      m_usesEncodingDetector = usesEncodingDetector;
-diff -urN OWB-r1097/WebCore/page/Settings.h OWB-r1097.new/WebCore/page/Settings.h
---- OWB-r1097/WebCore/page/Settings.h	2009-10-12 06:20:21.000000000 -0400
-+++ OWB-r1097.new/WebCore/page/Settings.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/WebCore/page/Settings.h OWB-r1097.aros/WebCore/page/Settings.h
+--- OWB-r1097/WebCore/page/Settings.h	2009-10-12 12:20:21.000000000 +0200
++++ OWB-r1097.aros/WebCore/page/Settings.h	2012-10-31 09:26:56.566284623 +0100
 @@ -275,6 +275,19 @@
          bool experimentalWebSocketsEnabled() const { return m_experimentalWebSocketsEnabled; }
  #endif
@@ -10149,9 +10149,9 @@ diff -urN OWB-r1097/WebCore/page/Settings.h OWB-r1097.new/WebCore/page/Settings.
      };
  
  } // namespace WebCore
-diff -urN OWB-r1097/WebCore/plugins/CMakeLists.txt OWB-r1097.new/WebCore/plugins/CMakeLists.txt
---- OWB-r1097/WebCore/plugins/CMakeLists.txt	2009-07-20 11:37:14.000000000 -0400
-+++ OWB-r1097.new/WebCore/plugins/CMakeLists.txt	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/WebCore/plugins/CMakeLists.txt OWB-r1097.aros/WebCore/plugins/CMakeLists.txt
+--- OWB-r1097/WebCore/plugins/CMakeLists.txt	2009-07-20 17:37:14.000000000 +0200
++++ OWB-r1097.aros/WebCore/plugins/CMakeLists.txt	2012-10-31 09:26:56.566284623 +0100
 @@ -48,6 +48,14 @@
              plugins/SDL/PluginViewSDL.cpp
          )
@@ -10167,9 +10167,9 @@ diff -urN OWB-r1097/WebCore/plugins/CMakeLists.txt OWB-r1097.new/WebCore/plugins
  else(ENABLE_NPAPI)
       list(APPEND WEBCORE_SRC
           plugins/PluginDataNone.cpp
-diff -urN OWB-r1097/WebCore/plugins/PluginView.cpp OWB-r1097.new/WebCore/plugins/PluginView.cpp
---- OWB-r1097/WebCore/plugins/PluginView.cpp	2009-10-16 14:40:05.000000000 -0400
-+++ OWB-r1097.new/WebCore/plugins/PluginView.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/WebCore/plugins/PluginView.cpp OWB-r1097.aros/WebCore/plugins/PluginView.cpp
+--- OWB-r1097/WebCore/plugins/PluginView.cpp	2009-10-16 20:40:05.000000000 +0200
++++ OWB-r1097.aros/WebCore/plugins/PluginView.cpp	2012-10-31 09:26:56.566284623 +0100
 @@ -1185,7 +1185,7 @@
  {
      static RefPtr<Image> nullPluginImage;
@@ -10191,9 +10191,9 @@ diff -urN OWB-r1097/WebCore/plugins/PluginView.cpp OWB-r1097.new/WebCore/plugins
      context->drawImage(nullPluginImage.get(), imageRect.location());
      context->restore();
  }
-diff -urN OWB-r1097/WebCore/plugins/PluginViewNone.cpp OWB-r1097.new/WebCore/plugins/PluginViewNone.cpp
---- OWB-r1097/WebCore/plugins/PluginViewNone.cpp	2009-10-05 06:36:03.000000000 -0400
-+++ OWB-r1097.new/WebCore/plugins/PluginViewNone.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/WebCore/plugins/PluginViewNone.cpp OWB-r1097.aros/WebCore/plugins/PluginViewNone.cpp
+--- OWB-r1097/WebCore/plugins/PluginViewNone.cpp	2009-10-05 12:36:03.000000000 +0200
++++ OWB-r1097.aros/WebCore/plugins/PluginViewNone.cpp	2012-10-31 09:26:56.566284623 +0100
 @@ -25,6 +25,7 @@
  
  #include "config.h"
@@ -10241,9 +10241,9 @@ diff -urN OWB-r1097/WebCore/plugins/PluginViewNone.cpp OWB-r1097.new/WebCore/plu
  }
  
  void PluginView::halt()
-diff -urN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateAROS.cpp OWB-r1097.new/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateAROS.cpp
---- OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateAROS.cpp	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateAROS.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateAROS.cpp OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateAROS.cpp
+--- OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateAROS.cpp	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateAROS.cpp	2012-10-31 09:26:56.566284623 +0100
 @@ -0,0 +1,106 @@
 +#include <wtf/OwnPtr.h>
 +#include "WebDownload.h"
@@ -10351,9 +10351,9 @@ diff -urN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateAROS.cpp OW
 +    if(delegate)
 +        DoMethod(delegate, MUIM_DownloadDelegate_DidFailWithError, download);
 +}
-diff -urN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateAROS.h OWB-r1097.new/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateAROS.h
---- OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateAROS.h	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateAROS.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateAROS.h OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateAROS.h
+--- OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateAROS.h	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateAROS.h	2012-10-31 09:26:56.566284623 +0100
 @@ -0,0 +1,41 @@
 +#ifndef _DOWNLOADDELEGATEAROS_H
 +#define _DOWNLOADDELEGATEAROS_H
@@ -10396,9 +10396,9 @@ diff -urN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateAROS.h OWB-
 +};
 +
 +#endif
-diff -urN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateZune.cpp OWB-r1097.new/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateZune.cpp
---- OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateZune.cpp	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateZune.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateZune.cpp OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateZune.cpp
+--- OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateZune.cpp	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateZune.cpp	2012-10-31 09:26:56.566284623 +0100
 @@ -0,0 +1,75 @@
 +#include "WebDownload.h"
 +
@@ -10475,9 +10475,9 @@ diff -urN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateZune.cpp OW
 +    MUIM_DownloadDelegate_CancelDownload, struct MUIP_DownloadDelegate_CancelDownload*,
 +    MUIM_DownloadDelegate_SetDestination, struct MUIP_DownloadDelegate_SetDestination*
 +);
-diff -urN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateZune.h OWB-r1097.new/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateZune.h
---- OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateZune.h	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateZune.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateZune.h OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateZune.h
+--- OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateZune.h	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateZune.h	2012-10-31 09:26:56.566284623 +0100
 @@ -0,0 +1,37 @@
 +#ifndef _DOWNLOADDELEGATEZUNE_H
 +#define _DOWNLOADDELEGATEZUNE_H
@@ -10516,9 +10516,9 @@ diff -urN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateZune.h OWB-
 +#define DownloadDelegateObject BOOPSIOBJMACRO_START(DownloadDelegate_CLASS->mcc_Class)
 +
 +#endif
-diff -urN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateZune_private.h OWB-r1097.new/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateZune_private.h
---- OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateZune_private.h	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateZune_private.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateZune_private.h OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateZune_private.h
+--- OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateZune_private.h	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateZune_private.h	2012-10-31 09:26:56.570284623 +0100
 @@ -0,0 +1,6 @@
 +#ifndef _DOWNLOADDELEGATEZUNE_PRIVATE_H
 +#define _DOWNLOADDELEGATEZUNE_PRIVATE_H
@@ -10526,9 +10526,9 @@ diff -urN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateZune_privat
 +struct DownloadDelegate_DATA {};
 +
 +#endif
-diff -urN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/PolicyDelegateAROS.cpp OWB-r1097.new/WebKit/OrigynWebBrowser/Api/AROS/PolicyDelegateAROS.cpp
---- OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/PolicyDelegateAROS.cpp	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/WebKit/OrigynWebBrowser/Api/AROS/PolicyDelegateAROS.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/PolicyDelegateAROS.cpp OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/PolicyDelegateAROS.cpp
+--- OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/PolicyDelegateAROS.cpp	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/PolicyDelegateAROS.cpp	2012-10-31 09:26:56.570284623 +0100
 @@ -0,0 +1,139 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -10669,9 +10669,9 @@ diff -urN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/PolicyDelegateAROS.cpp OWB-
 +	}
 +    }
 +}
-diff -urN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/PolicyDelegateAROS.h OWB-r1097.new/WebKit/OrigynWebBrowser/Api/AROS/PolicyDelegateAROS.h
---- OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/PolicyDelegateAROS.h	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/WebKit/OrigynWebBrowser/Api/AROS/PolicyDelegateAROS.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/PolicyDelegateAROS.h OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/PolicyDelegateAROS.h
+--- OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/PolicyDelegateAROS.h	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/PolicyDelegateAROS.h	2012-10-31 09:26:56.570284623 +0100
 @@ -0,0 +1,87 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -10760,9 +10760,9 @@ diff -urN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/PolicyDelegateAROS.h OWB-r1
 +};
 +
 +#endif // PolicyDelegateAROS_h
-diff -urN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebPreferencesZune.cpp OWB-r1097.new/WebKit/OrigynWebBrowser/Api/AROS/WebPreferencesZune.cpp
---- OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebPreferencesZune.cpp	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/WebKit/OrigynWebBrowser/Api/AROS/WebPreferencesZune.cpp	2012-10-27 14:38:55.000000000 -0400
+diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebPreferencesZune.cpp OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/WebPreferencesZune.cpp
+--- OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebPreferencesZune.cpp	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/WebPreferencesZune.cpp	2012-10-31 09:26:56.574284623 +0100
 @@ -0,0 +1,363 @@
 +#include "config.h"
 +#include "Settings.h"
@@ -11127,9 +11127,9 @@ diff -urN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebPreferencesZune.cpp OWB-
 +    OM_GET, struct opGet*,
 +    OM_SET, struct opSet*
 +)
-diff -urN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebPreferencesZune.h OWB-r1097.new/WebKit/OrigynWebBrowser/Api/AROS/WebPreferencesZune.h
---- OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebPreferencesZune.h	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/WebKit/OrigynWebBrowser/Api/AROS/WebPreferencesZune.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebPreferencesZune.h OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/WebPreferencesZune.h
+--- OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebPreferencesZune.h	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/WebPreferencesZune.h	2012-10-31 09:26:56.574284623 +0100
 @@ -0,0 +1,60 @@
 +#ifndef _WEBPREFERENCESZUNE_H
 +#define _WEBPREFERENCESZUNE_H
@@ -11191,9 +11191,9 @@ diff -urN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebPreferencesZune.h OWB-r1
 +#define WebPreferencesObject BOOPSIOBJMACRO_START(WebPreferences_CLASS->mcc_Class)
 +
 +#endif
-diff -urN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebPreferencesZune_private.h OWB-r1097.new/WebKit/OrigynWebBrowser/Api/AROS/WebPreferencesZune_private.h
---- OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebPreferencesZune_private.h	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/WebKit/OrigynWebBrowser/Api/AROS/WebPreferencesZune_private.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebPreferencesZune_private.h OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/WebPreferencesZune_private.h
+--- OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebPreferencesZune_private.h	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/WebPreferencesZune_private.h	2012-10-31 09:26:56.574284623 +0100
 @@ -0,0 +1,11 @@
 +#ifndef _WEBPREFERENCESZUNEZUNE_PRIVATE_H
 +#define _WEBPREFERENCESZUNEZUNE_PRIVATE_H
@@ -11206,9 +11206,9 @@ diff -urN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebPreferencesZune_private.
 +};
 +
 +#endif
-diff -urN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebViewPrivate.cpp OWB-r1097.new/WebKit/OrigynWebBrowser/Api/AROS/WebViewPrivate.cpp
---- OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebViewPrivate.cpp	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/WebKit/OrigynWebBrowser/Api/AROS/WebViewPrivate.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebViewPrivate.cpp OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/WebViewPrivate.cpp
+--- OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebViewPrivate.cpp	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/WebViewPrivate.cpp	2012-10-31 09:26:56.574284623 +0100
 @@ -0,0 +1,482 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -11692,9 +11692,9 @@ diff -urN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebViewPrivate.cpp OWB-r109
 +    }
 +}
 +
-diff -urN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebViewPrivate.h OWB-r1097.new/WebKit/OrigynWebBrowser/Api/AROS/WebViewPrivate.h
---- OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebViewPrivate.h	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/WebKit/OrigynWebBrowser/Api/AROS/WebViewPrivate.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebViewPrivate.h OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/WebViewPrivate.h
+--- OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebViewPrivate.h	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/WebViewPrivate.h	2012-10-31 09:26:56.574284623 +0100
 @@ -0,0 +1,146 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -11842,9 +11842,9 @@ diff -urN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebViewPrivate.h OWB-r1097.
 +
 +
 +#endif
-diff -urN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebViewZune.cpp OWB-r1097.new/WebKit/OrigynWebBrowser/Api/AROS/WebViewZune.cpp
---- OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebViewZune.cpp	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/WebKit/OrigynWebBrowser/Api/AROS/WebViewZune.cpp	2012-10-27 14:38:03.000000000 -0400
+diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebViewZune.cpp OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/WebViewZune.cpp
+--- OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebViewZune.cpp	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/WebViewZune.cpp	2012-10-31 09:26:56.574284623 +0100
 @@ -0,0 +1,1089 @@
 +#define MUIMASTER_YES_INLINE_STDARG
 +
@@ -12935,9 +12935,9 @@ diff -urN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebViewZune.cpp OWB-r1097.n
 +
 +ADD2INIT(SDL_Startup, -1);
 +ADD2EXIT(SDL_Shutdown, -1);
-diff -urN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebViewZune.h OWB-r1097.new/WebKit/OrigynWebBrowser/Api/AROS/WebViewZune.h
---- OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebViewZune.h	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/WebKit/OrigynWebBrowser/Api/AROS/WebViewZune.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebViewZune.h OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/WebViewZune.h
+--- OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebViewZune.h	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/WebViewZune.h	2012-10-31 09:26:56.574284623 +0100
 @@ -0,0 +1,106 @@
 +#ifndef _BROWSER_H
 +#define _BROWSER_H
@@ -13045,9 +13045,9 @@ diff -urN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebViewZune.h OWB-r1097.new
 +#define WebViewObject BOOPSIOBJMACRO_START(WebView_CLASS->mcc_Class)
 +
 +#endif /* _BROWSER_H */
-diff -urN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebViewZune_private.h OWB-r1097.new/WebKit/OrigynWebBrowser/Api/AROS/WebViewZune_private.h
---- OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebViewZune_private.h	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/WebKit/OrigynWebBrowser/Api/AROS/WebViewZune_private.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebViewZune_private.h OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/WebViewZune_private.h
+--- OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebViewZune_private.h	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/WebViewZune_private.h	2012-10-31 09:26:56.578284623 +0100
 @@ -0,0 +1,41 @@
 +#ifndef _WEBVIEW_PRIVATE_H_
 +#define _WEBVIEW_PRIVATE_H_
@@ -13090,9 +13090,9 @@ diff -urN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebViewZune_private.h OWB-r
 +};
 +
 +#endif /* _WEBVIEW_PRIVATE_H_ */
-diff -urN OWB-r1097/WebKit/OrigynWebBrowser/Api/DefaultPolicyDelegate.h OWB-r1097.new/WebKit/OrigynWebBrowser/Api/DefaultPolicyDelegate.h
---- OWB-r1097/WebKit/OrigynWebBrowser/Api/DefaultPolicyDelegate.h	2008-12-12 04:10:48.000000000 -0500
-+++ OWB-r1097.new/WebKit/OrigynWebBrowser/Api/DefaultPolicyDelegate.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/DefaultPolicyDelegate.h OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/DefaultPolicyDelegate.h
+--- OWB-r1097/WebKit/OrigynWebBrowser/Api/DefaultPolicyDelegate.h	2008-12-12 10:10:48.000000000 +0100
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/DefaultPolicyDelegate.h	2012-10-31 09:26:56.578284623 +0100
 @@ -78,7 +78,7 @@
       * @endcode
       */
@@ -13102,9 +13102,9 @@ diff -urN OWB-r1097/WebKit/OrigynWebBrowser/Api/DefaultPolicyDelegate.h OWB-r109
  
      /**
       * DefaultPolicyDelegate default constructor
-diff -urN OWB-r1097/WebKit/OrigynWebBrowser/Api/WebDownload.cpp OWB-r1097.new/WebKit/OrigynWebBrowser/Api/WebDownload.cpp
---- OWB-r1097/WebKit/OrigynWebBrowser/Api/WebDownload.cpp	2009-08-10 11:04:47.000000000 -0400
-+++ OWB-r1097.new/WebKit/OrigynWebBrowser/Api/WebDownload.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/WebDownload.cpp OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/WebDownload.cpp
+--- OWB-r1097/WebKit/OrigynWebBrowser/Api/WebDownload.cpp	2009-08-10 17:04:47.000000000 +0200
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/WebDownload.cpp	2012-10-31 09:26:56.578284623 +0100
 @@ -100,7 +100,7 @@
      WebCore::String suggestedFilename = webResponse->suggestedFilename();
      if(suggestedFilename.length() == 0)
@@ -13122,9 +13122,9 @@ diff -urN OWB-r1097/WebKit/OrigynWebBrowser/Api/WebDownload.cpp OWB-r1097.new/We
  
      m_priv->downloadClient = new DownloadClient(this);
      m_priv->currentSize = 0;
-diff -urN OWB-r1097/WebKit/OrigynWebBrowser/Api/WebFrame.cpp OWB-r1097.new/WebKit/OrigynWebBrowser/Api/WebFrame.cpp
---- OWB-r1097/WebKit/OrigynWebBrowser/Api/WebFrame.cpp	2009-10-07 11:28:50.000000000 -0400
-+++ OWB-r1097.new/WebKit/OrigynWebBrowser/Api/WebFrame.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/WebFrame.cpp OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/WebFrame.cpp
+--- OWB-r1097/WebKit/OrigynWebBrowser/Api/WebFrame.cpp	2009-10-07 17:28:50.000000000 +0200
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/WebFrame.cpp	2012-10-31 09:26:56.586284624 +0100
 @@ -31,6 +31,7 @@
  
  #include "DefaultPolicyDelegate.h"
@@ -13210,9 +13210,9 @@ diff -urN OWB-r1097/WebKit/OrigynWebBrowser/Api/WebFrame.cpp OWB-r1097.new/WebKi
  
  /*static IntRect printerRect(HDC printDC)
  {
-diff -urN OWB-r1097/WebKit/OrigynWebBrowser/Api/WebFrame.h OWB-r1097.new/WebKit/OrigynWebBrowser/Api/WebFrame.h
---- OWB-r1097/WebKit/OrigynWebBrowser/Api/WebFrame.h	2009-10-02 09:41:19.000000000 -0400
-+++ OWB-r1097.new/WebKit/OrigynWebBrowser/Api/WebFrame.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/WebFrame.h OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/WebFrame.h
+--- OWB-r1097/WebKit/OrigynWebBrowser/Api/WebFrame.h	2009-10-02 15:41:19.000000000 +0200
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/WebFrame.h	2012-10-31 09:26:56.590284624 +0100
 @@ -494,10 +494,8 @@
  
      /**
@@ -13225,9 +13225,9 @@ diff -urN OWB-r1097/WebKit/OrigynWebBrowser/Api/WebFrame.h OWB-r1097.new/WebKit/
  
      /**
       * Get the frame url
-diff -urN OWB-r1097/WebKit/OrigynWebBrowser/Api/WebURLAuthenticationChallenge.cpp OWB-r1097.new/WebKit/OrigynWebBrowser/Api/WebURLAuthenticationChallenge.cpp
---- OWB-r1097/WebKit/OrigynWebBrowser/Api/WebURLAuthenticationChallenge.cpp	2009-02-27 12:11:08.000000000 -0500
-+++ OWB-r1097.new/WebKit/OrigynWebBrowser/Api/WebURLAuthenticationChallenge.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/WebURLAuthenticationChallenge.cpp OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/WebURLAuthenticationChallenge.cpp
+--- OWB-r1097/WebKit/OrigynWebBrowser/Api/WebURLAuthenticationChallenge.cpp	2009-02-27 18:11:08.000000000 +0100
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/WebURLAuthenticationChallenge.cpp	2012-10-31 09:26:56.590284624 +0100
 @@ -65,12 +65,7 @@
  
  void WebURLAuthenticationChallenge::initWithProtectionSpace(WebURLProtectionSpace* space, WebURLCredential* proposedCredential, int previousFailureCount, WebURLResponse* failureResponse, WebError* error, WebURLAuthenticationChallengeSender* sender)
@@ -13242,9 +13242,9 @@ diff -urN OWB-r1097/WebKit/OrigynWebBrowser/Api/WebURLAuthenticationChallenge.cp
  }
  
  void WebURLAuthenticationChallenge::initWithAuthenticationChallenge(WebURLAuthenticationChallenge* challenge, WebURLAuthenticationChallengeSender* sender)
-diff -urN OWB-r1097/WebKit/OrigynWebBrowser/Api/WebView.cpp OWB-r1097.new/WebKit/OrigynWebBrowser/Api/WebView.cpp
---- OWB-r1097/WebKit/OrigynWebBrowser/Api/WebView.cpp	2009-10-16 14:40:05.000000000 -0400
-+++ OWB-r1097.new/WebKit/OrigynWebBrowser/Api/WebView.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/WebView.cpp OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/WebView.cpp
+--- OWB-r1097/WebKit/OrigynWebBrowser/Api/WebView.cpp	2009-10-16 20:40:05.000000000 +0200
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/WebView.cpp	2012-10-31 11:04:25.494567695 +0100
 @@ -128,6 +128,18 @@
  #include <proto/intuition.h>
  #include <proto/layout.h>
@@ -13311,7 +13311,7 @@ diff -urN OWB-r1097/WebKit/OrigynWebBrowser/Api/WebView.cpp OWB-r1097.new/WebKit
 +    return "Mozilla/5.0 (compatible; Origyn Web Browser; AROS; x86_64; U) AppleWebKit/525.1+ (KHTML, like Gecko, Safari/525.1+)";
 +#elif __i386__
 +    return "Mozilla/5.0 (compatible; Origyn Web Browser; AROS; i686; U) AppleWebKit/525.1+ (KHTML, like Gecko, Safari/525.1+)";
-+#elif __powerpc__ || __ppc__
++#elif defined(__powerpc__) || defined(__ppc__)
 +    return "Mozilla/5.0 (compatible; Origyn Web Browser; AROS; ppc; U) AppleWebKit/525.1+ (KHTML, like Gecko, Safari/525.1+)";
 +#elif __arm__
 +    return "Mozilla/5.0 (compatible; Origyn Web Browser; AROS; arm; U) AppleWebKit/525.1+ (KHTML, like Gecko, Safari/525.1+)";
@@ -13431,9 +13431,9 @@ diff -urN OWB-r1097/WebKit/OrigynWebBrowser/Api/WebView.cpp OWB-r1097.new/WebKit
      if (!node)
          return false;
  
-diff -urN OWB-r1097/WebKit/OrigynWebBrowser/Api/WebView.h OWB-r1097.new/WebKit/OrigynWebBrowser/Api/WebView.h
---- OWB-r1097/WebKit/OrigynWebBrowser/Api/WebView.h	2009-10-16 14:40:05.000000000 -0400
-+++ OWB-r1097.new/WebKit/OrigynWebBrowser/Api/WebView.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/WebView.h OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/WebView.h
+--- OWB-r1097/WebKit/OrigynWebBrowser/Api/WebView.h	2009-10-16 20:40:05.000000000 +0200
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/WebView.h	2012-10-31 09:26:56.590284624 +0100
 @@ -40,6 +40,7 @@
   */
  #include "WebKitTypes.h"
@@ -13451,9 +13451,9 @@ diff -urN OWB-r1097/WebKit/OrigynWebBrowser/Api/WebView.h OWB-r1097.new/WebKit/O
  
      /**
       *  clearDirtyRegion 
-diff -urN OWB-r1097/WebKit/OrigynWebBrowser/CMakeLists.txt OWB-r1097.new/WebKit/OrigynWebBrowser/CMakeLists.txt
---- OWB-r1097/WebKit/OrigynWebBrowser/CMakeLists.txt	2009-09-15 04:59:14.000000000 -0400
-+++ OWB-r1097.new/WebKit/OrigynWebBrowser/CMakeLists.txt	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/CMakeLists.txt OWB-r1097.aros/WebKit/OrigynWebBrowser/CMakeLists.txt
+--- OWB-r1097/WebKit/OrigynWebBrowser/CMakeLists.txt	2009-09-15 10:59:14.000000000 +0200
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/CMakeLists.txt	2012-10-31 09:26:56.594284624 +0100
 @@ -39,6 +39,20 @@
      )
  endif(USE_GRAPHICS_SDL)
@@ -13492,9 +13492,9 @@ diff -urN OWB-r1097/WebKit/OrigynWebBrowser/CMakeLists.txt OWB-r1097.new/WebKit/
      )
  ENDIF(NOT WIN32)
  
-diff -urN OWB-r1097/WebKit/OrigynWebBrowser/WebCoreSupport/WebChromeClient.cpp OWB-r1097.new/WebKit/OrigynWebBrowser/WebCoreSupport/WebChromeClient.cpp
---- OWB-r1097/WebKit/OrigynWebBrowser/WebCoreSupport/WebChromeClient.cpp	2009-10-16 14:40:05.000000000 -0400
-+++ OWB-r1097.new/WebKit/OrigynWebBrowser/WebCoreSupport/WebChromeClient.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/WebCoreSupport/WebChromeClient.cpp OWB-r1097.aros/WebKit/OrigynWebBrowser/WebCoreSupport/WebChromeClient.cpp
+--- OWB-r1097/WebKit/OrigynWebBrowser/WebCoreSupport/WebChromeClient.cpp	2009-10-16 20:40:05.000000000 +0200
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/WebCoreSupport/WebChromeClient.cpp	2012-10-31 09:26:56.594284624 +0100
 @@ -61,9 +61,21 @@
  #include <intuition/gadgetclass.h>
  #include <reaction/reaction_macros.h>
@@ -13683,9 +13683,9 @@ diff -urN OWB-r1097/WebKit/OrigynWebBrowser/WebCoreSupport/WebChromeClient.cpp O
  }
  
  bool WebChromeClient::setCursor(WebCore::PlatformCursorHandle cursor)
-diff -urN OWB-r1097/WebKit/OrigynWebBrowser/WebCoreSupport/WebChromeClient.h OWB-r1097.new/WebKit/OrigynWebBrowser/WebCoreSupport/WebChromeClient.h
---- OWB-r1097/WebKit/OrigynWebBrowser/WebCoreSupport/WebChromeClient.h	2009-10-14 09:25:22.000000000 -0400
-+++ OWB-r1097.new/WebKit/OrigynWebBrowser/WebCoreSupport/WebChromeClient.h	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/WebCoreSupport/WebChromeClient.h OWB-r1097.aros/WebKit/OrigynWebBrowser/WebCoreSupport/WebChromeClient.h
+--- OWB-r1097/WebKit/OrigynWebBrowser/WebCoreSupport/WebChromeClient.h	2009-10-14 15:25:22.000000000 +0200
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/WebCoreSupport/WebChromeClient.h	2012-10-31 09:26:56.602284625 +0100
 @@ -62,6 +62,7 @@
      virtual void takeFocus(WebCore::FocusDirection);
  
@@ -13694,9 +13694,9 @@ diff -urN OWB-r1097/WebKit/OrigynWebBrowser/WebCoreSupport/WebChromeClient.h OWB
      virtual void show();
  
      virtual bool canRunModal();
-diff -urN OWB-r1097/WebKit/OrigynWebBrowser/WebCoreSupport/WebFrameLoaderClient.cpp OWB-r1097.new/WebKit/OrigynWebBrowser/WebCoreSupport/WebFrameLoaderClient.cpp
---- OWB-r1097/WebKit/OrigynWebBrowser/WebCoreSupport/WebFrameLoaderClient.cpp	2009-10-16 14:40:05.000000000 -0400
-+++ OWB-r1097.new/WebKit/OrigynWebBrowser/WebCoreSupport/WebFrameLoaderClient.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/WebCoreSupport/WebFrameLoaderClient.cpp OWB-r1097.aros/WebKit/OrigynWebBrowser/WebCoreSupport/WebFrameLoaderClient.cpp
+--- OWB-r1097/WebKit/OrigynWebBrowser/WebCoreSupport/WebFrameLoaderClient.cpp	2009-10-16 20:40:05.000000000 +0200
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/WebCoreSupport/WebFrameLoaderClient.cpp	2012-10-31 09:26:56.606284625 +0100
 @@ -90,6 +90,13 @@
  #include <proto/layout.h>
  #include <gadgets/clicktab.h>
@@ -13772,11 +13772,11 @@ diff -urN OWB-r1097/WebKit/OrigynWebBrowser/WebCoreSupport/WebFrameLoaderClient.
  #else
      /*WebView* webView = m_webFrame->webView();
  
-diff -urN OWB-r1097/WebKit/OrigynWebBrowser/webkit-owb.pc OWB-r1097.new/WebKit/OrigynWebBrowser/webkit-owb.pc
---- OWB-r1097/WebKit/OrigynWebBrowser/webkit-owb.pc	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/WebKit/OrigynWebBrowser/webkit-owb.pc	2012-10-26 11:02:07.000000000 -0400
+diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/webkit-owb.pc OWB-r1097.aros/WebKit/OrigynWebBrowser/webkit-owb.pc
+--- OWB-r1097/WebKit/OrigynWebBrowser/webkit-owb.pc	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/webkit-owb.pc	2012-10-31 09:27:03.302284949 +0100
 @@ -0,0 +1,11 @@
-+prefix=/home/jmcmullan/private/AROS.amiga-m68k/bin/amiga-m68k/AROS/Development
++prefix=/home/weissms/media/data/aros/build/sam440-ppc/bin/sam440-ppc/AROS/Development
 +exec_prefix=${prefix}
 +libdir=${prefix}/lib
 +includedir=${prefix}/include
@@ -13787,9 +13787,9 @@ diff -urN OWB-r1097/WebKit/OrigynWebBrowser/webkit-owb.pc OWB-r1097.new/WebKit/O
 +Requires: sdl >= 1.2.10
 +Libs: -L${libdir} -lwebkit-owb
 +Cflags: -DWTF_PLATFORM_AROS -I${includedir}/webkit-owb
-diff -urN OWB-r1097/WebKitTools/OWBLauncher/AROS/main.cpp OWB-r1097.new/WebKitTools/OWBLauncher/AROS/main.cpp
---- OWB-r1097/WebKitTools/OWBLauncher/AROS/main.cpp	1969-12-31 19:00:00.000000000 -0500
-+++ OWB-r1097.new/WebKitTools/OWBLauncher/AROS/main.cpp	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/WebKitTools/OWBLauncher/AROS/main.cpp OWB-r1097.aros/WebKitTools/OWBLauncher/AROS/main.cpp
+--- OWB-r1097/WebKitTools/OWBLauncher/AROS/main.cpp	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/WebKitTools/OWBLauncher/AROS/main.cpp	2012-10-31 09:26:56.614284625 +0100
 @@ -0,0 +1,116 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -13907,9 +13907,9 @@ diff -urN OWB-r1097/WebKitTools/OWBLauncher/AROS/main.cpp OWB-r1097.new/WebKitTo
 +
 +    return 0;
 +}
-diff -urN OWB-r1097/WebKitTools/OWBLauncher/CMakeLists.txt OWB-r1097.new/WebKitTools/OWBLauncher/CMakeLists.txt
---- OWB-r1097/WebKitTools/OWBLauncher/CMakeLists.txt	2009-10-06 04:13:04.000000000 -0400
-+++ OWB-r1097.new/WebKitTools/OWBLauncher/CMakeLists.txt	2012-10-26 11:00:09.000000000 -0400
+diff -ruN OWB-r1097/WebKitTools/OWBLauncher/CMakeLists.txt OWB-r1097.aros/WebKitTools/OWBLauncher/CMakeLists.txt
+--- OWB-r1097/WebKitTools/OWBLauncher/CMakeLists.txt	2009-10-06 10:13:04.000000000 +0200
++++ OWB-r1097.aros/WebKitTools/OWBLauncher/CMakeLists.txt	2012-10-31 09:26:56.622284626 +0100
 @@ -43,13 +43,20 @@
      add_executable(owb EXCLUDE_FROM_ALL SDL/main.cpp)
  endif(USE_GRAPHICS_SDL)

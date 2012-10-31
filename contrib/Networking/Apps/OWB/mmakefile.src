@@ -1,4 +1,4 @@
-# Copyright © 2009-2011, The AROS Development Team. All rights reserved.
+# Copyright © 2009-2012, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(TOP)/config/make.cfg
@@ -30,7 +30,9 @@ FILES :=               \
 
 #MM- aros-tcpip-apps-startowb : contrib-fontconfig
 
-#MM- aros-tcpip-apps-owb : workbench-libs-thread         \
+#MM- aros-tcpip-apps-owb : workbench-libs-jpeg           \
+#MM                        workbench-libs-png            \
+#MM                        workbench-libs-thread         \
 #MM                        aros-tcpip-apps-owb-webview   \
 #MM                        aros-tcpip-apps-owb-icon      \
 #MM                        aros-tcpip-apps-owb-catalogs  \
