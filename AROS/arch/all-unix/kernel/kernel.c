@@ -127,6 +127,12 @@ GLOBAL_SIGNAL_INIT(core_TrapHandler)
 GLOBAL_SIGNAL_INIT(core_SysCall)
 GLOBAL_SIGNAL_INIT(core_IRQ)
 
+static const char *kernel_rt_functions[] =
+{
+        "clock_gettime",
+        NULL
+};
+
 /* libc functions that we use */
 static const char *kernel_functions[] =
 {
@@ -177,6 +183,7 @@ int core_Start(void *libc)
     const struct SignalTranslation *s;
     sigset_t tmp_mask;
     ULONG r;
+    void *rt_handle;
 
     /* We have hostlib.resource. Obtain the complete set of needed functions. */
     HostLibBase = OpenResource("hostlib.resource");
@@ -184,6 +191,20 @@ int core_Start(void *libc)
     {
     	krnPanic(KernelBase, "Failed to open hostlib.resource");
     	return FALSE;
+    }
+
+    rt_handle = HostLib_Open("librt.so.1", NULL);
+    if (!rt_handle)
+    {
+        krnPanic(KernelBase, "Failed to open librt");
+        return FALSE;
+    }
+
+    pd->rt = (struct KernelRTInterface *)HostLib_GetInterface(rt_handle, kernel_rt_functions, &r);
+    if (!pd->rt)
+    {
+        krnPanic(KernelBase, "Failed to allocate host-side librt interface");
+        return FALSE;
     }
 
     pd->iface = (struct KernelInterface *)HostLib_GetInterface(libc, kernel_functions, &r);

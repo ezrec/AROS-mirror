@@ -49,6 +49,11 @@ struct KernelInterface
 #endif
 };
 
+struct KernelRTInterface
+{
+    int     (*clock_gettime)(int id, void *data);
+};
+
 /*
  * Android's Bionic doesn't have these functions.
  * They are simply inlined in headers.
@@ -67,9 +72,10 @@ struct KernelInterface
 
 struct PlatformData
 {
-    sigset_t		    sig_int_mask;   /* Mask of signals that Disable() block */
-    int			   *errnoPtr;
-    struct KernelInterface *iface;
+    sigset_t                    sig_int_mask;   /* Mask of signals that Disable() block */
+    int                         *errnoPtr;
+    struct KernelInterface      *iface;
+    struct KernelRTInterface    *rt;
 };
 
 struct SignalTranslation
