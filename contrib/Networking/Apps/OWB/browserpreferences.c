@@ -3,6 +3,11 @@
     $Id$
 */
 
+/* Process this class after all the base
+ * custom classes have been created
+ */
+#define ZUNE_CUSTOMCLASS_PASS   101
+
 #include <proto/alib.h>
 #include <proto/exec.h>
 #include <proto/muimaster.h>
