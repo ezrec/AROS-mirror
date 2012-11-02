@@ -117,7 +117,7 @@ static IPTR CloseWindowFunc(struct Hook *hook, Object *app, Object **win)
     DoMethod(*win, MUIA_Window_Open, FALSE);
     DoMethod(app, OM_REMMEMBER, *win);
     MUI_DisposeObject(*win);
-    return NULL;
+    return (IPTR)NULL;
 }
 
 static IPTR SynthetizeKeyboardEventFunc(struct Hook *hook, Object *app, IPTR *data)
@@ -128,13 +128,13 @@ static IPTR SynthetizeKeyboardEventFunc(struct Hook *hook, Object *app, IPTR *da
     struct MsgPort *inputMP;
     struct InputEvent *fakeEvent;
 
-    if (inputMP = CreateMsgPort())
+    if ((inputMP = CreateMsgPort()))
     {
-        if (fakeEvent = AllocMem(sizeof(struct InputEvent), MEMF_PUBLIC | MEMF_CLEAR))
+        if ((fakeEvent = AllocMem(sizeof(struct InputEvent), MEMF_PUBLIC | MEMF_CLEAR)))
         {
-            if (inputIO = CreateIORequest(inputMP, sizeof(struct IOStdReq)))
+            if ((inputIO = CreateIORequest(inputMP, sizeof(struct IOStdReq))))
             {
-                if (!OpenDevice("input.device",NULL, (struct IORequest *) inputIO, NULL))
+                if (!OpenDevice("input.device", 0, (struct IORequest *) inputIO, 0))
                 {
 		    /* Set up InputEvent fields */
 		    fakeEvent->ie_Class = IECLASS_RAWKEY;
@@ -192,104 +192,104 @@ IPTR BrowserApp__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
     self = (Object *) DoSuperNewTags
     (
         CLASS, self, NULL,
-        MUIA_Application_Title, "Origyn Web Browser",
-        MUIA_Application_Version, "$VER: OWB " OWB_VERSION " (" OWB_RELEASE_DATE ")",
-        MUIA_Application_Author, "Stanislaw Szymczyk",
-        MUIA_Application_Copyright, "Copyright © 2009, The AROS Development Team. All rights reserved.",
-        MUIA_Application_Description, "Port of Origyn Web Browser to AROS",
-        MUIA_Application_Base, "OWB",
-        MUIA_Application_Menustrip, mainMenustrip = MenustripObject,
-	    MUIA_Family_Child, fileMenu = MenuObject,
-		MUIA_Menu_Title, _(MSG_MainMenu_File),
-		MUIA_Family_Child, openTabMenuItem = MenuitemObject,
-		    MUIA_Menuitem_Title, _(MSG_MainMenu_OpenNewTab),
-		    End,
-		MUIA_Family_Child, openWindowMenuItem = MenuitemObject,
-		    MUIA_Menuitem_Title, _(MSG_MainMenu_OpenNewWindow),
-		    End,
-		MUIA_Family_Child, openFileMenuItem = MenuitemObject,
-		    MUIA_Menuitem_Title, _(MSG_MainMenu_OpenFile),
-		    End,
-		MUIA_Family_Child, closeTabMenuItem = MenuitemObject,
-		    MUIA_Menuitem_Title, _(MSG_MainMenu_CloseCurrentTab),
-		    End,
-		MUIA_Family_Child, closeWindowMenuItem = MenuitemObject,
-		    MUIA_Menuitem_Title, _(MSG_MainMenu_CloseWindow),
-		    End,
-		MUIA_Family_Child, MenuitemObject,
-		    MUIA_Menuitem_Title, NM_BARLABEL,
-		    End,
-		MUIA_Family_Child, quitMenuItem = MenuitemObject,
-		    MUIA_Menuitem_Title, _(MSG_MainMenu_Quit),
-		    End,
-		End,
-	    MUIA_Family_Child, MenuObject,
-		MUIA_Menu_Title, _(MSG_MainMenu_Edit),
-		MUIA_Family_Child, findMenuItem = MenuitemObject,
-		    MUIA_Menuitem_Title, _(MSG_MainMenu_Find),
-		    End,
-		MUIA_Family_Child, findNextMenuItem = MenuitemObject,
-		    MUIA_Menuitem_Title, _(MSG_MainMenu_FindNext),
-		    End,
-		MUIA_Family_Child, MenuitemObject,
-		    MUIA_Menuitem_Title, NM_BARLABEL,
-		    End,
-		MUIA_Family_Child, cutMenuItem = MenuitemObject,
-		    MUIA_Menuitem_Title, _(MSG_MainMenu_Cut),
-		    End,
-		MUIA_Family_Child, copyMenuItem = MenuitemObject,
-		    MUIA_Menuitem_Title, _(MSG_MainMenu_Copy),
-		    End,
-		MUIA_Family_Child, pasteMenuItem = MenuitemObject,
-		    MUIA_Menuitem_Title, _(MSG_MainMenu_Paste),
-		    End,
-		MUIA_Family_Child, MenuitemObject,
-		    MUIA_Menuitem_Title, NM_BARLABEL,
-		    End,
-	        MUIA_Family_Child, preferencesManagerMenuItem = MenuitemObject,
-		    MUIA_Menuitem_Title, _(MSG_MainMenu_Preferences),
-		    End,
-		End,
-	    MUIA_Family_Child, MenuObject,
-		MUIA_Menu_Title, _(MSG_MainMenu_View),
-		MUIA_Family_Child, zoomInMenuItem = MenuitemObject,
-		    MUIA_Menuitem_Title, _(MSG_MainMenu_ZoomIn),
-		    End,
-		MUIA_Family_Child, zoomOutMenuItem = MenuitemObject,
-		    MUIA_Menuitem_Title, _(MSG_MainMenu_ZoomOut),
-		    End,
-		MUIA_Family_Child, zoomResetMenuItem = MenuitemObject,
-		    MUIA_Menuitem_Title, _(MSG_MainMenu_ZoomReset),
-		    End,
-		MUIA_Family_Child, MenuitemObject,
-		    MUIA_Menuitem_Title, NM_BARLABEL,
-		    End,
-		MUIA_Family_Child, viewSourceMenuItem = MenuitemObject,
-		    MUIA_Menuitem_Title, _(MSG_MainMenu_ViewSource),
-		    End,
-		End,
-	    MUIA_Family_Child, MenuObject,
-		MUIA_Menu_Title, _(MSG_MainMenu_Tools),
-		MUIA_Family_Child, bookmarkManagerMenuItem = MenuitemObject,
-		    MUIA_Menuitem_Title, _(MSG_MainMenu_BookmarkManager),
-		    End,
-		MUIA_Family_Child, downloadManagerMenuItem = MenuitemObject,
-		    MUIA_Menuitem_Title, _(MSG_MainMenu_DownloadManager),
-		    End,
-		End,
-            End,
-        SubWindow, downloadManager = NewObject(DownloadManager_CLASS->mcc_Class, NULL, 
+        MUIA_Application_Title, (IPTR)"Origyn Web Browser",
+        MUIA_Application_Version, (IPTR)"$VER: OWB " OWB_VERSION " (" OWB_RELEASE_DATE ")",
+        MUIA_Application_Author, (IPTR)"Stanislaw Szymczyk",
+        MUIA_Application_Copyright, (IPTR)"Copyright © 2009, The AROS Development Team. All rights reserved.",
+        MUIA_Application_Description, (IPTR)"Port of Origyn Web Browser to AROS",
+        MUIA_Application_Base, (IPTR)"OWB",
+        MUIA_Application_Menustrip, (IPTR)(mainMenustrip = MenustripObject,
+	    MUIA_Family_Child, (IPTR)(fileMenu = MenuObject,
+		MUIA_Menu_Title, (IPTR)_(MSG_MainMenu_File),
+		MUIA_Family_Child, (IPTR)(openTabMenuItem = MenuitemObject,
+		    MUIA_Menuitem_Title, (IPTR)_(MSG_MainMenu_OpenNewTab),
+		    End),
+		MUIA_Family_Child, (IPTR)(openWindowMenuItem = MenuitemObject,
+		    MUIA_Menuitem_Title, (IPTR)_(MSG_MainMenu_OpenNewWindow),
+		    End),
+		MUIA_Family_Child, (IPTR)(openFileMenuItem = MenuitemObject,
+		    MUIA_Menuitem_Title, (IPTR)_(MSG_MainMenu_OpenFile),
+		    End),
+		MUIA_Family_Child, (IPTR)(closeTabMenuItem = MenuitemObject,
+		    MUIA_Menuitem_Title, (IPTR)_(MSG_MainMenu_CloseCurrentTab),
+		    End),
+		MUIA_Family_Child, (IPTR)(closeWindowMenuItem = MenuitemObject,
+		    MUIA_Menuitem_Title, (IPTR)_(MSG_MainMenu_CloseWindow),
+		    End),
+		MUIA_Family_Child, (IPTR)(MenuitemObject,
+		    MUIA_Menuitem_Title, (IPTR)NM_BARLABEL,
+		    End),
+		MUIA_Family_Child, (IPTR)(quitMenuItem = MenuitemObject,
+		    MUIA_Menuitem_Title, (IPTR)_(MSG_MainMenu_Quit),
+		    End),
+		End),
+	    MUIA_Family_Child, (IPTR)(MenuObject,
+		MUIA_Menu_Title, (IPTR)_(MSG_MainMenu_Edit),
+		MUIA_Family_Child, (IPTR)(findMenuItem = MenuitemObject,
+		    MUIA_Menuitem_Title, (IPTR)_(MSG_MainMenu_Find),
+		    End),
+		MUIA_Family_Child, (IPTR)(findNextMenuItem = MenuitemObject,
+		    MUIA_Menuitem_Title, (IPTR)_(MSG_MainMenu_FindNext),
+		    End),
+		MUIA_Family_Child, (IPTR)(MenuitemObject,
+		    MUIA_Menuitem_Title, (IPTR)NM_BARLABEL,
+		    End),
+		MUIA_Family_Child, (IPTR)(cutMenuItem = MenuitemObject,
+		    MUIA_Menuitem_Title, (IPTR)_(MSG_MainMenu_Cut),
+		    End),
+		MUIA_Family_Child, (IPTR)(copyMenuItem = MenuitemObject,
+		    MUIA_Menuitem_Title, (IPTR)_(MSG_MainMenu_Copy),
+		    End),
+		MUIA_Family_Child, (IPTR)(pasteMenuItem = MenuitemObject,
+		    MUIA_Menuitem_Title, (IPTR)_(MSG_MainMenu_Paste),
+		    End),
+		MUIA_Family_Child, (IPTR)(MenuitemObject,
+		    MUIA_Menuitem_Title, (IPTR)NM_BARLABEL,
+		    End),
+	        MUIA_Family_Child, (IPTR)(preferencesManagerMenuItem = MenuitemObject,
+		    MUIA_Menuitem_Title, (IPTR)_(MSG_MainMenu_Preferences),
+		    End),
+		End),
+	    MUIA_Family_Child, (IPTR)(MenuObject,
+		MUIA_Menu_Title, (IPTR)_(MSG_MainMenu_View),
+		MUIA_Family_Child, (IPTR)(zoomInMenuItem = MenuitemObject,
+		    MUIA_Menuitem_Title, (IPTR)_(MSG_MainMenu_ZoomIn),
+		    End),
+		MUIA_Family_Child, (IPTR)(zoomOutMenuItem = MenuitemObject,
+		    MUIA_Menuitem_Title, (IPTR)_(MSG_MainMenu_ZoomOut),
+		    End),
+		MUIA_Family_Child, (IPTR)(zoomResetMenuItem = MenuitemObject,
+		    MUIA_Menuitem_Title, (IPTR)_(MSG_MainMenu_ZoomReset),
+		    End),
+		MUIA_Family_Child, (IPTR)(MenuitemObject,
+		    MUIA_Menuitem_Title, (IPTR)NM_BARLABEL,
+		    End),
+		MUIA_Family_Child, (IPTR)(viewSourceMenuItem = MenuitemObject,
+		    MUIA_Menuitem_Title, (IPTR)_(MSG_MainMenu_ViewSource),
+		    End),
+		End),
+	    MUIA_Family_Child, (IPTR)(MenuObject,
+		MUIA_Menu_Title, (IPTR)_(MSG_MainMenu_Tools),
+		MUIA_Family_Child, (IPTR)(bookmarkManagerMenuItem = MenuitemObject,
+		    MUIA_Menuitem_Title, (IPTR)_(MSG_MainMenu_BookmarkManager),
+		    End),
+		MUIA_Family_Child, (IPTR)(downloadManagerMenuItem = MenuitemObject,
+		    MUIA_Menuitem_Title, (IPTR)_(MSG_MainMenu_DownloadManager),
+		    End),
+		End),
+            End),
+        SubWindow, (IPTR)(downloadManager = NewObject(DownloadManager_CLASS->mcc_Class, NULL, 
 	    MUIA_Window_Width, MUIV_Window_AltWidth_Screen(50),
 	    MUIA_Window_Height, MUIV_Window_AltHeight_Screen(50),
-	    MUIA_DownloadManager_Preferences, preferences,
-            TAG_END),
-        SubWindow, preferencesManager = NewObject(PreferencesManager_CLASS->mcc_Class, NULL, 
-            MUIA_PreferencesManager_Preferences, preferences,
-            TAG_END),
-        SubWindow, bookmarkManager = NewObject(BookmarkManager_CLASS->mcc_Class, NULL, 
+	    MUIA_DownloadManager_Preferences, (IPTR)preferences,
+            TAG_END)),
+        SubWindow, (IPTR)(preferencesManager = NewObject(PreferencesManager_CLASS->mcc_Class, NULL, 
+            MUIA_PreferencesManager_Preferences, (IPTR)preferences,
+            TAG_END)),
+        SubWindow, (IPTR)(bookmarkManager = NewObject(BookmarkManager_CLASS->mcc_Class, NULL, 
 	    MUIA_Window_Width, MUIV_Window_AltWidth_Screen(50),
 	    MUIA_Window_Height, MUIV_Window_AltHeight_Screen(50),
-       	    TAG_END),
+       	    TAG_END)),
         TAG_MORE, (IPTR) message->ops_AttrList
     );
     
@@ -508,8 +508,6 @@ IPTR BrowserApp__OM_GET(Class *cl, Object *obj, struct opGet *msg)
 
 IPTR BrowserApp__MUIM_BrowserApp_OpenNewWindow(Class *cl, Object *app, struct MUIP_BrowserApp_OpenNewWindow *msg)
 {
-    struct BrowserApp_DATA *data = INST_DATA(cl, app);
-    
     Object* webView = NULL;
     Object* wnd = NULL;
     
@@ -548,9 +546,8 @@ IPTR BrowserApp__MUIM_BrowserApp_OpenNewWindow(Class *cl, Object *app, struct MU
     return (IPTR) webView;
 }
 
-IPTR BrowserApp__MUIM_BrowserApp_CloseActiveWindow(Class *cl, Object *obj, Msg *msg)
+IPTR BrowserApp__MUIM_BrowserApp_CloseActiveWindow(Class *cl, Object *obj, Msg msg)
 {
-    struct BrowserApp_DATA *data = INST_DATA(cl, obj);
     Object *win = getActiveWindow(obj);
     if(win)
     {

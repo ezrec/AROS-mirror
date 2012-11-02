@@ -39,8 +39,6 @@ IPTR forwardedAttributes[] =
 /*** Methods ****************************************************************/
 IPTR TabbedView__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
 {
-    struct TabbedView_DATA *data = NULL;
-    
     self = (Object *) DoSuperNewTags
     (
         CLASS, self, NULL,
@@ -49,8 +47,6 @@ IPTR TabbedView__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
     
     if (self == NULL)
 	return (IPTR) NULL;
-
-    data = INST_DATA(CLASS, self);
 
     /* Send notifications after changing active tab */
     DoMethod(self, MUIM_Notify, MUIA_Group_ActivePage, MUIV_EveryTime,
@@ -84,7 +80,6 @@ IPTR TabbedView__OM_DISPOSE(struct IClass *cl, Object *obj, Msg msg)
 
 IPTR TabbedView__OM_ADDMEMBER(Class *cl, Object *obj, struct opMember *msg)
 {
-    struct TabbedView_DATA *data = (struct TabbedView_DATA *) INST_DATA(cl, obj);
     Object *webView = msg->opam_Object;
     int i;
 
@@ -100,7 +95,6 @@ IPTR TabbedView__OM_ADDMEMBER(Class *cl, Object *obj, struct opMember *msg)
 
 IPTR TabbedView__OM_GET(Class *cl, Object *obj, struct opGet *msg)
 {
-    struct TabbedView_DATA *data = (struct TabbedView_DATA *) INST_DATA(cl, obj);
     IPTR retval = TRUE;
 
     switch(msg->opg_AttrID)
@@ -144,7 +138,6 @@ IPTR TabbedView__OM_GET(Class *cl, Object *obj, struct opGet *msg)
 
 IPTR TabbedView__OM_SET(Class *cl, Object *obj, struct opSet *msg)
 {
-    struct Tab_DATA *data = INST_DATA(cl, obj);
     struct TagItem *tags  = msg->ops_AttrList;
     struct TagItem *tag;
     
@@ -154,8 +147,6 @@ IPTR TabbedView__OM_SET(Class *cl, Object *obj, struct opSet *msg)
 	{
     	    case MUIA_Group_ActivePage:
     	    {
-		int currentPage = tag->ti_Data;
-		struct List *children = (struct List *) XGET(obj, MUIA_Group_ChildList);
 		Object *activeView;
 		
 		/* Set previously visible WebView to unactive state */
@@ -194,7 +185,7 @@ static IPTR TabbedView__MUIM_TabbedView_ForwardAttribute(Class *cl, Object *obj,
 	{
 	    if(forwardedAttributes[i] == msg->attribute)
 	    {
-		if(msg->attribute == MUIA_WebView_Title && (msg->value == NULL || ((char*) msg->value)[0] == '\0'))
+		if(msg->attribute == MUIA_WebView_Title && (msg->value == (IPTR)NULL || ((char*) msg->value)[0] == '\0'))
 		    SetAttrs(obj, MUIA_Group_Forward, FALSE, msg->attribute, (IPTR) _(MSG_OWB), TAG_END);
 		else
 		    SetAttrs(obj, MUIA_Group_Forward, FALSE, msg->attribute, msg->value, TAG_END);
@@ -213,7 +204,7 @@ static IPTR TabbedView__MUIM_TabbedView_TriggerNotifications(Class *cl, Object *
     for(i = 0; i < sizeof(forwardedAttributes) / sizeof(IPTR); i++)
     {
 	IPTR value = XGET(activeView, forwardedAttributes[i]);
-	if(forwardedAttributes[i] == MUIA_WebView_Title && (value == NULL || ((char*) value)[0] == '\0'))
+	if(forwardedAttributes[i] == MUIA_WebView_Title && (value == (IPTR)NULL || ((char*) value)[0] == '\0'))
 	    value = (IPTR) _(MSG_OWB);
 	SetAttrs(obj, MUIA_Group_Forward, FALSE, forwardedAttributes[i], value, TAG_END);
     }

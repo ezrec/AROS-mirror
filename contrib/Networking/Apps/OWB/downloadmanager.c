@@ -151,35 +151,39 @@ IPTR DownloadManager__OM_NEW(struct IClass *cl, Object *self, struct opSet *msg)
         tag->ti_Tag = TAG_IGNORE;
     }
     
-    if(!preferences)
-	return (IPTR) NULL;
+    if(!preferences) {
+        D(bug("DownloadManager: No preferences given\n"));
+        return (IPTR) NULL;
+    }
 
     self = (Object *) DoSuperNewTags
     (
         cl, self, NULL,
     
         MUIA_Window_Title, _(MSG_DownloadManager_Title),
-    	WindowContents, VGroup,
+    	WindowContents, (IPTR)(VGroup,
     	    MUIA_InnerLeft, 5,
     	    MUIA_InnerRight, 5,
     	    MUIA_InnerTop, 5,
     	    MUIA_InnerBottom, 5,
-    	    Child, ListviewObject,
-                MUIA_Listview_List, list = ListObject,
-            	    MUIA_List_Format, "BAR,BAR,BAR,BAR,",
+    	    Child, (IPTR)(ListviewObject,
+                MUIA_Listview_List, (IPTR)(list = ListObject,
+            	    MUIA_List_Format, (IPTR)"BAR,BAR,BAR,BAR,",
             	    MUIA_List_Title, TRUE,
-		    End,
-	        End,
-	    Child, HGroup,
-	        Child, bt_cancel = SimpleButton(_(MSG_DownloadManager_Cancel)),
-	        Child, bt_clearFinished = SimpleButton(_(MSG_DownloadManager_ClearFinished)),
-	        End,
-	    End,
+		    End),
+	        End),
+	    Child, (IPTR)(HGroup,
+	        Child, (IPTR)(bt_cancel = SimpleButton(_(MSG_DownloadManager_Cancel))),
+	        Child, (IPTR)(bt_clearFinished = SimpleButton(_(MSG_DownloadManager_ClearFinished))),
+	        End),
+	    End),
         TAG_MORE, (IPTR) msg->ops_AttrList	
     );
     
-    if(!self)
+    if(!self) {
+	D(bug("DownloadManager: Could not create self\n"));
 	return (IPTR) NULL;
+    }
     
     struct DownloadManager_DATA *manager = (struct DownloadManager_DATA *) INST_DATA(cl, self);
     
@@ -246,7 +250,7 @@ IPTR DownloadManager__MUIM_DownloadDelegate_DidBeginDownload(Class *cl, Object *
     download->speedMeasureTime = time(NULL);
     download->listRedrawTime = time(NULL);
     download->speedSizeDownloaded = 0;
-    sprintf(download->progress, "%ld %%", 0);
+    sprintf(download->progress, "%ld %%", (long)0);
 
     if(!download)
 	return FALSE;

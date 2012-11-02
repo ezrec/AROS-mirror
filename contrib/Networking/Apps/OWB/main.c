@@ -26,7 +26,7 @@ int main(void)
 {
     IPTR argArray[] = { 0 };
     struct RDArgs *args = NULL;
-    const char *url = NULL;
+    char *url = NULL;
     Object *wnd, *app;
     
     if((args = ReadArgs("URL", argArray, NULL)) != NULL)

@@ -51,23 +51,23 @@ IPTR SearchBar__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
         CLASS, self, NULL,
         MUIA_Group_Horiz, TRUE,
         MUIA_ShowMe, FALSE,
-        Child, bt_close = HGroup,
+        Child, (IPTR)(bt_close = HGroup,
 	    MUIA_Frame, MUIV_Frame_ImageButton,
 	    MUIA_InputMode, MUIV_InputMode_RelVerify,
-	    Child, ImageObject,
-		MUIA_Image_Spec, "3:PROGDIR:resources/close.png",
-		End,
-	    End,
-       	Child, Label2(_(MSG_SearchWindow_Locate)),
-        Child, located_string = StringObject,
+	    Child, (IPTR)(ImageObject,
+		MUIA_Image_Spec, (IPTR)"3:PROGDIR:resources/close.png",
+		End),
+	    End),
+       	Child, (IPTR)(Label2(_(MSG_SearchWindow_Locate))),
+        Child, (IPTR)(located_string = StringObject,
             MUIA_HorizWeight, 100,
             MUIA_Frame, MUIV_Frame_String,
-            End,
-       	Child, Label1(_(MSG_SearchWindow_CaseSensitive)),
-        Child, case_checkmark = MUI_MakeObject(MUIO_Checkmark, FALSE),
-    	Child, previous_button = SimpleButton(_(MSG_SearchWindow_FindPrevious)),
-    	Child, next_button = SimpleButton(_(MSG_SearchWindow_FindNext)),
-    	Child, HSpace(0),
+            End),
+       	Child, (IPTR)(Label1(_(MSG_SearchWindow_CaseSensitive))),
+        Child, (IPTR)(case_checkmark = MUI_MakeObject(MUIO_Checkmark, FALSE)),
+    	Child, (IPTR)(previous_button = SimpleButton(_(MSG_SearchWindow_FindPrevious))),
+    	Child, (IPTR)(next_button = SimpleButton(_(MSG_SearchWindow_FindNext))),
+    	Child, (IPTR)(HSpace(0)),
         TAG_MORE, (IPTR) message->ops_AttrList
     );
     
@@ -110,7 +110,7 @@ IPTR SearchBar__MUIM_SearchBar_Find(struct IClass *cl, Object *obj, struct MUIP_
     
     D(bug("criteria: %s, direction: %d, case sensitive: %d\n", searchMsg.criteria, searchMsg.forward, searchMsg.caseSensitive));
     
-    Object* webView = XGET(_win(obj), MUIA_BrowserWindow_WebView);
+    Object* webView = (Object *)XGET(_win(obj), MUIA_BrowserWindow_WebView);
     if(webView)
     {
 	DoMethod(webView, MUIM_WebView_SearchFor, searchMsg.criteria, (IPTR) searchMsg.forward, (IPTR) searchMsg.caseSensitive);
@@ -133,6 +133,8 @@ IPTR SearchBar__MUIM_Setup(struct IClass *cl, Object *obj, struct MUIP_Setup *ms
     DoMethod(_win(obj), MUIM_Notify, MUIA_Window_InputEvent, "control f",
 	    (IPTR) obj, (IPTR) 3,
 	    MUIM_Set, MUIA_ShowMe, (IPTR) TRUE);
+
+    return TRUE;
 }
 
 /*** Setup ******************************************************************/

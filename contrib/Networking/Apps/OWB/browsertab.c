@@ -68,11 +68,11 @@ IPTR BrowserTab__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
 	MUIA_Group_Horiz, TRUE,
 	MUIA_Group_HorizSpacing, 0,
 	MUIA_ShowSelState, FALSE,
-	Child, titleObject = TextObject,
+	Child, (IPTR)(titleObject = TextObject,
             MUIA_Frame, MUIV_Frame_None,
       	    MUIA_Text_SetMin, FALSE,
-            MUIA_Text_Contents, title,
-            End,
+            MUIA_Text_Contents, (IPTR)title,
+            End),
         TAG_MORE, (IPTR) message->ops_AttrList	
     );
     

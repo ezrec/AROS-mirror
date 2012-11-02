@@ -91,45 +91,45 @@ IPTR BookmarkManager__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
     (
         CLASS, self, NULL,
         MUIA_Window_Open, FALSE,
-        MUIA_Window_Title, _(MSG_BookmarkManager_Title),
-        WindowContents, VGroup,
+        MUIA_Window_Title, (IPTR)_(MSG_BookmarkManager_Title),
+        WindowContents, (IPTR)(VGroup,
             MUIA_InnerLeft, 5,
             MUIA_InnerRight, 5,
             MUIA_InnerTop, 5,
             MUIA_InnerBottom, 5,
-	    Child, VGroup,
-	        Child, ListviewObject,
-	            MUIA_Listview_List, tmpdata.bookmarks_list = ListObject,
+	    Child, (IPTR)(VGroup,
+	        Child, (IPTR)(ListviewObject,
+	            MUIA_Listview_List, (IPTR)(tmpdata.bookmarks_list = ListObject,
 			MUIA_CycleChain, 1,
-                        MUIA_List_Format, "BAR,",
+                        MUIA_List_Format, (IPTR)"BAR,",
                         MUIA_List_Title, TRUE,
-                        End,
-                    End,
-                End,
-	    Child, VGroup,
-		Child, ColGroup(2),
-		    Child, Label2(_(MSG_BookmarkManager_Label)),
-		    Child, tmpdata.label_string = StringObject,
+                        End),
+                    End),
+                End),
+	    Child, (IPTR)(VGroup,
+		Child, (IPTR)(ColGroup(2),
+		    Child, (IPTR)(Label2(_(MSG_BookmarkManager_Label))),
+		    Child, (IPTR)(tmpdata.label_string = StringObject,
 			MUIA_Frame, MUIV_Frame_String,
 			MUIA_CycleChain, 1,
 			MUIA_String_MaxLen, 256,
-			End,
-		    Child, Label2(_(MSG_BookmarkManager_URL)),
-		    Child, tmpdata.url_string = StringObject,
+			End),
+		    Child, (IPTR)(Label2(_(MSG_BookmarkManager_URL))),
+		    Child, (IPTR)(tmpdata.url_string = StringObject,
 			MUIA_Frame, MUIV_Frame_String,
 			MUIA_CycleChain, 1,
 			MUIA_String_MaxLen, 2048,
-			End,
-		    End,
-		End,
-	    Child, HGroup,
-		Child, insert_bt = SimpleButton(_(MSG_BookmarkManager_Insert)),
-		Child, change_bt = SimpleButton(_(MSG_BookmarkManager_Change)),
-		Child, remove_bt = SimpleButton(_(MSG_BookmarkManager_Remove)),
-		Child, up_bt = SimpleButton(_(MSG_BookmarkManager_MoveUp)),
-		Child, down_bt = SimpleButton(_(MSG_BookmarkManager_MoveDown)),
-		End,
-            End,
+			End),
+		    End),
+		End),
+	    Child, (IPTR)(HGroup,
+		Child, (IPTR)(insert_bt = SimpleButton(_(MSG_BookmarkManager_Insert))),
+		Child, (IPTR)(change_bt = SimpleButton(_(MSG_BookmarkManager_Change))),
+		Child, (IPTR)(remove_bt = SimpleButton(_(MSG_BookmarkManager_Remove))),
+		Child, (IPTR)(up_bt = SimpleButton(_(MSG_BookmarkManager_MoveUp))),
+		Child, (IPTR)(down_bt = SimpleButton(_(MSG_BookmarkManager_MoveDown))),
+		End),
+            End),
         TAG_MORE, (IPTR) message->ops_AttrList
     );
     
@@ -137,7 +137,7 @@ IPTR BookmarkManager__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
 	return (IPTR) NULL;
 
     tmpdata.bookmarks_menu = MenuObject,
-        MUIA_Menu_Title, _(MSG_BookmarkManager_MenuTitle),
+        MUIA_Menu_Title, (IPTR)_(MSG_BookmarkManager_MenuTitle),
         End;
     
     /* Click Close window with close gadget */
@@ -197,7 +197,7 @@ IPTR BookmarkManager__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
 	    
 	    DoMethod(data->bookmarks_list, MUIM_List_InsertSingle, bookmark, MUIV_List_Insert_Bottom);
 	    bookmark->menuItem = MenuitemObject,
-                MUIA_Menuitem_Title, bookmark->label,
+                MUIA_Menuitem_Title, (IPTR)bookmark->label,
                 End;
 	    DoMethod(data->bookmarks_menu, MUIM_Family_AddTail, bookmark->menuItem);
 
@@ -261,7 +261,7 @@ IPTR BookmarkManager__MUIM_BookmarkManager_Insert(struct IClass *cl, Object *obj
     
     /* Create bookmark menu item */
     bookmark->menuItem = MenuitemObject,
-	MUIA_Menuitem_Title, bookmark->label,
+	MUIA_Menuitem_Title, (IPTR)bookmark->label,
 	End;
     DoMethod(data->bookmarks_menu, MUIM_Family_AddTail, bookmark->menuItem);
 
@@ -606,6 +606,8 @@ IPTR BookmarkManager__MUIM_BookmarkManager_Bookmark(struct IClass *cl, Object *o
     set(data->url_string, MUIA_String_Contents, msg->url);
     set(obj, MUIA_Window_Open, (IPTR) TRUE);
     DoMethod(obj, MUIM_Window_ToFront);
+
+    return TRUE;
 }
 
 /*** Setup ******************************************************************/

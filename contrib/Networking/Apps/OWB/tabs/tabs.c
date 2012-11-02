@@ -365,14 +365,12 @@ IPTR Tabs__MUIM_Draw(struct IClass *cl, Object *obj, struct MUIP_Draw *msg)
 
 IPTR Tabs__OM_ADDMEMBER(struct IClass *cl, Object *obj, struct opMember *msg)
 {
-    struct Tabs_DATA *data = INST_DATA(cl, obj);
     DoSuperMethod(cl, obj, OM_ADDMEMBER, (IPTR) NewObject(Tab_CLASS->mcc_Class, NULL, Child, msg->opam_Object, TAG_END));
     return TRUE;
 }
 
 IPTR Tabs__OM_REMMEMBER(struct IClass *cl, Object *obj, struct opMember *msg)
 {
-    struct Tabs_DATA *data = INST_DATA(cl, obj);
     struct List *children = (struct List*) XGET(obj, MUIA_Group_ChildList);
     APTR cstate = children->lh_Head;
     Object *child, *prev = NULL, *next = NULL;
@@ -435,8 +433,6 @@ IPTR Tabs__MUIM_Cleanup(struct IClass *cl, Object *obj, struct MUIP_Cleanup *msg
 
 IPTR Tabs__MUIM_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg)
 {
-    struct Tabs_DATA *data = INST_DATA(cl, obj);
-
     if (!msg->imsg)
         return 0;
 

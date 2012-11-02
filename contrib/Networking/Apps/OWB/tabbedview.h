@@ -17,7 +17,7 @@
 
 /*** Methods ****************************************************************/
 #define MUIM_TabbedView_ForwardAttribute     (MUIB_TabbedView | 0x00000000)
-struct  MUIP_TabbedView_ForwardAttribute     { STACKED ULONG MethodID; STACKED Object *sender; STACKED ULONG attribute; STACKED ULONG value; };
+struct  MUIP_TabbedView_ForwardAttribute     { STACKED ULONG MethodID; STACKED Object *sender; STACKED IPTR attribute; STACKED IPTR value; };
 #define MUIM_TabbedView_TriggerNotifications (MUIB_TabbedView | 0x00000001)
 
 /*** Variables **************************************************************/
