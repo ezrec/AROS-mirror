@@ -1,0 +1,28 @@
+===================
+AROS a Amiwest 2012
+===================
+
+:Author:   Jason McMullan
+:Date:     2012-11-02
+
+Alla fiera di AmiWest 2012, Samuel Crow e Jason McMullan hanno mostrato AROS
+v1 girare su una scheda Sam460ex distribuita da`ACube`__, così come una scheda
+FPGA Arcade Replay distribuita da `FPGA Arcade`__, e una scheda Raspberry PI
+distruibito dalla `Fondazione Raspberry PI`__.
+
+Jason McMullan ha tenuto una `presentazione`__ di 20 minuti sulle origini e
+sui progressi di AROS, ed ha partecipato al gruppo di discussione sullo stato
+attuale e sui futuri sviluppi della famiglia di sistemi operativi Amiga.
+
+Allo show sono stati distribuiti DVD della distribuzione `Icaros`__
+(versione pc-i386, ABI v0) e di `AROS Vision`__ a tutti i visitatori.
+
+
+__ http://acube-systems.biz
+__ http://www.fpgaarcade.com
+__ http://www.raspberrypi.org
+
+__ http://www.evillabs.net/AROS/AmiWest-2012-Presentation.pdf
+
+__ http://vmwaros.blogspot.com/
+__ http://www.natami-news.de/html/aros_vision.html
