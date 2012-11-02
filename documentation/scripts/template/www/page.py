@@ -17,9 +17,6 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
         Tree \
         ( [
         P ( contents = [
-            Img( src = '%(ROOT)simages/englishlogo.png', width = 16, height = 10, alt = 'english logo'),
-            A( 'English', href='%(BASE)s.' )]),
-        P ( contents = [
             Img( src = '%(ROOT)simages/czechlogo.png', width = 16, height = 10, alt = 'czech logo'),
             A( '&#268;esky', href='%(BASE)scs/' )]),
         P ( contents = [
@@ -28,6 +25,12 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
             P ( contents = [
             Img( src = '%(ROOT)simages/greecelogo.png', width = 16, height = 10, alt = 'greece logo'),
             A( '&#917;&#955;&#955;&#951;&#965;&#953;&#954;&#940;', href='%(BASE)sel/' )]),
+        P ( contents = [
+            Img( src = '%(ROOT)simages/englishlogo.png', width = 16, height = 10, alt = 'english logo'),
+            A( 'English', href='%(BASE)s.' )]),
+        P ( contents = [
+            Img( src = '%(ROOT)simages/spanishlogo.png', width = 16, height = 10, alt = 'spanish logo'),
+            A( 'Espa&#241ol', href='%(BASE)ses/' )]),
             P ( contents = [
             Img( src = '%(ROOT)simages/francelogo.png', width = 16, height = 10, alt = 'france logo'),
             A( 'Fran&#231;ais', href='%(BASE)sfr/' )]),
@@ -46,9 +49,6 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
             P ( contents = [
             Img( src = '%(ROOT)simages/russialogo.png', width = 16, height = 10, alt = 'russian logo'),
             A( '&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;', href='%(BASE)sru/' )]),
-        P ( contents = [
-            Img( src = '%(ROOT)simages/spanishlogo.png', width = 16, height = 10, alt = 'spanish logo'),
-            A( 'Espa&#241ol', href='%(BASE)ses/' )]),
         P ( contents = [
             Img( src = '%(ROOT)simages/finlandlogo.png', width = 16, height = 10, alt = 'finland logo'),
             A( 'Suomi', href='%(BASE)sfi/' )]),
