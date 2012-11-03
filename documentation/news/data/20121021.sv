@@ -68,7 +68,7 @@ Förbättringar har gjorts gällande diskåtkomst från AROS. Vi har nu en AHCI drivr
 tillhandahåller grundläggande SATA tjänster på flera moderna maskiner. Tilläggas kan även att 
 standard windows partitoner nu kan läsas, via en tidig version av en NTFS hanterare och 
 skrivhastigheten till FAT partitoner har förbättrats. Nya open source CD brännar programmet Frying Pan 
-är nu en standard komponent i AROS programmet
+är nu en standard komponent i AROS programmet.
 
 Sist men inte minst vårt "papercuts" initiativ ledde till att många mindre men irriterande programfel
 har rättats till i hela AROS systemet.
@@ -80,7 +80,7 @@ Vidare utveckling
 AROS har nu fått sin första utgåva för original (MC680x0) Amiga plattformar.
 `AROS Vision <http://www.natami-news.de/html/aros_vision.html>`__
 Såväl som till  AROS systemet självt, AROS Vision inkluderar många fritt distribuerbara 3:e parts 
-AmigaOS systemkomponenter och applikationer
+AmigaOS systemkomponenter och applikationer.
 
 En annan ny AROS utgåva är `AEROS <http://www.aeros-os.org/>`__ som riktar sig till att kombinera 
 det bästa från AROS och Linux i en väl samansvetsad miljö. För nuvarande finns versioner för x86 och 
