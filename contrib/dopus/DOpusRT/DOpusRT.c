@@ -67,7 +67,6 @@ the existing commercial status of Directory Opus 5.
 //extern struct DosLibrary *DOSBase;
 struct DOpusBase *DOpusBase = NULL;
 
-void main(int,char **);
 void WBRun(int,char **);
 int setarg(struct WBArg *,char *,BPTR);
 BPTR CloneCommandDir(const char *);
@@ -108,7 +107,7 @@ static inline LONG atoi(char *str)
   return i;
  }
 
-void main(argc,argv)
+int main(argc,argv)
 int argc;
 char *argv[];
 {
@@ -123,7 +122,7 @@ char *argv[];
     struct Interrupt *interrupt;
     struct IOStdReq *inputreq;
 
-    if (argc<2 || !(DOpusBase=(struct DOpusBase *)OpenLibrary("dopus.library",0))) return /*_exit(0)*/;
+    if (argc<2 || !(DOpusBase=(struct DOpusBase *)OpenLibrary("dopus.library",0))) return 1000000/*_exit(0)*/;
     IntuitionBase=DOpusBase->IntuitionBase;
     GfxBase=DOpusBase->GfxBase;
 
@@ -227,6 +226,7 @@ char *argv[];
         break;
      }
     CloseLibrary((struct Library *)DOpusBase);
+    return 0;
     //_exit(0);
 }
 
