@@ -318,8 +318,16 @@ static VOID __HandleLaunch_WB
         {NP_HomeDir,    (IPTR)home                      },
         {NP_StackSize,  stacksize                       },
         {NP_Priority,   priority                        },
+        /* The lines below were introduced in backport of 38389 (as
+         * compatibility fix for amiga-m68k AROS). These changes however
+         * cause ABI_V0 programs compiled before 2009-03-13 to crash
+         * as there is now no way that process started from WB can get
+         * pr_COS/pr_CIS set.
+         */
+        /*
         {NP_Input,      BNULL                           },
         {NP_Output,     BNULL                           },
+        */
         {TAG_DONE,      0                               }
     };
 
