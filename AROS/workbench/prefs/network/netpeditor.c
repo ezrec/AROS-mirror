@@ -2152,7 +2152,8 @@ IPTR NetPEditor__MUIM_NetPEditor_EditServerEntry
         if (entries < MAXSERVERS)
         {
             struct Server server;
-            InitServer(&server, XGET(data->netped_domainString, MUIA_String_Contents));
+            InitServer(&server,
+                (STRPTR)XGET(data->netped_domainString, MUIA_String_Contents));
             server.device[strlen(server.device) - 1] += entries;
             DoMethod
             (

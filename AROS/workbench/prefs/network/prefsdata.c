@@ -609,12 +609,12 @@ BOOL WriteServers(CONST_STRPTR destdir, CONST_STRPTR envdir)
         fprintf(mount_file, "EHandler = smb.handler\nActivate = 1\n");
         fprintf(mount_file, "Control = \"");
         if (server->user[0] != '\0')
-            fprintf(mount_file, "USER=%s ", server->user);
+            fprintf(mount_file, "USER=*\"%s*\" ", server->user);
         if (server->group[0] != '\0')
-            fprintf(mount_file, "WORKGROUP=%s ", server->group);
+            fprintf(mount_file, "WORKGROUP=*\"%s*\" ", server->group);
         if (server->pass[0] != '\0')
-            fprintf(mount_file, "PASSWORD=%s ", server->pass);
-        fprintf(mount_file, "SERVICE=//%s/%s\"\n", server->host,
+            fprintf(mount_file, "PASSWORD=*\"%s*\" ", server->pass);
+        fprintf(mount_file, "SERVICE=*\"//%s/%s*\"\"\n", server->host,
             server->service);
         fclose(mount_file);
 
