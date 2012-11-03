@@ -36,9 +36,11 @@ def ignore( path ):
     else:
         return False
 
+
 def makedir( path ):
     if not os.path.exists( path ):
         os.makedirs( path )
+
 
 def copy( src, dst ):
     if not isinstance( src, list ): src = [ src ]
@@ -52,9 +54,25 @@ def copy( src, dst ):
         if newer( path, rdst ):
             shutil.copy( path, rdst )
 
+
+def pathscopy( entries, srcpath, dstpath):
+    """
+        entries - entry or list of entries to copy
+        srcpath - source to copy from
+        dstpath - destination to copy to
+
+        Note that the entries can themselves include paths.
+    """
+    if not isinstance( entries, list ): entries = [ entries ]
+
+    pathentries= map( (lambda e: os.path.join( srcpath, e)), entries)
+    copy( pathentries, dstpath)
+
+
 def remove( path ):
     if os.path.exists( path ):
         os.remove( path )
+
 
 # similar shutil.copytree, but ignores .svn directory
 def copytree(src, dst, symlinks=0):
@@ -76,8 +94,10 @@ def copytree(src, dst, symlinks=0):
         except (IOError, os.error), why:
             print "Can't copy %s to %s: %s" % (`srcname`, `dstname`, str(why))
 
+
 def reportSkipping( message ):
     print '\033[1m\033[32m*\033[30m', message, '\033[0m'
+
 
 def reportBuilding( message ):
     print '\033[1m\033[33m*\033[30m', message, '\033[0m'

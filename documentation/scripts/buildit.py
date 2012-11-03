@@ -20,6 +20,7 @@ from template.www.gallery import *
 
 import autodoc
 
+
 # Setup
 SRCROOT    = os.path.abspath( '.' )
 DSTROOT    = os.path.abspath( '../bin/documentation' )
@@ -28,20 +29,12 @@ TEMPLATE   = 'targets/www/template.html.'
 
 TEMPLATE_DATA = {}
 
-# Languages not supported by docutils yet (but that we have files written in):
+# languages supported by docutils:
+LANGUAGES  = [ 'en', 'de', 'cs', 'el', 'es', 'fi', 'fr', 'it', 'nl', 'pl', 'pt', 'ru', 'sv' ]
+# languages not supported by docutils yet (but that we have files written in):
 # 'no'
-SUPLANGUAGES  = [ 'en', 'de', 'cs', 'el', 'es', 'fi', 'fr', 'it', 'nl', 'pl', 'pt', 'ru', 'sv' ]
-LANGUAGES= []
-TARGETS= []
-
-
-# FIXME: Move this somewhere else...
-if (not os.path.exists( 'credits.en' ) ) \
-    or (os.path.getmtime( 'db/credits' ) > os.path.getmtime( 'credits.en' )):
-    CREDITS_DATA = db.credits.format.rest.format( 
-        db.credits.parse.parse( file( 'db/credits', 'r' ) )
-    )
-    file( 'credits.en', 'w' ).write( CREDITS_DATA )
+# Languages to build (defaults to LANGUAGES):
+languages= []
 
 
 # altLang
@@ -114,7 +107,7 @@ def makePictures():
 
     # Second, create the galleries
     for root in DIRECTORIES:
-        for lang in LANGUAGES:
+        for lang in languages:
             output = convertWWW( altLang( os.path.join( root, 'index.en' ), lang ), lang, options )
 
             names = os.listdir( root )
@@ -174,7 +167,7 @@ def makePictures():
 
 def makeStatus( extension = '.php' ):
     tasks  = db.tasks.parse.parse( file( 'db/status', 'r' ) )
-    for lang in LANGUAGES:
+    for lang in languages:
         dstdir = 'introduction/status'
         if lang == 'en':
             dstdir = os.path.join( DSTROOT, dstdir )
@@ -196,14 +189,14 @@ def makeNews():
     archives = {}
 
     # Get list of news and archive items for each language
-    for lang in LANGUAGES:
+    for lang in languages:
         news[lang] = []
         archives[lang] = {}
     for filename in os.listdir( NEWS_SRC_DIR ):
-        date = filename[:-3]
-        year = date[:4]
-        if filename[-2:] == 'en' and len( date ) == 8 and date.isdigit():
-            for lang in LANGUAGES:
+        date, ext= os.path.splitext( filename)
+        if ext == '.en' and len( date ) == 8 and date.isdigit():
+            year = date[:4]
+            for lang in languages:
                 lang_filename = altLang( filename, lang, NEWS_SRC_DIR)
 
                 news[lang].append( os.path.join( NEWS_SRC_DIR, lang_filename ) )
@@ -214,7 +207,7 @@ def makeNews():
                 archives[lang][year].append( os.path.join( NEWS_SRC_DIR, lang_filename ) )
 
     # Generate news and archive ReST files
-    for lang in LANGUAGES:
+    for lang in languages:
         news[lang].sort()
         news[lang].reverse()
         current = news[lang][:5]
@@ -242,6 +235,19 @@ def makeNews():
                     output.write( '.. include:: %s\n' % filename )
                     output.write( '.. raw:: html\n\n   </a>\n\n\n')
                 output.close()
+
+
+# makeCredits
+# -----------
+# Creates ReST file for credits.
+
+def makeCredits():
+    if (not os.path.exists( 'credits.en' ) ) \
+        or (os.path.getmtime( 'db/credits' ) > os.path.getmtime( 'credits.en' )):
+        CREDITS_DATA = db.credits.format.rest.format( 
+            db.credits.parse.parse( file( 'db/credits', 'r' ) )
+        )
+        file( 'credits.en', 'w' ).write( CREDITS_DATA )
 
 
 # convertWWW
@@ -298,7 +304,7 @@ def processWWW( src, depth ):
     suffix = os.path.splitext( src )[1][1:]
     if suffix != 'en': return
 
-    for lang in LANGUAGES:
+    for lang in languages:
         if lang == 'en':
             dst = prefix + '.php'
             dst_depth = depth
@@ -365,11 +371,12 @@ def copyImages():
     
     makedir( dstpath )
     
-    copy(
+    pathscopy(
         [
-            os.path.join( srcpath, 'windows-prefs-titlebar.png' ),
-            os.path.join( srcpath, 'windows-prefs-buttons.png' )
+            'windows-prefs-titlebar.png',
+            'windows-prefs-buttons.png'
         ],
+        srcpath,
         dstpath
     )
     
@@ -379,12 +386,7 @@ def copyImages():
     
     makedir( dstpath )
     
-    copy(
-        [
-            os.path.join( srcpath, 'hello.png' )
-        ],
-        dstpath
-    )
+    pathscopy( 'hello.png', srcpath, dstpath)
 
     imagepath = 'images'
     dstpath   = os.path.join( DSTROOT, imagepath )
@@ -392,23 +394,24 @@ def copyImages():
     
     makedir( dstpath )
 
-    copy(
+    pathscopy(
         [
-            os.path.join( srcpath, 'aros-banner.gif' ),
-            os.path.join( srcpath, 'aros-banner2.png' ),
-            os.path.join( srcpath, 'aros-banner-blue.png' ),
-            os.path.join( srcpath, 'aros-banner-pb2.png' ),
-            os.path.join( srcpath, 'aros-banner-peta.png' ),
-            os.path.join( srcpath, 'aros-sigbar-user.png' ),
-            os.path.join( srcpath, 'aros-sigbar-coder.png' ),
-            os.path.join( srcpath, 'genesi.gif' ),
-            os.path.join( srcpath, 'trustec.png' ),
-            os.path.join( srcpath, 'sourceforge.png' ),
-            os.path.join( srcpath, 'phoenix.jpeg' ),
-            os.path.join( srcpath, 'bttr.jpeg' ),
-            os.path.join( srcpath, 'icaroslive_logo.png' ),
-            os.path.join( srcpath, 'aspireos_logo.png' )
+            'aros-banner.gif',
+            'aros-banner2.png',
+            'aros-banner-blue.png',
+            'aros-banner-pb2.png',
+            'aros-banner-peta.png',
+            'aros-sigbar-user.png',
+            'aros-sigbar-coder.png',
+            'genesi.gif',
+            'trustec.png',
+            'sourceforge.png',
+            'phoenix.jpeg',
+            'bttr.jpeg',
+            'icaroslive_logo.png',
+            'aspireos_logo.png'
         ],
+        srcpath,
         dstpath
     )
 
@@ -441,7 +444,7 @@ def buildWWW():
     global DSTROOT ; DSTROOT = os.path.join( DSTROOT, 'www' )
 
     # Hack to get around dependency problems
-    for lang in LANGUAGES:
+    for lang in languages:
         if lang == 'en':
             dstpath = DSTROOT
         else:
@@ -453,7 +456,7 @@ def buildWWW():
     makeNews()
     makeTemplates()
 
-    for lang in LANGUAGES:
+    for lang in languages:
         TEMPLATE_DATA[lang] = file( TEMPLATE + lang, 'r' ).read()
 
     makePictures()
@@ -465,53 +468,55 @@ def buildWWW():
 
     imagepath = os.path.join( DSTROOT, 'images' )
     makedir( imagepath )
+    srcpath= 'targets/www/images'
 
-    copy(
+    pathscopy(
         [
-            'targets/www/images/trustec-small.png',
-            'targets/www/images/genesi-small.gif',
-            'targets/www/images/noeupatents-small.png',
-            'targets/www/images/bullet.gif',
-            'targets/www/images/toplogomenu.png',
-            'targets/www/images/toplogomenu.gif',
-            'targets/www/images/kittymascot.png',
-            'targets/www/images/kittymascot.gif',
-            'targets/www/images/backgroundtop.png',
-            'targets/www/images/disk.png',
-            'targets/www/images/arosthubmain.png',
-            'targets/www/images/bgcolormain.png',
-            'targets/www/images/mainpagespacer.png',
-            'targets/www/images/rsfeed.gif',
-            'targets/www/images/sidespacer.png',
-            'targets/www/images/textdocu.gif',
-            'targets/www/images/archivedownloadicon.gif',
-            'targets/www/images/archivedownloadicon.png',
-            'targets/www/images/bgcolorright.png',
-            'targets/www/images/bountyicon1.gif',
-            'targets/www/images/bountyicon1.png',
-            'targets/www/images/bountyicon2.gif',
-            'targets/www/images/bountyicon2.png',
-            'targets/www/images/communityicon.gif',
-            'targets/www/images/communityicon.png',
-            'targets/www/images/directdownloadicon.gif',
-            'targets/www/images/directdownloadicon.png',
-            'targets/www/images/czechlogo.png',
-            'targets/www/images/englishlogo.png',
-            'targets/www/images/finlandlogo.png',
-            'targets/www/images/francelogo.png',
-            'targets/www/images/germanylogo.png',
-            'targets/www/images/greecelogo.png',
-            'targets/www/images/italylogo.png',
-            'targets/www/images/netherlandslogo.png',
-            'targets/www/images/polandlogo.png',
-            'targets/www/images/portugallogo.png',
-            'targets/www/images/rssicon1.gif',
-            'targets/www/images/rssicon1.png',
-            'targets/www/images/russialogo.png',
-            'targets/www/images/swedenlogo.png',
-            'targets/www/images/spanishlogo.png',            
-            'targets/www/images/pointer.png'
+            'trustec-small.png',
+            'genesi-small.gif',
+            'noeupatents-small.png',
+            'bullet.gif',
+            'toplogomenu.png',
+            'toplogomenu.gif',
+            'kittymascot.png',
+            'kittymascot.gif',
+            'backgroundtop.png',
+            'disk.png',
+            'arosthubmain.png',
+            'bgcolormain.png',
+            'mainpagespacer.png',
+            'rsfeed.gif',
+            'sidespacer.png',
+            'textdocu.gif',
+            'archivedownloadicon.gif',
+            'archivedownloadicon.png',
+            'bgcolorright.png',
+            'bountyicon1.gif',
+            'bountyicon1.png',
+            'bountyicon2.gif',
+            'bountyicon2.png',
+            'communityicon.gif',
+            'communityicon.png',
+            'directdownloadicon.gif',
+            'directdownloadicon.png',
+            'czechlogo.png',
+            'englishlogo.png',
+            'finlandlogo.png',
+            'francelogo.png',
+            'germanylogo.png',
+            'greecelogo.png',
+            'italylogo.png',
+            'netherlandslogo.png',
+            'polandlogo.png',
+            'portugallogo.png',
+            'rssicon1.gif',
+            'rssicon1.png',
+            'russialogo.png',
+            'swedenlogo.png',
+            'spanishlogo.png',            
+            'pointer.png'
         ],
+        srcpath,
         imagepath
     )
 
@@ -519,15 +524,22 @@ def buildWWW():
     copySamples()
     copyHeaders()
 
-    copy( 'targets/www/docutils.css', DSTROOT )
-    copy( 'targets/www/aros.css', DSTROOT )
+    srcpath= 'targets/www'
+    pathscopy(
+        [
+            'docutils.css',
+            'aros.css',
+        ],
+        srcpath,
+        DSTROOT
+    )
 
     dbpath = os.path.join( DSTROOT, 'db' )
     makedir( dbpath )
     copy( 'db/quotes', dbpath )
 
     makedir( os.path.join( dbpath, 'download-descriptions' ) )
-    for lang in LANGUAGES:
+    for lang in languages:
         desc_file = os.path.join( 'db/download-descriptions', lang )
         if os.path.exists( desc_file ):
             copy( desc_file, os.path.join( dbpath, 'download-descriptions' ) )
@@ -551,12 +563,14 @@ def buildWWW():
     toolpath = os.path.join( DSTROOT, 'tools' )
     makedir( toolpath )
 
-    copy( 
+    srcpath= 'targets/www/tools'
+    pathscopy( 
         [ 
-            'targets/www/tools/password.html',
-            'targets/www/tools/password.php', 
-            'targets/www/tools/redirect.php' 
-        ], 
+            'password.html',
+            'password.php', 
+            'redirect.php' 
+        ],
+        srcpath,
         toolpath 
     )
 
@@ -568,7 +582,7 @@ def buildWWW():
 
 def buildHTML():
     global DSTROOT ; DSTROOT = os.path.join( DSTROOT, 'html' )
-    global LANGUAGES ; LANGUAGES = [ 'en' ]
+    global languages ; languages = [ 'en' ]
     TEMPLATE_DATA['en'] = file( 'targets/html/template.html.en', 'r' ).read()
 
     makeNews();
@@ -581,8 +595,15 @@ def buildHTML():
     copySamples()
     copyHeaders()
 
-    copy( 'targets/www/docutils.css', DSTROOT )
-    copy( 'targets/www/aros.css', DSTROOT )
+    srcpath= 'targets/www'
+    pathscopy(
+        [
+            'docutils.css',
+            'aros.css'
+        ],
+        srcpath,
+        DSTROOT
+    )
 
     copy( 'license.html', DSTROOT )
 
@@ -596,7 +617,7 @@ def buildHTML():
     os.system( 'chmod -R go+r %s' % DSTROOT )
 
 
-targets = {
+TARGETS = {
     'clean':     buildClean,
     'www':       buildWWW,
     'html':      buildHTML,
@@ -607,34 +628,37 @@ targets = {
 }
 
 
-# Usage: build [target [language]]
+# Usage: build {target|language}
 # Target is  www, html, clean, alldocs, shelldocs, libdocs.
 # The latter 3 update the documentation which is extracted from the source code.
-# A language may only be specified for the www target. If a language is
-# specified, only that language is built. If no language is specified, all
+# Specifying one or more languages only effects the www target. Only the
+# specified language(s) is built. If no language is specified, all
 # languages are built.
 
 if __name__ == '__main__':
+    targets= []
     valid= 1
 
     # Interpret arguments
     for arg in sys.argv[ 1:]:
-        if   arg in SUPLANGUAGES:
-            LANGUAGES.append( arg)
-        elif targets.has_key( arg):
-            TARGETS.append( arg)
+        if   arg in LANGUAGES:
+            languages.append( arg)
+        elif TARGETS.has_key( arg):
+            targets.append( arg)
         else:
             print 'Error: Unrecognised argument, "' + arg + '".'
             valid= 0
 
     if valid:
         # Fill in defaults if necessary
-        if len( LANGUAGES) == 0:
-            LANGUAGES= list( SUPLANGUAGES)
-        if len( TARGETS) == 0:
-            TARGETS.append( 'www')
+        if len( languages) == 0:
+            languages= list( LANGUAGES)
+        if len( targets) == 0:
+            targets.append( 'www')
+
+        makeCredits() # FIXME: Should probably be called for at most www and html only.
 
         # Build each target
-        for target in TARGETS:
-            targets[target]()
+        for target in targets:
+            TARGETS[target]()
 
