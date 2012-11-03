@@ -2,8 +2,7 @@
 AROS na AmiWestu 2012
 =====================
 
-:Autor:
-   Jason McMullan
+:Autor:   Jason McMullan
 :Datum:   2012-11-02
 
 V rámci akce AmiWest 2012, Samuel Crow a Jason McMullan pøedvedli AROS v1
