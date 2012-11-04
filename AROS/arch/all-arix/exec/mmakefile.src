@@ -1,7 +1,7 @@
 # $Id$
 include $(TOP)/config/make.cfg
 
-FILES := platform_init 
+FILES := platform_init cachepredma cachepostdma
 
 ifeq ($(ARCH),darwin)
 USER_CFLAGS += -D_FORTIFY_SOURCE=0
