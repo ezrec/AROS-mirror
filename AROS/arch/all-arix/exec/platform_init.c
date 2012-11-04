@@ -20,6 +20,8 @@ static const char *libc_symbols[] =
     "open",
     "read",
     "close",
+    "mlock",
+    "munlock",
     NULL
 };
 
