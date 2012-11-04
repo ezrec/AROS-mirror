@@ -6,6 +6,8 @@
     Lang: english
 */
 
+#include <fcntl.h>
+
 #define DEBUG 0
 
 #include <aros/debug.h>
@@ -29,6 +31,8 @@
 #define PM_PRESENT          PM_STATUS(4LL)
 #define PM_SWAP             PM_STATUS(2LL)
 #define PM_FILE             PM_STATUS(1LL)
+
+#define PAGE_SIZE           4096
 
 /*****************************************************************************
 
@@ -85,14 +89,26 @@
 {
     AROS_LIBFUNC_INIT
     void *phys_addr;
-
+    IPTR address_start;
+    IPTR address_end;
+    IPTR offset;
     int fd;
+    int len = *length;
 
     /*
      * We're in hosted environment where virtual address does not correspond to
      * a physical address. Therefore, before issuing any DMA transaction we have
      * to lock the memory region of interest and find out it's physical address.
      */
+
+    /*
+     * Align start address down to the page size (4K). The end address is rounded up
+     * to the page size
+     */
+    address_start = (IPTR)address & ~(PAGE_SIZE - 1);
+    address_end = (IPTR)(address + *length + PAGE_SIZE - 1) & ~(PAGE_SIZE - 1);
+
+    offset = (IPTR)address - address_start;
 
     /*
      * First, the memory has to be locked so that it does not get swapped away.
@@ -106,6 +122,20 @@
     /* Open pagemap file */
     if ((fd = PD(SysBase).SysIFace->open("/proc/self/pagemap", 0)))
     {
+        UQUAD position = (address_start / 4096) * PM_ENTRY_BYTES;
+        UQUAD pme, next_pme;
+
+        /* fast forward to the position of first page in the pagemap file */
+        PD(SysBase).SysIFace->lseek(fd, position, SEEK_SET);
+
+        PD(SysBase).SysIFace->read(fd, &pme, sizeof(pme));
+        PD(SysBase).SysIFace->read(fd, &next_pme, sizeof(next_pme));
+
+        while(len)
+        {
+
+        }
+
 
         PD(SysBase).SysIFace->close(fd);
     }
