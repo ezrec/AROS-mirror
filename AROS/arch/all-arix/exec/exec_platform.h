@@ -42,6 +42,7 @@ struct LibCInterface
     int     (*open)(const char *path, int flags);
     ssize_t (*read)(int fd, void *buf, size_t count);
     int     (*close)(int fd);
+    signed long long (*lseek)(int fd, signed long long offset, int whence);
     int     (*mlock)(void *addr, size_t len);
     int     (*munlock)(void *addr, size_t len);
 
