@@ -1,7 +1,7 @@
 # $Id$
 include $(TOP)/config/make.cfg
 
-FILES := platform_init coldreboot shutdowna typeofmem availmem
+FILES := platform_init coldreboot shutdowna typeofmem availmem cachepredma cachepostdma
 # swapcontext() and friends are not implemented on ARM Linux and are totally missing on Android
 ifneq ($(AROS_TARGET_CPU), arm)
 ifneq ($(AROS_TARGET_VARIANT), android)
