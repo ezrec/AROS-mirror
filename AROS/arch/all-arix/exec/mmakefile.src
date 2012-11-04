@@ -1,0 +1,20 @@
+# $Id$
+include $(TOP)/config/make.cfg
+
+FILES := platform_init 
+
+ifeq ($(ARCH),darwin)
+USER_CFLAGS += -D_FORTIFY_SOURCE=0
+endif
+
+USER_INCLUDES := $(PRIV_KERNEL_INCLUDES) $(PRIV_EXEC_INCLUDES) \
+		 -isystem $(GENINCDIR) $(KERNEL_INCLUDES) \
+		 -DHOST_OS_$(ARCH) -DHOST_OS_$(AROS_TARGET_VARIANT)
+
+%build_archspecific \
+  mainmmake=kernel-exec maindir=rom/exec \
+  arch=arix files=$(FILES)
+
+#MM kernel-exec-arix: kernel-kernel-includes kernel-hostlib-includes
+
+%common
