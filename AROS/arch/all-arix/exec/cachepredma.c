@@ -24,7 +24,7 @@
 #define PM_PSHIFT_BITS      6
 #define PM_PSHIFT_OFFSET    (PM_STATUS_OFFSET - PM_PSHIFT_BITS)
 #define PM_PSHIFT_MASK      (((1LL << PM_PSHIFT_BITS) - 1) << PM_PSHIFT_OFFSET)
-#define PM_PSHIFT(x)        (((u64) (x) << PM_PSHIFT_OFFSET) & PM_PSHIFT_MASK)
+#define PM_PSHIFT(x)        (((UQUAD) (x) & PM_PSHIFT_MASK) >> PM_PSHIFT_OFFSET)
 #define PM_PFRAME_MASK      ((1LL << PM_PSHIFT_OFFSET) - 1)
 #define PM_PFRAME(x)        ((x) & PM_PFRAME_MASK)
 
@@ -88,9 +88,8 @@
 ******************************************************************************/
 {
     AROS_LIBFUNC_INIT
-    void *phys_addr;
+    void *phys_addr = NULL;
     IPTR address_start;
-    IPTR address_end;
     IPTR offset;
     int fd;
     int len = *length;
@@ -106,7 +105,6 @@
      * to the page size
      */
     address_start = (IPTR)address & ~(PAGE_SIZE - 1);
-    address_end = (IPTR)(address + *length + PAGE_SIZE - 1) & ~(PAGE_SIZE - 1);
 
     offset = (IPTR)address - address_start;
 
@@ -128,19 +126,45 @@
         /* fast forward to the position of first page in the pagemap file */
         PD(SysBase).SysIFace->lseek(fd, position, SEEK_SET);
 
+        /* Read fist page */
         PD(SysBase).SysIFace->read(fd, &pme, sizeof(pme));
-        PD(SysBase).SysIFace->read(fd, &next_pme, sizeof(next_pme));
 
-        while(len)
+        /* If page is present and not in swap */
+        if (pme & PM_PRESENT && !(pme & PM_SWAP))
         {
+            /* Get physical address of the frame */
+            phys_addr = (void *)((IPTR)(PM_PFRAME(pme) << PM_PSHIFT(pme)));
 
+            /* Reset the length */
+            *length = 0;
+
+            /* Iteratee througgh PM entriees */
+            while(len)
+            {
+                /* Take care about page-unaligned buffers */
+                int size_in_page = PAGE_SIZE - offset;
+                if (size_in_page > len) size_in_page = len;
+
+                /* Advance by the size in page immediately */
+                *length += size_in_page;
+
+                /* Get next PME */
+                PD(SysBase).SysIFace->read(fd, &next_pme, sizeof(next_pme));
+
+                /* The next PME follows current PME? Break if it's not the case */
+                if (PM_PFRAME(next_pme) - PM_PFRAME(pme) != 1)
+                    break;
+
+                len -= size_in_page;
+                offset = 0;
+                pme = next_pme;
+            }
         }
-
 
         PD(SysBase).SysIFace->close(fd);
     }
 
-    return address;
+    return phys_addr;
 
     AROS_LIBFUNC_EXIT
 } /* CachePreDMA() */
