@@ -22,6 +22,7 @@ import autodoc
 
 
 # Setup
+DEFAULTLANG= 'en'
 SRCROOT    = os.path.abspath( '.' )
 DSTROOT    = os.path.abspath( '../bin/documentation' )
 
@@ -39,14 +40,23 @@ languages= []
 
 # altLang
 # -------
-# Returns the translation of the specified file into the specified language,
-# if it exists. Otherwise, returns the specified file name unmodified.
+# Returns the translation of the specified base name into the specified
+# language, if it exists. Otherwise, returns the file name for DEFAULTLANG.
 
-def altLang( file, lang, path='.' ):
-    altFile = os.path.splitext( file )[0] + '.' + lang
-    if os.path.exists( os.path.join( path, altFile ) ):
-        file = altFile
-    return file
+def altLang( base, lang, path='.'):
+    langfile= base +'.' +lang
+    if not(os.path.exists( os.path.join( path, langfile))):
+        langfile= base +'.' +DEFAULTLANG
+
+    return langfile
+
+
+# pathAltLang
+# -------
+# Joins the result of altLang with the specified path.
+
+def pathAltLang( base, lang, path='.'):
+    return  os.path.join( path, altLang( base, lang, path))
 
 
 def recurse( function, path='.', depth=0 ):
@@ -108,7 +118,7 @@ def makePictures():
     # Second, create the galleries
     for root in DIRECTORIES:
         for lang in languages:
-            output = convertWWW( altLang( os.path.join( root, 'index.en' ), lang ), lang, options )
+            output = convertWWW( pathAltLang( 'index', lang, root ), lang, options )
 
             names = os.listdir( root )
             names.sort()
@@ -120,7 +130,7 @@ def makePictures():
                 if name == '.svn' or not os.path.isdir( path ): continue
 
                 output += '<a name=%s>\n' % name
-                output += convertWWW( altLang( os.path.join( path, 'overview.en'), lang ), lang, options )
+                output += convertWWW( pathAltLang( 'overview', lang, path), lang, options )
 
                 for pictureName in os.listdir( path ):
                     picturePath = os.path.join( path, pictureName )
@@ -130,13 +140,13 @@ def makePictures():
 
                     output += makePicture( 
                         picturePath,
-                        convertWWW( altLang(os.path.splitext( picturePath )[0] + '.en', lang), lang, options ),
+                        convertWWW( pathAltLang( os.path.splitext( picturePath )[0], lang), lang, options ),
                         lang
                     )
 
                 output += '</a>'
 
-            if lang == 'en':
+            if lang == DEFAULTLANG:
                 strings = {
                     'ROOT'    : '../../',
                     'BASE'    : '../../',
@@ -150,7 +160,7 @@ def makePictures():
                 }
 
             filename = 'index.php'
-            if lang == 'en':
+            if lang == DEFAULTLANG:
                 dst = os.path.join( DSTROOT, root )
             else:
                 dst = os.path.join( DSTROOT, lang, root )
@@ -169,7 +179,7 @@ def makeStatus( extension = '.php' ):
     tasks  = db.tasks.parse.parse( file( 'db/status', 'r' ) )
     for lang in languages:
         dstdir = 'introduction/status'
-        if lang == 'en':
+        if lang == DEFAULTLANG:
             dstdir = os.path.join( DSTROOT, dstdir )
         else:
             dstdir = os.path.join( DSTROOT, lang, dstdir )
@@ -180,38 +190,54 @@ def makeStatus( extension = '.php' ):
 # makeNews
 # --------
 # Creates ReST files for current and archived news.
+# Returns True is files were created or False if no correct news files were found
 
 def makeNews():
     NEWS_SRC_DIR = os.path.join( SRCROOT, 'news/data' )
     NEWS_DST_DIR = os.path.join( SRCROOT, 'news/data' )
+    NEWS_SRC_INDX= os.path.join( SRCROOT, 'news/index.' )
+    NEWS_SRC_ARCH= os.path.join( SRCROOT, 'news/archive/')
+    NOOFITEMS=     5
 
-    news     = {}
-    archives = {}
+    news     = {}  # Lists of news, per language, to determine the recent news
+    archives = {}  # Lists of news, per year per language, to list news per year
 
     # Get list of news and archive items for each language
+    # Initialise the languages
     for lang in languages:
         news[lang] = []
         archives[lang] = {}
-    for filename in os.listdir( NEWS_SRC_DIR ):
-        date, ext= os.path.splitext( filename)
-        if ext == '.en' and len( date ) == 8 and date.isdigit():
-            year = date[:4]
-            for lang in languages:
-                lang_filename = altLang( filename, lang, NEWS_SRC_DIR)
 
-                news[lang].append( os.path.join( NEWS_SRC_DIR, lang_filename ) )
+    # Do all the year directories
+    for yeardirname in os.listdir( NEWS_SRC_DIR ):
+        yeardirpath= os.path.join( NEWS_SRC_DIR, yeardirname)
+        for lang in languages:
+            archives[ lang][yeardirname]= list()
 
-                if not archives[lang].has_key( year ):
-                    archives[lang][year] = list()
+        # Do all the news item files (originals) in a specific year directory
+        for filename in os.listdir( yeardirpath):
+            date, ext= os.path.splitext( filename)
+            if ext == '.en' and len( date ) == 8 and date.isdigit():
+                year = date[:4]
+                if year != yeardirname:
+                    print 'Error: News item "' +date +'" found in news year "' +yeardirname +'".'
 
-                archives[lang][year].append( os.path.join( NEWS_SRC_DIR, lang_filename ) )
+                # Generate a recent news source list and year news source lists for each language
+                for lang in languages:
+                    lang_filepath = os.path.join( yeardirpath, altLang( date, lang, yeardirpath))
+                    news[lang].append( lang_filepath)
+                    archives[lang][year].append( lang_filepath)
+                    # Disadvantage of this approach is that sorting the lists will have to compare entire paths.
+
+    # Check whether we actually found any news (we test for DEFAULTLANG, but all news lists have the same length)
+    if not( len( news[ DEFAULTLANG])):
+        return False
 
     # Generate news and archive ReST files
     for lang in languages:
-        news[lang].sort()
-        news[lang].reverse()
-        current = news[lang][:5]
-        _dst = os.path.join( SRCROOT, 'news/index.' + lang )
+        news[lang].sort( reverse= True)
+        current = news[lang][:NOOFITEMS]
+        _dst = NEWS_SRC_INDX +lang
 
         # Set up translated title dictionary
         config = ConfigParser()
@@ -220,29 +246,30 @@ def makeNews():
         for option in config.options( 'titles' ):
             _T[option] = config.get( 'titles', option )
 
+        # Create a recent news page
         if newer( current, _dst ):
             output  = file( _dst, 'w' )
-            output.write( _T['news'] + '\n' + '=' * len( _T['news'] ) + '\n\n' )
-            for filename in current:
-                output.write( '.. raw:: html\n\n   <a name="%s">\n' % filename[-11:-3])
-                output.write( '.. include:: %s\n' % filename )
-                output.write( '.. raw:: html\n\n   </a>\n\n\n')
+            output.write( titleReST( _T['news']))
+            for filepath in current:
+                output.write( htmlReST( '   <a name="%s"></a>\n' % filepath[-11:-3])) # Not ideal, but at least legal HTML
+                output.write( drctReST( 'include', filepath))
             output.close()
 
+        # Create year news pages
         for year in archives[lang].keys():
-            archives[lang][year].sort()
-            archives[lang][year].reverse()
-            _dst = os.path.join( SRCROOT, 'news/archive/' + year + '.' + lang )
+            if len( archives[ lang][ year]):
+                archives[lang][year].sort( reverse= True)
+                _dst = os.path.join( NEWS_SRC_ARCH +year +'.' +lang)
 
-            if newer( archives[lang][year], _dst ):
-                output = file( _dst, 'w' )
-                output.write( _T['news-archive-for'] + ' ' + year + '\n'
-                    + '=' * ( len( _T['news-archive-for'] ) + 5 ) + '\n\n' )
-                for filename in archives[lang][year]:
-                    output.write( '.. raw:: html\n\n   <a name="%s">\n' % filename[-11:-3])
-                    output.write( '.. include:: %s\n' % filename )
-                    output.write( '.. raw:: html\n\n   </a>\n\n\n')
-                output.close()
+                if newer( archives[lang][year], _dst ):
+                    output = file( _dst, 'w' )
+                    output.write( titleReST( _T[ 'news-archive-for'] +' ' + year))
+                    for filepath in archives[lang][year]:
+                        output.write( htmlReST( '   <a name="%s"></a>\n' % filepath[-11:-3])) # At least legal HTML
+                        output.write( drctReST( 'include', filepath))
+                    output.close()
+
+    return True
 
 
 # makeCredits
@@ -310,16 +337,16 @@ def processWWW( src, depth ):
 
     prefix = os.path.splitext( src )[0]
     suffix = os.path.splitext( src )[1][1:]
-    if suffix != 'en': return
+    if suffix != DEFAULTLANG: return
 
     for lang in languages:
-        if lang == 'en':
+        if lang == DEFAULTLANG:
             dst = prefix + '.php'
             dst_depth = depth
         else:
             dst = lang + '/' + prefix + '.php'
             dst_depth = depth + 1
-        src = altLang( prefix + '.en', lang )
+        src = altLang( prefix, lang )
         dst_abs = os.path.normpath( os.path.join( DSTROOT, dst ) )
         src_abs = os.path.normpath( os.path.join( SRCROOT, src ) )
         dst_dir = os.path.dirname( dst_abs )
@@ -343,7 +370,7 @@ def processHTML( src, depth ):
 
     prefix = os.path.splitext( src )[0]
     suffix = os.path.splitext( src )[1][1:]
-    if suffix != 'en': return
+    if suffix != DEFAULTLANG: return
 
     dst     = prefix + '.html' #.' + suffix
     dst_abs = os.path.normpath( os.path.join( DSTROOT, dst ) )
@@ -453,7 +480,7 @@ def buildWWW():
 
     # Hack to get around dependency problems
     for lang in languages:
-        if lang == 'en':
+        if lang == DEFAULTLANG:
             dstpath = DSTROOT
         else:
             dstpath = os.path.join( DSTROOT, lang )
@@ -590,8 +617,8 @@ def buildWWW():
 
 def buildHTML():
     global DSTROOT ; DSTROOT = os.path.join( DSTROOT, 'html' )
-    global languages ; languages = [ 'en' ]
-    TEMPLATE_DATA['en'] = file( 'targets/html/template.html.en', 'r' ).read()
+    global languages ; languages = [ DEFAULTLANG ]
+    TEMPLATE_DATA[DEFAULTLANG] = file( 'targets/html/template.html.en', 'r' ).read()
 
     makeNews();
 

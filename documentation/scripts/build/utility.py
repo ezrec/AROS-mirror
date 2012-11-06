@@ -101,4 +101,32 @@ def reportSkipping( message ):
 
 def reportBuilding( message ):
     print '\033[1m\033[33m*\033[30m', message, '\033[0m'
-  
+
+
+def titleReST( title):
+    """
+        title - title for an ReST page
+
+        Returns a string comprising of the title between =-lines, followed by an empty line.
+    """
+    return ('=' *len( title)) +'\n' +title +'\n' +('=' *len( title)) +'\n\n'
+
+
+def drctReST( directive, text):
+    """
+        directive - name of the directive
+        text      - text to be included in a ReST page as a directive
+
+        Returns a string comprising of the ReST directive of that name and with that text.
+    """
+    return '.. ' +directive +':: ' +text +'\n'
+
+
+def htmlReST( text):
+    """
+        text      - text to be included in a ReST page as raw html
+
+        Returns a string comprising of the ReST raw directive that includes as html that text followed by an empty line.
+    """
+    return drctReST( 'raw', 'html\n\n' +text)
+
