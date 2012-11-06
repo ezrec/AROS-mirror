@@ -4,6 +4,8 @@ charset:          iso-8859-7
 
 [titles]
 
+news:             Ειδήσεις
+news-archive-for: News archive for
 mirrors:          Mirrors
 contents:         Περιεχόμενα
 search:           Αναζήτηση

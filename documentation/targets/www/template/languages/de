@@ -4,6 +4,8 @@ charset:          iso-8859-15
 
 [titles]
 
+news:             Neues
+news-archive-for: News archive for
 mirrors:          Spiegel
 contents:         Inhalt
 search:           Suche

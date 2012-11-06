@@ -4,6 +4,8 @@ charset:          iso-8859-2
 
 [titles]
 
+news:             Zprávy
+news-archive-for: News archive for
 mirrors:          Zrcadla
 contents:         Obsah
 search:           Hledání

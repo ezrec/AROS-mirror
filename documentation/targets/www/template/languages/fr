@@ -4,6 +4,8 @@ charset:          iso-8859-15
 
 [titles]
 
+news:             News
+news-archive-for: News archive for
 mirrors:          Mirroirs
 contents:         Contenu
 search:           Recherche

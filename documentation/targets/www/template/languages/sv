@@ -4,6 +4,8 @@ charset:          iso-8859-15
 
 [titles]
 
+news:             Nyheter
+news-archive-for: News archive for
 mirrors:          Speglar
 contents:         Innehåll
 search:           Sökning

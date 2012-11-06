@@ -4,6 +4,8 @@ charset:          iso-8859-15
 
 [titles]
 
+news:             Uutiset
+news-archive-for: News archive for
 mirrors:          Mirrors
 contents:         Sisältö
 search:           Etsi

@@ -4,6 +4,8 @@ charset:          iso-8859-15
 
 [titles]
 
+news:             Novidades
+news-archive-for: News archive for
 mirrors:          Servidores espelho (Mirrors)
 contents:         Conteúdos
 search:           Procurar

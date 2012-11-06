@@ -4,6 +4,8 @@ charset:          iso-8859-2
 
 [titles]
 
+news:             Newsy
+news-archive-for: News archive for
 mirrors:          Serwery lustrzane
 contents:         Na stronach
 search:           Szukaj

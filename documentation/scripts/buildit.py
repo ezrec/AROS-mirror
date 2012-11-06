@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-1 -*-
-# Copyright © 2002-2011, The AROS Development Team. All rights reserved.
+# Copyright © 2002-2012, The AROS Development Team. All rights reserved.
 # $Id$
 
 import os, sys, shutil, glob
@@ -213,9 +213,16 @@ def makeNews():
         current = news[lang][:5]
         _dst = os.path.join( SRCROOT, 'news/index.' + lang )
 
+        # Set up translated title dictionary
+        config = ConfigParser()
+        config.read( os.path.join( 'targets/www/template/languages', lang ) )
+        _T = {}
+        for option in config.options( 'titles' ):
+            _T[option] = config.get( 'titles', option )
+
         if newer( current, _dst ):
             output  = file( _dst, 'w' )
-            output.write( 'News\n====\n\n' )
+            output.write( _T['news'] + '\n' + '=' * len( _T['news'] ) + '\n\n' )
             for filename in current:
                 output.write( '.. raw:: html\n\n   <a name="%s">\n' % filename[-11:-3])
                 output.write( '.. include:: %s\n' % filename )
@@ -229,7 +236,8 @@ def makeNews():
 
             if newer( archives[lang][year], _dst ):
                 output = file( _dst, 'w' )
-                output.write( 'News archive for ' + year + '\n=====================\n\n' )
+                output.write( _T['news-archive-for'] + ' ' + year + '\n'
+                    + '=' * ( len( _T['news-archive-for'] ) + 5 ) + '\n\n' )
                 for filename in archives[lang][year]:
                     output.write( '.. raw:: html\n\n   <a name="%s">\n' % filename[-11:-3])
                     output.write( '.. include:: %s\n' % filename )

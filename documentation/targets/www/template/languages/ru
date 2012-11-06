@@ -4,6 +4,8 @@ charset:          windows-1251
 
 [titles]
 
+news:             Новости
+news-archive-for: News archive for
 mirrors:          Зеркала
 contents:         Содержание
 search:           Поиск
