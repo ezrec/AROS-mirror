@@ -1,13 +1,12 @@
 # $Id$
 include $(TOP)/config/make.cfg
 
-# APPLY THE PATCH FIRST
-# APPLY THE PATCH FIRST
-# APPLY THE PATCH FIRST
-# APPLY THE PATCH FIRST
-# APPLY THE PATCH FIRST
-# APPLY THE PATCH FIRST
-# APPLY THE PATCH FIRST
+# If you need to build the complete aros-base-arixloader kickstart
+# image you need to apply the patch first to modify dos, emul and SFS.
+#
+# If you just made changes to arixloader.resource and want to
+# update the initrd with it, just use the kernel-arixloader
+# target
 
 %build_module mmake=kernel-arixloader \
   modname=arixloader modtype=resource \
