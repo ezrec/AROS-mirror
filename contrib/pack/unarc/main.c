@@ -32,7 +32,7 @@ enum
 static void cleanup_exit(CONST_STRPTR str);
 
 static Object *app, *win;
-static struct DiskObject *dobj;
+static struct DiskObject *dobj, *dobj2 = NULL;
 static struct RDArgs *rda;
 static IPTR args[ARG_COUNT];
 static BPTR olddir = (BPTR)-1;
@@ -40,11 +40,11 @@ static BPTR olddir = (BPTR)-1;
 
 int main(int argc, char **argv)
 {
-    STRPTR archive = NULL;
+    STRPTR archive = NULL, temp = NULL;
     STRPTR destination = NULL;
     STRPTR pubscreen = NULL;
 
-    STRPTR *toolarray;
+    STRPTR *toolarray, *toolarray2;
 
     dobj = GetDiskObject("PROGDIR:Unarc");
     if (dobj)
@@ -75,6 +75,15 @@ int main(int argc, char **argv)
         {
             olddir = CurrentDir(wbarg[1].wa_Lock);
             archive = wbarg[1].wa_Name;
+            dobj2 = GetDiskObject(archive);
+            if (dobj2)
+            {
+                toolarray2 = dobj2->do_ToolTypes;
+                destination = FindToolType(toolarray2, "DESTINATION");
+                temp = FindToolType(toolarray2, "ARCHIVE");
+                if (temp)
+                    archive = temp;
+            }
         }
     }
 
@@ -126,6 +135,7 @@ static void cleanup_exit(CONST_STRPTR str)
     }
     MUI_DisposeObject(app);
     if (dobj) FreeDiskObject(dobj);
+    if (dobj2) FreeDiskObject(dobj2);
     if (rda) FreeArgs(rda);
     if (olddir != (BPTR)-1) CurrentDir(olddir);
 }
