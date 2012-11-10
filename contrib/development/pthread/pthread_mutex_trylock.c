@@ -11,9 +11,6 @@
 
 int pthread_mutex_trylock(pthread_mutex_t* mutex)
 {
-#   warning Implement pthread_mutex_trylock()
-    AROS_FUNCTION_NOT_IMPLEMENTED("pthread_mutex_trylock");
-	
     if (AttemptSemaphore(&mutex->sigSem)) {
         return 0;
     } else {
