@@ -52,7 +52,7 @@ Endif
 Copy >NIL: ENVARC: ENV: ALL NOPRO NOREQ
 
 If EXISTS ENV:SYS/theme.var
-    Assign THEME: ${SYS/theme.var}
+    Assign THEME: "${SYS/theme.var}"
 else
     Assign THEME: THEMES:OS3.1/
 endif
@@ -90,8 +90,8 @@ Endif
 
 Assign EXISTS Extras: >NIL:
 If WARN
-    If Exists $EXTRASPATH
-        Assign Extras: $EXTRASPATH
+    If Exists "$EXTRASPATH"
+        Assign Extras: "$EXTRASPATH"
     Else
         Assign Extras: SYS:Extras >NIL:
         If WARN
@@ -102,8 +102,8 @@ Endif
 
 Assign EXISTS Development: >NIL:
 If WARN
-    If Exists $DEVELPATH
-        Assign Development: $DEVELPATH
+    If Exists "$DEVELPATH"
+        Assign Development: "$DEVELPATH"
     EndIf
 Endif
 Assign EXISTS Development: >NIL:
