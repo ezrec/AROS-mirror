@@ -30,7 +30,7 @@ de 22ste om 16.00 zal daar AROS gepresenteerd worden op de
 `Pianeta Amiga 2007`__ show.
 
 Enkele andere leuke programma's zijn geconverteerd naar AROS. Sinds kort
-hebben we MUIbase, een relationele database, en `Hively Tracker` __, een
+hebben we MUIbase, een relationele database, en `Hively Tracker`__, een
 editor voor AHX geluidsmodules. Beiden kunt u zoals gewoonlijk terugvinden
 in de `Archives`__.
 

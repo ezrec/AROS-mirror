@@ -48,9 +48,8 @@ Besser AROS gepresenteerd aan een kleine groep geïnteresseerde Amiga fans.
 Het evenement was van tevoren onder de aandacht gebracht door een aantal
 belangrijke nieuws-sites op het gebied van IT zoals `TGM Online`__ en
 `HW Upgrade`__. Een verslag van de show is gepubliceerd door
-`The AROS Show`__ (lees het  `hier`__). U kunt ook een leuke `video` __ op
+`The AROS Show`__ (lees het  `hier`__). U kunt ook een leuke `video`__ op
 YouTube bekijken.
-
 
 AROS Wereldwijd
 ---------------
