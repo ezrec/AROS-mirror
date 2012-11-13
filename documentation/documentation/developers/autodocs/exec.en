@@ -3827,9 +3827,9 @@ Notes
 ~~~~~
 ::
 
-     Currently no checks are performed if one is the owner of the slot.
-     This may be added in the future so one should deallocate a slot
-     from the same task that allocated the slot.
+     Currently no checks are performed to determine if one is the owner
+     of the slot. This may be added in the future, so one should
+     deallocate a slot from the same task that allocated the slot.
 
 
 
@@ -4003,7 +4003,7 @@ Result
 ~~~~~~
 ::
 
-     Value stored by SetTaskStorage(), or (IPTR)NULL if the slot was
+     Value stored by SetTaskStorageSlot(), or (IPTR)NULL if the slot was
      never used.
 
 
@@ -4011,7 +4011,7 @@ Result
 See also
 ~~~~~~~~
 
-`AllocTaskStorage()`_ `FreeTaskStorage()`_ `SetTaskStorageSlot()`_ 
+`AllocTaskStorageSlot()`_ `FreeTaskStorageSlot()`_ `SetTaskStorageSlot()`_ 
 
 ----------
 
@@ -5134,7 +5134,7 @@ Inputs
      DataStream   - Pointer to a zone of memory containing the data. Data has to be
                     WORD aligned.
 
-     PutChProc    - Callback function. In caseCalled for each character, including
+     PutChProc    - Callback function. Called for each character, including
                     the NULL terminator. The fuction is called as follow:
 
                     AROS_UFC2(void, PutChProc,
@@ -5851,8 +5851,8 @@ Function
 
      This function remembers the current state of the task storage slots.
      An ID will be returned with which the current state can be restored
-     using RestoreTaskStorageSlots(). NULL is returned when not enough
-     memory is available.
+     using RestoreTaskStorage(). NULL is returned when not enough memory
+     is available.
 
 
 Inputs
@@ -5866,7 +5866,7 @@ Result
 ~~~~~~
 ::
 
-     id - ID for use with RestoreTaskStorageSlots(), or NULL.
+     id - ID for use with RestoreTaskStorage(), or NULL.
 
 
 
@@ -6295,7 +6295,7 @@ Result
 ~~~~~~
 ::
 
-     This function does not return in case of success. Otherwise is returns
+     This function does not return in case of success. Otherwise it returns
      zero.
 
 

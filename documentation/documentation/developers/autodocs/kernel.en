@@ -718,11 +718,6 @@ Result
 
 
 
-See also
-~~~~~~~~
-
-`KrnSetSystemAttr()`_ 
-
 ----------
 
 KrnInitMemory()

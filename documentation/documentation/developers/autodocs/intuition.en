@@ -11,38 +11,38 @@ intuition
 ======================================= ======================================= ======================================= ======================================= 
 `ActivateGadget()`_                     `ActivateWindow()`_                     `AddClass()`_                           `AddGadget()`_                          
 `AddGList()`_                           `AllocRemember()`_                      `AllocScreenBuffer()`_                  `AlohaWorkbench()`_                     
-`AutoRequest()`_                        `BeginRefresh()`_                       `BuildSysRequest()`_                    `ChangeDecoration()`_                   
-`ChangeScreenBuffer()`_                 `ChangeWindowBox()`_                    `ChangeWindowShape()`_                  `ClearDMRequest()`_                     
-`ClearMenuStrip()`_                     `ClearPointer()`_                       `CloseScreen()`_                        `CloseWindow()`_                        
-`CloseWorkBench()`_                     `CurrentTime()`_                        `DisplayAlert()`_                       `DisplayBeep()`_                        
-`DisposeObject()`_                      `DoGadgetMethodA()`_                    `DoubleClick()`_                        `DrawBorder()`_                         
-`DrawImage()`_                          `DrawImageState()`_                     `DumpIntuiState()`_                     `EasyRequestArgs()`_                    
-`EndRefresh()`_                         `EndRequest()`_                         `EndScreenNotify()`_                    `EraseImage()`_                         
-`FreeClass()`_                          `FreeMonitorList()`_                    `FreeRemember()`_                       `FreeScreenBuffer()`_                   
-`FreeScreenDrawInfo()`_                 `FreeSysRequest()`_                     `GadgetMouse()`_                        `GetAttr()`_                            
-`GetDefaultPubScreen()`_                `GetDefPrefs()`_                        `GetMonitorList()`_                     `GetPrefs()`_                           
-`GetScreenData()`_                      `GetScreenDrawInfo()`_                  `HelpControl()`_                        `HideWindow()`_                         
-`InitRequester()`_                      `IntuiTextLength()`_                    `IsWindowVisible()`_                    `ItemAddress()`_                        
-`LendMenus()`_                          `LockIBase()`_                          `lockPubClass()`_                       `LockPubScreen()`_                      
-`LockPubScreenList()`_                  `MakeClass()`_                          `MakeScreen()`_                         `ModifyIDCMP()`_                        
-`ModifyProp()`_                         `MoveScreen()`_                         `MoveWindow()`_                         `MoveWindowInFrontOf()`_                
-`NewModifyProp()`_                      `NewObjectA()`_                         `NextObject()`_                         `NextPubScreen()`_                      
-`ObtainGIRPort()`_                      `OffGadget()`_                          `OffMenu()`_                            `OnGadget()`_                           
-`OnMenu()`_                             `OpenScreen()`_                         `OpenScreenTagList()`_                  `OpenWindow()`_                         
-`OpenWindowTagList()`_                  `OpenWorkBench()`_                      `PointInImage()`_                       `PrintIText()`_                         
-`PubScreenStatus()`_                    `QueryOverscan()`_                      `RefreshGadgets()`_                     `RefreshGList()`_                       
-`ReleaseGIRPort()`_                     `RemakeDisplay()`_                      `RemoveClass()`_                        `RemoveGadget()`_                       
-`RemoveGList()`_                        `ReportMouse()`_                        `Request()`_                            `ResetMenuStrip()`_                     
-`RethinkDisplay()`_                     `ScreenDepth()`_                        `ScreenPosition()`_                     `ScreenToBack()`_                       
-`ScreenToFront()`_                      `ScrollWindowRaster()`_                 `ScrollWindowRasterNoFill()`_           `SetAttrsA()`_                          
-`SetDefaultPubScreen()`_                `SetDMRequest()`_                       `SetEditHook()`_                        `SetGadgetAttrsA()`_                    
-`SetMenuStrip()`_                       `SetMouseQueue()`_                      `SetPointer()`_                         `SetPrefs()`_                           
-`SetPubScreenModes()`_                  `SetWindowPointerA()`_                  `SetWindowTitles()`_                    `ShowTitle()`_                          
-`ShowWindow()`_                         `SizeWindow()`_                         `StartScreenNotifyTagList()`_           `TimedDisplayAlert()`_                  
-`UnlockIBase()`_                        `unlockPubClass()`_                     `UnlockPubScreen()`_                    `UnlockPubScreenList()`_                
-`ViewAddress()`_                        `ViewPortAddress()`_                    `WBenchToBack()`_                       `WBenchToFront()`_                      
-`WindowAction()`_                       `WindowLimits()`_                       `WindowToBack()`_                       `WindowToFront()`_                      
-`ZipWindow()`_                          
+`AutoRequest()`_                        `BeginRefresh()`_                       `BuildEasyRequestArgs()`_               `BuildSysRequest()`_                    
+`ChangeDecoration()`_                   `ChangeScreenBuffer()`_                 `ChangeWindowBox()`_                    `ChangeWindowShape()`_                  
+`ClearDMRequest()`_                     `ClearMenuStrip()`_                     `ClearPointer()`_                       `CloseScreen()`_                        
+`CloseWindow()`_                        `CloseWorkBench()`_                     `CurrentTime()`_                        `DisplayAlert()`_                       
+`DisplayBeep()`_                        `DisposeObject()`_                      `DoGadgetMethodA()`_                    `DoubleClick()`_                        
+`DrawBorder()`_                         `DrawImage()`_                          `DrawImageState()`_                     `DumpIntuiState()`_                     
+`EasyRequestArgs()`_                    `EndRefresh()`_                         `EndRequest()`_                         `EndScreenNotify()`_                    
+`EraseImage()`_                         `FreeClass()`_                          `FreeMonitorList()`_                    `FreeRemember()`_                       
+`FreeScreenBuffer()`_                   `FreeScreenDrawInfo()`_                 `FreeSysRequest()`_                     `GadgetMouse()`_                        
+`GetAttr()`_                            `GetDefaultPubScreen()`_                `GetDefPrefs()`_                        `GetMonitorList()`_                     
+`GetPrefs()`_                           `GetScreenData()`_                      `GetScreenDrawInfo()`_                  `HelpControl()`_                        
+`HideWindow()`_                         `InitRequester()`_                      `IntuiTextLength()`_                    `IsWindowVisible()`_                    
+`ItemAddress()`_                        `LendMenus()`_                          `LockIBase()`_                          `lockPubClass()`_                       
+`LockPubScreen()`_                      `LockPubScreenList()`_                  `MakeClass()`_                          `MakeScreen()`_                         
+`ModifyIDCMP()`_                        `ModifyProp()`_                         `MoveScreen()`_                         `MoveWindow()`_                         
+`MoveWindowInFrontOf()`_                `NewModifyProp()`_                      `NewObjectA()`_                         `NextObject()`_                         
+`NextPubScreen()`_                      `ObtainGIRPort()`_                      `OffGadget()`_                          `OffMenu()`_                            
+`OnGadget()`_                           `OnMenu()`_                             `OpenScreen()`_                         `OpenScreenTagList()`_                  
+`OpenWindow()`_                         `OpenWindowTagList()`_                  `OpenWorkBench()`_                      `PointInImage()`_                       
+`PrintIText()`_                         `PubScreenStatus()`_                    `QueryOverscan()`_                      `RefreshGadgets()`_                     
+`RefreshGList()`_                       `ReleaseGIRPort()`_                     `RemakeDisplay()`_                      `RemoveClass()`_                        
+`RemoveGadget()`_                       `RemoveGList()`_                        `ReportMouse()`_                        `Request()`_                            
+`ResetMenuStrip()`_                     `RethinkDisplay()`_                     `ScreenDepth()`_                        `ScreenPosition()`_                     
+`ScreenToBack()`_                       `ScreenToFront()`_                      `ScrollWindowRaster()`_                 `ScrollWindowRasterNoFill()`_           
+`SetAttrsA()`_                          `SetDefaultPubScreen()`_                `SetDMRequest()`_                       `SetEditHook()`_                        
+`SetGadgetAttrsA()`_                    `SetMenuStrip()`_                       `SetMouseQueue()`_                      `SetPointer()`_                         
+`SetPrefs()`_                           `SetPubScreenModes()`_                  `SetWindowPointerA()`_                  `SetWindowTitles()`_                    
+`ShowTitle()`_                          `ShowWindow()`_                         `SizeWindow()`_                         `StartScreenNotifyTagList()`_           
+`SysReqHandler()`_                      `TimedDisplayAlert()`_                  `UnlockIBase()`_                        `unlockPubClass()`_                     
+`UnlockPubScreen()`_                    `UnlockPubScreenList()`_                `ViewAddress()`_                        `ViewPortAddress()`_                    
+`WBenchToBack()`_                       `WBenchToFront()`_                      `WindowAction()`_                       `WindowLimits()`_                       
+`WindowToBack()`_                       `WindowToFront()`_                      `ZipWindow()`_                          
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -554,6 +554,66 @@ See also
 ~~~~~~~~
 
 `EndRefresh()`_ 
+
+----------
+
+BuildEasyRequestArgs()
+======================
+
+Synopsis
+~~~~~~~~
+::
+
+ struct Window * BuildEasyRequestArgs(
+          struct Window     * RefWindow,
+          struct EasyStruct * easyStruct,
+          ULONG IDCMP,
+          APTR Args );
+ 
+ struct Window * BuildEasyRequest(
+          struct Window     * RefWindow,
+          struct EasyStruct * easyStruct,
+          ULONG IDCMP,
+          TAG tag, ... );
+
+Function
+~~~~~~~~
+::
+
+     Opens a requester, which provides one or more choices. The control is
+     returned to the application after the requester was opened. It is
+     handled by subsequent calls to SysReqHandler() and closed by calling
+     FreeSysRequest().
+
+
+Inputs
+~~~~~~
+::
+
+     RefWindow - A reference window. If NULL, the requester opens on
+                 the default public screen.
+     easyStruct - The EasyStruct structure (<intuition/intuition.h>),
+                  which describes the requester.
+     IDCMP - IDCMP flags, which should satisfy the requester, too. This is
+             useful for requesters, which want to listen to disk changes,
+             etc. Note that this is not a pointer to the flags as in
+             EasyRequestArgs().
+     Args - The arguments for easyStruct->es_TextFormat.
+
+
+Result
+~~~~~~
+::
+
+     Returns a pointer to the requester. Use this pointer only for calls
+     to SysReqHandler() and FreeSysRequest().
+
+
+
+See also
+~~~~~~~~
+
+`EasyRequestArgs()`_ `SysReqHandler()`_ `FreeSysRequest()`_ 
 
 ----------
 
@@ -4878,31 +4938,31 @@ Function
 ~~~~~~~~
 ::
 
- Enable or disable the window flag REPORTMOUSE. If the flag is
- set, you will receive IDCMP event every time the user moves
- the mouse.
+     Enable or disable the window flag REPORTMOUSE. If the flag is
+     set, you will receive an IDCMP event every time the user moves
+     the mouse.
 
 
 Inputs
 ~~~~~~
 ::
 
- flag - Enable (TRUE) or disable (FALSE) the reports.
- window - Do it in this window.
+     flag - Enable (TRUE) or disable (FALSE) the reports.
+     window - Do it in this window.
 
 
 Result
 ~~~~~~
 ::
 
- None.
+     None.
 
 
 Notes
 ~~~~~
 ::
 
- As you might have noticed, the arguments are twisted.
+     As you might have noticed, the arguments are twisted.
 
 
 
@@ -6140,6 +6200,76 @@ See also
 ~~~~~~~~
 
 `EndScreenNotify()`_ 
+
+----------
+
+SysReqHandler()
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG SysReqHandler(
+          struct Window  * window,
+          ULONG   * IDCMPFlagsPtr,
+          BOOL WaitInput );
+
+Function
+~~~~~~~~
+::
+
+     Handles a requester, which was opened with BuildSysRequest() or
+     BuildEasyRequestArgs(). When this function is called all outstanding
+     IDCMP requests are processed. If an IDCMP request that would close
+     a normal EasyRequestArgs() is encountered, SysReqHandler() returns
+     with a return code equally to the return code EasyRequestArgs()
+     would have returned. You may call this function in synchronous or
+     asynchronous mode, by setting the WaitInput parameter.
+
+
+Inputs
+~~~~~~
+::
+
+     Window - The window pointer returned by either BuildSysRequest() or
+              BuildEasyRequestArgs().
+     IDCMPFlagsPtr - Pointer to a ULONG to store the IDCMP flag that was
+                     received by the window. This will be set if you
+                     provided additional IDCMP flags to BuildSysRequest() or
+                     BuildEasyRequest(). You may set this to NULL. You must
+                     initialize the pointed to ULONG every time you call
+                     SysReqHandler().
+     WaitInput - Set this to TRUE, if you want this function to wait for
+                 the next IDCMP request, if there is none at the moment
+                 the function is called.
+
+
+Result
+~~~~~~
+::
+
+     -2, if the requester was not satisfied. Normally you want to call
+         this function at least until this function returns something
+         different than -2.
+     -1, if one of the IDCMP flags of idcmpPTR was set.
+      0, if the rightmost button was clicked or an error occured.
+      n, if the n-th button from the left was clicked.
+
+
+Bugs
+~~~~
+::
+
+     Gadget placing is still untidy.
+     Does not support BuildSysRequest() requesters, yet.
+
+
+
+See also
+~~~~~~~~
+
+`BuildSysRequest()`_ `BuildEasyRequestArgs()`_ 
 
 ----------
 

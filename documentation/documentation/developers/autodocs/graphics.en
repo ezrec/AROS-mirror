@@ -6603,7 +6603,7 @@ Result
 See also
 ~~~~~~~~
 
-`NewRegion()`_ `DisposeRegion()`_ `CopyRegion()`_ 
+`NewRegion()`_ `DisposeRegion()`_ 
 
 ----------
 
@@ -7117,8 +7117,8 @@ Function
 ~~~~~~~~
 ::
 
-     This function determines the metric of the space
-     that a text string would render into.
+     This function determines the metric of the space that a text string
+     would render into.
 
 
 Inputs
@@ -7134,16 +7134,18 @@ Inputs
                   te_Height - same as tf_YSize.  The height of the
                               font.
                   te_Extent.MinX - the offset to the left side of the
-                                   rectangle this would render into.  Often zero.
+                                   rectangle this would render into.
+                                   Often zero.
                   te_Extent.MinY - same as -tf_Baseline.  The offset
-                                   from the baseline to the top of the rectangle
-                                   this would render into.
+                                   from the baseline to the top of the
+                                   rectangle this would render into.
                   te_Extent.MaxX - the offset of the left side of the
-                                   rectangle this would render into.  Often the
-                                   same as te_Width-1.
+                                   rectangle this would render into.
+                                   Often the same as te_Width-1.
                   te_Extent.MaxY - same as tf_YSize-tf_Baseline-1.
-                                   The offset from the baseline to the bottom of
-                                   the rectangle this would render into.
+                                   The offset from the baseline to the
+                                   bottom of the rectangle this would
+                                   render into.
 
 
 
@@ -7228,7 +7230,7 @@ Function
 ::
 
      Determines the length of a string in pixels.
-     
+
 
 Inputs
 ~~~~~~

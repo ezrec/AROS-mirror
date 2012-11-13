@@ -433,8 +433,8 @@ Inputs
      PT_BOOTABLE   - LONG *                  ; Get value of "bootable" flag
      PT_AUTOMOUNT  - LONG *                  ; Get value of "automount" flag
      PT_NAME       - STRPTR                  ; Get name of partition (max 31 Bytes + NULL-byte)
-     PT_STARTBLOCK - ULONG *                 ; Get number of starting block for the partition (V2)
-     PT_ENDBLOCK   - ULONG *                 ; Get number of ending block for the partition (V2)
+     PT_STARTBLOCK - UQUAD *                 ; Get number of starting block for the partition (V2)
+     PT_ENDBLOCK   - UQUAD *                 ; Get number of ending block for the partition (V2)
 
 
 Result
