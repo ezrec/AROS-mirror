@@ -16,20 +16,12 @@ Name
      Shell
 
 
-Synopsis
-~~~~~~~~
-::
-
-
-     COMMAND/K/F,FROM
-
-
 Location
 ~~~~~~~~
 ::
 
 
-     C:
+     L:UserShell-Seg
 
 
 Function
@@ -40,29 +32,18 @@ Function
      Start a shell (interactive or background).
 
 
-Inputs
-~~~~~~
-::
-
-
-     COMMAND  --  command line to execute
-
-     FROM     --  script to invoke before user interaction
-
-
-
 Example
 ~~~~~~~
 ::
 
 
-     Shell FROM S:Startup-Sequence
+     Resident Shell L:UserShell-Seg SYSTEM PURE ADD
 
-     Starts a shell and executes the startup script.
+     Configures the default User Shell to this shell
 
 
 See also
 ~~~~~~~~
 
-`Execute <execute>`_ `NewShell <newshell>`_ 
+`Execute <execute>`_ `NewShell <newshell>`_ `Run <run>`_ 
 

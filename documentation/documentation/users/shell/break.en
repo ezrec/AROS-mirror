@@ -4,7 +4,7 @@ Break
 
 .. This document is automatically generated. Don't edit it!
 
-`Index <index>`_ `Prev <beep>`_ `Next <cd>`_ 
+`Index <index>`_ `Prev <binddrivers>`_ `Next <cd>`_ 
 
 ---------------
 
@@ -26,14 +26,14 @@ Synopsis
 ~~~~~~~~
 ::
 
-     PROCESS/N,PORT,ALL/S,C/S,D/S,E/S,F/S
+     PROCESS/N,PORT,NAME/K,ALL/S,C/S,D/S,E/S,F/S
 
 
 Location
 ~~~~~~~~
 ::
 
-     Sys:c
+     C:
 
 
 Function
@@ -69,7 +69,7 @@ Example
 ~~~~~~~
 ::
 
-     
+
      1.SYS:> BREAK 1
 
          Send the CTRL-C signal to the process numbered 1.
@@ -77,5 +77,9 @@ Example
      1.SYS:> BREAK 4 E
 
          Send the CTRL-E signal to the process numbered 4.
+
+     1.SYS:> BREAK NAME c:dhcpclient
+
+         Send the CTRL-C signal to the process named "c:dhcpclient".
 
 

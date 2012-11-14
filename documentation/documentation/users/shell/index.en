@@ -71,7 +71,6 @@ Shell Commands
     + `prompt <prompt>`_
     + `protect <protect>`_
     + `quit <quit>`_
-    + `quitaros <quitaros>`_
     + `reboot <reboot>`_
     + `relabel <relabel>`_
     + `rename <rename>`_
