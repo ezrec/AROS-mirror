@@ -861,6 +861,8 @@ def create_shell_docs():
     
     srcdirs = ( os.path.join(topdir, "workbench", "c"),
                 os.path.join(topdir, "workbench", "c", "shellcommands"),
+                os.path.join(topdir, "workbench", "c", "Shell"),
+                os.path.join(topdir, "workbench", "c", "R"),
                 os.path.join(topdir, "workbench", "c", "Identify"),
                 os.path.join(topdir, "workbench", "c", "Partition"),
                 os.path.join(topdir, "workbench", "c", "Decoration"),
