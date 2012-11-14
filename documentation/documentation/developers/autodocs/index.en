@@ -10,9 +10,7 @@ Autodocs for Modules
 + `arossupport <arossupport>`_
 + `asl <asl>`_
 + `battclock <battclock>`_
-+ `boopsi <boopsi>`_
 + `bootloader <bootloader>`_
-+ `bootmenu <bootmenu>`_
 + `bsdsocket <bsdsocket>`_
 + `bullet <bullet>`_
 + `camd <camd>`_
@@ -24,7 +22,6 @@ Autodocs for Modules
 + `coolimages <coolimages>`_
 + `datatypes <datatypes>`_
 + `debug <debug>`_
-+ `desktop <desktop>`_
 + `diskfont <diskfont>`_
 + `dos <dos>`_
 + `efi <efi>`_
@@ -60,8 +57,6 @@ Autodocs for Modules
 + `reqtools <reqtools>`_
 + `rexxsupport <rexxsupport>`_
 + `rexxsyslib <rexxsyslib>`_
-+ `security <security>`_
-+ `thread <thread>`_
 + `timer <timer>`_
 + `utility <utility>`_
 + `uuid <uuid>`_
