@@ -834,12 +834,20 @@ void RefreshPropGadgetKnob (struct Gadget * gadget, struct BBox * clear,
             else
             {
                 struct Image *image = (struct Image *)gadget->GadgetRender;
+                /* o1i: for some (at least for me) unknown reason, gadget->GadgetRender
+                 *      can be NULL sometimes. This seems to be a race condition
+                 *      somewhere (missing lock?), as it only happens, if enough
+                 *      debug is switched on.. so this check might not be a real
+                 *      fix, but I had no problems afterwards.
+                 */
+                if(image) 
+                {
 
-    	    #if 0 /* CHECKME */
+    	#if 0 /* CHECKME */
                 if (knob->Top + image->Height <= bbox.Top + bbox.Height &&
                     knob->Left + image->Width <= bbox.Left + bbox.Width)
-	    #endif
                 {
+	    #endif
 		#if 1
                     image->LeftEdge = knob->Left - bbox.Left;
                     image->TopEdge = knob->Top - bbox.Top;
@@ -863,6 +871,9 @@ void RefreshPropGadgetKnob (struct Gadget * gadget, struct BBox * clear,
                                    IDS_NORMAL,
                                    (struct DrawInfo *)dri);
 		#endif
+      #if 0 /* CHECKME */
+                }
+      #endif
                 }
             }
 
