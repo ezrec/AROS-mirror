@@ -2004,9 +2004,9 @@ diff -ruN OWB-r1097/BAL/ImageDecoder/WebCore/CMakeLists.txt OWB-r1097.aros/BAL/I
 +    aux_source_directory(${BAL_DIR}/ImageDecoder/WebCore/Datatype/WK WEBCORE_SRC)
 +endif(USE_GRAPHICS_AROS)
 diff -ruN OWB-r1097/BAL/ImageDecoder/WebCore/Datatype/WK/BCDatatypeImageDecoderWK.cpp OWB-r1097.aros/BAL/ImageDecoder/WebCore/Datatype/WK/BCDatatypeImageDecoderWK.cpp
---- OWB-r1097/BAL/ImageDecoder/WebCore/Datatype/WK/BCDatatypeImageDecoderWK.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/ImageDecoder/WebCore/Datatype/WK/BCDatatypeImageDecoderWK.cpp	2012-10-31 09:26:56.042284597 +0100
-@@ -0,0 +1,161 @@
+--- OWB-r1097/BAL/ImageDecoder/WebCore/Datatype/WK/BCDatatypeImageDecoderWK.cpp	1969-12-31 19:00:00.000000000 -0500
++++ OWB-r1097.aros/BAL/ImageDecoder/WebCore/Datatype/WK/BCDatatypeImageDecoderWK.cpp	2012-11-16 23:52:15.000000000 -0500
+@@ -0,0 +1,154 @@
 +/*
 + * Copyright (C) 2009 Stanislaw Szymczyk.
 + *
@@ -2126,17 +2126,10 @@ diff -ruN OWB-r1097/BAL/ImageDecoder/WebCore/Datatype/WK/BCDatatypeImageDecoderW
 +		    {
 +			for (unsigned x = 0; x < bitmapHeader->bmh_Width; x++)
 +			{
-+#if !AROS_BIG_ENDIAN
 +			    unsigned red = *data++;
 +			    unsigned green = *data++;
 +			    unsigned blue = *data++;
 +			    unsigned alpha = 0xff; data++;
-+#else
-+			    unsigned alpha = 0xff; data++;
-+			    unsigned blue = *data++;
-+			    unsigned green = *data++;
-+			    unsigned red = *data++;
-+#endif
 +			    buffer.setRGBA(x, y, red, green, blue, alpha);
 +			}
 +		    }
