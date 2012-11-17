@@ -77,12 +77,12 @@ def processPicture( src, depth ):
     if extension not in FORMATS: return
 
     src     = os.path.normpath( src )
-    dst_abs = os.path.normpath( os.path.join( DSTROOT, src ) )
+    dst_abs = os.path.normpath( os.path.join( TRGROOT, src ) )
     src_abs = os.path.normpath( os.path.join( SRCROOT, src ) )
     dst_dir = os.path.dirname( dst_abs )
 
     tn_dst     = makeThumbnailPath( src )
-    tn_dst_abs = os.path.normpath( os.path.join( DSTROOT, tn_dst ) )
+    tn_dst_abs = os.path.normpath( os.path.join( TRGROOT, tn_dst ) )
     tn_dst_dir = os.path.dirname( tn_dst_abs )
 
     # Make sure the destination directories exist.
@@ -161,9 +161,9 @@ def makePictures():
 
             filename = 'index.php'
             if lang == DEFAULTLANG:
-                dst = os.path.join( DSTROOT, root )
+                dst = os.path.join( TRGROOT, root )
             else:
-                dst = os.path.join( DSTROOT, lang, root )
+                dst = os.path.join( TRGROOT, lang, root )
             if not os.path.exists( dst ):
                 makedir( dst )
             file( 
@@ -180,9 +180,9 @@ def makeStatus( extension = '.php' ):
     for lang in languages:
         dstdir = 'introduction/status'
         if lang == DEFAULTLANG:
-            dstdir = os.path.join( DSTROOT, dstdir )
+            dstdir = os.path.join( TRGROOT, dstdir )
         else:
-            dstdir = os.path.join( DSTROOT, lang, dstdir )
+            dstdir = os.path.join( TRGROOT, lang, dstdir )
         makedir( dstdir )
         db.tasks.format.html.format( tasks, dstdir, TEMPLATE_DATA[lang], lang, extension )
 
@@ -347,7 +347,7 @@ def processWWW( src, depth ):
             dst = lang + '/' + prefix + '.php'
             dst_depth = depth + 1
         src = altLang( prefix, lang )
-        dst_abs = os.path.normpath( os.path.join( DSTROOT, dst ) )
+        dst_abs = os.path.normpath( os.path.join( TRGROOT, dst ) )
         src_abs = os.path.normpath( os.path.join( SRCROOT, src ) )
         dst_dir = os.path.dirname( dst_abs )
 
@@ -373,7 +373,7 @@ def processHTML( src, depth ):
     if suffix != DEFAULTLANG: return
 
     dst     = prefix + '.html' #.' + suffix
-    dst_abs = os.path.normpath( os.path.join( DSTROOT, dst ) )
+    dst_abs = os.path.normpath( os.path.join( TRGROOT, dst ) )
     src_abs = os.path.normpath( os.path.join( SRCROOT, src ) )
     dst_dir = os.path.dirname( dst_abs )
 
@@ -401,7 +401,7 @@ def processHTML( src, depth ):
 
 def copyImages():
     imagepath = 'documentation/developers/ui/images'
-    dstpath   = os.path.join( DSTROOT, imagepath )
+    dstpath   = os.path.join( TRGROOT, imagepath )
     srcpath   = imagepath
     
     makedir( dstpath )
@@ -416,7 +416,7 @@ def copyImages():
     )
     
     imagepath = 'documentation/developers/zune-dev/images'
-    dstpath   = os.path.join( DSTROOT, imagepath )
+    dstpath   = os.path.join( TRGROOT, imagepath )
     srcpath   = imagepath
     
     makedir( dstpath )
@@ -424,7 +424,7 @@ def copyImages():
     pathscopy( 'hello.png', srcpath, dstpath)
 
     imagepath = 'images'
-    dstpath   = os.path.join( DSTROOT, imagepath )
+    dstpath   = os.path.join( TRGROOT, imagepath )
     srcpath   = imagepath
     
     makedir( dstpath )
@@ -453,14 +453,14 @@ def copyImages():
 
 def copySamples():
     srcpath = os.path.join( "documentation", "developers", "samplecode")
-    dstpath = os.path.join(DSTROOT, srcpath)
+    dstpath = os.path.join( TRGROOT, srcpath)
     shutil.rmtree(dstpath, True)
     copytree(srcpath, dstpath)
 
 
 def copyHeaders():
     srcpath = os.path.join( "documentation", "developers", "headerfiles")
-    dstpath = os.path.join(DSTROOT, srcpath)
+    dstpath = os.path.join( TRGROOT, srcpath)
     shutil.rmtree(dstpath, True)
     copytree(srcpath, dstpath)
 
@@ -476,19 +476,20 @@ def buildClean():
 
 
 def buildWWW():
-    global DSTROOT ; DSTROOT = os.path.join( DSTROOT, 'www' )
+    global TRGROOT ; TRGROOT = os.path.join( DSTROOT, 'www' )
 
     # Hack to get around dependency problems
     for lang in languages:
         if lang == DEFAULTLANG:
-            dstpath = DSTROOT
+            dstpath = TRGROOT
         else:
-            dstpath = os.path.join( DSTROOT, lang )
+            dstpath = os.path.join( TRGROOT, lang )
         remove( os.path.join( dstpath, 'index.php' ) )
         remove( os.path.join( dstpath, 'introduction/index.php' ) )
         remove( os.path.join( dstpath, 'download.php' ) )
 
     makeNews()
+    makeCredits()
     makeTemplates()
 
     for lang in languages:
@@ -499,9 +500,9 @@ def buildWWW():
 
     recurse( processWWW )
 
-    copy( 'license.html', DSTROOT )
+    copy( 'license.html', TRGROOT )
 
-    imagepath = os.path.join( DSTROOT, 'images' )
+    imagepath = os.path.join( TRGROOT, 'images' )
     makedir( imagepath )
     srcpath= 'targets/www/images'
 
@@ -566,10 +567,10 @@ def buildWWW():
             'aros.css',
         ],
         srcpath,
-        DSTROOT
+        TRGROOT
     )
 
-    dbpath = os.path.join( DSTROOT, 'db' )
+    dbpath = os.path.join( TRGROOT, 'db' )
     makedir( dbpath )
     copy( 'db/quotes', dbpath )
 
@@ -579,23 +580,23 @@ def buildWWW():
         if os.path.exists( desc_file ):
             copy( desc_file, os.path.join( dbpath, 'download-descriptions' ) )
 
-    cgi_dest = os.path.join( DSTROOT, 'cgi-bin' )
+    cgi_dest = os.path.join( TRGROOT, 'cgi-bin' )
     if os.path.exists( cgi_dest ):
         shutil.rmtree( cgi_dest )
     copytree( 'targets/www/cgi-bin', cgi_dest )
 
-    thub_dest = os.path.join( DSTROOT, 'images/thubs' )
+    thub_dest = os.path.join( TRGROOT, 'images/thubs' )
     if os.path.exists( thub_dest ):
        shutil.rmtree ( thub_dest )
     copytree( 'targets/www/images/thubs', thub_dest )
 
 
-    rsfeed_dest = os.path.join( DSTROOT, 'rsfeed' )
+    rsfeed_dest = os.path.join( TRGROOT, 'rsfeed' )
     if os.path.exists( rsfeed_dest ):
        shutil.rmtree ( rsfeed_dest )
     copytree( 'targets/www/rsfeed', rsfeed_dest )   
 
-    toolpath = os.path.join( DSTROOT, 'tools' )
+    toolpath = os.path.join( TRGROOT, 'tools' )
     makedir( toolpath )
 
     srcpath= 'targets/www/tools'
@@ -610,17 +611,18 @@ def buildWWW():
     )
 
     # Remove index-offline.php
-    remove( os.path.join( DSTROOT, 'index-offline.php' ) )
+    remove( os.path.join( TRGROOT, 'index-offline.php' ) )
 
-    os.system( 'chmod -R go+r %s' % DSTROOT )
+    os.system( 'chmod -R go+r %s' % TRGROOT )
 
 
 def buildHTML():
-    global DSTROOT ; DSTROOT = os.path.join( DSTROOT, 'html' )
+    global TRGROOT ; TRGROOT = os.path.join( DSTROOT, 'html' )
     global languages ; languages = [ DEFAULTLANG ]
     TEMPLATE_DATA[DEFAULTLANG] = file( 'targets/html/template.html.en', 'r' ).read()
 
-    makeNews();
+    makeNews()
+    makeCredits()
 
     if not os.path.exists( 'news/index.en' ):
         file( 'news/index.en', 'w' ).write( '' )
@@ -637,19 +639,19 @@ def buildHTML():
             'aros.css'
         ],
         srcpath,
-        DSTROOT
+        TRGROOT
     )
 
-    copy( 'license.html', DSTROOT )
+    copy( 'license.html', TRGROOT )
 
     # Make status
     makeStatus( '.html' )
 
     # Use index-offline as index
-    remove( os.path.join( DSTROOT, 'index.html' ) )
-    os.rename( os.path.join( DSTROOT, 'index-offline.html' ), os.path.join( DSTROOT, 'index.html' ) )
+    remove( os.path.join( TRGROOT, 'index.html' ) )
+    os.rename( os.path.join( TRGROOT, 'index-offline.html' ), os.path.join( TRGROOT, 'index.html' ) )
 
-    os.system( 'chmod -R go+r %s' % DSTROOT )
+    os.system( 'chmod -R go+r %s' % TRGROOT )
 
 
 TARGETS = {
@@ -690,8 +692,6 @@ if __name__ == '__main__':
             languages= list( LANGUAGES)
         if len( targets) == 0:
             targets.append( 'www')
-
-        makeCredits() # FIXME: Should probably be called for at most www and html only.
 
         # Build each target
         for target in targets:
