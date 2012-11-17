@@ -90,7 +90,7 @@ static IPTR ManagerDestroyFunc(struct Hook *hook, APTR pool, struct Download *do
 
 static IPTR CancelFunc(struct Hook *hook, Object *list, void *data)
 {
-    LONG active;
+    LONG active = 0;
     get(list, MUIA_List_Active, &active);
     
     if(active == MUIV_List_Active_Off)
@@ -140,7 +140,7 @@ static struct Download *GetDownload(struct DownloadManager_DATA *manager, void *
 IPTR DownloadManager__OM_NEW(struct IClass *cl, Object *self, struct opSet *msg)
 {
     Object *list = NULL, *bt_cancel, *bt_clearFinished;
-    Object *preferences;
+    Object *preferences = NULL;
     struct TagItem *tag, *tags;
     
     for (tags = msg->ops_AttrList; (tag = NextTagItem(&tags)); )

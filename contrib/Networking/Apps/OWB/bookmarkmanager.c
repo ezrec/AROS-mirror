@@ -474,7 +474,7 @@ IPTR BookmarkManager__MUIM_BookmarkManager_Move(struct IClass *cl, Object *obj, 
 {
     struct BookmarkManager_DATA *data = (struct BookmarkManager_DATA *) INST_DATA(cl, obj);
     Object *cstate, *child, *prev = NULL, *prevprev = NULL, *next = NULL;
-    struct MinList *ChildList;
+    struct MinList *ChildList = NULL;
     sqlite3_stmt *stmt = NULL;
 
     int active = XGET(data->bookmarks_list, MUIA_List_Active);

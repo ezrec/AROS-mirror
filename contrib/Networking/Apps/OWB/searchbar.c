@@ -103,7 +103,7 @@ IPTR SearchBar__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
 IPTR SearchBar__MUIM_SearchBar_Find(struct IClass *cl, Object *obj, struct MUIP_SearchBar_Find *msg)
 {
     struct SearchBar_DATA *data = (struct SearchBar_DATA *) INST_DATA(cl, obj);
-    struct OWB_SearchMsg searchMsg;
+    struct OWB_SearchMsg searchMsg = {};
     searchMsg.forward = msg->forward;
     get(data->located_string, MUIA_String_Contents, &searchMsg.criteria);
     get(data->case_checkmark, MUIA_Pressed, &searchMsg.caseSensitive);

@@ -147,7 +147,7 @@ IPTR TabbedView__OM_SET(Class *cl, Object *obj, struct opSet *msg)
 	{
     	    case MUIA_Group_ActivePage:
     	    {
-		Object *activeView;
+		Object *activeView = NULL;
 		
 		/* Set previously visible WebView to unactive state */
 		get(obj, MUIA_TabbedView_ActiveObject, &activeView);

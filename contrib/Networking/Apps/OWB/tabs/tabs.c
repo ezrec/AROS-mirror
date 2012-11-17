@@ -279,7 +279,7 @@ IPTR Tabs__OM_GET(Class *cl, Object *obj, struct opGet *msg)
             break;
         case MUIA_Tabs_ActiveTab:
         {
-	    struct List *children;
+	    struct List *children = NULL;
 	    Object *child;
 	    APTR cstate;
 	    ULONG active = 0;
@@ -298,7 +298,7 @@ IPTR Tabs__OM_GET(Class *cl, Object *obj, struct opGet *msg)
         }
         case MUIA_Tabs_ActiveTabObject:
         {
-	    struct List *children;
+	    struct List *children = NULL;
 	    APTR cstate;
 	    get(data->activeObject, MUIA_Group_ChildList, &children);
             cstate = children->lh_Head;
@@ -319,7 +319,7 @@ IPTR Tabs__OM_GET(Class *cl, Object *obj, struct opGet *msg)
 IPTR Tabs__MUIM_Draw(struct IClass *cl, Object *obj, struct MUIP_Draw *msg)
 {
     struct Tabs_DATA *data = INST_DATA(cl, obj);
-    struct List *children;
+    struct List *children = NULL;
     APTR cstate;
     Object *child;
     WORD horiz_spacing = XGET(obj, MUIA_Group_HorizSpacing);
@@ -346,7 +346,7 @@ IPTR Tabs__MUIM_Draw(struct IClass *cl, Object *obj, struct MUIP_Draw *msg)
     }
     else if(data->location == MUIV_Tabs_Left)
     {
-	WORD lasty;
+	WORD lasty = 0;
         while(child && (child = NextObject(&cstate)))
         {
     	    RectFill(_rp(obj), _right(child), _top(child) - vert_spacing, _right(child), _top(child) - 1);

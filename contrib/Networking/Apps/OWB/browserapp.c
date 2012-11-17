@@ -34,7 +34,7 @@
 
 static Object* getActiveWindow(Object* app)
 {
-    struct List *wlist;
+    struct List *wlist = NULL;
     APTR         wstate;
     Object      *curwin;
 
@@ -57,7 +57,7 @@ static Object* getActiveWindow(Object* app)
 
 static IPTR ForwardCallToActiveWindowFunc(struct Hook *hook, Object *app, IPTR *msg)
 {   
-    struct List *wlist;
+    struct List *wlist = NULL;
     APTR         wstate;
     Object      *curwin;
 
@@ -562,7 +562,7 @@ IPTR BrowserApp__MUIM_BrowserApp_CloseWindow(Class *cl, Object *obj, struct MUIP
 
     /* count the number of browser windows */
     int windowsCount = 0;
-    struct List *wlist;
+    struct List *wlist = NULL;
     APTR         wstate;
     Object      *curwin;
 
