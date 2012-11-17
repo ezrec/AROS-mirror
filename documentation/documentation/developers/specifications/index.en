@@ -33,4 +33,5 @@ and don't necessarily correspond precisely with the current implementations.
 + `MMU HIDD <drafts/mmuhidd>`__
 + `ABI V1 <drafts/abiv1>`__
 + `Mouse Pointer Handling <drafts/mousepointer>`__
++ `RFC 10: Documentation Style Guide <drafts/doc-style-guide>`__
 
