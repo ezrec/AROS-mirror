@@ -263,7 +263,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
     <?php
         echo "<table width=\\"100%%\\"><tr><td>";
         echo "<div style=\\"text-align: right;\\">";
-        echo "<font color=\\"#aaaaaa\\">";        
+        echo "<font color=\\"#aaaaaa\\" size=\\"-1\\">";        
     ?>
     '''
     statsPHP6 = '''
@@ -315,11 +315,11 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
                 statsPHP3,
                 Table(
                     border = 0, cellspacing = 0, cellpadding = 0, 
-                    background='%(ROOT)simages/backgroundtop.png',
+                    style="background-image:url('%(ROOT)simages/backgroundtop.png'); background-repeat:repeat-x;", 
                     width = '100%%', contents = [
                         TR( [
                             TD( 
-                                valign = 'top', width = '100%%', height = 109, rowspan = 4,
+                                valign = 'top', width = '100%%', height = 109,
                                 contents = statsPHP5)
 
 #                Map(name = 'map')[,
@@ -331,6 +331,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
                         ] ),
             
                         TR(
+                            TD( 
                             Table(
                                 border = 0, cellspacing = 0, cellpadding = 0,
                                 width = '100%%', contents = [
@@ -344,13 +345,12 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
                                     ]),
                                 ]
                             )
+                            )
                         ), 
                         TR( [
                             TD(
-                                width = '100%%', colspan = 3, valign = 'bottom', align = 'center',
-                                contents = Font(
-                                    size = '-1', color = '#aaaaaa',
-                                    contents = [
+                                width = '100%%', valign = 'bottom', align = 'center',
+                                contents = [
                                         BR(),
                                         statsPHP4,
                                         _M['copyright'],
@@ -359,8 +359,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
                                         statsPHP6,
                                         BR(),
                                         BR()
-                                    ]
-                                )
+                                ]
                             )
                         ] )
                     ]
