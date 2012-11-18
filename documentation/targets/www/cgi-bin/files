@@ -125,7 +125,7 @@ downloadLabel = descriptions.get( 'links', 'download', '' )
 md5Label = descriptions.get( 'links', 'md5', '' )
 
 print '''
-    <p><table class="layout" border="0" cellpadding="2" cellspacing="1" bgcolor="%(colorFrame)s">
+    <table class="layout" border="0" cellpadding="2" cellspacing="1" bgcolor="%(colorFrame)s">
         <tr class="layout" bgcolor="%(colorTH)s">
             <td class="layout" width="35%%" rowspan="2"><b>%(packageHeading)s</b></td>
             <td class="layout" align="center" colspan="%(span)d"><b>%(dateHeading)s</b></td>
@@ -246,5 +246,5 @@ for group in groups.keys():
         print '''        </tr>'''
 
 print '''
-    </table></p>
+    </table>
 '''
