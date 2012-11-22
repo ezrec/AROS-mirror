@@ -1,6 +1,6 @@
 include $(TOP)/config/make.cfg
 
-#MM- workbench-darwin-$(CPU) : workbench-devs-hostdisk
+##MM- workbench-darwin-$(CPU) : workbench-devs-hostdisk
 
 USER_CFLAGS := -DHOST_OS_$(ARCH) -DHOST_OS_$(AROS_TARGET_VARIANT)	\
 	       -I$(SRCDIR)/arch/all-unix/devs/hostdisk			\
