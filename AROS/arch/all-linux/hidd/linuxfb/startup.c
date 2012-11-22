@@ -15,23 +15,32 @@
  * open etc.
  */
 
+#include <sys/stat.h>
+#include <fcntl.h>
+
+/* Prevent 'timeval redefinition' error */
+#define _AROS_TYPES_TIMEVAL_S_H_
+
 #include <aros/debug.h>
 #include <aros/symbolsets.h>
-#include <hidd/keyboard.h>
-#include <hidd/mouse.h>
+#include <graphics/gfxbase.h>
 #include <proto/exec.h>
 #include <proto/graphics.h>
 #include <proto/oop.h>
+#include <hidd/unixio_inline.h>
 
 #include LC_LIBDEFS_FILE
 
 static int LinuxFB_Startup(LIBBASETYPEPTR LIBBASE) 
 {
+    int res = FALSE;
     struct GfxBase *GfxBase;
-    OOP_Object *gfxhidd;
-    OOP_Object *kbd, *ms;
-    OOP_Object *kbdriver;
-    OOP_Object *msdriver = NULL;
+    ULONG err;
+    struct TagItem gfx_attrs[] =
+    {
+        {aHidd_LinuxFB_File, 0},
+        {TAG_DONE          , 0}
+    };
 
     D(bug("[LinuxFB] LinuxFB_Startup()\n"));
 
@@ -40,51 +49,32 @@ static int LinuxFB_Startup(LIBBASETYPEPTR LIBBASE)
     if (!GfxBase)
         return FALSE;
 
-    /* Add keyboard and mouse driver to the system */
-    kbd = OOP_NewObject(NULL, CLID_Hidd_Kbd, NULL);
-    if (kbd) {
-        ms = OOP_NewObject(NULL, CLID_Hidd_Mouse, NULL);
-	if (ms) {
-            kbdriver = HIDD_Kbd_AddHardwareDriver(kbd, LIBBASE->lsd.kbdclass, NULL);
-	    if (kbdriver) {
-		msdriver = HIDD_Mouse_AddHardwareDriver(ms, LIBBASE->lsd.mouseclass, NULL);
-		if (!msdriver)
-		    HIDD_Kbd_RemHardwareDriver(kbd, kbdriver);
-	    }
-	    OOP_DisposeObject(ms);
-	}    
-	OOP_DisposeObject(kbd);
-    }
-
-    /* If we got no input, we can't work, fail */
-    if (!msdriver) {
-	CloseLibrary(&GfxBase->LibNode);
+    /* TODO: In future we will support more framebuffers */
+    gfx_attrs[0].ti_Data = Hidd_UnixIO_OpenFile(LIBBASE->lsd.unixio, "/dev/fb0", O_RDWR, 0, NULL);
+    if (gfx_attrs[0].ti_Data == -1)
+    {
+        CloseLibrary(&GfxBase->LibNode);
         return FALSE;
     }
 
-    /* We use ourselves, and noone else */
-    LIBBASE->library.lib_OpenCnt = 1;
+    /*
+     * In future we will be able to call this several times in a loop.
+     * This will allow us to create several displays.
+     */
+    err = AddDisplayDriverA(LIBBASE->lsd.gfxclass, gfx_attrs);
 
-    /* In future we will be able to call this several times in a loop.
-       This will allow us to create several displays. */
-    gfxhidd = OOP_NewObject(LIBBASE->lsd.gfxclass, NULL, NULL);
-    D(bug("[LinuxFB_Startup] gfxhidd 0x%p\n", gfxhidd));
+    D(bug("[LinuxFB_Startup] AddDisplayDriver() result: %u\n", err));
 
-    if (gfxhidd) {
-        ULONG err = AddDisplayDriverA(gfxhidd, NULL);
-
-	D(bug("[LinuxFB_Startup] AddDisplayDriver() result: %u\n", err));
-	if (err) {
-	    OOP_DisposeObject(gfxhidd);
-	    gfxhidd = NULL;
-	}
+    if (!err)
+    {
+        res = TRUE;
+        /* We use ourselves, and noone else */
+        LIBBASE->library.lib_OpenCnt = 1;
     }
 
     CloseLibrary(&GfxBase->LibNode);
 
-    /* We always return TRUE because we added
-       keyboard and mouse drivers */
-    return TRUE;
+    return res;
 }
 
 static int LinuxFB_Test(LIBBASETYPEPTR LIBBASE)
