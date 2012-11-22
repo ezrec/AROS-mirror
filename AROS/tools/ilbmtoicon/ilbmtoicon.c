@@ -1,5 +1,5 @@
 /*
-    Copyright © 1995-2008, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: Tool to convert IFF ILBM images into Amiga icon file.
@@ -238,7 +238,7 @@ static char *skipword(char *s)
 static char *checkquotes(char *s)
 {
     char *s2;
-    char s3[256];
+    static char s3[256];
     BOOL escaped = 0;
     int i = 0;
 
@@ -364,7 +364,7 @@ static void handleoption(char *keyword, char *keyvalue)
 {
     struct keyword *kw;
     struct cycle *cy;
-    
+
     for(kw = keywordtable; kw->keyword; kw++)
     {
     	if (strcasecmp(kw->keyword, keyword) == 0)
