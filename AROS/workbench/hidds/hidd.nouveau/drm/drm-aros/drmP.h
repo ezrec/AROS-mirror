@@ -280,6 +280,8 @@ struct drm_device
 
     /* AROS specific fields */
     HIDDT_IRQ_Handler       *IntHandler;
+    struct Task            *IntHandlerTask;
+    BYTE                    wakesignal;
 };
 
 static __inline__ int drm_core_check_feature(struct drm_device *dev,
