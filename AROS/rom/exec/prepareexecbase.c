@@ -298,5 +298,10 @@ struct ExecBase *PrepareExecBase(struct MemHeader *mh, struct TagItem *msg)
 
     SysBase->DebugAROSBase = PrepareAROSSupportBase(mh);
 
+#if (AROS_FLAVOUR & AROS_FLAVOUR_STANDALONE)
+    /* ABI_V0 compatibility change */
+    *(struct ExecBase**)4UL = SysBase;
+#endif
+
     return SysBase;
 }
