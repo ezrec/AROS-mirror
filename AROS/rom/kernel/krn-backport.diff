@@ -1,0 +1,1967 @@
+Diffs generated between source V1 tree and V0 tree after backport
+Generate on Sat Oct 27 19:01:26 CEST 2012 by tools/krn-bckprt-diff.sh
+-----------------------------------------------------------------
+
+diff -urN /data/deadwood/gitAROS/AROS//arch/all-linux/kernel/mmakefile /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-linux/kernel/mmakefile
+--- /data/deadwood/gitAROS/AROS//arch/all-linux/kernel/mmakefile	2012-10-13 15:47:57.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-linux/kernel/mmakefile	1970-01-01 01:00:00.000000000 +0100
+@@ -1,12 +0,0 @@
+-# $Id$
+-include $(TOP)/config/make.cfg
+-
+-#MM- kernel-kernel-linux-i386 : kernel-$(AROS_TARGET_VARIANT)-sigcore kernel-linux-sigcore
+-
+-#MM
+-kernel-linux-sigcore : $(GENINCDIR)/sigcore.h
+-
+-$(GENINCDIR)/sigcore.h : sigcore.h.$(AROS_TARGET_CPU).src mksigcore.sh
+-	@$(ECHO) Generating $@...
+-	@$(MKDIR) $(GENINCDIR)
+-	@CC="$(KERNEL_CC)" CPU=$(AROS_TARGET_CPU) $(SHELL) $(SRCDIR)/$(CURDIR)/mksigcore.sh $(SRCDIR)/$(CURDIR) $(GENINCDIR)/sigcore.h
+diff -urN /data/deadwood/gitAROS/AROS//arch/all-linux/kernel/mmakefile.src /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-linux/kernel/mmakefile.src
+--- /data/deadwood/gitAROS/AROS//arch/all-linux/kernel/mmakefile.src	1970-01-01 01:00:00.000000000 +0100
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-linux/kernel/mmakefile.src	2012-10-25 20:04:05.000000000 +0200
+@@ -0,0 +1,12 @@
++# $Id$
++include $(TOP)/config/make.cfg
++
++#MM- kernel-kernel-linux-i386 : kernel-$(AROS_TARGET_VARIANT)-sigcore kernel-linux-sigcore
++
++#MM
++kernel-linux-sigcore : $(GENINCDIR)/sigcore.h
++
++$(GENINCDIR)/sigcore.h : sigcore.h.$(AROS_TARGET_CPU).src mksigcore.sh
++	@$(ECHO) Generating $@...
++	@$(MKDIR) $(GENINCDIR)
++	@CC="$(KERNEL_CC)" CPU=$(AROS_TARGET_CPU) $(SHELL) $(SRCDIR)/$(CURDIR)/mksigcore.sh $(SRCDIR)/$(CURDIR) $(GENINCDIR)/sigcore.h
+diff -urN /data/deadwood/gitAROS/AROS//arch/all-mingw32/boot/mmakefile.src /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-mingw32/boot/mmakefile.src
+--- /data/deadwood/gitAROS/AROS//arch/all-mingw32/boot/mmakefile.src	2012-10-13 15:47:57.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-mingw32/boot/mmakefile.src	2012-10-27 13:32:46.000000000 +0200
+@@ -31,7 +31,7 @@
+ %link_kickstart mmake=kernel-link-mingw32 file=$(EXEDIR)/aros-bsp-mingw32 \
+ 	devs=$(MINGW32_DEVS) handlers=$(MINGW32_HANDLERS) hidds=$(MINGW32_HIDD) libs=$(MINGW32_LIBS) res=$(MINGW32_RES) \
+ 	startup=$(KOBJSDIR)/kernel_resource.o \
+-	uselibs="arossupport hiddstubs amiga autoinit libinit arosc.static m" \
++	uselibs="arossupport hiddstubs amiga autoinit libinit rom m" \
+ 	map=$(GENDIR)/boot/kernel-mingw32.map
+ 
+ #MM
+diff -urN /data/deadwood/gitAROS/AROS//arch/all-mingw32/kernel/leaveinterrupt_i386.s /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-mingw32/kernel/leaveinterrupt_i386.s
+--- /data/deadwood/gitAROS/AROS//arch/all-mingw32/kernel/leaveinterrupt_i386.s	2012-10-13 15:47:57.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-mingw32/kernel/leaveinterrupt_i386.s	2012-10-27 12:54:46.000000000 +0200
+@@ -7,7 +7,8 @@
+ # so it's okay to play with stack here.
+ 
+ _core_LeaveInterrupt:
+-	pushl   0(%eax)		  # Push real return address
+-	movl    4(%eax), %eax	  # Restore real eax contents
+-	movl    $1, _Ints_Enabled # Now enable interrupts
++	pushl 0(%eax)		# Push real return address
++	pushl 4(%eax)		# Push real eax contents
++	movl $1, _Ints_Enabled	# Now enable interrupts
++	popl %eax		# Restore eax and leave
+ 	ret
+diff -urN /data/deadwood/gitAROS/AROS//arch/all-native/kernel/boot_utils.c /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-native/kernel/boot_utils.c
+--- /data/deadwood/gitAROS/AROS//arch/all-native/kernel/boot_utils.c	2012-10-13 15:47:57.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-native/kernel/boot_utils.c	2012-10-23 19:15:40.000000000 +0200
+@@ -24,7 +24,7 @@
+ {
+     struct TagItem *dest;
+     struct TagItem *tag;
+-    struct TagItem *tstate = (struct TagItem *)msg;
++    const struct TagItem *tstate = (struct TagItem *)msg;
+     ULONG num = 1;
+ 
+     /* First count how much memory we will need */
+diff -urN /data/deadwood/gitAROS/AROS//arch/all-pc/acpi/acpi_init.c /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-pc/acpi/acpi_init.c
+--- /data/deadwood/gitAROS/AROS//arch/all-pc/acpi/acpi_init.c	2012-10-13 15:47:57.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-pc/acpi/acpi_init.c	2012-10-23 19:15:40.000000000 +0200
+@@ -330,7 +330,7 @@
+ 	    D(bug("[ACPI] Have reset register, installing patch\n"));
+ 
+ 	    SetFunction(&SysBase->LibNode, -173 * LIB_VECTSIZE,
+-			AROS_SLIB_ENTRY(ShutdownA, Acpi, 173));
++			AROS_SLIB_ENTRY(ShutdownA, Acpi));
+ 	}
+     }
+ 
+diff -urN /data/deadwood/gitAROS/AROS//arch/all-pc/acpi/acpitool/parsers.c /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-pc/acpi/acpitool/parsers.c
+--- /data/deadwood/gitAROS/AROS//arch/all-pc/acpi/acpitool/parsers.c	2012-10-13 15:47:57.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-pc/acpi/acpitool/parsers.c	2012-10-23 19:15:40.000000000 +0200
+@@ -7,6 +7,8 @@
+ #include "locale.h"
+ #include "parsers.h"
+ 
++#define offsetof(type, field)       ((size_t)(&((type *)0)->field))
++
+ #define D(x)
+ 
+ /* Buffer for text formatting */
+diff -urN /data/deadwood/gitAROS/AROS//arch/all-pc/bootstrap/mmakefile.src /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-pc/bootstrap/mmakefile.src
+--- /data/deadwood/gitAROS/AROS//arch/all-pc/bootstrap/mmakefile.src	2012-10-13 15:47:58.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-pc/bootstrap/mmakefile.src	2012-10-23 19:15:41.000000000 +0200
+@@ -21,7 +21,7 @@
+ 
+ %build_prog mmake=kernel-bootstrap-pc progname=$(EXENAME) \
+ 	files=$(FILES) targetdir=$(EXEDIR) \
+-	uselibs="bootstrap bootconsole arosc.static" usestartup=no linker=kernel
++	uselibs="bootstrap bootconsole rom" usestartup=no linker=kernel
+ 
+ %rule_link_binary file=$(OBJDIR)/vesa.bin.o name=vesa objs=$(OBJDIR)/vesa.o \
+ 	start=0x1000 ldflags="-m elf_i386"
+diff -urN /data/deadwood/gitAROS/AROS//arch/all-pc/hpet/getunitattrsa.c /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-pc/hpet/getunitattrsa.c
+--- /data/deadwood/gitAROS/AROS//arch/all-pc/hpet/getunitattrsa.c	2012-10-13 15:47:58.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-pc/hpet/getunitattrsa.c	2012-10-23 19:15:41.000000000 +0200
+@@ -47,7 +47,7 @@
+     if (unit >= base->unitCnt)
+     	return FALSE;
+ 
+-    while ((tag = LibNextTagItem(&tstate)))
++    while ((tag = LibNextTagItem((const struct TagItem **)&tstate)))
+     {
+     	switch (tag->ti_Tag)
+     	{
+diff -urN /data/deadwood/gitAROS/AROS//arch/all-pc/hpet/hpet.conf /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-pc/hpet/hpet.conf
+--- /data/deadwood/gitAROS/AROS//arch/all-pc/hpet/hpet.conf	2012-10-13 15:47:58.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-pc/hpet/hpet.conf	2012-10-23 19:15:41.000000000 +0200
+@@ -5,6 +5,10 @@
+ libbasetype struct HPETBase
+ ##end config
+ 
++##begin cdef
++#include <utility/tagitem.h>
++##end cdef
++
+ ##begin cdefprivate
+ #include "hpet_intern.h"
+ ##end cdefprivate
+diff -urN /data/deadwood/gitAROS/AROS//arch/all-pc/kernel/cli.s /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-pc/kernel/cli.s
+--- /data/deadwood/gitAROS/AROS//arch/all-pc/kernel/cli.s	2012-10-13 15:47:58.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-pc/kernel/cli.s	2012-10-25 20:04:05.000000000 +0200
+@@ -1,10 +1,10 @@
+ 	.text
+ 	.align  16
+-	.globl  Kernel_9_KrnCli
+-	.type   Kernel_9_KrnCli, @function
++	.globl  Kernel_KrnCli
++	.type   Kernel_KrnCli, @function
+ 
+-Kernel_9_KrnCli:
++Kernel_KrnCli:
+ 	cli
+ 	ret
+ 
+-	.size  Kernel_9_KrnCli, .-Kernel_9_KrnCli
++	.size  Kernel_KrnCli, .-Kernel_KrnCli
+diff -urN /data/deadwood/gitAROS/AROS//arch/all-pc/kernel/issuper.s /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-pc/kernel/issuper.s
+--- /data/deadwood/gitAROS/AROS//arch/all-pc/kernel/issuper.s	2012-10-13 15:47:58.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-pc/kernel/issuper.s	2012-10-25 20:04:05.000000000 +0200
+@@ -1,12 +1,12 @@
+ 	.text
+ 	.align  16
+-	.globl  Kernel_13_KrnIsSuper
+-	.type   Kernel_13_KrnIsSuper, @function
++	.globl  Kernel_KrnIsSuper
++	.type   Kernel_KrnIsSuper, @function
+ 
+-Kernel_13_KrnIsSuper:
++Kernel_KrnIsSuper:
+ 	mov	%cs, %ax
+ 	and	$0x03, %eax		// Lower two bits are CPL
+ 	xor	$0x03, %eax		// 0x03 will give zero, 0x00 will give nonzero
+ 	ret
+ 
+-	.size  Kernel_13_KrnIsSuper, .-Kernel_13_KrnIsSuper
++	.size  Kernel_KrnIsSuper, .-Kernel_KrnIsSuper
+diff -urN /data/deadwood/gitAROS/AROS//arch/all-pc/kernel/sti.s /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-pc/kernel/sti.s
+--- /data/deadwood/gitAROS/AROS//arch/all-pc/kernel/sti.s	2012-10-13 15:47:58.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-pc/kernel/sti.s	2012-10-25 20:04:05.000000000 +0200
+@@ -1,10 +1,10 @@
+ 	.text
+ 	.align  16
+-	.globl  Kernel_10_KrnSti
+-	.type   Kernel_10_KrnSti, @function
++	.globl  Kernel_KrnSti
++	.type   Kernel_KrnSti, @function
+ 
+-Kernel_10_KrnSti:
++Kernel_KrnSti:
+ 	sti
+ 	ret
+ 
+-	.size  Kernel_10_KrnSti, .-Kernel_10_KrnSti
++	.size  Kernel_KrnSti, .-Kernel_KrnSti
+diff -urN /data/deadwood/gitAROS/AROS//arch/all-unix/boot/mmakefile.src /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-unix/boot/mmakefile.src
+--- /data/deadwood/gitAROS/AROS//arch/all-unix/boot/mmakefile.src	2012-10-13 15:47:58.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-unix/boot/mmakefile.src	2012-10-27 09:40:53.000000000 +0200
+@@ -58,6 +58,6 @@
+ 
+ %link_kickstart mmake=kernel-link-unix file=$(BINDIR)/boot/aros-bsp-$(BSP) \
+ 	devs=$(KDEVS) handlers=$(KHNDLRS) hidds=$(KHIDDS) libs=$(KLIBS) res=$(KRSRCS) startup=$(KOBJSDIR)/kernel_resource.o \
+-	uselibs="arossupport hiddstubs amiga autoinit arosc.static libinit m"
++	uselibs="arossupport hiddgraphicsstubs hiddstubs amiga autoinit libinit rom m"
+ 
+ %common
+diff -urN /data/deadwood/gitAROS/AROS//arch/all-unix/exec/newstackswap.c /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-unix/exec/newstackswap.c
+--- /data/deadwood/gitAROS/AROS//arch/all-unix/exec/newstackswap.c	2012-10-13 15:47:58.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-unix/exec/newstackswap.c	2012-10-23 19:15:41.000000000 +0200
+@@ -49,7 +49,7 @@
+ 	 AROS_LHA(struct StackSwapStruct *,  sss, A0),
+ 	 AROS_LHA(LONG_FUNC, entry, A1),
+ 	 AROS_LHA(struct StackSwapArgs *, args, A2),
+-	 struct ExecBase *, SysBase, 134, Exec)
++	 struct ExecBase *, SysBase, 122, Exec)
+ {
+     AROS_LIBFUNC_INIT
+ 
+diff -urN /data/deadwood/gitAROS/AROS//arch/all-unix/kernel/kernel_startup.c /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-unix/kernel/kernel_startup.c
+--- /data/deadwood/gitAROS/AROS//arch/all-unix/kernel/kernel_startup.c	2012-10-13 15:47:58.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-unix/kernel/kernel_startup.c	2012-10-27 09:40:53.000000000 +0200
+@@ -41,7 +41,7 @@
+ /* Global HostIFace is needed for krnPutC() to work before KernelBase is set up */
+ struct HostInterface *HostIFace;
+ 
+-THIS_PROGRAM_HANDLES_SYMBOLSET(STARTUP)
++THIS_PROGRAM_HANDLES_SYMBOLSETS
+ DEFINESET(STARTUP);
+ 
+ /*
+@@ -54,7 +54,8 @@
+     char *errstr;
+     unsigned int mm_PageSize;
+     struct MemHeader *bootmh;
+-    struct TagItem *tag, *tstate = msg;
++    struct TagItem *tag;
++    const struct TagItem *tstate = msg;
+     struct HostInterface *hif = NULL;
+     struct mb_mmap *mmap = NULL;
+     UWORD *ranges[] = {NULL, NULL, (UWORD *)-1};
+diff -urN /data/deadwood/gitAROS/AROS//arch/i386-all/exec/copymem_SSE.S /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-all/exec/copymem_SSE.S
+--- /data/deadwood/gitAROS/AROS//arch/i386-all/exec/copymem_SSE.S	2012-10-13 15:47:58.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-all/exec/copymem_SSE.S	2012-10-23 19:15:41.000000000 +0200
+@@ -44,12 +44,12 @@
+ #include <aros/config.h>
+ 
+ 	.text
+-	.globl  AROS_SLIB_ENTRY(CopyMem_SSE,Exec,104)
+-	_FUNCTION(AROS_SLIB_ENTRY(CopyMem_SSE,Exec,104))
+-AROS_SLIB_ENTRY(CopyMem_SSE,Exec,104):
++	.globl  AROS_SLIB_ENTRY(CopyMem_SSE,Exec)
++	_FUNCTION(AROS_SLIB_ENTRY(CopyMem_SSE,Exec))
++AROS_SLIB_ENTRY(CopyMem_SSE,Exec):
+ 	movl	12(%esp),%eax
+ 	cmpl	$4096,%eax
+-	jl	AROS_SLIB_ENTRY(CopyMem,Exec,104)	/* non-SSE version is faster for small copies */
++	jl	AROS_SLIB_ENTRY(CopyMem,Exec)	/* non-SSE version is faster for small copies */
+ 
+ 	pushl	%edi
+ 	pushl	%esi
+diff -urN /data/deadwood/gitAROS/AROS//arch/i386-all/exec/cpu_init.c /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-all/exec/cpu_init.c
+--- /data/deadwood/gitAROS/AROS//arch/i386-all/exec/cpu_init.c	2012-10-13 15:47:58.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-all/exec/cpu_init.c	2012-10-23 19:15:41.000000000 +0200
+@@ -2,7 +2,7 @@
+ #include <aros/symbolsets.h>
+ #include <proto/exec.h>
+ 
+-extern void AROS_SLIB_ENTRY(CopyMem_SSE, Exec, 104)();
++extern void AROS_SLIB_ENTRY(CopyMem_SSE, Exec)();
+ 
+ static int cpu_Init(struct ExecBase *SysBase)
+ {
+@@ -24,8 +24,8 @@
+         D(bug("[exec] SSE detected\n"));
+ 
+ 	/* Use SSE version of CopyMem() and CopyMemQuick() */
+-	SetFunction(&SysBase->LibNode, -104*LIB_VECTSIZE, AROS_SLIB_ENTRY(CopyMem_SSE, Exec, 104));
+-	SetFunction(&SysBase->LibNode, -105*LIB_VECTSIZE, AROS_SLIB_ENTRY(CopyMem_SSE, Exec, 104));
++	SetFunction(&SysBase->LibNode, -104*LIB_VECTSIZE, AROS_SLIB_ENTRY(CopyMem_SSE, Exec));
++	SetFunction(&SysBase->LibNode, -105*LIB_VECTSIZE, AROS_SLIB_ENTRY(CopyMem_SSE, Exec));
+     }
+ 
+     return TRUE;
+diff -urN /data/deadwood/gitAROS/AROS//arch/i386-all/exec/execstubs.s /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-all/exec/execstubs.s
+--- /data/deadwood/gitAROS/AROS//arch/i386-all/exec/execstubs.s	2012-10-13 15:47:58.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-all/exec/execstubs.s	2012-10-23 19:15:41.000000000 +0200
+@@ -41,15 +41,15 @@
+ 	PUSH			    ; \
+ 	call  name		    ; \
+ 	POP			    ; \
+-	leave                       ; \
++	leave
+ 	ret
+ 
+ #define STUB_ARG1(name)               \
+ 	pushl %ebp		    ; \
+ 	movl  %esp,%ebp		    ; \
+ 	PUSH			    ; \
+-	movl  FIRST_ARG(%esp),%edx  ; \
+-	pushl %edx		    ; \
++	movl  FIRST_ARG(%esp),%eax  ; \
++	pushl %eax		    ; \
+ 	call  name		    ; \
+ 	addl  $4,%esp		    ; \
+ 	POP			    ; \
+@@ -60,10 +60,10 @@
+ 	pushl %ebp		    ; \
+ 	movl  %esp,%ebp		    ; \
+ 	PUSH			    ; \
+-	movl  SECOND_ARG(%esp),%edx ; \
+-	pushl %edx		    ; \
+-	movl  SECOND_ARG(%esp),%edx ; \
+-	pushl %edx		    ; \
++	movl  SECOND_ARG(%esp),%eax ; \
++	pushl %eax		    ; \
++	movl  SECOND_ARG(%esp),%eax ; \
++	pushl %eax		    ; \
+ 	call  name		    ; \
+ 	addl  $8,%esp		    ; \
+ 	POP			    ; \
+@@ -95,13 +95,13 @@
+ 
+ 	/* Call functions and preserve registers */
+ #ifdef  UseExecstubs
+-	STUB0(AROS_SLIB_ENTRY(Forbid,Exec,22),AROS_CSYMNAME(_Exec_22_Forbid))
+-	STUB0(AROS_SLIB_ENTRY(Permit,Exec,23),AROS_CSYMNAME(_Exec_23_Permit))
+-	STUB0(AROS_SLIB_ENTRY(Disable,Exec,20),AROS_CSYMNAME(_Exec_20_Disable))
+-	STUB0(AROS_SLIB_ENTRY(Enable,Exec,21),AROS_CSYMNAME(_Exec_21_Enable))
+-
+-	STUB1(AROS_SLIB_ENTRY(ObtainSemaphore,Exec,94),AROS_CSYMNAME(_Exec_94_ObtainSemaphore))
+-	STUB1(AROS_SLIB_ENTRY(ReleaseSemaphore,Exec,95),AROS_CSYMNAME(_Exec_95_ReleaseSemaphore))
+-	STUB1(AROS_SLIB_ENTRY(ObtainSemaphoreShared,Exec,113),AROS_CSYMNAME(_Exec_113_ObtainSemaphoreShared))
++	STUB1(AROS_SLIB_ENTRY(Forbid,Exec),AROS_CSYMNAME(_Exec_Forbid))
++	STUB1(AROS_SLIB_ENTRY(Permit,Exec),AROS_CSYMNAME(_Exec_Permit))
++	STUB1(AROS_SLIB_ENTRY(Disable,Exec),AROS_CSYMNAME(_Exec_Disable))
++	STUB1(AROS_SLIB_ENTRY(Enable,Exec),AROS_CSYMNAME(_Exec_Enable))
++
++	STUB2(AROS_SLIB_ENTRY(ObtainSemaphore,Exec),AROS_CSYMNAME(_Exec_ObtainSemaphore))
++	STUB2(AROS_SLIB_ENTRY(ReleaseSemaphore,Exec),AROS_CSYMNAME(_Exec_ReleaseSemaphore))
++	STUB2(AROS_SLIB_ENTRY(ObtainSemaphoreShared,Exec),AROS_CSYMNAME(_Exec_ObtainSemaphoreShared))
+ #endif
+ 
+diff -urN /data/deadwood/gitAROS/AROS//arch/i386-all/exec/newstackswap.c /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-all/exec/newstackswap.c
+--- /data/deadwood/gitAROS/AROS//arch/i386-all/exec/newstackswap.c	2012-10-13 15:47:58.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-all/exec/newstackswap.c	2012-10-25 20:05:58.000000000 +0200
+@@ -1,5 +1,5 @@
+ /*
+-    Copyright © 1995-2012, The AROS Development Team. All rights reserved.
++    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
+     $Id$
+ 
+     Desc: NewStackSwap() - Call a function with swapped stack.
+@@ -17,7 +17,7 @@
+ 	AROS_LHA(struct StackSwapStruct *,  sss, A0),
+ 	AROS_LHA(LONG_FUNC, entry, A1),
+ 	AROS_LHA(struct StackSwapArgs *, args, A2),
+-	struct ExecBase *, SysBase, 134, Exec)
++	struct ExecBase *, SysBase, 122, Exec)
+ {
+     AROS_LIBFUNC_INIT
+ 
+@@ -28,20 +28,25 @@
+     IPTR ret;
+     BYTE i;
+ 
+-    /* Put arguments on stack in appropriate order */
++    /*
++     * In order to be able to restore the stack after calling the function
++     * we'll need to store original SP on the new stack. So we reserve a
++     * location for it.
++     */
++    _PUSH(sp, 0);
++    /* Then put arguments on stack in appropriate order */
+     for (i = 7; i >= 0; i--)
+     {
+ 	D(bug("[NewStackSwap] Argument %d value 0x%08lX\n", i, args->Args[i]));
+ 	_PUSH(sp, args->Args[i]);
+     }
+ 
+-    if (t->tc_Flags & TF_STACKCHK)
+-    {
+-    	volatile UBYTE* startfill = sss->stk_Lower;
++#if AROS_STACK_DEBUG
++    UBYTE* startfill = sss->stk_Lower;
+ 
+-    	while (startfill < (UBYTE *)sp)
+-	    *startfill++ = 0xE1;
+-    }
++    while (startfill < (UBYTE *)sp)
++	*startfill++ = 0xE1;
++#endif
+ 
+     /*
+      * We need to Disable() before changing limits and SP, otherwise
+@@ -54,36 +59,34 @@
+     t->tc_SPLower = sss->stk_Lower;
+     t->tc_SPUpper = sss->stk_Upper;
+ 
+-    asm volatile
+-    (
+-    /* Save original ESP by setting up a new stack frame */
+-    "	push	%%ebp\n"
+-    "	movl	%%esp, %%ebp\n"
++    asm volatile(
++    /* Save original ESP to the location reserved before */
++    "movl %%esp, 32(%2)\n\t"
+     /* Actually change the stack */
+-    "	movl	%2, %%esp\n\t"
++    "movl %2, %%esp\n\t"
+ 
+-    /* Enable(). Pass SysBase in %eax, We don't need %eax afterwards */
+-    "	call	*-84(%0)\n"
++    /* Enable(). It preserves all registers by convention, so no EAX save/restore.
++       Note also that we use global SysBase here  because we are running on the new
++       stack and SysBase is lost. */
++    "movl SysBase, %%ebx\n\t"
++    "push %%ebx\n\t"
++    "call *-84(%%ebx)\n\t"
++    "pop %%ebx\n\t"
+ 
+     /* Call our function */
+-    "	call	*%1\n"
++    "call *%1\n\t"
+ 
+-    /*
+-     * Disable().
+-     * Remember %eax (e.g. %0) and put local SysBase of this function in it.
+-     * %3 was clobbered by the called function.
+-     */ 
+-    "	push	%0\n"
+-    "	movl	SysBase, %0\n"
+-    "	call	*-80(%0)\n"
+-    "	pop	%0\n"
++    /* Disable(). Also preserves registers. */
++    "movl SysBase, %%ebx\n\t"
++    "push %%ebx\n\t"
++    "call *-80(%%ebx)\n\t"
++    "pop %%ebx\n\t"
+ 
+     /* Restore original ESP. Function's return value is in EAX. */
+-    "	movl	%%ebp, %%esp\n"
+-    "	pop	%%ebp\n"
++    "movl 32(%%esp), %%esp\n\t"
+     : "=a"(ret)
+-    : "r"(entry), "r"(sp), "a"(SysBase)
+-    : "ecx", "edx", "cc");
++    : "r"(entry), "r"(sp)
++    : "ebx", "ecx", "edx", "cc");
+ 
+     /* Change limits back and return */
+     t->tc_SPLower = splower;
+diff -urN /data/deadwood/gitAROS/AROS//arch/i386-all/exec/preparecontext.c /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-all/exec/preparecontext.c
+--- /data/deadwood/gitAROS/AROS//arch/i386-all/exec/preparecontext.c	2012-10-13 15:47:58.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-all/exec/preparecontext.c	2012-10-23 19:15:41.000000000 +0200
+@@ -15,13 +15,18 @@
+ #include <aros/i386/cpucontext.h>
+ 
+ #include "exec_intern.h"
+-#include "exec_util.h"
+ 
+ #define _PUSH(sp, val) *--sp = (IPTR)val
+ 
+-BOOL PrepareContext(struct Task *task, APTR entryPoint, APTR fallBack,
+-                    const struct TagItem *tagList, struct ExecBase *SysBase)
++AROS_LH4(BOOL, PrepareContext,
++	 AROS_LHA(VOLATILE struct Task *, task,       A0),
++	 AROS_LHA(APTR,                   entryPoint, A1),
++	 AROS_LHA(APTR,                   fallBack,   A2),
++	 AROS_LHA(const struct TagItem *, tagList,    A3),
++	 struct ExecBase *, SysBase, 6, Exec)
+ {
++    AROS_LIBFUNC_INIT
++
+     IPTR args[8] = {0};
+     WORD numargs = 0;
+     IPTR *sp = task->tc_SPReg;
+@@ -41,20 +46,20 @@
+     	switch(t->ti_Tag)
+ 	{
+ 		
+-#define HANDLEARG(x)                      \
+-	case TASKTAG_ARG ## x:            \
+-	    args[x - 1] = t->ti_Data;     \
+-	    if (x > numargs) numargs = x; \
+-	    break;
+-
+-	HANDLEARG(1)
+-	HANDLEARG(2)
+-	HANDLEARG(3)
+-	HANDLEARG(4)
+-	HANDLEARG(5)
+-	HANDLEARG(6)
+-	HANDLEARG(7)
+-	HANDLEARG(8)
++        #define HANDLEARG(x)                      \
++            case TASKTAG_ARG ## x:            \
++                args[x - 1] = t->ti_Data;     \
++                if (x > numargs) numargs = x; \
++                    break;
++
++            HANDLEARG(1)
++            HANDLEARG(2)
++            HANDLEARG(3)
++            HANDLEARG(4)
++            HANDLEARG(5)
++            HANDLEARG(6)
++            HANDLEARG(7)
++            HANDLEARG(8)
+ 	}
+     }
+ 
+@@ -84,4 +89,6 @@
+     task->tc_SPReg = sp;
+ 
+     return TRUE;
++
++    AROS_LIBFUNC_EXIT
+ } /* PrepareContext() */
+diff -urN /data/deadwood/gitAROS/AROS//arch/i386-all/exec/stackswap.S /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-all/exec/stackswap.S
+--- /data/deadwood/gitAROS/AROS//arch/i386-all/exec/stackswap.S	2012-10-13 15:47:58.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-all/exec/stackswap.S	2012-10-23 19:15:41.000000000 +0200
+@@ -42,17 +42,20 @@
+ #include <aros/config.h>
+ 
+ 	.text
+-	.globl	AROS_SLIB_ENTRY(StackSwap,Exec,122)
+-	_FUNCTION(AROS_SLIB_ENTRY(StackSwap,Exec,122))
+-AROS_SLIB_ENTRY(StackSwap,Exec,122):
++	.globl	AROS_SLIB_ENTRY(StackSwap,Exec)
++	_FUNCTION(AROS_SLIB_ENTRY(StackSwap,Exec))
++AROS_SLIB_ENTRY(StackSwap,Exec):
+ 	/* Save %ebx content */
+ 	pushl	%ebx
+ 
+-	/* Take the function's parameters; SysBase is in %eax */
++	/* Take the function's parameters */
+ 	movl	8(%esp),  %ebx  //newStack
++	movl	12(%esp), %eax  //SysBase
+ 
+ 	/* Disable interrupts, to be sure they always find a good stackframe */
++	pushl	%eax
+ 	call	*Disable(%eax)
++	popl	%eax
+ 
+ 	/* FindTask(NULL) in %edx */
+ 	movl	ThisTask(%eax), %edx
+@@ -67,14 +70,11 @@
+ 	xchgl	%ecx,             stk_Upper(%ebx)
+ 	movl    %ecx,             tc_SPUpper(%edx)
+ 
+-	movb	tc_Flags(%edx), %cx
+-	test	$TF_STACKCHK, %cx
+-	je	noStackSnoop
+-
++#if AROS_STACK_DEBUG
+ 	/* Fill [stk_Lower .. stk_Pointer - 16] with 0xE1 */
+ 
+ 	pushl	%edi
+-	pushl	%eax // SysBase
++	pushl	%eax
+ 
+ 	/* Destination register = %edi = NEW SPLower.
+ 	   Which was already swapped above, so to be found
+@@ -96,10 +96,15 @@
+ 	rep
+ 	stosb
+ 
+-	popl	%eax // SysBase
++	popl	%eax
+ 	popl	%edi
++#endif
++
++	/* We need to restore %ebx before swapping stack pointers, so
++	   put its content in a register whose content doesn't matter
++	   anymore to us, like %edx.  */
++	movl    %ebx, %edx  // edx = newStack, ThisTask is lost
+ 
+-noStackSnoop:
+ 	/* Now restore %ebx */
+ 	popl	%ebx
+ 
+@@ -109,18 +114,22 @@
+ 	   second StackSwap() call will restore the stack to exactly the same state. */
+ 	popl    %ecx    // return address
+ 	popl    %edx    // newStack
++	popl    %eax	// SysBase
+ 
+ 	/* Swap stack pointers */
+ 	xchgl	%esp, stk_Pointer(%edx) 
+ 
+ 	/* Reenable interrupts. */
++	pushl	%eax
+ 	call	*Enable(%eax)
+ 
+ 	/*
+ 	 * Now we should make the top of new stack to look exactly like the
+ 	 * old one. This means it should contain arguments passed to StackSwap(),
+ 	 * because the caller now will want to clear the stack and remove arguments.
+-	 * Arguments were: newStack. So we need to push it to the new stack.
++	 * Arguments were: SysBase, newStack (in the order in which they were
++	 * pushed). So we need to push them now to a new stack.
++	 * SysBase is already there, we supplied it to Enable(). Push newStack now.
+ 	 */
+ 	pushl %edx
+ 
+diff -urN /data/deadwood/gitAROS/AROS//arch/i386-pc/boot/iso/mmakefile.src /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-pc/boot/iso/mmakefile.src
+--- /data/deadwood/gitAROS/AROS//arch/i386-pc/boot/iso/mmakefile.src	2012-10-13 15:47:58.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-pc/boot/iso/mmakefile.src	2012-10-27 15:03:07.000000000 +0200
+@@ -6,6 +6,7 @@
+ TARGET_ISO := $(DISTDIR)/aros$(AROS_TARGET_SUFFIX)-pc-i386.iso
+ 
+ #MM bootiso-pc-i386 :	AROS-complete		\
++#MM			boot-pc-i386 \
+ #MM			kernel-package-pc-i386		\
+ #MM			AROS-pc-i386-drivers		\
+ #MM			bootloader-$(AROS_TARGET_BOOTLOADER)-pc-i386
+diff -urN /data/deadwood/gitAROS/AROS//arch/i386-pc/boot/mmakefile.src /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-pc/boot/mmakefile.src
+--- /data/deadwood/gitAROS/AROS//arch/i386-pc/boot/mmakefile.src	2012-10-13 15:47:58.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-pc/boot/mmakefile.src	2012-10-25 20:04:05.000000000 +0200
+@@ -34,14 +34,16 @@
+ #MM     kernel-workbench-devs-pc-i386
+ 
+ EXEDIR  := $(BINDIR)/boot
+-USELIBS	:= hiddstubs amiga arossupport debug arosc.static arosm autoinit libinit
++USELIBS	:= hiddstubs hiddgraphicsstubs bootconsole amiga arossupport debug arosm autoinit libinit rom
+ 
+ KRSRCS  := acpi battclock hpet processor
+ KLIBS   := exec expansion oop utility debug
+ KDEVS   := timer ahci ata trackdisk
+-KHIDDS  := kbd ps2mouse vesagfx vgah pci pcipc
++KHIDDS  := kbd ps2mouse vesagfx vgah pci pcipc irq
+ ##Disabled RSRC cpu isapnp
+ 
++USER_LDFLAGS := -L$(GENDIR)/lib
++
+ %link_kickstart mmake=kernel-bsp-pc-i386 file=$(EXEDIR)/aros-bsp-pc-i386 \
+ 	devs=$(KDEVS) hidds=$(KHIDDS) libs=$(KLIBS) res=$(KRSRCS) \
+ 	startup=$(KOBJSDIR)/kernel_resource.o \
+diff -urN /data/deadwood/gitAROS/AROS//arch/i386-pc/exec/debug_init.c /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-pc/exec/debug_init.c
+--- /data/deadwood/gitAROS/AROS//arch/i386-pc/exec/debug_init.c	2012-10-13 15:47:58.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-pc/exec/debug_init.c	2012-10-23 19:15:41.000000000 +0200
+@@ -14,8 +14,8 @@
+ 
+ #include "exec_intern.h"
+ 
+-extern void AROS_SLIB_ENTRY(MemoryRawIOInit, Exec, 84)();
+-extern void AROS_SLIB_ENTRY(MemoryRawPutChar, Exec, 86)(UBYTE chr);
++extern void AROS_SLIB_ENTRY(MemoryRawIOInit, Exec)();
++extern void AROS_SLIB_ENTRY(MemoryRawPutChar, Exec)(UBYTE chr);
+ 
+ int exec_boot(struct ExecBase *SysBase)
+ {
+@@ -29,9 +29,9 @@
+     if (strstr(cmdline, "debug=memory"))
+     {
+         SetFunction(&SysBase->LibNode, -84 * LIB_VECTSIZE,
+-            AROS_SLIB_ENTRY(MemoryRawIOInit, Exec, 84));
++            AROS_SLIB_ENTRY(MemoryRawIOInit, Exec));
+         SetFunction(&SysBase->LibNode, -86 * LIB_VECTSIZE,
+-            AROS_SLIB_ENTRY(MemoryRawPutChar, Exec, 86));
++            AROS_SLIB_ENTRY(MemoryRawPutChar, Exec));
+     }
+     RawIOInit();
+ 
+diff -urN /data/deadwood/gitAROS/AROS//arch/i386-pc/exec/userstate.s /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-pc/exec/userstate.s
+--- /data/deadwood/gitAROS/AROS//arch/i386-pc/exec/userstate.s	2012-10-13 15:47:58.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-pc/exec/userstate.s	2012-10-23 19:15:41.000000000 +0200
+@@ -16,10 +16,10 @@
+ 
+ 	.size  cpu_SuperState, .-cpu_SuperState
+ 
+-	.globl  AROS_SLIB_ENTRY(UserState, Exec, 26)
+-	.type   AROS_SLIB_ENTRY(UserState, Exec, 26), @function
++	.globl  AROS_SLIB_ENTRY(UserState, Exec)
++	.type   AROS_SLIB_ENTRY(UserState, Exec), @function
+ 
+-AROS_SLIB_ENTRY(UserState, Exec, 26):
++AROS_SLIB_ENTRY(UserState, Exec):
+ 	popl	%ecx			// Get return address
+ 	movl	(%esp), %eax		// Get supervisor return stack
+ 	movl	%ecx, (%eax)		// Set return address
+@@ -27,4 +27,4 @@
+ 	movl	%eax, %esp		// SSP = SP
+ 	iret				// Exit from interrupt
+ 
+-	.size  AROS_SLIB_ENTRY(UserState, Exec, 26), .-AROS_SLIB_ENTRY(UserState, Exec, 26)
++	.size  AROS_SLIB_ENTRY(UserState, Exec), .-AROS_SLIB_ENTRY(UserState, Exec)
+diff -urN /data/deadwood/gitAROS/AROS//arch/i386-pc/kernel/startup.c /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-pc/kernel/startup.c
+--- /data/deadwood/gitAROS/AROS//arch/i386-pc/kernel/startup.c	2012-10-13 15:47:58.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-pc/kernel/startup.c	2012-10-23 19:15:41.000000000 +0200
+@@ -191,7 +191,7 @@
+ 	/* Now relocate linked data */
+ 	mmap_len = LibGetTagData(KRN_MMAPLength, 0, BootMsg);
+ 	msg = BootMsg;
+-	while ((tag = LibNextTagItem((struct TagItem **)&msg)))
++	while ((tag = LibNextTagItem((const struct TagItem **)&msg)))
+     	{
+     	    switch (tag->ti_Tag)
+     	    {
+@@ -242,7 +242,7 @@
+      * (first boot and reboot)
+      */
+     msg = BootMsg;
+-    while ((tag = LibNextTagItem((struct TagItem **)&msg)))
++    while ((tag = LibNextTagItem((const struct TagItem **)&msg)))
+     {
+         switch (tag->ti_Tag)
+         {
+diff -urN /data/deadwood/gitAROS/AROS//bootstrap/elfloader.c /data/deadwood/repo-gitorious-aros/AROS/AROS//bootstrap/elfloader.c
+--- /data/deadwood/gitAROS/AROS//bootstrap/elfloader.c	2012-10-13 15:47:59.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//bootstrap/elfloader.c	2012-10-27 09:41:02.000000000 +0200
+@@ -161,13 +161,13 @@
+ 
+                 s = SysBase_ptr;
+             } else {
+-                DREL(kprintf("[ELF Loader] Undefined symbol '%s'\n", name));
++                kprintf("[ELF Loader] Undefined symbol '%s'\n", name);
+                 return 0;
+             }
+             break;
+ 
+         case SHN_COMMON:
+-            DREL(kprintf("[ELF Loader] COMMON symbol '%s'\n", name));
++            kprintf("[ELF Loader] COMMON symbol '%s' is unsupported\n", name);
+             return 0;
+ 
+         case SHN_ABS:
+--- /data/deadwood/gitAROS/AROS//compiler/include/exec/tasks.h	2012-10-13 15:47:59.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//compiler/include/exec/tasks.h	2012-10-23 19:15:41.000000000 +0200
+@@ -173,6 +173,7 @@
+     ULONG	    et_Result1;	    /* First result			*/
+     APTR	    et_Result2;	    /* Result data pointer (AllocVec)	*/
+     struct MsgPort  et_TaskMsgPort;
++    APTR	    et_Compatibility[4]; /* Reserve this space for compiled software to access iet_startup and iet_acpd */
+     void	   *et_MemPool;	    /* Task's private memory pool	*/
+ #ifdef __AROS__
+     IPTR	    et_Reserved[1]; /* MorphOS Private                  */
+diff -urN /data/deadwood/gitAROS/AROS//rom/debug/decodelocation.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/debug/decodelocation.c
+--- /data/deadwood/gitAROS/AROS//rom/debug/decodelocation.c	2012-10-13 15:47:59.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/debug/decodelocation.c	2012-10-27 17:58:29.000000000 +0200
+@@ -126,7 +126,7 @@
+     D(bug("[Debug] DecodeLocationA(0x%p)\n", addr));
+ 
+     /* Parse TagList */
+-    while ((tag = LibNextTagItem(&tstate)))
++    while ((tag = LibNextTagItem((const struct TagItem**)&tstate)))
+     {
+ 	switch (tag->ti_Tag)
+ 	{
+diff -urN /data/deadwood/gitAROS/AROS//rom/debug/mmakefile.src /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/debug/mmakefile.src
+--- /data/deadwood/gitAROS/AROS//rom/debug/mmakefile.src	2012-10-13 15:47:59.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/debug/mmakefile.src	2012-10-23 19:15:42.000000000 +0200
+@@ -11,6 +11,6 @@
+ 
+ %build_module mmake=kernel-debug \
+   modname=debug modtype=library \
+-  files="$(FILES) $(FUNCS)" linklibfiles=$(STATICFUNCS)
++  files="$(FILES) $(FUNCS)" linklibfiles=$(STATICFUNCS) uselibs="rom"
+ 
+ %common
+diff -urN /data/deadwood/gitAROS/AROS//rom/exec/allocentry.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/allocentry.c
+--- /data/deadwood/gitAROS/AROS//rom/exec/allocentry.c	2012-10-13 15:48:00.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/allocentry.c	2012-10-23 19:15:42.000000000 +0200
+@@ -1,5 +1,5 @@
+ /*
+-    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
++    Copyright © 1995-2001, The AROS Development Team. All rights reserved.
+     $Id$
+ 
+     Desc: Allocate memory.
+@@ -65,8 +65,7 @@
+     struct MemList *ret;
+     ULONG   	    ret_flags;
+ 
+-    ret = NewAllocEntry(entry, &ret_flags);
+-    if (ret)
++    if (NewAllocEntry(entry, &ret, &ret_flags))
+     {
+     	/* Check nasty case where the returncode is misleading :-(
+ 	   Like when memory was allocated at address 0x8???????. And
+diff -urN /data/deadwood/gitAROS/AROS//rom/exec/cachecleare.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/cachecleare.c
+--- /data/deadwood/gitAROS/AROS//rom/exec/cachecleare.c	2012-10-13 15:48:00.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/cachecleare.c	2012-10-23 19:15:42.000000000 +0200
+@@ -20,7 +20,7 @@
+ 
+ /*  SYNOPSIS */
+ 	AROS_LHA(APTR, address, A0),
+-	AROS_LHA(IPTR, length, D0),
++	AROS_LHA(ULONG, length, D0),
+ 	AROS_LHA(ULONG, caches, D1),
+ 
+ /*  LOCATION */
+diff -urN /data/deadwood/gitAROS/AROS//rom/exec/cause.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/cause.c
+--- /data/deadwood/gitAROS/AROS//rom/exec/cause.c	2012-10-13 15:48:00.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/cause.c	2012-10-23 19:15:42.000000000 +0200
+@@ -47,9 +47,15 @@
+ 
+ 	The software interrupt is called with the following prototype:
+ 
+-    AROS_INTC1(YourIntCode, APTR, interruptData)
+-
+-	The interruptData is the value of the is_Data field.
++	AROS_UFH3(void, YourIntCode,
++	    AROS_UFHA(APTR, interruptData, A1),
++	    AROS_UFHA(APTR, interruptCode, A5),
++	    AROS_UFHA(struct ExecBase *, SysBase, A6))
++
++	The interruptData is the value of the is_Data field, interruptCode
++	is the value of the is_Code field - it is included for historical
++	and compatibility reasons. You can ignore the value of interruptCode,
++	but you must declare it.
+ 
+     INPUTS
+ 	softint     -   The interrupt you wish to schedule. When setting up
+@@ -167,7 +173,10 @@
+                     KrnSti();
+ 
+                     /* Call the software interrupt. */
+-                    AROS_INTC1(intr->is_Code, intr->is_Data);
++                    AROS_UFC3(void, intr->is_Code,
++                              AROS_UFCA(APTR, intr->is_Data, A1),
++                              AROS_UFCA(APTR, intr->is_Code, A5),
++                              AROS_UFCA(struct ExecBase *, SysBase, A6));
+ 
+                     /* Get out and start loop *all* over again *from scratch*! */
+                     break;
+diff -urN /data/deadwood/gitAROS/AROS//rom/exec/etask.h /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/etask.h
+--- /data/deadwood/gitAROS/AROS//rom/exec/etask.h	2012-10-13 15:48:00.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/etask.h	2012-10-23 19:15:42.000000000 +0200
+@@ -48,6 +48,17 @@
+ #endif
+ };
+ 
++/* ABI_V0 compatibility:
++ * ETask was extended with some data. On the other hand, existing V0 binaries have code compiledin
++ * that accesses IntETask->iet_startup and IntETask->iet_acpd. Due to extentions of ETask, the
++ * position of those fields in relation to beginning of complete IntETask structure has changed, causing
++ * binary incompatibility. In order to fix this, et_Compatibility reverved fields were added to ETask
++ * and definition of iet_acpd and iet_startup was changed to use those fields which are in correct position
++ * from start of structure.
++ */
++#define iet_acpd    iet_ETask.et_Compatibility[2]
++#define iet_startup iet_ETask.et_Compatibility[3]
++
+ #define GetIntETask(task)   ((struct IntETask *)GetETask(task))
+ #define IntETask(etask)	    ((struct IntETask *)(etask))
+ 
+diff -urN /data/deadwood/gitAROS/AROS//rom/exec/exec.conf /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/exec.conf
+--- /data/deadwood/gitAROS/AROS//rom/exec/exec.conf	2012-10-13 15:48:00.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/exec.conf	2012-10-23 19:15:42.000000000 +0200
+@@ -1,5 +1,5 @@
+ ##begin config
+-version 51.0
++version 41.100
+ libbase SysBase
+ libbasetype struct IntExecBase
+ libbasetypeextern struct ExecBase
+@@ -27,33 +27,6 @@
+ STRPTR NewRawDoFmt(CONST_STRPTR FormatString, VOID_FUNC PutChProc, APTR PutChData, ...);
+ #endif
+ 
+-#ifdef __AROS_GIMME_DEPRECATED_STACKSWAP__
+-
+-#ifdef __GNUC__
+-
+-#if !defined(__EXEC_LIBAPI__) || (36 <= __EXEC_LIBAPI__)
+-
+-static inline void __attribute__((__always_inline__)) __inline_Exec_StackSwap(struct StackSwapStruct * __arg1, APTR __SysBase)
+-{
+-    AROS_LC1NR(void, StackSwap,
+-        AROS_LCA(struct StackSwapStruct *,(__arg1),A0),
+-        struct ExecBase *, (__SysBase), 122, Exec
+-    );
+-}
+-
+-#define StackSwap(arg1) \
+-    __inline_Exec_StackSwap((arg1), (APTR)SysBase)
+-
+-#endif /* !defined(__EXEC_LIBAPI__) || (36 <= __EXEC_LIBAPI__) */
+-
+-#else
+-
+-#error no StackSwap() support for your compiler 
+-
+-#endif /* __GNUC__ */
+-
+-#endif /* __AROS_GIMME_DEPRECATED_STACKSWAP__ */
+-
+ __END_DECLS
+ 
+ ##end cdef
+@@ -70,20 +43,16 @@
+ BPTR close() ()
+ .private
+ .skip 2
+-IPTR Supervisor(void *userFunction) (A5)
+-VOID ExitIntr() ()
+-.private
+-VOID Schedule() ()
+-.private
+-void Reschedule() ()
+-VOID Switch() ()
+-.private
+-VOID Dispatch() ()
+-.private
++ULONG Supervisor(ULONG_FUNC userFunction) (A5)
++BOOL PrepareContext(struct Task *task, APTR entryPoint, APTR fallBack, struct TagItem *tagList) (A0, A1, A2, A3)
++
++void Reschedule(struct Task *task) (A0)
++void Switch() ()
++void Dispatch() ()
+ void Exception() ()
+ void InitCode(ULONG startClass, ULONG version) (D0, D1)
+-void InitStruct(CONST_APTR initTable, APTR memory, ULONG size) (A1, A2, D0)
+-struct Library *MakeLibrary(CONST_APTR funcInit, CONST_APTR structInit, ULONG_FUNC libInit, ULONG dataSize, BPTR segList) (A0, A1, A2, D0, D1)
++void InitStruct(APTR initTable, APTR memory, ULONG size) (A1, A2, D0)
++struct Library *MakeLibrary(APTR funcInit, APTR structInit, ULONG_FUNC libInit, ULONG dataSize, BPTR segList) (A0, A1, A2, D0, D1)
+ ULONG MakeFunctions(APTR target, CONST_APTR functionArray, CONST_APTR funcDispBase) (A0, A1, A2)
+ struct Resident *FindResident(const UBYTE *name) (A1)
+ APTR InitResident(struct Resident *resident, BPTR segList) (A1, D1)
+@@ -115,10 +84,10 @@
+ struct Node *RemHead(struct List *list) (A0)
+ struct Node *RemTail(struct List *list) (A0)
+ void Enqueue(struct List *list, struct Node *node) (A0, A1)
+-struct Node *FindName(struct List *list, CONST_STRPTR name) (A0, A1)
++struct Node *FindName(struct List *list, const UBYTE *name) (A0, A1)
+ APTR AddTask(struct Task *task, APTR initialPC, APTR finalPC) (A1, A2, A3)
+ void RemTask(struct Task *task) (A1)
+-struct Task *FindTask(CONST_STRPTR name) (A1)
++struct Task *FindTask(STRPTR name) (A1)
+ BYTE SetTaskPri(struct Task *task, LONG priority) (A1, D0)
+ ULONG SetSignal(ULONG newSignals, ULONG signalSet) (D0, D1)
+ ULONG SetExcept(ULONG newSignals, ULONG signalSet) (D0, D1)
+@@ -162,23 +131,21 @@
+ ULONG Procure(struct SignalSemaphore *sigSem, struct SemaphoreMessage *bidMsg) (A0, A1)
+ void Vacate(struct SignalSemaphore *sigSem, struct SemaphoreMessage *bidMsg) (A0, A1)
+ struct Library *OpenLibrary(CONST_STRPTR libName, ULONG version) (A1, D0)
+-.version 33
+ void InitSemaphore(struct SignalSemaphore *sigSem) (A0)
+ void ObtainSemaphore(struct SignalSemaphore *sigSem) (A0)
+ void ReleaseSemaphore(struct SignalSemaphore *sigSem) (A0)
+ ULONG AttemptSemaphore(struct SignalSemaphore *sigSem) (A0)
+ void ObtainSemaphoreList(struct List *sigSem) (A0)
+ void ReleaseSemaphoreList(struct List *sigSem) (A0)
+-struct SignalSemaphore *FindSemaphore(CONST_STRPTR name) (A1)
++struct SignalSemaphore *FindSemaphore(STRPTR name) (A1)
+ void AddSemaphore(struct SignalSemaphore *sigSem) (A1)
+ void RemSemaphore(struct SignalSemaphore *sigSem) (A1)
+ ULONG SumKickData() ()
+ void AddMemList(ULONG size, ULONG attributes, LONG pri, APTR base, STRPTR name) (D0, D1, D2, A0, A1)
+ void CopyMem(CONST_APTR source, APTR dest, ULONG size) (A0, A1, D0)
+ void CopyMemQuick(CONST_APTR source, APTR dest, ULONG size) (A0, A1, D0)
+-.version 36
+ void CacheClearU() ()
+-void CacheClearE(APTR address, IPTR length, ULONG caches) (A0, D0, D1)
++void CacheClearE(APTR address, ULONG length, ULONG caches) (A0, D0, D1)
+ ULONG CacheControl(ULONG cacheBits, ULONG cacheMask) (D0, D1)
+ APTR CreateIORequest(struct MsgPort *ioReplyPort, ULONG size) (A0, D0)
+ void DeleteIORequest(APTR iorequest) (A0)
+@@ -194,32 +161,21 @@
+ ULONG AttemptSemaphoreShared(struct SignalSemaphore *sigSem) (A0)
+ void ColdReboot() ()
+ void StackSwap(struct StackSwapStruct *sss) (A0)
+-.private
+ void ChildFree(ULONG tid) (D0)
+ ULONG ChildOrphan(ULONG tid) (D0)
+ ULONG ChildStatus(ULONG tid) (D0)
+ IPTR ChildWait(ULONG tid) (D0)
+ APTR CachePreDMA(APTR address, ULONG *length, ULONG flags) (A0, A1, D0)
+-.novararg
+ void CachePostDMA(APTR address, ULONG *length, ULONG flags) (A0, A1, D0)
+-.novararg
+-.version 39
+ void AddMemHandler(struct Interrupt *memHandler) (A1)
+ void RemMemHandler(struct Interrupt *memHandler) (A1)
+ ULONG ObtainQuickVector(APTR interruptCode) (A0)
+-.skip 1 # MorphOS: NewSetFunction()
+-.skip 1 # MorphOS: NewCreateLibrary()
++.skip 2 # MorphOS: NewSetFunction(), NewCreateLibrary()
+ IPTR NewStackSwap(struct StackSwapStruct *newStack, APTR function, struct StackSwapArgs *args) (A0, A1, A2)
+ APTR TaggedOpenLibrary(LONG tag) (D0)
+ ULONG ReadGayle() ()
+-.version 50
+ STRPTR VNewRawDoFmt(CONST_STRPTR FormatString, VOID_FUNC PutChProc, APTR PutChData, va_list VaListStream) (A0, A2, A3, A1)
+-.version 45
+-void NewMinList(struct MinList *ml) (A0)
+-.skip 1 # MorphOS: CacheInvalidInstArea(APTR Address, ULONG Size) (A0, D0)
+-.skip 1 # MorphOS: CacheInvalidDataArea(APTR Address, ULONG Size) (A0, D0)
+-.skip 1 # MorphOS: CacheFlushDataInstArea(APTR Address, ULONG Size) (A0, D0)
+-.version 45
++.skip 1 # MorphOS: CacheFlushDataArea()
+ struct AVLNode *AVL_AddNode(struct AVLNode **root, struct AVLNode *node, AVLNODECOMP func) (A0, A1, A2)
+ struct AVLNode *AVL_RemNodeByAddress(struct AVLNode **root, struct AVLNode *node) (A0, A1)
+ struct AVLNode *AVL_RemNodeByKey(struct AVLNode **root, AVLKey key, AVLKEYCOMP func) (A0, A1, A2)
+@@ -230,42 +186,23 @@
+ struct AVLNode *AVL_FindNextNodeByKey(const struct AVLNode *node, AVLKey key, AVLKEYCOMP func) (A0, A1, A2)
+ struct AVLNode *AVL_FindFirstNode(const struct AVLNode *root) (A0)
+ struct AVLNode *AVL_FindLastNode(const struct AVLNode *root) (A0)
+-.version 50
+-.skip 1 # MorphOS: ULONG NewSetSystemAttrsA(APTR yData, ULONG Size, ULONG Type, struct TagItem *Tags ) (A0, D0, D1, A1)
++APTR AllocVecPooled(APTR pool, ULONG size) (D0, D1)
++void FreeVecPooled(APTR pool, APTR memory) (D0, D1)
++BOOL NewAllocEntry(struct MemList *entry, struct MemList **return_entry, ULONG *return_flags) (A0, A1, D0)
++APTR NewAddTask(struct Task *task, APTR initialPC, APTR finalPC, struct TagItem *tagList) (A1, A2, A3, A4)
+ struct Task *NewCreateTaskA(struct TagItem *tags) (A0)
+-.skip 1 # MorphOS: NewRawDoFmt()
+-.skip 1 # MorphOS: APTR AllocateAligned(struct MemHeader *memHeader, ULONG byteSize, ULONG alignSize, ULONG alignOffset) (base,sysv)
+-.skip 1 # MorphOS: APTR AllocMemAligned(ULONG byteSize, ULONG attributes, ULONG alignSize, ULONG alignOffset) (base,sysv)
+-.skip 1 # MorphOS: APTR AllocVecAligned(ULONG byteSize, ULONG attributes, ULONG alignSize, ULONG alignOffset) (base,sysv)
+-.skip 1 # MorphOS: AddExecNotify(struct Hook *hook) (base,sysv)
+-.skip 1 # MorphOS: RemExecNotify(struct Hook *hook) (base,sysv)
+-.skip 1 # MorphOS: struct Node *FindExecNode(ULONG type, CONST_STRPTR name) (D0, A0)
+-.skip 1 # MorphOS: APTR AddExecNodeA(APTR innode, struct TagItem *Tags) (A0, A1)
+-.skip 1 # MorphOS: APTR AllocVecDMA(ULONG byteSize, ULONG requirements) (D0, D1)
+-.skip 1 # MorphOS: VOID FreeVecDMA(APTR memoryBlock) (A1)
+-.skip 1 # MorphOS: APTR AllocPooledAligned(APTR poolHeader, ULONG byteSize, ULONG alignSize, ULONG alignOffset) (base,sysv)
+-.skip 1 # MorphOS: LONG AddResident(struct Resident *resident) (base,sysv)
+-struct Task *FindTaskByPID(ULONG processID) (D0)
++.skip 13
+ BOOL AddResetCallback(struct Interrupt *resetCallback) (A0)
+ void RemResetCallback(struct Interrupt *resetCallback) (A0)
+-APTR AllocVecPooled(APTR pool, ULONG size) (D0, D1)
+-void FreeVecPooled(APTR pool, APTR memory) (D0, D1)
+-.skip 1 # MorphOS: void DumpTaskState(struct Task *task) (A0)
+-.skip 1 # MorphOS: void AddExecNotifyType(struct Hook *hook, LONG Type) (base,sysv)
++.skip 2 # MorphOS: private9(), private10()
++.skip 2 # MorphOS: DumpTaskState(), AddExecNotifyType()
+ ULONG ShutdownA(ULONG action) (D0)
+ .novararg
+-struct MemList *NewAllocEntry(struct MemList *entry, ULONG *return_flags) (A0, A1)
+-.skip 1 # MorphOS: ULONG AvailPool(APTR poolHeader, ULONG flags) (base,sysv)
+-APTR NewAddTask(struct Task *task, APTR initialPC, APTR finalPC, struct TagItem *tagList) (A1, A2, A3, A4)
+ # MorphOS functions follow:
+-.skip 1 # void PutMsgHead(struct MsgPort *port, struct Message *message) (base,sysv)
+-.skip 1 # ULONG NewGetTaskPIDAttrsA(ULONG pid, APTR data, ULONG dataSize, ULONG type, struct TagItem *tags) (D0, A0, D1, D2, A1)
+-.skip 1 # ULONG NewGetTaskPIDAttrsA(ULONG pid, APTR data, ULONG dataSize, ULONG type, struct TagItem *tags) (D0, A0, D1, D2, A1)
+-.version 51
+-LONG AllocTaskStorageSlot() ()
+-VOID FreeTaskStorageSlot(LONG slot) (D0)
+-APTR SaveTaskStorage() ()
+-void RestoreTaskStorage(APTR id) (A0)
+-BOOL SetTaskStorageSlot(LONG id, IPTR value) (D0, D1)
+-IPTR GetTaskStorageSlot(LONG id) (D0)
++# private11()
++# AvailPool()
++# private12()
++# PutMsgHead()
++# NewGetTaskPIDAttrsA()
++# NewSetTaskPIDAttrsA()
+ ##end functionlist
+diff -urN /data/deadwood/gitAROS/AROS//rom/exec/exec_extfuncs.h /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/exec_extfuncs.h
+--- /data/deadwood/gitAROS/AROS//rom/exec/exec_extfuncs.h	2012-10-13 15:48:00.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/exec_extfuncs.h	2012-10-23 19:15:42.000000000 +0200
+@@ -6,133 +6,132 @@
+     Lang: english
+ */
+ 
+-extern void AROS_SLIB_ENTRY(Supervisor,Exec,5)();
+-extern void AROS_SLIB_ENTRY(ExitIntr,Exec,6)();
+-extern void AROS_SLIB_ENTRY(Schedule,Exec,7)();
+-extern void AROS_SLIB_ENTRY(Reschedule,Exec,8)();
+-extern void AROS_SLIB_ENTRY(Switch,Exec,9)();
+-extern void AROS_SLIB_ENTRY(Dispatch,Exec,10)();
+-extern void AROS_SLIB_ENTRY(Exception,Exec,11)();
+-extern void AROS_SLIB_ENTRY(InitCode,Exec,12)();
+-extern void AROS_SLIB_ENTRY(InitStruct,Exec,13)();
+-extern void AROS_SLIB_ENTRY(MakeLibrary,Exec,14)();
+-extern void AROS_SLIB_ENTRY(MakeFunctions,Exec,15)();
+-extern void AROS_SLIB_ENTRY(FindResident,Exec,16)();
+-extern void AROS_SLIB_ENTRY(InitResident,Exec,17)();
+-extern void AROS_SLIB_ENTRY(Alert,Exec,18)();
+-extern void AROS_SLIB_ENTRY(Debug,Exec,19)();
+-extern void AROS_SLIB_ENTRY(Disable,Exec,20)();
+-extern void AROS_SLIB_ENTRY(Enable,Exec,21)();
+-extern void AROS_SLIB_ENTRY(Forbid,Exec,22)();
+-extern void AROS_SLIB_ENTRY(Permit,Exec,23)();
+-extern void AROS_SLIB_ENTRY(SetSR,Exec,24)();
+-extern void AROS_SLIB_ENTRY(SuperState,Exec,25)();
+-extern void AROS_SLIB_ENTRY(UserState,Exec,26)();
+-extern void AROS_SLIB_ENTRY(SetIntVector,Exec,27)();
+-extern void AROS_SLIB_ENTRY(AddIntServer,Exec,28)();
+-extern void AROS_SLIB_ENTRY(RemIntServer,Exec,29)();
+-extern void AROS_SLIB_ENTRY(Cause,Exec,30)();
+-extern void AROS_SLIB_ENTRY(Allocate,Exec,31)();
+-extern void AROS_SLIB_ENTRY(Deallocate,Exec,32)();
+-extern void AROS_SLIB_ENTRY(AllocMem,Exec,33)();
+-extern void AROS_SLIB_ENTRY(AllocAbs,Exec,34)();
+-extern void AROS_SLIB_ENTRY(FreeMem,Exec,35)();
+-extern void AROS_SLIB_ENTRY(AvailMem,Exec,36)();
+-extern void AROS_SLIB_ENTRY(AllocEntry,Exec,37)();
+-extern void AROS_SLIB_ENTRY(FreeEntry,Exec,38)();
+-extern void AROS_SLIB_ENTRY(Insert,Exec,39)();
+-extern void AROS_SLIB_ENTRY(AddHead,Exec,40)();
+-extern void AROS_SLIB_ENTRY(AddTail,Exec,41)();
+-extern void AROS_SLIB_ENTRY(Remove,Exec,42)();
+-extern void AROS_SLIB_ENTRY(RemHead,Exec,43)();
+-extern void AROS_SLIB_ENTRY(RemTail,Exec,44)();
+-extern void AROS_SLIB_ENTRY(Enqueue,Exec,45)();
+-extern void AROS_SLIB_ENTRY(FindName,Exec,46)();
+-extern void AROS_SLIB_ENTRY(AddTask,Exec,47)();
+-extern void AROS_SLIB_ENTRY(RemTask,Exec,48)();
+-extern void AROS_SLIB_ENTRY(FindTask,Exec,49)();
+-extern void AROS_SLIB_ENTRY(SetTaskPri,Exec,50)();
+-extern void AROS_SLIB_ENTRY(SetSignal,Exec,51)();
+-extern void AROS_SLIB_ENTRY(SetExcept,Exec,52)();
+-extern void AROS_SLIB_ENTRY(Wait,Exec,53)();
+-extern void AROS_SLIB_ENTRY(Signal,Exec,54)();
+-extern void AROS_SLIB_ENTRY(AllocSignal,Exec,55)();
+-extern void AROS_SLIB_ENTRY(FreeSignal,Exec,56)();
+-extern void AROS_SLIB_ENTRY(AllocTrap,Exec,57)();
+-extern void AROS_SLIB_ENTRY(FreeTrap,Exec,58)();
+-extern void AROS_SLIB_ENTRY(AddPort,Exec,59)();
+-extern void AROS_SLIB_ENTRY(RemPort,Exec,60)();
+-extern void AROS_SLIB_ENTRY(PutMsg,Exec,61)();
+-extern void AROS_SLIB_ENTRY(GetMsg,Exec,62)();
+-extern void AROS_SLIB_ENTRY(ReplyMsg,Exec,63)();
+-extern void AROS_SLIB_ENTRY(WaitPort,Exec,64)();
+-extern void AROS_SLIB_ENTRY(FindPort,Exec,65)();
+-extern void AROS_SLIB_ENTRY(AddLibrary,Exec,66)();
+-extern void AROS_SLIB_ENTRY(RemLibrary,Exec,67)();
+-extern void AROS_SLIB_ENTRY(OldOpenLibrary,Exec,68)();
+-extern void AROS_SLIB_ENTRY(CloseLibrary,Exec,69)();
+-extern void AROS_SLIB_ENTRY(SetFunction,Exec,70)();
+-extern void AROS_SLIB_ENTRY(SumLibrary,Exec,71)();
+-extern void AROS_SLIB_ENTRY(AddDevice,Exec,72)();
+-extern void AROS_SLIB_ENTRY(RemDevice,Exec,73)();
+-extern void AROS_SLIB_ENTRY(OpenDevice,Exec,74)();
+-extern void AROS_SLIB_ENTRY(CloseDevice,Exec,75)();
+-extern void AROS_SLIB_ENTRY(DoIO,Exec,76)();
+-extern void AROS_SLIB_ENTRY(SendIO,Exec,77)();
+-extern void AROS_SLIB_ENTRY(CheckIO,Exec,78)();
+-extern void AROS_SLIB_ENTRY(WaitIO,Exec,79)();
+-extern void AROS_SLIB_ENTRY(AbortIO,Exec,80)();
+-extern void AROS_SLIB_ENTRY(AddResource,Exec,81)();
+-extern void AROS_SLIB_ENTRY(RemResource,Exec,82)();
+-extern void AROS_SLIB_ENTRY(OpenResource,Exec,83)();
+-extern void AROS_SLIB_ENTRY(RawIOInit,Exec,84)();
+-extern void AROS_SLIB_ENTRY(RawMayGetChar,Exec,85)();
+-extern void AROS_SLIB_ENTRY(RawPutChar,Exec,86)();
+-extern void AROS_SLIB_ENTRY(RawDoFmt,Exec,87)();
+-extern void AROS_SLIB_ENTRY(GetCC,Exec,88)();
+-extern void AROS_SLIB_ENTRY(TypeOfMem,Exec,89)();
+-extern void AROS_SLIB_ENTRY(Procure,Exec,90)();
+-extern void AROS_SLIB_ENTRY(Vacate,Exec,91)();
+-extern void AROS_SLIB_ENTRY(OpenLibrary,Exec,92)();
+-extern void AROS_SLIB_ENTRY(InitSemaphore,Exec,93)();
+-extern void AROS_SLIB_ENTRY(_ObtainSemaphore,Exec,94)();
+-extern void AROS_SLIB_ENTRY(_ReleaseSemaphore,Exec,95)();
+-extern void AROS_SLIB_ENTRY(AttemptSemaphore,Exec,96)();
+-extern void AROS_SLIB_ENTRY(ObtainSemaphoreList,Exec,97)();
+-extern void AROS_SLIB_ENTRY(ReleaseSemaphoreList,Exec,98)();
+-extern void AROS_SLIB_ENTRY(FindSemaphore,Exec,99)();
+-extern void AROS_SLIB_ENTRY(AddSemaphore,Exec,100)();
+-extern void AROS_SLIB_ENTRY(RemSemaphore,Exec,101)();
+-extern void AROS_SLIB_ENTRY(SumKickData,Exec,102)();
+-extern void AROS_SLIB_ENTRY(AddMemList,Exec,103)();
+-extern void AROS_SLIB_ENTRY(CopyMem,Exec,104)();
+-extern void AROS_SLIB_ENTRY(CopyMemQuick,Exec,105)();
+-extern void AROS_SLIB_ENTRY(CacheClearU,Exec,106)();
+-extern void AROS_SLIB_ENTRY(CacheClearE,Exec,107)();
+-extern void AROS_SLIB_ENTRY(CacheControl,Exec,108)();
+-extern void AROS_SLIB_ENTRY(CreateIORequest,Exec,109)();
+-extern void AROS_SLIB_ENTRY(DeleteIORequest,Exec,110)();
+-extern void AROS_SLIB_ENTRY(CreateMsgPort,Exec,111)();
+-extern void AROS_SLIB_ENTRY(DeleteMsgPort,Exec,112)();
+-extern void AROS_SLIB_ENTRY(_ObtainSemaphoreShared,Exec,113)();
+-extern void AROS_SLIB_ENTRY(AllocVec,Exec,114)();
+-extern void AROS_SLIB_ENTRY(FreeVec,Exec,115)();
+-extern void AROS_SLIB_ENTRY(CreatePool,Exec,116)();
+-extern void AROS_SLIB_ENTRY(DeletePool,Exec,117)();
+-extern void AROS_SLIB_ENTRY(AllocPooled,Exec,118)();
+-extern void AROS_SLIB_ENTRY(FreePooled,Exec,119)();
+-extern void AROS_SLIB_ENTRY(AttemptSemaphoreShared,Exec,120)();
+-extern void AROS_SLIB_ENTRY(ColdReboot,Exec,121)();
+-extern void AROS_SLIB_ENTRY(StackSwap,Exec,122)();
+-extern void AROS_SLIB_ENTRY(ChildFree,Exec,123)();
+-extern void AROS_SLIB_ENTRY(ChildOrphan,Exec,124)();
+-extern void AROS_SLIB_ENTRY(ChildStatus,Exec,125)();
+-extern void AROS_SLIB_ENTRY(ChildWait,Exec,126)();
+-extern void AROS_SLIB_ENTRY(CachePreDMA,Exec,127)();
+-extern void AROS_SLIB_ENTRY(CachePostDMA,Exec,128)();
+-extern void AROS_SLIB_ENTRY(AddMemHandler,Exec,129)();
+-extern void AROS_SLIB_ENTRY(RemMemHandler,Exec,130)();
+-extern void AROS_SLIB_ENTRY(ObtainQuickVector,Exec,131)();
+-extern void AROS_SLIB_ENTRY(TaggedOpenLibrary,Exec,135)();
+-extern void AROS_SLIB_ENTRY(AllocVecPooled,Exec,149)();
+-extern void AROS_SLIB_ENTRY(FreeVecPooled,Exec,150)();
++extern void AROS_SLIB_ENTRY(Supervisor,Exec)();
++extern void AROS_SLIB_ENTRY(ExitIntr,Exec)();
++extern void AROS_SLIB_ENTRY(Schedule,Exec)();
++extern void AROS_SLIB_ENTRY(Reschedule,Exec)();
++extern void AROS_SLIB_ENTRY(Switch,Exec)();
++extern void AROS_SLIB_ENTRY(Dispatch,Exec)();
++extern void AROS_SLIB_ENTRY(Exception,Exec)();
++extern void AROS_SLIB_ENTRY(InitCode,Exec)();
++extern void AROS_SLIB_ENTRY(InitStruct,Exec)();
++extern void AROS_SLIB_ENTRY(MakeLibrary,Exec)();
++extern void AROS_SLIB_ENTRY(MakeFunctions,Exec)();
++extern void AROS_SLIB_ENTRY(FindResident,Exec)();
++extern void AROS_SLIB_ENTRY(InitResident,Exec)();
++extern void AROS_SLIB_ENTRY(Alert,Exec)();
++extern void AROS_SLIB_ENTRY(Debug,Exec)();
++extern void AROS_SLIB_ENTRY(Disable,Exec)();
++extern void AROS_SLIB_ENTRY(Enable,Exec)();
++extern void AROS_SLIB_ENTRY(Forbid,Exec)();
++extern void AROS_SLIB_ENTRY(Permit,Exec)();
++extern void AROS_SLIB_ENTRY(SetSR,Exec)();
++extern void AROS_SLIB_ENTRY(SuperState,Exec)();
++extern void AROS_SLIB_ENTRY(UserState,Exec)();
++extern void AROS_SLIB_ENTRY(SetIntVector,Exec)();
++extern void AROS_SLIB_ENTRY(AddIntServer,Exec)();
++extern void AROS_SLIB_ENTRY(RemIntServer,Exec)();
++extern void AROS_SLIB_ENTRY(Cause,Exec)();
++extern void AROS_SLIB_ENTRY(Allocate,Exec)();
++extern void AROS_SLIB_ENTRY(Deallocate,Exec)();
++extern void AROS_SLIB_ENTRY(AllocMem,Exec)();
++extern void AROS_SLIB_ENTRY(AllocAbs,Exec)();
++extern void AROS_SLIB_ENTRY(FreeMem,Exec)();
++extern void AROS_SLIB_ENTRY(AvailMem,Exec)();
++extern void AROS_SLIB_ENTRY(AllocEntry,Exec)();
++extern void AROS_SLIB_ENTRY(FreeEntry,Exec)();
++extern void AROS_SLIB_ENTRY(Insert,Exec)();
++extern void AROS_SLIB_ENTRY(AddHead,Exec)();
++extern void AROS_SLIB_ENTRY(AddTail,Exec)();
++extern void AROS_SLIB_ENTRY(Remove,Exec)();
++extern void AROS_SLIB_ENTRY(RemHead,Exec)();
++extern void AROS_SLIB_ENTRY(RemTail,Exec)();
++extern void AROS_SLIB_ENTRY(Enqueue,Exec)();
++extern void AROS_SLIB_ENTRY(FindName,Exec)();
++extern void AROS_SLIB_ENTRY(AddTask,Exec)();
++extern void AROS_SLIB_ENTRY(RemTask,Exec)();
++extern void AROS_SLIB_ENTRY(FindTask,Exec)();
++extern void AROS_SLIB_ENTRY(SetTaskPri,Exec)();
++extern void AROS_SLIB_ENTRY(SetSignal,Exec)();
++extern void AROS_SLIB_ENTRY(SetExcept,Exec)();
++extern void AROS_SLIB_ENTRY(Wait,Exec)();
++extern void AROS_SLIB_ENTRY(Signal,Exec)();
++extern void AROS_SLIB_ENTRY(AllocSignal,Exec)();
++extern void AROS_SLIB_ENTRY(FreeSignal,Exec)();
++extern void AROS_SLIB_ENTRY(AllocTrap,Exec)();
++extern void AROS_SLIB_ENTRY(FreeTrap,Exec)();
++extern void AROS_SLIB_ENTRY(AddPort,Exec)();
++extern void AROS_SLIB_ENTRY(RemPort,Exec)();
++extern void AROS_SLIB_ENTRY(PutMsg,Exec)();
++extern void AROS_SLIB_ENTRY(GetMsg,Exec)();
++extern void AROS_SLIB_ENTRY(ReplyMsg,Exec)();
++extern void AROS_SLIB_ENTRY(WaitPort,Exec)();
++extern void AROS_SLIB_ENTRY(FindPort,Exec)();
++extern void AROS_SLIB_ENTRY(AddLibrary,Exec)();
++extern void AROS_SLIB_ENTRY(RemLibrary,Exec)();
++extern void AROS_SLIB_ENTRY(OldOpenLibrary,Exec)();
++extern void AROS_SLIB_ENTRY(CloseLibrary,Exec)();
++extern void AROS_SLIB_ENTRY(SetFunction,Exec)();
++extern void AROS_SLIB_ENTRY(SumLibrary,Exec)();
++extern void AROS_SLIB_ENTRY(AddDevice,Exec)();
++extern void AROS_SLIB_ENTRY(RemDevice,Exec)();
++extern void AROS_SLIB_ENTRY(OpenDevice,Exec)();
++extern void AROS_SLIB_ENTRY(CloseDevice,Exec)();
++extern void AROS_SLIB_ENTRY(DoIO,Exec)();
++extern void AROS_SLIB_ENTRY(SendIO,Exec)();
++extern void AROS_SLIB_ENTRY(CheckIO,Exec)();
++extern void AROS_SLIB_ENTRY(WaitIO,Exec)();
++extern void AROS_SLIB_ENTRY(AbortIO,Exec)();
++extern void AROS_SLIB_ENTRY(AddResource,Exec)();
++extern void AROS_SLIB_ENTRY(RemResource,Exec)();
++extern void AROS_SLIB_ENTRY(OpenResource,Exec)();
++extern void AROS_SLIB_ENTRY(RawIOInit,Exec)();
++extern void AROS_SLIB_ENTRY(RawMayGetChar,Exec)();
++extern void AROS_SLIB_ENTRY(RawPutChar,Exec)();
++extern void AROS_SLIB_ENTRY(RawDoFmt,Exec)();
++extern void AROS_SLIB_ENTRY(GetCC,Exec)();
++extern void AROS_SLIB_ENTRY(TypeOfMem,Exec)();
++extern void AROS_SLIB_ENTRY(Procure,Exec)();
++extern void AROS_SLIB_ENTRY(Vacate,Exec)();
++extern void AROS_SLIB_ENTRY(OpenLibrary,Exec)();
++extern void AROS_SLIB_ENTRY(InitSemaphore,Exec)();
++extern void AROS_SLIB_ENTRY(_ObtainSemaphore,Exec)();
++extern void AROS_SLIB_ENTRY(_ReleaseSemaphore,Exec)();
++extern void AROS_SLIB_ENTRY(AttemptSemaphore,Exec)();
++extern void AROS_SLIB_ENTRY(ObtainSemaphoreList,Exec)();
++extern void AROS_SLIB_ENTRY(ReleaseSemaphoreList,Exec)();
++extern void AROS_SLIB_ENTRY(FindSemaphore,Exec)();
++extern void AROS_SLIB_ENTRY(AddSemaphore,Exec)();
++extern void AROS_SLIB_ENTRY(RemSemaphore,Exec)();
++extern void AROS_SLIB_ENTRY(AddMemList,Exec)();
++extern void AROS_SLIB_ENTRY(CopyMem,Exec)();
++extern void AROS_SLIB_ENTRY(CopyMemQuick,Exec)();
++extern void AROS_SLIB_ENTRY(CacheClearU,Exec)();
++extern void AROS_SLIB_ENTRY(CacheClearE,Exec)();
++extern void AROS_SLIB_ENTRY(CacheControl,Exec)();
++extern void AROS_SLIB_ENTRY(CreateIORequest,Exec)();
++extern void AROS_SLIB_ENTRY(DeleteIORequest,Exec)();
++extern void AROS_SLIB_ENTRY(CreateMsgPort,Exec)();
++extern void AROS_SLIB_ENTRY(DeleteMsgPort,Exec)();
++extern void AROS_SLIB_ENTRY(_ObtainSemaphoreShared,Exec)();
++extern void AROS_SLIB_ENTRY(AllocVec,Exec)();
++extern void AROS_SLIB_ENTRY(FreeVec,Exec)();
++extern void AROS_SLIB_ENTRY(CreatePool,Exec)();
++extern void AROS_SLIB_ENTRY(DeletePool,Exec)();
++extern void AROS_SLIB_ENTRY(AllocPooled,Exec)();
++extern void AROS_SLIB_ENTRY(FreePooled,Exec)();
++extern void AROS_SLIB_ENTRY(AttemptSemaphoreShared,Exec)();
++extern void AROS_SLIB_ENTRY(ColdReboot,Exec)();
++extern void AROS_SLIB_ENTRY(StackSwap,Exec)();
++extern void AROS_SLIB_ENTRY(ChildFree,Exec)();
++extern void AROS_SLIB_ENTRY(ChildOrphan,Exec)();
++extern void AROS_SLIB_ENTRY(ChildStatus,Exec)();
++extern void AROS_SLIB_ENTRY(ChildWait,Exec)();
++extern void AROS_SLIB_ENTRY(CachePreDMA,Exec)();
++extern void AROS_SLIB_ENTRY(CachePostDMA,Exec)();
++extern void AROS_SLIB_ENTRY(AddMemHandler,Exec)();
++extern void AROS_SLIB_ENTRY(RemMemHandler,Exec)();
++extern void AROS_SLIB_ENTRY(ObtainQuickVector,Exec)();
++extern void AROS_SLIB_ENTRY(TaggedOpenLibrary,Exec)();
++extern void AROS_SLIB_ENTRY(AllocVecPooled,Exec)();
++extern void AROS_SLIB_ENTRY(FreeVecPooled,Exec)();
+diff -urN /data/deadwood/gitAROS/AROS//rom/exec/exec_init.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/exec_init.c
+--- /data/deadwood/gitAROS/AROS//rom/exec/exec_init.c	2012-10-13 15:48:00.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/exec_init.c	2012-10-23 19:15:42.000000000 +0200
+@@ -84,8 +84,7 @@
+ 
+ extern void debugmem(void);
+ 
+-THIS_PROGRAM_HANDLES_SYMBOLSET(INITLIB)
+-THIS_PROGRAM_HANDLES_SYMBOLSET(PREINITLIB)
++THIS_PROGRAM_HANDLES_SYMBOLSETS
+ DEFINESET(INITLIB)
+ DEFINESET(PREINITLIB)
+ 
+diff -urN /data/deadwood/gitAROS/AROS//rom/exec/exec_intern.h /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/exec_intern.h
+--- /data/deadwood/gitAROS/AROS//rom/exec/exec_intern.h	2012-10-13 15:48:00.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/exec_intern.h	2012-10-25 20:04:05.000000000 +0200
+@@ -70,7 +70,7 @@
+ void SetSysBaseChkSum(void);
+ BOOL IsSysBaseValid(struct ExecBase *sysbase);
+ 
+-IPTR cpu_SuperState();
++ULONG cpu_SuperState();
+ 
+ void ServiceTask(struct ExecBase *SysBase);
+ 
+diff -urN /data/deadwood/gitAROS/AROS//rom/exec/execstrap_init.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/execstrap_init.c
+--- /data/deadwood/gitAROS/AROS//rom/exec/execstrap_init.c	2012-10-13 15:48:00.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/execstrap_init.c	2012-10-23 19:15:42.000000000 +0200
+@@ -35,12 +35,12 @@
+ /*
+     Architecture dependent function variations:
+ */
+-extern void AROS_SLIB_ENTRY(GetCC_10,Exec,88)();
+-extern void AROS_SLIB_ENTRY(CacheClearU_20,Exec,106)();
+-extern void AROS_SLIB_ENTRY(CacheClearU_40,Exec,106)();
+-extern void AROS_SLIB_ENTRY(CachePreDMA_40,Exec,127)();
+-extern void AROS_SLIB_ENTRY(CachePostDMA_30,Exec,128)();
+-extern void AROS_SLIB_ENTRY(CachePostDMA_40,Exec,128)();
++extern void AROS_SLIB_ENTRY(GetCC_10,Exec)();
++extern void AROS_SLIB_ENTRY(CacheClearU_20,Exec)();
++extern void AROS_SLIB_ENTRY(CacheClearU_40,Exec)();
++extern void AROS_SLIB_ENTRY(CachePreDMA_40,Exec)();
++extern void AROS_SLIB_ENTRY(CachePostDMA_30,Exec)();
++extern void AROS_SLIB_ENTRY(CachePostDMA_40,Exec)();
+ 
+ /*
+     TODO:
+@@ -123,7 +123,7 @@
+ #define SetFunc(offset,name) \
+ { \
+     if(dearray[offset]) \
+-	SetFunction((struct Library *)SysBase, (offset * -6), (APTR)&AROS_SLIB_ENTRY(name,Exec,offset)); \
++	SetFunction((struct Library *)SysBase, (offset * -6), (APTR)&AROS_SLIB_ENTRY(name,Exec)); \
+ }
+ 
+ int start(void)
+diff -urN /data/deadwood/gitAROS/AROS//rom/exec/exec_util.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/exec_util.c
+--- /data/deadwood/gitAROS/AROS//rom/exec/exec_util.c	2012-10-13 15:48:00.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/exec_util.c	2012-10-23 19:15:42.000000000 +0200
+@@ -74,6 +74,8 @@
+     return NULL;
+ }
+ 
++AROS_LD1(struct Task *, FindTaskByPID, AROS_LDA(ULONG, id, D0), struct ExecBase *, SysBase, 166, Exec);
++
+ BOOL
+ Exec_InitETask(struct Task *task, struct ExecBase *SysBase)
+ {
+@@ -145,7 +147,7 @@
+ 	    SysBase->ex_TaskID = 1024;
+ 
+ 	Disable();
+-	if (FindTaskByPID(SysBase->ex_TaskID) == NULL)
++	if (Exec_FindTaskByPID(SysBase->ex_TaskID, SysBase) == NULL)
+ 	    et->et_UniqueID = SysBase->ex_TaskID;
+ 	Enable();
+     }
+diff -urN /data/deadwood/gitAROS/AROS//rom/exec/exec_util.h /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/exec_util.h
+--- /data/deadwood/gitAROS/AROS//rom/exec/exec_util.h	2012-10-13 15:48:00.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/exec_util.h	2012-10-23 19:15:42.000000000 +0200
+@@ -78,9 +78,6 @@
+ /*
+     Prototypes
+ */
+-BOOL PrepareContext(struct Task *task, APTR entryPoint, APTR fallBack,
+-                    const struct TagItem *tagList, struct ExecBase *SysBase);
+-
+ BOOL Exec_InitETask(struct Task *task, struct ExecBase *SysBase);
+ void Exec_CleanupETask(struct Task *task, struct ExecBase *SysBase);
+ void Exec_ExpungeETask(struct ETask *et, struct ExecBase *SysBase);
+diff -urN /data/deadwood/gitAROS/AROS//rom/exec/findname.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/findname.c
+--- /data/deadwood/gitAROS/AROS//rom/exec/findname.c	2012-10-13 15:48:00.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/findname.c	2012-10-23 19:15:42.000000000 +0200
+@@ -18,7 +18,7 @@
+ 
+ /*  SYNOPSIS */
+ 	AROS_LHA(struct List *, list, A0),
+-	AROS_LHA(CONST_STRPTR, name, A1),
++	AROS_LHA(const UBYTE *, name, A1),
+ 
+ /*  LOCATION */
+ 	struct ExecBase *, SysBase, 46, Exec)
+diff -urN /data/deadwood/gitAROS/AROS//rom/exec/findsemaphore.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/findsemaphore.c
+--- /data/deadwood/gitAROS/AROS//rom/exec/findsemaphore.c	2012-10-13 15:48:00.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/findsemaphore.c	2012-10-23 19:15:42.000000000 +0200
+@@ -16,7 +16,7 @@
+ 	AROS_LH1(struct SignalSemaphore *, FindSemaphore,
+ 
+ /*  SYNOPSIS */
+-	AROS_LHA(CONST_STRPTR, name, A1),
++	AROS_LHA(STRPTR, name, A1),
+ 
+ /*  LOCATION */
+ 	struct ExecBase *, SysBase, 99, Exec)
+diff -urN /data/deadwood/gitAROS/AROS//rom/exec/findtask.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/findtask.c
+--- /data/deadwood/gitAROS/AROS//rom/exec/findtask.c	2012-10-13 15:48:00.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/findtask.c	2012-10-23 19:15:42.000000000 +0200
+@@ -16,7 +16,7 @@
+ 	AROS_LH1(struct Task *, FindTask,
+ 
+ /*  SYNOPSIS */
+-	AROS_LHA(CONST_STRPTR, name, A1),
++	AROS_LHA(STRPTR, name, A1),
+ 
+ /*  LOCATION */
+ 	struct ExecBase *, SysBase, 49, Exec)
+@@ -71,7 +71,7 @@
+ 		to nonsense to look for it this way.
+ 	    */
+ 	    char *s1=SysBase->ThisTask->tc_Node.ln_Name;
+-	    const char *s2=name;
++	    char *s2=name;
+ 
+ 	    /* Check as long as the names are identical. */
+ 	    while(*s1++==*s2)
+diff -urN /data/deadwood/gitAROS/AROS//rom/exec/freevecpooled.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/freevecpooled.c
+--- /data/deadwood/gitAROS/AROS//rom/exec/freevecpooled.c	2012-10-13 15:48:00.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/freevecpooled.c	2012-10-23 19:15:42.000000000 +0200
+@@ -1,5 +1,5 @@
+ /*
+-    Copyright © 2003-2011, The AROS Development Team. All rights reserved.
++    Copyright © 2003, The AROS Development Team. All rights reserved.
+     $Id$
+ */
+ 
+@@ -11,7 +11,7 @@
+ AROS_LH2(void, FreeVecPooled,
+     AROS_LHA(APTR, pool,   D0),
+     AROS_LHA(APTR, memory, D1),
+-    struct ExecBase *, SysBase, 170, Exec)
++    struct ExecBase *, SysBase, 150, Exec)
+ {
+     AROS_LIBFUNC_INIT
+     
+diff -urN /data/deadwood/gitAROS/AROS//rom/exec/initstruct.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/initstruct.c
+--- /data/deadwood/gitAROS/AROS//rom/exec/initstruct.c	2012-10-13 15:48:00.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/initstruct.c	2012-10-23 19:15:42.000000000 +0200
+@@ -6,7 +6,6 @@
+     Lang: english
+ */
+ 
+-#include <aros/config.h>
+ #include <aros/libcall.h>
+ #include <proto/exec.h>
+ 
+@@ -20,7 +19,7 @@
+ 	AROS_LH3(void, InitStruct,
+ 
+ /*  SYNOPSIS */
+-	AROS_LHA(CONST_APTR,  initTable, A1),
++	AROS_LHA(APTR,  initTable, A1),
+ 	AROS_LHA(APTR,  memory,    A2),
+ 	AROS_LHA(ULONG, size,      D0),
+ 
+diff -urN /data/deadwood/gitAROS/AROS//rom/exec/makelibrary.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/makelibrary.c
+--- /data/deadwood/gitAROS/AROS//rom/exec/makelibrary.c	2012-10-13 15:48:00.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/makelibrary.c	2012-10-23 19:15:42.000000000 +0200
+@@ -22,8 +22,8 @@
+ 	AROS_LH5(struct Library *, MakeLibrary,
+ 
+ /*  SYNOPSIS */
+-	AROS_LHA(CONST_APTR, funcInit,   A0),
+-	AROS_LHA(CONST_APTR, structInit, A1),
++	AROS_LHA(APTR,       funcInit,   A0),
++	AROS_LHA(APTR,       structInit, A1),
+ 	AROS_LHA(ULONG_FUNC, libInit,    A2),
+ 	AROS_LHA(ULONG,      dataSize,   D0),
+ 	AROS_LHA(BPTR,       segList,    D1),
+diff -urN /data/deadwood/gitAROS/AROS//rom/exec/memory.h /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/memory.h
+--- /data/deadwood/gitAROS/AROS//rom/exec/memory.h	2012-10-13 15:48:00.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/memory.h	2012-10-23 19:15:42.000000000 +0200
+@@ -20,7 +20,11 @@
+  *
+  * Many m68k programs assume forbid state won't get broken.
+  */
+-#ifndef __mc68000
++/* ABI_V0 compatibility:
++ * Some existing software (i.e. packet.handler) allocate memory from within soft int handler. It is not allowed
++ * to work with semaphores in Supervisor mode as it may lead to deadlock.
++ */
++#if 0 //ndef __mc68000
+ #define MEM_LOCK	ObtainSemaphore(&PrivExecBase(SysBase)->MemListSem)
+ #define MEM_LOCK_SHARED ObtainSemaphoreShared(&PrivExecBase(SysBase)->MemListSem)
+ #define MEM_UNLOCK	ReleaseSemaphore(&PrivExecBase(SysBase)->MemListSem)
+diff -urN /data/deadwood/gitAROS/AROS//rom/exec/newaddtask.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/newaddtask.c
+--- /data/deadwood/gitAROS/AROS//rom/exec/newaddtask.c	2012-10-13 15:48:00.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/newaddtask.c	2012-10-23 19:15:42.000000000 +0200
+@@ -31,7 +31,7 @@
+         AROS_LHA(struct TagItem *,  tagList,   A4),
+ 
+ /*  LOCATION */
+-        struct ExecBase *, SysBase, 176, Exec)
++        struct ExecBase *, SysBase, 152, Exec)
+ 
+ /*  FUNCTION
+         Add a new task to the system. If the new task has the highest
+@@ -156,7 +156,7 @@
+         finalPC=SysBase->TaskExitCode;
+ 
+     /* Init new context. */
+-    if (!PrepareContext(task, initialPC, finalPC, tagList, SysBase))
++    if (!PrepareContext (task, initialPC, finalPC, tagList))
+     {
+         CleanupETask(task);
+         return NULL;
+@@ -193,7 +193,7 @@
+         D(bug("[AddTask] Rescheduling...\n"));
+ 
+         /* Reschedule() will take care about disabled task switching automatically */
+-        Reschedule();
++        Reschedule(NULL);
+     }
+ 
+     Enable();
+diff -urN /data/deadwood/gitAROS/AROS//rom/exec/newallocentry.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/newallocentry.c
+--- /data/deadwood/gitAROS/AROS//rom/exec/newallocentry.c	2012-10-13 15:48:00.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/newallocentry.c	2012-10-23 19:15:42.000000000 +0200
+@@ -1,5 +1,5 @@
+ /*
+-    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
++    Copyright © 1995-2001, The AROS Development Team. All rights reserved.
+     $Id$
+ 
+     Desc: Allocate memory.
+@@ -26,14 +26,15 @@
+ 
+     NAME */
+ 
+-	AROS_LH2(struct MemList *, NewAllocEntry,
++	AROS_LH3(BOOL, NewAllocEntry,
+ 
+ /*  SYNOPSIS */
+ 	AROS_LHA(struct MemList *, entry, A0),
+-	AROS_LHA(ULONG *, return_flags, A1),
++	AROS_LHA(struct MemList **, return_entry, A1),
++	AROS_LHA(ULONG *, return_flags, D0),
+ 
+ /*  LOCATION */
+-	struct ExecBase *, SysBase, 174, Exec)
++	struct ExecBase *, SysBase, 151, Exec)
+ 
+ /*  FUNCTION
+ 	Allocate a number of memory blocks through a MemList structure.
+@@ -47,14 +48,15 @@
+ 		       NULL here.
+ 
+     RESULT
+-    	Address of the allocated MemList if the allocation was successful. In this
+-    	case *return_flags will be set to 0.
+-
+-	NULL if the allocation failed. In this case *return_flags will contain the
+-	type of memory that couldn't be allocated.
+-
++    	TRUE if the allocation was successful. In this case *return_entry will
++	be set to the address of the allocated MemList. *return_flags will be set
++	to 0.
++	
++	FALSE if the allocation failed. In this case *return_entry will be set
++	to NULL and *return_flags will be set to contain the type of memory that
++	couldn't be allocated.
++	
+     NOTES
+-    	This function is AROS-specific.
+ 
+     EXAMPLE
+ 
+@@ -74,12 +76,12 @@
+ 
+     D(bug("NewAllocEntry $%lx num=%d\ttask=\"%s\"\n", entry, entry->ml_NumEntries, SysBase->ThisTask->tc_Node.ln_Name));
+ 
+-    D(
+-      for(i = 0; i < entry->ml_NumEntries; i++)
+-      {
+-          kprintf("\treq $%lx\tsize $%lx\n", entry->ml_ME[i].me_Reqs, entry->ml_ME[i].me_Length);
+-      }
+-    )
++#if DEBUG > 0
++    for(i = 0; i < entry->ml_NumEntries; i++)
++    {
++	kprintf("\treq $%lx\tsize $%lx\n", entry->ml_ME[i].me_Reqs, entry->ml_ME[i].me_Length);
++    }
++#endif
+ 
+     /* Calculate size of a MemList with ml_NumEntries MemEntries. */
+     mlsize = sizeof(struct MemList) - sizeof(struct MemEntry) +
+@@ -91,8 +93,9 @@
+     /* The allocation failed? Return "no public memory" */
+     if(ret == NULL)
+     {
++    	*return_entry = NULL;
+ 	if (return_flags) *return_flags = MEMF_PUBLIC;
+-	return NULL;
++	return FALSE;
+     }
+     
+     /* Init new struct */
+@@ -134,7 +137,9 @@
+ 		FreeMem(ret, mlsize);
+ 
+ 		/* All done */
+-		return NULL;
++		*return_entry = NULL;
++		
++		return FALSE;
+ 	    }
+ 	}
+ 	else /* if length = 0 */
+@@ -144,16 +149,13 @@
+ 
+ 	/* Copy the Length field */
+ 	ret->ml_ME[i].me_Length = entry->ml_ME[i].me_Length;
+-
+-        D(bug("[NewAllocEntry] Allocated size %d at 0x%p\n",
+-              ret->ml_ME[i].me_Length, ret->ml_ME[i].me_Addr
+-        ));
+     }
+     
+     /* Everything filled. Return OK. */
++    *return_entry = ret;
+     if (return_flags) *return_flags = 0;
+     
+-    return ret;
++    return TRUE;
+     
+     AROS_LIBFUNC_EXIT
+ } /* AllocEntry */
+diff -urN /data/deadwood/gitAROS/AROS//rom/exec/newcreatetaska.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/newcreatetaska.c
+--- /data/deadwood/gitAROS/AROS//rom/exec/newcreatetaska.c	2012-10-13 15:48:00.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/newcreatetaska.c	2012-10-23 19:15:42.000000000 +0200
+@@ -112,7 +112,7 @@
+     ULONG  pri	     = 0;
+     ULONG  flags     = 0;
+ 
+-    while ((tag = LibNextTagItem(&tstate)))
++    while ((tag = LibNextTagItem((const struct TagItem **)&tstate)))
+     {
+ 	switch (tag->ti_Tag)
+ 	{
+@@ -165,8 +165,7 @@
+ 
+     DADDTASK("NewCreateTaskA: name %s", taskname ? taskname : "<NULL>");
+ 
+-    ml = NewAllocEntry((struct MemList *)&nml, NULL);
+-    if (ml)
++    if (NewAllocEntry((struct MemList *)&nml, &ml, NULL))
+     {
+     	struct Task *task2 = NULL;
+ 	APTR name = ml->ml_ME[2].me_Addr;
+diff -urN /data/deadwood/gitAROS/AROS//rom/exec/newstackswap.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/newstackswap.c
+--- /data/deadwood/gitAROS/AROS//rom/exec/newstackswap.c	2012-10-13 15:48:00.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/newstackswap.c	2012-10-23 19:15:42.000000000 +0200
+@@ -20,7 +20,7 @@
+ 	AROS_LHA(struct StackSwapArgs *, args, A2),
+ 
+ /*  LOCATION */
+-	struct ExecBase *, SysBase, 134, Exec)
++	struct ExecBase *, SysBase, 122, Exec)
+ 
+ /*  FUNCTION
+ 	Calls a function with a new stack. 
+diff -urN /data/deadwood/gitAROS/AROS//rom/exec/preparecontext.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/preparecontext.c
+--- /data/deadwood/gitAROS/AROS//rom/exec/preparecontext.c	2012-10-13 15:48:00.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/preparecontext.c	2012-10-23 19:15:42.000000000 +0200
+@@ -1,23 +1,73 @@
+ /*
+-    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
++    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
+     $Id$
+ 
+     Desc: PrepareContext() - Prepare a task context for dispatch.
+     Lang: english
+ */
+ 
++#include <exec/types.h>
+ #include <exec/execbase.h>
+ #include <exec/memory.h>
+ #include <utility/tagitem.h>
+ 
+-#include "exec_util.h"
++/*****i***********************************************************************
+ 
+-BOOL PrepareContext(struct Task *task, APTR entryPoint, APTR fallBack,
+-                    const struct TagItem *tagList, struct ExecBase *SysBase)
++    NAME */
++	AROS_LH4(BOOL, PrepareContext,
++
++/*  SYNOPSIS */
++	AROS_LHA(VOLATILE struct Task *, task,       A0),
++	AROS_LHA(APTR,                   entryPoint, A1),
++	AROS_LHA(APTR,                   fallBack,   A2),
++	AROS_LHA(struct TagItem *,       tagList,    A3),
++
++/*  LOCATION */
++	struct ExecBase *, SysBase, 6, Exec)
++
++/*  FUNCTION
++	Prepare the context (set of registers) for a new task.
++	The context/stack will be set so that when the entryPoint
++	function returns, the fallback function will be called.
++
++    INPUTS
++	task        	-   Pointer to task
++	entryPoint      -   Function to call when the new context
++			    comes alive.
++	fallBack        -   Address of the function to be called
++			    when the entryPoint function returns.
++	tagList     	-   Additional options. Like for passing
++	    	    	    arguments to the entryPoint() functions.
++
++    RESULT
++	TRUE on success. FALSE on failure.
++
++    NOTES
++	This function is private and is not meant to be used
++	by any software. On other operating systems of Amiga(tm) family
++	it does not exist.
++
++	This function is very CPU dependant. In fact it can differ
++	over different models of the same processor family.
++
++    EXAMPLE
++
++    BUGS
++
++    SEE ALSO
++	Dispatch()
++
++    INTERNALS
++
++******************************************************************************/
+ {
++    AROS_LIBFUNC_INIT
++
+     /*
+      * The actual implementation of this function is CPU-specific.
+      * Please see files in arch/<cpu>-all/exec/ for working examples.
+      */
+     return FALSE;
++
++    AROS_LIBFUNC_EXIT
+ } /* PrepareContext() */
+diff -urN /data/deadwood/gitAROS/AROS//rom/exec/prepareexecbase.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/prepareexecbase.c
+--- /data/deadwood/gitAROS/AROS//rom/exec/prepareexecbase.c	2012-10-13 15:48:00.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/prepareexecbase.c	2012-10-23 19:15:42.000000000 +0200
+@@ -176,7 +176,7 @@
+ #endif
+ 
+     /* Setup function vectors */
+-    AROS_CALL3(ULONG, AROS_SLIB_ENTRY(MakeFunctions, Exec, 15),
++    AROS_CALL3(ULONG, AROS_SLIB_ENTRY(MakeFunctions, Exec),
+ 	      AROS_UFCA(APTR, SysBase, A0),
+ 	      AROS_UFCA(CONST_APTR, LIBFUNCTABLE, A1),
+ 	      AROS_UFCA(CONST_APTR, NULL, A2),
+diff -urN /data/deadwood/gitAROS/AROS//rom/exec/reschedule.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/reschedule.c
+--- /data/deadwood/gitAROS/AROS//rom/exec/reschedule.c	2012-10-13 15:48:00.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/reschedule.c	2012-10-23 19:15:42.000000000 +0200
+@@ -19,9 +19,10 @@
+     NAME */
+ #include <proto/exec.h>
+ 
+-        AROS_LH0(void, Reschedule,
++        AROS_LH1(void, Reschedule,
+ 
+ /*  SYNOPSIS */
++        AROS_LHA(struct Task *, task, A0),
+ 
+ /*  LOCATION */
+         struct ExecBase *, SysBase, 8, Exec)
+@@ -30,7 +31,7 @@
+         Give up the CPU time to other tasks (if there are any).
+ 
+     INPUTS
+-        None
++        task    -   Ignored, can be NULL.
+ 
+     RESULT
+         None
+diff -urN /data/deadwood/gitAROS/AROS//rom/exec/setexcept.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/setexcept.c
+--- /data/deadwood/gitAROS/AROS//rom/exec/setexcept.c	2012-10-13 15:48:00.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/setexcept.c	2012-10-23 19:15:42.000000000 +0200
+@@ -70,7 +70,7 @@
+         me->tc_Flags|=TF_EXCEPT;
+ 
+         /* And order rescheduling */
+-        Reschedule();
++        Reschedule(NULL);
+     }
+     Enable();
+ 
+diff -urN /data/deadwood/gitAROS/AROS//rom/exec/settaskpri.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/settaskpri.c
+--- /data/deadwood/gitAROS/AROS//rom/exec/settaskpri.c	2012-10-13 15:48:00.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/settaskpri.c	2012-10-23 19:15:42.000000000 +0200
+@@ -79,7 +79,7 @@
+ 
+             This should be reconsidered, because of Executive [ldp].
+         */
+-        Reschedule();
++        Reschedule(NULL);
+     }
+ 
+     /* All done. */
+diff -urN /data/deadwood/gitAROS/AROS//rom/exec/signal.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/signal.c
+--- /data/deadwood/gitAROS/AROS//rom/exec/signal.c	2012-10-13 15:48:00.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/signal.c	2012-10-23 19:15:42.000000000 +0200
+@@ -69,7 +69,7 @@
+         if (task->tc_State==TS_RUN)
+         {
+             /* Order a reschedule */
+-            Reschedule();
++            Reschedule(NULL);
+ 
+             /* All done. */
+             Enable();
+@@ -97,7 +97,7 @@
+                 (If the current task is not running it is already moved)
+             */
+             if (SysBase->ThisTask->tc_State == TS_RUN)
+-                Reschedule();
++                Reschedule(NULL);
+         }
+     }
+ 
+diff -urN /data/deadwood/gitAROS/AROS//rom/exec/superstate.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/superstate.c
+--- /data/deadwood/gitAROS/AROS//rom/exec/superstate.c	2012-10-13 15:48:00.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/superstate.c	2012-10-25 20:04:05.000000000 +0200
+@@ -68,7 +68,11 @@
+ 
+     if (!super)
+     {
+-        APTR ssp = (APTR)Supervisor(cpu_SuperState);
++        /* TODO: This implies that the Supervisor stack *must* be in 
++         *       the low 32 bits of the address on 64-bit machines.
++         *       Fixed in ABIv1
++         */
++        APTR ssp = (APTR)(IPTR)Supervisor(cpu_SuperState);
+         
+         D(bug("[SuperState] Saved SP 0x%p\n", ssp));
+         return ssp;
+diff -urN /data/deadwood/gitAROS/AROS//rom/exec/supervisor.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/supervisor.c
+--- /data/deadwood/gitAROS/AROS//rom/exec/supervisor.c	2012-10-13 15:48:00.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/supervisor.c	2012-10-23 19:15:42.000000000 +0200
+@@ -15,10 +15,10 @@
+     NAME */
+ #include <proto/exec.h>
+ 
+-	AROS_LH1(IPTR, Supervisor,
++	AROS_LH1(ULONG, Supervisor,
+ 
+ /*  SYNOPSIS */
+-	AROS_LHA(void *, userFunction, A5),
++	AROS_LHA(ULONG_FUNC, userFunction, A5),
+ 
+ /*  LOCATION */
+ 	struct ExecBase *, SysBase, 5, Exec)
+diff -urN /data/deadwood/gitAROS/AROS//rom/exec/vnewrawdofmt.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/vnewrawdofmt.c
+--- /data/deadwood/gitAROS/AROS//rom/exec/vnewrawdofmt.c	2012-10-13 15:48:00.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/vnewrawdofmt.c	2012-10-23 19:15:42.000000000 +0200
+@@ -29,7 +29,7 @@
+ 	AROS_LHA(va_list,      DataStream,   A1),
+ 
+ /*  LOCATION */
+-	struct ExecBase *, SysBase, 137, Exec)
++	struct ExecBase *, SysBase, 87, Exec)
+ 
+ /*  FUNCTION
+ 	printf-style formatting function with callback hook and C-style
+diff -urN /data/deadwood/gitAROS/AROS//rom/kernel/kernel.conf /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/kernel/kernel.conf
+--- /data/deadwood/gitAROS/AROS//rom/kernel/kernel.conf	2012-10-13 15:48:00.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/kernel/kernel.conf	2012-10-23 19:15:42.000000000 +0200
+@@ -70,5 +70,4 @@
+ void KrnDisplayAlert(uint32_t code, const char *text) (D0, A0)
+ unsigned int KrnGetCPUCount() ()
+ unsigned int KrnGetCPUNumber() ()
+-# One LVO is reserved here for IPI
+ ##end functionlist
+diff -urN /data/deadwood/gitAROS/AROS//rom/kernel/kernel_init.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/kernel/kernel_init.c
+--- /data/deadwood/gitAROS/AROS//rom/kernel/kernel_init.c	2012-10-13 15:48:00.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/kernel/kernel_init.c	2012-10-23 19:15:42.000000000 +0200
+@@ -61,7 +61,7 @@
+ 
+ extern const APTR GM_UNIQUENAME(FuncTable)[];
+ 
+-THIS_PROGRAM_HANDLES_SYMBOLSET(INITLIB)
++THIS_PROGRAM_HANDLES_SYMBOLSETS
+ DEFINESET(INITLIB)
+ 
+ /*
+diff -urN /data/deadwood/gitAROS/AROS//rom/kernel/mmakefile.src /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/kernel/mmakefile.src
+--- /data/deadwood/gitAROS/AROS//rom/kernel/mmakefile.src	2012-10-13 15:48:00.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/kernel/mmakefile.src	2012-10-23 19:15:42.000000000 +0200
+@@ -40,6 +40,6 @@
+ 
+ %build_module mmake=kernel-kernel \
+   modname=kernel modtype=resource version=$(AROS_TARGET_PLATFORM) \
+-  files="$(FILES) $(FUNCS)" uselibs="$(USER_LIBS)" nostartup=no
++  files="$(FILES) $(FUNCS)" uselibs="rom" nostartup=no
+ 
+ %common
+diff -urN /data/deadwood/gitAROS/AROS//rom/timer/mmakefile.src /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/timer/mmakefile.src
+--- /data/deadwood/gitAROS/AROS//rom/timer/mmakefile.src	2012-10-13 15:48:00.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/timer/mmakefile.src	2012-10-23 19:15:42.000000000 +0200
+@@ -25,6 +25,6 @@
+ 
+ %build_module mmake=kernel-timer \
+   modname=timer modtype=device version=$(AROS_TARGET_PLATFORM) \
+-  files="$(FUNCS) $(FILES)"
++  files="$(FUNCS) $(FILES)" uselibs="rom"
+ 
+ %common
+diff -urN /data/deadwood/gitAROS/AROS//rom/timer/timervblank.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/timer/timervblank.c
+--- /data/deadwood/gitAROS/AROS//rom/timer/timervblank.c	2012-10-13 15:48:00.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/timer/timervblank.c	2012-10-27 13:28:36.000000000 +0200
+@@ -1,6 +1,7 @@
+ #include <aros/asmcall.h>
+ #include <hardware/intbits.h>
+ #include <proto/exec.h>
++#include <aros/symbolsets.h>
+ 
+ #include <timer_intern.h>
+ #include "timervblank.h"
+diff -urN /data/deadwood/gitAROS/AROS//workbench/libs/uuid/mmakefile.src /data/deadwood/repo-gitorious-aros/AROS/AROS//workbench/libs/uuid/mmakefile.src
+--- /data/deadwood/gitAROS/AROS//workbench/libs/uuid/mmakefile.src	2012-10-13 15:48:04.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//workbench/libs/uuid/mmakefile.src	2012-10-23 19:15:43.000000000 +0200
+@@ -7,7 +7,8 @@
+ #MM- workbench-libs : workbench-libs-uuid
+ %build_module mmake=workbench-libs-uuid \
+     modname=uuid modtype=library \
+-    files="uuid_init $(FILES)"
++    files="uuid_init $(FILES)" \
++    uselibs=rom
+ 
+ #MM includes-copy
+ INCLUDE_FILES := $(call WILDCARD, include/*.h)
