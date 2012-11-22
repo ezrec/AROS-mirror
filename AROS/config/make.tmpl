@@ -817,10 +817,23 @@ $(addprefix %(targetdir)/,%(progs)) : %(targetdir)/% : %(objdir)/%.o $(TMP_DEPLI
 
 #------------------------------------------------------------------------------
 # Link the %(objs) to the library %(libdir)/lib%(libname).a
-%define rule_link_linklib libname=/A objs=/A libdir=$(LIBDIR)
+%define rule_link_linklib libname=/A objs=/A libdir=$(LIBDIR) linker=target
+
+ifeq (%(linker),target)
+%(libdir)/lib%(libname).a : TMP_AR:=$(AR)
+%(libdir)/lib%(libname).a : TMP_RANLIB:=$(RANLIB)
+endif
+ifeq (%(linker),host)
+%(libdir)/lib%(libname).a : TMP_AR:=$(HOST_AR)
+%(libdir)/lib%(libname).a : TMP_RANLIB:=$(HOST_RANLIB)
+endif
+ifeq (%(linker),kernel)
+%(libdir)/lib%(libname).a : TMP_AR:=$(KERNEL_AR)
+%(libdir)/lib%(libname).a : TMP_RANLIB:=$(KERNEL_RANLIB)
+endif
 
 %(libdir)/lib%(libname).a : %(objs)
-	%mklib_q from=$^
+    %mklib_q from=$^ ar=$(TMP_AR) ranlib=$(TMP_RANLIB)
 %end
 #------------------------------------------------------------------------------
 
@@ -1000,6 +1013,27 @@ endif
 %end
 #------------------------------------------------------------------------------
 
+#------------------------------------------------------------------------------
+# Link %(objs) to binary blob in %(file) using %(name) as name of embedded binary object
+# 'start' is an optional starting address
+# 'ldflags' is optional additional flags for the linker
+%define rule_link_binary file=/A name=/A objs=/A start=0 ldflags=
+
+BD_OUTDIR := $(dir %(file))
+# This trick removes the trailing '/', otherwise findstring below fails, causing a warning
+BD_OUTDIR := $(subst /*,,$(addsuffix *,$(BD_OUTDIR)))
+BD_TMPDIR := $(GENDIR)/$(CURDIR)
+
+%(file) : %(objs) $(BD_OUTDIR)
+	@$(ECHO) "Linking    $(subst $(TARGETDIR)/,,$@)..."
+	@$(KERNEL_LD) %(ldflags) --entry=%(start) --oformat=binary -Ttext=%(start) -o $(BD_TMPDIR)/%(name) %(objs)
+	@cd $(BD_TMPDIR) && $(AROS_LD) %(ldflags) -r --format binary %(name) -o $@
+
+ifeq ($(findstring $(BD_OUTDIR),$(GLOB_MKDIRS)),)
+    GLOB_MKDIRS += $(BD_OUTDIR)
+endif
+
+%end
 
 #------------------------------------------------------------------------------
 # Generate the support files for compiling a module. This includes include
@@ -1071,13 +1105,19 @@ BDID := $(BDTARGETID)
     cxxfiles= objdir=$(GENDIR)/$(CURDIR) targetdir=$(AROSDIR)/$(CURDIR) \
     cflags=$(CFLAGS) dflags=$(BD_CFLAGS) ldflags=$(LDFLAGS) \
     aflags=$(AFLAGS) uselibs= usehostlibs= usestartup=yes detach=no nix=no \
-    compiler=target srcdir=
+    compiler=target linker= srcdir=
 
 .PHONY : %(mmake)
 
 BD_PROGNAME  := %(progname)
 BD_OBJDIR    := %(objdir)
 BD_TARGETDIR := %(targetdir)
+BD_LINKER    := %(linker)
+
+# If not supplied, linker is equal to compiler
+ifeq ($(BD_LINKER),)
+    BD_LINKER := %(compiler)
+endif
 
 BD_FILES     := %(files)
 BD_CXXFILES  := %(cxxfiles)
@@ -1113,7 +1153,7 @@ ifneq ($(filter $(TARGET),%(mmake) %(mmake)-quick),)
     objs="$(BD_OBJS) $(BD_ARCHOBJS) $(USER_OBJS)" ldflags=$(BD_LDFLAGS) \
     uselibs="%(uselibs)" usehostlibs="%(usehostlibs)" \
     usestartup="%(usestartup)" detach="%(detach)" nix="%(nix)" \
-    linker=%(compiler)
+    linker=$(BD_LINKER)
 
 endif
 
@@ -1777,7 +1817,9 @@ endif # $(TARGET) in $(BD_ALLTARGETS)
 # - objdir is where the .o are generated
 # - libdir is the directory where the linklib will be placed (default $(LIBDIR))
 %define build_linklib mmake=/A libname=/A \
-  files="$(basename $(call WILDCARD, *.c))" cxxfiles="$(basename $(call WILDCARD, *.cpp))" asmfiles=  objs= \
+  files="$(basename $(call WILDCARD, *.c))" \
+  cxxfiles="$(basename $(call WILDCARD, *.cpp))" \
+  asmfiles= objs= compiler=target \
   cflags=$(CFLAGS) dflags= aflags=$(AFLAGS) objdir=$(OBJDIR) libdir=$(LIBDIR)
 
 # assign and generate the local variables used in this macro
@@ -1822,13 +1864,13 @@ vpath %.c $(addprefix $(TMP_SRCDIR)/$(CURDIR)/,$(dir $(BD_FILES)))
 endif
 
 %rule_compile basename=% targetdir=%(objdir) \
-	      cflags=$(BD_CFLAGS) dflags=$(BD_DFLAGS)
+    compiler=%(compiler) cflags=$(BD_CFLAGS) dflags=$(BD_DFLAGS)
 %rule_compile_cxx_multi basenames=$(BD_CXXFILES) targetdir=%(objdir) \
-	      cflags=$(BD_CFLAGS) dflags=$(BD_DFLAGS)
+    compiler=%(compiler) cflags=$(BD_CFLAGS) dflags=$(BD_DFLAGS)
 %rule_assemble basename=% targetdir=%(objdir) \
-	      aflags=$(BD_AFLAGS)
+    aflags=$(BD_AFLAGS)
 
-%rule_link_linklib libname=%(libname) objs=$(BD_OBJS) libdir=%(libdir)
+%rule_link_linklib libname=%(libname) objs=$(BD_OBJS) libdir=%(libdir) linker=%(compiler)
 endif
 
 %include_deps depstargets=%(mmake) deps=$(BD_DEPS)
@@ -2719,9 +2761,13 @@ postinstall-%(package)-delete-la-files:
 #------------------------------------------------------------------------------
 
 # Builds a kickstart package in PKG format
-# mmake   - target name
-# file    - Destination file name with path
-# startup - The file which will be put first
+#
+# Arguments:
+#
+#    - mmake   = target name
+#    - file    = destination file name with path
+#    - startup = the file which will be put first
+#
 # Other arguments are self-explanatory
 
 %define make_package mmake=/A file=/A classes= devs= handlers= hidds= libs= res= startup=
@@ -2743,19 +2789,40 @@ PKG_DEPS  := $(addprefix $(PKGDIR)/, $(PKG_FILES))
 #MM
 %(mmake)-quick : %(file)
 
-%(file): $(PKG_DIR) $(PKG_DEPS)
+%(file): PKG_FILES := $(PKG_FILES)
+%(file): $(PKG_DEPS) | $(PKG_DIR)
 	@$(ECHO) Packaging $@...
 	@$(SRCDIR)/tools/package/pkg c $@ $(PKGDIR) $(PKG_FILES)
+
+%compress_file mmake=%(mmake) file=%(file)
 
 GLOB_MKDIRS += $(PKG_DIR)
 
 %end
-#------------------------------------------------------------------------------
 
+#------------------------------------------------------------------------------
+# Compresses %(file) with a gzip.
+# Good in conjunction with for example %build_prog
+
+%define compress_file mmake=/A file=/A
+
+#MM- %(mmake)-gz : %(mmake) %(mmake)-gz-quick
+
+#MM
+%(mmake)-gz-quick : %(file).gz
+
+%(file).gz: %(file)
+	@$(ECHO) Compressing $(subst $(TARGETDIR)/,,$^)...
+	@gzip -9 -f $^
+
+%end
+
+#------------------------------------------------------------------------------
 # Links a kickstart module in ELF format
 # Arguments are similar to make_package
 
-%define link_kickstart mmake=/A file=/A classes= devs= handlers= hidds= libs= res= startup= uselibs= map=
+%define link_kickstart mmake=/A file=/A classes= devs= handlers= hidds= libs= res= \
+    startup= uselibs= ldflags=$(LDFLAGS) map= deps=
 
 KOBJ_CLASSES  := $(addprefix $(KOBJSDIR)/, $(addsuffix _class.o, %(classes)))
 KOBJ_DEVICES  := $(addprefix $(KOBJSDIR)/, $(addsuffix _device.o, %(devs)))
@@ -2770,25 +2837,33 @@ else
     KOBJ_STARTUP := %(startup)
 endif
 
-KOBJS       := $(KOBJ_STARTUP) $(KOBJ_CLASSES) $(KOBJ_HANDLERS) $(KOBJ_LIBS) $(KOBJ_DEVICES) $(KOBJ_HIDD) $(KOBJ_RES)
-LDLIBS      := $(addprefix -l, %(uselibs))
-DEPDIRS     := $(dir %(file))
-DEPLIBS     := $(addprefix lib,$(addsuffix .a, %(uselibs)))
-TMP_LDFLAGS := -L$(LIBDIR)
+KOBJS        := $(KOBJ_STARTUP) $(KOBJ_CLASSES) $(KOBJ_HANDLERS) $(KOBJ_LIBS) $(KOBJ_DEVICES) $(KOBJ_HIDD) $(KOBJ_RES)
 
-ifneq ($(USER_LIBDIR),)
-    ALL_USERLIBS := $(notdir $(wildcard $(USER_LIBDIR)/lib*.a))
-    USER_DEPLIBS := $(addprefix $(USER_LIBDIR)/, $(filter $(ALL_USERLIBS),$(DEPLIBS)))
-    DEPLIBS      := $(filter-out $(ALL_USERLIBS),$(DEPLIBS))
-    TMP_LDFLAGS  := -L$(USER_LIBDIR) $(TMP_LDFLAGS)
-endif
+TMP_LDFLAGS := %(ldflags)
 
-DEPLIBS := $(addprefix $(LIBDIR)/, $(DEPLIBS))
+# Make a list of the lib files this program depends on.
+# In LDFLAGS remove white space between -L and directory
+TMP_DIRS := $(subst -L ,-L,$(strip $(TMP_LDFLAGS)))
+# Filter out only the libdirs and remove -L
+TMP_DIRS := $(patsubst -L%,%,$(filter -L%,$(TMP_DIRS)))
+# Add trailing /
+TMP_DIRS := $(subst //,/,$(addsuffix /,$(TMP_DIRS)))
+# Add normal linklib path
+TMP_DIRS += $(LIBDIR)/
+# add lib and .a to static linklib names
+TMP_LIBS := $(addprefix lib,$(addsuffix .a,%(uselibs) libinit autoinit))
+# search for the linklibs in the given path, ignore ones not found
+TMP_DEPLIBS := $(foreach lib,$(TMP_LIBS), \
+    $(firstword $(wildcard $(addsuffix $(lib),$(TMP_DIRS)))) \
+)
 
+TMP_DIRS += $(dir %(file))
 ifneq (%(map),)
     TMP_LDFLAGS += $(GENMAP) %(map)
-    DEPDIRS     += $(dir %(map))
+    TMP_DIRS    += $(dir %(map))
 endif
+
+#MM %(mmake) : %(deps)
 
 #MM
 %(mmake) : %(file)
@@ -2796,28 +2871,18 @@ endif
 #MM
 %(mmake)-quick : %(file)
 
-%(file): $(KOBJS) $(DEPDIRS) $(DEPLIBS)
-	@$(ECHO) Linking $@...
-	@$(TARGET_CC) -o $@ $(KOBJS) $(LDFLAGS) $(NOSTARTUP_LDFLAGS) $(TMP_LDFLAGS) $(LDLIBS)
+%(file): KOBJS := $(KOBJS)
+%(file): LDFLAGS := $(TMP_LDFLAGS) $(NOSTARTUP_LDFLAGS) \
+                    -noarosc -Wl,-Ur
+%(file): LDLIBS := $(addprefix -l, %(uselibs))
+%(file): $(KOBJS) $(DEPLIBS) | $(TMP_DIRS)
+	@$(ECHO) "Kickstart  $(subst $(TARGETDIR)/,,$@)..."
+	@$(TARGET_CC) -o $@ $(KOBJS) $(LDFLAGS) $(LDLIBS)
+	@$(STRIP) $@
 
-GLOB_MKDIRS += $(DEPDIRS)
+%compress_file mmake=%(mmake) file=%(file)
 
-%end
-
-#------------------------------------------------------------------------------
-# Link %(objs) to binary blob in %(file) using %(name) as name of embedded binary object
-# 'start' is an optional starting address
-# 'ldflags' is optional additional flags for the linker
-%define rule_link_binary file=/A name=/A objs=/A start=0 ldflags=
-
-BD_OUTDIR := $(dir %(file))
-BD_TMPDIR  := $(GENDIR)/$(CURDIR)
-
-%(file) : %(objs) $(BD_OUTDIR)
-	@$(ECHO) Linking $@...
-	@$(KERNEL_LD) $(KERNEL_LDFLAGS) --oformat=binary -e %(start) -Ttext=%(start) -o $(BD_TMPDIR)/%(name) %(objs)
-	@cd $(BD_TMPDIR) && $(KERNEL_LD) $(KERNEL_LDFLAGS) -r --format binary %(ldflags) %(name) -o $@
-
-GLOB_MKDIRS += $(BD_OUTDIR)
+GLOB_MKDIRS += $(TMP_DIRS)
 
 %end
+

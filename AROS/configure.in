@@ -479,6 +479,7 @@ aros_shared_aflags=""
 aros_shared_ldflags="-Wl,-rpath,./lib -shared"
 aros_kernel_ldflags="-Wl,-rpath,./lib"
 
+aros_kernel_ar_flags="cr"
 aros_target_ar_flags="cr"
 aros_target_nm_flags="-C -ul"
 aros_target_strip_flags="--strip-unneeded -R.comment"
@@ -1661,7 +1662,14 @@ aros_target_ranlib="${prefix}-ranlib $aros_target_ranlib_flags"
 aros_target_nm="${prefix}-nm $aros_target_nm_flags"
 aros_kernel_nm="${prefix}-nm"
 aros_target_strip=${prefix}-strip
-aros_kernel_ar="${prefix}-ar"
+aros_plain_ar="${prefix}-ar"
+
+AROS_TOOL_KERNEL(aros_kernel_ar,ar,$aros_kernel_ar)
+AROS_REQUIRED(ar,$aros_kernel_ar)
+AROS_TOOL_KERNEL(aros_kernel_ranlib,ranlib,$aros_kernel_ranlib)
+AROS_REQUIRED(ranlib,$aros_kernel_ranlib)
+
+aros_kernel_ar="$aros_kernel_ar $aros_kernel_ar_flags"
 
 # Find the system include path. We can suggest that an alternative is
 # used if we don't get it correct. The default is to use /usr/include.
@@ -2205,7 +2213,9 @@ AC_SUBST(aros_target_incl)
 AC_SUBST(aros_target_ar)
 AC_SUBST(aros_target_ranlib)
 AC_SUBST(aros_kernel_nm)
+AC_SUBST(aros_plain_ar)
 AC_SUBST(aros_kernel_ar)
+AC_SUBST(aros_kernel_ranlib)
 AC_SUBST(orig_target_cc)
 AC_SUBST(aros_target_cc)
 AC_SUBST(aros_target_cxx)

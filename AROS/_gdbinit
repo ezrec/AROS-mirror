@@ -1,17 +1,52 @@
 handle SIGUSR1 pass noprint nostop
 handle SIGUSR2 pass noprint nostop
+set follow-fork-mode child
+
+# This is a bit tricky, because we have several cases,
+# and gdb has no easy 'is this symbol defined' tests.
+#
+# Case 1: Hosted AROSBootstrap (ie linux-i386)
+#         Provides SysBase, Debug_ModList, and Debug_KickList
+# Case 2: ROM (ie amiga-m68k)
+#         Provides AbsExecBase and SysBase
+#
+define _debug_init
+    init-if-undefined $AbsExecBase = (struct ExecBase *)SysBase
+    init-if-undefined $_debug_DebugBase = 0
+
+    # This is the case for ROM debugging - the user must
+    #  'set $AbsExecBase = 4', then this kicks in.
+    #if $AbsExecBase != 0 && $_debug_DebugBase == 0
+    #    set $AbsExecBase = (struct IntExecBase *)$AbsExecBase
+    #    set $_debug_DebugBase = (struct DebugBase *)($AbsExecBase->DebugBase)
+    #end
+
+    if $_debug_DebugBase != 0
+        # This is the case for debugging a ROM
+        set $_debug_ModList = &($_debug_DebugBase->db_Modules)
+        set $_debug_KickList = $_debug_DebugBase->db_KernelModules
+    else
+        # This is the case for debugging a bootstrap
+        init-if-undefined $_debug_ModList = Debug_ModList
+        init-if-undefined $_debug_KickList = Debug_KickList
+    end
+end
+document _debug_init
+Initialize debugging convenience variables
+end
 
 define liblist
-    set $lib = SysBase->LibList.lh_Head
+    _debug_init
+    set $lib = ((struct ExecBase *)$AbsExecBase)->LibList.lh_Head
 
     printf "Base     OpenC   Name\n"
     printf "---------------------------------------------------------------\n"
     while ($lib->ln_Succ != 0)
-        printf "%p %5d   %s\n", \
-            $lib, \
-            ((struct Library *)$lib)->lib_OpenCnt, \
-            $lib->ln_Name
-        set $lib = $lib->ln_Succ
+    printf "%p %5d   %s\n", \
+        $lib, \
+        ((struct Library *)$lib)->lib_OpenCnt, \
+        $lib->ln_Name
+    set $lib = $lib->ln_Succ
     end
 end
 document liblist
@@ -19,15 +54,16 @@ List the current libraries in the system
 end
 
 define devlist
-    set $dev = SysBase->DeviceList.lh_Head
+    _debug_init
+    set $dev = ((struct ExecBase *)$AbsExecBase)->DeviceList.lh_Head
     printf "Base     OpenC   Name\n"
     printf "---------------------------------------------------------------\n"
     while ($dev->ln_Succ != 0)
-        printf "%p %5d   %s\n", \
-            $dev, \
-            ((struct Library *)$dev)->lib_OpenCnt, \
-            $dev->ln_Name
-        set $dev = $dev->ln_Succ
+    printf "%p %5d   %s\n", \
+        $dev, \
+        ((struct Library *)$dev)->lib_OpenCnt, \
+        $dev->ln_Name
+    set $dev = $dev->ln_Succ
     end
 end
 document devlist
@@ -35,12 +71,13 @@ List the current devices in the system
 end
 
 define resourcelist
-    set $res = SysBase->ResourceList.lh_Head
+    _debug_init
+    set $res = ((struct ExecBase *)$AbsExecBase)->ResourceList.lh_Head
     printf "Base     Name\n"
     printf "---------------------------------------------------------------\n"
     while ($res->ln_Succ != 0)
-        printf "%p %s\n", $res, $res->ln_Name
-        set $res = $res->ln_Succ
+    printf "%p %s\n", $res, $res->ln_Name
+    set $res = $res->ln_Succ
     end
 end
 document resourcelist
@@ -48,21 +85,22 @@ List the current resources in the system
 end
 
 define residentlist
-    set $resp = (struct Resident **)SysBase->ResModules
+    _debug_init
+    set $resp = (struct Resident **)((struct ExecBase *)$AbsExecBase)->ResModules
     set $i = 0
 
     printf "Address    Pri Flags Vers Type  Name\n"
     printf "--------------------------------------------------------------\n"
     while (($resp)[$i] != 0)
-        set $res = ($resp)[$i]
-        printf "%p  %4d    %02x  %3d  %3d  %s\n", \
-            $res, \
-            ((struct Resident *)$res)->rt_Pri, \
-            ((struct Resident *)$res)->rt_Flags, \
-            ((struct Resident *)$res)->rt_Version, \
-            ((struct Resident *)$res)->rt_Type, \
-            ((struct Resident *)$res)->rt_Name
-        set $i = $i + 1
+    set $res = ($resp)[$i]
+    printf "%p  %4d    %02x  %3d  %3d  %s\n", \
+        $res, \
+        ((struct Resident *)$res)->rt_Pri, \
+        ((struct Resident *)$res)->rt_Flags, \
+        ((struct Resident *)$res)->rt_Version, \
+        ((struct Resident *)$res)->rt_Type, \
+        ((struct Resident *)$res)->rt_Name
+    set $i = $i + 1
     end
 end
 document residentlist
@@ -70,53 +108,12 @@ List the system resident list
 end
 
 define taskready
-    set $task = (struct Task *)SysBase->TaskReady.lh_Head
+    _debug_init
+    set $task = (struct Task *)((struct ExecBase *)$AbsExecBase)->TaskReady.lh_Head
 
     printf "Task     SigWait  SigRecvd StkSize   StkUsed Pri Type Name\n"
     printf "-----------------------------------------------------------------------------\n"
     while ($task->tc_Node.ln_Succ != 0)
-        printf "%p %p %p %8d %8d %3d  %3ld %s\n", \
-            $task, \
-            $task->tc_SigWait, \
-            $task->tc_SigRecvd, \
-            $task->tc_SPUpper - $task->tc_SPLower, \
-            $task->tc_SPUpper - $task->tc_SPReg, \
-            $task->tc_Node.ln_Pri, \
-            $task->tc_Node.ln_Type, \
-            $task->tc_Node.ln_Name
-        set $task = (struct Task *)$task->tc_Node.ln_Succ
-    end
-end
-document taskready
-List of tasks currently ready to run
-end
-
-define taskwait
-    set $task = (struct Task *)SysBase->TaskWait.lh_Head
-
-    printf "Task     SigWait  SigRecvd StkSize   StkUsed Pri Type Name\n"
-    printf "-----------------------------------------------------------------------------\n"
-    while ($task->tc_Node.ln_Succ != 0)
-        printf "%p %p %p %8d %8d %3d  %3ld %s\n", \
-            $task, \
-            $task->tc_SigWait, \
-            $task->tc_SigRecvd, \
-            $task->tc_SPUpper - $task->tc_SPLower, \
-            $task->tc_SPUpper - $task->tc_SPReg, \
-            $task->tc_Node.ln_Pri, \
-            $task->tc_Node.ln_Type, \
-            $task->tc_Node.ln_Name
-        set $task = (struct Task *)$task->tc_Node.ln_Succ
-    end
-end
-document taskwait
-List of tasks currently waiting for an event
-end
-
-define thistask
-    set $task = (struct Task *)SysBase->ThisTask
-    printf "Task     SigWait  SigRecvd StkSize   StkUsed Pri Type Name\n"
-    printf "-----------------------------------------------------------------------------\n"
     printf "%p %p %p %8d %8d %3d  %3ld %s\n", \
         $task, \
         $task->tc_SigWait, \
@@ -126,17 +123,62 @@ define thistask
         $task->tc_Node.ln_Pri, \
         $task->tc_Node.ln_Type, \
         $task->tc_Node.ln_Name
+    set $task = (struct Task *)$task->tc_Node.ln_Succ
+    end
+end
+document taskready
+List of tasks currently ready to run
+end
+
+define taskwait
+    _debug_init
+    set $task = (struct Task *)((struct ExecBase *)$AbsExecBase)->TaskWait.lh_Head
+
+    printf "Task     SigWait  SigRecvd StkSize   StkUsed Pri Type Name\n"
+    printf "-----------------------------------------------------------------------------\n"
+    while ($task->tc_Node.ln_Succ != 0)
+    printf "%p %p %p %8d %8d %3d  %3ld %s\n", \
+        $task, \
+        $task->tc_SigWait, \
+        $task->tc_SigRecvd, \
+        $task->tc_SPUpper - $task->tc_SPLower, \
+        $task->tc_SPUpper - $task->tc_SPReg, \
+        $task->tc_Node.ln_Pri, \
+        $task->tc_Node.ln_Type, \
+        $task->tc_Node.ln_Name
+    set $task = (struct Task *)$task->tc_Node.ln_Succ
+    end
+end
+document taskwait
+List of tasks currently waiting for an event
+end
+
+define thistask
+    _debug_init
+    set $task = (struct Task *)((struct ExecBase *)$AbsExecBase)->ThisTask
+    printf "Task     SigWait  SigRecvd StkSize   StkUsed Pri Type Name\n"
+    printf "-----------------------------------------------------------------------------\n"
+    printf "%p %p %p %8d %8d %3d  %3ld %s\n", \
+    $task, \
+    $task->tc_SigWait, \
+    $task->tc_SigRecvd, \
+    $task->tc_SPUpper - $task->tc_SPLower, \
+    $task->tc_SPUpper - $task->tc_SPReg, \
+    $task->tc_Node.ln_Pri, \
+    $task->tc_Node.ln_Type, \
+    $task->tc_Node.ln_Name
 end
 document thistask
 Print out information about the currently running task.
 end
 
 define modlist
+    _debug_init
     printf "Segment           Module\n"
 
-    if Debug_ModList
+    if $_debug_ModList
         printf "---------------------------------------------------------------------\n"
-        set $segnode = (struct segment *)Debug_ModList->mlh_Head
+        set $segnode = (struct segment *)$_debug_ModList->mlh_Head
 
         while ($segnode->s_node.mln_Succ != 0)
             printf "%p %12s %2u %32s\n", $segnode->s_lowest, $segnode->s_name, $segnode->s_num, $segnode->s_mod->m_name
@@ -146,7 +188,7 @@ define modlist
     end
 
     printf "---------------------------------------------------------------------\n"
-    set $kicknode = Debug_KickList
+    set $kicknode = $_debug_KickList
 
     while ($kicknode != 0)
         set $eh = $kicknode->eh
@@ -156,11 +198,11 @@ define modlist
         set $i = 0
         while ($i < $shnum)
             if ($sh->addr != 0) && ($sh->size != 0)
-                printf "%p              %2u %32s\n", $sh->addr, $i, $kicknode->Name
-            end
-            set $sh = $sh + 1
-            set $i = $i + 1
+        printf "%p              %2u %32s\n", $sh->addr, $i, $kicknode->Name
         end
+        set $sh = $sh + 1
+        set $i = $i + 1
+    end
         set $kicknode = $kicknode->Next
     end
 end
@@ -169,15 +211,16 @@ List of all the modules currently loaded in memory
 end
 
 define findaddr
+    _debug_init
     set $cont = 1
 
     #first search in modules loaded from disk
     printf "Searching in the loaded modules...\n"
-    if Debug_ModList
-        set $segnode = (struct segment *)Debug_ModList->mlh_Head
+    if $_debug_ModList
+        set $segnode = (struct segment *)$_debug_ModList->mlh_Head
 
         while ($segnode->s_node.mln_Succ != 0) && $cont
-            if $arg0 >= $segnode->s_lowest && $arg0 <= $segnode->s_highest
+        if $arg0 >= $segnode->s_lowest && $arg0 <= $segnode->s_highest
                 printf "Address found in %s, in segment %p.\nIf this is an executable, its .text section starts at %p.\n", $segnode->s_mod->m_name, $segnode->s_seg, $segnode->s_lowest
 
                 set $cont = 0
@@ -187,10 +230,10 @@ define findaddr
     end
 
     if $cont
-        printf "Searching in the kickstart list...\n"
-        set $kicknode = Debug_KickList
+    printf "Searching in the kickstart list...\n"
+        set $kicknode = $_debug_KickList
 
-        while ($kicknode != 0) && $cont
+    while ($kicknode != 0) && $cont
             set $eh = $kicknode->eh
             set $sh = $kicknode->sh
             set $shnum = $eh->shnum
@@ -198,18 +241,18 @@ define findaddr
             set $i = 0
             while ($i < $shnum) && $cont
                 if ($sh->addr != 0) && ($sh->size != 0)
-                    set $lowest  = $sh->addr
-                    set $highest = $sh->addr + $sh->size - 1
+            set $lowest  = $sh->addr
+            set $highest = $sh->addr + $sh->size - 1
 
-                    if $arg0 >= $lowest && $arg0 <= $highest
-                        printf "Address found in %s in section number %d starting at %p.\n", $kicknode->Name, $i, $lowest
+            if $arg0 >= $lowest && $arg0 <= $highest
+                printf "Address found in %s in section number %d starting at %p.\n", $kicknode->Name, $i, $lowest
                         set $cont = 0
                     end
                 end
 
-                set $sh = $sh + 1
-                set $i = $i + 1
-            end
+        set $sh = $sh + 1
+        set $i = $i + 1
+        end
             set $kicknode = $kicknode->Next
         end
     end
@@ -219,11 +262,11 @@ define findaddr
         printf "Searching in the resident list...\n"
     end
 
-    set $resp = (struct Resident **)SysBase->ResModules
+    set $resp = (struct Resident **)((struct ExecBase *)$AbsExecBase)->ResModules
     set $i = 0
 
     while (($resp)[$i] != 0) && $cont
-        set $res = ($resp)[$i]
+    set $res = ($resp)[$i]
 
         if ($arg0 >= $res) && ($arg0 <= $res->rt_EndSkip)
             printf "Address found in %s, which resides at %p\n", $res->rt_Name, $res
@@ -275,19 +318,19 @@ define printtaglist
     printf "--------------------------------------\n"
 
     while $list->ti_Tag != 0
-        # Handle the possible control tag...
-        if $list->ti_Tag == 1
-            printf "TAG_IGNORE\n"
-        else if $list->ti_Tag == 2
-            printf "TAG_MORE    %p\n", $list->ti_Data
-            set $list = (struct TagItem *)$list->ti_Data
-        else if $list->ti_Tag == 3
-            printf "TAG_SKIP    %d\n", $list->ti_Data
-            set $list = $list + $list->ti_Tag + 1
-        else
-            printf "%p  %p      %9lu\n", $list->ti_Tag, $list->ti_Data, $list->ti_Data
-            set $list = $list + 1
-        end
+    # Handle the possible control tag...
+    if $list->ti_Tag == 1
+        printf "TAG_IGNORE\n"
+    else if $list->ti_Tag == 2
+        printf "TAG_MORE    %p\n", $list->ti_Data
+        set $list = (struct TagItem *)$list->ti_Data
+    else if $list->ti_Tag == 3
+        printf "TAG_SKIP    %d\n", $list->ti_Data
+        set $list = $list + $list->ti_Tag + 1
+    else
+        printf "%p  %p      %9lu\n", $list->ti_Tag, $list->ti_Data, $list->ti_Data
+        set $list = $list + 1
+    end
     end
     printf "TAG_DONE\n"
 end
@@ -306,10 +349,11 @@ define end_log
 end
 
 define loadseg
+    _debug_init
     dont-repeat
-    if Debug_ModList
+    if $_debug_ModList
         set $step = 1
-        set $segnode = (struct segment *)Debug_ModList->mlh_Head
+        set $segnode = (struct segment *)$_debug_ModList->mlh_Head
         while ($segnode->s_node.mln_Succ != 0) && $step == 1
             if $arg0 >= $segnode->s_lowest && $arg0 <= $segnode->s_highest
                 log_to_file segname.tmp on
@@ -342,7 +386,7 @@ define loadseg
 
 
         if $step < 2
-            set $kicknode = Debug_KickList
+            set $kicknode = $_debug_KickList
 
             while ($kicknode != 0) && $step == 1
                 set $eh = $kicknode->eh
@@ -416,7 +460,8 @@ Loads the module that contains the given address
 end
 
 define loadkick
-    set $_kicknode = Debug_KickList
+    _debug_init
+    set $_kicknode = $_debug_KickList
 
     while ($_kicknode != 0)
         set $_eh = $_kicknode->eh
@@ -438,9 +483,11 @@ document loadkick
 Loads the Kickstart (symbols)
 end
 
-define loadmods    
-    if Debug_ModList
-        set $_segnode = (struct segment *)Debug_ModList->mlh_Head
+define loadmods
+    _debug_init
+    
+    if $_debug_ModList
+        set $_segnode = (struct segment *)$_debug_ModList->mlh_Head
 
         while ($_segnode->s_node.mln_Succ != 0)
             if $_segnode->s_num == 1
@@ -547,6 +594,7 @@ Tries to automatically load the symbols for all unresolved stack frames
 end
 
 define seglistdump
+    _debug_init
     set $nextseg = $arg0
     set $count   = 1
 
@@ -576,9 +624,7 @@ define bttask
             printf "WARNING: TS_RUN Task. Showing normal backtrace!\n"
         else
             set $esp = $task->tc_SPReg
-
-            #ABI V1: set $taskcontext = (struct AROSCPUContext *)$task->tc_UnionETask.tc_ETask.et_RegFrame
-            set $taskcontext = (struct AROSCPUContext *)((struct IntETask *)$task->tc_UnionETask.tc_ETask).iet_Context
+            set $taskcontext = (struct AROSCPUContext *)$task->tc_UnionETask.tc_ETask.et_RegFrame
             set $eip = $taskcontext.regs.eip
         end
         
