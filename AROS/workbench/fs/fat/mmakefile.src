@@ -2,12 +2,8 @@ include $(TOP)/config/make.cfg
 
 FILES := startup-aros cache charset direntry disk fat file lock main names packet ops support notify timer
 
-%build_prog mmake=kernel-fs-fat \
+%build_prog mmake=workbench-fs-fat \
     progname=fat.handler targetdir=$(AROS_DEVS) \
-    files="$(FILES)" usestartup=no uselibs="rom"
-
-%build_prog mmake=kernel-fs-fat-pkg \
-    progname=fat.handler targetdir=$(GENDIR)/pkg \
     files="$(FILES)" usestartup=no uselibs="rom"
 
 %common
