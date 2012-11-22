@@ -146,12 +146,7 @@ static void uuid_get_node(uuid_node_t *node, struct uuid_base *UUIDBase)
     {
         if (!DOSBase)
             DOSBase = (void *)OpenLibrary("dos.library", 0);
-
-        struct Process *me = (struct Process*)FindTask(NULL);
-        BPTR oldwin = me->pr_WindowPtr;
-
-        me->pr_WindowPtr = (BPTR)-1;
-
+        
         if (!(DOSBase && GetVar("uuid_state", (UBYTE*)&LIBBASE->uuid_State, sizeof(uuid_state_t),
                               GVF_BINARY_VAR | GVF_DONT_NULL_TERM) == sizeof(uuid_state_t)))
         {
@@ -169,8 +164,6 @@ static void uuid_get_node(uuid_node_t *node, struct uuid_base *UUIDBase)
         if (DOSBase)
             SetVar("uuid_state", (UBYTE*)&LIBBASE->uuid_State, sizeof(uuid_state_t),
                               GVF_BINARY_VAR | GVF_DONT_NULL_TERM | GVF_SAVE_VAR);
-
-        me->pr_WindowPtr = oldwin;
     }
     *node = UUIDBase->uuid_State.node;
 }
@@ -181,11 +174,6 @@ static void uuid_get_state(uint16_t *cs, uuid_time_t *timestamp, uuid_node_t *no
     {
         if (!DOSBase)
             DOSBase = (void *)OpenLibrary("dos.library", 0);
-
-        struct Process *me = (struct Process*)FindTask(NULL);
-        BPTR oldwin = me->pr_WindowPtr;
-
-        me->pr_WindowPtr = (BPTR)-1;
 
         if (!(DOSBase && GetVar("uuid_state", (UBYTE*)&LIBBASE->uuid_State, sizeof(uuid_state_t),
                                 GVF_BINARY_VAR | GVF_DONT_NULL_TERM) == sizeof(uuid_state_t)))
@@ -200,8 +188,6 @@ static void uuid_get_state(uint16_t *cs, uuid_time_t *timestamp, uuid_node_t *no
             UUIDBase->uuid_State.node.nodeID[0] |= 0x01;
         }
         UUIDBase->uuid_Initialized = 1;
-
-        me->pr_WindowPtr = oldwin;
     }
     
     *node = UUIDBase->uuid_State.node;

@@ -1,9 +1,7 @@
 /*
-    Copyright © 2007-2008, The AROS Development Team. All rights reserved.
+    Copyright © 2007-2011, The AROS Development Team. All rights reserved.
     $Id$
 */
-
-#define DEBUG 1
 
 #include <aros/symbolsets.h>
 #include <aros/debug.h>
@@ -56,11 +54,7 @@ static int UUID_Init(LIBBASETYPEPTR LIBBASE)
     if (DOSBase)
     {
         D(bug("[UUID] dos.library opened. Trying to get the UUID state.\n"));
-        struct Process *me = (struct Process*)FindTask(NULL);
-        BPTR oldwin = me->pr_WindowPtr;
-
-        me->pr_WindowPtr = (BPTR)-1;
-
+        
         /* DOS is there. Try to get the last UUID state. */
         if (GetVar("uuid_state", (UBYTE*)&LIBBASE->uuid_State, sizeof(uuid_state_t),
                GVF_BINARY_VAR | GVF_DONT_NULL_TERM) == sizeof(uuid_state_t))
@@ -72,7 +66,6 @@ static int UUID_Init(LIBBASETYPEPTR LIBBASE)
         {
             D(bug("[UUID] no UUID state found. Staying uninitlaized\n"));
         }
-        me->pr_WindowPtr = oldwin;
     }
     else
         D(bug("[UUID] dos.library not yet available. I will try later."));
