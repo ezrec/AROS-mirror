@@ -1354,7 +1354,7 @@ GLOB_MKDIRS += %(objdir) $(BD_MODDIR) $(KOBJSDIR)
   linklibfiles= linklibobjs= cflags=$(CFLAGS) dflags=$(BD_DEFDFLAGS) \
   objdir=$(OBJDIR) moduledir=$(BD_DEFMODDIR) prefix=$(AROSDIR) \
   linklibname=$(BD_DEFLINKLIBNAME) uselibs= usehostlibs= \
-  compiler=target
+  compiler=target nostartup=yes
 
 # Define metamake targets and their dependencies
 #MM- includes-all : %(mmake)-includes
@@ -1541,7 +1541,14 @@ endif
 
 BD_OBJS       := $(addsuffix .o,$(BD_STARTFILES)) $(BD_ARCHOBJS) \
 	     	 $(addsuffix .o, $(addprefix %(objdir)/,$(notdir $(BD_NARCHFILES))))
+
+ifeq (%(nostartup),yes)
+# Handlers always have entry point
+ifneq (%(modtype),handler)
 BD_STARTOBJS  := $(addsuffix .o,$(addprefix $(GENDIR)/,$(RESIDENT_BEGIN)))
+endif
+endif
+
 BD_ENDOBJS    := $(addsuffix .o,$(BD_ENDFILES))
 BD_LINKLIBOBJS:= $(addsuffix .o,$(addprefix %(objdir)/,$(notdir %(linklibfiles))) $(BD_LINKLIBFILES)) \
                  %(linklibobjs)
