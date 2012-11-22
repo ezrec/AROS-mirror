@@ -1,7 +1,151 @@
 Diffs generated between source V1 tree and V0 tree after backport
-Generate on Sat Oct 27 19:01:26 CEST 2012 by tools/krn-bckprt-diff.sh
+Generate on Thu Nov 22 19:11:00 CET 2012 by tools/krn-bckprt-diff.sh
 -----------------------------------------------------------------
 
+diff -urN /data/deadwood/gitAROS/AROS//arch/all-linux/hidd/linuxfb/gfxclass.c /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-linux/hidd/linuxfb/gfxclass.c
+--- /data/deadwood/gitAROS/AROS//arch/all-linux/hidd/linuxfb/gfxclass.c	2012-10-13 15:47:57.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-linux/hidd/linuxfb/gfxclass.c	2012-11-22 19:00:17.000000000 +0100
+@@ -341,9 +341,9 @@
+         break;
+     
+     case FB_VISUAL_PSEUDOCOLOR:
+-#warning "also pseudocolor pixelformats need red/green/blue masks now. Is the calc. correct here!?"
++        // FIXME: also pseudocolor pixelformats need red/green/blue masks now. Is the calc. correct here!?
+         /* stegerg: apps when using GetDisplayInfoData(DTA_DISP) even on 8 bit palettized
+-                    screens expect DisplayInfo->redbits/greenbits/bluebits to have
++            screens expect DisplayInfo->redbits/greenbits/bluebits to have
+             correct values (they are calculated based on the red/green/blue masks)
+             which reflect the "size" of the palette (16M, 4096, 262144) */
+         
+@@ -357,9 +357,9 @@
+         break;
+     
+      case FB_VISUAL_STATIC_PSEUDOCOLOR:
+-#warning "also pseudocolor pixelformats need red/green/blue masks now. Is the calc. correct here!?"
++        // FIXME: also pseudocolor pixelformats need red/green/blue masks now. Is the calc. correct here!?"
+         /* stegerg: apps when using GetDisplayInfoData(DTA_DISP) even on 8 bit palettized
+-                    screens expect DisplayInfo->redbits/greenbits/bluebits to have
++            screens expect DisplayInfo->redbits/greenbits/bluebits to have
+             correct values (they are calculated based on the red/green/blue masks)
+             which reflect the "size" of the palette (16M, 4096, 262144) */
+         
+diff -urN /data/deadwood/gitAROS/AROS//arch/all-linux/hidd/linuxfb/startup.c /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-linux/hidd/linuxfb/startup.c
+--- /data/deadwood/gitAROS/AROS//arch/all-linux/hidd/linuxfb/startup.c	2012-10-13 15:47:57.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-linux/hidd/linuxfb/startup.c	2012-11-22 19:00:20.000000000 +0100
+@@ -35,7 +35,7 @@
+ {
+     int res = FALSE;
+     struct GfxBase *GfxBase;
+-    ULONG err;
++    ULONG err; OOP_Object *gfxhidd;
+     struct TagItem gfx_attrs[] =
+     {
+         {aHidd_LinuxFB_File, 0},
+@@ -61,7 +61,8 @@
+      * In future we will be able to call this several times in a loop.
+      * This will allow us to create several displays.
+      */
+-    err = AddDisplayDriverA(LIBBASE->lsd.gfxclass, gfx_attrs, NULL);
++    gfxhidd = OOP_NewObject(LIBBASE->lsd.gfxclass, NULL, gfx_attrs);
++    err = AddDisplayDriverA(gfxhidd, NULL);
+ 
+     D(bug("[LinuxFB_Startup] AddDisplayDriver() result: %u\n", err));
+ 
+diff -urN /data/deadwood/gitAROS/AROS//arch/all-linux/hidd/linuxinput/kbdclass.c /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-linux/hidd/linuxinput/kbdclass.c
+--- /data/deadwood/gitAROS/AROS//arch/all-linux/hidd/linuxinput/kbdclass.c	2012-10-13 15:47:57.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-linux/hidd/linuxinput/kbdclass.c	2012-11-22 19:00:16.000000000 +0100
+@@ -26,7 +26,6 @@
+ 
+ #include LC_LIBDEFS_FILE
+ 
+-#define DEBUG 0
+ #include <aros/debug.h>
+ 
+ static UBYTE scancode2rawkey[256];
+diff -urN /data/deadwood/gitAROS/AROS//arch/all-linux/hidd/linuxinput/linuxinput_init.c /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-linux/hidd/linuxinput/linuxinput_init.c
+--- /data/deadwood/gitAROS/AROS//arch/all-linux/hidd/linuxinput/linuxinput_init.c	2012-10-13 15:47:57.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-linux/hidd/linuxinput/linuxinput_init.c	2012-11-22 19:00:16.000000000 +0100
+@@ -6,8 +6,6 @@
+     Lang: English.
+ */
+ 
+-#define DEBUG 0
+-
+ #define __OOP_NOATTRBASES__
+ 
+ #include <exec/rawfmt.h>
+diff -urN /data/deadwood/gitAROS/AROS//arch/all-linux/hidd/linuxinput/linuxinput_inputtask.c /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-linux/hidd/linuxinput/linuxinput_inputtask.c
+--- /data/deadwood/gitAROS/AROS//arch/all-linux/hidd/linuxinput/linuxinput_inputtask.c	2012-10-13 15:47:57.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-linux/hidd/linuxinput/linuxinput_inputtask.c	2012-11-22 19:00:16.000000000 +0100
+@@ -1,5 +1,5 @@
+ /*
+-    Copyright © 1995-2012, The AROS Development Team. All rights reserved.
++    Copyright ï¿½ 1995-2012, The AROS Development Team. All rights reserved.
+     $Id$
+ 
+     Desc: Task used for wainting on events from linux
+@@ -19,7 +19,6 @@
+ #include <hidd/unixio.h>
+ #include <hidd/unixio_inline.h>
+ 
+-#define DEBUG 0
+ #include <aros/debug.h>
+ 
+ #include "linuxinput_intern.h"
+@@ -130,8 +129,7 @@
+     D(bug("INSIDE INPUT TASK\n"));
+     itp = *((struct inputtask_params *)FindTask(NULL)->tc_UserData);
+     eh = itp.eh;
+-    D(bug("in inputtask: lsd = %p\n", lsd));
+-    D(bug("FDS: %d\n", lsd->mousedev));
++    D(bug("in inputtask: eh = %p\n", eh));
+ 
+     buff = AllocMem(BUFF_SIZE, MEMF_PUBLIC);
+     if (!buff)
+@@ -145,14 +143,17 @@
+ 
+         Hidd_UnixIO_Wait(eh->unixio, eh->eventdev, vHidd_UnixIO_Read);
+         bytesread = Hidd_UnixIO_ReadFile(eh->unixio, eh->eventdev, buff, BUFF_SIZE, &ioerr);
+-        items = bytesread / sizeof(struct input_event);
++        if (bytesread > 0)
++        {
++            items = bytesread / sizeof(struct input_event);
+ 
+-        ptr = buff;
++            ptr = buff;
+ 
+-        for (i = 0; i < items; i++)
+-        {
+-            process_input_event((struct input_event *)ptr, eh);
+-            ptr += sizeof(struct input_event);
++            for (i = 0; i < items; i++)
++            {
++                process_input_event((struct input_event *)ptr, eh);
++                ptr += sizeof(struct input_event);
++            }
+         }
+     }
+ 
+@@ -229,7 +230,7 @@
+     p.eh = eh;
+     p.creator = FindTask(NULL);
+ 
+-    D(bug("init_input_task: p.lsd = %p, p.creator = %p\n", p.lsd, p.creator));
++    D(bug("init_input_task: p.eh = %p, p.creator = %p\n", p.eh , p.creator));
+     
+     D(bug("SIGNALS ALLOCATED\n"));
+     
+diff -urN /data/deadwood/gitAROS/AROS//arch/all-linux/hidd/linuxinput/mouseclass.c /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-linux/hidd/linuxinput/mouseclass.c
+--- /data/deadwood/gitAROS/AROS//arch/all-linux/hidd/linuxinput/mouseclass.c	2012-10-13 15:47:57.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-linux/hidd/linuxinput/mouseclass.c	2012-11-22 19:00:16.000000000 +0100
+@@ -20,7 +20,6 @@
+ 
+ #include LC_LIBDEFS_FILE
+ 
+-#define DEBUG 0
+ #include <aros/debug.h>
+ 
+ OOP_Object *LinuxMouse__Root__New(OOP_Class *cl, OOP_Object *o, struct pRoot_New *msg)
 diff -urN /data/deadwood/gitAROS/AROS//arch/all-linux/kernel/mmakefile /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-linux/kernel/mmakefile
 --- /data/deadwood/gitAROS/AROS//arch/all-linux/kernel/mmakefile	2012-10-13 15:47:57.000000000 +0200
 +++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-linux/kernel/mmakefile	1970-01-01 01:00:00.000000000 +0100
@@ -20,7 +164,7 @@ diff -urN /data/deadwood/gitAROS/AROS//arch/all-linux/kernel/mmakefile /data/dea
 -	@CC="$(KERNEL_CC)" CPU=$(AROS_TARGET_CPU) $(SHELL) $(SRCDIR)/$(CURDIR)/mksigcore.sh $(SRCDIR)/$(CURDIR) $(GENINCDIR)/sigcore.h
 diff -urN /data/deadwood/gitAROS/AROS//arch/all-linux/kernel/mmakefile.src /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-linux/kernel/mmakefile.src
 --- /data/deadwood/gitAROS/AROS//arch/all-linux/kernel/mmakefile.src	1970-01-01 01:00:00.000000000 +0100
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-linux/kernel/mmakefile.src	2012-10-25 20:04:05.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-linux/kernel/mmakefile.src	2012-11-22 19:00:28.000000000 +0100
 @@ -0,0 +1,12 @@
 +# $Id$
 +include $(TOP)/config/make.cfg
@@ -36,7 +180,7 @@ diff -urN /data/deadwood/gitAROS/AROS//arch/all-linux/kernel/mmakefile.src /data
 +	@CC="$(KERNEL_CC)" CPU=$(AROS_TARGET_CPU) $(SHELL) $(SRCDIR)/$(CURDIR)/mksigcore.sh $(SRCDIR)/$(CURDIR) $(GENINCDIR)/sigcore.h
 diff -urN /data/deadwood/gitAROS/AROS//arch/all-mingw32/boot/mmakefile.src /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-mingw32/boot/mmakefile.src
 --- /data/deadwood/gitAROS/AROS//arch/all-mingw32/boot/mmakefile.src	2012-10-13 15:47:57.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-mingw32/boot/mmakefile.src	2012-10-27 13:32:46.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-mingw32/boot/mmakefile.src	2012-11-22 19:00:29.000000000 +0100
 @@ -31,7 +31,7 @@
  %link_kickstart mmake=kernel-link-mingw32 file=$(EXEDIR)/aros-bsp-mingw32 \
  	devs=$(MINGW32_DEVS) handlers=$(MINGW32_HANDLERS) hidds=$(MINGW32_HIDD) libs=$(MINGW32_LIBS) res=$(MINGW32_RES) \
@@ -48,7 +192,7 @@ diff -urN /data/deadwood/gitAROS/AROS//arch/all-mingw32/boot/mmakefile.src /data
  #MM
 diff -urN /data/deadwood/gitAROS/AROS//arch/all-mingw32/kernel/leaveinterrupt_i386.s /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-mingw32/kernel/leaveinterrupt_i386.s
 --- /data/deadwood/gitAROS/AROS//arch/all-mingw32/kernel/leaveinterrupt_i386.s	2012-10-13 15:47:57.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-mingw32/kernel/leaveinterrupt_i386.s	2012-10-27 12:54:46.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-mingw32/kernel/leaveinterrupt_i386.s	2012-11-06 19:44:41.000000000 +0100
 @@ -7,7 +7,8 @@
  # so it's okay to play with stack here.
  
@@ -63,7 +207,7 @@ diff -urN /data/deadwood/gitAROS/AROS//arch/all-mingw32/kernel/leaveinterrupt_i3
  	ret
 diff -urN /data/deadwood/gitAROS/AROS//arch/all-native/kernel/boot_utils.c /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-native/kernel/boot_utils.c
 --- /data/deadwood/gitAROS/AROS//arch/all-native/kernel/boot_utils.c	2012-10-13 15:47:57.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-native/kernel/boot_utils.c	2012-10-23 19:15:40.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-native/kernel/boot_utils.c	2012-11-22 19:00:28.000000000 +0100
 @@ -24,7 +24,7 @@
  {
      struct TagItem *dest;
@@ -75,7 +219,7 @@ diff -urN /data/deadwood/gitAROS/AROS//arch/all-native/kernel/boot_utils.c /data
      /* First count how much memory we will need */
 diff -urN /data/deadwood/gitAROS/AROS//arch/all-pc/acpi/acpi_init.c /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-pc/acpi/acpi_init.c
 --- /data/deadwood/gitAROS/AROS//arch/all-pc/acpi/acpi_init.c	2012-10-13 15:47:57.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-pc/acpi/acpi_init.c	2012-10-23 19:15:40.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-pc/acpi/acpi_init.c	2012-11-22 19:00:25.000000000 +0100
 @@ -330,7 +330,7 @@
  	    D(bug("[ACPI] Have reset register, installing patch\n"));
  
@@ -87,7 +231,7 @@ diff -urN /data/deadwood/gitAROS/AROS//arch/all-pc/acpi/acpi_init.c /data/deadwo
  
 diff -urN /data/deadwood/gitAROS/AROS//arch/all-pc/acpi/acpitool/parsers.c /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-pc/acpi/acpitool/parsers.c
 --- /data/deadwood/gitAROS/AROS//arch/all-pc/acpi/acpitool/parsers.c	2012-10-13 15:47:57.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-pc/acpi/acpitool/parsers.c	2012-10-23 19:15:40.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-pc/acpi/acpitool/parsers.c	2012-11-22 19:00:25.000000000 +0100
 @@ -7,6 +7,8 @@
  #include "locale.h"
  #include "parsers.h"
@@ -99,7 +243,7 @@ diff -urN /data/deadwood/gitAROS/AROS//arch/all-pc/acpi/acpitool/parsers.c /data
  /* Buffer for text formatting */
 diff -urN /data/deadwood/gitAROS/AROS//arch/all-pc/bootstrap/mmakefile.src /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-pc/bootstrap/mmakefile.src
 --- /data/deadwood/gitAROS/AROS//arch/all-pc/bootstrap/mmakefile.src	2012-10-13 15:47:58.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-pc/bootstrap/mmakefile.src	2012-10-23 19:15:41.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-pc/bootstrap/mmakefile.src	2012-11-22 19:00:28.000000000 +0100
 @@ -21,7 +21,7 @@
  
  %build_prog mmake=kernel-bootstrap-pc progname=$(EXENAME) \
@@ -111,7 +255,7 @@ diff -urN /data/deadwood/gitAROS/AROS//arch/all-pc/bootstrap/mmakefile.src /data
  	start=0x1000 ldflags="-m elf_i386"
 diff -urN /data/deadwood/gitAROS/AROS//arch/all-pc/hpet/getunitattrsa.c /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-pc/hpet/getunitattrsa.c
 --- /data/deadwood/gitAROS/AROS//arch/all-pc/hpet/getunitattrsa.c	2012-10-13 15:47:58.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-pc/hpet/getunitattrsa.c	2012-10-23 19:15:41.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-pc/hpet/getunitattrsa.c	2012-11-22 19:00:25.000000000 +0100
 @@ -47,7 +47,7 @@
      if (unit >= base->unitCnt)
      	return FALSE;
@@ -123,7 +267,7 @@ diff -urN /data/deadwood/gitAROS/AROS//arch/all-pc/hpet/getunitattrsa.c /data/de
      	{
 diff -urN /data/deadwood/gitAROS/AROS//arch/all-pc/hpet/hpet.conf /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-pc/hpet/hpet.conf
 --- /data/deadwood/gitAROS/AROS//arch/all-pc/hpet/hpet.conf	2012-10-13 15:47:58.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-pc/hpet/hpet.conf	2012-10-23 19:15:41.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-pc/hpet/hpet.conf	2012-11-22 19:00:25.000000000 +0100
 @@ -5,6 +5,10 @@
  libbasetype struct HPETBase
  ##end config
@@ -137,7 +281,7 @@ diff -urN /data/deadwood/gitAROS/AROS//arch/all-pc/hpet/hpet.conf /data/deadwood
  ##end cdefprivate
 diff -urN /data/deadwood/gitAROS/AROS//arch/all-pc/kernel/cli.s /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-pc/kernel/cli.s
 --- /data/deadwood/gitAROS/AROS//arch/all-pc/kernel/cli.s	2012-10-13 15:47:58.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-pc/kernel/cli.s	2012-10-25 20:04:05.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-pc/kernel/cli.s	2012-11-22 19:00:28.000000000 +0100
 @@ -1,10 +1,10 @@
  	.text
  	.align  16
@@ -155,7 +299,7 @@ diff -urN /data/deadwood/gitAROS/AROS//arch/all-pc/kernel/cli.s /data/deadwood/r
 +	.size  Kernel_KrnCli, .-Kernel_KrnCli
 diff -urN /data/deadwood/gitAROS/AROS//arch/all-pc/kernel/issuper.s /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-pc/kernel/issuper.s
 --- /data/deadwood/gitAROS/AROS//arch/all-pc/kernel/issuper.s	2012-10-13 15:47:58.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-pc/kernel/issuper.s	2012-10-25 20:04:05.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-pc/kernel/issuper.s	2012-11-22 19:00:28.000000000 +0100
 @@ -1,12 +1,12 @@
  	.text
  	.align  16
@@ -175,7 +319,7 @@ diff -urN /data/deadwood/gitAROS/AROS//arch/all-pc/kernel/issuper.s /data/deadwo
 +	.size  Kernel_KrnIsSuper, .-Kernel_KrnIsSuper
 diff -urN /data/deadwood/gitAROS/AROS//arch/all-pc/kernel/sti.s /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-pc/kernel/sti.s
 --- /data/deadwood/gitAROS/AROS//arch/all-pc/kernel/sti.s	2012-10-13 15:47:58.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-pc/kernel/sti.s	2012-10-25 20:04:05.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-pc/kernel/sti.s	2012-11-22 19:00:28.000000000 +0100
 @@ -1,10 +1,10 @@
  	.text
  	.align  16
@@ -193,7 +337,7 @@ diff -urN /data/deadwood/gitAROS/AROS//arch/all-pc/kernel/sti.s /data/deadwood/r
 +	.size  Kernel_KrnSti, .-Kernel_KrnSti
 diff -urN /data/deadwood/gitAROS/AROS//arch/all-unix/boot/mmakefile.src /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-unix/boot/mmakefile.src
 --- /data/deadwood/gitAROS/AROS//arch/all-unix/boot/mmakefile.src	2012-10-13 15:47:58.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-unix/boot/mmakefile.src	2012-10-27 09:40:53.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-unix/boot/mmakefile.src	2012-11-22 19:00:28.000000000 +0100
 @@ -58,6 +58,6 @@
  
  %link_kickstart mmake=kernel-link-unix file=$(BINDIR)/boot/aros-bsp-$(BSP) \
@@ -204,7 +348,7 @@ diff -urN /data/deadwood/gitAROS/AROS//arch/all-unix/boot/mmakefile.src /data/de
  %common
 diff -urN /data/deadwood/gitAROS/AROS//arch/all-unix/exec/newstackswap.c /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-unix/exec/newstackswap.c
 --- /data/deadwood/gitAROS/AROS//arch/all-unix/exec/newstackswap.c	2012-10-13 15:47:58.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-unix/exec/newstackswap.c	2012-10-23 19:15:41.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-unix/exec/newstackswap.c	2012-11-22 19:00:28.000000000 +0100
 @@ -49,7 +49,7 @@
  	 AROS_LHA(struct StackSwapStruct *,  sss, A0),
  	 AROS_LHA(LONG_FUNC, entry, A1),
@@ -214,9 +358,21 @@ diff -urN /data/deadwood/gitAROS/AROS//arch/all-unix/exec/newstackswap.c /data/d
  {
      AROS_LIBFUNC_INIT
  
+diff -urN /data/deadwood/gitAROS/AROS//arch/all-unix/hidd/unixio/mmakefile.src /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-unix/hidd/unixio/mmakefile.src
+--- /data/deadwood/gitAROS/AROS//arch/all-unix/hidd/unixio/mmakefile.src	2012-10-13 15:47:58.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-unix/hidd/unixio/mmakefile.src	2012-11-22 19:00:15.000000000 +0100
+@@ -15,7 +15,7 @@
+ 
+ %build_module mmake=kernel-unixio \
+     modname=unixio modtype=hidd version=$(AROS_TARGET_PLATFORM) \
+-    files=unixio_class uselibs="oop"
++    files=unixio_class uselibs="oop rom"
+ 
+ MY_INCLS := $(call WILDCARD, include/*.h)
+ DEST_INC := $(foreach f,$(MY_INCLS), $(AROS_INCLUDES)/hidd/$(notdir $f))
 diff -urN /data/deadwood/gitAROS/AROS//arch/all-unix/kernel/kernel_startup.c /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-unix/kernel/kernel_startup.c
 --- /data/deadwood/gitAROS/AROS//arch/all-unix/kernel/kernel_startup.c	2012-10-13 15:47:58.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-unix/kernel/kernel_startup.c	2012-10-27 09:40:53.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/all-unix/kernel/kernel_startup.c	2012-11-22 19:00:28.000000000 +0100
 @@ -41,7 +41,7 @@
  /* Global HostIFace is needed for krnPutC() to work before KernelBase is set up */
  struct HostInterface *HostIFace;
@@ -238,7 +394,7 @@ diff -urN /data/deadwood/gitAROS/AROS//arch/all-unix/kernel/kernel_startup.c /da
      UWORD *ranges[] = {NULL, NULL, (UWORD *)-1};
 diff -urN /data/deadwood/gitAROS/AROS//arch/i386-all/exec/copymem_SSE.S /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-all/exec/copymem_SSE.S
 --- /data/deadwood/gitAROS/AROS//arch/i386-all/exec/copymem_SSE.S	2012-10-13 15:47:58.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-all/exec/copymem_SSE.S	2012-10-23 19:15:41.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-all/exec/copymem_SSE.S	2012-11-22 19:00:28.000000000 +0100
 @@ -44,12 +44,12 @@
  #include <aros/config.h>
  
@@ -258,7 +414,7 @@ diff -urN /data/deadwood/gitAROS/AROS//arch/i386-all/exec/copymem_SSE.S /data/de
  	pushl	%esi
 diff -urN /data/deadwood/gitAROS/AROS//arch/i386-all/exec/cpu_init.c /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-all/exec/cpu_init.c
 --- /data/deadwood/gitAROS/AROS//arch/i386-all/exec/cpu_init.c	2012-10-13 15:47:58.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-all/exec/cpu_init.c	2012-10-23 19:15:41.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-all/exec/cpu_init.c	2012-11-22 19:00:28.000000000 +0100
 @@ -2,7 +2,7 @@
  #include <aros/symbolsets.h>
  #include <proto/exec.h>
@@ -281,7 +437,7 @@ diff -urN /data/deadwood/gitAROS/AROS//arch/i386-all/exec/cpu_init.c /data/deadw
      return TRUE;
 diff -urN /data/deadwood/gitAROS/AROS//arch/i386-all/exec/execstubs.s /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-all/exec/execstubs.s
 --- /data/deadwood/gitAROS/AROS//arch/i386-all/exec/execstubs.s	2012-10-13 15:47:58.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-all/exec/execstubs.s	2012-10-23 19:15:41.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-all/exec/execstubs.s	2012-11-06 19:44:41.000000000 +0100
 @@ -41,15 +41,15 @@
  	PUSH			    ; \
  	call  name		    ; \
@@ -340,7 +496,7 @@ diff -urN /data/deadwood/gitAROS/AROS//arch/i386-all/exec/execstubs.s /data/dead
  
 diff -urN /data/deadwood/gitAROS/AROS//arch/i386-all/exec/newstackswap.c /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-all/exec/newstackswap.c
 --- /data/deadwood/gitAROS/AROS//arch/i386-all/exec/newstackswap.c	2012-10-13 15:47:58.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-all/exec/newstackswap.c	2012-10-25 20:05:58.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-all/exec/newstackswap.c	2012-11-06 19:44:41.000000000 +0100
 @@ -1,5 +1,5 @@
  /*
 -    Copyright © 1995-2012, The AROS Development Team. All rights reserved.
@@ -449,7 +605,7 @@ diff -urN /data/deadwood/gitAROS/AROS//arch/i386-all/exec/newstackswap.c /data/d
      t->tc_SPLower = splower;
 diff -urN /data/deadwood/gitAROS/AROS//arch/i386-all/exec/preparecontext.c /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-all/exec/preparecontext.c
 --- /data/deadwood/gitAROS/AROS//arch/i386-all/exec/preparecontext.c	2012-10-13 15:47:58.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-all/exec/preparecontext.c	2012-10-23 19:15:41.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-all/exec/preparecontext.c	2012-11-22 19:00:28.000000000 +0100
 @@ -15,13 +15,18 @@
  #include <aros/i386/cpucontext.h>
  
@@ -516,7 +672,7 @@ diff -urN /data/deadwood/gitAROS/AROS//arch/i386-all/exec/preparecontext.c /data
  } /* PrepareContext() */
 diff -urN /data/deadwood/gitAROS/AROS//arch/i386-all/exec/stackswap.S /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-all/exec/stackswap.S
 --- /data/deadwood/gitAROS/AROS//arch/i386-all/exec/stackswap.S	2012-10-13 15:47:58.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-all/exec/stackswap.S	2012-10-23 19:15:41.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-all/exec/stackswap.S	2012-11-06 19:44:41.000000000 +0100
 @@ -42,17 +42,20 @@
  #include <aros/config.h>
  
@@ -601,9 +757,66 @@ diff -urN /data/deadwood/gitAROS/AROS//arch/i386-all/exec/stackswap.S /data/dead
  	 */
  	pushl %edx
  
+diff -urN /data/deadwood/gitAROS/AROS//arch/i386-pc/boot/grub2/grub.cfg /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-pc/boot/grub2/grub.cfg
+--- /data/deadwood/gitAROS/AROS//arch/i386-pc/boot/grub2/grub.cfg	2012-10-13 15:47:58.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-pc/boot/grub2/grub.cfg	2012-11-22 19:03:34.000000000 +0100
+@@ -14,7 +14,7 @@
+ fi
+ 
+ menuentry "AROS (native graphics)" {
+-    multiboot /boot/bootstrap-pc.gz ATA=32bit floppy=disabled
++    multiboot /boot/bootstrap-pc.gz ATA=32bit floppy=disabled enableusb
+     module /boot/aros-bsp-pc-i386.gz
+     module /boot/aros-base.pkg.gz
+     module /boot/aros-fs.pkg.gz
+@@ -22,7 +22,7 @@
+ }
+ 
+ menuentry "AROS (true colour VESA graphics)" {
+-    multiboot /boot/bootstrap-pc.gz vesa=32bit ATA=32bit floppy=disabled nomonitors
++    multiboot /boot/bootstrap-pc.gz vesa=32bit ATA=32bit floppy=disabled enableusb nomonitors
+     module /boot/aros-bsp-pc-i386.gz
+     module /boot/aros-base.pkg.gz
+     module /boot/aros-fs.pkg.gz
+@@ -30,7 +30,7 @@
+ }
+ 
+ menuentry "AROS (high colour VESA graphics)" {
+-    multiboot /boot/bootstrap-pc.gz vesa=16bit ATA=32bit floppy=disabled nomonitors
++    multiboot /boot/bootstrap-pc.gz vesa=16bit ATA=32bit floppy=disabled enableusb nomonitors
+     module /boot/aros-bsp-pc-i386.gz
+     module /boot/aros-base.pkg.gz
+     module /boot/aros-fs.pkg.gz
+@@ -38,7 +38,7 @@
+ }
+ 
+ menuentry "AROS (true colour VESA graphics, floppy drive)" {
+-    multiboot /boot/bootstrap-pc.gz vesa=32bit ATA=32bit nomonitors
++    multiboot /boot/bootstrap-pc.gz vesa=32bit ATA=32bit enableusb nomonitors
+     module /boot/aros-bsp-pc-i386.gz
+     module /boot/aros-base.pkg.gz
+     module /boot/aros-fs.pkg.gz
+@@ -46,7 +46,7 @@
+ }
+ 
+ menuentry "AROS (true colour VESA graphics: 1024x768)" {
+-    multiboot /boot/bootstrap-pc.gz vesa=1024x768 ATA=32bit floppy=disabled nomonitors
++    multiboot /boot/bootstrap-pc.gz vesa=1024x768 ATA=32bit floppy=disabled enableusb nomonitors
+     module /boot/aros-bsp-pc-i386.gz
+     module /boot/aros-base.pkg.gz
+     module /boot/aros-fs.pkg.gz
+@@ -54,7 +54,7 @@
+ }
+ 
+ menuentry "AROS (true colour VESA graphics: 1280x1024)" {
+-    multiboot /boot/bootstrap-pc.gz vesa=1280x1024 ATA=32bit floppy=disabled nomonitors
++    multiboot /boot/bootstrap-pc.gz vesa=1280x1024 ATA=32bit floppy=disabled enableusb nomonitors
+     module /boot/aros-bsp-pc-i386.gz
+     module /boot/aros-base.pkg.gz
+     module /boot/aros-fs.pkg.gz
 diff -urN /data/deadwood/gitAROS/AROS//arch/i386-pc/boot/iso/mmakefile.src /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-pc/boot/iso/mmakefile.src
 --- /data/deadwood/gitAROS/AROS//arch/i386-pc/boot/iso/mmakefile.src	2012-10-13 15:47:58.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-pc/boot/iso/mmakefile.src	2012-10-27 15:03:07.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-pc/boot/iso/mmakefile.src	2012-11-22 19:00:31.000000000 +0100
 @@ -6,6 +6,7 @@
  TARGET_ISO := $(DISTDIR)/aros$(AROS_TARGET_SUFFIX)-pc-i386.iso
  
@@ -614,7 +827,7 @@ diff -urN /data/deadwood/gitAROS/AROS//arch/i386-pc/boot/iso/mmakefile.src /data
  #MM			bootloader-$(AROS_TARGET_BOOTLOADER)-pc-i386
 diff -urN /data/deadwood/gitAROS/AROS//arch/i386-pc/boot/mmakefile.src /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-pc/boot/mmakefile.src
 --- /data/deadwood/gitAROS/AROS//arch/i386-pc/boot/mmakefile.src	2012-10-13 15:47:58.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-pc/boot/mmakefile.src	2012-10-25 20:04:05.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-pc/boot/mmakefile.src	2012-11-22 19:00:28.000000000 +0100
 @@ -34,14 +34,16 @@
  #MM     kernel-workbench-devs-pc-i386
  
@@ -636,7 +849,7 @@ diff -urN /data/deadwood/gitAROS/AROS//arch/i386-pc/boot/mmakefile.src /data/dea
  	startup=$(KOBJSDIR)/kernel_resource.o \
 diff -urN /data/deadwood/gitAROS/AROS//arch/i386-pc/exec/debug_init.c /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-pc/exec/debug_init.c
 --- /data/deadwood/gitAROS/AROS//arch/i386-pc/exec/debug_init.c	2012-10-13 15:47:58.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-pc/exec/debug_init.c	2012-10-23 19:15:41.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-pc/exec/debug_init.c	2012-11-22 19:00:28.000000000 +0100
 @@ -14,8 +14,8 @@
  
  #include "exec_intern.h"
@@ -662,7 +875,7 @@ diff -urN /data/deadwood/gitAROS/AROS//arch/i386-pc/exec/debug_init.c /data/dead
  
 diff -urN /data/deadwood/gitAROS/AROS//arch/i386-pc/exec/userstate.s /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-pc/exec/userstate.s
 --- /data/deadwood/gitAROS/AROS//arch/i386-pc/exec/userstate.s	2012-10-13 15:47:58.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-pc/exec/userstate.s	2012-10-23 19:15:41.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-pc/exec/userstate.s	2012-11-22 19:00:28.000000000 +0100
 @@ -16,10 +16,10 @@
  
  	.size  cpu_SuperState, .-cpu_SuperState
@@ -683,9 +896,68 @@ diff -urN /data/deadwood/gitAROS/AROS//arch/i386-pc/exec/userstate.s /data/deadw
  
 -	.size  AROS_SLIB_ENTRY(UserState, Exec, 26), .-AROS_SLIB_ENTRY(UserState, Exec, 26)
 +	.size  AROS_SLIB_ENTRY(UserState, Exec), .-AROS_SLIB_ENTRY(UserState, Exec)
+diff -urN /data/deadwood/gitAROS/AROS//arch/i386-pc/kernel/core_interrupts.s /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-pc/kernel/core_interrupts.s
+--- /data/deadwood/gitAROS/AROS//arch/i386-pc/kernel/core_interrupts.s	2012-10-13 15:47:58.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-pc/kernel/core_interrupts.s	2012-11-22 19:03:38.000000000 +0100
+@@ -104,7 +104,7 @@
+ 	movl	%eax, reg_fs(%ebx)
+ 	mov	%gs, %ax
+ 	movl	%eax, reg_gs(%ebx)
+-	mov	$KERNEL_DS, %ax		// We are supervisor now
++	mov	$KERNEL_DS, %ax		// We are supervisor now (Note: CS is used intead of DS for checks in handlerException)
+ 	mov	%ax, %ds
+ 	mov	%ax, %es
+ 
+@@ -139,14 +139,6 @@
+ 	iret
+ 	.size core_Interrupt, .-core_Interrupt
+ 
+-	.globl core_LeaveInterrupt
+-	.type core_LeaveInterrupt, @function
+-core_LeaveInterrupt:
+-	popl	%ebx			// Remove return address
+-	popl	%ebx			// Get argument
+-	jmp	restoreRegs
+-	.size core_LeaveInterrupt, .-core_LeaveInterrupt
+-
+ 	.globl core_Supervisor
+ 	.type core_Supervisor, @function
+ 
+diff -urN /data/deadwood/gitAROS/AROS//arch/i386-pc/kernel/kernel_debug.c /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-pc/kernel/kernel_debug.c
+--- /data/deadwood/gitAROS/AROS//arch/i386-pc/kernel/kernel_debug.c	2012-10-13 15:47:58.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-pc/kernel/kernel_debug.c	2012-11-22 19:03:39.000000000 +0100
+@@ -13,6 +13,8 @@
+ __attribute__((section(".data"))) static unsigned int debug_y_resolution = 0;
+ __attribute__((section(".data"))) static void *debug_framebuffer = NULL;
+ 
++#define MIN_WIDTH   480
++
+ int krnPutC(int c, struct KernelBase *KernelBase)
+ {
+     unsigned long flags;
+@@ -59,13 +61,14 @@
+ 
+ 	/*
+ 	 * VESA hack.
+-	 * It divides screen height by 2 and increments framebuffer pointer.
+-	 * This allows VESA driver to use only upper half of the screen, while
+-	 * lower half will still be used for debug output.
++	 * It divides screen into two parts.
++	 * This allows VESA driver to use only upper part of the screen, while
++	 * lower part will still be used for debug output. At minimum, 480
++	 * lines are needed to boot into Wanderer.
+ 	 */
+-	vmode->y_resolution >>= 1;
+ 
+-	debug_y_resolution = vmode->y_resolution;
++	debug_y_resolution = vmode->y_resolution - MIN_WIDTH;
++	vmode->y_resolution = MIN_WIDTH;
+ 	debug_framebuffer  = (void *)(unsigned long)vmode->phys_base + vmode->y_resolution * vmode->bytes_per_scanline;
+     }
+ }
 diff -urN /data/deadwood/gitAROS/AROS//arch/i386-pc/kernel/startup.c /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-pc/kernel/startup.c
 --- /data/deadwood/gitAROS/AROS//arch/i386-pc/kernel/startup.c	2012-10-13 15:47:58.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-pc/kernel/startup.c	2012-10-23 19:15:41.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-pc/kernel/startup.c	2012-11-22 19:00:28.000000000 +0100
 @@ -191,7 +191,7 @@
  	/* Now relocate linked data */
  	mmap_len = LibGetTagData(KRN_MMAPLength, 0, BootMsg);
@@ -704,9 +976,58 @@ diff -urN /data/deadwood/gitAROS/AROS//arch/i386-pc/kernel/startup.c /data/deadw
      {
          switch (tag->ti_Tag)
          {
+diff -urN /data/deadwood/gitAROS/AROS//arch/i386-pc/kernel/traps.c /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-pc/kernel/traps.c
+--- /data/deadwood/gitAROS/AROS//arch/i386-pc/kernel/traps.c	2012-10-13 15:47:58.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//arch/i386-pc/kernel/traps.c	2012-11-22 19:03:38.000000000 +0100
+@@ -198,13 +198,17 @@
+ 	    }
+ 	}
+ 
+-	/* Upon exit from the lowest-level hardware IRQ we run the task scheduler */
+-	if (SysBase && (regs->ds != KERNEL_DS))
++	/* Upon exit from the lowest-level hardware IRQ we run the task scheduler
++	 *
++	 * Only CS is guaranteed to be atomically set to correct segment upon privilage
++	 * level switch
++	 */
++	if (SysBase && (regs->cs != KERNEL_CS))
+ 	{
+-	    /* Disable interrupts for a while */
+-	    __asm__ __volatile__("cli; cld;");
++            /* Disable interrupts for a while */
++            __asm__ __volatile__("cli; cld;");
+ 
+-	    core_ExitInterrupt(regs);
++            core_ExitInterrupt(regs);
+ 	}
+     }
+     else if (irq_number == 0x80)  /* Syscall? */
+@@ -233,15 +237,18 @@
+ 	 * level switch occurs upon an interrupt, ss is reset to zero. Old ss value
+ 	 * is always pushed to stack as part of interrupt context.
+ 	 * We rely on this in order to determine which CPL we are returning to.
++	 *
++	 * Only CS is guaranteed to be atomically set to correct segment upon privilage
++	 * level switch
+ 	 */
+-        if (regs->ds != KERNEL_DS)
++        if (regs->cs != KERNEL_CS)
+         {
+             DSYSCALL(bug("[Kernel] User-mode syscall\n"));
+ 
+-	    /* Disable interrupts for a while */
+-	    __asm__ __volatile__("cli; cld;");
++            /* Disable interrupts for a while */
++            __asm__ __volatile__("cli; cld;");
+ 
+-	    core_SysCall(sc, regs);
++            core_SysCall(sc, regs);
+         }
+ 
+ 	DSYSCALL(bug("[Kernel] Returning from syscall...\n"));
 diff -urN /data/deadwood/gitAROS/AROS//bootstrap/elfloader.c /data/deadwood/repo-gitorious-aros/AROS/AROS//bootstrap/elfloader.c
 --- /data/deadwood/gitAROS/AROS//bootstrap/elfloader.c	2012-10-13 15:47:59.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//bootstrap/elfloader.c	2012-10-27 09:41:02.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//bootstrap/elfloader.c	2012-11-22 19:00:28.000000000 +0100
 @@ -161,13 +161,13 @@
  
                  s = SysBase_ptr;
@@ -723,8 +1044,71 @@ diff -urN /data/deadwood/gitAROS/AROS//bootstrap/elfloader.c /data/deadwood/repo
              return 0;
  
          case SHN_ABS:
+--- /data/deadwood/gitAROS/AROS//compiler/include/exec/interrupts.h	2012-10-13 15:47:59.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//compiler/include/exec/interrupts.h	2012-11-22 19:00:28.000000000 +0100
+@@ -86,31 +86,38 @@
+  * Handler should return TRUE (interrupt handled)
+  * or FALSE (continue interrupt processing)
+  */
++
++/* NOTE: definition adjusted to ABI_V0 compatibility */
++/* __ufi_intmask is transported in A5, __ufi_code is lost */
++
+ #define AROS_INTP(n)                                       \
+-        AROS_UFP5(ULONG, n,                                \
+-          AROS_UFPA(APTR,      __ufi_data,    A1),         \
+-          AROS_UFPA(ULONG,     __ufi_intmask, D1),         \
++        AROS_UFP4(ULONG, n,                                \
+           AROS_UFPA(APTR,      __ufi_custom,  A0),         \
+-          AROS_UFPA(VOID_FUNC, __ufi_code,    A5),         \
++          AROS_UFPA(APTR,      __ufi_data,    A1),         \
++          AROS_UFPA(ULONG,     __ufi_intmask, A5),         \
+           AROS_UFPA(struct ExecBase *, __ufi_SysBase, A6))
+ 
++/*          AROS_UFPA(VOID_FUNC, __ufi_code,    A5),         \ */
++
++
+ #define AROS_INTC4(n, data, intmask, custom, code)         \
+-        AROS_UFC5(ULONG, n,                                \
+-                AROS_UFCA(APTR,      data,    A1),         \
+-                AROS_UFCA(ULONG,     intmask, D1),         \
++        AROS_UFC4(ULONG, n,                                \
+                 AROS_UFCA(APTR,      custom,  A0),         \
+-                AROS_UFCA(VOID_FUNC, code,    A5),         \
++                AROS_UFCA(APTR,      data,    A1),         \
++                AROS_UFCA(ULONG,     intmask, A5),         \
+                 AROS_UFCA(struct ExecBase *, SysBase, A6))
+ #define AROS_INTC3(n, data, intmask, custom) AROS_INTC4(n, data, intmask, custom, (VOID_FUNC)(n))
+ #define AROS_INTC2(n, data, intmask)         AROS_INTC4(n, data, intmask, (APTR)(IPTR)0xdff000, (VOID_FUNC)(n));
+ #define AROS_INTC1(n, data)                  AROS_INTC4(n, data, 0, (APTR)(IPTR)0xdff000, (VOID_FUNC)(n));
+ 
++/*                AROS_UFCA(VOID_FUNC, code,    A5),         \ */
++
++
+ #define AROS_INTH4(n, type, data, intmask, custom, code)   \
+-        AROS_UFH5(ULONG, n,                                \
+-          AROS_UFHA(APTR,      __ufi_data, A1),            \
+-          AROS_UFHA(ULONG,     intmask,    D1),            \
++        AROS_UFH4(ULONG, n,                                \
+           AROS_UFHA(APTR,      custom,     A0),            \
+-          AROS_UFHA(VOID_FUNC, code,       A5),            \
++          AROS_UFHA(APTR,      __ufi_data, A1),            \
++          AROS_UFHA(ULONG,     intmask,    A5),            \
+           AROS_UFHA(struct ExecBase *, SysBase, A6)        \
+         ) { AROS_USERFUNC_INIT                             \
+             type __unused data = __ufi_data;
+@@ -120,6 +127,9 @@
+ #define AROS_INTH1(n, type, data)                  AROS_INTH4(n, type, data, __ufi_intmask, __ufi_custom, __ufi_code)
+ #define AROS_INTH0(n)                              AROS_INTH4(n, APTR, data, __ufi_intmask, __ufi_custom, __ufi_code)
+ 
++/*          AROS_UFHA(VOID_FUNC, code,       A5),            \ */
++
++
+ #ifdef __mc68000
+ /* Special hack for setting the 'Z' condition code upon exit
+  * for m68k architectures.
 --- /data/deadwood/gitAROS/AROS//compiler/include/exec/tasks.h	2012-10-13 15:47:59.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//compiler/include/exec/tasks.h	2012-10-23 19:15:41.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//compiler/include/exec/tasks.h	2012-11-22 19:00:28.000000000 +0100
 @@ -173,6 +173,7 @@
      ULONG	    et_Result1;	    /* First result			*/
      APTR	    et_Result2;	    /* Result data pointer (AllocVec)	*/
@@ -735,7 +1119,7 @@ diff -urN /data/deadwood/gitAROS/AROS//bootstrap/elfloader.c /data/deadwood/repo
      IPTR	    et_Reserved[1]; /* MorphOS Private                  */
 diff -urN /data/deadwood/gitAROS/AROS//rom/debug/decodelocation.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/debug/decodelocation.c
 --- /data/deadwood/gitAROS/AROS//rom/debug/decodelocation.c	2012-10-13 15:47:59.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/debug/decodelocation.c	2012-10-27 17:58:29.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/debug/decodelocation.c	2012-11-22 19:03:32.000000000 +0100
 @@ -126,7 +126,7 @@
      D(bug("[Debug] DecodeLocationA(0x%p)\n", addr));
  
@@ -747,7 +1131,7 @@ diff -urN /data/deadwood/gitAROS/AROS//rom/debug/decodelocation.c /data/deadwood
  	{
 diff -urN /data/deadwood/gitAROS/AROS//rom/debug/mmakefile.src /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/debug/mmakefile.src
 --- /data/deadwood/gitAROS/AROS//rom/debug/mmakefile.src	2012-10-13 15:47:59.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/debug/mmakefile.src	2012-10-23 19:15:42.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/debug/mmakefile.src	2012-11-22 19:00:24.000000000 +0100
 @@ -11,6 +11,6 @@
  
  %build_module mmake=kernel-debug \
@@ -758,7 +1142,7 @@ diff -urN /data/deadwood/gitAROS/AROS//rom/debug/mmakefile.src /data/deadwood/re
  %common
 diff -urN /data/deadwood/gitAROS/AROS//rom/exec/allocentry.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/allocentry.c
 --- /data/deadwood/gitAROS/AROS//rom/exec/allocentry.c	2012-10-13 15:48:00.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/allocentry.c	2012-10-23 19:15:42.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/allocentry.c	2012-11-06 19:44:42.000000000 +0100
 @@ -1,5 +1,5 @@
  /*
 -    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
@@ -778,7 +1162,7 @@ diff -urN /data/deadwood/gitAROS/AROS//rom/exec/allocentry.c /data/deadwood/repo
  	   Like when memory was allocated at address 0x8???????. And
 diff -urN /data/deadwood/gitAROS/AROS//rom/exec/cachecleare.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/cachecleare.c
 --- /data/deadwood/gitAROS/AROS//rom/exec/cachecleare.c	2012-10-13 15:48:00.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/cachecleare.c	2012-10-23 19:15:42.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/cachecleare.c	2012-11-06 19:44:42.000000000 +0100
 @@ -20,7 +20,7 @@
  
  /*  SYNOPSIS */
@@ -790,7 +1174,7 @@ diff -urN /data/deadwood/gitAROS/AROS//rom/exec/cachecleare.c /data/deadwood/rep
  /*  LOCATION */
 diff -urN /data/deadwood/gitAROS/AROS//rom/exec/cause.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/cause.c
 --- /data/deadwood/gitAROS/AROS//rom/exec/cause.c	2012-10-13 15:48:00.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/cause.c	2012-10-23 19:15:42.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/cause.c	2012-11-22 19:00:28.000000000 +0100
 @@ -47,9 +47,15 @@
  
  	The software interrupt is called with the following prototype:
@@ -824,7 +1208,7 @@ diff -urN /data/deadwood/gitAROS/AROS//rom/exec/cause.c /data/deadwood/repo-gito
                      break;
 diff -urN /data/deadwood/gitAROS/AROS//rom/exec/etask.h /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/etask.h
 --- /data/deadwood/gitAROS/AROS//rom/exec/etask.h	2012-10-13 15:48:00.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/etask.h	2012-10-23 19:15:42.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/etask.h	2012-11-22 19:00:28.000000000 +0100
 @@ -48,6 +48,17 @@
  #endif
  };
@@ -845,11 +1229,11 @@ diff -urN /data/deadwood/gitAROS/AROS//rom/exec/etask.h /data/deadwood/repo-gito
  
 diff -urN /data/deadwood/gitAROS/AROS//rom/exec/exec.conf /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/exec.conf
 --- /data/deadwood/gitAROS/AROS//rom/exec/exec.conf	2012-10-13 15:48:00.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/exec.conf	2012-10-23 19:15:42.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/exec.conf	2012-11-22 19:03:39.000000000 +0100
 @@ -1,5 +1,5 @@
  ##begin config
 -version 51.0
-+version 41.100
++version 41.40
  libbase SysBase
  libbasetype struct IntExecBase
  libbasetypeextern struct ExecBase
@@ -1048,7 +1432,7 @@ diff -urN /data/deadwood/gitAROS/AROS//rom/exec/exec.conf /data/deadwood/repo-gi
  ##end functionlist
 diff -urN /data/deadwood/gitAROS/AROS//rom/exec/exec_extfuncs.h /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/exec_extfuncs.h
 --- /data/deadwood/gitAROS/AROS//rom/exec/exec_extfuncs.h	2012-10-13 15:48:00.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/exec_extfuncs.h	2012-10-23 19:15:42.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/exec_extfuncs.h	2012-11-06 19:44:42.000000000 +0100
 @@ -6,133 +6,132 @@
      Lang: english
  */
@@ -1314,7 +1698,7 @@ diff -urN /data/deadwood/gitAROS/AROS//rom/exec/exec_extfuncs.h /data/deadwood/r
 +extern void AROS_SLIB_ENTRY(FreeVecPooled,Exec)();
 diff -urN /data/deadwood/gitAROS/AROS//rom/exec/exec_init.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/exec_init.c
 --- /data/deadwood/gitAROS/AROS//rom/exec/exec_init.c	2012-10-13 15:48:00.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/exec_init.c	2012-10-23 19:15:42.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/exec_init.c	2012-11-22 19:00:28.000000000 +0100
 @@ -84,8 +84,7 @@
  
  extern void debugmem(void);
@@ -1327,7 +1711,7 @@ diff -urN /data/deadwood/gitAROS/AROS//rom/exec/exec_init.c /data/deadwood/repo-
  
 diff -urN /data/deadwood/gitAROS/AROS//rom/exec/exec_intern.h /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/exec_intern.h
 --- /data/deadwood/gitAROS/AROS//rom/exec/exec_intern.h	2012-10-13 15:48:00.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/exec_intern.h	2012-10-25 20:04:05.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/exec_intern.h	2012-11-22 19:00:28.000000000 +0100
 @@ -70,7 +70,7 @@
  void SetSysBaseChkSum(void);
  BOOL IsSysBaseValid(struct ExecBase *sysbase);
@@ -1339,7 +1723,7 @@ diff -urN /data/deadwood/gitAROS/AROS//rom/exec/exec_intern.h /data/deadwood/rep
  
 diff -urN /data/deadwood/gitAROS/AROS//rom/exec/execstrap_init.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/execstrap_init.c
 --- /data/deadwood/gitAROS/AROS//rom/exec/execstrap_init.c	2012-10-13 15:48:00.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/execstrap_init.c	2012-10-23 19:15:42.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/execstrap_init.c	2012-11-06 19:44:42.000000000 +0100
 @@ -35,12 +35,12 @@
  /*
      Architecture dependent function variations:
@@ -1370,7 +1754,7 @@ diff -urN /data/deadwood/gitAROS/AROS//rom/exec/execstrap_init.c /data/deadwood/
  int start(void)
 diff -urN /data/deadwood/gitAROS/AROS//rom/exec/exec_util.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/exec_util.c
 --- /data/deadwood/gitAROS/AROS//rom/exec/exec_util.c	2012-10-13 15:48:00.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/exec_util.c	2012-10-23 19:15:42.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/exec_util.c	2012-11-22 19:00:28.000000000 +0100
 @@ -74,6 +74,8 @@
      return NULL;
  }
@@ -1391,7 +1775,7 @@ diff -urN /data/deadwood/gitAROS/AROS//rom/exec/exec_util.c /data/deadwood/repo-
      }
 diff -urN /data/deadwood/gitAROS/AROS//rom/exec/exec_util.h /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/exec_util.h
 --- /data/deadwood/gitAROS/AROS//rom/exec/exec_util.h	2012-10-13 15:48:00.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/exec_util.h	2012-10-23 19:15:42.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/exec_util.h	2012-11-22 19:00:28.000000000 +0100
 @@ -78,9 +78,6 @@
  /*
      Prototypes
@@ -1404,7 +1788,7 @@ diff -urN /data/deadwood/gitAROS/AROS//rom/exec/exec_util.h /data/deadwood/repo-
  void Exec_ExpungeETask(struct ETask *et, struct ExecBase *SysBase);
 diff -urN /data/deadwood/gitAROS/AROS//rom/exec/findname.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/findname.c
 --- /data/deadwood/gitAROS/AROS//rom/exec/findname.c	2012-10-13 15:48:00.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/findname.c	2012-10-23 19:15:42.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/findname.c	2012-11-06 19:44:42.000000000 +0100
 @@ -18,7 +18,7 @@
  
  /*  SYNOPSIS */
@@ -1416,7 +1800,7 @@ diff -urN /data/deadwood/gitAROS/AROS//rom/exec/findname.c /data/deadwood/repo-g
  	struct ExecBase *, SysBase, 46, Exec)
 diff -urN /data/deadwood/gitAROS/AROS//rom/exec/findsemaphore.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/findsemaphore.c
 --- /data/deadwood/gitAROS/AROS//rom/exec/findsemaphore.c	2012-10-13 15:48:00.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/findsemaphore.c	2012-10-23 19:15:42.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/findsemaphore.c	2012-11-06 19:44:42.000000000 +0100
 @@ -16,7 +16,7 @@
  	AROS_LH1(struct SignalSemaphore *, FindSemaphore,
  
@@ -1428,7 +1812,7 @@ diff -urN /data/deadwood/gitAROS/AROS//rom/exec/findsemaphore.c /data/deadwood/r
  	struct ExecBase *, SysBase, 99, Exec)
 diff -urN /data/deadwood/gitAROS/AROS//rom/exec/findtask.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/findtask.c
 --- /data/deadwood/gitAROS/AROS//rom/exec/findtask.c	2012-10-13 15:48:00.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/findtask.c	2012-10-23 19:15:42.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/findtask.c	2012-11-06 19:44:42.000000000 +0100
 @@ -16,7 +16,7 @@
  	AROS_LH1(struct Task *, FindTask,
  
@@ -1449,7 +1833,7 @@ diff -urN /data/deadwood/gitAROS/AROS//rom/exec/findtask.c /data/deadwood/repo-g
  	    while(*s1++==*s2)
 diff -urN /data/deadwood/gitAROS/AROS//rom/exec/freevecpooled.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/freevecpooled.c
 --- /data/deadwood/gitAROS/AROS//rom/exec/freevecpooled.c	2012-10-13 15:48:00.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/freevecpooled.c	2012-10-23 19:15:42.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/freevecpooled.c	2012-11-06 19:44:42.000000000 +0100
 @@ -1,5 +1,5 @@
  /*
 -    Copyright © 2003-2011, The AROS Development Team. All rights reserved.
@@ -1468,7 +1852,7 @@ diff -urN /data/deadwood/gitAROS/AROS//rom/exec/freevecpooled.c /data/deadwood/r
      
 diff -urN /data/deadwood/gitAROS/AROS//rom/exec/initstruct.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/initstruct.c
 --- /data/deadwood/gitAROS/AROS//rom/exec/initstruct.c	2012-10-13 15:48:00.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/initstruct.c	2012-10-23 19:15:42.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/initstruct.c	2012-11-06 19:44:42.000000000 +0100
 @@ -6,7 +6,6 @@
      Lang: english
  */
@@ -1488,7 +1872,7 @@ diff -urN /data/deadwood/gitAROS/AROS//rom/exec/initstruct.c /data/deadwood/repo
  
 diff -urN /data/deadwood/gitAROS/AROS//rom/exec/makelibrary.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/makelibrary.c
 --- /data/deadwood/gitAROS/AROS//rom/exec/makelibrary.c	2012-10-13 15:48:00.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/makelibrary.c	2012-10-23 19:15:42.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/makelibrary.c	2012-11-06 19:44:42.000000000 +0100
 @@ -22,8 +22,8 @@
  	AROS_LH5(struct Library *, MakeLibrary,
  
@@ -1502,7 +1886,7 @@ diff -urN /data/deadwood/gitAROS/AROS//rom/exec/makelibrary.c /data/deadwood/rep
  	AROS_LHA(BPTR,       segList,    D1),
 diff -urN /data/deadwood/gitAROS/AROS//rom/exec/memory.h /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/memory.h
 --- /data/deadwood/gitAROS/AROS//rom/exec/memory.h	2012-10-13 15:48:00.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/memory.h	2012-10-23 19:15:42.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/memory.h	2012-11-22 19:00:28.000000000 +0100
 @@ -20,7 +20,11 @@
   *
   * Many m68k programs assume forbid state won't get broken.
@@ -1518,7 +1902,7 @@ diff -urN /data/deadwood/gitAROS/AROS//rom/exec/memory.h /data/deadwood/repo-git
  #define MEM_UNLOCK	ReleaseSemaphore(&PrivExecBase(SysBase)->MemListSem)
 diff -urN /data/deadwood/gitAROS/AROS//rom/exec/newaddtask.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/newaddtask.c
 --- /data/deadwood/gitAROS/AROS//rom/exec/newaddtask.c	2012-10-13 15:48:00.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/newaddtask.c	2012-10-23 19:15:42.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/newaddtask.c	2012-11-22 19:00:28.000000000 +0100
 @@ -31,7 +31,7 @@
          AROS_LHA(struct TagItem *,  tagList,   A4),
  
@@ -1548,7 +1932,7 @@ diff -urN /data/deadwood/gitAROS/AROS//rom/exec/newaddtask.c /data/deadwood/repo
      Enable();
 diff -urN /data/deadwood/gitAROS/AROS//rom/exec/newallocentry.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/newallocentry.c
 --- /data/deadwood/gitAROS/AROS//rom/exec/newallocentry.c	2012-10-13 15:48:00.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/newallocentry.c	2012-10-23 19:15:42.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/newallocentry.c	2012-11-06 19:44:42.000000000 +0100
 @@ -1,5 +1,5 @@
  /*
 -    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
@@ -1660,7 +2044,7 @@ diff -urN /data/deadwood/gitAROS/AROS//rom/exec/newallocentry.c /data/deadwood/r
  } /* AllocEntry */
 diff -urN /data/deadwood/gitAROS/AROS//rom/exec/newcreatetaska.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/newcreatetaska.c
 --- /data/deadwood/gitAROS/AROS//rom/exec/newcreatetaska.c	2012-10-13 15:48:00.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/newcreatetaska.c	2012-10-23 19:15:42.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/newcreatetaska.c	2012-11-22 19:00:28.000000000 +0100
 @@ -112,7 +112,7 @@
      ULONG  pri	     = 0;
      ULONG  flags     = 0;
@@ -1682,7 +2066,7 @@ diff -urN /data/deadwood/gitAROS/AROS//rom/exec/newcreatetaska.c /data/deadwood/
  	APTR name = ml->ml_ME[2].me_Addr;
 diff -urN /data/deadwood/gitAROS/AROS//rom/exec/newstackswap.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/newstackswap.c
 --- /data/deadwood/gitAROS/AROS//rom/exec/newstackswap.c	2012-10-13 15:48:00.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/newstackswap.c	2012-10-23 19:15:42.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/newstackswap.c	2012-11-06 19:44:42.000000000 +0100
 @@ -20,7 +20,7 @@
  	AROS_LHA(struct StackSwapArgs *, args, A2),
  
@@ -1694,7 +2078,7 @@ diff -urN /data/deadwood/gitAROS/AROS//rom/exec/newstackswap.c /data/deadwood/re
  	Calls a function with a new stack. 
 diff -urN /data/deadwood/gitAROS/AROS//rom/exec/preparecontext.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/preparecontext.c
 --- /data/deadwood/gitAROS/AROS//rom/exec/preparecontext.c	2012-10-13 15:48:00.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/preparecontext.c	2012-10-23 19:15:42.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/preparecontext.c	2012-11-06 19:44:42.000000000 +0100
 @@ -1,23 +1,73 @@
  /*
 -    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
@@ -1775,7 +2159,7 @@ diff -urN /data/deadwood/gitAROS/AROS//rom/exec/preparecontext.c /data/deadwood/
  } /* PrepareContext() */
 diff -urN /data/deadwood/gitAROS/AROS//rom/exec/prepareexecbase.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/prepareexecbase.c
 --- /data/deadwood/gitAROS/AROS//rom/exec/prepareexecbase.c	2012-10-13 15:48:00.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/prepareexecbase.c	2012-10-23 19:15:42.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/prepareexecbase.c	2012-11-22 19:03:37.000000000 +0100
 @@ -176,7 +176,7 @@
  #endif
  
@@ -1785,9 +2169,20 @@ diff -urN /data/deadwood/gitAROS/AROS//rom/exec/prepareexecbase.c /data/deadwood
  	      AROS_UFCA(APTR, SysBase, A0),
  	      AROS_UFCA(CONST_APTR, LIBFUNCTABLE, A1),
  	      AROS_UFCA(CONST_APTR, NULL, A2),
+@@ -298,5 +298,10 @@
+ 
+     SysBase->DebugAROSBase = PrepareAROSSupportBase(mh);
+ 
++#if (AROS_FLAVOUR & AROS_FLAVOUR_STANDALONE)
++    /* ABI_V0 compatibility change */
++    *(struct ExecBase**)4UL = SysBase;
++#endif
++
+     return SysBase;
+ }
 diff -urN /data/deadwood/gitAROS/AROS//rom/exec/reschedule.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/reschedule.c
 --- /data/deadwood/gitAROS/AROS//rom/exec/reschedule.c	2012-10-13 15:48:00.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/reschedule.c	2012-10-23 19:15:42.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/reschedule.c	2012-11-22 19:00:28.000000000 +0100
 @@ -19,9 +19,10 @@
      NAME */
  #include <proto/exec.h>
@@ -1811,7 +2206,7 @@ diff -urN /data/deadwood/gitAROS/AROS//rom/exec/reschedule.c /data/deadwood/repo
          None
 diff -urN /data/deadwood/gitAROS/AROS//rom/exec/setexcept.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/setexcept.c
 --- /data/deadwood/gitAROS/AROS//rom/exec/setexcept.c	2012-10-13 15:48:00.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/setexcept.c	2012-10-23 19:15:42.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/setexcept.c	2012-11-22 19:00:28.000000000 +0100
 @@ -70,7 +70,7 @@
          me->tc_Flags|=TF_EXCEPT;
  
@@ -1823,7 +2218,7 @@ diff -urN /data/deadwood/gitAROS/AROS//rom/exec/setexcept.c /data/deadwood/repo-
  
 diff -urN /data/deadwood/gitAROS/AROS//rom/exec/settaskpri.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/settaskpri.c
 --- /data/deadwood/gitAROS/AROS//rom/exec/settaskpri.c	2012-10-13 15:48:00.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/settaskpri.c	2012-10-23 19:15:42.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/settaskpri.c	2012-11-22 19:00:28.000000000 +0100
 @@ -79,7 +79,7 @@
  
              This should be reconsidered, because of Executive [ldp].
@@ -1835,7 +2230,7 @@ diff -urN /data/deadwood/gitAROS/AROS//rom/exec/settaskpri.c /data/deadwood/repo
      /* All done. */
 diff -urN /data/deadwood/gitAROS/AROS//rom/exec/signal.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/signal.c
 --- /data/deadwood/gitAROS/AROS//rom/exec/signal.c	2012-10-13 15:48:00.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/signal.c	2012-10-23 19:15:42.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/signal.c	2012-11-22 19:00:28.000000000 +0100
 @@ -69,7 +69,7 @@
          if (task->tc_State==TS_RUN)
          {
@@ -1856,7 +2251,7 @@ diff -urN /data/deadwood/gitAROS/AROS//rom/exec/signal.c /data/deadwood/repo-git
  
 diff -urN /data/deadwood/gitAROS/AROS//rom/exec/superstate.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/superstate.c
 --- /data/deadwood/gitAROS/AROS//rom/exec/superstate.c	2012-10-13 15:48:00.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/superstate.c	2012-10-25 20:04:05.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/superstate.c	2012-11-22 19:00:28.000000000 +0100
 @@ -68,7 +68,11 @@
  
      if (!super)
@@ -1872,7 +2267,7 @@ diff -urN /data/deadwood/gitAROS/AROS//rom/exec/superstate.c /data/deadwood/repo
          return ssp;
 diff -urN /data/deadwood/gitAROS/AROS//rom/exec/supervisor.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/supervisor.c
 --- /data/deadwood/gitAROS/AROS//rom/exec/supervisor.c	2012-10-13 15:48:00.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/supervisor.c	2012-10-23 19:15:42.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/supervisor.c	2012-11-22 19:00:28.000000000 +0100
 @@ -15,10 +15,10 @@
      NAME */
  #include <proto/exec.h>
@@ -1888,7 +2283,7 @@ diff -urN /data/deadwood/gitAROS/AROS//rom/exec/supervisor.c /data/deadwood/repo
  	struct ExecBase *, SysBase, 5, Exec)
 diff -urN /data/deadwood/gitAROS/AROS//rom/exec/vnewrawdofmt.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/vnewrawdofmt.c
 --- /data/deadwood/gitAROS/AROS//rom/exec/vnewrawdofmt.c	2012-10-13 15:48:00.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/vnewrawdofmt.c	2012-10-23 19:15:42.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/exec/vnewrawdofmt.c	2012-11-22 19:00:28.000000000 +0100
 @@ -29,7 +29,7 @@
  	AROS_LHA(va_list,      DataStream,   A1),
  
@@ -1898,9 +2293,220 @@ diff -urN /data/deadwood/gitAROS/AROS//rom/exec/vnewrawdofmt.c /data/deadwood/re
  
  /*  FUNCTION
  	printf-style formatting function with callback hook and C-style
+--- /data/deadwood/gitAROS/AROS//rom/hidds/graphics/chunkybm.c	2012-10-13 15:48:00.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/hidds/graphics/chunkybm.c	2012-11-22 19:00:20.000000000 +0100
+@@ -29,11 +29,9 @@
+ 
+ OOP_Object *CBM__Root__New(OOP_Class *cl, OOP_Object *o, struct pRoot_New *msg)
+ {
+-    struct Library *OOPBase = CSD(cl)->cs_OOPBase;
+-    struct Library *UtilityBase = CSD(cl)->cs_UtilityBase;
+     struct chunkybm_data    *data;
+     OOP_Object      	    *pf;
+-    IPTR   	    	    bytesperrow, bytesperpixel;
++    IPTR   	    	    width, bytesperpixel;
+     struct TagItem	    *tag;
+     OOP_MethodID	    dispose_mid;
+ 
+@@ -46,13 +44,17 @@
+     memset(data, 0, sizeof (*data));
+ 
+     OOP_GetAttr(o, aHidd_BitMap_PixFmt, (APTR)&pf);
++    OOP_GetAttr(o, aHidd_BitMap_Width,  &width);
+     OOP_GetAttr(o, aHidd_BitMap_GfxHidd, (APTR)&data->gfxhidd);
+     /* Get some dimensions of the bitmap */
+-    OOP_GetAttr(o, aHidd_BitMap_BytesPerRow, &bytesperrow);
+     OOP_GetAttr(pf, aHidd_PixFmt_BytesPerPixel,	&bytesperpixel);
+ 
++    /* 16-byte alignment */
++    width = (width + 15) & ~15;
++
++
+     data->bytesperpixel = bytesperpixel;
+-    data->bytesperrow	= bytesperrow;
++    data->bytesperrow  = data->bytesperpixel * width;
+ 
+     tag = FindTagItem(aHidd_ChunkyBM_Buffer, msg->attrList);
+     if (tag)
+@@ -73,7 +75,7 @@
+     	OOP_GetAttr(o, aHidd_BitMap_Height, &height);
+ 
+     	data->own_buffer = TRUE;
+-    	data->buffer = AllocVec(height * bytesperrow, MEMF_ANY | MEMF_CLEAR);
++    	data->buffer = AllocVec(height * data->bytesperrow, MEMF_ANY | MEMF_CLEAR);
+     	
+     	if (data->buffer)
+     	    return o;
+@@ -436,7 +438,7 @@
+     struct pHidd_BitMap_PutAlphaImage *msg)
+ {
+     struct chunkybm_data *data = OOP_INST_DATA(cl, o);
+-    HIDDT_StdPixFmt pixFmt = BM_PIXFMT(o)->stdpixfmt;
++    HIDDT_StdPixFmt pixFmt = (BM_PIXFMT(o))->stdpixfmt;
+     WORD x, y, src_step, dst_step;
+     UBYTE *p, *q;
+     UBYTE src_red, src_green, src_blue, src_alpha;
+@@ -752,6 +754,89 @@
+ }
+ 
+ /****************************************************************************************/
++VOID CBM__Hidd_BitMap__BlitColorExpansion(OOP_Class *cl, OOP_Object *o, struct pHidd_BitMap_BlitColorExpansion *msg)
++{
++    struct chunkybm_data   *data = OOP_INST_DATA(cl, o);
++    HIDDT_Pixel            fg, bg, pix;
++    ULONG                  cemd;
++    LONG                   x, y;
++    ULONG                  mod, bpp;
++    UBYTE                 *mem;
++    BOOL                   opaque;
++
++    fg = GC_FG(msg->gc);
++    bg = GC_BG(msg->gc);
++    cemd = GC_COLEXP(msg->gc);
++
++    bpp = data->bytesperpixel;
++
++    mem = data->buffer + msg->destY * data->bytesperrow + msg->destX * bpp;
++    mod = data->bytesperrow - msg->width * bpp;
++
++    opaque = (cemd & vHidd_GC_ColExp_Opaque) ? TRUE : FALSE;
++
++    for (y = 0; y < msg->height; y ++)
++    {
++        for (x = 0; x < msg->width; x ++)
++        {
++       ULONG is_set;
++
++       is_set = HIDD_BM_GetPixel(msg->srcBitMap, x + msg->srcX, y + msg->srcY);
++       if (is_set)
++       {
++       pix = fg;
++       }
++       else if (opaque)
++       {
++       pix = bg;
++       }
++       else
++       {
++       mem += bpp;
++       continue;
++       }
++
++           switch(bpp)
++       {
++       case 1:
++                   *mem++ = pix;
++           break;
++
++       case 2:
++           *((UWORD *)mem) = pix;
++           mem += 2;
++                   break;
++
++       case 3:
++       #if AROS_BIG_ENDIAN
++           mem[0] = pix >> 16;
++           mem[1] = pix >> 8;
++           mem[2] = pix;
++       #else
++           mem[0] = pix;
++           mem[1] = pix >> 8;
++           mem[2] = pix >> 16;
++       #endif
++           mem += 3;
++           break;
++
++       case 4:
++           *((ULONG *)mem) = pix;
++           mem += 4;
++           break;
++
++       }
++
++   } /* for (each x) */
++
++       mem += mod;
++
++    } /* for (each y) */
++
++}
++
++/****************************************************************************************/
++
+ 
+ VOID CBM__Hidd_BitMap__PutTemplate(OOP_Class *cl, OOP_Object *o, struct pHidd_BitMap_PutTemplate *msg)
+ {
+@@ -762,7 +847,7 @@
+ 	case 1:
+ 	    HIDD_BM_PutMemTemplate8(o,
+ 	    	    	    	    msg->gc,
+-				    msg->masktemplate,
++				    msg->template,
+ 				    msg->modulo,
+ 				    msg->srcx,
+ 				    data->buffer,
+@@ -777,7 +862,7 @@
+ 	case 2:
+ 	    HIDD_BM_PutMemTemplate16(o,
+ 	    	    	    	     msg->gc,
+-				     msg->masktemplate,
++				     msg->template,
+ 				     msg->modulo,
+ 				     msg->srcx,
+ 				     data->buffer,
+@@ -792,7 +877,7 @@
+ 	case 3:
+ 	    HIDD_BM_PutMemTemplate24(o,
+ 	    	    	    	     msg->gc,
+-				     msg->masktemplate,
++				     msg->template,
+ 				     msg->modulo,
+ 				     msg->srcx,
+ 				     data->buffer,
+@@ -807,7 +892,7 @@
+ 	case 4:
+ 	    HIDD_BM_PutMemTemplate32(o,
+ 	    	    	    	     msg->gc,
+-				     msg->masktemplate,
++				     msg->template,
+ 				     msg->modulo,
+ 				     msg->srcx,
+ 				     data->buffer,
+@@ -946,6 +1031,16 @@
+         }
+     }
+ 
++    if (IS_BITMAP_ATTR(msg->attrID, idx))
++    {
++        switch(idx)
++        {
++        case aoHidd_BitMap_BytesPerRow:
++            *msg->storage = (IPTR)data->bytesperrow;
++            return;
++        }
++    }
++
+     OOP_DoSuperMethod(cl, o, &msg->mID);
+ }
+ 
+@@ -953,13 +1048,12 @@
+ 
+ VOID CBM__Root__Set(OOP_Class *cl, OOP_Object *o, struct pRoot_Set *msg)
+ {
+-    struct Library *UtilityBase = CSD(cl)->cs_UtilityBase;
+     struct chunkybm_data *data = OOP_INST_DATA(cl, o);
+     struct TagItem  *tag, *tstate;
+     ULONG idx;
+ 
+     tstate = msg->attrList;
+-    while((tag = NextTagItem(&tstate)))
++    while((tag = NextTagItem((const struct TagItem **)&tstate)))
+     {
+         if(IS_CHUNKYBM_ATTR(tag->ti_Tag, idx))
+         {
 diff -urN /data/deadwood/gitAROS/AROS//rom/kernel/kernel.conf /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/kernel/kernel.conf
 --- /data/deadwood/gitAROS/AROS//rom/kernel/kernel.conf	2012-10-13 15:48:00.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/kernel/kernel.conf	2012-10-23 19:15:42.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/kernel/kernel.conf	2012-11-22 19:00:28.000000000 +0100
 @@ -70,5 +70,4 @@
  void KrnDisplayAlert(uint32_t code, const char *text) (D0, A0)
  unsigned int KrnGetCPUCount() ()
@@ -1909,7 +2515,7 @@ diff -urN /data/deadwood/gitAROS/AROS//rom/kernel/kernel.conf /data/deadwood/rep
  ##end functionlist
 diff -urN /data/deadwood/gitAROS/AROS//rom/kernel/kernel_init.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/kernel/kernel_init.c
 --- /data/deadwood/gitAROS/AROS//rom/kernel/kernel_init.c	2012-10-13 15:48:00.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/kernel/kernel_init.c	2012-10-23 19:15:42.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/kernel/kernel_init.c	2012-11-22 19:00:28.000000000 +0100
 @@ -61,7 +61,7 @@
  
  extern const APTR GM_UNIQUENAME(FuncTable)[];
@@ -1921,7 +2527,7 @@ diff -urN /data/deadwood/gitAROS/AROS//rom/kernel/kernel_init.c /data/deadwood/r
  /*
 diff -urN /data/deadwood/gitAROS/AROS//rom/kernel/mmakefile.src /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/kernel/mmakefile.src
 --- /data/deadwood/gitAROS/AROS//rom/kernel/mmakefile.src	2012-10-13 15:48:00.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/kernel/mmakefile.src	2012-10-23 19:15:42.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/kernel/mmakefile.src	2012-11-22 19:00:28.000000000 +0100
 @@ -40,6 +40,6 @@
  
  %build_module mmake=kernel-kernel \
@@ -1930,9 +2536,72 @@ diff -urN /data/deadwood/gitAROS/AROS//rom/kernel/mmakefile.src /data/deadwood/r
 +  files="$(FILES) $(FUNCS)" uselibs="rom" nostartup=no
  
  %common
+diff -urN /data/deadwood/gitAROS/AROS//rom/processor/defaults.h /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/processor/defaults.h
+--- /data/deadwood/gitAROS/AROS//rom/processor/defaults.h	2012-10-13 15:48:00.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/processor/defaults.h	1970-01-01 01:00:00.000000000 +0100
+@@ -1,26 +0,0 @@
+-#include <aros/cpu.h>
+-
+-#if AROS_BIG_ENDIAN
+-#define ENDIANNESS_DEF ENDIANNESS_BE
+-#else
+-#define ENDIANNESS_DEF ENDIANNESS_LE
+-#endif
+-
+-#ifdef __i386__
+-#define PROCESSORARCH_DEF PROCESSORARCH_X86
+-#endif
+-#ifdef __x86_64__
+-#define PROCESSORARCH_DEF PROCESSORARCH_X86
+-#endif
+-#ifdef __mc68000__
+-#define PROCESSORARCH_DEF PROCESSORARCH_M68K
+-#endif
+-#ifdef __ppc__
+-#define PROCESSORARCH_DEF PROCESSORARCH_PPC
+-#endif
+-#ifdef __arm__
+-#define PROCESSORARCH_DEF PROCESSORARCH_ARM
+-#endif
+-#ifndef PROCESSORARCH_DEF
+-#define PROCESSORARCH_DEF PROCESSORARCH_UNKNOWN
+-#endif
+diff -urN /data/deadwood/gitAROS/AROS//rom/processor/getcpuinfo.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/processor/getcpuinfo.c
+--- /data/deadwood/gitAROS/AROS//rom/processor/getcpuinfo.c	2012-10-13 15:48:00.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/processor/getcpuinfo.c	2012-11-22 19:03:34.000000000 +0100
+@@ -14,7 +14,6 @@
+ #include <proto/utility.h>
+ #include <resources/processor.h>
+ 
+-#include "defaults.h"
+ #include "processor_intern.h"
+ 
+ /*****************************************************************************
+@@ -143,7 +142,7 @@
+     
+     /* This is the default implementation */
+         
+-    while ((passedTag = NextTagItem(&tagList)) != NULL)
++    while ((passedTag = NextTagItem((const struct TagItem **)&tagList)) != NULL)
+     {
+         if ((passedTag->ti_Tag > GCIT_FeaturesBase) &&
+             (passedTag->ti_Tag <= GCIT_FeaturesLast))
+@@ -186,10 +185,10 @@
+             *((ULONG *)passedTag->ti_Data) = 0;
+             break;
+         case(GCIT_Architecture):
+-            *((ULONG *)passedTag->ti_Data) = PROCESSORARCH_DEF;
++            *((ULONG *)passedTag->ti_Data) = PROCESSORARCH_UNKNOWN;
+             break;
+         case(GCIT_Endianness):
+-            *((ULONG *)passedTag->ti_Data) = ENDIANNESS_DEF;
++            *((ULONG *)passedTag->ti_Data) = ENDIANNESS_UNKNOWN;
+             break;
+         case(GCIT_ProcessorSpeed):
+             *((UQUAD *)passedTag->ti_Data) = 0;
 diff -urN /data/deadwood/gitAROS/AROS//rom/timer/mmakefile.src /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/timer/mmakefile.src
 --- /data/deadwood/gitAROS/AROS//rom/timer/mmakefile.src	2012-10-13 15:48:00.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/timer/mmakefile.src	2012-10-23 19:15:42.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/timer/mmakefile.src	2012-11-22 19:00:28.000000000 +0100
 @@ -25,6 +25,6 @@
  
  %build_module mmake=kernel-timer \
@@ -1943,7 +2612,7 @@ diff -urN /data/deadwood/gitAROS/AROS//rom/timer/mmakefile.src /data/deadwood/re
  %common
 diff -urN /data/deadwood/gitAROS/AROS//rom/timer/timervblank.c /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/timer/timervblank.c
 --- /data/deadwood/gitAROS/AROS//rom/timer/timervblank.c	2012-10-13 15:48:00.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/timer/timervblank.c	2012-10-27 13:28:36.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//rom/timer/timervblank.c	2012-11-22 19:00:29.000000000 +0100
 @@ -1,6 +1,7 @@
  #include <aros/asmcall.h>
  #include <hardware/intbits.h>
@@ -1952,9 +2621,77 @@ diff -urN /data/deadwood/gitAROS/AROS//rom/timer/timervblank.c /data/deadwood/re
  
  #include <timer_intern.h>
  #include "timervblank.h"
+diff -urN /data/deadwood/gitAROS/AROS//workbench/devs/networks/atheros5000/aros_device.c /data/deadwood/repo-gitorious-aros/AROS/AROS//workbench/devs/networks/atheros5000/aros_device.c
+--- /data/deadwood/gitAROS/AROS//workbench/devs/networks/atheros5000/aros_device.c	2012-10-13 15:48:01.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//workbench/devs/networks/atheros5000/aros_device.c	2012-11-22 19:03:38.000000000 +0100
+@@ -58,7 +58,6 @@
+ static BOOL RXFunction(struct IOSana2Req *request, APTR buffer, ULONG size);
+ static BOOL TXFunction(APTR buffer, struct IOSana2Req *request, ULONG size);
+ static UBYTE *DMATXFunction(struct IOSana2Req *request);
+-AROS_INTP(AROSInt);
+ 
+ extern const APTR init_data;
+ extern const struct Resident rom_tag;
+@@ -68,12 +67,12 @@
+ 
+ static const APTR vectors[] =
+ {
+-   (APTR)AROS_SLIB_ENTRY(AROSDevOpen, S2, 1),
+-   (APTR)AROS_SLIB_ENTRY(AROSDevClose, S2, 2),
+-   (APTR)AROS_SLIB_ENTRY(AROSDevExpunge, S2, 3),
+-   (APTR)AROS_SLIB_ENTRY(AROSDevReserved, S2, 4),
+-   (APTR)AROS_SLIB_ENTRY(AROSDevBeginIO, S2, 5),
+-   (APTR)AROS_SLIB_ENTRY(AROSDevAbortIO, S2, 6),
++   (APTR)AROS_SLIB_ENTRY(AROSDevOpen, S2),
++   (APTR)AROS_SLIB_ENTRY(AROSDevClose, S2),
++   (APTR)AROS_SLIB_ENTRY(AROSDevExpunge, S2),
++   (APTR)AROS_SLIB_ENTRY(AROSDevReserved, S2),
++   (APTR)AROS_SLIB_ENTRY(AROSDevBeginIO, S2),
++   (APTR)AROS_SLIB_ENTRY(AROSDevAbortIO, S2),
+    (APTR)-1
+ };
+ 
+@@ -121,8 +120,6 @@
+ 
+    base = DevInit(dev_base, seg_list, base);
+ 
+-   if(base != NULL)
+-      base->wrapper_int_code = (APTR)AROSInt;
+    return base;
+ 
+    AROS_LIBFUNC_EXIT
+@@ -371,28 +368,3 @@
+ }
+ 
+ 
+-
+-/****i* atheros5000.device/AROSInt *****************************************
+-*
+-*   NAME
+-*	AROSInt
+-*
+-****************************************************************************
+-*
+-*/
+-#undef SysBase
+-
+-AROS_INTH2(AROSInt, APTR *, int_data, mask)
+-{
+-   AROS_INTFUNC_INIT
+-
+-   BOOL (*int_code)(APTR, APTR, UBYTE);
+-
+-   int_code = int_data[0];
+-   return int_code(int_data[1], int_code, mask);
+-
+-   AROS_INTFUNC_EXIT
+-}
+-
+-
+-
 diff -urN /data/deadwood/gitAROS/AROS//workbench/libs/uuid/mmakefile.src /data/deadwood/repo-gitorious-aros/AROS/AROS//workbench/libs/uuid/mmakefile.src
 --- /data/deadwood/gitAROS/AROS//workbench/libs/uuid/mmakefile.src	2012-10-13 15:48:04.000000000 +0200
-+++ /data/deadwood/repo-gitorious-aros/AROS/AROS//workbench/libs/uuid/mmakefile.src	2012-10-23 19:15:43.000000000 +0200
++++ /data/deadwood/repo-gitorious-aros/AROS/AROS//workbench/libs/uuid/mmakefile.src	2012-11-06 19:44:45.000000000 +0100
 @@ -7,7 +7,8 @@
  #MM- workbench-libs : workbench-libs-uuid
  %build_module mmake=workbench-libs-uuid \
