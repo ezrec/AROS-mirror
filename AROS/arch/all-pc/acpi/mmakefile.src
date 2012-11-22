@@ -1,0 +1,11 @@
+# $Id: mmakefile.src 39345 2011-06-17 05:55:29Z jmcmullan $
+include $(TOP)/config/make.cfg
+
+FILES := acpi_init acpi_tables oemblacklist
+FUNCS := findsdt scanentries readreg writereg scansdt shutdowna
+
+%build_module mmake=kernel-pc-acpi \
+  modname=acpi modtype=resource \
+  files="$(FILES) $(FUNCS)"
+
+%common
