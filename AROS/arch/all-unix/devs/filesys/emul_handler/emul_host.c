@@ -85,6 +85,11 @@
 
 /*********************************************************************************************/
 
+unsigned long __fdelt_chk (unsigned long n)
+{
+    return n / NFDBITS;
+}
+
 static int TryRead(struct LibCInterface *iface, int fd, void *buf, size_t len)
 {
     fd_set rfds;
