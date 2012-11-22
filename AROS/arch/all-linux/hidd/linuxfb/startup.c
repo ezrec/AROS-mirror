@@ -35,7 +35,7 @@ static int LinuxFB_Startup(LIBBASETYPEPTR LIBBASE)
 {
     int res = FALSE;
     struct GfxBase *GfxBase;
-    ULONG err;
+    ULONG err; OOP_Object *gfxhidd;
     struct TagItem gfx_attrs[] =
     {
         {aHidd_LinuxFB_File, 0},
@@ -61,7 +61,8 @@ static int LinuxFB_Startup(LIBBASETYPEPTR LIBBASE)
      * In future we will be able to call this several times in a loop.
      * This will allow us to create several displays.
      */
-    err = AddDisplayDriverA(LIBBASE->lsd.gfxclass, gfx_attrs);
+    gfxhidd = OOP_NewObject(LIBBASE->lsd.gfxclass, NULL, gfx_attrs);
+    err = AddDisplayDriverA(gfxhidd, NULL);
 
     D(bug("[LinuxFB_Startup] AddDisplayDriver() result: %u\n", err));
 
