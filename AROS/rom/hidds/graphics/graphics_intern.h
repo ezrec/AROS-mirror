@@ -82,10 +82,11 @@ struct planarbm_data
 
 struct chunkybm_data
 {
-    UBYTE *buffer;
-    ULONG bytesperrow;
-    ULONG bytesperpixel;
-    BOOL own_buffer;
+    OOP_Object *gfxhidd;        /* Cached driver object             */
+    UBYTE      *buffer;     /* Pixelbuffer                  */
+    ULONG   bytesperrow;    /* Cached for faster access             */
+    UWORD   bytesperpixel;
+    BOOL    own_buffer; /* Whether the buffer was allocated by us   */
 };
 
 struct sync_data {
