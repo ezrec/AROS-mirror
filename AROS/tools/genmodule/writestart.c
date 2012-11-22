@@ -1105,7 +1105,7 @@ writefunctable(FILE *out,
 	       struct config *cfg
 )
 {
-    struct functionhead *funclistit;
+    struct functionhead *funclistit = cfg->funclist;
     struct functionarg *arglistit;
     unsigned int lvo;
     int i;
@@ -1157,7 +1157,6 @@ writefunctable(FILE *out,
 	    int neednull = 0;
 	    struct functionhead *funclistit2;
 	
-	    funclistit = cfg->funclist;
 	    if (funclistit->lvo != 1)
 	    {
 		fprintf(stderr, "Module without a generated resident structure has to provide the Open function (LVO==1)\n");
@@ -1234,6 +1233,13 @@ writefunctable(FILE *out,
 		fprintf(out, "    &%s_null,\n", cfg->modulename);
 	    lvo++;
 	}
+    else
+    {
+        fprintf(out,
+            "\n"
+            "const APTR GM_UNIQUENAME(FuncTable)[]=\n"
+            "{\n");
+    }
     }
 
     while (funclistit != NULL)

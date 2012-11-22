@@ -14,6 +14,19 @@ void writeinclibdefs(struct config *cfg)
     char *_libbasetype = (cfg->libbasetype==NULL) ? "struct Library" : cfg->libbasetype;
     char residentflags[256];
     struct classinfo *classlistit;
+    unsigned int funccount;
+    struct functionhead *funclistit = cfg->funclist;
+
+    if (funclistit == NULL)
+        funccount = cfg->firstlvo-1;
+    else
+    {
+        while (funclistit->next != NULL)
+            funclistit = funclistit->next;
+
+        funccount = funclistit->lvo;
+    }
+
 
     residentflags[0] = 0;
     
@@ -84,12 +97,14 @@ void writeinclibdefs(struct config *cfg)
         "#define LIBEND           GM_UNIQUENAME(End)\n"
         "#define LIBFUNCTABLE     GM_UNIQUENAME(FuncTable)\n"
         "#define RESIDENTPRI      %d\n"
-        "#define RESIDENTFLAGS    %s\n",
+        "#define RESIDENTFLAGS    %s\n"
+        "#define FUNCTIONS_COUNT  %u\n",
         cfg->majorversion, cfg->minorversion,
         cfg->datestring, cfg->copyright[0] != '\0' ? " " : "", cfg->copyright,
         cfg->copyright,
         cfg->residentpri,
-        residentflags
+        residentflags,
+        funccount
     );
 
     for (linelistit = cfg->cdefprivatelines; linelistit!=NULL; linelistit = linelistit->next)
