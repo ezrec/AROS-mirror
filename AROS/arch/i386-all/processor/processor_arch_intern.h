@@ -1,5 +1,5 @@
 /*
-    Copyright © 2010, The AROS Development Team. All rights reserved.
+    Copyright © 2010-2011, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -41,22 +41,21 @@ struct X86ProcessorInformation
     UQUAD   MaxFSBFrequency;
 };
 
-struct SystemProcessors
-{
-    struct X86ProcessorInformation processor; /* This should be a list. For now it's ok */
-    ULONG count;
-};
-
 #define cpuid(num) \
     do { asm volatile("cpuid":"=a"(eax),"=b"(ebx),"=c"(ecx),"=d"(edx):"a"(num)); } while(0)
+
+static inline void __attribute__((always_inline)) rdmsr(LONG msr_no, LONG *ret_lo, LONG *ret_hi)
+{
+    LONG ret1,ret2;
+    asm volatile("rdmsr":"=a"(ret1),"=d"(ret2):"c"(msr_no));
+    *ret_lo=ret1;
+    *ret_hi=ret2;
+}
+
 
 VOID ReadProcessorInformation(struct X86ProcessorInformation * info);
 VOID ReadMaxFrequencyInformation(struct X86ProcessorInformation * info);
 UQUAD GetCurrentProcessorFrequency(struct X86ProcessorInformation * info);
-
-#define VENDOR_UNKNOWN  0
-#define VENDOR_AMD      1
-#define VENDOR_INTEL    2
 
 /* EDX 00000001 Flags */
 #define FEATB_FPU   0

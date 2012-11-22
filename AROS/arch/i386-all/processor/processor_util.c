@@ -3,10 +3,28 @@
     $Id$
 */
 
+#define DEBUG 0
+#include <aros/debug.h>
+
 #include <resources/processor.h>
 #include <string.h>
 
 #include "processor_arch_intern.h"
+
+static const char *vendors[] =
+{
+    "AuthenticAMD",
+    "GenuineIntel",
+    "CyrixInstead",
+    "UMC UMC UMC ",
+    "NexGenDriven",
+    "CentaurHauls",
+    "RiseRiseRise",
+    "SiS SiS SiS ",
+    "GenuineTMx86",
+    "Geode by NSC",
+    NULL
+};
 
 static void ReadVendorID(struct X86ProcessorInformation * info)
 {
@@ -26,10 +44,14 @@ static void ReadVendorID(struct X86ProcessorInformation * info)
     ulongptr[index++] = ecx;info->VendorID[12] = 0;
 
     /* Select manufacturer based on Vendor ID */
-    if (strcmp(info->VendorID, "AuthenticAMD") == 0)
-        info->Vendor = VENDOR_AMD;
-    else if (strcmp(info->VendorID, "GenuineIntel") == 0)
-        info->Vendor = VENDOR_INTEL;
+    for (index = 0; vendors[index]; index++)
+    {
+        if (strcmp(info->VendorID, vendors[index]) == 0)
+        {
+            info->Vendor = index + VENDOR_AMD;
+            break;
+        }
+    }
 
     /* Reading Highest Extended Function */
     cpuid(0x80000000);
@@ -43,7 +65,7 @@ static void ReadBrandString(struct X86ProcessorInformation * info)
     ULONG eax, ebx, ecx, edx;
     ULONG * ulongptr = NULL;
     ULONG index = 0;
-    
+
     /* Reading CPU Brand String */
     ulongptr = (ULONG *)info->BrandStringBuffer;
     index = 0;
@@ -92,7 +114,7 @@ static ULONG IntelDeriveFamily(UBYTE basefamily, UBYTE extendedfamily)
 {
     ULONG family = extendedfamily + basefamily;
     ULONG ret;
-    
+
     switch(family)
     {
     case(4): ret = CPUFAMILY_INTEL_486; break;
@@ -109,7 +131,7 @@ static void ReadFamilyModelStepping(struct X86ProcessorInformation * info)
 {
     ULONG eax, ebx, ecx, edx;
     UBYTE stepping, basefamily, extendedfamily, basemodel, extendedmodel;
-    
+
     /* Reading Family/Model/Stepping */
     cpuid(0x00000001);
 
@@ -126,10 +148,12 @@ static void ReadFamilyModelStepping(struct X86ProcessorInformation * info)
     case(VENDOR_AMD): 
         info->Family = AMDDeriveFamily(basefamily, extendedfamily); 
         info->Model = basemodel | (basefamily < 0x0f ? 0 : (extendedmodel << 4));
+        (void)stepping; /* FIXME: Why is this unused? */
         break;
     case(VENDOR_INTEL): 
         info->Family = IntelDeriveFamily(basefamily, extendedfamily);
         info->Model = basemodel | (extendedmodel << 4);
+        (void)stepping; /* FIXME: Why is this unused? */
         break;
     }
 }
@@ -137,7 +161,7 @@ static void ReadFamilyModelStepping(struct X86ProcessorInformation * info)
 static void ReadFeaturesFlags(struct X86ProcessorInformation * info)
 {
     ULONG eax, ebx, ecx, edx;
-   
+
     /* Reading standard feature flags */
     cpuid(0x00000001);
 
@@ -194,7 +218,7 @@ static void AMDDeriveCacheInformation(struct X86ProcessorInformation * info)
 {
     ULONG eax, ebx, ecx, edx;
     info->CacheLineSize = 0xff;
-   
+
     /* Reading L1 information */
     cpuid(0x80000005);
 
@@ -289,7 +313,7 @@ static void IntelDeriveCacheInformation(struct X86ProcessorInformation * info)
 {
     ULONG eax, ebx, ecx, edx;
     info->CacheLineSize = 0xff;
-    
+
     /* Reading Cache Information */
     cpuid(0x00000002);
     

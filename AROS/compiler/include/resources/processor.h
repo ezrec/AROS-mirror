@@ -2,7 +2,7 @@
 #define RESOURCES_PROCESSOR_H
 
 /*
-    Copyright © 2010, The AROS Development Team. All rights reserved.
+    Copyright © 2010-2011, The AROS Development Team. All rights reserved.
         
     Tags and defines for processors information queries
 */
@@ -13,13 +13,20 @@
 
 #define PROCESSORNAME "processor.resource"
 
-/* Tags */
+/*
+ * Tags.
+ *
+ * ARM-specific implementation:
+ * 1. GCIT_Model   manufacturer-specific part number
+ * 2. GCIT_Version manufacturer-specific revision and variant numbers (see macros below)
+ * 3. GCIT_Vendor  implementer ID as defined by ARM Ltd.
+ */
 #define GCIT_NumberOfProcessors     (TAG_USER +   1)
 #define GCIT_NumberOfCPUs           GCIT_NumberOfProcessors
 #define GCIT_Family                 (TAG_USER +   2)
-/* #define GCIT_Model              (TAG_USER +   3) */
+#define GCIT_Model                  (TAG_USER +   3)
 #define GCIT_ModelString            (TAG_USER +   4)
-/* #define GCIT_Version            (TAG_USER +   5) */
+#define GCIT_Version                (TAG_USER +   5)
 /* #define GCIT_VersionString      (TAG_USER +   6) */
 #define GCIT_FrontsideSpeed         (TAG_USER +   7)
 #define GCIT_ProcessorSpeed         (TAG_USER +   8)
@@ -38,6 +45,7 @@
 #define GCIT_Architecture           (TAG_USER + 104)
 #define GCIT_Endianness             (TAG_USER + 105)
 #define GCIT_ProcessorLoad          (TAG_USER + 106)
+#define GCIT_Vendor                 (TAG_USER + 107)
 
 /* Space [TAG_USER + 200, TAG_USER + 499] is reserved for boolean feature
    tags. Do no introduce non boolean, non feature tags in this space. */
@@ -72,6 +80,11 @@
 #define GCIT_SupportsNoExecutionBit (GCIT_FeaturesBase +  28)
 #define GCIT_Supports64BitMode      (GCIT_FeaturesBase +  29)
 #define GCIT_SupportsMSR            (GCIT_FeaturesBase +  30)
+#define GCIT_SupportsVFP            (GCIT_FeaturesBase +  31)
+#define GCIT_SupportsVFPv3          (GCIT_FeaturesBase +  32)
+#define GCIT_SupportsNeon           (GCIT_FeaturesBase +  33)
+#define GCIT_SupportsThumb          (GCIT_FeaturesBase +  34)
+#define GCIT_SupportsThumbEE        (GCIT_FeaturesBase +  35)
 #define GCIT_FeaturesLast           (TAG_USER + 499)
 
 /* Processor family defines */
@@ -91,6 +104,15 @@
 #define CPUFAMILY_INTEL_PENTIUM_PRO 108
 #define CPUFAMILY_INTEL_PENTIUM4    109
 #define CPUFAMILY_MOTOROLA_68000    110
+#define CPUFAMILY_ARM_3             120    /* ARM family is architecture designation */
+#define CPUFAMILY_ARM_4             121
+#define CPUFAMILY_ARM_4T            122
+#define CPUFAMILY_ARM_5             123
+#define CPUFAMILY_ARM_5T            124
+#define CPUFAMILY_ARM_5TE           125
+#define CPUFAMILY_ARM_5TEJ          126
+#define CPUFAMILY_ARM_6             127
+#define CPUFAMILY_ARM_7             128
 
 /* Vector unit type */
 #define VECTORTYPE_NONE               0
@@ -107,6 +129,9 @@
 #define VECTORTYPE_SSE41            108
 #define VECTORTYPE_SSE42            109
 #define VECTORTYPE_SSE4A            110
+#define VECTORTYPE_VFP              120
+#define VECTORTYPE_VFPv3            121
+#define VECTORTYPE_NEON             122
 
 /* Processor architecture defines */
 #define PROCESSORARCH_UNKNOWN         0
@@ -119,5 +144,31 @@
 #define ENDIANNESS_UNKNOWN            0
 #define ENDIANNESS_LE                 1
 #define ENDIANNESS_BE                 2
+
+/* Some generic vendor IDs */
+#define VENDOR_UNKNOWN                0
+#define VENDOR_AMD                    1
+#define VENDOR_INTEL                  2
+#define VENDOR_CYRIX                  3
+#define VENDOR_UMC                    4
+#define VENDOR_NEXGEN                 5
+#define VENDOR_CENTAUR                6
+#define VENDOR_RISE                   7
+#define VENDOR_SIS                    8
+#define VENDOR_TRANSMETA              9
+#define VENDOR_NSC                   10 /* National Semiconductor */
+#define VENDOR_MOTOROLA             256
+
+/* ARM implementer IDs */
+#define ARM_VENDOR_ARMLTD           0x41 /* ARM Ltd                 */
+#define ARM_VENDOR_DEC              0x44 /* Digital Equipment Corp  */
+#define ARM_VENDOR_MOTOROLA         0x4D /* Motorola/Freescale      */
+#define ARM_VENDOR_QUALCOMM         0x51 /* Qualcomm                */
+#define ARM_VENDOR_MARVELL          0x56 /* Marvell Semi Inc        */
+#define ARM_VENDOR_INTEL            0x69 /* Intel corp              */
+
+/* For ARM Version tag encodes Revision and Variant numbers */
+#define ARM_REVISION(x)     ((x >> 16) & 0xFFFF)
+#define ARM_VARIANT(x)      (x & 0xFFFF)
 
 #endif /* EXEC_PROCESSORS_H */
