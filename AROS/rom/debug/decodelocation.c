@@ -126,7 +126,7 @@ AROS_LH2(int, DecodeLocationA,
     D(bug("[Debug] DecodeLocationA(0x%p)\n", addr));
 
     /* Parse TagList */
-    while ((tag = LibNextTagItem(&tstate)))
+    while ((tag = LibNextTagItem((const struct TagItem**)&tstate)))
     {
 	switch (tag->ti_Tag)
 	{
