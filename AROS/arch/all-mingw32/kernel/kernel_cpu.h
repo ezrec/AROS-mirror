@@ -9,6 +9,9 @@
 #ifdef __x86_64__
 #include "cpu_x86_64.h"
 #endif
+#ifdef __arm__
+#include "cpu_arm.h"
+#endif
 
 /* This macro serves as an indicator of included file */
 #ifndef PRINT_CPUCONTEXT
@@ -32,24 +35,23 @@
 /* Our virtual CPU interface. It's needed here for krnSysCall() definition */
 struct KernelInterface
 {
-    int (*core_init)(unsigned int TimerPeriod);
-    void (*core_raise)(ULONG num, const IPTR n);
+    int 	 (*core_init)(unsigned int TimerPeriod);
+    void	 (*core_raise)(ULONG num, const IPTR n);
     unsigned int (*core_protect)(void *addr, unsigned int len, unsigned int prot);
-    void (*core_putc)(char c);
-    int (*core_getc)(void);
-    int (**TrapVector)(unsigned int num, IPTR *args, CONTEXT *regs);
-    int (**IRQVector)(unsigned char *irqs, CONTEXT *regs);
-    volatile int *IntState;
-    volatile int *SuperState;
-    volatile unsigned char *SleepState;
-    volatile ULONG **LastErrorPtr;
+    void 	 (*core_putc)(char c);
+    int		 (*core_getc)(void);
+    void	 (*core_alert)(const char *text);
+    void	 **TrapVector;
+    void	 **IRQVector;
+    int		  *SuperState;
+    int           *IntState;
+    unsigned char *SleepState;
+    ULONG	 **LastError;
 };
 
 extern struct KernelInterface KernelIFace;
 
 #define krnSysCall(n) KernelIFace.core_raise(AROS_EXCEPTION_SYSCALL, n)
-#define Sleep_Mode   (*KernelIFace.SleepState)
-#define LastErrorPtr (*KernelIFace.LastErrorPtr)
 
 #endif
 

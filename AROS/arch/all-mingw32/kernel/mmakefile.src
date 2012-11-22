@@ -1,12 +1,11 @@
 # $Id$
 include $(TOP)/config/make.cfg
 
-USER_INCLUDES  := -I$(SRCDIR)/arch/all-$(ARCH)/kernel -I$(SRCDIR)/rom/kernel \
-		  -I$(SRCDIR)/rom/exec
+USER_INCLUDES  := $(PRIV_KERNEL_INCLUDES)
 
 #MM kernel-kernel-mingw32: kernel-kernel-mingw32-native
 
-FUNCS := bug addirqhandler cli issuper setprotection sti maygetchar putchar
+FUNCS := addirqhandler cli _displayalert issuper setprotection sti maygetchar putchar obtaininput
 FILES := kernel_startup kernel_debug kernel_intr kernel_cpu cpu_$(CPU)
 
 %build_archspecific \

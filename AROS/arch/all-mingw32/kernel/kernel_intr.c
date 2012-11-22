@@ -17,7 +17,6 @@
 #include "kernel_mingw32.h"
 #include "kernel_scheduler.h"
 #include "kernel_syscall.h"
-#include "kernel_timer.h"
 #include "kernel_traps.h"
 
 #define D(x) /* This may lock up. See notes in host_intr.c */
@@ -45,7 +44,7 @@ void core_ExitInterrupt(CONTEXT *regs)
 
     /* No tasks active (AROS is in idle state)? If yes, just pick up
        a new ready task (if there is any) */
-    if (Sleep_Mode != SLEEP_MODE_OFF)
+    if (*KernelIFace.SleepState != SLEEP_MODE_OFF)
     {
         cpu_Dispatch(regs);
         return;
@@ -85,9 +84,9 @@ int core_IRQHandler(unsigned char *irqs, CONTEXT *regs)
             h(in->in_HandlerData, in->in_HandlerData2);
     }
 
-    /* Timer IRQ is also used to emulate exec VBlank */
-    if (irqs[IRQ_TIMER])
-	core_TimerTick();
+    /* IRQ 0 is exec VBlank timer */
+    if (irqs[0])
+	core_Cause(INTB_VERTB, 1L << INTB_VERTB);
 
     /* Reschedule tasks and exit */
     core_ExitInterrupt(regs);
@@ -129,7 +128,7 @@ int core_TrapHandler(unsigned int num, IPTR *args, CONTEXT *regs)
         /* Restore saved context and continue */
 	ctx = (struct AROSCPUContext *)args[0];
 	RESTOREREGS(regs, ctx);
-	*LastErrorPtr = ctx->LastError;
+	**KernelIFace.LastError = ctx->LastError;
 	break;
 
     default:
@@ -173,7 +172,7 @@ int core_TrapHandler(unsigned int num, IPTR *args, CONTEXT *regs)
 	{
 	    if (ex->CPUTrap != -1)
 	    {
-		if (krnRunExceptionHandlers(ex->CPUTrap, &tmpContext))
+		if (krnRunExceptionHandlers(KernelBase, ex->CPUTrap, &tmpContext))
 		    break;
 	    }
 

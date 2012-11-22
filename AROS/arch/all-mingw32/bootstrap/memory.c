@@ -10,8 +10,12 @@
 #endif
 
 #define D(x)
-
 #define ID_LEN 64
+
+#ifdef UNDER_CE
+/* In Windows CE there's no MapViewOfFileEx(). This means that we're not going to have warm reboot, sorry. */
+#define MapViewOfFileEx(obj, access, offh, offl, size, addr) MapViewOfFile(obj, access, offh, offl, size)
+#endif
 
 HANDLE RAM_Handle = NULL;
 void *RAM_Address = NULL;
@@ -38,45 +42,51 @@ void *AllocateRW(size_t len)
 
 void *AllocateRAM(size_t len)
 {
-    void *addr = NULL;
-    char *var;
     SECURITY_ATTRIBUTES sa;
+#ifndef UNDER_CE
+    void *addr = NULL;
+    const char *var = getenv(SHARED_RAM_VAR);
 
-    var = getenv(SHARED_RAM_VAR);
     if (var)
     {
-	D(printf("[AllocateRAM] Found RAM specification: %s\n", var));
-	if (sscanf(var, "%p:%p", &RAM_Handle, &addr) != 2) {
-	    D(printf("[AllocateRAM] Error parsing specification\n"));
-	    RAM_Handle = NULL;
-	    addr = NULL;
-	}
+        D(fprintf(stderr, "[AllocateRAM] Found RAM specification: %s\n", var));
+        if (sscanf(var, "%p:%p", &RAM_Handle, &addr) != 2) {
+            D(fprintf(stderr, "[AllocateRAM] Error parsing specification\n"));
+            RAM_Handle = NULL;
+            addr = NULL;
+        }
     }
+    D(ffprintf(stderr, stderr, "[AllocateRAM] Inherited memory handle 0x%p address 0x%p\n", RAM_Handle, addr));
+#endif
 
-    D(printf("[AllocateRAM] Inherited memory handle 0x%p address 0x%p\n", RAM_Handle, addr));
     if (!RAM_Handle)
     {
         sa.nLength = sizeof(sa);
-	sa.lpSecurityDescriptor = NULL;
-	sa.bInheritHandle = TRUE;
-	RAM_Handle = CreateFileMapping(INVALID_HANDLE_VALUE, &sa, PAGE_EXECUTE_READWRITE, 0, len, NULL);
+        sa.lpSecurityDescriptor = NULL;
+        sa.bInheritHandle = TRUE;
+        RAM_Handle = CreateFileMapping(INVALID_HANDLE_VALUE, &sa, PAGE_EXECUTE_READWRITE, 0, len, NULL);
     }
     if (!RAM_Handle)
     {
-	D(printf("[AllocateRAM] PAGE_EXECUTE_READWRITE failed, retrying with PAGE_READWRITE\n"));
-	RAM_Handle = CreateFileMapping(INVALID_HANDLE_VALUE, &sa, PAGE_READWRITE, 0, len, NULL);
+        D(fprintf(stderr, "[AllocateRAM] PAGE_EXECUTE_READWRITE failed, retrying with PAGE_READWRITE\n"));
+        RAM_Handle = CreateFileMapping(INVALID_HANDLE_VALUE, &sa, PAGE_READWRITE, 0, len, NULL);
     }
-    D(printf("[AllocateRAM] Shared memory handle 0x%p\n", RAM_Handle));
+    D(fprintf(stderr, "[AllocateRAM] Shared memory handle 0x%p\n", RAM_Handle));
     if (!RAM_Handle)
-	return NULL;
+        return NULL;
 
     RAM_Address = MapViewOfFileEx(RAM_Handle, FILE_MAP_ALL_ACCESS|FILE_MAP_EXECUTE, 0, 0, 0, addr);
-    D(printf("[AllocateRAM] Requested address 0x%p, mapped at 0x%p\n", addr, RAM_Address));
+    if (!RAM_Address)
+    {
+        D(fprintf(stderr, "[AllocateRAM] FILE_MAP_EXECUTE failed, retrying without it\n"));
+        RAM_Address = MapViewOfFileEx(RAM_Handle, FILE_MAP_ALL_ACCESS, 0, 0, 0, addr);
+    }
+    D(fprintf(stderr, "[AllocateRAM] Mapped at 0x%p\n", RAM_Address));
 
     if (!RAM_Address)
     {
-	CloseHandle(RAM_Handle);
-	RAM_Handle = NULL;
+        CloseHandle(RAM_Handle);
+        RAM_Handle = NULL;
     }
 
     return RAM_Address;

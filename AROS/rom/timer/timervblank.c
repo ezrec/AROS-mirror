@@ -1,6 +1,7 @@
 #include <aros/asmcall.h>
 #include <hardware/intbits.h>
 #include <proto/exec.h>
+#include <aros/symbolsets.h>
 
 #include <timer_intern.h>
 #include "timervblank.h"
