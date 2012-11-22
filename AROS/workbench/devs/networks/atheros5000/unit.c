@@ -57,7 +57,7 @@ MA 02111-1307, USA.
 #define MAX_CHANNEL_COUNT 100
 
 #ifndef AbsExecBase
-#define AbsExecBase (*(struct ExecBase **)4)
+#define AbsExecBase sys_base
 #endif
 
 static struct AddressRange *FindMulticastRange(struct DevUnit *unit,
@@ -87,7 +87,7 @@ static VOID ResetHandler(REG(a1, struct DevUnit *unit),
    REG(a6, APTR int_code));
 static VOID ReportEvents(struct DevUnit *unit, ULONG events,
    struct DevBase *base);
-static VOID UnitTask();
+static VOID UnitTask(struct ExecBase *sys_base);
 
 
 static const UBYTE snap_template[] = {0xaa, 0xaa, 0x03, 0x00, 0x00, 0x00};
@@ -109,6 +109,15 @@ static const struct EmulLibEntry mos_task_trap =
    (APTR)UnitTask
 };
 #define UnitTask &mos_task_trap
+#endif
+#ifdef __AROS__
+#undef AddTask
+#define AddTask(task, initial_pc, final_pc) \
+   ({ \
+      struct TagItem _task_tags[] = \
+         {{TASKTAG_ARG1, (IPTR)SysBase}, {TAG_END, 0}}; \
+      NewAddTask(task, initial_pc, final_pc, _task_tags); \
+   })
 #endif
 
 
@@ -1002,7 +1011,7 @@ ath_hal_delay(3000);
 BOOL SetOptions(struct DevUnit *unit, const struct TagItem *tag_list,
    struct DevBase *base)
 {
-   const struct TagItem *tag_item, *tlist = tag_list;
+   struct TagItem *tag_item, *tlist = (struct TagItem *)tag_list;
    BOOL reconfigure = TRUE;
 
    while((tag_item = NextTagItem(&tlist)) != NULL)
@@ -1483,7 +1492,7 @@ VOID FlushUnit(struct DevUnit *unit, UBYTE last_queue, BYTE error,
 static BOOL StatusInt(REG(a1, struct DevUnit *unit), REG(a6, APTR int_code))
 {
    struct DevBase *base;
-   ULONG queue_mask;
+   uint32_t queue_mask;
    HAL_INT ints, int_mask;
 
    base = unit->device;
@@ -2896,7 +2905,7 @@ struct TagItem *GetRadioBands(struct DevUnit *unit, APTR pool,
 #undef UnitTask
 #endif
 
-static VOID UnitTask()
+static VOID UnitTask(struct ExecBase *sys_base)
 {
    struct Task *task;
    struct IORequest *request;

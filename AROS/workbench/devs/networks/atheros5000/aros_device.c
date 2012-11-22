@@ -1,6 +1,6 @@
 /*
 
-Copyright (C) 2011 Neil Cafferkey
+Copyright (C) 2011,2012 Neil Cafferkey
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@ MA 02111-1307, USA.
 
 #include <exec/types.h>
 #include <exec/resident.h>
+#include <aros/asmcall.h>
 #include <aros/libcall.h>
 #include "initializers.h"
 
@@ -29,112 +30,49 @@ MA 02111-1307, USA.
 
 #include "device_protos.h"
 
+
+/* Private prototypes */
+
+AROS_UFP3(struct DevBase *, AROSDevInit,
+   AROS_UFPA(struct DevBase *, dev_base, D0),
+   AROS_UFPA(APTR, seg_list, A0),
+   AROS_UFPA(struct DevBase *, base, A6));
+AROS_LD3(BYTE, AROSDevOpen,
+   AROS_LDA(struct IOSana2Req *, request, A1),
+   AROS_LDA(LONG, unit_num, D0),
+   AROS_LDA(ULONG, flags, D1),
+   struct DevBase *, base, 1, S2);
+AROS_LD1(APTR, AROSDevClose,
+   AROS_LDA(struct IOSana2Req *, request, A1),
+   struct DevBase *, base, 2, S2);
+AROS_LD0(APTR, AROSDevExpunge,
+   struct DevBase *, base, 3, S2);
+AROS_LD0(APTR, AROSDevReserved,
+   struct DevBase *, base, 4, S2);
+AROS_LD1(VOID, AROSDevBeginIO,
+   AROS_LDA(struct IOSana2Req *, request, A1),
+   struct DevBase *, base, 5, S2);
+AROS_LD1(VOID, AROSDevAbortIO,
+   AROS_LDA(struct IOSana2Req *, request, A1),
+   struct DevBase *, base, 6, S2);
+static BOOL RXFunction(struct IOSana2Req *request, APTR buffer, ULONG size);
+static BOOL TXFunction(APTR buffer, struct IOSana2Req *request, ULONG size);
+static UBYTE *DMATXFunction(struct IOSana2Req *request);
+
 extern const APTR init_data;
 extern const struct Resident rom_tag;
 extern const TEXT device_name[];
 extern const TEXT version_string[];
 
 
-AROS_LH2(struct DevBase *, DevInit,
-   AROS_LHA(struct DevBase *, dev_base, D0),
-   AROS_LHA(struct DevBase *, seg_list, A0),
-   struct DevBase *, base, 0, S2)
-{
-   AROS_LIBFUNC_INIT
-
-   return DevInit(dev_base, seg_list, base);
-
-   AROS_LIBFUNC_EXIT
-}
-
-
-
-AROS_LH3(BYTE, DevOpen,
-   AROS_LHA(struct IOSana2Req *, request, A1),
-   AROS_LHA(LONG, unit_num, D0),
-   AROS_LHA(ULONG, flags, D1),
-   struct DevBase *, base, 1, S2)
-{
-   AROS_LIBFUNC_INIT
-
-   return DevOpen(request, unit_num, flags, base);
-
-   AROS_LIBFUNC_EXIT
-}
-
-
-
-AROS_LH1(APTR, DevClose,
-   AROS_LHA(struct IOSana2Req *, request, A1),
-   struct DevBase *, base, 2, S2)
-{
-   AROS_LIBFUNC_INIT
-
-   return DevClose(request, base);
-
-   AROS_LIBFUNC_EXIT
-}
-
-
-
-AROS_LH0(APTR, DevExpunge,
-   struct DevBase *, base, 3, S2)
-{
-   AROS_LIBFUNC_INIT
-
-   return DevExpunge(base);
-
-   AROS_LIBFUNC_EXIT
-}
-
-
-
-AROS_LH0(APTR, DevReserved,
-   struct DevBase *, base, 4, S2)
-{
-   AROS_LIBFUNC_INIT
-
-   return DevReserved(base);
-
-   AROS_LIBFUNC_EXIT
-}
-
-
-
-AROS_LH1(VOID, DevBeginIO,
-   AROS_LHA(struct IOSana2Req *, request, A1),
-   struct DevBase *, base, 5, S2)
-{
-   AROS_LIBFUNC_INIT
-
-   DevBeginIO(request, base);
-
-   AROS_LIBFUNC_EXIT
-}
-
-
-
-AROS_LH1(VOID, DevAbortIO,
-   AROS_LHA(struct IOSana2Req *, request, A1),
-   struct DevBase *, base, 6, S2)
-{
-   AROS_LIBFUNC_INIT
-
-   DevAbortIO(request, base);
-
-   AROS_LIBFUNC_EXIT
-}
-
-
-
 static const APTR vectors[] =
 {
-   (APTR)AROS_SLIB_ENTRY(DevOpen, S2),
-   (APTR)AROS_SLIB_ENTRY(DevClose, S2),
-   (APTR)AROS_SLIB_ENTRY(DevExpunge, S2),
-   (APTR)AROS_SLIB_ENTRY(DevReserved, S2),
-   (APTR)AROS_SLIB_ENTRY(DevBeginIO, S2),
-   (APTR)AROS_SLIB_ENTRY(DevAbortIO, S2),
+   (APTR)AROS_SLIB_ENTRY(AROSDevOpen, S2),
+   (APTR)AROS_SLIB_ENTRY(AROSDevClose, S2),
+   (APTR)AROS_SLIB_ENTRY(AROSDevExpunge, S2),
+   (APTR)AROS_SLIB_ENTRY(AROSDevReserved, S2),
+   (APTR)AROS_SLIB_ENTRY(AROSDevBeginIO, S2),
+   (APTR)AROS_SLIB_ENTRY(AROSDevAbortIO, S2),
    (APTR)-1
 };
 
@@ -144,7 +82,7 @@ static const APTR init_table[] =
    (APTR)sizeof(struct DevBase),
    (APTR)vectors,
    (APTR)&init_data,
-   (APTR)AROS_SLIB_ENTRY(DevInit, S2),
+   (APTR)AROSDevInit,
 };
 
 
@@ -162,5 +100,271 @@ const struct Resident aros_rom_tag =
    (APTR)init_table
 };
 
+
+
+/****i* atheros5000.device/AROSDevInit *************************************
+*
+*   NAME
+*       AROSDevInit
+*
+****************************************************************************
+*
+*/
+
+AROS_UFH3(struct DevBase *, AROSDevInit,
+   AROS_UFHA(struct DevBase *, dev_base, D0),
+   AROS_UFHA(APTR, seg_list, A0),
+   AROS_UFHA(struct DevBase *, base, A6))
+{
+   AROS_LIBFUNC_INIT
+
+   base = DevInit(dev_base, seg_list, base);
+
+   return base;
+
+   AROS_LIBFUNC_EXIT
+}
+
+
+
+/****i* atheros5000.device/AROSDevOpen *************************************
+*
+*   NAME
+*       AROSDevOpen
+*
+****************************************************************************
+*
+*/
+
+AROS_LH3(BYTE, AROSDevOpen,
+   AROS_LHA(struct IOSana2Req *, request, A1),
+   AROS_LHA(LONG, unit_num, D0),
+   AROS_LHA(ULONG, flags, D1),
+   struct DevBase *, base, 1, S2)
+{
+   AROS_LIBFUNC_INIT
+
+   struct Opener *opener;
+   BYTE error;
+
+   error = DevOpen(request, unit_num, flags, base);
+
+   /* Set up wrapper hooks to hide register-call functions */
+
+   if(error == 0)
+   {
+      opener = request->ios2_BufferManagement;
+      opener->real_rx_function = opener->rx_function;
+      opener->real_tx_function = opener->tx_function;
+      opener->rx_function = (APTR)RXFunction;
+      opener->tx_function = (APTR)TXFunction;
+      if(opener->dma_tx_function != NULL)
+      {
+         opener->real_dma_tx_function = opener->dma_tx_function;
+         opener->dma_tx_function = (APTR)DMATXFunction;
+      }
+   }
+
+   return error;
+
+   AROS_LIBFUNC_EXIT
+}
+
+
+
+/****i* atheros5000.device/AROSDevClose ************************************
+*
+*   NAME
+*       AROSDevClose
+*
+****************************************************************************
+*
+*/
+
+AROS_LH1(APTR, AROSDevClose,
+   AROS_LHA(struct IOSana2Req *, request, A1),
+   struct DevBase *, base, 2, S2)
+{
+   AROS_LIBFUNC_INIT
+
+   return DevClose(request, base);
+
+   AROS_LIBFUNC_EXIT
+}
+
+
+
+/****i* atheros5000.device/AROSDevExpunge **********************************
+*
+*   NAME
+*       AROSDevExpunge
+*
+****************************************************************************
+*
+*/
+
+AROS_LH0(APTR, AROSDevExpunge,
+   struct DevBase *, base, 3, S2)
+{
+   AROS_LIBFUNC_INIT
+
+   return DevExpunge(base);
+
+   AROS_LIBFUNC_EXIT
+}
+
+
+
+/****i* atheros5000.device/AROSDevReserved *********************************
+*
+*   NAME
+*       AROSDevReserved
+*
+****************************************************************************
+*
+*/
+
+AROS_LH0(APTR, AROSDevReserved,
+   struct DevBase *, base, 4, S2)
+{
+   AROS_LIBFUNC_INIT
+
+   return DevReserved(base);
+
+   AROS_LIBFUNC_EXIT
+}
+
+
+
+/****i* atheros5000.device/AROSDevBeginIO **********************************
+*
+*   NAME
+*       AROSDevBeginIO
+*
+****************************************************************************
+*
+*/
+
+AROS_LH1(VOID, AROSDevBeginIO,
+   AROS_LHA(struct IOSana2Req *, request, A1),
+   struct DevBase *, base, 5, S2)
+{
+   AROS_LIBFUNC_INIT
+
+   /* Replace caller's cookie with our own */
+
+   switch(request->ios2_Req.io_Command)
+   {
+   case CMD_READ:
+   case CMD_WRITE:
+   case S2_MULTICAST:
+   case S2_BROADCAST:
+   case S2_READORPHAN:
+      request->ios2_StatData = request->ios2_Data;
+      request->ios2_Data = request;
+   }
+
+   DevBeginIO(request, base);
+
+   AROS_LIBFUNC_EXIT
+}
+
+
+
+/****i* atheros5000.device/AROSDevAbortIO **********************************
+*
+*   NAME
+*       AROSDevAbortIO -- Try to stop a request.
+*
+****************************************************************************
+*
+*/
+
+AROS_LH1(VOID, AROSDevAbortIO,
+   AROS_LHA(struct IOSana2Req *, request, A1),
+   struct DevBase *, base, 6, S2)
+{
+   AROS_LIBFUNC_INIT
+
+   DevAbortIO(request, base);
+
+   AROS_LIBFUNC_EXIT
+}
+
+
+
+/****i* atheros5000.device/RXFunction **************************************
+*
+*   NAME
+*	RXFunction
+*
+****************************************************************************
+*
+*/
+
+static BOOL RXFunction(struct IOSana2Req *request, APTR buffer, ULONG size)
+{
+   struct Opener *opener;
+   APTR cookie;
+
+   opener = request->ios2_BufferManagement;
+   cookie = request->ios2_StatData;
+   request->ios2_Data = cookie;
+
+   return AROS_UFC3(BOOL, (APTR)opener->real_rx_function,
+      AROS_UFCA(APTR, cookie, A0),
+      AROS_UFCA(APTR, buffer, A1),
+      AROS_UFCA(ULONG, size, D0));
+}
+
+
+
+/****i* atheros5000.device/TXFunction **************************************
+*
+*   NAME
+*	TXFunction
+*
+****************************************************************************
+*
+*/
+
+static BOOL TXFunction(APTR buffer, struct IOSana2Req *request, ULONG size)
+{
+   struct Opener *opener;
+   APTR cookie;
+
+   opener = request->ios2_BufferManagement;
+   cookie = request->ios2_StatData;
+   request->ios2_Data = cookie;
+
+   return AROS_UFC3(BOOL, (APTR)opener->real_tx_function,
+      AROS_UFCA(APTR, buffer, A0),
+      AROS_UFCA(APTR, cookie, A1),
+      AROS_UFCA(ULONG, size, D0));
+}
+
+
+
+/****i* atheros5000.device/DMATXFunction ***********************************
+*
+*   NAME
+*	DMATXFunction
+*
+****************************************************************************
+*
+*/
+
+static UBYTE *DMATXFunction(struct IOSana2Req *request)
+{
+   struct Opener *opener;
+   APTR cookie;
+
+   opener = request->ios2_BufferManagement;
+   cookie = request->ios2_StatData;
+   request->ios2_Data = cookie;
+
+   return AROS_UFC1(UBYTE *, (APTR)opener->real_dma_tx_function,
+      AROS_UFCA(APTR, cookie, A0));
+}
 
 
