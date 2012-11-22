@@ -42,7 +42,7 @@ OOP_Object *MNAME_ROOT(New)(OOP_Class *cl, OOP_Object *o, struct pRoot_New *msg)
     {
 	OOP_MethodID	     disp_mid;
 	struct BitmapData   *data;
-	IPTR 	    	     width, height, depth, multi;
+	IPTR 	    	     width, height, depth;
 	IPTR		     displayable;
 	HIDDT_ModeID 	     modeid;
 
@@ -57,8 +57,9 @@ OOP_Object *MNAME_ROOT(New)(OOP_Class *cl, OOP_Object *o, struct pRoot_New *msg)
 	OOP_GetAttr(o, aHidd_BitMap_GfxHidd, (APTR)&data->gfxhidd);
 	OOP_GetAttr(o, aHidd_BitMap_PixFmt, (APTR)&data->pixfmtobj);
 	OOP_GetAttr(o, aHidd_BitMap_Displayable, &displayable);
+	OOP_GetAttr(o, aHidd_BitMap_BytesPerRow, (APTR)&data->bytesperline);
 	OOP_GetAttr(data->pixfmtobj, aHidd_PixFmt_Depth, &depth);
-	OOP_GetAttr(data->pixfmtobj, aHidd_PixFmt_BytesPerPixel, &multi);
+	OOP_GetAttr(data->pixfmtobj, aHidd_PixFmt_BytesPerPixel, (APTR)&data->bytesperpix);
 	
         data->compositing = (OOP_Object *)
             GetTagData(aHidd_VesaGfxBitMap_CompositingHidd, 0, msg->attrList);
@@ -69,14 +70,7 @@ OOP_Object *MNAME_ROOT(New)(OOP_Class *cl, OOP_Object *o, struct pRoot_New *msg)
 	   Currently we only support the default depth
 	   */
 
-	width=(width+15) & ~15;
-	data->width = width;
-	data->height = height;
 	data->bpp = depth;
-
-	data->bytesperpix = multi;
-	data->bytesperline = width * multi;
-	D(bug("[VesaBitMap] Size %dx%d, %u bytes per pixel, %u bytes per line, displayable: %u\n", width, height, multi, data->bytesperline, displayable));
 
 	OOP_GetAttr(o, aHidd_BitMap_ModeID, &modeid);
 	if (modeid != vHidd_ModeID_Invalid) {
@@ -90,17 +84,11 @@ OOP_Object *MNAME_ROOT(New)(OOP_Class *cl, OOP_Object *o, struct pRoot_New *msg)
 	    data->disp_height = dheight;
 	}
 
-    	data->VideoData = AllocVec(data->bytesperline * height, MEMF_PUBLIC | MEMF_CLEAR);
-	D(bug("[VesaBitMap] Video data at 0x%p (%u bytes)\n", data->VideoData, width * height * multi));
+	OOP_GetAttr(o, aHidd_ChunkyBM_Buffer, (IPTR *)&data->VideoData);
+	D(bug("[VesaBitMap] Video data at 0x%p (%u bytes)\n", data->VideoData, width * height * data->bytesperpix));
 
 	if (data->VideoData) {
 	    HIDDT_ColorModel cmod;
-	    struct TagItem tags[2];
-
-            tags[0].ti_Tag = aHidd_ChunkyBM_Buffer;
-            tags[0].ti_Data = (IPTR)data->VideoData;
-            tags[1].ti_Tag = TAG_END;
-	    OOP_SetAttrs(o, tags);
 
 	    if (!displayable)
 	        ReturnPtr("VesaGfx.BitMap::New()", OOP_Object *, o);
@@ -133,29 +121,10 @@ VOID MNAME_ROOT(Dispose)(OOP_Class *cl, OOP_Object *o, OOP_Msg msg)
 
     if (data->DAC)
 	FreeMem(data->DAC, 768);
-    FreeVec(data->VideoData);
 
     OOP_DoSuperMethod(cl, o, msg);
 
     ReturnVoid("VesaGfx.BitMap::Dispose");
-}
-
-/*********  BitMap::PutPixel()  ***************************/
-// FIXME: in theory we shouldn't need this method since the superclass implements it
-
-VOID MNAME_BM(PutPixel)(OOP_Class *cl, OOP_Object *o, struct pHidd_BitMap_PutPixel *msg)
-{
-    OOP_DoSuperMethod(cl, o, (OOP_Msg)msg);
-
-    return;
-}
-
-/*********  BitMap::GetPixel()  ***************************/
-// FIXME: in theory we shouldn't need this method since the superclass implements it
-
-ULONG MNAME_BM(GetPixel)(OOP_Class *cl, OOP_Object *o, struct pHidd_BitMap_GetPixel *msg)
-{
-    return OOP_DoSuperMethod(cl, o, (OOP_Msg)msg);
 }
 
 /*** BitMap::Get() *******************************************/

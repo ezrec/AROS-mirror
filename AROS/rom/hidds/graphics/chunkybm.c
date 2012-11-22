@@ -31,7 +31,7 @@ OOP_Object *CBM__Root__New(OOP_Class *cl, OOP_Object *o, struct pRoot_New *msg)
 {
     struct chunkybm_data    *data;
     OOP_Object      	    *pf;
-    IPTR   	    	    bytesperrow, bytesperpixel;
+    IPTR   	    	    width, bytesperpixel;
     struct TagItem	    *tag;
     OOP_MethodID	    dispose_mid;
 
@@ -44,13 +44,17 @@ OOP_Object *CBM__Root__New(OOP_Class *cl, OOP_Object *o, struct pRoot_New *msg)
     memset(data, 0, sizeof (*data));
 
     OOP_GetAttr(o, aHidd_BitMap_PixFmt, (APTR)&pf);
+    OOP_GetAttr(o, aHidd_BitMap_Width,  &width);
     OOP_GetAttr(o, aHidd_BitMap_GfxHidd, (APTR)&data->gfxhidd);
     /* Get some dimensions of the bitmap */
-    OOP_GetAttr(o, aHidd_BitMap_BytesPerRow, &bytesperrow);
     OOP_GetAttr(pf, aHidd_PixFmt_BytesPerPixel,	&bytesperpixel);
 
+    /* 16-byte alignment */
+    width = (width + 15) & ~15;
+
+
     data->bytesperpixel = bytesperpixel;
-    data->bytesperrow	= bytesperrow;
+    data->bytesperrow  = data->bytesperpixel * width;
 
     tag = FindTagItem(aHidd_ChunkyBM_Buffer, msg->attrList);
     if (tag)
@@ -71,7 +75,7 @@ OOP_Object *CBM__Root__New(OOP_Class *cl, OOP_Object *o, struct pRoot_New *msg)
     	OOP_GetAttr(o, aHidd_BitMap_Height, &height);
 
     	data->own_buffer = TRUE;
-    	data->buffer = AllocVec(height * bytesperrow, MEMF_ANY | MEMF_CLEAR);
+    	data->buffer = AllocVec(height * data->bytesperrow, MEMF_ANY | MEMF_CLEAR);
     	
     	if (data->buffer)
     	    return o;
@@ -1023,6 +1027,16 @@ VOID CBM__Root__Get(OOP_Class *cl, OOP_Object *o, struct pRoot_Get *msg)
 	{
     	case aoHidd_ChunkyBM_Buffer:
             *msg->storage = (IPTR)data->buffer;
+            return;
+        }
+    }
+
+    if (IS_BITMAP_ATTR(msg->attrID, idx))
+    {
+        switch(idx)
+        {
+        case aoHidd_BitMap_BytesPerRow:
+            *msg->storage = (IPTR)data->bytesperrow;
             return;
         }
     }

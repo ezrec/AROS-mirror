@@ -116,17 +116,10 @@ OOP_Object *PCVGABM__Root__New(OOP_Class *cl, OOP_Object *o, struct pRoot_New *m
 	    D(bug("[VGABitMap] Display size: %dx%d\n", dwidth, dheight));
 	}
 
-	width=(width+15) & ~15;
-	data->bpr = width;
-	data->VideoData = AllocVec(width*height,MEMF_PUBLIC|MEMF_CLEAR);
+	OOP_GetAttr(o, aHidd_BitMap_BytesPerRow, (APTR)&data->bpr);
+	OOP_GetAttr(o, aHidd_ChunkyBM_Buffer, (IPTR *)&data->VideoData);
 	D(bug("[VGABitMap] Allocated videodata at 0x%p\n", data->VideoData));
 	if (data->VideoData) {
-            struct TagItem tags[2];
-
-            tags[0].ti_Tag = aHidd_ChunkyBM_Buffer;
-            tags[0].ti_Data = (IPTR)data->VideoData;
-            tags[1].ti_Tag = TAG_END;
-            OOP_SetAttrs(o, tags);
 
 	    /* If the bitmap is not displayable, we're done */
 	    if (!displayable)
@@ -192,8 +185,6 @@ VOID PCVGABM__Root__Dispose(OOP_Class *cl, OOP_Object *o, OOP_Msg msg)
     struct bitmap_data *data = OOP_INST_DATA(cl, o);
     EnterFunc(bug("VGAGfx.BitMap::Dispose()\n"));
     
-    if (data->VideoData)
-	FreeVec(data->VideoData);
     if (data->Regs)
 	FreeVec(data->Regs);
     
@@ -283,15 +274,6 @@ BOOL MNAME_BM(SetColors)(OOP_Class *cl, OOP_Object *o, struct pHidd_BitMap_SetCo
     }
 
     return TRUE;
-}
-
-/*********  BitMap::PutPixel()  ***************************/
-// FIXME: in theory we shouldn't need this method since the superclass implements it
-
-VOID MNAME_BM(PutPixel)(OOP_Class *cl, OOP_Object *o, struct pHidd_BitMap_PutPixel *msg)
-{
-    OOP_DoSuperMethod(cl, o, (OOP_Msg)msg);
-    return;
 }
 
 /*** BitMap::Set() *******************************************/

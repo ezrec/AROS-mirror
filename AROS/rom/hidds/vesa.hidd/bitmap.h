@@ -29,8 +29,6 @@ enum
 struct BitmapData
 {
     UBYTE   	    	*VideoData;	/* Pointing to video data */
-    LONG   	    	width;      	/* Width of bitmap */
-    LONG   	    	height;		/* Height of bitmap */
     UBYTE   	    	bytesperpix;
     ULONG   	    	bytesperline;
     UBYTE *   	    	DAC;   		/* Hardware palette registers */
