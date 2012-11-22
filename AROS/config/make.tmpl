@@ -857,7 +857,7 @@ $(addprefix %(targetdir)/,%(progs)) : %(targetdir)/% : %(objdir)/%.o $(TMP_DEPLI
 
 #------------------------------------------------------------------------------
 # Generate the libdefs.h include file for a module.
-%define rule_genmodule_genlibdefs modname=/A modtype=/A modsuffix= conffile= targetdir=
+%define rule_genmodule_genlibdefs modname=/A modtype=/A modsuffix= conffile= targetdir= version=
 
 TMP_TARGET := %(modname)_libdefs.h
 TMP_DEPS := $(GENMODULE)
@@ -875,6 +875,9 @@ endif
 ifneq (%(targetdir),)
     TMP_OPTS += -d %(targetdir)
     TMP_TARGET := %(targetdir)/$(TMP_TARGET)
+endif
+ifneq (%(version),)
+    TMP_OPTS += -v %(version)
 endif
 
 $(TMP_TARGET) : OPTS := $(TMP_OPTS)
@@ -1346,7 +1349,7 @@ GLOB_MKDIRS += %(objdir) $(BD_MODDIR) $(KOBJSDIR)
 #------------------------------------------------------------------------------
 # Build a module
 # Explanation of this macro is done in the developer's manual
-%define build_module mmake=/A modname=/A modtype=/A modsuffix= \
+%define build_module mmake=/A modname=/A modtype=/A modsuffix= version= \
   conffile= files="$(basename $(call WILDCARD, *.c))" \
   linklibfiles= linklibobjs= cflags=$(CFLAGS) dflags=$(BD_DEFDFLAGS) \
   objdir=$(OBJDIR) moduledir=$(BD_DEFMODDIR) prefix=$(AROSDIR) \
@@ -1447,7 +1450,7 @@ endif
 
 %rule_genmodule_genlibdefs modname=%(modname) modtype=%(modtype) \
 		 	   modsuffix=%(modsuffix) targetdir=%(objdir)/include \
-		 	   conffile=%(conffile)
+		 	   conffile=%(conffile) version=%(version)
 
 $(BD_DEFLIBDEFSINC) : FILENAME := $(BD_LIBDEFSINC)
 $(BD_DEFLIBDEFSINC) :
@@ -1990,6 +1993,10 @@ BD_ASMOBJS$(BDID) := $(addsuffix .o,$(addprefix $(BD_OBJDIR$(BDID))/,$(notdir %(
 BD_OBJS$(BDID)    := $(BD_COBJS$(BDID)) $(BD_ASMOBJS$(BDID))
 BD_DEPS$(BDID)    := $(addsuffix .d,$(addprefix $(BD_OBJDIR$(BDID))/,$(notdir %(files))))
 
+ifneq (%(modulename),)
+BD_DEFLIBDEFSINC$(BDID) := -include $(GENDIR)/%(maindir)/include/%(modulename)_deflibdefs.h
+endif
+
 ifeq ($(TARGET),%(mainmmake)-%(arch))
 TMP_SRCDIR := $(shell echo $(SRCDIR) | sed 's/^\(.\):\//\/\1\//')
 vpath %.c $(addprefix $(TMP_SRCDIR)/$(CURDIR)/,$(dir %(files)))
@@ -2022,8 +2029,7 @@ $(BD_COBJS$(BDID)) $(BD_DEPS$(BDID)) : TMP_IQUOTE:=$(KERNEL_IQUOTE)
 $(BD_COBJS$(BDID)) $(BD_DEPS$(BDID)) : TMP_IQUOTE_END:=$(KERNEL_IQUOTE_END)
 endif
 ifneq (%(modulename),)
-$(BD_COBJS$(BDID)) : TMP_CFLAGS:=%(cflags) -I$(GENDIR)/%(maindir) \
-                     -include $(GENDIR)/%(maindir)/include/%(modulename)_deflibdefs.h
+$(BD_COBJS$(BDID)) : TMP_CFLAGS:=%(cflags) -I$(GENDIR)/%(maindir) $(BD_DEFLIBDEFSINC$(BDID))
 else
 $(BD_COBJS$(BDID)) : TMP_CFLAGS:=%(cflags)
 endif
@@ -2033,7 +2039,7 @@ $(BD_OBJDIR$(BDID))/%.o : %.c
 endif
 
 ifeq (%(dflags),)
-$(BD_DEPS$(BDID)) : TMP_DFLAGS:=%(cflags)
+$(BD_DEPS$(BDID)) : TMP_DFLAGS:=%(cflags) $(BD_DEFLIBDEFSINC$(BDID))
 else
 $(BD_DEPS$(BDID)) : TMP_DFLAGS:=%(dflags)
 endif
