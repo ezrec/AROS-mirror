@@ -1,57 +1,59 @@
 /*
-    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
     $Id$
 
-    Desc: Dispatch() - Tell the system that we have switched tasks.
+    Desc: 
     Lang: english
 */
 
 #include <exec/types.h>
-#include <exec/lists.h>
-#include <exec/tasks.h>
 #include <exec/execbase.h>
-#include <exec/alerts.h>
+#include <aros/libcall.h>
+#include <aros/atomic.h>
+#include <proto/kernel.h>
 
-#include <proto/arossupport.h>
-#include <aros/asmcall.h>
+#include "exec_intern.h"
 
-#include "etask.h"
-
-/*****i***********************************************************************
+/*****************************************************************************
 
     NAME */
 #include <proto/exec.h>
 
-	AROS_LH0(void, Dispatch,
+        AROS_LH0(void, Dispatch,
+
+/*  SYNOPSIS */
 
 /*  LOCATION */
-	struct ExecBase *, SysBase, 10, Exec)
+        struct ExecBase *, SysBase, 10, Exec)
 
 /*  FUNCTION
-	This function is obsolete and subject to removal.
-	On AmigaOS(tm) this was a private function.
+        PRIVATE function to dispatch next available task
 
     INPUTS
-	None.
+        None
 
     RESULT
+        None
 
     NOTES
-	This function is still there because i386-native port
-	still uses it.
+        This function was private in AmigaOS(tm) up to v3.1.
+        There's no guarantee that it will continue to exist in other systems.
 
     EXAMPLE
 
     BUGS
 
     SEE ALSO
-	Switch(), Reschedule()
 
     INTERNALS
+
+    HISTORY
 
 ******************************************************************************/
 {
     AROS_LIBFUNC_INIT
 
+    AROS_FUNCTION_NOT_IMPLEMENTED("Exec");
+
     AROS_LIBFUNC_EXIT
-} /* Dispatch() */
+} /* Dispatch */

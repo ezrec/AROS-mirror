@@ -7,7 +7,7 @@
 #include <kernel_cpu.h>
 #include <kernel_debug.h>
 #include <kernel_interrupts.h>
-#include <kernel_memory.h>
+#include <kernel_objects.h>
 
 /* We use own implementation of bug(), so we don't need aros/debug.h */
 #define D(x)
@@ -82,7 +82,8 @@ AROS_LH4(void *, KrnAddExceptionHandler,
         /* Go to supervisor mode */
         (void)goSuper();
 
-        handle = krnAllocMem(sizeof(struct IntrNode));
+	/* Allocate protected memory, accessible only in supervisor mode */
+        handle = krnAllocIntrNode();
         D(bug("[KRN] handle=%012p\n", handle));
 
         if (handle)
@@ -107,10 +108,14 @@ AROS_LH4(void *, KrnAddExceptionHandler,
 }
 
 /* Run exception handlers and accumulate return value */
-int krnRunExceptionHandlers(uint8_t exception, void *ctx)
+int krnRunExceptionHandlers(struct KernelBase *KernelBase, uint8_t exception, void *ctx)
 {
     struct IntrNode *in, *in2;
     int ret = 0;
+
+    /* We can be called really early. Protect against this. */
+    if (!KernelBase)
+    	return 0;
 
     ForeachNodeSafe(&KernelBase->kb_Exceptions[exception], in, in2)
     {

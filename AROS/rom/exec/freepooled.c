@@ -1,17 +1,18 @@
 /*
-    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: Free memory allocated by AllocPooled().
     Lang: english
 */
 
-#include "exec_intern.h"
 #include <aros/libcall.h>
-#include "memory.h"
 #include <exec/memory.h>
 #include <proto/exec.h>
 
+#include "exec_intern.h"
+#include "exec_util.h"
+#include "memory.h"
 
 /*****************************************************************************
 
@@ -56,7 +57,9 @@
 {
     AROS_LIBFUNC_INIT
 
-    InternalFreePooled(memory, memSize, SysBase);
+    struct TraceLocation tp = CURRENT_LOCATION("FreePooled");
+
+    InternalFreePooled(memory, memSize, &tp, SysBase);
 
     AROS_LIBFUNC_EXIT
 } /* FreePooled */

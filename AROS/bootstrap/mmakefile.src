@@ -1,0 +1,19 @@
+#   $Id: mmakefile.src 37337 2011-03-04 11:40:10Z sonic $
+#
+include $(TOP)/config/make.cfg
+
+FILES := elfloader
+
+USER_INCLUDES := -I $(SRCDIR)/$(CURDIR)/include -I $(GENINCDIR)
+
+%build_linklib mmake=linklibs-bootstrap libname=bootstrap files="$(FILES)" \
+	       compiler=kernel libdir=$(GENDIR)/lib
+
+# linklibs-bootstrap32 target is used by x86-64 bootstrap which runs in 32-bit mode
+
+USER_CFLAGS := -m32 -DELF_64BIT
+
+%build_linklib mmake=linklibs-bootstrap32 libname=bootstrap files="$(FILES)" \
+	       compiler=kernel objdir=$(GENDIR)/$(CURDIR)/32bit libdir=$(GENDIR)/lib32
+
+%common

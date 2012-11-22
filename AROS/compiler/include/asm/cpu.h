@@ -3,7 +3,7 @@
 
 /*
     Copyright © 1995-2011, The AROS Development Team. All rights reserved.
-    $Id: io.h 37974 2011-04-01 06:37:44Z sonic $
+    $Id$
 
     CPU-specific assembler definitions.
     This file and included one describe hardware-level control structures
@@ -12,11 +12,17 @@
 */
 
 /* Include the actual CPU-dependent definitions */
-#if defined __x86_64__
+#ifdef __x86_64__
 #  include <asm/x86_64/cpu.h>
-
-/* TODO: add other architectures */
-
+#endif
+#ifdef __i386__
+#  include <asm/i386/cpu.h>
+#endif
+#ifdef __powerpc__
+#  include <asm/ppc/cpu.h>
+#endif
+#ifdef __arm__
+#  include <asm/arm/cpu.h>
 #endif
 
 /* Some default generic definitions. */

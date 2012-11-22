@@ -1,21 +1,14 @@
 /*
- *  filesystem.c
- *  AROS
- *
- *  Created by Pavel Fedin on 10/13/10.
- *  Copyright 2010 AROS Development Team. All rights reserved.
- *
- */
+    Copyright © 2010-2011, The AROS Development Team. All rights reserved.
+    $Id$
+
+    Desc: Filesystem control routines
+    Lang: english
+*/
 
 #include <dirent.h>
-#include <sys/stat.h>
-
-#ifdef _WIN32
-#define APPNAME "AROSBootstrap.exe"
-#else
 #include <unistd.h>
-#define APPNAME "AROSBootstrap"
-#endif
+#include <sys/stat.h>
 
 #include "filesystem.h"
 
@@ -25,8 +18,8 @@ int SetRootDirectory(void)
 
     /* If AROSBootstrap.exe is found in the current directory, this means the bootstrap
      was started in its own dir. Go one level up in order to reach the root */
-    if (!stat(APPNAME, &st))
-	chdir("..");
+    if (!stat("AROSBootstrap", &st))
+	return chdir("..");
 
     return 0;
 }

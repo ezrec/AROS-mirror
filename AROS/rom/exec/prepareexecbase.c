@@ -18,15 +18,17 @@
 #include <exec/execbase.h>
 #include <exec/libraries.h>
 #include <aros/arossupportbase.h>
-#include <aros/asmcall.h>
 
 #include <string.h>
 
 #include <proto/alib.h>
 #include <proto/exec.h>
+#include <proto/kernel.h>
 
 #include LC_LIBDEFS_FILE
+#include "etask.h"
 #include "memory.h"
+#include "exec_util.h"
 #include "exec_debug.h"
 #include "exec_intern.h"
 
@@ -102,7 +104,7 @@ UWORD GetSysBaseChkSum(struct ExecBase *sysbase)
      return sum;
 }
 
-void SetSysBaseChkSum()
+void SetSysBaseChkSum(void)
 {
      SysBase->ChkBase=~(IPTR)SysBase;
      SysBase->ChkSum = 0;
@@ -132,11 +134,12 @@ void SetSysBaseChkSum()
 struct ExecBase *PrepareExecBase(struct MemHeader *mh, struct TagItem *msg)
 {
     ULONG negsize = 0;
-    ULONG totalsize, i;
     VOID  **fp = LIBFUNCTABLE;
-    char *args;
     APTR ColdCapture = NULL, CoolCapture = NULL, WarmCapture = NULL;
     APTR KickMemPtr = NULL, KickTagPtr = NULL, KickCheckSum = NULL;
+    APTR mem;
+    ULONG i;
+    char *args;
 
     /*
      * Copy reset proof pointers if old SysBase is valid.
@@ -158,10 +161,13 @@ struct ExecBase *PrepareExecBase(struct MemHeader *mh, struct TagItem *msg)
     
     /* Align library base */
     negsize = AROS_ALIGN(negsize);
-    
+
     /* Allocate memory for library base */
-    totalsize = negsize + sizeof(struct IntExecBase);
-    SysBase = (struct ExecBase *)((UBYTE *)stdAlloc(mh, totalsize, MEMF_CLEAR, NULL) + negsize);
+    mem = stdAlloc(mh, negsize + sizeof(struct IntExecBase), MEMF_CLEAR, NULL, NULL);
+    if (!mem)
+    	return NULL;
+
+    SysBase = mem + negsize;
 
 #ifdef HAVE_PREPAREPLATFORM
     /* Setup platform-specific data */
@@ -176,14 +182,7 @@ struct ExecBase *PrepareExecBase(struct MemHeader *mh, struct TagItem *msg)
 	      AROS_UFCA(CONST_APTR, NULL, A2),
 	      struct ExecBase *, SysBase);
 
-    /* Bring back saved values (or NULLs) */
-    SysBase->ColdCapture = ColdCapture;
-    SysBase->CoolCapture = CoolCapture;
-    SysBase->WarmCapture = WarmCapture;
-    SysBase->KickMemPtr = KickMemPtr;
-    SysBase->KickTagPtr = KickTagPtr;
-    SysBase->KickCheckSum = KickCheckSum;
-
+    /* Set default values */
     SysBase->LibNode.lib_Node.ln_Type = NT_LIBRARY;
     SysBase->LibNode.lib_Node.ln_Pri  = -100;
     SysBase->LibNode.lib_Node.ln_Name = (char *)Exec_resident.rt_Name;
@@ -193,11 +192,10 @@ struct ExecBase *PrepareExecBase(struct MemHeader *mh, struct TagItem *msg)
     SysBase->LibNode.lib_OpenCnt      = 1;
     SysBase->LibNode.lib_NegSize      = negsize;
     SysBase->LibNode.lib_PosSize      = sizeof(struct IntExecBase);
-    SysBase->LibNode.lib_Flags        = 0;
+    SysBase->LibNode.lib_Flags        = LIBF_CHANGED | LIBF_SUMUSED;
 
     NEWLIST(&SysBase->MemList);
     SysBase->MemList.lh_Type = NT_MEMORY;
-    ADDHEAD(&SysBase->MemList, &mh->mh_Node);
     
     NEWLIST(&SysBase->ResourceList);
     SysBase->ResourceList.lh_Type = NT_RESOURCE;
@@ -210,6 +208,8 @@ struct ExecBase *PrepareExecBase(struct MemHeader *mh, struct TagItem *msg)
 
     NEWLIST(&SysBase->LibList);
     SysBase->LibList.lh_Type = NT_LIBRARY;
+
+    /* Add exec.library to system library list */
     ADDHEAD(&SysBase->LibList, &SysBase->LibNode.lib_Node);
 
     NEWLIST(&SysBase->PortList);
@@ -239,20 +239,12 @@ struct ExecBase *PrepareExecBase(struct MemHeader *mh, struct TagItem *msg)
     InitSemaphore(&PrivExecBase(SysBase)->LowMemSem);
 
     SysBase->SoftVer        = VERSION_NUMBER;
-
-    SysBase->MaxLocMem      = (IPTR)mh->mh_Upper;
-
     SysBase->Quantum        = 4;
-
     SysBase->TaskTrapCode   = Exec_TrapHandler;
     SysBase->TaskExceptCode = NULL;
     SysBase->TaskExitCode   = Exec_TaskFinaliser;
     SysBase->TaskSigAlloc   = 0xFFFF;
     SysBase->TaskTrapAlloc  = 0;
-
-    /* Default frequencies */
-    SysBase->VBlankFrequency = 50;
-    SysBase->PowerSupplyFrequency = 1;
 
     /* Parse some arguments from command line */
     args = (char *)LibGetTagData(KRN_CmdLine, 0, msg);
@@ -270,9 +262,13 @@ struct ExecBase *PrepareExecBase(struct MemHeader *mh, struct TagItem *msg)
 	 * We store mungwall setting in private flags because it must not be
 	 * switched at runtime (or hard crash will happen).
 	 */
-	opts = strstr(args, "mungwall");
+	opts = strcasestr(args, "mungwall");
 	if (opts)
 	    PrivExecBase(SysBase)->IntFlags = EXECF_MungWall;
+
+	opts = strcasestr(args, "stacksnoop");
+	if (opts)
+	    PrivExecBase(SysBase)->IntFlags = EXECF_StackSnoop;
 
 	/*
 	 * Parse system runtime debug flags.
@@ -280,14 +276,27 @@ struct ExecBase *PrepareExecBase(struct MemHeader *mh, struct TagItem *msg)
 	 * However in order to be able to turn them on during early startup,
 	 * we apply them also here.
 	 */
-	opts = strstr(args, "sysdebug=");
+	opts = strcasestr(args, "sysdebug=");
 	if (opts)
 	    SysBase->ex_DebugFlags = ParseFlags(&opts[9], ExecFlagNames);
     }
 
-    SysBase->DebugAROSBase = PrepareAROSSupportBase(mh);
+    NEWLIST(&PrivExecBase(SysBase)->TaskStorageSlots);
 
     SetSysBaseChkSum();
+
+    /* Add our initial MemHeader */
+    ADDHEAD(&SysBase->MemList, &mh->mh_Node);
+
+    /* Bring back saved values (or NULLs) */
+    SysBase->ColdCapture  = ColdCapture;
+    SysBase->CoolCapture  = CoolCapture;
+    SysBase->WarmCapture  = WarmCapture;
+    SysBase->KickMemPtr   = KickMemPtr;
+    SysBase->KickTagPtr   = KickTagPtr;
+    SysBase->KickCheckSum = KickCheckSum;
+
+    SysBase->DebugAROSBase = PrepareAROSSupportBase(mh);
 
     return SysBase;
 }

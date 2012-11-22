@@ -6,8 +6,8 @@ include $(TOP)/config/make.cfg
 TARGET_ISO := $(DISTDIR)/aros$(AROS_TARGET_SUFFIX)-pc-i386.iso
 
 #MM bootiso-pc-i386 :	AROS-complete		\
+#MM			boot-pc-i386 \
 #MM			kernel-package-pc-i386		\
-#MM			kernel-bootstrap-i386		\
 #MM			AROS-pc-i386-drivers		\
 #MM			bootloader-$(AROS_TARGET_BOOTLOADER)-pc-i386
 
@@ -33,10 +33,13 @@ ifeq ($(AROS_TARGET_BOOTLOADER),grub2gfx)
 BOOTLOADER_ELTORITO_REL := boot/grub/grub2_eltorito
 endif
 
+BOOT_FILES := bootstrap-pc.gz aros-bsp-pc-i386.gz aros-base.pkg.gz aros-fs.pkg.gz poseidon.pkg.gz
+ISO_DEPS := $(addprefix $(BINDIR)/boot/, $(BOOT_FILES))
+
 $(warning BOOTLOADER_ELTORITO_REL = $(BOOTLOADER_ELTORITO_REL))
 $(warning LANG = $(LANG))
 
-$(TARGET_ISO): $(BINDIR)/boot/aros-pc-i386.gz $(BINDIR)/boot/aros-kernel-pc-i386.gz
+$(TARGET_ISO): $(ISO_DEPS)
 	%mkdirs_q $(AROSDIR)/S
 	@$(CP) $(SRCDIR)/workbench/s/Startup-Sequence $(AROSDIR)/S/Startup-Sequence
 	@$(MKDIR) -p "$(DISTDIR)"

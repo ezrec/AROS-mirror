@@ -1,19 +1,27 @@
 #include <aros/debug.h>
+#include <exec/rawfmt.h>
 #include <proto/kernel.h>
 
 #include "exec_intern.h"
+#include "exec_util.h"
+#include "etask.h"
 #include "memory.h"
 #include "mungwall.h"
 
 #define DMH(x)
 
-/* Find MemHeader to which address belongs */
+/*
+ * Find MemHeader to which address belongs.
+ * This function is legal to be called in supervisor mode (we use TypeOfMem()
+ * in order to validate addresses in tons of places). So, here are checks.
+ */
 struct MemHeader *FindMem(APTR address, struct ExecBase *SysBase)
 {
+    int usermode = (KernelBase != NULL) && (KrnIsSuper() == 0);
     struct MemHeader *mh;
 
     /* Nobody should change the memory list now. */
-    MEM_LOCK_SHARED;
+    if (usermode) MEM_LOCK_SHARED;
 
     /* Follow the list of MemHeaders */
     mh = (struct MemHeader *)SysBase->MemList.lh_Head;
@@ -24,7 +32,7 @@ struct MemHeader *FindMem(APTR address, struct ExecBase *SysBase)
 	if(address >= mh->mh_Lower && address < mh->mh_Upper)
 	{
 	    /* Yes. Return it. */
-	    MEM_UNLOCK;
+	    if (usermode) MEM_UNLOCK;
 	    return mh;
 	}
 
@@ -32,20 +40,152 @@ struct MemHeader *FindMem(APTR address, struct ExecBase *SysBase)
 	mh = (struct MemHeader *)mh->mh_Node.ln_Succ;
     }
 
-    MEM_UNLOCK;
+    if (usermode) MEM_UNLOCK;
     return NULL;
 }
+
+char *FormatMMContext(char *buffer, struct MMContext *ctx, struct ExecBase *SysBase)
+{
+    if (ctx->addr)
+	buffer = NewRawDoFmt("In %s, block at 0x%p, size %lu", (VOID_FUNC)RAWFMTFUNC_STRING, buffer, ctx->func, ctx->addr, ctx->size) - 1;
+    else
+	buffer = NewRawDoFmt("In %s, size %lu", (VOID_FUNC)RAWFMTFUNC_STRING, buffer, ctx->func, ctx->size) - 1;
+    
+    if (ctx->mc)
+    {
+    	buffer = NewRawDoFmt("\nCorrupted MemChunk 0x%p (next 0x%p, size %lu)", (VOID_FUNC)RAWFMTFUNC_STRING, buffer, ctx->mc, ctx->mc->mc_Next, ctx->mc->mc_Bytes) - 1;
+    	
+    	if (ctx->mcPrev)
+            buffer = NewRawDoFmt("\nPrevious MemChunk 0x%p (next 0x%p, size %lu)", (VOID_FUNC)RAWFMTFUNC_STRING, buffer, ctx->mcPrev, ctx->mcPrev->mc_Next, ctx->mcPrev->mc_Bytes) - 1;
+    }
+
+    /* Print MemHeader details */
+    buffer = NewRawDoFmt("\nMemHeader 0x%p (0x%p - 0x%p)", (VOID_FUNC)RAWFMTFUNC_STRING, buffer, ctx->mh, ctx->mh->mh_Lower, ctx->mh->mh_Upper) - 1;
+    if ((IPTR)ctx->mh->mh_First & (MEMCHUNK_TOTAL - 1))
+    	buffer = NewRawDoFmt("\n- Unaligned first chunk address (0x%p)", (VOID_FUNC)RAWFMTFUNC_STRING, buffer, ctx->mh->mh_First) - 1;
+
+    if (ctx->mh->mh_Free & (MEMCHUNK_TOTAL - 1))
+    	buffer = NewRawDoFmt("\n- Unaligned free space count (0x%p)", (VOID_FUNC)RAWFMTFUNC_STRING, buffer, ctx->mh->mh_Free) - 1;
+
+    if (ctx->mh->mh_First)
+    {
+    	if ((APTR)ctx->mh->mh_First < ctx->mh->mh_Lower)
+    	    buffer = NewRawDoFmt("\n- First chunk (0x%p) below lower address", (VOID_FUNC)RAWFMTFUNC_STRING, buffer, ctx->mh->mh_First) - 1;
+
+    	if (((APTR)ctx->mh->mh_First + ctx->mh->mh_Free > ctx->mh->mh_Upper))
+    	    buffer = NewRawDoFmt("\n- Free space count too large (%lu, first chunk 0x%xp)", (VOID_FUNC)RAWFMTFUNC_STRING, buffer, ctx->mh->mh_Free, ctx->mh->mh_First) - 1;
+    }
+
+    return buffer;
+}
+
+#ifdef NO_CONSISTENCY_CHECKS
+
+#define validateHeader(mh, op, addr, size, SysBase) TRUE
+#define validateChunk(mc, prev, mh, op, addr, size, SysBase) TRUE
+
+#else
+
+static ULONG memAlerts[] =
+{
+    AT_DeadEnd|AN_MemoryInsane,	/* MM_ALLOC   */
+    AT_DeadEnd|AN_MemCorrupt,	/* MM_FREE    */
+    AN_FreeTwice		/* MM_OVERLAP */
+};
+
+/*
+ * MemHeader validation routine. Rules are:
+ *
+ * 1. Both mh_First and mh_Free must be MEMCHUNK_TOTAL-aligned.
+ * 2. Free space (if present) must completely fit in between mh_Lower and mh_Upper.
+ * We intentionally don't check header's own location. We assume that in future we'll
+ * be able to put MEMF_CHIP headers inside MEMF_FAST memory, for speed up.
+ */
+static BOOL validateHeader(struct MemHeader *mh, UBYTE op, APTR addr, IPTR size, struct TraceLocation *tp, struct ExecBase *SysBase)
+{
+    if (((IPTR)mh->mh_First & (MEMCHUNK_TOTAL - 1)) || (mh->mh_Free & (MEMCHUNK_TOTAL - 1)) ||		/* 1 */
+	(mh->mh_First &&
+	 (((APTR)mh->mh_First < mh->mh_Lower) || ((APTR)mh->mh_First + mh->mh_Free > mh->mh_Upper))))	/* 2 */
+    {
+    	if (tp)
+    	{
+    	    /* TraceLocation is not supplied by PrepareExecBase(). Fail silently. */
+    	    struct MMContext alertData;
+
+	    alertData.mh     = mh;
+	    alertData.mc     = NULL;
+	    alertData.mcPrev = NULL;
+	    alertData.func   = tp->function;
+	    alertData.addr   = addr;
+	    alertData.size   = size;
+	    alertData.op     = op;
+
+	    Exec_ExtAlert(memAlerts[op], tp->caller, tp->stack, AT_MEMORY, &alertData, SysBase);
+	}
+
+	/*
+	 * Theoretically during very early boot we can fail to post an alert (no KernelBase yet).
+	 * In this case we return with fault indication.
+	 */
+    	return FALSE;
+    }
+    return TRUE;
+}
+
+/*
+ * MemChunk consistency check. Rules are:
+ *
+ * 1. Both mc_Next and mc_Bytes must me MEMCHUNK_TOTAL-aligned, and mc_Bytes can not be zero.
+ * 2. End of this chunk must not be greater than mh->mh_Upper
+ * 3. mc_Next (if present) must point in between end of this chunk and mh->mh_Upper - MEMCHUNK_TOTAL.
+ *    There must be at least MEMHCUNK_TOTAL allocated bytes between free chunks.
+ *
+ * This function is inlined for speed improvements.
+ */
+static inline BOOL validateChunk(struct MemChunk *p2, struct MemChunk *p1, struct MemHeader *mh,
+				 UBYTE op, APTR addr, IPTR size,
+				 struct TraceLocation *tp, struct ExecBase *SysBase)
+{
+    if (((IPTR)p2->mc_Next & (MEMCHUNK_TOTAL-1)) || (p2->mc_Bytes == 0) || (p2->mc_Bytes & (MEMCHUNK_TOTAL-1))	||	/* 1 */
+	((APTR)p2 + p2->mc_Bytes > mh->mh_Upper)								||	/* 2 */
+	(p2->mc_Next && (((APTR)p2->mc_Next < (APTR)p2 + p2->mc_Bytes + MEMCHUNK_TOTAL) ||				/* 3 */
+	    		 ((APTR)p2->mc_Next > mh->mh_Upper - MEMCHUNK_TOTAL))))
+    {
+    	if (tp)
+    	{
+	    struct MMContext alertData;
+
+	    alertData.mh     = mh;
+	    alertData.mc     = p2;
+	    alertData.mcPrev = (p1 == (struct MemChunk *)&mh->mh_First) ? NULL : p1;
+	    alertData.func   = tp->function;
+	    alertData.addr   = addr;
+	    alertData.size   = size;
+	    alertData.op     = op;
+
+	    Exec_ExtAlert(memAlerts[op], tp->caller, tp->stack, AT_MEMORY, &alertData, SysBase);
+	}
+	return FALSE;
+    }
+
+    return TRUE;
+}
+
+#endif
 
 /*
  * Allocate block from the given MemHeader in a specific way.
  * This routine can be called with SysBase = NULL.
  */
-APTR stdAlloc(struct MemHeader *mh, IPTR byteSize, ULONG requirements, struct ExecBase *SysBase)
+APTR stdAlloc(struct MemHeader *mh, IPTR size, ULONG requirements, struct TraceLocation *tp, struct ExecBase *SysBase)
 {
+    /* First round byteSize up to a multiple of MEMCHUNK_TOTAL */
+    IPTR byteSize = AROS_ROUNDUP2(size, MEMCHUNK_TOTAL);
     struct MemChunk *mc=NULL, *p1, *p2;
 
-    /* First round byteSize to a multiple of MEMCHUNK_TOTAL */
-    byteSize = AROS_ROUNDUP2(byteSize, MEMCHUNK_TOTAL);
+    /* Validate MemHeader before doing anything. */
+    if (!validateHeader(mh, MM_ALLOC, NULL, size, tp, SysBase))
+    	return NULL;
 
     /*
      * The free memory list is only single linked, i.e. to remove
@@ -55,42 +195,16 @@ APTR stdAlloc(struct MemHeader *mh, IPTR byteSize, ULONG requirements, struct Ex
     p1 = (struct MemChunk *)&mh->mh_First;
     p2 = p1->mc_Next;
 
-    /* Follow the memory list */
+    /*
+     * Follow the memory list. p1 is the previous MemChunk, p2 is the current one.
+     * On 1st pass p1 points to mh->mh_First, so that chaning p1->mc_Next actually
+     * changes mh->mh_First.
+     */
     while (p2 != NULL)
     {
-        /* p1 is the previous MemChunk, p2 is the current one */
-#if !defined(NO_CONSISTENCY_CHECKS)
-	/*
-	 * Memory list consistency checks.
-	 * 1. Check alignment restrictions
-	 */
-        if (((IPTR)p2|(IPTR)p2->mc_Bytes) & (MEMCHUNK_TOTAL-1))
-	{
-	    if (SysBase && SysBase->DebugAROSBase)
-	    {
-		bug("[MM] Chunk allocator error\n");
-		bug("[MM] Attempt to allocate %lu bytes from MemHeader 0x%p\n", byteSize, mh);
-		bug("[MM] Misaligned chunk at 0x%p (%u bytes)\n", p2, p2->mc_Bytes);
-
-		Alert(AN_MemoryInsane|AT_DeadEnd);
-	    }
-	    return NULL;
-	}
-
-	/* 2. Check against overlapping blocks */
-	if (p2->mc_Next && ((UBYTE *)p2 + p2->mc_Bytes >= (UBYTE *)p2->mc_Next))
-	{
-	    if (SysBase && SysBase->DebugAROSBase)
-	    {
-		bug("[MM] Chunk allocator error\n");
-		bug("[MM] Attempt to allocate %lu bytes from MemHeader 0x%p\n", byteSize, mh);
-		bug("[MM] Overlapping chunks 0x%p (%u bytes) and 0x%p (%u bytes)\n", p2, p2->mc_Bytes, p2->mc_Next, p2->mc_Next->mc_Bytes);
-
-		Alert(AN_MemoryInsane|AT_DeadEnd);
-	    }
-	    return NULL;
-	}
-#endif
+    	/* Validate the current chunk */
+    	if (!validateChunk(p2, p1, mh, MM_ALLOC, NULL, size, tp, SysBase))
+    	    return NULL;
 
         /* Check if the current block is large enough */
         if (p2->mc_Bytes>=byteSize)
@@ -154,17 +268,23 @@ APTR stdAlloc(struct MemHeader *mh, IPTR byteSize, ULONG requirements, struct Ex
 }
 
 /* Free 'byteSize' bytes starting at 'memoryBlock' belonging to MemHeader 'freeList' */
-void stdDealloc(struct MemHeader *freeList, APTR memoryBlock, IPTR byteSize, struct ExecBase *SysBase)
+void stdDealloc(struct MemHeader *freeList, APTR addr, IPTR size, struct TraceLocation *tp, struct ExecBase *SysBase)
 {
+    APTR memoryBlock;
+    IPTR byteSize;
     struct MemChunk *p1, *p2, *p3;
     UBYTE *p4;
 
+    /* Make sure the MemHeader is OK */
+    if (!validateHeader(freeList, MM_FREE, addr, size, tp, SysBase))
+    	return;
+
     /* Align size to the requirements */
-    byteSize+=(IPTR)memoryBlock&(MEMCHUNK_TOTAL-1);
-    byteSize=(byteSize+MEMCHUNK_TOTAL-1)&~(MEMCHUNK_TOTAL-1);
+    byteSize = size + ((IPTR)addr & (MEMCHUNK_TOTAL-1));
+    byteSize = (byteSize + MEMCHUNK_TOTAL-1) & ~(MEMCHUNK_TOTAL-1);
 
     /* Align the block as well */
-    memoryBlock=(APTR)((IPTR)memoryBlock&~(MEMCHUNK_TOTAL-1));
+    memoryBlock = (APTR)((IPTR)addr & ~(MEMCHUNK_TOTAL-1));
 
     /*
 	The free memory list is only single linked, i.e. to insert
@@ -192,33 +312,9 @@ void stdDealloc(struct MemHeader *freeList, APTR memoryBlock, IPTR byteSize, str
     /* Follow the list to find a place where to insert our memory. */
     do
     {
-#if !defined(NO_CONSISTENCY_CHECKS)
-	/*
-	 * Do some constistency checks:
-	 * 1. All MemChunks must be aligned to MEMCHUNK_TOTAL.
-	 */
-        if (((IPTR)p2|(IPTR)p2->mc_Bytes) & (MEMCHUNK_TOTAL-1))
-	{
-	    bug("[MM] Chunk allocator error\n");
-	    bug("[MM] Attempt to free %u bytes at 0x%p from MemHeader 0x%p\n", byteSize, memoryBlock, freeList);
-	    bug("[MM] Misaligned chunk at 0x%p (%u bytes)\n", p2, p2->mc_Bytes);
+    	if (!validateChunk(p2, p1, freeList, MM_FREE, addr, size, tp, SysBase))
+    	    return;
 
-	    Alert(AN_MemCorrupt|AT_DeadEnd);
-	}
-
-	/* 
-	 * 2. The end (+1) of the current MemChunk
-	 *    must be lower than the start of the next one.
-	 */
-	if (p2->mc_Next && ((UBYTE *)p2 + p2->mc_Bytes >= (UBYTE *)p2->mc_Next))
-	{
-	    bug("[MM] Chunk allocator error\n");
-	    bug("[MM] Attempt to free %lu bytes at 0x%p from MemHeader 0x%p\n", byteSize, memoryBlock, freeList);
-	    bug("[MM] Overlapping chunks 0x%p (%u bytes) and 0x%p (%u bytes)\n", p2, p2->mc_Bytes, p2->mc_Next, p2->mc_Next->mc_Bytes);
-
-	    Alert(AN_MemCorrupt|AT_DeadEnd);
-	}
-#endif
 	/* Found a block with a higher address? */
 	if (p2 >= p3)
 	{
@@ -308,17 +404,17 @@ APTR InternalAllocAbs(APTR location, IPTR byteSize, struct ExecBase *SysBase)
  * Use this if you want to free region allocated by InternalAllocAbs().
  * Otherwise you hit mungwall problem (FreeMem() expects header).
  */
-void InternalFreeMem(APTR location, IPTR byteSize, struct ExecBase *SysBase)
+void InternalFreeMem(APTR location, IPTR byteSize, struct TraceLocation *loc, struct ExecBase *SysBase)
 {
-    nommu_FreeMem(location, byteSize, SysBase);
+    nommu_FreeMem(location, byteSize, loc, SysBase);
 }
 
 /* Allocate a region managed by own header */
-APTR AllocMemHeader(IPTR size, ULONG flags, struct ExecBase *SysBase)
+APTR AllocMemHeader(IPTR size, ULONG flags, struct TraceLocation *loc, struct ExecBase *SysBase)
 {
     struct MemHeader *mh;
 
-    mh = nommu_AllocMem(size, flags, SysBase);
+    mh = nommu_AllocMem(size, flags, loc, SysBase);
     DMH(bug("[AllocMemHeader] Allocated %u bytes at 0x%p\n", size, mh));
 
     if (mh)
@@ -348,12 +444,12 @@ APTR AllocMemHeader(IPTR size, ULONG flags, struct ExecBase *SysBase)
 }
 
 /* Free a region allocated by AllocMemHeader() */
-void FreeMemHeader(APTR addr, struct ExecBase *SysBase)
+void FreeMemHeader(APTR addr, struct TraceLocation *loc, struct ExecBase *SysBase)
 {
     ULONG size = ((struct MemHeader *)addr)->mh_Upper - addr;
 
     DMH(bug("[FreeMemHeader] Freeing %u bytes at 0x%p\n", size, addr));
-    nommu_FreeMem(addr, size, SysBase);
+    nommu_FreeMem(addr, size, loc, SysBase);
 }
 
 /*
@@ -395,7 +491,7 @@ static void EnqueueMemHeader(struct MinList *list, struct MemHeader *mh)
  * can contain puddles from both CHIP and FAST memory. This is done in
  * order to provide a single system default pool for all types of memory.
  */
-APTR InternalAllocPooled(APTR poolHeader, IPTR memSize, ULONG flags, struct ExecBase *SysBase)
+APTR InternalAllocPooled(APTR poolHeader, IPTR memSize, ULONG flags, struct TraceLocation *loc, struct ExecBase *SysBase)
 {
     struct ProtectedPool *pool = poolHeader + MEMHEADER_TOTAL;
     APTR ret = NULL;
@@ -457,7 +553,7 @@ APTR InternalAllocPooled(APTR poolHeader, IPTR memSize, ULONG flags, struct Exec
 		puddleSize = (puddleSize + align) & ~align;
 	    }
 
-	    mh = AllocMemHeader(puddleSize, flags, SysBase);
+	    mh = AllocMemHeader(puddleSize, flags, loc, SysBase);
 	    D(bug("[InternalAllocPooled] Allocated new puddle 0x%p, size %u\n", mh, puddleSize));
 
 	    /* No memory left? */
@@ -483,7 +579,7 @@ APTR InternalAllocPooled(APTR poolHeader, IPTR memSize, ULONG flags, struct Exec
 	}
 
 	/* Try to get the memory */
-	ret = stdAlloc(mh, memSize, flags, SysBase);
+	ret = stdAlloc(mh, memSize, flags, loc, SysBase);
 	D(bug("[InternalAllocPooled] Allocated memory at 0x%p from puddle 0x%p\n", ret, mh));
 
 	/* Got it? */
@@ -519,7 +615,7 @@ APTR InternalAllocPooled(APTR poolHeader, IPTR memSize, ULONG flags, struct Exec
     if (ret)
     {
 	/* Build munge walls if requested */
-	ret = MungWall_Build(ret, pool, origSize, flags, SysBase);
+	ret = MungWall_Build(ret, pool, origSize, flags, loc, SysBase);
 
 	/* Remember where we were allocated from */
 	*((struct MemHeader **)ret) = mh;
@@ -538,7 +634,7 @@ APTR InternalAllocPooled(APTR poolHeader, IPTR memSize, ULONG flags, struct Exec
  * Our chunks remember from which pool they came, so we don't need a pointer to pool
  * header here. This will save us from headaches in future FreeMem() implementation.
  */
-void InternalFreePooled(APTR memory, IPTR memSize, struct ExecBase *SysBase)
+void InternalFreePooled(APTR memory, IPTR memSize, struct TraceLocation *loc, struct ExecBase *SysBase)
 {
     struct MemHeader *mh;
     APTR freeStart;
@@ -554,7 +650,7 @@ void InternalFreePooled(APTR memory, IPTR memSize, struct ExecBase *SysBase)
     mh = *((struct MemHeader **)freeStart);
 
     /* Check walls first */
-    freeStart = MungWall_Check(freeStart, freeSize, SysBase);
+    freeStart = MungWall_Check(freeStart, freeSize, loc, SysBase);
     if (PrivExecBase(SysBase)->IntFlags & EXECF_MungWall)
 	freeSize += MUNGWALL_TOTAL_SIZE;
 
@@ -589,7 +685,7 @@ void InternalFreePooled(APTR memory, IPTR memSize, struct ExecBase *SysBase)
 	D(bug("[FreePooled] Allocated from puddle 0x%p, size %u\n", mh, size));
 
 	/* Free the memory. */
-	stdDealloc(mh, freeStart, freeSize, SysBase);
+	stdDealloc(mh, freeStart, freeSize, loc, SysBase);
 	D(bug("[FreePooled] Deallocated chunk, %u free bytes in the puddle\n", mh->mh_Free));
 
 	/* Is this MemHeader completely free now? */
@@ -600,7 +696,7 @@ void InternalFreePooled(APTR memory, IPTR memSize, struct ExecBase *SysBase)
 	    /* Yes. Remove it from the list. */
 	    Remove(&mh->mh_Node);
 	    /* And free it. */
-	    FreeMemHeader(mh, SysBase);
+	    FreeMemHeader(mh, loc, SysBase);
 	}
 	/* All done. */
 

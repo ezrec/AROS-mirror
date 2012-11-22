@@ -1,5 +1,5 @@
 /*
-    Copyright © 1995-2001, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: CacheClearU - Simple way of clearing the caches.
@@ -57,8 +57,12 @@
 {
     AROS_LIBFUNC_INIT
 
-    /* Just dump the whole lot */
-    CacheClearE(0, 0xFFFFFFFF, CACRF_ClearI | CACRF_ClearD);
+    /*
+     * Just dump the whole lot.
+     * FIXME: This is known to trigger system cold reset on Archos-70
+     * Android tablet. Likely hardware quirk. Needs to be investigated.
+     */
+    CacheClearE(0, ~0, CACRF_ClearI | CACRF_ClearD);
 
     AROS_LIBFUNC_EXIT
 } /* CacheClearU */

@@ -1,11 +1,11 @@
 # $Id$
 include $(TOP)/config/make.cfg
 
-#MM- workbench-devs-cdvdfs: includes linklibs
+#MM- kernel-fs-cdvdfs: includes linklibs
 #MM- workbench-devs-cdvdfs-checkcd: includes linklibs
 #MM- workbench-devs-cdvdfs-cdrom: includes linklibs
 #MM- workbench-devs-cdvdfs-cdcontrol: includes linklibs
-#MM- workbench-devs-cdvdfs-packet: includes linklibs
+#MM- kernel-fs-cdvdfs-packet: includes linklibs
 
 TESTSDIR := $(AROS_TESTS)/cdrom
 
@@ -25,7 +25,7 @@ CHECKCD_FILES := checkcd cdrom iso9660 rock joliet \
 #And these ones are for normal operation
 USER_CFLAGS := -DNDEBUG -DDEBUG=0
 
-%build_prog mmake=workbench-devs-cdvdfs-packet \
+%build_prog mmake=kernel-fs-cdvdfs-packet \
     progname=cdrom.handler targetdir=$(AROS_DEVS) \
     objdir=$(GENDIR)/$(CURDIR)-packet files="$(HANDLER_FILES)" usestartup=no uselibs="arossupport rom"
 
@@ -43,7 +43,7 @@ USER_CFLAGS := -DNDEBUG -DDEBUG=0
 
 USER_CFLAGS := -DAROS_KERNEL $(USER_CFLAGS)
 
-%build_module mmake=workbench-devs-cdvdfs \
+%build_module mmake=kernel-fs-cdvdfs \
     modname=cdrom modtype=device modsuffix=handler \
     files="$(MODULE_FILES) $(HANDLER_FILES)" \
     uselibs="arossupport rom"

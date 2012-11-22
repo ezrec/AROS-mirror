@@ -18,11 +18,6 @@
 #include "exec_util.h"
 #include "etask.h"
 
-/* x86/64 kernel.resource doesn't have KrnIsSuper() */
-#ifndef KrnIsSuper
-#define KrnIsSuper() 0
-#endif
-
 /*****************************************************************************
 
     NAME */
@@ -63,48 +58,87 @@
 {
     AROS_LIBFUNC_INIT
 
+    Exec_ExtAlert(alertNum, __builtin_return_address(0), CALLER_FRAME, AT_NONE, NULL, SysBase);
+
+    AROS_LIBFUNC_EXIT
+}
+
+static const ULONG contextSizes[] =
+{
+    0,
+    sizeof(struct ExceptionContext),
+    sizeof(struct MungwallContext),
+    sizeof(struct MMContext)
+};
+
+void Exec_ExtAlert(ULONG alertNum, APTR location, APTR stack, UBYTE type, APTR data, struct ExecBase *SysBase)
+{
     struct Task *task = SysBase->ThisTask;
-    struct IntETask *iet = NULL;
     int supervisor = KrnIsSuper();
+    struct IntETask *iet = NULL;
 
-    D(bug("[exec] Alert 0x%08X\n", alertNum));
+    D(bug("[exec] Alert 0x%08X, supervisor %d\n", alertNum, supervisor));
 
-    if (task)
+    if (task && (task->tc_Flags & TF_ETASK) && (task->tc_State != TS_REMOVED))
     {
-	iet = GetIntETask(task);
+        iet = GetIntETask(task);
+	
+	D(bug("[Alert] Task 0x%p, ETask 0x%p\n", task, iet));
 
 	/* Do we already have location set? */
-	if (!iet->iet_AlertLocation)
+	if (iet->iet_AlertFlags & AF_Location)
 	{
-	    /* If no, the location is where we were called from */
+	    /* If yes, pick it up */
+	    location = iet->iet_AlertLocation;
+	    stack    = iet->iet_AlertStack;
+	}
+	else
+	{
 	    if (supervisor && ((alertNum & ~AT_DeadEnd) == AN_StackProbe))
 	    {
 	    	/*
 	    	 * Special case: AN_StackProbe issued by kernel's task dispatcher.
 	    	 * Pick up data from task's context.
 	    	 */
-		struct ExceptionContext *ctx = iet->iet_Context;
+		struct ExceptionContext *ctx = iet->iet_ETask.et_RegFrame;
 
-		iet->iet_AlertLocation = (APTR)ctx->PC;
-	    	iet->iet_AlertStack    = (APTR)ctx->FP;
+		location = (APTR)ctx->PC;
+	    	stack    = (APTR)ctx->FP;
+	    	type     = AT_CPU;
+	    	data     = ctx;
 	    }
-	    else
-	    {
-	    	iet->iet_AlertLocation = __builtin_return_address(0);
-	    	/*
-	    	 * And backtrace starts at caller's frame.
-	    	 * On ARM we don't have frame pointer so we can't do backtrace.
-	    	 * __builtin_frame_address(1) will return garbage, so don't do this.
-	    	 */
-#ifdef __arm__
-	    	iet->iet_AlertStack = NULL;
-#else
-	    	iet->iet_AlertStack = __builtin_frame_address(1);
-#endif
-	    	D(bug("[Alert] Previous frame 0x%p, caller 0x%p\n", iet->iet_AlertStack, iet->iet_AlertLocation));
-	    }
+
+	    /* Set location */
+	    iet->iet_AlertFlags   |= AF_Location;	    
+	    iet->iet_AlertLocation = location;
+	    iet->iet_AlertStack    = stack;
+
+	    D(bug("[Alert] Previous frame 0x%p, caller 0x%p\n", iet->iet_AlertStack, iet->iet_AlertLocation));
+	}
+
+	/* If this is not a nested call, set the supplementary data if specified */
+	if (data && !(iet->iet_AlertFlags & AF_Alert))
+	{
+	    D(bug("[Alert] Setting alert context, type %u, data 0x%p\n", type, data));
+
+	    iet->iet_AlertType = type;
+	    CopyMem(data, &iet->iet_AlertData, contextSizes[type]);
+	}
+	else
+	{
+	    /* Either no data or already present */
+	    type = iet->iet_AlertType;
+	    data = &iet->iet_AlertData;
+	    
+	    D(bug("[Alert] Got stored alert context, type %u, data 0x%p\n", type, data));
 	}
     }
+    else
+    	/*
+    	 * If we have no task, or the task is being removed,
+    	 * we can't use the user-mode routine.
+    	 */
+    	supervisor = TRUE;
 
     /*
      * If we are running in user mode we should first try to report a problem
@@ -114,25 +148,27 @@
     {
         alertNum = Exec_UserAlert(alertNum, SysBase);
 	if (!alertNum)
+	{
+	    /*
+	     * UserAlert() succeeded and the user decided to continue the task.
+	     * Clear crash status and return happily
+	     */
+	    if (iet)
+	        ResetETask(iet);
 	    return;
+	}
     }
+
+    /* Hint for SystemAlert() - if AlertType is AT_NONE, we don't have AlertData */
+    if (type == AT_NONE)
+	data = NULL;
 
     /*
      * We're here if Intuition failed. Use safe (but not so
      * system and user-friendly) way to post alerts.
      */
     Disable();
-    Exec_SystemAlert(alertNum, SysBase);
-    Enable();
-
-    /*
-     * We succesfully displayed an alert in supervisor mode.
-     * Clear alert status by clearing respective fields in ETask.
-     */
-    if (iet)
-    {
-	ResetETask(iet);
-    }
+    Exec_SystemAlert(alertNum, location, stack, type, data, SysBase);
 
     if (alertNum & AT_DeadEnd)
     {
@@ -142,5 +178,12 @@
 	ShutdownA(SD_ACTION_COLDREBOOT);
     }
 
-    AROS_LIBFUNC_EXIT
+    Enable();
+
+    /*
+     * We succesfully displayed an alert in supervisor mode.
+     * Clear alert status by clearing respective fields in ETask.
+     */
+    if (iet)
+	ResetETask(iet);
 }

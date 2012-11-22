@@ -14,33 +14,36 @@ endif
 boot-unix: $(BINDIR)/boot/AROSBootstrap.conf
 
 $(BINDIR)/boot/AROSBootstrap.conf: mkbootconf.sh $(BINDIR)/boot AROSBootstrap.conf
-	@$(ECHO) Writing $@...
+	@$(ECHO) "Writing    $@..."
 	@$(SRCDIR)/$(CURDIR)/mkbootconf.sh $(SRCDIR)/$(CURDIR) $(BSP) >$@
 
 $(BINDIR)/boot:
-	@$(ECHO) Making $@...
+	@$(ECHO) "Making     $@..."
 	@mkdir -p $(BINDIR)/boot
 
 # -------- Kickstart part --------
 
-#MM- kernel-unix: kernel-link-base kernel-link-hosted kernel-timer
+#MM- kernel-unix: kernel-link-base
 
 #MM- kernel-link-unix : \
 #MM	kernel-kernel-kobj			\
 #MM     kernel-hostlib-kobj			\
 #MM	kernel-battclock-kobj			\
 #MM	kernel-processor-kobj			\
+#MM	kernel-timer-kobj			\
 #MM	kernel-expansion-kobj			\
 #MM	kernel-exec-kobj			\
 #MM     $(X11_HIDD_TARGET)		        \
 #MM     kernel-fs-emul-kobj                     \
+#MM	kernel-unixio-kobj			\
 #MM	linklibs
 
 # ---- UNIX board support package ----
 
+KDEVS	:= timer
 KLIBS   := exec expansion
 KHNDLRS := emul
-KHIDDS  := 
+KHIDDS  := unixio
 KRSRCS  := battclock hostlib processor
 # Disabled until ported - sonic
 # ifeq ("$(AROS_HOST_ARCH)","linux")
@@ -49,9 +52,12 @@ KRSRCS  := battclock hostlib processor
 ifeq ("$(X11_HIDD_TARGET)", "kernel-x11gfx-kobj")
     KHIDDS += x11gfx
 endif
+ifeq ("$(X11_HIDD_TARGET)", "kernel-hidd-androidgfx-kobj")
+    KHIDDS += androidgfx
+endif
 
 %link_kickstart mmake=kernel-link-unix file=$(BINDIR)/boot/aros-bsp-$(BSP) \
-	handlers=$(KHNDLRS) hidds=$(KHIDDS) libs=$(KLIBS) res=$(KRSRCS) startup=$(KOBJSDIR)/kernel_resource.o \
+	devs=$(KDEVS) handlers=$(KHNDLRS) hidds=$(KHIDDS) libs=$(KLIBS) res=$(KRSRCS) startup=$(KOBJSDIR)/kernel_resource.o \
 	uselibs="arossupport hiddgraphicsstubs hiddstubs amiga autoinit libinit rom m"
 
 %common

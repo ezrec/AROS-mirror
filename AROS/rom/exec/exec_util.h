@@ -34,23 +34,26 @@
 #define FP a[6]
 #else
 #define FP a[5]
+#define CALLER_FRAME NULL
 #endif
 #endif
 #ifdef __powerpc__
 #define PC ip
 #define FP gpr[1]
 #endif
-#ifdef __ppc__
-#define PC ip
-#define FP gpr[1]
-#endif
 #ifdef __arm__
 #define PC pc
-#define FP lr
+#define FP r[11]
+/* __builtin_frame_address(1) returns LR value. Perhaps not AAPCS-compatible. */
+#define CALLER_FRAME ({void * _fp; asm volatile("ldr %0, [%%fp, #-4]":"=r"(_fp)); _fp;})
 #endif
 
 #ifndef PC
 #error unsupported CPU type
+#endif
+
+#ifndef CALLER_FRAME
+#define CALLER_FRAME __builtin_frame_address(1)
 #endif
 
 #ifndef EXEC_TASKS_H
@@ -63,45 +66,68 @@ struct List;
 struct IntETask;
 #endif
 
+struct TraceLocation
+{
+    const char *function;
+    APTR	caller;
+    APTR	stack;
+};
+
+#define CURRENT_LOCATION(name) {name, __builtin_return_address(0), CALLER_FRAME}
+
 /*
     Prototypes
 */
-APTR Exec_AllocTaskMem (struct Task * task, ULONG size, ULONG flags, struct ExecBase *SysBase);
-void Exec_FreeTaskMem (struct Task * task, APTR mem, struct ExecBase *SysBase);
-
-void Exec_InitETask(struct Task *task, struct ETask *etask, struct ExecBase *SysBase);
-void Exec_CleanupETask(struct Task *task, struct ETask *et, struct ExecBase *SysBase);
-struct Task *Exec_FindTaskByID(ULONG id, struct ExecBase *SysBase);
+BOOL Exec_InitETask(struct Task *task, struct ExecBase *SysBase);
+void Exec_CleanupETask(struct Task *task, struct ExecBase *SysBase);
+void Exec_ExpungeETask(struct ETask *et, struct ExecBase *SysBase);
+BOOL Exec_ExpandTS(struct Task *task, struct ExecBase *SysBase);
 struct ETask *Exec_FindChild(ULONG id, struct ExecBase *SysBase);
 struct IntETask *FindETask(struct List *, ULONG id, struct ExecBase *SysBase);
 
+BOOL Exec_CheckTask(struct Task *task, struct ExecBase *SysBase);
+
 STRPTR Alert_AddString(STRPTR dest, CONST_STRPTR src);
 STRPTR Alert_GetTitle(ULONG alertNum);
-STRPTR Alert_GetTaskName(struct Task *task);
 STRPTR Alert_GetString(ULONG alertnum, STRPTR buf);
-STRPTR FormatAlert(char *buffer, ULONG alertNum, struct Task *task, struct ExecBase *SysBase);
+STRPTR FormatAlert(char *buffer, ULONG alertNum, struct Task *task, APTR location, UBYTE type, struct ExecBase *SysBase);
+STRPTR FormatTask(STRPTR buffer, const char *text, struct Task *, struct ExecBase *SysBase);
+STRPTR FormatLocation(STRPTR buf, const char *text, APTR location, struct ExecBase *SysBase);
 
-void FormatAlertExtra(char *buffer, struct Task *task, struct ExecBase *SysBase);
+void FormatAlertExtra(char *buffer, APTR stack, UBYTE type, APTR data, struct ExecBase *SysBase);
 char *FormatCPUContext(char *buffer, struct ExceptionContext *ctx, struct ExecBase *SysBase);
 APTR UnwindFrame(APTR fp, APTR *caller);
 
-VOID Exec_CrashHandler(void);
+void Exec_ExtAlert(ULONG alertNum, APTR location, APTR stack, UBYTE type, APTR data, struct ExecBase *SysBase);
 ULONG Exec_UserAlert(ULONG alertNum, struct ExecBase *SysBase);
-void Exec_SystemAlert(ULONG alertNum, struct ExecBase *SysBase);
+void Exec_SystemAlert(ULONG alertNum, APTR location, APTR stack, UBYTE type, APTR data, struct ExecBase *SysBase);
 void Exec_DoResetCallbacks(struct IntExecBase *SysBase);
 
 APTR InternalRawDoFmt(CONST_STRPTR FormatString, APTR DataStream, VOID_FUNC PutChProc,
 		      APTR PutChData, va_list VaListStream);
 
-/*
- *  Pseudo-functions, including SysBase for nicer calling...
- */
-#define AllocTaskMem(t,s,f) Exec_AllocTaskMem(t,s,f,SysBase)
-#define FreeTaskMem(t,m)    Exec_FreeTaskMem(t,m,SysBase)
-#define FindTaskByID(i)	    Exec_FindTaskByID(i,SysBase)
+IPTR *InternalFindResident(const UBYTE *name, IPTR *list);
+
+void FastPutMsg(struct MsgPort *port, struct Message *message, struct ExecBase *SysBase);
+void InternalPutMsg(struct MsgPort *port, struct Message *message, struct ExecBase *SysBase);
+
+LONG AllocTaskSignal(struct Task *ThisTask, LONG signalNum, struct ExecBase *SysBase);
+
+static inline void InitMsgPort(struct MsgPort *ret)
+{
+    /* Set port to type 'signalling' */
+    ret->mp_Flags = PA_SIGNAL;
+    /* Set port to type MsgPort */
+    ret->mp_Node.ln_Type = NT_MSGPORT;
+    /* Clear the list of messages */
+    NEWLIST(&ret->mp_MsgList);
+}
+
+/* Pseudo-functions, including SysBase for nicer calling */
 #define FindChild(i)	    Exec_FindChild(i,SysBase)
 #define FindETask(l,i)	    Exec_FindETask(l,i,SysBase)
-#define InitETask(t,e)	    Exec_InitETask(t,e,SysBase)
-#define CleanupETask(t,e)   Exec_CleanupETask(t,e,SysBase)
+#define InitETask(t)	    Exec_InitETask(t,SysBase)
+#define CleanupETask(t)     Exec_CleanupETask(t,SysBase)
+#define ExpungeETask(e)	    Exec_ExpungeETask(e,SysBase)
 
 #endif /* _EXEC_UTIL_H */

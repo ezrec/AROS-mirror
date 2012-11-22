@@ -1,104 +1,52 @@
 # $Id$
 include $(TOP)/config/make.cfg
 
-USER_INCLUDES	:= -I$(GENINCDIR)
-
-#
-# Rules to create AROS for pc-i386
-#
-
-#MM- AROS-pc-i386 : general-setup-pc-i386 kernel-pc-i386 software-pc-i386
-
-#MM- software-pc-i386 : general-setup binary-pc-i386 \
-#MM	    workbench-pc-i386 demos
-
-#MM- workbench-pc-i386 : workbench-complete workbench
-
-#MM- AROS-complete-pc-i386 : general-setup-pc-i386 kernel-pc-i386 software-pc-i386 contrib
-
-#MM- general-setup-pc-i386: setup-pc-i386 includes compiler
-
-#
-# Kernel modules
-#
-
-#MM- kernel-pc-i386 : general-setup-pc-i386
-
-#MM- kernel-pc-i386 : \
-#MM	kernel-kernel-kobj \
-#MM	kernel-bootloader-pc-i386-kobj \
-#MM	kernel-isapnp-kobj \
-#MM     kernel-partition-kobj \
-#MM     kernel-fs-afs-kobj \
-#MM	kernel-pc-i386-drivers \
-#MM     kernel-workbench-devs-pc-i386 \
-#MM     kernel-usb-pc-i386 \
-#MM     kernel-processor-kobj
-
-#MM- kernel-workbench-devs-pc-i386 : workbench-devs-pc-i386
-
 #MM- includes-pc-i386 : includes-common-i386 includes-copy-pc-i386 includes-copy
 
-USELIBS	:= hiddgraphicsstubs hiddstubs amiga arossupport rom arosm autoinit libinit
-LIBS    := $(addprefix -l,$(USELIBS))
-DEPLIBS := $(addprefix $(LIBDIR)/lib,$(addsuffix .a,$(USELIBS)))
+#
+# Rules to create kickstart packages for pc-i386
+#
 
-KRSRCS  := battclock bootloader dosboot processor
-KLIBS   := boot aros dos graphics utility intuition keymap \
-      	   expansion oop layers partition
-KDEVS   := timer input keyboard console gameport ata ahci trackdisk
-KHNDLRS := con nil packet amberram cdrom afs sfs
-KHIDDS  := hiddclass serial keyboard mouse graphics kbd ps2mouse vesagfx vgah pci pcipc
-KUSB    := poseidon_library.o hub_class.o hid_class.o massstorage_class.o pciusb_device.o usbromstartup_resource.o
+#MM- kernel-link-pc-i386 :	\
+#MM	kernel-bsp-pc-i386-gz	\
+#MM	kernel-package-base-gz	\
+#MM	kernel-package-usb-gz	\
+#MM	kernel-package-fs-gz
+
+#
+# Board support package
+#
+
+#MM- kernel-bsp-pc-i386 :		\
+#MM     kernel-bsp-objs			\
+#MM	kernel-pc-acpi-kobj		\
+#MM	kernel-pc-hpet-kobj		\
+#MM	kernel-ata-kobj 		\
+#MM	kernel-ahci-kobj 		\
+#MM	kernel-oop-kobj 		\
+#MM	kernel-utility-kobj 		\
+#MM	kernel-isapnp-kobj 		\
+#MM	kernel-debug-kobj 		\
+#MM	kernel-pc-i386-drivers 		\
+#MM     kernel-hidd-pci-kobj		\
+#MM     kernel-hidd-vesa-kobj 		\
+#MM     kernel-hidd-vga-kobj		\
+#MM     kernel-workbench-devs-pc-i386
+
+EXEDIR  := $(BINDIR)/boot
+USELIBS	:= hiddstubs hiddgraphicsstubs bootconsole amiga arossupport debug arosm autoinit libinit rom
+
+KRSRCS  := acpi battclock hpet processor
+KLIBS   := exec expansion oop utility debug
+KDEVS   := timer ahci ata trackdisk
+KHIDDS  := kbd ps2mouse vesagfx vgah pci pcipc irq
 ##Disabled RSRC cpu isapnp
 
-KOBJS := $(addprefix $(KOBJSDIR)/,$(addsuffix _resource.o,$(KRSRCS) )) \
-         $(addprefix $(KOBJSDIR)/,$(addsuffix _library.o ,$(KLIBS)  )) \
-         $(addprefix $(KOBJSDIR)/,$(addsuffix _device.o  ,$(KDEVS)  )) \
-         $(addprefix $(KOBJSDIR)/,$(addsuffix _handler.o ,$(KHNDLRS))) \
-         $(addprefix $(KOBJSDIR)/,$(addsuffix _hidd.o    ,$(KHIDDS) )) \
-         $(addprefix $(KOBJSDIR)/,$(addsuffix _driver.o  ,$(KDRVRS) ))
+USER_LDFLAGS := -L$(GENDIR)/lib
 
-KOBJS_USB := $(addprefix $(KOBJSDIR)/,$(KUSB) )
+%link_kickstart mmake=kernel-bsp-pc-i386 file=$(EXEDIR)/aros-bsp-pc-i386 \
+	devs=$(KDEVS) hidds=$(KHIDDS) libs=$(KLIBS) res=$(KRSRCS) \
+	startup=$(KOBJSDIR)/kernel_resource.o \
+	uselibs=$(USELIBS) map=$(GENDIR)/boot/kernel-i386-pc.map
 
-#MM
-kernel-setup-pc-i386 :
-	%mkdirs_q $(OSGENDIR)/boot
-	%mkdirs_q $(BINDIR)/boot
-	%mkdirs_q $(BINDIR)/boot/grub
-
-#MM kernel-link-pc-i386 : kernel-setup-pc-i386 kernel-pc-i386
-kernel-link-pc-i386 : $(BINDIR)/boot/aros-kernel-pc-i386.gz $(BINDIR)/boot/aros-usb-pc-i386.gz
-
-#MM
-kernel-link-pc-i386-quick : $(BINDIR)/boot/aros-kernel-pc-i386.gz $(BINDIR)/boot/aros-usb-pc-i386.gz
-
-#MM kernel-package-pc-i386 : kernel-link-pc-i386
-kernel-package-pc-i386 : $(BINDIR)/boot/aros-kernel-pc-i386.gz $(BINDIR)/boot/aros-usb-pc-i386.gz
-
-$(BINDIR)/boot/aros-kernel-pc-i386 : $(KOBJS) $(DEPLIBS)
-	@$(TARGET_CC) $(CFLAGS) -Wl,-N \
-	    $(GENMAP) $(OSGENDIR)/boot/aros.map -T $(SRCDIR)/$(CURDIR)/kernel.lds -o $@ $(KOBJS) \
-	    -static $(NOSTARTUP_LDFLAGS) -L$(LIBDIR) $(LIBS)
-	@$(TARGET_STRIP) --strip-unneeded -R .note -R .comment \
-	    -R .note.gnu.build-id $@
-
-$(BINDIR)/boot/aros-usb-pc-i386 : $(KOBJS_USB) $(DEPLIBS)
-	@$(TARGET_CC) $(CFLAGS) -Wl,-N \
-	    $(GENMAP) $(OSGENDIR)/boot/aros.map -T $(SRCDIR)/$(CURDIR)/kernel.lds -o $@ $(KOBJS_USB) \
-	    -static $(NOSTARTUP_LDFLAGS) -L$(LIBDIR) $(LIBS)
-	@$(TARGET_STRIP) --strip-unneeded -R .note -R .comment \
-	    -R .note.gnu.build-id $@
-
-$(BINDIR)/boot/aros-kernel-pc-i386.gz : $(BINDIR)/boot/aros-kernel-pc-i386
-	@gzip -9 -f $^
-
-$(BINDIR)/boot/aros-usb-pc-i386.gz : $(BINDIR)/boot/aros-usb-pc-i386
-	@gzip -9 -f $^
-
-#MM
-clean ::
-	-$(RM) $(TESTS)
-
-# %include_deps
 %common

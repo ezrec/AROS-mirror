@@ -1,0 +1,13 @@
+# $Id$
+include $(TOP)/config/make.cfg
+
+FILES := coldreboot supervisor shutdowna
+
+# From kernel.resource we need only kernel_syscalls.h
+USER_INCLUDES := $(PRIV_EXEC_INCLUDES) -I$(SRCDIR)/rom/kernel
+
+%build_archspecific \
+  mainmmake=kernel-exec maindir=rom/exec arch=pc \
+  files=$(FILES) modulename=exec
+
+%common

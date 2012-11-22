@@ -11,6 +11,9 @@ extern unsigned int  scr_Height;	/* Display height in characters */
  */
 extern char *fb_Mirror;
 
+extern unsigned short Serial_Base;
+extern void *IO_Base;
+
 /* Current screen type */
 enum scr_type
 {
@@ -23,6 +26,7 @@ extern unsigned char scr_Type;
 
 /* Common initialization */
 void con_InitMultiboot(struct multiboot *mb);
+void con_InitMultiboot2(void *mb);
 void con_InitTagList(const struct TagItem *tags);
 void con_InitVESA(unsigned short version, struct vbe_mode *mode);
 void con_InitVGA(void);

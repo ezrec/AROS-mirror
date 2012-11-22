@@ -53,13 +53,13 @@
 #define DEBUG_InitSemaphore 0
 #define DEBUG_InitStruct 0
 #define DEBUG_Insert 0
+#define DEBUG_NewAllocEntry 0
 #define DEBUG_ObtainQuickVector 0
 #define DEBUG_ObtainSemaphore 0
 #define DEBUG_ObtainSemaphoreList 0
 #define DEBUG_ObtainSemaphoreShared 0
 #define DEBUG_OldOpenLibrary 0
 #define DEBUG_OpenDevice 0
-#define DEBUG_OpenLibrary 0
 #define DEBUG_OpenResource 0
 #define DEBUG_PrepareContext 0
 #define DEBUG_Procure 0
@@ -115,5 +115,6 @@ void VLog(struct ExecBase *SysBase, ULONG flags, const char * const *FlagNames, 
 #define DADDTASK(...)		ExecLog(SysBase, EXECDEBUGF_ADDTASK, __VA_ARGS__)
 #define DREMTASK(...)		ExecLog(SysBase, EXECDEBUGF_REMTASK, __VA_ARGS__)
 #define DINIT(...)		ExecLog(SysBase, EXECDEBUGF_INIT, __VA_ARGS__)
+#define DRAMLIB(...)		ExecLog(SysBase, EXECDEBUGF_RAMLIB, __VA_ARGS__)
 
 #endif /* _EXEC_DEBUG_H_ */

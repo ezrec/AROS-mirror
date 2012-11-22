@@ -1,3 +1,6 @@
+#ifndef __EXEC_PLATFORM_H
+#define __EXEC_PLATFORM_H
+
 #ifdef HOST_OS_android
 /* Android is not a true Linux ;-) */
 #undef HOST_OS_linux
@@ -36,8 +39,8 @@ struct Exec_PlatformData
 {
     APTR HostLibBase;
     struct LibCInterface *SysIFace;
-    void (*Reboot)(unsigned char warm);
-    void (*DisplayAlert)(char *text);	/* Currently used only on iOS and Android */
 };
 
 #define HostLibBase PD(SysBase).HostLibBase
+
+#endif /* __EXEC_PLATFORM_H */

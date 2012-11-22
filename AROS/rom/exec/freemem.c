@@ -5,6 +5,7 @@
     Desc: Free memory allocated by AllocMem()
     Lang: english
 */
+
 #include <exec/alerts.h>
 #include <exec/execbase.h>
 #include <aros/libcall.h>
@@ -15,19 +16,8 @@
 #include <exec/memheaderext.h>
 #include <proto/exec.h>
 
-#include "exec_debug.h"
-
-#ifndef DEBUG_FreeMem
-#   define DEBUG_FreeMem 0
-#endif
-#undef DEBUG
-#if DEBUG_FreeMem
-#   define DEBUG 1
-#endif
-
-#include <stdlib.h>
-
 #include "exec_intern.h"
+#include "exec_util.h"
 #include "memory.h"
 #include "mungwall.h"
 
@@ -70,6 +60,8 @@
 {
     AROS_LIBFUNC_INIT
 
+    struct TraceLocation tp = CURRENT_LOCATION("FreeMem");
+
     D(bug("Call FreeMem (%08lx, %ld)\n", memoryBlock, byteSize));
 
     /* If there is no memory free nothing */
@@ -78,12 +70,12 @@
 
     RT_Free (RTT_MEMORY, memoryBlock, byteSize);
 
-    memoryBlock = MungWall_Check(memoryBlock, byteSize, SysBase);
+    memoryBlock = MungWall_Check(memoryBlock, byteSize, &tp, SysBase);
 
     if (PrivExecBase(SysBase)->IntFlags & EXECF_MungWall)
         byteSize += MUNGWALL_TOTAL_SIZE;
 
-    InternalFreeMem(memoryBlock, byteSize, SysBase);
+    InternalFreeMem(memoryBlock, byteSize, &tp, SysBase);
 
     ReturnVoid ("FreeMem");
 

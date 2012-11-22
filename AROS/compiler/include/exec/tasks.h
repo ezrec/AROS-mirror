@@ -63,26 +63,23 @@ struct Task
 
 /* Macros */
 #define GetTrapAlloc(t) \
-	((((struct Task *)t)->tc_Flags & TF_ETASK) ? \
-	    ((struct ETask *)(((struct Task *)t)->tc_UnionETask.tc_ETask))-> \
-		et_TrapAlloc : \
-	    ((struct Task *)t)->tc_UnionETask.tc_ETrap.tc_ETrapAlloc)
+	({struct Task *_t = (struct Task *)t;\
+	  (_t->tc_Flags & TF_ETASK) ? _t->tc_UnionETask.tc_ETask->et_TrapAlloc : \
+	  _t->tc_UnionETask.tc_ETrap.tc_ETrapAlloc; \
+	 })
 #define GetTrapAble(t) \
-	((((struct Task *)t)->tc_Flags & TF_ETASK) ? \
-	    ((struct ETask *)(((struct Task *)t)->tc_UnionETask.tc_ETask))-> \
-		et_TrapAble : \
-	    ((struct Task *)t)->tc_UnionETask.tc_ETrap.tc_ETrapAble)
+	({struct Task *_t = (struct Task *)t;\
+	  (_t->tc_Flags & TF_ETASK) ? _t->tc_UnionETask.tc_ETask->et_TrapAble : \
+	  _t->tc_UnionETask.tc_ETrap.tc_ETrapAble;\
+	 })
 #define GetETask(t) \
-	((((struct Task *)t)->tc_Flags & TF_ETASK) ? \
-	    ((struct ETask *)(((struct Task *)t)->tc_UnionETask.tc_ETask)) \
-	    : NULL \
-	)
+	({struct Task *_t = (struct Task *)t;\
+	   (_t->tc_Flags & TF_ETASK) ? _t->tc_UnionETask.tc_ETask : NULL; \
+         })
 #define GetETaskID(t) \
-	(   (((struct Task *)(t))->tc_Flags & TF_ETASK) \
-	    ? (((struct ETask *) \
-		(((struct Task *)(t))->tc_UnionETask.tc_ETask))->et_UniqueID) \
-	    : 0UL \
-	)
+	({struct Task *_t = (struct Task *)t;\
+	  (_t->tc_Flags & TF_ETASK) ? _t->tc_UnionETask.tc_ETask->et_UniqueID: 0UL; \
+         })
 
 
 /* Stack swap structure as passed to StackSwap() */
@@ -146,15 +143,18 @@ struct StackSwapArgs
 
 struct ETask
 {
-    struct Message Message;
-    struct Task *  Parent;	    /* Pointer to task */
-    ULONG	   UniqueID;
-    struct MinList Children;     /* List of children */
-    UWORD	   TrapAlloc;
-    UWORD	   TrapAble;
-    ULONG	   Result1;	    /* First result */
-    APTR	   Result2;	    /* Result data pointer (AllocVec) */
-    struct MsgPort MsgPort;
+    struct Message  Message;
+    struct Task    *Parent;	  /* Pointer to task */
+    ULONG	    UniqueID;
+    struct MinList  Children;     /* List of children */
+    UWORD	    TrapAlloc;
+    UWORD	    TrapAble;
+    ULONG	    Result1;	  /* First result */
+    APTR	    Result2;	  /* Result data pointer (AllocVec) */
+    struct MsgPort  MsgPort;
+    void           *MemPool;
+    void	   *Reserved[2];
+    void	   *RegFrame;
 
     /* Internal fields follow */
 };
@@ -164,16 +164,24 @@ struct ETask
 /* Extended Task structure */
 struct ETask
 {
-    struct Message et_Message;
-    APTR	   et_Parent;	    /* Pointer to task */
-    ULONG	   et_UniqueID;
-    struct MinList et_Children;     /* List of children */
-    UWORD	   et_TrapAlloc;
-    UWORD	   et_TrapAble;
-    ULONG	   et_Result1;	    /* First result */
-    APTR	   et_Result2;	    /* Result data pointer (AllocVec) */
-    struct MsgPort et_TaskMsgPort;
-
+    struct Message  et_Message;
+    APTR	    et_Parent;	     /* Pointer to parent task		*/
+    ULONG	    et_UniqueID;
+    struct MinList  et_Children;     /* List of children		*/
+    UWORD	    et_TrapAlloc;
+    UWORD	    et_TrapAble;
+    ULONG	    et_Result1;	    /* First result			*/
+    APTR	    et_Result2;	    /* Result data pointer (AllocVec)	*/
+    struct MsgPort  et_TaskMsgPort;
+    APTR	    et_Compatibility[4]; /* Reserve this space for compiled software to access iet_startup and iet_acpd */
+    void	   *et_MemPool;	    /* Task's private memory pool	*/
+#ifdef __AROS__
+    IPTR	    et_Reserved[1]; /* MorphOS Private                  */
+    IPTR	   *et_TaskStorage; /* Task Storage Slots		*/
+#else
+    IPTR	    et_Reserved[2]; /* MorphOS Private                  */
+#endif
+    void	   *et_RegFrame;
     /* Internal fields follow */
 };
 

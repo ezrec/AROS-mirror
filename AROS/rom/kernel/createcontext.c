@@ -3,7 +3,7 @@
 
 #include <kernel_base.h>
 #include <kernel_cpu.h>
-#include <kernel_memory.h>
+#include <kernel_objects.h>
 
 /*****************************************************************************
 
@@ -46,7 +46,8 @@ AROS_LH0(void *, KrnCreateContext,
     struct AROSCPUContext *ctx;
     cpumode_t mode = goSuper();
 
-    ctx = krnAllocMem(KernelBase->kb_ContextSize);
+    /* Our context is accessible only in supervisor mode */
+    ctx = krnAllocCPUContext();
 
     /* Initialize the storage if needed */
 #ifdef PREPARE_INITIAL_CONTEXT

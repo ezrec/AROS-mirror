@@ -8,6 +8,7 @@ include $(TOP)/config/make.cfg
 #MM- kernel-aros-kobj : linklibs kernel-aros-create-abi-file
 
 #MM- kernel-aros-includes : \
+#MM-     kernel-kernel-includes \
 #MM-     kernel-exec-includes \
 #MM-     kernel-utility-includes \
 #MM-     includes-copy

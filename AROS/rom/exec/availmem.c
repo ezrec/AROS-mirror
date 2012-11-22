@@ -1,5 +1,5 @@
 /*
-    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: Tell how much memory is available.
@@ -15,6 +15,7 @@
 #include <proto/exec.h>
 
 #include "exec_intern.h"
+#include "exec_util.h"
 #include "memory.h"
 #include "mungwall.h"
 
@@ -66,13 +67,15 @@
     AROS_LIBFUNC_INIT
 
     ULONG ret;
+    struct TraceLocation tp = CURRENT_LOCATION("AvailMem");
 
     ret = nommu_AvailMem(attributes, SysBase);
 
     if (attributes & MEMF_CLEAR)
-	MungWall_Scan(NULL, SysBase);
+	MungWall_Scan(NULL, &tp, SysBase);
 
     return ret;
+
     AROS_LIBFUNC_EXIT
 } /* AvailMem */
 

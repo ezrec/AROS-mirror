@@ -26,10 +26,11 @@
 
 #include <proto/exec.h>
 #include <proto/oop.h>
+#include <proto/kernel.h>
 
 #include "irq.h"
 
-void global_server(int cpl, struct irq_staticdata *isd, struct pt_regs *);
+void global_server(int cpl, void *isd, struct pt_regs *);
 
 struct irqServer irq5_int   = { global_server, "IRQ5"	    , NULL};
 struct irqServer irq7_int   = { global_server, "IRQ7"	    , NULL};
@@ -53,11 +54,11 @@ void timer_interrupt(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw);
     here dummy handlers.
 *******************************************************************************/
 
-void no_action(int cpl, struct irq_staticdata *isd, struct pt_regs *regs)
+void no_action(int cpl, void *isd, struct pt_regs *regs)
 {
 }
 
-static void math_error_irq(int cpl, struct irq_staticdata *isd, struct pt_regs *regs)
+static void math_error_irq(int cpl, void *isd, struct pt_regs *regs)
 {
 	outb(0,0xF0);
 }
@@ -70,7 +71,21 @@ static struct irqServer irq13 = { math_error_irq, "fpu", NULL};
 
 static struct irqServer irq2  = { no_action, "cascade", NULL};
 
-void irqSet(int, struct irqServer *);
+static void handler_wrapper(void *data, void *data2)
+{
+    int irq = (int)(IPTR)data;
+    struct irqServer *server = data2;
+
+    server->is_handler(irq, server->is_UserData, NULL);
+}
+
+void irqSet(int irq, struct irqServer *server)
+{
+    struct Library *KernelBase = OpenResource("kernel.resource");
+    if (KernelBase) {
+        KrnAddIRQHandler(irq, handler_wrapper, (APTR)(IPTR)irq, server);
+    }
+}
 
 void init_Servers(struct irq_staticdata *isd)
 {
@@ -169,13 +184,14 @@ void timer_interrupt(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
     defined ids.
 *******************************************************************************/
 
-void global_server(int cpl, struct irq_staticdata *isd, struct pt_regs *regs)
+void global_server(int cpl, void *data, struct pt_regs *regs)
 {
-    HIDDT_IRQ_Id	id;
+    struct irq_staticdata *isd = data;
     HIDDT_IRQ_HwInfo	hwinfo;
     HIDDT_IRQ_Handler	*handler;
-    
 #if 0
+    HIDDT_IRQ_Id	id;
+
     switch (cpl)
     {
 	case 0:	/* Timer */

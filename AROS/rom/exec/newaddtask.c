@@ -16,6 +16,7 @@
 #include "etask.h"
 #include "exec_util.h"
 #include "exec_debug.h"
+#include "taskstorage.h"
 
 /*****************************************************************************
 
@@ -54,6 +55,8 @@
         happen with TF_ETASK set - currenty not implemented).
 
     NOTES
+        This function is private. Use MorphOS-compatible NewCreateTaskA()
+        in your applications.
 
     EXAMPLE
 
@@ -82,6 +85,8 @@
     if (!task->tc_MemEntry.lh_Head)
         NEWLIST(&task->tc_MemEntry);
 
+    DADDTASK("NewAddTask MemEntry head: 0x%p", GetHead(&task->tc_MemEntry.lh_Head));
+
     /* Set node type to NT_TASK if not set to something else. */
     if(!task->tc_Node.ln_Type)
         task->tc_Node.ln_Type=NT_TASK;
@@ -108,59 +113,43 @@
     if(task->tc_ExceptCode==NULL)
         task->tc_ExceptCode=SysBase->TaskExceptCode;
         
-    task->tc_Flags |= TF_ETASK;
-
     /*
-     *  We don't add this to the task memory, it isn't free'd by
-     *  RemTask(), rather by somebody else calling ChildFree().
-     *  Alternatively, an orphaned task will free its own ETask.
+     * EXECF_StackSnoop can be set or reset at runtime.
+     * However task's stack is either snooped or not, it's problematic
+     * to turn it on at runtime. So we initialize it when the task starts up.
      */
-    task->tc_UnionETask.tc_ETask = AllocVec
-    (
-        sizeof (struct IntETask),
-        MEMF_ANY|MEMF_CLEAR
-    );
+    if (PrivExecBase(SysBase)->IntFlags & EXECF_StackSnoop)
+        task->tc_Flags |= TF_STACKCHK;
 
-    if (!task->tc_UnionETask.tc_ETask)
+    /* Initialize ETask */
+    if (!InitETask(task))
         return NULL;
-
-    InitETask(task, task->tc_UnionETask.tc_ETask);
 
     /* Get new stackpointer. */
     if (task->tc_SPReg==NULL)
-#if AROS_STACK_GROWS_DOWNWARDS
         task->tc_SPReg = (UBYTE *)(task->tc_SPUpper) - SP_OFFSET;
-#else
-        task->tc_SPReg = (UBYTE *)(task->tc_SPLower) - SP_OFFSET;
-#endif
 
 #ifdef AROS_STACKALIGN
     if ((IPTR)task->tc_SPReg & (AROS_STACKALIGN - 1))
     {
         DADDTASK("NewAddTask with unaligned stack pointer (0x%p)! Fixing...", task->tc_SPReg);
-    	task->tc_SPReg = (APTR)((IPTR)task->tc_SPReg & ~(AROS_STACKALIGN - 1));
+        task->tc_SPReg = (APTR)((IPTR)task->tc_SPReg & ~(AROS_STACKALIGN - 1));
     }
 #endif
     DADDTASK("NewAddTask: SPLower: 0x%p SPUpper: 0x%p SP: 0x%p", task->tc_SPLower, task->tc_SPUpper, task->tc_SPReg);
 
-#if AROS_STACK_DEBUG
+    if (task->tc_Flags & TF_STACKCHK)
     {
         UBYTE *startfill, *endfill;
 
-#if AROS_STACK_GROWS_DOWNWARDS
         startfill = (UBYTE *)task->tc_SPLower;
         endfill   = ((UBYTE *)task->tc_SPReg) - 16;
-#else
-        startfill = ((UBYTE *)task->tc_SPReg) + 16;
-        endfill   = ((UBYTE *)task->tc_SPUpper) - 1; /* FIXME: -1 correct ?? */
-#endif
 
         while(startfill <= endfill)
         {
             *startfill++ = 0xE1;
         }
     }
-#endif
 
     /* Default finalizer? */
     if(finalPC==NULL)
@@ -169,7 +158,7 @@
     /* Init new context. */
     if (!PrepareContext (task, initialPC, finalPC, tagList))
     {
-        FreeTaskMem (task, task->tc_UnionETask.tc_ETask);
+        CleanupETask(task);
         return NULL;
     }
 
@@ -198,18 +187,13 @@
         is already gone.
     */
 
-    if(task->tc_Node.ln_Pri>SysBase->ThisTask->tc_Node.ln_Pri&&
-       SysBase->ThisTask->tc_State==TS_RUN)
+    if (task->tc_Node.ln_Pri > SysBase->ThisTask->tc_Node.ln_Pri &&
+       SysBase->ThisTask->tc_State == TS_RUN)
     {
-        /* Are taskswitches allowed? (Don't count own Disable() here) */
-        if(SysBase->TDNestCnt>=0||SysBase->IDNestCnt>0)
-            /* No. Store it for later. */
-            SysBase->AttnResched|=0x80;
-        else
-        {
-            /* Force a reschedule. */
-            Reschedule(task);
-        }
+        D(bug("[AddTask] Rescheduling...\n"));
+
+        /* Reschedule() will take care about disabled task switching automatically */
+        Reschedule(NULL);
     }
 
     Enable();

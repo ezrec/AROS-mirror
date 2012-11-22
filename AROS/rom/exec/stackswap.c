@@ -47,12 +47,21 @@
 	Returning from the function that you call StackSwap() in can have
 	unexpected results.
 
+        Use of StackSwap() is deprecated on AROS; NewStackSwap() should
+        be used instead. StackSwap() is only retained to provide backwards
+        compatibility. On some hosted versions with strict stack checking use
+        of StackSwap() may cause problems.
+        By default StackSwap() will not be defined and you have to
+        #define __AROS_GIMME_DEPRECATED_STACKSWAP__ before including
+        <proto/exec.h>. As said above it is highly advised to change code
+        to use NewStackSwap() and not define __AROS_GIMME_DEPRECATED_STACKSWAP__
+
     EXAMPLE
 
     BUGS
 
     SEE ALSO
-	AddTask(), RemTask()
+	AddTask(), RemTask(), NewStackSwap()
 
     INTERNALS
 	This function MUST be replaced in $(KERNEL) or $(ARCH).

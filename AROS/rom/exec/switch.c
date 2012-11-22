@@ -1,47 +1,59 @@
 /*
-    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
     $Id$
 
-    Desc: Switch() - Switch to the next available task.
+    Desc: 
     Lang: english
 */
 
+#include <exec/types.h>
 #include <exec/execbase.h>
+#include <aros/libcall.h>
+#include <aros/atomic.h>
+#include <proto/kernel.h>
+
+#include "exec_intern.h"
 
 /*****************************************************************************
 
     NAME */
 #include <proto/exec.h>
 
-	AROS_LH0(void, Switch,
+        AROS_LH0(void, Switch,
+
+/*  SYNOPSIS */
 
 /*  LOCATION */
-	struct ExecBase *, SysBase, 9, Exec)
+        struct ExecBase *, SysBase, 9, Exec)
 
 /*  FUNCTION
-	This function is obsolete and subject to removal.
-	On AmigaOS(tm) this was a private function.
+        PRIVATE function to force a task switch to the next runnable task
 
     INPUTS
+        None
 
     RESULT
+        None
 
     NOTES
-	This function is still there because i386-native port
-	still uses it.
+        This function was private in AmigaOS(tm) up to v3.1.
+        There's no guarantee that it will continue to exist in other systems.
 
     EXAMPLE
 
     BUGS
 
     SEE ALSO
-	Dispatch(), Reschedule()
 
     INTERNALS
+
+    HISTORY
 
 ******************************************************************************/
 {
     AROS_LIBFUNC_INIT
 
+    AROS_FUNCTION_NOT_IMPLEMENTED("Exec");
+
     AROS_LIBFUNC_EXIT
-} /* Switch() */
+} /* Switch */

@@ -1,17 +1,16 @@
 /*
-    Copyright © 1995-2001, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: Start the internal debugger.
     Lang: english
 */
+
 #include <string.h>
 #include "exec_intern.h"
 #include <proto/exec.h>
 #include <exec/types.h>
-#include <asm/ptrace.h>
 #include <asm/speaker.h>
-#include "etask.h"
 
 /****************************************************************************************/
 
@@ -163,10 +162,10 @@ int	get_irq_list(char *buf);
 			    t->tc_Flags,
 			    t->tc_SPReg);				
 	}
-	else if (strcmp(comm,"RI") == 0)
+/*	else if (strcmp(comm,"RI") == 0)
 	{
-	    struct pt_regs *r = (struct pt_regs *)
-			    GetIntETask(SysBase->ThisTask)->iet_Context;
+
+	    struct pt_regs *r = (struct pt_regs *)SysBase->ThisTask->tc_UnionETask.tc_ETask->et_RegFrame;
 
 	    kprintf("Active task's registers dump:\n"
 			    "EAX=%p  ECX=%p  EDX=%p  EIP=%p\n"
@@ -174,8 +173,8 @@ int	get_irq_list(char *buf);
 			    "SS=%04.4lx  EFLAGS=%p\n",
 			    r->eax, r->ecx, r->edx,
 			    r->eip, r->xcs, r->xds, r->xes,
-			    r->xss, r->eflags);				
-	}
+			    r->xss, r->eflags);
+	} */
 	/* Enable command */
 	else if (strcmp(comm, "EN") == 0)
 	    Enable();
@@ -194,7 +193,7 @@ int	get_irq_list(char *buf);
 	}
 	else if (strcmp(comm, "SI") == 0)
 	{
-	    char buf[512];
+//	    char buf[512];
 	    
 	    kprintf("Available interrupts:\n");
 	    
@@ -373,31 +372,39 @@ int	get_irq_list(char *buf);
 	}
 	else if (strcmp(comm, "BE") == 0)
 	{
-            ULONG i, dummy;
+            ULONG i;
+#define DELAY_1USEC()   inb(0x80)
 
 	    kprintf("Beeping...\n");
 
             SetSpkFreq (400);
             SpkOn();
-            for (i = 0; i < 100000000; dummy = i * i, i++);
+            for (i = 0; i < 2000000; i++)
+                DELAY_1USEC();
             SpkOff();
-            for (i = 0; i< 50000000; dummy = i * i, i++);
+            for (i = 0; i < 1000000; i++)
+                DELAY_1USEC();
 
             SetSpkFreq (500);
             SpkOn();
-            for (i = 0; i < 100000000; dummy = i * i, i++);
+            for (i = 0; i < 2000000; i++)
+                DELAY_1USEC();
             SpkOff();
-            for (i = 0; i < 50000000; dummy = i * i, i++);
+            for (i = 0; i < 1000000; i++)
+                DELAY_1USEC();
 
             SetSpkFreq (592);
             SpkOn();
-            for (i=0; i<100000000; dummy = i * i, i++);
+            for (i = 0; i < 2000000; i++)
+                DELAY_1USEC();
             SpkOff();
-            for (i=0; i< 50000000; dummy = i * i, i++);
+            for (i = 0; i < 1000000; i++)
+                DELAY_1USEC();
 
             SetSpkFreq (788);
             SpkOn();
-            for (i = 0; i < 300000000; dummy = i * i, i++);
+            for (i = 0; i < 2000000; i++)
+                DELAY_1USEC();
             SpkOff();
 
 	}

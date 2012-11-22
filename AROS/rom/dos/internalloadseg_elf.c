@@ -19,7 +19,8 @@
 #include <dos/dosasl.h>
 #include <proto/dos.h>
 #include <proto/arossupport.h>
-#include <proto/kernel.h>
+#include <proto/debug.h>
+#include <libraries/debug.h>
 #include <aros/asmcall.h>
 #include "internalloadseg.h"
 #include "dos_intern.h"
@@ -141,27 +142,30 @@ static ULONG read_shnum(BPTR file, struct elfheader *eh, SIPTR *funcarray, struc
 
 static void register_elf(BPTR file, BPTR hunks, struct elfheader *eh, struct sheader *sh, struct DosLibrary *DOSBase)
 {
-#ifdef KrnRegisterModule
-    if (KernelBase)
+    if (DebugBase)
     {
-	char buffer[512];
+        char *buffer = AllocMem(512, MEMF_ANY);
 
-	if (NameFromFH(file, buffer, sizeof(buffer))) {
-	    char *nameptr = buffer;
-	    struct ELF_DebugInfo dbg = {eh, sh};
+        if (buffer)
+        {
+            if (NameFromFH(file, buffer, 512))
+            {
+                char *nameptr = buffer;
+                struct ELF_DebugInfo dbg = {eh, sh};
 
-/* gdb support needs full paths */
+    /* gdb support needs full paths */
 #if !AROS_MODULES_DEBUG
-	    /* First, go through the name, till end of the string */
-	    while(*nameptr++);
-	    /* Now, go back until either ":" or "/" is found */
-	    while(nameptr > buffer && nameptr[-1] != ':' && nameptr[-1] != '/')
-    		nameptr--;
+                /* First, go through the name, till end of the string */
+                while(*nameptr++);
+                /* Now, go back until either ":" or "/" is found */
+                while(nameptr > buffer && nameptr[-1] != ':' && nameptr[-1] != '/')
+                    nameptr--;
 #endif
-    	   KrnRegisterModule(nameptr, hunks, DEBUG_ELF, &dbg);
-	}
+                RegisterModule(nameptr, hunks, DEBUG_ELF, &dbg);
+            }
+            FreeMem(buffer, 512);
+        }
     }
-#endif
 }
 
 static int load_header(BPTR file, struct elfheader *eh, SIPTR *funcarray, struct DosLibrary *DOSBase) {

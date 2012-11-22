@@ -5,9 +5,7 @@ include $(TOP)/config/make.cfg
 
 #MM bootdisk-pc-i386 : AROS		\
 #MM			bootdisk-setup-pc-i386 \
-#MM			kernel-pc-i386 \
 #MM			kernel-package-pc-i386		\
-#MM			kernel-bootstrap-i386 \
 #MM			bootloader-$(AROS_TARGET_BOOTLOADER)-$(AROS_TARGET_ARCH)-$(AROS_TARGET_CPU)
 
 #MM systemdisk-pc-i386 : AROS		\
@@ -15,7 +13,7 @@ include $(TOP)/config/make.cfg
 #MM			bootloader-$(AROS_TARGET_BOOTLOADER)-$(AROS_TARGET_ARCH)-$(AROS_TARGET_CPU)
 
 SYSTEM_FILES := \
-    C/Shell \
+    C/NewShell \
     C/Unpack \
     Libs/locale.library \
     Libs/iffparse.library \
@@ -51,7 +49,7 @@ BOOT_TAR_EXECUTABLES := \
     Classes/Zune/PrefsEditor.mcc Classes/Zune/SystemPrefsWindow.mcc \
     Devs/clipboard.device \
     Devs/serial.device \
-    Devs/pipefs.handler \
+    L/pipe-handler \
     Libs/arosc.library Libs/asl.library Libs/commodities.library \
     Libs/cybergraphics.library \
     Libs/datatypes.library Libs/diskfont.library Libs/gadtools.library \
@@ -93,7 +91,7 @@ BOOT_TAR_ICONS := \
 
 BOOT_TAR_MISC := \
     Devs/DataTypes/ELF Devs/DataTypes/ELF_EXE Devs/DataTypes/ILBM \
-    Devs/DataTypes/FTXT Devs/DOSDrivers/PIPEFS \
+    Devs/DataTypes/FTXT Devs/DOSDrivers/PIPE \
     Devs/Keymaps Devs/Mountlist \
     Fonts/fixed/8 Fonts/arial/13 Fonts/ttcourier/14 \
     Locale/Countries Locale/Help \
@@ -166,7 +164,7 @@ bootdisk-pc-i386-quick : bootdisk-pc-i386
 systemdisk-pc-i386-quick : systemdisk-pc-i386
 
 $(DISTDIR)/aros-pc-i386.img: $(BOOT_DEST_FILES) $(BOOT_EXTRA_FILES) \
- $(BINDIR)/boot/aros-kernel-pc-i386.gz \
+ $(BINDIR)/boot/bootstrap-pc.gz \
  $(GENDIR)/$(CURDIR)/install-$(AROS_HOST_ARCH)-$(AROS_HOST_CPU)
 	@$(MKDIR) -p "$(DISTDIR)"
 	$(RM) $@

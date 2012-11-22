@@ -23,6 +23,12 @@ void krnCreateMemHeader(CONST_STRPTR name, BYTE pri, APTR start, IPTR size, ULON
     /* The MemHeader itself does not have to be aligned */
     struct MemHeader *mh = start;
 
+    /* If the end is less than (1 << 31), MEMF_31BIT is implied */
+    if (((IPTR)start+size) < (1UL << 31))
+        flags |= MEMF_31BIT;
+    else
+        flags &= ~MEMF_31BIT;
+
     mh->mh_Node.ln_Succ    = NULL;
     mh->mh_Node.ln_Pred    = NULL;
     mh->mh_Node.ln_Type    = NT_MEMORY;
@@ -45,15 +51,15 @@ void krnCreateMemHeader(CONST_STRPTR name, BYTE pri, APTR start, IPTR size, ULON
 
 /*
  * Create informational MemHeader for ROM region.
- * The header will be allocated inside another region, specified by 'ram' parameter.
+ * The header will be allocated from system's public memory lists.
  * It will be not possible to allocate memory from the created MemHeader.
  * The header will be added to the memory list.
  * This routine uses exec.library/Allocate() for memory allocation, so it is safe
  * to use before exec.library and kernel.resource memory management is initialized.
  */
-struct MemHeader *krnCreateROMHeader(struct MemHeader *ram, CONST_STRPTR name, APTR start, APTR end)
+struct MemHeader *krnCreateROMHeader(CONST_STRPTR name, APTR start, APTR end)
 {
-    struct MemHeader *mh = Allocate(ram, sizeof(struct MemHeader));
+    struct MemHeader *mh = AllocMem(sizeof(struct MemHeader), MEMF_ANY);
 
     if (mh)
     {

@@ -1,21 +1,20 @@
 /*
-    Copyright © 1995-2001, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: Remove an interrupt handler.
     Lang:
 */
-#include <aros/config.h>
+
 #include <exec/execbase.h>
 #include <exec/interrupts.h>
-
-#if (AROS_FLAVOUR & AROS_FLAVOUR_BINCOMPAT) && defined(mc68000)
-#include <hardware/custom.h>
 #include <hardware/intbits.h>
-#endif
-
 #include <proto/exec.h>
+#include <proto/kernel.h>
 #include <aros/libcall.h>
+
+#include "exec_intern.h"
+#include "chipset.h"
 
 /*****************************************************************************
 
@@ -49,24 +48,16 @@
 ******************************************************************************/
 {
     AROS_LIBFUNC_INIT
-#if (AROS_FLAVOUR & AROS_FLAVOUR_BINCOMPAT) && defined(mc68000)
-    struct List *list;
-    struct Custom *custom = (struct Custom *)(void **)0xdff000;
 
-    list = (struct List *)SysBase->IntVects[intNumber].iv_Data;
-#endif
+    if (intNumber >= INTB_KERNEL) {
+        KrnRemIRQHandler(interrupt->is_Node.ln_Succ);
+        return;
+    }
 
     Disable();
 
     Remove((struct Node *)interrupt);
-
-#if (AROS_FLAVOUR & AROS_FLAVOUR_BINCOMPAT) && defined(mc68000)
-    if(list->lh_TailPred == (struct Node *)list)
-    {
-	/* disable interrupts if there are no more nodes on the list */
-	custom->intena = (UWORD)((1<<intNumber));
-    }
-#endif
+    CUSTOM_DISABLE(intNumber, SysBase->IntVects[intNumber].iv_Data);
 
     Enable();
 

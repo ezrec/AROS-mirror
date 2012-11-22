@@ -5,6 +5,7 @@
     Desc: Copy aligned memory.
     Lang: english
 */
+#include <aros/debug.h>
 #include <aros/libcall.h>
 #include <exec/types.h>
 

@@ -1,0 +1,23 @@
+# $Id$
+include $(TOP)/config/make.cfg
+
+FUNCS	 := displayalert
+FILES    := apic apic_acpi apic_ia32 xtpic cpu_traps kernel_memory kernel_timer _displayalert
+ASMFILES := cli sti issuper
+
+MAINDIR	      := rom/kernel
+USER_INCLUDES  := $(PRIV_KERNEL_INCLUDES) $(PRIV_EXEC_INCLUDES) \
+		  -isystem $(SRCDIR)/arch/all-native/bootconsole/include
+
+#MM- kernel-kernel-pc : linklibs-bootconsole kernel-kernel-native
+#MM- kernel-kernel-pc-kobj : linklibs-bootconsole kernel-kernel-native
+#MM- kernel-kernel-pc-pkg : linklibs-bootconsole kernel-kernel-native
+#MM- kernel-kernel-pc-quick : kernel-kernel-native-quick
+#MM- kernel-kernel-pc-kobj-quick : kernel-kernel-native-quick
+#MM- kernel-kernel-pc-pkg-quick : kernel-kernel-native-quick
+
+%build_archspecific \
+  mainmmake=kernel-kernel maindir=$(MAINDIR) \
+  arch=pc files="$(FILES) $(FUNCS)" asmfiles=$(ASMFILES)
+
+%common

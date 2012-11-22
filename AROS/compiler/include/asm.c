@@ -120,6 +120,16 @@ int main(void) {
     DEFINE(lh_Head       , offsetof (struct List, lh_Head));
     DEFINE(lh_TailPred   , offsetof (struct List, lh_TailPred));
 
+     asm volatile("\n/* CPU context */" ::);
+#if defined(__x86_64__) || defined(__i386__)
+     DEFINE(ECF_SEGMENTS, ECF_SEGMENTS);
+
+     DEFINE(Flags , offsetof(struct ExceptionContext, Flags));
+     DEFINE(reg_ds, offsetof(struct ExceptionContext, ds));
+     DEFINE(reg_es, offsetof(struct ExceptionContext, es));
+     DEFINE(reg_fs, offsetof(struct ExceptionContext, fs));
+     DEFINE(reg_gs, offsetof(struct ExceptionContext, gs));
+#endif
 
 #ifdef UseExecstubs
     asm volatile("\n#define UseExecstubs 1" ::);

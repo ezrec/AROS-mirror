@@ -2,73 +2,83 @@
 #define _TIMER_INTERN_H
 
 /*
-    Copyright © 1995-2008, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: Internal information about the timer.device and HIDD's
     Lang: english
 */
 
-#ifndef EXEC_TYPES_H
-#include <exec/types.h>
-#endif
-#ifndef EXEC_LISTS_H
+#include <exec/execbase.h>
 #include <exec/lists.h>
-#endif
-#ifndef EXEC_INTERRUPTS_H
 #include <exec/interrupts.h>
-#endif
-#ifndef EXEC_IO_H
 #include <exec/io.h>
-#endif
-#ifndef EXEC_DEVICES_H
 #include <exec/devices.h>
-#endif
-#ifndef DEVICES_TIMER_H
+#include <exec/interrupts.h>
 #include <devices/timer.h>
-#endif
-#ifndef DOS_BPTR_H
 #include <dos/bptr.h>
-#endif
-
-#include <aros/system.h>
-#include <aros/libcall.h>
+#include <hardware/intbits.h>
 #include <aros/asmcall.h>
 
-#define TL_VBLANK	0
-#define TL_WAITVBL	1
-#define TL_MICROHZ	2
-#define TL_ECLOCK	3
-#define TL_WAITECLOCK	4
-#define NUM_LISTS	5
+/* Platform-specific portion */
+#include <timer_platform.h>
+
+/*
+ * First two of these correspond to UNIT_MICROHZ and UNIT_VBLANK.
+ * This is important.
+ */
+#define TL_MICROHZ	0
+#define TL_VBLANK	1
+#define TL_WAITVBL	2
+#define NUM_LISTS	3
 
 struct TimerBase
 {
     /* Required by the system */
-    struct Device	 tb_Device;
+    struct Device	 tb_Device;		/* Our base						*/
+    APTR		 tb_KernelBase;		/* kernel.resource base					*/
 
-    APTR		 tb_KernelBase;		/* kernel.resource base */
-    struct timeval	 tb_CurrentTime;	/* system time */
-    struct timeval	 tb_Elapsed;		/* Elapsed Time for VBlank */
+    /* Time counters */
+    struct timeval	 tb_CurrentTime;	/* Absolute system time. Can be set by TR_SETSYSTIME.	*/
+    struct timeval	 tb_Elapsed;		/* Relative system time. Used for measuring intervals.	*/
 
-    /* This is required for the vertical blanking stuff */
-    LONG		 tb_TimerIRQNum;	/* Timer IRQ number */
-    APTR		 tb_TimerIRQHandle;	/* Timer IRQ handle */
-    struct Interrupt	 tb_VBlankInt;		/* Used by older implementations, needs to be removed */
-    struct timeval	 tb_VBlankTime;		/* Periodic timer interval */
+    /* This is required for hardware-specific code */
+    APTR		 tb_TimerIRQHandle;	/* Timer IRQ handle					*/
+    struct Interrupt	 tb_VBlankInt;		/* Used by older implementations, needs to be removed	*/
 
-    /* Lists for waiting vblank, waituntil, microhz, eclock, waiteclock */
+    /* Request queues */
     struct MinList	 tb_Lists[NUM_LISTS];
 
-    UQUAD                tb_ticks_total;
-    ULONG                tb_ticks_sec;
-    ULONG                tb_ticks_elapsed;
-    ULONG                tb_prev_tick;
-    
-    struct timerequest   tb_vblank_timerequest; /* For vblank emulation */
+    /* EClock counter */
+    UQUAD                tb_ticks_total;	/* Effective EClock value				*/
+    ULONG                tb_ticks_sec;		/* Fraction of second for CurrentTime in ticks		*/
+    ULONG                tb_ticks_elapsed;	/* Fraction of second for Elapsed in ticks		*/
+    ULONG                tb_prev_tick;		/* Hardware-specific					*/
+    ULONG		 tb_eclock_rate;	/* EClock frequency					*/
+
+#ifdef USE_VBLANK_EMU
+    struct timerequest   tb_vblank_timerequest; /* VBlank emulation request				*/
+#endif
+
+    struct PlatformTimer tb_Platform;		/* Platform-specific data				*/
 };
 
 #define GetTimerBase(tb)	((struct TimerBase *)(tb))
 #define GetDevice(tb)		((struct Device *)(tb))
+
+BOOL common_BeginIO(struct timerequest *timereq, struct TimerBase *TimerBase);
+void handleMicroHZ(struct TimerBase *TimerBase, struct ExecBase *SysBase);
+void handleVBlank(struct TimerBase *TimerBase, struct ExecBase *SysBase);
+void EClockUpdate(struct TimerBase *TimerBase);
+void EClockSet(struct TimerBase *TimerBase);
+
+/* Call exec VBlank vector, if present */
+static inline void vblank_Cause(struct ExecBase *SysBase)
+{
+    struct IntVector *iv = &SysBase->IntVects[INTB_VERTB];
+
+    if (iv->iv_Code)
+        AROS_INTC2(iv->iv_Code, iv->iv_Data, INTF_VERTB);
+}
 
 #endif /* _TIMER_INTERN_H */

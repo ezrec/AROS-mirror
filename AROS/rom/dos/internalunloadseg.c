@@ -10,7 +10,7 @@
 #include <aros/asmcall.h>
 #include <exec/libraries.h>
 #include <proto/exec.h>
-#include <proto/kernel.h>
+#include <proto/debug.h>
 
 #include "dos_intern.h"
 #include "internalloadseg.h"
@@ -58,10 +58,8 @@
 
     if (seglist)
     {
-#ifdef KrnUnregisterModule
-	if (KernelBase)
-	    KrnUnregisterModule(seglist);
-#endif
+	if (DebugBase)
+	    UnregisterModule(seglist);
 
 #if (AROS_FLAVOUR & AROS_FLAVOUR_BINCOMPAT)
 	{

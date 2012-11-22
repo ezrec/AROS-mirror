@@ -5,7 +5,7 @@
     ROMTag scanner.
 */
 
-#include <aros/debug.h>
+#include <aros/asmcall.h>
 #include <exec/execbase.h>
 #include <exec/lists.h>
 #include <exec/nodes.h>
@@ -20,6 +20,8 @@
 #include <kernel_debug.h>
 #include <kernel_romtags.h>
 
+#define D(x)
+
 static LONG findname(struct Resident **list, ULONG len, CONST_STRPTR name)
 {
     ULONG i;
@@ -33,27 +35,46 @@ static LONG findname(struct Resident **list, ULONG len, CONST_STRPTR name)
     return -1;
 }
 
-/*
- * Our own, very simplified down memory allocator.
- * We use it because we should avoid to statically link in functions from other modules.
- * Currently the only linked in function is PrepareExecBase() and at some point it will
- * change. It will be possible to completely separate exec.library and kernel.resource,
- * and load them separately from the bootstrap.
- *
- * It is okay to use this routine because this is one of the first allocations (actually
- * should be the first one) and it is never going to be freed.
- * Additionally, in order to be able to discover exec.library (and its early init function)
- * dynamically, we want krnRomTagScanner() to work before ExecBase is created.
+/* 
+ * Allocate memory space for boot-time usage. Returns address and size of the usable area.
+ * It's strongly adviced to return enough space to store resident list of sane length.
  */
-static inline void krnAllocBootMem(struct MemHeader *mh, struct MemChunk *next, IPTR chunkSize, IPTR allocSize)
+static APTR krnGetSysMem(struct MemHeader *mh, IPTR *size)
 {
-    allocSize = AROS_ROUNDUP2(allocSize, MEMCHUNK_TOTAL);
+    /* Just dequeue the first MemChunk. It's assumed that it has the required space for sure. */
+    struct MemChunk *mc = mh->mh_First;
 
-    mh->mh_First          = (struct MemChunk *)((APTR)mh->mh_First + allocSize);
-    mh->mh_First->mc_Next = next;
-    mh->mh_Free          -= allocSize;
-    mh->mh_First->mc_Bytes = chunkSize - allocSize;
+    mh->mh_First = mc->mc_Next;
+    mh->mh_Free -= mc->mc_Bytes;
+
+    D(bug("[RomTagScanner] Using chunk 0x%p of %lu bytes\n", mc, mc->mc_Bytes));
+ 
+    *size = mc->mc_Bytes;
+    return mc;
 }
+
+/* Release unused boot-time memory */
+static void krnReleaseSysMem(struct MemHeader *mh, APTR addr, IPTR chunkSize, IPTR allocSize)
+{
+    struct MemChunk *mc;
+
+    allocSize = AROS_ROUNDUP2(allocSize, MEMCHUNK_TOTAL);
+    chunkSize -= allocSize;
+
+    D(bug("[RomTagScanner] Chunk 0x%p, %lu of %lu bytes used\n", addr, allocSize, chunkSize));
+
+    if (chunkSize < MEMCHUNK_TOTAL)
+    	return;
+
+    mc = addr + allocSize;
+
+    mc->mc_Next  = mh->mh_First;
+    mc->mc_Bytes = chunkSize - allocSize;
+
+    mh->mh_First = mc;
+    mh->mh_Free += mc->mc_Bytes;
+}
+
 
 /*
  * RomTag scanner.
@@ -81,26 +102,28 @@ APTR krnRomTagScanner(struct MemHeader *mh, UWORD *ranges[])
     ULONG	    i;
     BOOL	    sorted;
     /* 
-     * We take the beginning of free memory from our boot MemHeader
-     * and construct resident list there.
-     * When we are done we know list length, so we can seal the used
-     * memory by allocating it from the MemHeader.
-     * This is 100% safe because we are here long before multitasking
-     * is started up. However in some situations we can already have several
-     * MemChunks in our MemHeader (this happens on softkicked m68k Amiga).
-     * So, we preserve origiinal chunk size and next chunk pointer.
-     * Note that we expect the first chunk in the MemHeader to have enough space for resident list.
+     * We don't know resident list size until it's created. Because of this, we use two-step memory allocation
+     * for this purpose.
+     * First we dequeue some space from the MemHeader, and remember its starting address and size. Then we
+     * construct resident list in this area. After it's done, we return part of the used space to the system.
      */
-    struct MemChunk *nextChunk = mh->mh_First->mc_Next;
-    IPTR chunkSize = mh->mh_First->mc_Bytes;
-    struct Resident **RomTag = (struct Resident **)mh->mh_First;
-    ULONG	    num = 0;
+    IPTR chunkSize;
+    struct Resident **RomTag = krnGetSysMem(mh, &chunkSize);
+    IPTR  limit = chunkSize / sizeof(APTR);
+    ULONG num = 0;
+
+    if (!RomTag)
+    	return NULL;
 
     /* Look in whole kickstart for resident modules */
     while (*ranges != (UWORD *)~0)
     {
 	ptr = *ranges++;
 	end = *ranges++;
+
+        /* Make sure that addresses are UWORD-aligned. In some circumstances they can be not. */
+        ptr = (UWORD *)(((IPTR)ptr + 1) & ~1);
+        end = (UWORD *)((IPTR)end & ~1);
 
 	D(bug("RomTagScanner: Start = %p, End = %p\n", ptr, end));
 	do
@@ -111,7 +134,7 @@ APTR krnRomTagScanner(struct MemHeader *mh, UWORD *ranges[])
 	    if (res->rt_MatchWord == RTC_MATCHWORD && res->rt_MatchTag == res)
 	    {
 		/* Yes, it is Resident module. Check if there is module with such name already */
-		i = findname((struct Resident **)mh->mh_First, num, res->rt_Name);
+		i = findname(RomTag, num, res->rt_Name);
 		if (i != -1)
 		{
 		    struct Resident *old = RomTag[i];
@@ -131,6 +154,20 @@ APTR krnRomTagScanner(struct MemHeader *mh, UWORD *ranges[])
 		{
 		    /* New module */
 		    RomTag[num++] = res;
+		    /*
+		     * 'limit' holds a length of our MemChunk in pointers.
+		     * Actually it's a number or pointers we can safely store in it (including NULL terminator).
+		     * If it's exceeded, return NULL.
+		     * TODO: If ever needed, this routine can be made smarter. There can be
+		     * the following approaches:
+		     * a) Move the data to a next MemChunk which is bigger than the current one
+		     *    and continue.
+		     * b) In the beginning of this routine, find the largest available MemChunk and use it.
+		     * Note that we exit with destroyed MemChunk here. Anyway, failure here means the system
+		     * is completely unable to boot up.
+		     */
+		    if (num == limit)
+		    	return NULL;
 		}
 
 		/* Get address of EndOfResident from RomTag but only when
@@ -154,15 +191,7 @@ APTR krnRomTagScanner(struct MemHeader *mh, UWORD *ranges[])
     RomTag[num] = NULL;
 
     /* Seal our used memory as allocated */
-    krnAllocBootMem(mh, nextChunk, chunkSize, (num + 1) * sizeof(struct Resident *));
-
-    /*
-     * By now we have valid list of kickstart resident modules.
-     *
-     * Now, we will have to analyze used-defined RomTags (via KickTagPtr and
-     * KickMemPtr)
-     */
-    /* TODO: Implement external modules! */
+    krnReleaseSysMem(mh, RomTag, chunkSize, (num + 1) * sizeof(struct Resident *));
 
     /*
      * Building list is complete, sort RomTags according to their priority.
@@ -190,53 +219,14 @@ APTR krnRomTagScanner(struct MemHeader *mh, UWORD *ranges[])
     return RomTag;
 }
 
-/* This is PrepareExecBase() calling convention */
-typedef struct ExecBase *(INITFUNC)(struct MemHeader *, struct TagItem *);
-
-struct ExecBase *krnPrepareExecBase(UWORD *ranges[], struct MemHeader *mh, struct TagItem *bootMsg)
+struct Resident *krnFindResident(struct Resident **resList, const char *name)
 {
     ULONG i;
-    struct Resident **resList = krnRomTagScanner(mh, ranges);
 
     for (i = 0; resList[i]; i++)
     {
-    	/* Locate exec.library */
-    	if (!strcmp(resList[i]->rt_Name, "exec.library"))
-	{
-	    struct ExecBase *sysBase = NULL;
-
-	    /* Obtain early init routine pointer encoded in its extensions taglist */
-	    if (resList[i]->rt_Flags & RTF_EXTENDED)
-	    {
-		INITFUNC *execBoot = (INITFUNC *)LibGetTagData(RTT_STARTUP, 0, resList[i]->rt_Tags);
-
-		if (!execBoot)
-		    return NULL;
-
-		sysBase = execBoot(mh, bootMsg);
-		if (sysBase)
-		{
-		    sysBase->ResModules = resList;
-
-#ifndef NO_RUNTIME_DEBUG
-		    /* Print out modules list if requested by the user */
-		    if (SysBase->ex_DebugFlags & EXECDEBUGF_INITCODE)
-		    {
-			bug("Resident modules (addr: pri flags version name):\n");
-
-			for (i = 0; resList[i]; i++)
-			{
-			    bug("+ %p: %4d %02x %3d \"%s\"\n", resList[i], resList[i]->rt_Pri,
-				resList[i]->rt_Flags, resList[i]->rt_Version, resList[i]->rt_Name);
-			}
-		    }
-#endif
-		}
-	    }
-
-	    return sysBase;
-	}
+    	if (!strcmp(resList[i]->rt_Name, name))
+    	    return resList[i];
     }
-
     return NULL;
 }

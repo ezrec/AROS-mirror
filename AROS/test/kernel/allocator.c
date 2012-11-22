@@ -24,26 +24,9 @@
 
 /* Include private kernel.resource stuff, for DumpState() */
 struct KernelBase;
-#include "../../rom/kernel/memory_intern.h"
+#include "../../rom/kernel/mm_linear.h"
 
 #define PAGES_NUM 14
-
-/* This alignment stuff is copy-pasted from rom/exec/memory.h */
-#define RTPOTx4(a)      ((a)>2?4:(a)>1?2:1)
-
-#define RTPOTx10(a)     ((a)>=4?RTPOTx4(((a)+3)/4)*4:RTPOTx4(a))
-
-#define RTPOTx100(a)    \
-    ((a)>=0x10?RTPOTx10(((a)+0xf)/0x10)*0x10:RTPOTx10(a))
-
-#define ROUNDUP_TO_POWER_OF_TWO(a)      RTPOTx100(a)
-
-#define MEMCHUNK_TOTAL \
-    ROUNDUP_TO_POWER_OF_TWO(AROS_WORSTALIGN>sizeof(struct MemChunk)? \
-    AROS_WORSTALIGN:sizeof(struct MemChunk))
-
-#define MEMHEADER_TOTAL \
-    ((sizeof(struct MemHeader)+MEMCHUNK_TOTAL-1)&~(MEMCHUNK_TOTAL-1))
 
 volatile static ULONG trap;
 
@@ -87,7 +70,7 @@ static void DumpState(struct MemHeader *mh)
     struct BlockHeader *head = (struct BlockHeader *)mh->mh_First;
     IPTR p;
 
-    printf("Page map (%u total):\n", head->size);
+    printf("Page map (%u total):\n", (unsigned)head->size);
 
     for (p = 0; p < head->size; p++)
         printf(P_STATUS(head->map[p]) ? "#" : ".");
@@ -120,11 +103,11 @@ int main(void)
 	       "kernel.resource memory allocator will not work!\n");
 	return 1;
     }
-    printf("System page size: %u (0x%08X)\n", page, page);
+    printf("System page size: %u (0x%08X)\n", (unsigned)page, (unsigned)page);
 
     TestLength = PAGES_NUM * page;
     TestArea = AllocMem(TestLength, MEMF_ANY);
-    printf("Allocated test region (%u bytes) at 0x%p\n", TestLength, TestArea);
+    printf("Allocated test region (%u bytes) at 0x%p\n", (unsigned)TestLength, TestArea);
     if (!TestArea)
     {
 	printf("Failed to allocate test region!\n");
@@ -156,7 +139,7 @@ int main(void)
     {
 	printf("KrnInitMemory() failed:\n"
 	       "  mc_Next  is 0x%p\n"
-	       "  mc_Bytes is %u\n",
+	       "  mc_Bytes is %lu\n",
 	       mc->mc_Next, mc->mc_Bytes);
 	goto exit;
     }
@@ -173,7 +156,7 @@ int main(void)
     Permit();
 
     printf("Allocating region1 (two read-write pages)...\n");
-    region1 = KrnAllocPages(2 * page, MEMF_FAST, MAP_Readable|MAP_Writable);
+    region1 = KrnAllocPages(NULL, 2 * page, MEMF_FAST);
     printf("region1 at 0x%p\n", region1);
     DumpState(TestArea);
 
@@ -183,17 +166,17 @@ int main(void)
     DumpState(TestArea);
 
     printf("Allocating region1 (3 read-only pages)...\n");
-    region1 = KrnAllocPages(3 * page, MEMF_FAST, MAP_Readable);
+    region1 = KrnAllocPages(NULL, 3 * page, MEMF_FAST);
     printf("region1 at 0x%p\n", region1);
     DumpState(TestArea);
 
     printf("Allocating region2 (4 write-only ;-) pages)...\n");
-    region2 = KrnAllocPages(4 * page, MEMF_FAST, MAP_Writable);
+    region2 = KrnAllocPages(NULL, 4 * page, MEMF_FAST);
     printf("region2 at 0x%p\n", region2);
     DumpState(TestArea);
 
     printf("Attempting to allocate page with wrong flags...\n");
-    region3 = KrnAllocPages(page, MEMF_CHIP|MEMF_FAST, MAP_Readable);
+    region3 = KrnAllocPages(NULL, page, MEMF_CHIP|MEMF_FAST);
     printf("Region at 0x%p\n", region3);
     if (region3)
     {
@@ -212,7 +195,7 @@ int main(void)
     DumpState(TestArea);
 
     printf("Allocating region1 (one read-write page)...\n");
-    region1 = KrnAllocPages(page, MEMF_FAST, MAP_Readable|MAP_Writable);
+    region1 = KrnAllocPages(NULL, page, MEMF_FAST);
     printf("region1 at 0x%p\n", region1);
     DumpState(TestArea);
 
@@ -224,22 +207,22 @@ int main(void)
     printf("Now we'll try to fragment the memory\n");
 
     printf("Allocating region1 (2 pages)...\n");
-    region1 = KrnAllocPages(2 * page, MEMF_FAST, MAP_Readable|MAP_Writable);
+    region1 = KrnAllocPages(NULL, 2 * page, MEMF_FAST);
     printf("region1 at 0x%p\n", region1);
     DumpState(TestArea);
 
     printf("Allocating region2 (3 pages)...\n");
-    region2 = KrnAllocPages(3 * page, MEMF_FAST, MAP_Readable|MAP_Writable);
+    region2 = KrnAllocPages(NULL, 3 * page, MEMF_FAST);
     printf("region2 at 0x%p\n", region2);
     DumpState(TestArea);
 
     printf("Allocating region 3 (1 page)...\n");
-    region3 = KrnAllocPages(page, MEMF_FAST, MAP_Readable|MAP_Writable);
+    region3 = KrnAllocPages(NULL, page, MEMF_FAST);
     printf("Region at 0x%p\n", region3);
     DumpState(TestArea);
     
     printf("Allocating region 4 (2 pages)...\n");
-    region4 = KrnAllocPages(2 * page, MEMF_FAST, MAP_Readable|MAP_Writable);
+    region4 = KrnAllocPages(NULL, 2 * page, MEMF_FAST);
     printf("region4 at 0x%p\n", region1);
     DumpState(TestArea);
     
@@ -254,7 +237,7 @@ int main(void)
     DumpState(TestArea);
 
     printf("Allocating region 3 (1 page) again...\n");
-    region3 = KrnAllocPages(page, MEMF_FAST, MAP_Readable|MAP_Writable);
+    region3 = KrnAllocPages(NULL, page, MEMF_FAST);
     printf("Region at 0x%p\n", region3);
     DumpState(TestArea);
 

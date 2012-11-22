@@ -6,7 +6,7 @@
 #include <kernel_cpu.h>
 #include <kernel_debug.h>
 #include <kernel_interrupts.h>
-#include <kernel_memory.h>
+#include <kernel_objects.h>
 
 /* We use own implementation of bug(), so we don't need aros/debug.h */
 #define D(x)
@@ -75,7 +75,7 @@ AROS_LH4(void *, KrnAddIRQHandler,
         /* Go to supervisor mode */
         (void)goSuper();
 
-        handle = krnAllocMem(sizeof(struct IntrNode));
+        handle = krnAllocIntrNode();
         D(bug("[KRN] handle=%012p\n", handle));
 
         if (handle)
@@ -90,7 +90,7 @@ AROS_LH4(void *, KrnAddIRQHandler,
 
             ADDHEAD(&KernelBase->kb_Interrupts[irq], &handle->in_Node);
 
-            ictl_enable_irq(irq);
+            ictl_enable_irq(irq, KernelBase);
 
             Enable();
         }
@@ -104,7 +104,7 @@ AROS_LH4(void *, KrnAddIRQHandler,
 }
 
 /* Run IRQ handlers */
-void krnRunIRQHandlers(uint8_t irq)
+void krnRunIRQHandlers(struct KernelBase *KernelBase, uint8_t irq)
 {
     struct IntrNode *in, *in2;
 

@@ -6,17 +6,20 @@ include $(TOP)/config/make.cfg
 #MM     kernel-exec-includes-$(ARCH)-$(CPU) \
 #MM     includes-$(ARCH)-$(CPU)
 
-ALL_FUNCTIONS	:= \
+#MM- core-linklibs : linklibs-exec
+
+ALL_FUNCTIONS := \
 	abortio adddevice addhead addintserver addlibrary addmemhandler \
 	addmemlist addport addresource addsemaphore addtail addtask alert alertstrings \
 	allocabs allocate allocentry allocmem allocpooled allocsignal \
 	alloctrap allocvec attemptsemaphore attemptsemaphoreshared availmem \
 	cachecleare cacheclearu cachecontrol cachepostdma cachepredma cause \
 	checkio childfree childorphan childstatus childwait closedevice \
-	closelibrary coldreboot copymem copymemquick crashhandler createiorequest \
+	closelibrary coldreboot copymem copymemquick createiorequest \
 	createmsgport createpool deallocate debug deleteiorequest \
-	deletemsgport deletepool disable dispatch doio enable enqueue \
-	exception findname findport findresident findsemaphore findtask \
+	deletemsgport deletepool disable dispatch doio \
+	enable enqueue exception exitintr \
+	findname findport findresident findsemaphore findtask findtaskbypid \
 	forbid freeentry freemem freepooled freesignal freetrap freevec getcc \
 	getmsg initcode initresident initsemaphore initstruct insert \
 	makefunctions makelibrary obtainquickvector obtainsemaphore \
@@ -25,34 +28,25 @@ ALL_FUNCTIONS	:= \
 	rawioinit rawmaygetchar rawputchar readgayle releasesemaphore \
 	releasesemaphorelist remdevice remhead remintserver remlibrary \
 	remmemhandler remove remport remresource remsemaphore remtail remtask \
-	replymsg reschedule sendio setexcept setfunction setintvector \
+	replymsg reschedule schedule sendio setexcept setfunction setintvector \
 	setsignal setsr settaskpri signal stackswap sumkickdata sumlibrary \
 	superstate supervisor switch taggedopenlibrary typeofmem userstate \
 	vacate wait waitio waitport allocvecpooled freevecpooled newallocentry \
-	newaddtask avl vnewrawdofmt shutdowna useralert \
-	addresetcallback remresetcallback doresetcallbacks newcreatetaska
+	newaddtask newminlist avl vnewrawdofmt shutdowna useralert \
+	addresetcallback remresetcallback doresetcallbacks newcreatetaska \
+        alloctaskstorageslot freetaskstorageslot savetaskstorage \
+        restoretaskstorage settaskstorageslot gettaskstorageslot
 
+INIT_FILES := exec_init prepareexecbase
+FILES	   := alertextra alert_cpu systemalert initkicktags intservers \
+	      memory memory_nommu mungwall semaphores service traphandler \
+	      exec_debug exec_util
 
-INIT_FILE   := exec_init
-SYS_FILES   := prepareexecbase
-FILES	    := alertextra alert_cpu systemalert initkicktags \
-	       memory memory_nommu mungwall traphandler exec_debug exec_util
+# platform.h can be overriden in arch-specific directory
+USER_INCLUDES += $(PRIV_EXEC_INCLUDES) -DAROS_ARCH_$(ARCH)
 
-# I need the private includes (for struct AROSCPUContext) and they
-# have to be first in the list
-USER_CFLAGS := -I$(SRCDIR)/arch/all-$(ARCH)/exec \
-               -I$(SRCDIR)/arch/$(CPU)-$(ARCH)/kernel \
-               -I$(SRCDIR)/arch/all-$(ARCH)/kernel
-ifneq ($(FAMILY),)
-USER_CFLAGS += -I$(SRCDIR)/arch/all-$(FAMILY)/exec \
-	       -I$(SRCDIR)/arch/all-$(FAMILY)/kernel
-endif
-USER_CFLAGS += -I$(SRCDIR)/$(CURDIR)
-USER_CFLAGS += $(PARANOIA_CFLAGS)
-
-# As a hack the SYS_FILES are added as the initfile.
 %build_module mmake=kernel-exec \
-  modname=exec modtype=library \
-  files="$(SYS_FILES) $(INIT_FILE) $(ALL_FUNCTIONS) $(FILES)" \
-  uselibs=$(DEPLIBS)
+  modname=exec modtype=library version=$(AROS_TARGET_PLATFORM) \
+  linklibfiles=exec_autoinit files="$(INIT_FILES) $(ALL_FUNCTIONS) $(FILES)"
 
+%common

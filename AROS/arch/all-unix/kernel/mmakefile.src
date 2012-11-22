@@ -1,18 +1,19 @@
 # $Id$
 include $(TOP)/config/make.cfg
 
-USER_CFLAGS := -I$(SRCDIR)/arch/all-$(ARCH)/kernel -I$(SRCDIR)/arch/all-unix/kernel \
-	       -I$(SRCDIR)/rom/kernel -I$(SRCDIR)/rom/exec \
+MAINDIR	    := rom/kernel
+USER_CFLAGS := $(PRIV_KERNEL_INCLUDES) -I$(GENDIR)/$(MAINDIR)/include \
 	       -isystem $(GENINCDIR) $(KERNEL_INCLUDES) \
-	       -DAROS_ARCHITECTURE="\"$(AROS_TARGET_ARCH)-$(AROS_TARGET_CPU)\"" \
+	       -DAROS_ARCHITECTURE="\"$(AROS_TARGET_PLATFORM)\"" \
 	       -DHOST_OS_$(ARCH) -DHOST_OS_$(AROS_TARGET_VARIANT)
 
-FUNCS := cause cli getsystemattr issuper kernel_debug putchar sti setprotection # allocpages freepages
-FILES := kernel_startup kernel kernel_cpu cpu_$(CPU)
+FUNCS := cause cli issuper kernel_debug maygetchar sti setprotection \
+	 obtaininput releaseinput getpagesize allockernelbase
+FILES := kernel_startup kernel kernel_cpu kernel_intr cpu_$(CPU)
 
 %build_archspecific \
   mainmmake=kernel-kernel maindir=rom/kernel \
-  arch=unix files="$(FILES) $(FUNCS)"
+  arch=unix files="$(FILES) $(FUNCS)" modulename=kernel
 
 TESTS		:= coretest
 

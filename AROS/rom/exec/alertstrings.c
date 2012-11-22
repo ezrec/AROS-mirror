@@ -1,4 +1,9 @@
 /*
+    Copyright © 1995-2012, The AROS Development Team. All rights reserved.
+    $Id$
+*/
+
+/*
  * A library of alert strings and useful functions.
  * Used by platform-specific Alert() implementations
  */
@@ -7,6 +12,8 @@
 #include <exec/alerts.h>
 #include <exec/rawfmt.h>
 #include <exec/tasks.h>
+#include <libraries/debug.h>
+#include <proto/debug.h>
 #include <proto/kernel.h>
 
 #include "etask.h"
@@ -37,12 +44,12 @@ static STRPTR getString(ULONG alertnum, const struct Errors *errs)
 static const struct Errors cpustrings[] =
 {
     { ACPU_BusErr,      "Hardware bus fault/address error" },
-    { ACPU_AddressErr,  "Illegal address access (odd)" },
+    { ACPU_AddressErr,  "Illegal address access" },
     { ACPU_InstErr,     "Illegal instruction" },
     { ACPU_DivZero,     "Division by zero" },
     { ACPU_CHK,         "CHK instruction error" },
     { ACPU_TRAPV,       "TRAPV instruction error" },
-    { ACPU_PrivErr,     "Priviledge violation error" },
+    { ACPU_PrivErr,     "Privilege violation error" },
     { ACPU_Trace,       "Trace error" },
     { ACPU_LineA,       "Line 1010 (A) E mulator error" },
     { ACPU_LineF,       "Line 1111 (F) Emulator/Coprocessor error" },
@@ -81,6 +88,7 @@ static const struct Errors subsystems[] =
     { 0x40,	"aros " },
     { 0x41,	"oop " },
     { 0x42,	"hidd " },
+    { 0x43,	"partition.library " },
 
     /* This takes in 0x35 as well... */
     { 0x00,     "unknown " }
@@ -320,6 +328,11 @@ static const struct Errors hiddstrings[] =
     {0, "unknown Hidd system error" }
 };
 
+static const struct Errors partitionstrings[] =
+{
+    {0, "unknown partition.library error" }
+};
+
 static const struct Errors *const stringlist[] =
 {
     /* 0x00 */
@@ -397,7 +410,8 @@ static const struct Errors *const stringlist[] =
     /* 0x40 */
     arosstrings,
     oopstrings,
-    hiddstrings
+    hiddstrings,
+    partitionstrings
 };
 
 /* Similar to strcpy() but returns a pointer to the next byte beyond the
@@ -413,25 +427,12 @@ STRPTR Alert_AddString(STRPTR dest, CONST_STRPTR src)
 
 STRPTR Alert_GetTitle(ULONG alertNum)
 {
-    if(alertNum & AG_NoMemory)
+    if((alertNum & 0x00ff0000) == AG_NoMemory)
         return "Not Enough Memory!";
     else if(alertNum & AT_DeadEnd)
         return "Software Failure!";
     else
         return "Recoverable Alert!";
-}
-
-STRPTR Alert_GetTaskName(struct Task *task)
-{
-    STRPTR tname;
-
-    /* Find out the task name. The node type must be correct. */
-    if (task && ((task->tc_Node.ln_Type == NT_TASK) || (task->tc_Node.ln_Type == NT_PROCESS))
-       && (task->tc_Node.ln_Name != NULL))
-        tname = task->tc_Node.ln_Name;
-    else
-        tname = "--task not found--";
-    return tname;
 }
 
 /* Decode the alert number, and try and work out what string to get */
@@ -459,77 +460,110 @@ STRPTR Alert_GetString(ULONG alertnum, STRPTR buf)
     {
         UBYTE subsys = (alertnum & 0x7f000000) >> 24;
 
-        if(subsys < 0x80)
-            buf = Alert_AddString(buf, getString(alertnum, stringlist[subsys]));
-        else
-            buf = Alert_AddString(buf, "unknown error");
+        buf = Alert_AddString(buf, getString(alertnum, stringlist[subsys]));
     }
 
     *buf = 0;
     return buf;
 }
 
-static char *hdrstring = "Task : 0x%P - %s\n"
-			 "Error: 0x%08lx - ";
-static char *locstring = "PC   : 0x%P";
-#ifdef KrnDecodeLocation
-static char *modstring = "Module %s Segment %lu %s (0x%P) Offset 0x%P";
-static char *funstring = "Function %s (0x%P) Offset 0x%P";
-#endif
+static const char hdrstring[] =   "Task : 0x%P - %s";
+static const char errstring[] = "\nError: 0x%08lx - ";
+static const char locstring[] = "\nPC   : 0x%P";
+static const char stkstring[] = "\nStack: 0x%P - 0x%P";
 
-STRPTR FormatAlert(char *buffer, ULONG alertNum, struct Task *task, struct ExecBase *SysBase)
+STRPTR FormatAlert(char *buffer, ULONG alertNum, struct Task *task, APTR location, UBYTE type, struct ExecBase *SysBase)
 {
     char *buf;
 
-    buf = NewRawDoFmt(hdrstring, RAWFMTFUNC_STRING, buffer, task, Alert_GetTaskName(task), alertNum);
-    buf = Alert_GetString(alertNum, --buf);
-    *buf++ = 0;
+    buf = FormatTask(buffer, hdrstring, task, SysBase);
+    buf = NewRawDoFmt(errstring, RAWFMTFUNC_STRING, buf, alertNum) - 1;
+    buf = Alert_GetString(alertNum, buf);
+    *buf = 0;
     D(bug("[FormatAlert] Header:\n%s\n", buffer));
 
-    if (task)
+    /* For AT_CPU alerts NULL location is also valid */
+    if (location || (type == AT_CPU))
     {
-	struct IntETask *iet = GetIntETask(task);
+	buf = FormatLocation(buf, locstring, location, SysBase);
 
-	if (iet->iet_AlertLocation)
-	{
-#ifdef KrnDecodeLocation
-	    char *modname, *segname, *symname;
-	    void *segaddr, *symaddr;
-	    unsigned int segnum;
-#endif
+	D(bug("[FormatAlert] Location string:\n%s\n", buffer));
+    }
 
-	    buf[-1] = '\n';
-	    buf = NewRawDoFmt(locstring, RAWFMTFUNC_STRING, buf, iet->iet_AlertLocation);
-	    D(bug("[FormatAlert] Location string:\n%s\n", buffer));
+    /* For AN_StackProbe limits information is useful */
+    if ((alertNum & ~AT_DeadEnd) == AN_StackProbe)
+    {
+    	buf = NewRawDoFmt(stkstring, RAWFMTFUNC_STRING, buf, task->tc_SPLower, task->tc_SPUpper) - 1;
+    }
 
-#ifdef KrnDecodeLocation
-	    if (KrnDecodeLocation(iet->iet_AlertLocation,
-				  KDL_ModuleName , &modname, KDL_SegmentNumber, &segnum ,
-				  KDL_SegmentName, &segname, KDL_SegmentStart , &segaddr,
-				  KDL_SymbolName , &symname, KDL_SymbolStart  , &symaddr,
-				  TAG_DONE))
+    return buf;
+}
+
+STRPTR FormatTask(STRPTR buffer, const char *text, struct Task *task, struct ExecBase *SysBase)
+{
+    STRPTR taskName;
+
+    if (Exec_CheckTask(task, SysBase))
+    	taskName = task->tc_Node.ln_Name;
+    else
+    	taskName = "-- task not found -- ";
+    
+    return NewRawDoFmt(text, RAWFMTFUNC_STRING, buffer, task, taskName) - 1;
+}
+
+static const char modstring[] = "\nModule %s Segment %lu %s (0x%P) Offset 0x%P";
+static const char funstring[] = "\nFunction %s (0x%P) Offset 0x%P";
+
+STRPTR FormatLocation(STRPTR buf, const char *text, APTR location, struct ExecBase *SysBase)
+{
+    char *modname, *segname, *symname;
+    void *segaddr, *symaddr;
+    unsigned int segnum;
+
+    buf = NewRawDoFmt(text, RAWFMTFUNC_STRING, buf, location) - 1;
+
+    if (DebugBase)
+    {
+        if (DecodeLocation(location,
+				    DL_ModuleName , &modname, DL_SegmentNumber, &segnum ,
+				    DL_SegmentName, &segname, DL_SegmentStart , &segaddr,
+				    DL_SymbolName , &symname, DL_SymbolStart  , &symaddr,
+				    TAG_DONE))
+	{	    
+	    if (!segname)
+	    	segname = "- unknown -";
+
+	    buf = NewRawDoFmt(modstring, RAWFMTFUNC_STRING, buf, modname, segnum, segname, segaddr, location - segaddr) - 1;
+
+	    if (symaddr)
 	    {
-	    	buf[-1] = '\n';
-	    
-		if (!segname)
-		    segname = "- unknown -";
+	    	if (!symname)
+		    symname = "- unknown -";
 
-		buf = NewRawDoFmt(modstring, RAWFMTFUNC_STRING, buf, modname, segnum, segname, segaddr, iet->iet_AlertLocation - segaddr);
-
-		if (symaddr)
-		{
-		    buf[-1] = '\n';
-
-		    if (!symname)
-			symname = "- unknown -";
-
-		    buf = NewRawDoFmt(funstring, RAWFMTFUNC_STRING, buf, symname, symaddr, iet->iet_AlertLocation - symaddr);
-		}
+		buf = NewRawDoFmt(funstring, RAWFMTFUNC_STRING, buf, symname, symaddr, location - symaddr) - 1;
 	    }
-#endif
+        }
+    }
+    else if (KernelBase)
+    {
+    	/*
+    	 * If there's no debug.library yet, we likely crashed in boot code.
+    	 * In this case kickstart location information can be helpful.
+    	 * TODO: Perhaps we should get debug info and locate a module manually?
+    	 * It can be not that big code duplication, but will help if the crash
+    	 * happens not in the first module.
+    	 */
+    	struct TagItem *tags = KrnGetBootInfo();
+
+    	if (tags)
+    	{   
+    	    IPTR klow  = LibGetTagData(KRN_KernelLowest, 0, tags);
+	    IPTR kbase = LibGetTagData(KRN_KernelBase, 0, tags);
+	    IPTR khi   = LibGetTagData(KRN_KernelHighest, 0, tags);
+
+	    buf = NewRawDoFmt("\nKickstart location: Lowest 0x%p, Base 0x%p, Highest 0x%p\n", RAWFMTFUNC_STRING, buf, klow, kbase, khi) - 1;
 	}
     }
 
-    /* Here buf points to the character AFTER null terminator */
-    return buf - 1;
+    return buf;
 }

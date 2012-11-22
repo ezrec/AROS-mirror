@@ -1,21 +1,28 @@
 /*
-    Copyright © 1995-2001, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: Add interrupt client to chain of interrupt servers
     Lang: english
 */
-#include <aros/config.h>
+
+#include <aros/debug.h>
+#include <aros/libcall.h>
 #include <exec/execbase.h>
 #include <exec/interrupts.h>
-
-#if (AROS_FLAVOUR & AROS_FLAVOUR_BINCOMPAT) && defined(mc68000)
-#include <hardware/custom.h>
 #include <hardware/intbits.h>
-#endif
-
 #include <proto/exec.h>
-#include <aros/libcall.h>
+#include <proto/kernel.h>
+
+#include "exec_intern.h"
+#include "chipset.h"
+
+static void krnIRQwrapper(void *data1, void *data2)
+{
+    struct Interrupt *irq = (struct Interrupt *)data1;
+
+    AROS_INTC1(irq->is_Code, irq->is_Data);
+}
 
 /*****************************************************************************
 
@@ -51,20 +58,16 @@
 ******************************************************************************/
 {
     AROS_LIBFUNC_INIT
-#if (AROS_FLAVOUR & AROS_FLAVOUR_BINCOMPAT) && defined(mc68000)
-    struct Custom *custom = (struct Custom *)(void **)0xdff000;
-#endif
+
+    if (intNumber >= INTB_KERNEL) {
+        interrupt->is_Node.ln_Succ = KrnAddIRQHandler(intNumber - INTB_KERNEL, krnIRQwrapper, interrupt, NULL);
+        return;
+    }
 
     Disable();
 
-    Enqueue((struct List *)SysBase->IntVects[intNumber].iv_Data, (struct Node *)interrupt);
-
-#if (AROS_FLAVOUR & AROS_FLAVOUR_BINCOMPAT) && defined(mc68000)
-    /*
-	Enable the chipset interrupt if run on a native Amiga.
-    */
-    custom->intena = (UWORD)(INTF_SETCLR|(1L<<intNumber));
-#endif
+    Enqueue((struct List *)SysBase->IntVects[intNumber].iv_Data, &interrupt->is_Node);
+    CUSTOM_ENABLE(intNumber);
 
     Enable();
 

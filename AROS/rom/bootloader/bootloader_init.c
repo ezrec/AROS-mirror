@@ -7,7 +7,6 @@
 
 #define DEBUG 0
 
-#include <aros/config.h>
 #include <aros/debug.h>
 #include <aros/kernel.h>
 #include <aros/multiboot.h>
@@ -23,13 +22,14 @@
 #include <proto/kernel.h>
 #include <proto/utility.h>
 
+#include <ctype.h>
 #include <string.h>
 
 #include "bootloader_intern.h"
 
 #include LC_LIBDEFS_FILE
 
-void GetCmdLine(char *Kernel_Args, struct BootLoaderBase *BootLoaderBase)
+static void GetCmdLine(char *Kernel_Args, struct BootLoaderBase *BootLoaderBase)
 {
     STRPTR buff;
     ULONG len;
@@ -42,36 +42,48 @@ void GetCmdLine(char *Kernel_Args, struct BootLoaderBase *BootLoaderBase)
 
     /* First make a copy of the command line */
     len = strlen(Kernel_Args) + 1;
-    buff = AllocMem(len, MEMF_ANY|MEMF_CLEAR);
+    buff = AllocMem(len, MEMF_ANY);
     if (buff)
     {
 	CopyMem(Kernel_Args, buff, len);
 
-	while(*buff)
+	while (1)
 	{
 	    struct Node *node;
-	    /* remove any leading spaces */
-	    char *cmd = stpblk(buff);
-	    /* Split the command line */
-	    ULONG temp = strcspn(cmd," ");
 
-	    cmd[temp++] = 0x00;
-	    D(bug("[BootLdr] Init: Argument %s\n",cmd));
+	    /* remove any leading spaces */
+	    buff = stpblk(buff);
+
+	    /* Hit end of line (trailing spaces) ? Exit if so. */
+	    if (!*buff)
+	    	break;
 
 	    /* Allocate node and insert into list */
-	    node = AllocMem(sizeof(struct Node),MEMF_ANY|MEMF_CLEAR);
-	    if (node)
+	    node = AllocMem(sizeof(struct Node),MEMF_ANY);
+	    if (!node)
+	    	break;
+
+	    node->ln_Name = buff;
+	    AddTail(&(BootLoaderBase->Args), node);
+
+	    /* We now have the command line */
+	    BootLoaderBase->Flags |= BL_FLAGS_CMDLINE;
+
+	    /* Skip up to a next space or EOL */
+	    while (*buff != '\0' && !isspace(*buff))
+		buff++;
+
+	    /* End of line ? If yes, we are done. */
+	    if (!*buff)
 	    {
-	    	node->ln_Name = cmd;
-	    	AddTail(&(BootLoaderBase->Args),node);
+		D(bug("[BootLdr] Init: Last argument %s\n", node->ln_Name));
+		break;
 	    }
 
-	    /* Skip to next part */
-	    buff = cmd + temp;
+	    /* Split the line and repeat */
+	    *buff++ = 0;
+	    D(bug("[BootLdr] Init: Argument %s\n", node->ln_Name));
 	}
-	
-	/* We now have the command line */
-	BootLoaderBase->Flags |= BL_FLAGS_CMDLINE;
     }
 }
 
@@ -79,22 +91,25 @@ static const ULONG masks [] = {0x01, 0x03, 0x07, 0x0f ,0x1f, 0x3f, 0x7f, 0xff};
 
 static int GM_UNIQUENAME(Init)(LIBBASETYPEPTR BootLoaderBase)
 {
-    const struct TagItem *bootinfo;
-    struct TagItem *tag;
+    struct TagItem *tag, *bootinfo;
     APTR KernelBase;
-#if (AROS_FLAVOUR & AROS_FLAVOUR_STANDALONE)
+    struct Library *UtilityBase;
     struct vbe_mode *vmi = NULL;
     struct vbe_controller *vci = NULL;
     UWORD vmode = 0x00FF;	/* Dummy mode number by default		  */
     UBYTE palette = 0;		/* By default we don't know palette width */
-#endif
 
     D(bug("[BootLdr] Init\n"));
+
+    UtilityBase = TaggedOpenLibrary(TAGGEDOPEN_UTILITY);
+    if (!UtilityBase)
+        return FALSE;
+
     NEWLIST(&(BootLoaderBase->Args));
     NEWLIST(&(BootLoaderBase->DriveInfo));
 
     KernelBase = OpenResource("kernel.resource");
-    bootinfo = KrnGetBootInfo();
+    bootinfo = (struct TagItem *)KrnGetBootInfo();
     
     while ((tag = NextTagItem(&bootinfo)))
     {
@@ -108,7 +123,6 @@ static int GM_UNIQUENAME(Init)(LIBBASETYPEPTR BootLoaderBase)
     	    GetCmdLine((char *)tag->ti_Data, BootLoaderBase);
     	    break;
 
-#if (AROS_FLAVOUR & AROS_FLAVOUR_STANDALONE)
     	case KRN_VBEModeInfo:
     	    vmi = (struct vbe_mode *)tag->ti_Data;
     	    break;
@@ -124,11 +138,9 @@ static int GM_UNIQUENAME(Init)(LIBBASETYPEPTR BootLoaderBase)
 	case KRN_VBEPaletteWidth:
 	    palette = tag->ti_Data;
 	    break;
-#endif
 	}
     }
 
-#if (AROS_FLAVOUR & AROS_FLAVOUR_STANDALONE)
     /* Get VESA mode information */
     D(bug("[BootLdr] VESA mode info 0x%p, controller info 0x%p\n", vmi, vci));
 
@@ -195,7 +207,8 @@ static int GM_UNIQUENAME(Init)(LIBBASETYPEPTR BootLoaderBase)
 	    D(bug("[BootLdr] Init: Vesa mode direct color flags %02X\n", vmi->direct_color_mode_info));
 	}
     }
-#endif
+
+    CloseLibrary(UtilityBase);
 
     return TRUE;
 }

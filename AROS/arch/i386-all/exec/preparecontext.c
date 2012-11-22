@@ -14,7 +14,6 @@
 #include <proto/kernel.h>
 #include <aros/i386/cpucontext.h>
 
-#include "etask.h"
 #include "exec_intern.h"
 
 #define _PUSH(sp, val) *--sp = (IPTR)val
@@ -38,31 +37,29 @@ AROS_LH4(BOOL, PrepareContext,
 	return FALSE;
   
     ctx = KrnCreateContext();
-    GetIntETask (task)->iet_Context = ctx;
+    task->tc_UnionETask.tc_ETask->et_RegFrame = ctx;
     if (!ctx)
 	return FALSE;
 
-    while((t = LibNextTagItem(&tagList)))
+    while((t = LibNextTagItem((struct TagItem **)&tagList)))
     {
     	switch(t->ti_Tag)
 	{
 		
-#define HANDLEARG(x) \
-	    case TASKTAG_ARG ## x: \
-	    	args[x - 1] = t->ti_Data; \
-		if (x > numargs) numargs = x; \
-		break;
+        #define HANDLEARG(x)                      \
+            case TASKTAG_ARG ## x:            \
+                args[x - 1] = t->ti_Data;     \
+                if (x > numargs) numargs = x; \
+                    break;
 
-	    HANDLEARG(1)
-	    HANDLEARG(2)
-	    HANDLEARG(3)
-	    HANDLEARG(4)
-	    HANDLEARG(5)
-	    HANDLEARG(6)
-	    HANDLEARG(7)
-	    HANDLEARG(8)
-	    	
-	    #undef HANDLEARG
+            HANDLEARG(1)
+            HANDLEARG(2)
+            HANDLEARG(3)
+            HANDLEARG(4)
+            HANDLEARG(5)
+            HANDLEARG(6)
+            HANDLEARG(7)
+            HANDLEARG(8)
 	}
     }
 

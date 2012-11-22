@@ -1,5 +1,5 @@
 /*
-    Copyright © 2009, The AROS Development Team. All rights reserved.
+    Copyright © 2009-2011, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: functions for memory-stored RawIOInit/RawPutChar
@@ -7,9 +7,11 @@
 */
 
 #include <proto/exec.h>
+#include <proto/kernel.h>
 
 #include <string.h>
 
+#include "exec_intern.h"
 
 #define BLOCK_SIZE (256 * 1024)
 #define TASK_PRIORITY 0
@@ -197,9 +199,8 @@ static struct LogBlock *next_block = NULL;
 
     struct LogBlock *new_block;
 
-    /* Write to screen as well */
-
-    Putc(chr);
+    /* Write to screen/serial as well */
+    KrnPutChar(chr);
 
     /* Check if we need to move on to a new block */
 
@@ -239,9 +240,10 @@ static struct LogBlock *next_block = NULL;
 
     if (data->block_pos != data->block->length)
     {
-        if (chr != '\03')
-            ((UBYTE *)data->block)[sizeof(struct LogBlock) + data->block_pos++] =
-                chr;
+        if (chr && (chr != '\03'))
+	{
+            ((UBYTE *)data->block)[sizeof(struct LogBlock) + data->block_pos++] = chr;
+	}
     }
     else
         data_missed = TRUE;

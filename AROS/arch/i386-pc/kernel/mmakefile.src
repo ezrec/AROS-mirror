@@ -1,13 +1,18 @@
 # $Id$
 include $(TOP)/config/make.cfg
 
-FUNCS   := 
-FILES   := startup
+FUNCS   := getcpucount getcpunumber
+FILES   := startup kernel_debug platform_init ictl kernel_cpu traps utils smp
+AFILES  := core_interrupts reboot
 MAINDIR := rom/kernel
+
+USER_INCLUDES := $(PRIV_KERNEL_INCLUDES) -I$(SRCDIR)/arch/all-native/kernel \
+		 -isystem $(SRCDIR)/arch/all-native/bootconsole/include
+USER_AFLAGS   := -isystem $(GENINCDIR)
 
 %build_archspecific \
   mainmmake=kernel-kernel maindir=$(MAINDIR) \
-  arch=pc-i386 files="$(FILES) $(FUNCS)"
+  arch=pc-i386 files="$(FILES) $(FUNCS)" asmfiles=$(AFILES)
 
 # Build smpboot.bin.o in $(GENDIR)/$(MAINDIR)/arch, where it will be picked up
 # by the linker automatically (make.tmpl macros link in everything that is found there)
@@ -18,14 +23,14 @@ OUTDIR := $(GENDIR)/$(MAINDIR)/arch
 OBJDIR := $(GENDIR)/$(CURDIR)
 
 kernel-kernel-pc-i386 :: $(OUTDIR)/smpboot.bin.o 
+kernel-kernel-pc-i386-quick :: $(OUTDIR)/smpboot.bin.o 
 kernel-kernel-pc-i386-kobj :: $(OUTDIR)/smpboot.bin.o
+kernel-kernel-pc-i386-kobj-quick :: $(OUTDIR)/smpboot.bin.o
 
-%rule_compile basename=smpbootstrap targetdir=$(OBJDIR)
-%rule_link_binary file=$(OUTDIR)/smpboot.bin.o name=smpbootstrap objs=$(OBJDIR)/smpbootstrap.o
+%rule_assemble_multi basenames=smpbootstrap targetdir=$(OBJDIR)
+%rule_link_binary file=$(OUTDIR)/smpboot.bin.o name=smpbootstrap objs=$(OBJDIR)/smpbootstrap.o ldflags="-m elf_i386"
 
--include $(OBJDIR)/smpbootstrap.d
-
-$(OBJDIR)/smpbootstrap.o $(OBJDIR)/smpbootstrap.d : | $(OBJDIR)
+$(OBJDIR)/smpbootstrap.o : | $(OBJDIR)
 
 GLOB_MKDIRS += $(OUTDIR) $(OBJDIR)
 

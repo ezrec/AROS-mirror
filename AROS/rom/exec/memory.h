@@ -18,20 +18,21 @@
  * system memory allocation routines.
  * In case of problems use definitions below.
  *
- * 31.01.2011: disabled, because creates problems:
- * 1. FindMem() can be called from within supervisor mode
- * 2. FreeMem() can be called from within RemTask() in order to free task structure itself.
- *    This eventually leads to trashing memory (semaphore is owned by removed task).
- * Can be turned on again only after addressing these issues.
-
+ * Many m68k programs assume forbid state won't get broken.
+ */
+/* ABI_V0 compatibility:
+ * Some existing software (i.e. packet.handler) allocate memory from within soft int handler. It is not allowed
+ * to work with semaphores in Supervisor mode as it may lead to deadlock.
+ */
+#if 0 //ndef __mc68000
 #define MEM_LOCK	ObtainSemaphore(&PrivExecBase(SysBase)->MemListSem)
 #define MEM_LOCK_SHARED ObtainSemaphoreShared(&PrivExecBase(SysBase)->MemListSem)
 #define MEM_UNLOCK	ReleaseSemaphore(&PrivExecBase(SysBase)->MemListSem)
-*/
+#else
 #define MEM_LOCK	Forbid()
 #define MEM_LOCK_SHARED Forbid()
 #define MEM_UNLOCK	Permit()
-
+#endif
 
 /* Private Pool structure */
 struct Pool 
@@ -59,23 +60,25 @@ struct checkMemHandlersState
     struct MemHandlerData  cmhs_Data;
 };
 
+struct TraceLocation;
+
 struct MemHeader *FindMem(APTR address, struct ExecBase *SysBase);
-APTR stdAlloc(struct MemHeader *mh, IPTR byteSize, ULONG requirements, struct ExecBase *SysBase);
-void stdDealloc(struct MemHeader *freeList, APTR memoryBlock, IPTR byteSize, struct ExecBase *SysBase);
+APTR stdAlloc(struct MemHeader *mh, IPTR byteSize, ULONG requirements, struct TraceLocation *loc, struct ExecBase *SysBase);
+void stdDealloc(struct MemHeader *freeList, APTR memoryBlock, IPTR byteSize, struct TraceLocation *loc, struct ExecBase *SysBase);
 
 APTR InternalAllocAbs(APTR location, IPTR byteSize, struct ExecBase *SysBase);
-void InternalFreeMem(APTR location, IPTR byteSize, struct ExecBase *SysBase);
-APTR AllocMemHeader(IPTR size, ULONG flags, struct ExecBase *SysBase);
-void FreeMemHeader(APTR addr, struct ExecBase *SysBase);
+void InternalFreeMem(APTR location, IPTR byteSize, struct TraceLocation *loc, struct ExecBase *SysBase);
+APTR AllocMemHeader(IPTR size, ULONG flags, struct TraceLocation *loc, struct ExecBase *SysBase);
+void FreeMemHeader(APTR addr, struct TraceLocation *loc, struct ExecBase *SysBase);
 
-APTR InternalAllocPooled(APTR poolHeader, IPTR memSize, ULONG flags, struct ExecBase *SysBase);
-void InternalFreePooled(APTR memory, IPTR memSize, struct ExecBase *SysBase);
+APTR InternalAllocPooled(APTR poolHeader, IPTR memSize, ULONG flags, struct TraceLocation *loc, struct ExecBase *SysBase);
+void InternalFreePooled(APTR memory, IPTR memSize, struct TraceLocation *loc, struct ExecBase *SysBase);
 
 ULONG checkMemHandlers(struct checkMemHandlersState *cmhs, struct ExecBase *SysBase);
 
-APTR nommu_AllocMem(IPTR byteSize, ULONG flags, struct ExecBase *SysBase);
+APTR nommu_AllocMem(IPTR byteSize, ULONG flags, struct TraceLocation *loc, struct ExecBase *SysBase);
 APTR nommu_AllocAbs(APTR location, IPTR byteSize, struct ExecBase *SysBase);
-void nommu_FreeMem(APTR memoryBlock, IPTR byteSize, struct ExecBase *SysBase);
+void nommu_FreeMem(APTR memoryBlock, IPTR byteSize, struct TraceLocation *loc, struct ExecBase *SysBase);
 IPTR nommu_AvailMem(ULONG attributes, struct ExecBase *SysBase);
 
 #define BLOCK_TOTAL \

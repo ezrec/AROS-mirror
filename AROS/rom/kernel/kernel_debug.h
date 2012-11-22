@@ -12,33 +12,26 @@
 #undef bug
 #endif
 
-AROS_LD2(int, KrnBug,
-         AROS_LDA(const char *, format, A0),
-         AROS_LDA(va_list, args, A1),
-         struct KernelBase *, KernelBase, 12, Kernel);
+int krnPutC(int chr, struct KernelBase *KernelBase);
+int krnBug(const char *format, va_list args, APTR kernelBase);
+void krnDisplayAlert(const char *text, struct KernelBase *KernelBase);
+void krnPanic(struct KernelBase *KernelBase, const char *fmt, ...);
 
-static inline void _bug(struct KernelBase *KernelBase, const char *format, ...)
+static inline void _bug(APTR kernelBase, const char *format, ...)
 {
     va_list args;
 
     va_start(args, format);
 
-    /* We call the function directly. Not using vector table,
-       because KernelBase can be NULL here (during very early
-       startup). */
-    AROS_CALL2(int, AROS_SLIB_ENTRY(KrnBug, Kernel),
-	      AROS_LCA(const char *, format, A0),
-	      AROS_LCA(va_list, args, A1),
-	      struct KernelBase *, KernelBase);
+    /* 
+     * We use internal entry here. This is done because this function can be used
+     * during early boot, while KernelBase is NULL. However it's still passed,
+     * just in case.
+     */
+    krnBug(format, args, kernelBase);
 
     va_end(args);
 }
 
 #define bug(...) _bug(KernelBase, __VA_ARGS__)
-
-/*
- * Character output function. All debug output ends up there.
- * This function needs to be implemented for every supported
- * architecture.
- */
-int krnPutC(int chr, struct KernelBase *KernelBase);
+#define nbug(...) _bug(NULL, __VA_ARGS__)

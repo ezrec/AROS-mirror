@@ -105,10 +105,10 @@
 /*
  * Fetch a number from the stream.
  *
- * size - one of 'w', 'l', 'L'
+ * size - one of 'h', 'l', 'i'
  * sign - <0 or >= 0.
- * 
- * EXPERIMENTAL: 'L' is used to represent full IPTR value on 64-bit systems
+ *
+ * EXPERIMENTAL: 'i' is used to represent full IPTR value on 64-bit systems
  */
 #define fetch_number(size, sign)                                                               \
     (sign >= 0                                                                                 \
@@ -138,7 +138,7 @@ do                                        \
 	}						\
 	else						\
 	{						\
-            AROS_UFC2(void, PutChProc,        		\
+        AROS_UFC2NR(void, PutChProc,        		\
 	    AROS_UFCA(UBYTE, (ch), D0),       		\
 	    AROS_UFCA(APTR , PutChData, A3)); 		\
 	}						\
@@ -197,7 +197,7 @@ APTR InternalRawDoFmt(CONST_STRPTR FormatString, APTR DataStream, VOID_FUNC PutC
 	       same result (and never becomes smaller).
 
 	       Note that when the buffer is large enough for decimal it's
-	       large enough for hexdecimal as well.  */
+	       large enough for hexadecimal as well.  */
 
 	    #define CBUFSIZE (sizeof(IPTR)*8*302/1000+1)
 	    /* The buffer for converting long to ascii.  */
@@ -253,8 +253,16 @@ APTR InternalRawDoFmt(CONST_STRPTR FormatString, APTR DataStream, VOID_FUNC PutC
                 {
                     BSTR s = fetch_arg(BSTR);
                     
-		    buf = AROS_BSTR_ADDR(s);
-		    width = AROS_BSTR_strlen(s);
+                    if (s)
+                    {
+		    	buf = AROS_BSTR_ADDR(s);
+		    	width = AROS_BSTR_strlen(s);
+		    }
+		    else
+		    {
+		    	buf = "";
+		    	width = 0;
+		    }
 
 		    break;
                 }
@@ -278,6 +286,7 @@ APTR InternalRawDoFmt(CONST_STRPTR FormatString, APTR DataStream, VOID_FUNC PutC
 			minwidth = sizeof(APTR)*2;
 			size = 'i';
 		    case 'x':
+		    case 'X':
 		        base   = 16;
 			number = fetch_number(size, 1);
 
@@ -433,7 +442,7 @@ APTR InternalRawDoFmt(CONST_STRPTR FormatString, APTR DataStream, VOID_FUNC PutC
 				   'd' signed decimal number.
 				   's' C string. NULL terminated.
 				   'u' unsigned decimal number.
-				   'x' unsigned hexdecimal number.
+				   'x' unsigned hexadecimal number.
 				   'P' pointer. Size depends on the architecture.
 				   'p' The same as 'P', for AmigaOS v4 compatibility.
 

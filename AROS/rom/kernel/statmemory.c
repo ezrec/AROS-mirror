@@ -7,7 +7,7 @@
 #include <inttypes.h>
 
 #include <kernel_base.h>
-#include "memory_intern.h"
+#include <kernel_mm.h>
 
 /*****************************************************************************
 
@@ -68,8 +68,7 @@ AROS_LH2(ULONG, KrnStatMemoryA,
 #if USE_MMU
     if (KernelBase->kb_PageSize)
     {
-        const struct TagItem *tstate = query;
-	struct TagItem *tag;
+        struct TagItem *tag, *tstate = query;
 	struct MemHeader *mh;
 	BOOL do_traverse = FALSE;
 
@@ -111,7 +110,7 @@ AROS_LH2(ULONG, KrnStatMemoryA,
 		continue;
 
 	    /* Get statistics. Total values will be summed up. */
-	    krnStatMemHeader(mh, query);
+	    mm_StatMemHeader(mh, query, KernelBase);
 	}
     
 	return TRUE;

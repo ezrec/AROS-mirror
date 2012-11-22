@@ -1,17 +1,17 @@
 /*
-    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: Cause() - Cause a software interrupt.
     Lang: english
 */
 
-#include <exec/execbase.h>
 #include <aros/asmcall.h>
-#include <hardware/custom.h>
+#include <exec/execbase.h>
 #include <hardware/intbits.h>
 #include <proto/kernel.h>
 
+#include "chipset.h"
 #include "exec_intern.h"
 
 /*****************************************************************************
@@ -90,8 +90,9 @@
     UBYTE pri;
 
     Disable();
+
     /* Check to ensure that this node is not already in a list. */
-    if( softint->is_Node.ln_Type != NT_SOFTINT )
+    if (softint->is_Node.ln_Type != NT_SOFTINT)
     {
         /* Scale the priority down to a number between 0 and 4 inclusive
         We can use that to index into exec's software interrupt lists. */
@@ -100,18 +101,21 @@
         /* We are accessing an Exec list, protect ourselves. */
         ADDTAIL(&SysBase->SoftInts[pri].sh_List, &softint->is_Node);
         softint->is_Node.ln_Type = NT_SOFTINT;
+
+        /* Signal pending software interrupt condition */
         SysBase->SysFlags |= SFF_SoftInt;
-#if (AROS_FLAVOUR & AROS_FLAVOUR_BINCOMPAT) && defined(__mc68000)
-	{
-	   /* Quick soft int request. For optimal performance m68k-amiga
-	    * Enable() does not do any extra SFF_SoftInt checks */
-	    volatile struct Custom *custom = (struct Custom*)0xdff000;
-	    custom->intreq = INTF_SETCLR | INTF_SOFTINT;
-        }
-#else
-        /* If we are in usermode the software interrupt will end up
-           being triggered in Enable(). See Enable() code */
-#endif
+
+	/*
+	 * Quick soft int request. For optimal performance m68k-amiga
+	 * Enable() does not do any extra SFF_SoftInt checks
+	 */
+	CUSTOM_CAUSE(INTF_SOFTINT);
+        /*
+         * If we are in usermode the software interrupt will end up being triggered
+         * in Enable(). On Amiga hardware this happens because a hardware interrupt
+         * was queued. On other machines Enable() will simulate this behavior,
+         * looking at SFF_SoftInt flag.
+         */
     }
     Enable();
 
@@ -131,28 +135,15 @@
     This procedure could be more efficient.
 */
 
-AROS_UFH5(void, SoftIntDispatch,
-    AROS_UFHA(ULONG, intReady, D1),
-    AROS_UFHA(volatile struct Custom *, custom, A0),
-    AROS_UFHA(IPTR, intData, A1),
-    AROS_UFHA(ULONG_FUNC, intCode, A5),
-    AROS_UFHA(struct ExecBase *, SysBase, A6))
+AROS_INTH0(SoftIntDispatch)
 {
-    AROS_USERFUNC_INIT
+    AROS_INTFUNC_INIT
 
     struct Interrupt *intr = NULL;
     BYTE i;
 
-#if defined(__mc68000)
-    /* If we are working on classic Amiga(tm), we have valid custom chip pointer */
-    if (custom)
-    {
-    	/* disable soft ints temporarily */
-    	custom->intena = INTF_SOFTINT;
-    	/* clear request */
-    	custom->intreq = INTF_SOFTINT;
-    }
-#endif
+    /* disable soft ints temporarily */
+    CUSTOM_ACK(INTF_SOFTINT);
 
     /* Don't bother if there are no software ints queued. */
     if( SysBase->SysFlags & SFF_SoftInt )
@@ -206,11 +197,10 @@ AROS_UFH5(void, SoftIntDispatch,
         }
     }
 
-#if defined(__mc68000)
     /* re-enable soft ints */
-    if (custom)
-	custom->intena = INTF_SETCLR | INTF_SOFTINT;
-#endif
+    CUSTOM_ENABLE(INTB_SOFTINT);
 
-    AROS_USERFUNC_EXIT
+    return FALSE;
+
+    AROS_INTFUNC_EXIT
 }

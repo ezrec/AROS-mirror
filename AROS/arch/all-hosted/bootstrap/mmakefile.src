@@ -3,29 +3,26 @@ include $(TOP)/config/make.cfg
 
 EXEDIR := $(BINDIR)/boot
 
-FILES         := main bootstrap elfloader32 filesystem hostinterface memory support shutdown ui
-PROG	      := AROSBootstrap
-USER_INCLUDES := -I$(SRCDIR)/arch/all-$(ARCH)/kernel -I$(GENINCDIR)
+FILES := main bootstrap elf_io filesystem hostinterface kickstart log memory support shutdown runtime ui
+PROG  := AROSBootstrap
 
-ifeq ($(ARCH),mingw32)
-    EXE_SUFFIX := .exe
-else
-    LIBS := gcc dl
-endif
+## The '-Wno-attributes' is here due to a gcc 4.5.x bug
+## where its strcmp() builtin generates a number of spurious
+## complaints with -O1 or higher optimizations enabled.
+USER_CFLAGS   := -Wno-attributes -DADATE="\"$(shell date '+%d.%m.%Y')\""
+USER_LDFLAGS  := -L$(GENDIR)/lib
+USER_INCLUDES := -I$(SRCDIR)/arch/all-$(ARCH)/kernel -I$(GENINCDIR) -isystem $(SRCDIR)/bootstrap/include
+LIBS	      := bootstrap
 
-ifeq ($(AROS_TARGET_VARIANT),ios)
-    KERNEL_LDFLAGS += $(IOS_LDFLAGS) -framework Foundation -framework UIKit
-    EXEDIR := $(TARGETDIR)/Payload/$(PROG).app
-endif
-ifeq ($(AROS_TARGET_VARIANT),android)
-    KERNEL_LDFLAGS += -shared
-    EXEDIR := $(GENDIR)/arch/all-android/bootstrap/app/libs/armeabi
-    PROG := lib$(PROG)
-    EXE_SUFFIX := .so
-endif
+# Allow to add host-specific options
+-include $(SRCDIR)/arch/all-$(FAMILY)/bootstrap/make.opts
+-include $(SRCDIR)/arch/all-$(ARCH)/bootstrap/make.opts
+-include $(SRCDIR)/arch/all-$(AROS_TARGET_VARIANT)/bootstrap/make.opts
+
+#MM kernel-bootstrap-hosted: linklibs-bootstrap linklibs-arossupport
 
 %build_prog mmake=kernel-bootstrap-hosted \
     progname=$(PROG)$(EXE_SUFFIX) targetdir=$(EXEDIR) \
-    files=$(FILES) compiler=kernel uselibs=$(LIBS)
+    files=$(FILES) compiler=kernel uselibs="$(LIBS)"
 
 %common

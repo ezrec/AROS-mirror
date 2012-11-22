@@ -1,14 +1,21 @@
 # $Id$
 include $(TOP)/config/make.cfg
 
-FILES := platform_init shutdowna
+FILES := platform_init coldreboot shutdowna
+# swapcontext() and friends are not implemented on ARM Linux and are totally missing on Android
 ifneq ($(AROS_TARGET_CPU), arm)
+ifneq ($(AROS_TARGET_VARIANT), android)
 USER_CFLAGS := -DHAVE_SWAPCONTEXT
 FILES += newstackswap
 endif
+endif
 
-USER_INCLUDES := -I$(SRCDIR)/$(CURDIR) \
-		 -I$(SRCDIR)/rom/exec -isystem $(GENINCDIR) $(KERNEL_INCLUDES) \
+ifeq ($(ARCH),darwin)
+USER_CFLAGS += -D_FORTIFY_SOURCE=0
+endif
+
+USER_INCLUDES := $(PRIV_KERNEL_INCLUDES) $(PRIV_EXEC_INCLUDES) \
+		 -isystem $(GENINCDIR) $(KERNEL_INCLUDES) \
 		 -DHOST_OS_$(ARCH) -DHOST_OS_$(AROS_TARGET_VARIANT)
 
 %build_archspecific \

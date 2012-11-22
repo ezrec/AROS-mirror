@@ -4,14 +4,15 @@ include $(TOP)/config/make.cfg
 FILES  := alert_cpu cpu_init newstackswap preparecontext
 AFILES := execstubs stackswap copymem_SSE
 
+USER_CFLAGS   := -O0
 USER_AFLAGS   := -I$(GENINCDIR)
-USER_INCLUDES := -I$(SRCDIR)/rom/exec
+USER_INCLUDES := $(PRIV_EXEC_INCLUDES)
 
 %build_archspecific \
   mainmmake=kernel-exec maindir=rom/exec \
   asmfiles=$(AFILES) files=$(FILES) \
   arch=i386
 
-#MM kernel-exec-i386 : includes-asm_h-i386
+#MM kernel-exec-i386 : includes-asm_h-i386 kernel-kernel-includes
 
 %common

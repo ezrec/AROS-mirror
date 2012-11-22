@@ -6,7 +6,6 @@
     Lang: english
 */
 
-#include <exec/types.h>
 #include <exec/lists.h>
 #include <exec/execbase.h>
 #include <exec/interrupts.h>
@@ -15,8 +14,6 @@
 #include <exec/alerts.h>
 #include <exec/tasks.h>
 #include <hardware/intbits.h>
-#include <hardware/custom.h>
-#include <dos/dosextens.h>
 
 #include <aros/symbolsets.h>
 #include <aros/system.h>
@@ -34,280 +31,258 @@
 #include "exec_intern.h"
 #include "exec_util.h"
 #include "etask.h"
+#include "intservers.h"
 #include "memory.h"
+#include "taskstorage.h"
 
 #include LC_LIBDEFS_FILE
 
-/* Kludges for old kernels (x86-64) */
-#ifndef KrnCreateContext
-#define KrnCreateContext() AllocTaskMem(t, SIZEOF_ALL_REGISTERS, MEMF_PUBLIC|MEMF_CLEAR)
-#endif
-
 static const UBYTE name[];
 static const UBYTE version[];
-static const struct TagItem resTags[];
+
+/* This comes from genmodule */
 extern const char LIBEND;
-AROS_UFP3S(LIBBASETYPEPTR, GM_UNIQUENAME(init),
-    AROS_UFPA(ULONG, dummy, D0),
-    AROS_UFPA(BPTR, segList, A0),
+
+AROS_UFP3S(struct ExecBase *, GM_UNIQUENAME(init),
+    AROS_UFPA(struct MemHeader *, mh, D0),
+    AROS_UFPA(struct TagItem *, tagList, A0),
     AROS_UFPA(struct ExecBase *, sysBase, A6));
 
+/*
+ * exec.library ROMTag.
+ *
+ * It has RTF_COLDSTART level specified, however it actually runs at SINGLETASK
+ * (no multitasking, incomplete boot task).
+ * This is supposed to be the first COLDSTART resident to be executed. Its job is
+ * to complete the boot task and enable multitasking (which actually means entering
+ * COLDSTART level).
+ * Such mechanism allows kernel.resource boot code to do some additional setup after
+ * all SINGLETASK residents are run. Usually these are various lowlevel hardware resources
+ * (like acpi.resource, efi.resource, etc) which can be needed for kernel.resource to
+ * complete own setup. This helps to get rid of additional ROMTag hooks.
+ * There's one more magic with this ROMTag: it's called twice. First time it's called manually
+ * from within krnPrepareExecBase(), for initial ExecBase creation. This magic is described below.
+ *
+ * WARNING: the CPU privilege level must be set to user before calling InitCode(RTF_COLDSTART)!
+ */
 const struct Resident Exec_resident =
 {
     RTC_MATCHWORD,
     (struct Resident *)&Exec_resident,
     (APTR)&LIBEND,
-    RTF_SINGLETASK | RTF_EXTENDED,
+    RTF_COLDSTART,
     VERSION_NUMBER,
     NT_LIBRARY,
     120,
     (STRPTR)name,
     (STRPTR)&version[6],
     &GM_UNIQUENAME(init),
-    REVISION_NUMBER,
-    (struct TagItem *)&resTags[0],
 };
 
 static const UBYTE name[] = MOD_NAME_STRING;
 static const UBYTE version[] = VERSION_STRING;
-static const struct TagItem resTags[] = {
-    {RTT_STARTUP, (IPTR)PrepareExecBase},
-    {TAG_DONE   , 0              }
-};
 
 extern void debugmem(void);
 
-/* IntServer:
-    This interrupt handler will send an interrupt to a series of queued
-    interrupt servers. Servers should return D0 != 0 (Z clear) if they
-    believe the interrupt was for them, and no further interrupts will
-    be called. This will only check the value in D0 for non-m68k systems,
-    however it SHOULD check the Z-flag on 68k systems.
-
-    Hmm, in that case I would have to separate it from this file in order
-    to replace it...
-*/
-AROS_UFH5S(void, IntServer,
-    AROS_UFHA(ULONG, intMask, D0),
-    AROS_UFHA(struct Custom *, custom, A0),
-    AROS_UFHA(struct List *, intList, A1),
-    AROS_UFHA(APTR, intCode, A5),
-    AROS_UFHA(struct ExecBase *, SysBase, A6))
-{
-    AROS_USERFUNC_INIT
-
-    struct Interrupt * irq;
-
-    ForeachNode(intList, irq)
-    {
-	if( AROS_UFC4(int, irq->is_Code,
-		AROS_UFCA(struct Custom *, custom, A0),
-		AROS_UFCA(APTR, irq->is_Data, A1),
-		AROS_UFCA(APTR, irq->is_Code, A5),
-		AROS_UFCA(struct ExecBase *, SysBase, A6)
-	))
-#if (AROS_FLAVOUR & AROS_FLAVOUR_BINCOMPAT)
-	    ;
-#else
-	    break;
-#endif
-    }
-
-    AROS_USERFUNC_EXIT
-}
-
-/* VBlankServer. The same as general purpose IntServer but also counts task's quantum */
-AROS_UFH5S(void, VBlankServer,
-    AROS_UFHA(ULONG, intMask, D1),
-    AROS_UFHA(struct Custom *, custom, A0),
-    AROS_UFHA(struct List *, intList, A1),
-    AROS_UFHA(APTR, intCode, A5),
-    AROS_UFHA(struct ExecBase *, SysBase, A6))
-{
-    AROS_USERFUNC_INIT
-
-    struct Interrupt *irq;
-
-    /* First decrease Elapsed time for current task */
-    if (SysBase->Elapsed && (--SysBase->Elapsed == 0))
-    {
-        SysBase->SysFlags |= SFF_QuantumOver;
-        SysBase->AttnResched |= ARF_AttnSwitch;
-    }
-
-    ForeachNode(intList, irq)
-    {
-	if( AROS_UFC4(int, irq->is_Code,
-		AROS_UFCA(struct Custom *, custom, A0),
-		AROS_UFCA(APTR, irq->is_Data, A1),
-		AROS_UFCA(APTR, irq->is_Code, A5),
-		AROS_UFCA(struct ExecBase *, SysBase, A6)
-	))
-#if (AROS_FLAVOUR & AROS_FLAVOUR_BINCOMPAT)
-	    ;
-#else
-	    break;
-#endif
-    }
-
-    AROS_USERFUNC_EXIT
-}
-
-extern ULONG SoftIntDispatch();
-
 THIS_PROGRAM_HANDLES_SYMBOLSETS
 DEFINESET(INITLIB)
+DEFINESET(PREINITLIB)
 
-AROS_UFH3S(LIBBASETYPEPTR, GM_UNIQUENAME(init),
-    AROS_UFHA(ULONG, dummy, D0),
-    AROS_UFHA(BPTR, segList, A0),
-    AROS_UFHA(struct ExecBase *, SysBase, A6)
+AROS_UFH3S(struct ExecBase *, GM_UNIQUENAME(init),
+    AROS_UFHA(struct MemHeader *, mh, D0),
+    AROS_UFHA(struct TagItem *, tagList, A0),
+    AROS_UFHA(struct ExecBase *, origSysBase, A6)
 )
 {
     AROS_USERFUNC_INIT
 
-    struct Task    *t;
+    struct TaskStorageFreeSlot *tsfs;
+    struct Task *t;
     struct MemList *ml;
-    int i, j;
-    UWORD sum;
-    UWORD *ptr;
+    struct ExceptionContext *ctx;
+    int i;
 
     /*
-     * Please do not do this here.
-     * Global SysBase is set up earlier, in PrepareExecBase(). This assignment
-     * causes crash on kernels using write-protected zeropage (like x86-64).
-     * Memory protection is set up by kernel.resource before entering this code.
+     * exec.library init routine is a little bit magic. The magic is that it
+     * can be run twice.
+     * First time it's run manually from kernel.resource's ROMTag scanner in order
+     * to create initial ExecBase. This condition is determined by origSysBase == NULL
+     * passed to this function. In this case the routine expects two more arguments:
+     * mh      - an initial MemHeader in which ExecBase will be constructed.
+     * tagList - boot information passed from the bootstrap. It is used to parse
+     *           certain command-line arguments.
      *
-    SysBase = sysBase; */
+     * Second time it's run as part of normal modules initialization sequence, at the
+     * end of all RTS_SINGLETASK modules. At this moment we already have a complete
+     * memory list and working kernel.resource. Now the job is to complete the boot task
+     * structure, and start up multitasking.
+     */
+    if (!origSysBase)
+        return PrepareExecBase(mh, tagList);
 
     DINIT("exec.library init");
 
-    /* Create boot task */
-    ml = (struct MemList *)AllocMem(sizeof(struct MemList), MEMF_PUBLIC|MEMF_CLEAR);
-    t  = (struct Task *)   AllocMem(sizeof(struct Task), MEMF_PUBLIC|MEMF_CLEAR);
-    if( !ml || !t )
+    /*
+     * Call platform-specific pre-init code (if any). Return values are not checked.
+     * Note that Boot Task is still incomplete here, and there's no multitasking yet.
+     *
+     * TODO: Amiga(tm) port may call PrepareExecBaseMove() here instead of hardlinking
+     * it from within the boot code.
+     *
+     * NOTE: All functions will be passed origSysBase value. This is the original
+     * ExecBase pointer in case if it was moved. The new pointer will be in global
+     * SysBase then.
+     */
+    set_call_libfuncs(SETNAME(PREINITLIB), 1, 0, origSysBase);
+
+    /*
+     * kernel.resource is up and running and memory list is complete.
+     * Global SysBase is set to its final value. We've got KernelBase and AllocMem() works.
+     * Initialize free task storage slots management
+     */
+    tsfs = AllocMem(sizeof(struct TaskStorageFreeSlot), MEMF_PUBLIC|MEMF_CLEAR);
+    if (!tsfs)
     {
-	DINIT("ERROR: Cannot create Boot Task!");
-	Alert( AT_DeadEnd | AG_NoMemory | AN_ExecLib );
+        DINIT("ERROR: Could not allocate free slot node!");
+        return NULL;
     }
+    tsfs->FreeSlot = __TS_FIRSTSLOT+1;
+    AddHead((struct List *)&PrivExecBase(SysBase)->TaskStorageSlots, (struct Node *)tsfs);
 
-    D(bug("[exec] Boot task: MemList 0x%p, task 0x%p\n", ml, t));
+    /* Now we are ready to become a Boot Task and turn on the multitasking */
+    t   = AllocMem(sizeof(struct Task),    MEMF_PUBLIC|MEMF_CLEAR);
+    ml  = AllocMem(sizeof(struct MemList), MEMF_PUBLIC|MEMF_CLEAR);
+    ctx = KrnCreateContext();
 
-    ml->ml_NumEntries = 1;
-    ml->ml_ME[0].me_Addr = t;
-    ml->ml_ME[0].me_Length = sizeof(struct Task);
+    if (!t || !ml || !ctx)
+    {
+        DINIT("Not enough memory for first task");
+        return NULL;
+    }
 
     NEWLIST(&t->tc_MemEntry);
 
-    AddHead(&t->tc_MemEntry,&ml->ml_Node);
-
     t->tc_Node.ln_Name = "Boot Task";
     t->tc_Node.ln_Type = NT_TASK;
-    t->tc_Node.ln_Pri = 0;
-    t->tc_State = TS_RUN;
-    t->tc_SigAlloc = 0xFFFF;
-    t->tc_SPLower = 0;		/* This is the system's boot stack. Not to be confused with supervisor stack! */
-    t->tc_SPUpper = (APTR)~0UL;
-    t->tc_Flags |= TF_ETASK;
+    t->tc_Node.ln_Pri  = 0;
+    t->tc_State        = TS_RUN;
+    t->tc_SigAlloc     = 0xFFFF;
 
-    t->tc_UnionETask.tc_ETask = AllocVec(sizeof(struct IntETask), MEMF_ANY|MEMF_CLEAR);
-    if (!t->tc_UnionETask.tc_ETask)
+    /*
+     * Boot-time stack can be placed anywhere in memory.
+     * In order to avoid complex platform-dependent mechanism for querying its limits
+     * we simply shut up stack checking in kernel.resource by specifying the whole address
+     * space as limits.
+     */
+    t->tc_SPLower      = NULL;
+    t->tc_SPUpper      = (APTR)~0;
+
+    /*
+     * Build a memory list for the task.
+     * It doesn't include stack because it wasn't allocated by us.
+     */
+    ml->ml_NumEntries      = 1;
+    ml->ml_ME[0].me_Addr   = t;
+    ml->ml_ME[0].me_Length = sizeof(struct Task);
+    AddHead(&t->tc_MemEntry, &ml->ml_Node);
+
+    /* Create a ETask structure and attach CPU context */
+    if (!InitETask(t))
     {
-	DINIT("Not enough memory for first task");
-	Alert( AT_DeadEnd | AG_NoMemory | AN_ExecLib );
+        DINIT("Not enough memory for first task");
+        return NULL;
     }
+    t->tc_UnionETask.tc_ETask->et_RegFrame = ctx;
 
-    D(bug("[exec] ETask 0x%p\n", t->tc_UnionETask.tc_ETask));
+    D(bug("[exec] Boot Task 0x%p, ETask 0x%p, CPU context 0x%p\n", t, t->tc_UnionETask.tc_ETask, ctx));
 
-    /* Initialise the ETask data. */
-    InitETask(t, t->tc_UnionETask.tc_ETask);
-
-    GetIntETask(t)->iet_Context = KrnCreateContext();
-    if (!GetIntETask(t)->iet_Context)
-    {
-	DINIT("Not enough memory for first task context");
-	Alert( AT_DeadEnd | AG_NoMemory | AN_ExecLib );
-    }
-
-    D(bug("[exec] CPU context 0x%p\n", GetIntETask(t)->iet_Context));
-
+    /*
+     * Set the current task and elapsed time for it.
+     * Set ThisTask only AFTER InitETask() has been called. InitETask() sets et_Parent
+     * to FindTask(NULL). We must get NULL there, otherwise we'll get task looped on itself.
+     */
     SysBase->ThisTask = t;
-    SysBase->Elapsed = SysBase->Quantum;
+    SysBase->Elapsed  = SysBase->Quantum;
 
-    /* Install the interrupt servers */
-    for(i=0; i < 16; i++)
+    /* Install the interrupt servers. Again, do it here because allocations are needed. */
+    for (i=0; i < 16; i++)
     {
-	struct Interrupt *is;
+        struct Interrupt *is;
 
-	if (i != INTB_SOFTINT)
-	{	
-	    struct SoftIntList *sil;
+        if (i != INTB_SOFTINT)
+        {       
+            struct SoftIntList *sil;
 
-	    is = AllocMem(sizeof(struct Interrupt) + sizeof(struct SoftIntList), MEMF_CLEAR|MEMF_PUBLIC);
-	    if (is == NULL)
-	    {
-		DINIT("ERROR: Cannot install Interrupt Servers!");
-		Alert( AT_DeadEnd | AN_IntrMem );
-	    }
+            is = AllocMem(sizeof(struct Interrupt) + sizeof(struct SoftIntList), MEMF_CLEAR|MEMF_PUBLIC);
+            if (is == NULL)
+            {
+                DINIT("ERROR: Cannot install Interrupt Servers!");
+                Alert( AT_DeadEnd | AN_IntrMem );
+            }
 
-	    sil = (struct SoftIntList *)((struct Interrupt *)is + 1);
+            sil = (struct SoftIntList *)((struct Interrupt *)is + 1);
 
-	    if (i == INTB_VERTB)
-		is->is_Code = &VBlankServer;
-	    else
-		is->is_Code = &IntServer;
-	    is->is_Data = sil;
-	    NEWLIST((struct List *)sil);
-	    SetIntVector(i,is);
-	}
-	else
-	{
-	    struct Interrupt * is;
+            if (i == INTB_VERTB)
+                is->is_Code = (VOID_FUNC)VBlankServer;
+            else
+                is->is_Code = (VOID_FUNC)IntServer;
+            is->is_Data = sil;
+            NEWLIST((struct List *)sil);
+            SetIntVector(i,is);
+        }
+        else
+        {
+            struct Interrupt * is;
 
-	    is = AllocMem(sizeof(struct Interrupt), MEMF_CLEAR|MEMF_PUBLIC);
-	    if (NULL == is)
-	    {
-		DINIT("Error: Cannot install SoftInt Handler!\n");
-		Alert( AT_DeadEnd | AN_IntrMem );
-	    }
+            is = AllocMem(sizeof(struct Interrupt), MEMF_CLEAR|MEMF_PUBLIC);
+            if (NULL == is)
+            {
+                DINIT("Error: Cannot install SoftInt Handler!\n");
+                Alert( AT_DeadEnd | AN_IntrMem );
+            }
 
-	    is->is_Node.ln_Type = NT_INTERRUPT;
-	    is->is_Node.ln_Pri = 0;
-	    is->is_Node.ln_Name = "SW Interrupt Dispatcher";
-	    is->is_Data = NULL;
-	    is->is_Code = (void *)SoftIntDispatch;
-	    SetIntVector(i,is);
-	}
+            is->is_Node.ln_Type = NT_INTERRUPT;
+            is->is_Node.ln_Pri = 0;
+            is->is_Node.ln_Name = "SW Interrupt Dispatcher";
+            is->is_Data = NULL;
+            is->is_Code = (void *)SoftIntDispatch;
+            SetIntVector(i,is);
+        }
     }
 
     /* We now start up the interrupts */
     Permit();
     Enable();
 
-    /* Now it's time to calculate exec checksum. It will be used
-     * in future to distinguish whether we'd had proper execBase
-     * before restart */
-    sum=0;
-    ptr = &SysBase->SoftVer;
-
-    i=((IPTR)&SysBase->IntVects[0] - (IPTR)&SysBase->SoftVer) / 2;
-
-    /* Calculate sum for every static part from SoftVer to ChkSum */
-    for (j = 0; j < i; j++)
-        sum+=*(ptr++);
-
-    SysBase->ChkSum = ~sum;
-
     D(debugmem());
+
+    /* Our housekeeper must have the largest possible priority */
+    t = NewCreateTask(TASKTAG_NAME       , "Exec housekeeper",
+                      TASKTAG_PRI        , 127,
+                      TASKTAG_PC         , ServiceTask,
+                      TASKTAG_TASKMSGPORT, &((struct IntExecBase *)SysBase)->ServicePort,
+                      TASKTAG_ARG1       , SysBase,
+                      TAG_DONE);
+    if (!t)
+    {
+        DINIT("Failed to start up service task");
+        return NULL;
+    }
 
     /* Call platform-specific init code (if any) */
     set_call_libfuncs(SETNAME(INITLIB), 1, 1, SysBase);
 
-    /*
-     * This code returns, allowing more RTF_SINGLETASK modules to get initialized after us.
-     * Kernel.resource's startup code has to InitCode(RTF_COLDSTART) itself.
-     */
-    return NULL;
+    /* Multitasking is on. Call CoolCapture. */
+    if (SysBase->CoolCapture)
+    {
+        DINIT("Calling CoolCapture at 0x%p", SysBase->CoolCapture);
+
+        AROS_UFC1NR(void, SysBase->CoolCapture,
+            AROS_UFCA(struct Library *, (struct Library *)SysBase, A6));
+    }
+
+    /* Done. Following the convention, we return our base pointer. */
+    return SysBase;
 
     AROS_USERFUNC_EXIT
 }
@@ -321,6 +296,7 @@ AROS_PLH1(struct ExecBase *, open,
     /* I have one more opener. */
     SysBase->LibNode.lib_OpenCnt++;
     return SysBase;
+
     AROS_LIBFUNC_EXIT
 }
 
@@ -332,5 +308,6 @@ AROS_PLH0(BPTR, close,
     /* I have one fewer opener. */
     SysBase->LibNode.lib_OpenCnt--;
     return 0;
+
     AROS_LIBFUNC_EXIT
 }

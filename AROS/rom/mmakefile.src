@@ -5,6 +5,7 @@ include $(TOP)/config/make.cfg
 #MM     kernel-aros \
 #MM	kernel-disk \
 #MM     kernel-dos \
+#MM     kernel-debug \
 #MM     kernel-boot \
 #MM	kernel-fs-con \
 #MM	kernel-fs-nil \
@@ -31,8 +32,10 @@ include $(TOP)/config/make.cfg
 #MM     kernel-aros-includes \
 #MM     kernel-cia-includes \
 #MM     kernel-dos-includes \
+#MM     kernel-debug-includes \
 #MM     kernel-boot-includes \
 #MM     kernel-bootloader-includes \
+#MM     kernel-efi-includes \
 #MM	kernel-hostlib-includes \
 #MM     kernel-graphics-includes \
 #MM     kernel-utility-includes \
@@ -46,7 +49,18 @@ include $(TOP)/config/make.cfg
 #MM     kernel-battclock-includes \
 #MM     kernel-misc-includes \
 #MM     kernel-processor-includes \
+#MM     kernel-pc-acpi-includes \
 #MM     kernel-usb-includes-$(AROS_TARGET_ARCH)-$(AROS_TARGET_CPU)
+
+# A shortcut for minimal set of BSP modules.
+# All these components are machine-specific.
+#MM- kernel-bsp-objs:           \
+#MM kernel-kernel-kobj          \
+#MM kernel-battclock-kobj       \
+#MM kernel-processor-kobj       \
+#MM kernel-timer-kobj           \
+#MM kernel-expansion-kobj       \
+#MM kernel-exec-kobj
 
 # This is what kickstart base package consists of.
 # These modules are architecture-independent and can work on both hosted and native systems.
@@ -54,19 +68,18 @@ include $(TOP)/config/make.cfg
 BASE_DEVICES  := console input gameport keyboard
 BASE_HANDLERS := amberram con nil packet
 BASE_HIDD     := hiddclass graphics keyboard mouse
-BASE_LIBS     := aros boot dos graphics intuition keymap layers oop utility
+BASE_LIBS     := aros debug boot dos graphics intuition keymap layers oop utility
+BASE_RES      := dosboot bootloader
 
 # *** ELF kickstart package ***
 
 #MM- kernel-objs : \
-#MM     kernel-exec-kobj \
 #MM     kernel-aros-kobj \
-#MM     kernel-disk-kobj \
-#MM     kernel-dos-kobj \
 #MM     kernel-boot-kobj \
+#MM     kernel-bootloader-kobj \
+#MM     kernel-dos-kobj \
+#MM     kernel-debug-kobj \
 #MM     kernel-dosboot-kobj \
-#MM	kernel-fs-amberram-kobj \
-#MM     kernel-fs-packet-kobj \
 #MM     kernel-graphics-kobj \
 #MM     kernel-hidd-graphics-kobj \
 #MM     kernel-hidd-kbd-kobj \
@@ -75,14 +88,11 @@ BASE_LIBS     := aros boot dos graphics intuition keymap layers oop utility
 #MM     kernel-intuition-kobj \
 #MM     kernel-keymap-kobj \
 #MM     kernel-devs \
-#MM     kernel-expansion-kobj \
+#MM     kernel-fs-kobj \
 #MM     kernel-hidd-kobj \
-#MM     kernel-timer-kobj \
-#MM     kernel-battclock-kobj \
 #MM     kernel-oop-kobj \
 #MM     kernel-layers-kobj \
-#MM     kernel-usb-kobj-$(AROS_TARGET_ARCH)-$(AROS_TARGET_CPU) \
-#MM     kernel-processor-kobj
+#MM     kernel-usb-kobj-$(AROS_TARGET_ARCH)-$(AROS_TARGET_CPU)
 
 # Workaround: kernel-kernel-includes is built before kernel-exec-kobj, otherwise building exec
 # fails (it needs kernel.resource includes). We still do it here because older ports use
@@ -90,7 +100,7 @@ BASE_LIBS     := aros boot dos graphics intuition keymap layers oop utility
 #MM kernel-link-base: kernel-kernel-includes kernel-objs
 
 %link_kickstart mmake=kernel-link-base file=$(BINDIR)/boot/aros-base \
-	devs=$(BASE_DEVICES) handlers=$(BASE_HANDLERS) hidds=$(BASE_HIDD) libs=$(BASE_LIBS) \
+	devs=$(BASE_DEVICES) handlers=$(BASE_HANDLERS) hidds=$(BASE_HIDD) libs=$(BASE_LIBS) res=$(BASE_RES) \
 	uselibs="autoinit libinit amiga arossupport rom arosm hiddstubs hiddgraphicsstubs" \
 	map=$(GENDIR)/boot/kernel-base.map
 
@@ -98,12 +108,12 @@ BASE_LIBS     := aros boot dos graphics intuition keymap layers oop utility
 
 #MM kernel-package-base : \
 #MM     kernel-aros-pkg \
-#MM     kernel-dos-pkg \
 #MM     kernel-boot-pkg \
-#MM	kernel-fs-amberram-pkg \
-#MM	kernel-fs-con-pkg \
-#MM	kernel-fs-nil-pkg \
-#MM     kernel-fs-packet-pkg \
+#MM     kernel-bootloader-pkg \
+#MM     kernel-dos-pkg \
+#MM     kernel-dosboot-pkg \
+#MM     kernel-debug-pkg \
+#MM     kernel-fs-pkg \
 #MM     kernel-graphics-pkg \
 #MM     kernel-hidd-graphics-pkg \
 #MM     kernel-hidd-kbd-pkg \
@@ -112,14 +122,14 @@ BASE_LIBS     := aros boot dos graphics intuition keymap layers oop utility
 #MM     kernel-intuition-pkg \
 #MM     kernel-keymap-pkg \
 #MM     kernel-console-pkg \
-#MM	kernel-gameport-pkg \
-#MM	kernel-input-pkg \
-#MM	kernel-keyboard-pkg \
+#MM     kernel-gameport-pkg \
+#MM     kernel-input-pkg \
+#MM     kernel-keyboard-pkg \
 #MM     kernel-hidd-pkg \
 #MM     kernel-oop-pkg \
 #MM     kernel-layers-pkg
 
 %make_package mmake=kernel-package-base file=$(BINDIR)/boot/aros-base.pkg \
-	devs=$(BASE_DEVICES) handlers=$(BASE_HANDLERS) hidds=$(BASE_HIDD) libs=$(BASE_LIBS)
+	devs=$(BASE_DEVICES) handlers=$(BASE_HANDLERS) hidds=$(BASE_HIDD) libs=$(BASE_LIBS) res=$(BASE_RES)
 
 %common

@@ -1,5 +1,5 @@
 /*
-    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: Delete a memory pool including all its memory.
@@ -11,6 +11,7 @@
 #include <proto/exec.h>
 
 #include "exec_intern.h"
+#include "exec_util.h"
 #include "memory.h"
 #include "mungwall.h"
 
@@ -49,11 +50,14 @@
 {
     AROS_LIBFUNC_INIT
 
+    ASSERT_VALID_PTR_OR_NULL(poolHeader);
+
     D(bug("[exec] DeletePool(0x%p)\n", poolHeader));
 
     /* It is legal to DeletePool(NULL) */
     if (poolHeader != NULL)
     {
+    	struct TraceLocation tp = CURRENT_LOCATION("DeletePool");
 	struct Pool *pool = poolHeader + MEMHEADER_TOTAL;
 	struct Node *p, *p2; /* Avoid casts */
 
@@ -61,10 +65,9 @@
 
 	/*
 	 * We are going to deallocate the whole pool.
-	 * Scan mungwall's allocations list and remove all chunks
-	 * belonging to the pool.
+	 * Scan mungwall's allocations list and remove all chunks belonging to the pool.
 	 */
-	MungWall_Scan(pool, SysBase);
+	MungWall_Scan(pool, &tp, SysBase);
 
 	/*
 	 * Free the list of puddles.
@@ -80,14 +83,14 @@
     	    if (p != poolHeader)
 	    {
 		D(bug(" freeing"));
-    	    	FreeMemHeader(p, SysBase);
+    	    	FreeMemHeader(p, &tp, SysBase);
 	    }
 	    D(bug("\n"));
 	}
 
 	/* Free the last puddle, containing the pool header */
 	D(bug("[DeletePool] Freeing initial puddle 0x%p\n", poolHeader));
-	FreeMemHeader(poolHeader, SysBase);
+	FreeMemHeader(poolHeader, &tp, SysBase);
     }
 
     AROS_LIBFUNC_EXIT

@@ -1,32 +1,45 @@
 # $Id$
 include $(TOP)/config/make.cfg
 
+#
 # Allow to override include files by placing them in arch-specific directories
 # Note that kernel_#?.h files must be included using #include <name>, not #include "name"
 # for this to work.
-USER_CFLAGS := -I$(SRCDIR)/arch/$(CPU)-$(ARCH)/kernel \
-	       -I$(SRCDIR)/arch/all-$(ARCH)/kernel
-ifneq ($(FAMILY),)
-USER_CFLAGS += -I$(SRCDIR)/arch/all-$(FAMILY)/kernel
+# __AROS_EXEC_LIBRARY__ definition is needed for UNIX-hosted builds. kernel_base.h includes
+# kernel_cpu.h, which needs host OS includes for some CPU-specific defintions (host OS CPU context).
+# The code in rom/kernel is plain AROS code, it must not depend on host includes in any way, in order
+# not to overcomplicate the build. This definition prevents kernel_cpu.h from including host-specific
+# stuff. The name of this definition is legacy, in ancient times exec.library included some private
+# kernel's stuff and needed this.
+USER_INCLUDES := $(PRIV_KERNEL_INCLUDES) -D__AROS_EXEC_LIBRARY__ \
+	        -DAROS_ARCHITECTURE="\"$(AROS_TARGET_PLATFORM)\"" \
+
+# Allow to add architecture-specific options
+-include $(SRCDIR)/arch/all-$(ARCH)/kernel/make.opts
+-include $(SRCDIR)/arch/$(CPU)-$(ARCH)/kernel/make.opts
+ifneq ($(AROS_TARGET_VARIANT),)
+-include $(SRCDIR)/arch/$(CPU)-$(ARCH)/$(AROS_TARGET_VARIANT)/kernel/make.opts
 endif
-USER_CFLAGS += -I$(SRCDIR)/arch/$(CPU)-all/kernel -I$(SRCDIR)/rom/kernel \
-	       -I$(SRCDIR)/rom/exec \
-	       -DAROS_ARCHITECTURE="\"$(AROS_TARGET_ARCH)-$(AROS_TARGET_CPU)\"" \
-	       -D__AROS_EXEC_LIBRARY__
-USER_CFLAGS += $(PARANOIA_CFLAGS)
 
-FUNCS := addexceptionhandler addirqhandler bug cause cli createcontext deletecontext \
-         dispatch getbootinfo getscheduler issuper mapglobal registermodule          \
-	 remexceptionhandler remirqhandler schedule setprotection setscheduler sti   \
-	 switch unmapglobal unregistermodule virtualtophysical decodelocation	     \
-	 putchar maygetchar allocpages freepages getsystemattr setsystemattr	     \
-	 initmemory statmemory
+FUNCS :=     addexceptionhandler addirqhandler bug cause cli createcontext deletecontext    \
+             displayalert dispatch getbootinfo getscheduler issuper mapglobal		    \
+	     remexceptionhandler remirqhandler schedule setprotection setscheduler sti      \
+	     switch unmapglobal virtualtophysical obtaininput releaseinput 		    \
+	     putchar maygetchar allocpages freepages getsystemattr formatstr		    \
+	     initmemory statmemory _bug _displayalert getcpucount getcpunumber		    \
+	     allockernelbase prepareexecbase
+FILES     := kernel_init cpu_init kernel_cpu kernel_debug kernel_panic kernel_intr \
+	     kernel_memory kernel_romtags kernel_scheduler kernel_globals
+MMU_FILES := kernel_mm
+# You can replace this with own algorithm
+ALLOCATOR := mm_linear
 
-FILES := kernel_init cpu_init kernel_cpu kernel_debug kernel_intr kernel_memory_mmu \
-	 kernel_memory kernel_romtags kernel_scheduler kernel_timer
+ifeq ($(USE_MMU),1)
+    FILES += $(MMU_FILES) $(ALLOCATOR)
+endif
 
 %build_module mmake=kernel-kernel \
-  modname=kernel modtype=resource \
-  files="$(FILES) $(FUNCS)" uselibs=rom
+  modname=kernel modtype=resource version=$(AROS_TARGET_PLATFORM) \
+  files="$(FILES) $(FUNCS)" uselibs="rom" nostartup=no
 
 %common
