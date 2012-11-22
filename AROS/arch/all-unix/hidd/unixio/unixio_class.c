@@ -34,6 +34,7 @@
 #include <utility/tagitem.h>
 #include <utility/hooks.h>
 #include <hidd/unixio.h>
+#include <hidd/unixio_inline.h>
 #include <aros/asmcall.h>
 #include <aros/symbolsets.h>
 
@@ -100,7 +101,36 @@
 
 *****************************************************************************************/
 
-static void SigIO_IntServer(struct uio_data *ud, void *unused)
+static int poll_fd(int fd, int req_mode, struct unixio_base *ud)
+{
+    struct pollfd pfd = {fd, 0, 0};
+    int mode = 0;
+    int res;
+
+    if (req_mode & vHidd_UnixIO_Read)
+	pfd.events |= POLLIN;
+    if (req_mode & vHidd_UnixIO_Write)
+	pfd.events |= POLLOUT;
+
+    res = ud->SysIFace->poll(&pfd, 1, 0);
+    AROS_HOST_BARRIER
+
+    if (res > 0)
+    {
+	if (pfd.revents & POLLIN)
+	    mode |= vHidd_UnixIO_Read;
+	if (pfd.revents & POLLOUT)
+	    mode |= vHidd_UnixIO_Write;
+	if (pfd.revents & (POLLERR|POLLHUP))
+	    mode |= vHidd_UnixIO_Error;
+    }
+    else if (res < 0)
+	mode = -1;
+
+    return mode;
+}
+
+static void SigIO_IntServer(struct unixio_base *ud, void *unused)
 {
     struct uioInterrupt *intnode;
 
@@ -108,24 +138,10 @@ static void SigIO_IntServer(struct uio_data *ud, void *unused)
     for (intnode = (struct uioInterrupt *)ud->intList.mlh_Head; intnode->Node.mln_Succ;
     	 intnode = (struct uioInterrupt *)intnode->Node.mln_Succ)
     {
-    	struct pollfd pfd = {intnode->fd, 0, 0};
+ 	int mode = poll_fd(intnode->fd, intnode->mode, ud);
 
-	if (intnode->mode & vHidd_UnixIO_Read)
-	    pfd.events |= POLLIN;
-	if (intnode->mode & vHidd_UnixIO_Write)
-	    pfd.events |= POLLOUT;
-
-	if (ud->SysIFace->poll(&pfd, 1, 0) > 0)
+	if (mode > 0)
 	{
-	    int mode = 0;
-
-	    if (pfd.revents & POLLIN)
-	    	mode |= vHidd_UnixIO_Read;
-	    if (pfd.revents & POLLOUT)
-	    	mode |= vHidd_UnixIO_Write;
-	    if (pfd.revents & (POLLERR|POLLHUP))
-	    	mode |= vHidd_UnixIO_Error;
-
 	    D(bug("[UnixIO] Events 0x%02X for fd %d\n", mode, intnode->fd));
 
 	    intnode->handler(intnode->fd, mode, intnode->handlerData);
@@ -133,12 +149,13 @@ static void SigIO_IntServer(struct uio_data *ud, void *unused)
     }
 }
 
-static void WaitIntHandler(int fd, int mode, struct UnixIO_Waiter *w)
+static void WaitIntHandler(int fd, int mode, void *data)
 {
+    struct UnixIO_Waiter *w = data;
     Signal(w->task, 1 << w->signal);
 }
 
-static BOOL CheckArch(struct uio_data *data, STRPTR Component, STRPTR MyArch)
+static BOOL CheckArch(struct unixio_base *data, STRPTR Component, STRPTR MyArch)
 {
     STRPTR arg[3] = {Component, MyArch, data->SystemArch};
 
@@ -172,8 +189,8 @@ static BOOL CheckArch(struct uio_data *data, STRPTR Component, STRPTR MyArch)
     return TRUE;
 }
 
-#define KernelBase  LIBBASE->KernelBase
-#define HostLibBase LIBBASE->HostLibBase
+#define HostLibBase data->HostLibBase
+#define KernelBase  data->KernelBase
 
 #undef HiddUnixIOAttrBase
 #define HiddUnixIOAttrBase data->UnixIOAB
@@ -268,7 +285,7 @@ static BOOL CheckArch(struct uio_data *data, STRPTR Component, STRPTR MyArch)
 ********************/
 OOP_Object *UXIO__Root__New(OOP_Class *cl, OOP_Object *o, struct pRoot_New *msg)
 {
-    struct uio_data *data = UD(cl);
+    struct unixio_base *data = UD(cl);
     STRPTR archName;
 
     EnterFunc(bug("UnixIO::New(cl=%s)\n", cl->ClassNode.ln_Name));
@@ -284,7 +301,7 @@ OOP_Object *UXIO__Root__New(OOP_Class *cl, OOP_Object *o, struct pRoot_New *msg)
     }
 
     /* We are a true singletone */
-    ObtainSemaphore(&data->sem);
+    ObtainSemaphore(&data->lock);
 
     if (!data->obj)
     {
@@ -292,7 +309,7 @@ OOP_Object *UXIO__Root__New(OOP_Class *cl, OOP_Object *o, struct pRoot_New *msg)
     	data->obj = (OOP_Object *)OOP_DoSuperMethod(cl, o, (OOP_Msg)msg);
     }
 
-    ReleaseSemaphore(&data->sem);
+    ReleaseSemaphore(&data->lock);
 
     ReturnPtr("UnixIO::New", OOP_Object *, data->obj);
 }
@@ -333,15 +350,13 @@ void UXIO__Root__Dispose(OOP_Class *cl, OOP_Object *o, OOP_Msg msg)
         		- vHidd_UnixIO_Write - to request waiting until write is permitted
 
     RESULT
-    	0 in case of success or UNIX errno value in case if exception happens on the
-    	socket (select() call sets corresponding flag in third fd_set).
+    	0 in case of success or UNIX errno value in case if the operation failed.
 
     NOTES
 
     EXAMPLE
 
     BUGS
-    	Callback routine is called only for read events (if they were requested)
 
     SEE ALSO
 
@@ -352,9 +367,15 @@ void UXIO__Root__Dispose(OOP_Class *cl, OOP_Object *o, OOP_Msg msg)
 *****************************************************************************************/
 IPTR UXIO__Hidd_UnixIO__Wait(OOP_Class *cl, OOP_Object *o, struct uioMsg *msg)
 {
-    IPTR retval = 0UL;
+    int retval = 0;
+    int mode;
     struct uioInterrupt myInt;
     struct UnixIO_Waiter w;
+
+    /* Check if the fd is already ready. In this case we don't need to wait for anything. */
+    mode = Hidd_UnixIO_Poll(o, msg->um_Filedesc, msg->um_Mode, &retval);
+    if (mode)
+    	return (mode == -1) ? retval : 0;
 
     w.signal = AllocSignal(-1);
     if (w.signal == -1)
@@ -437,22 +458,22 @@ IPTR UXIO__Hidd_UnixIO__AsyncIO(OOP_Class *cl, OOP_Object *o, OOP_Msg msg)
 *****************************************************************************************/
 APTR UXIO__Hidd_UnixIO__OpenFile(OOP_Class *cl, OOP_Object *o, struct uioMsgOpenFile *msg)
 {
-    struct uio_data *data = UD(cl);
+    struct unixio_base *data = UD(cl);
     APTR retval;
 
     D(bug("[UnixIO] OpenFile(%s, 0x%04X, %o)\n", msg->um_FileName, msg->um_Flags, msg->um_Mode));
 
-    ObtainSemaphore(&data->sem);
+    HostLib_Lock();
 
-    retval = (APTR)data->SysIFace->open(msg->um_FileName, (int)msg->um_Flags, (int)msg->um_Mode);
+    retval = (APTR)(unsigned long)data->SysIFace->open(msg->um_FileName, (int)msg->um_Flags, (int)msg->um_Mode);
     AROS_HOST_BARRIER
 
     if (msg->um_ErrNoPtr)
-    	*msg->um_ErrNoPtr = *data->errnoPtr;
+    	*msg->um_ErrNoPtr = *data->uio_Public.uio_ErrnoPtr;
 
-    ReleaseSemaphore(&data->sem);
+    HostLib_Unlock();
 
-    D(bug("[UnixIO] FD is %d, errno is %d\n", retval, *data->errnoPtr));
+    D(bug("[UnixIO] FD is %d, errno is %d\n", retval, *data->uio_Public.uio_ErrnoPtr));
 
     return retval;
 }
@@ -499,20 +520,20 @@ APTR UXIO__Hidd_UnixIO__OpenFile(OOP_Class *cl, OOP_Object *o, struct uioMsgOpen
 *****************************************************************************************/
 int UXIO__Hidd_UnixIO__CloseFile(OOP_Class *cl, OOP_Object *o, struct uioMsgCloseFile *msg)
 {
-    struct uio_data *data = UD(cl);
+    struct unixio_base *data = UD(cl);
     int ret = 0;
 
     if (msg->um_FD != (APTR)-1)
     {
-    	ObtainSemaphore(&data->sem);
+    	HostLib_Lock();
 
-    	ret = data->SysIFace->close((int)msg->um_FD);
+    	ret = data->SysIFace->close((long)msg->um_FD);
     	AROS_HOST_BARRIER
 
     	if (msg->um_ErrNoPtr)
-    	    *msg->um_ErrNoPtr = *data->errnoPtr;
+    	    *msg->um_ErrNoPtr = *data->uio_Public.uio_ErrnoPtr;
 
-    	ReleaseSemaphore(&data->sem);
+    	HostLib_Unlock();
     }
 
     return ret;
@@ -550,6 +571,8 @@ int UXIO__Hidd_UnixIO__CloseFile(OOP_Class *cl, OOP_Object *o, struct uioMsgClos
 	of EINTR or EAGAIN error happens. If you supplied valid own errno_ptr you should be ready
 	to handle these conditions yourself.
 
+	This method can be called from within interrupts.
+
     EXAMPLE
 
     BUGS
@@ -564,20 +587,23 @@ int UXIO__Hidd_UnixIO__CloseFile(OOP_Class *cl, OOP_Object *o, struct uioMsgClos
 *****************************************************************************************/
 IPTR UXIO__Hidd_UnixIO__ReadFile(OOP_Class *cl, OOP_Object *o, struct uioMsgReadFile *msg)
 {
-    struct uio_data *data = UD(cl);
+    struct unixio_base *data = UD(cl);
     int retval = -1;
-    volatile int err;
+    volatile int err = EINVAL;
 
     if (msg->um_FD != (APTR)-1)
     {
-    	ObtainSemaphore(&data->sem);
+        int user = !KrnIsSuper();
+
+    	if (user)
+    	    HostLib_Lock();
 
     	do
 	{
-    	    retval = data->SysIFace->read((int)msg->um_FD, (void *)msg->um_Buffer, (size_t)msg->um_Count);
+    	    retval = data->SysIFace->read((long)msg->um_FD, (void *)msg->um_Buffer, (size_t)msg->um_Count);
     	    AROS_HOST_BARRIER
 
-    	    err = *data->errnoPtr;
+    	    err = *data->uio_Public.uio_ErrnoPtr;
     	    D(kprintf(" UXIO__Hidd_UnixIO__ReadFile: retval %d errno %d  buff %x  count %d\n", retval, err, msg->um_Buffer, msg->um_Count));
 
     	    if (msg->um_ErrNoPtr)
@@ -585,7 +611,8 @@ IPTR UXIO__Hidd_UnixIO__ReadFile(OOP_Class *cl, OOP_Object *o, struct uioMsgRead
 
 	} while((err == EINTR) || (err == EAGAIN));
 
-	ReleaseSemaphore(&data->sem);
+	if (user)
+	    HostLib_Unlock();
     }
 
     if (msg->um_ErrNoPtr)
@@ -628,6 +655,8 @@ IPTR UXIO__Hidd_UnixIO__ReadFile(OOP_Class *cl, OOP_Object *o, struct uioMsgRead
 	of EINTR or EAGAIN error happens. If you supplied valid own errno_ptr you should be ready
 	to handle these conditions yourself.
 
+	This method can be called from within interrupts.
+
     EXAMPLE
 
     BUGS
@@ -642,28 +671,32 @@ IPTR UXIO__Hidd_UnixIO__ReadFile(OOP_Class *cl, OOP_Object *o, struct uioMsgRead
 *****************************************************************************************/
 IPTR UXIO__Hidd_UnixIO__WriteFile(OOP_Class *cl, OOP_Object *o, struct uioMsgWriteFile *msg)
 {
-    struct uio_data *data = UD(cl);
+    struct unixio_base *data = UD(cl);
     int retval = -1;
-    volatile int err;
+    volatile int err = EINVAL;
 
     if (msg->um_FD != (APTR)-1)
     {
-	ObtainSemaphore(&data->sem);
+	int user = !KrnIsSuper();
+
+    	if (user)
+	    HostLib_Lock();
 
     	do
 	{
-    	    retval = data->SysIFace->write((int)msg->um_FD, (const void *)msg->um_Buffer, (size_t)msg->um_Count);
+    	    retval = data->SysIFace->write((long)msg->um_FD, (const void *)msg->um_Buffer, (size_t)msg->um_Count);
     	    AROS_HOST_BARRIER
 
-	    err = *data->errnoPtr;
+	    err = *data->uio_Public.uio_ErrnoPtr;
     	    D(kprintf(" UXIO__Hidd_UnixIO__WriteFile: retval %d errno %d  buff %x  count %d\n", retval, err, msg->um_Buffer, msg->um_Count));
 
     	    if (msg->um_ErrNoPtr)
     	    	break;
 
 	} while((retval < 1) && ((err == EINTR) || (err == EAGAIN) || (err == 0)));
-	
-	ReleaseSemaphore(&data->sem);
+
+	if (user)
+	    HostLib_Unlock();
     }
 
     if (msg->um_ErrNoPtr)
@@ -677,7 +710,7 @@ IPTR UXIO__Hidd_UnixIO__WriteFile(OOP_Class *cl, OOP_Object *o, struct uioMsgWri
 /*****************************************************************************************
 
     NAME
-        moHidd_UnixIO_ReadFile
+        moHidd_UnixIO_IOControlFile
 
     SYNOPSIS
         OOP_DoMethod(OOP_Object *obj, struct uioMsgIOControlFile *msg);
@@ -702,6 +735,7 @@ IPTR UXIO__Hidd_UnixIO__WriteFile(OOP_Class *cl, OOP_Object *o, struct uioMsgWri
 	Operation-specific value (actually a return value of ioctl() function called).
 
     NOTES
+    	This method can be called from within interrupts.
 
     EXAMPLE
 
@@ -716,21 +750,28 @@ IPTR UXIO__Hidd_UnixIO__WriteFile(OOP_Class *cl, OOP_Object *o, struct uioMsgWri
 *****************************************************************************************/
 IPTR UXIO__Hidd_UnixIO__IOControlFile(OOP_Class *cl, OOP_Object *o, struct uioMsgIOControlFile *msg)
 {
-    struct uio_data *data = UD(cl);
+    struct unixio_base *data = UD(cl);
+    int err = EINVAL;
     int retval = -1;
 
     if (msg->um_FD != (APTR)-1)
     {
-    	ObtainSemaphore(&data->sem);
+        int user = !KrnIsSuper();
 
-    	retval = data->SysIFace->ioctl((int)msg->um_FD, (int)msg->um_Request, msg->um_Param);
+	if (user)
+    	    HostLib_Lock();
+
+    	retval = data->SysIFace->ioctl((long)msg->um_FD, (int)msg->um_Request, msg->um_Param);
     	AROS_HOST_BARRIER
 
-    	if (msg->um_ErrNoPtr)
-	    *msg->um_ErrNoPtr = *data->errnoPtr;
+	err = *data->uio_Public.uio_ErrnoPtr;
 
-	ReleaseSemaphore(&data->sem);
+	if (user)
+	    HostLib_Unlock();
     }
+
+    if (msg->um_ErrNoPtr)
+	*msg->um_ErrNoPtr = err;
 
     return retval;
 }
@@ -788,7 +829,7 @@ IPTR UXIO__Hidd_UnixIO__IOControlFile(OOP_Class *cl, OOP_Object *o, struct uioMs
 *****************************************************************************************/
 int UXIO__Hidd_UnixIO__AddInterrupt(OOP_Class *cl, OOP_Object *o, struct uioMsgAddInterrupt *msg)
 {
-    struct uio_data *data = UD(cl);
+    struct unixio_base *data = UD(cl);
     int res;
     int err;
 
@@ -797,7 +838,7 @@ int UXIO__Hidd_UnixIO__AddInterrupt(OOP_Class *cl, OOP_Object *o, struct uioMsgA
     Enable();
 
     /* Now own the filedescriptor and enable SIGIO on it */
-    ObtainSemaphore(&data->sem);
+    HostLib_Lock();
 
     res = data->SysIFace->fcntl(msg->um_Int->fd, F_SETOWN, data->aros_PID);
     AROS_HOST_BARRIER
@@ -809,9 +850,9 @@ int UXIO__Hidd_UnixIO__AddInterrupt(OOP_Class *cl, OOP_Object *o, struct uioMsgA
 	res = data->SysIFace->fcntl(msg->um_Int->fd, F_SETFL, res|O_ASYNC);
 	AROS_HOST_BARRIER
     }
-    err = *data->errnoPtr;
+    err = *data->uio_Public.uio_ErrnoPtr;
 
-    ReleaseSemaphore(&data->sem);
+    HostLib_Unlock();
 
     if (res != -1)
     	return 0;
@@ -874,9 +915,185 @@ void UXIO__Hidd_UnixIO__RemInterrupt(OOP_Class *cl, OOP_Object *o, struct uioMsg
      */
 }
 
+/*****************************************************************************************
+
+    NAME
+        moHidd_UnixIO_Poll
+
+    SYNOPSIS
+        OOP_DoMethod(OOP_Object *obj, struct uioMsgPoll *msg);
+
+        int Hidd_UnixIO_Poll(OOP_Object *obj, int fd, int mode, int *errno_ptr);
+
+    LOCATION
+        unixio.hidd
+
+    FUNCTION
+        Check current status of UNIX file descriptor or -1 if an error occured.
+
+    INPUTS
+        obj	  - A pointer to a UnixIO object.
+        fd        - A file descriptor to check.
+        mode      - Mask of modes we are interested in.
+	errno_ptr - An optional pointer to a location where error code (a value of UNIX
+		    errno variable) will be written.
+
+    RESULT
+	Current set of filedescriptor modes.
+
+    NOTES
+    	This method can be called from within interrupts.
+
+    EXAMPLE
+
+    BUGS
+
+    SEE ALSO
+
+    INTERNALS
+
+    TODO
+
+*****************************************************************************************/
+ULONG UXIO__Hidd_UnixIO__Poll(OOP_Class *cl, OOP_Object *o, struct uioMsgPoll *msg)
+{
+    struct unixio_base *data = UD(cl);
+    int user = !KrnIsSuper();
+    int ret;
+ 
+    if (user)
+    	HostLib_Lock();
+
+    ret = poll_fd((int)(IPTR)msg->um_FD, msg->um_Mode, data);
+    if (msg->um_ErrNoPtr)
+	*msg->um_ErrNoPtr = *data->uio_Public.uio_ErrnoPtr;
+
+    if (user)
+    	HostLib_Unlock();
+
+    return ret;
+}
+
+/*****************************************************************************************
+
+    NAME
+        moHidd_UnixIO_MemoryMap
+
+    SYNOPSIS
+        OOP_DoMethod(OOP_Object *obj, struct uioMsgMemoryMap *msg);
+
+        int Hidd_UnixIO_MemoryMap(OOP_Object *obj, OOP_Object *o, void *addr, int len, int prot, int flags, int fd, int offset, int *errno_ptr);
+
+    LOCATION
+        unixio.hidd
+
+    FUNCTION
+        Maps address into file descriptor.
+
+    INPUTS
+        obj   - A pointer to a UnixIO object.
+        fd    - A file descriptor to check.
+    errno_ptr - An optional pointer to a location where error code (a value of UNIX
+            errno variable) will be written.
+
+    RESULT
+        Actuall mapping address or MAP_FAILED for errors.
+
+    NOTES
+        This method can be called from within interrupts.
+
+    EXAMPLE
+
+    BUGS
+
+    SEE ALSO
+
+    INTERNALS
+
+    TODO
+
+*****************************************************************************************/
+APTR UXIO__Hidd_UnixIO__MemoryMap(OOP_Class *cl, OOP_Object *o, struct uioMsgMemoryMap *msg)
+{
+    struct unixio_base *data = UD(cl);
+    int user = !KrnIsSuper();
+    APTR ret;
+
+    if (user)
+        HostLib_Lock();
+
+    ret = data->SysIFace->mmap(msg->um_Address, msg->um_Length, msg->um_Prot, msg->um_Flags,  (int)(IPTR)msg->um_FD, msg->um_Offset);
+    if (msg->um_ErrNoPtr)
+        *msg->um_ErrNoPtr = *data->uio_Public.uio_ErrnoPtr;
+
+    if (user)
+        HostLib_Unlock();
+
+    return ret;
+}
+
+/*****************************************************************************************
+
+    NAME
+        moHidd_UnixIO_MemoryUnMap
+
+    SYNOPSIS
+        OOP_DoMethod(OOP_Object *obj, struct uioMsgMemoryUnMap *msg);
+
+        int Hidd_UnixIO_MemoryUnMap(OOP_Object *obj, OOP_Object *o, void *addr, int len, int *errno_ptr);
+
+    LOCATION
+        unixio.hidd
+
+    FUNCTION
+        Unmaps memory
+
+    INPUTS
+        obj   - A pointer to a UnixIO object.
+    errno_ptr - An optional pointer to a location where error code (a value of UNIX
+            errno variable) will be written.
+
+    RESULT
+        0 for success, -1 for failure
+
+    NOTES
+        This method can be called from within interrupts.
+
+    EXAMPLE
+
+    BUGS
+
+    SEE ALSO
+
+    INTERNALS
+
+    TODO
+
+*****************************************************************************************/
+IPTR UXIO__Hidd_UnixIO__MemoryUnMap(OOP_Class *cl, OOP_Object *o, struct uioMsgMemoryUnMap *msg)
+{
+    struct unixio_base *data = UD(cl);
+    int user = !KrnIsSuper();
+    IPTR ret;
+
+    if (user)
+        HostLib_Lock();
+
+    ret = data->SysIFace->munmap(msg->um_Address, msg->um_Length);
+    if (msg->um_ErrNoPtr)
+        *msg->um_ErrNoPtr = *data->uio_Public.uio_ErrnoPtr;
+
+    if (user)
+        HostLib_Unlock();
+
+    return ret;
+}
+
+
 /* This is the initialisation code for the HIDD class itself. */
 
-static const char *libc_symbols[] = {
+static const char *libc_symbols[] =
+{
     "open",
     "close",
     "ioctl",
@@ -888,10 +1105,21 @@ static const char *libc_symbols[] = {
 #ifdef HOST_OS_linux
     "__errno_location",
 #else
+#ifdef HOST_OS_android
+    "__errno",
+#else
     "__error",
 #endif
+#endif
+    "mmap",
+    "munmap",
     NULL
 };
+
+#undef HostLibBase
+#undef KernelBase
+#define KernelBase  LIBBASE->KernelBase
+#define HostLibBase LIBBASE->HostLibBase
 
 static int UXIO_Init(LIBBASETYPEPTR LIBBASE)
 {
@@ -907,35 +1135,35 @@ static int UXIO_Init(LIBBASETYPEPTR LIBBASE)
     if (!HostLibBase)
     	return FALSE;
 
-    LIBBASE->uio_csd.SystemArch = (STRPTR)KrnGetSystemAttr(KATTR_Architecture);
-    if (!LIBBASE->uio_csd.SystemArch)
+    LIBBASE->SystemArch = (STRPTR)KrnGetSystemAttr(KATTR_Architecture);
+    if (!LIBBASE->SystemArch)
     	return FALSE;
 
-    if (!CheckArch(&LIBBASE->uio_csd, "unixio.hidd", AROS_ARCHITECTURE))
+    if (!CheckArch(LIBBASE, "unixio.hidd", AROS_ARCHITECTURE))
     	return FALSE;
 
-    LIBBASE->uio_csd.UnixIOAB = OOP_ObtainAttrBase(IID_Hidd_UnixIO);
-    if (!LIBBASE->uio_csd.UnixIOAB)
+    LIBBASE->UnixIOAB = OOP_ObtainAttrBase(IID_Hidd_UnixIO);
+    if (!LIBBASE->UnixIOAB)
     	return FALSE;
 
-    LIBBASE->libcHandle = HostLib_Open(LIBC_NAME, NULL);
-    if (!LIBBASE->libcHandle)
+    LIBBASE->uio_Public.uio_LibcHandle = HostLib_Open(LIBC_NAME, NULL);
+    if (!LIBBASE->uio_Public.uio_LibcHandle)
     	return FALSE;
 
-    LIBBASE->uio_csd.SysIFace = (struct LibCInterface *)HostLib_GetInterface(LIBBASE->libcHandle, libc_symbols, &i);
-    if ((!LIBBASE->uio_csd.SysIFace) || i)
+    LIBBASE->SysIFace = (struct LibCInterface *)HostLib_GetInterface(LIBBASE->uio_Public.uio_LibcHandle, libc_symbols, &i);
+    if ((!LIBBASE->SysIFace) || i)
 	return FALSE;
 
-    LIBBASE->irqHandle = KrnAddIRQHandler(SIGIO, SigIO_IntServer, &LIBBASE->uio_csd, NULL);
+    LIBBASE->irqHandle = KrnAddIRQHandler(SIGIO, SigIO_IntServer, LIBBASE, NULL);
     if (!LIBBASE->irqHandle)
     	return FALSE;
 
-    InitSemaphore(&LIBBASE->uio_csd.sem);
-    NewList((struct List *)&LIBBASE->uio_csd.intList);
+    NewList((struct List *)&LIBBASE->intList);
+    InitSemaphore(&LIBBASE->lock);
 
-    LIBBASE->uio_csd.errnoPtr = LIBBASE->uio_csd.SysIFace->__error();
+    LIBBASE->uio_Public.uio_ErrnoPtr = LIBBASE->SysIFace->__error();
     AROS_HOST_BARRIER
-    LIBBASE->uio_csd.aros_PID  = LIBBASE->uio_csd.SysIFace->getpid();
+    LIBBASE->aros_PID  = LIBBASE->SysIFace->getpid();
     AROS_HOST_BARRIER
 
     return TRUE;
@@ -951,13 +1179,13 @@ static int UXIO_Cleanup(struct unixio_base *LIBBASE)
     if (LIBBASE->irqHandle)
 	KrnRemIRQHandler(LIBBASE->irqHandle);
 
-    if (LIBBASE->uio_csd.SysIFace)
-	HostLib_DropInterface ((APTR *)LIBBASE->uio_csd.SysIFace);
+    if (LIBBASE->SysIFace)
+	HostLib_DropInterface ((APTR *)LIBBASE->SysIFace);
 
-    if (LIBBASE->libcHandle)
-    	HostLib_Close(LIBBASE->libcHandle, NULL);
+    if (LIBBASE->uio_Public.uio_LibcHandle)
+    	HostLib_Close(LIBBASE->uio_Public.uio_LibcHandle, NULL);
 
-    if (LIBBASE->uio_csd.UnixIOAB)
+    if (LIBBASE->UnixIOAB)
     	OOP_ReleaseAttrBase(IID_Hidd_UnixIO);
 
     return TRUE;
@@ -966,16 +1194,19 @@ static int UXIO_Cleanup(struct unixio_base *LIBBASE)
 /* The singleton gets really disposed only when we expunge its library */
 static int UXIO_Dispose(struct unixio_base *LIBBASE)
 {
-    ULONG mid = OOP_GetMethodID(IID_Root, moRoot_Dispose);
+    if (LIBBASE->obj)
+    {
+	OOP_MethodID mid = OOP_GetMethodID(IID_Root, moRoot_Dispose);
 
-    D(bug("[UnixIO] Disposing object\n"));
+	D(bug("[UnixIO] Disposing object\n"));
 
-    OOP_DoSuperMethod(LIBBASE->uio_unixioclass, LIBBASE->uio_csd.obj, (OOP_Msg)&mid);
-    LIBBASE->uio_csd.obj = NULL;
+	OOP_DoSuperMethod(LIBBASE->uio_unixioclass, LIBBASE->obj, &mid);
+    	LIBBASE->obj = NULL;
+    }
 
     return TRUE;
 }
 
 ADD2INITLIB(UXIO_Init, 0)
 ADD2EXPUNGELIB(UXIO_Cleanup, 0)
-ADD2SET(UXIO_Dispose, classesexpunge, 0)
+ADD2SET(UXIO_Dispose, CLASSESEXPUNGE, 0)

@@ -12,6 +12,7 @@
 #include <oop/oop.h>
 #include <hidd/parallel.h>
 #include <hidd/unixio.h>
+#include <hidd/unixio_inline.h>
 #include <dos/dos.h>
 
 #define PAR_MAX_UNITS	3

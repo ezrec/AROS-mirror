@@ -2,13 +2,14 @@
 #define HIDD_UNIXIO_H
 
 /*
-    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: Unix filedescriptor/socket IO Include File
     Lang: english
 */
 
+#include <exec/libraries.h>
 #include <exec/ports.h>
 #include <oop/oop.h>
 
@@ -31,6 +32,19 @@ struct uioInterrupt
     void	   *handlerData;
 };
 
+/*
+ * (Semi)-public part of unixio.hidd library base.
+ * Normally you don't need to access it at all. However it can be
+ * useful if you want to use more specific operations on filedescriptors.
+ * For example emul-handler needs this.
+ */
+struct UnixIOBase
+{
+    struct Library uio_Library;		/* Library node				  */
+    APTR	   uio_LibcHandle;	/* hostlib.resource's handle to host libc */
+    int		  *uio_ErrnoPtr;	/* Pointer to host's errno variable	  */
+};
+
 enum {
     moHidd_UnixIO_Wait = 0,	/* LONG M ( uioMsg *)		*/
     moHidd_UnixIO_AsyncIO,	/* Obsolete and reserved	*/
@@ -42,6 +56,9 @@ enum {
     moHidd_UnixIO_ReadFile,
     moHidd_UnixIO_AddInterrupt,
     moHidd_UnixIO_RemInterrupt,
+    moHidd_UnixIO_Poll,
+    moHidd_UnixIO_MemoryMap,
+    moHidd_UnixIO_MemoryUnMap,
     num_Hidd_UnixIO_Methods
 };
 
@@ -57,65 +74,93 @@ enum
 
 struct uioMsg
 {
-    STACKULONG um_MethodID;
-    STACKULONG um_Filedesc;
-    STACKULONG um_Filedesc_Type;
-    STACKULONG um_Mode;
+    STACKED ULONG um_MethodID;
+    STACKED ULONG um_Filedesc;
+    STACKED ULONG um_Filedesc_Type;
+    STACKED ULONG um_Mode;
 };
 
 struct uioMsgOpenFile
 {
-    STACKULONG  um_MethodID;
-    STRPTR      um_FileName;
-    STACKULONG  um_Flags;
-    STACKULONG  um_Mode;
-    int        *um_ErrNoPtr;
+    STACKED ULONG  um_MethodID;
+    STACKED CONST_STRPTR um_FileName;
+    STACKED ULONG  um_Flags;
+    STACKED ULONG  um_Mode;
+    STACKED int   *um_ErrNoPtr;
 };
 
 struct uioMsgCloseFile
 {
-    STACKULONG  um_MethodID;
-    APTR        um_FD;
-    int        *um_ErrNoPtr;
+    STACKED ULONG  um_MethodID;
+    STACKED APTR   um_FD;
+    STACKED int   *um_ErrNoPtr;
 };
 
 struct uioMsgWriteFile
 {
-    STACKULONG  um_MethodID;
-    APTR        um_FD;
-    APTR        um_Buffer;
-    STACKULONG  um_Count;
-    int        *um_ErrNoPtr;
+    STACKED ULONG  um_MethodID;
+    STACKED APTR   um_FD;
+    STACKED CONST_APTR   um_Buffer;
+    STACKED ULONG  um_Count;
+    STACKED int   *um_ErrNoPtr;
 };
 
 struct uioMsgIOControlFile
 {
-    STACKULONG  um_MethodID;
-    APTR        um_FD;
-    STACKULONG  um_Request;
-    APTR    	um_Param;
-    int        *um_ErrNoPtr;
+    STACKED ULONG  um_MethodID;
+    STACKED APTR   um_FD;
+    STACKED ULONG  um_Request;
+    STACKED APTR   um_Param;
+    STACKED int   *um_ErrNoPtr;
 };
 
 struct uioMsgReadFile
 {
-    STACKULONG  um_MethodID;
-    APTR        um_FD;
-    APTR        um_Buffer;
-    STACKULONG  um_Count;
-    int        *um_ErrNoPtr;
+    STACKED ULONG  um_MethodID;
+    STACKED APTR um_FD;
+    STACKED APTR um_Buffer;
+    STACKED ULONG  um_Count;
+    STACKED int *um_ErrNoPtr;
 };
 
 struct uioMsgAddInterrupt
 {
-    STACKULONG	         um_MethodID;
-    struct uioInterrupt *um_Int;
+    STACKED ULONG                um_MethodID;
+    STACKED struct uioInterrupt *um_Int;
 };
 
 struct uioMsgRemInterrupt
 {
-    STACKULONG	         um_MethodID;
-    struct uioInterrupt *um_Int;
+    STACKED ULONG                um_MethodID;
+    STACKED struct uioInterrupt *um_Int;
+};
+
+struct uioMsgPoll
+{
+    STACKED ULONG  um_MethodID;
+    STACKED APTR   um_FD;
+    STACKED ULONG  um_Mode;
+    STACKED int   *um_ErrNoPtr;
+};
+
+struct uioMsgMemoryMap
+{
+    STACKED ULONG  um_MethodID;
+    STACKED APTR   um_FD;
+    STACKED APTR   um_Address;
+    STACKED ULONG  um_Length;
+    STACKED LONG   um_Prot;
+    STACKED LONG   um_Flags;
+    STACKED ULONG  um_Offset;
+    STACKED int    *um_ErrNoPtr;
+};
+
+struct uioMsgMemoryUnMap
+{
+    STACKED ULONG  um_MethodID;
+    STACKED APTR   um_Address;
+    STACKED ULONG  um_Length;
+    STACKED int    *um_ErrNoPtr;
 };
 
 /* I/O mode flags */
@@ -123,17 +168,6 @@ struct uioMsgRemInterrupt
 #define vHidd_UnixIO_Write      0x2
 #define vHidd_UnixIO_RW         (vHidd_UnixIO_Read | vHidd_UnixIO_Write)
 #define vHidd_UnixIO_Error	0x10
-
-/* Stubs */
-IPTR Hidd_UnixIO_Wait(OOP_Object *h, ULONG fd, ULONG mode);
-
-int Hidd_UnixIO_OpenFile(OOP_Object *o, const char *filename, int flags, int mode, int *errno_ptr);
-int Hidd_UnixIO_CloseFile(OOP_Object *o, int fd, int *errno_ptr);
-int Hidd_UnixIO_ReadFile(OOP_Object *o, int fd, void *buffer, int count, int *errno_ptr);
-int Hidd_UnixIO_WriteFile(OOP_Object *o, int fd, const void *buffer, int count, int *errno_ptr);
-int Hidd_UnixIO_IOControlFile(OOP_Object *o, int fd, int request, void *param, int *errno_ptr);
-int Hidd_UnixIO_AddInterrupt(OOP_Object *o, struct uioInterrupt *interrupt);
-void Hidd_UnixIO_RemInterrupt(OOP_Object *o, struct uioInterrupt *interrupt);
 
 #endif /* HIDD_UNIXIO_H */
 

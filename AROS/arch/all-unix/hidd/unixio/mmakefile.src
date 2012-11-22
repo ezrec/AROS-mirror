@@ -4,16 +4,18 @@ include $(TOP)/config/make.cfg
 #MM kernel-unixio : kernel-kernel-includes hidd-unixio-stubs
 #MM kernel-unixio-kobj : kernel-kernel-includes hidd-unixio-stubs
 
-USER_CFLAGS := -DHOST_OS_$(ARCH) -DAROS_ARCHITECTURE="\"$(AROS_TARGET_ARCH)-$(AROS_TARGET_CPU)\"" \
-	      -isystem $(GENINCDIR) $(KERNEL_INCLUDES)
+USER_CFLAGS := -DHOST_OS_$(ARCH) -DHOST_OS_$(AROS_TARGET_VARIANT) \
+	       -DAROS_ARCHITECTURE="\"$(AROS_TARGET_PLATFORM)\"" \
+	       -isystem $(GENINCDIR) $(KERNEL_INCLUDES)
+
+## The '-Wno-attributes' is here due to a gcc 4.5.x bug
+## where its strcmp() builtin generates a number of spurious
+## complaints with -O1 or higher optimizations enabled.
+USER_CFLAGS += -Wno-attributes
 
 %build_module mmake=kernel-unixio \
-    modname=unixio modtype=hidd \
-    files=unixio_class uselibs="hiddstubs oop rom"
-
-STUBS := unixio_stubs
-
-%make_hidd_stubs hidd=unixio parenttarget=kernel-unixio-hidd
+    modname=unixio modtype=hidd version=$(AROS_TARGET_PLATFORM) \
+    files=unixio_class uselibs="oop rom"
 
 MY_INCLS := $(call WILDCARD, include/*.h)
 DEST_INC := $(foreach f,$(MY_INCLS), $(AROS_INCLUDES)/hidd/$(notdir $f))

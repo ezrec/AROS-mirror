@@ -1,4 +1,5 @@
 #include <hidd/unixio.h>
+#include <hidd/unixio_inline.h>
 #include <proto/exec.h>
 #include <proto/dos.h>
 #include <proto/oop.h>
