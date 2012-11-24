@@ -9,7 +9,7 @@ Compiling AROS
             + Aaron Digulla
             + Adam Chodorowski
             + Neil Cafferkey
-:Copyright: Copyright (C) 2001-2010, The AROS Development Team
+:Copyright: Copyright (C) 2001-2012, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
@@ -32,10 +32,11 @@ The following software is required for compiling AROS:
 + GNU AWK (GAWK) - other awks may also be suitable
 + Python 2.2.1+
 + Bison
-+ Flex
++ Flex 2.
 + pngtopnm and ppmtoilbm (part of the netpbm package)
 + Autoconf 2.61+
 + Automake
++ Patch
 + C library development files (libc)
 + Common utilities, like cp, mv, sort, uniq, head, ...
 
@@ -62,6 +63,7 @@ Firstly, these software packages must be installed:
 
 + XCode
 + MacPorts
++ objconv (not needed for hosted AROS)
 
 The following MacPort packages then need to be installed to complete the
 set of required software listed earlier:
@@ -90,11 +92,21 @@ Then compile and install it with::
     > i386-elf-gcc -c crt0.c
     > sudo cp crt0.o /opt/local/i386-elf/lib/
 
+If building native AROS, objconv must be manually downloaded, compiled and
+installed::
+
+    > mkdir objconv
+    > cd objconv
+    > wget http://www.agner.org/optimize/objconv.zip
+    > unzip objconv.zip
+    > unzip source.zip
+    > g++ -o objconv -O2 *.cpp
+    > sudo cp objconv /usr/local/bin
+
 Finally, there is a missing symbolic link that needs to be created::
 
     > cd /opt/local/bin
-    > sudo ln -s i386-elf-gcc-3.4.3 i386-elf-gcc
-
+    > sudo ln -s i386-elf-gcc-4.3.2 i386-elf-gcc
 
 
 
