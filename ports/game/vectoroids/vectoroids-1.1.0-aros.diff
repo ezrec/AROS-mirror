@@ -1,18 +1,7 @@
-diff -ruN vectoroids-1.1.0/vectoroids.c vectoroids-1.1.0.aros/vectoroids.c
---- vectoroids-1.1.0/vectoroids.c	2002-04-21 01:27:48.000000000 +0100
-+++ vectoroids-1.1.0.aros/vectoroids.c	2012-06-12 22:35:39.151105000 +0100
-@@ -74,8 +74,9 @@
- #endif
- 
- 
--
-+#if !defined(__AROS__)
- enum { FALSE, TRUE };
-+#endif
- 
- #define LEFT_EDGE   0x0001
- #define RIGHT_EDGE  0x0002
-@@ -593,7 +594,9 @@
+diff -Naur vectoroids-1.1.0-orig/vectoroids.c vectoroids-1.1.0/vectoroids.c
+--- vectoroids-1.1.0-orig/vectoroids.c	2010-06-25 17:55:25.172477152 +0200
++++ vectoroids-1.1.0/vectoroids.c	2010-06-25 17:57:53.393897223 +0200
+@@ -593,7 +593,9 @@
  
    /* Load state from disk: */
  

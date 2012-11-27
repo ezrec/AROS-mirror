@@ -34,7 +34,7 @@ include $(TOP)/config/make.cfg
 #MM  ports-scientific-mathx-quick : ports-scientific-mathx-fetch
 
 REPOSITORIES := http://archives.aros-exec.org/share/utility/scientific
-ARCHBASE     := muimathx-src-svn40
+ARCHBASE     := muimathx-src-svn46
 TARGETDIR    := $(AROS_CONTRIB)/Utilities/Scientific/MathX
 TARGET_CXX   := $(CROSSTOOLSDIR)/$(AROS_TARGET_CPU)-aros-g++
 USER_CFLAGS  := -D__MATHX_VERDATE=\"`date +%d.%m.%Y`\" \

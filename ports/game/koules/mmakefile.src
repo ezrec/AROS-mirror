@@ -20,7 +20,7 @@ include $(TOP)/config/make.cfg
 
 
 REPOSITORIES := http://archives.aros-exec.org/share/game/action/
-ARCHBASE     := koules-src-1.15
+ARCHBASE     := koules-src-1.16
 TARGETDIR    := $(AROS_CONTRIB)/Games/Koules
 USER_CFLAGS  := -DNOSOUND
 
