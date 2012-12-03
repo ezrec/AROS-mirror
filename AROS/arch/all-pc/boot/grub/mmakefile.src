@@ -18,6 +18,8 @@ grub-copy-stages : $(AROSDIR)/boot/grub/stage1 $(AROSDIR)/boot/grub/stage2 $(ARO
 # DO NOT DECLARE CFLAGS HERE
 # OR MAKE SURE -fno-stack-protector IS DETECTED IF COMPILER SUPPORTS IT
 
+OBJCOPY := $(OBJCOPY) -R .note.gnu.build-id
+
 %build_with_configure mmake=grub compiler=kernel install_target= \
     extraoptions="$(GRUBOPTS)" 
     
