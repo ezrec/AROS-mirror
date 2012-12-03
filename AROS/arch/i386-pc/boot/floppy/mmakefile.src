@@ -49,7 +49,7 @@ BOOT_TAR_EXECUTABLES := \
     Classes/Zune/PrefsEditor.mcc Classes/Zune/SystemPrefsWindow.mcc \
     Devs/clipboard.device \
     Devs/serial.device \
-    L/pipe-handler \
+    Devs/pipefs.handler \
     Libs/arosc.library Libs/asl.library Libs/commodities.library \
     Libs/cybergraphics.library \
     Libs/datatypes.library Libs/diskfont.library Libs/gadtools.library \
@@ -91,7 +91,7 @@ BOOT_TAR_ICONS := \
 
 BOOT_TAR_MISC := \
     Devs/DataTypes/ELF Devs/DataTypes/ELF_EXE Devs/DataTypes/ILBM \
-    Devs/DataTypes/FTXT Devs/DOSDrivers/PIPE \
+    Devs/DataTypes/FTXT Devs/DOSDrivers/PIPEFS \
     Devs/Keymaps Devs/Mountlist \
     Fonts/fixed/8 Fonts/arial/13 Fonts/ttcourier/14 \
     Locale/Countries Locale/Help \
