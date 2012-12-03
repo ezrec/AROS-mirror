@@ -85,10 +85,12 @@
 
 /*********************************************************************************************/
 
+#if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ > 5)
 unsigned long __fdelt_chk (unsigned long n)
 {
     return n / NFDBITS;
 }
+#endif
 
 static int TryRead(struct LibCInterface *iface, int fd, void *buf, size_t len)
 {
