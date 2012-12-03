@@ -2401,7 +2401,7 @@ ifeq (%(compiler),kernel)
     CONFIG_ENV := \
         CC="$(KERNEL_CC) $(KERNEL_CFLAGS) %(extracflags) $(%(mmake)-s_flag)"\
         AS="$(TARGET_AS)" CC_FOR_BUILD="$(HOST_CC)" RANLIB="$(RANLIB)"\
-        TARGET_RANLIB="$(RANLIB)"
+        OBJCOPY="$(OBJCOPY)" TARGET_RANLIB="$(RANLIB)"
     %(mmake)-config_opts += --build=$(AROS_HOST_CPU)-$(AROS_HOST_ARCH)\
         --host=$(AROS_TARGET_CPU)-aros\
         --target=$(AROS_TARGET_CPU)-aros --disable-nls\
