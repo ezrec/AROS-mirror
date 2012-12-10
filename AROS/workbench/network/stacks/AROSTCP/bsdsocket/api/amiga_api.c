@@ -75,7 +75,7 @@ extern f_void UserLibrary_funcTable[];
  * from amiga_libcallentry.h so it doens't generate code.
  */
 const char wrongTaskErrorFmt[] =
-  "Task %ld (%s) attempted to use library base of Task %ld (%s).";
+  "Task 0x%lx (%s) attempted to use library base of Task 0x%lx (%s).";
 
  #if !defined(__AROS__)
 /*
@@ -666,7 +666,7 @@ D(bug("[AROSTCP](amiga_api.c) api_deinit: The calling task of api_deinit() was n
 VOID writeErrnoValue(struct SocketBase * libPtr, int error)
 {
 #if defined(__AROS__)
-D(bug("[AROSTCP](amiga_api.c) writeErrnoValue()\n"));
+D(bug("[AROSTCP](amiga_api.c) writeErrnoValue(%d)\n", error));
 #endif
   /*
    * errnoSize is now restricted to 1, 2 or 4
