@@ -1250,6 +1250,7 @@ case "$target_os" in
     		aros_target_objdump="i386-aros-objdump"
 
 		target_tool_prefix="i386-mingw32-"
+		kernel_tool_prefix="i386-mingw32-"
 		;;
 	    *x86_64*)
 		aros_target_cpu="x86_64"
