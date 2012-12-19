@@ -153,10 +153,6 @@ static BOOL probe_monitor(struct g45staticdata *sd, uint32_t port)
 			};
 
 			bug("[GMA]   I2C device found\n");
-			
-			// there is at least something?,so... 
-            result = TRUE;
-			
 			OOP_Object *obj = OOP_NewObject(NULL, CLID_Hidd_I2CDevice, attrs);
 
 			if (obj)
@@ -190,6 +186,7 @@ static BOOL probe_monitor(struct g45staticdata *sd, uint32_t port)
 					{
 						bug("[GMA]       Analog device\n");
 					}
+                    result = TRUE;
 				}
 
 				OOP_DisposeObject(obj);
