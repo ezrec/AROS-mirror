@@ -141,7 +141,11 @@ typedef CHAR *PCH ;
 
 # include <exec/types.h>
 typedef BYTE CHAR ;
+#ifdef __MORPHOS__
+#define USHORT_TYPEDEFED
+#else
 typedef WORD SHORT ;
+#endif
 typedef char *PSZ ;
 typedef CONST char *PCSZ ;
 # ifndef VOID

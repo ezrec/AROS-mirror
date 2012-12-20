@@ -476,7 +476,11 @@ static int Amiga_uname(struct regina_utsname *name)
    sprintf( name->version, "%d", 0 );
    sprintf( name->release, "%d", 0 );
    strcpy( name->nodename, "standalone" );
+#ifdef __PPC__
+   strcpy( name->machine, "ppc" );
+#else
    strcpy( name->machine, "i386" );
+#endif
    
    return 0;
 }

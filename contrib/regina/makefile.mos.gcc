@@ -1,7 +1,7 @@
 #
 # Makefile for Regina REXX Interpreter
 #
-# Using gcc 2.95 under Amiga
+# Using gcc 4 under Amiga
 #
 # No support for DLLs under Amiga so no instructions applicable
 #
@@ -32,7 +32,7 @@ else
 USEFLISTS =
 endif
 
-CEXTRA = -DPOSIX_SOURCE -DNO_EXTERNAL_QUEUES
+CEXTRA = -DPOSIX_SOURCE -DNO_EXTERNAL_QUEUES -D_AMIGA
 EEXTRA =
 EXTQUEUE_OBJS = extstack.$(OBJ) rexxbif.$(OBJ)
 EXTQUEUE_SHOBJS = #extstack.sho rexxbif.sho
@@ -67,6 +67,7 @@ THREADING =
 MT_FILE = mt_notmt
 #OS_FILE = os_other
 OS_FILE = os_amiga
+JUNK = $(OFILES) rexx.o client.o drexx.o rexxsaa.o execiser.o rxstack.o erexxbif.o eextstack.o rxqueue.o msgcmp.o
 
 RANLIB_LIB=-ranlib $(LIBPRE)$(LIBFILE).a
 
