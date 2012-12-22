@@ -61,7 +61,6 @@ int main(void) {
     DEFINE(tc_SPUpper    , offsetof (struct Task, tc_SPUpper));
     DEFINE(tc_IDNestCnt  , offsetof (struct Task, tc_IDNestCnt));
     DEFINE(tc_ETask      , offsetof (struct Task, tc_UnionETask.tc_ETask));
-    DEFINE(iet_Context   , sizeof (struct ETask) + 4);
 
     asm volatile("\n/* struct Process */" ::);
     DEFINE(pr_MsgPort    , offsetof (struct Process, pr_MsgPort));

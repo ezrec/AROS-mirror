@@ -28,7 +28,7 @@
 #define AROS_STACKALIGN		  16 /* Clean stack must be aligned to this */
 
 #define SIZEOF_FPU_STATE	512  /* 108 bytes are needed to store FPU, 512 bytes are needed to store SSE */
-#define SIZEOF_ALL_REGISTERS	(15*4 + SIZEOF_FPU_STATE + 16)  /* Size of iet_Context */
+#define SIZEOF_ALL_REGISTERS	(15*4 + SIZEOF_FPU_STATE + 16)  /* Size of et_RegFrame */
 
 #define AROS_32BIT_TYPE         int
 
