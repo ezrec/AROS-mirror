@@ -730,8 +730,10 @@ target_bootloader="none"
 # For native ports this toolchain is used to build a bootloader and second-level bootstrap (if present).
 if test "$crosstools" != "yes"; then
     target_tool_prefix=${target_cpu}-elf-
+    kernel_tool_prefix=${target_cpu}-elf-
 else
     target_tool_prefix=${target_cpu}-aros-
+    kernel_tool_prefix=${target_cpu}-aros-
 fi
 
 #-----------------------------------------------------------------------------
