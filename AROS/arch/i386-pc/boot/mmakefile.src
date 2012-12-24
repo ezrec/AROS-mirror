@@ -1,7 +1,7 @@
 # $Id$
 include $(TOP)/config/make.cfg
 
-#MM- includes-pc-i386 : includes-common-i386 includes-copy-pc-i386 includes-copy
+#MM- includes-pc-i386 : compiler-includes includes-common-i386 includes-copy-pc-i386 includes-copy
 
 #
 # Rules to create kickstart packages for pc-i386
