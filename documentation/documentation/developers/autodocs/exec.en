@@ -177,7 +177,7 @@ Example
 See also
 ~~~~~~~~
 
-`NewList()`_ `AddTail()`_ `Insert()`_ `Remove()`_ `RemHead()`_ `RemTail()`_ `Enqueue()`_ 
+libamiga/NewList() `AddTail()`_ `Insert()`_ `Remove()`_ `RemHead()`_ `RemTail()`_ `Enqueue()`_ 
 
 ----------
 
@@ -6400,7 +6400,7 @@ Result
      The program will be running on a new stack and sss will contain
      the old stack.
 
-     Calling StackSwap() twice consequtively will effectively do
+     Calling StackSwap() twice consecutively will effectively do
      nothing.
 
 

@@ -67,19 +67,28 @@ Function
 ~~~~~~~~
 ::
 
+     This function does currently nothing. You can use WaitForChar()
+     to poll for characters from an interactive handler.
+
+     The planned purpose of this function is:
      Tries to abort an asynchronous packet. There is no guarantee
-     that this succeeds. You must wait for the packet to return
-     before you can reuse or deallocate it.
+     that this succeeds. You must wait with WaitPkt() for the packet
+     to return before you can reuse or deallocate it.
 
 
 Inputs
 ~~~~~~
 ::
 
-     port - the message port to where the packet was sent
-     pkt  - the packet to be aborted
+     port - The message port to where the packet was sent.
+     pkt  - The packet to be aborted.
 
 
+
+See also
+~~~~~~~~
+
+`SendPkt()`_ `WaitForChar()`_ `WaitPkt()`_ 
 
 ----------
 
@@ -98,25 +107,47 @@ Function
 ~~~~~~~~
 ::
 
-     Add or remove cache memory from a filesystem.
+     Add or remove cache memory to/from a filesystem. The amount of memory
+     per cache buffer and the limit depends on the filesystem.
 
 
 Inputs
 ~~~~~~
 ::
 
-     devicename  --  NUL terminated dos device name.
-     numbuffers  --  Number of buffers to add. May be negative.
+     devicename - DOS device name (with trailing ':' and NUL terminated).
+     numbuffers - Number of buffers to add. May be negative for decreasing.
 
 
 Result
 ~~~~~~
 ::
 
-     != 0 on success (IoErr() gives the actual number of buffers),
-     0 else (IoErr() gives the error code).
+     DOSTRUE on success (IoErr() gives the actual number of buffers).
+     DOSFALSE on error (IoErr() gives the error code).
+     Some old filesystems return the actual buffer size. See the example
+     for a workaround for that case.
 
 
+Example
+~~~~~~~
+::
+
+     LONG res1, res2;
+     res1 = AddBuffers("df0:", 10);
+     res2 = IoErr();
+     if (res1 != DOSFALSE && res1 != DOSTRUE)
+     {
+         res2 = res1;
+         res1 = DOSTRUE;
+     }
+
+
+
+See also
+~~~~~~~~
+
+`IoErr()`_ 
 
 ----------
 
@@ -134,24 +165,25 @@ Function
 ~~~~~~~~
 ::
 
-     Adds a given dos list entry to the dos list. Automatically
+     Adds a given dos list entry to the DOS list. Automatically
      locks the list for writing. There may be not more than one device
      or assign node of the same name. There are no restrictions on
-     volume nodes.
+     volume nodes except that the time stamps must differ.
 
 
 Inputs
 ~~~~~~
 ::
 
-     dlist - pointer to dos list entry.
+     dlist - Pointer to DOS list entry.
 
 
 Result
 ~~~~~~
 ::
 
-     != 0 if all went well, 0 otherwise.
+     DOSTRUE if all went well.
+     DOSFALSE for errors; IoErr() will return additional error code.
 
 
 Notes
@@ -159,12 +191,20 @@ Notes
 ::
 
      Since anybody who wants to use a device or volume node in the
-     dos list has to lock the list, filesystems may be called with
-     the dos list locked. So if you want to add a dos list entry
+     DOS list has to lock the list, filesystems may be called with
+     the DOS list locked. So if you want to add a DOS list entry
      out of a filesystem don't just wait on the lock but serve all
      incoming requests until the dos list is free instead.
 
+     The dlist pointer may become invalid after a call to AddDosEntry()
+     unless you have locked the DOS list.
 
+
+
+See also
+~~~~~~~~
+
+`RemDosEntry()`_ `FindDosEntry()`_ `NextDosEntry()`_ `LockDosList()`_ `MakeDosEntry()`_ `FreeDosEntry()`_ `AttemptLockDosList()`_ 
 
 ----------
 
@@ -188,7 +228,7 @@ Function
      directory path. It will take into account any pre-existing
      separator characters (':','/').
 
-     If filename is a fully qualified path, then it will replace
+     If filename is an absolute path it will replace
      the current value of dirname.
 
 
@@ -196,9 +236,9 @@ Inputs
 ~~~~~~
 ::
 
-     dirname     -   the path to add the new path to
-     filename    -   the path you wish added
-     size        -   The size of the dirname buffer (must NOT be 0)
+     dirname  - The path to add the new path to.
+     filename - The path you wish added.
+     size     - The size of the dirname buffer (must NOT be 0).
 
 
 Result
@@ -697,7 +737,7 @@ Function
  Currently, no DOS Packet arguments are used by this
  routine.
 
- A new Boot Cli is process is created, and 'dp' is
+ A new Boot Cli process is created, and 'dp' is
  sent to it. If the boot shell succeeds, then 'dp'
  is returned with dp_Res1 = DOSTRUE.
  has started.

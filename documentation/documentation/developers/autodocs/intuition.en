@@ -2489,32 +2489,40 @@ Function
 ~~~~~~~~
 ::
 
- Turn on or off Gadget-Help for your window. Gadget-Help will also
- be changed for all members of the same help-group to make
- multiple-windows apps to behave well.
+     Turn on or off Gadget-Help for your window. Gadget-Help will also be
+     changed for all members of the same help-group to make
+     multiple-windows apps behave well.
 
 
 Inputs
 ~~~~~~
 ::
 
- window - The window to affect. All windows of the same help-goup will
-     be affected as well.
- flags - HC_GADGETHELP or zero for turning help on or off.
+     window - The window to affect. All windows of the same help-group
+         will be affected as well.
+     flags - HC_GADGETHELP or zero for turning help on or off.
 
 
 Result
 ~~~~~~
 ::
 
- None. Toggles gadget-help of one or more windows to on or off.
+     None.
+
+
+Notes
+~~~~~
+::
+
+     The WA_HelpGroup and WA_HelpGroupWindow tags are relevant to this
+     function.
 
 
 
 See also
 ~~~~~~~~
 
-`WA_HelpGroup`_ 
+`OpenWindowTagList()`_ 
 
 ----------
 
