@@ -4,13 +4,16 @@
  *
  * ----------------------------------------------------------------------
  * This code is (C) Copyright 1993,1994 by Frank Munkert.
- *              (C) Copyright 2002-2010 The AROS Development Team
+ *              (C) Copyright 2002-2012 The AROS Development Team
  * All rights reserved.
  * This software may be freely distributed and redistributed for
  * non-commercial purposes, provided this notice is included.
  * ----------------------------------------------------------------------
  * History:
  *
+ * 28-Dec-12 neil    Pass corrected TOC length back from Read_TOC instead of
+ *                   the raw TOC header. Errors in the length field of this
+ *                   header were causing buffer overruns with many drives.
  * 11-Aug-10 sonic   Fixed comparison warning in Has_Audio_Tracks()
  * 01-Mar-10 neil    Do not read past end of disc.
  * 12-Jun-09 neil    If drive returns incorrect TOC length, calculate it
@@ -408,7 +411,7 @@ int Inquire (CDROM *p_cd, t_inquiry_data *p_data)
 t_toc_data *Read_TOC
 	(
 		CDROM *p_cd,
-		t_toc_header *p_toc_header
+		uint32_t *p_toc_len
 	)
 {
     static uint8_t cmd[10] = { 0x43, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -448,19 +451,21 @@ t_toc_data *Read_TOC
 	return NULL;
 
     /*
-     * that's a bit stupid (4 bytes and CopyMem) but still..
+     * We pass back the TOC length that the caller would expect to find in
+     * the header, if it could be trusted!
      */
-    CopyMem(buf, p_toc_header, sizeof (*p_toc_header));
+    *p_toc_len = toc_len - 2;
+
     return (t_toc_data *) (buf + 4);
 }
 
 int Has_Audio_Tracks(CDROM *p_cd) 
 {
-    t_toc_header hdr;
+    uint32_t toc_len;
     t_toc_data *toc;
     int i, len;
 
-    toc = Read_TOC (p_cd, &hdr);
+    toc = Read_TOC (p_cd, &toc_len);
     if (!toc)
 	return FALSE;
 
@@ -468,7 +473,7 @@ int Has_Audio_Tracks(CDROM *p_cd)
      * calc num TOC entries
      * last entry is usually LEADOUT (0xAA)
      */
-    len = hdr.length >> 3;
+    len = toc_len >> 3;
 
     /*
      * traverse all tracks, check for audio?
@@ -493,21 +498,21 @@ int Has_Audio_Tracks(CDROM *p_cd)
 int Data_Tracks(CDROM *p_cd, uint32_t** p_buf) 
 {
     int cnt=0;
-    t_toc_header hdr;
+    uint32_t toc_len;
     t_toc_data *toc;
     int i, j, len;
 
     /*
      * collect TOC
      */
-    toc = Read_TOC(p_cd, &hdr);
+    toc = Read_TOC(p_cd, &toc_len);
     if (!toc)
 	return -1;
 
     /*
      * calc TOC entries count
      */
-    len = hdr.length >> 3;
+    len = toc_len >> 3;
 
     /* 
      * count number of data tracks:
@@ -555,21 +560,21 @@ int Start_Play_Audio(CDROM *p_cd)
 {
     static unsigned char cmd[10] = { 0x47, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
     uint32_t start = 0xffffffff,end;
-    t_toc_header hdr;
+    uint32_t toc_len;
     t_toc_data *toc;
     int i, len;
 
     /*
      * read TOC
      */
-    toc = Read_TOC (p_cd, &hdr);
+    toc = Read_TOC (p_cd, &toc_len);
     if (!toc)
 	return FALSE;
 
     /*
      * calc len
      */
-    len = hdr.length >> 3;
+    len = toc_len >> 3;
 
     /*
      * find beginning of audio track

@@ -205,7 +205,7 @@ extern struct Globals *global;
 struct Globals glob;
 struct Globals *global=&glob;
 
-char __version__[] = "\0$VER: CDVDFS 1.4 (16-Jun-2008)";
+char __version__[] = "\0$VER: CDVDFS 1.7 (28.12.2012)";
 
 #ifdef __AROS__
 AROS_UFH1(__startup LONG, Main,
