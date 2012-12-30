@@ -27,19 +27,24 @@ struct BootConfig
 
 struct DOSBootBase
 {
-    struct Node           db_Node;		/* Node for linking into the list */
-    char                 *db_BootDevice;	/* Device to boot up from	  */
+    struct Node             db_Node;      /* Node for linking into the list */
+    IPTR                    db_BootFlags;     /* Bootup flags (identical to ExpansionBase->eb_BootFlags) */
 
-    struct GfxBase       *bm_GfxBase;		/* Library bases	  	  */
-    struct IntuitionBase *bm_IntuitionBase;
-    struct Window        *bm_Window;		/* Window and gadgets		  */
-    struct MainGadgets    bm_MainGadgets;
+    char                    *db_BootDevice;    /* Device to boot up from     */
+    struct BootNode         *db_BootNode;      /* Device to boot up from     */
 
-    struct BootConfig     bm_BootConfig;	/* Current HIDD configuration     */
-    ULONG		  BootFlags;		/* Bootup flags			  */
-    
-    APTR		  animData;		/* Animation stuff		  */
-    ULONG		  delayTicks;		/* Delay period. Can be adjusted by animation code */
+    struct GfxBase          *bm_GfxBase;       /* Library bases          */
+    struct IntuitionBase    *bm_IntuitionBase;
+    struct ExpansionBase    *bm_ExpansionBase;
+    struct Screen           *bm_Screen;        /* Screen                     */
+    struct Window           *bm_Window;        /* Window and gadgets         */
+    struct MainGadgets      bm_MainGadgets;
+
+    struct BootConfig       bm_BootConfig;    /* Current HIDD configuration     */
+    APTR                    animData;     /* Animation stuff        */
+    ULONG                   delayTicks;       /* Delay period. Can be adjusted by animation code */
+    WORD                    bottomY;
+    BOOL                    WantBootMenu;
 };
 
 /* Boot flags */
@@ -62,5 +67,15 @@ void anim_Animate(struct Screen *scr, struct DOSBootBase *DOSBootBase);
 #define GfxBase DOSBootBase->bm_GfxBase
 #undef IntuitionBase
 #define IntuitionBase DOSBootBase->bm_IntuitionBase
+
+/* Check to see if the bootnode is bootable */
+#include <libraries/expansion.h>
+#include <libraries/expansionbase.h>
+
+static inline BOOL IsBootableNode(struct BootNode *bootNode)
+{
+    return ((bootNode->bn_Node.ln_Type == NT_BOOTNODE) &&
+            (bootNode->bn_Node.ln_Pri > -128)) ? TRUE : FALSE;
+}
 
 #endif /* DOSBOOT_INTERN_H */

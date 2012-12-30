@@ -21,9 +21,11 @@
 #include <aros/macros.h>
 #include <aros/asmcall.h>
 #include <aros/symbolsets.h>
+#include <aros/bootloader.h>
 
 #include <proto/exec.h>
 #include <proto/dos.h>
+#include <proto/bootloader.h>
 
 #include <exec/types.h>
 #include <exec/nodes.h>
@@ -239,7 +241,6 @@ AROS_UFH3(void, __dosboot_BootProcess,
 {
     AROS_USERFUNC_INIT
 
-    struct ExpansionBase        *ExpansionBase = NULL;
     struct DosLibrary           *DOSBase       = NULL;
     LIBBASETYPEPTR              LIBBASE        = FindTask(NULL)->tc_UserData;
 
@@ -260,16 +261,10 @@ AROS_UFH3(void, __dosboot_BootProcess,
         Alert(AT_DeadEnd| AG_OpenLib | AN_DOSLib | AO_DOSLib);
     }
 
-    if ((ExpansionBase = (struct ExpansionBase *)OpenLibrary("expansion.library", 0)) == NULL)
-    {
-        D(bug("[DOSBoot] __dosboot_BootProcess: Failed to open expansion.library.\n"));
-        Alert(AT_DeadEnd | AG_OpenLib | AN_DOSLib | AO_ExpansionLib);
-    }
-
     /**** Try to mount all filesystems in the MountList ****************************/
     D(bug("[DOSBoot] __dosboot_BootProcess: Checking expansion.library/MountList for useable nodes:\n"));
 
-    ForeachNode(&ExpansionBase->MountList, bootNode)
+    ForeachNode(&LIBBASE->bm_ExpansionBase->MountList, bootNode)
     {
     	struct DeviceNode *dn = bootNode->bn_DeviceNode;
 
@@ -291,10 +286,12 @@ AROS_UFH3(void, __dosboot_BootProcess,
 
     LIBBASE->delayTicks = 500;
 
+    bootmenu_Init(LIBBASE, LIBBASE->WantBootMenu);
+
     /**** Try to find a bootable filesystem ****************************************/
     while (LIBBASE->db_BootDevice == NULL)
     {
-        ForeachNode(&ExpansionBase->MountList, bootNode)
+        ForeachNode(&LIBBASE->bm_ExpansionBase->MountList, bootNode)
         {
             struct DeviceNode *dn = bootNode->bn_DeviceNode;
             STRPTR deviceName = AROS_BSTR_ADDR(dn->dn_Name);
@@ -307,7 +304,7 @@ AROS_UFH3(void, __dosboot_BootProcess,
              * in drive or wrong disk) so we will retry after some time.
              */
             if ((bootNode->bn_Flags & BNF_MOUNTED) && (bootNode->bn_Node.ln_Pri != -128)
-		&& __dosboot_IsBootable(deviceName, DOSBase))
+		&& (__dosboot_IsBootable(deviceName, DOSBase) || bootNode->bn_Node.ln_Pri == 127))
             {
                 LIBBASE->db_BootDevice = deviceName;
                 break;
@@ -337,7 +334,7 @@ AROS_UFH3(void, __dosboot_BootProcess,
              * (this for example happens when USB stick is inserted and a new device has been
              * added for it.
              */
-            ForeachNode(&ExpansionBase->MountList, bootNode)
+            ForeachNode(&LIBBASE->bm_ExpansionBase->MountList, bootNode)
             {
                 if (!(bootNode->bn_Flags & BNF_MOUNTED))
                 {
@@ -425,7 +422,7 @@ AROS_UFH3(void, __dosboot_BootProcess,
          * If mounting fails again, remove the BootNode from the list.
          */
 	D(bug("[DOSBoot] Assigns done, retrying mounting handlers\n"));
-        ForeachNodeSafe(&ExpansionBase->MountList, bootNode, tmpNode)
+        ForeachNodeSafe(&LIBBASE->bm_ExpansionBase->MountList, bootNode, tmpNode)
         {
             if (!(bootNode->bn_Flags & BNF_MOUNTED))
             {
@@ -440,15 +437,15 @@ AROS_UFH3(void, __dosboot_BootProcess,
                 }
             }
         }
-        ExpansionBase->Flags |= EBF_BOOTFINISHED;
+        LIBBASE->bm_ExpansionBase->Flags |= EBF_BOOTFINISHED;
 
         /* We don't need expansion.library any more */
 	D(bug("[DOSBoot] Closing expansion.library\n"));
-        CloseLibrary( (struct Library *) ExpansionBase );
+        CloseLibrary( (struct Library *) LIBBASE->bm_ExpansionBase );
 
 #if !(mc68000)
         /* Initialize HIDDs */
-	if (!(LIBBASE->BootFlags & BF_NO_DISPLAY_DRIVERS))
+	if (!(LIBBASE->db_BootFlags & BF_NO_DISPLAY_DRIVERS))
 	{
 	    D(bug("[DOSBoot] Loading display drivers\n"));
             __dosboot_InitHidds(DOSBase);
@@ -456,7 +453,7 @@ AROS_UFH3(void, __dosboot_BootProcess,
 #endif
         /* We now call the system dependant boot - should NEVER return! */
 	D(bug("[DOSBoot] Calling bootstrap code\n"));
-        __dosboot_Boot(BootLoaderBase, DOSBase, LIBBASE->BootFlags);
+        __dosboot_Boot(BootLoaderBase, DOSBase, LIBBASE->db_BootFlags);
     }
 
     AROS_USERFUNC_EXIT
@@ -464,6 +461,9 @@ AROS_UFH3(void, __dosboot_BootProcess,
 
 int dosboot_Init(LIBBASETYPEPTR LIBBASE)
 {
+    struct ExpansionBase *ExpansionBase;
+    void *BootLoaderBase;
+
     struct TagItem bootprocess[] =
     {
         { NP_Entry,             (IPTR) __dosboot_BootProcess    },
@@ -482,9 +482,63 @@ int dosboot_Init(LIBBASETYPEPTR LIBBASE)
     D(bug("[DOSBoot] dosboot_Init: Launching Boot Process control task ..\n"));
 
     LIBBASE->db_BootDevice = NULL;
-    LIBBASE->BootFlags = 0;
+    LIBBASE->db_BootFlags = 0;
+    LIBBASE->db_BootNode = NULL;
+    LIBBASE->WantBootMenu = FALSE;
 
-    bootmenu_Init(LIBBASE);
+    D(bug("dosboot_Init: GO GO GO!\n"));
+
+    ExpansionBase = (APTR)OpenLibrary("expansion.library", 0);
+
+    D(bug("[Strap] ExpansionBase 0x%p\n", ExpansionBase));
+    if( ExpansionBase == NULL )
+    {
+        D(bug( "Could not open expansion.library, something's wrong!\n"));
+        Alert(AT_DeadEnd | AG_OpenLib | AN_BootStrap | AO_ExpansionLib);
+    }
+
+    ExpansionBase->Flags |= EBF_SILENTSTART;
+
+    LIBBASE->bm_ExpansionBase = ExpansionBase;
+
+    if ((BootLoaderBase = OpenResource("bootloader.resource")) != NULL)
+    {
+        struct List *args = GetBootInfo(BL_Args);
+
+        if (args)
+        {
+            struct Node *node;
+
+            ForeachNode(args, node)
+            {
+                if (0 == stricmp(node->ln_Name, "bootmenu"))
+                {
+                    D(bug("[BootMenu] bootmenu_Init: Forced with bootloader argument\n"));
+                    LIBBASE->WantBootMenu = TRUE;
+                }
+                /*
+                * TODO: The following two flags should have corresponding switches
+                * in 'display options' page.
+                */
+                else if (0 == stricmp(node->ln_Name, "nomonitors"))
+                {
+                    LIBBASE->db_BootFlags |= BF_NO_DISPLAY_DRIVERS;
+                }
+                else if (0 == strnicmp(node->ln_Name, "bootdevice=", 11))
+                {
+                    LIBBASE->db_BootDevice = &node->ln_Name[11];
+                    selectBootDevice(LIBBASE);
+                }
+            }
+        }
+    }
+
+   /*
+    * VGA and PCI hardware display drivers still need external initialization.
+    * This urgently needs to be fixed. After fixing this kludge
+    * will not be needed any more.
+    */
+    InitBootConfig(&LIBBASE->bm_BootConfig, BootLoaderBase);
 
     if (CreateNewProc(bootprocess) == NULL)
     {
