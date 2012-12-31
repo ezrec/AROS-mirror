@@ -1,7 +1,10 @@
 Distributioner
 ==============
 
-Distributioner är konfigurerade och testade versioner av AROS.
-Dom innehåller en mängd användarprogram som inte finns med i dom vanliga AROS.org utgåvorna. Dessa distributioner riktar sig till främst till intresserade användare. Dessa har ev. inte dom senaste kärn uppdateringarna, men användar vänligheten och stabiliteten är betydligt större, än för dom nattliga utgåvorna. 
+Detta är förkonfigurerade och vältestade versioner av AROS. De innehåller
+många användbara program som inte följer med från start och är de som är mest
+intressanta för vanliga användare. De kanske saknar den senaste versionen av
+AROS, men de är mycket stabilare och mer användarvänliga än nightly builds.
+Om du är en som är nyfiken på vad AROS har att erbjuda så rekommenderar vi att
+du använder distributioner för bästa möjliga upplevelse.
 
-Om du är en användare som är intresserad av AROS, så rekomenderar vi att du börjar med den senaste distributionen, för att få den bästa möjliga erfarenheten av AROS systemet.
