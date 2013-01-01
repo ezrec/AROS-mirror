@@ -673,8 +673,8 @@ Synopsis
 ::
 
   void NastyFreeMem(
-     APTR  mem,
-     ULONG size)
+     APTR mem,
+     IPTR size)
 
 
 Function

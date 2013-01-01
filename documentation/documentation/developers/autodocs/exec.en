@@ -283,7 +283,7 @@ Synopsis
 ::
 
  void AddMemList(
-          ULONG size,
+          IPTR size,
           ULONG attributes,
           LONG pri,
           APTR base,
@@ -634,7 +634,7 @@ Synopsis
 ::
 
  APTR AllocAbs(
-          ULONG byteSize,
+          IPTR byteSize,
           APTR location );
 
 Function
@@ -677,7 +677,7 @@ Synopsis
 
  APTR Allocate(
           struct MemHeader * freeList,
-          ULONG byteSize );
+          IPTR byteSize );
 
 Function
 ~~~~~~~~
@@ -805,7 +805,7 @@ Synopsis
 ::
 
  APTR AllocMem(
-          ULONG byteSize,
+          IPTR byteSize,
           ULONG requirements );
 
 Function
@@ -864,7 +864,7 @@ Synopsis
 
  APTR AllocPooled(
           APTR poolHeader,
-          ULONG memSize );
+          IPTR memSize );
 
 Function
 ~~~~~~~~
@@ -1013,7 +1013,7 @@ Synopsis
 ::
 
  APTR AllocVec(
-          ULONG byteSize,
+          IPTR byteSize,
           ULONG requirements );
 
 Function
@@ -1146,7 +1146,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- ULONG AvailMem(
+ IPTR AvailMem(
           ULONG attributes );
 
 Function
@@ -1183,7 +1183,7 @@ Example
      Print the size of the largest chunk of chip memory.
 
      printf("Largest chipmem chunk: %lu bytes\n",
-            AvailMem(MEMF_CHIP|MEMF_LARGEST));
+            AvailMem(MEMF_CHIP | MEMF_LARGEST));
 
 
 Notes
@@ -2625,7 +2625,7 @@ Synopsis
  void CopyMem(
           CONST_APTR source,
           APTR dest,
-          ULONG size );
+          IPTR size );
 
 Function
 ~~~~~~~~
@@ -2669,7 +2669,7 @@ Synopsis
  void CopyMemQuick(
           CONST_APTR source,
           APTR dest,
-          ULONG size );
+          IPTR size );
 
 Function
 ~~~~~~~~
@@ -2783,8 +2783,8 @@ Synopsis
 
  APTR CreatePool(
           ULONG requirements,
-          ULONG puddleSize,
-          ULONG threshSize );
+          IPTR puddleSize,
+          IPTR threshSize );
 
 Function
 ~~~~~~~~
@@ -2798,7 +2798,7 @@ Inputs
 ::
 
      requirements - The type of the memory
-     puddleSize   - The number of bytes that the pool expands
+     puddleSize   - The number of bytes that the pool expands by
                     if it is too small.
      threshSize   - Allocations beyond the threshSize are given
                     directly to the system. threshSize must be
@@ -2836,9 +2836,10 @@ Notes
 ~~~~~
 ::
 
-     Since exec.library v41.12 implementation of pools has been rewritten
-     to make use of memory protection capabilities. threshSize parameter
-     is effectively ignored and is present only for backwards compatibility.
+     Since exec.library v41.12, the implementation of pools has been
+     rewritten to make use of memory protection capabilities. The
+     threshSize parameter is effectively ignored and is present only
+     for backwards compatibility.
 
 
 
@@ -2859,7 +2860,7 @@ Synopsis
  void Deallocate(
           struct MemHeader * freeList,
           APTR memoryBlock,
-          ULONG byteSize );
+          IPTR byteSize );
 
 Function
 ~~~~~~~~
@@ -3700,7 +3701,7 @@ Synopsis
 
  void FreeMem(
           APTR memoryBlock,
-          ULONG byteSize );
+          IPTR byteSize );
 
 Function
 ~~~~~~~~
@@ -3735,7 +3736,7 @@ Synopsis
  void FreePooled(
           APTR poolHeader,
           APTR memory,
-          ULONG memSize );
+          IPTR memSize );
 
 Function
 ~~~~~~~~
