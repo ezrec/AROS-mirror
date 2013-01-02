@@ -394,34 +394,12 @@ int drm_irq_install(struct drm_device *dev)
 EXPORT_SYMBOL(drm_irq_install);
 #else
 
-static void inthandlertask_code(struct drm_device *dev, struct Task *parent, IPTR parentsig)
-{
-    ULONG sigs = 0;
-
-    dev->wakesignal = AllocSignal(-1);
-
-    Signal(parent, (ULONG)parentsig);
-
-    while(TRUE)
-    {
-        sigs = Wait(SIGBREAKF_CTRL_C | dev->wakesignal);
-
-        if (sigs & SIGBREAKF_CTRL_C)
-            break;
-
-        if (sigs & dev->wakesignal)
-            if (dev->driver->irq_handler)
-                dev->driver->irq_handler(dev);
-    }
-
-    FreeSignal(dev->wakesignal);
-}
-
 static void interrupt_handler(HIDDT_IRQ_Handler * irq, HIDDT_IRQ_HwInfo *hw)
 {
     struct drm_device *dev = (struct drm_device*)irq->h_Data;
 
-    Signal(dev->IntHandlerTask, dev->wakesignal);
+    if (dev->driver->irq_handler)
+        dev->driver->irq_handler(dev);
 }
 
 int drm_irq_install(struct drm_device *dev)
@@ -429,10 +407,10 @@ int drm_irq_install(struct drm_device *dev)
     struct OOP_Object *o = NULL;
     IPTR INTLine = 0;
     int retval = -EINVAL;
-    IPTR parentsig = 0;
     
     ObtainSemaphore(&dev->struct_mutex.semaphore);
     if (dev->irq_enabled) {
+        ReleaseSemaphore(&dev->struct_mutex.semaphore);
         return -EBUSY;
     }
     dev->irq_enabled = 1;
@@ -440,17 +418,6 @@ int drm_irq_install(struct drm_device *dev)
     
     if (dev->driver->irq_preinstall)
         dev->driver->irq_preinstall(dev);
-
-    parentsig = AllocSignal(-1);
-    dev->IntHandlerTask = NewCreateTask(TASKTAG_NAME,   "DRM INT Handler Task",
-                                        TASKTAG_PRI,    120,
-                                        TASKTAG_PC,     inthandlertask_code,
-                                        TASKTAG_ARG1,   dev,
-                                        TASKTAG_ARG2,   FindTask(NULL),
-                                        TASKTAG_ARG3,   parentsig,
-                                        TAG_END);
-    Wait(parentsig);
-    FreeSignal(parentsig);
 
     dev->IntHandler = (HIDDT_IRQ_Handler *)HIDDNouveauAlloc(sizeof(HIDDT_IRQ_Handler));
     
@@ -586,8 +553,6 @@ int drm_irq_uninstall(struct drm_device *dev)
         {
             HIDDNouveauFree(dev->IntHandler);
             dev->IntHandler = NULL;
-            Signal(dev->IntHandlerTask, SIGBREAKF_CTRL_C);
-            dev->IntHandlerTask = NULL;
             retval = 0;
         }
 
