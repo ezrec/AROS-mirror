@@ -9,7 +9,7 @@ Compiling AROS
             + Aaron Digulla
             + Adam Chodorowski
             + Neil Cafferkey
-:Copyright: Copyright (C) 2001-2012, The AROS Development Team
+:Copyright: Copyright (C) 2001-2013, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
@@ -202,10 +202,6 @@ Additionally, the following i386-pc-specific options are available::
 
     ``--with-bootloader=NAME [default: grub2]``
         Use a specific bootloader.
-
-.. Note:: Since the default bootloader, GRUB 2, cannot be built in a
-          cross-compilation environment, GRUB 1 must be used if compiling
-          under Mac OS X. To do this, use ``--with-bootloader=grub``.
 
 
 
