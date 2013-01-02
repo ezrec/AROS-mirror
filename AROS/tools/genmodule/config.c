@@ -19,16 +19,29 @@
 const static char bannertemplate[] =
     "/*\n"
     "    *** Automatically generated from '%s'. Edits will be lost. ***\n"
-    "    Copyright © 1995-2012, The AROS Development Team. All rights reserved.\n"
+    "    Copyright © 1995-%4u, The AROS Development Team. All rights reserved.\n"
     "*/\n";
 
 char*
 getBanner(struct config* config)
 {
-    int bannerlength = strlen(config->conffile) + strlen(bannertemplate) -1;
+    static unsigned currentyear = 0;
+
+    int bannerlength = strlen(config->conffile) + strlen(bannertemplate);
+    // No additional bytes needed because
+    // + 1 (NUL) + 4 (4 digit year) - strlen("%s") - strlen("%4u) = 0
+
     char * banner = malloc(bannerlength);
 
-    snprintf (banner, bannerlength, bannertemplate, config->conffile);
+    if (currentyear == 0)
+    {
+        time_t rawtime;
+        time(&rawtime);
+        struct tm *utctm = gmtime(&rawtime);
+        currentyear = utctm->tm_year + 1900;
+    }
+
+    snprintf (banner, bannerlength, bannertemplate, config->conffile, currentyear);
 
     return(banner);
 }
