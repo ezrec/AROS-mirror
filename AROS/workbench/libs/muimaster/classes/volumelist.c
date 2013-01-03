@@ -132,9 +132,7 @@ IPTR Volumelist__OM_NEW(struct IClass *cl, Object *obj, struct opSet *msg)
     obj = (Object *)DoSuperNewTags
     (
         cl, obj, NULL,
-	MUIA_List_Format, format
-	    ? TAG_IGNORE
-	    : (IPTR)",,P=\33r,P=\33r,P=\33r",
+	format ? TAG_IGNORE : MUIA_List_Format, (IPTR)",,P=\33r,P=\33r,P=\33r",
         TAG_MORE, (IPTR) msg->ops_AttrList
     );
     
