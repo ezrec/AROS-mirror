@@ -28,33 +28,30 @@ users:            Användare
 installation:     Installation
 using:            Användning
 faq:              Frågor och svar
-howto:            HowTo
-hwcompat:         Hardware Compatibility
-shell:            Shell commands
-# FIXME: above
-applications:     Applications
+howto:            Hurman (Howto)
+hwcompat:         Hårdvarukompatibilitet
+shell:            Shell-kommandon
+applications:     Program
 developers:       Utvecklare
 contribute:       Medverka
-roadmap:          Roadmap
-bug-tracker:      Bug Tracker
-# FIXME: above
+roadmap:          Syfte och mål (Roadmap)
+bug-tracker:      Buggrapportering
 working-with-subversion: Arbeta med Subversion
 compiling:        Kompilering
-application-development-manual: Manual för applikationsutveckling
-zune-application-development-manual: Manual för Zune applikationsutveckling
+application-development-manual: Manual för programutveckling
+zune-application-development-manual: Manual för Zune programutveckling
 system-development-manual:      Manual för systemutveckling
-debugging-manual: Manual för debugging
+debugging-manual: Manual för buggfixning
 reference:        Referens
 specifications:   Specifikationer
 ui-style-guide:   UI Style Guide    
-# FIXME: above
 documenting:      Dokumentering
 porting:          Porting
 translating:      Översättning
 summaries:        Sammanfattningar
 links:            Länkar
 contact:          Kontakt
-mailing-lists:    Mailing listor
+mailing-lists:    Mailing-listor
 forums:           Forum
 irc-channels:     IRC-kanaler
 credits:          Medverkande
