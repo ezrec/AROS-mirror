@@ -1,0 +1,17 @@
+# $Id$
+include $(TOP)/config/make.cfg
+
+#MM kernel-z-rom-includes : \
+#MM     kernel-exec-includes \
+#MM     kernel-dos-includes \
+#MM     includes-copy
+
+FILES := z-rom_funcs z-rom_init z-rom_gzlib z-rom_gzread \
+    ../inflate ../inffast ../adler32 ../crc32 ../inftrees ../zutil
+
+USER_CFLAGS := -DSTDC -DAMIGA -DZ_HAVE_UNISTD_H
+
+%build_module mmake=kernel-z-rom modname=z-rom modtype=library \
+    files="$(FILES)" linklibname=z-rom
+
+%common
