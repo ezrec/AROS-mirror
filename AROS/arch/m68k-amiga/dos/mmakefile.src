@@ -1,0 +1,6 @@
+# $Id$
+include $(TOP)/config/make.cfg
+
+#MM- kernel-dos-amiga-m68k : kernel-z-rom-includes
+
+%common

@@ -49,6 +49,9 @@ struct IntDosBase
     BOOL  arm_VFP;
     BOOL  arm_VFP_v3;
 #endif
+#ifdef __mc68000
+    struct Library *zromBase;
+#endif
 };
 
 #define IDosBase(base) ((struct IntDosBase *)base)
