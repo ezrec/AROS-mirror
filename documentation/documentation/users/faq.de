@@ -343,7 +343,7 @@ Die verfügbaren Sprachen sind Python_, Regina_, Lua_, Hollywood_ and False_:
 .. _Regina: http://regina-rexx.sourceforge.net/
 .. _Lua: http://www.lua.org/
 .. _Hollywood: http://www.airsoftsoftwair.com/
-.. _False:  http://wouter.fov120.com/false/
+.. _False:  http://strlen.com/false-language
 
 
 Warum gibt es keinen m68k Emulator in AROS?
@@ -366,7 +366,7 @@ unmoglich (nur ein Beispiel: es gibt ein Feld in einer Struktur von AmigaOS welc
 manchmal ULONG und manchmal zwei WORDs enthält), da wir nicht festlegen können
 wie eine Menge an Bytes im RAM codiert werden soll.
 
-.. _UAE: http://www.freiburg.linux.de/~uae/
+.. _UAE: http://www.amigaemulator.org/
 
 
 Wird es ein AROS Kickstart ROM geben? 

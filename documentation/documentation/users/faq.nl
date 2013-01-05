@@ -320,7 +320,7 @@ Tot de talen die native beschikbaar zijn behoren Python_, Regina_ en False_:
 
 .. _Python: http://www.python.org/
 .. _Regina: http://regina-rexx.sourceforge.net/
-.. _False:  http://wouter.fov120.com/false/
+.. _False:  http://strlen.com/false-language
 
 Waarom zit er geen m68k emulator in AROS?
 -----------------------------------------
@@ -342,7 +342,7 @@ er is een veld in een structuur van het AmigaOS dat de ene keer een enkele ULONG
 en de andere keer twee WORDs), omdat we niet kunnen weten hoe een paar bytes in
 het ram gecodeerd worden.
 
-.. _UAE: http://www.freiburg.linux.de/~uae/
+.. _UAE: http://www.amigaemulator.org/
 
 
 Zal er een AROS Kickstart ROM komen?

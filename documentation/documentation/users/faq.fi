@@ -320,7 +320,7 @@ Kielet jotka ovat natiivina saatavana ovat Python_, Regina_ ja False_:
 
 .. _Python: http://www.python.org/
 .. _Regina: http://regina-rexx.sourceforge.net/
-.. _False:  http://wouter.fov120.com/false/
+.. _False:  http://strlen.com/false-language
 
 
 Miksei AROS:issa ole m68k emulaattoria?
@@ -343,7 +343,7 @@ tiedolla. Automaattinen muunnos n‰ytt‰‰ mahdottomalta (esim.: AmigaOS:issa on
 rakenteessa kentt‰ joka joskus sis‰lt‰‰ ULONG:in ja joskus kaksi WORD:i‰)
 koska emme voi tiet‰‰ miten pari tavua muistia on enkoodattu.
 
-.. _UAE: http://www.freiburg.linux.de/~uae/
+.. _UAE: http://www.amigaemulator.org/
 
 
 Tuleeko AROS:ista Kickstart ROM:ia?

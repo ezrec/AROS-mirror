@@ -314,7 +314,7 @@ Los lenguajes que están disponibles nativamente son Python_, Regina_ y False_:
 
 .. _Python: http://www.python.org/
 .. _Regina: http://regina-rexx.sourceforge.net/
-.. _False:  http://wouter.fov120.com/false/
+.. _False:  http://strlen.com/false-language
 
 
 ¿Por qué no hay un emulador m68k en AROS?
@@ -338,7 +338,7 @@ campo en una estructura en el AmigaOS que a veces contiene un ULONG y
 a veces dos WORDS) porque no podemos decir cómo están codificados en la 
 RAM un par de bytes.
 
-.. _UAE: http://www.freiburg.linux.de/~uae/
+.. _UAE: http://www.amigaemulator.org/
 
 
 ¿Habrá una ROM Kicktstart en AROS?

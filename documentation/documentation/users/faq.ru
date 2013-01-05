@@ -251,7 +251,7 @@ Partner. MorphOS использует части AROS для ускорения собственных разработок, в
 
 .. _Python: http://www.python.org/
 .. _Regina: http://regina-rexx.sourceforge.net/
-.. _False:  http://wouter.fov120.com/false/
+.. _False:  http://strlen.com/false-language
 
 
 Почему в AROS не встроен эмулятор m68k?
@@ -274,7 +274,7 @@ AROS требует меньше ресурсов, чем прочие системы (что значит, что UAE может полу
 из одного ULONG - значения, а иногда - из двух WORD), поскольку нельзя сказать
 точно, каков именно формат байт информации в памяти.
 
-.. _UAE: http://www.freiburg.linux.de/~uae/
+.. _UAE: http://www.amigaemulator.org/
 
 
 Будет ли в AROS Kickstart ROM? 

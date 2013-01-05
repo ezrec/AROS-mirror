@@ -20,7 +20,7 @@ Questa guida riguarda il porting di software su AROS che abbia script configure
 o make, come per la maggioranza del software open source dal mondo linux. E'
 basata su un `documento`__ scritto da Johan Samuellson per AmigaOS4. 
 
-__ http://utilitybase.com/article?action=show&id=210
+__ http://www.os4depot.net/index.php?function=showfile&file=document/manual/spots-pfd.lha
 
 Cosa portare?
 -------------

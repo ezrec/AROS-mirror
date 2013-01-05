@@ -316,7 +316,7 @@ De språk som finns tillgängliga i native är Python_, Regina_, Lua_, Hollywood: o
 .. _Regina: http://regina-rexx.sourceforge.net/
 .. _Lua: http://www.lua.org/
 .. _Hollywood: http://www.airsoftsoftwair.com/
-.. _False:  http://wouter.fov120.com/false/
+.. _False:  http://strlen.com/false-language
 
 
 Varför finns det ingen m68k-emulator i AROS?
@@ -337,7 +337,7 @@ emuleringen. Automatisk konvertering verkar i princip vara omöjligt (Till exempe
 Det finns ett fält i strukturen i AmigaOS vilket ibland innehåller ULONG och ibland
 två WORD) eftersom vi inte kan säga hur ett par bytes i RAM är enkodade.
 
-.. _UAE: http://www.freiburg.linux.de/~uae/
+.. _UAE: http://www.amigaemulator.org/
 
 
 Kommer det att finnas en AROS Kickstart ROM?

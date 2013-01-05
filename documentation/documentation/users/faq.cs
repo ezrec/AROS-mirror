@@ -321,7 +321,7 @@ The languages that are available natively are Python_, Regina_, Lua_, Hollywood_
 .. _Regina: http://regina-rexx.sourceforge.net/
 .. _Lua: http://www.lua.org/
 .. _Hollywood: http://www.airsoftsoftwair.com/
-.. _False:  http://wouter.fov120.com/false/
+.. _False:  http://strlen.com/false-language
 
 
 Proè není v AROSu ¾ádný m68k emulátor?
@@ -343,7 +343,7 @@ an example: there is a field in a structure in the AmigaOS which sometimes
 contains one ULONG and sometimes two WORDs) because we cannot tell how a couple
 of bytes in RAM are encoded.
 
-.. _UAE: http://www.freiburg.linux.de/~uae/
+.. _UAE: http://www.amigaemulator.org/
 
 
 Chystá se AROS Kickstart ROM?

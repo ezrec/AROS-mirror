@@ -97,7 +97,7 @@ Verdere ontwikkelingen
 AROS heeft er nu een derde distributie bijgekregen, naast de regelmatig 
 bijgewerkte `Icaros Desktop <http://www.icarosdesktop.org/>`__ en `AROS 
 Broadway <http://www.aros-broadway.de/>`__. De nieuwe `AspireOS-
-distributie <http://www.arosaspire.org/>`__ richt zich voornamelijk op 
+distributie <http://www.aspireos.com/>`__ richt zich voornamelijk op 
 de Acer Aspire One 110 en 150 netbooks, maar kan ook interessant zijn 
 voor gebruikers van andere pc's die op zoek zijn naar een lichtgewicht-
 distributie.

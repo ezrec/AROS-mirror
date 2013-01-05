@@ -21,7 +21,7 @@ configure o make a AROS.
 Esto es verdad para la mayoría del software de fuente abierta del mundo Linux.
 Se basa en un `documento`__ escrito por Johan Samuellson para el AmigaOS4.
 
-__ http://utilitybase.com/article?action=show&id=210
+__ http://www.os4depot.net/index.php?function=showfile&file=document/manual/spots-pfd.lha
 
 ¿Qué transferir?
 ----------------

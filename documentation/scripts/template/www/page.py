@@ -181,7 +181,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
                     A
                     ( 
                         Img( src = '%(ROOT)simages/genesi-small.gif', border = 0, alt = 'Genesi USA' ), 
-                        href = 'http://www.genesi-usa.com/' 
+                        href = 'http://www.genesi-tech.com/' 
                     )
                 )
             ),
@@ -253,7 +253,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
     <?php
         echo "<map name=\\"map\\">";
               echo "<area shape=\\"rect\\" coords=\\"25,78,85,95\\" alt=\\"http://www.aros.org\\" href=\\"http://www.aros.org\\">";
-              echo "<area shape=\\"rect\\" coords=\\"100,78,168,95\\" alt=\\"AROS-Exec\\" href=\\"http://www.aros-exec.org\\">";
+              echo "<area shape=\\"rect\\" coords=\\"100,78,168,95\\" alt=\\"AROS-Exec\\" href=\\"http://aros-exec.org\\">";
               echo "<area shape=\\"rect\\" coords=\\"180,78,240,95\\" alt=\\"AROS-Exec Archives\\" href=\\"http://archives.aros-exec.org\\">";
               echo "<area shape=\\"rect\\" coords=\\"260,78,350,95\\" alt=\\"Power2People\\" href=\\"http://www.power2people.org\\">";
               echo "</map>"; 

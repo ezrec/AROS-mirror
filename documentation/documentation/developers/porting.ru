@@ -20,7 +20,7 @@
 программ с открытым исходным кодом из мира Linux. Данное руководство основано на
 `документе`__, написанном Джоаном Самуэллсоном для AmigaOS4.
 
-__ http://utilitybase.com/article?action=show&id=210
+__ http://www.os4depot.net/index.php?function=showfile&file=document/manual/spots-pfd.lha
 
 
 Что портировать?

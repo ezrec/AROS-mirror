@@ -55,7 +55,7 @@
    <?php if ($win_ie56) { echo "<img alt=\"Community Icon\" src=\"/images/communityicon.gif\" align=\"middle\">"; } 
    else { echo "<img alt=\"Community Icon\" src=\"/images/communityicon.png\" align=\"middle\">"; } ?> 
    Senaste inläggen på AROS-EXEC forumet:<br><img style="width: 238px; height: 2px;" alt="spacer" src="/images/sidespacer.png"><br>
-   <a href=http://www.aros-exec.org>AROS-EXEC</a> är den primära AROS community-sidan. Här kan du få hjälp, hålla koll på vad som händer inom AROS-världen och posta dina tankar om AROS.<br><br>
+   <a href=http://aros-exec.org>AROS-EXEC</a> är den primära AROS community-sidan. Här kan du få hjälp, hålla koll på vad som händer inom AROS-världen och posta dina tankar om AROS.<br><br>
    <?php include("../rsfeed/aeforum.php"); ?><br></td></tr></tbody></table>
    <table style="width: 100%; text-align: justify; margin-left: auto; margin-right: auto;" background="/images/bgcolorright.png" border="0" cellpadding="1" cellspacing="1"><tr><td style="vertical-align: top;">
    <?php if ($win_ie56) { echo "<img alt=\"Syndication Icon\" src=\"/images/rssicon1.gif\" align=\"middle\">"; } else { echo "<img alt=\"Syndication Icon\" src=\"/images/rssicon1.png\" align=\"middle\">"; } ?>

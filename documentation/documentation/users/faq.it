@@ -334,7 +334,7 @@ False_:
 
 .. _Python: http://www.python.org/
 .. _Regina: http://regina-rexx.sourceforge.net/
-.. _False:  http://wouter.fov120.com/false/
+.. _False:  http://strlen.com/false-language
 
 
 Perchè non c'è alcun emulator m68k in AROS?
@@ -358,7 +358,7 @@ in emulazione. La conversione automatica sembra essere impossibile
 contiene ULONG e a volte due WORD) perchè non possiamo dire come sono
 codificati una coppia di byte in RAM.
 
-.. _UAE: http://www.freiburg.linux.de/~uae/
+.. _UAE: http://www.amigaemulator.org/
 
 
 Ci sarà una ROM Kickstart di AROS?
