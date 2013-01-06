@@ -2812,7 +2812,7 @@ VOID GFX__Hidd_Gfx__CopyBox(OOP_Class *cl, OOP_Object *obj, struct pHidd_Gfx_Cop
 		    get_p.y = srcY + y;
 		    pix = GETPIXEL(src, &get_p);
     	    	#else
-		    pix = HIDD_BM_GetPixel(obj, srcX + x, srcY + y);
+		    pix = HIDD_BM_GetPixel(src, srcX + x, srcY + y);
     	    	#endif
 
     	    	#if COPYBOX_CHECK_FOR_ALIKE_PIXFMT
