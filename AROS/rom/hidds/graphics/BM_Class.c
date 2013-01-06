@@ -920,22 +920,19 @@ OOP_Object *BM__Root__New(OOP_Class *cl, OOP_Object *obj, struct pRoot_New *msg)
 	    data->classptr = (OOP_Class *)attrs[AO(ClassPtr)];
 
     	#if USE_FAST_PUTPIXEL
-	    data->putpixel = (IPTR (*)(OOP_Class *, OOP_Object *, struct pHidd_BitMap_PutPixel *))
-			     OOP_GetMethod(obj, CSD(cl)->putpixel_mid);
+	    data->putpixel = OOP_GetMethodExt(obj, HiddBitMapBase + moHidd_BitMap_PutPixel, &data->putpixel_Class);
 	    if (NULL == data->putpixel)
 		ok = FALSE;
     	#endif
 
     	#if USE_FAST_GETPIXEL
-	    data->getpixel = (IPTR (*)(OOP_Class *, OOP_Object *, struct pHidd_BitMap_GetPixel *))
-			     OOP_GetMethod(obj, CSD(cl)->getpixel_mid);
+	    data->getpixel = OOP_GetMethodExt(obj, HiddBitMapBase + moHidd_BitMap_GetPixel, &data->getpixel_Class);
 	    if (NULL == data->getpixel)
 		ok = FALSE;
     	#endif
 
     	#if USE_FAST_DRAWPIXEL
-	    data->drawpixel = (IPTR (*)(OOP_Class *, OOP_Object *, struct pHidd_BitMap_DrawPixel *))
-			      OOP_GetMethod(obj, CSD(cl)->drawpixel_mid);
+	    data->drawpixel = OOP_GetMethodExt(obj, HiddBitMapBase + moHidd_BitMap_DrawPixel, &data->drawpixel_Class);
 	    if (NULL == data->drawpixel)
 		ok = FALSE;
     	#endif
@@ -1233,9 +1230,6 @@ ULONG BM__Hidd_BitMap__DrawPixel(OOP_Class *cl, OOP_Object *obj,
     HIDDT_DrawMode  	    	    mode;
     HIDDT_Pixel     	    	    writeMask;
     OOP_Object      	    	    *gc;
-#if USE_FAST_PUTPIXEL
-    struct pHidd_BitMap_PutPixel    p;
-#endif
 
 /*    EnterFunc(bug("BitMap::DrawPixel() x: %i, y: %i\n", msg->x, msg->y));
 */
@@ -1280,7 +1274,7 @@ ULONG BM__Hidd_BitMap__DrawPixel(OOP_Class *cl, OOP_Object *obj,
     {
 #endif
 
-    dest      = HIDD_BM_GetPixel(obj, msg->x, msg->y);
+        dest      = GETPIXEL(cl, obj, msg->x, msg->y);
     writeMask = ~GC_COLMASK(gc) & dest;
 
     val = 0;
@@ -1296,16 +1290,7 @@ ULONG BM__Hidd_BitMap__DrawPixel(OOP_Class *cl, OOP_Object *obj,
 }
 #endif
 
-#if USE_FAST_PUTPIXEL
-    p.mID	= CSD(cl)->putpixel_mid;
-    p.x		= msg->x;
-    p.y		= msg->y;
-    p.pixel	= val;
-    PUTPIXEL(obj, &p);
-#else
-
-    HIDD_BM_PutPixel(obj, msg->x, msg->y, val);
-#endif
+    PUTPIXEL(cl, obj, msg->x, msg->y, val);
 
 /*    ReturnInt("BitMap::DrawPixel ", ULONG, 1); */ /* in quickmode return always 1 */
 

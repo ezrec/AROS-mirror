@@ -302,7 +302,7 @@ static BOOL parse_sync_tags(OOP_Class *cl, OOP_Object *o, struct TagItem *tags, 
     struct sync_data *data = OOP_INST_DATA(cl, o);
     struct class_static_data *csd = CSD(cl);
 
-    if (0 != OOP_ParseAttrs(tags, attrs, num_Hidd_Sync_Attrs, &ATTRCHECK(sync), csd->hiddSyncAttrBase))
+    if (0 != OOP_ParseAttrs(tags, attrs, num_Hidd_Sync_Attrs, &ATTRCHECK(sync), __IHidd_Sync))
     {
 	D(bug("!!! parse_sync_tags: ERROR PARSING ATTRS !!!\n"));
 	return FALSE;

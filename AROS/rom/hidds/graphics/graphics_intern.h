@@ -9,40 +9,23 @@
 /* Include files */
 
 #include <aros/debug.h>
-#ifndef EXEC_LIBRARIES_H
-#   include <exec/libraries.h>
-#endif
-#ifndef EXEC_SEMAPHORES_H
-#   include <exec/semaphores.h>
-#endif
-#ifndef OOP_OOP_H
-#   include <oop/oop.h>
-#endif
-#ifndef HIDD_GRAPHICS_H
-#   include <hidd/graphics.h>
-#endif
+#include <exec/libraries.h>
+#include <exec/semaphores.h>
+#include <oop/oop.h>
+#include <hidd/graphics.h>
 #include <dos/dos.h>
 #include <graphics/gfxbase.h>
 #include <graphics/monitor.h>
 
 
-#define USE_FAST_PUTPIXEL		0
-#define OPTIMIZE_DRAWPIXEL_FOR_COPY	1
-#define USE_FAST_DRAWPIXEL		1
-#define USE_FAST_GETPIXEL		1
-#define COPYBOX_CHECK_FOR_ALIKE_PIXFMT	1
+#define USE_FAST_PUTPIXEL               1
+#define OPTIMIZE_DRAWPIXEL_FOR_COPY     1
+#define USE_FAST_DRAWPIXEL              1
+#define USE_FAST_GETPIXEL               1
+#define COPYBOX_CHECK_FOR_ALIKE_PIXFMT  1
 
 #define HBM(x) ((struct HIDDBitMapData *)x)
 
-#define PUTPIXEL(o, msg)	\
-    HBM(o)->putpixel(OOP_OCLASS(o), o, msg)
-
-#define GETPIXEL(o, msg)	\
-    HBM(o)->getpixel(OOP_OCLASS(o), o, msg)
-
-#define DRAWPIXEL(o, msg)	\
-    HBM(o)->drawpixel(OOP_OCLASS(o), o, msg)
-    
 #define GOT_PF_ATTR(code)	GOT_ATTR(code, aoHidd_PixFmt, pixfmt)
 #define FOUND_PF_ATTR(code)	FOUND_ATTR(code, aoHidd_PixFmt, pixfmt);
 
@@ -224,16 +207,18 @@ struct HIDDBitMapData
     HIDDT_ModeID modeid;
     
 
-    /* Optimize these two method calls */
+    /* Optimize these three method calls */
 #if USE_FAST_PUTPIXEL    
-    IPTR (*putpixel)(OOP_Class *cl, OOP_Object *o, struct pHidd_BitMap_PutPixel *msg);
+    OOP_MethodFunc putpixel;
+    OOP_Class *putpixel_Class;
 #endif
 #if USE_FAST_GETPIXEL    
-    IPTR (*getpixel)(OOP_Class *cl, OOP_Object *o, struct pHidd_BitMap_GetPixel *msg);
+    OOP_MethodFunc getpixel;
+    OOP_Class *getpixel_Class;
 #endif
-
 #if USE_FAST_DRAWPIXEL    
-    IPTR (*drawpixel)(OOP_Class *cl, OOP_Object *o, struct pHidd_BitMap_DrawPixel *msg);
+    OOP_MethodFunc drawpixel;
+    OOP_Class *drawpixel_Class;
 #endif
 
 
@@ -272,21 +257,16 @@ struct HIDDGCData
 };
 #endif    
 
+#define NUM_ATTRBASES   9
+#define NUM_METHODBASES 1
 
 struct class_static_data
 {
     struct GfxBase	 *GfxBase;
     struct SignalSemaphore sema;
 
-    OOP_AttrBase    	 hiddPixFmtAttrBase;
-    OOP_AttrBase    	 hiddBitMapAttrBase;
-    OOP_AttrBase    	 hiddGfxAttrBase;
-    OOP_AttrBase    	 hiddSyncAttrBase;
-    OOP_AttrBase    	 hiddGCAttrBase;
-    OOP_AttrBase	 hiddOverlayAttrBase;
-    OOP_AttrBase    	 hiddColorMapAttrBase;
-    OOP_AttrBase    	 hiddPlanarBMAttrBase;
-    OOP_AttrBase    	 hiddChunkyBMAttrBase;
+    OOP_AttrBase     attrBases[NUM_ATTRBASES];
+    OOP_MethodID     methodBases[NUM_METHODBASES];
     
     OOP_Class            *gfxhiddclass; /* graphics hidd class    */
     OOP_Class            *bitmapclass;  /* bitmap class           */
@@ -313,29 +293,22 @@ struct class_static_data
     /* Index of standard pixelformats for quick access */
     HIDDT_PixelFormat	 *std_pixfmts[num_Hidd_StdPixFmt];
 
-    /* Thes calls are optimized by calling the method functions directly	*/
-#if USE_FAST_PUTPIXEL
-    OOP_MethodID	 putpixel_mid;
-#endif
-#if USE_FAST_GETPIXEL
-    OOP_MethodID	 getpixel_mid;
-#endif
-#if USE_FAST_DRAWPIXEL
-    OOP_MethodID	 drawpixel_mid;
-#endif
     HIDDT_RGBConversionFunction rgbconvertfuncs[NUM_RGB_STDPIXFMT][NUM_RGB_STDPIXFMT];
     struct SignalSemaphore rgbconvertfuncs_sem;
 };
 
-#define __IHidd_PixFmt      (csd->hiddPixFmtAttrBase)
-#define __IHidd_BitMap	    (csd->hiddBitMapAttrBase)
-#define __IHidd_Gfx 	    (csd->hiddGfxAttrBase)
-#define __IHidd_Sync	    (csd->hiddSyncAttrBase)
-#define __IHidd_GC  	    (csd->hiddGCAttrBase)
-#define __IHidd_Overlay	    (csd->hiddOverlayAttrBase)
-#define __IHidd_ColorMap    (csd->hiddColorMapAttrBase)
-#define __IHidd_PlanarBM    (csd->hiddPlanarBMAttrBase)
-#define __IHidd_ChunkyBM    (csd->hiddChunkyBMAttrBase)
+#define __IHidd_BitMap      (csd->attrBases[0])
+#define __IHidd_Gfx         (csd->attrBases[1])
+#define __IHidd_GC          (csd->attrBases[2])
+#define __IHidd_ColorMap    (csd->attrBases[3])
+#define __IHidd_Overlay     (csd->attrBases[4])
+#define __IHidd_Sync        (csd->attrBases[5])
+#define __IHidd_PixFmt      (csd->attrBases[6])
+#define __IHidd_PlanarBM    (csd->attrBases[7])
+#define __IHidd_ChunkyBM    (csd->attrBases[8])
+
+#undef HiddBitMapBase
+#define HiddBitMapBase      (csd->methodBases[0])
 
 /* Library base */
 
@@ -371,5 +344,54 @@ static inline ULONG color_distance(UWORD a1, UWORD r1, UWORD g1, UWORD b1, UWORD
 
 #define CSD(x) (&((struct IntHIDDGraphicsBase *)x->UserData)->hdg_csd)
 #define csd CSD(cl)
+
+/* The following calls are optimized by calling the method functions directly */
+
+#if USE_FAST_GETPIXEL
+static inline HIDDT_Pixel GETPIXEL(OOP_Class *cl, OOP_Object *o, WORD x, WORD y)
+{
+    struct pHidd_BitMap_GetPixel get_p;
+
+    get_p.mID = HiddBitMapBase + moHidd_BitMap_GetPixel;
+    get_p.x   = x;
+    get_p.y   = y;
+
+    return HBM(o)->getpixel(HBM(o)->getpixel_Class, o, &get_p.mID);
+}
+#else
+#define GETPIXEL(cl, obj, x, y) HIDD_BM_GetPixel(obj, x, y)
+#endif
+
+#if USE_FAST_PUTPIXEL
+static inline void PUTPIXEL(OOP_Class *cl, OOP_Object *o, WORD x, WORD y, HIDDT_Pixel val)
+{
+    struct pHidd_BitMap_PutPixel put_p;
+
+    put_p.mID   = HiddBitMapBase + moHidd_BitMap_PutPixel;
+    put_p.x     = x;
+    put_p.y     = y;
+    put_p.pixel = val;
+
+    HBM(o)->putpixel(HBM(o)->putpixel_Class, o, &put_p.mID);
+}
+#else
+#define PUTPIXEL(cl, obj, x, y, val) HIDD_BM_PutPixel(obj, x, y, val)
+#endif
+
+#if USE_FAST_DRAWPIXEL
+static inline void DRAWPIXEL(OOP_Class *cl, OOP_Object *o, OOP_Object *gc, WORD x, WORD y)
+{
+    struct pHidd_BitMap_DrawPixel draw_p;
+
+    draw_p.mID = HiddBitMapBase + moHidd_BitMap_DrawPixel;
+    draw_p.gc  = gc;
+    draw_p.x   = x;
+    draw_p.y   = y;
+
+    HBM(o)->drawpixel(HBM(o)->drawpixel_Class, o, &draw_p.mID);
+}
+#else
+#define DRAWPIXEL(cl, obj, gc, x, y) HIDD_BM_PutPixel(obj, gc, x, y)
+#endif
 
 #endif /* GRAPHICS_HIDD_INTERN_H */

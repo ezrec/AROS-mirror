@@ -8,8 +8,13 @@
 
 /****************************************************************************************/
 
+#define DEBUG 0
+#define SDEBUG 0
+#define DPF(x)
+#define DCOPYBOX(x)
+
 #include <aros/atomic.h>
-#include <aros/config.h>
+#include <aros/debug.h>
 #include <aros/symbolsets.h>
 #include <cybergraphx/cgxvideo.h>
 #include <exec/lists.h>
@@ -31,15 +36,6 @@
 #include <utility/tagitem.h>
 
 #include LC_LIBDEFS_FILE
-
-#undef  SDEBUG
-#undef  DEBUG
-#define SDEBUG 0
-#define DEBUG 0
-#include <aros/debug.h>
-
-#define DPF(x)
-
 
 #include <hidd/graphics.h>
 
@@ -2697,20 +2693,6 @@ VOID GFX__Hidd_Gfx__CopyBox(OOP_Class *cl, OOP_Object *obj, struct pHidd_Gfx_Cop
     OOP_Object      	    	    *dest, *src;
     
     OOP_Object      	    	    *gc;
-#if USE_FAST_GETPIXEL
-    struct pHidd_BitMap_GetPixel    get_p;
-#endif
-
-#if USE_FAST_DRAWPIXEL
-    struct pHidd_BitMap_DrawPixel   draw_p;
-    
-    draw_p.mID	= CSD(cl)->drawpixel_mid;
-    draw_p.gc	= msg->gc;
-#endif
-
-#if USE_FAST_GETPIXEL
-    get_p.mID	= CSD(cl)->getpixel_mid;
-#endif
     
     dest = msg->dest;
     src  = msg->src;
@@ -2737,22 +2719,21 @@ VOID GFX__Hidd_Gfx__CopyBox(OOP_Class *cl, OOP_Object *obj, struct pHidd_Gfx_Cop
     
     /* Get the source pixel format */
     srcpf = (HIDDT_PixelFormat *)HBM(src)->prot.pixfmt;
-    
-    /* bug("COPYBOX: SRC PF: %p, obj=%p, cl=%s, OOP_OCLASS: %s\n", srcpf, obj
-	    , cl->ClassNode.ln_Name, OOP_OCLASS(obj)->ClassNode.ln_Name);
-    */
-    
-#if 0
+
+    DCOPYBOX(bug("COPYBOX: obj=0x%p (%s), src=0x%p at (%d, %d), dst=0x%p at (%d, %d), size=%dx%d\n", obj, OOP_OCLASS(obj)->ClassNode.ln_Name,
+        msg->src, srcX, srcY, msg->dest, destX, destY, msg->width, msg->height));
+    DCOPYBOX(bug("COPYBOX: GC=0x%p, DrawMode %ld, ColMask 0x%08X\n", msg->gc, GC_DRMD(msg->gc), GC_COLMASK(msg->gc)));
+
+#ifdef COPYBOX_DUMP_DIMS
     {
 	IPTR sw, sh, dw, dh;
-	D(bug("COPYBOX: src=%p, dst=%p, width=%d, height=%d\n"
-	    , obj, msg->dest, msg->width, msg->height));
 
 	OOP_GetAttr(obj, aHidd_BitMap_Width, &sw);
 	OOP_GetAttr(obj, aHidd_BitMap_Height, &sh);
 	OOP_GetAttr(msg->dest, aHidd_BitMap_Width, &dw);
 	OOP_GetAttr(msg->dest, aHidd_BitMap_Height, &dh);
-	D(bug("src dims: %d, %d  dest dims: %d, %d\n", sw, sh, dw, dh));
+
+    bug("src dims: %dx%d  dest dims: %dx%d\n", sw, sh, dw, dh);
     }
 #endif
 
@@ -2795,7 +2776,8 @@ VOID GFX__Hidd_Gfx__CopyBox(OOP_Class *cl, OOP_Object *obj, struct pHidd_Gfx_Cop
     {
     	if (IS_TRUECOLOR(srcpf))
 	{
-    	    // bug("COPY FROM TRUECOLOR TO TRUECOLOR\n");
+           DCOPYBOX(bug("COPY FROM TRUECOLOR TO TRUECOLOR\n"));
+
 	    for(y = startY; y != endY; y += deltaY)
 	    {
 		HIDDT_Color col;
@@ -2805,15 +2787,7 @@ VOID GFX__Hidd_Gfx__CopyBox(OOP_Class *cl, OOP_Object *obj, struct pHidd_Gfx_Cop
 		*/    
 		for(x = startX; x != endX; x += deltaX)
 		{
-		    HIDDT_Pixel pix;
-		    
-    	    	#if USE_FAST_GETPIXEL
-		    get_p.x = srcX + x;
-		    get_p.y = srcY + y;
-		    pix = GETPIXEL(src, &get_p);
-    	    	#else
-		    pix = HIDD_BM_GetPixel(src, srcX + x, srcY + y);
-    	    	#endif
+            HIDDT_Pixel pix = GETPIXEL(cl, src, srcX + x, srcY + y);
 
     	    	#if COPYBOX_CHECK_FOR_ALIKE_PIXFMT
 		    if (srcpf == dstpf)
@@ -2829,18 +2803,7 @@ VOID GFX__Hidd_Gfx__CopyBox(OOP_Class *cl, OOP_Object *obj, struct pHidd_Gfx_Cop
 		    }
     	    	#endif
 
-    	    // #if 0
-
-    	    	#if USE_FAST_DRAWPIXEL
-		    draw_p.x = destX + x;
-		    draw_p.y = destY + y;
-		    DRAWPIXEL(dest, &draw_p);
-    	    	#else
-		    
-		    HIDD_BM_DrawPixel(msg->dest, gc, destX + x, destY + y);
-    	    	#endif
-
-    	    // #endif
+            DRAWPIXEL(cl, dest, gc, destX + x, destY + y);
 		}
 		/*if (0 == strcmp("CON: Window", FindTask(NULL)->tc_Node.ln_Name))
 		    bug("[%d,%d] ", srcY, destY);
@@ -2854,7 +2817,7 @@ VOID GFX__Hidd_Gfx__CopyBox(OOP_Class *cl, OOP_Object *obj, struct pHidd_Gfx_Cop
 	        For this case we do NOT convert through RGB,
 		but copy the pixel indexes directly
 	     */
-    	    // bug("COPY FROM PALETTE TO PALETTE\n");
+        DCOPYBOX(bug("COPY FROM PALETTE TO PALETTE\n"));
 
     	    /* FIXME: This might not work very well with two StaticPalette bitmaps */
 
@@ -2878,14 +2841,14 @@ VOID GFX__Hidd_Gfx__CopyBox(OOP_Class *cl, OOP_Object *obj, struct pHidd_Gfx_Cop
 	if (IS_TRUECOLOR(srcpf))
 	{
     	    /* FIXME: Implement this */
-	     D(bug("!! DEFAULT COPYING FROM TRUECOLOR TO PALETTIZED NOT IMPLEMENTED IN BitMap::CopyBox\n"));
+        DCOPYBOX(bug("!! DEFAULT COPYING FROM TRUECOLOR TO PALETTIZED NOT IMPLEMENTED IN BitMap::CopyBox\n"));
 	}
 	else if (IS_TRUECOLOR(dstpf))
 	{
 	    /* Get the colortab */
 	    HIDDT_Color *ctab = ((HIDDT_ColorLUT *)HBM(src)->colmap)->colors;
 
-    	    // bug("COPY FROM PALETTE TO TRUECOLOR, DRAWMODE %d, CTAB %p\n", GC_DRMD(gc), ctab);
+        DCOPYBOX(bug("COPY FROM PALETTE TO TRUECOLOR, DRAWMODE %d, CTAB %p\n", GC_DRMD(gc), ctab));
 	    
 	    for(y = startY; y != endY; y += deltaY)
 	    {		
@@ -3735,53 +3698,76 @@ ULONG GFX__Hidd_Gfx__PrepareViewPorts(OOP_Class *cl, OOP_Object *o, struct pHidd
 
 /****************************************************************************************/
 
+static ULONG ObtainAttrBases(OOP_AttrBase *bases, CONST_STRPTR *interfaces, ULONG count, struct Library *OOPBase)
+{
+    ULONG i;
+    ULONG failed = 0;
+
+    for (i = 0; i < count; i++)
+    {
+        bases[i] = OOP_ObtainAttrBase((STRPTR)interfaces[i]);
+        if (!bases[i])
+            failed++;
+    }
+    
+    return failed;
+}
+
+static void ReleaseAttrBases(OOP_AttrBase *bases, CONST_STRPTR *interfaces, ULONG count, struct Library *OOPBase)
+{
+    ULONG i;
+    
+    for (i = 0; i < count; i++)
+    {
+        if (bases[i])
+            OOP_ReleaseAttrBase((STRPTR)interfaces[i]);
+    }
+}
+
+static ULONG GetMethodBases(OOP_MethodID *bases, CONST_STRPTR *interfaces, ULONG count, struct Library *OOPBase)
+{
+    ULONG i;
+    ULONG failed = 0;
+
+    for (i = 0; i < count; i++)
+    {
+        bases[i] = OOP_GetMethodID((STRPTR)interfaces[i], 0);
+        if (bases[i] == -1)
+            failed++;
+    }
+
+    return failed;
+}
+
+static CONST_STRPTR interfaces[NUM_ATTRBASES] =
+{
+    IID_Hidd_BitMap,
+    IID_Hidd_Gfx,
+    IID_Hidd_GC,
+    IID_Hidd_ColorMap,
+    IID_Hidd_Overlay,
+    IID_Hidd_Sync,
+    IID_Hidd_PixFmt,
+    IID_Hidd_PlanarBM,
+    IID_Hidd_ChunkyBM,
+};
+
 static int GFX_ClassInit(LIBBASETYPEPTR LIBBASE)
 {
     struct class_static_data *csd = &LIBBASE->hdg_csd;
-    
-    __IHidd_PixFmt  	= OOP_ObtainAttrBase(IID_Hidd_PixFmt);
-    __IHidd_BitMap  	= OOP_ObtainAttrBase(IID_Hidd_BitMap);
-    __IHidd_Gfx     	= OOP_ObtainAttrBase(IID_Hidd_Gfx);
-    __IHidd_Sync    	= OOP_ObtainAttrBase(IID_Hidd_Sync);
-    __IHidd_GC      	= OOP_ObtainAttrBase(IID_Hidd_GC);
-    __IHidd_Overlay    	= OOP_ObtainAttrBase(IID_Hidd_Overlay);
-    __IHidd_ColorMap 	= OOP_ObtainAttrBase(IID_Hidd_ColorMap);
-    __IHidd_PlanarBM	= OOP_ObtainAttrBase(IID_Hidd_PlanarBM);
-    __IHidd_ChunkyBM	= OOP_ObtainAttrBase(IID_Hidd_ChunkyBM);
-    
-    if (!__IHidd_PixFmt     ||
-     	!__IHidd_BitMap     ||
-	!__IHidd_Gfx 	    ||
-	!__IHidd_Sync 	    ||
-	!__IHidd_GC 	    ||
-	!__IHidd_ColorMap   ||
-	!__IHidd_PlanarBM   ||
-	!__IHidd_ChunkyBM
-       )
+
+    if (ObtainAttrBases(csd->attrBases, interfaces, NUM_ATTRBASES, OOPBase))
     {
-	goto failexit;
+        ReturnInt("init_gfxhiddclass", ULONG, FALSE);
+    }
+
+    if (GetMethodBases(csd->methodBases, interfaces, NUM_METHODBASES, OOPBase))
+    {
+        ReturnInt("init_gfxhiddclass", ULONG, FALSE);
     }
 
     D(bug("Creating std pixelfmts\n"));
-    if (!create_std_pixfmts(csd))
-    	goto failexit;
-    D(bug("Pixfmts created\n"));
-
-    /* Get two methodis required for direct method execution */
-#if USE_FAST_PUTPIXEL
-    csd->putpixel_mid = OOP_GetMethodID(IID_Hidd_BitMap, moHidd_BitMap_PutPixel);
-#endif
-#if USE_FAST_GETPIXEL
-    csd->getpixel_mid = OOP_GetMethodID(IID_Hidd_BitMap, moHidd_BitMap_GetPixel);
-#endif
-#if USE_FAST_DRAWPIXEL
-    csd->drawpixel_mid = OOP_GetMethodID(IID_Hidd_BitMap, moHidd_BitMap_DrawPixel);
-#endif
-
-    ReturnInt("init_gfxhiddclass", ULONG, TRUE);
-    
-failexit:
-    ReturnInt("init_gfxhiddclass", ULONG, FALSE);
+    ReturnInt("init_gfxhiddclass", ULONG, create_std_pixfmts(csd));
 }
 
 /****************************************************************************************/
@@ -3791,22 +3777,10 @@ static int GFX_ClassFree(LIBBASETYPEPTR LIBBASE)
     struct class_static_data *csd = &LIBBASE->hdg_csd;
     
     EnterFunc(bug("free_gfxhiddclass(csd=%p)\n", csd));
-    
-    if(NULL != csd)
-    {
-	delete_pixfmts(csd);
-        
-    	OOP_ReleaseAttrBase(IID_Hidd_PixFmt);
-    	OOP_ReleaseAttrBase(IID_Hidd_BitMap);
-    	OOP_ReleaseAttrBase(IID_Hidd_Gfx);
-    	OOP_ReleaseAttrBase(IID_Hidd_Sync);
-    	OOP_ReleaseAttrBase(IID_Hidd_GC);
-	OOP_ReleaseAttrBase(IID_Hidd_Overlay);
-    	OOP_ReleaseAttrBase(IID_Hidd_ColorMap);
-    	OOP_ReleaseAttrBase(IID_Hidd_PlanarBM);
-    	OOP_ReleaseAttrBase(IID_Hidd_ChunkyBM);
-    }
-    
+
+    delete_pixfmts(csd);
+    ReleaseAttrBases(csd->attrBases, interfaces, NUM_ATTRBASES, OOPBase);
+
     ReturnInt("free_gfxhiddclass", BOOL, TRUE);
 }
 
