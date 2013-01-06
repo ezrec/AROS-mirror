@@ -35,7 +35,7 @@ OOP_AttrBase HiddPixFmtAttrBase;
 OOP_AttrBase HiddLinuxFBAttrBase;
 OOP_AttrBase HiddLinuxFBBitmapAttrBase;
 
-static const struct OOP_ABDescr abd[] =
+static struct OOP_ABDescr abd[] =
 {
     { IID_Hidd_ChunkyBM         , &HiddChunkyBMAttrBase         },
     { IID_Hidd_BitMap           , &HiddBitMapAttrBase           },
