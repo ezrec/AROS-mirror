@@ -1,4 +1,4 @@
-# Copyright © 2008, The AROS Development Team. All rights reserved.
+# Copyright © 2008, 2013, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(TOP)/config/make.cfg
@@ -17,23 +17,40 @@ USER_INCLUDES := -I$(PORTSDIR)/netpbm/$(ARCHBASE) \
                  -I$(PORTSDIR)/netpbm/$(ARCHBASE)converter/ppm
 USER_CFLAGS := -Wno-uninitialized $(UNUSED_BUT_SET_VARIABLE_CFLAGS) -Wno-format
 
-PNGTOPNMFILES := converter/other/pngtopnm lib/util/nstring lib/util/shhopt \
-         lib/libpm lib/libpnm1 lib/libpnm2 lib/libpbm1 lib/libpbm2 \
-         lib/libpbm3 lib/libpgm1 lib/libpgm2 lib/libppmcolor lib/colorname \
-         lib/libppmcmap lib/libppm1 lib/libppm2 lib/fileio
+DIR := $(PORTSDIR)/netpbm/$(ARCHBASE)/
 
-PPMTOILBMFILES := converter/ppm/ppmtoilbm lib/libpm lib/libpnm1 lib/libpnm2 \
-         lib/libpbm1 lib/libpbm2 lib/libpbm3 lib/libpgm1 lib/libpgm2 \
-         lib/libppmcolor lib/colorname lib/libppmcmap lib/libppm1 \
-         lib/libppmfloyd lib/libppm2 lib/fileio
+COMMON_FILES := \
+    $(DIR)/lib/libpm \
+    $(DIR)/lib/libpnm1 \
+    $(DIR)/lib/libpnm2 \
+    $(DIR)/lib/libpbm1 \
+    $(DIR)/lib/libpbm2 \
+    $(DIR)/lib/libpbm3 \
+    $(DIR)/lib/libpgm1 \
+    $(DIR)/lib/libpgm2 \
+    $(DIR)/lib/libppmcolor \
+    $(DIR)/lib/colorname \
+    $(DIR)/lib/libppmcmap \
+    $(DIR)/lib/libppm1 \
+    $(DIR)/lib/libppm2 \
+    $(DIR)/lib/fileio
+
+PNGTOPNMFILES := \
+    $(DIR)/converter/other/pngtopnm \
+    $(DIR)/lib/util/nstring \
+    $(DIR)/lib/util/shhopt \
+    $(COMMON_FILES)
+
+PPMTOILBMFILES := \
+    $(DIR)/converter/ppm/ppmtoilbm \
+    $(DIR)/lib/libppmfloyd \
+    $(COMMON_FILES)
 
 %build_prog mmake=contrib-gfx-netpbm-pngtopnm progname=pngtopnm \
-    srcdir=$(PORTSDIR)/netpbm/$(ARCHBASE)/ \
     files=$(PNGTOPNMFILES) targetdir=$(TARGETDIR) \
     uselibs="arosc png z"
 
 %build_prog mmake=contrib-gfx-netpbm-ppmtoilbm progname=ppmtoilbm \
-    srcdir=$(PORTSDIR)/netpbm/$(ARCHBASE)/ \
     files=$(PPMTOILBMFILES) targetdir=$(TARGETDIR) \
     uselibs="arosc"
 
