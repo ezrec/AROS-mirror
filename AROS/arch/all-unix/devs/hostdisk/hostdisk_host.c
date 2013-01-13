@@ -41,9 +41,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <string.h>
-#include <signal.h>
 #include <sys/stat.h>
-#include <sys/syscall.h>
 
 #ifdef __linux__
 #define stat64 stat
@@ -68,17 +66,6 @@
 
 #include "hostdisk_host.h"
 #include "hostdisk_device.h"
-#include "host_thread.h"
-
-#define _GNU_SOURCE
-#include <linux/sched.h>
-
-/* Required to build with proper syscal numbers! Why!?? */
-#if defined __i386__
-#include <i386-linux-gnu/asm/unistd.h>
-#elif defined __arm__
-#include <asm/unistd.h>
-#endif
 
 static ULONG error(int unixerr)
 {
@@ -86,91 +73,23 @@ static ULONG error(int unixerr)
 
     switch (unixerr)
     {
-        case 0:
-            return 0;
+    case 0:
+        return 0;
 
-        case EBUSY:
-            return TDERR_DriveInUse;
+    case EBUSY:
+        return TDERR_DriveInUse;
 
-        case EPERM:
-            return TDERR_WriteProt;
+    case EPERM:
+        return TDERR_WriteProt;
 
-        default:
-            return TDERR_NotSpecified;
+    default:
+        return TDERR_NotSpecified;
     }
 }
-
-/* IRQ Handler is trigerred with every SIGUSR2 signal. */
-void irqHandler(struct ThreadData *td, struct unit *u)
-{
-    __sync_synchronize();
-    /* Do we have IRQ from child process pending? */
-    if (td->td_mmio->mmio_IRQ)
-    {
-        Disable();
-
-        __sync_synchronize();
-
-        /* If there is any task waiting for signal, let it know :) */
-        if (td->td_mmio->mmio_Task)
-            Signal((struct Task *)td->td_mmio->mmio_Task, 1 << td->td_mmio->mmio_Signal);
-
-        /* "Clear" IRQ */
-        td->td_mmio->mmio_IRQ = 0;
-
-        __sync_synchronize();
-
-        Enable();
-    }
-}
-
-/*
- * HERE LIVE DRAGONS!!! VERY DANGEROUS CODE HERE!!!
- *
- * The asynchronous IO operations based on the clone() function are potentially
- * unsafe when used with glibc! Even worse, using libc after clone() is rather tricky!
- *
- * There is a problem with cached pids and tids within the library. After the clone took
- * place, it is no more safe to use any function which could ask for cached pid. This
- * includes clib functions like getpid() or raise(). Therefore, some changes have to
- * be applied to the hosted kernel if thread based AIO is going to be used.
- *
- * You have been warned...
- */
-
-#if 0
-int do_clone(void (*fn)(void *), void **stack, long flags, void *data)
-{
-    long retval;
-
-    *--stack = data;
-
-    __asm__ __volatile__(
-            "int $0x80\n\t"     /* Linux/i386 system call */
-            "testl %0,%0\n\t"   /* check return value */
-            "jne 1f\n\t"        /* jump if parent */
-            "call *%3\n\t"      /* start subthread function */
-            "movl %2,%0\n\t"
-            "int $0x80\n"       /* exit system call: exit subthread */
-            "1:\t"
-            :"=a" (retval)
-             :"0" (120),"i" (__NR_exit),
-              "r" (fn),
-              "b" (flags),
-              "c" (stack));
-
-    if (retval < 0) {
-        //errno = -retval;
-        retval = -1;
-    }
-    return retval;
-}
-#endif
 
 ULONG Host_Open(struct unit *Unit)
 {
     struct HostDiskBase *hdskBase = Unit->hdskBase;
-    void *KernelBase = OpenResource("kernel.resource");
     int err;
 
     D(bug("hostdisk: Host_Open(%s)\n", Unit->filename));
@@ -182,10 +101,10 @@ ULONG Host_Open(struct unit *Unit)
     AROS_HOST_BARRIER
     err = *hdskBase->errnoPtr;
 
-    if (err == EBUSY || err == EROFS)
+    if (err == EBUSY)
     {
         /* This allows to work on Darwin, at least in read-only mode */
-        D(bug("hostdisk: EBUSY/EROFS, retrying with read-only access\n", Unit->filename, Unit->file, err));
+        D(bug("hostdisk: EBUSY, retrying with read-only access\n", Unit->filename, Unit->file, err));
         Unit->flags = UNIT_READONLY;
 
         Unit->file = hdskBase->iface->open(Unit->filename, O_RDONLY, 0755);
@@ -201,82 +120,6 @@ ULONG Host_Open(struct unit *Unit)
 
         return error(err);
     }
-    else
-    {
-        /*
-         * Everything went fine so far - time for AMP part :)
-         *
-         * Here we create new child process which shares everything with AROS:
-         * it's VM, it's all files and their handles and so on. Then, we will
-         * postpone all reads and writes to that process and will wait here using
-         * exec.library functions. The advantage of this solution is, AROS can continue
-         * to work as before (including multitasking), whereas the tasks reading
-         * or writing to slow media will be waiting for the completion.
-         */
-//      int __pid;
-
-        struct ThreadData * td = (struct ThreadData *)AllocVec(sizeof(struct ThreadData), MEMF_CLEAR);
-        td->td_iface = hdskBase->iface;
-        td->td_stacksize = 64*1024;
-        td->td_stack = AllocVec(td->td_stacksize, MEMF_CLEAR);
-        td->td_mmio = AllocVec(sizeof(struct HostMMIO), MEMF_CLEAR);
-
-        /*
-         * We install an IRQ handler at SIGUSR2 (signal 12). It is shared with
-         * software interrupts but that shouldn't be an issue - there are not so
-         * many of them anyway.
-         */
-        td->td_irqHandler = KrnAddIRQHandler(28, irqHandler, td, Unit);
-
-        /*
-         * Ping me when you're awake!
-         */
-        td->td_mmio->mmio_Task = FindTask(NULL);
-        td->td_mmio->mmio_Signal = SIGB_SINGLE;
-
-        HostLib_Lock();
-
-        /*
-         * Disabled state is important. Cloning AROS process will let both processes
-         * share the sigprocmask initially as well as share the signal handlers. We
-         * really do not want to let AROS scheduler run on the child...
-         */
-        Disable();
-
-        td->td_pid = hdskBase->iface->clone((int (*)(void*))host_thread, td->td_stack + td->td_stacksize,
-                        CLONE_FS | CLONE_SYSVSEM /*| CLONE_IO */| CLONE_FILES | CLONE_VM,
-                        (void *)td);
-
-//      __pid = hdskBase->iface->syscall(SYS_clone, CLONE_FS | CLONE_SYSVSEM /*| CLONE_IO */| CLONE_FILES | CLONE_VM, td->td_stack + td->td_stacksize);
-//
-//      if (__pid == 0)
-//      {
-//          int retval = host_thread(td);
-//          hdskBase->iface->syscall(SYS_exit, retval);
-//      }
-//      else
-//      {
-//          td->td_pid = __pid;
-//      }
-//
-//      td->td_pid = do_clone((int (*)(void*))host_thread, td->td_stack + td->td_stacksize,
-//                CLONE_FS | CLONE_SYSVSEM /*| CLONE_IO */| CLONE_FILES | CLONE_VM,
-//                (void *)td);
-
-        AROS_HOST_BARRIER
-
-        Enable();
-
-        HostLib_Unlock();
-
-        /*
-         * Our clone is running. Wait for it a while.
-         */
-        Wait(1 << SIGB_SINGLE);
-
-        /* All done! */
-        Unit->reserved = td;
-    }
 
     return 0;
 }
@@ -284,22 +127,13 @@ ULONG Host_Open(struct unit *Unit)
 void Host_Close(struct unit *Unit)
 {
     struct HostDiskBase *hdskBase = Unit->hdskBase;
-    struct ThreadData *td = (struct ThreadData *)Unit->reserved;
 
     D(bug("hostdisk: Close device %s\n", Unit->n.ln_Name));
     D(bug("hostdisk: HostLibBase 0x%p, close() 0x%p\n", HostLibBase, hdskBase->iface->close));
 
     HostLib_Lock();
 
-    if (td)
-    {
-        td->td_mmio->mmio_Command = -1;
-        hdskBase->iface->kill(td->td_pid, 12);
-
-        AROS_HOST_BARRIER
-    }
     hdskBase->iface->close(Unit->file);
-
     AROS_HOST_BARRIER
 
     HostLib_Unlock();
@@ -308,51 +142,17 @@ void Host_Close(struct unit *Unit)
 LONG Host_Read(struct unit *Unit, APTR buf, ULONG size, ULONG *ioerr)
 {
     struct HostDiskBase *hdskBase = Unit->hdskBase;
-    struct ThreadData *td = (struct ThreadData *)Unit->reserved;
-    int ret, err = 0;
+    int ret, err;
 
     D(bug("hostdisk: Read %u bytes\n", size));
 
-    /* Thread data available - postpone the request to child process */
-    if (td)
-    {
-        /* We're waiting for completion */
-        td->td_mmio->mmio_Task = FindTask(NULL);
-        td->td_mmio->mmio_Signal = SIGB_SINGLE;
+    HostLib_Lock();
 
-        /* Pinpoint the location... */
-        td->td_mmio->mmio_File = Unit->file;
-        td->td_mmio->mmio_Command = CMD_READ;
-        td->td_mmio->mmio_Buffer = buf;
-        td->td_mmio->mmio_Size = size;
+    ret = hdskBase->iface->read(Unit->file, buf, size);
+    AROS_HOST_BARRIER
+    err = *hdskBase->errnoPtr;
 
-        __sync_synchronize();
-
-        /* ... and initiate the process */
-        hdskBase->iface->kill(td->td_pid, 12);
-        AROS_HOST_BARRIER
-
-        /* Wait for completion */
-        Wait(1 << td->td_mmio->mmio_Signal);
-
-        ret = td->td_mmio->mmio_Ret;
-        if (ret < 0)
-        {
-            err = -ret;
-            ret = -1;
-        }
-    }
-    else
-    {
-        HostLib_Lock();
-
-        ret = hdskBase->iface->read(Unit->file, buf, size);
-
-        AROS_HOST_BARRIER
-        err = *hdskBase->errnoPtr;
-
-        HostLib_Unlock();
-    }
+    HostLib_Unlock();
 
     if (ret == -1)
         *ioerr = error(err);
@@ -363,98 +163,20 @@ LONG Host_Read(struct unit *Unit, APTR buf, ULONG size, ULONG *ioerr)
 LONG Host_Write(struct unit *Unit, APTR buf, ULONG size, ULONG *ioerr)
 {
     struct HostDiskBase *hdskBase = Unit->hdskBase;
-    struct ThreadData *td = (struct ThreadData *)Unit->reserved;
-    int ret, err = 0;
+    int ret, err;
 
     D(bug("hostdisk: Write %u bytes\n", size));
 
-    /* Thread data available - postpone the request to child process */
-    if (td)
-    {
-        /* We're waiting for completion */
-        td->td_mmio->mmio_Task = FindTask(NULL);
-        td->td_mmio->mmio_Signal = SIGB_SINGLE;
+    HostLib_Lock();
 
-        /* Pinpoint the location... */
-        td->td_mmio->mmio_File = Unit->file;
-        td->td_mmio->mmio_Command = CMD_WRITE;
-        td->td_mmio->mmio_Buffer = buf;
-        td->td_mmio->mmio_Size = size;
+    ret = hdskBase->iface->write(Unit->file, buf, size);
+    AROS_HOST_BARRIER
+    err = *hdskBase->errnoPtr;
 
-        __sync_synchronize();
-
-        /* ... and initiate the process */
-        hdskBase->iface->kill(td->td_pid, 12);
-        AROS_HOST_BARRIER
-
-        /* Wait for completion */
-        Wait(1 << td->td_mmio->mmio_Signal);
-
-        ret = td->td_mmio->mmio_Ret;
-        if (ret < 0)
-        {
-            err = -ret;
-            ret = -1;
-        }
-    }
-    else
-    {
-        HostLib_Lock();
-
-        ret = hdskBase->iface->write(Unit->file, buf, size);
-        AROS_HOST_BARRIER
-        err = *hdskBase->errnoPtr;
-
-        HostLib_Unlock();
-    }
+    HostLib_Unlock();
 
     if (ret == -1)
         *ioerr = error(err);
-
-    return ret;
-}
-
-LONG Host_Flush(struct unit *Unit)
-{
-    struct HostDiskBase *hdskBase = Unit->hdskBase;
-    struct ThreadData *td = (struct ThreadData *)Unit->reserved;
-    int ret;
-
-    /* Thread data available - postpone the request to child process */
-    if (td)
-    {
-        /* We're waiting for completion */
-        td->td_mmio->mmio_Task = FindTask(NULL);
-        td->td_mmio->mmio_Signal = SIGB_SINGLE;
-
-        /* Pinpoint the location... */
-        td->td_mmio->mmio_File = Unit->file;
-        td->td_mmio->mmio_Command = CMD_FLUSH;
-
-        __sync_synchronize();
-
-        /* ... and initiate the process */
-        hdskBase->iface->kill(td->td_pid, 12);
-        AROS_HOST_BARRIER
-
-        /* Wait for completion */
-        Wait(1 << td->td_mmio->mmio_Signal);
-
-        ret = td->td_mmio->mmio_Ret;
-    }
-    else
-    {
-        HostLib_Lock();
-
-        ret = hdskBase->iface->fsync(Unit->file);
-
-        AROS_HOST_BARRIER
-
-        HostLib_Unlock();
-    }
-
-    //    if (ret == -1)
-    //        *ioerr = error(err);
 
     return ret;
 }
@@ -468,16 +190,16 @@ ULONG Host_Seek64(struct unit *Unit, ULONG pos, ULONG pos_hi)
 {
     struct HostDiskBase *hdskBase = Unit->hdskBase;
     int res;
-    UQUAD pos64 = (((UQUAD)pos_hi) << 32) + (UQUAD)pos;
 
-    D(bug("hostdisk: Seek to block 0x%08X%08X (%llu)\n", pos_hi, pos, pos64));
+    D(bug("hostdisk: Seek to block 0x%08X%08X (%llu)\n", pos_hi, pos, (((UQUAD)pos_hi) << 32) + pos));
 
     /*
      * Host OS is usually not reentrant.
      * All host OS calls should be protected by global lock (since hostlib.resource v3).
      */
     HostLib_Lock();
-    res = hdskBase->iface->lseek(Unit->file, pos64, SEEK_SET);
+
+    res = LSeek(Unit->file, pos, pos_hi, SEEK_SET);
     AROS_HOST_BARRIER
 
     HostLib_Unlock();
@@ -507,9 +229,9 @@ static ULONG InternalGetGeometry(int file, struct DriveGeometry *dg, struct Host
              */
             err = Host_DeviceGeometry(file, dg, hdskBase);
 
-            /* If this routine is not implemented, use fstat() (worst case) */
-            if (err != ENOSYS)
-                return error(err);
+           /* If this routine is not implemented, use fstat() (worst case) */
+           if (err != ENOSYS)
+               return error(err);
         }
 
         D(bug("hostdisk: Image file length: %ld\n", st.st_size));
@@ -527,7 +249,7 @@ static ULONG InternalGetGeometry(int file, struct DriveGeometry *dg, struct Host
 ULONG Host_GetGeometry(struct unit *Unit, struct DriveGeometry *dg)
 {
     int err = InternalGetGeometry(Unit->file, dg, Unit->hdskBase);
-
+    
     return error(err);
 }
 
@@ -548,52 +270,39 @@ int Host_ProbeGeometry(struct HostDiskBase *hdskBase, char *name, struct DriveGe
     res = InternalGetGeometry(file, dg, hdskBase);
 
     HostLib_Lock();
-
+    
     hdskBase->iface->close(file);
     AROS_HOST_BARRIER
 
     HostLib_Unlock();
-
+    
     return res;
-}
+}    
 
 extern const char Hostdisk_LibName[];
 
 static const char *libcSymbols[] =
 {
-        "open",
-        "close",
-        "read",
-        "write",
-        "ioctl",
-        "fsync",
-        "lseek64",
-#if defined(HOST_OS_linux) || defined(HOST_OS_arix)
-        "__errno_location",
-        "__fxstat64",
-        "__xstat64",
+    "open",
+    "close",
+    "read",
+    "write",
+    "ioctl",
+    "lseek",
+#ifdef HOST_OS_linux
+    "__errno_location",
+    "__fxstat64",
+    "__xstat64",
 #else
 #ifdef HOST_OS_android
-        "__errno",
+    "__errno",
 #else
-        "__error",
+    "__error",
 #endif
-        "fstat64" INODE64_SUFFIX,
-        "stat64" INODE64_SUFFIX,
+    "fstat64" INODE64_SUFFIX,
+    "stat64" INODE64_SUFFIX,
 #endif
-        "sigprocmask",
-        "sigsuspend",
-        "sigaction",
-        "sigemptyset",
-        "sigfillset",
-        "sigaddset",
-        "sigdelset",
-        "clone",
-        "kill",
-        "getppid",
-        "prctl",
-        "syscall",
-        NULL
+    NULL
 };
 
 static BOOL CheckArch(const char *Component, const char *MyArch, const char *SystemArch)
@@ -611,13 +320,13 @@ static BOOL CheckArch(const char *Component, const char *MyArch, const char *Sys
         {
             struct EasyStruct es =
             {
-                    sizeof (struct EasyStruct),
-                    0,
-                    "Incompatible architecture",
-                    "Used version of %s is built for use\n"
-                    "with %s architecture, but your\n"
-                    "system architecture is %s.",
-                    "Ok",
+                sizeof (struct EasyStruct),
+                0,
+                "Incompatible architecture",
+                "Used version of %s is built for use\n"
+                "with %s architecture, but your\n"
+                "system architecture is %s.",
+                "Ok",
             };
 
             EasyRequestArgs(NULL, &es, NULL, (IPTR *)arg);
