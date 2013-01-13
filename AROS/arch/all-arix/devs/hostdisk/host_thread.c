@@ -131,20 +131,20 @@ int host_thread(struct ThreadData *td)
     /*
      * Find out the PID of parent (that is, AROS process)
      */
-    parent_pid = iface->syscall(SYS_getppid); //do_getppid(); //iface->getppid();
+    parent_pid = iface->syscall(SYS_getppid);
 
     /*
-     * Kill'em! AROS' handler installed by hostdisk will know the child
+     * AROS handler installed by hostdisk will know the child
      * up and awaiting commands
      */
     mmio->mmio_IRQ = 1;				// Yup! That's me!
-    iface->syscall(SYS_kill, parent_pid, 28);
+    SignalParent(parent_pid);
 
     /* Endless loop starts here */
     do {
         /*
          * If there is any work to do, AROS will set up virtual MMIO range
-         * and will kill the child process. Therefore, in order to save the
+         * and will signal the child process. Therefore, in order to save the
          * cpu cycles we will wait here a while.
          */
         iface->syscall(SYS_rt_sigsuspend, &sigs, _NSIG/8);
@@ -164,7 +164,7 @@ int host_thread(struct ThreadData *td)
                 mmio->mmio_Command = 0;		// Not really needed
                 __sync_synchronize();
 
-                iface->syscall(SYS_kill, parent_pid, 28);// Kill AROS
+                SignalParent(parent_pid);
                 AROS_HOST_BARRIER
                 break;
 
@@ -176,7 +176,7 @@ int host_thread(struct ThreadData *td)
                 mmio->mmio_Command = 0;		// Not really needed
                 __sync_synchronize();
 
-                iface->syscall(SYS_kill, parent_pid, 28);// Kill AROS
+                SignalParent(parent_pid);
                 AROS_HOST_BARRIER
                 break;
 
@@ -188,7 +188,7 @@ int host_thread(struct ThreadData *td)
                 mmio->mmio_Command = 0;		// Not really needed
                 __sync_synchronize();
 
-                iface->syscall(SYS_kill, parent_pid, 28);// Kill AROS
+                SignalParent(parent_pid);
                 AROS_HOST_BARRIER
                 break;
 
@@ -201,7 +201,7 @@ int host_thread(struct ThreadData *td)
     mmio->mmio_IRQ = 1;
     __sync_synchronize();
 
-    iface->syscall(SYS_kill, parent_pid, 28);
+    SignalParent(parent_pid);
     AROS_HOST_BARRIER
 
     return 0;
