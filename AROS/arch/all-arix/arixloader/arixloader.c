@@ -185,8 +185,15 @@ static VOID freeBootFiles(STRPTR * bootfiles)
     FreeVec(bootfiles);
 }
 
+struct MyBootNode
+{
+    struct Node mbn_Node;
+    TEXT        mbn_Name[108];
+};
+
 static int ARIXLoaderInit(APTR Base)
 {
+    struct List bootList;
 
     /*
      * 1. Scan available volumes in search of boot files
@@ -196,6 +203,8 @@ static int ARIXLoaderInit(APTR Base)
 
     struct DosList *dl;
 
+    NEWLIST(&bootList);
+
     D(bug("ARIX Loader\n"));
 
     dl = LockDosList(LDF_DEVICES | LDF_READ);
@@ -204,14 +213,33 @@ static int ARIXLoaderInit(APTR Base)
     {
         if(dl->dol_Type == DLT_DEVICE)
         {
-            TEXT name[108];
-            STRPTR * bootfiles = NULL;
+            struct MyBootNode *mbn = AllocMem(sizeof(struct MyBootNode), MEMF_CLEAR);
 
-            __sprintf(name, "%b:", dl->dol_Name);
+            __sprintf(mbn->mbn_Name, "%b:", dl->dol_Name);
+
+            if (strncasecmp("CD", mbn->mbn_Name, 2) == 0)
+                mbn->mbn_Node.ln_Pri = 10;
+            else if (strncasecmp("SD", mbn->mbn_Name, 2) == 0)
+                mbn->mbn_Node.ln_Pri = 5;
+            else if (strncasecmp("MMC", mbn->mbn_Name, 3) == 0)
+                mbn->mbn_Node.ln_Pri = 6;
+            else
+                mbn->mbn_Node.ln_Pri = 0;
+
+            Enqueue(&bootList, (struct Node*)mbn);
 
             D(bug("Found name %s\n", name));
+        }
+    }
 
-            if ((bootfiles = findBootFiles(name)) != NULL)
+    if (!IsListEmpty(&bootList))
+    {
+        struct MyBootNode *mbn;
+        STRPTR * bootfiles = NULL;
+
+        ForeachNode(&bootList, mbn)
+        {
+            if ((bootfiles = findBootFiles(mbn->mbn_Name)) != NULL)
             {
                 if (copyBootFiles(bootfiles))
                 {
