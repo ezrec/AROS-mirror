@@ -59,3 +59,6 @@ struct DriveGeometry;
 
 /* This routine is specific to a particular UNIX variant */
 ULONG Host_DeviceGeometry(int file, struct DriveGeometry *dg, struct HostDiskBase *hdskBase);
+
+#define SignalChild(PID)    hdskBase->iface->kill(PID, 12)
+#define SignalParent(PID)   iface->syscall(SYS_kill, PID, 28)
