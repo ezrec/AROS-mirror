@@ -2,7 +2,7 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- contrib-fryingpan-framework-generic : $(CROSSTOOLS_CXX_TARGET)
+#MM- contrib-fryingpan-framework-generic : AHI $(CROSSTOOLS_CXX_TARGET)
 
 FILES := \
  DynList \
