@@ -271,7 +271,7 @@ void Host_Close(struct unit *Unit)
     if (td)
     {
         td->td_mmio->mmio_Command = -1;
-        hdskBase->iface->kill(td->td_pid, 12);
+        SignalChild(td->td_pid);
 
         AROS_HOST_BARRIER
     }
@@ -306,7 +306,7 @@ LONG Host_Read(struct unit *Unit, APTR buf, ULONG size, ULONG *ioerr)
         __sync_synchronize();
 
         /* ... and initiate the process */
-        hdskBase->iface->kill(td->td_pid, 12);
+        SignalChild(td->td_pid);
         AROS_HOST_BARRIER
 
         /* Wait for completion */
@@ -361,7 +361,7 @@ LONG Host_Write(struct unit *Unit, APTR buf, ULONG size, ULONG *ioerr)
         __sync_synchronize();
 
         /* ... and initiate the process */
-        hdskBase->iface->kill(td->td_pid, 12);
+        SignalChild(td->td_pid);
         AROS_HOST_BARRIER
 
         /* Wait for completion */
@@ -411,7 +411,7 @@ LONG Host_Flush(struct unit *Unit)
         __sync_synchronize();
 
         /* ... and initiate the process */
-        hdskBase->iface->kill(td->td_pid, 12);
+        SignalChild(td->td_pid);
         AROS_HOST_BARRIER
 
         /* Wait for completion */
