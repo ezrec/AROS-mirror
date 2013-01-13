@@ -115,12 +115,13 @@ void irqHandler(struct ThreadData *td, struct unit *u)
  * You have been warned...
  */
 
-#if 0
-int do_clone(void (*fn)(void *), void **stack, long flags, void *data)
+int do_clone(int (*fn)(void *), void *stack, long flags, void *data, struct HostDiskBase *hdskBase)
 {
+#if defined (__i386__)
     long retval;
+    void ** t = stack;
 
-    *--stack = data;
+    *--t = data; /* Place pointer to data on top of child thread stack */
 
     __asm__ __volatile__(
             "int $0x80\n\t"     /* Linux/i386 system call */
@@ -134,15 +135,27 @@ int do_clone(void (*fn)(void *), void **stack, long flags, void *data)
              :"0" (120),"i" (__NR_exit),
               "r" (fn),
               "b" (flags),
-              "c" (stack));
+              "c" (t));
 
-    if (retval < 0) {
-        //errno = -retval;
+    if (retval < 0)
         retval = -1;
-    }
+
     return retval;
-}
+#elif 0
+    int __pid;
+    __pid = hdskBase->iface->syscall(SYS_clone, flags, stack);
+
+    if (__pid == 0)
+    {
+        int retval = host_thread(td);
+        hdskBase->iface->syscall(SYS_exit, retval);
+    }
+    else
+        return __pid;
+#else
+    return hdskBase->iface->clone((int (*)(void*))host_thread, stack, flags, data);
 #endif
+}
 
 ULONG Host_Open(struct unit *Unit)
 {
@@ -190,7 +203,6 @@ ULONG Host_Open(struct unit *Unit)
          * to work as before (including multitasking), whereas the tasks reading
          * or writing to slow media will be waiting for the completion.
          */
-//      int __pid;
 
         struct ThreadData * td = (struct ThreadData *)AllocVec(sizeof(struct ThreadData), MEMF_CLEAR);
         td->td_iface = hdskBase->iface;
@@ -220,25 +232,8 @@ ULONG Host_Open(struct unit *Unit)
          */
         Disable();
 
-        td->td_pid = hdskBase->iface->clone((int (*)(void*))host_thread, td->td_stack + td->td_stacksize,
-                        CLONE_FS | CLONE_SYSVSEM /*| CLONE_IO */| CLONE_FILES | CLONE_VM,
-                        (void *)td);
-
-//      __pid = hdskBase->iface->syscall(SYS_clone, CLONE_FS | CLONE_SYSVSEM /*| CLONE_IO */| CLONE_FILES | CLONE_VM, td->td_stack + td->td_stacksize);
-//
-//      if (__pid == 0)
-//      {
-//          int retval = host_thread(td);
-//          hdskBase->iface->syscall(SYS_exit, retval);
-//      }
-//      else
-//      {
-//          td->td_pid = __pid;
-//      }
-//
-//      td->td_pid = do_clone((int (*)(void*))host_thread, td->td_stack + td->td_stacksize,
-//                CLONE_FS | CLONE_SYSVSEM /*| CLONE_IO */| CLONE_FILES | CLONE_VM,
-//                (void *)td);
+        td->td_pid = do_clone((int (*)(void*))host_thread, td->td_stack + td->td_stacksize,
+                CLONE_FS | CLONE_SYSVSEM | CLONE_FILES | CLONE_VM, (void *)td, hdskBase);
 
         AROS_HOST_BARRIER
 
