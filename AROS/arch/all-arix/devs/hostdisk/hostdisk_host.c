@@ -563,61 +563,9 @@ static const char *libcSymbols[] =
         NULL
 };
 
-static BOOL CheckArch(const char *Component, const char *MyArch, const char *SystemArch)
-{
-    const char *arg[3] = {Component, MyArch, SystemArch};
-
-    D(bug("hostdisk: My architecture: %s, kernel architecture: %s\n", arg[1], arg[2]));
-
-    if (strcmp(arg[1], arg[2]))
-    {
-        struct IntuitionBase *IntuitionBase;
-
-        IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library", 36);
-        if (IntuitionBase)
-        {
-            struct EasyStruct es =
-            {
-                    sizeof (struct EasyStruct),
-                    0,
-                    "Incompatible architecture",
-                    "Used version of %s is built for use\n"
-                    "with %s architecture, but your\n"
-                    "system architecture is %s.",
-                    "Ok",
-            };
-
-            EasyRequestArgs(NULL, &es, NULL, (IPTR *)arg);
-
-            CloseLibrary(&IntuitionBase->LibNode);
-        }
-        return FALSE;
-    }
-
-    D(bug("hostdisk: Architecture check done\n"));
-    return TRUE;
-}
-
 static int Host_Init(struct HostDiskBase *hdskBase)
 {
     ULONG r;
-    STRPTR arch;
-    /*
-     * This device is disk-based and it can travel from disk to disk.
-     * In order to prevent unexplained crashes we check that system architecture
-     * is the architecture we were built for.
-     */
-    APTR KernelBase = OpenResource("kernel.resource");
-
-    if (!KernelBase)
-        return FALSE;
-
-    arch = (STRPTR)KrnGetSystemAttr(KATTR_Architecture);
-    if (!arch)
-        return FALSE;
-
-    if (!CheckArch(Hostdisk_LibName, AROS_ARCHITECTURE, arch))
-        return FALSE;
 
     hdskBase->KernelHandle = HostLib_Open(LIBC_NAME, NULL);
     if (!hdskBase->KernelHandle)
