@@ -32,6 +32,9 @@ void Exec_DoResetCallbacks(struct IntExecBase *IntSysBase, UBYTE action)
          i = (struct Interrupt *)i->is_Node.ln_Succ)
     {
         i->is_Node.ln_Type = action;
-        AROS_INTC1(i->is_Code, i->is_Data);
+        AROS_UFC3(void, i->is_Code,
+                AROS_UFCA(APTR, i->is_Data, A1),
+                AROS_UFCA(APTR, i->is_Code, A5),
+                AROS_UFCA(struct ExecBase *, &IntSysBase->pub, A6));
     }
 }

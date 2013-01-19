@@ -16,7 +16,7 @@
 
 /* This reset handler is called if more modern system reset mechanisms fail
  * or are not available */
-AROS_INTH1(static ColdResetHandler, struct Interrupt *, handler)
+AROS_SOFTINTH1(static ColdResetHandler, struct Interrupt *, handler)
 {
     AROS_INTFUNC_INIT
 

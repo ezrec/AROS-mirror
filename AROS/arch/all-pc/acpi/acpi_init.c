@@ -251,7 +251,7 @@ static int acpi_CheckSDT(struct ACPIBase *ACPIBase)
     return c;
 }
 
-AROS_INTH1(static ResetHandler, struct ACPIBase *, ACPIBase)
+AROS_SOFTINTH1(static ResetHandler, struct ACPIBase *, ACPIBase)
 {
     AROS_INTFUNC_INIT
 

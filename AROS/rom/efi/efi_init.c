@@ -18,7 +18,7 @@ static BOOL CheckTable(struct EFI_TableHeader *t, UQUAD sig)
     return TRUE;
 }
 
-AROS_INTH1(static ResetHandler, struct EFIBase *, EFIBase)
+AROS_SOFTINTH1(static ResetHandler, struct EFIBase *, EFIBase)
 {
     AROS_INTFUNC_INIT
 
