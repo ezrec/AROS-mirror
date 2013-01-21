@@ -2310,34 +2310,39 @@ void ata_ResetBus(struct ata_Bus *bus)
 {
     ULONG alt = bus->ab_Alt;
     ULONG port = bus->ab_Port;
-    int id;
+    ULONG TimeOut;
 
-    /*
-     * issue and clear the software reset signal
-     */
-    /* at this time both devices should report ready immediately */
-    for (id = 0; id < 2; id++)
-    {
-        if (DEV_NONE != bus->ab_Dev[id])
-        {
-            ata_out(0xa0 | (id << 4), ata_DevHead, port);
-            ata_400ns(bus->ab_Alt);
+    /* Set and then reset the soft reset bit in the Device Control
+     * register.  This causes device 0 be selected */
+    DINIT(bug("[ATA  ] ata_ResetBus(%d)\n", bus->ab_BusNum));
+    ata_out(0xa0 | (0 << 4), ata_DevHead, port);    /* Select it never the less */
+    ata_WaitNano(400);
+    //ata_WaitTO(bus->ab_Timer, 0, 1, 0);
 
-            ata_out(0x04, ata_AltControl, alt);
-            ata_usleep(tr, 10);                /* minimum required: 5us */
-            ata_out(0x02, ata_AltControl, alt);
-            ata_usleep(tr, 20000);               /* minimum required: 2ms */
+    ata_out(0x04, ata_AltControl, alt);
+    ata_WaitTO(bus->ab_Timer, 0, 10, 0);    /* sleep 10us; min: 5us */
+    ata_out(0x02, ata_AltControl, alt);
+    ata_WaitTO(bus->ab_Timer, 0, 20000, 0); /* sleep 20ms; min: 2ms */
 
-            ata_out(0xa0 | (id << 4), ata_DevHead, port);
-            ata_400ns(bus->ab_Alt);
-
-            while (0 != (ata_in(ata_Status, port) & ATAF_BUSY))
-                ata_usleep(tr, 200);
-
-            bus->ab_Dev[id] = ata_ReadSignature(bus, id);
+    /* If there is a device 0, wait for device 0 to clear BSY */
+    if (DEV_NONE != bus->ab_Dev[0]) {
+        DINIT(bug("[ATA%02ld] ata_ResetBus: Wait for Device to clear BSY\n",
+            ((bus->ab_BusNum << 1 ) + 0)));
+        TimeOut = 1000;     /* Timeout 1s (1ms x 1000) */
+        while ( 1 ) {
+            if ((ata_ReadStatus(bus) & ATAF_BUSY) == 0)
+                break;
+            ata_WaitTO(bus->ab_Timer, 0, 1000, 0);
+            if (!(--TimeOut)) {
+                DINIT(bug("[ATA%02ld] ata_ResetBus: Device Timed Out!\n",
+                    ((bus->ab_BusNum << 1 ) + 0)));
+                bus->ab_Dev[0] = DEV_NONE;
+                break;
+            }
         }
+        DINIT(bug("[ATA%02ld] ata_ResetBus: Wait left after %d ms\n",
+            ((bus->ab_BusNum << 1 ) + 0), (1000 - TimeOut)));
     }
-}
 
     /* If there is a device 1, wait some time until device 1 allows
      * register access, but fail only if BSY isn't cleared */
