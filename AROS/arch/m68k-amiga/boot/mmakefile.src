@@ -14,6 +14,7 @@ Q ?= @
 #MM     kernel-diag-kobj \
 #MM     kernel-amiga-m68k-amigavideo-kobj \
 #MM     kernel-amiga-m68k-audio-kobj \
+#MM     kernel-amiga-m68k-cd-kobj \
 #MM     kernel-amiga-m68k-devs \
 #MM     kernel-amiga-m68k-kbd-kobj \
 #MM     kernel-amiga-m68k-mouse-kobj \
@@ -101,7 +102,7 @@ AFILES  := ext_entry
 
 KLIBS   :=  keymap graphics layers intuition gadtools icon workbench \
             mathffp mathieeesingbas
-KDEVS   := 
+KDEVS   := cd
 KHNDLRS := cdrom
 KHIDDS  :=
 KRSRCS  := shellcommands workbook wbtag
