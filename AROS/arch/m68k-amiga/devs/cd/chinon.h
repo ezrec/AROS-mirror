@@ -16,7 +16,7 @@
  *          ^- These are in BCD --^
  */
 
-#define CHCD_NOOP      0       /* Cmd =    [ 0x00 ] 
+#define CHCD_RESET     0       /* Cmd =    [ 0x00 ] 
                                   Result = [ 0x00 ] */
 #define CHCD_STOP      1       /* Cmd =    [ 0x01 0x00 ]
                                   Result = [ 0x01 errcode ] */

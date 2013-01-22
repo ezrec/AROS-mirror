@@ -22,12 +22,12 @@ struct cdBase {
 
 struct cdUnitOps {
     CONST_STRPTR  uo_Name;
-    VOID        (*uo_OpenDevice)(struct IORequest *io, APTR priv);
-    VOID        (*uo_CloseDevice)(struct IORequest *io, APTR priv);
-    VOID        (*uo_BeginIO)(struct IORequest *io, APTR priv);
-    LONG        (*uo_AbortIO)(struct IORequest *io, APTR priv);
+    LONG        (*uo_DoIO)(struct IOStdReq *io, APTR priv);
+    VOID        (*uo_Expunge)(APTR priv);
 };
 
 LONG cdAddUnit(LIBBASETYPE *cb, const struct cdUnitOps *ops, APTR priv);
+
+#define IOF_ABORT       (1 << 7)
 
 #endif /* CD_INTERN_H */

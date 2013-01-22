@@ -40,6 +40,7 @@
 #define AKIKO_CDSUBINX  0xb80018        /* u8 Bytes of subcode recieved */
 #define AKIKO_CDTXINX   0xb80019        /* u8 Bytes of Command processed */
 #define AKIKO_CDRXINX   0xb8001a        /* u8 Bytes of Result processed */
+#define AKIKO_CDTXCMP   0xb8001d        /* u8 Bytes of Command expected */
 #define AKIKO_CDRXCMP   0xb8001f        /* u8 Bytes of Result expected */
 #define AKIKO_CDPBX     0xb80020        /* u16 Sector mask */
 
