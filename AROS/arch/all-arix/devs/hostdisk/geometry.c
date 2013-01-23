@@ -60,8 +60,10 @@ ULONG Host_DeviceGeometry(int file, struct DriveGeometry *dg, struct HostDiskBas
 
     if (uselba)
     {
-        dg->dg_CylSectors = 1;
-        dg->dg_Cylinders  = dg->dg_TotalSectors;
+        dg->dg_Heads        = 1;
+        dg->dg_TrackSectors = 1;
+        dg->dg_CylSectors   = 1;
+        dg->dg_Cylinders    = dg->dg_TotalSectors;
 
         D(bug("hostdisk: Geometry does not fit, use LBA\n"));
     }
