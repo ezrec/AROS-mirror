@@ -16,7 +16,7 @@
 #if defined __i386__
 #include <i386-linux-gnu/asm/unistd.h>
 #elif defined __arm__
-#include <arm-linux-gnueabihf/asm/unistd.h>
+#include <asm/unistd.h>
 #endif
 
 /* Empty signal handler which does pretty nothing */
