@@ -58,10 +58,17 @@ static int PCILx_Init(LIBBASETYPEPTR LIBBASE)
     	return FALSE;
     }
 
+#if defined(__i386__) || defined(__x86_64__)
     ret = syscall1(__NR_iopl, 3);
+
     D(bug("LinuxPCI: iopl(3)=%d\n", ret));
 
     LIBBASE->psd.fd = syscall2(__NR_open, (IPTR)"/dev/mem", 2);
+#else
+    ret = -1;
+    LIBBASE->psd.fd = -1;
+#endif
+
     D(bug("LinuxPCI: /dev/mem fd=%d\n", LIBBASE->psd.fd));
 
     if (ret==0)
