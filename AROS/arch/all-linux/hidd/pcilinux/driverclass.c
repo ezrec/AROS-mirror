@@ -77,6 +77,7 @@ OOP_Object *PCILx__Root__New(OOP_Class *cl, OOP_Object *o, struct pRoot_New *msg
     return o;
 }
 
+#if defined(__i386__) || defined(__x86_64__)
 /*
     Some in/out magic to access PCI bus on PCs
 */
@@ -93,6 +94,16 @@ static inline void outl(ULONG val, UWORD port)
 {
     asm volatile ("outl %0,%w1"::"a"(val),"Nd"(port));
 }
+#else
+static inline ULONG inl(UWORD port)
+{
+    return 0;
+}
+
+static inline void outl(ULONG val, UWORD port)
+{
+}
+#endif
 
 ULONG PCILx__Hidd_PCIDriver__ReadConfigLong(OOP_Class *cl, OOP_Object *o, 
     struct pHidd_PCIDriver_ReadConfigLong *msg)
@@ -137,12 +148,14 @@ IPTR PCILx__Hidd_PCIDriver__MapPCI(OOP_Class *cl, OOP_Object *o,
         :"=a"(ret)
         :"i"(192), "b"(0), "c"(size), "d"(0x03), "S"(0x01), "D"(PSD(cl)->fd), "0"(offs)
     );
-#else
+#elif defined(__i386__)
     asm volatile(
         "push %%ebp; movl %%eax,%%ebp; movl %1,%%eax; int $0x80; pop %%ebp"
         :"=a"(ret)
         :"i"(192), "b"(0), "c"(size), "d"(0x03), "S"(0x01), "D"(PSD(cl)->fd), "0"(offs)
     );
+#else
+    ret = (IPTR)-1;
 #endif
 
     D(bug("[PCILinux] mmap syscall returned %x\n", ret));
@@ -155,8 +168,10 @@ VOID PCILx__Hidd_PCIDriver__UnmapPCI(OOP_Class *cl, OOP_Object *o,
 {
     IPTR offs = (IPTR)msg->CPUAddress;
     ULONG size = msg->Length;
-
+#if defined(__x86_64__) || defined(__i386__)
     syscall2(91, offs, size);
+#else
+#endif
 }
 
 BOOL PCILx__Hidd_PCIDriver__AddInterrupt(OOP_Class *cl, OOP_Object *o,
