@@ -1,5 +1,5 @@
 /*
-    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2013, The AROS Development Team. All rights reserved.
     $Id$
 
     List the contents of a directory.
@@ -489,7 +489,10 @@ int printFileData(struct AnchorPath *ap,
 
     CopyMem(ds, &dt.dat_Stamp, sizeof(struct DateStamp));
     dt.dat_Format  = FORMAT_DOS;
-    dt.dat_Flags   = DTF_SUBST;
+    if (dates)
+        dt.dat_Flags = 0;
+    else
+        dt.dat_Flags = DTF_SUBST;
     dt.dat_StrDay  = NULL;
     dt.dat_StrDate = date;
     dt.dat_StrTime = time;
