@@ -2,7 +2,7 @@
  * fat.handler - FAT12/16/32 filesystem handler
  *
  * Copyright © 2006 Marek Szyprowski
- * Copyright © 2007-2012 The AROS Development Team
+ * Copyright © 2007-2013 The AROS Development Team
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the same terms as AROS itself.
@@ -40,7 +40,7 @@ struct Library *IntuitionBase;
 struct Globals global_data;
 struct Globals *glob = &global_data;
 
-const TEXT version_string[] = "$VER: fat.handler 41.54 (22.7.2012)";
+const TEXT version_string[] = "$VER: fat.handler 41.55 (29.1.2013)";
 
 void handler(void) {
     struct Message *msg;
