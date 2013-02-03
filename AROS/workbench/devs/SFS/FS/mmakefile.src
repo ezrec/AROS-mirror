@@ -15,7 +15,8 @@ FILES := adminspaces \
 	 locks \
 	 deviceio \
 	 cachedio \
-	 filesystemmain
+	 filesystemmain \
+	 globals
 
 MODULE_FILES := arosdevice arosmain
 
