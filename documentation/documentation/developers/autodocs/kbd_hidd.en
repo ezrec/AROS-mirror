@@ -8,9 +8,19 @@ kbd_hidd
 
 ----------
 
+Classes
+-------
+
++ `CLID_HW_Kbd`_
++ `CLID_Hidd_Kbd`_
+
+----------
+
+CLID_HW_Kbd
+-----------
+
 ========================================== ========================================== ========================================== ========================================== 
-`--background--`_                          `--hardware_drivers--`_                    `aoHidd_Kbd_IrqHandler`_                   `aoHidd_Kbd_IrqHandlerData`_               
-`moHidd_Kbd_AddHardwareDriver`_            `moHidd_Kbd_RemHardwareDriver`_            
+`--background--`_                          `--hardware_drivers--`_                    
 ========================================== ========================================== ========================================== ========================================== 
 
 -----------
@@ -22,26 +32,23 @@ Notes
 ~~~~~
 ::
 
-     This class represents a "hub" for collecting input from various
-     keyboard devices in the system and sending them to clients.
+     This class represents a keyboard input subsystem in AROS. Additionally
+     it serves as a "hub" for collecting input from various keyboard devices
+     in the system. Events from all keyboard devices are merged into a single
+     stream and propagated to all clients.
 
      In order to get an access to keyboard input subsystem you need to
-     create an object of CLID_Hidd_Kbd class. There can be two use
-     scenarios: driver mode and client mode.
+     create an object of CLID_HW_Kbd class. The actual returned object is a
+     singletone, you do not have to dispose it, and every call will return
+     the same object pointer. After getting this object, you can, for example,
+     register your driver using moHW_AddDriver method, or enumerate drivers
+     using moHW_EnumDrivers.
 
-     If you wish to run in client mode (receive keyboard events), you
-     have to supply a callback using aoHidd_Kbd_IrqHandler attribute.
-     After this your callback will be called every time the event arrives
-     until you dispose your object.
-
-     Events from all keyboard devices are merged into a single stream
-     and propagated to all clients.
-
-     In driver mode you don't need to supply a callback (however it's not
-     forbidden). Instead you use the master object for registering your
-     hardware driver using HIDD_Kbd_AddHardwareDriver(). It is safe to
-     dispose the master object after adding a driver, the driver will
-     be internally kept in place.
+     If you wish to receive keyboard events, use objects of CLID_Hidd_Kbd
+     class. This class implements the same interface as driver class, but
+     represents receiver's side and is responsible for registering user's
+     interrupt handler in the listeners chain. These objects are not real
+     drivers and do not need to me registered within the subsystem.
 
 
 
@@ -54,18 +61,41 @@ Notes
 ~~~~~
 ::
 
-     A hardware driver should implement the same interface according to the following
-     rules:
+     A hardware driver should be a subclass of CLID_Hidd and implement IID_Hidd_Kbd
+     interface according to the following rules:
 
      1. A single object of driver class represents a single hardware unit.
      2. A single driver object maintains a single callback address (passed to it
         using aoHidd_Kbd_IrqHandler). Under normal conditions this callback is supplied
         by CLID_Hidd_Kbd class.
-     3. HIDD_Kbd_AddHardwareDriver() and HIDD_Kbd_RemHardwareDriver() on a driver object
-        itself do not make sense, so there's no need to implement them.
 
-     A hardware driver class should be a subclass of CLID_Hidd in order to ensure
-     compatibility in future.
+
+
+CLID_Hidd_Kbd
+-------------
+
+========================================== ========================================== ========================================== ========================================== 
+`--background--`_                          `aoHidd_Kbd_IrqHandler`_                   `aoHidd_Kbd_IrqHandlerData`_               `moHidd_Kbd_AddHardwareDriver`_            
+`moHidd_Kbd_RemHardwareDriver`_            
+========================================== ========================================== ========================================== ========================================== 
+
+-----------
+
+--background--
+==============
+
+Notes
+~~~~~
+::
+
+     Instances of this class are virtual devices being clients of the
+     keyboard input subsystem. In order to receive keyboard events, you
+     have to create an object of this class and supply a callback using
+     aoHidd_Kbd_IrqHandler attribute. After this your callback will be
+     called every time the event arrives until you dispose your object.
+
+     Every client receives events from all keyboard devices merged into
+     a single stream.
 
 
 
@@ -166,6 +196,9 @@ Function
      It does not matter on which instance of CLID_Hidd_Kbd class this method is
      used. Hardware driver objects are shared between all of them.
 
+     Since V2 this interface is obsolete and deprecated. Use moHW_AddDriver
+     method on CLID_HW_Kbd class in order to install the driver.
+
 
 Inputs
 ~~~~~~
@@ -220,6 +253,9 @@ Function
 
      It does not matter on which instance of CLID_Hidd_Kbd class this method is
      used. Hardware driver objects are shared between all of them.
+
+     Since V2 this interface is obsolete and deprecated. Use moHW_RemoveDriver
+     method on CLID_HW_Kbd class in order to remove the driver.
 
 
 Inputs

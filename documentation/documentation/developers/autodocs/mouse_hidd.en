@@ -8,8 +8,45 @@ mouse_hidd
 
 ----------
 
+Classes
+-------
+
++ `CLID_HW_Mouse`_
++ `CLID_Hidd_Mouse`_
+
+----------
+
+CLID_HW_Mouse
+-------------
+
 ========================================== ========================================== ========================================== ========================================== 
-`--background--`_                          `--hardware_drivers--`_                    `aoHidd_Mouse_Extended`_                   `aoHidd_Mouse_IrqHandler`_                 
+`--hardware_drivers--`_                    
+========================================== ========================================== ========================================== ========================================== 
+
+-----------
+
+--hardware_drivers--
+====================
+
+Notes
+~~~~~
+::
+
+     A hardware driver should be a subclass of CLID_Hidd and implement IID_Hidd_Mouse
+     interface according to the following rules:
+
+     1. A single object of driver class represents a single hardware unit.
+     2. A single driver object maintains a single callback address (passed to it
+        using aoHidd_Mouse_IrqHandler). Under normal conditions this callback is
+        supplied by CLID_HW_Mouse class.
+
+
+
+CLID_Hidd_Mouse
+---------------
+
+========================================== ========================================== ========================================== ========================================== 
+`--background--`_                          `--background--`_                          `aoHidd_Mouse_Extended`_                   `aoHidd_Mouse_IrqHandler`_                 
 `aoHidd_Mouse_IrqHandlerData`_             `aoHidd_Mouse_RelativeCoords`_             `aoHidd_Mouse_State`_                      `moHidd_Mouse_AddHardwareDriver`_          
 `moHidd_Mouse_RemHardwareDriver`_          
 ========================================== ========================================== ========================================== ========================================== 
@@ -23,50 +60,43 @@ Notes
 ~~~~~
 ::
 
-     This class represents a "hub" for collecting input from various
-     pointing devices (mice, tablets, touchscreens, etc) in the
-     system and sending them to clients.
+     Instances of this class are virtual devices being clients of the
+     pointing input subsystem. In order to receive input events, you
+     have to create an object of this class and supply a callback using
+     aoHidd_Mouse_IrqHandler attribute. After this your callback will be
+     called every time the event arrives until you dispose your object.
 
-     In order to get an access to pointing input subsystem you need to
-     create an object of CLID_Hidd_Mouse class. There can be two use
-     scenarios: driver mode and client mode.
+     Every client receives events from all pointing devices merged into
+     a single stream.
 
-     If you wish to run in client mode (receive pointing events), you
-     have to supply a callback using aoHidd_Mouse_IrqHandler attribute.
-     After this your callback will be called every time the event arrives
-     until you dispose your object.
-
-     Events from all pointing devices are merged into a single stream
-     and propagated to all clients.
-
-     In driver mode you don't need to supply a callback (however it's not
-     forbidden). Instead you use the master object for registering your
-     hardware driver using HIDD_Mouse_AddHardwareDriver(). It is safe to
-     dispose the master object after adding a driver, the driver will
-     be internally kept in place.
 
 
 ----------
 
---hardware_drivers--
-====================
+--background--
+==============
 
 Notes
 ~~~~~
 ::
 
-     A hardware driver should implement the same interface according to the following
-     rules:
+     This class represents a "hub" for collecting input from various
+     pointing devices (mice, tablets, touchscreens, etc) in the
+     system. Events from all pointing devices are merged into a
+     single stream and propagated to all clients.
 
-     1. A single object of driver class represents a single hardware unit.
-     2. A single driver object maintains a single callback address (passed to it
-        using aoHidd_Mouse_IrqHandler). Under normal conditions this callback is supplied
-        by CLID_Hidd_Mouse class.
-     3. HIDD_Mouse_AddHardwareDriver() and HIDD_Mouse_RemHardwareDriver() on a driver object
-        itself do not make sense, so there's no need to implement them.
+     In order to get an access to pointing input subsystem you need to
+     create an object of CLID_Hidd_Mouse class. The actual returned
+     object is a singletone, you do not have to dispose it, and every
+     call will return the same object pointer. After getting this object
+     you can, for example, register your driver using moHW_AddDriver
+     method, or enumerate drivers using moHW_EnumDrivers.
 
-     A hardware driver class should be a subclass of CLID_Hidd in order to ensure
-     compatibility in future.
+     If you wish to receive keyboard events, use objects of CLID_Hidd_Mouse
+     class. This class implements the same interface as driver class, but
+     represents receiver's side and is responsible for registering user's
+     interrupt handler in the listeners chain. These objects are not real
+     drivers and do not need to me registered within the subsystem.
 
 
 
@@ -91,6 +121,8 @@ Function
 
      If value of this attribute is FALSE, the flags member is actually missing from
      the structure, not just zeroed out! So do not use it at all in this case.
+
+     CLID_Hidd_Mouse class always return TRUE for this attribute.
 
 
 
@@ -149,14 +181,6 @@ Notes
      on their aoHidd_Mouse_Extended attribute value.
 
 
-Bugs
-~~~~
-::
-
-     CLID_Hidd_Mouse and some hardware driver classes allow to get value of this attribute,
-     however there is currently no use for it. The attribute is considered non-getable.
-
-
 
 See also
 ~~~~~~~~
@@ -184,14 +208,6 @@ Function
      The system will not assume anything about this value.
 
      Defaults to NULL if not specified.
-
-
-Bugs
-~~~~
-::
-
-     CLID_Hidd_Mouse and some hardware driver classes allow to get value of this attribute,
-     however there is currently no use for it. The attribute is considered non-getable.
 
 
 
@@ -287,6 +303,9 @@ Function
      It does not matter on which instance of CLID_Hidd_Mouse class this method is
      used. Hardware driver objects are shared between all of them.
 
+     Since V2 this interface is obsolete and deprecated. Use moHW_AddDriver
+     method on CLID_HW_Mouse class in order to install the driver.
+
 
 Inputs
 ~~~~~~
@@ -341,6 +360,9 @@ Function
 
      It does not matter on which instance of CLID_Hidd_Mouse class this method is
      used. Hardware driver objects are shared between all of them.
+
+     Since V2 this interface is obsolete and deprecated. Use moHW_RemoveDriver
+     method on CLID_HW_Kbd class in order to remove the driver.
 
 
 Inputs

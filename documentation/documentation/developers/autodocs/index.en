@@ -15,6 +15,7 @@ Autodocs for Modules
 + `bullet <bullet>`_
 + `camd <camd>`_
 + `cgfx <cgfx>`_
++ `cgxbootpic <cgxbootpic>`_
 + `cgxvideo <cgxvideo>`_
 + `clib <clib>`_
 + `commodities <commodities>`_
@@ -31,6 +32,7 @@ Autodocs for Modules
 + `gallium <gallium>`_
 + `graphics <graphics>`_
 + `graphics_hidd <graphics_hidd>`_
++ `hidd.pci_hidd <hidd.pci_hidd>`_
 + `hidd_hidd <hidd_hidd>`_
 + `hyperlayers <hyperlayers>`_
 + `icon <icon>`_

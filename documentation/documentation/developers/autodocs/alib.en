@@ -27,19 +27,19 @@ alib
 `GetMsgFromStack()`_                    `GetParamsFromStack()`_                 `GetRexxVar()`_                         `GetRPAttrs()`_                         
 `GetTagsFromStack()`_                   `GetVisualInfo()`_                      `GT_GetGadgetAttrs()`_                  `GT_SetGadgetAttrs()`_                  
 `HookEntry()`_                          `HotKey()`_                             `InvertString()`_                       `InvertStringForwd()`_                  
-`LayoutMenuItems()`_                    `LayoutMenus()`_                        `LibAllocPooled()`_                     `LibCreatePool()`_                      
-`LibDeletePool()`_                      `LibFreePooled()`_                      `LockBitMapTags()`_                     `MakeWorkbenchObjectVisible()`_         
-`MergeSortList()`_                      `NewDTObject()`_                        `NewList()`_                            `NewLoadSegTags()`_                     
-`NewObject()`_                          `NewRawDoFmt()`_                        `NewRectRegion()`_                      `ObtainBestPen()`_                      
-`ObtainInfo()`_                         `OpenAmigaGuide()`_                     `OpenAmigaGuideAsync()`_                `OpenCatalog()`_                        
-`OpenScreenTags()`_                     `OpenWindowTags()`_                     `OpenWorkbenchObject()`_                `RangeRand()`_                          
-`ReAllocVec()`_                         `RefreshDTObject()`_                    `RefreshDTObjects()`_                   `ReleaseInfo()`_                        
-`RemoveAmigaGuideHost()`_               `SelectErrorOutput()`_                  `SendAmigaGuideCmd()`_                  `SendAmigaGuideContext()`_              
-`SetAmigaGuideAttrs()`_                 `SetAmigaGuideContext()`_               `SetAttrs()`_                           `SetDTAttrs()`_                         
-`SetGadgetAttrs()`_                     `SetInfo()`_                            `SetRexxVar()`_                         `SetRPAttrs()`_                         
-`SetSuperAttrs()`_                      `SetWindowPointer()`_                   `StrDup()`_                             `SystemTags()`_                         
-`TimeDelay()`_                          `UnLockBitMapTags()`_                   `VideoControlTags()`_                   `WorkbenchControl()`_                   
-
+`LayoutMenuItems()`_                    `LayoutMenus()`_                        `LibAllocAligned()`_                    `LibAllocPooled()`_                     
+`LibCreatePool()`_                      `LibDeletePool()`_                      `LibFreePooled()`_                      `LockBitMapTags()`_                     
+`MakeWorkbenchObjectVisible()`_         `MergeSortList()`_                      `NewDTObject()`_                        `NewList()`_                            
+`NewLoadSegTags()`_                     `NewObject()`_                          `NewRawDoFmt()`_                        `NewRectRegion()`_                      
+`ObtainBestPen()`_                      `ObtainInfo()`_                         `OpenAmigaGuide()`_                     `OpenAmigaGuideAsync()`_                
+`OpenCatalog()`_                        `OpenScreenTags()`_                     `OpenWindowTags()`_                     `OpenWorkbenchObject()`_                
+`RangeRand()`_                          `ReAllocVec()`_                         `RefreshDTObject()`_                    `RefreshDTObjects()`_                   
+`ReleaseInfo()`_                        `RemoveAmigaGuideHost()`_               `SelectErrorOutput()`_                  `SendAmigaGuideCmd()`_                  
+`SendAmigaGuideContext()`_              `SetAmigaGuideAttrs()`_                 `SetAmigaGuideContext()`_               `SetAttrs()`_                           
+`SetDTAttrs()`_                         `SetGadgetAttrs()`_                     `SetInfo()`_                            `SetRexxVar()`_                         
+`SetRPAttrs()`_                         `SetSuperAttrs()`_                      `SetWindowPointer()`_                   `StrDup()`_                             
+`SystemTags()`_                         `TimeDelay()`_                          `UnLockBitMapTags()`_                   `VideoControlTags()`_                   
+`WorkbenchControl()`_                   
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -2775,6 +2775,53 @@ See also
 ~~~~~~~~
 
 `gadtools.library/LayoutMenusA() <./gadtools#layoutmenusa>`_ 
+
+----------
+
+LibAllocAligned()
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+  APTR LibAllocAligned(
+     ULONG memSize,
+     ULONG requirements,
+     IPTR  alignBytes)
+
+
+Inputs
+~~~~~~
+::
+
+     memSize      - Size in bytes of the aligned area
+     requirements - Memory requirements (same as AllocMem())
+     alignBytes   - Required alignment, in bytes.
+                    This must be a power of 2!
+
+
+Result
+~~~~~~
+::
+
+
+     Pointer to the newly alloctated area, or
+     NULL if no saisfying memory can be found.
+
+     Free this pointer using FreeMem(..., memSize)
+
+
+Notes
+~~~~~
+::
+
+
+     If alignBytes is not a power of two, NULL is returned.
+
+     If memSize is not a multiple of alignBytes, NULL is returned.
+
+
 
 ----------
 

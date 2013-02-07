@@ -8,6 +8,350 @@ hidd_hidd
 
 ----------
 
+Classes
+-------
+
++ `CLID_HW_Root`_
++ `CLID_HW`_
++ `hiddclass`_
+
+----------
+
+CLID_HW_Root
+------------
+
+========================================== ========================================== ========================================== ========================================== 
+`--background--`_                          
+========================================== ========================================== ========================================== ========================================== 
+
+-----------
+
+--background--
+==============
+
+Notes
+~~~~~
+::
+
+     This class represents a root of HIDD subsystem tree. In other words, it
+     represents your computer. Calling HW_EnumDrivers() on it will enumerate
+     installed subsystem classes.
+     
+     By design this class is a singletone. In order to get access to it, just
+     call OOP_NewObject() on it. Every call will return the same pointer to
+     the same object. You do not need to call OOP_Dispose object on it. Such
+     calls will simply do nothing.
+     
+     Subsystem classes need to register themselves in the tree by calling
+     HW_AddDriver() on this class.
+
+
+
+CLID_HW
+-------
+
+========================================== ========================================== ========================================== ========================================== 
+`--background--`_                          `aoHW_ClassName`_                          `moHW_AddDriver`_                          `moHW_CleanupDriver`_                      
+`moHW_EnumDrivers`_                        `moHW_RemoveDriver`_                       `moHW_SetupDriver`_                        
+========================================== ========================================== ========================================== ========================================== 
+
+-----------
+
+--background--
+==============
+
+Notes
+~~~~~
+::
+
+     This class is a base class for all hardware subsystems in AROS. Its
+     main purpose is to manage hardware drivers.
+     
+     A "subsystem" is a kind of devices, e. g. keyboards, mice, etc. This
+     class stores information about existing device instances and can provide
+     this information to user's software.
+
+     A typical subsystem class should be a singletone. This greatly simplifies
+     handling it.
+
+
+
+----------
+
+aoHW_ClassName
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+     [I.G], CONST_STRPTR
+
+
+Function
+~~~~~~~~
+::
+
+     Query human-readable description of the class. E. g. "Keyboards".
+
+
+
+----------
+
+moHW_AddDriver
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+     OOP_Object *OOP_DoMethod(OOP_Object *obj, struct pHW_AddHardwareDriver *Msg);
+
+     OOP_Object *HIDD_Kbd_AddHardwareDriver(OOP_Object *obj, OOP_Class *driverClass,
+                                            struct TagItem *tags);
+
+
+Function
+~~~~~~~~
+::
+
+     Creates a hardware driver object and registers it in the subsystem.
+
+
+Inputs
+~~~~~~
+::
+
+     obj         - A subsystem object to operate on.
+     driverClass - A pointer to OOP class of the driver. In order to create an object
+                   of some previously registered public class, use
+                   oop.library/OOP_FindClass().
+     tags        - An optional taglist which will be passed to driver class' New() method.
+
+
+Result
+~~~~~~
+::
+
+     A pointer to driver object or NULL in case of failure.
+
+
+Notes
+~~~~~
+::
+
+     Do not dispose the returned object yourself, use HW_RemoveDriver() for it.
+
+
+
+See also
+~~~~~~~~
+
+`moHW_RemHardwareDriver`_ 
+
+----------
+
+moHW_CleanupDriver
+==================
+
+Synopsis
+~~~~~~~~
+::
+
+     void OOP_DoMethod(OOP_Object *obj, struct pHW_CleanupDriver *Msg);
+
+     void HW_CleanupDriver(OOP_Object *obj, OOP_Object *driverObject);
+
+
+Function
+~~~~~~~~
+::
+
+     Performs subsystem-specific cleanup before driver object disposal.
+     This method is intended to be used only by subclasses of CLID_HW.
+
+
+Inputs
+~~~~~~
+::
+
+     obj          - A subsystem object.
+     driverObject - Device driver object.
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+Notes
+~~~~~
+::
+
+     In base class this method does nothing.
+
+
+
+See also
+~~~~~~~~
+
+`moHW_SetupDriver`_ 
+
+----------
+
+moHW_EnumDrivers
+================
+
+Synopsis
+~~~~~~~~
+::
+
+     void OOP_DoMethod(OOP_Object *obj, struct pHW_EnumDrivers *Msg);
+
+     void HW_EnumDrivers(OOP_Object *obj, struct Hook *callback, APTR hookMsg);
+
+
+Function
+~~~~~~~~
+::
+
+     Enumerates all installed driver in the subsystem.
+
+
+Inputs
+~~~~~~
+::
+
+     obj      - A subsystem object to query.
+     callback - A user-supplied hook which will be called for every driver.
+     hookMsg  - A user-defined data to be passed to the hook.
+
+     The hool will be called with the following parameters:
+         AROS_UFHA(struct Hook *, hook        , A0)
+             - A pointer to hook structure itself
+         AROS_UFHA(OOP_Object * , driverObject, A2)
+             - A device driver object
+         AROS_UFHA(APTR         , message     , A1)
+             - User-defined data
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+
+----------
+
+moHW_RemoveDriver
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+     void OOP_DoMethod(OOP_Object *obj, struct pHW_RemoveDriver *Msg);
+
+     void HW_RemoveDriver(OOP_Object *obj, OOP_Object *driver);
+
+
+Function
+~~~~~~~~
+::
+
+     Unregisters and disposes hardware driver object.
+
+
+Inputs
+~~~~~~
+::
+
+     obj    - A subsystem object from which the driver should be removed.
+     driver - A pointer to a driver object, returned by HW_AddDriver().
+
+
+Result
+~~~~~~
+::
+
+     TRUE if removal succesful or FALSE upon failure.
+
+
+Notes
+~~~~~
+::
+
+     The base class returns FALSE only if the driver is not registered
+     in the subsystem. However, subclasses implementing actual subsystems
+     can add their own checks, for example whether the driver currently
+     owns some objects which are in use, and thus cannot be disposed.
+
+
+
+See also
+~~~~~~~~
+
+`moHW_AddDriver`_ 
+
+----------
+
+moHW_SetupDriver
+================
+
+Synopsis
+~~~~~~~~
+::
+
+     void OOP_DoMethod(OOP_Object *obj, struct pHW_SetupDriver *Msg);
+
+     void HW_SetupDriver(OOP_Object *obj, OOP_Object *driverObject);
+
+
+Function
+~~~~~~~~
+::
+
+     Performs subsystem-specific setup after driver object creation.
+     This method is intended to be used only by subclasses of CLID_HW.
+
+
+Inputs
+~~~~~~
+::
+
+     obj          - A subsystem object.
+     driverObject - Device driver object.
+
+
+Result
+~~~~~~
+::
+
+     TRUE if setup completed succesfully and FALSE in case of error.
+     If this method returns error, the driver object will be disposed
+     and moHW_AddDriver method will fail.
+
+
+Notes
+~~~~~
+::
+
+     In base class this method does nothing and always returns TRUE.
+
+
+
+See also
+~~~~~~~~
+
+`moHW_CleanupDriver`_ 
+
+hiddclass
+---------
+
 ========================================== ========================================== ========================================== ========================================== 
 `--background--`_                          `aoHidd_HardwareName`_                     `aoHidd_Name`_                             `aoHidd_Producer`_                         
 `aoHidd_ProducerName`_                     `aoHidd_Product`_                          

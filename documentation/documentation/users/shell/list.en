@@ -24,7 +24,7 @@ Format
      List [(dir | pattern | filename)] [ PAT (pattern)] [KEYS] [DATES]
           [NODATES] [TO (name)] [SUB (string)] [SINCE (date)] [UPTO (date)]
           [QUICK] [BLOCK] [NOHEAD] [FILES] [DIRS] [LFORMAT (string)] [ALL]
-             
+
 
 Template
 ~~~~~~~~
@@ -40,7 +40,7 @@ Location
 
 
      C:
-        
+
 
 Function
 ~~~~~~~~
@@ -52,12 +52,12 @@ Function
 
      The information for each file or directory is presented on a separate 
      line, containing the following information:
-      
+
      name
      size (in bytes)
      protection bits
      date and time
-     
+
 
 Inputs
 ~~~~~~
@@ -68,7 +68,8 @@ Inputs
                        directory will be listed.
      PAT           --  Display only files matching 'string'
      KEYS          --  Display the block number of each file or directory
-     DATES         --  Display the creation date of files and directories
+     DATES         --  Always display the full modification date of files
+                       and directories instead of a day name.
      NODATES       --  Don't display dates
      TO (name)     --  Write the listing to a file instead of stdout
      SUB (string)  --  Display only files, a substring of which matches
@@ -88,7 +89,7 @@ Inputs
      %A  --  file attributes
      %B  --  size of file in blocks rather than bytes
      %C  --  file comment
-     %D  --  creation date
+     %D  --  modification date
      %E  --  file extension
      %F  --  volume name
      %K  --  file key block number
@@ -97,8 +98,8 @@ Inputs
      %N  --  file name
      %P  --  file path
      %S  --  superceded by %N and %P; obsolete
-     %T  --  creation time
-     
+     %T  --  modification time
+
 
 Result
 ~~~~~~
@@ -125,7 +126,7 @@ Example
      Installer                109956 ----rwed 02-Sep-99 11:51:31
      Which                      1068 --p-rwed 02-Sep-99 11:51:31
      9 files - 274 blocks used        
-     
+
 
 See also
 ~~~~~~~~

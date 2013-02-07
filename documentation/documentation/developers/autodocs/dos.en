@@ -3934,7 +3934,7 @@ Synopsis
 
  LONG MakeLink(
           CONST_STRPTR name,
-          APTR dest,
+          SIPTR dest,
           LONG soft );
 
 Function
@@ -3969,14 +3969,6 @@ Result
 
      boolean - DOSTRUE or DOSFALSE. On error, IoErr() will contain more
      information.
-
-
-Bugs
-~~~~
-::
-
-     Soft links were not working in the ROM filesystem before version
-     37.
 
 
 
