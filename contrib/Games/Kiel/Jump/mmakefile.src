@@ -15,7 +15,9 @@ INFO := $(foreach f,$(FILES), $(DESTDIR)/$(f).info)
 #MM
 games-kiel-jump-info : $(INFO)
 
-$(DESTDIR)/%.info : %.info | $(DESTDIR)
+$(INFO) : | $(DESTDIR)
+
+$(DESTDIR)/%.info : %.info 
 	$(CP) $? $(DESTDIR)
 
 %rule_makedirs dirs=$(DESTDIR)
