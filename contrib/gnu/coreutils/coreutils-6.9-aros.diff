@@ -1,6 +1,6 @@
-diff -ruN coreutils-6.9/configure coreutils-6.9.new/configure
+diff -ruN coreutils-6.9/configure coreutils-6.9.aros/configure
 --- coreutils-6.9/configure	2007-03-22 22:20:28.000000000 +0100
-+++ coreutils-6.9.new/configure	2008-08-27 20:00:30.000000000 +0200
++++ coreutils-6.9.aros/configure	2013-02-13 23:40:24.423338339 +0100
 @@ -6573,7 +6573,9 @@
  
  
@@ -96,9 +96,9 @@ diff -ruN coreutils-6.9/configure coreutils-6.9.new/configure
  if test "${gl_cv_func_tzset_clobber+set}" = set; then
    $as_echo_n "(cached) " >&6
  else
-diff -ruN coreutils-6.9/lib/at-func.c coreutils-6.9.new/lib/at-func.c
+diff -ruN coreutils-6.9/lib/at-func.c coreutils-6.9.aros/lib/at-func.c
 --- coreutils-6.9/lib/at-func.c	2006-09-30 02:37:48.000000000 +0200
-+++ coreutils-6.9.new/lib/at-func.c	2008-08-27 20:00:30.000000000 +0200
++++ coreutils-6.9.aros/lib/at-func.c	2013-02-13 23:40:24.423338339 +0100
 @@ -37,7 +37,7 @@
  
    if (fd == AT_FDCWD || IS_ABSOLUTE_FILE_NAME (file))
@@ -117,9 +117,9 @@ diff -ruN coreutils-6.9/lib/at-func.c coreutils-6.9.new/lib/at-func.c
    if (save_cwd (&saved_cwd) != 0)
      openat_save_fail (errno);
  
-diff -ruN coreutils-6.9/lib/cloexec.c coreutils-6.9.new/lib/cloexec.c
+diff -ruN coreutils-6.9/lib/cloexec.c coreutils-6.9.aros/lib/cloexec.c
 --- coreutils-6.9/lib/cloexec.c	2006-09-14 00:38:14.000000000 +0200
-+++ coreutils-6.9.new/lib/cloexec.c	2008-08-27 20:00:30.000000000 +0200
++++ coreutils-6.9.aros/lib/cloexec.c	2013-02-13 23:40:24.423338339 +0100
 @@ -36,7 +36,7 @@
  int
  set_cloexec_flag (int desc, bool value)
@@ -129,9 +129,9 @@ diff -ruN coreutils-6.9/lib/cloexec.c coreutils-6.9.new/lib/cloexec.c
  
    int flags = fcntl (desc, F_GETFD, 0);
  
-diff -ruN coreutils-6.9/lib/getpagesize.h coreutils-6.9.new/lib/getpagesize.h
+diff -ruN coreutils-6.9/lib/getpagesize.h coreutils-6.9.aros/lib/getpagesize.h
 --- coreutils-6.9/lib/getpagesize.h	2006-12-31 00:27:20.000000000 +0100
-+++ coreutils-6.9.new/lib/getpagesize.h	2008-08-27 20:00:30.000000000 +0200
++++ coreutils-6.9.aros/lib/getpagesize.h	2013-02-13 23:40:24.423338339 +0100
 @@ -43,7 +43,7 @@
  #endif
  
@@ -141,9 +141,9 @@ diff -ruN coreutils-6.9/lib/getpagesize.h coreutils-6.9.new/lib/getpagesize.h
  # define getpagesize() 2048
  #endif
  
-diff -ruN coreutils-6.9/lib/getpass.c coreutils-6.9.new/lib/getpass.c
+diff -ruN coreutils-6.9/lib/getpass.c coreutils-6.9.aros/lib/getpass.c
 --- coreutils-6.9/lib/getpass.c	2006-09-27 19:59:19.000000000 +0200
-+++ coreutils-6.9.new/lib/getpass.c	2008-08-27 20:00:30.000000000 +0200
++++ coreutils-6.9.aros/lib/getpass.c	2013-02-13 23:40:24.423338339 +0100
 @@ -89,7 +89,6 @@
  {
    FILE *tty;
@@ -160,9 +160,9 @@ diff -ruN coreutils-6.9/lib/getpass.c coreutils-6.9.new/lib/getpass.c
    if (tcgetattr (fileno (in), &t) == 0)
      {
        /* Save the old one. */
-diff -ruN coreutils-6.9/lib/Makefile.in coreutils-6.9.new/lib/Makefile.in
+diff -ruN coreutils-6.9/lib/Makefile.in coreutils-6.9.aros/lib/Makefile.in
 --- coreutils-6.9/lib/Makefile.in	2007-03-22 22:20:22.000000000 +0100
-+++ coreutils-6.9.new/lib/Makefile.in	2008-08-27 20:00:30.000000000 +0200
++++ coreutils-6.9.aros/lib/Makefile.in	2013-02-13 23:40:24.423338339 +0100
 @@ -208,7 +208,7 @@
  	full-write.$(OBJEXT) getdate.$(OBJEXT) hash-pjw.$(OBJEXT) \
  	linebuffer.$(OBJEXT) localcharset.$(OBJEXT) mbchar.$(OBJEXT) \
@@ -172,9 +172,9 @@ diff -ruN coreutils-6.9/lib/Makefile.in coreutils-6.9.new/lib/Makefile.in
  	version-etc.$(OBJEXT) version-etc-fsf.$(OBJEXT) \
  	xalloc-die.$(OBJEXT) xgethostname.$(OBJEXT) xmemcoll.$(OBJEXT) \
  	xreadlink.$(OBJEXT) xreadlink-with-size.$(OBJEXT) \
-diff -ruN coreutils-6.9/lib/mkancesdirs.c coreutils-6.9.new/lib/mkancesdirs.c
+diff -ruN coreutils-6.9/lib/mkancesdirs.c coreutils-6.9.aros/lib/mkancesdirs.c
 --- coreutils-6.9/lib/mkancesdirs.c	2006-10-07 09:07:34.000000000 +0200
-+++ coreutils-6.9.new/lib/mkancesdirs.c	2008-08-27 20:00:30.000000000 +0200
++++ coreutils-6.9.aros/lib/mkancesdirs.c	2013-02-13 23:40:24.423338339 +0100
 @@ -18,75 +18,100 @@
  
  /* Written by Paul Eggert.  */
@@ -391,18 +391,18 @@ diff -ruN coreutils-6.9/lib/mkancesdirs.c coreutils-6.9.new/lib/mkancesdirs.c
 +
 +  return 0;
  }
-diff -ruN coreutils-6.9/lib/mkancesdirs.h coreutils-6.9.new/lib/mkancesdirs.h
+diff -ruN coreutils-6.9/lib/mkancesdirs.h coreutils-6.9.aros/lib/mkancesdirs.h
 --- coreutils-6.9/lib/mkancesdirs.h	2006-10-07 09:07:34.000000000 +0200
-+++ coreutils-6.9.new/lib/mkancesdirs.h	2008-08-27 20:00:30.000000000 +0200
++++ coreutils-6.9.aros/lib/mkancesdirs.h	2013-02-13 23:40:24.423338339 +0100
 @@ -1,4 +1 @@
 -#include <stddef.h>
 -struct savewd;
 -ptrdiff_t mkancesdirs (char *, struct savewd *,
 -		       int (*) (char const *, char const *, void *), void *);
 +int mkancesdirs (char *, int (*) (char const *, void *), void *);
-diff -ruN coreutils-6.9/lib/mkdir-p.c coreutils-6.9.new/lib/mkdir-p.c
+diff -ruN coreutils-6.9/lib/mkdir-p.c coreutils-6.9.aros/lib/mkdir-p.c
 --- coreutils-6.9/lib/mkdir-p.c	2007-02-01 08:56:15.000000000 +0100
-+++ coreutils-6.9.new/lib/mkdir-p.c	2008-08-27 20:00:30.000000000 +0200
++++ coreutils-6.9.aros/lib/mkdir-p.c	2013-02-13 23:40:24.423338339 +0100
 @@ -1,7 +1,7 @@
  /* mkdir-p.c -- Ensure that a directory and its parents exist.
  
@@ -638,9 +638,9 @@ diff -ruN coreutils-6.9/lib/mkdir-p.c coreutils-6.9.new/lib/mkdir-p.c
 +
 +  return true;
  }
-diff -ruN coreutils-6.9/lib/mkdir-p.h coreutils-6.9.new/lib/mkdir-p.h
+diff -ruN coreutils-6.9/lib/mkdir-p.h coreutils-6.9.aros/lib/mkdir-p.h
 --- coreutils-6.9/lib/mkdir-p.h	2006-10-07 09:07:34.000000000 +0200
-+++ coreutils-6.9.new/lib/mkdir-p.h	2008-08-27 20:00:30.000000000 +0200
++++ coreutils-6.9.aros/lib/mkdir-p.h	2013-02-13 23:40:24.423338339 +0100
 @@ -1,7 +1,7 @@
  /* mkdir-p.h -- Ensure that a directory and its parents exist.
  
@@ -664,9 +664,9 @@ diff -ruN coreutils-6.9/lib/mkdir-p.h coreutils-6.9.new/lib/mkdir-p.h
  		       void *options,
  		       mode_t mode,
  		       void (*announce) (char const *, void *),
-diff -ruN coreutils-6.9/lib/nanosleep.c coreutils-6.9.new/lib/nanosleep.c
+diff -ruN coreutils-6.9/lib/nanosleep.c coreutils-6.9.aros/lib/nanosleep.c
 --- coreutils-6.9/lib/nanosleep.c	2007-02-12 19:49:19.000000000 +0100
-+++ coreutils-6.9.new/lib/nanosleep.c	2008-08-27 20:00:30.000000000 +0200
++++ coreutils-6.9.aros/lib/nanosleep.c	2013-02-13 23:40:24.423338339 +0100
 @@ -124,6 +124,12 @@
  static void
  my_usleep (const struct timespec *ts_delay)
@@ -688,9 +688,9 @@ diff -ruN coreutils-6.9/lib/nanosleep.c coreutils-6.9.new/lib/nanosleep.c
  }
  
  /* Suspend execution for at least *REQUESTED_DELAY seconds.  The
-diff -ruN coreutils-6.9/lib/openat-proc.c coreutils-6.9.new/lib/openat-proc.c
+diff -ruN coreutils-6.9/lib/openat-proc.c coreutils-6.9.aros/lib/openat-proc.c
 --- coreutils-6.9/lib/openat-proc.c	2007-01-14 12:32:10.000000000 +0100
-+++ coreutils-6.9.new/lib/openat-proc.c	2008-08-27 20:00:30.000000000 +0200
++++ coreutils-6.9.aros/lib/openat-proc.c	2013-02-13 23:40:24.423338339 +0100
 @@ -53,6 +53,7 @@
  char *
  openat_proc_name (char buf[OPENAT_BUFFER_SIZE], int fd, char const *file)
@@ -699,9 +699,9 @@ diff -ruN coreutils-6.9/lib/openat-proc.c coreutils-6.9.new/lib/openat-proc.c
    static int proc_status = 0;
  
    if (! proc_status)
-diff -ruN coreutils-6.9/man/Makefile.in coreutils-6.9.new/man/Makefile.in
+diff -ruN coreutils-6.9/man/Makefile.in coreutils-6.9.aros/man/Makefile.in
 --- coreutils-6.9/man/Makefile.in	2007-03-22 22:20:22.000000000 +0100
-+++ coreutils-6.9.new/man/Makefile.in	2008-08-27 20:00:30.000000000 +0200
++++ coreutils-6.9.aros/man/Makefile.in	2013-02-13 23:40:24.423338339 +0100
 @@ -857,19 +857,7 @@
  	      'or inadequate' 1>&2 \
  	    ;;							\
@@ -723,9 +723,21 @@ diff -ruN coreutils-6.9/man/Makefile.in coreutils-6.9.new/man/Makefile.in
  	esac
  
  check-local: check-x-vs-1 check-programs-vs-x
-diff -ruN coreutils-6.9/src/install.c coreutils-6.9.new/src/install.c
+diff -ruN coreutils-6.9/src/cat.c coreutils-6.9.aros/src/cat.c
+--- coreutils-6.9/src/cat.c	2007-03-18 22:36:43.000000000 +0100
++++ coreutils-6.9.aros/src/cat.c	2013-02-13 23:43:14.558338626 +0100
+@@ -31,7 +31,7 @@
+ #if HAVE_STROPTS_H
+ # include <stropts.h>
+ #endif
+-#if HAVE_SYS_IOCTL_H
++#if HAVE_SYS_IOCTL_H && !defined(__AROS__)
+ # include <sys/ioctl.h>
+ #endif
+ 
+diff -ruN coreutils-6.9/src/install.c coreutils-6.9.aros/src/install.c
 --- coreutils-6.9/src/install.c	2007-03-18 22:36:43.000000000 +0100
-+++ coreutils-6.9.new/src/install.c	2008-08-27 20:00:30.000000000 +0200
++++ coreutils-6.9.aros/src/install.c	2013-02-13 23:40:24.423338339 +0100
 @@ -1,5 +1,5 @@
  /* install - copy files and set attributes
 -   Copyright (C) 89, 90, 91, 1995-2007 Free Software Foundation, Inc.
@@ -946,9 +958,21 @@ diff -ruN coreutils-6.9/src/install.c coreutils-6.9.new/src/install.c
    -t, --target-directory=DIRECTORY  copy all SOURCE arguments into DIRECTORY\n\
    -T, --no-target-directory  treat DEST as a normal file\n\
    -v, --verbose       print the name of each directory as it is created\n\
-diff -ruN coreutils-6.9/src/Makefile.am coreutils-6.9.new/src/Makefile.am
+diff -ruN coreutils-6.9/src/ls.c coreutils-6.9.aros/src/ls.c
+--- coreutils-6.9/src/ls.c	2007-03-18 22:36:43.000000000 +0100
++++ coreutils-6.9.aros/src/ls.c	2013-02-13 23:43:34.005337932 +0100
+@@ -45,7 +45,7 @@
+ #if HAVE_STROPTS_H
+ # include <stropts.h>
+ #endif
+-#if HAVE_SYS_IOCTL_H
++#if HAVE_SYS_IOCTL_H && !defined(__AROS__)
+ # include <sys/ioctl.h>
+ #endif
+ 
+diff -ruN coreutils-6.9/src/Makefile.am coreutils-6.9.aros/src/Makefile.am
 --- coreutils-6.9/src/Makefile.am	2007-03-20 08:24:27.000000000 +0100
-+++ coreutils-6.9.new/src/Makefile.am	2008-08-27 20:00:30.000000000 +0200
++++ coreutils-6.9.aros/src/Makefile.am	2013-02-13 23:40:24.423338339 +0100
 @@ -16,7 +16,7 @@
  ## along with this program; if not, write to the Free Software Foundation,
  ## Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
@@ -1031,9 +1055,9 @@ diff -ruN coreutils-6.9/src/Makefile.am coreutils-6.9.new/src/Makefile.am
  
  # Use `ginstall' in the definition of PROGRAMS and in dependencies to avoid
  # confusion with the `install' target.  The install rule transforms `ginstall'
-diff -ruN coreutils-6.9/src/Makefile.in coreutils-6.9.new/src/Makefile.in
+diff -ruN coreutils-6.9/src/Makefile.in coreutils-6.9.aros/src/Makefile.in
 --- coreutils-6.9/src/Makefile.in	2007-03-22 22:23:20.000000000 +0100
-+++ coreutils-6.9.new/src/Makefile.in	2008-08-27 20:00:30.000000000 +0200
++++ coreutils-6.9.aros/src/Makefile.in	2013-02-13 23:40:24.423338339 +0100
 @@ -34,7 +34,7 @@
  build_triplet = @build@
  host_triplet = @host@
@@ -1144,9 +1168,9 @@ diff -ruN coreutils-6.9/src/Makefile.in coreutils-6.9.new/src/Makefile.in
  dircolors.h: dcgen dircolors.hin
  	@rm -f $@ $@-t
  	$(PERL) -w -- $(srcdir)/dcgen $(srcdir)/dircolors.hin > $@-t
-diff -ruN coreutils-6.9/src/mkdir.c coreutils-6.9.new/src/mkdir.c
+diff -ruN coreutils-6.9/src/mkdir.c coreutils-6.9.aros/src/mkdir.c
 --- coreutils-6.9/src/mkdir.c	2007-03-18 22:36:43.000000000 +0100
-+++ coreutils-6.9.new/src/mkdir.c	2008-08-27 20:00:30.000000000 +0200
++++ coreutils-6.9.aros/src/mkdir.c	2013-02-13 23:40:24.423338339 +0100
 @@ -23,12 +23,12 @@
  #include <sys/types.h>
  
@@ -1282,9 +1306,9 @@ diff -ruN coreutils-6.9/src/mkdir.c coreutils-6.9.new/src/mkdir.c
 +
 +  exit (exit_status);
  }
-diff -ruN coreutils-6.9/src/remove.c coreutils-6.9.new/src/remove.c
+diff -ruN coreutils-6.9/src/remove.c coreutils-6.9.aros/src/remove.c
 --- coreutils-6.9/src/remove.c	2007-03-18 22:36:43.000000000 +0100
-+++ coreutils-6.9.new/src/remove.c	2008-08-27 20:00:30.000000000 +0200
++++ coreutils-6.9.aros/src/remove.c	2013-02-13 23:40:24.423338339 +0100
 @@ -1278,7 +1278,9 @@
  
    /* Ensure that *dirp is not NULL and that its file descriptor is valid.  */
@@ -1295,9 +1319,9 @@ diff -ruN coreutils-6.9/src/remove.c coreutils-6.9.new/src/remove.c
  
    return status;
  }
-diff -ruN coreutils-6.9/src/sort.c coreutils-6.9.new/src/sort.c
+diff -ruN coreutils-6.9/src/sort.c coreutils-6.9.aros/src/sort.c
 --- coreutils-6.9/src/sort.c	2007-03-18 22:36:43.000000000 +0100
-+++ coreutils-6.9.new/src/sort.c	2008-08-27 20:00:30.000000000 +0200
++++ coreutils-6.9.aros/src/sort.c	2013-02-13 23:40:24.423338339 +0100
 @@ -1,5 +1,5 @@
  /* sort - sort lines of text (with all kinds of options).
 -   Copyright (C) 1988, 1991-2007 Free Software Foundation, Inc.
@@ -2353,9 +2377,21 @@ diff -ruN coreutils-6.9/src/sort.c coreutils-6.9.new/src/sort.c
    else
      sort (files, nfiles, outfile);
  
-diff -ruN coreutils-6.9/src/system.h coreutils-6.9.new/src/system.h
+diff -ruN coreutils-6.9/src/stty.c coreutils-6.9.aros/src/stty.c
+--- coreutils-6.9/src/stty.c	2007-03-18 22:36:43.000000000 +0100
++++ coreutils-6.9.aros/src/stty.c	2013-02-13 23:43:59.349213699 +0100
+@@ -43,7 +43,7 @@
+ #if HAVE_STROPTS_H
+ # include <stropts.h>
+ #endif
+-#ifdef HAVE_SYS_IOCTL_H
++#ifdef HAVE_SYS_IOCTL_H && !defined(__AROS__)
+ # include <sys/ioctl.h>
+ #endif
+ 
+diff -ruN coreutils-6.9/src/system.h coreutils-6.9.aros/src/system.h
 --- coreutils-6.9/src/system.h	2007-03-18 22:36:43.000000000 +0100
-+++ coreutils-6.9.new/src/system.h	2008-08-27 20:00:30.000000000 +0200
++++ coreutils-6.9.aros/src/system.h	2013-02-13 23:40:24.423338339 +0100
 @@ -511,7 +511,6 @@
  # if ! defined ftello
  static inline off_t ftello (FILE *stream)
