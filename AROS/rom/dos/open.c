@@ -208,55 +208,55 @@ static LONG InternalOpen(CONST_STRPTR name, LONG accessMode,
         	error = ERROR_OBJECT_NOT_FOUND;
 	}
 
-	    if (error == ERROR_IS_SOFT_LINK)
+        if (error == ERROR_IS_SOFT_LINK)
+        {
+            ULONG buffer_size = 256;
+            STRPTR softname;
+       	    LONG continue_loop;
+            LONG written;
+
+            do
             {
-            	ULONG buffer_size = 256;
-            	STRPTR softname;
-            	LONG continue_loop;
-            	LONG written;
+                continue_loop = FALSE;
+                if (!(softname = AllocVec(buffer_size, MEMF_ANY)))
+                {
+               	    error2 = ERROR_NO_FREE_STORE;
+                    break;
+                }
 
-            	do
-            	{
-                    continue_loop = FALSE;
-                    if (!(softname = AllocVec(buffer_size, MEMF_ANY)))
-                    {
-                    	error2 = ERROR_NO_FREE_STORE;
-                    	break;
-                    }
+                if (dvp != NULL)
+                    written = ReadLink(dvp->dvp_Port, dvp->dvp_Lock, name,
+                        softname, buffer_size);
+                else
+                    written = ReadLink(NULL, NULL, name,
+                        softname, buffer_size);
+                if (written == -1)
+                {
+                    /* An error occured */
+                    error2 = IoErr();
+                }
+                else if (written == -2)
+                {
+                    /* If there's not enough space in the buffer, increase
+                       it and try again */
+                    continue_loop = TRUE;
+                    buffer_size *= 2;
+                }
+                else if (written >= 0)
+                {
+                    /* All OK */
+                    ret = InternalOpen(softname, accessMode, handle, soft_nesting - 1, dvp, DOSBase);
+                    error2 = IoErr();
+                }
+                else
+                    error2 = ERROR_UNKNOWN;
 
-                    if (dvp != NULL)
-                        written = ReadLink(dvp->dvp_Port, dvp->dvp_Lock, name,
-                            softname, buffer_size);
-                    else
-                        written = ReadLink(NULL, NULL, name,
-                            softname, buffer_size);
-                    if (written == -1)
-                    {
-                    	/* An error occured */
-                    	error2 = IoErr();
-                    }
-                    else if (written == -2)
-                    {
-                    	/* If there's not enough space in the buffer, increase
-                       	   it and try again */
-                    	continue_loop = TRUE;
-                    	buffer_size *= 2;
-                    }
-                    else if (written >= 0)
-                    {
-                    	/* All OK */
-                    	ret = InternalOpen(softname, accessMode, handle, soft_nesting - 1, dvp, DOSBase);
-                    	error2 = IoErr();
-                    }
-                    else
-                    	error2 = ERROR_UNKNOWN;
+                FreeVec(softname);
+	    }
+            while(continue_loop);
+        }
 
-                    FreeVec(softname);
-	        }
-            	while(continue_loop);
-            }
-
-            FreeDeviceProc(dvp);
+        FreeDeviceProc(dvp);
     }
 
     if(!error)
