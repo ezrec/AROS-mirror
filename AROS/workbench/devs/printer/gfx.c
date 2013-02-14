@@ -18,7 +18,7 @@
 #include <proto/cybergraphics.h>
 
 #include <cybergraphx/cybergraphics.h>
-
+#include <intuition/classes.h>
 #include <devices/prtgfx.h>
 
 #include <SDI/SDI_hook.h>
