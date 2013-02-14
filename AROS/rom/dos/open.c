@@ -1,5 +1,5 @@
 /*
-    Copyright © 1995-2013, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: Open a file with the specified mode.
@@ -18,9 +18,8 @@
 #include <proto/utility.h>
 #include "dos_intern.h"
 
-static LONG InternalOpen(CONST_STRPTR name, LONG accessMode,
-    struct FileHandle *handle, LONG soft_nesting, struct DevProc *link_dvp,
-    struct DosLibrary *DOSBase);
+LONG InternalOpen(CONST_STRPTR name, LONG accessMode, 
+    struct FileHandle *handle, LONG soft_nesting, struct DosLibrary *DOSBase);
 
 #define MAX_SOFT_LINK_NESTING 16 /* Maximum level of soft links nesting */
 
@@ -77,8 +76,7 @@ static LONG InternalOpen(CONST_STRPTR name, LONG accessMode,
 
     if(ret != NULL)
     {
-	LONG ok = InternalOpen(name, accessMode, ret, MAX_SOFT_LINK_NESTING,
-            NULL, DOSBase);
+	LONG ok = InternalOpen(name, accessMode, ret, MAX_SOFT_LINK_NESTING, DOSBase);
 	D(bug("[Open] = %d Error = %d\n", ok, IoErr()));
 	if (ok)
 	{
@@ -99,15 +97,13 @@ static LONG InternalOpen(CONST_STRPTR name, LONG accessMode,
     AROS_LIBFUNC_EXIT
 } /* Open */
 
-/* Try to open name, recursively calling itself in case it's a soft link.
+/* Try to open name recursively calling itself in case it's a soft link.
    Store result in handle. Return boolean value indicating result. */
-static LONG InternalOpen(CONST_STRPTR name, LONG accessMode,
-    struct FileHandle *handle, LONG soft_nesting, struct DevProc *link_dvp,
-    struct DosLibrary *DOSBase)
+LONG InternalOpen(CONST_STRPTR name, LONG accessMode, 
+    struct FileHandle *handle, LONG soft_nesting, struct DosLibrary *DOSBase)
 {
     /* Get pointer to process structure */
     struct Process *me = (struct Process *)FindTask(NULL);
-    struct DevProc *dvp = NULL;
     LONG ret = DOSFALSE;
     LONG error = 0;
     LONG error2 = 0;
@@ -173,14 +169,7 @@ static LONG InternalOpen(CONST_STRPTR name, LONG accessMode,
             	cur = DOSBase->dl_SYSLock;
 
 	    if (cur)
-            {
-                if (link_dvp != NULL)
-                    error = fs_Open(handle, REF_DEVICE, MKBADDR(link_dvp),
-                        accessMode, name, DOSBase);
-                else
-                    error = fs_Open(handle, REF_LOCK, cur,
-                        accessMode, name, DOSBase);
-            }
+	    	error = fs_Open(handle, REF_LOCK, cur, accessMode, name, DOSBase);
 	    else
 	    	/*
 	    	 * This can be reached if we attempt to load disk-based library or
@@ -192,6 +181,8 @@ static LONG InternalOpen(CONST_STRPTR name, LONG accessMode,
 	}
     	else 
     	{
+            struct DevProc *dvp = NULL;
+
 	    filename++;
 	    do
 	    {
@@ -206,57 +197,55 @@ static LONG InternalOpen(CONST_STRPTR name, LONG accessMode,
 
 	    if (error == ERROR_NO_MORE_ENTRIES)
         	error = ERROR_OBJECT_NOT_FOUND;
-	}
 
-        if (error == ERROR_IS_SOFT_LINK)
-        {
-            ULONG buffer_size = 256;
-            STRPTR softname;
-       	    LONG continue_loop;
-            LONG written;
-
-            do
+	    if (error == ERROR_IS_SOFT_LINK)
             {
-                continue_loop = FALSE;
-                if (!(softname = AllocVec(buffer_size, MEMF_ANY)))
-                {
-               	    error2 = ERROR_NO_FREE_STORE;
-                    break;
-                }
+            	ULONG buffer_size = 256;
+            	STRPTR softname;
+            	LONG continue_loop;
+            	LONG written;
 
-                if (dvp != NULL)
-                    written = ReadLink(dvp->dvp_Port, dvp->dvp_Lock, name,
-                        softname, buffer_size);
-                else
-                    written = ReadLink(NULL, NULL, name,
-                        softname, buffer_size);
-                if (written == -1)
-                {
-                    /* An error occured */
-                    error2 = IoErr();
-                }
-                else if (written == -2)
-                {
-                    /* If there's not enough space in the buffer, increase
-                       it and try again */
-                    continue_loop = TRUE;
-                    buffer_size *= 2;
-                }
-                else if (written >= 0)
-                {
-                    /* All OK */
-                    ret = InternalOpen(softname, accessMode, handle, soft_nesting - 1, dvp, DOSBase);
-                    error2 = IoErr();
-                }
-                else
-                    error2 = ERROR_UNKNOWN;
+            	do
+            	{
+                    continue_loop = FALSE;
+                    if (!(softname = AllocVec(buffer_size, MEMF_ANY)))
+                    {
+                    	error2 = ERROR_NO_FREE_STORE;
+                    	break;
+                    }
 
-                FreeVec(softname);
-	    }
-            while(continue_loop);
-        }
+                    written = ReadLink(dvp->dvp_Port, dvp->dvp_Lock, name, softname, buffer_size);
+                    if (written == -1)
+                    {
+                    	/* An error occured */
+                    	error2 = IoErr();
+                    }
+                    else if (written == -2)
+                    {
+                    	/* If there's not enough space in the buffer, increase
+                       	   it and try again */
+                    	continue_loop = TRUE;
+                    	buffer_size *= 2;
+                    }
+                    else if (written >= 0)
+                    {
+                    	/* All OK */
+                    	BPTR olddir;
 
-        FreeDeviceProc(dvp);
+                    	olddir = CurrentDir(dvp->dvp_Lock);
+                    	ret = InternalOpen(softname, accessMode, handle, soft_nesting - 1, DOSBase);
+                    	error2 = IoErr();
+                    	CurrentDir(olddir);
+                    }
+                    else
+                    	error2 = ERROR_UNKNOWN;
+
+                    FreeVec(softname);
+	        }
+            	while(continue_loop);
+            }
+            FreeDeviceProc(dvp);
+	}
     }
 
     if(!error)

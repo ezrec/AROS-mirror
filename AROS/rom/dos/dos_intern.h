@@ -1,5 +1,5 @@
 /*
-    Copyright © 1995-2013, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: Internal types and stuff for dos
@@ -311,6 +311,9 @@ struct PacketHelperStruct
 BOOL getpacketinfo(struct DosLibrary *DOSBase, CONST_STRPTR, struct PacketHelperStruct*);
 BOOL getdevpacketinfo(struct DosLibrary *DOSBase, CONST_STRPTR devname, CONST_STRPTR name, struct PacketHelperStruct *phs);
 void freepacketinfo(struct DosLibrary *DOSBase, struct PacketHelperStruct*);
+
+LONG InternalOpen(CONST_STRPTR name, LONG action, 
+    struct FileHandle *handle, LONG soft_nesting, struct DosLibrary *DOSBase);
 
 #define ASSERT_VALID_FILELOCK(lock) do { \
     	struct FileLock *fl = BADDR(lock); \
