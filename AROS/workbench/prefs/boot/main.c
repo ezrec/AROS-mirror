@@ -15,7 +15,7 @@
 #include "args.h"
 #include "booteditor.h"
 
-#define VERSION "$VER: Boot 1.1 (12.1.2013)"
+#define VERSION "$VER: Boot 1.2 (21.2.2013)"
 
 int main(int argc, char **argv)
 {
