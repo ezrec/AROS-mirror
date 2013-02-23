@@ -795,7 +795,7 @@ def create_module_docs():
         libdocs.write(targetdir, module_titles)
 
     # add HIDD docs
-    srcdirs = ( os.path.join(topdir, "rom/hidds"), os.path.join(topdir, "workbench/hidds/"))
+    srcdirs = ( os.path.join(topdir, "rom/hidds"), os.path.join(topdir, "workbench/hidds/"), os.path.join(topdir, "rom/devs/ata") )
     for dir in srcdirs:
         create_hidd_docs_dir(dir, targetdir, module_titles)
 
@@ -828,7 +828,7 @@ def create_lib_docs_dir(srcdir, targetdir, titles):
     subdirs = os.listdir(srcdir)
     for dir in subdirs: # exec ,graphics etc.
         docpath = os.path.join(srcdir, dir)
-        if (dir != ".svn") and os.path.isdir(docpath) :
+        if (dir != ".svn") and (dir != "ata") and os.path.isdir(docpath) :
             libdocs = libdoclist()
             libdocs.read(docpath)
             libdocs.write(targetdir, titles)
