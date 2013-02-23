@@ -51,8 +51,9 @@ CLID_HW
 -------
 
 ========================================== ========================================== ========================================== ========================================== 
-`--background--`_                          `aoHW_ClassName`_                          `moHW_AddDriver`_                          `moHW_CleanupDriver`_                      
-`moHW_EnumDrivers`_                        `moHW_RemoveDriver`_                       `moHW_SetupDriver`_                        
+`--background--`_                          `aoHW_ClassName`_                          `aoHW_InUse`_                              `moHW_AddDriver`_                          
+`moHW_CleanupDriver`_                      `moHW_EnumDrivers`_                        `moHW_RemoveDriver`_                       `moHW_SetupDriver`_                        
+
 ========================================== ========================================== ========================================== ========================================== 
 
 -----------
@@ -93,6 +94,27 @@ Function
 ::
 
      Query human-readable description of the class. E. g. "Keyboards".
+
+
+
+----------
+
+aoHW_InUse
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+     [..G], BOOL
+
+
+Function
+~~~~~~~~
+::
+
+     Return TRUE if the subsystem is currently in use by some driver(s)
+     and FALSE otherwise.
 
 
 
@@ -353,8 +375,8 @@ hiddclass
 ---------
 
 ========================================== ========================================== ========================================== ========================================== 
-`--background--`_                          `aoHidd_HardwareName`_                     `aoHidd_Name`_                             `aoHidd_Producer`_                         
-`aoHidd_ProducerName`_                     `aoHidd_Product`_                          
+`--background--`_                          `aoHidd_DriverData`_                       `aoHidd_HardwareName`_                     `aoHidd_Name`_                             
+`aoHidd_Producer`_                         `aoHidd_ProducerName`_                     `aoHidd_Product`_                          
 ========================================== ========================================== ========================================== ========================================== 
 
 -----------
@@ -375,6 +397,49 @@ Notes
      definitions may change at any moment.
 
 
+
+----------
+
+aoHidd_DriverData
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+     [I..], APTR
+
+
+Function
+~~~~~~~~
+::
+
+     Provide private data for driver creation.
+
+     This attribute is actually reserved for private use by device drivers.
+     Many driver classes will scan the system and instantiate one or more
+     objects of own class to control the discovered hardware. This attribute
+     is intended to specify details of the actual device. For example for
+     PCI device drivers this can be a pointer to PCI device objects.
+
+
+Notes
+~~~~~
+::
+
+     Be careful and do not use this attribute if you implement a public reusable
+     class which is meant to be subclassed. In this case this attribute can be
+     used by subclasses, and your own use will make a conflict.
+
+     This attribute actually exists only in order to free the developer from need
+     to create own private interface just for one attribute.
+
+
+
+See also
+~~~~~~~~
+
+`aoHidd_Producer`_ 
 
 ----------
 

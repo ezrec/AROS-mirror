@@ -12,7 +12,7 @@ lowlevel
 `AddKBInt()`_                           `AddTimerInt()`_                        `AddVBlankInt()`_                       `ElapsedTime()`_                        
 `GetKey()`_                             `GetLanguageSelection()`_               `QueryKeys()`_                          `ReadJoyPort()`_                        
 `RemKBInt()`_                           `RemTimerInt()`_                        `RemVBlankInt()`_                       `SetJoyPortAttrsA()`_                   
-`StartTimerInt()`_                      `StopTimerInt()`_                       
+`StartTimerInt()`_                      `StopTimerInt()`_                       `SystemControlA()`_                     
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -262,5 +262,21 @@ Synopsis
 
  VOID StopTimerInt(
           APTR intHandle );
+
+
+----------
+
+SystemControlA()
+================
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG SystemControlA(
+          struct TagItem * tags );
+ 
+ ULONG SystemControl(
+          TAG tag, ... );
 
 

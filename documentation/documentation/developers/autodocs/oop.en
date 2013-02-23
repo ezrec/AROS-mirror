@@ -11,8 +11,9 @@ oop
 ======================================= ======================================= ======================================= ======================================= 
 `OOP_AddClass()`_                       `OOP_DisposeObject()`_                  `OOP_FindClass()`_                      `OOP_GetAttr()`_                        
 `OOP_GetAttrBase()`_                    `OOP_GetMethod()`_                      `OOP_GetMethodID()`_                    `OOP_NewObject()`_                      
-`OOP_ObtainAttrBase()`_                 `OOP_ObtainAttrBases()`_                `OOP_ParseAttrs()`_                     `OOP_ReleaseAttrBase()`_                
-`OOP_ReleaseAttrBases()`_               `OOP_RemoveClass()`_                    `OOP_SetAttrs()`_                       
+`OOP_ObtainAttrBase()`_                 `OOP_ObtainAttrBases()`_                `OOP_ObtainAttrBasesArray()`_           `OOP_ObtainMethodBasesArray()`_         
+`OOP_ParseAttrs()`_                     `OOP_ReleaseAttrBase()`_                `OOP_ReleaseAttrBases()`_               `OOP_ReleaseAttrBasesArray()`_          
+`OOP_RemoveClass()`_                    `OOP_SetAttrs()`_                       
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -466,6 +467,94 @@ Synopsis
 
 ----------
 
+OOP_ObtainAttrBasesArray()
+==========================
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG OOP_ObtainAttrBasesArray(
+          OOP_AttrBase * bases,
+          CONST_STRPTR * ids );
+
+Function
+~~~~~~~~
+::
+
+     Obtain several attribute base IDs, storing them in linear array.
+
+
+Inputs
+~~~~~~
+::
+
+     bases - a pointer to array to fill in
+     ids   - a NULL-terminated array of interface IDs
+
+
+Result
+~~~~~~
+::
+
+     Zero on success or number of failed bases on failure. Failed
+     entries will be set to 0.
+
+
+
+See also
+~~~~~~~~
+
+`OOP_ReleaseAttrBasesArray`_ 
+
+----------
+
+OOP_ObtainMethodBasesArray()
+============================
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG OOP_ObtainMethodBasesArray(
+          OOP_MethodID * bases,
+          CONST_STRPTR * ids );
+
+Function
+~~~~~~~~
+::
+
+     Obtain several method ID bases, storing them in linear array.
+
+
+Inputs
+~~~~~~
+::
+
+     bases - a pointer to array to fill in
+     ids   - a NULL-terminated array of interface IDs
+
+
+Result
+~~~~~~
+::
+
+     Zero on success or number of failed bases on failure. Failed array
+     entries will be set to -1.
+
+
+Notes
+~~~~~
+::
+
+     Method IDs are owned by particular class, and are released when
+     the class is destroyed. Thus, there is no ReleaseMethodBasesArray()
+     function.
+
+
+
+----------
+
 OOP_ParseAttrs()
 ================
 
@@ -581,6 +670,55 @@ Synopsis
  VOID OOP_ReleaseAttrBases(
           const struct OOP_ABDescr * abd );
 
+
+----------
+
+OOP_ReleaseAttrBasesArray()
+===========================
+
+Synopsis
+~~~~~~~~
+::
+
+ void OOP_ReleaseAttrBasesArray(
+          OOP_AttrBase * bases,
+          CONST_STRPTR * ids );
+
+Function
+~~~~~~~~
+::
+
+     Release several attribute ID bases, stored in linear array.
+
+
+Inputs
+~~~~~~
+::
+
+     bases - a pointer to array of bases
+     ids   - a NULL-terminated array of corresponding interface IDs
+
+
+Result
+~~~~~~
+::
+
+     None
+
+
+Notes
+~~~~~
+::
+
+     It is legal to have some entries in the array not filled in
+     (equal to 0). They will be skipped.
+
+
+
+See also
+~~~~~~~~
+
+`OOP_ObtainAttrBasesArray`_ 
 
 ----------
 

@@ -68,6 +68,7 @@ Shell Commands
     + `pathpart <pathpart>`_
     + `pipe <pipe>`_
     + `play <play>`_
+    + `print <print>`_
     + `prompt <prompt>`_
     + `protect <protect>`_
     + `quit <quit>`_
