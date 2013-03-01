@@ -15,28 +15,29 @@ TARGETDIR    := $(AROS_CONTRIB)/Games/InterLogic
 SDL_PREFIX   := $(AROS_DEVELOPMENT)
 USER_CFLAGS  := $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags)
 
-
-FILES := src/password src/credits src/levels src/splash src/interlogic src/mainmenu
+FILES := \
+    $(PORTSDIR)/interlogic/interlogic/src/password \
+    $(PORTSDIR)/interlogic/interlogic/src/credits \
+    $(PORTSDIR)/interlogic/interlogic/src/levels \
+    $(PORTSDIR)/interlogic/interlogic/src/splash \
+    $(PORTSDIR)/interlogic/interlogic/src/interlogic \
+    $(PORTSDIR)/interlogic/interlogic/src/mainmenu
 
 %build_prog mmake=ports-game-interlogic progname=InterLogic \
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="arosc SDL_image png jpeg SDL_mixer vorbisfile vorbis ogg SDL GL z"
 
-
 %fetch mmake=ports-game-interlogic-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/interlogic \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz"
-
 
 ICONS := InterLogic
 
 %build_icons mmake=ports-game-interlogic-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)/..
-
+	icons=$(ICONS) dir=$(TARGETDIR)
 
 CPYFILES := README
 
 %copy_files_q mmake=ports-game-interlogic-cpy files=$(CPYFILES) src=$(PORTSDIR)/interlogic/interlogic \
     dst=$(TARGETDIR)
-
 
 %common
