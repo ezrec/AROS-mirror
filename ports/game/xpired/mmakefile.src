@@ -20,33 +20,28 @@ include $(TOP)/config/make.cfg
 
 #MM-  ports-game-xpired-clean : ports-game-xpiredbin-clean ports-game-xpiredit-clean
 
-
 REPOSITORIES := sf://xpired
 ARCHBASE     := xpired-1.22
 TARGETDIR    := $(AROS_CONTRIB)/Games/Xpired
 SDL_PREFIX   := $(AROS_DEVELOPMENT)
 USER_CFLAGS  := $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags) -DUNIX -DSHARE_PREFIX=\"PROGDIR:data\"
 
-
 %build_prog mmake=ports-game-xpiredbin progname=Xpired \
-    files=xpired targetdir=$(TARGETDIR) nix=yes \
+    files="$(PORTSDIR)/xpired/$(ARCHBASE)/src/xpired" targetdir=$(TARGETDIR) nix=yes \
     uselibs="arosc SDL_image SDL_gfx png jpeg SDL_mixer vorbisfile vorbis ogg SDL GL z"
 
 %build_prog mmake=ports-game-xpiredit progname=XpirEdit \
-    files=xpiredit targetdir=$(TARGETDIR) nix=yes \
+    files="$(PORTSDIR)/xpired/$(ARCHBASE)/src/xpiredit" targetdir=$(TARGETDIR) nix=yes \
     uselibs="arosc SDL_image SDL_gfx png jpeg SDL GL z"
-
 
 %fetch mmake=ports-game-xpired-fetch archive=$(ARCHBASE)-linux_source destination=$(PORTSDIR)/xpired/$(ARCHBASE) \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
     patches_specs=xpired-1.22-aros.diff:$(ARCHBASE):-p1
 
-
 ICONS := Xpired
 
 %build_icons mmake=ports-game-xpired-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)/..
-
+	icons=$(ICONS) dir=$(TARGETDIR)
 
 %copy_dir_recursive mmake=ports-game-xpired-img src=$(PORTSDIR)/xpired/$(ARCHBASE)/src/img \
 dst=$(TARGETDIR)/data/img
@@ -54,11 +49,9 @@ dst=$(TARGETDIR)/data/img
 %copy_dir_recursive mmake=ports-game-xpired-snd src=$(PORTSDIR)/xpired/$(ARCHBASE)/src/snd \
     dst=$(TARGETDIR)/data/snd
 
-
 CPYFILES := xpired.lvl xpired.cfg bgimages.txt readme.txt xpired.dmo
 
 %copy_files_q mmake=ports-game-xpired-cpy files=$(CPYFILES) src=$(PORTSDIR)/xpired/$(ARCHBASE)/src \
     dst=$(TARGETDIR)/data
-
 
 %common
