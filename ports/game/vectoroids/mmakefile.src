@@ -21,32 +21,27 @@ USER_CFLAGS  := $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cf
 
 # sound disabled because it crashes
 
-FILES := vectoroids
+FILES := $(PORTSDIR)/vectoroids/$(ARCHBASE)/vectoroids
 
 %build_prog mmake=ports-game-vectoroids progname=Vectoroids \
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="arosc SDL_image png jpeg SDL GL z"
 
-
 %fetch mmake=ports-game-vectoroids-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/vectoroids \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
     patches_specs=vectoroids-1.1.0-aros.diff:$(ARCHBASE):-p1
 
-
 ICONS := Vectoroids
 
 %build_icons mmake=ports-game-vectoroids-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)/..
-
+	icons=$(ICONS) dir=$(TARGETDIR)
 
 %copy_dir_recursive mmake=ports-game-vectoroids-data src=$(PORTSDIR)/vectoroids/$(ARCHBASE)/data \
     dst=$(TARGETDIR)/data
-
 
 CPYFILES := CHANGES.txt COPYING.txt README.txt vectoroids.6
 
 %copy_files_q mmake=ports-game-vectoroids-cpy files=$(CPYFILES) src=$(PORTSDIR)/vectoroids/$(ARCHBASE) \
     dst=$(TARGETDIR)
-
 
 %common
