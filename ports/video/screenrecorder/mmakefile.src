@@ -18,47 +18,41 @@ USER_CFLAGS  := -D__LOCALE_STDLIBBASE__
 USER_INCLUDES:= -I$(PORTSDIR)/screenrecorder/$(ARCHBASE)/include
 
 FILES := \
-    audio \
-    main \
-    pointer \
-    video_avi \
-    video_mng \
-    mui \
-    scaling \
-    screenlistclass \
-    qport \
-    video_png \
-    utils \
-    recorder \
-    broker \
-    init \
-    appclass
-
+    $(PORTSDIR)/screenrecorder/$(ARCHBASE)/audio \
+    $(PORTSDIR)/screenrecorder/$(ARCHBASE)/main \
+    $(PORTSDIR)/screenrecorder/$(ARCHBASE)/pointer \
+    $(PORTSDIR)/screenrecorder/$(ARCHBASE)/video_avi \
+    $(PORTSDIR)/screenrecorder/$(ARCHBASE)/video_mng \
+    $(PORTSDIR)/screenrecorder/$(ARCHBASE)/mui \
+    $(PORTSDIR)/screenrecorder/$(ARCHBASE)/scaling \
+    $(PORTSDIR)/screenrecorder/$(ARCHBASE)/screenlistclass \
+    $(PORTSDIR)/screenrecorder/$(ARCHBASE)/qport \
+    $(PORTSDIR)/screenrecorder/$(ARCHBASE)/video_png \
+    $(PORTSDIR)/screenrecorder/$(ARCHBASE)/utils \
+    $(PORTSDIR)/screenrecorder/$(ARCHBASE)/recorder \
+    $(PORTSDIR)/screenrecorder/$(ARCHBASE)/broker \
+    $(PORTSDIR)/screenrecorder/$(ARCHBASE)/init \
+    $(PORTSDIR)/screenrecorder/$(ARCHBASE)/appclass
 
 %build_prog mmake=ports-video-screenrecorder progname=ScreenRecorder \
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="arosc amiga arossupport mui jpeg z"
 
-
 %fetch mmake=ports-video-screenrecorder-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/screenrecorder \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.bz2" \
     patches_specs=$(ARCHBASE)-aros.diff:$(ARCHBASE):-p1
 
-
 %create_patch mmake=ports-video-screenrecorder-create-patch \
     archive=$(ARCHBASE) destination=$(PORTSDIR)/screenrecorder
-
 
 ICONS := ScreenRecorder
 
 %build_icons mmake=ports-video-screenrecorder-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)/..
-
+	icons=$(ICONS) dir=$(TARGETDIR)
 
 CPYFILES := ScreenRecorder.info
 
 %copy_files_q mmake=ports-video-screenrecorder-cpy files=$(CPYFILES) src=$(PORTSDIR)/screenrecorder/$(ARCHBASE) \
     dst=$(TARGETDIR)/Images
-
 
 %common
