@@ -21,7 +21,7 @@ USER_CFLAGS  := $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cf
 
 # sound disabled because it crashes
 
-FILES := bugsquish
+FILES := $(PORTSDIR)/bugsquish/$(ARCHBASE)/bugsquish
 
 %build_prog mmake=ports-game-bugsquish progname=Bugsquish \
     files=$(FILES) targetdir=$(TARGETDIR) \
@@ -31,21 +31,17 @@ FILES := bugsquish
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
     patches_specs=bugsquish-0.0.6-aros.diff:$(ARCHBASE):-p1
 
-
 ICONS := Bugsquish
 
 %build_icons mmake=ports-game-bugsquish-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)/..
-
+	icons=$(ICONS) dir=$(TARGETDIR)
 
 %copy_dir_recursive mmake=ports-game-bugsquish-data src=$(PORTSDIR)/bugsquish/$(ARCHBASE)/data \
     dst=$(TARGETDIR)/data
-
 
 CPYFILES := CHANGES.txt COPYING.txt README.txt
 
 %copy_files_q mmake=ports-game-bugsquish-cpy files=$(CPYFILES) src=$(PORTSDIR)/bugsquish/$(ARCHBASE) \
     dst=$(TARGETDIR)
-
 
 %common
