@@ -20,44 +20,39 @@ USER_CFLAGS  := $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cf
                 -DPLATFORM_AROS -DVERSION=\"0.66\" -DPACKAGE_DATA_DIR=\"PROGDIR:data\" -DHAVE_DESIGNER 
 
 FILES := \
-	board \
-	controls \
-	font \
-	game \
-	konstruktor \
-	levels \
-	locales \
-	pointer_controls \
-	rcfile \
-	ROB_engine \
-	screen \
-	skins \
-	sound
+	$(PORTSDIR)/gnurobbo/$(ARCHBASE)/board \
+	$(PORTSDIR)/gnurobbo/$(ARCHBASE)/controls \
+	$(PORTSDIR)/gnurobbo/$(ARCHBASE)/font \
+	$(PORTSDIR)/gnurobbo/$(ARCHBASE)/game \
+	$(PORTSDIR)/gnurobbo/$(ARCHBASE)/konstruktor \
+	$(PORTSDIR)/gnurobbo/$(ARCHBASE)/levels \
+	$(PORTSDIR)/gnurobbo/$(ARCHBASE)/locales \
+	$(PORTSDIR)/gnurobbo/$(ARCHBASE)/pointer_controls \
+	$(PORTSDIR)/gnurobbo/$(ARCHBASE)/rcfile \
+	$(PORTSDIR)/gnurobbo/$(ARCHBASE)/ROB_engine \
+	$(PORTSDIR)/gnurobbo/$(ARCHBASE)/screen \
+	$(PORTSDIR)/gnurobbo/$(ARCHBASE)/skins \
+	$(PORTSDIR)/gnurobbo/$(ARCHBASE)/sound
 
 %build_prog mmake=ports-game-gnurobbo progname=GnuRobbo \
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="arosc SDL_image png jpeg SDL_ttf freetype2 SDL_mixer vorbisfile vorbis ogg SDL GL z"
 
-
 %fetch mmake=ports-game-gnurobbo-fetch archive=$(ARCHBASE)-source destination=$(PORTSDIR)/gnurobbo \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
     patches_specs=gnurobbo-0.66-aros.diff:$(ARCHBASE):-p1
 
-
 ICONS := GnuRobbo
 
 %build_icons mmake=ports-game-gnurobbo-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)/..
-
+	icons=$(ICONS) dir=$(TARGETDIR)
 
 %copy_dir_recursive mmake=ports-game-gnurobbo-data src=$(PORTSDIR)/gnurobbo/$(ARCHBASE)/data \
     dst=$(TARGETDIR)/data
-
 
 CPYFILES := ChangeLog NEWS COPYING README LICENSE-sound LICENSE-ttf
 
 %copy_files_q mmake=ports-game-gnurobbo-cpy files=$(CPYFILES) src=$(PORTSDIR)/gnurobbo/$(ARCHBASE) \
     dst=$(TARGETDIR)
-
 
 %common
