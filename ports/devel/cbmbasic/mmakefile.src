@@ -19,7 +19,6 @@ TARGETDIR    := $(AROS_CONTRIB)/Development/CBMBasic
 FILES := cbmbasic plugin runtime
 
 %build_prog mmake=ports-devel-cbmbasic progname=CBMBasic \
-    srcdir=$(PORTSDIR)/cbmbasic/$(ARCHBASE)/ \
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="arosc"
 

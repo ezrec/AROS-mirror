@@ -24,7 +24,6 @@ USER_CFLAGS  := $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cf
 FILES := vectoroids
 
 %build_prog mmake=ports-game-vectoroids progname=Vectoroids \
-    srcdir=$(PORTSDIR)/vectoroids/$(ARCHBASE)/ \
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="arosc SDL_image png jpeg SDL GL z"
 

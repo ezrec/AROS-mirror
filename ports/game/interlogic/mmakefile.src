@@ -19,7 +19,6 @@ USER_CFLAGS  := $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cf
 FILES := src/password src/credits src/levels src/splash src/interlogic src/mainmenu
 
 %build_prog mmake=ports-game-interlogic progname=InterLogic \
-    srcdir=$(PORTSDIR)/interlogic/interlogic/ \
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="arosc SDL_image png jpeg SDL_mixer vorbisfile vorbis ogg SDL GL z"
 

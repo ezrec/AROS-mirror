@@ -22,7 +22,6 @@ USER_CFLAGS  := $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cf
 FILES := gemdropx
 
 %build_prog mmake=ports-game-gemdropx progname=GemDropX \
-    srcdir=$(PORTSDIR)/gemdropx/$(ARCHBASE)/ \
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="arosc SDL GL"
 

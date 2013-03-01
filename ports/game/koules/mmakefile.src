@@ -24,7 +24,6 @@ TARGETDIR    := $(AROS_CONTRIB)/Games/Koules
 FILES := source/framebuffer source/koules source/menu source/amiga source/gameplan
 
 %build_prog mmake=ports-game-koules progname=Koules \
-    srcdir=$(PORTSDIR)/koules/$(ARCHBASE)/ \
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="arosc lowlevel"
 

@@ -24,7 +24,6 @@ USER_CFLAGS := -Wno-implicit-function-declaration -Wno-parentheses
 USER_INCLUDES := -I.
 
 %build_prog mmake=ports-game-multipuzzle progname=MultiPuzzle \
-    srcdir=$(PORTSDIR)/multipuzzle/$(ARCHBASE)/ \
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="arosc"
 

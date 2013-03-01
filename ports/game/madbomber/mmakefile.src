@@ -22,7 +22,6 @@ USER_CFLAGS  := $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cf
 FILES := madbomber
 
 %build_prog mmake=ports-game-madbomber progname=MadBomber \
-    srcdir=$(PORTSDIR)/madbomber/$(ARCHBASE)/ \
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="arosc SDL_image png jpeg SDL_mixer vorbisfile vorbis ogg SDL GL z"
 

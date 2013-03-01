@@ -41,7 +41,6 @@ USER_CFLAGS  := -DVOLLIST=\"$(VOLLIST)\" -DMANTITLEPRINTF=\"$(MANTITLEPRINTF)\" 
 FILES := rman
 
 %build_prog mmake=ports-text-polyglotman progname=rman \
-    srcdir=$(PORTSDIR)/polyglotman/$(ARCHBASE)/ \
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="arosc m"
 

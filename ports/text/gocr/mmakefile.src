@@ -42,7 +42,6 @@ FILES := \
 	gocr
 
 %build_prog mmake=ports-text-gocr progname=gocr \
-    srcdir=$(PORTSDIR)/gocr/$(ARCHBASE)/src/ \
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="arosc"
 

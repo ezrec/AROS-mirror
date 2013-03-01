@@ -20,7 +20,6 @@ FILES := \
 	adv09 adv10 adv11 adv12 adv13 adv14 adv15 adv16 adv17
 
 %build_prog mmake=ports-game-adv770 progname=Adv770 \
-    srcdir=$(PORTSDIR)/adv770/$(ARCHBASE)/acode/adv770/src/ \
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="arosc"
 

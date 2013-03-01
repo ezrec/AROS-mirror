@@ -25,7 +25,6 @@ USER_CFLAGS  := $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cf
 FILES := src/defendguin
 
 %build_prog mmake=ports-game-defendguin progname=Defendguin \
-    srcdir=$(PORTSDIR)/defendguin/$(ARCHBASE)/ \
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="arosc SDL_mixer vorbisfile vorbis ogg SDL GL"
 

@@ -50,7 +50,6 @@ FILES := \
 	src/core/tools
 
 %build_prog mmake=ports-graphics-lunapaint progname=Lunapaint \
-    srcdir=$(PORTSDIR)/lunapaint/$(ARCHBASE)/ \
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="arosc m mui png z freetype2"
 

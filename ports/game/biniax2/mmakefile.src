@@ -24,7 +24,6 @@ USER_INCLUDES:= -I$(PORTSDIR)/biniax2/biniax2-1.30 -I$(PORTSDIR)/biniax2/biniax2
 FILES := hof biniax desktop/snd desktop/gfx desktop/net desktop/inp desktop/sys desktop/cfg tut
 
 %build_prog mmake=ports-game-biniax2 progname=Biniax2 \
-    srcdir=$(PORTSDIR)/biniax2/biniax2-1.30/ \
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="arosc SDL_net SDL_image png jpeg SDL_mixer vorbisfile vorbis ogg SDL GL z"
 

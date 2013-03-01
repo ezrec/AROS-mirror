@@ -35,7 +35,6 @@ FILES := \
 	sound
 
 %build_prog mmake=ports-game-gnurobbo progname=GnuRobbo \
-    srcdir=$(PORTSDIR)/gnurobbo/$(ARCHBASE)/ \
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="arosc SDL_image png jpeg SDL_ttf freetype2 SDL_mixer vorbisfile vorbis ogg SDL GL z"
 

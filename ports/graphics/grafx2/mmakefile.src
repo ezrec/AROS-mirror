@@ -70,7 +70,6 @@ FILES := \
 	layers
 
 %build_prog mmake=ports-graphics-grafx2 progname=GrafX2 \
-    srcdir=$(PORTSDIR)/grafx2/$(ARCHBASE)/src/ \
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="SDL_ttf SDL_image SDL GL jpeg png z freetype2"
 

@@ -29,12 +29,10 @@ USER_CFLAGS  := $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cf
 
 
 %build_prog mmake=ports-game-xpiredbin progname=Xpired \
-    srcdir=$(PORTSDIR)/xpired/$(ARCHBASE)/src/ \
     files=xpired targetdir=$(TARGETDIR) nix=yes \
     uselibs="arosc SDL_image SDL_gfx png jpeg SDL_mixer vorbisfile vorbis ogg SDL GL z"
 
 %build_prog mmake=ports-game-xpiredit progname=XpirEdit \
-    srcdir=$(PORTSDIR)/xpired/$(ARCHBASE)/src/ \
     files=xpiredit targetdir=$(TARGETDIR) nix=yes \
     uselibs="arosc SDL_image SDL_gfx png jpeg SDL GL z"
 

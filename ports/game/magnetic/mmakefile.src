@@ -23,7 +23,6 @@ USER_INCLUDES:= -I $(PORTSDIR)/magnetic/$(ARCHBASE)/Generic
 FILES := Amiga/amiga Generic/emu
 
 %build_prog mmake=ports-game-magnetic progname=Magnetic \
-    srcdir=$(PORTSDIR)/magnetic/$(ARCHBASE)/ \
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="arosc arossupport amiga"
 

@@ -32,7 +32,6 @@ FILES := source/amiga source/engine1 source/engine2 source/extras \
          source/gfx source/heads source/le source/squares source/tails
 
 %build_prog mmake=ports-game-wormwars progname=WormWars \
-    srcdir=$(PORTSDIR)/wormwars/$(ARCHBASE)/ \
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="arosc"
 

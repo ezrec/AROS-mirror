@@ -35,7 +35,6 @@ FILES := \
 	src/zaphod
 
 %build_prog mmake=ports-filetool-zaphod progname=Zaphod \
-    srcdir=$(PORTSDIR)/zaphod/$(ARCHBASE)/ \
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="amiga arosc arossupport"
 

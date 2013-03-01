@@ -31,7 +31,6 @@ FILES := \
 	wordlib wordmac wordole wordwin xmalloc xml
 
 %build_prog mmake=ports-text-antiword progname=antiword \
-    srcdir=$(PORTSDIR)/antiword/$(ARCHBASE)/ \
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="arosc m"
 

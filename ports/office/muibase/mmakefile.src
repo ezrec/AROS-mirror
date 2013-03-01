@@ -84,7 +84,6 @@ FILES := \
 	$(AUTO_SRCS)
 
 %build_prog mmake=ports-office-muibase progname=MUIbase \
-    srcdir=$(PORTSDIR)/muibase/$(ARCHBASE)/ \
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="amiga arossupport arosc mui m codesets"
 

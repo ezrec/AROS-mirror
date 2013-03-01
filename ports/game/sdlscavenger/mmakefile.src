@@ -21,7 +21,6 @@ USER_CFLAGS  := $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cf
 FILES := scav gfx sound edit anim
 
 %build_prog mmake=ports-game-sdlscavenger progname=SdlScavenger \
-    srcdir=$(PORTSDIR)/sdlscavenger/$(ARCHBASE)/ \
     files=$(FILES) targetdir=$(TARGETDIR) nix=yes \
     uselibs="arosc SDL GL"
 

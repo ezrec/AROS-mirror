@@ -23,7 +23,6 @@ FILES := main globals am solve help parse cmds simplify \
 		 complex complex_lib list gcd factor_int
 
 %build_prog mmake=ports-scientific-mathomatic progname=Mathomatic \
-    srcdir=$(PORTSDIR)/mathomatic/$(ARCHBASE)/ \
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="arosc m"
 
