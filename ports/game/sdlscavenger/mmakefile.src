@@ -18,29 +18,30 @@ SDL_PREFIX   := $(AROS_DEVELOPMENT)
 USER_CFLAGS  := $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags) \
                 -DLIBPATH=\"/PROGDIR/data\"
 
-FILES := scav gfx sound edit anim
+FILES := \
+    $(PORTSDIR)/sdlscavenger/$(ARCHBASE)/scav \
+    $(PORTSDIR)/sdlscavenger/$(ARCHBASE)/gfx \
+    $(PORTSDIR)/sdlscavenger/$(ARCHBASE)/sound \
+    $(PORTSDIR)/sdlscavenger/$(ARCHBASE)/edit \
+    $(PORTSDIR)/sdlscavenger/$(ARCHBASE)/anim
 
 %build_prog mmake=ports-game-sdlscavenger progname=SdlScavenger \
     files=$(FILES) targetdir=$(TARGETDIR) nix=yes \
     uselibs="arosc SDL GL"
 
-
 %fetch mmake=ports-game-sdlscavenger-fetch archive=$(ARCHBASE).1_2010_11_5 destination=$(PORTSDIR)/sdlscavenger \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tgz" \
     patches_specs=sdlscavenger-145-aros.diff:$(ARCHBASE):-p1
 
-
 ICONS := SdlScavenger
 
 %build_icons mmake=ports-game-sdlscavenger-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)/..
-
+	icons=$(ICONS) dir=$(TARGETDIR)
 
 CPYFILES := DOC STRATEGY COPYING README
 
 %copy_files_q mmake=ports-game-sdlscavenger-cpy files=$(CPYFILES) src=$(PORTSDIR)/sdlscavenger/$(ARCHBASE) \
     dst=$(TARGETDIR)
-
 
 #MM
 ports-game-sdlscavenger-install :
@@ -50,6 +51,5 @@ ports-game-sdlscavenger-install :
 	$(CP) $(PORTSDIR)/sdlscavenger/$(ARCHBASE)/data/*.scl $(TARGETDIR)/data
 	$(MKDIR) $(TARGETDIR)/.scavenger
 	$(CP) $(PORTSDIR)/sdlscavenger/$(ARCHBASE)/data/*rc $(TARGETDIR)/.scavenger
-
 
 %common
