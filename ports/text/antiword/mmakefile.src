@@ -21,30 +21,71 @@ DB           := NDEBUG
 USER_CFLAGS  := -Wall -pedantic -D$(DB)
 
 FILES := \
-	main_u asc85enc blocklist chartrans datalist depot \
-	dib2eps doclist fail finddata findtext fmt_text fontlist \
-	fonts fonts_u hdrftrlist imgexam imgtrans jpeg2eps \
-	listlist misc notes options out2window output pdf \
-	pictlist png2eps postscript prop0 prop2 prop6 prop8 \
-	properties propmod rowlist sectlist stylelist stylesheet \
-	summary tabstop text unix utf8 word2text worddos \
-	wordlib wordmac wordole wordwin xmalloc xml
+    $(PORTSDIR)/antiword/antiword-0.37/main_u \
+    $(PORTSDIR)/antiword/antiword-0.37/asc85enc \
+    $(PORTSDIR)/antiword/antiword-0.37/blocklist \
+    $(PORTSDIR)/antiword/antiword-0.37/chartrans \
+    $(PORTSDIR)/antiword/antiword-0.37/datalist \
+    $(PORTSDIR)/antiword/antiword-0.37/depot \
+    $(PORTSDIR)/antiword/antiword-0.37/dib2eps \
+    $(PORTSDIR)/antiword/antiword-0.37/doclist \
+    $(PORTSDIR)/antiword/antiword-0.37/fail \
+    $(PORTSDIR)/antiword/antiword-0.37/finddata \
+    $(PORTSDIR)/antiword/antiword-0.37/findtext \
+    $(PORTSDIR)/antiword/antiword-0.37/fmt_text \
+    $(PORTSDIR)/antiword/antiword-0.37/fontlist \
+    $(PORTSDIR)/antiword/antiword-0.37/fonts \
+    $(PORTSDIR)/antiword/antiword-0.37/fonts_u \
+    $(PORTSDIR)/antiword/antiword-0.37/hdrftrlist \
+    $(PORTSDIR)/antiword/antiword-0.37/imgexam \
+    $(PORTSDIR)/antiword/antiword-0.37/imgtrans \
+    $(PORTSDIR)/antiword/antiword-0.37/jpeg2eps \
+    $(PORTSDIR)/antiword/antiword-0.37/listlist \
+    $(PORTSDIR)/antiword/antiword-0.37/misc \
+    $(PORTSDIR)/antiword/antiword-0.37/notes \
+    $(PORTSDIR)/antiword/antiword-0.37/options \
+    $(PORTSDIR)/antiword/antiword-0.37/out2window \
+    $(PORTSDIR)/antiword/antiword-0.37/output \
+    $(PORTSDIR)/antiword/antiword-0.37/pdf \
+    $(PORTSDIR)/antiword/antiword-0.37/pictlist \
+    $(PORTSDIR)/antiword/antiword-0.37/png2eps \
+    $(PORTSDIR)/antiword/antiword-0.37/postscript \
+    $(PORTSDIR)/antiword/antiword-0.37/prop0 \
+    $(PORTSDIR)/antiword/antiword-0.37/prop2 \
+    $(PORTSDIR)/antiword/antiword-0.37/prop6 \
+    $(PORTSDIR)/antiword/antiword-0.37/prop8 \
+    $(PORTSDIR)/antiword/antiword-0.37/properties \
+    $(PORTSDIR)/antiword/antiword-0.37/propmod \
+    $(PORTSDIR)/antiword/antiword-0.37/rowlist \
+    $(PORTSDIR)/antiword/antiword-0.37/sectlist \
+    $(PORTSDIR)/antiword/antiword-0.37/stylelist \
+    $(PORTSDIR)/antiword/antiword-0.37/stylesheet \
+    $(PORTSDIR)/antiword/antiword-0.37/summary \
+    $(PORTSDIR)/antiword/antiword-0.37/tabstop \
+    $(PORTSDIR)/antiword/antiword-0.37/text \
+    $(PORTSDIR)/antiword/antiword-0.37/unix \
+    $(PORTSDIR)/antiword/antiword-0.37/utf8 \
+    $(PORTSDIR)/antiword/antiword-0.37/word2text \
+    $(PORTSDIR)/antiword/antiword-0.37/worddos \
+    $(PORTSDIR)/antiword/antiword-0.37/wordlib \
+    $(PORTSDIR)/antiword/antiword-0.37/wordmac \
+    $(PORTSDIR)/antiword/antiword-0.37/wordole \
+    $(PORTSDIR)/antiword/antiword-0.37/wordwin \
+    $(PORTSDIR)/antiword/antiword-0.37/xmalloc \
+    $(PORTSDIR)/antiword/antiword-0.37/xml
 
 %build_prog mmake=ports-text-antiword progname=antiword \
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="arosc m"
 
-
 %fetch mmake=ports-text-antiword-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/antiword \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
     patches_specs=antiword-0.37-aros.diff:antiword-0.37:-p1
 
-
 ICONS := Antiword
 
 %build_icons mmake=ports-text-antiword-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)/..
-
+	icons=$(ICONS) dir=$(TARGETDIR)
 
 %copy_dir_recursive mmake=ports-text-antiword-docs src=$(PORTSDIR)/antiword/antiword-0.37/Docs \
     dst=$(TARGETDIR)/Docs
@@ -52,8 +93,6 @@ ICONS := Antiword
 %copy_dir_recursive mmake=ports-text-antiword-data src=$(PORTSDIR)/antiword/antiword-0.37/Resources \
     dst=$(TARGETDIR)/Data
 
-
 %copy_files_q mmake=ports-text-antiword-cpy files=AntiwordGUI src=. dst=$(TARGETDIR)
-
 
 %common
