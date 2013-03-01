@@ -16,7 +16,10 @@ REPOSITORIES := sf://cbmbasic
 ARCHBASE     := cbmbasic-1.0
 TARGETDIR    := $(AROS_CONTRIB)/Development/CBMBasic
 
-FILES := cbmbasic plugin runtime
+FILES := \
+    $(PORTSDIR)/cbmbasic/$(ARCHBASE)/cbmbasic \
+    $(PORTSDIR)/cbmbasic/$(ARCHBASE)/plugin \
+    $(PORTSDIR)/cbmbasic/$(ARCHBASE)/runtime
 
 %build_prog mmake=ports-devel-cbmbasic progname=CBMBasic \
     files=$(FILES) targetdir=$(TARGETDIR) \
@@ -31,7 +34,7 @@ FILES := cbmbasic plugin runtime
 ICONS := CBMBasic
 
 %build_icons mmake=ports-devel-cbmbasic-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)/..
+	icons=$(ICONS) dir=$(TARGETDIR)
 
 
 %copy_dir_recursive mmake=ports-devel-cbmbasic-data src=$(PORTSDIR)/cbmbasic/$(ARCHBASE)/test \
