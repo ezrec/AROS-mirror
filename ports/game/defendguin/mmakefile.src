@@ -22,34 +22,28 @@ SDL_PREFIX   := $(AROS_DEVELOPMENT)
 USER_CFLAGS  := $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags) \
                 -DDATA_PREFIX=\"PROGDIR:data/\" -DJOY_YES -D__SOUND
 
-FILES := src/defendguin
+FILES := $(PORTSDIR)/defendguin/$(ARCHBASE)/src/defendguin
 
 %build_prog mmake=ports-game-defendguin progname=Defendguin \
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="arosc SDL_mixer vorbisfile vorbis ogg SDL GL"
 
-
 %fetch mmake=ports-game-defendguin-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/defendguin \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
     patches_specs=defendguin-0.0.12-aros.diff:$(ARCHBASE):-p1
 
-
 ICONS := Defendguin
 
 %build_icons mmake=ports-game-defendguin-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)/..
-
+	icons=$(ICONS) dir=$(TARGETDIR)
 
 %copy_dir_recursive mmake=ports-game-defendguin-data src=$(PORTSDIR)/defendguin/$(ARCHBASE)/data \
 dst=$(TARGETDIR)/data
 
-
 %copy_dir_recursive mmake=ports-game-defendguin-docs src=$(PORTSDIR)/defendguin/$(ARCHBASE)/docs \
     dst=$(TARGETDIR)/Docs
 
-
 %copy_files_q mmake=ports-game-defendguin-cpy files=defendguin.6 src=$(PORTSDIR)/defendguin/$(ARCHBASE)/src \
     dst=$(TARGETDIR)
-
 
 %common
