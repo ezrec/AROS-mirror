@@ -20,42 +20,39 @@ USER_CFLAGS  := -Wno-unused-but-set-variable
 USER_INCLUDES:= -I $(PORTSDIR)/gocr/$(ARCHBASE)/include
 
 FILES := \
-	pgm2asc \
-	box \
-	database \
-	detect \
-	barcode \
-	lines \
-	list \
-	ocr0 \
-	ocr0n \
-	ocr1 \
-	otsu \
-	output \
-	pixel \
-	unicode \
-	remove \
-	pnm \
-	pcx \
-	progress \
-	job \
-	gocr
+    $(PORTSDIR)/gocr/$(ARCHBASE)/src/pgm2asc \
+    $(PORTSDIR)/gocr/$(ARCHBASE)/src/box \
+    $(PORTSDIR)/gocr/$(ARCHBASE)/src/database \
+    $(PORTSDIR)/gocr/$(ARCHBASE)/src/detect \
+    $(PORTSDIR)/gocr/$(ARCHBASE)/src/barcode \
+    $(PORTSDIR)/gocr/$(ARCHBASE)/src/lines \
+    $(PORTSDIR)/gocr/$(ARCHBASE)/src/list \
+    $(PORTSDIR)/gocr/$(ARCHBASE)/src/ocr0 \
+    $(PORTSDIR)/gocr/$(ARCHBASE)/src/ocr0n \
+    $(PORTSDIR)/gocr/$(ARCHBASE)/src/ocr1 \
+    $(PORTSDIR)/gocr/$(ARCHBASE)/src/otsu \
+    $(PORTSDIR)/gocr/$(ARCHBASE)/src/output \
+    $(PORTSDIR)/gocr/$(ARCHBASE)/src/pixel \
+    $(PORTSDIR)/gocr/$(ARCHBASE)/src/unicode \
+    $(PORTSDIR)/gocr/$(ARCHBASE)/src/remove \
+    $(PORTSDIR)/gocr/$(ARCHBASE)/src/pnm \
+    $(PORTSDIR)/gocr/$(ARCHBASE)/src/pcx \
+    $(PORTSDIR)/gocr/$(ARCHBASE)/src/progress \
+    $(PORTSDIR)/gocr/$(ARCHBASE)/src/job \
+    $(PORTSDIR)/gocr/$(ARCHBASE)/src/gocr
 
 %build_prog mmake=ports-text-gocr progname=gocr \
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="arosc"
 
-
 %fetch mmake=ports-text-gocr-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/gocr \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
     patches_specs=$(ARCHBASE)-aros.diff:$(ARCHBASE):-p1
 
-
 ICONS := Gocr
 
 %build_icons mmake=ports-text-gocr-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)/..
-
+	icons=$(ICONS) dir=$(TARGETDIR)
 
 %copy_dir_recursive mmake=ports-text-gocr-docs src=$(PORTSDIR)/gocr/$(ARCHBASE)/doc \
     dst=$(TARGETDIR)/doc
@@ -63,11 +60,9 @@ ICONS := Gocr
 %copy_dir_recursive mmake=ports-text-gocr-examples src=$(PORTSDIR)/gocr/$(ARCHBASE)/examples \
     dst=$(TARGETDIR)/examples
 
-
 FILES := AUTHORS BUGS CREDITS gpl.html HISTORY \
     README READMEde.txt REMARK.txt REVIEW TODO
 
 %copy_files_q mmake=ports-text-gocr-cpy files=$(FILES) src=$(PORTSDIR)/gocr/$(ARCHBASE) dst=$(TARGETDIR)
-
 
 %common
