@@ -18,24 +18,38 @@ TARGETDIR    := $(AROS_CONTRIB)/Utilities/Scientific/Mathomatic
 
 USER_CFLAGS  := -DVERSION=\"16.0.1\"
 
-FILES := main globals am solve help parse cmds simplify \
-		 factor super unfactor poly diff integrate \
-		 complex complex_lib list gcd factor_int
+FILES := \
+    $(PORTSDIR)/mathomatic/$(ARCHBASE)/main \
+    $(PORTSDIR)/mathomatic/$(ARCHBASE)/globals \
+    $(PORTSDIR)/mathomatic/$(ARCHBASE)/am \
+    $(PORTSDIR)/mathomatic/$(ARCHBASE)/solve \
+    $(PORTSDIR)/mathomatic/$(ARCHBASE)/help \
+    $(PORTSDIR)/mathomatic/$(ARCHBASE)/parse \
+    $(PORTSDIR)/mathomatic/$(ARCHBASE)/cmds \
+    $(PORTSDIR)/mathomatic/$(ARCHBASE)/simplify \
+    $(PORTSDIR)/mathomatic/$(ARCHBASE)/factor \
+    $(PORTSDIR)/mathomatic/$(ARCHBASE)/super \
+    $(PORTSDIR)/mathomatic/$(ARCHBASE)/unfactor \
+    $(PORTSDIR)/mathomatic/$(ARCHBASE)/poly \
+    $(PORTSDIR)/mathomatic/$(ARCHBASE)/diff \
+    $(PORTSDIR)/mathomatic/$(ARCHBASE)/integrate \
+    $(PORTSDIR)/mathomatic/$(ARCHBASE)/complex \
+    $(PORTSDIR)/mathomatic/$(ARCHBASE)/complex_lib \
+    $(PORTSDIR)/mathomatic/$(ARCHBASE)/list \
+    $(PORTSDIR)/mathomatic/$(ARCHBASE)/gcd \
+    $(PORTSDIR)/mathomatic/$(ARCHBASE)/factor_int
 
 %build_prog mmake=ports-scientific-mathomatic progname=Mathomatic \
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="arosc m"
 
-
 %fetch mmake=ports-scientific-mathomatic-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/mathomatic \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.bz2"
-
 
 ICONS := Mathomatic
 
 %build_icons mmake=ports-scientific-mathomatic-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)/..
-
+	icons=$(ICONS) dir=$(TARGETDIR)
 
 %copy_dir_recursive mmake=ports-scientific-mathomatic-docs \
 src=$(PORTSDIR)/mathomatic/$(ARCHBASE)/doc dst=$(TARGETDIR)/Docs
@@ -45,6 +59,5 @@ CPYFILES := changes.txt COPYING mathomatic.1 README.txt
 
 %copy_files_q mmake=ports-scientific-mathomatic-cpy files=$(CPYFILES) src=$(PORTSDIR)/mathomatic/$(ARCHBASE) \
     dst=$(TARGETDIR)
-
 
 %common
