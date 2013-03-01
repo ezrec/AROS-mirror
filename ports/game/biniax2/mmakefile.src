@@ -4,14 +4,21 @@ include $(TOP)/config/make.cfg
 
 #MM- ports-game : ports-game-biniax2
 
-#MM  ports-game-biniax2 : includes linklibs contrib-sdl \
-#MM  ports-game-biniax2-data ports-game-biniax2-cpy \
-#MM  ports-game-biniax2-drawericon ports-game-biniax2-fetch
+#MM  ports-game-biniax2 : \
+#MM  includes \
+#MM  linklibs \
+#MM  contrib-sdl \
+#MM  contrib-sdl-sdl-image \
+#MM  contrib-sdl-sdl-mixer \
+#MM  contrib-sdl-sdl-net \
+#MM  ports-game-biniax2-data \
+#MM  ports-game-biniax2-cpy \
+#MM  ports-game-biniax2-drawericon \
+#MM  ports-game-biniax2-fetch
 
 #MM- ports-game-biniax2-data : ports-game-biniax2-fetch
 
 #MM  ports-game-biniax2-quick : ports-game-biniax2-fetch
-
 
 REPOSITORIES := http://mordred.dir.bg/biniax
 ARCHBASE     := biniax2-1.30-fullsrc
@@ -20,33 +27,36 @@ SDL_PREFIX   := $(AROS_DEVELOPMENT)
 USER_CFLAGS  := $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags)
 USER_INCLUDES:= -I$(PORTSDIR)/biniax2/biniax2-1.30 -I$(PORTSDIR)/biniax2/biniax2-1.30/desktop
 
-
-FILES := hof biniax desktop/snd desktop/gfx desktop/net desktop/inp desktop/sys desktop/cfg tut
+FILES := \
+    $(PORTSDIR)/biniax2/biniax2-1.30/hof \
+    $(PORTSDIR)/biniax2/biniax2-1.30/biniax \
+    $(PORTSDIR)/biniax2/biniax2-1.30/desktop/snd \
+    $(PORTSDIR)/biniax2/biniax2-1.30/desktop/gfx \
+    $(PORTSDIR)/biniax2/biniax2-1.30/desktop/net \
+    $(PORTSDIR)/biniax2/biniax2-1.30/desktop/inp \
+    $(PORTSDIR)/biniax2/biniax2-1.30/desktop/sys \
+    $(PORTSDIR)/biniax2/biniax2-1.30/desktop/cfg \
+    $(PORTSDIR)/biniax2/biniax2-1.30/tut
 
 %build_prog mmake=ports-game-biniax2 progname=Biniax2 \
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="arosc SDL_net SDL_image png jpeg SDL_mixer vorbisfile vorbis ogg SDL GL z"
 
-
 %fetch mmake=ports-game-biniax2-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/biniax2/biniax2-1.30 \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
     patches_specs=biniax2-1.30-aros.diff:$(ARCHBASE):-p1
 
-
 ICONS := Biniax2
 
 %build_icons mmake=ports-game-biniax2-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)/..
-
+	icons=$(ICONS) dir=$(TARGETDIR)
 
 %copy_dir_recursive mmake=ports-game-biniax2-data src=$(PORTSDIR)/biniax2/biniax2-1.30/data \
     dst=$(TARGETDIR)/data
-
 
 CPYFILES := LICENSE.txt
 
 %copy_files_q mmake=ports-game-biniax2-cpy files=$(CPYFILES) src=$(PORTSDIR)/biniax2/biniax2-1.30 \
     dst=$(TARGETDIR)
-
 
 %common
