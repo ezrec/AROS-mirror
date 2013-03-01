@@ -38,28 +38,24 @@ MANREFPRINTF := '%s.%s'
 
 USER_CFLAGS  := -DVOLLIST=\"$(VOLLIST)\" -DMANTITLEPRINTF=\"$(MANTITLEPRINTF)\" -DMANREFPRINTF=\"$(MANREFPRINTF)\" -DPOLYGLOTMANVERSION=\"3.2\"
 
-FILES := rman
+FILES := $(PORTSDIR)/polyglotman/$(ARCHBASE)/rman
 
 %build_prog mmake=ports-text-polyglotman progname=rman \
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="arosc m"
 
-
 %fetch mmake=ports-text-polyglotman-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/polyglotman \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz"
-
 
 ICONS := PolyglotMan
 
 %build_icons mmake=ports-text-polyglotman-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)/..
-
+	icons=$(ICONS) dir=$(TARGETDIR)
 
 %copy_dir_recursive mmake=ports-text-polyglotman-contrib src=$(PORTSDIR)/polyglotman/$(ARCHBASE)/contrib \
     dst=$(TARGETDIR)/Contrib
 
 CPYFILES := CHANGES MANIFEST README-rman.txt rman.1 rman.html
 %copy_files_q mmake=ports-text-polyglotman-cpy files=$(CPYFILES) src=$(PORTSDIR)/polyglotman/$(ARCHBASE) dst=$(TARGETDIR)
-
 
 %common
