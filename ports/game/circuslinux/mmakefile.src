@@ -21,32 +21,27 @@ USER_CFLAGS  := $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cf
 
 # sound disabled because it crashes
 
-FILES := circuslinux
+FILES := $(PORTSDIR)/circuslinux/$(ARCHBASE)/circuslinux
 
 %build_prog mmake=ports-game-circuslinux progname=CircusLinux \
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="arosc SDL_image png jpeg SDL GL z"
 
-
 %fetch mmake=ports-game-circuslinux-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/circuslinux \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
     patches_specs=circuslinux-1.0.3-aros.diff:$(ARCHBASE):-p1
 
-
 ICONS := CircusLinux
 
 %build_icons mmake=ports-game-circuslinux-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)/..
-
+	icons=$(ICONS) dir=$(TARGETDIR)
 
 %copy_dir_recursive mmake=ports-game-circuslinux-data src=$(PORTSDIR)/circuslinux/$(ARCHBASE)/data \
     dst=$(TARGETDIR)/data
-
 
 CPYFILES := CHANGES.txt COPYING.txt FAQ.txt README.txt
 
 %copy_files_q mmake=ports-game-circuslinux-cpy files=$(CPYFILES) src=$(PORTSDIR)/circuslinux/$(ARCHBASE) \
     dst=$(TARGETDIR)
-
 
 %common
