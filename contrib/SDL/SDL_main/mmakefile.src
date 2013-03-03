@@ -3,7 +3,7 @@
 
 include $(TOP)/config/make.cfg
 
-##MM- contrib-sdl : SDL-aros
+#MM- contrib-sdl : SDL-aros
 #MM- SDL-aros-lib : contrib-sdl-sdl-main-fetch SDL-aros-sharedlib
 ##MM- SDL-aros-lib : contrib-sdl-sdl-main-fetch SDL-aros-staticlib
 #MM- SDL-aros : SDL-aros-lib SDL-aros-tests SDL-aros-gltests
