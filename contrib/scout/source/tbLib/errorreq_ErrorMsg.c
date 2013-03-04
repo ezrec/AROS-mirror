@@ -21,7 +21,11 @@ void VARARGS68K STDARGS ErrorMsg( CONST_STRPTR title,
     es.es_GadgetFormat = (STRPTR)"Ok";
 
     VA_START(args, msg);
+#if defined(__AROS__) && defined(__ARM_ARCH__)
+    #warning "TODO: fix va_arg usage for ARM"
+#else
     EasyRequestArgs(NULL, &es, NULL, VA_ARG(args, APTR));
+#endif
     VA_END(args);
 }
 /* \\\ */

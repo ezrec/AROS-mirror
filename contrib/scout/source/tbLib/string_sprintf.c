@@ -10,7 +10,11 @@ void _vsprintf( STRPTR buffer,
                 CONST_STRPTR fmt,
                 VA_LIST args )
 {
+#if defined(__AROS__) && defined(__ARM_ARCH__)
+    #warning "TODO: fix va_arg usage for ARM"
+#else
     RawDoFmt(fmt, (APTR)args, (VOID (*)())NULL, (APTR)buffer);
+#endif
 }
 /* \\\ */
 
