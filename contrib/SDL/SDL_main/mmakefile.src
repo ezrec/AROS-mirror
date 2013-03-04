@@ -1,12 +1,13 @@
-# Copyright © 2009-2011, The AROS Development Team. All rights reserved.
+# Copyright © 2009-2013, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(TOP)/config/make.cfg
 
-#MM- contrib-sdl : SDL-aros
+##MM- contrib-sdl : SDL-aros
 #MM- SDL-aros-lib : contrib-sdl-sdl-main-fetch SDL-aros-sharedlib
 ##MM- SDL-aros-lib : contrib-sdl-sdl-main-fetch SDL-aros-staticlib
-#MM- SDL-aros : SDL-aros-lib SDL-aros-tests SDL-aros-gltests
+#MM- SDL-aros : SDL-aros-lib SDL-aros-tests
+##MM- SDL-aros-tests : SDL-aros-standardtests SDL-aros-gltests
 
 #MM SDL-aros-sharedlib : SDL-aros-includes workbench-devs-AHI workbench-libs-mesa \
 #MM  development-libiconv SDL-aros-config
@@ -122,7 +123,7 @@ USER_INCLUDES := -I$(SDLINCDIR) -I-I$(ARCHSRCDIR) -I$(ARCHSRCDIR)/src
 %build_linklib mmake=SDL-aros-staticlib libname=SDL_static \
     files="$(FILES)"
 
-#MM SDL-aros-tests : includes linklibs SDL-aros-lib SDL-aros-tests-copyfiles
+#MM SDL-aros-standardtests : includes linklibs SDL-aros-lib SDL-aros-tests-copyfiles
 #MM SDL-aros-gltests : includes linklibs SDL-aros-lib SDL-aros-tests-copyfiles
 
 TESTFILES := \
@@ -165,7 +166,7 @@ DISABLEDTESTFILES := \
 
 USER_INCLUDES := -I$(SDLINCDIR) -I$(ARCHSRCDIR)/test
 
-%build_progs mmake=SDL-aros-tests \
+%build_progs mmake=SDL-aros-standardtests \
     files=$(TESTFILES) targetdir=$(TESTEXEDIR) \
     uselibs="SDL arosc m"
 
