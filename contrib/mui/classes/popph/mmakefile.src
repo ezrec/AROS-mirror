@@ -19,7 +19,7 @@ TARGETDIR     := $(AROS_CONTRIB)/Zune/MCC_Popph
 %build_module \
     mmake=contrib-zune-classes-popph-class \
     modname=Popplaceholder modtype=mcc \
-    files=$(FILES) conffile=popph.conf \
+    files=$(FILES) conffile=$(SRCDIR)/$(CURDIR)/popph.conf \
     moduledir=Extras/Zune/MCC_Popph/Classes/Zune \
     uselibs="mui"
 
