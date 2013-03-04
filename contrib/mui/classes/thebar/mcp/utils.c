@@ -41,11 +41,15 @@ Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
   ENTER();
 
   VA_START(args, obj);
-  #if defined(__AROS__)
-  rc = (IPTR)DoSuperNewTagList(cl, obj, NULL, (struct TagItem *)VA_ARG(args, IPTR));
-  #else
-  rc = (Object *)DoSuperMethod(cl, obj, OM_NEW, VA_ARG(args, ULONG), NULL);
-  #endif
+#if defined(__AROS__)
+    #if defined(__ARM_ARCH__)
+        #warning "TODO: fix va_arg usage for ARM"
+    #else
+        rc = (IPTR)DoSuperNewTagList(cl, obj, NULL, (struct TagItem *)VA_ARG(args, IPTR));
+    #endif
+#else
+    rc = (Object *)DoSuperMethod(cl, obj, OM_NEW, VA_ARG(args, ULONG), NULL);
+#endif
   VA_END(args);
 
   RETURN(rc);
