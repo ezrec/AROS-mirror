@@ -47,12 +47,12 @@ USER_INCLUDES := -I$(TOP)/$(CURDIR)
 USER_CFLAGS += $(PARANOIA_CFLAGS)
 
 %build_module mmake=contrib-zune-classes-mailtext-mcc \
-  modname=Mailtext modtype=mcc conffile=Mailtext_mcc.conf \
+  modname=Mailtext modtype=mcc conffile=$(SRCDIR)/$(CURDIR)/Mailtext_mcc.conf \
   files="$(MCCFILES)" objdir=$(OBJDIR)/mcc moduledir=Extras/Zune/MCC_Mailtext/Classes/Zune \
   uselibs="mui"
 
 %build_module mmake=contrib-zune-classes-mailtext-mcp \
-  modname=Mailtext modtype=mcp conffile=Mailtext_mcp.conf \
+  modname=Mailtext modtype=mcp conffile=$(SRCDIR)/$(CURDIR)/Mailtext_mcp.conf \
   files=$(MCPFILES) objdir=$(OBJDIR)/mcp moduledir=Extras/Zune/MCC_Mailtext/Classes/Zune \
   uselibs="mui"
 
