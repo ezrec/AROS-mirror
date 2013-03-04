@@ -4,7 +4,7 @@ include $(TOP)/config/make.cfg
 
 #MM- ports-game : ports-game-gnurobbo
 
-#MM  ports-game-gnurobbo : includes linklibs contrib-sdl \
+#MM  ports-game-gnurobbo : includes linklibs contrib-sdl contrib-sdl-sdl-ttf \
 #MM  ports-game-gnurobbo-data ports-game-gnurobbo-cpy \
 #MM  ports-game-gnurobbo-drawericon ports-game-gnurobbo-fetch
 
