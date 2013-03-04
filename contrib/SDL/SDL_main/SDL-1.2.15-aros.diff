@@ -8170,7 +8170,7 @@ diff -ruN SDL-1.2.15/src/SDL_error.c SDL-1.2.15.aros/src/SDL_error.c
 +{
 +    AROS_LIBFUNC_INIT
 +    
-+    va_list ap = params;
++    va_list ap = *(va_list *)&params;
 +#endif
  	SDL_error *error;
  
