@@ -83,7 +83,7 @@ diff -ruN SDL-1.2.15/aros_init.c SDL-1.2.15.aros/aros_init.c
 --- SDL-1.2.15/aros_init.c	1970-01-01 01:00:00.000000000 +0100
 +++ SDL-1.2.15.aros/aros_init.c	2012-06-18 01:53:19.718548000 +0100
 @@ -0,0 +1,125 @@
-+/* Copyright 2012 The AROS Development Team. All rights reserved. */
++/* Copyright 2013 The AROS Development Team. All rights reserved. */
 +
 +#define DEBUG 1
 +#include <aros/debug.h>
@@ -1230,7 +1230,7 @@ diff -ruN SDL-1.2.15/SDL.conf SDL-1.2.15.aros/SDL.conf
 +rootbase_field rootSDLBase
 +version 1.215
 +date 26.05.2012
-+copyright Copyright (C) 1997-2012 Sam Lantinga, 2012 The AROS Development Team
++copyright Copyright (C) 1997-2012 Sam Lantinga, 2013 The AROS Development Team
 +options peropenerbase
 +##end config
 +
