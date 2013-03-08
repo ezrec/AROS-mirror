@@ -125,7 +125,7 @@ USER_CFLAGS := -Wno-parentheses
     modname=gtlayout modtype=library \
     files="$(FILES) $(OTHERS) $(UFC_SOURCE) $(API_SOURCE) $(LINKLIB_FILES)" \
     linklibobjs=$(GENDIR)/$(CURDIR)/$(LINKLIB_FILES).o \
-    conffile=$(SRCDIR)/$(CURDIR)/lib.conf
+    conffile=lib.conf
 
 #MM linklibs-aminet-dev-gui-gtlayout-includes : gtlayout-includes-copy
 #MM
