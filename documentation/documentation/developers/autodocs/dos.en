@@ -2731,14 +2731,14 @@ Inputs
 ~~~~~~
 ::
 
-     dp              - DevProc structure as returned by GetDeviceProc().
+     dp - DevProc structure as returned by GetDeviceProc(), or NULL.
 
 
 Result
 ~~~~~~
 ::
 
-     Some memory and other resources returned to the system.
+     None.
 
 
 

@@ -9,7 +9,8 @@ debug
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`DecodeLocationA()`_                    `RegisterModule()`_                     `UnregisterModule()`_                   
+`DecodeLocationA()`_                    `EnumerateSymbolsA()`_                  `RegisterModule()`_                     `UnregisterModule()`_                   
+
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -84,6 +85,34 @@ Notes
 ::
 
      If the function fails values pointed to by taglist will not be changed.
+
+
+
+----------
+
+EnumerateSymbolsA()
+===================
+
+Synopsis
+~~~~~~~~
+::
+
+ void EnumerateSymbolsA(
+          struct Hook * handler,
+          struct TagItem * tags );
+ 
+ void EnumerateSymbols(
+          struct Hook * handler,
+          TAG tag, ... );
+
+Function
+~~~~~~~~
+::
+
+ Function will call the handler hook for all symbols from kickstart and
+ loaded modules that match the given search criteria.
+
+ The message that is passed to hook contains a pointer to struct SymbolInfo.
 
 
 

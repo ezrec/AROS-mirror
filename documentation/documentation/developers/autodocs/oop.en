@@ -476,7 +476,7 @@ Synopsis
 
  ULONG OOP_ObtainAttrBasesArray(
           OOP_AttrBase * bases,
-          CONST_STRPTR * ids );
+          CONST_STRPTR const * ids );
 
 Function
 ~~~~~~~~
@@ -518,7 +518,7 @@ Synopsis
 
  ULONG OOP_ObtainMethodBasesArray(
           OOP_MethodID * bases,
-          CONST_STRPTR * ids );
+          CONST_STRPTR const * ids );
 
 Function
 ~~~~~~~~
@@ -682,7 +682,7 @@ Synopsis
 
  void OOP_ReleaseAttrBasesArray(
           OOP_AttrBase * bases,
-          CONST_STRPTR * ids );
+          CONST_STRPTR const * ids );
 
 Function
 ~~~~~~~~
