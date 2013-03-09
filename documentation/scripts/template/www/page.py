@@ -304,6 +304,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
             Charset( charset ),
             Title( 'AROS Research Operating System' ),
             Link( href = '%(ROOT)saros.css', type = 'text/css', rel = 'stylesheet' ),
+            Link( href = '%(ROOT)sprint.css', type = 'text/css', rel = 'stylesheet', media = 'print' ),
             Meta(
                 name    = 'keywords',
                 content = 'AROS, OS, operating system, research, open source, portage'
@@ -337,7 +338,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
                                 width = '100%%', contents = [
                                     TR( contents = [
                                         TD(
-                                            width = 171, contents = [ bar ]
+                                            width = 171, contents = [ bar ], id = 'menusidebar'
                                         ),
                                         TD( width="100%%",
                                             contents =  '%(CONTENT)s'

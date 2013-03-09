@@ -566,6 +566,7 @@ def buildWWW():
         [
             'docutils.css',
             'aros.css',
+			'print.css'
         ],
         srcpath,
         TRGROOT
@@ -637,7 +638,8 @@ def buildHTML():
     pathscopy(
         [
             'docutils.css',
-            'aros.css'
+            'aros.css',
+			'print.css'
         ],
         srcpath,
         TRGROOT
