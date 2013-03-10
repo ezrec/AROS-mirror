@@ -56,8 +56,7 @@ FILES := \
     Version \
     Wait \
     WaitForPort \
-    Which \
-    Delay
+    Which
 
 PURE_FILES := \
     Assign \
