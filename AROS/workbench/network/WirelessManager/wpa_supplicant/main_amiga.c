@@ -45,7 +45,7 @@ typedef LONG PINT;
 #endif
 
 static const TEXT template[] = "DEVICE/A,UNIT/K/N,CONFIG/K,VERBOSE/S";
-const TEXT version_string[] = "$VER: WirelessManager 1.2 (1.8.2012)";
+const TEXT version_string[] = "$VER: WirelessManager 1.3 (11.03.2013)";
 static const TEXT config_file_name[] = "ENV:Wireless.prefs";
 
 
@@ -168,7 +168,10 @@ int start_gui(struct wpa_global *global)
 
 void stop_gui(void)
 {
-	Signal((struct Task *) gui_proc, SIGBREAKF_CTRL_C);
-	Wait(SIGF_SINGLE);
+	if (gui_proc)
+	{
+		Signal((struct Task *) gui_proc, SIGBREAKF_CTRL_C);
+		Wait(SIGF_SINGLE);
+	}
 }
 #endif
