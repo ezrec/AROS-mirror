@@ -100,6 +100,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
                 A( _N['contribute'], href=makeURL( 'documentation/developers/contribute', lang ) ),
                 A( _N['roadmap'], href=makeURL( 'documentation/developers/roadmap', lang ) ),
                 A( _N['bug-tracker'], href='http://sourceforge.net/tracker/?atid=439463&amp;group_id=43586&amp;func=browse' ),
+                A( _N['feature-requests'], href='http://sourceforge.net/tracker/?group_id=43586&amp;atid=439466' ),
                 A( _N['working-with-subversion'], href=makeURL( 'documentation/developers/svn', lang ) ),
                 A( _N['compiling'],  href=makeURL( 'documentation/developers/compiling', lang ) ),
                 A( _N['application-development-manual'], href=makeURL( 'documentation/developers/app-dev/index', lang ) ),
