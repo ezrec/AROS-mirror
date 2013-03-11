@@ -14,6 +14,8 @@
 #include <zune/clock.h>
 #include <zune/calendar.h>
 
+#include <stdlib.h>
+
 /*********************************************************************************************/
 
 #define ARG_TEMPLATE    "FROM,EDIT/S,USE/S,SAVE/S,PUBSCREEN/K"
@@ -103,7 +105,7 @@ void Cleanup(STRPTR msg)
     CloseTimerDev();
     CleanupLocale();
     
-    Exit(prog_exitcode);
+    exit(prog_exitcode);
 }
 
 /*********************************************************************************************/
