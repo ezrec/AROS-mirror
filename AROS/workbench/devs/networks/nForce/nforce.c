@@ -708,32 +708,44 @@ static void drain_ring(struct net_device *dev)
 
 static int request_irq(struct net_device *dev)
 {
-    OOP_Object *irq = OOP_NewObject(NULL, CLID_Hidd_IRQ, NULL);
+    OOP_Object *irq;
     BOOL ret;
 
-    if (irq)
+    if (!dev->nu_IntsAdded)
     {
-        ret = HIDD_IRQ_AddHandler(irq, dev->nu_irqhandler, dev->nu_IRQ);
-        HIDD_IRQ_AddHandler(irq, dev->nu_touthandler, vHidd_IRQ_Timer);
-
-        OOP_DisposeObject(irq);
-
-        if (ret)
+        irq = OOP_NewObject(NULL, CLID_Hidd_IRQ, NULL);
+        if (irq)
         {
-            return 0;
+            ret = HIDD_IRQ_AddHandler(irq, dev->nu_irqhandler, dev->nu_IRQ);
+            HIDD_IRQ_AddHandler(irq, dev->nu_touthandler, vHidd_IRQ_Timer);
+
+            OOP_DisposeObject(irq);
+
+            if (ret)
+            {
+                dev->nu_IntsAdded = TRUE;
+                return 0;
+            }
         }
+        return 1;
     }
-    return 1;
+    return 0;
 }
 
 static void free_irq(struct net_device *dev)
 {
-    OOP_Object *irq = OOP_NewObject(NULL, CLID_Hidd_IRQ, NULL);
-    if (irq)
+    OOP_Object *irq;
+
+    if (dev->nu_IntsAdded)
     {
-        HIDD_IRQ_RemHandler(irq, dev->nu_irqhandler);
-        HIDD_IRQ_RemHandler(irq, dev->nu_touthandler);
-        OOP_DisposeObject(irq);
+        irq = OOP_NewObject(NULL, CLID_Hidd_IRQ, NULL);
+        if (irq)
+        {
+            HIDD_IRQ_RemHandler(irq, dev->nu_irqhandler);
+            HIDD_IRQ_RemHandler(irq, dev->nu_touthandler);
+            OOP_DisposeObject(irq);
+            dev->nu_IntsAdded = FALSE;
+        }
     }
 }
 

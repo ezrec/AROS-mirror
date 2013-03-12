@@ -143,6 +143,7 @@ struct PCN32Unit {
 
     struct timeval          pcnu_toutPOLL;
     BOOL                    pcnu_toutNEED;
+    BOOL                    pcnu_IntsAdded;
 
     struct MsgPort          *pcnu_TimerSlowPort;
     struct timerequest      *pcnu_TimerSlowReq;

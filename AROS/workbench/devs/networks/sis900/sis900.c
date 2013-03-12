@@ -898,36 +898,48 @@ static void drain_ring(struct net_device *unit)
 
 static int request_irq(struct net_device *unit)
 {
-    OOP_Object *irq = OOP_NewObject(NULL, CLID_Hidd_IRQ, NULL);
+    OOP_Object *irq;
     BOOL ret;
 
 D(bug("[%s]: request_irq()\n", unit->sis900u_name));
 
-    if (irq)
+    if (!unit->sis900u_IntsAdded)
     {
-        ret = HIDD_IRQ_AddHandler(irq, unit->sis900u_irqhandler, unit->sis900u_IRQ);
-        HIDD_IRQ_AddHandler(irq, unit->sis900u_touthandler, vHidd_IRQ_Timer);
+        irq = OOP_NewObject(NULL, CLID_Hidd_IRQ, NULL);
+        if (irq)
+        {
+            ret = HIDD_IRQ_AddHandler(irq, unit->sis900u_irqhandler, unit->sis900u_IRQ);
+            HIDD_IRQ_AddHandler(irq, unit->sis900u_touthandler, vHidd_IRQ_Timer);
 
 D(bug("[%s]: request_irq: IRQ Handlers configured\n", unit->sis900u_name));
 
-        OOP_DisposeObject(irq);
+            OOP_DisposeObject(irq);
 
-        if (ret)
-        {
-            return 0;
+            if (ret)
+            {
+                unit->sis900u_IntsAdded = TRUE;
+                return 0;
+            }
         }
+        return 1;
     }
-    return 1;
+    return 0;
 }
 
 static void free_irq(struct net_device *unit)
 {
-    OOP_Object *irq = OOP_NewObject(NULL, CLID_Hidd_IRQ, NULL);
-    if (irq)
+    OOP_Object *irq;
+
+    if (unit->sis900u_IntsAdded)
     {
-        HIDD_IRQ_RemHandler(irq, unit->sis900u_irqhandler);
-        HIDD_IRQ_RemHandler(irq, unit->sis900u_touthandler);
-        OOP_DisposeObject(irq);
+        irq = OOP_NewObject(NULL, CLID_Hidd_IRQ, NULL);
+        if (irq)
+        {
+            HIDD_IRQ_RemHandler(irq, unit->sis900u_irqhandler);
+            HIDD_IRQ_RemHandler(irq, unit->sis900u_touthandler);
+            OOP_DisposeObject(irq);
+            unit->sis900u_IntsAdded = FALSE;
+        }
     }
 }
 
