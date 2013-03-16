@@ -11,6 +11,8 @@
 #include <sys/cdefs.h>
 #include <time.h>
 
+#define PTHREAD_MUTEX_INITIALIZER {0}
+
 struct sched_param {
     int sched_priority;
 };
