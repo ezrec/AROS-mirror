@@ -3,8 +3,9 @@
 
 -include $(TOP)/config/make.cfg
 
-REPOSITORIES = http://download.icu-project.org/files/icu4c/4.2.1/
-ARCHBASE := icu4c-4_2_1-src
+REPOSITORIES = http://download.icu-project.org/files/icu4c/51rc/
+ARCHVERS := 51_rc
+ARCHBASE := icu4c-$(ARCHVERS)-src
 ICU4C_SOURCE := $(PORTSDIR)/icu4c/icu/source
 ICU4C_CROSSBUILD_DIR := $(GENDIR)/$(CURDIR)/build
 ICU4C_CROSSHOST_DIR := $(GENDIR)/$(CURDIR)/host
@@ -13,7 +14,7 @@ ICU4C_CROSSHOST_DIR := $(GENDIR)/$(CURDIR)/host
 
 %fetch mmake=contrib-icu4c-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/icu4c \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tgz" \
-    patches_specs=icu4c-4.2.1-aros.diff:icu:-p1
+    patches_specs=icu4c-$(ARCHVERS)-aros.diff:icu:-p1
 
 #MM
 contrib-icu4c-build-configure : $(ICU4C_CROSSBUILD_DIR)/.configured
@@ -36,13 +37,16 @@ contrib-icu4c-host-configure : $(ICU4C_CROSSHOST_DIR)/.configured
 $(ICU4C_CROSSHOST_DIR)/.configured :
 	%mkdir_q dir=$(ICU4C_CROSSHOST_DIR)
 	cd $(ICU4C_CROSSHOST_DIR) && PATH=$(PATH) $(ICU4C_SOURCE)/configure 	\
-		--prefix=/Development 												\
-		--enable-static 													\
-		--disable-shared 													\
-		--disable-threads 													\
-		--with-data-packaging=static 										\
-		--host=$(AROS_TARGET_CPU)-aros 										\
-		--with-cross-build=$(ICU4C_CROSSBUILD_DIR)							\
+		--prefix=/Development 						\
+		--disable-dyload 						\
+		--enable-static 						\
+		--enable-shared=no 						\
+		--enable-tests=no 						\
+		--enable-samples=no 						\
+		--enable-extras=no 						\
+		--with-data-packaging=static 					\
+		--host=$(AROS_TARGET_CPU)-aros 					\
+		--with-cross-build=$(ICU4C_CROSSBUILD_DIR)			\
 		CFLAGS=-nix LDFLAGS=-nix
 	$(TOUCH) $(ICU4C_CROSSHOST_DIR)/.configured
 
