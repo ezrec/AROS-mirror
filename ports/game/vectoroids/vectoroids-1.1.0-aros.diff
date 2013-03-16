@@ -1,6 +1,15 @@
 diff -Naur vectoroids-1.1.0-orig/vectoroids.c vectoroids-1.1.0/vectoroids.c
 --- vectoroids-1.1.0-orig/vectoroids.c	2010-06-25 17:55:25.172477152 +0200
 +++ vectoroids-1.1.0/vectoroids.c	2010-06-25 17:57:53.393897223 +0200
+@@ -76,5 +76,7 @@
+ 
+ 
+-enum { FALSE, TRUE };
++#ifndef TRUE
++enum { FALSE, TRUE };
++#endif
+ 
+ #define LEFT_EDGE   0x0001
 @@ -593,7 +593,9 @@
  
    /* Load state from disk: */
