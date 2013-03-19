@@ -14,10 +14,10 @@ kernel
 `KrnDispatch()`_                        `KrnDisplayAlert()`_                    `KrnFormatStr()`_                       `KrnFreePages()`_                       
 `KrnGetBootInfo()`_                     `KrnGetCPUCount()`_                     `KrnGetCPUNumber()`_                    `KrnGetScheduler()`_                    
 `KrnGetSystemAttr()`_                   `KrnInitMemory()`_                      `KrnIsSuper()`_                         `KrnMapGlobal()`_                       
-`KrnMayGetChar()`_                      `KrnObtainInput()`_                     `KrnPutChar()`_                         `KrnReleaseInput()`_                    
-`KrnRemExceptionHandler()`_             `KrnRemIRQHandler()`_                   `KrnSchedule()`_                        `KrnSetProtection()`_                   
-`KrnSetScheduler()`_                    `KrnStatMemoryA()`_                     `KrnSti()`_                             `KrnSwitch()`_                          
-`KrnUnmapGlobal()`_                     `KrnVirtualToPhysical()`_               
+`KrnMayGetChar()`_                      `KrnModifyIRQHandler()`_                `KrnObtainInput()`_                     `KrnPutChar()`_                         
+`KrnReleaseInput()`_                    `KrnRemExceptionHandler()`_             `KrnRemIRQHandler()`_                   `KrnSchedule()`_                        
+`KrnSetProtection()`_                   `KrnSetScheduler()`_                    `KrnStatMemoryA()`_                     `KrnSti()`_                             
+`KrnSwitch()`_                          `KrnUnmapGlobal()`_                     `KrnVirtualToPhysical()`_               
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -852,6 +852,43 @@ Notes
      the stream it just returns with -1
 
 
+
+----------
+
+KrnModifyIRQHandler()
+=====================
+
+Synopsis
+~~~~~~~~
+::
+
+ void KrnModifyIRQHandler(
+          void * handle,
+          void * handlerData,
+          void * handlerData2 );
+
+Function
+~~~~~~~~
+::
+
+     Modify the data passed to a raw hardware IRQ handler.
+
+
+Inputs
+~~~~~~
+::
+
+     handle       - Existing handle
+     handlerData,
+     handlerData2 - User-defined data which is passed to the
+                    handler.
+     
+
+
+See also
+~~~~~~~~
+
+`KrnAddIRQHandler()`_ `KrnRemIRQHandler()`_ 
 
 ----------
 
