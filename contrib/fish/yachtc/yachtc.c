@@ -1079,7 +1079,7 @@ if (InitImages() != TRUE) {
  
 
   FreeImages();
-   Exit(FALSE);
+   exit(FALSE);
    }
 
 /* Open the Intuition and Graphics libraries.
