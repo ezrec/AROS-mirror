@@ -421,7 +421,7 @@ IPTR GeneratorCleanup(Class *cl, Object *obj, Msg msg)
 
 	msg = msg;
 	if (d->FileHandle) Close(d->FileHandle);
-	d->FileHandle = NULL;
+	d->FileHandle = BNULL;
 	FreeVecPooled(MPool, d->ClassName);
 	d->ClassName = NULL;
 	FreeVecPooled(MPool, d->ClassNameSmall);
@@ -752,7 +752,7 @@ IPTR GeneratorLoad(Class *cl, Object *obj, struct GENP_Load *msg)
 	msg->Parser->params[2] = (LONG)&externity;
 	msg->Parser->params[3] = (LONG)&remarks;
 
-	#warning SKIPS FOR NOW UNUSED PROJECT TYPE
+	//FIXME: SKIPS FOR NOW UNUSED PROJECT TYPE
 
 	FGets((BPTR)msg->Handle, msg->LineBuf, INPUT_LINE_MAX_LEN);
 
@@ -784,7 +784,7 @@ IPTR GeneratorGenerate(Class *cl, Object *obj, Msg msg)
 	struct GeneratorData *d = INST_DATA(cl, obj);
 
 	msg = msg;
-	#warning NO RETURN VALUE IS PASSED HERE, NO ERROR HANDLING!
+	//FIXME: NO RETURN VALUE IS PASSED HERE, NO ERROR HANDLING!
 	MUI_Request(App, obj, 0, "ChocolateCastle", (char*)LS(MSG_INFO_REQUESTER_OK_BUTTON, "*_OK"),
 	 (char*)LS(MSG_PROJECT_INFO_CODE_GENERATED, "Code has been generated to \"%s\"."),
 	 xget(d->DestDir, MUIA_String_Contents));

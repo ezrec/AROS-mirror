@@ -139,10 +139,10 @@ IPTR MethodListListDisplay(UNUSED Class *cl, UNUSED Object *obj, struct MUIP_Lis
 
 	if (!ent)
 	{
-		msg->array[0] = LS(MSG_METHOD_LIST_HEADER_NAME, "\33cMethod Name");
-		msg->array[1] = LS(MSG_METHOD_LIST_HEADER_IDENTIFIER, "\33cIdentifier");
-		msg->array[2] = LS(MSG_METHOD_LIST_HEADER_FUNCTION, "\33cFunction");
-		msg->array[3] = LS(MSG_METHOD_LIST_HEADER_STRUCTURE, "\33cMessage Structure");
+		msg->array[0] = (STRPTR)LS(MSG_METHOD_LIST_HEADER_NAME, "\33cMethod Name");
+		msg->array[1] = (STRPTR)LS(MSG_METHOD_LIST_HEADER_IDENTIFIER, "\33cIdentifier");
+		msg->array[2] = (STRPTR)LS(MSG_METHOD_LIST_HEADER_FUNCTION, "\33cFunction");
+		msg->array[3] = (STRPTR)LS(MSG_METHOD_LIST_HEADER_STRUCTURE, "\33cMessage Structure");
 	}
 	else
 	{
