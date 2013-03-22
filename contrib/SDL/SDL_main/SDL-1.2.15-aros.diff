@@ -1,6 +1,6 @@
 diff -ruN SDL-1.2.15/aros/sdl-config SDL-1.2.15.aros/aros/sdl-config
---- SDL-1.2.15/aros/sdl-config	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.15.aros/aros/sdl-config	2012-06-18 01:53:17.956324200 +0100
+--- SDL-1.2.15/aros/sdl-config	1969-12-31 19:00:00.000000000 -0500
++++ SDL-1.2.15.aros/aros/sdl-config	2013-03-08 08:30:15.000000000 -0500
 @@ -0,0 +1,58 @@
 +#!/bin/sh
 +
@@ -61,8 +61,8 @@ diff -ruN SDL-1.2.15/aros/sdl-config SDL-1.2.15.aros/aros/sdl-config
 +  shift
 +done
 diff -ruN SDL-1.2.15/aros/sdl.pc SDL-1.2.15.aros/aros/sdl.pc
---- SDL-1.2.15/aros/sdl.pc	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.15.aros/aros/sdl.pc	2012-06-18 01:53:17.954324000 +0100
+--- SDL-1.2.15/aros/sdl.pc	1969-12-31 19:00:00.000000000 -0500
++++ SDL-1.2.15.aros/aros/sdl.pc	2013-03-08 08:30:15.000000000 -0500
 @@ -0,0 +1,15 @@
 +# sdl pkg-config source file
 +
@@ -80,8 +80,8 @@ diff -ruN SDL-1.2.15/aros/sdl.pc SDL-1.2.15.aros/aros/sdl.pc
 +Libs.private: -lSDL   -lm -lGL
 +Cflags: -I${includedir}/SDL -D_GNU_SOURCE=1
 diff -ruN SDL-1.2.15/aros_init.c SDL-1.2.15.aros/aros_init.c
---- SDL-1.2.15/aros_init.c	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.15.aros/aros_init.c	2012-06-18 01:53:19.718548000 +0100
+--- SDL-1.2.15/aros_init.c	1969-12-31 19:00:00.000000000 -0500
++++ SDL-1.2.15.aros/aros_init.c	2013-03-22 12:04:43.000000000 -0400
 @@ -0,0 +1,125 @@
 +/* Copyright 2013 The AROS Development Team. All rights reserved. */
 +
@@ -108,7 +108,7 @@ diff -ruN SDL-1.2.15/aros_init.c SDL-1.2.15.aros/aros_init.c
 +
 +    LIBBASE->aroscbase = OpenLibrary("arosc.library", 0);
 +    LIBBASE->copy_row_base = AllocMem(4096 * 2, MEMF_CLEAR);
-+    LIBBASE->copy_row = (((int)LIBBASE->copy_row_base + 4096) & ~0xFFF);
++    LIBBASE->copy_row = (APTR)(((IPTR)LIBBASE->copy_row_base + 4096) & ~0xFFF);
 +    D(bug("SDL.library->Open: root base @ 0x%p\n", LIBBASE->rootSDLBase));
 +    D(
 +        struct Task *opener = FindTask(NULL);
@@ -143,7 +143,7 @@ diff -ruN SDL-1.2.15/aros_init.c SDL-1.2.15.aros/aros_init.c
 +    LIBBASE->SDL_Threads = NULL;
 +    LIBBASE->SDL_ThreadLock = NULL;
 +    LIBBASE->SDL_ThreadLockCreated = 0;
-+    LIBBASE->SDL_global_error = 0;
++    memset(&LIBBASE->SDL_global_error, 0, sizeof(LIBBASE->SDL_global_error));
 +
 +    LIBBASE->SDL_appstate = 0;
 +
@@ -209,8 +209,8 @@ diff -ruN SDL-1.2.15/aros_init.c SDL-1.2.15.aros/aros_init.c
 +ADD2OPENLIB(GM_UNIQUENAME(LibOpen), 0)
 +ADD2CLOSELIB(GM_UNIQUENAME(LibClose), 0)
 diff -ruN SDL-1.2.15/include/SDL_active.h SDL-1.2.15.aros/include/SDL_active.h
---- SDL-1.2.15/include/SDL_active.h	2012-01-19 06:30:05.000000000 +0000
-+++ SDL-1.2.15.aros/include/SDL_active.h	2012-06-18 01:53:18.142347900 +0100
+--- SDL-1.2.15/include/SDL_active.h	2012-01-19 01:30:05.000000000 -0500
++++ SDL-1.2.15.aros/include/SDL_active.h	2013-03-08 08:30:15.000000000 -0500
 @@ -51,8 +51,9 @@
   * SDL_APPACTIVE.  If SDL_APPACTIVE is set, then the user is able to
   * see your application, otherwise it has been iconified or disabled.
@@ -223,8 +223,8 @@ diff -ruN SDL-1.2.15/include/SDL_active.h SDL-1.2.15.aros/include/SDL_active.h
  /* Ends C function definitions when using C++ */
  #ifdef __cplusplus
 diff -ruN SDL-1.2.15/include/SDL_audio.h SDL-1.2.15.aros/include/SDL_audio.h
---- SDL-1.2.15/include/SDL_audio.h	2012-01-19 06:30:05.000000000 +0000
-+++ SDL-1.2.15.aros/include/SDL_audio.h	2012-06-18 01:53:18.211856700 +0100
+--- SDL-1.2.15/include/SDL_audio.h	2012-01-19 01:30:05.000000000 -0500
++++ SDL-1.2.15.aros/include/SDL_audio.h	2013-03-08 08:30:15.000000000 -0500
 @@ -88,7 +88,11 @@
  	 *  Once the callback returns, the buffer will no longer be valid.
  	 *  Stereo samples are stored in a LRLRLR ordering.
@@ -316,8 +316,8 @@ diff -ruN SDL-1.2.15/include/SDL_audio.h SDL-1.2.15.aros/include/SDL_audio.h
  /* Ends C function definitions when using C++ */
  #ifdef __cplusplus
 diff -ruN SDL-1.2.15/include/SDL_cdrom.h SDL-1.2.15.aros/include/SDL_cdrom.h
---- SDL-1.2.15/include/SDL_cdrom.h	2012-01-19 06:30:05.000000000 +0000
-+++ SDL-1.2.15.aros/include/SDL_cdrom.h	2012-06-18 01:53:18.139347500 +0100
+--- SDL-1.2.15/include/SDL_cdrom.h	2012-01-19 01:30:05.000000000 -0500
++++ SDL-1.2.15.aros/include/SDL_cdrom.h	2013-03-08 08:30:15.000000000 -0500
 @@ -111,6 +111,7 @@
   *  Returns the number of CD-ROM drives on the system, or -1 if
   *  SDL_Init() has not been called with the SDL_INIT_CDROM flag.
@@ -336,8 +336,8 @@ diff -ruN SDL-1.2.15/include/SDL_cdrom.h SDL-1.2.15.aros/include/SDL_cdrom.h
  /* Ends C function definitions when using C++ */
  #ifdef __cplusplus
 diff -ruN SDL-1.2.15/include/SDL_config_aros.h SDL-1.2.15.aros/include/SDL_config_aros.h
---- SDL-1.2.15/include/SDL_config_aros.h	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.15.aros/include/SDL_config_aros.h	2012-06-18 01:53:18.173851900 +0100
+--- SDL-1.2.15/include/SDL_config_aros.h	1969-12-31 19:00:00.000000000 -0500
++++ SDL-1.2.15.aros/include/SDL_config_aros.h	2013-03-08 08:30:15.000000000 -0500
 @@ -0,0 +1,152 @@
 +/*
 +    SDL - Simple DirectMedia Layer
@@ -492,8 +492,8 @@ diff -ruN SDL-1.2.15/include/SDL_config_aros.h SDL-1.2.15.aros/include/SDL_confi
 +
 +#endif /* _SDL_config_aros_h */
 diff -ruN SDL-1.2.15/include/SDL_config.h SDL-1.2.15.aros/include/SDL_config.h
---- SDL-1.2.15/include/SDL_config.h	2012-01-19 06:30:30.000000000 +0000
-+++ SDL-1.2.15.aros/include/SDL_config.h	2012-06-18 01:53:18.214357000 +0100
+--- SDL-1.2.15/include/SDL_config.h	2012-01-19 01:30:30.000000000 -0500
++++ SDL-1.2.15.aros/include/SDL_config.h	2013-03-08 08:30:15.000000000 -0500
 @@ -26,7 +26,9 @@
  #include "SDL_platform.h"
  
@@ -506,8 +506,8 @@ diff -ruN SDL-1.2.15/include/SDL_config.h SDL-1.2.15.aros/include/SDL_config.h
  #elif defined(__MACOS__)
  #include "SDL_config_macos.h"
 diff -ruN SDL-1.2.15/include/SDL_cpuinfo.h SDL-1.2.15.aros/include/SDL_cpuinfo.h
---- SDL-1.2.15/include/SDL_cpuinfo.h	2012-01-19 06:30:05.000000000 +0000
-+++ SDL-1.2.15.aros/include/SDL_cpuinfo.h	2012-06-18 01:53:18.145348200 +0100
+--- SDL-1.2.15/include/SDL_cpuinfo.h	2012-01-19 01:30:05.000000000 -0500
++++ SDL-1.2.15.aros/include/SDL_cpuinfo.h	2013-03-08 08:30:15.000000000 -0500
 @@ -36,6 +36,7 @@
  extern "C" {
  #endif
@@ -525,8 +525,8 @@ diff -ruN SDL-1.2.15/include/SDL_cpuinfo.h SDL-1.2.15.aros/include/SDL_cpuinfo.h
  /* Ends C function definitions when using C++ */
  #ifdef __cplusplus
 diff -ruN SDL-1.2.15/include/SDL_error.h SDL-1.2.15.aros/include/SDL_error.h
---- SDL-1.2.15/include/SDL_error.h	2012-01-19 06:30:05.000000000 +0000
-+++ SDL-1.2.15.aros/include/SDL_error.h	2012-06-18 01:53:18.150348900 +0100
+--- SDL-1.2.15/include/SDL_error.h	2012-01-19 01:30:05.000000000 -0500
++++ SDL-1.2.15.aros/include/SDL_error.h	2013-03-08 08:30:15.000000000 -0500
 @@ -40,9 +40,23 @@
   *  @name Public functions
   */
@@ -571,8 +571,8 @@ diff -ruN SDL-1.2.15/include/SDL_error.h SDL-1.2.15.aros/include/SDL_error.h
  
  /* Ends C function definitions when using C++ */
 diff -ruN SDL-1.2.15/include/SDL_events.h SDL-1.2.15.aros/include/SDL_events.h
---- SDL-1.2.15/include/SDL_events.h	2012-01-19 06:30:05.000000000 +0000
-+++ SDL-1.2.15.aros/include/SDL_events.h	2012-06-18 01:53:18.117344700 +0100
+--- SDL-1.2.15/include/SDL_events.h	2012-01-19 01:30:05.000000000 -0500
++++ SDL-1.2.15.aros/include/SDL_events.h	2013-03-08 08:30:15.000000000 -0500
 @@ -248,7 +248,9 @@
   *  This function updates the event queue and internal input device state.
   *  This should only be run in the thread that sets the video mode.
@@ -627,8 +627,8 @@ diff -ruN SDL-1.2.15/include/SDL_events.h SDL-1.2.15.aros/include/SDL_events.h
  /* Ends C function definitions when using C++ */
  #ifdef __cplusplus
 diff -ruN SDL-1.2.15/include/SDL.h SDL-1.2.15.aros/include/SDL.h
---- SDL-1.2.15/include/SDL.h	2012-01-19 06:30:05.000000000 +0000
-+++ SDL-1.2.15.aros/include/SDL.h	2012-06-18 01:53:18.162850500 +0100
+--- SDL-1.2.15/include/SDL.h	2012-01-19 01:30:05.000000000 -0500
++++ SDL-1.2.15.aros/include/SDL.h	2013-03-08 08:30:15.000000000 -0500
 @@ -73,7 +73,25 @@
   *  Unless the SDL_INIT_NOPARACHUTE flag is set, it will install cleanup
   *  signal handlers for some commonly ignored fatal signals (like SIGSEGV)
@@ -679,8 +679,8 @@ diff -ruN SDL-1.2.15/include/SDL.h SDL-1.2.15.aros/include/SDL.h
  /* Ends C function definitions when using C++ */
  #ifdef __cplusplus
 diff -ruN SDL-1.2.15/include/SDL_joystick.h SDL-1.2.15.aros/include/SDL_joystick.h
---- SDL-1.2.15/include/SDL_joystick.h	2012-01-19 06:30:05.000000000 +0000
-+++ SDL-1.2.15.aros/include/SDL_joystick.h	2012-06-18 01:53:18.152849200 +0100
+--- SDL-1.2.15/include/SDL_joystick.h	2012-01-19 01:30:05.000000000 -0500
++++ SDL-1.2.15.aros/include/SDL_joystick.h	2013-03-08 08:30:15.000000000 -0500
 @@ -50,6 +50,7 @@
  /**
   * Count the number of joysticks attached to the system
@@ -716,8 +716,8 @@ diff -ruN SDL-1.2.15/include/SDL_joystick.h SDL-1.2.15.aros/include/SDL_joystick
  /* Ends C function definitions when using C++ */
  #ifdef __cplusplus
 diff -ruN SDL-1.2.15/include/SDL_keyboard.h SDL-1.2.15.aros/include/SDL_keyboard.h
---- SDL-1.2.15/include/SDL_keyboard.h	2012-01-19 06:30:05.000000000 +0000
-+++ SDL-1.2.15.aros/include/SDL_keyboard.h	2012-06-18 01:53:18.197854900 +0100
+--- SDL-1.2.15/include/SDL_keyboard.h	2012-01-19 01:30:05.000000000 -0500
++++ SDL-1.2.15.aros/include/SDL_keyboard.h	2013-03-08 08:30:15.000000000 -0500
 @@ -79,7 +79,9 @@
   *
   * @return It returns the previous state of keyboard translation.
@@ -746,8 +746,8 @@ diff -ruN SDL-1.2.15/include/SDL_keyboard.h SDL-1.2.15.aros/include/SDL_keyboard
  /* Ends C function definitions when using C++ */
  #ifdef __cplusplus
 diff -ruN SDL-1.2.15/include/SDL_loadso.h SDL-1.2.15.aros/include/SDL_loadso.h
---- SDL-1.2.15/include/SDL_loadso.h	2012-01-19 06:30:05.000000000 +0000
-+++ SDL-1.2.15.aros/include/SDL_loadso.h	2012-06-18 01:53:18.217357400 +0100
+--- SDL-1.2.15/include/SDL_loadso.h	2012-01-19 01:30:05.000000000 -0500
++++ SDL-1.2.15.aros/include/SDL_loadso.h	2013-03-08 08:30:15.000000000 -0500
 @@ -57,6 +57,7 @@
   * to the object handle (or NULL if there was an error).
   * The 'sofile' parameter is a system dependent name of the object file.
@@ -765,8 +765,8 @@ diff -ruN SDL-1.2.15/include/SDL_loadso.h SDL-1.2.15.aros/include/SDL_loadso.h
  /* Ends C function definitions when using C++ */
  #ifdef __cplusplus
 diff -ruN SDL-1.2.15/include/SDL_main.h SDL-1.2.15.aros/include/SDL_main.h
---- SDL-1.2.15/include/SDL_main.h	2012-01-19 06:30:05.000000000 +0000
-+++ SDL-1.2.15.aros/include/SDL_main.h	2012-06-18 01:53:18.105343200 +0100
+--- SDL-1.2.15/include/SDL_main.h	2012-01-19 01:30:05.000000000 -0500
++++ SDL-1.2.15.aros/include/SDL_main.h	2013-03-08 08:30:15.000000000 -0500
 @@ -66,12 +66,14 @@
  extern "C" {
  #endif
@@ -797,8 +797,8 @@ diff -ruN SDL-1.2.15/include/SDL_main.h SDL-1.2.15.aros/include/SDL_main.h
  #ifdef __cplusplus
  }
 diff -ruN SDL-1.2.15/include/SDL_mouse.h SDL-1.2.15.aros/include/SDL_mouse.h
---- SDL-1.2.15/include/SDL_mouse.h	2012-01-19 06:30:05.000000000 +0000
-+++ SDL-1.2.15.aros/include/SDL_mouse.h	2012-06-18 01:53:18.030833700 +0100
+--- SDL-1.2.15/include/SDL_mouse.h	2012-01-19 01:30:05.000000000 -0500
++++ SDL-1.2.15.aros/include/SDL_mouse.h	2013-03-08 08:30:15.000000000 -0500
 @@ -54,6 +54,7 @@
   * be tested using the SDL_BUTTON(X) macros, and x and y are set to the
   * current mouse cursor position.  You can pass NULL for either x or y.
@@ -816,8 +816,8 @@ diff -ruN SDL-1.2.15/include/SDL_mouse.h SDL-1.2.15.aros/include/SDL_mouse.h
  /*@{*/
  /** Used as a mask when testing buttons in buttonstate
 diff -ruN SDL-1.2.15/include/SDL_mutex.h SDL-1.2.15.aros/include/SDL_mutex.h
---- SDL-1.2.15/include/SDL_mutex.h	2012-01-19 06:30:05.000000000 +0000
-+++ SDL-1.2.15.aros/include/SDL_mutex.h	2012-06-18 01:53:18.127345900 +0100
+--- SDL-1.2.15/include/SDL_mutex.h	2012-01-19 01:30:05.000000000 -0500
++++ SDL-1.2.15.aros/include/SDL_mutex.h	2013-03-08 08:30:15.000000000 -0500
 @@ -56,13 +56,17 @@
  typedef struct SDL_mutex SDL_mutex;
  
@@ -888,8 +888,8 @@ diff -ruN SDL-1.2.15/include/SDL_mutex.h SDL-1.2.15.aros/include/SDL_mutex.h
  
  /* Ends C function definitions when using C++ */
 diff -ruN SDL-1.2.15/include/SDL_opengl.h SDL-1.2.15.aros/include/SDL_opengl.h
---- SDL-1.2.15/include/SDL_opengl.h	2012-01-19 06:30:05.000000000 +0000
-+++ SDL-1.2.15.aros/include/SDL_opengl.h	2012-06-18 01:53:18.185853400 +0100
+--- SDL-1.2.15/include/SDL_opengl.h	2012-01-19 01:30:05.000000000 -0500
++++ SDL-1.2.15.aros/include/SDL_opengl.h	2013-03-08 08:30:15.000000000 -0500
 @@ -108,6 +108,18 @@
  #define GLAPI extern
  #endif
@@ -910,8 +910,8 @@ diff -ruN SDL-1.2.15/include/SDL_opengl.h SDL-1.2.15.aros/include/SDL_opengl.h
  
  /* Header file version number, required by OpenGL ABI for Linux */
 diff -ruN SDL-1.2.15/include/SDL_rwops.h SDL-1.2.15.aros/include/SDL_rwops.h
---- SDL-1.2.15/include/SDL_rwops.h	2012-01-19 06:30:05.000000000 +0000
-+++ SDL-1.2.15.aros/include/SDL_rwops.h	2012-06-18 01:53:18.028333400 +0100
+--- SDL-1.2.15/include/SDL_rwops.h	2012-01-19 01:30:05.000000000 -0500
++++ SDL-1.2.15.aros/include/SDL_rwops.h	2013-03-08 08:30:15.000000000 -0500
 @@ -60,7 +60,6 @@
  
  	/** Close and free an allocated SDL_FSops structure */
@@ -969,8 +969,8 @@ diff -ruN SDL-1.2.15/include/SDL_rwops.h SDL-1.2.15.aros/include/SDL_rwops.h
  
  /* Ends C function definitions when using C++ */
 diff -ruN SDL-1.2.15/include/SDL_syswm.h SDL-1.2.15.aros/include/SDL_syswm.h
---- SDL-1.2.15/include/SDL_syswm.h	2012-01-19 06:30:05.000000000 +0000
-+++ SDL-1.2.15.aros/include/SDL_syswm.h	2012-06-18 01:53:18.191854100 +0100
+--- SDL-1.2.15/include/SDL_syswm.h	2012-01-19 01:30:05.000000000 -0500
++++ SDL-1.2.15.aros/include/SDL_syswm.h	2013-03-08 08:30:15.000000000 -0500
 @@ -214,8 +214,9 @@
   * if ( SDL_GetWMInfo(&info) ) { ... }
   * @endcode
@@ -983,8 +983,8 @@ diff -ruN SDL-1.2.15/include/SDL_syswm.h SDL-1.2.15.aros/include/SDL_syswm.h
  /* Ends C function definitions when using C++ */
  #ifdef __cplusplus
 diff -ruN SDL-1.2.15/include/SDL_thread.h SDL-1.2.15.aros/include/SDL_thread.h
---- SDL-1.2.15/include/SDL_thread.h	2012-01-19 06:30:05.000000000 +0000
-+++ SDL-1.2.15.aros/include/SDL_thread.h	2012-06-18 01:53:18.120345100 +0100
+--- SDL-1.2.15/include/SDL_thread.h	2012-01-19 01:30:05.000000000 -0500
++++ SDL-1.2.15.aros/include/SDL_thread.h	2013-03-08 08:30:15.000000000 -0500
 @@ -75,7 +75,9 @@
  typedef void (__cdecl *pfnSDL_CurrentEndThread)(unsigned code);
  #endif
@@ -1019,8 +1019,8 @@ diff -ruN SDL-1.2.15/include/SDL_thread.h SDL-1.2.15.aros/include/SDL_thread.h
  /* Ends C function definitions when using C++ */
  #ifdef __cplusplus
 diff -ruN SDL-1.2.15/include/SDL_timer.h SDL-1.2.15.aros/include/SDL_timer.h
---- SDL-1.2.15/include/SDL_timer.h	2012-01-19 06:30:05.000000000 +0000
-+++ SDL-1.2.15.aros/include/SDL_timer.h	2012-06-18 01:53:18.108343500 +0100
+--- SDL-1.2.15/include/SDL_timer.h	2012-01-19 01:30:05.000000000 -0500
++++ SDL-1.2.15.aros/include/SDL_timer.h	2013-03-08 08:30:15.000000000 -0500
 @@ -46,10 +46,12 @@
   * Get the number of milliseconds since the SDL library initialization.
   * Note that this value wraps if the program runs for more than ~49 days.
@@ -1062,8 +1062,8 @@ diff -ruN SDL-1.2.15/include/SDL_timer.h SDL-1.2.15.aros/include/SDL_timer.h
  
  /* Ends C function definitions when using C++ */
 diff -ruN SDL-1.2.15/include/SDL_version.h SDL-1.2.15.aros/include/SDL_version.h
---- SDL-1.2.15/include/SDL_version.h	2012-01-19 06:30:05.000000000 +0000
-+++ SDL-1.2.15.aros/include/SDL_version.h	2012-06-18 01:53:18.207856200 +0100
+--- SDL-1.2.15/include/SDL_version.h	2012-01-19 01:30:05.000000000 -0500
++++ SDL-1.2.15.aros/include/SDL_version.h	2013-03-08 08:30:15.000000000 -0500
 @@ -80,7 +80,9 @@
   *  it should NOT be used to fill a version structure, instead you should
   *  use the SDL_Version() macro.
@@ -1075,8 +1075,8 @@ diff -ruN SDL-1.2.15/include/SDL_version.h SDL-1.2.15.aros/include/SDL_version.h
  /* Ends C function definitions when using C++ */
  #ifdef __cplusplus
 diff -ruN SDL-1.2.15/include/SDL_video.h SDL-1.2.15.aros/include/SDL_video.h
---- SDL-1.2.15/include/SDL_video.h	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/include/SDL_video.h	2012-06-18 01:53:18.156849700 +0100
+--- SDL-1.2.15/include/SDL_video.h	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/include/SDL_video.h	2013-03-08 08:30:15.000000000 -0500
 @@ -119,6 +119,9 @@
  
  	/** Reference count -- used when freeing surface */
@@ -1220,8 +1220,8 @@ diff -ruN SDL-1.2.15/include/SDL_video.h SDL-1.2.15.aros/include/SDL_video.h
  #ifdef __cplusplus
  }
 diff -ruN SDL-1.2.15/SDL.conf SDL-1.2.15.aros/SDL.conf
---- SDL-1.2.15/SDL.conf	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.15.aros/SDL.conf	2012-06-18 01:53:17.937321800 +0100
+--- SDL-1.2.15/SDL.conf	1969-12-31 19:00:00.000000000 -0500
++++ SDL-1.2.15.aros/SDL.conf	2013-03-08 08:30:15.000000000 -0500
 @@ -0,0 +1,243 @@
 +##begin config
 +basename SDL
@@ -1467,9 +1467,9 @@ diff -ruN SDL-1.2.15/SDL.conf SDL-1.2.15.aros/SDL.conf
 +char *SDL_iconv_string(const char *tocode, const char *fromcode, const char *inbuf, size_t inbytesleft) (A0, A1, A2, D0)
 +##end functionlist
 diff -ruN SDL-1.2.15/SDL_intern.h SDL-1.2.15.aros/SDL_intern.h
---- SDL-1.2.15/SDL_intern.h	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.15.aros/SDL_intern.h	2012-06-18 01:53:17.245233900 +0100
-@@ -0,0 +1,160 @@
+--- SDL-1.2.15/SDL_intern.h	1969-12-31 19:00:00.000000000 -0500
++++ SDL-1.2.15.aros/SDL_intern.h	2013-03-22 12:04:14.000000000 -0400
+@@ -0,0 +1,162 @@
 +#ifndef	_SDL_INTERN_H
 +#define	_SDL_INTERN_H
 +
@@ -1509,6 +1509,8 @@ diff -ruN SDL-1.2.15/SDL_intern.h SDL-1.2.15.aros/SDL_intern.h
 +#include <SDL/SDL_types.h>
 +#include <SDL/SDL_version.h>
 +#include <SDL/SDL_video.h>
++
++#include "SDL_error_c.h"
 +
 +#define MAX_DRIVES	32
 +#define CURSOR_VISIBLE	0x01
@@ -1552,7 +1554,7 @@ diff -ruN SDL-1.2.15/SDL_intern.h SDL-1.2.15.aros/SDL_intern.h
 +    SDL_mutex           *SDL_ThreadLock;
 +
 +    /** thread/aros/SDL_thread.c **/
-+    SDL_errorcode       SDL_global_error;
++    SDL_error           SDL_global_error;
 +    int                 SDL_ThreadLockCreated;
 +
 +    /** events/SDL_active.c **/
@@ -1631,8 +1633,8 @@ diff -ruN SDL-1.2.15/SDL_intern.h SDL-1.2.15.aros/SDL_intern.h
 +
 +#endif
 diff -ruN SDL-1.2.15/src/audio/ahi/SDL_ahiaudio.c SDL-1.2.15.aros/src/audio/ahi/SDL_ahiaudio.c
---- SDL-1.2.15/src/audio/ahi/SDL_ahiaudio.c	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.15.aros/src/audio/ahi/SDL_ahiaudio.c	2012-06-18 01:53:21.519776700 +0100
+--- SDL-1.2.15/src/audio/ahi/SDL_ahiaudio.c	1969-12-31 19:00:00.000000000 -0500
++++ SDL-1.2.15.aros/src/audio/ahi/SDL_ahiaudio.c	2013-03-22 11:22:27.000000000 -0400
 @@ -0,0 +1,528 @@
 +/*
 +    SDL - Simple DirectMedia Layer
@@ -1858,7 +1860,7 @@ diff -ruN SDL-1.2.15/src/audio/ahi/SDL_ahiaudio.c SDL-1.2.15.aros/src/audio/ahi/
 +
 +			do
 +			{
-+				*buf++ = *buf - 128;
++				*(buf++) -= 128;
 +				mixbufsize--;
 +			}
 +			while (mixbufsize);
@@ -1871,7 +1873,7 @@ diff -ruN SDL-1.2.15/src/audio/ahi/SDL_ahiaudio.c SDL-1.2.15.aros/src/audio/ahi/
 +
 +			do
 +			{
-+				*buf++ = *buf - 32768;
++				*(buf++) -= 32768;
 +				mixbufsize -= 2;
 +			}
 +			while (mixbufsize > 0);
@@ -2163,8 +2165,8 @@ diff -ruN SDL-1.2.15/src/audio/ahi/SDL_ahiaudio.c SDL-1.2.15.aros/src/audio/ahi/
 +	SetTaskPri(task, 1);
 +}
 diff -ruN SDL-1.2.15/src/audio/ahi/SDL_ahiaudio.h SDL-1.2.15.aros/src/audio/ahi/SDL_ahiaudio.h
---- SDL-1.2.15/src/audio/ahi/SDL_ahiaudio.h	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.15.aros/src/audio/ahi/SDL_ahiaudio.h	2012-06-18 01:53:21.521276900 +0100
+--- SDL-1.2.15/src/audio/ahi/SDL_ahiaudio.h	1969-12-31 19:00:00.000000000 -0500
++++ SDL-1.2.15.aros/src/audio/ahi/SDL_ahiaudio.h	2013-03-08 08:30:16.000000000 -0500
 @@ -0,0 +1,64 @@
 +/*
 +    SDL - Simple DirectMedia Layer
@@ -2231,8 +2233,8 @@ diff -ruN SDL-1.2.15/src/audio/ahi/SDL_ahiaudio.h SDL-1.2.15.aros/src/audio/ahi/
 +
 +#endif /* _SDL_ahiaudio_h */
 diff -ruN SDL-1.2.15/src/audio/disk/SDL_diskaudio.c SDL-1.2.15.aros/src/audio/disk/SDL_diskaudio.c
---- SDL-1.2.15/src/audio/disk/SDL_diskaudio.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/audio/disk/SDL_diskaudio.c	2012-06-18 01:53:21.454768500 +0100
+--- SDL-1.2.15/src/audio/disk/SDL_diskaudio.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/audio/disk/SDL_diskaudio.c	2013-03-22 11:50:31.000000000 -0400
 @@ -21,6 +21,11 @@
  
      This file written by Ryan C. Gordon (icculus@icculus.org)
@@ -2265,7 +2267,29 @@ diff -ruN SDL-1.2.15/src/audio/disk/SDL_diskaudio.c SDL-1.2.15.aros/src/audio/di
  
  static const char *DISKAUD_GetOutputFilename(void)
  {
-@@ -75,7 +88,11 @@
+@@ -60,7 +73,11 @@
+ }
+ 
+ /* Audio driver bootstrap functions */
++#if !defined(PROTO_SDL_H)
+ static int DISKAUD_Available(void)
++#else
++static int DISKAUD_Available(struct SDLBase *SDLBase)
++#endif
+ {
+ 	const char *envr = SDL_getenv("SDL_AUDIODRIVER");
+ 	if (envr && (SDL_strcmp(envr, DISKAUD_DRIVER_NAME) == 0)) {
+@@ -69,13 +86,21 @@
+ 	return(0);
+ }
+ 
++#if !defined(PROTO_SDL_H)
+ static void DISKAUD_DeleteDevice(SDL_AudioDevice *device)
++#else
++static void DISKAUD_DeleteDevice(SDL_AudioDevice *device, struct SDLBase *SDLBase)
++#endif
+ {
+ 	SDL_free(device->hidden);
  	SDL_free(device);
  }
  
@@ -2277,7 +2301,7 @@ diff -ruN SDL-1.2.15/src/audio/disk/SDL_diskaudio.c SDL-1.2.15.aros/src/audio/di
  {
  	SDL_AudioDevice *this;
  	const char *envr;
-@@ -117,12 +134,20 @@
+@@ -117,12 +142,20 @@
  };
  
  /* This function waits until it is possible to write a full sound buffer */
@@ -2298,7 +2322,7 @@ diff -ruN SDL-1.2.15/src/audio/disk/SDL_diskaudio.c SDL-1.2.15.aros/src/audio/di
  {
  	int written;
  
-@@ -140,12 +165,20 @@
+@@ -140,12 +173,20 @@
  #endif
  }
  
@@ -2319,7 +2343,7 @@ diff -ruN SDL-1.2.15/src/audio/disk/SDL_diskaudio.c SDL-1.2.15.aros/src/audio/di
  {
  	if ( this->hidden->mixbuf != NULL ) {
  		SDL_FreeAudioMem(this->hidden->mixbuf);
-@@ -157,7 +190,11 @@
+@@ -157,7 +198,11 @@
  	}
  }
  
@@ -2332,8 +2356,8 @@ diff -ruN SDL-1.2.15/src/audio/disk/SDL_diskaudio.c SDL-1.2.15.aros/src/audio/di
  	const char *fname = DISKAUD_GetOutputFilename();
  
 diff -ruN SDL-1.2.15/src/audio/dummy/SDL_dummyaudio.c SDL-1.2.15.aros/src/audio/dummy/SDL_dummyaudio.c
---- SDL-1.2.15/src/audio/dummy/SDL_dummyaudio.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/audio/dummy/SDL_dummyaudio.c	2012-06-18 01:53:21.489272900 +0100
+--- SDL-1.2.15/src/audio/dummy/SDL_dummyaudio.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/audio/dummy/SDL_dummyaudio.c	2013-03-08 08:30:16.000000000 -0500
 @@ -21,6 +21,11 @@
  
      This file written by Ryan C. Gordon (icculus@icculus.org)
@@ -2452,8 +2476,8 @@ diff -ruN SDL-1.2.15/src/audio/dummy/SDL_dummyaudio.c SDL-1.2.15.aros/src/audio/
  	float bytes_per_sec = 0.0f;
  
 diff -ruN SDL-1.2.15/src/audio/SDL_audio.c SDL-1.2.15.aros/src/audio/SDL_audio.c
---- SDL-1.2.15/src/audio/SDL_audio.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/audio/SDL_audio.c	2012-06-18 01:53:21.341754100 +0100
+--- SDL-1.2.15/src/audio/SDL_audio.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/audio/SDL_audio.c	2013-03-22 11:16:44.000000000 -0400
 @@ -19,6 +19,12 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -2523,7 +2547,7 @@ diff -ruN SDL-1.2.15/src/audio/SDL_audio.c SDL-1.2.15.aros/src/audio/SDL_audio.c
 +#if !defined(PROTO_SDL_H)
  	void (SDLCALL *fill)(void *userdata,Uint8 *stream, int len);
 +#else
-+	void (SDLCALL *fill)(void *userdata,Uint8 *stream, int len, struct SDLBase *SDLBase);
++	void (SDLCALL *fill)(void *userdata,Uint8 *stream, int len, struct Library *SDLBase);
 +#endif
  	int    silence;
  
@@ -2556,7 +2580,7 @@ diff -ruN SDL-1.2.15/src/audio/SDL_audio.c SDL-1.2.15.aros/src/audio/SDL_audio.c
 +#if !defined(PROTO_SDL_H)
  			(*fill)(udata, stream, stream_len);
 +#else
-+			(*fill)(udata, stream, stream_len, SDLBase);
++			(*fill)(udata, stream, stream_len, (struct Library *)SDLBase);
 +#endif
  			SDL_mutexV(audio->mixer_lock);
  		}
@@ -2954,8 +2978,8 @@ diff -ruN SDL-1.2.15/src/audio/SDL_audio.c SDL-1.2.15.aros/src/audio/SDL_audio.c
  }
  
 diff -ruN SDL-1.2.15/src/audio/SDL_audio_c.h SDL-1.2.15.aros/src/audio/SDL_audio_c.h
---- SDL-1.2.15/src/audio/SDL_audio_c.h	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/audio/SDL_audio_c.h	2012-06-18 01:53:21.385759700 +0100
+--- SDL-1.2.15/src/audio/SDL_audio_c.h	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/audio/SDL_audio_c.h	2013-03-08 08:30:16.000000000 -0500
 @@ -23,6 +23,8 @@
  
  /* Functions and variables exported from SDL_audio.c for SDL_sysaudio.c */
@@ -2984,8 +3008,8 @@ diff -ruN SDL-1.2.15/src/audio/SDL_audio_c.h SDL-1.2.15.aros/src/audio/SDL_audio
 +
  
 diff -ruN SDL-1.2.15/src/audio/SDL_audiocvt.c SDL-1.2.15.aros/src/audio/SDL_audiocvt.c
---- SDL-1.2.15/src/audio/SDL_audiocvt.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/audio/SDL_audiocvt.c	2012-06-18 01:53:21.450267900 +0100
+--- SDL-1.2.15/src/audio/SDL_audiocvt.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/audio/SDL_audiocvt.c	2013-03-22 11:20:46.000000000 -0400
 @@ -19,6 +19,11 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -3008,7 +3032,7 @@ diff -ruN SDL-1.2.15/src/audio/SDL_audiocvt.c SDL-1.2.15.aros/src/audio/SDL_audi
 +#include "SDL_intern.h"
 +
 +#define SDL_ConvertMono SDL_ConvertMonoI
-+void SDLCALL SDL_ConvertMonoI(SDL_AudioCVT *cvt, Uint16 format, struct SDLBase *SDLBase)
++void SDLCALL SDL_ConvertMonoI(SDL_AudioCVT *cvt, Uint16 format, struct Library *SDLBase)
 +#endif
  {
  	int i;
@@ -3020,7 +3044,7 @@ diff -ruN SDL-1.2.15/src/audio/SDL_audiocvt.c SDL-1.2.15.aros/src/audio/SDL_audi
 +#if !defined(PROTO_SDL_H)
  		cvt->filters[cvt->filter_index](cvt, format);
 +#else
-+		cvt->filters[cvt->filter_index](cvt, format, (struct Library *)SDLBase);
++		cvt->filters[cvt->filter_index](cvt, format, SDLBase);
 +#endif
  	}
  }
@@ -3030,7 +3054,7 @@ diff -ruN SDL-1.2.15/src/audio/SDL_audiocvt.c SDL-1.2.15.aros/src/audio/SDL_audi
  void SDLCALL SDL_ConvertStrip(SDL_AudioCVT *cvt, Uint16 format)
 +#else
 +#define SDL_ConvertStrip SDL_ConvertStripI
-+void SDLCALL SDL_ConvertStripI(SDL_AudioCVT *cvt, Uint16 format, struct SDLBase *SDLBase)
++void SDLCALL SDL_ConvertStripI(SDL_AudioCVT *cvt, Uint16 format, struct Library *SDLBase)
 +#endif
  {
  	int i;
@@ -3042,7 +3066,7 @@ diff -ruN SDL-1.2.15/src/audio/SDL_audiocvt.c SDL-1.2.15.aros/src/audio/SDL_audi
 +#if !defined(PROTO_SDL_H)
  		cvt->filters[cvt->filter_index](cvt, format);
 +#else
-+		cvt->filters[cvt->filter_index](cvt, format, (struct Library *)SDLBase);
++		cvt->filters[cvt->filter_index](cvt, format, SDLBase);
 +#endif
  	}
  }
@@ -3053,7 +3077,7 @@ diff -ruN SDL-1.2.15/src/audio/SDL_audiocvt.c SDL-1.2.15.aros/src/audio/SDL_audi
  void SDLCALL SDL_ConvertStrip_2(SDL_AudioCVT *cvt, Uint16 format)
 +#else
 +#define SDL_ConvertStrip_2 SDL_ConvertStrip_2I
-+void SDLCALL SDL_ConvertStrip_2I(SDL_AudioCVT *cvt, Uint16 format, struct SDLBase *SDLBase)
++void SDLCALL SDL_ConvertStrip_2I(SDL_AudioCVT *cvt, Uint16 format, struct Library *SDLBase)
 +#endif
  {
  	int i;
@@ -3065,7 +3089,7 @@ diff -ruN SDL-1.2.15/src/audio/SDL_audiocvt.c SDL-1.2.15.aros/src/audio/SDL_audi
 +#if !defined(PROTO_SDL_H)
  		cvt->filters[cvt->filter_index](cvt, format);
 +#else
-+		cvt->filters[cvt->filter_index](cvt, format, (struct Library *)SDLBase);
++		cvt->filters[cvt->filter_index](cvt, format, SDLBase);
 +#endif
  	}
  }
@@ -3075,7 +3099,7 @@ diff -ruN SDL-1.2.15/src/audio/SDL_audiocvt.c SDL-1.2.15.aros/src/audio/SDL_audi
  void SDLCALL SDL_ConvertStereo(SDL_AudioCVT *cvt, Uint16 format)
 +#else
 +#define SDL_ConvertStereo SDL_ConvertStereoI
-+void SDLCALL SDL_ConvertStereoI(SDL_AudioCVT *cvt, Uint16 format, struct SDLBase *SDLBase)
++void SDLCALL SDL_ConvertStereoI(SDL_AudioCVT *cvt, Uint16 format, struct Library *SDLBase)
 +#endif
  {
  	int i;
@@ -3087,7 +3111,7 @@ diff -ruN SDL-1.2.15/src/audio/SDL_audiocvt.c SDL-1.2.15.aros/src/audio/SDL_audi
 +#if !defined(PROTO_SDL_H)
  		cvt->filters[cvt->filter_index](cvt, format);
 +#else
-+		cvt->filters[cvt->filter_index](cvt, format, (struct Library *)SDLBase);
++		cvt->filters[cvt->filter_index](cvt, format, SDLBase);
 +#endif
  	}
  }
@@ -3098,7 +3122,7 @@ diff -ruN SDL-1.2.15/src/audio/SDL_audiocvt.c SDL-1.2.15.aros/src/audio/SDL_audi
  void SDLCALL SDL_ConvertSurround(SDL_AudioCVT *cvt, Uint16 format)
 +#else
 +#define SDL_ConvertSurround SDL_ConvertSurroundI
-+void SDLCALL SDL_ConvertSurroundI(SDL_AudioCVT *cvt, Uint16 format, struct SDLBase *SDLBase)
++void SDLCALL SDL_ConvertSurroundI(SDL_AudioCVT *cvt, Uint16 format, struct Library *SDLBase)
 +#endif
  {
  	int i;
@@ -3110,7 +3134,7 @@ diff -ruN SDL-1.2.15/src/audio/SDL_audiocvt.c SDL-1.2.15.aros/src/audio/SDL_audi
 +#if !defined(PROTO_SDL_H)
  		cvt->filters[cvt->filter_index](cvt, format);
 +#else
-+		cvt->filters[cvt->filter_index](cvt, format, (struct Library *)SDLBase);
++		cvt->filters[cvt->filter_index](cvt, format, SDLBase);
 +#endif
  	}
  }
@@ -3121,7 +3145,7 @@ diff -ruN SDL-1.2.15/src/audio/SDL_audiocvt.c SDL-1.2.15.aros/src/audio/SDL_audi
  void SDLCALL SDL_ConvertSurround_4(SDL_AudioCVT *cvt, Uint16 format)
 +#else
 +#define SDL_ConvertSurround_4 SDL_ConvertSurround_4I
-+void SDLCALL SDL_ConvertSurround_4I(SDL_AudioCVT *cvt, Uint16 format, struct SDLBase *SDLBase)
++void SDLCALL SDL_ConvertSurround_4I(SDL_AudioCVT *cvt, Uint16 format, struct Library *SDLBase)
 +#endif
  {
  	int i;
@@ -3133,7 +3157,7 @@ diff -ruN SDL-1.2.15/src/audio/SDL_audiocvt.c SDL-1.2.15.aros/src/audio/SDL_audi
 +#if !defined(PROTO_SDL_H)
  		cvt->filters[cvt->filter_index](cvt, format);
 +#else
-+		cvt->filters[cvt->filter_index](cvt, format, (struct Library *)SDLBase);
++		cvt->filters[cvt->filter_index](cvt, format, SDLBase);
 +#endif
  	}
  }
@@ -3144,7 +3168,7 @@ diff -ruN SDL-1.2.15/src/audio/SDL_audiocvt.c SDL-1.2.15.aros/src/audio/SDL_audi
  void SDLCALL SDL_Convert16LSB(SDL_AudioCVT *cvt, Uint16 format)
 +#else
 +#define SDL_Convert16LSB SDL_Convert16LSBI
-+void SDLCALL SDL_Convert16LSBI(SDL_AudioCVT *cvt, Uint16 format, struct SDLBase *SDLBase)
++void SDLCALL SDL_Convert16LSBI(SDL_AudioCVT *cvt, Uint16 format, struct Library *SDLBase)
 +#endif
  {
  	int i;
@@ -3156,7 +3180,7 @@ diff -ruN SDL-1.2.15/src/audio/SDL_audiocvt.c SDL-1.2.15.aros/src/audio/SDL_audi
 +#if !defined(PROTO_SDL_H)
  		cvt->filters[cvt->filter_index](cvt, format);
 +#else
-+		cvt->filters[cvt->filter_index](cvt, format, (struct Library *)SDLBase);
++		cvt->filters[cvt->filter_index](cvt, format, SDLBase);
 +#endif
  	}
  }
@@ -3165,7 +3189,7 @@ diff -ruN SDL-1.2.15/src/audio/SDL_audiocvt.c SDL-1.2.15.aros/src/audio/SDL_audi
  void SDLCALL SDL_Convert16MSB(SDL_AudioCVT *cvt, Uint16 format)
 +#else
 +#define SDL_Convert16MSB SDL_Convert16MSBI
-+void SDLCALL SDL_Convert16MSBI(SDL_AudioCVT *cvt, Uint16 format, struct SDLBase *SDLBase)
++void SDLCALL SDL_Convert16MSBI(SDL_AudioCVT *cvt, Uint16 format, struct Library *SDLBase)
 +#endif
  {
  	int i;
@@ -3177,7 +3201,7 @@ diff -ruN SDL-1.2.15/src/audio/SDL_audiocvt.c SDL-1.2.15.aros/src/audio/SDL_audi
 +#if !defined(PROTO_SDL_H)
  		cvt->filters[cvt->filter_index](cvt, format);
 +#else
-+		cvt->filters[cvt->filter_index](cvt, format, (struct Library *)SDLBase);
++		cvt->filters[cvt->filter_index](cvt, format, SDLBase);
 +#endif
  	}
  }
@@ -3187,7 +3211,7 @@ diff -ruN SDL-1.2.15/src/audio/SDL_audiocvt.c SDL-1.2.15.aros/src/audio/SDL_audi
  void SDLCALL SDL_Convert8(SDL_AudioCVT *cvt, Uint16 format)
 +#else
 +#define SDL_Convert8 SDL_Convert8I
-+void SDLCALL SDL_Convert8I(SDL_AudioCVT *cvt, Uint16 format, struct SDLBase *SDLBase)
++void SDLCALL SDL_Convert8I(SDL_AudioCVT *cvt, Uint16 format, struct Library *SDLBase)
 +#endif
  {
  	int i;
@@ -3199,7 +3223,7 @@ diff -ruN SDL-1.2.15/src/audio/SDL_audiocvt.c SDL-1.2.15.aros/src/audio/SDL_audi
 +#if !defined(PROTO_SDL_H)
  		cvt->filters[cvt->filter_index](cvt, format);
 +#else
-+		cvt->filters[cvt->filter_index](cvt, format, (struct Library *)SDLBase);
++		cvt->filters[cvt->filter_index](cvt, format, SDLBase);
 +#endif
  	}
  }
@@ -3209,7 +3233,7 @@ diff -ruN SDL-1.2.15/src/audio/SDL_audiocvt.c SDL-1.2.15.aros/src/audio/SDL_audi
  void SDLCALL SDL_ConvertSign(SDL_AudioCVT *cvt, Uint16 format)
 +#else
 +#define SDL_ConvertSign SDL_ConvertSignI
-+void SDLCALL SDL_ConvertSignI(SDL_AudioCVT *cvt, Uint16 format, struct SDLBase *SDLBase)
++void SDLCALL SDL_ConvertSignI(SDL_AudioCVT *cvt, Uint16 format, struct Library *SDLBase)
 +#endif
  {
  	int i;
@@ -3221,7 +3245,7 @@ diff -ruN SDL-1.2.15/src/audio/SDL_audiocvt.c SDL-1.2.15.aros/src/audio/SDL_audi
 +#if !defined(PROTO_SDL_H)
  		cvt->filters[cvt->filter_index](cvt, format);
 +#else
-+		cvt->filters[cvt->filter_index](cvt, format, (struct Library *)SDLBase);
++		cvt->filters[cvt->filter_index](cvt, format, SDLBase);
 +#endif
  	}
  }
@@ -3231,7 +3255,7 @@ diff -ruN SDL-1.2.15/src/audio/SDL_audiocvt.c SDL-1.2.15.aros/src/audio/SDL_audi
  void SDLCALL SDL_ConvertEndian(SDL_AudioCVT *cvt, Uint16 format)
 +#else
 +#define SDL_ConvertEndian SDL_ConvertEndianI
-+void SDLCALL SDL_ConvertEndianI(SDL_AudioCVT *cvt, Uint16 format, struct SDLBase *SDLBase)
++void SDLCALL SDL_ConvertEndianI(SDL_AudioCVT *cvt, Uint16 format, struct Library *SDLBase)
 +#endif
  {
  	int i;
@@ -3243,7 +3267,7 @@ diff -ruN SDL-1.2.15/src/audio/SDL_audiocvt.c SDL-1.2.15.aros/src/audio/SDL_audi
 +#if !defined(PROTO_SDL_H)
  		cvt->filters[cvt->filter_index](cvt, format);
 +#else
-+		cvt->filters[cvt->filter_index](cvt, format, (struct Library *)SDLBase);
++		cvt->filters[cvt->filter_index](cvt, format, SDLBase);
 +#endif
  	}
  }
@@ -3253,7 +3277,7 @@ diff -ruN SDL-1.2.15/src/audio/SDL_audiocvt.c SDL-1.2.15.aros/src/audio/SDL_audi
  void SDLCALL SDL_RateMUL2(SDL_AudioCVT *cvt, Uint16 format)
 +#else
 +#define SDL_RateMUL2 SDL_RateMUL2I
-+void SDLCALL SDL_RateMUL2(SDL_AudioCVT *cvt, Uint16 format, struct SDLBase *SDLBase)
++void SDLCALL SDL_RateMUL2(SDL_AudioCVT *cvt, Uint16 format, struct Library *SDLBase)
 +#endif
  {
  	int i;
@@ -3265,7 +3289,7 @@ diff -ruN SDL-1.2.15/src/audio/SDL_audiocvt.c SDL-1.2.15.aros/src/audio/SDL_audi
 +#if !defined(PROTO_SDL_H)
  		cvt->filters[cvt->filter_index](cvt, format);
 +#else
-+		cvt->filters[cvt->filter_index](cvt, format, (struct Library *)SDLBase);
++		cvt->filters[cvt->filter_index](cvt, format, SDLBase);
 +#endif
  	}
  }
@@ -3276,7 +3300,7 @@ diff -ruN SDL-1.2.15/src/audio/SDL_audiocvt.c SDL-1.2.15.aros/src/audio/SDL_audi
  void SDLCALL SDL_RateMUL2_c2(SDL_AudioCVT *cvt, Uint16 format)
 +#else
 +#define SDL_RateMUL2_c2 SDL_RateMUL2_c2I
-+void SDLCALL SDL_RateMUL2_c2I(SDL_AudioCVT *cvt, Uint16 format, struct SDLBase *SDLBase)
++void SDLCALL SDL_RateMUL2_c2I(SDL_AudioCVT *cvt, Uint16 format, struct Library *SDLBase)
 +#endif
  {
  	int i;
@@ -3288,7 +3312,7 @@ diff -ruN SDL-1.2.15/src/audio/SDL_audiocvt.c SDL-1.2.15.aros/src/audio/SDL_audi
 +#if !defined(PROTO_SDL_H)
  		cvt->filters[cvt->filter_index](cvt, format);
 +#else
-+		cvt->filters[cvt->filter_index](cvt, format, (struct Library *)SDLBase);
++		cvt->filters[cvt->filter_index](cvt, format, SDLBase);
 +#endif
  	}
  }
@@ -3298,7 +3322,7 @@ diff -ruN SDL-1.2.15/src/audio/SDL_audiocvt.c SDL-1.2.15.aros/src/audio/SDL_audi
  void SDLCALL SDL_RateMUL2_c4(SDL_AudioCVT *cvt, Uint16 format)
 +#else
 +#define SDL_RateMUL2_c4 SDL_RateMUL2_c4I
-+void SDLCALL SDL_RateMUL2_c4I(SDL_AudioCVT *cvt, Uint16 format, struct SDLBase *SDLBase)
++void SDLCALL SDL_RateMUL2_c4I(SDL_AudioCVT *cvt, Uint16 format, struct Library *SDLBase)
 +#endif
  {
  	int i;
@@ -3310,7 +3334,7 @@ diff -ruN SDL-1.2.15/src/audio/SDL_audiocvt.c SDL-1.2.15.aros/src/audio/SDL_audi
 +#if !defined(PROTO_SDL_H)
  		cvt->filters[cvt->filter_index](cvt, format);
 +#else
-+		cvt->filters[cvt->filter_index](cvt, format, (struct Library *)SDLBase);
++		cvt->filters[cvt->filter_index](cvt, format, SDLBase);
 +#endif
  	}
  }
@@ -3321,7 +3345,7 @@ diff -ruN SDL-1.2.15/src/audio/SDL_audiocvt.c SDL-1.2.15.aros/src/audio/SDL_audi
  void SDLCALL SDL_RateMUL2_c6(SDL_AudioCVT *cvt, Uint16 format)
 +#else
 +#define SDL_RateMUL2_c6 SDL_RateMUL2_c6I
-+void SDLCALL SDL_RateMUL2_c6I(SDL_AudioCVT *cvt, Uint16 format, struct SDLBase *SDLBase)
++void SDLCALL SDL_RateMUL2_c6I(SDL_AudioCVT *cvt, Uint16 format, struct Library *SDLBase)
 +#endif
  {
  	int i;
@@ -3333,7 +3357,7 @@ diff -ruN SDL-1.2.15/src/audio/SDL_audiocvt.c SDL-1.2.15.aros/src/audio/SDL_audi
 +#if !defined(PROTO_SDL_H)
  		cvt->filters[cvt->filter_index](cvt, format);
 +#else
-+		cvt->filters[cvt->filter_index](cvt, format, (struct Library *)SDLBase);
++		cvt->filters[cvt->filter_index](cvt, format, SDLBase);
 +#endif
  	}
  }
@@ -3343,7 +3367,7 @@ diff -ruN SDL-1.2.15/src/audio/SDL_audiocvt.c SDL-1.2.15.aros/src/audio/SDL_audi
  void SDLCALL SDL_RateDIV2(SDL_AudioCVT *cvt, Uint16 format)
 +#else
 +#define SDL_RateDIV2 SDL_RateDIV2I
-+void SDLCALL SDL_RateDIV2I(SDL_AudioCVT *cvt, Uint16 format, struct SDLBase *SDLBase)
++void SDLCALL SDL_RateDIV2I(SDL_AudioCVT *cvt, Uint16 format, struct Library *SDLBase)
 +#endif
  {
  	int i;
@@ -3355,7 +3379,7 @@ diff -ruN SDL-1.2.15/src/audio/SDL_audiocvt.c SDL-1.2.15.aros/src/audio/SDL_audi
 +#if !defined(PROTO_SDL_H)
  		cvt->filters[cvt->filter_index](cvt, format);
 +#else
-+		cvt->filters[cvt->filter_index](cvt, format, (struct Library *)SDLBase);
++		cvt->filters[cvt->filter_index](cvt, format, SDLBase);
 +#endif
  	}
  }
@@ -3366,7 +3390,7 @@ diff -ruN SDL-1.2.15/src/audio/SDL_audiocvt.c SDL-1.2.15.aros/src/audio/SDL_audi
  void SDLCALL SDL_RateDIV2_c2(SDL_AudioCVT *cvt, Uint16 format)
 +#else
 +#define SDL_RateDIV2_c2 SDL_RateDIV2_c2I
-+void SDLCALL SDL_RateDIV2_c2I(SDL_AudioCVT *cvt, Uint16 format, struct SDLBase *SDLBase)
++void SDLCALL SDL_RateDIV2_c2I(SDL_AudioCVT *cvt, Uint16 format, struct Library *SDLBase)
 +#endif
  {
  	int i;
@@ -3378,7 +3402,7 @@ diff -ruN SDL-1.2.15/src/audio/SDL_audiocvt.c SDL-1.2.15.aros/src/audio/SDL_audi
 +#if !defined(PROTO_SDL_H)
  		cvt->filters[cvt->filter_index](cvt, format);
 +#else
-+		cvt->filters[cvt->filter_index](cvt, format, (struct Library *)SDLBase);
++		cvt->filters[cvt->filter_index](cvt, format, SDLBase);
 +#endif
  	}
  }
@@ -3389,7 +3413,7 @@ diff -ruN SDL-1.2.15/src/audio/SDL_audiocvt.c SDL-1.2.15.aros/src/audio/SDL_audi
  void SDLCALL SDL_RateDIV2_c4(SDL_AudioCVT *cvt, Uint16 format)
 +#else
 +#define SDL_RateDIV2_c4 SDL_RateDIV2_c4I
-+void SDLCALL SDL_RateDIV2_c4I(SDL_AudioCVT *cvt, Uint16 format, struct SDLBase *SDLBase)
++void SDLCALL SDL_RateDIV2_c4I(SDL_AudioCVT *cvt, Uint16 format, struct Library *SDLBase)
 +#endif
  {
  	int i;
@@ -3401,7 +3425,7 @@ diff -ruN SDL-1.2.15/src/audio/SDL_audiocvt.c SDL-1.2.15.aros/src/audio/SDL_audi
 +#if !defined(PROTO_SDL_H)
  		cvt->filters[cvt->filter_index](cvt, format);
 +#else
-+		cvt->filters[cvt->filter_index](cvt, format, (struct Library *)SDLBase);
++		cvt->filters[cvt->filter_index](cvt, format, SDLBase);
 +#endif
  	}
  }
@@ -3411,7 +3435,7 @@ diff -ruN SDL-1.2.15/src/audio/SDL_audiocvt.c SDL-1.2.15.aros/src/audio/SDL_audi
  void SDLCALL SDL_RateDIV2_c6(SDL_AudioCVT *cvt, Uint16 format)
 +#else
 +#define SDL_RateDIV2_c6 SDL_RateDIV2_c6I
-+void SDLCALL SDL_RateDIV2_c6I(SDL_AudioCVT *cvt, Uint16 format, struct SDLBase *SDLBase)
++void SDLCALL SDL_RateDIV2_c6I(SDL_AudioCVT *cvt, Uint16 format, struct Library *SDLBase)
 +#endif
  {
  	int i;
@@ -3423,7 +3447,7 @@ diff -ruN SDL-1.2.15/src/audio/SDL_audiocvt.c SDL-1.2.15.aros/src/audio/SDL_audi
 +#if !defined(PROTO_SDL_H)
  		cvt->filters[cvt->filter_index](cvt, format);
 +#else
-+		cvt->filters[cvt->filter_index](cvt, format, (struct Library *)SDLBase);
++		cvt->filters[cvt->filter_index](cvt, format, SDLBase);
 +#endif
  	}
  }
@@ -3433,7 +3457,7 @@ diff -ruN SDL-1.2.15/src/audio/SDL_audiocvt.c SDL-1.2.15.aros/src/audio/SDL_audi
  void SDLCALL SDL_RateSLOW(SDL_AudioCVT *cvt, Uint16 format)
 +#else
 +#define SDL_RateSLOW SDL_RateSLOWI
-+void SDLCALL SDL_RateSLOWI(SDL_AudioCVT *cvt, Uint16 format, struct SDLBase *SDLBase)
++void SDLCALL SDL_RateSLOWI(SDL_AudioCVT *cvt, Uint16 format, struct Library *SDLBase)
 +#endif
  {
  	double ipos;
@@ -3445,7 +3469,7 @@ diff -ruN SDL-1.2.15/src/audio/SDL_audiocvt.c SDL-1.2.15.aros/src/audio/SDL_audi
 +#if !defined(PROTO_SDL_H)
  		cvt->filters[cvt->filter_index](cvt, format);
 +#else
-+		cvt->filters[cvt->filter_index](cvt, format, (struct Library *)SDLBase);
++		cvt->filters[cvt->filter_index](cvt, format, SDLBase);
 +#endif
  	}
  }
@@ -3456,7 +3480,7 @@ diff -ruN SDL-1.2.15/src/audio/SDL_audiocvt.c SDL-1.2.15.aros/src/audio/SDL_audi
 +#else
 +AROS_LH1(int, SDL_ConvertAudio,
 +	AROS_LHA(SDL_AudioCVT *, cvt, A0),
-+	struct SDLBase *, SDLBase, 135, SDL)
++	struct Library *, SDLBase, 135, SDL)
 +{
 +    AROS_LIBFUNC_INIT
 +#endif
@@ -3504,7 +3528,19 @@ diff -ruN SDL-1.2.15/src/audio/SDL_audiocvt.c SDL-1.2.15.aros/src/audio/SDL_audi
  /*printf("Build format %04x->%04x, channels %u->%u, rate %d->%d\n",
  		src_format, dst_format, src_channels, dst_channels, src_rate, dst_rate);*/
  	/* Start off with no conversion necessary */
-@@ -1507,4 +1723,7 @@
+@@ -1439,7 +1655,11 @@
+ 		Uint32 hi_rate, lo_rate;
+ 		int len_mult;
+ 		double len_ratio;
++#if !defined(PROTO_SDL_H)
+ 		void (SDLCALL *rate_cvt)(SDL_AudioCVT *cvt, Uint16 format);
++#else
++		void (SDLCALL *rate_cvt)(SDL_AudioCVT *cvt, Uint16 format, struct Library *SDLBase);
++#endif
+ 
+ 		if ( src_rate > dst_rate ) {
+ 			hi_rate = src_rate;
+@@ -1507,4 +1727,7 @@
  		cvt->filters[cvt->filter_index] = NULL;
  	}
  	return(cvt->needed);
@@ -3513,8 +3549,8 @@ diff -ruN SDL-1.2.15/src/audio/SDL_audiocvt.c SDL-1.2.15.aros/src/audio/SDL_audi
 +#endif
  }
 diff -ruN SDL-1.2.15/src/audio/SDL_audiodev.c SDL-1.2.15.aros/src/audio/SDL_audiodev.c
---- SDL-1.2.15/src/audio/SDL_audiodev.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/audio/SDL_audiodev.c	2012-06-18 01:53:21.357256100 +0100
+--- SDL-1.2.15/src/audio/SDL_audiodev.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/audio/SDL_audiodev.c	2013-03-08 08:30:16.000000000 -0500
 @@ -19,6 +19,11 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -3528,8 +3564,8 @@ diff -ruN SDL-1.2.15/src/audio/SDL_audiodev.c SDL-1.2.15.aros/src/audio/SDL_audi
  
  /* Get the name of the audio device we use for output */
 diff -ruN SDL-1.2.15/src/audio/SDL_mixer.c SDL-1.2.15.aros/src/audio/SDL_mixer.c
---- SDL-1.2.15/src/audio/SDL_mixer.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/audio/SDL_mixer.c	2012-06-18 01:53:21.305749600 +0100
+--- SDL-1.2.15/src/audio/SDL_mixer.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/audio/SDL_mixer.c	2013-03-08 08:30:16.000000000 -0500
 @@ -19,6 +19,11 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -3585,8 +3621,8 @@ diff -ruN SDL-1.2.15/src/audio/SDL_mixer.c SDL-1.2.15.aros/src/audio/SDL_mixer.c
  }
  
 diff -ruN SDL-1.2.15/src/audio/SDL_mixer_m68k.c SDL-1.2.15.aros/src/audio/SDL_mixer_m68k.c
---- SDL-1.2.15/src/audio/SDL_mixer_m68k.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/audio/SDL_mixer_m68k.c	2012-06-18 01:53:21.515776200 +0100
+--- SDL-1.2.15/src/audio/SDL_mixer_m68k.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/audio/SDL_mixer_m68k.c	2013-03-08 08:30:16.000000000 -0500
 @@ -19,6 +19,11 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -3600,8 +3636,8 @@ diff -ruN SDL-1.2.15/src/audio/SDL_mixer_m68k.c SDL-1.2.15.aros/src/audio/SDL_mi
  
  /*
 diff -ruN SDL-1.2.15/src/audio/SDL_mixer_MMX.c SDL-1.2.15.aros/src/audio/SDL_mixer_MMX.c
---- SDL-1.2.15/src/audio/SDL_mixer_MMX.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/audio/SDL_mixer_MMX.c	2012-06-18 01:53:21.390760300 +0100
+--- SDL-1.2.15/src/audio/SDL_mixer_MMX.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/audio/SDL_mixer_MMX.c	2013-03-08 08:30:16.000000000 -0500
 @@ -19,6 +19,11 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -3615,8 +3651,8 @@ diff -ruN SDL-1.2.15/src/audio/SDL_mixer_MMX.c SDL-1.2.15.aros/src/audio/SDL_mix
  
  /*
 diff -ruN SDL-1.2.15/src/audio/SDL_sysaudio.h SDL-1.2.15.aros/src/audio/SDL_sysaudio.h
---- SDL-1.2.15/src/audio/SDL_sysaudio.h	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/audio/SDL_sysaudio.h	2012-06-18 01:53:21.502274500 +0100
+--- SDL-1.2.15/src/audio/SDL_sysaudio.h	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/audio/SDL_sysaudio.h	2013-03-08 08:30:16.000000000 -0500
 @@ -27,6 +27,10 @@
  #include "SDL_mutex.h"
  #include "SDL_thread.h"
@@ -3697,8 +3733,8 @@ diff -ruN SDL-1.2.15/src/audio/SDL_sysaudio.h SDL-1.2.15.aros/src/audio/SDL_sysa
  
  #endif /* _SDL_sysaudio_h */
 diff -ruN SDL-1.2.15/src/audio/SDL_wave.c SDL-1.2.15.aros/src/audio/SDL_wave.c
---- SDL-1.2.15/src/audio/SDL_wave.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/audio/SDL_wave.c	2012-06-18 01:53:21.436266100 +0100
+--- SDL-1.2.15/src/audio/SDL_wave.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/audio/SDL_wave.c	2013-03-08 08:30:16.000000000 -0500
 @@ -19,6 +19,11 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -3828,8 +3864,8 @@ diff -ruN SDL-1.2.15/src/audio/SDL_wave.c SDL-1.2.15.aros/src/audio/SDL_wave.c
  	chunk->magic	= SDL_ReadLE32(src);
  	chunk->length	= SDL_ReadLE32(src);
 diff -ruN SDL-1.2.15/src/cdrom/aros/SDL_syscdrom.c SDL-1.2.15.aros/src/cdrom/aros/SDL_syscdrom.c
---- SDL-1.2.15/src/cdrom/aros/SDL_syscdrom.c	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.15.aros/src/cdrom/aros/SDL_syscdrom.c	2012-06-18 01:53:21.886823300 +0100
+--- SDL-1.2.15/src/cdrom/aros/SDL_syscdrom.c	1969-12-31 19:00:00.000000000 -0500
++++ SDL-1.2.15.aros/src/cdrom/aros/SDL_syscdrom.c	2013-03-08 08:30:16.000000000 -0500
 @@ -0,0 +1,635 @@
 +/*
 +    SDL - Simple DirectMedia Layer
@@ -4467,8 +4503,8 @@ diff -ruN SDL-1.2.15/src/cdrom/aros/SDL_syscdrom.c SDL-1.2.15.aros/src/cdrom/aro
 +	D(bug("CDRom : SDL_SYS_CDQuit\n"));
 +}
 diff -ruN SDL-1.2.15/src/cdrom/aros/SDL_syscdrom.h SDL-1.2.15.aros/src/cdrom/aros/SDL_syscdrom.h
---- SDL-1.2.15/src/cdrom/aros/SDL_syscdrom.h	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.15.aros/src/cdrom/aros/SDL_syscdrom.h	2012-06-18 01:53:21.889823700 +0100
+--- SDL-1.2.15/src/cdrom/aros/SDL_syscdrom.h	1969-12-31 19:00:00.000000000 -0500
++++ SDL-1.2.15.aros/src/cdrom/aros/SDL_syscdrom.h	2013-03-08 08:30:16.000000000 -0500
 @@ -0,0 +1,107 @@
 +/*
 +    SDL - Simple DirectMedia Layer
@@ -4578,8 +4614,8 @@ diff -ruN SDL-1.2.15/src/cdrom/aros/SDL_syscdrom.h SDL-1.2.15.aros/src/cdrom/aro
 +#endif
 +#endif
 diff -ruN SDL-1.2.15/src/cdrom/SDL_cdrom.c SDL-1.2.15.aros/src/cdrom/SDL_cdrom.c
---- SDL-1.2.15/src/cdrom/SDL_cdrom.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/cdrom/SDL_cdrom.c	2012-06-18 01:53:21.908826100 +0100
+--- SDL-1.2.15/src/cdrom/SDL_cdrom.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/cdrom/SDL_cdrom.c	2013-03-08 08:30:16.000000000 -0500
 @@ -19,6 +19,12 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -5005,8 +5041,8 @@ diff -ruN SDL-1.2.15/src/cdrom/SDL_cdrom.c SDL-1.2.15.aros/src/cdrom/SDL_cdrom.c
  	SDL_SYS_CDQuit();
  	SDL_cdinitted = 0;
 diff -ruN SDL-1.2.15/src/cdrom/SDL_syscdrom.h SDL-1.2.15.aros/src/cdrom/SDL_syscdrom.h
---- SDL-1.2.15/src/cdrom/SDL_syscdrom.h	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/cdrom/SDL_syscdrom.h	2012-06-18 01:53:21.918827400 +0100
+--- SDL-1.2.15/src/cdrom/SDL_syscdrom.h	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/cdrom/SDL_syscdrom.h	2013-03-08 08:30:16.000000000 -0500
 @@ -21,12 +21,17 @@
  */
  #include "SDL_config.h"
@@ -5063,8 +5099,8 @@ diff -ruN SDL-1.2.15/src/cdrom/SDL_syscdrom.h SDL-1.2.15.aros/src/cdrom/SDL_sysc
  
 +#endif
 diff -ruN SDL-1.2.15/src/cpuinfo/SDL_cpuinfo.c SDL-1.2.15.aros/src/cpuinfo/SDL_cpuinfo.c
---- SDL-1.2.15/src/cpuinfo/SDL_cpuinfo.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/cpuinfo/SDL_cpuinfo.c	2012-06-18 01:53:21.272245300 +0100
+--- SDL-1.2.15/src/cpuinfo/SDL_cpuinfo.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/cpuinfo/SDL_cpuinfo.c	2013-03-08 08:30:16.000000000 -0500
 @@ -19,6 +19,11 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -5238,8 +5274,8 @@ diff -ruN SDL-1.2.15/src/cpuinfo/SDL_cpuinfo.c SDL-1.2.15.aros/src/cpuinfo/SDL_c
  
  #ifdef TEST_MAIN
 diff -ruN SDL-1.2.15/src/events/SDL_active.c SDL-1.2.15.aros/src/events/SDL_active.c
---- SDL-1.2.15/src/events/SDL_active.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/events/SDL_active.c	2012-06-18 01:53:22.197862800 +0100
+--- SDL-1.2.15/src/events/SDL_active.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/events/SDL_active.c	2013-03-08 08:30:16.000000000 -0500
 @@ -19,6 +19,11 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -5309,8 +5345,8 @@ diff -ruN SDL-1.2.15/src/events/SDL_active.c SDL-1.2.15.aros/src/events/SDL_acti
  	int posted;
  	Uint8 new_state;
 diff -ruN SDL-1.2.15/src/events/SDL_events.c SDL-1.2.15.aros/src/events/SDL_events.c
---- SDL-1.2.15/src/events/SDL_events.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/events/SDL_events.c	2012-06-18 01:53:22.219865600 +0100
+--- SDL-1.2.15/src/events/SDL_events.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/events/SDL_events.c	2013-03-08 08:30:16.000000000 -0500
 @@ -19,6 +19,11 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -5695,8 +5731,8 @@ diff -ruN SDL-1.2.15/src/events/SDL_events.c SDL-1.2.15.aros/src/events/SDL_even
  	int posted;
  
 diff -ruN SDL-1.2.15/src/events/SDL_events_c.h SDL-1.2.15.aros/src/events/SDL_events_c.h
---- SDL-1.2.15/src/events/SDL_events_c.h	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/events/SDL_events_c.h	2012-06-18 01:53:22.189361800 +0100
+--- SDL-1.2.15/src/events/SDL_events_c.h	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/events/SDL_events_c.h	2013-03-08 08:30:16.000000000 -0500
 @@ -24,6 +24,7 @@
  /* Useful functions and variables from SDL_events.c */
  #include "SDL_events.h"
@@ -5782,8 +5818,8 @@ diff -ruN SDL-1.2.15/src/events/SDL_events_c.h SDL-1.2.15.aros/src/events/SDL_ev
  #endif
 -extern int SDL_TranslateUNICODE;
 diff -ruN SDL-1.2.15/src/events/SDL_expose.c SDL-1.2.15.aros/src/events/SDL_expose.c
---- SDL-1.2.15/src/events/SDL_expose.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/events/SDL_expose.c	2012-06-18 01:53:22.187861600 +0100
+--- SDL-1.2.15/src/events/SDL_expose.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/events/SDL_expose.c	2013-03-08 08:30:16.000000000 -0500
 @@ -19,6 +19,11 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -5809,8 +5845,8 @@ diff -ruN SDL-1.2.15/src/events/SDL_expose.c SDL-1.2.15.aros/src/events/SDL_expo
  	int posted;
  	SDL_Event events[32];
 diff -ruN SDL-1.2.15/src/events/SDL_keyboard.c SDL-1.2.15.aros/src/events/SDL_keyboard.c
---- SDL-1.2.15/src/events/SDL_keyboard.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/events/SDL_keyboard.c	2012-06-18 01:53:22.211864600 +0100
+--- SDL-1.2.15/src/events/SDL_keyboard.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/events/SDL_keyboard.c	2013-03-08 08:30:16.000000000 -0500
 @@ -19,6 +19,11 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -6036,8 +6072,8 @@ diff -ruN SDL-1.2.15/src/events/SDL_keyboard.c SDL-1.2.15.aros/src/events/SDL_ke
  
  void SDL_GetKeyRepeat(int *delay, int *interval)
 diff -ruN SDL-1.2.15/src/events/SDL_mouse.c SDL-1.2.15.aros/src/events/SDL_mouse.c
---- SDL-1.2.15/src/events/SDL_mouse.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/events/SDL_mouse.c	2012-06-18 01:53:22.193362300 +0100
+--- SDL-1.2.15/src/events/SDL_mouse.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/events/SDL_mouse.c	2013-03-08 08:30:16.000000000 -0500
 @@ -19,6 +19,11 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -6200,8 +6236,8 @@ diff -ruN SDL-1.2.15/src/events/SDL_mouse.c SDL-1.2.15.aros/src/events/SDL_mouse
  	SDL_Event event;
  	int posted;
 diff -ruN SDL-1.2.15/src/events/SDL_quit.c SDL-1.2.15.aros/src/events/SDL_quit.c
---- SDL-1.2.15/src/events/SDL_quit.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/events/SDL_quit.c	2012-06-18 01:53:22.202363400 +0100
+--- SDL-1.2.15/src/events/SDL_quit.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/events/SDL_quit.c	2013-03-22 11:50:50.000000000 -0400
 @@ -19,6 +19,11 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -6221,7 +6257,7 @@ diff -ruN SDL-1.2.15/src/events/SDL_quit.c SDL-1.2.15.aros/src/events/SDL_quit.c
 +#if !defined(PROTO_SDL_H)
  	SDL_PrivateQuit();
 +#else
-+#warning "TODO: Call SDL_PrivateQuit()"
++        // FIXME: Call SDL_PrivateQuit()
 +#endif
  }
  #endif /* HAVE_SIGNAL_H */
@@ -6260,8 +6296,8 @@ diff -ruN SDL-1.2.15/src/events/SDL_quit.c SDL-1.2.15.aros/src/events/SDL_quit.c
  	int posted;
  
 diff -ruN SDL-1.2.15/src/events/SDL_resize.c SDL-1.2.15.aros/src/events/SDL_resize.c
---- SDL-1.2.15/src/events/SDL_resize.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/events/SDL_resize.c	2012-06-18 01:53:22.215365100 +0100
+--- SDL-1.2.15/src/events/SDL_resize.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/events/SDL_resize.c	2013-03-08 08:30:16.000000000 -0500
 @@ -19,6 +19,11 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -6301,8 +6337,8 @@ diff -ruN SDL-1.2.15/src/events/SDL_resize.c SDL-1.2.15.aros/src/events/SDL_resi
  	int posted;
  	SDL_Event events[32];
 diff -ruN SDL-1.2.15/src/file/SDL_rwops.c SDL-1.2.15.aros/src/file/SDL_rwops.c
---- SDL-1.2.15/src/file/SDL_rwops.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/file/SDL_rwops.c	2012-06-18 01:53:22.086848700 +0100
+--- SDL-1.2.15/src/file/SDL_rwops.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/file/SDL_rwops.c	2013-03-22 11:53:55.000000000 -0400
 @@ -19,6 +19,11 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -6330,7 +6366,7 @@ diff -ruN SDL-1.2.15/src/file/SDL_rwops.c SDL-1.2.15.aros/src/file/SDL_rwops.c
  static int SDLCALL stdio_seek(SDL_RWops *context, int offset, int whence)
  {
 +#if defined(PROTO_SDL_H)
-+    struct SDLBase *SDLBase = context->SDLLib;
++    struct Library __unused *SDLBase = context->SDLLib;
 +#endif
  	if ( fseek(context->hidden.stdio.fp, offset, whence) == 0 ) {
  		return(ftell(context->hidden.stdio.fp));
@@ -6340,7 +6376,7 @@ diff -ruN SDL-1.2.15/src/file/SDL_rwops.c SDL-1.2.15.aros/src/file/SDL_rwops.c
  static int SDLCALL stdio_read(SDL_RWops *context, void *ptr, int size, int maxnum)
  {
 +#if defined(PROTO_SDL_H)
-+    struct SDLBase *SDLBase = context->SDLLib;
++    struct Library __unused *SDLBase = context->SDLLib;
 +#endif
  	size_t nread;
  
@@ -6350,7 +6386,7 @@ diff -ruN SDL-1.2.15/src/file/SDL_rwops.c SDL-1.2.15.aros/src/file/SDL_rwops.c
  static int SDLCALL stdio_write(SDL_RWops *context, const void *ptr, int size, int num)
  {
 +#if defined(PROTO_SDL_H)
-+    struct SDLBase *SDLBase = context->SDLLib;
++    struct Library __unused *SDLBase = context->SDLLib;
 +#endif
  	size_t nwrote;
  
@@ -6360,7 +6396,7 @@ diff -ruN SDL-1.2.15/src/file/SDL_rwops.c SDL-1.2.15.aros/src/file/SDL_rwops.c
  static int SDLCALL stdio_close(SDL_RWops *context)
  {
 +#if defined(PROTO_SDL_H)
-+    struct SDLBase *SDLBase = context->SDLLib;
++    struct Library __unused *SDLBase = context->SDLLib;
 +#endif
  	if ( context ) {
  		if ( context->hidden.stdio.autoclose ) {
@@ -6377,7 +6413,7 @@ diff -ruN SDL-1.2.15/src/file/SDL_rwops.c SDL-1.2.15.aros/src/file/SDL_rwops.c
  static int SDLCALL mem_seek(SDL_RWops *context, int offset, int whence)
  {
 +#if defined(PROTO_SDL_H)
-+    struct SDLBase *SDLBase = context->SDLLib;
++    struct Library __unused *SDLBase = context->SDLLib;
 +#endif
  	Uint8 *newpos;
  
@@ -6387,7 +6423,7 @@ diff -ruN SDL-1.2.15/src/file/SDL_rwops.c SDL-1.2.15.aros/src/file/SDL_rwops.c
  static int SDLCALL mem_read(SDL_RWops *context, void *ptr, int size, int maxnum)
  {
 +#if defined(PROTO_SDL_H)
-+    struct SDLBase *SDLBase = context->SDLLib;
++    struct Library __unused *SDLBase = context->SDLLib;
 +#endif
  	size_t total_bytes;
  	size_t mem_available;
@@ -6397,7 +6433,7 @@ diff -ruN SDL-1.2.15/src/file/SDL_rwops.c SDL-1.2.15.aros/src/file/SDL_rwops.c
  static int SDLCALL mem_write(SDL_RWops *context, const void *ptr, int size, int num)
  {
 +#if defined(PROTO_SDL_H)
-+    struct SDLBase *SDLBase = context->SDLLib;
++    struct Library __unused *SDLBase = context->SDLLib;
 +#endif
  	if ( (context->hidden.mem.here + (num*size)) > context->hidden.mem.stop ) {
  		num = (context->hidden.mem.stop-context->hidden.mem.here)/size;
@@ -6407,7 +6443,7 @@ diff -ruN SDL-1.2.15/src/file/SDL_rwops.c SDL-1.2.15.aros/src/file/SDL_rwops.c
  static int SDLCALL mem_writeconst(SDL_RWops *context, const void *ptr, int size, int num)
  {
 +#if defined(PROTO_SDL_H)
-+    struct SDLBase *SDLBase = context->SDLLib;
++    struct Library __unused *SDLBase = context->SDLLib;
 +#endif
  	SDL_SetError("Can't write to read-only memory");
  	return(-1);
@@ -6415,7 +6451,7 @@ diff -ruN SDL-1.2.15/src/file/SDL_rwops.c SDL-1.2.15.aros/src/file/SDL_rwops.c
  static int SDLCALL mem_close(SDL_RWops *context)
  {
 +#if defined(PROTO_SDL_H)
-+    struct SDLBase *SDLBase = context->SDLLib;
++    struct Library __unused *SDLBase = context->SDLLib;
 +#endif
  	if ( context ) {
  		SDL_FreeRW(context);
@@ -6512,7 +6548,7 @@ diff -ruN SDL-1.2.15/src/file/SDL_rwops.c SDL-1.2.15.aros/src/file/SDL_rwops.c
  {
 +#else
 +AROS_LH0(SDL_RWops *, SDL_AllocRW,
-+	struct SDLBase *, SDLBase, 20, SDL)
++	struct Library *, SDLBase, 20, SDL)
 +{
 +    AROS_LIBFUNC_INIT
 +#endif
@@ -6761,8 +6797,8 @@ diff -ruN SDL-1.2.15/src/file/SDL_rwops.c SDL-1.2.15.aros/src/file/SDL_rwops.c
 +#endif
  }
 diff -ruN SDL-1.2.15/src/joystick/aros/SDL_sysjoystick.c SDL-1.2.15.aros/src/joystick/aros/SDL_sysjoystick.c
---- SDL-1.2.15/src/joystick/aros/SDL_sysjoystick.c	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.15.aros/src/joystick/aros/SDL_sysjoystick.c	2012-06-18 01:53:22.115352400 +0100
+--- SDL-1.2.15/src/joystick/aros/SDL_sysjoystick.c	1969-12-31 19:00:00.000000000 -0500
++++ SDL-1.2.15.aros/src/joystick/aros/SDL_sysjoystick.c	2013-03-22 11:57:46.000000000 -0400
 @@ -0,0 +1,506 @@
 +/*
 +    SDL - Simple DirectMedia Layer
@@ -7082,7 +7118,7 @@ diff -ruN SDL-1.2.15/src/joystick/aros/SDL_sysjoystick.c SDL-1.2.15.aros/src/joy
 +{
 +	ULONG data;
 +#ifndef NO_LOWLEVEL_EXT
-+	ULONG data_ext;
++	ULONG data_ext = 0;
 +#endif
 +	int	i;
 +	
@@ -7208,7 +7244,7 @@ diff -ruN SDL-1.2.15/src/joystick/aros/SDL_sysjoystick.c SDL-1.2.15.aros/src/joy
 +		{
 +			if(i == 1)
 +			{
-+#warning WTF?
++				// FIXME: WTF?
 +				data &= ~(joybut[2]);
 +			}
 +
@@ -7271,8 +7307,8 @@ diff -ruN SDL-1.2.15/src/joystick/aros/SDL_sysjoystick.c SDL-1.2.15.aros/src/joy
 +}
 +
 diff -ruN SDL-1.2.15/src/joystick/SDL_joystick.c SDL-1.2.15.aros/src/joystick/SDL_joystick.c
---- SDL-1.2.15/src/joystick/SDL_joystick.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/joystick/SDL_joystick.c	2012-06-18 01:53:22.100850500 +0100
+--- SDL-1.2.15/src/joystick/SDL_joystick.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/joystick/SDL_joystick.c	2013-03-08 08:30:16.000000000 -0500
 @@ -19,6 +19,11 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -7748,8 +7784,8 @@ diff -ruN SDL-1.2.15/src/joystick/SDL_joystick.c SDL-1.2.15.aros/src/joystick/SD
 +#endif
  }
 diff -ruN SDL-1.2.15/src/joystick/SDL_joystick_c.h SDL-1.2.15.aros/src/joystick/SDL_joystick_c.h
---- SDL-1.2.15/src/joystick/SDL_joystick_c.h	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/joystick/SDL_joystick_c.h	2012-06-18 01:53:22.123353400 +0100
+--- SDL-1.2.15/src/joystick/SDL_joystick_c.h	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/joystick/SDL_joystick_c.h	2013-03-08 08:30:16.000000000 -0500
 @@ -28,6 +28,7 @@
  extern Uint8 SDL_numjoysticks;
  
@@ -7779,8 +7815,8 @@ diff -ruN SDL-1.2.15/src/joystick/SDL_joystick_c.h SDL-1.2.15.aros/src/joystick/
 +#define SDL_PrivateJoystickButton(joystick, button, state) SDL_PrivateJoystickButtonI(joystick, button, state, SDLBase)
 +#endif
 diff -ruN SDL-1.2.15/src/joystick/SDL_sysjoystick.h SDL-1.2.15.aros/src/joystick/SDL_sysjoystick.h
---- SDL-1.2.15/src/joystick/SDL_sysjoystick.h	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/joystick/SDL_sysjoystick.h	2012-06-18 01:53:22.165358700 +0100
+--- SDL-1.2.15/src/joystick/SDL_sysjoystick.h	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/joystick/SDL_sysjoystick.h	2013-03-08 08:30:16.000000000 -0500
 @@ -55,28 +55,39 @@
   * This function should return the number of available joysticks, or -1
   * on an unrecoverable fatal error.
@@ -7828,8 +7864,8 @@ diff -ruN SDL-1.2.15/src/joystick/SDL_sysjoystick.h SDL-1.2.15.aros/src/joystick
 +#define SDL_SYS_JoystickQuit() SDL_SYS_JoystickQuitI(SDLBase)
 +#endif
 diff -ruN SDL-1.2.15/src/loadso/dummy/SDL_sysloadso.c SDL-1.2.15.aros/src/loadso/dummy/SDL_sysloadso.c
---- SDL-1.2.15/src/loadso/dummy/SDL_sysloadso.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/loadso/dummy/SDL_sysloadso.c	2012-06-18 01:53:22.067846300 +0100
+--- SDL-1.2.15/src/loadso/dummy/SDL_sysloadso.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/loadso/dummy/SDL_sysloadso.c	2013-03-22 11:58:20.000000000 -0400
 @@ -19,6 +19,11 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -7849,7 +7885,7 @@ diff -ruN SDL-1.2.15/src/loadso/dummy/SDL_sysloadso.c SDL-1.2.15.aros/src/loadso
 +#if !defined(PROTO_SDL_H)
  void *SDL_LoadObject(const char *sofile)
 +#else
-+void *SDL_LoadObject(const char *sofile, struct SDLBase *SDLBase)
++void *SDL_LoadObject(const char *sofile, struct Library *SDLBase)
 +#endif
  {
  	const char *loaderror = "SDL_LoadObject() not implemented";
@@ -7860,7 +7896,7 @@ diff -ruN SDL-1.2.15/src/loadso/dummy/SDL_sysloadso.c SDL-1.2.15.aros/src/loadso
 +#if !defined(PROTO_SDL_H)
  void *SDL_LoadFunction(void *handle, const char *name)
 +#else
-+void *SDL_LoadFunction(void *handle, const char *name, struct SDLBase *SDLBase)
++void *SDL_LoadFunction(void *handle, const char *name, struct Library *SDLBase)
 +#endif
  {
  	const char *loaderror = "SDL_LoadFunction() not implemented";
@@ -7871,14 +7907,14 @@ diff -ruN SDL-1.2.15/src/loadso/dummy/SDL_sysloadso.c SDL-1.2.15.aros/src/loadso
 +#if !defined(PROTO_SDL_H)
  void SDL_UnloadObject(void *handle)
 +#else
-+void SDL_UnloadObject(void *handle, struct SDLBase *SDLBase)
++void SDL_UnloadObject(void *handle, struct Library *SDLBase)
 +#endif
  {
      /* no-op. */
  }
 diff -ruN SDL-1.2.15/src/main/aros/mydebug.h SDL-1.2.15.aros/src/main/aros/mydebug.h
---- SDL-1.2.15/src/main/aros/mydebug.h	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.15.aros/src/main/aros/mydebug.h	2012-06-18 01:53:19.767054200 +0100
+--- SDL-1.2.15/src/main/aros/mydebug.h	1969-12-31 19:00:00.000000000 -0500
++++ SDL-1.2.15.aros/src/main/aros/mydebug.h	2013-03-08 08:30:16.000000000 -0500
 @@ -0,0 +1,8 @@
 +#ifndef MYDEBUG
 +#define MYDEBUG
@@ -7889,8 +7925,8 @@ diff -ruN SDL-1.2.15/src/main/aros/mydebug.h SDL-1.2.15.aros/src/main/aros/mydeb
 +
 +#endif
 diff -ruN SDL-1.2.15/src/SDL.c SDL-1.2.15.aros/src/SDL.c
---- SDL-1.2.15/src/SDL.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/SDL.c	2012-06-18 01:53:21.623289900 +0100
+--- SDL-1.2.15/src/SDL.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/SDL.c	2013-03-22 11:04:26.000000000 -0400
 @@ -19,6 +19,11 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -8006,7 +8042,7 @@ diff -ruN SDL-1.2.15/src/SDL.c SDL-1.2.15.aros/src/SDL.c
  	}
  #endif
 +        if (MesaBase_ptr)
-+            SDLBase->GLBase_ptr = MesaBase_ptr;
++            SDLBase->GLBase_ptr = (struct Library **)MesaBase_ptr;
  
  	/* Clear the error message */
  	SDL_ClearError();
@@ -8101,8 +8137,8 @@ diff -ruN SDL-1.2.15/src/SDL.c SDL-1.2.15.aros/src/SDL.c
  
  #if defined(__OS2__)
 diff -ruN SDL-1.2.15/src/SDL_error.c SDL-1.2.15.aros/src/SDL_error.c
---- SDL-1.2.15/src/SDL_error.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/SDL_error.c	2012-06-18 01:53:21.825315500 +0100
+--- SDL-1.2.15/src/SDL_error.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/SDL_error.c	2013-03-08 08:30:16.000000000 -0500
 @@ -19,6 +19,13 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -8315,8 +8351,8 @@ diff -ruN SDL-1.2.15/src/SDL_error.c SDL-1.2.15.aros/src/SDL_error.c
  
  #ifdef TEST_ERROR
 diff -ruN SDL-1.2.15/src/SDL_fatal.c SDL-1.2.15.aros/src/SDL_fatal.c
---- SDL-1.2.15/src/SDL_fatal.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/SDL_fatal.c	2012-06-18 01:53:21.276245800 +0100
+--- SDL-1.2.15/src/SDL_fatal.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/SDL_fatal.c	2013-03-22 11:09:31.000000000 -0400
 @@ -19,6 +19,11 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -8336,14 +8372,14 @@ diff -ruN SDL-1.2.15/src/SDL_fatal.c SDL-1.2.15.aros/src/SDL_fatal.c
 +#if !defined(PROTO_SDL_H)
  	SDL_Quit();
 +#else
-+#warning "TODO: Call SDL_Quit()"
++	// FIXME: Call SDL_Quit()
 +#endif
  	raise(sig);
  }
  
 diff -ruN SDL-1.2.15/src/stdlib/SDL_getenv.c SDL-1.2.15.aros/src/stdlib/SDL_getenv.c
---- SDL-1.2.15/src/stdlib/SDL_getenv.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/stdlib/SDL_getenv.c	2012-06-18 01:53:21.258243500 +0100
+--- SDL-1.2.15/src/stdlib/SDL_getenv.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/stdlib/SDL_getenv.c	2013-03-08 08:30:16.000000000 -0500
 @@ -19,6 +19,11 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -8357,8 +8393,8 @@ diff -ruN SDL-1.2.15/src/stdlib/SDL_getenv.c SDL-1.2.15.aros/src/stdlib/SDL_gete
  
  #include "SDL_stdinc.h"
 diff -ruN SDL-1.2.15/src/stdlib/SDL_iconv.c SDL-1.2.15.aros/src/stdlib/SDL_iconv.c
---- SDL-1.2.15/src/stdlib/SDL_iconv.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/stdlib/SDL_iconv.c	2012-06-18 01:53:21.255243100 +0100
+--- SDL-1.2.15/src/stdlib/SDL_iconv.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/stdlib/SDL_iconv.c	2013-03-22 11:59:07.000000000 -0400
 @@ -19,6 +19,11 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -8371,6 +8407,15 @@ diff -ruN SDL-1.2.15/src/stdlib/SDL_iconv.c SDL-1.2.15.aros/src/stdlib/SDL_iconv
  #include "SDL_config.h"
  
  /* This file contains portable iconv functions for SDL */
+@@ -44,7 +49,7 @@
+                  char **outbuf, size_t *outbytesleft)
+ {
+ 	size_t retCode;
+-#ifdef ICONV_INBUF_NONCONST
++#if defined(ICONV_INBUF_NONCONST) || defined(__AROS__)
+ 	retCode = iconv(cd, (char **)inbuf, inbytesleft, outbuf, outbytesleft);
+ #else
+ 	retCode = iconv(cd, inbuf, inbytesleft, outbuf, outbytesleft);
 @@ -812,8 +817,19 @@
  
  #endif /* !HAVE_ICONV */
@@ -8400,8 +8445,8 @@ diff -ruN SDL-1.2.15/src/stdlib/SDL_iconv.c SDL-1.2.15.aros/src/stdlib/SDL_iconv
 +#endif
  }
 diff -ruN SDL-1.2.15/src/stdlib/SDL_malloc.c SDL-1.2.15.aros/src/stdlib/SDL_malloc.c
---- SDL-1.2.15/src/stdlib/SDL_malloc.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/stdlib/SDL_malloc.c	2012-06-18 01:53:21.251742700 +0100
+--- SDL-1.2.15/src/stdlib/SDL_malloc.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/stdlib/SDL_malloc.c	2013-03-08 08:30:16.000000000 -0500
 @@ -19,6 +19,11 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -8415,8 +8460,8 @@ diff -ruN SDL-1.2.15/src/stdlib/SDL_malloc.c SDL-1.2.15.aros/src/stdlib/SDL_mall
  
  /* This file contains portable memory management functions for SDL */
 diff -ruN SDL-1.2.15/src/stdlib/SDL_qsort.c SDL-1.2.15.aros/src/stdlib/SDL_qsort.c
---- SDL-1.2.15/src/stdlib/SDL_qsort.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/stdlib/SDL_qsort.c	2012-06-18 01:53:21.267744700 +0100
+--- SDL-1.2.15/src/stdlib/SDL_qsort.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/stdlib/SDL_qsort.c	2013-03-08 08:30:16.000000000 -0500
 @@ -41,6 +41,11 @@
   *
   * Gareth McCaughan   Peterhouse   Cambridge   1998
@@ -8430,8 +8475,8 @@ diff -ruN SDL-1.2.15/src/stdlib/SDL_qsort.c SDL-1.2.15.aros/src/stdlib/SDL_qsort
  
  /*
 diff -ruN SDL-1.2.15/src/stdlib/SDL_stdlib.c SDL-1.2.15.aros/src/stdlib/SDL_stdlib.c
---- SDL-1.2.15/src/stdlib/SDL_stdlib.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/stdlib/SDL_stdlib.c	2012-06-18 01:53:21.242741600 +0100
+--- SDL-1.2.15/src/stdlib/SDL_stdlib.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/stdlib/SDL_stdlib.c	2013-03-08 08:30:16.000000000 -0500
 @@ -19,6 +19,11 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -8445,8 +8490,8 @@ diff -ruN SDL-1.2.15/src/stdlib/SDL_stdlib.c SDL-1.2.15.aros/src/stdlib/SDL_stdl
  
  /* This file contains portable stdlib functions for SDL */
 diff -ruN SDL-1.2.15/src/stdlib/SDL_string.c SDL-1.2.15.aros/src/stdlib/SDL_string.c
---- SDL-1.2.15/src/stdlib/SDL_string.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/stdlib/SDL_string.c	2012-06-18 01:53:21.264244300 +0100
+--- SDL-1.2.15/src/stdlib/SDL_string.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/stdlib/SDL_string.c	2013-03-08 08:30:16.000000000 -0500
 @@ -19,6 +19,11 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -8460,8 +8505,8 @@ diff -ruN SDL-1.2.15/src/stdlib/SDL_string.c SDL-1.2.15.aros/src/stdlib/SDL_stri
  
  /* This file contains portable string manipulation functions for SDL */
 diff -ruN SDL-1.2.15/src/thread/aros/SDL_syscond.c SDL-1.2.15.aros/src/thread/aros/SDL_syscond.c
---- SDL-1.2.15/src/thread/aros/SDL_syscond.c	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.15.aros/src/thread/aros/SDL_syscond.c	2012-06-18 01:53:21.733303800 +0100
+--- SDL-1.2.15/src/thread/aros/SDL_syscond.c	1969-12-31 19:00:00.000000000 -0500
++++ SDL-1.2.15.aros/src/thread/aros/SDL_syscond.c	2013-03-08 08:30:16.000000000 -0500
 @@ -0,0 +1,295 @@
 +/*
 +    SDL - Simple DirectMedia Layer
@@ -8759,8 +8804,8 @@ diff -ruN SDL-1.2.15/src/thread/aros/SDL_syscond.c SDL-1.2.15.aros/src/thread/ar
 +#endif
 +}
 diff -ruN SDL-1.2.15/src/thread/aros/SDL_sysmutex.c SDL-1.2.15.aros/src/thread/aros/SDL_sysmutex.c
---- SDL-1.2.15/src/thread/aros/SDL_sysmutex.c	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.15.aros/src/thread/aros/SDL_sysmutex.c	2012-06-18 01:53:21.742305000 +0100
+--- SDL-1.2.15/src/thread/aros/SDL_sysmutex.c	1969-12-31 19:00:00.000000000 -0500
++++ SDL-1.2.15.aros/src/thread/aros/SDL_sysmutex.c	2013-03-08 08:30:16.000000000 -0500
 @@ -0,0 +1,178 @@
 +/*
 +    SDL - Simple DirectMedia Layer
@@ -8941,8 +8986,8 @@ diff -ruN SDL-1.2.15/src/thread/aros/SDL_sysmutex.c SDL-1.2.15.aros/src/thread/a
 +#endif
 +}
 diff -ruN SDL-1.2.15/src/thread/aros/SDL_syssem.c SDL-1.2.15.aros/src/thread/aros/SDL_syssem.c
---- SDL-1.2.15/src/thread/aros/SDL_syssem.c	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.15.aros/src/thread/aros/SDL_syssem.c	2012-06-18 01:53:21.736304200 +0100
+--- SDL-1.2.15/src/thread/aros/SDL_syssem.c	1969-12-31 19:00:00.000000000 -0500
++++ SDL-1.2.15.aros/src/thread/aros/SDL_syssem.c	2013-03-08 08:30:16.000000000 -0500
 @@ -0,0 +1,658 @@
 +/*
 +    SDL - Simple DirectMedia Layer
@@ -9603,8 +9648,8 @@ diff -ruN SDL-1.2.15/src/thread/aros/SDL_syssem.c SDL-1.2.15.aros/src/thread/aro
 +}
 +
 diff -ruN SDL-1.2.15/src/thread/aros/SDL_systhread.c SDL-1.2.15.aros/src/thread/aros/SDL_systhread.c
---- SDL-1.2.15/src/thread/aros/SDL_systhread.c	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.15.aros/src/thread/aros/SDL_systhread.c	2012-06-18 01:53:21.744805300 +0100
+--- SDL-1.2.15/src/thread/aros/SDL_systhread.c	1969-12-31 19:00:00.000000000 -0500
++++ SDL-1.2.15.aros/src/thread/aros/SDL_systhread.c	2013-03-22 11:59:50.000000000 -0400
 @@ -0,0 +1,167 @@
 +/*
 +    SDL - Simple DirectMedia Layer
@@ -9665,7 +9710,7 @@ diff -ruN SDL-1.2.15/src/thread/aros/SDL_systhread.c SDL-1.2.15.aros/src/thread/
 +{
 +	thread_args *data=(thread_args *)atol(args);
 +#if defined(PROTO_SDL_H)
-+        struct SDLBase *SDLBase = data->base;
++        struct SDLBase __unused *SDLBase = data->base;
 +#endif
 +	struct Task *Father;
 +
@@ -9691,7 +9736,7 @@ diff -ruN SDL-1.2.15/src/thread/aros/SDL_systhread.c SDL-1.2.15.aros/src/thread/
 +	D(bug("Sending %lx to the new thread...\n",args));
 +
 +	if(args)
-+		SDL_snprintf(buffer, SDL_arraysize(buffer),"%ld",args);
++		SDL_snprintf(buffer, SDL_arraysize(buffer),"%ld",(unsigned long)args);
 +
 +#if defined(__AROS__)
 +        char tasknmtmp[1024];
@@ -9699,7 +9744,7 @@ diff -ruN SDL-1.2.15/src/thread/aros/SDL_systhread.c SDL-1.2.15.aros/src/thread/
 +        
 +        if ((thread->threadno = (SDL_numthreads - 1)) > 0)
 +        {
-+            sprintf(tasknmtmp, "%s SDL subtask #%u", ((struct Node *)thisTask)->ln_Name, thread->threadno);
++            sprintf(tasknmtmp, "%s SDL subtask #%u", ((struct Node *)thisTask)->ln_Name, (unsigned int)thread->threadno);
 +        }
 +        else
 +        {
@@ -9774,8 +9819,8 @@ diff -ruN SDL-1.2.15/src/thread/aros/SDL_systhread.c SDL-1.2.15.aros/src/thread/
 +	Signal((struct Task *)thread->handle,SIGBREAKF_CTRL_C);
 +}
 diff -ruN SDL-1.2.15/src/thread/aros/SDL_systhread_c.h SDL-1.2.15.aros/src/thread/aros/SDL_systhread_c.h
---- SDL-1.2.15/src/thread/aros/SDL_systhread_c.h	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.15.aros/src/thread/aros/SDL_systhread_c.h	2012-06-18 01:53:21.738804500 +0100
+--- SDL-1.2.15/src/thread/aros/SDL_systhread_c.h	1969-12-31 19:00:00.000000000 -0500
++++ SDL-1.2.15.aros/src/thread/aros/SDL_systhread_c.h	2013-03-08 08:30:16.000000000 -0500
 @@ -0,0 +1,36 @@
 +/*
 +    SDL - Simple DirectMedia Layer
@@ -9814,8 +9859,8 @@ diff -ruN SDL-1.2.15/src/thread/aros/SDL_systhread_c.h SDL-1.2.15.aros/src/threa
 +#define SYS_ThreadHandle struct Task *
 +
 diff -ruN SDL-1.2.15/src/thread/aros/SDL_thread.c SDL-1.2.15.aros/src/thread/aros/SDL_thread.c
---- SDL-1.2.15/src/thread/aros/SDL_thread.c	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.15.aros/src/thread/aros/SDL_thread.c	2012-06-18 01:53:21.729803400 +0100
+--- SDL-1.2.15/src/thread/aros/SDL_thread.c	1969-12-31 19:00:00.000000000 -0500
++++ SDL-1.2.15.aros/src/thread/aros/SDL_thread.c	2013-03-22 12:03:54.000000000 -0400
 @@ -0,0 +1,410 @@
 +/*
 +    SDL - Simple DirectMedia Layer
@@ -10228,8 +10273,8 @@ diff -ruN SDL-1.2.15/src/thread/aros/SDL_thread.c SDL-1.2.15.aros/src/thread/aro
 +}
 +
 diff -ruN SDL-1.2.15/src/thread/SDL_systhread.h SDL-1.2.15.aros/src/thread/SDL_systhread.h
---- SDL-1.2.15/src/thread/SDL_systhread.h	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/thread/SDL_systhread.h	2012-06-18 01:53:21.748305700 +0100
+--- SDL-1.2.15/src/thread/SDL_systhread.h	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/thread/SDL_systhread.h	2013-03-08 08:30:16.000000000 -0500
 @@ -32,6 +32,7 @@
     saves a system-dependent thread id in thread->id, and returns 0
     on success.
@@ -10257,8 +10302,8 @@ diff -ruN SDL-1.2.15/src/thread/SDL_systhread.h SDL-1.2.15.aros/src/thread/SDL_s
 +#endif
  #endif /* _SDL_systhread_h */
 diff -ruN SDL-1.2.15/src/thread/SDL_thread.c SDL-1.2.15.aros/src/thread/SDL_thread.c
---- SDL-1.2.15/src/thread/SDL_thread.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/thread/SDL_thread.c	2012-06-18 01:53:21.771808700 +0100
+--- SDL-1.2.15/src/thread/SDL_thread.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/thread/SDL_thread.c	2013-03-08 08:30:16.000000000 -0500
 @@ -19,6 +19,11 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -10346,8 +10391,8 @@ diff -ruN SDL-1.2.15/src/thread/SDL_thread.c SDL-1.2.15.aros/src/thread/SDL_thre
  SDL_error *SDL_GetErrBuf(void)
  {
 diff -ruN SDL-1.2.15/src/thread/SDL_thread_c.h SDL-1.2.15.aros/src/thread/SDL_thread_c.h
---- SDL-1.2.15/src/thread/SDL_thread_c.h	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/thread/SDL_thread_c.h	2012-06-18 01:53:21.768808400 +0100
+--- SDL-1.2.15/src/thread/SDL_thread_c.h	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/thread/SDL_thread_c.h	2013-03-08 08:30:16.000000000 -0500
 @@ -43,6 +43,8 @@
  #include "win32/SDL_systhread_c.h"
  #elif SDL_THREAD_SYMBIAN
@@ -10372,8 +10417,8 @@ diff -ruN SDL-1.2.15/src/thread/SDL_thread_c.h SDL-1.2.15.aros/src/thread/SDL_th
 -
  #endif /* _SDL_thread_c_h */
 diff -ruN SDL-1.2.15/src/timer/aros/SDL_systimer.c SDL-1.2.15.aros/src/timer/aros/SDL_systimer.c
---- SDL-1.2.15/src/timer/aros/SDL_systimer.c	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.15.aros/src/timer/aros/SDL_systimer.c	2012-06-18 01:53:21.998337500 +0100
+--- SDL-1.2.15/src/timer/aros/SDL_systimer.c	1969-12-31 19:00:00.000000000 -0500
++++ SDL-1.2.15.aros/src/timer/aros/SDL_systimer.c	2013-03-08 08:30:16.000000000 -0500
 @@ -0,0 +1,326 @@
 +/*
 +    SDL - Simple DirectMedia Layer
@@ -10702,8 +10747,8 @@ diff -ruN SDL-1.2.15/src/timer/aros/SDL_systimer.c SDL-1.2.15.aros/src/timer/aro
 +
 +#endif /* SDL_TIMER_AROS */
 diff -ruN SDL-1.2.15/src/timer/SDL_systimer.h SDL-1.2.15.aros/src/timer/SDL_systimer.h
---- SDL-1.2.15/src/timer/SDL_systimer.h	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/timer/SDL_systimer.h	2012-06-18 01:53:22.028841400 +0100
+--- SDL-1.2.15/src/timer/SDL_systimer.h	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/timer/SDL_systimer.h	2013-03-08 08:30:16.000000000 -0500
 @@ -26,7 +26,7 @@
  #include "SDL_timer.h"
  #include "SDL_timer_c.h"
@@ -10730,8 +10775,8 @@ diff -ruN SDL-1.2.15/src/timer/SDL_systimer.h SDL-1.2.15.aros/src/timer/SDL_syst
 +#endif
 \ No newline at end of file
 diff -ruN SDL-1.2.15/src/timer/SDL_timer.c SDL-1.2.15.aros/src/timer/SDL_timer.c
---- SDL-1.2.15/src/timer/SDL_timer.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/timer/SDL_timer.c	2012-06-18 01:53:21.978335000 +0100
+--- SDL-1.2.15/src/timer/SDL_timer.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/timer/SDL_timer.c	2013-03-08 08:30:16.000000000 -0500
 @@ -19,6 +19,11 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -10925,8 +10970,8 @@ diff -ruN SDL-1.2.15/src/timer/SDL_timer.c SDL-1.2.15.aros/src/timer/SDL_timer.c
 +#endif
  }
 diff -ruN SDL-1.2.15/src/timer/SDL_timer_c.h SDL-1.2.15.aros/src/timer/SDL_timer_c.h
---- SDL-1.2.15/src/timer/SDL_timer_c.h	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/timer/SDL_timer_c.h	2012-06-18 01:53:22.031341700 +0100
+--- SDL-1.2.15/src/timer/SDL_timer_c.h	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/timer/SDL_timer_c.h	2013-03-08 08:30:16.000000000 -0500
 @@ -27,6 +27,7 @@
  #define ROUND_RESOLUTION(X)	\
  	(((X+TIMER_RESOLUTION-1)/TIMER_RESOLUTION)*TIMER_RESOLUTION)
@@ -10958,8 +11003,8 @@ diff -ruN SDL-1.2.15/src/timer/SDL_timer_c.h SDL-1.2.15.aros/src/timer/SDL_timer
 +#endif
 \ No newline at end of file
 diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxaccel.c SDL-1.2.15.aros/src/video/cgx/SDL_cgxaccel.c
---- SDL-1.2.15/src/video/cgx/SDL_cgxaccel.c	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.15.aros/src/video/cgx/SDL_cgxaccel.c	2012-06-18 01:53:20.300621900 +0100
+--- SDL-1.2.15/src/video/cgx/SDL_cgxaccel.c	1969-12-31 19:00:00.000000000 -0500
++++ SDL-1.2.15.aros/src/video/cgx/SDL_cgxaccel.c	2013-03-22 12:11:52.000000000 -0400
 @@ -0,0 +1,701 @@
 +/*
 +    SDL - Simple DirectMedia Layer
@@ -11235,7 +11280,7 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxaccel.c SDL-1.2.15.aros/src/video/cgx/
 +		if(!SDL_temprp) SDL_temprp = CreateRastPort();
 +		SDL_temprp->BitMap=(struct BitMap *)dst->hwdata->bmap;
 +
-+		FillPixelArray(SDL_temprp,dstrect->x,dstrect->y,dstrect->w,dstrect->h,color);
++		FillPixelArray(SDL_temprp,dstrect->x,dstrect->y,dstrect->w,dstrect->h,col);
 +	}
 +	return 0;
 +}
@@ -11477,7 +11522,7 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxaccel.c SDL-1.2.15.aros/src/video/cgx/
 +	int pixnum=0;
 +	
 +	D(bug("CGX_ColorKeyToAlpha\n"));
-+#warning Potential endianess issue here!
++	// FIXME: Potential endianess issue here!
 +	
 +	/* Only works for 32bits surfaces in ARGB format */
 +	if	(  (surface->format->BytesPerPixel == 4)
@@ -11663,8 +11708,8 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxaccel.c SDL-1.2.15.aros/src/video/cgx/
 +
 +#endif
 diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxaccel_c.h SDL-1.2.15.aros/src/video/cgx/SDL_cgxaccel_c.h
---- SDL-1.2.15/src/video/cgx/SDL_cgxaccel_c.h	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.15.aros/src/video/cgx/SDL_cgxaccel_c.h	2012-06-18 01:53:20.269618000 +0100
+--- SDL-1.2.15/src/video/cgx/SDL_cgxaccel_c.h	1969-12-31 19:00:00.000000000 -0500
++++ SDL-1.2.15.aros/src/video/cgx/SDL_cgxaccel_c.h	2013-03-08 08:30:16.000000000 -0500
 @@ -0,0 +1,64 @@
 +/*
 +    SDL - Simple DirectMedia Layer
@@ -11731,9 +11776,9 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxaccel_c.h SDL-1.2.15.aros/src/video/cg
 +#define CGX_FillHWRect(this, dst, dstrect, colo) CGX_FillHWRectI(this, dst, dstrect, colo, SDLBase)
 +#endif
 diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxevents.c SDL-1.2.15.aros/src/video/cgx/SDL_cgxevents.c
---- SDL-1.2.15/src/video/cgx/SDL_cgxevents.c	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.15.aros/src/video/cgx/SDL_cgxevents.c	2012-06-18 01:53:20.335626400 +0100
-@@ -0,0 +1,489 @@
+--- SDL-1.2.15/src/video/cgx/SDL_cgxevents.c	1969-12-31 19:00:00.000000000 -0500
++++ SDL-1.2.15.aros/src/video/cgx/SDL_cgxevents.c	2013-03-22 12:16:35.000000000 -0400
+@@ -0,0 +1,493 @@
 +/*
 +    SDL - Simple DirectMedia Layer
 +    Copyright (C) 1997-2006 Sam Lantinga
@@ -12162,7 +12207,11 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxevents.c SDL-1.2.15.aros/src/video/cgx
 +		}
 +}
 +
++#if !defined(PROTO_SDL_H)
 +void CGX_InitOSKeymap(_THIS)
++#else
++void CGX_InitOSKeymap(_THIS, struct SDLBase *SDLBase)
++#endif
 +{
 +	int i;
 +
@@ -12224,9 +12273,9 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxevents.c SDL-1.2.15.aros/src/video/cgx
 +	MISC_keymap[RAWKEY_END			] = SDLK_END;
 +}
 diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxevents_c.h SDL-1.2.15.aros/src/video/cgx/SDL_cgxevents_c.h
---- SDL-1.2.15/src/video/cgx/SDL_cgxevents_c.h	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.15.aros/src/video/cgx/SDL_cgxevents_c.h	2012-06-18 01:53:20.332125900 +0100
-@@ -0,0 +1,34 @@
+--- SDL-1.2.15/src/video/cgx/SDL_cgxevents_c.h	1969-12-31 19:00:00.000000000 -0500
++++ SDL-1.2.15.aros/src/video/cgx/SDL_cgxevents_c.h	2013-03-22 12:16:59.000000000 -0400
+@@ -0,0 +1,35 @@
 +/*
 +    SDL - Simple DirectMedia Layer
 +    Copyright (C) 1997-2006 Sam Lantinga
@@ -12253,17 +12302,18 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxevents_c.h SDL-1.2.15.aros/src/video/c
 +#include "SDL_cgxvideo.h"
 +
 +/* Functions to be exported */
-+extern void CGX_InitOSKeymap(_THIS);
 +#if !defined(PROTO_SDL_H)
++extern void CGX_InitOSKeymap(_THIS);
 +extern void CGX_PumpEvents(_THIS);
 +#else
++extern void CGX_InitOSKeymap(_THIS, struct SDLBase *SDLBase);
 +extern void CGX_PumpEvents(_THIS, struct SDLBase *SDLBase);
 +#endif
 +
 +
 diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxgl_c.h SDL-1.2.15.aros/src/video/cgx/SDL_cgxgl_c.h
---- SDL-1.2.15/src/video/cgx/SDL_cgxgl_c.h	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.15.aros/src/video/cgx/SDL_cgxgl_c.h	2012-06-18 01:53:20.306622700 +0100
+--- SDL-1.2.15/src/video/cgx/SDL_cgxgl_c.h	1969-12-31 19:00:00.000000000 -0500
++++ SDL-1.2.15.aros/src/video/cgx/SDL_cgxgl_c.h	2013-03-08 08:30:16.000000000 -0500
 @@ -0,0 +1,77 @@
 +/*
 +    SDL - Simple DirectMedia Layer
@@ -12343,8 +12393,8 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxgl_c.h SDL-1.2.15.aros/src/video/cgx/S
 +
 +#undef _THIS
 diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxgl_CreateContext.c SDL-1.2.15.aros/src/video/cgx/SDL_cgxgl_CreateContext.c
---- SDL-1.2.15/src/video/cgx/SDL_cgxgl_CreateContext.c	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.15.aros/src/video/cgx/SDL_cgxgl_CreateContext.c	2012-06-18 01:53:20.282119600 +0100
+--- SDL-1.2.15/src/video/cgx/SDL_cgxgl_CreateContext.c	1969-12-31 19:00:00.000000000 -0500
++++ SDL-1.2.15.aros/src/video/cgx/SDL_cgxgl_CreateContext.c	2013-03-08 08:30:16.000000000 -0500
 @@ -0,0 +1,124 @@
 +/*
 +    SDL - Simple DirectMedia Layer
@@ -12471,8 +12521,8 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxgl_CreateContext.c SDL-1.2.15.aros/src
 +#endif
 +}
 diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxgl_DestroyContext.c SDL-1.2.15.aros/src/video/cgx/SDL_cgxgl_DestroyContext.c
---- SDL-1.2.15/src/video/cgx/SDL_cgxgl_DestroyContext.c	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.15.aros/src/video/cgx/SDL_cgxgl_DestroyContext.c	2012-06-18 01:53:20.312123400 +0100
+--- SDL-1.2.15/src/video/cgx/SDL_cgxgl_DestroyContext.c	1969-12-31 19:00:00.000000000 -0500
++++ SDL-1.2.15.aros/src/video/cgx/SDL_cgxgl_DestroyContext.c	2013-03-08 08:30:16.000000000 -0500
 @@ -0,0 +1,59 @@
 +/*
 +    SDL - Simple DirectMedia Layer
@@ -12534,8 +12584,8 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxgl_DestroyContext.c SDL-1.2.15.aros/sr
 +#endif
 +}
 diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxgl_GetAttribute.c SDL-1.2.15.aros/src/video/cgx/SDL_cgxgl_GetAttribute.c
---- SDL-1.2.15/src/video/cgx/SDL_cgxgl_GetAttribute.c	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.15.aros/src/video/cgx/SDL_cgxgl_GetAttribute.c	2012-06-18 01:53:20.297121500 +0100
+--- SDL-1.2.15/src/video/cgx/SDL_cgxgl_GetAttribute.c	1969-12-31 19:00:00.000000000 -0500
++++ SDL-1.2.15.aros/src/video/cgx/SDL_cgxgl_GetAttribute.c	2013-03-08 08:30:16.000000000 -0500
 @@ -0,0 +1,105 @@
 +/*
 +    SDL - Simple DirectMedia Layer
@@ -12643,8 +12693,8 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxgl_GetAttribute.c SDL-1.2.15.aros/src/
 +}
 +#endif /* SDL_VIDEO_OPENGL */
 diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxgl_GetProcAddress.c SDL-1.2.15.aros/src/video/cgx/SDL_cgxgl_GetProcAddress.c
---- SDL-1.2.15/src/video/cgx/SDL_cgxgl_GetProcAddress.c	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.15.aros/src/video/cgx/SDL_cgxgl_GetProcAddress.c	2012-06-18 01:53:20.323624800 +0100
+--- SDL-1.2.15/src/video/cgx/SDL_cgxgl_GetProcAddress.c	1969-12-31 19:00:00.000000000 -0500
++++ SDL-1.2.15.aros/src/video/cgx/SDL_cgxgl_GetProcAddress.c	2013-03-08 08:30:16.000000000 -0500
 @@ -0,0 +1,61 @@
 +/*
 +    SDL - Simple DirectMedia Layer
@@ -12708,8 +12758,8 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxgl_GetProcAddress.c SDL-1.2.15.aros/sr
 +}
 +#endif /* SDL_VIDEO_OPENGL */
 diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxgl_LoadLibrary.c SDL-1.2.15.aros/src/video/cgx/SDL_cgxgl_LoadLibrary.c
---- SDL-1.2.15/src/video/cgx/SDL_cgxgl_LoadLibrary.c	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.15.aros/src/video/cgx/SDL_cgxgl_LoadLibrary.c	2012-06-18 01:53:20.275118700 +0100
+--- SDL-1.2.15/src/video/cgx/SDL_cgxgl_LoadLibrary.c	1969-12-31 19:00:00.000000000 -0500
++++ SDL-1.2.15.aros/src/video/cgx/SDL_cgxgl_LoadLibrary.c	2013-03-22 12:13:17.000000000 -0400
 @@ -0,0 +1,82 @@
 +/*
 +    SDL - Simple DirectMedia Layer
@@ -12754,7 +12804,7 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxgl_LoadLibrary.c SDL-1.2.15.aros/src/v
 +#define MesaBase_ptr SDLBase->GLBase_ptr
 +#define MesaBase *MesaBase_ptr
 +#else
-+extern struct Library *MesaBase = NULL;
++struct Library *MesaBase = NULL;
 +#define MesaBase_ptr &MesaBase
 +#endif
 +
@@ -12767,7 +12817,7 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxgl_LoadLibrary.c SDL-1.2.15.aros/src/v
 +{
 +    D(bug("CGX_GL_LoadLibrary('%s')\n", path));
 +
-+    if ( MesaBase_ptr != NULL)
++    if ( *MesaBase_ptr != NULL)
 +    {
 +        if (this->gl_config.driver_loaded == 0) {
 +            if ((MesaBase = OpenLibrary("mesa.library", 17)) != NULL) {
@@ -12794,8 +12844,8 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxgl_LoadLibrary.c SDL-1.2.15.aros/src/v
 +}
 +#endif /* SDL_VIDEO_OPENGL */
 diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxgl_MakeCurrent.c SDL-1.2.15.aros/src/video/cgx/SDL_cgxgl_MakeCurrent.c
---- SDL-1.2.15/src/video/cgx/SDL_cgxgl_MakeCurrent.c	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.15.aros/src/video/cgx/SDL_cgxgl_MakeCurrent.c	2012-06-18 01:53:20.315123800 +0100
+--- SDL-1.2.15/src/video/cgx/SDL_cgxgl_MakeCurrent.c	1969-12-31 19:00:00.000000000 -0500
++++ SDL-1.2.15.aros/src/video/cgx/SDL_cgxgl_MakeCurrent.c	2013-03-08 08:30:16.000000000 -0500
 @@ -0,0 +1,59 @@
 +/*
 +    SDL - Simple DirectMedia Layer
@@ -12857,8 +12907,8 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxgl_MakeCurrent.c SDL-1.2.15.aros/src/v
 +}
 +#endif /* SDL_VIDEO_OPENGL */
 diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxgl_Quit.c SDL-1.2.15.aros/src/video/cgx/SDL_cgxgl_Quit.c
---- SDL-1.2.15/src/video/cgx/SDL_cgxgl_Quit.c	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.15.aros/src/video/cgx/SDL_cgxgl_Quit.c	2012-06-18 01:53:20.318124100 +0100
+--- SDL-1.2.15/src/video/cgx/SDL_cgxgl_Quit.c	1969-12-31 19:00:00.000000000 -0500
++++ SDL-1.2.15.aros/src/video/cgx/SDL_cgxgl_Quit.c	2013-03-08 08:30:16.000000000 -0500
 @@ -0,0 +1,60 @@
 +/*
 +    SDL - Simple DirectMedia Layer
@@ -12921,8 +12971,8 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxgl_Quit.c SDL-1.2.15.aros/src/video/cg
 +#endif
 +}
 diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxgl_SwapBuffers.c SDL-1.2.15.aros/src/video/cgx/SDL_cgxgl_SwapBuffers.c
---- SDL-1.2.15/src/video/cgx/SDL_cgxgl_SwapBuffers.c	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.15.aros/src/video/cgx/SDL_cgxgl_SwapBuffers.c	2012-06-18 01:53:20.272118300 +0100
+--- SDL-1.2.15/src/video/cgx/SDL_cgxgl_SwapBuffers.c	1969-12-31 19:00:00.000000000 -0500
++++ SDL-1.2.15.aros/src/video/cgx/SDL_cgxgl_SwapBuffers.c	2013-03-08 08:30:16.000000000 -0500
 @@ -0,0 +1,57 @@
 +/*
 +    SDL - Simple DirectMedia Layer
@@ -12982,8 +13032,8 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxgl_SwapBuffers.c SDL-1.2.15.aros/src/v
 +}
 +#endif /* SDL_VIDEO_OPENGL */
 diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxgl_UpdateContext.c SDL-1.2.15.aros/src/video/cgx/SDL_cgxgl_UpdateContext.c
---- SDL-1.2.15/src/video/cgx/SDL_cgxgl_UpdateContext.c	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.15.aros/src/video/cgx/SDL_cgxgl_UpdateContext.c	2012-06-18 01:53:20.289620500 +0100
+--- SDL-1.2.15/src/video/cgx/SDL_cgxgl_UpdateContext.c	1969-12-31 19:00:00.000000000 -0500
++++ SDL-1.2.15.aros/src/video/cgx/SDL_cgxgl_UpdateContext.c	2013-03-08 08:30:16.000000000 -0500
 @@ -0,0 +1,69 @@
 +/*
 +    SDL - Simple DirectMedia Layer
@@ -13055,8 +13105,8 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxgl_UpdateContext.c SDL-1.2.15.aros/src
 +#endif
 +}
 diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgximage.c SDL-1.2.15.aros/src/video/cgx/SDL_cgximage.c
---- SDL-1.2.15/src/video/cgx/SDL_cgximage.c	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.15.aros/src/video/cgx/SDL_cgximage.c	2012-06-18 01:53:20.338126700 +0100
+--- SDL-1.2.15/src/video/cgx/SDL_cgximage.c	1969-12-31 19:00:00.000000000 -0500
++++ SDL-1.2.15.aros/src/video/cgx/SDL_cgximage.c	2013-03-08 08:30:16.000000000 -0500
 @@ -0,0 +1,306 @@
 +/*
 +    SDL - Simple DirectMedia Layer
@@ -13365,8 +13415,8 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgximage.c SDL-1.2.15.aros/src/video/cgx/
 +#endif
 +}
 diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgximage_c.h SDL-1.2.15.aros/src/video/cgx/SDL_cgximage_c.h
---- SDL-1.2.15/src/video/cgx/SDL_cgximage_c.h	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.15.aros/src/video/cgx/SDL_cgximage_c.h	2012-06-18 01:53:20.303622300 +0100
+--- SDL-1.2.15/src/video/cgx/SDL_cgximage_c.h	1969-12-31 19:00:00.000000000 -0500
++++ SDL-1.2.15.aros/src/video/cgx/SDL_cgximage_c.h	2013-03-08 08:30:16.000000000 -0500
 @@ -0,0 +1,45 @@
 +/*
 +    SDL - Simple DirectMedia Layer
@@ -13414,8 +13464,8 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgximage_c.h SDL-1.2.15.aros/src/video/cg
 +#define CGX_RefreshDisplay(this) CGX_RefreshDisplayI(this, SDLBase)
 +#endif
 diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxmodes.c SDL-1.2.15.aros/src/video/cgx/SDL_cgxmodes.c
---- SDL-1.2.15/src/video/cgx/SDL_cgxmodes.c	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.15.aros/src/video/cgx/SDL_cgxmodes.c	2012-06-18 01:53:20.278619100 +0100
+--- SDL-1.2.15/src/video/cgx/SDL_cgxmodes.c	1969-12-31 19:00:00.000000000 -0500
++++ SDL-1.2.15.aros/src/video/cgx/SDL_cgxmodes.c	2013-03-08 08:30:16.000000000 -0500
 @@ -0,0 +1,236 @@
 +/*
 +    SDL - Simple DirectMedia Layer
@@ -13654,8 +13704,8 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxmodes.c SDL-1.2.15.aros/src/video/cgx/
 +    }
 +}
 diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxmodes_c.h SDL-1.2.15.aros/src/video/cgx/SDL_cgxmodes_c.h
---- SDL-1.2.15/src/video/cgx/SDL_cgxmodes_c.h	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.15.aros/src/video/cgx/SDL_cgxmodes_c.h	2012-06-18 01:53:20.340627000 +0100
+--- SDL-1.2.15/src/video/cgx/SDL_cgxmodes_c.h	1969-12-31 19:00:00.000000000 -0500
++++ SDL-1.2.15.aros/src/video/cgx/SDL_cgxmodes_c.h	2013-03-08 08:30:16.000000000 -0500
 @@ -0,0 +1,47 @@
 +/*
 +    SDL - Simple DirectMedia Layer
@@ -13705,9 +13755,9 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxmodes_c.h SDL-1.2.15.aros/src/video/cg
 +#define CGX_FreeVideoModes(this) CGX_FreeVideoModesI(this, SDLBase)
 +#endif
 diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxmouse.c SDL-1.2.15.aros/src/video/cgx/SDL_cgxmouse.c
---- SDL-1.2.15/src/video/cgx/SDL_cgxmouse.c	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.15.aros/src/video/cgx/SDL_cgxmouse.c	2012-06-18 01:53:20.327125300 +0100
-@@ -0,0 +1,254 @@
+--- SDL-1.2.15/src/video/cgx/SDL_cgxmouse.c	1969-12-31 19:00:00.000000000 -0500
++++ SDL-1.2.15.aros/src/video/cgx/SDL_cgxmouse.c	2013-03-22 12:16:06.000000000 -0400
+@@ -0,0 +1,266 @@
 +/*
 +    SDL - Simple DirectMedia Layer
 +    Copyright (C) 1997-2006 Sam Lantinga
@@ -13751,7 +13801,11 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxmouse.c SDL-1.2.15.aros/src/video/cgx/
 +	Object	*PointerObj;
 +};
 +
++#if !defined(PROTO_SDL_H)
 +void CGX_FreeWMCursor(_THIS, WMcursor *cursor)
++#else
++void CGX_FreeWMCursor(_THIS, WMcursor *cursor, struct SDLBase *SDLBase)
++#endif
 +{
 +	D(bug("[SDL] CGX_FreeWMCursor()\n"));
 +
@@ -13770,7 +13824,11 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxmouse.c SDL-1.2.15.aros/src/video/cgx/
 +	}
 +}
 +
++#if !defined(PROTO_SDL_H)
 +WMcursor *CGX_CreateWMCursor(_THIS, Uint8 *data, Uint8 *mask, int w, int h, int hot_x, int hot_y)
++#else
++WMcursor *CGX_CreateWMCursor(_THIS, Uint8 *data, Uint8 *mask, int w, int h, int hot_x, int hot_y, struct SDLBase *SDLBase)
++#endif
 +{
 +	struct WMcursor *cursor = NULL;
 +	struct RastPort *CursorRP = NULL;
@@ -13957,15 +14015,19 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxmouse.c SDL-1.2.15.aros/src/video/cgx/
 +}
 +
 +
++#if !defined(PROTO_SDL_H)
 +void CGX_CheckMouseMode(_THIS)
++#else
++void CGX_CheckMouseMode(_THIS, struct SDLBase *SDLBase)
++#endif
 +{
 +	/* Check to see if we need to enter or leave mouse relative mode */
 +	/* under AROS the mouse mode is always absolute => nothing to be done*/
 +}
 diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxmouse_c.h SDL-1.2.15.aros/src/video/cgx/SDL_cgxmouse_c.h
---- SDL-1.2.15/src/video/cgx/SDL_cgxmouse_c.h	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.15.aros/src/video/cgx/SDL_cgxmouse_c.h	2012-06-18 01:53:20.330125700 +0100
-@@ -0,0 +1,40 @@
+--- SDL-1.2.15/src/video/cgx/SDL_cgxmouse_c.h	1969-12-31 19:00:00.000000000 -0500
++++ SDL-1.2.15.aros/src/video/cgx/SDL_cgxmouse_c.h	2013-03-22 12:15:07.000000000 -0400
+@@ -0,0 +1,44 @@
 +/*
 +    SDL - Simple DirectMedia Layer
 +    Copyright (C) 1997-2006 Sam Lantinga
@@ -13992,24 +14054,27 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxmouse_c.h SDL-1.2.15.aros/src/video/cg
 +#include "SDL_cgxvideo.h"
 +
 +/* Functions to be exported */
++#if !defined(PROTO_SDL_H)
 +extern void 		CGX_FreeWMCursor(_THIS, WMcursor *cursor);
 +extern WMcursor*	CGX_CreateWMCursor(_THIS, Uint8 *data, Uint8 *mask, int w, int h, int hot_x, int hot_y);
 +extern void 		CGX_CheckMouseMode(_THIS);
 +
-+#if !defined(PROTO_SDL_H)
 +extern int 			CGX_ShowWMCursor(_THIS, WMcursor *cursor);
 +extern void 		CGX_WarpWMCursor(_THIS, Uint16 x, Uint16 y);
 +#else
++extern void 		CGX_FreeWMCursor(_THIS, WMcursor *cursor, struct SDLBase *SDLBase);
++extern WMcursor*	CGX_CreateWMCursor(_THIS, Uint8 *data, Uint8 *mask, int w, int h, int hot_x, int hot_y, struct SDLBase *SDLBase);
++extern void 		CGX_CheckMouseMode(_THIS, struct SDLBase *SDLBase);
++
 +extern int 			CGX_ShowWMCursorI(_THIS, WMcursor *cursor, struct SDLBase *SDLBase);
 +extern void 		CGX_WarpWMCursorI(_THIS, Uint16 x, Uint16 y, struct SDLBase *SDLBase);
 +
 +#define CGX_ShowWMCursor(this, cursor) CGX_ShowWMCursorI(this, cursor, SDLBase)
 +#define CGX_WarpWMCursor(this, x, y) CGX_WarpWMCursorI(this, x, y, SDLBase)
 +#endif
-\ No newline at end of file
 diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxvideo.c SDL-1.2.15.aros/src/video/cgx/SDL_cgxvideo.c
---- SDL-1.2.15/src/video/cgx/SDL_cgxvideo.c	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.15.aros/src/video/cgx/SDL_cgxvideo.c	2012-06-18 01:53:20.287120200 +0100
+--- SDL-1.2.15/src/video/cgx/SDL_cgxvideo.c	1969-12-31 19:00:00.000000000 -0500
++++ SDL-1.2.15.aros/src/video/cgx/SDL_cgxvideo.c	2013-03-08 08:30:16.000000000 -0500
 @@ -0,0 +1,1516 @@
 +/*
 +    SDL - Simple DirectMedia Layer
@@ -15528,8 +15593,8 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxvideo.c SDL-1.2.15.aros/src/video/cgx/
 +	return(-1);
 +}
 diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxvideo.h SDL-1.2.15.aros/src/video/cgx/SDL_cgxvideo.h
---- SDL-1.2.15/src/video/cgx/SDL_cgxvideo.h	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.15.aros/src/video/cgx/SDL_cgxvideo.h	2012-06-18 01:53:20.291620800 +0100
+--- SDL-1.2.15/src/video/cgx/SDL_cgxvideo.h	1969-12-31 19:00:00.000000000 -0500
++++ SDL-1.2.15.aros/src/video/cgx/SDL_cgxvideo.h	2013-03-08 08:30:16.000000000 -0500
 @@ -0,0 +1,138 @@
 +/*
 +    SDL - Simple DirectMedia Layer
@@ -15670,8 +15735,8 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxvideo.h SDL-1.2.15.aros/src/video/cgx/
 +#endif /* _SDL_cgxvideo_h */
 +
 diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxwm.c SDL-1.2.15.aros/src/video/cgx/SDL_cgxwm.c
---- SDL-1.2.15/src/video/cgx/SDL_cgxwm.c	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.15.aros/src/video/cgx/SDL_cgxwm.c	2012-06-18 01:53:20.309623100 +0100
+--- SDL-1.2.15/src/video/cgx/SDL_cgxwm.c	1969-12-31 19:00:00.000000000 -0500
++++ SDL-1.2.15.aros/src/video/cgx/SDL_cgxwm.c	2013-03-08 08:30:16.000000000 -0500
 @@ -0,0 +1,111 @@
 +/*
 +    SDL - Simple DirectMedia Layer
@@ -15785,8 +15850,8 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxwm.c SDL-1.2.15.aros/src/video/cgx/SDL
 +}
 +
 diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxwm_c.h SDL-1.2.15.aros/src/video/cgx/SDL_cgxwm_c.h
---- SDL-1.2.15/src/video/cgx/SDL_cgxwm_c.h	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.15.aros/src/video/cgx/SDL_cgxwm_c.h	2012-06-18 01:53:20.320624500 +0100
+--- SDL-1.2.15/src/video/cgx/SDL_cgxwm_c.h	1969-12-31 19:00:00.000000000 -0500
++++ SDL-1.2.15.aros/src/video/cgx/SDL_cgxwm_c.h	2013-03-08 08:30:16.000000000 -0500
 @@ -0,0 +1,45 @@
 +/*
 +    SDL - Simple DirectMedia Layer
@@ -15834,8 +15899,8 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxwm_c.h SDL-1.2.15.aros/src/video/cgx/S
 +#define CGX_GrabWMInput(this, mode) CGX_GrabWMInputI(this, mode, SDLBase)
 +#endif
 diff -ruN SDL-1.2.15/src/video/dummy/SDL_nullevents.c SDL-1.2.15.aros/src/video/dummy/SDL_nullevents.c
---- SDL-1.2.15/src/video/dummy/SDL_nullevents.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/video/dummy/SDL_nullevents.c	2012-06-18 01:53:20.847691400 +0100
+--- SDL-1.2.15/src/video/dummy/SDL_nullevents.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/video/dummy/SDL_nullevents.c	2013-03-22 12:10:45.000000000 -0400
 @@ -19,6 +19,11 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -15848,9 +15913,47 @@ diff -ruN SDL-1.2.15/src/video/dummy/SDL_nullevents.c SDL-1.2.15.aros/src/video/
  #include "SDL_config.h"
  
  /* Being a null driver, there's no event stream. We just define stubs for
+@@ -31,12 +36,20 @@
+ #include "SDL_nullvideo.h"
+ #include "SDL_nullevents_c.h"
+ 
++#if !defined(PROTO_SDL_H)
+ void DUMMY_PumpEvents(_THIS)
++#else
++void DUMMY_PumpEvents(_THIS, struct SDLBase *SDLBase)
++#endif
+ {
+ 	/* do nothing. */
+ }
+ 
++#if !defined(PROTO_SDL_H)
+ void DUMMY_InitOSKeymap(_THIS)
++#else
++void DUMMY_InitOSKeymap(_THIS, struct SDLBase *SDLBase)
++#endif
+ {
+ 	/* do nothing. */
+ }
+diff -ruN SDL-1.2.15/src/video/dummy/SDL_nullevents_c.h SDL-1.2.15.aros/src/video/dummy/SDL_nullevents_c.h
+--- SDL-1.2.15/src/video/dummy/SDL_nullevents_c.h	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/video/dummy/SDL_nullevents_c.h	2013-03-22 12:10:47.000000000 -0400
+@@ -26,8 +26,13 @@
+ /* Variables and functions exported by SDL_sysevents.c to other parts 
+    of the native video subsystem (SDL_sysvideo.c)
+ */
++#if !defined(PROTO_SDL_H)
+ extern void DUMMY_InitOSKeymap(_THIS);
+ extern void DUMMY_PumpEvents(_THIS);
++#else
++extern void DUMMY_InitOSKeymap(_THIS, struct SDLBase *SDLBase);
++extern void DUMMY_PumpEvents(_THIS, struct SDLBase *SDLBase);
++#endif
+ 
+ /* end of SDL_nullevents_c.h ... */
+ 
 diff -ruN SDL-1.2.15/src/video/dummy/SDL_nullmouse.c SDL-1.2.15.aros/src/video/dummy/SDL_nullmouse.c
---- SDL-1.2.15/src/video/dummy/SDL_nullmouse.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/video/dummy/SDL_nullmouse.c	2012-06-18 01:53:20.852192000 +0100
+--- SDL-1.2.15/src/video/dummy/SDL_nullmouse.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/video/dummy/SDL_nullmouse.c	2013-03-08 08:30:16.000000000 -0500
 @@ -19,6 +19,11 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -15864,8 +15967,8 @@ diff -ruN SDL-1.2.15/src/video/dummy/SDL_nullmouse.c SDL-1.2.15.aros/src/video/d
  
  #include "SDL_mouse.h"
 diff -ruN SDL-1.2.15/src/video/dummy/SDL_nullvideo.c SDL-1.2.15.aros/src/video/dummy/SDL_nullvideo.c
---- SDL-1.2.15/src/video/dummy/SDL_nullvideo.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/video/dummy/SDL_nullvideo.c	2012-06-18 01:53:20.855192300 +0100
+--- SDL-1.2.15/src/video/dummy/SDL_nullvideo.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/video/dummy/SDL_nullvideo.c	2013-03-08 08:30:16.000000000 -0500
 @@ -19,6 +19,11 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -16041,8 +16144,8 @@ diff -ruN SDL-1.2.15/src/video/dummy/SDL_nullvideo.c SDL-1.2.15.aros/src/video/d
  	if (this->screen->pixels != NULL)
  	{
 diff -ruN SDL-1.2.15/src/video/SDL_blit_0.c SDL-1.2.15.aros/src/video/SDL_blit_0.c
---- SDL-1.2.15/src/video/SDL_blit_0.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/video/SDL_blit_0.c	2012-06-18 01:53:20.745178400 +0100
+--- SDL-1.2.15/src/video/SDL_blit_0.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/video/SDL_blit_0.c	2013-03-08 08:30:16.000000000 -0500
 @@ -19,6 +19,11 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -16068,8 +16171,8 @@ diff -ruN SDL-1.2.15/src/video/SDL_blit_0.c SDL-1.2.15.aros/src/video/SDL_blit_0
  	int which;
  
 diff -ruN SDL-1.2.15/src/video/SDL_blit_1.c SDL-1.2.15.aros/src/video/SDL_blit_1.c
---- SDL-1.2.15/src/video/SDL_blit_1.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/video/SDL_blit_1.c	2012-06-18 01:53:20.019086200 +0100
+--- SDL-1.2.15/src/video/SDL_blit_1.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/video/SDL_blit_1.c	2013-03-08 08:30:16.000000000 -0500
 @@ -19,6 +19,11 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -16095,8 +16198,8 @@ diff -ruN SDL-1.2.15/src/video/SDL_blit_1.c SDL-1.2.15.aros/src/video/SDL_blit_1
  	int which;
  	SDL_PixelFormat *dstfmt;
 diff -ruN SDL-1.2.15/src/video/SDL_blit_A.c SDL-1.2.15.aros/src/video/SDL_blit_A.c
---- SDL-1.2.15/src/video/SDL_blit_A.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/video/SDL_blit_A.c	2012-06-18 01:53:20.801185500 +0100
+--- SDL-1.2.15/src/video/SDL_blit_A.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/video/SDL_blit_A.c	2013-03-08 08:30:16.000000000 -0500
 @@ -19,6 +19,11 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -16123,8 +16226,8 @@ diff -ruN SDL-1.2.15/src/video/SDL_blit_A.c SDL-1.2.15.aros/src/video/SDL_blit_A
      SDL_PixelFormat *sf = surface->format;
      SDL_PixelFormat *df = surface->map->dst->format;
 diff -ruN SDL-1.2.15/src/video/SDL_blit.c SDL-1.2.15.aros/src/video/SDL_blit.c
---- SDL-1.2.15/src/video/SDL_blit.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/video/SDL_blit.c	2012-06-18 01:53:20.842190700 +0100
+--- SDL-1.2.15/src/video/SDL_blit.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/video/SDL_blit.c	2013-03-22 12:06:45.000000000 -0400
 @@ -19,6 +19,11 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -16155,7 +16258,7 @@ diff -ruN SDL-1.2.15/src/video/SDL_blit.c SDL-1.2.15.aros/src/video/SDL_blit.c
  	int dst_locked;
  
 +#if defined(PROTO_SDL_H)
-+        struct SDLBase *SDLBase = src->SDLLib;
++        struct Library __unused *SDLBase = src->SDLLib;
 +#endif
  	/* Everything is okay at the beginning...  */
  	okay = 1;
@@ -16176,7 +16279,7 @@ diff -ruN SDL-1.2.15/src/video/SDL_blit.c SDL-1.2.15.aros/src/video/SDL_blit.c
  	int srcskip, dstskip;
  
 +#if defined(PROTO_SDL_H)
-+        struct SDLBase *SDLBase = info->SDLLib;
++        struct Library __unused *SDLBase = info->SDLLib;
 +#endif
 +
  	w = info->d_width*info->dst->BytesPerPixel;
@@ -16187,7 +16290,7 @@ diff -ruN SDL-1.2.15/src/video/SDL_blit.c SDL-1.2.15.aros/src/video/SDL_blit.c
  	int srcskip, dstskip;
  
 +#if defined(PROTO_SDL_H)
-+        struct SDLBase *SDLBase = info->SDLLib;
++        struct Library __unused *SDLBase = info->SDLLib;
 +#endif
 +
  	w = info->d_width*info->dst->BytesPerPixel;
@@ -16230,8 +16333,8 @@ diff -ruN SDL-1.2.15/src/video/SDL_blit.c SDL-1.2.15.aros/src/video/SDL_blit.c
  	}
  
 diff -ruN SDL-1.2.15/src/video/SDL_blit.h SDL-1.2.15.aros/src/video/SDL_blit.h
---- SDL-1.2.15/src/video/SDL_blit.h	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/video/SDL_blit.h	2012-06-18 01:53:20.350128200 +0100
+--- SDL-1.2.15/src/video/SDL_blit.h	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/video/SDL_blit.h	2013-03-08 08:30:16.000000000 -0500
 @@ -40,6 +40,9 @@
  	SDL_PixelFormat *src;
  	Uint8 *table;
@@ -16273,8 +16376,8 @@ diff -ruN SDL-1.2.15/src/video/SDL_blit.h SDL-1.2.15.aros/src/video/SDL_blit.h
  /*
   * Useful macros for blitting routines
 diff -ruN SDL-1.2.15/src/video/SDL_blit_N.c SDL-1.2.15.aros/src/video/SDL_blit_N.c
---- SDL-1.2.15/src/video/SDL_blit_N.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/video/SDL_blit_N.c	2012-06-18 01:53:20.839190300 +0100
+--- SDL-1.2.15/src/video/SDL_blit_N.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/video/SDL_blit_N.c	2013-03-08 08:30:16.000000000 -0500
 @@ -19,6 +19,11 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -16300,8 +16403,8 @@ diff -ruN SDL-1.2.15/src/video/SDL_blit_N.c SDL-1.2.15.aros/src/video/SDL_blit_N
  	struct private_swaccel *sdata;
  	SDL_PixelFormat *srcfmt;
 diff -ruN SDL-1.2.15/src/video/SDL_bmp.c SDL-1.2.15.aros/src/video/SDL_bmp.c
---- SDL-1.2.15/src/video/SDL_bmp.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/video/SDL_bmp.c	2012-06-18 01:53:21.237740900 +0100
+--- SDL-1.2.15/src/video/SDL_bmp.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/video/SDL_bmp.c	2013-03-08 08:30:16.000000000 -0500
 @@ -19,6 +19,11 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -16365,8 +16468,8 @@ diff -ruN SDL-1.2.15/src/video/SDL_bmp.c SDL-1.2.15.aros/src/video/SDL_bmp.c
 +#endif
  }
 diff -ruN SDL-1.2.15/src/video/SDL_cursor.c SDL-1.2.15.aros/src/video/SDL_cursor.c
---- SDL-1.2.15/src/video/SDL_cursor.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/video/SDL_cursor.c	2012-06-18 01:53:21.149729700 +0100
+--- SDL-1.2.15/src/video/SDL_cursor.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/video/SDL_cursor.c	2013-03-08 08:30:16.000000000 -0500
 @@ -19,6 +19,11 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -16809,8 +16912,8 @@ diff -ruN SDL-1.2.15/src/video/SDL_cursor.c SDL-1.2.15.aros/src/video/SDL_cursor
  	int savelen;
  
 diff -ruN SDL-1.2.15/src/video/SDL_cursor_c.h SDL-1.2.15.aros/src/video/SDL_cursor_c.h
---- SDL-1.2.15/src/video/SDL_cursor_c.h	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/video/SDL_cursor_c.h	2012-06-18 01:53:19.876068000 +0100
+--- SDL-1.2.15/src/video/SDL_cursor_c.h	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/video/SDL_cursor_c.h	2013-03-08 08:30:16.000000000 -0500
 @@ -24,6 +24,7 @@
  /* Useful variables and functions from SDL_cursor.c */
  #include "SDL_mouse.h"
@@ -16888,8 +16991,8 @@ diff -ruN SDL-1.2.15/src/video/SDL_cursor_c.h SDL-1.2.15.aros/src/video/SDL_curs
  
 -extern volatile int SDL_cursorstate;
 diff -ruN SDL-1.2.15/src/video/SDL_gamma.c SDL-1.2.15.aros/src/video/SDL_gamma.c
---- SDL-1.2.15/src/video/SDL_gamma.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/video/SDL_gamma.c	2012-06-18 01:53:20.256116300 +0100
+--- SDL-1.2.15/src/video/SDL_gamma.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/video/SDL_gamma.c	2013-03-08 08:30:16.000000000 -0500
 @@ -19,6 +19,11 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -17042,8 +17145,8 @@ diff -ruN SDL-1.2.15/src/video/SDL_gamma.c SDL-1.2.15.aros/src/video/SDL_gamma.c
 +#endif
  }
 diff -ruN SDL-1.2.15/src/video/SDL_pixels.c SDL-1.2.15.aros/src/video/SDL_pixels.c
---- SDL-1.2.15/src/video/SDL_pixels.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/video/SDL_pixels.c	2012-06-18 01:53:20.451141000 +0100
+--- SDL-1.2.15/src/video/SDL_pixels.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/video/SDL_pixels.c	2013-03-08 08:30:16.000000000 -0500
 @@ -19,6 +19,11 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -17264,8 +17367,8 @@ diff -ruN SDL-1.2.15/src/video/SDL_pixels.c SDL-1.2.15.aros/src/video/SDL_pixels
  	SDL_PixelFormat *srcfmt;
  	SDL_PixelFormat *dstfmt;
 diff -ruN SDL-1.2.15/src/video/SDL_pixels_c.h SDL-1.2.15.aros/src/video/SDL_pixels_c.h
---- SDL-1.2.15/src/video/SDL_pixels_c.h	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/video/SDL_pixels_c.h	2012-06-18 01:53:20.985208800 +0100
+--- SDL-1.2.15/src/video/SDL_pixels_c.h	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/video/SDL_pixels_c.h	2013-03-08 08:30:16.000000000 -0500
 @@ -25,18 +25,30 @@
  
  #include "SDL_blit.h"
@@ -17301,8 +17404,8 @@ diff -ruN SDL-1.2.15/src/video/SDL_pixels_c.h SDL-1.2.15.aros/src/video/SDL_pixe
  
  /* Miscellaneous functions */
 diff -ruN SDL-1.2.15/src/video/SDL_RLEaccel.c SDL-1.2.15.aros/src/video/SDL_RLEaccel.c
---- SDL-1.2.15/src/video/SDL_RLEaccel.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/video/SDL_RLEaccel.c	2012-06-18 01:53:20.189107800 +0100
+--- SDL-1.2.15/src/video/SDL_RLEaccel.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/video/SDL_RLEaccel.c	2013-03-22 12:05:50.000000000 -0400
 @@ -19,6 +19,11 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -17339,7 +17442,7 @@ diff -ruN SDL-1.2.15/src/video/SDL_RLEaccel.c SDL-1.2.15.aros/src/video/SDL_RLEa
  	unsigned alpha;
  
 +#if defined(PROTO_SDL_H)
-+        struct SDLBase *SDLBase = src->SDLLib;
++        struct Library __unused *SDLBase = src->SDLLib;
 +#endif
 +
  	/* Lock the destination if necessary */
@@ -17350,7 +17453,7 @@ diff -ruN SDL-1.2.15/src/video/SDL_RLEaccel.c SDL-1.2.15.aros/src/video/SDL_RLEa
  			     Uint8 *dstbuf, SDL_Rect *srcrect)
  {
 +#if defined(PROTO_SDL_H)
-+        struct SDLBase *SDLBase = dst->SDLLib;
++    struct Library __unused *SDLBase = dst->SDLLib;
 +#endif
 +
      SDL_PixelFormat *df = dst->format;
@@ -17361,7 +17464,7 @@ diff -ruN SDL-1.2.15/src/video/SDL_RLEaccel.c SDL-1.2.15.aros/src/video/SDL_RLEa
      SDL_PixelFormat *df = dst->format;
  
 +#if defined(PROTO_SDL_H)
-+        struct SDLBase *SDLBase = src->SDLLib;
++    struct Library __unused *SDLBase = src->SDLLib;
 +#endif
 +
      /* Lock the destination if necessary */
@@ -17420,8 +17523,8 @@ diff -ruN SDL-1.2.15/src/video/SDL_RLEaccel.c SDL-1.2.15.aros/src/video/SDL_RLEa
      if ( (surface->flags & SDL_RLEACCEL) == SDL_RLEACCEL ) {
  	surface->flags &= ~SDL_RLEACCEL;
 diff -ruN SDL-1.2.15/src/video/SDL_RLEaccel_c.h SDL-1.2.15.aros/src/video/SDL_RLEaccel_c.h
---- SDL-1.2.15/src/video/SDL_RLEaccel_c.h	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/video/SDL_RLEaccel_c.h	2012-06-18 01:53:20.543652800 +0100
+--- SDL-1.2.15/src/video/SDL_RLEaccel_c.h	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/video/SDL_RLEaccel_c.h	2013-03-08 08:30:16.000000000 -0500
 @@ -23,9 +23,20 @@
  
  /* Useful functions and variables from SDL_RLEaccel.c */
@@ -17446,8 +17549,8 @@ diff -ruN SDL-1.2.15/src/video/SDL_RLEaccel_c.h SDL-1.2.15.aros/src/video/SDL_RL
 +#endif
 \ No newline at end of file
 diff -ruN SDL-1.2.15/src/video/SDL_stretch.c SDL-1.2.15.aros/src/video/SDL_stretch.c
---- SDL-1.2.15/src/video/SDL_stretch.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/video/SDL_stretch.c	2012-06-18 01:53:20.485645400 +0100
+--- SDL-1.2.15/src/video/SDL_stretch.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/video/SDL_stretch.c	2013-03-08 08:30:16.000000000 -0500
 @@ -19,6 +19,11 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -17505,8 +17608,8 @@ diff -ruN SDL-1.2.15/src/video/SDL_stretch.c SDL-1.2.15.aros/src/video/SDL_stret
  }
  
 diff -ruN SDL-1.2.15/src/video/SDL_stretch_c.h SDL-1.2.15.aros/src/video/SDL_stretch_c.h
---- SDL-1.2.15/src/video/SDL_stretch_c.h	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/video/SDL_stretch_c.h	2012-06-18 01:53:21.234240500 +0100
+--- SDL-1.2.15/src/video/SDL_stretch_c.h	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/video/SDL_stretch_c.h	2013-03-08 08:30:16.000000000 -0500
 @@ -24,6 +24,7 @@
  /* Perform a stretch blit between two surfaces of the same format.
     NOTE:  This function is not safe to call from multiple threads!
@@ -17517,8 +17620,8 @@ diff -ruN SDL-1.2.15/src/video/SDL_stretch_c.h SDL-1.2.15.aros/src/video/SDL_str
 -
 +#endif
 diff -ruN SDL-1.2.15/src/video/SDL_surface.c SDL-1.2.15.aros/src/video/SDL_surface.c
---- SDL-1.2.15/src/video/SDL_surface.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/video/SDL_surface.c	2012-06-18 01:53:20.989209400 +0100
+--- SDL-1.2.15/src/video/SDL_surface.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/video/SDL_surface.c	2013-03-22 12:07:41.000000000 -0400
 @@ -19,6 +19,11 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -17566,7 +17669,7 @@ diff -ruN SDL-1.2.15/src/video/SDL_surface.c SDL-1.2.15.aros/src/video/SDL_surfa
  		return(NULL);
  	}
 +#if defined(PROTO_SDL_H)
-+        surface->SDLLib = SDLBase;
++        surface->SDLLib = (struct Library *)SDLBase;
 +#endif
  	surface->flags = SDL_SWSURFACE;
  	if ( (flags & SDL_HWSURFACE) == SDL_HWSURFACE ) {
@@ -18010,8 +18113,8 @@ diff -ruN SDL-1.2.15/src/video/SDL_surface.c SDL-1.2.15.aros/src/video/SDL_surfa
 +#endif
  }
 diff -ruN SDL-1.2.15/src/video/SDL_sysvideo.h SDL-1.2.15.aros/src/video/SDL_sysvideo.h
---- SDL-1.2.15/src/video/SDL_sysvideo.h	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/video/SDL_sysvideo.h	2012-06-18 01:53:19.873567700 +0100
+--- SDL-1.2.15/src/video/SDL_sysvideo.h	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/video/SDL_sysvideo.h	2013-03-08 08:30:16.000000000 -0500
 @@ -37,6 +37,10 @@
  #include "SDL_opengl.h"
  #endif /* SDL_VIDEO_OPENGL */
@@ -18180,8 +18283,8 @@ diff -ruN SDL-1.2.15/src/video/SDL_sysvideo.h SDL-1.2.15.aros/src/video/SDL_sysv
  #define SDL_VideoSurface	(current_video->screen)
  #define SDL_ShadowSurface	(current_video->shadow)
 diff -ruN SDL-1.2.15/src/video/SDL_video.c SDL-1.2.15.aros/src/video/SDL_video.c
---- SDL-1.2.15/src/video/SDL_video.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/video/SDL_video.c	2012-06-18 01:53:20.184607200 +0100
+--- SDL-1.2.15/src/video/SDL_video.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/video/SDL_video.c	2013-03-08 08:30:16.000000000 -0500
 @@ -19,6 +19,11 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -19381,8 +19484,8 @@ diff -ruN SDL-1.2.15/src/video/SDL_video.c SDL-1.2.15.aros/src/video/SDL_video.c
  		return(0);
  	}
 diff -ruN SDL-1.2.15/src/video/SDL_yuv.c SDL-1.2.15.aros/src/video/SDL_yuv.c
---- SDL-1.2.15/src/video/SDL_yuv.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/video/SDL_yuv.c	2012-06-18 01:53:20.475644100 +0100
+--- SDL-1.2.15/src/video/SDL_yuv.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/video/SDL_yuv.c	2013-03-08 08:30:16.000000000 -0500
 @@ -19,6 +19,11 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -19538,8 +19641,8 @@ diff -ruN SDL-1.2.15/src/video/SDL_yuv.c SDL-1.2.15.aros/src/video/SDL_yuv.c
 +#endif
  }
 diff -ruN SDL-1.2.15/src/video/SDL_yuvfuncs.h SDL-1.2.15.aros/src/video/SDL_yuvfuncs.h
---- SDL-1.2.15/src/video/SDL_yuvfuncs.h	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/video/SDL_yuvfuncs.h	2012-06-18 01:53:20.150602900 +0100
+--- SDL-1.2.15/src/video/SDL_yuvfuncs.h	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/video/SDL_yuvfuncs.h	2013-03-08 08:30:16.000000000 -0500
 @@ -30,8 +30,15 @@
  #define _THIS	SDL_VideoDevice *_this
  #endif
@@ -19557,8 +19660,8 @@ diff -ruN SDL-1.2.15/src/video/SDL_yuvfuncs.h SDL-1.2.15.aros/src/video/SDL_yuvf
 +#endif
  };
 diff -ruN SDL-1.2.15/src/video/SDL_yuv_mmx.c SDL-1.2.15.aros/src/video/SDL_yuv_mmx.c
---- SDL-1.2.15/src/video/SDL_yuv_mmx.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/video/SDL_yuv_mmx.c	2012-06-18 01:53:20.354128700 +0100
+--- SDL-1.2.15/src/video/SDL_yuv_mmx.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/video/SDL_yuv_mmx.c	2013-03-08 08:30:16.000000000 -0500
 @@ -19,6 +19,11 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -19572,8 +19675,8 @@ diff -ruN SDL-1.2.15/src/video/SDL_yuv_mmx.c SDL-1.2.15.aros/src/video/SDL_yuv_m
  
  #if (__GNUC__ > 2) && defined(__i386__) && __OPTIMIZE__ && SDL_ASSEMBLY_ROUTINES
 diff -ruN SDL-1.2.15/src/video/SDL_yuv_sw.c SDL-1.2.15.aros/src/video/SDL_yuv_sw.c
---- SDL-1.2.15/src/video/SDL_yuv_sw.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/video/SDL_yuv_sw.c	2012-06-18 01:53:20.346627800 +0100
+--- SDL-1.2.15/src/video/SDL_yuv_sw.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/video/SDL_yuv_sw.c	2013-03-08 08:30:16.000000000 -0500
 @@ -19,6 +19,11 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -19641,8 +19744,8 @@ diff -ruN SDL-1.2.15/src/video/SDL_yuv_sw.c SDL-1.2.15.aros/src/video/SDL_yuv_sw
  	struct private_yuvhwdata *swdata;
  
 diff -ruN SDL-1.2.15/src/video/SDL_yuv_sw_c.h SDL-1.2.15.aros/src/video/SDL_yuv_sw_c.h
---- SDL-1.2.15/src/video/SDL_yuv_sw_c.h	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/src/video/SDL_yuv_sw_c.h	2012-06-18 01:53:21.189734800 +0100
+--- SDL-1.2.15/src/video/SDL_yuv_sw_c.h	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/src/video/SDL_yuv_sw_c.h	2013-03-08 08:30:16.000000000 -0500
 @@ -25,7 +25,7 @@
  #include "SDL_sysvideo.h"
  
@@ -19673,8 +19776,8 @@ diff -ruN SDL-1.2.15/src/video/SDL_yuv_sw_c.h SDL-1.2.15.aros/src/video/SDL_yuv_
 +#define SDL_FreeYUV_SW SDL_FreeYUV_SWI
 +#endif
 diff -ruN SDL-1.2.15/test/testplatform.c SDL-1.2.15.aros/test/testplatform.c
---- SDL-1.2.15/test/testplatform.c	2012-01-19 06:30:06.000000000 +0000
-+++ SDL-1.2.15.aros/test/testplatform.c	2012-06-18 01:53:18.368876600 +0100
+--- SDL-1.2.15/test/testplatform.c	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15.aros/test/testplatform.c	2013-03-08 08:30:16.000000000 -0500
 @@ -197,6 +197,8 @@
  #else
  			"Windows"
