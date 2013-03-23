@@ -277,6 +277,14 @@ LONG MakeConWindow(struct filehandle *fh, struct conbase *conbase)
 
     win_tags[2].ti_Data = (IPTR)fh->screenname;
     D(bug("[contask] Opening window on screen %s, FileHandle 0x%p, IntuitionBase = 0x%p\n", fh->screenname, fh, IntuitionBase));
+
+    /*  Autoadjust doesn't enforce the window's width and height to be larger than
+        minwidth and minheight, so we set it here to avoid crashes in devs/console
+        if a user does e.g. dir >con:0/0/0/0
+    */
+    fh->nw.Width = fh->nw.Width > fh->nw.MinWidth ? fh->nw.Width : -1;
+    fh->nw.Height = fh->nw.Height > fh->nw.MinHeight ? fh->nw.Height : fh->nw.MinHeight;
+
     fh->window = OpenWindowTagList(&fh->nw, (struct TagItem *)win_tags);
 
     if (fh->window)
