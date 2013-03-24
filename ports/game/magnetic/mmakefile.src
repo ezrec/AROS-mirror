@@ -21,6 +21,7 @@ USER_CFLAGS  := -Wno-parentheses -DNO_ANIMATION
 USER_INCLUDES:= -I $(PORTSDIR)/magnetic/$(ARCHBASE)/Generic
 
 FILES := Amiga/amiga Generic/emu
+FILES := $(addprefix $(PORTSDIR)/magnetic/$(ARCHBASE)/,$(FILES))
 
 %build_prog mmake=ports-game-magnetic progname=Magnetic \
     files=$(FILES) targetdir=$(TARGETDIR) \

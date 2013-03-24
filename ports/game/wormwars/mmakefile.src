@@ -30,6 +30,7 @@ USER_CFLAGS  := -DNO_PRAGMAS -D__STORM__ -D__chip= -DAMIGA \
 
 FILES := source/amiga source/engine1 source/engine2 source/extras \
          source/gfx source/heads source/le source/squares source/tails
+FILES := $(addprefix $(PORTSDIR)/wormwars/$(ARCHBASE)/,$(FILES))
 
 %build_prog mmake=ports-game-wormwars progname=WormWars \
     files=$(FILES) targetdir=$(TARGETDIR) \

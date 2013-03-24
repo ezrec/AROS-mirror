@@ -48,6 +48,7 @@ FILES := \
 	src/core/drawtools \
 	src/core/canvas \
 	src/core/tools
+FILES := $(addprefix $(PORTSDIR)/lunapaint/$(ARCHBASE)/,$(FILES))
 
 %build_prog mmake=ports-graphics-lunapaint progname=Lunapaint \
     files=$(FILES) targetdir=$(TARGETDIR) \

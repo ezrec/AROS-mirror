@@ -22,6 +22,7 @@ ARCHBASE     := koules-src-1.16
 TARGETDIR    := $(AROS_CONTRIB)/Games/Koules
 
 FILES := source/framebuffer source/koules source/menu source/amiga source/gameplan
+FILES := $(addprefix $(PORTSDIR)/koules/$(ARCHBASE)/,$(FILES))
 
 %build_prog mmake=ports-game-koules progname=Koules \
     files=$(FILES) targetdir=$(TARGETDIR) \

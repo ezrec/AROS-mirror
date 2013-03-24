@@ -20,6 +20,7 @@ TARGETDIR    := $(AROS_CONTRIB)/Games/MultiPuzzle
 
 
 FILES := displayinit localize multipuzzle puzzle requesters multipuzzle_strings
+FILES := $(addprefix $(PORTSDIR)/multipuzzle/$(ARCHBASE)/,$(FILES))
 USER_CFLAGS := -Wno-implicit-function-declaration -Wno-parentheses
 USER_INCLUDES := -I.
 

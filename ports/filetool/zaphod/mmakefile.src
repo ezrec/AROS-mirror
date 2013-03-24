@@ -33,6 +33,7 @@ FILES := \
 	src/display \
 	src/clipboard \
 	src/zaphod
+FILES := $(addprefix $(PORTSDIR)/zaphod/$(ARCHBASE)/,$(FILES))
 
 %build_prog mmake=ports-filetool-zaphod progname=Zaphod \
     files=$(FILES) targetdir=$(TARGETDIR) \

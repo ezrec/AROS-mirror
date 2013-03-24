@@ -82,6 +82,7 @@ FILES := \
 	$(LANG_SRCS) \
 	$(AMIGA_SRCS) \
 	$(AUTO_SRCS)
+FILES := $(addprefix $(PORTSDIR)/muibase/$(ARCHBASE)/,$(FILES))
 
 %build_prog mmake=ports-office-muibase progname=MUIbase \
     files=$(FILES) targetdir=$(TARGETDIR) \

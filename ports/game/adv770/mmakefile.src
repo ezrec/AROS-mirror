@@ -18,6 +18,7 @@ USER_CFLAGS  := -DHAVE_STRING_H -DHAVE_STDLIB_H -DHAVE_SYS_STAT_H \
 FILES := \
 	adv00 adv01 adv02 adv03 adv04 adv05 adv06 adv07 adv08 \
 	adv09 adv10 adv11 adv12 adv13 adv14 adv15 adv16 adv17
+FILES := $(addprefix $(PORTSDIR)/adv770/$(ARCHBASE)/acode/adv770/src/,$(FILES))
 
 %build_prog mmake=ports-game-adv770 progname=Adv770 \
     files=$(FILES) targetdir=$(TARGETDIR) \
