@@ -4,7 +4,8 @@ include $(TOP)/config/make.cfg
 FILES := hpet_init
 FUNCS := gethpetcount allochpetunit freehpetunit getunitattrsa
 
-#MM- includes-generate : kernel-pc-hpet-includes
+#MM- kernel-pc-hpet : includes
+#MM- kernel-pc-hpet-kobj : includes
 
 %build_module mmake=kernel-pc-hpet \
   modname=hpet modtype=resource \
