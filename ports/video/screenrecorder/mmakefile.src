@@ -36,7 +36,7 @@ FILES := \
 
 %build_prog mmake=ports-video-screenrecorder progname=ScreenRecorder \
     files=$(FILES) targetdir=$(TARGETDIR) \
-    uselibs="arosc amiga arossupport mui jpeg z"
+    uselibs="mui jpeg z"
 
 %fetch mmake=ports-video-screenrecorder-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/screenrecorder \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.bz2" \

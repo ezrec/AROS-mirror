@@ -11,6 +11,6 @@ USER_CFLAGS = -DGAME_AROS
 
 %build_prog mmake=XInvaders3D \
     progname=XInvaders3D targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="arossupport amiga arosc m"
+    files=$(FILES)
 
 %common

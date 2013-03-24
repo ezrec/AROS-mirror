@@ -13,4 +13,4 @@ EXEDIR := $(CONTRIBDIR)/Networking/Apps/ttel
 
 %build_prog mmake=aros-tcpip-apps-ttel \
     progname=ttel targetdir=$(EXEDIR) \
-    files=ttel uselibs="arossupport amiga arosc m termcap"
+    files=ttel uselibs="termcap"

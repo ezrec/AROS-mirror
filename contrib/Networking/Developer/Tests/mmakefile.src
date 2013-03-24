@@ -10,7 +10,9 @@ TFILES = ping simpleping
 
 USER_CFLAGS := -D__BSD_VISIBLE=1
 
-%build_progs mmake=contrib-net-developer-tests files="$(TFILES) $(STACKTESTS) $(CLISERVTESTS)" targetdir=$(CONTRIBDIR)/Networking/Tests uselibs="arossupport amiga arosc m"
+%build_progs mmake=contrib-net-developer-tests \
+    files="$(TFILES) $(STACKTESTS) $(CLISERVTESTS)" \
+    targetdir=$(CONTRIBDIR)/Networking/Tests
 
 ##MM contrib-net-developer-tests : aros-tcpip
 

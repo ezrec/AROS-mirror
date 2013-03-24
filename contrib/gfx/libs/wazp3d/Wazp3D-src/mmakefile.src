@@ -14,14 +14,14 @@ USER_CFLAGS := -Wno-implicit-function-declaration \
 FILES := Wazp3D soft3d_opengl
 
 %build_module mmake=contrib-wazp3d-lib modname=Warp3D modtype=library \
-  files=$(FILES) uselibs="arossupport GL"
+  files=$(FILES) uselibs="GL"
 
 
 FILES := Wazp3D-Prefs
 TARGETDIR := $(AROS_CONTRIB)/MultiMedia/Gfx/Wazp3D
 
 %build_prog mmake=contrib-wazp3d-prefs progname=Wazp3D-Prefs files=$(FILES) \
-    targetdir=$(TARGETDIR) uselibs="arossupport Warp3D"
+    targetdir=$(TARGETDIR) uselibs="Warp3D"
 
 
 %copy_includes mmake=includes-copy includes=Warp3D.h path=Warp3D

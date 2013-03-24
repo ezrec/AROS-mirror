@@ -4,4 +4,4 @@ EXEDIR := $(CONTRIBDIR)/Games/Inv
 
 %build_prog mmake=aminet-games-shoot-inv \
     progname=Inv targetdir=$(EXEDIR) \
-    files=inv uselibs="arossupport amiga arosc m"
+    files=inv

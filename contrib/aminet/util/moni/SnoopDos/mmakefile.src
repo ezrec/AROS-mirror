@@ -5,4 +5,4 @@ FILES := buffer language subwin mainwin system hotkey \
 
 %build_prog mmake=aminet-util-moni-snoopdos \
     progname=SnoopDos targetdir=$(CONTRIBDIR)/Misc/aminet \
-    files=$(FILES) uselibs="arossupport amiga arosc m"
+    files=$(FILES)

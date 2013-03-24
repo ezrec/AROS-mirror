@@ -12,13 +12,11 @@ DESTDIR 	:= $(CONTRIBDIR)/Demos/InfPlane
 
 %build_prog mmake=demo-infplane-i386 \
     progname=InfPlane targetdir=$(DESTDIR) \
-    files=infplane asmfiles=refresh-i386 \
-    uselibs="arossupport amiga arosc m"
+    files=infplane asmfiles=refresh-i386
 
 %build_prog mmake=demo-infplane-x86_64 \
     progname=InfPlane targetdir=$(DESTDIR) \
-    files=infplane asmfiles=refresh-x86_64 \
-    uselibs="arossupport amiga arosc m"
+    files=infplane asmfiles=refresh-x86_64
 
 DATAFILES	:= pattern.data pattern.pal
 

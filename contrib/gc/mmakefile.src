@@ -17,6 +17,6 @@ USER_CFLAGS := -O2 -Wunused -Wall -Uunix -Ulinux -U__linux__ -DATOMIC_UNCOLLECTA
 
 %build_prog mmake=contrib-gc \
     progname=gctest targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="arossupport amiga arosc m"
+    files=$(FILES)
 
 %common

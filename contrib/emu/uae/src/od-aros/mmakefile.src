@@ -25,6 +25,6 @@ STRIP := $(NOP)
 
 %build_prog mmake=uae-od-aros \
     progname=od-aros.o targetdir=$(EXEDIR) files=$(FILES) \
-    ldflags="$(GENDIR)/$(CURDIR)/uae-gui.o $(NOSTARTUP_LDFLAGS) $(NOSTDLIB_LDFLAGS) -Wl,-r" uselibs=""
+    ldflags="$(GENDIR)/$(CURDIR)/uae-gui.o $(NOSTARTUP_LDFLAGS) $(NOSTDLIB_LDFLAGS) -Wl,-r"
 
 %common

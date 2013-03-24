@@ -2,5 +2,4 @@ include $(TOP)/config/make.cfg
 
 %build_prog mmake=aminet-dev-src-rable \
     progname=rable targetdir=$(CONTRIBDIR)/Misc/aminet \
-    files="rable_draw rable_gadgets rable" \
-    uselibs="arossupport amiga arosc m"
+    files="rable_draw rable_gadgets rable"

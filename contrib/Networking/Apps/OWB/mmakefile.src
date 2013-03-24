@@ -9,7 +9,7 @@ USER_CFLAGS := -DZUNE_BUILTIN_SCROLLGROUP=0 -DWTF_PLATFORM_AROS=1
 
 %build_prog mmake=aros-tcpip-apps-startowb \
     files="startowb locale" targetdir=$(EXEDIR) \
-    progname="startowb" uselibs="fontconfig xml2 freetype2.static z iconv amiga arosc m mui" \
+    progname="startowb" uselibs="fontconfig xml2 freetype2.static z iconv mui" \
 
 FILES :=               \
 	tabs/tab           \
@@ -27,7 +27,7 @@ FILES :=               \
 	browserwindow      \
 	browserapp
 	
-#MM- aros-tcpip-apps: aros-tcpip-apps-owb
+##MM- aros-tcpip-apps: aros-tcpip-apps-owb
 
 #MM- aros-tcpip-apps-startowb : contrib-fontconfig
 
@@ -47,8 +47,9 @@ FILES :=               \
 
 OWB_LIBS := webkit-owb webcore wtf jsc webkit-owb \
     icui18n icuuc icudata codesets thread xml2 fontconfig freetype2.static \
-    SDL SDL_gfx GL png jpeg curl iconv z amiga arosc m mui ssl \
+    SDL SDL_gfx GL png jpeg curl iconv z mui ssl \
     crypto sqlite3 xslt thread
+#TODO: Link OWB with shared library version of freetype2
 
 USER_CFLAGS := -DZUNE_BUILTIN_SCROLLGROUP=0 -DMUIMASTER_YES_INLINE_STDARG \
     -DWTF_PLATFORM_AROS=1 -I$(SRCDIR)/$(CURDIR)/tabs -I$(AROS_INCLUDES)/SDL \

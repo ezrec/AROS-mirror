@@ -6,6 +6,6 @@ DESTDIR := $(CONTRIBDIR)/Demos/RubberStrings
 
 %build_prog mmake=demo-rubberstrings \
     progname=Rubberstrings targetdir=$(DESTDIR) \
-    files=rubberstrings uselibs="arossupport amiga arosc m"
+    files=rubberstrings
 
 %common

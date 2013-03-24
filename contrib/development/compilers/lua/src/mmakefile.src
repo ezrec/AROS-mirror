@@ -49,18 +49,18 @@ USER_CFLAGS   += -Wno-uninitialized -DLUA_COMPAT_ALL
 
 #MM contrib-development-lua-lua : includes linklibs contrib-development-lua-lib
 %build_prog mmake=contrib-development-lua-lua progname=Lua files=$(LUAFILES) \
-    targetdir=$(EXEDIR) uselibs="arosc m lua"
+    targetdir=$(EXEDIR) uselibs="lua"
 
 #MM contrib-development-lua-luac : includes linklibs contrib-development-lua-lib
 %build_prog mmake=contrib-development-lua-luac progname=Luac files=$(LUACFILES) \
-    targetdir=$(EXEDIR) uselibs="arosc m lua"
+    targetdir=$(EXEDIR) uselibs="lua"
 
 #MM contrib-development-lua-amilua : includes linklibs contrib-development-luasiamiga-lib \
 #MM contrib-development-luamui-lib contrib-development-lualfs-lib contrib-development-lsqlite3-lib contrib-development-luaxmlreader-lib
 
 
 %build_prog mmake=contrib-development-lua-amilua progname=AmiLua files=$(AMILUAFILES) \
-    targetdir=$(EXEDIR) uselibs="arosc m lua luasiamiga luamui lualfs mui lsqlite3 sqlite3 luaxmlreader xml2 z"
+    targetdir=$(EXEDIR) uselibs="lua luasiamiga luamui lualfs mui lsqlite3 sqlite3 luaxmlreader xml2 z"
 
 
 

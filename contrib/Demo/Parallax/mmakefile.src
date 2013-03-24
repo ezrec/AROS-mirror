@@ -6,6 +6,6 @@ DESTDIR := $(CONTRIBDIR)/Demos/Parallax
 
 %build_prog mmake=demo-parallax \
     progname=Parallax targetdir=$(DESTDIR) \
-    files=parallax uselibs="arossupport amiga arosc m"
+    files=parallax
 
 %common

@@ -2,5 +2,5 @@ include $(TOP)/config/make.cfg
 
 %build_prog mmake=aminet-dev-src-hexdump \
     progname=HexDump targetdir=$(CONTRIBDIR)/Misc/aminet \
-    files=HexDump uselibs="arossupport amiga arosc m"
+    files=HexDump
 

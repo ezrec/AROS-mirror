@@ -19,8 +19,7 @@ gfx-xaos-prog-quick : $(PROG)
 XAOSLIBS	:= ui engine util filter uiaros
 XAOSLIBFILES	:= $(foreach f, $(XAOSLIBS), $(LIBDIR)/libxaos$(f).a)
 
-%rule_link_prog prog=$(PROG) objs=$(XAOSLIBFILES) \
-    uselibs="arossupport amiga arosc m"
+%rule_link_prog prog=$(PROG) objs=$(XAOSLIBFILES)
 
 #MM setup-gfx-xaos
 %rule_makedirs dirs=$(CONTRIBDIR)/MultiMedia/Gfx/XaoS setuptarget=setup-gfx-xaos

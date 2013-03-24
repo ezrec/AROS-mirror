@@ -14,6 +14,6 @@ FILES := demo1 \
 
 %build_progs mmake=contrib-zune-classes-bwin-demos files=$(FILES) \
     targetdir=$(TARGETDIR) \
-    uselibs="amiga mui"
+    uselibs="mui"
 
 %common

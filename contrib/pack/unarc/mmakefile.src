@@ -14,7 +14,7 @@ IMAGES := selected unselected
 
 %build_prog mmake=contrib-pack-unarc \
     progname=Unarc targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="mui xadmaster amiga arosc"
+    files=$(FILES) uselibs="mui xadmaster"
 
 %copy_files_q mmake=contrib-pack-unarc-images files=$(IMAGES) src=images dst=$(EXEDIR)/Images
 

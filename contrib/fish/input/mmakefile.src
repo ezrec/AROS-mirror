@@ -2,5 +2,4 @@ include $(TOP)/config/make.cfg
 
 %build_prog mmake=fish-input \
     progname=input_test targetdir=$(CONTRIBDIR)/Misc/fish \
-    files="console input test" \
-    uselibs="arossupport amiga arosc m"
+    files="console input test"

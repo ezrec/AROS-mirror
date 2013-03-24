@@ -4,7 +4,7 @@ include $(TOP)/config/make.cfg
 
 %build_prog mmake=fish-worldtime \
     progname=WorldTime targetdir=$(CONTRIBDIR)/Misc/fish/WorldTime \
-    files=main uselibs="arossupport amiga arosc m"
+    files=main
 
 FILES := worldtime.cfg worldtime.dat
 

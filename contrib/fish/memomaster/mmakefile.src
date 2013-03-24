@@ -2,5 +2,4 @@ include $(TOP)/config/make.cfg
 
 %build_prog mmake=fish-memomaster \
     progname=mm2 targetdir=$(CONTRIBDIR)/Misc/fish \
-    files="datefunc deledadd display helpmode listfunc mm2" \
-    uselibs="arossupport amiga arosc m"
+    files="datefunc deledadd display helpmode listfunc mm2"

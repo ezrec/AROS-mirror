@@ -6,7 +6,7 @@ FILES := Wumpus
 
 %build_prog mmake=games-kiel-wumpus \
     progname=Wumpus targetdir=$(CONTRIBDIR)/Games/Kiel \
-    files=$(FILES) uselibs="arossupport amiga arosc m"
+    files=$(FILES)
 
 #MM games-kiel-wumpus : games-kiel-wumpus-catalogs
 

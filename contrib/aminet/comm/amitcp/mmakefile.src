@@ -38,6 +38,6 @@ USER_CFLAGS := -w -Wall -O0 $(USER_DEFINES) -I./ -I./conf -I./protos
 
 %build_prog mmake=aminet-comm-amitcp \
     progname=amitcp targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="arossupport amiga arosc m"
+    files=$(FILES)
 
 %common

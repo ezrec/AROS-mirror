@@ -6,6 +6,6 @@ DESTDIR	:= $(CONTRIBDIR)/Demos/Firework
 
 %build_prog mmake=demo-firework \
     progname=Firework targetdir=$(DESTDIR) \
-    files=firework uselibs="arossupport amiga arosc m"
+    files=firework
 
 %common

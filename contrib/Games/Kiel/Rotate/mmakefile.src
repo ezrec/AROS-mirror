@@ -7,7 +7,7 @@ DESTDIR := $(CONTRIBDIR)/Games/Kiel
 
 %build_prog mmake=games-kiel-rotate \
     progname=Rotate targetdir=$(DESTDIR) \
-    files=$(FILES) uselibs="arossupport amiga arosc m"
+    files=$(FILES)
 
 
 INFO := $(foreach f,$(FILES), $(DESTDIR)/$(f).info)

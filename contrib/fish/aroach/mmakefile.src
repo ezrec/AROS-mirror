@@ -2,5 +2,4 @@ include $(TOP)/config/make.cfg
 
 %build_prog mmake=fish-aroach \
     progname=aroach targetdir=$(CONTRIBDIR)/Misc/fish \
-    files="animtools ARoach RoachData" \
-    uselibs="arossupport amiga arosc m"
+    files="animtools ARoach RoachData"

@@ -2,5 +2,5 @@ include $(TOP)/config/make.cfg
 
 %build_prog mmake=fish-304_clines \
     progname=304_clines targetdir=$(CONTRIBDIR)/Misc/fish \
-    files=clines uselibs="arossupport amiga arosc m"
+    files=clines
 

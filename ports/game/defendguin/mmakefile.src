@@ -26,7 +26,7 @@ FILES := $(PORTSDIR)/defendguin/$(ARCHBASE)/src/defendguin
 
 %build_prog mmake=ports-game-defendguin progname=Defendguin \
     files=$(FILES) targetdir=$(TARGETDIR) \
-    uselibs="arosc SDL_mixer vorbisfile vorbis ogg SDL GL"
+    uselibs="SDL_mixer vorbisfile vorbis ogg SDL GL"
 
 %fetch mmake=ports-game-defendguin-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/defendguin \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \

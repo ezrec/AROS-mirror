@@ -6,7 +6,7 @@ DESTDIR := $(CONTRIBDIR)/Demos/Voxel
 
 %build_prog mmake=demo-voxel \
     progname=Voxel targetdir=$(DESTDIR) \
-    files=voxel uselibs="arossupport amiga arosc m"
+    files=voxel
 
 IMAGES := clouds.pcx democ.pcx demoh.pcx
 IMAGEFILES := $(foreach f, $(IMAGES), $(DESTDIR)/$(f))

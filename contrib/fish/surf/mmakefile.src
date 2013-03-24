@@ -6,4 +6,4 @@ FILES := bezpt control fasttrig gadgetdef gadgetuse getfilenames \
 
 %build_prog mmake=fish-surf \
     progname=surf targetdir=$(CONTRIBDIR)/Misc/fish \
-    files=$(FILES) uselibs="arossupport amiga arosc m"
+    files=$(FILES)

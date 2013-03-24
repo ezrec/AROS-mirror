@@ -21,8 +21,7 @@ FILES := \
 FILES := $(addprefix $(PORTSDIR)/adv770/$(ARCHBASE)/acode/adv770/src/,$(FILES))
 
 %build_prog mmake=ports-game-adv770 progname=Adv770 \
-    files=$(FILES) targetdir=$(TARGETDIR) \
-    uselibs="arosc"
+    files=$(FILES) targetdir=$(TARGETDIR)
 
 
 %fetch mmake=ports-game-adv770-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/adv770/$(ARCHBASE) \

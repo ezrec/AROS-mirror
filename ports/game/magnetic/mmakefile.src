@@ -24,8 +24,7 @@ FILES := Amiga/amiga Generic/emu
 FILES := $(addprefix $(PORTSDIR)/magnetic/$(ARCHBASE)/,$(FILES))
 
 %build_prog mmake=ports-game-magnetic progname=Magnetic \
-    files=$(FILES) targetdir=$(TARGETDIR) \
-    uselibs="arosc arossupport amiga"
+    files=$(FILES) targetdir=$(TARGETDIR)
 
 
 %fetch mmake=ports-game-magnetic-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/magnetic \

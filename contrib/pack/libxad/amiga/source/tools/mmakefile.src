@@ -21,6 +21,6 @@ USER_CFLAGS     := -I$(AROS_INCLUDES)/SDI -I$(SRCDIR)/$(CURDIR)/../../../portabl
 
 %build_progs mmake=xadmaster-tools \
     files=$(FILES) targetdir=$(AROS_C) \
-    uselibs="arossupport amiga arosc m debug"
+    uselibs="debug"
 
 %common

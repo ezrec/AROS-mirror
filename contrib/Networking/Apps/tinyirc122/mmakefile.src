@@ -13,4 +13,4 @@ EXEDIR := $(CONTRIBDIR)/Networking/Apps/TinyIRC
 
 %build_prog mmake=aros-tcpip-apps-tinyirc \
     progname=TinyIRC targetdir=$(EXEDIR)/ \
-    files=tinyirc uselibs="arossupport amiga arosc m termcap"
+    files=tinyirc uselibs="termcap"

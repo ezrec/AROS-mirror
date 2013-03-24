@@ -2,4 +2,4 @@ include $(TOP)/config/make.cfg
 
 %build_prog mmake=aminet-util-pack-ppunpack \
     progname=ppunpack targetdir=$(CONTRIBDIR)/Misc/aminet \
-    files="depack ppunpack" uselibs="arossupport amiga arosc m"
+    files="depack ppunpack"

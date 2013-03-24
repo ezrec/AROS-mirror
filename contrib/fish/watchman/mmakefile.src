@@ -2,4 +2,4 @@ include $(TOP)/config/make.cfg
 
 %build_prog mmake=fish-watchman \
     progname=watchman targetdir=$(CONTRIBDIR)/Misc/fish \
-    files=watchman uselibs="arossupport amiga arosc m"
+    files=watchman

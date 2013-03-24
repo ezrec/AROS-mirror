@@ -14,13 +14,11 @@ FILES := alter attach auth btree build callback date \
 %build_prog mmake=contrib-sqlite3 \
 	progname=sqlite targetdir=$(CONTRIBDIR)/daikane \
 	files="$(FILES) shell" \
-	cflags="-Wall -DOS_AROS -DSQLITE_DEBUG" \
-	uselibs="arossupport amiga arosc m"
+	cflags="-Wall -DOS_AROS -DSQLITE_DEBUG"
 
 %build_prog mmake=contrib-sqlite3-test \
 	progname=test targetdir=$(CONTRIBDIR)/daikane \
-	files="test" cflags="-Wall" \
-	uselibs="arossupport amiga arosc"
+	files="test" cflags="-Wall"
 
 #MM- contrib-sqlite3: \
 #MM contrib-sqlite3-lemon \

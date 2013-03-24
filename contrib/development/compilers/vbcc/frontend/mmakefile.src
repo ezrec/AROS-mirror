@@ -8,7 +8,7 @@ EXEDIR := $(CONTRIBDIR)/vbcc
 
 %build_prog mmake=vbcc-frontend \
     progname=vc targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs=arosc
+    files=$(FILES)
 
 %common
 

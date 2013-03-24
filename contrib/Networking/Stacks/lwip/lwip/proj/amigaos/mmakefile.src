@@ -37,14 +37,13 @@ USER_CFLAGS := -DLWIP_DEBUG -O2 -I$(SRCDIR)/include -I$(ARCHINCLUDE) -I$(IPVXINC
 
 %build_prog mmake=lwip \
     progname=lwip targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="amiga arosc m"
+    files=$(FILES)
 
 
 FILES := testserver testclient ping simpleping
 
 %build_progs mmake=lwip-tests \
     files=$(FILES) targetdir=$(EXEDIR)
-    uselibs="amiga arosc m"
 
 %common
 

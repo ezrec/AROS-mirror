@@ -6,6 +6,6 @@ DESTDIR := $(CONTRIBDIR)/Demos/Flamme
 
 %build_prog mmake=demo-flamme \
     progname=Flamme targetdir=$(DESTDIR) \
-    files=flamme uselibs="arossupport amiga arosc m"
+    files=flamme
 
 %common

@@ -16,7 +16,7 @@ USER_CFLAGS += -Wno-error
 
 %build_prog mmake=ConfigOpus \
     progname=ConfigOpus targetdir=$(DOPUSDIR)/Modules \
-    files=$(FILES) uselibs="amiga arosc m"
+    files=$(FILES)
 
 %common
 

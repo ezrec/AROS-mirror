@@ -9,7 +9,7 @@ EXEDIR := $(CONTRIBDIR)/vbcc
 
 %build_prog mmake=vbcc-about-aros \
     progname=about targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs=arosc
+    files=$(FILES)
 
 #MM
 vbcc-tmp : ../tmp.c

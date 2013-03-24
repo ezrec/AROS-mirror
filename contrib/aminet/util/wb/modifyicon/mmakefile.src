@@ -12,7 +12,7 @@ EXEDIR := $(CONTRIBDIR)/Misc/aminet
 
 %build_prog mmake=aminet-util-wb-modifyicon \
     progname=ModifyIcon targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="arossupport amiga arosc m"
+    files=$(FILES)
 
 %common
 

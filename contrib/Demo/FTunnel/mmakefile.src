@@ -6,7 +6,7 @@ DESTDIR := $(CONTRIBDIR)/Demos/FTunnel
 
 %build_prog mmake=demo-ftunnel \
     progname=ftunnel targetdir=$(DESTDIR) \
-    files=ftunnel uselibs="arossupport amiga arosc m"
+    files=ftunnel
 
 
 DATAFILES	:= pattern.data pattern.pal

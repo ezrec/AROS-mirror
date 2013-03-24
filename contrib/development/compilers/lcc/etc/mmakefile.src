@@ -14,6 +14,6 @@ USER_CFLAGS := -DAROS -DV39
 
 %build_prog mmake=contrib-development-compilers-lcc-etc \
     progname=lcc targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="arossupport amiga arosc m"
+    files=$(FILES)
 
 %common

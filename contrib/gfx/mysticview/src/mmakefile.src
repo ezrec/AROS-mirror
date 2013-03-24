@@ -37,6 +37,6 @@ EXEDIR := $(CONTRIBDIR)/MultiMedia/Gfx/MysticView
 
 %build_prog mmake=contrib-gfx-mysticview \
     progname=MysticView targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="arossupport amiga arosc m"
+    files=$(FILES)
 
 %common

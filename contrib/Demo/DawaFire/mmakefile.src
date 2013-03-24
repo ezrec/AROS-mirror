@@ -6,4 +6,4 @@ DESTDIR := $(CONTRIBDIR)/Demos/DawaFire
 
 %build_prog mmake=demo-dawafire \
     progname=DawaFire targetdir=$(DESTDIR) \
-    files=dawafire uselibs="arossupport amiga arosc m"
+    files=dawafire

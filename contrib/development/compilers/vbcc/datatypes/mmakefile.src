@@ -9,7 +9,7 @@ EXEDIR := $(CONTRIBDIR)/vbcc
 
 %build_prog mmake=vbcc-dtgen \
     progname=dtgen targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs=arosc
+    files=$(FILES)
 
 #MM
 vbcc-datatypes : ../dt.h ../dt.c

@@ -11,7 +11,7 @@ USER_LDFLAGS := -ltcc1
 
 %build_prog mmake=contrib-development-compilers-tcc \
     progname=tcc targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="tcc1 amiga arosc m"
+    files=$(FILES) uselibs="tcc1"
 
 #MM
 includes-tcc : $(EXEDIR)/stdarg.h

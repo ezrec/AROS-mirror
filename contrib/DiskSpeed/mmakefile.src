@@ -8,11 +8,11 @@ DISKSHARED := locale diskspeed/DiskSpeedCPU
 
 %build_prog mmake=contrib-diskspeed-comp \
     progname=DiskSpeed targetdir=$(DESTDIR) \
-    files="$(DISKSHARED) diskspeed/DiskSpeed" uselibs="mui arossupport amiga arosc m"
+    files="$(DISKSHARED) diskspeed/DiskSpeed" uselibs="mui"
 
 %build_prog mmake=contrib-scsispeed-comp \
     progname=ScsiSpeed targetdir=$(DESTDIR) \
-    files="$(DISKSHARED) scsispeed/ScsiSpeed" uselibs="mui arossupport amiga arosc m"
+    files="$(DISKSHARED) scsispeed/ScsiSpeed" uselibs="mui"
     
 #MM- contrib-diskspeed : contrib-diskspeed-comp contrib-scsispeed-comp
 #MM contrib-diskspeed-comp : contrib-diskspeed-docs contrib-diskspeed-icons contrib-diskspeed-catalogs

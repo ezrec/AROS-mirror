@@ -48,46 +48,46 @@ $(OBJECTDIR)/%.3d : objects/%.3d
 
 %build_prog mmake=demo-kdp-bob \
     progname=bob targetdir=$(DESTDIR) \
-    files="kdp kdpgfx bob" uselibs="arossupport amiga arosc m"
+    files="kdp kdpgfx bob"
 
 %build_prog mmake=demo-kdp-bump \
     progname=bump targetdir=$(DESTDIR) \
-    files="kdp kdpgfx bump" uselibs="arossupport amiga arosc m"
+    files="kdp kdpgfx bump"
 
 %build_prog mmake=demo-kdp-grav \
     progname=grav targetdir=$(DESTDIR) \
-    files="kdp kdpgfx grav" uselibs="arossupport amiga arosc m"
+    files="kdp kdpgfx grav"
 
 %build_prog mmake=demo-kdp-grav2 \
     progname=grav2 targetdir=$(DESTDIR) \
-    files="kdp kdpgfx grav2" uselibs="arossupport amiga arosc m"
+    files="kdp kdpgfx grav2"
 
 %build_prog mmake=demo-kdp-motionblur \
     progname=motionblur targetdir=$(DESTDIR) \
-    files="kdp kdpgfx motionblur" uselibs="arossupport amiga arosc m"
+    files="kdp kdpgfx motionblur"
 
 %build_prog mmake=demo-kdp-poly \
     progname=poly targetdir=$(DESTDIR) \
-    files="kdp kdpgfx kdppoly poly" uselibs="arossupport amiga arosc m"
+    files="kdp kdpgfx kdppoly poly"
 
 %build_prog mmake=demo-kdp-scaletest \
     progname=scaletest targetdir=$(DESTDIR) \
-    files="kdp kdpgfx scaletest" uselibs="arossupport amiga arosc m"
+    files="kdp kdpgfx scaletest"
 
 %build_prog mmake=demo-kdp-tun \
     progname=tun targetdir=$(DESTDIR) \
-    files="kdp kdpgfx tun" uselibs="arossupport amiga arosc m"
+    files="kdp kdpgfx tun"
 
 %build_prog mmake=demo-kdp-tun2 \
     progname=tun2 targetdir=$(DESTDIR) \
-    files="kdp kdpgfx tun2" uselibs="arossupport amiga arosc m"
+    files="kdp kdpgfx tun2"
 
 %build_prog mmake=demo-kdp-tv \
     progname=tv targetdir=$(DESTDIR) \
-    files="kdp kdpgfx tv" uselibs="arossupport amiga arosc m"
+    files="kdp kdpgfx tv"
 
 %build_prog mmake=demo-kdp-wire \
     progname=wire targetdir=$(DESTDIR) \
-    files="kdp kdpgfx wire" uselibs="arossupport amiga arosc m"
+    files="kdp kdpgfx wire"
 
 %common

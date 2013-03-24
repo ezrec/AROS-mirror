@@ -2,4 +2,4 @@ include $(TOP)/config/make.cfg
 
 %build_prog mmake=fish-304_lines \
     progname=304_lines targetdir=$(CONTRIBDIR)/Misc/fish \
-    files=lines uselibs="arossupport amiga arosc m"
+    files=lines

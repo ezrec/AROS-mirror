@@ -4,4 +4,4 @@ CFLAGS := $(filter-out -Werror-implicit-function-declaration,$(CFLAGS))
 
 %build_prog mmake=fish-bezier2 \
     progname=bezier2 targetdir=$(CONTRIBDIR)/Misc/fish \
-    files=bezier uselibs="arossupport amiga arosc m"
+    files=bezier

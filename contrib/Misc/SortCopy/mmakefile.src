@@ -2,6 +2,6 @@ include $(TOP)/config/make.cfg
 
 %build_prog mmake=contrib-sortcopy \
     progname=SortCopy targetdir=$(CONTRIBDIR)/Misc \
-    files=SortCopy uselibs="arossupport amiga arosc m"
+    files=SortCopy
 
 

@@ -27,7 +27,7 @@ FILES := \
 
 %build_prog mmake=ports-game-sdlscavenger progname=SdlScavenger \
     files=$(FILES) targetdir=$(TARGETDIR) nix=yes \
-    uselibs="arosc SDL GL"
+    uselibs="SDL GL"
 
 %fetch mmake=ports-game-sdlscavenger-fetch archive=$(ARCHBASE).1_2010_11_5 destination=$(PORTSDIR)/sdlscavenger \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tgz" \

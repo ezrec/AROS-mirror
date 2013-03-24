@@ -2,4 +2,4 @@ include $(TOP)/config/make.cfg
 
 %build_prog mmake=contrib-switch \
     progname=SWitch targetdir=$(CONTRIBDIR)/Misc \
-    files=SWitch uselibs="arossupport amiga arosc m"
+    files=SWitch

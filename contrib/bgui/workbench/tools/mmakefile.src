@@ -14,6 +14,6 @@ EXEDIR := $(CONTRIBDIR)/BGUI/Examples
 
 %build_progs mmake=contrib-bgui-workbench-tools \
     files=$(FILES) targetdir=$(EXEDIR) \
-    uselibs="bgui amiga arosc m"
+    uselibs="bgui"
 
 %common

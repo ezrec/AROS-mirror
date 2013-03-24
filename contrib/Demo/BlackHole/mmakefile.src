@@ -2,6 +2,6 @@ include $(TOP)/config/make.cfg
 
 %build_prog mmake=demo-blackhole \
     progname=blackhole targetdir=$(CONTRIBDIR)/Demos/BlackHole \
-    files=blackhole uselibs="arossupport amiga arosc m"
+    files=blackhole
 
 

@@ -89,7 +89,7 @@ FILES :=             \
 
 %build_prog mmake=Doom-i386 \
     progname=Doom targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="amiga arosc m"
+    files=$(FILES)
 
 
 STARTSCRIPTS := start2 start3 start4

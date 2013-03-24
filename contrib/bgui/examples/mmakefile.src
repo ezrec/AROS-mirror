@@ -31,6 +31,6 @@ FILES = AddButtons \
 
 %build_progs mmake=bgui-examples \
     files=$(FILES) targetdir=$(BGUIEXAMPLESDIR) \
-    uselibs="bgui arossupport amiga arosc m"
+    uselibs="bgui"
 
 %common

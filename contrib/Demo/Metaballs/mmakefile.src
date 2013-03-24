@@ -6,6 +6,6 @@ DESTDIR := $(CONTRIBDIR)/Demos/Metaballs
 
 %build_prog mmake=demo-metaballs \
     progname=Metaballs targetdir=$(DESTDIR) \
-    files=metaballs uselibs="arossupport amiga arosc m"
+    files=metaballs
 
 %common

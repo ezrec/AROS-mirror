@@ -151,7 +151,7 @@ cpudefs.o: cpudefs.c
 USER_LDFLAGS := "$(GENDIR)/$(CURDIR)/od-aros.o"
 %build_prog mmake=uae-i386 \
     progname=uae targetdir=$(EXEDIR) files=$(FILES) \
-    uselibs="SDL GL arossupport amiga arosc m" usehostlibs=gcc nix=yes
+    uselibs="SDL GL" usehostlibs=gcc nix=yes
 
 %common
 

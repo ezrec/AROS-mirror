@@ -13,7 +13,7 @@ USER_CFLAGS := -DAROS
 
 %build_prog mmake=aminet-util-arc-lha \
     progname=lha targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="arossupport amiga arosc m"
+    files=$(FILES)
 
 %common
 

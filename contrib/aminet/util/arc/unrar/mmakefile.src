@@ -10,7 +10,7 @@ USER_CFLAGS :=-D_UNIX
 
 %build_prog mmake=aminet-util-arc-unrar \
     progname=unrar targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="arossupport amiga arosc m"
+    files=$(FILES)
 
 %common
 

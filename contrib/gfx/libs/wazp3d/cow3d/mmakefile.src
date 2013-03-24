@@ -10,7 +10,7 @@ FILES := CoW3D
 
 %build_prog mmake=contrib-wazp3d-cow3d progname=$(EXE) files=$(FILES) \
     targetdir=$(TARGETDIR) \
-    uselibs="amiga arosc Warp3D"
+    uselibs="Warp3D"
 
 
 FILES := Cosmos_256X256X32.RAW Cow_256X256X32.RAW

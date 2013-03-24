@@ -17,7 +17,7 @@ USER_CFLAGS := -DGENERIC -DNOSIGNAL
 
 #%build_prog mmake=aminet-util-arc-zoo \
 #    progname=zoo targetdir=$(EXEDIR) \
-#    files=$(FILES) uselibs="arossupport amiga arosc m"
+#    files=$(FILES)
 
 %common
 

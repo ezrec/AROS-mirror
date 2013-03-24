@@ -16,6 +16,6 @@ USER_CFLAGS := -DINTUITION_NO_INLINE_STDARG \
 
 %build_prog mmake=aminet-text-misc-typeface \
     progname=Typeface targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="bgui arossupport amiga arosc m"
+    files=$(FILES) uselibs="bgui"
 
 %common

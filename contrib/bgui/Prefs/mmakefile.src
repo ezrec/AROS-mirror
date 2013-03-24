@@ -15,6 +15,6 @@ USER_CFLAGS := $(PARANOIA_CFLAGS)
 
 %build_prog mmake=bgui-prefs \
     progname=BGUI targetdir=$(BGUIPREFSDIR) \
-    files=$(FILES) uselibs="bgui arossupport amiga arosc m"
+    files=$(FILES) uselibs="bgui"
 
 %common

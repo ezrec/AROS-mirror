@@ -14,7 +14,6 @@ USER_LDFLAGS := -nix
 #MM- contrib-gnu    : contrib-gnu-sh
 #MM- contrib-gnu-sh : sh
 
-%build_prog mmake=contrib-gnu-sh progname=sh files=$(FILES) targetdir=$(DESTDIR) \
-    uselibs="arosc m"
+%build_prog mmake=contrib-gnu-sh progname=sh files=$(FILES) targetdir=$(DESTDIR)
 
 %common

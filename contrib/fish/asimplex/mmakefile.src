@@ -2,5 +2,4 @@ include $(TOP)/config/make.cfg
 
 %build_prog mmake=fish-asimplex \
     progname=asimplex targetdir=$(CONTRIBDIR)/Misc/fish \
-    files="main matrix phase1 phase2 mpsx" \
-    uselibs="arossupport amiga arosc m"
+    files="main matrix phase1 phase2 mpsx"

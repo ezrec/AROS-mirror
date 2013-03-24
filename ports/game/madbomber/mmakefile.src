@@ -23,7 +23,7 @@ FILES := $(PORTSDIR)/madbomber/$(ARCHBASE)/madbomber
 
 %build_prog mmake=ports-game-madbomber progname=MadBomber \
     files=$(FILES) targetdir=$(TARGETDIR) \
-    uselibs="arosc SDL_image png jpeg SDL_mixer vorbisfile vorbis ogg SDL GL z"
+    uselibs="SDL_image png jpeg SDL_mixer vorbisfile vorbis ogg SDL GL z"
 
 %fetch mmake=ports-game-madbomber-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/madbomber \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \

@@ -8,6 +8,6 @@ EXEDIR := $(CONTRIBDIR)/vbcc
 
 %build_prog mmake=vbcc-vprof \
     progname=vprof targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs=arosc
+    files=$(FILES)
 
 %common

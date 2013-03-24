@@ -32,7 +32,6 @@ $(GENDIR)/$(CURDIR)/opcodes/libmyopcodes.a: $(GENDIR)/$(CURDIR)/opcodes/libopcod
 %build_module_simple mmake=contrib-scout-disassembler \
     modname=disassembler modtype=library \
     files=$(FILES) \
-    uselibs="arossupport" \
     usehostlibs="myopcodes rom"
 
 %common

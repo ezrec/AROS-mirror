@@ -75,8 +75,7 @@ FILES := \
     $(PORTSDIR)/antiword/antiword-0.37/xml
 
 %build_prog mmake=ports-text-antiword progname=antiword \
-    files=$(FILES) targetdir=$(TARGETDIR) \
-    uselibs="arosc m"
+    files=$(FILES) targetdir=$(TARGETDIR)
 
 %fetch mmake=ports-text-antiword-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/antiword \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \

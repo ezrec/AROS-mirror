@@ -168,11 +168,11 @@ USER_INCLUDES := -I$(SDLINCDIR) -I$(ARCHSRCDIR)/test
 
 %build_progs mmake=SDL-aros-standardtests \
     files=$(TESTFILES) targetdir=$(TESTEXEDIR) \
-    uselibs="SDL arosc m"
+    uselibs="SDL"
 
 %build_progs mmake=SDL-aros-gltests \
     files=$(TESTGLFILES) targetdir=$(TESTEXEDIR) \
-    uselibs="SDL GL arosc m"
+    uselibs="SDL GL"
 
 INCLUDEFILES := \
     SDL.h  \

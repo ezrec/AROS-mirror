@@ -20,7 +20,7 @@ EXEDIR := $(CONTRIBDIR)/Misc/aminet/C
 
 %build_prog mmake=aminet-util-arc-bzip2 \
     progname=bzip2 targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="arosc m"
+    files=$(FILES)
 
 %common
 

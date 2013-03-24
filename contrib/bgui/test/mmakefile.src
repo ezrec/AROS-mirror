@@ -23,6 +23,6 @@ FILES = test0 \
 
 %build_progs mmake=bgui-test \
     files=$(FILES) targetdir=$(BGUITESTSDIR) \
-    uselibs="bgui arossupport amiga arosc m"
+    uselibs="bgui"
 
 %common

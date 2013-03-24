@@ -2,9 +2,9 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- ports-graphics : ports-graphics-$(AROS_TARGET_CPU)
+##MM- ports-graphics : ports-graphics-$(AROS_TARGET_CPU)
 
-#MM- ports-graphics-i386 : ports-graphics-lunapaint
+##MM- ports-graphics-i386 : ports-graphics-lunapaint
 
 #MM  ports-graphics-lunapaint : includes linklibs workbench-libs-freetype-linklib ports-graphics-lunapaint-fetch \
 #MM  ports-graphics-lunapaint-data ports-graphics-lunapaint-drawericon \
@@ -52,7 +52,7 @@ FILES := $(addprefix $(PORTSDIR)/lunapaint/$(ARCHBASE)/,$(FILES))
 
 %build_prog mmake=ports-graphics-lunapaint progname=Lunapaint \
     files=$(FILES) targetdir=$(TARGETDIR) \
-    uselibs="arosc m mui png z freetype2"
+    uselibs="mui png z freetype2"
 
 
 %fetch mmake=ports-graphics-lunapaint-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/lunapaint \

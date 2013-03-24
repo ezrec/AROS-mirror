@@ -14,7 +14,6 @@ USER_CFLAGS += -Wno-error
 
 %build_prog mmake=DOpus_Icon \
     progname=DOpus_Icon targetdir=$(DOPUSDIR)/Modules \
-    files="data main doiconinfo strings" \
-    uselibs="amiga arosc"
+    files="data main doiconinfo strings"
 
 %common

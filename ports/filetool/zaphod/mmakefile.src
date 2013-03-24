@@ -36,8 +36,7 @@ FILES := \
 FILES := $(addprefix $(PORTSDIR)/zaphod/$(ARCHBASE)/,$(FILES))
 
 %build_prog mmake=ports-filetool-zaphod progname=Zaphod \
-    files=$(FILES) targetdir=$(TARGETDIR) \
-    uselibs="amiga arosc arossupport"
+    files=$(FILES) targetdir=$(TARGETDIR)
 
 
 %fetch mmake=ports-filetool-zaphod-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/zaphod \

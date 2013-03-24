@@ -10,6 +10,6 @@ EXEDIR	:= $(CONTRIBDIR)/Games/LazyMines
 
 %build_prog mmake=aminet-games-think-lazymines \
     progname=LazyMines targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="chunkyiclass arossupport amiga arosc m"
+    files=$(FILES) uselibs="chunkyiclass"
 
 %common

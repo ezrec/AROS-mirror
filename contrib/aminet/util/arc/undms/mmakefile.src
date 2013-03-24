@@ -2,4 +2,4 @@ include $(TOP)/config/make.cfg
 
 %build_prog mmake=aminet-util-arc-undms \
     progname=undms targetdir=$(CONTRIBDIR)/Misc/aminet/C \
-    files=undms uselibs="arossupport amiga arosc m"
+    files=undms

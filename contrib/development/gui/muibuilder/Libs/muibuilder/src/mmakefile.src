@@ -16,7 +16,7 @@ USER_CFLAGS += -I$(AROS_INCLUDES)/SDI
 
 %build_module_simple mmake=contrib-development-gui-muibuilder-libs \
     modname=muibuilder modtype=library moduledir=$(EXEDIR) \
-    files="$(FILES)" uselibs="arossupport"
+    files="$(FILES)"
 
 
 %common

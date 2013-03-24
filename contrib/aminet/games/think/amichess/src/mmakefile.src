@@ -47,6 +47,6 @@ EXEDIR := $(CONTRIBDIR)/Games/AmiChess
 
 %build_prog mmake=aminet-games-think-amichess-program \
     progname=AmiChess targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="mui arossupport amiga arosc m"
+    files=$(FILES) uselibs="mui"
 
 %common

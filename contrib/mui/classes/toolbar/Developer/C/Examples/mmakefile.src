@@ -17,7 +17,7 @@ USER_CFLAGS += $(PARANOIA_CFLAGS)
 
 %build_prog mmake=contrib-zune-classes-toolbar-demo \
     progname=Toolbar-Demo targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="mui arossupport amiga arosc"
+    files=$(FILES) uselibs="mui"
 
 %copy_files_q mmake=mcc_toolbar-demo-images \
                     src=../../../Demos/Images \

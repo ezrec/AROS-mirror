@@ -37,8 +37,7 @@ FILES := commands job dir file misc main read remake \
     remote-stub getopt getopt1 alloca amiga glob/glob glob/fnmatch
 
 %build_prog mmake=contrib-gnu-make progname=make files=$(FILES) \
-    targetdir=$(TARGETDIR) \
-    uselibs="aros arossupport arosc m" nix=yes
+    targetdir=$(TARGETDIR) nix=yes
 
 %common
 

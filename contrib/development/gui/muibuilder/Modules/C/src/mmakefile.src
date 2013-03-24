@@ -17,7 +17,7 @@ USER_CFLAGS += -I$(SRCDIR)/contrib/development/gui/muibuilder/include
 
 %build_prog mmake=contrib-development-gui-muibuilder-modules-c \
     progname=GenCodeC targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="arossupport"
+    files=$(FILES)
 
 
 %common

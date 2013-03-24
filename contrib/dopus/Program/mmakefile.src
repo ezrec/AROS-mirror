@@ -27,6 +27,6 @@ USER_CFLAGS += -Wno-error
 
 %build_prog mmake=DirOpus \
     progname=DirectoryOpus targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="rexxsyslib amiga arosc m"
+    files=$(FILES) uselibs="rexxsyslib"
 
 %common

@@ -2,5 +2,4 @@ include $(TOP)/config/make.cfg
 
 %build_prog mmake=fish-shuffle \
     progname=shuffle targetdir=$(CONTRIBDIR)/Misc/fish \
-    files="shuffle shuffle_files shuffle_main shuffle_temp" \
-    uselibs="arossupport amiga arosc m"
+    files="shuffle shuffle_files shuffle_main shuffle_temp"

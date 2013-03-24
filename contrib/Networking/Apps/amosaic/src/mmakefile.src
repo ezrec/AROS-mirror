@@ -48,6 +48,6 @@ USER_CFLAGS  += -Wno-parentheses -Wno-format-contains-nul
 
 %build_prog mmake=mui-amosaic \
     progname=AMosaic targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="www2 mui arossupport amiga net arosc"
+    files=$(FILES) uselibs="www2 mui net"
 
 %common

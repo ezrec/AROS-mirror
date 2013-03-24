@@ -12,8 +12,7 @@ $(OBJDIR)/%.o: %.S
 	%compile_q opt=$(USER_CFLAGS)
 
 %build_prog mmake=cpuid-i386 \
-    progname=cpuid targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="arosc m"
+    progname=cpuid targetdir=$(EXEDIR)
 
 %common
 

@@ -14,7 +14,6 @@ USER_CFLAGS += -Wno-error
 
 %build_prog mmake=DOpus_Disk \
     progname=DOpus_Disk targetdir=$(DOPUSDIR)/Modules \
-    files="diskop data format strings diskcopy install" \
-    uselibs="amiga arosc"
+    files="diskop data format strings diskcopy install"
 
 %common

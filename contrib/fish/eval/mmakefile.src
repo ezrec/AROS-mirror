@@ -2,5 +2,4 @@ include $(TOP)/config/make.cfg
 
 %build_prog mmake=fish-eval \
     progname=eval targetdir=$(CONTRIBDIR)/Misc/fish \
-    files="base bitwise emath estack etable eval funcs help parse" \
-    uselibs="arossupport amiga arosc m"
+    files="base bitwise emath estack etable eval funcs help parse"

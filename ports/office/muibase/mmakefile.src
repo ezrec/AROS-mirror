@@ -86,7 +86,7 @@ FILES := $(addprefix $(PORTSDIR)/muibase/$(ARCHBASE)/,$(FILES))
 
 %build_prog mmake=ports-office-muibase progname=MUIbase \
     files=$(FILES) targetdir=$(TARGETDIR) \
-    uselibs="amiga arossupport arosc mui m codesets"
+    uselibs="mui"
 
 
 %fetch mmake=ports-office-muibase-fetch archive=MUIbaseSource-2.11 destination=$(PORTSDIR)/muibase \

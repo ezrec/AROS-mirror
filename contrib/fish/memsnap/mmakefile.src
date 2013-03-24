@@ -2,5 +2,4 @@ include $(TOP)/config/make.cfg
 
 %build_prog mmake=fish-memsnap \
     progname=memsnap targetdir=$(CONTRIBDIR)/Misc/fish \
-    files="icon memsnap menu wintext" \
-    uselibs="arossupport amiga arosc m"
+    files="icon memsnap menu wintext"

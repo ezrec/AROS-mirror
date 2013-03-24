@@ -62,7 +62,7 @@ USER_CFLAGS += -Wno-parentheses \
 
 %build_prog mmake=contrib-development-gui-muibuilder-src \
     progname=MUIBuilder targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="mui arossupport amiga arosc m"
+    files=$(FILES) uselibs="mui"
 
 
 %common

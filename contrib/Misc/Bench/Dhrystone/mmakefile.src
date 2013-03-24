@@ -14,6 +14,6 @@ USER_CFLAGS := -O2 -Wunused -Wall
 
 %build_prog mmake=dhrystone \
     progname=Dhrystone \
-    files=$(FILES) uselibs="arosc m"
+    files=$(FILES)
 
 %common

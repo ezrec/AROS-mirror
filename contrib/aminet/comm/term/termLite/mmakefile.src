@@ -2,4 +2,4 @@ include $(TOP)/config/make.cfg
 
 %build_prog mmake=aminet-comm-term-termlite \
     progname=termLite targetdir=$(CONTRIBDIR)/Misc/aminet \
-    files=termLite uselibs="arossupport amiga arosc m"
+    files=termLite

@@ -62,7 +62,7 @@ COMMON_OBJ := $(foreach f,$(COMMON),$(OBJDIR)/$(f).o)
 
 %build_prog mmake=contrib-development-libs-pthread-test \
     progname=pthreadtest targetdir=$(AROS_TESTS) \
-    files=pthreadtest uselibs="pthread mui arossupport"
+    files=pthreadtest uselibs="pthread mui"
 
 #MM
 contrib-development-linklibs-pthreadlib-quick : contrib-development-linklibs-pthreadlib

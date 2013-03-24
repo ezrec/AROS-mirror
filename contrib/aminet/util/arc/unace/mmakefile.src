@@ -10,7 +10,7 @@ USER_CFLAGS := -DUNIX -UAMIGA -U_AMIGA $(FORMAT_SECURITY_CFLAGS)
 
 %build_prog mmake=aminet-util-arc-unace \
     progname=unace targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="arossupport amiga arosc m"
+    files=$(FILES)
 
 %common
 

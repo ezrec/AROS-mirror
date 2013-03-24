@@ -40,7 +40,7 @@ FILES := \
 
 %build_prog mmake=ports-game-biniax2 progname=Biniax2 \
     files=$(FILES) targetdir=$(TARGETDIR) \
-    uselibs="arosc SDL_net SDL_image png jpeg SDL_mixer vorbisfile vorbis ogg SDL GL z"
+    uselibs="SDL_net SDL_image png jpeg SDL_mixer vorbisfile vorbis ogg SDL GL z"
 
 %fetch mmake=ports-game-biniax2-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/biniax2/biniax2-1.30 \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \

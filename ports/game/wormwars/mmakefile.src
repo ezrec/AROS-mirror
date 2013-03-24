@@ -33,8 +33,7 @@ FILES := source/amiga source/engine1 source/engine2 source/extras \
 FILES := $(addprefix $(PORTSDIR)/wormwars/$(ARCHBASE)/,$(FILES))
 
 %build_prog mmake=ports-game-wormwars progname=WormWars \
-    files=$(FILES) targetdir=$(TARGETDIR) \
-    uselibs="arosc"
+    files=$(FILES) targetdir=$(TARGETDIR)
 
 
 %fetch mmake=ports-game-wormwars-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/wormwars \

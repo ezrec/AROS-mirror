@@ -2,4 +2,4 @@ include $(TOP)/config/make.cfg
 
 %build_prog mmake=fish-cube \
     progname=cube targetdir=$(CONTRIBDIR)/Misc/fish \
-    files=cube uselibs="arossupport amiga arosc m"
+    files=cube

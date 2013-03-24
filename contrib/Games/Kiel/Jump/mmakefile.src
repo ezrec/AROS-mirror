@@ -6,8 +6,7 @@ DESTDIR := $(CONTRIBDIR)/Games/Kiel
 #MM games-kiel-jump : games-kiel-jump-info
 
 %build_progs mmake=games-kiel-jump \
-    files=$(FILES) targetdir=$(DESTDIR) \
-    uselibs="arossupport amiga arosc m"
+    files=$(FILES) targetdir=$(DESTDIR)
 
 
 INFO := $(foreach f,$(FILES), $(DESTDIR)/$(f).info)

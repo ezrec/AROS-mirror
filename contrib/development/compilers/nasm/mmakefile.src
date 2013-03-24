@@ -17,7 +17,7 @@ EXEDIR := $(CONTRIBDIR)/Development/nasm
 
 %build_prog mmake=contrib-development-nasm \
     progname=Nasm targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="arossupport amiga z arosc m"
+    files=$(FILES) uselibs="z"
 
 %rule_makedirs dirs="$(EXEDIR) $(EXEDIR)/include $(EXEDIR)/test"
 

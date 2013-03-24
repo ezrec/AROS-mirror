@@ -28,11 +28,11 @@ USER_CFLAGS  := $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cf
 
 %build_prog mmake=ports-game-xpiredbin progname=Xpired \
     files="$(PORTSDIR)/xpired/$(ARCHBASE)/src/xpired" targetdir=$(TARGETDIR) nix=yes \
-    uselibs="arosc SDL_image SDL_gfx png jpeg SDL_mixer vorbisfile vorbis ogg SDL GL z"
+    uselibs="SDL_image SDL_gfx png jpeg SDL_mixer vorbisfile vorbis ogg SDL GL z"
 
 %build_prog mmake=ports-game-xpiredit progname=XpirEdit \
     files="$(PORTSDIR)/xpired/$(ARCHBASE)/src/xpiredit" targetdir=$(TARGETDIR) nix=yes \
-    uselibs="arosc SDL_image SDL_gfx png jpeg SDL GL z"
+    uselibs="SDL_image SDL_gfx png jpeg SDL GL z"
 
 %fetch mmake=ports-game-xpired-fetch archive=$(ARCHBASE)-linux_source destination=$(PORTSDIR)/xpired/$(ARCHBASE) \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \

@@ -23,7 +23,7 @@ FILES := $(PORTSDIR)/gemdropx/$(ARCHBASE)/gemdropx
 
 %build_prog mmake=ports-game-gemdropx progname=GemDropX \
     files=$(FILES) targetdir=$(TARGETDIR) \
-    uselibs="arosc SDL GL"
+    uselibs="SDL GL"
 
 %fetch mmake=ports-game-gemdropx-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/gemdropx \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \

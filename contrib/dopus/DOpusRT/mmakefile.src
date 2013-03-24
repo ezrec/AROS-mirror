@@ -16,6 +16,6 @@ USER_CFLAGS += -Wno-error
 
 %build_prog mmake=DOpusRT \
     progname=DOpusRT targetdir=$(EXEDIR) \
-    files=DOpusRT uselibs="amiga arosc"
+    files=DOpusRT
 
 %common

@@ -186,59 +186,59 @@ MKMANIFEST = $(SRCDIR)mkmanifest
 
 %build_prog mmake=mtools-mattrib \
     progname=mattrib targetdir=$(DESTDIR) \
-    files="$(MATTRIB)" uselibs="mui arossupport amiga arosc m"
+    files="$(MATTRIB)" uselibs="mui"
 
 %build_prog mmake=mtools-mcd \
     progname=mcd targetdir=$(DESTDIR) \
-    files="$(MCD)" uselibs="mui arossupport amiga arosc m"
+    files="$(MCD)" uselibs="mui"
 
 %build_prog mmake=mtools-mcopy \
     progname=mcopy targetdir=$(DESTDIR) \
-    files="$(MCOPY)" uselibs="mui arossupport amiga arosc m"
+    files="$(MCOPY)" uselibs="mui"
 
 %build_prog mmake=mtools-mdel \
     progname=mdel targetdir=$(DESTDIR) \
-    files="$(MDEL)" uselibs="mui arossupport amiga arosc m"
+    files="$(MDEL)" uselibs="mui"
 
 %build_prog mmake=mtools-mdir \
     progname=mdir targetdir=$(DESTDIR) \
-    files="$(MDIR)" uselibs="mui arossupport amiga arosc m"
+    files="$(MDIR)" uselibs="mui"
 
 %build_prog mmake=mtools-mformat \
     progname=mformat targetdir=$(DESTDIR) \
-    files="$(MFORMAT)" uselibs="mui arossupport amiga arosc m"    
+    files="$(MFORMAT)" uselibs="mui"    
     
 %build_prog mmake=mtools-mlabel \
     progname=mlabel targetdir=$(DESTDIR) \
-    files="$(MLABEL)" uselibs="mui arossupport amiga arosc m"
+    files="$(MLABEL)" uselibs="mui"
 
 %build_prog mmake=mtools-mmd \
     progname=mmd targetdir=$(DESTDIR) \
-    files="$(MMD)" uselibs="mui arossupport amiga arosc m"
+    files="$(MMD)" uselibs="mui"
 
 %build_prog mmake=mtools-mrd \
     progname=mrd targetdir=$(DESTDIR) \
-    files="$(MRD)" uselibs="mui arossupport amiga arosc m"
+    files="$(MRD)" uselibs="mui"
 
 %build_prog mmake=mtools-mread \
     progname=mread targetdir=$(DESTDIR) \
-    files="$(MREAD)" uselibs="mui arossupport amiga arosc m"
+    files="$(MREAD)" uselibs="mui"
 
 %build_prog mmake=mtools-mren \
     progname=mren targetdir=$(DESTDIR) \
-    files="$(MREN)" uselibs="mui arossupport amiga arosc m"        
+    files="$(MREN)" uselibs="mui"        
     
 %build_prog mmake=mtools-mtype \
     progname=mtype targetdir=$(DESTDIR) \
-    files="$(MTYPE)" uselibs="mui arossupport amiga arosc m"
+    files="$(MTYPE)" uselibs="mui"
 
 %build_prog mmake=mtools-mwrite \
     progname=mwrite targetdir=$(DESTDIR) \
-    files="$(MWRITE)" uselibs="mui arossupport amiga arosc m"
+    files="$(MWRITE)" uselibs="mui"
 
 %build_prog mmake=mtools-mkmanifest \
     progname=mkmanifest targetdir=$(DESTDIR) \
-    files="$(MKMANIFEST)" uselibs="mui arossupport amiga arosc m"
+    files="$(MKMANIFEST)" uselibs="mui"
    
 #MM- contrib-mtools : mtools-mattrib mtools-mcd mtools-mdel mtools-mdir mtools-mlabel mtools-mmd mtools-mren mtools-mtype mtools-mwrite mtools-mkmanifest mtools-mread mtools-mrd mtools-mformat mtools-mcopy
 

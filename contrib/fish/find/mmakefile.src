@@ -5,4 +5,4 @@ FILES := find find_broker find_error find_file find_main find_match find_rx \
 
 %build_prog mmake=fish-find \
     progname=find targetdir=$(CONTRIBDIR)/Misc/fish \
-    files=$(FILES) uselibs="arossupport amiga arosc m"
+    files=$(FILES)

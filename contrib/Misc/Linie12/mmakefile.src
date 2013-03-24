@@ -2,4 +2,4 @@ include $(TOP)/config/make.cfg
 
 %build_prog mmake=contrib-linie12 \
     progname=Linie12 targetdir=$(CONTRIBDIR)/Misc \
-    files=Linie12 uselibs="arossupport amiga arosc m"
+    files=Linie12

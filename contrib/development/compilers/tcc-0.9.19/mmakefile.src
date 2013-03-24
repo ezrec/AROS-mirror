@@ -11,7 +11,7 @@ USER_LDFLAGS := -ltcc1
 
 %build_prog mmake=contrib-development-compilers-tcc-0.9.19 \
     progname=tcc targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="amiga arosc m"
+    files=$(FILES)
 
 #MM
 setup-tcc-0.9.19 : $(LIBDIR)/bcheck.o $(EXEDIR)/stdarg.h

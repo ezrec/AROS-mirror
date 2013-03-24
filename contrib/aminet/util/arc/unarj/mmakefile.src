@@ -14,7 +14,7 @@ USER_CFLAGS := $(FORMAT_SECURITY_CFLAGS)
 
 %build_prog mmake=aminet-util-arc-unarj \
     progname=unarj targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="arossupport amiga arosc m"
+    files=$(FILES)
 
 %common
 

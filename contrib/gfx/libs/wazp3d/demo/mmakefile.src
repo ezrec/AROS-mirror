@@ -9,8 +9,7 @@ TARGETDIR := $(AROS_CONTRIB)/MultiMedia/Gfx/Wazp3D
 FILES := WarpTest
 
 %build_prog mmake=contrib-wazp3d-test progname=$(EXE) files=$(FILES) \
-    targetdir=$(TARGETDIR) \
-    uselibs="amiga arosc Warp3D"
+    targetdir=$(TARGETDIR) uselibs="Warp3D"
 
 #MM
 contrib-wazp3d-test-cpy : $(TARGETDIR)/wall.ppm

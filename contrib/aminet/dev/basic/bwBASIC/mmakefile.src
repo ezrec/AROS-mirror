@@ -12,6 +12,6 @@ EXEDIR := $(CONTRIBDIR)/Misc/aminet
 
 %build_prog mmake=aminet-dev-basic-bwBASIC \
     progname=bwbasic targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="arossupport amiga arosc m"
+    files=$(FILES)
 
 %common

@@ -14,7 +14,7 @@ FILES  := ShellPlayer
 
 %build_prog mmake=contrib-shellplayer \
     progname=$(EXE) targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="amiga arosc ptplay"
+    files=$(FILES) uselibs="ptplay"
 
 #MM
 contrib-shellplayer-cpy : $(EXEDIR)/README.aros $(EXEDIR)/ShellPlayer.readme

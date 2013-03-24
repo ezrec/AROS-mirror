@@ -2,5 +2,5 @@ include $(TOP)/config/make.cfg
 
 %build_prog mmake=aminet-gadgettest \
     progname=GadgetTest targetdir=$(CONTRIBDIR)/Misc/aminet \
-    files=GadgetTest uselibs="arossupport amiga arosc m"
+    files=GadgetTest
 

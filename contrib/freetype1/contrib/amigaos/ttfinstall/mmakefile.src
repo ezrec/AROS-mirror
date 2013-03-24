@@ -10,6 +10,6 @@ USER_INCLUDES := -I$(AROS_INCLUDES)/freetype1
 
 %build_prog mmake=contrib-freetype1-ttfinstall \
     progname=ttfinstall targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="freetype1_shared amiga arosc"
+    files=$(FILES) uselibs="freetype1_shared"
 
 %common

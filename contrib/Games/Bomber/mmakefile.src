@@ -10,7 +10,7 @@ EXEDIR := $(CONTRIBDIR)/Games/Bomber
 
 %build_prog mmake=Bomber \
     progname=Bomber targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="amiga arosc m"
+    files=$(FILES)
 
 
 DATAFILES := BombSnds.ssf Bomber.mid Bomber0.ssf Bomber1.ssf

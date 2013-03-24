@@ -4,7 +4,6 @@ EXEDIR := $(CONTRIBDIR)/Games/Backgammon
 
 %build_prog mmake=aminet-games-board-backgammon \
     progname=Backgammon targetdir=$(EXEDIR) \
-    files="BackEval BackMenu BackScreen Backgammon" \
-    uselibs="arossupport amiga arosc m"
+    files="BackEval BackMenu BackScreen Backgammon"
 
 

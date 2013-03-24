@@ -48,11 +48,10 @@ PPMTOILBMFILES := \
 
 %build_prog mmake=contrib-gfx-netpbm-pngtopnm progname=pngtopnm \
     files=$(PNGTOPNMFILES) targetdir=$(TARGETDIR) \
-    uselibs="arosc png z"
+    uselibs="png z"
 
 %build_prog mmake=contrib-gfx-netpbm-ppmtoilbm progname=ppmtoilbm \
-    files=$(PPMTOILBMFILES) targetdir=$(TARGETDIR) \
-    uselibs="arosc"
+    files=$(PPMTOILBMFILES) targetdir=$(TARGETDIR)
 
 %fetch mmake=contrib-gfx-netpbm-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/netpbm \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tgz" \

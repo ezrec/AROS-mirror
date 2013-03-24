@@ -4,5 +4,5 @@ CFLAGS := $(filter-out -Werror-implicit-function-declaration,$(CFLAGS))
 
 %build_prog mmake=fish-bcubic \
     progname=bcubic targetdir=$(CONTRIBDIR)/Misc/fish \
-    files=bcubic uselibs="arossupport amiga arosc m"
+    files=bcubic
 

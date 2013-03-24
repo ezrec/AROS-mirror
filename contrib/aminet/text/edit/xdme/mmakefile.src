@@ -27,7 +27,7 @@ EXEDIR := $(CONTRIBDIR)/Misc/aminet/XDME
 
 %build_prog mmake=aminet-text-edit-xdme \
     progname=XDME targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="reqtoolsstubs bgui arossupport amiga arosc m"
+    files=$(FILES) uselibs="reqtoolsstubs bgui"
 
 #MM setup-xdme : setup-xdme-parser
 setup-xdme : make-dirs protos docs sources copy-files

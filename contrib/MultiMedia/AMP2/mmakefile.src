@@ -53,6 +53,6 @@ USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/aros -I$(SRCDIR)/$(CURDIR)/amigaos -I$(SRCD
 
 #MM contrib-mmedia-amp2 : includes linklibs workbench-libs-cgxvideo-includes contrib-mmedia-amp2-plugins
 
-%build_prog mmake=contrib-mmedia-amp2 progname=AMP targetdir=$(EXEDIR) files=$(OBJS) uselibs="arossupport amiga arosc z m"
+%build_prog mmake=contrib-mmedia-amp2 progname=AMP targetdir=$(EXEDIR) files=$(OBJS) uselibs="z"
 
 %common

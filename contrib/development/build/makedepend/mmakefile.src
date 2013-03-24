@@ -15,7 +15,7 @@ USER_CFLAGS := -DAROS -DINCLUDEDIR=\"\"
 
 %build_prog mmake=contrib-development-makedepend \
     progname=makedepend targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="arossupport amiga arosc m"
+    files=$(FILES)
 
 %common
 

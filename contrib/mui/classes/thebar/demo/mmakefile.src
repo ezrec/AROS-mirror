@@ -25,7 +25,7 @@ USER_CFLAGS += $(PARANOIA_CFLAGS)
 
 %build_progs mmake=contrib-zune-classes-thebar-demos files=$(FILES) \
     targetdir=$(TARGETDIR) \
-    uselibs="amiga mui"
+    uselibs="mui"
 
 #MM
 contrib-zune-classes-thebar-pics :

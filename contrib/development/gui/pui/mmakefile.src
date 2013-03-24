@@ -29,6 +29,6 @@ USER_INCLUDES := -I.
 
 %build_prog mmake=contrib-development-gui-pui \
     progname=pui targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="arossupport amiga arosc m"
+    files=$(FILES)
 
 %common

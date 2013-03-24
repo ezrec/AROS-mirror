@@ -6,7 +6,7 @@ DESTDIR := $(CONTRIBDIR)/Demos/Tunnel
 
 %build_prog mmake=demo-tunnel \
     progname=Tunnel targetdir=$(DESTDIR) \
-    files=tunnel uselibs="arossupport amiga arosc m"
+    files=tunnel
 
 
 DATAFILES	:= pattern.data pattern.pal

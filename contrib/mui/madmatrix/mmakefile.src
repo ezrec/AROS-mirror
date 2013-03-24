@@ -14,6 +14,6 @@ USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../libs/muimaster
 
 %build_prog mmake=contrib-aminet-games-think-madmatrix \
     progname=MadMatrix targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="mui arossupport arosc"
+    files=$(FILES) uselibs="mui"
 
 %common

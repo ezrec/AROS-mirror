@@ -12,7 +12,7 @@ USER_CFLAGS = -DHIGHSCOREFILE=\""S:chextris-scores"\"
 
 %build_prog mmake=contrib-games-cxhextris \
     progname=CXHextris targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="arossupport amiga arosc m"
+    files=$(FILES)
 
 #MM
 contrib-games-cxhextris-docs : $(EXEDIR)/README

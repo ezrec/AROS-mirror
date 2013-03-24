@@ -16,6 +16,6 @@ USER_CFLAGS := -D__far
 
 %build_prog mmake=contrib-gfx-mysticube \
     progname=MystiCube targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="arossupport amiga arosc m"
+    files=$(FILES)
 
 %common

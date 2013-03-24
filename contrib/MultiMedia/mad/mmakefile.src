@@ -27,7 +27,7 @@ CFLAGS += -DHAVE_CONFIG_H -O2 -DFPM_INTEL
 
 %build_prog mmake=sound-madoss \
     progname=madoss targetdir=$(EXEDIR) \
-    files="$(FILES)" uselibs="arosc"
+    files="$(FILES)"
 
 
 FILES  := madahi \
@@ -47,6 +47,6 @@ FILES  := madahi \
 
 %build_prog mmake=sound-madahi \
     progname=madahi targetdir=$(EXEDIR) \
-    files="$(FILES)" uselibs="arosc"
+    files="$(FILES)"
 
 %common

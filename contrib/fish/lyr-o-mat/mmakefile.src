@@ -4,4 +4,4 @@ FILES := words words_file words_list words_main words_replace words_temp
 
 %build_prog mmake=fish-lyromat \
     progname=lyr-o-mat targetdir=$(CONTRIBDIR)/Misc/fish \
-    files=$(FILES) uselibs="arossupport amiga arosc m"
+    files=$(FILES)

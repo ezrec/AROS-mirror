@@ -9,10 +9,8 @@ DESTDIR := $(CONTRIBDIR)/Demos/Galaxy
 
 %build_prog mmake=demo-galaxy-i386 \
     progname=Galaxy targetdir=$(DESTDIR) \
-    files="galaxy schedul_fx" asmfiles=memshd-i386 \
-    uselibs="arossupport amiga arosc m"
+    files="galaxy schedul_fx" asmfiles=memshd-i386
 
 %build_prog mmake=demo-galaxy-x86_64 \
     progname=Galaxy targetdir=$(DESTDIR) \
-    files="galaxy schedul_fx" asmfiles=memshd-x86_64 \
-    uselibs="arossupport amiga arosc m"
+    files="galaxy schedul_fx" asmfiles=memshd-x86_64

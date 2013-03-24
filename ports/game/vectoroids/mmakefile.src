@@ -25,7 +25,7 @@ FILES := $(PORTSDIR)/vectoroids/$(ARCHBASE)/vectoroids
 
 %build_prog mmake=ports-game-vectoroids progname=Vectoroids \
     files=$(FILES) targetdir=$(TARGETDIR) \
-    uselibs="arosc SDL_image png jpeg SDL GL z"
+    uselibs="SDL_image png jpeg SDL GL z"
 
 %fetch mmake=ports-game-vectoroids-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/vectoroids \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \

@@ -4,4 +4,4 @@ DESTDIR := $(CONTRIBDIR)/Demos/PowerZoom
 
 %build_prog mmake=demo-powerzoom \
     progname=PowerZoom targetdir=$(DESTDIR) \
-    files=powerzoom uselibs="arossupport amiga arosc m"
+    files=powerzoom

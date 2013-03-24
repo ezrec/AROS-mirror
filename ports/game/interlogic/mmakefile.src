@@ -25,7 +25,7 @@ FILES := \
 
 %build_prog mmake=ports-game-interlogic progname=InterLogic \
     files=$(FILES) targetdir=$(TARGETDIR) \
-    uselibs="arosc SDL_image png jpeg SDL_mixer vorbisfile vorbis ogg SDL GL z"
+    uselibs="SDL_image png jpeg SDL_mixer vorbisfile vorbis ogg SDL GL z"
 
 %fetch mmake=ports-game-interlogic-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/interlogic \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz"

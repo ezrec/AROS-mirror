@@ -4,8 +4,8 @@ include $(TOP)/config/make.cfg
 
 %build_prog mmake=fish-cfn \
     progname=cfn targetdir=$(CONTRIBDIR)/Misc/fish \
-    files=cfn uselibs="arossupport amiga arosc m"
+    files=cfn
 
 %build_prog mmake=fish-cfn_newshell \
     progname=cfn_newshell targetdir=$(CONTRIBDIR)/Misc/fish \
-    files=cfn_newshell uselibs="arossupport amiga arosc m"
+    files=cfn_newshell

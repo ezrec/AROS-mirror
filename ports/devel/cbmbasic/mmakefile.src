@@ -22,8 +22,7 @@ FILES := \
     $(PORTSDIR)/cbmbasic/$(ARCHBASE)/runtime
 
 %build_prog mmake=ports-devel-cbmbasic progname=CBMBasic \
-    files=$(FILES) targetdir=$(TARGETDIR) \
-    uselibs="arosc"
+    files=$(FILES) targetdir=$(TARGETDIR)
 
 
 %fetch mmake=ports-devel-cbmbasic-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/cbmbasic \

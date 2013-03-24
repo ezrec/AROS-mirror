@@ -36,7 +36,7 @@ FILES := \
 
 %build_prog mmake=ports-game-gnurobbo progname=GnuRobbo \
     files=$(FILES) targetdir=$(TARGETDIR) \
-    uselibs="arosc SDL_image png jpeg SDL_ttf freetype2 SDL_mixer vorbisfile vorbis ogg SDL GL z"
+    uselibs="SDL_image png jpeg SDL_ttf freetype2 SDL_mixer vorbisfile vorbis ogg SDL GL z"
 
 %fetch mmake=ports-game-gnurobbo-fetch archive=$(ARCHBASE)-source destination=$(PORTSDIR)/gnurobbo \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \

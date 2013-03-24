@@ -12,7 +12,7 @@ EXEDIR := $(CONTRIBDIR)/Misc/fish
 
 %build_prog mmake=fish-windowtool \
     progname=windowtool targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="reqtoolsstubs arossupport amiga arosc m"
+    files=$(FILES) uselibs="reqtoolsstubs"
     
 %common
 

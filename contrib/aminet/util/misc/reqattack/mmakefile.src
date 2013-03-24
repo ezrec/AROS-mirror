@@ -38,6 +38,6 @@ USER_CFLAGS := -DNO_POPUPMENU -DNO_SOUND -DNO_ASM
 
 %build_prog mmake=aminet-util-misc-reqattack \
     progname=ReqAttack targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="arossupport amiga arosc m"
+    files=$(FILES)
 
 %common

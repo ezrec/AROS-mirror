@@ -14,7 +14,6 @@ USER_CFLAGS += -Wno-error -Wno-implicit-function-declaration -Wno-parentheses
 
 %build_prog mmake=DOpus_Print \
     progname=DOpus_Print targetdir=$(DOPUSDIR)/Modules \
-    files="print printreq doprint data printdir strings" \
-    uselibs="amiga arosc"
+    files="print printreq doprint data printdir strings"
 
 %common

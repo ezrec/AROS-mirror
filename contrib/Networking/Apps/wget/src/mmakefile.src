@@ -19,7 +19,7 @@ FILES := cmpt connect convert cookies \
       utils version xmalloc
 
 %build_prog mmake=aros-tcpip-apps-wget-bin progname=$(EXE) files=$(FILES) \
-    targetdir=$(TARGETDIR) uselibs="arosc m" nix=false
+    targetdir=$(TARGETDIR) nix=false
 
 %common
 

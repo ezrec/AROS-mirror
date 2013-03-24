@@ -3,6 +3,6 @@ include $(TOP)/config/make.cfg
 %build_prog mmake=contrib-misc-m68kemul \
     progname=m68kemul targetdir=$(CONTRIBDIR)/Misc/Berger \
     files="m68kemul kernellibs addressingmodes conditioncodes" \
-    uselibs="arossupport amiga arosc m" usestartup=no
+    usestartup=no
 
 #MM contrib-misc-m68kemul : contrib-misc-m68kemul-copysamples

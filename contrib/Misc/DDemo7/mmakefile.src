@@ -2,6 +2,6 @@ include $(TOP)/config/make.cfg
 
 %build_prog mmake=contrib-ddemo7 \
     progname=DDemo7 targetdir=$(CONTRIBDIR)/Misc \
-    files=DDemo7 uselibs="arossupport amiga arosc m"
+    files=DDemo7
 
 

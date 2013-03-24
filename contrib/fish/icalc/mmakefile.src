@@ -12,4 +12,4 @@ FILES := cmath \
 
 %build_prog mmake=fish-icalc \
     progname=icalc targetdir=$(CONTRIBDIR)/Misc/fish \
-    files=$(FILES) uselibs="arossupport amiga arosc m"
+    files=$(FILES)

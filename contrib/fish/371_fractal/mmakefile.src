@@ -2,5 +2,4 @@ include $(TOP)/config/make.cfg
 
 %build_prog mmake=fish-371_fractal \
     progname=371_fractal targetdir=$(CONTRIBDIR)/Misc/fish \
-    files="frac menu formulas formulas1 wilbm colorwindow" \
-    uselibs="arossupport amiga arosc m"
+    files="frac menu formulas formulas1 wilbm colorwindow"

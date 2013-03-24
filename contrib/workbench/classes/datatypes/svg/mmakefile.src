@@ -12,3 +12,5 @@ USER_INCLUDES := -I$(AROS_INCLUDES)/libxml2
 %build_module mmake=contrib-datatypes-svg \
     modname=svg modtype=datatype \
     files=$(FILES) uselibs="svgtiny cairo xml2 pixman freetype2.static fontconfig z.static"
+
+#TODO: Link with shared version of freetype2/z ?

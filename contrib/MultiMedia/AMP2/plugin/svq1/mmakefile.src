@@ -20,6 +20,6 @@ USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/../../common -I$(SRCDIR)/$(CURDIR)/../../ar
 
 #MM contrib-mmedia-amp2-plug-SVQ1 : contrib-mmedia-amp2
 
-%build_prog mmake=contrib-mmedia-amp2-plug-SVQ1 progname=SVQ1.AMP targetdir=$(EXEDIR) files=$(OBJS) uselibs="arossupport amiga arosc z m"
+%build_prog mmake=contrib-mmedia-amp2-plug-SVQ1 progname=SVQ1.AMP targetdir=$(EXEDIR) files=$(OBJS) uselibs="z"
 
 %common

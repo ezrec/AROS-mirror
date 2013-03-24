@@ -42,8 +42,7 @@ FILES := \
     $(PORTSDIR)/gocr/$(ARCHBASE)/src/gocr
 
 %build_prog mmake=ports-text-gocr progname=gocr \
-    files=$(FILES) targetdir=$(TARGETDIR) \
-    uselibs="arosc"
+    files=$(FILES) targetdir=$(TARGETDIR)
 
 %fetch mmake=ports-text-gocr-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/gocr \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \

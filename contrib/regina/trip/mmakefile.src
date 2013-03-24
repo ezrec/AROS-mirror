@@ -39,7 +39,6 @@ $(TARGETDIR)/testing : testing
 FILES := rc true
 
 %build_progs mmake=contrib-regina \
-    files=$(FILES) targetdir=$(TARGETDIR) \
-    uselibs=arosc
+    files=$(FILES) targetdir=$(TARGETDIR)
 
 %common

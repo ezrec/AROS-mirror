@@ -914,7 +914,7 @@ ALL_OBJS = $(COREOBJS) $(AROSOBJS) $(OBJS)
 all: $(EMULATOR_EXE)
 
 %rule_link_prog prog=$(EMULATOR_EXE) objs="$(ALL_OBJS) $(GCCLIB)" \
-    uselibs="$(ZLIB) arossupport amiga arosc m"
+    uselibs="$(ZLIB)"
 
 #$(OBJDIR)/%.d: src/%.c
 #	@echo "******* Make depend ** $< ** $@ **"

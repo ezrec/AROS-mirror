@@ -20,6 +20,6 @@ EXEDIR := $(CONTRIBDIR)/Development/False
 
 %build_prog mmake=contrib-development-false \
     progname=False targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="arossupport amiga z arosc m"
+    files=$(FILES) uselibs="z"
 
 %common

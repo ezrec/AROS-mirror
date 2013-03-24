@@ -12,6 +12,6 @@ EXEDIR := $(CONTRIBDIR)/Misc/aminet/C
 
 %build_prog mmake=aminet-util-arc-untar \
     progname=untar targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="arossupport amiga arosc m"
+    files=$(FILES)
 
 %common

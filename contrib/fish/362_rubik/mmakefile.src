@@ -5,5 +5,4 @@ FILES := rubik getwindow makecube rotate trig gadgets draw extras solve \
 
 %build_prog mmake=fish-362_rubik \
     progname=362_rubik targetdir=$(CONTRIBDIR)/Misc/fish \
-    files=$(FILES) uselibs="arossupport amiga arosc m"
-
+    files=$(FILES)
