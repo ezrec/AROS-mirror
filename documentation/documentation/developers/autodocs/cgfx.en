@@ -33,6 +33,49 @@ Synopsis
  struct List * AllocCModeListTags(
           TAG tag, ... );
 
+Function
+~~~~~~~~
+::
+
+     Retrieves a list of RTG screenmodes that match the criteria specified
+     in a taglist. The supported tags are as follows:
+         CYBRMREQ_MinWidth (ULONG) - the minimum acceptable display width
+             (defaults to 320).
+         CYBRMREQ_MaxWidth (ULONG) - the maximum acceptable display width.
+             (defaults to 1600).
+         CYBRMREQ_MinHeight (ULONG) - the minimum acceptable display
+             height (defaults to 240).
+         CYBRMREQ_MaxHeight (ULONG) - the maximum acceptable display
+             height (defaults to 1200).
+         CYBRMREQ_MinDepth (UWORD) - the minimum acceptable display depth
+             (defaults to 8).
+         CYBRMREQ_MaxDepth (UWORD) - the minimum acceptable display depth
+             (defaults to 32).
+         CYBRMREQ_CModelArray (UWORD *) - array of permitted pixel formats.
+             Any of the PIXFMT_#? constants may be specified (see
+             LockBitMapTagList()), and the array must be terminated by ~0.
+             By default, all pixel formats are acceptable.
+
+
+Inputs
+~~~~~~
+::
+
+     tags - mode selection criteria (may be NULL).
+
+
+Result
+~~~~~~
+::
+
+     result - a list of matching screenmodes, or NULL if there are none.
+
+
+
+See also
+~~~~~~~~
+
+`FreeCModeList()`_ 
 
 ----------
 
@@ -61,7 +104,7 @@ Inputs
 ~~~~~~
 ::
 
-     tags - An optional pointer to a TagList containint requirements
+     tags - An optional pointer to a TagList containing requirements
             for the display mode. Valid tags are:
 
        CYBRBIDTG_Depth (ULONG) - depth the returned ModeID must support.
@@ -97,7 +140,7 @@ Result
 ~~~~~~
 ::
 
-     Best matchind display mode ID or INVALID_ID if there is no match
+     ID - Best matching display mode ID or INVALID_ID if there is no match.
 
 
 
@@ -125,6 +168,44 @@ Synopsis
           LONG width,
           LONG height );
 
+Function
+~~~~~~~~
+::
+
+     Alpha blends the current foreground colour into a rectangular portion
+     of a RastPort. The source alpha channel to use for each pixel is taken
+     from an array of 8-bit alpha values. This alpha template may be any
+     rectangle within a larger array/rectangle of alpha values.
+
+
+Inputs
+~~~~~~
+::
+
+     src - pointer to an array of source alpha values.
+     srcx - byte/pixel offset of top-lefthand corner of alpha template.
+     srcmod - the number of bytes in each row of the source array.
+     rp - the RastPort to write to.
+     destx, desty - top-lefthand corner of portion of destination RastPort
+         to write to (in pixels).
+     width, height - size of the area to copy (in pixels).
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+Notes
+~~~~~
+::
+
+     The size and destination coordinates may be outside the RastPort
+     boundaries, in which case the affected area is safely truncated.
+
+
 
 ----------
 
@@ -143,6 +224,65 @@ Synopsis
           APTR ,
           TAG tag, ... );
 
+Function
+~~~~~~~~
+::
+
+     Displays a requester that allows the user to select an RTG screenmode.
+     Some of the requester's properties may be set using the following
+     tags:
+         CYBRMREQ_Screen (struct Screen *) - the screen on which the
+             requester should be opened.
+         CYBRMREQ_WinTitle (STRPTR) - window title.
+         CYBRMREQ_OKText (STRPTR) - label text for OK button.
+         CYBRMREQ_CancelText (STRPTR) - label text for Cancel button.
+         CYBRMREQ_MinWidth (IPTR) - Minimum acceptable display width
+             (defaults to 320).
+         CYBRMREQ_MaxWidth (IPTR) - Maximum acceptable display width.
+             (defaults to 1600).
+         CYBRMREQ_MinHeight (IPTR) - Minimum acceptable display height.
+             (defaults to 240).
+         CYBRMREQ_MaxHeight (IPTR) - Maximum acceptable display height.
+             (defaults to 1200).
+         CYBRMREQ_MinDepth (IPTR) - Minimum acceptable display depth
+             (defaults to 8).
+         CYBRMREQ_MaxDepth (IPTR) - Maximum acceptable display depth
+             (defaults to 32).
+         CYBRMREQ_CModelArray (UWORD *) - array of permitted pixel formats.
+             Any of the PIXFMT_#? constants may be specified (see
+             LockBitMapTagList()), and the array must be terminated by ~0.
+             By default, all pixel formats are acceptable.
+
+
+Inputs
+~~~~~~
+::
+
+     requester - not used. Must be NULL.
+     tagItems - options for the requester that will be created (may be
+         NULL).
+
+
+Result
+~~~~~~
+::
+
+     result - user-selected screenmode ID, or zero on failure or
+         user-cancellation.
+
+
+Bugs
+~~~~
+::
+
+     This function is not implemented.
+
+
+
+See also
+~~~~~~~~
+
+`graphics.library/AslRequest() <./graphics#aslrequest>`_ 
 
 ----------
 
@@ -160,6 +300,34 @@ Synopsis
  void CVideoCtrlTags(
           struct ViewPort * vp,
           TAG tag, ... );
+
+Function
+~~~~~~~~
+::
+
+     Controls video output. It currently only allows adjustment of
+     power-saving modes, using the following tag:
+         SETVC_DPMSLevel (IPTR) - one of the following DPMS levels:
+             DPMS_ON - normal operation.
+             DPMS_STANDBY - less than 80% power usage.
+             DPMS_SUSPEND - less than 30W power usage.
+             DPMS_OFF - less than 8W power usage.
+
+
+Inputs
+~~~~~~
+::
+
+     vp - a ViewPort belonging to the video output device to be controlled.
+     tags - a taglist containing video control options.
+
+
+Result
+~~~~~~
+::
+
+     None.
+
 
 
 ----------
@@ -181,6 +349,33 @@ Synopsis
           struct RastPort * rp,
           TAG tag, ... );
 
+Function
+~~~~~~~~
+::
+
+     Calls a callback hook that directly accesses a RastPort's bitmap.
+
+
+Inputs
+~~~~~~
+::
+
+     hook - a callback hook. The standard hook inputs will be set as
+         follows:
+             object (struct RastPort *) - this function's 'rp' input.
+             message (struct CDrawMsg *) - details of the area on which to
+                 operate.
+     rp - the RastPort to perform operations on.
+     tags - not used. Must be NULL.
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
 
 ----------
 
@@ -200,6 +395,48 @@ Synopsis
           ULONG Width,
           ULONG Height );
 
+Function
+~~~~~~~~
+::
+
+     Create a single-plane bitmap that describes the coordinates where a
+     particular colour is present in a portion of a RastPort (i.e. a mask).
+     A one is stored in the bitmap where the requested colour is present,
+     and a zero where it is absent.
+
+     For true-colour RastPorts, the colour is specified in 32-bit ARGB
+     format: 1 byte per component, in the order alpha, red, green, blue
+     (the alpha byte is ignored for RastPorts without an alpha channel).
+     For paletted RastPorts, a pen number is given instead.
+
+
+Inputs
+~~~~~~
+::
+
+     RastPort - the RastPort to analyse.
+     SingleMap - a planar bitmap to fill (its pixel dimensions must be at
+         least as big as the rectangle being analysed).
+     Colour - the colour to extract.
+     sX, sY - top-lefthand corner of portion of RastPort to analyse
+         (in pixels).
+     Width, Height - size of the area to analyse (in pixels).
+
+
+Result
+~~~~~~
+::
+
+     result - Boolean success indicator.
+
+
+Notes
+~~~~~
+::
+
+     It is safe for the bitmap being filled to have more than one bitplane.
+
+
 
 ----------
 
@@ -218,6 +455,33 @@ Synopsis
           UWORD height,
           ULONG pixel );
 
+Function
+~~~~~~~~
+::
+
+     Writes the same color value to all pixels in a rectangular region of
+     a RastPort.
+
+
+Inputs
+~~~~~~
+::
+
+     rp - the RastPort to write to.
+     destx, desty - top-lefthand corner of portion of destination RastPort
+         to write to (in pixels).
+     width, height - size of the affected area (in pixels).
+     pixel - the color value to use, in 32-bit ARGB format: 1 byte per
+         component, in the order alpha, red, green, blue.
+
+
+Result
+~~~~~~
+::
+
+     count - the number of pixels filled.
+
+
 
 ----------
 
@@ -231,6 +495,25 @@ Synopsis
  void FreeCModeList(
           struct List * modeList );
 
+Function
+~~~~~~~~
+::
+
+     Frees a list of RTG modes returned by AllocCModeListTagList().
+
+
+Inputs
+~~~~~~
+::
+
+     modeList - a list of RTG modes returned by AllocCModeListTagList().
+
+
+
+See also
+~~~~~~~~
+
+`AllocCModeListTagList()`_ 
 
 ----------
 
@@ -245,6 +528,41 @@ Synopsis
           ULONG attribute,
           ULONG DisplayModeID );
 
+Function
+~~~~~~~~
+::
+
+     Provides information about a specific RTG screenmode.
+
+
+Inputs
+~~~~~~
+::
+
+     attribute - one of the following display attributes:
+         CYBERIDATTR_PIXFMT - the display's pixel format. See
+             LockBitMapTagList() for possible values.
+         CYBERIDATTR_WIDTH - the display's width (in pixels).
+         CYBERIDATTR_HEIGHT - the display's height (in pixels).
+         CYBERIDATTR_DEPTH - the number of bits per pixel.
+         CYBERIDATTR_BPPIX - the number of bytes per pixel.
+     DisplayModeID - an RTG screenmode ID.
+
+
+Result
+~~~~~~
+::
+
+     value - the value associated with the requested attribute.
+
+
+Notes
+~~~~~
+::
+
+     If an unknown attribute is requested, -1 is returned.
+
+
 
 ----------
 
@@ -258,6 +576,56 @@ Synopsis
  ULONG GetCyberMapAttr(
           struct BitMap * bitMap,
           ULONG attribute );
+
+Function
+~~~~~~~~
+::
+
+     Provides information about an RTG bitmap. If you are unsure whether
+     the bitmap is an RTG one, you must retrieve and check
+     CYBRMATTR_ISCYBERGFX first, as all other attributes are only allowed
+     to be retrieved for RTG bitmaps.
+
+
+Inputs
+~~~~~~
+::
+
+     bitMap - an RTG bitmap.
+     attribute - one of the following bitmap attributes:
+         CYBRMATTR_PIXFMT - the bitmap's pixel format. See
+             LockBitMapTagList() for possible values.
+         CYBRMATTR_WIDTH - the bitmap's width (in pixels).
+         CYBRMATTR_HEIGHT - the bitmap's height (in pixels).
+         CYBRMATTR_DEPTH - the number of bits per pixel.
+         CYBRMATTR_BPPIX - the number of bytes per pixel.
+         CYBRMATTR_XMOD - the number of bytes per row.
+         CYBRMATTR_ISCYBERGFX - TRUE only if the bitmap is an RTG one.
+         CYBRMATTR_ISLINEARMEM - TRUE only if the bitmap's display buffer
+             is linear.
+         CYBRMATTR_COLORMAP - the bitmap's color map.
+
+
+Result
+~~~~~~
+::
+
+     value - the value associated with the requested attribute.
+
+
+Notes
+~~~~~
+::
+
+     If an unknown attribute is requested, -1 is returned.
+
+
+Bugs
+~~~~
+::
+
+     CYBRMATTR_COLORMAP is unimplemented.
+
 
 
 ----------
@@ -276,6 +644,30 @@ Synopsis
           UWORD width,
           UWORD height );
 
+Function
+~~~~~~~~
+::
+
+     Inverts each pixel in rectangular portion of a RastPort, i.e. applies
+     a NOT operation to each bit of pixel data.
+
+
+Inputs
+~~~~~~
+::
+
+     rp - the RastPort to write to.
+     destx, desty - top-lefthand corner of portion of RastPort to invert.
+     width, height - size of the area to invert.
+
+
+Result
+~~~~~~
+::
+
+     count - the number of pixels inverted.
+
+
 
 ----------
 
@@ -293,21 +685,21 @@ Function
 ~~~~~~~~
 ::
 
-     Check if the given display mode ID belongs to an RTG driver
+     Checks if the given display mode ID belongs to an RTG driver.
 
 
 Inputs
 ~~~~~~
 ::
 
-     modeID - a display mode ID to check
+     modeID - a display mode ID to check.
 
 
 Result
 ~~~~~~
 ::
 
-     TRUE if the mode belongs to an RTG driver, FALSE otherwise
+     result - TRUE if the mode belongs to an RTG driver, FALSE otherwise.
 
 
 
@@ -328,6 +720,107 @@ Synopsis
           APTR bitmap,
           TAG tag, ... );
 
+Function
+~~~~~~~~
+::
+
+     Obtains exclusive access to a bitmap in preparation for direct access
+     to its pixel data. Direct access to a bitmap should only be done in
+     exceptional cases, and the locking period should be limited to at most
+     one frame.
+
+     A taglist is passed in that contains pointers to variables in which to
+     store the information necessary to directly access the bitmap. The
+     tags used are as follows:
+         LBMI_WIDTH (ULONG *) - the bitmap's width.
+         LBMI_HEIGHT (ULONG *) - the bitmap's height.
+         LBMI_DEPTH (ULONG *) - the bitmap's depth.
+         LBMI_PIXFMT (ULONG *) - the bitmap's pixel format.
+         LBMI_BYTESPERPIX (ULONG *) - the number of bytes per pixel.
+         LBMI_BYTESPERROW (ULONG *) - the number of bytes per row.
+         LBMI_BASEADDRESS (APTR *) - the start address of the pixel data.
+
+     The value returned for LBMI_PIXFMT will be one of the following
+     constants:
+             PIXFMT_RGB24 - 3 bytes per pixel: 1 byte per component, in
+                 the order red, green, blue.
+             PIXFMT_RGBA32 - 4 bytes per pixel: 1 byte per component, in  
+                 the order red, green, blue, alpha.
+             PIXFMT_ARGB32 - 4 bytes per pixel: 1 byte per component, in
+                 the order alpha, red, green, blue.
+             PIXFMT_LUT8 - 1 byte per pixel: each byte is a pen number
+                 rather than a direct colour value.
+             PIXFMT_RGB15 - 2 bytes per pixel: one unused bit, then 5 bits
+                 per component, in the order red, green, blue.
+             PIXFMT_BGR15 - 2 bytes per pixel: 1 unused bit, then 5 bits
+                 per component, in the order blue, green, red.
+             PIXFMT_RGB15PC - 2 bytes per pixel, accessed as a little
+                 endian value: 1 unused bit, then 5 bits per component, in
+                 the order red, green, blue.
+             PIXFMT_BGR15PC - 2 bytes per pixel, accessed as a little
+                 endian value: 1 unused bit, then 5 bits per component, in
+                 the order blue, green, red.
+             PIXFMT_RGB16 - 2 bytes per pixel: 5 bits for red, then 6 bits
+                 for green, then 5 bits for blue.
+             PIXFMT_BGR16 - 2 bytes per pixel: 5 bits for blue, then 6 bits
+                 for green, then 5 bits for red.
+             PIXFMT_RGB16PC - 2 bytes per pixel, accessed as a little
+                 endian value: 5 bits for red, then 6 bits for green, then
+                 5 bits for blue. 
+             PIXFMT_BGR16PC - 2 bytes per pixel, accessed as a little
+                 endian value: 5 bits for blue, then 6 bits for green, then
+                 5 bits for red.  
+             PIXFMT_BGR24 - 3 bytes per pixel: 1 byte per component, in
+                 the order blue, green, red.
+             PIXFMT_BGRA32 - 4 bytes per pixel: 1 byte per component, in
+                 the order blue, green, red, alpha.
+             PIXFMT_ABGR32 - 4 bytes per pixel: 1 byte per component, in
+                 the order alpha, blue, green, red (AROS extension).
+             PIXFMT_0RGB32 - 4 bytes per pixel: 1 unused byte, then 1 byte
+                 per component, in the order red, green, blue (AROS
+                 extension).
+             PIXFMT_BGR032 - 4 bytes per pixel: 1 byte per component, in
+                 the order blue, green, red, followed by 1 unused byte
+                 (AROS extension).
+             PIXFMT_RGB032 - 4 bytes per pixel: 1 byte per component, in
+                 the order red, green, blue, followed by 1 unused byte
+                 (AROS extension).
+             PIXFMT_0BGR32 - 4 bytes per pixel: 1 unused byte, then 1 byte
+                 per component, in the order blue, green, red (AROS
+                 extension).
+
+
+Inputs
+~~~~~~
+::
+
+     bitmap - the bitmap to lock.
+     tags - a taglist that will be filled with information necessary to
+         directly access the bitmap.
+
+
+Result
+~~~~~~
+::
+
+     handle - a handle to be passed to UnLockBitMap() or
+         UnLockBitMapTagList(), or NULL for failure.
+
+
+Notes
+~~~~~
+::
+
+     While the bitmap is locked, no cybergraphics.library or
+     graphics.library related functions should be called (except to unlock
+     it).
+
+
+
+See also
+~~~~~~~~
+
+`UnLockBitMap()`_ `UnLockBitMapTagList()`_ 
 
 ----------
 
@@ -346,6 +839,31 @@ Synopsis
           UWORD DstY,
           UWORD SizeX,
           UWORD SizeY );
+
+Function
+~~~~~~~~
+::
+
+     Copies the pixels in a rectangular portion of a RastPort to another
+     rectangle with the same dimensions in the same RastPort.
+
+
+Inputs
+~~~~~~
+::
+
+     SrcX, SrcY - top-lefthand corner of source rectangle.
+     RastPort - the RastPort to modify.
+     DstX, DstY - top-lefthand corner of destination rectangle.
+     SizeX, SizeY - size of the rectangles (in pixels).
+
+
+Result
+~~~~~~
+::
+
+     count - the number of pixels moved.
+
 
 
 ----------
@@ -377,14 +895,56 @@ Synopsis
           LONG value,
           TAG tag, ... );
 
-Notes
-~~~~~
+Function
+~~~~~~~~
 ::
 
-     Not implemented.
-     This function exists to get Scalos compiled. Because Scalos
-     has its own fallback code for the case that lib_Version < 50
-     it's not so urgent to implement it.
+     Applies one of a variety of transformations to a rectangular portion
+     of a RastPort.
+
+
+Inputs
+~~~~~~
+::
+
+     rp - the RastPort to process.
+     destX, destY - top-lefthand corner of portion of RastPort to process.
+     sizeX, sizeY - size of the affected area.
+     operation - one of the following transformation types:
+         POP_TINT - tint the rectangle with an ARGB32 color ('value' input).
+         POP_BLUR - blur the rectangle.
+         POP_BRIGHTEN - brighten the rectangle. The amount of brightening
+             to be done is defined by the 'value' input, which must be in
+             the range 0 to 255.
+         POP_DARKEN - darken the rectangle. The amount of darkening to be
+             done is defined by the 'value' input, which must be in the
+             range 0 to 255.
+         POP_SETALPHA - set the alpha channel value for all pixels in the
+             rectangle to that specified in the 'value' input. The valid
+             range is 0 to 255.
+         POP_GRADIENT - apply a gradient to the rectangle. Gradient
+             parameters are supplied through the taglist.
+     value - see description of 'operation' input.
+     taglist - currently describes gradient parameters, as follows:
+         PPAOPTAG_GRADIENTTYPE - GRADTYPE_HORIZONTAL or GRADTYPE_VERTICAL.
+         PPAOPTAG_GRADCOLOR1 - The starting color of the gradient (ARGB32).
+         PPAOPTAG_GRADCOLOR2 - The ending color of the gradient (ARGB32).
+         PPAOPTAG_GRADFULLSCALE
+         PPAOPTAG_GRADOFFSET
+
+
+Result
+~~~~~~
+::
+
+     count - the number of pixels processed.
+
+
+Bugs
+~~~~
+::
+
+     This function is not implemented.
 
 
 
@@ -409,54 +969,66 @@ Synopsis
           UWORD height,
           UBYTE dstformat );
 
+Function
+~~~~~~~~
+::
+
+     Copies a rectangular portion of a RastPort to a block of raw pixel
+     values.
+
+
 Inputs
 ~~~~~~
 ::
 
-
-     dstformat - A RECTFMT_xxx value describing requested format in which
-                 data in dst will be available. Currently supported original
-                 values are:
-                 
-                 RECTFMT_RGB
-                 RECTFMT_RGBA
-                 RECTFMT_ARGB
-                 RECTFMT_RAW
-                 
-                 Currently supported AROS extensions are:
-
-                 RECTFMT_RGB15
-                 RECTFMT_BGR15
-                 RECTFMT_RGB15PC
-                 RECTFMT_BGR15PC
-                 RECTFMT_RGB16
-                 RECTFMT_BGR16
-                 RECTFMT_RGB16PC
-                 RECTFMT_BGR16PC
-                 RECTFMT_RGB24
-                 RECTFMT_BGR24
-                 RECTFMT_0RGB32
-                 RECTFMT_BGR032
-                 RECTFMT_RGB032
-                 RECTFMT_0BGR32
-                 RECTFMT_ARGB32
-                 RECTFMT_BGRA32
-                 RECTFMT_RGBA32
-                 RECTFMT_ABGR32
-                 
-                 Following values are not supported and will cause function
-                 to return 0:
-                 
-                 RECTFMT_LUT8
-                 RECTFMT_GREY8
+     dst - pointer to the pixel values.
+     destx, desty - top-lefthand corner of portion of destination rectangle
+         to write to (in pixels).
+     dstmod - the number of bytes in each row of the destination rectangle.
+     rp - the RastPort to read.
+     srcx, srcy - top-lefthand corner of portion of source RastPort to
+         read (in pixels).
+     width, height - size of the area to copy (in pixels).
+     dstformat - the format of the destination pixels. The following format
+         types are supported:
+             RECTFMT_RGB
+             RECTFMT_RGBA
+             RECTFMT_ARGB
+             RECTFMT_RAW
+             RECTFMT_RGB15
+             RECTFMT_BGR15
+             RECTFMT_RGB15PC
+             RECTFMT_BGR15PC
+             RECTFMT_RGB16
+             RECTFMT_BGR16
+             RECTFMT_RGB16PC
+             RECTFMT_BGR16PC
+             RECTFMT_RGB24
+             RECTFMT_BGR24
+             RECTFMT_0RGB32
+             RECTFMT_BGR032
+             RECTFMT_RGB032
+             RECTFMT_0BGR32
+             RECTFMT_ARGB32
+             RECTFMT_BGRA32
+             RECTFMT_RGBA32
+             RECTFMT_ABGR32
 
 
 Result
 ~~~~~~
 ::
 
+     count - number of pixels read.
 
-     Number of pixels read.
+
+Notes
+~~~~~
+::
+
+     See WritePixelArray() for descriptions of pixel formats. Where a
+     RastPort does not support an alpha channel, destination alpha values
+     will be set to zero.
 
 
 
@@ -473,6 +1045,29 @@ Synopsis
           struct RastPort * rp,
           UWORD x,
           UWORD y );
+
+Function
+~~~~~~~~
+::
+
+     Reads a particular pixel's color value from a RastPort.
+
+
+Inputs
+~~~~~~
+::
+
+     rp - the RastPort to read from.
+     x, y - the coordinates of the pixel to read.
+
+
+Result
+~~~~~~
+::
+
+     color - the pixel's color value in 32-bit ARGB format: 1 byte
+         per component, in the order alpha, red, green, blue.
+
 
 
 ----------
@@ -496,6 +1091,50 @@ Synopsis
           UWORD DestH,
           UBYTE SrcFormat );
 
+Function
+~~~~~~~~
+::
+
+     Fills all or part of a RastPort with a rectangular block of raw pixel
+     values. The source pixels are scaled to fit the destination area, i.e.
+     some pixels may be duplicated or dropped according to the need to
+     stretch or compress the source block.
+
+
+Inputs
+~~~~~~
+::
+
+     srcRect - pointer to the pixel values.
+     SrcW, SrcH - width and height of the source rectangle (in pixels).
+     SrcMod - the number of bytes in each row of the source rectangle.
+     RastPort - the RastPort to write to.
+     DestX, DestY - top-lefthand corner of portion of destination RastPort
+         to write to (in pixels).
+     DestW, DestH - size of the destination rectangle (in pixels).
+     SrcFormat - the format of the source pixels. See WritePixelArray for
+         possible values.
+
+
+Result
+~~~~~~
+::
+
+     count - the number of pixels written to.
+
+
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
+
+
+See also
+~~~~~~~~
+
+`WritePixelArray()`_ 
 
 ----------
 
@@ -509,6 +1148,32 @@ Synopsis
  void UnLockBitMap(
           APTR Handle );
 
+Function
+~~~~~~~~
+::
+
+     Releases exclusive access to a bitmap.
+
+
+Inputs
+~~~~~~
+::
+
+     Handle - handle to the bitmap to unlock.
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+
+See also
+~~~~~~~~
+
+`UnLockBitMapTagList()`_ `LockBitMapTagList()`_ 
 
 ----------
 
@@ -527,6 +1192,38 @@ Synopsis
           APTR Handle,
           TAG tag, ... );
 
+Function
+~~~~~~~~
+::
+
+     Releases exclusive access to a bitmap. Options for the unlocking
+     process are given in a taglist. The possible tags are as follows:
+         UBMI_UPDATERECTS (struct RectList *) - pointer to a series of
+             rectangle lists that need to be refreshed.
+         UBMI_REALLYUNLOCK (BOOL) - if FALSE, the bitmap will not be
+             unlocked; only rectangle updates will be done.
+
+
+Inputs
+~~~~~~
+::
+
+     Handle - handle to the bitmap to unlock.
+     Tags - a taglist as described above.
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+
+See also
+~~~~~~~~
+
+`UnLockBitMap()`_ `LockBitMapTagList()`_ 
 
 ----------
 
@@ -550,6 +1247,42 @@ Synopsis
           UWORD SizeY,
           UBYTE CTabFormat );
 
+Function
+~~~~~~~~
+::
+
+     Copies all or part of a rectangular block of raw pen values to a
+     RastPort. The pen values are converted to the RastPort's native pixel
+     values.
+
+
+Inputs
+~~~~~~
+::
+
+     srcRect - pointer to the pixel values.
+     SrcX, SrcY - top-lefthand corner of portion of source rectangle to
+         copy (in pixels).
+     SrcMod - the number of bytes in each row of the source rectangle.
+     rp - the RastPort to write to.
+     CTable - the color table that maps the source pen values.
+     DestX, DestY - top-lefthand corner of portion of destination RastPort
+         to write to (in pixels).
+     SizeX, SizeY - size of the area to copy (in pixels).
+     CTabFormat - format of the color table. Only one format type is
+         currently supported:
+             CTABFMT_XRGB8 - the colour table is an array of 256 ULONGs.
+                 Each entry begins with an unused byte, followed by 1 byte
+                 for each component, in the order red, green, blue.
+
+
+Result
+~~~~~~
+::
+
+     count - the number of pixels written to.
+
+
 
 ----------
 
@@ -572,6 +1305,97 @@ Synopsis
           UWORD height,
           UBYTE srcformat );
 
+Function
+~~~~~~~~
+::
+
+     Copies all or part of a rectangular block of raw pixel values to a
+     RastPort.
+
+
+Inputs
+~~~~~~
+::
+
+     srcRect - pointer to the pixel values.
+     srcx, srcy - top-lefthand corner of portion of source rectangle to
+         copy (in pixels).
+     srcmod - the number of bytes in each row of the source rectangle.
+     rp - the RastPort to write to.
+     destx, desty - top-lefthand corner of portion of destination RastPort
+         to write to (in pixels).
+     width, height - size of the area to copy (in pixels).
+     srcformat - the format of the source pixels. The following format
+         types are supported:
+             RECTFMT_RGB - 3 bytes per pixel: 1 byte per component, in
+                 the order red, green, blue.
+             RECTFMT_RGBA - 4 bytes per pixel: 1 byte per component, in
+                 the order red, green, blue, alpha.
+             RECTFMT_ARGB - 4 bytes per pixel: 1 byte per component, in
+                 the order alpha, red, green, blue.
+             RECTFMT_LUT8 - 1 byte per pixel: each byte is a pen number
+                 rather than a direct colour value.
+             RECTFMT_GREY8 - 1 byte per pixel: each byte is a greyscale
+                 value.
+             RECTFMT_RAW - the same pixel format as the destination
+                 RastPort.
+             RECTFMT_RGB15 - 2 bytes per pixel: one unused bit, then 5 bits
+                 per component, in the order red, green, blue (AROS
+                 extension).
+             RECTFMT_BGR15 - 2 bytes per pixel: 1 unused bit, then 5 bits
+                 per component, in the order blue, green, red (AROS
+                 extension).
+             RECTFMT_RGB15PC - 2 bytes per pixel, accessed as a little
+                 endian value: 1 unused bit, then 5 bits per component, in
+                 the order red, green, blue (AROS extension).
+             RECTFMT_BGR15PC - 2 bytes per pixel, accessed as a little
+                 endian value: 1 unused bit, then 5 bits per component, in
+                 the order blue, green, red (AROS extension).
+             RECTFMT_RGB16 - 2 bytes per pixel: 5 bits for red, then 6 bits
+                 for green, then 5 bits for blue (AROS extension).
+             RECTFMT_BGR16 - 2 bytes per pixel: 5 bits for blue, then 6 bits
+                 for green, then 5 bits for red (AROS extension).
+             RECTFMT_RGB16PC - 2 bytes per pixel, accessed as a little
+                 endian value: 5 bits for red, then 6 bits for green, then
+                 5 bits for blue (AROS extension).
+             RECTFMT_BGR16PC - 2 bytes per pixel, accessed as a little
+                 endian value: 5 bits for blue, then 6 bits for green, then
+                 5 bits for red (AROS extension).
+             RECTFMT_RGB24 - the same as RECTFMT_RGB (AROS extension).
+             RECTFMT_BGR24 - 3 bytes per pixel: 1 byte per component, in
+                 the order blue, green, red (AROS extension).
+             RECTFMT_ARGB32 - the same as RECTFMT_ARGB (AROS extension).
+             RECTFMT_BGRA32 - 4 bytes per pixel: 1 byte per component, in
+                 the order blue, green, red, alpha (AROS extension).
+             RECTFMT_RGBA32 - the same as RECTFMT_RGBA (AROS extension).
+             RECTFMT_ABGR32 - 4 bytes per pixel: 1 byte per component, in
+                 the order alpha, blue, green, red (AROS extension).
+             RECTFMT_0RGB32 - 4 bytes per pixel: 1 unused byte, then 1 byte
+                 per component, in the order red, green, blue (AROS
+                 extension).
+             RECTFMT_BGR032 - 4 bytes per pixel: 1 byte per component, in
+                 the order blue, green, red, followed by 1 unused byte
+                 (AROS extension).
+             RECTFMT_RGB032 - 4 bytes per pixel: 1 byte per component, in
+                 the order red, green, blue, followed by 1 unused byte
+                 (AROS extension).
+             RECTFMT_0BGR32 - 4 bytes per pixel: 1 unused byte, then 1 byte
+                 per component, in the order blue, green, red (AROS
+                 extension).
+
+
+Result
+~~~~~~
+::
+
+     count - the number of pixels written to.
+
+
+
+See also
+~~~~~~~~
+
+`WritePixelArrayAlpha()`_ 
 
 ----------
 
@@ -594,6 +1418,51 @@ Synopsis
           UWORD height,
           ULONG globalalpha );
 
+Function
+~~~~~~~~
+::
+
+     Alpha-blends all or part of a rectangular block of raw pixel values
+     into a RastPort. The source data must be in 32-bit ARGB format: 1 byte
+     per component, in the order alpha, red, green, blue.
+
+
+Inputs
+~~~~~~
+::
+
+     srcRect - pointer to the pixel values.
+     srcx, srcy - top-lefthand corner of portion of source rectangle to
+         use (in pixels).
+     srcmod - the number of bytes in each row of the source rectangle.
+     rp - the RastPort to write to.
+     destx, desty - top-lefthand corner of portion of destination RastPort
+         to write to (in pixels).
+     width, height - size of the affected area (in pixels).
+     globalalpha - an alpha value applied globally to every pixel taken
+         from the source rectangle (the full 32-bit range of values is
+         used: 0 to 0xFFFFFFFF).
+
+
+Result
+~~~~~~
+::
+
+     count - the number of pixels written to.
+
+
+Bugs
+~~~~
+::
+
+     The globalalpha parameter is currently ignored.
+
+
+
+See also
+~~~~~~~~
+
+`WritePixelArray()`_ 
 
 ----------
 
@@ -609,5 +1478,30 @@ Synopsis
           UWORD x,
           UWORD y,
           ULONG pixel );
+
+Function
+~~~~~~~~
+::
+
+     Writes a new color value to a pixel in a RastPort.
+
+
+Inputs
+~~~~~~
+::
+
+     rp - the RastPort to write to.
+     x, y - the coordinates of the pixel to write.
+     pixel - the pixel's new color value in 32-bit ARGB format: 1 byte
+         per component, in the order alpha, red, green, blue.
+
+
+Result
+~~~~~~
+::
+
+     error - 0 if no error occurred, or -1 if (x, y) is outside the
+         RastPort.
+
 
 

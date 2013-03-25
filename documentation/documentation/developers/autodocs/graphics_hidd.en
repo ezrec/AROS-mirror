@@ -35,9 +35,9 @@ hidd.graphics.bitmap
 `moHidd_BitMap_FillPolygon`_               `moHidd_BitMap_FillRect`_                  `moHidd_BitMap_FillSpan`_                  `moHidd_BitMap_FillText`_                  
 `moHidd_BitMap_GetImage`_                  `moHidd_BitMap_GetImageLUT`_               `moHidd_BitMap_MapColor`_                  `moHidd_BitMap_ObtainDirectAccess`_        
 `moHidd_BitMap_PutAlphaImage`_             `moHidd_BitMap_PutAlphaTemplate`_          `moHidd_BitMap_PutImage`_                  `moHidd_BitMap_PutImageLUT`_               
-`moHidd_BitMap_PutPattern`_                `moHidd_BitMap_PutTemplate`_               `moHidd_BitMap_PutTranspImageLUT`_         `moHidd_BitMap_ReleaseDirectAccess`_       
-`moHidd_BitMap_SetColorMap`_               `moHidd_BitMap_SetColors`_                 `moHidd_BitMap_SetRGBConversionFunction`_  `moHidd_BitMap_UnmapPixel`_                
-`moHidd_BitMap_UpdateRect`_                
+`moHidd_BitMap_PutPattern`_                `moHidd_BitMap_PutPixel`_                  `moHidd_BitMap_PutTemplate`_               `moHidd_BitMap_PutTranspImageLUT`_         
+`moHidd_BitMap_ReleaseDirectAccess`_       `moHidd_BitMap_SetColorMap`_               `moHidd_BitMap_SetColors`_                 `moHidd_BitMap_SetRGBConversionFunction`_  
+`moHidd_BitMap_UnmapPixel`_                `moHidd_BitMap_UpdateRect`_                
 ========================================== ========================================== ========================================== ========================================== 
 
 -----------
@@ -1774,6 +1774,47 @@ Result
 
 ----------
 
+moHidd_BitMap_PutPixel
+======================
+
+Synopsis
+~~~~~~~~
+::
+
+     ULONG OOP_DoMethod(OOP_Object *obj, struct pHidd_BitMap_PutPixel *msg);
+
+     ULONG HIDD_BM_PutPixel(OOP_Object *obj, WORD x, WORD y,
+         HIDDT_Pixel pixel);
+
+
+Function
+~~~~~~~~
+::
+
+     Sets a new color value for the pixel at (x,y). The actual color stored
+     may be an approximation, due to the limited color depth or palette size
+     of the bitmap. This function does not check the coordinates.
+
+
+Inputs
+~~~~~~
+::
+
+     obj  -  bitmap to write to.
+     x, y - coordinates of the pixel to write.
+     pixel - the pixel's new color value.
+
+
+Result
+~~~~~~
+::
+
+     Unknown.
+
+
+
+----------
+
 moHidd_BitMap_PutTemplate
 =========================
 
@@ -2082,17 +2123,17 @@ hidd.graphics.graphics
 
 ========================================== ========================================== ========================================== ========================================== 
 `--background_graphics--`_                 `--display_modes--`_                       `aoHidd_Gfx_ActiveCallBack`_               `aoHidd_Gfx_ActiveCallBackData`_           
-`aoHidd_Gfx_DefaultGC`_                    `aoHidd_Gfx_DMPSLevel`_                    `aoHidd_Gfx_DriverName`_                   `aoHidd_Gfx_HWSpriteTypes`_                
-`aoHidd_Gfx_IsWindowed`_                   `aoHidd_Gfx_MemoryClock`_                  `aoHidd_Gfx_MemorySize`_                   `aoHidd_Gfx_ModeTags`_                     
-`aoHidd_Gfx_NoFrameBuffer`_                `aoHidd_Gfx_NumSyncs`_                     `aoHidd_Gfx_SupportsHWCursor`_             `moHidd_Gfx_CheckMode`_                    
-`moHidd_Gfx_CleanViewPort`_                `moHidd_Gfx_CopyBox`_                      `moHidd_Gfx_CopyBoxMasked`_                `moHidd_Gfx_DisposeBitMap`_                
-`moHidd_Gfx_DisposeGC`_                    `moHidd_Gfx_DisposeOverlay`_               `moHidd_Gfx_GetGamma`_                     `moHidd_Gfx_GetMaxSpriteSize`_             
-`moHidd_Gfx_GetMode`_                      `moHidd_Gfx_GetPixFmt`_                    `moHidd_Gfx_GetSync`_                      `moHidd_Gfx_MakeViewPort`_                 
-`moHidd_Gfx_ModeProperties`_               `moHidd_Gfx_NewBitMap`_                    `moHidd_Gfx_NewGC`_                        `moHidd_Gfx_NewOverlay`_                   
-`moHidd_Gfx_NextModeID`_                   `moHidd_Gfx_PrepareViewPorts`_             `moHidd_Gfx_QueryHardware3D`_              `moHidd_Gfx_QueryModeIDs`_                 
-`moHidd_Gfx_ReleaseModeIDs`_               `moHidd_Gfx_SetCursorPos`_                 `moHidd_Gfx_SetCursorShape`_               `moHidd_Gfx_SetCursorVisible`_             
-`moHidd_Gfx_SetGamma`_                     `moHidd_Gfx_SetMode`_                      `moHidd_Gfx_Show`_                         `moHidd_Gfx_ShowImminentReset`_            
-`moHidd_Gfx_ShowViewPorts`_                
+`aoHidd_Gfx_DefaultGC`_                    `aoHidd_Gfx_DMPSLevel`_                    `aoHidd_Gfx_DriverName`_                   `aoHidd_Gfx_FrameBufferType`_              
+`aoHidd_Gfx_HWSpriteTypes`_                `aoHidd_Gfx_IsWindowed`_                   `aoHidd_Gfx_MemoryClock`_                  `aoHidd_Gfx_MemorySize`_                   
+`aoHidd_Gfx_ModeTags`_                     `aoHidd_Gfx_NoFrameBuffer`_                `aoHidd_Gfx_NumSyncs`_                     `aoHidd_Gfx_SupportsHWCursor`_             
+`moHidd_Gfx_CheckMode`_                    `moHidd_Gfx_CleanViewPort`_                `moHidd_Gfx_CopyBox`_                      `moHidd_Gfx_CopyBoxMasked`_                
+`moHidd_Gfx_DisposeBitMap`_                `moHidd_Gfx_DisposeGC`_                    `moHidd_Gfx_DisposeOverlay`_               `moHidd_Gfx_GetGamma`_                     
+`moHidd_Gfx_GetMaxSpriteSize`_             `moHidd_Gfx_GetMode`_                      `moHidd_Gfx_GetPixFmt`_                    `moHidd_Gfx_GetSync`_                      
+`moHidd_Gfx_MakeViewPort`_                 `moHidd_Gfx_ModeProperties`_               `moHidd_Gfx_NewBitMap`_                    `moHidd_Gfx_NewGC`_                        
+`moHidd_Gfx_NewOverlay`_                   `moHidd_Gfx_NextModeID`_                   `moHidd_Gfx_PrepareViewPorts`_             `moHidd_Gfx_QueryHardware3D`_              
+`moHidd_Gfx_QueryModeIDs`_                 `moHidd_Gfx_ReleaseModeIDs`_               `moHidd_Gfx_SetCursorPos`_                 `moHidd_Gfx_SetCursorShape`_               
+`moHidd_Gfx_SetCursorVisible`_             `moHidd_Gfx_SetGamma`_                     `moHidd_Gfx_SetMode`_                      `moHidd_Gfx_Show`_                         
+`moHidd_Gfx_ShowImminentReset`_            `moHidd_Gfx_ShowViewPorts`_                
 ========================================== ========================================== ========================================== ========================================== 
 
 -----------
@@ -2354,6 +2395,60 @@ Notes
      documentation) be overriden.
 
 
+
+----------
+
+aoHidd_Gfx_FrameBufferType
+==========================
+
+Synopsis
+~~~~~~~~
+::
+
+     [I.G], UBYTE
+
+
+Function
+~~~~~~~~
+::
+
+     Specifies fixed framebuffer type used by the driver. The value can be one of the following:
+
+       vHidd_FrameBuffer_None     - the driver does not use framebuffer.
+       vHidd_FrameBuffer_Direct   - the driver uses framefuffer which can be accessed
+                                    directly for both reads and writes.
+       vHidd_FrameBuffer_Mirrored - the driver uses write-only framebuffer.
+
+     This attribute has to be specified during driver object creation. If this is not done,
+     the OS will use value of old aoHidd_Gfx_NoFrameBuffer attribute in order to distinguish
+     between vHidd_FrameBuffer_Direct (for FALSE) and vHidd_FrameBuffer_None (for TRUE).
+
+
+Notes
+~~~~~
+::
+
+     A fixed framebuffer is a special bitmap in a fixed area of video RAM. If the
+     framebuffer is used, the driver is expected to copy a new bitmap into it in
+     HIDD_Gfx_Show() and optionally copy old bitmap back.
+
+     A framebuffer is needed if the hardware does not have enough VRAM to store many
+     bitmaps or does not have capabilities to switch the display between various VRAM
+     regions.
+
+     Some hardware suffers from slow VRAM reading. In this case you should use mirrored
+     mode. If you use it, the system will hold a bitmap in the memory buffer, and
+     update VRAM on demand (hence the name).
+
+     An example of driver using a framebuffer is hosted SDL driver. By design SDL works
+     only with single display window, which is considered a framebuffer.
+
+
+
+See also
+~~~~~~~~
+
+`aoHidd_Gfx_NoFrameBuffer`_ 
 
 ----------
 
@@ -2638,16 +2733,8 @@ Function
 
      Tells whether the driver does not need a framebuffer.
 
-     A framebuffer is a special bitmap in a fixed area of video RAM. If the framebuffer
-     is used, the driver is expected to copy a new bitmap into it in HIDD_Gfx_Show()
-     and optionally copy old bitmap back.
-
-     A framebuffer is needed if the hardware does not have enough VRAM to store many
-     bitmaps or does not have capabilities to switch the display between various VRAM
-     regions.
-
-     An example of driver using a framebuffer is hosted SDL driver. By design SDL works
-     only with single display window, which is considered a framebuffer.
+     Since v1.2 this attribute is obsolete. Please use aoHidd_Gfx_FrameBufferType
+     in new code.
 
 
 Notes
@@ -2661,7 +2748,7 @@ Notes
 See also
 ~~~~~~~~
 
-`moHidd_Gfx_Show`_ 
+`aoHidd_Gfx_FrameBufferType`_ `moHidd_Gfx_Show`_ 
 
 ----------
 
