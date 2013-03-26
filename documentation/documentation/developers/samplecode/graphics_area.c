@@ -104,7 +104,7 @@ static void draw_area(void)
     rp->TmpRas = &tr;                // Link tempras to rastport
 
     SetAPen(rp, pen1);               // Set foreground color
-    SetBPen(rp, pen2);               // Set background color
+    SetOPen(rp, pen2);               // Set outline color
 
     AreaMove(rp, 50, 200);           // Set start point of 1st triangle
     AreaDraw(rp, 300, 100);
