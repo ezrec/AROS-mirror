@@ -11,14 +11,17 @@ Shell Commands
     + `addbuffers <addbuffers>`_
     + `adddatatypes <adddatatypes>`_
     + `alias <alias>`_
+    + `arosmondrvs <arosmondrvs>`_
     + `ask <ask>`_
     + `assign <assign>`_
+    + `automount <automount>`_
     + `avail <avail>`_
     + `beep <beep>`_
     + `binddrivers <binddrivers>`_
     + `break <break>`_
     + `cd <cd>`_
     + `changetaskpri <changetaskpri>`_
+    + `checkmem <checkmem>`_
     + `clip <clip>`_
     + `conclip <conclip>`_
     + `copy <copy>`_
@@ -28,6 +31,7 @@ Shell Commands
     + `debug <debug>`_
     + `decoration <decoration>`_
     + `delete <delete>`_
+    + `devlist <devlist>`_
     + `dir <dir>`_
     + `diskchange <diskchange>`_
     + `echo <echo>`_
@@ -55,6 +59,8 @@ Shell Commands
     + `iprefs <iprefs>`_
     + `join <join>`_
     + `lab <lab>`_
+    + `leakwatch <leakwatch>`_
+    + `liblist <liblist>`_
     + `list <list>`_
     + `load <load>`_
     + `lock <lock>`_
@@ -77,6 +83,8 @@ Shell Commands
     + `requestchoice <requestchoice>`_
     + `requestfile <requestfile>`_
     + `requeststring <requeststring>`_
+    + `resident <resident>`_
+    + `reslist <reslist>`_
     + `run <run>`_
     + `scripts <scripts>`_
     + `search <search>`_
@@ -91,7 +99,11 @@ Shell Commands
     + `skip <skip>`_
     + `sort <sort>`_
     + `stack <stack>`_
+    + `stacksnoop <stacksnoop>`_
     + `status <status>`_
+    + `symboldump <symboldump>`_
+    + `tasklist <tasklist>`_
+    + `touch <touch>`_
     + `type <type>`_
     + `unalias <unalias>`_
     + `unset <unset>`_
@@ -99,6 +111,7 @@ Shell Commands
     + `uuidgen <uuidgen>`_
     + `version <version>`_
     + `wait <wait>`_
+    + `waitforport <waitforport>`_
     + `waitx <waitx>`_
     + `which <which>`_
     + `why <why>`_

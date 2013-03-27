@@ -1,0 +1,42 @@
+=========
+AutoMount
+=========
+
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <assign>`_ `Next <avail>`_ 
+
+---------------
+
+Name
+~~~~
+::
+
+
+     AutoMount
+
+
+Synopsis
+~~~~~~~~
+::
+
+
+     (N/A)
+
+
+Location
+~~~~~~~~
+::
+
+
+     C:
+
+
+Notes
+~~~~~
+::
+
+
+     Command is called in Startup-Sequence.
+
+

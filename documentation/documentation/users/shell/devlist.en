@@ -1,0 +1,42 @@
+=======
+DevList
+=======
+
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <delete>`_ `Next <dir>`_ 
+
+---------------
+
+Name
+~~~~
+::
+
+
+     DevList
+
+
+Synopsis
+~~~~~~~~
+::
+
+
+     (N/A)
+
+
+Location
+~~~~~~~~
+::
+
+
+     C:
+
+
+Function
+~~~~~~~~
+::
+
+
+     Prints a list of all devices.
+
+

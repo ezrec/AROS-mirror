@@ -1,0 +1,45 @@
+=========
+LeakWatch
+=========
+
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <lab>`_ `Next <liblist>`_ 
+
+---------------
+
+Name
+~~~~
+::
+
+
+     LeakWatch
+
+
+Synopsis
+~~~~~~~~
+::
+
+
+     (N/A)
+
+
+Location
+~~~~~~~~
+::
+
+
+     C:
+
+
+Function
+~~~~~~~~
+::
+
+
+     It's like doing avail flush before and after executing a program to detect
+     memleaks, excepted that this program tries to detect much more leaks.
+
+     Press CRTL-f whenever you want to check for leak.
+
+

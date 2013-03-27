@@ -32,6 +32,14 @@ Location
      C:
 
 
+Function
+~~~~~~~~
+::
+
+
+    Deletes local variable.
+
+
 Inputs
 ~~~~~~
 ::

@@ -1,0 +1,54 @@
+===========
+AROSMonDrvs
+===========
+
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <alias>`_ `Next <ask>`_ 
+
+---------------
+
+Name
+~~~~
+::
+
+
+     AROSMonDrvs
+
+
+Synopsis
+~~~~~~~~
+::
+
+
+     NOCOMPOSITION/S,ONLYCOMPOSITION/S
+
+
+Location
+~~~~~~~~
+::
+
+
+     C:
+
+
+Function
+~~~~~~~~
+::
+
+
+     This command does almost the same thing as C:LoadMonDrvs does on
+     other systems. However, additionally we support priority-based
+     sorting for display drivers. This is needed in order to make monitor
+     ID assignment more predictable.
+
+
+Inputs
+~~~~~~
+::
+
+
+     NOCOMPOSITION   -- Only load Monitors
+     ONLYCOMPOSITION -- Only load Compositor
+
+

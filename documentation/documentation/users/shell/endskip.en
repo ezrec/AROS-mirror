@@ -24,3 +24,16 @@ Location
      C:
 
 
+Function
+~~~~~~~~
+::
+
+
+     Ends a skip block in a script.
+
+
+See also
+~~~~~~~~
+
+`Skip <skip>`_ `Label <label>`_ 
+
