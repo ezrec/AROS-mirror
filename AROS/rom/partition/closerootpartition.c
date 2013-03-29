@@ -55,6 +55,7 @@
         if (handler->closePartitionTable)
             handler->closePartitionTable(PartitionBase, ph);
     }
+    CloseDevice((struct IORequest *)ph->bd->ioreq);
     DeleteIORequest((struct IORequest *)ph->bd->ioreq);
     DeleteMsgPort(ph->bd->port);
     FreeMem(ph->bd, sizeof(struct PartitionBlockDevice));
