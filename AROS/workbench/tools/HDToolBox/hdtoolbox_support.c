@@ -85,12 +85,8 @@ void typestrncpy(STRPTR dst, STRPTR src, ULONG len)
     }
 }
 
-#ifndef __AROS__
-UWORD strcpyESC(STRPTR dst, STRPTR fmt, ...){
-#else
-UWORD strcpyESC(STRPTR dst, STRPTR fmt){
-#endif
-#warning "TODO: Check varargs usage is correct"
+UWORD strcpyESC(STRPTR dst, STRPTR fmt)
+{
     UWORD count = 0;
 
     while (*fmt)
@@ -142,7 +138,7 @@ void getSizeStr(STRPTR str, ULONG size)
         size = size / 1024;
     }
     r = r*10/1024;
-    sprintf(str, "%d.%d%c",size,r,c);
+    sprintf(str, "%d.%d%c",(int)size,(int)r,c);
 }
 
 /* size in kB */
@@ -222,7 +218,7 @@ LONG GetPartitionTableAttrsA(struct PartitionHandle *ph, IPTR tag, ... )
 #endif
 }
 
-ULONG getAttrInfo(struct PartitionAttribute *attrlist, ULONG attr)
+ULONG getAttrInfo(const struct PartitionAttribute *attrlist, ULONG attr)
 {
     D(bug("[HDToolBox] getAttrInfo()\n"));
 

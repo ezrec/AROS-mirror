@@ -1,5 +1,5 @@
 /*
-    Copyright © 1995-2008, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2012, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -30,7 +30,7 @@ void setPartitionName(struct HDTBPartition *pnode)
     D(bug("[HDToolBox] setPartitionName()\n"));
 
     if (pnode->pos != -1)
-        sprintf(pnode->listnode.ln.ln_Name, "Partition %d", pnode->pos);
+        sprintf(pnode->listnode.ln.ln_Name, "Partition %d", (int)pnode->pos);
     else
     {
         sprintf
@@ -164,8 +164,7 @@ void findPartitions(struct ListNode *parent, struct HDTBPartition *partition)
             }
 
 	    /*
-	     * check if partition is active
-	     * (what's the difference between this and automount?)
+	     * check if partition is active (MBR-specific)
 	     */
             if (getAttrInfo(pn->root->table->pattrlist, PTA_ACTIVE) & PLAM_READ)
             {
@@ -194,10 +193,11 @@ void findPartitions(struct ListNode *parent, struct HDTBPartition *partition)
 
 void freePartitionNode(struct HDTBPartition *node)
 {
-    D(bug("[HDToolBox] freePartitionNode()\n"));
+    D(bug("[HDToolBox] freePartitionNode(%p)\n", node));
 
     if (node->table)
     {
+        D(bug("[HDToolBox] Freeing sub-table %p\n", node->table));
         freePartitionList(&node->listnode.list);
         freePartitionTable(node);
     }
@@ -211,7 +211,7 @@ void freePartitionList(struct List *list)
     struct HDTBPartition *node;
     struct HDTBPartition *next;
 
-    D(bug("[HDToolBox] freePartitionList()\n"));
+    D(bug("[HDToolBox] freePartitionList(%p)\n", list));
 
     node = (struct HDTBPartition *)list->lh_Head;
     while (node->listnode.ln.ln_Succ)
@@ -276,18 +276,6 @@ BOOL validValue(struct HDTBPartition *table, struct HDTBPartition *current, ULON
     return TRUE;
 }
 
-struct PartitionHandle *AddPartitionA(struct PartitionHandle *root, IPTR tag, ...)
-{
-//    D(bug("[HDToolBox] AddPartitionA()\n"));
-#ifdef __AROS__
-    AROS_SLOWSTACKMETHODS_PRE(tag)
-    retval = (IPTR)AddPartition(root, (struct TagItem *)AROS_SLOWSTACKMETHODS_ARG(tag));
-    AROS_SLOWSTACKMETHODS_POST
-#else
-    return AddPartition(root, (struct TagItem *)&tag);
-#endif
-}
-
 struct HDTBPartition *addPartition(struct HDTBPartition *table, struct DosEnvec *de)
 {
     struct HDTBPartition *partition;
@@ -326,11 +314,12 @@ struct HDTBPartition *addPartition(struct HDTBPartition *table, struct DosEnvec 
         else
             AddTail(&table->listnode.list, &partition->listnode.ln);
 
-        de->de_TableSize = DE_DOSTYPE;
+        de->de_TableSize   = DE_DOSTYPE;
         de->de_MaxTransfer = 0xFFFFFF;
-        de->de_Mask = 0xFFFFFFFE;
-        de->de_Reserved = 2;
-        de->de_BufMemType = MEMF_ANY;
+        de->de_Mask        = 0xFFFFFFFE;
+        de->de_Reserved    = 2;
+        de->de_BufMemType  = MEMF_PUBLIC;
+
         CopyMem(de, &partition->de, sizeof(struct DosEnvec));
         ttn = findTableTypeNode(table->table->type);
         CopyMem(&ttn->defaulttype, &partition->type, sizeof(struct PartitionType));
@@ -338,12 +327,9 @@ struct HDTBPartition *addPartition(struct HDTBPartition *table, struct DosEnvec 
             strcpy(partition->listnode.ln.ln_Name, "DH0");
         else
             setPartitionName(partition);
-        GetPartitionTableAttrsA
-        (
-            table->ph,
-            PTT_MAXLEADIN, &leadin,
-            TAG_DONE
-        );
+
+        GetPartitionTableAttrsTags(table->ph, PTT_MAXLEADIN, &leadin, TAG_DONE);
+
         blocks_per_cyl = de->de_Surfaces * de->de_BlocksPerTrack;
         de->de_LowCyl += (leadin + blocks_per_cyl - 1) / blocks_per_cyl;
 	D(bug("[HDToolBox] addPartition() Prepared Envec:\n"));
@@ -358,26 +344,19 @@ struct HDTBPartition *addPartition(struct HDTBPartition *table, struct DosEnvec 
 	D(bug("[HDToolBox] - BlocksPerTrack  : %ld\n", de->de_BlocksPerTrack));
 	D(bug("[HDToolBox] - BootBlocks      : %ld\n", de->de_BootBlocks));
 
-        partition->ph = AddPartitionA
-        (
-            table->ph,
-            PT_DOSENVEC, de,
-            PT_TYPE, &partition->type,
-            PT_NAME, partition->listnode.ln.ln_Name,
-            PT_POSITION, partition->pos,
-            TAG_DONE
-        );
+        partition->ph = AddPartitionTags(table->ph,
+                                         PT_DOSENVEC, de,
+                                         PT_TYPE    , &partition->type,
+                                         PT_NAME    , partition->listnode.ln.ln_Name,
+                                         PT_POSITION, partition->pos,
+                                         TAG_DONE);
         if (partition->ph)
         {
-            /* we did not set GEOMETRY so partitionlib did it */
-            GetPartitionAttrsA
-            (
-                partition->ph,
-                PT_GEOMETRY, &partition->dg,
-                TAG_DONE
-            );
-            /* Update DOS type in local DOSEnvec */
-            GetPartitionAttrsA(partition->ph, PT_DOSENVEC, &partition->de, TAG_DONE);
+            /* We did not set GEOMETRY so partitionlib did it. Update geometry and DOS type in local DOSEnvec */
+            GetPartitionAttrsTags(partition->ph, PT_GEOMETRY, &partition->dg, 
+                                                 PT_DOSENVEC, &partition->de,
+                                                 TAG_DONE);
+
 	    de = &partition->de;
 	    D(bug("[HDToolBox] addPartition() Real Envec:\n"));
 	    D(bug("[HDToolBox] - SizeBlock       : %ld\n", de->de_SizeBlock));

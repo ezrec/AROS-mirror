@@ -1,5 +1,5 @@
 /*
-    Copyright © 1995-2008, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2012, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -54,7 +54,9 @@ LONG initEnv(char *device)
     retval = initGUI();
     if (retval != ERR_NONE)
         return retval;
+
     LoadPrefs("ENV:hdtoolbox.prefs");
+
     return ERR_NONE;
 }
 
@@ -63,13 +65,14 @@ void uninitEnv()
     D(bug("[HDToolBox] uninitEnv()\n"));
 
     deinitGUI();
+    freeDeviceList();
+
     if (PartitionBase)
         CloseLibrary((struct Library *)PartitionBase);
     if (GfxBase)
         CloseLibrary((struct Library *)GfxBase);
     if (IntuitionBase)
         CloseLibrary((struct Library *)IntuitionBase);
-    freeDeviceList();
 }
 
 void waitMessage()
@@ -105,7 +108,7 @@ int main(int argc, char **argv)
         waitMessage();
     }
     else
-        printf("Error %d\n", error);
+        printf("Error %d\n", (int)error);
 
     uninitEnv();
     CleanupLocale();
