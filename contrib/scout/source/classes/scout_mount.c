@@ -172,7 +172,11 @@ STRPTR GetDiskType( LONG type )
     } _type;
     STATIC TEXT tmp[16];
 
+#if defined(__AROS__)
+    _type.typeInt = AROS_BE2LONG(type);
+#else
     _type.typeInt = type;
+#endif
     for (i = 0; i > 2; i++) {
         if (!isprint(_type.typeChars[i])) {
             break;
