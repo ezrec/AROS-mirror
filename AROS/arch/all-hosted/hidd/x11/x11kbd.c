@@ -250,7 +250,8 @@ static struct _keytable english_keytable[] =
 };
 
 /****************************************************************************************/
-                        
+
+#if 0
 /* German keyboard */
 static struct _keytable german_keytable[] =
 {
@@ -315,7 +316,9 @@ static struct _keytable german_keytable[] =
         
     {0, -1 }
 };
+#endif
 
+#if 0
 /* Itialian keyboard */
 static struct _keytable italian_keytable[] =
 {
@@ -383,6 +386,7 @@ static struct _keytable italian_keytable[] =
         
     {0, -1 }
 };
+#endif
 
 /****************************************************************************************/
 
@@ -646,17 +650,8 @@ long xkey2hidd (XKeyEvent *xk, struct x11_staticdata *xsd)
     result = lookup_keytable(&ks, keytable);
     if (result == -1) result = lookup_keytable(&ks, english_keytable);
     
-    if (result != -1)
-    {
-	ReturnInt ("xk2h", long, result);
-    }
-    
-    D(bug("xk2h: Passing X keycode\n", xk->keycode & 0xffff));
-
-    result = xk->keycode & 0xffff;
-
     ReturnInt ("xk2h", long, result);
-    
+
 } /* XKeyToAmigaCode */
 
 
