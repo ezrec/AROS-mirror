@@ -133,9 +133,9 @@
 	 * Add the puddle to the list (yes, contained in itself).
 	 * This is the first puddle so it's safe to use AddTail() here.
 	 * Note that we use ln_Name of our MemHeader to point back to
-	 * our pool.
+	 * our pool (directly or indirectly).
 	 */
-	firstPuddle->mh_Node.ln_Name = (STRPTR)pool;
+	mhac_PoolMemHeaderSetup(firstPuddle, pool);
 	AddTail((struct List *)&pool->pool.PuddleList, &firstPuddle->mh_Node);
     }
 
