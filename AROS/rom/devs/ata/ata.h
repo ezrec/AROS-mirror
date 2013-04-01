@@ -2,7 +2,7 @@
 #define _ATA_H
 
 /*
-   Copyright © 2004-2011, The AROS Development Team. All rights reserved.
+   Copyright © 2004-2013, The AROS Development Team. All rights reserved.
    $Id$
 
 Desc: ata.device main private include file
@@ -86,7 +86,7 @@ struct PRDEntry {
 };
 
 #define PRDE_EOT    0x80000000
-#define PRD_MAX     514
+#define PRD_MAX     256
 
 /* ata.device base */
 struct ataBase

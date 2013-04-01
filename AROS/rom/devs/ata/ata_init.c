@@ -1,5 +1,5 @@
 /*
-    Copyright © 2004-2011, The AROS Development Team. All rights reserved
+    Copyright © 2004-2013, The AROS Development Team. All rights reserved
     $Id$
 
     Desc:
@@ -286,11 +286,25 @@ static void ata_RegisterBus(IPTR IOBase, IPTR IOAlt, IPTR INTLine,
     D(bug("[ATA>>] ata_RegisterBus: IRQ %d, IO: %x:%x, DMA: %x\n", INTLine, IOBase, IOAlt, DMABase));
 
     /*
-     * allocate DMA PRD
+     * allocate DMA PRD table
      */
-    ab->ab_PRD          = AllocVecPooled(a->ATABase->ata_MemPool, (PRD_MAX+1) * 2 * sizeof(struct PRDEntry));  
-    if ((0x10000 - ((ULONG)ab->ab_PRD & 0xffff)) < PRD_MAX * sizeof(struct PRDEntry))
-       ab->ab_PRD      = (void*)((((IPTR)ab->ab_PRD)+0xffff) &~ 0xffff);
+    ab->ab_PRD = AllocVecPooled(a->ATABase->ata_MemPool,
+        PRD_MAX * 2 * sizeof(struct PRDEntry));
+    if (ab->ab_PRD != NULL)
+    {
+        /* Ensure table does not cross a 4kB boundary (required by VirtualBox,
+           if not by real hardware) */
+        if(0x1000 - ((ULONG)ab->ab_PRD & 0xfff) <
+            PRD_MAX * sizeof(struct PRDEntry))
+        {
+            ab->ab_PRD = (APTR)(((ULONG)ab->ab_PRD) + 0xfff & ~0xfff);
+        }
+    }
+    else
+    {
+        FreeVecPooled(a->ATABase->ata_MemPool, ab);
+        return;
+    }
 
     /*
      * add reset handler for this bus
