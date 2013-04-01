@@ -19,6 +19,5 @@ FILES := rnd_memory 	\
 
 %build_module mmake=contrib-gfx-libs-render \
     modname=render modtype=library \
-    files="render_funcs $(FILES)" \
-    uselibs="mui"
+    files="render_funcs $(FILES)"
 

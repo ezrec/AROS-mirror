@@ -15,7 +15,6 @@ USER_CFLAGS += $(PARANOIA_CFLAGS)
 
 %build_module mmake=contrib-zune-classes-bwin-mcp \
   modname=BWin modtype=mcp moduledir=Extras/Zune/MCC_BWin/Classes/Zune \
-  files=$(FILES) \
-  uselibs="mui"
+  files=$(FILES)
 
 %common

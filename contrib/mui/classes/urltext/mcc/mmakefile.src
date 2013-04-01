@@ -15,7 +15,7 @@ USER_CFLAGS := $(PARANOIA_CFLAGS)
 %build_module mmake=contrib-zune-classes-urltext-mcc \
   modname=Urltext modtype=mcc moduledir=Extras/Zune/MCC_Urltext/Classes/Zune \
   files=$(FILES) \
-  uselibs="mui openurl"
+  uselibs="openurl"
 
 
 #MM includes-copy

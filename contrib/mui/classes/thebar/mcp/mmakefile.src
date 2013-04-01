@@ -18,8 +18,7 @@ USER_CFLAGS += $(PARANOIA_CFLAGS)
 
 %build_module_simple mmake=contrib-zune-classes-thebar-mcp \
   modname=TheBar modtype=mcp moduledir=$(AROS_CONTRIB)/Zune/MCC_TheBar/Classes/Zune \
-  files=$(FILES) \
-  uselibs="mui"
+  files=$(FILES)
 
 
 #MM includes-copy

@@ -17,8 +17,7 @@ FILES := Dispatcher \
 	 
 %build_module_simple mmake=contrib-zune-classes-toolbar-class \
   modname=Toolbar modtype=mcc moduledir=$(CONTRIBDIR)/Zune/MCC_Toolbar/Classes/Zune/ \
-  files="library $(FILES)" \
-  uselibs="mui"
+  files="library $(FILES)"
 
 
 #MM includes-copy

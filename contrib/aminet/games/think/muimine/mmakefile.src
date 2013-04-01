@@ -23,7 +23,7 @@ EXEDIR := $(CONTRIBDIR)/Games/MUIMine
 
 %build_prog mmake=aminet-games-think-muimine \
     progname=MUIMine targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="mui"
+    files=$(FILES)
 
 %common
  

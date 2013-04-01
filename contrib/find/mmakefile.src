@@ -14,7 +14,7 @@ IMAGES := selected unselected
 
 %build_prog mmake=contrib-find \
     progname=Find targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="mui"
+    files=$(FILES)
 
 # %copy_files_q mmake=contrib-find-images files=$(IMAGES) src=images dst=$(EXEDIR)/Images
 

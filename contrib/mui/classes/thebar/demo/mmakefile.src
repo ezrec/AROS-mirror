@@ -24,8 +24,7 @@ USER_CFLAGS := -DNO_INLINE_STDARG
 USER_CFLAGS += $(PARANOIA_CFLAGS)
 
 %build_progs mmake=contrib-zune-classes-thebar-demos files=$(FILES) \
-    targetdir=$(TARGETDIR) \
-    uselibs="mui"
+    targetdir=$(TARGETDIR)
 
 #MM
 contrib-zune-classes-thebar-pics :

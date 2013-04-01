@@ -13,6 +13,6 @@ USER_CFLAGS := $(PARANOIA_CFLAGS)
 
 %build_prog mmake=contrib-zune-classes-urltext-demos \
     progname=$(EXE) targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="mui"
+    files=$(FILES)
 
 %common

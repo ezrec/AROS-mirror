@@ -56,7 +56,6 @@ FUNCS := \
 USER_CFLAGS := -D__DESKTOP_NOLIBBASE__
 %build_module mmake=workbench-libs-desktop \
  modname=desktop modtype=library \
- files="desktop_init $(FUNCS) $(FILES)" \
- uselibs="mui"
+ files="desktop_init $(FUNCS) $(FILES)"
 
 %common

@@ -62,7 +62,7 @@ USER_CFLAGS += -Wno-parentheses \
 
 %build_prog mmake=contrib-development-gui-muibuilder-src \
     progname=MUIBuilder targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="mui"
+    files=$(FILES)
 
 
 %common

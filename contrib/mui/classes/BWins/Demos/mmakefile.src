@@ -13,7 +13,6 @@ FILES := demo1 \
 	 demo3
 
 %build_progs mmake=contrib-zune-classes-bwin-demos files=$(FILES) \
-    targetdir=$(TARGETDIR) \
-    uselibs="mui"
+    targetdir=$(TARGETDIR)
 
 %common

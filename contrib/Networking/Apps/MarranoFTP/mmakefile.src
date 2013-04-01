@@ -20,6 +20,6 @@ USER_CFLAGS := -Wno-uninitialized -Wno-parentheses -D__BSD_VISIBLE=1
 
 %build_prog mmake=aros-tcpip-apps-marranoftp \
     progname=MarranoFTP targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="caf mui"
+    files=$(FILES) uselibs="caf"
 
 %common

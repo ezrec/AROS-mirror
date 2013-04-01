@@ -8,11 +8,11 @@ DISKSHARED := locale diskspeed/DiskSpeedCPU
 
 %build_prog mmake=contrib-diskspeed-comp \
     progname=DiskSpeed targetdir=$(DESTDIR) \
-    files="$(DISKSHARED) diskspeed/DiskSpeed" uselibs="mui"
+    files="$(DISKSHARED) diskspeed/DiskSpeed"
 
 %build_prog mmake=contrib-scsispeed-comp \
     progname=ScsiSpeed targetdir=$(DESTDIR) \
-    files="$(DISKSHARED) scsispeed/ScsiSpeed" uselibs="mui"
+    files="$(DISKSHARED) scsispeed/ScsiSpeed"
     
 #MM- contrib-diskspeed : contrib-diskspeed-comp contrib-scsispeed-comp
 #MM contrib-diskspeed-comp : contrib-diskspeed-docs contrib-diskspeed-icons contrib-diskspeed-catalogs

@@ -65,6 +65,6 @@ USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../Include
 ##MM workbench-libs-security : includes linklibs
 
 #%build_module mmake=workbench-libs-security modname=security \
-  modtype=library files=$(FUNCS) uselibs="mui"
+  modtype=library files=$(FUNCS)
 
 %common

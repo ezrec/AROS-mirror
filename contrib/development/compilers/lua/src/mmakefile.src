@@ -60,7 +60,7 @@ USER_CFLAGS   += -Wno-uninitialized -DLUA_COMPAT_ALL
 
 
 %build_prog mmake=contrib-development-lua-amilua progname=AmiLua files=$(AMILUAFILES) \
-    targetdir=$(EXEDIR) uselibs="lua luasiamiga luamui lualfs mui lsqlite3 sqlite3 luaxmlreader xml2 z"
+    targetdir=$(EXEDIR) uselibs="lua luasiamiga luamui lualfs lsqlite3 sqlite3 luaxmlreader xml2 z"
 
 
 

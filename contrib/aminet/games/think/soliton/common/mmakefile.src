@@ -26,6 +26,6 @@ USER_CFLAGS := -DUSE_ZUNE
 
 %build_prog mmake=aminet-games-think-soliton-program \
     progname=Soliton targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="mui"
+    files=$(FILES)
 
 %common

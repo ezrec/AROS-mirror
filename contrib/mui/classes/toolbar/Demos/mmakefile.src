@@ -15,6 +15,6 @@ USER_CFLAGS += $(PARANOIA_CFLAGS)
 
 %build_prog mmake=contrib-zune-classes-toolbar-demo \
     progname=Toolbar-Demo targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="mui"
+    files=$(FILES)
 
 %common

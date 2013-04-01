@@ -15,7 +15,7 @@ USER_CFLAGS := -Wno-parentheses
 
 %build_prog mmake=aminet-util-app-smarttrash \
     progname=SmartTrash targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="mui"
+    files=$(FILES)
 
 #MM
 aminet-util-app-smarttrash-icon : $(EXEDIR)/SmartTrash.info

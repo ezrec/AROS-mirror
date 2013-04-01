@@ -186,59 +186,59 @@ MKMANIFEST = $(SRCDIR)mkmanifest
 
 %build_prog mmake=mtools-mattrib \
     progname=mattrib targetdir=$(DESTDIR) \
-    files="$(MATTRIB)" uselibs="mui"
+    files="$(MATTRIB)"
 
 %build_prog mmake=mtools-mcd \
     progname=mcd targetdir=$(DESTDIR) \
-    files="$(MCD)" uselibs="mui"
+    files="$(MCD)"
 
 %build_prog mmake=mtools-mcopy \
     progname=mcopy targetdir=$(DESTDIR) \
-    files="$(MCOPY)" uselibs="mui"
+    files="$(MCOPY)"
 
 %build_prog mmake=mtools-mdel \
     progname=mdel targetdir=$(DESTDIR) \
-    files="$(MDEL)" uselibs="mui"
+    files="$(MDEL)"
 
 %build_prog mmake=mtools-mdir \
     progname=mdir targetdir=$(DESTDIR) \
-    files="$(MDIR)" uselibs="mui"
+    files="$(MDIR)"
 
 %build_prog mmake=mtools-mformat \
     progname=mformat targetdir=$(DESTDIR) \
-    files="$(MFORMAT)" uselibs="mui"    
+    files="$(MFORMAT)"    
     
 %build_prog mmake=mtools-mlabel \
     progname=mlabel targetdir=$(DESTDIR) \
-    files="$(MLABEL)" uselibs="mui"
+    files="$(MLABEL)"
 
 %build_prog mmake=mtools-mmd \
     progname=mmd targetdir=$(DESTDIR) \
-    files="$(MMD)" uselibs="mui"
+    files="$(MMD)"
 
 %build_prog mmake=mtools-mrd \
     progname=mrd targetdir=$(DESTDIR) \
-    files="$(MRD)" uselibs="mui"
+    files="$(MRD)"
 
 %build_prog mmake=mtools-mread \
     progname=mread targetdir=$(DESTDIR) \
-    files="$(MREAD)" uselibs="mui"
+    files="$(MREAD)"
 
 %build_prog mmake=mtools-mren \
     progname=mren targetdir=$(DESTDIR) \
-    files="$(MREN)" uselibs="mui"        
+    files="$(MREN)"        
     
 %build_prog mmake=mtools-mtype \
     progname=mtype targetdir=$(DESTDIR) \
-    files="$(MTYPE)" uselibs="mui"
+    files="$(MTYPE)"
 
 %build_prog mmake=mtools-mwrite \
     progname=mwrite targetdir=$(DESTDIR) \
-    files="$(MWRITE)" uselibs="mui"
+    files="$(MWRITE)"
 
 %build_prog mmake=mtools-mkmanifest \
     progname=mkmanifest targetdir=$(DESTDIR) \
-    files="$(MKMANIFEST)" uselibs="mui"
+    files="$(MKMANIFEST)"
    
 #MM- contrib-mtools : mtools-mattrib mtools-mcd mtools-mdel mtools-mdir mtools-mlabel mtools-mmd mtools-mren mtools-mtype mtools-mwrite mtools-mkmanifest mtools-mread mtools-mrd mtools-mformat mtools-mcopy
 

@@ -9,7 +9,7 @@ USER_CFLAGS := -DZUNE_BUILTIN_SCROLLGROUP=0 -DWTF_PLATFORM_AROS=1
 
 %build_prog mmake=aros-tcpip-apps-startowb \
     files="startowb locale" targetdir=$(EXEDIR) \
-    progname="startowb" uselibs="fontconfig xml2 freetype2.static z iconv mui" \
+    progname="startowb" uselibs="fontconfig xml2 freetype2.static z iconv"
 
 FILES :=               \
 	tabs/tab           \

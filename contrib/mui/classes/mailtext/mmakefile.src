@@ -48,17 +48,14 @@ USER_CFLAGS += $(PARANOIA_CFLAGS)
 
 %build_module mmake=contrib-zune-classes-mailtext-mcc \
   modname=Mailtext modtype=mcc conffile=$(SRCDIR)/$(CURDIR)/Mailtext_mcc.conf \
-  files="$(MCCFILES)" objdir=$(OBJDIR)/mcc moduledir=Extras/Zune/MCC_Mailtext/Classes/Zune \
-  uselibs="mui"
+  files="$(MCCFILES)" objdir=$(OBJDIR)/mcc moduledir=Extras/Zune/MCC_Mailtext/Classes/Zune
 
 %build_module mmake=contrib-zune-classes-mailtext-mcp \
   modname=Mailtext modtype=mcp conffile=$(SRCDIR)/$(CURDIR)/Mailtext_mcp.conf \
-  files=$(MCPFILES) objdir=$(OBJDIR)/mcp moduledir=Extras/Zune/MCC_Mailtext/Classes/Zune \
-  uselibs="mui"
+  files=$(MCPFILES) objdir=$(OBJDIR)/mcp moduledir=Extras/Zune/MCC_Mailtext/Classes/Zune
 
 %build_prog mmake=contrib-zune-classes-mailtext-demo progname=Show_Mailtext files=show_mailtext \
-    targetdir=$(CONTRIBDIR)/Zune/MCC_Mailtext/Demos \
-    uselibs="mui"
+    targetdir=$(CONTRIBDIR)/Zune/MCC_Mailtext/Demos
 
 #MM contrib-zune-classes-mailtext-catalogs-setup :
 %rule_makedirs dirs=$(TOP)/$(CURDIR)/loc setuptarget=contrib-zune-classes-mailtext-catalogs-setup

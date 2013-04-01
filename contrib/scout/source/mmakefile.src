@@ -99,7 +99,7 @@ FILES := \
 
 %build_prog mmake=contrib-scout-bin \
 	progname=$(EXE) targetdir=$(EXEDIR) \
-	files=$(FILES) uselibs="mui tblib" usestartup=no
+	files=$(FILES) uselibs="tblib" usestartup=no
 
 
 #MM

@@ -23,8 +23,7 @@ USER_CFLAGS += $(PARANOIA_CFLAGS)
 
 %build_module_simple mmake=contrib-zune-classes-thebar-mcc \
   modname=TheBar modtype=mcc moduledir=$(AROS_CONTRIB)/Zune/MCC_TheBar/Classes/Zune \
-  objdir=$(GENDIR)/$(CURDIR)/mcc files=$(FILES) \
-  uselibs="mui"
+  objdir=$(GENDIR)/$(CURDIR)/mcc files=$(FILES)
 
 
 USER_CFLAGS := -DVIRTUAL -DNO_INLINE_STDARG
@@ -32,8 +31,7 @@ USER_CFLAGS += $(PARANOIA_CFLAGS)
 
 %build_module_simple mmake=contrib-zune-classes-thebar-mccv \
   modname=TheBarVirt modtype=mcc moduledir=$(AROS_CONTRIB)/Zune/MCC_TheBar/Classes/Zune \
-  objdir=$(GENDIR)/$(CURDIR)/mccv files=$(FILES) \
-  uselibs="mui"
+  objdir=$(GENDIR)/$(CURDIR)/mccv files=$(FILES)
 
 
 #MM includes-copy

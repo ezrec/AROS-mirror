@@ -21,7 +21,7 @@ USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/libvstring
 
 %build_prog mmake=contrib-development-gui-chocolatecastle-source \
     progname=ChocolateCastle targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="mui"
+    files=$(FILES)
 
 
 %common
