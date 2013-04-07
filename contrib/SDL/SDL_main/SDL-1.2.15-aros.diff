@@ -1103,45 +1103,10 @@ diff -ruN SDL-1.2.15/include/SDL_video.h SDL-1.2.15.aros/include/SDL_video.h
  extern DECLSPEC int SDLCALL SDL_VideoInit(const char *driver_name, Uint32 flags);
  extern DECLSPEC void SDLCALL SDL_VideoQuit(void);
  /*@}*/
-@@ -496,10 +499,19 @@
- /**
-  * Maps an RGBA quadruple to a pixel value for a given pixel format
-  */
-+#if !defined(__AROS__)
- extern DECLSPEC Uint32 SDLCALL SDL_MapRGBA
- (const SDL_PixelFormat * const format,
-  const Uint8 r, const Uint8 g, const Uint8 b, const Uint8 a);
--
-+#else
-+extern DECLSPEC Uint32 SDLCALL SDL_MapARGB
-+                                (const SDL_PixelFormat * const format,
-+                                const Uint8 a, const Uint8 r, const Uint8 g, const Uint8 b);
-+#define SDL_MapRGBA(format, r, g, b, a) \
-+({ \
-+    SDL_MapARGB(format, a, r, g, b); \
-+})
-+#endif
- /**
-  * Maps a pixel value into the RGB components for a given pixel format
-  */
-@@ -510,12 +522,26 @@
- /**
-  * Maps a pixel value into the RGBA components for a given pixel format
-  */
-+#if !defined(__AROS__)
+@@ -513,9 +516,12 @@
  extern DECLSPEC void SDLCALL SDL_GetRGBA(Uint32 pixel,
  				const SDL_PixelFormat * const fmt,
  				Uint8 *r, Uint8 *g, Uint8 *b, Uint8 *a);
-+#else
-+extern DECLSPEC void SDLCALL SDL_GetARGB(Uint32 pixel,
-+				const SDL_PixelFormat * const fmt,
-+				Uint8 *a, Uint8 *r, Uint8 *g, Uint8 *b);
-+
-+#define SDL_GetRGBA(pixel, fmt, r, g, b, a) \
-+({ \
-+    SDL_GetARGB(pixel, fmt, a, r, g, b); \
-+})
-+#endif
 +#endif /* ! PROTO_SDL_H */
  
  /** @sa SDL_CreateRGBSurface */
@@ -1151,7 +1116,7 @@ diff -ruN SDL-1.2.15/include/SDL_video.h SDL-1.2.15.aros/include/SDL_video.h
  /**
   * Allocate and free an RGB surface (must be called after SDL_SetVideoMode)
   * If the depth is 4 or 8 bits, an empty palette is allocated for the surface.
-@@ -586,11 +612,14 @@
+@@ -586,11 +592,14 @@
   * Returns the new surface, or NULL if there was an error.
   * The new surface should be freed with SDL_FreeSurface().
   */
@@ -1166,7 +1131,7 @@ diff -ruN SDL-1.2.15/include/SDL_video.h SDL-1.2.15.aros/include/SDL_video.h
  /**
   * Save a surface to a seekable SDL data source (memory or file.)
   * If 'freedst' is non-zero, the source will be closed after being written.
-@@ -598,11 +627,12 @@
+@@ -598,11 +607,12 @@
   */
  extern DECLSPEC int SDLCALL SDL_SaveBMP_RW
  		(SDL_Surface *surface, SDL_RWops *dst, int freedst);
@@ -1180,7 +1145,7 @@ diff -ruN SDL-1.2.15/include/SDL_video.h SDL-1.2.15.aros/include/SDL_video.h
  /**
   * Sets the color key (transparent pixel) in a blittable surface.
   * If 'flag' is SDL_SRCCOLORKEY (optionally OR'd with SDL_RLEACCEL), 
-@@ -740,8 +770,10 @@
+@@ -740,8 +750,10 @@
   * You should call SDL_BlitSurface() unless you know exactly how SDL
   * blitting works internally and how to use the other blit functions.
   */
@@ -1191,7 +1156,7 @@ diff -ruN SDL-1.2.15/include/SDL_video.h SDL-1.2.15.aros/include/SDL_video.h
  /** This is the public blit function, SDL_BlitSurface(), and it performs
   *  rectangle validation and clipping before passing it to SDL_LowerBlit()
   */
-@@ -920,12 +952,16 @@
+@@ -920,12 +932,16 @@
   */
  extern DECLSPEC int SDLCALL SDL_WM_ToggleFullScreen(SDL_Surface *surface);
  
@@ -1208,7 +1173,7 @@ diff -ruN SDL-1.2.15/include/SDL_video.h SDL-1.2.15.aros/include/SDL_video.h
  /**
   * This function allows you to set and query the input grab state of
   * the application.  It returns the new input grab state.
-@@ -941,7 +977,9 @@
+@@ -941,7 +957,9 @@
  /** @internal Not in public API at the moment - do not use! */
  extern DECLSPEC int SDLCALL SDL_SoftStretch(SDL_Surface *src, SDL_Rect *srcrect,
                                      SDL_Surface *dst, SDL_Rect *dstrect);
@@ -1222,14 +1187,14 @@ diff -ruN SDL-1.2.15/include/SDL_video.h SDL-1.2.15.aros/include/SDL_video.h
 diff -ruN SDL-1.2.15/SDL.conf SDL-1.2.15.aros/SDL.conf
 --- SDL-1.2.15/SDL.conf	1969-12-31 19:00:00.000000000 -0500
 +++ SDL-1.2.15.aros/SDL.conf	2013-03-08 08:30:15.000000000 -0500
-@@ -0,0 +1,243 @@
+@@ -0,0 +1,245 @@
 +##begin config
 +basename SDL
 +libbase SDLBase
 +libbasetype struct SDLBase
 +rootbase_field rootSDLBase
 +version 1.215
-+date 26.05.2012
++date 07.04.2013
 +copyright Copyright (C) 1997-2012 Sam Lantinga, 2013 The AROS Development Team
 +options peropenerbase
 +##end config
@@ -1302,7 +1267,8 @@ diff -ruN SDL-1.2.15/SDL.conf SDL-1.2.15.aros/SDL.conf
 +void SDL_UpdateRect(SDL_Surface *screen, Sint32 x, Sint32 y, Uint32 w, Uint32 h) (A0, D0, D1, D2, D3)
 +SDL_Surface *SDL_SetVideoMode(int width, int height, int bpp, Uint32 flags) (D0, D1, D2, D3)
 +Uint32 SDL_MapRGB(SDL_PixelFormat *format, Uint8 r, Uint8 g, Uint8 b) (A0, D0, D1, D2)
-+Uint32 SDL_MapARGB(SDL_PixelFormat *format, Uint8 a, Uint8 r, Uint8 g, Uint8 b) (A0, D0, D1, D2, D3)
++Uint32 SDL_MapRGBA(SDL_PixelFormat *format, Uint8 r, Uint8 g, Uint8 b, Uint8 a) (A0, D0, D1, D2, D3)
++.novararg
 +int SDL_VideoInit(const char *driver_name, Uint32 flags) (A0, D0)
 +const SDL_VideoInfo * SDL_GetVideoInfo() ()
 +char *SDL_VideoDriverName(char *namebuf, int maxlen) (A0, D0)
@@ -1316,7 +1282,8 @@ diff -ruN SDL-1.2.15/SDL.conf SDL-1.2.15.aros/SDL.conf
 +int SDL_SetColors(SDL_Surface *surface, SDL_Color *colors, int firstcolor, int ncolors) (A0, A1, D0, D1)
 +int SDL_SetPalette(SDL_Surface *surface, int flags, SDL_Color *colors, int firstcolor, int ncolors) (A0, D0, A1, D1, D2)
 +void SDL_GetRGB(Uint32 pix, SDL_PixelFormat *fmt, Uint8 *r, Uint8 *g, Uint8 *b) (D0, A0, A1, A2, A3)
-+void SDL_GetARGB(Uint32 pix, SDL_PixelFormat *fmt, Uint8 *a, Uint8 *r, Uint8 *g, Uint8 *b) (D0, A0, A1, A2, A3, A4)
++void SDL_GetRGBA(Uint32 pix, SDL_PixelFormat *fmt, Uint8 *r, Uint8 *g, Uint8 *b, Uint8 *a) (D0, A0, A1, A2, A3, A4)
++.novararg
 +SDL_Surface *SDL_CreateRGBSurface(Uint32 flags, int width, int height, int depth, Uint32 Rmask, Uint32 Gmask, Uint32 Bmask, Uint32 Amask) (D0, D1, D2, D3, D4, D5, D6, D7)
 +SDL_Surface *SDL_CreateRGBSurfaceFrom(void *pixels, int width, int height, int depth, int pitch, Uint32 Rmask, Uint32 Gmask, Uint32 Bmask, Uint32 Amask) (A0, D0, D1, D2, D3, D4, D5, D6, D7)
 +int SDL_LockSurface(SDL_Surface *surface) (A0)
@@ -17225,12 +17192,12 @@ diff -ruN SDL-1.2.15/src/video/SDL_pixels.c SDL-1.2.15.aros/src/video/SDL_pixels
   const Uint8 r, const Uint8 g, const Uint8 b, const Uint8 a)
  {
 +#else
-+AROS_LH5(Uint32, SDL_MapARGB,
++AROS_LH5(Uint32, SDL_MapRGBA,
 +	AROS_LHA(const SDL_PixelFormat * const, format, A0),
-+	AROS_LHA(const Uint8, a, D0),
-+	AROS_LHA(const Uint8, r, D1),
-+	AROS_LHA(const Uint8, g, D2),
-+	AROS_LHA(const Uint8, b, D3),
++	AROS_LHA(const Uint8, r, D0),
++	AROS_LHA(const Uint8, g, D1),
++	AROS_LHA(const Uint8, b, D2),
++	AROS_LHA(const Uint8, a, D3),
 +	struct SDLBase *, SDLBase, 33, SDL)
 +{
 +    AROS_LIBFUNC_INIT
@@ -17252,13 +17219,13 @@ diff -ruN SDL-1.2.15/src/video/SDL_pixels.c SDL-1.2.15.aros/src/video/SDL_pixels
  		 Uint8 *r, Uint8 *g, Uint8 *b, Uint8 *a)
  {
 +#else
-+AROS_LH6(void, SDL_GetARGB,
++AROS_LH6(void, SDL_GetRGBA,
 +	AROS_LHA(Uint32, pixel, D0),
 +	AROS_LHA(const SDL_PixelFormat * const, fmt, A0),
-+	AROS_LHA(Uint8 *, a, D1),
-+	AROS_LHA(Uint8 *, r, D2),
-+	AROS_LHA(Uint8 *, g, D3),
-+	AROS_LHA(Uint8 *, b, D4),
++	AROS_LHA(Uint8 *, r, A1),
++	AROS_LHA(Uint8 *, g, A2),
++	AROS_LHA(Uint8 *, b, A3),
++	AROS_LHA(Uint8 *, a, A4),
 +	struct SDLBase *, SDLBase, 47, SDL)
 +{
 +    AROS_LIBFUNC_INIT
@@ -17283,9 +17250,9 @@ diff -ruN SDL-1.2.15/src/video/SDL_pixels.c SDL-1.2.15.aros/src/video/SDL_pixels
 +AROS_LH5(void, SDL_GetRGB,
 +	AROS_LHA(Uint32, pixel, D0),
 +	AROS_LHA(const SDL_PixelFormat * const, fmt, A0),
-+	AROS_LHA(Uint8 *, r, D1),
-+	AROS_LHA(Uint8 *, g, D2),
-+	AROS_LHA(Uint8 *, b, D3),
++	AROS_LHA(Uint8 *, r, A1),
++	AROS_LHA(Uint8 *, g, A2),
++	AROS_LHA(Uint8 *, b, A3),
 +	struct SDLBase *, SDLBase, 46, SDL)
 +{
 +    AROS_LIBFUNC_INIT
