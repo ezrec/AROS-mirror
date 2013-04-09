@@ -3,56 +3,28 @@
 
 -include $(TOP)/config/make.cfg
 
-REPOSITORIES = http://download.icu-project.org/files/icu4c/4.2.1/
-ARCHBASE := icu4c-4_2_1-src
-ICU4C_SOURCE := $(PORTSDIR)/icu4c/icu/source
-ICU4C_CROSSBUILD_DIR := $(GENDIR)/$(CURDIR)/build
-ICU4C_CROSSHOST_DIR := $(GENDIR)/$(CURDIR)/host
+#MM contrib-icu4c-complete : tools-crosstools-icu
+#MM contrib-icu4c : tools-crosstools-icu
 
-#MM- contrib-icu4c : contrib-icu4c-fetch contrib-icu4c-build-configure contrib-icu4c-build-make contrib-icu4c-host-configure contrib-icu4c-host-make contrib-icu4c-install
+ICU_VERSION := 4.2.1
+ICU_PKGNAME := icu4c
+ICU_PKGVERSION := $(subst .,_,$(ICU_VERSION))
+ICU_REPOSITORY := http://download.icu-project.org/files/$(ICU_PKGNAME)/$(ICU_VERSION)
+ARCHBASE := $(ICU_PKGNAME)-$(ICU_VERSION)-src
 
-%fetch mmake=contrib-icu4c-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/icu4c \
-    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tgz" \
-    patches_specs=icu4c-4.2.1-aros.diff:icu:-p1
-
-#MM
-contrib-icu4c-build-configure : $(ICU4C_CROSSBUILD_DIR)/.configured
-
-$(ICU4C_CROSSBUILD_DIR)/.configured :
-	%mkdir_q dir=$(ICU4C_CROSSBUILD_DIR)
-	cd $(ICU4C_CROSSBUILD_DIR) && $(ICU4C_SOURCE)/runConfigureICU Linux
-	$(TOUCH) $(ICU4C_CROSSBUILD_DIR)/.configured
+ICU_EXTRA_OPTS := \
+        --enable-static \
+        --disable-shared \
+        -with-cross-build=$(HOSTGENDIR)/tools/crosstools/$(ICU_PKGNAME)
 
 #MM
-contrib-icu4c-build-make : $(ICU4C_CROSSBUILD_DIR)/.make
+contrib-icu4c :
+	$(MAKE) -f ./mmakefile contrib-icu4c-complete--fetch ; \
+	$(MAKE) -f ./mmakefile contrib-icu4c-complete--build_and_install-quick ;
 
-$(ICU4C_CROSSBUILD_DIR)/.make :
-	$(MAKE) -C $(ICU4C_CROSSBUILD_DIR) MAKEOVERRIDES= TARGET=
-	$(TOUCH) $(ICU4C_CROSSBUILD_DIR)/.make
+TARGET_CXXFLAGS := $(subst -Wno-pointer-sign,, $(subst -Werror-implicit-function-declaration,, $(TARGET_CXXFLAGS)))
 
-#MM
-contrib-icu4c-host-configure : $(ICU4C_CROSSHOST_DIR)/.configured
-
-$(ICU4C_CROSSHOST_DIR)/.configured :
-	%mkdir_q dir=$(ICU4C_CROSSHOST_DIR)
-	cd $(ICU4C_CROSSHOST_DIR) && PATH=$(PATH) $(ICU4C_SOURCE)/configure 	\
-		--prefix=/Development 												\
-		--enable-static 													\
-		--disable-shared 													\
-		--disable-threads 													\
-		--with-data-packaging=static 										\
-		--host=$(AROS_TARGET_CPU)-aros 										\
-		--with-cross-build=$(ICU4C_CROSSBUILD_DIR)							\
-		CFLAGS=-nix LDFLAGS=-nix
-	$(TOUCH) $(ICU4C_CROSSHOST_DIR)/.configured
-
-#MM
-contrib-icu4c-host-make : $(ICU4C_CROSSHOST_DIR)/.make
-
-$(ICU4C_CROSSHOST_DIR)/.make :
-	$(MAKE) -C $(ICU4C_CROSSHOST_DIR) MAKEOVERRIDES=
-	$(TOUCH) $(ICU4C_CROSSHOST_DIR)/.make
-	
-#MM
-contrib-icu4c-install : 
-	$(MAKE) -C $(ICU4C_CROSSHOST_DIR) -j1 install MAKEFLAGS="prefix=$(AROS_DEVELOPMENT)" MAKEOVERRIDES=
+%fetch_and_build mmake=contrib-icu4c-complete package=$(ICU_PKGNAME) version=$(ICU_PKGVERSION)-src \
+	package_repo="$(ICU_REPOSITORY)" suffixes="tgz" \
+	patch=yes srcdir=icu builddir=source \
+	extraoptions="$(ICU_EXTRA_OPTS)"
