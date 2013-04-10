@@ -3,7 +3,8 @@
 
 -include $(TOP)/config/make.cfg
 
-#MM contrib-icu4c : tools-crosstools-icu
+#MM- contrib-icu4c : contrib-icu4c-complete
+#MM contrib-icu4c-complete : tools-crosstools-icu
 
 ICU_VERSION := 4.2.1
 ICU_PKGNAME := icu4c
@@ -24,7 +25,7 @@ ICU_EXTRA_OPTS := \
 
 TARGET_CXXFLAGS := $(subst -Wno-pointer-sign,, $(subst -Werror-implicit-function-declaration,, $(TARGET_CXXFLAGS)))
 
-%fetch_and_build mmake=contrib-icu4c package=$(ICU_PKGNAME) version=$(ICU_PKGVERSION)-src \
+%fetch_and_build mmake=contrib-icu4c-complete package=$(ICU_PKGNAME) version=$(ICU_PKGVERSION)-src \
 	package_repo="$(ICU_REPOSITORY)" suffixes="tgz" \
-	patch=yes srcdir=icu builddir=source prefix=$(AROS_DEVELOPMENT) aros_prefix=/Development \
+	patch=yes srcdir=icu builddir=source prefix=$(AROS_DEVELOPMENT) \
 	extraoptions="$(ICU_EXTRA_OPTS)"
