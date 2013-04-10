@@ -4,7 +4,7 @@
 -include $(TOP)/config/make.cfg
 
 #MM- contrib-icu4c : contrib-icu4c-complete
-#MM contrib-icu4c-complete : tools-crosstools-icu
+#MM- contrib-icu4c-complete : tools-crosstools-icu
 
 ICU_VERSION := 4.2.1
 ICU_PKGNAME := icu4c
