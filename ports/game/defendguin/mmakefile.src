@@ -5,9 +5,10 @@ include $(TOP)/config/make.cfg
 #MM- ports-game : ports-game-defendguin
 
 #MM  ports-game-defendguin : includes linklibs contrib-sdl \
-#MM  ports-game-defendguin-data ports-game-defendguin-docs \
-#MM  ports-game-defendguin-cpy ports-game-defendguin-drawericon \
-#MM  ports-game-defendguin-fetch
+#MM    contrib-sdl-sdl-mixer \
+#MM    ports-game-defendguin-data ports-game-defendguin-docs \
+#MM    ports-game-defendguin-cpy ports-game-defendguin-drawericon \
+#MM    ports-game-defendguin-fetch
 
 #MM  ports-game-defendguin-data : ports-game-defendguin-fetch
 

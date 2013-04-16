@@ -4,8 +4,10 @@ include $(TOP)/config/make.cfg
 
 #MM- ports-graphics : ports-graphics-grafx2
 
-#MM  ports-graphics-grafx2 : includes linklibs contrib-sdl ports-graphics-grafx2-fetch \
-#MM  ports-graphics-grafx2-docs ports-graphics-grafx2-data ports-graphics-grafx2-drawericon
+#MM  ports-graphics-grafx2 : includes linklibs contrib-sdl \
+#MM    contrib-sdl-sdl-image contrib-sdl-sdl-ttf \
+#MM    ports-graphics-grafx2-fetch ports-graphics-grafx2-docs \
+#MM    ports-graphics-grafx2-data ports-graphics-grafx2-drawericon
 
 #MM  ports-graphics-grafx2-docs : ports-graphics-grafx2-fetch
 

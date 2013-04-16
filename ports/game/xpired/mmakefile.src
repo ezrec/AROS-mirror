@@ -8,9 +8,11 @@ include $(TOP)/config/make.cfg
 #MM  ports-game-xpired-drawericon ports-game-xpired-cpy \
 #MM  ports-game-xpired-img ports-game-xpired-snd ports-game-xpired-fetch
 
-#MM  ports-game-xpiredbin : includes linklibs contrib-sdl contrib-sdl-sdl-gfx ports-game-xpired-fetch
+#MM  ports-game-xpiredbin : includes linklibs contrib-sdl \
+#MM    contrib-sdl-sdl-image contrib-sdl-sdl-gfx ports-game-xpired-fetch
 
-#MM  ports-game-xpiredit : includes linklibs contrib-sdl contrib-sdl-sdl-gfx ports-game-xpired-fetch
+#MM  ports-game-xpiredit : includes linklibs contrib-sdl \
+#MM    contrib-sdl-sdl-image contrib-sdl-sdl-gfx ports-game-xpired-fetch
 
 #MM  ports-game-xpired-img : ports-game-xpired-fetch
 

@@ -5,8 +5,9 @@ include $(TOP)/config/make.cfg
 #MM- ports-game : ports-game-madbomber
 
 #MM  ports-game-madbomber : includes linklibs contrib-sdl \
-#MM  ports-game-madbomber-data ports-game-madbomber-cpy \
-#MM  ports-game-madbomber-drawericon ports-game-madbomber-fetch
+#MM    contrib-sdl-sdl-image contrib-sdl-sdl-mixer \
+#MM    ports-game-madbomber-data ports-game-madbomber-cpy \
+#MM    ports-game-madbomber-drawericon ports-game-madbomber-fetch
 
 #MM  ports-game-madbomber-data : ports-game-madbomber-fetch
 

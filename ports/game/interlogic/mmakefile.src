@@ -4,7 +4,8 @@ include $(TOP)/config/make.cfg
 
 #MM- ports-game : ports-game-interlogic
 
-#MM- ports-game-interlogic : includes linklibs contrib-sdl ports-game-interlogic-cpy \
+#MM- ports-game-interlogic : includes linklibs contrib-sdl \
+#MM      contrib-sdl-sdl-image contrib-sdl-sdl-mixer ports-game-interlogic-cpy \
 #MM  ports-game-interlogic-fetch ports-game-interlogic-drawericon
 
 #MM- ports-game-interlogic-quick : ports-game-interlogic-fetch

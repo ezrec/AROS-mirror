@@ -5,8 +5,9 @@ include $(TOP)/config/make.cfg
 #MM- ports-game : ports-game-vectoroids
 
 #MM  ports-game-vectoroids : includes linklibs contrib-sdl \
-#MM  ports-game-vectoroids-data ports-game-vectoroids-cpy \
-#MM  ports-game-vectoroids-drawericon ports-game-vectoroids-fetch
+#MM    contrib-sdl-sdl-image \
+#MM    ports-game-vectoroids-data ports-game-vectoroids-cpy \
+#MM    ports-game-vectoroids-drawericon ports-game-vectoroids-fetch
 
 #MM  ports-game-vectoroids-data : ports-game-vectoroids-fetch
 

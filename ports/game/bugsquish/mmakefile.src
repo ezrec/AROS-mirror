@@ -5,8 +5,9 @@ include $(TOP)/config/make.cfg
 #MM- ports-game : ports-game-bugsquish
 
 #MM  ports-game-bugsquish : includes linklibs contrib-sdl \
-#MM  ports-game-bugsquish-data ports-game-bugsquish-cpy \
-#MM  ports-game-bugsquish-drawericon ports-game-bugsquish-fetch
+#MM    contrib-sdl-sdl-image contrib-sdl-sdl-mixer \
+#MM    ports-game-bugsquish-data ports-game-bugsquish-cpy \
+#MM    ports-game-bugsquish-drawericon ports-game-bugsquish-fetch
 
 #MM  ports-game-bugsquish-data : ports-game-bugsquish-fetch
 
