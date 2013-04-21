@@ -8141,16 +8141,14 @@ diff -ruN SDL-1.2.15/src/SDL_error.c SDL-1.2.15.aros/src/SDL_error.c
  
  #define SDL_ERRBUFIZE	1024
  
-@@ -47,9 +61,36 @@
+@@ -47,9 +61,38 @@
  
  /* Public functions */
  
 +#if !defined(PROTO_SDL_H)
  void SDL_SetError (const char *fmt, ...)
  {
- 	va_list ap;
 +#else
-+
 +#define fetch_arg(type)                              \
 +({                                                      \
 +    type res;                                           \
@@ -8172,13 +8170,17 @@ diff -ruN SDL-1.2.15/src/SDL_error.c SDL-1.2.15.aros/src/SDL_error.c
 +	struct SDLBase *, SDLBase, 122, SDL)
 +{
 +    AROS_LIBFUNC_INIT
-+    
-+    va_list ap = *(va_list *)&params;
++#endif
++
++#if !defined(__arm__)
+ 	va_list ap;
++#else
++	va_list ap = *(va_list *)&params;
 +#endif
  	SDL_error *error;
  
  	/* Copy in the key, mark error as valid */
-@@ -57,7 +98,9 @@
+@@ -57,7 +100,9 @@
  	error->error = 1;
  	SDL_strlcpy((char *)error->key, fmt, sizeof(error->key));
  
@@ -8188,7 +8190,7 @@ diff -ruN SDL-1.2.15/src/SDL_error.c SDL-1.2.15.aros/src/SDL_error.c
  	error->argc = 0;
  	while ( *fmt ) {
  		if ( *fmt++ == '%' ) {
-@@ -76,20 +119,36 @@
+@@ -76,20 +121,36 @@
  			    case 'x':
  			    case 'X':
  				error->args[error->argc++].value_i =
@@ -8225,7 +8227,7 @@ diff -ruN SDL-1.2.15/src/SDL_error.c SDL-1.2.15.aros/src/SDL_error.c
  				  if (str == NULL)
  				      str = "(null)";
  				  SDL_strlcpy((char *)error->args[i].buf, str, ERR_MAX_STRLEN);
-@@ -104,18 +163,27 @@
+@@ -104,18 +165,27 @@
  			}
  		}
  	}
@@ -8254,7 +8256,7 @@ diff -ruN SDL-1.2.15/src/SDL_error.c SDL-1.2.15.aros/src/SDL_error.c
  {
  	SDL_error *error;
  
-@@ -184,24 +252,52 @@
+@@ -184,24 +254,52 @@
  }
  
  /* Available for backwards compatibility */
@@ -8307,7 +8309,7 @@ diff -ruN SDL-1.2.15/src/SDL_error.c SDL-1.2.15.aros/src/SDL_error.c
  	switch (code) {
  		case SDL_ENOMEM:
  			SDL_SetError("Out of memory");
-@@ -219,6 +315,9 @@
+@@ -219,6 +317,9 @@
  			SDL_SetError("Unknown SDL error");
  			break;
  	}
