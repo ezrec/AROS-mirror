@@ -3634,7 +3634,7 @@ Function
                            this behavior.
 
      If your driver wants to specify own class for the bitmap being created,
-     it should prepend an aHIDD_BitMap_ClassPtr attribute to the supplied taglist
+     it should prepend an aoHidd_BitMap_ClassPtr attribute to the supplied taglist
      and pass it to base class. It's not allowed to create bitmap objects directly
      since they need some more extra information which is added by the base class!
 
@@ -3658,6 +3658,16 @@ Result
 
      bm - pointer to the newly created bitmap.
  
+
+Notes
+~~~~~
+::
+
+     Drivers which do not use framebuffer must always specify own class using either
+     moHidd_BitMap_ClassPtr or moHidd_BitMap_ClassID attribute. Drivers making use of
+     framebuffer may omit this, in this case framebuffer's class will be used for
+     displayable bitmaps.
+
 
 
 See also
