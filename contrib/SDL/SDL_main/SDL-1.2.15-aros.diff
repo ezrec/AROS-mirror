@@ -82,11 +82,14 @@ diff -ruN SDL-1.2.15/aros/sdl.pc SDL-1.2.15.aros/aros/sdl.pc
 diff -ruN SDL-1.2.15/aros_init.c SDL-1.2.15.aros/aros_init.c
 --- SDL-1.2.15/aros_init.c	1969-12-31 19:00:00.000000000 -0500
 +++ SDL-1.2.15.aros/aros_init.c	2013-03-22 12:04:43.000000000 -0400
-@@ -0,0 +1,125 @@
+@@ -0,0 +1,126 @@
 +/* Copyright 2013 The AROS Development Team. All rights reserved. */
 +
 +#define DEBUG 1
 +#include <aros/debug.h>
++
++
++#include <proto/arosc.h>
 +
 +#include <aros/symbolsets.h>
 +#include LC_LIBDEFS_FILE
@@ -106,13 +109,12 @@ diff -ruN SDL-1.2.15/aros_init.c SDL-1.2.15.aros/aros_init.c
 +{
 +    D(bug("SDL.library->Open(%p)\n", LIBBASE));
 +
-+    LIBBASE->aroscbase = OpenLibrary("arosc.library", 0);
 +    LIBBASE->copy_row_base = AllocMem(4096 * 2, MEMF_CLEAR);
 +    LIBBASE->copy_row = (APTR)(((IPTR)LIBBASE->copy_row_base + 4096) & ~0xFFF);
 +    D(bug("SDL.library->Open: root base @ 0x%p\n", LIBBASE->rootSDLBase));
 +    D(
 +        struct Task *opener = FindTask(NULL);
-+        bug("SDL.library->Open: aroscbase @ 0x%p for task @ 0x%p ('%s')\n", LIBBASE->aroscbase, opener, ((struct Node *)opener)->ln_Name);
++        bug("SDL.library->Open: aroscbase @ 0x%p for task @ 0x%p ('%s')\n", __aros_getbase_aroscbase(), opener, ((struct Node *)opener)->ln_Name);
 +      )
 +    D(bug("SDL.library->Open: copy_row @ 0x%p\n", LIBBASE->copy_row));
 +
@@ -200,7 +202,6 @@ diff -ruN SDL-1.2.15/aros_init.c SDL-1.2.15.aros/aros_init.c
 +        {
 +            LIBBASE->GLBase_ptr = NULL;
 +        }
-+        CloseLibrary(LIBBASE->aroscbase);
 +    }
 +   return TRUE;
 +}
@@ -1187,7 +1188,7 @@ diff -ruN SDL-1.2.15/include/SDL_video.h SDL-1.2.15.aros/include/SDL_video.h
 diff -ruN SDL-1.2.15/SDL.conf SDL-1.2.15.aros/SDL.conf
 --- SDL-1.2.15/SDL.conf	1969-12-31 19:00:00.000000000 -0500
 +++ SDL-1.2.15.aros/SDL.conf	2013-03-08 08:30:15.000000000 -0500
-@@ -0,0 +1,240 @@
+@@ -0,0 +1,241 @@
 +##begin config
 +basename SDL
 +libbase SDLBase
@@ -1197,6 +1198,7 @@ diff -ruN SDL-1.2.15/SDL.conf SDL-1.2.15.aros/SDL.conf
 +date 07.04.2013
 +copyright Copyright (C) 1997-2012 Sam Lantinga, 2013 The AROS Development Team
 +options peropenerbase
++rellib arosc
 +forcebase aroscbase
 +##end config
 +
@@ -1431,7 +1433,7 @@ diff -ruN SDL-1.2.15/SDL.conf SDL-1.2.15.aros/SDL.conf
 diff -ruN SDL-1.2.15/SDL_intern.h SDL-1.2.15.aros/SDL_intern.h
 --- SDL-1.2.15/SDL_intern.h	1969-12-31 19:00:00.000000000 -0500
 +++ SDL-1.2.15.aros/SDL_intern.h	2013-03-22 12:04:14.000000000 -0400
-@@ -0,0 +1,162 @@
+@@ -0,0 +1,161 @@
 +#ifndef	_SDL_INTERN_H
 +#define	_SDL_INTERN_H
 +
@@ -1489,7 +1491,6 @@ diff -ruN SDL-1.2.15/SDL_intern.h SDL-1.2.15.aros/SDL_intern.h
 +{
 +    struct Library      _lib;
 +    struct SDLBase      *rootSDLBase;
-+    struct Library      *aroscbase;
 +    struct Library      *LowLevelBase;
 +    struct Library      **GLBase_ptr;
 +
