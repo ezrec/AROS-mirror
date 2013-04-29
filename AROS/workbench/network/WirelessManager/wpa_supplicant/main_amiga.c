@@ -1,7 +1,7 @@
 /*
  * WPA Supplicant / main() function for Amiga-like OSes
  * Copyright (c) 2003-2007, Jouni Malinen <j@w1.fi>
- * Copyright (c) 2010-2012, Neil Cafferkey
+ * Copyright (c) 2010-2013, Neil Cafferkey
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -44,8 +44,8 @@ typedef LONG PINT;
 #endif
 #endif
 
-static const TEXT template[] = "DEVICE/A,UNIT/K/N,CONFIG/K,VERBOSE/S";
-const TEXT version_string[] = "$VER: WirelessManager 1.3 (11.03.2013)";
+static const TEXT template[] = "DEVICE/A,UNIT/K/N,CONFIG/K,VERBOSE/S,NOGUI/S";
+const TEXT version_string[] = "$VER: WirelessManager 1.4 (29.4.2013)";
 static const TEXT config_file_name[] = "ENV:Wireless.prefs";
 
 
@@ -59,8 +59,9 @@ int main(int argc, char *argv[])
 		LONG *unit;
 		const TEXT *config;
 		PINT verbose;
+		PINT no_gui;
 	}
-	args = {NULL, &unit_no, config_file_name, FALSE};
+	args = {NULL, &unit_no, config_file_name, FALSE, FALSE};
 	int i;
 	struct wpa_interface *ifaces, *iface;
 	int iface_count, exitcode = RETURN_FAIL;
@@ -126,7 +127,7 @@ int main(int argc, char *argv[])
 	}
 
 #ifdef MUI_GUI
-	if (exitcode == 0)
+	if (exitcode == 0 && !args.no_gui)
 		exitcode = start_gui(global);
 #endif
 
@@ -168,7 +169,7 @@ int start_gui(struct wpa_global *global)
 
 void stop_gui(void)
 {
-	if (gui_proc)
+	if (gui_proc != NULL)
 	{
 		Signal((struct Task *) gui_proc, SIGBREAKF_CTRL_C);
 		Wait(SIGF_SINGLE);
