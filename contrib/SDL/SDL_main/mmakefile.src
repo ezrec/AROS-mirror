@@ -114,7 +114,7 @@ USER_INCLUDES := -I$(SDLINCDIR) -I$(ARCHSRCDIR) -I$(ARCHSRCDIR)/src -DSDL_AROS_S
 %build_module mmake=SDL-aros-sharedlib \
     modname=SDL modtype=library \
     files="$(ARCHSRCDIR)/aros_init $(FILES)" conffile=$(ARCHSRCDIR)/SDL.conf \
-    uselibs="GL iconv arosc"
+    uselibs="GL iconv"
 
 #MM SDL-aros-staticlib : SDL-aros-includes
 
