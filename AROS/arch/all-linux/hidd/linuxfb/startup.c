@@ -15,13 +15,6 @@
  * open etc.
  */
 
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <sys/time.h>
-
-/* Prevent 'timeval redefinition' error */
-#define _AROS_TYPES_TIMEVAL_S_H_
-
 #include <aros/debug.h>
 #include <aros/symbolsets.h>
 #include <graphics/gfxbase.h>
@@ -31,6 +24,14 @@
 #include <hidd/unixio_inline.h>
 
 #include LC_LIBDEFS_FILE
+
+/* Prevent struct timeval derefinition error */
+#define timeval sys_timeval
+
+#include <sys/stat.h>
+#include <fcntl.h>
+
+#undef timeval
 
 static int LinuxFB_Startup(LIBBASETYPEPTR LIBBASE) 
 {
