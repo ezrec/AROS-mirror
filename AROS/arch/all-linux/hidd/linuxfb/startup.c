@@ -17,6 +17,7 @@
 
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <sys/time.h>
 
 /* Prevent 'timeval redefinition' error */
 #define _AROS_TYPES_TIMEVAL_S_H_
