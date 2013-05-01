@@ -8,9 +8,14 @@
 #pragma pack(4)
 #endif
 
+/* Prevents struct timeval redefinition error */
+#define timeval sys_timeval
+
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <signal.h>
+
+#undef timeval
 
 #pragma pack()
 
