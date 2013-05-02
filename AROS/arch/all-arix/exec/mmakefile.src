@@ -22,6 +22,6 @@ USER_INCLUDES := $(PRIV_KERNEL_INCLUDES) $(PRIV_EXEC_INCLUDES) \
   mainmmake=kernel-exec maindir=rom/exec \
   arch=arix files=$(FILES)
 
-#MM kernel-exec-unix: kernel-kernel-includes kernel-hostlib-includes
+#MM- kernel-exec-unix: kernel-kernel-includes kernel-hostlib-includes
 
 %common
