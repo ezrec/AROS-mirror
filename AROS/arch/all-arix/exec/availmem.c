@@ -77,7 +77,7 @@ int sscanf(const char *s1, const char *s2, ...);
 
         if (siz > 0 && (attributes & MEMF_CHIP))
         {
-            if (attributes & MEMF_TOTAL)
+            if (attributes & (MEMF_TOTAL | MEMF_LARGEST))
             {
                 str = strstr(minfo, "MemTotal:");
                 if (str)
