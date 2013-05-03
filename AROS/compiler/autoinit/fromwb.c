@@ -37,9 +37,12 @@ static void __startup_fromwb(struct ExecBase *SysBase)
 	__argv = (char **) WBenchMsg;
         __argc = 0;
 
+        /* ABI_V0 compatibility */
+#if 0
         /* WB started processes' pr_CurrentDir = BNULL */
         curdir = DupLock(WBenchMsg->sm_ArgList->wa_Lock);
         CurrentDir(curdir);
+#endif
 
 	D(bug("[startup] Started from Workbench\n"));
     }
@@ -49,9 +52,12 @@ static void __startup_fromwb(struct ExecBase *SysBase)
     /* Reply startup message to Workbench */
     if (WBenchMsg)
     {
+        /* ABI_V0 compatibility */
+#if 0
         /* Close original lock */
         CurrentDir(BNULL);
         UnLock(curdir);
+#endif
 
         Forbid(); /* make sure we're not UnLoadseg()ed before we're really done */
         ReplyMsg((struct Message *) WBenchMsg);
