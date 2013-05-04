@@ -1758,6 +1758,13 @@ Result
              or 0 if any error
 
 
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
+
 
 ----------
 
@@ -1873,6 +1880,13 @@ Synopsis
           struct ViewPort * vp,
           struct SimpleSprite * s,
           void * newdata );
+
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
 
 
 ----------
@@ -2423,6 +2437,13 @@ Result
 ::
 
      ID - ID of best mode to coerce to, or INVALID_ID if could not coerce
+
+
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
 
 
 
@@ -6293,6 +6314,13 @@ Result
      chiprevbits - Actual bits set in GfxBase->ChipRevBits0
 
 
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
+
 
 ----------
 
@@ -7398,6 +7426,13 @@ Result
      None.
 
 
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
+
 
 ----------
 
@@ -7472,6 +7507,13 @@ Result
      None.
 
 
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
+
 
 ----------
 
@@ -7497,6 +7539,13 @@ Result
 ::
 
      None.
+
+
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
 
 
 

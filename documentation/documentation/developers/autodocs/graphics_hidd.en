@@ -2125,15 +2125,15 @@ hidd.graphics.graphics
 `--background_graphics--`_                 `--display_modes--`_                       `aoHidd_Gfx_ActiveCallBack`_               `aoHidd_Gfx_ActiveCallBackData`_           
 `aoHidd_Gfx_DefaultGC`_                    `aoHidd_Gfx_DMPSLevel`_                    `aoHidd_Gfx_DriverName`_                   `aoHidd_Gfx_FrameBufferType`_              
 `aoHidd_Gfx_HWSpriteTypes`_                `aoHidd_Gfx_IsWindowed`_                   `aoHidd_Gfx_MemoryClock`_                  `aoHidd_Gfx_MemorySize`_                   
-`aoHidd_Gfx_ModeTags`_                     `aoHidd_Gfx_NoFrameBuffer`_                `aoHidd_Gfx_NumSyncs`_                     `aoHidd_Gfx_SupportsHWCursor`_             
-`moHidd_Gfx_CheckMode`_                    `moHidd_Gfx_CleanViewPort`_                `moHidd_Gfx_CopyBox`_                      `moHidd_Gfx_CopyBoxMasked`_                
-`moHidd_Gfx_DisposeBitMap`_                `moHidd_Gfx_DisposeGC`_                    `moHidd_Gfx_DisposeOverlay`_               `moHidd_Gfx_GetGamma`_                     
-`moHidd_Gfx_GetMaxSpriteSize`_             `moHidd_Gfx_GetMode`_                      `moHidd_Gfx_GetPixFmt`_                    `moHidd_Gfx_GetSync`_                      
-`moHidd_Gfx_MakeViewPort`_                 `moHidd_Gfx_ModeProperties`_               `moHidd_Gfx_NewBitMap`_                    `moHidd_Gfx_NewGC`_                        
-`moHidd_Gfx_NewOverlay`_                   `moHidd_Gfx_NextModeID`_                   `moHidd_Gfx_PrepareViewPorts`_             `moHidd_Gfx_QueryHardware3D`_              
-`moHidd_Gfx_QueryModeIDs`_                 `moHidd_Gfx_ReleaseModeIDs`_               `moHidd_Gfx_SetCursorPos`_                 `moHidd_Gfx_SetCursorShape`_               
-`moHidd_Gfx_SetCursorVisible`_             `moHidd_Gfx_SetGamma`_                     `moHidd_Gfx_SetMode`_                      `moHidd_Gfx_Show`_                         
-`moHidd_Gfx_ShowImminentReset`_            `moHidd_Gfx_ShowViewPorts`_                
+`aoHidd_Gfx_ModeTags`_                     `aoHidd_Gfx_NoFrameBuffer`_                `aoHidd_Gfx_NumSyncs`_                     `aoHidd_Gfx_SupportsGamma`_                
+`aoHidd_Gfx_SupportsHWCursor`_             `moHidd_Gfx_CheckMode`_                    `moHidd_Gfx_CleanViewPort`_                `moHidd_Gfx_CopyBox`_                      
+`moHidd_Gfx_CopyBoxMasked`_                `moHidd_Gfx_DisposeBitMap`_                `moHidd_Gfx_DisposeGC`_                    `moHidd_Gfx_DisposeOverlay`_               
+`moHidd_Gfx_GetGamma`_                     `moHidd_Gfx_GetMaxSpriteSize`_             `moHidd_Gfx_GetMode`_                      `moHidd_Gfx_GetPixFmt`_                    
+`moHidd_Gfx_GetSync`_                      `moHidd_Gfx_MakeViewPort`_                 `moHidd_Gfx_ModeProperties`_               `moHidd_Gfx_NewBitMap`_                    
+`moHidd_Gfx_NewGC`_                        `moHidd_Gfx_NewOverlay`_                   `moHidd_Gfx_NextModeID`_                   `moHidd_Gfx_PrepareViewPorts`_             
+`moHidd_Gfx_QueryHardware3D`_              `moHidd_Gfx_QueryModeIDs`_                 `moHidd_Gfx_ReleaseModeIDs`_               `moHidd_Gfx_SetCursorPos`_                 
+`moHidd_Gfx_SetCursorShape`_               `moHidd_Gfx_SetCursorVisible`_             `moHidd_Gfx_SetGamma`_                     `moHidd_Gfx_SetMode`_                      
+`moHidd_Gfx_Show`_                         `moHidd_Gfx_ShowImminentReset`_            `moHidd_Gfx_ShowViewPorts`_                
 ========================================== ========================================== ========================================== ========================================== 
 
 -----------
@@ -2777,6 +2777,32 @@ See also
 
 ----------
 
+aoHidd_Gfx_SupportsGamma
+========================
+
+Synopsis
+~~~~~~~~
+::
+
+     [..G], UBYTE
+
+
+Function
+~~~~~~~~
+::
+
+     Specifies if the driver supports gamma correction tables. Default implementation
+     in base class returns FALSE.
+
+
+
+See also
+~~~~~~~~
+
+`moHidd_Gfx_SetGamma`_ 
+
+----------
+
 aoHidd_Gfx_SupportsHWCursor
 ===========================
 
@@ -3237,37 +3263,8 @@ Function
 
      Get current gamma table for the display.
 
-     A gamma table consists of three 256-byte tables: one for red component, one for
-     green and one for blue.
-
-     A user should supply three pointers to preallocated 256-byte tables which will
-     be filled in. Any ot these pointers may have NULL value, in this case the
-     respective component will be ignored.
-
-
-Inputs
-~~~~~~
-::
-
-     gfxHidd - A display driver object
-     Red     - A pointer to a 256-byte array for red component or NULL
-     Green   - A pointer to a 256-byte array for green component or NULL
-     Blue    - A pointer to a 256-byte array for blue component or NULL
-
-
-Result
-~~~~~~
-::
-
-     FALSE if the driver doesn't support gamma correction, otherwise TRUE
-
-
-Notes
-~~~~~
-::
-
-     This method can be used just to query if the driver supports gamma correction.
-     Just set Red, Green and Blue to NULL for this.
+     This method was neither ever implemented nor used. Currently obsolete and
+     considered reserved.
 
 
 
@@ -4221,19 +4218,15 @@ Function
      A gamma table consists of three 256-byte tables: one for red component, one for
      green and one for blue.
 
-     A user should supply three pointers to 256-byte tables from which gamma values
-     will be picked up. Any ot these pointers may have NULL value, in this case the
-     respective component will be ignored.
-
 
 Inputs
 ~~~~~~
 ::
 
      gfxHidd - A display driver object
-     Red     - A pointer to a 256-byte array for red component or NULL
-     Green   - A pointer to a 256-byte array for green component or NULL
-     Blue    - A pointer to a 256-byte array for blue component or NULL
+     Red     - A pointer to a 256-byte array for red component
+     Green   - A pointer to a 256-byte array for green component
+     Blue    - A pointer to a 256-byte array for blue component
 
 
 Result
@@ -4243,19 +4236,6 @@ Result
      FALSE if the driver doesn't support gamma correction, otherwise TRUE
 
 
-Notes
-~~~~~
-::
-
-     This method can be used just to query if the driver supports gamma correction.
-     Just set Red, Green and Blue to NULL for this.
-
-
-
-See also
-~~~~~~~~
-
-`moHidd_Gfx_GetGamma`_ 
 
 ----------
 

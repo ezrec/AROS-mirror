@@ -46,15 +46,15 @@ CLID_Hidd_Mouse
 ---------------
 
 ========================================== ========================================== ========================================== ========================================== 
-`--background--`_                          `--background--`_                          `aoHidd_Mouse_Extended`_                   `aoHidd_Mouse_IrqHandler`_                 
+`--background_mouseclass--`_               `--background_subsystem--`_                `aoHidd_Mouse_Extended`_                   `aoHidd_Mouse_IrqHandler`_                 
 `aoHidd_Mouse_IrqHandlerData`_             `aoHidd_Mouse_RelativeCoords`_             `aoHidd_Mouse_State`_                      `moHidd_Mouse_AddHardwareDriver`_          
 `moHidd_Mouse_RemHardwareDriver`_          
 ========================================== ========================================== ========================================== ========================================== 
 
 -----------
 
---background--
-==============
+--background_mouseclass--
+=========================
 
 Notes
 ~~~~~
@@ -73,8 +73,8 @@ Notes
 
 ----------
 
---background--
-==============
+--background_subsystem--
+========================
 
 Notes
 ~~~~~

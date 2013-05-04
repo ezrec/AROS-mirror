@@ -705,9 +705,8 @@ Function
 ~~~~~~~~
 ::
 
-     After the damaged areas are update this routine should be
+     After the damaged areas are updated, this routine should be
      called so the regular cliprects of the layer can be installed.
-     
 
 
 Inputs
@@ -1179,8 +1178,8 @@ Result
 ~~~~~~
 ::
 
-     result - TRUE everyting went alright
-              FALSE an error occurred (out of memory)
+     result - TRUE if everything went right
+              FALSE if an error occurred (out of memory)
 
 
 

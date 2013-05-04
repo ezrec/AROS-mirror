@@ -241,6 +241,13 @@ Synopsis
  void AllocBoardMem(
           ULONG slotSpec );
 
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
+
 
 ----------
 
@@ -296,6 +303,13 @@ Synopsis
           ULONG numSlots,
           ULONG slotAlign );
 
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
+
 
 ----------
 
@@ -309,6 +323,13 @@ Synopsis
  BOOL ConfigBoard(
           APTR board,
           struct ConfigDev * configDev );
+
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
 
 
 ----------
@@ -402,6 +423,13 @@ Synopsis
           ULONG startSlot,
           ULONG slotSpec );
 
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
+
 
 ----------
 
@@ -455,6 +483,13 @@ Synopsis
  void FreeExpansionMem(
           ULONG startSlot,
           ULONG numSlots );
+
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
 
 
 ----------
@@ -668,6 +703,13 @@ Synopsis
           APTR board,
           ULONG offset );
 
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
+
 
 ----------
 
@@ -681,6 +723,13 @@ Synopsis
  BOOL ReadExpansionRom(
           APTR board,
           struct ConfigDev * configDev );
+
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
 
 
 ----------
@@ -832,6 +881,13 @@ Synopsis
           ULONG offset,
           ULONG byte );
 
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
+
 
 ----------
 
@@ -846,5 +902,12 @@ Synopsis
           APTR board,
           ULONG offset,
           ULONG word );
+
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
 
 

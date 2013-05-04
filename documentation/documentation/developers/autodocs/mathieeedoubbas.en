@@ -1,0 +1,423 @@
+===============
+mathieeedoubbas
+===============
+
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_
+
+----------
+
+======================================= ======================================= ======================================= ======================================= 
+`IEEEDPAbs()`_                          `IEEEDPAdd()`_                          `IEEEDPCeil()`_                         `IEEEDPCmp()`_                          
+`IEEEDPDiv()`_                          `IEEEDPFix()`_                          `IEEEDPFloor()`_                        `IEEEDPFlt()`_                          
+`IEEEDPMul()`_                          `IEEEDPNeg()`_                          `IEEEDPSub()`_                          `IEEEDPTst()`_                          
+
+======================================= ======================================= ======================================= ======================================= 
+
+-----------
+
+IEEEDPAbs()
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ double IEEEDPAbs(
+          double y );
+
+Function
+~~~~~~~~
+::
+
+     Calculate the absolute value of the given IEEE double precision
+     floating point number
+
+
+Result
+~~~~~~
+::
+
+     absolute value of y
+
+     Flags:
+       zero     : result is zero
+       negative : 0
+       overflow : 0
+
+
+
+----------
+
+IEEEDPAdd()
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ double IEEEDPAdd(
+          double y,
+          double z );
+
+Function
+~~~~~~~~
+::
+
+     Calculate the sum of two IEEE double precision numbers
+
+
+Result
+~~~~~~
+::
+
+     sum of y and z
+
+     Flags:
+       zero     : result is zero
+       negative : result is negative
+       overflow : result is too large or too small for ffp format
+
+
+
+----------
+
+IEEEDPCeil()
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ double IEEEDPCeil(
+          double y );
+
+Function
+~~~~~~~~
+::
+
+     Calculates the ceil-value of a IEEE double precision number
+
+
+Result
+~~~~~~
+::
+
+     Flags:
+       zero     : result is zero
+       negative : result is negative
+       overflow : 0
+
+
+
+See also
+~~~~~~~~
+
+`IEEEDPFloor()`_ 
+
+----------
+
+IEEEDPCmp()
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG IEEEDPCmp(
+          double y,
+          double z );
+
+Function
+~~~~~~~~
+::
+
+     Compares two IEEE double precision numbers
+
+
+Result
+~~~~~~
+::
+
+    +1 : y > z
+     0 : y = z
+    -1 : y < z
+
+     Flags:
+       zero     : y = z
+       negative : y < z
+       overflow : 0
+
+
+
+----------
+
+IEEEDPDiv()
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ double IEEEDPDiv(
+          double y,
+          double z );
+
+Function
+~~~~~~~~
+::
+
+     Divides two IEEE double precision numbers
+
+
+Result
+~~~~~~
+::
+
+    +1 : y > z
+     0 : y = z
+    -1 : y < z
+
+     Flags:
+       zero     : y = z
+       negative : y < z
+       overflow : 0
+
+
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
+
+
+----------
+
+IEEEDPFix()
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG IEEEDPFix(
+          double y );
+
+Function
+~~~~~~~~
+::
+
+     Convert IEEE double precision floating point number to integer
+
+
+Result
+~~~~~~
+::
+
+     absolute value of y
+
+     Flags:
+       zero     : result is zero
+       negative : result is negative
+       overflow : ieeedp out of integer-range
+
+
+
+----------
+
+IEEEDPFloor()
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ double IEEEDPFloor(
+          double y );
+
+Function
+~~~~~~~~
+::
+
+     Calculates the floor-value of a IEEE double precision number
+
+
+Result
+~~~~~~
+::
+
+    +1 : y > z
+     0 : y = z
+    -1 : y < z
+
+     Flags:
+       zero     : y = z
+       negative : y < z
+       overflow : 0
+
+
+
+----------
+
+IEEEDPFlt()
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ double IEEEDPFlt(
+          LONG y );
+
+Result
+~~~~~~
+::
+
+     IEEE double precision number
+
+     Flags:
+       zero     : result is zero
+       negative : result is negative
+       overflow : 0
+
+
+
+----------
+
+IEEEDPMul()
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ double IEEEDPMul(
+          double y,
+          double z );
+
+Function
+~~~~~~~~
+::
+
+     Multiplies two IEEE double precision numbers
+
+
+Result
+~~~~~~
+::
+
+     +1 : y > z
+      0 : y = z
+     -1 : y < z
+
+     Flags:
+       zero     : y = z
+       negative : y < z
+       overflow : 0
+
+
+
+----------
+
+IEEEDPNeg()
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ double IEEEDPNeg(
+          double y );
+
+Function
+~~~~~~~~
+::
+
+     Switch the sign of the given IEEE double precision
+     floating point number
+
+
+Result
+~~~~~~
+::
+
+     -y
+
+     Flags:
+       zero     : result is zero
+       negative : result is negative
+       overflow : 0
+
+
+
+----------
+
+IEEEDPSub()
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ double IEEEDPSub(
+          double y,
+          double z );
+
+Function
+~~~~~~~~
+::
+
+     Subtracts two IEEE double precision numbers
+
+
+Result
+~~~~~~
+::
+
+    +1 : y > z
+     0 : y = z
+    -1 : y < z
+
+     Flags:
+       zero     : y = z
+       negative : y < z
+       overflow : 0
+
+
+
+----------
+
+IEEEDPTst()
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG IEEEDPTst(
+          double y );
+
+Function
+~~~~~~~~
+::
+
+     Compare a IEEE double precision floting point number against zero.
+
+
+Result
+~~~~~~
+::
+
+     +1 : y > 0.0
+      0 : y = 0.0
+     -1 : y < 0.0
+
+     Flags:
+       zero     : result is zero
+       negative : result is negative
+       overflow : 0
+
+
+

@@ -35,6 +35,13 @@ Synopsis
           STRPTR name,
           TAG tag, ... );
 
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
+
 
 ----------
 
@@ -47,6 +54,13 @@ Synopsis
 
  ULONG AmigaGuideSignal(
           AMIGAGUIDECONTEXT handle );
+
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
 
 
 ----------
@@ -61,6 +75,13 @@ Synopsis
  void CloseAmigaGuide(
           AMIGAGUIDECONTEXT handle );
 
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
+
 
 ----------
 
@@ -72,6 +93,13 @@ Synopsis
 ::
 
  void ExpungeXRef();
+
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
 
 
 ----------
@@ -88,6 +116,13 @@ Synopsis
           AMIGAGUIDECONTEXT handle,
           ULONG * storage );
 
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
+
 
 ----------
 
@@ -101,6 +136,13 @@ Synopsis
  struct AmigaGuideMsg * GetAmigaGuideMsg(
           AMIGAGUIDECONTEXT handle );
 
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
+
 
 ----------
 
@@ -113,6 +155,13 @@ Synopsis
 
  STRPTR GetAmigaGuideString(
           ULONG id );
+
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
 
 
 ----------
@@ -128,6 +177,13 @@ Synopsis
           BPTR lock,
           STRPTR name );
 
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
+
 
 ----------
 
@@ -140,6 +196,13 @@ Synopsis
 
  LONG LockAmigaGuideBase(
           AMIGAGUIDECONTEXT handle );
+
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
 
 
 ----------
@@ -159,6 +222,13 @@ Synopsis
           struct NewAmigaGuide * nag,
           TAG tag, ... );
 
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
+
 
 ----------
 
@@ -176,6 +246,13 @@ Synopsis
  AMIGAGUIDECONTEXT OpenAmigaGuideAsync(
           struct NewAmigaGuide * nag,
           TAG tag, ... );
+
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
 
 
 ----------
@@ -195,6 +272,13 @@ Synopsis
           AMIGAGUIDEHOST key,
           TAG tag, ... );
 
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
+
 
 ----------
 
@@ -207,6 +291,13 @@ Synopsis
 
  void ReplyAmigaGuideMsg(
           struct AmigaGuideMsg * msg );
+
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
 
 
 ----------
@@ -228,6 +319,13 @@ Synopsis
           STRPTR cmd,
           TAG tag, ... );
 
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
+
 
 ----------
 
@@ -245,6 +343,13 @@ Synopsis
  BOOL SendAmigaGuideContext(
           AMIGAGUIDECONTEXT handle,
           TAG tag, ... );
+
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
 
 
 ----------
@@ -265,6 +370,11 @@ Synopsis
           TAG tag, ... );
 
 
+See also
+~~~~~~~~
+
+This function is unimplemented. 
+
 ----------
 
 SetAmigaGuideContextA()
@@ -284,6 +394,13 @@ Synopsis
           ULONG context,
           TAG tag, ... );
 
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
+
 
 ----------
 
@@ -296,5 +413,12 @@ Synopsis
 
  void UnlockAmigaGuideBase(
           LONG key );
+
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
 
 

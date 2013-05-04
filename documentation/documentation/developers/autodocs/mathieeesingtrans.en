@@ -1,0 +1,553 @@
+=================
+mathieeesingtrans
+=================
+
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_
+
+----------
+
+======================================= ======================================= ======================================= ======================================= 
+`IEEESPAcos()`_                         `IEEESPAsin()`_                         `IEEESPAtan()`_                         `IEEESPCos()`_                          
+`IEEESPCosh()`_                         `IEEESPExp()`_                          `IEEESPFieee()`_                        `IEEESPLog()`_                          
+`IEEESPLog10()`_                        `IEEESPPow()`_                          `IEEESPSin()`_                          `IEEESPSincos()`_                       
+`IEEESPSinh()`_                         `IEEESPSqrt()`_                         `IEEESPTan()`_                          `IEEESPTanh()`_                         
+`IEEESPTieee()`_                        
+======================================= ======================================= ======================================= ======================================= 
+
+-----------
+
+IEEESPAcos()
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ float IEEESPAcos(
+          float y );
+
+Function
+~~~~~~~~
+::
+
+     Calculate arcuscos of the given number
+
+
+Result
+~~~~~~
+::
+
+     IEEE single precision floating point number
+
+     flags:
+     zero     : result is zero
+     negative : 0 (not possible)
+     overflow : y < -1  or  y > 1
+
+
+
+----------
+
+IEEESPAsin()
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ float IEEESPAsin(
+          float y );
+
+Function
+~~~~~~~~
+::
+
+     Calculate arcussin of the given number
+
+
+Result
+~~~~~~
+::
+
+     IEEE single precision floating point number
+
+     flags:
+     zero     : result is zero
+     negative : result is negative
+     overflow : fnum < -1  or  fnum > 1
+
+
+
+----------
+
+IEEESPAtan()
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ float IEEESPAtan(
+          float y );
+
+Function
+~~~~~~~~
+::
+
+     Calculates the angle of a given number representing the tangent
+     of that angle. The angle will be in radians.
+
+
+Result
+~~~~~~
+::
+
+     IEEE single precision floating point number
+
+
+
+----------
+
+IEEESPCos()
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ float IEEESPCos(
+          float y );
+
+Function
+~~~~~~~~
+::
+
+     Calculate the cosine of a given IEEE single precision number in radians
+
+
+Result
+~~~~~~
+::
+
+     IEEE single precision floating point number
+
+     flags:
+     zero     : result is zero
+     negative : result is negative
+     overflow : 0
+
+
+
+----------
+
+IEEESPCosh()
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ float IEEESPCosh(
+          float y );
+
+Function
+~~~~~~~~
+::
+
+     Calculate the hyperbolic cosine of the IEEE single precision number
+
+
+Result
+~~~~~~
+::
+
+     IEEE single precision floating point number
+
+     flags:
+     zero     : result is zero
+     negative : 0 (not possible)
+     overflow : result too big for ffp-number
+
+
+
+----------
+
+IEEESPExp()
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ float IEEESPExp(
+          float y );
+
+Function
+~~~~~~~~
+::
+
+     Calculate e^x
+
+
+Bugs
+~~~~
+::
+
+     IEEE single precision number
+
+     flags:
+     zero     : result is zero
+     negative : 0
+     overflow : the result was out of range for the IEEE single precision
+                format
+
+
+
+----------
+
+IEEESPFieee()
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ float IEEESPFieee(
+          float y );
+
+Function
+~~~~~~~~
+::
+
+     Convert IEEE single to IEEE single
+     It just returns the input parameter.
+
+
+Result
+~~~~~~
+::
+
+     IEEE single precision floting point number
+
+
+
+----------
+
+IEEESPLog()
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ float IEEESPLog(
+          float y );
+
+Function
+~~~~~~~~
+::
+
+     Calculate logarithm (base e) of the given IEEE single precision number
+
+
+Result
+~~~~~~
+::
+
+     IEEE single precision number
+
+     flags:
+     zero     : result is zero
+     negative : result is negative
+     overflow : argument was negative
+
+
+
+----------
+
+IEEESPLog10()
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ float IEEESPLog10(
+          float y );
+
+Function
+~~~~~~~~
+::
+
+     Calculate logarithm (base 10) of the given IEEE single precision number
+
+
+Result
+~~~~~~
+::
+
+     IEEE single precision number
+
+     flags:
+     zero     : result is zero
+     negative : result is negative
+     overflow : argument was negative
+
+
+
+----------
+
+IEEESPPow()
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ float IEEESPPow(
+          float x,
+          float y );
+
+Function
+~~~~~~~~
+::
+
+   Calculate y raised to the x power (y^x)
+
+
+Result
+~~~~~~
+::
+
+     IEEE single precision floating point number
+
+     flags:
+     zero     : result is zero
+     negative : result is negative
+     overflow : result is too big
+
+
+
+----------
+
+IEEESPSin()
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ float IEEESPSin(
+          float y );
+
+Function
+~~~~~~~~
+::
+
+     Calculate the sine of a given IEEE single precision number in radians
+
+
+Result
+~~~~~~
+::
+
+     IEEE single precision floating point number
+
+     flags:
+     zero     : result is zero
+     negative : result is negative
+     overflow : 0
+
+
+
+----------
+
+IEEESPSincos()
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+ float IEEESPSincos(
+          float * z,
+          float y );
+
+Function
+~~~~~~~~
+::
+
+     Calculate the cosine and the sine of the given IEEE single
+     precision number where y represents an angle in radians. The 
+     function returns the sine of that number as a result and puts
+     the cosine of that number into *z which must represent
+     a valid pointer to a IEEE single precision number.
+
+
+Result
+~~~~~~
+::
+
+     *z            - IEEE single precision floating point number
+     direct result - IEEE single precision floating point number
+
+
+
+----------
+
+IEEESPSinh()
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ float IEEESPSinh(
+          float y );
+
+Function
+~~~~~~~~
+::
+
+     Calculate the hyperbolic sine of the IEEE single precision number
+
+
+Result
+~~~~~~
+::
+
+     IEEE single precision floating point number
+
+     flags:
+     zero     : result is zero
+     negative : result is negative
+     overflow : result is too big for IEEE single precsion format
+
+
+
+----------
+
+IEEESPSqrt()
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ float IEEESPSqrt(
+          float y );
+
+Function
+~~~~~~~~
+::
+
+     Calculate square root of IEEE single precision number
+
+
+Result
+~~~~~~
+::
+
+     IEEE single precision number
+
+     flags:
+     zero     : result is zero
+     negative : 0
+     overflow : square root could not be calculated
+
+
+
+----------
+
+IEEESPTan()
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ float IEEESPTan(
+          float y );
+
+Function
+~~~~~~~~
+::
+
+     Calculate the tangens of a given IEEE single precision number in radians
+
+
+Result
+~~~~~~
+::
+
+     IEEE single precision floating point number
+
+     flags:
+     zero     : result is zero
+     negative : result is negative
+     overflow :
+
+
+
+----------
+
+IEEESPTanh()
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ float IEEESPTanh(
+          float y );
+
+Function
+~~~~~~~~
+::
+
+     Calculate hyperbolic tangens of the IEEE single precision number
+
+
+Result
+~~~~~~
+::
+
+     IEEE single precision floating point number
+
+     flags:
+     zero     : result is zero
+     negative : result is negative
+     overflow : (not possible)
+
+
+
+----------
+
+IEEESPTieee()
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ float IEEESPTieee(
+          float y );
+
+Function
+~~~~~~~~
+::
+
+     Convert IEEE single to IEEE single
+     It just returns the input parameter.
+
+
+Result
+~~~~~~
+::
+
+     IEEE single precision floting point number
+
+
+

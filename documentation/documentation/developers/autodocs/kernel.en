@@ -331,6 +331,13 @@ Notes
      Normal applications should consider using exec.library/Disable().
 
 
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
+
 
 See also
 ~~~~~~~~
@@ -1237,6 +1244,13 @@ Notes
      This is low level function, it does not have nesting count
      and state tracking mechanism. It operates directly on the CPU.
      Normal applications should consider using exec.library/Enable().
+
+
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
 
 
 

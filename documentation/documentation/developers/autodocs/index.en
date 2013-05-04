@@ -46,6 +46,12 @@ Autodocs for Modules
 + `kms <kms>`_
 + `locale <locale>`_
 + `lowlevel <lowlevel>`_
++ `mathffp <mathffp>`_
++ `mathieeedoubbas <mathieeedoubbas>`_
++ `mathieeedoubtrans <mathieeedoubtrans>`_
++ `mathieeesingbas <mathieeesingbas>`_
++ `mathieeesingtrans <mathieeesingtrans>`_
++ `mathtrans <mathtrans>`_
 + `misc <misc>`_
 + `mouse_hidd <mouse_hidd>`_
 + `muimaster <muimaster>`_

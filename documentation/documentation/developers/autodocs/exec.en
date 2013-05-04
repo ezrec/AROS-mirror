@@ -2057,6 +2057,13 @@ Notes
      be considered as equal.
 
 
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
+
 
 See also
 ~~~~~~~~
@@ -5261,8 +5268,8 @@ Function
 
      Releases a lock on a semaphore obtained with either ObtainSemaphore(),
      ObtainSemaphoreShared(), AttemptSemaphore or AttemptSemaphoreShared().
-     Each call to one of those functions must be accompanied with one
-     call to ReleasSemaphore().
+     Each call to one of those functions must be accompanied by one call
+     to ReleaseSemaphore().
 
 
 Inputs
@@ -6921,8 +6928,8 @@ Function
 ::
 
      Waits until the I/O request is completed and removes it from the
-     reply port. If the message is already done when calling this function
-     it doesn't wait but just remove the message.
+     reply port. If the message is already done when calling this function,
+     it doesn't wait but just removes the message.
 
 
 Inputs

@@ -1622,8 +1622,8 @@ Function
 ::
 
      Finishes refreshing which was initialized with BeginRefresh().
-     The argument |complete| is usually TRUE, It can be useful to
-     set it to FALSE when refreshing is split in several tasks.
+     The argument |complete| is usually TRUE. It can be useful to
+     set it to FALSE when refreshing is split into several tasks.
 
 
 Inputs
@@ -5816,7 +5816,7 @@ Synopsis
 
  void SetPointer(
           struct Window * window,
-          UWORD         * pointer,
+          const UWORD   * pointer,
           LONG height,
           LONG width,
           LONG xOffset,

@@ -28,6 +28,13 @@ Synopsis
           APTR intRoutine,
           APTR intData );
 
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
+
 
 ----------
 
@@ -41,6 +48,13 @@ Synopsis
  APTR AddTimerInt(
           APTR intRoutine,
           APTR intData );
+
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
 
 
 ----------
@@ -104,6 +118,13 @@ Synopsis
  ULONG ElapsedTime(
           struct EClockVal * context );
 
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
+
 
 ----------
 
@@ -115,6 +136,13 @@ Synopsis
 ::
 
  ULONG GetKey();
+
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
 
 
 ----------
@@ -142,6 +170,13 @@ Synopsis
           struct KeyQuery * queryArray,
           UBYTE arraySize );
 
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
+
 
 ----------
 
@@ -154,6 +189,13 @@ Synopsis
 
  ULONG ReadJoyPort(
           ULONG port );
+
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
 
 
 ----------
@@ -168,6 +210,13 @@ Synopsis
  VOID RemKBInt(
           APTR intHandle );
 
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
+
 
 ----------
 
@@ -180,6 +229,13 @@ Synopsis
 
  VOID RemTimerInt(
           APTR intHandle );
+
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
 
 
 ----------
@@ -250,6 +306,13 @@ Synopsis
           ULONG timeInterval,
           BOOL continuous );
 
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
+
 
 ----------
 
@@ -262,6 +325,13 @@ Synopsis
 
  VOID StopTimerInt(
           APTR intHandle );
+
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
 
 
 ----------
@@ -278,5 +348,12 @@ Synopsis
  
  ULONG SystemControl(
           TAG tag, ... );
+
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
 
 

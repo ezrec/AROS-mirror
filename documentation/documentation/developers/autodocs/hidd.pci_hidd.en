@@ -21,8 +21,8 @@ CLID_Hidd_PCIDevice
 -------------------
 
 ========================================== ========================================== ========================================== ========================================== 
-`aoHidd_PCIDevice_Owner`_                  `moHidd_PCIDevice_Obtain`_                 `moHidd_PCIDevice_Release`_                `moHidd_PCIDevice_RemoveInterrupt`_        
-`moHidd_PCIDriver_AddInterrupt`_           
+`aoHidd_PCIDevice_Owner`_                  `moHidd_PCIDevice_AddInterrupt`_           `moHidd_PCIDevice_Obtain`_                 `moHidd_PCIDevice_Release`_                
+`moHidd_PCIDevice_RemoveInterrupt`_        
 ========================================== ========================================== ========================================== ========================================== 
 
 -----------
@@ -55,6 +55,49 @@ Notes
      and owns the device atomically.
 
 
+
+----------
+
+moHidd_PCIDevice_AddInterrupt
+=============================
+
+Synopsis
+~~~~~~~~
+::
+
+     OOP_Object *OOP_DoMethod(OOP_Object *obj, struct pHidd_PCIDevice_AddInterrupt *Msg);
+
+     OOP_Object *HIDD_PCIDriver_AddInterrupt(OOP_Object *obj, OOP_Object *device,
+                                             struct Interrupt *interrupt);
+
+
+Function
+~~~~~~~~
+::
+
+     Add interrupt handler for the device.
+
+
+Inputs
+~~~~~~
+::
+
+     obj       - Pointer to device object.
+     interrupt - Interrupt structure to add.
+
+
+Result
+~~~~~~
+::
+
+     TRUE it succesful or FALSE on failure.
+
+
+
+See also
+~~~~~~~~
+
+`moHidd_PCIDevice_RemoveInterrupt`_ 
 
 ----------
 
@@ -189,49 +232,6 @@ See also
 ~~~~~~~~
 
 `moHidd_PCIDevice_AddInterrupt`_ 
-
-----------
-
-moHidd_PCIDriver_AddInterrupt
-=============================
-
-Synopsis
-~~~~~~~~
-::
-
-     OOP_Object *OOP_DoMethod(OOP_Object *obj, struct pHidd_PCIDevice_AddInterrupt *Msg);
-
-     OOP_Object *HIDD_PCIDriver_AddInterrupt(OOP_Object *obj, OOP_Object *device,
-                                             struct Interrupt *interrupt);
-
-
-Function
-~~~~~~~~
-::
-
-     Add interrupt handler for the device.
-
-
-Inputs
-~~~~~~
-::
-
-     obj       - Pointer to device object.
-     interrupt - Interrupt structure to add.
-
-
-Result
-~~~~~~
-::
-
-     TRUE it succesful or FALSE on failure.
-
-
-
-See also
-~~~~~~~~
-
-`moHidd_PCIDevice_RemoveInterrupt`_ 
 
 CLID_Hidd_PCIDriver
 -------------------

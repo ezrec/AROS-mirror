@@ -75,6 +75,13 @@ Notes
              VOA_BottomIndent (ULONG) - additional offset from the bottom window border
 
 
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
+
 
 See also
 ~~~~~~~~
@@ -227,6 +234,13 @@ Result
      result - 0 if videolayer could be detached from the window
 
 
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
+
 
 See also
 ~~~~~~~~
@@ -286,6 +300,13 @@ Notes
                              If color keying is not enabled, -1 is returned.
 
 
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
+
 
 See also
 ~~~~~~~~
@@ -325,6 +346,13 @@ Result
 ::
 
      result - TRUE if video layer could be locked, FALSE otherwise
+
+
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
 
 
 
@@ -392,6 +420,13 @@ Notes
                                              border
 
 
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
+
+
 
 See also
 ~~~~~~~~
@@ -429,6 +464,13 @@ Result
 ::
 
      none
+
+
+Bugs
+~~~~
+::
+
+     This function is unimplemented.
 
 
 

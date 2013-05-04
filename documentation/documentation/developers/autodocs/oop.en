@@ -408,11 +408,9 @@ Function
 ::
 
      Maps a globally unique string interface ID into
-     a numeric AttrBase ID that is unique on
-     pr. machine basis. The AttrBase can be combiner
+     a numeric AttrBase ID that is unique on a
+     per machine basis. The AttrBase can be combined
      with attribute offsets to generate attribute IDs.
-     
-     
 
 
 Inputs
@@ -448,7 +446,7 @@ Notes
 ~~~~~
 ::
 
-     Obtained attrbases should be released with ReleasAttrBase().
+     Obtained attrbases should be released with ReleaseAttrBase().
 
 
 
@@ -505,7 +503,7 @@ Result
 See also
 ~~~~~~~~
 
-`OOP_ReleaseAttrBasesArray`_ 
+`OOP_ReleaseAttrBasesArray()`_ 
 
 ----------
 
@@ -654,7 +652,7 @@ Notes
 ~~~~~
 ::
 
-     The call must be paired wit OOP_ObtainAttrBase().
+     The call must be paired with OOP_ObtainAttrBase().
 
 
 
@@ -718,7 +716,7 @@ Notes
 See also
 ~~~~~~~~
 
-`OOP_ObtainAttrBasesArray`_ 
+`OOP_ObtainAttrBasesArray()`_ 
 
 ----------
 
