@@ -30,6 +30,7 @@ FUNCTIONS := \
 	allocdbufinfo \
 	allocraster \
 	allocspritedataa \
+	andrectrect \
 	andrectregion \
         andrectregionnd \
 	andregionregion \
@@ -71,6 +72,7 @@ FUNCTIONS := \
 	closemonitor \
 	cmove \
 	coercemode \
+	copyregion \
 	copysbitmap \
 	createrastport \
 	cwait \
@@ -135,6 +137,7 @@ FUNCTIONS := \
 	move \
 	movesprite \
 	mrgcop \
+	newrectregion \
 	newregion \
 	nextdisplayinfo \
 	obtainbestpena \
