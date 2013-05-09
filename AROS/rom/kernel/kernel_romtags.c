@@ -1,5 +1,5 @@
 /*
-    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
+    Copyright ï¿½ 1995-2011, The AROS Development Team. All rights reserved.
     $Id$
 
     ROMTag scanner.
@@ -11,6 +11,7 @@
 #include <exec/nodes.h>
 #include <exec/memory.h>
 #include <exec/resident.h>
+#include <exec/memheaderext.h>
 #include <proto/alib.h>
 #include <proto/exec.h>
 
@@ -41,38 +42,60 @@ static LONG findname(struct Resident **list, ULONG len, CONST_STRPTR name)
  */
 static APTR krnGetSysMem(struct MemHeader *mh, IPTR *size)
 {
-    /* Just dequeue the first MemChunk. It's assumed that it has the required space for sure. */
-    struct MemChunk *mc = mh->mh_First;
+    if (mh->mh_Attributes & MEMF_MANAGED)
+    {
+        struct MemHeaderExt *mhe = (struct MemHeaderExt *)mh;
+        char *ptr = mhe->mhe_Alloc(mhe, 1024*1024, NULL);
+        *size = 1024*1024;
 
-    mh->mh_First = mc->mc_Next;
-    mh->mh_Free -= mc->mc_Bytes;
+        return ptr;
 
-    D(bug("[RomTagScanner] Using chunk 0x%p of %lu bytes\n", mc, mc->mc_Bytes));
- 
-    *size = mc->mc_Bytes;
-    return mc;
+    }
+    else
+    {
+        /* Just dequeue the first MemChunk. It's assumed that it has the required space for sure. */
+        struct MemChunk *mc = mh->mh_First;
+
+        mh->mh_First = mc->mc_Next;
+        mh->mh_Free -= mc->mc_Bytes;
+
+        D(bug("[RomTagScanner] Using chunk 0x%p of %lu bytes\n", mc, mc->mc_Bytes));
+
+        *size = mc->mc_Bytes;
+        return mc;
+    }
 }
 
 /* Release unused boot-time memory */
 static void krnReleaseSysMem(struct MemHeader *mh, APTR addr, IPTR chunkSize, IPTR allocSize)
 {
-    struct MemChunk *mc;
+    if (mh->mh_Attributes & MEMF_MANAGED)
+    {
+        struct MemHeaderExt *mhe = (struct MemHeaderExt *)mh;
 
-    allocSize = AROS_ROUNDUP2(allocSize, MEMCHUNK_TOTAL);
-    chunkSize -= allocSize;
+        /* In-place decrease size */
+        mhe->mhe_ReAlloc(mhe, addr, allocSize);
+    }
+    else
+    {
+        struct MemChunk *mc;
 
-    D(bug("[RomTagScanner] Chunk 0x%p, %lu of %lu bytes used\n", addr, allocSize, chunkSize));
+        allocSize = AROS_ROUNDUP2(allocSize, MEMCHUNK_TOTAL);
+        chunkSize -= allocSize;
 
-    if (chunkSize < MEMCHUNK_TOTAL)
-    	return;
+        D(bug("[RomTagScanner] Chunk 0x%p, %lu of %lu bytes used\n", addr, allocSize, chunkSize));
 
-    mc = addr + allocSize;
+        if (chunkSize < MEMCHUNK_TOTAL)
+            return;
 
-    mc->mc_Next  = mh->mh_First;
-    mc->mc_Bytes = chunkSize - allocSize;
+        mc = addr + allocSize;
 
-    mh->mh_First = mc;
-    mh->mh_Free += mc->mc_Bytes;
+        mc->mc_Next  = mh->mh_First;
+        mc->mc_Bytes = chunkSize - allocSize;
+
+        mh->mh_First = mc;
+        mh->mh_Free += mc->mc_Bytes;
+    }
 }
 
 
@@ -125,7 +148,7 @@ APTR krnRomTagScanner(struct MemHeader *mh, UWORD *ranges[])
         ptr = (UWORD *)(((IPTR)ptr + 1) & ~1);
         end = (UWORD *)((IPTR)end & ~1);
 
-	D(bug("RomTagScanner: Start = %p, End = %p\n", ptr, end));
+	D(bug("RomTagScanner: Start = %p, End = %p, ptr=%p\n", ptr, end, RomTag));
 	do
 	{
 	    res = (struct Resident *)ptr;
@@ -154,6 +177,7 @@ APTR krnRomTagScanner(struct MemHeader *mh, UWORD *ranges[])
 		{
 		    /* New module */
 		    RomTag[num++] = res;
+
 		    /*
 		     * 'limit' holds a length of our MemChunk in pointers.
 		     * Actually it's a number or pointers we can safely store in it (including NULL terminator).
