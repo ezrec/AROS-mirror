@@ -12,7 +12,9 @@
 #include <exec/tasks.h>
 #include <exec/lists.h>
 #include <proto/exec.h>
-#include <assert.h>
+
+#define ADEBUG 1
+#include <aros/debug.h>
 
 /*****************************************************************************
 
@@ -66,7 +68,7 @@
     struct _Condition *c = (struct _Condition *) cond;
     struct _CondWaiter *waiter;
 
-    assert(c != NULL);
+    ASSERT(c != NULL);
 
     /* safely remove a waiter from the list */
     ObtainSemaphore(&c->lock);

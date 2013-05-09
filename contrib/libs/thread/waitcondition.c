@@ -14,7 +14,9 @@
 #include <exec/lists.h>
 #include <proto/exec.h>
 #include <proto/thread.h>
-#include <assert.h>
+
+#define ADEBUG 1
+#include <aros/debug.h>
 
 /*****************************************************************************
 
@@ -70,8 +72,8 @@
     struct _Condition *c = (struct _Condition *) cond;
     struct _CondWaiter *waiter;
 
-    assert(c != NULL);
-    assert(mutex != NULL);
+    ASSERT(c != NULL);
+    ASSERT(mutex != NULL);
 
     /* setup a new waiter */
     if ((waiter = AllocMem(sizeof(struct _CondWaiter), MEMF_CLEAR)) == NULL) {

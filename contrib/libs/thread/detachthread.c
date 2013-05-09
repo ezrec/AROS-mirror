@@ -10,7 +10,9 @@
 #include "thread_intern.h"
 
 #include <proto/exec.h>
-#include <assert.h>
+
+#define ADEBUG 1
+#include <aros/debug.h>
 
 /*****************************************************************************
 
@@ -65,7 +67,7 @@
 {
     AROS_LIBFUNC_INIT
 
-    assert(thread_id);
+    ASSERT(thread_id);
 
     /* get thread data */
     struct _Thread *thread = _getthreadbyid(thread_id, ThreadBase);

@@ -11,7 +11,9 @@
 
 #include <exec/types.h>
 #include <proto/exec.h>
-#include <assert.h>
+
+#define ADEBUG 1
+#include <aros/debug.h>
 
 /*****************************************************************************
 
@@ -54,7 +56,7 @@
 
     struct _Condition *c = (struct _Condition *) cond;
 
-    assert(c != NULL);
+    ASSERT(c != NULL);
 
     /* we can only destroy the cond if noone is waiting on it */
     ObtainSemaphoreShared(&c->lock);

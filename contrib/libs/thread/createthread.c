@@ -18,7 +18,9 @@
 #include <proto/exec.h>
 #include <proto/dos.h>
 #include <proto/thread.h>
-#include <assert.h>
+
+#define ADEBUG 1
+#include <aros/debug.h>
 
 struct trampoline_data {
     struct ThreadBase   *ThreadBase;
@@ -81,7 +83,7 @@ static void entry_trampoline(void);
     struct Task *task;
     uint32_t id;
 
-    assert(entry != NULL);
+    ASSERT(entry != NULL);
 
     /* allocate some space for the thread and stuff the trampoline needs */
     if ((td = AllocVec(sizeof(struct trampoline_data), MEMF_PUBLIC | MEMF_CLEAR)) == NULL)

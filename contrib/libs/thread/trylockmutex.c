@@ -11,7 +11,9 @@
 
 #include <exec/semaphores.h>
 #include <proto/exec.h>
-#include <assert.h>
+
+#define ADEBUG 1
+#include <aros/debug.h>
 
 /*****************************************************************************
 
@@ -50,7 +52,7 @@
 {
     AROS_LIBFUNC_INIT
 
-    assert(mutex != NULL);
+    ASSERT(mutex != NULL);
 
     return (BOOL) AttemptSemaphore((struct SignalSemaphore *) mutex);
 

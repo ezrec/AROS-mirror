@@ -13,7 +13,9 @@
 #include <exec/tasks.h>
 #include <proto/exec.h>
 #include <proto/thread.h>
-#include <assert.h>
+
+#define ADEBUG 1
+#include <aros/debug.h>
 
 /*****************************************************************************
 
@@ -67,7 +69,7 @@
 
     struct _Thread *thread;
 
-    assert(thread_id);
+    ASSERT(thread_id);
 
     /* get the thread */
     if ((thread = _getthreadbyid(thread_id, ThreadBase)) == NULL)

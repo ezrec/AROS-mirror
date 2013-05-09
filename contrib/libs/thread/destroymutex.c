@@ -11,7 +11,9 @@
 
 #include <exec/semaphores.h>
 #include <proto/exec.h>
-#include <assert.h>
+
+#define ADEBUG 1
+#include <aros/debug.h>
 
 /*****************************************************************************
 
@@ -52,7 +54,7 @@
 {
     AROS_LIBFUNC_INIT
 
-    assert(mutex != NULL);
+    ASSERT(mutex != NULL);
 
     /* we can only destroy the mutex if its not held and noone is waiting */
     Forbid();
