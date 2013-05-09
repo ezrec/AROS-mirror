@@ -17,13 +17,61 @@
 #include "kernel_globals.h"
 #include "kernel_intern.h"
 
-//
-//  tlsf.c
-//  tlsf
-//
-//  Created by Michal Schulz on 06.05.13.
-//  Copyright (c) 2013 Michal Schulz. All rights reserved.
-//
+
+/*
+ * Two Levels Segregate Fit memory allocator (TLSF)
+ * Version 2.4.6
+ *
+ * Written by Miguel Masmano Tello <mimastel@doctor.upv.es>
+ *
+ * Thanks to Ismael Ripoll for his suggestions and reviews
+ *
+ * Copyright (C) 2008, 2007, 2006, 2005, 2004
+ *
+ * This code is released using a dual license strategy: GPL/LGPL
+ * You can choose the licence that better fits your requirements.
+ *
+ * Released under the terms of the GNU General Public License Version 2.0
+ * Released under the terms of the GNU Lesser General Public License Version 2.1
+ *
+ */
+
+/*
+ * Code contributions:
+ *
+ * (May 9 2013) Michal Schulz <michal.schulz@gmx.de>
+ *
+ * - Add tlsf_allocabs function. It allows allocation in a fixed place in memory
+ *
+ * (Jul 28 2007)  Herman ten Brugge <hermantenbrugge@home.nl>:
+ *
+ * - Add 64 bit support. It now runs on x86_64 and solaris64.
+ * - I also tested this on vxworks/32and solaris/32 and i386/32 processors.
+ * - Remove assembly code. I could not measure any performance difference
+ *   on my core2 processor. This also makes the code more portable.
+ * - Moved defines/typedefs from tlsf.h to tlsf.c
+ * - Changed MIN_BLOCK_SIZE to sizeof (free_ptr_t) and BHDR_OVERHEAD to
+ *   (sizeof (bhdr_t) - MIN_BLOCK_SIZE). This does not change the fact
+ *    that the minumum size is still sizeof
+ *   (bhdr_t).
+ * - Changed all C++ comment style to C style. (// -> /.* ... *./)
+ * - Used ls_bit instead of ffs and ms_bit instead of fls. I did this to
+ *   avoid confusion with the standard ffs function which returns
+ *   different values.
+ * - Created set_bit/clear_bit fuctions because they are not present
+ *   on x86_64.
+ * - Added locking support + extra file target.h to show how to use it.
+ * - Added get_used_size function (REMOVED in 2.4)
+ * - Added rtl_realloc and rtl_calloc function
+ * - Implemented realloc clever support.
+ * - Added some test code in the example directory.
+ * - Bug fixed (discovered by the rockbox project: www.rockbox.org).
+ *
+ * (Oct 23 2006) Adam Scislowicz:
+ *
+ * - Support for ARMv5 implemented
+ *
+ */
 
 #include <sys/types.h>
 
