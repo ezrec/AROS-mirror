@@ -144,6 +144,7 @@ static const char *kernel_functions[] =
     "fcntl",
     "mmap",
     "munmap",
+    "getpagesize",
 #if defined(HOST_OS_linux) || defined(HOST_OS_arix)
     "__errno_location",
 #else

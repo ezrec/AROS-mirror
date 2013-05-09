@@ -34,6 +34,7 @@ struct KernelInterface
     int     (*fcntl)(int fd, int cmd, ...);
     void *  (*mmap)(void *addr, size_t length, int prot, int flags, int fd, off_t offset);
     int     (*munmap)(void *addr, size_t length);
+    int     (*getpagesize)();
     int    *(*__error)(void);
 #ifdef HOST_OS_android
     int     (*sigwait)(const sigset_t *restrict set, int *restrict sig);

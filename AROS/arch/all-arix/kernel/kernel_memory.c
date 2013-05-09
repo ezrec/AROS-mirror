@@ -200,7 +200,7 @@ static void *calloc_ex(size_t, size_t, void *);
 #define DEFAULT_AREA_SIZE (1024*10)
 
 #ifdef USE_MMAP
-#define PAGE_SIZE (getKernelBase()->kb_PageSize)
+#define PAGE_SIZE (getKernelBase()->kb_PlatformData->iface->getpagesize())
 #endif
 
 #if USE_PRINTF
@@ -453,7 +453,7 @@ static __inline__ void *get_new_area(size_t * size)
 
 #if USE_MMAP
     *size = ROUNDUP(*size, PAGE_SIZE);
-    if ((area = getKernelBase()->kb_PlatformData->iface->mmap(0, *size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0)) != MAP_FAILED)
+    if ((area = getKernelBase()->kb_PlatformData->iface->mmap(0, *size, PROT_READ | PROT_WRITE | PROT_EXEC, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0)) != MAP_FAILED)
         return area;
 #endif
     return ((void *) ~0);
