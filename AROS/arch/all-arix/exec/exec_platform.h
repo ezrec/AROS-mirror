@@ -45,7 +45,6 @@ struct LibCInterface
     signed long long (*lseek)(int fd, signed long long offset, int whence);
     int     (*mlock)(void *addr, size_t len);
     int     (*munlock)(void *addr, size_t len);
-    int		(*getpagesize)();
 };
 
 struct Exec_PlatformData

@@ -23,7 +23,6 @@ static const char *libc_symbols[] =
     "lseek64",
     "mlock",
     "munlock",
-    "getpagesize",
     NULL
 };
 
