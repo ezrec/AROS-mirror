@@ -4,7 +4,7 @@
 
     Desc: Common memory utility functions
     Lang: english
-*/
+ */
 
 #include <aros/debug.h>
 #include <exec/execbase.h>
@@ -12,6 +12,7 @@
 #include <exec/memheaderext.h>
 #include <proto/exec.h>
 
+#include <kernel_debug.h>
 #include <kernel_base.h>
 #include "kernel_globals.h"
 #include "kernel_intern.h"
@@ -69,17 +70,17 @@ static void *calloc_ex(size_t, size_t, void *);
 
 #if TLSF_STATISTIC
 #define TLSF_ADD_SIZE(tlsf, b) do {                                                                     \
-tlsf->used_size += (b->size & BLOCK_SIZE) + BHDR_OVERHEAD;      \
-if (tlsf->used_size > tlsf->max_size)                                           \
-tlsf->max_size = tlsf->used_size;                                               \
+        tlsf->used_size += (b->size & BLOCK_SIZE) + BHDR_OVERHEAD;      \
+        if (tlsf->used_size > tlsf->max_size)                                           \
+        tlsf->max_size = tlsf->used_size;                                               \
 } while(0)
 
 #define TLSF_REMOVE_SIZE(tlsf, b) do {                                                          \
-tlsf->used_size -= (b->size & BLOCK_SIZE) + BHDR_OVERHEAD;      \
+        tlsf->used_size -= (b->size & BLOCK_SIZE) + BHDR_OVERHEAD;      \
 } while(0)
 
 #define TLSF_ADD_TOTAL_SIZE(tlsf, size) do {                \
-tlsf->total_size += size;                                   \
+        tlsf->total_size += size;                                   \
 } while(0)
 
 #else
@@ -154,16 +155,16 @@ tlsf->total_size += size;                                   \
 #define PAGE_SIZE (getKernelBase()->kb_PageSize)
 #endif
 
-#ifdef USE_PRINTF
+#if USE_PRINTF
 #include <stdio.h>
 # define PRINT_MSG(fmt, args...) printf(fmt, ## args)
 # define ERROR_MSG(fmt, args...) printf(fmt, ## args)
 #else
 # if !defined(PRINT_MSG)
-#  define PRINT_MSG(fmt, args...)
+#  define PRINT_MSG(fmt, args...) nbug(fmt, ## args)
 # endif
 # if !defined(ERROR_MSG)
-#  define ERROR_MSG(fmt, args...)
+#  define ERROR_MSG(fmt, args...) nbug(fmt, ## args)
 # endif
 #endif
 
@@ -241,30 +242,30 @@ static __inline__ void *get_new_area(size_t * size);
 #endif
 
 static const int table[] = {
-    -1, 0, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4,
-    4, 4,
-    4, 4, 4, 4, 4, 4, 4,
-    5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-    5,
-    5, 5, 5, 5, 5, 5, 5,
-    6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-    6,
-    6, 6, 6, 6, 6, 6, 6,
-    6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-    6,
-    6, 6, 6, 6, 6, 6, 6,
-    7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-    7,
-    7, 7, 7, 7, 7, 7, 7,
-    7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-    7,
-    7, 7, 7, 7, 7, 7, 7,
-    7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-    7,
-    7, 7, 7, 7, 7, 7, 7,
-    7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-    7,
-    7, 7, 7, 7, 7, 7, 7
+        -1, 0, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4,
+        4, 4,
+        4, 4, 4, 4, 4, 4, 4,
+        5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+        5,
+        5, 5, 5, 5, 5, 5, 5,
+        6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
+        6,
+        6, 6, 6, 6, 6, 6, 6,
+        6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
+        6,
+        6, 6, 6, 6, 6, 6, 6,
+        7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
+        7,
+        7, 7, 7, 7, 7, 7, 7,
+        7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
+        7,
+        7, 7, 7, 7, 7, 7, 7,
+        7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
+        7,
+        7, 7, 7, 7, 7, 7, 7,
+        7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
+        7,
+        7, 7, 7, 7, 7, 7, 7
 };
 
 static __inline__ int ls_bit(int i)
@@ -346,43 +347,43 @@ static __inline__ bhdr_t *FIND_SUITABLE_BLOCK(tlsf_t * _tlsf, int *_fl, int *_sl
 }
 
 #define EXTRACT_BLOCK_HDR(_b, _tlsf, _fl, _sl) do {                                     \
-_tlsf -> matrix [_fl] [_sl] = _b -> ptr.free_ptr.next;          \
-if (_tlsf -> matrix[_fl][_sl])                                                          \
-_tlsf -> matrix[_fl][_sl] -> ptr.free_ptr.prev = NULL;  \
-else {                                                                                                          \
-clear_bit (_sl, &_tlsf -> sl_bitmap [_fl]);                             \
-if (!_tlsf -> sl_bitmap [_fl])                                                  \
-clear_bit (_fl, &_tlsf -> fl_bitmap);                           \
-}                                                                                                                       \
-_b -> ptr.free_ptr.prev =  NULL;                                \
-_b -> ptr.free_ptr.next =  NULL;                                \
+        _tlsf -> matrix [_fl] [_sl] = _b -> ptr.free_ptr.next;          \
+        if (_tlsf -> matrix[_fl][_sl])                                                          \
+        _tlsf -> matrix[_fl][_sl] -> ptr.free_ptr.prev = NULL;  \
+        else {                                                                                                          \
+            clear_bit (_sl, &_tlsf -> sl_bitmap [_fl]);                             \
+            if (!_tlsf -> sl_bitmap [_fl])                                                  \
+            clear_bit (_fl, &_tlsf -> fl_bitmap);                           \
+        }                                                                                                                       \
+        _b -> ptr.free_ptr.prev =  NULL;                                \
+        _b -> ptr.free_ptr.next =  NULL;                                \
 }while(0)
 
 #define EXTRACT_BLOCK(_b, _tlsf, _fl, _sl) do {                                                 \
-if (_b -> ptr.free_ptr.next)                                                                    \
-_b -> ptr.free_ptr.next -> ptr.free_ptr.prev = _b -> ptr.free_ptr.prev; \
-if (_b -> ptr.free_ptr.prev)                                                                    \
-_b -> ptr.free_ptr.prev -> ptr.free_ptr.next = _b -> ptr.free_ptr.next; \
-if (_tlsf -> matrix [_fl][_sl] == _b) {                                                 \
-_tlsf -> matrix [_fl][_sl] = _b -> ptr.free_ptr.next;           \
-if (!_tlsf -> matrix [_fl][_sl]) {                                                      \
-clear_bit (_sl, &_tlsf -> sl_bitmap[_fl]);                              \
-if (!_tlsf -> sl_bitmap [_fl])                                                  \
-clear_bit (_fl, &_tlsf -> fl_bitmap);                           \
-}                                                                                                                       \
-}                                                                                                                               \
-_b -> ptr.free_ptr.prev = NULL;                                 \
-_b -> ptr.free_ptr.next = NULL;                                 \
+        if (_b -> ptr.free_ptr.next)                                                                    \
+        _b -> ptr.free_ptr.next -> ptr.free_ptr.prev = _b -> ptr.free_ptr.prev; \
+        if (_b -> ptr.free_ptr.prev)                                                                    \
+        _b -> ptr.free_ptr.prev -> ptr.free_ptr.next = _b -> ptr.free_ptr.next; \
+        if (_tlsf -> matrix [_fl][_sl] == _b) {                                                 \
+            _tlsf -> matrix [_fl][_sl] = _b -> ptr.free_ptr.next;           \
+            if (!_tlsf -> matrix [_fl][_sl]) {                                                      \
+                clear_bit (_sl, &_tlsf -> sl_bitmap[_fl]);                              \
+                if (!_tlsf -> sl_bitmap [_fl])                                                  \
+                clear_bit (_fl, &_tlsf -> fl_bitmap);                           \
+            }                                                                                                                       \
+        }                                                                                                                               \
+        _b -> ptr.free_ptr.prev = NULL;                                 \
+        _b -> ptr.free_ptr.next = NULL;                                 \
 } while(0)
 
 #define INSERT_BLOCK(_b, _tlsf, _fl, _sl) do {                                                  \
-_b -> ptr.free_ptr.prev = NULL; \
-_b -> ptr.free_ptr.next = _tlsf -> matrix [_fl][_sl]; \
-if (_tlsf -> matrix [_fl][_sl])                                                                 \
-_tlsf -> matrix [_fl][_sl] -> ptr.free_ptr.prev = _b;           \
-_tlsf -> matrix [_fl][_sl] = _b;                                                                \
-set_bit (_sl, &_tlsf -> sl_bitmap [_fl]);                                               \
-set_bit (_fl, &_tlsf -> fl_bitmap);                                                             \
+        _b -> ptr.free_ptr.prev = NULL; \
+        _b -> ptr.free_ptr.next = _tlsf -> matrix [_fl][_sl]; \
+        if (_tlsf -> matrix [_fl][_sl])                                                                 \
+        _tlsf -> matrix [_fl][_sl] -> ptr.free_ptr.prev = _b;           \
+        _tlsf -> matrix [_fl][_sl] = _b;                                                                \
+        set_bit (_sl, &_tlsf -> sl_bitmap [_fl]);                                               \
+        set_bit (_fl, &_tlsf -> fl_bitmap);                                                             \
 } while(0)
 
 #if USE_SBRK || USE_MMAP
@@ -417,8 +418,8 @@ static __inline__ bhdr_t *process_area(void *area, size_t size)
 
     ib = (bhdr_t *) area;
     ib->size =
-    (sizeof(area_info_t) <
-     MIN_BLOCK_SIZE) ? MIN_BLOCK_SIZE : ROUNDUP_SIZE(sizeof(area_info_t)) | USED_BLOCK | PREV_USED;
+            (sizeof(area_info_t) <
+                    MIN_BLOCK_SIZE) ? MIN_BLOCK_SIZE : ROUNDUP_SIZE(sizeof(area_info_t)) | USED_BLOCK | PREV_USED;
     b = (bhdr_t *) GET_NEXT_BLOCK(ib->ptr.buffer, ib->size & BLOCK_SIZE);
     b->size = ROUNDDOWN_SIZE(size - 3 * BHDR_OVERHEAD - (ib->size & BLOCK_SIZE)) | USED_BLOCK | PREV_USED;
     b->ptr.free_ptr.prev = b->ptr.free_ptr.next = 0;
@@ -466,7 +467,7 @@ static size_t init_memory_pool(size_t mem_pool_size, void *mem_pool)
     TLSF_CREATE_LOCK(&tlsf->lock);
 
     ib = process_area(GET_NEXT_BLOCK
-                      (mem_pool, ROUNDUP_SIZE(sizeof(tlsf_t))), ROUNDDOWN_SIZE(mem_pool_size - sizeof(tlsf_t)));
+            (mem_pool, ROUNDUP_SIZE(sizeof(tlsf_t))), ROUNDDOWN_SIZE(mem_pool_size - sizeof(tlsf_t)));
     b = GET_NEXT_BLOCK(ib->ptr.buffer, ib->size & BLOCK_SIZE);
     free_ex(b->ptr.buffer, tlsf);
     tlsf->area_head = (area_info_t *) ib->ptr.buffer;
@@ -514,8 +515,8 @@ static size_t add_new_area(void *area, size_t area_size, void *mem_pool)
                 ptr = ptr->next;
             }
             b0->size =
-            ROUNDDOWN_SIZE((b0->size & BLOCK_SIZE) +
-                           (ib1->size & BLOCK_SIZE) + 2 * BHDR_OVERHEAD) | USED_BLOCK | PREV_USED;
+                    ROUNDDOWN_SIZE((b0->size & BLOCK_SIZE) +
+                            (ib1->size & BLOCK_SIZE) + 2 * BHDR_OVERHEAD) | USED_BLOCK | PREV_USED;
 
             b1->prev_hdr = b0;
             lb0 = lb1;
@@ -535,8 +536,8 @@ static size_t add_new_area(void *area, size_t area_size, void *mem_pool)
             }
 
             lb1->size =
-            ROUNDDOWN_SIZE((b0->size & BLOCK_SIZE) +
-                           (ib0->size & BLOCK_SIZE) + 2 * BHDR_OVERHEAD) | USED_BLOCK | (lb1->size & PREV_STATE);
+                    ROUNDDOWN_SIZE((b0->size & BLOCK_SIZE) +
+                            (ib0->size & BLOCK_SIZE) + 2 * BHDR_OVERHEAD) | USED_BLOCK | (lb1->size & PREV_STATE);
             next_b = GET_NEXT_BLOCK(lb1->ptr.buffer, lb1->size & BLOCK_SIZE);
             next_b->prev_hdr = lb1;
             b0 = lb1;
@@ -584,7 +585,7 @@ size_t get_max_size(void *mem_pool)
 /******************************************************************/
 size_t get_total_size(void *mem_pool)
 {
-/******************************************************************/
+    /******************************************************************/
 #if TLSF_STATISTIC
     return ((tlsf_t *) mem_pool)->total_size;
 #else
@@ -805,7 +806,7 @@ void *calloc_ex(size_t nelem, size_t elem_size, void *mem_pool)
     return ptr;
 }
 
-#if 0
+#if 1
 /***************  DEBUG FUNCTIONS   **************/
 
 /* The following functions have been designed to ease the debugging of */
@@ -1184,6 +1185,10 @@ void krnCreateMemHeader(CONST_STRPTR name, BYTE pri, APTR start, IPTR size, ULON
     /* The MemHeader itself does not have to be aligned */
     struct MemHeaderExt *mhe = start;
 
+    name = "TLSF Memory";
+
+    nbug("krnCreateMemHeader(%s, %d, %p, %p)\n", name, pri, start, (char*)start+size);
+
     /* If the end is less than (1 << 31), MEMF_31BIT is implied */
     if (((IPTR)start+size) < (1UL << 31))
         flags |= MEMF_31BIT;
@@ -1208,15 +1213,20 @@ void krnCreateMemHeader(CONST_STRPTR name, BYTE pri, APTR start, IPTR size, ULON
     mhe->mhe_MemHeader.mh_Upper           = (APTR)-1;
     mhe->mhe_MemHeader.mh_Free            = 0;
 
-    mhe->mhe_UserData = start + MEMHEADER_TOTAL;
+    mhe->mhe_UserData = start + ((sizeof(struct MemHeaderExt)+15)&~15);
 
-    init_memory_pool(64*1024*1024, mhe->mhe_UserData);
+    init_memory_pool(size - ((sizeof(struct MemHeaderExt)+15)&~15), mhe->mhe_UserData);
 
     mhe->mhe_Alloc = tlsf_allocmem;
     mhe->mhe_AllocAbs = tlsf_allocabs;
     mhe->mhe_Free = tlsf_freemem;
     mhe->mhe_ReAlloc = tlsf_realloc;
     mhe->mhe_Avail = tlsf_avail;
+
+    print_tlsf(mhe->mhe_UserData);
+    print_all_blocks(mhe->mhe_UserData);
+
+    nbug("memory pool created\n");
 }
 
 /*
@@ -1233,15 +1243,15 @@ struct MemHeader *krnCreateROMHeader(CONST_STRPTR name, APTR start, APTR end)
 
     if (mh)
     {
-	mh->mh_Node.ln_Type = NT_MEMORY;
-	mh->mh_Node.ln_Name = (STRPTR)name;
-	mh->mh_Node.ln_Pri = -128;
-	mh->mh_Attributes = MEMF_KICK;
-	mh->mh_First = NULL;
-	mh->mh_Lower = start;
-	mh->mh_Upper = end + 1;			/* end is the last valid address of the region */
-	mh->mh_Free = 0;                        /* Never allocate from this chunk! */
-	Enqueue(&SysBase->MemList, &mh->mh_Node);
+        mh->mh_Node.ln_Type = NT_MEMORY;
+        mh->mh_Node.ln_Name = (STRPTR)name;
+        mh->mh_Node.ln_Pri = -128;
+        mh->mh_Attributes = MEMF_KICK;
+        mh->mh_First = NULL;
+        mh->mh_Lower = start;
+        mh->mh_Upper = end + 1;			/* end is the last valid address of the region */
+        mh->mh_Free = 0;                        /* Never allocate from this chunk! */
+        Enqueue(&SysBase->MemList, &mh->mh_Node);
     }
 
     return mh;
