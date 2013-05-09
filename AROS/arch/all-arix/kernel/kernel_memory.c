@@ -209,10 +209,10 @@ static void *calloc_ex(size_t, size_t, void *);
 # define ERROR_MSG(fmt, args...) printf(fmt, ## args)
 #else
 # if !defined(PRINT_MSG)
-#  define PRINT_MSG(fmt, args...) nbug(fmt, ## args)
+#  define PRINT_MSG(fmt, args...)
 # endif
 # if !defined(ERROR_MSG)
-#  define ERROR_MSG(fmt, args...) nbug(fmt, ## args)
+#  define ERROR_MSG(fmt, args...)
 # endif
 #endif
 
@@ -663,7 +663,7 @@ void *malloc_ex(size_t size, void *mem_pool)
     int fl, sl;
     size_t tmp_size;
 
-    size = (size < MIN_BLOCK_SIZE) ? MIN_BLOCK_SIZE : ROUNDUP_SIZE(size);
+    size = /*(size < MIN_BLOCK_SIZE) ? MIN_BLOCK_SIZE :*/ ROUNDUP_SIZE(size);
 
     /* Rounding up the requested size and calculating fl and sl */
     MAPPING_SEARCH(&size, &fl, &sl);
@@ -777,7 +777,7 @@ void *realloc_ex(void *ptr, size_t new_size, void *mem_pool)
     }
     b = (bhdr_t *) ((char *) ptr - BHDR_OVERHEAD);
     next_b = GET_NEXT_BLOCK(b->ptr.buffer, b->size & BLOCK_SIZE);
-    new_size = (new_size < MIN_BLOCK_SIZE) ? MIN_BLOCK_SIZE : ROUNDUP_SIZE(new_size);
+    new_size = /*(new_size < MIN_BLOCK_SIZE) ? MIN_BLOCK_SIZE :*/ ROUNDUP_SIZE(new_size);
     tmp_size = (b->size & BLOCK_SIZE);
     if (new_size <= tmp_size) {
         TLSF_REMOVE_SIZE(tlsf, b);
@@ -839,23 +839,7 @@ void *realloc_ex(void *ptr, size_t new_size, void *mem_pool)
     return ptr_aux;
 }
 
-/******************************************************************/
-void *calloc_ex(size_t nelem, size_t elem_size, void *mem_pool)
-{
-    /******************************************************************/
-    void *ptr;
-
-    if (nelem <= 0 || elem_size <= 0)
-        return NULL;
-
-    if (!(ptr = malloc_ex(nelem * elem_size, mem_pool)))
-        return NULL;
-    memset(ptr, 0, nelem * elem_size);
-
-    return ptr;
-}
-
-#if 1
+#if 0
 /***************  DEBUG FUNCTIONS   **************/
 
 /* The following functions have been designed to ease the debugging of */
