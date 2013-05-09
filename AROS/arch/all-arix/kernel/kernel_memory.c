@@ -114,7 +114,7 @@ static void *calloc_ex(size_t, size_t, void *);
 
 /* Some IMPORTANT TLSF parameters */
 /* Unlike the preview TLSF versions, now they are statics */
-#define BLOCK_ALIGN (sizeof(void *) * 2)
+#define BLOCK_ALIGN (sizeof(void *) * 4)
 
 #define MAX_FLI         (30)
 #define MAX_LOG2_SLI    (5)
@@ -182,6 +182,7 @@ typedef struct bhdr_struct {
     /* The size is stored in bytes */
     size_t size;                /* bit 0 indicates whether the block is used and */
     /* bit 1 allows to know whether the previous block is free */
+    u32_t fill[2];
     union {
         struct free_ptr_struct free_ptr;
         u8_t buffer[1];         /*sizeof(struct free_ptr_struct)]; */
@@ -924,17 +925,28 @@ void print_all_blocks(tlsf_t * tlsf)
 static void * tlsf_allocmem(struct MemHeaderExt *mhe, IPTR size, ULONG *flags)
 {
     void *ptr = malloc_ex(size, mhe->mhe_UserData);
+
+    mhe->mhe_MemHeader.mh_Free = get_total_size(mhe->mhe_UserData) - get_used_size(mhe->mhe_UserData);
+
+    if (flags && (*flags & MEMF_CLEAR))
+        bzero(ptr, size);
+
     return ptr;
 }
 
 static void tlsf_freemem(struct MemHeaderExt *mhe, APTR ptr, IPTR size)
 {
     free_ex(ptr, mhe->mhe_UserData);
+
+    mhe->mhe_MemHeader.mh_Free = get_total_size(mhe->mhe_UserData) - get_used_size(mhe->mhe_UserData);
 }
 
 static void * tlsf_realloc(struct MemHeaderExt *mhe, APTR old, IPTR size)
 {
     void *ptr = realloc_ex(old, size, mhe->mhe_UserData);
+
+    mhe->mhe_MemHeader.mh_Free = get_total_size(mhe->mhe_UserData) - get_used_size(mhe->mhe_UserData);
+
     return ptr;
 }
 
@@ -1164,6 +1176,9 @@ static void * tlsf_allocabs(struct MemHeaderExt *mhe, IPTR size, APTR addr)
                     }
 
                     TLSF_ADD_SIZE(tlsf, breg);
+
+                    mhe->mhe_MemHeader.mh_Free = get_total_size(mhe->mhe_UserData) - get_used_size(mhe->mhe_UserData);
+
                     return breg->ptr.buffer;
                 }
 
@@ -1187,8 +1202,6 @@ void krnCreateMemHeader(CONST_STRPTR name, BYTE pri, APTR start, IPTR size, ULON
 
     name = "TLSF Memory";
 
-    nbug("krnCreateMemHeader(%s, %d, %p, %p)\n", name, pri, start, (char*)start+size);
-
     /* If the end is less than (1 << 31), MEMF_31BIT is implied */
     if (((IPTR)start+size) < (1UL << 31))
         flags |= MEMF_31BIT;
@@ -1211,22 +1224,20 @@ void krnCreateMemHeader(CONST_STRPTR name, BYTE pri, APTR start, IPTR size, ULON
      */
     mhe->mhe_MemHeader.mh_Lower           = (APTR)0;
     mhe->mhe_MemHeader.mh_Upper           = (APTR)-1;
-    mhe->mhe_MemHeader.mh_Free            = 0;
 
     mhe->mhe_UserData = start + ((sizeof(struct MemHeaderExt)+15)&~15);
 
+    bzero(mhe->mhe_UserData, 1024);
+
     init_memory_pool(size - ((sizeof(struct MemHeaderExt)+15)&~15), mhe->mhe_UserData);
+
+    mhe->mhe_MemHeader.mh_Free = get_total_size(mhe->mhe_UserData) - get_used_size(mhe->mhe_UserData);
 
     mhe->mhe_Alloc = tlsf_allocmem;
     mhe->mhe_AllocAbs = tlsf_allocabs;
     mhe->mhe_Free = tlsf_freemem;
     mhe->mhe_ReAlloc = tlsf_realloc;
     mhe->mhe_Avail = tlsf_avail;
-
-    print_tlsf(mhe->mhe_UserData);
-    print_all_blocks(mhe->mhe_UserData);
-
-    nbug("memory pool created\n");
 }
 
 /*
