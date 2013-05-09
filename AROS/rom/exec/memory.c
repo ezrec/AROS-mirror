@@ -1,11 +1,12 @@
 /*
-    Copyright © 1995-2012, The AROS Development Team. All rights reserved.
+    Copyright ï¿½ 1995-2012, The AROS Development Team. All rights reserved.
     $Id$
 */
 
 #include <aros/debug.h>
 #include <exec/rawfmt.h>
 #include <proto/kernel.h>
+#include <exec/memheaderext.h>
 
 #include "exec_intern.h"
 #include "exec_util.h"
@@ -184,212 +185,231 @@ static inline BOOL validateChunk(struct MemChunk *p2, struct MemChunk *p1, struc
  */
 APTR stdAlloc(struct MemHeader *mh, IPTR size, ULONG requirements, struct TraceLocation *tp, struct ExecBase *SysBase)
 {
-    /* First round byteSize up to a multiple of MEMCHUNK_TOTAL */
-    IPTR byteSize = AROS_ROUNDUP2(size, MEMCHUNK_TOTAL);
-    struct MemChunk *mc=NULL, *p1, *p2;
-
-    /* Validate MemHeader before doing anything. */
-    if (!validateHeader(mh, MM_ALLOC, NULL, size, tp, SysBase))
-    	return NULL;
-
-    /*
-     * The free memory list is only single linked, i.e. to remove
-     * elements from the list I need the node's predecessor. For the
-     * first element I can use mh->mh_First instead of a real predecessor.
-     */
-    p1 = (struct MemChunk *)&mh->mh_First;
-    p2 = p1->mc_Next;
-
-    /*
-     * Follow the memory list. p1 is the previous MemChunk, p2 is the current one.
-     * On 1st pass p1 points to mh->mh_First, so that changing p1->mc_Next actually
-     * changes mh->mh_First.
-     */
-    while (p2 != NULL)
+    if (mh->mh_Attributes & MEMF_MANAGED)
     {
-    	/* Validate the current chunk */
-    	if (!validateChunk(p2, p1, mh, MM_ALLOC, NULL, size, tp, SysBase))
-    	    return NULL;
+        struct MemHeaderExt *mhe = (struct MemHeaderExt *)mh;
 
-        /* Check if the current block is large enough */
-        if (p2->mc_Bytes>=byteSize)
-        {
-            /* It is. */
-            mc = p1;
-
-            /* Use this one if MEMF_REVERSE is not set.*/
-            if (!(requirements & MEMF_REVERSE))
-                break;
-            /* Else continue - there may be more to come. */
-        }
-
-        /* Go to next block */
-        p1 = p2;
-        p2 = p1->mc_Next;
+        return mhe->mhe_Alloc(mhe, size, &requirements);
     }
-
-    /* Something found? */
-    if (mc != NULL)
+    else
     {
-        /* Remember: if MEMF_REVERSE is set p1 and p2 are now invalid. */
-        p1 = mc;
+        /* First round byteSize up to a multiple of MEMCHUNK_TOTAL */
+        IPTR byteSize = AROS_ROUNDUP2(size, MEMCHUNK_TOTAL);
+        struct MemChunk *mc=NULL, *p1, *p2;
+
+        /* Validate MemHeader before doing anything. */
+        if (!validateHeader(mh, MM_ALLOC, NULL, size, tp, SysBase))
+            return NULL;
+
+        /*
+         * The free memory list is only single linked, i.e. to remove
+         * elements from the list I need the node's predecessor. For the
+         * first element I can use mh->mh_First instead of a real predecessor.
+         */
+        p1 = (struct MemChunk *)&mh->mh_First;
         p2 = p1->mc_Next;
 
-        /* Remove the block from the list and return it. */
-        if (p2->mc_Bytes == byteSize)
+        /*
+         * Follow the memory list. p1 is the previous MemChunk, p2 is the current one.
+         * On 1st pass p1 points to mh->mh_First, so that changing p1->mc_Next actually
+         * changes mh->mh_First.
+         */
+        while (p2 != NULL)
         {
-            /* Fits exactly. Just relink the list. */
-            p1->mc_Next = p2->mc_Next;
-            mc          = p2;
-        }
-        else
-        {
-            if (requirements & MEMF_REVERSE)
+            /* Validate the current chunk */
+            if (!validateChunk(p2, p1, mh, MM_ALLOC, NULL, size, tp, SysBase))
+                return NULL;
+
+            /* Check if the current block is large enough */
+            if (p2->mc_Bytes>=byteSize)
             {
-                /* Return the last bytes. */
-                p1->mc_Next=p2;
-                mc = (struct MemChunk *)((UBYTE *)p2+p2->mc_Bytes-byteSize);
+                /* It is. */
+                mc = p1;
+
+                /* Use this one if MEMF_REVERSE is not set.*/
+                if (!(requirements & MEMF_REVERSE))
+                    break;
+                /* Else continue - there may be more to come. */
+            }
+
+            /* Go to next block */
+            p1 = p2;
+            p2 = p1->mc_Next;
+        }
+
+        /* Something found? */
+        if (mc != NULL)
+        {
+            /* Remember: if MEMF_REVERSE is set p1 and p2 are now invalid. */
+            p1 = mc;
+            p2 = p1->mc_Next;
+
+            /* Remove the block from the list and return it. */
+            if (p2->mc_Bytes == byteSize)
+            {
+                /* Fits exactly. Just relink the list. */
+                p1->mc_Next = p2->mc_Next;
+                mc          = p2;
             }
             else
             {
-                /* Return the first bytes. */
-                p1->mc_Next=(struct MemChunk *)((UBYTE *)p2+byteSize);
-                mc=p2;
+                if (requirements & MEMF_REVERSE)
+                {
+                    /* Return the last bytes. */
+                    p1->mc_Next=p2;
+                    mc = (struct MemChunk *)((UBYTE *)p2+p2->mc_Bytes-byteSize);
+                }
+                else
+                {
+                    /* Return the first bytes. */
+                    p1->mc_Next=(struct MemChunk *)((UBYTE *)p2+byteSize);
+                    mc=p2;
+                }
+
+                p1           = p1->mc_Next;
+                p1->mc_Next  = p2->mc_Next;
+                p1->mc_Bytes = p2->mc_Bytes-byteSize;
             }
 
-            p1           = p1->mc_Next;
-            p1->mc_Next  = p2->mc_Next;
-            p1->mc_Bytes = p2->mc_Bytes-byteSize;
+            mh->mh_Free -= byteSize;
+
+            /* Clear the block if requested */
+            if (requirements & MEMF_CLEAR)
+                memset(mc, 0, byteSize);
         }
 
-        mh->mh_Free -= byteSize;
-
-	/* Clear the block if requested */
-	if (requirements & MEMF_CLEAR)
-	    memset(mc, 0, byteSize);
+        return mc;
     }
-
-    return mc;
 }
 
 /* Free 'size' bytes starting at 'addr' belonging to MemHeader 'freeList' */
 void stdDealloc(struct MemHeader *freeList, APTR addr, IPTR size, struct TraceLocation *tp, struct ExecBase *SysBase)
 {
-    APTR memoryBlock;
-    IPTR byteSize;
-    struct MemChunk *p1, *p2, *p3;
-    UBYTE *p4;
+    if (freeList->mh_Attributes & MEMF_MANAGED)
+    {
+        struct MemHeaderExt *mhe = (struct MemHeaderExt *)freeList;
 
-    /* Make sure the MemHeader is OK */
-    if (!validateHeader(freeList, MM_FREE, addr, size, tp, SysBase))
-    	return;
+        if (addr)
+            mhe->mhe_Free(mhe, addr, size);
+    }
+    else
+    {
+        APTR memoryBlock;
+        IPTR byteSize;
+        struct MemChunk *p1, *p2, *p3;
+        UBYTE *p4;
 
-    /* Align size to the requirements */
-    byteSize = size + ((IPTR)addr & (MEMCHUNK_TOTAL - 1));
-    byteSize = (byteSize + MEMCHUNK_TOTAL-1) & ~(MEMCHUNK_TOTAL - 1);
+        /* Make sure the MemHeader is OK */
+        if (!validateHeader(freeList, MM_FREE, addr, size, tp, SysBase))
+            return;
 
-    /* Align the block as well */
-    memoryBlock = (APTR)((IPTR)addr & ~(MEMCHUNK_TOTAL-1));
+        /* Align size to the requirements */
+        byteSize = size + ((IPTR)addr & (MEMCHUNK_TOTAL - 1));
+        byteSize = (byteSize + MEMCHUNK_TOTAL-1) & ~(MEMCHUNK_TOTAL - 1);
 
-    /*
+        /* Align the block as well */
+        memoryBlock = (APTR)((IPTR)addr & ~(MEMCHUNK_TOTAL-1));
+
+        /*
 	The free memory list is only single linked, i.e. to insert
 	elements into the list I need the node as well as its
 	predecessor. For the first element I can use freeList->mh_First
 	instead of a real predecessor.
-    */
-    p1 = (struct MemChunk *)&freeList->mh_First;
-    p2 = freeList->mh_First;
+         */
+        p1 = (struct MemChunk *)&freeList->mh_First;
+        p2 = freeList->mh_First;
 
-    /* Start and end(+1) of the block */
-    p3 = (struct MemChunk *)memoryBlock;
-    p4 = (UBYTE *)p3 + byteSize;
+        /* Start and end(+1) of the block */
+        p3 = (struct MemChunk *)memoryBlock;
+        p4 = (UBYTE *)p3 + byteSize;
 
-    /* No chunk in list? Just insert the current one and return. */
-    if (p2 == NULL)
-    {
-	p3->mc_Bytes = byteSize;
-	p3->mc_Next = NULL;
-	p1->mc_Next = p3;
-	freeList->mh_Free += byteSize;
-	return;
-    }
+        /* No chunk in list? Just insert the current one and return. */
+        if (p2 == NULL)
+        {
+            p3->mc_Bytes = byteSize;
+            p3->mc_Next = NULL;
+            p1->mc_Next = p3;
+            freeList->mh_Free += byteSize;
+            return;
+        }
 
-    /* Follow the list to find a place where to insert our memory. */
-    do
-    {
-    	if (!validateChunk(p2, p1, freeList, MM_FREE, addr, size, tp, SysBase))
-    	    return;
+        /* Follow the list to find a place where to insert our memory. */
+        do
+        {
+            if (!validateChunk(p2, p1, freeList, MM_FREE, addr, size, tp, SysBase))
+                return;
 
-	/* Found a block with a higher address? */
-	if (p2 >= p3)
-	{
+            /* Found a block with a higher address? */
+            if (p2 >= p3)
+            {
 #if !defined(NO_CONSISTENCY_CHECKS)
-	    /*
+                /*
 		If the memory to be freed overlaps with the current
 		block something must be wrong.
-	    */
-	    if (p4>(UBYTE *)p2)
-	    {
-		bug("[MM] Chunk allocator error\n");
-		bug("[MM] Attempt to free %u bytes at 0x%p from MemHeader 0x%p\n", byteSize, memoryBlock, freeList);
-		bug("[MM] Block overlaps (1) with chunk 0x%p (%u bytes)\n", p2, p2->mc_Bytes);
+                 */
+                if (p4>(UBYTE *)p2)
+                {
+                    bug("[MM] Chunk allocator error\n");
+                    bug("[MM] Attempt to free %u bytes at 0x%p from MemHeader 0x%p\n", byteSize, memoryBlock, freeList);
+                    bug("[MM] Block overlaps (1) with chunk 0x%p (%u bytes)\n", p2, p2->mc_Bytes);
 
-		Alert(AN_FreeTwice);
-		return;
-	    }
+                    Alert(AN_FreeTwice);
+                    return;
+                }
 #endif
-	    /* End the loop with p2 non-zero */
-	    break;
-	}
-	/* goto next block */
-	p1 = p2;
-	p2 = p2->mc_Next;
+                /* End the loop with p2 non-zero */
+                break;
+            }
+            /* goto next block */
+            p1 = p2;
+            p2 = p2->mc_Next;
 
-    /* If the loop ends with p2 zero add it at the end. */
-    } while (p2 != NULL);
+            /* If the loop ends with p2 zero add it at the end. */
+        } while (p2 != NULL);
 
-    /* If there was a previous block merge with it. */
-    if (p1 != (struct MemChunk *)&freeList->mh_First)
-    {
+        /* If there was a previous block merge with it. */
+        if (p1 != (struct MemChunk *)&freeList->mh_First)
+        {
 #if !defined(NO_CONSISTENCY_CHECKS)
-	/* Check if they overlap. */
-	if ((UBYTE *)p1 + p1->mc_Bytes > (UBYTE *)p3)
-	{
-	    bug("[MM] Chunk allocator error\n");
-	    bug("[MM] Attempt to free %u bytes at 0x%p from MemHeader 0x%p\n", byteSize, memoryBlock, freeList);
-	    bug("[MM] Block overlaps (2) with chunk 0x%p (%u bytes)\n", p1, p1->mc_Bytes);
+            /* Check if they overlap. */
+            if ((UBYTE *)p1 + p1->mc_Bytes > (UBYTE *)p3)
+            {
+                bug("[MM] Chunk allocator error\n");
+                bug("[MM] Attempt to free %u bytes at 0x%p from MemHeader 0x%p\n", byteSize, memoryBlock, freeList);
+                bug("[MM] Block overlaps (2) with chunk 0x%p (%u bytes)\n", p1, p1->mc_Bytes);
 
-	    Alert(AN_FreeTwice);
-	    return;
-	}
+                Alert(AN_FreeTwice);
+                return;
+            }
 #endif
-	/* Merge if possible */
-	if ((UBYTE *)p1 + p1->mc_Bytes == (UBYTE *)p3)
-	    p3 = p1;
-	else
-	    /* Not possible to merge */
-	    p1->mc_Next = p3;
-    }else
-	/*
+            /* Merge if possible */
+            if ((UBYTE *)p1 + p1->mc_Bytes == (UBYTE *)p3)
+                p3 = p1;
+            else
+                /* Not possible to merge */
+                p1->mc_Next = p3;
+        }else
+            /*
 	    There was no previous block. Just insert the memory at
 	    the start of the list.
-	*/
-	p1->mc_Next = p3;
+             */
+            p1->mc_Next = p3;
 
-    /* Try to merge with next block (if there is one ;-) ). */
-    if (p4 == (UBYTE *)p2 && p2 != NULL)
-    {
-	/*
+        /* Try to merge with next block (if there is one ;-) ). */
+        if (p4 == (UBYTE *)p2 && p2 != NULL)
+        {
+            /*
 	   Overlap checking already done. Doing it here after
 	   the list potentially changed would be a bad idea.
-	*/
-	p4 += p2->mc_Bytes;
-	p2 = p2->mc_Next;
+             */
+            p4 += p2->mc_Bytes;
+            p2 = p2->mc_Next;
+        }
+        /* relink the list and return. */
+        p3->mc_Next = p2;
+        p3->mc_Bytes = p4 - (UBYTE *)p3;
+        freeList->mh_Free += byteSize;
     }
-    /* relink the list and return. */
-    p3->mc_Next = p2;
-    p3->mc_Bytes = p4 - (UBYTE *)p3;
-    freeList->mh_Free += byteSize;
 }
 
 /* 
@@ -438,7 +458,7 @@ APTR AllocMemHeader(IPTR size, ULONG flags, struct TraceLocation *loc, struct Ex
 	 */
 	mh->mh_Node.ln_Type	= NT_MEMORY;
 	mh->mh_Node.ln_Pri      = orig->mh_Node.ln_Pri;
-	mh->mh_Attributes	= orig->mh_Attributes;
+	mh->mh_Attributes	= orig->mh_Attributes & ~MEMF_MANAGED;
 	mh->mh_Lower 	    	= (APTR)mh + MEMHEADER_TOTAL;
 	mh->mh_Upper 	    	= mh->mh_Lower + size;
 	mh->mh_First	    	= mh->mh_Lower;
