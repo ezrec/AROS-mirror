@@ -290,6 +290,7 @@ static __inline__ bhdr_t *process_area(void *area, size_t size);
 static __inline__ void *get_new_area(size_t * size);
 #endif
 
+#if !defined(__i386__) && !defined(__x86_64__)
 static const int table[] = {
         -1, 0, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4,
         4, 4,
@@ -316,23 +317,32 @@ static const int table[] = {
         7,
         7, 7, 7, 7, 7, 7, 7
 };
+#endif
 
 static __inline__ int ls_bit(int i)
 {
+#if defined(__i386__) || defined(__x86_64__)
+    return __builtin_ffs(i) - 1;
+#else
     unsigned int a;
     unsigned int x = i & -i;
 
     a = x <= 0xffff ? (x <= 0xff ? 0 : 8) : (x <= 0xffffff ? 16 : 24);
     return table[x >> a] + a;
+#endif
 }
 
 static __inline__ int ms_bit(int i)
 {
+#if defined(__i386__) || defined(__x86_64__)
+    return i ? 31 - __builtin_clz(i) : -1;
+#else
     unsigned int a;
     unsigned int x = (unsigned int) i;
 
     a = x <= 0xffff ? (x <= 0xff ? 0 : 8) : (x <= 0xffffff ? 16 : 24);
     return table[x >> a] + a;
+#endif
 }
 
 static __inline__ void set_bit(int nr, u32_t * addr)
