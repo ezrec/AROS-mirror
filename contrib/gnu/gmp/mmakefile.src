@@ -5,6 +5,6 @@
 
 #MM- contrib-gnu-gmp : development-gmp
 
-%fetch_and_build_gnu_development package=gmp version=5.0.1 patch=no
+%fetch_and_build_gnu_development package=gmp version=5.0.1 patch=yes
 
 %common

@@ -1,0 +1,13 @@
+diff -ruN gmp-5.0.1/gmp-h.in gmp-5.0.1.aros/gmp-h.in
+--- gmp-5.0.1/gmp-h.in	2010-02-06 13:43:13.000000000 +0100
++++ gmp-5.0.1.aros/gmp-h.in	2010-02-06 13:43:19.000000000 +0100
+@@ -326,7 +326,8 @@
+   || defined (__STDIO__)              /* Apple MPW MrC */       \
+   || defined (_MSL_STDIO_H)           /* Metrowerks */          \
+   || defined (_STDIO_H_INCLUDED)      /* QNX4 */		\
+-  || defined (_ISO_STDIO_ISO_H)       /* Sun C++ */
++  || defined (_ISO_STDIO_ISO_H)       /* Sun C++ */		\
++  || defined (_STDC_STDIO_H_)         /* AROS */
+ #define _GMP_H_HAVE_FILE 1
+ #endif
+ 
