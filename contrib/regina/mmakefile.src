@@ -70,7 +70,7 @@ FILES := $(OFILES) \
 
 %build_module mmake=contrib-regina-module \
     modname=regina modtype=library \
-    files=$(FILES) uselibs="arosc_rel" \
+    files=$(FILES) \
     objdir=$(GENDIR)/$(CURDIR)/shared linklibname=regina_shared
 
 %copy_includes includes=rexxsaa.h

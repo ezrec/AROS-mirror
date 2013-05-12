@@ -1188,7 +1188,7 @@ diff -ruN SDL-1.2.15/include/SDL_video.h SDL-1.2.15.aros/include/SDL_video.h
 diff -ruN SDL-1.2.15/SDL.conf SDL-1.2.15.aros/SDL.conf
 --- SDL-1.2.15/SDL.conf	1969-12-31 19:00:00.000000000 -0500
 +++ SDL-1.2.15.aros/SDL.conf	2013-03-08 08:30:15.000000000 -0500
-@@ -0,0 +1,241 @@
+@@ -0,0 +1,243 @@
 +##begin config
 +basename SDL
 +libbase SDLBase
@@ -1198,6 +1198,8 @@ diff -ruN SDL-1.2.15/SDL.conf SDL-1.2.15.aros/SDL.conf
 +date 07.04.2013
 +copyright Copyright (C) 1997-2012 Sam Lantinga, 2013 The AROS Development Team
 +options peropenerbase
++rellib stdcio
++rellib stdc
 +rellib arosc
 +forcebase aroscbase
 +##end config

@@ -1,5 +1,5 @@
 /*
-    Copyright © 2008-2012, The AROS Development Team. All rights reserved.
+    Copyright © 2008-2013, The AROS Development Team. All rights reserved.
     $Id$
 
     Support functions for POSIX exec*() functions.
@@ -57,7 +57,7 @@ APTR __exec_prepare(const char *filename, int searchpath, char *const argv[], ch
         goto error;
     }
 
-    /* Use own memory to allocate so that no arosstdc.library functions need to be called
+    /* Use own memory to allocate so that no stdc.library functions need to be called
        exec_pool can also be allocated in __exec_valist2array
     */
     if (!aroscbase->acb_exec_pool)

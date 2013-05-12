@@ -42,7 +42,7 @@ EXEDIR := $(CONTRIBDIR)/Misc/aminet/FileX
 
 #MM aminet-disk-moni-filex : includes linklibs setup-filex-catalogs
 
-USER_LDFLAGS := -noarosc
+USER_LDFLAGS := -noarosc -nostdc
 
 %build_prog mmake=aminet-disk-moni-filex \
     progname=FileX targetdir=$(EXEDIR) \
