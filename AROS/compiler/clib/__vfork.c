@@ -61,14 +61,21 @@ LONG launcher()
 
     if(__register_init_fdarray(pbase))
         aroscbase = (struct aroscbase *)OpenLibrary((STRPTR) "arosc.library", 0);
-    if(!aroscbase)
+    if(aroscbase)
+        aroscbase->StdCBase = (struct StdCBase *)OpenLibrary((STRPTR)"stdc.library", 0);
+    if(!aroscbase || !aroscbase->StdCBase)
     {
+        if (aroscbase)
+            CloseLibrary((struct Library *)aroscbase);
 	FreeSignal(child_signal);
 	udata->child_errno = ENOMEM;
 	Signal(udata->parent, 1 << udata->parent_signal);
 	return -1;	
     }
-    D(bug("launcher: Opened aroscbase: %x\n", aroscbase));
+    D(bug("launcher: Opened aroscbase: %x, StdCBase: %x\n",
+          aroscbase, aroscbase->StdCBase
+      )
+    );
 
     aroscbase->acb_flags |= VFORK_PARENT;
       
