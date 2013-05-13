@@ -12,5 +12,8 @@
 struct StdCIntBase
 {
     struct StdCBase StdCBase;
+
+    /* stdlib.h */
+    APTR mempool;
 };
 
