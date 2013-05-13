@@ -1,8 +1,12 @@
 include $(TOP)/config/make.cfg
 
 STDC := \
+    __ctype \
     longjmp \
     setjmp
+
+STDC_LINKLIB := \
+    __ctype_linklib
 
 STDCIO := \
     __stdcio_init
@@ -16,7 +20,7 @@ USER_LDFLAGS := -nostdc -noposixc
 
 %build_module mmake=compiler-stdc \
     modname=stdc modtype=library \
-    files=$(STDC)
+    files=$(STDC) linklibfiles=$(STDC_LINKLIB)
 
 %build_module mmake=compiler-stdcio \
     modname=stdcio modtype=library \
@@ -24,7 +28,7 @@ USER_LDFLAGS := -nostdc -noposixc
     uselibs="stdc_rel"
 
 STDC_STATIC := \
-    empty
+    __ctype
 
 USER_CFLAGS := -DSTDC_STATIC
 
