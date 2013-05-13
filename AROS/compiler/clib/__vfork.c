@@ -1,5 +1,5 @@
 /*
-    Copyright © 2008-2012, The AROS Development Team. All rights reserved.
+    Copyright © 2008-2013, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -8,6 +8,7 @@
 #include <exec/exec.h>
 #include <exec/tasks.h>
 #include <dos/dos.h>
+#include <libraries/stdc.h>
 #include <aros/cpu.h>
 
 #include <sys/types.h>
@@ -84,7 +85,7 @@ LONG launcher()
 
     if(setjmp(udata->child_exitjmp) == 0)
     {
-        __arosc_program_startup(udata->child_exitjmp, &udata->child_error);
+        __stdc_program_startup(udata->child_exitjmp, &udata->child_error);
 
         /* Setup complete, signal parent */
         D(bug("launcher: Signaling parent that we finished setup\n"));
@@ -251,9 +252,9 @@ pid_t __vfork(jmp_buf env)
     D(bug("__vfork: Parent: Setting jmp_buf at %p\n", udata->parent_newexitjmp));
     if(setjmp(udata->parent_newexitjmp) == 0)
     {
-        udata->parent_olderrorptr = __arosc_set_errorptr(&udata->child_error);
+        udata->parent_olderrorptr = __stdc_set_errorptr(&udata->child_error);
         udata->child_error = *udata->parent_olderrorptr;
-        __arosc_set_exitjmp(udata->parent_newexitjmp, udata->parent_oldexitjmp);
+        __stdc_set_exitjmp(udata->parent_newexitjmp, udata->parent_oldexitjmp);
 
         parent_enterpretendchild(udata);
 
@@ -302,7 +303,7 @@ pid_t __vfork(jmp_buf env)
 	D(bug("__vfork: Parent: restoring startup buffer\n"));
 	/* Restore parent startup buffer */
         jmp_buf dummy;
-        __arosc_set_exitjmp(udata->parent_oldexitjmp, dummy);
+        __stdc_set_exitjmp(udata->parent_oldexitjmp, dummy);
 
 	D(bug("__vfork: Parent: freeing parent signal\n"));
 	FreeSignal(udata->parent_signal);

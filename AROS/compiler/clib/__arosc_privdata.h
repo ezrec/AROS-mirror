@@ -56,9 +56,6 @@ struct aroscbase
     int acb_numslots;
     struct _fdesc **acb_fd_array;
 
-    /* atexit.c */
-    struct MinList acb_atexit_list;
-
     /* umask.c */
     mode_t acb_umask;
 
@@ -111,10 +108,6 @@ struct aroscbase
     /* Used for random()/srandom() */
     struct random_state *acb_random;
 
-    /* Used for arosc startup code */
-    int *acb_startup_error_ptr;
-    jmp_buf acb_exit_jmp_buf;
-
     /* temp bases until we are gone */
     struct StdCBase *StdCBase;
     struct StdCIOBase *StdCIOBase;
@@ -148,9 +141,6 @@ struct aroscbase
    for SHARE_ACPD_WITH_CHILD
 */
 #define SHARE_ACPD_WITH_CHILD 16
-
-/* Make a distinction between exit() and abort() */
-#define ABNORMAL_EXIT 32
 
 /* !acb_flags */
 
