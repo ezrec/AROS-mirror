@@ -15,5 +15,6 @@ struct StdCIntBase
 
     /* stdlib.h */
     APTR mempool;
+    unsigned int srand_seed;
 };
 
