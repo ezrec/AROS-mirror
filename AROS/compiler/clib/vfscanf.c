@@ -116,7 +116,7 @@ static int __ungetc(int c, void *_h)
 
     if (!UnGetC((BPTR)h->fdesc->fcb->fh, c))
     {
-	errno = __arosc_ioerr2errno(IoErr());
+	errno = __stdc_ioerr2errno(IoErr());
 
 	if (errno)
 	{
@@ -148,7 +148,7 @@ static int __getc(void *_h)
 	
 	if (c)
 	{
-	    errno = __arosc_ioerr2errno(c);
+	    errno = __stdc_ioerr2errno(c);
 	    h->stream->flags |= _STDIO_ERROR;
 	}
 	else

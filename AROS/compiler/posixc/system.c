@@ -148,7 +148,7 @@ static int system_no_sh(const char *string)
     free(fullcmd);
     
     if (ret == -1)
-        errno = __arosc_ioerr2errno(IoErr());
+        errno = __stdc_ioerr2errno(IoErr());
 
     return ret;
 } /* system */
