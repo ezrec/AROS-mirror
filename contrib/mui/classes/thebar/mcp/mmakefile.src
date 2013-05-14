@@ -31,41 +31,41 @@ TARGETDIR := $(AROS_CONTRIB)/Zune/MCC_TheBar/Locale/Catalogs
 
 #MM
 contrib-zune-classes-thebar-mcp-catalogs : locale.h locale.c \
-    $(TARGETDIR)/deutsch/TheBar.catalog \
+    $(TARGETDIR)/german/TheBar.catalog \
     $(TARGETDIR)/czech/TheBar.catalog \
-    $(TARGETDIR)/svenska/TheBar.catalog \
-    $(TARGETDIR)/italiano/TheBar.catalog \
-    $(TARGETDIR)/français/TheBar.catalog \
-    $(TARGETDIR)/polski/TheBar.catalog \
-    $(TARGETDIR)/türkçe/TheBar.catalog
+    $(TARGETDIR)/swedish/TheBar.catalog \
+    $(TARGETDIR)/italian/TheBar.catalog \
+    $(TARGETDIR)/french/TheBar.catalog \
+    $(TARGETDIR)/polish/TheBar.catalog \
+    $(TARGETDIR)/turkish/TheBar.catalog
 
 locale.h: locale/TheBar_mcp.cd locale_h.sd
 	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/TheBar_mcp.cd locale.h=$(SRCDIR)/$(CURDIR)/locale_h.sd
 
-$(TARGETDIR)/deutsch/TheBar.catalog: locale/german.ct
-	@$(MKDIR) $(TARGETDIR)/deutsch
+$(TARGETDIR)/german/TheBar.catalog: locale/german.ct
+	@$(MKDIR) $(TARGETDIR)/german
 	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/TheBar_mcp.cd $< CATALOG $@
 
 $(TARGETDIR)/czech/TheBar.catalog: locale/czech.ct
 	@$(MKDIR) $(TARGETDIR)/czech
 	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/TheBar_mcp.cd $< CATALOG $@
 
-$(TARGETDIR)/français/TheBar.catalog: locale/french.ct
-	@$(MKDIR) $(TARGETDIR)/français
+$(TARGETDIR)/french/TheBar.catalog: locale/french.ct
+	@$(MKDIR) $(TARGETDIR)/french
 	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/TheBar_mcp.cd $< CATALOG $@
 
-$(TARGETDIR)/svenska/TheBar.catalog: locale/swedish.ct
-	@$(MKDIR) $(TARGETDIR)/svenska
+$(TARGETDIR)/swedish/TheBar.catalog: locale/swedish.ct
+	@$(MKDIR) $(TARGETDIR)/swedish
 	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/TheBar_mcp.cd $< CATALOG $@
 
-$(TARGETDIR)/italiano/TheBar.catalog: locale/italian.ct
-	@$(MKDIR) $(TARGETDIR)/italiano
+$(TARGETDIR)/italian/TheBar.catalog: locale/italian.ct
+	@$(MKDIR) $(TARGETDIR)/italian
 	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/TheBar_mcp.cd $< CATALOG $@
 
-$(TARGETDIR)/polski/TheBar.catalog: locale/polish.ct
-	@$(MKDIR) $(TARGETDIR)/polski
+$(TARGETDIR)/polish/TheBar.catalog: locale/polish.ct
+	@$(MKDIR) $(TARGETDIR)/polish
 	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/TheBar_mcp.cd $< CATALOG $@
 
-$(TARGETDIR)/türkçe/TheBar.catalog: locale/turkish.ct
-	@$(MKDIR) $(TARGETDIR)/türkçe
+$(TARGETDIR)/turkish/TheBar.catalog: locale/turkish.ct
+	@$(MKDIR) $(TARGETDIR)/turkish
 	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/TheBar_mcp.cd $< CATALOG $@
