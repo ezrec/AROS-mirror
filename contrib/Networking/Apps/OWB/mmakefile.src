@@ -27,7 +27,7 @@ FILES :=               \
 	browserwindow      \
 	browserapp
 	
-##MM- aros-tcpip-apps: aros-tcpip-apps-owb
+#MM- aros-tcpip-apps: aros-tcpip-apps-owb
 
 #MM- aros-tcpip-apps-startowb : contrib-fontconfig
 
