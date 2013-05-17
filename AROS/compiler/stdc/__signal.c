@@ -6,17 +6,25 @@
 #include <proto/exec.h>
 #include <libraries/stdc.h>
 
-#include <signal.h>
+/* We include the signal.h of posixc.library for getting min/max signal number
+   TODO: Implement more elegant way to get maximum and minimum signal number
+*/
+#include <aros/posixc/signal.h>
 #include <errno.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <assert.h>
 
-#include "__arosc_privdata.h"
+#include "__stdc_intbase.h"
 #include "__signal.h"
+
+#define DEBUG 0
+#include <aros/debug.h>
 
 struct signal_func_data *__sig_getfuncdata(int signum)
 {
-    struct aroscbase *aroscbase = __aros_getbase_aroscbase();
+    struct StdCIntBase *StdCBase =
+        (struct StdCIntBase *)__aros_getbase_StdCBase();
     int i;
 
     if (signum < SIGHUP || signum > _SIGMAX)
@@ -25,14 +33,11 @@ struct signal_func_data *__sig_getfuncdata(int signum)
         return NULL;
     }
 
-    if (aroscbase->acb_sigfunc_array == NULL)
+    if (StdCBase->sigfunc_array == NULL)
     {
-        aroscbase->acb_sigfunc_array =
-            AllocPooled(aroscbase->acb_internalpool,
-                        _SIGMAX*sizeof(struct signal_func_data)
-            );
+        StdCBase->sigfunc_array = malloc(_SIGMAX*sizeof(struct signal_func_data));
 
-        if (!aroscbase->acb_sigfunc_array)
+        if (!StdCBase->sigfunc_array)
         {
             errno = ENOMEM;
             return NULL;
@@ -40,29 +45,31 @@ struct signal_func_data *__sig_getfuncdata(int signum)
 
         for (i = 0; i < _SIGMAX; i++)
         {
-            aroscbase->acb_sigfunc_array[i].sigfunc = SIG_DFL;
-            aroscbase->acb_sigfunc_array[i].flags = 0;
+            StdCBase->sigfunc_array[i].sigfunc = SIG_DFL;
+            StdCBase->sigfunc_array[i].flags = 0;
         }
     }
 
-    return &aroscbase->acb_sigfunc_array[signum-1];
+    return &StdCBase->sigfunc_array[signum-1];
 }
 
 /* Handler for SIG_DFL */
 void __sig_default(int signum)
 {
+    /* FIXME: Can we use something more user oriented than kprintf here ?
+       f.ex. a requester or DOS IO functions */
     switch (signum)
     {
     case SIGABRT:
-        fprintf(stderr, "Program aborted.\n");
+        kprintf("Program aborted.\n");
         break;
 
     case SIGTERM:
-        fprintf(stderr, "Program terminated.\n");
+        kprintf("Program terminated.\n");
         break;
 
     default:
-        fprintf(stderr, "Caught signal %d; aborting...\n", signum);
+        kprintf("Caught signal %d; aborting...\n", signum);
         break;
     }
 

@@ -32,7 +32,6 @@ SHARED	:= \
 	__env \
         __exec \
         __fdesc \
-        __signal \
 	__stat \
 	__stdio \
 	__upath \
@@ -135,7 +134,6 @@ SHARED	:= \
 	putenv \
         putc \
 	puts \
-	raise \
 	read \
 	readdir \
 	readlink \
@@ -166,7 +164,6 @@ SHARED	:= \
 	sigemptyset \
 	sigfillset \
 	sigismember \
-	signal \
 	sigpending \
 	sigprocmask \
 	sigsuspend \

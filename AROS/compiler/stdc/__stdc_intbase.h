@@ -13,6 +13,8 @@
 #include <time.h>
 
 #include <aros/types/clock_t.h>
+/* Some structs that are defined privately */
+struct signal_func_data;
 
 
 struct StdCIntBase
@@ -39,6 +41,9 @@ struct StdCIntBase
 
     /* atexit.c */
     struct MinList atexit_list;
+
+    /* signal.c & co. */
+    struct signal_func_data *sigfunc_array;
 };
 
 /* Make a distinction between exit() and abort() */
