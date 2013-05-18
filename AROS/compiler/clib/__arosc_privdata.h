@@ -42,9 +42,6 @@ struct aroscbase
     /* malloc.c */
     APTR acb_mempool;
 
-    /* __env.c */
-    struct __env_item *acb_env_list;
-
     /* __stdio.c */
     struct MinList acb_stdio_files;
 
@@ -94,9 +91,6 @@ struct aroscbase
     char **acb_exec_tmparray;
     BPTR acb_exec_oldin, acb_exec_oldout, acb_exec_olderr;
     struct Library *acb_exec_aroscbase;
-
-    /* environ emulation */
-    char ***acb_environptr;
 
     /* rand */
     unsigned int acb_srand_seed;
