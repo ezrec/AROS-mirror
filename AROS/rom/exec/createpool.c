@@ -1,5 +1,5 @@
 /*
-    Copyright © 1995-2012, The AROS Development Team. All rights reserved.
+    Copyright ï¿½ 1995-2012, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: Create a memory pool.
@@ -19,6 +19,7 @@
 
     NAME */
 #include <exec/memory.h>
+#include <exec/memheaderext.h>
 #include <proto/exec.h>
 
 	AROS_LH3(APTR, CreatePool,
@@ -82,17 +83,20 @@
     struct MemHeader *firstPuddle = NULL;
     IPTR align = PrivExecBase(SysBase)->PageSize - 1;
 
+    if (align < 4095)
+        align = 4095;
+
     D(bug("[exec] CreatePool(0x%08X, %u, %u)\n", requirements, puddleSize, threshSize));
     
     /*
-     * puddleSize needs to include MEMHEADER_TOTAL and one pointer.
+     * puddleSize needs to include MEMHEADER_TOTAL, allocator context size and one pointer.
      * This is because our puddles must be able to accommodate an allocation
      * of own size. Allocations of larger size will always use enlarged puddles.
      * Pointer is used for pointing back to the MemHeader from which the block
      * was allocated, in AllocVec()-alike manner. This way we get rid of slow
      * lookup in FreePooled().
      */
-    puddleSize += MEMHEADER_TOTAL + sizeof(struct MemHeader *);
+    puddleSize += MEMHEADER_TOTAL + mhac_GetCtxSize() + sizeof(struct MemHeader *);
 
     /* If mungwall is enabled, count also size of walls, at least for one allocation */
     if (PrivExecBase(SysBase)->IntFlags & EXECF_MungWall)
@@ -131,15 +135,30 @@
 	}
 
 	/*
-	 * Add the puddle to the list (yes, contained in itself).
-	 * This is the first puddle so it's safe to use AddTail() here.
-	 * Note that we use ln_Name of our MemHeader to point back to
-	 * our pool.
+	 * If the pool is in managed memory, don't bother any further setup. The
+	 * pool should do the rest self.
 	 */
-	firstPuddle->mh_Node.ln_Name = (STRPTR)pool;
-	AddTail((struct List *)&pool->pool.PuddleList, &firstPuddle->mh_Node);
+	if (firstPuddle->mh_Attributes & MEMF_MANAGED)
+	{
+	    D(bug("Managed pool\n"));
+	    /*
+	     * Just link the pool structure at the ln_Name - we will need that
+	     * for the semaphore
+	     */
+	    firstPuddle->mh_Node.ln_Name = (STRPTR)&pool->sem;
+	}
+	else
+	{
+	    /*
+	     * Add the puddle to the list (yes, contained in itself).
+	     * This is the first puddle so it's safe to use AddTail() here.
+	     * Note that we use ln_Name of our MemHeader to point back to
+	     * our pool (directly or indirectly).
+	     */
+	    mhac_PoolMemHeaderSetup(firstPuddle, pool);
+	    AddTail((struct List *)&pool->pool.PuddleList, &firstPuddle->mh_Node);
+	}
     }
-
     return firstPuddle;
 
     AROS_LIBFUNC_EXIT

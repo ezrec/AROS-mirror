@@ -1,5 +1,5 @@
 /*
-    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
+    Copyright ï¿½ 1995-2011, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: System memory allocator for MMU-less systems.
@@ -10,6 +10,7 @@
 #include <aros/debug.h>
 #include <exec/execbase.h>
 #include <exec/memory.h>
+#include <exec/memheaderext.h>
 #include <proto/exec.h>
 
 #include <string.h>
@@ -30,18 +31,28 @@ APTR nommu_AllocMem(IPTR byteSize, ULONG flags, struct TraceLocation *loc, struc
     /* Loop over MemHeader structures */
     ForeachNode(&SysBase->MemList, mh)
     {
-	/*
-	 * Check for the right requirements and enough free memory.
-	 * The requirements are OK if there's no bit in the
-	 * 'attributes' that isn't set in the 'mh->mh_Attributes'.
-	 */
-	    if ((requirements & ~mh->mh_Attributes)
-	        || mh->mh_Free < byteSize)
-	        continue;
+        /*
+         * Check for the right requirements and enough free memory.
+         * The requirements are OK if there's no bit in the
+         * 'attributes' that isn't set in the 'mh->mh_Attributes'.
+         */
+        if ((requirements & ~mh->mh_Attributes)
+                || mh->mh_Free < byteSize)
+            continue;
 
-	res = stdAlloc(mh, byteSize, flags, loc, SysBase);
-	if (res)
-	    break;
+        if (mh->mh_Attributes & MEMF_MANAGED)
+        {
+            struct MemHeaderExt *mhe = (struct MemHeaderExt *)mh;
+
+            if (mhe->mhe_Alloc)
+                res = mhe->mhe_Alloc(mhe, byteSize, &flags);
+        }
+        else
+        {
+            res = stdAlloc(mh, mhac_GetSysCtx(mh, SysBase), byteSize, flags, loc, SysBase);
+        }
+        if (res)
+            break;
     }
 
     MEM_UNLOCK;
@@ -61,8 +72,24 @@ APTR nommu_AllocAbs(APTR location, IPTR byteSize, struct ExecBase *SysBase)
     /* Loop over MemHeader structures */
     ForeachNode(&SysBase->MemList, mh)
     {
-        if (mh->mh_Lower <= location && mh->mh_Upper >= endlocation)
-            break;
+        if (mh->mh_Attributes & MEMF_MANAGED)
+        {
+            struct MemHeaderExt *mhe = (struct MemHeaderExt *)mh;
+            if (mhe->mhe_InBounds(mhe, location, endlocation))
+            {
+                if (mhe->mhe_AllocAbs)
+                {
+                    void * ret = mhe->mhe_AllocAbs(mhe, byteSize, location);
+
+                    MEM_UNLOCK;
+
+                    return ret;
+                }
+            }
+        }
+        else
+            if (mh->mh_Lower <= location && mh->mh_Upper >= endlocation)
+                break;
     }
     
     /* If no header was found which matched the requirements, just give up. */
@@ -94,41 +121,43 @@ APTR nommu_AllocAbs(APTR location, IPTR byteSize, struct ExecBase *SysBase)
         while (p2 != NULL)
         {
 #if !defined(NO_CONSISTENCY_CHECKS)
-	    /*
-	     * Memory list consistency checks.
-	     * 1. Check alignment restrictions
-	     */
+            /*
+             * Memory list consistency checks.
+             * 1. Check alignment restrictions
+             */
             if (((IPTR)p2|(IPTR)p2->mc_Bytes) & (MEMCHUNK_TOTAL-1))
-	    {
-		if (SysBase && SysBase->DebugAROSBase)
-		{
-		    bug("[MM] Chunk allocator error\n");
-		    bug("[MM] Attempt to allocate %lu bytes at 0x%p from MemHeader 0x%p\n", byteSize, location, mh);
-		    bug("[MM] Misaligned chunk at 0x%p (%u bytes)\n", p2, p2->mc_Bytes);
+            {
+                if (SysBase && SysBase->DebugAROSBase)
+                {
+                    bug("[MM] Chunk allocator error\n");
+                    bug("[MM] Attempt to allocate %lu bytes at 0x%p from MemHeader 0x%p\n", byteSize, location, mh);
+                    bug("[MM] Misaligned chunk at 0x%p (%u bytes)\n", p2, p2->mc_Bytes);
 
-		    Alert(AN_MemoryInsane|AT_DeadEnd);
-		}
-		break;
-	    }
+                    Alert(AN_MemoryInsane|AT_DeadEnd);
+                }
+                break;
+            }
 
-	    /* 2. Check against overlapping blocks */
-	    if (p2->mc_Next && ((UBYTE *)p2 + p2->mc_Bytes >= (UBYTE *)p2->mc_Next))
-	    {
-		if (SysBase && SysBase->DebugAROSBase)
-		{
-		    bug("[MM] Chunk allocator error\n");
-		    bug("[MM] Attempt to allocate %lu bytes at 0x%p from MemHeader 0x%p\n", byteSize, location, mh);
-		    bug("[MM] Overlapping chunks 0x%p (%u bytes) and 0x%p (%u bytes)\n", p2, p2->mc_Bytes, p2->mc_Next, p2->mc_Next->mc_Bytes);
-		
-		    Alert(AN_MemoryInsane|AT_DeadEnd);
-		}
-		break;
-	    }
+            /* 2. Check against overlapping blocks */
+            if (p2->mc_Next && ((UBYTE *)p2 + p2->mc_Bytes >= (UBYTE *)p2->mc_Next))
+            {
+                if (SysBase && SysBase->DebugAROSBase)
+                {
+                    bug("[MM] Chunk allocator error\n");
+                    bug("[MM] Attempt to allocate %lu bytes at 0x%p from MemHeader 0x%p\n", byteSize, location, mh);
+                    bug("[MM] Overlapping chunks 0x%p (%u bytes) and 0x%p (%u bytes)\n", p2, p2->mc_Bytes, p2->mc_Next, p2->mc_Next->mc_Bytes);
+
+                    Alert(AN_MemoryInsane|AT_DeadEnd);
+                }
+                break;
+            }
 #endif
 
             /* Found a chunk that fits? */
             if((UBYTE *)p2+p2->mc_Bytes>=(UBYTE *)p4&&p2<=p3)
             {
+                mhac_MemChunkClaimed(p2, mhac_GetSysCtx(mh, SysBase));
+
                 /* Check if there's memory left at the end. */
                 if((UBYTE *)p2+p2->mc_Bytes!=(UBYTE *)p4)
                 {
@@ -172,7 +201,7 @@ void nommu_FreeMem(APTR memoryBlock, IPTR byteSize, struct TraceLocation *loc, s
 
     /* It is legal to free zero bytes */
     if (!byteSize)
-	return;
+        return;
 
     blockEnd = memoryBlock + byteSize;
 
@@ -181,14 +210,31 @@ void nommu_FreeMem(APTR memoryBlock, IPTR byteSize, struct TraceLocation *loc, s
 
     ForeachNode(&SysBase->MemList, mh)
     {
-	/* Test if the memory belongs to this MemHeader. */
-	if (mh->mh_Lower > memoryBlock || mh->mh_Upper < blockEnd)
-	    continue;
+        if (mh->mh_Attributes & MEMF_MANAGED)
+        {
+            struct MemHeaderExt *mhe = (struct MemHeaderExt *)mh;
 
-	stdDealloc(mh, memoryBlock, byteSize, loc, SysBase);
+            if (mhe->mhe_InBounds(mhe, memoryBlock, blockEnd))
+            {
+                if (mhe->mhe_Free)
+                {
+                    mhe->mhe_Free(mhe, memoryBlock, byteSize);
 
-	MEM_UNLOCK;
-	ReturnVoid ("nommu_FreeMem");
+                    MEM_UNLOCK;
+                    return;
+                }
+            }
+        }
+        else
+        {
+            /* Test if the memory belongs to this MemHeader. */
+            if (mh->mh_Lower > memoryBlock || mh->mh_Upper < blockEnd)
+                continue;
+
+            stdDealloc(mh, mhac_GetSysCtx(mh, SysBase), memoryBlock, byteSize, loc, SysBase);
+        }
+        MEM_UNLOCK;
+        ReturnVoid ("nommu_FreeMem");
     }
 
     MEM_UNLOCK;
@@ -219,49 +265,69 @@ IPTR nommu_AvailMem(ULONG attributes, struct ExecBase *SysBase)
 
     ForeachNode(&SysBase->MemList, mh)
     {
-	D(bug("[MM] Checking MemHeader 0x%p\n", mh));
+        D(bug("[MM] Checking MemHeader 0x%p\n", mh));
 
         /*
          * The current memheader is OK if there's no bit in the
          * 'physFlags' that isn't set in the 'mh->mh_Attributes'.
          */
         if (physFlags & ~mh->mh_Attributes)
-	{
-	    D(bug("[MM] Skipping (mh_Attributes = 0x%08X\n", mh->mh_Attributes));
+        {
+            D(bug("[MM] Skipping (mh_Attributes = 0x%08X\n", mh->mh_Attributes));
             continue;
-	}
+        }
+
+        if (mh->mh_Attributes & MEMF_MANAGED)
+        {
+            struct MemHeaderExt *mhe = (struct MemHeaderExt *)mh;
+
+            if (mhe->mhe_Avail)
+            {
+                IPTR val = mhe->mhe_Avail(mhe, attributes);
+
+                if (attributes & MEMF_LARGEST)
+                {
+                    if (val > ret)
+                        ret = val;
+                }
+                else
+                    ret += val;
+
+                continue;
+            }
+        }
 
         /* Find largest chunk? */
         if (attributes & MEMF_LARGEST)
         {
             /*
-                Yes. Follow the list of MemChunks and set 'ret' to
-                each value that is bigger than all previous ones.
-            */
+             * Yes. Follow the list of MemChunks and set 'ret' to
+             * each value that is bigger than all previous ones.
+             */
             struct MemChunk *mc;
 
-	    for (mc = mh->mh_First; mc; mc = mc->mc_Next)
+            for (mc = mh->mh_First; mc; mc = mc->mc_Next)
             {
 #if !defined(NO_CONSISTENCY_CHECKS)
                 /*
                  * Do some constistency checks:
                  * 1. All MemChunks must be aligned to MEMCHUNK_TOTAL.
-		 */
-		if (((IPTR)mc | mc->mc_Bytes) & (MEMCHUNK_TOTAL-1))
-		{
-		    bug("[MM] Chunk allocator error in MemHeader 0x%p\n", mh);
-		    bug("[MM] Misaligned chunk at 0x%p (%u bytes)\n", mc, mc->mc_Bytes);
+                 */
+                if (((IPTR)mc | mc->mc_Bytes) & (MEMCHUNK_TOTAL-1))
+                {
+                    bug("[MM] Chunk allocator error in MemHeader 0x%p\n", mh);
+                    bug("[MM] Misaligned chunk at 0x%p (%u bytes)\n", mc, mc->mc_Bytes);
 
-		    Alert(AN_MemoryInsane|AT_DeadEnd);
-		}
-                /*  2. The end (+1) of the current MemChunk must be lower than the start of the next one. */
-		if (mc->mc_Next && ((UBYTE *)mc + mc->mc_Bytes >= (UBYTE *)mc->mc_Next))
-		{
-		    bug("[MM] Chunk allocator error in MemHeader 0x%p\n");
-		    bug("[MM] Overlapping chunks 0x%p (%u bytes) and 0x%p (%u bytes)\n", mc, mc->mc_Bytes, mc->mc_Next, mc->mc_Next->mc_Bytes);
+                    Alert(AN_MemoryInsane|AT_DeadEnd);
+                }
+                        /*  2. The end (+1) of the current MemChunk must be lower than the start of the next one. */
+                if (mc->mc_Next && ((UBYTE *)mc + mc->mc_Bytes >= (UBYTE *)mc->mc_Next))
+                {
+                    bug("[MM] Chunk allocator error in MemHeader 0x%p\n");
+                    bug("[MM] Overlapping chunks 0x%p (%u bytes) and 0x%p (%u bytes)\n", mc, mc->mc_Bytes, mc->mc_Next, mc->mc_Next->mc_Bytes);
 
-		    Alert(AN_MemoryInsane|AT_DeadEnd);
-		}
+                    Alert(AN_MemoryInsane|AT_DeadEnd);
+                }
 #endif
                 if (mc->mc_Bytes>ret)
                     ret=mc->mc_Bytes;
