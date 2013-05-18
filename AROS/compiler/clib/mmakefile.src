@@ -25,7 +25,6 @@ COMMON	:= \
 SHARED	:= \
         __arosc_init \
 	__arosc_userdata \
-	__assert \
 	cfgetispeed \
 	cfgetospeed \
 	cfsetispeed \
@@ -111,8 +110,7 @@ SHARED_LINKLIB := \
 #       depending on whether -DAROSC_ROM is used
 #       or not.
 ROM_ONLY := \
-	__arosc_userdata \
-	__assert_kernel
+	__arosc_userdata
 
 ROM_COMMON :=
 
