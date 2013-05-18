@@ -38,7 +38,7 @@
 ******************************************************************************/
 {
     /* Implement getgrnam() */
-    AROS_FUNCTION_NOT_IMPLEMENTED("arosc");
+    AROS_FUNCTION_NOT_IMPLEMENTED("posixc");
     errno = ENOSYS;
 
     return NULL;
