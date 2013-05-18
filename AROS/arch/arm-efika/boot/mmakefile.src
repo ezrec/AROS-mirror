@@ -10,7 +10,6 @@ USER_CFLAGS     := -DUSE_UBOOT -ffixed-r8 -Wall -fno-builtin -O2
 #MM    kernel-package-efika-arm
 
 #MM kernel-package-efika-arm: \
-#MM     linklibs-clib \
 #MM		kernel-oop \
 #MM     hidd-i2c
 

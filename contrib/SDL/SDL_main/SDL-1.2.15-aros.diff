@@ -89,7 +89,7 @@ diff -ruN SDL-1.2.15/aros_init.c SDL-1.2.15.aros/aros_init.c
 +#include <aros/debug.h>
 +
 +
-+#include <proto/arosc.h>
++#include <proto/arosstdc.h>
 +
 +#include <aros/symbolsets.h>
 +#include LC_LIBDEFS_FILE
@@ -114,7 +114,7 @@ diff -ruN SDL-1.2.15/aros_init.c SDL-1.2.15.aros/aros_init.c
 +    D(bug("SDL.library->Open: root base @ 0x%p\n", LIBBASE->rootSDLBase));
 +    D(
 +        struct Task *opener = FindTask(NULL);
-+        bug("SDL.library->Open: aroscbase @ 0x%p for task @ 0x%p ('%s')\n", __aros_getbase_aroscbase(), opener, ((struct Node *)opener)->ln_Name);
++        bug("SDL.library->Open: AROSStdCBase @ 0x%p for task @ 0x%p ('%s')\n", __aros_getbase_AROSStdCBase(), opener, ((struct Node *)opener)->ln_Name);
 +      )
 +    D(bug("SDL.library->Open: copy_row @ 0x%p\n", LIBBASE->copy_row));
 +
@@ -1188,7 +1188,7 @@ diff -ruN SDL-1.2.15/include/SDL_video.h SDL-1.2.15.aros/include/SDL_video.h
 diff -ruN SDL-1.2.15/SDL.conf SDL-1.2.15.aros/SDL.conf
 --- SDL-1.2.15/SDL.conf	1969-12-31 19:00:00.000000000 -0500
 +++ SDL-1.2.15.aros/SDL.conf	2013-03-08 08:30:15.000000000 -0500
-@@ -0,0 +1,243 @@
+@@ -0,0 +1,241 @@
 +##begin config
 +basename SDL
 +libbase SDLBase
@@ -1200,8 +1200,6 @@ diff -ruN SDL-1.2.15/SDL.conf SDL-1.2.15.aros/SDL.conf
 +options peropenerbase
 +rellib stdcio
 +rellib stdc
-+rellib arosc
-+forcebase aroscbase
 +##end config
 +
 +##begin cdefprivate

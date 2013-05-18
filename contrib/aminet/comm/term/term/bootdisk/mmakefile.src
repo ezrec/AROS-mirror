@@ -25,7 +25,7 @@ BOOT_TAR_FILES := \
     Devs/DataTypes Devs/Keymaps Devs/ramdrive.device Devs/clipboard.device \
     Devs/serial.device Devs/Mountlist\
     Fonts/fixed/8 Fonts/arial/13 Fonts/ttcourier/14 \
-    Libs/arosc.library Libs/asl.library Libs/commodities.library Libs/datatypes.library \
+    Libs/arosstdc.library Libs/asl.library Libs/commodities.library Libs/datatypes.library \
     Libs/diskfont.library Libs/gadtools.library Libs/icon.library Libs/iffparse.library \
     Libs/locale.library \
     Libs/coolimages.library \

@@ -87,14 +87,14 @@ endif
 #
 %define link_module_q err="$(notdir $@).err" objs=/A endtag= module=$(MODULE) ldflags=$(LDFLAGS) libs=$(LIBS) objdir=$(OBJDIR)
 	@$(ECHO) "Building   $(subst $(TARGETDIR)/,,$@) ..."
-	@if $(AROS_CC) $(NOSTARTUP_LDFLAGS) -noarosc -nostdc %(ldflags) \
+	@if $(AROS_CC) $(NOSTARTUP_LDFLAGS) -nostdc %(ldflags) \
 	    $(GENMAP) %(objdir)/%(module).map \
 	    %(objs) %(libs) %(endtag) \
 	    -o $@ 2>&1 > %(objdir)/%(err); \
 	then \
 	    cat %(objdir)/%(err); \
 	else \
-	    echo "$(AROS_CC) $(NOSTARTUP_LDFLAGS) -noarosc -nostdc %(ldflags) $(GENMAP) %(objdir)/%(module).map %(objs) %(libs) %(endtag) -o $@"; \
+	    echo "$(AROS_CC) $(NOSTARTUP_LDFLAGS) -nostdc %(ldflags) $(GENMAP) %(objdir)/%(module).map %(objs) %(libs) %(endtag) -o $@"; \
 	    cat %(objdir)/%(err); \
 	    exit 1; \
 	fi
@@ -862,7 +862,7 @@ ifeq (%(nix),yes)
     TMP_EXTRA_LDFLAGS += $(NIX_LDFLAGS)
 endif
 ifeq (%(usestartup),no)
-    TMP_EXTRA_LDFLAGS += $(NOSTARTUP_LDFLAGS) -noarosc -nostdc
+    TMP_EXTRA_LDFLAGS += $(NOSTARTUP_LDFLAGS) -nostdc
     ifeq (%(linker),target)
         TMP_EXTRA_LIBS += libinit autoinit
     endif
@@ -928,7 +928,7 @@ ifeq (%(nix),yes)
     TMP_EXTRA_LDFLAGS += $(NIX_LDFLAGS)
 endif
 ifeq (%(usestartup),no)
-    TMP_EXTRA_LDFLAGS += $(NOSTARTUP_LDFLAGS) -noarosc -nostdc
+    TMP_EXTRA_LDFLAGS += $(NOSTARTUP_LDFLAGS) -nostdc
     TMP_EXTRA_LIBS += libinit autoinit
 endif
 ifeq (%(detach),yes)
@@ -984,7 +984,8 @@ endif
 #------------------------------------------------------------------------------
 # Link the %(objs) and %(endobj) to %(module) with errors in %(err) and using
 # the libraries in %(uselibs) and the host libraries in %(usehostlibs)
-# The -noarosc flag is added so that modules are not linked with arosc.library
+# The -nostdc and -noposixc flag is added so that modules are not linked with
+# stdc.library, stdcio.library or posixc.library
 # (see /config/specs.in file)
 %define rule_linkmodule module=/A objs=/A endobj=/A err=/A objdir=$(OBJDIR) \
     ldflags=$(LDFLAGS) uselibs= usehostlibs=
@@ -1015,7 +1016,7 @@ TMP_DEPLIBS := $(foreach lib,$(TMP_LIBS), \
 %(module) : LIBS := $(addprefix -l,$(LIB_NAMES)) \
                     -L/usr/lib $(addprefix -l,%(usehostlibs))
 %(module) : %(objs) %(endobj) $(TMP_DEPLIBS) $(USER_DEPLIBS)
-	%link_module_q err=$(ERR) endtag=$(ENDTAG) objs=$(OBJS) libs=$(LIBS) objdir=$(OBJDIR) ldflags="$(LDFLAGS) -noarosc -nostdc"
+	%link_module_q err=$(ERR) endtag=$(ENDTAG) objs=$(OBJS) libs=$(LIBS) objdir=$(OBJDIR) ldflags="$(LDFLAGS) -nostdc"
 
 %end
 #------------------------------------------------------------------------------
@@ -3267,7 +3268,7 @@ endif
 
 %(file): KOBJS := $(KOBJS)
 %(file): LDFLAGS := $(TMP_LDFLAGS) $(NOSTARTUP_LDFLAGS) \
-                    -noarosc -nostdc -nosysbase -Wl,-Ur
+                    -nostdc -nosysbase -Wl,-Ur
 %(file): LDLIBS := $(addprefix -l, %(uselibs))
 %(file): $(KOBJS) $(DEPLIBS) | $(TMP_DIRS)
 	@$(ECHO) "Kickstart  $(subst $(TARGETDIR)/,,$@)..."
