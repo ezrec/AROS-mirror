@@ -83,7 +83,6 @@ static size_t add_new_area(void *, size_t, void *);
 static void *malloc_ex(size_t, void *);
 static void free_ex(void *, void *);
 static void *realloc_ex(void *, size_t, void *);
-static void *calloc_ex(size_t, size_t, void *);
 
 #ifndef USE_PRINTF
 #define USE_PRINTF      (0)
@@ -983,6 +982,13 @@ static void tlsf_freemem(struct MemHeaderExt *mhe, APTR ptr, IPTR size)
     mhe->mhe_MemHeader.mh_Free = get_total_size(mhe->mhe_UserData) - get_used_size(mhe->mhe_UserData);
 }
 
+static void tlsf_freevec(struct MemHeaderExt *mhe, APTR ptr)
+{
+    free_ex(ptr, mhe->mhe_UserData);
+
+    mhe->mhe_MemHeader.mh_Free = get_total_size(mhe->mhe_UserData) - get_used_size(mhe->mhe_UserData);
+}
+
 static void * tlsf_realloc(struct MemHeaderExt *mhe, APTR old, IPTR size)
 {
     void *ptr = realloc_ex(old, size, mhe->mhe_UserData);
@@ -990,6 +996,22 @@ static void * tlsf_realloc(struct MemHeaderExt *mhe, APTR old, IPTR size)
     mhe->mhe_MemHeader.mh_Free = get_total_size(mhe->mhe_UserData) - get_used_size(mhe->mhe_UserData);
 
     return ptr;
+}
+
+static BOOL tlsf_inbounds(struct MemHeaderExt *mhe, APTR addr)
+{
+    tlsf_t *tlsf = (tlsf_t *)mhe->mhe_UserData;
+    area_info_t * area = tlsf->area_head;
+
+    while(area)
+    {
+        if (addr >= (u8_t *)area && addr <= (u8_t *)area->end)
+            return TRUE;
+
+        area = area->next;
+    }
+
+    return FALSE;
 }
 
 static ULONG tlsf_avail(struct MemHeaderExt *mhe, ULONG flags)
@@ -1276,10 +1298,13 @@ void krnCreateMemHeader(CONST_STRPTR name, BYTE pri, APTR start, IPTR size, ULON
     mhe->mhe_MemHeader.mh_Free = get_total_size(mhe->mhe_UserData) - get_used_size(mhe->mhe_UserData);
 
     mhe->mhe_Alloc = tlsf_allocmem;
+    mhe->mhe_AllocVec = tlsf_allocmem;
+    mhe->mhe_FreeVec = tlsf_freevec;
     mhe->mhe_AllocAbs = tlsf_allocabs;
     mhe->mhe_Free = tlsf_freemem;
     mhe->mhe_ReAlloc = tlsf_realloc;
     mhe->mhe_Avail = tlsf_avail;
+    mhe->mhe_InBounds = tlsf_inbounds;
 }
 
 /*
