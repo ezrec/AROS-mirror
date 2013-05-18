@@ -18,8 +18,7 @@ TESTDIR := $(BINDIR)/Tests
 COMMON	:= \
 	__filesystem_support \
 	getopt \
-	getopt_long \
-        putchar
+	getopt_long
 
 #   - Shared are in either the shared linklib, or the arosc module
 SHARED	:= \
@@ -33,8 +32,6 @@ SHARED	:= \
 	endgrent \
 	endpwent \
 	fchown \
-	ftello \
-        getc \
 	gettimeofday \
         getuid \
         geteuid \
@@ -54,20 +51,12 @@ SHARED	:= \
 	mknod \
 	mktemp \
 	pathconf \
-	pclose \
-	perror \
-	printf \
-        putc \
-	puts \
 	regex/regerror	\
 	regex/regexec	\
 	regex/regcomp	\
 	regex/regfree	\
-	rewind \
 	rewinddir \
         rmdir \
-	scanf \
-	setbuf \
 	setgid \
 	setgrent \
 	setlinebuf \
@@ -89,18 +78,13 @@ SHARED	:= \
 	sync \
 	sysconf \
 	tcgetattr \
-	tempnam \
 	times \
-	tmpfile \
-	tmpnam \
 	truncate \
 	tcsetattr \
 	ttyname \
 	uname \
 	unlink \
-	utime \
-	vprintf \
-	vscanf
+	utime
 
 SHARED_LINKLIB := \
 	ftime \

@@ -27,6 +27,7 @@ STDC := \
     exit \
     fenv _fenv \
     free \
+    getc \
     gmtime gmtime_r \
     localeconv \
     localtime localtime_r \
@@ -112,6 +113,7 @@ STDC := \
     memset \
     mktime \
     on_exit \
+    putc \
     qsort \
     raise \
     rand \
@@ -228,6 +230,7 @@ STDCIO := \
     scanf \
     setbuf \
     setvbuf \
+    system \
     tmpfile \
     tmpnam \
     ungetc \
