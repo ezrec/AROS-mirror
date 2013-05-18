@@ -29,8 +29,7 @@ FILES :=			\
 	pixman-implementation	\
 	pixman-solid-fill	\
 	pixman-general		\
-	pixman-noop		\
-	../aros/emul_arosc
+	pixman-noop
 
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR) -I$(SRCDIR)/$(CURDIR)/../aros
 USER_CFLAGS := -DHAVE_CONFIG_H -DPIXMAN_NO_TLS \
@@ -42,7 +41,7 @@ USER_CFLAGS := -DHAVE_CONFIG_H -DPIXMAN_NO_TLS \
 
 %build_module mmake=contrib-gfx-libs-pixman \
     modname=pixman modtype=library \
-    files="$(FILES)"
+    files="$(FILES)" uselibs="arosstdcdos arosstdc"
 
 INCLUDE_FILES := pixman.h pixman-version.h
 %copy_includes mmake=includes-copy path=pixman-1

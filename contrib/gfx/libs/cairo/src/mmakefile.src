@@ -90,8 +90,6 @@ FILES := \
 	$(CAIRO_AROS_FILES) \
 	cairo-deflate-stream
 
-# ../aros/emul_arosc
-
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../aros -I$(GENINCDIR)/pixman-1
 USER_CFLAGS := -DHAVE_CONFIG_H -DCAIRO_NO_MUTEX
 USER_CFLAGS += $(ENUM_COMPARE_CFLAGS) $(UNUSED_BUT_SET_VARIABLE_CFLAGS)
@@ -105,7 +103,7 @@ USER_CFLAGS += $(ENUM_COMPARE_CFLAGS) $(UNUSED_BUT_SET_VARIABLE_CFLAGS)
 #%build_module mmake=contrib-gfx-libs-cairo \
 #    modname=cairo modtype=library \
 #    files="$(FILES)" \
-#    uselibs="freetype2 pixman png z "
+#    uselibs="freetype2 pixman png z arosstdcdos arosstdc"
 
 %build_linklib mmake=contrib-gfx-libs-cairo \
     libname=cairo files="$(FILES)" cxxfiles=""

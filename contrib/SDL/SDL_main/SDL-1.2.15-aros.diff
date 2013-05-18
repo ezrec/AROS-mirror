@@ -82,7 +82,7 @@ diff -ruN SDL-1.2.15/aros/sdl.pc SDL-1.2.15.aros/aros/sdl.pc
 diff -ruN SDL-1.2.15/aros_init.c SDL-1.2.15.aros/aros_init.c
 --- SDL-1.2.15/aros_init.c	1969-12-31 19:00:00.000000000 -0500
 +++ SDL-1.2.15.aros/aros_init.c	2013-03-22 12:04:43.000000000 -0400
-@@ -0,0 +1,126 @@
+@@ -0,0 +1,135 @@
 +/* Copyright 2013 The AROS Development Team. All rights reserved. */
 +
 +#define DEBUG 1
@@ -209,6 +209,15 @@ diff -ruN SDL-1.2.15/aros_init.c SDL-1.2.15.aros/aros_init.c
 +ADD2INITLIB(GM_UNIQUENAME(LibInit), 0)
 +ADD2OPENLIB(GM_UNIQUENAME(LibOpen), 0)
 +ADD2CLOSELIB(GM_UNIQUENAME(LibClose), 0)
++
++#include <errno.h>
++#include <signal.h>
++
++/* TODO: Should we emulate sigaction() ? */
++int sigaction (int signum, const  struct  sigaction  *act, struct sigaction *oldact)
++{
++    errno=ENOSYS; return -1;
++}
 diff -ruN SDL-1.2.15/include/SDL_active.h SDL-1.2.15.aros/include/SDL_active.h
 --- SDL-1.2.15/include/SDL_active.h	2012-01-19 01:30:05.000000000 -0500
 +++ SDL-1.2.15.aros/include/SDL_active.h	2013-03-08 08:30:15.000000000 -0500
