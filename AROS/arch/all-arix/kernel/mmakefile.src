@@ -11,7 +11,7 @@ USER_CFLAGS := $(PRIV_KERNEL_INCLUDES) -I$(GENDIR)/$(MAINDIR)/include \
 
 %build_archspecific \
   mainmmake=kernel-kernel maindir=rom/kernel \
-  arch=arix files="getcpucount kernel_memory" modulename=kernel
+  arch=arix files="getcpucount" modulename=kernel
 
 
 %common
