@@ -1,5 +1,5 @@
 /*
-    Copyright ï¿½ 1995-2011, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
     $Id$
 
     ROMTag scanner.
@@ -45,11 +45,15 @@ static APTR krnGetSysMem(struct MemHeader *mh, IPTR *size)
     if (mh->mh_Attributes & MEMF_MANAGED)
     {
         struct MemHeaderExt *mhe = (struct MemHeaderExt *)mh;
-        char *ptr = mhe->mhe_Alloc(mhe, 1024*1024, NULL);
-        *size = 1024*1024;
 
-        return ptr;
+        if (mhe->mhe_Alloc)
+        {
+            *size = 1024*1024;
+            return mhe->mhe_Alloc(mhe, *size, NULL);
+        }
 
+        *size = 0;
+        return NULL;
     }
     else
     {
@@ -73,8 +77,8 @@ static void krnReleaseSysMem(struct MemHeader *mh, APTR addr, IPTR chunkSize, IP
     {
         struct MemHeaderExt *mhe = (struct MemHeaderExt *)mh;
 
-        /* In-place decrease size */
-        mhe->mhe_ReAlloc(mhe, addr, allocSize);
+        if (mhe->mhe_ReAlloc)
+            mhe->mhe_ReAlloc(mhe, addr, allocSize);
     }
     else
     {
@@ -97,7 +101,6 @@ static void krnReleaseSysMem(struct MemHeader *mh, APTR addr, IPTR chunkSize, IP
         mh->mh_Free += mc->mc_Bytes;
     }
 }
-
 
 /*
  * RomTag scanner.
@@ -148,7 +151,7 @@ APTR krnRomTagScanner(struct MemHeader *mh, UWORD *ranges[])
         ptr = (UWORD *)(((IPTR)ptr + 1) & ~1);
         end = (UWORD *)((IPTR)end & ~1);
 
-	D(bug("RomTagScanner: Start = %p, End = %p, ptr=%p\n", ptr, end, RomTag));
+	D(bug("RomTagScanner: Start = %p, End = %p\n", ptr, end));
 	do
 	{
 	    res = (struct Resident *)ptr;
@@ -177,7 +180,6 @@ APTR krnRomTagScanner(struct MemHeader *mh, UWORD *ranges[])
 		{
 		    /* New module */
 		    RomTag[num++] = res;
-
 		    /*
 		     * 'limit' holds a length of our MemChunk in pointers.
 		     * Actually it's a number or pointers we can safely store in it (including NULL terminator).
