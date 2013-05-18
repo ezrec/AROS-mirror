@@ -144,6 +144,7 @@ STDC := \
     strcpy \
     strcspn \
     strdup \
+    strerror \
     strftime \
     strlcat \
     strlcpy \

@@ -71,9 +71,6 @@ struct aroscbase
     /* spawn* */
     char *acb_joined_args;
 
-    /* strerror */
-    char acb_fault_buf[100];
-
     /* __arosc_nixmain */
     int acb_parent_does_upath;
 
