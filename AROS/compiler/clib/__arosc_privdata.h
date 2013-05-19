@@ -106,18 +106,6 @@ struct aroscbase
 
 /* acb_flags */
 
-/* When a program is started with the exec functions and from vfork,
-   this is indicated in the flags of the library.
-   This way the child can use the parent arosc library during its initialization
-   phase */
-#define EXEC_PARENT 1
-#define VFORK_PARENT 2
-
-/* This flag is set by vfork() to correctly report child process ID during
-   execution of child code, even though that it's actually executed by parent
-   process until execve() is called. */
-#define PRETEND_CHILD 4
-
 /* By default arosc.library creates new arosc_privdata when opened if 
    pr_ReturnAddr has changed (for example during RunCommand()). Setting 
    this flag prevents creation of new arosc_privdata. */

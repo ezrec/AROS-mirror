@@ -1,5 +1,5 @@
 /*
-    Copyright © 1995-2012, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2013, The AROS Development Team. All rights reserved.
     $Id$
 
     C99 function fgetc().
@@ -52,7 +52,7 @@
     if (!fdesc)
     {
         errno = EBADF;
-	stream->flags |= _STDIO_ERROR;
+	stream->flags |= __POSIXC_STDIO_ERROR;
 	return EOF;
     }
 
@@ -67,10 +67,10 @@
 	{
             errno = __stdc_ioerr2errno (c);
 
-	    stream->flags |= _STDIO_ERROR;
+	    stream->flags |= __POSIXC_STDIO_ERROR;
 	}
 	else
-	    stream->flags |= _STDIO_EOF;
+	    stream->flags |= __POSIXC_STDIO_EOF;
 
 	c = EOF;
     }
