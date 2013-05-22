@@ -18,7 +18,10 @@
 #include "kernel_base.h"
 #include "kernel_debug.h"
 
+#ifndef __mc68000__
 #define USE_TLSF
+#endif
+
 #ifdef USE_TLSF
 
 #include "tlsf.h"
