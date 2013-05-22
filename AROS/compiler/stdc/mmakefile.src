@@ -253,6 +253,10 @@ STDC_LINKOBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(STDC
 USER_CFLAGS := -noposixc -Dlint '-D__FBSDID(x)='
 USER_LDFLAGS := -nostdc -noposixc
 
+# Ugh. These are for the math routines, which have a number of
+# lint issues.
+USER_CFLAGS += -Wno-unused-variable -Wno-parentheses -Wno-uninitialized
+
 %build_module mmake=compiler-stdc \
     modname=stdc modtype=library \
     files="$(STDC) $(STDC_COMMON)" \
@@ -315,6 +319,10 @@ STDC_STATIC := \
     vsscanf
 
 USER_CFLAGS := -DSTDC_STATIC
+
+# Ugh. These are for the math routines, which have a number of
+# lint issues, that should be fixed.
+USER_CFLAGS += -Wno-unused-variable -Wno-parentheses -Wno-uninitialized
 
 #MM- core-linklibs : linklibs-stdc-static
 %build_linklib mmake=linklibs-stdc-static libname=stdc.static \
