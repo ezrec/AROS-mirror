@@ -21,7 +21,7 @@ ICU_EXTRA_OPTS := \
         --enable-extras=no \
         --with-data-packaging=static \
         --host=$(AROS_TARGET_CPU)-aros \
-        -with-cross-build=$(HOSTGENDIR)/tools/crosstools/$(ICU_PKGNAME)
+        --with-cross-build=$(HOSTGENDIR)/tools/crosstools/$(ICU_PKGNAME)
 
 TARGET_CXXFLAGS := $(subst -Wno-pointer-sign,, $(subst -Werror-implicit-function-declaration,, $(TARGET_CXXFLAGS)))
 
