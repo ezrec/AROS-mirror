@@ -64,6 +64,7 @@ COMMONTESTFILES := \
     readpixelarray \
     writepixelarray \
     writepixelarrayalpha \
+    scalepixelarray \
     rawtest \
     camdtree \
     mktime \
