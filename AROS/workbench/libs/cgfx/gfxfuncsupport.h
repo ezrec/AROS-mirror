@@ -12,3 +12,7 @@ extern BYTE hidd2cyber_pixfmt[];
 void hidd2buf_fast(struct BitMap *hidd_bm, LONG x_src , LONG y_src, APTR dest_info,
     	    	   LONG x_dest, LONG y_dest, ULONG xsize, ULONG ysize, VOID (*putbuf_hook)(),
 		   struct IntCGFXBase *CyberGfxBase);
+UBYTE GetRectFmtBytesPerPixel(UBYTE rectfmt, struct RastPort *rp,
+    struct Library *CyberGfxBase);
+HIDDT_StdPixFmt GetHIDDRectFmt(UBYTE rectfmt, struct RastPort *rp,
+    struct Library *CyberGfxBase);
