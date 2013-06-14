@@ -812,13 +812,18 @@ IPTR Group__MUIM_ExitChange(struct IClass *cl, Object *obj,
 
     data->flags &= ~GROUP_CHANGING;
 
+#if 0
+    /* Temporarily disable to hide a bug as it was hidden on ABI_V0 */
     if (data->flags & GROUP_CHANGED)
+#endif
     {
         data->flags &= ~GROUP_CHANGED;
 
         if ((_flags(obj) & MADF_SETUP) && _win(obj))
         {
             Object *win = _win(obj);
+#if 0
+            /* ABI_V0 compatibility */
             Object *parent = obj;
 
             /* CHECKME: Don't call RecalcDisplay if one of our parents is
@@ -841,6 +846,7 @@ IPTR Group__MUIM_ExitChange(struct IClass *cl, Object *obj,
                 }
 
             }
+#endif
 
             DoMethod(win, MUIM_Window_RecalcDisplay, (IPTR) obj);
         }
@@ -865,6 +871,8 @@ IPTR Group__MUIM_ExitChange2(struct IClass *cl, Object *obj,
         if ((_flags(obj) & MADF_SETUP) && _win(obj))
         {
             Object *win = _win(obj);
+#if 0
+            /* ABI_V0 compatibility */
             Object *parent = obj;
 
             /* CHECKME: Don't call RecalcDisplay if one of our parents is
@@ -887,6 +895,7 @@ IPTR Group__MUIM_ExitChange2(struct IClass *cl, Object *obj,
                 }
 
             }
+#endif
 
             DoMethod(win, MUIM_Window_RecalcDisplay, (IPTR) obj);
         }
