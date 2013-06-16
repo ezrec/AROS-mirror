@@ -1,5 +1,5 @@
 /*
-    Copyright © 2009-2012, The AROS Development Team. All rights reserved.
+    Copyright © 2009-2013, The AROS Development Team. All rights reserved.
     $Id$
  */
 
@@ -514,9 +514,9 @@ BOOL WriteWirelessPrefs(CONST_STRPTR destdir)
     TEXT filename[filenamelen];
 
     /* Write wireless config */
+    CombinePath2P(filename, filenamelen, destdir, "Wireless.prefs");
     if (prefs.networkCount > 0)
     {
-        CombinePath2P(filename, filenamelen, destdir, "Wireless.prefs");
         ConfFile = fopen(filename, "w");
         if (!ConfFile) return FALSE;
 
@@ -553,6 +553,8 @@ BOOL WriteWirelessPrefs(CONST_STRPTR destdir)
 
         fclose(ConfFile);
     }
+    else
+        DeleteFile(filename);
 
     return TRUE;
 }

@@ -1,5 +1,5 @@
 /*
-    Copyright © 2009-2012, The AROS Development Team. All rights reserved.
+    Copyright © 2009-2013, The AROS Development Team. All rights reserved.
     $Id$
  */
 
@@ -15,7 +15,7 @@
 #include "netpeditor.h"
 #include "prefsdata.h"
 
-#define VERSION "$VER: Network 1.19 (3.11.2012) AROS Dev Team"
+#define VERSION "$VER: Network 1.20 (16.6.2013) AROS Dev Team"
 
 int main(int argc, char **argv)
 {
