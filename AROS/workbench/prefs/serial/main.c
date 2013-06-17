@@ -1,5 +1,5 @@
 /*
-    Copyright © 1995-2008, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2013, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc:
@@ -23,7 +23,7 @@
 /* #define DEBUG 1 */
 #include <aros/debug.h>
 
-#define VERSION "$VER: Serial 2.1 (05.01.2010) AROS Dev Team"
+#define VERSION "$VER: Serial 2.2 (17.6.2013) AROS Dev Team"
 /*********************************************************************************************/
 
 int main(int argc, char **argv)

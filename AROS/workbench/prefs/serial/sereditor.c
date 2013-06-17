@@ -1,5 +1,5 @@
 /*
-    Copyright © 2003-2008, The AROS Development Team. All rights reserved.
+    Copyright © 2003-2013, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -75,7 +75,7 @@ struct SerEditor_DATA
 {
     int i;
 
-    CONST_STRPTR ParityLabels[5];
+    CONST_STRPTR ParityLabels[6];
     Object *child;
     Object *baudrate;
     Object *stopbits;
