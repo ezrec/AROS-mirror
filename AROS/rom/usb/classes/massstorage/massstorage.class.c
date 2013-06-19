@@ -5811,6 +5811,19 @@ BOOL IsFATSuperBlock(struct FATSuperBlock *fsb)
 }
 /* \\\ */
 
+/* /// "GetFATDosType()" */
+ULONG GetFATDosType(struct FATSuperBlock *fsb)
+{
+    ULONG result = 0x46415400;
+    if(strncmp(fsb->fsb_FileSystem2, "FAT32", 5) == 0)
+        result |= 2;
+    else if(strncmp(fsb->fsb_FileSystem, "FAT16", 5) == 0)
+        result |= 1;
+
+    return(result);
+}
+/* \\\ */
+
 /* /// "CheckFATPartition()" */
 void CheckFATPartition(struct NepClassMS *ncm, ULONG startblock)
 {
@@ -5894,8 +5907,8 @@ void CheckFATPartition(struct NepClassMS *ncm, ULONG startblock)
             envec->de_DosType = ncm->ncm_CDC->cdc_FATDosType; //0x46415401; // FAT1
             if((ncm->ncm_CDC->cdc_FATDosType & 0xffffff00) == 0x46415400)
             {
-                /* tell FAT95 to use floppy detection */
-                envec->de_DosType = 0x46415400;
+                envec->de_DosType =
+                    GetFATDosType((struct FATSuperBlock *) mbr);
             }
 
             // we have no FSHD and LSEG blocks
