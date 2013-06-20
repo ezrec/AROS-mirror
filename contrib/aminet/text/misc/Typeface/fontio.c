@@ -631,7 +631,12 @@ ULONG retcode;
   req.es_TextFormat = text;
   req.es_GadgetFormat = gadgets;
   va_start(va,gadgets);
+#if defined(__AROS__) && defined(__ARM_ARCH__)
+  #warning "TODO: fix va_arg usage for ARM"
+  retcode = 0;
+#else
   retcode = EasyRequestArgs(SaveWnd,&req,NULL,va);
+#endif
   va_end(va);
   WindowReady(SaveWndObj);
   return (retcode);
