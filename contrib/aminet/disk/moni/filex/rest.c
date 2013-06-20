@@ -349,7 +349,11 @@ ULONG __stdargs MyFullRequestNoLocale( CONST_STRPTR Text, CONST_STRPTR ButtonTex
 	va_list VarArgs;
 
 	va_start( VarArgs, ButtonText );
+#if defined(__AROS__) && defined(__ARM_ARCH__)
+        #warning "TODO: fix va_arg usage for ARM"
+#else
 	Result = MyMainFullRequest( Text, ButtonText, VarArgs );
+#endif
 	va_end( VarArgs );
 
 	return( Result );
@@ -361,7 +365,11 @@ ULONG __stdargs MyFullRequest( CONST_STRPTR Text, CONST_STRPTR ButtonText, ... )
 	va_list VarArgs;
 
 	va_start( VarArgs, ButtonText );
+#if defined(__AROS__) && defined(__ARM_ARCH__)
+        #warning "TODO: fix va_arg usage for ARM"
+#else
 	Result = MyMainFullRequest( GetStr( Text ), GetStr( ButtonText ), VarArgs );
+#endif
 	va_end( VarArgs );
 
 	return( Result );
