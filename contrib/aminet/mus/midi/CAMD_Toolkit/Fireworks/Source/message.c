@@ -75,11 +75,20 @@ LONG __stdargs AsyncMessage(struct Globals *glob, TaskFlag flg, UBYTE *Msg,UBYTE
 	{
 		md.Msg = Msg;
 		md.Options= Options;
+#if defined(__AROS__) && defined(__ARM_ARCH__)
+        #warning "TODO: fix va_arg usage for ARM"
+		md.Args = NULL;
+#else
 		md.Args = Args;
-		
+#endif
+
 		if (!StartAsyncTask(glob, NULL, "Fireworks messaging task", flg, &AsyncMessageFunction, &md, sizeof(struct MsgData)))
 		{
+#if defined(__AROS__) && defined(__ARM_ARCH__)
+        #warning "TODO: fix va_arg usage for ARM"
+#else
 			MessageA(Msg,Options,Args);
+#endif
 		}
 	}
 	va_end(Args);
