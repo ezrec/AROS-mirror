@@ -385,7 +385,11 @@ D(bug("FormatString nodes.c 388...........\n"));
 D(bug("FormatString nodes.c 391...........\n"));
 #endif
   } else {
- 	rawdo(form,args,ptr);
+#if defined(__AROS__) && defined(__ARM_ARCH__)
+        #warning "TODO: fix va_arg usage for ARM"
+#else
+ 	rawdo(form,(void *)&args,ptr);
+#endif
  }
 D(bug("FormatString nodes.c 398...........\n"));
 ReleaseSemaphore(&fmmain.msgsema);
