@@ -20,28 +20,28 @@ REPOSITORIES := sf://vice-emu/releases
 
 #MM
 ports-emulation-vice-install :
-	$(CP) $(GENDIR)/$(CURDIR)/vice/src/x64		$(TARGETDIR)/x64.exe
-	$(CP) $(GENDIR)/$(CURDIR)/vice/src/x64dtv	$(TARGETDIR)/x64dtv.exe
-	$(CP) $(GENDIR)/$(CURDIR)/vice/src/x64sc	$(TARGETDIR)/x64sc.exe
-	$(CP) $(GENDIR)/$(CURDIR)/vice/src/x128		$(TARGETDIR)/x128.exe
-	$(CP) $(GENDIR)/$(CURDIR)/vice/src/xcbm2	$(TARGETDIR)/xcbm2.exe
-	$(CP) $(GENDIR)/$(CURDIR)/vice/src/xpet		$(TARGETDIR)/xpet.exe
-	$(CP) $(GENDIR)/$(CURDIR)/vice/src/xplus4	$(TARGETDIR)/xplus4.exe
-	$(CP) $(GENDIR)/$(CURDIR)/vice/src/xvic		$(TARGETDIR)/xvic.exe
-	$(CP) $(GENDIR)/$(CURDIR)/vice/src/c1541	$(TARGETDIR)/c1541.exe
-	$(CP) $(GENDIR)/$(CURDIR)/vice/src/cartconv	$(TARGETDIR)/cartconv.exe
-	$(CP) $(GENDIR)/$(CURDIR)/vice/src/petcat	$(TARGETDIR)/petcat.exe
+	$(CP) $(GENDIR)/$(CURDIR)/vice/src/x64		                        $(TARGETDIR)/x64
+	$(CP) $(GENDIR)/$(CURDIR)/vice/src/x64dtv	                        $(TARGETDIR)/x64dtv
+	$(CP) $(GENDIR)/$(CURDIR)/vice/src/x64sc	                        $(TARGETDIR)/x64sc
+	$(CP) $(GENDIR)/$(CURDIR)/vice/src/x128		                        $(TARGETDIR)/x128
+	$(CP) $(GENDIR)/$(CURDIR)/vice/src/xcbm2	                        $(TARGETDIR)/xcbm2
+	$(CP) $(GENDIR)/$(CURDIR)/vice/src/xpet		                        $(TARGETDIR)/xpet
+	$(CP) $(GENDIR)/$(CURDIR)/vice/src/xplus4	                        $(TARGETDIR)/xplus4
+	$(CP) $(GENDIR)/$(CURDIR)/vice/src/xvic		                        $(TARGETDIR)/xvic
+	$(CP) $(GENDIR)/$(CURDIR)/vice/src/c1541	                        $(TARGETDIR)/c1541
+	$(CP) $(GENDIR)/$(CURDIR)/vice/src/cartconv	                        $(TARGETDIR)/cartconv
+	$(CP) $(GENDIR)/$(CURDIR)/vice/src/petcat	                        $(TARGETDIR)/petcat
 
-	$(CP) $(GENDIR)/$(CURDIR)/vice/src/arch/amigaos/x64ns		"$(TARGETDIR)/x64 (no sound).exe"
-	$(CP) $(GENDIR)/$(CURDIR)/vice/src/arch/amigaos/x64dtvns	"$(TARGETDIR)/x64dtv (no sound).exe"
-	$(CP) $(GENDIR)/$(CURDIR)/vice/src/arch/amigaos/x64scns		"$(TARGETDIR)/x64sc (no sound).exe"
-	$(CP) $(GENDIR)/$(CURDIR)/vice/src/arch/amigaos/x128ns		"$(TARGETDIR)/x128 (no sound).exe"
-	$(CP) $(GENDIR)/$(CURDIR)/vice/src/arch/amigaos/xcbm2ns		"$(TARGETDIR)/xcbm2 (no sound).exe"
-	$(CP) $(GENDIR)/$(CURDIR)/vice/src/arch/amigaos/xpetns		"$(TARGETDIR)/xpet (no sound).exe"
-	$(CP) $(GENDIR)/$(CURDIR)/vice/src/arch/amigaos/xplus4ns	"$(TARGETDIR)/xplus4 (no sound).exe"
-	$(CP) $(GENDIR)/$(CURDIR)/vice/src/arch/amigaos/xvicns		"$(TARGETDIR)/xvic (no sound).exe"
+	$(CP) $(GENDIR)/$(CURDIR)/vice/src/arch/amigaos/x64ns		        "$(TARGETDIR)/x64 (no sound)"
+	$(CP) $(GENDIR)/$(CURDIR)/vice/src/arch/amigaos/x64dtvns	        "$(TARGETDIR)/x64dtv (no sound)"
+	$(CP) $(GENDIR)/$(CURDIR)/vice/src/arch/amigaos/x64scns		        "$(TARGETDIR)/x64sc (no sound)"
+	$(CP) $(GENDIR)/$(CURDIR)/vice/src/arch/amigaos/x128ns		        "$(TARGETDIR)/x128 (no sound)"
+	$(CP) $(GENDIR)/$(CURDIR)/vice/src/arch/amigaos/xcbm2ns		        "$(TARGETDIR)/xcbm2 (no sound)"
+	$(CP) $(GENDIR)/$(CURDIR)/vice/src/arch/amigaos/xpetns		        "$(TARGETDIR)/xpet (no sound)"
+	$(CP) $(GENDIR)/$(CURDIR)/vice/src/arch/amigaos/xplus4ns	        "$(TARGETDIR)/xplus4 (no sound)"
+	$(CP) $(GENDIR)/$(CURDIR)/vice/src/arch/amigaos/xvicns		        "$(TARGETDIR)/xvic (no sound)"
 
-	$(CP) -a $(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/data/C128		$(TARGETDIR)
+	$(CP) -a $(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/data/C128         $(TARGETDIR)
 	$(CP) -a $(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/data/C64		$(TARGETDIR)
 	$(CP) -a $(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/data/C64DTV	$(TARGETDIR)
 	$(CP) -a $(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/data/CBM-II	$(TARGETDIR)
@@ -53,22 +53,31 @@ ports-emulation-vice-install :
 	$(CP) -a $(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/data/fonts	$(TARGETDIR)
 	$(CP) -a $(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/doc/html		$(TARGETDIR)
 
-	$(CP) $(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/FEEDBACK	$(TARGETDIR)
-	$(CP) $(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/README	$(TARGETDIR)
-	$(CP) $(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/src/arch/amigaos/README.AMIGA	$(TARGETDIR)
+	$(CP) $(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/FEEDBACK	        $(TARGETDIR)
+	$(CP) $(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/README	        $(TARGETDIR)
+	$(CP) $(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/src/arch/amigaos/README.AMIGA $(TARGETDIR)
 
-	$(CP) $(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/src/arch/amigaos/info-files/*.exe.info	$(TARGETDIR)
+	$(CP) $(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/src/arch/amigaos/info-files/x64.exe.info "$(TARGETDIR)/x64.info"
+	$(CP) $(TARGETDIR)/x64.info		                                "$(TARGETDIR)/x64 (no sound).info"
+	$(CP) $(TARGETDIR)/x64.info		                                "$(TARGETDIR)/x64dtv.info"
+	$(CP) $(TARGETDIR)/x64.info		                                "$(TARGETDIR)/x64dtv (no sound).info"
+	$(CP) $(TARGETDIR)/x64.info		                                "$(TARGETDIR)/x64sc.info"
+	$(CP) $(TARGETDIR)/x64.info		                                "$(TARGETDIR)/x64sc (no sound).info"
 
-	$(CP) $(TARGETDIR)/x64.exe.info		"$(TARGETDIR)/x64\ \(no\ sound\).exe.info"
-	$(CP) $(TARGETDIR)/x64.exe.info		"$(TARGETDIR)/x64dtv.exe.info"
-	$(CP) $(TARGETDIR)/x64.exe.info		"$(TARGETDIR)/x64dtv\ \(no\ sound\).exe.info"
-	$(CP) $(TARGETDIR)/x64.exe.info		"$(TARGETDIR)/x64sc.exe.info"
-	$(CP) $(TARGETDIR)/x64.exe.info		"$(TARGETDIR)/x64sc\ \(no\ sound\).exe.info"
-	$(CP) $(TARGETDIR)/x128.exe.info	"$(TARGETDIR)/x128\ \(no\ sound\).exe.info"
-	$(CP) $(TARGETDIR)/xvic.exe.info	"$(TARGETDIR)/xvic\ \(no\ sound\).exe.info"
-	$(CP) $(TARGETDIR)/xpet.exe.info	"$(TARGETDIR)/xpet\ \(no\ sound\).exe.info"
-	$(CP) $(TARGETDIR)/xplus4.exe.info	"$(TARGETDIR)/xplus4\ \(no\ sound\).exe.info"
-	$(CP) $(TARGETDIR)/xcbm2.exe.info	"$(TARGETDIR)/xcbm2\ \(no\ sound\).exe.info"
+	$(CP) $(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/src/arch/amigaos/info-files/x128.exe.info "$(TARGETDIR)/x128.info"
+	$(CP) $(TARGETDIR)/x128.info	                                        "$(TARGETDIR)/x128 (no sound).info"
+
+	$(CP) $(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/src/arch/amigaos/info-files/xvic.exe.info "$(TARGETDIR)/xvic.info"
+	$(CP) $(TARGETDIR)/xvic.info	                                        "$(TARGETDIR)/xvic (no sound).info"
+
+	$(CP) $(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/src/arch/amigaos/info-files/xpet.exe.info "$(TARGETDIR)/xpet.info"
+	$(CP) $(TARGETDIR)/xpet.info	                                        "$(TARGETDIR)/xpet (no sound).info"
+
+	$(CP) $(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/src/arch/amigaos/info-files/xplus4.exe.info "$(TARGETDIR)/xplus4.info"
+	$(CP) $(TARGETDIR)/xplus4.info	                                        "$(TARGETDIR)/xplus4 (no sound).info"
+
+	$(CP) $(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/src/arch/amigaos/info-files/xcbm2.exe.info "$(TARGETDIR)/xcbm2.info"
+	$(CP) $(TARGETDIR)/xcbm2.info	                                        "$(TARGETDIR)/xcbm2 (no sound).info"
 
 
 ICONS := Vice
