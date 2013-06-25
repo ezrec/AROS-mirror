@@ -94,7 +94,8 @@ xref_kind_any = 5
 blacklist = (   "refreshwindowframe.c",
                 "setiprefs.c",
                 "match_old.c","dosdoio.c","exec_util.c","strerror_rom.c",
-                "runprocess.c", "monitorclass.c", "basemetaclass.c", "rootclass.c")
+                "runprocess.c", "monitorclass.c", "basemetaclass.c", "rootclass.c",
+                "screenclass.c")
 
 
 class autodoc:
