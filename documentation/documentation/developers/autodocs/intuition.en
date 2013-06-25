@@ -20,29 +20,30 @@ intuition
 `EasyRequestArgs()`_                    `EndRefresh()`_                         `EndRequest()`_                         `EndScreenNotify()`_                    
 `EraseImage()`_                         `FreeClass()`_                          `FreeMonitorList()`_                    `FreeRemember()`_                       
 `FreeScreenBuffer()`_                   `FreeScreenDrawInfo()`_                 `FreeSysRequest()`_                     `GadgetMouse()`_                        
-`GetAttr()`_                            `GetDefaultPubScreen()`_                `GetDefPrefs()`_                        `GetMonitorList()`_                     
-`GetPrefs()`_                           `GetScreenData()`_                      `GetScreenDrawInfo()`_                  `HelpControl()`_                        
-`HideWindow()`_                         `InitRequester()`_                      `IntuiTextLength()`_                    `IsWindowVisible()`_                    
-`ItemAddress()`_                        `LendMenus()`_                          `LockIBase()`_                          `lockPubClass()`_                       
-`LockPubScreen()`_                      `LockPubScreenList()`_                  `MakeClass()`_                          `MakeScreen()`_                         
-`ModifyIDCMP()`_                        `ModifyProp()`_                         `MoveScreen()`_                         `MoveWindow()`_                         
-`MoveWindowInFrontOf()`_                `NewModifyProp()`_                      `NewObjectA()`_                         `NextObject()`_                         
-`NextPubScreen()`_                      `ObtainGIRPort()`_                      `OffGadget()`_                          `OffMenu()`_                            
-`OnGadget()`_                           `OnMenu()`_                             `OpenScreen()`_                         `OpenScreenTagList()`_                  
-`OpenWindow()`_                         `OpenWindowTagList()`_                  `OpenWorkBench()`_                      `PointInImage()`_                       
-`PrintIText()`_                         `PubScreenStatus()`_                    `QueryOverscan()`_                      `RefreshGadgets()`_                     
-`RefreshGList()`_                       `ReleaseGIRPort()`_                     `RemakeDisplay()`_                      `RemoveClass()`_                        
-`RemoveGadget()`_                       `RemoveGList()`_                        `ReportMouse()`_                        `Request()`_                            
-`ResetMenuStrip()`_                     `RethinkDisplay()`_                     `ScreenDepth()`_                        `ScreenPosition()`_                     
-`ScreenToBack()`_                       `ScreenToFront()`_                      `ScrollWindowRaster()`_                 `ScrollWindowRasterNoFill()`_           
-`SetAttrsA()`_                          `SetDefaultPubScreen()`_                `SetDMRequest()`_                       `SetEditHook()`_                        
-`SetGadgetAttrsA()`_                    `SetMenuStrip()`_                       `SetMouseQueue()`_                      `SetPointer()`_                         
-`SetPrefs()`_                           `SetPubScreenModes()`_                  `SetWindowPointerA()`_                  `SetWindowTitles()`_                    
-`ShowTitle()`_                          `ShowWindow()`_                         `SizeWindow()`_                         `StartScreenNotifyTagList()`_           
-`SysReqHandler()`_                      `TimedDisplayAlert()`_                  `UnlockIBase()`_                        `unlockPubClass()`_                     
-`UnlockPubScreen()`_                    `UnlockPubScreenList()`_                `ViewAddress()`_                        `ViewPortAddress()`_                    
-`WBenchToBack()`_                       `WBenchToFront()`_                      `WindowAction()`_                       `WindowLimits()`_                       
-`WindowToBack()`_                       `WindowToFront()`_                      `ZipWindow()`_                          
+`GetAttr()`_                            `GetDefaultPubScreen()`_                `GetDefPrefs()`_                        `GetDrawInfoAttr()`_                    
+`GetMonitorList()`_                     `GetPrefs()`_                           `GetScreenData()`_                      `GetScreenDrawInfo()`_                  
+`HelpControl()`_                        `HideWindow()`_                         `InitRequester()`_                      `IntuiTextLength()`_                    
+`IsWindowVisible()`_                    `ItemAddress()`_                        `LendMenus()`_                          `LockIBase()`_                          
+`lockPubClass()`_                       `LockPubScreen()`_                      `LockPubScreenList()`_                  `MakeClass()`_                          
+`MakeScreen()`_                         `ModifyIDCMP()`_                        `ModifyProp()`_                         `MoveScreen()`_                         
+`MoveWindow()`_                         `MoveWindowInFrontOf()`_                `NewModifyProp()`_                      `NewObjectA()`_                         
+`NextObject()`_                         `NextPubScreen()`_                      `ObtainGIRPort()`_                      `OffGadget()`_                          
+`OffMenu()`_                            `OnGadget()`_                           `OnMenu()`_                             `OpenScreen()`_                         
+`OpenScreenTagList()`_                  `OpenWindow()`_                         `OpenWindowTagList()`_                  `OpenWorkBench()`_                      
+`PointInImage()`_                       `PrintIText()`_                         `PubScreenStatus()`_                    `QueryOverscan()`_                      
+`RefreshGadgets()`_                     `RefreshGList()`_                       `ReleaseGIRPort()`_                     `RemakeDisplay()`_                      
+`RemoveClass()`_                        `RemoveGadget()`_                       `RemoveGList()`_                        `ReportMouse()`_                        
+`Request()`_                            `ResetMenuStrip()`_                     `RethinkDisplay()`_                     `ScreenDepth()`_                        
+`ScreenPosition()`_                     `ScreenToBack()`_                       `ScreenToFront()`_                      `ScrollWindowRaster()`_                 
+`ScrollWindowRasterNoFill()`_           `SetAttrsA()`_                          `SetDefaultPubScreen()`_                `SetDMRequest()`_                       
+`SetEditHook()`_                        `SetGadgetAttrsA()`_                    `SetMenuStrip()`_                       `SetMouseQueue()`_                      
+`SetPointer()`_                         `SetPrefs()`_                           `SetPubScreenModes()`_                  `SetWindowPointerA()`_                  
+`SetWindowTitles()`_                    `ShowTitle()`_                          `ShowWindow()`_                         `SizeWindow()`_                         
+`StartScreenNotifyTagList()`_           `SysReqHandler()`_                      `TimedDisplayAlert()`_                  `UnlockIBase()`_                        
+`unlockPubClass()`_                     `UnlockPubScreen()`_                    `UnlockPubScreenList()`_                `ViewAddress()`_                        
+`ViewPortAddress()`_                    `WBenchToBack()`_                       `WBenchToFront()`_                      `WindowAction()`_                       
+`WindowLimits()`_                       `WindowToBack()`_                       `WindowToFront()`_                      `ZipWindow()`_                          
+
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -821,18 +822,19 @@ Synopsis
           struct Region * newshape,
           struct Hook * callback );
 
-Function
-~~~~~~~~
-::
-
-     Make a window invisible.
-
-
 Inputs
 ~~~~~~
 ::
 
- window - The window to affect.
+      window - The window to affect.
+
+
+Notes
+~~~~~
+::
+
+      This function is also present in MorphOS v50, however
+      not implemented and reserved.
 
 
 
@@ -2275,6 +2277,78 @@ See also
 
 ----------
 
+GetDrawInfoAttr()
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG GetDrawInfoAttr(
+          struct DrawInfo * drawInfo,
+          ULONG attrID,
+          IPTR * resultPtr );
+
+Function
+~~~~~~~~
+::
+
+      Gets value of the specified attribute from DrawInfo object, or
+      system default value (for some attributes).
+
+
+Inputs
+~~~~~~
+::
+
+      drawInfo - an object pointer to query. It is possible to set this
+                 argument to NULL when querying GDIA_Color or GDIA_Pen
+                 attributes. In this case values will be retrieved from
+                 system preferences.
+      attrID   - ID of the attribute you want. The following IDs are
+                 currently defined:
+
+        GDIA_Color       - 0RGB value of the color corresponding to a given pen.
+                           It is possible to retrieve these values only from
+                           DrawInfos belonging to direct-color screens. Pen ID
+                           should be ORed with attribute ID.
+        GDIA_Pen         - LUT color number corresponding to a given pen.
+        GDIA_Version     - Version number of the DrawInfo object.
+        GDIA_DirectColor - TRUE if the DrawInfo belongs to direct-color screen. Note
+                           that in case of failure it also sets success indicator to
+                           FALSE.
+        GDIA_NumPens     - Number of pens or colors defined in this DrawInfo object.
+        GDIA_Font        - Font specified in this DrawInfo.
+        GDIA_Depth       - Depth of this DrawInfo. Note that this attribute will
+                           return real depth of DrawInfo's screen, however dri_Depth
+                           member will contain 8 for AmigaOS(tm) compatibility.
+        GDIA_ResolutionX - X resolution in ticks
+        GDIA_ResolutionY - Y resolution in ticks
+        GDIA_CheckMark   - A pointer to CheckMark image object for the menu.
+        GDIA_MenuKey     - A pointer to Menu (Amiga) key image object for the menu.
+
+      resultPtr - an optional storage area for success indicator. You
+                  can set this parameter to NULL.
+
+
+Result
+~~~~~~
+::
+
+      A value of the specified attribute. resultPtr, if supplied, gets
+      TRUE for success and FALSE for failure.
+
+
+Notes
+~~~~~
+::
+
+      This function is compatible with MorphOS
+
+
+
+----------
+
 GetMonitorList()
 ================
 
@@ -2562,6 +2636,8 @@ Notes
 ::
 
      This function is source-compatible with AmigaOS v4.
+     This function is also present in MorphOS v50, however
+     considered private.
 
 
 
@@ -2689,6 +2765,14 @@ Result
 ::
 
      TRUE if window is currently visible, FALSE otherwise.
+
+
+Notes
+~~~~~
+::
+
+     This function is also present in MorphOS v50, however
+     considered private.
 
 
 
@@ -6089,6 +6173,8 @@ Notes
 ::
 
      This function is soure-compatible with AmigaOS v4.
+     This function is also present in MorphOS v50, however
+     considered private.
 
 
 

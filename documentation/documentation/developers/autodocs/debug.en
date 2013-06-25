@@ -61,7 +61,8 @@ Inputs
                                       in memory.
          DL_SegmentEnd     (void *) - End address of actual segment contents
                                       in memory.
-     
+         DL_FirstSegment   (BPTR) - DOS pointer to the first segment.
+
          The following tags may return NULL values if there was no corresponding
          information provided for the module:
 

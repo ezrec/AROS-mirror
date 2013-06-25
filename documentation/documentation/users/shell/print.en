@@ -46,7 +46,7 @@ Inputs
 ::
 
 
-     FILE f      --  Filename to play
+     FILE f      --  Filename to print
      PRTUNIT n   --  Printer unit
 
 

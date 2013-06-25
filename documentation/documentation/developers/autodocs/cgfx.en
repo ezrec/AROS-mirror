@@ -1123,13 +1123,6 @@ Result
      count - the number of pixels written to.
 
 
-Bugs
-~~~~
-::
-
-     This function is unimplemented.
-
-
 
 See also
 ~~~~~~~~

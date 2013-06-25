@@ -1952,7 +1952,7 @@ Notes
      Calling this function bypasses normal termination sequence of your program.
      Automatically opened libraries will not be closed, destructors will not be
      called, etc. Do this only if you really know what are you doing. It's not
-     adviced to use this function at all.
+     advised to use this function at all.
 
 
 
@@ -2055,7 +2055,7 @@ Function
      By convention, error messages are ALWAYS less than 80 (plus 1 for
      NULL termination), and ideally less than 60 characters.
 
-     If the error code is not know, then the string "Unknown error"
+     If the error code is not known, then the string "Unknown error"
      followed by the error number will be added to the string.
 
 

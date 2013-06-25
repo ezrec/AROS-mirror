@@ -16,6 +16,7 @@ Classes
 + `hidd.graphics.bitmap.planarbm`_
 + `hidd.graphics.gc`_
 + `hidd.graphics.overlay`_
++ `hidd.gfx.pixfmt`_
 + `CLID_Hidd_ColorMap`_
 
 ----------
@@ -1035,9 +1036,9 @@ Synopsis
 ~~~~~~~~
 ::
 
-     ULONG OOP_DoMethod(OOP_Object *obj, struct pHidd_BitMap_DrawPixel *msg);
+     VOID OOP_DoMethod(OOP_Object *obj, struct pHidd_BitMap_DrawPixel *msg);
 
-     ULONG HIDD_BM_DrawPixel(OOP_Object *obj, OOP_Object *gc, WORD x, WORD y);
+     VOID HIDD_BM_DrawPixel(OOP_Object *obj, OOP_Object *gc, WORD x, WORD y);
 
 
 Function
@@ -1062,7 +1063,7 @@ Result
 ~~~~~~
 ::
 
-     Undefined. Many drivers declare this method as void.
+     None.
 
 
 
@@ -1649,7 +1650,7 @@ Inputs
 
      obj         - A bitmap to draw on
      gc          - A GC object specifying drawing parameters
-     alpha       - A pointer to a 8-bit per pixel alpha channel mask
+     alpha       - A pointer to an 8-bit per pixel alpha channel mask
      modulo      - Number of bytes per line in the mask
      x, y        - Top-left corner of the affected bitmap's region
      width       - Width of the affected bitmap's region
@@ -1781,9 +1782,9 @@ Synopsis
 ~~~~~~~~
 ::
 
-     ULONG OOP_DoMethod(OOP_Object *obj, struct pHidd_BitMap_PutPixel *msg);
+     VOID OOP_DoMethod(OOP_Object *obj, struct pHidd_BitMap_PutPixel *msg);
 
-     ULONG HIDD_BM_PutPixel(OOP_Object *obj, WORD x, WORD y,
+     VOID HIDD_BM_PutPixel(OOP_Object *obj, WORD x, WORD y,
          HIDDT_Pixel pixel);
 
 
@@ -1809,7 +1810,7 @@ Result
 ~~~~~~
 ::
 
-     Unknown.
+     None.
 
 
 
@@ -4949,6 +4950,40 @@ See also
 ~~~~~~~~
 
 `aoHidd_Overlay_SrcHeight`_ 
+
+hidd.gfx.pixfmt
+---------------
+
+========================================== ========================================== ========================================== ========================================== 
+`aoHidd_PixFmt_CgxPixFmt`_                 
+========================================== ========================================== ========================================== ========================================== 
+
+-----------
+
+aoHidd_PixFmt_CgxPixFmt
+=======================
+
+Synopsis
+~~~~~~~~
+::
+
+     [..G], ULONG
+
+
+Function
+~~~~~~~~
+::
+
+     Returns pixelformat number according to CyberGraphX standard or -1
+     if the pixelformat has no correct representation in CGX (for example,
+     planar pixelformats).
+
+
+
+See also
+~~~~~~~~
+
+`aoHidd_PixFmt_StdPixFmt`_ 
 
 CLID_Hidd_ColorMap
 ------------------
