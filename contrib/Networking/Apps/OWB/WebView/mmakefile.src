@@ -10,8 +10,16 @@ REPOSITORIES = http://www.evillabs.net/AROS
 ARCHBASE := OWB-r1097
 OWB_SOURCE := $(PORTSDIR)/OWB/$(ARCHBASE)
 OWB_BUILD_DIR := $(GENDIR)/$(CURDIR)
+ifneq ($(AROS_TARGET_CPU),arm)
+OWB_I18N=ICU
+OWB_I18N_OPTS=-DICU_LIBRARY="-licui18n -licuuc -licudata" \
+	-DICU_INCLUDE="$(AROS_DEVELOPMENT)/include"
+else
+OWB_I18N=GENERIC
+OWB_I18N_OPTS=
+endif
 
-#MM- aros-tcpip-apps-owb-libs : contrib-fontconfig contrib-networking-curl development-SDL development-SDL_gfx-quick contrib-sqlite contrib-icu4c contrib-libxslt
+#MM- aros-tcpip-apps-owb-libs : contrib-fontconfig contrib-networking-curl development-SDL development-SDL_gfx-quick contrib-sqlite contrib-libxslt
 #MM- aros-tcpip-apps-owb-webview : aros-tcpip-apps-owb-libs aros-tcpip-apps-owb-webview-fetch aros-tcpip-apps-owb-webview-setup aros-tcpip-apps-owb-webview-build aros-tcpip-apps-owb-webview-install
 
 %fetch mmake=aros-tcpip-apps-owb-webview-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/OWB \
@@ -30,7 +38,7 @@ aros-tcpip-apps-owb-webview-setup :
 	-DENABLE_XPATH:BOOL=ON \
 	-DENABLE_XSLT:BOOL=ON \
 	-DENABLE_INSPECTOR:BOOL=ON \
-	-DUSE_I18N:STRING=ICU \
+	-DUSE_I18N:STRING=$(OWB_I18N) \
 	-DCMAKE_MODULE_PATH=$(SRCDIR)/$(CURDIR)/cmake \
 	-DCMAKE_SYSTEM_NAME=AROS \
 	-DCMAKE_SYSTEM_VERSION=1 \
@@ -70,8 +78,7 @@ aros-tcpip-apps-owb-webview-setup :
 	-DCMAKE_C_FLAGS="$(CFLAGS) -Wno-error" \
 	-DCMAKE_CXX_FLAGS="$(CFLAGS) -Wno-error" \
 	-DAROS_NETINCLUDE=$(AROS_DEVELOPMENT)/netinclude \
-	-DICU_LIBRARY="-licui18n -licuuc -licudata" \
-	-DICU_INCLUDE="$(AROS_DEVELOPMENT)/include" \
+	$(OWB_I18N_OPTS) \
 	$(OWB_SOURCE)
 	
 #MM
