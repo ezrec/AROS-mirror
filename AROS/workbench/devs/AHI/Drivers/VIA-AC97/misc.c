@@ -24,6 +24,9 @@
 #include <asm/io.h>
 #include <aros/debug.h>
 #define DebugPrintF bug
+SOFTINTGW(static, void,   playbackinterrupt, PlaybackInterrupt); /* ABI_V0 compatibility */
+SOFTINTGW(static, void,   recordinterrupt,   RecordInterrupt); /* ABI_V0 compatibility */
+INTGW(static, ULONG, cardinterrupt,  CardInterrupt);
 #endif
 
 //SB- Some debug/err/info output stuff.
@@ -140,19 +143,31 @@ AllocDriverData( struct PCIDevice *    dev,
   dd->interrupt.is_Node.ln_Type = IRQTYPE;
   dd->interrupt.is_Node.ln_Pri  = 0;
   dd->interrupt.is_Node.ln_Name = (STRPTR) LibName;
+#ifdef __AROS__
+  dd->interrupt.is_Code         = (VOID_FUNC)cardinterrupt;
+#else
   dd->interrupt.is_Code         = (void(*)(void)) CardInterrupt;
+#endif
   dd->interrupt.is_Data         = (APTR) dd;
 
   dd->playback_interrupt.is_Node.ln_Type = IRQTYPE;
   dd->playback_interrupt.is_Node.ln_Pri  = 0;
   dd->playback_interrupt.is_Node.ln_Name = (STRPTR) LibName;
+#ifdef __AROS__
+  dd->playback_interrupt.is_Code         = (VOID_FUNC)playbackinterrupt;
+#else
   dd->playback_interrupt.is_Code         = PlaybackInterrupt;
+#endif
   dd->playback_interrupt.is_Data         = (APTR) dd;
 
   dd->record_interrupt.is_Node.ln_Type = IRQTYPE;
   dd->record_interrupt.is_Node.ln_Pri  = 0;
   dd->record_interrupt.is_Node.ln_Name = (STRPTR) LibName;
+#ifdef __AROS__
+  dd->record_interrupt.is_Code         = (VOID_FUNC)recordinterrupt;
+#else
   dd->record_interrupt.is_Code         = RecordInterrupt;
+#endif
   dd->record_interrupt.is_Data         = (APTR) dd;
 
   dd->pci_dev = dev;
