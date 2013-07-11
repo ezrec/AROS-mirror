@@ -1,4 +1,4 @@
-# Copyright © 2009-2012, The AROS Development Team. All rights reserved.
+# Copyright © 2009-2013, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(TOP)/config/make.cfg
@@ -45,10 +45,17 @@ FILES :=               \
 
 #MM aros-tcpip-apps-owb-resources : aros-tcpip-apps-owb-icons iconset-$(AROS_TARGET_ICONSET)-contrib-icons-owb aros-tcpip-apps-owb-readme
 
+ifneq ($(AROS_TARGET_CPU),m68k)
 OWB_LIBS := webkit-owb webcore wtf jsc webkit-owb \
     icui18n icuuc icudata codesets thread xml2 fontconfig freetype2.static \
     SDL SDL_gfx GL png jpeg curl iconv z mui ssl \
     crypto sqlite3 xslt thread
+else
+OWB_LIBS := webkit-owb webcore wtf jsc webkit-owb \
+    codesets thread xml2 fontconfig freetype2.static \
+    SDL SDL_gfx GL png jpeg curl iconv z mui ssl \
+    crypto sqlite3 xslt thread
+endif
 #TODO: Link OWB with shared library version of freetype2
 
 USER_CFLAGS := -DZUNE_BUILTIN_SCROLLGROUP=0 -DMUIMASTER_YES_INLINE_STDARG \
