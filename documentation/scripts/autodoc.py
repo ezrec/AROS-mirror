@@ -777,7 +777,9 @@ def create_module_docs():
         "Inputs","Tags", "Result","Example","Notes","Bugs","See also")  # The titles we want
                                                                         # to be printed
     targetdir = os.path.join("documentation", "developers", "autodocs")
-    srcdirs = ( os.path.join(topdir, "rom"), os.path.join(topdir, "rom/devs"), os.path.join(topdir, "workbench/libs") )
+    srcdirs = ( os.path.join(topdir, "rom"),
+                os.path.join(topdir, "rom", "devs"),
+                os.path.join(topdir, "workbench", "libs") )
     for dir in srcdirs:
         create_lib_docs_dir(dir, targetdir, module_titles)
 
@@ -792,7 +794,9 @@ def create_module_docs():
         libdocs.write(targetdir, module_titles)
 
     # add HIDD docs
-    srcdirs = ( os.path.join(topdir, "rom/hidds"), os.path.join(topdir, "workbench/hidds/"), os.path.join(topdir, "rom/devs/ata") )
+    srcdirs = ( os.path.join(topdir, "rom", "hidds"),
+                os.path.join(topdir, "workbench", "hidds"),
+                os.path.join(topdir, "rom", "devs", "ata") )
     for dir in srcdirs:
         create_hidd_docs_dir(dir, targetdir, module_titles)
 
