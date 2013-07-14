@@ -1,6 +1,6 @@
 /*
-    Copyright © 1995-2007, The AROS Development Team. All rights reserved.
-    $Id$	 $Log
+    Copyright © 1995-2013, The AROS Development Team. All rights reserved.
+    $Id$
 
     Desc: Graphics function WritePixel()
     Lang: english
@@ -9,6 +9,7 @@
 #include <graphics/rastport.h>
 #include <graphics/clip.h>
 #include <proto/graphics.h>
+#include <proto/oop.h>
 
 #include "graphics_intern.h"
 #include "gfxfuncsupport.h"
@@ -59,8 +60,6 @@ static LONG pix_write(APTR pr_data, OOP_Object *bm, OOP_Object *gc,
         This function takes layers into account. Some pixel that is
         being read is not found on the display-bitmap but in some
         clipped rectangle (cliprect) in a layer structure.
-        There is no support of anything else than bitplanes now.
-        (No chunky pixels)
 
     HISTORY
 	29-10-95    digulla automatically created from
@@ -79,7 +78,7 @@ static LONG pix_write(APTR pr_data, OOP_Object *bm, OOP_Object *gc,
     if(!OBTAIN_DRIVERDATA(rp, GfxBase))
 	return  -1L;
 	
-    prd.pixel = BM_PIXEL(rp->BitMap, (UBYTE)rp->FgPen);
+    OOP_GetAttr(RP_DRIVERDATA(rp)->dd_GC, aHidd_GC_Foreground, &prd.pixel);
     retval = do_pixel_func(rp, x, y, pix_write, &prd, TRUE, GfxBase);
     
     RELEASE_DRIVERDATA(rp, GfxBase);
