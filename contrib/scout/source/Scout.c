@@ -209,11 +209,9 @@ STATIC BOOL init1( void )
 
     Forbid();
     morphOS = (FindResident("MorphOS") != NULL);
+    arOS = (FindResident("kernel.resource") != NULL);
     Permit();
-    amigaOS4 = !morphOS && (SysBase->LibNode.lib_Version >= 50);
-#ifdef __AROS__
-    arOS = TRUE;
-#endif
+    amigaOS4 = !morphOS && !arOS && (SysBase->LibNode.lib_Version >= 50);
 
     if ((ScoutPort = CreateMsgPort()) == NULL) {
         return FALSE;
