@@ -324,11 +324,11 @@ Synopsis
           APTR board,
           struct ConfigDev * configDev );
 
-Bugs
-~~~~
+Notes
+~~~~~
 ::
 
-     This function is unimplemented.
+     This function isn't implemented on all platforms.
 
 
 
@@ -703,11 +703,11 @@ Synopsis
           APTR board,
           ULONG offset );
 
-Bugs
-~~~~
+Notes
+~~~~~
 ::
 
-     This function is unimplemented.
+     This function isn't implemented on all platforms.
 
 
 
@@ -724,11 +724,11 @@ Synopsis
           APTR board,
           struct ConfigDev * configDev );
 
-Bugs
-~~~~
+Notes
+~~~~~
 ::
 
-     This function is unimplemented.
+     This function isn't implemented on all platforms.
 
 
 
@@ -881,11 +881,11 @@ Synopsis
           ULONG offset,
           ULONG byte );
 
-Bugs
-~~~~
+Notes
+~~~~~
 ::
 
-     This function is unimplemented.
+     This function isn't implemented on all platforms.
 
 
 
@@ -903,11 +903,11 @@ Synopsis
           ULONG offset,
           ULONG word );
 
-Bugs
-~~~~
+Notes
+~~~~~
 ::
 
-     This function is unimplemented.
+     This function isn't implemented on all platforms.
 
 
 

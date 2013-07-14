@@ -18,18 +18,18 @@ alib
 `BuildEasyRequest()`_                   `CallHook()`_                           `CallHookA()`_                          `ChangeExtSprite()`_                    
 `CheckRexxMsg()`_                       `CloseWorkbenchObject()`_               `CoerceMethodA()`_                      `CopyRegion()`_                         
 `CreateExtIO()`_                        `CreateGadget()`_                       `CreateMenus()`_                        `CreateNewProcTags()`_                  
-`CreatePort()`_                         `CreateStdIO()`_                        `CreateTask()`_                         `defined()`_                            
-`DeleteExtIO()`_                        `DeletePort()`_                         `DeleteStdIO()`_                        `DeleteTask()`_                         
-`DoDTMethod()`_                         `DoGadgetMethod()`_                     `DoMethodA()`_                          `DoSuperMethodA()`_                     
-`DoSuperNewTagList()`_                  `DrawBevelBox()`_                       `EasyRequest()`_                        `ErrorOutput()`_                        
-`ExtendFontTags()`_                     `FastRand()`_                           `FreeIEvents()`_                        `FreeMsgFromStack()`_                   
-`FreeParamsFromStack()`_                `FreeTagsFromStack()`_                  `GetDTAttrs()`_                         `GetExtSprite()`_                       
-`GetMsgFromStack()`_                    `GetParamsFromStack()`_                 `GetRexxVar()`_                         `GetRPAttrs()`_                         
-`GetTagsFromStack()`_                   `GetVisualInfo()`_                      `GT_GetGadgetAttrs()`_                  `GT_SetGadgetAttrs()`_                  
-`HookEntry()`_                          `HotKey()`_                             `InvertString()`_                       `InvertStringForwd()`_                  
-`LayoutMenuItems()`_                    `LayoutMenus()`_                        `LibAllocAligned()`_                    `LibAllocPooled()`_                     
-`LibCreatePool()`_                      `LibDeletePool()`_                      `LibFreePooled()`_                      `LockBitMapTags()`_                     
-`MakeWorkbenchObjectVisible()`_         `MergeSortList()`_                      `NewDTObject()`_                        `NewList()`_                            
+`CreatePort()`_                         `CreateStdIO()`_                        `CreateTask()`_                         `DeleteExtIO()`_                        
+`DeletePort()`_                         `DeleteStdIO()`_                        `DeleteTask()`_                         `DoDTMethod()`_                         
+`DoGadgetMethod()`_                     `DoMethodA()`_                          `DoSuperMethodA()`_                     `DoSuperNewTagList()`_                  
+`DrawBevelBox()`_                       `EasyRequest()`_                        `ErrorOutput()`_                        `ExtendFontTags()`_                     
+`FastRand()`_                           `FreeIEvents()`_                        `FreeMsgFromStack()`_                   `FreeParamsFromStack()`_                
+`FreeTagsFromStack()`_                  `GetDTAttrs()`_                         `GetExtSprite()`_                       `GetMsgFromStack()`_                    
+`GetParamsFromStack()`_                 `GetRexxVar()`_                         `GetRPAttrs()`_                         `GetTagsFromStack()`_                   
+`GetVisualInfo()`_                      `GT_GetGadgetAttrs()`_                  `GT_SetGadgetAttrs()`_                  `HookEntry()`_                          
+`HotKey()`_                             `InvertString()`_                       `InvertStringForwd()`_                  `LayoutMenuItems()`_                    
+`LayoutMenus()`_                        `LibAllocAligned()`_                    `LibAllocPooled()`_                     `LibCreatePool()`_                      
+`LibDeletePool()`_                      `LibFreePooled()`_                      `LockBitMapTags()`_                     `MakeWorkbenchObjectVisible()`_         
+`Merge()`_                              `MergeSortList()`_                      `NewDTObject()`_                        `NewList()`_                            
 `NewLoadSegTags()`_                     `NewObject()`_                          `NewRawDoFmt()`_                        `NewRectRegion()`_                      
 `ObtainBestPen()`_                      `ObtainInfo()`_                         `OpenAmigaGuide()`_                     `OpenAmigaGuideAsync()`_                
 `OpenCatalog()`_                        `OpenScreenTags()`_                     `OpenWindowTags()`_                     `OpenWorkbenchObject()`_                
@@ -1382,56 +1382,6 @@ Result
 
      A pointer to the new task or NULL on failure.
 
-
-
-----------
-
-defined()
-=========
-
-Synopsis
-~~~~~~~~
-::
-
-  #if defined(__GNUC__) && (defined(__x86_64__) || defined(
-     struct MinNode *l,
-     int (*compare)(struct MinNode *n1, struct MinNode *n2, void *data),
-     void *data)
-
-
-Function
-~~~~~~~~
-::
-
-     Given a list of ordered circular sublists, merge pairs of ordered sublists into one
-     ordered circular sublist. 
-
-
-Inputs
-~~~~~~
-::
-
-     l       - The first node of the first sublist. The sublists must be linked one
-               after the other one, and must be circular lists, that is their
-               first node's Pred pointer must point to their last node.
-               
-               I.e., the 2nd sublist will be at l->mln_Pred->mln_Succ, the 3rd will be at
-               l->mln_Pred->mln_Succ->mln_Pred->mln_Succ and so on.
-              
-     compare - Pointer to the comparison function used to merge the 
-               sublists
-              
-     data    - Pointer to user-defined data which will be passed untouched
-               to the comparison function.
-
-
-Result
-~~~~~~
-::
-
-     Pointer to the first node of the resulting list of sublists, with the same
-     format of the input list, but with pairs of sublists merged into one.
- 
 
 
 ----------
@@ -2933,6 +2883,56 @@ See also
 ~~~~~~~~
 
 `workbench.library/MakeWorkbenchObjectVisibleA() <./workbench#makeworkbenchobjectvisiblea>`_ 
+
+----------
+
+Merge()
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  static inline struct MinNode *Merge(
+     struct MinNode *l,
+     int (*compare)(struct MinNode *n1, struct MinNode *n2, void *data),
+     void *data)
+
+
+Function
+~~~~~~~~
+::
+
+     Given a list of ordered circular sublists, merge pairs of ordered sublists into one
+     ordered circular sublist. 
+
+
+Inputs
+~~~~~~
+::
+
+     l       - The first node of the first sublist. The sublists must be linked one
+               after the other one, and must be circular lists, that is their
+               first node's Pred pointer must point to their last node.
+               
+               I.e., the 2nd sublist will be at l->mln_Pred->mln_Succ, the 3rd will be at
+               l->mln_Pred->mln_Succ->mln_Pred->mln_Succ and so on.
+              
+     compare - Pointer to the comparison function used to merge the 
+               sublists
+              
+     data    - Pointer to user-defined data which will be passed untouched
+               to the comparison function.
+
+
+Result
+~~~~~~
+::
+
+     Pointer to the first node of the resulting list of sublists, with the same
+     format of the input list, but with pairs of sublists merged into one.
+ 
+
 
 ----------
 

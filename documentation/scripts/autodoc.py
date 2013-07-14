@@ -90,13 +90,6 @@ xref_kind_header = 3
 xref_kind_string = 4
 xref_kind_any = 5
 
-# don't generate autodocs from these files
-blacklist = (   "refreshwindowframe.c",
-                "setiprefs.c",
-                "match_old.c","dosdoio.c","exec_util.c","strerror_rom.c",
-                "runprocess.c", "monitorclass.c", "basemetaclass.c", "rootclass.c",
-                "screenclass.c")
-
 
 class autodoc:
     """ Autodoc base class.
@@ -559,7 +552,7 @@ class libdoclist:
         
         cfiles = os.listdir(srcdir)
         for file in cfiles:
-            if not (file in blacklist) and file[-2:]==".c":
+            if file[-2:]==".c":
                 filename = os.path.join(srcdir, file)
                 print "Reading from file", filename
                 filehandle = open(filename)
@@ -677,7 +670,7 @@ class hidddoclist:
         
         cfiles = os.listdir(srcdir)
         for file in cfiles:
-            if not (file in blacklist) and file[-2:]==".c":
+            if file[-2:]==".c":
                 filename = os.path.join(srcdir, file)
                 print "Reading from file", filename
                 filehandle = open(filename)

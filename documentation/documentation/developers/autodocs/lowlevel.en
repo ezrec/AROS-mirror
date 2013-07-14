@@ -190,11 +190,11 @@ Synopsis
  ULONG ReadJoyPort(
           ULONG port );
 
-Bugs
-~~~~
+Notes
+~~~~~
 ::
 
-     This function is unimplemented.
+     This function isn't implemented on all platforms.
 
 
 

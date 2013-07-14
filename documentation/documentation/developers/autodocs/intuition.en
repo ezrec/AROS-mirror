@@ -31,19 +31,19 @@ intuition
 `OffMenu()`_                            `OnGadget()`_                           `OnMenu()`_                             `OpenScreen()`_                         
 `OpenScreenTagList()`_                  `OpenWindow()`_                         `OpenWindowTagList()`_                  `OpenWorkBench()`_                      
 `PointInImage()`_                       `PrintIText()`_                         `PubScreenStatus()`_                    `QueryOverscan()`_                      
-`RefreshGadgets()`_                     `RefreshGList()`_                       `ReleaseGIRPort()`_                     `RemakeDisplay()`_                      
-`RemoveClass()`_                        `RemoveGadget()`_                       `RemoveGList()`_                        `ReportMouse()`_                        
-`Request()`_                            `ResetMenuStrip()`_                     `RethinkDisplay()`_                     `ScreenDepth()`_                        
-`ScreenPosition()`_                     `ScreenToBack()`_                       `ScreenToFront()`_                      `ScrollWindowRaster()`_                 
-`ScrollWindowRasterNoFill()`_           `SetAttrsA()`_                          `SetDefaultPubScreen()`_                `SetDMRequest()`_                       
-`SetEditHook()`_                        `SetGadgetAttrsA()`_                    `SetMenuStrip()`_                       `SetMouseQueue()`_                      
-`SetPointer()`_                         `SetPrefs()`_                           `SetPubScreenModes()`_                  `SetWindowPointerA()`_                  
-`SetWindowTitles()`_                    `ShowTitle()`_                          `ShowWindow()`_                         `SizeWindow()`_                         
-`StartScreenNotifyTagList()`_           `SysReqHandler()`_                      `TimedDisplayAlert()`_                  `UnlockIBase()`_                        
-`unlockPubClass()`_                     `UnlockPubScreen()`_                    `UnlockPubScreenList()`_                `ViewAddress()`_                        
-`ViewPortAddress()`_                    `WBenchToBack()`_                       `WBenchToFront()`_                      `WindowAction()`_                       
-`WindowLimits()`_                       `WindowToBack()`_                       `WindowToFront()`_                      `ZipWindow()`_                          
-
+`RefreshGadgets()`_                     `RefreshGList()`_                       `RefreshWindowFrame()`_                 `ReleaseGIRPort()`_                     
+`RemakeDisplay()`_                      `RemoveClass()`_                        `RemoveGadget()`_                       `RemoveGList()`_                        
+`ReportMouse()`_                        `Request()`_                            `ResetMenuStrip()`_                     `RethinkDisplay()`_                     
+`ScreenDepth()`_                        `ScreenPosition()`_                     `ScreenToBack()`_                       `ScreenToFront()`_                      
+`ScrollWindowRaster()`_                 `ScrollWindowRasterNoFill()`_           `SetAttrsA()`_                          `SetDefaultPubScreen()`_                
+`SetDMRequest()`_                       `SetEditHook()`_                        `SetGadgetAttrsA()`_                    `SetIPrefs()`_                          
+`SetMenuStrip()`_                       `SetMouseQueue()`_                      `SetPointer()`_                         `SetPrefs()`_                           
+`SetPubScreenModes()`_                  `SetWindowPointerA()`_                  `SetWindowTitles()`_                    `ShowTitle()`_                          
+`ShowWindow()`_                         `SizeWindow()`_                         `StartScreenNotifyTagList()`_           `SysReqHandler()`_                      
+`TimedDisplayAlert()`_                  `UnlockIBase()`_                        `unlockPubClass()`_                     `UnlockPubScreen()`_                    
+`UnlockPubScreenList()`_                `ViewAddress()`_                        `ViewPortAddress()`_                    `WBenchToBack()`_                       
+`WBenchToFront()`_                      `WindowAction()`_                       `WindowLimits()`_                       `WindowToBack()`_                       
+`WindowToFront()`_                      `ZipWindow()`_                          
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -999,30 +999,30 @@ Function
 ~~~~~~~~
 ::
 
- Closes a window. Depending on the display, this might not happen
- at the time when this function returns, but you must not use
- the window pointer after this function has been called.
+     Closes a window. Depending on the display, this might not happen
+     at the time when this function returns, but you must not use
+     the window pointer after this function has been called.
 
 
 Inputs
 ~~~~~~
 ::
 
- window - The window to close
+     window - The window to close
 
 
 Result
 ~~~~~~
 ::
 
- None.
+     None.
 
 
 Notes
 ~~~~~
 ::
 
- The window might not have been disappeared when this function returns.
+     The window might not have been disappeared when this function returns.
 
 
 
@@ -4821,6 +4821,33 @@ Notes
 
 ----------
 
+RefreshWindowFrame()
+====================
+
+Synopsis
+~~~~~~~~
+::
+
+ void RefreshWindowFrame(
+          struct Window * window );
+
+Function
+~~~~~~~~
+::
+
+     Redraw window borders.
+
+
+Inputs
+~~~~~~
+::
+
+     window - pointer to a window whose borders should be redrawn
+
+
+
+----------
+
 ReleaseGIRPort()
 ================
 
@@ -5784,6 +5811,35 @@ See also
 ~~~~~~~~
 
 `NewObjectA()`_ `SetAttrsA()`_ `GetAttr()`_ `DoGadgetMethodA()`_ "Basic Object-Oriented Programming System for Intuition" and "boopsi Class Reference" Dokument. 
+
+----------
+
+SetIPrefs()
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG SetIPrefs(
+          APTR data,
+          ULONG length,
+          ULONG type );
+
+Result
+~~~~~~
+::
+
+ Depending on the operation
+
+
+Notes
+~~~~~
+::
+
+     This function is currently considered private
+
+
 
 ----------
 

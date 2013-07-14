@@ -2056,12 +2056,7 @@ Notes
      On CPU's without a separate instruction and data cache, these will
      be considered as equal.
 
-
-Bugs
-~~~~
-::
-
-     This function is unimplemented.
+     This function isn't implemented on all platforms.
 
 
 

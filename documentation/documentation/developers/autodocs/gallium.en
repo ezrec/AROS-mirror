@@ -36,8 +36,8 @@ Function
 ~~~~~~~~
 ::
 
- Copies part of pipe resource onto rast port. Clips output by using layers of
- rastport.
+     Copies part of pipe resource onto rast port. Clips output by using layers of
+     rastport.
 
 
 Inputs
@@ -75,8 +75,8 @@ Function
 ~~~~~~~~
 ::
 
- Copies part of pipe surface onto rast port. Clips output by using layers of
- rastport.
+     Copies part of pipe surface onto rast port. Clips output by using layers of
+     rastport.
 
 
 Inputs
@@ -110,36 +110,34 @@ Function
 ~~~~~~~~
 ::
 
- Creates a gallium pipe screen.
+     Creates a gallium pipe screen.
 
 
 Inputs
 ~~~~~~
 ::
 
- tags - a pointer to tags to be used during creation.
+     tags - a pointer to tags to be used during creation.
 
 
 Tags
 ~~~~
 ::
 
- CPS_GalliumInterfaceVersion   - Indicates a version of gallium interface
-                                 that a client is expected to receive. The
-                                 client expected version must ideally match 
-                                 with the version that the driver provides,
-                                 because gallium interface is not backwards
-                                 compatible. This tag is required. Unless
-                                 otherwise needed, the value
-                                 GALLIUM_INTERFACE_VERSION should be passed.
-                                 See also CreatePipeScreenV.
+     CPS_GalliumInterfaceVersion - Indicates a version of gallium interface
+         that a client is expected to receive. The client expected version
+         must ideally match with the version that the driver provides,
+         because gallium interface is not backwards compatible. This tag is
+         required. Unless otherwise needed, the value
+         GALLIUM_INTERFACE_VERSION should be passed.
+         See also CreatePipeScreenV.
 
 
 Result
 ~~~~~~
 ::
 
- A valid pipe screen instance or NULL of creation was not succesfull.
+     A valid pipe screen instance or NULL of creation was not succesfull.
 
 
 
@@ -159,22 +157,22 @@ Function
 ~~~~~~~~
 ::
 
- Disposes the pipe screen
+     Disposes the pipe screen
 
 
 Inputs
 ~~~~~~
 ::
 
- handle - a pointer to pipe screen structure. A NULL pointer will be
-        ignored.
+     handle - a pointer to pipe screen structure. A NULL pointer will be
+         ignored.
 
 
 Result
 ~~~~~~
 ::
 
- The pipe screen is freed. Don't use it anymore.
+     The pipe screen is freed. Don't use it anymore.
 
 
 
