@@ -304,11 +304,20 @@ class libautodoc(autodoc):
         self.rettype = ""
         self.parameters = []
 
+        if (not "NAME" in self.titles):
+            print content
+            raise ValueError("Field 'NAME' is missing")
+        name = self.titles["NAME"].strip()
+        if name == "":
+            print content
+            raise ValueError("Field 'NAME' is empty")
+
         # search for function name
-        m = libfunc_regx.search(content)
+        m = libfunc_regx.search(name)
         if m:
             # AROS lib function
-            self.docname = m.group(2)
+            funcname = m.group(2)
+            self.docname = funcname + "()"
             self.rettype = m.group(1)
             self.docfilename = self.docname.lower()
 
@@ -318,7 +327,7 @@ class libautodoc(autodoc):
                     self.parameters.append(par)
 
             # create new Synopsis
-            syn = " " + self.rettype + " " + self.docname
+            syn = " " + self.rettype + " " + funcname
             if len(self.parameters) == 0:
                 syn += "();\n"
             else:
@@ -333,21 +342,21 @@ class libautodoc(autodoc):
             # check for variadic prototype
             varproto = ""
             if len(self.parameters) > 0:
-                if self.docname[-1] == "A":
+                if funcname[-1] == "A":
                     # function name ends with "A"
-                    varproto = self.docname[:-1]
-                elif self.docname[-7:] == "TagList":
+                    varproto = funcname[:-1]
+                elif funcname[-7:] == "TagList":
                     # function name ends with "TagList"
-                    varproto = self.docname[:-7] + "Tags"
-                elif self.docname[-4:] == "Args" and (self.docname not in ("ReadArgs","FreeArgs")):
+                    varproto = funcname[:-7] + "Tags"
+                elif funcname[-4:] == "Args" and (funcname not in ("ReadArgs","FreeArgs")):
                     # function name ends with "Args"
-                    varproto = self.docname[:-4]
+                    varproto = funcname[:-4]
                 else:
                     # last argument's type is "const struct TagItem *"
                     lastarg = self.parameters[-1] # last parameter
                     lastarg = lastarg[0] # type
                     if lastarg[-16:] == "struct TagItem *":
-                        varproto = self.docname + "Tags"
+                        varproto = funcname + "Tags"
                 
             # append variadic prototype
             if len(varproto) > 0:
@@ -359,26 +368,20 @@ class libautodoc(autodoc):
                 syn += "          TAG tag, ... );\n"
 
             self.titles["SYNOPSIS"] = syn
-        
+
         else:
             # C function
-            m = cfunc_regx.search(content)
+            m = cfunc_regx.search(name)
             if m:
-                self.docname = m.group(2)
+                funcname = m.group(2)
+                self.docname = funcname + "()"
                 self.rettype = m.group(1)
                 self.docfilename = self.docname.lower()
                 # We don't parse the Synopsis but insert the function name at the beginning
                 syn = self.titles["SYNOPSIS"]
-                syn = "  " + self.rettype + self.docname + "(\n" + syn
+                syn = "  " + self.rettype + funcname + "(\n" + syn
                 self.titles["SYNOPSIS"] = syn
-            else:
-                print content
-                raise ValueError("No field 'NAME' in autodoc")
-                
-        # append pair of brackets
-        self.docname += "()"
-        self.docfilename = self.docname.lower()
-
+            #else => use normal text autodoc format
 
     def write(self, filehandle, titles):
         """Write autodoc to file.
