@@ -532,8 +532,8 @@ static int pmain (lua_State *L) {
     return 0;  /* error running LUA_INIT */
   
   if (argc == 0) {
-    //freopen("con:10/10//300/AmiLua output/auto/close/wait", "r+", stdout);
-    //freopen("con:10/100//300/AmiLua error/auto/close/wait", "r+", stderr);
+    freopen("con:10/10//300/AmiLua output/auto/close/wait", "r+", stdout);
+    freopen("con:10/100//300/AmiLua error/auto/close/wait", "r+", stderr);
     handle_wb_script(L, argv);
   }
   else {
