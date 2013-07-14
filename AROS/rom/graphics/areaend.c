@@ -1,5 +1,5 @@
 /*
-    Copyright © 1995-2007, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2013, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: Graphics function AreaEnd()
@@ -138,7 +138,7 @@
         	    CurVctr = &CurVctr[2];
         	    CurFlag = &CurFlag[1];
         	    /* 
-        	       no need to set the bundaries here like in case above as
+        	       no need to set the boundaries here like in case above as
         	       this coord closes the polygon and therefore is the same
         	       one as the first coordinate of the polygon. 
         	    */
@@ -303,6 +303,7 @@
 		default:
         	    /* this is an error */
         	    SetAPen(rp, Rem_APen);
+
         	    /* also restore old graphics cursor position */
         	    rp->cp_x = Rem_cp_x;
         	    rp->cp_y = Rem_cp_y;
@@ -318,9 +319,7 @@
 	areainfo->FlagPtr = areainfo->FlagTbl;
 	areainfo->Count   = 0;
 
-	/* restore old APen */
-	SetAPen(rp, Rem_APen);    
-	/* also restore old graphics cursor position */
+	/* restore old graphics cursor position */
 	rp->cp_x = Rem_cp_x;
 	rp->cp_y = Rem_cp_y;
       
