@@ -1,5 +1,5 @@
 /*
-    Copyright © 1995-2001, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2013, The AROS Development Team. All rights reserved.
     $Id$
 
 */
@@ -51,6 +51,9 @@
     AROS_LIBFUNC_INIT
 
     struct PartitionHandle *ph;
+
+    if (Device == NULL)
+        return NULL;
 
     ph = AllocMem(sizeof(struct PartitionHandle), MEMF_PUBLIC | MEMF_CLEAR);
     if (ph)
