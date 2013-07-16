@@ -6,6 +6,6 @@
 #MM- contrib-gnu-mpfr : development-mpfr
 #MM- development-mpfr : development-gmp
 
-%fetch_and_build_gnu_development package=mpfr version=3.0.1 patch=no
+%fetch_and_build_gnu_development package=mpfr version=3.1.2 patch=no
 
 %common
