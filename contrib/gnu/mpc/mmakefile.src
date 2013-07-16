@@ -6,6 +6,6 @@
 #MM- contrib-gnu-mpc : development-mpc
 #MM- development-mpc : development-mpfr
 
-%fetch_and_build_gnu_development package=mpc version=0.9 patch=no
+%fetch_and_build_gnu_development package=mpc version=1.0.1 patch=no
 
 %common
