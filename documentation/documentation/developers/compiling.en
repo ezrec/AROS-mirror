@@ -15,7 +15,7 @@ Compiling AROS
 :Status:    Done.
 :Abstract:
     This document will explain how to compile AROS. Development of AROS is
-    possible in two ways. One way is to use a Linux, FreeBSD or Max OS X
+    possible in two ways. One way is to use a Linux, FreeBSD or Mac OS X
     system to cross-compile AROS. The other is to perform the compilation
     directly under AROS. Both methods are explained below.
 
@@ -36,6 +36,8 @@ The following software is required for compiling AROS:
 + pngtopnm and ppmtoilbm (part of the netpbm package)
 + Autoconf 2.61+
 + Automake
++ CMake
++ gperf
 + Patch
 + C library development files (libc)
 + Common utilities, like cp, mv, sort, uniq, head, ...
