@@ -894,7 +894,7 @@ Function
 ::
 
      Detach menu stript from a window.
-     Call this function before you change memu data.
+     Call this function before you change menu data.
      
 
 Inputs

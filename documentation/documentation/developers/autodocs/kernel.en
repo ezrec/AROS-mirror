@@ -330,12 +330,7 @@ Notes
      and state tracking mechanism. It operates directly on the CPU.
      Normal applications should consider using exec.library/Disable().
 
-
-Bugs
-~~~~
-::
-
-     This function is unimplemented.
+     This function isn't implemented on all platforms.
 
 
 
@@ -1245,12 +1240,7 @@ Notes
      and state tracking mechanism. It operates directly on the CPU.
      Normal applications should consider using exec.library/Enable().
 
-
-Bugs
-~~~~
-::
-
-     This function is unimplemented.
+     This function isn't implemented on all platforms.
 
 
 

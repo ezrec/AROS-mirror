@@ -9,6 +9,9 @@ oop
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
+`--background_meta--`_                  `--background_root--`_                  `--naming_conventions--`_               `aoMeta_ID`_                            
+`aoMeta_InstSize`_                      `aoMeta_InterfaceDescr`_                `aoMeta_SuperID`_                       `aoMeta_SuperPtr`_                      
+`moRoot_Dispose`_                       `moRoot_Get`_                           `moRoot_New`_                           `moRoot_Set`_                           
 `OOP_AddClass()`_                       `OOP_DisposeObject()`_                  `OOP_FindClass()`_                      `OOP_GetAttr()`_                        
 `OOP_GetAttrBase()`_                    `OOP_GetMethod()`_                      `OOP_GetMethodID()`_                    `OOP_NewObject()`_                      
 `OOP_ObtainAttrBase()`_                 `OOP_ObtainAttrBases()`_                `OOP_ObtainAttrBasesArray()`_           `OOP_ObtainMethodBasesArray()`_         
@@ -17,6 +20,448 @@ oop
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
+
+--background_meta--
+===================
+
+Notes
+~~~~~
+::
+
+     Classes are objects of metaclasses, so therefore
+     classes are created with OOP_NewObject().
+
+     As of now there are three different metaclasses available:
+
+       mimetaclass (CLID_MIMeta)
+       - Creates classes that supports multiple interfaces.
+
+       simetaclass (CLID_SIMeta)
+       - Creates classes that can only support single interfaces. Advantage is faster
+         method invocation (doesn't require hashing).
+
+     How to create a class is best shown through an example.
+     Here is a Timer class with two simple methods,
+     Start and Stop.
+     Note, this example doesn't show the New and Dispose
+     methods and OOP_DoSuperMethod() usage, but it is exactly the same as in BOOPSI,
+     so those familiar with BOOPSI, should find creating classes with this system simple.
+
+     // In the classes' include file you have to define class ID, interface ID
+     // method offsets and attribute offset
+     #define CLID_Timer      "timerclass"
+     #define IID_Timer       "I_timer"
+
+     // Method offset for methods in the IID_Timer interface.
+     enum
+     {
+         moTimer_Start       = 0,
+         moTimer_Stop,
+
+         Num_Timer_Methods   // number of methods in the Timer interface
+     };
+
+     // Attribute offsets for attrs in the IID_Timer interface.
+     enum
+     {
+         aoTimer_Elapsed = 0,
+
+         Num_Timer_Attrs     // number of attrs in the timer interface
+     };
+
+     // private instance data
+     struct timer_data
+     {
+         struct timeval start_time;
+         struct timeval elapsed_time;
+     };
+
+     // The methods
+     static VOID timer_start(Class *cl, Object *o, Msg msg)
+     {
+         struct timer_data *data;
+
+         data = INST_DATA(tcl, o);
+
+         gettimeofday(&(data->start_time), NULL);
+
+         return;
+     }
+
+     static VOID timer_stop(Class *cl, Object *o, Msg msg)
+     {
+         struct timer_data *data = INST_DATA(tcl, o);
+         gettimeofday(&(data->elapsed_time), NULL);
+
+         SubTime(&(data->elapsed_time), &(data->start_time));
+
+         return;
+     }
+
+     #define NUM_TIMER_METHODS 2
+     Class *make_timerclass()
+     {
+         struct MethodDescr methods[NUM_TIMER_METHODS + 1] =
+         {
+             {(IPTR (*)())timer_start,               moTimer_Start},
+             {(IPTR (*)())timer_stop,                moTimer_Stop},
+             {NULL, 0UL} // must be null-terminated
+         };
+
+         struct InterfaceDescr ifdescr[] =
+         {
+             { methods, "Timer", NUM_TIMER_METHODS },
+             { NULL, 0UL, 0UL} // must be null-terminated
+         };
+
+         struct TagItem tags[] =
+         {
+             {aMeta_SuperID,         (IPTR)CLID_Root},
+             {aMeta_InterfaceDescr,  (IPTR)ifdescr},
+             {aMeta_ID,              (IPTR)CLID_Timer},
+             {aMeta_InstSize,        (IPTR)sizeof (struct timer_data)},
+             {TAG_DONE, 0UL}
+         };
+
+         Class *tcl;
+
+         // Make it a class of the SIMeta
+         tcl = (Class *)OOP_NewObject(NULL, CLID_SIMeta, tags);
+
+         if (tcl)
+         {
+             // Make the class public
+             OOP_AddClass(tcl);
+         }
+
+         return tcl;
+     }
+
+     VOID free_timerclass(Class *cl)
+     {
+         OOP_DisposeObject((Object *)cl);
+
+         return;
+     }
+
+
+
+----------
+
+--background_root--
+===================
+
+Notes
+~~~~~
+::
+
+     Root class is the base class of all classes.
+     One can create new baseclasses, but all classes must implement the root interface.
+
+
+
+----------
+
+--naming_conventions--
+======================
+
+Notes
+~~~~~
+::
+
+     This section describes the recommented convention for naming attributes and methods.
+
+     Method and attribute offsets are constructed like this:
+
+     method offset:
+       mo<interface>_<method name>  (eg. moTimer_Start)
+
+     attribute offset:
+       ao<interface>_<attrname>  (eg. aoTimer_Elapsed)
+
+     or moHidd_GC_SetPixel and aoHidd_GC_FgPen
+
+     Macro specifying class ID is defined like this:
+     CLID_<system>_<class name> (eg. CLID_Hidd_Gfx )
+
+     And interface IDs like this.
+     IID_<system>_<interface name> (eg. IID_Hidd_Gfx )
+
+     ID themselves are strings.
+
+
+
+----------
+
+aoMeta_ID
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+     [I..], CONST_STRPTR
+
+
+Function
+~~~~~~~~
+::
+
+     Specifies the class ID for the class.
+
+
+
+----------
+
+aoMeta_InstSize
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+     [I..], ULONG
+
+
+Function
+~~~~~~~~
+::
+
+     Size of the instance data for this class.
+     Note, this is not necessarily the same as the size of the whole
+     object of this class.
+
+
+
+----------
+
+aoMeta_InterfaceDescr
+=====================
+
+Synopsis
+~~~~~~~~
+::
+
+     [I..],  struct InterfaceDescr *
+
+
+Function
+~~~~~~~~
+::
+
+     Pointer to an array of interface descriptors (struct InterfaceDescr).
+     This array has to be null-terminated.
+
+     Each
+
+     struct InterfaceDescr
+     {
+             struct MethodDescr *MethodTable;
+             CONST_STRPTR InterfaceID;
+             ULONG NumMethods;
+     };
+
+     describes an interface of the class.
+     The MethodTable is an array of 
+
+     struct MethodDescr
+     {
+             IPTR (*MethodFunc)();
+             ULONG MethodIdx;
+     };
+     
+     which describes each method's implementation.
+
+
+Example
+~~~~~~~
+::
+
+     struct MethodDescr root_mdescr[NUM_ROOT_METHODS + 1] =
+     {
+         { (IPTR (*)())unixio_new,     moRoot_New            },
+         { (IPTR (*)())unixio_dispose, moRoot_Dispose        },
+         { NULL, 0UL }
+     };
+
+     struct MethodDescr unixio_mdescr[NUM_UNIXIO_METHODS + 1] =
+     {
+         { (IPTR (*)())unixio_wait,  moHidd_UnixIO_Wait      },
+         { NULL, 0UL }
+     };
+
+     struct InterfaceDescr ifdescr[] =
+     {
+         {root_mdescr, IID_Root, NUM_ROOT_METHODS},
+         {unixio_mdescr, IID_UnixIO, NUM_UNIXIO_METHODS},
+         {NULL, NULL, 0UL}
+     };
+     
+     struct TagItem tags[] =
+     {
+         {aMeta_SuperID,                     (IPTR)CLID_Hidd},
+         {aMeta_InterfaceDescr,              (IPTR)ifdescr},
+         {aMeta_ID,                  (IPTR)CLID_UnixIO_Hidd},
+         {aMeta_InstSize,            (IPTR)sizeof (struct UnixIOData) },
+         {TAG_DONE, 0UL}
+     };
+ 
+     ...
+
+     cl = NewObjectA(NULL, CLID_HIDDMeta, tags);
+
+
+Bugs
+~~~~
+::
+
+     InterfaceDescr->NumMethods field was originally intended to specify
+     size of internal method table. When creating a new interface (i. e.
+     if this is your own interface), you need to be sure that the value
+     you set there is equal to highest possible method number + 1.
+     
+     Since v42.1 oop.library always ensures that methods table has enough
+     entries to accomodate all defined methods. NumMethods field in interface
+     descriptor is effectively ignored and is present only for backwards
+     compatibility.
+
+
+
+----------
+
+aoMeta_SuperID
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+     [I..], CONST_STRPTR
+
+
+Function
+~~~~~~~~
+::
+
+     ID of public class that will be superclass of class to be created.
+
+
+
+----------
+
+aoMeta_SuperPtr
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+     [I..], OOP_Class *
+
+
+Function
+~~~~~~~~
+::
+
+     Pointer to private class that will be superclass to
+     class created.
+
+
+
+----------
+
+moRoot_Dispose
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+     See OOP_DisposeObject() doc.
+
+
+Function
+~~~~~~~~
+::
+
+     Used internally to dispose of an object previously
+     created using the moRoot_New method.
+
+
+
+----------
+
+moRoot_Get
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+     OOP_GetAttr(OOP_Object *object, ULONG attrID, IPTR *storage);
+
+
+Function
+~~~~~~~~
+::
+
+     Get the value for an object attribute.
+     The attribute value will be stored in *storage.
+
+
+Example
+~~~~~~~
+::
+
+     ..
+     ULONG num_members;
+     
+     OOP_GetAttr(list, aList_NumMembers, &num_members);
+
+
+
+----------
+
+moRoot_New
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+     See OOP_NewObject() doc.
+
+
+Function
+~~~~~~~~
+::
+
+     Creates a new object of some class. Class users should use OOP_NewObject() to
+     create an object.
+
+
+
+----------
+
+moRoot_Set
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+     OOP_SetAttrs() (OOP_Object *object, struct TagItem *attrs);
+
+
+Function
+~~~~~~~~
+::
+
+     Set an attribute of an object.
+
+
+
+----------
 
 OOP_AddClass()
 ==============
