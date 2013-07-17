@@ -45,17 +45,21 @@ FILES :=               \
 
 #MM aros-tcpip-apps-owb-resources : aros-tcpip-apps-owb-icons iconset-$(AROS_TARGET_ICONSET)-contrib-icons-owb aros-tcpip-apps-owb-readme
 
-ifneq ($(AROS_TARGET_CPU),m68k)
-OWB_LIBS := webkit-owb webcore wtf jsc webkit-owb \
-    icui18n icuuc icudata codesets thread xml2 fontconfig freetype2.static \
-    SDL SDL_gfx GL png jpeg curl iconv z mui ssl \
-    crypto sqlite3 xslt thread
+ifneq ($(AROS_TARGET_CPU),arm)
+    ifneq ($(AROS_TARGET_CPU),m68k)
+        I18N_LIBS=icui18n icuuc icudata
+    else
+        I18N_LIBS=
+    endif
 else
+    I18N_LIBS=
+endif
+
 OWB_LIBS := webkit-owb webcore wtf jsc webkit-owb \
-    codesets thread xml2 fontconfig freetype2.static \
+    $(I18N_LIBS) codesets thread xml2 fontconfig freetype2.static \
     SDL SDL_gfx GL png jpeg curl iconv z mui ssl \
     crypto sqlite3 xslt thread
-endif
+
 #TODO: Link OWB with shared library version of freetype2
 
 USER_CFLAGS := -DZUNE_BUILTIN_SCROLLGROUP=0 -DMUIMASTER_YES_INLINE_STDARG \
