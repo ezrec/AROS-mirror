@@ -300,13 +300,14 @@ class libautodoc(autodoc):
         if (not "NAME" in self.titles):
             print content
             raise ValueError("Field 'NAME' is missing")
-        name = self.titles["NAME"].strip()
-        if name == "":
+        self.docname = self.titles["NAME"].strip()
+        if self.docname == "":
             print content
             raise ValueError("Field 'NAME' is empty")
+        self.docfilename = self.docname.lower()
 
         # search for function name
-        m = libfunc_regx.search(name)
+        m = libfunc_regx.search(self.docname)
         if m:
             # AROS lib function
             funcname = m.group(2)
@@ -364,7 +365,7 @@ class libautodoc(autodoc):
 
         else:
             # C function
-            m = cfunc_regx.search(name)
+            m = cfunc_regx.search(self.docname)
             if m:
                 funcname = m.group(2)
                 self.docname = funcname + "()"
