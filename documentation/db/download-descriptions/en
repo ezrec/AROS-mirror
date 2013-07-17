@@ -123,6 +123,9 @@ efika-chrp-ppc-boot-iso:
     The native version for PowerPC Efika computers. This is the
     bootable CD-ROM ISO image including ub2lb for open firmware. It
     contains all AROS system and contributed programs.
+raspi-armhf:
+    The native version for ARMv6 based Raspberry Pi computers.
+    Contains all files needed to boot from a FAT formatted sd-card.
 pc-i386-contrib:
     This archive contains all the contributed programs,
     compiled for the i386 architecture. They will work in
