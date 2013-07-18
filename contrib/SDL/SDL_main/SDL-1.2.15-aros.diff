@@ -1514,7 +1514,7 @@ diff -ruN SDL-1.2.15/SDL_intern.h SDL-1.2.15.aros/SDL_intern.h
 +    int                 SDL_maxthreads;
 +    int                 SDL_numthreads;
 +    SDL_Thread          **SDL_Threads;
-+    SDL_mutex           *SDL_ThreadLock;
++    struct SignalSemaphore     *SDL_ThreadLock;
 +
 +    /** thread/aros/SDL_thread.c **/
 +    SDL_error           SDL_global_error;
@@ -2039,7 +2039,7 @@ diff -ruN SDL-1.2.15/src/audio/ahi/SDL_ahiaudio.c SDL-1.2.15.aros/src/audio/ahi/
 +	hidden->ctrl_req.ahir_Std.io_Message.mn_Length = sizeof(struct AHIRequest);
 +	hidden->ctrl_req.ahir_Version = 4;
 +
-+	if (OpenDevice(AHINAME, 0, (struct IORequest *)&hidden->ctrl_req, NULL) != 0)
++	if (OpenDevice(AHINAME, 0, (struct IORequest *)&hidden->ctrl_req, 0) != 0)
 +	{
 +		D(bug("could not open ahi\n"));
 +		SDL_SetError("Unable to open AHI device! Error code %d.\n", hidden->ctrl_req.ahir_Std.io_Error);
@@ -4312,7 +4312,7 @@ diff -ruN SDL-1.2.15/src/cdrom/aros/SDL_syscdrom.c SDL-1.2.15.aros/src/cdrom/aro
 +		ULONG	devnamelen;
 +		
 +		startup = BADDR(dlist->dol_misc.dol_handler.dol_Startup);
-+		if ((ULONG) startup > 0x400 &&
++		if ((IPTR) startup > 0x400 &&
 +		    (startup->fssm_Unit & 0xff000000) == 0 &&
 +		     startup->fssm_Device && startup->fssm_Environ)
 +		{
@@ -8349,7 +8349,14 @@ diff -ruN SDL-1.2.15/src/stdlib/SDL_iconv.c SDL-1.2.15.aros/src/stdlib/SDL_iconv
  #include "SDL_config.h"
  
  /* This file contains portable iconv functions for SDL */
-@@ -44,7 +49,7 @@
+@@ -39,12 +44,14 @@
+ 
+ #include <errno.h>
+ 
++struct SDLBase;
++
+ size_t SDL_iconv(SDL_iconv_t cd,
+                  const char **inbuf, size_t *inbytesleft,
                   char **outbuf, size_t *outbytesleft)
  {
  	size_t retCode;
@@ -8358,7 +8365,7 @@ diff -ruN SDL-1.2.15/src/stdlib/SDL_iconv.c SDL-1.2.15.aros/src/stdlib/SDL_iconv
  	retCode = iconv(cd, (char **)inbuf, inbytesleft, outbuf, outbytesleft);
  #else
  	retCode = iconv(cd, inbuf, inbytesleft, outbuf, outbytesleft);
-@@ -812,8 +817,19 @@
+@@ -812,8 +819,19 @@
  
  #endif /* !HAVE_ICONV */
  
@@ -8378,7 +8385,7 @@ diff -ruN SDL-1.2.15/src/stdlib/SDL_iconv.c SDL-1.2.15.aros/src/stdlib/SDL_iconv
  	SDL_iconv_t cd;
  	char *string;
  	size_t stringsize;
-@@ -878,4 +894,7 @@
+@@ -878,4 +896,7 @@
  	SDL_iconv_close(cd);
  
  	return string;
@@ -8388,7 +8395,7 @@ diff -ruN SDL-1.2.15/src/stdlib/SDL_iconv.c SDL-1.2.15.aros/src/stdlib/SDL_iconv
  }
 diff -ruN SDL-1.2.15/src/stdlib/SDL_malloc.c SDL-1.2.15.aros/src/stdlib/SDL_malloc.c
 --- SDL-1.2.15/src/stdlib/SDL_malloc.c	2012-01-19 01:30:06.000000000 -0500
-+++ SDL-1.2.15.aros/src/stdlib/SDL_malloc.c	2013-05-22 10:57:42.051551575 -0400
++++ SDL-1.2.15.aros/src/stdlib/SDL_malloc.c	2013-07-18 12:45:12.124504892 -0400
 @@ -19,6 +19,11 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -8448,8 +8455,8 @@ diff -ruN SDL-1.2.15/src/stdlib/SDL_string.c SDL-1.2.15.aros/src/stdlib/SDL_stri
  /* This file contains portable string manipulation functions for SDL */
 diff -ruN SDL-1.2.15/src/thread/aros/SDL_syscond.c SDL-1.2.15.aros/src/thread/aros/SDL_syscond.c
 --- SDL-1.2.15/src/thread/aros/SDL_syscond.c	1969-12-31 19:00:00.000000000 -0500
-+++ SDL-1.2.15.aros/src/thread/aros/SDL_syscond.c	2013-05-22 10:57:42.055551590 -0400
-@@ -0,0 +1,295 @@
++++ SDL-1.2.15.aros/src/thread/aros/SDL_syscond.c	2013-07-18 12:55:18.907513767 -0400
+@@ -0,0 +1,297 @@
 +/*
 +    SDL - Simple DirectMedia Layer
 +    Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002  Sam Lantinga
@@ -8492,6 +8499,8 @@ diff -ruN SDL-1.2.15/src/thread/aros/SDL_syscond.c SDL-1.2.15.aros/src/thread/ar
 +
 +#include "SDL_error.h"
 +#include "SDL_thread.h"
++
++struct SDLBase;
 +
 +struct SDL_cond
 +{
@@ -8747,8 +8756,8 @@ diff -ruN SDL-1.2.15/src/thread/aros/SDL_syscond.c SDL-1.2.15.aros/src/thread/ar
 +}
 diff -ruN SDL-1.2.15/src/thread/aros/SDL_sysmutex.c SDL-1.2.15.aros/src/thread/aros/SDL_sysmutex.c
 --- SDL-1.2.15/src/thread/aros/SDL_sysmutex.c	1969-12-31 19:00:00.000000000 -0500
-+++ SDL-1.2.15.aros/src/thread/aros/SDL_sysmutex.c	2013-05-22 10:57:42.055551590 -0400
-@@ -0,0 +1,178 @@
++++ SDL-1.2.15.aros/src/thread/aros/SDL_sysmutex.c	2013-07-18 12:55:33.979588505 -0400
+@@ -0,0 +1,179 @@
 +/*
 +    SDL - Simple DirectMedia Layer
 +    Copyright (C) 1997-2006 Sam Lantinga
@@ -8783,6 +8792,7 @@ diff -ruN SDL-1.2.15/src/thread/aros/SDL_sysmutex.c SDL-1.2.15.aros/src/thread/a
 +#include "SDL_thread.h"
 +#include "SDL_systhread_c.h"
 +
++struct SDLBase;
 +
 +struct SDL_mutex {
 +	int recursive;
@@ -9591,8 +9601,8 @@ diff -ruN SDL-1.2.15/src/thread/aros/SDL_syssem.c SDL-1.2.15.aros/src/thread/aro
 +
 diff -ruN SDL-1.2.15/src/thread/aros/SDL_systhread.c SDL-1.2.15.aros/src/thread/aros/SDL_systhread.c
 --- SDL-1.2.15/src/thread/aros/SDL_systhread.c	1969-12-31 19:00:00.000000000 -0500
-+++ SDL-1.2.15.aros/src/thread/aros/SDL_systhread.c	2013-05-22 10:57:42.055551590 -0400
-@@ -0,0 +1,167 @@
++++ SDL-1.2.15.aros/src/thread/aros/SDL_systhread.c	2013-07-18 12:56:54.923989887 -0400
+@@ -0,0 +1,170 @@
 +/*
 +    SDL - Simple DirectMedia Layer
 +    Copyright (C) 1997-2006 Sam Lantinga
@@ -9629,6 +9639,8 @@ diff -ruN SDL-1.2.15/src/thread/aros/SDL_systhread.c SDL-1.2.15.aros/src/thread/
 +#include "../SDL_thread_c.h"
 +#include "../SDL_systhread.h"
 +#include "../../main/aros/mydebug.h"
++
++struct SDLBase;
 +
 +typedef struct {
 +	int (*func)(void *);
@@ -9736,7 +9748,8 @@ diff -ruN SDL-1.2.15/src/thread/aros/SDL_systhread.c SDL-1.2.15.aros/src/thread/
 +{
 +    AROS_LIBFUNC_INIT
 +#endif
-+	return((Uint32)FindTask(NULL));
++        /* FIXME: ThreadID may be NON-UNIQUE on 64-bit architectures! */
++	return((Uint32)(IPTR)FindTask(NULL));
 +#if defined(PROTO_SDL_H)
 +    AROS_LIBFUNC_EXIT
 +#endif
@@ -11092,8 +11105,8 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxaccel.c SDL-1.2.15.aros/src/video/cgx/
 +			Uint32 pitch;
 +
 +			if((surface->hwdata->lock = LockBitMapTags(surface->hwdata->bmap,
-+					LBMI_BASEADDRESS,(ULONG)&surface->pixels,
-+					LBMI_BYTESPERROW,(ULONG)&pitch,TAG_DONE)) != NULL)
++					LBMI_BASEADDRESS,(IPTR)&surface->pixels,
++					LBMI_BYTESPERROW,(IPTR)&pitch,TAG_DONE)) != NULL)
 +			{
 +				D(bug("Done...\n"));
 +				surface->pitch=pitch;
@@ -13502,7 +13515,7 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxmodes.c SDL-1.2.15.aros/src/video/cgx/
 +				struct DimensionInfo info;
 +
 +				/* ULONG GetDisplayInfoData( CONST DisplayInfoHandle handle, APTR buf, ULONG size, ULONG tagID, ULONG displayID ); */
-+				if(GetDisplayInfoData(h,(char *)&info,(ULONG)sizeof(struct DimensionInfo),(ULONG)DTAG_DIMS,(ULONG)NULL))
++				if(GetDisplayInfoData(h,(char *)&info,(ULONG)sizeof(struct DimensionInfo),(ULONG)DTAG_DIMS,(IPTR)NULL))
 +				{
 +					int ok=0;
 +
@@ -13835,9 +13848,9 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxmouse.c SDL-1.2.15.aros/src/video/cgx/
 +			// Create Pointer Object
 +			cursor->PointerObj = (Object *)NewObject(NULL,	
 +													(STRPTR)"pointerclass",
-+													POINTERA_BitMap,      (LONG)cursor->CursorBM,
-+													POINTERA_XOffset,     (LONG)(-hot_x),
-+													POINTERA_YOffset,     (LONG)(-hot_y),
++													POINTERA_BitMap,      (IPTR)cursor->CursorBM,
++													POINTERA_XOffset,     (IPTR)(-hot_x),
++													POINTERA_YOffset,     (IPTR)(-hot_y),
 +													TAG_DONE);
 +													
 +			if (!cursor->PointerObj)
@@ -14994,8 +15007,8 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxvideo.c SDL-1.2.15.aros/src/video/cgx/
 +									WA_Height,SDL_Display->Height,
 +									WA_Flags,WFLG_ACTIVATE|WFLG_RMBTRAP|WFLG_BORDERLESS|WFLG_BACKDROP|WFLG_REPORTMOUSE,
 +									WA_IDCMP,IDCMP_RAWKEY|IDCMP_MOUSEBUTTONS|IDCMP_MOUSEMOVE,
-+									WA_BackFill, (ULONG)LAYERS_NOBACKFILL,
-+									WA_CustomScreen,(ULONG)SDL_Display,
++									WA_BackFill, (IPTR)LAYERS_NOBACKFILL,
++									WA_CustomScreen,(IPTR)SDL_Display,
 +									TAG_DONE);
 +		FillPixelArray(SDL_Window->RPort,SDL_Window->BorderLeft,SDL_Window->BorderTop,SDL_Display->Width,SDL_Display->Height,0x00000000);
 +		D(bug("Opening backdrop window %ldx%ld on display %lx!\n",SDL_Display->Width,SDL_Display->Height,SDL_Display));
@@ -15018,8 +15031,8 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxvideo.c SDL-1.2.15.aros/src/video/cgx/
 +												((flags&SDL_RESIZABLE) ? WFLG_SIZEGADGET|WFLG_SIZEBBOTTOM : 0))),
 +									WA_IDCMP,	IDCMP_RAWKEY|IDCMP_CLOSEWINDOW|IDCMP_MOUSEBUTTONS|IDCMP_NEWSIZE|
 +												IDCMP_MOUSEMOVE|IDCMP_ACTIVEWINDOW|IDCMP_INACTIVEWINDOW,
-+									WA_BackFill, (ULONG)LAYERS_NOBACKFILL,
-+									WA_PubScreen,(ULONG)SDL_Display,
++									WA_BackFill, (IPTR)LAYERS_NOBACKFILL,
++									WA_PubScreen,(IPTR)SDL_Display,
 +									TAG_DONE);
 +		FillPixelArray(SDL_Window->RPort,SDL_Window->BorderLeft,SDL_Window->BorderTop,w,h,0x00000000);
 +		D(bug("Opening WB window of size: %ldx%ld!\n",w,h));
@@ -16359,9 +16372,11 @@ diff -ruN SDL-1.2.15/src/video/SDL_bmp.c SDL-1.2.15.aros/src/video/SDL_bmp.c
  #include "SDL_config.h"
  
  /* 
-@@ -45,8 +50,17 @@
+@@ -44,9 +49,19 @@
+ #define BI_BITFIELDS	3
  #endif
  
++struct SDLBase;
  
 +#if !defined(PROTO_SDL_H)
  SDL_Surface * SDL_LoadBMP_RW (SDL_RWops *src, int freesrc)
@@ -16377,7 +16392,7 @@ diff -ruN SDL-1.2.15/src/video/SDL_bmp.c SDL-1.2.15.aros/src/video/SDL_bmp.c
  	SDL_bool was_error;
  	long fp_offset = 0;
  	int bmpPitch;
-@@ -355,10 +369,23 @@
+@@ -355,10 +370,23 @@
  		SDL_RWclose(src);
  	}
  	return(surface);
@@ -16401,7 +16416,7 @@ diff -ruN SDL-1.2.15/src/video/SDL_bmp.c SDL-1.2.15.aros/src/video/SDL_bmp.c
  	long fp_offset;
  	int i, pad;
  	SDL_Surface *surface;
-@@ -546,4 +573,7 @@
+@@ -546,4 +574,7 @@
  		SDL_RWclose(dst);
  	}
  	return((SDL_strcmp(SDL_GetError(), "") == 0) ? 0 : -1);
@@ -16411,7 +16426,7 @@ diff -ruN SDL-1.2.15/src/video/SDL_bmp.c SDL-1.2.15.aros/src/video/SDL_bmp.c
  }
 diff -ruN SDL-1.2.15/src/video/SDL_cursor.c SDL-1.2.15.aros/src/video/SDL_cursor.c
 --- SDL-1.2.15/src/video/SDL_cursor.c	2012-01-19 01:30:06.000000000 -0500
-+++ SDL-1.2.15.aros/src/video/SDL_cursor.c	2013-05-22 10:57:42.087551752 -0400
++++ SDL-1.2.15.aros/src/video/SDL_cursor.c	2013-07-18 12:45:12.160505071 -0400
 @@ -19,6 +19,11 @@
      Sam Lantinga
      slouken@libsdl.org
@@ -18539,7 +18554,7 @@ diff -ruN SDL-1.2.15/src/video/SDL_video.c SDL-1.2.15.aros/src/video/SDL_video.c
 +#if !defined(PROTO_SDL_H)
  		if ( SDL_Init(SDL_INIT_VIDEO|SDL_INIT_NOPARACHUTE) < 0 ) {
 +#else
-+		if ( SDL_Initialise(SDL_INIT_VIDEO|SDL_INIT_NOPARACHUTE, SDLBase->GLBase_ptr) < 0 ) {
++		if ( SDL_Initialise(SDL_INIT_VIDEO|SDL_INIT_NOPARACHUTE, (void **)SDLBase->GLBase_ptr) < 0 ) {
 +#endif
  			return(NULL);
  		}
