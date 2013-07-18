@@ -351,11 +351,11 @@ STATIC void SetDetails( struct IClass *cl,
         MySetContents(texts[24], "%s/%ld", scr->Font->ta_Name, scr->Font->ta_YSize);
         MySetContents(texts[25], "$%08lx", &scr->ViewPort);
         MySetContents(texts[26], "$%08lx", &scr->RastPort);
-        MySetContents(texts[27], "$%08lx", &scr->BitMap);
-        MySetContents(texts[28], "%lU", GetBitMapAttr(&scr->BitMap, BMA_WIDTH));
-        MySetContents(texts[29], "%lU", GetBitMapAttr(&scr->BitMap, BMA_HEIGHT));
-        MySetContents(texts[30], "%lU", GetBitMapAttr(&scr->BitMap, BMA_DEPTH));
-        set(texts[31], MUIA_FlagsButton_Flags, GetBitMapAttr(&scr->BitMap, BMA_FLAGS));
+        MySetContents(texts[27], "$%08lx", scr->RastPort.BitMap);
+        MySetContents(texts[28], "%lU", GetBitMapAttr(scr->RastPort.BitMap, BMA_WIDTH));
+        MySetContents(texts[29], "%lU", GetBitMapAttr(scr->RastPort.BitMap, BMA_HEIGHT));
+        MySetContents(texts[30], "%lU", GetBitMapAttr(scr->RastPort.BitMap, BMA_DEPTH));
+        set(texts[31], MUIA_FlagsButton_Flags, GetBitMapAttr(scr->RastPort.BitMap, BMA_FLAGS));
         MySetContents(texts[32], "$%08lx", &scr->LayerInfo);
         MySetContents(texts[33], "$%08lx", scr->FirstGadget);
         MySetContents(texts[34], "%lD", scr->DetailPen);
