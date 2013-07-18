@@ -186,7 +186,7 @@ BOOL check_pattern(STRPTR line, STRPTR pattern, struct Parser *parser)
 	parser->args->RDA_BufSiz = 0;
 	parser->args->RDA_ExtHelp = NULL;
 	parser->args->RDA_Flags = RDAF_NOPROMPT;
-	if (ReadArgs(pattern, (LONG*)parser->params, parser->args)) return TRUE;
+	if (ReadArgs(pattern, (IPTR*)parser->params, parser->args)) return TRUE;
 	return FALSE;
 }
 

@@ -81,7 +81,7 @@ Object *labelled_checkmark(CONST_STRPTR label, IPTR id);
 
 struct Parser
 {
-	int32_t params[MAXPARAMS];
+	IPTR params[MAXPARAMS];
 	struct RDArgs *args;
 	int line;
 };

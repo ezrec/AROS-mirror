@@ -57,7 +57,7 @@ intptr_t CastleAppNew(Class *cl, Object *obj, struct opSet *msg)
 		MUIA_Application_Description,   LS(MSG_APPLICATION_DESCRIPTION, "Code template generator"),
 		MUIA_Application_Title,         "ChocolateCastle",
 		MUIA_Application_Version,       "$VER: ChocolateCastle " CHC_VERSION " (" CHC_DATE ")",
-	TAG_MORE, (ULONG)msg->ops_AttrList);
+	TAG_MORE, (IPTR)msg->ops_AttrList);
 
 	if (obj)
 	{

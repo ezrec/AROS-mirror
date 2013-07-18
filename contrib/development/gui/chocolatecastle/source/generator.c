@@ -263,7 +263,7 @@ static void generate_init_reggae_class(Object *obj)
 	T("Class *init_class(struct LibBase *lb)\n{\n");
 	II; I; T("Class *cl = NULL;\n\n");
 	I; TC("if ((cl = Create%sClass()))\n");
-	I; T("{\n"); II; I; T("cl->cl_UserData = (ULONG)lb;\n"); I; T("AddClass(cl);\n"); IO;
+	I; T("{\n"); II; I; T("cl->cl_UserData = (IPTR)lb;\n"); I; T("AddClass(cl);\n"); IO;
 	I; T("}\n\n"); I; T("lb->MyClass = cl;\n"); I; T("return cl;\n"); IO; T("}\n");
 	TRAIL("init_class()");
 }
@@ -356,11 +356,11 @@ IPTR GeneratorGet(Class *cl, Object *obj, struct opGet *msg)
 	switch (msg->opg_AttrID)
 	{
 		case GENA_SubclassSpace:
-		 *msg->opg_Storage = (ULONG)d->EmptyGroup;
+		 *msg->opg_Storage = (IPTR)d->EmptyGroup;
 		return TRUE;
 
 		case GENA_UnitName:
-		 *msg->opg_Storage = (ULONG)xget(d->ModuleName, MUIA_String_Contents);
+		 *msg->opg_Storage = (IPTR)xget(d->ModuleName, MUIA_String_Contents);
 		return TRUE;
 
 		case GENA_ProjectType:
@@ -747,10 +747,10 @@ IPTR GeneratorLoad(Class *cl, Object *obj, struct GENP_Load *msg)
 	LONG externity = 0, remarks = 0;
 	IPTR rv = FALSE;
 
-	msg->Parser->params[0] = (LONG)LS(MSG_MODULE_UNNAMED, "Unnamed");
-	msg->Parser->params[1] = (LONG)"";
-	msg->Parser->params[2] = (LONG)&externity;
-	msg->Parser->params[3] = (LONG)&remarks;
+	msg->Parser->params[0] = (IPTR)LS(MSG_MODULE_UNNAMED, "Unnamed");
+	msg->Parser->params[1] = (IPTR)"";
+	msg->Parser->params[2] = (IPTR)&externity;
+	msg->Parser->params[3] = (IPTR)&remarks;
 
 	//FIXME: SKIPS FOR NOW UNUSED PROJECT TYPE
 
@@ -1216,13 +1216,13 @@ IPTR GeneratorLibraryC(Class *cl, Object *obj, struct GENP_LibraryC *msg)
         TRAIL("LibOpen()");
 
 		LEAD("LibClose()");
-		T("ULONG LibClose(void)\n{\n");
+		T("IPTR LibClose(void)\n{\n");
 		II; I; T("struct LibBase *lb = (struct LibBase*)REG_A6;\n");
-		I; T("ULONG ret = 0;\n\n");
+		I; T("IPTR ret = 0;\n\n");
 		I; T("ObtainSemaphore(&lb->BaseLock);\n\n");
 		I; T("if (--lb->LibNode.lib_OpenCnt == 0)\n");
 		I; T("{\n");
-		II; I; T("if (lb->LibNode.lib_Flags & LIBF_DELEXP) ret = (ULONG)LibExpunge2(lb);\n");
+		II; I; T("if (lb->LibNode.lib_Flags & LIBF_DELEXP) ret = (IPTR)LibExpunge2(lb);\n");
 		IO; I; T("}\n\n");
 		I; T("ReleaseSemaphore(&lb->BaseLock);\n");
 		I; T("return ret;\n");
