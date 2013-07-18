@@ -537,13 +537,14 @@ D(bug("fmmain init ...........\n"));
 
   if ((wbscr = LockPubScreen (workbench)))
     {
+      UBYTE depth;
       screenmode = GetVPModeID (&wbscr->ViewPort);
       if (screenmode == INVALID_ID)
 	screenmode = 0;
       height = wbscr->Height;
       width = wbscr->Width;
-      fmconfig->mainscreen.depth =
-	wbscr->BitMap.Depth > 4 ? 4 : wbscr->BitMap.Depth;
+      depth = GetBitMapAttr(wbscr->RastPort.BitMap, BMA_DEPTH);
+      fmconfig->mainscreen.depth = depth > 4 ? 4 : depth;
       if (wbscr->Flags & AUTOSCROLL)
 	fmconfig->mainscreen.autoscroll = 1;
       apu2 = 0;
