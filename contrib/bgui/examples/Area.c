@@ -51,7 +51,7 @@ ULONG RenderMandel( struct Window *win, struct IBox *ibox, Object *area, Object 
 	LONG    xsize, ysize, depth;
 	ULONG rc;
 
-	depth = win->WScreen->BitMap.Depth;
+	depth = GetBitMapAttr(win->WScreen->RastPort.BitMap, BMA_DEPTH);
 	xsize = ibox->Width;
 	ysize = ibox->Height;
 
