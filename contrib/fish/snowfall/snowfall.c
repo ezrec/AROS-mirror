@@ -44,7 +44,7 @@ int backup;
 	srand((int)mic);
 	if ((LoadPicture(filename))==0) loc_abort("Can't load picture");
 	if (backup) 
-		BltBitMap(&s->BitMap,0L,0L,&bs->BitMap,0L,0L,(long)s->Width,(long)s->Height,0xC0L,0xFFL,0L);
+		BltBitMap(s->RastPort.BitMap,0L,0L,bs->RastPort.BitMap,0L,0L,(long)s->Width,(long)s->Height,0xC0L,0xFFL,0L);
 }
 
 void loc_abort(errortext)
@@ -90,6 +90,9 @@ char *filename;
 	ns.Type=CUSTOMSCREEN;
 	if ((bs=OpenScreen(&ns))==0) loc_abort("Can't open backupscreen");
 	if ((s=(struct Screen *)OpenScreen(&ns))==0) loc_abort("No memory for screen");
+	if (!(GetBitMapAttr(s->RastPort.BitMap, BMA_FLAGS) & BMF_STANDARD) ||
+	    !(GetBitMapAttr(bs->RastPort.BitMap, BMA_FLAGS) & BMF_STANDARD))
+	    loc_abort("Only BMF_STANDARD backed screens are supported");
 	LoadRGB4(&s->ViewPort,BlackColors,(long)1<<bmhd.nplanes);
 	nw.Screen=s;
 	nw.Width=bmhd.w;
@@ -285,10 +288,10 @@ long mass,refresh,wind;
 			if (--refresh==0)
 			{
 				for (i=0;i<mass;i++)
-					*(bs->BitMap.Planes[0]+(s->Width/8)*y[i]+x[i]/8) |= (128>>(x[i]%8));
-				BltBitMap(&bs->BitMap,0L,0L,&s->BitMap,0L,0L,(long)s->Width,(long)s->Height,0xC0L,0xFFL,0x00L);
+					*(bs->RastPort.BitMap->Planes[0]+(s->Width/8)*y[i]+x[i]/8) |= (128>>(x[i]%8));
+				BltBitMap(bs->RastPort.BitMap,0L,0L,s->RastPort.BitMap,0L,0L,(long)s->Width,(long)s->Height,0xC0L,0xFFL,0x00L);
 				for (i=0;i<mass;i++)
-					*(bs->BitMap.Planes[0]+(s->Width/8)*y[i]+x[i]/8) &= ~(128>>(x[i]%8));
+					*(bs->RastPort.BitMap->Planes[0]+(s->Width/8)*y[i]+x[i]/8) &= ~(128>>(x[i]%8));
 				refresh=timer;
 			}
 		}
@@ -308,9 +311,9 @@ long mass,refresh,wind;
 					if (cx<0) cx+=s->Width;
 					if (ReadPixel(w->RPort,cx,cy+1)==0)
 					{
-						*(s->BitMap.Planes[0]+(s->Width/8)*cy+oldx/8)&=~(128>>(oldx%8));
+						*(s->RastPort.BitMap->Planes[0]+(s->Width/8)*cy+oldx/8)&=~(128>>(oldx%8));
 						cy++;
-						*(s->BitMap.Planes[0]+(s->Width/8)*cy+cx/8) |= (128>>(cx%8));
+						*(s->RastPort.BitMap->Planes[0]+(s->Width/8)*cy+cx/8) |= (128>>(cx%8));
 					}
 					else
 					{
@@ -329,10 +332,10 @@ long mass,refresh,wind;
 							{cx--; end=0;}
 						if (end==0)
 						{
-							*(s->BitMap.Planes[0]+(s->Width/8)*cy+oldx/8)&=~(128>>(oldx%8));
+							*(s->RastPort.BitMap->Planes[0]+(s->Width/8)*cy+oldx/8)&=~(128>>(oldx%8));
 							cy++;
 						}
-						*(s->BitMap.Planes[0]+(s->Width/8)*cy+cx/8) |= (128>>(cx%8));
+						*(s->RastPort.BitMap->Planes[0]+(s->Width/8)*cy+cx/8) |= (128>>(cx%8));
 						if (end==1) cy=-1;
 					}
 				}
