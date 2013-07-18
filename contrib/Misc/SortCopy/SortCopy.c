@@ -2319,7 +2319,7 @@ BOOL CreateLink(char *name, BPTR melock, char *linkname, BPTR linklock,
 
     if(soft)
     {
-	if(!MakeLink(name, buffer, TRUE))
+	if(!MakeLink(name, (SIPTR)buffer, TRUE))
 	{
 	    PostFailure(IoErr(), "Can't create the softlink \"%s\"", name);
 
@@ -2331,7 +2331,7 @@ BOOL CreateLink(char *name, BPTR melock, char *linkname, BPTR linklock,
     }
     else
     {
-	if(!MakeLink(name, (APTR)lock, FALSE))
+	if(!MakeLink(name, (SIPTR)lock, FALSE))
 	{
 	    PostFailure(IoErr(), "Can't create the hardlink \"%s\"", name);
 
