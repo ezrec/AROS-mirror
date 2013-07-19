@@ -12,7 +12,7 @@ include $(TOP)/config/make.cfg
 
 #MM  ports-scientific-mathomatic-quick : ports-scientific-mathomatic-fetch
 
-REPOSITORIES := http://www.panix.com/~gesslein
+REPOSITORIES := http://mathomatic.orgserve.de
 ARCHBASE     := mathomatic-16.0.1
 TARGETDIR    := $(AROS_CONTRIB)/Utilities/Scientific/Mathomatic
 
