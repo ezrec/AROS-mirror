@@ -4,6 +4,7 @@ Autodocs for Modules
 
 .. This document is automatically generated. Don't edit it!
 
++ `acpi <acpi>`_
 + `alib <alib>`_
 + `amigaguide <amigaguide>`_
 + `aros <aros>`_
@@ -34,6 +35,8 @@ Autodocs for Modules
 + `graphics_hidd <graphics_hidd>`_
 + `hidd.pci_hidd <hidd.pci_hidd>`_
 + `hidd_hidd <hidd_hidd>`_
++ `hostlib <hostlib>`_
++ `hpet <hpet>`_
 + `hyperlayers <hyperlayers>`_
 + `icon <icon>`_
 + `identify <identify>`_
@@ -65,6 +68,7 @@ Autodocs for Modules
 + `reqtools <reqtools>`_
 + `rexxsupport <rexxsupport>`_
 + `rexxsyslib <rexxsyslib>`_
++ `setpatch <setpatch>`_
 + `timer <timer>`_
 + `utility <utility>`_
 + `uuid <uuid>`_

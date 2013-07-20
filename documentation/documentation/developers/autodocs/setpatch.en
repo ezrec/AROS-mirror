@@ -1,0 +1,102 @@
+========
+setpatch
+========
+
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_
+
+----------
+
+======================================= ======================================= ======================================= ======================================= 
+`AddPatch()`_                           `FindPatch()`_                          `RemPatch()`_                           
+======================================= ======================================= ======================================= ======================================= 
+
+-----------
+
+AddPatch()
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL AddPatch(
+          struct PatchEntry * pe );
+
+Inputs
+~~~~~~
+::
+
+
+     pe - Patch entry header
+
+
+Result
+~~~~~~
+::
+
+
+     TRUE  - Patch entry is added to the master patch list
+     FALSE - Patch with matching name already in the list 
+
+
+
+----------
+
+FindPatch()
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ struct PatchEntry * FindPatch(
+          CONST_STRPTR name );
+
+Inputs
+~~~~~~
+::
+
+
+     name - Name of the patch to search for
+
+
+Result
+~~~~~~
+::
+
+
+     Pointer to the patch entry if found, or NULL
+
+
+
+----------
+
+RemPatch()
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ VOID RemPatch(
+          struct PatchEntry * pe );
+
+Inputs
+~~~~~~
+::
+
+
+     Patch entry to remove (from FindPatch() or AddPatch())
+
+
+Result
+~~~~~~
+::
+
+
+     Patch entry is removed from the master patch list
+
+
+

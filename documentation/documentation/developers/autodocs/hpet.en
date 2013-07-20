@@ -1,0 +1,156 @@
+====
+hpet
+====
+
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_
+
+----------
+
+======================================= ======================================= ======================================= ======================================= 
+`AllocHPETUnit()`_                      `FreeHPETUnit()`_                       `GetHPETCount()`_                       `GetUnitAttrsA()`_                      
+
+======================================= ======================================= ======================================= ======================================= 
+
+-----------
+
+AllocHPETUnit()
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG AllocHPETUnit(
+          const char * user );
+
+Function
+~~~~~~~~
+::
+
+     Allocate a free HPET timer for use.
+
+
+Inputs
+~~~~~~
+::
+
+     user - a string specifying the name of current user. Can not be NULL.
+
+
+Result
+~~~~~~
+::
+
+     A number of HPET timer unit allocated for exclusive use, or -1 if
+     there was no free HPET.
+
+
+
+----------
+
+FreeHPETUnit()
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+ void FreeHPETUnit(
+          ULONG unit );
+
+Function
+~~~~~~~~
+::
+
+     Free the specified HPET unit.
+
+
+Inputs
+~~~~~~
+::
+
+     unit - a number of previously allocated HPET unit.
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+
+----------
+
+GetHPETCount()
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG GetHPETCount();
+
+Function
+~~~~~~~~
+::
+
+     Return the total number of HPET units in the system.
+
+
+Inputs
+~~~~~~
+::
+
+     None
+
+
+Result
+~~~~~~
+::
+
+     Total number of HPET units
+
+
+
+----------
+
+GetUnitAttrsA()
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL GetUnitAttrsA(
+          ULONG unit,
+          const struct TagItem * tags );
+ 
+ BOOL GetUnitAttrs(
+          ULONG unit,
+          TAG tag, ... );
+
+Function
+~~~~~~~~
+::
+
+     Query attributes of HPET unit.
+
+
+Inputs
+~~~~~~
+::
+
+     unit - a number of previously allocated HPET unit.
+
+
+Result
+~~~~~~
+::
+
+     TRUE in case of success or FALSE if the given unit number is out of range.
+
+
+

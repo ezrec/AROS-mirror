@@ -981,27 +981,25 @@ Function
 ~~~~~~~~
 ::
 
-
- This function checks if the provided window is a registred AppWindow, if this is true the
- list of given files will be send to the Application of the window.
+     This function sends the given list of files to a registered
+     AppWindow's application. If the window is not an AppWindow, nothing
+     is done.
 
 
 Inputs
 ~~~~~~
 ::
 
-
- win       --  window which should be checked
- numfiles  --  number of files in the attached array of pointers to an array of chars
- files     --  files "list"
+     win -  window that should be checked
+     numfiles - number of files in the attached array of string pointers
+     files - files "list"
 
 
 Result
 ~~~~~~
 ::
 
-
- TRUE if action succeeded
+     TRUE if action succeeded
 
 
 Example
@@ -1009,9 +1007,10 @@ Example
 ::
 
 
- char *FileList[] = {"images:image1.png", "images:image2.png", "images:image3.png", };
+     char *FileList[] =
+         {"images:image1.png", "images:image2.png", "images:image3.png"};
 
- SendAppWindowMessage(myWindow, 3, FilesList);
+     SendAppWindowMessage(myWindow, 3, FileList);
 
 
 
