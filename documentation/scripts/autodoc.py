@@ -800,6 +800,7 @@ def create_module_docs():
     # add HIDD docs
     srcdirs = ( os.path.join(topdir, "rom", "hidds"),
                 os.path.join(topdir, "workbench", "hidds"),
+                os.path.join(topdir, "arch", "all-unix", "hidd"),
                 os.path.join(topdir, "rom", "devs", "ata") )
     for dir in srcdirs:
         create_hidd_docs_dir(dir, targetdir, module_titles)
