@@ -780,6 +780,9 @@ def create_module_docs():
     targetdir = os.path.join("documentation", "developers", "autodocs")
     srcdirs = ( os.path.join(topdir, "rom"),
                 os.path.join(topdir, "rom", "devs"),
+                os.path.join(topdir, "arch", "all-hosted"),
+                os.path.join(topdir, "arch", "all-pc"),
+                os.path.join(topdir, "arch", "m68k-amiga"),
                 os.path.join(topdir, "workbench", "libs") )
     for dir in srcdirs:
         create_lib_docs_dir(dir, targetdir, module_titles)
