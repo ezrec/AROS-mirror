@@ -42,6 +42,27 @@ static void abiv0_delayed_startup()
     }
 }
 
+static void handle_standard_error(struct Process * me)
+{
+    /* A some C error IO routines evidently rely on this, and
+     * should be fixed!
+     */
+    if (me->pr_Task.tc_Node.ln_Type == NT_PROCESS &&
+        me->pr_CES != me->pr_COS && /* ABI_V0 compatibility: don't change buffer mode of pr_COS */
+        me->pr_CES != BNULL)
+    {
+        SetVBuf(me->pr_CES, NULL, BUF_NONE, -1);
+    }
+
+    /* There are many ways in which pr_CES can become equal to pr_COS. Setting the buffer mode
+     * in such cases "damages" the pr_COS (which can be seen for example by prompt not beeing
+     * correctly rendererd in Shell.
+     * Cases:
+     * a) __exec_prepare during vfork + execvp (gcc starting up cc1)
+     * b) sh setting NP_Error explictly on creation of process that runns the command
+     */
+}
+
 /*****************************************************************************
 
     NAME */
@@ -77,19 +98,13 @@ static void abiv0_delayed_startup()
     struct aroscbase *aroscbase = __aros_getbase_aroscbase();
     struct Process *me = (struct Process *)FindTask(NULL);
 
-    D(bug("[__arosc_program_startup] aroscbase 0x%p\n", aroscbase));
+    D(bug("[__arosc_program_startup_abiv0] aroscbase 0x%p task %s (%x), pr_COS %x, pr_CES %x\n",
+            aroscbase, me->pr_Task.tc_Node.ln_Name, me, me->pr_COS, me->pr_CES));
 
     aroscbase->acb_startup_error_ptr = NULL;
     aroscbase->acb_flags |= ACPD_NEWSTARTUP;
 
-    /* A some C error IO routines evidently rely on this, and
-     * should be fixed!
-     */
-    if (me->pr_Task.tc_Node.ln_Type == NT_PROCESS &&
-        me->pr_CES != BNULL)
-    {
-        SetVBuf(me->pr_CES, NULL, BUF_NONE, -1);
-    }
+    handle_standard_error(me);
 }
 
 /*****************************************************************************
@@ -130,20 +145,14 @@ static void abiv0_delayed_startup()
     struct aroscbase *aroscbase = __aros_getbase_aroscbase();
     struct Process *me = (struct Process *)FindTask(NULL);
 
-    D(bug("[__arosc_program_startup] aroscbase 0x%p\n", aroscbase));
+    D(bug("[__arosc_program_startup] aroscbase 0x%p task %s (%x), pr_COS %x, pr_CES %x\n",
+            aroscbase, me->pr_Task.tc_Node.ln_Name, me, me->pr_COS, me->pr_CES));
 
     aroscbase->acb_startup_error_ptr = errorptr;
     *aroscbase->acb_exit_jmp_buf = *exitjmp;
     aroscbase->acb_flags |= ACPD_NEWSTARTUP;
 
-    /* A some C error IO routines evidently rely on this, and
-     * should be fixed!
-     */
-    if (me->pr_Task.tc_Node.ln_Type == NT_PROCESS &&
-        me->pr_CES != BNULL)
-    {
-        SetVBuf(me->pr_CES, NULL, BUF_NONE, -1);
-    }
+    handle_standard_error(me);
 }
 
 /*****************************************************************************
