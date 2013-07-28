@@ -17,7 +17,6 @@
 static char rcsid[] = "$FreeBSD: src/lib/msun/src/s_rintf.c,v 1.10 2005/12/03 09:00:29 bde Exp $";
 #endif
 
-#include <sys/types.h>
 #include "math.h"
 #include "math_private.h"
 
@@ -31,7 +30,8 @@ float
 rintf(float x)
 {
 	int32_t i0,j0,sx;
-	volatile float w,t;	/* volatile works around gcc bug */
+	volatile float w; /* N.b. - gcc optimises "w" away so use volatile to work around*/
+        float t;
 	GET_FLOAT_WORD(i0,x);
 	sx = (i0>>31)&1;
 	j0 = ((i0>>23)&0xff)-0x7f;
