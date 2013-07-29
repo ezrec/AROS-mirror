@@ -780,6 +780,12 @@
 # define FILE_SEPARATOR_STR "]"
 # define PATH_SEPARATOR     '?'
 # define PATH_SEPARATOR_STR "?"
+#elif defined(_AMIGA) || defined(__AROS__)
+# define FILE_SEPARATORS    "/:"
+# define FILE_SEPARATOR     '/'
+# define FILE_SEPARATOR_STR "/"
+# define PATH_SEPARATOR     '?'
+# define PATH_SEPARATOR_STR "?"
 #else
 # define FILE_SEPARATORS    "/"
 # define FILE_SEPARATOR     '/'

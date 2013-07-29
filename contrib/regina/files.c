@@ -6101,7 +6101,10 @@ streng *get_external_routine( const tsd_t *TSD, const char *inname, FILE **fp )
 
    suffixes = mygetenv( TSD, "REGINA_SUFFIXES", NULL, 0 );
 
+   /* Always try without path added to the beginning on Amiga */
+#if !defined(_AMIGA) && !defined(__AROS__)
    if ( strpbrk( inname, FILE_SEPARATORS ) != NULL )
+#endif
    {
       retval = get_external_routine_path( TSD, inname, fp, NULL, suffixes, 1 );
       if ( retval )
@@ -6129,6 +6132,8 @@ streng *get_external_routine( const tsd_t *TSD, const char *inname, FILE **fp )
 #ifdef UNIX
    if ( geteuid() == 0 )
       paths = NULL;
+#elif defined(_AMIGA) || defined(__AROS__)
+   paths = "REXX:";
 #endif
    if ( paths )
    {
