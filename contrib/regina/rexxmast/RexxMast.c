@@ -100,11 +100,15 @@ int main(int argc, char **argv)
                case RXCOMM:
                   if (StartFile(msg) < 0)
                   {
+                     D(bug("Error executing command '%s'\n", (char *)msg->rm_Args[0]));
                      msg->rm_Result1 = RC_ERROR;
                      msg->rm_Result2 = (IPTR)ERR10_100;
                   }
                   else
+                  {
+                     D(bug("Command '%s' executed\n", (char *)msg->rm_Args[0]));
                      reply = FALSE;
+                  }
                   break;
 
                case RXADDCON:
@@ -356,8 +360,11 @@ static void StartFileSlave(struct RexxMsg *msg)
    }
 
    MAKERXSTRING(rxresult, NULL, 0);
+   D(bug("[RexxMast/StartFileSlave()] Executing '%s'\n", progname));
    RexxStart(argcount, rxargs, progname, instore, msg->rm_CommAddr, RXFUNCTION, NULL, &rc, &rxresult);
-
+   D(bug("[RexxMast/StartFileSlave()] Return rc=%d, rxresult='%s'\n",
+         rc, rxresult
+   ));
    /* Return to the old input/output if it was changed */
    if (!(msg->rm_Action & RXFF_NOIO))
    {
