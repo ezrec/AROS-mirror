@@ -25,8 +25,14 @@ struct arosc_userdata
 
     struct arosc_ctype acud_ctype;
 
+    /* ABI_V0 compatibility: int, long int, char * offset */
+    int acud_compatibility_1[4];
+
     /* Used by multi-byte functions */
     int acud_mb_cur_max;
+
+    /* ABI_V0 compatibility: environ variable value */
+    void * acud_compatibility_2[1];
 };
 
 __BEGIN_DECLS
