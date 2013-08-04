@@ -37,8 +37,8 @@ endif
 %create_patch mmake=aros-tcpip-apps-owb-webview-create-patch \
     archive=$(ARCHBASE) destination=$(PORTSDIR)/OWB
 
-#MM
-aros-tcpip-apps-owb-webview-setup :
+$(OWB_BUILD_DIR)/.configure_flag : $(TOP)/$(CURDIR)/mmakefile
+	$(RM) $@
 	%mkdir_q dir=$(OWB_BUILD_DIR)
 	cd $(OWB_BUILD_DIR); \
 	cmake \
@@ -88,15 +88,26 @@ aros-tcpip-apps-owb-webview-setup :
 	-DAROS_NETINCLUDE=$(AROS_DEVELOPMENT)/netinclude \
 	$(OWB_I18N_OPTS) \
 	$(OWB_SOURCE)
+	$(TOUCH) $@
 	
 #MM
-aros-tcpip-apps-owb-webview-build :
+aros-tcpip-apps-owb-webview-setup : $(OWB_BUILD_DIR)/.configure_flag
+
+$(OWB_BUILD_DIR)/.build_flag : $(OWB_BUILD_DIR)/.configure_flag
+	$(RM) $@
 	cd $(OWB_BUILD_DIR); \
 	$(MAKE)
+	$(TOUCH) $@
 
 #MM
-aros-tcpip-apps-owb-webview-install :
+aros-tcpip-apps-owb-webview-build : $(OWB_BUILD_DIR)/.build_flag
+
+$(OWB_BUILD_DIR)/.install_flag : $(OWB_BUILD_DIR)/.build_flag
+	$(RM) $@
 	cd $(OWB_BUILD_DIR); \
 	$(MAKE) install; \
 	$(CP) lib/libjsc.a lib/libwebcore.a lib/libwtf.a $(AROS_LIB)
-	
+	$(TOUCH) $@
+
+#MM
+aros-tcpip-apps-owb-webview-install : $(OWB_BUILD_DIR)/.install_flag

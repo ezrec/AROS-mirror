@@ -1,4 +1,4 @@
-# Copyright © 2008-2011, The AROS Development Team. All rights reserved.
+# Copyright © 2008-2013, The AROS Development Team. All rights reserved.
 # $Id$
 
 -include $(TOP)/config/make.cfg
@@ -22,7 +22,8 @@ OPENSSL_BUILD_DIR := $(GENDIR)/$(CURDIR)
     archive=$(ARCHBASE) destination=$(PORTSDIR)/openssl \
     excludes="fips_aes_data Makefile.org.orig include"
 
-$(OPENSSL_BUILD_DIR)/.links-created :
+$(OPENSSL_BUILD_DIR)/.links-created : $(TOP)/$(CURDIR)/mmakefile
+	$(RM) $@
 	%mkdir_q dir=$(OPENSSL_BUILD_DIR)
 	cd $(OPENSSL_SOURCE); \
 	find . -type d -exec mkdir -p $(OPENSSL_BUILD_DIR)/\{\} \;;\
@@ -32,7 +33,8 @@ $(OPENSSL_BUILD_DIR)/.links-created :
 #MM
 contrib-networking-openssl-setup : $(OPENSSL_BUILD_DIR)/.links-created
 
-$(OPENSSL_BUILD_DIR)/.build-configured :
+$(OPENSSL_BUILD_DIR)/.build-configured : $(OPENSSL_BUILD_DIR)/.links-created
+	$(RM) $@
 	cd $(OPENSSL_BUILD_DIR); \
 	env -i PATH=$(PATH) AROS_CC="$(TARGET_CC)" AROS_CFLAGS="$(CONFIG_CFLAGS) $(UNUSED_BUT_SET_VARIABLE_CFLAGS) -Wno-unused-variable $(FORMAT_SECURITY_CFLAGS)" AROS_RANLIB="$(RANLIB)" ./Configure "aros-$(AROS_TARGET_CPU)-cross" no-threads no-sse2 --prefix=/Development --openssldir=/Development/etc/ssl
 	$(TOUCH) $@;
@@ -40,13 +42,20 @@ $(OPENSSL_BUILD_DIR)/.build-configured :
 #MM
 contrib-networking-openssl-configure : $(OPENSSL_BUILD_DIR)/.build-configured
 
-#MM
-contrib-networking-openssl-build :
+$(OPENSSL_BUILD_DIR)/.build-flag : $(OPENSSL_BUILD_DIR)/.build-configured
+	$(RM) $@
 	cd $(OPENSSL_BUILD_DIR); \
 	env -i PATH=$(PATH) HOME=$(HOME) make
+	$(TOUCH) $@
 
 #MM
-contrib-networking-openssl-install :
+contrib-networking-openssl-build : $(OPENSSL_BUILD_DIR)/.build-flag
+
+$(OPENSSL_BUILD_DIR)/.install-flag : $(OPENSSL_BUILD_DIR)/.build-flag
+	$(RM) $@
 	cd $(OPENSSL_BUILD_DIR); \
 	env -i PATH=$(PATH) make install INSTALL_PREFIX=$(AROS_DEVELOPMENT)/../
+	$(TOUCH) $@
 
+#MM
+contrib-networking-openssl-install : $(OPENSSL_BUILD_DIR)/.install-flag
