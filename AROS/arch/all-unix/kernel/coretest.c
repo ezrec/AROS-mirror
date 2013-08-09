@@ -106,7 +106,7 @@ void PrintList (struct List * list)
 #undef STR
 
 /* Macro to get a pointer to the current running task */
-#define THISTASK	(SysBase->ThisTask)
+#define THISTASK	(SysCPUBase->ThisTask)
 
 /*
     Disable and enable signals. Don't use these in the signal handler

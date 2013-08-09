@@ -69,7 +69,7 @@ void core_ExitInterrupt(regs_t *regs)
 void core_SysCall(int sig, regs_t *regs)
 {
     struct KernelBase *KernelBase = getKernelBase();
-    struct Task *task = SysBase->ThisTask;
+    struct Task *task = SysCPUBase->ThisTask;
 
     SUPERVISOR_ENTER;
 

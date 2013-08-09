@@ -69,7 +69,7 @@ static void cpu_Exception(void)
 void cpu_Switch(regs_t *regs)
 {
     struct KernelBase *KernelBase = getKernelBase();
-    struct Task *task = SysBase->ThisTask;
+    struct Task *task = SysCPUBase->ThisTask;
     struct AROSCPUContext *ctx = task->tc_UnionETask.tc_ETask->et_RegFrame;
 
     D(bug("[KRN] cpu_Switch(), task %p (%s)\n", task, task->tc_Node.ln_Name));
