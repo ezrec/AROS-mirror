@@ -1,4 +1,4 @@
-# Copyright © 2009-2013, The AROS Development Team. All rights reserved.
+# Copyright Â© 2009-2013, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(TOP)/config/make.cfg
@@ -12,10 +12,8 @@ include $(TOP)/config/make.cfg
 #MM SDL-aros-sharedlib : SDL-aros-includes workbench-devs-AHI workbench-libs-mesa \
 #MM  development-libiconv SDL-aros-config
 
-#MM SDL-aros-sharedlib-includes : SDL-aros-includes
-
 REPOSITORIES := http://www.libsdl.org/release/
-ARCHVER := 1.2.15
+ARCHVER      := 1.2.15
 ARCHBASE     := SDL-$(ARCHVER)
 
 %fetch mmake=contrib-sdl-sdl-main-fetch archive=$(ARCHBASE) suffixes="tar.gz" \
@@ -118,7 +116,7 @@ USER_INCLUDES := -I$(SDLINCDIR) -I$(ARCHSRCDIR) -I$(ARCHSRCDIR)/src -DSDL_AROS_S
 
 #MM SDL-aros-staticlib : SDL-aros-includes
 
-USER_INCLUDES := -I$(SDLINCDIR) -I-I$(ARCHSRCDIR) -I$(ARCHSRCDIR)/src
+USER_INCLUDES := -I$(SDLINCDIR) -I$(ARCHSRCDIR) -I$(ARCHSRCDIR)/src
 
 %build_linklib mmake=SDL-aros-staticlib libname=SDL_static \
     files="$(FILES)"
@@ -210,10 +208,16 @@ INCLUDEFILES := \
     SDL_version.h  \
     SDL_video.h
 
-#MM- SDL-aros-includes : SDL_main-aros-includes
-#MM- SDL_main-aros-includes : contrib-sdl-sdl-main-fetch
+#MM- SDL-aros-includes : contrib-sdl-sdl-main-fetch SDL_main-aros-includes
 
-%copy_files_q mmake=SDL_main-aros-includes files="$(INCLUDEFILES)" src=$(ARCHSRCDIR)/include dst=$(SDLINCDIR)
+STAMPFILE := $(GENDIR)/$(CURDIR)/.copy_stamp
+
+#MM
+SDL_main-aros-includes : setup-gendir $(STAMPFILE)
+
+%rule_makedirs dirs=$(GENDIR)/$(CURDIR) setuptarget=setup-gendir
+
+%rule_copy_diff_multi files=$(INCLUDEFILES) srcdir=$(ARCHSRCDIR)/include targetdir=$(SDLINCDIR) stampfile=$(STAMPFILE)
 
 #MM
 SDL-aros-config : \
@@ -221,14 +225,14 @@ SDL-aros-config : \
     $(AROS_DEVELOPMENT)/bin/sdl-config
 
 $(TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)$(AROS_TARGET_SUFFIX)-aros-sdl-config: $(ARCHSRCDIR)/aros/sdl-config
-	@sed 's,prefix=/Development,prefix=$(AROS_DEVELOPMENT),g' $< > $@
-	@chmod a+x $@
+	@$(SED) 's,prefix=/Development,prefix=$(AROS_DEVELOPMENT),g' $< > $@
+	@$(CHMOD) a+x $@
 	ln -sf $@ $(TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)$(AROS_TARGET_SUFFIX)/sdl-config
 
 $(AROS_DEVELOPMENT)/bin/sdl-config: $(ARCHSRCDIR)/aros/sdl-config
 	%mkdir_q dir=$(AROS_DEVELOPMENT)/bin
 	@$(CP) $< $@
-	@chmod a+x $@
+	@$(CHMOD) a+x $@
 
 DATAFILES := \
     icon.bmp \
