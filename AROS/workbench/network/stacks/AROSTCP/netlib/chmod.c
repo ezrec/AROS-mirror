@@ -164,7 +164,7 @@ const static char usage[] = "usage: chmod [-fR] mode file ...";
 
 void main(int argc, char *argv[])
 {
-  struct Process *p = (struct Process *)SysBase->ThisTask;
+  struct Process *p = (struct Process *)FindTask(NULL);
   BPTR Stderr = p->pr_CES ? p->pr_CES : p->pr_COS;
 
   short perrors = 1, recursive = 0;

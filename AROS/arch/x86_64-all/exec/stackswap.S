@@ -19,9 +19,11 @@ AROS_SLIB_ENTRY(StackSwap, Exec, 122):
                 pushq   %rsi
                 movq	%rsi, %rdi	/* Put SysBase into rdi (first argument) */
                 call    *Disable(%rsi)
+                popq    %rdi
+                pushq   %rdi
+                xorq    %rsi, %rsi  /* name = NULL (second argument) */
+                call    *FindTask(%rdi) 
                 popq    %rsi
-
-                movq    ThisTask(%rsi), %rax
 
                 /* Exchange tc_SPLower */
                 movq    tc_SPLower(%rax), %rcx
