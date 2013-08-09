@@ -89,8 +89,6 @@
 
 #include <ctype.h>
 
-#include <aros/rt.h>
-
 #define ERROR_HEADER "Filenote"
 
 #define ARG_TEMPLATE    "FILE/A,COMMENT,ALL/S,QUIET/S"
@@ -118,8 +116,6 @@ int main(void)
     struct AnchorPath * apath;
     IPTR                args[TOTAL_ARGS] = { 0, (IPTR)"", 0, 0};
     int                 Return_Value;
-
-    RT_Init();
 
     Return_Value = RETURN_OK;
 
@@ -158,8 +154,6 @@ int main(void)
     }
 
     FreeVec(apath);
-
-    RT_Exit();
 
     return (Return_Value);
 

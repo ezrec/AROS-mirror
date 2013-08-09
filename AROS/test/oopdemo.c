@@ -26,12 +26,6 @@
 #include <aros/debug.h>
 
 
-#define ENABLE_RT 1
-#include <aros/rt.h>
-
-
-
-
 /**************** String class definitions ***********************/
 
 /* Subclass of root */
@@ -192,8 +186,6 @@ int main(int argc, char **argv)
 
     SDInit();
 
-    RT_Init();
-
     if (InitOOP())
     {
 	struct Node *n;
@@ -242,8 +234,6 @@ int main(int argc, char **argv)
     	}
     	CleanupOOP();
     }
-
-    RT_Exit();
 
     return (0);
 }

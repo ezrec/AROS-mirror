@@ -61,9 +61,6 @@
 #include <aros/inquire.h>
 #include <proto/aros.h>
 
-#define ENABLE_RT 1
-#include <aros/rt.h>
-
 #include <string.h>
 #include <ctype.h>
 
@@ -2274,8 +2271,6 @@ int main (void)
         PrintFault(IoErr(), (STRPTR) ERROR_HEADER);
         error = RETURN_FAIL;
     }
-
-        RT_Exit();
 
         return(error);
 }
