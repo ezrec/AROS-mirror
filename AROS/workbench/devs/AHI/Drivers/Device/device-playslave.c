@@ -60,9 +60,13 @@ Slave( struct ExecBase* SysBase )
   BOOL                    running;
   ULONG                   signals;
 
+#ifdef __amigaos4__ 
   /* Note that in OS4, we cannot call FindTask(NULL) here, since IExec
    * is inside AHIsubBase! */
   AudioCtrl  = (struct AHIAudioCtrlDrv*) SysBase->ThisTask->tc_UserData;
+#else
+  AudioCtrl  = (struct AHIAudioCtrlDrv*) FindTask(NULL)->tc_UserData;
+#endif
   AHIsubBase = (struct DriverBase*) dd->ahisubbase;
   DeviceBase = (struct DeviceBase*) AHIsubBase;
 
