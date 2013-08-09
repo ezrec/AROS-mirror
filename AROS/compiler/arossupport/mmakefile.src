@@ -28,7 +28,6 @@ FILES	:= \
     readstruct \
     readword \
     removeslist \
-    strrncasecmp \
     writebyte \
     writedouble \
     writefloat \
