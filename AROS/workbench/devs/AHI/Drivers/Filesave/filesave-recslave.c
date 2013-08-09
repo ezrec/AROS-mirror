@@ -70,9 +70,13 @@ static void RecSlave( struct ExecBase* SysBase )
     RECBUFFERSIZE
   };
 
+#ifdef __amigaos4__ 
   /* Note that in OS4, we cannot call FindTask(NULL) here, since IExec
    * is inside AHIsubBase! */
   AudioCtrl    = (struct AHIAudioCtrlDrv*) SysBase->ThisTask->tc_UserData;
+#else
+  AudioCtrl    = (struct AHIAudioCtrlDrv*) FindTask(NULL)->tc_UserData;
+#endif
   AHIsubBase   = (struct DriverBase*) dd->fs_AHIsubBase;
   FilesaveBase = (struct FilesaveBase*) AHIsubBase;
 

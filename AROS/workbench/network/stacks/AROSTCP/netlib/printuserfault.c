@@ -48,7 +48,7 @@ extern struct ExecBase *SysBase;
 
 void PrintUserFault(LONG code, const UBYTE *banner)
 {
-  struct Process *p = (struct Process *)SysBase->ThisTask;
+  struct Process *p = (struct Process *)FindTask(NULL);
   BPTR Stderr = p->pr_CES ? p->pr_CES : p->pr_COS;
 
   if (banner != NULL) {

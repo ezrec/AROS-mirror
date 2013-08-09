@@ -235,9 +235,13 @@ static void PlaySlave( struct ExecBase* SysBase )
   ULONG signals, i, samplesAdd =0, samples = 0, length = 0;
   ULONG offset = 0, bytesInBuffer = 0, samplesWritten = 0, bytesWritten = 0;
 
+#ifdef __amigaos4__ 
   /* Note that in OS4, we cannot call FindTask(NULL) here, since IExec
    * is inside AHIsubBase! */
   AudioCtrl    = (struct AHIAudioCtrlDrv*) SysBase->ThisTask->tc_UserData;
+#else
+  AudioCtrl    = (struct AHIAudioCtrlDrv*) FindTask(NULL)->tc_UserData;
+#endif
   AHIsubBase   = (struct DriverBase*) dd->fs_AHIsubBase;
   FilesaveBase = (struct FilesaveBase*) AHIsubBase;
 

@@ -2917,7 +2917,11 @@ static VOID UnitTask(struct ExecBase *sys_base)
 
    /* Get parameters */
 
+#ifdef __amigaos4__
    task = AbsExecBase->ThisTask;
+#else
+   task = FindTask(NULL);
+#endif
    unit = task->tc_UserData;
    base = unit->device;
 
