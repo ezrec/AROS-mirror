@@ -58,6 +58,7 @@ typedef enum
 #define KRN_EFISystemTable	(KRN_Dummy + 23) /* Pointer to EFI system table				*/
 #define KRN_KernelStackBase     (KRN_Dummy + 26) /* Kickstart Boot Task stack base address */
 #define KRN_KernelStackSize     (KRN_Dummy + 27) /* Kickstart Boot Task stack size */
+#define KRN_MaxCPUs         (KRN_Dummy + 28)    /* Maximum # of CPUs to use on a SMP system */
 
 /* Magic value passed by the bootstrap as second parameter */
 #define AROS_BOOT_MAGIC AROS_MAKE_ID('A', 'R', 'O', 'S')

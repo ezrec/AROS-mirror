@@ -90,6 +90,7 @@ static struct TagItem km[] =
     {KRN_HostInterface, 0                },
     {KRN_MMAPAddress  , 0                },
     {KRN_MMAPLength   , sizeof(MemoryMap)},
+    {KRN_MaxCPUs      , 0                },
     {KRN_CmdLine      , 0                },
     {TAG_DONE         , 0                }
 };
@@ -151,6 +152,7 @@ int bootstrap(int argc, char ** argv)
     kernel_entry_fun_t kernel_entry;
     void *ro_addr, *rw_addr, *__bss_track;
     unsigned long ro_size, rw_size, bss_size;
+    int MaxCPUs = 0;
 
     D(fprintf(stderr, "[Bootstrap] Started\n"));
 
@@ -181,6 +183,7 @@ int bootstrap(int argc, char ** argv)
                     " --help             same as '-h'\n"
                     " --memsize <size>   same as '-m <size>'\n"
                     " --config <file>    same as '-c'\n"
+                    " --cpus N           max number of simulated CPUs\n"
                     "\n"
                     "Please report bugs to the AROS development team. http://www.aros.org/\n", argv[0], DefaultConfig);
             return 0;
@@ -190,6 +193,9 @@ int bootstrap(int argc, char ** argv)
             i++;
         } else if (!strcmp(argv[i], "--config") || !strcmp(argv[i], "-c")) {
             config = argv[++i];
+            i++;
+        } else if (!strcmp(argv[i], "--cpus")) {
+            MaxCPUs = atoi(argv[++i]);
             i++;
         } else
             break;
@@ -345,10 +351,11 @@ int bootstrap(int argc, char ** argv)
     km[5].ti_Data = (IPTR)HostIFace;
     km[6].ti_Data = (IPTR)&MemoryMap;
     /* km[7] is statically filled in */
+    km[8].ti_Data = (IPTR)MaxCPUs;
     if (KernelArgs)
-        km[8].ti_Data = (IPTR)KernelArgs;
+        km[9].ti_Data = (IPTR)KernelArgs;
     else
-        km[8].ti_Tag = TAG_DONE;
+        km[9].ti_Tag = TAG_DONE;
 
     /* Flush instruction cache */
     __clear_cache((char *)ro_addr, (char *)ro_addr + ro_size);
