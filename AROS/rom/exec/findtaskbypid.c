@@ -40,36 +40,7 @@
 {
     AROS_LIBFUNC_INIT
 
-    struct Task *t;
-    struct ETask *et;
-
-    /*
-	First up, check ThisTask. It could be NULL because of exec_init.c
-    */
-    if (SysBase->ThisTask != NULL)
-    {
-	et = GetETask(SysBase->ThisTask);
-	if (et != NULL && et->et_UniqueID == id)
-	    return SysBase->ThisTask;
-    }
-
-    /*	Next, go through the ready list */
-    ForeachNode(&SysBase->TaskReady, t)
-    {
-	et = GetETask(t);
-	if (et != NULL && et->et_UniqueID == id)
-	    return t;
-    }
-
-    /* Finally, go through the wait list */
-    ForeachNode(&SysBase->TaskWait, t)
-    {
-	et = GetETask(t);
-	if (et != NULL && et->et_UniqueID == id)
-	    return t;
-    }
-
-    return NULL;
+    return (struct Task *)ScanTasks(SCANTAG_FILTER_UNIQUEID, id, TAG_END);
 
     AROS_LIBFUNC_EXIT
 }
