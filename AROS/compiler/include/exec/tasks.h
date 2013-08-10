@@ -221,6 +221,18 @@ struct ETask
 #define TASKERROR_OK       0
 #define TASKERROR_NOMEMORY 1
 
+/* Tags for ScanTasksA() */
+#define SCANTAG_Dummy           (TAG_USER + 0x100100)
+#define SCANTAG_HOOK            (SCANTAG_Dummy +  0) /* struct Hook * */
+#define SCANTAG_HOOK_MESSAGE    (SCANTAG_Dummy +  1) /* APTR message for hook */
+#define SCANTAG_FILTER_TASK     (SCANTAG_Dummy +  2) /* struct Task * */
+#define SCANTAG_FILTER_NAME     (SCANTAG_Dummy +  3) /* BYTE task's priority */
+#define SCANTAG_FILTER_PRI      (SCANTAG_Dummy +  4) /* STRPTR task's name */
+#define SCANTAG_FILTER_CPU      (SCANTAG_Dummy +  5) /* ULONG task's CPU */
+#define SCANTAG_FILTER_UNIQUEID (SCANTAG_Dummy +  6) /* ULONG et_UniqueID */
+#define SCANTAG_FILTER_STATE    (SCANTAG_Dummy + 20) /* UBYTE tc_State */
+
+
 /* Actions for ShutdownA() */
 
 #define SD_ACTION_POWEROFF   0

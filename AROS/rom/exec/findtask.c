@@ -48,46 +48,12 @@
 {
     AROS_LIBFUNC_INIT
 
-    struct Task *ret;
-
     /* Quick return for a quick argument */
-    if(name==NULL)
-	return SysBase->ThisTask;
+    if (name==NULL)
+        return SysBase->ThisTask;
 
-    /* Always protect task lists with a Disable(). */
-    Disable();
+    return (struct Task *)ScanTasks(SCANTAG_FILTER_NAME, name, TAG_END);
 
-    /* First look into the ready list. */
-    ret=(struct Task *)FindName(&SysBase->TaskReady,name);
-    if(ret==NULL)
-    {
-	/* Then into the waiting list. */
-	ret=(struct Task *)FindName(&SysBase->TaskWait,name);
-	if(ret==NULL)
-	{
-	    /*
-		Finally test the current task. Note that generally
-		you know the name of your own task - so it is close
-		to nonsense to look for it this way.
-	    */
-	    char *s1=SysBase->ThisTask->tc_Node.ln_Name;
-	    const char *s2=name;
-
-	    /* Check as long as the names are identical. */
-	    while(*s1++==*s2)
-		/* Terminator found? */
-		if(!*s2++)
-		{
-		    /* Got it. */
-		    ret=SysBase->ThisTask;
-		    break;
-		}
-	}
-    }
-
-    /* Return whatever I found. */
-    Enable();
-    return ret;
     AROS_LIBFUNC_EXIT
 } /* FindTask */
 
