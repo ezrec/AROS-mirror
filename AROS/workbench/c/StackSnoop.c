@@ -108,8 +108,15 @@ static int out (const UBYTE * fmt, ...)
 }
 
 
-static void CheckTaskStack(struct Task *task)
+AROS_UFH3(IPTR, CheckTaskStack_Hook,
+        AROS_UFHA(struct Hook *,    hook, A0),
+        AROS_UFHA(APTR,             object, A2),
+        AROS_UFHA(APTR,             message, A1)
+        )
 {
+    AROS_USERFUNC_INIT
+
+    struct Task *task = (struct Task *)object;
     UBYTE *startcheck, *endcheck;
     LONG stacksize, stackinc, unusedstack = 0;
     
@@ -139,35 +146,22 @@ static void CheckTaskStack(struct Task *task)
                 ((stacksize - unusedstack) < stacksize) ? "=" : ">",
                 stacksize - unusedstack,
                 (unusedstack < 512) ? ": Needs more stack!!!!!!!!!" : "");
+
+    return FALSE;
+
+    AROS_USERFUNC_EXIT
 }
 
 static void Action(void)
 {
-    struct Task *task;
-    WORD i;
-    
-    Disable();
+    struct Hook hook = { .h_Entry = CheckTaskStack_Hook };
+    out("\n------------------------------------------------------------------------------\n\n");
 
-    out("\n------------------------------------------------------------------------------\n\n");
-    
-    task = (struct Task *)SysBase->TaskReady.lh_Head;
-    for(i = 0; i < 2;i++)
-    {
-        while(task->tc_Node.ln_Succ)
-        {
-            CheckTaskStack(task);
-            
-            task = (struct Task *)task->tc_Node.ln_Succ;
-        } /* while(task->tc_Node.ln_Succ) */
-        
-        task = (struct Task *)SysBase->TaskWait.lh_Head;
-        
-    } /* for(i = 0; i < 2;i++) */
+    ScanTasks(SCANTAG_HOOK, &hook, SCANTAG_FILTER_STATE, TS_READY, TAG_END);
+    ScanTasks(SCANTAG_HOOK, &hook, SCANTAG_FILTER_STATE, TS_WAIT, TAG_END);
     out("\n");
-    CheckTaskStack(FindTask(NULL));
+    ScanTasks(SCANTAG_HOOK, &hook, SCANTAG_FILTER_STATE, TS_RUN, TAG_END);
     out("\n------------------------------------------------------------------------------\n\n");
-    
-    Enable();
     
     PutStr(outbuffer);
 }
