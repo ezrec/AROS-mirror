@@ -115,34 +115,40 @@ static int addtask(struct Task *task, struct task **t, STRPTR *e)
     return 1;
 }
 
+AROS_UFH3(IPTR, fillbuffer_hook,
+        AROS_UFHA(struct Hook *,    hook, A0),
+        AROS_UFHA(APTR,             object, A2),
+        AROS_UFHA(APTR,             message, A1)
+        )
+{
+    AROS_USERFUNC_INIT
+
+    struct task **buffer = hook->h_Data;
+    struct Task *task = (struct Task *)object;
+    STRPTR *endptr = (STRPTR *)message;
+
+    if (addtask(task, buffer, endptr))
+        return FALSE;
+
+    return TRUE;
+
+    AROS_USERFUNC_EXIT
+}
+
 static int fillbuffer(struct task **buffer, IPTR size)
 {
     STRPTR end=(STRPTR)*buffer+size;
-    struct Task *task;
-    Disable();
-    if(!addtask(SysBase->ThisTask,buffer,&end))
-    {
-        Enable();
-        return 0;
-    }
-    for(task=(struct Task *)SysBase->TaskReady.lh_Head;
-        task->tc_Node.ln_Succ!=NULL;
-        task=(struct Task *)task->tc_Node.ln_Succ)
-        if(!addtask(task,buffer,&end))
-        {
-            Enable();
-            return 0;
-        }
-    for(task=(struct Task *)SysBase->TaskWait.lh_Head;
-        task->tc_Node.ln_Succ!=NULL;
-        task=(struct Task *)task->tc_Node.ln_Succ)
-        if(!addtask(task,buffer,&end))
-        {
-            Enable();
-            return 0;
-        }
-    Enable();
-    return 1;
+    struct Hook hook = {
+        .h_Entry = (APTR)fillbuffer_hook,
+        .h_Data = buffer,
+    };
+    BOOL failed;
+
+    failed = ScanTasks(SCANTAG_HOOK, &hook,
+                       SCANTAG_HOOK_MESSAGE, &end,
+                       TAG_END);
+
+    return failed ? 0 : 1;
 }
 
 int __nocommandline;
