@@ -10,6 +10,8 @@
 #include <aros/libcall.h>
 #include <proto/exec.h>
 
+#include "exec_intern.h"
+
 /*****************************************************************************
 
     NAME */
@@ -69,7 +71,7 @@
         if(task->tc_State==TS_READY)
         {
             Remove(&task->tc_Node);
-            Enqueue(&SysBase->TaskReady,&task->tc_Node);
+            Enqueue(&GetESysCPU(task)->TaskReady,&task->tc_Node);
         }
 
         /*

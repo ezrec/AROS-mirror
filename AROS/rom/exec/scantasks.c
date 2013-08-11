@@ -8,10 +8,13 @@
 #include <string.h>     /* for strcmp */
 
 #include <exec/execbase.h>
+#include <exec/cpu.h>
 #include <aros/libcall.h>
 #include <proto/exec.h>
 
 #include <proto/arossupport.h>
+
+#include "exec_intern.h"
     
 struct ScanTaskFilter {
     struct TagItem *task, *pri, *name, *cpu, *uniqueid;
@@ -101,9 +104,13 @@ static BOOL ScanTask_Filter(struct Task *task, struct ScanTaskFilter *filter);
 
     Disable();
     /* Quick return for a quick argument */
+#if AROS_SMP
+    struct ExecCPUInfo *ThisCPU;
+    ForeachNode(&PrivExecBase(SysBase)->CPUList, ThisCPU) {
+#else
     do {
-        ULONG cpu = 0;
         struct ExecBase *ThisCPU = SysBase;
+#endif
 
         /* Call on the running task */
         if (ThisCPU->ThisTask && ScanTask_Filter(ThisCPU->ThisTask, &filter)) {
@@ -136,8 +143,12 @@ static BOOL ScanTask_Filter(struct Task *task, struct ScanTaskFilter *filter);
         if (done)
             break;
 
+#if AROS_SMP
+    }
+#else
     /* Nothing to do */
     } while (0);
+#endif
 
     /* Return whatever I found. */
     Enable();
@@ -148,6 +159,11 @@ static BOOL ScanTask_Filter(struct Task *task, struct ScanTaskFilter *filter);
 static BOOL ScanTask_Filter(struct Task *task, struct ScanTaskFilter *filter)
 {
     BOOL found = TRUE;
+#if AROS_SMP
+    ULONG cpu = GetETask(task)->et_SysCPU->ec_CPUNumber;
+#else
+    ULONG cpu = 0;
+#endif
 
     if (task == NULL)
         return FALSE;

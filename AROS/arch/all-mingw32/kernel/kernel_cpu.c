@@ -43,7 +43,7 @@
 static void cpu_Exception()
 {
     /* Save return context and IDNestCnt on stack */
-    struct Task *task = SysBase->ThisTask;
+    struct Task *task = THISCPU->ThisTask;
     struct ExceptionContext *ctx = task->tc_UnionETask.tc_ETask->et_RegFrame;
     char nestCnt = task->tc_IDNestCnt;
     char ContextSave[KernelBase->kb_ContextSize];
@@ -68,7 +68,7 @@ static void cpu_Exception()
 /* CPU-specific Switch() bits. Actually just context save. */
 void cpu_Switch(CONTEXT *regs)
 {
-    struct Task *t = SysBase->ThisTask;
+    struct Task *t = THISCPU->ThisTask;
     struct AROSCPUContext *ctx = t->tc_UnionETask.tc_ETask->et_RegFrame;
 
     /* Actually save the context */

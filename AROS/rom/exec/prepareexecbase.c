@@ -49,7 +49,7 @@ AROS_LD3(ULONG, MakeFunctions,
 static void Exec_TaskFinaliser(void)
 {
     /* Get rid of current task. */
-    RemTask(SysBase->ThisTask);
+    RemTask(NULL);
 }
 
 #undef kprintf
@@ -236,14 +236,16 @@ struct ExecBase *PrepareExecBase(struct MemHeader *mh, struct TagItem *msg)
     NEWLIST(&SysBase->PortList);
     SysBase->PortList.lh_Type = NT_MSGPORT;
 
+#if AROS_SMP == 0
     NEWLIST(&SysBase->TaskReady);
     SysBase->TaskReady.lh_Type = NT_TASK;
 
     NEWLIST(&SysBase->TaskWait);
     SysBase->TaskWait.lh_Type = NT_TASK;
+#endif
 
     NEWLIST(&SysBase->SemaphoreList);
-    SysBase->TaskWait.lh_Type = NT_SEMAPHORE;
+    SysBase->SemaphoreList.lh_Type = NT_SEMAPHORE;
 
     NEWLIST(&SysBase->ex_MemHandlers);
 
@@ -261,7 +263,9 @@ struct ExecBase *PrepareExecBase(struct MemHeader *mh, struct TagItem *msg)
     InitSemaphore(&PrivExecBase(SysBase)->LowMemSem);
 
     SysBase->SoftVer        = VERSION_NUMBER;
+#if AROS_SMP == 0
     SysBase->Quantum        = 4;
+#endif
     SysBase->TaskTrapCode   = Exec_TrapHandler;
     SysBase->TaskExceptCode = NULL;
     SysBase->TaskExitCode   = Exec_TaskFinaliser;
@@ -304,6 +308,9 @@ struct ExecBase *PrepareExecBase(struct MemHeader *mh, struct TagItem *msg)
     }
 
     NEWLIST(&PrivExecBase(SysBase)->TaskStorageSlots);
+#if AROS_SMP
+    NEWLIST(&PrivExecBase(SysBase)->CPUList);
+#endif
 
     SetSysBaseChkSum();
 

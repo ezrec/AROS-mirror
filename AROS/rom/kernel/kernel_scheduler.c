@@ -7,7 +7,9 @@
 
 #include <exec/alerts.h>
 #include <exec/execbase.h>
+#include <exec/cpu.h>
 #include <proto/exec.h>
+#include <proto/kernel.h>
 
 #include <kernel_base.h>
 #include <kernel_debug.h>
@@ -22,11 +24,11 @@
  */
 BOOL core_Schedule(void)
 {
-    struct Task *task = SysBase->ThisTask;
+    struct Task *task = THISCPU->ThisTask;
 
     D(bug("[KRN] core_Schedule()\n"));
 
-    SysBase->AttnResched &= ~ARF_AttnSwitch;
+    THISCPU->AttnResched &= ~ARF_AttnSwitch;
 
     /* If task has pending exception, reschedule it so that the dispatcher may handle the exception */
     if (!(task->tc_Flags & TF_EXCEPT))
@@ -34,16 +36,16 @@ BOOL core_Schedule(void)
         BYTE pri;
 
         /* Is the TaskReady empty? If yes, then the running task is the only one. Let it work */
-        if (IsListEmpty(&SysBase->TaskReady))
+        if (IsListEmpty(&THISCPU->TaskReady))
             return FALSE;
 
         /* Does the TaskReady list contains tasks with priority equal or lower than current task?
          * If so, then check further... */
-        pri = ((struct Task*)GetHead(&SysBase->TaskReady))->tc_Node.ln_Pri;
+        pri = ((struct Task*)GetHead(&THISCPU->TaskReady))->tc_Node.ln_Pri;
         if (pri <= task->tc_Node.ln_Pri)
         {
             /* If the running task did not used it's whole quantum yet, let it work */
-            if (!(SysBase->SysFlags & SFF_QuantumOver))
+            if (!(THISCPU->SysFlags & SFF_QuantumOver))
                 return FALSE;
         }
     }
@@ -54,7 +56,7 @@ BOOL core_Schedule(void)
      */
     D(bug("[KRN] Setting task 0x%p (%s) to READY\n", task, task->tc_Node.ln_Name));
     task->tc_State = TS_READY;
-    Enqueue(&SysBase->TaskReady, &task->tc_Node);
+    Enqueue(&THISCPU->TaskReady, &task->tc_Node);
 
     /* Select new task to run */
     return TRUE;
@@ -63,7 +65,7 @@ BOOL core_Schedule(void)
 /* Actually switch away from the task */
 void core_Switch(void)
 {
-    struct Task *task = SysBase->ThisTask;
+    struct Task *task = THISCPU->ThisTask;
 
     D(bug("[KRN] core_Switch(): Old task = %p (%s)\n", task, task->tc_Node.ln_Name));
 
@@ -80,7 +82,7 @@ void core_Switch(void)
         Remove(&task->tc_Node);
         task->tc_SigWait    = 0;
         task->tc_State      = TS_WAIT;
-        Enqueue(&SysBase->TaskWait, &task->tc_Node);
+        Enqueue(&THISCPU->TaskWait, &task->tc_Node);
 
         Alert(AN_StackProbe);
     }
@@ -102,7 +104,7 @@ struct Task *core_Dispatch(void)
 
     D(bug("[KRN] core_Dispatch()\n"));
 
-    task = (struct Task *)REMHEAD(&SysBase->TaskReady);
+    task = (struct Task *)REMHEAD(&THISCPU->TaskReady);
     if (!task)
     {
         /* Is the list of ready tasks empty? Well, go idle. */
@@ -112,17 +114,17 @@ struct Task *core_Dispatch(void)
          * Idle counter is incremented every time when we enter here,
          * not only once. This is correct.
          */
-        SysBase->IdleCount++;
-        SysBase->AttnResched |= ARF_AttnSwitch;
+        THISCPU->IdleCount++;
+        THISCPU->AttnResched |= ARF_AttnSwitch;
 
         return NULL;
     }
 
-    SysBase->DispCount++;
+    THISCPU->DispCount++;
     SysBase->IDNestCnt = task->tc_IDNestCnt;
-    SysBase->ThisTask  = task;
-    SysBase->Elapsed   = SysBase->Quantum;
-    SysBase->SysFlags &= ~SFF_QuantumOver;
+    THISCPU->ThisTask  = task;
+    THISCPU->Elapsed   = THISCPU->Quantum;
+    THISCPU->SysFlags &= ~SFF_QuantumOver;
     task->tc_State     = TS_RUN;
 
     D(bug("[KRN] New task = %p (%s)\n", task, task->tc_Node.ln_Name));

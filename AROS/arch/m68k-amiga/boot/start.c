@@ -835,8 +835,8 @@ void exec_boot(ULONG *membanks, ULONG *cpupcr)
     DEBUGPUTHEX(("[SysBase] at", (ULONG)SysBase));
 
     PrivExecBase(SysBase)->PlatformData.BootMsg = bootmsgptr;
-    SysBase->ThisTask->tc_SPLower = &_ss;
-    SysBase->ThisTask->tc_SPUpper = &_ss_end;
+    THISCPU->ThisTask->tc_SPLower = &_ss;
+    THISCPU->ThisTask->tc_SPUpper = &_ss_end;
 
     if (wasvalid) {
         SysBase->ColdCapture = ColdCapture;

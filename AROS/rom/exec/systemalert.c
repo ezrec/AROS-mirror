@@ -41,9 +41,11 @@ void Alert_DisplayKrnAlert(struct Task * task, ULONG alertNum, APTR location, AP
  */
 void Exec_SystemAlert(ULONG alertNum, APTR location, APTR stack, UBYTE type, APTR data, struct ExecBase *SysBase)
 {
+    struct Task *ThisTask = THISCPU->ThisTask;
+
     D(bug("[SystemAlert] Code 0x%08X, type %d, data 0x%p\n", alertNum, type, data));
 
-    if ((SysBase->ThisTask == PrivExecBase(SysBase)->SAT.sat_Task) &&
+    if ((ThisTask == PrivExecBase(SysBase)->SAT.sat_Task) &&
             (PrivExecBase(SysBase)->SAT.sat_Params[1] != (IPTR) NULL))
     {
         /* SupervisorAlertTask crashed when trying to show crash information for another task */
@@ -60,12 +62,12 @@ void Exec_SystemAlert(ULONG alertNum, APTR location, APTR stack, UBYTE type, APT
         /* SupervisorAlertTask is available, use it */
 
         PrivExecBase(SysBase)->SAT.sat_Params[0] = alertNum;
-        PrivExecBase(SysBase)->SAT.sat_Params[1] = (IPTR)SysBase->ThisTask;
+        PrivExecBase(SysBase)->SAT.sat_Params[1] = (IPTR)ThisTask;
 
         Signal(PrivExecBase(SysBase)->SAT.sat_Task, SIGF_SINGLE);
     }
     else
     {
-        Alert_DisplayKrnAlert(SysBase->ThisTask, alertNum, location, stack, type, data, SysBase);
+        Alert_DisplayKrnAlert(ThisTask, alertNum, location, stack, type, data, SysBase);
     }
 }

@@ -138,7 +138,7 @@ int core_TrapHandler(unsigned int num, IPTR *args, CONTEXT *regs)
 	/* Find out trap handler for caught task */
 	if (SysBase)
 	{
-            struct Task *t = SysBase->ThisTask;
+            struct Task *t = THISCPU->ThisTask;
 
             if (t)
 	    {

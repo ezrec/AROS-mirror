@@ -113,14 +113,14 @@ extern void RestoreRegs(struct Task *task, struct pt_regs *regs);
 		SysBase->AttnResched &= ~0x8000;
 
 		/* Save registers for this task (if there is one...) */
-		if (SysBase->ThisTask && SysBase->ThisTask->tc_State != TS_REMOVED)
-			SaveRegs(SysBase->ThisTask, regs);
+		if (THISCPU->ThisTask && THISCPU->ThisTask->tc_State != TS_REMOVED)
+			SaveRegs(THISCPU->ThisTask, regs);
 
 		/* Tell exec that we have actually switched tasks... */
 		Dispatch ();
 
 		/* Get the registers of the old task */
-		RestoreRegs(SysBase->ThisTask, regs);
+		RestoreRegs(THISCPU->ThisTask, regs);
 
 		/* Make sure that the state of the interrupts is what the task
 		   expects.
@@ -134,7 +134,7 @@ extern void RestoreRegs(struct Task *task, struct pt_regs *regs);
 		/* Ok, the next step is to either drop back to the new task, or
 		   give it its Exception() if it wants one... */
 
-		if (SysBase->ThisTask->tc_Flags & TF_EXCEPT)
+		if (THISCPU->ThisTask->tc_Flags & TF_EXCEPT)
 		{
 			Disable();
 			Exception();
@@ -143,10 +143,10 @@ extern void RestoreRegs(struct Task *task, struct pt_regs *regs);
 
 
 #if DEBUG_TT
-		if (lastTask != SysBase->ThisTask)
+		if (lastTask != THISCPU->ThisTask)
 		{
-			kprintf (stderr, "TT %s\n", SysBase->ThisTask->tc_Node.ln_Name);
-			lastTask = SysBase->ThisTask;
+			kprintf (stderr, "TT %s\n", THISCPU->ThisTask->tc_Node.ln_Name);
+			lastTask = THISCPU->ThisTask;
 		}
 #endif
 	}

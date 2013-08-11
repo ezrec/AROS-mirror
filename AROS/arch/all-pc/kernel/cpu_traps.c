@@ -25,7 +25,7 @@ static void PrintContext(struct ExceptionContext *regs, unsigned long error_code
 {
     int i;
     unsigned long *ptr;
-    struct Task *t = SysBase->ThisTask;
+    struct Task *t = THISCPU->ThisTask;
 
     if (t)
     {

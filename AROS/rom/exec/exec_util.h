@@ -85,6 +85,7 @@ void Exec_CleanupETask(struct Task *task, struct ExecBase *SysBase);
 void Exec_ExpungeETask(struct ETask *et, struct ExecBase *SysBase);
 BOOL Exec_ExpandTS(struct Task *task, struct ExecBase *SysBase);
 struct ETask *Exec_FindChild(ULONG id, struct ExecBase *SysBase);
+struct Task *Exec_CreateBootTask(CONST_STRPTR name, struct ExecBase *SysBase);
 struct IntETask *FindETask(struct List *, ULONG id, struct ExecBase *SysBase);
 
 BOOL Exec_CheckTask(struct Task *task, struct ExecBase *SysBase);
@@ -131,5 +132,6 @@ static inline void InitMsgPort(struct MsgPort *ret)
 #define InitETask(t)	    Exec_InitETask(t,SysBase)
 #define CleanupETask(t)     Exec_CleanupETask(t,SysBase)
 #define ExpungeETask(e)	    Exec_ExpungeETask(e,SysBase)
+#define CreateBootTask(n)   Exec_CreateBootTask(n,SysBase)
 
 #endif /* _EXEC_UTIL_H */

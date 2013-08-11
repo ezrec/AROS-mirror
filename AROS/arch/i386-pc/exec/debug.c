@@ -115,7 +115,7 @@ AROS_LH1(void, Debug,
 	/* Show active task information */
 	else if (strcmp(comm, "TI") == 0)
 	{
-	    struct Task *t = SysBase->ThisTask;
+	    struct Task *t = THISCPU->ThisTask;
 
 	    kprintf("Active task (%p = '%s'):\n"
 			    "tc_Node.ln_Pri = %d\n"
@@ -135,7 +135,7 @@ AROS_LH1(void, Debug,
 /*	else if (strcmp(comm,"RI") == 0)
 	{
 
-	    struct pt_regs *r = (struct pt_regs *)SysBase->ThisTask->tc_UnionETask.tc_ETask->et_RegFrame;
+	    struct pt_regs *r = (struct pt_regs *)THISCPU->ThisTask->tc_UnionETask.tc_ETask->et_RegFrame;
 
 	    kprintf("Active task's registers dump:\n"
 			    "EAX=%p  ECX=%p  EDX=%p  EIP=%p\n"
@@ -204,9 +204,9 @@ AROS_LH1(void, Debug,
 
 	    kprintf("Task List:\n");
 
-	    kprintf("0x%08.8lx T %d %s\n",SysBase->ThisTask,
-		SysBase->ThisTask->tc_Node.ln_Pri,
-		SysBase->ThisTask->tc_Node.ln_Name);
+	    kprintf("0x%08.8lx T %d %s\n",THISCPU->ThisTask,
+		THISCPU->ThisTask->tc_Node.ln_Pri,
+		THISCPU->ThisTask->tc_Node.ln_Name);
 
 	    /* Look through the list */
 	    for (node = GetHead(&SysBase->TaskReady); node; node = GetSucc(node))

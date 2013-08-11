@@ -105,20 +105,20 @@ void sys_Dispatch(struct pt_regs * regs)
 	      same or higher priority than the currently active task */
 
 	if( SysBase->TaskReady.lh_Head->ln_Succ != NULL  /* &&
-	   ((BYTE)SysBase->ThisTask->tc_Node.ln_Pri <=   
+	   ((BYTE)THISCPU->ThisTask->tc_Node.ln_Pri <=   
 	    (BYTE)((struct Task *)SysBase->TaskReady.lh_Head)->tc_Node.ln_Pri )*/
 	   )
 	{
 		/* Check if task switch is possible */
 		if( SysBase->TDNestCnt < 0 )
 		{
-			if( SysBase->ThisTask->tc_State == TS_RUN )
+			if( THISCPU->ThisTask->tc_State == TS_RUN )
 			{
-				SysBase->ThisTask->tc_State = TS_READY;
-				Reschedule(SysBase->ThisTask);
+				THISCPU->ThisTask->tc_State = TS_READY;
+				Reschedule(THISCPU->ThisTask);
 				SysBase->AttnResched |= 0x8000;
 	                }
-			else if( SysBase->ThisTask->tc_State == TS_REMOVED )
+			else if( THISCPU->ThisTask->tc_State == TS_REMOVED )
 				SysBase->AttnResched |= 0x8000;
 		}
 		else
@@ -132,14 +132,14 @@ void sys_Dispatch(struct pt_regs * regs)
 		SysBase->AttnResched &= ~0x8000;
 
 		/* Save registers for this task (if there is one...) */
-		if (SysBase->ThisTask && SysBase->ThisTask->tc_State != TS_REMOVED)
-			SaveRegs(SysBase->ThisTask, regs);
+		if (THISCPU->ThisTask && THISCPU->ThisTask->tc_State != TS_REMOVED)
+			SaveRegs(THISCPU->ThisTask, regs);
 
 		/* Tell exec that we have actually switched tasks... */
 		Dispatch ();
 
 		/* Get the registers of the old task */
-		RestoreRegs(SysBase->ThisTask, regs);
+		RestoreRegs(THISCPU->ThisTask, regs);
 		/* Make sure that the state of the interrupts is what the task
 		   expects.
 		*/
@@ -150,7 +150,7 @@ void sys_Dispatch(struct pt_regs * regs)
 		/* Ok, the next step is to either drop back to the new task, or
 		   give it its Exception() if it wants one... */
 
-		if (SysBase->ThisTask->tc_Flags & TF_EXCEPT)
+		if (THISCPU->ThisTask->tc_Flags & TF_EXCEPT)
 		{
 			Disable();
 			Exception();

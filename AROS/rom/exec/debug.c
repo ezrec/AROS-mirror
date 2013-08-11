@@ -278,22 +278,35 @@ static char *NextWord(char *s)
 
             kprintf("Task List:\n");
 
-            kprintf("0x%p T %d %s\n",SysBase->ThisTask,
-                SysBase->ThisTask->tc_Node.ln_Pri,
-                SysBase->ThisTask->tc_Node.ln_Name);
+#if AROS_SMP
+            struct ExecCPUInfo *ThisCPU;
+            ForeachNode(&PrivExecBase(SysBase)->CPUList, ThisCPU) {
+                kprintf("CPU%d:\n", ThisCPU->ec_Node.ln_Pri);
+#else
+            do {
+                struct ExecBase *ThisCPU = SysBase;
+#endif
+                kprintf("0x%p T %d %s\n",ThisCPU->ThisTask,
+                    ThisCPU->ThisTask->tc_Node.ln_Pri,
+                    ThisCPU->ThisTask->tc_Node.ln_Name);
 
-            /* Look through the list */
-            for (node = GetHead(&SysBase->TaskReady); node; node = GetSucc(node))
-            {
-                kprintf("0x%p R %d %s\n", node, node->ln_Pri, node->ln_Name);
+                /* Look through the list */
+                for (node = GetHead(&ThisCPU->TaskReady); node; node = GetSucc(node))
+                {
+                    kprintf("0x%p R %d %s\n", node, node->ln_Pri, node->ln_Name);
+                }
+
+                for (node = GetHead(&ThisCPU->TaskWait); node; node = GetSucc(node))
+                {
+                    kprintf("0x%p W %d %s\n", node, node->ln_Pri, node->ln_Name);
+                }
+
+                kprintf("Idle called %d times\n", ThisCPU->IdleCount);
+#if AROS_SMP
             }
-
-            for (node = GetHead(&SysBase->TaskWait); node; node = GetSucc(node))
-            {
-                kprintf("0x%p W %d %s\n", node, node->ln_Pri, node->ln_Name);
-            }
-
-            kprintf("Idle called %d times\n", SysBase->IdleCount);
+#else
+            } while (0);
+#endif
         }
         /* Help command */
         else if (strcmp(comm, "HE") == 0)

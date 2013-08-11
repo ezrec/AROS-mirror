@@ -6,6 +6,9 @@
 */
 
 #include <proto/exec.h>
+#include <proto/kernel.h>
+
+#include <exec/cpu.h>
 
 /* Main scheduler entry points */
 void core_ExitInterrupt(regs_t *regs);
@@ -40,7 +43,7 @@ static inline int core_Trap(ULONG code, void *regs)
     if (SysBase)
     {
 	void (*trapHandler)(ULONG, void *) = SysBase->TaskTrapCode;
-        struct Task *t = SysBase->ThisTask;
+        struct Task *t = THISCPU->ThisTask;
 
         if (t)
 	{

@@ -8,6 +8,7 @@
     Desc: structure of exec.library
     Lang: english
 */
+#include <aros/config.h>
 
 #ifndef EXEC_INTERRUPTS_H
 #   include <exec/interrupts.h>
@@ -48,16 +49,20 @@ struct ExecBase
     struct IntVector IntVects[16];
 
 /* System Variables */
+#if AROS_SMP == 0
     struct Task *ThisTask;       /* Pointer to currently running task (readable) */
     ULONG        IdleCount;      /* Incremented when system goes idle            */
     ULONG        DispCount;      /* Incremented when a task is dispatched        */
     UWORD        Quantum;        /* # of ticks, a task may run                   */
     UWORD        Elapsed;        /* # of ticks, the current task has run         */
+#endif
     UWORD        SysFlags;       /* Private flags                                */
     BYTE         IDNestCnt;      /* Disable() nesting count                      */
     BYTE         TDNestCnt;      /* Forbid() nesting count                       */
     UWORD        AttnFlags;      /* Attention Flags (readable, see below)        */
+#if AROS_SMP == 0
     UWORD        AttnResched;    /* Private scheduler flags                      */
+#endif
     APTR         ResModules;     /* Resident modules list                        */
     APTR         TaskTrapCode;   /* Trap handling code                           */
     APTR         TaskExceptCode; /* User-mode exception handling code            */
@@ -72,8 +77,10 @@ struct ExecBase
     struct List        IntrList;
     struct List        LibList;
     struct List        PortList;
+#if AROS_SMP == 0
     struct List        TaskReady;      /* Tasks that are ready to run */
     struct List        TaskWait;       /* Tasks that wait for some event */
+#endif
     struct SoftIntList SoftInts[5];
 
 /* Miscellaneous Stuff */
@@ -102,7 +109,7 @@ struct ExecBase
     struct MinList ex_MemHandlers;
     APTR           ex_MemHandler;      /* PRIVATE */
 
-/* Additional field for AROS */
+/* Additional fields for AROS */
     struct Library      * DebugAROSBase;
 };
 

@@ -22,7 +22,6 @@ struct TaskInfo
 
 VOID UpdateTasksInformation(struct SysMonData * smdata)
 {
-    struct Task * task;
     IPTR firstvis = 0, entryid = 0;
     struct Task *selected = smdata->sm_TaskSelected;
 
@@ -46,8 +45,12 @@ VOID UpdateTasksInformation(struct SysMonData * smdata)
         set(smdata->tasklist, MUIA_List_Active, entryid);
     }
 
+#if AROS_SMP
+    /* FIXME: Fix for SMP! */
+#else
     /* Now disable multitasking and get the rest of the tasks .. */
     Disable();
+    struct Task * task;
     for (task = (struct Task *)SysBase->TaskReady.lh_Head;
         task->tc_Node.ln_Succ != NULL;
         task = (struct Task *)task->tc_Node.ln_Succ)
@@ -83,6 +86,7 @@ VOID UpdateTasksInformation(struct SysMonData * smdata)
     }
 
     Enable();
+#endif
 
     if (XGET(smdata->tasklist, MUIA_List_Active) == 0)
         smdata->sm_TaskSelected = NULL;
