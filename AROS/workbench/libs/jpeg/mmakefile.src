@@ -22,8 +22,8 @@ USER_CFLAGS += -Wno-main
 #MM- core-linklibs : linklibs-jpeg
 
 %build_module mmake=workbench-libs-jpeg \
-  modname=jpeg_au modtype=library \
-  files="$(FILES)" linklibname=jpeg
+  modname=jpeg modtype=library conffile=$(SRCDIR)/$(CURDIR)/jpeg_au.conf \
+  files="$(FILES)"
 
 
 INCLUDE_FILES := jerror.h jmorecfg.h jpeglib.h jconfig.h
