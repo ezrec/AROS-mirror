@@ -239,7 +239,7 @@ struct MsgPort *CreateMsgPort(void)
 	    ret->mp_Node.ln_Type = NT_MSGPORT;
 	    NEWLIST(&ret->mp_MsgList);
 	    ret->mp_SigBit=sb;
-	    ret->mp_SigTask=SysBase->ThisTask;
+	    ret->mp_SigTask=FindTask(NULL);
 	    return ret;
 	}
 	FreeMem(ret,sizeof(struct MsgPort));

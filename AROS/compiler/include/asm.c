@@ -41,10 +41,13 @@ int main(void) {
     asm volatile("\n#define _ALIGNMENT             .balign %0" :: "i" (AROS_WORSTALIGN));
 
     asm volatile("\n/* ExecBase */" ::);
+#if AROS_SMP == 0
     DEFINE(AttnResched   , offsetof (struct ExecBase, AttnResched));
+#endif
     DEFINE(AttnFlags     , offsetof (struct ExecBase, AttnFlags));
     DEFINE(IDNestCnt     , offsetof (struct ExecBase, IDNestCnt));
     DEFINE(TDNestCnt     , offsetof (struct ExecBase, TDNestCnt));
+#if AROS_SMP == 0
     DEFINE(TaskReady     , offsetof (struct ExecBase, TaskReady));
     DEFINE(ThisTask      , offsetof (struct ExecBase, ThisTask));
     DEFINE(SysFlags      , offsetof (struct ExecBase, SysFlags));
@@ -52,6 +55,7 @@ int main(void) {
     DEFINE(DispCount     , offsetof (struct ExecBase, DispCount));
     DEFINE(Quantum       , offsetof (struct ExecBase, Quantum));
     DEFINE(Elapsed       , offsetof (struct ExecBase, Elapsed));
+#endif
     DEFINE(SysStkUpper   , offsetof (struct ExecBase, SysStkUpper));
 
     asm volatile("\n/* struct Task */" ::);

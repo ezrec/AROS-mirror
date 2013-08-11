@@ -86,7 +86,7 @@ void cpu_Switch(context_t *regs)
     /* Disable interrupts until the task switch */
     __asm__ __volatile__("wrteei 0");
 
-    task = SysBase->ThisTask;
+    task = THISCPU->ThisTask;
         
     /* Copy current task's context into the ETask structure */
     memmove(task->tc_UnionETask.tc_ETask->et_RegFrame, regs, sizeof(context_t));

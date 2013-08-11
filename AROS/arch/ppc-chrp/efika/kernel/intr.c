@@ -380,7 +380,7 @@ void __attribute__((noreturn)) decrementer_handler(regs_t *ctx, uint8_t exceptio
 	{
 		uint32_t total_time = current - last_calc;
 
-		if (SysBase->ThisTask == idle_task)
+		if (THISCPU->ThisTask == idle_task)
 		{
 			tbu2 = mftbu();
 			idle_time += tbu2 - tbu1;

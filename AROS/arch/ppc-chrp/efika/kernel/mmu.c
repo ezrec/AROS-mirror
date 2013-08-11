@@ -349,9 +349,9 @@ void __attribute__((noreturn)) mmu_handler(regs_t *ctx, uint8_t exception, void 
 
 	if (SysBase)
 	{
-		struct Task *dead = SysBase->ThisTask;
+		struct Task *dead = THISCPU->ThisTask;
 
-		SysBase->ThisTask = NULL;
+		THISCPU->ThisTask = NULL;
 		KernelBase->kb_LastDeadTask = dead;
 		Remove(dead);
 		Enqueue(&KernelBase->kb_DeadTasks, dead);

@@ -80,6 +80,14 @@ struct Task
 	({struct Task *_t = (struct Task *)t;\
 	  (_t->tc_Flags & TF_ETASK) ? _t->tc_UnionETask.tc_ETask->et_UniqueID: 0UL; \
          })
+#if AROS_SMP
+#define GetESysCPU(t) \
+    ({struct Task *_t = (struct Task *)t;\
+      (_t->tc_Flags & TF_ETASK) ? _t->tc_UnionETask.tc_ETask->et_SysCPU : \
+     THISCPU; })
+#else
+#define GetESysCPU(t) SysBase
+#endif
 
 
 /* Stack swap structure as passed to StackSwap() */
@@ -175,7 +183,11 @@ struct ETask
     struct MsgPort  et_TaskMsgPort;
     void	   *et_MemPool;	    /* Task's private memory pool	*/
 #ifdef __AROS__
-    IPTR	    et_Reserved[1]; /* MorphOS Private                  */
+#if AROS_SMP
+    struct ExecCPUInfo *et_SysCPU;
+#else
+    IPTR        et_Reserved[1];
+#endif
     IPTR	   *et_TaskStorage; /* Task Storage Slots		*/
 #else
     IPTR	    et_Reserved[2]; /* MorphOS Private                  */

@@ -128,11 +128,11 @@ static LONG AskSuspend(struct Task *task, ULONG alertNum, struct ExecBase *SysBa
  */
 ULONG Exec_UserAlert(ULONG alertNum, struct ExecBase *SysBase)
 {
-    struct Task *task = SysBase->ThisTask;
+    struct Task *task = THISCPU->ThisTask;
     struct IntETask *iet;
     LONG res;
 
-    /* Protect ourselves agains really hard crashes where SysBase->ThisTask is NULL.
+    /* Protect ourselves agains really hard crashes where THISCPU->ThisTask is NULL.
        Obviously we won't go far away in such a case */
     if (!task)
         return alertNum;

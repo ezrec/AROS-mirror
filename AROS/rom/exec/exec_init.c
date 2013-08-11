@@ -15,6 +15,8 @@
 #include <exec/tasks.h>
 #include <hardware/intbits.h>
 
+#include <proto/kernel.h>
+
 #include <aros/symbolsets.h>
 #include <aros/system.h>
 #include <aros/arossupportbase.h>
@@ -26,6 +28,8 @@
 #include <proto/arossupport.h>
 #include <proto/exec.h>
 #include <proto/kernel.h>
+
+#include <stdio.h>  // For snprintf only!
 
 #include "exec_debug.h"
 #include "exec_intern.h"
@@ -86,6 +90,37 @@ extern void debugmem(void);
 
 void SupervisorAlertTask(struct ExecBase *SysBase);
 
+#if AROS_SMP
+static AROS_UFH3(IPTR, SMPHookEntry,
+        AROS_UFHA(struct Hook *, hook, A0),
+        AROS_UFHA(APTR, object, A2),
+        AROS_UFHA(APTR, message, A1)
+        )
+{
+    AROS_USERFUNC_INIT
+
+    struct ExecCPUInfo *ec = message;
+
+    KrnSetCPUStorage(ec);
+
+    Enable();
+
+    /* We now wait forever */
+    for (;;) {
+        Wait(SIGF_SINGLE);
+    }
+
+    return 0;
+
+    AROS_USERFUNC_EXIT
+}
+
+static const struct Hook SMPHook = {
+    .h_Entry = (APTR)SMPHookEntry,
+};
+#endif
+
+
 THIS_PROGRAM_HANDLES_SYMBOLSET(INITLIB)
 THIS_PROGRAM_HANDLES_SYMBOLSET(PREINITLIB)
 DEFINESET(INITLIB)
@@ -101,8 +136,6 @@ AROS_UFH3S(struct ExecBase *, GM_UNIQUENAME(init),
 
     struct TaskStorageFreeSlot *tsfs;
     struct Task *t;
-    struct MemList *ml;
-    struct ExceptionContext *ctx;
     int i;
 
     /*
@@ -152,60 +185,41 @@ AROS_UFH3S(struct ExecBase *, GM_UNIQUENAME(init),
     tsfs->FreeSlot = __TS_FIRSTSLOT+1;
     AddHead((struct List *)&PrivExecBase(SysBase)->TaskStorageSlots, (struct Node *)tsfs);
 
+#if AROS_SMP
+    do {
+        struct ExecCPUInfo *ec;
+        bug("SMP: Creating CPU0 scheduler\n");
+        ec = AllocMem(sizeof(*ec), MEMF_ANY | MEMF_CLEAR);
+        ec->ec_Node.ln_Pri = 127;   /* Highest priority CPU */
+        ec->ec_CPUNumber = 0;
+        ec->Quantum = 4;
+        NEWLIST(&ec->TaskReady);
+        ec->TaskReady.lh_Type = NT_TASK;
+        NEWLIST(&ec->TaskWait);
+        ec->TaskWait.lh_Type = NT_TASK;
+        AddHead(&PrivExecBase(SysBase)->CPUList, (struct Node *)ec);
+        KrnSetCPUStorage(ec);
+    } while (0);
+#endif
+
     /* Now we are ready to become a Boot Task and turn on the multitasking */
-    t   = AllocMem(sizeof(struct Task),    MEMF_PUBLIC|MEMF_CLEAR);
-    ml  = AllocMem(sizeof(struct MemList), MEMF_PUBLIC|MEMF_CLEAR);
-    ctx = KrnCreateContext();
+    t = CreateBootTask("Boot Task");
 
-    if (!t || !ml || !ctx)
+    if (!t)
     {
         DINIT("Not enough memory for first task");
         return NULL;
     }
 
-    NEWLIST(&t->tc_MemEntry);
-
-    t->tc_Node.ln_Name = "Boot Task";
-    t->tc_Node.ln_Type = NT_TASK;
-    t->tc_Node.ln_Pri  = 0;
-    t->tc_State        = TS_RUN;
-    t->tc_SigAlloc     = 0xFFFF;
-
-    /*
-     * Boot-time stack can be placed anywhere in memory.
-     * In order to avoid complex platform-dependent mechanism for querying its limits
-     * we simply shut up stack checking in kernel.resource by specifying the whole address
-     * space as limits.
-     */
-    t->tc_SPLower      = NULL;
-    t->tc_SPUpper      = (APTR)~0;
-
-    /*
-     * Build a memory list for the task.
-     * It doesn't include stack because it wasn't allocated by us.
-     */
-    ml->ml_NumEntries      = 1;
-    ml->ml_ME[0].me_Addr   = t;
-    ml->ml_ME[0].me_Length = sizeof(struct Task);
-    AddHead(&t->tc_MemEntry, &ml->ml_Node);
-
-    /* Create a ETask structure and attach CPU context */
-    if (!InitETask(t))
-    {
-        DINIT("Not enough memory for first task");
-        return NULL;
-    }
-    t->tc_UnionETask.tc_ETask->et_RegFrame = ctx;
-
-    DINIT("[exec] Boot Task 0x%p, ETask 0x%p, CPU context 0x%p\n", t, t->tc_UnionETask.tc_ETask, ctx);
+    DINIT("[exec] Boot Task 0x%p, ETask 0x%p, CPU context 0x%p\n", t, t->tc_UnionETask.tc_ETask, t->tc_UnionETask.tc_ETask->et_RegFrame);
 
     /*
      * Set the current task and elapsed time for it.
      * Set ThisTask only AFTER InitETask() has been called. InitETask() sets et_Parent
      * to FindTask(NULL). We must get NULL there, otherwise we'll get task looped on itself.
      */
-    SysBase->ThisTask = t;
-    SysBase->Elapsed  = SysBase->Quantum;
+    THISCPU->ThisTask = t;
+    THISCPU->Elapsed  = THISCPU->Quantum;
 
     /* Install the interrupt servers. Again, do it here because allocations are needed. */
     for (i=0; i < 16; i++)
@@ -252,6 +266,52 @@ AROS_UFH3S(struct ExecBase *, GM_UNIQUENAME(init),
             SetIntVector(i,is);
         }
     }
+
+#if AROS_SMP
+    /* Start up our secondary CPUs
+     */
+    if (KrnGetCPUCount() > 1) {
+        ULONG cpumax = KrnGetCPUCount();
+        ULONG i;
+        for (i = 1; i < cpumax; i++) {
+            struct ExecCPUInfo *ec;
+
+            bug("SMP: Creating CPU%d scheduler\n", i);
+            ec = AllocMem(sizeof(*ec), MEMF_ANY | MEMF_CLEAR);
+
+            if (ec) {
+                struct Task *task;
+                char buff[64];
+
+                snprintf(buff, sizeof(buff), "CPU%d Idle Task", i);
+                buff[sizeof(buff)-1] = 0;
+                task = CreateBootTask(buff);
+
+                if (task) {
+                    /* Make this the idle task for this ExecCPU
+                     */
+                    task->tc_Node.ln_Pri = -128;
+                    task->tc_UnionETask.tc_ETask->et_SysCPU = ec;
+                    ec->ThisTask = task;
+
+                    ec->ec_Node.ln_Pri = 0; /* Normal priority */
+                    ec->ec_CPUNumber = i;
+                    ec->Quantum = 4;
+                    NEWLIST(&ec->TaskReady);
+                    ec->TaskReady.lh_Type = NT_TASK;
+                    NEWLIST(&ec->TaskWait);
+                    ec->TaskWait.lh_Type = NT_TASK;
+
+                    AddTail(&PrivExecBase(SysBase)->CPUList, (struct Node *)ec);
+
+                    KrnSetCPUEntry(i, &SMPHook, ec);
+                } else {
+                    FreeMem(ec, sizeof(*ec));
+                }
+            }
+        }
+    }
+#endif
 
     /* We now start up the interrupts */
     Permit();

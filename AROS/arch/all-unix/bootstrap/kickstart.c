@@ -58,6 +58,7 @@ int kick(int (*addr)(), struct TagItem *msg)
     	}
 
 	/* Wait until AROS process exits */
+	i = 0;
 	waitpid(child, &i, 0);
 
 	if (!WIFEXITED(i))

@@ -2,6 +2,8 @@
 #include <exec/execbase.h>
 #include <exec/lists.h>
 
+#include "exec_intern.h"
+
 #include "intservers.h"
 
 /*
@@ -43,10 +45,10 @@ AROS_INTH3(VBlankServer, struct List *, intList, intMask, custom)
     AROS_INTFUNC_INIT
 
     /* First decrease Elapsed time for current task */
-    if (SysBase->Elapsed && (--SysBase->Elapsed == 0))
+    if (THISCPU->Elapsed && (--THISCPU->Elapsed == 0))
     {
-        SysBase->SysFlags    |= SFF_QuantumOver;
-        SysBase->AttnResched |= ARF_AttnSwitch;
+        THISCPU->SysFlags    |= SFF_QuantumOver;
+        THISCPU->AttnResched |= ARF_AttnSwitch;
     }
 
     /* Chain to the generic routine */

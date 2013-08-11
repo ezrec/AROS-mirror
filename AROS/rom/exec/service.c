@@ -68,7 +68,7 @@ void ServiceTask(struct ExecBase *SysBase)
 
                 /* The task is ready to run again. Move it back to TaskReady list. */
                 task->tc_State = TS_READY;
-                Enqueue(&SysBase->TaskReady,&task->tc_Node);
+                Enqueue(&GetESysCPU(task)->TaskReady,&task->tc_Node);
 
                 break;
             }

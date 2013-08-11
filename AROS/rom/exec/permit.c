@@ -79,7 +79,7 @@ HISTORY
 
     if(    ( SysBase->TDNestCnt < 0 )
         && ( SysBase->IDNestCnt < 0 )
-        && ( SysBase->AttnResched & 0x80 ) )
+        && ( THISCPU->AttnResched & 0x80 ) )
     {
         /* Haha, you re-enabled multitasking, only to have the rug
            pulled out from under you feet :)

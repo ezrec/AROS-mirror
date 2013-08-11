@@ -83,7 +83,7 @@ void cpu_Dispatch(struct ExceptionContext *regs)
 
 void cpu_Switch(struct ExceptionContext *regs)
 {
-    struct Task *task = SysBase->ThisTask;
+    struct Task *task = THISCPU->ThisTask;
     struct ExceptionContext *ctx = task->tc_UnionETask.tc_ETask->et_RegFrame;
 
     D(bug("[Kernel] cpu_Switch(), task %s\n", task->tc_Node.ln_Name));

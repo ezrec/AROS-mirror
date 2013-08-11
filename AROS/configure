@@ -708,6 +708,7 @@ aros_host_cpp
 aros_host_cpu
 aros_host_arch
 aros_cc_pre
+aros_smp
 aros_amigaos_compliance
 AROS_PORTSSRCDIR
 AROS_CROSSTOOLSDIR
@@ -4659,6 +4660,8 @@ host_cc_elf=yes
 # can change the values of any variables it needs to change. We do
 # not look at anything that compiles to the target yet, we'll get
 # to that later.
+
+aros_smp=0
 
 case "$host_os" in
     aros*)
@@ -14285,6 +14288,9 @@ fi
 
 
 # Compatability with other Amiga-like operation systems
+
+
+# AROS SMP
 
 
 # Host related

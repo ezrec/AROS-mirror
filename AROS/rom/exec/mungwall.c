@@ -163,7 +163,7 @@ static void CheckHeader(struct MungwallHeader *header, IPTR byteSize, struct Tra
     	 * This is 100% safe as long as we don't touch the entry after Alert().
     	 * Well, potentally dangerous case is list iteration in MungWall_Scan().
     	 * What to do then? Use a semaphore? Won't do because of RemTask(NULL),
-    	 * during which SysBase->ThisTask becomes garbage, thus a semaphore can't
+    	 * during which THISCPU->ThisTask becomes garbage, thus a semaphore can't
     	 * be used.
     	 */
     }
@@ -220,7 +220,7 @@ APTR MungWall_Check(APTR memoryBlock, IPTR byteSize, struct TraceLocation *loc, 
 	 * the stack to some safe place and make sure that task structure is not
 	 * accessed after freeing it.
 	 */
-	if (SysBase->ThisTask->tc_State != TS_REMOVED)
+	if (THISCPU->ThisTask->tc_State != TS_REMOVED)
 		MUNGE_BLOCK(memoryBlock, MEMFILL_FREE, byteSize);
 
 	/* Return real start of the block to deallocate */

@@ -87,21 +87,29 @@ LONG rxsupp_showlist(struct Library *RexxSupportBase, struct RexxMsg *msg, UBYTE
 	isexec = TRUE;
 	execl = &SysBase->SemaphoreList;
 	break;
-	
+
+#if AROS_SMP
+    /* FIXME FOR SMP! */
+#else
     case 't':
 	isexec = TRUE;
 	execl = &SysBase->TaskReady;
 	break;
+#endif
 	
     case 'v':
 	isexec = FALSE;
 	dosflags = LDF_READ | LDF_VOLUMES;
 	break;
 	
+#if AROS_SMP
+    /* FIXME FOR SMP! */
+#else
     case 'w':
 	isexec = TRUE;
 	execl = &SysBase->TaskWait;
 	break;
+#endif
 	
     default:
 	*argstring = NULL;

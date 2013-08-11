@@ -54,9 +54,9 @@
 {
     AROS_LIBFUNC_INIT
 
-    UWORD oldAttnSwitch = SysBase->AttnResched & ARF_AttnSwitch;
+    UWORD oldAttnSwitch = THISCPU->AttnResched & ARF_AttnSwitch;
 
-    AROS_ATOMIC_OR(SysBase->AttnResched, ARF_AttnSwitch);       /* Set scheduling attention */
+    AROS_ATOMIC_OR(THISCPU->AttnResched, ARF_AttnSwitch);       /* Set scheduling attention */
 
     if (SysBase->TDNestCnt < 0)                 /* If task switching enabled */
     {

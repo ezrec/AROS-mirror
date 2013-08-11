@@ -14,6 +14,7 @@
 #include <aros/system.h>
 #include <aros/libcall.h>
 #include <exec/execbase.h>
+#include <exec/cpu.h>
 #include <proto/exec.h>
 
 #include <exec_platform.h>
@@ -51,6 +52,9 @@ struct IntExecBase
     struct Exec_PlatformData PlatformData;      /* Platform-specific stuff                               */
     struct SupervisorAlertTask SAT;
     char   AlertBuffer[ALERT_BUFFER_SIZE];      /* Buffer for alert text                                 */
+#if AROS_SMP
+    struct List CPUList;
+#endif
 };
 
 #define PrivExecBase(base) ((struct IntExecBase *)base)

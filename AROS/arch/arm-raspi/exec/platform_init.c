@@ -30,7 +30,7 @@ static int PlatformInit(struct ExecBase *SysBase)
 {
     D(bug("[Exec] PlatformInit()\n"));
     
-    struct Task *BootTask = SysBase->ThisTask;
+    struct Task *BootTask = THISCPU->ThisTask;
     D(bug("[Exec] PlatformInit: Boot Task @ 0x%p\n", BootTask));
 
     /* for our sanity we will tell exec about the correct stack for the boot task */

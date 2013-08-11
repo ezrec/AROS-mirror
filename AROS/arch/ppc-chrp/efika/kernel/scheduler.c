@@ -117,7 +117,7 @@ void core_Dispatch(regs_t *regs)
 
         /* Get the first task from the TaskReady list, and populate it's settings through Sysbase */
         task = (struct Task *)REMHEAD(&SysBase->TaskReady);
-        SysBase->ThisTask = task;
+        THISCPU->ThisTask = task;
         SysBase->Elapsed = SysBase->Quantum;
         SysBase->SysFlags &= ~0x2000;
         task->tc_State = TS_RUN;
@@ -167,7 +167,7 @@ void core_Switch(regs_t *regs)
         /* Disable interrupts for a while */
     	wrmsr(rdmsr() & ~MSR_EE);
 
-        task = SysBase->ThisTask;
+        task = THISCPU->ThisTask;
 
         //D(bug("[KRN] Old task = %p (%s)\n", task, task->tc_Node.ln_Name));
 
@@ -224,7 +224,7 @@ void core_Schedule(regs_t *regs)
         /* Disable interrupts for a while */
         wrmsr(rdmsr() & ~MSR_EE); // CLI
 
-        task = SysBase->ThisTask;
+        task = THISCPU->ThisTask;
 
         /* Clear the pending switch flag. */
         SysBase->AttnResched &= ~ARF_AttnSwitch;
