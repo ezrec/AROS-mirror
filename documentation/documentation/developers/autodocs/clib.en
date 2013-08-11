@@ -79,10 +79,10 @@ clib
 `times()`_                              `tmpfile()`_                            `tmpnam()`_                             `truncate()`_                           
 `ttyname()`_                            `umask()`_                              `uname()`_                              `ungetc()`_                             
 `unlink()`_                             `unsetenv()`_                           `updatestdio()`_                        `usleep()`_                             
-`utime()`_                              `utimes()`_                             `vfprintf()`_                           `vfscanf()`_                            
-`vprintf()`_                            `vscanf()`_                             `vsnprintf()`_                          `vsprintf()`_                           
-`vsscanf()`_                            `wait()`_                               `waitpid()`_                            `wcstombs()`_                           
-`wctomb()`_                             `write()`_                              
+`utime()`_                              `utimes()`_                             `vfork()`_                              `vfprintf()`_                           
+`vfscanf()`_                            `vprintf()`_                            `vscanf()`_                             `vsnprintf()`_                          
+`vsprintf()`_                           `vsscanf()`_                            `wait()`_                               `waitpid()`_                            
+`wcstombs()`_                           `wctomb()`_                             `write()`_                              
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -12529,6 +12529,79 @@ See also
 ~~~~~~~~
 
 `utime()`_ 
+
+----------
+
+vfork()
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  pid_t vfork(
+     void)
+
+
+Function
+~~~~~~~~
+::
+
+     Function to create a subprocess of the current process.
+     This is there to ease porting of software using the fork()/vfork()
+     POSIX functions. Due to different memory and process model fork()
+     is not implemented at the moment in the C library. vfork() is provided
+     with some extenden functionality. In POSIX standard the only guaranteed
+     functionality for vfork() is to have a exec*() function or _exit() called
+     right after the vfork() in the child.
+     Extra functionality for vfork():
+     - The child has it's own memory heap, memory allocation/deallocation
+       is allowed and heap will be removed when calling _exit() or will be used
+       for the code started by the exec*() functions.
+     - The child will have a copy of the file descriptors as specified by POSIX
+       standard for the fork() function. File I/O is possible in child, also
+       file manipulation with dup() etc.
+
+     Difference with fork():
+     - The virtual memory heap is not duplicated as in POSIX but the memory
+       is shared between parent and child. AROS lives in one big single memory
+       region so changes to memory in child are also seen by parent.
+
+     Behaviour for other resources not described in this doc may not be relied
+     on for future.
+
+
+Inputs
+~~~~~~
+::
+
+     -
+
+
+Result
+~~~~~~
+::
+
+     -1: error, no child is started; errno will be set.
+     0: Running in child
+     >0: Running in parent, pid of child is return value.
+
+
+Notes
+~~~~~
+::
+
+     Current implementation of vfork() will only really start running things
+     in parallel on an exec*() call. After vfork() child code will run until
+     _exit() or exec*(). With _exit() child will exit and parent continue;
+     with exec*() child will be detached and parent will continue.
+
+
+
+See also
+~~~~~~~~
+
+`execl()`_ `execve()`_ `execlp()`_ `execv()`_ `execvp()`_ 
 
 ----------
 
