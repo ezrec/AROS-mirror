@@ -109,7 +109,7 @@
             KrnCause();
         }
 
-        if ((SysBase->TDNestCnt < 0) && (SysBase->AttnResched & ARF_AttnSwitch))
+        if ((SysBase->TDNestCnt < 0) && (THISCPU->AttnResched & ARF_AttnSwitch))
         {
             /*
              * If SFF_SoftInt hasn't been set, we have a chance that task switching

@@ -179,7 +179,7 @@ void handle_exception(context_t *ctx, uint8_t exception)
     const ULONG marker = 0x00dead00 | (exception << 24) | exception;
 
     if (SysBase) {
-        struct Task *task = SysBase->ThisTask;
+        struct Task *task = THISCPU->ThisTask;
         if (task && (ctx->cpu.srr1 & MSR_PR) && ((APTR)ctx->cpu.gpr[1] <= task->tc_SPLower ||
             (APTR)ctx->cpu.gpr[1] > task->tc_SPUpper)) {
             bug("[KRN]: When did my stack base go from %p to %p?\n",
@@ -316,7 +316,7 @@ void decrementer_handler(context_t *ctx, uint8_t exception)
     	if (KernelBase->kb_PlatformData->pd_CPUUsage > 999)
     	{
     		DB2(bug("[KRN] CPU usage: %3d.%d (%s)\n", KernelBase->kb_PlatformData->pd_CPUUsage / 10, KernelBase->kb_PlatformData->pd_CPUUsage % 10,
-    				SysBase->ThisTask->tc_Node.ln_Name));
+    				THISCPU->ThisTask->tc_Node.ln_Name));
     	}
     	else
     		DB2(bug("[KRN] CPU usage: %3d.%d\n", KernelBase->kb_PlatformData->pd_CPUUsage / 10, KernelBase->kb_PlatformData->pd_CPUUsage % 10));

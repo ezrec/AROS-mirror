@@ -178,7 +178,7 @@
 
     /* Add the new task to the ready list. */
     task->tc_State=TS_READY;
-    Enqueue(&SysBase->TaskReady,&task->tc_Node);
+    Enqueue(&GetESysCPU(task)->TaskReady,&task->tc_Node);
 
     /*
         Determine if a task switch is necessary. (If the new task has a
@@ -187,8 +187,8 @@
         is already gone.
     */
 
-    if (task->tc_Node.ln_Pri > SysBase->ThisTask->tc_Node.ln_Pri &&
-       SysBase->ThisTask->tc_State == TS_RUN)
+    if (task->tc_Node.ln_Pri > GetESysCPU(task)->ThisTask->tc_Node.ln_Pri &&
+       GetESysCPU(task)->ThisTask->tc_State == TS_RUN)
     {
         D(bug("[AddTask] Rescheduling...\n"));
 

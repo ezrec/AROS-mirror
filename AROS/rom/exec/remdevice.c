@@ -62,7 +62,7 @@
 
     D(bug("RemDevice $%lx (\"%s\") by \"%s\"\n", device, 
 	device ? device->dd_Library.lib_Node.ln_Name : "(null)",
-	SysBase->ThisTask->tc_Node.ln_Name));
+	THISCPU->ThisTask->tc_Node.ln_Name));
 
     /* Arbitrate for the device list */
     Forbid();

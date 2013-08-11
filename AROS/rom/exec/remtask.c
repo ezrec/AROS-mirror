@@ -64,7 +64,7 @@
 
     /* A value of NULL means current task */
     if (task==NULL)
-        task=SysBase->ThisTask;
+        task=THISCPU->ThisTask;
 
     DREMTASK("RemTask (0x%p (\"%s\"))", task, task->tc_Node.ln_Name);
 
@@ -72,7 +72,7 @@
     */
     Forbid();
 
-    suicide = (task == SysBase->ThisTask);
+    suicide = (task == THISCPU->ThisTask);
     if (suicide)
         DREMTASK("Removing itself");
 

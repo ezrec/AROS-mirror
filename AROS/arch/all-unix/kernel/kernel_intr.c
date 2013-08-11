@@ -41,7 +41,7 @@ void core_ExitInterrupt(regs_t *regs)
          * Do not disturb task if it's not necessary. 
          * Reschedule only if switch pending flag is set. Exit otherwise.
          */
-        if (SysBase->AttnResched & ARF_AttnSwitch)
+        if (THISCPU->AttnResched & ARF_AttnSwitch)
         {
 	    /* Run task scheduling sequence */
             if (core_Schedule())
@@ -69,7 +69,7 @@ void core_ExitInterrupt(regs_t *regs)
 void core_SysCall(int sig, regs_t *regs)
 {
     struct KernelBase *KernelBase = getKernelBase();
-    struct Task *task = SysCPUBase->ThisTask;
+    struct Task *task = THISCPU->ThisTask;
 
     SUPERVISOR_ENTER;
 

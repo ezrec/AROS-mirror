@@ -43,9 +43,12 @@
 
 ******************************************************************************/
 
+#include <aros/config.h>
+
 #include <exec/memory.h>
 #include <exec/tasks.h>
 #include <exec/execbase.h>
+#include <exec/cpu.h>
 #include <proto/exec.h>
 #include <proto/timer.h>
 #include <aros/debug.h>
@@ -70,12 +73,18 @@ struct task
     IPTR stackused;
     WORD pri;
     UQUAD cputime;
+    ULONG cpuid;
 };
 
 static int addtask(struct Task *task, struct task **t, STRPTR *e)
 {
     STRPTR s1,s2;
     (*t)->cputime = GetIntETask(task)->iet_CpuTime;
+#if AROS_SMP
+    (*t)->cpuid = GetETask(task)->et_SysCPU->ec_CPUNumber;
+#else
+    (*t)->cpuid = 0;
+#endif
     (*t)->address=task;
     (*t)->type=task->tc_Node.ln_Type;
     (*t)->pri =(WORD)task->tc_Node.ln_Pri;
@@ -181,7 +190,7 @@ int main(void)
         tasks=buffer;
         if(fillbuffer(&tasks,size))
         {
-            FPuts(Output(),"Address\t\tType\tPri\tState\tCPU Time\tStack\tUsed\tName\n");
+            FPuts(Output(),"Address\t\tType\tPri CPU\tState\tCPU Time\tStack\tUsed\tName\n");
             for(tasks2=buffer;tasks2<tasks;tasks2++)
             {
             	ULONG time;
@@ -192,22 +201,23 @@ int main(void)
             	else /* Otherwise we cannot calculate the cpu time :/ */
             		time = 0;
 
-                IPTR args[10];
+                IPTR args[11];
                 args[0]=(IPTR)tasks2->address;
                 args[1]=(IPTR)(tasks2->type==NT_TASK?"task":
                 	       tasks2->type==NT_PROCESS?"process":"CLI");
                 args[2]=tasks2->pri;
-                args[3]=(IPTR)(tasks2->state==TS_RUN?"running":
+                args[3]=tasks2->cpuid;
+                args[4]=(IPTR)(tasks2->state==TS_RUN?"running":
                 	       tasks2->state==TS_READY?"ready":"waiting");
+                args[7]=time % 60;
+                time /= 60;
                 args[6]=time % 60;
                 time /= 60;
-                args[5]=time % 60;
-                time /= 60;
-                args[4]=time;
-                args[7]=tasks2->stacksize;
-                args[8]=tasks2->stackused;
-                args[9]=tasks2->name!=NULL?(IPTR)tasks2->name:0;
-                VPrintf("0x%08.lx\t%s\t%ld\t%s\t%02ld:%02ld:%02ld\t%ld\t%ld\t%s\n",args);
+                args[5]=time;
+                args[8]=tasks2->stacksize;
+                args[9]=tasks2->stackused;
+                args[10]=tasks2->name!=NULL?(IPTR)tasks2->name:0;
+                VPrintf("0x%08.lx\t%s\t%3ld %3ld\t%s\t%02ld:%02ld:%02ld\t%ld\t%ld\t%s\n",args);
             }
             FreeVec(buffer);
             return 0;

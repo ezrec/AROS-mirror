@@ -34,7 +34,7 @@ asm (
 
 void cpu_Switch(regs_t *regs)
 {
-    struct Task *task = SysBase->ThisTask;
+    struct Task *task = THISCPU->ThisTask;
     struct AROSCPUContext *ctx = task->tc_UnionETask.tc_ETask->et_RegFrame;
 
     /* Actually save the context */

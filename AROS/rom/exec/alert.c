@@ -73,7 +73,7 @@ static const ULONG contextSizes[] =
 
 void Exec_ExtAlert(ULONG alertNum, APTR location, APTR stack, UBYTE type, APTR data, struct ExecBase *SysBase)
 {
-    struct Task *task = SysBase->ThisTask;
+    struct Task *task = THISCPU->ThisTask;
     int supervisor = KrnIsSuper();
     BOOL usesystemalert = !!supervisor;
     struct IntETask *iet = NULL;

@@ -14,7 +14,7 @@ AROS_LH0(void, Switch,
 {
     AROS_LIBFUNC_INIT
 
-    struct Task *this = SysBase->ThisTask;
+    struct Task *this = THISCPU->ThisTask;
 
     /*
         If the state is not TS_RUN then the task is already in a list

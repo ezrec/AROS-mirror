@@ -380,10 +380,10 @@ void exec_main(struct TagItem *msg, void *entry)
             }
         }
 
-        SysBase->ThisTask = t;
+        THISCPU->ThisTask = t;
     }
 
-    D(bug("[exec] Done. SysBase->ThisTask = %08p\n", SysBase->ThisTask));
+    D(bug("[exec] Done. THISCPU->ThisTask = %08p\n", THISCPU->ThisTask));
 
     /* We now start up the interrupts */
     Permit();
@@ -434,7 +434,7 @@ struct rt_node
 void exec_DefaultTaskExit()
 {
     struct ExecBase *SysBase = priv_SysBase;
-    RemTask(SysBase->ThisTask);
+    RemTask(THISCPU->ThisTask);
 }
 
 IPTR **exec_RomTagScanner(struct TagItem *msg, struct ExecBase *SysBase)

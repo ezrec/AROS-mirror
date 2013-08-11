@@ -67,8 +67,12 @@ int main(int argc, char* argv[])
 		NEWLIST(&t->tc_MemEntry);
 		AddTask(t,&entry,NULL);
 		SetTaskPri(t,1);
+#if AROS_SMP
+		printf("%p %p %p\n",t,FindTask("new task"), FindTask(NULL));
+#else
 		printf("%p %p %p %p\n",t,FindTask("new task"),
 		       SysBase->ThisTask,FindTask(NULL));
+#endif
 		Wait(1<<sigbit1);
 		if(sigbit2>=0)
 		{

@@ -9,6 +9,8 @@
 #include <aros/libcall.h>
 #include <proto/exec.h>
 
+#include "exec_intern.h"
+
 /*****************************************************************************
 
     NAME */
@@ -50,7 +52,7 @@
 
     /* Quick return for a quick argument */
     if (name==NULL)
-        return SysBase->ThisTask;
+        return THISCPU ? THISCPU->ThisTask : NULL;
 
     return (struct Task *)ScanTasks(SCANTAG_FILTER_NAME, name, TAG_END);
 

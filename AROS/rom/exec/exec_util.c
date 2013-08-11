@@ -18,6 +18,7 @@
 #include "etask.h"
 #include "exec_intern.h"
 #include "exec_util.h"
+#include "exec_debug.h"
 #include "taskstorage.h"
 
 /*i***************************************************************************
@@ -153,13 +154,39 @@ Exec_InitETask(struct Task *task, struct ExecBase *SysBase)
     }
     Permit();
     
-    /* Finally if the parent task is an ETask, add myself as its child */
+    /* If the parent task is an ETask, add myself as its child */
     if(et->et_Parent && ((struct Task*) et->et_Parent)->tc_Flags & TF_ETASK)
     {
 	Forbid();
 	ADDHEAD(&GetETask(et->et_Parent)->et_Children, et);
 	Permit();
     }
+
+#if AROS_SMP
+    /* Find a CPU to attach this to */
+    struct ExecCPUInfo *ec;
+    ForeachNode(&PrivExecBase(SysBase)->CPUList, ec) {
+        /* Unused CPU? */
+        if (IsListEmpty(&ec->TaskReady)) {
+            et->et_SysCPU = ec;
+            break;
+        }
+    }
+    if (et->et_SysCPU == NULL) {
+        ULONG i, maxcpus;
+        ListLength(&PrivExecBase(SysBase)->CPUList, maxcpus);
+        /* (semi) randomly pick one */
+        i = (((IPTR)et)>>5) % maxcpus;
+        ForeachNode(&PrivExecBase(SysBase)->CPUList, ec) {
+            if (i == 0)
+                break;
+            i--;
+        }
+    }
+    if (et->et_SysCPU == NULL) {
+        et->et_SysCPU = (struct ExecCPUInfo *)GetHead(&PrivExecBase(SysBase)->CPUList);
+    }
+#endif
 
     return TRUE;
 }
@@ -251,37 +278,76 @@ Exec_ExpungeETask(struct ETask *et, struct ExecBase *SysBase)
 
 BOOL Exec_CheckTask(struct Task *task, struct ExecBase *SysBase)
 {
-    struct Task *t;
-
     if (!task)
 	return FALSE;
 
-    Forbid();
+	return (ScanTasks(SCANTAG_FILTER_TASK, task, TAG_END) == (IPTR)NULL) ? FALSE : TRUE;
+}
 
-    if (task == SysBase->ThisTask)
-    {
-    	Permit();
-    	return TRUE;
+struct Task *Exec_CreateBootTask(CONST_STRPTR name, struct ExecBase *SysBase)
+{
+    struct Task *t;
+    struct MemList *ml;
+    struct ExceptionContext *ctx;
+    int namelen;
+
+    namelen = strlen(name) + 1;
+
+    t   = AllocMem(sizeof(struct Task) + namelen,    MEMF_PUBLIC|MEMF_CLEAR);
+    if (!t)
+        return NULL;
+
+    ml  = AllocMem(sizeof(struct MemList), MEMF_PUBLIC|MEMF_CLEAR);
+    if (!ml) {
+        FreeMem(t, sizeof(*t));
+        return NULL;
     }
 
-    ForeachNode(&SysBase->TaskReady, t)
-    {
-    	if (task == t)
-    	{
-    	    Permit();
-    	    return TRUE;
-    	}
+    ctx = KrnCreateContext();
+    if (!ctx) {
+        FreeMem(t, sizeof(*t));
+        FreeMem(ml, sizeof(*ml));
+        return NULL;
     }
 
-    ForeachNode(&SysBase->TaskWait, t)
+    NEWLIST(&t->tc_MemEntry);
+
+    CopyMem(name, &t[1], namelen);
+    t->tc_Node.ln_Name = (STRPTR)&t[1];
+    t->tc_Node.ln_Type = NT_TASK;
+    t->tc_Node.ln_Pri  = 0;
+    t->tc_State        = TS_RUN;
+    t->tc_SigAlloc     = 0xFFFF;
+
+    /*
+     * Boot-time stack can be placed anywhere in memory.
+     * In order to avoid complex platform-dependent mechanism for querying its limits
+     * we simply shut up stack checking in kernel.resource by specifying the whole address
+     * space as limits.
+     */
+    t->tc_SPLower      = NULL;
+    t->tc_SPUpper      = (APTR)~0;
+
+    /*
+     * Build a memory list for the task.
+     * It doesn't include stack because it wasn't allocated by us.
+     */
+    ml->ml_NumEntries      = 1;
+    ml->ml_ME[0].me_Addr   = t;
+    ml->ml_ME[0].me_Length = sizeof(struct Task) + namelen;
+    AddHead(&t->tc_MemEntry, &ml->ml_Node);
+
+    /* Create a ETask structure and attach CPU context */
+    if (!InitETask(t))
     {
-    	if (task == t)
-    	{
-    	    Permit();
-    	    return TRUE;
-    	}
+        DINIT("Not enough memory for first task");
+        FreeMem(t, sizeof(*t));
+        FreeMem(ml, sizeof(*ml));
+        KrnDeleteContext(ctx);
+        return NULL;
     }
-    
-    Permit();
-    return FALSE;
+
+    t->tc_UnionETask.tc_ETask->et_RegFrame = ctx;
+
+    return t;
 }

@@ -64,7 +64,7 @@
 	    /* Set signal bit. */
 	    ret->mp_SigBit=sb;
 	    /* Set task to send the signal to. */
-	    ret->mp_SigTask=SysBase->ThisTask;
+	    ret->mp_SigTask=THISCPU->ThisTask;
 
 	    /* Now the port is ready for use. */
 	    return ret;

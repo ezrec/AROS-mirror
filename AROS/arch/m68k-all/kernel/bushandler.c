@@ -103,7 +103,7 @@ static void dumpinfo(UWORD mmutype, struct ExecBase *SysBase, ULONG pc)
 
     if (SysBase == NULL)
         return;
-    t = SysBase->ThisTask;
+    t = THISCPU->ThisTask;
     if (t && mmuisvalid(mmutype, t) && (t->tc_Node.ln_Type == NT_TASK || t->tc_Node.ln_Type == NT_PROCESS)) {
         dumpstr(mmutype, "Name: ", t->tc_Node.ln_Name);
         if (t->tc_Node.ln_Type == NT_PROCESS) {
@@ -239,7 +239,7 @@ void bushandler(struct busframe *bf)
 	buf[10] = 0;
 	DebugPutStr(buf);
 	DebugPutStr("    TCB: ");
-	DebugPutHexVal(SysBase ? 0xffffffff : (ULONG)SysBase->ThisTask);
+	DebugPutHexVal(SysBase ? 0xffffffff : (ULONG)THISCPU->ThisTask);
 	DebugPutStr("\n");
 
     dumpline(mmutype, "Data: ", &bf->regs[0]);
