@@ -1,5 +1,8 @@
 handle SIGUSR1 pass noprint nostop
 handle SIGUSR2 pass noprint nostop
+handle SIGCONT pass noprint nostop
+handle SIGSTOP pass noprint nostop
+handle SIGSYS  pass noprint nostop
 set follow-fork-mode child
 
 # This is a bit tricky, because we have several cases,
@@ -117,13 +120,13 @@ document residentlist
 List the system resident list
 end
 
-define taskready
-    _debug_init
-    set $task = (struct Task *)((struct ExecBase *)$AbsExecBase)->TaskReady.lh_Head
-
+define _dump_task_header
     printf "Task     SigWait  SigRecvd StkSize   StkUsed Pri Type Name\n"
     printf "-----------------------------------------------------------------------------\n"
-    while ($task->tc_Node.ln_Succ != 0)
+end
+
+define _dump_task
+    set $task = (struct Task *)$arg0
     printf "%p %p %p %8d %8d %3d  %3ld %s\n", \
         $task, \
         $task->tc_SigWait, \
@@ -133,8 +136,23 @@ define taskready
         $task->tc_Node.ln_Pri, \
         $task->tc_Node.ln_Type, \
         $task->tc_Node.ln_Name
-    set $task = (struct Task *)$task->tc_Node.ln_Succ
+end
+
+define _dump_tasks
+    _debug_init
+
+    _dump_task_header
+    set $task = (struct Task *)$arg0
+    while ($task->tc_Node.ln_Succ != 0)
+        _dump_task $task
+        set $task = (struct Task *)$task->tc_Node.ln_Succ
     end
+end
+
+define taskready
+    _debug_init
+    set $task = (struct Task *)((struct ExecBase *)$AbsExecBase)->TaskReady.lh_Head
+    _dump_tasks $task
 end
 document taskready
 List of tasks currently ready to run
@@ -143,21 +161,7 @@ end
 define taskwait
     _debug_init
     set $task = (struct Task *)((struct ExecBase *)$AbsExecBase)->TaskWait.lh_Head
-
-    printf "Task     SigWait  SigRecvd StkSize   StkUsed Pri Type Name\n"
-    printf "-----------------------------------------------------------------------------\n"
-    while ($task->tc_Node.ln_Succ != 0)
-    printf "%p %p %p %8d %8d %3d  %3ld %s\n", \
-        $task, \
-        $task->tc_SigWait, \
-        $task->tc_SigRecvd, \
-        $task->tc_SPUpper - $task->tc_SPLower, \
-        $task->tc_SPUpper - $task->tc_SPReg, \
-        $task->tc_Node.ln_Pri, \
-        $task->tc_Node.ln_Type, \
-        $task->tc_Node.ln_Name
-    set $task = (struct Task *)$task->tc_Node.ln_Succ
-    end
+    _dump_tasks $task
 end
 document taskwait
 List of tasks currently waiting for an event
@@ -166,20 +170,66 @@ end
 define thistask
     _debug_init
     set $task = (struct Task *)((struct ExecBase *)$AbsExecBase)->ThisTask
-    printf "Task     SigWait  SigRecvd StkSize   StkUsed Pri Type Name\n"
-    printf "-----------------------------------------------------------------------------\n"
-    printf "%p %p %p %8d %8d %3d  %3ld %s\n", \
-    $task, \
-    $task->tc_SigWait, \
-    $task->tc_SigRecvd, \
-    $task->tc_SPUpper - $task->tc_SPLower, \
-    $task->tc_SPUpper - $task->tc_SPReg, \
-    $task->tc_Node.ln_Pri, \
-    $task->tc_Node.ln_Type, \
-    $task->tc_Node.ln_Name
+    _dump_task_header
+    _dump_task $task
 end
 document thistask
 Print out information about the currently running task.
+end
+
+define smp_cpu
+    _debug_init
+    set $cpu = (struct ExecCPUInfo *)((struct IntExecBase *)SysBase)->CPUList.lh_Head
+    while ($cpu->ec_Node.ln_Succ != 0)
+        printf "CPU%d: %p\n", $cpu->ec_CPUNumber, $cpu
+        set $cpu = (struct ExecCPUInfo *)$cpu->ec_Node.ln_Succ
+    end
+end
+document smp_cpu
+List of CPUs available
+end
+
+define smp_taskready
+    _debug_init
+    set $cpu = (struct ExecCPUInfo *)((struct IntExecBase *)SysBase)->CPUList.lh_Head
+    while ($cpu->ec_Node.ln_Succ != 0)
+        printf "CPU%d:\n", $cpu->ec_CPUNumber        
+        set $task = (struct Task *)($cpu->TaskReady.lh_Head)
+        _dump_tasks $task
+        set $cpu = (struct ExecCPUInfo *)$cpu->ec_Node.ln_Succ
+    end
+end
+document smp_taskready
+List of tasks currently ready to run, AROS_SMP mode
+end
+
+define smp_taskwait
+    _debug_init
+    set $cpu = (struct ExecCPUInfo *)((struct IntExecBase *)SysBase)->CPUList.lh_Head
+    while ($cpu->ec_Node.ln_Succ != 0)
+        printf "CPU%d:\n", $cpu->ec_CPUNumber        
+        set $task = (struct Task *)($cpu->TaskWait.lh_Head)
+        _dump_tasks $task
+        set $cpu = (struct ExecCPUInfo *)$cpu->ec_Node.ln_Succ
+    end
+end
+document smp_taskwait
+List of tasks currently waiting for an event, AROS_SMP mode
+end
+
+define smp_thistask
+    _debug_init
+    printf "CPUx "
+    _dump_task_header
+    set $cpu = (struct ExecCPUInfo *)((struct IntExecBase *)SysBase)->CPUList.lh_Head
+    while ($cpu->ec_Node.ln_Succ != 0)
+        printf "CPU%d ", $cpu->ec_CPUNumber
+        _dump_task $cpu->ThisTask
+        set $cpu = (struct ExecCPUInfo *)$cpu->ec_Node.ln_Succ
+    end
+end
+document smp_thistask
+Print out information about the currently running task on all SMP CPUs
 end
 
 define modlist
