@@ -106,7 +106,7 @@ void PrintList (struct List * list)
 #undef STR
 
 /* Macro to get a pointer to the current running task */
-#define THISTASK	(SysCPUBase->ThisTask)
+#define THISTASK	(THISCPU->ThisTask)
 
 /*
     Disable and enable signals. Don't use these in the signal handler
@@ -194,7 +194,7 @@ void Reschedule (struct Task * task)
 	because I have no good way to extend the task structure (I
 	need a variable to store the original prio).
     */
-    AddTail (&SysBase->TaskReady, (struct Node *)task);
+    AddTail (&THISCPU->TaskReady, (struct Node *)task);
 } /* Reschedule */
 
 /* Switch to a new task if the current task is not running and no
@@ -360,7 +360,7 @@ void Dispatch (void)
     }
 
     /* Try to find a task which is ready to run */
-    if ((task = (struct Task *)GetHead (&SysBase->TaskReady)))
+    if ((task = (struct Task *)GetHead (&THISCPU->TaskReady)))
     {
 	printf ("Dispatch: Old = %s (Stack = %lx), new = %s\n",
 	this->tc_Node.ln_Name,
@@ -466,7 +466,7 @@ void AddTask (struct Task * task, STRPTR name, BYTE pri, APTR pc)
     task->tc_SPReg = sp;
 
     /* Add task to queue by priority */
-    Enqueue (&SysBase->TaskReady, (struct Node *)task);
+    Enqueue (&THISCPU->TaskReady, (struct Node *)task);
 } /* AddTask */
 
 /*
@@ -476,8 +476,8 @@ void AddTask (struct Task * task, STRPTR name, BYTE pri, APTR pc)
 int main (int argc, char ** argv)
 {
     /* Init SysBase */
-    NEWLIST (&SysBase->TaskReady);
-    NEWLIST (&SysBase->TaskWait);
+    NEWLIST (&THISCPU->TaskReady);
+    NEWLIST (&THISCPU->TaskWait);
 
     sigfillset(&Kernel_PlatformData.sig_int_mask);
 
@@ -489,7 +489,7 @@ int main (int argc, char ** argv)
     AddTask (&Task1, "Task 1", 0, Main1);
     AddTask (&Task2, "Task 2", 5, Main2);
     AddTask (&Task3, "Task 3", 0, Main2);
-    PrintList (&SysBase->TaskReady);
+    PrintList (&THISCPU->TaskReady);
 
     /*
 	Add main task. Make sure the stack check is ok. This task is *not*

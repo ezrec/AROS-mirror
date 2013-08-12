@@ -35,6 +35,7 @@
 
 #undef timeval
 
+#undef D
 #define D(x)
 #define DSC(x)
 
@@ -105,18 +106,89 @@ static void core_TrapHandler(int sig, regs_t *regs)
 static void core_IRQ(int sig, regs_t *sc)
 {
     struct KernelBase *KernelBase = getKernelBase();
+    struct PlatformData *pd = KernelBase->kb_PlatformData;
+    ULONG cpu = KrnGetCPUNumber();
 
     SUPERVISOR_ENTER;
 
-    /* Just additional protection - what if there's more than 32 signals? */
-    if (sig < IRQ_COUNT)
-	krnRunIRQHandlers(KernelBase, sig);
+#if AROS_SMP
+    D(bug("%s: CPU%d <- Signal %d\n", __func__, cpu, sig));
+    if (cpu == 0) {
+        ULONG i, maxcpu = KrnGetCPUCount();
+
+        if (sig == SIGVTALRM ||
+            sig == SIGALRM ||
+            sig == SIGIO) {
+            /* Pass the timer and IO IRQs to all other CPU threads
+             * via the SIGURG signal
+             */
+            for (i = 1; i < maxcpu; i++) {
+                pd->iface->write(pd->thread[i].signal[1], &sig, sizeof(sig));
+                pd->iface->pthread_kill(pd->thread[i].tid, SIGURG);
+            }
+        }
+    }
+
+    /* If were are in a KrnCli() state, don't process
+     * any signals.
+     */
+    if (pd->thread[cpu].in_cli)
+        goto done;
+
+    if (cpu != 0 && (sig == SIGALRM || sig == SIGVTALRM)) {
+        /* We handle SIGALRM/SIGVTALRM time quantas here
+         * for CPU1...N 
+         */
+        if (THISCPU->Elapsed && (--THISCPU->Elapsed == 0)) {
+            THISCPU->SysFlags    |= SFF_QuantumOver;
+            THISCPU->AttnResched |= ARF_AttnSwitch;
+        }
+        if (THISCPU->Elapsed == 0)
+            THISCPU->Elapsed = THISCPU->Quantum;
+    } else {
+#else
+    if (1) {
+#endif
+        /* Just additional protection - what if there's more than 32 signals? */
+        if (sig < IRQ_COUNT)
+            krnRunIRQHandlers(KernelBase, sig);
+    }
 
     if (UKB(KernelBase)->SupervisorCount == 1)
-	core_ExitInterrupt(sc);
+        core_ExitInterrupt(sc);
 
+done:
     SUPERVISOR_LEAVE;
 }
+
+#if AROS_SMP
+static void core_Thread_SysCall(int sig, regs_t *sc)
+{
+    struct KernelBase *KernelBase = getKernelBase();
+
+    if (THISCPU == NULL)
+        return;
+
+    core_SysCall(SIGUSR1, sc);
+}
+
+static void core_Thread_IRQ(int sig, regs_t *sc)
+{
+    /* This is *only* issued from the parent context
+     */
+    struct KernelBase *KernelBase = getKernelBase();
+    struct PlatformData *pd = KernelBase->kb_PlatformData;
+    unsigned int cpu = KrnGetCPUNumber();
+
+    if (THISCPU == NULL)
+        return;
+
+    while (pd->iface->read(pd->thread[cpu].signal[0], &sig, sizeof(sig)) == sizeof(sig)) {
+        D(bug("%s: CPU%d <- %d\n", __func__, cpu, sig));
+        core_IRQ(sig, sc);
+    }
+}
+#endif
 
 /*
  * This is from sigcore.h - it brings in the definition of the
@@ -126,12 +198,18 @@ static void core_IRQ(int sig, regs_t *sc)
 GLOBAL_SIGNAL_INIT(core_TrapHandler)
 GLOBAL_SIGNAL_INIT(core_SysCall)
 GLOBAL_SIGNAL_INIT(core_IRQ)
+GLOBAL_SIGNAL_INIT(core_Thread_SysCall)
+GLOBAL_SIGNAL_INIT(core_Thread_IRQ)
 
 /* libc functions that we use */
 static const char *kernel_functions[] =
 {
     "raise",
+#if AROS_SMP
+    "pthread_sigmask",
+#else
     "sigprocmask",
+#endif
     "sigsuspend",
     "sigaction",
     "mprotect",
@@ -156,22 +234,32 @@ static const char *kernel_functions[] =
     "sigaddset",
     "sigdelset",
 #endif
+#if AROS_SMP
+    "pthread_create",
+    "pthread_self",
+    "pthread_kill",
+    "pthread_cond_init",
+    "pthread_cond_signal",
+    "pthread_cond_wait",
+    "pthread_mutex_init",
+    "pthread_mutex_lock",
+    "pthread_mutex_unlock",
+    "malloc",
+    "abort",
+    "write",
+    "pipe2",
+#endif
     NULL
 };
 
 /*
- * Our post-SINGLETASK initialization code.
- * At this point we are starting up interrupt subsystem.
  * We have hostlib.resource and can use it in order to pick up all needed host OS functions.
  */
-int core_Start(void *libc)
+int core_Setup(void *libc, void *libpthread)
 {
     struct KernelBase *KernelBase = getKernelBase();
     struct PlatformData *pd = KernelBase->kb_PlatformData;
     APTR HostLibBase;
-    struct sigaction sa = {};
-    const struct SignalTranslation *s;
-    sigset_t tmp_mask;
     ULONG r;
 
     /* We have hostlib.resource. Obtain the complete set of needed functions. */
@@ -191,13 +279,40 @@ int core_Start(void *libc)
 
     if (r)
     {
-    	krnPanic(KernelBase, "Failed to resove %u functions from host libc", r);
-    	return FALSE;
+        int i;
+        krnPanic(KernelBase, "Failed to resove %u functions from host libc, scanning libpthread", r);
+        for (i = 0; kernel_functions[i] != NULL; i++) {
+            if (((void **)(pd->iface))[i] == NULL) {
+                char *err;
+                void *sym;
+                sym = HostLib_GetPointer(libpthread, kernel_functions[i], &err);
+                if (sym == NULL) {
+                    krnPanic(KernelBase, "libpthread: Can't resolve symbol %s: %s\n", kernel_functions[i], err);
+                    return FALSE;
+                }
+                ((void **)(pd->iface))[i] = sym;
+            }
+        }
     }
 
     /* Cache errno pointer, for context switching */
     pd->errnoPtr = pd->iface->__error();
     AROS_HOST_BARRIER
+
+    return TRUE;
+}
+
+/*
+ * Our post-SINGLETASK initialization code.
+ * At this point we are starting up interrupt subsystem.
+ */
+int core_Start(void)
+{
+    struct KernelBase *KernelBase = getKernelBase();
+    struct PlatformData *pd = KernelBase->kb_PlatformData;
+    struct sigaction sa = {};
+    const struct SignalTranslation *s;
+    sigset_t tmp_mask;
 
 #if DEBUG
     /* Pass unhandled exceptions to the debugger, if present */
@@ -265,6 +380,22 @@ int core_Start(void *libc)
     pd->iface->sigaction(SIGUSR1, &sa, NULL);
     AROS_HOST_BARRIER
 
+#if AROS_SMP
+    /* SIGSYS is explicitly sent to the CPU theads to trigger
+     * their core_SysCall
+     */
+    SETHANDLER(sa, core_Thread_SysCall);
+    pd->iface->sigaction(SIGSYS, &sa, NULL);
+    AROS_HOST_BARRIER
+
+    /* SIGSYS is explicitly sent to the CPU theads to trigger
+     * their core_INT
+     */
+    SETHANDLER(sa, core_Thread_IRQ);
+    pd->iface->sigaction(SIGURG, &sa, NULL);
+    AROS_HOST_BARRIER
+#endif
+
     /* We need to start up with disabled interrupts */
     pd->iface->sigprocmask(SIG_BLOCK, &pd->sig_int_mask, NULL);
     AROS_HOST_BARRIER
@@ -294,8 +425,19 @@ int core_Start(void *libc)
  */
 void unix_SysCall(unsigned char n, struct KernelBase *KernelBase)
 {
+    struct PlatformData *pd = KernelBase->kb_PlatformData;
+    ULONG cpu = KrnGetCPUNumber();
     DSC(bug("[KRN] SysCall %d\n", n));
 
-    KernelBase->kb_PlatformData->iface->raise(SIGUSR1);
+#if AROS_SMP
+    if (cpu == 0)
+        pd->iface->raise(SIGUSR1);
+    else {
+        pd->iface->pthread_kill(pd->thread[cpu].tid, SIGSYS);
+    }
+#else
+    pd->iface->raise(SIGUSR1);
+#endif
+
     AROS_HOST_BARRIER
 }

@@ -1,21 +1,20 @@
 /* Things declared here do not depend on host OS includes */
 
+#include <aros/config.h>
+#include <proto/kernel.h>
+
 struct HostInterface;
 
 extern unsigned int SupervisorCount;
 extern struct HostInterface *HostIFace;
 
 unsigned int krnGetPageSize(void *libc);
-int core_Start(void *libc);
+int core_Setup(void *libc, void *libpthread);
+int core_Start(void);
 
-/* Our own add-ons to KernelBase */
-struct UnixKernelBase
-{
-    struct KernelBase kb;
-    unsigned int      SupervisorCount;
-};
+int smp_Start(void);
 
-#define UKB(base) ((struct UnixKernelBase *)base)
+#define UKB(base) (&(base)->kb_PlatformData->thread[KrnGetCPUNumber()])
 
 #ifdef AROS_NO_ATOMIC_OPERATIONS
 
@@ -28,3 +27,4 @@ struct UnixKernelBase
 #define SUPERVISOR_LEAVE AROS_ATOMIC_DEC(UKB(KernelBase)->SupervisorCount)
 
 #endif
+

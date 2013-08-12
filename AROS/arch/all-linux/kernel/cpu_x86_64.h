@@ -100,8 +100,13 @@ struct ucontext;
     On Linux x86-64 signal mask is restored from uc_sigmask field of ucontext
     structure.
 */
+#if AROS_SMP
+#define SC_DISABLE(uc) KrnCli()
+#define SC_ENABLE(uc)  do { } while (0)
+#else
 #define SC_DISABLE(uc) uc->uc_sigmask = KernelBase->kb_PlatformData->sig_int_mask
 #define SC_ENABLE(uc)  pd->iface->SigEmptySet(&uc->uc_sigmask)
+#endif
 
 /*
     The names of the general purpose registers which are to be saved.

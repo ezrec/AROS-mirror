@@ -2,6 +2,9 @@
 #include <sys/types.h>
 #include <signal.h>
 
+#include <aros/config.h>
+#include <utility/hooks.h>
+
 /* Android is not a true Linux ;-) */
 #ifdef HOST_OS_android
 #undef HOST_OS_linux
@@ -9,6 +12,7 @@
 
 #ifdef HOST_OS_linux
 #define LIBC_NAME "libc.so.6"
+#define LIBPTHREAD_NAME "libpthread.so.0"
 #endif
 
 #ifdef HOST_OS_darwin
@@ -43,6 +47,21 @@ struct KernelInterface
     int     (*SigAddSet)(sigset_t *set, int signum);
     int     (*SigDelSet)(sigset_t *set, int signum);
 #endif
+#if AROS_SMP
+    int     (*pthread_create)(pthread_t *thread, const pthread_attr_t *attr,void *(*start_routine) (void *), void *arg);
+    pthread_t (*pthread_self)(void);
+    int     (*pthread_kill)(pthread_t thread, int sig);
+    int     (*pthread_cond_init)(pthread_cond_t *cond, const pthread_condattr_t *attr);
+    int     (*pthread_cond_signal)(pthread_cond_t *cond);
+    int     (*pthread_cond_wait)(pthread_cond_t *cond, pthread_mutex_t *mutex);
+    int     (*pthread_mutex_init)(pthread_mutex_t *mutex, const pthread_mutexattr_t *attr);
+    int     (*pthread_mutex_lock)(pthread_mutex_t *mutex);
+    int     (*pthread_mutex_unlock)(pthread_mutex_t *mutex);
+    void *  (*malloc)(size_t len);
+    void    (*abort)(void);
+    ssize_t (*write)(int fd, const void *buff, size_t count);
+    int     (*pipe2)(int fd[2], int flags);
+#endif
 };
 
 /*
@@ -65,6 +84,19 @@ struct PlatformData
 {
     sigset_t		    sig_int_mask;   /* Mask of signals that Disable() block */
     int			   *errnoPtr;
+    unsigned int         threads;
+    struct KrnUnixThread {
+        pthread_t tid;
+        APTR storage;        /* per-CPU storage */
+        struct Hook *hook;   /* Hook for entry point */
+        APTR message;
+        unsigned int SupervisorCount;
+        int signal[2];
+        BOOL in_cli;
+    } *thread;
+    int cli_thread;
+    pthread_mutex_t cli_mutex;
+    pthread_cond_t  cli_cond;
     struct KernelInterface *iface;
 };
 
@@ -78,3 +110,5 @@ struct SignalTranslation
 extern struct SignalTranslation const sigs[];
 
 void cpu_DispatchContext(struct Task *task, regs_t *regs, struct PlatformData *pdata);
+
+
