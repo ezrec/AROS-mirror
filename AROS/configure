@@ -4713,6 +4713,7 @@ $as_echo "$as_me: WARNING: \"Unknown CPU for host -- $host_cpu\"" >&2;}
                 ;;
             *x86_64*)
                 aros_host_cpu="x86_64"
+                aros_smp="1"
                 ;;
             *m68k*)
                 aros_host_cpu="m68k"

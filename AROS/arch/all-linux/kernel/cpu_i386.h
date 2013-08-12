@@ -106,6 +106,10 @@ typedef struct sigcontext regs_t;
     to store original signal mask. See x86-64 and PPC implementation
     of these macros for examples.
 */
+#if AROS_SMP
+#define SC_DISABLE(uc)  KrnCli()
+#define SC_ENABLE(uc)   do { } while (0)
+#else
 #ifdef HOST_OS_android
 /* In Android's Bionic sigset_t is simply unsigned long */
 #define SC_DISABLE(sc)   ((sc)->oldmask = KernelBase->kb_PlatformData->sig_int_mask)
@@ -113,6 +117,7 @@ typedef struct sigcontext regs_t;
 #define SC_DISABLE(sc)   ((sc)->oldmask = KernelBase->kb_PlatformData->sig_int_mask.__val[0])
 #endif
 #define SC_ENABLE(sc)    ((sc)->oldmask = 0L)
+#endif
 
 /*
     The names of the general purpose registers which are to be saved.

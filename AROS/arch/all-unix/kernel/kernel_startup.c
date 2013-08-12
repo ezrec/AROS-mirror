@@ -21,6 +21,7 @@
 #include "kernel_romtags.h"
 #include "kernel_unix.h"
 
+#undef D
 #define D(x)
 
 /* This macro is defined in both UNIX and AROS headers. Get rid of warnings. */
@@ -52,6 +53,7 @@ int __startup startup(struct TagItem *msg, ULONG magic)
 {
     void* _stack = AROS_GET_SP;
     void *hostlib;
+    void *pthreadlib;
     char *errstr;
     char *cmdline = NULL;
     unsigned int mm_PageSize;
@@ -194,7 +196,28 @@ int __startup startup(struct TagItem *msg, ULONG magic)
 
     /* The following is a typical AROS bootup sequence */
     InitCode(RTF_SINGLETASK, 0);	/* Initialize early modules. This includes hostlib.resource. */
-    core_Start(hostlib);		/* Got hostlib.resource. Initialize our interrupt mechanism. */
+
+#ifdef LIBPTHREAD_NAME
+    pthreadlib = HostIFace->hostlib_Open(LIBPTHREAD_NAME, &errstr);
+    AROS_HOST_BARRIER
+    if (!pthreadlib)
+    {
+        krnPanic(NULL, "Failed to load %s\n%s", LIBPTHREAD_NAME, errstr);
+        return -1;
+    }
+#else
+    pthreadlib = NULL;
+#endif
+
+    /* Got hostlib.resource. */
+    core_Setup(hostlib, pthreadlib);
+
+    /* Initialize our interrupt mechanism. */
+    core_Start();
+
+    /* Initialize and idle 'SMP' threads */
+    smp_Start();
+
     InitCode(RTF_COLDSTART, 0);		/* Boot!						     */
 
     /* If we returned here, something went wrong, and dos.library failed to take over */

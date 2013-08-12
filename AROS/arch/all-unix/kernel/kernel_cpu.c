@@ -38,7 +38,7 @@ static void cpu_Exception(void)
 {
     struct KernelBase *KernelBase = getKernelBase();
     /* Save return context and IDNestCnt on stack */
-    struct Task *task = SysBase->ThisTask;
+    struct Task *task = THISCPU->ThisTask;
     char nestCnt = task->tc_IDNestCnt;
     char save[KernelBase->kb_ContextSize];
     APTR savesp;
@@ -59,7 +59,7 @@ static void cpu_Exception(void)
     task->tc_SPReg = savesp;
 
     /* This tells task switcher that we are returning from the exception */
-    SysBase->ThisTask->tc_State = TS_EXCEPT;
+    THISCPU->ThisTask->tc_State = TS_EXCEPT;
 
     /* System call */
     KernelBase->kb_PlatformData->iface->raise(SIGUSR1);
@@ -69,7 +69,7 @@ static void cpu_Exception(void)
 void cpu_Switch(regs_t *regs)
 {
     struct KernelBase *KernelBase = getKernelBase();
-    struct Task *task = SysCPUBase->ThisTask;
+    struct Task *task = THISCPU->ThisTask;
     struct AROSCPUContext *ctx = task->tc_UnionETask.tc_ETask->et_RegFrame;
 
     D(bug("[KRN] cpu_Switch(), task %p (%s)\n", task, task->tc_Node.ln_Name));
@@ -87,17 +87,26 @@ void cpu_Dispatch(regs_t *regs)
     struct PlatformData *pd = KernelBase->kb_PlatformData;
     struct Task *task;
     sigset_t sigs;
+#if AROS_SMP
+    unsigned int cpu = KrnGetCPUNumber();
+#else
+    unsigned int cpu = 0;
+#endif
 
     /* This macro relies on 'pd' being present */
     SIGEMPTYSET(&sigs);
 
     while (!(task = core_Dispatch()))
     {
+#if AROS_SMP
+        /* If we own the CLI lock, release it */
+        KrnSti();
+#endif
         /* Sleep almost forever ;) */
         KernelBase->kb_PlatformData->iface->sigsuspend(&sigs);
         AROS_HOST_BARRIER
 
-        if (SysBase->SysFlags & SFF_SoftInt)
+        if (cpu == 0 && (SysBase->SysFlags & SFF_SoftInt))
             core_Cause(INTB_SOFTINT, 1L << INTB_SOFTINT);
     }
 
@@ -130,10 +139,12 @@ void cpu_DispatchContext(struct Task *task, regs_t *regs, struct PlatformData *p
      */
     if (SysBase->IDNestCnt < 0)
     {
+        D(bug("CPU%d: %p: Enabled\n", KrnGetCPUNumber(), THISCPU->ThisTask));
         SC_ENABLE(regs);
     }
     else
     {
+        D(bug("CPU%d: %p: Disabled\n", KrnGetCPUNumber(), THISCPU->ThisTask));
         SC_DISABLE(regs);
     }
 }
