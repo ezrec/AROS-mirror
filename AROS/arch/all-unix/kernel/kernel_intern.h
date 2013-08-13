@@ -52,13 +52,12 @@ struct KernelInterface
     pthread_t (*pthread_self)(void);
     int     (*pthread_kill)(pthread_t thread, int sig);
     int     (*pthread_cond_init)(pthread_cond_t *cond, const pthread_condattr_t *attr);
+    int     (*pthread_cond_broadcast)(pthread_cond_t *cond);
     int     (*pthread_cond_signal)(pthread_cond_t *cond);
     int     (*pthread_cond_wait)(pthread_cond_t *cond, pthread_mutex_t *mutex);
     int     (*pthread_mutex_init)(pthread_mutex_t *mutex, const pthread_mutexattr_t *attr);
     int     (*pthread_mutex_lock)(pthread_mutex_t *mutex);
     int     (*pthread_mutex_unlock)(pthread_mutex_t *mutex);
-    void *  (*malloc)(size_t len);
-    void    (*abort)(void);
     ssize_t (*write)(int fd, const void *buff, size_t count);
     int     (*pipe2)(int fd[2], int flags);
 #endif

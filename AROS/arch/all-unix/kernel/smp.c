@@ -47,30 +47,6 @@ static void *smp_entry(void *threadp)
 
     return (void *)res;
 }
-
-/* Unix __thread implementations (at least on Linux) require a
- * malloc() and abort().
- *
- * Provide them.
- */
-void *malloc(size_t size)
-{
-    struct KernelBase *KernelBase = getKernelBase();
-    struct PlatformData *pd = KernelBase->kb_PlatformData;
-    struct KernelInterface *iface = pd->iface;
-
-    return iface->malloc(size);
-}
-
-__attribute__((__noreturn__)) void abort(void)
-{
-    struct KernelBase *KernelBase = getKernelBase();
-    struct PlatformData *pd = KernelBase->kb_PlatformData;
-    struct KernelInterface *iface = pd->iface;
-
-    iface->abort();
-    for (;;);
-}
 #endif
 
 int smp_Start(void)
