@@ -279,7 +279,7 @@ int core_Setup(void *libc, void *libpthread)
     if (r)
     {
         int i;
-        krnPanic(KernelBase, "Failed to resove %u functions from host libc, scanning libpthread", r);
+        krnPanic(KernelBase, "Failed to reslove %u functions from host libc, scanning libpthread", r);
         for (i = 0; kernel_functions[i] != NULL; i++) {
             if (((void **)(pd->iface))[i] == NULL) {
                 char *err;
