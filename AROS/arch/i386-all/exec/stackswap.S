@@ -55,7 +55,12 @@ AROS_SLIB_ENTRY(StackSwap,Exec,122):
 	call	*Disable(%eax)
 
 	/* FindTask(NULL) in %edx */
-	movl	ThisTask(%eax), %edx
+	pushl	%eax		// preserve SysBase
+	pushl	$0		// FindTask(NULL)
+	call	*FindTask(%eax)
+	movl	%eax, %edx	// result into %edx
+	addl	$4, %esp	// advance stack pointer
+	popl	%eax		// restore SysBase
 
 	/* Swap Lower boundaries, %ecx is used as temp register */
 	movl    tc_SPLower(%edx), %ecx
