@@ -182,6 +182,7 @@ Exec_InitETask(struct Task *task, struct ExecBase *SysBase)
                 break;
             i--;
         }
+        et->et_SysCPU = ec;
     }
     if (et->et_SysCPU == NULL) {
         et->et_SysCPU = (struct ExecCPUInfo *)GetHead(&PrivExecBase(SysBase)->CPUList);
