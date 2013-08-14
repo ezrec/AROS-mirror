@@ -78,11 +78,10 @@
 
 #if AROS_SMP
     if (KernelBase)
-        KrnScheduling(FALSE);
+        KrnScheduling(1);
 #else
-#error 1
-#endif
     AROS_ATOMIC_INC(SysBase->TDNestCnt);
+#endif
 
     AROS_LIBFUNC_EXIT
 } /* Forbid() */

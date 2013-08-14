@@ -102,7 +102,7 @@ struct Task *core_Dispatch(void)
 {
     struct Task *task;
 
-    D(bug("[KRN] core_Dispatch()\n"));
+    D(bug("[KRN] core_Dispatch() on CPU%d\n", THISCPU->ec_CPUNumber));
 
     task = (struct Task *)REMHEAD(&THISCPU->TaskReady);
     if (!task)
