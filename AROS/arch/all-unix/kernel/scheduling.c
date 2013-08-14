@@ -5,7 +5,7 @@
     Desc:
 */
 
-#define DEBUG 0
+#define DEBUG 1
 
 #include <aros/atomic.h>
 #include <aros/debug.h>
@@ -76,7 +76,7 @@ bug("[KRN] KrnScheduling(%d) --> SysBase->TDNestCnt = %d\n", trigger, SysBase->T
             asm volatile ("int3");
         }
         D(bug("CPU%d: Forbidden\n", thiscpu));
-    } else if (pd->forbid_cpu != -1) {
+    } else if (SysBase->TDNestCnt < 0 && pd->forbid_cpu != -1) {
         /* Permit semantics:
          *  - Start all other CPUs
          *  - Enable task switching
