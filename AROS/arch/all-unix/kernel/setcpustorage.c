@@ -24,12 +24,12 @@ AROS_LH1(BOOL, KrnSetCPUStorage,
     bug("CPU%d: Set CPU Storage: %p\n", KrnGetCPUNumber(), value);
     struct PlatformData *pd = KernelBase->kb_PlatformData;
 
-    if (pd->iface)
-        pd->thread[KrnGetCPUNumber()].storage = value;
-    else
-        pd->thread[0].storage = value;
-
-    return TRUE;
+    if (pd->iface && pd->thread) {
+        pd->iface->pthread_setspecific(pd->key_storage, value);
+        return TRUE;
+    } else {
+        return FALSE;
+    }
 
     AROS_LIBFUNC_EXIT
 }
