@@ -167,7 +167,7 @@ Exec_InitETask(struct Task *task, struct ExecBase *SysBase)
     struct ExecCPUInfo *ec;
     ForeachNode(&PrivExecBase(SysBase)->CPUList, ec) {
         /* Unused CPU? */
-        if (IsListEmpty(&ec->TaskReady)) {
+        if (IsListEmpty(&ec->TaskReady) && IsListEmpty(&ec->TaskWait)) {
             et->et_SysCPU = ec;
             break;
         }
