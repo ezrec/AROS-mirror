@@ -58,6 +58,9 @@ struct KernelInterface
     int     (*pthread_mutex_init)(pthread_mutex_t *mutex, const pthread_mutexattr_t *attr);
     int     (*pthread_mutex_lock)(pthread_mutex_t *mutex);
     int     (*pthread_mutex_unlock)(pthread_mutex_t *mutex);
+    int     (*pthread_key_create)(pthread_key_t *key, void (*destructor)(void *));
+    int     (*pthread_setspecific)(pthread_key_t key, const void *value);
+    void *  (*pthread_getspecific)(pthread_key_t key);
     ssize_t (*write)(int fd, const void *buff, size_t count);
     int     (*pipe2)(int fd[2], int flags);
 #endif
@@ -96,6 +99,8 @@ struct PlatformData
     int cli_thread;
     pthread_mutex_t cli_mutex;
     pthread_cond_t  cli_cond;
+    pthread_key_t key_cpu;
+    pthread_key_t key_storage;
     struct KernelInterface *iface;
 };
 

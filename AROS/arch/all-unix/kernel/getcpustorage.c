@@ -20,13 +20,13 @@ AROS_LH0(APTR, KrnGetCPUStorage,
 {
     AROS_LIBFUNC_INIT
     struct PlatformData *pd = KernelBase->kb_PlatformData;
+    void *storage = NULL;
 
     if (pd->iface && pd->thread) {
-        return pd->thread[KrnGetCPUNumber()].storage;
-    } else {
-        bug("CPUx: Can't CPU Storage, hostlib interface not set up yet\n");
-        return NULL;
+        storage = pd->iface->pthread_getspecific(pd->key_storage);
     }
+
+    return storage;
 
     AROS_LIBFUNC_EXIT
 }
