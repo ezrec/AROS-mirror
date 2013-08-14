@@ -36,6 +36,11 @@ AROS_LH1(void, KrnScheduling,
     else if (trigger < 0)
         AROS_ATOMIC_DEC(SysBase->TDNestCnt);
 
+    if (trigger > 0 && SysBase->TDNestCnt == -128)
+	bug("[KRN] D-A-M-N-! TDNestCnt wrapped while increasing!\n");
+    if (trigger < 0 && SysBase->TDNestCnt == 127)
+        bug("[KRN] D-A-M-N-! TDNestCnt wrapped while decreasing!\n");
+
     D(bug("[KRN] KrnScheduling(%d) --> SysBase->TDNestCnt = %d\n", trigger, SysBase->TDNestCnt));
 
     if (SysBase->TDNestCnt >= 0 && pd->forbid_cpu != thiscpu) {
