@@ -5,7 +5,7 @@
     Desc:
 */
 
-#define DEBUG 1
+#define DEBUG 0
 
 #include <aros/atomic.h>
 #include <aros/debug.h>
@@ -36,7 +36,7 @@ AROS_LH1(void, KrnScheduling,
     else if (trigger < 0)
         AROS_ATOMIC_DEC(SysBase->TDNestCnt);
 
-bug("[KRN] KrnScheduling(%d) --> SysBase->TDNestCnt = %d\n", trigger, SysBase->TDNestCnt);
+    D(bug("[KRN] KrnScheduling(%d) --> SysBase->TDNestCnt = %d\n", trigger, SysBase->TDNestCnt));
 
     if (SysBase->TDNestCnt >= 0 && pd->forbid_cpu != thiscpu) {
         /* Forbid semantics:
