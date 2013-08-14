@@ -92,7 +92,7 @@
         Enqueue(&GetESysCPU(task)->TaskReady,&task->tc_Node);
 
         /* Has it a higher priority as the current one? */
-        if (task->tc_Node.ln_Pri > GetESysCPU(task)->ThisTask->tc_Node.ln_Pri)
+        if (GetESysCPU(task)->ThisTask && task->tc_Node.ln_Pri > GetESysCPU(task)->ThisTask->tc_Node.ln_Pri)
         {
             /*
                 Yes. A taskswitch is necessary. Prepare one if possible.
