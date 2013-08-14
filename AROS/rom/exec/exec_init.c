@@ -103,8 +103,6 @@ static AROS_UFH3(IPTR, SMPHookEntry,
 
     KrnSetCPUStorage(ec);
 
-    Enable();
-
     /* We now wait forever */
     for (;;) {
         Wait(SIGF_SINGLE);
