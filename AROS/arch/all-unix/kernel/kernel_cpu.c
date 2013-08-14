@@ -3,6 +3,9 @@
     $Id$
 */
 
+#define DEBUG 0
+
+#include <aros/debug.h>
 #include <exec/alerts.h>
 #include <exec/execbase.h>
 #include <hardware/intbits.h>
@@ -16,8 +19,6 @@
 #include "kernel_intern.h"
 #include "kernel_intr.h"
 #include "kernel_scheduler.h"
-
-#define D(x)
 
 /*
  * Task exception handler.
@@ -81,6 +82,65 @@ void cpu_Switch(regs_t *regs)
     core_Switch();
 }
 
+static void thread_Suspend(struct KernelBase *KernelBase)
+{
+    struct PlatformData *pd = KernelBase->kb_PlatformData;
+    struct KrnUnixThread *thread;
+    unsigned int thiscpu = KrnGetCPUNumber();
+
+    thread = &pd->thread[thiscpu];
+
+    pd->iface->pthread_mutex_lock(&pd->forbid_mutex);
+    while (pd->forbid_cpu >= 0 && pd->forbid_cpu != thiscpu) {
+
+        bug("CPU%d: Suspending by request from %d\n", thiscpu, pd->forbid_cpu);
+
+        /* Let the forbid holder know we're alseep */
+        thread->state = STATE_STOPPED;
+        bug("CPU%d: Stopped...\n", thiscpu);
+        pd->iface->pthread_cond_broadcast(&thread->state_cond);
+        
+       /* Wait to be awoken */
+        while (thread->state == STATE_STOPPED) {
+            pd->iface->pthread_cond_wait(&thread->state_cond, &pd->forbid_mutex);
+        }
+        bug("CPU%d: Continuing...\n", thiscpu);
+
+    }
+    pd->iface->pthread_mutex_unlock(&pd->forbid_mutex);
+}
+
+static void thread_BreakForbid(struct KernelBase *KernelBase)
+{
+    struct PlatformData *pd = KernelBase->kb_PlatformData;
+    struct KrnUnixThread *thread;
+    unsigned int thiscpu = KrnGetCPUNumber();
+
+    thread = &pd->thread[thiscpu];
+
+    pd->iface->pthread_mutex_lock(&pd->forbid_mutex);
+    if (pd->forbid_cpu == thiscpu) {
+        /* Break forbid */
+        int cpu;
+        
+        do {
+            cpu = (thiscpu + 1) % pd->threads;
+            if (pd->thread[cpu].state == STATE_STOPPED)
+                break;
+        } while (cpu != thiscpu);
+
+        if (cpu != thiscpu) {
+            D(bug("CPU%d: Passing Forbid token to CPU%d\n", thiscpu, cpu));
+            thread->state = STATE_STOPPED;
+            pd->forbid_cpu = cpu;
+            pd->thread[cpu].state = STATE_RUNNING;
+            pd->iface->pthread_cond_broadcast(&pd->thread[cpu].state_cond);
+        }
+    }
+    pd->iface->pthread_mutex_unlock(&pd->forbid_mutex);
+
+}
+
 void cpu_Dispatch(regs_t *regs)
 {
     struct KernelBase *KernelBase = getKernelBase();
@@ -96,18 +156,26 @@ void cpu_Dispatch(regs_t *regs)
     /* This macro relies on 'pd' being present */
     SIGEMPTYSET(&sigs);
 
+    /* If IRQs are disabled, re-enable */
+    if (cpu == 0 && !pd->irq_enable) {
+        pd->irq_enable = TRUE;
+    }
+
+     /* If scheduling is disabled, suspend */
+    thread_Suspend(KernelBase);
     while (!(task = core_Dispatch()))
     {
-#if AROS_SMP
-        /* If we own the CLI lock, release it */
-        KrnSti();
-#endif
         /* Sleep almost forever ;) */
-        KernelBase->kb_PlatformData->iface->sigsuspend(&sigs);
-        AROS_HOST_BARRIER
+        if (cpu == 0) {
+            KernelBase->kb_PlatformData->iface->sigsuspend(&sigs);
+            AROS_HOST_BARRIER
 
-        if (cpu == 0 && (SysBase->SysFlags & SFF_SoftInt))
-            core_Cause(INTB_SOFTINT, 1L << INTB_SOFTINT);
+            if ((SysBase->SysFlags & SFF_SoftInt))
+                core_Cause(INTB_SOFTINT, 1L << INTB_SOFTINT);
+        }
+
+        thread_BreakForbid(KernelBase);
+        thread_Suspend(KernelBase);
     }
 
     D(bug("[KRN] cpu_Dispatch(), task %p (%s)\n", task, task->tc_Node.ln_Name));

@@ -70,12 +70,15 @@ void core_SysCall(int sig, regs_t *regs)
 {
     struct KernelBase *KernelBase = getKernelBase();
     struct Task *task = THISCPU->ThisTask;
+    UBYTE state;
 
     SUPERVISOR_ENTER;
 
     krnRunIRQHandlers(KernelBase, sig);
 
-    switch(task->tc_State)
+    state = task ? task->tc_State : TS_REMOVED;
+
+    switch(state)
     {
     /* A running task needs to be put into TaskReady list first. It's SC_SCHEDULE. */
     case TS_RUN:

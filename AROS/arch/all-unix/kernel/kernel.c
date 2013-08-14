@@ -111,8 +111,13 @@ static void core_IRQ(int sig, regs_t *sc)
 
     SUPERVISOR_ENTER;
 
-#if AROS_SMP
     D(bug("%s: CPU%d <- Signal %d\n", __func__, cpu, sig));
+
+    if (pd->forbid_cpu != -1) {
+        if (sig == SIGVTALRM || sig == SIGALRM)
+            return;
+    }
+
     if (cpu == 0) {
         ULONG i, maxcpu = KrnGetCPUCount();
 
@@ -129,12 +134,6 @@ static void core_IRQ(int sig, regs_t *sc)
         }
     }
 
-    /* If were are in a KrnCli() state, don't process
-     * any signals.
-     */
-    if (pd->thread[cpu].in_cli)
-        goto done;
-
     if (cpu != 0 && (sig == SIGALRM || sig == SIGVTALRM)) {
         /* We handle SIGALRM/SIGVTALRM time quantas here
          * for CPU1...N 
@@ -146,9 +145,6 @@ static void core_IRQ(int sig, regs_t *sc)
         if (THISCPU->Elapsed == 0)
             THISCPU->Elapsed = THISCPU->Quantum;
     } else {
-#else
-    if (1) {
-#endif
         /* Just additional protection - what if there's more than 32 signals? */
         if (sig < IRQ_COUNT)
             krnRunIRQHandlers(KernelBase, sig);
@@ -157,7 +153,6 @@ static void core_IRQ(int sig, regs_t *sc)
     if (UKB(KernelBase)->SupervisorCount == 1)
         core_ExitInterrupt(sc);
 
-done:
     SUPERVISOR_LEAVE;
 }
 
@@ -182,6 +177,18 @@ static void core_Thread_IRQ(int sig, regs_t *sc)
 
     if (THISCPU == NULL)
         return;
+
+    if (cpu == 0) {
+        sigset_t sigs;
+        SIGFILLSET(&sigs);
+        SIGDELSET(&sigs, SIGURG);
+        /* Actually reflects a change in IRQ status... */
+        while (pd->irq_enable == FALSE) {
+            /* Wait for a SIGURG when pd->irq_enable == TRUE */
+            pd->iface->sigsuspend(&sigs);
+        }
+        return;
+    }
 
     while (pd->iface->read(pd->thread[cpu].signal[0], &sig, sizeof(sig)) == sizeof(sig)) {
         D(bug("%s: CPU%d <- %d\n", __func__, cpu, sig));
@@ -226,9 +233,8 @@ static const char *kernel_functions[] =
     "__error",
 #endif
 #endif
-#ifdef HOST_OS_android
     "sigwait",
-#else
+#ifndef HOST_OS_android
     "sigemptyset",
     "sigfillset",
     "sigaddset",
@@ -245,6 +251,9 @@ static const char *kernel_functions[] =
     "pthread_mutex_init",
     "pthread_mutex_lock",
     "pthread_mutex_unlock",
+    "pthread_key_create",
+    "pthread_setspecific",
+    "pthread_getspecific",
     "write",
     "pipe2",
 #endif
@@ -379,7 +388,6 @@ int core_Start(void)
     pd->iface->sigaction(SIGUSR1, &sa, NULL);
     AROS_HOST_BARRIER
 
-#if AROS_SMP
     /* SIGSYS is explicitly sent to the CPU theads to trigger
      * their core_SysCall
      */
@@ -387,13 +395,12 @@ int core_Start(void)
     pd->iface->sigaction(SIGSYS, &sa, NULL);
     AROS_HOST_BARRIER
 
-    /* SIGSYS is explicitly sent to the CPU theads to trigger
+    /* SIGURG is explicitly sent to the CPU theads to trigger
      * their core_INT
      */
     SETHANDLER(sa, core_Thread_IRQ);
     pd->iface->sigaction(SIGURG, &sa, NULL);
     AROS_HOST_BARRIER
-#endif
 
     /* We need to start up with disabled interrupts */
     pd->iface->sigprocmask(SIG_BLOCK, &pd->sig_int_mask, NULL);
@@ -410,6 +417,8 @@ int core_Start(void)
     SIGADDSET(&tmp_mask, SIGUSR2);
     pd->iface->sigprocmask(SIG_UNBLOCK, &tmp_mask, NULL);
     AROS_HOST_BARRIER
+
+    pd->irq_enable = TRUE;
 
     return TRUE;
 }

@@ -39,9 +39,8 @@ struct KernelInterface
     void *  (*mmap)(void *addr, size_t length, int prot, int flags, int fd, off_t offset);
     int     (*munmap)(void *addr, size_t length);
     int    *(*__error)(void);
-#ifdef HOST_OS_android
     int     (*sigwait)(const sigset_t *restrict set, int *restrict sig);
-#else
+#ifndef HOST_OS_android
     int     (*SigEmptySet)(sigset_t *set);
     int     (*SigFillSet)(sigset_t *set);
     int     (*SigAddSet)(sigset_t *set, int signum);
@@ -84,9 +83,10 @@ struct KernelInterface
 
 struct PlatformData
 {
-    sigset_t		    sig_int_mask;   /* Mask of signals that Disable() block */
     int			   *errnoPtr;
     unsigned int         threads;
+    sigset_t sig_int_mask;
+    BOOL irq_enable;
     struct KrnUnixThread {
         pthread_t tid;
         APTR storage;        /* per-CPU storage */
@@ -94,11 +94,11 @@ struct PlatformData
         APTR message;
         unsigned int SupervisorCount;
         int signal[2];
-        BOOL in_cli;
+        enum { STATE_STOPPED = 0, STATE_IDLE = -1, STATE_RUNNING = 1 } state;
+        pthread_cond_t state_cond;
     } *thread;
-    int cli_thread;
-    pthread_mutex_t cli_mutex;
-    pthread_cond_t  cli_cond;
+    pthread_mutex_t forbid_mutex;
+    int forbid_cpu;
     pthread_key_t key_cpu;
     pthread_key_t key_storage;
     struct KernelInterface *iface;

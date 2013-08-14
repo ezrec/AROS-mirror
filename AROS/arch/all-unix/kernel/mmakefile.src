@@ -11,7 +11,8 @@ USER_CFLAGS := $(PRIV_KERNEL_INCLUDES) \
 
 FUNCS := cause cli issuper kernel_debug maygetchar sti setprotection \
 	 obtaininput releaseinput getpagesize allockernelbase \
-	 getcpucount getcpunumber smp setcpuentry getcpustorage setcpustorage
+	 getcpucount getcpunumber smp setcpuentry getcpustorage setcpustorage \
+	 scheduling
 FILES := kernel_startup kernel kernel_cpu kernel_intr cpu_$(CPU)
 
 %build_archspecific \

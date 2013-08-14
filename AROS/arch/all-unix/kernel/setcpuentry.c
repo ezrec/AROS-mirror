@@ -35,6 +35,13 @@ AROS_LH3(BOOL, KrnSetCPUEntry,
     pd->thread[cpu].message = message;
     pd->thread[cpu].hook = hook;
 
+    /* Wait for startup acknowlege */
+    pd->iface->pthread_mutex_lock(&pd->forbid_mutex);
+    while (pd->thread[cpu].hook && pd->thread[cpu].state == STATE_IDLE) {
+        pd->iface->pthread_cond_wait(&pd->thread[cpu].state_cond, &pd->forbid_mutex);
+    }
+    pd->iface->pthread_mutex_unlock(&pd->forbid_mutex);
+
     return TRUE;
 
     AROS_LIBFUNC_EXIT
