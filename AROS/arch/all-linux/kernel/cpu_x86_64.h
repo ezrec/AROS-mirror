@@ -101,8 +101,8 @@ struct ucontext;
     structure.
 */
 #if AROS_SMP
-#define SC_DISABLE(uc) KrnCli()
-#define SC_ENABLE(uc)  do { } while (0)
+#define SC_DISABLE(uc) KrnCli();
+#define SC_ENABLE(uc)  KrnSti();
 #else
 #define SC_DISABLE(uc) uc->uc_sigmask = KernelBase->kb_PlatformData->sig_int_mask
 #define SC_ENABLE(uc)  pd->iface->SigEmptySet(&uc->uc_sigmask)

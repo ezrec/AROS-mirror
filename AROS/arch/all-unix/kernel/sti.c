@@ -18,30 +18,9 @@ AROS_LH0(void, KrnSti,
     {
         if (pd->iface)
         {
-#if AROS_SMP
-            unsigned int thiscpu = KrnGetCPUNumber();
-            D(bug("CPU%d: STI\n", thiscpu));
-            pd->iface->pthread_mutex_lock(&pd->cli_mutex);
-            if (pd->cli_thread == -1) {
-                /* Nothing to do */
-            } else {
-                if (pd->cli_thread != thiscpu) {
-                    /* Wait for the other CPU to release its Disable */
-                    while (pd->cli_thread != -1) {
-                        D(bug("CPU%d: STI: Waiting for CPU%d\n", thiscpu, pd->cli_thread));
-                        pd->iface->pthread_cond_wait(&pd->cli_cond, &pd->cli_mutex);
-                    }
-                } else {
-                    /* Start all other threads */
-                    pd->cli_thread = -1;
-                    pd->thread[thiscpu].in_cli = FALSE;
-                    pd->iface->pthread_cond_signal(&pd->cli_cond);
-                }
-            }
-            pd->iface->pthread_mutex_unlock(&pd->cli_mutex);
-#else
-            pd->iface->sigprocmask(SIG_UNBLOCK, &pd->sig_int_mask, NULL);
-#endif
+            KrnScheduling(TRUE);
+            pd->irq_enable = TRUE;
+            pd->iface->pthread_kill(pd->thread[0].tid, SIGURG);
             AROS_HOST_BARRIER
         }
     }
