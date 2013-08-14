@@ -16,13 +16,12 @@
 #include "kernel_globals.h"
 #include "kernel_unix.h"
 
-#if AROS_SMP
 static void *smp_entry(void *threadp)
 {
     struct KernelBase *KernelBase = getKernelBase();
     struct PlatformData *pd = KernelBase->kb_PlatformData;
     struct KrnUnixThread *thread = threadp;
-    ULONG cpu;
+    unsigned int cpu;
     IPTR res;
     sigset_t newset;
 
@@ -30,28 +29,43 @@ static void *smp_entry(void *threadp)
      */
     cpu = thread - &pd->thread[0];
     bug("CPU%d: Kernel IPI\n", cpu);
+    pd->iface->pthread_setspecific(pd->key_cpu, &cpu);
 
     /* SIGSYS and SIGURG for threads */
     SIGFILLSET(&newset);
     SIGDELSET(&newset, SIGSYS);     /* SysCall-stype */
     SIGDELSET(&newset, SIGURG);     /* IRQ-style */
-    SIGDELSET(&newset, SIGSTOP);    /* Disable() */
+    SIGDELSET(&newset, SIGTSTP);    /* Disable() */
     SIGDELSET(&newset, SIGCONT);    /* Enable() */
     pd->iface->sigprocmask(SIG_SETMASK, &newset, NULL);
-   
+
     do {
+        /* Acknowledge that we are ready to go */
+        pd->iface->pthread_mutex_lock(&pd->forbid_mutex);
+        thread->state = STATE_IDLE;
+        pd->iface->pthread_cond_broadcast(&thread->state_cond);
+        pd->iface->pthread_mutex_unlock(&pd->forbid_mutex);
+
+        bug("CPU%d: Idle\n", cpu);
         while (thread->hook == NULL);
+
+        /* Notify that we are running */
+        pd->iface->pthread_mutex_lock(&pd->forbid_mutex);
+        thread->state = STATE_RUNNING;
+        pd->iface->pthread_cond_broadcast(&thread->state_cond);
+        pd->iface->pthread_mutex_unlock(&pd->forbid_mutex);
+
+        bug("CPU%d: Running hook %p\n", cpu, thread->hook);
         res = CALLHOOKPKT(thread->hook, &cpu, thread->message);
+
         thread->hook = NULL;
     } while (res == 0);
 
     return (void *)res;
 }
-#endif
 
 int smp_Start(void)
 {
-#if AROS_SMP
     struct KernelBase *KernelBase = getKernelBase();
     struct PlatformData *pd = KernelBase->kb_PlatformData;
     struct KernelInterface *iface = pd->iface;
@@ -77,8 +91,14 @@ int smp_Start(void)
 
     iface->sigprocmask(SIG_SETMASK, &newset, NULL);
 
-    pd->iface->pthread_mutex_init(&pd->cli_mutex, NULL);
-    pd->iface->pthread_cond_init(&pd->cli_cond, NULL);
+    pd->forbid_cpu = -1;
+    pd->iface->pthread_mutex_init(&pd->forbid_mutex, NULL);
+
+    pd->iface->pthread_key_create(&pd->key_cpu, NULL);
+    pd->iface->pthread_key_create(&pd->key_storage, NULL);
+
+    SIGEMPTYSET(&newset);
+    SIGADDSET(&newset, SIGCONT);
 
     /* Start all new threads - they will wait for their KrnUnixTLS->CPUId to
      * be non-zero
@@ -86,19 +106,27 @@ int smp_Start(void)
     pd->thread[0].tid = iface->pthread_self();
     for (cpu = 1; cpu < pd->threads; cpu++) {
         int err;
+        struct KrnUnixThread *thread = &pd->thread[cpu];
 #ifdef HOST_OS_linux
 #define O_NONBLOCK 04000
 #endif
-        pd->iface->pipe2(pd->thread[cpu].signal, O_NONBLOCK );
-        err = iface->pthread_create(&pd->thread[cpu].tid, NULL, smp_entry, &pd->thread[cpu]);
+        thread->state = STATE_STOPPED;
+        pd->iface->pthread_cond_init(&thread->state_cond, NULL);
+        pd->iface->pipe2(thread->signal, O_NONBLOCK );
+        err = iface->pthread_create(&thread->tid, NULL, smp_entry, &pd->thread[cpu]);
         if (err) {
             D(bug("CPU%d: Could not start\n", cpu));
         }
+        /* Wait for startup acknowlege */
+        pd->iface->pthread_mutex_lock(&pd->forbid_mutex);
+        while (thread->state != STATE_IDLE) {
+            pd->iface->pthread_cond_wait(&thread->state_cond, &pd->forbid_mutex);
+        }
+        pd->iface->pthread_mutex_unlock(&pd->forbid_mutex);
     }
     
     /* Restore the signal set for the boot thread */
     iface->sigprocmask(SIG_SETMASK, &oldset, NULL);
-#endif
     return 0;
 }
 
