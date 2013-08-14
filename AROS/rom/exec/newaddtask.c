@@ -198,7 +198,7 @@
 
     Enable();
 
-    DADDTASK("Added task 0x%p", task);
+    DADDTASK("Added task 0x%p on CPU%d", task, GetESysCPU(task)->ec_CPUNumber);
     return task;
 
     AROS_LIBFUNC_EXIT
