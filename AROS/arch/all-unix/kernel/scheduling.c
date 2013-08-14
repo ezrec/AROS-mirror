@@ -7,6 +7,7 @@
 
 #define DEBUG 0
 
+#include <aros/atomic.h>
 #include <aros/debug.h>
 #include <aros/kernel.h>
 #include <aros/libcall.h>
@@ -17,7 +18,7 @@
 #include "kernel_intern.h"
 
 AROS_LH1(void, KrnScheduling,
-    AROS_LHA(BOOL, enabled, D0),
+    AROS_LHA(BYTE, trigger, D0),
     struct KernelBase *, KernelBase, 43, Kernel)
 {
     AROS_LIBFUNC_INIT
@@ -28,12 +29,20 @@ AROS_LH1(void, KrnScheduling,
     if (pd->iface == NULL || pd->thread == NULL)
         return;
 
-    if (!enabled) {
+    pd->iface->pthread_mutex_lock(&pd->forbid_mutex);
+
+    if (trigger > 0)
+        AROS_ATOMIC_INC(SysBase->TDNestCnt);
+    else if (trigger < 0)
+        AROS_ATOMIC_DEC(SysBase->TDNestCnt);
+
+bug("[KRN] KrnScheduling(%d) --> SysBase->TDNestCnt = %d\n", trigger, SysBase->TDNestCnt);
+
+    if (SysBase->TDNestCnt >= 0 && pd->forbid_cpu != thiscpu) {
         /* Forbid semantics:
          *  - Stop task switching on this CPU
          *  - Stop all other CPUs
          */
-        pd->iface->pthread_mutex_lock(&pd->forbid_mutex);
 
         while (pd->forbid_cpu >= 0 && pd->forbid_cpu != thiscpu) {
             struct KrnUnixThread *thread = &pd->thread[thiscpu];
@@ -67,13 +76,11 @@ AROS_LH1(void, KrnScheduling,
             asm volatile ("int3");
         }
         D(bug("CPU%d: Forbidden\n", thiscpu));
-        pd->iface->pthread_mutex_unlock(&pd->forbid_mutex);
-    } else {
+    } else if (pd->forbid_cpu != -1) {
         /* Permit semantics:
          *  - Start all other CPUs
          *  - Enable task switching
          */
-        pd->iface->pthread_mutex_lock(&pd->forbid_mutex);
 
         while (pd->forbid_cpu >= 0 && pd->forbid_cpu != thiscpu) {
             struct KrnUnixThread *thread = &pd->thread[thiscpu];
@@ -107,8 +114,9 @@ AROS_LH1(void, KrnScheduling,
             asm volatile ("int3");
         }
         D(bug("CPU%d: Permitted\n", thiscpu));
-        pd->iface->pthread_mutex_unlock(&pd->forbid_mutex);
     }
+
+    pd->iface->pthread_mutex_unlock(&pd->forbid_mutex);
 
     AROS_LIBFUNC_EXIT
 }

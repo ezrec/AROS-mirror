@@ -187,6 +187,7 @@ case "$host_os" in
         case "$host_cpu" in
             *i?86*)
                 aros_host_cpu="i386"
+                aros_smp="1"
                 ;;
             *x86_64*)
                 aros_host_cpu="x86_64"

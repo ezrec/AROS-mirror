@@ -16,7 +16,7 @@
 #include <proto/kernel.h>
 
         AROS_LH1(void, KrnScheduling,
-            AROS_LHA(BOOL, enabled, D0),
+            AROS_LHA(BYTE, trigger, D0),
 
 /*  SYNOPSIS */
 
