@@ -76,6 +76,12 @@ HISTORY
      */
 
     AROS_ATOMIC_DEC(SysBase->TDNestCnt);
+#if AROS_SMP
+    if (KernelBase)
+        KrnScheduling(TRUE);
+#else
+#error 1
+#endif
 
     if(    ( SysBase->TDNestCnt < 0 )
         && ( SysBase->IDNestCnt < 0 )
