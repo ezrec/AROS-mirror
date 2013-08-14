@@ -8,8 +8,12 @@
 
 #include <exec/types.h>
 #include <exec/execbase.h>
+#include <exec/cpu.h>
+#include <proto/kernel.h>
 #include <aros/libcall.h>
 #include <aros/atomic.h>
+
+#include "exec_intern.h"
 
 /*****************************************************************************/
 #undef  Exec
@@ -72,6 +76,12 @@
 
     AROS_LIBFUNC_INIT
 
+#if AROS_SMP
+    if (KernelBase)
+        KrnScheduling(FALSE);
+#else
+#error 1
+#endif
     AROS_ATOMIC_INC(SysBase->TDNestCnt);
 
     AROS_LIBFUNC_EXIT
