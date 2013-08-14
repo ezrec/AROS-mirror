@@ -84,6 +84,8 @@
 	me->tc_TDNestCnt=SysBase->TDNestCnt;
 	SysBase->TDNestCnt=-1;
 
+	KrnScheduling(0);
+
 	/* Move current task to the waiting list. */
 	me->tc_State=TS_WAIT;
 	Enqueue(&GetESysCPU(me)->TaskWait,&me->tc_Node);
@@ -99,6 +101,8 @@
 
 	/* Restore TDNestCnt. */
 	SysBase->TDNestCnt=me->tc_TDNestCnt;
+	
+	KrnScheduling(0);
     }
     /* Get active signals. */
     rcvd=me->tc_SigRecvd&signalSet;

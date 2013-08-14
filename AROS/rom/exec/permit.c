@@ -75,12 +75,11 @@ HISTORY
         should allow it.
      */
 
-    AROS_ATOMIC_DEC(SysBase->TDNestCnt);
 #if AROS_SMP
     if (KernelBase)
-        KrnScheduling(TRUE);
+        KrnScheduling(-1);
 #else
-#error 1
+    AROS_ATOMIC_DEC(SysBase->TDNestCnt);
 #endif
 
     if(    ( SysBase->TDNestCnt < 0 )

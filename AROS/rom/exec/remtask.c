@@ -122,6 +122,8 @@
         */
         SysBase->TDNestCnt = -1;
 
+	KrnScheduling(0);
+
         /* And force a task switch. Note: Dispatch, not Switch,
            because the state of ThisTask must not be saved
         */
