@@ -11,21 +11,16 @@ AROS_LH0(unsigned int, KrnGetCPUNumber,
 {
     AROS_LIBFUNC_INIT
     struct PlatformData *pd = KernelBase->kb_PlatformData;
-    unsigned int i = 0;
+    unsigned int cpu = 0;
 
     if (pd->iface && pd->thread) {
-        pthread_t self;
-
-        self = pd->iface->pthread_self();
-        for (i = 0; i < pd->threads; i++) {
-            if (pd->thread[i].tid == self)
-                break;
-        }
-        if (i == pd->threads)
-            i = 0;
+        const unsigned int *cpu_p;
+        cpu_p = pd->iface->pthread_getspecific(pd->key_cpu);
+        if (cpu_p)
+            cpu = *cpu_p;
     }
    
-    return i;
+    return cpu;
 
     AROS_LIBFUNC_EXIT
 }
