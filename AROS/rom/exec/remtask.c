@@ -81,6 +81,8 @@
 
     if (!suicide)
         Remove(&task->tc_Node);
+    else
+        THISCPU->ThisTask = NULL;
 
     /*
      * The task is being removed.
