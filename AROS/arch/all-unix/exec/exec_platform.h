@@ -23,6 +23,10 @@
 #define LIBC_NAME "libSystem.dylib"
 #endif
 
+#ifndef HOST_OS_android
+#define HAVE_SWAPCONTEXT
+#endif
+
 #ifndef LIBC_NAME
 #define LIBC_NAME "libc.so"
 #endif
