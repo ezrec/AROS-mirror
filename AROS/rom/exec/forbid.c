@@ -78,7 +78,7 @@
 
 #if AROS_SMP
     if (KernelBase)
-        KrnScheduling(1);
+        SysBase->TDNestCnt = KrnScheduling(KSCHED_FORBID);
 #else
     AROS_ATOMIC_INC(SysBase->TDNestCnt);
 #endif
