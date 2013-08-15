@@ -16,9 +16,9 @@ AROS_LH0(void, KrnSti,
 
     if (1 || !UKB(KernelBase)->SupervisorCount)
     {
+        KrnScheduling(KSCHED_RESET(SysBase->TDNestCnt));
         if (pd->iface)
         {
-            KrnScheduling(TRUE);
             pd->irq_enable = TRUE;
             pd->iface->pthread_kill(pd->thread[0].tid, SIGURG);
             AROS_HOST_BARRIER
