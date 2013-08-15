@@ -5,7 +5,6 @@ FILES := platform_init coldreboot shutdowna
 # swapcontext() and friends are not implemented on ARM Linux and are totally missing on Android
 ifneq ($(AROS_TARGET_CPU), arm)
 ifneq ($(AROS_TARGET_VARIANT), android)
-USER_CFLAGS := -DHAVE_SWAPCONTEXT
 FILES += newstackswap
 endif
 endif
