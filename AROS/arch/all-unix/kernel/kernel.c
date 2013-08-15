@@ -114,8 +114,10 @@ static void core_IRQ(int sig, regs_t *sc)
     D(bug("%s: CPU%d <- Signal %d\n", __func__, cpu, sig));
 
     if (pd->forbid_cpu != -1) {
-        if (sig == SIGVTALRM || sig == SIGALRM)
+        if (sig == SIGVTALRM || sig == SIGALRM) {
+            SUPERVISOR_LEAVE;
             return;
+        }
     }
 
     if (cpu == 0) {
