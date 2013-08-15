@@ -5,6 +5,8 @@
     Desc:
 */
 
+#include <aros/debug.h>
+
 #include <exec/alerts.h>
 #include <exec/execbase.h>
 #include <exec/cpu.h>
@@ -14,8 +16,6 @@
 #include <kernel_base.h>
 #include <kernel_debug.h>
 #include <kernel_scheduler.h>
-
-#define D(x)
 
 /*
  * Schedule the currently running task away. Put it into the TaskReady list 
@@ -119,6 +119,8 @@ struct Task *core_Dispatch(void)
 
         return NULL;
     }
+
+    ASSERT(GetESysCPU(task) == THISCPU);
 
     THISCPU->DispCount++;
     SysBase->IDNestCnt = task->tc_IDNestCnt;
