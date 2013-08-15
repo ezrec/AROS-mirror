@@ -88,4 +88,10 @@ typedef void (*irqhandler_t)(void *data, void *data2);
 #define KMS_NumFree		(TAG_USER + 0x04000007)
 #define KMS_PageSize		(TAG_USER + 0x04000008)
 
+/* Triggers for KrnScheduling */
+#define KSCHED_INSPECT  129         /* Don't modify, just return current state */
+#define KSCHED_FORBID   128         /* Similar to Forbid() */
+#define KSCHED_PERMIT  -129         /* Similar to Permit() */
+#define KSCHED_RESET(x) ((BYTE)(x)) /* Reset to a specific depth */
+
 #endif /* AROS_KERNEL_H */

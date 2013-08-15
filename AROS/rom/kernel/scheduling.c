@@ -15,8 +15,8 @@
     NAME */
 #include <proto/kernel.h>
 
-        AROS_LH1(void, KrnScheduling,
-            AROS_LHA(BYTE, trigger, D0),
+        AROS_LH1(BYTE, KrnScheduling,
+            AROS_LHA(LONG, trigger, D0),
 
 /*  SYNOPSIS */
 
@@ -24,7 +24,7 @@
     struct KernelBase *, KernelBase, 43, Kernel)
 
 /*  FUNCTION
-    Enable or disable kernel task switching
+    Alter kernel task switching
 
     INPUTS
     None
@@ -46,8 +46,14 @@
 {
     AROS_LIBFUNC_INIT
 
-    /* The actual implementation is entirely architecture-specific */
-    return;
+    /* The actual implementation can be entirely architecture-specific */
+    switch (trigger) {
+    case KSCHED_INPECT: break;
+    case KSCHED_FORBID: AROS_ATOMIC_INC(SysBase->TDNestCnt); break;
+    case KSCHED_PERMIT: AROS_ATOMIC_DEC(SysBase->TDNestCnt); break;
+    default:            SysBase->TDNestCnt = (BYTE)trigger;
+
+    return SysBase->TDNestCnt;
 
     AROS_LIBFUNC_EXIT
 }
