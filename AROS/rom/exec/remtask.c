@@ -120,9 +120,7 @@
             Since I don't know how many levels of Forbid()
             are already pending I set a default value.
         */
-        SysBase->TDNestCnt = -1;
-
-	KrnScheduling(0);
+        SysBase->TDNestCnt = KrnScheduling(KSCHED_RESET(-1));
 
         /* And force a task switch. Note: Dispatch, not Switch,
            because the state of ThisTask must not be saved

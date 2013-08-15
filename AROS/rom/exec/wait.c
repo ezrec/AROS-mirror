@@ -82,9 +82,7 @@
 	    but memorize it first. IDNestCnt is handled by Switch().
 	*/
 	me->tc_TDNestCnt=SysBase->TDNestCnt;
-	SysBase->TDNestCnt=-1;
-
-	KrnScheduling(0);
+	SysBase->TDNestCnt=KrnScheduling(KSCHED_RESET(-1));
 
 	/* Move current task to the waiting list. */
 	me->tc_State=TS_WAIT;
@@ -100,9 +98,7 @@
 	*/
 
 	/* Restore TDNestCnt. */
-	SysBase->TDNestCnt=me->tc_TDNestCnt;
-	
-	KrnScheduling(0);
+	SysBase->TDNestCnt=KrnScheduling(KSCHED_RESET(me->tc_TDNestCnt));
     }
     /* Get active signals. */
     rcvd=me->tc_SigRecvd&signalSet;
