@@ -181,20 +181,12 @@ static void core_Thread_IRQ(int sig, regs_t *sc)
         return;
 
     if (cpu == 0) {
-        sigset_t sigs;
-        SIGFILLSET(&sigs);
-        SIGDELSET(&sigs, SIGURG);
-        /* Actually reflects a change in IRQ status... */
-        while (pd->irq_enable == FALSE) {
-            /* Wait for a SIGURG when pd->irq_enable == TRUE */
-            pd->iface->sigsuspend(&sigs);
+        /* Nothing to do */
+    } else {
+        while (pd->iface->read(pd->thread[cpu].signal[0], &sig, sizeof(sig)) == sizeof(sig)) {
+            D(bug("%s: CPU%d <- %d\n", __func__, cpu, sig));
+            core_IRQ(sig, sc);
         }
-        return;
-    }
-
-    while (pd->iface->read(pd->thread[cpu].signal[0], &sig, sizeof(sig)) == sizeof(sig)) {
-        D(bug("%s: CPU%d <- %d\n", __func__, cpu, sig));
-        core_IRQ(sig, sc);
     }
 }
 #endif
