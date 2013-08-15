@@ -23,7 +23,6 @@ AROS_LH0(void, KrnCli,
     {
         pd->irq_enable = FALSE;
         KrnScheduling(KSCHED_RESET(0));
-        pd->iface->pthread_kill(pd->thread[0].tid, SIGURG);
         AROS_HOST_BARRIER
     }
 

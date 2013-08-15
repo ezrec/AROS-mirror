@@ -14,15 +14,10 @@ AROS_LH0(void, KrnSti,
 
     struct PlatformData *pd = KernelBase->kb_PlatformData;
 
-    if (1 || !UKB(KernelBase)->SupervisorCount)
+    if (pd->iface)
     {
         KrnScheduling(KSCHED_RESET(SysBase->TDNestCnt));
-        if (pd->iface)
-        {
-            pd->irq_enable = TRUE;
-            pd->iface->pthread_kill(pd->thread[0].tid, SIGURG);
-            AROS_HOST_BARRIER
-        }
+        pd->irq_enable = TRUE;
     }
 
     AROS_LIBFUNC_EXIT
