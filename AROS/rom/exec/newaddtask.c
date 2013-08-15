@@ -187,8 +187,9 @@
         is already gone.
     */
 
-    if (task->tc_Node.ln_Pri > GetESysCPU(task)->ThisTask->tc_Node.ln_Pri &&
-       GetESysCPU(task)->ThisTask->tc_State == TS_RUN)
+    if (GetESysCPU(task)->ThisTask == NULL ||
+       (task->tc_Node.ln_Pri > GetESysCPU(task)->ThisTask->tc_Node.ln_Pri &&
+        GetESysCPU(task)->ThisTask->tc_State == TS_RUN))
     {
         D(bug("[AddTask] Rescheduling...\n"));
 
