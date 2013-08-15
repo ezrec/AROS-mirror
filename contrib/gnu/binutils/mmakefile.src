@@ -9,6 +9,6 @@
 
 EXTRAOPTS := --with-sysroot=/Development --with-build-sysroot=$(AROS_DEVELOPMENT)
 
-%fetch_and_build_gnu_development package=binutils version=2.23.2 patch=yes \
+%fetch_and_build_gnu_development package=binutils version=2.21.1 patch=yes \
     extraoptions=$(EXTRAOPTS)
 
