@@ -92,6 +92,7 @@ int smp_Start(void)
     iface->sigprocmask(SIG_SETMASK, &newset, NULL);
 
     pd->forbid_cpu = -1;
+    pd->forbid_depth = -1;
     pd->iface->pthread_mutex_init(&pd->forbid_mutex, NULL);
 
     pd->iface->pthread_key_create(&pd->key_cpu, NULL);

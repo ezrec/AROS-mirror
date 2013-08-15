@@ -17,49 +17,49 @@
 #include "kernel_base.h"
 #include "kernel_intern.h"
 
-AROS_LH1(void, KrnScheduling,
-    AROS_LHA(BYTE, trigger, D0),
+AROS_LH1(BYTE, KrnScheduling,
+    AROS_LHA(LONG, trigger, D0),
     struct KernelBase *, KernelBase, 43, Kernel)
 {
     AROS_LIBFUNC_INIT
 
     struct PlatformData *pd = KernelBase->kb_PlatformData;
     unsigned int thiscpu = KrnGetCPUNumber();
+    BYTE ret;
 
     if (pd->iface == NULL || pd->thread == NULL)
-        return;
+        return -1;
 
     pd->iface->pthread_mutex_lock(&pd->forbid_mutex);
+    D(bug("[KRN] KrnScheduling(%d) --> SysBase->TDNestCnt = %d, pd->forbid_depth = %d\n", trigger, SysBase->TDNestCnt, pd->forbid_depth));
 
-    if (trigger > 0)
-        AROS_ATOMIC_INC(SysBase->TDNestCnt);
-    else if (trigger < 0)
-        AROS_ATOMIC_DEC(SysBase->TDNestCnt);
+    /* Wait to get a claim on the forbid_cpu indicator */
+    while (pd->forbid_cpu >= 0 && pd->forbid_cpu != thiscpu) {
+        pd->thread[thiscpu].state = STATE_STOPPED;
+        pd->iface->pthread_cond_broadcast(&pd->thread[thiscpu].state_cond);
+        while (pd->thread[thiscpu].state != STATE_RUNNING) {
+            pd->iface->pthread_cond_wait(&pd->thread[thiscpu].state_cond, &pd->forbid_mutex);
+        }
+    }
 
-    if (trigger > 0 && SysBase->TDNestCnt == -128)
-	bug("[KRN] D-A-M-N-! TDNestCnt wrapped while increasing!\n");
-    if (trigger < 0 && SysBase->TDNestCnt == 127)
-        bug("[KRN] D-A-M-N-! TDNestCnt wrapped while decreasing!\n");
+    if (trigger == KSCHED_INSPECT) {
+        /* Don't modify trigger */
+    } else if (trigger == KSCHED_FORBID) {
+        pd->forbid_depth++;
+    } else if (trigger == KSCHED_PERMIT) {
+        pd->forbid_depth--;
+    } else if (-128 <= trigger && trigger <= 127) {
+        pd->forbid_depth = trigger;
+    } else {
+        bug("[KRN] KrnScheduling: Invalid trigger '%d'\n", trigger);
+        asm volatile ("int3");
+    }
 
-    D(bug("[KRN] KrnScheduling(%d) --> SysBase->TDNestCnt = %d\n", trigger, SysBase->TDNestCnt));
-
-    if (SysBase->TDNestCnt >= 0 && pd->forbid_cpu != thiscpu) {
+    if (pd->forbid_depth >= 0) {
         /* Forbid semantics:
          *  - Stop task switching on this CPU
          *  - Stop all other CPUs
          */
-
-        while (pd->forbid_cpu >= 0 && pd->forbid_cpu != thiscpu) {
-            struct KrnUnixThread *thread = &pd->thread[thiscpu];
-            /* Wait for release of forbid */
-            thread->state = STATE_STOPPED;
-            pd->iface->pthread_cond_broadcast(&thread->state_cond);
-            D(bug("CPU%d: Waiting for CPU%d to give up Forbid()\n", thiscpu, pd->forbid_cpu));
-            while (thread->state == STATE_STOPPED) {
-                pd->iface->pthread_cond_wait(&thread->state_cond, &pd->forbid_mutex);
-            }
-        }
-
         if (pd->forbid_cpu == thiscpu) {
             /* Scheduler alread stopped */
         } else if (pd->forbid_cpu == -1) {
@@ -77,27 +77,15 @@ AROS_LH1(void, KrnScheduling,
                 }
             }
         } else {
-            D(bug("CPU%d: Insane - we already waited for this!\n", thiscpu));
+            bug("CPU%d: CPU%d has the Forbid() - how did I get here?!\n", thiscpu, pd->forbid_cpu);
             asm volatile ("int3");
         }
         D(bug("CPU%d: Forbidden\n", thiscpu));
-    } else if (SysBase->TDNestCnt < 0 && pd->forbid_cpu != -1) {
+    } else {
         /* Permit semantics:
          *  - Start all other CPUs
          *  - Enable task switching
          */
-
-        while (pd->forbid_cpu >= 0 && pd->forbid_cpu != thiscpu) {
-            struct KrnUnixThread *thread = &pd->thread[thiscpu];
-            /* Wait for release of forbid */
-            thread->state = STATE_STOPPED;
-            pd->iface->pthread_cond_broadcast(&thread->state_cond);
-            D(bug("CPU%d: Waiting for CPU%d to give up Forbid()\n", thiscpu, pd->forbid_cpu));
-            while (thread->state == STATE_STOPPED) {
-                pd->iface->pthread_cond_wait(&thread->state_cond, &pd->forbid_mutex);
-            }
-        }
-
         if (pd->forbid_cpu == -1) {
             /* Scheduler already started */
         } else if (pd->forbid_cpu == thiscpu) {
@@ -120,8 +108,10 @@ AROS_LH1(void, KrnScheduling,
         }
         D(bug("CPU%d: Permitted\n", thiscpu));
     }
-
+    ret = pd->forbid_depth;
     pd->iface->pthread_mutex_unlock(&pd->forbid_mutex);
+
+    return ret;
 
     AROS_LIBFUNC_EXIT
 }

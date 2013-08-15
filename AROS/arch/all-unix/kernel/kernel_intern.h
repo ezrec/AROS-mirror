@@ -99,6 +99,7 @@ struct PlatformData
     } *thread;
     pthread_mutex_t forbid_mutex;
     int forbid_cpu;
+    BYTE forbid_depth;
     pthread_key_t key_cpu;
     pthread_key_t key_storage;
     struct KernelInterface *iface;

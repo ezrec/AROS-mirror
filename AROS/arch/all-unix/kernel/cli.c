@@ -21,8 +21,8 @@ AROS_LH0(void, KrnCli,
     /* This check is needed for early atomics on ARM <v6, which are Disable()/Enable()-based */
     if (pd->iface)
     {
-        KrnScheduling(FALSE);
         pd->irq_enable = FALSE;
+        KrnScheduling(KSCHED_RESET(0));
         pd->iface->pthread_kill(pd->thread[0].tid, SIGURG);
         AROS_HOST_BARRIER
     }
