@@ -49,7 +49,13 @@ struct ExecBase
     struct IntVector IntVects[16];
 
 /* System Variables */
-#if AROS_SMP == 0
+#if AROS_SMP
+    struct Task *__ThisTask;       /* Pointer to currently running task (readable) */
+    ULONG        __IdleCount;      /* Incremented when system goes idle            */
+    ULONG        __DispCount;      /* Incremented when a task is dispatched        */
+    UWORD        __Quantum;        /* # of ticks, a task may run                   */
+    UWORD        __Elapsed;        /* # of ticks, the current task has run         */
+#else
     struct Task *ThisTask;       /* Pointer to currently running task (readable) */
     ULONG        IdleCount;      /* Incremented when system goes idle            */
     ULONG        DispCount;      /* Incremented when a task is dispatched        */
@@ -60,7 +66,9 @@ struct ExecBase
     BYTE         IDNestCnt;      /* Disable() nesting count                      */
     BYTE         TDNestCnt;      /* Forbid() nesting count                       */
     UWORD        AttnFlags;      /* Attention Flags (readable, see below)        */
-#if AROS_SMP == 0
+#if AROS_SMP
+    UWORD        __AttnResched;    /* Private scheduler flags                      */
+#else
     UWORD        AttnResched;    /* Private scheduler flags                      */
 #endif
     APTR         ResModules;     /* Resident modules list                        */
@@ -77,7 +85,10 @@ struct ExecBase
     struct List        IntrList;
     struct List        LibList;
     struct List        PortList;
-#if AROS_SMP == 0
+#if AROS_SMP
+    struct List        __TaskReady;      /* Tasks that are ready to run */
+    struct List        __TaskWait;       /* Tasks that wait for some event */
+#else
     struct List        TaskReady;      /* Tasks that are ready to run */
     struct List        TaskWait;       /* Tasks that wait for some event */
 #endif
