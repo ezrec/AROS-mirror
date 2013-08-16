@@ -736,8 +736,13 @@
 #define DEFAULT_BROKEN_ADDRESS_COMMAND 0
 /*
  * Indicates if the user wants outer parentheses when using CALL subroutine.
+ * On Amiga and AROS, they are on by default.
  */
+#if defined(_AMIGA) || defined(__AROS__)
+#define DEFAULT_CALLS_AS_FUNCS          1
+#else
 #define DEFAULT_CALLS_AS_FUNCS          0
+#endif
 /*
  * Indicates if the user wants the broken queue naming conventions.
  */
