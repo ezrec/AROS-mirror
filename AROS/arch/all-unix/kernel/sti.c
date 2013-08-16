@@ -16,8 +16,8 @@ AROS_LH0(void, KrnSti,
 
     if (pd->iface)
     {
-        KrnScheduling(KSCHED_RESET(SysBase->TDNestCnt));
         pd->irq_enable = TRUE;
+        KrnScheduling(KSCHED_RESET(SysBase->TDNestCnt));
     }
 
     AROS_LIBFUNC_EXIT
