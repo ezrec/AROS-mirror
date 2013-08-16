@@ -82,35 +82,16 @@ void cpu_Switch(regs_t *regs)
     core_Switch();
 }
 
-static void thread_Suspend(struct KernelBase *KernelBase)
-{
-    struct PlatformData *pd = KernelBase->kb_PlatformData;
-    struct KrnUnixThread *thread;
-    unsigned int thiscpu = KrnGetCPUNumber();
-
-    thread = &pd->thread[thiscpu];
-
-    pd->iface->pthread_mutex_lock(&pd->forbid_mutex);
-    while (pd->forbid_cpu >= 0 && pd->forbid_cpu != thiscpu) {
-
-        bug("CPU%d: Suspending by request from %d\n", thiscpu, pd->forbid_cpu);
-
-        /* Let the forbid holder know we're alseep */
-        thread->state = STATE_STOPPED;
-        bug("CPU%d: Stopped...\n", thiscpu);
-        pd->iface->pthread_cond_broadcast(&thread->state_cond);
-        
-       /* Wait to be awoken */
-        while (thread->state == STATE_STOPPED) {
-            pd->iface->pthread_cond_wait(&thread->state_cond, &pd->forbid_mutex);
-        }
-        bug("CPU%d: Continuing...\n", thiscpu);
-
-    }
-    pd->iface->pthread_mutex_unlock(&pd->forbid_mutex);
-}
-
-static void thread_BreakForbid(struct KernelBase *KernelBase)
+/* We have three cases when we enter cpu_Dispatch:
+ *   - No CPUs are have disabled task switching
+ *   - A CPU (not us) has disabled task switching
+ *      - In this case, we suspend, and wait for that
+ *        CPU to put us back in running state
+ *   - This CPU has disabled task switching
+ *      - Since we are in Dispatch state, we have to
+ *        start task switching again.
+ */
+static void thread_SuspendOrBreakForbid(struct KernelBase *KernelBase)
 {
     struct PlatformData *pd = KernelBase->kb_PlatformData;
     struct KrnUnixThread *thread;
@@ -120,25 +101,31 @@ static void thread_BreakForbid(struct KernelBase *KernelBase)
 
     pd->iface->pthread_mutex_lock(&pd->forbid_mutex);
     if (pd->forbid_cpu == thiscpu) {
-        /* Break forbid */
-        int cpu;
-        
-        do {
-            cpu = (thiscpu + 1) % pd->threads;
-            if (pd->thread[cpu].state == STATE_STOPPED)
-                break;
-        } while (cpu != thiscpu);
-
-        if (cpu != thiscpu) {
-            D(bug("CPU%d: Passing Forbid token to CPU%d\n", thiscpu, cpu));
-            thread->state = STATE_STOPPED;
-            pd->forbid_cpu = cpu;
-            pd->thread[cpu].state = STATE_RUNNING;
-            pd->iface->pthread_cond_broadcast(&pd->thread[cpu].state_cond);
+        int i;
+        D(bug("CPU%d: Breaking forbid state\n"));
+        for (i = 0; i < pd->threads; i++) {
+            if (i == thiscpu || pd->thread[i].state != STATE_STOPPED)
+                continue;
+            pd->thread[i].state = STATE_RUNNING;
+            pd->iface->pthread_cond_broadcast(&pd->thread[i].state_cond);
         }
+        pd->forbid_cpu = -1;
+    }
+    while (pd->forbid_cpu >= 0 && pd->forbid_cpu != thiscpu) {
+        D(bug("CPU%d: Suspending by request from %d\n", thiscpu, pd->forbid_cpu));
+
+        /* Let the forbid holder know we're alseep */
+        thread->state = STATE_STOPPED;
+        D(bug("CPU%d: Stopped...\n", thiscpu));
+        
+       /* Wait to be awoken */
+        while (thread->state == STATE_STOPPED) {
+            pd->iface->pthread_cond_broadcast(&thread->state_cond);
+            pd->iface->pthread_cond_wait(&thread->state_cond, &pd->forbid_mutex);
+        }
+        D(bug("CPU%d: Continuing...\n", thiscpu));
     }
     pd->iface->pthread_mutex_unlock(&pd->forbid_mutex);
-
 }
 
 void cpu_Dispatch(regs_t *regs)
@@ -162,20 +149,21 @@ void cpu_Dispatch(regs_t *regs)
     }
 
      /* If scheduling is disabled, suspend */
-    thread_Suspend(KernelBase);
+    thread_SuspendOrBreakForbid(KernelBase);
     while (!(task = core_Dispatch()))
     {
-        /* Sleep almost forever ;) */
         if (cpu == 0) {
+            /* Sleep almost forever ;) */
             KernelBase->kb_PlatformData->iface->sigsuspend(&sigs);
             AROS_HOST_BARRIER
+        }
 
+        if (cpu == 0) {
             if ((SysBase->SysFlags & SFF_SoftInt))
                 core_Cause(INTB_SOFTINT, 1L << INTB_SOFTINT);
         }
-
-        thread_BreakForbid(KernelBase);
-        thread_Suspend(KernelBase);
+    
+        thread_SuspendOrBreakForbid(KernelBase);
     }
 
     D(bug("[KRN] cpu_Dispatch(), task %p (%s)\n", task, task->tc_Node.ln_Name));
