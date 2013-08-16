@@ -93,12 +93,16 @@
 
     /* Delete context */
     et = GetETask(task);
-    if (et != NULL)
+    if (et != NULL) {
         KrnDeleteContext(et->et_RegFrame);
+        et->et_RegFrame = NULL;
+    }
 
     /* Uninitialize ETask structure */
     DREMTASK("Cleaning up ETask et=%p", et);
     CleanupETask(task);
+    task->tc_UnionETask.tc_ETask = NULL;
+    task->tc_Flags &= ~TF_ETASK;
 
     /* Freeing myself? */
     if (suicide)
