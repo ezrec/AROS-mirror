@@ -37,6 +37,8 @@ AROS_LH1(BYTE, KrnScheduling,
     while (pd->forbid_cpu >= 0 && pd->forbid_cpu != thiscpu) {
         pd->thread[thiscpu].state = STATE_STOPPED;
         pd->iface->pthread_cond_broadcast(&pd->thread[thiscpu].state_cond);
+        pd->iface->pthread_mutex_unlock(&pd->forbid_mutex);
+        pd->iface->pthread_mutex_lock(&pd->forbid_mutex);
         while (pd->thread[thiscpu].state != STATE_RUNNING) {
             pd->iface->pthread_cond_wait(&pd->thread[thiscpu].state_cond, &pd->forbid_mutex);
         }

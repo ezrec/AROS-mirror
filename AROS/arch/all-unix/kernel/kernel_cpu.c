@@ -111,16 +111,20 @@ static void thread_SuspendOrBreakForbid(struct KernelBase *KernelBase)
         }
         pd->forbid_cpu = -1;
     }
+    pd->iface->pthread_mutex_unlock(&pd->forbid_mutex);
+    pd->iface->pthread_mutex_lock(&pd->forbid_mutex);
     while (pd->forbid_cpu >= 0 && pd->forbid_cpu != thiscpu) {
         D(bug("CPU%d: Suspending by request from %d\n", thiscpu, pd->forbid_cpu));
 
         /* Let the forbid holder know we're alseep */
         thread->state = STATE_STOPPED;
+        pd->iface->pthread_cond_broadcast(&thread->state_cond);
         D(bug("CPU%d: Stopped...\n", thiscpu));
+        pd->iface->pthread_mutex_unlock(&pd->forbid_mutex);
+        pd->iface->pthread_mutex_lock(&pd->forbid_mutex);
         
        /* Wait to be awoken */
-        while (thread->state == STATE_STOPPED) {
-            pd->iface->pthread_cond_broadcast(&thread->state_cond);
+        while (thread->state != STATE_RUNNING) {
             pd->iface->pthread_cond_wait(&thread->state_cond, &pd->forbid_mutex);
         }
         D(bug("CPU%d: Continuing...\n", thiscpu));
@@ -143,11 +147,6 @@ void cpu_Dispatch(regs_t *regs)
     /* This macro relies on 'pd' being present */
     SIGEMPTYSET(&sigs);
 
-    /* If IRQs are disabled, re-enable */
-    if (cpu == 0 && !pd->irq_enable) {
-        pd->irq_enable = TRUE;
-    }
-
      /* If scheduling is disabled, suspend */
     thread_SuspendOrBreakForbid(KernelBase);
     while (!(task = core_Dispatch()))
@@ -159,6 +158,11 @@ void cpu_Dispatch(regs_t *regs)
         }
 
         if (cpu == 0) {
+            /* If IRQs are disabled, re-enable */
+            if (!pd->irq_enable) {
+                pd->irq_enable = TRUE;
+            }
+
             if ((SysBase->SysFlags & SFF_SoftInt))
                 core_Cause(INTB_SOFTINT, 1L << INTB_SOFTINT);
         }
