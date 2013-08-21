@@ -11,6 +11,8 @@
 #include <kernel_debug.h>
 #include <kernel_scheduler.h>
 
+#include "kernel_intern.h"
+
 #ifndef D
 # ifdef DEBUG
 #  define D(x) x

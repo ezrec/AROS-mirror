@@ -11,7 +11,7 @@
 
 #include <exec/resident.h>
 #include <exec/execbase.h>
-#include <defines/kernel.h>
+#include <proto/kernel.h>
 
 #include <hardware/intbits.h>
 
