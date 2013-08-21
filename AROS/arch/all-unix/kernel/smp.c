@@ -71,15 +71,10 @@ int smp_Start(void)
     struct KernelInterface *iface = pd->iface;
     sigset_t oldset, newset;
     ULONG cpu;
-    ULONG cpus;
     
-    cpus = LibGetTagData(KRN_MaxCPUs, 0, BootMsg);
-    if (cpus == 0)
-        cpus = 1;
-
     /* Initialize the boot CPU's per-thread data */
-    pd->threads = cpus;
-    pd->thread = AllocMem(sizeof(struct KrnUnixThread)*cpus, MEMF_ANY | MEMF_CLEAR);
+    pd->threads = KrnGetCPUCount();
+    pd->thread = AllocMem(sizeof(struct KrnUnixThread)*pd->threads, MEMF_ANY | MEMF_CLEAR);
 
     /* Block all signals..
      * NOTE: For SMP, sigprocmask is actually pointing to pthread_sigmask,
