@@ -100,13 +100,8 @@ struct ucontext;
     On Linux x86-64 signal mask is restored from uc_sigmask field of ucontext
     structure.
 */
-#if AROS_SMP
-#define SC_DISABLE(uc) KrnCli();
-#define SC_ENABLE(uc)  KrnSti();
-#else
 #define SC_DISABLE(uc) uc->uc_sigmask = KernelBase->kb_PlatformData->sig_int_mask
 #define SC_ENABLE(uc)  pd->iface->SigEmptySet(&uc->uc_sigmask)
-#endif
 
 /*
     The names of the general purpose registers which are to be saved.
@@ -199,7 +194,7 @@ struct ucontext;
 #define RESTOREREGS(cc, sc)                                    					\
     RESTORE_CPU((cc)->regs, sc);								\
     if ((cc)->regs.Flags & ECF_FPX)								\
-	CopyMemQuick((cc)->regs.FXData, sc->uc_mcontext.fpregs, sizeof(struct FPXContext));
+        sc->uc_mcontext.fpregs = (void *)(cc)->regs.FXData;
 
 /* Print signal context. Used in crash handler. */
 #define PRINT_SC(sc)						\
