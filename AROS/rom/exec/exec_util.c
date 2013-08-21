@@ -14,6 +14,7 @@
 #include <dos/dosextens.h>
 
 #include <proto/exec.h>
+#include <proto/kernel.h>
 
 #include "etask.h"
 #include "exec_intern.h"
