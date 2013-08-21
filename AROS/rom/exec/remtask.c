@@ -79,9 +79,10 @@
     /* Remove() here, before freeing the MemEntry list. Because
        the MemEntry list might contain the task struct itself! */
 
-    if (!suicide)
+    if (!suicide) {
+        ASSERT(task->tc_State == TS_WAIT || task->tc_State == TS_READY);
         Remove(&task->tc_Node);
-    else
+    } else
         THISCPU->ThisTask = NULL;
 
     /*
