@@ -187,7 +187,7 @@
          * the desitination.
          */
     if ((task->tc_Node.ln_Pri > SysBase->ThisTask->tc_Node.ln_Pri &&
-        (SysBase->ThisTask->tc_State == TS_RUN))
+        (SysBase->ThisTask->tc_State == TS_RUN)))
         Reschedule();
 #else
     /* For all other architectures, the Reschedule() is unconditional.
