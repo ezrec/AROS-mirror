@@ -45,8 +45,7 @@
 {
     AROS_LIBFUNC_INIT
 
-    /* The implementation of this function is architecture-specific */
-    return 1;
+    return KernelBase->kb_CPUCount;
 
     AROS_LIBFUNC_EXIT
 }
