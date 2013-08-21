@@ -68,13 +68,8 @@ struct ucontext
 
 /* Macros to enable or disable all signals after the signal handler
    has returned and the normal execution commences. */
-#if AROS_SMP
-#define SC_DISABLE(uc)  KrnCli()
-#define SC_ENABLE(uc)   do { } while (0)
-#else
 #define SC_DISABLE(uc) uc->uc_sigmask = KernelBase->kb_PlatformData->sig_int_mask
 #define SC_ENABLE(uc)  SIGEMPTYSET(&uc->uc_sigmask)
-#endif
 
 /*
  * Linux kernel does not provide any standarized view of VFP context on signal frame. The ARM linux-hosted
