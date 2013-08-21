@@ -53,9 +53,9 @@ int main(void) {
     DEFINE(SysFlags      , offsetof (struct ExecBase, SysFlags));
     DEFINE(IdleCount     , offsetof (struct ExecBase, IdleCount));
     DEFINE(DispCount     , offsetof (struct ExecBase, DispCount));
-    DEFINE(Quantum       , offsetof (struct ExecBase, Quantum));
     DEFINE(Elapsed       , offsetof (struct ExecBase, Elapsed));
 #endif
+    DEFINE(Quantum       , offsetof (struct ExecBase, Quantum));
     DEFINE(SysStkUpper   , offsetof (struct ExecBase, SysStkUpper));
 
     asm volatile("\n/* struct Task */" ::);

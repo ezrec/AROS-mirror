@@ -53,13 +53,15 @@ struct ExecBase
     struct Task *__ThisTask;       /* Pointer to currently running task (readable) */
     ULONG        __IdleCount;      /* Incremented when system goes idle            */
     ULONG        __DispCount;      /* Incremented when a task is dispatched        */
-    UWORD        __Quantum;        /* # of ticks, a task may run                   */
-    UWORD        __Elapsed;        /* # of ticks, the current task has run         */
 #else
     struct Task *ThisTask;       /* Pointer to currently running task (readable) */
     ULONG        IdleCount;      /* Incremented when system goes idle            */
     ULONG        DispCount;      /* Incremented when a task is dispatched        */
+#endif
     UWORD        Quantum;        /* # of ticks, a task may run                   */
+#if AROS_SMP
+    UWORD        __Elapsed;        /* # of ticks, the current task has run         */
+#else
     UWORD        Elapsed;        /* # of ticks, the current task has run         */
 #endif
     UWORD        SysFlags;       /* Private flags                                */

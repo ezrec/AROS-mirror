@@ -190,7 +190,6 @@ AROS_UFH3S(struct ExecBase *, GM_UNIQUENAME(init),
         ec = AllocMem(sizeof(*ec), MEMF_ANY | MEMF_CLEAR);
         ec->ec_Node.ln_Pri = 127;   /* Highest priority CPU */
         ec->ec_CPUNumber = 0;
-        ec->Quantum = 4;
         NEWLIST(&ec->TaskReady);
         ec->TaskReady.lh_Type = NT_TASK;
         NEWLIST(&ec->TaskWait);
@@ -217,7 +216,7 @@ AROS_UFH3S(struct ExecBase *, GM_UNIQUENAME(init),
      * to FindTask(NULL). We must get NULL there, otherwise we'll get task looped on itself.
      */
     THISCPU->ThisTask = t;
-    THISCPU->Elapsed  = THISCPU->Quantum;
+    THISCPU->Elapsed  = SysBase->Quantum;
 
     /* Install the interrupt servers. Again, do it here because allocations are needed. */
     for (i=0; i < 16; i++)
@@ -294,7 +293,6 @@ AROS_UFH3S(struct ExecBase *, GM_UNIQUENAME(init),
 
                     ec->ec_Node.ln_Pri = 0; /* Normal priority */
                     ec->ec_CPUNumber = i;
-                    ec->Quantum = 4;
                     NEWLIST(&ec->TaskReady);
                     ec->TaskReady.lh_Type = NT_TASK;
                     NEWLIST(&ec->TaskWait);
