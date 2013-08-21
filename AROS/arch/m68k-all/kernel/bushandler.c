@@ -6,6 +6,9 @@
 #include <proto/exec.h>
 #include <proto/debug.h>
 
+#include "kernel_base.h"
+#include "kernel_intern.h"
+
 void DebugPutStr(register const char *buff);
 void DebugPutHex(const char *what, ULONG val);
 void DebugPutDec(const char *what, ULONG val);

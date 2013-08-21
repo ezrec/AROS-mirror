@@ -26,3 +26,7 @@ extern void enable_mmu(struct KernelBase *kb);
 extern void disable_mmu(struct KernelBase *kb);
 extern BOOL init_mmu(struct KernelBase *kb);
 
+#ifndef THISCPU
+#define THISCPU SysBase
+#endif
+
