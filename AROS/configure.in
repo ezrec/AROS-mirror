@@ -155,8 +155,6 @@ host_cc_elf=yes
 # not look at anything that compiles to the target yet, we'll get
 # to that later.
 
-aros_smp=0
-
 case "$host_os" in
     aros*)
         aros_host_arch="aros"
@@ -187,11 +185,9 @@ case "$host_os" in
         case "$host_cpu" in
             *i?86*)
                 aros_host_cpu="i386"
-                aros_smp="1"
                 ;;
             *x86_64*)
                 aros_host_cpu="x86_64"
-                aros_smp="1"
                 ;;
             *m68k*)
                 aros_host_cpu="m68k"
@@ -842,6 +838,8 @@ esac
 kernel_tool_prefix="none"
 aros_tool_prefix="none"
 elf_tool_prefix="${target_cpu}-elf-"
+                
+aros_smp=0
 
 # This is the target configuration switch.
 case "$target_os" in
@@ -859,6 +857,7 @@ case "$target_os" in
                 gcc_target_cpu="mc68000"
                 ;;
             *i?86*)
+                aros_smp=1
                 aros_target_cpu="i386"
                 aros_object_format="elf_i386"
                 aros_flavour="emulation"
@@ -876,6 +875,7 @@ case "$target_os" in
                 android_ndk_arch="x86"
                 ;;
             *x86_64*)
+                aros_smp=1
                 aros_target_cpu="x86_64"
                 aros_object_format="elf_x86_64"
                 aros_flavour="emulation"
