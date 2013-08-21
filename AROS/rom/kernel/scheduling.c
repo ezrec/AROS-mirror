@@ -7,6 +7,10 @@
 
 #include <aros/kernel.h>
 #include <aros/libcall.h>
+#include <aros/atomic.h>
+
+#include <proto/kernel.h>
+#include <proto/exec.h>
 
 #include <kernel_base.h>
 
@@ -48,10 +52,11 @@
 
     /* The actual implementation can be entirely architecture-specific */
     switch (trigger) {
-    case KSCHED_INPECT: break;
+    case KSCHED_INSPECT: break;
     case KSCHED_FORBID: AROS_ATOMIC_INC(SysBase->TDNestCnt); break;
     case KSCHED_PERMIT: AROS_ATOMIC_DEC(SysBase->TDNestCnt); break;
-    default:            SysBase->TDNestCnt = (BYTE)trigger;
+    default:            SysBase->TDNestCnt = (BYTE)trigger; break;
+    }
 
     return SysBase->TDNestCnt;
 

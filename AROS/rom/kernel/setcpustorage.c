@@ -15,10 +15,10 @@
     NAME */
 #include <proto/kernel.h>
 
-        AROS_LH0(BOOL, KrnSetCPUStorage,
+        AROS_LH1(BOOL, KrnSetCPUStorage,
 
 /*  SYNOPSIS */
-                AROS_LHA(APTR, value, A0)
+                AROS_LHA(APTR, value, A0),
 
 /*  LOCATION */
 	struct KernelBase *, KernelBase, 42, Kernel)

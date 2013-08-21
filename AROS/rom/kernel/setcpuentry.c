@@ -15,7 +15,7 @@
     NAME */
 #include <proto/kernel.h>
 
-        AROS_LH0(BOOL, KrnSetCPUEntry,
+        AROS_LH3(BOOL, KrnSetCPUEntry,
 
 /*  SYNOPSIS */
                 AROS_LHA(ULONG, cpu, D0),
