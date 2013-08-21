@@ -200,11 +200,19 @@ void cpu_DispatchContext(struct Task *task, regs_t *regs, struct PlatformData *p
     if (SysBase->IDNestCnt < 0)
     {
         D(bug("CPU%d: %p: Enabled\n", KrnGetCPUNumber(), THISCPU->ThisTask));
+#if AROS_SMP
+        KrnSti();
+#else
         SC_ENABLE(regs);
+#endif
     }
     else
     {
         D(bug("CPU%d: %p: Disabled\n", KrnGetCPUNumber(), THISCPU->ThisTask));
+#if AROS_SMP
+        KrnCli();
+#else
         SC_DISABLE(regs);
+#endif
     }
 }
