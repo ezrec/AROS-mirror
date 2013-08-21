@@ -8010,6 +8010,7 @@ case "$target_os" in
                 gcc_target_cpu="i386"
                 ;;
             *x86_64*)
+                aros_smp=1
                 aros_target_cpu="x86_64"
                 aros_serial_debug=1
                 if test "$aros_object_format" = "" ; then
