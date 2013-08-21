@@ -45,7 +45,11 @@
 {
     AROS_LIBFUNC_INIT
 
+#if AROS_SMP
     return KernelBase->kb_CPUCount;
+#else
+    return 1;
+#endif
 
     AROS_LIBFUNC_EXIT
 }
