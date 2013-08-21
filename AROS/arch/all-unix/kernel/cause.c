@@ -10,8 +10,15 @@ AROS_LH0(void, KrnCause,
 {
     AROS_LIBFUNC_INIT
 
-    KernelBase->kb_PlatformData->iface->raise(SIGUSR2);
+    struct PlatformData *pd = KernelBase->kb_PlatformData;
+
+#if AROS_SMP
+    pd->iface->pthread_kill(pd->thread[0].tid, SIGUSR2);
     AROS_HOST_BARRIER
+#else
+    pd->iface->raise(SIGUSR2);
+    AROS_HOST_BARRIER
+#endif
 
     AROS_LIBFUNC_EXIT
 }
