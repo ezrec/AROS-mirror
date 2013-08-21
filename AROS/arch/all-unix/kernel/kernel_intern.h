@@ -89,7 +89,6 @@ struct PlatformData
     BOOL irq_enable;
     struct KrnUnixThread {
         pthread_t tid;
-        APTR storage;        /* per-CPU storage */
         struct Hook *hook;   /* Hook for entry point */
         APTR message;
         unsigned int SupervisorCount;
