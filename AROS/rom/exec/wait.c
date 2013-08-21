@@ -77,13 +77,6 @@
 	/* Set the wait signal mask */
 	me->tc_SigWait=signalSet;
 
-	/*
-	    Clear TDNestCnt (because Switch() will not care about it),
-	    but memorize it first. IDNestCnt is handled by Switch().
-	*/
-	me->tc_TDNestCnt=SysBase->TDNestCnt;
-	SysBase->TDNestCnt=KrnScheduling(KSCHED_RESET(-1));
-
 	/* Move current task to the waiting list. */
 	me->tc_State=TS_WAIT;
 	Enqueue(&GetESysCPU(me)->TaskWait,&me->tc_Node);
@@ -96,9 +89,6 @@
 	    signals are there or it's just a finished task exception.
 	    Test again to be sure (see above).
 	*/
-
-	/* Restore TDNestCnt. */
-	SysBase->TDNestCnt=KrnScheduling(KSCHED_RESET(me->tc_TDNestCnt));
     }
     /* Get active signals. */
     rcvd=me->tc_SigRecvd&signalSet;
