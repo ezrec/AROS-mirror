@@ -12,6 +12,7 @@
 #include <proto/kernel.h>
 #include <proto/exec.h>
 
+
 #include <kernel_base.h>
 
 /*****************************************************************************
@@ -57,6 +58,7 @@
     case KSCHED_PERMIT: AROS_ATOMIC_DEC(SysBase->TDNestCnt); break;
     default:            SysBase->TDNestCnt = (BYTE)trigger; break;
     }
+
 
     return SysBase->TDNestCnt;
 

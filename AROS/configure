@@ -4677,6 +4677,8 @@ host_cc_elf=yes
 # not look at anything that compiles to the target yet, we'll get
 # to that later.
 
+aros_smp=0
+
 case "$host_os" in
     aros*)
         aros_host_arch="aros"
@@ -4708,9 +4710,11 @@ $as_echo "$as_me: WARNING: \"Unknown CPU for host -- $host_cpu\"" >&2;}
         case "$host_cpu" in
             *i?86*)
                 aros_host_cpu="i386"
+                aros_smp="1"
                 ;;
             *x86_64*)
                 aros_host_cpu="x86_64"
+                aros_smp="1"
                 ;;
             *m68k*)
                 aros_host_cpu="m68k"
