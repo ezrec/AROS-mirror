@@ -32,12 +32,12 @@
  * work if mb2_mmap is extended in future, but we assume the old mb_mmap 
  * will not be extended.
  */
-static struct mb_mmap *mmap_convert(struct mb2_tag_mmap *tag, unsigned long *mmap_len)
+static volatile struct mb_mmap *mmap_convert(struct mb2_tag_mmap *tag, unsigned long *mmap_len)
 {
     volatile struct mb2_mmap *mmap2 = tag->mmap;
     volatile struct mb_mmap *mmap = (void *)tag->mmap - 4;
     int mmap2_len = tag->size - sizeof(struct mb2_tag_mmap);
-    struct mb_mmap *ret = mmap;
+    volatile struct mb_mmap *ret = mmap;
 
     DMMAP(kprintf("[Multiboot2] Memory map at 0x%p, total size %u, entry size %u\n", mmap2, mmap2_len, tag->entry_size));
 
@@ -54,14 +54,14 @@ static struct mb_mmap *mmap_convert(struct mb2_tag_mmap *tag, unsigned long *mma
     return ret;
 }
 
-unsigned long mb2_parse(void *mb, struct mb_mmap **mmap_addr, unsigned long *mmap_len)
+unsigned long mb2_parse(void *mb, volatile struct mb_mmap **mmap_addr, unsigned long *mmap_len)
 {
     struct mb2_tag *mbtag;
     struct mb2_tag_framebuffer *fb = NULL;
     struct mb2_tag_vbe *vbe = NULL;
     struct mb2_tag_module *mod;
     const char *cmdline = NULL;
-    struct mb_mmap *mmap = NULL;
+    volatile struct mb_mmap *mmap = NULL;
     unsigned long memlower = 0;
     unsigned long long memupper = 0;
     unsigned long usable = (unsigned long)&_end;

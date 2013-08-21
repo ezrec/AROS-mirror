@@ -10,10 +10,10 @@
 #include "bootstrap.h"
 #include "support.h"
 
-unsigned long mb1_parse(struct multiboot *mb, struct mb_mmap **mmap_addr, unsigned long *mmap_len)
+unsigned long mb1_parse(struct multiboot *mb, volatile struct mb_mmap **mmap_addr, unsigned long *mmap_len)
 {
     const char *cmdline = NULL;
-    struct mb_mmap *mmap = NULL;
+    volatile struct mb_mmap *mmap = NULL;
     unsigned long len = 0;
     unsigned long usable = (unsigned long)&_end;
 
@@ -37,7 +37,7 @@ unsigned long mb1_parse(struct multiboot *mb, struct mb_mmap **mmap_addr, unsign
 
     if ((mb->flags & MB_FLAGS_MMAP))
     {
-        mmap = (struct mb_mmap *)mb->mmap_addr;
+        mmap = (volatile struct mb_mmap *)mb->mmap_addr;
         len  = mb->mmap_length;
 
         D(kprintf("[Multiboot] Memory map at 0x%p, length %u\n", mmap, len));
