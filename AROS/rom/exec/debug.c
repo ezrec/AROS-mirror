@@ -278,6 +278,7 @@ static char *NextWord(char *s)
 
             kprintf("Task List:\n");
 
+            Disable();
 #if AROS_SMP
             struct ExecCPUInfo *ThisCPU;
             ForeachNode(&PrivExecBase(SysBase)->CPUList, ThisCPU) {
@@ -290,23 +291,24 @@ static char *NextWord(char *s)
                     ThisCPU->ThisTask->tc_Node.ln_Pri,
                     ThisCPU->ThisTask->tc_Node.ln_Name);
 
-                /* Look through the list */
-                for (node = GetHead(&ThisCPU->TaskReady); node; node = GetSucc(node))
-                {
-                    kprintf("0x%p R %d %s\n", node, node->ln_Pri, node->ln_Name);
-                }
-
-                for (node = GetHead(&ThisCPU->TaskWait); node; node = GetSucc(node))
-                {
-                    kprintf("0x%p W %d %s\n", node, node->ln_Pri, node->ln_Name);
-                }
-
                 kprintf("Idle called %d times\n", ThisCPU->IdleCount);
 #if AROS_SMP
             }
 #else
             } while (0);
 #endif
+            /* Look through the list */
+            for (node = GetHead(&SysBase->TaskReady); node; node = GetSucc(node))
+            {
+                kprintf("0x%p R %d %s\n", node, node->ln_Pri, node->ln_Name);
+            }
+
+            for (node = GetHead(&SysBase->TaskWait); node; node = GetSucc(node))
+            {
+                kprintf("0x%p W %d %s\n", node, node->ln_Pri, node->ln_Name);
+            }
+            Enable();
+
         }
         /* Help command */
         else if (strcmp(comm, "HE") == 0)

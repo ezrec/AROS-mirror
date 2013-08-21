@@ -236,13 +236,11 @@ struct ExecBase *PrepareExecBase(struct MemHeader *mh, struct TagItem *msg)
     NEWLIST(&SysBase->PortList);
     SysBase->PortList.lh_Type = NT_MSGPORT;
 
-#if AROS_SMP == 0
     NEWLIST(&SysBase->TaskReady);
     SysBase->TaskReady.lh_Type = NT_TASK;
 
     NEWLIST(&SysBase->TaskWait);
     SysBase->TaskWait.lh_Type = NT_TASK;
-#endif
 
     NEWLIST(&SysBase->SemaphoreList);
     SysBase->SemaphoreList.lh_Type = NT_SEMAPHORE;

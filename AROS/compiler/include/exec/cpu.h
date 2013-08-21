@@ -25,12 +25,11 @@ struct ExecCPUInfo {
     UWORD       Elapsed;        /* # of ticks, the current task has run         */
     UWORD       AttnResched;    /* Private scheduler flags                      */
     UWORD       SysFlags;       /* Private flags                                */
-    struct List TaskReady;      /* Tasks that are ready to run */
-    struct List TaskWait;       /* Tasks that wait for some event */
 };
 
 #define THISCPU (KernelBase ? (struct ExecCPUInfo *)KrnGetCPUStorage() : NULL)
 #else
+#define ExecCPUInfo ExecBase
 #define THISCPU  SysBase
 #endif
 

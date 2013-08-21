@@ -47,8 +47,8 @@ int main(void) {
     DEFINE(AttnFlags     , offsetof (struct ExecBase, AttnFlags));
     DEFINE(IDNestCnt     , offsetof (struct ExecBase, IDNestCnt));
     DEFINE(TDNestCnt     , offsetof (struct ExecBase, TDNestCnt));
-#if AROS_SMP == 0
     DEFINE(TaskReady     , offsetof (struct ExecBase, TaskReady));
+#if AROS_SMP == 0
     DEFINE(ThisTask      , offsetof (struct ExecBase, ThisTask));
     DEFINE(SysFlags      , offsetof (struct ExecBase, SysFlags));
     DEFINE(IdleCount     , offsetof (struct ExecBase, IdleCount));

@@ -89,18 +89,23 @@
         /* Yes. Move him to the ready list. */
         task->tc_State=TS_READY;
         Remove(&task->tc_Node);
-        Enqueue(&GetESysCPU(task)->TaskReady,&task->tc_Node);
+        Enqueue(&SysBase->TaskReady,&task->tc_Node);
 
-        /* Has it a higher priority as the current one? */
-        if (GetESysCPU(task)->ThisTask && task->tc_Node.ln_Pri > GetESysCPU(task)->ThisTask->tc_Node.ln_Pri)
-        {
-            /*
-                Yes. A taskswitch is necessary. Prepare one if possible.
-                (If the current task is not running it is already moved)
-            */
-            if (GetESysCPU(task)->ThisTask->tc_State == TS_RUN)
+#ifdef __mc68000
+        /* On m68k, a number of programs make the assumption
+         * that Signal() will *not* cause a reschedule if
+         * the current task is of a higher priority than 
+         * the desitination.
+         */
+        if ((task->tc_Node.ln_Pri > SysBase->ThisTask->tc_Node.ln_Pri) &&
+            (SysBase->ThisTask->tc_State == TS_RUN))
                 Reschedule();
-        }
+#else
+        /* On all other architectures, Signal() will case an immediate
+         * reschedule.
+         */
+        Reschedule();
+#endif
     }
 
     Enable();

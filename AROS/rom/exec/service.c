@@ -67,8 +67,10 @@ void ServiceTask(struct ExecBase *SysBase)
                 /* FIXME: Add fault handling here. Perhaps kernel-level GURU. */
 
                 /* The task is ready to run again. Move it back to TaskReady list. */
+                Disable();
                 task->tc_State = TS_READY;
-                Enqueue(&GetESysCPU(task)->TaskReady,&task->tc_Node);
+                Enqueue(&SysBase->TaskReady,&task->tc_Node);
+                Enable();
 
                 break;
             }

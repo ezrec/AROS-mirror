@@ -119,27 +119,6 @@ static BOOL ScanTask_Filter(struct Task *task, struct ScanTaskFilter *filter);
                 break;
         }
 
-        /* Now look into the ready list. */
-        ForeachNode(&ThisCPU->TaskReady, task) {
-            if (ScanTask_Filter(task, &filter)) {
-                done = hook ? CALLHOOKPKT(hook, task, message) : (IPTR)task;
-                if (done)
-                    break;
-            }
-        }
-
-        if (done)
-            break;
-
-        /* Now inspect the waiting list. */
-        ForeachNode(&ThisCPU->TaskWait, task) {
-            if (ScanTask_Filter(task, &filter)) {
-                done = hook ? CALLHOOKPKT(hook, task, message) : (IPTR)task;
-                if (done)
-                    break;
-            }
-        }
-
         if (done)
             break;
 
@@ -149,6 +128,28 @@ static BOOL ScanTask_Filter(struct Task *task, struct ScanTaskFilter *filter);
     /* Nothing to do */
     } while (0);
 #endif
+
+    if (!done) {
+        /* Now look into the ready list. */
+        ForeachNode(&SysBase->TaskReady, task) {
+            if (ScanTask_Filter(task, &filter)) {
+                done = hook ? CALLHOOKPKT(hook, task, message) : (IPTR)task;
+                if (done)
+                    break;
+            }
+        }
+    }
+
+    if (!done) {
+        /* Now inspect the waiting list. */
+        ForeachNode(&SysBase->TaskWait, task) {
+            if (ScanTask_Filter(task, &filter)) {
+                done = hook ? CALLHOOKPKT(hook, task, message) : (IPTR)task;
+                if (done)
+                    break;
+            }
+        }
+    }
 
     /* Return whatever I found. */
     Enable();
@@ -160,7 +161,8 @@ static BOOL ScanTask_Filter(struct Task *task, struct ScanTaskFilter *filter)
 {
     BOOL found = TRUE;
 #if AROS_SMP
-    ULONG cpu = GetETask(task)->et_SysCPU->ec_CPUNumber;
+    struct ExecCPUInfo *ec = GetETask(task)->et_SysCPU;
+    ULONG cpu = ec ? ec->ec_CPUNumber : ~0;
 #else
     ULONG cpu = 0;
 #endif

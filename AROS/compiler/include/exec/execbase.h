@@ -87,13 +87,8 @@ struct ExecBase
     struct List        IntrList;
     struct List        LibList;
     struct List        PortList;
-#if AROS_SMP
-    struct List        __TaskReady;      /* Tasks that are ready to run */
-    struct List        __TaskWait;       /* Tasks that wait for some event */
-#else
     struct List        TaskReady;      /* Tasks that are ready to run */
     struct List        TaskWait;       /* Tasks that wait for some event */
-#endif
     struct SoftIntList SoftInts[5];
 
 /* Miscellaneous Stuff */
@@ -122,7 +117,7 @@ struct ExecBase
     struct MinList ex_MemHandlers;
     APTR           ex_MemHandler;      /* PRIVATE */
 
-/* Additional fields for AROS */
+/* Additional field for AROS */
     struct Library      * DebugAROSBase;
 };
 
