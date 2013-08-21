@@ -36,12 +36,12 @@ BOOL core_Schedule(void)
         BYTE pri;
 
         /* Is the TaskReady empty? If yes, then the running task is the only one. Let it work */
-        if (IsListEmpty(&THISCPU->TaskReady))
+        if (IsListEmpty(&SysBase->TaskReady))
             return FALSE;
 
         /* Does the TaskReady list contains tasks with priority equal or lower than current task?
          * If so, then check further... */
-        pri = ((struct Task*)GetHead(&THISCPU->TaskReady))->tc_Node.ln_Pri;
+        pri = ((struct Task*)GetHead(&SysBase->TaskReady))->tc_Node.ln_Pri;
         if (pri <= task->tc_Node.ln_Pri)
         {
             /* If the running task did not used it's whole quantum yet, let it work */
@@ -56,7 +56,7 @@ BOOL core_Schedule(void)
      */
     D(bug("[KRN] Setting task 0x%p (%s) to READY\n", task, task->tc_Node.ln_Name));
     task->tc_State = TS_READY;
-    Enqueue(&THISCPU->TaskReady, &task->tc_Node);
+    Enqueue(&SysBase->TaskReady, &task->tc_Node);
 
     /* Select new task to run */
     return TRUE;
@@ -79,10 +79,9 @@ void core_Switch(void)
          * lock on some global/library semaphore it will most likelly mean immenent freeze. In most cases
          * however, user will be shown an alert.
          */
-        Remove(&task->tc_Node);
         task->tc_SigWait    = 0;
         task->tc_State      = TS_WAIT;
-        Enqueue(&THISCPU->TaskWait, &task->tc_Node);
+        Enqueue(&SysBase->TaskWait, &task->tc_Node);
 
         Alert(AN_StackProbe);
     }
@@ -104,7 +103,27 @@ struct Task *core_Dispatch(void)
 
     D(bug("[KRN] core_Dispatch() on CPU%d\n", THISCPU->ec_CPUNumber));
 
-    task = (struct Task *)REMHEAD(&THISCPU->TaskReady);
+#if AROS_SMP
+    /* Find the next available task that can run on this CPU
+     */
+    struct Task *tmp;
+    task = NULL;
+    if ((tmp = (struct Task *)GetHead(&SysBase->TaskReady))) {
+        BYTE pri = tmp->tc_Node.ln_Pri;
+        ForeachNode(&SysBase->TaskReady, tmp) {
+            if (tmp->tc_Node.ln_Pri == pri &&
+                (GetESysCPU(tmp) == NULL ||
+                 GetESysCPU(tmp) == THISCPU)) {
+                task = tmp;
+                break;
+            }
+        }
+        if (task)
+            REMOVE(task);
+    }
+#else
+    task = (struct Task *)REMHEAD(&SysBase->TaskReady);
+#endif
     if (!task)
     {
         /* Is the list of ready tasks empty? Well, go idle. */
@@ -120,6 +139,11 @@ struct Task *core_Dispatch(void)
         return NULL;
     }
 
+    if (GetESysCPU(task) == NULL) {
+        D(bug("[KRN] Scheduling %p.%d (%s) on CPU%d\n", task, task->tc_Node.ln_Pri, task->tc_Node.ln_Name, THISCPU->ec_CPUNumber));
+        SetESysCPU(task, THISCPU);
+    }
+
     ASSERT(GetESysCPU(task) == THISCPU);
 
     THISCPU->DispCount++;
@@ -129,7 +153,7 @@ struct Task *core_Dispatch(void)
     THISCPU->SysFlags &= ~SFF_QuantumOver;
     task->tc_State     = TS_RUN;
 
-    D(bug("[KRN] New task = %p (%s)\n", task, task->tc_Node.ln_Name));
+    D(bug("[KRN] New task %p.%d (%s)\n", task, task->tc_Node.ln_Pri, task->tc_Node.ln_Name));
 
     /*
      * Check the stack of the task we are about to launch.

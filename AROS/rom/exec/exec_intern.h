@@ -53,7 +53,7 @@ struct IntExecBase
     struct SupervisorAlertTask SAT;
     char   AlertBuffer[ALERT_BUFFER_SIZE];      /* Buffer for alert text                                 */
 #if AROS_SMP
-    struct List CPUList;
+    struct List CPUList;                        /* List of CPUs */
 #endif
 };
 

@@ -79,7 +79,7 @@
 
 	/* Move current task to the waiting list. */
 	me->tc_State=TS_WAIT;
-	Enqueue(&GetESysCPU(me)->TaskWait,&me->tc_Node);
+	Enqueue(&SysBase->TaskWait,&me->tc_Node);
 
 	/* And switch to the next ready task. */
 	KrnSwitch();
