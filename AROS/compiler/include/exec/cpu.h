@@ -22,7 +22,6 @@ struct ExecCPUInfo {
     struct Task *ThisTask;       /* Pointer to currently running task (readable) */
     ULONG       IdleCount;      /* Incremented when system goes idle            */
     ULONG       DispCount;      /* Incremented when a task is dispatched        */
-    UWORD       Quantum;        /* # of ticks, a task may run                   */
     UWORD       Elapsed;        /* # of ticks, the current task has run         */
     UWORD       AttnResched;    /* Private scheduler flags                      */
     UWORD       SysFlags;       /* Private flags                                */

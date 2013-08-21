@@ -263,9 +263,7 @@ struct ExecBase *PrepareExecBase(struct MemHeader *mh, struct TagItem *msg)
     InitSemaphore(&PrivExecBase(SysBase)->LowMemSem);
 
     SysBase->SoftVer        = VERSION_NUMBER;
-#if AROS_SMP == 0
     SysBase->Quantum        = 4;
-#endif
     SysBase->TaskTrapCode   = Exec_TrapHandler;
     SysBase->TaskExceptCode = NULL;
     SysBase->TaskExitCode   = Exec_TaskFinaliser;

@@ -125,7 +125,7 @@ struct Task *core_Dispatch(void)
     THISCPU->DispCount++;
     SysBase->IDNestCnt = task->tc_IDNestCnt;
     THISCPU->ThisTask  = task;
-    THISCPU->Elapsed   = THISCPU->Quantum;
+    THISCPU->Elapsed   = SysBase->Quantum;
     THISCPU->SysFlags &= ~SFF_QuantumOver;
     task->tc_State     = TS_RUN;
 

@@ -145,7 +145,7 @@ static void core_IRQ(int sig, regs_t *sc)
             THISCPU->AttnResched |= ARF_AttnSwitch;
         }
         if (THISCPU->Elapsed == 0)
-            THISCPU->Elapsed = THISCPU->Quantum;
+            THISCPU->Elapsed = SysBase->Quantum;
     } else {
         /* Just additional protection - what if there's more than 32 signals? */
         if (sig < IRQ_COUNT)
