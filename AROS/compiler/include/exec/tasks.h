@@ -85,8 +85,15 @@ struct Task
     ({struct Task *_t = (struct Task *)t;\
       (_t->tc_Flags & TF_ETASK) ? _t->tc_UnionETask.tc_ETask->et_SysCPU : \
      THISCPU; })
+#define SetESysCPU(t,ec) \
+    do { \
+      struct Task *_t = (struct Task *)t;\
+      if (_t->tc_Flags & TF_ETASK) \
+        _t->tc_UnionETask.tc_ETask->et_SysCPU = ec; \
+     } while (0)
 #else
 #define GetESysCPU(t) SysBase
+#define SetESysCPU(t,ec) do { } while (0)
 #endif
 
 

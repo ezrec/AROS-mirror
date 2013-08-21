@@ -154,7 +154,7 @@ Exec_InitETask(struct Task *task, struct ExecBase *SysBase)
     }
     Permit();
     
-    /* If the parent task is an ETask, add myself as its child */
+    /* Finally if the parent task is an ETask, add myself as its child */
     if(et->et_Parent && ((struct Task*) et->et_Parent)->tc_Flags & TF_ETASK)
     {
 	Forbid();
@@ -163,30 +163,11 @@ Exec_InitETask(struct Task *task, struct ExecBase *SysBase)
     }
 
 #if AROS_SMP
-    /* Find a CPU to attach this to */
-    struct ExecCPUInfo *ec;
-    ForeachNode(&PrivExecBase(SysBase)->CPUList, ec) {
-        /* Unused CPU? */
-        if (IsListEmpty(&ec->TaskReady)) { // && IsListEmpty(&ec->TaskWait)) {
-            et->et_SysCPU = ec;
-            break;
-        }
-    }
-    if (et->et_SysCPU == NULL) {
-        ULONG i, maxcpus;
-        ListLength(&PrivExecBase(SysBase)->CPUList, maxcpus);
-        /* (semi) randomly pick one */
-        i = (((IPTR)et)>>5) % maxcpus;
-        ForeachNode(&PrivExecBase(SysBase)->CPUList, ec) {
-            if (i == 0)
-                break;
-            i--;
-        }
-        et->et_SysCPU = ec;
-    }
-    if (et->et_SysCPU == NULL) {
-        et->et_SysCPU = (struct ExecCPUInfo *)GetHead(&PrivExecBase(SysBase)->CPUList);
-    }
+    /* The Task's et->et_SysCPU will be assigned
+     * by core_Dispatch() by the first available 
+     * CPU, so we set it to NULL for now.
+     */
+    et->et_SysCPU = NULL;
 #endif
 
     return TRUE;

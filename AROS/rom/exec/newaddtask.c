@@ -178,28 +178,26 @@
 
     /* Add the new task to the ready list. */
     task->tc_State=TS_READY;
-    Enqueue(&GetESysCPU(task)->TaskReady,&task->tc_Node);
+    Enqueue(&SysBase->TaskReady,&task->tc_Node);
 
-    /*
-        Determine if a task switch is necessary. (If the new task has a
-        higher priority than the current one and the current one
-        is still active.) If the current task isn't of type TS_RUN it
-        is already gone.
-    */
-
-    if (GetESysCPU(task)->ThisTask == NULL ||
-       (task->tc_Node.ln_Pri > GetESysCPU(task)->ThisTask->tc_Node.ln_Pri &&
-        GetESysCPU(task)->ThisTask->tc_State == TS_RUN))
-    {
-        D(bug("[AddTask] Rescheduling...\n"));
-
-        /* Reschedule() will take care about disabled task switching automatically */
+#ifdef __mc68000
+        /* On m68k, a number of programs make the assumption
+         * that the AddTask() family will *not* cause a reschedule
+         * if the current task is of a higher priority than 
+         * the desitination.
+         */
+    if ((task->tc_Node.ln_Pri > SysBase->ThisTask->tc_Node.ln_Pri &&
+        (SysBase->ThisTask->tc_State == TS_RUN))
         Reschedule();
-    }
+#else
+    /* For all other architectures, the Reschedule() is unconditional.
+     */
+    Reschedule();
+#endif
 
     Enable();
 
-    DADDTASK("Added task 0x%p on CPU%d", task, GetESysCPU(task)->ec_CPUNumber);
+    DADDTASK("Added task 0x%p", task);
     return task;
 
     AROS_LIBFUNC_EXIT

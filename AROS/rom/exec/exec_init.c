@@ -190,10 +190,6 @@ AROS_UFH3S(struct ExecBase *, GM_UNIQUENAME(init),
         ec = AllocMem(sizeof(*ec), MEMF_ANY | MEMF_CLEAR);
         ec->ec_Node.ln_Pri = 127;   /* Highest priority CPU */
         ec->ec_CPUNumber = 0;
-        NEWLIST(&ec->TaskReady);
-        ec->TaskReady.lh_Type = NT_TASK;
-        NEWLIST(&ec->TaskWait);
-        ec->TaskWait.lh_Type = NT_TASK;
         AddHead(&PrivExecBase(SysBase)->CPUList, (struct Node *)ec);
         KrnSetCPUStorage(ec);
     } while (0);
@@ -293,10 +289,6 @@ AROS_UFH3S(struct ExecBase *, GM_UNIQUENAME(init),
 
                     ec->ec_Node.ln_Pri = 0; /* Normal priority */
                     ec->ec_CPUNumber = i;
-                    NEWLIST(&ec->TaskReady);
-                    ec->TaskReady.lh_Type = NT_TASK;
-                    NEWLIST(&ec->TaskWait);
-                    ec->TaskWait.lh_Type = NT_TASK;
 
                     AddTail(&PrivExecBase(SysBase)->CPUList, (struct Node *)ec);
 
