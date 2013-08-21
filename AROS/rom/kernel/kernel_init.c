@@ -12,6 +12,7 @@
 #include <exec/resident.h>
 #include <proto/arossupport.h>
 #include <proto/exec.h>
+#include <proto/kernel.h>
 
 #include <inttypes.h>
 #include <stdlib.h>
@@ -102,6 +103,20 @@ AROS_UFH3S(struct KernelBase *, Kernel_Init,
 
     for (i=0; i < IRQ_COUNT; i++)
         NEWLIST(&KernelBase->kb_Interrupts[i]);
+
+    if (AROS_SMP) {
+        ULONG cpus;
+        cpus = LibGetTagData(KRN_MaxCPUs, 0, KrnGetBootInfo());
+        if (cpus > 0)
+            KernelBase->kb_CPUCount = cpus;
+        else 
+            KernelBase->kb_CPUCount = 1;
+
+        KernelBase->kb_CPU = AllocMem(sizeof(KernelBase->kb_CPU[0]) * KernelBase->kb_CPUCount, MEMF_ANY | MEMF_CLEAR);
+        for (i = 0; i < KernelBase->kb_CPUCount; i++) {
+            KernelBase->kb_CPU[i].kc_Pri = -128;
+        }
+    }
 
     /*
      * Everything is ok, add our resource.
