@@ -494,7 +494,7 @@ void panic(const char *str)
 */
 static void __bootstrap(unsigned int magic, void *mb)
 {
-    struct mb_mmap *mmap = NULL;
+    volatile struct mb_mmap *mmap = NULL;
     unsigned long len = 0;
     unsigned long ro_size = 0;
     unsigned long rw_size = 0;

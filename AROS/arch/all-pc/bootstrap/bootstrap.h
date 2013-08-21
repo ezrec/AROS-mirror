@@ -65,8 +65,8 @@ void Hello(void);
 int ParseCmdLine(const char *cmdline);
 struct mb_mmap *mmap_make(unsigned long *len, unsigned long mem_lower, unsigned long long mem_upper);
 void panic(const char *str);
-unsigned long mb1_parse(struct multiboot *mb, struct mb_mmap **mmap_addr, unsigned long *mmap_len);
-unsigned long mb2_parse(void *mb, struct mb_mmap **mmap_addr, unsigned long *mmap_len);
+unsigned long mb1_parse(struct multiboot *mb, volatile struct mb_mmap **mmap_addr, unsigned long *mmap_len);
+unsigned long mb2_parse(void *mb, volatile struct mb_mmap **mmap_addr, unsigned long *mmap_len);
 void setupVESA(char *str);
 
 #if defined(__i386__) || defined(__x86_64__)
