@@ -1,6 +1,8 @@
 # $Id$
 include $(TOP)/config/make.cfg
 
+#MM- kernel-exec-pc: kernel-kernel-pc
+
 FILES := reset_init supervisor
 
 # From kernel.resource we need only kernel_syscalls.h
