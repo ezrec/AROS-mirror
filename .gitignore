@@ -1,1 +1,4 @@
 Builds/
+.settings/
+.cproject
+.project
