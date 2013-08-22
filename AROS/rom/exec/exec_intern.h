@@ -57,6 +57,12 @@ struct IntExecBase
 #endif
 };
 
+#if AROS_SMP
+#define THISCPU (KernelBase ? (struct ExecCPUInfo *)KrnGetCPUStorage() : NULL)
+#else
+#define THISCPU  SysBase
+#endif
+
 #define PrivExecBase(base) ((struct IntExecBase *)base)
 #define PD(base)   PrivExecBase(base)->PlatformData
 #define KernelBase PrivExecBase(SysBase)->KernelBase
