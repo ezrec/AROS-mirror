@@ -163,7 +163,7 @@ void cpu_Dispatch(regs_t *regs)
                 pd->irq_enable = TRUE;
             }
 
-            if ((SysBase->SysFlags & SFF_SoftInt))
+            if ((THISCPU->SysFlags & SFF_SoftInt))
                 core_Cause(INTB_SOFTINT, 1L << INTB_SOFTINT);
         }
     

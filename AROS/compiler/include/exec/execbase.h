@@ -60,11 +60,12 @@ struct ExecBase
 #endif
     UWORD        Quantum;        /* # of ticks, a task may run                   */
 #if AROS_SMP
-    UWORD        __Elapsed;        /* # of ticks, the current task has run         */
+    UWORD        __Elapsed;      /* # of ticks, the current task has run         */
+    UWORD        __SysFlags;     /* Private flags                                */
 #else
     UWORD        Elapsed;        /* # of ticks, the current task has run         */
-#endif
     UWORD        SysFlags;       /* Private flags                                */
+#endif
     BYTE         IDNestCnt;      /* Disable() nesting count                      */
     BYTE         TDNestCnt;      /* Forbid() nesting count                       */
     UWORD        AttnFlags;      /* Attention Flags (readable, see below)        */

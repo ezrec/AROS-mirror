@@ -97,7 +97,7 @@
         softint->is_Node.ln_Type = NT_SOFTINT;
 
         /* Signal pending software interrupt condition */
-        SysBase->SysFlags |= SFF_SoftInt;
+        THISCPU->SysFlags |= SFF_SoftInt;
 
 	/*
 	 * Quick soft int request. For optimal performance m68k-amiga
@@ -140,10 +140,10 @@ AROS_INTH0(SoftIntDispatch)
     CUSTOM_ACK(INTF_SOFTINT);
 
     /* Don't bother if there are no software ints queued. */
-    if( SysBase->SysFlags & SFF_SoftInt )
+    if( THISCPU->SysFlags & SFF_SoftInt )
     {
 	/* Clear Software interrupt pending flag. */
-	SysBase->SysFlags &= ~(SFF_SoftInt);
+	THISCPU->SysFlags &= ~(SFF_SoftInt);
 
         for(;;)
         {
