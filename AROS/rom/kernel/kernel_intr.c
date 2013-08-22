@@ -1,5 +1,5 @@
 /*
-    Copyright © 2011, The AROS Development Team. All rights reserved.
+    Copyright ï¿½ 2011, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: High-level scheduler calling code
@@ -39,15 +39,15 @@ void core_ExitInterrupt(regs_t *regs)
          * Do not disturb task if it's not necessary. 
          * Reschedule only if switch pending flag is set. Exit otherwise.
          */
-        if (SysBase->AttnResched & ARF_AttnSwitch)
+        if (THISCPU->AttnResched & ARF_AttnSwitch)
         {
-	    /* Run task scheduling sequence */
+            /* Run task scheduling sequence */
             if (core_Schedule())
-	    {
-		cpu_Switch(regs);
-		cpu_Dispatch(regs);
+            {
+                cpu_Switch(regs);
+                cpu_Dispatch(regs);
             }
-	}
+        }
     }
 }
 
@@ -60,21 +60,21 @@ void core_SysCall(int sc, regs_t *regs)
 {
     switch (sc)
     {
-    case SC_CAUSE:
-	core_ExitInterrupt(regs);
-        break;
-
-    case SC_SCHEDULE:
-        if (!core_Schedule())
+        case SC_CAUSE:
+            core_ExitInterrupt(regs);
             break;
-        /* Fallthrough */
 
-    case SC_SWITCH:
-        cpu_Switch(regs);
-        /* Fallthrough */
+        case SC_SCHEDULE:
+            if (!core_Schedule())
+                break;
+            /* Fallthrough */
 
-    case SC_DISPATCH:
-        cpu_Dispatch(regs);
-        break;
+        case SC_SWITCH:
+            cpu_Switch(regs);
+            /* Fallthrough */
+
+        case SC_DISPATCH:
+            cpu_Dispatch(regs);
+            break;
     }
 }
