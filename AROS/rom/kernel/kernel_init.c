@@ -117,7 +117,7 @@ AROS_UFH3S(struct KernelBase *, Kernel_Init,
         for (i = 0; i < KernelBase->kb_CPUCount; i++) {
             KernelBase->kb_CPU[i].kc_Pri = -128;
         }
-    } while (0)
+    } while (0);
 #endif
 
     /*
