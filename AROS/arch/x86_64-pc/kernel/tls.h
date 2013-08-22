@@ -5,6 +5,7 @@ typedef struct tls
 {
     struct ExecBase     *SysBase;
     void *              *KernelBase;    /* Base of kernel.resource */
+    void *              *CPUStorage;    /* Per-CPU private data */
 } tls_t;
 
 #define TLS_OFFSET(name) ((char *)&(((tls_t *)0)->name)-(char *)0)
