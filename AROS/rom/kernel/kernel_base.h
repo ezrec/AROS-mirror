@@ -40,6 +40,12 @@ struct KernelBase
     struct PlatformData	  *kb_PlatformData;
 };
 
+#if AROS_SMP
+#define THISCPU (KernelBase ? (struct ExecCPUInfo *)KrnGetCPUStorage() : NULL)
+#else
+#define THISCPU  SysBase
+#endif
+
 /*
  * Some useful global variables. They are global because:
  * - BootMsg needs to be stored before KernelBase is allocated;
