@@ -99,7 +99,7 @@
          * only once interrupts are enabled again) software interrupt,
          * so we check it manually here in Enable(), similar to Permit().
          */
-        if (SysBase->SysFlags & SFF_SoftInt)
+        if (THISCPU->SysFlags & SFF_SoftInt)
         {
             /*
              * First we react on SFF_SoftInt by issuing KrnCause() call. This triggers
