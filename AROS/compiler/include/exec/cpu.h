@@ -26,11 +26,6 @@ struct ExecCPUInfo {
     UWORD       AttnResched;    /* Private scheduler flags                      */
     UWORD       SysFlags;       /* Private flags                                */
 };
-
-#define THISCPU (KernelBase ? (struct ExecCPUInfo *)KrnGetCPUStorage() : NULL)
-#else
-#define ExecCPUInfo ExecBase
-#define THISCPU  SysBase
 #endif
 
 #endif /* EXEC_CPU_H */
