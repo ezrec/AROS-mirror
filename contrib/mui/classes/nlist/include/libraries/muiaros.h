@@ -491,7 +491,7 @@ enum
 
 /* 
     Copyright © 1999, David Le Corfec.
-    Copyright © 2002-2003, The AROS Development Team.
+    Copyright © 2002-2012, The AROS Development Team.
     All rights reserved.
 
     $Id$
@@ -510,17 +510,24 @@ enum
 #define MUIM_Family_Remove     (MUIB_MUI|0x0042f8a9) /* MUI: V8  */
 #define MUIM_Family_Sort       (MUIB_MUI|0x00421c49) /* MUI: V8  */
 #define MUIM_Family_Transfer   (MUIB_MUI|0x0042c14a) /* MUI: V8  */
+#define MUIM_Family_GetChild   (MUIB_MUI|0x0042c556) /* MUI: V20 */
 struct MUIP_Family_AddHead     {STACKED ULONG MethodID; STACKED Object *obj;};
 struct MUIP_Family_AddTail     {STACKED ULONG MethodID; STACKED Object *obj;};
 struct MUIP_Family_Insert      {STACKED ULONG MethodID; STACKED Object *obj; STACKED Object *pred;};
 struct MUIP_Family_Remove      {STACKED ULONG MethodID; STACKED Object *obj;};
 struct MUIP_Family_Sort        {STACKED ULONG MethodID; STACKED Object *obj[1];};
 struct MUIP_Family_Transfer    {STACKED ULONG MethodID; STACKED Object *family;};
+struct MUIP_Family_GetChild    {STACKED ULONG MethodID; STACKED LONG nr; STACKED Object *ref;};
 
 /*** Attributes *************************************************************/
 #define MUIA_Family_Child      (MUIB_MUI|0x0042c696) /* MUI: V8  i.. Object *          */
 #define MUIA_Family_List       (MUIB_MUI|0x00424b9e) /* MUI: V8  ..g struct MinList *  */
+#define MUIA_Family_ChildCount (MUIB_MUI|0x0042b25a) /* MUI: V20 ..g LONG              */
 
+#define MUIV_Family_GetChild_First      0
+#define MUIV_Family_GetChild_Last       -1
+#define MUIV_Family_GetChild_Next       -2
+#define MUIV_Family_GetChild_Previous   -3
 
 
 #endif /* _CLASSES_FAMILY_H */
@@ -1213,7 +1220,7 @@ struct MUI_EventHandlerNode
 #ifndef _MUI_CLASSES_AREA_H
 /* 
     Copyright © 1999, David Le Corfec.
-    Copyright © 2002 - 2011, The AROS Development Team.
+    Copyright © 2002 - 2012, The AROS Development Team.
     All rights reserved.
 
     $Id$
@@ -1323,6 +1330,7 @@ struct MUI_DragImage
 #define MUIA_CustomBackfill		(MUIB_MUI|0x00420a63) /* undoc    i..                   */
 #define MUIA_CycleChain         	(MUIB_MUI|0x00421ce7) /* MUI: V11 isg LONG              */
 #define MUIA_Disabled           	(MUIB_MUI|0x00423661) /* MUI: V4  isg BOOL              */
+#define MUIA_DoubleBuffer               (MUIB_MUI|0x0042a9c7) /* MUI: V20 isg BOOL              */
 #define MUIA_Draggable          	(MUIB_MUI|0x00420b6e) /* MUI: V11 isg BOOL              */
 #define MUIA_Dropable           	(MUIB_MUI|0x0042fbce) /* MUI: V11 isg BOOL              */
 #define MUIA_FillArea           	(MUIB_MUI|0x004294a3) /* MUI: V4  is. BOOL              */
@@ -1468,6 +1476,7 @@ enum {
     MUIV_Frame_Knob,
     MUIV_Frame_Drag,
     MUIV_Frame_Count,
+    MUIV_Frame_Register = 21,
 };
 
 // offset 95
@@ -1509,7 +1518,7 @@ void __area_finish_minmax(Object *obj, struct MUI_MinMax *MinMaxInfo);
 
 /* 
     Copyright © 1999, David Le Corfec.
-    Copyright © 2002-2003, The AROS Development Team.
+    Copyright © 2002-2012, The AROS Development Team.
     All rights reserved.
 
     $Id$
@@ -1522,12 +1531,18 @@ void __area_finish_minmax(Object *obj, struct MUI_MinMax *MinMaxInfo);
 #define MUIB_Group                 (MUIB_ZUNE | 0x00001000)
 
 /*** Methods ****************************************************************/
+#define MUIM_Group_AddHead         (MUIB_MUI|0x0042e200) /* MUI: V8 */
+#define MUIM_Group_AddTail         (MUIB_MUI|0x0042d752) /* MUI: V8 */
 #define MUIM_Group_ExitChange      (MUIB_MUI|0x0042d1cc) /* MUI: V11 */
 #define MUIM_Group_InitChange      (MUIB_MUI|0x00420887) /* MUI: V11 */
 #define MUIM_Group_Sort            (MUIB_MUI|0x00427417) /* MUI: V4  */
+#define MUIM_Group_Remove          (MUIB_MUI|0x0042f8a9) /* MUI: V8 */
+struct MUIP_Group_AddHead          {STACKED ULONG MethodID; STACKED Object *obj;};
+struct MUIP_Group_AddTail          {STACKED ULONG MethodID; STACKED Object *obj;};
 struct MUIP_Group_ExitChange       {STACKED ULONG MethodID;};
 struct MUIP_Group_InitChange       {STACKED ULONG MethodID;};
 struct MUIP_Group_Sort             {STACKED ULONG MethodID; STACKED Object *obj[1];};
+struct MUIP_Group_Remove           {STACKED ULONG MethodID; STACKED Object *obj;};
 
 #define MUIM_Group_DoMethodNoForward (MUIB_Group | 0x00000000)
 struct MUIP_Group_DoMethodNoForward  {STACKED ULONG MethodID; STACKED ULONG DoMethodID; }; /* msg stuff follows */
@@ -1567,10 +1582,10 @@ struct MUI_LayoutMsg
     STACKED struct MUI_MinMax  lm_MinMax;   /* here you have to place the MUILM_MINMAX results */
     struct
     {
-	STACKED LONG Width;
-	STACKED LONG Height;
-	STACKED ULONG priv5;
-	STACKED ULONG priv6;
+        STACKED LONG Width;
+        STACKED LONG Height;
+        STACKED ULONG priv5;
+        STACKED ULONG priv6;
     } lm_Layout;   /* size (and result) for MUILM_LAYOUT */
 };
 
@@ -2352,7 +2367,7 @@ struct MUIP_List_InsertSingle         {STACKED ULONG MethodID; STACKED APTR entr
 struct MUIP_List_Jump                 {STACKED ULONG MethodID; STACKED LONG pos;};
 struct MUIP_List_Move                 {STACKED ULONG MethodID; STACKED LONG from; STACKED LONG to;};
 struct MUIP_List_NextSelected         {STACKED ULONG MethodID; STACKED LONG *pos;};
-struct MUIP_List_Redraw               {STACKED ULONG MethodID; STACKED LONG pos;};
+struct MUIP_List_Redraw               {STACKED ULONG MethodID; STACKED LONG pos; STACKED APTR entry;};
 struct MUIP_List_Remove               {STACKED ULONG MethodID; STACKED LONG pos;};
 struct MUIP_List_Select               {STACKED ULONG MethodID; STACKED LONG pos; STACKED LONG seltype; STACKED LONG *state;};
 struct MUIP_List_Sort                 {STACKED ULONG MethodID;};
@@ -2457,6 +2472,7 @@ enum
 {
     MUIV_List_Redraw_Active = -1,
     MUIV_List_Redraw_All    = -2,
+    MUIV_List_Redraw_Entry  = -3,
 };
 
 enum
@@ -2516,7 +2532,7 @@ enum
 #define _MUI_CLASSES_FLOATTEXT_H
 
 /*
-    Copyright © 2002-2010, The AROS Development Team. All rights reserved.
+    Copyright © 2002-2013, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -2527,13 +2543,17 @@ enum
 #define MUIB_Floattext           (MUIB_ZUNE | 0x00001500)
 
 /*** Attributes *************************************************************/
-#define MUIA_Floattext_Justify   (MUIB_MUI|0x0042dc03) /* MUI: V4  isg BOOL   */
-#define MUIA_Floattext_SkipChars (MUIB_MUI|0x00425c7d) /* MUI: V4  is. STRPTR */
-#define MUIA_Floattext_TabSize   (MUIB_MUI|0x00427d17) /* MUI: V4  is. LONG   */
-#define MUIA_Floattext_Text      (MUIB_MUI|0x0042d16a) /* MUI: V4  isg STRPTR */
+#define MUIA_Floattext_Justify \
+    (MUIB_MUI | 0x0042dc03)  /* MUI: V4  isg BOOL   */
+#define MUIA_Floattext_SkipChars \
+    (MUIB_MUI | 0x00425c7d)  /* MUI: V4  is. STRPTR */
+#define MUIA_Floattext_TabSize \
+    (MUIB_MUI | 0x00427d17)  /* MUI: V4  is. LONG   */
+#define MUIA_Floattext_Text \
+    (MUIB_MUI | 0x0042d16a)  /* MUI: V4  isg STRPTR */
 
 
-#endif /* _MUI_CLASSES_VOLUMELIST_H */
+#endif /* _MUI_CLASSES_FLOATTEXT_H */
 #endif
 
 #ifndef _MUI_CLASSES_POPSTRING_H
@@ -2604,7 +2624,7 @@ struct  MUIP_Popstring_Open   {STACKED ULONG MethodID; };
 #define _MUI_CLASSES_CYCLE_H
 
 /*
-    Copyright © 2002-2003, The AROS Development Team. All rights reserved.
+    Copyright © 2002-2013, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -2615,8 +2635,8 @@ struct  MUIP_Popstring_Open   {STACKED ULONG MethodID; };
 #define MUIB_Cycle         (MUIB_ZUNE | 0x00000a00)
 
 /*** Attributes *************************************************************/
-#define MUIA_Cycle_Active  (MUIB_MUI|0x00421788) /* MUI:V4  isg LONG      */
-#define MUIA_Cycle_Entries (MUIB_MUI|0x00420629) /* MUI:V4  i.. STRPTR    */
+#define MUIA_Cycle_Active  (MUIB_MUI | 0x00421788) /* MUI:V4  isg LONG      */
+#define MUIA_Cycle_Entries (MUIB_MUI | 0x00420629) /* MUI:V4  is. STRPTR    */
 
 enum
 {
@@ -3623,6 +3643,110 @@ struct MUI_Palette_Entry
 
 
 #endif /* _MUI_PALETTE_H */
+#endif
+
+#ifndef _MUI_CLASSES_TITLE_H
+#ifndef _MUI_CLASSES_TITLE_H
+#define _MUI_CLASSES_TITLE_H
+
+/*
+    Copyright © 2012, The AROS Development Team. All rights reserved.
+    $Id$
+*/
+
+/*** Name *******************************************************************/
+#define MUIC_Title          "Title.mui"
+
+/*** Identifier base (for Zune extensions) **********************************/
+
+
+/*** Attributes *************************************************************/
+
+
+
+#endif /* _MUI_CLASSES_TITLE_H */
+#endif
+
+#ifndef _MUI_CLASSES_PROCESS_H
+#ifndef _MUI_CLASSES_PROCESS_H
+#define _MUI_CLASSES_PROCESS_H
+
+/*
+    Copyright © 2012, The AROS Development Team. All rights reserved.
+    $Id$
+*/
+
+/*** Name *******************************************************************/
+#define MUIC_Process            "Process.mui"
+
+/*** Identifier base (for Zune extensions) **********************************/
+
+/*** Methods ****************************************************************/
+#define MUIM_Process_Kill               (MUIB_MUI|0x004264cf) /* V20 */
+#define MUIM_Process_Launch             (MUIB_MUI|0x00425df7) /* V20 */
+#define MUIM_Process_Process            (MUIB_MUI|0x004230aa) /* V20 */
+#define MUIM_Process_Signal             (MUIB_MUI|0x0042e791) /* V20 */
+struct  MUIP_Process_Kill               {STACKED ULONG MethodID; STACKED LONG maxdelay;};
+struct  MUIP_Process_Launch             {STACKED ULONG MethodID;};
+struct  MUIP_Process_Process            {STACKED ULONG MethodID; STACKED ULONG *kill; STACKED Object *proc;};
+struct  MUIP_Process_Signal             {STACKED ULONG MethodID; STACKED ULONG sigs;};
+
+/*** Attributes *************************************************************/
+#define MUIA_Process_AutoLaunch         (MUIB_MUI|0x00428855) /* V20 i.. ULONG             */
+#define MUIA_Process_Name               (MUIB_MUI|0x0042732b) /* V20 i.. ULONG             */
+#define MUIA_Process_Priority           (MUIB_MUI|0x00422a54) /* V20 i.. ULONG             */
+#define MUIA_Process_SourceClass        (MUIB_MUI|0x0042cf8b) /* V20 i.. ULONG             */
+#define MUIA_Process_SourceObject       (MUIB_MUI|0x004212a2) /* V20 i.. ULONG             */
+#define MUIA_Process_StackSize          (MUIB_MUI|0x004230d0) /* V20 i.. ULONG             */
+#define MUIA_Process_Task               (MUIB_MUI|0x0042b123) /* V20 ..g ULONG             */
+
+
+
+#endif /* _MUI_CLASSES_PROCESS_H */
+#endif
+
+#ifndef _MUI_CLASSES_PIXMAP_H
+#ifndef _MUI_CLASSES_PIXMAP_H
+#define _MUI_CLASSES_PIXMAP_H
+
+/*
+    Copyright © 2011, Thore Böckelmann. All rights reserved.
+    Copyright © 2012, The AROS Development Team. All rights reserved.
+    $Id$
+*/
+
+/*** Name *******************************************************************/
+#define MUIC_Pixmap "Pixmap.mui"
+
+/*** Identifier base (for Zune extensions) **********************************/
+#define MUIB_Pixmap                     (MUIB_ZUNE|0x00003600)
+
+/*** Methods ****************************************************************/
+#define MUIM_Pixmap_DrawSection         (MUIB_MUI|0x0042ce0f) /* private */ /* V20 */
+struct  MUIP_Pixmap_DrawSection          {STACKED ULONG MethodID; STACKED LONG sx; STACKED LONG sy; STACKED LONG sw; STACKED LONG sh; 
+                                          STACKED struct MUI_RenderInfo *mri; STACKED LONG dx; STACKED LONG dy; }; /* private */
+
+/*** Attributes *************************************************************/
+#define MUIA_Pixmap_Alpha               (MUIB_MUI|0x00421fef) /* V20 isg ULONG             */
+#define MUIA_Pixmap_CLUT                (MUIB_MUI|0x0042042a) /* V20 isg ULONG *           */
+#define MUIA_Pixmap_CompressedSize      (MUIB_MUI|0x0042e7e4) /* V20 isg ULONG             */
+#define MUIA_Pixmap_Compression         (MUIB_MUI|0x0042ce74) /* V20 isg ULONG             */
+#define MUIA_Pixmap_Data                (MUIB_MUI|0x00429ea0) /* V20 isg APTR              */
+#define MUIA_Pixmap_Format              (MUIB_MUI|0x0042ab14) /* V20 isg ULONG             */
+#define MUIA_Pixmap_Height              (MUIB_MUI|0x004288be) /* V20 isg LONG              */
+#define MUIA_Pixmap_UncompressedData    (MUIB_MUI|0x0042b085) /* V20 ..g APTR              */
+#define MUIA_Pixmap_Width               (MUIB_MUI|0x0042ccb8) /* V20 isg LONG              */
+
+#define MUIV_Pixmap_Compression_None 0
+#define MUIV_Pixmap_Compression_RLE 1
+#define MUIV_Pixmap_Compression_BZip2 2
+#define MUIV_Pixmap_Format_CLUT8 0
+#define MUIV_Pixmap_Format_RGB24 1
+#define MUIV_Pixmap_Format_ARGB32 2
+
+
+
+#endif
 #endif
 
 /**************************************************************************
