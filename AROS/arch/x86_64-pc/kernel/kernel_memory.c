@@ -11,7 +11,7 @@
 
 #include "tlsf.h"
 
-#define D(x) x
+#define D(x)
 
 
 BOOL krnAddMemory(struct MemHeaderExt **mhe, IPTR start, IPTR end,
