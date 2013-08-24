@@ -14,6 +14,7 @@
 #include "kernel_intern.h"
 #include "apic.h"
 #include "xtpic.h"
+#include "tls.h"
 
 #define D(x) x
 #define DAPIC(x)
@@ -26,6 +27,8 @@ static int Platform_Init(struct KernelBase *LIBBASE)
     int i;
 
     D(bug("[Kernel] Kernel_Init: Post-exec init. KernelBase @ %p\n", LIBBASE));
+
+    TLS_SET(KernelBase, LIBBASE);
 
     for (i = 0; i < IRQ_COUNT; i++)
     {
@@ -47,7 +50,7 @@ static int Platform_Init(struct KernelBase *LIBBASE)
 
     pd = AllocMem(sizeof(struct PlatformData), MEMF_PUBLIC|MEMF_CLEAR);
     if (!pd)
-    	return FALSE;
+        return FALSE;
 
     LIBBASE->kb_PlatformData = pd;
 
