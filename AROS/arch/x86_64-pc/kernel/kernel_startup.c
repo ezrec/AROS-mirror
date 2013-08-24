@@ -441,8 +441,8 @@ void kernel_cstart(const struct TagItem *start_msg)
     {
         mh2 = (struct MemHeader *)mh->mh_Node.ln_Succ;
 
-	D(bug("[Kernel] * 0x%p - 0x%p (%s)\n", mh->mh_Lower, mh->mh_Upper, mh->mh_Node.ln_Name));
-	Enqueue(&SysBase->MemList, &mh->mh_Node);
+        D(bug("[Kernel] * 0x%p - 0x%p (%s)\n", mh->mh_Lower, mh->mh_Upper, mh->mh_Node.ln_Name));
+        Enqueue(&SysBase->MemList, &mh->mh_Node);
     }
 
     /*
@@ -530,7 +530,7 @@ void core_SetupGDT(struct KernBootPrivate *__KernBootPrivate)
         __KernBootPrivate->GDT        = krnAllocBootMemAligned(sizeof(struct gdt_64bit), 128);
         __KernBootPrivate->TSS        = krnAllocBootMemAligned(sizeof(struct tss_64bit) * 16, 128);
 
-        D(bug("[Kernel] Allocated GDT 0x%p, TLS 0x%p\n", __KernBootPrivate->GDT, __KernBootPrivate->system_tls));
+        D(bug("[Kernel] Allocated GDT 0x%p, TLS 0x%p size %d\n", __KernBootPrivate->GDT, __KernBootPrivate->system_tls, sizeof(tls_t)));
     }
 
     GDT = __KernBootPrivate->GDT;
@@ -602,9 +602,9 @@ void core_SetupGDT(struct KernBootPrivate *__KernBootPrivate)
     GDT->gs.type=0x12;      	/* data segment */
     GDT->gs.dpl=3;    		/* user level */
     GDT->gs.p=1;            	/* present */
-    GDT->gs.base_low  = tls_ptr & 0xffff;
-    GDT->gs.base_mid  = (tls_ptr >> 16) & 0xff;
-    GDT->gs.base_high = (tls_ptr >> 24) & 0xff;   
+    GDT->gs.base_low  = ((unsigned long)tls_ptr) & 0xffff;
+    GDT->gs.base_mid  = (((unsigned long)tls_ptr) >> 16) & 0xff;
+    GDT->gs.base_high = (((unsigned long)tls_ptr) >> 24) & 0xff;
     GDT->gs.g=1;
     GDT->gs.d=1;
 }

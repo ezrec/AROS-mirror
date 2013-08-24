@@ -9,6 +9,6 @@
 #define USER_CS32 0x1b
 #define USER_CS   0x2b
 #define USER_DS   0x23
-#define USER_GS   0x30
+#define USER_GS   0x33
 #define SEG_LDT   0x38
 #define TASK_SEG  0x40

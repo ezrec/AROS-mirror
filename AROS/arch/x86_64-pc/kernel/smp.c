@@ -11,6 +11,7 @@
 #include "kernel_syscall.h"
 #include "apic.h"
 #include "smp.h"
+#include "tls.h"
 
 #define D(x) x
 #define DWAKE(x)
@@ -165,6 +166,13 @@ int smp_Initialize(void)
 {
     struct KernelBase *KernelBase = getKernelBase();
     struct PlatformData *pdata = KernelBase->kb_PlatformData;
+
+    /* Set the per-cpu data table in TLS */
+    APTR *cpu_storage = AllocMem(sizeof(APTR) * pdata->kb_APIC->count, MEMF_CLEAR);
+
+    D(bug("[SMP] Per-cpu storage table at %p\n", cpu_storage));
+
+    TLS_SET(CPUStorage, cpu_storage);
 
     if (pdata->kb_APIC && (pdata->kb_APIC->count > 1))
     {
