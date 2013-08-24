@@ -10,7 +10,10 @@ AROS_LH0(unsigned int, KrnGetCPUNumber,
 {
     AROS_LIBFUNC_INIT
 
-    return core_APIC_GetNumber(KernelBase->kb_PlatformData->kb_APIC);
+    if (KernelBase && KernelBase->kb_PlatformData)
+        return core_APIC_GetNumber(KernelBase->kb_PlatformData->kb_APIC);
+    else
+        return 0;
 
     AROS_LIBFUNC_EXIT
 }
