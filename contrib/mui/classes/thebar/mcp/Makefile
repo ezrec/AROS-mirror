@@ -16,7 +16,7 @@
 #
 # TheBar class Support Site:  http://www.sf.net/projects/thebar
 #
-# $Id: Makefile 43803 2012-01-30 20:14:47Z mazze $
+# $Id: Makefile 47868 2013-08-24 12:59:23Z mazze $
 #
 #***************************************************************************/
 
@@ -162,7 +162,7 @@ TESTTARGET= $(BINDIR)/TheBar-Test
 
 # Common compiler/linker flags
 WARN     = -W -Wall -Wwrite-strings -Wpointer-arith -Wsign-compare
-OPTFLAGS = -O3 -fomit-frame-pointer -funroll-loops
+OPTFLAGS = -O3 -fomit-frame-pointer
 DEBUG    = -DDEBUG -O0
 DEBUGSYM = -g -gstabs
 CFLAGS   = -I. -I../include $(CPU) $(WARN) \
@@ -185,6 +185,7 @@ EXTRAOBJS =
 CATALOGS = $(LOCALE)/czech.catalog \
            $(LOCALE)/french.catalog \
            $(LOCALE)/german.catalog \
+           $(LOCALE)/greek.catalog \
            $(LOCALE)/italian.catalog \
            $(LOCALE)/polish.catalog \
            $(LOCALE)/swedish.catalog \
@@ -230,7 +231,7 @@ ifeq ($(OS), os3)
 
   # Compiler/Linker flags
   CPU     = -m68020-60 -msoft-float
-  CFLAGS  += -noixemul -DNO_INLINE_STDARG
+  CFLAGS  += -noixemul -DNO_INLINE_STDARG -D__amigaos3__
   LDFLAGS += -noixemul
   LDLIBS  += -ldebug -lmui
 
@@ -433,6 +434,7 @@ clean:
 	-$(RM) $(TARGET) $(TARGET).debug $(TARGET).map
 	-$(RM) $(TESTTARGET) $(TESTTARGET).debug $(TESTTARGET).map
 	-$(RM) $(OBJS) $(M68KSTUBS)
+	-$(RM) $(CATALOGS)
 
 .PHONY: distclean
 distclean: clean

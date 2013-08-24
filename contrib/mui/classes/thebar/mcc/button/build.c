@@ -2,7 +2,7 @@
 
  TheBar.mcc - Next Generation Toolbar MUI Custom Class
  Copyright (C) 2003-2005 Alfonso Ranieri
- Copyright (C) 2005-2009 by TheBar.mcc Open Source Team
+ Copyright (C) 2005-2013 by TheBar.mcc Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -32,6 +32,10 @@
 
 #define ALLOCRASTERCG(w,h) SharedAlloc(RAWIDTH(w)*((UWORD)(h)))
 #define FREERASTERCG(ra)   SharedFree(ra)
+
+/***********************************************************************/
+
+#define DONT_SKIP_PIC(p)   (((void *)(p)) != NULL && ((void *)(p)) != MUIV_TheBar_SkipPic)
 
 /***********************************************************************/
 
@@ -129,6 +133,7 @@ LUT8ToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
     {
         UBYTE *alpha = NULL;
 
+/*
         if (isFlagClear(flags, MFLG_NtMask))
         {
             if (isFlagSet(flags, MFLG_Cyber))
@@ -144,6 +149,7 @@ LUT8ToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
             else if((copy->mask = ALLOCRASTER(w,h)))
               alpha = copy->mask;
         }
+*/
 
         if (isFlagSet(flags, MFLG_Scaled))
         {
@@ -922,28 +928,26 @@ getSource(struct MUIS_TheBar_Brush *image)
 
     ENTER();
 
-    if (image->compressedSize)
+    if (image->compressedSize != 0)
     {
         ULONG size = image->dataTotalWidth*image->dataHeight;
 
         if (isFlagSet(image->flags, BRFLG_ARGB))
             size *= 4;
 
-        if ((src = SharedAlloc(size)) == NULL)
+        if ((src = SharedAlloc(size)) != NULL)
         {
-            RETURN(NULL);
-            return NULL;
-        }
-
-        if(BRCUnpack(image->data,src,image->compressedSize,size) != 0)
-        {
-            SharedFree(src);
-            RETURN(NULL);
-            return NULL;
+            if(BRCUnpack(image->data,src,image->compressedSize,size) != 0)
+            {
+                SharedFree(src);
+                src = NULL;
+            }
         }
     }
-    else
+	else
+	{
         src = image->data;
+	}
 
     RETURN(src);
     return src;
@@ -1008,7 +1012,7 @@ makeSources(struct InstData *data,struct make *make)
         make->mask    = copy.mask;
         make->gchunky = copy.grey;
 
-        if (isFlagClear(data->userFlags, UFLG_IgnoreSelImages) && data->simage)
+        if (isFlagClear(data->userFlags, UFLG_IgnoreSelImages) && DONT_SKIP_PIC(data->simage) == TRUE)
         {
             back = data->simage->data;
 
@@ -1032,7 +1036,7 @@ makeSources(struct InstData *data,struct make *make)
                 data->image->data = back;
         }
 
-        if (isFlagClear(data->userFlags, UFLG_IgnoreDisImages) && data->dimage)
+        if (isFlagClear(data->userFlags, UFLG_IgnoreDisImages) && DONT_SKIP_PIC(data->dimage) == TRUE)
         {
             back = data->dimage->data;
 
@@ -1107,7 +1111,7 @@ makeSourcesRGB(struct InstData *data,struct make *make)
         make->mask    = copy.mask;
         make->gchunky = copy.grey;
 
-        if (isFlagClear(data->userFlags, UFLG_IgnoreSelImages) && data->simage)
+        if (isFlagClear(data->userFlags, UFLG_IgnoreSelImages) && DONT_SKIP_PIC(data->simage) == TRUE)
         {
             back = data->simage->data;
 
@@ -1130,7 +1134,7 @@ makeSourcesRGB(struct InstData *data,struct make *make)
                 data->simage->data = back;
         }
 
-        if (isFlagClear(data->userFlags, UFLG_IgnoreDisImages) && data->dimage)
+        if (isFlagClear(data->userFlags, UFLG_IgnoreDisImages) && DONT_SKIP_PIC(data->dimage) == TRUE)
         {
             back = data->dimage->data;
 

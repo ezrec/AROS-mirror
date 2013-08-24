@@ -1,567 +1,569 @@
-## version $VER: TheBar_mcp.catalog 26.8 (28.8.2012)
-## language tόrkηe
+## version $VER: TheBar_mcp.catalog 2.1 (29.09.2012)
+## language greek
 ## codeset 0
+## chunk AUTH Anthony Iliakis (amiga.phantom@yahoo.gr)
 ;
 ;
 ; CATCOMP TheBar.cd CTFILE TheBar.ct
 ;
 Msg_Reg_Colors
-Renkler
+Χρώματα
 ; Colors
 ;
 Msg_Reg_Appearance
-Gφrόnόm
+Εμφάνιση
 ; Appearance
 ;
 Msg_Reg_Spacing
-Boώluklar
+Aπόσταση
 ; Spacing
 ;
 Msg_Reg_Options
-Seηenekler
+Επιλογές
 ; Options
 ;
 Msg_Title_Backgrounds
-Art alanlar
+Φόντο
 ; Backgrounds
 ;
 Msg_GroupBackground
-Ηubuk
+Μπάρα
 ; Bar
 ;
 Msg_GroupBackground_Help
-Ηubuk art alanύ.
+Φόντο μπάρας.
 ; Bar background.
 ;
 Msg_GroupBackground_Title
-Ηubuk art alanύ
+Φόντο μπάρας
 ; Bar background
 ;
 Msg_UseGroupBackground
-Etkin
+Ενεργό
 ; Active
 ;
 Msg_UseGroupBackground_Help
-Etkinleώtirildiπinde, ηubuk sizin\n\
-tercih ettiπiniz art alana sahip\n\
-olur.\n\
-Aksi durumda alt art alan devralύnύr.
+Αν επιλεχτεί, η μπάρα κάνει λήψη του\n\
+προτεινόμενου φόντου σας, αλλιώς\n\
+γίνεται λήψη του γονικού φόντου.
 ; If selected, the bar gets\n\
 ; your preferred background,\n\
 ; otherwise it gets its\n\
 ; parent background.
 ;
 Msg_ButtonBackground
-Dόπmeler
+Κουμπιά
 ; Buttons
 ;
 Msg_ButtonBackground_Help
-Etkin dόπmenin art alanύ.
+Φόντο ενεργών κουμπιών.
 ; Active buttons background.
 ;
 Msg_ButtonBackground_Title
-Etkin dόπmenin art alanύ
+Φόντο ενεργών κουμπιών
 ; Active buttons background
 ;
 Msg_UseButtonBackground
-Etkin
+Ενεργό
 ; Active
 ;
 Msg_UseButtonBackground_Help
-Etkinleώtirildiπinde, dόπmeler sizin\n\
-tercih ettiπiniz art alana sahip\n\
-olur.\n\
-Aksi durumda alt art alan devralύnύr.
+Αν επιλεχτεί, τα κουμπιά κάνουν λήψη\n\
+του προτεινόμενου φόντου σας, αλλιώς\n\
+γίνεται λήψη του γονικού φόντου.\n\
 ; If selected, the buttons get\n\
 ; your preferred background,\n\
 ; otherwise they get their\n\
 ; parent background.
 ;
 Msg_Title_Frame
-Dόπme ηerηevesi
+Πλαίσιο κουμπιών
 ; Buttons frame
 ;
 Msg_FrameShinePen
-Parlayan
+Λάμψη
 ; Shine
 ;
 Msg_FrameShinePen_Help
-Etkin dόπme ηerηevesinin parlayan rengi.
+Πένα λάμψης πλαισίου για ενεργά κουμπιά.
 ; Active buttons frame shine pen.
 ;
 Msg_FrameShinePen_Title
-Ηerηeve parlayan kalemi
+Πένα λάμψης πλαισίου
 ; Frame shine pen
 ;
 Msg_FrameShadowPen
-Gφlge
+Σκιά
 ; Shadow
 ;
 Msg_FrameShadowPen_Help
-Etkin dόπme ηerηevesinin gφlge rengi.
+Πένα σκιάς πλαισίου για ενεργά κουμπιά.
 ; Active buttons frame shadow pen.
 ;
 Msg_FrameShadowPen_Title
-Ηerηeve gφlge kalemi
+Πένα σκιάς πλαισίου
 ; Frame shadow pen
 ;
 Msg_FrameStyle_Recessed
-Girinti
+Eσοχή
 ; Recessed
 ;
 Msg_FrameStyle_Normal
-Normal
+Κανονική
 ; Normal
 ;
 Msg_FrameStyle
-ήekil
+Στύλ
 ; Style
 ;
 Msg_FrameStyle_Help
-Etkin dόπmenin ηerηeve ώekli.
+Στύλ πλαισίου για ενεργά κουμπιά.
 ; Active buttons frame style.
 ;
 Msg_Title_Disabled
-Devre dύώύ dόπmeler
+Απενεργοποιημένα κουμπιά
 ; Disabled buttons
 ;
 Msg_DisabledBody
-Gφvde
+Σώμα
 ; Body
 ;
 Msg_DisabledBody_Help
-Devre dύώύ dόπmenin gφvde kalemi. 'ήekil' kipinde\n\
-devre dύώύ dόπmenin ana kalemi olarak, 'Kύlavuz'\n\
-kiplerinde ise kύlavuz ηizgisi kalemi olarak kullanύlύr.
+Πένα σώματος για απενεργοποιημένα κουμπιά. Χρησιμοποιείται\n\
+ως η κύρια πένα για απενεργοποιημένα κουμπιά σε κατάσταση\n\
+σχήματος και ως πένα πλέγματος για απενεργοποιημένα κουμπιά\n\
+σε καταστάσεις πλέγματος.
 ; Disabled buttons body pen. It is used as\n\
 ; main pen for disabled buttons in Shape\n\
 ; mode and as grid pen for disabled\n\
 ; buttons in Grid modes.
 ;
 Msg_DisabledBody_Title
-Gφvde kalemi
+Πένα σώματος
 ; Body pen
 ;
 Msg_DisabledShadow
-Gφlge
+Σκιά
 ; Shadow
 ;
 Msg_DisabledShadow_Help
-Devre dύώύ dόπmenin gφlge kalemi. 'ήekil' kipinde\n\
-devre dύώύ dόπmenin ikincil kalemi olarak, 'Kύlavuz'\n\
-kiplerinde ise metin kalemi olarak kullanύlύr.
+Πένα σκιάς για απενεργοποιημένα κουμπιά. Χρησιμοποιείται\n\
+ως η δευτερεύουσα πένα για απενεργοποιημένα κουμπιά σε\n\
+κατάσταση σχήματος και ως πένα κειμένου για απενεργοποιημένα\n\
+κουμπιά σε κατάσταση πλέγματος.
 ; Disabled buttons shadow pen. It is used as\n\
 ; secondary pen for disabled buttons in Shape\n\
 ; mode and as text pen for disabled buttons\n\
 ; in Grid modes.
 ;
 Msg_DisabledShadow_Title
-Gφlge kalemi
+Πένα σκιάς
 ; Shadow pen
 ;
 Msg_Title_BarSpacer
-Ηubuk ayύracύ
+Διαχωριστικό μπάρας
 ; Bar spacer
 ;
 Msg_BarSpacerShinePen
-Parlayan
+Λάμψη
 ; Shine
 ;
 Msg_BarSpacerShinePen_Help
-Ηubuk ayύracύ parlayan rengi.
+Πένα λάμψης για διαχωριστική μπάρα.
 ; Bar spacer shine pen.
 ;
 Msg_BarSpacerShinePen_Title
-Ayύraη parlayan kalemi
+Πένα λάμψης διαχωριστικού
 ; Spacer shine pen
 ;
 Msg_BarSpacerShadowPen
-Gφlge
+Σκιά
 ; Shadow
 ;
 Msg_BarSpacerShadowPen_Help
-Ηubuk ayύracύ gφlge rengi.
+Πένα σκιάς για διαχωριστική μπάρα.
 ; Bar spacer shadow pen.
 ;
 Msg_BarSpacerShadowPen_Title
-Ayύraη gφlge kalemi
+Πένα σκιάς διαχωριστικού
 ; Spacer shadow pen
 ;
 Msg_Title_BarFrame
-Ηubuk ηerηevesi
+Πλαίσιο μπάρας
 ; Bar frame
 ;
 Msg_BarFrameShine
-Parlayan
+Λάμψη
 ; Shine
 ;
 Msg_BarFrameShine_Help
-Ηubuk ηerηevesi parlayan rengi.
+Πένα λάμψης για πλαίσιο μπάρας.
 ; Bar frame shine pen.
 ;
 Msg_BarFrameShine_Title
-Ηerηeve parlayan kalemi
+Πένα λάμψης πλαισίου
 ; Frame shine pen
 ;
 Msg_BarFrameShadow
-Gφlge
+Σκιά
 ; Shadow
 ;
 Msg_BarFrameShadow_Help
-Ηubuk ηerηevesi gφlge rengi.
+Πένα σκιάς για πλαίσιο μπάρας.
 ; Bar frame shadow pen.
 ;
 Msg_BarFrameShadow_Title
-Ηerηeve gφlge kalemi
+Πένα σκιάς πλαισίου
 ; Frame shadow pen
 ;
 Msg_Title_DragBar
-Sόrόkleme ηubuπu
+Μπάρα μεταφοράς
 ; DragBar
 ;
 Msg_DragBarShine
-Parlayan
+Λάμψη
 ; Shine
 ;
 Msg_DragBarShine_Help
-Sόrόkleme ηubuπu parlayan rengi.
+Πένα λάμψης για μπάρα μεταφοράς.
 ; DragBar shine pen.
 ;
 Msg_DragBarShine_Title
-Sόrόkleme ηubuπu parlayan kalemi
+Πένα λάμψης μπάρας μεταφοράς.
 ; DragBar shine pen
 ;
 Msg_DragBarShadow
-Gφlge
+Σκιά
 ; Shadow
 ;
 Msg_DragBarShadow_Help
-Sόrόkleme ηubuπu gφlge rengi.
+Πένα σκιάς για μπάρα μεταφοράς.
 ; DragBar shadow pen.
 ;
 Msg_DragBarShadow_Title
-Sόrόkleme ηubuπu gφlge kalemi
+Πένα σκιάς μπάρας μεταφοράς
 ; DragBar shadow pen
 ;
 Msg_DragBarFill
-Dolgu
+Συμπλήρωση
 ; Fill
 ;
 Msg_DragBarFill_Help
-Sόrόkleme ηubuπu dolgu rengi.
+Πένα συμπλήρωσης για μπάρα μεταφοράς.
 ; DragBar fill pen.
 ;
 Msg_DragBarFill_Title
-Sόrόkleme ηubuπu dolgu kalemi
+Πένα συμπλήρωσης μπάρας μεταφοράς
 ; DragBar fill pen
 ;
 Msg_UseDragBarFill
-Kullan
+Χρήση
 ; Use
 ;
 Msg_UseDragBarFill_Help
-Etkinleώtirildiπinde, sόrόkleme\n\
-ηubuπu dolgu kalemi kullanύlύr.
+Αν επιλεχτεί, θα χρησιμοποιηθεί η πένα\n\
+συμπλήρωσης της μπάρας μεταφοράς.
 ; If selected, the dragbar fill\n\
 ; pen is used.
 ;
 Msg_Frame
-Ηerηeve
+Πλαίσιο
 ; Frame
 ;
 Msg_Frame_Help
-Ηubuk ηerηevesi
+Πλαίσιο για μπάρα.
 ; Bar frame
 ;
 Msg_Frame_Title
-Ηubuk ηerηevesi
+Πλαίσιο μπάρας
 ; Bar frame
 ;
 Msg_TextFont
-Metin
+Κείμενο
 ; Text
 ;
 Msg_TextFont_Help
-Salt metin dόπmelerin yazύtipi.
+Γραμματοσειρά μόνο για κουμπιά κειμένου.
 ; Text only buttons font.
 ;
 Msg_TextGfxFont
-Metin&Grafik
+Γραφικά & Κείμενο
 ; TextGfx
 ;
 Msg_TextGfxFont_Help
-Metin ve simge dόπmelerin yazύtipi.
+Γραμματοσειρά για κουμπιά κειμένου και γραφικών.
 ; Text and image buttons font.
 ;
 Msg_ViewMode
-Gφsterim kipi
+Κατάσταση προβολής
 ; View mode
 ;
 Msg_ViewMode_Help
-Dόπmelerin gφrόnόmόnό ayarlayύnύz.
+Τροποποιήστε την εμφάνιση των κουμπιών.
 ; Adjust the appearance of the buttons.
 ;
 Msg_Appearance_Text
-TheBar aώaπύdaki ayarlarύ ancak ve ancak, nesne\n\
-oluώturulurken φzel olarak baώvurursa kullanύr.\n\
-Yani, eπer programcύ aksine karar vermediyse\n\
-yoksayύlύrlar.
+Οι παρακάτω επιλογές χρησιμοποιούνται από την TheBar εάν και\n\
+μόνο εάν κλήθηκε από το αντικείμενο κατά την δημιουργία του.\n\
+Αυτό σημαίνει ότι αν ο προγραμματιστής αποφάσισε αλλιώς, απλά\n\
+οι επιλογές αυτές θα αγνοηθούν.
 ; The options below are used by TheBar if and only if the\n\
 ; object requested for it at creation time. It means that\n\
 ; if the programmer didn't decide otherwise, they are simply\n\
 ; ignored.
 ;
 Msg_TextGfx
-Simgeler ve metin
+Εικονίδια και κείμενο
 ; Icons and text
 ;
 Msg_Gfx
-Yalnύca simgeler
+Μόνο εικονίδια
 ; Icons only
 ;
 Msg_Text
-Yalnύzca metin
+Μόνο κείμενο
 ; Text only
 ;
 Msg_Borderless
-Kenarlύksύz
+Χωρίς περίγραμμα
 ; Borderless
 ;
 Msg_Borderless_Help
-Eπer etkinleώtirilirse, dόπmeler kenarlύksύz ηizilir.
+Αν επιλεχτεί, τα κουμπιά θα είναι χωρίς περίγραμμα.
 ; If selected, buttons are borderless.
 ;
 Msg_Sunny
-Iώύldat
+Μαρκάρισμα
 ; Highlight
 ;
 Msg_Sunny_Help
-Eπer etkinleώtirlirse, dόπmeler normal\n\
-durumda siyah beyaz olur ve fare\n\
-όzerlerine geldiπinde renklenir.
+Αν επιλεχτεί, τα κουμπιά, συνήθως σε μαύρο\n\
+και άσπρο χρώμα, θα χρωματιστούν όταν το\n\
+ποντίκι θα βρίσκεται από πάνω τους.
 ; If selected, buttons, normally in black\n\
 ; and white, are colored when the\n\
 ; mouse is over them.
 ;
 Msg_Raised
-Kabart
+Υψωμένα
 ; Raised
 ;
 Msg_Raised_Help
-Eπer etkinleώtirilirse, dόπmeler ηerηevesiz ηizilir\n\
-ve sadece fare όzerine geldiπinde ηerηevelenir.
+Αν επιλεχτεί, τα κουμπιά, συνήθως χωρίς πλαίσιο, θα\n\
+εμφανίζουν ένα πλαίσιο όταν το ποντίκι θα βρίσκεται\n\
+από πάνω τους.
 ; If selected, buttons, normally frameless,\n\
 ; are framed when the mouse is over them.
 ;
 Msg_Scaled
-Φlηekle
+Διαβαθμησμένα
 ; Scaled
 ;
 Msg_Scaled_Help
-Etkinleώtirilirse, dόπmeler φlηeklendirilir.
+Αν επιλεχτεί, τα κουμπιά θα είναι διαβαθμησμένα.
 ; If selected, buttons are scaled.
 ;
 Msg_BarSpacer
-Ηubuk ayύraca zorla
+Εξαναγκασμός διαχωριστικού μπάρας
 ; Force Bar spacer
 ;
 Msg_BarSpacer_Help
-Etkinleώitirirse, her ηeώit ayύracύn\n\
-yerine ηubuk ayύraη kullanύlύr.
+Αν επιλεχτεί, θα χρησιμοποιηθεί ένα διαχωριστικό\n\
+μπάρας για όλα τα είδη διαχωριστικών.
 ; If selected, a bar spacer is used\n\
 ; for all kind of separators.
 ;
 Msg_EnableKeys
-Tuώlarύ etkinleώtir
+Ενεργοποίηση πλήκτρων
 ; Enable keys
 ;
 Msg_EnableKeys_Help
-Onaylanύrsa, dόπme kύsayol tuώlarύ etkinleώir.
+Αν επιλεχτεί, θα ενεργοποιηθούν οι\n\
+συντομεύσεις των κουμπιών.
 ; If selected, buttons short cuts\n\
 ; are active.
 ;
 Msg_LabelPos
-Etiket konumu
+Ετικέτες σε
 ; Labels at
 ;
 Msg_LabelPos_Help
-έmge ve metin dόπmeleri iηin\n\
-metin konumunu ayarlayύn.
+Τροποποιήστε την θέση του κειμένου στα\n\
+εικονίδια και στα κουμπιά κειμένου.
 ; Adjust the position of text in\n\
 ; Icons and text buttons.
 ;
 Msg_LabelPos_Bottom
-Aώaπύda
+Τέρμα
 ; Bottom
 ;
 Msg_LabelPos_Top
-Yukarύda
+Κορυφή
 ; Top
 ;
 Msg_LabelPos_Right
-Saπda
+Δεξιά
 ; Right
 ;
 Msg_LabelPos_Left
-Solda
+Αριστερά
 ; Left
 ;
 Msg_Title_GroupSpacing
-Ηubuk
+Μπάρα
 ; Bar
 ;
 Msg_HorizGroupSpacing
-Yatay
+Οριζόντια
 ; Horiz
 ;
 Msg_HorizGroupSpacing_Help
-Aynύ sύradaki dόπmeler arasύnda\n\
-boώluk bύrakύlacak piksel sayύsύ.
+Απόσταση μεταξύ δυο κουμπιών σε\n\
+μια γραμμή μπάρας σε pixels.
 ; Pixels between two buttons in a bar row.
 ;
 Msg_VertGroupSpacing
-Dόώey
+Κάθετα
 ; Vert
 ;
 Msg_VertGroupSpacing_Help
-έki dόπme sύrasύ arasύnda boώluk\n\
-olarak bύrakύlacak piksel sayύsύ.
+Απόσταση μεταξύ δύο γραμμών μπάρας σε pixels.
 ; Pixels between two bar rows.
 ;
 Msg_BarSpacerSpacing
-Ηubuk
+Μπάρα
 ; Bar
 ;
 Msg_BarSpacerSpacing_Help
-Bir ηubuk ayύracύnύn φncesinde ve sonrasύndaki\n\
-dόπmeler ile arasύnda boώluk bύrakύlacak piksel sayύsύ.
+Απόσταση μεταξύ ενός διαχωριστικού μπάρας και\n\
+του προηγούμενου/επόμενου αντικειμένου σε pixels.
 ; Pixels between a Bar spacer\n\
 ; and the previous/next object.
 ;
 Msg_Title_InnerSpacing
-Dόπmeler
+Κουμπιά
 ; Buttons
 ;
 Msg_HorizInnerSpacing
-Yatay
+Οριζόντια
 ; Horiz
 ;
 Msg_HorizInnerSpacing_Help
-Sol/saπ ηerηeve kenarlύklarύ ile dόπmeler\n\
-arasύnda boώluk bύrakύlacak piksel sayύsύ.
+Απόσταση μεταξύ του αριστερού/δεξιού περιγράμματος\n\
+πλαισίου και στα περιεχόμενα των κουμπιών, σε pixels.
 ; Pixels between the left/right frame\n\
 ; border and the button contents.
 ;
 Msg_TopInnerSpacing
-άst
+Κορυφή
 ; Top
 ;
 Msg_TopInnerSpacing_Help
-άst ηerceve kenarύ ile dόπmeler arasύnda\n\
-boώluk bύrakύlacak piksel sayύsύ.
+Απόσταση μεταξύ του πιο πάνω περιγράμματος\n\
+πλαισίου και στα περιεχόμενα των κουμπιών, σε pixels.
 ; Pixels between the top frame border\n\
 ; and the button contents.
 ;
 Msg_BottomInnerSpacing
-Alt
+Τέρμα
 ; Bottom
 ;
 Msg_BottomInnerSpacing_Help
-Alt ηerceve kenarύ ile dόπmeler arasύnda\n\
-boώluk bύrakύlacak piksel sayύsύ.
+Απόσταση μεταξύ του πιο κάτω περιγράμματος\n\
+πλαισίου και στα περιεχόμενα των κουμπιών, σε pixels.
 ; Pixels between the bottom frame border\n\
 ; and the button contents.
 ;
 Msg_Title_BarFrameSpacing
-Ηubuk ηerηevesi
+Πλαίσιο μπάρας
 ; Bar frame
 ;
 Msg_LeftBarFrameSpacing
-Sol
+Αριστερό
 ; Left
 ;
 Msg_LeftBarFrameSpacing_Help
-Sol ηerηeve kenarύ ile ηubuk iηeriπi arasύnda\n\
-boώluk bύrakύlacak piksel sayύsύ.
+Απόσταση μεταξύ του αριστερού περιγράμματος\n\
+πλαισίου και στα περιεχόμενα της μπάρας, σε pixels.
 ; Pixels between the left frame border\n\
 ; and the bar contents.
 ;
 Msg_RightBarFrameSpacing
-Saπ
+Δεξί
 ; Right
 ;
 Msg_RightBarFrameSpacing_Help
-Saπ ηerηeve kenarύ ile ηubuk iηeriπi arasύnda\n\
-boώluk bύrakύlacak piksel sayύsύ.
+Απόσταση μεταξύ του δεξιού περιγράμματος\n\
+πλαισίου και στα περιεχόμενα της μπάρας, σε pixels.
 ; Pixels between the right frame border\n\
 ; and the bar contents.
 ;
 Msg_TopBarFrameSpacing
-άst
+Κορυφή
 ; Top
 ;
 Msg_TopBarFrameSpacing_Help
-άst ηerηeve kenarύ ile ηubuk iηeriπi arasύnda\n\
-boώluk bύrakύlacak piksel sayύsύ.
+Απόσταση μεταξύ του πιο πάνω περιγράμματος\n\
+πλαισίου και στα περιεχόμενα της μπάρας, σε pixels.
 ; Pixels between the top frame border\n\
 ; and the bar contents.
 ;
 Msg_BottomBarFrameSpacing
-Alt
+Τέρμα
 ; Bottom
 ;
 Msg_BottomBarFrameSpacing_Help
-Alt ηerηeve kenarύ ile ηubuk iηeriπi arasύnda\n\
-boώluk bύrakύlacak piksel sayύsύ.
+Απόσταση μεταξύ του πιο κάτω περιγράμματος\n\
+πλαισίου και στα περιεχόμενα της μπάρας, σε pixels.
 ; Pixels between the bottom frame border\n\
 ; and the bar contents.
 ;
 Msg_Title_TextGfxSpacing
-Metin/έmge
+Κείμενο/Γραφικά
 ; Text/Gfx
 ;
 Msg_HorizTextGfxSpacing
-Yatay
+Οριζόντια
 ; Horiz
 ;
 Msg_HorizTextGfxSpacing_Help
-Bir simge ile saπ/soluna yerleώtirilecek etiket\n\
-arasύnda boώluk bύrakύlacak piksel sayύsύ.
+Απόσταση μεταξύ μιας εικόνας και στην\n\
+αριστερή/δεξιά μεριά ετικέτας της, σε pixels.
 ; Pixels between an image and\n\
 ; its left/right placed label.
 ;
 Msg_VertTextGfxSpacing
-Dikey
+Κάθετα
 ; Vert
 ;
 Msg_VertTextGfxSpacing_Help
-Bir simge ile alt/όstόne yerleώtirilecek etiket\n\
-arasύnda boώluk bύrakύlacak piksel sayύsύ.
+Απόσταση μεταξύ μιας εικόνας και στην\n\
+κάτω/πάνω μεριά ετικέτας της, σε pixels.
 ; Pixels between an image and\n\
 ; its bottom/top placed label.
 ;
 Msg_Precision_Gui
-Kφtό
+Κακή
 ; Bad
 ;
 Msg_Precision_Icon
-Zayύf
+Φτωχή
 ; Poor
 ;
 Msg_Precision_Image
-έyi
+Καλή
 ; Good
 ;
 Msg_Precision_Exact
-En iyi
+Καλύτερη
 ; Best
 ;
 Msg_Precision
-Kalite
+Ποιοτική
 ; Quality
 ;
 Msg_Precision_Help
-Kalem renkleri seηilirken kullanύlacak hassasiyet.
+Χρήση ακριβείας κατά την απόκτηση μιας πένας.
 ; Precision to use when obtaining pens.
 ;
 Msg_Event_IntuiTicks
@@ -569,19 +571,19 @@ IntuiTicks
 ; IntuiTicks
 ;
 Msg_Event_MouseMove
-Fare hareketi
+Κίνηση
 ; MouseMove
 ;
 Msg_Event
-Olay
+Συμβάν
 ; Event
 ;
 Msg_Event_Help
-Farenin bir dόπme όzerinde olduπu nasύl doπrulansύn:\n\
-- IntuiTicks: belli aralύklarla doπrulanύr\n\
-- Fare hareketi: her fare hareketinde doπrulanύr\n\
-- Fare nesne: fare yeni bir nesnenin όzerine\n\
-geldiπinde onaylanύr.
+Πως θα επαληθεύσετε αν το ποντίκι είναι πάνω από ένα κουμπί:\n\
+- IntuiTicks: επαληθεύεται περιοδικά\n\
+- Κίνηση: επαληθεύεται σε κάθε μετακίνηση του ποντικιού\n\
+- Αντικείμενο: επαληθεύεται όταν το ποντίκι βρίσκεται πάνω\n\
+από ένα καινούργιο αντικείμενο
 ; How to verify if the mouse is over a button:\n\
 ; - IntuiTicks: it is verified periodically\n\
 ; - MouseMove: it is verified at every mouse move\n\
@@ -589,190 +591,208 @@ geldiπinde onaylanύr.
 ; over a new object
 ;
 Msg_Scale
-Φlηek
+Διαβάθμιση
 ; Scale
 ;
 Msg_Scale_Help
-Φlηeklendirilmiώ simgeler iηin φlηek deπeri.
+Συντελεστής διαβάθμισης για διαβαθμισμένες εικόνες.
 ; Scale factor for scaled images.
 ;
 Msg_SpecialSelect
-Φzel seηim
+Ειδική επιλογή
 ; Special select
 ;
 Msg_SpecialSelect_Help
-Onaylanύrsa, dόπmeler seηili veya etkin\n\
-olduklarύnda iηerikleri hareket ettirilir.
+Αν επιλεχτεί, μετακινούνται τα περιεχόμενα των\n\
+κουμπιών όταν έχουν επιλεχτεί ή είναι ενεργά.
 ; If selected, buttons contents is moved\n\
 ; when they are selected or active.
 ;
 Msg_TextOverUseShine
-Φzel metin
+Ειδικό κείμενο
 ; Special text
 ;
 Msg_TextOverUseShine_Help
-Onaylanύrsa, etkin dόπme etiketleri\n\
-parlayan kalem ile yazύlύr.
+Αν επιλεχτεί, οι ενεργές ετικέτες των κουμπιών\n\
+θα σχεδιαστούν με την πένα λάμψης.
 ; If selected, active buttons labels\n\
 ; are drawn with the shine pen.
 ;
 Msg_IgnoreSelImages
-Seηilmiώ simgelerini yoksay
+Αγνόηση επιλεγμένων εικόνων
 ; Ignore selected images
 ;
 Msg_IgnoreSelImages_Help
-Onaylanύrsa, etkin/seηilmiώ\n\
-durum simgeleri yok sayύlύr.
+Αν επιλεχτεί, οι επιλεγμένες\n\
+εικόνες θα αγνοηθούν.
 ; If selected, selected images\n\
 ; are ignored.
 ;
 Msg_IgnoreDisImages
-Devre dύώύ simgelerini yoksay
+Αγνόηση ανενεργών εικόνων
 ; Ignore disabled images
 ;
 Msg_IgnoreDisImages_Help
-Onaylanύrsa, devre dύώύ\n\
-simgeleri yok sayύlύr.
+Αν επιλεχτεί, οι ανενεργές\n\
+εικόνες θα αγνοηθούν.
 ; If selected, disabled images\n\
 ; are ignored.
 ;
 Msg_DisMode_Shape
-ήekil
+Σχήμα
 ; Shape
 ;
 Msg_DisMode_Grid
-Klavuz ηizgisi
+Πλέγμα
 ; Grid
 ;
 Msg_DisMode_FullGrid
-Tam klavuz ηizgisi
+Πλήρες πλέγμα
 ; Full grid
 ;
 Msg_DisMode
-Devre dύώύ
+Απενεργοποίηση
 ; Disable
 ;
 Msg_DisMode_Help
-Devre dύώύ dόπmelerin ηizilme yφntemi.
+Πως να αποδίδετε απενεργοποιημένα κουμπιά.
 ; How to render disabled buttons.
 ;
 Msg_DontMove
-Hareketsiz
+Χωρίς κίνηση
 ; Don't move
 ;
 Msg_DontMove_Help
-Onaylanύrsa, dόπmelerin iηerikleri etkin\n\
-olduklarύnda hareket ettirilmez.
+Αν επιλεχτεί, τα περιεχόμενα των κουμπιών\n\
+δεν θα μετακινηθούν όταν αυτά είναι ενεργά.
 ; If selected, the contents of the buttons\n\
 ; is not moved when they are active.
 ;
 Msg_DisMode_Sunny
-Gri
+Γκρί
 ; Grey
 ;
 Msg_NtRaiseActive
-Etkin dόπmeleri kabartma
+Μη ύψωση ενεργών κουμπιών
 ; Don't raise active buttons
 ;
 Msg_NtRaiseActive_Help
-Onaylandύπύnda, etkin dόπmeler kabartύlmaz.
+Αν επιλεχτεί, τα ενεργά κουμπιά δεν θα υψωθούν.
 ; If selected, active buttons are not raised.
 ;
 Msg_SpacersSize
-Ayύracύn bόyόklόπό
+Μέγεθος διαχωριστών
 ; Spacers size
 ;
 Msg_SpacersSize_Help
-Ayύraηlarύn bόyόklόπό.
+Μέγεθος των διαχωριστών.
 ; Size of spacers.
 ;
 Msg_SpacersSize_Quarter
-Dόπmenin dφrtte biri kadar
+Σε ένα τέταρτο μέγεθος ενός κουμπιού
 ; Quarter of a button
 ;
 Msg_SpacersSize_Half
-Dόπmenin yarύsύ kadar
+Σε μισό μέγεθος ενός κουμπιού
 ; Half of a button
 ;
 Msg_SpacersSize_One
-Dόπme kadar
+Ως ένα κουμπί
 ; As a button
 ;
 Msg_Event_MouseObject
-Fare Nesne
+Αντικείμενο
 ; MouseObject
 ;
 Msg_DisMode_Blend
-Karύώtύr
+Ανάμειξη
 ; Blend
 ;
 Msg_DisMode_BlendGrey
-Gri karύώtύr
+Ανάμειξη γκρί
 ; Blend grey
 ;
 Msg_Item_Defaults
-Varsayύlanlara dφndόr
+Επαναφορά στα προεπιλεγμένα
 ; Reset to defaults
 ;
 Msg_NoMUI20Event_Help
-Farenin bir dόπme όzerinde olduπu nasύl doπrulansύn:\n\
-- IntuiTicks: belli aralύklarla doπrulanύr\n\
-- Fare hareketi: her fare hareketinde doπrulanύr
+Πως να επαληθεύσετε αν το ποντίκι είναι πάνω από ενα κουμπί:\n\
+- IntuiTicks: επαληθεύετε περιοδικά\n\
+- Κίνηση: επαληθεύετε σε κάθε κίνηση του ποντικιού
 ; How to verify if the mouse is over a button:\n\
 ; - IntuiTicks: it is verified periodically\n\
 ; - MouseMove: it is verified at every mouse move
 ;
 Msg_SpacersSize_None
-Yok
+Κανένα
 ; None
 ;
 Msg_SpacersSize_OnePoint
-Bir piksel
+Ένας πόντος
 ; One point
 ;
 Msg_SpacersSize_TwoPoint
-έki piksel
+Δυο πόντοι
 ; Two points
 ;
 ;
+;Msg_Info_First
+;%s\n\
+;Copyright (c) 2003-2008 Alfonso Ranieri\n\
+;and TheBar Open Source Team
+; %s\n\
+; Copyright (c) 2003-2008 Alfonso Ranieri\n\
+; and TheBar Open Source Team
+;
+;Msg_Info_Reserved
+;Διανέμεται υπό τους όρους της LGPL2.
+; Distributed under the terms of the LGPL2.
+;
+;Msg_Info_Rest
+;Για πρόσφατες εκδόσεις και ενημερώσεις επισκευτείτε:\n\
+;http://www.sourceforge.net/projects/thebar
+; For recent versions and updates visit:\n\
+; http://www.sourceforge.net/projects/thebar
+;
 Msg_Info_Translator
-Tόrkηe Ηeviri : Alper Sφnmez
+Ελληνική μετάφραση: Αντώνης Ηλιάκης
 ;
 ;
 Msg_Item_Globals
-Genele sύfύrla
+Επαναφορά στις γενικές ρυθμίσεις
 ; Reset to global
 ;
 Msg_Item_LastSaved
-Son kaydedilmiώ
+Τελευταία αποθήκευση
 ; Last saved
 ;
 Msg_Item_Restore
-Geri al
+Επαναφορά
 ; Restore
 ;
 Msg_Pop_OK
-Tamam
+ΟΚ
 ; OK
 ;
 Msg_Pop_OK_Help
-Deπiώiklikleri kabul et
+Δεχτείτε τις αλλαγές.
 ; Accept changes.
 ;
 Msg_Pop_Cancel
-έptal
+Ακύρωση
 ; Cancel
 ;
 Msg_Pop_Cancel_Help
-Deπiώiklikleri yoksay ve ηύk.
+Κάντε έξοδο χωρίς αλλαγές.
 ; Exit without changing.
 ;
 Msg_Popback_Pattern
-Desen
+Μοτίβο
 ; Pattern
 ;
 Msg_Popback_Color
-Renk
+Χρώμα
 ; Color
 ;
 Msg_Popback_Bitmap
@@ -780,44 +800,43 @@ Bitmap
 ; Bitmap
 ;
 Msg_Popback_Gradient
-Renk geηiώi
+Διαβάθμιση
 ; Gradient
 ;
 Msg_Popback_HorizGradient
-Yatay
+Οριζόντια
 ; Horizontal
 ;
 Msg_Popback_HorizGradientHelp
-Etkinleώtirilirse, yatay bir\n\
-renk geηiώi elde edersiniz.
+Αν επιλεχτεί, θα κάνετε λήψη\n\
+μιας οριζόντιας διαβάθμισης.
 ; If selected, you get a\n\
 ; horizontal gradient.
 ;
 Msg_Popback_VertGradient
-Yatay
+Κάθετα
 ; Vertical
 ;
 Msg_Popback_VertGradientHelp
-Etkinleώtirilirse, dikey bir\n\
-renk geηiώi elde edersiniz.
+Αν επιλεχτεί, θα κάνετε λήψη\n\
+μιας κάθετης διαβάθμισης.
 ; If selected, you get a\n\
 ; vertical gradient.
 ;
 Msg_Popback_From
-Baώlangύη rengi
+Από χρώμα
 ; From color
 ;
 Msg_Popback_To
-Bitiώ rengi
+Σε χρώμα
 ; To color
 ;
 Msg_Popback_Swap
-Deπiώtir
+Ανταλλαγή
 ; Swap
 ;
 Msg_Popback_SwapHelp
-Baώlangύη ile bitiώ\n\
-rengini deπiώtirir.
+Ανταλλαγή από/σε χρώματα.
 ; Swaps from/to colors.
 ;
 Msg_Poppen_MUI
@@ -825,7 +844,7 @@ MUI
 ; MUI
 ;
 Msg_Poppen_Colormap
-Renk haritasύ
+Χρώματα
 ; Colormap
 ;
 Msg_Poppen_RGB
@@ -833,63 +852,63 @@ RGB
 ; RGB
 ;
 Msg_Poppen_Shine
-Parlayan
+Λάμψη
 ; Shine
 ;
 Msg_Poppen_Halfshine
-Yarύ parlak
+Μισή-λάμψη
 ; Halfshine
 ;
 Msg_Poppen_Background
-Art alan
+Φόντο
 ; Background
 ;
 Msg_Poppen_Halfshadow
-Yarύ gφlge
+Μισή-σκιά
 ; Halfshadow
 ;
 Msg_Poppen_Shadow
-Gφlge
+Σκιά
 ; Shadow
 ;
 Msg_Poppen_Text
-Metin
+Κείμνο
 ; Text
 ;
 Msg_Poppen_Fill
-Dolgu
+Συμπλήρωση
 ; Fill
 ;
 Msg_Poppen_Mark
-έώaret
+Μαρκάρισμα
 ; Mark
 ;
 Msg_Poppen_ColorMapHelp
-Bir ekran renk girdisi seηiniz.
+Επιλέξτε μια είσοδο χρώματος οθόνης.
 ; Select a screen color entry.
 ;
 Msg_ColoradjustRed
-Kύrmύzύ
+Κόκκινο
 ; Red
 ;
 Msg_Coloradjust_RedHelp
-Rengin kύrmύzύ bileώeni.
+Το κόκκινο στοιχείο του χρώματος.
 ; The red component of the color.
 ;
 Msg_ColoradjustGreen
-Yeώil
+Πράσινο
 ; Green
 ;
 Msg_Coloradjust_GreenHelp
-Rengin yeώil bileώeni.
+Το πράσινο στοιχείο του χρώματος.
 ; The green component of the color.
 ;
 Msg_ColoradjustBlue
-Mavi
+Μπλέ
 ; Blue
 ;
 Msg_Coloradjust_BlueHelp
-Rengin mavi bileώeni.
+Το μπλέ στοιχείο του χρώματος.
 ; The blue component of the color.
 ;
 Msg_Coloradjust_WheelAbbr
@@ -897,14 +916,14 @@ GCBMRY
 ; GCBMRY
 ;
 Msg_Coloradjust_WheelHelp
-Fareyi kullanarak bir renk seηin.
+Μετακινήστε το ποντίκι για να επιλέξετε ένα χρώμα.
 ; Move the mouse to select a color.
 ;
 Msg_Coloradjust_GradientHelp
-Rengin parlaklύπύ.
+Η φωτεινότητα του χρώματος.
 ; The brightness of the color.
 ;
 Msg_PrefsShortHelp
-Yeni nesil araη ηubuπu sύnύfύ.
+Εργαλείο μπάρας επόμενης γενιάς.
 ; Next generation tool bar class.
 ;

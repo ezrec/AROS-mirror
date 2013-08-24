@@ -2,7 +2,7 @@
 
  TheBar.mcc - Next Generation Toolbar MUI Custom Class
  Copyright (C) 2003-2005 Alfonso Ranieri
- Copyright (C) 2005-2009 by TheBar.mcc Open Source Team
+ Copyright (C) 2005-2013 by TheBar.mcc Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -154,7 +154,7 @@ localizeArray(STRPTR *strings, const ULONG *ids)
 void
 initStrings(void)
 {
-    if (openCatalogVR((CONST_STRPTR)"TheBar.catalog",0,0))
+    if (openCatalogVR((CONST_STRPTR)"TheBar_mcp.catalog",0,0))
     {
         struct CatCompArrayType *cca;
         int                     cnt;

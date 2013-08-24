@@ -2,7 +2,7 @@
 
  TheBar.mcc - Next Generation Toolbar MUI Custom Class
  Copyright (C) 2003-2005 Alfonso Ranieri
- Copyright (C) 2005-2009 by TheBar.mcc Open Source Team
+ Copyright (C) 2005-2013 by TheBar.mcc Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -26,6 +26,10 @@
 #include <mcc_common.h>
 
 /******************************************************************************/
+/* include the minimal startup code to be able to start the class from a      */
+/* shell without crashing the system                                          */
+/******************************************************************************/
+#include "shellstart.c"
 
 #define VERSION       LIB_VERSION
 #define REVISION      LIB_REVISION
@@ -170,15 +174,13 @@ static BOOL ClassInit(UNUSED struct Library *base)
     BOOL success = TRUE;
 
     // check for MUI 3.9+
-    if(MUIMasterBase->lib_Version >= 20)
+    if(LIB_VERSION_IS_AT_LEAST(MUIMasterBase, 20, 0))
     {
       lib_flags |= BASEFLG_MUI20;
 
-      #if defined(__MORPHOS__)
-      // check for MUI 4.0+, MorphOS only
-      if(MUIMasterBase->lib_Version > 20 || MUIMasterBase->lib_Revision >= 5341)
+      // check for MUI 4.0+
+      if(LIB_VERSION_IS_AT_LEAST(MUIMasterBase, 20, 5500))
         lib_flags |= BASEFLG_MUI4;
-      #endif
     }
 
     // on MUI 3.1 system's we do have to

@@ -1,4 +1,4 @@
-## version $VER: thebar.catalog 1.0 (26.05.2010)
+## version $VER: thebar.catalog 1.1 (28.8.2012)
 ## language polski
 ## codeset 5
 ## chunk AUTH Mariusz Danilewicz <mandi@interia.pl>
@@ -744,28 +744,10 @@ dwa punkty
 ; Two points
 ;
 ;
-Msg_Info_First
-%s\n\
-Copyright (c) 2003-2010 Alfonso Ranieri\n\
-i TheBar Open Source Team
-; %s\n\
-; Copyright (c) 2003-2008 Alfonso Ranieri\n\
-; and TheBar Open Source Team
-;
-Msg_Info_Reserved
-Rozpowszechniany na warunkach okre¶lonych w LGPL2.
-; Distributed under the terms of the LGPL2.
-;
-Msg_Info_Rest
-Najnowsze wersje i aktualizacje znadziesz na stronie:\n\
-http://www.sourceforge.net/projects/thebar
-; For recent versions and updates visit:\n\
-; http://www.sourceforge.net/projects/thebar
-;
 Msg_Info_Translator
 Polska wersja: Mariusz Danilewicz / ATO PL\n\
 http://ato.exec.pl
-; 
+;
 ;
 Msg_Item_Globals
 Przywróæ ustawienia globalne
