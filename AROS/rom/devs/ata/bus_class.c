@@ -1094,7 +1094,8 @@ AROS_UFH3(BOOL, Hidd_ATABus_Tick,
         timeout = --bus->ab_Timeout;
     Permit();
 
-    if (timeout < 0)
+    /* If timeout condition is met and there is a bus task to signal, send CTRL_C there */
+    if ((timeout < 0) && bus->ab_Task)
         Signal(bus->ab_Task, SIGBREAKF_CTRL_C);
 
     return FALSE;

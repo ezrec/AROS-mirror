@@ -1,5 +1,5 @@
 /*
-    Copyright © 2004-2013, The AROS Development Team. All rights reserved
+    Copyright ï¿½ 2004-2013, The AROS Development Team. All rights reserved
     $Id$
 
     Desc:
@@ -871,7 +871,7 @@ void BusTaskCode(struct ata_Bus *bus, struct ataBase *ATABase)
     bus->ab_Timer = ata_OpenTimer(ATABase);
 
     /* Get the signal used for sleeping */
-    bus->ab_Task = FindTask(0);
+    bus->ab_Task = FindTask(NULL);
     bus->ab_SleepySignal = AllocSignal(-1);
     /* Failed to get it? Use SIGBREAKB_CTRL_E instead */
     if (bus->ab_SleepySignal < 0)
