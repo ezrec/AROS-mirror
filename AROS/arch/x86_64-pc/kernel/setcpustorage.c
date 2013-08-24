@@ -5,15 +5,16 @@
     Desc:
 */
 
-#include <aros/debug.h>
 #include <aros/kernel.h>
 #include <aros/libcall.h>
 
+#include "kernel_debug.h"
 #include "kernel_base.h"
 #include "kernel_intern.h"
 #include "tls.h"
 
 #include <proto/kernel.h>
+#include <proto/exec.h>
 
 AROS_LH1(BOOL, KrnSetCPUStorage,
     AROS_LHA(APTR, value, A0),
@@ -21,9 +22,17 @@ AROS_LH1(BOOL, KrnSetCPUStorage,
 {
     AROS_LIBFUNC_INIT
 
-    bug("CPU%d: Set CPU Storage: %p\n", KrnGetCPUNumber(), value);
+    int cpu = KrnGetCPUNumber();
+    void **cpu_storage = TLS_GET(CPUStorage);
 
-    TLS_SET(CPUStorage, value);
+    if (cpu_storage != NULL)
+    {
+        cpu_storage[cpu] = value;
+
+        return TRUE;
+    }
+    else
+        return FALSE;
 
     AROS_LIBFUNC_EXIT
 }

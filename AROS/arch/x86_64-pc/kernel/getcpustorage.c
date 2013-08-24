@@ -5,10 +5,10 @@
     Desc:
 */
 
-#include <aros/debug.h>
 #include <aros/kernel.h>
 #include <aros/libcall.h>
 
+#include "kernel_debug.h"
 #include "kernel_base.h"
 #include "kernel_intern.h"
 #include "tls.h"
@@ -20,7 +20,16 @@ AROS_LH0(APTR, KrnGetCPUStorage,
 {
     AROS_LIBFUNC_INIT
 
-    void *storage = TLS_GET(CPUStorage);
+    int cpu = KrnGetCPUNumber();
+
+    void *storage = NULL;
+
+    void **tls_cpu_storage = TLS_GET(CPUStorage);
+
+    if (tls_cpu_storage)
+    {
+        storage = tls_cpu_storage[cpu];
+    }
 
     return storage;
 
