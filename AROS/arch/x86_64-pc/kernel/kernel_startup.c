@@ -616,6 +616,19 @@ void core_CPUSetup(UBYTE _APICID, IPTR SystemStack)
 
     D(bug("[Kernel] core_CPUSetup(%d, 0x%p)\n", _APICID, SystemStack));
 
+    /* Set up IDT (on secondary cores...) */
+    D(bug("[Kernel] IDT@ %p\n", __KernBootPrivate->IDT));
+    if (__KernBootPrivate->IDT)
+    {
+        D(bug("[Kenrel] Loading IDT\n"));
+        struct segment_selector IDT_sel;
+
+        IDT_sel.size = sizeof(struct int_gate_64bit) * 256 - 1;
+        IDT_sel.base = __KernBootPrivate->IDT;
+
+        asm volatile("lidt %0"::"m"(IDT_sel));
+    }
+
     /*
      * At the moment two of three stacks are reserved. IST is not used (indexes == 0 in interrupt gates)
      * and ring 1 is not used either. However, the space pointed to by IST is used as a temporary stack

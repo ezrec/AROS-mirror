@@ -1,5 +1,5 @@
 /*
-    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
+    Copyright ï¿½ 1995-2011, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: Intel IA-32 APIC driver.
@@ -64,6 +64,11 @@ static ULONG DoIPI(IPTR __APICBase, ULONG target, ULONG cmd)
     D(bug("[IPI] ... left wait loop (status = 0x%08X)\n", status_ipisend));
 
     return status_ipisend;
+}
+
+ULONG core_APIC_DoIPI(IPTR __APICBase, ULONG target, ULONG cmd)
+{
+    return DoIPI(__APICBase, target, cmd);
 }
 
 /**********************************************************

@@ -1,5 +1,6 @@
 #include <asm/cpu.h>
 #include <asm/io.h>
+#include <aros/debug.h>
 #include <aros/libcall.h>
 #include <aros/asmcall.h>
 #include <exec/execbase.h>
@@ -55,6 +56,7 @@ IRQPROTO_16(0x0);
 IRQPROTO_16(0x1);
 IRQPROTO_16(0x2);
 IRQPROTO(0x8, 0);
+IRQPROTO(0xf, d);
 IRQPROTO(0xf, e);
 extern void core_DefaultIRETQ(void);
 
@@ -74,9 +76,9 @@ void core_SetupIDT(struct KernBootPrivate *__KernBootPrivate)
 
     if (!__KernBootPrivate->IDT)
     {
-    	__KernBootPrivate->IDT = krnAllocBootMemAligned(sizeof(struct int_gate_64bit) * 256, 256);
+        __KernBootPrivate->IDT = krnAllocBootMemAligned(sizeof(struct int_gate_64bit) * 256, 256);
 
-    	D(bug("[Kernel] Allocated IDT at 0x%p\n", __KernBootPrivate->IDT));
+        D(bug("[Kernel] Allocated IDT at 0x%p\n", __KernBootPrivate->IDT));
     }
 
     D(bug("[Kernel] core_SetupIDT: Setting all interrupt handlers to default value\n"));
@@ -88,6 +90,8 @@ void core_SetupIDT(struct KernBootPrivate *__KernBootPrivate)
             off = (uintptr_t)interrupt[i];
         else if (i == 0x80)
             off = (uintptr_t)IRQ0x80_intr;
+        else if (i == 0xfd)
+            off = (uintptr_t)IRQ0xfd_intr;
         else if (i == 0xfe)
             off = (uintptr_t)IRQ0xfe_intr;
         else
@@ -272,99 +276,109 @@ void core_IRQHandle(struct ExceptionContext *regs, unsigned long error_code, uns
     /* These exceptions are CPU traps */
     if (irq_number < 0x20)
     {
-    	cpu_Trap(regs, error_code, irq_number);
+        cpu_Trap(regs, error_code, irq_number);
     }
     else if (irq_number == 0x80)  /* Syscall? */
     {
-	/* Syscall number is actually ULONG (we use only eax) */
-    	ULONG sc = regs->rax;
+        /* Syscall number is actually ULONG (we use only eax) */
+        ULONG sc = regs->rax;
 
         DSYSCALL(bug("[Kernel] Syscall %u\n", sc));
 
-	/* The following syscalls can be run in both supervisor and user mode */
-	switch (sc)
-	{
-	case SC_REBOOT:
-	    D(bug("[Kernel] Warm restart, stack 0x%p\n", AROS_GET_SP));
+        /* The following syscalls can be run in both supervisor and user mode */
+        switch (sc)
+        {
+            case SC_REBOOT:
+                D(bug("[Kernel] Warm restart, stack 0x%p\n", AROS_GET_SP));
 
-	    /*
-	     * Restart the kernel with a double stack swap. This doesn't return.
-	     * Double swap guarantees that core_Kick() is called when SP is set to a
-	     * dynamically allocated emergency stack and not to boot stack.
-	     * Such situation is rare but can occur in the following situation:
-	     * 1. Boot task calls SuperState(). Privilege changed, but stack is manually reset
-	     *    back into our .bss space.
-	     * 2. Boot task crashes. Privilege doesn't change this time, RSP is not changed.
-	     * 3. If we call core_Kick() right now, we are dead (core_Kick() clears .bss).
-	     */
-	    __asm__ __volatile__(
-	    	"cli\n\t"
-	    	"cld\n\t"
-	    	"movq %0, %%rsp\n\t"
-	    	"jmp *%1\n"
-	    	::"r"(__KernBootPrivate->SystemStack + STACK_SIZE), "r"(core_Kick), "D"(BootMsg), "S"(kernel_cstart));
+                /*
+                 * Restart the kernel with a double stack swap. This doesn't return.
+                 * Double swap guarantees that core_Kick() is called when SP is set to a
+                 * dynamically allocated emergency stack and not to boot stack.
+                 * Such situation is rare but can occur in the following situation:
+                 * 1. Boot task calls SuperState(). Privilege changed, but stack is manually reset
+                 *    back into our .bss space.
+                 * 2. Boot task crashes. Privilege doesn't change this time, RSP is not changed.
+                 * 3. If we call core_Kick() right now, we are dead (core_Kick() clears .bss).
+                 */
+                __asm__ __volatile__(
+                        "cli\n\t"
+                        "cld\n\t"
+                        "movq %0, %%rsp\n\t"
+                        "jmp *%1\n"
+                        ::"r"(__KernBootPrivate->SystemStack + STACK_SIZE), "r"(core_Kick), "D"(BootMsg), "S"(kernel_cstart));
+                break;
 
-	case SC_SUPERVISOR:
-	    /* This doesn't return */
-	    core_Supervisor(regs);
-	}
+            case SC_SUPERVISOR:
+                /* This doesn't return */
+                core_Supervisor(regs);
+        }
 
-	/*
-	 * Scheduler can be called only from within user mode.
-	 * Every task has ss register initialized to a valid segment descriptor.
-	 * The descriptor itself isn't used by x86-64, however when a privilege
-	 * level switch occurs upon an interrupt, ss is reset to zero. Old ss value
-	 * is always pushed to stack as part of interrupt context.
-	 * We rely on this in order to determine which CPL we are returning to.
-	 */
+        /*
+         * Scheduler can be called only from within user mode.
+         * Every task has ss register initialized to a valid segment descriptor.
+         * The descriptor itself isn't used by x86-64, however when a privilege
+         * level switch occurs upon an interrupt, ss is reset to zero. Old ss value
+         * is always pushed to stack as part of interrupt context.
+         * We rely on this in order to determine which CPL we are returning to.
+         */
         if (regs->ss != 0)
         {
             DSYSCALL(bug("[Kernel] User-mode syscall\n"));
 
-	    /* Disable interrupts for a while */
-	    __asm__ __volatile__("cli; cld;");
+            /* Disable interrupts for a while */
+            __asm__ __volatile__("cli; cld;");
 
-	    core_SysCall(sc, regs);
+            core_SysCall(sc, regs);
         }
 
-	DSYSCALL(bug("[Kernel] Returning from syscall...\n"));
+        DSYSCALL(bug("[Kernel] Returning from syscall...\n"));
+    }
+    else if (irq_number == 0x0xfd)
+    {
+        if (KernelBase)
+        {
+            bug("[Kernel] Got IPI on CPU %d\n", core_APIC_GetNumber(KernelBase->kb_PlatformData->kb_APIC));
+        }
+
+        core_APIC_AckIntr();
     }
     else if (irq_number >= 0x20) /* Hardware IRQ */
     {
-	if (KernelBase)
-    	{
-	    /* From CPU's point of view, IRQs are exceptions starting from 0x20. */
-    	    irq_number -= 0x20;
+        if (KernelBase)
+        {
+            /* From CPU's point of view, IRQs are exceptions starting from 0x20. */
+            irq_number -= 0x20;
 
-    	    switch (KernelBase->kb_Interrupts[irq_number].lh_Type)
-    	    {
-    	    case KBL_APIC:
-            	core_APIC_AckIntr();
-            	break;
+            switch (KernelBase->kb_Interrupts[irq_number].lh_Type)
+            {
+                case KBL_APIC:
+                    core_APIC_AckIntr();
+                    break;
 
-            case KBL_XTPIC:
-            	XTPIC_AckIntr(irq_number, &KernelBase->kb_PlatformData->kb_XTPIC_Mask);
-	 	krnRunIRQHandlers(KernelBase, irq_number);
+                case KBL_XTPIC:
+                    XTPIC_AckIntr(irq_number, &KernelBase->kb_PlatformData->kb_XTPIC_Mask);
+                    krnRunIRQHandlers(KernelBase, irq_number);
 
-		/*
-		 * Interrupt acknowledge on XT-PIC also disables this interrupt.
-		 * If we still need it, we need to re-enable it.
-		 */
-            	if (!IsListEmpty(&KernelBase->kb_Interrupts[irq_number]))
-                    XTPIC_EnableIRQ(irq_number, &KernelBase->kb_PlatformData->kb_XTPIC_Mask);
+                    /*
+                     * Interrupt acknowledge on XT-PIC also disables this interrupt.
+                     * If we still need it, we need to re-enable it.
+                     */
+                    if (!IsListEmpty(&KernelBase->kb_Interrupts[irq_number]))
+                        XTPIC_EnableIRQ(irq_number, &KernelBase->kb_PlatformData->kb_XTPIC_Mask);
 
-                break;
-	    }
-	}
+                    break;
+            }
+        }
 
-	/* Upon exit from the lowest-level hardware IRQ we run the task scheduler */
-	if (SysBase && (regs->ss != 0))
-	{
-	    /* Disable interrupts for a while */
-	    __asm__ __volatile__("cli; cld;");
+        /* Upon exit from the lowest-level hardware IRQ we run the task scheduler */
+        if (SysBase && (regs->ss != 0))
+        {
+            /* Disable interrupts for a while */
+            __asm__ __volatile__("cli; cld;");
 
-	    core_ExitInterrupt(regs);
-	}
+            core_ExitInterrupt(regs);
+        }
     }
 
     core_LeaveInterrupt(regs);
@@ -383,25 +397,25 @@ void ictl_Initialize(void)
 
     if (!pdata->kb_APIC)
     {
-	/* No APIC was discovered by ACPI/whatever else. Do the probe. */
-	pdata->kb_APIC = core_APIC_Probe();
+        /* No APIC was discovered by ACPI/whatever else. Do the probe. */
+        pdata->kb_APIC = core_APIC_Probe();
     }
 
     if (!pdata)
     {
-    	/* We are x86-64 and we always have APIC. */
-    	krnPanic(KernelBase, "Failed to allocate APIC descriptor\n.The system is low on memory.");
+        /* We are x86-64 and we always have APIC. */
+        krnPanic(KernelBase, "Failed to allocate APIC descriptor\n.The system is low on memory.");
     }
 
     if (pdata->kb_APIC->flags & APF_8259)
     {
-    	/*
-    	 * Initialize legacy 8529A PIC.
-    	 * TODO: We obey ACPI information about its presence, however currently we don't have
-    	 * IOAPIC support. Switching to IOAPIC requires full ACPI support including AML.
-    	 */
+        /*
+         * Initialize legacy 8529A PIC.
+         * TODO: We obey ACPI information about its presence, however currently we don't have
+         * IOAPIC support. Switching to IOAPIC requires full ACPI support including AML.
+         */
 
-    	XTPIC_Init(&pdata->kb_XTPIC_Mask);
+        XTPIC_Init(&pdata->kb_XTPIC_Mask);
     }
 
     D(bug("[Kernel] kernel_cstart: Interrupts redirected. We will go back in a minute ;)\n"));

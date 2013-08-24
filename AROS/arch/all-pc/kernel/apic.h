@@ -1,5 +1,5 @@
 /*
-    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
+    Copyright ï¿½ 1995-2011, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: Generic AROS APIC definitions.
@@ -38,6 +38,7 @@ ULONG core_APIC_Wake(APTR start_addr, UBYTE id, IPTR base);
 UBYTE core_APIC_GetID(IPTR base);
 void  core_APIC_Init(struct APICData *data, ULONG cpuNum);
 void  core_APIC_AckIntr(void);
+ULONG core_APIC_DoIPI(IPTR base, ULONG target, ULONG cmd);
 
 #ifdef __x86_64__
 #define APIC_BASE_MASK 0x000FFFFFFFFFF000

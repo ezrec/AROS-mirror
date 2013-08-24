@@ -44,6 +44,8 @@ static void smp_Entry(IPTR stackBase, volatile UBYTE *apicready, struct KernelBa
     /* Set up GDT and LDT for our core */
     core_CPUSetup(_APICID, stackBase);
 
+    core_APIC_Init(KernelBase->kb_PlatformData->kb_APIC, _APICID);
+
     bug("[SMP] APIC #%u of %u Going IDLE (Halting)...\n", _APICNO + 1, KernelBase->kb_PlatformData->kb_APIC->count);
 
     /* Signal the bootstrap core that we are running */
@@ -176,15 +178,37 @@ int smp_Initialize(void)
 
     if (pdata->kb_APIC && (pdata->kb_APIC->count > 1))
     {
-    	if (!smp_Setup(KernelBase))
-    	{
-    	    D(bug("[SMP] Failed to prepare the environment!\n"));
+        if (!smp_Setup(KernelBase))
+        {
+            D(bug("[SMP] Failed to prepare the environment!\n"));
 
-    	    pdata->kb_APIC->count = 1;	/* We have only one workinng CPU */
-    	    return 0;
-    	}
+            pdata->kb_APIC->count = 1;	/* We have only one workinng CPU */
+            return 0;
+        }
 
-    	return smp_Wake(KernelBase);
+        int retval = smp_Wake(KernelBase);
+
+        asm volatile("sti");
+        {
+            bug("[SMP] Sending IPI to myself\n");
+            core_APIC_DoIPI(pdata->kb_APIC->lapicBase, 0, (1 << 14) |  0xfd | (0x1 << 18));
+
+            bug("[SMP] Sending IPI to all including self\n");
+            core_APIC_DoIPI(pdata->kb_APIC->lapicBase, 0, (1 << 14) | 0xfd | (0x2 << 18));
+
+            bug("[SMP] Sending IPI to all excluding self\n");
+            core_APIC_DoIPI(pdata->kb_APIC->lapicBase, 0, (1 << 14) | 0xfd | (0x3 << 18));
+            int i;
+
+            for (i=0; i < pdata->kb_APIC->count; i++)
+            {
+                bug("[SMP] Sending IPI to target %d\n", i);
+                core_APIC_DoIPI(pdata->kb_APIC->lapicBase, i, (1 << 14) | 0xfd);
+            }
+        }
+        asm volatile("cli");
+
+        return retval;
     }
 
     /* This is not an SMP machine, but it's okay */

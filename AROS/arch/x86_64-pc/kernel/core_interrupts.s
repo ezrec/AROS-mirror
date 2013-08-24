@@ -62,7 +62,8 @@ BUILD_IRQ(0x1e)
 BUILD_IRQ(0x1f)
 BUILD_16(0x2)
 BUILD_IRQ(0x80)
-BUILD_IRQ(0xfe)		// APIC timer
+BUILD_IRQ(0xfd)         // IPI
+BUILD_IRQ(0xfe)         // APIC timer
 
 	.balign 32, 0x90
 	.globl core_EnterInterrupt
