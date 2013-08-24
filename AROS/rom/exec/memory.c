@@ -825,6 +825,8 @@ APTR AllocMemHeader(IPTR size, ULONG flags, struct TraceLocation *loc, struct Ex
             mhe->mhe_Alloc          = mhe_orig->mhe_Alloc;
             mhe->mhe_AllocAbs       = mhe_orig->mhe_AllocAbs;
             mhe->mhe_AllocVec       = mhe_orig->mhe_AllocVec;
+            mhe->mhe_AllocAligned   = mhe_orig->mhe_AllocAligned;
+            mhe->mhe_AllocVecAligned= mhe_orig->mhe_AllocVecAligned;
             mhe->mhe_Avail          = mhe_orig->mhe_Avail;
             mhe->mhe_Free           = mhe_orig->mhe_Free;
             mhe->mhe_FreeVec        = mhe_orig->mhe_FreeVec;
