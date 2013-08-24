@@ -525,10 +525,10 @@ void * tlsf_malloc_aligned(struct MemHeaderExt *mhe, IPTR size, IPTR align, ULON
 
     if (align > SIZE_ALIGN)
     {
-        void *aligned_ptr = (void *)(((uintptr_t)ptr + align - 1) & ~(align - 1));
+        void *aligned_ptr = (void *)(((IPTR)ptr + align - 1) & ~(align - 1));
         bhdr_t *aligned_bhdr = MEM_TO_BHDR(aligned_ptr);
-        uintptr_t diff_begin = (uintptr_t)aligned_bhdr - (uintptr_t)b;
-        uintptr_t diff_end = (uintptr_t)GET_NEXT_BHDR(b, GET_SIZE(b)) - (uintptr_t)GET_NEXT_BHDR(aligned_bhdr, size);
+        IPTR diff_begin = (IPTR)aligned_bhdr - (IPTR)b;
+        IPTR diff_end = (IPTR)GET_NEXT_BHDR(b, GET_SIZE(b)) - (IPTR)GET_NEXT_BHDR(aligned_bhdr, size);
 
         SET_SIZE(aligned_bhdr, size);
 
