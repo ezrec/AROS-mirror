@@ -15,6 +15,7 @@
                   and Dirk Stöcker I created files to handle interrupt
                   and handler functions in an API compatible way.
  1.1   25.04.06 : fixed MakeInterrupt() and MakeHandler() macro. (geit)
+ WIP   23.08.13 : ported to AROS. WARNING: FOR ABIv1 ONLY!
 
 */
 
@@ -111,6 +112,24 @@
     SAVEDS ASM ret name( obj, data)
 
   #define ENTRY(func) (APTR)&Gate_##func
+
+#elif defined(__AROS__)
+
+  /* This is the same prototype for both Cause() and
+   * AddIntServer() functions
+   */
+  #define INTERRUPTPROTO(name, ret, obj, data) \
+      ret name(obj, data, struct ExecBase *SysBase); \
+      AROS_UFH5(int, name##_wrapper, \
+          AROS_UFHA(APTR, is_Data, A1), \
+          AROS_UFHA(APTR, is_Code, A5), \
+          AROS_UFHA(struct ExecBase *, sysBase, A6), \
+          AROS_UFHA(APTR, mask, D1), \
+          AROS_UFHA(APTR, custom, A0)) \
+      { AROS_USERFUNC_INIT \
+        name(custom, is_Data, sysBase ); return 0; \
+        AROS_USERFUNC_EXIT }  \
+      ret name(obj, data, struct ExecBase *SysBase)
 
 #else
 

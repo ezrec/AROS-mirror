@@ -2,7 +2,7 @@
 
  TheBar.mcc - Next Generation Toolbar MUI Custom Class
  Copyright (C) 2003-2005 Alfonso Ranieri
- Copyright (C) 2005-2007 by TheBar.mcc Open Source Team
+ Copyright (C) 2005-2013 by TheBar.mcc Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -153,7 +153,7 @@ enum
 #define MUIDEF_TheBar_HorizTextGfxSpacing   1
 #define MUIDEF_TheBar_VertTextGfxSpacing    1
 
-#define MUIDEF_TheBar_Precision             MUIV_TheBar_Precision_GUI
+#define MUIDEF_TheBar_Precision             MUIV_TheBar_Precision_Image
 #define MUIDEF_TheBar_NotMUI20Event         MUIV_TheBar_Event_MouseMove
 #define MUIDEF_TheBar_Event                 MUIV_TheBar_Event_MouseObject
 #define MUIDEF_TheBar_Scale                 66
@@ -165,11 +165,11 @@ enum
 #define MUIDEF_TheBar_DontMove              FALSE
 #define MUIDEF_TheBar_NtRaiseActive         FALSE
 
-#define MUIDEF_TheBar_SpacersSize           MUIV_TheBar_SpacersSize_One
+#define MUIDEF_TheBar_SpacersSize           MUIV_TheBar_SpacersSize_Quarter
 
 #define MUIDEF_TheBar_Appearance_ViewMode   MUIV_TheBar_ViewMode_TextGfx
 #define MUIDEF_TheBar_Appearance_LabelPos   MUIV_TheBar_LabelPos_Bottom
-#define MUIDEF_TheBar_Appearance_Flags      MUIV_TheBar_Appearance_EnableKeys
+#define MUIDEF_TheBar_Appearance_Flags      (MUIV_TheBar_Appearance_EnableKeys|MUIV_TheBar_Appearance_Borderless)
 
 /***********************************************************************/
 

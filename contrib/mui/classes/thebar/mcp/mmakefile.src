@@ -13,7 +13,7 @@ FILES := \
 	 debug \
 
 USER_INCLUDES := -idirafter $(SRCDIR)/$(CURDIR)/../include
-USER_CFLAGS := -DNO_INLINE_STDARG
+USER_CFLAGS := -DNO_INLINE_STDARG -DAROS_ABI_V1
 USER_CFLAGS += $(PARANOIA_CFLAGS)
 
 %build_module_simple mmake=contrib-zune-classes-thebar-mcp \
@@ -37,7 +37,8 @@ contrib-zune-classes-thebar-mcp-catalogs : locale.h locale.c \
     $(TARGETDIR)/italian/TheBar.catalog \
     $(TARGETDIR)/french/TheBar.catalog \
     $(TARGETDIR)/polish/TheBar.catalog \
-    $(TARGETDIR)/turkish/TheBar.catalog
+    $(TARGETDIR)/turkish/TheBar.catalog \
+    $(TARGETDIR)/greek/TheBar.catalog
 
 locale.h: locale/TheBar_mcp.cd locale_h.sd
 	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/TheBar_mcp.cd locale.h=$(SRCDIR)/$(CURDIR)/locale_h.sd
@@ -68,4 +69,8 @@ $(TARGETDIR)/polish/TheBar.catalog: locale/polish.ct
 
 $(TARGETDIR)/turkish/TheBar.catalog: locale/turkish.ct
 	@$(MKDIR) $(TARGETDIR)/turkish
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/TheBar_mcp.cd $< CATALOG $@
+
+$(TARGETDIR)/greek/TheBar.catalog: locale/greek.ct
+	@$(MKDIR) $(TARGETDIR)/greek
 	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/TheBar_mcp.cd $< CATALOG $@

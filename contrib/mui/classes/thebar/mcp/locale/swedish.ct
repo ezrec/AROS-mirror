@@ -1,4 +1,4 @@
-## version $VER: TheBar.ct 26.4 (18.09.2010)
+## version $VER: TheBar.ct 26.6 (28.8.2012)
 ## language svenska
 ## codeset 0
 ;
@@ -43,7 +43,10 @@ Aktiv
 ; Active
 ;
 Msg_UseGroupBackground_Help
-Om vald, får raden din\nföredragna bakgrund,\nannars får den sin\nföregångna bakgrund.
+Om vald, får raden din\n\
+föredragna bakgrund,\n\
+annars får den sin\n\
+föregångna bakgrund.
 ; If selected, the bar gets\n\
 ; your preferred background,\n\
 ; otherwise it gets its\n\
@@ -66,7 +69,10 @@ Aktiv
 ; Active
 ;
 Msg_UseButtonBackground_Help
-Om vald, får knapparna din\nföredragna bakgrund,\nannars får de sin\nföregångna bakgrund.
+Om vald, får knapparna din\n\
+föredragna bakgrund,\n\
+annars får de sin\n\
+föregångna bakgrund.
 ; If selected, the buttons get\n\
 ; your preferred background,\n\
 ; otherwise they get their\n\
@@ -125,7 +131,10 @@ Kropp
 ; Body
 ;
 Msg_DisabledBody_Help
-Kropp penna för avaktiverade knappar. Den\nanvänds som huvudpenna för avaktiverade\nknappar i Form läge och som rut penna\nför avaktiverade knappar i Rutnät läge.
+Kropp penna för avaktiverade knappar. Den\n\
+används som huvudpenna för avaktiverade\n\
+knappar i Form läge och som rut penna\n\
+för avaktiverade knappar i Rutnät läge.
 ; Disabled buttons body pen. It is used as\n\
 ; main pen for disabled buttons in Shape\n\
 ; mode and as grid pen for disabled\n\
@@ -140,7 +149,10 @@ Skugga
 ; Shadow
 ;
 Msg_DisabledShadow_Help
-Skugg penna för avaktiverade knappar. Den\nanvänds som andra penna för avaktiverade\nknappar i Form läge och som text penna\nför avaktiverade knappar i Rutnät läge.
+Skugg penna för avaktiverade knappar. Den\n\
+används som andra penna för avaktiverade\n\
+knappar i Form läge och som text penna\n\
+för avaktiverade knappar i Rutnät läge.
 ; Disabled buttons shadow pen. It is used as\n\
 ; secondary pen for disabled buttons in Shape\n\
 ; mode and as text pen for disabled buttons\n\
@@ -251,7 +263,8 @@ Använd
 ; Use
 ;
 Msg_UseDragBarFill_Help
-Om vald, så används fyll\npenna för draghandtag.
+Om vald, så används fyll\n\
+penna för draghandtag.
 ; If selected, the dragbar fill\n\
 ; pen is used.
 ;
@@ -292,7 +305,10 @@ Justera knapparnas utseende.
 ; Adjust the appearance of the buttons.
 ;
 Msg_Appearance_Text
-Valen nedan används av TheBar endast om objektet\nfrågade efter det vid uppstart. Det betyder att om\nprogrammeraren inte bestämde annorlunda så\nignoreras de bara.
+Valen nedan används av TheBar endast om objektet\n\
+frågade efter det vid uppstart. Det betyder att om\n\
+programmeraren inte bestämde annorlunda så\n\
+ignoreras de bara.
 ; The options below are used by TheBar if and only if the\n\
 ; object requested for it at creation time. It means that\n\
 ; if the programmer didn't decide otherwise, they are simply\n\
@@ -323,7 +339,8 @@ Framhäv
 ; Highlight
 ;
 Msg_Sunny_Help
-Om vald, knappar, normalt i svart\noch vitt, blir färgade när muspekaren\när över dem.
+Om vald, knappar, normalt i svart och vitt,\n\
+blir färgade när muspekaren är över dem.
 ; If selected, buttons, normally in black\n\
 ; and white, are colored when the\n\
 ; mouse is over them.
@@ -333,7 +350,8 @@ Upphöjd
 ; Raised
 ;
 Msg_Raised_Help
-Om vald, knappar, normalt ramlösa,\nfår en ram när muspekaren är över dem.
+Om vald, knappar, normalt ramlösa,\n\
+får en ram när muspekaren är över dem.
 ; If selected, buttons, normally frameless,\n\
 ; are framed when the mouse is over them.
 ;
@@ -350,7 +368,8 @@ Tvinga radavskiljare
 ; Force Bar spacer
 ;
 Msg_BarSpacer_Help
-Om vald, så används en radavskiljare\nför alla typer av separatörer.
+Om vald, så används en radavskiljare\n\
+för alla typer av separatörer.
 ; If selected, a bar spacer is used\n\
 ; for all kind of separators.
 ;
@@ -368,7 +387,8 @@ Etikett position
 ; Labels at
 ;
 Msg_LabelPos_Help
-Justera textposition i ikoner\noch text knappar.
+Justera textposition i ikoner\n\
+och text knappar.
 ; Adjust the position of text in\n\
 ; Icons and text buttons.
 ;
@@ -413,7 +433,8 @@ Rad
 ; Bar
 ;
 Msg_BarSpacerSpacing_Help
-Pixlar mellan en radavskiljare\noch föregående/nästa objekt.
+Pixlar mellan en radavskiljare\n\
+och föregående/nästa objekt.
 ; Pixels between a Bar spacer\n\
 ; and the previous/next object.
 ;
@@ -426,7 +447,8 @@ Horis
 ; Horiz
 ;
 Msg_HorizInnerSpacing_Help
-Pixlar mellan vänster/höger ramgräns\noch knappinnehållet.
+Pixlar mellan vänster/höger ramgräns\n\
+och knappinnehållet.
 ; Pixels between the left/right frame\n\
 ; border and the button contents.
 ;
@@ -435,7 +457,8 @@ Msg_TopInnerSpacing
 ; Top
 ;
 Msg_TopInnerSpacing_Help
-Pixlar mellan översta ramgränsen\noch knappinnehållet.
+Pixlar mellan översta ramgränsen\n\
+och knappinnehållet.
 ; Pixels between the top frame border\n\
 ; and the button contents.
 ;
@@ -444,7 +467,8 @@ Nederst
 ; Bottom
 ;
 Msg_BottomInnerSpacing_Help
-Pixlar mellan nedersta ramgränsen\noch knappinnehållet.
+Pixlar mellan nedersta ramgränsen\n\
+och knappinnehållet.
 ; Pixels between the bottom frame border\n\
 ; and the button contents.
 ;
@@ -457,7 +481,8 @@ Vänster
 ; Left
 ;
 Msg_LeftBarFrameSpacing_Help
-Pixlar mellan vänster ramgräns och\nrad innehållet.
+Pixlar mellan vänster ramgräns och\n\
+rad innehållet.
 ; Pixels between the left frame border\n\
 ; and the bar contents.
 ;
@@ -466,7 +491,8 @@ Höger
 ; Right
 ;
 Msg_RightBarFrameSpacing_Help
-Pixlar mellan höger ramgräns och\nrad innehållet.
+Pixlar mellan höger ramgräns och\n\
+rad innehållet.
 ; Pixels between the right frame border\n\
 ; and the bar contents.
 ;
@@ -475,7 +501,8 @@ Msg_TopBarFrameSpacing
 ; Top
 ;
 Msg_TopBarFrameSpacing_Help
-Pixlar mellan översta ramgränsen och\nrad innehållet.
+Pixlar mellan översta ramgränsen och\n\
+rad innehållet.
 ; Pixels between the top frame border\n\
 ; and the bar contents.
 ;
@@ -484,7 +511,8 @@ Nederst
 ; Bottom
 ;
 Msg_BottomBarFrameSpacing_Help
-Pixlar mellan nedersta ramgränsen och\nrad innehållet.
+Pixlar mellan nedersta ramgränsen och\n\
+rad innehållet.
 ; Pixels between the bottom frame border\n\
 ; and the bar contents.
 ;
@@ -497,7 +525,8 @@ Horis
 ; Horiz
 ;
 Msg_HorizTextGfxSpacing_Help
-Pixlar mellan en bild och dess\nvänster/höger placerade märkning.
+Pixlar mellan en bild och dess\n\
+vänster/höger placerade märkning.
 ; Pixels between an image and\n\
 ; its left/right placed label.
 ;
@@ -506,7 +535,8 @@ Vert
 ; Vert
 ;
 Msg_VertTextGfxSpacing_Help
-Pixlar mellan en bild och dess\nnederst/överst placerade märkning.
+Pixlar mellan en bild och dess\n\
+nederst/överst placerade märkning.
 ; Pixels between an image and\n\
 ; its bottom/top placed label.
 ;
@@ -547,7 +577,11 @@ Händelse
 ; Event
 ;
 Msg_Event_Help
-Hur vi verifierar om muspekaren är över en knapp:\n- IntuiTicks: verifieras periodvis\n- Musflyttning: verifieras vid varje musflyttning\n- Musobjekt: verifieras när muspekaren är över ett nytt objekt
+Hur vi verifierar om muspekaren är över en knapp:\n\
+- IntuiTicks: verifieras periodvis\n\
+- Musflyttning: verifieras vid varje musflyttning\n\
+- Musobjekt: verifieras när muspekaren är över\n\
+ett nytt objekt
 ; How to verify if the mouse is over a button:\n\
 ; - IntuiTicks: it is verified periodically\n\
 ; - MouseMove: it is verified at every mouse move\n\
@@ -567,8 +601,9 @@ Specialvälj
 ; Special select
 ;
 Msg_SpecialSelect_Help
-Om vald, så flyttas knapparnas innehåll\nnär de väljs eller är aktiva.
-; If selected, buttons contents is moved\n\
+Om vald, så flyttas knapparnas innehåll\n\
+när de väljs eller är aktiva.
+; If selected, button contents are moved\n\
 ; when they are selected or active.
 ;
 Msg_TextOverUseShine
@@ -576,7 +611,8 @@ Specialtext
 ; Special text
 ;
 Msg_TextOverUseShine_Help
-Om vald, så ritas aktiva knappars\netikett med sken pennan.
+Om vald, så ritas aktiva knappars\n\
+etikett med sken pennan.
 ; If selected, active buttons labels\n\
 ; are drawn with the shine pen.
 ;
@@ -585,7 +621,7 @@ Ignorera valda bilder
 ; Ignore selected images
 ;
 Msg_IgnoreSelImages_Help
-Om vald, så ignoreras\nvalda bilder.
+Om vald, så ignoreras valda bilder.
 ; If selected, selected images\n\
 ; are ignored.
 ;
@@ -594,7 +630,8 @@ Ignorera icke valda bilder
 ; Ignore disabled images
 ;
 Msg_IgnoreDisImages_Help
-Om vald, så ignoreras\nicke valda bilder.
+Om vald, så ignoreras\n\
+icke valda bilder.
 ; If selected, disabled images\n\
 ; are ignored.
 ;
@@ -623,7 +660,8 @@ Flytta inte
 ; Don't move
 ;
 Msg_DontMove_Help
-Om vald, så flyttas inte knapparnas innehåll\nnär de är aktiva.
+Om vald, så flyttas inte knapparnas innehåll\n\
+när de är aktiva.
 ; If selected, the contents of the buttons\n\
 ; is not moved when they are active.
 ;
@@ -676,7 +714,9 @@ Msg_Item_Defaults
 ; Reset to defaults
 ;
 Msg_NoMUI20Event_Help
-Hur vi verifierar att muspekaren är över en knapp:\n- IntuiTicks: verifieras periodiskt\n- Musflyttning: verifieras vid varje musflyttning
+Hur vi verifierar att muspekaren är över en knapp:\n\
+- IntuiTicks: verifieras periodiskt\n\
+- Musflyttning: verifieras vid varje musflyttning
 ; How to verify if the mouse is over a button:\n\
 ; - IntuiTicks: it is verified periodically\n\
 ; - MouseMove: it is verified at every mouse move
@@ -694,24 +734,9 @@ Två punkter
 ; Two points
 ;
 ;
-Msg_Info_First
-%s\nKopieringsrätt (c) 2003-2008 Alfonso Ranieri\noch TheBar Open Source Team
-; %s\n\
-; Copyright (c) 2003-2008 Alfonso Ranieri\n\
-; and TheBar Open Source Team
-;
-Msg_Info_Reserved
-Distribuerad under termerna av LGPL2.
-; Distributed under the terms of the LGPL2.
-;
-Msg_Info_Rest
-För senaste versioner och uppdateringar:\nhttp://www.sourceforge.net/projects/thebar
-; For recent versions and updates visit:\n\
-; http://www.sourceforge.net/projects/thebar
-;
 Msg_Info_Translator
 Svenska av: Pär Boberg
-; 
+;
 ;
 Msg_Item_Globals
 Återställ till globala
@@ -762,7 +787,8 @@ Horisontell
 ; Horizontal
 ;
 Msg_Popback_HorizGradientHelp
-Om vald, så får du en\nhorisontell gradient.
+Om vald, så får du en\n\
+horisontell gradient.
 ; If selected, you get a\n\
 ; horizontal gradient.
 ;
@@ -771,7 +797,8 @@ Vertikal
 ; Vertical
 ;
 Msg_Popback_VertGradientHelp
-Om vald, så får du en\nvertikal gradient.
+Om vald, så får du en\n\
+vertikal gradient.
 ; If selected, you get a\n\
 ; vertical gradient.
 ;

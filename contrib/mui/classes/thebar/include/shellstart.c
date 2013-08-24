@@ -20,27 +20,28 @@
 
 ***************************************************************************/
 
-/* utils.c */
-#if !defined(__MORPHOS__)
-#if defined(__AROS__)
-Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, Tag tag1, ...);
+/*
+ * The system (and compiler) rely on a symbol named _start which marks
+ * the beginning of execution of an ELF file. To prevent others from
+ * executing this library, and to keep the compiler/linker happy, we
+ * define an empty _start symbol here.
+ *
+ * On the classic system (pre-AmigaOS4) this was usually done by
+ * moveq #0,d0
+ * rts
+ *
+ */
+
+#if defined(__amigaos3__)
+asm(".text\n\
+     .even\n\
+     .globl _start\n\
+    _start:\n\
+     moveq #20,d0\n\
+     rts");
 #else
-Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...);
+LONG _start(void)
+{
+  return RETURN_FAIL;
+}
 #endif
-#endif
-
-BOOL CreateSharedPool(void);
-void DeleteSharedPool(void);
-APTR SharedAlloc(ULONG size);
-void SharedFree(APTR mem);
-void stripUnderscore(STRPTR dest, STRPTR from, ULONG mode);
-struct TextFont *openFont(const char *name);
-ULONG peekQualifier(void);
-
-/* brc1.c */
-int BRCUnpack(APTR pSource, APTR pDest, LONG srcBytes0, LONG dstBytes0);
-
-/* scale.c */
-void scale(struct scale *sce , UBYTE *src , UBYTE *dst);
-void scaleRGB(struct scale *sce , ULONG *src , ULONG *dst);
-

@@ -4,7 +4,7 @@
 #
 # TheBar.mcc - Next Generation Toolbar MUI Custom Class
 # Copyright (C) 2003-2005 Alfonso Ranieri
-# Copyright (C) 2005-2009 by TheBar.mcc Open Source Team
+# Copyright (C) 2005-2013 by TheBar.mcc Open Source Team
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -32,6 +32,7 @@ mkdir -p "release/MCC_TheBar/Demos"
 mkdir -p "release/MCC_TheBar/Demos/pics"
 mkdir -p "release/MCC_TheBar/Developer"
 mkdir -p "release/MCC_TheBar/Developer/Autodocs"
+mkdir -p "release/MCC_TheBar/Developer/Autodocs/MCC"
 mkdir -p "release/MCC_TheBar/Developer/C"
 mkdir -p "release/MCC_TheBar/Developer/C/Examples"
 mkdir -p "release/MCC_TheBar/Developer/C/Examples/b2chunky"
@@ -76,7 +77,7 @@ for os in os3 os4 mos aros-i386 aros-ppc aros-x86_64; do
 done
 
 make -C mcp catalogs
-for language in czech french german italian polish swedish turkish; do
+for language in czech french german greek italian polish swedish turkish; do
 	mkdir -p "release/MCC_TheBar/Locale/Catalogs/$language"
 	cp -a mcp/locale/$language.catalog "release/MCC_TheBar/Locale/Catalogs/$language/TheBar_mcp.catalog"
 done
@@ -88,7 +89,7 @@ cp -a demo/pics/* "release/MCC_TheBar/Demos/pics/"
 cp -a doc/MCC_TheBar.readme "release/MCC_TheBar/Docs/"
 cp -a doc/b2chunky.doc "release/MCC_TheBar/Docs/"
 cp -a doc/fkeys.doc "release/MCC_TheBar/Docs/"
-cp -a doc/MCC_TheBar.doc "release/MCC_TheBar/Developer/Autodocs/"
+cp -a doc/MCC_TheBar.doc "release/MCC_TheBar/Developer/Autodocs/MCC/"
 cp -a demo/*.c "release/MCC_TheBar/Developer/C/Examples/"
 cp -a demo/*.h "release/MCC_TheBar/Developer/C/Examples/"
 cp -a demo/Makefile "release/MCC_TheBar/Developer/C/Examples/"
@@ -104,3 +105,5 @@ find release -nowarn -name ".svn" -exec rm -rf {} \; 2>/dev/null
 cd release
 rm -f ../MCC_TheBar-$releasever.$releaserev.lha
 lha -ao5q ../MCC_TheBar-$releasever.$releaserev.lha *
+cp MCC_TheBar/ReadMe ../MCC_TheBar-$releasever.$releaserev.readme
+cd ..

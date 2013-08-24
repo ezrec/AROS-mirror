@@ -1,4 +1,4 @@
-## version $VER: TheBar.catalog 25.5 (2.3.2008)
+## version $VER: TheBar.catalog 25.6 (28.8.2012)
 ## codeset 0
 ## language italiano
 ;
@@ -600,21 +600,6 @@ Un punto
 Msg_SpacersSize_TwoPoint
 Due punti
 ; Two points
-;
-Msg_Info_First
-%s\n\
-Copyright (c) 2003-2008 Alfonso Ranieri\n\
-e \"TheBar Open Source Team\".
-; Copyright (c) 2003-2008 Alfonso Ranieri\nand TheBar Open Source Team
-;
-Msg_Info_Reserved
-Distribuito secondo i termini della LGPL2.
-; Distributed under the terms of the LGPL2.
-;
-Msg_Info_Rest
-Per informazioni e update, visita:\n\
-http://www.sourceforge.net/projects/thebar
-; For recent versions and updates visit:\nhttp://www.sourceforge.net/projects/thebar
 ;
 Msg_Info_Translator
 

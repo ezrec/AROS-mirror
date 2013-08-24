@@ -133,13 +133,14 @@ main(UNUSED int argc,char **argv)
                         WindowContents, mg = VGroup,
 
                             Child, sb = TheBarObject,
-                                MUIA_Group_Horiz,        TRUE,
-                                MUIA_TheBar_ViewMode,    MUIV_TheBar_ViewMode_Gfx,
-                                MUIA_TheBar_Buttons,     buttons,
-                                MUIA_TheBar_PicsDrawer,  "PROGDIR:Pics",
-                                MUIA_TheBar_Pics,        pics,
-                                MUIA_TheBar_SelPics,     spics,
-                                MUIA_TheBar_DisPics,     dpics,
+                                MUIA_Group_Horiz,             TRUE,
+                                MUIA_TheBar_IgnoreAppearance, TRUE,
+                                MUIA_TheBar_ViewMode,         MUIV_TheBar_ViewMode_Gfx,
+                                MUIA_TheBar_Buttons,          buttons,
+                                MUIA_TheBar_PicsDrawer,       "PROGDIR:Pics",
+                                MUIA_TheBar_Pics,             pics,
+                                MUIA_TheBar_SelPics,          spics,
+                                MUIA_TheBar_DisPics,          dpics,
                             End,
 
                             Child, VGroup,
@@ -213,8 +214,9 @@ main(UNUSED int argc,char **argv)
 
                 set(rows,MUIA_Group_Horiz,TRUE);
                 set(cols,MUIA_Group_Horiz,TRUE);
-                set(viewMode,MUIA_Cycle_Active,0);
+                set(viewMode,MUIA_Cycle_Active,1);
                 set(s4,MUIA_Selected,TRUE);
+                DoMethod(sb,MUIM_TheBar_SetAttr,4,MUIA_TheBar_Attr_Sleep,TRUE);
 
                 DoMethod(win,MUIM_Notify,MUIA_Window_CloseRequest,TRUE,MUIV_Notify_Application,2,MUIM_Application_ReturnID,MUIV_Application_ReturnID_Quit);
                 DoMethod(update,MUIM_Notify,MUIA_Pressed,FALSE,app,2,MUIM_Application_ReturnID,TAG_USER);

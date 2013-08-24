@@ -82,7 +82,7 @@ TheBar.mcc/MUIM_TheBar_Sort
 TheBar.mcc/TheBar.mcc
 
     $Id: MCC_TheBar.doc 332 2009-10-04 11:57:03Z thboeckel $
-    $URL: https://thebar.svn.sourceforge.net/svnroot/thebar/releases/26.8/doc/MCC_TheBar.doc $
+    $URL: https://thebar.svn.sourceforge.net/svnroot/thebar/trunk/doc/MCC_TheBar.doc $
 
     Copyright (C) 2003-2005 Alfonso Ranieri
     Copyright (C) 2005-2009 TheBar Open Source Team
@@ -258,6 +258,7 @@ TheBar.mcc/MUIA_TheBar_BarSpacer
 
     SEE ALSO
      MUIA_TheBar_BarSpacerSpacing
+     MUIA_TheBar_IgnoreAppearance
 
 TheBar.mcc/MUIA_TheBar_BarSpacerSpacing
 
@@ -293,6 +294,9 @@ TheBar.mcc/MUIA_TheBar_Borderless
     NOTE
      This overwrites the user preferences and so must be used
      wisely. If in doubt, don't use it.
+
+    SEE ALSO
+     MUIA_TheBar_IgnoreAppearance
 
 TheBar.mcc/MUIA_TheBar_BottomBarFrameSpacing
 
@@ -674,6 +678,9 @@ TheBar.mcc/MUIA_TheBar_EnableKeys
     NOTE
      This overwrites the user preferences and so must be used
      wisely. If in doubt, don't use it.
+
+    SEE ALSO
+     MUIA_TheBar_IgnoreAppearance
 
 TheBar.mcc/MUIA_TheBar_Frame
 
@@ -1069,6 +1076,9 @@ TheBar.mcc/MUIA_TheBar_LabelPos
      This overwrites the user preferences and so must be used
      wisely. If in doubt, don't use it.
 
+    SEE ALSO
+     MUIA_TheBar_IgnoreAppearance
+
 TheBar.mcc/MUIA_TheBar_LeftBarFrameSpacing
 
     NAME
@@ -1293,6 +1303,9 @@ TheBar.mcc/MUIA_TheBar_Raised
      This overwrites the user preferences and so must be used
      wisely. If in doubt, don't use it.
 
+    SEE ALSO
+     MUIA_TheBar_IgnoreAppearance
+
 TheBar.mcc/MUIA_TheBar_RemoveSpacers
 
     NAME
@@ -1306,7 +1319,7 @@ TheBar.mcc/MUIA_TheBar_RemoveSpacers
      The allowed values are the following and can be
      combined as binary flags:
 
-      MUIV_TheBar_RemoveSpacers_Bar 
+      MUIV_TheBar_RemoveSpacers_Bar
         Remove bar spacers
 
       MUIV_TheBar_RemoveSpacers_Button
@@ -1394,6 +1407,9 @@ TheBar.mcc/MUIA_TheBar_Scaled
 
     SEE ALSO
      MUIA_TheBar_Scale
+
+    SEE ALSO
+     MUIA_TheBar_IgnoreAppearance
 
 TheBar.mcc/MUIA_TheBar_SelImages
 
@@ -1772,6 +1788,9 @@ TheBar.mcc/MUIA_TheBar_Sunny
      This overwrites the user preferences and so must be used
      wisely. If in doubt, don't use it.
 
+    SEE ALSO
+     MUIA_TheBar_IgnoreAppearance
+
 TheBar.mcc/MUIA_TheBar_TextOnly
 
     NAME
@@ -1851,6 +1870,7 @@ TheBar.mcc/MUIA_TheBar_ViewMode
 
 
     SEE ALSO
+     MUIA_TheBar_IgnoreAppearance
      MUIA_TheBar_TextOnly
 
 TheBar.mcc/MUIA_TheBar_VertSpacing

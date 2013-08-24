@@ -102,15 +102,14 @@ main(UNUSED int argc,char **argv)
                         MUIA_Window_Title, "TheBar Demo2",
                         WindowContents, mg = VGroup,
                             Child, sb = TheBarObject,
-                                #ifndef __MORPHOS__
-                                MUIA_TheBar_Frame, 	     TRUE,
-                                #endif
-                                MUIA_Group_Horiz,        TRUE,
-                                MUIA_TheBar_ViewMode,    MUIV_TheBar_ViewMode_Gfx,
-                                MUIA_TheBar_Buttons,     buttons,
-                                MUIA_TheBar_PicsDrawer,  "PROGDIR:PICS",
-                                MUIA_TheBar_Pics,        pics,
-                                MUIA_TheBar_DragBar,     TRUE,
+                                MUIA_TheBar_Frame, 	          TRUE,
+                                MUIA_Group_Horiz,             TRUE,
+                                MUIA_TheBar_IgnoreAppearance, TRUE,
+                                MUIA_TheBar_ViewMode,         MUIV_TheBar_ViewMode_Gfx,
+                                MUIA_TheBar_Buttons,          buttons,
+                                MUIA_TheBar_PicsDrawer,       "PROGDIR:PICS",
+                                MUIA_TheBar_Pics,             pics,
+                                MUIA_TheBar_DragBar,          TRUE,
                             End,
                         End,
                     End,
@@ -190,7 +189,7 @@ main(UNUSED int argc,char **argv)
 
                 set(rows,MUIA_Group_Horiz,TRUE);
                 set(cols,MUIA_Group_Horiz,TRUE);
-                set(viewMode,MUIA_Cycle_Active,0);
+                set(viewMode,MUIA_Cycle_Active,1);
 
                 DoMethod(bwin,MUIM_Notify,MUIA_Window_CloseRequest,TRUE,MUIV_Notify_Application,2,MUIM_Application_ReturnID,MUIV_Application_ReturnID_Quit);
                 DoMethod(cwin,MUIM_Notify,MUIA_Window_CloseRequest,TRUE,MUIV_Notify_Application,2,MUIM_Application_ReturnID,MUIV_Application_ReturnID_Quit);
