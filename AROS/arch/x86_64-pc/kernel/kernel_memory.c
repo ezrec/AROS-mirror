@@ -13,7 +13,6 @@
 
 #define D(x)
 
-
 BOOL krnAddMemory(struct MemHeaderExt **mhe, IPTR start, IPTR end,
         IPTR mh_Start, const struct MemRegion *reg)
 {
@@ -26,7 +25,7 @@ BOOL krnAddMemory(struct MemHeaderExt **mhe, IPTR start, IPTR end,
         start = (start + 4095) & ~4095;
 
         /* Align down end address to the page boundary */
-        end = end & 4095;
+        end = end & ~4095;
 
         D(nbug("MemHeaderExt non-existing. Creating it...\n"));
         krnCreateTLSFMemHeader(reg->name, reg->pri, start, end - start, reg->flags);
