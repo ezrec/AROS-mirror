@@ -334,7 +334,7 @@ void core_IRQHandle(struct ExceptionContext *regs, unsigned long error_code, uns
 
         DSYSCALL(bug("[Kernel] Returning from syscall...\n"));
     }
-    else if (irq_number == 0x0xfd)
+    else if (irq_number == 0xfd)
     {
         if (KernelBase)
         {

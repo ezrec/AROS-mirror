@@ -2,7 +2,7 @@
 include $(TOP)/config/make.cfg
 
 FILES    := kernel_startup platform_init kernel_cpu kernel_debug kernel_memory kernel_bootmem \
-	    intr acpi_tables mmu smp
+	    intr acpi_tables mmu smp spinlock
 FUNCS	 := getcpucount getcpunumber getcpustorage setcpustorage
 ASMFILES := core_interrupts
 
