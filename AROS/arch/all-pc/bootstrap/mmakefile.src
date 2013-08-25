@@ -19,6 +19,8 @@ USER_OBJS    := $(OBJDIR)/vesa.bin.o
 EXEDIR       := $(BINDIR)/boot
 EXENAME      := bootstrap-pc
 
+CFLAGS       := $(filter-out -mcmodel=large,$(CFLAGS))
+
 %build_prog mmake=kernel-bootstrap-pc progname=$(EXENAME) \
 	files=$(FILES) targetdir=$(EXEDIR) \
 	uselibs="bootstrap bootconsole arosc.static" usestartup=no linker=kernel
