@@ -12,6 +12,7 @@
 #include "apic.h"
 #include "smp.h"
 #include "tls.h"
+#include "spinlock.h"
 
 #define D(x) x
 #define DWAKE(x)
@@ -48,14 +49,30 @@ static void smp_Entry(IPTR stackBase, volatile UBYTE *apicready, struct KernelBa
 
     bug("[SMP] APIC #%u of %u Going IDLE (Halting)...\n", _APICNO + 1, KernelBase->kb_PlatformData->kb_APIC->count);
 
+    /* Drop privileges down to user mode before calling RTF_COLDSTART */
+    D(bug("[SMP] CPU%d is Leaving supervisor mode\n", _APICID));
+    asm volatile (
+            "mov %[user_ds],%%ds\n\t"   // Load DS and ES
+            "mov %[user_ds],%%es\n\t"
+            "mov %%rsp,%%r12\n\t"
+            "pushq %[ds]\n\t"       // SS
+            "pushq %%r12\n\t"           // rSP
+            "pushq $0x3002\n\t"         // rFLAGS
+            "pushq %[cs]\n\t"       // CS
+            "pushq $1f\n\t"
+            "iretq\n1: sti"
+            ::[user_ds]"r"(USER_DS),[ds]"i"(USER_DS),[cs]"i"(USER_CS):"r12");
+
+    D(bug("[SMP] Done?! Still here?\n"));
+
     /* Signal the bootstrap core that we are running */
-    *apicready = 1;
+    spinlock_release(apicready);
 
     /*
      * Unfortunately at the moment we have nothing more to do.
      * The rest of AROS is not SMP-capable. :-(
      */
-    while (1) asm volatile("hlt");
+    while (1) {};
 }
 
 static int smp_Setup(struct KernelBase *KernelBase)
@@ -111,7 +128,9 @@ static int smp_Wake(struct KernelBase *KernelBase)
     APTR _APICStackBase;
     IPTR wakeresult;
     UBYTE i;
-    volatile UBYTE apicready;
+    spinlock_t apicready;
+
+    spinlock_init(&apicready);
 
     D(bug("[SMP] Ready spinlock at 0x%p\n", &apicready));
 
@@ -136,8 +155,8 @@ static int smp_Wake(struct KernelBase *KernelBase)
 	bs->Arg2 = (IPTR)&apicready;
 	bs->SP   = _APICStackBase + STACK_SIZE;
 
-	/* Initialize 'ready' flag to zero before launching the core */
-	apicready = 0;
+	/* Lock here */
+	spinlock_acquire(&apicready);
 
 	/* Start IPI sequence */
 	wakeresult = core_APIC_Wake(bs, apic_id, apic->lapicBase);
@@ -152,7 +171,7 @@ static int smp_Wake(struct KernelBase *KernelBase)
 	     * it writes 1 there.
 	     */
 	    DWAKE(bug("[SMP] Waiting for APIC #%u to initialise .. ", i + 1));
-	    while (!apicready);
+	    while (spinlock_is_locked(&apicready)) asm volatile("pause");
 
 	    D(bug("[SMP] APIC #%u started up\n", i + 1));
 	}
