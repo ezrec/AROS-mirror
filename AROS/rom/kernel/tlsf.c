@@ -22,11 +22,16 @@
 /*
  * Settings for TLSF allocator:
  * MAX_LOG2_SLI - amount of bits used for the second level list
- * MAX_FLI      - maximal allowable allocation size - 2^32 should be enough
+ * MAX_FLI      - maximal allowable allocation size - 2^32 should be enough on 32bit systems
+ *                64bit systems use 128GB limit.
  */
 #define MAX_LOG2_SLI    (5)
 #define MAX_SLI         (1 << MAX_LOG2_SLI)
+#if __WORDSIZE == 64
+#define MAX_FLI         (32+5)
+#else
 #define MAX_FLI         (32)
+#endif
 #define FLI_OFFSET      (6)
 #define SMALL_BLOCK     (2 << FLI_OFFSET)
 
