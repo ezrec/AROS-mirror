@@ -39,6 +39,9 @@ BOOL krnAddMemory(struct MemHeaderExt **mhe, IPTR start, IPTR end,
     {
         D(nbug("adding memory (%p - %p) to MemHeader %p\n",
                 start, end-1, *mhe));
+
+        (*mhe)->mhe_MemHeader.mh_Upper = end;
+
         tlsf_add_memory(*mhe, (void *)start, end - start);
     }
 
@@ -195,6 +198,30 @@ void mmap_InitMemory(struct mb_mmap *mmap_addr, unsigned long mmap_len, struct M
 
         reg++;
     }
+}
+
+/* Find largest memory address within the address space */
+IPTR mmap_LargestAddress(struct mb_mmap *mmap, unsigned long len)
+{
+    IPTR top = 0;
+
+    while(len >= sizeof(struct mb_mmap))
+    {
+        if (mmap->type == MMAP_TYPE_RAM)
+        {
+            D(bug("type %02x ", mmap->type));
+            if (top < (mmap->addr + mmap->len))
+                top = mmap->addr + mmap->len;
+
+            D(bug("base %p end %p\n", mmap->addr, mmap->addr + mmap->len - 1));
+        }
+
+        /* Go to the next chunk */
+        len -= mmap->size + 4;
+        mmap = (struct mb_mmap *)(mmap->size + (IPTR)mmap + 4);
+    }
+
+    return top;
 }
 
 struct mb_mmap *mmap_FindRegion(IPTR addr, struct mb_mmap *mmap, unsigned long len)
