@@ -9,6 +9,8 @@
 #define D(x)
 #define DMMU(x)
 
+#define PTE_CACHE_SIZE  64
+
 void core_SetupMMU(struct KernBootPrivate *__KernBootPrivate, IPTR memtop)
 {
     unsigned int i;
@@ -37,7 +39,7 @@ void core_SetupMMU(struct KernBootPrivate *__KernBootPrivate, IPTR memtop)
     	__KernBootPrivate->PML4 = krnAllocBootMemAligned(sizeof(struct PML4E) * 512, PAGE_SIZE);
     	__KernBootPrivate->PDP  = krnAllocBootMemAligned(sizeof(struct PDPE)  * 512, PAGE_SIZE);
     	__KernBootPrivate->PDE  = krnAllocBootMemAligned(sizeof(struct PDE2M) * pde_page_count, PAGE_SIZE);
-    	__KernBootPrivate->PTE  = krnAllocBootMemAligned(sizeof(struct PTE)   * 512 * 32, PAGE_SIZE);
+    	__KernBootPrivate->PTE  = krnAllocBootMemAligned(sizeof(struct PTE)   * 512 * PTE_CACHE_SIZE, PAGE_SIZE);
 
     	D(bug("[Kernel] Allocated PML4 0x%p, PDP 0x%p, PDE 0x%p PTE 0x%p\n", __KernBootPrivate->PML4, __KernBootPrivate->PDP, __KernBootPrivate->PDE, __KernBootPrivate->PTE));
     }
@@ -103,60 +105,23 @@ void core_SetupMMU(struct KernBootPrivate *__KernBootPrivate, IPTR memtop)
         PDE[i].base_high = (base >> 32) & 0x000FFFFF;
     }
 
-#if 0
-    /* PDP Entries. There are four of them used in order to define 2048 pages of 2MB each. */
-    for (i = 0; i < 4; i++)
-    {
-        struct PDE2M *pdes = &PDE[512 * i];
-        unsigned int j;
-
-        /* Set the PDP entry up and point to the PDE table */
-        PDP[i].p  = 1;
-        PDP[i].rw = 1;
-        PDP[i].us = 1;
-        PDP[i].pwt= 0;
-        PDP[i].pcd= 0;
-        PDP[i].a  = 0;
-        PDP[i].mbz= 0;
-        PDP[i].base_low = (unsigned long)pdes >> 12;
-
-        PDP[i].nx = 0;
-        PDP[i].avail = 0;
-        PDP[i].base_high = ((unsigned long)pdes >> 32) & 0x000FFFFF;
-
-        for (j=0; j < 512; j++)
-        {
-            /* Set PDE entries - use 2MB memory pages, with full supervisor and user access */        
-            unsigned long base = (i << 30) + (j << 21);
-
-            pdes[j].p  = 1;
-            pdes[j].rw = 1;
-            pdes[j].us = 1;
-            pdes[j].pwt= 0;  // 1
-            pdes[j].pcd= 0;  // 1
-            pdes[j].a  = 0;
-            pdes[j].d  = 0;
-            pdes[j].g  = 0;
-            pdes[j].pat= 0;
-            pdes[j].ps = 1;
-            pdes[j].base_low = base >> 13;
-
-            pdes[j].avail = 0;
-            pdes[j].nx = 0;
-            pdes[j].base_high = (base >> 32) & 0x000FFFFF;
-        }
-    }
-#endif
-
     __KernBootPrivate->used_page = 0;
 
     D(bug("[Kernel] core_SetupMMU: Registering New PML4 @ 0x%p\n", __KernBootPrivate->PML4));
     wrcr(cr3, __KernBootPrivate->PML4);
 
+    D(bug("[Kernel] Making MMU table memory UC...\n"));
+    core_ProtKernelArea(__KernBootPrivate->PML4, sizeof(struct PML4E) * 512, 1, 1, 0, 3);
+    core_ProtKernelArea(__KernBootPrivate->PDP, sizeof(struct PDPE)  * 512, 1, 1, 0, 3);
+    core_ProtKernelArea(__KernBootPrivate->PDE, sizeof(struct PDE2M) * pde_page_count, 1, 1, 0, 3);
+    core_ProtKernelArea(__KernBootPrivate->PTE, sizeof(struct PTE)   * 512 * PTE_CACHE_SIZE, 1, 1, 0, 3);
+
     D(bug("[Kernel] core_SetupMMU: Done\n"));
 }
 
-void core_ProtPage(intptr_t addr, char p, char rw, char us)
+static const char *caches[] = { "WB", "WT", "WC", "UC" };
+
+void core_ProtPage(uintptr_t addr, char p, char rw, char us, char cache)
 {
     unsigned long pml4_off = (addr >> 39) & 0x1ff;
     unsigned long pdpe_off = (addr >> 30) & 0x1ff;
@@ -169,20 +134,26 @@ void core_ProtPage(intptr_t addr, char p, char rw, char us)
     struct PTE   *Pages4K = __KernBootPrivate->PTE;
     struct PTE   *pte;
 
-    DMMU(bug("[Kernel] Marking page 0x%p as read-only\n", addr));
-
     if (pde[pde_off].ps)
     {
         /* work on local copy of the affected PDE */
         struct PDE4K tmp_pde = pde[pde_off]; 
         struct PDE2M *pde2 = (struct PDE2M *)pde;
-        intptr_t base = (pde2[pde_off].base_low << 13) | ((unsigned long)pde2[pde_off].base_high << 32);
+        uintptr_t base = ((uintptr_t)pde2[pde_off].base_low << 13) | ((unsigned long)pde2[pde_off].base_high << 32);
         int i;
 
         pte = &Pages4K[512 * __KernBootPrivate->used_page++];
 
+        if (__KernBootPrivate->used_page >= PTE_CACHE_SIZE)
+        {
+            bug("[Kernel] PANIC! Run out of PTE tables!!!");
+            while(1);
+        }
+
         D(bug("[Kernel] The page for address 0x%p was a big one. Splitting it into 4K pages\n", addr));
         D(bug("[Kernel] Base=0x%p, pte=0x%p\n", base, pte));
+        D(bug("[Kernel] PDE2M.base_low = %08x, base_high = %08x\n",
+                pde2[pde_off].base_low, pde2[pde_off].base_high));
 
         for (i = 0; i < 512; i++)
         {
@@ -198,28 +169,53 @@ void core_ProtPage(intptr_t addr, char p, char rw, char us)
         }
 
         tmp_pde.ps = 0;
-        tmp_pde.base_low = (intptr_t)pte >> 12;
-        tmp_pde.base_high = ((intptr_t)pte >> 32) & 0x0FFFFF;
+        tmp_pde.base_low = (uintptr_t)pte >> 12;
+        tmp_pde.base_high = ((uintptr_t)pte >> 32) & 0x0FFFFF;
 
         pde[pde_off] = tmp_pde;
+        asm volatile("invlpg (%0)"::"r"(base));
     }
             
     pte = (struct PTE *)((pde[pde_off].base_low << 12) | ((unsigned long)pde[pde_off].base_high << 32));
 
-    pte[pte_off].rw = rw ? 1:0;
-    pte[pte_off].us = us ? 1:0;
-    pte[pte_off].p = p ? 1:0;
+    DMMU(bug("[Kernel] Protecting area 0x%p - 0x%p", addr, addr + 4095));
+
+    if ((rw & 0xfe) == 0)
+    {
+        DMMU(bug(" %s", rw ? "RW":"RO"));
+        pte[pte_off].rw = rw ? 1:0;
+    }
+    if ((us & 0xfe) == 0)
+    {
+        DMMU(bug(" %s", us ? "User":"Super"));
+        pte[pte_off].us = us ? 1:0;
+    }
+    if ((p & 0xfe) == 0)
+    {
+        DMMU(bug(" %s", p ? "Present":"N/A"));
+        pte[pte_off].p = p ? 1:0;
+    }
+    if ((cache & 0xfc) == 0)
+    {
+        DMMU(bug(" %s", caches[(int)cache]));
+        pte[pte_off].pcd = cache & 2 ? 1:0;
+        pte[pte_off].pwt = cache & 1 ? 1:0;
+        asm volatile ("wbinvd");
+    }
+
+    DMMU(bug("\n"));
+
     asm volatile ("invlpg (%0)"::"r"(addr));   
 }
 
-void core_ProtKernelArea(intptr_t addr, intptr_t length, char p, char rw, char us)
+void core_ProtKernelArea(uintptr_t addr, uintptr_t length, char p, char rw, char us, char cache)
 {
-    D(bug("[Kernel] Protecting area 0x%p - 0x%p\n", addr, addr + length - 1));
-
-    while (length > 0)
+    uintptr_t base = addr & ~(PAGE_SIZE - 1);
+    uintptr_t top = (addr + length + PAGE_SIZE - 1) & ~(PAGE_SIZE - 1);
+    DMMU(bug("[Kernel] Protecting area 0x%p - 0x%p", base, top - 1));
+    while (base != top)
     {
-        core_ProtPage(addr, p, rw, us);
-        addr += 4096;
-        length -= 4096;
+        core_ProtPage(base, p, rw, us, cache);
+        base += PAGE_SIZE;
     }
 }

@@ -418,7 +418,7 @@ void kernel_cstart(const struct TagItem *start_msg)
     D(bug("[Kernel] Created SysBase at 0x%p (pointer at 0x%p), MemHeader 0x%p\n", SysBase, &SysBase, mh));
 
     /* Block all user's access to zero page */
-    core_ProtKernelArea(0, PAGE_SIZE, 1, 0, 0);
+    core_ProtKernelArea(0, PAGE_SIZE, 1, 0, 0, -1);
 
     /* Store important private data */
     TLS_SET(SysBase, SysBase);
@@ -432,7 +432,7 @@ void kernel_cstart(const struct TagItem *start_msg)
      * We do it only after ExecBase creation because SysBase pointer is put
      * into .rodata. This way we prevent it from ocassional modification by buggy software.
      */
-    core_ProtKernelArea(addr, kick_highest - addr, 1, 0, 1);
+    core_ProtKernelArea(addr, kick_highest - addr, 1, 0, 1, -1);
 
     /* Transfer the rest of memory list into SysBase */
     D(bug("[Kernel] Transferring memory list into SysBase...\n"));
@@ -458,6 +458,9 @@ void kernel_cstart(const struct TagItem *start_msg)
      * Interrupts are still disabled and we are still supervisor.
      */
     acpi_Initialize();
+
+    /* Make local APIC UC, supervisor RW */
+    core_ProtKernelArea(KernelBase->kb_PlatformData->kb_APIC->lapicBase, 4096, 1, 1, 1, 3);
 
     /* Now initialize our interrupt controller (XT-PIC or APIC) */
     ictl_Initialize();
