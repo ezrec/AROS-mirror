@@ -13,6 +13,7 @@
 #include "smp.h"
 #include "tls.h"
 #include "spinlock.h"
+#include "apic_ia32.h"
 
 #define D(x) x
 #define DWAKE(x)
@@ -42,12 +43,31 @@ static void smp_Entry(IPTR stackBase, volatile UBYTE *apicready, struct KernelBa
     D(bug("[SMP] smp_Entry[0x%02X]: KernelBootPrivate 0x%p, stack base 0x%p\n", _APICID, __KernBootPrivate, stackBase));
     D(bug("[SMP] smp_Entry[0x%02X]: Stack base 0x%p, ready lock 0x%p\n", _APICID, stackBase, apicready));
 
+    IPTR sp;
+
+    asm volatile("movq %%rsp, %0":"=r"(sp));
+    D(bug("[SMP] %rsp = %p\n", sp));
+
     /* Set up GDT and LDT for our core */
     core_CPUSetup(_APICID, stackBase);
 
+    /* Perform basic initialization of APIC */
     core_APIC_Init(KernelBase->kb_PlatformData->kb_APIC, _APICID);
 
+    /*
+     * And now disable LINT0 and LINT1. LINT0 is usually routed to XTPIC, which should be
+     * handled only by one local APIC in the system
+     */
+    APIC_REG(_APICBase, APIC_LINT0_VEC) = LVT_MASK;
+    APIC_REG(_APICBase, APIC_LINT1_VEC) = LVT_MASK;
+
     bug("[SMP] APIC #%u of %u Going IDLE (Halting)...\n", _APICNO + 1, KernelBase->kb_PlatformData->kb_APIC->count);
+
+    /* Signal the bootstrap core that we are running */
+    spinlock_release(apicready);
+
+    bug("[SMP] waiting for IPI\n");
+    asm volatile ("sti; hlt;");
 
     /* Drop privileges down to user mode before calling RTF_COLDSTART */
     D(bug("[SMP] CPU%d is Leaving supervisor mode\n", _APICID));
@@ -65,8 +85,14 @@ static void smp_Entry(IPTR stackBase, volatile UBYTE *apicready, struct KernelBa
 
     D(bug("[SMP] Done?! Still here?\n"));
 
-    /* Signal the bootstrap core that we are running */
-    spinlock_release(apicready);
+    int gs, ds, cs, tr;
+    asm volatile("mov %%gs, %0; mov %%ds, %1; mov %%cs, %2; str %w3":"=r"(gs),"=r"(ds),"=r"(cs),"=r"(tr));
+
+    D(bug("[SMP] gs = %04x, ds = %04x, cs = %04x, tr = %04x\n", gs, ds, cs, tr));
+
+
+    asm volatile("movq %%rsp, %0":"=r"(sp));
+    D(bug("[SMP] %rsp = %p\n", sp));
 
     /*
      * Unfortunately at the moment we have nothing more to do.
@@ -153,7 +179,7 @@ static int smp_Wake(struct KernelBase *KernelBase)
 	/* Give the stack to the CPU */
 	bs->Arg1 = (IPTR)_APICStackBase;
 	bs->Arg2 = (IPTR)&apicready;
-	bs->SP   = _APICStackBase + STACK_SIZE;
+	bs->SP   = _APICStackBase + STACK_SIZE - 16;
 
 	/* Lock here */
 	spinlock_acquire(&apicready);
@@ -206,7 +232,7 @@ int smp_Initialize(void)
         }
 
         int retval = smp_Wake(KernelBase);
-
+#if 0
         asm volatile("sti");
         {
             bug("[SMP] Sending IPI to myself\n");
@@ -226,7 +252,7 @@ int smp_Initialize(void)
             }
         }
         asm volatile("cli");
-
+#endif
         return retval;
     }
 
