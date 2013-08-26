@@ -1,8 +1,7 @@
-diff --git a/bfd/config.bfd b/bfd/config.bfd
-index fbf77ad..cd9e5aa 100644
---- a/bfd/config.bfd
-+++ b/bfd/config.bfd
-@@ -281,7 +281,7 @@ case "${targ}" in
+diff -ruN binutils-2.21.1/bfd/config.bfd binutils-2.21.1.aros/bfd/config.bfd
+--- binutils-2.21.1/bfd/config.bfd	2011-04-01 14:02:42.000000000 +0200
++++ binutils-2.21.1.aros/bfd/config.bfd	2011-06-27 09:39:00.000000000 +0200
+@@ -281,7 +281,7 @@
      ;;
    arm-*-elf | arm-*-freebsd* | arm*-*-linux-* | arm*-*-conix* | \
    arm*-*-uclinux* | arm-*-kfreebsd*-gnu | \
@@ -11,7 +10,7 @@ index fbf77ad..cd9e5aa 100644
      targ_defvec=bfd_elf32_littlearm_vec
      targ_selvecs=bfd_elf32_bigarm_vec
      ;;
-@@ -518,6 +518,8 @@ case "${targ}" in
+@@ -518,6 +518,8 @@
      ;;
    i[3-7]86-*-aros*)
      targ_defvec=bfd_elf32_i386_vec
@@ -20,7 +19,7 @@ index fbf77ad..cd9e5aa 100644
      ;;
    i[3-7]86-*-chorus*)
      targ_defvec=bfd_elf32_i386_vec
-@@ -647,6 +649,11 @@ case "${targ}" in
+@@ -647,6 +649,11 @@
      want64=true
      targ_underscore=no
      ;;
@@ -32,7 +31,7 @@ index fbf77ad..cd9e5aa 100644
  #endif
    i[3-7]86-*-lynxos*)
      targ_defvec=bfd_elf32_i386_vec
-@@ -802,7 +809,7 @@ case "${targ}" in
+@@ -802,7 +809,7 @@
      targ_selvecs="cisco_core_big_vec ieee_vec"
      targ_underscore=yes
      ;;
@@ -41,7 +40,7 @@ index fbf77ad..cd9e5aa 100644
      targ_defvec=bfd_elf32_m68k_vec
      targ_selvecs="m68kcoff_vec ieee_vec"
      ;;
-@@ -1197,6 +1204,11 @@ case "${targ}" in
+@@ -1197,6 +1204,11 @@
      targ_defvec=bfd_elf32_rx_le_vec
      targ_selvecs="bfd_elf32_rx_be_vec bfd_elf32_rx_le_vec"
      ;;
@@ -53,10 +52,9 @@ index fbf77ad..cd9e5aa 100644
  
    s390-*-linux*)
      targ_defvec=bfd_elf32_s390_vec
-diff --git a/binutils/sysdep.h b/binutils/sysdep.h
-index e573637..52ca698 100644
---- a/binutils/sysdep.h
-+++ b/binutils/sysdep.h
+diff -ruN binutils-2.21.1/binutils/sysdep.h binutils-2.21.1.aros/binutils/sysdep.h
+--- binutils-2.21.1/binutils/sysdep.h	2009-03-18 12:27:17.000000000 +0100
++++ binutils-2.21.1.aros/binutils/sysdep.h	2011-06-27 09:39:00.000000000 +0200
 @@ -26,6 +26,7 @@
  #include "ansidecl.h"
  #include <stdio.h>
@@ -65,11 +63,10 @@ index e573637..52ca698 100644
  
  #include "bfdver.h"
  
-diff --git a/config.guess b/config.guess
-index 115f944..abe6b41 100755
---- a/config.guess
-+++ b/config.guess
-@@ -289,6 +289,9 @@ case "${UNAME_MACHINE}:${UNAME_SYSTEM}:${UNAME_RELEASE}:${UNAME_VERSION}" in
+diff -ruN binutils-2.21.1/config.guess binutils-2.21.1.aros/config.guess
+--- binutils-2.21.1/config.guess	2010-06-01 19:53:40.000000000 +0200
++++ binutils-2.21.1.aros/config.guess	2011-06-27 09:39:00.000000000 +0200
+@@ -289,6 +289,9 @@
      *:[Mm]orph[Oo][Ss]:*:*)
  	echo ${UNAME_MACHINE}-unknown-morphos
  	exit ;;
@@ -79,11 +76,10 @@ index 115f944..abe6b41 100755
      *:OS/390:*:*)
  	echo i370-ibm-openedition
  	exit ;;
-diff --git a/intl/configure b/intl/configure
-index 34da38b..3db9b1d 100755
---- a/intl/configure
-+++ b/intl/configure
-@@ -4606,6 +4606,9 @@ int nan;
+diff -ruN binutils-2.21.1/intl/configure binutils-2.21.1.aros/intl/configure
+--- binutils-2.21.1/intl/configure	2010-11-05 11:31:38.000000000 +0100
++++ binutils-2.21.1.aros/intl/configure	2011-06-27 09:39:00.000000000 +0200
+@@ -4606,6 +4606,9 @@
  
  int main ()
  {
@@ -93,22 +89,21 @@ index 34da38b..3db9b1d 100755
    signal (SIGFPE, sigfpe_handler);
  /* IRIX and AIX (when "xlc -qcheck" is used) yield signal SIGTRAP.  */
  #if (defined (__sgi) || defined (_AIX)) && defined (SIGTRAP)
-diff --git a/ld/configure.tgt b/ld/configure.tgt
-index 90d7461..1c86504 100644
---- a/ld/configure.tgt
-+++ b/ld/configure.tgt
-@@ -79,6 +79,10 @@ arm*b-*-linux-*)	targ_emul=armelfb_linux
+diff -ruN binutils-2.21.1/ld/configure.tgt binutils-2.21.1.aros/ld/configure.tgt
+--- binutils-2.21.1/ld/configure.tgt	2011-04-01 14:03:54.000000000 +0200
++++ binutils-2.21.1.aros/ld/configure.tgt	2013-08-26 13:30:21.000000000 +0200
+@@ -79,6 +79,10 @@
  			targ_extra_emuls="armelfb armelf armelf_linux"
  			targ_extra_libpath="armelf_linux"
  			;;
-+arm*-*-aros*)		targ_emul=armelf_linux_eabi
-+			targ_extra_emuls=armelfb_linux_eabi
++arm*-*-aros*)		targ_emul=armelf_aros
++			targ_extra_emuls=armelfb_aros
 +			targ_extra_libpath=$targ_extra_emuls
 +			;;
  arm*-*-linux-*eabi)	targ_emul=armelf_linux_eabi
  			targ_extra_emuls=armelfb_linux_eabi
  			targ_extra_libpath=$targ_extra_emuls
-@@ -245,6 +249,9 @@ i[3-7]86-*-elf*)	targ_emul=elf_i386 ;;
+@@ -245,6 +249,9 @@
  x86_64-*-elf*)		targ_emul=elf_x86_64
  			targ_extra_emuls="elf_i386 elf_l1om"
  			;;
@@ -118,7 +113,7 @@ index 90d7461..1c86504 100644
  i[3-7]86-*-kaos*)	targ_emul=elf_i386 ;;
  i[3-7]86-*-freebsdaout* | i[3-7]86-*-freebsd[12].* | i[3-7]86-*-freebsd[12])
  			targ_emul=i386bsd ;;
-@@ -336,6 +343,7 @@ m68k-sony-*)		targ_emul=news ;;
+@@ -336,6 +343,7 @@
  m68k-hp-bsd*)		targ_emul=hp300bsd ;;
  m68*-motorola-sysv*)	targ_emul=delta68 ;;
  m68*-*-aout)		targ_emul=m68kaout ;;
@@ -126,7 +121,7 @@ index 90d7461..1c86504 100644
  m68*-*-coff)		targ_emul=m68kcoff ;;
  m68*-*-elf)		targ_emul=m68kelf ;;
  m68*-*-hpux*)		targ_emul=hp3hpux ;;
-@@ -504,6 +512,7 @@ powerpc-*-aix*)		targ_emul=aixppc ;;
+@@ -504,6 +512,7 @@
  powerpc-*-beos*)	targ_emul=aixppc ;;
  powerpc-*-windiss*)	targ_emul=elf32ppcwindiss ;;
  powerpc-*-lynxos*)	targ_emul=ppclynx ;;
@@ -134,3 +129,76 @@ index 90d7461..1c86504 100644
  rs6000-*-aix[5-9]*)	targ_emul=aix5rs6 ;;
  rs6000-*-aix*)		targ_emul=aixrs6
  			;;
+diff -ruN binutils-2.21.1/ld/emulparams/armelf_aros.sh binutils-2.21.1.aros/ld/emulparams/armelf_aros.sh
+--- binutils-2.21.1/ld/emulparams/armelf_aros.sh	1970-01-01 01:00:00.000000000 +0100
++++ binutils-2.21.1.aros/ld/emulparams/armelf_aros.sh	2012-06-28 13:50:52.000000000 +0200
+@@ -0,0 +1,3 @@
++. ${srcdir}/emulparams/armelf_linux_eabi.sh
++# Remap R_ARM_TARGET2 to R_ARM_ABS32
++TARGET2_TYPE=abs
+diff -ruN binutils-2.21.1/ld/emulparams/armelfb_aros.sh binutils-2.21.1.aros/ld/emulparams/armelfb_aros.sh
+--- binutils-2.21.1/ld/emulparams/armelfb_aros.sh	1970-01-01 01:00:00.000000000 +0100
++++ binutils-2.21.1.aros/ld/emulparams/armelfb_aros.sh	2012-06-28 13:50:52.000000000 +0200
+@@ -0,0 +1,2 @@
++. ${srcdir}/emulparams/armelf_aros.sh
++OUTPUT_FORMAT="elf32-bigarm"
+diff -ruN binutils-2.21.1/ld/Makefile.in binutils-2.21.1.aros/ld/Makefile.in
+--- binutils-2.21.1/ld/Makefile.in	2011-03-16 09:37:30.000000000 +0100
++++ binutils-2.21.1.aros/ld/Makefile.in	2013-08-26 13:33:27.000000000 +0200
+@@ -445,12 +445,14 @@
+ 	earmaoutl.c \
+ 	earmcoff.c \
+ 	earmelf.c \
++	earmelf_aros.c \
+ 	earmelf_fbsd.c \
+ 	earmelf_linux.c \
+ 	earmelf_linux_eabi.c \
+ 	earmelf_nbsd.c \
+ 	earmelf_vxworks.c \
+ 	earmelfb.c \
++	earmelfb_aros.c \
+ 	earmelfb_linux.c \
+ 	earmelfb_linux_eabi.c \
+ 	earmelfb_nbsd.c \
+@@ -1027,12 +1029,14 @@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/earmaoutl.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/earmcoff.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/earmelf.Po@am__quote@
++@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/earmelf_aros.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/earmelf_fbsd.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/earmelf_linux.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/earmelf_linux_eabi.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/earmelf_nbsd.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/earmelf_vxworks.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/earmelfb.Po@am__quote@
++@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/earmelfb_aros.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/earmelfb_linux.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/earmelfb_linux_eabi.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/earmelfb_nbsd.Po@am__quote@
+@@ -2114,6 +2118,12 @@
+   $(ELF_DEPS) $(srcdir)/emultempl/armelf.em \
+   $(srcdir)/scripttempl/elf.sc ${GEN_DEPENDS}
+ 	${GENSCRIPTS} armelf_linux_eabi "$(tdir_armelf_linux_abi)"
++earmelf_aros.c: $(srcdir)/emulparams/armelf_aros.sh \
++  $(srcdir)/emulparams/armelf_linux_eabi.sh \
++  $(srcdir)/emulparams/armelf_linux.sh \
++  $(ELF_DEPS) $(srcdir)/emultempl/armelf.em \
++  $(srcdir)/scripttempl/elf.sc ${GEN_DEPENDS}
++	${GENSCRIPTS} armelf_aros "$(tdir_armelf_aros)"
+ earmelf_nbsd.c: $(srcdir)/emulparams/armelf_nbsd.sh \
+   $(srcdir)/emulparams/armelf.sh \
+   $(ELF_DEPS) $(srcdir)/emultempl/armelf.em \
+@@ -2140,6 +2150,13 @@
+   $(ELF_DEPS) $(srcdir)/emultempl/armelf.em \
+   $(srcdir)/scripttempl/elf.sc ${GEN_DEPENDS}
+ 	${GENSCRIPTS} armelfb_linux_eabi "$(tdir_armelfb_linux_abi)"
++earmelfb_aros.c: $(srcdir)/emulparams/armelfb_aros.sh \
++  $(srcdir)/emulparams/armelf_aros.sh \
++  $(srcdir)/emulparams/armelf_linux_eabi.sh \
++  $(srcdir)/emulparams/armelf_linux.sh \
++  $(ELF_DEPS) $(srcdir)/emultempl/armelf.em \
++  $(srcdir)/scripttempl/elf.sc ${GEN_DEPENDS}
++	${GENSCRIPTS} armelfb_aros "$(tdir_armelfb_aros)"
+ earmelfb_nbsd.c: $(srcdir)/emulparams/armelfb_nbsd.sh \
+   $(srcdir)/emulparams/armelf_nbsd.sh \
+   $(srcdir)/emulparams/armelf.sh \
