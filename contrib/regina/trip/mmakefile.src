@@ -27,12 +27,12 @@ contrib-regina-quick : $(TARGETS)
 
 $(TARGETDIR)/%.rexx : %.rexx
 	@if [ ! -d $(TARGETDIR) ]; then $(MKDIR) $(TARGETDIR) ; fi
-	@echo Copying $< ...
+	@echo "Copying    $< ..."
 	@$(CP) $< $@
 
 $(TARGETDIR)/testing : testing
 	@if [ ! -d $(TARGETDIR) ]; then $(MKDIR) $(TARGETDIR) ; fi
-	@echo Copying $< ...
+	@echo "Copying    $< ..."
 	@$(CP) $< $@
 
 
