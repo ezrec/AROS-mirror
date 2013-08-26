@@ -1,11 +1,23 @@
 #ifndef ASM_TLS_H
 #define ASM_TLS_H
 
+#include <utility/hooks.h>
+#include "spinlock.h"
+
+typedef struct mbox
+{
+    spinlock_t      inbox_lock;
+    spinlock_t      reply_lock;
+    struct Hook *   hook;
+    APTR            message;
+} mbox_t;
+
 typedef struct tls
 {
     struct ExecBase     *SysBase;
     void *              KernelBase;    /* Base of kernel.resource */
     void **             CPUStorage;    /* Per-CPU private data */
+    mbox_t *            MessageBoxes;
 } tls_t;
 
 #define TLS_OFFSET(name) ((char *)&(((tls_t *)0)->name)-(char *)0)

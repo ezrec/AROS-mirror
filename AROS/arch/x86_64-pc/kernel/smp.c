@@ -21,7 +21,7 @@
 extern const void *_binary_smpbootstrap_start;
 extern const void *_binary_smpbootstrap_size;
 
-static void smp_Entry(IPTR stackBase, volatile UBYTE *apicready, struct KernelBase *KernelBase)
+static void smp_Entry(IPTR stackBase, spinlock_t *apicready, struct KernelBase *KernelBase)
 {
     /*
      * This is the entry point for secondary cores.
@@ -29,7 +29,9 @@ static void smp_Entry(IPTR stackBase, volatile UBYTE *apicready, struct KernelBa
      */
     IPTR _APICBase;
     UWORD _APICID;
-    UBYTE _APICNO;
+    ULONG _APICNO;
+    APTR startup_message = NULL;
+    struct Hook *startup_hook = NULL;
 
     /* Enable fxsave/fxrstor */
     wrcr(cr4, rdcr(cr4) | _CR4_OSFXSR | _CR4_OSXMMEXCPT);
@@ -61,13 +63,28 @@ static void smp_Entry(IPTR stackBase, volatile UBYTE *apicready, struct KernelBa
     APIC_REG(_APICBase, APIC_LINT0_VEC) = LVT_MASK;
     APIC_REG(_APICBase, APIC_LINT1_VEC) = LVT_MASK;
 
+    spinlock_init(&TLS_GET(MessageBoxes)[_APICNO].inbox_lock);
+    spinlock_init(&TLS_GET(MessageBoxes)[_APICNO].reply_lock);
+
     bug("[SMP] APIC #%u of %u Going IDLE (Halting)...\n", _APICNO + 1, KernelBase->kb_PlatformData->kb_APIC->count);
 
     /* Signal the bootstrap core that we are running */
     spinlock_release(apicready);
 
     bug("[SMP] waiting for IPI\n");
-    asm volatile ("sti; hlt;");
+    do {
+        asm volatile ("sti; hlt;");
+
+        mbox_t *mbox = &TLS_GET(MessageBoxes)[_APICNO];
+
+        spinlock_acquire(&mbox->inbox_lock);
+        startup_message = mbox->message;
+        startup_hook = mbox->hook;
+        mbox->message = NULL;
+        mbox->hook = NULL;
+        spinlock_release(&mbox->inbox_lock);
+
+    } while(startup_message == NULL);
 
     /* Drop privileges down to user mode before calling RTF_COLDSTART */
     D(bug("[SMP] CPU%d is Leaving supervisor mode\n", _APICID));
@@ -93,6 +110,11 @@ static void smp_Entry(IPTR stackBase, volatile UBYTE *apicready, struct KernelBa
 
     asm volatile("movq %%rsp, %0":"=r"(sp));
     D(bug("[SMP] %rsp = %p\n", sp));
+
+
+    D(bug("[SMP] Calling the startup message from exec\n"));
+
+    CALLHOOKPKT(startup_hook, &_APICNO, startup_message);
 
     /*
      * Unfortunately at the moment we have nothing more to do.
@@ -213,13 +235,19 @@ int smp_Initialize(void)
 {
     struct KernelBase *KernelBase = getKernelBase();
     struct PlatformData *pdata = KernelBase->kb_PlatformData;
+    int cpu = core_APIC_GetNumber(KernelBase->kb_PlatformData->kb_APIC);
 
     /* Set the per-cpu data table in TLS */
     APTR *cpu_storage = AllocMem(sizeof(APTR) * pdata->kb_APIC->count, MEMF_CLEAR);
+    mbox_t *message_boxes = AllocMem(sizeof(mbox_t) * pdata->kb_APIC->count, MEMF_CLEAR);
 
     D(bug("[SMP] Per-cpu storage table at %p\n", cpu_storage));
 
     TLS_SET(CPUStorage, cpu_storage);
+    TLS_SET(MessageBoxes, message_boxes);
+
+    spinlock_init(&message_boxes[cpu].inbox_lock);
+    spinlock_init(&message_boxes[cpu].reply_lock);
 
     if (pdata->kb_APIC && (pdata->kb_APIC->count > 1))
     {
