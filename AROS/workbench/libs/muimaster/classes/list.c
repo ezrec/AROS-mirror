@@ -157,7 +157,17 @@ struct MUI_ListData
     UWORD prefs_linespacing;
     BOOL prefs_smoothed;
     UWORD prefs_smoothval;
+
+    /* ABI_V0 compatibility */
+    struct MUI_EventHandlerNode ehn;
+    int mouse_click;            /* see below if mouse is hold down */
+    ULONG last_secs;
+    ULONG last_mics;
+    ULONG last_active;
+    BOOL wrapped_in_listview;
 };
+
+#define MOUSE_CLICK_ENTRY 1     /* on entry clicked */
 
 #define LIST_ADJUSTWIDTH   (1<<0)
 #define LIST_ADJUSTHEIGHT  (1<<1)
@@ -811,6 +821,14 @@ IPTR List__OM_NEW(struct IClass *cl, Object *obj, struct opSet *msg)
         /* Selected entry will be moved into visible area */
     }
 
+    /* ABI_V0 compatibility */
+    data->ehn.ehn_Events = IDCMP_MOUSEBUTTONS;
+    data->ehn.ehn_Priority = 1; /* Higher than Listview */
+    data->ehn.ehn_Flags = 0;
+    data->ehn.ehn_Object = obj;
+    data->ehn.ehn_Class = cl;
+    data->wrapped_in_listview = FALSE;
+
     NewList((struct List *)&data->images);
 
     D(bug("List_New(%lx)\n", obj));
@@ -1061,6 +1079,11 @@ IPTR List__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
             /* Swallow this so the Area class doesn't redraw us */
             tag->ti_Tag = TAG_IGNORE;
             break;
+
+        /* ABI_V0 compatibility */
+        case MUIB_List | 0x00000010:
+            data->wrapped_in_listview = (BOOL)tag->ti_Data;
+            break;
         }
     }
 
@@ -1116,6 +1139,10 @@ IPTR List__OM_GET(struct IClass *cl, Object *obj, struct opGet *msg)
         STORE = data->flags & LIST_DRAGSORTABLE;
         return 1;
         break;
+    /* ABI_V0 compatibility */
+    case MUIA_Listview_List:
+        STORE = (IPTR) obj;
+        return 1;               /* Validated with 3rd party application */
     }
 
     if (DoSuperMethodA(cl, obj, (Msg) msg))
@@ -1152,6 +1179,10 @@ IPTR List__MUIM_Setup(struct IClass *cl, Object *obj,
         data->title_height = 0;
     }
 
+    /* ABI_V0 compatibility */
+    if (!data->wrapped_in_listview)
+        DoMethod(_win(obj), MUIM_Window_AddEventHandler, (IPTR) & data->ehn);
+
     data->list_cursor =
         zune_imspec_setup(MUII_ListCursor, muiRenderInfo(obj));
     data->list_select =
@@ -1181,6 +1212,13 @@ IPTR List__MUIM_Cleanup(struct IClass *cl, Object *obj,
     zune_imspec_cleanup(data->list_cursor);
     zune_imspec_cleanup(data->list_select);
     zune_imspec_cleanup(data->list_selcur);
+
+    /* ABI_V0 compatibility */
+    if (!data->wrapped_in_listview)
+    {
+        DoMethod(_win(obj), MUIM_Window_RemEventHandler, (IPTR) & data->ehn);
+        data->mouse_click = 0;
+    }
 
     return DoSuperMethodA(cl, obj, (Msg) msg);
 }
@@ -2849,6 +2887,78 @@ static IPTR List__MUIM_CreateDragImage(struct IClass *cl, Object *obj,
     return (IPTR) img;
 }
 
+/* ABI_V0 compatibility */
+/**************************************************************************
+ MUIM_HandleEvent
+**************************************************************************/
+IPTR List__MUIM_HandleEvent(struct IClass *cl, Object *obj,
+    struct MUIP_HandleEvent *msg)
+{
+    struct MUI_ListData *data = INST_DATA(cl, obj);
+
+    if (msg->imsg && !data->wrapped_in_listview)
+    {
+        LONG mx = msg->imsg->MouseX - _left(obj);
+        LONG my = msg->imsg->MouseY - _top(obj);
+        struct MUI_List_TestPos_Result pos;
+
+        DoMethod(obj, MUIM_List_TestPos, msg->imsg->MouseX,
+            msg->imsg->MouseY, (IPTR) &pos);
+
+        switch (msg->imsg->Class)
+        {
+        case IDCMP_MOUSEBUTTONS:
+            if (msg->imsg->Code == SELECTDOWN)
+            {
+                if (mx >= 0 && mx < _width(obj) && my >= 0
+                    && my < _height(obj))
+                {
+                    LONG eclicky = my + _top(obj) - data->entries_top_pixel;
+                    /* y coordinates transformed to the entries */
+                    data->mouse_click = MOUSE_CLICK_ENTRY;
+
+                    /* Now check if it was clicked on a title or on entries */
+                    if (eclicky >= 0
+                        && eclicky <
+                        data->entries_visible * data->entry_maxheight)
+                    {
+                        if (pos.entry != XGET(obj, MUIA_List_Active))
+                            set(obj, MUIA_List_Active, pos.entry);
+
+                        if (data->last_active == data->entries_active
+                            && DoubleClick(data->last_secs, data->last_mics,
+                                msg->imsg->Seconds, msg->imsg->Micros))
+                        {
+                            set(obj, MUIA_Listview_DoubleClick, TRUE);
+                            data->last_active = -1;
+                            data->last_secs = data->last_mics = 0;
+                        }
+                        else
+                        {
+                            data->last_active = data->entries_active;
+                            data->last_secs = msg->imsg->Seconds;
+                            data->last_mics = msg->imsg->Micros;
+                        }
+                    }
+
+                    return 0;
+                }
+            }
+            else
+            {
+                if (msg->imsg->Code == SELECTUP && data->mouse_click)
+                {
+                    data->mouse_click = 0;
+                    return 0;
+                }
+            }
+            break;
+        }
+    }
+
+    return 0;
+}
+
 /**************************************************************************
  Dispatcher
 **************************************************************************/
@@ -2931,6 +3041,8 @@ BOOPSI_DISPATCHER(IPTR, List_Dispatcher, cl, obj, msg)
         return List__MUIM_DragDrop(cl, obj, (APTR) msg);
     case MUIM_CreateDragImage:
         return List__MUIM_CreateDragImage(cl, obj, (APTR) msg);
+    case MUIM_HandleEvent: /* ABI_V0 compatibility */
+        return List__MUIM_HandleEvent(cl, obj, (struct MUIP_HandleEvent *)msg);
     }
 
     return DoSuperMethodA(cl, obj, msg);
