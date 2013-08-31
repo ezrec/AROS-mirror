@@ -226,6 +226,9 @@ IPTR Listview__OM_NEW(struct IClass *cl, Object *obj, struct opSet *msg)
         (IPTR) obj, 4, MUIM_CallHook, (IPTR) &data->selfnotify_hook,
         MUIA_List_Active, MUIV_TriggerValue);
 
+    /* ABI_V0 compatibility */
+    set(list, MUIB_List | 0x00000010, (IPTR)TRUE); /* Wrapper in Listview */
+
     return (IPTR) obj;
 }
 
