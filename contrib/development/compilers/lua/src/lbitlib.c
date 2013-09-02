@@ -147,7 +147,9 @@ static int b_rrot (lua_State *L) {
 
 /*
 ** get field and width arguments for field-manipulation functions,
-** checking whether they are valid
+** checking whether they are valid.
+** ('luaL_error' called without 'return' to avoid later warnings about
+** 'width' being used uninitialized.)
 */
 static int fieldargs (lua_State *L, int farg, int *width) {
   int f = luaL_checkint(L, farg);

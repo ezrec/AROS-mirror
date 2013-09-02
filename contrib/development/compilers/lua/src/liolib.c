@@ -29,6 +29,20 @@
 #include "lualib.h"
 
 
+#if !defined(lua_checkmode)
+
+/*
+** Check whether 'mode' matches '[rwa]%+?b?'.
+** Change this macro to accept other modes for 'fopen' besides
+** the standard ones.
+*/
+#define lua_checkmode(mode) \
+	(*mode != '\0' && strchr("rwa", *(mode++)) != NULL &&	\
+	(*mode != '+' || ++mode) &&  /* skip if char is '+' */	\
+	(*mode != 'b' || ++mode) &&  /* skip if char is 'b' */	\
+	(*mode == '\0'))
+
+#endif
 
 /*
 ** {======================================================
@@ -212,14 +226,8 @@ static int io_open (lua_State *L) {
   const char *filename = luaL_checkstring(L, 1);
   const char *mode = luaL_optstring(L, 2, "r");
   LStream *p = newfile(L);
-  int i = 0;
-  /* check whether 'mode' matches '[rwa]%+?b?' */
-  if (!(mode[i] != '\0' && strchr("rwa", mode[i++]) != NULL &&
-       (mode[i] != '+' || ++i) &&  /* skip if char is '+' */
-       (mode[i] != 'b' || ++i) &&  /* skip if char is 'b' */
-       (mode[i] == '\0')))
-    return luaL_error(L, "invalid mode " LUA_QS
-                         " (should match " LUA_QL("[rwa]%%+?b?") ")", mode);
+  const char *md = mode;  /* to traverse/check mode */
+  luaL_argcheck(L, lua_checkmode(md), 2, "invalid mode");
   p->f = fopen(filename, mode);
   return (p->f == NULL) ? luaL_fileresult(L, 0, filename) : 1;
 }

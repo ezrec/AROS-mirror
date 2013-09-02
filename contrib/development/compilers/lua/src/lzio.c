@@ -1,6 +1,6 @@
 /*
 ** $Id$
-** a generic input stream interface
+** Buffered streams
 ** See Copyright Notice in lua.h
 */
 
