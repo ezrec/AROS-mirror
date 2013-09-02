@@ -4,7 +4,7 @@ include $(TOP)/config/make.cfg
 
 #MM- ports-game : ports-game-$(AROS_TARGET_CPU)
 
-#MM- ports-game-i386 : ports-game-magnetic
+#MM- ports-game-arm : ports-game-magnetic
 
 #MM  ports-game-magnetic : includes linklibs \
 #MM  ports-game-magnetic-data ports-game-magnetic-cpy \

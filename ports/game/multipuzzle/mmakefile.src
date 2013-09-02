@@ -5,6 +5,7 @@ include $(TOP)/config/make.cfg
 #MM- ports-game: ports-game-$(AROS_TARGET_CPU)
 
 #MM- ports-game-i386 : ports-game-multipuzzle
+#MM- ports-game-arm : ports-game-multipuzzle
 
 #MM  ports-game-multipuzzle : includes linklibs ports-game-multipuzzle-cpy \
 #MM  ports-game-multipuzzle-drawericon ports-game-multipuzzle-catalogs ports-game-multipuzzle-fetch

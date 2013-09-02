@@ -5,6 +5,7 @@ include $(TOP)/config/make.cfg
 #MM- ports-scientific : ports-scientific-$(AROS_TARGET_CPU)
 
 #MM- ports-scientific-i386 : ports-scientific-mathx
+#MM- ports-scientific-arm : ports-scientific-mathx
 
 #MM  ports-scientific-mathx : includes linklibs ports-scientific-mathx-catalogs \
 #MM  ports-scientific-mathx-cpp ports-scientific-mathx-drawericon \

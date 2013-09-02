@@ -5,7 +5,7 @@ include $(TOP)/config/make.cfg
 
 #MM- ports-game : ports-game-$(AROS_TARGET_CPU)
 
-#MM- ports-game-i386 : ports-game-wormwars
+#MM- ports-game-arm : ports-game-wormwars
 
 #MM  ports-game-wormwars : includes linklibs ports-game-wormwars-cpy \
 #MM  ports-game-wormwars-drawericon ports-game-wormwars-fx ports-game-wormwars-fonts \
