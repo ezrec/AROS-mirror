@@ -240,17 +240,17 @@ HOOKPROTONHNO(NL_LayoutFuncGroup, ULONG, struct MUI_LayoutMsg *lm)
 MakeStaticHook(NL_LayoutHookGroup, NL_LayoutFuncGroup);
 
 
-void release_pen(Object *obj, ULONG *pen)
+void release_pen(Object *obj, IPTR *pen)
 {
-  if(*pen != (ULONG)-1)
+  if(*pen != (IPTR)-1)
   {
     MUI_ReleasePen(muiRenderInfo(obj), *pen);
-    *pen = (ULONG)-1;
+    *pen = (IPTR)-1;
   }
 }
 
 
-void obtain_pen(Object *obj, ULONG *pen, struct MUI_PenSpec *ps)
+void obtain_pen(Object *obj, IPTR *pen, struct MUI_PenSpec *ps)
 {
   release_pen(obj, pen);
   *pen = MUI_ObtainPen(muiRenderInfo(obj), ps, 0);
