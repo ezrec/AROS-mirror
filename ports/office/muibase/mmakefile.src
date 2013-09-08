@@ -164,9 +164,6 @@ FILES := \
 	$(AUTO_SRCS)
 FILES := $(addprefix $(PORTSDIR)/muibase/$(ARCHBASE)/,$(FILES))
 
-#MM-
-querymb :
-	$(ECHO) $(FILES)
 
 %build_prog mmake=ports-office-muibase progname=MUIbase \
     files=$(FILES) targetdir=$(TARGETDIR)
