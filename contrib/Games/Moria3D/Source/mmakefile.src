@@ -1,7 +1,7 @@
 # $Id$
 include $(TOP)/config/make.cfg
 
-LIBS	:= -L$(LIBDIR) -larosc -larosm -lamiga -larossupport -lautoinit -lstdc
+LIBS	:= -L$(LIBDIR) -lamiga -larossupport -lautoinit -lstdc
 
 INSTDIR := $(CONTRIBDIR)/Games/Moria3D
 EXE	:= $(INSTDIR)/Moria3D

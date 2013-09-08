@@ -18,7 +18,6 @@ Autodocs for Modules
 + `cgfx <cgfx>`_
 + `cgxbootpic <cgxbootpic>`_
 + `cgxvideo <cgxvideo>`_
-+ `clib <clib>`_
 + `commodities <commodities>`_
 + `console <console>`_
 + `coolimages <coolimages>`_
@@ -62,6 +61,7 @@ Autodocs for Modules
 + `nonvolatile <nonvolatile>`_
 + `oop <oop>`_
 + `partition <partition>`_
++ `posixc <posixc>`_
 + `processor <processor>`_
 + `prometheus <prometheus>`_
 + `realtime <realtime>`_
@@ -69,6 +69,7 @@ Autodocs for Modules
 + `rexxsupport <rexxsupport>`_
 + `rexxsyslib <rexxsyslib>`_
 + `setpatch <setpatch>`_
++ `stdc <stdc>`_
 + `timer <timer>`_
 + `unixio_hidd <unixio_hidd>`_
 + `utility <utility>`_

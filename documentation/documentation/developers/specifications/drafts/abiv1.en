@@ -212,14 +212,14 @@ C library
     * a std C subset that can be put in ROM as the first library, that thus
       does not need dos.library. This should then replace all usage of
       librom.a.
-      This library is called arosstdc.library. It contains also the math
+      This library is called stdc.library. It contains also the math
       functions which may make it too big for for example m68k ROMs.
     * a std C implementation of stdio is done as a light weight wrapper around
-      AmigaOS file handles. The library is arosstdcdos.library
+      AmigaOS file handles. The library is stdcio.library
     * Full POSIX implementation; possibly also including some BSD functions.
       This would then provide a (nearly) full POSIX implementation. This
       library should be optional and real Amiga programs should not need this
-      library. The library is called arosnixc.library.
+      library. The library is called posixc.library.
 
 * this change will influence all already compiled programs as arosc.library
   is gone.
@@ -229,6 +229,7 @@ C library
   arosc2.library was rejected - the ABI_V1 should be clean of such hacks
 
 STATUS: IMPLEMENTED (branch in SVN: branches/ABI_V1/trunk-aroscsplit.)
+        Work is ongoing for debugging and merging in main trunk.
 
 DECISION: A decision was made on 2008-12-14 to include this item into
 ABI_V1.
