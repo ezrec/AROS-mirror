@@ -790,7 +790,10 @@ def create_module_docs():
     # add some docs for linker libs in AROS/compiler
     subdirs = ( os.path.join(topdir, "compiler", "alib"),
                 os.path.join(topdir, "compiler", "arossupport"),
-                os.path.join(topdir, "compiler", "clib") )
+                os.path.join(topdir, "compiler", "clib"),
+                os.path.join(topdir, "compiler", "stdc"),
+                os.path.join(topdir, "compiler", "posixc")
+    )
     
     for docpath in subdirs:
         libdocs = libdoclist()

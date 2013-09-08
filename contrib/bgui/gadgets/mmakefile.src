@@ -11,7 +11,7 @@ COMMONINCLUDES := -I$(SRCDIR)/$(CURDIR)/include -I$(SRCDIR)/$(CURDIR)/../
 LAYOUTGROUPINCLUDES := $(COMMONINCLUDES) -I$(SRCDIR)/$(CURDIR)/include -I$(SRCDIR)/$(CURDIR)/LayoutGroup
 TREEVIEWINCLUDES := $(COMMONINCLUDES) -I$(SRCDIR)/$(CURDIR)/TreeView/include
 
-EXELIBS = -L$(LIBDIR) -lamiga -larossupport -larosc -larosm -lbgui -lautoinit
+EXELIBS = -L$(LIBDIR) -lamiga -larossupport -larosc -larosm -lbgui -lautoinit -lstdc
 
 BARGADGET = bgui_bar.gadget
 BARDEMO = BarDemo
