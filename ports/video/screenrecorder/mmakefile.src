@@ -48,7 +48,7 @@ FILES := \
 ICONS := ScreenRecorder
 
 %build_icons mmake=ports-video-screenrecorder-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)
+	icons=$(ICONS) dir=$(TARGETDIR)/..
 
 CPYFILES := ScreenRecorder.info
 
