@@ -1,0 +1,8 @@
+Problem: Gocr doesn't work with PNG files.
+
+Gocr tries to convert PNG files by a call of pngtopnm with popen(). 
+It looks like popen() doesn't use the shell search path to find
+pngtopnm.
+
+An attempt to call Gocr with PNG file from a bash shows the error:
+pngtopnm: I/O error writing packed row to raw PBM file.

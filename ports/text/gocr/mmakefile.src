@@ -51,7 +51,7 @@ FILES := \
 ICONS := Gocr
 
 %build_icons mmake=ports-text-gocr-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)
+	icons=$(ICONS) dir=$(TARGETDIR)/..
 
 %copy_dir_recursive mmake=ports-text-gocr-docs src=$(PORTSDIR)/gocr/$(ARCHBASE)/doc \
     dst=$(TARGETDIR)/doc
