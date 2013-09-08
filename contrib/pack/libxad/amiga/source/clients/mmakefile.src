@@ -4,7 +4,7 @@
 include $(TOP)/config/make.cfg
 
 USER_CFLAGS     := -I$(AROS_INCLUDES)/SDI -I$(SRCDIR)/$(CURDIR)/../../../portable/include
-LDFLAGS += -nostartfiles
+LDFLAGS += -nostartfiles -nostdc
 
 #MM- contrib-pack-xadmaster : xadmaster-clients
 
