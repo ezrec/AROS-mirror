@@ -49,7 +49,7 @@ FILES := $(PORTSDIR)/polyglotman/$(ARCHBASE)/rman
 ICONS := PolyglotMan
 
 %build_icons mmake=ports-text-polyglotman-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)
+	icons=$(ICONS) dir=$(TARGETDIR)/..
 
 %copy_dir_recursive mmake=ports-text-polyglotman-contrib src=$(PORTSDIR)/polyglotman/$(ARCHBASE)/contrib \
     dst=$(TARGETDIR)/Contrib
