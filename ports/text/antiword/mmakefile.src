@@ -18,7 +18,7 @@ REPOSITORIES := http://www.winfield.demon.nl/linux
 ARCHBASE     := antiword-0.37
 TARGETDIR    := $(AROS_CONTRIB)/Utilities/Text/Antiword
 DB           := NDEBUG
-USER_CFLAGS  := -Wall -pedantic -D$(DB)
+USER_CFLAGS  := -Wall -pedantic -D$(DB) -Wno-unused-but-set-variable
 
 FILES := \
     $(PORTSDIR)/antiword/antiword-0.37/main_u \
@@ -84,7 +84,7 @@ FILES := \
 ICONS := Antiword
 
 %build_icons mmake=ports-text-antiword-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)
+	icons=$(ICONS) dir=$(TARGETDIR)/..
 
 %copy_dir_recursive mmake=ports-text-antiword-docs src=$(PORTSDIR)/antiword/antiword-0.37/Docs \
     dst=$(TARGETDIR)/Docs

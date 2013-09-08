@@ -129,7 +129,7 @@ function main()
           print (command)
         end
         local retval = os.execute(command)
-        if retval > 0 then
+        if not retval then
           app:request(window, 0, "Error", "OK", "antiword returned error code " .. retval)
         end
       end
