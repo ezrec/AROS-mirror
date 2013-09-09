@@ -32,7 +32,6 @@ Autodocs for Modules
 + `gallium <gallium>`_
 + `graphics <graphics>`_
 + `graphics_hidd <graphics_hidd>`_
-+ `hidd.pci_hidd <hidd.pci_hidd>`_
 + `hidd_hidd <hidd_hidd>`_
 + `hostlib <hostlib>`_
 + `hpet <hpet>`_
@@ -61,6 +60,7 @@ Autodocs for Modules
 + `nonvolatile <nonvolatile>`_
 + `oop <oop>`_
 + `partition <partition>`_
++ `pci_hidd <pci_hidd>`_
 + `posixc <posixc>`_
 + `processor <processor>`_
 + `prometheus <prometheus>`_
