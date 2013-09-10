@@ -99,7 +99,7 @@ CXX_FILES := \
 
 %build_prog mmake=ports-scientific-mathx \
     progname="MathX" targetdir=$(TARGETDIR) files="" \
-    cxxfiles="$(CXX_FILES)" uselibs=""
+    cxxfiles="$(CXX_FILES)" uselibs="stdc++"
 
 %fetch mmake=ports-scientific-mathx-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/mathx \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.bz2" \
