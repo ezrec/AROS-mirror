@@ -1,0 +1,36 @@
+diff -Naur muimathx-src-svn46-orig/Graph2D.cpp muimathx-src-svn46/Graph2D.cpp
+--- muimathx-src-svn46-orig/Graph2D.cpp	2013-09-10 23:11:01.497181952 +0200
++++ muimathx-src-svn46/Graph2D.cpp	2013-09-10 23:18:37.377204006 +0200
+@@ -108,7 +108,7 @@
+ 	if (fname)
+ 	{
+ 		Settings* s = (Settings*)xget(app, MUIA_MathX_Settings);
+-		LONG depth  = scr->BitMap.Depth,
++		LONG depth  = scr->RastPort.BitMap->Depth,
+          width  = ((320) / 16) * 16,
+ 		  	 height = 256;
+ 		double w, h;
+diff -Naur muimathx-src-svn46-orig/Graph3D.cpp muimathx-src-svn46/Graph3D.cpp
+--- muimathx-src-svn46-orig/Graph3D.cpp	2013-09-10 23:11:01.497181952 +0200
++++ muimathx-src-svn46/Graph3D.cpp	2013-09-10 23:20:50.257210446 +0200
+@@ -375,7 +375,7 @@
+ 	if (fname)
+ 	{
+ 		Settings* s = (Settings*)xget(app, MUIA_MathX_Settings);
+-		LONG depth  = scr->BitMap.Depth,
++		LONG depth  = scr->RastPort.BitMap->Depth,
+          width  = ((640) / 16) * 16,
+ 		  	 height = 512;
+ 		double w, h;		
+diff -Naur muimathx-src-svn46-orig/GraphSIRDS.cpp muimathx-src-svn46/GraphSIRDS.cpp
+--- muimathx-src-svn46-orig/GraphSIRDS.cpp	2013-09-10 23:11:01.493181951 +0200
++++ muimathx-src-svn46/GraphSIRDS.cpp	2013-09-10 23:23:56.417219462 +0200
+@@ -148,7 +148,7 @@
+ 	if (fname)
+ 	{
+ 		Settings* s = (Settings*)xget(app, MUIA_MathX_Settings);
+-		LONG depth  = scr->BitMap.Depth,
++		LONG depth  = scr->RastPort.BitMap->Depth,
+          width  = ((640) / 16) * 16,
+ 		  	 height = 512;
+ 		double w, h;		
