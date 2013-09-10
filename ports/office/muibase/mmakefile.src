@@ -2,7 +2,7 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- ports-office : ports-office-$(AROS_TARGET_CPU)
+# #MM- ports-office : ports-office-$(AROS_TARGET_CPU)
 
 #MM- ports-office-i386 : ports-office-muibase
 #MM- ports-office-arm : ports-office-muibase
