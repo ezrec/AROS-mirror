@@ -1,0 +1,12 @@
+diff -Naur mathomatic-16.0.5-orig/main.c mathomatic-16.0.5/main.c
+--- mathomatic-16.0.5-orig/main.c	2013-09-10 23:58:36.533320127 +0200
++++ mathomatic-16.0.5/main.c	2013-09-10 23:59:07.061321605 +0200
+@@ -445,7 +445,7 @@
+ 	if (signal(SIGALRM, alarmhandler) == SIG_ERR)
+ 		rv = SIGALRM;
+ #endif
+-#if	!MINGW
++#if	!MINGW && !__AROS__
+ 	if (time_out_seconds > 0) {
+ 		alarm(time_out_seconds);
+ #if	TIMEOUT_SECONDS
