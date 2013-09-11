@@ -4,6 +4,7 @@ include $(TOP)/config/make.cfg
 
 ##MM- linklibs : linklibs-www2
 #MM linklibs-www2 : includes
+#MM- includes-copy : libwww2-inc-directories
 
 FILES := \
 	aros_tcphack \
@@ -54,9 +55,11 @@ USER_CFLAGS += -Wno-format-contains-nul
 
 #MM
 includes-copy :
-	$(MKDIR) $(GENINCDIR)/libwww2
 	@$(CP) $(SRCDIR)/$(CURDIR)/*.h $(GENINCDIR)/libwww2
-	$(MKDIR) $(AROS_INCLUDES)/libwww2
 	@$(CP) $(SRCDIR)/$(CURDIR)/*.h $(AROS_INCLUDES)/libwww2
+
+#MM
+libwww2-inc-directories ::
+    %mkdirs_q $(GENINCDIR)/libwww2 $(AROS_INCLUDES)/libwww2
 
 %common
