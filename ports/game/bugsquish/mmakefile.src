@@ -35,7 +35,7 @@ FILES := $(PORTSDIR)/bugsquish/$(ARCHBASE)/bugsquish
 ICONS := Bugsquish
 
 %build_icons mmake=ports-game-bugsquish-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)
+	icons=$(ICONS) dir=$(TARGETDIR)/..
 
 %copy_dir_recursive mmake=ports-game-bugsquish-data src=$(PORTSDIR)/bugsquish/$(ARCHBASE)/data \
     dst=$(TARGETDIR)/data

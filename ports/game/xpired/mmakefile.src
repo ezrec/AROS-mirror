@@ -43,7 +43,7 @@ USER_CFLAGS  := $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cf
 ICONS := Xpired
 
 %build_icons mmake=ports-game-xpired-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)
+	icons=$(ICONS) dir=$(TARGETDIR)/..
 
 %copy_dir_recursive mmake=ports-game-xpired-img src=$(PORTSDIR)/xpired/$(ARCHBASE)/src/img \
 dst=$(TARGETDIR)/data/img

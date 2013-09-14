@@ -35,7 +35,7 @@ FILES := $(PORTSDIR)/vectoroids/$(ARCHBASE)/vectoroids
 ICONS := Vectoroids
 
 %build_icons mmake=ports-game-vectoroids-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)
+	icons=$(ICONS) dir=$(TARGETDIR)/..
 
 %copy_dir_recursive mmake=ports-game-vectoroids-data src=$(PORTSDIR)/vectoroids/$(ARCHBASE)/data \
     dst=$(TARGETDIR)/data

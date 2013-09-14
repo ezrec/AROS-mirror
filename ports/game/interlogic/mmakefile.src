@@ -34,7 +34,7 @@ FILES := \
 ICONS := InterLogic
 
 %build_icons mmake=ports-game-interlogic-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)
+	icons=$(ICONS) dir=$(TARGETDIR)/..
 
 CPYFILES := README
 
