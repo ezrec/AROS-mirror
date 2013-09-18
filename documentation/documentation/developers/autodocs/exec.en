@@ -14,39 +14,39 @@ exec
 `AddResetCallback()`_                   `AddResource()`_                        `AddSemaphore()`_                       `AddTail()`_                            
 `AddTask()`_                            `Alert()`_                              `AllocAbs()`_                           `Allocate()`_                           
 `AllocEntry()`_                         `AllocMem()`_                           `AllocPooled()`_                        `AllocSignal()`_                        
-`AllocTaskStorageSlot()`_               `AllocTrap()`_                          `AllocVec()`_                           `AttemptSemaphore()`_                   
-`AttemptSemaphoreShared()`_             `AvailMem()`_                           `AVL_AddNode()`_                        `AVL_FindFirstNode()`_                  
-`AVL_FindLastNode()`_                   `AVL_FindNextNodeByAddress()`_          `AVL_FindNextNodeByKey()`_              `AVL_FindNode()`_                       
-`AVL_FindPrevNodeByAddress()`_          `AVL_FindPrevNodeByKey()`_              `AVL_RemNodeByAddress()`_               `AVL_RemNodeByKey()`_                   
-`CacheClearE()`_                        `CacheClearU()`_                        `CacheControl()`_                       `CachePostDMA()`_                       
-`CachePreDMA()`_                        `Cause()`_                              `CheckIO()`_                            `ChildFree()`_                          
-`ChildOrphan()`_                        `ChildStatus()`_                        `ChildWait()`_                          `CloseDevice()`_                        
-`CloseLibrary()`_                       `ColdReboot()`_                         `CopyMem()`_                            `CopyMemQuick()`_                       
-`CreateIORequest()`_                    `CreateMsgPort()`_                      `CreatePool()`_                         `Deallocate()`_                         
-`Debug()`_                              `DeleteIORequest()`_                    `DeleteMsgPort()`_                      `DeletePool()`_                         
-`Disable()`_                            `Dispatch()`_                           `DoIO()`_                               `Enable()`_                             
-`Enqueue()`_                            `ExitIntr()`_                           `FindName()`_                           `FindPort()`_                           
-`FindResident()`_                       `FindSemaphore()`_                      `FindTask()`_                           `FindTaskByPID()`_                      
-`Forbid()`_                             `FreeEntry()`_                          `FreeMem()`_                            `FreePooled()`_                         
-`FreeSignal()`_                         `FreeTaskStorageSlot()`_                `FreeTrap()`_                           `FreeVec()`_                            
-`GetCC()`_                              `GetMsg()`_                             `GetTaskStorageSlot()`_                 `InitCode()`_                           
-`InitResident()`_                       `InitSemaphore()`_                      `InitStruct()`_                         `Insert()`_                             
-`MakeFunctions()`_                      `MakeLibrary()`_                        `NewAddTask()`_                         `NewAllocEntry()`_                      
-`NewCreateTaskA()`_                     `NewMinList()`_                         `NewStackSwap()`_                       `ObtainQuickVector()`_                  
-`ObtainSemaphoreList()`_                `ObtainSemaphoreShared()`_              `OldOpenLibrary()`_                     `OpenDevice()`_                         
-`OpenLibrary()`_                        `OpenResource()`_                       `Permit()`_                             `Procure()`_                            
-`PutMsg()`_                             `RawDoFmt()`_                           `ReadGayle()`_                          `ReleaseSemaphore()`_                   
-`ReleaseSemaphoreList()`_               `RemDevice()`_                          `RemHead()`_                            `RemIntServer()`_                       
-`RemLibrary()`_                         `RemMemHandler()`_                      `Remove()`_                             `RemPort()`_                            
-`RemResetCallback()`_                   `RemResource()`_                        `RemSemaphore()`_                       `RemTail()`_                            
-`RemTask()`_                            `ReplyMsg()`_                           `Reschedule()`_                         `RestoreTaskStorage()`_                 
-`SaveTaskStorage()`_                    `Schedule()`_                           `SendIO()`_                             `SetExcept()`_                          
-`SetFunction()`_                        `SetIntVector()`_                       `SetSignal()`_                          `SetSR()`_                              
-`SetTaskPri()`_                         `SetTaskStorageSlot()`_                 `ShutdownA()`_                          `Signal()`_                             
-`StackSwap()`_                          `SumKickData()`_                        `SumLibrary()`_                         `SuperState()`_                         
-`Supervisor()`_                         `Switch()`_                             `TypeOfMem()`_                          `UserState()`_                          
-`Vacate()`_                             `VNewRawDoFmt()`_                       `Wait()`_                               `WaitIO()`_                             
-`WaitPort()`_                           
+`AllocTaskStorageSlot()`_               `AllocTrap()`_                          `AllocVec()`_                           `AllocVecPooled()`_                     
+`AttemptSemaphore()`_                   `AttemptSemaphoreShared()`_             `AvailMem()`_                           `AVL_AddNode()`_                        
+`AVL_FindFirstNode()`_                  `AVL_FindLastNode()`_                   `AVL_FindNextNodeByAddress()`_          `AVL_FindNextNodeByKey()`_              
+`AVL_FindNode()`_                       `AVL_FindPrevNodeByAddress()`_          `AVL_FindPrevNodeByKey()`_              `AVL_RemNodeByAddress()`_               
+`AVL_RemNodeByKey()`_                   `CacheClearE()`_                        `CacheClearU()`_                        `CacheControl()`_                       
+`CachePostDMA()`_                       `CachePreDMA()`_                        `Cause()`_                              `CheckIO()`_                            
+`ChildFree()`_                          `ChildOrphan()`_                        `ChildStatus()`_                        `ChildWait()`_                          
+`CloseDevice()`_                        `CloseLibrary()`_                       `ColdReboot()`_                         `CopyMem()`_                            
+`CopyMemQuick()`_                       `CreateIORequest()`_                    `CreateMsgPort()`_                      `CreatePool()`_                         
+`Deallocate()`_                         `Debug()`_                              `DeleteIORequest()`_                    `DeleteMsgPort()`_                      
+`DeletePool()`_                         `Disable()`_                            `Dispatch()`_                           `DoIO()`_                               
+`Enable()`_                             `Enqueue()`_                            `ExitIntr()`_                           `FindName()`_                           
+`FindPort()`_                           `FindResident()`_                       `FindSemaphore()`_                      `FindTask()`_                           
+`FindTaskByPID()`_                      `Forbid()`_                             `FreeEntry()`_                          `FreeMem()`_                            
+`FreePooled()`_                         `FreeSignal()`_                         `FreeTaskStorageSlot()`_                `FreeTrap()`_                           
+`FreeVec()`_                            `FreeVecPooled()`_                      `GetCC()`_                              `GetMsg()`_                             
+`GetTaskStorageSlot()`_                 `InitCode()`_                           `InitResident()`_                       `InitSemaphore()`_                      
+`InitStruct()`_                         `Insert()`_                             `MakeFunctions()`_                      `MakeLibrary()`_                        
+`NewAddTask()`_                         `NewAllocEntry()`_                      `NewCreateTaskA()`_                     `NewMinList()`_                         
+`NewStackSwap()`_                       `ObtainQuickVector()`_                  `ObtainSemaphoreList()`_                `ObtainSemaphoreShared()`_              
+`OldOpenLibrary()`_                     `OpenDevice()`_                         `OpenLibrary()`_                        `OpenResource()`_                       
+`Permit()`_                             `Procure()`_                            `PutMsg()`_                             `RawDoFmt()`_                           
+`ReadGayle()`_                          `ReleaseSemaphore()`_                   `ReleaseSemaphoreList()`_               `RemDevice()`_                          
+`RemHead()`_                            `RemIntServer()`_                       `RemLibrary()`_                         `RemMemHandler()`_                      
+`Remove()`_                             `RemPort()`_                            `RemResetCallback()`_                   `RemResource()`_                        
+`RemSemaphore()`_                       `RemTail()`_                            `RemTask()`_                            `ReplyMsg()`_                           
+`Reschedule()`_                         `RestoreTaskStorage()`_                 `SaveTaskStorage()`_                    `Schedule()`_                           
+`SendIO()`_                             `SetExcept()`_                          `SetFunction()`_                        `SetIntVector()`_                       
+`SetSignal()`_                          `SetSR()`_                              `SetTaskPri()`_                         `SetTaskStorageSlot()`_                 
+`ShutdownA()`_                          `Signal()`_                             `StackSwap()`_                          `SumKickData()`_                        
+`SumLibrary()`_                         `SuperState()`_                         `Supervisor()`_                         `Switch()`_                             
+`TypeOfMem()`_                          `UserState()`_                          `Vacate()`_                             `VNewRawDoFmt()`_                       
+`Wait()`_                               `WaitIO()`_                             `WaitPort()`_                           
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -870,7 +870,9 @@ Function
 ~~~~~~~~
 ::
 
-     Allocate memory out of a private memory pool.
+     Allocate memory out of a private memory pool. The memory must be
+     freed with FreePooled(), or by deallocating the entire pool with
+     DeletePool().
 
 
 Inputs
@@ -1046,6 +1048,50 @@ See also
 ~~~~~~~~
 
 `FreeVec()`_ 
+
+----------
+
+AllocVecPooled()
+================
+
+Synopsis
+~~~~~~~~
+::
+
+ APTR AllocVecPooled(
+          APTR poolHeader,
+          IPTR memSize );
+
+Function
+~~~~~~~~
+::
+
+     Allocate memory out of a private memory pool and remember the size.
+     The memory must be freed with FreeVecPooled(), or by deallocating
+     the entire pool with DeletePool().
+
+
+Inputs
+~~~~~~
+::
+
+     poolHeader - Handle of the memory pool
+     memSize    - Number of bytes you want to get
+
+
+Result
+~~~~~~
+::
+
+     A pointer to the number of bytes you wanted or NULL if the memory
+     couldn't be allocated
+
+
+
+See also
+~~~~~~~~
+
+`CreatePool()`_ `DeletePool()`_ `FreeVecPooled()`_ 
 
 ----------
 
@@ -3744,7 +3790,8 @@ Function
 ~~~~~~~~
 ::
 
-     Free memory allocated out of a private memory pool.
+     Free memory that was allocated out of a private memory pool by
+     AllocPooled().
 
 
 Inputs
@@ -3886,6 +3933,41 @@ See also
 ~~~~~~~~
 
 `AllocVec()`_ 
+
+----------
+
+FreeVecPooled()
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+ void FreeVecPooled(
+          APTR poolHeader,
+          APTR memory );
+
+Function
+~~~~~~~~
+::
+
+     Free memory that was allocated out of a private memory pool by
+     AllocVecPooled().
+
+
+Inputs
+~~~~~~
+::
+
+     poolHeader - Handle of the memory pool
+     memory     - Pointer to the memory
+
+
+
+See also
+~~~~~~~~
+
+`CreatePool()`_ `DeletePool()`_ `AllocVecPooled()`_ 
 
 ----------
 
