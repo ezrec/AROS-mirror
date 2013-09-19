@@ -116,7 +116,7 @@ zune;group;Group.mui;2012-07-11
 zune;register;Register.mui;2012-07-17
 zune;penadjust;Penadjust.mui;2012-07-17
 zune;virtgroup;Virtgroup.mui;2012-07-17
-zune;scrollgroup;Scrollgroup.mui;2012-07-17
+zune;scrollgroup;Scrollgroup.mui;2013-09-20
 zune;scrollbar;Scrollbar.mui;2012-07-17
 zune;listview;Listview.mui;2013-07-09
 zune;radio;Radio.mui;2012-07-17
@@ -2938,9 +2938,9 @@ virtgroup;MUIA_Virtgroup_Width;1;1;0
 scrollgroup;MUIA_Scrollgroup_Contents;1;1;2
 scrollgroup;MUIA_Scrollgroup_FreeHoriz;1;1;0
 scrollgroup;MUIA_Scrollgroup_FreeVert;1;1;0
-scrollgroup;MUIA_Scrollgroup_HorizBar;1;1;0
+scrollgroup;MUIA_Scrollgroup_HorizBar;1;1;2
 scrollgroup;MUIA_Scrollgroup_UseWinBorder;1;1;2
-scrollgroup;MUIA_Scrollgroup_VertBar;1;1;0
+scrollgroup;MUIA_Scrollgroup_VertBar;1;1;2
 scrollbar;MUIA_Scrollbar_Type;1;1;2
 listview;MUIA_Listview_ClickColumn;1;1;2
 listview;MUIA_Listview_DefClickColumn;1;1;0
