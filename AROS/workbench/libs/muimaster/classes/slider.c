@@ -1,6 +1,6 @@
 /*
     Copyright  1999, David Le Corfec.
-    Copyright  2002-2010, The AROS Development Team.
+    Copyright  2002-2013, The AROS Development Team.
     All rights reserved.
 
     $Id$
@@ -402,6 +402,7 @@ IPTR Slider__MUIM_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_Handle
 			DoMethod(_win(obj), MUIM_Window_RemEventHandler, (IPTR)&data->ehn);
 			data->ehn.ehn_Events |= IDCMP_MOUSEMOVE;
 			DoMethod(_win(obj), MUIM_Window_AddEventHandler, (IPTR)&data->ehn);
+                        set(obj, MUIA_Pressed, TRUE);
 			data->state = 1;
 			MUI_Redraw(obj,MADF_DRAWUPDATE);
 		    }
@@ -426,6 +427,7 @@ IPTR Slider__MUIM_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_Handle
 		    data->ehn.ehn_Events &= ~IDCMP_MOUSEMOVE;
 		    DoMethod(_win(obj), MUIM_Window_AddEventHandler, (IPTR)&data->ehn);
 		    data->state = 0;
+                    set(obj, MUIA_Pressed, FALSE);
 		    MUI_Redraw(obj,MADF_DRAWUPDATE);
 		}
 	    } /* if (msg->imsg->Code == SELECTDOWN) */
