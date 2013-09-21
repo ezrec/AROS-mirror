@@ -1,0 +1,69 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-text : ports-text-$(AROS_TARGET_CPU)
+
+#MM- ports-text-i386 : ports-text-annotate
+#MM- ports-text-arm : ports-text-annotate
+
+#MM ports-text-annotate : includes linklibs \
+#MM    workbench-libs-expat \
+#MM    ports-text-annotate-fetch \
+#MM    ports-text-annotate-drawericon \
+#MM    ports-text-annotate-release
+
+#MM  ports-text-annotate-quick : ports-text-annotate-fetch
+
+REPOSITORIES := http://www.mazze-online.de/aros/ports-src/
+ARCHBASE     := annotate-src-3.0.1
+TARGETDIR    := $(AROS_CONTRIB)/Utilities/Text/Annotate
+USER_CFLAGS  := -DANN_MUI -Wno-parentheses -Wno-unused-but-set-variable
+GUI          := MUI
+
+FILES := \
+	annMain \
+	annRequesters$(GUI) \
+	annExchangeControl$(GUI) \
+	annBaseFunc \
+	annDraw \
+	annDrawSyntax \
+	annSupportfunc \
+	annDispatch \
+	annCbio \
+	annRexxFuncs \
+	annListRequest \
+	annMacFunc \
+	annUndo \
+	annProject \
+	onyxsoft/EString \
+	onyxsoft/Softtimer \
+	onyxsoft/HttpGet \
+	onyxsoft/muisimplifiers \
+	onyxsoft/LinkedList
+
+FILES := $(addprefix $(PORTSDIR)/annotate/$(ARCHBASE)/src/,$(FILES))
+
+%build_prog mmake=ports-text-annotate \
+    progname=Ann targetdir=$(TARGETDIR) \
+    files=$(FILES) uselibs="expat"
+
+############################################################################################
+
+
+%fetch mmake=ports-text-annotate-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/annotate \
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="zip"
+
+############################################################################################
+
+ICONS := Annotate
+
+%build_icons mmake=ports-text-annotate-drawericon \
+	icons=$(ICONS) dir=$(TARGETDIR)/..
+
+############################################################################################
+
+%copy_dir_recursive mmake=ports-text-annotate-release src=release \
+    dst=$(TARGETDIR)
+
+%common

@@ -1,0 +1,12 @@
+How to use one of the contribution synxta files.
+------------------------------------------------
+
+Open the Config from Annotate and select the Syntax page.
+Click Add file and select the contribution syntax file.
+The new syntax will be added to your AnnotateSyntax.xml
+file and loaded everytime you start Annotate in the future.
+
+Alternatively, you can do it manually by simply adding a
+similar line to the <Ann-SyntaxHighlighting> block in the
+AnnotateSyntax.xml file:
+<SyntaxFile filename="Syntax Contribution/Annotate_new_syntax.xml"/>

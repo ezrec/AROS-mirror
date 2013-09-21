@@ -1,0 +1,3769 @@
+@database "Annotate"
+@$VER: 3.0.1
+@author "Doug Bakewell & Daniel Westerberg"
+@node "main" "Annotate 3.0.1"
+
+   @{fg shine}@{b}Annotate 3.0.1  by  Doug Bakewell & Daniel Westerberg@{ub}
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~@{fg text}
+
+    A comprehensive text editor with programmer's features like syntax highlighting
+    and macros written for AmigaOS 2.0 and up, ported to AmigaOS 4.0, backported to
+    AmigaOS 3 and sideported to MorphOS and AROS.
+
+    @{fg fill}Compile date: 2012-12-01@{fg text}
+
+
+
+    @{" Introduction " link intro}
+    @{" Requirements " link Reqs}
+    @{" Installation " link install}
+
+    @{" News " link History}
+
+    @{" Startup " link startup}
+    @{" Usage   " link usage}
+    @{" Syntax  " link syntax}
+    @{" Menus   " link menus}
+    @{" ARexx   " link rexx}
+    @{" Config  " link config}
+
+    @{" Future " link Future}
+
+    @{" About    " link copy_stuff}
+    @{" OnyxSoft " link Onyxsoft}
+    @{" Donate   " link donate}
+
+@endnode
+@node "Reqs" "Requirements"
+
+  @{b}@{u}What you need to be able to run Annotate 3@{uu}@{ub}
+
+   AmigaOS 4.0 or higher and ReAction.
+   AmigaOS 3.0 or higher (possibly even OS2.04) and MUI.
+   MorphOS 1.0 or higher and MUI.
+   AROS with Zune.
+
+@endnode
+@node "History" "History"
+
+  @{fg shine}@{b}What's new and what Annotate already features!
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~@{ub}@{fg text}
+
+   @{fg fill}* NEW *@{fg text} Tool commands now get a console output window if they output anything.
+
+   @{fg fill}* NEW *@{fg text} Made the "Quit with changes" requester much better and allows to save.
+
+   @{fg fill}* FIX *@{fg text} Spell corrected guide by Tom Breeden. Thank you!
+
+   @{fg fill}* FIX *@{fg text} Fixed string escaping in the XML prefs such that any characters in paths
+           etc can be saved without causing XML parse errors.
+
+   @{fg fill}* FIX *@{fg text} Fixed the Tools edit page which was completely screwed on the MUI versions.
+
+   @{fg fill}* NEW *@{fg text} Added Alt as qualifier to temporarely switch selection mode between normal
+           and rectangular mode.
+
+   @{fg fill}* NEW *@{fg text} Improved rectangular selection such that the width is not dependent on the
+           length of the last line the mouse is over.
+
+   @{fg fill}* NEW *@{fg text} Updated the behavior of upper/lower case when there is no selection.
+           Now it changes the character under the cursor and advances by char ahead.
+
+   @{fg fill}* FIX *@{fg text} Fixed the $ VER : string which appeared empty in some versions.
+
+   @{fg fill}* FIX *@{fg text} Optimized the text redrawing when selecting text and in other situations.
+
+   @{fg fill}* FIX *@{fg text} * FIX * Fixed crash when iconifying and reopening.
+
+
+  @{fg shine}@{b}v3.0
+  ~~~~@{ub}@{fg text}
+
+   ** Completely rewrote Ed Exchange so it can now be used along-side the editor
+      windows as a quicklist of editors.
+   
+   ** Added the setting to have a scrollbar on the right side.
+   
+   ** Implemented different mark modes: Ann, Notepad, Quick where NotePad makes
+      Annotate's selection of text behave like "normal" text editors.
+   
+   ** Annotate can now open on a custom screen with a chosen backdrop image,
+      frontmost public screen.
+   
+   ** Added find/replace history so you can use up/down arrow keys to navigate
+      old searches.
+
+   * Added a setting to set the filename in the window titlebar.
+   
+   * Implemented marking of edited lines in the scrollbar.
+   
+   * Made it possible to add external syntax files.
+   
+   * Monitors file changes, and alerts when a file was changed on disk.
+   
+   * Added "Hide and Open New" to the menu.
+   
+   * Added a frame for the status bar so no strange colors have to be used.
+   
+   * Added an 'All' button to the Replace prompt.
+   
+   * Selecting Clear selection now clears the selection in all windows if
+     UNIX copy'n'paste is used..
+   
+   * Match brace now finds unmatching brace combinations like ( [ ) ].
+   
+   * Added a switch to disable horiz scrolling with the vertical mouse wheel
+     when the mouse is outside the window.
+   
+   * Showing the color for each color setting in a box.
+   
+   * Added the tools settings to the prefs.
+   
+   * Made optimizations in when and how often the editor should be redrawn.
+   
+   * Added arexx commands SHOW_EX_EDITOR and HIDE_EDITOR.
+   
+   * Fixed pasting of 8-bit characters for OS3.
+   
+   * Added setting to put filename in window title.
+
+   * Fixed saving of projects which didn't work very well.
+   
+   * Save when window becomes inactive now also applies when hiding.
+   
+   * Made it scroll to the correct last line also when a file is loaded hidden.
+   
+   * Fixed loading of macros.
+   
+   * RAmiga+w now behaves exactly as double-clicking some word or symbol.
+   
+   * Fixed replace which always forgot the first line.
+   
+   * Make it possible to replace equal, but case-different, strings when
+     non-case is selected.
+   
+   * Fixed starting to find at the very end or beginning.
+   
+   * Cleaned up the source code a lot by renamed a lot of functions to make it
+     more coherent.
+   
+   * Fixed gfx garbage when scrolling.
+   
+   * Fixed complex syntax type with endtoken parsing.
+
+  @{fg shine}@{b}v2.7
+  ~~~~@{ub}@{fg text}
+
+   @{fg fill}**@{fg text} Annotate can now be compiled for MUI instead of ReAction!
+      The OS4 version uses ReAction since it looks better and has more
+      features under OS4. All other targets are compiled for MUI but
+      can be compiled for ReAction/ClassAct as well.
+
+   @{fg fill}**@{fg text} AROS is now supported.
+
+   @{fg fill}**@{fg text} Added simple project support. This makes it possible to save and
+      load a project file which will contain the current configuration of
+      opened files and their editors/windows. Makes for a quick way of
+      reopening all the files and windows you were working on yesterday,
+      or before a crash.
+
+   @{fg fill}**@{fg text} Annotate's editors are now AppWindows which means that you can drop
+      icons on them to open files.
+
+   @{fg fill}**@{fg text} Having a requester opening when Ann is started from Workbench is
+      now optional.
+
+   @{fg fill}**@{fg text} Realtime update of colors in the editor when they are changed from
+      the Config.
+
+   @{fg fill}**@{fg text} Added an expiration date to the "remembered lines".
+
+   @{fg fill}**@{fg text} Fixed the auto-update function so that it will download the correct
+      binary for your OS. (Will of course only work the next time.)
+
+   @{fg fill}**@{fg text} Pasting an text that started with a linefeed at the end of a line
+      didn't work correctly.
+
+   @{fg fill}**@{fg text} Possibly fixed some random garbage that could have been inserted
+      when cut'n'pasting vertical blocks with empty lines in the middle.
+
+  @{fg shine}@{b}v2.6.4
+  ~~~~~~@{ub}@{fg text}
+   @{fg fill}*@{fg text} Ported to AmigaOS 3.x and MorphOS!
+     It works with the latest ClassAct that can be found on Aminet, but
+     it works better with ReAction from AmigaOS 3.5+. Note that on MorphOS
+     the latest window.class looks for the wrong version of icon.library
+     and fails to open completely. Use an older window.class in this case.
+     This will be improved in the future.
+
+   @{fg fill}*@{fg text} Added a Find next change/Find previous change function to the Search menu.
+
+   @{fg fill}*@{fg text} Fixed a weirdness when checking for new updates and none were available
+     but extra files were available.
+
+   @{fg fill}*@{fg text} Made errors more clear when shown in the status line.
+
+   @{fg fill}*@{fg text} Fixed copying of  a line to the find or replace field with a vertical
+     selection.
+
+  @{fg shine}@{b}v2.6.3
+  ~~~~~~@{ub}@{fg text}
+   @{fg fill}*@{fg text} Made edited lines appear with a different background color.
+     The color is selected by the user.
+
+   @{fg fill}*@{fg text} Added a new way of finding and replacing words by matching
+     only whole unbroken words.
+
+   @{fg fill}*@{fg text} Added PortablE as a language with syntax highlighting.
+
+   @{fg fill}*@{fg text} New icons composed by David Braconnier. Thanks! :)
+
+   @{fg fill}*@{fg text} When reopening the same file twice and selected to bring the already
+     open editor to front, the current editor was cleared.
+
+   @{fg fill}*@{fg text} The uppercase/lowercase function didn't work on a vertical block selection.
+
+   @{fg fill}*@{fg text} Fixed Ctrl+MMB moving of a vertical selection.
+
+   @{fg fill}*@{fg text} Added "mandatory" to the qualifying And/OrTokens to force matching
+     this qualification for a particular language at all times.
+
+   @{fg fill}*@{fg text} Now tries to not clear a selection when undoing something.
+
+   @{fg fill}*@{fg text} Fixed random insertion of null bytes when loading an MS-DOS file with CR+LF.
+
+   @{fg fill}*@{fg text} Better handling of multiline tokens like for example /* C/C++ comments */.
+
+   @{fg fill}*@{fg text} Better handling of files with very long lines, such as if one accidently
+     loads a binary file.
+
+  @{fg shine}@{b}v2.6.2
+  ~~~~~~@{ub}@{fg text}
+
+   @{fg fill}*@{fg text} Starts quicker because it doesn't open all gadget classes until they are needed.
+
+   @{fg fill}*@{fg text} Fixed a bug in the auto update code.
+
+   @{fg fill}*@{fg text} Fixed a crash if expat.library was not found.
+
+   @{fg fill}*@{fg text} Added an option to disable the use of system beep/flash.
+
+   @{fg fill}*@{fg text} Fixed a few bugs regarding vertical selection/block copy'n'paste and undo/redo.
+
+   @{fg fill}*@{fg text} Changed the scroll wheel acceleration for the scrollbar so that it will
+      never jumps more than one page at a time.
+
+
+  @{fg shine}@{b}v2.6.1
+  ~~~~~~@{ub}@{fg text}
+
+   @{fg fill}*@{fg text} Using expat.library instead of linking with expat.lib. Saves 150kB.
+
+   @{fg fill}*@{fg text} Improved archive bit handling.
+
+   @{fg fill}*@{fg text} Added HTML as a syntax highlighting.
+
+   @{fg fill}*@{fg text} Added LaTeX as a syntax highlighting.
+
+   @{fg fill}*@{fg text} Added the attribute "caseinsensitive"/"ignorecase" to make it easy to
+          implement syntax for case insensitive languages, such as HTML.
+
+   @{fg fill}*@{fg text} Added function to let paste replace a selection.
+
+   @{fg fill}*@{fg text} Added a kind of UNIX primary selection way of copy'n'paste using the
+          middle mouse button. When it is enabled it is possible to select text
+          in any editor and then by a click on the MMB paste this text in any
+          opened editor without activating its window first!
+          Holding Ctrl while clicking the MMB will move the text.
+
+   @{fg fill}*@{fg text} Now Ann asks if you try to open the same file twice.
+
+   @{fg fill}*@{fg text} Now Ann asks if you try to overwrite a file that exists when using Save as.
+
+   @{fg fill}*@{fg text} Added "Wrap selected or all text" to the Tools menu to make it possible
+          to wrap a text that is already loaded.
+
+   @{fg fill}*@{fg text} Holding the Ctrl key while closing a window makes it discard all changes
+          to the file without asking.
+
+   @{fg fill}*@{fg text} Added an iconify gadget which at the moment closes a window and places
+          the editor in the hidden editors list in Ed Exchange.
+
+   @{fg fill}*@{fg text} Fixed an error regarding undo when more than one file was selected to be
+          opened. This error could result in a number of different behaviours.
+
+   @{fg fill}*@{fg text} Sometimes there was garbage displayed when syntax highlighting was enabled.
+
+   @{fg fill}*@{fg text} If moving the editor window while replacing interactively answered Yes
+          to the requester.
+
+   @{fg fill}*@{fg text} Arexx command GET WIN NAME without a number caused a crash.
+
+   @{fg fill}*@{fg text} When making your own syntax file Ann could crash if there was an
+          error with the OrTokens tag.
+
+   @{fg fill}*@{fg text} Now the double-click to select word accepts 8-bit characters so that
+          non-English words can be completely selected.
+
+   @{fg fill}*@{fg text} Fixed a few bugs regarding the Exchange Ed. This needs a total rewrite though.
+
+
+  @{fg shine}@{b}v2.6
+  ~~~~@{ub}@{fg text}
+
+   @{fg fill}*@{fg text} (Major since v2.5) Syntax highlighting with current support for
+           C/C++, Amiga-E, AmigaGuide and XML.
+
+   @{fg fill}*@{fg text} (Major since v2.5) Unlimited Undo/Redo!
+
+   @{fg fill}*@{fg text} (Major since v2.5) Ann can remember where in a file you last edited
+           and scroll there when the file is opened.
+
+   @{fg fill}*@{fg text} (Major since v2.5) Double/triple-click to select word, syntactic
+           phrase, line or bracket contents.
+
+   @{fg fill}*@{fg text} Fixed many (hopefully all) Undo/Redo bugs, some of which were nasty.
+
+   @{fg fill}*@{fg text} Reimplemented wildcard find. It is now possible to enter a DOS pattern
+           string to search for. It will match an entire line.
+
+   @{fg fill}*@{fg text} Multiple cursors when using "Last saved" to revert a file.
+
+   @{fg fill}*@{fg text} It was impossible to select text on the first line.
+
+   @{fg fill}*@{fg text} Fixed a subtle problem with match brace causing it to mismatch sometimes.
+
+   @{fg fill}*@{fg text} Improved the smart window placement.
+
+   @{fg fill}*@{fg text} Fixed a small ARexx bug regarding cursor placement.
+
+
+  @{fg shine}@{b}v2.5.3 (AutoUpdate)
+  ~~~~~~@{ub}@{fg text}
+
+   @{fg fill}*@{fg text} Finally Ann is on the same level as other modern editors:
+      It has got Undo/Redo!
+      Beware of possible bugs. May not work will all kinds of editing,
+      like vert selections.
+
+   @{fg fill}*@{fg text} Added the option "Delete key deletes selection".
+
+   @{fg fill}*@{fg text} It is is now possible to double-click to select a word, line, or the
+      contents between ({[brackets and braces]}).
+
+   @{fg fill}*@{fg text} Ann can now remember which line you last visited in a file when
+      you save it so the next time you load it, Ann will scroll there
+      automatically.
+
+   @{fg fill}*@{fg text} Added functionality to allow the Tab key to perform indentation instead
+      of inserting tab characters or spaces.
+
+   @{fg fill}*@{fg text} Made it possible to do circular finds. When no more matches are found
+      it will start over from the top.
+
+   @{fg fill}*@{fg text} Now the line in the middle of the window will be seen in the status field
+      when scrolling with the scroll bar to make it a lot easier to find a
+      particular line.
+
+   @{fg fill}*@{fg text} Ann respects file protection bits.
+
+   @{fg fill}*@{fg text} Ann can now automatically switch tab-key and indentation mode depending
+      on if the file loaded contains tab characters or not.
+
+   @{fg fill}*@{fg text} Added "Clear Selection" as a menu option to provide a simple way of
+      clearing a selection from the keyboard. Default hotkey is 'RAmiga +'.
+
+   @{fg fill}*@{fg text} Fixed a couple of minor bug regarding syntax highlighting, including
+      some update of the AnnotateSyntax.xml file.
+
+   @{fg fill}*@{fg text} Many more small changes and enhancements.
+
+  @{fg shine}@{b}v2.5.2 (AutoUpdate)
+  ~~~~~~@{ub}@{fg text}
+
+   @{fg fill}*@{fg text} Fixed a small error detected by OS4 Final when entering the config
+      on OS4 Final.
+
+   @{fg fill}*@{fg text} Fixed another error of the same kind related to the configurable
+      part of the Tools menu in Ann.
+
+   @{fg fill}*@{fg text} The Auto Update feature was broken and does not work correctly in
+      v2.5.1. It works in v2.5 and v2.5.2 though.
+
+   @{fg fill}*@{fg text} The correct page was not remembered when reentering Config.
+
+  @{fg shine}@{b}v2.5.1 (AutoUpdate)
+  ~~~~~~@{ub}@{fg text}
+   @{fg fill}*@{fg text} Finally we have Syntax Highlighting! Currently there is support for
+      the following languages: C/C++, Amiga-E, Amiga Guide, XML.
+
+   @{fg fill}*@{fg text} Changing of font size was not recognized unless the font was also changed.
+
+   @{fg fill}*@{fg text} Tab-settings and Auto-indent are individual for each editor now.
+      Use the Apply button in the Config to set it for all opened editors.
+
+   @{fg fill}*@{fg text} Match Brace has been fixed and enhanced a bit.
+
+   @{fg fill}*@{fg text} Window left and top edge could not be 0.
+
+
+  @{fg shine}@{b}v2.5
+  ~~~~@{ub}@{fg text}
+   @{fg fill}*@{fg text} Saving config only saved to ENVARC: which made it appear
+     as if settings weren't saved until you rebooted.
+
+   @{fg fill}*@{fg text} Added Auto Update which means that Ann now is able to update
+     itself over Internet. It will by default check for updates every
+     five days or less.
+
+   @{fg fill}*@{fg text} Ann is now a true OS4 Application, meaning that it has full
+     Application.library support. Unfortunately there is no
+     application handler out there right now.
+
+   @{fg fill}*@{fg text} Added Search from beginning and Search backwards for Find
+     and Replace.
+
+   @{fg fill}*@{fg text} Added Find Previous to the menu.
+
+   @{fg fill}*@{fg text} The Find requester outputted some debug.
+
+   @{fg fill}*@{fg text} Now Esc works in the Find and Replace requesters.
+
+   @{fg fill}*@{fg text} Added a few arexx command;
+     ACTION REPLACE - Replace without opening the replace requester.
+     ACTION FIND - Find next and return a bool.
+     ACTION FIND_IN_LINE - Find only on current line and return bool.
+     INSERT TAB - Insert tab characters.
+     BACKSPACE - As hitting backspace.
+     SET SEARCH_FROM_BEG - Set this flag for Find and Replace.
+     SET SEARCH_BACKWARDS - Set this flag for Find and Replace.
+     HELP - Write a list of all commands to a file.
+
+     Included an AmigaE to C translation rexx script that demonstrates the
+     potential of scripting with Annotate. It also does a pretty good job
+     of doing the dirty work when porting E to C :)
+
+   @{fg fill}*@{fg text} Doesn't jump to the beginning of the file when
+     reverting to last saved.
+
+   @{fg fill}*@{fg text} Fixed loading of files as parameters, both shift-clicked
+     from WB and supplied via CLI.
+
+   @{fg fill}*@{fg text} Text selection is visible while selecting.
+
+   @{fg fill}*@{fg text} Holding Ctrl while copying text with MMB cuts text.
+
+   @{fg fill}*@{fg text} Added possibility to paste with MMB click a la UNIX.
+
+   @{fg fill}*@{fg text} Added Cycle Editor in menu on key LAlt+Tab to easily swap
+     between editor windows.
+
+   @{fg fill}*@{fg text} Reading and writing hotkeys didn't work correctly.
+
+   @{fg fill}*@{fg text} A couple of other fixes regarding the editing of hotkeys,
+     such as they not working with CapsLock on, and letting repeat
+     through as regular keys.
+
+   @{fg fill}*@{fg text} CursorX doesn't jump to AutoX after Find but stays intuitively
+     where is it.
+
+   @{fg fill}*@{fg text} Added confirmation requester for all unsaved editors when
+     quitting. The requester also now contains the filename.
+
+   @{fg fill}*@{fg text} Added the option to keep only one instance of Ann running
+     even when starting another copy.
+
+   @{fg fill}*@{fg text} Fixed possible crash in the Ed Exchange editor.
+
+
+  @{fg shine}@{b}v2.4
+  ~~~~@{ub}@{fg text}
+   @{fg fill}*@{fg text} Closing the Config without a font selected (which is default)
+     caused a crash. Fixed. (sorry about that... :-( )
+   
+   @{fg fill}*@{fg text} All hotkeys (pretty much) are now editable!!
+   
+   @{fg fill}*@{fg text} Scroll-wheel support - context sensitive! Scroll over the text
+     and it scrolls "Scroll Unit" lines at a time, scroll over the
+     scroll bar and it scrolls pages, scroll to the right of the
+     text and it scrolls horizontally.
+     Also the horizontal wheel (should) work.
+   
+   @{fg fill}*@{fg text} Now finally full tab-key support with tab-stops and all!
+     Placing the mouse on a line with tabs, moving the cursor with the
+     arrow keys, wordwrap, it should all work as expected now.
+     Only vertical column selections doesn't work well with tabs now
+     (they really can't either as they may cut a tab in half which
+     would be illegal).
+   
+   @{fg fill}*@{fg text} Added Tabs to Spaces and Spaces to Tabs functions.
+   
+   @{fg fill}*@{fg text} The default path can now be explicitly selected in the config.
+   
+   @{fg fill}*@{fg text} Added a new marker in the scroll bar that shows the last place
+     you were with the cursor if you scroll away and place the cursor
+     somewhere else using the mouse. Very practical and makes it dead
+     easy to find your way back to where you were.
+   
+   @{fg fill}*@{fg text} Added option to autosave every X minutes. Autosave only writes
+     the backup file if it didn't previously existed, if backups is
+     is switched on. This prevents accidental overwrite of an old
+     file that you may have opened to create a new file from.
+   
+   @{fg fill}*@{fg text} Added option to autosave when the edit window gets inactive.
+     Very practical if you switch between Ann and for example a
+     compiler in a shell, you then don't have to save your changes
+     manually, just click outside Ann's window, e.g. in the shell
+     and it will automatically save.
+   
+   @{fg fill}*@{fg text} Added a function to switch off the "cursor memory" which may seem
+     a bit annoying for those not used to Ann. This means you need to
+     switch off "Remember cursor positions" to remove the cursor memory.
+   
+   @{fg fill}*@{fg text} Added a few new short commands:
+     Ctrl+Left mouse  immediately starts a selection as a non-sticky
+     selection editor would do.
+     Middle mouse  immediately selects and copys a text without moving
+     the cursor or cancelling another selection. Using Shift copies the
+     text into clip unit 1 instead of 0 which is default.
+     These, and the other mouse-"keys" are not editable.
+   
+   @{fg fill}*@{fg text} It is now possible to open many files at the same time from the
+     file-requester.
+   
+   @{fg fill}*@{fg text} Added switch top make the cursor follow when scrolling using the
+     numpad scroll-keys.
+   
+   @{fg fill}*@{fg text} Added key to get cursor into view. It defaults to numpad-0.
+   
+   @{fg fill}*@{fg text} Added switch to make new windows open relative to parent window
+     instead of the default position.
+   
+   @{fg fill}*@{fg text} Forgot to check the "Smart window placing" switch. It was always
+     used.
+   
+   @{fg fill}*@{fg text} Now compiled with NewLib which made the exe 50kB smaller than
+     with CLib2. Unfortunately all new features added another 100kB.
+   
+   @{fg fill}*@{fg text} Ann shouldn't die the Linux death when given Ctrl-C anymore.
+   
+   @{fg fill}*@{fg text} A lot of other minor fixes, like the save requester gave no
+     busy-pointer to the editor, replacing repetitive characters
+     didn't work, save close now quits if the last editor was closed,
+     Shrink/Enlarge Ann works now.
+
+
+  @{fg shine}@{b}v2.3
+  ~~~~@{ub}@{fg text}
+   @{fg fill}*@{fg text} ReAction is now used for just about everything except for the editor
+     itself! The Config, most notable, has been completely remade and now
+     has the same structure as SYS:Prefs/GUI. The remake of the config
+     also made it easier to add a lot more settings.
+
+   @{fg fill}*@{fg text} Tab characters are now supported! It's not 100% perfect but way
+     better than nothing.
+
+   @{fg fill}*@{fg text} UTF-8 support! It is possible to load files with UTF-8 to Latin1
+     conversion, and to paste text with UTF-8 to Latin1 conversion.
+     I don't know how to convert anything else than Latin1 now though.
+
+   @{fg fill}*@{fg text} Word wrap can now be performed when loading a text file.
+
+   @{fg fill}*@{fg text} Added busy-pointer to the editor windows when a requester is open.
+
+   @{fg fill}*@{fg text} Added a bunch of sneaky hotkeys that could be very useful:
+     * Ctrl+Del  deletes everything to the right of the cursor.
+     * Ctrl+BackSpace  deletes everything to the left of the cursor.
+     * Shift+Del  deletes all white spaces to the right of the cursor.
+     * Shift+BackSpace  deletes all white spaces to the left of the cursor.
+     * Ctrl+Enter  causes the very unique Anti-Enter! This is a
+       linefeed upwards in the text! (See the guide for more info.)
+     * Shift+Enter  temporarily inverts the Auto Indent flag.
+     * Alt+BackSpace  deletes a "tabs size" number of characters to the left.
+     * See the guide for a complete list of old and new key combinations.
+
+   @{fg fill}*@{fg text} Fixed a lot of hotkeys that didn't work.
+
+   @{fg fill}*@{fg text} It is now possible to change font.
+
+   @{fg fill}*@{fg text} Added proper Use and Last Saved to the Config.
+
+   @{fg fill}*@{fg text} It is now possible to side-shift text in steps of tab size, not
+     just one space at a time.
+
+   @{fg fill}*@{fg text} It is also possible to side-shift one line of text without
+     selecting it first.
+
+   @{fg fill}*@{fg text} Changed backup behaviour to rename the old file as #?.bak instead
+     of just writing two copies when saving.
+
+   @{fg fill}*@{fg text} The status line now has its own background colour and it is fixed
+     to the bottom of the window instead of the bottom of the text.
+
+   @{fg fill}*@{fg text} Enter now responds to key-repeat.
+
+   @{fg fill}*@{fg text} Arrow-keys now have the option to run through lines instead of
+     stopping at the beginning or end of the line it is on.
+
+   @{fg fill}*@{fg text} Now it is possible to abort a replace operation or a repeating
+     macro event by hitting Escape or clicking the window close button.
+
+   @{fg fill}*@{fg text} Added some info, like "Replace - Done" and "Replace - Text not found"
+     when replacing.
+
+   @{fg fill}*@{fg text} It is now possible to have newly paste text selected.
+
+   @{fg fill}*@{fg text} Various small cosmetic enhancements.
+
+   @{fg fill}*@{fg text} Fixed the scroll bar which got inverted when the window was very
+     small and there were only few lines of text.
+
+   @{fg fill}*@{fg text} Fixed pasting of multiple clip chunks, such as from YAM which often
+     caused garbage to be pasted into Ann. Now with UTF-8 paste support
+     it is very nice to be able to paste UTF-8 e-mails into Ann to be
+     able to read them comfortably :-)
+
+   @{fg fill}*@{fg text} Fixed a couple of bugs regarding selection of text. If in column
+     select mode and side-shifting until the block shrunk to zero size
+     it would crash. There were other old crashy selection bugs as well
+     that are fixed.
+
+   @{fg fill}*@{fg text} Fixed a couple of cosmetic selection bugs.
+
+   @{fg fill}*@{fg text} The text and background color wasn't used properly.
+
+   @{fg fill}*@{fg text} Fixed "Repeat next event" which didn't work at all as it got eaten
+     by mouse move events.
+
+  @{fg shine}@{b}v2.2
+  ~~~~@{ub}@{fg text}
+   @{fg fill}*@{fg text} When saving prefs the XML prefs file did not become well-formed and
+     could therefore not be read. How stupid of me to not test that in
+     the final release (it obviously worked in my betas).
+
+   @{fg fill}*@{fg text} Colors (pens) for most things can now be edited.
+
+   @{fg fill}*@{fg text} New look scroll bar! No more black boring rectangle (unless you
+     want to of course).
+
+   @{fg fill}*@{fg text} Diminished the "WINDOW TO SMALL TO SCROLL!!!" message even further.
+
+   @{fg fill}*@{fg text} Now Ann preserves protection bits of files which makes it a lot
+     more convenient to edit scripts with the 's' bit set for example.
+
+   @{fg fill}*@{fg text} Now you can choose to work with a filled cursor contrary to the
+     unfilled box.
+
+   @{fg fill}*@{fg text} Added Apply and Cancel to the preferences.
+
+   @{fg fill}*@{fg text} Now the Find and Number requesters only require Enter in the
+     string/integer gadget to close.
+
+   @{fg fill}*@{fg text} When the mouse is pressed down to scroll or mark text and another
+     program pops up a requester, the mouse won't stick to Ann any more.
+
+   @{fg fill}*@{fg text} Now the CPU-loop is all gone which means no flickering when the
+     mouse is pressed down somewhere in the editor or scroller.
+
+   @{fg fill}*@{fg text} Fixed a few small cosmetic issues.
+
+  @{fg shine}@{b}v2.1
+  ~~~~@{ub}@{fg text}
+   @{fg fill}*@{fg text} Now it's possible to have text unselected after it has been copied.
+   
+   @{fg fill}*@{fg text} Annotate handles Carriage Return (from PC texts) while reading and
+     a setting specifies if you want to save with or without Carriage
+     Return unrelative to the input file.
+   
+   @{fg fill}*@{fg text} Go to the beginning of the line now has one additional meaning:
+     Shift+Left or Home can now optionally place the cursor at the first
+     character in a line instead of at the very beginning.
+   
+   @{fg fill}*@{fg text} Annotate can now place successive windows in a smart way, cascading
+     I think, so they are easier to manage.
+   
+   @{fg fill}*@{fg text} If you never use Arexx with Annotate you can switch it off. This
+     will effectively remove the "Could not create arexx port" message
+     that always popped up if multiple instances of Annotate was started.
+   
+   @{fg fill}*@{fg text} The autoscroll when clicking in any outer region of the text in the
+     window can now be slightly delayed to make it possible to put the
+     cursor on a character in this area without accidently scrolling away.
+   
+   @{fg fill}*@{fg text} Added the current filename to the screen title bar to make it easier
+     to see what file is being edited if the name doesn't fit in the
+     status line.
+   
+   @{fg fill}*@{fg text} Now Annotate won't use 100% CPU when holding down the mouse button.
+   
+   @{fg fill}*@{fg text} Several code speed-ups when loading and saving files.
+   
+   @{fg fill}*@{fg text} Enabled pasting of 8-bit ASCII, and tab.
+   
+   @{fg fill}*@{fg text} It is now possible to have the Tab key insert real tabs into the text.
+     (It will only be displayed as one unprintable (blank) character though,
+     and will not induce an indentation as may be expected. A rewrite of
+     the draw routines will have to be made for that to work.)
+
+   @{fg fill}*@{fg text} PC-keys PgUp, PgDown, Home, End works as intended now.
+   
+   @{fg fill}*@{fg text} Annotate now remembers paths and filenames in requesters all the time
+     and everywhere. Also saves path so one can have a default path.
+
+   @{fg fill}*@{fg text} Made it possible to resize the window with contents.
+
+   @{fg fill}*@{fg text} Added a status message "Not found" after searching when nothing was found.
+
+   @{fg fill}*@{fg text} The "WINDOW TO SMALL TO SCROLL!!!" message can now be diminished
+     by letting Annotate scale the Scroll Unit to the window size.
+   
+   @{fg fill}*@{fg text} Now the editor window can be placed where one wants it and then
+     press "Get Window Dimensions" instead of guessing and entering the
+     values manually.
+
+   @{fg fill}*@{fg text} Now using XML for prefs saving and loading, removed s:AnnConfig saving.
+   
+   @{fg fill}*@{fg text} Removed the little window that popped up in the top-left corner at startup.
+   
+   @{fg fill}*@{fg text} Changed some menu hotkeys so they will work on (Swedish) PC-keyboards.
+     In the future all hotkeys will be configurable.
+   
+   @{fg fill}*@{fg text} Fixed the ever varying text mark color when used on hi/true-colour
+     screens.
+
+   @{fg fill}*@{fg text} Set the WFLG_NewLookMenus flag to make the menus look up-to-date.
+   
+   @{fg fill}*@{fg text} Added a checkmark to the Line/Vert select menu item to make it
+     easier to see what mode one is in.
+   
+   @{fg fill}*@{fg text} Fixed paste from empty clipboard which switched off Auto indent.
+   
+   @{fg fill}*@{fg text} Fixed paste from empty clipboard which marked the file as modified.
+   
+   @{fg fill}*@{fg text} Status wasn't displayed as modified when deleting characters, now it is.
+
+@endnode
+@node "Future" "What will come..!"
+
+    @{fg shine}@{b}Future@{ub}
+    ~~~~~~@{fg text}
+
+   @{fg fill}*@{fg text} Some other kind of minimize/iconify function, connected to AmiDock or
+     something perhaps. I have app.lib support now so it should be easy.
+
+   @{fg fill}*@{fg text} Add a screen selector and CLI parameters.
+
+
+    Following are things further into the future.. if I ever get the time.
+
+   @{fg fill}*@{fg text} Hex-editor mode.
+
+@endnode
+@node "install" "Installing Annotate"
+
+  @{b}INSTALLATION@{ub}
+       Annotate needs no special installation. Just copy the entire directory,
+  or just the executable of your choice, to any place on your hard disk.
+
+       Syntax highlighting: A note about the file "AnnotateSyntax.xml" though.
+  This file is meant to be put in ENVARC: to be accessible to Ann no matter
+  from where it is executed. However, you can also let it stay in the program
+  directory too, if you like. If it exists in both locations, the version in
+  the program directory will be read first so that you can have a special
+  version of the syntax file if you start Ann from a special place, but let
+  default be to read from ENVARC:.
+
+@endnode
+@node "intro" "Notes about Annotate"
+
+  @{b}FUNDAMENTALS@{ub}
+       Some of the basic concepts of this text editor are far different than 
+  regular text editors.  
+
+       Firstly, Annotate (Ann for short) has a cursor separate from the selection
+  unless the NotePad markmode is used. For instance, one could move the cursor
+  wherever he or she pleases without losing the selection.
+  A bit like "sticky selection" in other editors but not as annoying as I've
+  felt it to be in other editor. In fact, if one was to edit the text inside
+  the selection, the highlight would resize accordingly. So how to unselect
+  text then? - Simple: Just click on the cursor, or use the menu option Clear
+  Selection, preferably through its hotkey.
+
+       As this text editor was created with programmers in mind, it has many
+  features useful to programmers such as syntax highlighting and macros.
+
+       The cursor is drawn using complement, which means that it inverts the
+  color under it. This means that if you have a color equal or close to medium
+  grey (RGB=128,128,128) you will not see the cursor. In this case it is a
+  good idea to go into the Config from the Tools menu and change the background
+  color slightly to something darker or brighter.
+
+       The scroll bar also has features many other editors lack, such as that
+  it shows where the cursor is, and where it last was, in the text which makes
+  it easy to find your way back. It can also show where there are changes in
+  the text and more. The @{"Usage" link usage} page describes it in more detail.
+
+@endnode
+@node "usage" "Features of Annotate"
+
+  @{fg shine}@{b}Overview of how Annotate works
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~@{ub}@{fg text}
+
+       Annotate is a multi-window editor where each file is opened in its own
+  window. Editors (that is, opened files) can also be hidden from view using the
+  @{"Ed Exchange" link window_menu} so that you can effectively work on different
+  files in only one or just a few windows.
+
+       An editor window is very streamlined to give room to as many lines of
+  text as possible while still presenting useful status information using its
+  status bar and also the scrollbar.
+
+
+  @{b}Status Bar@{ub}
+       When editing text in Annotate, one would notice the current status line 
+  at the bottom.
+  
+  A typical display would look like this:
+  
+  @{bg shine} "DH1:Ann/AnnotateDoc"  Line:   25/85  Col: 30  Modified Sel Srl LS Char: 32@{bg back}
+
+  On the very left is the current document you are editing. It may be shortend
+  to show only @{bg shine}"../AnnotateDoc"  @{bg back} if there is not enough room for the whole path.
+
+  Next is the current cursor column and line display, then "Modified".  If
+  "Modified" is present the text has been edited since the last save, and Ann
+  will prompt for saving changes if you try to quit or load a new document.
+
+  "Sel" is used to indicate if there is any text currently selected. This is
+  useful as many menu items act on a selection, and not necessarily the cursor.
+
+  "LS" which may also say "VS" tells whether the current editor is in line
+  selection mode or vertical (i.e. block) selection mode.
+
+  "Srl" means that the numeric keypad is in scroll mode. It could also read
+  "Num" at which time you can input numbers with the keypad.
+
+  The last part shows the ASCII-value of the character under the cursor.
+
+  Also, any error messages are conveyed on this bottom line, temporarily
+  replacing the stats and displayed in another color.
+
+
+  @{b}Scroll Bar@{ub}
+       But not just any scroll bar. A scroll bar should show you where you 
+  are in relation to the top and bottom of text. Ann's scroll bar also 
+  shows you where your cursor, selection, last cursor position, and scroll
+  stores are.  Try it, you'll find it very useful.
+  
+       A very important part of Annotate is its ScrollStores, these beasties 
+  are used to save your current position in the document.  It is useful when 
+  programming, when trying to find the little piece of code within 100s of lines 
+  or more.  All one has to do, is set a ScrollStore there, and then call that 
+  same ScrollStore when one wants to return.  There are 6 different ScrollStore 
+  locations, so up to six positions may be saved.  - Note: ScrollStore merely
+  identifies vertical and horizontal scroll, not the actual text your 
+  looking at. On the scroll bar they appear as lines with a number under 
+  them to indicate which scrollstore the line represents.
+
+
+  @{b}Projects@{ub}
+       Since v3.0 Ann supports a simple kind of project model. This means that
+  it is possible to save the state of all opened files, editors and their windows
+  in a project file. See the @{"Project menu" link project_menu}. This file can later be opened again
+  and Annotate will then try to load all the files and open and position all
+  windows that were part of the project so everything looks just like when you
+  saved it.
+
+       Saving or opening a project will make all associated editors part of
+  the project. To disconnect the editors from the project, or close all editors
+  that are part of a project you can select @{"Close Project" link project_menu} from the menu.
+  When a project exists, saving the project will not automatically add new files
+  to the project. You need to close the project and then save it again to add
+  new files to the project.
+
+
+  @{b}Quick keys not in the menu, but editable in the config@{ub}
+
+       @{u}Ctrl + Left/Right Arrow keys@{uu}
+  Will move you to the beginning or end of the next word on the current line.
+
+       @{u}Shift + Left/Right Arrow keys@{uu}
+  Will move the cursor to the beginning of line and end of line. Beginning of
+  line can be interpreted in two ways: absolute beginning or first non-white
+  space character. You can change this in the Config window.
+
+       @{u}Shift + Up/Down Arrow keys@{uu}
+  Will move the cursor to the top of screen and bottom of the screen.
+  When already at the top or bottom of screen it will scroll the text
+  @{"scroll unit" link config} number of lines at a time.
+
+       @{u}Home/End/PageUp/PageDown@{uu} (The PC keyboard ones)
+  Works exactly as Shift + Arrow keys.  Note: These keys on the numpad,
+  including numpad arrow keys work a bit different.
+
+       @{u}Ctrl + Del@{uu}
+  Deletes everything to the right of the cursor.
+
+       @{u}Ctrl + BackSpace@{uu}
+  Deletes everything to the left of the cursor.
+
+       @{u}Shift + Del@{uu}
+  Deletes all white spaces to the right of the cursor.
+
+       @{u}Shift + BackSpace@{uu}
+  Deletes all white spaces to the left of the cursor.
+
+       @{u}Right Alt + BackSpace@{uu}
+  Deletes a "tabs size" number of character to the left of the cursor.
+
+       @{u}Shift + Enter@{uu}
+  Temporarily inverts the Auto indent flag. If you have Auto indent enabled in
+  the config but would like to make an unindented linefeed you can press
+  Shift + Enter. In the same manner, if you have Auto indent off but
+  temporarily want to use it you press Shift + Enter. If you don't know
+  what Auto indent is then this is a very good way of testing it :)
+
+       @{u}Ctrl + Enter@{uu}
+  Causes the unique Anti-Enter! This is a linefeed upwards in the text!
+  Think about this situation: You have the following line:
+
+@{fg shine}    if(whatever = 123) /* 123 is a magic number */@{fg text}
+
+  but you would like to have the comment on the line above the
+  if()-statement. Normally you would need to cut'n'paste, but with
+  Anti-Enter you just place the cursor at the end of the if()-statement
+  and press Ctrl + Enter and you automagically get this:
+@{fg shine}
+    /* 123 is a magic number */
+    if(whatever = 123)
+@{fg text}
+
+       @{u}Ctrl + LMB@{uu}
+  Select text without first moving the cursor to the place to select text.
+  This means that if you hold Ctrl, selecting text works as in most other
+  text editors.
+
+       @{u}Alt + LMB@{uu}
+  Inverts the selection mode such that you can make a @{"Rectangular Selection" link setting_menu}
+  without first switching to this mode from the menu. And vice versa if you
+  have selected rectangular mode you can hold an Alt key to temporarely make
+  a normal selection with the mouse.
+
+       @{u}MMB@{uu}
+  The middle mouse button can be configured in a variety of ways, explained
+  below. See the Clipboard page in the Annotate Config for all the settings.
+
+  - It can be configured to let you select text directly, like if holding Ctrl.
+  This is called Quick-select using MMB.
+  - It can be configured to let you select text and also copy it immediately
+  when you release the middle mouse button. This is called Quick-copy using
+  MMB. In this case the editor can also be configured to scroll back to the
+  last cursor position and also keep any previous selection. Perfect when
+  you just need to scroll away and copy something without loosing a selection
+  or cursor placement in the file.
+  - When configured to copy text you can hold Shift to copy into clipboard
+  unit 1 instead of 0.
+  - When configured to copy text you can hold Ctrl to cut text instead of
+  copying. Also works together with Shift to cut text into clipboard unit 1.
+  - It can be configured to paste text when clicking, sort of like in UNIX.
+  There are actually two way of doing this: One is to use the function of
+  pasting when clicking the MMB. This way works best together with Quick-copy.
+  The second is to enable the UNIX Primary Selection emulation. This way
+  works best together with Quick-select.
+
+  @{b}A word about making selections@{ub}
+       Normally Ann has an unfilled box for a cursor but if you click down
+  on the cursor it will become filled in. If you drag the cursor to a new 
+  position and let go Ann will make a selection from where you started to 
+  where you ended.
+
+  @{b}About the close gadget@{ub}
+       It should be noted that hitting the close gadget in Ann's last window
+  (which would cause most programs to quit) Ann will close the editor in 
+  the window but will not close the window if there is an editor in the 
+  external editor list. Instead it will put the first external editor into 
+  the window. However if there is not an external editor Ann will quit 
+  just like most programs. External editors are managed using the Ed Exchange.
+  
+  If you hold Ctrl when closing a window a file that has been modified will
+  be discarded without a warning.
+
+@endnode
+@node "startup" "Startup"
+
+  @{b}Starting from Workbench:@{ub}
+
+     To start Ann from Workbench simply double click on the Ann icon in 
+     which case Ann will appear with the ASL file requester ready for you 
+     to use, or by double clicking on a project icon with Ann as the default 
+     tool in which case Ann will appear and immediately load the file.
+
+     It is also possible to start Ann by Shift-clicking with other files
+     in which case Ann will load these immediately. See also "Open documents/
+     new editor in the same instance" under Options in the @{"Config" link config}.
+
+
+  @{b}Starting from the Shell:@{ub}
+
+     If you start Ann from the shell you have the option of suppling a 
+     file list to be loaded at startup. See also "Open documents/new editor
+     in the same instance" under Options in the @{"Config" link config}.
+
+     On startup Annotate will search for its config files. Ann looks for 
+     three files:
+
+          1) ENV:Annotate.xml
+          2) Default.AnnMacs
+          3) ENV:Annotate.autoupdate
+          4) ENVARC:AnnotateLastLine.xml
+
+     1) Annotate.xml contains the default settings for window placement, 
+     rendering options, etc. It is created by use the "Save" and "Use"
+     gadgets in the Config window.
+
+     2) Default.AnnMacs is a Macro file created by using the "Save Macros" 
+     command from the menu. Ann looks for Default.AnnMacs in the Current 
+     directory and if it is not found there then Ann searches S:.
+
+     3) Annotate.autoupdate is used to keep track of when was the last time
+     Ann checked for updates over the net. Usage of this is configurable.
+
+     4) AnnotateLastLine.xml contains the last line each file was last
+     visited if this feature is enabled in the config.
+
+     If any of these files are not present Ann will resort to its built-in
+     default settings for that file.
+
+     When Ann has loaded all config files it will open on the configured screen.
+     Ann will also use the default fonts of the screen unless otherwise
+     configured. Also Ann must run on a screen at least 640x200. If the
+     default public screen is smaller this 640x200 Ann will fail to open
+     and supply an error message that the screen is to small.
+
+@endnode
+@node "config" "The Configuration Window"
+
+  @{fg shine}@{b}The Configuration Window
+  ~~~~~~~~~~~~~~~~~~~~~~~~@{ub}@{fg text}
+
+  This window contains settings regarding the behavior and appearance
+  of Annotate. See below for an explanation of all settings.
+
+  The new config window consists of six topics listed to the left in
+  the config window.
+
+  @{u}Editor@{uu}
+
+    @{fg shine}Operation@{fg text}
+
+      @{b}Smart start of line@{ub}
+        Normally when Shift+LeftArrow or Home is pressed Ann will move the
+        cursor to the actual beginning of the line. With this switch Ann
+        will instead move the cursor to the first non-white character of
+        a line. However, if the cursor is already on the first non-white
+        character or to the left of it, but not at the actual beginning,
+        it will instead move the cursor to the actual beginning of the line.
+
+        This behavior can be seen in many text editors.
+
+      @{b}Auto indent@{ub}
+        Normally when pressing Enter, a new line will be made and the
+        cursor will be put at the beginning of that line. With this switch
+        Ann will instead insert as many spaces at the beginning of the
+        new line as there are spaces in the previous line and thus put
+        the cursor right below the first non-white character of the
+        previous line.
+    
+        This behavior can be seen in many text editors.
+
+        @{u}NOTE:@{uu} This setting is editor local which means that if you change
+              this, only the editor from which you opened the config will
+              see the effect of the change unless you press @{b}Apply@{ub} which
+              will cause the change to be applied to all open editors.
+
+      @{b}Arrow-keys move through lines@{ub}
+        Normally the cursor stays on one line when you use the left and
+        right arrow keys, i.e. if you are at the end of a line the cursor
+        won't go any further, but with this enabled the cursor will in
+        this case go to the beginning of the next line, like most editors
+        do.
+
+      @{b}Key-repeat Del/BackSp through lines@{ub}
+        When you hold in the Delete or Backspace key to delete character
+        and you have deleted a hole line it will automatically start
+        chewing on the next line. This can be dangerous as you might
+        remove too many characters.
+        If you disable this setting the Delete and Backspace keys will
+        stop deleting when reaching the end or beginning of the current
+        line when held down. You then have to let go and press again to
+        continue with the next line.
+
+      @{b}Remember cursor positions@{ub}
+        Deselect this if you don't want the cursor to jump unexpectedly
+        after pasting and typing text.
+
+    @{fg shine}Tabulators@{fg text}
+
+      @{b}Tab-key inserts real tab@{ub}
+        If you select this then the tab key will insert real tabs (ASCII 9)
+        into your text instead of a series of spaces. Note that tabs are
+        currently always drawn the size of @{b}Tab size:@{ub} ignoring
+        any implied tabstops. Tabs are therefor currently only useful at
+        the beginning of lines, not to make nice columns in the middle of
+        text. That will come in a later version of Ann.
+
+        This however makes it possible to edit makefiles which require tabs.
+
+        The Load option "Set tab mode and indent mode depending on if files
+        contain tabs" can override this setting.
+
+        @{u}NOTE:@{uu} This setting is editor local which means that if you
+              change this, only the editor from which you opened the config will
+              see the effect of the change unless you press @{b}Apply@{ub} which will
+              cause the change to be applied to all open editors.
+
+      @{b}Tab-key indents@{ub}
+        Normally the tab key inserts a tab character or a series of spaces.
+        With this switch it is however possible to make it act also as an
+        indent key. When this switch is activated the tab key acts as follows
+        (deciding in this order):
+        1. If the cursor is at the left edge the line will be indented to
+           the same depth as the previous line, unless the previous line is
+           not indented at all. In that case normal tab behaviour is applied.
+        2. If the cursor is on any of the leading white spaces of a line
+           and more to the left than the indentation of the previous line
+           the line will be indented as the previous line.
+        3. If the cursor is on any of the leading white spaces of a line
+           but further to the right than the indentation of the previous
+           line, the current line will be indented to start where the cursor
+           is at.
+        4. If the cursor is on any other character, normal tab behaviour is
+           applied, i.e. a tab character, or a set of space characters will
+           be inserted.
+
+      @{b}Auto indent with tabs@{ub}
+        Select this if you like Ann to fill the auto indented space with
+        tabs instead of spaces.
+
+        The Load option "Set tab mode and indent mode depending on if files
+        contain tabs" can override this setting.
+
+        @{u}NOTE:@{uu} This setting is editor local which means that if you
+              change this, only the editor from which you opened the config will
+              see the effect of the change unless you press @{b}Apply@{ub} which will
+              cause the change to be applied to all open editors.
+
+      @{b}Side-shift with tabs@{ub}
+        When you use the menu functions to @{"shift" link edit_menu} text sideways it may be
+        desirable to shift with the size of tabs instead of single spaces.
+        In that case you can enable this setting.
+
+        @{u}How it works:@{uu}
+          When in normal selection mode:
+            When shifting to the right:
+              A tab will be inserted at the beginning of every selected line.
+
+            When shifting to the left:
+              If a tab char is found at the beginning of a line it will be
+              deleted. If not, the line will be searched until the first
+              non-with space is found and then the last white spaces will
+              be deleted in such a way that the text has shifted exactly tab
+              size number of characters.
+
+          When in vertical selection:
+            When shifting to the right:
+              A tab will be inserted at the position the vertical block
+              starts at if the line does not start to the left of the
+              selection, then the line will be unaffected.
+
+            When shifting to the left:
+              If a tab char is found at the position the vertical block starts
+              at, it will be deleted. If not, the line will be searched until
+              the first non-with space is found and then the last white spaces
+              will be deleted in such a way that the text has shifted exactly
+              tab size number or characters. Nothing will be done if the line
+              ends before the block selection starts.
+
+      @{b}Tab size:@{ub}
+        Specifies how many spaces should be inserted when you press the
+        Tab key, provided that you don't have @{b}Tab Inserts Real Tab@{ub} selected
+        because then one tab character will be inserted but displayed as
+        if it were this number of spaces. This is also the number of spaces
+        that will be inserted for every tab character found when reading a
+        text file containing spaces when you confirmed to convert tabs to
+        spaces.
+
+        @{u}NOTE:@{uu} This setting is editor local which means that if you
+              change this, only the editor from which you opened the config will
+              see the effect of the change unless you press @{b}Apply@{ub} which will
+              cause the change to be applied to all open editors.
+
+    @{fg shine}Scrolling@{fg text}
+
+      @{b}Numpad scroll-keys on@{ub}
+        This setting works pretty much the same way a NumLock key works on
+        a PC(-keyboard). Enabling this setting will make the numpad keys
+        scroll the text in different directories but without the cursor
+        following.
+
+      @{b}Cursor follows scroll-keys@{ub}
+        Select this if you like the cursor to follow when you scroll using
+        the non-cursor scroll-keys.
+
+      @{b}Ignore wheel acceleration@{ub}
+        In OS4 Final there is a setting to accelerate the mouse wheel
+        movements. This can make Ann scroll very much every time which may
+        not be desired. With this switch it is possible to ignore the
+        acceleration set in the OS and only let Ann decide how much to
+        scroll instead.
+
+      @{b}Disable horizontal scrolling@{ub}
+        Normally the scroll wheel will scroll the text side-ways if the
+        scroll wheel is used outside to the left or right of the editor
+        window unless you have a second wheel dedicated for horizontal
+        scrolling that you have used. This can be annoying if you, like
+        most people, only have one vertical scroll wheel.
+
+      @{b}Use dynamic scroll unit@{ub}
+        Ann will automatically scroll if you click in an outer region
+        of the text, or try to move the cursor to an outer region. Now
+        if the editor window is made so small that these regions overlap
+        from left to right or top to bottom it will be impossible to scroll
+        the text in the window.
+    
+        If this switch is set then Ann will try to automatically scale
+        the scroll unit (i.e. the outer region size) to always fit in the
+        window.
+
+      @{b}Static scroll unit:@{ub}
+        Specifies how many lines vertically, and characters horizontally,
+        at the edges of the text area that will trigger scrolling of the
+        text. The further out in these outer regions defined by the scroll
+        unit you click with the mouse, the faster the text will scroll.
+
+      @{b}Scroll delay (ms):@{ub}
+        When clicking in one of the outer regions of the text, the text
+        will start to scroll. This is a very convenient feature, but can
+        be annoying when you only want to place the cursor on a line
+        or character in this scroll area. Therefor there is a small delay
+        before the scrolling begins to make it possible to place the cursor
+        with a short mouse click without accidently scrolling away. This
+        field specifies how many milliseconds to wait before scrolling
+        begins. See also @{b}Static scroll unit@{ub}.
+
+    @{fg shine}Word Wrap@{fg text}
+
+      @{b}Word wrap while typing@{ub}
+        This will perform simple word-wrapping as you type. It does not
+        work like in fancy wordprocessors where a complete section can be
+        edited and wrapped on-the-fly. The internals of Ann will not allow
+        that without a major rewrite.
+
+      @{b}Word wrap column:@{ub}
+        Sets the column, i.e. line length, at which the word wrap should
+        occur.
+
+
+  @{u}Clipboard@{uu}
+
+    @{fg shine}Copy'n'Paste@{fg text}
+
+      @{b}Keyboard select qualifiers@{ub}
+        What key should be used as qualifier for keyboard selection.
+        You hold down the key of your choice, for example the Alt key,
+        and use arrow keys for move the cursor and mark text.
+
+      @{b}Selection mode@{ub}
+        Choose how Ann should treat selections:
+        - @{u}Annotate@{uu} mode is a sticky mode and the normal way Ann always have
+          handled selections. In this mode you must click @{i}on @{ui}the cursor to
+          start or cancel a selection using the mouse. Typing, moving the
+          cursor or deleting text or clicking somewhere else than on the
+          cursor will not alter the selection.
+          I would say this is the most efficient mode when you get used to it
+          and using a hotkey for menu->Edit->Selection->None to cancel selection
+          and the @{b}Quick-select using MMB click'n'drag@{ub} setting.
+
+        - @{u}Notepad@{uu} mode is a volatile selection mode that is used by
+          most editors, such as NotePad. Anything will cancel a selection such
+          as clicking anywhere with the mouse, typing text or moving the cursor.
+          This is the least efficient mode and I only recommended for people who
+          have worked too much with editors of this type and cannot change their
+          habits.
+
+        - @{u}Quick-select@{uu} is a sticky mode but not as sticky as @{u}Annotate@{uu}. It lets
+          you start or cancel a selection by clicking anywhere on the text, like
+          @{u}Notepad@{uu} mode, but moving the cursor or typing text will not
+          cancel the selection.
+          Useful compromise if you find the @{u}Annotate@{uu} mode annoying.
+
+      @{b}Let a selection be replaced when pasting@{ub}
+        This setting make Ann replace a selection when you paste. Many
+        editors work this way.
+
+      @{b}Delete key deletes selection@{ub}
+        If this is selected the Delete key will delete a selection of
+        text as in many other editors, instead of only delete characters
+        regardless of any selection.
+
+      @{b}Unselect marked area after copy@{ub}
+        Ann features a kind of sticky selection. This means that text
+        that is marked will stay marked until you explicitly unmark it by
+        clicking within the cursor (or effectively double-click anywhere
+        @{u}on@{uu} the text). With this switch selected text will unmark itself
+        when it is copied.
+        This setting does not affect the Emulate UNIX copy'n'paste method.
+
+      @{b}Select pasted text@{ub}
+        With this enabled blocks you paste will be selected. This can be
+        useful especially with vertical selection to be able to see exactly
+        how it got pasted which is not always so easy with vertical pastes.
+
+      @{b}Paste with UTF-8 to Latin1 conversion@{ub}
+        Ann has a UTF-8 filter that you can paste text through. Useful
+        when you have some text in UTF-8 in a mail or on a homepage that
+        you would like to be able to read more easily.
+        Just start Ann, enable this setting and paste the text into Ann.
+
+
+      @{b}Double-click to select a word of block@{ub}
+        When this is selected a double-click @{u}on the cursor@{uu} will select a word
+        or block. This is somewhat intelligent:
+        If you double-click (DC) on a letter or digit Ann will select all
+        adjacent letters and digits.
+        If you DC on an underscore ('_'), both letters, digits and underscores
+        will be selected.
+        If you DC on any of these: "+*/-=<>&|%?:" an entire expression can
+        be selected.
+        There are more combinations, like double-clicking an '@' sign to select
+        an e-mail address.
+
+        To select a block you can DC on any of ({[]}) and everything between
+        it and its counterpart will be selected. This is an easy way of matching
+        braces.
+
+      @{b}Triple-click to select a line@{ub}
+        When this is selected you can triple-click @{u}on the cursor@{uu} to select
+        a complete line.
+
+
+      @{b}Quick-select using middle mouse-button click'n'drag@{ub}
+        This lets you select test anywhere directly using the MMB.
+        Quick is useful together with the Emulate UNIX way of copy'n'paste.
+
+      @{b}Quick-copy using middle mouse-button click'n'drag@{ub}
+        Using the middle mouse-button (MMB) to copy or cut text becomes possible
+        when this is selected. Adding Shift makes the copy go into clipboard
+        unit 1 instead of the normal unit 0. Adding Ctrl makes it cut text
+        instead of copying.
+        Not recommended together with the Emulate UNIX way of copy'n'paste.
+
+      @{b}Paste with the middle mouse-button@{ub}
+        Lets you paste text by clicking the MMB. The text will be pasted at
+        the location you click, which might not be where the cursor currently
+        is. Add Shift to make it paste from clipboard unit 1 instead of 0.
+        When used together with MMB Quick-copy it pastes when the button is
+        released without having moved. (If moved a quick-copy will then happen
+        instead.)
+
+      @{b}Remember last cursor position after MMB quick-copy or paste@{ub}
+        To make the two above options powerful this option is also enabled.
+        It will make the cursor jump back to its previous location in the text.
+        It also preserves any previous selection even after a quick-copy.
+
+      @{b}Jump to last cursor position after MMB quick-copy@{ub}
+        Much like the above option but also scrolls the editor back to the
+        last position instead of only setting the cursor back.
+
+      @{b}Emulate UNIX "Primary Selection" way of copy'n'paste@{ub}
+        If you like the UNIX way of copy'n'pasting you may want to enable this option.
+        This is similar to the above Quick-copy and Paste with MMB options.
+        However, if you have used Linux or UNIX you know that it can work a
+        bit different. Let me explain:
+        To copy text, you first just select text anywhere, in any editor.
+        Then you click the middle mouse button where you want the text copied
+        to, which may be in another, possibly inactive, window.
+        To move text, i.e. to cut'n'paste you do the same. That is, you select
+        the text you want to cut and paste, i.e. move. Then you hold the Ctrl
+        key while clicking with the middle mouse button and the selected text
+        will move there.
+
+        Note: Beware that in AmigaOS (and Annotate) you can have text selected
+        in many programs and windows at the same time. This is not possible in
+        UNIX. This makes it uncertain which selected source will be used when you
+        use this function in Ann if you have many windows open an text selected
+        in more than one window.
+        One this is for sure though; it will always look in the active window
+        first before it starts scanning the other editor windows for selections.
+
+
+  @{u}Hotkeys@{uu}
+
+    In this page you can edit most hotkeys in the program. The treeview
+    first contains a list of the menu actions and then a list of all invisible
+    keyboard command actions and their current hotkeys.
+
+    @{fg shine}Keyboard shortcuts@{fg text}
+
+      @{b}Add@{ub}
+        Here you can add a new action. If you would like to add another
+        hotkey for a menu action you selected that menu action and click
+        Duplicate instead. This list contains only the hidden actions.
+
+      @{b}Duplicate@{ub}
+        Click this if you would like to add another hotkey for the selected
+        action.
+
+      @{b}Edit@{ub}
+        Click here to edit an action. A window will open in which you press
+        your hotkey. Close the input window when finished.
+
+        You can also double-click in the list to edit a hotkey for an
+        actions. You can also edit menu actions that have a blank hotkey.
+        This is how you add a hotkey for a menu action that doesn't already
+        have a hotkey defined.
+
+      @{b}Remove@{ub}
+        Click to remove the selected hotkey. Removed menu action hotkeys
+        will get a blank hotkey while hidden actions will be removed from
+        the list. Use Add to add a removed invisible action.
+
+      @{b}Repeat@{ub}
+        This switch tells if the current hotkey should also accept key-repeat
+        events. Arrow keys and such is most efficient with key-repeat while
+        events such as Save should not accept a repeating event, but the
+        choice is yours.
+
+
+  @{u}Appearance@{uu}
+
+    @{fg shine}Graphics@{fg text}
+
+      @{b}Right side window border scroll bar@{ub}
+        Enable a normal intuition scroll bar in the right side window border.
+        Note that you need to close and reopen any windows for this setting
+        to take effect.
+
+      @{b}Filled cursor@{ub}
+        Normally the cursor is unfilled until you start to select text with
+        the mouse. Select this to invert this behavior, i.e. type with a
+        filled cursor.
+
+      @{b}Visible text selection@{ub}
+        Before Ann v2.4 the selection of text which selecting it was not visible.
+        With v2.4+ this setting exists and is default. It enables visible
+        selection while making them, as more editors to it.
+
+      @{b}Show edited lines in the scroll bar@{ub}
+        This setting will make edited lines show as marks in the left side
+        scroll bar to make it very easy to find your way back to a place
+        you have just edited.
+        The marks are reset everytime a file is saved.
+
+    @{fg shine}Text@{fg text}
+
+      @{b}Show Line/Col/Char in the status bar@{ub}
+        Select this to make the status bar display the current line and
+        column the cursor is on and also what ASCII-value the character
+        under the cursor has.
+
+      @{b}Draw linefeeds & tabs in the text@{ub}
+        Select this to make Ann draw the end of lines with a '¶' character.
+        Tabs will be drawn as a line with a small knee on unless syntax
+        highlighting is enabled.
+
+      @{b}Show locked lines as underlined@{ub}
+        Select this to make Ann mark what lines have been locked from editing.
+
+    @{fg shine}Font@{fg text}
+
+      @{b}Use system default font@{ub}
+        This is the default, to use the same font as e.g. Shell uses.
+
+        If this is unselected it is possible to select another font
+        using the font requester in the field below. Only fixed fonts
+        are supported.
+        Note: When trying out new fonts you cannot go back to using the
+        system default font without restarting Ann.
+
+    @{fg shine}Ed Exchange@{fg text}
+
+      @{b}Open Ed Exchange on startup@{ub}
+        Opens the project and file manager Ed Exchange on startup which
+        makes it a lot easier to handle multiple opened files.
+
+
+  @{u}Colors@{uu}
+
+    Here you select what pens you like to use for the different parts
+    of the editor, such as text, scroll bar, etc.
+
+
+  @{u}Window@{uu}
+
+    @{fg shine}Operation@{fg text}
+
+      @{b}Put filename in window title@{ub}
+        Shows the current filename instead of "Annotate 3.0" in the window
+        title bar of each editor window.
+
+      @{b}Smart new window placing@{ub}
+        When opening Ann it will read the configuration file and see where
+        to open its window and how large it should be. When opening more
+        windows they will normally be put right on top of each other which
+        can make it hard to flip between them. This switch makes a new
+        window open slightly to the right and slightly lower than the
+        previous window to make it easier to flip between them.
+
+      @{b}New window opens relative to current@{ub}
+        Select this if you would like new window to open as the current
+        instead of using the default size and position.
+
+      @{b}Silent window activation@{ub}
+        Normally, whenever you click in the text editor window, the cursor
+        will be placed. This is not always desired though if the window
+        was inactive and you only wanted to activate the window. This
+        switch makes it possibly to activate the window by clicking once
+        on the text without moving the cursor.
+
+      @{b}Remember file requester position@{ub}
+        When this is enabled Ann will remember (and save when you save config)
+        the position and dimension of the file requester. When this is not
+        selected the requester will open at the top left of the current
+        editor window.
+        NOTE: The size is ignored if your ASL Prefs in AmigaOS is set to
+              override the dimension of ASL requesters.
+
+    @{fg shine}Dimensions@{fg text}
+
+      @{b}Window left edge@{ub}, @{b}Window top edge@{ub}, @{b}Window width@{ub}, @{b}Window height:@{ub}
+        The default size and position the editor window will open at.
+
+      @{b}Get window dimensions@{ub}
+        This button will read the current size and position of the window
+        from which you opened this config window and put these values in
+        the fields described above. Easier than to guess and type them in
+        manually when editing default startup preferences.
+
+    @{fg shine}Screens@{fg text}
+
+      These settings lets you configure on what screen Ann should open.
+      Options are Workbench, frontmost screen (which could be for example
+      DirOpus) or a new public screen.
+
+      It also has settings for background picture.
+
+      Depending you your setting when starting more than one instance of
+      Ann, it can be configured on what screen further instances should
+      open on.
+
+
+  @{u}Options@{uu}
+
+    @{fg shine}Program settings@{fg text}
+
+      @{b}Open file requester when starting from Workbench@{ub}
+        This setting will make Ann open a file requester if Ann is started
+        from Workbench without shift-clicking another file to edit.
+
+      @{b}Open documents in the same instance@{ub}
+        Sometimes it may be practical to have all open documents open in the
+        same currently running instance of Ann to be able to share Find/Replace
+        requester strings and other settings.
+        Selecting this will cause any new extra started instance of Ann with one
+        filename parameter to send this filename to the already running process
+        to open it there instead of starting a new instance Ann. Note that it
+        only works when starting Ann with one parameter, or shift-clicking on
+        one other icon.
+
+      @{b}Open new editors in the same instance@{ub}
+        This is similar to the above setting, but instead of opening files in
+        the one running instance it will take effect only when starting Ann
+        without arguments, i.e. starting Ann will be the same as choosing
+        New from the Project menu in the already running instance of Ann.
+
+      @{b}Remember the line last visited when opening files@{ub}
+        This is a useful feature that makes it easier to remember where you
+        last edited a file when opening the file again. It will write the
+        file ENVARC:AnnotateLastLine.xml everytime you save to record where
+        in the file you last edited and use this information when the file
+        is opened again later.
+
+      @{b}Disable ARexx@{ub}
+        Usually Ann opens a comprehensive ARexx port when started, but if
+        more than one copy of Ann is started independently, all but the
+        first will fail to open this ARexx port and will let you know
+        through a requester. This switch disables the ARexx port completely.
+
+        If you want ARexx @{u}and@{uu} be able to start multiple instances it
+        is suggested to enable the above two options.
+
+      @{b}Disable only the ARexx warning@{ub}
+        Use this switch to disable the warning you see when Ann fails to open
+        the ARexx port, mostly due to the fact that one copy of Ann is already
+        running.
+
+      @{b}Auto Update Annotate when a new version is available@{ub}
+        When this is selected Ann will look over the Internet if a new version
+        of Ann has been released. It will not look more often than every
+        5 days. You will of course be asked what to do. Nothing will be
+        installed without your approval.
+
+        @{b}Check Now@{ub}
+          This button will open the update window with which you can check for
+          new versions, see new changes and download an update.
+
+      @{b}Beep or flash the screen on warnings and errors@{ub}
+        Makes you hear a beep or flash in the screen when you try to search
+        once more after the last occurrence has been found and the search
+        wraps around from the beginning (or end) again, or when a file cannot
+        be saved, or when a new update is available, or when you try to undo
+        or redo but the buffer is at the end.
+
+    @{fg shine}Search and Replace@{fg text}
+
+      @{b}Default search method:@{ub}
+        The Find and Replace functions offer five ways of searching for
+        text. This gadget specifies the default way.
+
+      @{b}Default replace prompt type:@{ub}
+        When replacing there are three ways of being prompted before
+        replacing. This specifies the default way.
+
+
+  @{u}Syntax@{uu}
+
+    @{fg shine}Syntax Highlighting@{fg text}
+
+      @{i}Lister @{ui}
+        This lister contains all languages that have syntax highlighting loaded
+        and available in Ann at the moment. The file "AnnotateSyntax.xml" contains
+        the definitions of the highlighting schemes.
+        See @{"Syntax" link syntax} for an explanation of how to edit this file.
+
+      @{b}Enable syntax highlighting@{ub}
+        This switch is a master switch for the whole highlightning engine.
+        If it is switched off the old draw routine will be used and no colors
+        or styles will be used.
+
+        When this switch is on all files that are loaded will be attempted
+        for qualification for any of the different languages defined. If no
+        qualification matches the contents of the file loaded it is assumed
+        it is a plain text file and will get no syntax highlightning.
+
+      @{b}Add file@{ub}
+        With this button you can easily add your own syntax file or one of
+        the contribution files to your installation without editing the main
+        syntax file yourself.
+
+      @{b}Edit@{ub}
+        This will open the syntax file (which is in XML format) into a new editor
+        so you can edit it. (You need to exit the Config to edit.)
+
+      @{b}Reload@{ub}
+        This button reloads the syntax file "AnnotateSyntax.xml". It first tries
+        to load it from current directory. If not found it will search ENVARC:.
+        It can be useful to reload the syntax file when making and trying out
+        a new scheme for a new language.
+        Click @{b}Apply@{ub} to put the new colors on the current editor directly without
+        exiting the config.
+
+
+  @{u}Tools@{uu}
+
+    Allows you to add commands for the F-keys. These command will appear in
+    Ann's Tools menu.
+
+
+  @{u}Load/Save@{uu}
+
+    @{fg shine}Loading@{fg text}
+
+      @{b}Word wrap while loading@{ub}
+        If you have a textfile without line breaks or linefeeds in it, it
+        can be useful to be able to have this text word wrapped when you
+        load it, else it will end up on one very long line which makes it
+        hard to read.
+
+      @{b}Load with UTF-8 to Latin1 conversion@{ub}
+        In case you have a text encoded in UTF-8 Latin1 you may want to
+        select this before loading it to have it converted back to normal
+        8-bit ASCII.
+
+      @{b}Set tab mode and indent mode depending on if files contain tabs@{ub}
+        This setting will cause the Editor settings "Tab-key inserts real tab"
+        and "Auto indent with tabs" to be set automatically depending on if
+        a file contains any tab characters or not when it is loaded.
+
+      @{b}Default directory:@{ub}
+        Unless Ann is started with a file as argument, this is the directory
+        the file requester will default to.
+
+    @{fg shine}Saving@{fg text}
+
+      @{b}Save carriage return (MS-DOS)@{ub}
+        Select this to make Ann save not only the Line Feed (0x0A) character
+        as a line break, which is standard on Amiga and UNIX, but instead
+        save the combination of Carriage Return + Line Feed (0x0D0A), which
+        is standard in DOS and Windows. If you intend to read a file in
+        MS Notepad you will need this.
+
+        Note that Ann automatically flushes carriage returns in files
+        when loading so even if your file had CR in it, you will need
+        to enable this before saving to put them back there.
+
+      @{b}Create icons for saved files@{ub}
+        Select this if you want Ann to create icons for the files that
+        are saved.
+
+      @{b}Backup last file as #?.bak when saving@{ub}
+        Select this if you want Ann to make backup files whenever a file
+        is saved. The behavior of this function has changed slightly
+        since v2.2 of Ann.
+
+        Whenever you save a file there will always be two copies.
+        If you save a new file it will be saved twice where one of them
+        will get the extension '.bak'. If you attempt to overwrite an
+        existing file, this old existing file will be renamed with the
+        extension '.bak' before your file is saved. This way you will
+        have access to the second latest file with the same name.
+
+      @{b}Save when window is inactivated@{ub}
+        If this is selected the editor will automatically save a
+        modified file everytime you select another window so that the
+        current editor window gets inactive.
+
+        This is useful if you do many small changes in a row while using
+        another application to test the result everytime, like when fixing
+        compiler-errors. Then you never need to worry about saving everytime
+        because the editor will do that automatically when you click in the
+        shell to compile, or whatever it may be you are doing.
+
+      @{b}Save modified editors every [X] minutes@{ub}
+        This is a times auto-saving feature. Nothing strange. It will
+        save all modified editors at the interval you specify.
+
+        A note about backup files though: If saving backups is selected,
+        the backup file will only be automatically written if it does
+        not exist. If a backup exists it will not be overwritten by any
+        of the auto-saving features!
+
+
+
+  @{b}Apply@{ub}
+    Apply and test the settings in the editor windows without closing
+    the config window and with the possibility to discard the changes.
+
+    Apply also sets editor-local settings such as @{b}Tab size@{ub} for all
+    editors.
+
+  @{b}Save@{ub}
+    Closes the config window and saves the settings to ENVARC:Annotate.xml.
+
+  @{b}Use@{ub}
+    This closes the config window with the current settings and saves
+    them to ENV:.
+
+  @{b}Cancel@{ub}
+    Discard the changed settings and close the config window.
+    If you have applied a new font, it will not be reverted back to the
+    previous font in the editor, only in the actual font selection field.
+    Changed hotkeys will not be reverted either.
+
+
+@endnode
+@node "syntax" "Syntax Highlightning"
+
+  @{fg shine}@{b}Format of the language definition file
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~@{ub}@{fg text}
+
+  This chapter describes the file containing the syntax highlighting
+  definitions for the languages. The file is called "AnnotateSyntax.xml"
+  and should be place in the current directory of a specific project
+  and/or ENVARC: to be accessible from anywhere.
+
+  The highlighting is based on @{i}tokens@{ui}. A token is a short string
+  containing a special word or character(s) that should be applied a certain
+  text style of color.
+  Example: In the language C, "if" is a common token, as well as "(" and ";".
+
+  The file is in XML format and there are a limited number of supported
+  tags used to build the color and style codes for a language. All tags and
+  their attributes are case sensitive! Here is a hierarchical summary of the
+  possible tags:
+
+  <Ann-SyntaxHighlighting> - The !DOCTYPE of the file. (This tag is ignored by Ann.)
+    <SyntaxFile>           - Defines an external xml file containing one or more languages.
+    <Syntax>               - Defines a new language.
+      <Name>               - Name of language (max 27 characters).
+      <Qualifying>         - Contains recognition rules for a language.
+        <OrTokens>         - A minimum number of these tokens must be in a file.
+        <AndTokens>        - All of these tokens must be in a file.
+        <FilePattern>      - A file should have a name matching this pattern to be recognized.
+
+      <Tokens>             - Number of tokens in this language.
+      <Token>              - A character array (max 27 chars) assigned a style and color.
+      <ComplexToken>       - A complex token typically consisting of a start and end token.
+        <Token>            - Start token.
+        <MatchToToken>     - End token.
+        <MatchToEOL>       - If end token is not found, color will be applied to the the end of line.
+        <MultiLine/>       - If end token is not found, color will be applied over the rest of the entire file.
+
+
+  @{u}Short lesson in XML@{uu}
+
+  To spare you from reading up on XML, here are some pointers useful to know:
+  - XML does not define any tags by itself (like HTML do).
+  - A tag starts like this: @{fg fill}<Tag>@{fg text} It ends like this: @{fg fill}</Tag>@{fg text} (just like HTML).
+  - Between the start and end tags there can be almost any text data.
+  - If you encounter problems, encapsulate your text like this:
+    @{fg fill}<Tag><![CDATA[My difficult data containing both "<" & ">" characters]]></Tag>@{fg text}
+  - A tag without any data (possibly only attributes) does not need an end tag
+    but can look like this: @{fg fill}<Tag/>@{fg text} or this: @{fg fill}<Tag attr="true"/>@{fg text}
+  - These characters are special and need escaping: &  <  >  "  '
+    They are escaped (in order) like this: &amp;  &lt;  &gt;  &quot;  &apos;
+  - Using escaped characters does not work (well) as text data between tags,
+    only in attribute text.
+  - Attributes are written like this: @{fg fill}<Tag attribute1="my attr1" my_num_attr="1234">@{fg text}
+  - All attribute data must be in "quotes" (unlike HTML).
+
+
+  @{u}How to create a syntax definition@{uu}
+
+  There are basically two parts of an Annotate syntax definition:
+  1. The qualifying part.
+  2. The token part.
+
+  The qualifying part is used by Ann when a file is loaded to be able to
+  recognize which one of all syntax definitions this file should use. It does
+  this by looking for specific tokens in the file. If it finds enough tokens
+  according to a qualifying set that syntax definition will be used. If not,
+  it continues in the list of syntax definitions.
+
+  The token part defines which tokens should be highlighted and how. There are
+  a few ways it can be done. Normally a simple keyword is highlighted somehow
+  and this is done with <Token>. Other specific things like comments and strings
+  cannot be directly detected but needs to be defined using a <ComplexToken>.
+
+  Continue reading to get the details, and feel free to use the existing syntax
+  file as an example. When you are pleased with the result you could drop me an
+  e-mail so I could include it in the main distribution.
+
+
+  @{u}Detailed explanation of Ann's tags@{uu}
+
+  <@{b}Ann-SyntaxHighlighting@{ub}>
+    This tag surrounds the whole file.
+
+    - This tag can only exists once as a top tag.
+    - Tags contained by this tag: N*<Syntax>, N*<SyntaxFile>
+    - Data in this tag: Can only contain other tags.
+
+  <@{b}SyntaxFile@{ub} filename>
+    This tag specifies an external syntax file to be loaded. Use this to add
+    your new syntax file to the main syntax file without having to copy and
+    paste it into the main syntax file.
+
+    This file has to follow the same specifications as described here. That
+    means it has to contain some <Syntax> definition to be useful. It could
+    also recursively contain another <SyntaxFile> definition but that is
+    untested.
+
+    - This tag can only exist inside <Ann-SyntaxHighlighting>.
+    - Tags contained by this tag: none
+    - Data in this tag: none
+
+    Example: <SyntaxFile filename="path/my_own_syntax.xml"/>
+
+  <@{b}Syntax@{ub}>
+    This tag contains a full definition of a language.
+
+    Note that if you have many similar languages it may be useful to know
+    that Ann will start to qualify for a matching syntax with the @{u}last@{uu}
+    <Syntax> in the file. This means that you should put the least significant
+    language first in the syntax file.
+
+    - This tag can only exist inside <Ann-SyntaxHighlighting>.
+    - Tags contained by this tag: 1*<Name>, 1*<Qualifying>, 1*<Tokens>, N*<Token>, N*<ComplexToken>
+    - Data in this tag: Can only contain other tags.
+
+  <@{b}Name@{ub}>
+    Specifies the name of the language. A maximum of 27 characters can be used.
+
+    - This tag can only exist inside <Syntax>.
+    - Tags contained by this tag: none
+    - Data in this tag: A string with a maximum length of 27 characters.
+
+  <@{b}Qualifying@{ub}>
+    Specifies a set of rules used by Ann to identify a text and/or file as a
+    certain language. You need a properly tuned Qualifying set if you want Ann
+    to recognize your specific file type automatically and to not incorrectly
+    recognize other, similar, file types.
+
+    - This tag can only exist inside <Syntax>.
+    - Tags contained by this tag: N*<OrTokens>, 1*<AndTokens>, 1*<FilePattern>
+    - Data in this tag: Can only contain other tags.
+
+    This tag is used in a specific way: When loading a file Ann uses this
+    information to try to determine if this <Syntax> should be applied to the
+    file or not. The following logic will be applied when loading a file,
+    except for OrTokens and AndTokens that are defined as mandatory:
+
+    FOR ALL <Syntax> IN <SyntaxHighlighting> DO
+      useThisLanguage := <OrTokens> AND <AndTokens> AND <FilePattern> == TRUE
+
+    IF useThisLanguage == FALSE THEN
+      FOR ALL <Syntax> IN <SyntaxHighlighting> DO
+        useThisLanguage := <FilePattern> == TRUE
+
+    IF useThisLanguage == TRUE THEN
+      use <Syntax>
+    ELSE
+      use built-in plain text mode
+
+    When qualifying a syntax by selecting @{i}Try Syntax Highlighting@{ui} from the
+    menu, one extra pass is made before deciding if this language fits or not:
+
+    IF useThisLanguage == FALSE THEN
+      FOR ALL <Syntax> IN <SyntaxHighlighting> DO
+        useThisLanguage := <OrTokens> AND <AndTokens> == TRUE
+
+    Note: Remember that the qualifying is not only designed to recognize files
+          that should have this syntax highlighting, but it is also designed
+          to @{i}prevent@{ui} matching of files that should @{i}not@{ui} have this syntax
+          highlighting. The user may load a plain text file that happen to
+          contain the same tokens as in your qualifying set. This guide could
+          for example match a sloppy written XML syntax qualifying since it
+          contains two mandatory tokens! It could potentially also match a C
+          syntax because it has many "if", "while" and "for" in it.
+
+  <@{b}OrTokens@{ub} min>
+    Specifies a number of space-terminated tokens of which >min< number of
+    tokens must exist in the file. Here you can put in a number of tokens that
+    your file type may have but not necessarily all at the same time.
+
+    - This tag can only exist inside <Qualifying>.
+    - Tags contained by this tag: none
+    - Data in this tag: A string without a maximum length.
+
+    Attributes:
+    >min<             - A number specifying how many times any of the tokens in <OrTokens>
+                        must be found in the file to qualify for a match. This attribute
+                        is mandatory and must be specified.
+
+    >caseinsensitive<
+    >ignorecase<      - These attributes are synonyms, user your favourite. They
+                        make the tokens match case insensitive. This is useful
+                        for languages that are case insensitive, such as HTML.
+                        Default is to match case sensitive.
+
+    >mandatory<       - This special says that this OrTokens @{b}always@{ub} has to return
+                        TRUE no matter what to match this file. AmigaGuide for
+                        example always starts with "@@database" and XML always
+                        has "<?xml" and "<!DOCTYPE" in them.
+                        Try to use this for all file types it is possible to
+                        make the syntax qualifying as strong as possible to
+                        avoid mismatches.
+
+    Example: <OrTokens min="10">if while for ( ) ; int void</OrTokens>
+    There must exist 10 occurrences in any combination of the 8 tokens in the file
+    to make this OrToken TRUE.
+
+  <@{b}AndTokens@{ub}>
+    Specifies a number of space-terminated tokens which all must exist in the file.
+    Here you specify a set of tokens that @{b}always@{ub} exists in your file type.
+
+    - This tag can only exist inside <Qualifying>.
+    - Tags contained by this tag: none
+    - Data in this tag: A string without a maximum length.
+
+    Attributes:
+    >caseinsensitive<
+    >ignorecase<      - These attributes are synonyms, use your favourite. They
+                        make the tokens match case insensitive. This is useful
+                        for languages that are case insensitive, such as HTML.
+                        Default is to match case sensitive.
+
+    >mandatory<       - This special says that this AndToken @{b}always@{ub} has to return
+                        TRUE no matter what to match this file. Typically use
+                        for file types that always starts with some specific
+                        keyword. AmigaGuide for example always starts with
+                        "@@database" and XML always has "<?xml" and "<!DOCTYPE"
+                        in them.
+                        Try to use this for all file types it is possible to
+                        make the syntax qualifying as strong as possible to
+                        avoid mismatches.
+
+    Example: <AndTokens>{ } ; int</AndTokens>
+    All these four tokens must exist in the file to make this AndToken TRUE.
+
+    Example: <AndTokens mandatory="1">@database</AndTokens>
+    The file must contain the word "@database" or the syntax can never be loaded.
+
+  <@{b}FilePattern@{ub}>
+    Specifies a file pattern that the loaded file must match.
+
+    - This tag can only exist inside <Qualifying>.
+    - Tags contained by this tag: none
+    - Data in this tag: A string without a maximum length.
+
+    Example: <FilePattern>#?.(c|h|cpp|hpp)</FilePattern>
+    Match all C and C++ files.
+
+  <@{b}Tokens@{ub}>
+    Specifies the maximum number of tokens this <Syntax> has. It must be placed
+    before the first <Token> or <ComplexToken>. It is used to pre-allocate
+    memory for all tokens. If you have less than a third as many tokens compared
+    to this number you will get a warning.
+
+    - This tag can only exist inside <Syntax>.
+    - Tags contained by this tag: none
+    - Data in this tag: A number.
+
+    Example: <Tokens>30</Tokens>
+    This <Syntax> can have a maximum of 30 tokens.
+
+  <@{b}Token@{ub} pen bgpen style absolute>
+    This tag is used to specify an actual token. What style and color the
+    token shall have is specified through attributes. No attribute is mandatory.
+    Specifying a token without any attribute is a way to force a token into
+    having normal color and style.
+
+    - This tag can exist inside <Syntax> and <ComplexToken>.
+    - Tags contained by this tag: none
+    - Data in this tag: A maximum of 27 characters.
+
+    When this tag is used alone in <Syntax> pieces of the text matching the
+    string defined here will be applied the color and style specified. It
+    will however do a little more than just search each line for the token.
+    If a token is for example the word "for" you generally do not want it to
+    match the first part of the word "@{u}for@{uu}ever" or the middle part of the word
+    "there@{u}for@{uu}e". This is why Ann makes a check and fails to match this token
+    if the first character in the token and the character just before the
+    token in the text are both letters, underscore or digits. It also checks
+    the last character in the token and the character following it in the
+    text by the same criteria.
+    If the >absolute< attribute is used these checks are not performed and
+    if the string is found it will always match and set the color and style.
+
+    When this tag is used in a <ComplexToken> it generally represents the
+    start token where matching should begin. It can be used without any
+    token string when used in a <ComplexToken> of a >type<, such as "decnumber",
+    just to set the color and style of e.g. a matched decimal number.
+
+    Attributes:
+    >pen<       - A system pen number between 0 and 255 to be used as text
+                  color for this token. Enter Ann's Config, go to Appearance,
+                  click on a color in the palette and hold you mouse pointer
+                  still for a while to see the pen number. Default is 1 (black).
+                  Don't forget to click Cancel when done!
+
+    >bgpen<     - A system pen number between 0 and 255 to be used as text
+                  background color for this token. Default is 0 (grey).
+
+    >style<     - A softstyle to be used for this token. Possible values
+                  (including synonyms) are "bold", "italic", "underline",
+                  "underlined". "italics",This attribute can be specified
+                  many times if more than one style is desired.
+                  Default is normal.
+
+    >absolute<  - This is a bool used to suppress the extra criteria checks
+                  used to see if a word is isolated or part of another word.
+                  Set to anything, e.g. "1", will make it true and cause any
+                  findings of the string to be a match.
+
+    >caseinsensitive<
+    >ignorecase<      - These attributes are synonyms, use your favourite. They
+                        make the tokens match case insensitive. This is useful
+                        for languages that are case insensitive, such as HTML.
+                        Default is to match case sensitive.
+
+    Example: <Token pen="2" bgpen="1" style="bold">int</Token>
+    A part of a text parsed with this token will look like the following.
+    Note: Unmatched occurrences of "int" will be underlined so you can see
+          what would also be matched if the >absolute< attribute was used.
+
+    "An @{u}int@{uu}eger, abbreviated as @{fg shine}@{bg text}@{b}int@{ub}@{bg back}@{fg text}, can be just as sweet as a m@{u}int@{uu} pastill
+     and will in programming often be seen as @{fg shine}@{bg text}@{b}int@{ub}@{bg back}@{fg text}*, (@{fg shine}@{bg text}@{b}int@{ub}@{bg back}@{fg text}) or like INT."
+
+    Note2: If one of the >caseinsensitive< or >ignorecase< attributes were
+           specified, the uppercase "INT" would also be matched.
+
+  <@{b}ComplexToken@{ub} type>
+    A complex token is typically used to match something between two tokens,
+    such as text between "quotes", text between /*comment delimiters*/, or
+    general kinds of tokens such as #preprocessing directives that begin
+    with a special character and continues with letters.
+
+    - This tag can only exist inside <Syntax>.
+    - Tags contained by this tag: 1*<Token>, 1*<MatchToToken>, 1*<MatchToEOL>, 1*<MultiLine>
+    - Data in this tag: Can only contain other tags.
+
+    Attribute:
+    >type<  - If >type< is omitted, a normal token-based <ComplexToken> will be
+              used where <Token> and possibly also <MatchToToken> are used.
+              But if >type< is used it must be one of the following and <Token>
+              or <MatchToToken> do not need to be used, but they can be. Only
+              one >type< can be use per <ComplexToken>.
+      "decnumber"
+        Matches a decimal number, i.e. the characters 0-9. The number must be
+        isolated which means that "foo@{u}1234@{uu}_bar" will not match what
+        is underlined. "(@{u}1234@{uu}," will however match what is underlined.
+
+      "hexnumber"
+        Matches a hexadecimal number, i.e. the characters 0-9A-Fa-f. The number
+        must be isolated which means that "_@{u}12ef@{uu}abc" will not match what is
+        underlined. Use <Token>0x</Token> or <Token>$</Token> to use as prefix
+        to be able to match a complete hexadecimal number in C, E or asm.
+
+      "binnumber"
+        Matches a binary number, i.e. the character 0-1. The number must
+        be isolated which means that "@{u}0101@{uu}23" will not match what
+        is underlined.
+
+      "alpha"
+        Matches (English) letter and underscore, i.e. the characters A-Za-z_.
+        The word must be isolated which means that "023@{u}word@{uu}" will not match
+        what is underlined. This type combined with <Token>#</Token> is
+        useful for matching preprocessor directives in for example C and E.
+
+      "alphaupper"
+      "alphalower"
+        Case sensitive versions of "alpha".
+
+      "alphanum"
+        Matches all letters, digits and underscore, i.e. the characters 0-9A-Za-z_.
+        Isolation is implied with this type as there are no other given characters
+        that could be confused with these characters.
+
+      "alphanumupper"
+      "alphanumlower"
+        Case sensitive versions of "alphanum".
+
+      "unprintable"
+        Matches all unprintable characters, i.e. ASCII values between 0-31 and
+        128-159. This includes tab (9) and linefeed (10).
+
+    It is always the <Token> that defines the color and style.
+
+    If you plan on using only a >type< without a <Token> but still want to put
+    some color and style on your type (which is the whole point) you need to
+    specify an empty <Token>. You can do that this way without an end tag:
+    <Token pen="3" style="bold"/>
+
+    Example: Put color 4 on Amiga Guide commands. Will match e.g. "\@{fg shine}".
+      <ComplexToken>
+        <Token pen="4">\@{</Token>
+        <MatchToToken>}</MatchToToken>
+      </ComplexToken>
+
+    Example: Display hex numbers in bold.
+      <ComplexToken type="hexnumber">
+        <Token style="bold">0x</Token>
+      </ComplexToken>
+
+    Example: Make one-line E-comments italic.
+      <ComplexToken>
+        <Token style="italics">-></Token>
+        <MatchToEOL/>
+      </ComplexToken>
+
+  <@{b}MatchToToken@{ub}>
+    Used as an end token in <ComplexToken>. To make use of this tag the
+    <ComplexToken> must use a >type< and/or a normal <Token> as well.
+    Otherwise it works as <Token> except it does not support any attributes.
+
+    - This tag can only exist inside <ComplexToken>.
+    - Tags contained by this tag: none
+    - Data in this tag: A maximum of 27 characters.
+
+    Example, see <ComplexToken>.
+
+  <@{b}MatchToEOL@{ub}>
+    This is a bool telling a <ComplexToken> to put its color and style all
+    the way to the end of the line (EOL) if the <MatchToToken> is not found
+    or not used.
+
+    - This tag can only exist inside <ComplexToken>.
+    - Tags contained by this tag: none
+    - Data in this tag: no data
+
+    This tag is typically used in two cases; either to cause the start of a
+    "quoted string" to match all the way to the right, or to make one-line
+    comments be colored from their start to the end of the line.
+
+    Example: <MatchToEOL/>
+
+  <@{b}MultiLine@{ub}>
+    This is a special bool telling a <ComplexToken> to put its color and style
+    all the way to <MatchToToken> even if it is not on the same line. This
+    means that if <MatchToToken> is not found the entire file will be searched
+    and colored from the <Token> and forward.
+
+    - This tag can only exist inside <ComplexToken>.
+    - Tags contained by this tag: none
+    - Data in this tag: no data
+
+    This tag is typically used for multi-line comments, such as /* */ in C
+    and E.
+
+    Example: <MultiLine/>
+
+@endnode
+@node "menus" "Menus"
+
+Annotate uses standard Amiga menus with one exception. All hotkeys are
+case sensitive. For example:
+
+       Menu Item                Quick Key           You Press
+       
+      "Open ..."                 Amiga-o            Amiga-o
+      "Open New..."              Amiga-O            Amiga-Shift-o
+
+The following is a list of all Ann menu items with a brief description for 
+each one.
+     
+  @{" Project " link project_menu} @{" Edit " link edit_menu} @{" Formatting " link format_menu} @{" Search " link search_menu} @{" Navigation " link nav_menu} @{" Window " link window_menu} @{" Macros " link mac_menu} @{" Settings " link setting_menu} @{" Tools " link tool_menu}
+
+@endnode
+@node "project_menu" "Project Menu"
+
+  @{fg shine}@{b}Project Menu
+  ~~~~~~~~~~~~@{ub}@{fg text}
+
+     New
+       This will create a new document in a new window.
+
+     Open...
+       This will bring up an ASL requester for opening files and will
+       open the first selected file in the current window replacing
+       the current editor. New windows will be opened for the rest of
+       the files.
+
+     Open New...
+       This will bring up an ASL requester for opening files and
+       will open all selected files in new windows.
+
+     Hide and Open New...
+       Opens a new file in the current window and puts the already opened
+       file in the list of hidden editor that you can find from Ed Exchange.
+
+     Save
+       This just saves the file. It will prompt for a name and behave like
+       "Save As" if this it is a new unnamed document.
+
+     Save As...
+       Lets you save the file as a different name.
+
+     Save All Modified
+       This saves every file that has been modified.
+
+     Save / Close
+       This saves the file. It will prompt for a name and behave like
+       "Save As" if this it is a new unnamed document. The editor and
+       possibly also the window will then be closed.
+
+     Save All / Quit
+       This option saves all current documents and quits the program.
+
+
+     Project >
+
+       Open...
+         Open a previously saved Annotate project file in XML
+         format, ending with ".apx". This will automatically
+         open all files specified in the project and adjust
+         their editor windows as they were when the project
+         was saved.
+
+       Save...
+         This will save the current state of all opened files
+         and windows so they can all be opened as they were at
+         a later time. Very practical if you usually switch off
+         your Amiga between programming sessions for example, or
+         when testing something that crashes a lot.
+
+       Close
+         Close a project. This can be done in two ways:
+         1. Close all files and editors associated with the
+            project. If all editors are part of the project then
+            Ann will quit.
+         2. Close only the logical project itself and leave all files
+            and editors untouched, just disconnect them from the
+            project. Useful to "reset" the project to be able to
+            add new files to it.
+
+     Print
+       Sends the current window out to PRT: for text printing.
+
+     Close
+       Close the current window and ask to save if modified.
+
+     About...
+       This item merely give some information on this version of
+       Annotate and a brief description.
+
+     Quit
+       This option lets the user quit without saving the documents.
+       If changes have been made, a requester will pop up asking if
+       you wish to really quit.
+
+@endnode
+@node "edit_menu" "Edit Menu"
+
+  @{fg shine}@{b}Edit Menu
+  ~~~~~~~~~@{ub}@{fg text}
+
+     Cut >
+       This will allow you to "cut" text which copies the selected text
+       to the selected clipboard and deletes it from the editor.
+
+       There are 6 clipboard "units" available in Ann. Unit 0 is the
+       normal clipboard unit used the the system and most other program.
+       By having access to more than one clipboard unit you can cut and
+       copy more than one piece of text at the time. Very practical.
+
+     Copy >
+       This will allow you to "copy" text which copies the selected text
+       to the selected clipboard and.
+
+     Paste >
+       This will allow you to "paste" text which inserts the text in the
+       selected clipboard into the editor where the cursor is positioned.
+
+       There is a setting that enables pasting of text to replace a
+       selected part in the editor. Most editor default to replace selected
+       text when pasting, but Ann does not default to do that since it uses
+       so called sticky selection.
+
+     Begin Select
+       Start a selection from the keyboard. This feature is  mostly here
+       for making selections from ARexx and Macros.
+
+     End Sel
+       End a selection from the keyboard. This feature is mostly here
+       for making selections from ARexx and Macros.
+
+     Select >
+
+       Word or Token
+         Selects the word, phrase or token the cursor is on.
+         If the cursor is on any bracket like {[()]} it will try to find
+         a matching mark and select all text between them including the
+         brackets.
+         If the cursor is on an @-sign it will try to match a complete
+         e-mail address.
+         There is more logic as well. Just try it out.
+
+       Line
+         Selects entire line the cursor is on.
+
+       All
+         Simply selects the entire document.
+
+       None
+         Simply unselect a marked piece of text. Same as clicking with
+         your mouse on the cursor. The point of this menu entry is to
+         connect a hotkey to it so you can unselect using your keyboard
+         since Ann uses sticky selection.
+
+     Line >
+
+       Duplicate
+         This will take the line the current cursor is on and duplicate
+         it on the next line.
+
+       Merge
+         Merge line takes the current line the cursor is on and tacks
+         the next line to the end of it. The same as putting the
+         cursor at the end of a line and hit the Delete key, but it
+         also removes all while spaces from the next line.
+
+       Delete
+         This menu item deletes the line the cursor is on.
+
+     Erase
+       This will delete the current selection.
+
+     Insert ASCII Code
+       Opens a requester that lets you input a number between 0 and 255.
+       This number is inserted at cursor position when the OK gadget is
+       pressed. Useful if you need to insert a character that is
+       impossible to type on the keyboard.
+
+     Lock Lines
+       Sets all lines in the current selection to locked. This 
+       makes the selected lines uneditable. You can use this 
+       feature to protect certain parts of your document. Locked 
+       lines will appear underlined if you have the "Show locked
+       lines as underlined" gadget ticked in the config.
+
+     Unlock Lines
+       Sets all locked lines in the current selection to unlocked.
+
+     Undo
+       Reverts the last change. Note that it will undo the change of
+       a whole line, not every single character typed or deleted.
+       You can undo any number of times you like, unless memory
+       runs out.
+
+     Redo
+       Undo what has been undone. If you undo and change your mind,
+       you can redo any number or times to get back your latest
+       changes. But after you make a new change the old redo timeline
+       gets erased and you cannot redo anymore until you make another
+       Undo because the editor cannot maintain multiple timelines.
+
+     Last Saved
+       This will "revert" the text to the last version saved.
+
+@endnode
+@node "format_menu" "Formatting Menu"
+
+  @{fg shine}@{b}Formatting Menu
+  ~~~~~~~~~~~~~~~@{ub}@{fg text}
+
+     Alignment >
+       Justify a line within the word wrap column width.
+
+       Left
+         Left will push the line the cursor is on to the far left.
+
+       Centered
+         Centers the line between the left and the Word wrap column.
+
+       Right
+         Pushes the line up so it touches the Word wrap column.
+
+     Shift Left
+       This will shift all of the characters in the current selection left.
+
+     Shift Right
+       This will shift all of the characters in the current selection right.
+
+     Wrap Text
+       Will immediately try to word wrap all lines longer that the
+       word wrap column specified in the config. If there is some
+       text selected it will only wrap lines inside the selection.
+       Otherwise the whole file will be wrapped.
+
+     Lower Case
+       This will shift all of the characters in the current 
+       selection to lower case. It will also shift high 8-bit
+       characters, such as ÅÄÖÜÇ etc.
+
+     Upper Case
+       This will shift all of the characters in the current
+       selection to upper case. It will also shift high 8-bit
+       characters, such as åäöüç etc.
+
+     Tabs To Spaces
+       Replace all tab-characters in the file by spaces.
+
+     Spaces To Tabs
+       Replace all @{u}leading@{uu} spaces on every line in the file
+       by an appropriate number of tab-characters.
+
+@endnode
+@node "search_menu" "Search Menu"
+
+  @{fg shine}@{b}Search Menu
+  ~~~~~~~~~~~@{ub}@{fg text}
+
+     Find...
+       Opens a requester used for searching the text.  The string gadget
+       accepts a string of characters to search for, or a DOS pattern to
+       match against whole lines of text.
+
+       The Search Method specifies how to search. There are five ways
+       to search:
+       "Case Sensitive" - Searches for the exact thing you have entered.
+       "Non-Case Sensitive" - Ignores the difference between UPPER/lower
+       case characters.
+       "Whole Words, Case Sensitive" - Very useful to find specific
+       words or numbers. If you for example need to find a variable
+       named 'str' this function will not stop on text like 'string',
+       'strcmp', 'Astrid', only where 'str' is separated by non-alphabetic
+       and non-digit characters, such as 'str=' or 'func(str,'.
+       "Whole Words, Non-Case Sensitive" - Same as the above but case
+       insensitive.
+       "Wild Cards" - Uses dos/MatchPattern to find any line. Use the
+       same kind of pattern as you would in a shell. Ex: 'param#?45'
+
+       "Search from the beginning" will cause find to start from the
+       beginning instead of the cursor position.
+       "Search backwards" will search upwards in the text starting
+       from the cursor.
+       "Live searching" - Searches while you type. This makes is a lot easier
+       to find something you are not sure how it is spelled.
+
+     Find Next
+       Uses the string from the original find requester to find
+       the next instance of the string.
+
+     Find Previous
+       Uses the string from the original find requester to find
+       the previous instance of the string.
+
+     Replace...
+       Opens a replace requester that allows you to replace text.
+       The string gadgets accepts strings to search for and replace
+       with.  There are cycle type gadgets from search type and
+       prompt type.
+       See the description of Search Method for the Find function.
+
+       Prompt type chooses how to alert you before making a change.
+       "Replace All" causes all text to be replace at once.
+       "Prompt before start" will find the first occurrence and then
+       ask you once.
+       "Always ask" will ask you for every occurrence.
+
+       "Replace from the beginning" will cause the replacing to
+       start from the beginning instead of the cursor position.
+       "Replace backwards" will replace upwards in the text starting
+       from the cursor.
+
+     Find Selection
+       Takes the current selection and places it in the find
+       requester of Find or Replace.
+
+     Replace with Selection
+       Takes the current selection and places it in the replace
+       part of the replace requester.
+
+     Find Previous Change
+       Jumps to the previous change in the file.
+
+     Find Next Change
+       Jumps to the next change in the file.
+
+     Match Brace
+       This finds the opposite bracket or brace and takes the
+       cursor to it if there is a match.
+
+@endnode
+@node "nav_menu" "Navigation Menu"
+
+  @{fg shine}@{b}Navigation Menu
+  ~~~~~~~~~~~~~~~@{ub}@{fg text}
+
+     Goto Cursor
+       Scrolls the editor so that the cursor gets visible.
+
+     Goto Selection
+       Scrolls the editor so that the selection gets visible.
+
+     Goto Line...
+       Opens a requester prompting for a line number to go to.
+
+     Goto Position >
+       Scrolls the editor and moves the cursor to a previously set
+       scrollstore position.
+
+     Store Position >
+       Stores a cursor position as a scrollstore position.
+       Useful when editing different places in the same file and like
+       to easily find you way back. A scroll store is visible in the
+       left side scrollbar as well.
+
+     Get Cursor to View
+       Puts the cursor in the middle of the window if not already in
+       view. It is the counterpart of "Goto Cursor".
+
+     Fold
+       This will fold the currently selected lines into one line.
+       Useful if you have a long text but have a big part of it already
+       finished. Then you can fold this part of the text into one line
+       to make it easier to scroll around in the rest of the text.
+
+     Unfold
+       This will unfold the folded line the cursor is currently on.
+
+     Unfold All
+       This will unfold all of the folded lines in the current
+       document.
+
+@endnode
+@node "window_menu" "Window Menu"
+
+  @{fg shine}@{b}Window Menu
+  ~~~~~~~~~~~@{ub}@{fg text}
+
+     Next
+       Put the next editor window to front and activate it.
+
+     Previous
+       Put the previous editor window to front and activate it.
+
+     Shrink
+       Makes Annotate shrink to minimum possible size.
+
+     Enlarge
+       Restores Annotate to its original size.
+
+     To Front
+       Pushes the active window to font.
+
+     To Back
+       Pushes the active window to back.
+
+     Ed Exchange...
+       Works like a file manager within Ann. It has two lists of files.
+       One list with open windows and one list with open but hidden
+       editors.
+
+       It allows you to swap files using only one or a few windows,
+       or you can use it to easily find and activate an editor window.
+       Just try it.
+
+       Note: There is unfortunately no more docs on Ed Exchange at the
+             moment. It's on my todo, like 1000 other things :) But it
+             has bubble-help on the gadgets.
+
+
+@endnode
+@node "mac_menu" "Macros Menu"
+
+  @{fg shine}@{b}Macros Menu
+  ~~~~~~~~~~~@{ub}@{fg text}
+
+
+     Play Macro >
+       Play macro is used to play macros 1 to 10 depending on 
+       the number you select. Note that the Quick key is Shift +
+       the function key which corresponds to the macro you wish 
+       to play. Also if you hold down the Ctrl key in the quick 
+       key combination the macro will shut down screen update 
+       until after the macro has finished. For macros that do a 
+       lot of screen update this can speed up the macro 
+       dramatically.
+
+     Record Macro >
+       Will start recording a macro in the number you selected.
+       Use 'Stop Recording' when you are finished.
+
+     Stop Recording
+       If you Recording a Macro this will stop the recording and
+       return Ann to its normal state.
+
+     Open Macros...
+       Load a macro file made with 'Save Macros As'.
+
+     Save Macros As...
+       Save all macros to a file.
+
+@endnode
+@node "setting_menu" "Settings Menu"
+
+  @{fg shine}@{b}Settings Menu
+  ~~~~~~~~~~~~~@{ub}@{fg text}
+
+
+     Try Syntax Highlighting
+       This menu operation is useful if you are editing a new file
+       and, after writing a bit, would like to get automatic syntax
+       highlighting in the editor.
+       It can also work if you are editing a file that does not have
+       the correct file extension since this option will ignore the
+       extension.
+
+     No syntax in this editor
+       Sometimes Ann makes the wrong decision about what language a
+       file is in and applies the wrong highlighting. Use this
+       option to clear syntax highlighting from this editor.
+
+       Alternatively you can open the Config and manually select a
+       highlighting you prefer.
+
+     Rectangular Selection
+       The selection will change from a line selection to a vertical
+       or rectangular selection. To find out what mode the window is in,
+       look at the status bar it will have an "LS" or "VS" in it,
+       meaning Line Select mode or Vertical Select mode respectively.
+
+       This mode is extremely useful when editing matrices or tables
+       of data, and also repetitive sections of programming code or
+       log files. You need to get used to this mode if you are not
+       already.
+
+       Side-shifting of text left and right also works a bit special
+       in this mode an allows you you very easily move a column of
+       text apart or together.
+
+       Example in C code: You have a prefilled array like this:
+struct Test array[] = {10,"foo",
+                       20,"hello",
+                       30,"there",
+                       40,"have",
+                       50,"you",
+                       60,"mastered",
+                       70,"rectangles",
+                       80,"yet?",
+                       90,":-)"};
+
+       Then you realize the you want to insert once element like this:
+struct Test array[] = {10,"foo",
+                       20,"hello",
+                       30,"there",
+                       30,"dude", // Notice there are two number 30 now. What to do??
+                       40,"have",
+                       50,"you",
+                       60,"mastered",
+                       70,"rectangles",
+                       80,"yet?",
+                       90,":-)"};
+
+       Use a rectangular selection like this:
+struct Test array[] = {10,"foo",
+                       20,"hello",
+                       30,"there",
+                       @{bg fill}30@{bg background},"dude",
+                       @{bg fill}40@{bg background},"have",
+                       @{bg fill}50@{bg background},"you",
+                       @{bg fill}60@{bg background},"mastered",
+                       @{bg fill}70@{bg background},"rectangles",
+                       @{bg fill}80@{bg background},"yet?",
+                       @{bg fill}90@{bg background},":-)"};
+
+       Now just cut this column of text out, remove the other '30' and
+       paste it one line up and insert '100' for the last item. Done!
+       Now consider this with a table several hundred lines long and
+       with much more data. You can save A LOT of time learning to use this.
+
+     Numpad Scrolls
+       Sets the keypad between scroll movement and typing numbers.
+       Much like a "NumLock" key on a PC.
+
+     Config...
+       See the @{" Config " link config} section about this.
+
+@endnode
+@node "tool_menu" "Tools Menu"
+
+  @{fg shine}@{b}Tools Menu
+  ~~~~~~~~~~@{ub}@{fg text}
+
+
+     Filename To Clipboard 0
+       Copies the current window's filename to the normal clipboard.
+
+     Execute Rexx Script...
+       After selecting this item a file requester will appear 
+       with '#?.rexx' in the pattern gadget. When you select a 
+       file Ann will run it as 'rx filename'. Note; this will 
+       only work if you have ARexx properly installed on your 
+       system. This has nothing to do with the built-in arexx
+       port of Ann.
+
+     Repeat Next Event...
+       Will produce a number requester. Whatever number you put into the
+       requester will be the number of times the next event is repeated.
+
+       For example, if you input the number 10 into the requester and
+       after hitting OK you press the letter 'A', the editor will
+       automatically insert ten A's into the text.
+       Mostly useful when playing macros. For example record a macro and
+       play it 100 times.
+
+     User Tools
+       After this menu item, are the tools that may be added by you.
+       Up to 10 custom tools may be added in the Config on the
+       Tools page.
+
+@endnode
+@node "rexx" "ARexx"
+
+  @{fg shine}@{b}ARexx
+  ~~~~~@{ub}@{fg text}
+
+The following are a list of base commands for the Annotate ARexx port 
+which can be addressed as:
+     
+     address('Annotate_Rexx')
+     
+Each of these base commands may have more specific commands and/or 
+parameters follow them. For example the if you wish to play macro 6 via
+the rexx port the command would be:
+
+     DOMENU PLAY_MACRO 6
+
+In this case DOMENU is the base command, PLAY_MACRO is the first sub 
+command, and 6 is the second sub command. Note that menu commands never 
+take any parameters.
+
+An example of a command that does take parameters is:
+
+     MOVE_CURSOR REL 5 8
+
+Where MOVE_CURSOR is the base command, REL (for relative to the current
+position of the cursor) is the sub command and 5 and 8 are the parameters 
+for deltaX and deltaY. This command will move the cursor 5 spaces to the 
+right and 8 spaces down exactly the same way you can do with the cursor keys.
+
+If OPTIONS RESULTS has been specified in the rexx program then many of the 
+following commands will also return valuable information.
+
+The following is a complete list of Annotates rexx commands, subcommands, 
+parameters and return values.
+
+The list may also be obtain directly from Ann using this CLI command line:
+rx "ADDRESS 'Annotate_Rexx' HELP 'RAM:Annotate.commands'"
+
+
+     @{" DOMENU " link DOMENU} - The menu commands
+     
+     @{" SET " link SET} - Setting state variable
+          
+     @{" GET " link GET} - Getting information
+          
+     @{" INSERT " link INSERT} - Inserting text
+          
+     @{" MOVE_CURSOR " link MOVE_CURSOR} - Navigation
+
+     @{" ACTION " link ACTION} - Perform actions such as replace
+
+     @{" REQUESTER " link REQUESTER} - Ask the user
+     
+     @{" Other Commands " link Other_Commands}
+
+
+
+Example Code:
+
+     @{" Requester Demo " link Requster_Demo}
+
+     @{" Search and Load " link Seach_and_Load}
+
+     @{" Replace And Count " link ReplaceAndCount}
+
+@endnode
+@node "ReplaceAndCount" "Replace And Count"
+/*  This Rexx Macro will run through the editor replacing 
+the string in the find requester with a number. Each new
+occurrence of the find string found will be replaced with a
+higher number.
+
+ex. if 'test' was in the find string and the editor read:
+
+          test test test test test
+
+you could have this macro replace tests with:
+          
+          1 2 3 4 5
+
+*/
+
+OPTIONS RESULTS
+address 'Annotate_Rexx'
+
+count = 0
+
+REQUESTER NUM "'Iterations?' '#' '100'"
+
+if RC == 0 then
+do
+     Ids = RESULT
+     
+     REQUESTER NUM "'Startnum?' '#' '0'"
+     CurNum = RESULT
+     
+     if RC == 0 then
+     do
+          ids = CurNum+ids
+          do while ids > CurNum
+               domenu find_next
+               Get sel_size
+               if RC ~= 0 then
+                    count = ids
+               else
+               do
+                    DOMENU Erase
+                    insert string CurNum
+                    CurNum = CurNum+1
+               end
+          end
+     end
+end
+
+exit rc
+
+@endnode
+@node "Requster_Demo" "Requester Demo"
+/* A Quick Requester Demo */
+
+OPTIONS RESULTS
+address 'Annotate_Rexx'
+
+REQUESTER ANSWER "'Do _List' 'C_ancel' '_OK'"
+
+say RESULT
+
+if RESULT == '_OK' then 
+do
+     REQUESTER List "Window_Name Ca_ncel 'This is ' a test ' of the' list gadget"
+     say RESULT
+end
+
+REQUESTER NUM "'Num Request' 'Hel_lo' '7456'"
+
+if RC == 0 then
+     say RESULT
+else
+     say "You Hit Cancel"
+
+REQUESTER STRING "'String Request?' 'Te_xt' '_Ok doky' '_Na'"
+
+if RC == 0 then
+     say RESULT
+else
+     say "You Hit Cancel"
+
+
+exit rc
+
+@endnode
+@node "Seach_and_Load" "Search and Load"
+/* This rexx program brings up a list requester with some file names. 
+After the user picks a file (as long as they didn't pick cancel) the 
+program searches to see if Ann has that file in a window and if it finds 
+it, Ann brings the window to front. If Ann doesn't find it, Ann searches 
+the external editor list in memory and brings the editor (if it's there) 
+into the current window. If Ann still hasn't found the file, Ann will load 
+it off disk and into the current window and push the editor in the current 
+window into the external editor list.
+
+Whenever I'm working on a project this is the program I us to manage my 
+files. You can expand it simply by adding more files to the List requester.
+*/
+
+OPTIONS RESULTS
+
+address('Annotate_Rexx')
+
+/* find out what file the user wants */
+
+REQUESTER LIST "'Open Ted File' '_Cancel' 's:startup-sequence' 's:user-startup'"
+
+/* if they didn't cancel find the file they want */
+
+if RESULT ~== '_Cancel' then 
+do
+
+     userhit = RESULT
+     
+     /* is the file in a window */
+     
+     SET WRK_WIN userhit
+     
+     if RC = 0 then
+     do
+          domenu ann_to_front /* the file is in a window so we can stop */
+          exit
+     end
+     
+     /* is the file in an external editor */
+     
+     RC = 0
+     count = 1
+     RESULT = ""
+     
+     do while RC = 0 
+     
+          GET EX_ED_NAME count
+          
+          if userhit == RESULT then
+          do
+               EXCHANGE_EDS count  /* the file was is an external editor 
+                                   so bring the editor into the current 
+                                   window and quit */
+               domenu ann_to_front
+               exit
+          end
+          
+          count = count + 1
+          
+     end
+     
+     /* The file is not in memory so load it into the current window and 
+     put the editor which is in the current window into the external 
+     editor list */
+     
+     OPEN_EX_EDITOR userhit
+                           
+end
+
+@endnode
+@node "DOMENU" 
+
+The DOMENU ARexx command can be used to access most menu items by simply 
+writing out the menu item after DOMENU. Menu items with more then one 
+word in them such as "Last Saved" must be written as "LAST_SAVED" so Ann 
+will not think the word "SAVED" is another subcommand. DOMENU commands 
+never take any params and never return anything. Below is a complete list 
+of the menu items supported be Ann. Indented items are sub commands of the 
+previous item and must be used to make the command work.
+
+Example how to past the text in clipboard unit 0:
+DOMENU PASTE 0
+
+Note that commands that has three dots (...) in them will require user
+interaction beyond the control of an arexx script.
+
+    ABOUT...
+    NEW
+    OPEN_NEW...
+    OPEN...
+    SAVE/CLOSE
+    SAVE_ALL_MODS
+    SAVE_AS...
+    SAVE
+    PRINT...
+    LAST_SAVED
+    DELETE_FILE...
+    CLOSE
+    SAVE_ALL/QUIT
+    QUIT
+    VERT_SELECTION
+    CUT
+          0
+          1
+          2
+          3
+          4
+          5
+
+    COPY
+          0
+          1
+          2
+          3
+          4
+          5
+
+    PASTE
+          0
+          1
+          2
+          3
+          4
+          5
+
+    ERASE
+    FOLD
+    UNFOLD
+    UNFOLD_ALL
+    SHIFT_RIGHT
+    SHIFT_LEFT
+    UPPER_CASE
+    LOWER_CASE
+    DUPLICATE_LINE
+    MERGE_LINE
+    DELETE_LINE
+    LOCK_LINES
+    UNLOCK_LINES
+    START_SEL
+    END_SEL
+    FIND...
+    FIND_NEXT
+    FIND_PREVIOUS
+    REPLACE...
+    SEL->FIND
+    SEL->REPLACE
+    LINE_NUMBER...
+    MATCH_BRACE
+    MATCH_BRACE/SEL
+    SELECT_ALL
+    SELECT_LINE
+    SELECT_WORD
+    ED_EXCHANGE...
+    SHRINK__ANN
+    ENLARGE_ANN
+    ANN_TO_FRONT
+    ANN_TO_BACK
+    CYCLE_EDITORS
+    CYCLE_EDITORS_REVERSE
+    SET->SCROLLSTORE
+          1
+          2
+          3
+          4
+          5
+          6
+
+    GO->SCROLLSTORE
+          1
+          2
+          3
+          4
+          5
+          6
+
+    GOTO_CURSOR
+    GOTO_SELECTION
+    GET_CURSOR_IN_VIEW
+    NUMPAD_SCROLLS
+    REGEN_ALL
+    PLAY_MACRO
+          1
+          2
+          3
+          4
+          5
+          6
+          7
+          8
+          9
+          10
+
+    OPEN_MACROS
+    SAVE_MACROS
+    CONFIG...
+    FILENAME_TO_CLIP0
+    INSERT_ASCII_CODE
+    REPEAT_NEXT_EVENT
+    JUSTIFY_LINE
+          LEFT
+          CENTER
+          RIGHT
+
+    TABS_TO_SPACES
+    SPACES_TO_TABS
+    EXTERNAL_TOOL_1
+    EXTERNAL_TOOL_2
+    EXTERNAL_TOOL_3
+    EXTERNAL_TOOL_4
+    EXTERNAL_TOOL_5
+    EXTERNAL_TOOL_6
+    EXTERNAL_TOOL_7
+    EXTERNAL_TOOL_8
+    EXTERNAL_TOOL_9
+    EXTERNAL_TOOL_10
+
+
+@{" Some examples of DOMENU " link DOMENU_EXAMPLES}
+
+@endnode
+@node "DOMENU_EXAMPLES" "DOMENU Examples"
+DOMENU SET->SCROLLSTORE 5
+DOMENU CUT 0
+DOMENU DUPLICATE_LINE
+DOMENU JUSTIFY_LINE CENTER
+DOMENU CONFIG...
+
+@endnode
+@node "SET" 
+Subcommands of SET with their params and return values:
+
+WIN_STATS      Moves and resizes the current window.
+
+     call      SET WIN_STATS WindowX WindowY Width Height
+     
+     params    WindowX,WindowY,Width,Height are all numbers describing 
+               where to move and how to size the current window.
+               
+     result    "WindowX WindowY Width Height" which are all numbers 
+               describing the resulting window size and position.
+               
+               
+DEF_WIN_STATS  Sets default window size and position for new windows.
+
+     call      SET DEF_WIN_STATS WindowX WindowY Width Height
+     
+     params    WindowX,WindowY,Width,Height are numbers used as the new 
+               default window (see Config requester).
+               
+     result    "WindowX WindowY Width Height" which are all numbers 
+               describing the resulting default window size and position.
+
+
+WRK_WIN
+
+     call      WRK_WIN WindowName
+     
+     params    WindowName is a the currently loaded filename of the window
+               you want all further rexx commands to be directed towards.
+
+     result    WindowName if the window WindowName was found.
+
+
+GRAPHIC_UPDATE
+
+     call      SET GRAPHIC_UPDATE ON/OFF
+     
+     params    ON or OFF. If you turn GRAPHIC_UPDATE off all rendering in 
+               Ann will be stopped making most operations speed up. 
+               Turning it back on will cause a total refresh.
+               
+     result    The status of GRAPHIC_UPDATE, namely ON or OFF.
+
+
+SHOW_REQUEST
+
+     call      SET SHOW_REQUEST ON/OFF
+     
+     params    ON or OFF. If you turn SHOW_REQUEST off all requester in 
+               Ann will automatically return as if the OK gadget was 
+               selected without even showing the requester to the user.
+               
+     result    The status of SHOW_REQUEST, namely ON or OFF.
+
+
+FIND_TYPE      Used to set the Search Type gadget in the search requesters.
+
+     call      SET FIND_TYPE TypeNum
+     
+     params    TypeNum is a number from 0 to 2 which mean:
+               0 Case Sensitive
+               1 Non-Case Sensitive
+               2 Wild Cards
+               
+     result    The old FIND_TYPE TypeNum.
+
+
+REPLACE_PROMPT_TYPE Used to set the Prompt Type gadget in the search requesters.
+
+     call      SET REPLACE_PROMPT_TYPE TypeNum
+     
+     params    TypeNum is a number from 0 to 2 which mean:
+               0 No Prompt
+               1 Prompt Once
+               2 Always Prompt
+
+     result    The old REPLACE_PROMPT_TYPE TypeNum.
+
+
+FIND_TEXT      Used to set the Find string gadget in the search requesters.
+
+     call      SET FIND_TEXT String
+     
+     params    String is a string that you want in the string gadget.
+               
+     result    The old FIND_TEXT String.
+
+
+REPLACE_TEXT   Used to set the Replace string gadget in the search requesters.
+
+     call      SET REPLACE_TEXT String
+     
+     params    String is a string that you want in the string gadget.
+               
+     result    The old REPLACE_TEXT String.
+
+
+STATUS_LINE    Used to set the current windows status line.
+
+     call      SET STATUS_LINE String
+     
+     params    String is a string that you want written into the current windows 
+               status line.
+               
+     result    none.
+
+
+DRAWER         Used to set the Drawer string gadget in the file requester.
+
+     call      SET DRAWER String
+     
+     params    String is a string that you want in the string gadget.
+               
+     result    The old DRAWER String.
+
+
+PATTERN        Used to set the Pattern string gadget in the file requester.
+
+     call      SET PATTERN String
+     
+     params    String is a string that you want in the string gadget.
+               
+     result    The old PATTERN String.
+
+
+SEEK_LINE      Used to set the LineNum gadget in the seek LineNum requester.
+
+     call      SET SEEK_LINE Num
+     
+     params    Num is a num that you want in the num gadget.
+               
+     result    The old SEEK_LINE num.
+
+
+ASCII_CODE     Used to set the Ascii code gadget in the insert ascii code requester.
+
+     call      SET ASCII_CODE Num
+     
+     params    Num is a num that you want in the num gadget.
+               
+     result    The old ASCII_CODE num.
+
+
+SEARCH_FROM_BEG  Used to set the Ascii code gadget in the insert ascii code requester.
+
+     call      SET SEARCH_FROM_BEG ON/OFF
+     
+     params    Bool where "ON" mean true and everything else means false.
+               
+     result    The state. This will be reset to OFF after each call to
+               ACTION REPLACE, ACTION FIND or DOMENU FIND_NEXT.
+
+
+SEARCH_BACKWARDS  Used to set the Ascii code gadget in the insert ascii code requester.
+
+     call      SET SEARCH_BACKWARDS ON/OFF
+     
+     params    Bool where "ON" mean true and everything else means false.
+               
+     result    The state.
+
+
+@endnode
+@node "GET" 
+Subcommands of GET with their params and return values:
+
+SCR_SIZE       Used to get the size of the screen.
+
+     call      GET SCR_SIZE
+     
+     result    "Width Height" of the screen Ann is running on.
+
+
+WIN_STATS      Used to get the current window size and position.
+
+     call      GET WIN_STATS
+     
+     result    "WindowX WindowY Width Height" which are all numbers 
+               describing the current windows size and position.
+
+
+DEF_WIN_STATS  Used to get the default window size and position.
+
+     call      GET DEF_WIN_STATS
+     
+     result    "WindowX WindowY Width Height" which are all numbers 
+               describing the default window size and position.
+
+
+SEL_TEXT       Used to get the current selection.
+
+     call      GET SEL_TEXT
+     
+     result    A string containing the current selection or an err if there 
+               is no selection.
+
+
+CHR            Used to get the character under the cursor
+
+     call      GET CHR
+     
+     result    "char ascii CursorX CursorY" where char is the character 
+               under the cursor, ascii is the ascii value of char and 
+               CursorX and CursorY is the position of the cursor.
+
+
+WIN_NAME       Used to get the name of a window
+
+     call      GET WIN_NAME WindowNum
+
+     params    WindowNum is a number of the window you want the name of or 
+               it can be 0 if you want the name of the current window.
+
+     result    A string contaning the window name or an err if the 
+               WindowNum is higher then the number of windows open.
+
+
+FILENAME       Used to get the filename for the current editor window.
+               Same as GET WIN_NAME 0.
+
+     call      GET FILENAME
+
+     result    A string containing the window name or an err if there
+               is no open window.
+
+
+SEL_SIZE       Used to get the start and end points of the selection
+
+     call      GET SEL_SIZE
+     
+     result    "MarkStartX MarkStartY MarkEndX MarkEndY" which are all 
+               numbers describing the cursor positions of the selection 
+               start and end. If there is no selection an err will be 
+               returned.
+
+
+EX_ED_NAME     Used to get the name of a external editor
+
+     call      GET EX_ED_NAME EdNum
+     
+     params    EdNum is a number of the editor you want the name of.
+               
+     result    A string contaning the editor name or an err if the 
+               EdNum is higher then the number of External editors open.
+
+
+@endnode
+@node "INSERT" 
+Subcommands of INSERT with their params and return values:
+
+STRING         Used to insert a string of text at the cursor position.
+
+     call      INSERT STRING String
+     
+     params    String is the string you want inserted.
+               
+     result    "TRUE" if all went well.
+
+
+RETURN         Used to insert LFs at the cursor position.
+
+     call      INSERT RETURN Num
+     
+     params    Num is the number of returns to insert.
+               
+     result    "TRUE" if all went well.
+
+
+SPACE          Used to insert spaces at the cursor position.
+
+     call      INSERT SPACE Num
+     
+     params    Num is the number of spaces to insert.
+               
+     result    "TRUE" if all went well.
+
+
+TAB            Used to insert tabs at the cursor position.
+
+     call      INSERT TAB Num
+
+     params    Num is the number of tabs to insert.
+
+     result    "TRUE" if all went well.
+
+@endnode
+@node "MOVE_CURSOR" 
+Subcommands of MOVE_CURSOR with their params and return values:
+
+REL            Used to move the cursor some distance form where it is.
+
+     call      MOVE_CURSOR REL DeltaX DeltaY
+     
+     params    DeltaX and DeltaY are numbers which are used as offsets to 
+               move the cursor from it's current position.
+               
+     result    "DeltaX DeltaY X Y" where DeltaX and DeltaY are the actual 
+               distance the cursor was able to move and X and Y are the 
+               cursors new absolute position.
+
+
+ABS            Used to move the cursor to an absolute position.
+
+     call      MOVE_CURSOR ABS X Y
+     
+     params    X and Y are numbers which are used as absolute positions to 
+               move the cursor to.
+               
+     result    "DeltaX DeltaY X Y" where DeltaX and DeltaY is the distance 
+               the cursor moved and X and Y are the actual new cursors
+               absolute position.
+
+@endnode
+@node "ACTION" 
+Subcommands of ACTION with their params and return values:
+
+ACTION REPLACE Start replacing without opening the replace requester.
+
+     call      ACTION REPLACE
+     
+     params    None.
+               
+     result    The FIND_TEXT replaced by REPLACE_TEXT in all occurrences
+               from the cursor or beginning, to the end or beginning
+               depending on settings of SEARCH_FROM_BEG and
+               SEARCH_BACKWARDS.
+
+
+ACTION FIND - Find next that returns a bool.
+
+     call      ACTION FIND
+     
+     params    None.
+               
+     result    A bool (5=true, 0=false) indicating if the FIND_TEXT was
+               found. It will start searching from the cursor or beginning,
+               to the end or beginning depending on settings of SEARCH_FROM_BEG
+               and SEARCH_BACKWARDS.
+
+
+ACTION FIND_IN_LINE - Find only on current line and returns bool.
+
+     call      ACTION FIND_IN_LINE String
+     
+     params    String to be found on the current line only.
+               
+     result    A bool (5=true, 0=false) indicating if the String was
+               found on the current line to the right of the cursor.
+
+@endnode
+@node "REQUESTER" 
+Subcommands of REQUESTER with their params and return values:
+
+ANSWER         Offers the user one of three choices.
+
+     call      REQUESTER ANSWER Text Cancel OK Maybe
+     
+     params    Text is a string and the question being asked.
+               Maybe, Cancel and OK are strings for up to three gadgets (
+               you don't have to use them all).
+               
+     result    A string which contains the option chosen.
+
+
+LIST           Offers the user one of many choices and a cancel.
+
+     call      REQUESTER LIST WindowTitle CancelText Option1 Optoin2 ...
+     
+     params    WindowTitle is the window title and should be the question 
+               begin asked.
+               CancelText is a string for the Cancel gadgets text.
+               Option1 ... are the option of the list.
+               
+     result    A string which contains the option chosen. This option 
+               could be any of the Option texts or the Cancel text.
+
+NUM            Lets the user input a number.
+
+     call      REQUESTER NUM WindowTitle NumGadText DefaultNum
+     
+     params    WindowTitle is the text put into the window title.
+               NumGadText is the text put beside the num gadget.
+               DefaultNum is the number the requester comes up with.
+               
+               
+     result    The number the user selected or an err if they canceled.
+
+
+STRING         Lets the user input a number.
+
+     call      REQUESTER STRING WindowTitle StringGadText OKGad CancelGad
+     
+     params    WindowTitle is the text put into the window title.
+               StringGadText is the text put beside the string gadget.
+               OKGad is the text used for the OK gadget.
+               CancelGad is the text used for the Cancel gadget.
+               
+     result    The string the user input or an err if they canceled.
+
+@endnode
+@node "Other_Commands" "Other Commands"
+ANN_VERSION    To find out what version of Ann you're talking to.
+
+     call      ANN_VERSION
+               
+     result    A string containing Annotates version.
+
+DEL            Deletes characters from the cursor position.
+
+     call      DEL Num
+          
+     params    Num is the number of characters to delete.
+               
+     result    "TRUE" if all went well.
+
+
+BACKSPACE      Deletes characters from to the left of the cursor, and moves the cursor.
+
+     call      BACKSPACE Num
+
+     params    Num is the number of characters to delete.
+
+     result    "TRUE" if all went well.
+
+
+OPEN_IN_WIN    Loads a file into the current window
+
+     call      OPEN_IN_WIN FileName
+          
+     params    FileName is a string with the name of the file to be loaded
+               
+     result    none.
+
+
+OPEN_EX_EDITOR Loads a file into the current window and puts the editor in 
+               the current window into the external editor list.
+
+     call      OPEN_EX_EDITOR FileName
+          
+     params    FileName is a string with the name of the file to be loaded
+               
+     result    none.
+
+
+OPEN_WIN       Opens a window and puts the first editor in the external 
+               editor list into it.
+
+     call      OPEN_WIN
+     
+     result    none.
+
+
+SHOW_EX_EDITOR Opens a window for any hidden (external) editor by referring
+               to it by the filename of the already opened but hidden editor.
+               It will first match the complete path but if it cannot be found
+               it will try again matching only the filename. Case insensitive.
+
+     call      SHOW_EX_EDITOR FileName
+
+     result    RC=0 for success, 5 for failure.
+
+
+HIDE_EDITOR    Hides the window for any open editor by referring to it by the
+               filename.
+               It will first match the complete path but if it cannot be found
+               it will try again matching only the filename. Case insensitive.
+
+     call      HIDE_EDITOR FileName
+
+     result    RC=0 for success, 5 for failure.
+
+
+CLOSE_BOTH     Closes the current window and the editor in it. Same a 
+               clicking the close gadget on the window.
+
+     call      CLOSE_BOTH
+     
+     result    none.
+
+
+CLOSE_WIN      Closes the current window and puts its editor into the 
+               external editor list.
+
+     call      CLOSE_WIN
+     
+     result    none.
+
+
+CLOSE_ED       Closes the editor in the current window and puts its puts 
+               the first editor from the external editor list into it.
+
+     call      CLOSE_ED
+     
+     result    none.
+
+
+EXCHANGE_EDS   Exchanges an external editor with the editor in the current 
+               window.
+
+     call      EXCHANGE_EDS Num
+          
+     params    Num is the number of the external editor.
+               
+     result    none if the Num was valid else an err is returned.
+
+
+HELP           Get a complete list of all arexx commands supported by Ann.
+
+     call      HELP Filename
+          
+     params    Filename is a place to write the list of commands.
+               
+     result    The result of the operation. 10 (ERROR) if it failed.
+
+@endnode
+@node "copy_stuff" "CopyRight Stuff"
+
+                             A N N O T A T E
+                              
+                                    by
+                                    
+                        D O U G    B A K E W E L L
+
+                     version 2.0           Aug 20,1993
+                     
+                  resurrected, updated and maintained by
+
+                    D A N I E L    W E S T E R B E R G
+
+                   version 3.0.1       November 24, 2012
+
+              Annotate  Copyright 1991,92,93 by Doug Bakewell
+   Annotate  Copyright 2005,06,07,08,09,10,11,12 by OnyxSoft & Doug Bakewell
+
+          This text editor is released under the GNU GPL license with
+     all that this implies. A GPL license files in included in the archive.
+
+
+                              Doug Bakewell 
+                              Victoria B.C.
+                              Canada 
+
+
+                              Daniel Westerberg
+                     MorphOS and AROS port by Stefan Blixth
+                              daniel@onyxsoft.se*
+
+
+                   DISCLAIMER OF WARRANTY AND LIABILITY
+
+    This software and manual file are offered "as is" and without
+    warranties as to performance or merchantability. Any statements made
+    about the uses of this software do not constitute warranties and shall
+    not be relied on by the user in deciding to use this program.
+
+    This program is given without any express or implied warranties
+    whatsoever. Because of the diversity of conditions and hardware under
+    which this program may be used, no warranty or fitness for a particular
+    purpose is offered. The user is advised to test the program thoroughly
+    before relying on it. The user must assume the entire risk of using the
+    program.
+
+
+@{b}NOTE*:@{ub} Please, @{i}NEVER @{ui}publish my e-mail, or a text file containing my
+       e-mail, on a web page or similar unless spam-encrypted like this:
+       daniel / onyxsoft se
+       Thank you.
+
+@endnode
+@node "Onyxsoft" 
+
+    @{fg shine}@{b}OnyxSoft
+    @{ub}~~~~~~~~@{fg text}
+
+  If you like our products, found bugs, have complains or
+  ideas etc. etc. Don't hesitate to contact us!
+
+  OnyxSoft productions can be found on our HomePage.
+  Updates and new releases will be there first.
+
+  OnyxSoft HomePage : www.onyxsoft.se
+  Deniil's HomePage : www.algonet.se/~deniil/
+  E-mail            : daniel@onyxsoft.se*
+
+  We just love to get response from other Amiga-freaks!!
+
+
+@{b}NOTE*:@{ub} Please, @{i}NEVER @{ui}publish my e-mail, or a text file containing my
+       e-mail, on a web page or similar unless spam-encrypted like this:
+       daniel / onyxsoft se
+       Thank you.
+
+@endnode
+@node "donate" "Annotate - Donations"
+
+  @{fg shine}@{b}Donations are welcome
+  ~~~~~~~~~~~~~~~~~~~~~@{ub}@{fg text}
+
+   We in OnyxSoft have been releasing freeware applications for over 10 years
+   and still going strong with the fullest ambition for the Amiga platform.
+  
+   This is of course something we would like to continue to do in the future.
+   All our titles are totally free of charge without any crippled functions etc.
+  
+   We have now established a paypal-account after many users have asked us
+   how to donate money to us (for motivating us even further and keeping the
+   software releases "flowing").
+  
+   To send us donations, please use the following email: @{b}donate@onyxsoft.se@{ub}
+  
+  
+   Thank you for you support!
+
+@endnode
