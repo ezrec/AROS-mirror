@@ -1,7 +1,7 @@
 #include <cybergraphx/cybergraphics.h>
 #include <graphics/gfxmacros.h>
 
-#include <proto/png.h>
+#include <proto/pngdt.h>
 #include <proto/exec.h>
 #include <proto/graphics.h>
 #include <proto/intuition.h>

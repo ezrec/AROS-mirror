@@ -12,8 +12,8 @@ USER_CFLAGS := -Wno-deprecated-declarations
 #MM- core-linklibs : linklibs-png
 
 %build_module mmake=workbench-libs-png \
-    modname=pnglib modtype=library conffile=$(SRCDIR)/$(CURDIR)/png_au.conf \
-    files="$(FILES)" linklibname="png"
+    modname=png modtype=library conffile=$(SRCDIR)/$(CURDIR)/png_au.conf \
+    files="$(FILES)" uselibs="z"
 
 
 #MM- linklibs: linklibs-png-nostdio

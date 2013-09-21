@@ -12,7 +12,7 @@
 
 #include <proto/dos.h>
 #include <proto/alib.h>
-#include <proto/png.h>
+#include <proto/pngdt.h>
 #include <proto/datatypes.h>
 
 #include <aros/bigendianio.h>

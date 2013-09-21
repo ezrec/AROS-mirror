@@ -14,7 +14,7 @@ void writeincclib(struct config *cfg)
     struct functionarg *arglistit;
     struct stringlist *linelistit;
     
-    snprintf(line, 255, "%s/clib/%s_protos.h", cfg->gendir, cfg->modulename);
+    snprintf(line, 255, "%s/clib/%s_protos.h", cfg->gendir, cfg->incname);
 
     out = fopen(line, "w");
 
@@ -33,7 +33,7 @@ void writeincclib(struct config *cfg)
 	    "\n"
 	    "#include <aros/libcall.h>\n"
 	    "\n",
-	    cfg->modulenameupper, cfg->modulenameupper, banner
+	    cfg->incnameupper, cfg->incnameupper, banner
     );
     freeBanner(banner);
 
@@ -53,5 +53,5 @@ void writeincclib(struct config *cfg)
 	    "__END_DECLS\n"
 	    "\n"
 	    "#endif /* CLIB_%s_PROTOS_H */\n",
-	    cfg->modulenameupper);
+	    cfg->incnameupper);
 }

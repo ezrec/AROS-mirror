@@ -16,7 +16,7 @@ void writeincinline(struct config *cfg)
     char line[256], *banner;
     struct functionhead *funclistit;
 
-    snprintf(line, 255, "%s/inline/%s.h", cfg->gendir, cfg->modulename);
+    snprintf(line, 255, "%s/inline/%s.h", cfg->gendir, cfg->incname);
     out = fopen(line, "w");
 
     if (out == NULL)
@@ -41,7 +41,7 @@ void writeincinline(struct config *cfg)
 	    "#include <aros/symbolsets.h>\n"
 	    "#include <aros/preprocessor/variadic/cast2iptr.hpp>\n"
 	    "\n",
-	    cfg->modulenameupper, cfg->modulenameupper, banner, cfg->modulename
+	    cfg->incnameupper, cfg->incnameupper, banner, cfg->modulename
     );
     freeBanner(banner);
 
@@ -78,7 +78,7 @@ void writeincinline(struct config *cfg)
     fprintf(out,
 	    "\n"
 	    "#endif /* INLINE_%s_H*/\n",
-	    cfg->modulenameupper
+	    cfg->incnameupper
     );
     fclose(out);
 }

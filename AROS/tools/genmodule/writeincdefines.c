@@ -16,7 +16,7 @@ void writeincdefines(struct config *cfg)
     char line[256], *banner;
     struct functionhead *funclistit;
 
-    snprintf(line, 255, "%s/defines/%s.h", cfg->gendir, cfg->modulename);
+    snprintf(line, 255, "%s/defines/%s.h", cfg->gendir, cfg->incname);
     out = fopen(line, "w");
 
     if (out == NULL)
@@ -43,7 +43,7 @@ void writeincdefines(struct config *cfg)
 	    "\n"
 	    "__BEGIN_DECLS\n"
 	    "\n",
-	    cfg->modulenameupper, cfg->modulenameupper, banner, cfg->modulename
+	    cfg->incnameupper, cfg->incnameupper, banner, cfg->modulename
     );
     freeBanner(banner);
 
@@ -82,7 +82,7 @@ void writeincdefines(struct config *cfg)
 	    "__END_DECLS\n"
 	    "\n"
 	    "#endif /* DEFINES_%s_H*/\n",
-	    cfg->modulenameupper
+	    cfg->incnameupper
     );
     fclose(out);
 }

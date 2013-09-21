@@ -180,12 +180,6 @@ struct config *initconfig(int argc, char **argv)
 	exit(20);
     }
 
-    cfg->modulename = argv[optind+1];
-    cfg->modulenameupper = strdup(cfg->modulename);
-    for (s=cfg->modulenameupper; *s!='\0'; *s = toupper(*s), s++) {
-        if (!isalnum(*s)) *s = '_';
-    }
-
     if (strcmp(argv[optind+2],"library")==0)
     {
     	cfg->modtype = LIBRARY;
@@ -257,6 +251,24 @@ struct config *initconfig(int argc, char **argv)
 	exit(20);
     }
     cfg->modtypestr = argv[optind+2];
+
+    cfg->modulename = argv[optind+1];
+    cfg->modulenameupper = strdup(cfg->modulename);
+    for (s=cfg->modulenameupper; *s!='\0'; *s = toupper(*s), s++) {
+        if (!isalnum(*s)) *s = '_';
+    }
+
+    if (cfg->modtype == DATATYPE)
+    {
+        cfg->incname = malloc(strlen(cfg->modulename) + 3);
+        sprintf(cfg->incname, "%sdt", cfg->modulename);
+    }
+    else
+        cfg->incname = strdup(cfg->modulename);
+    cfg->incnameupper = strdup(cfg->incname);
+    for (s=cfg->incnameupper; *s!='\0'; *s = toupper(*s), s++) {
+        if (!isalnum(*s)) *s = '_';
+    }
 
     if (!hassuffix)
 	cfg->suffix = argv[optind+2];

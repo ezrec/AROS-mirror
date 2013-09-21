@@ -12,7 +12,7 @@ void writeincproto(struct config *cfg)
     struct linelist *linelistit;
     
     snprintf(line, 255, "%s/proto/%s.h",
-             cfg->gendir, cfg->modulename
+             cfg->gendir, cfg->incname
     );
     out = fopen(line, "w");
 
@@ -29,8 +29,8 @@ void writeincproto(struct config *cfg)
 	    "\n"
             "%s"
 	    "\n"
-	    , cfg->modulenameupper
-            , cfg->modulenameupper
+	    , cfg->incnameupper
+            , cfg->incnameupper
             , banner
     );
     fprintf(out,
@@ -41,7 +41,7 @@ void writeincproto(struct config *cfg)
 	    "#include <clib/%s_protos.h>\n"
 	    "\n",
 	    (cfg->modtype == DEVICE) ? "#include <exec/devices.h>\n" : "",
-	    cfg->modulename
+	    cfg->incname
     );
     freeBanner(banner);
     fprintf(out,
@@ -107,10 +107,10 @@ void writeincproto(struct config *cfg)
 	    "\n"
 	    "#endif /* PROTO_%s_H */\n",
             define, cfg->modulenameupper,
-            cfg->modulename,
+            cfg->incname,
 	    define,
-            cfg->modulename,
-            cfg->modulenameupper
+            cfg->incname,
+            cfg->incnameupper
     );
 
     fclose(out);

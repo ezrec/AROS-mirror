@@ -127,6 +127,7 @@ struct config
     enum modtype modtype;
     char *modtypestr;
     char *suffix;
+    char *incname, *incnameupper;
     
     /* Extra string to include in version */
     char *versionextra;
