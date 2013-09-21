@@ -10,8 +10,8 @@ COMMONINCLUDES := -I$(SRCDIR)/$(CURDIR)/include -I$(SRCDIR)/$(CURDIR)/../
 LAYOUTGROUPINCLUDES := $(COMMONINCLUDES) -I$(SRCDIR)/$(CURDIR)/include -I$(SRCDIR)/$(CURDIR)/LayoutGroup
 TREEVIEWINCLUDES := $(COMMONINCLUDES) -I$(SRCDIR)/$(CURDIR)/TreeView/include
 
-EXELIBS = -L$(AROS_LIB) -lamiga -larossupport -lbgui -lautoinit -lstdc
-GADGETLIBS = -lbgui -lstdc -lamiga
+EXELIBS = -L$(AROS_LIB) -lamiga -larossupport -lbgui -lautoinit -lstdc -newclib
+GADGETLIBS = -lbgui -lstdc -lamiga -newclib
 
 BARGADGET = bgui_bar.gadget
 BARDEMO = BarDemo

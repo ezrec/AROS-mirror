@@ -146,7 +146,7 @@ diff -urN gcc-4.6.4/gcc/config/arm/aros.h gcc-4.6.4.new/gcc/config/arm/aros.h
 +#endif
 +
 +#undef SUBTARGET_CPP_SPEC
-+#define SUBTARGET_CPP_SPEC "-D__ELF__ %{!nostdinc:%{!nostdc:%{!noposixc:-isystem %R/include/aros/posixc} -isystem %R/include/aros/stdc}}"
++#define SUBTARGET_CPP_SPEC "-D__ELF__ %{!nostdinc:%{!nostdc:%{!noposixc:-isystem %R/include/aros/posixc} -isystem %R/include/aros/stdc} -isystem %R/include}"
 +
 +#undef  SUBTARGET_EXTRA_LINK_SPEC
 +#define SUBTARGET_EXTRA_LINK_SPEC " -m " TARGET_LINKER_EMULATION
@@ -305,7 +305,7 @@ diff -urN gcc-4.6.4/gcc/config/aros.h gcc-4.6.4.new/gcc/config/aros.h
 +}; \
 +
 +#undef CPP_SPEC
-+#define CPP_SPEC "%{!nostdinc:%{!nostdc:%{!noposixc:-isystem %R/include/aros/posixc} -isystem %R/include/aros/stdc}}"
++#define CPP_SPEC "%{!nostdinc:%{!nostdc:%{!noposixc:-isystem %R/include/aros/posixc} -isystem %R/include/aros/stdc} -isystem %R/include}"
 +
 +/* This is for -profile to use -lc_p instead of -lc.  */
 +#ifndef CC1_SPEC
@@ -318,7 +318,7 @@ diff -urN gcc-4.6.4/gcc/config/aros.h gcc-4.6.4.new/gcc/config/aros.h
 +
 +#undef	LIB_SPEC
 +#define LIB_SPEC \
-+  "-lmui -larossupport -lamiga %{!nostdc:%{!noposixc:-lposixc} -lstdcio -lstdc} -lcodesets -lkeymap -lexpansion -lcommodities -ldiskfont -lasl -lmuimaster -ldatatypes -lcybergraphics -lworkbench -licon -lintuition -lgadtools -llayers -laros -lpartition -liffparse -lgraphics -llocale -ldos -lutility -loop %{!nosysbase:-lexec} -lautoinit -llibinit -lautoinit %{nostdc:-lstdc.static}"
++  "-lmui -larossupport -lamiga %{newclib:%{!nostdc:%{!noposixc:-lposixc} -lstdcio -lstdc}} %{!newclib:%{!nostdc:-larosc}} -lcodesets -lkeymap -lexpansion -lcommodities -ldiskfont -lasl -lmuimaster -ldatatypes -lcybergraphics -lworkbench -licon -lintuition -lgadtools -llayers -laros -lpartition -liffparse -lgraphics -llocale -ldos -lutility -loop %{!nosysbase:-lexec} -lautoinit -llibinit -lautoinit %{newclib:%{nostdc:%{!nostaticc:-lstdc.static}}}"
 +
 +#if !defined(USE_GNULIBC_1) && defined(HAVE_LD_EH_FRAME_HDR)
 +#define LINK_EH_SPEC "%{!static:--eh-frame-hdr} "
