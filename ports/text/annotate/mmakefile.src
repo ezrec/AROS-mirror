@@ -5,7 +5,6 @@ include $(TOP)/config/make.cfg
 #MM- ports-text : ports-text-$(AROS_TARGET_CPU)
 
 #MM- ports-text-i386 : ports-text-annotate
-#MM- ports-text-arm : ports-text-annotate
 
 #MM ports-text-annotate : includes linklibs \
 #MM    workbench-libs-expat \
