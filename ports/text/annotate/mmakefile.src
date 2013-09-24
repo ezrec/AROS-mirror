@@ -14,7 +14,7 @@ include $(TOP)/config/make.cfg
 
 #MM  ports-text-annotate-quick : ports-text-annotate-fetch
 
-REPOSITORIES := http://www.mazze-online.de/aros/ports-src/
+REPOSITORIES := http://archives.aros-exec.org/share/utility/text/edit/
 ARCHBASE     := annotate-src-3.0.1
 TARGETDIR    := $(AROS_CONTRIB)/Utilities/Text/Annotate
 USER_CFLAGS  := -DANN_MUI -Wno-parentheses -Wno-unused-but-set-variable
@@ -51,7 +51,7 @@ FILES := $(addprefix $(PORTSDIR)/annotate/$(ARCHBASE)/src/,$(FILES))
 
 
 %fetch mmake=ports-text-annotate-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/annotate \
-    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="zip"
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.bz2"
 
 ############################################################################################
 
@@ -62,7 +62,7 @@ ICONS := Annotate
 
 ############################################################################################
 
-%copy_dir_recursive mmake=ports-text-annotate-release src=release \
+%copy_dir_recursive mmake=ports-text-annotate-release src=$(PORTSDIR)/annotate/$(ARCHBASE)/release \
     dst=$(TARGETDIR)
 
 %common
