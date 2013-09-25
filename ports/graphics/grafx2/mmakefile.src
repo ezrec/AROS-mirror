@@ -16,78 +16,92 @@ include $(TOP)/config/make.cfg
 #MM  ports-graphics-grafx2-quick : ports-graphics-grafx2-fetch
 
 REPOSITORIES := http://grafx2.googlecode.com/files
-ARCHBASE     := grafx2
+ARCHBASE     := grafx2-2.4.2035-src
 TARGETDIR    := $(AROS_CONTRIB)/MultiMedia/Gfx/GrafX2
 SDL_PREFIX   := $(AROS_DEVELOPMENT)
-USER_CFLAGS  := -g $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags) -Wno-unused-but-set-variable
+USER_CFLAGS  := $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags) \
+    -I$(AROS_DEVELOPMENT)/include/lua \
+    -D__ENABLE_LUA__ -Wno-unused-but-set-variable \
+    
 
 FILES := \
-	$(PORTSDIR)/grafx2/grafx2/src/main \
-	$(PORTSDIR)/grafx2/grafx2/src/init \
-	$(PORTSDIR)/grafx2/grafx2/src/graph \
-	$(PORTSDIR)/grafx2/grafx2/src/sdlscreen \
-	$(PORTSDIR)/grafx2/grafx2/src/misc \
-	$(PORTSDIR)/grafx2/grafx2/src/special \
-	$(PORTSDIR)/grafx2/grafx2/src/buttons \
-	$(PORTSDIR)/grafx2/grafx2/src/palette \
-	$(PORTSDIR)/grafx2/grafx2/src/help \
-	$(PORTSDIR)/grafx2/grafx2/src/operatio \
-	$(PORTSDIR)/grafx2/grafx2/src/pages \
-	$(PORTSDIR)/grafx2/grafx2/src/loadsave \
-	$(PORTSDIR)/grafx2/grafx2/src/readline \
-	$(PORTSDIR)/grafx2/grafx2/src/engine \
-	$(PORTSDIR)/grafx2/grafx2/src/filesel \
-	$(PORTSDIR)/grafx2/grafx2/src/op_c \
-	$(PORTSDIR)/grafx2/grafx2/src/readini \
-	$(PORTSDIR)/grafx2/grafx2/src/saveini \
-	$(PORTSDIR)/grafx2/grafx2/src/shade \
-	$(PORTSDIR)/grafx2/grafx2/src/keyboard \
-	$(PORTSDIR)/grafx2/grafx2/src/io \
-	$(PORTSDIR)/grafx2/grafx2/src/version \
-	$(PORTSDIR)/grafx2/grafx2/src/text \
-	$(PORTSDIR)/grafx2/grafx2/src/SFont \
-	$(PORTSDIR)/grafx2/grafx2/src/setup \
-	$(PORTSDIR)/grafx2/grafx2/src/pxsimple \
-	$(PORTSDIR)/grafx2/grafx2/src/pxtall \
-	$(PORTSDIR)/grafx2/grafx2/src/pxwide \
-	$(PORTSDIR)/grafx2/grafx2/src/pxdouble \
-	$(PORTSDIR)/grafx2/grafx2/src/pxtriple \
-	$(PORTSDIR)/grafx2/grafx2/src/pxtall2 \
-	$(PORTSDIR)/grafx2/grafx2/src/pxwide2 \
-	$(PORTSDIR)/grafx2/grafx2/src/pxquad \
-	$(PORTSDIR)/grafx2/grafx2/src/windows \
-	$(PORTSDIR)/grafx2/grafx2/src/brush \
-	$(PORTSDIR)/grafx2/grafx2/src/realpath \
-	$(PORTSDIR)/grafx2/grafx2/src/mountlist \
-	$(PORTSDIR)/grafx2/grafx2/src/input \
-	$(PORTSDIR)/grafx2/grafx2/src/hotkeys \
-	$(PORTSDIR)/grafx2/grafx2/src/transform \
-	$(PORTSDIR)/grafx2/grafx2/src/pversion \
-	$(PORTSDIR)/grafx2/grafx2/src/factory \
-	$(PORTSDIR)/grafx2/grafx2/src/fileformats \
-	$(PORTSDIR)/grafx2/grafx2/src/miscfileformats \
-	$(PORTSDIR)/grafx2/grafx2/src/libraw2crtc \
-	$(PORTSDIR)/grafx2/grafx2/src/brush_ops \
-	$(PORTSDIR)/grafx2/grafx2/src/buttons_effects \
-	$(PORTSDIR)/grafx2/grafx2/src/layers
+	main \
+	init \
+	graph \
+	sdlscreen \
+	misc \
+	special \
+	buttons \
+	palette \
+	help \
+	operatio \
+	pages \
+	loadsave \
+	readline \
+	engine \
+	filesel \
+	op_c \
+	readini \
+	saveini \
+	shade \
+	keyboard \
+	io \
+	version \
+	text \
+	SFont \
+	setup \
+	pxsimple \
+	pxtall \
+	pxwide \
+	pxdouble \
+	pxtriple \
+	pxtall2 \
+	pxwide2 \
+	pxquad \
+	windows \
+	brush \
+	realpath \
+	mountlist \
+	input \
+	hotkeys \
+	transform \
+	pversion \
+	factory \
+	fileformats \
+	miscfileformats \
+	libraw2crtc \
+	brush_ops \
+	buttons_effects \
+	layers \
+	oldies \
+	tiles \
+	colorred
+
+FILES := $(addprefix $(PORTSDIR)/grafx2/$(ARCHBASE)/grafx2/src/,$(FILES))
 
 %build_prog mmake=ports-graphics-grafx2 progname=GrafX2 \
     files=$(FILES) targetdir=$(TARGETDIR) \
-    uselibs="SDL_ttf SDL_image SDL GL jpeg png z freetype2"
+    uselibs="lua SDL_ttf SDL_image SDL GL jpeg png z freetype2"
 
-%fetch mmake=ports-graphics-grafx2-fetch archive=$(ARCHBASE)-2.3.1781-src destination=$(PORTSDIR)/grafx2 \
+############################################################################################################
+
+%fetch mmake=ports-graphics-grafx2-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/grafx2/$(ARCHBASE) \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tgz" \
-    patches_specs=grafx2-aros.diff:grafx2:-p1
+    patches_specs=grafx2-2.4.2035-src.diff::-p1
+
+############################################################################################################
 
 ICONS := GrafX2
 
 %build_icons mmake=ports-graphics-grafx2-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)
+	icons=$(ICONS) dir=$(TARGETDIR)/..
 
-%copy_dir_recursive mmake=ports-graphics-grafx2-docs src=$(PORTSDIR)/grafx2/grafx2/doc \
+############################################################################################################
+
+%copy_dir_recursive mmake=ports-graphics-grafx2-docs src=$(PORTSDIR)/grafx2/$(ARCHBASE)/grafx2/doc \
     dst=$(TARGETDIR)/doc
 
-%copy_dir_recursive mmake=ports-graphics-grafx2-data src=$(PORTSDIR)/grafx2/grafx2/share \
+%copy_dir_recursive mmake=ports-graphics-grafx2-data src=$(PORTSDIR)/grafx2/$(ARCHBASE)/grafx2/share \
     dst=$(TARGETDIR)/share
 
 %common

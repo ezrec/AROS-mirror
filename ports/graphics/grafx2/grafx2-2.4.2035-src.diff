@@ -1,0 +1,57 @@
+diff -Naur grafx2-2.4.2035-src-orig/grafx2/src/hotkeys.c grafx2-2.4.2035-src/grafx2/src/hotkeys.c
+--- grafx2-2.4.2035-src-orig/grafx2/src/hotkeys.c	2012-09-29 00:10:04.000000000 +0200
++++ grafx2-2.4.2035-src/grafx2/src/hotkeys.c	2013-09-25 20:41:04.042260988 +0200
+@@ -621,7 +621,7 @@
+   true,
+   SDLK_b, // B
+   #if defined(__amigaos4__) || defined(__AROS__) || defined(__MORPHOS__) || defined(__amigaos__)
+-  SDLK_C|MOD_META // Right-Amiga + C
++  SDLK_c|MOD_META // Right-Amiga + C
+   #else
+   0
+   #endif
+@@ -850,7 +850,7 @@
+   true,
+   SDLK_F2, // F2
+   #if defined(__amigaos4__) || defined(__AROS__) || defined(__MORPHOS__) || defined(__amigaos__)
+-  SDLK_A|MOD_META // Right-Amiga + A
++  SDLK_a|MOD_META // Right-Amiga + A
+   #else
+   0
+   #endif
+@@ -863,7 +863,7 @@
+   true,
+   SDLK_F2|MOD_SHIFT, // Shift + F2
+   #if defined(__amigaos4__) || defined(__AROS__) || defined(__MORPHOS__) || defined(__amigaos__)
+-  SDLK_S|MOD_META // Right-Amiga + S
++  SDLK_s|MOD_META // Right-Amiga + S
+   #else
+   0
+   #endif
+@@ -876,7 +876,7 @@
+   true,
+   SDLK_F3, // F3
+   #if defined(__amigaos4__) || defined(__AROS__) || defined(__MORPHOS__) || defined(__amigaos__)
+-  SDLK_O|MOD_META // Right-Amiga + O
++  SDLK_o|MOD_META // Right-Amiga + O
+   #else
+   0
+   #endif
+@@ -926,7 +926,7 @@
+   #elif defined (__WIZ__)
+     (KEY_JOYBUTTON+JOY_BUTTON_L)
+   #elif defined(__amigaos4__) || defined(__AROS__) || defined(__MORPHOS__) || defined(__amigaos__)
+-  SDLK_Z|MOD_META // Right-Amiga + Z
++  SDLK_z|MOD_META // Right-Amiga + Z
+   #else
+   0
+   #endif
+@@ -986,7 +986,7 @@
+   #elif defined (__WIZ__)
+     (KEY_JOYBUTTON+JOY_BUTTON_MENU)
+   #eif defined(__amigaos4__) || defined(__AROS__) || defined(__MORPHOS__) || defined(__amigaos__)
+-  SDLK_Q|MOD_META // Right-Amiga + Q
++  SDLK_q|MOD_META // Right-Amiga + Q
+   #else
+   0
+   #endif
