@@ -43,13 +43,13 @@ void core_ExitInterrupt(regs_t *regs)
          */
         if (THISCPU->AttnResched & ARF_AttnSwitch)
         {
-	    /* Run task scheduling sequence */
+            /* Run task scheduling sequence */
             if (core_Schedule())
-	    {
-		cpu_Switch(regs);
-		cpu_Dispatch(regs);
+            {
+                cpu_Switch(regs);
+                cpu_Dispatch(regs);
             }
-	}
+        }
     }
 }
 
@@ -82,23 +82,23 @@ void core_SysCall(int sig, regs_t *regs)
     {
     /* A running task needs to be put into TaskReady list first. It's SC_SCHEDULE. */
     case TS_RUN:
-	if (!core_Schedule())
-	    break;
+        if (!core_Schedule())
+            break;
 
     /* If the task is already in some list with appropriate state, it's SC_SWITCH */
     case TS_READY:
     case TS_WAIT:
-	cpu_Switch(regs);
+        cpu_Switch(regs);
 
     /* If the task is removed, it's simply SC_DISPATCH */
     case TS_REMOVED:
-	cpu_Dispatch(regs);
-	break;
+        cpu_Dispatch(regs);
+        break;
 
     /* Special state is used for returning from exception */
     case TS_EXCEPT:
-	cpu_DispatchContext(task, regs, KernelBase->kb_PlatformData);
-	break;
+        cpu_DispatchContext(task, regs, KernelBase->kb_PlatformData);
+        break;
     }
 
     SUPERVISOR_LEAVE;
