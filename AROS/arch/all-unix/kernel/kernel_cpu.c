@@ -176,12 +176,20 @@ void cpu_Dispatch(regs_t *regs)
 
 void cpu_DispatchContext(struct Task *task, regs_t *regs, struct PlatformData *pd)
 {
-    struct AROSCPUContext *ctx = task->tc_UnionETask.tc_ETask->et_RegFrame;
+    struct AROSCPUContext *ctx;
 
-    RESTOREREGS(ctx, regs);
-    *pd->errnoPtr = ctx->errno_backup;
+    /* If task is in TS_REMOVED state, RemTask has already uninitialized 
+       the ETask structure. */
+    if(task->tc_State!=TS_REMOVED)
+    {
+    
+        ctx = task->tc_UnionETask.tc_ETask->et_RegFrame;
 
-    D(PRINT_SC(regs));
+        RESTOREREGS(ctx, regs);
+        *pd->errnoPtr = ctx->errno_backup;
+
+        D(PRINT_SC(regs));
+    }
 
     if (task->tc_Flags & TF_EXCEPT)
     {
